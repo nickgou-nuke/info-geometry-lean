@@ -392,3 +392,70 @@ noncomputable def entropyAtTau
     (τ : ℝ)
     (_hZ : partitionFunction N_func Q τ ≠ 0) : ℝ :=
   τ * internalEnergy N_func Q τ _hZ - Phi N_func Q τ
+
+lemma hasDerivAt_partitionFunction
+    {α : Type*} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (Q : ProbabilityDist α)
+    (τ : ℝ) :
+    HasDerivAt (partitionFunction N_func Q)
+      (∑ x, Q.prob x * Real.exp (-τ * relativeSurprisal N_func Q x) *
+        logRNDensity N_func Q x) τ := by
+  classical
+  unfold partitionFunction
+  refine HasDerivAt.sum ?_
+  intro x hx
+  have hlin :
+      HasDerivAt (fun t : ℝ => -t * relativeSurprisal N_func Q x)
+        (logRNDensity N_func Q x) τ := by
+    have hlin0 :
+        HasDerivAt (fun t : ℝ => -t * relativeSurprisal N_func Q x)
+          (-relativeSurprisal N_func Q x) τ := by
+      simpa [mul_comm, mul_left_comm, mul_assoc] using
+        ((hasDerivAt_id τ).neg.mul_const (relativeSurprisal N_func Q x))
+    simpa [relativeSurprisal] using hlin0
+  have hexp :
+      HasDerivAt (fun t : ℝ => Real.exp (-t * relativeSurprisal N_func Q x))
+        (Real.exp (-τ * relativeSurprisal N_func Q x) *
+          logRNDensity N_func Q x) τ := by
+    exact (Real.hasDerivAt_exp (-τ * relativeSurprisal N_func Q x)).comp τ hlin
+  simpa [mul_assoc, mul_left_comm, mul_comm] using hexp.const_mul (Q.prob x)
+
+theorem deriv_partitionFunction
+    {α : Type*} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (Q : ProbabilityDist α)
+    (τ : ℝ) :
+    deriv (partitionFunction N_func Q) τ =
+      ∑ x, Q.prob x * Real.exp (-τ * relativeSurprisal N_func Q x) *
+        logRNDensity N_func Q x := by
+  exact (hasDerivAt_partitionFunction N_func Q τ).deriv
+
+theorem dPhi_eq_internalEnergy
+    {α : Type*} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (Q : ProbabilityDist α)
+    (τ : ℝ)
+    (hZ : partitionFunction N_func Q τ ≠ 0) :
+    deriv (Phi N_func Q) τ = internalEnergy N_func Q τ hZ := by
+  have hlog :
+      HasDerivAt (Phi N_func Q)
+        ((∑ x, Q.prob x * Real.exp (-τ * relativeSurprisal N_func Q x) *
+            logRNDensity N_func Q x) /
+          partitionFunction N_func Q τ) τ := by
+    simpa [Phi] using (hasDerivAt_partitionFunction N_func Q τ).log hZ
+  calc
+    deriv (Phi N_func Q) τ
+        = ((∑ x, Q.prob x * Real.exp (-τ * relativeSurprisal N_func Q x) *
+            logRNDensity N_func Q x) /
+          partitionFunction N_func Q τ) := hlog.deriv
+    _ = ∑ x,
+          ((Q.prob x * Real.exp (-τ * relativeSurprisal N_func Q x)) /
+            partitionFunction N_func Q τ) *
+            logRNDensity N_func Q x := by
+          rw [Finset.sum_div]
+          refine Finset.sum_congr rfl ?_
+          intro x hx
+          ring
+    _ = internalEnergy N_func Q τ hZ := by
+          simp [internalEnergy, tiltedProb, mul_assoc, mul_left_comm, mul_comm]

@@ -1,6 +1,6 @@
 // Lean compiler output
 // Module: InfoGeometry
-// Imports: public import Init public import InfoGeometry.Basic public import InfoGeometry.KL public import InfoGeometry.Fenchel public import InfoGeometry.Cramer public import InfoGeometry.Renyi public import InfoGeometry.Clifford.Cl11 public import InfoGeometry.Clifford.Grading public import Mathlib public import Mathlib.Probability.Distributions.Poisson
+// Imports: public import Init public import InfoGeometry.Basic public import InfoGeometry.KL public import InfoGeometry.Fenchel public import InfoGeometry.Cramer public import InfoGeometry.Renyi public import InfoGeometry.Clifford.Cl11 public import InfoGeometry.Clifford.Grading public import InfoGeometry.Clifford.Supercharge public import Mathlib public import Mathlib.Probability.Distributions.Poisson
 #include <lean/lean.h>
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wunused-parameter"
@@ -14,7 +14,6 @@
 extern "C" {
 #endif
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_spectralEpsilonKreinAntiIsometry___boxed(lean_object*, lean_object*, lean_object*, lean_object*);
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_superHamiltonian___redArg(lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_HessianOrthogonalGroup_inv___boxed(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_modularJHessianOrthogonal(lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_spectralEpsilonEquiv(lean_object*, lean_object*, lean_object*);
@@ -27,7 +26,6 @@ LEAN_EXPORT lean_object* lp_info_x2dgeometry_hessianIndefiniteForm(lean_object*,
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_projectiveMap(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 static lean_object* lp_info_x2dgeometry_chiralityOperator___closed__0;
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_projectivize___boxed(lean_object*, lean_object*, lean_object*, lean_object*);
-lean_object* lp_mathlib_LinearMap_comp___redArg(lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_modularJHessianOrthogonal___redArg(lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_chiralityOperator(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_modularJEquiv(lean_object*, lean_object*, lean_object*);
@@ -59,10 +57,8 @@ LEAN_EXPORT lean_object* lp_info_x2dgeometry_HessianOrthogonalGroup_inv(lean_obj
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_modularJHessianOrthogonal___redArg___boxed(lean_object*, lean_object*);
 static lean_object* lp_info_x2dgeometry_modularJEquiv___closed__1;
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_modularJKreinIsometry___redArg___boxed(lean_object*, lean_object*);
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_superHamiltonian(lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_spectralEpsilonKreinAntiIsometry(lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_spectralEpsilonEquiv___redArg___boxed(lean_object*);
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_superHamiltonian___boxed(lean_object*, lean_object*, lean_object*, lean_object*);
 lean_object* lp_info_x2dgeometry_complexI___redArg(lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_HessianOrthogonalGroup_comp(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_vacuumChoicePlus(lean_object*, lean_object*, lean_object*);
@@ -92,34 +88,6 @@ LEAN_EXPORT lean_object* lp_info_x2dgeometry_projectivize___redArg(lean_object*)
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_PrequantumData_holonomyScale(lean_object*);
 extern lean_object* lp_mathlib_Real_instCommSemiring;
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_vacuumChoicePlus___redArg(lean_object*);
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_superHamiltonian___redArg(lean_object* x_1) {
-_start:
-{
-lean_object* x_2; 
-lean_inc_ref(x_1);
-x_2 = lp_mathlib_LinearMap_comp___redArg(x_1, x_1);
-return x_2;
-}
-}
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_superHamiltonian(lean_object* x_1, lean_object* x_2, lean_object* x_3, lean_object* x_4) {
-_start:
-{
-lean_object* x_5; 
-lean_inc_ref(x_4);
-x_5 = lp_mathlib_LinearMap_comp___redArg(x_4, x_4);
-return x_5;
-}
-}
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_superHamiltonian___boxed(lean_object* x_1, lean_object* x_2, lean_object* x_3, lean_object* x_4) {
-_start:
-{
-lean_object* x_5; 
-x_5 = lp_info_x2dgeometry_superHamiltonian(x_1, x_2, x_3, x_4);
-lean_dec(x_3);
-lean_dec_ref(x_2);
-return x_5;
-}
-}
 static lean_object* _init_lp_info_x2dgeometry_chiralityOperator___closed__0() {
 _start:
 {
@@ -827,6 +795,7 @@ lean_object* initialize_info_x2dgeometry_InfoGeometry_Cramer(uint8_t builtin);
 lean_object* initialize_info_x2dgeometry_InfoGeometry_Renyi(uint8_t builtin);
 lean_object* initialize_info_x2dgeometry_InfoGeometry_Clifford_Cl11(uint8_t builtin);
 lean_object* initialize_info_x2dgeometry_InfoGeometry_Clifford_Grading(uint8_t builtin);
+lean_object* initialize_info_x2dgeometry_InfoGeometry_Clifford_Supercharge(uint8_t builtin);
 lean_object* initialize_mathlib_Mathlib(uint8_t builtin);
 lean_object* initialize_mathlib_Mathlib_Probability_Distributions_Poisson(uint8_t builtin);
 static bool _G_initialized = false;
@@ -856,6 +825,9 @@ res = initialize_info_x2dgeometry_InfoGeometry_Clifford_Cl11(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 res = initialize_info_x2dgeometry_InfoGeometry_Clifford_Grading(builtin);
+if (lean_io_result_is_error(res)) return res;
+lean_dec_ref(res);
+res = initialize_info_x2dgeometry_InfoGeometry_Clifford_Supercharge(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 res = initialize_mathlib_Mathlib(builtin);

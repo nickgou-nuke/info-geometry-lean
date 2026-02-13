@@ -8,7 +8,9 @@
      [["«info-geometry»/InfoGeometry:extraDep",
        [["@«info-geometry»:extraDep", "00000000000006bb"]]],
       ["imports",
-       [["Mathlib transitive imports (legacy)", "f9da6cd4fca56da0"],
+       [["InfoGeometry.KL transitive imports (legacy)", "0e27cb9a322c9999"],
+        ["InfoGeometry.KL:importAllArts", "18975d82f7e80665"],
+        ["Mathlib transitive imports (legacy)", "f9da6cd4fca56da0"],
         ["Mathlib:importAllArts", "34e29ba263089bbb"]]]]],
     ["libs",
      [["import dynlibs", "00000000000006bb"],
@@ -18,7 +20,7 @@
   ["Lean 4.28.0, commit 3b0f2862196c6a8af9eb0025ee650252694013dd",
    "612345b87aa96642"],
   ["/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Renyi.lean",
-   "f882466ae840afa5"],
+   "c3ae55d68822c439"],
   ["options", "00000000000006bb"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "3b7497d6413ff2d9"}
+ "depHash": "2e83dad1c8c475cd"}

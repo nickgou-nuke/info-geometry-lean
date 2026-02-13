@@ -1,7 +1,7 @@
 {"plugins": [],
  "package": "info-geometry",
  "options": {},
- "name": "InfoGeometry",
+ "name": "InfoGeometry.Prequantum.Scaling",
  "isModule": false,
  "importArts":
  {"Qq.Typ":
@@ -38314,26 +38314,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean/LeanSearchClient.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean/LeanSearchClient.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean/LeanSearchClient.olean.private"],
-  "InfoGeometry.Renyi":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Renyi.olean"],
-  "InfoGeometry.Projective.Rays":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Projective/Rays.olean"],
-  "InfoGeometry.Projective.ProjectiveMap":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Projective/ProjectiveMap.olean"],
-  "InfoGeometry.KL":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/KL.olean"],
-  "InfoGeometry.Fenchel":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Fenchel.olean"],
-  "InfoGeometry.Cramer":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Cramer.olean"],
-  "InfoGeometry.Clifford.Supercharge":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Clifford/Supercharge.olean"],
-  "InfoGeometry.Clifford.Grading":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Clifford/Grading.olean"],
-  "InfoGeometry.Clifford.Cl11":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Clifford/Cl11.olean"],
-  "InfoGeometry.Basic":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Basic.olean"],
   "ImportGraph.Tools.RedundantImports":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/importGraph/.lake/build/lib/lean/ImportGraph/Tools/RedundantImports.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/importGraph/.lake/build/lib/lean/ImportGraph/Tools/RedundantImports.ir",

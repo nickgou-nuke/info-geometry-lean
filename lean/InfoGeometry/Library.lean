@@ -7,7 +7,7 @@ import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Supercharge
 import InfoGeometry.Projective.Rays
 import InfoGeometry.Projective.ProjectiveMap
-import Prequantum.Scaling
-import Prequantum.Bundle
+import InfoGeometry.Prequantum.Scaling
+import InfoGeometry.Prequantum.Bundle
 import Krein.Metric
 import Krein.OrthogonalGroup

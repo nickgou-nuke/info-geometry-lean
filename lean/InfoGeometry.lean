@@ -1050,7 +1050,7 @@ theorem PrequantumData.omega_eq_hbar_mul_curvature
   linarith
 
 /-- Rescaling `ℏ` by `c` rescales curvature by `1/c` at fixed symplectic scale. -/
-def PrequantumData.rescaleHbar
+noncomputable def PrequantumData.rescaleHbar
     (P : PrequantumData) (c : ℝ) (hc : c ≠ 0) : PrequantumData where
   omegaScale := P.omegaScale
   curvatureScale := P.curvatureScale / c
@@ -1059,7 +1059,6 @@ def PrequantumData.rescaleHbar
   curvature_law := by
     rw [P.curvature_law]
     field_simp [hc, P.hbar_ne_zero]
-    ring
 
 theorem PrequantumData.rescaleHbar_curvature
     (P : PrequantumData) (c : ℝ) (hc : c ≠ 0) :

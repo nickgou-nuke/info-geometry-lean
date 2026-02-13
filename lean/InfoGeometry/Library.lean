@@ -4,6 +4,7 @@ import InfoGeometry.Renyi
 import InfoGeometry.Cramer
 import InfoGeometry.Clifford.Cl11
 import InfoGeometry.Clifford.Grading
+import InfoGeometry.Clifford.Supercharge
 import Projective.Rays
 import Projective.ProjectiveMap
 import Prequantum.Scaling

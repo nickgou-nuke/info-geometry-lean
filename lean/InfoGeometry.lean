@@ -6,6 +6,8 @@ import InfoGeometry.Renyi
 import InfoGeometry.Clifford.Cl11
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Supercharge
+import InfoGeometry.Projective.Rays
+import InfoGeometry.Projective.ProjectiveMap
 import Mathlib
 import Mathlib.Probability.Distributions.Poisson
 
@@ -95,125 +97,6 @@ theorem vacuumChoice_switch_swaps_polarizations_minus :
   rcases v with ⟨x, y⟩
   simp [vacuumPolarizationPlus, vacuumPolarizationMinus,
     vacuumChoicePlus, vacuumChoiceMinus, sub_eq_add_neg]
-
-/-- Projectivization dictionary: two nonzero vectors represent the same ray
-iff they differ by a nonzero real scalar. -/
-def SameRayDoubled (v w : DoubledSpace E) : Prop :=
-  ∃ a : ℝ, a ≠ 0 ∧ w = a • v
-
-lemma sameRay_refl {v : DoubledSpace E} : SameRayDoubled v v := by
-  refine ⟨1, by norm_num, ?_⟩
-  simp
-
-lemma sameRay_symm {v w : DoubledSpace E} :
-    SameRayDoubled v w → SameRayDoubled w v := by
-  rintro ⟨a, ha, rfl⟩
-  refine ⟨a⁻¹, inv_ne_zero ha, ?_⟩
-  calc
-    v = (a⁻¹ * a) • v := by simp [ha]
-    _ = a⁻¹ • (a • v) := by simp [smul_smul]
-
-lemma sameRay_trans {u v w : DoubledSpace E} :
-    SameRayDoubled u v → SameRayDoubled v w → SameRayDoubled u w := by
-  rintro ⟨a, ha, rfl⟩ ⟨b, hb, rfl⟩
-  refine ⟨b * a, mul_ne_zero hb ha, ?_⟩
-  simp [smul_smul, mul_comm]
-
-/-- Setoid for projectivized doubled states (rays). -/
-def sameRaySetoid : Setoid (DoubledSpace E) where
-  r := SameRayDoubled
-  iseqv := ⟨
-    by intro x; exact sameRay_refl (E := E),
-    by intro x y hxy; exact sameRay_symm (E := E) hxy,
-    by intro x y z hxy hyz; exact sameRay_trans (E := E) hxy hyz
-  ⟩
-
-/-- Projective states: quotient of doubled states by nonzero real rescaling. -/
-def ProjectiveState : Type _ := Quotient (sameRaySetoid (E := E))
-
-/-- Canonical projection from a doubled state to its projective ray class. -/
-def projectivize (v : DoubledSpace E) : ProjectiveState (E := E) :=
-  Quotient.mk'' v
-
-lemma sameRayDoubled_map
-    (A : DoubledSpace E →L[ℝ] DoubledSpace E)
-    {v w : DoubledSpace E} :
-    SameRayDoubled (E := E) v w →
-      SameRayDoubled (E := E) (A v) (A w) := by
-  rintro ⟨a, ha, hw⟩
-  refine ⟨a, ha, ?_⟩
-  rw [hw]
-  simp
-
-/-- Any linear endomorphism descends to projective rays. -/
-def projectiveMap
-    (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
-    ProjectiveState (E := E) → ProjectiveState (E := E) :=
-  Quotient.map (fun v => A v) (by
-    intro v w hvw
-    exact sameRayDoubled_map (E := E) A hvw)
-
-lemma projectiveMap_mk
-    (A : DoubledSpace E →L[ℝ] DoubledSpace E)
-    (v : DoubledSpace E) :
-    projectiveMap (E := E) A (projectivize (E := E) v)
-      = projectivize (E := E) (A v) := rfl
-
-/-- Grade-preserving (even) endomorphisms descend to projective states. -/
-def projectiveMapEven
-    (A : DoubledSpace E →L[ℝ] DoubledSpace E)
-    (_hA : isEven (E := E) A) :
-    ProjectiveState (E := E) → ProjectiveState (E := E) :=
-  projectiveMap (E := E) A
-
-lemma projectiveMapEven_mk
-    (A : DoubledSpace E →L[ℝ] DoubledSpace E)
-    (hA : isEven (E := E) A)
-    (v : DoubledSpace E) :
-    projectiveMapEven (E := E) A hA (projectivize (E := E) v)
-      = projectivize (E := E) (A v) := rfl
-
-lemma projectiveMap_id :
-    projectiveMap (E := E) (ContinuousLinearMap.id ℝ (DoubledSpace E))
-      = id := by
-  funext q
-  refine Quotient.inductionOn q ?_
-  intro v
-  rfl
-
-lemma projectiveMap_comp
-    (A B : DoubledSpace E →L[ℝ] DoubledSpace E) :
-    projectiveMap (E := E) (A.comp B)
-      = (projectiveMap (E := E) A) ∘ (projectiveMap (E := E) B) := by
-  funext q
-  refine Quotient.inductionOn q ?_
-  intro v
-  rfl
-
-lemma projectiveMapEven_id
-    (hId : isEven (E := E) (ContinuousLinearMap.id ℝ (DoubledSpace E))) :
-    projectiveMapEven (E := E) (ContinuousLinearMap.id ℝ (DoubledSpace E)) hId = id :=
-  projectiveMap_id (E := E)
-
-lemma projectiveMapEven_comp
-    (A B : DoubledSpace E →L[ℝ] DoubledSpace E)
-    (hA : isEven (E := E) A)
-    (hB : isEven (E := E) B) :
-    projectiveMapEven (E := E) (A.comp B)
-      (by
-        unfold isEven at *
-        calc
-          (modularJ (E := E)).comp (A.comp B)
-              = ((modularJ (E := E)).comp A).comp B := by
-                  simp [ContinuousLinearMap.comp_assoc]
-          _ = (A.comp (modularJ (E := E))).comp B := by rw [hA]
-          _ = A.comp ((modularJ (E := E)).comp B) := by
-                simp [ContinuousLinearMap.comp_assoc]
-          _ = A.comp (B.comp (modularJ (E := E))) := by rw [hB]
-          _ = (A.comp B).comp (modularJ (E := E)) := by
-                simp [ContinuousLinearMap.comp_assoc])
-      = (projectiveMapEven (E := E) A hA) ∘ (projectiveMapEven (E := E) B hB) :=
-  projectiveMap_comp (E := E) A B
 
 /-- Minimal prequantum line-bundle data (scalarized): symplectic scale `ω`,
 curvature scale `F`, and conversion constant `ℏ` with relation `F = ω / ℏ`. -/

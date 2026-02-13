@@ -1,9 +1,9 @@
 {"synthetic": false,
  "schemaVersion": "2025-09-10",
  "outputs":
- {"o": ["77e5936fe7a81fff.olean"],
-  "i": "f69119654a6a82ee.ilean",
-  "c": "8e3d11b2087f598f.c"},
+ {"o": ["52af050b996c03b0.olean"],
+  "i": "38dd22e944f63756.ilean",
+  "c": "c36653ce803a4382.c"},
  "log":
  [{"message":
    ".> LEAN_PATH=/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/Cli/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/batteries/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/Qq/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/aesop/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/importGraph/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/plausible/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean /home/goutev/.elan/toolchains/leanprover--lean4---v4.28.0-rc1/bin/lean /home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry.lean -o /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry.olean -i /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry.ilean -c /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/ir/InfoGeometry.c --setup /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/ir/InfoGeometry.setup.json --json",
@@ -18,6 +18,11 @@
         ["InfoGeometry.Basic:importAllArts", "90be8af738aeaa5c"],
         ["InfoGeometry.KL transitive imports (legacy)", "0e27cb9a322c9999"],
         ["InfoGeometry.KL:importAllArts", "18975d82f7e80665"],
+        ["InfoGeometry.Fenchel transitive imports (legacy)",
+         "5735cfefaabf54b6"],
+        ["InfoGeometry.Fenchel:importAllArts", "7672cc7c7a531f4e"],
+        ["InfoGeometry.Cramer transitive imports (legacy)", "5735cfefaabf54b6"],
+        ["InfoGeometry.Cramer:importAllArts", "451b5b43936c86b6"],
         ["Mathlib transitive imports (legacy)", "f9da6cd4fca56da0"],
         ["Mathlib:importAllArts", "34e29ba263089bbb"],
         ["Mathlib.Probability.Distributions.Poisson transitive imports (legacy)",
@@ -32,7 +37,7 @@
   ["Lean 4.28.0, commit 3b0f2862196c6a8af9eb0025ee650252694013dd",
    "612345b87aa96642"],
   ["/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry.lean",
-   "faada60a304e4bde"],
+   "b5382118b9dcfff4"],
   ["options", "00000000000006bb"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "8fa017ba3227cdb3"}
+ "depHash": "c053a72be8f24a1f"}

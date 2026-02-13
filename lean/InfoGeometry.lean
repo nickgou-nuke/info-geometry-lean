@@ -403,7 +403,11 @@ lemma hasDerivAt_partitionFunction
         logRNDensity N_func Q x) τ := by
   classical
   unfold partitionFunction
-  refine HasDerivAt.sum ?_
+  change HasDerivAt
+    (fun t : ℝ => ∑ x, Q.prob x * Real.exp (-t * relativeSurprisal N_func Q x))
+    (∑ x, Q.prob x * Real.exp (-τ * relativeSurprisal N_func Q x) *
+      logRNDensity N_func Q x) τ
+  refine HasDerivAt.fun_sum ?_
   intro x hx
   have hlin :
       HasDerivAt (fun t : ℝ => -t * relativeSurprisal N_func Q x)
@@ -458,4 +462,136 @@ theorem dPhi_eq_internalEnergy
           intro x hx
           ring
     _ = internalEnergy N_func Q τ hZ := by
-          simp [internalEnergy, tiltedProb, mul_assoc, mul_left_comm, mul_comm]
+          simp [internalEnergy, tiltedProb, mul_comm]
+
+lemma hasDerivAt_partitionFunctionLogMoment
+    {α : Type*} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (Q : ProbabilityDist α)
+    (τ : ℝ) :
+    HasDerivAt
+      (fun t => ∑ x, Q.prob x * Real.exp (-t * relativeSurprisal N_func Q x) *
+        logRNDensity N_func Q x)
+      (∑ x, Q.prob x * Real.exp (-τ * relativeSurprisal N_func Q x) *
+        (logRNDensity N_func Q x) ^ 2) τ := by
+  classical
+  refine HasDerivAt.fun_sum ?_
+  intro x hx
+  have hlin :
+      HasDerivAt (fun t : ℝ => -t * relativeSurprisal N_func Q x)
+        (logRNDensity N_func Q x) τ := by
+    have hlin0 :
+        HasDerivAt (fun t : ℝ => -t * relativeSurprisal N_func Q x)
+          (-relativeSurprisal N_func Q x) τ := by
+      simpa [mul_comm, mul_left_comm, mul_assoc] using
+        ((hasDerivAt_id τ).neg.mul_const (relativeSurprisal N_func Q x))
+    simpa [relativeSurprisal] using hlin0
+  have hexp :
+      HasDerivAt (fun t : ℝ => Real.exp (-t * relativeSurprisal N_func Q x))
+        (Real.exp (-τ * relativeSurprisal N_func Q x) *
+          logRNDensity N_func Q x) τ := by
+    exact (Real.hasDerivAt_exp (-τ * relativeSurprisal N_func Q x)).comp τ hlin
+  have hfactor :
+      HasDerivAt
+        (fun t : ℝ => Q.prob x * Real.exp (-t * relativeSurprisal N_func Q x))
+        (Q.prob x * Real.exp (-τ * relativeSurprisal N_func Q x) *
+          logRNDensity N_func Q x) τ := by
+    simpa [mul_assoc, mul_left_comm, mul_comm] using hexp.const_mul (Q.prob x)
+  have hterm :
+      HasDerivAt
+        (fun t : ℝ => Q.prob x * Real.exp (-t * relativeSurprisal N_func Q x) *
+          logRNDensity N_func Q x)
+        ((Q.prob x * Real.exp (-τ * relativeSurprisal N_func Q x) *
+          logRNDensity N_func Q x) * logRNDensity N_func Q x) τ := by
+    simpa [mul_assoc] using hfactor.mul_const (logRNDensity N_func Q x)
+  simpa [pow_two, mul_assoc, mul_left_comm, mul_comm] using hterm
+
+theorem deriv_partitionFunctionLogMoment
+    {α : Type*} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (Q : ProbabilityDist α)
+    (τ : ℝ) :
+    deriv
+      (fun t => ∑ x, Q.prob x * Real.exp (-t * relativeSurprisal N_func Q x) *
+        logRNDensity N_func Q x) τ
+      = ∑ x, Q.prob x * Real.exp (-τ * relativeSurprisal N_func Q x) *
+          (logRNDensity N_func Q x) ^ 2 := by
+  exact (hasDerivAt_partitionFunctionLogMoment N_func Q τ).deriv
+
+theorem deriv_Phi_eq_partition_ratio
+    {α : Type*} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (Q : ProbabilityDist α)
+    (hZ : ∀ t, partitionFunction N_func Q t ≠ 0) :
+    deriv (Phi N_func Q) =
+      fun t =>
+        (∑ x, Q.prob x * Real.exp (-t * relativeSurprisal N_func Q x) *
+          logRNDensity N_func Q x) / partitionFunction N_func Q t := by
+  funext t
+  have hlog :
+      HasDerivAt (Phi N_func Q)
+        ((∑ x, Q.prob x * Real.exp (-t * relativeSurprisal N_func Q x) *
+            logRNDensity N_func Q x) /
+          partitionFunction N_func Q t) t := by
+    simpa [Phi] using (hasDerivAt_partitionFunction N_func Q t).log (hZ t)
+  exact hlog.deriv
+
+noncomputable def varianceLogRNDensity
+    {α : Type*} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (Q : ProbabilityDist α)
+    (τ : ℝ)
+    (hZ : partitionFunction N_func Q τ ≠ 0) : ℝ :=
+  (∑ x, tiltedProb N_func Q τ hZ x * (logRNDensity N_func Q x) ^ 2) -
+    (internalEnergy N_func Q τ hZ) ^ 2
+
+theorem d2Phi_eq_varianceLogRNDensity
+    {α : Type*} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (Q : ProbabilityDist α)
+    (hZ : ∀ t, partitionFunction N_func Q t ≠ 0)
+    (τ : ℝ) :
+    deriv (fun t => deriv (Phi N_func Q) t) τ =
+      varianceLogRNDensity N_func Q τ (hZ τ) := by
+  let Z : ℝ → ℝ := partitionFunction N_func Q
+  let M1 : ℝ → ℝ := fun t =>
+    ∑ x, Q.prob x * Real.exp (-t * relativeSurprisal N_func Q x) *
+      logRNDensity N_func Q x
+  let M2 : ℝ → ℝ := fun t =>
+    ∑ x, Q.prob x * Real.exp (-t * relativeSurprisal N_func Q x) *
+      (logRNDensity N_func Q x) ^ 2
+  have hderivPhi : deriv (Phi N_func Q) = fun t => M1 t / Z t := by
+    simpa [M1, Z] using deriv_Phi_eq_partition_ratio N_func Q hZ
+  calc
+    deriv (fun t => deriv (Phi N_func Q) t) τ
+        = deriv (fun t => M1 t / Z t) τ := by
+            simp [hderivPhi]
+    _ = (deriv M1 τ * Z τ - M1 τ * deriv Z τ) / (Z τ) ^ 2 := by
+          refine deriv_fun_div ?_ ?_ ?_
+          · exact (hasDerivAt_partitionFunctionLogMoment N_func Q τ).differentiableAt
+          · exact (hasDerivAt_partitionFunction N_func Q τ).differentiableAt
+          · simpa [Z] using hZ τ
+    _ = ((M2 τ) * Z τ - M1 τ * M1 τ) / (Z τ) ^ 2 := by
+          rw [(hasDerivAt_partitionFunctionLogMoment N_func Q τ).deriv]
+          rw [(hasDerivAt_partitionFunction N_func Q τ).deriv]
+    _ = M2 τ / Z τ - (M1 τ / Z τ) ^ 2 := by
+          have hZτ : Z τ ≠ 0 := by simpa [Z] using hZ τ
+          field_simp [hZτ]
+    _ = varianceLogRNDensity N_func Q τ (hZ τ) := by
+          have hM2 :
+              M2 τ / Z τ =
+                ∑ x, tiltedProb N_func Q τ (hZ τ) x * (logRNDensity N_func Q x) ^ 2 := by
+            unfold M2 Z partitionFunction
+            rw [Finset.sum_div]
+            refine Finset.sum_congr rfl ?_
+            intro x hx
+            simp [tiltedProb, partitionFunction]
+            ring
+          have hM1 : M1 τ / Z τ = internalEnergy N_func Q τ (hZ τ) := by
+            unfold M1 Z partitionFunction internalEnergy
+            rw [Finset.sum_div]
+            refine Finset.sum_congr rfl ?_
+            intro x hx
+            simp [tiltedProb, partitionFunction]
+            ring
+          simp [varianceLogRNDensity, hM2, hM1]

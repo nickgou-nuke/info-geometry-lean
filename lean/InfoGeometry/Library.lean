@@ -2,9 +2,8 @@ import InfoGeometry.KL
 import InfoGeometry.Fenchel
 import InfoGeometry.Renyi
 import InfoGeometry.Cramer
-import Clifford.Cl11
-import Clifford.Supercharge
-import Clifford.Grading
+import InfoGeometry.Clifford.Cl11
+import InfoGeometry.Clifford.Grading
 import Projective.Rays
 import Projective.ProjectiveMap
 import Prequantum.Scaling

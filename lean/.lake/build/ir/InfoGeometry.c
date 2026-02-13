@@ -1,6 +1,6 @@
 // Lean compiler output
 // Module: InfoGeometry
-// Imports: public import Init public import InfoGeometry.Basic public import InfoGeometry.KL public import InfoGeometry.Fenchel public import InfoGeometry.Cramer public import InfoGeometry.Renyi public import InfoGeometry.Clifford.Cl11 public import InfoGeometry.Clifford.Grading public import InfoGeometry.Clifford.Supercharge public import InfoGeometry.Projective.Rays public import InfoGeometry.Projective.ProjectiveMap public import Mathlib public import Mathlib.Probability.Distributions.Poisson
+// Imports: public import Init public import InfoGeometry.Basic public import InfoGeometry.KL public import InfoGeometry.Fenchel public import InfoGeometry.Cramer public import InfoGeometry.Renyi public import InfoGeometry.Clifford.Cl11 public import InfoGeometry.Clifford.Grading public import InfoGeometry.Clifford.Supercharge public import InfoGeometry.Projective.Rays public import InfoGeometry.Projective.ProjectiveMap public import InfoGeometry.Prequantum.Scaling public import InfoGeometry.Prequantum.Bundle public import Mathlib public import Mathlib.Probability.Distributions.Poisson
 #include <lean/lean.h>
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wunused-parameter"
@@ -28,7 +28,6 @@ LEAN_EXPORT lean_object* lp_info_x2dgeometry_chiralityOperator(lean_object*, lea
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_modularJEquiv(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_HessianOrthogonalGroup_one___redArg(lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_modularJKreinIsometry___boxed(lean_object*, lean_object*, lean_object*, lean_object*);
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_PrequantumData_holonomyScale___boxed(lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_modularJKreinIsometry___redArg(lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_complexStructureOperator___redArg(lean_object*);
 lean_object* lp_mathlib_LinearEquiv_trans___redArg(lean_object*, lean_object*);
@@ -73,7 +72,6 @@ LEAN_EXPORT lean_object* lp_info_x2dgeometry_vacuumChoiceMinus___redArg(lean_obj
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_spectralEpsilonKreinAntiIsometry___redArg___boxed(lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_complexStructureOperator___boxed(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_vacuumChoicePlus___redArg___boxed(lean_object*);
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_PrequantumData_holonomyScale(lean_object*);
 extern lean_object* lp_mathlib_Real_instCommSemiring;
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_vacuumChoicePlus___redArg(lean_object*);
 static lean_object* _init_lp_info_x2dgeometry_chiralityOperator___closed__0() {
@@ -248,24 +246,6 @@ lean_object* x_4;
 x_4 = lp_info_x2dgeometry_vacuumChoiceMinus(x_1, x_2, x_3);
 lean_dec(x_3);
 return x_4;
-}
-}
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_PrequantumData_holonomyScale(lean_object* x_1) {
-_start:
-{
-lean_object* x_2; 
-x_2 = lean_ctor_get(x_1, 1);
-lean_inc(x_2);
-return x_2;
-}
-}
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_PrequantumData_holonomyScale___boxed(lean_object* x_1) {
-_start:
-{
-lean_object* x_2; 
-x_2 = lp_info_x2dgeometry_PrequantumData_holonomyScale(x_1);
-lean_dec_ref(x_1);
-return x_2;
 }
 }
 LEAN_EXPORT lean_object* lp_info_x2dgeometry_hessianIndefiniteForm___redArg(lean_object* x_1, lean_object* x_2, lean_object* x_3) {
@@ -682,6 +662,8 @@ lean_object* initialize_info_x2dgeometry_InfoGeometry_Clifford_Grading(uint8_t b
 lean_object* initialize_info_x2dgeometry_InfoGeometry_Clifford_Supercharge(uint8_t builtin);
 lean_object* initialize_info_x2dgeometry_InfoGeometry_Projective_Rays(uint8_t builtin);
 lean_object* initialize_info_x2dgeometry_InfoGeometry_Projective_ProjectiveMap(uint8_t builtin);
+lean_object* initialize_info_x2dgeometry_InfoGeometry_Prequantum_Scaling(uint8_t builtin);
+lean_object* initialize_info_x2dgeometry_InfoGeometry_Prequantum_Bundle(uint8_t builtin);
 lean_object* initialize_mathlib_Mathlib(uint8_t builtin);
 lean_object* initialize_mathlib_Mathlib_Probability_Distributions_Poisson(uint8_t builtin);
 static bool _G_initialized = false;
@@ -720,6 +702,12 @@ res = initialize_info_x2dgeometry_InfoGeometry_Projective_Rays(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 res = initialize_info_x2dgeometry_InfoGeometry_Projective_ProjectiveMap(builtin);
+if (lean_io_result_is_error(res)) return res;
+lean_dec_ref(res);
+res = initialize_info_x2dgeometry_InfoGeometry_Prequantum_Scaling(builtin);
+if (lean_io_result_is_error(res)) return res;
+lean_dec_ref(res);
+res = initialize_info_x2dgeometry_InfoGeometry_Prequantum_Bundle(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 res = initialize_mathlib_Mathlib(builtin);

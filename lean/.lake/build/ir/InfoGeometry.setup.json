@@ -38320,6 +38320,10 @@
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Projective/Rays.olean"],
   "InfoGeometry.Projective.ProjectiveMap":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Projective/ProjectiveMap.olean"],
+  "InfoGeometry.Prequantum.Scaling":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Prequantum/Scaling.olean"],
+  "InfoGeometry.Prequantum.Bundle":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Prequantum/Bundle.olean"],
   "InfoGeometry.KL":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/KL.olean"],
   "InfoGeometry.Fenchel":

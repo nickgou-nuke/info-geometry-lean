@@ -1,0 +1,32 @@
+{"synthetic": false,
+ "schemaVersion": "2025-09-10",
+ "outputs":
+ {"o": ["e799b829afed0d4e.olean"],
+  "i": "f3d9ed5be76edbb1.ilean",
+  "c": "c18f9d7445457d7c.c"},
+ "log":
+ [{"message":
+   ".> LEAN_PATH=/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/Cli/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/batteries/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/Qq/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/aesop/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/importGraph/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/plausible/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean /home/goutev/.elan/toolchains/leanprover--lean4---v4.28.0-rc1/bin/lean /home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/KL.lean -o /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/KL.olean -i /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/KL.ilean -c /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/ir/InfoGeometry/KL.c --setup /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/ir/InfoGeometry/KL.setup.json --json",
+   "level": "trace"}],
+ "inputs":
+ [["InfoGeometry.KL:deps",
+   [["deps",
+     [["«info-geometry»/InfoGeometry:extraDep",
+       [["@«info-geometry»:extraDep", "00000000000006bb"]]],
+      ["imports",
+       [["InfoGeometry.Basic transitive imports (legacy)", "5735cfefaabf54b6"],
+        ["InfoGeometry.Basic:importAllArts", "90be8af738aeaa5c"],
+        ["Mathlib transitive imports (legacy)", "f9da6cd4fca56da0"],
+        ["Mathlib:importAllArts", "34e29ba263089bbb"]]]]],
+    ["libs",
+     [["import dynlibs", "00000000000006bb"],
+      ["package external libraries", "00000000000006bb"],
+      ["module dynlibs", "00000000000006bb"],
+      ["module plugins", "00000000000006bb"]]]]],
+  ["Lean 4.28.0, commit 3b0f2862196c6a8af9eb0025ee650252694013dd",
+   "612345b87aa96642"],
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/KL.lean",
+   "5b6ff5d239427601"],
+  ["options", "00000000000006bb"],
+  ["Module.leanArgs: #[]", "00000000000006bb"]],
+ "depHash": "afa035f823fee6e6"}

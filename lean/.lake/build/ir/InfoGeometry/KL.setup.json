@@ -1,7 +1,7 @@
 {"plugins": [],
  "package": "info-geometry",
  "options": {},
- "name": "InfoGeometry",
+ "name": "InfoGeometry.KL",
  "isModule": false,
  "importArts":
  {"Qq.Typ":
@@ -38314,8 +38314,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean/LeanSearchClient.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean/LeanSearchClient.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean/LeanSearchClient.olean.private"],
-  "InfoGeometry.KL":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/KL.olean"],
   "InfoGeometry.Basic":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Basic.olean"],
   "ImportGraph.Tools.RedundantImports":

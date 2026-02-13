@@ -38322,6 +38322,8 @@
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Fenchel.olean"],
   "InfoGeometry.Cramer":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Cramer.olean"],
+  "InfoGeometry.Clifford.Supercharge":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Clifford/Supercharge.olean"],
   "InfoGeometry.Clifford.Grading":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Clifford/Grading.olean"],
   "InfoGeometry.Clifford.Cl11":

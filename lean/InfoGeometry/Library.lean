@@ -5,8 +5,8 @@ import InfoGeometry.Cramer
 import InfoGeometry.Clifford.Cl11
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Supercharge
-import Projective.Rays
-import Projective.ProjectiveMap
+import InfoGeometry.Projective.Rays
+import InfoGeometry.Projective.ProjectiveMap
 import Prequantum.Scaling
 import Prequantum.Bundle
 import Krein.Metric

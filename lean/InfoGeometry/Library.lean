@@ -6,6 +6,8 @@ import InfoGeometry.Clifford.Cl11
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Supercharge
 import InfoGeometry.Clifford.Relations
+import InfoGeometry.Krein.Metric
+import InfoGeometry.Krein.Automorphisms
 import InfoGeometry.Projective.Rays
 import InfoGeometry.Projective.ProjectiveMap
 import InfoGeometry.Prequantum.Scaling

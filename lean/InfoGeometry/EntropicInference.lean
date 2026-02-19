@@ -253,17 +253,59 @@ noncomputable def factorizedJoint
 
 /-! ME characterization interfaces (finite case). -/
 
+/-- klTerm multiplicative decomposition: klTerm (r·a) (s·b) = a·klTerm r s + r·klTerm a b. -/
+lemma klTerm_mul {r s a b : ℝ} (hr : r ≠ 0) (hs : s ≠ 0) :
+  klTerm (r * a) (s * b) = a * klTerm r s + r * klTerm a b := by
+  by_cases ha : a = 0
+  · simp [klTerm, ha]
+  · -- both sides simplify to `r * a * (log (r / s) + log (a / b))`
+    have hra : r * a ≠ 0 := mul_ne_zero hr (mt Eq.symm ha)
+    simp [klTerm, ha]
+    calc
+      (r * a) * Real.log ((r * a) / (s * b))
+        = (r * a) * Real.log ((r / s) * (a / b)) := by
+          field_simp [hr, hs]
+        _ = (r * a) * (Real.log (r / s) + Real.log (a / b)) := by
+          rw [Real.log_mul (r / s) (a / b)]
+        _ = a * (r * Real.log (r / s)) + r * (a * Real.log (a / b)) := by ring
+        _ = a * klTerm r s + r * klTerm a b := by simp [klTerm, hr, ha]
+
 /-- KL chain-rule decomposition on finite products. -/
-def KL_chain_rule
+theorem KL_chain_rule
     (p q : FinProb (X × Θ))
     (hq : ∀ x : X, 0 < (marginalX q).toFun x)
-    (hp : ∀ x : X, 0 < (marginalX p).toFun x) : Prop :=
-  KL p q
-    =
+    (hp : ∀ x : X, 0 < (marginalX p).toFun x) :
+  KL p q =
     KL (marginalX p) (marginalX q)
-      +
-    (∑ x : X, (marginalX p).toFun x *
-      KL (condΘGivenX p x (hp x)) (condΘGivenX q x (hq x)))
+      + (∑ x : X, (marginalX p).toFun x *
+          KL (condΘGivenX p x (hp x)) (condΘGivenX q x (hq x))) := by
+  unfold KL
+  -- expand sum over product and prove the pointwise decomposition for each `x`
+  rw [← Fintype.sum_prod_type']
+  refine Finset.sum_congr rfl ?_
+  intro x _
+  let pX := (marginalX p).toFun x
+  let qX := (marginalX q).toFun x
+  have hpX_ne : pX ≠ 0 := (hp x).ne'
+  have hqX_ne : qX ≠ 0 := (hq x).ne'
+  -- rewrite each joint-term using `klTerm_mul` and then sum
+  calc
+    (∑ θ, klTerm (p.toFun (x, θ)) (q.toFun (x, θ)))
+        = ∑ θ, klTerm (pX * (condΘGivenX p x (hp x)).toFun θ) (qX * (condΘGivenX q x (hq x)).toFun θ) := by
+      apply Finset.sum_congr rfl
+      intro θ _
+      simp [condΘGivenX_toFun]
+    _ = ∑ θ, ( (condΘGivenX p x (hp x)).toFun θ * klTerm pX qX
+              + pX * klTerm ( (condΘGivenX p x (hp x)).toFun θ ) ( (condΘGivenX q x (hq x)).toFun θ ) ) := by
+      apply Finset.sum_congr rfl
+      intro θ _
+      simp [klTerm_mul hpX_ne hqX_ne]
+    _ = klTerm pX qX * ∑ θ, (condΘGivenX p x (hp x)).toFun θ
+        + pX * ∑ θ, klTerm ( (condΘGivenX p x (hp x)).toFun θ ) ( (condΘGivenX q x (hq x)).toFun θ ) := by
+      rw [Finset.sum_add_distrib, Finset.sum_mul, Finset.mul_sum]
+    _ = klTerm pX qX + pX * KL (condΘGivenX p x (hp x)) (condΘGivenX q x (hq x)) := by
+      simp [KL, condΘGivenX_toFun]
+
 
 /-- Jeffrey update is ME under fixed `x`-marginal constraint. -/
 def jeffrey_is_ME

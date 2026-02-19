@@ -1,5 +1,6 @@
 import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Data.Fintype.Basic
+import InfoGeometry.Basic
 import Mathlib.GroupTheory.GroupAction.Basic
 import Mathlib.Tactic.Positivity
 import Mathlib.Tactic.Ring
@@ -57,7 +58,7 @@ lemma uniform_of_all_eq {α : Type*} [Fintype α] [Nonempty α]
     exact_mod_cast Fintype.card_ne_zero
   have hcval : c = 1 / (Fintype.card α : ℝ) := by
     have hEq : (Fintype.card α : ℝ) * c = 1 := by
-      simpa [hsum] using p.sum_eq_one
+      simpa [hsum] using p.sum_one
     have hEq' : c * (Fintype.card α : ℝ) = 1 := by
       simpa [mul_comm] using hEq
     exact (eq_div_iff hcard).2 hEq'

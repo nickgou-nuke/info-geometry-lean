@@ -1,6 +1,6 @@
 // Lean compiler output
 // Module: InfoGeometry.Prequantum.Bundle
-// Imports: public import Init public import InfoGeometry.Prequantum.Scaling public import InfoGeometry.Projective.Rays public import Mathlib
+// Imports: public import Init public import InfoGeometry.Prequantum.Scaling public import InfoGeometry.Projective.Rays
 #include <lean/lean.h>
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wunused-parameter"
@@ -13,9 +13,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_PrequantumData_holonomyScale___boxed(lean_object*);
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_PrequantumData_holonomyScale(lean_object*);
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_PrequantumData_holonomyScale(lean_object* x_1) {
+LEAN_EXPORT lean_object* lp_infogeometry_PrequantumData_holonomyScale___boxed(lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_PrequantumData_holonomyScale(lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_PrequantumData_holonomyScale(lean_object* x_1) {
 _start:
 {
 lean_object* x_2; 
@@ -24,34 +24,30 @@ lean_inc(x_2);
 return x_2;
 }
 }
-LEAN_EXPORT lean_object* lp_info_x2dgeometry_PrequantumData_holonomyScale___boxed(lean_object* x_1) {
+LEAN_EXPORT lean_object* lp_infogeometry_PrequantumData_holonomyScale___boxed(lean_object* x_1) {
 _start:
 {
 lean_object* x_2; 
-x_2 = lp_info_x2dgeometry_PrequantumData_holonomyScale(x_1);
+x_2 = lp_infogeometry_PrequantumData_holonomyScale(x_1);
 lean_dec_ref(x_1);
 return x_2;
 }
 }
 lean_object* initialize_Init(uint8_t builtin);
-lean_object* initialize_info_x2dgeometry_InfoGeometry_Prequantum_Scaling(uint8_t builtin);
-lean_object* initialize_info_x2dgeometry_InfoGeometry_Projective_Rays(uint8_t builtin);
-lean_object* initialize_mathlib_Mathlib(uint8_t builtin);
+lean_object* initialize_infogeometry_InfoGeometry_Prequantum_Scaling(uint8_t builtin);
+lean_object* initialize_infogeometry_InfoGeometry_Projective_Rays(uint8_t builtin);
 static bool _G_initialized = false;
-LEAN_EXPORT lean_object* initialize_info_x2dgeometry_InfoGeometry_Prequantum_Bundle(uint8_t builtin) {
+LEAN_EXPORT lean_object* initialize_infogeometry_InfoGeometry_Prequantum_Bundle(uint8_t builtin) {
 lean_object * res;
 if (_G_initialized) return lean_io_result_mk_ok(lean_box(0));
 _G_initialized = true;
 res = initialize_Init(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
-res = initialize_info_x2dgeometry_InfoGeometry_Prequantum_Scaling(builtin);
+res = initialize_infogeometry_InfoGeometry_Prequantum_Scaling(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
-res = initialize_info_x2dgeometry_InfoGeometry_Projective_Rays(builtin);
-if (lean_io_result_is_error(res)) return res;
-lean_dec_ref(res);
-res = initialize_mathlib_Mathlib(builtin);
+res = initialize_infogeometry_InfoGeometry_Projective_Rays(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 return lean_io_result_mk_ok(lean_box(0));

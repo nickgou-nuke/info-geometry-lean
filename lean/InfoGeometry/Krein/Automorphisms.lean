@@ -1,11 +1,12 @@
 import InfoGeometry.Krein.Metric
-import Mathlib
 
 section KreinClifford
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E]
 
 section Automorphisms
+
+variable [NormedSpace ℝ E]
 
 /-- Conjugation action of `U` on doubled-space endomorphisms. -/
 noncomputable def conjugateCLM
@@ -91,6 +92,8 @@ lemma preservesClifford_of_conjugate
     preservesClifford (E := E) U J ε := by
   intro hCl
   exact hCl.conjugate (E := E) U
+
+end Automorphisms
 
 section MetricTransport
 
@@ -284,7 +287,5 @@ theorem noAxiom_witness_flowConjugate_infinitesimal
   flowConjugate_infinitesimal (E := E) F hB t
 
 end NoAxiomSanity
-
-end Automorphisms
 
 end KreinClifford

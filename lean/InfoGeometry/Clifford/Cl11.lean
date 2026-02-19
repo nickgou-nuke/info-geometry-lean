@@ -1,11 +1,13 @@
-import Mathlib
+import Mathlib.Analysis.Normed.Group.Defs
+import Mathlib.Analysis.Normed.Module.Basic
+import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
 
 section KreinClifford
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Doubled space `E ⊕ E` (geometric doubling of primal/dual sectors). -/
-abbrev DoubledSpace (E : Type*) := E × E
+abbrev DoubledSpace (E : Type) := E × E
 
 /-- Swap involution `J(x, y) = (y, x)`. -/
 def modularJ : DoubledSpace E →L[ℝ] DoubledSpace E where

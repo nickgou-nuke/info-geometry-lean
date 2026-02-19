@@ -1,9 +1,13 @@
 import InfoGeometry.Clifford.Cl11
-import Mathlib
+import InfoGeometry.Core.Involution
+import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.Algebra.Lie.Submodule
+
+open InfoGeometry.Core
 
 section KreinClifford
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Commutator bracket on doubled-space endomorphisms. -/
 def clmComm
@@ -84,35 +88,45 @@ def inGradePlus (v : DoubledSpace E) : Prop := modularJ (E := E) v = v
 /-- `-1` eigenspace predicate for the grading involution `J`. -/
 def inGradeMinus (v : DoubledSpace E) : Prop := modularJ (E := E) v = -v
 
+/-- `modularJ` packaged as an involution on doubled vectors. -/
+def modularJInvolution : InvolutiveAutomorphism (DoubledSpace E) where
+  toFun := modularJ (E := E)
+  involutive := by
+    intro v
+    rcases v with ⟨x, y⟩
+    simp [modularJ]
+
+instance modularJInvolution_preservesLinear :
+    PreservesLinear (DoubledSpace E) (modularJInvolution (E := E)) where
+  map_add := by
+    intro x y
+    simp [modularJInvolution, modularJ]
+  map_smul := by
+    intro a x
+    simp [modularJInvolution, modularJ]
+
 /-- Grade `+` projector `(Id + J)/2`. -/
 noncomputable def gradePlusPart (v : DoubledSpace E) : DoubledSpace E :=
-  ((2 : ℝ)⁻¹) • (v + modularJ (E := E) v)
+  Projector.plus (θ := modularJInvolution (E := E)) v
 
 /-- Grade `-` projector `(Id - J)/2`. -/
 noncomputable def gradeMinusPart (v : DoubledSpace E) : DoubledSpace E :=
-  ((2 : ℝ)⁻¹) • (v - modularJ (E := E) v)
+  Projector.minus (θ := modularJInvolution (E := E)) v
 
 lemma gradePlusPart_in_plus (v : DoubledSpace E) :
     inGradePlus (E := E) (gradePlusPart (E := E) v) := by
-  ext <;> simp [gradePlusPart, modularJ, add_comm]
+  simpa [inGradePlus, gradePlusPart, modularJInvolution]
+    using (Projector.plus_fixed (θ := modularJInvolution (E := E)) v)
 
 lemma gradeMinusPart_in_minus (v : DoubledSpace E) :
     inGradeMinus (E := E) (gradeMinusPart (E := E) v) := by
-  ext <;> simp [gradeMinusPart, modularJ, sub_eq_add_neg, add_comm]
+  simpa [inGradeMinus, gradeMinusPart, modularJInvolution]
+    using (Projector.minus_neg_fixed (θ := modularJInvolution (E := E)) v)
 
 lemma grade_decomposition (v : DoubledSpace E) :
     v = gradePlusPart (E := E) v + gradeMinusPart (E := E) v := by
-  have hhalf : ((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) = 1 := by norm_num
-  ext <;> simp [gradePlusPart, gradeMinusPart, modularJ, sub_eq_add_neg, add_comm,
-    add_left_comm, add_assoc, smul_add]
-  · calc
-      v.1 = (1 : ℝ) • v.1 := by simp
-      _ = (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • v.1 := by simp [hhalf]
-      _ = (2 : ℝ)⁻¹ • v.1 + (2 : ℝ)⁻¹ • v.1 := by simp [add_smul]
-  · calc
-      v.2 = (1 : ℝ) • v.2 := by simp
-      _ = (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • v.2 := by simp [hhalf]
-      _ = (2 : ℝ)⁻¹ • v.2 + (2 : ℝ)⁻¹ • v.2 := by simp [add_smul]
+  simpa [gradePlusPart, gradeMinusPart] using
+    (Projector.decomposition (θ := modularJInvolution (E := E)) v)
 
 lemma spectralEpsilon_swaps_grades_plus_to_minus
     {v : DoubledSpace E}
@@ -145,6 +159,164 @@ def isOdd (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
 lemma isEven_iff_gradeZero (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
     isEven (E := E) A ↔ isGradeZero (E := E) A := Iff.rfl
 
+/-- Even endomorphisms form a Lie subalgebra under the commutator. -/
+def evenLieSubalgebra :
+    LieSubalgebra ℝ (DoubledSpace E →L[ℝ] DoubledSpace E) where
+  carrier := {A | isEven (E := E) A}
+  zero_mem' := by
+    unfold isEven
+    simp
+  add_mem' := by
+    intro A B hA hB
+    unfold isEven at *
+    calc
+      (modularJ (E := E)).comp (A + B)
+          = (modularJ (E := E)).comp A + (modularJ (E := E)).comp B := by
+              simp [ContinuousLinearMap.comp_add]
+      _ = A.comp (modularJ (E := E)) + B.comp (modularJ (E := E)) := by
+            rw [hA, hB]
+      _ = (A + B).comp (modularJ (E := E)) := by
+            simp [ContinuousLinearMap.add_comp]
+  smul_mem' := by
+    intro a A hA
+    unfold isEven at *
+    calc
+      (modularJ (E := E)).comp (a • A)
+          = a • ((modularJ (E := E)).comp A) := by
+              simp
+      _ = a • (A.comp (modularJ (E := E))) := by rw [hA]
+      _ = (a • A).comp (modularJ (E := E)) := by
+            simp [ContinuousLinearMap.smul_comp]
+  lie_mem' := by
+    intro A B hA hB
+    change isEven (E := E) (clmComm A B)
+    exact (isEven_iff_gradeZero (E := E) (A := clmComm A B)).2 <|
+      gradeZero_closed_comm (E := E)
+        ((isEven_iff_gradeZero (E := E) (A := A)).1 hA)
+        ((isEven_iff_gradeZero (E := E) (A := B)).1 hB)
+
+/-- Odd endomorphisms form a linear subspace (submodule), but not a Lie subalgebra. -/
+def oddSubmodule :
+    Submodule ℝ (DoubledSpace E →L[ℝ] DoubledSpace E) where
+  carrier := {A | isOdd (E := E) A}
+  zero_mem' := by
+    unfold isOdd
+    simp
+  add_mem' := by
+    intro A B hA hB
+    unfold isOdd at *
+    calc
+      (modularJ (E := E)).comp (A + B)
+          = (modularJ (E := E)).comp A + (modularJ (E := E)).comp B := by
+              simp [ContinuousLinearMap.comp_add]
+      _ = -(A.comp (modularJ (E := E))) + -(B.comp (modularJ (E := E))) := by
+            rw [hA, hB]
+      _ = -(A.comp (modularJ (E := E)) + B.comp (modularJ (E := E))) := by
+            abel_nf
+      _ = -((A + B).comp (modularJ (E := E))) := by
+            simp [ContinuousLinearMap.add_comp]
+  smul_mem' := by
+    intro a A hA
+    unfold isOdd at *
+    calc
+      (modularJ (E := E)).comp (a • A)
+          = a • ((modularJ (E := E)).comp A) := by
+              simp
+      _ = a • (-(A.comp (modularJ (E := E)))) := by rw [hA]
+      _ = -((a • A).comp (modularJ (E := E))) := by
+            simp [ContinuousLinearMap.smul_comp]
+
+/-- Bracket closure `[𝔨, 𝔨] ⊆ 𝔨` for even endomorphisms. -/
+lemma bracket_even_even_mem_even
+    {A B : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hA : isEven (E := E) A)
+    (hB : isEven (E := E) B) :
+    isEven (E := E) (clmComm A B) := by
+  exact (isEven_iff_gradeZero (E := E) (A := clmComm A B)).2 <|
+    gradeZero_closed_comm (E := E)
+      ((isEven_iff_gradeZero (E := E) (A := A)).1 hA)
+      ((isEven_iff_gradeZero (E := E) (A := B)).1 hB)
+
+/-- Bracket closure `[𝔨, 𝔭] ⊆ 𝔭` for even/odd endomorphisms. -/
+lemma bracket_even_odd_mem_odd
+    {A B : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hA : isEven (E := E) A)
+    (hB : isOdd (E := E) B) :
+    isOdd (E := E) (clmComm A B) := by
+  unfold isEven isOdd at *
+  calc
+    (modularJ (E := E)).comp (clmComm A B)
+        = (modularJ (E := E)).comp (A.comp B) - (modularJ (E := E)).comp (B.comp A) := by
+            simp [clmComm, ContinuousLinearMap.comp_sub]
+    _ = ((modularJ (E := E)).comp A).comp B - ((modularJ (E := E)).comp B).comp A := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = (A.comp (modularJ (E := E))).comp B - (-(B.comp (modularJ (E := E)))).comp A := by
+          rw [hA, hB]
+    _ = A.comp ((modularJ (E := E)).comp B) - (-(B.comp (modularJ (E := E)))).comp A := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = A.comp (-(B.comp (modularJ (E := E)))) - (-(B.comp (modularJ (E := E)))).comp A := by
+          rw [hB]
+    _ = -(A.comp (B.comp (modularJ (E := E)))) + (B.comp (modularJ (E := E))).comp A := by
+          simp
+    _ = -((A.comp B).comp (modularJ (E := E))) + B.comp ((modularJ (E := E)).comp A) := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = -((A.comp B).comp (modularJ (E := E))) + B.comp (A.comp (modularJ (E := E))) := by
+          rw [hA]
+    _ = -((A.comp B).comp (modularJ (E := E))) + (B.comp A).comp (modularJ (E := E)) := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = -(((A.comp B).comp (modularJ (E := E)) - (B.comp A).comp (modularJ (E := E)))) := by
+          abel_nf
+    _ = -(((A.comp B - B.comp A)).comp (modularJ (E := E))) := by
+          simp [ContinuousLinearMap.sub_comp]
+    _ = -((clmComm A B).comp (modularJ (E := E))) := by
+          rfl
+
+/-- Bracket closure `[𝔭, 𝔭] ⊆ 𝔨` for odd endomorphisms. -/
+lemma bracket_odd_odd_mem_even
+    {A B : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hA : isOdd (E := E) A)
+    (hB : isOdd (E := E) B) :
+    isEven (E := E) (clmComm A B) := by
+  unfold isEven isOdd at *
+  calc
+    (modularJ (E := E)).comp (clmComm A B)
+        = (modularJ (E := E)).comp (A.comp B) - (modularJ (E := E)).comp (B.comp A) := by
+            simp [clmComm, ContinuousLinearMap.comp_sub]
+    _ = ((modularJ (E := E)).comp A).comp B - ((modularJ (E := E)).comp B).comp A := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = (-(A.comp (modularJ (E := E)))).comp B - (-(B.comp (modularJ (E := E)))).comp A := by
+          rw [hA, hB]
+    _ = -(A.comp ((modularJ (E := E)).comp B)) + B.comp ((modularJ (E := E)).comp A) := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = -(A.comp (-(B.comp (modularJ (E := E))))) + B.comp (-(A.comp (modularJ (E := E)))) := by
+          rw [hB, hA]
+    _ = A.comp (B.comp (modularJ (E := E))) + -(B.comp (A.comp (modularJ (E := E)))) := by
+          simp
+    _ = A.comp (B.comp (modularJ (E := E))) - B.comp (A.comp (modularJ (E := E))) := by
+          simp [sub_eq_add_neg]
+    _ = (A.comp B).comp (modularJ (E := E)) - (B.comp A).comp (modularJ (E := E)) := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = (clmComm A B).comp (modularJ (E := E)) := by
+          simp [clmComm, ContinuousLinearMap.sub_comp]
+
+/-- Canonical triple product on the odd sector: `[[X, Y], Z]`. -/
+def oddTriple
+    (A B C : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    DoubledSpace E →L[ℝ] DoubledSpace E :=
+  clmComm (clmComm A B) C
+
+/-- Triple closure `[𝔭, [𝔭, 𝔭]] ⊆ 𝔭`. -/
+lemma odd_triple_mem_odd
+    {A B C : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hA : isOdd (E := E) A)
+    (hB : isOdd (E := E) B)
+    (hC : isOdd (E := E) C) :
+    isOdd (E := E) (oddTriple A B C) := by
+  unfold oddTriple
+  exact bracket_even_odd_mem_odd (E := E)
+    (A := clmComm A B) (B := C)
+    (bracket_odd_odd_mem_even (E := E) hA hB) hC
+
 /-- Chirality/grade projectors as endomorphisms `(Id ± J)/2`. -/
 noncomputable def gradePlusProj : DoubledSpace E →L[ℝ] DoubledSpace E :=
   ((2 : ℝ)⁻¹) •
@@ -166,11 +338,13 @@ noncomputable def spectralMinusProj : DoubledSpace E →L[ℝ] DoubledSpace E :=
 
 lemma gradePlusProj_apply (v : DoubledSpace E) :
     gradePlusProj (E := E) v = gradePlusPart (E := E) v := by
-  simp [gradePlusProj, gradePlusPart]
+  unfold gradePlusPart
+  simp [gradePlusProj, Projector.plus, modularJInvolution, smul_add]
 
 lemma gradeMinusProj_apply (v : DoubledSpace E) :
     gradeMinusProj (E := E) v = gradeMinusPart (E := E) v := by
-  simp [gradeMinusProj, gradeMinusPart]
+  unfold gradeMinusPart
+  simp [gradeMinusProj, Projector.minus, modularJInvolution]
 
 lemma projector_commutator_gradePlus_spectralPlus :
     clmComm (gradePlusProj (E := E)) (spectralPlusProj (E := E))

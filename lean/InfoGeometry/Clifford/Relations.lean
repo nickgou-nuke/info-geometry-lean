@@ -1,9 +1,8 @@
 import InfoGeometry.Clifford.Grading
-import Mathlib
 
 section KreinClifford
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Dilation operator extracted from the commutator `[J, ε]`. -/
 noncomputable def dilationOperator : DoubledSpace E →L[ℝ] DoubledSpace E :=

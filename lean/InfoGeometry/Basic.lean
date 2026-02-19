@@ -68,13 +68,13 @@ end StrictProbabilityDist
 /-- Finite probability vectors (`FinProb`) kept for compatibility with older modules.
 
 This is a thin, record-style finite probability type with the same field names
-used across the repository (`toFun`, `nonneg`, `sum_eq_one`).  We provide
+used across the repository (`toFun`, `nonneg`, `sum_one`).  We provide
 conversions to/from `ProbabilityDist` so callers can use either API.
 -/
 structure FinProb (α : Type*) [Fintype α] where
   toFun : α → ℝ
   nonneg : ∀ x, 0 ≤ toFun x
-  sum_eq_one : ∑ x, toFun x = 1
+  sum_one : ∑ x, toFun x = 1
 
 instance {α : Type*} [Fintype α] : CoeFun (FinProb α) (fun _ => α → ℝ) where
   coe := FinProb.toFun

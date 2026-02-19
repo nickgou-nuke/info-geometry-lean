@@ -126,7 +126,7 @@ noncomputable def marginalX (p : FinProb (X × Θ)) : FinProb X := by
       apply Finset.sum_nonneg
       intro θ _
       exact p.nonneg (x, θ),
-    sum_eq_one := by
+    sum_one := by
       calc
         (∑ x : X, ∑ θ : Θ, p.toFun (x, θ)) = ∑ z : X × Θ, p.toFun z := by rw [← Fintype.sum_prod_type']
         _ = 1 := p.sum_one
@@ -142,7 +142,7 @@ noncomputable def marginalΘ (p : FinProb (X × Θ)) : FinProb Θ := by
       apply Finset.sum_nonneg
       intro x _
       exact p.nonneg (x, θ),
-    sum_eq_one := by
+    sum_one := by
       calc
         (∑ θ : Θ, ∑ x : X, p.toFun (x, θ)) = ∑ x, ∑ θ, p.toFun (x, θ) := by rw [Finset.sum_comm]
         _ = ∑ z : X × Θ, p.toFun z := by rw [← Fintype.sum_prod_type']
@@ -169,7 +169,7 @@ noncomputable def assemble (pX : FinProb X) (pΘ_givenX : X → FinProb Θ) : Fi
     nonneg := by
       intro xt
       exact mul_nonneg (pX.nonneg xt.1) ((pΘ_givenX xt.1).nonneg xt.2),
-    sum_eq_one := by
+    sum_one := by
       calc
         (∑ z : X × Θ, pX.toFun z.1 * (pΘ_givenX z.1).toFun z.2)
           = ∑ x : X, ∑ θ : Θ, pX.toFun x * (pΘ_givenX x).toFun θ := by rw [← Fintype.sum_prod_type']
@@ -214,7 +214,7 @@ noncomputable def factorizedJoint
     nonneg := by
       intro xt
       exact mul_nonneg (qΘ.nonneg xt.2) ((qX_givenΘ xt.2).nonneg xt.1),
-    sum_eq_one := by
+    sum_one := by
       calc
         (∑ z : X × Θ, qΘ.toFun z.2 * (qX_givenΘ z.2).toFun z.1)
           = ∑ x : X, ∑ θ : Θ, qΘ.toFun θ * (qX_givenΘ θ).toFun x := by

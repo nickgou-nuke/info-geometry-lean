@@ -18,13 +18,7 @@ section Discrete
 variable {α : Type*} [Fintype α]
 
 /-- Finite probability vectors (`ℝ`-valued). -/
-structure FinProb (α : Type*) [Fintype α] where
-  toFun : α → ℝ
-  nonneg : ∀ a, 0 ≤ toFun a
-  sum_eq_one : (∑ a, toFun a) = 1
-
-instance : CoeFun (FinProb α) (fun _ => α → ℝ) := ⟨FinProb.toFun⟩
-attribute [simp] FinProb.sum_eq_one
+abbrev FinProb (α : Type*) [Fintype α] := InfoGeometry.FinProb α
 
 /-- Invariance of a prior under a group action. -/
 def InvariantUnder {G : Type*} [Group G] {α : Type*} [Fintype α] [MulAction G α]

@@ -105,7 +105,7 @@ by
   refine
   { toFun := fun x => ∑ θ, p (x, θ)
     nonneg := ?_
-    sum_eq_one := ?_ }
+    sum_one := ?_ }
   · intro x
     exact Finset.sum_nonneg (by intro θ hθ; simpa using p.nonneg (x, θ))
   · -- ∑ x ∑ θ p(x,θ) = ∑ (x,θ) p(x,θ) = 1
@@ -118,7 +118,7 @@ by
   refine
   { toFun := fun θ => ∑ x, p (x, θ)
     nonneg := ?_
-    sum_eq_one := ?_ }
+    sum_one := ?_ }
   · intro θ
     exact Finset.sum_nonneg (by intro x hx; simpa using p.nonneg (x, θ))
   · -- ∑ θ ∑ x p(x,θ) = ∑ (x,θ) p(x,θ) = 1
@@ -148,7 +148,7 @@ by
   refine
   { toFun := fun xt => pX xt.1 * (pΘ_givenX xt.1) xt.2
     nonneg := ?_
-    sum_eq_one := ?_ }
+    sum_one := ?_ }
   · intro xt
     exact mul_nonneg (pX.nonneg xt.1) ((pΘ_givenX xt.1).nonneg xt.2)
   · -- ∑_{x,θ} pX(x) p(θ|x) = ∑_x pX(x) * (∑_θ p(θ|x)) = ∑_x pX(x) = 1
@@ -2605,10 +2605,10 @@ noncomputable def jointYT (pT_givenX : X → FinProb T) : FinProb (Y × T) :=
     refine Finset.sum_nonneg ?_
     intro x hx
     exact mul_nonneg (prob.pXY.nonneg (x,y)) ((pT_givenX x).nonneg t)
-  sum_eq_one := by
+  sum_one := by
     classical
     -- ∑_{y,t} ∑_x p(x,y) p(t|x) = ∑_x (∑_y p(x,y)) (∑_t p(t|x)) = 1
-    -- This is a standard Fubini + `sum_eq_one` for each kernel.
+    -- This is a standard Fubini + `sum_one` for each kernel.
     -- The cleanest proof uses `Finset.sum_sigma'`-style rearrangements.
     -- You likely already have a lemma in `Prob` for “assemble then marginalize”.
     -- If not, prove with `Finset` algebra.
@@ -2851,7 +2851,7 @@ noncomputable def diracFinProb (α : Type*) [Fintype α] [DecidableEq α] (a0 : 
 { toFun := fun a => if a = a0 then 1 else 0
   nonneg := by
     intro a; by_cases h : a = a0 <;> simp [h]
-  sum_eq_one := by
+  sum_one := by
     classical
     simpa using (Finset.sum_ite_eq' (s := (Finset.univ : Finset α)) (a := a0) (b := (1 : ℝ))) }
 
@@ -2861,7 +2861,7 @@ noncomputable def normalizeFinProb (α : Type*) [Fintype α]
   nonneg := by
     intro a
     exact div_nonneg (hg a) (le_of_lt hsum)
-  sum_eq_one := by
+  sum_one := by
     classical
     have hden : (∑ a, g a) ≠ 0 := ne_of_gt hsum
     simp [Finset.sum_div, hden] }
@@ -2890,7 +2890,7 @@ noncomputable def jointYT (pT_givenX : X → FinProb T) : FinProb (Y × T) :=
     refine Finset.sum_nonneg ?_
     intro x hx
     exact mul_nonneg (prob.pXY.nonneg (x, y)) ((pT_givenX x).nonneg t)
-  sum_eq_one := by
+  sum_one := by
     classical
     sorry }
 
@@ -2913,7 +2913,7 @@ by
             exact mul_nonneg (prob.pXY.nonneg (x, y)) ((pT_givenX x).nonneg t)
           have hpt : 0 < pT t := lt_of_le_of_ne (pT.nonneg t) (Ne.symm ht)
           exact div_nonneg hg (le_of_lt hpt)
-        sum_eq_one := by
+        sum_one := by
           classical
           have hpt : 0 < pT t := lt_of_le_of_ne (pT.nonneg t) (Ne.symm ht)
           have hsum : (∑ y : Y, g y) = pT t := by

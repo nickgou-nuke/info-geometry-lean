@@ -237,7 +237,7 @@
         ["InfoGeometry.MaxEnt.Finite:importAllArts", "8a7b42a22234b61d"],
         ["InfoGeometry.EntropicInference transitive imports (legacy)",
          "b315cd38828e1607"],
-        ["InfoGeometry.EntropicInference:importAllArts", "327d46862385bc85"],
+        ["InfoGeometry.EntropicInference:importAllArts", "f8c2238fe2e71aa0"],
         ["InfoGeometry.TransformationGroups transitive imports (legacy)",
          "eb20ea954c464a7e"],
         ["InfoGeometry.TransformationGroups:importAllArts",
@@ -253,4 +253,4 @@
    "ead5d971805471a6"],
   ["options", "00000000000006bb"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "77daf1f1a093e9e6"}
+ "depHash": "d1f5bf2abc7f71f9"}

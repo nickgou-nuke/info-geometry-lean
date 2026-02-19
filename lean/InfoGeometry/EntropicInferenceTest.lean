@@ -35,6 +35,15 @@ example {X Θ : Type} [Fintype X] [Fintype Θ] (p : FinProb (X × Θ)) (x : X)
 by
   simp [condΘGivenX_toFun]
 
+-- KL chain-rule (pointwise decomposition test)
+example {X Θ : Type} [Fintype X] [Fintype Θ]
+    (p q : FinProb (X × Θ))
+    (hp : ∀ x, 0 < (marginalX p).toFun x)
+    (hq : ∀ x, 0 < (marginalX q).toFun x) :
+  KL p q = KL (marginalX p) (marginalX q) + ∑ x, (marginalX p).toFun x *
+    KL (condΘGivenX p x (hp x)) (condΘGivenX q x (hq x)) := by
+  exact KL_chain_rule p q hq hp
+
 -- Test: normalize produces a valid FinProb
 example {α : Type} [Fintype α] (w : α → ℝ) (hw : ∀ a, 0 ≤ w a) (hZ : 0 < ∑ a, w a) :
   (∀ a, 0 ≤ normalize w hw hZ a) ∧ (∑ a, normalize w hw hZ a = 1) :=

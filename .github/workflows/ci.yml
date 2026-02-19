@@ -35,3 +35,11 @@ jobs:
     - name: Build project
       working-directory: lean
       run: lake build
+
+    - name: Verify archive exclusion
+      working-directory: lean
+      run: |
+        if rg -n "all_lean_files_combined" InfoGeometry.lean InfoGeometry -g '*.lean'; then
+          echo "Archive file must not be imported by canonical modules"
+          exit 1
+        fi

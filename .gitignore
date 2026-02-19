@@ -1,0 +1,6 @@
+# Lean build/tooling artifacts
+lean/.lake/
+
+# Generated aggregation artifacts
+lean/all_lean_files.txt
+lean/all_lean_files_combined.lean

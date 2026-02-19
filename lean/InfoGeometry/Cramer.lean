@@ -1,4 +1,6 @@
-import Mathlib
+import Mathlib.Data.Finset.Lattice.Fold
+import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.Linarith
 
 section LargeDeviations
 

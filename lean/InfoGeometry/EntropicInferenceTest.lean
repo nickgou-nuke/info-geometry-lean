@@ -23,6 +23,18 @@ by
   · intro xt; exact (assemble pX pΘ_givenX).nonneg xt
   · exact (assemble pX pΘ_givenX).sum_one
 
+-- Test: marginal of an assembled joint is the original marginal
+example {X Θ : Type} [Fintype X] [Fintype Θ] (pX : FinProb X) (pΘ_givenX : X → FinProb Θ) :
+  marginalX (assemble pX pΘ_givenX) = pX := by
+  exact marginalX_assemble pX pΘ_givenX
+
+-- Test: `condΘGivenX` uses the expected pointwise division formula
+example {X Θ : Type} [Fintype X] [Fintype Θ] (p : FinProb (X × Θ)) (x : X)
+    (hx : 0 < (marginalX p).toFun x) (θ : Θ) :
+  (condΘGivenX p x hx).toFun θ = p.toFun (x, θ) / (marginalX p).toFun x :=
+by
+  simp [condΘGivenX_toFun]
+
 -- Test: normalize produces a valid FinProb
 example {α : Type} [Fintype α] (w : α → ℝ) (hw : ∀ a, 0 ≤ w a) (hZ : 0 < ∑ a, w a) :
   (∀ a, 0 ≤ normalize w hw hZ a) ∧ (∑ a, normalize w hw hZ a = 1) :=
@@ -30,3 +42,14 @@ by
   constructor
   · intro a; exact (normalize w hw hZ).nonneg a
   · exact (normalize w hw hZ).sum_one
+
+-- Test: round-trip conversions between `FinProb` and `ProbabilityDist`
+example {α : Type} [Fintype α] (p : FinProb α) :
+  ((p : InfoGeometry.ProbabilityDist α).toFinProb = p) := by simp
+
+example {α : Type} [Fintype α] (P : InfoGeometry.ProbabilityDist α) :
+  ((P.toFinProb : InfoGeometry.ProbabilityDist α) = P) := by simp
+
+-- Test: expectation compatibility for coercions
+example {α : Type} [Fintype α] [DecidableEq α] (p : FinProb α) (f : α → ℝ) :
+  InfoGeometry.expectation (p : InfoGeometry.ProbabilityDist α) f = ∑ x, p.toFun x * f x := by simp

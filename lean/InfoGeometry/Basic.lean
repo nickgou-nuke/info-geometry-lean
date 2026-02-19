@@ -33,13 +33,13 @@ instance {α : Type} : CoeFun (EmpiricalCounts α) (fun _ => α → ℕ) where
   coe N := N.count
 
 
-structure ProbabilityDist (α : Type) [Fintype α] where
+structure ProbabilityDist (α : Type*) [Fintype α] where
   prob : α → ℝ
   sum_one : ∑ x, prob x = 1
   nonneg : ∀ x, 0 ≤ prob x
 
 /-- Strict finite probability distribution: pointwise positivity. -/
-structure StrictProbabilityDist (α : Type) [Fintype α] where
+structure StrictProbabilityDist (α : Type*) [Fintype α] where
   prob : α → ℝ
   sum_one : ∑ x, prob x = 1
   pos : ∀ x, 0 < prob x
@@ -79,18 +79,51 @@ structure FinProb (α : Type*) [Fintype α] where
 instance {α : Type*} [Fintype α] : CoeFun (FinProb α) (fun _ => α → ℝ) where
   coe := FinProb.toFun
 
-/-- `sum_eq_one` as a `simp` lemma for `FinProb`. -/
-@[simp] lemma FinProb.sum_eq_one (p : FinProb α) : ∑ x, p.toFun x = 1 := p.sum_eq_one
+/-- Mark the `sum_one` projection on `FinProb` as `simp`. -/
+attribute [simp] FinProb.sum_one
 
 /-- Convert `FinProb` → `ProbabilityDist` (core representation). -/
 def FinProb.toProbabilityDist {α : Type*} [Fintype α] (p : FinProb α) : ProbabilityDist α :=
-  { prob := p.toFun, sum_one := p.sum_eq_one, nonneg := p.nonneg }
+  { prob := p.toFun, sum_one := p.sum_one, nonneg := p.nonneg }
 
 /-- Convert `ProbabilityDist` → `FinProb` for compatibility. -/
 def ProbabilityDist.toFinProb {α : Type*} [Fintype α] (P : ProbabilityDist α) : FinProb α :=
-  { toFun := P.prob, nonneg := P.nonneg, sum_eq_one := P.sum_one }
+  { toFun := P.prob, nonneg := P.nonneg, sum_one := P.sum_one }
 
 instance {α : Type*} [Fintype α] : Coe (FinProb α) (ProbabilityDist α) := ⟨FinProb.toProbabilityDist⟩
+
+/-- Normalize nonnegative weights into a `FinProb`. -/
+noncomputable def normalize {α : Type*} [Fintype α]
+    (w : α → ℝ) (hw : ∀ a, 0 ≤ w a) (hZ : 0 < (∑ a, w a)) : FinProb α := by
+  classical
+  let Z : ℝ := ∑ a, w a
+  have hZ0 : Z ≠ 0 := ne_of_gt hZ
+  refine { toFun := fun a => w a / Z, nonneg := ?, sum_one := ? }
+  · intro a; exact div_nonneg (hw a) (le_of_lt hZ)
+  · calc
+      (∑ a : α, w a / Z) = (∑ a : α, w a) / Z := by simp [div_eq_mul_inv, Finset.sum_mul]
+    _ = 1 := by simp [Z, hZ0]
+
+/-- Point mass / Dirac distribution on a finite type. -/
+noncomputable def dirac {α : Type*} [Fintype α] [DecidableEq α] (a0 : α) : FinProb α := by
+  classical
+  let w : α → ℝ := fun a => if a = a0 then (1 : ℝ) else 0
+  have hw : ∀ a, 0 ≤ w a := by intro a; by_cases h : a = a0 <;> simp [w, h]
+  have hZ : 0 < (∑ a, w a) := by simp [w]
+  exact normalize (w := w) hw hZ
+
+/-- In a finite probability vector some atom has strictly positive mass. -/
+@[simp] lemma FinProb.exists_pos {α : Type*} [Fintype α] (q : FinProb α) : ∃ a, 0 < q a := by
+  classical
+  by_contra h
+  push_neg at h
+  have hzero : ∀ a, q a = 0 := by
+    intro a
+    have : q a ≤ 0 := h a
+    have : q a = 0 := le_antisymm this (q.nonneg a)
+    exact this
+  have : (∑ a, q a) = 0 := by simp [hzero]
+  linarith [q.sum_one, this]
 
 /-!
   Note: All definitions below require [Fintype α] at use sites.

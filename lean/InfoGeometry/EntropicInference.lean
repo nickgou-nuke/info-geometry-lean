@@ -27,40 +27,17 @@ variable {α : Type} [Fintype α]
 /-- Use the canonical `FinProb` from `InfoGeometry.Basic`. -/
 abbrev FinProb (α : Type*) [Fintype α] := InfoGeometry.FinProb α
 
-/-- Helper: unnormalized weights normalized to a probability vector. -/
+/-- Delegate to the canonical `InfoGeometry.normalize` in `Basic.lean`. -/
 noncomputable def normalize
     {α : Type} [Fintype α]
-    (w : α → ℝ) (hw : ∀ a, 0 ≤ w a) (hZ : 0 < (∑ a, w a)) : FinProb α := by
-  classical
-  refine
-    { toFun := fun a => w a / (∑ b, w b)
-      nonneg := ?_
-      sum_eq_one := ?_ }
-  · intro a
-    exact div_nonneg (hw a) (le_of_lt hZ)
-  · have hZne : (∑ b, w b) ≠ 0 := ne_of_gt hZ
-    calc
-      (∑ a, w a / (∑ b, w b))
-          = (∑ a, w a) / (∑ b, w b) := by
-              symm
-              simpa using
-                (Finset.sum_div (s := (Finset.univ : Finset α))
-                  (f := fun a => w a) (a := ∑ b, w b))
-      _ = 1 := div_self hZne
+    (w : α → ℝ) (hw : ∀ a, 0 ≤ w a) (hZ : 0 < (∑ a, w a)) : FinProb α :=
+  InfoGeometry.normalize (w := w) (hw := hw) (hZ := hZ)
 
-/-- Point mass / Dirac distribution on a finite type. -/
+/-- Delegate to the canonical `InfoGeometry.dirac` in `Basic.lean`. -/
 noncomputable def dirac
     {α : Type} [Fintype α] [DecidableEq α]
-    (a0 : α) : FinProb α := by
-  classical
-  let w : α → ℝ := fun a => if a = a0 then (1 : ℝ) else 0
-  have hw : ∀ a, 0 ≤ w a := by
-    intro a
-    by_cases h : a = a0 <;> simp [w, h]
-  have hZ : 0 < (∑ a, w a) := by
-    -- `simp` computes `∑ a, ite (a=a0) 1 0 = 1`
-    simp [w]
-  exact normalize w hw hZ
+    (a0 : α) : FinProb α :=
+  InfoGeometry.dirac (a0 := a0)
 
 /-- KL term with `0 * log(0 / _) = 0` convention. -/
 noncomputable def klTerm (p q : ℝ) : ℝ :=
@@ -74,11 +51,9 @@ noncomputable def KL {α : Type} [Fintype α] (p q : FinProb α) : ℝ :=
 noncomputable def Entropy {α : Type} [Fintype α] (p q : FinProb α) : ℝ :=
   -KL p q
 
-/-- Convert local finite probability vectors to the core `InfoGeometry` type. -/
+/-- Forwarding wrapper to the canonical converter in `Basic.lean`. -/
 def toProbabilityDist {α : Type} [Fintype α] (p : FinProb α) : InfoGeometry.ProbabilityDist α :=
-  { prob := p.toFun
-    sum_one := p.sum_eq_one
-    nonneg := p.nonneg }
+  FinProb.toProbabilityDist p
 
 /-- Bridge to the core KL definition when the reference distribution has full support. -/
 lemma KL_eq_klDiv
@@ -154,7 +129,7 @@ noncomputable def marginalX (p : FinProb (X × Θ)) : FinProb X := by
     sum_eq_one := by
       calc
         (∑ x : X, ∑ θ : Θ, p.toFun (x, θ)) = ∑ z : X × Θ, p.toFun z := by rw [← Fintype.sum_prod_type']
-        _ = 1 := p.sum_eq_one
+        _ = 1 := p.sum_one
   }
 
 /-- Marginal on `Θ`. -/
@@ -171,7 +146,7 @@ noncomputable def marginalΘ (p : FinProb (X × Θ)) : FinProb Θ := by
       calc
         (∑ θ : Θ, ∑ x : X, p.toFun (x, θ)) = ∑ x, ∑ θ, p.toFun (x, θ) := by rw [Finset.sum_comm]
         _ = ∑ z : X × Θ, p.toFun z := by rw [← Fintype.sum_prod_type']
-        _ = 1 := p.sum_eq_one
+        _ = 1 := p.sum_one
   }
 
 /-- Conditional `p(θ | x)` by normalizing `θ ↦ p(x, θ)`; requires positive `x`-marginal. -/
@@ -204,7 +179,7 @@ noncomputable def assemble (pX : FinProb X) (pΘ_givenX : X → FinProb Θ) : Fi
               rw [Finset.mul_sum]
         _ = ∑ x : X, pX.toFun x * 1 := by simp
         _ = ∑ x : X, pX.toFun x := by simp
-        _ = 1 := pX.sum_eq_one
+        _ = 1 := pX.sum_one
   }
 
 /-- Bayes posterior from factorized prior `q(θ) q(x | θ)` after observing `x0`. -/
@@ -251,7 +226,7 @@ noncomputable def factorizedJoint
             rw [Finset.mul_sum]
         _ = ∑ θ : Θ, qΘ.toFun θ * 1 := by simp
         _ = ∑ θ : Θ, qΘ.toFun θ := by simp
-        _ = 1 := qΘ.sum_eq_one
+        _ = 1 := qΘ.sum_one
   }
 
 /-! ME characterization interfaces (finite case). -/

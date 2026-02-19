@@ -15,36 +15,14 @@ variable {α : Type*} [Fintype α]
 /-- Probability vectors on a finite type, valued in `ℝ`. -/
 abbrev FinProb (α : Type*) [Fintype α] := InfoGeometry.FinProb α
 
-/-- Point mass / Dirac distribution on a finite type. -/
+/-- Delegate to the canonical `InfoGeometry.dirac`. -/
 def dirac [DecidableEq α] (a0 : α) : FinProb α :=
-{ toFun := fun a => if a = a0 then (1 : ℝ) else 0
-  nonneg := by
-    intro a; by_cases h : a = a0 <;> simp [dirac, h]
-  sum_eq_one := by
-    classical
-    -- ∑ a, (if a=a0 then 1 else 0) = 1
-    simpa [dirac] }
+  InfoGeometry.dirac (a0 := a0)
 
-/-- Helper: normalize a nonnegative weight function into a probability vector. -/
+/-- Delegate to the canonical `InfoGeometry.normalize`. -/
 noncomputable def normalize (w : α → ℝ) (hw : ∀ a, 0 ≤ w a)
     (hZ : 0 < (∑ a, w a)) : FinProb α :=
-by
-  classical
-  let Z : ℝ := ∑ a, w a
-  have hZ0 : Z ≠ 0 := ne_of_gt hZ
-  refine
-  { toFun := fun a => w a / Z
-    nonneg := ?_
-    sum_eq_one := ?_ }
-  · intro a
-    exact div_nonneg (hw a) (le_of_lt hZ)
-  · -- ∑ a, w a / Z = (∑ a, w a) / Z = 1
-    calc
-      (∑ a : α, w a / Z) = (∑ a : α, w a) / Z := by
-        -- pull constant division out of the sum
-        simp [div_eq_mul_inv, Z, Finset.sum_mul]
-      _ = 1 := by
-        simp [Z, hZ0]
+  InfoGeometry.normalize (w := w) (hw := hw) (hZ := hZ)
 
 end Prob
 
@@ -80,9 +58,9 @@ lemma KL_self (p : FinProb α) : KL p p = 0 := by
   classical
   simp [KL, klTerm_self]
 
-/-- Convert local `FinProb` to the core `InfoGeometry.ProbabilityDist`. -/
+/-- Forwarding wrapper to the canonical converter in `InfoGeometry.Basic`. -/
 def toProbabilityDist {α : Type*} [Fintype α] (p : FinProb α) : InfoGeometry.ProbabilityDist α :=
-  { prob := p, sum_one := p.sum_eq_one, nonneg := p.nonneg }
+  FinProb.toProbabilityDist p
 
 /-- Bridge to the core KL definition when the reference distribution has full support. -/
 lemma KL_eq_klDiv (p q : FinProb α) (hq : ∀ a, 0 < q a) :
@@ -131,7 +109,7 @@ by
   · intro x
     exact Finset.sum_nonneg (by intro θ hθ; simpa using p.nonneg (x, θ))
   · -- ∑ x ∑ θ p(x,θ) = ∑ (x,θ) p(x,θ) = 1
-    simpa [Fintype.sum_prod_type] using p.sum_eq_one
+    simpa [Fintype.sum_prod_type] using p.sum_one
 
 /-- Marginal on `Θ`. -/
 noncomputable def marginalΘ (p : Joint) : Prob.FinProb Θ :=
@@ -150,7 +128,7 @@ by
       classical
       simpa [Fintype.sum_prod_type] using (by rfl : (∑ θ, ∑ x, p (x, θ)) = (∑ x, ∑ θ, p (x, θ)))
     -- simplest: just rewrite to product-sum directly
-    simpa [Fintype.sum_prod_type, Prod.mk.eta] using p.sum_eq_one
+    simpa [Fintype.sum_prod_type, Prod.mk.eta] using p.sum_one
 
 /-- Conditional `p(θ|x)` computed by normalizing the slice `θ ↦ p(x,θ)`.
     Requires `marginalX p x > 0`. -/
@@ -182,9 +160,9 @@ by
             -- pull pX x out of inner sum
             simp [Finset.mul_sum, mul_assoc]
       _ = ∑ x : X, pX x * 1 := by
-            simp [(pΘ_givenX ·).sum_eq_one]
+            simp [(pΘ_givenX ·).sum_one]
       _ = ∑ x : X, pX x := by simp
-      _ = 1 := pX.sum_eq_one
+      _ = 1 := pX.sum_one
 
 /-- Bayes posterior from factorized prior `q(θ) q(x|θ)` and an observed `x0`. -/
 noncomputable def bayesPosterior
@@ -285,7 +263,7 @@ lemma uniform_of_all_eq
 
   have hcval : c = 1 / (Fintype.card α : ℝ) := by
     have hEq : (Fintype.card α : ℝ) * c = 1 := by
-      simpa [hsum] using p.sum_eq_one
+      simpa [hsum] using p.sum_one
     have hEq' : c * (Fintype.card α : ℝ) = 1 := by simpa [mul_comm] using hEq
     exact (eq_div_iff hcard).2 hEq'
 
@@ -2071,20 +2049,7 @@ namespace InfoGeometry
 noncomputable def logSumExp {α : Type*} [Fintype α] (q : FinProb α) (f : α → ℝ) (θ : ℝ) : ℝ :=
   Real.log (∑ a, q a * Real.exp (θ * f a))
 
-/-- handy lemma: in a finite probability distribution, some mass is strictly positive -/
-lemma FinProb.exists_pos {α : Type*} [Fintype α] (q : FinProb α) : ∃ a, 0 < q a := by
-  classical
-  by_contra h
-  push_neg at h  -- h : ∀ a, q a ≤ 0
-  have hzero : ∀ a, q a = 0 := by
-    intro a
-    have : q a ≤ 0 := h a
-    have : q a = 0 := le_antisymm this (q.nonneg a)
-    exact this
-  have : (∑ a, q a) = 0 := by
-    simp [hzero]
-  -- contradiction with sum_eq_one = 1
-  linarith [q.sum_eq_one, this]
+-- `FinProb.exists_pos` centralized in `InfoGeometry.Basic` (see `Basic.lean`) — removed duplicate here.
 
 theorem gradient_logSumExp_is_expectation
     {α : Type*} [Fintype α] (q : FinProb α) (f : α → ℝ) (θ : ℝ) :
@@ -2291,37 +2256,16 @@ variable {α : Type*} [Fintype α]
 /-- A probability vector on a finite type, valued in `ℝ`. -/
 abbrev FinProb (α : Type*) [Fintype α] := InfoGeometry.FinProb α
 
-@[simp] lemma sum_eq_one (p : FinProb α) : (∑ a, p a) = 1 := p.sum_eq_one
+@[simp] lemma sum_eq_one (p : FinProb α) : (∑ a, p a) = 1 := p.sum_one
 
 /-- Dirac / point-mass probability vector. -/
 def dirac [DecidableEq α] (a0 : α) : FinProb α :=
-{ toFun := fun a => if a = a0 then (1 : ℝ) else 0
-  nonneg := by
-    intro a; by_cases h : a = a0 <;> simp [h]
-  sum_eq_one := by
-    classical
-    -- `∑ a, (if a = a0 then 1 else 0) = 1`
-    simpa using (Finset.sum_ite_eq' (s := (Finset.univ : Finset α)) (a := a0) (b := (1 : ℝ))) }
+  InfoGeometry.dirac (a0 := a0)
 
 /-- Normalize nonnegative weights into a probability vector. -/
 noncomputable def normalize (w : α → ℝ) (hw : ∀ a, 0 ≤ w a)
     (hZ : 0 < (∑ a, w a)) : FinProb α :=
-by
-  classical
-  let Z : ℝ := ∑ a, w a
-  have hZ0 : Z ≠ 0 := ne_of_gt hZ
-  refine
-  { toFun := fun a => w a / Z
-    nonneg := ?_
-    sum_eq_one := ?_ }
-  · intro a
-    exact div_nonneg (hw a) (le_of_lt hZ)
-  · calc
-      (∑ a : α, w a / Z) = (∑ a : α, w a) / Z := by
-        -- pull `(/ Z)` out of the finite sum
-        simp [div_eq_mul_inv, Finset.sum_mul]
-    _ = 1 := by
-        simp [Z, hZ0]
+  InfoGeometry.normalize (w := w) (hw := hw) (hZ := hZ)
 
 end Prob
 
@@ -2382,7 +2326,7 @@ lemma uniform_of_all_eq
 
   have hcval : c = 1 / (Fintype.card α : ℝ) := by
     have hEq : (Fintype.card α : ℝ) * c = 1 := by
-      simpa [hsum] using p.sum_eq_one
+      simpa [hsum] using p.sum_one
     have hEq' : c * (Fintype.card α : ℝ) = 1 := by
       simpa [mul_comm] using hEq
     exact (eq_div_iff hcard).2 hEq'
@@ -2596,26 +2540,12 @@ variable {α : Type*} [Fintype α] [DecidableEq α]
 
 /-- Dirac distribution at `a0`. -/
 noncomputable def dirac (a0 : α) : FinProb α :=
-{ toFun := fun a => if a = a0 then 1 else 0
-  nonneg := by intro a; by_cases h : a = a0 <;> simp [h]
-  sum_eq_one := by
-    classical
-    -- sum over univ of indicator = 1
-    simpa using (by
-      have : (∑ a : α, (if a = a0 then (1:ℝ) else 0)) = 1 := by
-        simpa using Finset.sum_ite_eq' (s := (Finset.univ : Finset α)) (a := a0) (b := (1:ℝ))
-      exact this) }
+  InfoGeometry.dirac (a0 := a0)
 
 /-- Normalize a nonnegative function with positive total mass into a `FinProb`. -/
 noncomputable def normalize (g : α → ℝ)
     (hg : ∀ a, 0 ≤ g a) (hsum : 0 < ∑ a, g a) : FinProb α :=
-{ toFun := fun a => g a / (∑ a, g a)
-  nonneg := by intro a; exact div_nonneg (hg a) (le_of_lt hsum)
-  sum_eq_one := by
-    classical
-    have hden : (∑ a, g a) ≠ 0 := ne_of_gt hsum
-    -- ∑ g/den = (∑ g)/den = 1
-    simp [Finset.sum_div, hden] }
+  InfoGeometry.normalize (w := g) (hw := hg) (hZ := hsum)
 
 end InfoGeometry
 ```
@@ -2694,7 +2624,7 @@ noncomputable def condYGivenT (pYT : FinProb (Y × T)) (t : T) : FinProb Y :=
       -- since there is a probability distribution on (Y×T), types are nonempty
       -- you can extract `y0 : Y` from `Nonempty` via classical choice
       classical exact InfoGeometry.dirac (α := Y) (Classical.choice (by
-        -- show `Nonempty Y` (you can derive from `pYT.sum_eq_one`)
+        -- show `Nonempty Y` (you can derive from `pYT.sum_one`)
         sorry)))
   else
     -- the usual conditional

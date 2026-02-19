@@ -12,8 +12,8 @@ by
   constructor
   · intro θ; exact (marginalΘ p).nonneg θ
   constructor
-  · exact (marginalX p).sum_eq_one
-  · exact (marginalΘ p).sum_eq_one
+  · exact (marginalX p).sum_one
+  · exact (marginalΘ p).sum_one
 
 -- Test: assemble produces a valid joint
 example {X Θ : Type} [Fintype X] [Fintype Θ] (pX : FinProb X) (pΘ_givenX : X → FinProb Θ) :
@@ -21,7 +21,7 @@ example {X Θ : Type} [Fintype X] [Fintype Θ] (pX : FinProb X) (pΘ_givenX : X 
 by
   constructor
   · intro xt; exact (assemble pX pΘ_givenX).nonneg xt
-  · exact (assemble pX pΘ_givenX).sum_eq_one
+  · exact (assemble pX pΘ_givenX).sum_one
 
 -- Test: normalize produces a valid FinProb
 example {α : Type} [Fintype α] (w : α → ℝ) (hw : ∀ a, 0 ≤ w a) (hZ : 0 < ∑ a, w a) :
@@ -29,4 +29,4 @@ example {α : Type} [Fintype α] (w : α → ℝ) (hw : ∀ a, 0 ≤ w a) (hZ : 
 by
   constructor
   · intro a; exact (normalize w hw hZ).nonneg a
-  · exact (normalize w hw hZ).sum_eq_one
+  · exact (normalize w hw hZ).sum_one

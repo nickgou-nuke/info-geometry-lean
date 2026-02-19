@@ -13,13 +13,7 @@ namespace Prob
 variable {α : Type*} [Fintype α]
 
 /-- Probability vectors on a finite type, valued in `ℝ`. -/
-structure FinProb (α : Type*) [Fintype α] where
-  toFun : α → ℝ
-  nonneg : ∀ a, 0 ≤ toFun a
-  sum_eq_one : (∑ a, toFun a) = 1
-
-instance : CoeFun (FinProb α) (fun _ => α → ℝ) := ⟨FinProb.toFun⟩
-attribute [simp] FinProb.sum_eq_one
+abbrev FinProb (α : Type*) [Fintype α] := InfoGeometry.FinProb α
 
 /-- Point mass / Dirac distribution on a finite type. -/
 def dirac [DecidableEq α] (a0 : α) : FinProb α :=
@@ -2072,13 +2066,7 @@ open scoped BigOperators Real
 
 namespace InfoGeometry
 
-structure FinProb (α : Type*) [Fintype α] where
-  toFun : α → ℝ
-  nonneg : ∀ a, 0 ≤ toFun a
-  sum_eq_one : ∑ a, toFun a = 1
-
-instance {α : Type*} [Fintype α] : CoeFun (FinProb α) (fun _ => α → ℝ) :=
-  ⟨FinProb.toFun⟩
+-- `FinProb` is centralized in `InfoGeometry.Basic`.  Use `InfoGeometry.FinProb` (see `Basic.lean`).
 
 noncomputable def logSumExp {α : Type*} [Fintype α] (q : FinProb α) (f : α → ℝ) (θ : ℝ) : ℝ :=
   Real.log (∑ a, q a * Real.exp (θ * f a))
@@ -2301,12 +2289,7 @@ namespace Prob
 variable {α : Type*} [Fintype α]
 
 /-- A probability vector on a finite type, valued in `ℝ`. -/
-structure FinProb (α : Type*) [Fintype α] where
-  toFun : α → ℝ
-  nonneg : ∀ a, 0 ≤ toFun a
-  sum_eq_one : (∑ a, toFun a) = 1
-
-instance : CoeFun (FinProb α) (fun _ => α → ℝ) := ⟨FinProb.toFun⟩
+abbrev FinProb (α : Type*) [Fintype α] := InfoGeometry.FinProb α
 
 @[simp] lemma sum_eq_one (p : FinProb α) : (∑ a, p a) = 1 := p.sum_eq_one
 

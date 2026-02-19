@@ -24,15 +24,8 @@ section FiniteProb
 
 variable {α : Type} [Fintype α]
 
-structure FinProb (α : Type) [Fintype α] where
-  toFun : α → ℝ
-  nonneg : ∀ a, 0 ≤ toFun a
-  sum_eq_one : (∑ a, toFun a) = 1
-
-attribute [simp] FinProb.sum_eq_one
-
-instance (α : Type) [Fintype α] : CoeFun (FinProb α) (fun _ => α → ℝ) :=
-  ⟨FinProb.toFun⟩
+/-- Use the canonical `FinProb` from `InfoGeometry.Basic`. -/
+abbrev FinProb (α : Type*) [Fintype α] := InfoGeometry.FinProb α
 
 /-- Helper: unnormalized weights normalized to a probability vector. -/
 noncomputable def normalize

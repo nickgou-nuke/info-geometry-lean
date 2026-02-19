@@ -65,6 +65,33 @@ instance : Coe (StrictProbabilityDist α) (ProbabilityDist α) :=
 
 end StrictProbabilityDist
 
+/-- Finite probability vectors (`FinProb`) kept for compatibility with older modules.
+
+This is a thin, record-style finite probability type with the same field names
+used across the repository (`toFun`, `nonneg`, `sum_eq_one`).  We provide
+conversions to/from `ProbabilityDist` so callers can use either API.
+-/
+structure FinProb (α : Type*) [Fintype α] where
+  toFun : α → ℝ
+  nonneg : ∀ x, 0 ≤ toFun x
+  sum_eq_one : ∑ x, toFun x = 1
+
+instance {α : Type*} [Fintype α] : CoeFun (FinProb α) (fun _ => α → ℝ) where
+  coe := FinProb.toFun
+
+/-- `sum_eq_one` as a `simp` lemma for `FinProb`. -/
+@[simp] lemma FinProb.sum_eq_one (p : FinProb α) : ∑ x, p.toFun x = 1 := p.sum_eq_one
+
+/-- Convert `FinProb` → `ProbabilityDist` (core representation). -/
+def FinProb.toProbabilityDist {α : Type*} [Fintype α] (p : FinProb α) : ProbabilityDist α :=
+  { prob := p.toFun, sum_one := p.sum_eq_one, nonneg := p.nonneg }
+
+/-- Convert `ProbabilityDist` → `FinProb` for compatibility. -/
+def ProbabilityDist.toFinProb {α : Type*} [Fintype α] (P : ProbabilityDist α) : FinProb α :=
+  { toFun := P.prob, nonneg := P.nonneg, sum_eq_one := P.sum_one }
+
+instance {α : Type*} [Fintype α] : Coe (FinProb α) (ProbabilityDist α) := ⟨FinProb.toProbabilityDist⟩
+
 /-!
   Note: All definitions below require [Fintype α] at use sites.
   Lean defines Real.log 0 = 0, so analytic theorems may require strict positivity of probabilities.

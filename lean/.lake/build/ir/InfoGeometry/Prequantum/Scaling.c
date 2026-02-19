@@ -1,6 +1,6 @@
 // Lean compiler output
 // Module: InfoGeometry.Prequantum.Scaling
-// Imports: public import Init public import Mathlib
+// Imports: public import Init public import Mathlib.Algebra.Group.Action.Basic public import Mathlib.Data.Real.Basic public import Mathlib.Tactic
 #include <lean/lean.h>
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wunused-parameter"
@@ -14,16 +14,24 @@
 extern "C" {
 #endif
 lean_object* initialize_Init(uint8_t builtin);
-lean_object* initialize_mathlib_Mathlib(uint8_t builtin);
+lean_object* initialize_mathlib_Mathlib_Algebra_Group_Action_Basic(uint8_t builtin);
+lean_object* initialize_mathlib_Mathlib_Data_Real_Basic(uint8_t builtin);
+lean_object* initialize_mathlib_Mathlib_Tactic(uint8_t builtin);
 static bool _G_initialized = false;
-LEAN_EXPORT lean_object* initialize_info_x2dgeometry_InfoGeometry_Prequantum_Scaling(uint8_t builtin) {
+LEAN_EXPORT lean_object* initialize_infogeometry_InfoGeometry_Prequantum_Scaling(uint8_t builtin) {
 lean_object * res;
 if (_G_initialized) return lean_io_result_mk_ok(lean_box(0));
 _G_initialized = true;
 res = initialize_Init(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
-res = initialize_mathlib_Mathlib(builtin);
+res = initialize_mathlib_Mathlib_Algebra_Group_Action_Basic(builtin);
+if (lean_io_result_is_error(res)) return res;
+lean_dec_ref(res);
+res = initialize_mathlib_Mathlib_Data_Real_Basic(builtin);
+if (lean_io_result_is_error(res)) return res;
+lean_dec_ref(res);
+res = initialize_mathlib_Mathlib_Tactic(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 return lean_io_result_mk_ok(lean_box(0));

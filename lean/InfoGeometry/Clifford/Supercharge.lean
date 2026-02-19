@@ -1,10 +1,9 @@
 import InfoGeometry.Clifford.Cl11
 import InfoGeometry.Clifford.Grading
-import Mathlib
 
 section KreinClifford
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Algebraic supercharge package: odd generator and its square Hamiltonian. -/
 structure Supercharge where

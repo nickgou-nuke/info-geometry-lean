@@ -1,9 +1,8 @@
 import InfoGeometry.Clifford.Cl11
-import Mathlib
 
 section KreinClifford
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Projectivization dictionary: two nonzero vectors represent the same ray
 iff they differ by a nonzero real scalar. -/
@@ -43,5 +42,40 @@ def ProjectiveState : Type _ := Quotient (sameRaySetoid (E := E))
 /-- Canonical projection from a doubled state to its projective ray class. -/
 def projectivize (v : DoubledSpace E) : ProjectiveState (E := E) :=
   Quotient.mk'' v
+
+abbrev Gauge := Units ℝ
+
+instance : SMul (Gauge) (DoubledSpace E) :=
+  ⟨fun u v => (↑u : ℝ) • v⟩
+
+instance : MulAction (Gauge) (DoubledSpace E) where
+  one_smul := by
+    intro v
+    simp
+  mul_smul := by
+    intro u v w
+    simp [smul_smul]
+
+/-- `SameRayDoubled` is exactly the orbit relation for the gauge action by `ℝˣ`. -/
+lemma sameRayDoubled_iff_gauge {v w : DoubledSpace E} :
+    SameRayDoubled (E := E) v w ↔ ∃ u : Gauge, w = u • v := by
+  constructor
+  · rintro ⟨a, ha, hwa⟩
+    refine ⟨Units.mk0 a ha, ?_⟩
+    simpa using hwa
+  · rintro ⟨u, hwu⟩
+    refine ⟨(↑u : ℝ), Units.ne_zero u, ?_⟩
+    simpa using hwu
+
+lemma projectivize_eq_projectivize_smul
+    (u : Gauge) (v : DoubledSpace E) :
+    projectivize (E := E) v = projectivize (E := E) (u • v) := by
+  apply Quotient.sound
+  exact (sameRayDoubled_iff_gauge (E := E)).2 ⟨u, rfl⟩
+
+@[simp] lemma projectivize_smul
+    (u : Gauge) (v : DoubledSpace E) :
+    projectivize (E := E) (u • v) = projectivize (E := E) v := by
+  simpa using (projectivize_eq_projectivize_smul (E := E) u v).symm
 
 end KreinClifford

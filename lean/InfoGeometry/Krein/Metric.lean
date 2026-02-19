@@ -1,9 +1,8 @@
 import InfoGeometry.Clifford.Grading
-import Mathlib
 
 section KreinClifford
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E]
 
 section Metric
 
@@ -13,17 +12,14 @@ variable [InnerProductSpace ℝ E]
 def hessianIndefiniteForm (v w : DoubledSpace E) : ℝ :=
   inner ℝ v.1 w.2 + inner ℝ w.1 v.2
 
-omit [NormedSpace ℝ E] in
 lemma hessianIndefiniteForm_symm (v w : DoubledSpace E) :
     hessianIndefiniteForm (E := E) v w = hessianIndefiniteForm (E := E) w v := by
   simp [hessianIndefiniteForm, add_comm]
 
-omit [NormedSpace ℝ E] in
 lemma hessianIndefiniteForm_isotropic_primal (x : E) :
     hessianIndefiniteForm (E := E) (x, (0 : E)) (x, (0 : E)) = 0 := by
   simp [hessianIndefiniteForm]
 
-omit [NormedSpace ℝ E] in
 lemma hessianIndefiniteForm_isotropic_dual (ξ : E) :
     hessianIndefiniteForm (E := E) ((0 : E), ξ) ((0 : E), ξ) = 0 := by
   simp [hessianIndefiniteForm]
@@ -42,6 +38,61 @@ def IsInfinitesimalIsometry (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop
     hessianIndefiniteForm (E := E) (A v) w +
       hessianIndefiniteForm (E := E) v (A w) = 0
 
+lemma infinitesimalIsometry_zero :
+    IsInfinitesimalIsometry (E := E) (0 : DoubledSpace E →L[ℝ] DoubledSpace E) := by
+  intro v w
+  simp [hessianIndefiniteForm]
+
+lemma infinitesimalIsometry_add
+    {A B : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hA : IsInfinitesimalIsometry (E := E) A)
+    (hB : IsInfinitesimalIsometry (E := E) B) :
+    IsInfinitesimalIsometry (E := E) (A + B) := by
+  intro v w
+  calc
+    hessianIndefiniteForm (E := E) ((A + B) v) w
+      + hessianIndefiniteForm (E := E) v ((A + B) w)
+        = (hessianIndefiniteForm (E := E) (A v) w
+            + hessianIndefiniteForm (E := E) v (A w))
+          + (hessianIndefiniteForm (E := E) (B v) w
+              + hessianIndefiniteForm (E := E) v (B w)) := by
+                simp [ContinuousLinearMap.add_apply, hessianIndefiniteForm,
+                  inner_add_left, inner_add_right]
+                ring
+    _ = 0 + 0 := by rw [hA v w, hB v w]
+    _ = 0 := by ring
+
+lemma infinitesimalIsometry_smul
+    (a : ℝ)
+    {A : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hA : IsInfinitesimalIsometry (E := E) A) :
+    IsInfinitesimalIsometry (E := E) (a • A) := by
+  intro v w
+  have h1 : inner ℝ (a • (A v).1) w.2 = a * inner ℝ (A v).1 w.2 := by
+    simpa using (real_inner_smul_left (A v).1 w.2 a)
+  have h2 : inner ℝ w.1 (a • (A v).2) = a * inner ℝ w.1 (A v).2 := by
+    simpa using (real_inner_smul_right w.1 (A v).2 a)
+  have h3 : inner ℝ v.1 (a • (A w).2) = a * inner ℝ v.1 (A w).2 := by
+    simpa using (real_inner_smul_right v.1 (A w).2 a)
+  have h4 : inner ℝ (a • (A w).1) v.2 = a * inner ℝ (A w).1 v.2 := by
+    simpa using (real_inner_smul_left (A w).1 v.2 a)
+  calc
+    hessianIndefiniteForm (E := E) ((a • A) v) w
+      + hessianIndefiniteForm (E := E) v ((a • A) w)
+        = inner ℝ (a • (A v).1) w.2 + inner ℝ w.1 (a • (A v).2)
+          + (inner ℝ v.1 (a • (A w).2) + inner ℝ (a • (A w).1) v.2) := by
+              simp [ContinuousLinearMap.smul_apply, hessianIndefiniteForm, add_assoc]
+    _ = a * inner ℝ (A v).1 w.2 + a * inner ℝ w.1 (A v).2
+          + (a * inner ℝ v.1 (A w).2 + a * inner ℝ (A w).1 v.2) := by
+            simp [h1, h2, h3, h4]
+    _ = a *
+          (hessianIndefiniteForm (E := E) (A v) w
+            + hessianIndefiniteForm (E := E) v (A w)) := by
+            simp [hessianIndefiniteForm]
+            ring
+    _ = a * 0 := by rw [hA v w]
+    _ = 0 := by ring
+
 /-- Continuous automorphisms preserving the neutral Hessian pairing. -/
 structure KreinIsometry where
   U : DoubledSpace E ≃L[ℝ] DoubledSpace E
@@ -54,7 +105,7 @@ structure KreinAntiIsometry where
 
 /-- Orthogonal isometries of the doubled neutral form `hessianIndefiniteForm`
 (`O(hessianIndefiniteForm)`, finite-dimensional model of `O(n,n)`). -/
-def HessianOrthogonalGroup (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E]
+def HessianOrthogonalGroup (E : Type) [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] : Type _ :=
   {U : DoubledSpace E ≃L[ℝ] DoubledSpace E //
     preservesMetric (E := E) (U : DoubledSpace E →L[ℝ] DoubledSpace E)}
@@ -93,6 +144,18 @@ lemma preservesMetric_equiv_comp
         (V : DoubledSpace E →L[ℝ] DoubledSpace E)) := by
   exact preservesMetric_comp (E := E) hU hV
 
+/-- Subgroup model of the orthogonal isometry group of `hessianIndefiniteForm`. -/
+def hessianOrthogonalSubgroup :
+    Subgroup (DoubledSpace E ≃L[ℝ] DoubledSpace E) where
+  carrier := {U | preservesMetric (E := E) (U : DoubledSpace E →L[ℝ] DoubledSpace E)}
+  one_mem' := preservesMetric_id (E := E)
+  mul_mem' := by
+    intro U V hU hV
+    simpa using preservesMetric_equiv_comp (E := E) U V hU hV
+  inv_mem' := by
+    intro U hU
+    simpa using preservesMetric_symm (E := E) U hU
+
 def HessianOrthogonalGroup.one : HessianOrthogonalGroup E :=
   ⟨ContinuousLinearEquiv.refl ℝ (DoubledSpace E), preservesMetric_id (E := E)⟩
 
@@ -112,6 +175,10 @@ def HessianOrthogonalGroup.inv
     (U : HessianOrthogonalGroup E) :
     HessianOrthogonalGroup E :=
   ⟨U.1.symm, preservesMetric_symm (E := E) U.1 U.2⟩
+
+instance : Group (HessianOrthogonalGroup E) := by
+  simpa [HessianOrthogonalGroup, hessianOrthogonalSubgroup] using
+    (inferInstance : Group (hessianOrthogonalSubgroup (E := E)))
 
 lemma modularJ_preservesMetric :
     preservesMetric (E := E) (modularJ (E := E)) := by
@@ -164,6 +231,22 @@ lemma infinitesimalIsometry_closed_comm
     linarith [hB v (A w)]
   rw [hsplit₁, hsplit₂, hA1, hB1, hA2, hB2]
   ring
+
+/-- Lie subalgebra of infinitesimal isometries of the neutral Hessian form. -/
+def kreinLieSubalgebra :
+    LieSubalgebra ℝ (DoubledSpace E →L[ℝ] DoubledSpace E) where
+  carrier := {A | IsInfinitesimalIsometry (E := E) A}
+  zero_mem' := infinitesimalIsometry_zero (E := E)
+  add_mem' := by
+    intro A B hA hB
+    exact infinitesimalIsometry_add (E := E) hA hB
+  smul_mem' := by
+    intro a A hA
+    exact infinitesimalIsometry_smul (E := E) a hA
+  lie_mem' := by
+    intro A B hA hB
+    change IsInfinitesimalIsometry (E := E) (clmComm A B)
+    exact infinitesimalIsometry_closed_comm (E := E) hA hB
 
 /-- Swap involution as a continuous linear equivalence. -/
 def modularJEquiv : DoubledSpace E ≃L[ℝ] DoubledSpace E where

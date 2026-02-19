@@ -111,7 +111,6 @@ end FiniteProb
 section BayesJeffreyFinite
 
 variable {X Θ : Type} [Fintype X] [Fintype Θ]
-variable [DecidableEq X] [DecidableEq Θ]
 
 /-- Joint distributions on `X × Θ`. -/
 abbrev Joint := FinProb (X × Θ)
@@ -213,6 +212,8 @@ noncomputable def bayesPosterior
     intro θ
     exact mul_nonneg (qΘ.nonneg θ) ((qX_givenΘ θ).nonneg x0)
   exact normalize w hw hZ
+
+variable [DecidableEq X]
 
 /-- Bayes joint posterior: `p(x, θ) = δ_{x0}(x) * p(θ)`. -/
 noncomputable def bayesJoint

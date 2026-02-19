@@ -65,11 +65,11 @@ lemma KL_eq_klDiv
   refine Finset.sum_congr rfl ?_
   intro a _ha
   by_cases hp : p.toFun a = 0
-  · simp [klTerm, hp, toProbabilityDist]
+  · simp [klTerm, hp, toProbabilityDist, FinProb.toProbabilityDist_prob]
   · rw [klTerm, if_neg hp]
     have hq_ne : q.toFun a ≠ 0 := (hq a).ne'
     -- By definition, (toProbabilityDist q).prob a = q.toFun a
-    simp only [toProbabilityDist]
+    simp only [toProbabilityDist, FinProb.toProbabilityDist_prob]
     rw [Real.log_div hp hq_ne]
 
 /-- Gibbs inequality in finite dimension under strict positivity of the reference law. -/
@@ -161,6 +161,14 @@ noncomputable def condΘGivenX
     convert hx using 1
   exact normalize w hw hZ
 
+/-- `condΘGivenX` projection (pointwise formula). -/
+@[simp] lemma condΘGivenX_toFun (p : FinProb (X × Θ)) (x : X) (hx : 0 < (marginalX p).toFun x)
+    (θ : Θ) : (condΘGivenX p x hx).toFun θ = p.toFun (x, θ) / (marginalX p).toFun x :=
+  by
+    dsimp [condΘGivenX, normalize]
+    -- `normalize` definition gives `toFun := fun a => w a / Z` with `w := fun θ => p.toFun (x, θ)`
+    rfl
+
 /-- Assemble a joint distribution from a marginal on `X` and conditionals on `Θ | X`. -/
 noncomputable def assemble (pX : FinProb X) (pΘ_givenX : X → FinProb Θ) : FinProb (X × Θ) := by
   classical
@@ -181,6 +189,19 @@ noncomputable def assemble (pX : FinProb X) (pΘ_givenX : X → FinProb Θ) : Fi
         _ = ∑ x : X, pX.toFun x := by simp
         _ = 1 := pX.sum_one
   }
+
+/-- `assemble` projection (pointwise formula). -/
+@[simp] lemma assemble_toFun (pX : FinProb X) (pΘ_givenX : X → FinProb Θ) (x : X) (θ : Θ) :
+    (assemble pX pΘ_givenX).toFun (x, θ) = pX.toFun x * (pΘ_givenX x).toFun θ := rfl
+
+/-- Marginalizing an assembled joint recovers the original marginal `pX`. -/
+theorem marginalX_assemble (pX : FinProb X) (pΘ_givenX : X → FinProb Θ) :
+    marginalX (assemble pX pΘ_givenX) = pX := by
+  apply FinProb.ext
+  intro x
+  -- unfold `marginalX`/`assemble` first, then do the algebra explicitly
+  dsimp [marginalX, assemble]
+  rw [← Finset.mul_sum, sum_eq_one, mul_one]
 
 /-- Bayes posterior from factorized prior `q(θ) q(x | θ)` after observing `x0`. -/
 noncomputable def bayesPosterior

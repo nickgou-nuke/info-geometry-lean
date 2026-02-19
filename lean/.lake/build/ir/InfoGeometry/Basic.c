@@ -14,14 +14,28 @@
 extern "C" {
 #endif
 LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_StrictProbabilityDist_toProbabilityDist(lean_object*, lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_instCoeFinProbProbabilityDist___redArg(lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_instCoeFunEmpiricalCountsForallNat___lam__0(lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_ProbabilityDist_toFinProb(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_StrictProbabilityDist_toProbabilityDist___redArg(lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_instCoeFunEmpiricalCountsForallNat(lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal(lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal___boxed(lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_ProbabilityDist_toFinProb___redArg___boxed(lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_StrictProbabilityDist_toProbabilityDist___redArg___boxed(lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_ProbabilityDist_toFinProb___boxed(lean_object*, lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_FinProb_toProbabilityDist___redArg___boxed(lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_FinProb_toProbabilityDist___redArg(lean_object*);
 static lean_object* lp_infogeometry_InfoGeometry_instCoeFunEmpiricalCountsForallNat___closed__0;
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal___lam__0(lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_ProbabilityDist_toFinProb___redArg(lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_StrictProbabilityDist_instCoeProbabilityDist(lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_instCoeFinProbProbabilityDist(lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_StrictProbabilityDist_toProbabilityDist___boxed(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_StrictProbabilityDist_instCoeProbabilityDist___redArg(lean_object*);
+static lean_object* lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal___closed__0;
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_FinProb_toProbabilityDist___boxed(lean_object*, lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_FinProb_toProbabilityDist(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_instCoeFunEmpiricalCountsForallNat___lam__0(lean_object* x_1, lean_object* x_2) {
 _start:
 {
@@ -99,6 +113,125 @@ lean_closure_set(x_3, 1, x_2);
 return x_3;
 }
 }
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal___lam__0(lean_object* x_1, lean_object* x_2) {
+_start:
+{
+lean_object* x_3; 
+x_3 = lean_apply_1(x_1, x_2);
+return x_3;
+}
+}
+static lean_object* _init_lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal___closed__0() {
+_start:
+{
+lean_object* x_1; 
+x_1 = lean_alloc_closure((void*)(lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal___lam__0), 2, 0);
+return x_1;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal(lean_object* x_1, lean_object* x_2) {
+_start:
+{
+lean_object* x_3; 
+x_3 = lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal___closed__0;
+return x_3;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal___boxed(lean_object* x_1, lean_object* x_2) {
+_start:
+{
+lean_object* x_3; 
+x_3 = lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal(x_1, x_2);
+lean_dec(x_2);
+return x_3;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_FinProb_toProbabilityDist___redArg(lean_object* x_1) {
+_start:
+{
+lean_inc(x_1);
+return x_1;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_FinProb_toProbabilityDist___redArg___boxed(lean_object* x_1) {
+_start:
+{
+lean_object* x_2; 
+x_2 = lp_infogeometry_InfoGeometry_FinProb_toProbabilityDist___redArg(x_1);
+lean_dec(x_1);
+return x_2;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_FinProb_toProbabilityDist(lean_object* x_1, lean_object* x_2, lean_object* x_3) {
+_start:
+{
+lean_inc(x_3);
+return x_3;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_FinProb_toProbabilityDist___boxed(lean_object* x_1, lean_object* x_2, lean_object* x_3) {
+_start:
+{
+lean_object* x_4; 
+x_4 = lp_infogeometry_InfoGeometry_FinProb_toProbabilityDist(x_1, x_2, x_3);
+lean_dec(x_3);
+lean_dec(x_2);
+return x_4;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_ProbabilityDist_toFinProb___redArg(lean_object* x_1) {
+_start:
+{
+lean_inc(x_1);
+return x_1;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_ProbabilityDist_toFinProb___redArg___boxed(lean_object* x_1) {
+_start:
+{
+lean_object* x_2; 
+x_2 = lp_infogeometry_InfoGeometry_ProbabilityDist_toFinProb___redArg(x_1);
+lean_dec(x_1);
+return x_2;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_ProbabilityDist_toFinProb(lean_object* x_1, lean_object* x_2, lean_object* x_3) {
+_start:
+{
+lean_inc(x_3);
+return x_3;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_ProbabilityDist_toFinProb___boxed(lean_object* x_1, lean_object* x_2, lean_object* x_3) {
+_start:
+{
+lean_object* x_4; 
+x_4 = lp_infogeometry_InfoGeometry_ProbabilityDist_toFinProb(x_1, x_2, x_3);
+lean_dec(x_3);
+lean_dec(x_2);
+return x_4;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_instCoeFinProbProbabilityDist___redArg(lean_object* x_1) {
+_start:
+{
+lean_object* x_2; 
+x_2 = lean_alloc_closure((void*)(lp_infogeometry_InfoGeometry_FinProb_toProbabilityDist___boxed), 3, 2);
+lean_closure_set(x_2, 0, lean_box(0));
+lean_closure_set(x_2, 1, x_1);
+return x_2;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_InfoGeometry_instCoeFinProbProbabilityDist(lean_object* x_1, lean_object* x_2) {
+_start:
+{
+lean_object* x_3; 
+x_3 = lean_alloc_closure((void*)(lp_infogeometry_InfoGeometry_FinProb_toProbabilityDist___boxed), 3, 2);
+lean_closure_set(x_3, 0, lean_box(0));
+lean_closure_set(x_3, 1, x_2);
+return x_3;
+}
+}
 lean_object* initialize_Init(uint8_t builtin);
 lean_object* initialize_mathlib_Mathlib_Algebra_BigOperators_Group_Finset_Basic(uint8_t builtin);
 lean_object* initialize_mathlib_Mathlib_Algebra_BigOperators_Field(uint8_t builtin);
@@ -130,6 +263,8 @@ if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 lp_infogeometry_InfoGeometry_instCoeFunEmpiricalCountsForallNat___closed__0 = _init_lp_infogeometry_InfoGeometry_instCoeFunEmpiricalCountsForallNat___closed__0();
 lean_mark_persistent(lp_infogeometry_InfoGeometry_instCoeFunEmpiricalCountsForallNat___closed__0);
+lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal___closed__0 = _init_lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal___closed__0();
+lean_mark_persistent(lp_infogeometry_InfoGeometry_instCoeFunFinProbForallReal___closed__0);
 return lean_io_result_mk_ok(lean_box(0));
 }
 #ifdef __cplusplus

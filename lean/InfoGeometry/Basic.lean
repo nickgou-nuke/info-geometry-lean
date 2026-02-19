@@ -65,11 +65,11 @@ instance : Coe (StrictProbabilityDist α) (ProbabilityDist α) :=
 
 end StrictProbabilityDist
 
-/-- Finite probability vectors (`FinProb`) kept for compatibility with older modules.
+/-- Finite probability vectors (`FinProb`) — lightweight compatibility wrapper.
 
-This is a thin, record-style finite probability type with the same field names
-used across the repository (`toFun`, `nonneg`, `sum_one`).  We provide
-conversions to/from `ProbabilityDist` so callers can use either API.
+Provides `toFun`, pointwise `nonneg`, and `sum_one` (normalization).  Conversions
+to/from `ProbabilityDist` are available so the canonical representation can be
+used where preferred.
 -/
 structure FinProb (α : Type*) [Fintype α] where
   toFun : α → ℝ
@@ -79,49 +79,79 @@ structure FinProb (α : Type*) [Fintype α] where
 instance {α : Type*} [Fintype α] : CoeFun (FinProb α) (fun _ => α → ℝ) where
   coe := FinProb.toFun
 
-/-- Mark the `sum_one` projection on `FinProb` as `simp`. -/
-attribute [simp] FinProb.sum_one
+-- Make the projection `FinProb.sum_one` a `simp` lemma.
+-- attribute [simp] FinProb.sum_one  -- temporarily disabled to satisfy linter
+
+-- Backward-compatible name used in older modules.
+@[simp] lemma sum_eq_one {α : Type*} [Fintype α] (p : FinProb α) : (∑ a, p a) = 1 := p.sum_one
 
 /-- Convert `FinProb` → `ProbabilityDist` (core representation). -/
 def FinProb.toProbabilityDist {α : Type*} [Fintype α] (p : FinProb α) : ProbabilityDist α :=
   { prob := p.toFun, sum_one := p.sum_one, nonneg := p.nonneg }
 
-/-- Convert `ProbabilityDist` → `FinProb` for compatibility. -/
+/-- Convert `ProbabilityDist` → `FinProb`. -/
 def ProbabilityDist.toFinProb {α : Type*} [Fintype α] (P : ProbabilityDist α) : FinProb α :=
   { toFun := P.prob, nonneg := P.nonneg, sum_one := P.sum_one }
 
 instance {α : Type*} [Fintype α] : Coe (FinProb α) (ProbabilityDist α) := ⟨FinProb.toProbabilityDist⟩
 
+/-- `FinProb` extensionality: equality is pointwise on `toFun` (Prop-fields are proof-irrelevant). -/
+theorem FinProb.ext {α : Type*} [Fintype α] {p q : FinProb α} (h : ∀ x, p x = q x) : p = q := by
+  have hfun : p.toFun = q.toFun := funext h
+  cases p; cases q; dsimp [FinProb.toFun] at hfun
+  subst hfun
+  -- `nonneg` and `sum_one` are in `Prop`, so proofs are equal by proof irrelevance
+  rfl
+
+/-- Bridge simp-lemma: coercion from `FinProb` to `ProbabilityDist` preserves `prob`. -/
+@[simp] lemma FinProb.toProbabilityDist_prob {α : Type*} [Fintype α] (p : FinProb α) (x : α) :
+    (p : ProbabilityDist α).prob x = p.toFun x := rfl
+
+/-- Bridge simp-lemma: `ProbabilityDist.toFinProb` projects `toFun` to `prob`. -/
+@[simp] lemma ProbabilityDist.toFinProb_toFun {α : Type*} [Fintype α] (P : ProbabilityDist α) (x : α) :
+    (P.toFinProb).toFun x = P.prob x := rfl
+
+/-- Round-trip: coercing a `FinProb` to `ProbabilityDist` and back yields the original `FinProb`. -/
+@[simp] theorem FinProb.toProbabilityDist_toFinProb {α : Type*} [Fintype α] (p : FinProb α) :
+    ((p : ProbabilityDist α).toFinProb) = p := by
+  apply FinProb.ext; intro x; simp [FinProb.toProbabilityDist_prob, ProbabilityDist.toFinProb_toFun]
+
+/-- Round-trip: converting a `ProbabilityDist` to `FinProb` and back yields the original `ProbabilityDist`. -/
+@[simp] theorem ProbabilityDist.toFinProb_toProbabilityDist {α : Type*} [Fintype α] (P : ProbabilityDist α) :
+    (P.toFinProb : ProbabilityDist α) = P := by
+  -- `ext` is not available for `ProbabilityDist` (no `[ext]` theorem), so destructure and finish by `rfl`.
+  cases P
+  dsimp [ProbabilityDist.toFinProb]
+  rfl
+
+
 /-- Normalize nonnegative weights into a `FinProb`. -/
 noncomputable def normalize {α : Type*} [Fintype α]
     (w : α → ℝ) (hw : ∀ a, 0 ≤ w a) (hZ : 0 < (∑ a, w a)) : FinProb α := by
   classical
-  let Z : ℝ := ∑ a, w a
-  have hZ0 : Z ≠ 0 := ne_of_gt hZ
-  refine { toFun := fun a => w a / Z, nonneg := ?, sum_one := ? }
-  · intro a; exact div_nonneg (hw a) (le_of_lt hZ)
-  · calc
+  let Z := ∑ a, w a
+  have hZ_ne : Z ≠ 0 := ne_of_gt hZ
+  have hsum : (∑ a : α, w a / Z) = 1 := by
+    calc
       (∑ a : α, w a / Z) = (∑ a : α, w a) / Z := by simp [div_eq_mul_inv, Finset.sum_mul]
-    _ = 1 := by simp [Z, hZ0]
+      _ = 1 := by rw [div_self hZ_ne]
+  exact { toFun := fun a => w a / Z, nonneg := fun a => div_nonneg (hw a) (le_of_lt hZ), sum_one := hsum }
 
-/-- Point mass / Dirac distribution on a finite type. -/
+/-- Dirac (point-mass) distribution. -/
 noncomputable def dirac {α : Type*} [Fintype α] [DecidableEq α] (a0 : α) : FinProb α := by
   classical
-  let w : α → ℝ := fun a => if a = a0 then (1 : ℝ) else 0
+  let w := fun a => if a = a0 then (1 : ℝ) else 0
   have hw : ∀ a, 0 ≤ w a := by intro a; by_cases h : a = a0 <;> simp [w, h]
   have hZ : 0 < (∑ a, w a) := by simp [w]
   exact normalize (w := w) hw hZ
 
-/-- In a finite probability vector some atom has strictly positive mass. -/
+/-- Some atom is strictly positive in a finite probability vector. -/
 @[simp] lemma FinProb.exists_pos {α : Type*} [Fintype α] (q : FinProb α) : ∃ a, 0 < q a := by
   classical
   by_contra h
   push_neg at h
   have hzero : ∀ a, q a = 0 := by
-    intro a
-    have : q a ≤ 0 := h a
-    have : q a = 0 := le_antisymm this (q.nonneg a)
-    exact this
+    intro a; have : q a ≤ 0 := h a; have : q a = 0 := le_antisymm this (q.nonneg a); exact this
   have : (∑ a, q a) = 0 := by simp [hzero]
   linarith [q.sum_one, this]
 
@@ -136,6 +166,10 @@ variable {α : Type} [Fintype α]
 /-- Expectation under a finite distribution. -/
 noncomputable def expectation (P : ProbabilityDist α) (f : α → ℝ) : ℝ :=
   ∑ x, P.prob x * f x
+
+/-- Expectation compatibility when using a `FinProb` via coercion. -/
+@[simp] lemma expectation_coe_FinProb (p : FinProb α) (f : α → ℝ) :
+    expectation (p : ProbabilityDist α) f = ∑ x, p.toFun x * f x := rfl
 
 /-- Log density (finite Radon–Nikodym derivative). -/
 noncomputable def logDensity (P : ProbabilityDist α) (x : α) : ℝ :=

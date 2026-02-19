@@ -1,9 +1,9 @@
 {"synthetic": false,
  "schemaVersion": "2025-09-10",
  "outputs":
- {"o": ["322d8b58dc881814.olean"],
-  "i": "024f4ec72147d218.ilean",
-  "c": "70ae4fabbebff942.c"},
+ {"o": ["f674817b1e8e4bf6.olean"],
+  "i": "48dadc2865b8a0ee.ilean",
+  "c": "44f21e87471bd77a.c"},
  "log":
  [{"message":
    ".> LEAN_PATH=/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/Cli/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/batteries/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/Qq/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/aesop/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/importGraph/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/plausible/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean /home/goutev/.elan/toolchains/leanprover--lean4---v4.28.0/bin/lean /home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Basic.lean -o /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Basic.olean -i /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Basic.ilean -c /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/ir/InfoGeometry/Basic.c --setup /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/ir/InfoGeometry/Basic.setup.json --json",
@@ -40,7 +40,7 @@
   ["Lean 4.28.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b",
    "a96bc04a2e5e9630"],
   ["/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Basic.lean",
-   "05c0bf4af4f3260a"],
+   "3c35ff3306c11d46"],
   ["options", "00000000000006bb"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "c021de9a05bd06b6"}
+ "depHash": "a936e06f8fbf3f0f"}

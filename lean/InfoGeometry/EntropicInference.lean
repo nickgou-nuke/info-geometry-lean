@@ -308,11 +308,53 @@ theorem KL_chain_rule
 
 
 /-- Jeffrey update is ME under fixed `x`-marginal constraint. -/
+
 def jeffrey_is_ME
     (q : FinProb (X × Θ)) (pX : FinProb X)
     (hq : ∀ x : X, 0 < (marginalX q).toFun x) : Prop :=
   ∀ p : Joint, marginalX p = pX →
     Entropy p q ≤ Entropy (jeffreyJoint q pX hq) q
+
+/-- Jeffrey update satisfies the ME property when the prior joint `q` has full joint support
+    (so all conditional references are strictly positive) and the target marginal `pX` is
+    strictly positive.  This is the standard I‑projection proof using the chain rule +
+    pointwise KL nonnegativity. -/
+theorem jeffrey_is_ME_of_full_support
+    (q : FinProb (X × Θ)) (pX : FinProb X)
+    (hq_joint : ∀ z : X × Θ, 0 < q.toFun z)
+    (hpX_pos : ∀ x, 0 < pX.toFun x) :
+  jeffrey_is_ME q pX (fun x => Finset.sum_pos fun θ _ => hq_joint (x, θ)) := by
+  -- marginal positivity for `q` follows from joint positivity
+  let hq_marg := fun x => by
+    dsimp [marginalX]
+    apply Finset.sum_pos
+    intro θ _; exact hq_joint (x, θ)
+  -- prove the ME inequality for arbitrary `p` with marginal `pX`
+  intro p hp_eq
+  have hp_marg_pos : ∀ x, 0 < (marginalX p).toFun x := by
+    intro x; rw [hp_eq]; exact hpX_pos x
+  -- apply KL chain rule to `p` and to the Jeffrey joint
+  have Hp_chain := KL_chain_rule p q hq_marg hp_marg_pos
+  have Hj_chain := KL_chain_rule (jeffreyJoint q pX hq_marg) q hq_marg hpX_pos
+  -- subtract the two chain-rule decompositions; marginals cancel and we get a sum
+  have : KL p q - KL (jeffreyJoint q pX hq_marg) q
+      = ∑ x, (marginalX p).toFun x *
+          KL (condΘGivenX p x (hp_marg_pos x)) (condΘGivenX q x (hq_marg x)) := by
+    rw [Hp_chain, Hj_chain]
+    simp [hp_eq, marginalX_assemble]
+  -- each summand is nonnegative (KL ≥ 0 for conditionals because `q` has full joint support)
+  have sum_nonneg : 0 ≤ ∑ x, (marginalX p).toFun x *
+      KL (condΘGivenX p x (hp_marg_pos x)) (condΘGivenX q x (hq_marg x)) := by
+    apply Finset.sum_nonneg
+    intro x _
+    apply mul_nonneg
+    · exact (marginalX p).nonneg x
+    · have hcond_support : ∀ θ, 0 < (condΘGivenX q x (hq_marg x)).toFun θ := by
+        intro θ; dsimp [condΘGivenX_toFun]; apply div_pos; exact hq_joint (x, θ); exact (hq_marg x)
+      exact KL_nonneg _ _ hcond_support
+  -- conclude
+  have : 0 ≤ KL p q - KL (jeffreyJoint q pX hq_marg) q := by simpa [this] using sum_nonneg
+  simpa [Entropy] using (neg_le_neg (by linarith : 0 ≤ _))
 
 /-- Bayes update is ME under hard-data marginal constraint `p(x)=δ_{x0}`. -/
 def bayes_is_ME

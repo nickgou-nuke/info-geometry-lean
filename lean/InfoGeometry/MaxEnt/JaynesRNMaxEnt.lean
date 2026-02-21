@@ -28,10 +28,36 @@ def Satisfies {ι : Type*} [Fintype ι] (C : MomentFamily (Ω := Ω) ι)
     (P : ProbabilityMeasure Ω) : Prop :=
   ∀ i, (∫ x, C.f i x ∂(P : Measure Ω)) = C.d i
 
+/-- Integrability-aware satisfaction of all moment constraints. -/
+def SatisfiesIntegrable {ι : Type*} [Fintype ι] (C : MomentFamily (Ω := Ω) ι)
+    (P : ProbabilityMeasure Ω) : Prop :=
+  ∀ i, Integrable (C.f i) (P : Measure Ω) ∧
+    (∫ x, C.f i x ∂(P : Measure Ω)) = C.d i
+
 /-- The feasible set of probability measures. -/
 def FeasibleSet {ι : Type*} [Fintype ι] (C : MomentFamily (Ω := Ω) ι) :
     Set (ProbabilityMeasure Ω) :=
   {P | Satisfies (Ω := Ω) C P}
+
+/-- Integrability-aware feasible set of probability measures. -/
+def FeasibleSetIntegrable {ι : Type*} [Fintype ι] (C : MomentFamily (Ω := Ω) ι) :
+    Set (ProbabilityMeasure Ω) :=
+  {P | SatisfiesIntegrable (Ω := Ω) C P}
+
+lemma SatisfiesIntegrable.satisfies
+    {ι : Type*} [Fintype ι]
+    {C : MomentFamily (Ω := Ω) ι} {P : ProbabilityMeasure Ω}
+    (hP : SatisfiesIntegrable (Ω := Ω) C P) :
+    Satisfies (Ω := Ω) C P := by
+  intro i
+  exact (hP i).2
+
+lemma FeasibleSetIntegrable_subset_FeasibleSet
+    {ι : Type*} [Fintype ι]
+    (C : MomentFamily (Ω := Ω) ι) :
+    FeasibleSetIntegrable (Ω := Ω) C ⊆ FeasibleSet (Ω := Ω) C := by
+  intro P hP
+  exact (SatisfiesIntegrable.satisfies (Ω := Ω) hP)
 
 /-!
 ## 2. Objective = KL divergence relative to a prior `μ₀`
@@ -65,6 +91,10 @@ noncomputable def potential (lam : ι → ℝ) : Ω → ℝ :=
 /-- Partition function `Z(λ) = ∫ exp(Φ(x)) dμ₀`. -/
 noncomputable def partitionFunction (lam : ι → ℝ) : ℝ :=
   ∫ x, Real.exp (potential (C := C) lam x) ∂μ₀
+
+/-- Finiteness hypothesis for the partition function integrand. -/
+def PartitionIntegrable (lam : ι → ℝ) : Prop :=
+  Integrable (fun x => Real.exp (potential (C := C) lam x)) μ₀
 
 /-- The Gibbs measure (not yet packaged as `ProbabilityMeasure`). -/
 noncomputable def gibbsMeasure (lam : ι → ℝ) : Measure Ω :=
@@ -102,6 +132,34 @@ theorem rnDeriv_gibbsMeasure_eq (lam : ι → ℝ) :
       (f := potential (C := C) lam)
       (aemeasurable_potential (μ₀ := μ₀) (C := C) lam))
 
+omit [IsProbabilityMeasure μ₀] in
+lemma partitionFunction_nonneg (lam : ι → ℝ) :
+    0 ≤ partitionFunction (μ₀ := μ₀) (C := C) lam := by
+  unfold partitionFunction
+  exact integral_nonneg (fun x => by positivity)
+
+/-- Scalar RN-density form for the Gibbs measure (`toReal` version). -/
+theorem rnDeriv_gibbsMeasure_toReal_eq (lam : ι → ℝ) :
+    (fun x => ((gibbsMeasure (μ₀ := μ₀) (C := C) lam).rnDeriv μ₀ x).toReal)
+      =ᵐ[μ₀] fun x =>
+        Real.exp (potential (C := C) lam x)
+          / partitionFunction (μ₀ := μ₀) (C := C) lam := by
+  filter_upwards [rnDeriv_gibbsMeasure_eq (μ₀ := μ₀) (C := C) lam] with x hx
+  have hnonneg :
+      0 ≤ Real.exp (potential (C := C) lam x)
+        / partitionFunction (μ₀ := μ₀) (C := C) lam := by
+    exact div_nonneg (le_of_lt (Real.exp_pos _))
+      (partitionFunction_nonneg (μ₀ := μ₀) (C := C) lam)
+  calc
+    ((gibbsMeasure (μ₀ := μ₀) (C := C) lam).rnDeriv μ₀ x).toReal
+        = (ENNReal.ofReal
+            (Real.exp (potential (C := C) lam x)
+              / partitionFunction (μ₀ := μ₀) (C := C) lam)).toReal := by
+              simp [hx]
+    _ = Real.exp (potential (C := C) lam x)
+          / partitionFunction (μ₀ := μ₀) (C := C) lam := by
+            exact ENNReal.toReal_ofReal hnonneg
+
 /--
 If `exp(Φ)` is integrable, the tilted measure is a probability measure.
 We bundle it as `ProbabilityMeasure Ω`.
@@ -127,10 +185,11 @@ def gibbs_minimizes_kl
     (C : MomentFamily (Ω := Ω) ι)
     (lam : ι → ℝ)
     (hInt : Integrable (fun x => Real.exp (potential (C := C) lam x)) μ₀)
-    (_hFeas : gibbs (μ₀ := μ₀) (C := C) lam hInt ∈ FeasibleSet (Ω := Ω) C) :
+    (hFeas : gibbs (μ₀ := μ₀) (C := C) lam hInt ∈ FeasibleSetIntegrable (Ω := Ω) C) :
     Prop :=
+  let _ := hFeas
   ∀ P : ProbabilityMeasure Ω,
-    P ∈ FeasibleSet (Ω := Ω) C →
+    P ∈ FeasibleSetIntegrable (Ω := Ω) C →
       objectiveKL (μ₀ := μ₀) (gibbs (μ₀ := μ₀) (C := C) lam hInt)
         ≤ objectiveKL (μ₀ := μ₀) P
 
@@ -139,8 +198,8 @@ def GibbsMinimizesKL
     (C : MomentFamily (Ω := Ω) ι)
     (lam : ι → ℝ)
     (hInt : Integrable (fun x => Real.exp (potential (C := C) lam x)) μ₀)
-    (_hFeas : gibbs (μ₀ := μ₀) (C := C) lam hInt ∈ FeasibleSet (Ω := Ω) C) :
+    (hFeas : gibbs (μ₀ := μ₀) (C := C) lam hInt ∈ FeasibleSetIntegrable (Ω := Ω) C) :
     Prop :=
-  gibbs_minimizes_kl (μ₀ := μ₀) C lam hInt _hFeas
+  gibbs_minimizes_kl (μ₀ := μ₀) C lam hInt hFeas
 
 end JaynesRNMaxEnt

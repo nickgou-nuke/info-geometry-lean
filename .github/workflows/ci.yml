@@ -36,10 +36,24 @@ jobs:
       working-directory: lean
       run: lake build
 
+    - name: Lint canonical surface
+      working-directory: lean
+      run: lake lint
+
+    - name: Reject experimental imports in canonical modules
+      working-directory: lean
+      run: |
+        if rg -n "^import InfoGeometry\\.Experimental$" \
+          InfoGeometry.lean InfoGeometry/Library.lean InfoGeometry/Canonical -g '*.lean'; then
+          echo "Canonical modules must not import InfoGeometry.Experimental"
+          exit 1
+        fi
+
     - name: Verify archive exclusion
       working-directory: lean
       run: |
-        if rg -n "all_lean_files_combined" InfoGeometry.lean InfoGeometry -g '*.lean'; then
+        if rg -n "all_lean_files_combined" \
+          InfoGeometry.lean InfoGeometry/Library.lean InfoGeometry/Canonical -g '*.lean'; then
           echo "Archive file must not be imported by canonical modules"
           exit 1
         fi

@@ -1,8 +1,8 @@
 {"synthetic": false,
  "schemaVersion": "2025-09-10",
  "outputs":
- {"o": ["ad663c8df197b282.olean"],
-  "i": "77104fc82dc78be7.ilean",
+ {"o": ["879a6d508523c2f2.olean"],
+  "i": "355e9a38520207c6.ilean",
   "c": "bd0487abb5689909.c"},
  "log":
  [{"message":
@@ -16,7 +16,7 @@
       ["imports",
        [["InfoGeometry.Clifford.Cl11 transitive imports (legacy)",
          "25ca2d3e7d41e3c4"],
-        ["InfoGeometry.Clifford.Cl11:importAllArts", "bc2da0ee44d57362"]]]]],
+        ["InfoGeometry.Clifford.Cl11:importAllArts", "e1acbc335ea90251"]]]]],
     ["libs",
      [["import dynlibs", "00000000000006bb"],
       ["package external libraries", "00000000000006bb"],
@@ -25,7 +25,7 @@
   ["Lean 4.28.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b",
    "a96bc04a2e5e9630"],
   ["/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/Rays.lean",
-   "ea05311d9b509c55"],
+   "c3bdd0ea3e5f05f5"],
   ["options", "00000000000006bb"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "7d32058b4e5bde1d"}
+ "depHash": "cddf6f58cac2fe30"}

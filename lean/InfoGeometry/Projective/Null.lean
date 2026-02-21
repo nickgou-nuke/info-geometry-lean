@@ -91,6 +91,28 @@ def IsGradeMinusRay : ProjectiveState (E := E) → Prop :=
 @[simp] lemma IsGradeMinusRay_projectivize (v : DoubledSpace E) :
     IsGradeMinusRay (E := E) (projectivize (E := E) v) ↔ inGradeMinus (E := E) v := Iff.rfl
 
+/-- Coordinate form for grade `+`: `J(x,ξ)=(x,ξ)` iff `ξ=x`. -/
+@[simp] lemma inGradePlus_iff_coords (x ξ : E) :
+    inGradePlus (E := E) (x, ξ) ↔ ξ = x := by
+  unfold inGradePlus
+  constructor
+  · intro h
+    exact congrArg Prod.fst h
+  · intro h
+    cases h
+    simp [modularJ]
+
+/-- Coordinate form for grade `-`: `J(x,ξ)=-(x,ξ)` iff `ξ=-x`. -/
+@[simp] lemma inGradeMinus_iff_coords (x ξ : E) :
+    inGradeMinus (E := E) (x, ξ) ↔ ξ = -x := by
+  unfold inGradeMinus
+  constructor
+  · intro h
+    exact congrArg Prod.fst h
+  · intro h
+    cases h
+    simp [modularJ]
+
 /-- “Grade-null” rays: points lying in either grading eigenspace. -/
 def IsGradeNullRay (q : ProjectiveState (E := E)) : Prop :=
   IsGradePlusRay (E := E) q ∨ IsGradeMinusRay (E := E) q
@@ -106,6 +128,42 @@ lemma IsGradeMinusRay_vacuum : IsGradeMinusRay (E := E) (vacuum (E := E)) := by
 lemma IsGradeNullRay_vacuum : IsGradeNullRay (E := E) (vacuum (E := E)) := by
   exact Or.inl (IsGradePlusRay_vacuum (E := E))
 
+/-- A ray cannot be both grade `+` and grade `-` unless it is the vacuum ray. -/
+lemma gradePlus_and_gradeMinus_implies_vacuum
+    (q : ProjectiveState (E := E))
+    (hqPlus : IsGradePlusRay (E := E) q)
+    (hqMinus : IsGradeMinusRay (E := E) q) :
+    q = vacuum (E := E) := by
+  revert hqPlus hqMinus
+  refine Quotient.inductionOn q ?_
+  intro v hvPlus hvMinus
+  have hvPlus' : inGradePlus (E := E) v := by
+    simpa using hvPlus
+  have hvMinus' : inGradeMinus (E := E) v := by
+    simpa using hvMinus
+  rcases v with ⟨x, ξ⟩
+  have hξx : ξ = x := (inGradePlus_iff_coords (E := E) x ξ).1 hvPlus'
+  have hξnegx : ξ = -x := (inGradeMinus_iff_coords (E := E) x ξ).1 hvMinus'
+  have hxneg : x = -x := by
+    calc
+      x = ξ := hξx.symm
+      _ = -x := hξnegx
+  have hx0 : x = 0 := by
+    have hhalfEq : (1 / 2 : ℝ) • x = (1 / 2 : ℝ) • (-x) := by
+      exact congrArg (fun t : E => (1 / 2 : ℝ) • t) hxneg
+    calc
+      x = (1 : ℝ) • x := by simp
+      _ = (((1 / 2 : ℝ) + (1 / 2 : ℝ)) : ℝ) • x := by norm_num
+      _ = (1 / 2 : ℝ) • x + (1 / 2 : ℝ) • x := by simp [add_smul]
+      _ = (1 / 2 : ℝ) • x + (1 / 2 : ℝ) • (-x) := by rw [hhalfEq]
+      _ = (1 / 2 : ℝ) • x + -((1 / 2 : ℝ) • x) := by simp [smul_neg]
+      _ = 0 := by simp
+  have hξ0 : ξ = 0 := by
+    simpa [hx0] using hξx
+  rw [vacuum_def]
+  change projectivize (E := E) (x, ξ) = projectivize (E := E) ((0 : E), (0 : E))
+  simp [hx0, hξ0]
+
 end GradeNull
 
 section MetricNull
@@ -115,6 +173,16 @@ variable [InnerProductSpace ℝ E]
 /-- “Metric-null” / isotropic doubled vectors for the neutral Hessian form. -/
 def IsMetricNull (v : DoubledSpace E) : Prop :=
   hessianIndefiniteForm (E := E) v v = 0
+
+@[simp] lemma isMetricNull_iff_inner_eq_zero (x ξ : E) :
+    IsMetricNull (E := E) (x, ξ) ↔ inner ℝ x ξ = 0 := by
+  unfold IsMetricNull hessianIndefiniteForm
+  constructor
+  · intro h
+    have h' : inner ℝ x ξ + inner ℝ x ξ = 0 := by simpa [real_inner_comm] using h
+    linarith
+  · intro h
+    simp [h]
 
 lemma hessianIndefiniteForm_smul_smul (a b : ℝ) (v w : DoubledSpace E) :
     hessianIndefiniteForm (E := E) (a • v) (b • w)
@@ -210,6 +278,9 @@ def IsNullRay (q : ProjectiveState (E := E)) : Prop :=
   q = vacuum (E := E) ∨
   IsGradeNullRay (E := E) q ∨
   IsMetricNullRay (E := E) q
+
+lemma IsNullRay_vacuum : IsNullRay (E := E) (vacuum (E := E)) := by
+  exact Or.inl rfl
 
 end UnifiedNull
 

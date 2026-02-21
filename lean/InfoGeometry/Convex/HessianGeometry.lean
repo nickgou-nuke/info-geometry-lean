@@ -1,12 +1,16 @@
 import InfoGeometry.Potential.LogPotential
 import InfoGeometry.GrandCanonical.Core
 import InfoGeometry.Krein.Metric
+import Mathlib.Analysis.Convex.Deriv
 
 /-!
 # Hessian Geometry Bridges
 
 A minimal bridge layer connecting log-potential Hessian geometry,
 grand-canonical thermodynamics, and the scalar neutral Krein form.
+
+`metric` is defined using Lean's totalized `deriv`; when smoothness is not
+assumed, this should be read as the totalized second-derivative term.
 -/
 
 namespace InfoGeometry.Convex
@@ -20,6 +24,21 @@ namespace HessianGeometry1D
 /-- Hessian metric in 1D is the second derivative of the potential. -/
 noncomputable def metric (H : HessianGeometry1D) (x : ℝ) : ℝ :=
   deriv (fun t => deriv H.potential t) x
+
+/-- Convexity + differentiability imply nonnegativity of the 1D Hessian metric. -/
+lemma metric_nonneg_of_convex
+    (H : HessianGeometry1D)
+    (hconv : ConvexOn ℝ Set.univ H.potential)
+    (hdiff : Differentiable ℝ H.potential)
+    (x : ℝ) :
+    0 ≤ H.metric x := by
+  have hmonoOn : MonotoneOn (deriv H.potential) Set.univ :=
+    hconv.monotoneOn_deriv (fun z _hz => hdiff z)
+  have hmono : Monotone (deriv H.potential) := by
+    intro a b hab
+    exact hmonoOn (by simp) (by simp) hab
+  unfold metric
+  simpa using (Monotone.deriv_nonneg (g := deriv H.potential) (x := x) hmono)
 
 /-- Any 1D `LogPotential` induces a 1D Hessian geometry. -/
 noncomputable def ofLogPotential (L : InfoGeometry.LogPotential ℝ) : HessianGeometry1D where
@@ -43,11 +62,17 @@ noncomputable def grandCanonicalHessianGeometry
     (params : GrandCanonicalParams α) : HessianGeometry1D where
   potential := potential params
 
-/-- Hessian metric of `log Z` equals Gibbs variance. -/
+/-- Hessian metric of the grand-canonical potential equals Gibbs variance. -/
 lemma grandCanonical_metric_eq_variance
     (params : GrandCanonicalParams α) (β : ℝ) :
     (grandCanonicalHessianGeometry params).metric β = variance params β :=
   potential_second_derivative_eq_variance params β
+
+lemma grandCanonical_metric_nonneg
+    (params : GrandCanonicalParams α) (β : ℝ) :
+    0 ≤ (grandCanonicalHessianGeometry params).metric β := by
+  rw [grandCanonical_metric_eq_variance]
+  exact variance_nonneg params β
 
 end GrandCanonicalBridge
 
@@ -60,6 +85,22 @@ noncomputable def kreinNeutralPotential (v : DoubledSpace ℝ) : ℝ :=
 /-- Bilinear form induced by the scalar neutral potential polarization. -/
 def kreinNeutralForm (u v : DoubledSpace ℝ) : ℝ :=
   u.1 * v.2 + v.1 * u.2
+
+@[simp] lemma kreinNeutralForm_primal_primal (a b : ℝ) :
+    kreinNeutralForm (a, 0) (b, 0) = 0 := by
+  simp [kreinNeutralForm]
+
+@[simp] lemma kreinNeutralForm_dual_dual (a b : ℝ) :
+    kreinNeutralForm (0, a) (0, b) = 0 := by
+  simp [kreinNeutralForm]
+
+@[simp] lemma kreinNeutralForm_primal_dual (a b : ℝ) :
+    kreinNeutralForm (a, 0) (0, b) = a * b := by
+  simp [kreinNeutralForm]
+
+@[simp] lemma kreinNeutralForm_dual_primal (a b : ℝ) :
+    kreinNeutralForm (0, a) (b, 0) = a * b := by
+  simp [kreinNeutralForm, mul_comm]
 
 /-- Polarization identity for the scalar neutral potential. -/
 lemma kreinNeutralForm_from_potential

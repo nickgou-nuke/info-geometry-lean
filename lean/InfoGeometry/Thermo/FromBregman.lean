@@ -30,14 +30,12 @@ noncomputable def energyFromDivergence
 
 /-- Gibbs probability induced by Bregman energy. -/
 noncomputable def gibbsProbFromBregman
-    [Nonempty Ω]
     (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) :
     Ω → ℝ :=
   gibbsProb (energyFromBregman (L := L) θ0 θ) ε
 
 /-- Free energy induced by Bregman energy. -/
 noncomputable def freeEnergyFromBregman
-    [Nonempty Ω]
     (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) : ℝ :=
   freeEnergy (energyFromBregman (L := L) θ0 θ) ε
 
@@ -68,6 +66,13 @@ section ProbabilisticLemmas
 
 variable [Nonempty Ω]
 
+omit [Nonempty Ω] in
+@[simp] lemma partitionDivergence_eq_Z
+    (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) :
+    partitionDivergence (L := L) θ0 θ ε
+      = Z (E := energyFromBregman (L := L) θ0 θ) ε := by
+  simp [partitionDivergence, gibbsWeightDivergence, Z, weight]
+
 lemma partitionDivergence_pos
     (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) :
     0 < partitionDivergence (L := L) θ0 θ ε := by
@@ -91,6 +96,22 @@ lemma gibbsProbFromBregman_sum_one
   simpa [gibbsProbFromBregman] using
     (gibbsProb_sum_one (E := energyFromBregman (L := L) θ0 θ) ε)
 
+omit [Nonempty Ω] in
+lemma gibbsProbFromBregman_eq_weight_over_partition
+    (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) (ω : Ω) :
+    gibbsProbFromBregman (L := L) θ0 θ ε ω
+      = gibbsWeightDivergence (L := L) θ0 θ ε ω
+          / partitionDivergence (L := L) θ0 θ ε := by
+  simp [gibbsProbFromBregman, gibbsProb, gibbsWeightDivergence, partitionDivergence_eq_Z, weight]
+
+omit [Nonempty Ω] in
+@[simp] lemma freeEnergyDivergence_eq_freeEnergyFromBregman
+    (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) :
+    freeEnergyDivergence (L := L) θ0 θ ε
+      = freeEnergyFromBregman (L := L) θ0 θ ε := by
+  simp [freeEnergyDivergence, freeEnergyFromBregman, freeEnergy, logZ,
+    partitionDivergence, gibbsWeightDivergence, Z, weight]
+
 lemma freeEnergyFromBregman_eq_internal_sub_scale_entropy
     (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ)
     (hε : ε ≠ 0) :
@@ -101,6 +122,17 @@ lemma freeEnergyFromBregman_eq_internal_sub_scale_entropy
   simpa [freeEnergyFromBregman] using
     (freeEnergy_eq_internal_sub_scale_entropy
       (E := energyFromBregman (L := L) θ0 θ) ε hε)
+
+lemma freeEnergyDivergence_eq_internal_sub_scale_entropy
+    (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ)
+    (hε : ε ≠ 0) :
+    freeEnergyDivergence (L := L) θ0 θ ε
+      =
+    internalEnergy (energyFromBregman (L := L) θ0 θ) ε
+      - ε * shannonEntropy (energyFromBregman (L := L) θ0 θ) ε := by
+  rw [freeEnergyDivergence_eq_freeEnergyFromBregman]
+  exact freeEnergyFromBregman_eq_internal_sub_scale_entropy
+    (L := L) θ0 θ ε hε
 
 end ProbabilisticLemmas
 

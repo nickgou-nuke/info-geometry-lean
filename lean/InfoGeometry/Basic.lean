@@ -12,9 +12,13 @@ Foundational types and definitions for InfoGeometry.
 ## Main results
 - `EmpiricalCounts`
 - `ProbabilityDist`
-- `partitionFunction`
-- `relativeSurprisal`
-- `logRNDensity`
+- `StrictProbabilityDist`
+- `FinProb`
+- `expectation`
+- `logDensity`
+- `surprisal`
+- `entropy`
+- `klDiv`
 
 -/
 
@@ -38,11 +42,54 @@ structure ProbabilityDist (α : Type*) [Fintype α] where
   sum_one : ∑ x, prob x = 1
   nonneg : ∀ x, 0 ≤ prob x
 
+instance {α : Type*} [Fintype α] : CoeFun (ProbabilityDist α) (fun _ => α → ℝ) where
+  coe := ProbabilityDist.prob
+
+@[simp] lemma ProbabilityDist.coe_prob {α : Type*} [Fintype α] (P : ProbabilityDist α) (x : α) :
+    P x = P.prob x := rfl
+
+@[ext] theorem ProbabilityDist.ext {α : Type*} [Fintype α] {P Q : ProbabilityDist α}
+    (h : ∀ x, P x = Q x) : P = Q := by
+  cases P with
+  | mk p hp1 hp2 =>
+    cases Q with
+    | mk q hq1 hq2 =>
+      dsimp at h
+      have hfun : p = q := funext h
+      subst hfun
+      have hh1 : hp1 = hq1 := Subsingleton.elim _ _
+      have hh2 : hp2 = hq2 := Subsingleton.elim _ _
+      cases hh1
+      cases hh2
+      rfl
+
 /-- Strict finite probability distribution: pointwise positivity. -/
 structure StrictProbabilityDist (α : Type*) [Fintype α] where
   prob : α → ℝ
   sum_one : ∑ x, prob x = 1
   pos : ∀ x, 0 < prob x
+
+instance {α : Type*} [Fintype α] : CoeFun (StrictProbabilityDist α) (fun _ => α → ℝ) where
+  coe := StrictProbabilityDist.prob
+
+@[simp] lemma StrictProbabilityDist.coe_prob {α : Type*} [Fintype α]
+    (P : StrictProbabilityDist α) (x : α) :
+    P x = P.prob x := rfl
+
+@[ext] theorem StrictProbabilityDist.ext {α : Type*} [Fintype α] {P Q : StrictProbabilityDist α}
+    (h : ∀ x, P x = Q x) : P = Q := by
+  cases P with
+  | mk p hp1 hp2 =>
+    cases Q with
+    | mk q hq1 hq2 =>
+      dsimp at h
+      have hfun : p = q := funext h
+      subst hfun
+      have hh1 : hp1 = hq1 := Subsingleton.elim _ _
+      have hh2 : hp2 = hq2 := Subsingleton.elim _ _
+      cases hh1
+      cases hh2
+      rfl
 
 namespace StrictProbabilityDist
 
@@ -96,12 +143,20 @@ def ProbabilityDist.toFinProb {α : Type*} [Fintype α] (P : ProbabilityDist α)
 instance {α : Type*} [Fintype α] : Coe (FinProb α) (ProbabilityDist α) := ⟨FinProb.toProbabilityDist⟩
 
 /-- `FinProb` extensionality: equality is pointwise on `toFun` (Prop-fields are proof-irrelevant). -/
-theorem FinProb.ext {α : Type*} [Fintype α] {p q : FinProb α} (h : ∀ x, p x = q x) : p = q := by
-  have hfun : p.toFun = q.toFun := funext h
-  cases p; cases q; dsimp [FinProb.toFun] at hfun
-  subst hfun
-  -- `nonneg` and `sum_one` are in `Prop`, so proofs are equal by proof irrelevance
-  rfl
+@[ext] theorem FinProb.ext {α : Type*} [Fintype α] {p q : FinProb α}
+    (h : ∀ x, p x = q x) : p = q := by
+  cases p with
+  | mk p hp hs =>
+    cases q with
+    | mk q hq hqsum =>
+      dsimp at h
+      have hfun : p = q := funext h
+      subst hfun
+      have hhp : hp = hq := Subsingleton.elim _ _
+      have hhs : hs = hqsum := Subsingleton.elim _ _
+      cases hhp
+      cases hhs
+      rfl
 
 /-- Bridge simp-lemma: coercion from `FinProb` to `ProbabilityDist` preserves `prob`. -/
 @[simp] lemma FinProb.toProbabilityDist_prob {α : Type*} [Fintype α] (p : FinProb α) (x : α) :
@@ -119,9 +174,7 @@ theorem FinProb.ext {α : Type*} [Fintype α] {p q : FinProb α} (h : ∀ x, p x
 /-- Round-trip: converting a `ProbabilityDist` to `FinProb` and back yields the original `ProbabilityDist`. -/
 @[simp] theorem ProbabilityDist.toFinProb_toProbabilityDist {α : Type*} [Fintype α] (P : ProbabilityDist α) :
     (P.toFinProb : ProbabilityDist α) = P := by
-  -- `ext` is not available for `ProbabilityDist` (no `[ext]` theorem), so destructure and finish by `rfl`.
-  cases P
-  dsimp [ProbabilityDist.toFinProb]
+  ext x
   rfl
 
 
@@ -145,8 +198,24 @@ noncomputable def dirac {α : Type*} [Fintype α] [DecidableEq α] (a0 : α) : F
   have hZ : 0 < (∑ a, w a) := by simp [w]
   exact normalize (w := w) hw hZ
 
+/-- Normalize strictly positive weights into a strict finite distribution. -/
+noncomputable def normalizeStrict {α : Type*} [Fintype α]
+    (w : α → ℝ) (hw : ∀ a, 0 < w a) (hZ : 0 < (∑ a, w a)) :
+    StrictProbabilityDist α := by
+  let Z := ∑ a, w a
+  have hZ_ne : Z ≠ 0 := ne_of_gt hZ
+  refine
+    { prob := fun a => w a / Z
+      sum_one := ?_
+      pos := ?_ }
+  · calc
+      (∑ a : α, w a / Z) = (∑ a : α, w a) / Z := by simp [div_eq_mul_inv, Finset.sum_mul]
+      _ = 1 := by rw [div_self hZ_ne]
+  · intro a
+    exact div_pos (hw a) hZ
+
 /-- Some atom is strictly positive in a finite probability vector. -/
-@[simp] lemma FinProb.exists_pos {α : Type*} [Fintype α] (q : FinProb α) : ∃ a, 0 < q a := by
+lemma FinProb.exists_pos {α : Type*} [Fintype α] (q : FinProb α) : ∃ a, 0 < q a := by
   classical
   by_contra h
   push_neg at h

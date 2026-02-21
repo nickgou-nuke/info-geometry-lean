@@ -1,11 +1,12 @@
-import InfoGeometry.Krein.Prelude
-import InfoGeometry.Krein.Metric
-import InfoGeometry.Krein.HilbertBridge
-import InfoGeometry.Krein.Automorphisms
+import InfoGeometry.Canonical.Krein
 import InfoGeometry.Krein.Modular
-import InfoGeometry.Krein.Thermal
 import InfoGeometry.Krein.CartanDecomposition
 
 /-!
-# Krein Geometry
+# InfoGeometry.Krein
+
+Compatibility umbrella for legacy imports.
+This file is intentionally import-only and introduces no new declarations.
+
+Prefer `import InfoGeometry` (or `InfoGeometry.Canonical.Krein`) for canonical publishing.
 -/

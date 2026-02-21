@@ -10,24 +10,36 @@ open scoped BigOperators
 `ExponentialFamily α θ` abstracts exponential families of probability
 distributions on sample space `α` with parameter `θ`.
 -/
-class ExponentialFamily (α θ : Type) where
-  statistic : α → θ → ℝ
-  logPartition : θ → ℝ
-  density : θ → α → ℝ
+class ExponentialFamily (α η : Type _) where
+  statistic : α → η → ℝ
+  logPartition : η → ℝ
+  density : η → α → ℝ
   density_eq :
-    ∀ θ a,
-      density θ a =
-        Real.exp (statistic a θ - logPartition θ)
+    ∀ p a,
+      density p a =
+        Real.exp (statistic a p - logPartition p)
 
 /--
 Finite exponential families with normalization.
 -/
 class FiniteExponentialFamily
-    (α θ : Type)
+    (α η : Type _)
     [Fintype α]
-    extends ExponentialFamily α θ where
+    extends ExponentialFamily α η where
   normalization :
-    ∀ θ, Finset.univ.sum (density θ) = 1
+    ∀ p, Finset.univ.sum (density p) = 1
+
+namespace ExponentialFamily
+
+lemma density_pos
+    {α η : Type _}
+    [ExponentialFamily α η]
+    (p : η) (a : α) :
+    0 < ExponentialFamily.density p a := by
+  rw [ExponentialFamily.density_eq]
+  exact Real.exp_pos _
+
+end ExponentialFamily
 
 /-!
 ## Multinomial Family
@@ -36,69 +48,69 @@ class FiniteExponentialFamily
 noncomputable section
 open Finset
 
-variable {α : Type} [Fintype α] [Nonempty α]
+variable {α : Type _} [Fintype α] [Nonempty α]
 
 def multinomialStatistic
-    (a : α) (θ : α → ℝ) : ℝ :=
-  θ a
+    (a : α) (p : α → ℝ) : ℝ :=
+  p a
 
 def multinomialLogPartition
-    (θ : α → ℝ) : ℝ :=
-  Real.log (∑ b, Real.exp (θ b))
+    (p : α → ℝ) : ℝ :=
+  Real.log (∑ b, Real.exp (p b))
 
 def multinomialDensity
-    (θ : α → ℝ) (a : α) : ℝ :=
-  Real.exp (θ a)
-    / (∑ b, Real.exp (θ b))
+    (p : α → ℝ) (a : α) : ℝ :=
+  Real.exp (p a)
+    / (∑ b, Real.exp (p b))
 
 lemma multinomial_partition_pos
-    (θ : α → ℝ) :
-    0 < ∑ a, Real.exp (θ a) := by
+    (p : α → ℝ) :
+    0 < ∑ a, Real.exp (p a) := by
   classical
   simpa using
     (Finset.sum_pos
       (s := (Finset.univ : Finset α))
-      (f := fun a => Real.exp (θ a))
+      (f := fun a => Real.exp (p a))
       (by
         intro a ha
         exact Real.exp_pos _)
       Finset.univ_nonempty)
 
 lemma multinomial_density_pos
-    (θ : α → ℝ) (a : α) :
-    0 < multinomialDensity θ a := by
+    (p : α → ℝ) (a : α) :
+    0 < multinomialDensity p a := by
   classical
   unfold multinomialDensity
   apply div_pos
   · exact Real.exp_pos _
-  · exact multinomial_partition_pos θ
+  · exact multinomial_partition_pos p
 
 lemma multinomial_density_eq
-    (θ : α → ℝ) (a : α) :
-    multinomialDensity θ a
+    (p : α → ℝ) (a : α) :
+    multinomialDensity p a
       =
       Real.exp
-        (multinomialStatistic a θ
-          - multinomialLogPartition θ) := by
+        (multinomialStatistic a p
+          - multinomialLogPartition p) := by
   unfold multinomialDensity multinomialStatistic multinomialLogPartition
   rw [Real.exp_sub]
-  have hpos : 0 < ∑ b, Real.exp (θ b) := multinomial_partition_pos θ
+  have hpos : 0 < ∑ b, Real.exp (p b) := multinomial_partition_pos p
   rw [Real.exp_log hpos]
 
 lemma multinomial_normalization
-    (θ : α → ℝ) :
-    ∑ a, multinomialDensity θ a = 1 := by
+    (p : α → ℝ) :
+    ∑ a, multinomialDensity p a = 1 := by
   unfold multinomialDensity
-  have hne : (∑ a, Real.exp (θ a)) ≠ 0 := ne_of_gt (multinomial_partition_pos θ)
+  have hne : (∑ a, Real.exp (p a)) ≠ 0 := ne_of_gt (multinomial_partition_pos p)
   calc
-    ∑ a, Real.exp (θ a) / ∑ b, Real.exp (θ b)
-        = (∑ a, Real.exp (θ a)) / ∑ b, Real.exp (θ b) := by
+    ∑ a, Real.exp (p a) / ∑ b, Real.exp (p b)
+        = (∑ a, Real.exp (p a)) / ∑ b, Real.exp (p b) := by
             symm
             simpa using
               (Finset.sum_div
                 (s := (Finset.univ : Finset α))
-                (f := fun a => Real.exp (θ a))
-                (a := ∑ b, Real.exp (θ b)))
+                (f := fun a => Real.exp (p a))
+                (a := ∑ b, Real.exp (p b)))
     _ = 1 := by
           exact div_self hne
 

@@ -26,6 +26,7 @@ noncomputable def logDetBarrier (X : SPD n) : ℝ :=
 lemma SPD.det_pos (X : SPD n) : 0 < Matrix.det X.mat :=
   X.pos.det_pos
 
+@[simp]
 lemma SPD.det_ne_zero (X : SPD n) : Matrix.det X.mat ≠ 0 :=
   X.det_pos.ne'
 
@@ -45,12 +46,36 @@ lemma normalizedDistortion_det_pos (X Y : SPD n) :
           symm
           exact Matrix.det_mul (Y.mat⁻¹) X.mat
 
+lemma normalizedDistortion_det (X Y : SPD n) :
+    Matrix.det (normalizedDistortion X Y) = Matrix.det X.mat / Matrix.det Y.mat := by
+  unfold normalizedDistortion
+  calc
+    Matrix.det (Y.mat⁻¹ * X.mat)
+        = Matrix.det (Y.mat⁻¹) * Matrix.det X.mat := by
+            exact Matrix.det_mul (Y.mat⁻¹) X.mat
+    _ = (Matrix.det Y.mat)⁻¹ * Matrix.det X.mat := by
+          simp [Matrix.det_nonsing_inv, Ring.inverse_eq_inv]
+    _ = Matrix.det X.mat / Matrix.det Y.mat := by
+          simp [div_eq_mul_inv, mul_comm]
+
 /-- Log-det/Burg matrix divergence:
 `tr(Y⁻¹X) - log det(Y⁻¹X) - n`. -/
 noncomputable def logDetBregman (X Y : SPD n) : ℝ :=
   Matrix.trace (normalizedDistortion X Y)
     - Real.log (Matrix.det (normalizedDistortion X Y))
     - (n : ℝ)
+
+lemma logDetBregman_eq_burg_form (X Y : SPD n) :
+    logDetBregman X Y
+      = -Real.log (Matrix.det X.mat)
+          + Real.log (Matrix.det Y.mat)
+          + Matrix.trace (normalizedDistortion X Y)
+          - (n : ℝ) := by
+  have hX : Matrix.det X.mat ≠ 0 := X.det_ne_zero
+  have hY : Matrix.det Y.mat ≠ 0 := Y.det_ne_zero
+  unfold logDetBregman
+  rw [normalizedDistortion_det, Real.log_div hX hY]
+  linarith
 
 /-- Scalar nonnegativity template: `tr(A) - log det(A) - n ≥ 0` for positive-definite `A`. -/
 lemma trace_sub_logdet_sub_dim_nonneg_of_posDef
@@ -127,7 +152,8 @@ lemma logDetBregman_nonneg
   let U : Matrix (Fin n) (Fin n) ℝ := CFC.sqrt (Y.mat⁻¹)
   have hYinv_nonneg : 0 ≤ Y.mat⁻¹ := Y.pos.inv.posSemidef.nonneg
   have hU_nonneg : 0 ≤ U := by
-    simp [U]
+    change 0 ≤ CFC.sqrt (Y.mat⁻¹)
+    exact CFC.sqrt_nonneg (Y.mat⁻¹)
   have hU_posSemidef : U.PosSemidef := hU_nonneg.posSemidef
   have hU_star : star U = U := by
     calc

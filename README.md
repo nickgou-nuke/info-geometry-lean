@@ -21,8 +21,11 @@ lake build
 ## Structure
 
 - `lean/` - Lean source code and configuration
-	- `InfoGeometry.lean` - current monolithic development (compatibility root)
-	- `InfoGeometry/Library.lean` - modular import hub
+	- `InfoGeometry.lean` - canonical published entrypoint (stable surface)
+	- `InfoGeometry/Library.lean` - stable linted umbrella imported by `InfoGeometry.lean`
+	- `InfoGeometry/Canonical/` - canonical domain umbrellas (`Foundations`, `Statistics`, `Algebra`, `Geometry`, `All`)
+	- `InfoGeometry/Experimental.lean` - exploratory/compatibility umbrella (non-canonical)
+	- `InfoGeometry/{Clifford,Krein,Projective,Prequantum,Quantum,Twistor}.lean` - legacy compatibility wrappers
 	- `all_lean_files_combined.lean` - archive-only concatenation for LLM context (non-canonical; excluded from CI/strict checks)
 	- `InfoGeometry/` - information-geometry modules (`KL`, `Fenchel`, `Renyi`, `Cramer`)
 	- `Clifford/`, `Projective/`, `Prequantum/`, `Krein/` - domain scaffolds

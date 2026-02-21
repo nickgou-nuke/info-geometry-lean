@@ -27,6 +27,10 @@ namespace SymmetricLieAlgebra
 
 variable (S : SymmetricLieAlgebra R L)
 
+@[simp] lemma involution_apply (x : L) : S.θ (S.θ x) = x := by
+  have h := congrArg (fun e : L ≃ₗ⁅R⁆ L => e x) S.involution
+  simpa using h
+
 /-!
 ## Cartan decomposition operators and eigenspaces
 -/
@@ -66,6 +70,88 @@ def P_plus : L →ₗ[R] L :=
 
 def P_minus : L →ₗ[R] L :=
   (⅟ (2 : R)) • ((LinearMap.id : L →ₗ[R] L) - S.θ.toLinearMap)
+
+@[simp] lemma P_plus_apply (x : L) :
+    S.P_plus x = (⅟ (2 : R)) • (x + S.θ x) := by
+  simp [P_plus, LinearMap.add_apply]
+
+@[simp] lemma P_minus_apply (x : L) :
+    S.P_minus x = (⅟ (2 : R)) • (x - S.θ x) := by
+  simp [P_minus, LinearMap.sub_apply]
+
+lemma P_plus_fixed (x : L) :
+    S.θ (S.P_plus x) = S.P_plus x := by
+  simp [S.P_plus_apply, map_add, map_smul, S.involution_apply, add_comm]
+
+lemma P_minus_neg_fixed (x : L) :
+    S.θ (S.P_minus x) = -S.P_minus x := by
+  calc
+    S.θ (S.P_minus x) = (⅟ (2 : R)) • (S.θ x - x) := by
+      simp [S.P_minus_apply, map_sub, map_smul, S.involution_apply]
+    _ = (⅟ (2 : R)) • (-(x - S.θ x)) := by
+      simp [sub_eq_add_neg, add_comm]
+    _ = -(⅟ (2 : R) • (x - S.θ x)) := by
+      rw [smul_neg]
+    _ = -S.P_minus x := by
+      simp [S.P_minus_apply]
+
+lemma P_plus_mem_𝔨 (x : L) :
+    S.P_plus x ∈ S.𝔨 :=
+  (S.mem_𝔨_iff _).2 (S.P_plus_fixed x)
+
+lemma P_minus_mem_𝔭 (x : L) :
+    S.P_minus x ∈ S.𝔭 :=
+  (S.mem_𝔭_iff _).2 (S.P_minus_neg_fixed x)
+
+lemma P_plus_eq_self_of_mem_𝔨 {x : L} (hx : x ∈ S.𝔨) :
+    S.P_plus x = x := by
+  have hx' : S.θ x = x := (S.mem_𝔨_iff x).1 hx
+  calc
+    S.P_plus x = (⅟ (2 : R)) • (x + S.θ x) := S.P_plus_apply x
+    _ = (⅟ (2 : R)) • (x + x) := by simp [hx']
+    _ = (⅟ (2 : R)) • ((2 : R) • x) := by simp [two_smul]
+    _ = x := by simp [smul_smul]
+
+lemma P_minus_eq_zero_of_mem_𝔨 {x : L} (hx : x ∈ S.𝔨) :
+    S.P_minus x = 0 := by
+  have hx' : S.θ x = x := (S.mem_𝔨_iff x).1 hx
+  calc
+    S.P_minus x = (⅟ (2 : R)) • (x - S.θ x) := S.P_minus_apply x
+    _ = (⅟ (2 : R)) • (x - x) := by simp [hx']
+    _ = 0 := by simp
+
+lemma P_plus_eq_zero_of_mem_𝔭 {x : L} (hx : x ∈ S.𝔭) :
+    S.P_plus x = 0 := by
+  have hx' : S.θ x = -x := (S.mem_𝔭_iff x).1 hx
+  calc
+    S.P_plus x = (⅟ (2 : R)) • (x + S.θ x) := S.P_plus_apply x
+    _ = (⅟ (2 : R)) • (x + -x) := by simp [hx']
+    _ = 0 := by simp
+
+lemma P_minus_eq_self_of_mem_𝔭 {x : L} (hx : x ∈ S.𝔭) :
+    S.P_minus x = x := by
+  have hx' : S.θ x = -x := (S.mem_𝔭_iff x).1 hx
+  calc
+    S.P_minus x = (⅟ (2 : R)) • (x - S.θ x) := S.P_minus_apply x
+    _ = (⅟ (2 : R)) • (x + x) := by simp [hx']
+    _ = (⅟ (2 : R)) • ((2 : R) • x) := by simp [two_smul]
+    _ = x := by simp [smul_smul]
+
+lemma P_plus_idempotent (x : L) :
+    S.P_plus (S.P_plus x) = S.P_plus x :=
+  S.P_plus_eq_self_of_mem_𝔨 (S.P_plus_mem_𝔨 x)
+
+lemma P_minus_idempotent (x : L) :
+    S.P_minus (S.P_minus x) = S.P_minus x :=
+  S.P_minus_eq_self_of_mem_𝔭 (S.P_minus_mem_𝔭 x)
+
+lemma P_plus_comp_P_minus (x : L) :
+    S.P_plus (S.P_minus x) = 0 :=
+  S.P_plus_eq_zero_of_mem_𝔭 (S.P_minus_mem_𝔭 x)
+
+lemma P_minus_comp_P_plus (x : L) :
+    S.P_minus (S.P_plus x) = 0 :=
+  S.P_minus_eq_zero_of_mem_𝔨 (S.P_plus_mem_𝔨 x)
 
 theorem cartan_decomposition (x : L) :
     x = S.P_plus x + S.P_minus x := by
@@ -140,14 +226,17 @@ section Killing
 
 variable [CommRing R]
 variable [LieRing L] [LieAlgebra R L]
+variable [Module.Free R L] [Module.Finite R L]
 
 namespace SymmetricLieAlgebra
 
 variable (S : SymmetricLieAlgebra R L)
 
-noncomputable abbrev B (_S : SymmetricLieAlgebra R L) : LinearMap.BilinForm R L :=
-  killingForm R L
+noncomputable abbrev B : LinearMap.BilinForm R L := by
+  let _ := S
+  exact killingForm R L
 
+omit [Module.Free R L] [Module.Finite R L] in
 theorem killing_invariant (x y : L) :
     S.B (S.θ x) (S.θ y) = S.B x y := by
   exact LieAlgebra.killingForm_of_equiv_apply (R := R) (L := L) (L' := L) S.θ x y
@@ -156,6 +245,7 @@ section Orthogonal
 
 variable [Invertible (2 : R)]
 
+omit [Module.Free R L] [Module.Finite R L] in
 theorem killing_orthogonal {k p : L} (hk : k ∈ S.𝔨) (hp : p ∈ S.𝔭) :
     S.B k p = 0 := by
   have hk' : S.θ k = k := (S.mem_𝔨_iff k).1 hk

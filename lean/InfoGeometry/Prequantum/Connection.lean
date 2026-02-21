@@ -38,7 +38,8 @@ end ProjectivePrequantumBundle
 
 /-- Weyl-compatibility predicate: the neutral Hessian form scales conformally by `a²`. -/
 def IsWeylCompatibleHessian
-    (_P : ProjectivePrequantumBundle (E := E)) : Prop :=
+    (P : ProjectivePrequantumBundle (E := E)) : Prop :=
+  let _ := P
   ∀ (u : Gauge) (v w : DoubledSpace E),
     hessianIndefiniteForm (E := E) (u • v) (u • w)
       = ((u : ℝ) ^ (2 : ℕ)) * hessianIndefiniteForm (E := E) v w

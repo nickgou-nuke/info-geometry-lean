@@ -87,3 +87,91 @@ noncomputable instance : MulAction (Units ℝ) PrequantumData where
       (P.rescaleHbar_rescaleHbar
         (c := (v : ℝ)) (d := (u : ℝ))
         (hc := Units.ne_zero v) (hd := Units.ne_zero u))
+
+namespace PrequantumData
+
+/-- Local gauge group for scalarized prequantum data. -/
+abbrev Gauge := Units ℝ
+
+/-- Weight `-1` observable (connection/curvature scale). -/
+def connectionScale (P : PrequantumData) : ℝ :=
+  P.curvatureScale
+
+@[simp] theorem connectionScale_smul
+    (u : Gauge) (P : PrequantumData) :
+    connectionScale (u • P) = connectionScale P / (u : ℝ) := by
+  rfl
+
+/-- Gauge-invariant scalar `F * ℏ`, equal to `ω`. -/
+def covariantScale (P : PrequantumData) : ℝ :=
+  P.curvatureScale * P.hbar
+
+@[simp] theorem covariantScale_eq_omega (P : PrequantumData) :
+    covariantScale P = P.omegaScale := by
+  exact P.curvature_mul_hbar_eq_omega
+
+@[simp] theorem covariantScale_smul
+    (u : Gauge) (P : PrequantumData) :
+    covariantScale (u • P) = covariantScale P := by
+  calc
+    covariantScale (u • P) = (u • P).omegaScale := covariantScale_eq_omega (u • P)
+    _ = P.omegaScale := by simp
+    _ = covariantScale P := (covariantScale_eq_omega P).symm
+
+/-- Gauge-orbit equivalence on scalarized prequantum data. -/
+def GaugeEquivalent (P Q : PrequantumData) : Prop :=
+  ∃ u : Gauge, u • P = Q
+
+lemma gaugeEquivalent_refl (P : PrequantumData) :
+    GaugeEquivalent P P := by
+  refine ⟨1, ?_⟩
+  simp
+
+lemma gaugeEquivalent_symm {P Q : PrequantumData}
+    (h : GaugeEquivalent P Q) :
+    GaugeEquivalent Q P := by
+  rcases h with ⟨u, rfl⟩
+  refine ⟨u⁻¹, ?_⟩
+  simp [smul_smul]
+
+lemma gaugeEquivalent_trans {P Q R : PrequantumData}
+    (hPQ : GaugeEquivalent P Q)
+    (hQR : GaugeEquivalent Q R) :
+    GaugeEquivalent P R := by
+  rcases hPQ with ⟨u, rfl⟩
+  rcases hQR with ⟨v, rfl⟩
+  refine ⟨v * u, ?_⟩
+  simp [smul_smul]
+
+/-- Setoid of gauge orbits. -/
+def gaugeSetoid : Setoid PrequantumData where
+  r := GaugeEquivalent
+  iseqv := ⟨gaugeEquivalent_refl, gaugeEquivalent_symm, gaugeEquivalent_trans⟩
+
+/-- `covariantScale` descends to the gauge quotient. -/
+noncomputable def covariantScaleOnQuotient :
+    Quotient gaugeSetoid → ℝ :=
+  Quotient.lift
+    covariantScale
+    (by
+      intro P Q hPQ
+      rcases hPQ with ⟨u, rfl⟩
+      simp)
+
+@[simp] theorem covariantScaleOnQuotient_mk (P : PrequantumData) :
+    covariantScaleOnQuotient (Quotient.mk _ P) = covariantScale P := rfl
+
+/-- `omegaScale` also descends (same invariant, different presentation). -/
+noncomputable def omegaScaleOnQuotient :
+    Quotient gaugeSetoid → ℝ :=
+  Quotient.lift
+    (fun P => P.omegaScale)
+    (by
+      intro P Q hPQ
+      rcases hPQ with ⟨u, rfl⟩
+      simp)
+
+@[simp] theorem omegaScaleOnQuotient_mk (P : PrequantumData) :
+    omegaScaleOnQuotient (Quotient.mk _ P) = P.omegaScale := rfl
+
+end PrequantumData

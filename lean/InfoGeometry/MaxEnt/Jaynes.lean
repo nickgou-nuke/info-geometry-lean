@@ -42,6 +42,31 @@ def Simplex (n : ℕ) : Set (Fin n → ℝ) :=
 noncomputable def ShannonEntropy (p : Fin n → ℝ) : ℝ :=
   entropy (n := n) p 1
 
+/-!
+`xlogx` helper with the explicit Shannon convention at `0`.
+This keeps later analytic statements independent of Lean's `Real.log 0 = 0` choice.
+-/
+/-- Conventioned entropy kernel: `x log x` for `x ≠ 0`, and `0` at `x = 0`. -/
+noncomputable def xlogx (x : ℝ) : ℝ :=
+  if x = 0 then 0 else x * Real.log x
+
+@[simp] lemma xlogx_zero : xlogx 0 = 0 := by
+  simp [xlogx]
+
+lemma xlogx_eq_mul_log (x : ℝ) : xlogx x = x * Real.log x := by
+  by_cases hx : x = 0
+  · simp [xlogx, hx]
+  · simp [xlogx, hx]
+
+/-- Shannon entropy written through `xlogx`. -/
+noncomputable def ShannonEntropyXlogx (p : Fin n → ℝ) : ℝ :=
+  -∑ i, xlogx (p i)
+
+lemma ShannonEntropy_eq_xlogx (p : Fin n → ℝ) :
+    ShannonEntropy (n := n) p = ShannonEntropyXlogx (n := n) p := by
+  unfold ShannonEntropy ShannonEntropyXlogx entropy
+  simp [xlogx_eq_mul_log]
+
 @[simp] lemma ShannonEntropy_eq_entropy (p : Fin n → ℝ) :
     ShannonEntropy (n := n) p = entropy (n := n) p 1 := rfl
 
@@ -53,6 +78,112 @@ lemma normalized_of_mem_simplex {p : Fin n → ℝ} (hp : p ∈ Simplex n) :
   hp.2
 
 end EntropyBasics
+
+section PriorWeightedGibbs
+
+variable {n : ℕ}
+
+/-- Prior-weighted Jaynes partition function `Z_q(λ) = ∑ᵢ qᵢ exp(-λ fᵢ)`. -/
+noncomputable def partitionWithPrior
+    (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) : ℝ :=
+  ∑ i, q.prob i * Real.exp (-lam * f i)
+
+/-- Prior-weighted Gibbs form `pᵢ(λ) = qᵢ exp(-λ fᵢ) / Z_q(λ)`. -/
+noncomputable def gibbsWithPrior
+    (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) : ℝ :=
+  q.prob i * Real.exp (-lam * f i) / partitionWithPrior q f lam
+
+/-- Prior-weighted Gibbs expectation of the observable `f`. -/
+noncomputable def gibbsExpectationWithPrior
+    (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) : ℝ :=
+  ∑ i, gibbsWithPrior q f lam i * f i
+
+lemma partitionWithPrior_pos
+    (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) :
+    0 < partitionWithPrior q f lam := by
+  unfold partitionWithPrior
+  have hnonneg :
+      ∀ i ∈ (Finset.univ : Finset (Fin n)),
+        0 ≤ q.prob i * Real.exp (-lam * f i) := by
+    intro i hi
+    exact mul_nonneg (q.nonneg i) (le_of_lt (Real.exp_pos _))
+  have hposWitness :
+      ∃ i ∈ (Finset.univ : Finset (Fin n)),
+        0 < q.prob i * Real.exp (-lam * f i) := by
+    rcases (InfoGeometry.FinProb.exists_pos q.toFinProb) with ⟨i, hi⟩
+    refine ⟨i, Finset.mem_univ i, ?_⟩
+    exact mul_pos (by simpa using hi) (Real.exp_pos _)
+  exact Finset.sum_pos' hnonneg hposWitness
+
+lemma partitionWithPrior_ne_zero
+    (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) :
+    partitionWithPrior q f lam ≠ 0 :=
+  (partitionWithPrior_pos q f lam).ne'
+
+lemma gibbsWithPrior_nonneg
+    (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) :
+    0 ≤ gibbsWithPrior q f lam i := by
+  unfold gibbsWithPrior
+  exact div_nonneg
+    (mul_nonneg (q.nonneg i) (le_of_lt (Real.exp_pos _)))
+    (le_of_lt (partitionWithPrior_pos q f lam))
+
+lemma gibbsWithPrior_sum_one
+    (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) :
+    ∑ i, gibbsWithPrior q f lam i = 1 := by
+  unfold gibbsWithPrior partitionWithPrior
+  have hZne : (∑ j : Fin n, q.prob j * Real.exp (-lam * f j)) ≠ 0 := by
+    exact (partitionWithPrior_pos q f lam).ne'
+  calc
+    ∑ i : Fin n, q.prob i * Real.exp (-lam * f i) /
+        ∑ j : Fin n, q.prob j * Real.exp (-lam * f j)
+      = (∑ i : Fin n, q.prob i * Real.exp (-lam * f i)) /
+          ∑ j : Fin n, q.prob j * Real.exp (-lam * f j) := by
+          symm
+          simpa using
+            (Finset.sum_div
+              (s := (Finset.univ : Finset (Fin n)))
+              (f := fun i : Fin n => q.prob i * Real.exp (-lam * f i))
+              (a := ∑ j : Fin n, q.prob j * Real.exp (-lam * f j)))
+    _ = 1 := by
+          exact div_self hZne
+
+/-- Prior-weighted log-partition `log Z_q(λ)`. -/
+noncomputable def logPartitionWithPrior
+    (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) : ℝ :=
+  Real.log (partitionWithPrior q f lam)
+
+lemma gibbsWithPrior_eq_exp_sub_logPartition
+    (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) :
+    gibbsWithPrior q f lam i =
+      q.prob i * Real.exp (-lam * f i - logPartitionWithPrior q f lam) := by
+  unfold gibbsWithPrior logPartitionWithPrior
+  have hZpos : 0 < partitionWithPrior q f lam := partitionWithPrior_pos q f lam
+  calc
+    q.prob i * Real.exp (-lam * f i) / partitionWithPrior q f lam
+        = q.prob i * Real.exp (-lam * f i) /
+            Real.exp (Real.log (partitionWithPrior q f lam)) := by
+              rw [Real.exp_log hZpos]
+    _ = q.prob i * (Real.exp (-lam * f i) /
+            Real.exp (Real.log (partitionWithPrior q f lam))) := by
+          rw [mul_div_assoc]
+    _ = q.prob i * Real.exp (-lam * f i - Real.log (partitionWithPrior q f lam)) := by
+          rw [Real.exp_sub]
+
+/-- Prior-weighted Gibbs point packaged as a feasible MaxEnt point once moments match. -/
+noncomputable def gibbsWithPriorMaxEntProblemOfExpectation
+    (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam expectationVal : ℝ)
+    (hE : gibbsExpectationWithPrior q f lam = expectationVal) :
+    MaxEntProblem (n := n) f expectationVal where
+  p := gibbsWithPrior q f lam
+  norm := gibbsWithPrior_sum_one q f lam
+  expectation := by
+    simpa [gibbsExpectationWithPrior] using hE
+  nonneg := by
+    intro i
+    exact gibbsWithPrior_nonneg q f lam i
+
+end PriorWeightedGibbs
 
 section Multiplicity
 

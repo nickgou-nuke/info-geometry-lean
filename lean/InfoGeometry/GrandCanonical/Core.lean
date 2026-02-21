@@ -8,14 +8,20 @@ import Mathlib.Tactic
 /-!
 # Grand Canonical Core
 
-Finite-state grand-canonical model with Gibbs weights.
+Finite-state thermodynamic models with Gibbs weights:
+- canonical specialization (`β` and energy only),
+- genuine grand-canonical extension (`β`, `μ`, energy and number).
 -/
 
 namespace InfoGeometry.GrandCanonical
 
 open scoped BigOperators
 
-/-- Grand-canonical data: an energy observable on a finite state space. -/
+/--
+Canonical-specialization data: an energy observable on a finite state space.
+
+This is the `μ = 0`/single-observable slice of the full grand-canonical model.
+-/
 structure GrandCanonicalParams (α : Type _) where
   energy : α → ℝ
 
@@ -398,5 +404,295 @@ lemma spinodal_iff_energy_eq_mean
   rw [spinodal_iff_variance_eq_zero, variance_eq_zero_iff_energy_eq_mean]
 
 end FiniteModel
+
+/--
+Genuine grand-canonical data: energy and number observables on a finite state space.
+-/
+structure GrandCanonicalTwoParam (α : Type _) where
+  energy : α → ℝ
+  number : α → ℝ
+
+section FiniteGrandCanonicalModel
+
+variable {α : Type _} [Fintype α] [Nonempty α]
+
+/-- Shifted observable `E(x) - μ N(x)` entering the grand-canonical kernel. -/
+noncomputable def shiftedEnergy
+    (params : GrandCanonicalTwoParam α) (μ : ℝ) (x : α) : ℝ :=
+  params.energy x - μ * params.number x
+
+/-- Two-parameter grand-canonical partition function `Z(β, μ)`. -/
+noncomputable def partitionGC
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, Real.exp (-β * shiftedEnergy params μ x)
+
+lemma partitionGC_pos
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    0 < partitionGC params β μ := by
+  classical
+  unfold partitionGC
+  simpa using
+    (Finset.sum_pos
+      (s := (Finset.univ : Finset α))
+      (f := fun x => Real.exp (-β * shiftedEnergy params μ x))
+      (by
+        intro x hx
+        exact Real.exp_pos _)
+      Finset.univ_nonempty)
+
+/-- Log-partition potential `ψ(β, μ) = log Z(β, μ)`. -/
+noncomputable def potentialGC
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  Real.log (partitionGC params β μ)
+
+/-- Gibbs weight at thermodynamic parameters `(β, μ)`. -/
+noncomputable def gibbsWeightGC
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) : ℝ :=
+  Real.exp (-β * shiftedEnergy params μ x) / partitionGC params β μ
+
+lemma gibbsWeightGC_nonneg
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) :
+    0 ≤ gibbsWeightGC params β μ x := by
+  unfold gibbsWeightGC
+  exact div_nonneg (le_of_lt (Real.exp_pos _)) (le_of_lt (partitionGC_pos params β μ))
+
+lemma gibbsWeightGC_pos
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) :
+    0 < gibbsWeightGC params β μ x := by
+  unfold gibbsWeightGC
+  exact div_pos (Real.exp_pos _) (partitionGC_pos params β μ)
+
+lemma gibbsWeightGC_sum_one
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    ∑ x, gibbsWeightGC params β μ x = 1 := by
+  unfold gibbsWeightGC partitionGC
+  have hZne : (∑ y : α, Real.exp (-β * shiftedEnergy params μ y)) ≠ 0 :=
+    ne_of_gt (partitionGC_pos params β μ)
+  calc
+    ∑ x : α, Real.exp (-β * shiftedEnergy params μ x) / ∑ y : α, Real.exp (-β * shiftedEnergy params μ y)
+        = (∑ x : α, Real.exp (-β * shiftedEnergy params μ x)) / ∑ y : α, Real.exp (-β * shiftedEnergy params μ y) := by
+            symm
+            simpa using
+              (Finset.sum_div
+                (s := (Finset.univ : Finset α))
+                (f := fun x => Real.exp (-β * shiftedEnergy params μ x))
+                (a := ∑ y : α, Real.exp (-β * shiftedEnergy params μ y)))
+    _ = 1 := by exact div_self hZne
+
+/-- Mean value of `E - μN` under the grand-canonical Gibbs state. -/
+noncomputable def meanShift
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, gibbsWeightGC params β μ x * shiftedEnergy params μ x
+
+/-- Mean particle number under the grand-canonical Gibbs state. -/
+noncomputable def meanNumber
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, gibbsWeightGC params β μ x * params.number x
+
+/-- Unnormalized first moment of `E - μN`. -/
+noncomputable def firstShiftUnnormalized
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, shiftedEnergy params μ x * Real.exp (-β * shiftedEnergy params μ x)
+
+/-- Unnormalized first moment of `N`. -/
+noncomputable def firstNumberUnnormalized
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, params.number x * Real.exp (-β * shiftedEnergy params μ x)
+
+-- Pointwise derivative in `β`.
+omit [Fintype α] [Nonempty α] in
+lemma hasDerivAt_exp_neg_mul_shiftedEnergy_beta
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) :
+    HasDerivAt
+      (fun t : ℝ => Real.exp (-t * shiftedEnergy params μ x))
+      (-(shiftedEnergy params μ x) * Real.exp (-β * shiftedEnergy params μ x))
+      β := by
+  have hlin : HasDerivAt (fun t : ℝ => -t * shiftedEnergy params μ x)
+      (-(shiftedEnergy params μ x)) β := by
+    simpa [mul_comm, mul_left_comm, mul_assoc] using
+      ((hasDerivAt_id' β).const_mul (-(shiftedEnergy params μ x)))
+  simpa [mul_comm, mul_left_comm, mul_assoc] using
+    (Real.hasDerivAt_exp (-β * shiftedEnergy params μ x)).comp β hlin
+
+/-- Derivative kernel `∂β Z(β, μ)`. -/
+noncomputable def partitionGCDerivBetaFun
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, -(shiftedEnergy params μ x) * Real.exp (-β * shiftedEnergy params μ x)
+
+omit [Nonempty α] in
+lemma partitionGCDerivBetaFun_eq_neg_firstShift
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    partitionGCDerivBetaFun params β μ = -firstShiftUnnormalized params β μ := by
+  unfold partitionGCDerivBetaFun firstShiftUnnormalized
+  simp [Finset.sum_neg_distrib]
+
+omit [Nonempty α] in
+lemma hasDerivAt_partitionGC_beta
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    HasDerivAt (fun t : ℝ => partitionGC params t μ) (partitionGCDerivBetaFun params β μ) β := by
+  classical
+  have hsum :
+      HasDerivAt
+        (fun t : ℝ => ∑ x, Real.exp (-t * shiftedEnergy params μ x))
+        (∑ x, -(shiftedEnergy params μ x) * Real.exp (-β * shiftedEnergy params μ x))
+        β := by
+    simpa using
+      (HasDerivAt.fun_sum (u := (Finset.univ : Finset α))
+        (fun x _hx => hasDerivAt_exp_neg_mul_shiftedEnergy_beta params β μ x))
+  unfold partitionGC partitionGCDerivBetaFun
+  simpa [neg_mul] using hsum
+
+lemma potentialGC_deriv_beta_eq_partitionDeriv_div_partition
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t => potentialGC params t μ) β
+      = partitionGCDerivBetaFun params β μ / partitionGC params β μ := by
+  unfold potentialGC
+  have hdiff : DifferentiableAt ℝ (fun t => partitionGC params t μ) β :=
+    (hasDerivAt_partitionGC_beta params β μ).differentiableAt
+  have hne : partitionGC params β μ ≠ 0 := ne_of_gt (partitionGC_pos params β μ)
+  calc
+    deriv (fun t => Real.log (partitionGC params t μ)) β
+        = deriv (fun t => partitionGC params t μ) β / partitionGC params β μ := by
+            simpa using (deriv.log (f := fun t => partitionGC params t μ) hdiff hne)
+    _ = partitionGCDerivBetaFun params β μ / partitionGC params β μ := by
+          rw [(hasDerivAt_partitionGC_beta params β μ).deriv]
+
+lemma meanShift_eq_firstShift_div_partition
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    meanShift params β μ = firstShiftUnnormalized params β μ / partitionGC params β μ := by
+  unfold meanShift firstShiftUnnormalized gibbsWeightGC
+  have hZne : partitionGC params β μ ≠ 0 := ne_of_gt (partitionGC_pos params β μ)
+  calc
+    ∑ x, (Real.exp (-β * shiftedEnergy params μ x) / partitionGC params β μ) * shiftedEnergy params μ x
+        = ∑ x, (shiftedEnergy params μ x * Real.exp (-β * shiftedEnergy params μ x)) / partitionGC params β μ := by
+            refine Finset.sum_congr rfl ?_
+            intro x hx
+            field_simp [hZne]
+    _ = (∑ x, shiftedEnergy params μ x * Real.exp (-β * shiftedEnergy params μ x)) / partitionGC params β μ := by
+          symm
+          simpa using
+            (Finset.sum_div
+              (s := (Finset.univ : Finset α))
+              (f := fun x => shiftedEnergy params μ x * Real.exp (-β * shiftedEnergy params μ x))
+              (a := partitionGC params β μ))
+    _ = firstShiftUnnormalized params β μ / partitionGC params β μ := by
+          rfl
+
+/-- Grand-canonical `β`-derivative: `∂β ψ = - E_{β,μ}[E - μN]`. -/
+lemma potentialGC_deriv_beta_eq_neg_meanShift
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t => potentialGC params t μ) β = -meanShift params β μ := by
+  rw [potentialGC_deriv_beta_eq_partitionDeriv_div_partition]
+  rw [partitionGCDerivBetaFun_eq_neg_firstShift, neg_div, meanShift_eq_firstShift_div_partition]
+
+-- Pointwise derivative in `μ`.
+omit [Fintype α] [Nonempty α] in
+lemma hasDerivAt_exp_neg_mul_shiftedEnergy_mu
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) :
+    HasDerivAt
+      (fun t : ℝ => Real.exp (-β * shiftedEnergy params t x))
+      ((β * params.number x) * Real.exp (-β * shiftedEnergy params μ x))
+      μ := by
+  have hmul : HasDerivAt (fun t : ℝ => t * params.number x) (params.number x) μ := by
+    simpa [mul_comm, mul_left_comm, mul_assoc] using
+      ((hasDerivAt_id' μ).mul_const (params.number x))
+  have hshift : HasDerivAt (fun t : ℝ => shiftedEnergy params t x) (-(params.number x)) μ := by
+    unfold shiftedEnergy
+    simpa [mul_comm, mul_left_comm, mul_assoc] using
+      hmul.const_sub (params.energy x)
+  have hlin : HasDerivAt
+      (fun t : ℝ => -β * shiftedEnergy params t x)
+      (β * params.number x)
+      μ := by
+    simpa [mul_comm, mul_left_comm, mul_assoc] using (hshift.const_mul (-β))
+  simpa [mul_comm, mul_left_comm, mul_assoc] using
+    (Real.hasDerivAt_exp (-β * shiftedEnergy params μ x)).comp μ hlin
+
+/-- Derivative kernel `∂μ Z(β, μ)`. -/
+noncomputable def partitionGCDerivMuFun
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, (β * params.number x) * Real.exp (-β * shiftedEnergy params μ x)
+
+omit [Nonempty α] in
+lemma partitionGCDerivMuFun_eq_beta_mul_firstNumber
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    partitionGCDerivMuFun params β μ = β * firstNumberUnnormalized params β μ := by
+  unfold partitionGCDerivMuFun firstNumberUnnormalized
+  calc
+    ∑ x, (β * params.number x) * Real.exp (-β * shiftedEnergy params μ x)
+        = ∑ x, β * (params.number x * Real.exp (-β * shiftedEnergy params μ x)) := by
+            refine Finset.sum_congr rfl ?_
+            intro x hx
+            ring
+    _ = β * ∑ x, params.number x * Real.exp (-β * shiftedEnergy params μ x) := by
+          symm
+          simpa using
+            (Finset.mul_sum
+              (s := (Finset.univ : Finset α))
+              (a := β)
+              (f := fun x => params.number x * Real.exp (-β * shiftedEnergy params μ x)))
+
+omit [Nonempty α] in
+lemma hasDerivAt_partitionGC_mu
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    HasDerivAt (fun t : ℝ => partitionGC params β t) (partitionGCDerivMuFun params β μ) μ := by
+  classical
+  have hsum :
+      HasDerivAt
+        (fun t : ℝ => ∑ x, Real.exp (-β * shiftedEnergy params t x))
+        (∑ x, (β * params.number x) * Real.exp (-β * shiftedEnergy params μ x))
+        μ := by
+    simpa using
+      (HasDerivAt.fun_sum (u := (Finset.univ : Finset α))
+        (fun x _hx => hasDerivAt_exp_neg_mul_shiftedEnergy_mu params β μ x))
+  unfold partitionGC partitionGCDerivMuFun
+  simpa using hsum
+
+lemma potentialGC_deriv_mu_eq_partitionDeriv_div_partition
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t => potentialGC params β t) μ
+      = partitionGCDerivMuFun params β μ / partitionGC params β μ := by
+  unfold potentialGC
+  have hdiff : DifferentiableAt ℝ (fun t => partitionGC params β t) μ :=
+    (hasDerivAt_partitionGC_mu params β μ).differentiableAt
+  have hne : partitionGC params β μ ≠ 0 := ne_of_gt (partitionGC_pos params β μ)
+  calc
+    deriv (fun t => Real.log (partitionGC params β t)) μ
+        = deriv (fun t => partitionGC params β t) μ / partitionGC params β μ := by
+            simpa using (deriv.log (f := fun t => partitionGC params β t) hdiff hne)
+    _ = partitionGCDerivMuFun params β μ / partitionGC params β μ := by
+          rw [(hasDerivAt_partitionGC_mu params β μ).deriv]
+
+lemma meanNumber_eq_firstNumber_div_partition
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    meanNumber params β μ = firstNumberUnnormalized params β μ / partitionGC params β μ := by
+  unfold meanNumber firstNumberUnnormalized gibbsWeightGC
+  have hZne : partitionGC params β μ ≠ 0 := ne_of_gt (partitionGC_pos params β μ)
+  calc
+    ∑ x, (Real.exp (-β * shiftedEnergy params μ x) / partitionGC params β μ) * params.number x
+        = ∑ x, (params.number x * Real.exp (-β * shiftedEnergy params μ x)) / partitionGC params β μ := by
+            refine Finset.sum_congr rfl ?_
+            intro x hx
+            field_simp [hZne]
+    _ = (∑ x, params.number x * Real.exp (-β * shiftedEnergy params μ x)) / partitionGC params β μ := by
+          symm
+          simpa using
+            (Finset.sum_div
+              (s := (Finset.univ : Finset α))
+              (f := fun x => params.number x * Real.exp (-β * shiftedEnergy params μ x))
+              (a := partitionGC params β μ))
+    _ = firstNumberUnnormalized params β μ / partitionGC params β μ := by
+          rfl
+
+/-- Grand-canonical `μ`-derivative: `∂μ ψ = β E_{β,μ}[N]`. -/
+lemma potentialGC_deriv_mu_eq_beta_meanNumber
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t => potentialGC params β t) μ = β * meanNumber params β μ := by
+  rw [potentialGC_deriv_mu_eq_partitionDeriv_div_partition]
+  rw [partitionGCDerivMuFun_eq_beta_mul_firstNumber, meanNumber_eq_firstNumber_div_partition]
+  simpa [mul_assoc] using
+    (mul_div_assoc β (firstNumberUnnormalized params β μ) (partitionGC params β μ))
+
+end FiniteGrandCanonicalModel
 
 end InfoGeometry.GrandCanonical

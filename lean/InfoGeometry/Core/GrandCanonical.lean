@@ -1,4 +1,5 @@
 import InfoGeometry.GrandCanonical.Core
+import Mathlib.Analysis.Calculus.Deriv.Basic
 
 /-!
 # Core Grand Canonical
@@ -9,6 +10,7 @@ Core façade re-exporting the finite grand-canonical model and key theorems.
 namespace InfoGeometry.Core
 
 abbrev GrandCanonicalParams := InfoGeometry.GrandCanonical.GrandCanonicalParams
+abbrev GrandCanonicalTwoParam := InfoGeometry.GrandCanonical.GrandCanonicalTwoParam
 
 section FiniteModel
 
@@ -54,6 +56,11 @@ lemma gc_potential_second_derivative_eq_variance
     hessian params β = variance params β :=
   potential_second_derivative_eq_variance params β
 
+lemma gc_hessian_eq_variance
+    (params : GrandCanonicalParams α) (β : ℝ) :
+    hessian params β = variance params β :=
+  gc_potential_second_derivative_eq_variance params β
+
 lemma gc_hessian_nonneg (params : GrandCanonicalParams α) (β : ℝ) :
     0 ≤ hessian params β :=
   hessian_nonneg params β
@@ -64,5 +71,57 @@ lemma gc_spinodal_iff_variance_eq_zero
   spinodal_iff_variance_eq_zero params β
 
 end FiniteModel
+
+section FiniteGrandCanonicalModel
+
+open InfoGeometry.GrandCanonical
+
+variable {α : Type _} [Fintype α] [Nonempty α]
+
+noncomputable abbrev shiftedEnergy
+    (params : GrandCanonicalTwoParam α) (μ : ℝ) (x : α) : ℝ :=
+  InfoGeometry.GrandCanonical.shiftedEnergy params μ x
+
+noncomputable abbrev partitionGC
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  InfoGeometry.GrandCanonical.partitionGC params β μ
+
+noncomputable abbrev potentialGC
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  InfoGeometry.GrandCanonical.potentialGC params β μ
+
+noncomputable abbrev gibbsWeightGC
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) : ℝ :=
+  InfoGeometry.GrandCanonical.gibbsWeightGC params β μ x
+
+noncomputable abbrev meanShift
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  InfoGeometry.GrandCanonical.meanShift params β μ
+
+noncomputable abbrev meanNumber
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  InfoGeometry.GrandCanonical.meanNumber params β μ
+
+lemma gc2_partition_pos
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    0 < partitionGC params β μ :=
+  partitionGC_pos params β μ
+
+lemma gc2_gibbsWeight_sum_one
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    ∑ x, gibbsWeightGC params β μ x = 1 :=
+  gibbsWeightGC_sum_one params β μ
+
+lemma gc2_potential_deriv_beta_eq_neg_meanShift
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t => potentialGC params t μ) β = -meanShift params β μ :=
+  potentialGC_deriv_beta_eq_neg_meanShift params β μ
+
+lemma gc2_potential_deriv_mu_eq_beta_meanNumber
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t => potentialGC params β t) μ = β * meanNumber params β μ :=
+  potentialGC_deriv_mu_eq_beta_meanNumber params β μ
+
+end FiniteGrandCanonicalModel
 
 end InfoGeometry.Core

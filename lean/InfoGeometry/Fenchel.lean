@@ -1,4 +1,7 @@
 import InfoGeometry.Convex.Bregman
+import Mathlib.Order.Closure
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
 
 /-!
 # Bregman Divergence and Fenchel Duality (1D)
@@ -17,8 +20,9 @@ dually-flat information geometry layer:
 No supremum machinery is used.
 -/
 
-open Real
-open InfoGeometry
+namespace InfoGeometry
+namespace Convex
+namespace OneD
 
 /-- Compatibility alias to the canonical three-point identity in `InfoGeometry.Convex.Bregman`. -/
 lemma bregmanDiv_three_point
@@ -44,10 +48,13 @@ lemma bregmanDiv_pythagorean_ineq
 
 section ConvexDuality
 
-/-- `fStar` is a (weak) Legendre conjugate of `f`
-if it upper-bounds all affine supports. -/
-def IsLegendreConjugate (f fStar : ℝ → ℝ) : Prop :=
+/-- `fStar` is a Fenchel upper bound for `f` if it upper-bounds all affine supports. -/
+def IsFenchelUpperBound (f fStar : ℝ → ℝ) : Prop :=
   ∀ η θ, η * θ - f θ ≤ fStar η
+
+/-- Compatibility alias: a weak Legendre-conjugacy interface via Fenchel upper bounds. -/
+def IsLegendreConjugate (f fStar : ℝ → ℝ) : Prop :=
+  IsFenchelUpperBound f fStar
 
 /-- Fenchel gap associated to a primal/dual pair. -/
 def fenchelGap (f fStar : ℝ → ℝ) (θ η : ℝ) : ℝ :=
@@ -187,6 +194,16 @@ lemma fenchel_legendre_equivalence
     subst hη
     exact fenchelGap_zero_of_gradient hGrad θ
 
+/-- `fenchel_legendre_equivalence` with an explicit name for its value-matching hypothesis. -/
+lemma fenchelGap_zero_iff_eq_deriv_of_dual_value_match
+    {f fStar : ℝ → ℝ}
+    (hGrad : IsGradientDual f fStar)
+    (θ η : ℝ)
+    (hEqGrad : fStar η = deriv f θ * θ - f θ)
+    (hθ : θ ≠ 0) :
+    fenchelGap f fStar θ η = 0 ↔ η = deriv f θ :=
+  fenchel_legendre_equivalence hGrad θ η hEqGrad hθ
+
 /-- Gradient pairing realizes Fenchel–Young equality. -/
 lemma fenchel_young_eq_gradient
     {f fStar : ℝ → ℝ}
@@ -208,8 +225,6 @@ self-adjoint Galois connection.
 
 No convexity, topology, or analytic hypotheses are used.
 -/
-
-namespace InfoGeometry
 
 section OrderKernel
 
@@ -233,7 +248,8 @@ lemma kernelOp_monotone (Φ : X → X → α) :
 lemma kernelOp_eq_transpose (Φ : X → X → α)
     (hΦ : ∀ x y, Φ x y = Φ y x) :
     KernelOp Φ = KernelOp (fun x y => Φ y x) := by
-  funext f y
+  funext f
+  funext y
   simp [KernelOp, hΦ]
 
 /-- Closure induced by double application of `KernelOp`. -/
@@ -284,4 +300,6 @@ noncomputable instance kernelClosedFunctionsCompleteLattice (Φ : X → X → α
 
 end OrderKernel
 
+end OneD
+end Convex
 end InfoGeometry

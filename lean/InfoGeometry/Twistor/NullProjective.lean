@@ -31,11 +31,11 @@ def IsNull (Q : QuadraticForm K V) : ℙ K V → Prop :=
           exact a.2 this
         have hscaled : (t * t) * Q (b : V) = 0 := by
           have hta : Q (t • (b : V)) = 0 := by simpa [ht] using ha
-          simpa [QuadraticMap.map_smul, smul_eq_mul] using hta
+          simpa [Q.map_smul, smul_eq_mul] using hta
         exact (mul_eq_zero.mp hscaled).resolve_left (mul_ne_zero ht0 ht0)
       · intro hb
         have hta : Q (t • (b : V)) = 0 := by
-          simp [QuadraticMap.map_smul, hb, smul_eq_mul]
+          simp [Q.map_smul, hb, smul_eq_mul]
         simpa [ht] using hta)
 
 /-- Projective null cone (`twistor space`) associated to `Q`. -/
@@ -55,7 +55,6 @@ def twistorMk (Q : QuadraticForm K V) (v : V) (hv : v ≠ 0) (hQ : Q v = 0) :
 section Doubled
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
-variable [NoZeroSMulDivisors ℝ (DoubledSpace E)]
 
 /-- Mathlib-native projective states on doubled space. -/
 abbrev DoubledProjectiveState : Type _ := InfoGeometry.Convex.ProjectiveState (E := E)
@@ -76,9 +75,8 @@ theorem isNull_projectivize_iff
     (v : DoubledSpace E) (hv : v ≠ 0) :
     IsNull Q
       (InfoGeometry.Convex.projectivize (E := E) v hv) ↔ Q v = 0 := by
-  let _ := (inferInstance : NoZeroSMulDivisors ℝ (DoubledSpace E))
   change IsNull Q (Projectivization.mk ℝ v hv) ↔ Q v = 0
-  exact @isNull_mk_iff ℝ (DoubledSpace E) _ _ _ Q v hv
+  exact isNull_mk_iff (K := ℝ) (V := DoubledSpace E) (Q := Q) v hv
 
 attribute [simp] isNull_projectivize_iff
 

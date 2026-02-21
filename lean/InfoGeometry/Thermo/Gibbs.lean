@@ -45,6 +45,10 @@ noncomputable def logZ (E : Ω → ℝ) (ε : ℝ) : ℝ :=
 noncomputable def freeEnergy (E : Ω → ℝ) (ε : ℝ) : ℝ :=
   -ε * logZ E ε
 
+omit [Nonempty Ω] in
+@[simp] lemma freeEnergy_def' (E : Ω → ℝ) (ε : ℝ) :
+    freeEnergy E ε = -ε * Real.log (Z E ε) := rfl
+
 /-- Soft-min functional induced by `E` at scale `ε`. -/
 noncomputable def softMin (E : Ω → ℝ) (ε : ℝ) : ℝ :=
   freeEnergy E ε
@@ -81,6 +85,12 @@ lemma Z_pos (E : Ω → ℝ) (ε : ℝ) : 0 < Z E ε := by
 lemma Z_ne_zero (E : Ω → ℝ) (ε : ℝ) : Z E ε ≠ 0 :=
   (Z_pos E ε).ne'
 
+omit [Fintype Ω] [Nonempty Ω] in
+lemma weight_pos (E : Ω → ℝ) (ε : ℝ) (ω : Ω) :
+    0 < weight E ε ω := by
+  unfold weight
+  exact Real.exp_pos _
+
 omit [Nonempty Ω] in
 lemma softMin_def (E : Ω → ℝ) (ε : ℝ) :
     softMin E ε = -ε * Real.log (∑ ω, Real.exp (-(E ω) / ε)) := by
@@ -90,6 +100,11 @@ lemma gibbsProb_nonneg (E : Ω → ℝ) (ε : ℝ) (ω : Ω) :
     0 ≤ gibbsProb E ε ω := by
   unfold gibbsProb weight
   exact div_nonneg (le_of_lt (Real.exp_pos _)) (le_of_lt (Z_pos E ε))
+
+lemma gibbsProb_pos (E : Ω → ℝ) (ε : ℝ) (ω : Ω) :
+    0 < gibbsProb E ε ω := by
+  unfold gibbsProb
+  exact div_pos (weight_pos E ε ω) (Z_pos E ε)
 
 lemma gibbsProb_sum_one (E : Ω → ℝ) (ε : ℝ) :
     ∑ ω, gibbsProb E ε ω = 1 := by
@@ -168,6 +183,17 @@ lemma freeEnergy_eq_internal_sub_scale_entropy
   unfold freeEnergy
   field_simp [hε]
   ring
+
+lemma internalEnergy_sub_freeEnergy
+    (E : Ω → ℝ) (ε : ℝ) (hε : ε ≠ 0) :
+    internalEnergy E ε - freeEnergy E ε = ε * shannonEntropy E ε := by
+  rw [freeEnergy_eq_internal_sub_scale_entropy (E := E) (ε := ε) hε]
+  ring
+
+lemma epsilon_mul_shannonEntropy
+    (E : Ω → ℝ) (ε : ℝ) (hε : ε ≠ 0) :
+    ε * shannonEntropy E ε = internalEnergy E ε - freeEnergy E ε :=
+  (internalEnergy_sub_freeEnergy (E := E) (ε := ε) hε).symm
 
 end Finite
 

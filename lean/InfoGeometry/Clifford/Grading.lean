@@ -7,13 +7,17 @@ open InfoGeometry.Core
 
 section KreinClifford
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Commutator bracket on doubled-space endomorphisms. -/
 def clmComm
     (A B : DoubledSpace E →L[ℝ] DoubledSpace E) :
     DoubledSpace E →L[ℝ] DoubledSpace E :=
   A.comp B - B.comp A
+
+lemma clmComm_eq_lie
+    (A B : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    clmComm A B = ⁅A, B⁆ := rfl
 
 /-- Jordan product from the associative product on doubled-space endomorphisms. -/
 noncomputable def jordanProd
@@ -33,9 +37,13 @@ def isDerivation
   ∀ A B,
     D (jordanProd A B) = jordanProd (D A) B + jordanProd A (D B)
 
-/-- Grade-0 (structure) operators commute with the grading involution `J`. -/
-def isGradeZero (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
+/-- Even operators commute with the grading involution `J`. -/
+def isEven (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
   (modularJ (E := E)).comp A = A.comp (modularJ (E := E))
+
+/-- Backward-compatible alias for even operators. -/
+abbrev isGradeZero (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
+  isEven (E := E) A
 
 lemma jordanProd_comm
     (A B : DoubledSpace E →L[ℝ] DoubledSpace E) :
@@ -59,12 +67,12 @@ lemma comp_eq_jordan_add_half_comm
   · exact hsplit ((A (B v)).1)
   · exact hsplit ((A (B v)).2)
 
-lemma gradeZero_closed_comm
+lemma even_closed_comm
     {A B : DoubledSpace E →L[ℝ] DoubledSpace E}
-    (hA : isGradeZero (E := E) A)
-    (hB : isGradeZero (E := E) B) :
-    isGradeZero (E := E) (clmComm A B) := by
-  unfold isGradeZero at *
+    (hA : isEven (E := E) A)
+    (hB : isEven (E := E) B) :
+    isEven (E := E) (clmComm A B) := by
+  unfold isEven at *
   calc
     (modularJ (E := E)).comp (clmComm A B)
         = (modularJ (E := E)).comp (A.comp B) - (modularJ (E := E)).comp (B.comp A) := by
@@ -81,6 +89,14 @@ lemma gradeZero_closed_comm
           simp [ContinuousLinearMap.comp_assoc]
     _ = (clmComm A B).comp (modularJ (E := E)) := by
           simp [clmComm, ContinuousLinearMap.sub_comp]
+
+/-- Backward-compatible name for closure of commuting endomorphisms under commutator. -/
+lemma gradeZero_closed_comm
+    {A B : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hA : isGradeZero (E := E) A)
+    (hB : isGradeZero (E := E) B) :
+    isGradeZero (E := E) (clmComm A B) :=
+  even_closed_comm (E := E) hA hB
 
 /-- `+1` eigenspace predicate for the grading involution `J`. -/
 def inGradePlus (v : DoubledSpace E) : Prop := modularJ (E := E) v = v
@@ -148,16 +164,63 @@ lemma spectralEpsilon_swaps_grades_minus_to_plus
   subst hxy
   simp [inGradePlus, modularJ, spectralEpsilon]
 
-/-- Even operators commute with the grading involution `J`. -/
-def isEven (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
-  (modularJ (E := E)).comp A = A.comp (modularJ (E := E))
-
 /-- Odd operators anticommute with the grading involution `J`. -/
 def isOdd (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
   (modularJ (E := E)).comp A = -(A.comp (modularJ (E := E)))
 
 lemma isEven_iff_gradeZero (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
     isEven (E := E) A ↔ isGradeZero (E := E) A := Iff.rfl
+
+/-- Conjugation by the grading involution on endomorphisms: `σ(A) = J ∘ A ∘ J`. -/
+def gradeConj (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    DoubledSpace E →L[ℝ] DoubledSpace E :=
+  (modularJ (E := E)).comp (A.comp (modularJ (E := E)))
+
+lemma isEven_iff_gradeConj_eq
+    (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    isEven (E := E) A ↔ gradeConj (E := E) A = A := by
+  constructor
+  · intro hEven
+    apply ContinuousLinearMap.ext
+    intro v
+    have hAtJ :
+        (modularJ (E := E)) (A ((modularJ (E := E)) v))
+          = A ((modularJ (E := E)) ((modularJ (E := E)) v)) := by
+      simpa [ContinuousLinearMap.comp_apply] using
+        congrArg (fun f => f ((modularJ (E := E)) v)) hEven
+    simpa [gradeConj, ContinuousLinearMap.comp_apply, modularJ_involution] using hAtJ
+  · intro hConj
+    apply ContinuousLinearMap.ext
+    intro v
+    have hAtJ :
+        (modularJ (E := E)) (A ((modularJ (E := E)) ((modularJ (E := E)) v)))
+          = A ((modularJ (E := E)) v) := by
+      simpa [gradeConj, ContinuousLinearMap.comp_apply] using
+        congrArg (fun f => f ((modularJ (E := E)) v)) hConj
+    simpa [ContinuousLinearMap.comp_apply, modularJ_involution] using hAtJ
+
+lemma isOdd_iff_gradeConj_eq_neg
+    (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    isOdd (E := E) A ↔ gradeConj (E := E) A = -A := by
+  constructor
+  · intro hOdd
+    apply ContinuousLinearMap.ext
+    intro v
+    have hAtJ :
+        (modularJ (E := E)) (A ((modularJ (E := E)) v))
+          = -(A ((modularJ (E := E)) ((modularJ (E := E)) v))) := by
+      simpa [ContinuousLinearMap.comp_apply] using
+        congrArg (fun f => f ((modularJ (E := E)) v)) hOdd
+    simpa [gradeConj, ContinuousLinearMap.comp_apply, modularJ_involution] using hAtJ
+  · intro hConj
+    apply ContinuousLinearMap.ext
+    intro v
+    have hAtJ :
+        (modularJ (E := E)) (A ((modularJ (E := E)) ((modularJ (E := E)) v)))
+          = -A ((modularJ (E := E)) v) := by
+      simpa [gradeConj, ContinuousLinearMap.comp_apply] using
+        congrArg (fun f => f ((modularJ (E := E)) v)) hConj
+    simpa [ContinuousLinearMap.comp_apply, modularJ_involution] using hAtJ
 
 /-- Even endomorphisms form a Lie subalgebra under the commutator. -/
 def evenLieSubalgebra :
@@ -190,10 +253,7 @@ def evenLieSubalgebra :
   lie_mem' := by
     intro A B hA hB
     change isEven (E := E) (clmComm A B)
-    exact (isEven_iff_gradeZero (E := E) (A := clmComm A B)).2 <|
-      gradeZero_closed_comm (E := E)
-        ((isEven_iff_gradeZero (E := E) (A := A)).1 hA)
-        ((isEven_iff_gradeZero (E := E) (A := B)).1 hB)
+    exact even_closed_comm (E := E) hA hB
 
 /-- Odd endomorphisms form a linear subspace (submodule), but not a Lie subalgebra. -/
 def oddSubmodule :
@@ -232,10 +292,7 @@ lemma bracket_even_even_mem_even
     (hA : isEven (E := E) A)
     (hB : isEven (E := E) B) :
     isEven (E := E) (clmComm A B) := by
-  exact (isEven_iff_gradeZero (E := E) (A := clmComm A B)).2 <|
-    gradeZero_closed_comm (E := E)
-      ((isEven_iff_gradeZero (E := E) (A := A)).1 hA)
-      ((isEven_iff_gradeZero (E := E) (A := B)).1 hB)
+  exact even_closed_comm (E := E) hA hB
 
 /-- Bracket closure `[𝔨, 𝔭] ⊆ 𝔭` for even/odd endomorphisms. -/
 lemma bracket_even_odd_mem_odd
@@ -336,15 +393,108 @@ noncomputable def spectralMinusProj : DoubledSpace E →L[ℝ] DoubledSpace E :=
   ((2 : ℝ)⁻¹) •
     (ContinuousLinearMap.id ℝ (DoubledSpace E) - spectralEpsilon (E := E))
 
-lemma gradePlusProj_apply (v : DoubledSpace E) :
+@[simp] lemma gradePlusProj_apply (v : DoubledSpace E) :
     gradePlusProj (E := E) v = gradePlusPart (E := E) v := by
   unfold gradePlusPart
   simp [gradePlusProj, Projector.plus, modularJInvolution, smul_add]
 
-lemma gradeMinusProj_apply (v : DoubledSpace E) :
+@[simp] lemma gradeMinusProj_apply (v : DoubledSpace E) :
     gradeMinusProj (E := E) v = gradeMinusPart (E := E) v := by
   unfold gradeMinusPart
   simp [gradeMinusProj, Projector.minus, modularJInvolution]
+
+@[simp] lemma spectralPlusProj_apply (v : DoubledSpace E) :
+    spectralPlusProj (E := E) v = (v.1, 0) := by
+  rcases v with ⟨x, y⟩
+  have hhalf : ((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) = 1 := by norm_num
+  ext
+  · calc
+      (spectralPlusProj (E := E) (x, y)).1
+          = ((2 : ℝ)⁻¹) • x + ((2 : ℝ)⁻¹) • x := by
+              simp [spectralPlusProj, spectralEpsilon, smul_add]
+      _ = (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • x := by
+            simp [add_smul]
+      _ = (1 : ℝ) • x := by simp [hhalf]
+      _ = x := by simp
+  · simp [spectralPlusProj, spectralEpsilon, smul_add]
+
+@[simp] lemma spectralMinusProj_apply (v : DoubledSpace E) :
+    spectralMinusProj (E := E) v = (0, v.2) := by
+  rcases v with ⟨x, y⟩
+  have hhalf : ((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) = 1 := by norm_num
+  ext
+  · simp [spectralMinusProj, spectralEpsilon, sub_eq_add_neg, smul_add]
+  · calc
+      (spectralMinusProj (E := E) (x, y)).2
+          = ((2 : ℝ)⁻¹) • y + ((2 : ℝ)⁻¹) • y := by
+              simp [spectralMinusProj, spectralEpsilon, sub_eq_add_neg, smul_add]
+      _ = (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • y := by
+            simp [add_smul]
+      _ = (1 : ℝ) • y := by simp [hhalf]
+      _ = y := by simp
+
+lemma gradePlusProj_idempotent :
+    (gradePlusProj (E := E)).comp (gradePlusProj (E := E)) = gradePlusProj (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro v
+  simp [gradePlusPart, Projector.plus_idempotent]
+
+lemma gradeMinusProj_idempotent :
+    (gradeMinusProj (E := E)).comp (gradeMinusProj (E := E)) = gradeMinusProj (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro v
+  simp [gradeMinusPart, Projector.minus_idempotent]
+
+lemma gradePlusProj_comp_gradeMinusProj :
+    (gradePlusProj (E := E)).comp (gradeMinusProj (E := E)) = 0 := by
+  apply ContinuousLinearMap.ext
+  intro v
+  simp [gradePlusPart, gradeMinusPart, Projector.plus_minus]
+
+lemma gradeMinusProj_comp_gradePlusProj :
+    (gradeMinusProj (E := E)).comp (gradePlusProj (E := E)) = 0 := by
+  apply ContinuousLinearMap.ext
+  intro v
+  simp [gradePlusPart, gradeMinusPart, Projector.minus_plus]
+
+lemma gradeProj_sum :
+    gradePlusProj (E := E) + gradeMinusProj (E := E)
+      = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  apply ContinuousLinearMap.ext
+  intro v
+  simpa [ContinuousLinearMap.id_apply] using (grade_decomposition (E := E) v).symm
+
+lemma spectralPlusProj_idempotent :
+    (spectralPlusProj (E := E)).comp (spectralPlusProj (E := E)) = spectralPlusProj (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro v
+  simp
+
+lemma spectralMinusProj_idempotent :
+    (spectralMinusProj (E := E)).comp (spectralMinusProj (E := E)) = spectralMinusProj (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro v
+  simp
+
+lemma spectralPlusProj_comp_spectralMinusProj :
+    (spectralPlusProj (E := E)).comp (spectralMinusProj (E := E)) = 0 := by
+  apply ContinuousLinearMap.ext
+  intro v
+  simp
+
+lemma spectralMinusProj_comp_spectralPlusProj :
+    (spectralMinusProj (E := E)).comp (spectralPlusProj (E := E)) = 0 := by
+  apply ContinuousLinearMap.ext
+  intro v
+  simp
+
+lemma spectralProj_sum :
+    spectralPlusProj (E := E) + spectralMinusProj (E := E)
+      = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  apply ContinuousLinearMap.ext
+  intro v
+  rcases v with ⟨x, y⟩
+  simp [ContinuousLinearMap.id_apply]
 
 lemma projector_commutator_gradePlus_spectralPlus :
     clmComm (gradePlusProj (E := E)) (spectralPlusProj (E := E))
@@ -396,6 +546,31 @@ lemma splittingIncompatible_iff_nonzero_clifford_comm :
     apply h
     have h4 : (4 : ℝ) ≠ 0 := by norm_num
     exact smul_eq_zero.mp hProj |>.resolve_left (inv_ne_zero h4)
+
+lemma complexI_ne_zero [Nontrivial E] :
+    complexI (E := E) ≠ 0 := by
+  intro hI
+  rcases exists_ne (0 : E) with ⟨x, hx⟩
+  have hAt : complexI (E := E) (x, 0) = (0 : DoubledSpace E) := by
+    simpa using congrArg (fun T => T (x, 0)) hI
+  have hx0 : x = 0 := by
+    simpa [complexI, modularJ, spectralEpsilon] using congrArg Prod.snd hAt
+  exact hx hx0
+
+lemma splittingIncompatible_of_nontrivial [Nontrivial E] :
+    splittingIncompatible (E := E) := by
+  intro hSplit
+  have hsmul0 : ((2 : ℝ)⁻¹) • complexI (E := E) = 0 := by
+    calc
+      ((2 : ℝ)⁻¹) • complexI (E := E)
+          = clmComm (gradePlusProj (E := E)) (spectralPlusProj (E := E)) := by
+              simpa using
+                (projector_commutator_gradePlus_spectralPlus_eq_half_complexI (E := E)).symm
+      _ = 0 := hSplit
+  have hhalf : ((2 : ℝ)⁻¹) ≠ 0 := by norm_num
+  have hI0 : complexI (E := E) = 0 :=
+    (smul_eq_zero.mp hsmul0).resolve_left hhalf
+  exact (complexI_ne_zero (E := E)) hI0
 
 /-- CAR-style dictionary entry: creation-like projector (grade `+`). -/
 noncomputable def creationLike : DoubledSpace E →L[ℝ] DoubledSpace E :=

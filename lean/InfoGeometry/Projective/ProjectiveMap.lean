@@ -42,7 +42,7 @@ lemma projectiveMap_mk
     projectiveMap (E := E) A (projectivize (E := E) v)
       = projectivize (E := E) (A v) := rfl
 
-@[simp] lemma projectiveMap_vacuum
+lemma projectiveMap_vacuum
     (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
     projectiveMap (E := E) A (vacuum (E := E)) = vacuum (E := E) := by
   simp [vacuum, projectiveMap_mk]
@@ -64,8 +64,9 @@ lemma projectiveMap_mk_gauge
 /-- Grade-preserving (even) endomorphisms descend to projective states. -/
 def projectiveMapEven
     (A : DoubledSpace E →L[ℝ] DoubledSpace E)
-    (_hA : isEven (E := E) A) :
+    (hA : isEven (E := E) A) :
     ProjectiveState (E := E) → ProjectiveState (E := E) :=
+  let _ := hA
   projectiveMap (E := E) A
 
 lemma projectiveMapEven_mk
@@ -75,7 +76,7 @@ lemma projectiveMapEven_mk
     projectiveMapEven (E := E) A hA (projectivize (E := E) v)
       = projectivize (E := E) (A v) := rfl
 
-@[simp] lemma projectiveMapEven_vacuum
+lemma projectiveMapEven_vacuum
     (A : DoubledSpace E →L[ℝ] DoubledSpace E)
     (hA : isEven (E := E) A) :
     projectiveMapEven (E := E) A hA (vacuum (E := E)) = vacuum (E := E) := by

@@ -1,9 +1,9 @@
 {"synthetic": false,
  "schemaVersion": "2025-09-10",
  "outputs":
- {"o": ["d11033149e3f4d6b.olean"],
-  "i": "0478c6dbbdc0168f.ilean",
-  "c": "09afd81beec6e3c5.c"},
+ {"o": ["023229c1aaea8e3b.olean"],
+  "i": "9289ade6c12e7ccb.ilean",
+  "c": "944c09aed73276b4.c"},
  "log":
  [{"message":
    ".> LEAN_PATH=/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/Cli/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/batteries/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/Qq/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/aesop/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/proofwidgets/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/importGraph/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/plausible/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean:/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean /home/goutev/.elan/toolchains/leanprover--lean4---v4.28.0/bin/lean /home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/Metric.lean -o /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Krein/Metric.olean -i /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Krein/Metric.ilean -c /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/ir/InfoGeometry/Krein/Metric.c --setup /home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/ir/InfoGeometry/Krein/Metric.setup.json --json",
@@ -15,8 +15,13 @@
        [["@infogeometry:extraDep", "00000000000006bb"]]],
       ["imports",
        [["InfoGeometry.Clifford.Grading transitive imports (legacy)",
-         "7d8dc929e5268e54"],
-        ["InfoGeometry.Clifford.Grading:importAllArts", "205b38ab4dbd5513"]]]]],
+         "358e3930c25ed36c"],
+        ["InfoGeometry.Clifford.Grading:importAllArts", "8e130e82f1f40d92"],
+        ["Mathlib.Tactic.Linarith transitive imports (legacy)",
+         "632ef3d756d705c4"],
+        ["Mathlib.Tactic.Linarith:importAllArts", "7d7c5de3e6502925"],
+        ["Mathlib.Tactic.Ring transitive imports (legacy)", "bef37b57f917f087"],
+        ["Mathlib.Tactic.Ring:importAllArts", "8e42f4b80ab5724c"]]]]],
     ["libs",
      [["import dynlibs", "00000000000006bb"],
       ["package external libraries", "00000000000006bb"],
@@ -25,7 +30,7 @@
   ["Lean 4.28.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b",
    "a96bc04a2e5e9630"],
   ["/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/Metric.lean",
-   "33245bf7194cd40c"],
+   "50c029d98bb4bd99"],
   ["options", "00000000000006bb"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "85c65b2b9dd8dbfe"}
+ "depHash": "1ede6618e1dbb3fa"}

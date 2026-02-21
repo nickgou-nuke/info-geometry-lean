@@ -18,14 +18,26 @@ noncomputable abbrev klDiv
     (μ ν : Measure α) : ℝ≥0∞ :=
   InformationTheory.klDiv μ ν
 
-@[simp] lemma klDiv_of_not_ac
+/- Explicit aliases to disambiguate from finite/discrete KL APIs. -/
+noncomputable abbrev measureKlDiv
+    {α : Type _} [MeasurableSpace α]
+    (μ ν : Measure α) : ℝ≥0∞ :=
+  klDiv μ ν
+
+noncomputable abbrev klDivMeasure
+    {α : Type _} [MeasurableSpace α]
+    (μ ν : Measure α) : ℝ≥0∞ :=
+  klDiv μ ν
+
+lemma klDiv_of_not_ac
     {α : Type _} [MeasurableSpace α]
     {μ ν : Measure α}
     (h : ¬ μ ≪ ν) :
     klDiv μ ν = ∞ :=
   InformationTheory.klDiv_of_not_ac h
 
-@[simp] lemma klDiv_self
+@[simp]
+lemma klDiv_self
     {α : Type _} [MeasurableSpace α]
     (μ : Measure α) [SigmaFinite μ] :
     klDiv μ μ = 0 :=

@@ -20,9 +20,12 @@ class JordanAlgebra (V : Type _) [AddCommGroup V] [Module ℝ V] where
       jordanProd (jordanProd x x) (jordanProd x y) =
         jordanProd x (jordanProd (jordanProd x x) y)
 
-infixl:70 " ⊙ " => JordanAlgebra.jordanProd
+set_option quotPrecheck false in
+scoped[InfoGeometryJordan] infixl:70 " ⊙ " => InfoGeometry.Jordan.JordanAlgebra.jordanProd
 
 section
+
+open scoped InfoGeometryJordan
 
 variable {V : Type _} [AddCommGroup V] [Module ℝ V] [JordanAlgebra V]
 
@@ -49,6 +52,15 @@ lemma jordanProd_add_right (x y z : V) :
 lemma jordanProd_smul_right (a : ℝ) (x y : V) :
     x ⊙ (a • y) = a • (x ⊙ y) := by
   rw [jordanProd_comm, JordanAlgebra.smul_left a y x, jordanProd_comm y x]
+
+@[simp]
+lemma jordanProd_zero_left (x : V) : (0 : V) ⊙ x = 0 := by
+  simpa using
+    (JordanAlgebra.smul_left (V := V) (a := (0 : ℝ)) (x := (0 : V)) (y := x))
+
+@[simp]
+lemma jordanProd_zero_right (x : V) : x ⊙ (0 : V) = 0 := by
+  rw [jordanProd_comm, jordanProd_zero_left]
 
 lemma jordanProd_identity (x y : V) :
     (x ⊙ x) ⊙ (x ⊙ y) = x ⊙ ((x ⊙ x) ⊙ y) :=

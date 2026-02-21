@@ -45,6 +45,12 @@ noncomputable def divergence
     (η θ : Θ) : ℝ :=
   H.ψ η - H.ψ θ - (dualCoord H θ) (η - θ)
 
+@[simp] lemma divergence_self
+    (H : HessianGeometry Θ) (θ : Θ) :
+    divergence H θ θ = 0 := by
+  unfold divergence
+  simp
+
 section Structural
 
 /-- Affine `e`-geodesic in primal coordinates. -/
@@ -211,6 +217,12 @@ noncomputable def divergenceVec
     (η θ : E) : ℝ :=
   H.ψ η - H.ψ θ - inner ℝ (dualCoordVec H θ) (η - θ)
 
+@[simp] lemma divergenceVec_self
+    (H : HessianGeometry E) (θ : E) :
+    divergenceVec H θ θ = 0 := by
+  unfold divergenceVec
+  simp
+
 lemma divergence_eq_divergenceVec
     (H : HessianGeometry E)
     (η θ : E) :
@@ -335,6 +347,10 @@ noncomputable def nabla (x : E) : E :=
 noncomputable def divergence (x y : E) : ℝ :=
   InfoGeometry.Geometry.divergenceVec (H := toHessianGeometry S) x y
 
+@[simp] lemma divergence_self (x : E) :
+    divergence S x x = 0 := by
+  simp [divergence, toHessianGeometry]
+
 /-- Three-point identity (dual-flat law of cosines). -/
 theorem three_point_identity (x y z : E) :
     divergence S x z
@@ -373,14 +389,27 @@ theorem bregman_pythagorean
 
 section RealBridge
 
+lemma dualCoord_apply_sub_eq_deriv_mul
+    (SR : DualFlatStructure ℝ) (x y : ℝ) :
+    (InfoGeometry.Geometry.dualCoord (Θ := ℝ) (toHessianGeometry SR) y) (x - y)
+      = deriv SR.ψ y * (x - y) := by
+  change (fderiv ℝ SR.ψ y : ℝ →L[ℝ] ℝ) (x - y) = deriv SR.ψ y * (x - y)
+  calc
+    (fderiv ℝ SR.ψ y : ℝ →L[ℝ] ℝ) (x - y)
+        = (x - y) * deriv SR.ψ y := by
+            rw [fderiv_eq_smul_deriv (f := SR.ψ) (x := y) (y := x - y)]
+            simp [smul_eq_mul]
+    _ = deriv SR.ψ y * (x - y) := by ring
+
 lemma divergence_eq_bregmanDiv_real
     (SR : DualFlatStructure ℝ) (x y : ℝ) :
     divergence SR x y = InfoGeometry.bregmanDiv SR.ψ x y := by
   unfold divergence
-  rw [← InfoGeometry.Geometry.divergence_eq_divergenceVec
-    (H := toHessianGeometry SR) (η := x) (θ := y)]
-  simp [InfoGeometry.Geometry.divergence, InfoGeometry.Geometry.dualCoord,
-    toHessianGeometry, InfoGeometry.bregmanDiv, mul_comm]
+  unfold InfoGeometry.Geometry.divergenceVec InfoGeometry.bregmanDiv
+  rw [InfoGeometry.Geometry.dualCoordVec_spec
+    (H := toHessianGeometry SR) (x := y) (y := x - y)]
+  rw [dualCoord_apply_sub_eq_deriv_mul (SR := SR) (x := x) (y := y)]
+  simp [toHessianGeometry]
 
 end RealBridge
 
@@ -412,6 +441,28 @@ lemma projectiveDivergence_eq_kl
       = InfoGeometry.KL.klDiv P.representative.μ Q.representative.μ :=
   rfl
 
+lemma projectiveDivergence_eq_of_representative_eq
+    {μ₀ : MeasureTheory.Measure Ω}
+    {P P' Q Q' : UnnormalizedMeasure μ₀}
+    (hP : P.representative = P'.representative)
+    (hQ : Q.representative = Q'.representative) :
+    projectiveDivergence P Q = projectiveDivergence P' Q' := by
+  cases P
+  cases P'
+  cases Q
+  cases Q'
+  cases hP
+  cases hQ
+  rfl
+
+theorem bayesian_update_pythagorean_point
+    (Prior Posterior Alt : E)
+    (h_ortho :
+      inner ℝ (nabla S Prior - nabla S Posterior) (Alt - Posterior) = 0) :
+    divergence S Alt Prior
+      = divergence S Alt Posterior + divergence S Posterior Prior := by
+  exact bregman_pythagorean (S := S) (x := Alt) (y := Posterior) (z := Prior) h_ortho
+
 /--
 Bayesian/MaxEnt update as Bregman-orthogonal projection:
 for any feasible alternative `Alt`, divergence to `Prior` decomposes through
@@ -424,8 +475,8 @@ theorem bayesian_update_pythagorean
         inner ℝ (nabla S Prior - nabla S Posterior) (v - Posterior) = 0) :
     divergence S Alt Prior
       = divergence S Alt Posterior + divergence S Posterior Prior := by
-  apply bregman_pythagorean (S := S) (x := Alt) (y := Posterior) (z := Prior)
-  exact h_projection Alt ⟨0, by simp⟩
+  exact bayesian_update_pythagorean_point (S := S) Prior Posterior Alt
+    (h_projection Alt ⟨0, by simp⟩)
 
 /--
 Bayesian/MaxEnt update as a scalar Bregman Pythagorean identity in `ℝ`,

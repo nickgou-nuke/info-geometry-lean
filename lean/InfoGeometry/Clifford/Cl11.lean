@@ -4,7 +4,7 @@ import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
 
 section KreinClifford
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Doubled space `E ⊕ E` (geometric doubling of primal/dual sectors). -/
 abbrev DoubledSpace (E : Type) := E × E
@@ -39,12 +39,26 @@ def spectralEpsilon : DoubledSpace E →L[ℝ] DoubledSpace E where
 def complexI : DoubledSpace E →L[ℝ] DoubledSpace E :=
   modularJ.comp spectralEpsilon
 
-/-- Abstract `Cl(1,1)` relations for a pair of endomorphisms. -/
-structure Cl11Algebra
+/-- `Cl(1,1)` relations for a pair of endomorphisms. -/
+structure Cl11Relations
     (J ε : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop where
   j_involution : J.comp J = ContinuousLinearMap.id ℝ (DoubledSpace E)
   eps_involution : ε.comp ε = ContinuousLinearMap.id ℝ (DoubledSpace E)
   anticommute : J.comp ε = -(ε.comp J)
+
+abbrev Cl11Algebra
+    (J ε : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
+  Cl11Relations J ε
+
+@[simp] lemma modularJ_apply (v : DoubledSpace E) :
+    modularJ (E := E) v = (v.2, v.1) := rfl
+
+@[simp] lemma spectralEpsilon_apply (v : DoubledSpace E) :
+    spectralEpsilon (E := E) v = (v.1, -v.2) := rfl
+
+@[simp] lemma complexI_apply (v : DoubledSpace E) :
+    complexI (E := E) v = (-v.2, v.1) := by
+  simp [complexI]
 
 lemma modularJ_involution :
     modularJ (E := E).comp (modularJ (E := E)) =
@@ -61,9 +75,19 @@ lemma modularJ_spectralEpsilon_anticommute :
       -((spectralEpsilon (E := E)).comp (modularJ (E := E))) := by
   ext v <;> simp [modularJ, spectralEpsilon]
 
-theorem modularJ_spectralEpsilon_isCl11 :
-    Cl11Algebra (modularJ (E := E)) (spectralEpsilon (E := E)) := by
+/-- The canonical generator `I = J ∘ ε` squares to `-id`. -/
+lemma complexI_sq :
+    (complexI (E := E)).comp (complexI (E := E))
+      = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+  ext v <;> simp [complexI, modularJ, spectralEpsilon]
+
+theorem modularJ_spectralEpsilon_hasCl11Relations :
+    Cl11Relations (modularJ (E := E)) (spectralEpsilon (E := E)) := by
   refine ⟨modularJ_involution (E := E), spectralEpsilon_involution (E := E),
     modularJ_spectralEpsilon_anticommute (E := E)⟩
+
+theorem modularJ_spectralEpsilon_isCl11 :
+    Cl11Algebra (modularJ (E := E)) (spectralEpsilon (E := E)) :=
+  modularJ_spectralEpsilon_hasCl11Relations (E := E)
 
 end KreinClifford

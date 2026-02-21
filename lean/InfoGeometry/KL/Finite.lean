@@ -32,6 +32,14 @@ noncomputable def empiricalDistribution
     (x : α) : ℝ :=
   (N_func x : ℝ) / (totalMass N_func : ℝ)
 
+lemma empirical_nonneg
+    {α : Type} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (x : α) :
+    0 ≤ empiricalDistribution N_func x := by
+  unfold empiricalDistribution
+  exact div_nonneg (by positivity) (by positivity)
+
 /-- Pointwise empirical-to-model density ratio. -/
 noncomputable def densityRatio
     {α : Type} [Fintype α]
@@ -58,6 +66,15 @@ lemma empirical_sum_one
     _ = (totalMass N_func : ℝ) / (totalMass N_func : ℝ) := by simp [totalMass]
     _ = 1 := by field_simp [hmass]
 
+/-- Empirical counts viewed as a finite probability distribution. -/
+noncomputable def empiricalProbDist
+    {α : Type} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (h_nontrivial : EmpiricalNontrivial N_func) : ProbabilityDist α where
+  prob := empiricalDistribution N_func
+  sum_one := empirical_sum_one N_func h_nontrivial
+  nonneg := empirical_nonneg N_func
+
 -- surprisal: negative log density ratio
 noncomputable def surprisal
     {α : Type} [Fintype α]
@@ -73,12 +90,45 @@ noncomputable def entropyExpectation
     (Q : ProbabilityDist α) : ℝ :=
   ∑ x, empiricalDistribution N_func x * surprisal N_func Q x
 
--- KLdivergence: Kullback-Leibler divergence
+/-- Q has full support if all point masses are strictly positive. -/
+def FullSupport
+    {α : Type} [Fintype α]
+    (Q : ProbabilityDist α) : Prop :=
+  ∀ x, 0 < Q.prob x
+
+-- KLdivergence: Kullback-Leibler divergence (finite-valued, full-support model)
 noncomputable def KLdivergence
     {α : Type} [Fintype α]
     (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α) : ℝ :=
-  -entropyExpectation N_func Q
+    (Q : ProbabilityDist α)
+    (h_support : FullSupport Q) : ℝ :=
+  let _ := h_support
+  ∑ x, empiricalDistribution N_func x * Real.log (densityRatio N_func Q x)
+
+noncomputable abbrev klDivergence
+    {α : Type} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (Q : ProbabilityDist α)
+    (h_support : FullSupport Q) : ℝ :=
+  KLdivergence N_func Q h_support
+
+lemma KLdivergence_eq_sum_mul_log_densityRatio
+    {α : Type} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (Q : ProbabilityDist α)
+    (h_support : FullSupport Q) :
+    KLdivergence N_func Q h_support
+      = ∑ x, empiricalDistribution N_func x * Real.log (densityRatio N_func Q x) :=
+  rfl
+
+lemma KLdivergence_eq_neg_entropyExpectation
+    {α : Type} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (Q : ProbabilityDist α)
+    (h_support : FullSupport Q) :
+    KLdivergence N_func Q h_support = -entropyExpectation N_func Q := by
+  unfold KLdivergence entropyExpectation surprisal
+  simp
 
 /-- Definition: P̂ is absolutely continuous with respect to Q if P̂(x) ≠ 0 implies Q(x) ≠ 0. -/
 def AbsolutelyContinuous
@@ -86,12 +136,6 @@ def AbsolutelyContinuous
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α) : Prop :=
   ∀ x, empiricalDistribution N_func x ≠ 0 → Q.prob x ≠ 0
-
-/-- Q has full support if all point masses are strictly positive. -/
-def FullSupport
-    {α : Type} [Fintype α]
-    (Q : ProbabilityDist α) : Prop :=
-  ∀ x, 0 < Q.prob x
 
 /-- `P̂` and `Q` have matching zero sets. -/
 def SupportMatches
@@ -189,12 +233,11 @@ theorem KL_nonneg
     (Q : ProbabilityDist α)
     (h_nontrivial : EmpiricalNontrivial N_func)
     (h_support : FullSupport Q) :
-    0 ≤ KLdivergence N_func Q := by
+    0 ≤ KLdivergence N_func Q h_support := by
   let P : α → ℝ := empiricalDistribution N_func
   have hPnonneg : ∀ x, 0 ≤ P x := by
     intro x
-    unfold P empiricalDistribution
-    exact div_nonneg (by positivity) (by positivity)
+    simpa [P] using empirical_nonneg N_func x
   have hterm : ∀ x, P x - Q.prob x ≤ P x * Real.log (P x / Q.prob x) := by
     intro x
     exact kl_pointwise_ge_sub (hPnonneg x) (h_support x)
@@ -208,8 +251,8 @@ theorem KL_nonneg
     calc ∑ x, (P x - Q.prob x) = (∑ x, P x) - (∑ x, Q.prob x) := by rw [Finset.sum_sub_distrib]
       _ = 1 - 1 := by simp [hsumP, hsumQ]
       _ = 0 := by ring
-  have hKL : KLdivergence N_func Q = ∑ x, (P x * Real.log (P x / Q.prob x)) := by
-    unfold KLdivergence entropyExpectation surprisal densityRatio P
+  have hKL : KLdivergence N_func Q h_support = ∑ x, (P x * Real.log (P x / Q.prob x)) := by
+    unfold KLdivergence densityRatio P
     simp
   rw [hKL]
   have hnonneg_sum : 0 ≤ ∑ x, (P x * Real.log (P x / Q.prob x)) := by
@@ -223,12 +266,11 @@ theorem KL_eq_zero_iff
     (Q : ProbabilityDist α)
     (h_nontrivial : EmpiricalNontrivial N_func)
     (h_support : FullSupport Q) :
-    KLdivergence N_func Q = 0 ↔ ∀ x, empiricalDistribution N_func x = Q.prob x := by
+    KLdivergence N_func Q h_support = 0 ↔ ∀ x, empiricalDistribution N_func x = Q.prob x := by
   let P : α → ℝ := empiricalDistribution N_func
   have hPnonneg : ∀ x, 0 ≤ P x := by
     intro x
-    unfold P empiricalDistribution
-    exact div_nonneg (by positivity) (by positivity)
+    simpa [P] using empirical_nonneg N_func x
   have hterm : ∀ x, P x - Q.prob x ≤ P x * Real.log (P x / Q.prob x) := by
     intro x
     exact kl_pointwise_ge_sub (hPnonneg x) (h_support x)
@@ -241,8 +283,8 @@ theorem KL_eq_zero_iff
     calc ∑ x, (P x - Q.prob x) = (∑ x, P x) - (∑ x, Q.prob x) := by rw [Finset.sum_sub_distrib]
       _ = 1 - 1 := by simp [hsumP, hsumQ]
       _ = 0 := by ring
-  have hKL : KLdivergence N_func Q = ∑ x, (P x * Real.log (P x / Q.prob x)) := by
-    unfold KLdivergence entropyExpectation surprisal densityRatio P
+  have hKL : KLdivergence N_func Q h_support = ∑ x, (P x * Real.log (P x / Q.prob x)) := by
+    unfold KLdivergence densityRatio P
     simp
   constructor
   · intro hKL_zero
@@ -271,6 +313,23 @@ theorem KL_eq_zero_iff
       rw [hPx]
       have hQne : Q.prob x ≠ 0 := ne_of_gt (h_support x)
       simp [hQne]
+
+lemma KLdivergence_eq_klDiv
+    {α : Type} [Fintype α]
+    (N_func : EmpiricalCounts α)
+    (Q : ProbabilityDist α)
+    (h_nontrivial : EmpiricalNontrivial N_func)
+    (h_support : FullSupport Q) :
+    KLdivergence N_func Q h_support
+      = InfoGeometry.klDiv (empiricalProbDist N_func h_nontrivial) Q := by
+  unfold KLdivergence InfoGeometry.klDiv InfoGeometry.expectation
+    InfoGeometry.logDensity densityRatio empiricalProbDist
+  refine Finset.sum_congr rfl ?_
+  intro x hx
+  by_cases hPx : empiricalDistribution N_func x = 0
+  · simp [hPx]
+  · have hQx : Q.prob x ≠ 0 := (h_support x).ne'
+    simp [Real.log_div hPx hQx]
 
 theorem klDiv_nonneg_of_fullSupport
     {α : Type} [Fintype α]

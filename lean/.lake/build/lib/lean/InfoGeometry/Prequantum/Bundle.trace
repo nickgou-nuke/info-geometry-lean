@@ -1,7 +1,7 @@
 {"synthetic": false,
  "schemaVersion": "2025-09-10",
  "outputs":
- {"o": ["9f681717cf57e9d9.olean"],
+ {"o": ["0e020d690f8cba25.olean"],
   "i": "b3d66e33c84ff2ba.ilean",
   "c": "71be0a2cc4ed91d8.c"},
  "log":
@@ -16,10 +16,10 @@
       ["imports",
        [["InfoGeometry.Prequantum.Scaling transitive imports (legacy)",
          "8f81b693c462db21"],
-        ["InfoGeometry.Prequantum.Scaling:importAllArts", "ef1962fd363c4789"],
+        ["InfoGeometry.Prequantum.Scaling:importAllArts", "eb12c456500e2dfe"],
         ["InfoGeometry.Projective.Rays transitive imports (legacy)",
-         "63c9c4bb6dd45605"],
-        ["InfoGeometry.Projective.Rays:importAllArts", "2876b53cd29485c7"]]]]],
+         "b167cd90763f490a"],
+        ["InfoGeometry.Projective.Rays:importAllArts", "958be71b8f780046"]]]]],
     ["libs",
      [["import dynlibs", "00000000000006bb"],
       ["package external libraries", "00000000000006bb"],
@@ -31,4 +31,4 @@
    "2911fc7500cc0786"],
   ["options", "00000000000006bb"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "b8730bf147bffa76"}
+ "depHash": "33cccaeb5f124af5"}

@@ -1,8 +1,8 @@
 {"synthetic": false,
  "schemaVersion": "2025-09-10",
  "outputs":
- {"o": ["e717963f570399f7.olean"],
-  "i": "8d46f55ff0dd73c9.ilean",
+ {"o": ["c22ecb4e76dcfc86.olean"],
+  "i": "0eff1e647e0ae253.ilean",
   "c": "923a4e335708d110.c"},
  "log":
  [{"message":
@@ -34,7 +34,7 @@
   ["Lean 4.28.0, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b",
    "a96bc04a2e5e9630"],
   ["/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Clifford/Cl11.lean",
-   "2f7239cb27b7c0d0"],
+   "216e21d8d547cec7"],
   ["options", "00000000000006bb"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "ead2b8609919f73e"}
+ "depHash": "3533486372dac2e4"}

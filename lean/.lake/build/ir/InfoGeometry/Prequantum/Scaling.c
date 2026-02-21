@@ -13,6 +13,52 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+LEAN_EXPORT lean_object* lp_infogeometry_PrequantumData_connectionScale(lean_object*);
+lean_object* lp_mathlib_Real_definition___lam__0_00___x40_Mathlib_Data_Real_Basic_4214226450____hygCtx___hyg_8_(lean_object*, lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_PrequantumData_covariantScale(lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_PrequantumData_gaugeSetoid;
+LEAN_EXPORT lean_object* lp_infogeometry_PrequantumData_connectionScale___boxed(lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_PrequantumData_connectionScale(lean_object* x_1) {
+_start:
+{
+lean_object* x_2; 
+x_2 = lean_ctor_get(x_1, 1);
+lean_inc(x_2);
+return x_2;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_PrequantumData_connectionScale___boxed(lean_object* x_1) {
+_start:
+{
+lean_object* x_2; 
+x_2 = lp_infogeometry_PrequantumData_connectionScale(x_1);
+lean_dec_ref(x_1);
+return x_2;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_PrequantumData_covariantScale(lean_object* x_1) {
+_start:
+{
+lean_object* x_2; lean_object* x_3; lean_object* x_4; 
+x_2 = lean_ctor_get(x_1, 1);
+lean_inc(x_2);
+x_3 = lean_ctor_get(x_1, 2);
+lean_inc(x_3);
+lean_dec_ref(x_1);
+x_4 = lean_alloc_closure((void*)(lp_mathlib_Real_definition___lam__0_00___x40_Mathlib_Data_Real_Basic_4214226450____hygCtx___hyg_8_), 3, 2);
+lean_closure_set(x_4, 0, x_2);
+lean_closure_set(x_4, 1, x_3);
+return x_4;
+}
+}
+static lean_object* _init_lp_infogeometry_PrequantumData_gaugeSetoid() {
+_start:
+{
+lean_object* x_1; 
+x_1 = lean_box(0);
+return x_1;
+}
+}
 lean_object* initialize_Init(uint8_t builtin);
 lean_object* initialize_mathlib_Mathlib_Algebra_Group_Action_Basic(uint8_t builtin);
 lean_object* initialize_mathlib_Mathlib_Data_Real_Basic(uint8_t builtin);
@@ -34,6 +80,8 @@ lean_dec_ref(res);
 res = initialize_mathlib_Mathlib_Tactic(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
+lp_infogeometry_PrequantumData_gaugeSetoid = _init_lp_infogeometry_PrequantumData_gaugeSetoid();
+lean_mark_persistent(lp_infogeometry_PrequantumData_gaugeSetoid);
 return lean_io_result_mk_ok(lean_box(0));
 }
 #ifdef __cplusplus

@@ -168,7 +168,9 @@ def HasExponentialRNFormSigmaFinite
     (constraints : Finset (LinearConstraint Ω))
     (Λ : constraints → ℝ)
     (P : ACProbMeasure μ₀) : Prop :=
-  HasExponentialRNForm μ₀ constraints Λ P
+  by
+    let _ := (inferInstance : SigmaFinite μ₀)
+    exact HasExponentialRNForm μ₀ constraints Λ P
 
 /-!
 ## Dual/Fenchel Interface (Structural)

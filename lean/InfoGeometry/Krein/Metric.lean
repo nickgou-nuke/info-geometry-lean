@@ -1,4 +1,6 @@
 import InfoGeometry.Clifford.Grading
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
 
 section KreinClifford
 
@@ -127,6 +129,43 @@ lemma preservesMetric_comp
     _ = hessianIndefiniteForm (E := E) (V v) (V w) := hU (V v) (V w)
     _ = hessianIndefiniteForm (E := E) v w := hV v w
 
+lemma antiPreservesMetric_comp
+    {U V : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hU : antiPreservesMetric (E := E) U)
+    (hV : antiPreservesMetric (E := E) V) :
+    preservesMetric (E := E) (U.comp V) := by
+  intro v w
+  calc
+    hessianIndefiniteForm (E := E) ((U.comp V) v) ((U.comp V) w)
+        = hessianIndefiniteForm (E := E) (U (V v)) (U (V w)) := by rfl
+    _ = -hessianIndefiniteForm (E := E) (V v) (V w) := hU (V v) (V w)
+    _ = -(-hessianIndefiniteForm (E := E) v w) := by rw [hV v w]
+    _ = hessianIndefiniteForm (E := E) v w := by ring
+
+lemma preservesMetric_comp_anti
+    {U V : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hU : preservesMetric (E := E) U)
+    (hV : antiPreservesMetric (E := E) V) :
+    antiPreservesMetric (E := E) (U.comp V) := by
+  intro v w
+  calc
+    hessianIndefiniteForm (E := E) ((U.comp V) v) ((U.comp V) w)
+        = hessianIndefiniteForm (E := E) (U (V v)) (U (V w)) := by rfl
+    _ = hessianIndefiniteForm (E := E) (V v) (V w) := hU (V v) (V w)
+    _ = -hessianIndefiniteForm (E := E) v w := hV v w
+
+lemma antiPreservesMetric_comp_preserves
+    {U V : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hU : antiPreservesMetric (E := E) U)
+    (hV : preservesMetric (E := E) V) :
+    antiPreservesMetric (E := E) (U.comp V) := by
+  intro v w
+  calc
+    hessianIndefiniteForm (E := E) ((U.comp V) v) ((U.comp V) w)
+        = hessianIndefiniteForm (E := E) (U (V v)) (U (V w)) := by rfl
+    _ = -hessianIndefiniteForm (E := E) (V v) (V w) := hU (V v) (V w)
+    _ = -hessianIndefiniteForm (E := E) v w := by rw [hV v w]
+
 lemma preservesMetric_symm
     (U : DoubledSpace E ≃L[ℝ] DoubledSpace E)
     (hU : preservesMetric (E := E) (U : DoubledSpace E →L[ℝ] DoubledSpace E)) :
@@ -175,6 +214,17 @@ def HessianOrthogonalGroup.inv
     (U : HessianOrthogonalGroup E) :
     HessianOrthogonalGroup E :=
   ⟨U.1.symm, preservesMetric_symm (E := E) U.1 U.2⟩
+
+/-- Convert a wrapper isometry into the canonical orthogonal-group subtype. -/
+def KreinIsometry.toHessianOrthogonalGroup
+    (U : KreinIsometry (E := E)) : HessianOrthogonalGroup E :=
+  ⟨U.U, U.isometry⟩
+
+/-- Convert a canonical orthogonal-group element into the wrapper isometry structure. -/
+def HessianOrthogonalGroup.toKreinIsometry
+    (U : HessianOrthogonalGroup E) : KreinIsometry (E := E) where
+  U := U.1
+  isometry := U.2
 
 instance : Group (HessianOrthogonalGroup E) := by
   simpa [HessianOrthogonalGroup, hessianOrthogonalSubgroup] using
@@ -285,6 +335,10 @@ def spectralEpsilonKreinAntiIsometry : KreinAntiIsometry (E := E) where
   U := spectralEpsilonEquiv (E := E)
   antiIsometry := by
     simpa [spectralEpsilonEquiv] using spectralEpsilon_antiPreservesMetric (E := E)
+
+lemma spectralEpsilonEquiv_antiPreservesMetric :
+    antiPreservesMetric (E := E) (spectralEpsilonEquiv (E := E) : DoubledSpace E →L[ℝ] DoubledSpace E) := by
+  simpa [spectralEpsilonEquiv] using spectralEpsilon_antiPreservesMetric (E := E)
 
 end Metric
 

@@ -1,6 +1,6 @@
 import InfoGeometry.Axioms
 import InfoGeometry.Assumptions
-import InfoGeometry.Analytic.LogSumExp
+import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
 import InfoGeometry.Degree
 import InfoGeometry.EntropicInference
 import InfoGeometry.Information.MultiLogPotential

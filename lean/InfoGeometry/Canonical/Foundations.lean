@@ -1,5 +1,5 @@
-import InfoGeometry.Analytic.LogSumExp
-import InfoGeometry.Analytic.Softmax
+import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
+import InfoGeometry.ExponentialFamily.Analytic.Softmax
 import InfoGeometry.Convex.Duality
 import InfoGeometry.Convex.FenchelConjugate
 import InfoGeometry.Convex.HessianGeometry

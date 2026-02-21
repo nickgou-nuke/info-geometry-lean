@@ -15563,6 +15563,10 @@
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/ExponentialFamily/Finite.olean"],
   "InfoGeometry.ExponentialFamily.Class":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/ExponentialFamily/Class.olean"],
+  "InfoGeometry.ExponentialFamily.Analytic.Softmax":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.olean"],
+  "InfoGeometry.ExponentialFamily.Analytic.LogSumExp":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/ExponentialFamily/Analytic/LogSumExp.olean"],
   "InfoGeometry.EntropicInference":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/EntropicInference.olean"],
   "InfoGeometry.Cramer":
@@ -15643,10 +15647,6 @@
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Basic.olean"],
   "InfoGeometry.Architecture.SymmetricSpace":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Architecture/SymmetricSpace.olean"],
-  "InfoGeometry.Analytic.Softmax":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Analytic/Softmax.olean"],
-  "InfoGeometry.Analytic.LogSumExp":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Analytic/LogSumExp.olean"],
   "ImportGraph.Tools.RedundantImports":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/importGraph/.lake/build/lib/lean/ImportGraph/Tools/RedundantImports.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/importGraph/.lake/build/lib/lean/ImportGraph/Tools/RedundantImports.ir",

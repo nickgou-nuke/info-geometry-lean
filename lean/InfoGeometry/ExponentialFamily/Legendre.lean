@@ -1,4 +1,4 @@
-import InfoGeometry.Analytic.LogSumExp
+import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
 import InfoGeometry.Convex.Legendre
 
 /-!

@@ -1,9 +1,5 @@
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic.Ring
 import InfoGeometry.Potential.LogPotential
 
 open scoped BigOperators

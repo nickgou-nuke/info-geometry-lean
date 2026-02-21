@@ -4,8 +4,8 @@ import Mathlib.Algebra.Lie.Submodule
 import InfoGeometry.Clifford.Cl11
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Krein.Metric
-import InfoGeometry.Jordan.Core
 import InfoGeometry.Core.UnifiedGeometry
+import InfoGeometry.Jordan.Core
 
 /-!
 # The Super-Kähler Geometry of Information

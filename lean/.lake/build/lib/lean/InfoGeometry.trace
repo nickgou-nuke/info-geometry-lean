@@ -15,7 +15,7 @@
        [["@infogeometry:extraDep", "00000000000006bb"]]],
       ["imports",
        [["InfoGeometry.Library transitive imports (legacy)",
-         "1d4b497782b131e1"],
+         "6fd5a4afea8e2f62"],
         ["InfoGeometry.Library:importAllArts", "b0ccc747b925aaac"]]]]],
     ["libs",
      [["import dynlibs", "00000000000006bb"],
@@ -28,4 +28,4 @@
    "28db0e0cf8ce0e0c"],
   ["options", "00000000000006bb"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "55a9faab650de294"}
+ "depHash": "36e884437cc3e44c"}

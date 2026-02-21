@@ -71,6 +71,11 @@ instance instPreservesLinear (S : SymmetricLieAlgebra L) :
 instance instPreservesLieBracket (S : SymmetricLieAlgebra L) :
     PreservesLieBracket L S.θ := S.lie
 
+instance instPreservesLie (S : SymmetricLieAlgebra L) :
+    PreservesLie L S.θ where
+  toPreservesLinear := S.lin
+  toPreservesLieBracket := S.lie
+
 /-- Involutivity of the distinguished symmetry map. -/
 lemma involutive (S : SymmetricLieAlgebra L) :
     Function.Involutive S.θ :=
@@ -544,7 +549,8 @@ lemma even_isPathConnected (S : SymmetricLieAlgebra L) :
 end Topology
 
 /-- Triple bracket `[[x,y],z]`. -/
-def triple (_S : SymmetricLieAlgebra L) (x y z : L) : L :=
+def triple (S : SymmetricLieAlgebra L) (x y z : L) : L :=
+  let _ := S
   ⁅⁅x, y⁆, z⁆
 
 /-- The odd submodule is closed under the triple bracket. -/
@@ -660,10 +666,10 @@ noncomputable def oddLocalModel (S : SymmetricLieAlgebra L) : OddLocalModel L wh
 @[simp] lemma oddLocalModel_tripleSystem (S : SymmetricLieAlgebra L) :
     (S.oddLocalModel).tripleSystem = S.oddLieTripleSystem := rfl
 
-@[simp] lemma oddLocalModel_convex (S : SymmetricLieAlgebra L) :
+lemma oddLocalModel_convex (S : SymmetricLieAlgebra L) :
     (S.oddLocalModel).convex = S.odd_convex := rfl
 
-@[simp] lemma oddLocalModel_pathConnected (S : SymmetricLieAlgebra L) :
+lemma oddLocalModel_pathConnected (S : SymmetricLieAlgebra L) :
     (S.oddLocalModel).pathConnected = S.odd_isPathConnected := rfl
 
 end TopologicalModel

@@ -15439,42 +15439,64 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean/LeanSearchClient.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean/LeanSearchClient.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean/LeanSearchClient.olean.private"],
+  "InfoGeometry.generalizedKL":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/generalizedKL.olean"],
   "InfoGeometry.Twistor.NullProjective":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Twistor/NullProjective.olean"],
-  "InfoGeometry.Twistor":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Twistor.olean"],
-  "InfoGeometry.TransformationGroups":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/TransformationGroups.olean"],
+  "InfoGeometry.Thermo.ThermodynamicIdentities":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Thermo/ThermodynamicIdentities.olean"],
   "InfoGeometry.Thermo.Gibbs":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Thermo/Gibbs.olean"],
   "InfoGeometry.Thermo.FromLogDet":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Thermo/FromLogDet.olean"],
   "InfoGeometry.Thermo.FromBregman":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Thermo/FromBregman.olean"],
+  "InfoGeometry.Thermo.FiniteMatrix":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Thermo/FiniteMatrix.olean"],
+  "InfoGeometry.Thermo.FiniteDiagonal":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Thermo/FiniteDiagonal.olean"],
   "InfoGeometry.SuperUnified":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/SuperUnified.olean"],
   "InfoGeometry.SLT.ConditionalExpectation":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/SLT/ConditionalExpectation.olean"],
+  "InfoGeometry.Renyi":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Renyi.olean"],
+  "InfoGeometry.RegularizedKL":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/RegularizedKL.olean"],
   "InfoGeometry.Quantum.Fock":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Quantum/Fock.olean"],
   "InfoGeometry.Projective.Rays":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Projective/Rays.olean"],
   "InfoGeometry.Projective.ProjectiveMap":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Projective/ProjectiveMap.olean"],
+  "InfoGeometry.Projective.Projective":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Projective/Projective.olean"],
   "InfoGeometry.Projective.PhysicalKinematics":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Projective/PhysicalKinematics.olean"],
   "InfoGeometry.Projective.Null":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Projective/Null.olean"],
+  "InfoGeometry.Projective.Normalize":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Projective/Normalize.olean"],
+  "InfoGeometry.Projective.GaugeReduction":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Projective/GaugeReduction.olean"],
   "InfoGeometry.Projective.GaugeQuotient":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Projective/GaugeQuotient.olean"],
+  "InfoGeometry.Projective.Dynamics":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Projective/Dynamics.olean"],
   "InfoGeometry.Prequantum.Scaling":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Prequantum/Scaling.olean"],
+  "InfoGeometry.Prequantum.Quotient":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Prequantum/Quotient.olean"],
   "InfoGeometry.Prequantum.Connection":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Prequantum/Connection.olean"],
   "InfoGeometry.Prequantum.Bundle":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Prequantum/Bundle.olean"],
+  "InfoGeometry.Potential.Thermo":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Potential/Thermo.olean"],
   "InfoGeometry.Potential.LogPotential":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Potential/LogPotential.olean"],
+  "InfoGeometry.PositiveMeasure":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/PositiveMeasure.olean"],
   "InfoGeometry.MaxEnt.Optimality":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/MaxEnt/Optimality.olean"],
   "InfoGeometry.MaxEnt.Lagrange":
@@ -15489,16 +15511,24 @@
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/MaxEnt/Jaynes.olean"],
   "InfoGeometry.MaxEnt.Finite":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/MaxEnt/Finite.olean"],
+  "InfoGeometry.MaxEnt.DualBridge":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/MaxEnt/DualBridge.olean"],
   "InfoGeometry.MaxEnt.Core":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/MaxEnt/Core.olean"],
+  "InfoGeometry.Library":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Library.olean"],
   "InfoGeometry.Krein.Thermal":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Krein/Thermal.olean"],
+  "InfoGeometry.Krein.Prelude":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Krein/Prelude.olean"],
   "InfoGeometry.Krein.Modular":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Krein/Modular.olean"],
   "InfoGeometry.Krein.Metric":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Krein/Metric.olean"],
   "InfoGeometry.Krein.HilbertBridge":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Krein/HilbertBridge.olean"],
+  "InfoGeometry.Krein.CartanDecomposition":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Krein/CartanDecomposition.olean"],
   "InfoGeometry.Krein.Automorphisms":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Krein/Automorphisms.olean"],
   "InfoGeometry.KL.Measure":
@@ -15523,6 +15553,8 @@
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Geometry/KreinAsHessian.olean"],
   "InfoGeometry.Geometry.DualFlat":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Geometry/DualFlat.olean"],
+  "InfoGeometry.Fenchel":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Fenchel.olean"],
   "InfoGeometry.ExponentialFamily.Legendre":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/ExponentialFamily/Legendre.olean"],
   "InfoGeometry.ExponentialFamily.KLBregman":
@@ -15533,14 +15565,28 @@
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/ExponentialFamily/Class.olean"],
   "InfoGeometry.EntropicInference":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/EntropicInference.olean"],
+  "InfoGeometry.Cramer":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Cramer.olean"],
   "InfoGeometry.Core.UnifiedGeometry":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Core/UnifiedGeometry.olean"],
+  "InfoGeometry.Core.SymmetricSpaces":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Core/SymmetricSpaces.olean"],
   "InfoGeometry.Core.SymmetricLieGeneric":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Core/SymmetricLieGeneric.olean"],
   "InfoGeometry.Core.SymmetricLie":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Core/SymmetricLie.olean"],
+  "InfoGeometry.Core.Jordan":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Core/Jordan.olean"],
   "InfoGeometry.Core.Involution":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Core/Involution.olean"],
+  "InfoGeometry.Core.GrandCanonical":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Core/GrandCanonical.olean"],
+  "InfoGeometry.Core.Entropy":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Core/Entropy.olean"],
+  "InfoGeometry.Core.Derivatives":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Core/Derivatives.olean"],
+  "InfoGeometry.Core":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Core.olean"],
   "InfoGeometry.Convex.RadonHelly":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Convex/RadonHelly.olean"],
   "InfoGeometry.Convex.ProjectiveRays":
@@ -15559,12 +15605,40 @@
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Clifford/Tower.olean"],
   "InfoGeometry.Clifford.Supercharge":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Clifford/Supercharge.olean"],
+  "InfoGeometry.Clifford.SplitQ11":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Clifford/SplitQ11.olean"],
+  "InfoGeometry.Clifford.Relations":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Clifford/Relations.olean"],
   "InfoGeometry.Clifford.Lift":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Clifford/Lift.olean"],
   "InfoGeometry.Clifford.Grading":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Clifford/Grading.olean"],
   "InfoGeometry.Clifford.Cl11":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Clifford/Cl11.olean"],
+  "InfoGeometry.Canonical.Twistor":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Canonical/Twistor.olean"],
+  "InfoGeometry.Canonical.Thermo":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Canonical/Thermo.olean"],
+  "InfoGeometry.Canonical.Statistics":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Canonical/Statistics.olean"],
+  "InfoGeometry.Canonical.Quantum":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Canonical/Quantum.olean"],
+  "InfoGeometry.Canonical.Projective":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Canonical/Projective.olean"],
+  "InfoGeometry.Canonical.Prequantum":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Canonical/Prequantum.olean"],
+  "InfoGeometry.Canonical.Krein":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Canonical/Krein.olean"],
+  "InfoGeometry.Canonical.Geometry":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Canonical/Geometry.olean"],
+  "InfoGeometry.Canonical.Foundations":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Canonical/Foundations.olean"],
+  "InfoGeometry.Canonical.Clifford":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Canonical/Clifford.olean"],
+  "InfoGeometry.Canonical.All":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Canonical/All.olean"],
+  "InfoGeometry.Canonical.Algebra":
+  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Canonical/Algebra.olean"],
   "InfoGeometry.Basic":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/build/lib/lean/InfoGeometry/Basic.olean"],
   "InfoGeometry.Architecture.SymmetricSpace":

@@ -1,6 +1,8 @@
+import Mathlib.Analysis.Normed.Group.Defs
+import Mathlib.Analysis.Normed.Module.Basic
 import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
 import Mathlib.Order.ConditionallyCompleteLattice.Basic
-import Mathlib.Tactic
+import Mathlib.Tactic.Linarith
 
 namespace InfoGeometry.Convex
 
@@ -27,9 +29,11 @@ noncomputable def fenchelConj (f : E → ℝ) (y : DualSpace E) : ℝ :=
   sSup (fenchelSet f y)
 
 /-!
-For real scalars, `sSup` is `0` on empty or unbounded-above sets, so this
-real-valued definition matches the usual extended-real Fenchel conjugate only
-under a bounded-above hypothesis.
+This real-valued `sSup` definition matches the usual Fenchel conjugate only
+in the bounded-above regime (where `le_csSup`/`csSup` lemmas apply). Outside
+that regime, conditionally complete `sSup` should be treated as unspecified.
+For a fully general definition without boundedness side conditions, one usually
+works in `EReal`.
 -/
 
 lemma fenchelSet_nonempty (f : E → ℝ) (y : DualSpace E) :
@@ -42,6 +46,12 @@ lemma le_fenchelConj (f : E → ℝ) (y : DualSpace E) (x : E)
     (hb : BddAbove (fenchelSet f y)) :
     ⟪y, x⟫ₗ - f x ≤ fenchelConj f y := by
   exact le_csSup hb ⟨x, rfl⟩
+
+/-- Discoverability alias for `le_fenchelConj` in `≥` orientation. -/
+lemma fenchelConj_ge_eval_sub (f : E → ℝ) (y : DualSpace E) (x : E)
+    (hb : BddAbove (fenchelSet f y)) :
+    fenchelConj f y ≥ ⟪y, x⟫ₗ - f x :=
+  le_fenchelConj (f := f) (y := y) (x := x) hb
 
 /-- Fenchel-Young inequality (real-valued version; needs `BddAbove` to use `le_csSup`). -/
 theorem fenchelYoung (f : E → ℝ) (y : DualSpace E) (x : E)

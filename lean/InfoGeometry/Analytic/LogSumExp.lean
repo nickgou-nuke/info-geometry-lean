@@ -186,7 +186,7 @@ lemma logSumExpScaledWeight_pos
     logSumExpWeight_pos (w := w) (a := fun j => a j / ε) hw θ i
 
 lemma hasDerivAt_logSumExpPartition_term
-    {ι : Type _} [Fintype ι]
+    {ι : Type _}
     (w a : ι → ℝ) (i : ι) (θ : ℝ) :
     HasDerivAt
       (fun t : ℝ => w i * Real.exp (t * a i))
@@ -268,6 +268,31 @@ lemma logSumExpMean_eq_weighted_sum
           intro i hi
           field_simp [hZne]
     _ = ∑ i, logSumExpWeight w a θ i * a i := by
+          rfl
+
+lemma logSumExpSecondMoment_eq_weighted_sum
+    {ι : Type _} [Fintype ι] [Nonempty ι]
+    (w a : ι → ℝ)
+    (hw : ∀ i, 0 < w i)
+    (θ : ℝ) :
+    logSumExpSecondMoment w a θ = ∑ i, logSumExpWeight w a θ i * (a i) ^ (2 : ℕ) := by
+  unfold logSumExpSecondMoment logSumExpMoment2 logSumExpWeight
+  have hZne : logSumExpPartition w a θ ≠ 0 :=
+    (logSumExp_sum_pos w a hw θ).ne'
+  calc
+    (∑ i, w i * Real.exp (θ * a i) * (a i) ^ (2 : ℕ)) / logSumExpPartition w a θ
+        =
+      ∑ i, (w i * Real.exp (θ * a i) * (a i) ^ (2 : ℕ)) / logSumExpPartition w a θ := by
+            simpa using
+              (Finset.sum_div
+                (s := (Finset.univ : Finset ι))
+                (f := fun i => w i * Real.exp (θ * a i) * (a i) ^ (2 : ℕ))
+                (a := logSumExpPartition w a θ))
+    _ = ∑ i, (w i * Real.exp (θ * a i) / logSumExpPartition w a θ) * (a i) ^ (2 : ℕ) := by
+          refine Finset.sum_congr rfl ?_
+          intro i hi
+          field_simp [hZne]
+    _ = ∑ i, logSumExpWeight w a θ i * (a i) ^ (2 : ℕ) := by
           rfl
 
 lemma logSumExp_deriv_eq_ratio

@@ -2,6 +2,7 @@ import InfoGeometry.Clifford.Cl11
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Tactic.NormNum
 
 section KreinClifford
 
@@ -18,7 +19,7 @@ def fundamentalSymmetry : DoubledSpace E →L[ℝ] DoubledSpace E :=
 @[simp] lemma fundamentalSymmetry_apply (u : DoubledSpace E) :
     fundamentalSymmetry (E := E) u = (u.1, -u.2) := rfl
 
-@[simp] lemma fundamentalSymmetry_involutive (u : DoubledSpace E) :
+lemma fundamentalSymmetry_involutive (u : DoubledSpace E) :
     fundamentalSymmetry (E := E) (fundamentalSymmetry (E := E) u) = u := by
   rcases u with ⟨x, y⟩
   simp [fundamentalSymmetry, spectralEpsilon]
@@ -112,6 +113,18 @@ lemma transportToHilbert_comp
   ext u
   rfl
 
+@[simp] lemma transportToHilbert_id :
+    transportToHilbert (E := E) (ContinuousLinearMap.id ℝ (DoubledSpace E))
+      = ContinuousLinearMap.id ℝ (HilbertDoubled E) := by
+  ext u
+  simp [transportToHilbert]
+
+@[simp] lemma transportToHilbert_neg
+    (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    transportToHilbert (E := E) (-A) = -(transportToHilbert (E := E) A) := by
+  ext u
+  simp [transportToHilbert]
+
 /-- Transported `J` on the Hilbert carrier. -/
 noncomputable def modularJH : HilbertDoubled E →L[ℝ] HilbertDoubled E :=
   transportToHilbert (E := E) (modularJ (E := E))
@@ -138,6 +151,63 @@ noncomputable def complexIH : HilbertDoubled E →L[ℝ] HilbertDoubled E :=
     complexIH (E := E) u
       = WithLp.toLp (2 : ENNReal) (-(WithLp.ofLp u).2, (WithLp.ofLp u).1) := by
   simp [complexIH, transportToHilbert, complexI, modularJ, spectralEpsilon]
+
+lemma modularJH_involution :
+    (modularJH (E := E)).comp (modularJH (E := E))
+      = ContinuousLinearMap.id ℝ (HilbertDoubled E) := by
+  calc
+    (modularJH (E := E)).comp (modularJH (E := E))
+        = transportToHilbert (E := E) ((modularJ (E := E)).comp (modularJ (E := E))) := by
+            simpa [modularJH] using
+              (transportToHilbert_comp (E := E) (A := modularJ (E := E)) (B := modularJ (E := E))).symm
+    _ = transportToHilbert (E := E) (ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+          simp [modularJ_involution (E := E)]
+    _ = ContinuousLinearMap.id ℝ (HilbertDoubled E) := transportToHilbert_id (E := E)
+
+lemma spectralEpsilonH_involution :
+    (spectralEpsilonH (E := E)).comp (spectralEpsilonH (E := E))
+      = ContinuousLinearMap.id ℝ (HilbertDoubled E) := by
+  calc
+    (spectralEpsilonH (E := E)).comp (spectralEpsilonH (E := E))
+        = transportToHilbert (E := E)
+            ((spectralEpsilon (E := E)).comp (spectralEpsilon (E := E))) := by
+              simpa [spectralEpsilonH] using
+                (transportToHilbert_comp (E := E)
+                  (A := spectralEpsilon (E := E))
+                  (B := spectralEpsilon (E := E))).symm
+    _ = transportToHilbert (E := E) (ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+          simp [spectralEpsilon_involution (E := E)]
+    _ = ContinuousLinearMap.id ℝ (HilbertDoubled E) := transportToHilbert_id (E := E)
+
+lemma modularJH_spectralEpsilonH_anticommute :
+    (modularJH (E := E)).comp (spectralEpsilonH (E := E))
+      = -((spectralEpsilonH (E := E)).comp (modularJH (E := E))) := by
+  calc
+    (modularJH (E := E)).comp (spectralEpsilonH (E := E))
+        = transportToHilbert (E := E) ((modularJ (E := E)).comp (spectralEpsilon (E := E))) := by
+            simpa [modularJH, spectralEpsilonH] using
+              (transportToHilbert_comp (E := E)
+                (A := modularJ (E := E)) (B := spectralEpsilon (E := E))).symm
+    _ = transportToHilbert (E := E) (-((spectralEpsilon (E := E)).comp (modularJ (E := E)))) := by
+          rw [modularJ_spectralEpsilon_anticommute (E := E)]
+    _ = -transportToHilbert (E := E) ((spectralEpsilon (E := E)).comp (modularJ (E := E))) := by
+          simp [transportToHilbert_neg]
+    _ = -((spectralEpsilonH (E := E)).comp (modularJH (E := E))) := by
+          rw [transportToHilbert_comp (E := E)
+            (A := spectralEpsilon (E := E)) (B := modularJ (E := E))]
+          rfl
+
+lemma complexIH_eq_modularJH_comp_spectralEpsilonH :
+    complexIH (E := E) = (modularJH (E := E)).comp (spectralEpsilonH (E := E)) := by
+  calc
+    complexIH (E := E) = transportToHilbert (E := E) (complexI (E := E)) := rfl
+    _ = transportToHilbert (E := E) ((modularJ (E := E)).comp (spectralEpsilon (E := E))) := by
+          rfl
+    _ = (modularJH (E := E)).comp (spectralEpsilonH (E := E)) := by
+          symm
+          simpa [modularJH, spectralEpsilonH] using
+            (transportToHilbert_comp (E := E)
+              (A := modularJ (E := E)) (B := spectralEpsilon (E := E)))
 
 /-- Fundamental symmetry on the Hilbert carrier. -/
 noncomputable def fundamentalSymmetryH : HilbertDoubled E →L[ℝ] HilbertDoubled E :=
@@ -268,6 +338,32 @@ lemma kreinAdjointH_isKreinAdjoint
           exact (kreinInnerH_eq_inner_fundamentalSymmetryH (E := E) u
             ((kreinAdjointH (E := E) A) v)).symm
 
+@[simp] lemma kreinAdjointH_add
+    (A B : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
+    kreinAdjointH (E := E) (A + B)
+      = kreinAdjointH (E := E) A + kreinAdjointH (E := E) B := by
+  simp [kreinAdjointH, ContinuousLinearMap.comp_add, ContinuousLinearMap.add_comp]
+
+@[simp] lemma kreinAdjointH_smul
+    (c : ℝ)
+    (A : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
+    kreinAdjointH (E := E) (c • A) = c • kreinAdjointH (E := E) A := by
+  simp [kreinAdjointH]
+
+lemma kreinAdjointH_comp
+    (A B : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
+    kreinAdjointH (E := E) (A.comp B)
+      = (kreinAdjointH (E := E) B).comp (kreinAdjointH (E := E) A) := by
+  ext u
+  simp [kreinAdjointH, ContinuousLinearMap.comp_assoc, fundamentalSymmetryH_involutive]
+
+@[simp] lemma kreinAdjointH_involutive
+    (A : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
+    kreinAdjointH (E := E) (kreinAdjointH (E := E) A) = A := by
+  ext u
+  simp [kreinAdjointH, ContinuousLinearMap.comp_assoc, fundamentalSymmetryH_involutive,
+    fundamentalSymmetryH_adjoint (E := E)]
+
 lemma isKreinAdjointH_self_iff_adjoint
     (A : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
     IsKreinAdjointH (E := E) A A ↔
@@ -332,10 +428,20 @@ lemma isKreinAdjointH_self_iff_adjoint_mul
         (fundamentalSymmetryH (E := E)) := by
   simpa [mul_assoc] using isKreinAdjointH_self_iff_adjoint (E := E) A
 
+lemma isKreinAdjointH_self_iff_kreinAdjointH_eq
+    (A : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
+    IsKreinAdjointH (E := E) A A ↔ kreinAdjointH (E := E) A = A := by
+  simpa [kreinAdjointH, eq_comm] using isKreinAdjointH_self_iff_adjoint (E := E) A
+
 /-- Krein self-adjointness on the Hilbert carrier (`A♯ = A`). -/
 def IsKreinSelfAdjointH
     (A : HilbertDoubled E →L[ℝ] HilbertDoubled E) : Prop :=
   kreinAdjointH (E := E) A = A
+
+lemma isKreinAdjointH_self_iff_isKreinSelfAdjointH
+    (A : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
+    IsKreinAdjointH (E := E) A A ↔ IsKreinSelfAdjointH (E := E) A := by
+  exact isKreinAdjointH_self_iff_kreinAdjointH_eq (E := E) A
 
 /-- Krein skew-adjointness on the Hilbert carrier (`A♯ = -A`). -/
 def IsKreinSkewAdjointH

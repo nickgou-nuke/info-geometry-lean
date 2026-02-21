@@ -1,6 +1,4 @@
 import InfoGeometry.Architecture.SymmetricSpace
-import InfoGeometry.Core.UnifiedGeometry
-import InfoGeometry.Core.SymmetricLie
 
 /-!
 # Core Symmetric Spaces
@@ -10,44 +8,74 @@ Core façade for group-level symmetric-space and Cartan data.
 
 namespace InfoGeometry.Core
 
+/-- Core alias for group-level Cartan involutions. -/
+abbrev CartanInvolution (G : Type _) [Group G] :=
+  InfoGeometry.Architecture.CartanInvolution G
+
+/-- Core alias for involutive group automorphisms as a subtype. -/
+abbrev InvolutiveMulAut (G : Type _) [Group G] :=
+  InfoGeometry.Architecture.InvolutiveMulAut G
+
+/-- Core alias for symmetric pairs. -/
+abbrev SymmetricPair (G : Type _) [Group G] :=
+  InfoGeometry.Architecture.SymmetricPair G
+
 section GroupModel
 
 variable {G : Type _} [Group G]
 
-lemma cartanSymmetry_involutive
-    (θ : InfoGeometry.Architecture.CartanInvolution G) (x y : G) :
-    InfoGeometry.Architecture.cartanSymmetry θ x
-      (InfoGeometry.Architecture.cartanSymmetry θ x y) = y :=
-  InfoGeometry.Architecture.cartanSymmetry_involutive θ x y
+/-- Core alias for fixed-point subgroup of a group automorphism. -/
+abbrev fixedSubgroup (θ : MulAut G) : Subgroup G :=
+  InfoGeometry.Architecture.fixedSubgroup θ
 
-lemma cartanSymmetry_fixpoint
-    (θ : InfoGeometry.Architecture.CartanInvolution G) (x : G) :
-    InfoGeometry.Architecture.cartanSymmetry θ x x = x :=
-  InfoGeometry.Architecture.cartanSymmetry_fixpoint θ x
+/-- Core alias for Cartan group-model point symmetry. -/
+abbrev cartanSymmetry (θ : CartanInvolution G) (x y : G) : G :=
+  InfoGeometry.Architecture.cartanSymmetry θ x y
+
+/-- Core alias for point symmetry induced by an involutive `MulAut` subtype. -/
+abbrev cartanSymmetryOfInvolutiveMulAut
+    (θ : InvolutiveMulAut G) (x y : G) : G :=
+  InfoGeometry.Architecture.cartanSymmetryOfInvolutiveMulAut θ x y
+
+/-- Core alias for the canonical symmetric pair induced by an involutive `MulAut` subtype. -/
+abbrev symmetricPairOfInvolutiveMulAut (θ : InvolutiveMulAut G) : SymmetricPair G :=
+  InfoGeometry.Architecture.symmetricPairOfInvolutiveMulAut θ
+
+export InfoGeometry.Architecture
+  (cartanSymmetry_involutive
+   cartanSymmetry_fixpoint
+   cartanSymmetryOfInvolutiveMulAut_involutive
+   cartanSymmetryOfInvolutiveMulAut_fixpoint)
+
+export InfoGeometry.Architecture.SymmetricPair (K_eq_fixedSubgroup)
 
 lemma cartanSymmetry_involutive_ofInvolutiveMulAut
-    (θ : InfoGeometry.Architecture.InvolutiveMulAut G) (x y : G) :
-    InfoGeometry.Architecture.cartanSymmetryOfInvolutiveMulAut θ x
-      (InfoGeometry.Architecture.cartanSymmetryOfInvolutiveMulAut θ x y) = y :=
-  InfoGeometry.Architecture.cartanSymmetryOfInvolutiveMulAut_involutive θ x y
+    (θ : InvolutiveMulAut G) (x y : G) :
+    cartanSymmetryOfInvolutiveMulAut θ x
+      (cartanSymmetryOfInvolutiveMulAut θ x y) = y :=
+  cartanSymmetryOfInvolutiveMulAut_involutive θ x y
 
 lemma cartanSymmetry_fixpoint_ofInvolutiveMulAut
-    (θ : InfoGeometry.Architecture.InvolutiveMulAut G) (x : G) :
-    InfoGeometry.Architecture.cartanSymmetryOfInvolutiveMulAut θ x x = x :=
-  InfoGeometry.Architecture.cartanSymmetryOfInvolutiveMulAut_fixpoint θ x
+    (θ : InvolutiveMulAut G) (x : G) :
+    cartanSymmetryOfInvolutiveMulAut θ x x = x :=
+  cartanSymmetryOfInvolutiveMulAut_fixpoint θ x
 
 lemma symmetricPair_K_eq_fixedSubgroup
-    (S : InfoGeometry.Architecture.SymmetricPair G) :
-    S.K = InfoGeometry.Architecture.fixedSubgroup S.θ.toMulAut :=
-  InfoGeometry.Architecture.SymmetricPair.K_eq_fixedSubgroup S
+    (S : SymmetricPair G) :
+    S.K = fixedSubgroup S.θ.toMulAut :=
+  K_eq_fixedSubgroup S
+
+lemma symmetricPairOfInvolutiveMulAut_K_eq_fixed
+    (θ : InvolutiveMulAut G) :
+    (symmetricPairOfInvolutiveMulAut θ).K = fixedSubgroup θ.1 := by
+  simpa [symmetricPairOfInvolutiveMulAut, fixedSubgroup] using
+    K_eq_fixedSubgroup
+      (InfoGeometry.Architecture.symmetricPairOfInvolutiveMulAut θ)
 
 lemma symmetricPairOfInvolutiveMulAut_K_eq_fixedSubgroup
-    (θ : InfoGeometry.Architecture.InvolutiveMulAut G) :
-    (InfoGeometry.Architecture.symmetricPairOfInvolutiveMulAut θ).K
-      = InfoGeometry.Architecture.fixedSubgroup θ.1 := by
-  simpa using
-    InfoGeometry.Architecture.SymmetricPair.K_eq_fixedSubgroup
-      (InfoGeometry.Architecture.symmetricPairOfInvolutiveMulAut θ)
+    (θ : InvolutiveMulAut G) :
+    (symmetricPairOfInvolutiveMulAut θ).K = fixedSubgroup θ.1 :=
+  symmetricPairOfInvolutiveMulAut_K_eq_fixed θ
 
 end GroupModel
 

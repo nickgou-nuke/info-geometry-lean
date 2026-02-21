@@ -104,6 +104,56 @@ noncomputable def occupancyOnProjective : ProjectiveState (E := E) → ℝ :=
 @[simp] lemma occupancyOnProjective_projectivize (v : DoubledSpace E) :
     occupancyOnProjective (E := E) (projectivize (E := E) v) = occupancy (E := E) v := rfl
 
+omit [NormedSpace ℝ E] in
+@[simp] lemma occupancy_zero :
+    occupancy (E := E) (0 : DoubledSpace E) = 0 := by
+  classical
+  simp [occupancy]
+
+omit [NormedSpace ℝ E] in
+lemma occupancy_of_ne_zero {v : DoubledSpace E} (hv : v ≠ 0) :
+    occupancy (E := E) v = 1 := by
+  classical
+  simp [occupancy, hv]
+
+omit [NormedSpace ℝ E] in
+lemma occupancy_eq_zero_iff (v : DoubledSpace E) :
+    occupancy (E := E) v = 0 ↔ v = 0 := by
+  classical
+  by_cases hv : v = 0
+  · simp [occupancy, hv]
+  · simp [occupancy, hv]
+
+omit [NormedSpace ℝ E] in
+lemma occupancy_eq_one_iff (v : DoubledSpace E) :
+    occupancy (E := E) v = 1 ↔ v ≠ 0 := by
+  classical
+  by_cases hv : v = 0
+  · simp [occupancy, hv]
+  · simp [occupancy, hv]
+
+@[simp] lemma occupancyOnProjective_zero :
+    occupancyOnProjective (E := E)
+      (projectivize (E := E) (0 : DoubledSpace E)) = 0 := by
+  simp [occupancy]
+
+lemma occupancyOnProjective_of_ne_zero (v : DoubledSpace E) (hv : v ≠ 0) :
+    occupancyOnProjective (E := E) (projectivize (E := E) v) = 1 := by
+  simp [occupancyOnProjective_projectivize, occupancy, hv]
+
+/-- The descended occupancy is a `{0,1}`-valued observable on projective states. -/
+lemma occupancyOnProjective_binary (q : ProjectiveState (E := E)) :
+    occupancyOnProjective (E := E) q = 0 ∨ occupancyOnProjective (E := E) q = 1 := by
+  refine Quotient.inductionOn q ?_
+  intro v
+  classical
+  by_cases hv : v = 0
+  · left
+    subst hv
+    exact occupancyOnProjective_zero (E := E)
+  · right
+    exact occupancyOnProjective_of_ne_zero (E := E) v hv
+
 end Doubled
 
 end InfoGeometry.Projective

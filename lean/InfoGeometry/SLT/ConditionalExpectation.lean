@@ -22,9 +22,37 @@ def measurableSpaceExcept (i : Fin n) : MeasurableSpace (Fin n → α) :=
 noncomputable def condExpExcept
     (i : Fin n) (μ : Measure (Fin n → α)) (f : (Fin n → α) → ℝ) :
     (Fin n → α) → ℝ :=
-  MeasureTheory.condExp (measurableSpaceExcept (n := n) (α := α) i) μ f
+  μ[f | measurableSpaceExcept (n := n) (α := α) i]
+
+/-- Conditional variance given all coordinates except `i`. -/
+noncomputable def condVarExcept
+    (i : Fin n) (μ : Measure (Fin n → α)) (f : (Fin n → α) → ℝ) :
+    (Fin n → α) → ℝ :=
+  Var[f; μ | measurableSpaceExcept (n := n) (α := α) i]
 
 /-- Conditional-variance integral identity for the “all-but-`i`” sigma-algebra. -/
+lemma setIntegral_condVarExcept_eq
+    (i : Fin n)
+    (μ : Measure (Fin n → α))
+    (f : (Fin n → α) → ℝ)
+    (hm : measurableSpaceExcept (n := n) (α := α) i ≤
+      (inferInstance : MeasurableSpace (Fin n → α)))
+    [SigmaFinite (μ.trim hm)]
+    (hfi : Integrable
+      (fun ω => (f ω - (condExpExcept (n := n) (α := α) i μ f) ω) ^ 2) μ)
+    {s : Set (Fin n → α)}
+    (hs : MeasurableSet[measurableSpaceExcept (n := n) (α := α) i] s) :
+    ∫ ω in s, (condVarExcept (n := n) (α := α) i μ f) ω ∂μ
+      = ∫ ω in s, (f ω - (condExpExcept (n := n) (α := α) i μ f) ω) ^ 2 ∂μ := by
+  simpa [condExpExcept, condVarExcept] using
+    (ProbabilityTheory.setIntegral_condVar
+      (m := measurableSpaceExcept (n := n) (α := α) i)
+      (μ := μ)
+      (X := f)
+      (hm := hm)
+      hfi hs)
+
+@[deprecated setIntegral_condVarExcept_eq (since := "2026-02-21")]
 lemma setIntegral_condVar_except_eq
     (i : Fin n)
     (μ : Measure (Fin n → α))
@@ -33,17 +61,11 @@ lemma setIntegral_condVar_except_eq
       (inferInstance : MeasurableSpace (Fin n → α)))
     [SigmaFinite (μ.trim hm)]
     (hfi : Integrable
-      (fun ω => (f ω - (μ[f | measurableSpaceExcept (n := n) (α := α) i]) ω) ^ 2) μ)
+      (fun ω => (f ω - (condExpExcept (n := n) (α := α) i μ f) ω) ^ 2) μ)
     {s : Set (Fin n → α)}
     (hs : MeasurableSet[measurableSpaceExcept (n := n) (α := α) i] s) :
-    ∫ ω in s, (Var[f; μ | measurableSpaceExcept (n := n) (α := α) i]) ω ∂μ
-      = ∫ ω in s, (f ω - (μ[f | measurableSpaceExcept (n := n) (α := α) i]) ω) ^ 2 ∂μ := by
-  simpa using
-    (ProbabilityTheory.setIntegral_condVar
-      (m := measurableSpaceExcept (n := n) (α := α) i)
-      (μ := μ)
-      (X := f)
-      (hm := hm)
-      hfi hs)
+    ∫ ω in s, (condVarExcept (n := n) (α := α) i μ f) ω ∂μ
+      = ∫ ω in s, (f ω - (condExpExcept (n := n) (α := α) i μ f) ω) ^ 2 ∂μ :=
+  setIntegral_condVarExcept_eq (n := n) (α := α) i μ f hm hfi hs
 
 end InfoGeometry.SLT

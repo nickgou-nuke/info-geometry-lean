@@ -17,71 +17,89 @@ variable {α : Type _} [Fintype α]
 /-- Mean of the sufficient statistic under parameter `θ`. -/
 noncomputable def statMean
     (F : FiniteExponentialFamilyData α) (θ : ℝ) : ℝ :=
-  ∑ x, density F θ x * F.stat x
+  ∑ x, familyDensity F θ x * F.stat x
 
 /-- Parameterized KL divergence `KL(P_θ || P_η)` for a finite exponential family. -/
 noncomputable def KLParam
     (F : FiniteExponentialFamilyData α) (θ η : ℝ) : ℝ :=
-  ∑ x, density F θ x *
-    (Real.log (density F θ x) - Real.log (density F η x))
+  ∑ x, familyDensity F θ x *
+    (Real.log (familyDensity F θ x) - Real.log (familyDensity F η x))
 
 /-- Exponential-family log-partition viewed as a `LogPotential`. -/
 noncomputable def logPotential
     (F : FiniteExponentialFamilyData α) : InfoGeometry.LogPotential ℝ where
-  ψ := logPartition F
+  ψ := familyLogPartition F
 
 lemma log_density_eq
     (F : FiniteExponentialFamilyData α) (θ : ℝ) (x : α) :
-    Real.log (density F θ x) = statistic F x θ - logPartition F θ := by
-  rw [density_eq]
-  simp
+    Real.log (familyDensity F θ x) = familyStatistic F x θ - familyLogPartition F θ := by
+  have hpos : 0 < familyDensity F θ x := familyDensity_pos F θ x
+  apply Real.exp_injective
+  calc
+    Real.exp (Real.log (familyDensity F θ x))
+        = familyDensity F θ x := Real.exp_log hpos
+    _ = Real.exp (familyStatistic F x θ - familyLogPartition F θ) := by
+          rw [familyDensity_eq]
 
 lemma KLParam_eq
     (F : FiniteExponentialFamilyData α) (θ η : ℝ) :
     KLParam F θ η
       =
       (θ - η) * statMean F θ
-        - (logPartition F θ - logPartition F η) := by
+        - (familyLogPartition F θ - familyLogPartition F η) := by
   unfold KLParam statMean
   calc
-    ∑ x, density F θ x *
-        (Real.log (density F θ x) - Real.log (density F η x))
+    ∑ x, familyDensity F θ x *
+        (Real.log (familyDensity F θ x) - Real.log (familyDensity F η x))
       =
-      ∑ x, density F θ x *
-        (((θ - η) * F.stat x) - (logPartition F θ - logPartition F η)) := by
+      ∑ x, familyDensity F θ x *
+        (((θ - η) * F.stat x) - (familyLogPartition F θ - familyLogPartition F η)) := by
           refine Finset.sum_congr rfl ?_
           intro x hx
           rw [log_density_eq, log_density_eq]
-          unfold statistic
+          unfold familyStatistic
           ring
     _ =
-      ∑ x, ((θ - η) * (density F θ x * F.stat x)
-        - (logPartition F θ - logPartition F η) * density F θ x) := by
+      ∑ x, ((θ - η) * (familyDensity F θ x * F.stat x)
+        - (familyLogPartition F θ - familyLogPartition F η) * familyDensity F θ x) := by
           refine Finset.sum_congr rfl ?_
           intro x hx
           ring
     _ =
-      (θ - η) * (∑ x, density F θ x * F.stat x)
-        - (logPartition F θ - logPartition F η) * (∑ x, density F θ x) := by
+      (θ - η) * (∑ x, familyDensity F θ x * F.stat x)
+        - (familyLogPartition F θ - familyLogPartition F η) * (∑ x, familyDensity F θ x) := by
           rw [Finset.sum_sub_distrib, Finset.mul_sum, Finset.mul_sum]
     _ =
       (θ - η) * statMean F θ
-        - (logPartition F θ - logPartition F η) := by
-          rw [show (∑ x, density F θ x * F.stat x) = statMean F θ by rfl]
-          rw [normalization F θ]
+        - (familyLogPartition F θ - familyLogPartition F η) := by
+          rw [show (∑ x, familyDensity F θ x * F.stat x) = statMean F θ by rfl]
+          rw [familyNormalization F θ]
           ring
+
+lemma KLParam_self (F : FiniteExponentialFamilyData α) (θ : ℝ) :
+    KLParam F θ θ = 0 := by
+  rw [KLParam_eq]
+  ring
 
 /-- KL equals Bregman divergence of the log-partition potential,
 assuming the standard derivative-mean identity `ψ'(θ) = E_θ[T]`. -/
 lemma KLParam_eq_LogPotential_bregman_of_statMean_eq_deriv
     (F : FiniteExponentialFamilyData α)
     (θ η : ℝ)
-    (hmean : statMean F θ = deriv (logPartition F) θ) :
+    (hmean : statMean F θ = deriv (familyLogPartition F) θ) :
     KLParam F θ η = (logPotential F).bregman η θ := by
   rw [KLParam_eq]
   rw [hmean]
   unfold InfoGeometry.LogPotential.bregman logPotential
   unfold InfoGeometry.bregmanDiv
   ring
+
+lemma KLParam_eq_bregman_if_deriv_mean
+    (F : FiniteExponentialFamilyData α)
+    (hmean : ∀ t, statMean F t = deriv (familyLogPartition F) t)
+    (θ η : ℝ) :
+    KLParam F θ η = (logPotential F).bregman η θ := by
+  exact KLParam_eq_LogPotential_bregman_of_statMean_eq_deriv
+    (F := F) θ η (hmean θ)
 
 end InfoGeometry.ExponentialFamily

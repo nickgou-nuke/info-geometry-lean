@@ -4,6 +4,7 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.BigOperators.Field
+import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Data.Nat.Factorial.Basic
 import Mathlib.Order.Filter.Basic
 import Mathlib.Tactic.Linarith
@@ -12,6 +13,8 @@ import InfoGeometry.Basic
 import InfoGeometry.KL.Finite
 
 open scoped BigOperators
+
+universe u
 
 namespace JaynesMaxEnt
 
@@ -49,12 +52,42 @@ noncomputable def shannonEntropy (P : ProbDist Ω) : ℝ :=
 
 /-!
 ### 2. Combinatorial Foundations (Multiplicity)
-Multiplicity `W = N! / ∏ᵢ Nᵢ!` (as a `ℕ`-valued combinatorial count).
+Multiplicity is encoded as a multinomial count derived from the count profile.
 -/
 
-/-- Multiplicity: `W = N! / (N₁! * N₂! * ... * Nₙ!)`. -/
-def multiplicity (N : ℕ) (counts : Ω → ℕ) : ℕ :=
-  Nat.factorial N / ∏ i, Nat.factorial (counts i)
+/-- Total count encoded by a count profile. -/
+noncomputable def totalCount (counts : Ω → ℕ) : ℕ :=
+  ∑ i, counts i
+
+/-- Multiplicity (multinomial count) for a finite count profile. -/
+noncomputable def multiplicity (counts : Ω → ℕ) : ℕ :=
+  Nat.multinomial Finset.univ counts
+
+lemma multiplicity_pos (counts : Ω → ℕ) :
+    0 < multiplicity counts := by
+  simpa [multiplicity] using
+    (Nat.multinomial_pos (s := (Finset.univ : Finset Ω)) (f := counts))
+
+lemma multiplicity_spec (counts : Ω → ℕ) :
+    (∏ i, Nat.factorial (counts i)) * multiplicity counts
+      = Nat.factorial (totalCount counts) := by
+  simpa [multiplicity, totalCount] using
+    (Nat.multinomial_spec (s := (Finset.univ : Finset Ω)) (f := counts))
+
+lemma multiplicity_one_le (counts : Ω → ℕ) :
+    1 ≤ multiplicity counts :=
+  Nat.succ_le_of_lt (multiplicity_pos counts)
+
+/-- Log multiplicity. -/
+noncomputable def logMultiplicity (counts : Ω → ℕ) : ℝ :=
+  Real.log (multiplicity counts)
+
+lemma logMultiplicity_nonneg (counts : Ω → ℕ) :
+    0 ≤ logMultiplicity counts := by
+  unfold logMultiplicity
+  have h1 : (1 : ℝ) ≤ (multiplicity counts : ℝ) := by
+    exact_mod_cast multiplicity_one_le counts
+  exact Real.log_nonneg h1
 
 /--
 Asymptotic Equipartition Property (AEP), stated conceptually.
@@ -64,9 +97,11 @@ argument on normalized frequencies; we register it here as an explicit propositi
 interface while retaining the intended statement.
 -/
 def asymptotic_equipartition
-    (_counts : ℕ → Ω → ℕ) (_P : ProbDist Ω) :
+    (counts : ℕ → Ω → ℕ) (P : ProbDist Ω) :
     Prop :=
-  True -- removed unused h_freq argument; placeholder for actual statement
+  let _ := counts
+  let _ := P
+  True -- placeholder for actual asymptotic statement
 
 /--
 Asymptotic Equipartition Property as a theorem-ready proposition alias.
@@ -316,7 +351,8 @@ noncomputable def empiricalAutocovariance (Y : ℕ → ℝ) (T : ℕ) (k : ℕ) 
 Conceptual predicate placeholder: “`P` corresponds to an autoregressive (AR) model”.
 Replace `True` with your preferred formalization (e.g. existence of AR coefficients).
 -/
-def isAutoregressiveModel (_P : ProbDist Ω) : Prop :=
+def isAutoregressiveModel (P : ProbDist Ω) : Prop :=
+  let _ := P
   True
 
 end JaynesMaxEnt

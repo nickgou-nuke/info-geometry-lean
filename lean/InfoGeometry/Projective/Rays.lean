@@ -4,8 +4,9 @@ section KreinClifford
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
-/-- Projectivization dictionary: two nonzero vectors represent the same ray
-iff they differ by a nonzero real scalar. -/
+/-- Cone-projectivization dictionary: vectors represent the same ray
+iff they differ by a nonzero real scalar.
+This includes the distinguished zero class (vacuum) in the quotient. -/
 def SameRayDoubled (v w : DoubledSpace E) : Prop :=
   ∃ a : ℝ, a ≠ 0 ∧ w = a • v
 
@@ -36,12 +37,21 @@ def sameRaySetoid : Setoid (DoubledSpace E) where
     by intro x y z hxy hyz; exact sameRay_trans (E := E) hxy hyz
   ⟩
 
-/-- Projective states: quotient of doubled states by nonzero real rescaling. -/
+/-- Cone-projective states: quotient of doubled states by nonzero real rescaling.
+Unlike strict projectivization, this retains a distinguished zero class. -/
 def ProjectiveState : Type _ := Quotient (sameRaySetoid (E := E))
 
 /-- Canonical projection from a doubled state to its projective ray class. -/
 def projectivize (v : DoubledSpace E) : ProjectiveState (E := E) :=
   Quotient.mk'' v
+
+lemma projectivize_eq_iff {v w : DoubledSpace E} :
+    projectivize (E := E) v = projectivize (E := E) w ↔ SameRayDoubled (E := E) v w := by
+  constructor
+  · intro h
+    exact Quotient.exact h
+  · intro h
+    exact Quotient.sound h
 
 abbrev Gauge := Units ℝ
 

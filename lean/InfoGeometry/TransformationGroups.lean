@@ -114,13 +114,14 @@ lemma logCoord_flat (c : ℝ) :
   have hne : Real.exp t ≠ 0 := Real.exp_ne_zero t
   calc
     Real.exp t * (c / Real.exp t)
-        = Real.exp t * (c * (Real.exp t)⁻¹) := by simp [div_eq_mul_inv]
-    _   = (Real.exp t * c) * (Real.exp t)⁻¹ := by
-          simpa using (mul_assoc (Real.exp t) c (Real.exp t)⁻¹).symm
-    _   = (c * Real.exp t) * (Real.exp t)⁻¹ := by simp [mul_comm]
-        _   = c * (Real.exp t * (Real.exp t)⁻¹) := by simp
-    _   = c * 1 := by simp
-    _   = c := by simp
+        = Real.exp t * (c * (Real.exp t)⁻¹) := by
+            simp [div_eq_mul_inv]
+    _ = c * (Real.exp t * (Real.exp t)⁻¹) := by
+          ring
+    _ = c * 1 := by
+          simp [hne]
+    _ = c := by
+          simp
 
 end ContinuousLocationScale
 

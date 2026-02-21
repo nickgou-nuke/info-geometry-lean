@@ -14,17 +14,64 @@ variable {Θ : Type _}
 variable [NormedAddCommGroup Θ]
 variable [NormedSpace ℝ Θ]
 
+/-- Affine-support set used in the Legendre/Fenchel supremum. -/
+def legendreSupport
+    (ψ : Θ → ℝ)
+    (η : Θ →L[ℝ] ℝ) : Set ℝ :=
+  Set.range (fun θ : Θ => η θ - ψ θ)
+
 /-- Legendre transform as supremum of affine supports against a dual covector. -/
 noncomputable def legendre
     (ψ : Θ → ℝ)
     (η : Θ →L[ℝ] ℝ) : ℝ :=
-  sSup (Set.range (fun θ : Θ => η θ - ψ θ))
+  sSup (legendreSupport ψ η)
 
-/-- Fenchel conjugacy inequality (`ψ*` upper-bounds all affine supports of `ψ`). -/
-def IsLegendreConjugate
+/-- Well-posedness assumptions for the real-valued `sSup` Legendre transform. -/
+structure LegendreWellPosed
+    (ψ : Θ → ℝ)
+    (η : Θ →L[ℝ] ℝ) : Prop where
+  nonempty : (legendreSupport ψ η).Nonempty
+  bddAbove : BddAbove (legendreSupport ψ η)
+
+lemma le_legendre_of_bddAbove
+    (ψ : Θ → ℝ)
+    (η : Θ →L[ℝ] ℝ)
+    (hb : BddAbove (legendreSupport ψ η))
+    (θ : Θ) :
+    η θ - ψ θ ≤ legendre ψ η := by
+  exact le_csSup hb ⟨θ, rfl⟩
+
+/-- Fenchel majorization (`ψ*` upper-bounds all affine supports of `ψ`). -/
+def IsFenchelMajorized
     (ψ : Θ → ℝ)
     (ψStar : (Θ →L[ℝ] ℝ) → ℝ) : Prop :=
   ∀ η θ, η θ - ψ θ ≤ ψStar η
+
+/-- Exact Fenchel conjugacy via equality with the support supremum. -/
+def IsFenchelConjugate
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ) : Prop :=
+  ∀ η, ψStar η = legendre ψ η
+
+/--
+Backward-compatible alias.
+This corresponds to Fenchel majorization, not necessarily exact conjugacy.
+-/
+abbrev IsLegendreConjugate
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ) : Prop :=
+  IsFenchelMajorized ψ ψStar
+
+lemma IsFenchelConjugate.isFenchelMajorized
+    {ψ : Θ → ℝ}
+    {ψStar : (Θ →L[ℝ] ℝ) → ℝ}
+    (hConj : IsFenchelConjugate ψ ψStar)
+    (hBdd : ∀ η, BddAbove (legendreSupport ψ η)) :
+    IsFenchelMajorized ψ ψStar := by
+  intro η θ
+  have hle : η θ - ψ θ ≤ legendre ψ η :=
+    le_legendre_of_bddAbove ψ η (hBdd η) θ
+  simpa [hConj η] using hle
 
 /-- Fenchel gap associated to a primal/dual pair. -/
 def fenchelGap
@@ -38,7 +85,7 @@ def fenchelGap
 lemma fenchelYoung_ineq
     {ψ : Θ → ℝ}
     {ψStar : (Θ →L[ℝ] ℝ) → ℝ}
-    (hConj : IsLegendreConjugate ψ ψStar)
+    (hConj : IsFenchelMajorized ψ ψStar)
     (θ : Θ)
     (η : Θ →L[ℝ] ℝ) :
     η θ ≤ ψ θ + ψStar η := by
@@ -49,7 +96,7 @@ lemma fenchelYoung_ineq
 lemma fenchelGap_nonneg
     {ψ : Θ → ℝ}
     {ψStar : (Θ →L[ℝ] ℝ) → ℝ}
-    (hConj : IsLegendreConjugate ψ ψStar)
+    (hConj : IsFenchelMajorized ψ ψStar)
     (θ : Θ)
     (η : Θ →L[ℝ] ℝ) :
     0 ≤ fenchelGap ψ ψStar θ η := by
@@ -105,7 +152,8 @@ lemma dual_value_of_fenchelYoungEquality
 structure LegendreInvolutionAssumptions
     (ψ : Θ → ℝ)
     (ψStar : (Θ →L[ℝ] ℝ) → ℝ) where
-  conjugate : IsLegendreConjugate ψ ψStar
+  conjugate : IsFenchelMajorized ψ ψStar
+  diff : Differentiable ℝ ψ
   grad : Θ → (Θ →L[ℝ] ℝ)
   gradStar : (Θ →L[ℝ] ℝ) → Θ
   grad_eq_fderiv : ∀ θ, grad θ = fderiv ℝ ψ θ
@@ -122,6 +170,25 @@ lemma LegendreInvolutionAssumptions.fenchelYoung_eq
     FenchelYoungEquality ψ ψStar θ (h.grad θ) :=
   h.fenchelYoung_along_grad θ
 
+lemma LegendreInvolutionAssumptions.fenchelGap_eq_zero_along_grad
+    {ψ : Θ → ℝ}
+    {ψStar : (Θ →L[ℝ] ℝ) → ℝ}
+    (h : LegendreInvolutionAssumptions ψ ψStar)
+    (θ : Θ) :
+    fenchelGap ψ ψStar θ (h.grad θ) = 0 := by
+  exact
+    (fenchelYoungEquality_iff_gap_eq_zero ψ ψStar θ (h.grad θ)).1
+      (h.fenchelYoung_along_grad θ)
+
+lemma LegendreInvolutionAssumptions.dual_value_along_grad
+    {ψ : Θ → ℝ}
+    {ψStar : (Θ →L[ℝ] ℝ) → ℝ}
+    (h : LegendreInvolutionAssumptions ψ ψStar)
+    (θ : Θ) :
+    ψStar (h.grad θ) = h.grad θ θ - ψ θ := by
+  exact dual_value_of_fenchelYoungEquality ψ ψStar θ (h.grad θ)
+    (h.fenchelYoung_along_grad θ)
+
 /-- Interface theorem: involution assumptions provide gradient/dual-gradient inverses. -/
 theorem legendre_involution_assumption_theorem
     {ψ : Θ → ℝ}
@@ -130,5 +197,13 @@ theorem legendre_involution_assumption_theorem
     Function.LeftInverse h.gradStar h.grad ∧
       Function.RightInverse h.gradStar h.grad := by
   exact ⟨h.left_inv, h.right_inv⟩
+
+/-- Stronger interface: involution assumptions imply zero Fenchel gap along `grad`. -/
+theorem legendre_involution_gap_theorem
+    {ψ : Θ → ℝ}
+    {ψStar : (Θ →L[ℝ] ℝ) → ℝ}
+    (h : LegendreInvolutionAssumptions ψ ψStar) :
+    ∀ θ, fenchelGap ψ ψStar θ (h.grad θ) = 0 :=
+  h.fenchelGap_eq_zero_along_grad
 
 end InfoGeometry.Geometry

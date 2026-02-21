@@ -1,6 +1,6 @@
 // Lean compiler output
 // Module: InfoGeometry.Krein.Metric
-// Imports: public import Init public import InfoGeometry.Clifford.Grading
+// Imports: public import Init public import InfoGeometry.Clifford.Grading public import Mathlib.Tactic.Linarith public import Mathlib.Tactic.Ring
 #include <lean/lean.h>
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wunused-parameter"
@@ -19,17 +19,20 @@ LEAN_EXPORT lean_object* lp_infogeometry_hessianOrthogonalSubgroup___boxed(lean_
 LEAN_EXPORT lean_object* lp_infogeometry_HessianOrthogonalGroup_inv___boxed(lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_modularJHessianOrthogonal(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_spectralEpsilonEquiv(lean_object*, lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_HessianOrthogonalGroup_toKreinIsometry___redArg___boxed(lean_object*);
 lean_object* lp_mathlib_NormedAddCommGroup_toENormedAddCommMonoid___redArg(lean_object*);
 lean_object* lp_mathlib_SubNegZeroMonoid_toNegZeroClass___redArg(lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_modularJKreinIsometry(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_spectralEpsilonEquiv___redArg___lam__0(lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_hessianIndefiniteForm(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_modularJHessianOrthogonal___redArg(lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_KreinIsometry_toHessianOrthogonalGroup(lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_modularJEquiv(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_HessianOrthogonalGroup_one___redArg(lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_modularJKreinIsometry___boxed(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_modularJKreinIsometry___redArg(lean_object*, lean_object*);
 lean_object* lp_mathlib_LinearEquiv_trans___redArg(lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_HessianOrthogonalGroup_toKreinIsometry___boxed(lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_modularJEquiv___boxed(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_instGroupHessianOrthogonalGroup(lean_object*, lean_object*, lean_object*);
 lean_object* lp_mathlib_LinearEquiv_symm___redArg(lean_object*);
@@ -39,15 +42,19 @@ lean_object* lp_mathlib_ContinuousLinearEquiv_automorphismGroup___redArg(lean_ob
 static lean_object* lp_infogeometry_modularJEquiv___closed__0;
 lean_object* lp_mathlib_Real_definition___lam__0_00___x40_Mathlib_Data_Real_Basic_1138242547____hygCtx___hyg_8_(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_hessianIndefiniteForm___redArg(lean_object*, lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_KreinIsometry_toHessianOrthogonalGroup___boxed(lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_modularJHessianOrthogonal___boxed(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_hessianIndefiniteForm___boxed(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_HessianOrthogonalGroup_inv(lean_object*, lean_object*, lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_KreinIsometry_toHessianOrthogonalGroup___redArg(lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_modularJHessianOrthogonal___redArg___boxed(lean_object*, lean_object*);
 static lean_object* lp_infogeometry_modularJEquiv___closed__1;
 LEAN_EXPORT lean_object* lp_infogeometry_modularJKreinIsometry___redArg___boxed(lean_object*, lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_HessianOrthogonalGroup_toKreinIsometry(lean_object*, lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_instGroupHessianOrthogonalGroup___redArg(lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_spectralEpsilonKreinAntiIsometry(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_spectralEpsilonEquiv___redArg___boxed(lean_object*);
+LEAN_EXPORT lean_object* lp_infogeometry_KreinIsometry_toHessianOrthogonalGroup___redArg___boxed(lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_hessianOrthogonalSubgroup(lean_object*, lean_object*, lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_HessianOrthogonalGroup_comp(lean_object*, lean_object*, lean_object*, lean_object*, lean_object*);
 lean_object* lp_mathlib_Prod_instAddMonoid___redArg(lean_object*, lean_object*);
@@ -63,6 +70,7 @@ LEAN_EXPORT lean_object* lp_infogeometry_HessianOrthogonalGroup_one(lean_object*
 LEAN_EXPORT lean_object* lp_infogeometry_modularJEquiv___lam__0(lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_spectralEpsilonKreinAntiIsometry___redArg___boxed(lean_object*);
 extern lean_object* lp_mathlib_Real_instCommSemiring;
+LEAN_EXPORT lean_object* lp_infogeometry_HessianOrthogonalGroup_toKreinIsometry___redArg(lean_object*);
 LEAN_EXPORT lean_object* lp_infogeometry_hessianIndefiniteForm___redArg(lean_object* x_1, lean_object* x_2, lean_object* x_3) {
 _start:
 {
@@ -203,6 +211,74 @@ _start:
 {
 lean_object* x_5; 
 x_5 = lp_infogeometry_HessianOrthogonalGroup_inv(x_1, x_2, x_3, x_4);
+lean_dec_ref(x_3);
+lean_dec_ref(x_2);
+return x_5;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_KreinIsometry_toHessianOrthogonalGroup___redArg(lean_object* x_1) {
+_start:
+{
+lean_inc_ref(x_1);
+return x_1;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_KreinIsometry_toHessianOrthogonalGroup___redArg___boxed(lean_object* x_1) {
+_start:
+{
+lean_object* x_2; 
+x_2 = lp_infogeometry_KreinIsometry_toHessianOrthogonalGroup___redArg(x_1);
+lean_dec_ref(x_1);
+return x_2;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_KreinIsometry_toHessianOrthogonalGroup(lean_object* x_1, lean_object* x_2, lean_object* x_3, lean_object* x_4) {
+_start:
+{
+lean_inc_ref(x_4);
+return x_4;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_KreinIsometry_toHessianOrthogonalGroup___boxed(lean_object* x_1, lean_object* x_2, lean_object* x_3, lean_object* x_4) {
+_start:
+{
+lean_object* x_5; 
+x_5 = lp_infogeometry_KreinIsometry_toHessianOrthogonalGroup(x_1, x_2, x_3, x_4);
+lean_dec_ref(x_4);
+lean_dec_ref(x_3);
+lean_dec_ref(x_2);
+return x_5;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_HessianOrthogonalGroup_toKreinIsometry___redArg(lean_object* x_1) {
+_start:
+{
+lean_inc_ref(x_1);
+return x_1;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_HessianOrthogonalGroup_toKreinIsometry___redArg___boxed(lean_object* x_1) {
+_start:
+{
+lean_object* x_2; 
+x_2 = lp_infogeometry_HessianOrthogonalGroup_toKreinIsometry___redArg(x_1);
+lean_dec_ref(x_1);
+return x_2;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_HessianOrthogonalGroup_toKreinIsometry(lean_object* x_1, lean_object* x_2, lean_object* x_3, lean_object* x_4) {
+_start:
+{
+lean_inc_ref(x_4);
+return x_4;
+}
+}
+LEAN_EXPORT lean_object* lp_infogeometry_HessianOrthogonalGroup_toKreinIsometry___boxed(lean_object* x_1, lean_object* x_2, lean_object* x_3, lean_object* x_4) {
+_start:
+{
+lean_object* x_5; 
+x_5 = lp_infogeometry_HessianOrthogonalGroup_toKreinIsometry(x_1, x_2, x_3, x_4);
+lean_dec_ref(x_4);
 lean_dec_ref(x_3);
 lean_dec_ref(x_2);
 return x_5;
@@ -526,6 +602,8 @@ return x_4;
 }
 lean_object* initialize_Init(uint8_t builtin);
 lean_object* initialize_infogeometry_InfoGeometry_Clifford_Grading(uint8_t builtin);
+lean_object* initialize_mathlib_Mathlib_Tactic_Linarith(uint8_t builtin);
+lean_object* initialize_mathlib_Mathlib_Tactic_Ring(uint8_t builtin);
 static bool _G_initialized = false;
 LEAN_EXPORT lean_object* initialize_infogeometry_InfoGeometry_Krein_Metric(uint8_t builtin) {
 lean_object * res;
@@ -535,6 +613,12 @@ res = initialize_Init(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 res = initialize_infogeometry_InfoGeometry_Clifford_Grading(builtin);
+if (lean_io_result_is_error(res)) return res;
+lean_dec_ref(res);
+res = initialize_mathlib_Mathlib_Tactic_Linarith(builtin);
+if (lean_io_result_is_error(res)) return res;
+lean_dec_ref(res);
+res = initialize_mathlib_Mathlib_Tactic_Ring(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 lp_infogeometry_modularJEquiv___closed__0 = _init_lp_infogeometry_modularJEquiv___closed__0();

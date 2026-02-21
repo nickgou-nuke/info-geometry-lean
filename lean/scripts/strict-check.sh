@@ -7,14 +7,26 @@ lake build InfoGeometry.Library --wfail
 echo "[strict-check] elaborating InfoGeometry/Library.lean"
 lake env lean InfoGeometry/Library.lean
 
+echo "[strict-check] elaborating canonical root InfoGeometry.lean"
+lake env lean InfoGeometry.lean
+
+CANONICAL_PATHS=(InfoGeometry.lean InfoGeometry/Library.lean InfoGeometry/Canonical)
+
 echo "[strict-check] ensuring archive file is not imported by canonical modules"
-if rg -n "all_lean_files_combined" InfoGeometry.lean InfoGeometry -g '*.lean'; then
+if rg -n "all_lean_files_combined" "${CANONICAL_PATHS[@]}" -g '*.lean'; then
   echo "[strict-check] archive file must not be imported by canonical modules"
   exit 1
 fi
 
+echo "[strict-check] ensuring canonical modules do not import experimental umbrella"
+if rg -n "^import InfoGeometry\\.Experimental$" \
+  "${CANONICAL_PATHS[@]}" -g '*.lean'; then
+  echo "[strict-check] canonical modules must not import InfoGeometry.Experimental"
+  exit 1
+fi
+
 echo "[strict-check] checking for unresolved placeholders"
-if rg -n "\\b(sorry|admit)\\b|content will be moved here" InfoGeometry.lean InfoGeometry -g '*.lean'; then
+if rg -n "\\b(sorry|admit)\\b|content will be moved here" "${CANONICAL_PATHS[@]}" -g '*.lean'; then
   echo "[strict-check] placeholder content detected"
   exit 1
 fi

@@ -47,7 +47,7 @@ end SuperAlgebra
 
 section SuperKaehlerGeometry
 
-/-- Super-Kähler package from an involutive anticommuting pair. -/
+/-- Super-Kähler package from an involutive anticommuting pair (`J^2 = +Id` in this split/Krein model). -/
 structure SuperKaehlerStructure where
   J : End E
   epsilon : End E
@@ -74,12 +74,14 @@ theorem supercharge_squared_is_hamiltonian :
 theorem symplectic_is_complex_structure :
     symplecticFormOp S = (2 : ℝ) • (S.J.comp S.epsilon) := by
   have hεJ : S.epsilon.comp S.J = -(S.J.comp S.epsilon) := by
-    have hneg := congrArg (fun T => -T) S.anticomm
-    simpa using hneg.symm
+    have h := congrArg (fun T => -T) S.anticomm
+    simpa using h.symm
   unfold symplecticFormOp lieBracket
-  rw [hεJ]
-  abel_nf
-  simp [two_smul]
+  calc
+    S.J.comp S.epsilon - S.epsilon.comp S.J
+        = S.J.comp S.epsilon - (-(S.J.comp S.epsilon)) := by rw [hεJ]
+    _ = (2 : ℝ) • (S.J.comp S.epsilon) := by
+        simp [sub_eq_add_neg, two_smul]
 
 end SuperKaehlerGeometry
 
@@ -157,8 +159,8 @@ def StructureGroupLieAlgebra (S : SuperKaehlerStructure (E := E)) :
       _ = (r • A).comp S.J := by simp [ContinuousLinearMap.smul_comp]
   lie_mem' := by
     intro A B hA hB
-    change IsBosonic S.J ⁅A, B⁆
-    simpa [lieBracket, LieRing.of_associative_ring_bracket] using
+    change IsBosonic S.J (A * B - B * A)
+    simpa [lieBracket] using
       (bracket_boson_boson_is_bosonic (S := S) hA hB)
 
 /-- Odd (`fermionic`) linear subspace. -/
@@ -175,7 +177,7 @@ def SuperchargeSpace (S : SuperKaehlerStructure (E := E)) :
         simp [ContinuousLinearMap.comp_add]
       _ = -(A.comp S.J) + -(B.comp S.J) := by rw [hA, hB]
       _ = -((A.comp S.J) + (B.comp S.J)) := by
-        abel_nf
+        simp [add_comm]
       _ = -((A + B).comp S.J) := by
         simp [ContinuousLinearMap.add_comp]
   smul_mem' := by
@@ -214,6 +216,31 @@ theorem bracket_fermion_fermion_is_bosonic
           simp [ContinuousLinearMap.comp_assoc]
     _ = (A.comp B - B.comp A).comp S.J := by
           simp [ContinuousLinearMap.sub_comp]
+
+/-- KKT `ℤ`-grading rule: `[even, odd] ⊆ odd`. -/
+theorem bracket_boson_fermion_is_fermionic
+    (S : SuperKaehlerStructure (E := E))
+    {A B : End E}
+    (hA : IsBosonic S.J A)
+    (hB : IsFermionic S.J B) :
+    IsFermionic S.J (lieBracket A B) := by
+  unfold IsBosonic IsFermionic lieBracket at *
+  calc
+    S.J.comp (A.comp B - B.comp A)
+        = S.J.comp (A.comp B) - S.J.comp (B.comp A) := by
+            simp [ContinuousLinearMap.comp_sub]
+    _ = (S.J.comp A).comp B - (S.J.comp B).comp A := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = (A.comp S.J).comp B - (-(B.comp S.J)).comp A := by
+          rw [hA, hB]
+    _ = A.comp (-(B.comp S.J)) + B.comp (A.comp S.J) := by
+          simp [ContinuousLinearMap.comp_assoc, hA, hB]
+    _ = -(A.comp (B.comp S.J)) + B.comp (A.comp S.J) := by
+          simp
+    _ = -((A.comp B).comp S.J) + (B.comp A).comp S.J := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = -((A.comp B - B.comp A).comp S.J) := by
+          simp [sub_eq_add_neg, add_comm]
 
 end KKT_Construction
 

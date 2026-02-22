@@ -2,7 +2,7 @@ import Lake
 open Lake DSL
 
 package «infogeometry» where
-  srcDir := "."
+  srcDir := "lean"
   lintDriver := "strictCheck"
 
 /-- Strict canonical checks run by `lake lint`. -/

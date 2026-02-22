@@ -26,7 +26,7 @@ require mathlib from git
 -- pin a commit once the project itself moves to Lean 4.29.
 -- require LeanArchitect from git
 --   "https://github.com/hanwenzhu/LeanArchitect.git"
---   @ "c9c33948ac54a20ee946436526e5a62a0b41c13d"  -- stable commit (before v4.29 rc bump)
+--   @ "v4.28.0"  -- stable release compatible with Lean 4.28
 
 
 -- the main umbrella library depends on the smaller components below

@@ -19,6 +19,16 @@ require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git"
   @ "v4.28.0"
 
+-- optional tool for exporting blueprint data directly from Lean
+-- (see docs in workspace for LeanArchitect usage)
+-- The following block is commented out to prevent Lake from pulling
+-- a newer toolchain (4.29‑rc) when the repo updates.  Re‑enable and
+-- pin a commit once the project itself moves to Lean 4.29.
+-- require LeanArchitect from git
+--   "https://github.com/hanwenzhu/LeanArchitect.git"
+--   @ "c9c33948ac54a20ee946436526e5a62a0b41c13d"  -- stable commit (before v4.29 rc bump)
+
+
 -- the main umbrella library depends on the smaller components below
 @[default_target]
 lean_lib InfoGeometry.Library where

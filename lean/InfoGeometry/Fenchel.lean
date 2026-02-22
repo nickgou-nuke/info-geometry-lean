@@ -1,7 +1,4 @@
 import InfoGeometry.Convex.Bregman
-import Mathlib.Order.Closure
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
 
 /-!
 # Bregman Divergence and Fenchel Duality (1D)

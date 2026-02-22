@@ -1,6 +1,4 @@
-import Mathlib.LinearAlgebra.QuadraticForm.Prod
 import Mathlib.LinearAlgebra.CliffordAlgebra.Prod
-import Mathlib.Data.Real.Basic
 import InfoGeometry.Clifford.SplitQ11
 
 /-!

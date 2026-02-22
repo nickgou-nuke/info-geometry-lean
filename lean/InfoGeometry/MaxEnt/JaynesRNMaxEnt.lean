@@ -1,9 +1,5 @@
-import Mathlib.MeasureTheory.Measure.Decomposition.RadonNikodym
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
-import Mathlib.MeasureTheory.Measure.Tilted
-import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.InformationTheory.KullbackLeibler.Basic
-import Mathlib.Tactic.Measurability
 
 open scoped BigOperators ENNReal
 open MeasureTheory

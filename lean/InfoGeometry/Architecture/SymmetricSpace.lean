@@ -1,4 +1,3 @@
-import Mathlib.Algebra.Group.End
 import Mathlib.Algebra.Group.Subgroup.Basic
 
 /-!

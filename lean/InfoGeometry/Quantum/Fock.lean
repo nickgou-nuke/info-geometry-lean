@@ -1,7 +1,4 @@
-import InfoGeometry.Clifford.Grading
-import InfoGeometry.Krein.Metric
 import InfoGeometry.Projective.Null
-import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
 # Fock Space Representation of Information

@@ -1,5 +1,4 @@
 import InfoGeometry.Core.UnifiedGeometry
-import Mathlib.Algebra.Lie.Killing
 
 /-!
 # Symmetric Lie Algebra Core

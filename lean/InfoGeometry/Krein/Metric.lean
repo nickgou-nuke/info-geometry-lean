@@ -1,6 +1,4 @@
 import InfoGeometry.Clifford.Grading
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
 
 section KreinClifford
 

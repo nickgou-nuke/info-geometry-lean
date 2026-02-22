@@ -1,6 +1,4 @@
 import Mathlib.Analysis.Calculus.Deriv.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
 
 /-!
 # Bregman Divergence

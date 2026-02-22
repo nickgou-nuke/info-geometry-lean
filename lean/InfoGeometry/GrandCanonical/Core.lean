@@ -1,8 +1,3 @@
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Analysis.Calculus.Deriv.Basic
-import Mathlib.Analysis.SpecialFunctions.ExpDeriv
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
 /-!

@@ -1,6 +1,6 @@
 // Lean compiler output
 // Module: InfoGeometry.Clifford.Cl11
-// Imports: public import Init public import Mathlib.Analysis.Normed.Group.Defs public import Mathlib.Analysis.Normed.Module.Basic public import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
+// Imports: public import Init public import Mathlib.Analysis.Normed.Module.Basic
 #include <lean/lean.h>
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wunused-parameter"
@@ -191,9 +191,7 @@ return x_4;
 }
 }
 lean_object* initialize_Init(uint8_t builtin);
-lean_object* initialize_mathlib_Mathlib_Analysis_Normed_Group_Defs(uint8_t builtin);
 lean_object* initialize_mathlib_Mathlib_Analysis_Normed_Module_Basic(uint8_t builtin);
-lean_object* initialize_mathlib_Mathlib_Analysis_Normed_Operator_ContinuousLinearMap(uint8_t builtin);
 static bool _G_initialized = false;
 LEAN_EXPORT lean_object* initialize_infogeometry_InfoGeometry_Clifford_Cl11(uint8_t builtin) {
 lean_object * res;
@@ -202,13 +200,7 @@ _G_initialized = true;
 res = initialize_Init(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
-res = initialize_mathlib_Mathlib_Analysis_Normed_Group_Defs(builtin);
-if (lean_io_result_is_error(res)) return res;
-lean_dec_ref(res);
 res = initialize_mathlib_Mathlib_Analysis_Normed_Module_Basic(builtin);
-if (lean_io_result_is_error(res)) return res;
-lean_dec_ref(res);
-res = initialize_mathlib_Mathlib_Analysis_Normed_Operator_ContinuousLinearMap(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 lp_infogeometry_modularJ___closed__0 = _init_lp_infogeometry_modularJ___closed__0();

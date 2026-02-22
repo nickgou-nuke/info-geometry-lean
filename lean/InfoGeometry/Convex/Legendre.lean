@@ -1,9 +1,6 @@
 import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Analysis.Calculus.Deriv.AffineMap
 import Mathlib.Analysis.Calculus.Gradient.Basic
 import Mathlib.Analysis.Convex.Deriv
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.NormNum
 import InfoGeometry.Convex.Bregman
 
 /-!

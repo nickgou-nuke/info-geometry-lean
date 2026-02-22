@@ -1,8 +1,6 @@
 import InfoGeometry.Clifford.Cl11
-import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Tactic.NormNum
 
 section KreinClifford
 

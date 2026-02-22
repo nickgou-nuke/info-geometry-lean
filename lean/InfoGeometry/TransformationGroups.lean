@@ -1,10 +1,4 @@
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Data.Fintype.Basic
 import InfoGeometry.Basic
-import Mathlib.GroupTheory.GroupAction.Basic
-import Mathlib.Tactic.Positivity
-import Mathlib.Tactic.Ring
-import Mathlib.Analysis.SpecialFunctions.Exp
 
 open scoped BigOperators
 

@@ -1,8 +1,6 @@
 import InfoGeometry.Clifford.Cl11
 import InfoGeometry.Clifford.SplitQ11
-import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
-import Mathlib.Tactic
 
 /-- Backward-compatible alias to the canonical split form. -/
 noncomputable abbrev Q11 : QuadraticForm ℝ (ℝ × ℝ) := InfoGeometry.Clifford.splitQ11

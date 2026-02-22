@@ -1,5 +1,4 @@
 import InfoGeometry.EntropicInference
-import Mathlib.Tactic
 
 open InfoGeometry.EntropicInference
 open scoped BigOperators

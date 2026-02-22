@@ -1,8 +1,5 @@
-import InfoGeometry.Krein.Metric
 import InfoGeometry.Krein.Automorphisms
-import InfoGeometry.Clifford.Grading
 import InfoGeometry.Architecture.SymmetricSpace
-import InfoGeometry.Core.Involution
 
 open InfoGeometry.Core
 

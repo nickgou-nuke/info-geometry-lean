@@ -1,7 +1,5 @@
 import InfoGeometry.Jordan.SPD
 import Mathlib.Analysis.Matrix.Order
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Tactic.Linarith
 
 /-!
 # Log-Det Barrier and Burg Divergence on SPD

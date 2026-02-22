@@ -1,5 +1,3 @@
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Data.Real.Basic
 import InfoGeometry.PositiveMeasure
 
 /-!

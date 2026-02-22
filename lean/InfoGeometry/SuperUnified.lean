@@ -1,10 +1,3 @@
-import Mathlib.Analysis.InnerProductSpace.Basic
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Algebra.Lie.Submodule
-import InfoGeometry.Clifford.Cl11
-import InfoGeometry.Clifford.Grading
-import InfoGeometry.Krein.Metric
-import InfoGeometry.Core.UnifiedGeometry
 import InfoGeometry.Jordan.Core
 
 /-!

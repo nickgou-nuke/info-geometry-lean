@@ -7,3 +7,6 @@ lean/all_lean_files_combined.lean
 .venv/
 .lake/
 lean/.lake/
+*.lean.bak
+*.log
+*.txt

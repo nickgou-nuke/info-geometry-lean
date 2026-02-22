@@ -1,4 +1,3 @@
-import InfoGeometry.Clifford.Cl11
 import InfoGeometry.Clifford.Grading
 
 section KreinClifford

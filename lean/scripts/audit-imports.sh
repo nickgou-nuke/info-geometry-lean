@@ -11,6 +11,11 @@ echo "Starting import audit..."
 
 audit_file() {
   local file="$1"
+  # skip compatibility umbrellas (they are intentionally import-only)
+  if grep -q "Compatibility umbrella" "$file"; then
+    echo "\n== $file (skipped compatibility umbrella) =="
+    return
+  fi
   echo "\n== $file =="
   # read each import line
   grep '^import' "$file" | while read -r line; do

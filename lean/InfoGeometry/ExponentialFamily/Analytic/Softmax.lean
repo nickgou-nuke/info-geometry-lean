@@ -1,8 +1,6 @@
 import InfoGeometry.Basic
 import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
 
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Tactic.Ring
 
 open scoped BigOperators
 

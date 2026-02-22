@@ -1,5 +1,4 @@
 import InfoGeometry.Prequantum.Connection
-import Mathlib.GroupTheory.GroupAction.Basic
 
 section KreinClifford
 

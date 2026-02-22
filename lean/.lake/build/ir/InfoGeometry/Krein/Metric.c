@@ -1,6 +1,6 @@
 // Lean compiler output
 // Module: InfoGeometry.Krein.Metric
-// Imports: public import Init public import InfoGeometry.Clifford.Grading public import Mathlib.Tactic.Linarith public import Mathlib.Tactic.Ring
+// Imports: public import Init public import InfoGeometry.Clifford.Grading
 #include <lean/lean.h>
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wunused-parameter"
@@ -602,8 +602,6 @@ return x_4;
 }
 lean_object* initialize_Init(uint8_t builtin);
 lean_object* initialize_infogeometry_InfoGeometry_Clifford_Grading(uint8_t builtin);
-lean_object* initialize_mathlib_Mathlib_Tactic_Linarith(uint8_t builtin);
-lean_object* initialize_mathlib_Mathlib_Tactic_Ring(uint8_t builtin);
 static bool _G_initialized = false;
 LEAN_EXPORT lean_object* initialize_infogeometry_InfoGeometry_Krein_Metric(uint8_t builtin) {
 lean_object * res;
@@ -613,12 +611,6 @@ res = initialize_Init(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 res = initialize_infogeometry_InfoGeometry_Clifford_Grading(builtin);
-if (lean_io_result_is_error(res)) return res;
-lean_dec_ref(res);
-res = initialize_mathlib_Mathlib_Tactic_Linarith(builtin);
-if (lean_io_result_is_error(res)) return res;
-lean_dec_ref(res);
-res = initialize_mathlib_Mathlib_Tactic_Ring(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 lp_infogeometry_modularJEquiv___closed__0 = _init_lp_infogeometry_modularJEquiv___closed__0();

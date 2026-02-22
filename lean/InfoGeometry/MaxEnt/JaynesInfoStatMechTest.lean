@@ -1,5 +1,4 @@
 import InfoGeometry.MaxEnt.JaynesInfoStatMech
-import Mathlib.Tactic
 
 open JaynesInfoStatMech
 

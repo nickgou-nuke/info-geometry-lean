@@ -1,13 +1,3 @@
-import Mathlib.Analysis.Calculus.Deriv.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.LinearAlgebra.Matrix.Diagonal
-import Mathlib.Tactic.Ring
-import InfoGeometry.Basic
 
 open scoped BigOperators
 

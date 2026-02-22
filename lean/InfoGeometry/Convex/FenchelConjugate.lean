@@ -1,8 +1,4 @@
-import Mathlib.Analysis.Normed.Group.Defs
 import Mathlib.Analysis.Normed.Module.Basic
-import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
-import Mathlib.Order.ConditionallyCompleteLattice.Basic
-import Mathlib.Tactic.Linarith
 
 namespace InfoGeometry.Convex
 

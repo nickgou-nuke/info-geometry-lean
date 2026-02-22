@@ -1,6 +1,4 @@
-import Mathlib.Analysis.Normed.Group.Defs
 import Mathlib.Analysis.Normed.Module.Basic
-import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
 
 section KreinClifford
 

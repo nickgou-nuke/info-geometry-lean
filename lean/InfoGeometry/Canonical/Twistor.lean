@@ -1,4 +1,3 @@
-import InfoGeometry.Twistor.NullProjective
 
 /-!
 # InfoGeometry.Canonical.Twistor

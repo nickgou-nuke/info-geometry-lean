@@ -10,4 +10,9 @@ import InfoGeometry.Krein.Thermal
 # InfoGeometry.Canonical.Krein
 
 Canonical Krein-layer umbrella (publication surface).
+
+This file re‑exports the various Krein submodules so that
+`import InfoGeometry.Canonical.Krein` brings in the full Krein
+infrastructure.  Legacy compatibility modules like
+`InfoGeometry.Krein` simply import this file.
 -/

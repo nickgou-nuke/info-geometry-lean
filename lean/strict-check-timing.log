@@ -1,0 +1,8 @@
+[strict-check] building InfoGeometry.Library with warnings as errors
+Build completed successfully (3437 jobs).
+[strict-check] elaborating InfoGeometry/Library.lean
+[strict-check] elaborating canonical root InfoGeometry.lean
+[strict-check] ensuring archive file is not imported by canonical modules
+[strict-check] ensuring canonical modules do not import experimental umbrella
+[strict-check] checking for unresolved placeholders
+[strict-check] OK

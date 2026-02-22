@@ -1,8 +1,4 @@
-import Mathlib.Algebra.Lie.Basic
 import Mathlib.Algebra.Lie.Killing
-import Mathlib.Algebra.Lie.Submodule
-import Mathlib.Algebra.Group.Invertible.Basic
-import Mathlib.Algebra.Order.Field.Basic
 
 open scoped Invertible
 

@@ -1,5 +1,4 @@
 import InfoGeometry.Clifford.Grading
-import Mathlib.Tactic.NormNum
 
 section KreinClifford
 

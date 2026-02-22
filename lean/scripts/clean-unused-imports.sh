@@ -5,6 +5,10 @@ set -euo pipefail
 # Supports optional dry-run mode and keeps backups of edited files.
 # Usage: $0 [--dry-run]
 
+# run from lean folder regardless of caller location
+cd "$(dirname "$0")/.."  # project root
+cd lean
+
 LIST=import-unused-list.txt
 DRY_RUN=false
 

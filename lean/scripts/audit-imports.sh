@@ -5,6 +5,10 @@ set -euo pipefail
 # For each import, comment it out temporarily and test if the file still compiles.
 # If compilation succeeds, the import is likely unnecessary.
 
+# change to project root then lean subfolder
+cd "$(dirname "$0")/.."  # project root
+cd lean
+
 BASE=InfoGeometry
 
 echo "Starting import audit..."

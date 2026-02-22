@@ -5,3 +5,5 @@ lean/.lake/
 lean/all_lean_files.txt
 lean/all_lean_files_combined.lean
 .venv/
+.lake/
+lean/.lake/

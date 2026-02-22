@@ -1,6 +1,6 @@
 // Lean compiler output
 // Module: InfoGeometry.Clifford.Grading
-// Imports: public import Init public import InfoGeometry.Clifford.Cl11 public import InfoGeometry.Core.Involution public import Mathlib.Algebra.Lie.OfAssociative public import Mathlib.Algebra.Lie.Submodule
+// Imports: public import Init public import InfoGeometry.Clifford.Cl11 public import InfoGeometry.Core.Involution public import Mathlib.Algebra.Lie.OfAssociative
 #include <lean/lean.h>
 #if defined(__clang__)
 #pragma clang diagnostic ignored "-Wunused-parameter"
@@ -234,7 +234,6 @@ lean_object* initialize_Init(uint8_t builtin);
 lean_object* initialize_infogeometry_InfoGeometry_Clifford_Cl11(uint8_t builtin);
 lean_object* initialize_infogeometry_InfoGeometry_Core_Involution(uint8_t builtin);
 lean_object* initialize_mathlib_Mathlib_Algebra_Lie_OfAssociative(uint8_t builtin);
-lean_object* initialize_mathlib_Mathlib_Algebra_Lie_Submodule(uint8_t builtin);
 static bool _G_initialized = false;
 LEAN_EXPORT lean_object* initialize_infogeometry_InfoGeometry_Clifford_Grading(uint8_t builtin) {
 lean_object * res;
@@ -250,9 +249,6 @@ res = initialize_infogeometry_InfoGeometry_Core_Involution(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 res = initialize_mathlib_Mathlib_Algebra_Lie_OfAssociative(builtin);
-if (lean_io_result_is_error(res)) return res;
-lean_dec_ref(res);
-res = initialize_mathlib_Mathlib_Algebra_Lie_Submodule(builtin);
 if (lean_io_result_is_error(res)) return res;
 lean_dec_ref(res);
 lp_infogeometry_modularJInvolution___closed__0 = _init_lp_infogeometry_modularJInvolution___closed__0();

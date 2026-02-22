@@ -1,7 +1,4 @@
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Algebra.BigOperators.Field
 
 open scoped BigOperators
 

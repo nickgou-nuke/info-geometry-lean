@@ -1,10 +1,6 @@
 
 
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Tactic
 import InfoGeometry.KL.Finite
-import InfoGeometry.KL.Measure
 
 
 namespace InfoGeometry.KL

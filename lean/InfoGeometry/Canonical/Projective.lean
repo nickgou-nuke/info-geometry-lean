@@ -1,10 +1,3 @@
-import InfoGeometry.Projective.GaugeQuotient
-import InfoGeometry.Projective.Dynamics
-import InfoGeometry.Projective.Normalize
-import InfoGeometry.Projective.Null
-import InfoGeometry.Projective.PhysicalKinematics
-import InfoGeometry.Projective.ProjectiveMap
-import InfoGeometry.Projective.Rays
 
 /-!
 # InfoGeometry.Canonical.Projective

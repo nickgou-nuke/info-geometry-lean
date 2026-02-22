@@ -1,7 +1,7 @@
 {"synthetic": false,
  "schemaVersion": "2025-09-10",
  "outputs":
- {"o": ["9ed4cfeff9ac2281.olean"],
+ {"o": ["1949b6a485127764.olean"],
   "i": "02191924a0c45c1b.ilean",
   "c": "3cbce6e037ca5b5c.c"},
  "log":
@@ -15,8 +15,8 @@
        [["@infogeometry:extraDep", "00000000000006bb"]]],
       ["imports",
        [["InfoGeometry.Krein.Metric transitive imports (legacy)",
-         "8d6677e4600f7d56"],
-        ["InfoGeometry.Krein.Metric:importAllArts", "46d11f65b200123a"]]]]],
+         "c6c447d95f61c287"],
+        ["InfoGeometry.Krein.Metric:importAllArts", "c057a86f6c4266de"]]]]],
     ["libs",
      [["import dynlibs", "00000000000006bb"],
       ["package external libraries", "00000000000006bb"],
@@ -28,4 +28,4 @@
    "e8802c5e5a747baf"],
   ["options", "00000000000006bb"],
   ["Module.leanArgs: #[]", "00000000000006bb"]],
- "depHash": "e3630927fe159179"}
+ "depHash": "d243c7cf574b8d54"}

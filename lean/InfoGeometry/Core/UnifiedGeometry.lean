@@ -1,9 +1,6 @@
 import InfoGeometry.Core.Involution
 import InfoGeometry.Core.SymmetricLieGeneric
 import InfoGeometry.Architecture.SymmetricSpace
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Algebra.Lie.Submodule
-import Mathlib.LinearAlgebra.Eigenspace.Basic
 
 /-!
 # Unified Geometry Core

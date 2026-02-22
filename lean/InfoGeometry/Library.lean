@@ -1,4 +1,3 @@
-import InfoGeometry.Canonical.All
 
 /-!
 # InfoGeometry.Library

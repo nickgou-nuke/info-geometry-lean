@@ -1,6 +1,5 @@
 import InfoGeometry.Prequantum.Bundle
 import InfoGeometry.Krein.Metric
-import Mathlib.Tactic.Ring
 
 section KreinClifford
 

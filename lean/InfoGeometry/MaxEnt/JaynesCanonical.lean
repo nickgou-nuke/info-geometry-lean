@@ -1,15 +1,4 @@
-import Mathlib.Analysis.Calculus.ContDiff.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Deriv
-import Mathlib.Data.Real.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Data.Nat.Factorial.Basic
-import Mathlib.Order.Filter.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
-import InfoGeometry.Basic
 import InfoGeometry.KL.Finite
 
 open scoped BigOperators

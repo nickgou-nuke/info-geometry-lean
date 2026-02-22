@@ -1,7 +1,6 @@
 import InfoGeometry.Clifford.Cl11
 import InfoGeometry.Core.Involution
 import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Algebra.Lie.Submodule
 
 open InfoGeometry.Core
 

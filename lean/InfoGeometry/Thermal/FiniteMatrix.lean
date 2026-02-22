@@ -1,9 +1,4 @@
 import InfoGeometry.MaxEnt.Finite
-import Mathlib.Data.Matrix.Basic
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Tactic.Ring
 
 open scoped BigOperators
 

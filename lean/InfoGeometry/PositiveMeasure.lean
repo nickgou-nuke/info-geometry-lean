@@ -4,12 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: ...
 -/
 
-import Mathlib.Algebra.Order.Ring.Defs
-import Mathlib.Algebra.Order.BigOperators.Group.Finset
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic
 
 /-!
 # Positive measures (strictly positive weights)

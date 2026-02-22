@@ -1,9 +1,5 @@
 import InfoGeometry.MaxEnt.Optimality
-import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Nat.Choose.Multinomial
-import Mathlib.Topology.Basic
-import Mathlib.Tactic.Linarith
 
 open scoped BigOperators
 

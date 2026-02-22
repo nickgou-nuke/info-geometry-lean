@@ -1,5 +1,4 @@
 import InfoGeometry.EntropicInference
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-!
 # Assumptions.IB

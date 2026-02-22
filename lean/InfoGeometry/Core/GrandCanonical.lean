@@ -1,5 +1,4 @@
 import InfoGeometry.GrandCanonical.Core
-import Mathlib.Analysis.Calculus.Deriv.Basic
 
 /-!
 # Core Grand Canonical

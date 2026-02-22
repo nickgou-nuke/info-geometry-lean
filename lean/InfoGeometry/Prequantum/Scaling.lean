@@ -1,5 +1,3 @@
-import Mathlib.Algebra.Group.Action.Basic
-import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
 /-- Minimal prequantum line-bundle data (scalarized): symplectic scale `ω`,

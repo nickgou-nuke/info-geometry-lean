@@ -1,6 +1,5 @@
 import InfoGeometry.Projective.ProjectiveMap
 import InfoGeometry.Krein.Metric
-import Mathlib.Tactic
 
 section KreinClifford
 

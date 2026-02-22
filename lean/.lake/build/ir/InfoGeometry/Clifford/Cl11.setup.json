@@ -904,21 +904,11 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Monoid.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Monoid.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Monoid.olean.private"],
-  "Mathlib.Topology.Algebra.Module.LinearMapPiProd":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/LinearMapPiProd.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/LinearMapPiProd.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/LinearMapPiProd.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/LinearMapPiProd.olean.private"],
   "Mathlib.Topology.Algebra.Module.LinearMap":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/LinearMap.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/LinearMap.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/LinearMap.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/LinearMap.olean.private"],
-  "Mathlib.Topology.Algebra.Module.Equiv":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/Equiv.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/Equiv.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/Equiv.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/Equiv.olean.private"],
   "Mathlib.Topology.Algebra.Module.Basic":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/Basic.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Topology/Algebra/Module/Basic.ir",
@@ -1429,11 +1419,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/Monotonicity/Attr.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/Monotonicity/Attr.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/Monotonicity/Attr.olean.private"],
-  "Mathlib.Tactic.Module":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/Module.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/Module.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/Module.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/Module.olean.private"],
   "Mathlib.Tactic.MkIffOfInductiveProp":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/MkIffOfInductiveProp.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/MkIffOfInductiveProp.ir",
@@ -1779,11 +1764,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/Find.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/Find.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/Find.olean.private"],
-  "Mathlib.Tactic.FinCases":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/FinCases.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/FinCases.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/FinCases.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/FinCases.olean.private"],
   "Mathlib.Tactic.FieldSimp.Lemmas":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/FieldSimp/Lemmas.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Tactic/FieldSimp/Lemmas.ir",
@@ -2389,11 +2369,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Set/Image.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Set/Image.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Set/Image.olean.private"],
-  "Mathlib.Order.Interval.Set.Fin":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Set/Fin.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Set/Fin.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Set/Fin.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Set/Fin.olean.private"],
   "Mathlib.Order.Interval.Set.Disjoint":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Set/Disjoint.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Set/Disjoint.ir",
@@ -2424,11 +2399,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Finset/Nat.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Finset/Nat.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Finset/Nat.olean.private"],
-  "Mathlib.Order.Interval.Finset.Fin":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Finset/Fin.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Finset/Fin.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Finset/Fin.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Finset/Fin.olean.private"],
   "Mathlib.Order.Interval.Finset.Defs":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Finset/Defs.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Order/Interval/Finset/Defs.ir",
@@ -2984,11 +2954,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Logic/Equiv/List.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Logic/Equiv/List.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Logic/Equiv/List.olean.private"],
-  "Mathlib.Logic.Equiv.Fin.Rotate":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Logic/Equiv/Fin/Rotate.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Logic/Equiv/Fin/Rotate.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Logic/Equiv/Fin/Rotate.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Logic/Equiv/Fin/Rotate.olean.private"],
   "Mathlib.Logic.Equiv.Fin.Basic":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Logic/Equiv/Fin/Basic.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Logic/Equiv/Fin/Basic.ir",
@@ -3064,21 +3029,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Pi.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Pi.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Pi.olean.private"],
-  "Mathlib.LinearAlgebra.LinearIndependent.Lemmas":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/LinearIndependent/Lemmas.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/LinearIndependent/Lemmas.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/LinearIndependent/Lemmas.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/LinearIndependent/Lemmas.olean.private"],
-  "Mathlib.LinearAlgebra.LinearIndependent.Defs":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/LinearIndependent/Defs.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/LinearIndependent/Defs.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/LinearIndependent/Defs.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/LinearIndependent/Defs.olean.private"],
-  "Mathlib.LinearAlgebra.LinearIndependent.Basic":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/LinearIndependent/Basic.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/LinearIndependent/Basic.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/LinearIndependent/Basic.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/LinearIndependent/Basic.olean.private"],
   "Mathlib.LinearAlgebra.GeneralLinearGroup.Basic":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/GeneralLinearGroup/Basic.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/GeneralLinearGroup/Basic.ir",
@@ -3089,11 +3039,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Finsupp/Supported.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Finsupp/Supported.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Finsupp/Supported.olean.private"],
-  "Mathlib.LinearAlgebra.Finsupp.SumProd":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Finsupp/SumProd.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Finsupp/SumProd.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Finsupp/SumProd.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Finsupp/SumProd.olean.private"],
   "Mathlib.LinearAlgebra.Finsupp.LinearCombination":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Finsupp/LinearCombination.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Finsupp/LinearCombination.ir",
@@ -3109,21 +3054,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Finsupp/Defs.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Finsupp/Defs.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Finsupp/Defs.olean.private"],
-  "Mathlib.LinearAlgebra.Dual.Defs":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Dual/Defs.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Dual/Defs.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Dual/Defs.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/Dual/Defs.olean.private"],
-  "Mathlib.LinearAlgebra.DFinsupp":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/DFinsupp.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/DFinsupp.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/DFinsupp.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/DFinsupp.olean.private"],
-  "Mathlib.LinearAlgebra.BilinearMap":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/BilinearMap.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/BilinearMap.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/BilinearMap.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/LinearAlgebra/BilinearMap.olean.private"],
   "Mathlib.Lean.PrettyPrinter.Delaborator":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Lean/PrettyPrinter/Delaborator.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Lean/PrettyPrinter/Delaborator.ir",
@@ -4034,11 +3964,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/List/ProdSigma.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/List/ProdSigma.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/List/ProdSigma.olean.private"],
-  "Mathlib.Data.List.Pi":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/List/Pi.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/List/Pi.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/List/Pi.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/List/Pi.olean.private"],
   "Mathlib.Data.List.Permutation":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/List/Permutation.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/List/Permutation.ir",
@@ -4299,11 +4224,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Sets.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Sets.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Sets.olean.private"],
-  "Mathlib.Data.Fintype.Quotient":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Quotient.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Quotient.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Quotient.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Quotient.olean.private"],
   "Mathlib.Data.Fintype.Prod":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Prod.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Prod.ir",
@@ -4344,11 +4264,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Lattice.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Lattice.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Lattice.olean.private"],
-  "Mathlib.Data.Fintype.Fin":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Fin.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Fin.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Fin.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Fin.olean.private"],
   "Mathlib.Data.Fintype.EquivFin":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/EquivFin.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/EquivFin.ir",
@@ -4374,11 +4289,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Basic.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Basic.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fintype/Basic.olean.private"],
-  "Mathlib.Data.Finsupp.ToDFinsupp":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finsupp/ToDFinsupp.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finsupp/ToDFinsupp.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finsupp/ToDFinsupp.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finsupp/ToDFinsupp.olean.private"],
   "Mathlib.Data.Finsupp.Single":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finsupp/Single.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finsupp/Single.ir",
@@ -4539,11 +4449,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finset/Fold.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finset/Fold.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finset/Fold.olean.private"],
-  "Mathlib.Data.Finset.Fin":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finset/Fin.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finset/Fin.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finset/Fin.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finset/Fin.olean.private"],
   "Mathlib.Data.Finset.Filter":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finset/Filter.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Finset/Filter.ir",
@@ -4629,11 +4534,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fin/VecNotation.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fin/VecNotation.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fin/VecNotation.olean.private"],
-  "Mathlib.Data.Fin.Tuple.Reflection":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fin/Tuple/Reflection.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fin/Tuple/Reflection.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fin/Tuple/Reflection.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fin/Tuple/Reflection.olean.private"],
   "Mathlib.Data.Fin.Tuple.Basic":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fin/Tuple/Basic.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Fin/Tuple/Basic.ir",
@@ -4704,36 +4604,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/ENNReal/Action.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/ENNReal/Action.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/ENNReal/Action.olean.private"],
-  "Mathlib.Data.DFinsupp.Submonoid":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Submonoid.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Submonoid.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Submonoid.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Submonoid.olean.private"],
-  "Mathlib.Data.DFinsupp.Sigma":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Sigma.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Sigma.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Sigma.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Sigma.olean.private"],
-  "Mathlib.Data.DFinsupp.Module":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Module.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Module.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Module.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Module.olean.private"],
-  "Mathlib.Data.DFinsupp.Ext":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Ext.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Ext.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Ext.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Ext.olean.private"],
-  "Mathlib.Data.DFinsupp.Defs":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Defs.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Defs.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Defs.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/Defs.olean.private"],
-  "Mathlib.Data.DFinsupp.BigOperators":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/BigOperators.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/BigOperators.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/BigOperators.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/DFinsupp/BigOperators.olean.private"],
   "Mathlib.Data.Countable.Defs":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Countable/Defs.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Data/Countable/Defs.ir",
@@ -4814,11 +4684,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Analysis/Normed/Ring/Basic.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Analysis/Normed/Ring/Basic.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Analysis/Normed/Ring/Basic.olean.private"],
-  "Mathlib.Analysis.Normed.Operator.ContinuousLinearMap":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Analysis/Normed/Operator/ContinuousLinearMap.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Analysis/Normed/Operator/ContinuousLinearMap.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Analysis/Normed/Operator/ContinuousLinearMap.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Analysis/Normed/Operator/ContinuousLinearMap.olean.private"],
   "Mathlib.Analysis.Normed.MulAction":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Analysis/Normed/MulAction.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Analysis/Normed/MulAction.ir",
@@ -6354,11 +6219,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/Group/Fin/Tuple.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/Group/Fin/Tuple.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/Group/Fin/Tuple.olean.private"],
-  "Mathlib.Algebra.Group.Fin.Basic":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/Group/Fin/Basic.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/Group/Fin/Basic.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/Group/Fin/Basic.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/Group/Fin/Basic.olean.private"],
   "Mathlib.Algebra.Group.Even":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/Group/Even.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/Group/Even.ir",
@@ -6654,11 +6514,6 @@
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/BigOperators/Finprod.ir",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/BigOperators/Finprod.olean.server",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/BigOperators/Finprod.olean.private"],
-  "Mathlib.Algebra.BigOperators.Fin":
-  ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/BigOperators/Fin.olean",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/BigOperators/Fin.ir",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/BigOperators/Fin.olean.server",
-   "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/BigOperators/Fin.olean.private"],
   "Mathlib.Algebra.BigOperators.Expect":
   ["/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/BigOperators/Expect.olean",
    "/home/goutev/LEAN4/info-geometry-lean/lean/.lake/packages/mathlib/.lake/build/lib/lean/Mathlib/Algebra/BigOperators/Expect.ir",

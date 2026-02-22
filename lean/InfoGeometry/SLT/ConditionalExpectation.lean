@@ -1,4 +1,3 @@
-import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
 import Mathlib.Probability.CondVar
 
 /-!

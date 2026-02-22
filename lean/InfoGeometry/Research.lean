@@ -1,4 +1,3 @@
-import InfoGeometry.Research.All
 
 /-!
 # InfoGeometry.Research

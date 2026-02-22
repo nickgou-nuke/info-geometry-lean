@@ -1,11 +1,4 @@
-import Mathlib.Algebra.BigOperators.Field
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.Ring
 
-import InfoGeometry.Basic
 import InfoGeometry.KL.Finite
 
 open scoped BigOperators

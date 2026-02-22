@@ -1,4 +1,3 @@
-import InfoGeometry.Projective.LogSum
 
 /-!
 # Log-sum inequality wrapper alias

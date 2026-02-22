@@ -1,4 +1,3 @@
-import InfoGeometry.Quantum.Fock
 
 /-!
 # InfoGeometry.Canonical.Quantum

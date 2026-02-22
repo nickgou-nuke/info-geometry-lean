@@ -1,8 +1,5 @@
 import InfoGeometry.Potential.LogPotential
 import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.Linarith
-import Mathlib.Tactic.Ring
 
 /-!
 # Log Potential Thermodynamics

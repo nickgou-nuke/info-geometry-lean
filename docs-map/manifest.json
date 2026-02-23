@@ -1,0 +1,66 @@
+{
+  "project": {
+    "name": "InfoGeometry",
+    "importModule": "InfoGeometry",
+    "namespace": "InfoGeometry"
+  },
+  "paths": {
+    "declarationsJson": "docs-map/declarations.json",
+    "resolvedJson": "docs-map/resolved.json",
+    "coverageJson": "docs-map/coverage.json",
+    "blueprintTex": "blueprint/src/generated/content.auto.tex",
+    "markdownIndex": "docs/auto/index.md"
+  },
+  "renderDefaults": {
+    "autoNodeEnvironment": "theorem",
+    "emitAutoNodes": true,
+    "emitChapterHeaders": true
+  },
+  "chapters": [
+    {
+      "id": "core",
+      "number": 1,
+      "title": "Core Foundations",
+      "modulePrefixes": ["InfoGeometry.Core"],
+      "includeUnmappedDecls": false,
+      "sections": [
+        {
+          "id": "core-1",
+          "title": "Basic lemmas",
+          "nodes": [
+            {
+              "label": "thm:core-trivial",
+              "kind": "theorem",
+              "title": "trivial equality",
+              "render": "leannode",
+              "milestone": true,
+              "leanAnyOf": [
+                "InfoGeometry.Core.core_trivial"
+              ]
+            },
+            {
+              "label": "thm:nat-add-comm",
+              "kind": "theorem",
+              "title": "commutativity of addition on ℕ",
+              "render": "leannode",
+              "milestone": true,
+              "leanAnyOf": [
+                "InfoGeometry.Core.nat_add_comm"
+              ]
+            },
+            {
+              "label": "thm:nat-add-assoc",
+              "kind": "theorem",
+              "title": "associativity of addition on ℕ",
+              "render": "leannode",
+              "milestone": true,
+              "leanAnyOf": [
+                "InfoGeometry.Core.nat_add_assoc"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

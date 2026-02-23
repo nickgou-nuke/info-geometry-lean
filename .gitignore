@@ -10,3 +10,6 @@ lean/.lake/
 *.lean.bak
 *.log
 *.txt
+blueprint/
+docs/
+docbuild/

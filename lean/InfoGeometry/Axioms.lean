@@ -18,6 +18,7 @@ export InfoGeometry.Assumptions.ManifoldDegree (
   exists_isolating_nhds_of_nondegenerate
   preimage_finite_of_regular_value
   exists_local_chart_homotopy_to_linear
+  localDegreeSign
   local_degree_eq_sign_jacDet
 )
 

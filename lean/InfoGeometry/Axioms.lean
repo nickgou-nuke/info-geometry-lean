@@ -49,8 +49,6 @@ export InfoGeometry.Assumptions.ManifoldHomology (
 )
 
 export InfoGeometry.Assumptions.Determinant (
-  GL
-  SL
   detHom
   ker_det_eq_SL
   logAbsDet
@@ -58,6 +56,15 @@ export InfoGeometry.Assumptions.Determinant (
   jacDet_comp
   jacobian_functoriality
 )
+
+universe u v
+
+abbrev «GL» (R : Type u) (V : Type v) [CommRing R] [Fintype V] [DecidableEq V] :=
+  InfoGeometry.Assumptions.Determinant.GL R V
+
+noncomputable abbrev «SL» (R : Type u) (V : Type v)
+    [CommRing R] [Fintype V] [DecidableEq V] :=
+  InfoGeometry.Assumptions.Determinant.SL R V
 
 export InfoGeometry.Assumptions.DualConnections (
   fisherMetric

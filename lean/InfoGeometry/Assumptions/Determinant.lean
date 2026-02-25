@@ -1,45 +1,76 @@
 import Architect
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
+import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 /-!
 # Assumptions.Determinant
 
-Assumption-backed interface for determinant/group wrapper drafts extracted from
-the historical `InfoGeometry/New.lean`.
+Determinant/group interface now aligned with mathlib objects:
+- `GL` as invertible matrices `Units (Matrix V V R)`
+- `detHom` as determinant homomorphism on matrix units
+- `SL` as kernel of determinant
 -/
 
 namespace InfoGeometry.Assumptions.Determinant
 
 universe u v
 
-/-- Draft general linear group wrapper. -/
-def GL (R : Type u) (V : Type v) : Type (max u v) := ULift.{v} (R × V)
+/-- Matrix-route general linear group: invertible matrices. -/
+abbrev GL (R : Type u) (V : Type v)
+    [CommRing R] [Fintype V] [DecidableEq V] :=
+  Units (Matrix V V R)
 
-/-- Draft special linear subgroup wrapper. -/
-def SL (R : Type u) (V : Type v) : Type (max u v) := GL R V
+/-- Determinant monoid hom on square matrices. -/
+noncomputable def detMonoidHom (R : Type u) (V : Type v)
+    [CommRing R] [Fintype V] [DecidableEq V] : Matrix V V R →* R where
+  toFun := Matrix.det
+  map_one' := Matrix.det_one
+  map_mul' := Matrix.det_mul
 
-/-- Draft determinant homomorphism placeholder. -/
-def detHom (R : Type u) (V : Type v) : GL R V → R := fun g => g.down.1
+/-- Determinant homomorphism `GL(V) →* Rˣ`. -/
+noncomputable def detHom (R : Type u) (V : Type v)
+    [CommRing R] [Fintype V] [DecidableEq V] :
+    GL R V →* Rˣ :=
+  Units.map (detMonoidHom R V)
 
-/-- Draft kernel characterization placeholder (`ker det = SL`). -/
-def ker_det_eq_SL (R : Type u) (V : Type v) : Prop := SL R V = GL R V
+/-- Special linear group as kernel of determinant. -/
+noncomputable def SL (R : Type u) (V : Type v)
+    [CommRing R] [Fintype V] [DecidableEq V] :
+    Subgroup (GL R V) :=
+  (detHom R V).ker
+
+/-- Kernel characterization (`ker det = SL`) by definition. -/
+theorem ker_det_eq_SL (R : Type u) (V : Type v)
+    [CommRing R] [Fintype V] [DecidableEq V] :
+    (detHom R V).ker = SL R V := rfl
 
 /-- Draft logarithmic absolute determinant. -/
 @[blueprint "def:determinant-log-abs"]
-noncomputable def logAbsDet (V : Type v) : GL ℝ V → ℝ := fun g =>
-  Real.log (|detHom ℝ V g|)
+noncomputable def logAbsDet (V : Type v)
+    [Fintype V] [DecidableEq V] : GL ℝ V → ℝ := fun g =>
+  Real.log (|((detHom ℝ V g : ℝˣ) : ℝ)|)
 
-/-- Draft Jacobian determinant helper. -/
+/-- Jacobian determinant helper (`det` on linear automorphisms). -/
 @[blueprint "def:determinant-jac"]
-def jacDet (R : Type u) (V : Type v) : GL R V → R := detHom R V
+noncomputable abbrev jacDet (R : Type u) (V : Type v)
+    [CommRing R] [Fintype V] [DecidableEq V] :
+    GL R V →* Rˣ :=
+  detHom R V
 
-/-- Draft Jacobian functoriality/composition marker. -/
-def jacDet_comp (R : Type u) (V : Type v) (f g : GL R V) : Prop :=
-  jacDet R V f = jacDet R V f ∧ jacDet R V g = jacDet R V g
+/-- Jacobian chain rule for linear automorphisms. -/
+theorem jacDet_comp (R : Type u) (V : Type v)
+    [CommRing R] [Fintype V] [DecidableEq V]
+    (f g : GL R V) :
+    jacDet R V (f * g) = jacDet R V f * jacDet R V g := by
+  change detHom R V (f * g) = detHom R V f * detHom R V g
+  exact (detHom R V).map_mul f g
 
-/-- Draft Jacobian functoriality for maps marker. -/
-def jacobian_functoriality {M : Type v} (f g : M → M) : Prop :=
-  (fun x => g (f x)) = (fun x => g (f x))
+/-- Named alias for multiplicative functoriality of the Jacobian determinant. -/
+theorem jacobian_functoriality (R : Type u) (V : Type v)
+    [CommRing R] [Fintype V] [DecidableEq V]
+    (f g : GL R V) :
+    jacDet R V (f * g) = jacDet R V f * jacDet R V g :=
+  jacDet_comp R V f g
 
 end InfoGeometry.Assumptions.Determinant

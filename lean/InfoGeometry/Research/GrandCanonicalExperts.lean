@@ -955,6 +955,7 @@ noncomputable abbrev schroedingerBridgeKernel (ε : ℝ) (C : CostMatrix n) : Co
   entropicKernel n ε C
 
 /-- Backward-compatible ASCII alias (`oe` omitted). -/
+@[deprecated schroedingerBridgeKernel (since := "2026-02-25")]
 noncomputable abbrev schrodingerBridgeKernel (ε : ℝ) (C : CostMatrix n) : Coupling n :=
   schroedingerBridgeKernel n ε C
 
@@ -964,6 +965,7 @@ noncomputable abbrev schroedingerBridgeCoupling
   sinkhornScaledCoupling n K left right
 
 /-- Backward-compatible ASCII alias (`oe` omitted). -/
+@[deprecated schroedingerBridgeCoupling (since := "2026-02-25")]
 noncomputable abbrev schrodingerBridgeCoupling
     (K : Coupling n) (left right : Fin n → ℝ) : Coupling n :=
   schroedingerBridgeCoupling n K left right
@@ -974,6 +976,7 @@ noncomputable abbrev schroedingerBridgeObjective
   regularizedOTObjective n ε C PiM
 
 /-- Backward-compatible ASCII alias (`oe` omitted). -/
+@[deprecated schroedingerBridgeObjective (since := "2026-02-25")]
 noncomputable abbrev schrodingerBridgeObjective
     (ε : ℝ) (C PiM : Coupling n) : ℝ :=
   schroedingerBridgeObjective n ε C PiM
@@ -1033,6 +1036,7 @@ lemma sinkhornTwoStep_eq_schroedingerBridgeGauge
     (sinkhornTwoStep_eq_twoSidedGauge (n := n) M hrow hcol)
 
 /-- Backward-compatible ASCII alias (`oe` omitted). -/
+@[deprecated sinkhornTwoStep_eq_schroedingerBridgeGauge (since := "2026-02-25")]
 lemma sinkhornTwoStep_eq_schrodingerBridgeGauge
     (M : Coupling n)
     (hrow : HasPositiveRowSums n M)
@@ -1097,6 +1101,7 @@ lemma schroedingerBridgeStep_radonNikodymBarrier_monotone
   sinkhornStep_radonNikodymBarrier_monotone (n := n) hstep
 
 /-- Backward-compatible ASCII alias (`oe` omitted). -/
+@[deprecated schroedingerBridgeStep_monotone (since := "2026-02-25")]
 lemma schrodingerBridgeStep_monotone
     {phase : SinkhornPhase} {M M' : Coupling n}
     (hstep : SinkhornStep n phase M M') :
@@ -1104,6 +1109,7 @@ lemma schrodingerBridgeStep_monotone
   simpa using (schroedingerBridgeStep_monotone (n := n) hstep)
 
 /-- Backward-compatible ASCII alias (`oe` omitted). -/
+@[deprecated schroedingerBridgeStep_radonNikodymBarrier_monotone (since := "2026-02-25")]
 lemma schrodingerBridgeStep_radonNikodymBarrier_monotone
     {phase : SinkhornPhase} {M M' : Coupling n}
     (hstep : SinkhornStep n phase M M') :

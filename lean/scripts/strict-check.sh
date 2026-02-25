@@ -5,12 +5,12 @@ echo "[strict-check] building InfoGeometry.Library with warnings as errors"
 lake build InfoGeometry.Library --wfail
 
 echo "[strict-check] elaborating InfoGeometry/Library.lean"
-lake env lean InfoGeometry/Library.lean
+lake env lean lean/InfoGeometry/Library.lean
 
 echo "[strict-check] elaborating canonical root InfoGeometry.lean"
-lake env lean InfoGeometry.lean
+lake env lean lean/InfoGeometry.lean
 
-CANONICAL_PATHS=(InfoGeometry.lean InfoGeometry/Library.lean InfoGeometry/Canonical)
+CANONICAL_PATHS=(lean/InfoGeometry.lean lean/InfoGeometry/Library.lean lean/InfoGeometry/Canonical)
 
 echo "[strict-check] ensuring archive file is not imported by canonical modules"
 if rg -n "all_lean_files_combined" "${CANONICAL_PATHS[@]}" -g '*.lean'; then

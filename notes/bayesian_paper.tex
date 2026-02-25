@@ -1,0 +1,93 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{keywordcolor}{rgb}{0.7, 0.1, 0.1}
+\definecolor{commentcolor}{rgb}{0.4, 0.4, 0.4}
+\definecolor{stringcolor}{rgb}{0.1, 0.5, 0.1}
+
+\lstdefinelanguage{lean4}{
+    keywords={def, theorem, lemma, structure, class, instance, example, section, end, namespace, open, variable, universe, theorem, notation, noncomputable, abbrev},
+    keywordstyle=\color{keywordcolor}\bfseries,
+    ndkeywords={Prop, Type, Type*, Sort, Real, ℝ, ℕ, ℤ},
+    ndkeywordstyle=\color{blue}\bfseries,
+    identifierstyle=\color{black},
+    sensitive=false,
+    comment=[l]{--},
+    morecomment=[s]{/-}{-/},
+    commentstyle=\color{commentcolor}	tfamily,
+    stringstyle=\color{stringcolor}	tfamily,
+    morestring=[b]",
+}
+
+\lstset{language=lean4, basicstyle=	tfamily\small, breaklines=true}
+
+	itle{Formalizing the Bregman-Pythagorean Theorem for Bayesian Inference in Lean 4}
+\author{Gemini CLI Analysis of 	exttt{info-geometry-lean}}
+\date{February 24, 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This paper discusses the formalization of information-geometric structures within the 	exttt{info-geometry-lean} codebase. We focus on the implementation of the Bregman-Pythagorean theorem and its application to Bayesian inference. By leveraging Lean 4's dependent type theory and the Mathlib library, the project provides a rigorous foundation for the geometric interpretation of statistical manifolds.
+\end{abstract}
+
+\section{Introduction}
+Information geometry treats the space of probability distributions as a Riemannian manifold. A central tool in this field is the 	extbf{Bregman divergence}, which generalizes the squared Euclidean distance and the Kullback-Leibler (KL) divergence. In the context of Bayesian inference, a posterior update can be viewed as an orthogonal projection of a prior onto a manifold of distributions consistent with new evidence.
+
+\section{Formal Structures}
+The project defines a 	exttt{DualFlatStructure} to represent a Hessian manifold. This structure is built upon a convex potential function $\psi$ defined on an inner product space $E$.
+
+\begin{lstlisting}
+structure DualFlatStructure (E : Type _)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] where
+  ψ : E → ℝ
+  h_convex : StrictConvexOn ℝ Set.univ ψ
+  h_diff : Differentiable ℝ ψ
+\end{lstlisting}
+
+The Bregman divergence $D_\psi(x, y)$ is defined using the potential and its gradient:
+\[ D_\psi(x, y) = \psi(x) - \psi(y) - \langle 
+abla \psi(y), x - y 
+angle \]
+
+In the Lean implementation, this is captured by the 	exttt{divergenceVec} definition:
+\begin{lstlisting}
+noncomputable def divergenceVec
+    (H : HessianGeometry E)
+    (η θ : E) : ℝ :=
+  H.ψ η - H.ψ θ - inner ℝ (dualCoordVec H θ) (η - θ)
+\end{lstlisting}
+
+\section{The Bregman-Pythagorean Theorem}
+A fundamental result in information geometry is the three-point identity, often called the "dual-flat law of cosines":
+\[ D_\psi(x, z) = D_\psi(x, y) + D_\psi(y, z) - \langle 
+abla \psi(z) - 
+abla \psi(y), x - y 
+angle \]
+
+When the last term vanishes (orthogonality), we obtain the Pythagorean decomposition. The project formalizes this in 	exttt{DualFlat.lean}:
+
+\begin{lstlisting}
+theorem bayesian_update_pythagorean
+    (Prior Posterior Alt : E)
+    (h_projection : 
+      ∀ v, (∃ t : ℝ, v = Alt + t • (Posterior - Alt)) →
+        inner ℝ (nabla S Prior - nabla S Posterior) (v - Posterior) = 0) :
+    divergence S Alt Prior
+      = divergence S Alt Posterior + divergence S Posterior Prior
+\end{lstlisting}
+
+\section{Connection to Bayesian Inference}
+In a Bayesian setting, the 	exttt{Prior} distribution is updated to a 	exttt{Posterior} based on observed data. If the set of candidate distributions 	exttt{Alt} forms a linear manifold (in the dual coordinates), then the KL divergence from any 	exttt{Alt} to the 	exttt{Prior} is exactly the sum of the divergence to the 	exttt{Posterior} and the divergence from the 	exttt{Posterior} to the 	exttt{Prior}. This formalizes the intuition that the posterior is the "closest" distribution to the prior that satisfies the data constraints.
+
+\section{Conclusion}
+The 	exttt{info-geometry-lean} project successfully bridges abstract differential geometry and statistical inference. By providing machine-checked proofs of these core identities, it ensures the reliability of geometric interpretations of probability theory. Future work in the repository aims to extend these results to the quantum domain using Clifford algebras and Krein spaces.
+
+\end{document}

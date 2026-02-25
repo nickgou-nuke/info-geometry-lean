@@ -5,7 +5,7 @@ set -euo pipefail
 CANONICAL_ROOTS=(lean/InfoGeometry)
 
 # List of allowed non-source files in lean/
-ALLOWED=(lakefile.lean lake-manifest.json lean-toolchain scripts all_lean_files_combined.lean)
+ALLOWED=(lakefile.lean lake-manifest.json lean-toolchain scripts all_lean_files_combined.lean InfoGeometry.lean)
 
 # Find all files in lean/ that are not in canonical roots or allowed
 find lean/ -maxdepth 1 -type f | while read -r file; do
@@ -23,18 +23,21 @@ find lean/ -maxdepth 1 -type f | while read -r file; do
   fi
 done
 
-# Find orphaned .lean files not in InfoGeometry, Archive, or Experimental
+# Find orphaned .lean files not in InfoGeometry, Archive, Experimental, or scripts
 find lean/ -type f -name '*.lean' | while read -r file; do
-  if [[ "$file" != lean/InfoGeometry/* ]] && [[ "$file" != lean/InfoGeometry/Archive/* ]] && [[ "$file" != lean/InfoGeometry/Experimental/* ]]; then
+  if [[ "$file" != lean/InfoGeometry/* ]] && [[ "$file" != lean/InfoGeometry/Archive/* ]] && [[ "$file" != lean/InfoGeometry/Experimental/* ]] && [[ "$file" != lean/scripts/* ]] && [[ "$file" != lean/InfoGeometry.lean ]]; then
     echo "[orphaned-check] Orphaned Lean file: $file"
     exit 1
   fi
 done
 
 # Optionally, check for empty folders
-find lean/ -type d -empty | grep -vE 'lean$|scripts$' | while read -r dir; do
-  echo "[orphaned-check] Empty directory: $dir"
+# Use a temporary file to avoid pipefail with grep if no empty dirs found
+EMPTY_DIRS=$(find lean/ -type d -empty | grep -vE 'lean$|scripts$' || true)
+if [[ -n "$EMPTY_DIRS" ]]; then
+  echo "[orphaned-check] Empty directory found:"
+  echo "$EMPTY_DIRS"
   exit 1
-done
+fi
 
 echo "[orphaned-check] OK"

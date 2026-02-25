@@ -18,8 +18,8 @@ open InfoGeometry.Analysis.Graph
 
 -- reexport names from the submodule for convenience
 export InfoGeometry.Analysis.Graph (
-  Graph EdgeKind IndexedGraph
-  collectConsts envToIndexedGraph envToGraph indexedToGraph
+  SimpleGraph EdgeKind IndexedGraph
+  collectConsts collectDeps envToIndexedGraph envToGraph indexedToGraph
 )
 
 end InfoGeometry.Analysis

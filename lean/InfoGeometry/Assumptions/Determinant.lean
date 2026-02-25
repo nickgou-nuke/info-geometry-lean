@@ -1,3 +1,4 @@
+import Architect
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 
@@ -25,10 +26,12 @@ def detHom (R : Type u) (V : Type v) : GL R V → R := fun g => g.down.1
 def ker_det_eq_SL (R : Type u) (V : Type v) : Prop := SL R V = GL R V
 
 /-- Draft logarithmic absolute determinant. -/
+@[blueprint "def:determinant-log-abs"]
 noncomputable def logAbsDet (V : Type v) : GL ℝ V → ℝ := fun g =>
   Real.log (|detHom ℝ V g|)
 
 /-- Draft Jacobian determinant helper. -/
+@[blueprint "def:determinant-jac"]
 def jacDet (R : Type u) (V : Type v) : GL R V → R := detHom R V
 
 /-- Draft Jacobian functoriality/composition marker. -/

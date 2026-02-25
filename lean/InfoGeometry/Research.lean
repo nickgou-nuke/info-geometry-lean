@@ -1,8 +1,15 @@
 
+import InfoGeometry.Research.Drazin
+import InfoGeometry.Research.DualConnections
+import InfoGeometry.Research.IB
+import InfoGeometry.Research.LLN
+
 /-!
 # InfoGeometry.Research
 
-Noncanonical research umbrella for exploratory APIs, imported domain-by-domain
-from dedicated modules.
--/
+Curated noncanonical research umbrella for build-validated exploratory APIs.
 
+For the larger, fast-moving bundle, use:
+
+`import InfoGeometry.Research.All`
+-/

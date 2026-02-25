@@ -57,9 +57,9 @@ instance : ToJson GraphJson where
       ]
 
 /-- Convert the internal simple `Graph` to the serializable record. -/
-def graphToJson (g : Graph) : GraphJson :=
-  { nodes := Graph.nodes g |>.map toString
-  , edges := Graph.edges g |>.map (fun (u,v) => (u.toString, v.toString, "")) }
+def graphToJson (g : SimpleGraph) : GraphJson :=
+  { nodes := g.nodes |>.map toString
+  , edges := g.edges |>.map (fun (u,v) => (u.toString, v.toString, "")) }
 
 /-- Convert an indexed graph (with kinds) to JSON. -/
 def indexedGraphToJson (g : IndexedGraph) : GraphJson :=
@@ -79,8 +79,8 @@ def indexedGraphToJson (g : IndexedGraph) : GraphJson :=
           let dstName := (nodesArr[j]!).toString
           let kind :=
             match k with
-            | EdgeKind.type  => "type"
-            | EdgeKind.value => "value"
+            | .type  => "type"
+            | .value => "value"
           out := (srcName, dstName, kind) :: out
       out.reverse
   { nodes := nodesList, edges := edges }
@@ -101,7 +101,22 @@ def main (args : List String) : IO UInt32 := do
   | [importModsStr, outPath] =>
       let imports := parseImports importModsStr
       let env ← importModules imports {} 0
-      let ig : IndexedGraph := envToIndexedGraph env
+      let ig : IndexedGraph := envToIndexedGraph env none
+      let graphJson := indexedGraphToJson ig
+      let json := ToJson.toJson graphJson
+      let path := System.FilePath.mk outPath
+      match path.parent with
+      | some p => IO.FS.createDirAll p
+      | none   => pure ()
+      IO.FS.writeFile path json.pretty
+      let nodeCount := ig.nodes.size
+      let edgeCount := ig.forward.foldl (init := 0) fun acc arr => acc + arr.size
+      IO.println s!"[ExportGraph] wrote {outPath} (nodes={nodeCount}, edges={edgeCount})"
+      return 0
+  | [importModsStr, outPath, nsPrefix] =>
+      let imports := parseImports importModsStr
+      let env ← importModules imports {} 0
+      let ig : IndexedGraph := envToIndexedGraph env (some nsPrefix)
       let graphJson := indexedGraphToJson ig
       let json := ToJson.toJson graphJson
       let path := System.FilePath.mk outPath
@@ -114,5 +129,5 @@ def main (args : List String) : IO UInt32 := do
       IO.println s!"[ExportGraph] wrote {outPath} (nodes={nodeCount}, edges={edgeCount})"
       return 0
   | _ =>
-      IO.eprintln "usage: ExportGraph <import-module[,module2,…]> <output.json>"
+      IO.eprintln "usage: ExportGraph <import-module[,module2,…]> <output.json> [ns-prefix]"
       return 1

@@ -99,6 +99,32 @@ noncomputable def logSumExpScaledBregman
     (w a : ι → ℝ) (ε η θ : ℝ) : ℝ :=
   InfoGeometry.bregmanDiv (logSumExpScaled w a ε) η θ
 
+/-! ### Optimal-Transport Naming Bridge -/
+
+/-- OT naming alias for the `ε`-regularized objective in the scaled Gibbs family. -/
+noncomputable abbrev logSumExpScaledEntropicTransportObjective
+    {ι : Type _} [Fintype ι]
+    (w a : ι → ℝ) (ε θ η : ℝ) : ℝ :=
+  logSumExpScaledKL w a ε θ η
+
+/-- OT naming alias for the convex potential gap in the scaled Gibbs family. -/
+noncomputable abbrev logSumExpScaledEntropicTransportPotentialGap
+    {ι : Type _} [Fintype ι]
+    (w a : ι → ℝ) (ε θ η : ℝ) : ℝ :=
+  logSumExpScaledBregman w a ε η θ
+
+@[simp] lemma logSumExpScaledEntropicTransportObjective_eq
+    {ι : Type _} [Fintype ι]
+    (w a : ι → ℝ) (ε θ η : ℝ) :
+    logSumExpScaledEntropicTransportObjective w a ε θ η
+      = logSumExpScaledKL w a ε θ η := rfl
+
+@[simp] lemma logSumExpScaledEntropicTransportPotentialGap_eq
+    {ι : Type _} [Fintype ι]
+    (w a : ι → ℝ) (ε θ η : ℝ) :
+    logSumExpScaledEntropicTransportPotentialGap w a ε θ η
+      = logSumExpScaledBregman w a ε η θ := rfl
+
 /-- Positivity of the finite weighted exponential sum for strictly positive weights. -/
 lemma logSumExp_sum_pos
     {ι : Type _} [Fintype ι] [Nonempty ι]
@@ -559,6 +585,30 @@ lemma logSumExpScaledBregman_eq_eps_mul_KL
             field_simp [heps]
     _ = ε * logSumExpScaledKL w a ε θ η := by
           rw [hKL]
+
+lemma logSumExpScaledEntropicTransportObjective_eq_inv_eps_mul_potentialGap
+    {ι : Type _} [Fintype ι] [Nonempty ι]
+    (w a : ι → ℝ) (ε : ℝ)
+    (hw : ∀ i, 0 < w i)
+    (heps : ε ≠ 0)
+    (θ η : ℝ) :
+    logSumExpScaledEntropicTransportObjective w a ε θ η
+      = (1 / ε) * logSumExpScaledEntropicTransportPotentialGap w a ε θ η := by
+  simpa [logSumExpScaledEntropicTransportObjective, logSumExpScaledEntropicTransportPotentialGap]
+    using (logSumExpScaledKL_eq_inv_eps_mul_bregman
+      (w := w) (a := a) (ε := ε) hw heps θ η)
+
+lemma logSumExpScaledEntropicTransportPotentialGap_eq_eps_mul_objective
+    {ι : Type _} [Fintype ι] [Nonempty ι]
+    (w a : ι → ℝ) (ε : ℝ)
+    (hw : ∀ i, 0 < w i)
+    (heps : ε ≠ 0)
+    (θ η : ℝ) :
+    logSumExpScaledEntropicTransportPotentialGap w a ε θ η
+      = ε * logSumExpScaledEntropicTransportObjective w a ε θ η := by
+  simpa [logSumExpScaledEntropicTransportObjective, logSumExpScaledEntropicTransportPotentialGap]
+    using (logSumExpScaledBregman_eq_eps_mul_KL
+      (w := w) (a := a) (ε := ε) hw heps θ η)
 
 /-- `C²` smoothness of the finite log-sum-exp potential. -/
 lemma logSumExp_contDiff

@@ -5,7 +5,7 @@ section KreinClifford
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Doubled space `E ⊕ E` (geometric doubling of primal/dual sectors). -/
-abbrev DoubledSpace (E : Type) := E × E
+abbrev DoubledSpace (E : Type _) := E × E
 
 /-- Swap involution `J(x, y) = (y, x)`. -/
 def modularJ : DoubledSpace E →L[ℝ] DoubledSpace E where

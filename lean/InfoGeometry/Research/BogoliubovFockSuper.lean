@@ -1,0 +1,310 @@
+import InfoGeometry.Quantum.Fock
+import InfoGeometry.Research.RicciMongeAmpere
+
+/-!
+# Research.BogoliubovFockSuper
+
+Bogoliubov/Fock superalgebra lift over the doubled state space:
+
+- Bogoliubov-mixed creation/annihilation operators
+- `ℤ₂` super-bracket on Fock endomorphisms
+- grand-canonical generator with chemical potential
+- bridge from transported Einstein residual to Fock deformation scale
+-/
+
+namespace InfoGeometry.Research.BogoliubovFockSuper
+
+open InfoGeometry.Quantum
+open InfoGeometry.Research.RicciMongeAmpere
+
+section FockSuper
+
+variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+
+/-- Endomorphisms of the doubled/Fock state space. -/
+abbrev FockEnd (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] :=
+  DoubledSpace E →L[ℝ] DoubledSpace E
+
+/-- Real Bogoliubov mixing parameters with split normalization. -/
+structure BogoliubovParams where
+  u : ℝ
+  v : ℝ
+  normalization : u ^ 2 - v ^ 2 = 1
+
+/--
+Bogoliubov annihilation operator:
+`a_B = u a + v a†`.
+-/
+noncomputable def bogoliubovAnnihilation
+    (B : BogoliubovParams) : FockEnd E :=
+  B.u • annihilationOp (E := E) + B.v • creationOp (E := E)
+
+/--
+Bogoliubov creation operator:
+`a†_B = u a† + v a`.
+-/
+noncomputable def bogoliubovCreation
+    (B : BogoliubovParams) : FockEnd E :=
+  B.u • creationOp (E := E) + B.v • annihilationOp (E := E)
+
+/-- Number-operator surrogate from Bogoliubov ladder modes. -/
+noncomputable def numberOperator
+    (B : BogoliubovParams) : FockEnd E :=
+  (bogoliubovCreation (E := E) B).comp (bogoliubovAnnihilation (E := E) B)
+
+/-- Grand-canonical generator `H - μ N_B`. -/
+noncomputable def grandCanonicalGenerator
+    (B : BogoliubovParams) (H : FockEnd E) (μ : ℝ) : FockEnd E :=
+  H - μ • numberOperator (E := E) B
+
+/-- One Euler step of grand-canonical Fock evolution. -/
+noncomputable def grandCanonicalEulerStep
+    (η : ℝ) (B : BogoliubovParams) (H : FockEnd E) (μ : ℝ)
+    (ψ : DoubledSpace E) : DoubledSpace E :=
+  ψ + η • grandCanonicalGenerator (E := E) B H μ ψ
+
+theorem bogoliubovAnnihilation_kills_vacuumVector
+    (B : BogoliubovParams) :
+    bogoliubovAnnihilation (E := E) B 0 = 0 := by
+  simp [bogoliubovAnnihilation]
+
+theorem bogoliubovCreation_kills_vacuumVector
+    (B : BogoliubovParams) :
+    bogoliubovCreation (E := E) B 0 = 0 := by
+  simp [bogoliubovCreation]
+
+/-- `ℤ₂` grading parity labels for superalgebra brackets. -/
+inductive SuperParity where
+  | even
+  | odd
+deriving DecidableEq, Repr
+
+/-- Super sign `(-1)^{|p||q|}` specialized to `{even, odd}`. -/
+def paritySign : SuperParity → SuperParity → ℝ
+  | .odd, .odd => -1
+  | _, _ => 1
+
+/-- Graded super-commutator on Fock endomorphisms. -/
+noncomputable def superBracket
+    (p q : SuperParity) (A B : FockEnd E) : FockEnd E :=
+  A.comp B - paritySign p q • (B.comp A)
+
+lemma superBracket_add_left
+    (p q : SuperParity) (A₁ A₂ B : FockEnd E) :
+    superBracket (E := E) p q (A₁ + A₂) B
+      = superBracket (E := E) p q A₁ B + superBracket (E := E) p q A₂ B := by
+  unfold superBracket
+  simp [sub_eq_add_neg, add_assoc, add_left_comm, add_comm, smul_add]
+
+lemma superBracket_add_right
+    (p q : SuperParity) (A B₁ B₂ : FockEnd E) :
+    superBracket (E := E) p q A (B₁ + B₂)
+      = superBracket (E := E) p q A B₁ + superBracket (E := E) p q A B₂ := by
+  unfold superBracket
+  simp [sub_eq_add_neg, add_assoc, add_left_comm, add_comm, smul_add]
+
+lemma superBracket_smul_left
+    (p q : SuperParity) (r : ℝ) (A B : FockEnd E) :
+    superBracket (E := E) p q (r • A) B
+      = r • superBracket (E := E) p q A B := by
+  unfold superBracket
+  simp [sub_eq_add_neg, smul_smul, mul_comm]
+
+lemma superBracket_smul_right
+    (p q : SuperParity) (r : ℝ) (A B : FockEnd E) :
+    superBracket (E := E) p q A (r • B)
+      = r • superBracket (E := E) p q A B := by
+  unfold superBracket
+  simp [sub_eq_add_neg, smul_smul, mul_comm]
+
+@[simp] lemma superBracket_even_left
+    (q : SuperParity) (A B : FockEnd E) :
+    superBracket (E := E) SuperParity.even q A B
+      = A.comp B - B.comp A := by
+  simp [superBracket, paritySign]
+
+@[simp] lemma superBracket_odd_odd
+    (A B : FockEnd E) :
+    superBracket (E := E) SuperParity.odd SuperParity.odd A B
+      = A.comp B + B.comp A := by
+  apply ContinuousLinearMap.ext
+  intro x
+  rcases x with ⟨x₁, x₂⟩
+  simp [superBracket, paritySign]
+
+/-- Even-even super bracket (commutator channel). -/
+noncomputable abbrev commutator (A B : FockEnd E) : FockEnd E :=
+  superBracket (E := E) SuperParity.even SuperParity.even A B
+
+/-- Odd-odd super bracket (anticommutator channel). -/
+noncomputable abbrev anticommutator (A B : FockEnd E) : FockEnd E :=
+  superBracket (E := E) SuperParity.odd SuperParity.odd A B
+
+/-- CAR witness for the base ladder pair `(a, a†)` in this Fock model. -/
+structure CARWitness : Prop where
+  car_annihilation :
+    anticommutator (E := E) (annihilationOp (E := E)) (annihilationOp (E := E)) = 0
+  car_creation :
+    anticommutator (E := E) (creationOp (E := E)) (creationOp (E := E)) = 0
+  car_mixed :
+    anticommutator (E := E) (annihilationOp (E := E)) (creationOp (E := E))
+      = (2 : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
+
+/-- CCR witness for the base ladder pair `(a, a†)` in this Fock model. -/
+structure CCRWitness : Prop where
+  ccr_annihilation :
+    commutator (E := E) (annihilationOp (E := E)) (annihilationOp (E := E)) = 0
+  ccr_creation :
+    commutator (E := E) (creationOp (E := E)) (creationOp (E := E)) = 0
+  ccr_mixed :
+    commutator (E := E) (annihilationOp (E := E)) (creationOp (E := E))
+      = ContinuousLinearMap.id ℝ (DoubledSpace E)
+
+lemma anticommutator_symm (A B : FockEnd E) :
+    anticommutator (E := E) A B = anticommutator (E := E) B A := by
+  simp [anticommutator, superBracket_odd_odd, add_comm]
+
+lemma commutator_swap (A B : FockEnd E) :
+    commutator (E := E) A B = - commutator (E := E) B A := by
+  unfold commutator
+  simp [superBracket_even_left, sub_eq_add_neg]
+
+/--
+Bogoliubov covariance (mode expansion form) for the graded super bracket.
+This is the core transport law before imposing CAR/CCR closure.
+-/
+theorem superBracket_bogoliubov_covariance
+    (p q : SuperParity) (B : BogoliubovParams) :
+    superBracket (E := E) p q
+        (bogoliubovAnnihilation (E := E) B)
+        (bogoliubovCreation (E := E) B)
+      =
+      (superBracket (E := E) p q (B.u • annihilationOp (E := E)) (B.u • creationOp (E := E))
+        + superBracket (E := E) p q (B.u • annihilationOp (E := E)) (B.v • annihilationOp (E := E)))
+      + (superBracket (E := E) p q (B.v • creationOp (E := E)) (B.u • creationOp (E := E))
+        + superBracket (E := E) p q (B.v • creationOp (E := E)) (B.v • annihilationOp (E := E))) := by
+  simp [bogoliubovAnnihilation, bogoliubovCreation,
+    superBracket_add_left, superBracket_add_right]
+  ac_rfl
+
+/--
+CAR-collapsed Bogoliubov covariance:
+under CAR witness, odd-odd bracket of transformed ladder modes is the
+weighted sum of the mixed CAR channel.
+-/
+theorem anticommutator_bogoliubov_of_CAR
+    (B : BogoliubovParams) (hCAR : CARWitness (E := E)) :
+    anticommutator (E := E)
+        (bogoliubovAnnihilation (E := E) B)
+        (bogoliubovCreation (E := E) B)
+      =
+      ((B.u * B.u) • ((2 : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)))
+        + ((B.v * B.v) • ((2 : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E))) := by
+  have hCov :=
+    superBracket_bogoliubov_covariance (E := E) (p := SuperParity.odd) (q := SuperParity.odd) B
+  have hca :
+      anticommutator (E := E) (creationOp (E := E)) (annihilationOp (E := E))
+        = (2 : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+    calc
+      anticommutator (E := E) (creationOp (E := E)) (annihilationOp (E := E))
+          = anticommutator (E := E) (annihilationOp (E := E)) (creationOp (E := E)) := by
+            exact anticommutator_symm (E := E) _ _
+      _ = (2 : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E) := hCAR.car_mixed
+  unfold anticommutator
+  rw [hCov]
+  simp [superBracket_smul_left, superBracket_smul_right,
+    hCAR.car_annihilation, hCAR.car_creation, hCAR.car_mixed, hca,
+    smul_smul, mul_assoc]
+
+/--
+CCR-collapsed Bogoliubov covariance:
+under CCR witness, even-even bracket of transformed ladder modes is the
+weighted sum of the mixed CCR channel.
+-/
+theorem commutator_bogoliubov_of_CCR
+    (B : BogoliubovParams) (hCCR : CCRWitness (E := E)) :
+    commutator (E := E)
+        (bogoliubovAnnihilation (E := E) B)
+        (bogoliubovCreation (E := E) B)
+      =
+      ((B.u * B.u) • ContinuousLinearMap.id ℝ (DoubledSpace E))
+        + ((B.v * B.v) • (-(ContinuousLinearMap.id ℝ (DoubledSpace E)))) := by
+  have hCov :=
+    superBracket_bogoliubov_covariance (E := E) (p := SuperParity.even) (q := SuperParity.even) B
+  have hca :
+      commutator (E := E) (creationOp (E := E)) (annihilationOp (E := E))
+        = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+    calc
+      commutator (E := E) (creationOp (E := E)) (annihilationOp (E := E))
+          = - commutator (E := E) (annihilationOp (E := E)) (creationOp (E := E)) := by
+            exact commutator_swap (E := E) _ _
+      _ = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+            rw [hCCR.ccr_mixed]
+  unfold commutator
+  rw [hCov]
+  simp [superBracket_smul_left, superBracket_smul_right,
+    hCCR.ccr_annihilation, hCCR.ccr_creation, hCCR.ccr_mixed, hca,
+    smul_smul]
+
+end FockSuper
+
+section EinsteinBridge
+
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/-- Einstein-transported residual viewed as a chemical-potential shift. -/
+noncomputable def inducedChemicalPotential
+    (R : RicciTensor E)
+    (K : InfoGeometry.Research.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein K x) (Γ : SpinConnection K x V) : ℝ :=
+  transportedEinsteinResidual (R := R) (K := K) (x := x)
+    (scalar := scalar) (Λ := Λ) V Γ
+
+lemma inducedChemicalPotential_eq_zero_of_vacuumTransported
+    (R : RicciTensor E)
+    (K : InfoGeometry.Research.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein K x) (Γ : SpinConnection K x V)
+    (hVacSplit : VacuumEinsteinOnTransportedSplit R K x scalar Λ V Γ) :
+    inducedChemicalPotential R K x scalar Λ V Γ = 0 :=
+  hVacSplit
+
+/-- Einstein-residual deformation as a scalar multiple of identity on Fock space. -/
+noncomputable def einsteinFockDeformation
+    (R : RicciTensor E)
+    (K : InfoGeometry.Research.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein K x) (Γ : SpinConnection K x V) :
+    FockEnd E :=
+  inducedChemicalPotential R K x scalar Λ V Γ • ContinuousLinearMap.id ℝ (DoubledSpace E)
+
+lemma einsteinFockDeformation_eq_zero_of_vacuumTransported
+    (R : RicciTensor E)
+    (K : InfoGeometry.Research.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein K x) (Γ : SpinConnection K x V)
+    (hVacSplit : VacuumEinsteinOnTransportedSplit R K x scalar Λ V Γ) :
+    einsteinFockDeformation R K x scalar Λ V Γ = 0 := by
+  have hμ : inducedChemicalPotential R K x scalar Λ V Γ = 0 := hVacSplit
+  unfold einsteinFockDeformation
+  rw [hμ]
+  simp
+
+lemma grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
+    (B : BogoliubovParams) (H : FockEnd E)
+    (R : RicciTensor E)
+    (K : InfoGeometry.Research.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein K x) (Γ : SpinConnection K x V)
+    (hVacSplit : VacuumEinsteinOnTransportedSplit R K x scalar Λ V Γ) :
+    grandCanonicalGenerator (E := E) B H
+        (inducedChemicalPotential R K x scalar Λ V Γ) = H := by
+  have hμ : inducedChemicalPotential R K x scalar Λ V Γ = 0 := hVacSplit
+  unfold grandCanonicalGenerator
+  rw [hμ]
+  simp
+
+end EinsteinBridge
+
+end InfoGeometry.Research.BogoliubovFockSuper

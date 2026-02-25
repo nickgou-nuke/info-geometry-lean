@@ -10,7 +10,7 @@ from typing import Any
 from tools.pathing import normalize_user_path, default_docs_map_root
 
 
-def run_export(import_mods: str, out: Path) -> None:
+def run_export(import_mods: str, out: Path, ns_prefix: str = "InfoGeometry") -> None:
     # invoke the Lean exporter via lake env lean --run
     cmd = [
         "lake",
@@ -20,6 +20,7 @@ def run_export(import_mods: str, out: Path) -> None:
         "scripts/ExportGraph.lean",
         import_mods,
         str(out),
+        ns_prefix,
     ]
     subprocess.run(cmd, check=True)
 
@@ -30,14 +31,15 @@ def load_json(path: Path) -> Any:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--modules", default="", help="Comma-separated modules to load")
+    ap.add_argument("--modules", default="InfoGeometry.Library,InfoGeometry.Research.All", help="Comma-separated modules to load")
+    ap.add_argument("--ns", default="InfoGeometry", help="Namespace prefix to filter by")
     ap.add_argument("--out", default=None, help="Output JSON path")
     args = ap.parse_args()
 
     docs_root = default_docs_map_root()
     out_path = normalize_user_path(args.out, docs_root / "graph.json")
 
-    run_export(args.modules, out_path)
+    run_export(args.modules, out_path, args.ns)
 
     # Report a quick summary of node/edge counts; attempt to parse the JSON
     try:

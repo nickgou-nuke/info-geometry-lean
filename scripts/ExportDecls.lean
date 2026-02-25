@@ -101,10 +101,6 @@ def isGeneratedOrUnstableName (n : Name) : Bool :=
   leaf.endsWith "injEq" ||
   leaf.endsWith "sizeOf_spec"
 
--- `collectDeps` is now provided by `InfoGeometry.Analysis`.
--- We keep a local alias for backwards compatibility.
-def collectDeps := InfoGeometry.Analysis.collectDeps
-
 def dedupNames (xs : List Name) : List Name :=
   (xs.foldl (fun acc n => if acc.contains n then acc else n :: acc) []).reverse
 

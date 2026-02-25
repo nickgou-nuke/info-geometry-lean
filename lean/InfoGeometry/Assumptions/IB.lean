@@ -1,3 +1,4 @@
+import Architect
 import InfoGeometry.EntropicInference
 
 /-!
@@ -17,6 +18,7 @@ variable {X Y T : Type} [Fintype X] [Fintype Y] [Fintype T]
 abbrev FinProb (α : Type*) [Fintype α] := InfoGeometry.EntropicInference.FinProb α
 
 /-- Draft IB problem package. -/
+@[blueprint "def:ib-problem"]
 structure IBProblem where
   pXY : FinProb (X × Y)
   beta : ℝ
@@ -32,6 +34,7 @@ private theorem nonemptyY (prob : IBProblem (X := X) (Y := Y)) : Nonempty Y := b
   exact ⟨xy.2⟩
 
 /-- Mutual information `I(A;B)` written as `KL(pAB || pA ⊗ pB)`. -/
+@[blueprint "def:ib-mutual-information"]
 noncomputable def mutualInformation {A B : Type} [Fintype A] [Fintype B]
     (pAB : FinProb (A × B)) : ℝ :=
   let pA : FinProb A := InfoGeometry.EntropicInference.marginalX (X := A) (Θ := B) pAB
@@ -146,6 +149,7 @@ def argmin_exponentialTilt (prob : IBProblem (X := X) (Y := Y))
   ∀ x : X, (∑ t : T, (exponentialTilt (prob := prob) pT_givenX x).toFun t) = 1
 
 /-- IB Lagrangian `I(X;T) - β I(Y;T)`. -/
+@[blueprint "def:ib-lagrangian"]
 noncomputable def ibLagrangian (prob : IBProblem (X := X) (Y := Y))
     (pT_givenX : X → FinProb T) : ℝ :=
   let pX : FinProb X := InfoGeometry.EntropicInference.marginalX (X := X) (Θ := Y) prob.pXY

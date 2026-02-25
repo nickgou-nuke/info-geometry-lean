@@ -9,7 +9,7 @@ package «infogeometry» where
 script strictCheck (args) do
   let child ← IO.Process.spawn
     { cmd := "bash"
-      args := #["scripts/strict-check.sh"] ++ args.toArray
+      args := #["lean/scripts/strict-check.sh"] ++ args.toArray
       stdin := .inherit
       stdout := .inherit
       stderr := .inherit }
@@ -20,13 +20,9 @@ require mathlib from git
   @ "v4.28.0"
 
 -- optional tool for exporting blueprint data directly from Lean
--- (see docs in workspace for LeanArchitect usage)
--- The following block is commented out to prevent Lake from pulling
--- a newer toolchain (4.29‑rc) when the repo updates.  Re‑enable and
--- pin a commit once the project itself moves to Lean 4.29.
--- require LeanArchitect from git
---   "https://github.com/hanwenzhu/LeanArchitect.git"
---   @ "v4.28.0"  -- stable release compatible with Lean 4.28
+require LeanArchitect from git
+  "https://github.com/hanwenzhu/LeanArchitect.git"
+  @ "v4.28.0"
 
 
 -- the main umbrella library depends on the smaller components below

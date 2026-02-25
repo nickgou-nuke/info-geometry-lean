@@ -1,4 +1,7 @@
 
+import InfoGeometry.Core.Entropy
+import InfoGeometry.Core.GrandCanonical
+
 /-!
 # InfoGeometry.Core
 

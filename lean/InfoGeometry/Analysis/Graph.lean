@@ -58,17 +58,27 @@ def collectConsts (e : Expr) : NameSet :=
     | _              => acc
   fromConsts.union (proj e NameSet.empty)
 
+/-- extract a list of unique constant names from an expression. -/
+def collectDeps (e : Expr) : List Name :=
+  (collectConsts e).toList
+
 /-- Build an indexed graph from an environment.  Nodes are all constants in
     `env`; edges are typed/value dependencies between them.  External names
     (not present in `env`) are ignored.  This is essentially the same logic
     found in `DAG.KernelExtract.buildGraphFromEnv`. -/
-def envToIndexedGraph (env : Environment) : IndexedGraph :=
+def envToIndexedGraph (env : Environment) (nsPrefix? : Option String := none) : IndexedGraph :=
   Id.run do
     -- collect all constant names and sort them to ensure deterministic
     -- ordering.  the `Environment.constants` hashmap does not guarantee
     -- any particular iteration order, so we sort by `Name`'s `Ord`.
-    let constList : Array Name :=
-      (env.constants.fold (init := (#[] : Array Name)) (fun acc name _ => acc.push name)).qsort Name.lt
+    let consts := env.constants
+    let allNames : Array Name := 
+      match nsPrefix? with
+      | none => consts.fold (init := #[]) (fun acc n _ => acc.push n)
+      | some p => consts.fold (init := #[]) (fun acc n _ => 
+          if (toString n).startsWith p then acc.push n else acc)
+    
+    let constList : Array Name := allNames.qsort Name.lt
 
     let mut nodeToIdx : Std.HashMap Name Nat := {}
     for i in [:constList.size] do
@@ -104,8 +114,8 @@ def indexedToGraph (g : IndexedGraph) : SimpleGraph :=
   { nodes := g.nodes.toList, edges := edges }
 
 /-- old flat graph from environment -/
-def envToGraph (env : Environment) : SimpleGraph :=
-  indexedToGraph (envToIndexedGraph env)
+def envToGraph (env : Environment) (nsPrefix? : Option String := none) : SimpleGraph :=
+  indexedToGraph (envToIndexedGraph env nsPrefix?)
 
 end InfoGeometry.Analysis.Graph
 
@@ -120,7 +130,7 @@ open InfoGeometry.Analysis.Graph
 abbrev Graph := SimpleGraph
 
 export InfoGeometry.Analysis.Graph
-  (SimpleGraph EdgeKind IndexedGraph arrayReplicate collectConsts envToIndexedGraph
+  (SimpleGraph EdgeKind IndexedGraph arrayReplicate collectConsts collectDeps envToIndexedGraph
    indexedToGraph envToGraph)
 
 end InfoGeometry.Analysis

@@ -1,0 +1,6 @@
+\beamer@sectionintoc {1}{Audit and Scope}{3}{0}{1}
+\beamer@sectionintoc {2}{Architecture}{5}{0}{2}
+\beamer@sectionintoc {3}{Core Mathematical Stack}{7}{0}{3}
+\beamer@sectionintoc {4}{LLM Formalization Layer}{11}{0}{4}
+\beamer@sectionintoc {5}{Geometric PDE and Flow Layer}{13}{0}{5}
+\beamer@sectionintoc {6}{Quality Gates and Roadmap}{15}{0}{6}

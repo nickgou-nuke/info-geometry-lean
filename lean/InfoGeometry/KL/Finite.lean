@@ -61,8 +61,7 @@ lemma empirical_sum_one
   calc
     ∑ x, (N_func x : ℝ) / (totalMass N_func : ℝ)
         = (∑ x, (N_func x : ℝ)) / (totalMass N_func : ℝ) := by
-          symm
-          simpa using (Finset.sum_div (s := (Finset.univ : Finset α)) (f := fun x => (N_func x : ℝ)) (a := (totalMass N_func : ℝ)))
+          simp [div_eq_mul_inv, Finset.sum_mul]
     _ = (totalMass N_func : ℝ) / (totalMass N_func : ℝ) := by simp [totalMass]
     _ = 1 := by field_simp [hmass]
 

@@ -36,8 +36,8 @@ def default_src_root() -> Path:
 
 
 def default_docs_map_root() -> Path:
-    l = lean_root()
-    return l / "docs-map"
+    r = repo_root()
+    return r / "docs-map"
 
 
 def default_blueprint_tags_file() -> Path:

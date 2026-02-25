@@ -25,10 +25,30 @@ noncomputable def KLParam
   ∑ x, familyDensity F θ x *
     (Real.log (familyDensity F θ x) - Real.log (familyDensity F η x))
 
+/-! ### Optimal-Transport Naming Bridge -/
+
+/-- OT naming alias for the regularized transport objective in natural parameters. -/
+noncomputable abbrev entropicTransportObjective
+    (F : FiniteExponentialFamilyData α) (θ η : ℝ) : ℝ :=
+  KLParam F θ η
+
 /-- Exponential-family log-partition viewed as a `LogPotential`. -/
 noncomputable def logPotential
     (F : FiniteExponentialFamilyData α) : InfoGeometry.LogPotential ℝ where
   ψ := familyLogPartition F
+
+/-- OT naming alias for the convex potential gap driving the same objective. -/
+noncomputable abbrev entropicTransportPotentialGap
+    (F : FiniteExponentialFamilyData α) (θ η : ℝ) : ℝ :=
+  (logPotential F).bregman η θ
+
+@[simp] lemma entropicTransportObjective_eq
+    (F : FiniteExponentialFamilyData α) (θ η : ℝ) :
+    entropicTransportObjective F θ η = KLParam F θ η := rfl
+
+@[simp] lemma entropicTransportPotentialGap_eq
+    (F : FiniteExponentialFamilyData α) (θ η : ℝ) :
+    entropicTransportPotentialGap F θ η = (logPotential F).bregman η θ := rfl
 
 lemma log_density_eq
     (F : FiniteExponentialFamilyData α) (θ : ℝ) (x : α) :
@@ -101,5 +121,13 @@ lemma KLParam_eq_bregman_if_deriv_mean
     KLParam F θ η = (logPotential F).bregman η θ := by
   exact KLParam_eq_LogPotential_bregman_of_statMean_eq_deriv
     (F := F) θ η (hmean θ)
+
+lemma entropicTransportObjective_eq_potentialGap_if_deriv_mean
+    (F : FiniteExponentialFamilyData α)
+    (hmean : ∀ t, statMean F t = deriv (familyLogPartition F) t)
+    (θ η : ℝ) :
+    entropicTransportObjective F θ η = entropicTransportPotentialGap F θ η := by
+  simpa [entropicTransportObjective, entropicTransportPotentialGap] using
+    (KLParam_eq_bregman_if_deriv_mean (F := F) hmean θ η)
 
 end InfoGeometry.ExponentialFamily

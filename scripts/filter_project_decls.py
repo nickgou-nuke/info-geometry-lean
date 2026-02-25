@@ -60,7 +60,7 @@ def main() -> int:
     payload = load_json(inp_path)
     decls = payload["declarations"] if isinstance(payload, dict) and "declarations" in payload else payload
 
-    declared_ns = collect_declared_namespaces(Path(args.src_root))
+    declared_ns = collect_declared_namespaces(src_root)
     declared_ns |= set(args.extra_prefix)
 
     # top-level prefixes from local source namespaces (e.g. PositiveMeasure, JaynesMaxEnt, InfoGeometry)

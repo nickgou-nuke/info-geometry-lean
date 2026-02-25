@@ -1,4 +1,5 @@
 
+import Architect
 import InfoGeometry.KL.Finite
 
 open scoped BigOperators
@@ -37,10 +38,12 @@ noncomputable def klTerm (p q : ℝ) : ℝ :=
   if p = 0 then 0 else p * Real.log (p / q)
 
 /-- Kullback–Leibler divergence `KL(p ‖ q)` on finite probability vectors. -/
+@[blueprint "def:inference-kl"]
 noncomputable def KL {α : Type} [Fintype α] (p q : FinProb α) : ℝ :=
   ∑ a, klTerm (p.toFun a) (q.toFun a)
 
 /-- Negative KL as entropy-like update objective. -/
+@[blueprint "def:inference-entropy"]
 noncomputable def Entropy {α : Type} [Fintype α] (p q : FinProb α) : ℝ :=
   -KL p q
 

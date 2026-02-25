@@ -18,7 +18,7 @@
 set -euo pipefail
 
 PROJECT_NS="${1:-InfoGeometry}"
-ROOT_DIR="${2:-./InfoGeometry}"
+ROOT_DIR="${2:-./lean/InfoGeometry}"
 
 if [[ ! -d "$ROOT_DIR" ]]; then
   echo "[audit] root directory not found: $ROOT_DIR" >&2

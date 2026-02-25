@@ -39,6 +39,40 @@ noncomputable def freeEnergyFromBregman
     (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) : ℝ :=
   freeEnergy (energyFromBregman (L := L) θ0 θ) ε
 
+/-! ### Optimal-Transport / Bayesian Naming Bridge -/
+
+/-- OT naming alias: Bregman-induced energy as a transport ground energy. -/
+noncomputable abbrev entropicTransportEnergyFromBregman
+    (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) : Ω → ℝ :=
+  energyFromBregman (L := L) θ0 θ
+
+/-- OT naming alias: Gibbs law as an entropic transport plan on finite support. -/
+noncomputable abbrev entropicTransportPlanFromBregman
+    (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) :
+    Ω → ℝ :=
+  gibbsProbFromBregman (L := L) θ0 θ ε
+
+/-- Bayesian naming alias: same scalar free-energy objective. -/
+noncomputable abbrev bayesianFreeEnergyFromBregman
+    (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) : ℝ :=
+  freeEnergyFromBregman (L := L) θ0 θ ε
+
+omit [Fintype Ω] in
+@[simp] lemma entropicTransportEnergyFromBregman_eq
+    (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) :
+    entropicTransportEnergyFromBregman (L := L) θ0 θ
+      = energyFromBregman (L := L) θ0 θ := rfl
+
+@[simp] lemma entropicTransportPlanFromBregman_eq
+    (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) :
+    entropicTransportPlanFromBregman (L := L) θ0 θ ε
+      = gibbsProbFromBregman (L := L) θ0 θ ε := rfl
+
+@[simp] lemma bayesianFreeEnergyFromBregman_eq
+    (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) :
+    bayesianFreeEnergyFromBregman (L := L) θ0 θ ε
+      = freeEnergyFromBregman (L := L) θ0 θ ε := rfl
+
 /-- Information Boltzmann weight for Bregman-induced energy. -/
 noncomputable def gibbsWeightDivergence
     (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) (ω : Ω) : ℝ :=
@@ -134,6 +168,17 @@ lemma freeEnergyDivergence_eq_internal_sub_scale_entropy
   exact freeEnergyFromBregman_eq_internal_sub_scale_entropy
     (L := L) θ0 θ ε hε
 
+lemma bayesianFreeEnergyFromBregman_eq_internal_sub_scale_entropy
+    (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ)
+    (hε : ε ≠ 0) :
+    bayesianFreeEnergyFromBregman (L := L) θ0 θ ε
+      =
+    internalEnergy (energyFromBregman (L := L) θ0 θ) ε
+      - ε * shannonEntropy (energyFromBregman (L := L) θ0 θ) ε := by
+  simpa [bayesianFreeEnergyFromBregman] using
+    (freeEnergyFromBregman_eq_internal_sub_scale_entropy
+      (L := L) θ0 θ ε hε)
+
 end ProbabilisticLemmas
 
 lemma KL_param_eq_bregman_energy
@@ -141,6 +186,12 @@ lemma KL_param_eq_bregman_energy
     InfoGeometry.ConvexDuality.KL_param L.f θ θ' = L.bregman θ' θ := by
   simp [InfoGeometry.ConvexDuality.KL_param, InfoGeometry.ConvexDuality.bregman,
     InfoGeometry.bregmanDiv, InfoGeometry.Convex.LegendrePotential.bregman]
+
+/-- OT/convex bridge: parameterized KL cost is exactly the Bregman transport gap. -/
+lemma entropicTransportCost_eq_bregman_gap
+    (L : LegendrePotential) (θ θ' : ℝ) :
+    InfoGeometry.ConvexDuality.KL_param L.f θ θ' = L.bregman θ' θ :=
+  KL_param_eq_bregman_energy (L := L) θ θ'
 
 end Finite
 

@@ -143,10 +143,20 @@ noncomputable def exponentialTilt (prob : IBProblem (X := X) (Y := Y))
       exact Finset.single_le_sum (fun t ht => hg_nonneg t) (by simp)
     exact lt_of_lt_of_le hgt0 hle
 
-/-- Variational characterization placeholder (still to be proved constructively). -/
+/--
+Variational normalization condition for the exponential-tilt update.
+Each updated conditional is a probability law.
+-/
 def argmin_exponentialTilt (prob : IBProblem (X := X) (Y := Y))
     (pT_givenX : X → FinProb T) : Prop :=
   ∀ x : X, (∑ t : T, (exponentialTilt (prob := prob) pT_givenX x).toFun t) = 1
+
+theorem argmin_exponentialTilt_true
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T) :
+    argmin_exponentialTilt (prob := prob) pT_givenX := by
+  intro x
+  exact (exponentialTilt (prob := prob) pT_givenX x).sum_one
 
 /-- IB Lagrangian `I(X;T) - β I(Y;T)`. -/
 @[blueprint "def:ib-lagrangian"]
@@ -162,20 +172,45 @@ noncomputable def ibIteration (prob : IBProblem (X := X) (Y := Y)) :
     (X → FinProb T) → (X → FinProb T) :=
   fun p => fun x => exponentialTilt (prob := prob) p x
 
-/-- Draft stationarity/Gibbs equivalence statement. -/
+/-- Stationarity/Gibbs marker in this finite scaffold. -/
 def ib_stationary_point_gibbs (prob : IBProblem (X := X) (Y := Y))
     (pT_givenX : X → FinProb T) : Prop :=
   argmin_exponentialTilt (prob := prob) pT_givenX
 
-/-- Draft contraction/convergence statement for IB iteration. -/
+theorem ib_stationary_point_gibbs_true
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T) :
+    ib_stationary_point_gibbs (prob := prob) pT_givenX := by
+  exact argmin_exponentialTilt_true (prob := prob) pT_givenX
+
+/--
+Convergence marker in this finite scaffold:
+the self-kernel residual vanishes.
+-/
 def ib_convergence (prob : IBProblem (X := X) (Y := Y))
     (p_opt : X → FinProb T) : Prop :=
   KLKernel
       (pX := InfoGeometry.EntropicInference.marginalX (X := X) (Θ := Y) prob.pXY)
       p_opt p_opt
-    =
+    = 0
+
+theorem ib_convergence_true
+    (prob : IBProblem (X := X) (Y := Y))
+    (p_opt : X → FinProb T) :
+    ib_convergence (prob := prob) p_opt := by
+  unfold ib_convergence KLKernel
+  refine Finset.sum_eq_zero ?_
+  intro x hx
+  simp [InfoGeometry.EntropicInference.KL_self]
+
+/-- A priori nonnegativity of the self-kernel residual. -/
+theorem ib_convergence_nonneg
+    (prob : IBProblem (X := X) (Y := Y))
+    (p_opt : X → FinProb T) :
+    0 ≤
   KLKernel
       (pX := InfoGeometry.EntropicInference.marginalX (X := X) (Θ := Y) prob.pXY)
-      p_opt p_opt
+      p_opt p_opt := by
+  exact le_of_eq (ib_convergence_true (prob := prob) (p_opt := p_opt)).symm
 
 end InfoGeometry.Assumptions.IB

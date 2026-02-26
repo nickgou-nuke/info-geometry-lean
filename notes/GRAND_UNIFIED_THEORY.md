@@ -1,4 +1,4 @@
-# The Geometry of Inference: A Grand Unified Formalization
+# The Grand Unification of the Physics of Information in Lean 4
 **Structural Architecture and Research Synthesis of the `info-geometry-lean` Repository**
 
 **Authors:** Gemini CLI Analysis & Workspace Contributor  
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-The `info-geometry-lean` repository represents an unprecedented effort to formalize the deep structural isomorphism between classical statistical inference, quantum statistical mechanics, and the architecture of modern Artificial Intelligence. By leveraging the Lean 4 theorem prover, the project moves beyond heuristic analogies to provide a machine-checked foundation for **Information Geometry** as a unified physical theory.
+The `info-geometry-lean` repository represents an unprecedented effort to formalize the deep structural isomorphism between classical statistical inference, quantum statistical mechanics, and the architecture of modern Artificial Intelligence. By leveraging the Lean 4 theorem prover, the project moves beyond heuristic analogies to provide a machine-checked foundation for **the Physics of Information** as a unified physical theory.
 
 The central thesis of the project is that the laws of logical belief update (Bayes' Theorem), the laws of physical equilibrium (Thermodynamics), and the laws of neural routing (Attention and Mixture of Experts) are all emergent properties of a single mathematical object: **The Negative Logarithmic Generating Potential on a Dual-Flat Symmetric Space.**
 

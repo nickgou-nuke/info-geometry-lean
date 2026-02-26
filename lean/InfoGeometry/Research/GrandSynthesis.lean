@@ -8,6 +8,13 @@ import InfoGeometry.Research.AnalyticalIndex
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 
+/-!
+# The Grand Unification of the Physics of Information in Lean 4
+
+Capstone synthesis layer connecting thermodynamic Sinkhorn/KMS closure,
+geometric Ricci/Calabi-Yau closure, and algebraic Bott-Dirac/index closure.
+-/
+
 open scoped TensorProduct
 open scoped Kronecker
 

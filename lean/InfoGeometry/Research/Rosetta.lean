@@ -162,24 +162,42 @@ export InfoGeometry.Research.ChiralGravity (
 
 export InfoGeometry.Research.BogoliubovFockSuper (
   BogoliubovParams
+  BogoliubovMixingParams
+  FockEnd
+  FockEndomorphism
   bogoliubovAnnihilation
   bogoliubovCreation
   numberOperator
+  bogoliubovNumberOperator
   grandCanonicalGenerator
+  grandCanonicalFockGenerator
   grandCanonicalEulerStep
+  grandCanonicalFockEulerStep
   SuperParity
   paritySign
   superBracket
+  fockSuperBracket
   commutator
+  fockCommutator
   anticommutator
+  fockAnticommutator
   CARWitness
+  CARClosure
   CCRWitness
+  CCRClosure
+  anticommutator_symm
+  fockAnticommutator_symm
+  commutator_swap
+  fockCommutator_swap
   superBracket_bogoliubov_covariance
   anticommutator_bogoliubov_of_CAR
   commutator_bogoliubov_of_CCR
   inducedChemicalPotential
+  einsteinInducedChemicalPotential
   einsteinFockDeformation
+  einsteinFockDeformationOperator
   grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
+  grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
 )
 
 end InfoGeometry.Research.Rosetta

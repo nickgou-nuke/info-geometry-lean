@@ -171,6 +171,9 @@ def cliffordBasis : CliffordLabel → ℝ × ℝ
 
 abbrev PermMode (n : Nat) := Equiv.Perm (Fin n)
 
+/-- Canonical naming alias for permutation routing modes. -/
+abbrev PermutationMode (n : Nat) := PermMode n
+
 /-- Weighted Clifford mode contribution for a single permutation mode. -/
 def cliffordModeContribution {n : Nat}
     (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel) (σ : PermMode n) : ℝ × ℝ :=
@@ -180,6 +183,11 @@ def cliffordModeContribution {n : Nat}
 noncomputable def cliffordSemanticState {n : Nat}
     (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel) : ℝ × ℝ :=
   ∑ σ : PermMode n, cliffordModeContribution w label σ
+
+/-- Canonical naming alias for permutation-mode Clifford semantic state. -/
+noncomputable abbrev permutationCliffordSemanticState {n : Nat}
+    (w : PermutationMode n → ℝ) (label : PermutationMode n → CliffordLabel) : ℝ × ℝ :=
+  cliffordSemanticState w label
 
 /-- Total `plus`-labeled mass in the permutation simplex decomposition. -/
 noncomputable def plusMass {n : Nat}
@@ -365,6 +373,11 @@ noncomputable def weightedModeCliffordState {n : Nat}
     (S : SplitCliffordSuperData n) (w : PermMode n → ℝ) : SplitCliffordAlg :=
   ∑ σ : PermMode n, algebraMap ℝ SplitCliffordAlg (w σ) * canonicalModewiseRep S σ
 
+/-- Canonical naming alias for weighted modewise Clifford state. -/
+noncomputable abbrev modewiseCliffordState {n : Nat}
+    (S : SplitCliffordSuperData n) (w : PermutationMode n → ℝ) : SplitCliffordAlg :=
+  weightedModeCliffordState S w
+
 /-- Even (`plus`) component of the weighted Clifford state. -/
 noncomputable def weightedModeCliffordStatePlus {n : Nat}
     (S : SplitCliffordSuperData n) (w : PermMode n → ℝ) : SplitCliffordAlg :=
@@ -373,6 +386,11 @@ noncomputable def weightedModeCliffordStatePlus {n : Nat}
       algebraMap ℝ SplitCliffordAlg (w σ) * canonicalModewiseRep S σ
     else 0
 
+/-- Canonical naming alias for even/plus modewise Clifford component. -/
+noncomputable abbrev modewiseCliffordStateEven {n : Nat}
+    (S : SplitCliffordSuperData n) (w : PermutationMode n → ℝ) : SplitCliffordAlg :=
+  weightedModeCliffordStatePlus S w
+
 /-- Odd (`minus`) component of the weighted Clifford state. -/
 noncomputable def weightedModeCliffordStateMinus {n : Nat}
     (S : SplitCliffordSuperData n) (w : PermMode n → ℝ) : SplitCliffordAlg :=
@@ -380,6 +398,11 @@ noncomputable def weightedModeCliffordStateMinus {n : Nat}
     if S.label σ = CliffordLabel.minus then
       algebraMap ℝ SplitCliffordAlg (w σ) * canonicalModewiseRep S σ
     else 0
+
+/-- Canonical naming alias for odd/minus modewise Clifford component. -/
+noncomputable abbrev modewiseCliffordStateOdd {n : Nat}
+    (S : SplitCliffordSuperData n) (w : PermutationMode n → ℝ) : SplitCliffordAlg :=
+  weightedModeCliffordStateMinus S w
 
 /-- Graded decomposition of the modewise Clifford state into `plus` and `minus` parts. -/
 lemma weightedModeCliffordState_split {n : Nat}
@@ -415,9 +438,18 @@ lemma weightedModeCliffordState_split {n : Nat}
           else 0) := by
             rw [Finset.sum_add_distrib]
 
+lemma modewiseCliffordState_split {n : Nat}
+    (S : SplitCliffordSuperData n) (w : PermutationMode n → ℝ) :
+    modewiseCliffordState S w
+      = modewiseCliffordStateEven S w + modewiseCliffordStateOdd S w := by
+  exact weightedModeCliffordState_split S w
+
 /-! ## Dirac Dynamics On Modewise Clifford States -/
 
 abbrev ModeMass (n : Nat) := PermMode n → ℝ
+
+/-- Canonical naming alias for modewise Dirac mass profile. -/
+abbrev ModeDiracMassProfile (n : Nat) := ModeMass n
 
 /-- Dirac operator induced by a modewise mass profile. -/
 noncomputable def modeDiracOperator {n : Nat}

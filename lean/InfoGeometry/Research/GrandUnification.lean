@@ -4,6 +4,13 @@ import Mathlib.Analysis.Calculus.FDeriv.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic.Linarith
 
+/-!
+# The Grand Unification of the Physics of Information in Lean 4
+
+Core formal layer for the grand-unification thesis:
+dually-flat information geometry, Jordan/KKT barrier structure, and Bregman/Fenchel identities.
+-/
+
 namespace InfoGeometry.Research.GrandUnification
 
 open InfoGeometry.Geometry.DualFlat

@@ -9,8 +9,8 @@ import InfoGeometry.Research.SuperInference
 namespace InfoGeometry.Research.GrandUnificationBlueprint
 
 /-!
-# THE GRAND UNIFICATION BLUEPRINT: 
-# Non-commutative Information Geometry & Bayesian Inference
+# The Grand Unification of the Physics of Information in Lean 4
+# Blueprint Layer
 
 This module serves as the crowning synthesis of the library, 
 formally linking all machine-checked sectors into a single architecture.

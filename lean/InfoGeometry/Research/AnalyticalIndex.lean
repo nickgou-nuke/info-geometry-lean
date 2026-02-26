@@ -103,20 +103,14 @@ variable {E F : Type*}
 
 /-- Vanishing condition for the split Bott Laplacian term. -/
 def Cl11BottLaplacianZero (Dn : Endomorphism F) : Prop :=
-  (TensorProduct.map
-    ((cl11DiracSeed (E := E)).comp (cl11DiracSeed (E := E)))
-    (LinearMap.id : Endomorphism F))
-    +
-  (TensorProduct.map
-    (LinearMap.id : Endomorphism (DoubledSpace E))
-    (Dn.comp Dn)) = 0
+  cl11BottLaplacian (E := E) Dn = 0
 
 theorem cl11_bottDirac_sq_eq_zero_of_laplacian_zero
     (Dn : Endomorphism F)
     (hZero : Cl11BottLaplacianZero (E := E) Dn) :
     (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn).comp
       (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn) = 0 := by
-  exact (cl11_bottDirac_sq_eq_sum_laplacians (E := E) (F := F) (Dn := Dn)).trans hZero
+  exact (cl11_bottDirac_sq_eq_cl11BottLaplacian (E := E) (F := F) (Dn := Dn)).trans hZero
 
 end Laplacian
 
@@ -330,6 +324,28 @@ theorem fullThermoGeoIndexCapstone_of_hypotheses
       hNorm hFixed hplus hminus
   · exact sinkhornKMSCapstone_of_drive
       (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hDrive
+
+lemma FullThermoGeoIndexCapstone.geometricAlgebraicState
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd Fth)
+    (ω : Nat → AlgebraEnd Fth →L[ℝ] ℝ)
+    (β : ℝ)
+    (hCap : FullThermoGeoIndexCapstone n T flow D Γ K ω β) :
+    SinkhornRicciIndexInvariant n T flow D Γ :=
+  hCap.1
+
+lemma FullThermoGeoIndexCapstone.thermodynamicKMSState
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd Fth)
+    (ω : Nat → AlgebraEnd Fth →L[ℝ] ℝ)
+    (β : ℝ)
+    (hCap : FullThermoGeoIndexCapstone n T flow D Γ K ω β) :
+    SinkhornKMSState n T.traj K ω β :=
+  hCap.2.2
 
 end FullCapstone
 

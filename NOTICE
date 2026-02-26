@@ -1,0 +1,12 @@
+info-geometry-lean
+Copyright 2024-2026 Nikolay Goutev and Dimitar Tonev
+Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
+Bulgarian Academy of Sciences
+
+This repository contains Lean 4 formalizations in information geometry,
+gauge-inspired inference structures, and transformer-related abstractions.
+
+Attribution notice:
+If you use this software in academic work, please cite the project using
+the metadata in CITATION.cff and include the repository URL or DOI.
+

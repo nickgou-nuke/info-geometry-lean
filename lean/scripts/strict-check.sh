@@ -26,16 +26,11 @@ if rg -n "^import InfoGeometry\\.Experimental$" \
 fi
 
 echo "[strict-check] enforcing canonical-to-research import allowlist"
-ALLOWED_CANONICAL_RESEARCH_IMPORTS=(
-  "InfoGeometry.Research.CartanDecomposition"
-  "InfoGeometry.Research.Drazin"
-  "InfoGeometry.Research.MoorePenrose"
-  "InfoGeometry.Research.Triality"
-)
+ALLOWED_CANONICAL_RESEARCH_IMPORTS=()
 
 mapfile -t canonical_research_import_lines < <(
   rg -n "^import InfoGeometry\\.Research\\.[A-Za-z0-9_.]+$" \
-    "${CANONICAL_PATHS[@]}" -g '*.lean' -g '!ResearchPromoted.lean' || true
+    "${CANONICAL_PATHS[@]}" -g '*.lean' || true
 )
 
 violations=()

@@ -1,23 +1,7 @@
-import InfoGeometry.Experimental.AssumptionWrappers.LLN
+import InfoGeometry.Canonical.Promoted.LLN
 
 /-!
-# Research.LLN
+# InfoGeometry.Research.LLN
 
-Compatibility forwarder over `InfoGeometry.Experimental.AssumptionWrappers.LLN`.
+Compatibility shim forwarding to InfoGeometry.Canonical.Promoted.LLN.
 -/
-
-namespace InfoGeometry.Research.LLN
-
-/-!
-Explicitly forward the LLN scaffold surface from the experimental wrapper.
--/
-export InfoGeometry.Experimental.AssumptionWrappers.LLN (
-  empiricalAverage
-  fixed_partition_slln
-  fixed_partition_slln_holds
-  empirical_to_theoretical_slln
-  ae_tendsto_ratio_to_rnDeriv
-  ae_tendsto_ratio_to_rnDeriv_holds
-)
-
-end InfoGeometry.Research.LLN

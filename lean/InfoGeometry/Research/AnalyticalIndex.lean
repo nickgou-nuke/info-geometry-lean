@@ -174,7 +174,20 @@ def SinkhornKMSCapstone
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ) : Prop :=
   SinkhornDrivesToKMS n T K ω β ∧
-    ∀ k : Nat, SatisfiesKMSLike (E := F) K (ω (k + 1)) β
+    SinkhornKMSState n T K ω β
+
+/--
+Constructive thermodynamic state directly from the Sinkhorn-to-KMS drive law.
+-/
+theorem sinkhornKMSState_of_drive
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hDrive : SinkhornDrivesToKMS n T K ω β) :
+    SinkhornKMSState n T K ω β := by
+  exact sinkhorn_step_exactKMS_of_barrier_control
+    (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive
 
 theorem sinkhornKMSCapstone_of_drive
     (T : SinkhornTrajectory n)
@@ -184,8 +197,16 @@ theorem sinkhornKMSCapstone_of_drive
     (hDrive : SinkhornDrivesToKMS n T K ω β) :
     SinkhornKMSCapstone n T K ω β := by
   refine ⟨hDrive, ?_⟩
-  exact sinkhorn_step_exactKMS_of_barrier_control
-    (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive
+  exact sinkhornKMSState_of_drive (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive
+
+lemma SinkhornKMSCapstone.kmsState
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hCap : SinkhornKMSCapstone n T K ω β) :
+    SinkhornKMSState n T K ω β :=
+  hCap.2
 
 /--
 Constructive iterate specialization of the explicit KMS capstone package.
@@ -311,5 +332,46 @@ theorem fullThermoGeoIndexCapstone_of_hypotheses
       (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hDrive
 
 end FullCapstone
+
+section UnifiedNaming
+
+variable (n : Nat)
+variable {X V Fth : Type}
+  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
+  [AddCommGroup V] [Module ℝ V]
+  [NormedAddCommGroup Fth] [NormedSpace ℝ Fth]
+
+/--
+Unified thermodynamic state naming used by higher-level synthesis modules.
+-/
+abbrev ThermodynamicKMSState
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (K : AlgebraEnd Fth)
+    (ω : Nat → AlgebraEnd Fth →L[ℝ] ℝ)
+    (β : ℝ) : Prop :=
+  SinkhornKMSState n T.traj K ω β
+
+/--
+Unified geometric-algebraic state naming used by higher-level synthesis modules.
+-/
+abbrev GeometricAlgebraicState
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V) : Prop :=
+  SinkhornRicciIndexInvariant n T flow D Γ
+
+/--
+Unified full capstone naming used by higher-level synthesis modules.
+-/
+abbrev ThermoGeoIndexCapstoneState
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd Fth)
+    (ω : Nat → AlgebraEnd Fth →L[ℝ] ℝ)
+    (β : ℝ) : Prop :=
+  FullThermoGeoIndexCapstone n T flow D Γ K ω β
+
+end UnifiedNaming
 
 end InfoGeometry.Research.AnalyticalIndex

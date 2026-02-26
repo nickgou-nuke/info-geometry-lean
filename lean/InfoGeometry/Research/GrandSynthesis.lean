@@ -327,6 +327,17 @@ def RNEntropySourcesMongeAmpere
   SatisfiesMongeAmpere Kgeo.H (fun _ => relativeVolumeChangeRN n M)
 
 /--
+Constant-density witness extracted from RN-entropy Monge-Ampere sourcing.
+-/
+lemma hasConstantMongeAmpereDensity_of_rnEntropySource
+    (Kgeo : KaehlerInformationGeometry X)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M) :
+    HasConstantMongeAmpereDensity Kgeo.H :=
+  hasConstantMongeAmpereDensity_of_satisfiesMongeAmpere_const
+    (H := Kgeo.H) (ρ0 := relativeVolumeChangeRN n M) hSource
+
+/--
 If RN entropy sources the Monge-Ampere density, Calabi-Yau bridge closure yields Ricci-flatness.
 -/
 theorem isRicciFlat_of_rnEntropySource
@@ -337,8 +348,7 @@ theorem isRicciFlat_of_rnEntropySource
     (hBridge : ConstantMongeAmpereImpliesRicciFlat R Kgeo) :
     IsRicciFlat R := by
   apply isRicciFlat_of_constantMongeAmpere (R := R) (K := Kgeo) hBridge
-  exact hasConstantMongeAmpereDensity_of_satisfiesMongeAmpere_const
-    (H := Kgeo.H) (ρ0 := relativeVolumeChangeRN n M) hSource
+  exact hasConstantMongeAmpereDensity_of_rnEntropySource (n := n) (Kgeo := Kgeo) (M := M) hSource
 
 /--
 Entropy-sourced geometric gravity statement:
@@ -356,8 +366,7 @@ theorem vacuumEinsteinEquation_of_rnEntropySource
   exact vacuumEinsteinEquation_of_constantMongeAmpere
     (R := R) (K := Kgeo) (x := x) (Λ := Λ)
     hBridge
-    (hasConstantMongeAmpereDensity_of_satisfiesMongeAmpere_const
-      (H := Kgeo.H) (ρ0 := relativeVolumeChangeRN n M) hSource)
+    (hasConstantMongeAmpereDensity_of_rnEntropySource (n := n) (Kgeo := Kgeo) (M := M) hSource)
 
 /--
 Capstone entropy-to-gravity statement:
@@ -679,6 +688,22 @@ abbrev CalabiYauEntropyBridge
   GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β
 
 /--
+Constructive geometric+algebraic closure from Sinkhorn-Ricci-index hypotheses.
+-/
+theorem geometricAlgebraicState_of_sinkhornRicciIndexHypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
+    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0)) :
+    GeometricAlgebraicState n T flow D Γ :=
+  sinkhornRicciIndexInvariant_of_hypotheses
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    hNorm hFixed hplus hminus
+
+/--
 Derived Calabi-Yau entropy bridge from constructive invariance hypotheses:
 the geometric+algebraic state is built directly from the existing
 `SinkhornRicciIndexInvariant` constructor.
@@ -696,7 +721,7 @@ theorem calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
     (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0)) :
     CalabiYauEntropyBridge n T flow D Γ K ω β := by
   intro _hThermo
-  exact sinkhornRicciIndexInvariant_of_hypotheses
+  exact geometricAlgebraicState_of_sinkhornRicciIndexHypotheses
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
     hNorm hFixed hplus hminus
 
@@ -765,8 +790,7 @@ theorem information_wheeler_dewitt_equivalence
 
 /--
 Reduced-hypothesis Wheeler-DeWitt equivalence:
-`BochnerWeitzenboeckBridge` is discharged by
-`SinkhornDrivesToKMS + ConstantMongeAmpereImpliesRicciFlat`.
+`BochnerWeitzenboeckBridge` is discharged by `SinkhornDrivesToKMS`.
 -/
 theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -784,6 +808,33 @@ theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
       (K := K) (ω := ω) (β := β) hDrive)
     hCYBridge
+
+/--
+Constructive reduced-hypothesis Wheeler-DeWitt equivalence:
+both directions are discharged from
+`SinkhornDrivesToKMS + SinkhornRicciIndexInvariant` hypotheses.
+-/
+theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hDrive : SinkhornDrivesToKMS n T.traj K ω β)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
+    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0)) :
+    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
+  exact information_wheeler_dewitt_equivalence
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
+    (bochnerWeitzenboeckBridge_of_sinkhornDrive
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (K := K) (ω := ω) (β := β) hDrive)
+    (calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
+      hNorm hFixed hplus hminus)
 
 /--
 Legacy-compatibility reduced-hypothesis theorem:
@@ -814,8 +865,7 @@ theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_calabiYau
 
 /--
 Fully constructive reduced-hypothesis Wheeler-DeWitt equivalence:
-both bridge directions are discharged from existing
-`KMSSinkhornBridge + CalabiYauBridge + AnalyticalIndex` hypotheses.
+kept for compatibility; delegates to the leaner index-hypothesis theorem.
 -/
 theorem information_wheeler_dewitt_equivalence_of_constructive_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -834,14 +884,10 @@ theorem information_wheeler_dewitt_equivalence_of_constructive_hypotheses
     (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
     (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0)) :
     ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
-    (bochnerWeitzenboeckBridge_of_sinkhornDrive
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ω) (β := β) hDrive)
-    (calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
-      hNorm hFixed hplus hminus)
+  exact information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypotheses
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (ω := ω) (β := β)
+    hDrive hNorm hFixed hplus hminus
 
 /--
 The full capstone package from `AnalyticalIndex` immediately yields both sides.

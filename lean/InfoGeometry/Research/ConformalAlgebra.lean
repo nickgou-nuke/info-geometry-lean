@@ -27,7 +27,7 @@ structure ConformalBeliefAlgebra (E : Type*) [NormedAddCommGroup E] [InnerProduc
   D : E →L[ℝ] E := CI.D
   /-- Positive anomaly obstructs the flat conformal weight equations. -/
   anomaly_breaks_weights :
-      CI.epsilon > 0 →
+      CI.chiralScale > 0 →
         ¬ ((D * CI.P - CI.P * D = CI.P) ∧ (D * CI.K - CI.K * D = - CI.K))
 
 namespace ConformalBeliefAlgebra
@@ -76,12 +76,12 @@ do not satisfy the standard flat relations.
 A 'Scale Anomaly' constant emerges, proportional to ε.
 -/
 theorem scale_anomaly_emergence
-    : CBA.CI.epsilon > 0 → ¬ CBA.ConformalWeightClosure := by
+    : CBA.CI.chiralScale > 0 → ¬ CBA.ConformalWeightClosure := by
   simpa [SatisfiesFlatWeights, SatisfiesPWeight, SatisfiesKWeight] using CBA.anomaly_breaks_weights
 
 omit [FiniteDimensional ℝ E] in
 theorem scale_anomaly_breaks_weight_closure
-    : CBA.CI.epsilon > 0 → ¬ CBA.ConformalWeightClosure :=
+    : CBA.CI.chiralScale > 0 → ¬ CBA.ConformalWeightClosure :=
   CBA.scale_anomaly_emergence
 
 /--

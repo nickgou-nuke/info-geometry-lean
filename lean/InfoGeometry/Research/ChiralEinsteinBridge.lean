@@ -20,6 +20,12 @@ noncomputable def anomalyStressEnergyAt
     StressEnergyTensor E :=
   fun u v => A * K.H.metric x u v
 
+/-- Canonical alias for anomaly-sourced isotropic stress-energy model. -/
+noncomputable abbrev anomalyStressEnergyModelAt
+    (K : KaehlerInformationGeometry E) (x : E) (A : ℝ) :
+    StressEnergyTensor E :=
+  anomalyStressEnergyAt K x A
+
 @[simp] lemma anomalyStressEnergyAt_apply
     (K : KaehlerInformationGeometry E) (x : E) (A : ℝ) (u v : E) :
     anomalyStressEnergyAt K x A u v = A * K.H.metric x u v := rfl
@@ -89,6 +95,11 @@ def SatisfiesAnomalyDrivenKaehlerRicciFlow
     (flow : ScalarRicciFlow E) (A : ℝ → ℝ) : Prop :=
   ∀ s : ℝ, scalarRicciBetaFunction (E := E) flow s = - flow s + A s
 
+/-- Canonical scalar-Ricci naming alias for anomaly-driven evolution law. -/
+abbrev SatisfiesAnomalyDrivenScalarRicciFlow
+    (flow : ScalarRicciFlow E) (A : ℝ → ℝ) : Prop :=
+  SatisfiesAnomalyDrivenKaehlerRicciFlow (E := E) flow A
+
 lemma anomalyDriven_zeroSource_iff_normalized
     (flow : ScalarRicciFlow E) :
     SatisfiesAnomalyDrivenKaehlerRicciFlow (E := E) flow (fun _ => 0)
@@ -116,6 +127,14 @@ theorem anomalyDriven_fixedpoint_tracks_source
     flow s = flow s + 0 := by ring
     _ = flow s + (- flow s + A s) := by simp [hEq']
     _ = A s := by ring
+
+theorem anomalyDrivenScalarRicci_fixedpoint_tracks_source
+    (flow : ScalarRicciFlow E) (A : ℝ → ℝ)
+    (hFlow : SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow A)
+    (hFixed : ∀ s, scalarRicciBetaFunction (E := E) flow s = 0) :
+    ∀ s, flow s = A s := by
+  exact anomalyDriven_fixedpoint_tracks_source
+    (E := E) (flow := flow) (A := A) hFlow hFixed
 
 section InverseSource
 

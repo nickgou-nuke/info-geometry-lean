@@ -26,6 +26,12 @@ noncomputable def anomalyEinsteinResidualAt
     anomalyEinsteinResidualAt R K x scalar Λ u v
       = einsteinTensorAt R K x scalar u v + Λ * K.H.metric x u v := rfl
 
+/-- Canonical curvature-forcing state at a given pair of directions. -/
+def AnomalyCurvatureForcingStateAt
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ) (u v : E) : Prop :=
+  anomalyEinsteinResidualAt R K x scalar Λ u v ≠ 0
+
 /--
 Under anomaly-sourced Einstein equation, residual equals `κ * A * g`.
 -/
@@ -52,7 +58,8 @@ theorem anomaly_nonzero_forces_curved_plus_component
     (hEinEq : EinsteinEquationAt R K x scalar Λ κ (anomalyStressEnergyAt K x A))
     (V : SplitVielbein K x)
     (hκ : κ ≠ 0) (hA : A ≠ 0) :
-    anomalyEinsteinResidualAt R K x scalar Λ V.ePlus V.ePlus ≠ 0 := by
+    AnomalyCurvatureForcingStateAt R K x scalar Λ V.ePlus V.ePlus := by
+  unfold AnomalyCurvatureForcingStateAt
   rw [anomalyEinsteinResidual_eq_kappa_mul_metric
       (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ)
       (κ := κ) (A := A) hEinEq]
@@ -95,11 +102,11 @@ theorem routingAnomaly_nonzero_forces_curved_plus_component
     (scalar Λ κ : ℝ)
     (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel)
     (hEinEq : EinsteinEquationAt R K x scalar Λ κ
-      (anomalyStressEnergyAt K x (routingEpsilon w label)))
+      (anomalyStressEnergyModelAt K x (routingEpsilon w label)))
     (V : SplitVielbein K x)
     (hκ : κ ≠ 0)
     (hε : routingEpsilon w label ≠ 0) :
-    anomalyEinsteinResidualAt R K x scalar Λ V.ePlus V.ePlus ≠ 0 := by
+    AnomalyCurvatureForcingStateAt R K x scalar Λ V.ePlus V.ePlus := by
   exact anomaly_nonzero_forces_curved_plus_component
     (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ)
     (κ := κ) (A := routingEpsilon w label) hEinEq V hκ hε

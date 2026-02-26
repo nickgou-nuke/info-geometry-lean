@@ -7,6 +7,7 @@ import InfoGeometry.Research.AttentionSplit
 import InfoGeometry.Research.GrandUnification
 import InfoGeometry.Research.FormalScaffold
 import InfoGeometry.Research.GaugeUnified
+import InfoGeometry.Research.SuperInference
 import InfoGeometry.Research.ChiralCliffordBridge
 import InfoGeometry.Research.CliffordBridge
 import InfoGeometry.Research.AnomalyInflow
@@ -59,6 +60,39 @@ export InfoGeometry.Research.Attention (
 export InfoGeometry.Research.Gauge (
   Signature
   act_preserves_bilinear
+)
+
+export InfoGeometry.Research.ConformalUnification.ConformalInference (
+  P
+  K
+  D
+  P_D
+  P_MP
+  spectralChiralProjector
+  metricChiralProjector
+  chiralAnomaly
+  chiralAnomalyOperator
+  epsilon
+  chiralScale
+  ProjectorCommutationClosure
+  chiral_commutation_link
+  chiralAnomaly_eq_zero_iff_projectorCommutation
+  IsNormalInference
+  IsChiralInference
+  NormalInferenceState
+  ChiralInferenceState
+)
+
+export InfoGeometry.Research.SuperInference (
+  SuperState
+  SuperBeliefState
+  superCharge
+  susyCharge
+  superHamiltonian
+  susyHamiltonian
+  superCharge_boson_eq_zero
+  superCharge_fermion_eq_dualMap
+  susyHamiltonian_eq_self
 )
 
 export InfoGeometry.Research.ChiralCliffordBridge (

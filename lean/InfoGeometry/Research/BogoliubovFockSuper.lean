@@ -25,11 +25,18 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 abbrev FockEnd (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] :=
   DoubledSpace E →L[ℝ] DoubledSpace E
 
+/-- Canonical naming alias for Fock endomorphisms. -/
+abbrev FockEndomorphism (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] :=
+  FockEnd E
+
 /-- Real Bogoliubov mixing parameters with split normalization. -/
 structure BogoliubovParams where
   u : ℝ
   v : ℝ
   normalization : u ^ 2 - v ^ 2 = 1
+
+/-- Canonical naming alias for Bogoliubov mixing parameters. -/
+abbrev BogoliubovMixingParams := BogoliubovParams
 
 /--
 Bogoliubov annihilation operator:
@@ -52,16 +59,33 @@ noncomputable def numberOperator
     (B : BogoliubovParams) : FockEnd E :=
   (bogoliubovCreation (E := E) B).comp (bogoliubovAnnihilation (E := E) B)
 
+/-- Canonical naming alias for the Bogoliubov number operator. -/
+noncomputable abbrev bogoliubovNumberOperator
+    (B : BogoliubovMixingParams) : FockEndomorphism E :=
+  numberOperator (E := E) B
+
 /-- Grand-canonical generator `H - μ N_B`. -/
 noncomputable def grandCanonicalGenerator
     (B : BogoliubovParams) (H : FockEnd E) (μ : ℝ) : FockEnd E :=
   H - μ • numberOperator (E := E) B
+
+/-- Canonical naming alias for the grand-canonical Fock generator. -/
+noncomputable abbrev grandCanonicalFockGenerator
+    (B : BogoliubovMixingParams) (H : FockEndomorphism E) (μ : ℝ) :
+    FockEndomorphism E :=
+  grandCanonicalGenerator (E := E) B H μ
 
 /-- One Euler step of grand-canonical Fock evolution. -/
 noncomputable def grandCanonicalEulerStep
     (η : ℝ) (B : BogoliubovParams) (H : FockEnd E) (μ : ℝ)
     (ψ : DoubledSpace E) : DoubledSpace E :=
   ψ + η • grandCanonicalGenerator (E := E) B H μ ψ
+
+/-- Canonical naming alias for one Euler step of grand-canonical Fock evolution. -/
+noncomputable abbrev grandCanonicalFockEulerStep
+    (η : ℝ) (B : BogoliubovMixingParams) (H : FockEndomorphism E) (μ : ℝ)
+    (ψ : DoubledSpace E) : DoubledSpace E :=
+  grandCanonicalEulerStep (E := E) η B H μ ψ
 
 theorem bogoliubovAnnihilation_kills_vacuumVector
     (B : BogoliubovParams) :
@@ -88,6 +112,11 @@ def paritySign : SuperParity → SuperParity → ℝ
 noncomputable def superBracket
     (p q : SuperParity) (A B : FockEnd E) : FockEnd E :=
   A.comp B - paritySign p q • (B.comp A)
+
+/-- Canonical naming alias for graded bracket on Fock endomorphisms. -/
+noncomputable abbrev fockSuperBracket
+    (p q : SuperParity) (A B : FockEndomorphism E) : FockEndomorphism E :=
+  superBracket (E := E) p q A B
 
 lemma superBracket_add_left
     (p q : SuperParity) (A₁ A₂ B : FockEnd E) :
@@ -140,6 +169,14 @@ noncomputable abbrev commutator (A B : FockEnd E) : FockEnd E :=
 noncomputable abbrev anticommutator (A B : FockEnd E) : FockEnd E :=
   superBracket (E := E) SuperParity.odd SuperParity.odd A B
 
+/-- Canonical naming alias for even-even channel on Fock endomorphisms. -/
+noncomputable abbrev fockCommutator (A B : FockEndomorphism E) : FockEndomorphism E :=
+  commutator (E := E) A B
+
+/-- Canonical naming alias for odd-odd channel on Fock endomorphisms. -/
+noncomputable abbrev fockAnticommutator (A B : FockEndomorphism E) : FockEndomorphism E :=
+  anticommutator (E := E) A B
+
 /-- CAR witness for the base ladder pair `(a, a†)` in this Fock model. -/
 structure CARWitness : Prop where
   car_annihilation :
@@ -149,6 +186,9 @@ structure CARWitness : Prop where
   car_mixed :
     anticommutator (E := E) (annihilationOp (E := E)) (creationOp (E := E))
       = (2 : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
+
+/-- Canonical naming alias for CAR closure witness. -/
+abbrev CARClosure : Prop := CARWitness (E := E)
 
 /-- CCR witness for the base ladder pair `(a, a†)` in this Fock model. -/
 structure CCRWitness : Prop where
@@ -160,14 +200,25 @@ structure CCRWitness : Prop where
     commutator (E := E) (annihilationOp (E := E)) (creationOp (E := E))
       = ContinuousLinearMap.id ℝ (DoubledSpace E)
 
+/-- Canonical naming alias for CCR closure witness. -/
+abbrev CCRClosure : Prop := CCRWitness (E := E)
+
 lemma anticommutator_symm (A B : FockEnd E) :
     anticommutator (E := E) A B = anticommutator (E := E) B A := by
   simp [anticommutator, superBracket_odd_odd, add_comm]
+
+lemma fockAnticommutator_symm (A B : FockEndomorphism E) :
+    fockAnticommutator (E := E) A B = fockAnticommutator (E := E) B A :=
+  anticommutator_symm (E := E) A B
 
 lemma commutator_swap (A B : FockEnd E) :
     commutator (E := E) A B = - commutator (E := E) B A := by
   unfold commutator
   simp [superBracket_even_left, sub_eq_add_neg]
+
+lemma fockCommutator_swap (A B : FockEndomorphism E) :
+    fockCommutator (E := E) A B = - fockCommutator (E := E) B A :=
+  commutator_swap (E := E) A B
 
 /--
 Bogoliubov covariance (mode expansion form) for the graded super bracket.
@@ -261,6 +312,14 @@ noncomputable def inducedChemicalPotential
   transportedEinsteinResidual (R := R) (K := K) (x := x)
     (scalar := scalar) (Λ := Λ) V Γ
 
+/-- Canonical naming alias for Einstein-induced chemical potential. -/
+noncomputable abbrev einsteinInducedChemicalPotential
+    (R : RicciTensor E)
+    (K : InfoGeometry.Research.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein K x) (Γ : SpinConnection K x V) : ℝ :=
+  inducedChemicalPotential R K x scalar Λ V Γ
+
 lemma inducedChemicalPotential_eq_zero_of_vacuumTransported
     (R : RicciTensor E)
     (K : InfoGeometry.Research.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
@@ -278,6 +337,15 @@ noncomputable def einsteinFockDeformation
     (V : SplitVielbein K x) (Γ : SpinConnection K x V) :
     FockEnd E :=
   inducedChemicalPotential R K x scalar Λ V Γ • ContinuousLinearMap.id ℝ (DoubledSpace E)
+
+/-- Canonical naming alias for Einstein-induced Fock deformation operator. -/
+noncomputable abbrev einsteinFockDeformationOperator
+    (R : RicciTensor E)
+    (K : InfoGeometry.Research.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein K x) (Γ : SpinConnection K x V) :
+    FockEndomorphism E :=
+  einsteinFockDeformation R K x scalar Λ V Γ
 
 lemma einsteinFockDeformation_eq_zero_of_vacuumTransported
     (R : RicciTensor E)
@@ -304,6 +372,20 @@ lemma grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
   unfold grandCanonicalGenerator
   rw [hμ]
   simp
+
+lemma grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
+    (B : BogoliubovMixingParams) (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (K : InfoGeometry.Research.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein K x) (Γ : SpinConnection K x V)
+    (hVacSplit : VacuumEinsteinOnTransportedSplit R K x scalar Λ V Γ) :
+    grandCanonicalFockGenerator (E := E) B H
+        (einsteinInducedChemicalPotential R K x scalar Λ V Γ) = H := by
+  simpa [grandCanonicalFockGenerator, einsteinInducedChemicalPotential] using
+    grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
+      (E := E) (B := B) (H := H) (R := R) (K := K) (x := x)
+      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit
 
 end EinsteinBridge
 

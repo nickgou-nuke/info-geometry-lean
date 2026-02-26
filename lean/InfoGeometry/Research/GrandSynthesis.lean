@@ -345,7 +345,7 @@ theorem isRicciFlat_of_rnEntropySource
     (R : RicciTensor X)
     (M : SinkhornMatrix n)
     (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
-    (hBridge : ConstantMongeAmpereImpliesRicciFlat R Kgeo) :
+    (hBridge : MongeAmpereRicciClosure R Kgeo) :
     IsRicciFlat R := by
   apply isRicciFlat_of_constantMongeAmpere (R := R) (K := Kgeo) hBridge
   exact hasConstantMongeAmpereDensity_of_rnEntropySource (n := n) (Kgeo := Kgeo) (M := M) hSource
@@ -361,7 +361,7 @@ theorem vacuumEinsteinEquation_of_rnEntropySource
     (x : X) (Λ : ℝ)
     (M : SinkhornMatrix n)
     (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
-    (hBridge : ConstantMongeAmpereImpliesRicciFlat R Kgeo) :
+    (hBridge : MongeAmpereRicciClosure R Kgeo) :
     VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
   exact vacuumEinsteinEquation_of_constantMongeAmpere
     (R := R) (K := Kgeo) (x := x) (Λ := Λ)
@@ -380,7 +380,7 @@ theorem gravity_generated_by_rnEntropy
     (x : X) (Λ : ℝ)
     (M : SinkhornMatrix n)
     (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
-    (hBridge : ConstantMongeAmpereImpliesRicciFlat R Kgeo) :
+    (hBridge : MongeAmpereRicciClosure R Kgeo) :
     IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
   refine ⟨?_, ?_⟩
   · exact isRicciFlat_of_rnEntropySource (n := n) (Kgeo := Kgeo) (R := R) (M := M) hSource hBridge
@@ -413,7 +413,7 @@ theorem sinkhornStepwise_kmsResidual_le_entropyBarrier
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hDrive : SinkhornDrivesToKMS n T K ω β) :
+    (hDrive : SinkhornKMSControl n T K ω β) :
     ∀ k : Nat, ∀ A B : AlgebraEnd F,
       kmsResidual K (ω (k + 1)) β A B ≤ trajectoryRNBarrier n T k := by
   exact sinkhorn_stepwise_kms_bound (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive
@@ -707,7 +707,7 @@ theorem calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
 
 /--
 Derived Bochner-Weitzenbock bridge from existing library assumptions:
-- `KMSSinkhornBridge`: Sinkhorn barrier control drives exact KMS
+- `KMSSinkhornBridge`: Sinkhorn KMS control drives exact KMS
 This discharges the `BochnerWeitzenboeckBridge` hypothesis directly from the
 thermodynamic/KMS side, so only the opposite directional bridge remains external.
 -/
@@ -718,7 +718,7 @@ theorem bochnerWeitzenboeckBridge_of_sinkhornDrive
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hDrive : SinkhornDrivesToKMS n T.traj K ω β) :
+    (hDrive : SinkhornKMSControl n T.traj K ω β) :
     BochnerWeitzenboeckBridge n T flow D Γ K ω β := by
   intro _hGeoAlg
   exact sinkhornKMSState_of_drive
@@ -737,8 +737,8 @@ theorem bochnerWeitzenboeckBridge_of_sinkhornDrive_and_constantMongeAmpere
     (β : ℝ)
     (Kgeo : KaehlerInformationGeometry X)
     (R : RicciTensor X)
-    (hDrive : SinkhornDrivesToKMS n T.traj K ω β)
-    (hCY : ConstantMongeAmpereImpliesRicciFlat R Kgeo)
+    (hDrive : SinkhornKMSControl n T.traj K ω β)
+    (hCY : MongeAmpereRicciClosure R Kgeo)
     (hConst : HasConstantMongeAmpereDensity Kgeo.H) :
     BochnerWeitzenboeckBridge n T flow D Γ K ω β := by
   have _hFlat : IsRicciFlat R :=
@@ -770,7 +770,7 @@ theorem information_wheeler_dewitt_equivalence
 
 /--
 Reduced-hypothesis Wheeler-DeWitt equivalence:
-`BochnerWeitzenboeckBridge` is discharged by `SinkhornDrivesToKMS`.
+`BochnerWeitzenboeckBridge` is discharged by `SinkhornKMSControl`.
 -/
 theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -779,7 +779,7 @@ theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hDrive : SinkhornDrivesToKMS n T.traj K ω β)
+    (hDrive : SinkhornKMSControl n T.traj K ω β)
     (hCYBridge : CalabiYauEntropyBridge n T flow D Γ K ω β) :
     ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
   exact information_wheeler_dewitt_equivalence
@@ -792,7 +792,7 @@ theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive
 /--
 Constructive reduced-hypothesis Wheeler-DeWitt equivalence:
 both directions are discharged from
-`SinkhornDrivesToKMS + SinkhornRicciIndexInvariant` hypotheses.
+`SinkhornKMSControl + SinkhornRicciIndexInvariant` hypotheses.
 -/
 theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -801,7 +801,7 @@ theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypothe
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hDrive : SinkhornDrivesToKMS n T.traj K ω β)
+    (hDrive : SinkhornKMSControl n T.traj K ω β)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
     (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
@@ -819,7 +819,7 @@ theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypothe
 /--
 Legacy-compatibility reduced-hypothesis theorem:
 retains explicit Calabi-Yau assumptions in the signature while using the
-constructive `SinkhornDrivesToKMS` Bochner discharge.
+constructive `SinkhornKMSControl` Bochner discharge.
 -/
 theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_calabiYau
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -830,8 +830,8 @@ theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_calabiYau
     (β : ℝ)
     (Kgeo : KaehlerInformationGeometry X)
     (R : RicciTensor X)
-    (hDrive : SinkhornDrivesToKMS n T.traj K ω β)
-    (hCY : ConstantMongeAmpereImpliesRicciFlat R Kgeo)
+    (hDrive : SinkhornKMSControl n T.traj K ω β)
+    (hCY : MongeAmpereRicciClosure R Kgeo)
     (hConst : HasConstantMongeAmpereDensity Kgeo.H)
     (hCYBridge : CalabiYauEntropyBridge n T flow D Γ K ω β) :
     ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
@@ -856,8 +856,8 @@ theorem information_wheeler_dewitt_equivalence_of_constructive_hypotheses
     (β : ℝ)
     (Kgeo : KaehlerInformationGeometry X)
     (R : RicciTensor X)
-    (hDrive : SinkhornDrivesToKMS n T.traj K ω β)
-    (_hCY : ConstantMongeAmpereImpliesRicciFlat R Kgeo)
+    (hDrive : SinkhornKMSControl n T.traj K ω β)
+    (_hCY : MongeAmpereRicciClosure R Kgeo)
     (_hConst : HasConstantMongeAmpereDensity Kgeo.H)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)

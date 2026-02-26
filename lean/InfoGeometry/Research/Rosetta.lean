@@ -7,6 +7,8 @@ import InfoGeometry.Research.AttentionSplit
 import InfoGeometry.Research.GrandUnification
 import InfoGeometry.Research.FormalScaffold
 import InfoGeometry.Research.GaugeUnified
+import InfoGeometry.Research.ChiralCliffordBridge
+import InfoGeometry.Research.CliffordBridge
 import InfoGeometry.Research.AnomalyInflow
 import InfoGeometry.Research.ChiralEinsteinBridge
 import InfoGeometry.Research.ChiralGravity
@@ -57,6 +59,25 @@ export InfoGeometry.Research.Attention (
 export InfoGeometry.Research.Gauge (
   Signature
   act_preserves_bilinear
+)
+
+export InfoGeometry.Research.ChiralCliffordBridge (
+  chiralGrading
+  generalizedChiralPlus
+  generalizedChiralMinus
+  chiralProjectorPlus
+  chiralProjectorMinus
+  IsCompactBeliefUpdate
+  IsNonCompactBeliefUpdate
+  anomaly_as_structure_constant
+  cartan_collapse_of_normal
+)
+
+export InfoGeometry.Research.CliffordBridge (
+  splitQuadratic_eq_gaugeQuadratic
+  splitBilinear_eq_gaugeBilinear
+  q_agrees_with_Gauge_quad
+  B_agrees_with_Gauge_bilinear
 )
 
 export InfoGeometry.Research.ChiralTorsionBridge (

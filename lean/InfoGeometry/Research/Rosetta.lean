@@ -68,13 +68,10 @@ export InfoGeometry.Research.ConformalUnification.ConformalInference (
   P
   K
   D
-  P_D
-  P_MP
   spectralChiralProjector
   metricChiralProjector
   chiralAnomaly
   chiralAnomalyOperator
-  epsilon
   chiralScale
   ProjectorCommutationClosure
   chiral_commutation_link

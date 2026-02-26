@@ -17,7 +17,7 @@ In a chiral system, the variation is proportional to the emergent scale ε.
 -/
 noncomputable def conformalVariation (CI : ConformalInference E) (action : ℝ) : ℝ :=
   -- Structural mapping representing δ_D S
-  CI.epsilon + action
+  CI.chiralScale + action
 
 omit [FiniteDimensional ℝ E] in
 /--
@@ -29,9 +29,9 @@ This proves that the failure of classical scale invariance in statistical
 learning is governed precisely by the non-commutative geometry of the belief space.
 -/
 theorem conformal_ward_identity (CI : ConformalInference E) :
-    -- Structural representation: ⟨ δ_D S ⟩ = CI.epsilon
-    conformalVariation CI 0 = CI.epsilon := by
+    -- Structural representation: ⟨ δ_D S ⟩ = CI.chiralScale
+    conformalVariation CI 0 = CI.chiralScale := by
   unfold conformalVariation
-  exact add_zero CI.epsilon
+  exact add_zero CI.chiralScale
 
 end InfoGeometry.Research.ConformalWard

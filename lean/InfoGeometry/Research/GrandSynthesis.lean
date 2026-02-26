@@ -621,20 +621,20 @@ abbrev ThermodynamicKMSState
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ) : Prop :=
-  SinkhornKMSCapstone n T.traj K ω β
+  InfoGeometry.Research.AnalyticalIndex.ThermodynamicKMSState n T K ω β
 
 /-- Geometric+algebraic side: Sinkhorn/Ricci/index capstone state. -/
 abbrev GeometricAlgebraicState
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V) : Prop :=
-  SinkhornRicciIndexInvariant n T flow D Γ
+  InfoGeometry.Research.AnalyticalIndex.GeometricAlgebraicState n T flow D Γ
 
 /--
 Bochner-Weitzenbock bridge hypothesis:
 geometric+algebraic closure implies thermodynamic KMS closure.
 -/
-def BochnerWeitzenboeckBridge
+def ThermodynamicFromGeometricAlgebraic
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
@@ -644,11 +644,21 @@ def BochnerWeitzenboeckBridge
   GeometricAlgebraicState n T flow D Γ →
     ThermodynamicKMSState n T K ω β
 
+/-- Backward-compatible bridge naming alias. -/
+abbrev BochnerWeitzenboeckBridge
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ) : Prop :=
+  ThermodynamicFromGeometricAlgebraic n T flow D Γ K ω β
+
 /--
 Calabi-Yau entropy bridge hypothesis:
 thermodynamic KMS closure implies geometric+algebraic closure.
 -/
-def CalabiYauEntropyBridge
+def GeometricAlgebraicFromThermodynamic
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
@@ -657,6 +667,16 @@ def CalabiYauEntropyBridge
     (β : ℝ) : Prop :=
   ThermodynamicKMSState n T K ω β →
     GeometricAlgebraicState n T flow D Γ
+
+/-- Backward-compatible bridge naming alias. -/
+abbrev CalabiYauEntropyBridge
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ) : Prop :=
+  GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β
 
 /--
 Derived Calabi-Yau entropy bridge from constructive invariance hypotheses:
@@ -683,10 +703,25 @@ theorem calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
 /--
 Derived Bochner-Weitzenbock bridge from existing library assumptions:
 - `KMSSinkhornBridge`: Sinkhorn barrier control drives exact KMS
-- `CalabiYauBridge`: constant Monge-Ampere closure (used here as geometric witness)
+This discharges the `BochnerWeitzenboeckBridge` hypothesis directly from the
+thermodynamic/KMS side, so only the opposite directional bridge remains external.
+-/
+theorem bochnerWeitzenboeckBridge_of_sinkhornDrive
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hDrive : SinkhornDrivesToKMS n T.traj K ω β) :
+    BochnerWeitzenboeckBridge n T flow D Γ K ω β := by
+  intro _hGeoAlg
+  exact sinkhornKMSState_of_drive
+    (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hDrive
 
-This discharges the `BochnerWeitzenboeckBridge` hypothesis, so only the opposite
-directional bridge remains external.
+/--
+Compatibility wrapper with legacy Calabi-Yau assumptions retained in the
+signature. The bridge itself is now discharged constructively from `hDrive`.
 -/
 theorem bochnerWeitzenboeckBridge_of_sinkhornDrive_and_constantMongeAmpere
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -701,11 +736,11 @@ theorem bochnerWeitzenboeckBridge_of_sinkhornDrive_and_constantMongeAmpere
     (hCY : ConstantMongeAmpereImpliesRicciFlat R Kgeo)
     (hConst : HasConstantMongeAmpereDensity Kgeo.H) :
     BochnerWeitzenboeckBridge n T flow D Γ K ω β := by
-  intro _hGeoAlg
   have _hFlat : IsRicciFlat R :=
     isRicciFlat_of_constantMongeAmpere (R := R) (K := Kgeo) hCY hConst
-  exact sinkhornKMSCapstone_of_drive
-    (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hDrive
+  exact bochnerWeitzenboeckBridge_of_sinkhornDrive
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (ω := ω) (β := β) hDrive
 
 /--
 Information-theoretic Wheeler-DeWitt equivalence (assumption-driven):
@@ -732,6 +767,28 @@ theorem information_wheeler_dewitt_equivalence
 Reduced-hypothesis Wheeler-DeWitt equivalence:
 `BochnerWeitzenboeckBridge` is discharged by
 `SinkhornDrivesToKMS + ConstantMongeAmpereImpliesRicciFlat`.
+-/
+theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hDrive : SinkhornDrivesToKMS n T.traj K ω β)
+    (hCYBridge : CalabiYauEntropyBridge n T flow D Γ K ω β) :
+    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
+  exact information_wheeler_dewitt_equivalence
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
+    (bochnerWeitzenboeckBridge_of_sinkhornDrive
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (K := K) (ω := ω) (β := β) hDrive)
+    hCYBridge
+
+/--
+Legacy-compatibility reduced-hypothesis theorem:
+retains explicit Calabi-Yau assumptions in the signature while using the
+constructive `SinkhornDrivesToKMS` Bochner discharge.
 -/
 theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_calabiYau
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -770,8 +827,8 @@ theorem information_wheeler_dewitt_equivalence_of_constructive_hypotheses
     (Kgeo : KaehlerInformationGeometry X)
     (R : RicciTensor X)
     (hDrive : SinkhornDrivesToKMS n T.traj K ω β)
-    (hCY : ConstantMongeAmpereImpliesRicciFlat R Kgeo)
-    (hConst : HasConstantMongeAmpereDensity Kgeo.H)
+    (_hCY : ConstantMongeAmpereImpliesRicciFlat R Kgeo)
+    (_hConst : HasConstantMongeAmpereDensity Kgeo.H)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
     (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
@@ -779,10 +836,9 @@ theorem information_wheeler_dewitt_equivalence_of_constructive_hypotheses
     ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
   exact information_wheeler_dewitt_equivalence
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
-    (bochnerWeitzenboeckBridge_of_sinkhornDrive_and_constantMongeAmpere
+    (bochnerWeitzenboeckBridge_of_sinkhornDrive
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ω) (β := β) (Kgeo := Kgeo) (R := R)
-      hDrive hCY hConst)
+      (K := K) (ω := ω) (β := β) hDrive)
     (calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
       hNorm hFixed hplus hminus)
@@ -799,7 +855,7 @@ theorem thermodynamic_and_geometricAlgebraic_of_fullCapstone
     (β : ℝ)
     (hFull : FullThermoGeoIndexCapstone n T flow D Γ K ω β) :
     ThermodynamicKMSState n T K ω β ∧ GeometricAlgebraicState n T flow D Γ := by
-  exact ⟨hFull.2, hFull.1⟩
+  exact ⟨hFull.2.2, hFull.1⟩
 
 end WheelerDeWitt
 

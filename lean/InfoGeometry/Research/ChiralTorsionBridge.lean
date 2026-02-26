@@ -119,6 +119,14 @@ structure ChiralTorsionChentsovGibbsBridge
   gibbs_smoothing_pos :
     0 < gibbsSmoothingOnGeneralizedKL β μ ν μ₀
 
+/-- Canonical naming alias for the chiral-torsion/Chentsov/Gibbs compatibility package. -/
+abbrev ChiralTorsionChentsovGibbsState
+    (CI : ConformalInference E)
+    (T : TwistedInference E)
+    (p : Θ → InfoGeometry.FinProb α)
+    (β : ℝ) (μ ν μ₀ : α → ℝ) : Prop :=
+  ChiralTorsionChentsovGibbsBridge CI T p β μ ν μ₀
+
 lemma twistedInference_torsion_nonzero
     (T : TwistedInference E) :
     informationTorsion T.dual.nabla ≠ 0 :=
@@ -142,6 +150,16 @@ theorem chentsov_and_gibbs_of_bridge
     (hBridge : ChiralTorsionChentsovGibbsBridge CI T p β μ ν μ₀) :
     amariChentsovTensor p ∧ 0 < gibbsSmoothingOnGeneralizedKL β μ ν μ₀ := by
   exact ⟨hBridge.chentsov_available, hBridge.gibbs_smoothing_pos⟩
+
+theorem chentsov_and_gibbs_of_state
+    (CI : ConformalInference E)
+    (T : TwistedInference E)
+    (p : Θ → InfoGeometry.FinProb α)
+    (β : ℝ) (μ ν μ₀ : α → ℝ)
+    (hState : ChiralTorsionChentsovGibbsState CI T p β μ ν μ₀) :
+    amariChentsovTensor p ∧ 0 < gibbsSmoothingOnGeneralizedKL β μ ν μ₀ := by
+  exact chentsov_and_gibbs_of_bridge
+    (CI := CI) (T := T) (p := p) (β := β) (μ := μ) (ν := ν) (μ₀ := μ₀) hState
 
 end ChiralTorsionChentsov
 

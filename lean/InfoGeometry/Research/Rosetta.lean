@@ -7,6 +7,9 @@ import InfoGeometry.Research.AttentionSplit
 import InfoGeometry.Research.GrandUnification
 import InfoGeometry.Research.FormalScaffold
 import InfoGeometry.Research.GaugeUnified
+import InfoGeometry.Research.AnomalyInflow
+import InfoGeometry.Research.ChiralEinsteinBridge
+import InfoGeometry.Research.ChiralGravity
 import InfoGeometry.Research.ChiralTorsionBridge
 import InfoGeometry.Research.BogoliubovFockSuper
 
@@ -68,6 +71,38 @@ export InfoGeometry.Research.ChiralTorsionBridge (
   ChiralTorsionChentsovGibbsBridge
   torsion_nonzero_of_chiral
   chentsov_and_gibbs_of_bridge
+)
+
+export InfoGeometry.Research.AnomalyInflow (
+  variationChernSimons
+  bulkChernSimonsVariation
+  boundaryAnomaly
+  boundaryAnomalyDensity
+  AnomalyInflowClosure
+  anomalyInflowClosure
+  anomaly_inflow_cancellation
+)
+
+export InfoGeometry.Research.ChiralEinsteinBridge (
+  anomalyStressEnergyAt
+  anomalyStressEnergyModelAt
+  einsteinEquation_of_anomaly_source
+  exists_einsteinEquation_of_bistochastic_routingAnomaly
+  SatisfiesAnomalyDrivenKaehlerRicciFlow
+  SatisfiesAnomalyDrivenScalarRicciFlow
+  anomalyDriven_fixedpoint_tracks_source
+  anomalyDrivenScalarRicci_fixedpoint_tracks_source
+  inverseEpsilonSource
+  anomalyDriven_fixedpoint_eq_inverseEpsilon
+)
+
+export InfoGeometry.Research.ChiralGravity (
+  anomalyEinsteinResidualAt
+  AnomalyCurvatureForcingStateAt
+  anomalyEinsteinResidual_eq_kappa_mul_metric
+  anomaly_nonzero_forces_curved_plus_component
+  anomaly_nonzero_excludes_vacuum
+  routingAnomaly_nonzero_forces_curved_plus_component
 )
 
 export InfoGeometry.Research.BogoliubovFockSuper (

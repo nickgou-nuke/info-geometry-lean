@@ -63,6 +63,10 @@ def SatisfiesMasterRelation (η : ℝ) : Prop :=
 def SatisfiesFlatWeights : Prop :=
   CBA.SatisfiesPWeight ∧ CBA.SatisfiesKWeight
 
+/-- Canonical naming alias for flat conformal weight closure. -/
+abbrev ConformalWeightClosure : Prop :=
+  CBA.SatisfiesFlatWeights
+
 /-! ### 2. Anomaly and Scale Emergence -/
 
 omit [FiniteDimensional ℝ E] in
@@ -72,8 +76,13 @@ do not satisfy the standard flat relations.
 A 'Scale Anomaly' constant emerges, proportional to ε.
 -/
 theorem scale_anomaly_emergence
-    : CBA.CI.epsilon > 0 → ¬ CBA.SatisfiesFlatWeights := by
+    : CBA.CI.epsilon > 0 → ¬ CBA.ConformalWeightClosure := by
   simpa [SatisfiesFlatWeights, SatisfiesPWeight, SatisfiesKWeight] using CBA.anomaly_breaks_weights
+
+omit [FiniteDimensional ℝ E] in
+theorem scale_anomaly_breaks_weight_closure
+    : CBA.CI.epsilon > 0 → ¬ CBA.ConformalWeightClosure :=
+  CBA.scale_anomaly_emergence
 
 /--
 The Chiral Cartan Splitting of the Conformal Algebra.

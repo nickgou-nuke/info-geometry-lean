@@ -25,6 +25,40 @@ if rg -n "^import InfoGeometry\\.Experimental$" \
   exit 1
 fi
 
+echo "[strict-check] enforcing canonical-to-research import allowlist"
+ALLOWED_CANONICAL_RESEARCH_IMPORTS=(
+  "InfoGeometry.Research.CartanDecomposition"
+  "InfoGeometry.Research.Drazin"
+  "InfoGeometry.Research.MoorePenrose"
+  "InfoGeometry.Research.Triality"
+)
+
+mapfile -t canonical_research_import_lines < <(
+  rg -n "^import InfoGeometry\\.Research\\.[A-Za-z0-9_.]+$" \
+    "${CANONICAL_PATHS[@]}" -g '*.lean' -g '!ResearchPromoted.lean' || true
+)
+
+violations=()
+for line in "${canonical_research_import_lines[@]}"; do
+  mod=$(echo "$line" | sed -E 's/.*import (InfoGeometry\.Research\.[A-Za-z0-9_.]+).*/\1/')
+  allowed=false
+  for ok in "${ALLOWED_CANONICAL_RESEARCH_IMPORTS[@]}"; do
+    if [[ "$mod" == "$ok" ]]; then
+      allowed=true
+      break
+    fi
+  done
+  if [[ "$allowed" == false ]]; then
+    violations+=("$line")
+  fi
+done
+
+if [[ ${#violations[@]} -gt 0 ]]; then
+  echo "[strict-check] disallowed canonical->research imports found:"
+  printf '%s\n' "${violations[@]}"
+  exit 1
+fi
+
 echo "[strict-check] checking for unresolved placeholders"
 if rg -n "\\b(sorry|admit)\\b|content will be moved here" "${CANONICAL_PATHS[@]}" -g '*.lean'; then
   echo "[strict-check] placeholder content detected"

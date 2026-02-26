@@ -18,79 +18,80 @@ limitations under the License.
 Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
-import InfoGeometry.Research.AnalyticalIndex
-import InfoGeometry.Research.AQFTOperatorInterface
-import InfoGeometry.Research.AnomalyInflow
-import InfoGeometry.Research.Attention
-import InfoGeometry.Research.AttentionEuclidean
-import InfoGeometry.Research.AttentionSplit
-import InfoGeometry.Research.BeliefAlgebra
-import InfoGeometry.Research.BeliefDynamics
-import InfoGeometry.Research.BerryPhase
-import InfoGeometry.Research.BogoliubovFockSuper
-import InfoGeometry.Research.BottDirac
-import InfoGeometry.Research.BottPeriodicity
-import InfoGeometry.Research.BregmanTriality
-import InfoGeometry.Research.CalabiYauBridge
-import InfoGeometry.Research.CartanDecomposition
-import InfoGeometry.Research.CayleyBregmanBridge
-import InfoGeometry.Research.ChiralAction
-import InfoGeometry.Research.ChiralAnomaly
-import InfoGeometry.Research.ChiralCliffordBridge
-import InfoGeometry.Research.ChiralEinsteinBridge
-import InfoGeometry.Research.ChiralGravity
-import InfoGeometry.Research.ChiralRGFlow
-import InfoGeometry.Research.ChiralTorsionBridge
-import InfoGeometry.Research.CliffordBridge
-import InfoGeometry.Research.ConformalAlgebra
-import InfoGeometry.Research.ConformalUnification
-import InfoGeometry.Research.ConformalWard
-import InfoGeometry.Research.CountSubstrateBridge
-import InfoGeometry.Research.CurvatureRGFlow
-import InfoGeometry.Research.Drazin
-import InfoGeometry.Research.DualConnections
-import InfoGeometry.Research.FormalScaffold
-import InfoGeometry.Research.GaugeUnified
-import InfoGeometry.Research.GrandCanonicalExperts
-import InfoGeometry.Research.GrandSynthesis
-import InfoGeometry.Research.GrandUnification
-import InfoGeometry.Research.GrandUnificationBlueprint
-import InfoGeometry.Research.GrandUnificationMetric
-import InfoGeometry.Research.HeatKernel
-import InfoGeometry.Research.HolographicEmergence
-import InfoGeometry.Research.IB
-import InfoGeometry.Research.InformationNumber
-import InfoGeometry.Research.InformationTorsion
-import InfoGeometry.Research.KMSSinkhornBridge
-import InfoGeometry.Research.KaehlerGeometry
-import InfoGeometry.Research.KreinLadder
-import InfoGeometry.Research.LLN
-import InfoGeometry.Research.LorentzianRouting
-import InfoGeometry.Research.ManifoldHomology
-import InfoGeometry.Research.MixtureOfExperts
-import InfoGeometry.Research.MoorePenrose
-import InfoGeometry.Research.PathIntegral
-import InfoGeometry.Research.PerelmanW
-import InfoGeometry.Research.QFTTDFTLaunchpad
-import InfoGeometry.Research.QuantumInference
-import InfoGeometry.Research.RGFlow
-import InfoGeometry.Research.RicciMongeAmpere
-import InfoGeometry.Research.Rosetta
-import InfoGeometry.Research.SpectralInference
-import InfoGeometry.Research.SuperInference
-import InfoGeometry.Research.TomitaTakesaki
-import InfoGeometry.Research.TopologicalEuler
-import InfoGeometry.Research.TopologicalInvariants
-import InfoGeometry.Research.Triality
-import InfoGeometry.Research.WeylInformationGauge
+import InfoGeometry.Canonical.Promoted.AnalyticalIndex
+import InfoGeometry.Canonical.Promoted.AQFTOperatorInterface
+import InfoGeometry.Canonical.Promoted.AnomalyInflow
+import InfoGeometry.Canonical.Promoted.Attention
+import InfoGeometry.Canonical.Promoted.AttentionEuclidean
+import InfoGeometry.Canonical.Promoted.AttentionSplit
+import InfoGeometry.Canonical.Promoted.BeliefAlgebra
+import InfoGeometry.Canonical.Promoted.BeliefDynamics
+import InfoGeometry.Canonical.Promoted.BerryPhase
+import InfoGeometry.Canonical.Promoted.BogoliubovFockSuper
+import InfoGeometry.Canonical.Promoted.BottDirac
+import InfoGeometry.Canonical.Promoted.BottPeriodicity
+import InfoGeometry.Canonical.Promoted.BregmanTriality
+import InfoGeometry.Canonical.Promoted.CalabiYauBridge
+import InfoGeometry.Canonical.Promoted.CartanDecomposition
+import InfoGeometry.Canonical.Promoted.CayleyBregmanBridge
+import InfoGeometry.Canonical.Promoted.ChiralAction
+import InfoGeometry.Canonical.Promoted.ChiralAnomaly
+import InfoGeometry.Canonical.Promoted.ChiralCliffordBridge
+import InfoGeometry.Canonical.Promoted.ChiralEinsteinBridge
+import InfoGeometry.Canonical.Promoted.ChiralGravity
+import InfoGeometry.Canonical.Promoted.ChiralRGFlow
+import InfoGeometry.Canonical.Promoted.ChiralTorsionBridge
+import InfoGeometry.Canonical.Promoted.CliffordBridge
+import InfoGeometry.Canonical.Promoted.ConformalAlgebra
+import InfoGeometry.Canonical.Promoted.ConformalUnification
+import InfoGeometry.Canonical.Promoted.ConformalWard
+import InfoGeometry.Canonical.Promoted.CountSubstrateBridge
+import InfoGeometry.Canonical.Promoted.CurvatureRGFlow
+import InfoGeometry.Canonical.Promoted.Drazin
+import InfoGeometry.Canonical.Promoted.DualConnections
+import InfoGeometry.Canonical.Promoted.FormalScaffold
+import InfoGeometry.Canonical.Promoted.GaugeUnified
+import InfoGeometry.Canonical.Promoted.GrandCanonicalExperts
+import InfoGeometry.Canonical.Promoted.GrandSynthesis
+import InfoGeometry.Canonical.Promoted.GrandUnification
+import InfoGeometry.Canonical.Promoted.GrandUnificationBlueprint
+import InfoGeometry.Canonical.Promoted.GrandUnificationMetric
+import InfoGeometry.Canonical.Promoted.HeatKernel
+import InfoGeometry.Canonical.Promoted.HolographicEmergence
+import InfoGeometry.Canonical.Promoted.IB
+import InfoGeometry.Canonical.Promoted.InformationNumber
+import InfoGeometry.Canonical.Promoted.InformationTorsion
+import InfoGeometry.Canonical.Promoted.KMSSinkhornBridge
+import InfoGeometry.Canonical.Promoted.KaehlerGeometry
+import InfoGeometry.Canonical.Promoted.KreinLadder
+import InfoGeometry.Canonical.Promoted.LLN
+import InfoGeometry.Canonical.Promoted.LorentzianRouting
+import InfoGeometry.Canonical.Promoted.ManifoldHomology
+import InfoGeometry.Canonical.Promoted.MixtureOfExperts
+import InfoGeometry.Canonical.Promoted.MoorePenrose
+import InfoGeometry.Canonical.Promoted.PathIntegral
+import InfoGeometry.Canonical.Promoted.PerelmanW
+import InfoGeometry.Canonical.Promoted.QFTTDFTLaunchpad
+import InfoGeometry.Canonical.Promoted.QuantumInference
+import InfoGeometry.Canonical.Promoted.RGFlow
+import InfoGeometry.Canonical.Promoted.RicciMongeAmpere
+import InfoGeometry.Canonical.Promoted.Rosetta
+import InfoGeometry.Canonical.Promoted.SpectralInference
+import InfoGeometry.Canonical.Promoted.SuperInference
+import InfoGeometry.Canonical.Promoted.TomitaTakesaki
+import InfoGeometry.Canonical.Promoted.TopologicalEuler
+import InfoGeometry.Canonical.Promoted.TopologicalInvariants
+import InfoGeometry.Canonical.Promoted.Triality
+import InfoGeometry.Canonical.Promoted.WeylInformationGauge
 
 /-!
 # InfoGeometry.Canonical.ResearchPromoted
 
 Canonical umbrella for promoted research modules.
 
-This file now tracks the full explicit `Research/*` allowlist (except
-`InfoGeometry.Research.All`, which is itself an umbrella).
+This compatibility umbrella now re-exports the relocated
+`InfoGeometry.Canonical.Promoted.*` modules while retaining the explicit
+`InfoGeometry.Research.*` allowlist metadata for reviewability.
 -/
 
 /--

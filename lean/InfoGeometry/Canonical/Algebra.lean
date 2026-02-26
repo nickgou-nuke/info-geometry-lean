@@ -19,10 +19,10 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 
-import InfoGeometry.Canonical.Promoted.Drazin
-import InfoGeometry.Canonical.Promoted.MoorePenrose
-import InfoGeometry.Canonical.Promoted.Triality
-import InfoGeometry.Canonical.Promoted.CartanDecomposition
+import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Canonical.MoorePenrose
+import InfoGeometry.Canonical.Triality
+import InfoGeometry.Canonical.CartanDecomposition
 
 /-!
 # InfoGeometry.Canonical.Algebra

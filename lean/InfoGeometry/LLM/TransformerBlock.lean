@@ -1,10 +1,10 @@
-import InfoGeometry.Research.Attention
-import InfoGeometry.Research.Triality
+import InfoGeometry.Canonical.Attention
+import InfoGeometry.Canonical.Triality
 
 namespace InfoGeometry.LLM
 
-open InfoGeometry.Research
-open InfoGeometry.Research.Triality
+open InfoGeometry.Canonical
+open InfoGeometry.Canonical.Triality
 
 /-- Context-window alias for LLM-facing APIs. -/
 abbrev TokenContext (n : ℕ) (K V : Type*) := Attention.ContextWindow n K V

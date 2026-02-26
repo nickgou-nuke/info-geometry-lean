@@ -1,6 +1,6 @@
 import InfoGeometry.ExponentialFamily.Class
 import InfoGeometry.Convex.HessianGeometry
-import InfoGeometry.Research.Triality
+import InfoGeometry.Canonical.Triality
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.Calculus.FDeriv.Add
@@ -9,7 +9,7 @@ import Mathlib.Analysis.Calculus.FDeriv.Mul
 namespace InfoGeometry.ExponentialFamily.Gaussian
 
 open InfoGeometry.Convex
-open InfoGeometry.Research.Triality
+open InfoGeometry.Canonical.Triality
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 

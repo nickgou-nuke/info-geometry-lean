@@ -1,10 +1,10 @@
 import InfoGeometry.ExponentialFamily.Gaussian
-import InfoGeometry.Research.QuantumInference
+import InfoGeometry.Canonical.QuantumInference
 
 namespace InfoGeometry.ExponentialFamily.GaussianHolonomy
 
 open InfoGeometry.ExponentialFamily.Gaussian
-open InfoGeometry.Research.QuantumInference
+open InfoGeometry.Canonical.QuantumInference
 open Complex
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]

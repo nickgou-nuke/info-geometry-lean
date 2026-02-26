@@ -6,7 +6,7 @@ import InfoGeometry.EntropicInference
 import InfoGeometry.Information.MultiLogPotential
 import InfoGeometry.Library
 import InfoGeometry.Projective.LogSum
-import InfoGeometry.Research
+import InfoGeometry.Canonical.Promoted
 import InfoGeometry.Thermo.Gibbs
 import InfoGeometry.TransformationGroups
 
@@ -25,11 +25,10 @@ transition away from `InfoGeometry.New` incrementally.
 
 Research APIs extracted from old `New.lean` are now exposed domain-by-domain in:
 
-- `InfoGeometry.Research.IB`
-- `InfoGeometry.Research.ManifoldHomology`
-- `InfoGeometry.Research.Determinant`
-- `InfoGeometry.Research.DualConnections`
-- `InfoGeometry.Research.LLN`
+- `InfoGeometry.Canonical.IB`
+- `InfoGeometry.Canonical.ManifoldHomology`
+- `InfoGeometry.Canonical.DualConnections`
+- `InfoGeometry.Canonical.LLN`
 -/
 
 namespace InfoGeometry.New

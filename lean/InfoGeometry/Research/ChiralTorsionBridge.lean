@@ -127,6 +127,41 @@ abbrev ChiralTorsionChentsovGibbsState
     (β : ℝ) (μ ν μ₀ : α → ℝ) : Prop :=
   ChiralTorsionChentsovGibbsBridge CI T p β μ ν μ₀
 
+/--
+Constructive builder: package explicit torsion/Chentsov/Gibbs witnesses into the
+canonical chiral-torsion state.
+-/
+def chiralTorsionChentsovGibbsState_mk
+    (CI : ConformalInference E)
+    (T : TwistedInference E)
+    (p : Θ → InfoGeometry.FinProb α)
+    (β : ℝ) (μ ν μ₀ : α → ℝ)
+    (hTorsion : CI.IsChiralInference → informationTorsion T.dual.nabla ≠ 0)
+    (hChentsov : amariChentsovTensor p)
+    (hGibbs : 0 < gibbsSmoothingOnGeneralizedKL β μ ν μ₀) :
+    ChiralTorsionChentsovGibbsState CI T p β μ ν μ₀ where
+  anomaly_induces_torsion := hTorsion
+  chentsov_available := hChentsov
+  gibbs_smoothing_pos := hGibbs
+
+/--
+Constructive default builder:
+for twisted inference, torsion is already nonzero, so only Chentsov availability
+is required; Gibbs positivity is canonical from the exponential model.
+-/
+def chiralTorsionChentsovGibbsState_of_twistedInference
+    (CI : ConformalInference E)
+    (T : TwistedInference E)
+    (p : Θ → InfoGeometry.FinProb α)
+    (β : ℝ) (μ ν μ₀ : α → ℝ)
+    (hChentsov : amariChentsovTensor p) :
+    ChiralTorsionChentsovGibbsState CI T p β μ ν μ₀ :=
+  chiralTorsionChentsovGibbsState_mk
+    (CI := CI) (T := T) (p := p) (β := β) (μ := μ) (ν := ν) (μ₀ := μ₀)
+    (hTorsion := fun _hChiral => T.has_torsion)
+    (hChentsov := hChentsov)
+    (hGibbs := gibbsSmoothingOnGeneralizedKL_pos β μ ν μ₀)
+
 lemma twistedInference_torsion_nonzero
     (T : TwistedInference E) :
     informationTorsion T.dual.nabla ≠ 0 :=
@@ -160,6 +195,17 @@ theorem chentsov_and_gibbs_of_state
     amariChentsovTensor p ∧ 0 < gibbsSmoothingOnGeneralizedKL β μ ν μ₀ := by
   exact chentsov_and_gibbs_of_bridge
     (CI := CI) (T := T) (p := p) (β := β) (μ := μ) (ν := ν) (μ₀ := μ₀) hState
+
+theorem torsion_nonzero_of_state_and_chiral
+    (CI : ConformalInference E)
+    (T : TwistedInference E)
+    (p : Θ → InfoGeometry.FinProb α)
+    (β : ℝ) (μ ν μ₀ : α → ℝ)
+    (hState : ChiralTorsionChentsovGibbsState CI T p β μ ν μ₀)
+    (hChiral : CI.IsChiralInference) :
+    informationTorsion T.dual.nabla ≠ 0 :=
+  torsion_nonzero_of_chiral
+    (CI := CI) (T := T) (p := p) (β := β) (μ := μ) (ν := ν) (μ₀ := μ₀) hState hChiral
 
 end ChiralTorsionChentsov
 

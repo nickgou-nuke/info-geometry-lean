@@ -32,6 +32,14 @@ noncomputable def generalizedChiralPlus (CI : ConformalInference E) : E →L[ℝ
 noncomputable def generalizedChiralMinus (CI : ConformalInference E) : E →L[ℝ] E :=
   ((2 : ℝ)⁻¹) • (CI.P_D - chiralGrading CI)
 
+/-- Canonical naming alias for the positive chiral projector. -/
+noncomputable abbrev chiralProjectorPlus (CI : ConformalInference E) : E →L[ℝ] E :=
+  generalizedChiralPlus CI
+
+/-- Canonical naming alias for the negative chiral projector. -/
+noncomputable abbrev chiralProjectorMinus (CI : ConformalInference E) : E →L[ℝ] E :=
+  generalizedChiralMinus CI
+
 /-! ### Cartan Decomposition of the Information Algebra -/
 
 /--

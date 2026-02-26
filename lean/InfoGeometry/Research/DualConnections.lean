@@ -1,26 +1,7 @@
-import InfoGeometry.Experimental.AssumptionWrappers.DualConnections
+import InfoGeometry.Canonical.Promoted.DualConnections
 
 /-!
-# Research.DualConnections
+# InfoGeometry.Research.DualConnections
 
-Compatibility forwarder over
-`InfoGeometry.Experimental.AssumptionWrappers.DualConnections`.
+Compatibility shim forwarding to InfoGeometry.Canonical.Promoted.DualConnections.
 -/
-
-namespace InfoGeometry.Research.DualConnections
-
-/-!
-Explicitly forward the dual-connection scaffold surface from the
-experimental wrapper.
--/
-export InfoGeometry.Experimental.AssumptionWrappers.DualConnections (
-  fisherMetric
-  amariChentsovTensor
-  alphaConnection
-  alpha_duality
-  fisherMetric_of_finProb
-  amariChentsovTensor_of_finProb
-  fisher_metric_eq_hessian_KL
-)
-
-end InfoGeometry.Research.DualConnections

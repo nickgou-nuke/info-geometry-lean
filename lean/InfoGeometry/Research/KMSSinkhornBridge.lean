@@ -97,6 +97,16 @@ def SinkhornDrivesToKMS
     kmsResidual K (ω (k + 1)) β A B ≤ trajectoryRNBarrierNext n T k
 
 /--
+Constructive thermodynamic state: exact KMS holds at every next Sinkhorn step.
+-/
+def SinkhornKMSState
+    (_T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ) : Prop :=
+  ∀ k : Nat, SatisfiesKMSLike (E := F) K (ω (k + 1)) β
+
+/--
 If KMS residual is controlled by the post-step RN barrier, every Sinkhorn step
 produces an exact KMS state (because the post-step barrier is zero).
 -/
@@ -106,12 +116,32 @@ theorem sinkhorn_step_exactKMS_of_barrier_control
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
     (hDrive : SinkhornDrivesToKMS n T K ω β) :
-    ∀ k : Nat, SatisfiesKMSLike (E := F) K (ω (k + 1)) β := by
+    SinkhornKMSState n T K ω β := by
   intro k
   apply satisfiesKMSLike_of_approx_zero (K := K) (ω := ω (k + 1)) (β := β)
   intro A B
   have hAB : kmsResidual K (ω (k + 1)) β A B ≤ trajectoryRNBarrierNext n T k :=
     hDrive k A B
+  have hzero : trajectoryRNBarrierNext n T k = 0 :=
+    trajectoryRNBarrierNext_eq_zero (n := n) T k
+  simpa [hzero] using hAB
+
+/--
+Conversely, exact KMS at every next Sinkhorn step constructively implies the
+`SinkhornDrivesToKMS` residual bound.
+-/
+theorem sinkhorn_barrier_control_of_step_exactKMS
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hState : SinkhornKMSState n T K ω β) :
+    SinkhornDrivesToKMS n T K ω β := by
+  intro k A B
+  have hApprox :
+      SatisfiesApproxKMSLike K (ω (k + 1)) β 0 :=
+    satisfiesApproxKMSLike_of_satisfiesKMSLike (K := K) (ω := ω (k + 1)) (β := β) (hState k)
+  have hAB : kmsResidual K (ω (k + 1)) β A B ≤ 0 := hApprox A B
   have hzero : trajectoryRNBarrierNext n T k = 0 :=
     trajectoryRNBarrierNext_eq_zero (n := n) T k
   simpa [hzero] using hAB
@@ -144,7 +174,7 @@ theorem sinkhornIterate_exactKMS_of_barrier_control
     (β : ℝ)
     (hDrive : SinkhornDrivesToKMS n
       (sinkhornIterateTrajectory (n := n) M0 hrow hcol) K ω β) :
-    ∀ k : Nat, SatisfiesKMSLike (E := F) K (ω (k + 1)) β := by
+    SinkhornKMSState n (sinkhornIterateTrajectory (n := n) M0 hrow hcol) K ω β := by
   exact sinkhorn_step_exactKMS_of_barrier_control
     (n := n) (T := sinkhornIterateTrajectory (n := n) M0 hrow hcol)
     (K := K) (ω := ω) (β := β) hDrive
@@ -171,9 +201,9 @@ theorem router_sinkhornIterate_exactKMS_of_barrier_control
     (hDrive : SinkhornDrivesToKMS n
       (sinkhornIterateTrajectory (n := n) M0 hrow hcol)
       (routerModularHamiltonian n x i) ω β) :
-    ∀ k : Nat,
-      SatisfiesKMSLike (E := RouterAmplitude n)
-        (routerModularHamiltonian n x i) (ω (k + 1)) β := by
+    SinkhornKMSState n
+      (sinkhornIterateTrajectory (n := n) M0 hrow hcol)
+      (routerModularHamiltonian n x i) ω β := by
   exact sinkhornIterate_exactKMS_of_barrier_control
     (n := n) (M0 := M0) (hrow := hrow) (hcol := hcol)
     (K := routerModularHamiltonian n x i) (ω := ω) (β := β) hDrive

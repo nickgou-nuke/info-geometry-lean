@@ -167,8 +167,8 @@ def SinkhornKMSCapstone
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ) : Prop :=
-  SinkhornDrivesToKMS n T K ω β ∧
-    SinkhornKMSState n T K ω β
+  SinkhornKMSControl n T K ω β ∧
+    SinkhornKMSClosure n T K ω β
 
 /--
 Constructive thermodynamic state directly from the Sinkhorn-to-KMS drive law.
@@ -178,9 +178,9 @@ theorem sinkhornKMSState_of_drive
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hDrive : SinkhornDrivesToKMS n T K ω β) :
-    SinkhornKMSState n T K ω β := by
-  exact sinkhorn_step_exactKMS_of_barrier_control
+    (hDrive : SinkhornKMSControl n T K ω β) :
+    SinkhornKMSClosure n T K ω β := by
+  exact sinkhorn_step_kmsClosure_of_control
     (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive
 
 theorem sinkhornKMSCapstone_of_drive
@@ -188,7 +188,7 @@ theorem sinkhornKMSCapstone_of_drive
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hDrive : SinkhornDrivesToKMS n T K ω β) :
+    (hDrive : SinkhornKMSControl n T K ω β) :
     SinkhornKMSCapstone n T K ω β := by
   refine ⟨hDrive, ?_⟩
   exact sinkhornKMSState_of_drive (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive
@@ -199,7 +199,7 @@ lemma SinkhornKMSCapstone.kmsState
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
     (hCap : SinkhornKMSCapstone n T K ω β) :
-    SinkhornKMSState n T K ω β :=
+    SinkhornKMSClosure n T K ω β :=
   hCap.2
 
 /--
@@ -212,7 +212,7 @@ theorem sinkhornIterate_sinkhornKMSCapstone_of_drive
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hDrive : SinkhornDrivesToKMS n
+    (hDrive : SinkhornKMSControl n
       (sinkhornIterateTrajectory (n := n) M0 hrow hcol) K ω β) :
     SinkhornKMSCapstone n (sinkhornIterateTrajectory (n := n) M0 hrow hcol) K ω β := by
   exact sinkhornKMSCapstone_of_drive
@@ -316,7 +316,7 @@ theorem fullThermoGeoIndexCapstone_of_hypotheses
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
     (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
     (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0))
-    (hDrive : SinkhornDrivesToKMS n T.traj K ω β) :
+    (hDrive : SinkhornKMSControl n T.traj K ω β) :
     FullThermoGeoIndexCapstone n T flow D Γ K ω β := by
   refine ⟨?_, ?_⟩
   · exact sinkhornRicciIndexInvariant_of_hypotheses
@@ -344,7 +344,7 @@ lemma FullThermoGeoIndexCapstone.thermodynamicKMSState
     (ω : Nat → AlgebraEnd Fth →L[ℝ] ℝ)
     (β : ℝ)
     (hCap : FullThermoGeoIndexCapstone n T flow D Γ K ω β) :
-    SinkhornKMSState n T.traj K ω β :=
+    SinkhornKMSClosure n T.traj K ω β :=
   hCap.2.2
 
 end FullCapstone
@@ -365,7 +365,7 @@ abbrev ThermodynamicKMSState
     (K : AlgebraEnd Fth)
     (ω : Nat → AlgebraEnd Fth →L[ℝ] ℝ)
     (β : ℝ) : Prop :=
-  SinkhornKMSState n T.traj K ω β
+  SinkhornKMSClosure n T.traj K ω β
 
 /--
 Unified geometric-algebraic state naming used by higher-level synthesis modules.

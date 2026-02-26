@@ -70,6 +70,14 @@ def ConstantMongeAmpereImpliesRicciFlat
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) : Prop :=
   HasConstantMongeAmpereDensity K.H → IsRicciFlat R
 
+/-- Canonical closure name: constant Monge-Ampere density closes to Ricci-flatness. -/
+abbrev MongeAmpereRicciClosure
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) : Prop :=
+  ConstantMongeAmpereImpliesRicciFlat R K
+
+attribute [deprecated MongeAmpereRicciClosure (since := "2026-02-26")]
+  ConstantMongeAmpereImpliesRicciFlat
+
 /--
 Constructive discharge of the Monge-Ampere-to-Ricci bridge from an explicit
 Ricci-flat witness.
@@ -77,13 +85,13 @@ Ricci-flat witness.
 lemma constantMongeAmpereImpliesRicciFlat_of_isRicciFlat
     (R : RicciTensor E) (K : KaehlerInformationGeometry E)
     (hFlat : IsRicciFlat R) :
-    ConstantMongeAmpereImpliesRicciFlat R K := by
+    MongeAmpereRicciClosure R K := by
   intro _hConst
   exact hFlat
 
 theorem isRicciFlat_of_constantMongeAmpere
     (R : RicciTensor E) (K : KaehlerInformationGeometry E)
-    (hBridge : ConstantMongeAmpereImpliesRicciFlat R K)
+    (hBridge : MongeAmpereRicciClosure R K)
     (hConst : HasConstantMongeAmpereDensity K.H) :
     CalabiYauRicciState R :=
   hBridge hConst
@@ -95,8 +103,8 @@ bridge closure, they coincide.
 -/
 theorem ricciTensor_unique_of_constantMongeAmpere
     (R₁ R₂ : RicciTensor E) (K : KaehlerInformationGeometry E)
-    (hBridge₁ : ConstantMongeAmpereImpliesRicciFlat R₁ K)
-    (hBridge₂ : ConstantMongeAmpereImpliesRicciFlat R₂ K)
+    (hBridge₁ : MongeAmpereRicciClosure R₁ K)
+    (hBridge₂ : MongeAmpereRicciClosure R₂ K)
     (hConst : HasConstantMongeAmpereDensity K.H) :
     R₁ = R₂ := by
   apply ricciTensor_eq_of_isRicciFlat
@@ -110,7 +118,7 @@ at scalar closure `R = 2Λ` (the `c = 0` Einstein-Kaehler branch).
 theorem vacuumEinsteinEquation_of_constantMongeAmpere
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (Λ : ℝ)
-    (hBridge : ConstantMongeAmpereImpliesRicciFlat R K)
+    (hBridge : MongeAmpereRicciClosure R K)
     (hConst : HasConstantMongeAmpereDensity K.H) :
     VacuumEinsteinEquationAt R K x (2 * Λ) Λ := by
   have hFlat : IsRicciFlat R := hBridge hConst
@@ -150,6 +158,13 @@ def ConstantMongeAmpereImpliesZeroSpinorial
     (IST : InfoSpectralTriple E) : Prop :=
   HasConstantMongeAmpereDensity IST.H → spinorialScalarCurvature IST = 0
 
+/-- Canonical closure name: constant Monge-Ampere density closes to zero spinorial scalar. -/
+abbrev MongeAmpereSpinorialClosure (IST : InfoSpectralTriple E) : Prop :=
+  ConstantMongeAmpereImpliesZeroSpinorial IST
+
+attribute [deprecated MongeAmpereSpinorialClosure (since := "2026-02-26")]
+  ConstantMongeAmpereImpliesZeroSpinorial
+
 /-- Constructive spectral Calabi-Yau state (non-bridge form). -/
 def CalabiYauSpinorialState (IST : InfoSpectralTriple E) : Prop :=
   spinorialScalarCurvature IST = 0
@@ -161,13 +176,13 @@ zero-spinorial witness.
 lemma constantMongeAmpereImpliesZeroSpinorial_of_spinorialState
     (IST : InfoSpectralTriple E)
     (hSpin0 : CalabiYauSpinorialState IST) :
-    ConstantMongeAmpereImpliesZeroSpinorial IST := by
+    MongeAmpereSpinorialClosure IST := by
   intro _hConst
   exact hSpin0
 
 theorem spinorialScalarCurvature_eq_zero_of_constantMongeAmpere
     (IST : InfoSpectralTriple E)
-    (hCY : ConstantMongeAmpereImpliesZeroSpinorial IST)
+    (hCY : MongeAmpereSpinorialClosure IST)
     (hConst : HasConstantMongeAmpereDensity IST.H) :
     CalabiYauSpinorialState IST :=
   hCY hConst
@@ -183,7 +198,7 @@ theorem W_constant_of_constantMongeAmpere
     (hW : ∀ s : ℝ, deriv W s = spinorialWDissipation flow IST s)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
     (hTrack : ∀ t : ℝ, flow t = spinorialScalarCurvature IST)
-    (hCY : ConstantMongeAmpereImpliesZeroSpinorial IST)
+    (hCY : MongeAmpereSpinorialClosure IST)
     (hConst : HasConstantMongeAmpereDensity IST.H) :
     ∃ c : ℝ, ∀ s : ℝ, W s = c := by
   exact W_constant_of_spinorial_zero

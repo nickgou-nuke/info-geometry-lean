@@ -57,9 +57,16 @@ Path-ordered discrete Wilson Loop.
 W(γ₀…γₖ) = tr( Πᵢ exp(Dε(γᵢ) Δt) ).
 Captures the sequential nature of Bayesian updates.
 -/
+noncomputable def wilsonStep (Dε : DiracField X n) (dt : ℂ) (x : X) : Matrix n n ℂ :=
+  NormedSpace.exp (dt • Dε x)
+
+/-- Discrete path-ordered propagator underlying the Wilson loop. -/
+noncomputable def wilsonPropagatorDiscrete (Dε : DiracField X n) (γ : List X) (dt : ℂ) :
+    Matrix n n ℂ :=
+  γ.foldl (fun U x => U * wilsonStep Dε dt x) 1
+
 noncomputable def wilsonLoopDiscrete (Dε : DiracField X n) (γ : List X) (dt : ℂ) : ℂ :=
-  let U : Matrix n n ℂ := γ.foldl (fun U x => U * NormedSpace.exp (dt • Dε x)) 1
-  Matrix.trace U
+  Matrix.trace (wilsonPropagatorDiscrete Dε γ dt)
 
 /--
 Formalization of the Path-Ordered Exponential (The Dyson Series).

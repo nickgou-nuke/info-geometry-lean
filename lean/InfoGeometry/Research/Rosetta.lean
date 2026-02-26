@@ -36,6 +36,8 @@ export InfoGeometry.Research.GrandUnification (
 )
 
 export InfoGeometry.Research.Cayley (
+  CayleyEquivalence
+  CayleyDualFlatCompatibility
   cayley_pythagorean_invariance
   Bridge
   CompatibleDualFlat
@@ -61,6 +63,8 @@ export InfoGeometry.Research.ChiralTorsionBridge (
   gibbsSmoothingOnGeneralizedKL_pos
   IsVacuumApexNull
   vacuumApexTwistor
+  ChiralTorsionChentsovGibbsState
+  chentsov_and_gibbs_of_state
   ChiralTorsionChentsovGibbsBridge
   torsion_nonzero_of_chiral
   chentsov_and_gibbs_of_bridge

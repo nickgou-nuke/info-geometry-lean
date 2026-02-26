@@ -12,6 +12,9 @@ structure Bridge (U B : Type*) where
   left_inv    : Function.LeftInverse toUnbounded toBounded
   right_inv   : Function.RightInverse toUnbounded toBounded
 
+/-- Canonical naming alias for a Cayley transport equivalence. -/
+abbrev CayleyEquivalence (U B : Type*) := Bridge U B
+
 @[blueprint "def:compatible-dual-flat"]
 structure CompatibleDualFlat
     {U B : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
@@ -20,6 +23,13 @@ structure CompatibleDualFlat
   SB : DualFlatStructure B
   D_transport : ∀ x y : U, divergence SB (C.toBounded x) (C.toBounded y) = divergence SU x y
   grad_transport : ∀ x : U, C.toBounded (nabla SU x) = nabla SB (C.toBounded x)
+
+/-- Canonical naming alias for dual-flat compatibility under Cayley transport. -/
+abbrev CayleyDualFlatCompatibility
+    {U B : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
+    [NormedAddCommGroup B] [InnerProductSpace ℝ B] [CompleteSpace B]
+    (C : Bridge U B) (SU : DualFlatStructure U) :=
+  CompatibleDualFlat C SU
 
 def identityBridge (E : Type*) : Bridge E E where
   toBounded x := x

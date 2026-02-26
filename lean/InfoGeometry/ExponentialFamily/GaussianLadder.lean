@@ -1,14 +1,14 @@
 import InfoGeometry.ExponentialFamily.Gaussian
-import InfoGeometry.Research.KreinLadder
-import InfoGeometry.Research.QuantumInference
+import InfoGeometry.Canonical.KreinLadder
+import InfoGeometry.Canonical.QuantumInference
 
 namespace InfoGeometry.ExponentialFamily.GaussianLadder
 
 open InfoGeometry.ExponentialFamily.Gaussian
-open InfoGeometry.Research.KreinLadder
-open InfoGeometry.Research.Drazin
-open InfoGeometry.Research.SpectralInference
-open InfoGeometry.Research.QuantumInference
+open InfoGeometry.Canonical.KreinLadder
+open InfoGeometry.Canonical.Drazin
+open InfoGeometry.Canonical.SpectralInference
+open InfoGeometry.Canonical.QuantumInference
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 

@@ -1,11 +1,11 @@
 import InfoGeometry.ExponentialFamily.Gaussian
-import InfoGeometry.Research.MoorePenrose
+import InfoGeometry.Canonical.MoorePenrose
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 namespace InfoGeometry.ExponentialFamily.TwistedGaussian
 
 open InfoGeometry.Convex
-open InfoGeometry.Research.MoorePenrose
+open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.ExponentialFamily.Gaussian
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

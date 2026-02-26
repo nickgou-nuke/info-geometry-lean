@@ -1,5 +1,6 @@
 import InfoGeometry.Library
 import InfoGeometry.Architecture.SymmetricSpace
+import InfoGeometry.Experimental.AssumptionWrappers
 import InfoGeometry.Research
 import InfoGeometry.TransformationGroups
 

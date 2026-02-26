@@ -19,6 +19,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Research.AnalyticalIndex
+import InfoGeometry.Research.AQFTOperatorInterface
 import InfoGeometry.Research.AnomalyInflow
 import InfoGeometry.Research.Attention
 import InfoGeometry.Research.AttentionEuclidean
@@ -44,6 +45,7 @@ import InfoGeometry.Research.CliffordBridge
 import InfoGeometry.Research.ConformalAlgebra
 import InfoGeometry.Research.ConformalUnification
 import InfoGeometry.Research.ConformalWard
+import InfoGeometry.Research.CountSubstrateBridge
 import InfoGeometry.Research.CurvatureRGFlow
 import InfoGeometry.Research.Drazin
 import InfoGeometry.Research.DualConnections
@@ -55,6 +57,7 @@ import InfoGeometry.Research.GrandUnification
 import InfoGeometry.Research.GrandUnificationBlueprint
 import InfoGeometry.Research.GrandUnificationMetric
 import InfoGeometry.Research.HeatKernel
+import InfoGeometry.Research.HolographicEmergence
 import InfoGeometry.Research.IB
 import InfoGeometry.Research.InformationNumber
 import InfoGeometry.Research.InformationTorsion
@@ -68,6 +71,7 @@ import InfoGeometry.Research.MixtureOfExperts
 import InfoGeometry.Research.MoorePenrose
 import InfoGeometry.Research.PathIntegral
 import InfoGeometry.Research.PerelmanW
+import InfoGeometry.Research.QFTTDFTLaunchpad
 import InfoGeometry.Research.QuantumInference
 import InfoGeometry.Research.RGFlow
 import InfoGeometry.Research.RicciMongeAmpere
@@ -78,6 +82,7 @@ import InfoGeometry.Research.TomitaTakesaki
 import InfoGeometry.Research.TopologicalEuler
 import InfoGeometry.Research.TopologicalInvariants
 import InfoGeometry.Research.Triality
+import InfoGeometry.Research.WeylInformationGauge
 
 /-!
 # InfoGeometry.Canonical.ResearchPromoted
@@ -94,6 +99,7 @@ This list remains explicit for reviewability.
 -/
 def promotedResearchAllowlist : List String :=
   [ "InfoGeometry.Research.AnalyticalIndex"
+  , "InfoGeometry.Research.AQFTOperatorInterface"
   , "InfoGeometry.Research.AnomalyInflow"
   , "InfoGeometry.Research.Attention"
   , "InfoGeometry.Research.AttentionEuclidean"
@@ -119,6 +125,7 @@ def promotedResearchAllowlist : List String :=
   , "InfoGeometry.Research.ConformalAlgebra"
   , "InfoGeometry.Research.ConformalUnification"
   , "InfoGeometry.Research.ConformalWard"
+  , "InfoGeometry.Research.CountSubstrateBridge"
   , "InfoGeometry.Research.CurvatureRGFlow"
   , "InfoGeometry.Research.Drazin"
   , "InfoGeometry.Research.DualConnections"
@@ -130,6 +137,7 @@ def promotedResearchAllowlist : List String :=
   , "InfoGeometry.Research.GrandUnificationBlueprint"
   , "InfoGeometry.Research.GrandUnificationMetric"
   , "InfoGeometry.Research.HeatKernel"
+  , "InfoGeometry.Research.HolographicEmergence"
   , "InfoGeometry.Research.IB"
   , "InfoGeometry.Research.InformationNumber"
   , "InfoGeometry.Research.InformationTorsion"
@@ -143,6 +151,7 @@ def promotedResearchAllowlist : List String :=
   , "InfoGeometry.Research.MoorePenrose"
   , "InfoGeometry.Research.PathIntegral"
   , "InfoGeometry.Research.PerelmanW"
+  , "InfoGeometry.Research.QFTTDFTLaunchpad"
   , "InfoGeometry.Research.QuantumInference"
   , "InfoGeometry.Research.RGFlow"
   , "InfoGeometry.Research.RicciMongeAmpere"
@@ -153,6 +162,7 @@ def promotedResearchAllowlist : List String :=
   , "InfoGeometry.Research.TopologicalEuler"
   , "InfoGeometry.Research.TopologicalInvariants"
   , "InfoGeometry.Research.Triality"
+  , "InfoGeometry.Research.WeylInformationGauge"
   ]
 
 theorem promotedResearchAllowlist_nodup :

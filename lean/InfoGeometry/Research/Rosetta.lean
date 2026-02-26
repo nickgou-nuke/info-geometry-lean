@@ -42,11 +42,13 @@ export InfoGeometry.Research.GrandUnification (
 )
 
 export InfoGeometry.Research.Cayley (
+  CayleyBridge
   CayleyEquivalence
+  CayleyCompatibleDualFlat
   CayleyDualFlatCompatibility
-  cayley_pythagorean_invariance
-  Bridge
-  CompatibleDualFlat
+  cayleyPythagoreanInvariance
+  cayleyIdentityBridge
+  cayleyIdentityCompatibleGeometry
 )
 
 export InfoGeometry.Research.Attention (

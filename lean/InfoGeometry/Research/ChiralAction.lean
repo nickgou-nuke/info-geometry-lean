@@ -37,9 +37,9 @@ reduces to the standard Spectral Action.
 theorem chiral_action_reduces_for_normal (IST : InfoSpectralTriple E) (CI : ConformalInference E) (g _Λ : ℝ)
     (h_normal : CI.IsNormalInference) :
     chiralDirac IST CI g = IST.D := by
-  have he : CI.epsilon = 0 := h_normal
+  have he : CI.chiralScale = 0 := h_normal
   have hnreal : (nnnorm CI.chiralAnomaly : ℝ) = 0 := by
-    simpa [ConformalInference.epsilon] using he
+    simpa [ConformalInference.chiralScale, ConformalInference.epsilon] using he
   have hc : CI.chiralAnomaly = 0 := by
     have hn : nnnorm CI.chiralAnomaly = 0 := by
       exact_mod_cast hnreal

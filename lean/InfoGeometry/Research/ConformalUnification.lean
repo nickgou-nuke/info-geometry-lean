@@ -94,7 +94,8 @@ noncomputable abbrev chiralScale : ℝ := CI.epsilon
 
 /-- Canonical closure condition: spectral and metric projectors commute. -/
 def ProjectorCommutationClosure : Prop :=
-  CI.P_D * CI.P_MP = CI.P_MP * CI.P_D
+  CI.spectralChiralProjector * CI.metricChiralProjector
+    = CI.metricChiralProjector * CI.spectralChiralProjector
 
 omit [FiniteDimensional ℝ E] in
 /--
@@ -102,8 +103,10 @@ Theorem: The chiral anomaly vanishes exactly when the spectral and metric
 projectors commute.
 -/
 theorem chiral_commutation_link :
-    CI.chiralAnomaly = 0 ↔ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D := by
-  simp [chiralAnomaly, sub_eq_zero]
+    CI.chiralAnomaly = 0 ↔
+      CI.spectralChiralProjector * CI.metricChiralProjector
+        = CI.metricChiralProjector * CI.spectralChiralProjector := by
+  simp [chiralAnomaly, spectralChiralProjector, metricChiralProjector, sub_eq_zero]
 
 omit [FiniteDimensional ℝ E] in
 theorem chiralAnomaly_eq_zero_iff_projectorCommutation :
@@ -116,9 +119,21 @@ Cartan-like Decomposition of the Information Manifold.
 The space decomposes into a Normal sector (ε = 0) and a Chiral sector (ε > 0).
 This mirrors the Cl(1,1) grading into even and odd endomorphisms.
 -/
-def IsNormalInference : Prop := CI.epsilon = 0
+def IsNormalInference : Prop := CI.chiralScale = 0
 
-def IsChiralInference : Prop := 0 < CI.epsilon
+def IsChiralInference : Prop := 0 < CI.chiralScale
+
+-- Legacy alias: normal inference stated via `epsilon = 0`.
+omit [FiniteDimensional ℝ E] in
+theorem isNormalInference_iff_epsilon_eq_zero :
+    CI.IsNormalInference ↔ CI.epsilon = 0 := by
+  simp [IsNormalInference, chiralScale]
+
+-- Legacy alias: chiral inference stated via `0 < epsilon`.
+omit [FiniteDimensional ℝ E] in
+theorem isChiralInference_iff_epsilon_pos :
+    CI.IsChiralInference ↔ 0 < CI.epsilon := by
+  simp [IsChiralInference, chiralScale]
 
 /-- Canonical alias for the normal (non-chiral) information state. -/
 abbrev NormalInferenceState : Prop := CI.IsNormalInference

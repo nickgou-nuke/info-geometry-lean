@@ -27,10 +27,10 @@ These projectors isolate the belief states that are aligned/anti-aligned
 with the geometric-spectral mismatch.
 -/
 noncomputable def generalizedChiralPlus (CI : ConformalInference E) : E →L[ℝ] E :=
-  ((2 : ℝ)⁻¹) • (CI.P_D + chiralGrading CI)
+  ((2 : ℝ)⁻¹) • (CI.spectralChiralProjector + chiralGrading CI)
 
 noncomputable def generalizedChiralMinus (CI : ConformalInference E) : E →L[ℝ] E :=
-  ((2 : ℝ)⁻¹) • (CI.P_D - chiralGrading CI)
+  ((2 : ℝ)⁻¹) • (CI.spectralChiralProjector - chiralGrading CI)
 
 /-- Canonical naming alias for the positive chiral projector. -/
 noncomputable abbrev chiralProjectorPlus (CI : ConformalInference E) : E →L[ℝ] E :=
@@ -65,7 +65,11 @@ fundamental structure constant (the ε) of the Cartan decomposition.
 This bridges the Conformal generators to the Clifford grading.
 -/
 theorem anomaly_as_structure_constant (CI : ConformalInference E) :
-    CI.chiralAnomaly = CI.P_D * CI.P_MP - CI.P_MP * CI.P_D := rfl
+    CI.chiralAnomaly
+      = CI.spectralChiralProjector * CI.metricChiralProjector
+          - CI.metricChiralProjector * CI.spectralChiralProjector := by
+  simp [ConformalInference.chiralAnomaly, ConformalInference.spectralChiralProjector,
+    ConformalInference.metricChiralProjector]
 
 omit [FiniteDimensional ℝ E] in
 /--
@@ -74,9 +78,9 @@ collapses because Γ and P_D coincide or commute.
 -/
 theorem cartan_collapse_of_normal (CI : ConformalInference E) (h_norm : CI.IsNormalInference) :
     CI.chiralAnomaly = 0 := by
-  have he : CI.epsilon = 0 := h_norm
+  have he : CI.chiralScale = 0 := h_norm
   have hn : nnnorm CI.chiralAnomaly = 0 := by
-    simpa [ConformalInference.epsilon] using he
+    simpa [ConformalInference.chiralScale, ConformalInference.epsilon] using he
   exact (nnnorm_eq_zero).mp hn
 
 end InfoGeometry.Research.ChiralCliffordBridge

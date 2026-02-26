@@ -1,13 +1,13 @@
 import InfoGeometry.ExponentialFamily.Class
 import InfoGeometry.Convex.HessianGeometry
-import InfoGeometry.Research.Triality
+import InfoGeometry.Canonical.Triality
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.SpecialFunctions.ExpDeriv
 
 namespace InfoGeometry.ExponentialFamily.Bernoulli
 
 open InfoGeometry.Convex
-open InfoGeometry.Research.Triality
+open InfoGeometry.Canonical.Triality
 
 /-- Bernoulli log-partition function: ψ(η) = log(1 + exp η). -/
 noncomputable def logPartition (η : ℝ) : ℝ :=

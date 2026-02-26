@@ -1,13 +1,13 @@
 import InfoGeometry.LLM.TransformerBlock
 import InfoGeometry.LLM.MaskedTransformerBlock
 import InfoGeometry.LLM.PositionalEncoding
-import InfoGeometry.Research.Attention
-import InfoGeometry.Research.AttentionEuclidean
-import InfoGeometry.Research.AttentionSplit
-import InfoGeometry.Research.FormalScaffold
-import InfoGeometry.Research.GrandCanonicalExperts
-import InfoGeometry.Research.LorentzianRouting
-import InfoGeometry.Research.Triality
+import InfoGeometry.Canonical.Attention
+import InfoGeometry.Canonical.AttentionEuclidean
+import InfoGeometry.Canonical.AttentionSplit
+import InfoGeometry.Canonical.FormalScaffold
+import InfoGeometry.Canonical.GrandCanonicalExperts
+import InfoGeometry.Canonical.LorentzianRouting
+import InfoGeometry.Canonical.Triality
 
 /-!
 # InfoGeometry.LLM

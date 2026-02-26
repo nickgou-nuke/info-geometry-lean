@@ -1,5 +1,5 @@
 import InfoGeometry.Potential.LogPotential
-import InfoGeometry.Research.Triality
+import InfoGeometry.Canonical.Triality
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.FDeriv.Basic
@@ -7,7 +7,7 @@ import Mathlib.Analysis.InnerProductSpace.Dual
 
 namespace InfoGeometry.Convex
 
-open InfoGeometry.Research.Triality
+open InfoGeometry.Canonical.Triality
 open scoped BigOperators
 
 /-- Abstract divergence interface used by Bregman-triality attention bridges. -/

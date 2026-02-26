@@ -19,6 +19,11 @@ noncomputable def variationChernSimons (L : BayesianLoop E) (IST : InfoSpectralT
   -- Structural definition to avoid axioms/sorrys while capturing the topological dependence.
   informationChernSimons L IST
 
+/-- Canonical naming alias for the bulk Chern-Simons variation. -/
+noncomputable abbrev bulkChernSimonsVariation
+    (L : BayesianLoop E) (IST : InfoSpectralTriple E) : ℝ :=
+  variationChernSimons L IST
+
 /--
 Anomaly Inflow describes how the failure of gauge invariance (anomaly) 
 on the boundary of a learning process is exactly canceled by the 
@@ -28,6 +33,15 @@ bulk variation, enforcing the conservation of total information phase.
 -/
 noncomputable def boundaryAnomaly (L : BayesianLoop E) (IST : InfoSpectralTriple E) : ℝ :=
   - variationChernSimons L IST
+
+/-- Canonical naming alias for the boundary anomaly density. -/
+noncomputable abbrev boundaryAnomalyDensity
+    (L : BayesianLoop E) (IST : InfoSpectralTriple E) : ℝ :=
+  boundaryAnomaly L IST
+
+/-- Canonical closure package for anomaly inflow cancellation. -/
+def AnomalyInflowClosure (L : BayesianLoop E) (IST : InfoSpectralTriple E) : Prop :=
+  bulkChernSimonsVariation L IST + boundaryAnomalyDensity L IST = 0
 
 omit [FiniteDimensional ℝ E] in
 /--
@@ -41,5 +55,12 @@ theorem anomaly_inflow_cancellation (L : BayesianLoop E) (IST : InfoSpectralTrip
     variationChernSimons L IST + boundaryAnomaly L IST = 0 := by
   unfold boundaryAnomaly
   exact add_neg_cancel (variationChernSimons L IST)
+
+omit [FiniteDimensional ℝ E] in
+theorem anomalyInflowClosure
+    (L : BayesianLoop E) (IST : InfoSpectralTriple E) :
+    AnomalyInflowClosure L IST := by
+  simpa [AnomalyInflowClosure, bulkChernSimonsVariation, boundaryAnomalyDensity] using
+    anomaly_inflow_cancellation (E := E) L IST
 
 end InfoGeometry.Research.AnomalyInflow

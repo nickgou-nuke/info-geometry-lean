@@ -107,8 +107,6 @@ export InfoGeometry.Research.ChiralCliffordBridge (
 )
 
 export InfoGeometry.Research.CliffordBridge (
-  splitQuadratic_eq_gaugeQuadratic
-  splitBilinear_eq_gaugeBilinear
   q_agrees_with_Gauge_quad
   B_agrees_with_Gauge_bilinear
 )

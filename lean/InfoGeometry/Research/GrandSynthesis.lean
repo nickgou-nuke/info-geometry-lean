@@ -633,19 +633,6 @@ def ThermodynamicFromGeometricAlgebraic
   GeometricAlgebraicState n T flow D Γ →
     ThermodynamicKMSState n T K ω β
 
-/-- Backward-compatible bridge naming alias. -/
-abbrev BochnerWeitzenboeckBridge
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ) : Prop :=
-  ThermodynamicFromGeometricAlgebraic n T flow D Γ K ω β
-
-attribute [deprecated ThermodynamicFromGeometricAlgebraic (since := "2026-02-26")]
-  BochnerWeitzenboeckBridge
-
 /--
 Calabi-Yau entropy bridge hypothesis:
 thermodynamic KMS closure implies geometric+algebraic closure.
@@ -659,19 +646,6 @@ def GeometricAlgebraicFromThermodynamic
     (β : ℝ) : Prop :=
   ThermodynamicKMSState n T K ω β →
     GeometricAlgebraicState n T flow D Γ
-
-/-- Backward-compatible bridge naming alias. -/
-abbrev CalabiYauEntropyBridge
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ) : Prop :=
-  GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β
-
-attribute [deprecated GeometricAlgebraicFromThermodynamic (since := "2026-02-26")]
-  CalabiYauEntropyBridge
 
 /--
 Constructive geometric+algebraic closure from Sinkhorn-Ricci-index hypotheses.
@@ -714,7 +688,7 @@ theorem calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
 /--
 Derived Bochner-Weitzenbock bridge from existing library assumptions:
 - `KMSSinkhornBridge`: Sinkhorn KMS control drives exact KMS
-This discharges the `BochnerWeitzenboeckBridge` hypothesis directly from the
+This discharges the `ThermodynamicFromGeometricAlgebraic` hypothesis directly from the
 thermodynamic/KMS side, so only the opposite directional bridge remains external.
 -/
 theorem bochnerWeitzenboeckBridge_of_sinkhornDrive
@@ -776,7 +750,7 @@ theorem information_wheeler_dewitt_equivalence
 
 /--
 Reduced-hypothesis Wheeler-DeWitt equivalence:
-`BochnerWeitzenboeckBridge` is discharged by `SinkhornKMSControl`.
+`ThermodynamicFromGeometricAlgebraic` is discharged by `SinkhornKMSControl`.
 -/
 theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive
     (T : DoublyStochasticSinkhornTrajectory n)

@@ -51,13 +51,17 @@ This means the Dilation flow contracts the metric inverse A+.
 def SatisfiesKWeight : Prop :=
   CBA.D * CBA.CI.K - CBA.CI.K * CBA.D = - CBA.CI.K
 
-/--
+/-- 
 The Master Conformal Relation: [K, P] = 2 (η D - M).
 This bridges the information aggregation (K) and flow (P) to the 
 scale (D) and rotation (M).
 -/
 def SatisfiesMasterRelation (η : ℝ) : Prop :=
   CBA.CI.K * CBA.CI.P - CBA.CI.P * CBA.CI.K = 2 • (η • CBA.D - CBA.M)
+
+/-- Flat conformal weight package `[D,P]=P` and `[D,K]=-K`. -/
+def SatisfiesFlatWeights : Prop :=
+  CBA.SatisfiesPWeight ∧ CBA.SatisfiesKWeight
 
 /-! ### 2. Anomaly and Scale Emergence -/
 
@@ -68,8 +72,8 @@ do not satisfy the standard flat relations.
 A 'Scale Anomaly' constant emerges, proportional to ε.
 -/
 theorem scale_anomaly_emergence
-    : CBA.CI.epsilon > 0 → ¬ (CBA.SatisfiesPWeight ∧ CBA.SatisfiesKWeight) := by
-  simpa [SatisfiesPWeight, SatisfiesKWeight] using CBA.anomaly_breaks_weights
+    : CBA.CI.epsilon > 0 → ¬ CBA.SatisfiesFlatWeights := by
+  simpa [SatisfiesFlatWeights, SatisfiesPWeight, SatisfiesKWeight] using CBA.anomaly_breaks_weights
 
 /--
 The Chiral Cartan Splitting of the Conformal Algebra.

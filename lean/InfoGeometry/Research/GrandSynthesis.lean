@@ -435,20 +435,6 @@ variable {E F : Type*}
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /--
-Cl(1,1)-specialized Bott Laplacian operator from the split seed
-`(modularJ, spectralEpsilon)` and a downstream Dirac `Dn`.
--/
-def cl11BottLaplacian (Dn : Endomorphism F) :
-    Endomorphism (DoubledSpace E ⊗[ℝ] F) :=
-  (TensorProduct.map
-    ((cl11DiracSeed (E := E)).comp (cl11DiracSeed (E := E)))
-    (LinearMap.id : Endomorphism F))
-    +
-  (TensorProduct.map
-    (LinearMap.id : Endomorphism (DoubledSpace E))
-    (Dn.comp Dn))
-
-/--
 Algebraic equilibrium: the Cl(1,1)-Bott Laplacian vanishes.
 -/
 def AlgebraicEquilibriumCl11 (Dn : Endomorphism F) : Prop :=
@@ -462,13 +448,7 @@ theorem cl11_bottDirac_sq_eq_zero_of_algebraicEquilibrium
     (hAlg : AlgebraicEquilibriumCl11 (E := E) Dn) :
     (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn).comp
       (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn) = 0 := by
-  calc
-    (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn).comp
-        (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn)
-      = cl11BottLaplacian (E := E) Dn := by
-          simpa [cl11BottLaplacian] using
-            (cl11_bottDirac_sq_eq_sum_laplacians (E := E) (F := F) (Dn := Dn))
-    _ = 0 := hAlg
+  exact (cl11_bottDirac_sq_eq_cl11BottLaplacian (E := E) (F := F) (Dn := Dn)).trans hAlg
 
 /--
 Pointwise harmonicity of a Bott state at algebraic equilibrium.
@@ -901,7 +881,12 @@ theorem thermodynamic_and_geometricAlgebraic_of_fullCapstone
     (β : ℝ)
     (hFull : FullThermoGeoIndexCapstone n T flow D Γ K ω β) :
     ThermodynamicKMSState n T K ω β ∧ GeometricAlgebraicState n T flow D Γ := by
-  exact ⟨hFull.2.2, hFull.1⟩
+  exact ⟨
+    FullThermoGeoIndexCapstone.thermodynamicKMSState
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β) hFull,
+    FullThermoGeoIndexCapstone.geometricAlgebraicState
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β) hFull
+  ⟩
 
 end WheelerDeWitt
 

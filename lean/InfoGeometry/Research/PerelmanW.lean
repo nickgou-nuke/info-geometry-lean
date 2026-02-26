@@ -150,13 +150,15 @@ theorem W_constant_of_spinorial_zero
     ∃ c : ℝ, ∀ s : ℝ, W s = c := by
   refine ⟨W 0, ?_⟩
   intro s
-  have hSpin0Heat : InfoGeometry.Research.HeatKernel.totalScalarCurvature IST = 0 := by
-    simpa [spinorialScalarCurvature] using hSpin0
   have hDerivZero : ∀ t : ℝ, deriv W t = 0 := by
     intro t
-    rw [deriv_W_eq_abs_spinorial_of_normalized_tracking
-        (E := E) (flow := flow) (IST := IST) (W := W) hW hNorm hTrack t]
-    simp [spinorialScalarCurvature, hSpin0Heat]
+    calc
+      deriv W t = |spinorialScalarCurvature IST| := by
+        rw [deriv_W_eq_abs_spinorial_of_normalized_tracking
+            (E := E) (flow := flow) (IST := IST) (W := W) hW hNorm hTrack t]
+      _ = 0 := by
+        rw [hSpin0]
+        simp
   simpa using is_const_of_deriv_eq_zero (f := W) hDiff hDerivZero s 0
 
 end SpinorialBridge

@@ -164,6 +164,31 @@ theorem cl11_bottDirac_sq_eq_sum_laplacians
     (hChiral := cl11_isChiralDirac (E := E))
     (hGrading := cl11Grading_involutive (E := E))
 
+/--
+Canonical `Cl(1,1)` Bott Laplacian operator reused by downstream modules.
+-/
+def cl11BottLaplacian (Dn : Endomorphism F) :
+    Endomorphism (DoubledSpace E ⊗[ℝ] F) :=
+  (TensorProduct.map
+    ((cl11DiracSeed (E := E)).comp (cl11DiracSeed (E := E)))
+    (LinearMap.id : Endomorphism F))
+    +
+  (TensorProduct.map
+    (LinearMap.id : Endomorphism (DoubledSpace E))
+    (Dn.comp Dn))
+
+/--
+Rewriting form of the split Bott-Dirac square into the canonical
+`cl11BottLaplacian`.
+-/
+theorem cl11_bottDirac_sq_eq_cl11BottLaplacian
+    (Dn : Endomorphism F) :
+    (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn).comp
+      (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn)
+      = cl11BottLaplacian (E := E) Dn := by
+  simpa [cl11BottLaplacian] using
+    (cl11_bottDirac_sq_eq_sum_laplacians (E := E) (F := F) (Dn := Dn))
+
 end Cl11Bridge
 
 end InfoGeometry.Research.BottDirac

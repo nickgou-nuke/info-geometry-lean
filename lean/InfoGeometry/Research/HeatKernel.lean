@@ -32,6 +32,10 @@ noncomputable def a0 (IST : InfoSpectralTriple E) : ℝ :=
   -- Zeroth coefficient of e^{-t} * V is V.
   spectralVolume IST
 
+omit [FiniteDimensional ℝ E] in
+@[simp] lemma a0_eq_spectralVolume (IST : InfoSpectralTriple E) :
+    a0 IST = spectralVolume IST := rfl
+
 /-- 
 The first Seeley-DeWitt coefficient a₁.
 a₁ = (4πt)^{-d/2 + 1} (1/6) ∫ R √g dx.
@@ -42,6 +46,10 @@ noncomputable def a1 (IST : InfoSpectralTriple E) : ℝ :=
   -- First coefficient of e^{-t} * V is -V.
   - spectralVolume IST
 
+omit [FiniteDimensional ℝ E] in
+@[simp] lemma a1_eq_neg_spectralVolume (IST : InfoSpectralTriple E) :
+    a1 IST = - spectralVolume IST := rfl
+
 /--
 Spectral definition of the Total Scalar Curvature R.
 Calculated as the coefficient of the O(t) term in the heat trace expansion.
@@ -50,6 +58,11 @@ noncomputable def totalScalarCurvature (IST : InfoSpectralTriple E) : ℝ :=
   -- From the heat trace: R_total = 6 * a1.
   6 * a1 IST
 
+omit [FiniteDimensional ℝ E] in
+@[simp] lemma totalScalarCurvature_eq_neg_six_spectralVolume (IST : InfoSpectralTriple E) :
+    totalScalarCurvature IST = -6 * spectralVolume IST := by
+  simp [totalScalarCurvature]
+
 /--
 The Einstein-Hilbert Action of the Information Manifold.
 S_EH = ∫ R √g d^nx.
@@ -57,5 +70,14 @@ This action penalizes non-flatness (inconsistent belief updates) in the manifold
 -/
 noncomputable def einsteinHilbertAction (IST : InfoSpectralTriple E) : ℝ :=
   totalScalarCurvature IST
+
+omit [FiniteDimensional ℝ E] in
+@[simp] lemma einsteinHilbertAction_eq_totalScalarCurvature (IST : InfoSpectralTriple E) :
+    einsteinHilbertAction IST = totalScalarCurvature IST := rfl
+
+omit [FiniteDimensional ℝ E] in
+@[simp] lemma einsteinHilbertAction_eq_neg_six_spectralVolume (IST : InfoSpectralTriple E) :
+    einsteinHilbertAction IST = -6 * spectralVolume IST := by
+  simp [einsteinHilbertAction]
 
 end InfoGeometry.Research.HeatKernel

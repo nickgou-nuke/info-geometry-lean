@@ -1,17 +1,15 @@
-import InfoGeometry.Experimental.AssumptionWrappers.IB
+import InfoGeometry.Assumptions.IB
 
 /-!
-# Research.IB
+# Experimental.AssumptionWrappers.IB
 
-Compatibility forwarder over `InfoGeometry.Experimental.AssumptionWrappers.IB`.
+Experimental wrapper over `InfoGeometry.Assumptions.IB`.
+This is the canonical migration home for legacy `Research.IB` forwarding.
 -/
 
-namespace InfoGeometry.Research.IB
+namespace InfoGeometry.Experimental.AssumptionWrappers.IB
 
-/-!
-Explicitly forward the IB scaffold surface from the experimental wrapper.
--/
-export InfoGeometry.Experimental.AssumptionWrappers.IB (
+export InfoGeometry.Assumptions.IB (
   FinProb
   IBProblem
   KLKernel
@@ -32,4 +30,5 @@ export InfoGeometry.Experimental.AssumptionWrappers.IB (
   ib_convergence_nonneg
 )
 
-end InfoGeometry.Research.IB
+end InfoGeometry.Experimental.AssumptionWrappers.IB
+

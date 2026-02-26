@@ -986,32 +986,15 @@ Discrete entropic OT with Gibbs kernel + Sinkhorn scaling is the finite Schrödi
 noncomputable abbrev schroedingerBridgeKernel (ε : ℝ) (C : CostMatrix n) : Coupling n :=
   entropicKernel n ε C
 
-/-- Backward-compatible ASCII alias (`oe` omitted). -/
-@[deprecated schroedingerBridgeKernel (since := "2026-02-25")]
-noncomputable abbrev schrodingerBridgeKernel (ε : ℝ) (C : CostMatrix n) : Coupling n :=
-  schroedingerBridgeKernel n ε C
-
 /-- Schrödinger bridge coupling via two-sided Sinkhorn scaling. -/
 noncomputable abbrev schroedingerBridgeCoupling
     (K : Coupling n) (left right : Fin n → ℝ) : Coupling n :=
   sinkhornScaledCoupling n K left right
 
-/-- Backward-compatible ASCII alias (`oe` omitted). -/
-@[deprecated schroedingerBridgeCoupling (since := "2026-02-25")]
-noncomputable abbrev schrodingerBridgeCoupling
-    (K : Coupling n) (left right : Fin n → ℝ) : Coupling n :=
-  schroedingerBridgeCoupling n K left right
-
 /-- Schrödinger bridge objective (entropic OT action). -/
 noncomputable abbrev schroedingerBridgeObjective
     (ε : ℝ) (C PiM : Coupling n) : ℝ :=
   regularizedOTObjective n ε C PiM
-
-/-- Backward-compatible ASCII alias (`oe` omitted). -/
-@[deprecated schroedingerBridgeObjective (since := "2026-02-25")]
-noncomputable abbrev schrodingerBridgeObjective
-    (ε : ℝ) (C PiM : Coupling n) : ℝ :=
-  schroedingerBridgeObjective n ε C PiM
 
 /-- Row-normalization enforces unit row marginals. -/
 lemma rowNormalize_has_unit_rowMarginal
@@ -1067,18 +1050,6 @@ lemma sinkhornTwoStep_eq_schroedingerBridgeGauge
   simpa [schroedingerBridgeCoupling] using
     (sinkhornTwoStep_eq_twoSidedGauge (n := n) M hrow hcol)
 
-/-- Backward-compatible ASCII alias (`oe` omitted). -/
-@[deprecated sinkhornTwoStep_eq_schroedingerBridgeGauge (since := "2026-02-25")]
-lemma sinkhornTwoStep_eq_schrodingerBridgeGauge
-    (M : Coupling n)
-    (hrow : HasPositiveRowSums n M)
-    (hcol : HasPositiveColSums n (rowNormalize n M hrow)) :
-    colNormalize n (rowNormalize n M hrow) hcol
-      = schroedingerBridgeCoupling n M
-          (leftWeylScale n M)
-          (rightWeylScale n (rowNormalize n M hrow)) :=
-  sinkhornTwoStep_eq_schroedingerBridgeGauge (n := n) M hrow hcol
-
 /--
 Phase-aligned Lyapunov monotonicity for one Sinkhorn step, in OT language.
 -/
@@ -1131,22 +1102,6 @@ lemma schroedingerBridgeStep_radonNikodymBarrier_monotone
     (hstep : SinkhornStep n phase M M') :
     phaseRNBarrierAfter n phase M' ≤ phaseRNBarrierBefore n phase M :=
   sinkhornStep_radonNikodymBarrier_monotone (n := n) hstep
-
-/-- Backward-compatible ASCII alias (`oe` omitted). -/
-@[deprecated schroedingerBridgeStep_monotone (since := "2026-02-25")]
-lemma schrodingerBridgeStep_monotone
-    {phase : SinkhornPhase} {M M' : Coupling n}
-    (hstep : SinkhornStep n phase M M') :
-    phaseLyapunovAfter n phase M' ≤ phaseLyapunovBefore n phase M := by
-  simpa using (schroedingerBridgeStep_monotone (n := n) hstep)
-
-/-- Backward-compatible ASCII alias (`oe` omitted). -/
-@[deprecated schroedingerBridgeStep_radonNikodymBarrier_monotone (since := "2026-02-25")]
-lemma schrodingerBridgeStep_radonNikodymBarrier_monotone
-    {phase : SinkhornPhase} {M M' : Coupling n}
-    (hstep : SinkhornStep n phase M M') :
-    phaseRNBarrierAfter n phase M' ≤ phaseRNBarrierBefore n phase M := by
-  simpa using (schroedingerBridgeStep_radonNikodymBarrier_monotone (n := n) hstep)
 
 end EntropicOTBridge
 

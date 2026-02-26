@@ -611,21 +611,6 @@ variable {X V F : Type}
   [AddCommGroup V] [Module ℝ V]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
-/-- Thermodynamic side: Sinkhorn/KMS capstone state. -/
-abbrev ThermodynamicKMSState
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ) : Prop :=
-  InfoGeometry.Research.AnalyticalIndex.ThermodynamicKMSState n T K ω β
-
-/-- Geometric+algebraic side: Sinkhorn/Ricci/index capstone state. -/
-abbrev GeometricAlgebraicState
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V) : Prop :=
-  InfoGeometry.Research.AnalyticalIndex.GeometricAlgebraicState n T flow D Γ
-
 /--
 Bochner-Weitzenbock bridge hypothesis:
 geometric+algebraic closure implies thermodynamic KMS closure.

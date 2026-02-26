@@ -1,4 +1,5 @@
-import Mathlib
+import Mathlib.Analysis.Complex.Trigonometric
+import Mathlib.Tactic.Ring
 import Architect
 import InfoGeometry.Research.FormalScaffold
 

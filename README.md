@@ -45,3 +45,14 @@ Optional interactive view:
 ```bash
 python3 lean/scripts/catastrophe_surface.py --show --save /tmp/catastrophe_surface.png
 ```
+
+## License
+
+This project is licensed under the Apache License 2.0.
+See [LICENSE](LICENSE) and [NOTICE](NOTICE).
+
+## Citation
+
+If you use this repository in academic work, please cite it using
+[CITATION.cff](CITATION.cff). For archival citation, mint a DOI (for example via Zenodo)
+for a tagged release.

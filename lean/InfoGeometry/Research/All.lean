@@ -11,6 +11,8 @@ import InfoGeometry.Research.Attention
 import InfoGeometry.Research.AttentionEuclidean
 import InfoGeometry.Research.AttentionSplit
 import InfoGeometry.Research.BogoliubovFockSuper
+import InfoGeometry.Research.QFTTDFTLaunchpad
+import InfoGeometry.Research.AQFTOperatorInterface
 import InfoGeometry.Research.BottPeriodicity
 import InfoGeometry.Research.BottDirac
 import InfoGeometry.Research.AnalyticalIndex
@@ -18,6 +20,9 @@ import InfoGeometry.Research.GrandSynthesis
 import InfoGeometry.Research.ChiralGravity
 import InfoGeometry.Research.ChiralEinsteinBridge
 import InfoGeometry.Research.ChiralTorsionBridge
+import InfoGeometry.Research.WeylInformationGauge
+import InfoGeometry.Research.HolographicEmergence
+import InfoGeometry.Research.CountSubstrateBridge
 import InfoGeometry.Research.KMSSinkhornBridge
 import InfoGeometry.Research.DualConnections
 import InfoGeometry.Research.IB

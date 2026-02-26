@@ -88,7 +88,7 @@ variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
 Control hypothesis coupling Sinkhorn balancing to KMS residuals:
 the residual at step `k+1` is bounded by the post-step RN barrier.
 -/
-def SinkhornDrivesToKMS
+def SinkhornKMSControl
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
@@ -96,37 +96,15 @@ def SinkhornDrivesToKMS
   ∀ k : Nat, ∀ A B : AlgebraEnd F,
     kmsResidual K (ω (k + 1)) β A B ≤ trajectoryRNBarrierNext n T k
 
-/-- Canonical control name for Sinkhorn-to-KMS residual coupling. -/
-abbrev SinkhornKMSControl
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ) : Prop :=
-  SinkhornDrivesToKMS n T K ω β
-
-attribute [deprecated SinkhornKMSControl (since := "2026-02-26")]
-  SinkhornDrivesToKMS
-
 /--
 Constructive thermodynamic state: exact KMS holds at every next Sinkhorn step.
 -/
-def SinkhornKMSState
+def SinkhornKMSClosure
     (_T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ) : Prop :=
   ∀ k : Nat, SatisfiesKMSLike (E := F) K (ω (k + 1)) β
-
-/-- Canonical closure name for exact KMS along Sinkhorn steps. -/
-abbrev SinkhornKMSClosure
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ) : Prop :=
-  SinkhornKMSState n T K ω β
-
-attribute [deprecated SinkhornKMSClosure (since := "2026-02-26")]
-  SinkhornKMSState
 
 /--
 Canonical theorem name: Sinkhorn control closes to exact KMS at each next step.
@@ -147,21 +125,6 @@ theorem sinkhorn_step_kmsClosure_of_control
     trajectoryRNBarrierNext_eq_zero (n := n) T k
   simpa [hzero] using hAB
 
-/--
-If KMS residual is controlled by the post-step RN barrier, every Sinkhorn step
-produces an exact KMS state (because the post-step barrier is zero).
--/
-@[deprecated sinkhorn_step_kmsClosure_of_control (since := "2026-02-26")]
-theorem sinkhorn_step_exactKMS_of_barrier_control
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hDrive : SinkhornKMSControl n T K ω β) :
-    SinkhornKMSClosure n T K ω β :=
-  sinkhorn_step_kmsClosure_of_control
-    (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive
-
 /-- Canonical theorem name: exact KMS closure implies Sinkhorn control. -/
 theorem sinkhorn_control_of_step_kmsClosure
     (T : SinkhornTrajectory n)
@@ -178,21 +141,6 @@ theorem sinkhorn_control_of_step_kmsClosure
   have hzero : trajectoryRNBarrierNext n T k = 0 :=
     trajectoryRNBarrierNext_eq_zero (n := n) T k
   simpa [hzero] using hAB
-
-/--
-Conversely, exact KMS at every next Sinkhorn step constructively implies the
-`SinkhornDrivesToKMS` residual bound.
--/
-@[deprecated sinkhorn_control_of_step_kmsClosure (since := "2026-02-26")]
-theorem sinkhorn_barrier_control_of_step_exactKMS
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hState : SinkhornKMSClosure n T K ω β) :
-    SinkhornKMSControl n T K ω β :=
-  sinkhorn_control_of_step_kmsClosure
-    (n := n) (T := T) (K := K) (ω := ω) (β := β) hState
 
 /--
 Stepwise quantitative control: KMS residual is bounded by the pre-step RN barrier.
@@ -223,26 +171,6 @@ theorem sinkhornIterate_kmsClosure_of_control
     (n := n) (T := sinkhornIterateTrajectory (n := n) M0 hrow hcol)
     (K := K) (ω := ω) (β := β) hControl
 
-/--
-Constructive-iterate specialization:
-the recursive Sinkhorn-Knopp generator drives the state sequence to KMS under
-the same RN-barrier control hypothesis.
--/
-@[deprecated sinkhornIterate_kmsClosure_of_control (since := "2026-02-26")]
-theorem sinkhornIterate_exactKMS_of_barrier_control
-    (M0 : SinkhornMatrix n)
-    (hrow : ∀ M : SinkhornMatrix n, HasPositiveRowSums n M)
-    (hcol : ∀ M : SinkhornMatrix n, HasPositiveColSums n M)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hDrive : SinkhornKMSControl n
-      (sinkhornIterateTrajectory (n := n) M0 hrow hcol) K ω β) :
-    SinkhornKMSClosure n (sinkhornIterateTrajectory (n := n) M0 hrow hcol) K ω β := by
-  exact sinkhornIterate_kmsClosure_of_control
-    (n := n) (M0 := M0) (hrow := hrow) (hcol := hcol)
-    (K := K) (ω := ω) (β := β) hDrive
-
 end SinkhornBridge
 
 section RouterSinkhornBridge
@@ -271,25 +199,6 @@ theorem router_sinkhornIterate_kmsClosure_of_control
   exact sinkhornIterate_kmsClosure_of_control
     (n := n) (M0 := M0) (hrow := hrow) (hcol := hcol)
     (K := routerModularHamiltonian n x i) (ω := ω) (β := β) hDrive
-
-@[deprecated router_sinkhornIterate_kmsClosure_of_control (since := "2026-02-26")]
-theorem router_sinkhornIterate_exactKMS_of_barrier_control
-    {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [Nonempty (Fin n)]
-    (x : Fin n → V) (i : Fin n)
-    (M0 : SinkhornMatrix n)
-    (hrow : ∀ M : SinkhornMatrix n, HasPositiveRowSums n M)
-    (hcol : ∀ M : SinkhornMatrix n, HasPositiveColSums n M)
-    (ω : Nat → AlgebraEnd (RouterAmplitude n) →L[ℝ] ℝ)
-    (β : ℝ)
-    (hDrive : SinkhornKMSControl n
-      (sinkhornIterateTrajectory (n := n) M0 hrow hcol)
-      (routerModularHamiltonian n x i) ω β) :
-    SinkhornKMSClosure n
-      (sinkhornIterateTrajectory (n := n) M0 hrow hcol)
-      (routerModularHamiltonian n x i) ω β := by
-  exact router_sinkhornIterate_kmsClosure_of_control
-    (n := n) (x := x) (i := i) (M0 := M0) (hrow := hrow) (hcol := hcol)
-    (ω := ω) (β := β) hDrive
 
 end RouterSinkhornBridge
 

@@ -66,17 +66,9 @@ lemma isEinsteinKaehlerAtWith_zero_of_isRicciFlat
 Calabi-Yau bridge hypothesis:
 constant Monge-Ampere density closes to Ricci-flatness.
 -/
-def ConstantMongeAmpereImpliesRicciFlat
+def MongeAmpereRicciClosure
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) : Prop :=
   HasConstantMongeAmpereDensity K.H → IsRicciFlat R
-
-/-- Canonical closure name: constant Monge-Ampere density closes to Ricci-flatness. -/
-abbrev MongeAmpereRicciClosure
-    (R : RicciTensor E) (K : KaehlerInformationGeometry E) : Prop :=
-  ConstantMongeAmpereImpliesRicciFlat R K
-
-attribute [deprecated MongeAmpereRicciClosure (since := "2026-02-26")]
-  ConstantMongeAmpereImpliesRicciFlat
 
 /--
 Constructive discharge of the Monge-Ampere-to-Ricci bridge from an explicit
@@ -154,16 +146,9 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 Calabi-Yau spectral closure hypothesis:
 constant Monge-Ampere density forces vanishing spinorial scalar curvature.
 -/
-def ConstantMongeAmpereImpliesZeroSpinorial
+def MongeAmpereSpinorialClosure
     (IST : InfoSpectralTriple E) : Prop :=
   HasConstantMongeAmpereDensity IST.H → spinorialScalarCurvature IST = 0
-
-/-- Canonical closure name: constant Monge-Ampere density closes to zero spinorial scalar. -/
-abbrev MongeAmpereSpinorialClosure (IST : InfoSpectralTriple E) : Prop :=
-  ConstantMongeAmpereImpliesZeroSpinorial IST
-
-attribute [deprecated MongeAmpereSpinorialClosure (since := "2026-02-26")]
-  ConstantMongeAmpereImpliesZeroSpinorial
 
 /-- Constructive spectral Calabi-Yau state (non-bridge form). -/
 def CalabiYauSpinorialState (IST : InfoSpectralTriple E) : Prop :=

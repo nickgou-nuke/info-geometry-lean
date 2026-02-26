@@ -389,4 +389,20 @@ lemma grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
 
 end EinsteinBridge
 
+attribute [deprecated FockEndomorphism (since := "2026-02-26")] FockEnd
+attribute [deprecated BogoliubovMixingParams (since := "2026-02-26")] BogoliubovParams
+attribute [deprecated bogoliubovNumberOperator (since := "2026-02-26")] numberOperator
+attribute [deprecated grandCanonicalFockGenerator (since := "2026-02-26")] grandCanonicalGenerator
+attribute [deprecated grandCanonicalFockEulerStep (since := "2026-02-26")] grandCanonicalEulerStep
+attribute [deprecated fockSuperBracket (since := "2026-02-26")] superBracket
+attribute [deprecated fockCommutator (since := "2026-02-26")] commutator
+attribute [deprecated fockAnticommutator (since := "2026-02-26")] anticommutator
+attribute [deprecated einsteinInducedChemicalPotential (since := "2026-02-26")]
+  inducedChemicalPotential
+attribute [deprecated einsteinFockDeformationOperator (since := "2026-02-26")]
+  einsteinFockDeformation
+attribute [deprecated grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
+  (since := "2026-02-26")]
+  grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
+
 end InfoGeometry.Research.BogoliubovFockSuper

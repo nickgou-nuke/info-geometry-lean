@@ -6,7 +6,6 @@ import InfoGeometry.Canonical.Krein
 import InfoGeometry.Canonical.Prequantum
 import InfoGeometry.Canonical.Projective
 import InfoGeometry.Canonical.Quantum
-import InfoGeometry.Canonical.ResearchPromoted
 import InfoGeometry.Canonical.Statistics
 import InfoGeometry.Canonical.Thermo
 import InfoGeometry.Canonical.Twistor
@@ -15,4 +14,7 @@ import InfoGeometry.Canonical.Twistor
 # InfoGeometry.Canonical.All
 
 Single canonical umbrella for all publishable InfoGeometry modules.
+
+This default surface intentionally excludes `InfoGeometry.Canonical.ResearchPromoted`.
+For research-promoted modules, import that umbrella explicitly.
 -/

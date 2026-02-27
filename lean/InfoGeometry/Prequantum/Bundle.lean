@@ -1,6 +1,9 @@
 import InfoGeometry.Prequantum.Scaling
 import InfoGeometry.Projective.Rays
 
+namespace InfoGeometry.Prequantum.Bundle
+end InfoGeometry.Prequantum.Bundle
+
 section KreinClifford
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]

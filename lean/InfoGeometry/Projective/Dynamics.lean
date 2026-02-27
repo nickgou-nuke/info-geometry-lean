@@ -1,5 +1,8 @@
 import InfoGeometry.Projective.ProjectiveMap
 
+namespace InfoGeometry.Projective.Dynamics
+end InfoGeometry.Projective.Dynamics
+
 section KreinClifford
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]

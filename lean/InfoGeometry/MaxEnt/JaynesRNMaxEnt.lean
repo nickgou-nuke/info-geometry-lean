@@ -4,7 +4,7 @@ import Mathlib.InformationTheory.KullbackLeibler.Basic
 open scoped BigOperators ENNReal
 open MeasureTheory
 
-namespace JaynesRNMaxEnt
+namespace InfoGeometry.MaxEnt.JaynesRNMaxEnt
 
 variable {Ω : Type*} [MeasurableSpace Ω]
 
@@ -198,4 +198,4 @@ def GibbsMinimizesKL
     Prop :=
   gibbs_minimizes_kl (μ₀ := μ₀) C lam hInt hFeas
 
-end JaynesRNMaxEnt
+end InfoGeometry.MaxEnt.JaynesRNMaxEnt

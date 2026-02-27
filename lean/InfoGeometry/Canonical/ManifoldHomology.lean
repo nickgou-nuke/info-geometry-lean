@@ -1,19 +1,21 @@
-import InfoGeometry.Experimental.AssumptionWrappers.ManifoldHomology
+import InfoGeometry.Assumptions.ManifoldHomology
+import InfoGeometry.Degree
 
 /-!
-# Research.ManifoldHomology
+# InfoGeometry.Canonical.ManifoldHomology
 
-Compatibility forwarder over
-`InfoGeometry.Experimental.AssumptionWrappers.ManifoldHomology`.
+Canonical manifold-homology surface built from:
+- `InfoGeometry.Assumptions.ManifoldHomology`
+- `InfoGeometry.ManifoldTopology` (exposed through `InfoGeometry.Degree`)
 -/
 
 namespace InfoGeometry.Canonical.ManifoldHomology
 
 /-!
 Explicitly forward manifold homology/degree scaffold surfaces from the
-experimental wrapper.
+assumptions + degree layers.
 -/
-export InfoGeometry.Experimental.AssumptionWrappers.ManifoldHomology (
+export InfoGeometry.Assumptions.ManifoldHomology (
   IsRegularValue
   topHomologyIso
   top_homology_is_Z
@@ -22,6 +24,9 @@ export InfoGeometry.Experimental.AssumptionWrappers.ManifoldHomology (
   mappingDegree_nonneg
   degree_formula_via_jacobian
   degree_formula_via_jacobian_true
+)
+
+export InfoGeometry.ManifoldTopology (
   exists_isolating_nhds_of_nondegenerate
   preimage_finite_of_regular_value
   exists_local_chart_homotopy_to_linear

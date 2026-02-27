@@ -20,15 +20,24 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 
 import InfoGeometry.Basic
+import InfoGeometry.Assumptions
 import InfoGeometry.Core
+import InfoGeometry.Convex
 import InfoGeometry.Convex.Bregman
 import InfoGeometry.Convex.Duality
+import InfoGeometry.Convex.FenchelConjugate
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Convex.Legendre
+import InfoGeometry.Convex.RadonHelly
+import InfoGeometry.Cramer
 import InfoGeometry.EntropicInference
+import InfoGeometry.Fenchel
+import InfoGeometry.Information.MultiLogPotential
 import InfoGeometry.KL.Finite
 import InfoGeometry.MaxEnt.Core
 import InfoGeometry.OptimalTransport
+import InfoGeometry.Potential
+import InfoGeometry.Potential.Thermo
 
 /-!
 # InfoGeometry.Canonical.Foundations

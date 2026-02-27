@@ -13,6 +13,9 @@ Python (or Lean) and can be invoked from the repository root.
   package.
 - `namespace_patch_plan.py` and `audit_namespaces.sh` – assist with
   namespace hygiene.
+- `ci_baseline.sh` – runs the canonical green baseline used by CI:
+  `lake build`, `make-graph --probe-unresolved`, `refactor-plan`,
+  and archive-policy enforcement.
 - `ExportDecls.lean` and `emit_blueprint_tex.py` – export data from a
   `Lean.Environment` for analysis.
 - `ExportGraph.lean` + `make_graph.py` – produce a dependency graph (nodes +

@@ -4,14 +4,14 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-ROOT = Path("InfoGeometry")
+ROOT = Path("lean/InfoGeometry")
 
 NS_RE = re.compile(r"^\s*namespace\s+([A-Za-z0-9_.']+)\s*$")
 DECL_RE = re.compile(r"^\s*(def|lemma|theorem|structure|class|inductive|abbrev|opaque|instance)\b")
 
 SKIP_FILES = {
-    "InfoGeometry/BlueprintTags.lean",
-    "InfoGeometry/auto_blueprints.lean",
+    "lean/InfoGeometry/BlueprintTags.lean",
+    "lean/InfoGeometry/auto_blueprints.lean",
 }
 
 def suggested_namespace(path: Path) -> str:

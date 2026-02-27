@@ -5,6 +5,9 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
+namespace InfoGeometry.Projective.FaithfulKL
+end InfoGeometry.Projective.FaithfulKL
+
 open scoped BigOperators
 
 namespace PositiveMeasure

@@ -1,17 +1,17 @@
-import InfoGeometry.Experimental.AssumptionWrappers.IB
+import InfoGeometry.Assumptions.IB
 
 /-!
-# Research.IB
+# InfoGeometry.Canonical.IB
 
-Compatibility forwarder over `InfoGeometry.Experimental.AssumptionWrappers.IB`.
+Canonical IB surface built directly from `InfoGeometry.Assumptions.IB`.
 -/
 
 namespace InfoGeometry.Canonical.IB
 
 /-!
-Explicitly forward the IB scaffold surface from the experimental wrapper.
+Explicitly forward the IB scaffold surface from the assumptions layer.
 -/
-export InfoGeometry.Experimental.AssumptionWrappers.IB (
+export InfoGeometry.Assumptions.IB (
   FinProb
   IBProblem
   KLKernel

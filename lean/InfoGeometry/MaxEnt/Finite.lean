@@ -1,4 +1,5 @@
 import InfoGeometry.Basic
+import Mathlib.Algebra.BigOperators.Field
 
 open scoped BigOperators
 

@@ -1,0 +1,4336 @@
+{
+  "schema": "infogeometry.module_graph.v1",
+  "namespace": "InfoGeometry",
+  "nodes": [
+    {
+      "id": "InfoGeometry",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Root"
+    },
+    {
+      "id": "InfoGeometry.Analysis",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Analysis.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Analysis"
+    },
+    {
+      "id": "InfoGeometry.Analysis.Graph",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Analysis/Graph.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Analysis"
+    },
+    {
+      "id": "InfoGeometry.Architecture.SymmetricSpace",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Architecture/SymmetricSpace.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Architecture"
+    },
+    {
+      "id": "InfoGeometry.Archive.Drafts.Degree_pre_assumptions_extraction",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Archive/Drafts/Degree_pre_assumptions_extraction.lean",
+      "discovered": true,
+      "buildable": false,
+      "region": "Archive"
+    },
+    {
+      "id": "InfoGeometry.Archive.Drafts.New_pre_assumptions_extraction",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Archive/Drafts/New_pre_assumptions_extraction.lean",
+      "discovered": true,
+      "buildable": false,
+      "region": "Archive"
+    },
+    {
+      "id": "InfoGeometry.Archive.Drafts.Projective_LogSum_pre_assumptions_extraction",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Archive/Drafts/Projective_LogSum_pre_assumptions_extraction.lean",
+      "discovered": true,
+      "buildable": false,
+      "region": "Archive"
+    },
+    {
+      "id": "InfoGeometry.Assumptions",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Assumptions.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Assumptions"
+    },
+    {
+      "id": "InfoGeometry.Assumptions.Determinant",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Assumptions/Determinant.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Assumptions"
+    },
+    {
+      "id": "InfoGeometry.Assumptions.DualConnections",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Assumptions/DualConnections.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Assumptions"
+    },
+    {
+      "id": "InfoGeometry.Assumptions.IB",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Assumptions/IB.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Assumptions"
+    },
+    {
+      "id": "InfoGeometry.Assumptions.LLN",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Assumptions/LLN.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Assumptions"
+    },
+    {
+      "id": "InfoGeometry.Assumptions.ManifoldDegree",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Assumptions/ManifoldDegree.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Assumptions"
+    },
+    {
+      "id": "InfoGeometry.Assumptions.ManifoldHomology",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Assumptions/ManifoldHomology.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Assumptions"
+    },
+    {
+      "id": "InfoGeometry.Axioms",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Axioms.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Axioms"
+    },
+    {
+      "id": "InfoGeometry.Basic",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Basic.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Basic"
+    },
+    {
+      "id": "InfoGeometry.Canonical.AQFTOperatorInterface",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/AQFTOperatorInterface.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Algebra",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Algebra.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.All",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.AnalysisLegacy",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/AnalysisLegacy.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.AnalyticalIndex",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/AnalyticalIndex.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.AnomalyInflow",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/AnomalyInflow.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Attention",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Attention.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.AttentionEuclidean",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/AttentionEuclidean.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.AttentionSplit",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/AttentionSplit.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.BeliefAlgebra",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/BeliefAlgebra.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.BeliefDynamics",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/BeliefDynamics.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.BerryPhase",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/BerryPhase.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.BogoliubovFockSuper",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/BogoliubovFockSuper.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.BottDirac",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/BottDirac.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.BottPeriodicity",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/BottPeriodicity.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.BregmanTriality",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/BregmanTriality.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.CalabiYauBridge",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/CalabiYauBridge.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.CartanDecomposition",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/CartanDecomposition.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.CayleyBregmanBridge",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/CayleyBregmanBridge.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.ChiralAction",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ChiralAction.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.ChiralAnomaly",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ChiralAnomaly.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.ChiralCliffordBridge",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ChiralCliffordBridge.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.ChiralEinsteinBridge",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ChiralEinsteinBridge.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.ChiralGravity",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ChiralGravity.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.ChiralRGFlow",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ChiralRGFlow.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.ChiralTorsionBridge",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ChiralTorsionBridge.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Clifford",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Clifford.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.CliffordBridge",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/CliffordBridge.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.ConformalAlgebra",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ConformalAlgebra.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.ConformalUnification",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ConformalUnification.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.ConformalWard",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ConformalWard.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.CoreLegacy",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/CoreLegacy.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.CountSubstrateBridge",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/CountSubstrateBridge.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.CurvatureRGFlow",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/CurvatureRGFlow.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Drazin",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Drazin.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.DualConnections",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/DualConnections.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.ExponentialFamilyLegacy",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ExponentialFamilyLegacy.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.FormalScaffold",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/FormalScaffold.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Foundations",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Foundations.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.FoundationsLegacy",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/FoundationsLegacy.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.GaugeUnified",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/GaugeUnified.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.GeneralizedKL",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/GeneralizedKL.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Geometry",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Geometry.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/GrandCanonicalExperts.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.GrandSynthesis",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/GrandSynthesis.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.GrandUnification",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/GrandUnification.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.GrandUnificationBlueprint",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/GrandUnificationBlueprint.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.GrandUnificationMetric",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/GrandUnificationMetric.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.HeatKernel",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/HeatKernel.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.HolographicEmergence",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/HolographicEmergence.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.IB",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/IB.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.InformationNumber",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/InformationNumber.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.InformationTorsion",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/InformationTorsion.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.IntegrationLegacy",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/IntegrationLegacy.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/KMSSinkhornBridge.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.KaehlerGeometry",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/KaehlerGeometry.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Krein",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Krein.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.KreinLadder",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/KreinLadder.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.LLMLegacy",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/LLMLegacy.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.LLN",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/LLN.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.LorentzianRouting",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/LorentzianRouting.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.ManifoldHomology",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ManifoldHomology.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.MixtureOfExperts",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/MixtureOfExperts.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.MoorePenrose",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/MoorePenrose.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.PathIntegral",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/PathIntegral.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.PerelmanW",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/PerelmanW.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Prequantum",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Prequantum.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Projective",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Projective.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/QFTTDFTLaunchpad.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Quantum",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Quantum.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.QuantumInference",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/QuantumInference.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.RGFlow",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RGFlow.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.RicciMongeAmpere",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RicciMongeAmpere.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Rosetta",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Rosetta.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.SpectralInference",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/SpectralInference.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Statistics",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Statistics.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.StatisticsLegacy",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/StatisticsLegacy.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.SuperInference",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/SuperInference.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.SuperUnified",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/SuperUnified.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.ThermalLegacy",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ThermalLegacy.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Thermo",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Thermo.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.TomitaTakesaki",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/TomitaTakesaki.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.TopologicalEuler",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/TopologicalEuler.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.TopologicalInvariants",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/TopologicalInvariants.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Triality",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Triality.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.Twistor",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/Twistor.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Canonical.WeylInformationGauge",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/WeylInformationGauge.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Canonical"
+    },
+    {
+      "id": "InfoGeometry.Clifford.Cl11",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Clifford/Cl11.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Clifford"
+    },
+    {
+      "id": "InfoGeometry.Clifford.Grading",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Clifford/Grading.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Clifford"
+    },
+    {
+      "id": "InfoGeometry.Clifford.Lift",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Clifford/Lift.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Clifford"
+    },
+    {
+      "id": "InfoGeometry.Clifford.Relations",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Clifford/Relations.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Clifford"
+    },
+    {
+      "id": "InfoGeometry.Clifford.SplitQ11",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Clifford/SplitQ11.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Clifford"
+    },
+    {
+      "id": "InfoGeometry.Clifford.Supercharge",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Clifford/Supercharge.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Clifford"
+    },
+    {
+      "id": "InfoGeometry.Clifford.Tower",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Clifford/Tower.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Clifford"
+    },
+    {
+      "id": "InfoGeometry.Convex",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Convex.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Convex"
+    },
+    {
+      "id": "InfoGeometry.Convex.Bregman",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Convex/Bregman.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Convex"
+    },
+    {
+      "id": "InfoGeometry.Convex.Duality",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Convex/Duality.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Convex"
+    },
+    {
+      "id": "InfoGeometry.Convex.FenchelConjugate",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Convex/FenchelConjugate.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Convex"
+    },
+    {
+      "id": "InfoGeometry.Convex.HessianGeometry",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Convex/HessianGeometry.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Convex"
+    },
+    {
+      "id": "InfoGeometry.Convex.Legendre",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Convex/Legendre.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Convex"
+    },
+    {
+      "id": "InfoGeometry.Convex.ProjectiveRays",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Convex/ProjectiveRays.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Convex"
+    },
+    {
+      "id": "InfoGeometry.Convex.RadonHelly",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Convex/RadonHelly.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Convex"
+    },
+    {
+      "id": "InfoGeometry.Core",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Core.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Core"
+    },
+    {
+      "id": "InfoGeometry.Core.Derivatives",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Core/Derivatives.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Core"
+    },
+    {
+      "id": "InfoGeometry.Core.DerivativesSmoke",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Core/DerivativesSmoke.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Core"
+    },
+    {
+      "id": "InfoGeometry.Core.Entropy",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Core/Entropy.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Core"
+    },
+    {
+      "id": "InfoGeometry.Core.GrandCanonical",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Core/GrandCanonical.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Core"
+    },
+    {
+      "id": "InfoGeometry.Core.Involution",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Core/Involution.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Core"
+    },
+    {
+      "id": "InfoGeometry.Core.Jordan",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Core/Jordan.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Core"
+    },
+    {
+      "id": "InfoGeometry.Core.SymmetricLie",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Core/SymmetricLie.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Core"
+    },
+    {
+      "id": "InfoGeometry.Core.SymmetricLieGeneric",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Core/SymmetricLieGeneric.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Core"
+    },
+    {
+      "id": "InfoGeometry.Core.SymmetricSpaces",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Core/SymmetricSpaces.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Core"
+    },
+    {
+      "id": "InfoGeometry.Core.UnifiedGeometry",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Core/UnifiedGeometry.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Core"
+    },
+    {
+      "id": "InfoGeometry.Cramer",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Cramer.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Cramer"
+    },
+    {
+      "id": "InfoGeometry.Degree",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Degree.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Degree"
+    },
+    {
+      "id": "InfoGeometry.EntropicInference",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/EntropicInference.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "EntropicInference"
+    },
+    {
+      "id": "InfoGeometry.EntropicInferenceTest",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/EntropicInferenceTest.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "EntropicInferenceTest"
+    },
+    {
+      "id": "InfoGeometry.ExponentialFamily",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/ExponentialFamily.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "ExponentialFamily"
+    },
+    {
+      "id": "InfoGeometry.ExponentialFamily.Analytic.LogSumExp",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/Analytic/LogSumExp.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "ExponentialFamily"
+    },
+    {
+      "id": "InfoGeometry.ExponentialFamily.Analytic.Softmax",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/Analytic/Softmax.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "ExponentialFamily"
+    },
+    {
+      "id": "InfoGeometry.ExponentialFamily.Bernoulli",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/Bernoulli.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "ExponentialFamily"
+    },
+    {
+      "id": "InfoGeometry.ExponentialFamily.Class",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/Class.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "ExponentialFamily"
+    },
+    {
+      "id": "InfoGeometry.ExponentialFamily.Finite",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/Finite.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "ExponentialFamily"
+    },
+    {
+      "id": "InfoGeometry.ExponentialFamily.Gaussian",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/Gaussian.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "ExponentialFamily"
+    },
+    {
+      "id": "InfoGeometry.ExponentialFamily.GaussianHolonomy",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/GaussianHolonomy.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "ExponentialFamily"
+    },
+    {
+      "id": "InfoGeometry.ExponentialFamily.GaussianLadder",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/GaussianLadder.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "ExponentialFamily"
+    },
+    {
+      "id": "InfoGeometry.ExponentialFamily.KLBregman",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/KLBregman.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "ExponentialFamily"
+    },
+    {
+      "id": "InfoGeometry.ExponentialFamily.Legendre",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/Legendre.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "ExponentialFamily"
+    },
+    {
+      "id": "InfoGeometry.ExponentialFamily.TwistedGaussian",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/ExponentialFamily/TwistedGaussian.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "ExponentialFamily"
+    },
+    {
+      "id": "InfoGeometry.Fenchel",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Fenchel.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Fenchel"
+    },
+    {
+      "id": "InfoGeometry.Geometry.DualFlat",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Geometry/DualFlat.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Geometry"
+    },
+    {
+      "id": "InfoGeometry.Geometry.KreinAsHessian",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Geometry/KreinAsHessian.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Geometry"
+    },
+    {
+      "id": "InfoGeometry.Geometry.LegendreDuality",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Geometry/LegendreDuality.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Geometry"
+    },
+    {
+      "id": "InfoGeometry.GrandCanonical.Core",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/GrandCanonical/Core.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "GrandCanonical"
+    },
+    {
+      "id": "InfoGeometry.Information.MultiLogPotential",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Information/MultiLogPotential.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Information"
+    },
+    {
+      "id": "InfoGeometry.Jordan.Core",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Jordan/Core.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Jordan"
+    },
+    {
+      "id": "InfoGeometry.Jordan.LogDet",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Jordan/LogDet.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Jordan"
+    },
+    {
+      "id": "InfoGeometry.Jordan.SPD",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Jordan/SPD.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Jordan"
+    },
+    {
+      "id": "InfoGeometry.KL",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/KL.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "KL"
+    },
+    {
+      "id": "InfoGeometry.KL.Finite",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/KL/Finite.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "KL"
+    },
+    {
+      "id": "InfoGeometry.KL.Measure",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/KL/Measure.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "KL"
+    },
+    {
+      "id": "InfoGeometry.Krein.Automorphisms",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/Automorphisms.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Krein"
+    },
+    {
+      "id": "InfoGeometry.Krein.CartanDecomposition",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/CartanDecomposition.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Krein"
+    },
+    {
+      "id": "InfoGeometry.Krein.HilbertBridge",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/HilbertBridge.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Krein"
+    },
+    {
+      "id": "InfoGeometry.Krein.Metric",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/Metric.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Krein"
+    },
+    {
+      "id": "InfoGeometry.Krein.Modular",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/Modular.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Krein"
+    },
+    {
+      "id": "InfoGeometry.Krein.Prelude",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/Prelude.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Krein"
+    },
+    {
+      "id": "InfoGeometry.Krein.Thermal",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/Thermal.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Krein"
+    },
+    {
+      "id": "InfoGeometry.LLM",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/LLM.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "LLM"
+    },
+    {
+      "id": "InfoGeometry.LLM.MaskedTransformerBlock",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/LLM/MaskedTransformerBlock.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "LLM"
+    },
+    {
+      "id": "InfoGeometry.LLM.PositionalEncoding",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/LLM/PositionalEncoding.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "LLM"
+    },
+    {
+      "id": "InfoGeometry.LLM.TransformerBlock",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/LLM/TransformerBlock.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "LLM"
+    },
+    {
+      "id": "InfoGeometry.Library",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Library.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Library"
+    },
+    {
+      "id": "InfoGeometry.MaxEnt",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/MaxEnt.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "MaxEnt"
+    },
+    {
+      "id": "InfoGeometry.MaxEnt.Core",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/MaxEnt/Core.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "MaxEnt"
+    },
+    {
+      "id": "InfoGeometry.MaxEnt.DualBridge",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/MaxEnt/DualBridge.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "MaxEnt"
+    },
+    {
+      "id": "InfoGeometry.MaxEnt.Finite",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/MaxEnt/Finite.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "MaxEnt"
+    },
+    {
+      "id": "InfoGeometry.MaxEnt.Jaynes",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/MaxEnt/Jaynes.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "MaxEnt"
+    },
+    {
+      "id": "InfoGeometry.MaxEnt.JaynesCanonical",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/MaxEnt/JaynesCanonical.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "MaxEnt"
+    },
+    {
+      "id": "InfoGeometry.MaxEnt.JaynesInfoStatMech",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/MaxEnt/JaynesInfoStatMech.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "MaxEnt"
+    },
+    {
+      "id": "InfoGeometry.MaxEnt.JaynesInfoStatMechTest",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/MaxEnt/JaynesInfoStatMechTest.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "MaxEnt"
+    },
+    {
+      "id": "InfoGeometry.MaxEnt.JaynesRNMaxEnt",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/MaxEnt/JaynesRNMaxEnt.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "MaxEnt"
+    },
+    {
+      "id": "InfoGeometry.MaxEnt.Lagrange",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/MaxEnt/Lagrange.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "MaxEnt"
+    },
+    {
+      "id": "InfoGeometry.MaxEnt.Optimality",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/MaxEnt/Optimality.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "MaxEnt"
+    },
+    {
+      "id": "InfoGeometry.OptimalTransport",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/OptimalTransport.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "OptimalTransport"
+    },
+    {
+      "id": "InfoGeometry.PositiveMeasure",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/PositiveMeasure.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "PositiveMeasure"
+    },
+    {
+      "id": "InfoGeometry.Potential",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Potential.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Potential"
+    },
+    {
+      "id": "InfoGeometry.Potential.LogPotential",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Potential/LogPotential.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Potential"
+    },
+    {
+      "id": "InfoGeometry.Potential.Thermo",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Potential/Thermo.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Potential"
+    },
+    {
+      "id": "InfoGeometry.Prequantum.Bundle",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Prequantum/Bundle.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Prequantum"
+    },
+    {
+      "id": "InfoGeometry.Prequantum.Connection",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Prequantum/Connection.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Prequantum"
+    },
+    {
+      "id": "InfoGeometry.Prequantum.Quotient",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Prequantum/Quotient.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Prequantum"
+    },
+    {
+      "id": "InfoGeometry.Prequantum.Scaling",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Prequantum/Scaling.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Prequantum"
+    },
+    {
+      "id": "InfoGeometry.Projective.Dynamics",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/Dynamics.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Projective"
+    },
+    {
+      "id": "InfoGeometry.Projective.FaithfulKL",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/FaithfulKL.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Projective"
+    },
+    {
+      "id": "InfoGeometry.Projective.GaugeQuotient",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/GaugeQuotient.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Projective"
+    },
+    {
+      "id": "InfoGeometry.Projective.GaugeReduction",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/GaugeReduction.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Projective"
+    },
+    {
+      "id": "InfoGeometry.Projective.LogSum",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/LogSum.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Projective"
+    },
+    {
+      "id": "InfoGeometry.Projective.LogSumIneq",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/LogSumIneq.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Projective"
+    },
+    {
+      "id": "InfoGeometry.Projective.Normalize",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/Normalize.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Projective"
+    },
+    {
+      "id": "InfoGeometry.Projective.Null",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/Null.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Projective"
+    },
+    {
+      "id": "InfoGeometry.Projective.PhysicalKinematics",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/PhysicalKinematics.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Projective"
+    },
+    {
+      "id": "InfoGeometry.Projective.Projective",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/Projective.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Projective"
+    },
+    {
+      "id": "InfoGeometry.Projective.ProjectiveMap",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/ProjectiveMap.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Projective"
+    },
+    {
+      "id": "InfoGeometry.Projective.Rays",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/Rays.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Projective"
+    },
+    {
+      "id": "InfoGeometry.Quantum.Fock",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/Fock.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Quantum"
+    },
+    {
+      "id": "InfoGeometry.RegularizedKL",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/RegularizedKL.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "RegularizedKL"
+    },
+    {
+      "id": "InfoGeometry.RegularizedKLTest",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/RegularizedKLTest.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "RegularizedKLTest"
+    },
+    {
+      "id": "InfoGeometry.Renyi",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Renyi.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Renyi"
+    },
+    {
+      "id": "InfoGeometry.SLT.ConditionalExpectation",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/SLT/ConditionalExpectation.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "SLT"
+    },
+    {
+      "id": "InfoGeometry.SuperUnified",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/SuperUnified.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "SuperUnified"
+    },
+    {
+      "id": "InfoGeometry.Thermal.FiniteMatrix",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Thermal/FiniteMatrix.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Thermal"
+    },
+    {
+      "id": "InfoGeometry.Thermo.FiniteDiagonal",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Thermo/FiniteDiagonal.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Thermo"
+    },
+    {
+      "id": "InfoGeometry.Thermo.FiniteMatrix",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Thermo/FiniteMatrix.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Thermo"
+    },
+    {
+      "id": "InfoGeometry.Thermo.FromBregman",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Thermo/FromBregman.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Thermo"
+    },
+    {
+      "id": "InfoGeometry.Thermo.FromLogDet",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Thermo/FromLogDet.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Thermo"
+    },
+    {
+      "id": "InfoGeometry.Thermo.Gibbs",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Thermo/Gibbs.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Thermo"
+    },
+    {
+      "id": "InfoGeometry.Thermo.ThermodynamicIdentities",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Thermo/ThermodynamicIdentities.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Thermo"
+    },
+    {
+      "id": "InfoGeometry.TransformationGroups",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/TransformationGroups.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "TransformationGroups"
+    },
+    {
+      "id": "InfoGeometry.Twistor.NullProjective",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Twistor/NullProjective.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "Twistor"
+    },
+    {
+      "id": "InfoGeometry.auto_blueprints",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/auto_blueprints.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "auto_blueprints"
+    },
+    {
+      "id": "InfoGeometry.generalizedKL",
+      "path": "/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/generalizedKL.lean",
+      "discovered": true,
+      "buildable": true,
+      "region": "generalizedKL"
+    }
+  ],
+  "edges": [
+    [
+      "InfoGeometry",
+      "InfoGeometry.Library",
+      "import"
+    ],
+    [
+      "InfoGeometry.Analysis",
+      "InfoGeometry.Analysis.Graph",
+      "import"
+    ],
+    [
+      "InfoGeometry.Assumptions",
+      "InfoGeometry.Assumptions.Determinant",
+      "import"
+    ],
+    [
+      "InfoGeometry.Assumptions",
+      "InfoGeometry.Assumptions.DualConnections",
+      "import"
+    ],
+    [
+      "InfoGeometry.Assumptions",
+      "InfoGeometry.Assumptions.IB",
+      "import"
+    ],
+    [
+      "InfoGeometry.Assumptions",
+      "InfoGeometry.Assumptions.LLN",
+      "import"
+    ],
+    [
+      "InfoGeometry.Assumptions",
+      "InfoGeometry.Assumptions.ManifoldDegree",
+      "import"
+    ],
+    [
+      "InfoGeometry.Assumptions",
+      "InfoGeometry.Assumptions.ManifoldHomology",
+      "import"
+    ],
+    [
+      "InfoGeometry.Assumptions",
+      "InfoGeometry.Projective.LogSum",
+      "import"
+    ],
+    [
+      "InfoGeometry.Assumptions.DualConnections",
+      "InfoGeometry.Basic",
+      "import"
+    ],
+    [
+      "InfoGeometry.Assumptions.IB",
+      "InfoGeometry.EntropicInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Assumptions.ManifoldDegree",
+      "InfoGeometry.Assumptions.ManifoldHomology",
+      "import"
+    ],
+    [
+      "InfoGeometry.Axioms",
+      "InfoGeometry.Assumptions.Determinant",
+      "import"
+    ],
+    [
+      "InfoGeometry.Axioms",
+      "InfoGeometry.Assumptions.DualConnections",
+      "import"
+    ],
+    [
+      "InfoGeometry.Axioms",
+      "InfoGeometry.Assumptions.IB",
+      "import"
+    ],
+    [
+      "InfoGeometry.Axioms",
+      "InfoGeometry.Assumptions.LLN",
+      "import"
+    ],
+    [
+      "InfoGeometry.Axioms",
+      "InfoGeometry.Assumptions.ManifoldDegree",
+      "import"
+    ],
+    [
+      "InfoGeometry.Axioms",
+      "InfoGeometry.Assumptions.ManifoldHomology",
+      "import"
+    ],
+    [
+      "InfoGeometry.Axioms",
+      "InfoGeometry.Projective.LogSum",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.AQFTOperatorInterface",
+      "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Algebra",
+      "InfoGeometry.Canonical.CartanDecomposition",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Algebra",
+      "InfoGeometry.Canonical.Drazin",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Algebra",
+      "InfoGeometry.Canonical.MoorePenrose",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Algebra",
+      "InfoGeometry.Canonical.SuperUnified",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Algebra",
+      "InfoGeometry.Canonical.Triality",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.AQFTOperatorInterface",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Algebra",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.AnalysisLegacy",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.AnalyticalIndex",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.AnomalyInflow",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Attention",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.AttentionEuclidean",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.AttentionSplit",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.BeliefAlgebra",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.BeliefDynamics",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.BerryPhase",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.BogoliubovFockSuper",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.BottDirac",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.BottPeriodicity",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.BregmanTriality",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.CalabiYauBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.CartanDecomposition",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.CayleyBregmanBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.ChiralAction",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.ChiralAnomaly",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.ChiralCliffordBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.ChiralEinsteinBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.ChiralGravity",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.ChiralRGFlow",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.ChiralTorsionBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Clifford",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.CliffordBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.ConformalAlgebra",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.ConformalUnification",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.ConformalWard",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.CoreLegacy",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.CountSubstrateBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.CurvatureRGFlow",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Drazin",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.DualConnections",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.FormalScaffold",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Foundations",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.GaugeUnified",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Geometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.GrandSynthesis",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.GrandUnification",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.GrandUnificationBlueprint",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.GrandUnificationMetric",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.HeatKernel",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.HolographicEmergence",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.IB",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.InformationNumber",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.InformationTorsion",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.IntegrationLegacy",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.KaehlerGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Krein",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.KreinLadder",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.LLMLegacy",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.LLN",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.LorentzianRouting",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.ManifoldHomology",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.MixtureOfExperts",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.MoorePenrose",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.PathIntegral",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.PerelmanW",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Prequantum",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Projective",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Quantum",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.QuantumInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.RGFlow",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.RicciMongeAmpere",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Rosetta",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Statistics",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.SuperInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Thermo",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.TomitaTakesaki",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.TopologicalEuler",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.TopologicalInvariants",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Triality",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.Twistor",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.WeylInformationGauge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.AnalysisLegacy",
+      "InfoGeometry.Analysis",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.AnalysisLegacy",
+      "InfoGeometry.Analysis.Graph",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.AnalyticalIndex",
+      "InfoGeometry.Canonical.BottDirac",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.AnalyticalIndex",
+      "InfoGeometry.Canonical.ChiralAnomaly",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.AnalyticalIndex",
+      "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.AnalyticalIndex",
+      "InfoGeometry.Canonical.RicciMongeAmpere",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.AnomalyInflow",
+      "InfoGeometry.Canonical.HeatKernel",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.AnomalyInflow",
+      "InfoGeometry.Canonical.TopologicalInvariants",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Attention",
+      "InfoGeometry.GrandCanonical.Core",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.AttentionEuclidean",
+      "InfoGeometry.Canonical.Attention",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.AttentionSplit",
+      "InfoGeometry.Canonical.Attention",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.AttentionSplit",
+      "InfoGeometry.Clifford.SplitQ11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BeliefAlgebra",
+      "InfoGeometry.Canonical.InformationTorsion",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BeliefDynamics",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BeliefDynamics",
+      "InfoGeometry.Convex.HessianGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BerryPhase",
+      "InfoGeometry.Canonical.ConformalUnification",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BerryPhase",
+      "InfoGeometry.Canonical.MoorePenrose",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BerryPhase",
+      "InfoGeometry.Canonical.QuantumInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BerryPhase",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BerryPhase",
+      "InfoGeometry.Canonical.TopologicalInvariants",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BogoliubovFockSuper",
+      "InfoGeometry.Canonical.RicciMongeAmpere",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BogoliubovFockSuper",
+      "InfoGeometry.Quantum.Fock",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BottDirac",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BottDirac",
+      "InfoGeometry.Clifford.Cl11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BottPeriodicity",
+      "InfoGeometry.Clifford.Cl11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BottPeriodicity",
+      "InfoGeometry.Clifford.Tower",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BregmanTriality",
+      "InfoGeometry.Canonical.GrandUnification",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BregmanTriality",
+      "InfoGeometry.Canonical.Triality",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.BregmanTriality",
+      "InfoGeometry.Convex.HessianGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CalabiYauBridge",
+      "InfoGeometry.Canonical.PerelmanW",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CartanDecomposition",
+      "InfoGeometry.Canonical.Drazin",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CartanDecomposition",
+      "InfoGeometry.Canonical.MoorePenrose",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CayleyBregmanBridge",
+      "InfoGeometry.Geometry.DualFlat",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralAction",
+      "InfoGeometry.Canonical.ConformalUnification",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralAction",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralAnomaly",
+      "InfoGeometry.Canonical.Drazin",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralAnomaly",
+      "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralAnomaly",
+      "InfoGeometry.Canonical.MoorePenrose",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralCliffordBridge",
+      "InfoGeometry.Canonical.ConformalUnification",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralCliffordBridge",
+      "InfoGeometry.Clifford.Grading",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralEinsteinBridge",
+      "InfoGeometry.Canonical.ChiralAnomaly",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralEinsteinBridge",
+      "InfoGeometry.Canonical.RicciMongeAmpere",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralGravity",
+      "InfoGeometry.Canonical.ChiralEinsteinBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralRGFlow",
+      "InfoGeometry.Canonical.MoorePenrose",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralRGFlow",
+      "InfoGeometry.Canonical.RGFlow",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralRGFlow",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralTorsionBridge",
+      "InfoGeometry.Assumptions.DualConnections",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralTorsionBridge",
+      "InfoGeometry.Canonical.BeliefDynamics",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralTorsionBridge",
+      "InfoGeometry.Canonical.ConformalUnification",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralTorsionBridge",
+      "InfoGeometry.Canonical.GeneralizedKL",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralTorsionBridge",
+      "InfoGeometry.Canonical.InformationTorsion",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralTorsionBridge",
+      "InfoGeometry.Convex.ProjectiveRays",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ChiralTorsionBridge",
+      "InfoGeometry.Twistor.NullProjective",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Clifford",
+      "InfoGeometry.Clifford.Cl11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Clifford",
+      "InfoGeometry.Clifford.Grading",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Clifford",
+      "InfoGeometry.Clifford.Lift",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Clifford",
+      "InfoGeometry.Clifford.Relations",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Clifford",
+      "InfoGeometry.Clifford.SplitQ11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Clifford",
+      "InfoGeometry.Clifford.Supercharge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Clifford",
+      "InfoGeometry.Clifford.Tower",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CliffordBridge",
+      "InfoGeometry.Canonical.GaugeUnified",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CliffordBridge",
+      "InfoGeometry.Clifford.SplitQ11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ConformalAlgebra",
+      "InfoGeometry.Canonical.ChiralCliffordBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ConformalAlgebra",
+      "InfoGeometry.Canonical.ConformalUnification",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ConformalUnification",
+      "InfoGeometry.Canonical.Drazin",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ConformalUnification",
+      "InfoGeometry.Canonical.MoorePenrose",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ConformalUnification",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ConformalWard",
+      "InfoGeometry.Canonical.AnomalyInflow",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ConformalWard",
+      "InfoGeometry.Canonical.ConformalUnification",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ConformalWard",
+      "InfoGeometry.Canonical.PathIntegral",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CoreLegacy",
+      "InfoGeometry.Core",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CoreLegacy",
+      "InfoGeometry.Core.Derivatives",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CoreLegacy",
+      "InfoGeometry.Core.DerivativesSmoke",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CoreLegacy",
+      "InfoGeometry.Core.Jordan",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CoreLegacy",
+      "InfoGeometry.Core.SymmetricLie",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CoreLegacy",
+      "InfoGeometry.Core.SymmetricLieGeneric",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CoreLegacy",
+      "InfoGeometry.Core.SymmetricSpaces",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CoreLegacy",
+      "InfoGeometry.Core.UnifiedGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CountSubstrateBridge",
+      "InfoGeometry.Canonical.ChiralAnomaly",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CountSubstrateBridge",
+      "InfoGeometry.Canonical.HolographicEmergence",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CountSubstrateBridge",
+      "InfoGeometry.KL.Finite",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CurvatureRGFlow",
+      "InfoGeometry.Canonical.HeatKernel",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.CurvatureRGFlow",
+      "InfoGeometry.Canonical.RGFlow",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.DualConnections",
+      "InfoGeometry.Assumptions.DualConnections",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ExponentialFamilyLegacy",
+      "InfoGeometry.ExponentialFamily",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ExponentialFamilyLegacy",
+      "InfoGeometry.ExponentialFamily.Analytic.Softmax",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ExponentialFamilyLegacy",
+      "InfoGeometry.ExponentialFamily.GaussianHolonomy",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ExponentialFamilyLegacy",
+      "InfoGeometry.ExponentialFamily.GaussianLadder",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ExponentialFamilyLegacy",
+      "InfoGeometry.ExponentialFamily.Legendre",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ExponentialFamilyLegacy",
+      "InfoGeometry.ExponentialFamily.TwistedGaussian",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.FormalScaffold",
+      "InfoGeometry.Geometry.DualFlat",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Assumptions",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Basic",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Convex",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Convex.Bregman",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Convex.Duality",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Convex.FenchelConjugate",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Convex.HessianGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Convex.Legendre",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Convex.RadonHelly",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Core",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Cramer",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.EntropicInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Fenchel",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Information.MultiLogPotential",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.KL.Finite",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.MaxEnt.Core",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.OptimalTransport",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Potential",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Potential.Thermo",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.FoundationsLegacy",
+      "InfoGeometry.Canonical.Foundations",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GaugeUnified",
+      "InfoGeometry.Canonical.FormalScaffold",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Geometry",
+      "InfoGeometry.Convex.HessianGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Geometry",
+      "InfoGeometry.Degree",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Geometry",
+      "InfoGeometry.Geometry.DualFlat",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Geometry",
+      "InfoGeometry.Geometry.KreinAsHessian",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Geometry",
+      "InfoGeometry.Geometry.LegendreDuality",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "InfoGeometry.Canonical.MixtureOfExperts",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "InfoGeometry.Clifford.SplitQ11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "InfoGeometry.GrandCanonical.Core",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandSynthesis",
+      "InfoGeometry.Canonical.AnalyticalIndex",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandSynthesis",
+      "InfoGeometry.Canonical.BottDirac",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandSynthesis",
+      "InfoGeometry.Canonical.CalabiYauBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandSynthesis",
+      "InfoGeometry.Canonical.ChiralAnomaly",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandSynthesis",
+      "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandSynthesis",
+      "InfoGeometry.Canonical.KaehlerGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandSynthesis",
+      "InfoGeometry.Canonical.RicciMongeAmpere",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandUnification",
+      "InfoGeometry.Canonical.CayleyBregmanBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandUnificationBlueprint",
+      "InfoGeometry.Canonical.AnomalyInflow",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandUnificationBlueprint",
+      "InfoGeometry.Canonical.BerryPhase",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandUnificationBlueprint",
+      "InfoGeometry.Canonical.ChiralRGFlow",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandUnificationBlueprint",
+      "InfoGeometry.Canonical.ConformalAlgebra",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandUnificationBlueprint",
+      "InfoGeometry.Canonical.InformationNumber",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandUnificationBlueprint",
+      "InfoGeometry.Canonical.PathIntegral",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandUnificationBlueprint",
+      "InfoGeometry.Canonical.SuperInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.GrandUnificationMetric",
+      "InfoGeometry.Canonical.GrandUnification",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.HeatKernel",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.HolographicEmergence",
+      "InfoGeometry.Canonical.AnomalyInflow",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.HolographicEmergence",
+      "InfoGeometry.Canonical.ChiralTorsionBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.HolographicEmergence",
+      "InfoGeometry.Canonical.WeylInformationGauge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.IB",
+      "InfoGeometry.Assumptions.IB",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.InformationNumber",
+      "InfoGeometry.Canonical.Drazin",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.InformationTorsion",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.InformationTorsion",
+      "InfoGeometry.Convex.HessianGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.IntegrationLegacy",
+      "InfoGeometry.EntropicInferenceTest",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.IntegrationLegacy",
+      "InfoGeometry.SLT.ConditionalExpectation",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.IntegrationLegacy",
+      "InfoGeometry.TransformationGroups",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.IntegrationLegacy",
+      "InfoGeometry.auto_blueprints",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "InfoGeometry.Canonical.ChiralAnomaly",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "InfoGeometry.Krein.Thermal",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.KaehlerGeometry",
+      "InfoGeometry.Clifford.Relations",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.KaehlerGeometry",
+      "InfoGeometry.Convex.HessianGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Krein",
+      "InfoGeometry.Krein.Automorphisms",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Krein",
+      "InfoGeometry.Krein.CartanDecomposition",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Krein",
+      "InfoGeometry.Krein.HilbertBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Krein",
+      "InfoGeometry.Krein.Metric",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Krein",
+      "InfoGeometry.Krein.Modular",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Krein",
+      "InfoGeometry.Krein.Prelude",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Krein",
+      "InfoGeometry.Krein.Thermal",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.KreinLadder",
+      "InfoGeometry.Canonical.Drazin",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.KreinLadder",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.KreinLadder",
+      "InfoGeometry.Krein.Metric",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.LLMLegacy",
+      "InfoGeometry.LLM",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.LLMLegacy",
+      "InfoGeometry.LLM.MaskedTransformerBlock",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.LLMLegacy",
+      "InfoGeometry.LLM.PositionalEncoding",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.LLMLegacy",
+      "InfoGeometry.LLM.TransformerBlock",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.LLN",
+      "InfoGeometry.Assumptions.LLN",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.LorentzianRouting",
+      "InfoGeometry.Canonical.AttentionSplit",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ManifoldHomology",
+      "InfoGeometry.Assumptions.ManifoldHomology",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ManifoldHomology",
+      "InfoGeometry.Degree",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.MoorePenrose",
+      "InfoGeometry.Canonical.Drazin",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.PathIntegral",
+      "InfoGeometry.Canonical.QuantumInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.PathIntegral",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.PerelmanW",
+      "InfoGeometry.Canonical.RicciMongeAmpere",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Prequantum",
+      "InfoGeometry.Prequantum.Bundle",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Prequantum",
+      "InfoGeometry.Prequantum.Connection",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Prequantum",
+      "InfoGeometry.Prequantum.Quotient",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Prequantum",
+      "InfoGeometry.Prequantum.Scaling",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Projective",
+      "InfoGeometry.Projective.Dynamics",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Projective",
+      "InfoGeometry.Projective.FaithfulKL",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Projective",
+      "InfoGeometry.Projective.GaugeQuotient",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Projective",
+      "InfoGeometry.Projective.GaugeReduction",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Projective",
+      "InfoGeometry.Projective.LogSum",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Projective",
+      "InfoGeometry.Projective.LogSumIneq",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Projective",
+      "InfoGeometry.Projective.Normalize",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Projective",
+      "InfoGeometry.Projective.Null",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Projective",
+      "InfoGeometry.Projective.PhysicalKinematics",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Projective",
+      "InfoGeometry.Projective.Projective",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Projective",
+      "InfoGeometry.Projective.ProjectiveMap",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Projective",
+      "InfoGeometry.Projective.Rays",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "InfoGeometry.Canonical.BogoliubovFockSuper",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "InfoGeometry.Canonical.RGFlow",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "InfoGeometry.Geometry.LegendreDuality",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Quantum",
+      "InfoGeometry.Quantum.Fock",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.QuantumInference",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.QuantumInference",
+      "InfoGeometry.Krein.Metric",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.RGFlow",
+      "InfoGeometry.Convex.HessianGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.RicciMongeAmpere",
+      "InfoGeometry.Canonical.CurvatureRGFlow",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.RicciMongeAmpere",
+      "InfoGeometry.Canonical.HeatKernel",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.RicciMongeAmpere",
+      "InfoGeometry.Canonical.KaehlerGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.RicciMongeAmpere",
+      "InfoGeometry.Convex.HessianGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.AnomalyInflow",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.Attention",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.AttentionEuclidean",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.AttentionSplit",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.BogoliubovFockSuper",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.CayleyBregmanBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.ChiralCliffordBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.ChiralEinsteinBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.ChiralGravity",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.ChiralTorsionBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.CliffordBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.FormalScaffold",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.GaugeUnified",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.GrandUnification",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.SuperInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Jordan.LogDet",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Thermo.FromLogDet",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.SpectralInference",
+      "InfoGeometry.Canonical.Drazin",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.SpectralInference",
+      "InfoGeometry.Canonical.MoorePenrose",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.SpectralInference",
+      "InfoGeometry.Convex.HessianGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.SpectralInference",
+      "InfoGeometry.Krein.Metric",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.Canonical.ExponentialFamilyLegacy",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.ExponentialFamily.Bernoulli",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.ExponentialFamily.Class",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.ExponentialFamily.Finite",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.ExponentialFamily.Gaussian",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.KL",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.MaxEnt",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.MaxEnt.DualBridge",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.MaxEnt.Finite",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.MaxEnt.Jaynes",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.MaxEnt.JaynesCanonical",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.MaxEnt.JaynesInfoStatMech",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.MaxEnt.JaynesInfoStatMechTest",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.MaxEnt.JaynesRNMaxEnt",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.MaxEnt.Lagrange",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.MaxEnt.Optimality",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.OptimalTransport",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.PositiveMeasure",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.RegularizedKL",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.RegularizedKLTest",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.Renyi",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.StatisticsLegacy",
+      "InfoGeometry.Canonical.Statistics",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.SuperInference",
+      "InfoGeometry.Convex.HessianGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.SuperInference",
+      "InfoGeometry.Krein.Metric",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.SuperUnified",
+      "InfoGeometry.Clifford.Grading",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.SuperUnified",
+      "InfoGeometry.Jordan.Core",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.ThermalLegacy",
+      "InfoGeometry.Thermal.FiniteMatrix",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Thermo",
+      "InfoGeometry.Canonical.ThermalLegacy",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Thermo",
+      "InfoGeometry.GrandCanonical.Core",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Thermo",
+      "InfoGeometry.Thermo.FiniteDiagonal",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Thermo",
+      "InfoGeometry.Thermo.FiniteMatrix",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Thermo",
+      "InfoGeometry.Thermo.FromBregman",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Thermo",
+      "InfoGeometry.Thermo.FromLogDet",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Thermo",
+      "InfoGeometry.Thermo.Gibbs",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Thermo",
+      "InfoGeometry.Thermo.ThermodynamicIdentities",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.TomitaTakesaki",
+      "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.TomitaTakesaki",
+      "InfoGeometry.Clifford.Lift",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.TopologicalEuler",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.TopologicalInvariants",
+      "InfoGeometry.Canonical.InformationTorsion",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.TopologicalInvariants",
+      "InfoGeometry.Canonical.SpectralInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Triality",
+      "InfoGeometry.Clifford.SplitQ11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.Twistor",
+      "InfoGeometry.Twistor.NullProjective",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.WeylInformationGauge",
+      "InfoGeometry.Canonical.BogoliubovFockSuper",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.WeylInformationGauge",
+      "InfoGeometry.Canonical.ConformalUnification",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.WeylInformationGauge",
+      "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "import"
+    ],
+    [
+      "InfoGeometry.Canonical.WeylInformationGauge",
+      "InfoGeometry.Canonical.InformationTorsion",
+      "import"
+    ],
+    [
+      "InfoGeometry.Clifford.Grading",
+      "InfoGeometry.Clifford.Cl11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Clifford.Grading",
+      "InfoGeometry.Core.Involution",
+      "import"
+    ],
+    [
+      "InfoGeometry.Clifford.Lift",
+      "InfoGeometry.Clifford.Cl11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Clifford.Lift",
+      "InfoGeometry.Clifford.SplitQ11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Clifford.Relations",
+      "InfoGeometry.Clifford.Grading",
+      "import"
+    ],
+    [
+      "InfoGeometry.Clifford.Supercharge",
+      "InfoGeometry.Clifford.Grading",
+      "import"
+    ],
+    [
+      "InfoGeometry.Clifford.Tower",
+      "InfoGeometry.Clifford.SplitQ11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Convex",
+      "InfoGeometry.Convex.Bregman",
+      "import"
+    ],
+    [
+      "InfoGeometry.Convex.Duality",
+      "InfoGeometry.Convex.Bregman",
+      "import"
+    ],
+    [
+      "InfoGeometry.Convex.HessianGeometry",
+      "InfoGeometry.Canonical.Triality",
+      "import"
+    ],
+    [
+      "InfoGeometry.Convex.HessianGeometry",
+      "InfoGeometry.Potential.LogPotential",
+      "import"
+    ],
+    [
+      "InfoGeometry.Convex.Legendre",
+      "InfoGeometry.Convex.Bregman",
+      "import"
+    ],
+    [
+      "InfoGeometry.Convex.ProjectiveRays",
+      "InfoGeometry.Clifford.Cl11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Core",
+      "InfoGeometry.Core.Entropy",
+      "import"
+    ],
+    [
+      "InfoGeometry.Core",
+      "InfoGeometry.Core.GrandCanonical",
+      "import"
+    ],
+    [
+      "InfoGeometry.Core.Derivatives",
+      "InfoGeometry.Core.GrandCanonical",
+      "import"
+    ],
+    [
+      "InfoGeometry.Core.DerivativesSmoke",
+      "InfoGeometry.Core.Derivatives",
+      "import"
+    ],
+    [
+      "InfoGeometry.Core.Entropy",
+      "InfoGeometry.Basic",
+      "import"
+    ],
+    [
+      "InfoGeometry.Core.GrandCanonical",
+      "InfoGeometry.GrandCanonical.Core",
+      "import"
+    ],
+    [
+      "InfoGeometry.Core.Jordan",
+      "InfoGeometry.Jordan.Core",
+      "import"
+    ],
+    [
+      "InfoGeometry.Core.Jordan",
+      "InfoGeometry.Jordan.SPD",
+      "import"
+    ],
+    [
+      "InfoGeometry.Core.SymmetricLie",
+      "InfoGeometry.Core.UnifiedGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.Core.SymmetricSpaces",
+      "InfoGeometry.Architecture.SymmetricSpace",
+      "import"
+    ],
+    [
+      "InfoGeometry.Core.UnifiedGeometry",
+      "InfoGeometry.Architecture.SymmetricSpace",
+      "import"
+    ],
+    [
+      "InfoGeometry.Core.UnifiedGeometry",
+      "InfoGeometry.Core.Involution",
+      "import"
+    ],
+    [
+      "InfoGeometry.Core.UnifiedGeometry",
+      "InfoGeometry.Core.SymmetricLieGeneric",
+      "import"
+    ],
+    [
+      "InfoGeometry.Degree",
+      "InfoGeometry.Axioms",
+      "import"
+    ],
+    [
+      "InfoGeometry.EntropicInference",
+      "InfoGeometry.KL.Finite",
+      "import"
+    ],
+    [
+      "InfoGeometry.EntropicInferenceTest",
+      "InfoGeometry.EntropicInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily",
+      "InfoGeometry.ExponentialFamily.Class",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily",
+      "InfoGeometry.ExponentialFamily.Finite",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.Analytic.LogSumExp",
+      "InfoGeometry.Convex.Bregman",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.Analytic.Softmax",
+      "InfoGeometry.Basic",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.Analytic.Softmax",
+      "InfoGeometry.ExponentialFamily.Analytic.LogSumExp",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.Bernoulli",
+      "InfoGeometry.Canonical.Triality",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.Bernoulli",
+      "InfoGeometry.Convex.HessianGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.Bernoulli",
+      "InfoGeometry.ExponentialFamily.Class",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.Finite",
+      "InfoGeometry.Basic",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.Finite",
+      "InfoGeometry.ExponentialFamily.Class",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.Gaussian",
+      "InfoGeometry.Canonical.Triality",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.Gaussian",
+      "InfoGeometry.Convex.HessianGeometry",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.Gaussian",
+      "InfoGeometry.ExponentialFamily.Class",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.GaussianHolonomy",
+      "InfoGeometry.Canonical.QuantumInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.GaussianHolonomy",
+      "InfoGeometry.ExponentialFamily.Gaussian",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.GaussianLadder",
+      "InfoGeometry.Canonical.KreinLadder",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.GaussianLadder",
+      "InfoGeometry.Canonical.QuantumInference",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.GaussianLadder",
+      "InfoGeometry.ExponentialFamily.Gaussian",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.KLBregman",
+      "InfoGeometry.ExponentialFamily.Finite",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.KLBregman",
+      "InfoGeometry.Potential.LogPotential",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.Legendre",
+      "InfoGeometry.Convex.Legendre",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.Legendre",
+      "InfoGeometry.ExponentialFamily.Analytic.LogSumExp",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.TwistedGaussian",
+      "InfoGeometry.Canonical.MoorePenrose",
+      "import"
+    ],
+    [
+      "InfoGeometry.ExponentialFamily.TwistedGaussian",
+      "InfoGeometry.ExponentialFamily.Gaussian",
+      "import"
+    ],
+    [
+      "InfoGeometry.Fenchel",
+      "InfoGeometry.Convex.Bregman",
+      "import"
+    ],
+    [
+      "InfoGeometry.Geometry.DualFlat",
+      "InfoGeometry.Convex.Bregman",
+      "import"
+    ],
+    [
+      "InfoGeometry.Geometry.DualFlat",
+      "InfoGeometry.MaxEnt.Core",
+      "import"
+    ],
+    [
+      "InfoGeometry.Geometry.DualFlat",
+      "InfoGeometry.Projective.Rays",
+      "import"
+    ],
+    [
+      "InfoGeometry.Geometry.KreinAsHessian",
+      "InfoGeometry.Clifford.Cl11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Information.MultiLogPotential",
+      "InfoGeometry.Potential.LogPotential",
+      "import"
+    ],
+    [
+      "InfoGeometry.Jordan.LogDet",
+      "InfoGeometry.Jordan.SPD",
+      "import"
+    ],
+    [
+      "InfoGeometry.KL",
+      "InfoGeometry.KL.Finite",
+      "import"
+    ],
+    [
+      "InfoGeometry.KL.Finite",
+      "InfoGeometry.Basic",
+      "import"
+    ],
+    [
+      "InfoGeometry.Krein.Automorphisms",
+      "InfoGeometry.Krein.Metric",
+      "import"
+    ],
+    [
+      "InfoGeometry.Krein.CartanDecomposition",
+      "InfoGeometry.Architecture.SymmetricSpace",
+      "import"
+    ],
+    [
+      "InfoGeometry.Krein.CartanDecomposition",
+      "InfoGeometry.Krein.Automorphisms",
+      "import"
+    ],
+    [
+      "InfoGeometry.Krein.HilbertBridge",
+      "InfoGeometry.Clifford.Cl11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Krein.Metric",
+      "InfoGeometry.Clifford.Grading",
+      "import"
+    ],
+    [
+      "InfoGeometry.Krein.Modular",
+      "InfoGeometry.Krein.Automorphisms",
+      "import"
+    ],
+    [
+      "InfoGeometry.Krein.Prelude",
+      "InfoGeometry.Clifford.Grading",
+      "import"
+    ],
+    [
+      "InfoGeometry.Krein.Thermal",
+      "InfoGeometry.Clifford.Cl11",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM",
+      "InfoGeometry.Canonical.Attention",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM",
+      "InfoGeometry.Canonical.AttentionEuclidean",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM",
+      "InfoGeometry.Canonical.AttentionSplit",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM",
+      "InfoGeometry.Canonical.FormalScaffold",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM",
+      "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM",
+      "InfoGeometry.Canonical.LorentzianRouting",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM",
+      "InfoGeometry.Canonical.Triality",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM",
+      "InfoGeometry.LLM.MaskedTransformerBlock",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM",
+      "InfoGeometry.LLM.PositionalEncoding",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM",
+      "InfoGeometry.LLM.TransformerBlock",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM.MaskedTransformerBlock",
+      "InfoGeometry.LLM.TransformerBlock",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM.PositionalEncoding",
+      "InfoGeometry.LLM.MaskedTransformerBlock",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM.TransformerBlock",
+      "InfoGeometry.Canonical.Attention",
+      "import"
+    ],
+    [
+      "InfoGeometry.LLM.TransformerBlock",
+      "InfoGeometry.Canonical.Triality",
+      "import"
+    ],
+    [
+      "InfoGeometry.Library",
+      "InfoGeometry.Canonical.All",
+      "import"
+    ],
+    [
+      "InfoGeometry.MaxEnt",
+      "InfoGeometry.MaxEnt.Core",
+      "import"
+    ],
+    [
+      "InfoGeometry.MaxEnt.Core",
+      "InfoGeometry.KL.Measure",
+      "import"
+    ],
+    [
+      "InfoGeometry.MaxEnt.DualBridge",
+      "InfoGeometry.MaxEnt.Optimality",
+      "import"
+    ],
+    [
+      "InfoGeometry.MaxEnt.Finite",
+      "InfoGeometry.Basic",
+      "import"
+    ],
+    [
+      "InfoGeometry.MaxEnt.Jaynes",
+      "InfoGeometry.MaxEnt.Optimality",
+      "import"
+    ],
+    [
+      "InfoGeometry.MaxEnt.JaynesCanonical",
+      "InfoGeometry.KL.Finite",
+      "import"
+    ],
+    [
+      "InfoGeometry.MaxEnt.JaynesInfoStatMechTest",
+      "InfoGeometry.MaxEnt.JaynesInfoStatMech",
+      "import"
+    ],
+    [
+      "InfoGeometry.MaxEnt.Lagrange",
+      "InfoGeometry.MaxEnt.Finite",
+      "import"
+    ],
+    [
+      "InfoGeometry.MaxEnt.Optimality",
+      "InfoGeometry.KL.Finite",
+      "import"
+    ],
+    [
+      "InfoGeometry.MaxEnt.Optimality",
+      "InfoGeometry.MaxEnt.Finite",
+      "import"
+    ],
+    [
+      "InfoGeometry.OptimalTransport",
+      "InfoGeometry.ExponentialFamily.Analytic.LogSumExp",
+      "import"
+    ],
+    [
+      "InfoGeometry.OptimalTransport",
+      "InfoGeometry.ExponentialFamily.KLBregman",
+      "import"
+    ],
+    [
+      "InfoGeometry.OptimalTransport",
+      "InfoGeometry.Thermo.FromBregman",
+      "import"
+    ],
+    [
+      "InfoGeometry.PositiveMeasure",
+      "InfoGeometry.Basic",
+      "import"
+    ],
+    [
+      "InfoGeometry.Potential",
+      "InfoGeometry.Potential.LogPotential",
+      "import"
+    ],
+    [
+      "InfoGeometry.Potential",
+      "InfoGeometry.Potential.Thermo",
+      "import"
+    ],
+    [
+      "InfoGeometry.Potential.LogPotential",
+      "InfoGeometry.Convex.Bregman",
+      "import"
+    ],
+    [
+      "InfoGeometry.Potential.Thermo",
+      "InfoGeometry.Potential.LogPotential",
+      "import"
+    ],
+    [
+      "InfoGeometry.Prequantum.Bundle",
+      "InfoGeometry.Prequantum.Scaling",
+      "import"
+    ],
+    [
+      "InfoGeometry.Prequantum.Bundle",
+      "InfoGeometry.Projective.Rays",
+      "import"
+    ],
+    [
+      "InfoGeometry.Prequantum.Connection",
+      "InfoGeometry.Krein.Metric",
+      "import"
+    ],
+    [
+      "InfoGeometry.Prequantum.Connection",
+      "InfoGeometry.Prequantum.Bundle",
+      "import"
+    ],
+    [
+      "InfoGeometry.Prequantum.Quotient",
+      "InfoGeometry.Prequantum.Connection",
+      "import"
+    ],
+    [
+      "InfoGeometry.Projective.Dynamics",
+      "InfoGeometry.Projective.ProjectiveMap",
+      "import"
+    ],
+    [
+      "InfoGeometry.Projective.FaithfulKL",
+      "InfoGeometry.Projective.GaugeReduction",
+      "import"
+    ],
+    [
+      "InfoGeometry.Projective.FaithfulKL",
+      "InfoGeometry.Projective.LogSumIneq",
+      "import"
+    ],
+    [
+      "InfoGeometry.Projective.GaugeReduction",
+      "InfoGeometry.PositiveMeasure",
+      "import"
+    ],
+    [
+      "InfoGeometry.Projective.LogSumIneq",
+      "InfoGeometry.Projective.LogSum",
+      "import"
+    ],
+    [
+      "InfoGeometry.Projective.Normalize",
+      "InfoGeometry.Projective.Projective",
+      "import"
+    ],
+    [
+      "InfoGeometry.Projective.Null",
+      "InfoGeometry.Krein.Metric",
+      "import"
+    ],
+    [
+      "InfoGeometry.Projective.Null",
+      "InfoGeometry.Projective.ProjectiveMap",
+      "import"
+    ],
+    [
+      "InfoGeometry.Projective.PhysicalKinematics",
+      "InfoGeometry.Projective.Rays",
+      "import"
+    ],
+    [
+      "InfoGeometry.Projective.Projective",
+      "InfoGeometry.PositiveMeasure",
+      "import"
+    ],
+    [
+      "InfoGeometry.Projective.ProjectiveMap",
+      "InfoGeometry.Clifford.Grading",
+      "import"
+    ],
+    [
+      "InfoGeometry.Projective.ProjectiveMap",
+      "InfoGeometry.Projective.Rays",
+      "import"
+    ],
+    [
+      "InfoGeometry.Projective.Rays",
+      "InfoGeometry.Clifford.Cl11",
+      "import"
+    ],
+    [
+      "InfoGeometry.Quantum.Fock",
+      "InfoGeometry.Projective.Null",
+      "import"
+    ],
+    [
+      "InfoGeometry.RegularizedKL",
+      "InfoGeometry.PositiveMeasure",
+      "import"
+    ],
+    [
+      "InfoGeometry.RegularizedKLTest",
+      "InfoGeometry.RegularizedKL",
+      "import"
+    ],
+    [
+      "InfoGeometry.Renyi",
+      "InfoGeometry.KL",
+      "import"
+    ],
+    [
+      "InfoGeometry.SuperUnified",
+      "InfoGeometry.Canonical.SuperUnified",
+      "import"
+    ],
+    [
+      "InfoGeometry.Thermal.FiniteMatrix",
+      "InfoGeometry.MaxEnt.Finite",
+      "import"
+    ],
+    [
+      "InfoGeometry.Thermo.FromBregman",
+      "InfoGeometry.Convex.Duality",
+      "import"
+    ],
+    [
+      "InfoGeometry.Thermo.FromBregman",
+      "InfoGeometry.Convex.Legendre",
+      "import"
+    ],
+    [
+      "InfoGeometry.Thermo.FromBregman",
+      "InfoGeometry.Thermo.Gibbs",
+      "import"
+    ],
+    [
+      "InfoGeometry.Thermo.FromLogDet",
+      "InfoGeometry.Jordan.LogDet",
+      "import"
+    ],
+    [
+      "InfoGeometry.Thermo.FromLogDet",
+      "InfoGeometry.Thermo.Gibbs",
+      "import"
+    ],
+    [
+      "InfoGeometry.Thermo.ThermodynamicIdentities",
+      "InfoGeometry.Thermo.FiniteDiagonal",
+      "import"
+    ],
+    [
+      "InfoGeometry.TransformationGroups",
+      "InfoGeometry.Basic",
+      "import"
+    ],
+    [
+      "InfoGeometry.Twistor.NullProjective",
+      "InfoGeometry.Convex.ProjectiveRays",
+      "import"
+    ],
+    [
+      "InfoGeometry.auto_blueprints",
+      "InfoGeometry.Basic",
+      "import"
+    ],
+    [
+      "InfoGeometry.auto_blueprints",
+      "InfoGeometry.Core",
+      "import"
+    ],
+    [
+      "InfoGeometry.generalizedKL",
+      "InfoGeometry.Canonical.GeneralizedKL",
+      "import"
+    ]
+  ],
+  "stats": {
+    "discovered_modules": 218,
+    "nodes": 218,
+    "edges": 512,
+    "buildable": 215,
+    "non_buildable": 3,
+    "components": 4,
+    "largest_component": 215
+  },
+  "non_buildable_modules": [
+    "InfoGeometry.Archive.Drafts.Degree_pre_assumptions_extraction",
+    "InfoGeometry.Archive.Drafts.New_pre_assumptions_extraction",
+    "InfoGeometry.Archive.Drafts.Projective_LogSum_pre_assumptions_extraction"
+  ],
+  "connected_components": [
+    [
+      "InfoGeometry",
+      "InfoGeometry.Analysis",
+      "InfoGeometry.Analysis.Graph",
+      "InfoGeometry.Architecture.SymmetricSpace",
+      "InfoGeometry.Assumptions",
+      "InfoGeometry.Assumptions.Determinant",
+      "InfoGeometry.Assumptions.DualConnections",
+      "InfoGeometry.Assumptions.IB",
+      "InfoGeometry.Assumptions.LLN",
+      "InfoGeometry.Assumptions.ManifoldDegree",
+      "InfoGeometry.Assumptions.ManifoldHomology",
+      "InfoGeometry.Axioms",
+      "InfoGeometry.Basic",
+      "InfoGeometry.Canonical.AQFTOperatorInterface",
+      "InfoGeometry.Canonical.Algebra",
+      "InfoGeometry.Canonical.All",
+      "InfoGeometry.Canonical.AnalysisLegacy",
+      "InfoGeometry.Canonical.AnalyticalIndex",
+      "InfoGeometry.Canonical.AnomalyInflow",
+      "InfoGeometry.Canonical.Attention",
+      "InfoGeometry.Canonical.AttentionEuclidean",
+      "InfoGeometry.Canonical.AttentionSplit",
+      "InfoGeometry.Canonical.BeliefAlgebra",
+      "InfoGeometry.Canonical.BeliefDynamics",
+      "InfoGeometry.Canonical.BerryPhase",
+      "InfoGeometry.Canonical.BogoliubovFockSuper",
+      "InfoGeometry.Canonical.BottDirac",
+      "InfoGeometry.Canonical.BottPeriodicity",
+      "InfoGeometry.Canonical.BregmanTriality",
+      "InfoGeometry.Canonical.CalabiYauBridge",
+      "InfoGeometry.Canonical.CartanDecomposition",
+      "InfoGeometry.Canonical.CayleyBregmanBridge",
+      "InfoGeometry.Canonical.ChiralAction",
+      "InfoGeometry.Canonical.ChiralAnomaly",
+      "InfoGeometry.Canonical.ChiralCliffordBridge",
+      "InfoGeometry.Canonical.ChiralEinsteinBridge",
+      "InfoGeometry.Canonical.ChiralGravity",
+      "InfoGeometry.Canonical.ChiralRGFlow",
+      "InfoGeometry.Canonical.ChiralTorsionBridge",
+      "InfoGeometry.Canonical.Clifford",
+      "InfoGeometry.Canonical.CliffordBridge",
+      "InfoGeometry.Canonical.ConformalAlgebra",
+      "InfoGeometry.Canonical.ConformalUnification",
+      "InfoGeometry.Canonical.ConformalWard",
+      "InfoGeometry.Canonical.CoreLegacy",
+      "InfoGeometry.Canonical.CountSubstrateBridge",
+      "InfoGeometry.Canonical.CurvatureRGFlow",
+      "InfoGeometry.Canonical.Drazin",
+      "InfoGeometry.Canonical.DualConnections",
+      "InfoGeometry.Canonical.ExponentialFamilyLegacy",
+      "InfoGeometry.Canonical.FormalScaffold",
+      "InfoGeometry.Canonical.Foundations",
+      "InfoGeometry.Canonical.FoundationsLegacy",
+      "InfoGeometry.Canonical.GaugeUnified",
+      "InfoGeometry.Canonical.GeneralizedKL",
+      "InfoGeometry.Canonical.Geometry",
+      "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "InfoGeometry.Canonical.GrandSynthesis",
+      "InfoGeometry.Canonical.GrandUnification",
+      "InfoGeometry.Canonical.GrandUnificationBlueprint",
+      "InfoGeometry.Canonical.GrandUnificationMetric",
+      "InfoGeometry.Canonical.HeatKernel",
+      "InfoGeometry.Canonical.HolographicEmergence",
+      "InfoGeometry.Canonical.IB",
+      "InfoGeometry.Canonical.InformationNumber",
+      "InfoGeometry.Canonical.InformationTorsion",
+      "InfoGeometry.Canonical.IntegrationLegacy",
+      "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "InfoGeometry.Canonical.KaehlerGeometry",
+      "InfoGeometry.Canonical.Krein",
+      "InfoGeometry.Canonical.KreinLadder",
+      "InfoGeometry.Canonical.LLMLegacy",
+      "InfoGeometry.Canonical.LLN",
+      "InfoGeometry.Canonical.LorentzianRouting",
+      "InfoGeometry.Canonical.ManifoldHomology",
+      "InfoGeometry.Canonical.MixtureOfExperts",
+      "InfoGeometry.Canonical.MoorePenrose",
+      "InfoGeometry.Canonical.PathIntegral",
+      "InfoGeometry.Canonical.PerelmanW",
+      "InfoGeometry.Canonical.Prequantum",
+      "InfoGeometry.Canonical.Projective",
+      "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "InfoGeometry.Canonical.Quantum",
+      "InfoGeometry.Canonical.QuantumInference",
+      "InfoGeometry.Canonical.RGFlow",
+      "InfoGeometry.Canonical.RicciMongeAmpere",
+      "InfoGeometry.Canonical.Rosetta",
+      "InfoGeometry.Canonical.SpectralInference",
+      "InfoGeometry.Canonical.Statistics",
+      "InfoGeometry.Canonical.StatisticsLegacy",
+      "InfoGeometry.Canonical.SuperInference",
+      "InfoGeometry.Canonical.SuperUnified",
+      "InfoGeometry.Canonical.ThermalLegacy",
+      "InfoGeometry.Canonical.Thermo",
+      "InfoGeometry.Canonical.TomitaTakesaki",
+      "InfoGeometry.Canonical.TopologicalEuler",
+      "InfoGeometry.Canonical.TopologicalInvariants",
+      "InfoGeometry.Canonical.Triality",
+      "InfoGeometry.Canonical.Twistor",
+      "InfoGeometry.Canonical.WeylInformationGauge",
+      "InfoGeometry.Clifford.Cl11",
+      "InfoGeometry.Clifford.Grading",
+      "InfoGeometry.Clifford.Lift",
+      "InfoGeometry.Clifford.Relations",
+      "InfoGeometry.Clifford.SplitQ11",
+      "InfoGeometry.Clifford.Supercharge",
+      "InfoGeometry.Clifford.Tower",
+      "InfoGeometry.Convex",
+      "InfoGeometry.Convex.Bregman",
+      "InfoGeometry.Convex.Duality",
+      "InfoGeometry.Convex.FenchelConjugate",
+      "InfoGeometry.Convex.HessianGeometry",
+      "InfoGeometry.Convex.Legendre",
+      "InfoGeometry.Convex.ProjectiveRays",
+      "InfoGeometry.Convex.RadonHelly",
+      "InfoGeometry.Core",
+      "InfoGeometry.Core.Derivatives",
+      "InfoGeometry.Core.DerivativesSmoke",
+      "InfoGeometry.Core.Entropy",
+      "InfoGeometry.Core.GrandCanonical",
+      "InfoGeometry.Core.Involution",
+      "InfoGeometry.Core.Jordan",
+      "InfoGeometry.Core.SymmetricLie",
+      "InfoGeometry.Core.SymmetricLieGeneric",
+      "InfoGeometry.Core.SymmetricSpaces",
+      "InfoGeometry.Core.UnifiedGeometry",
+      "InfoGeometry.Cramer",
+      "InfoGeometry.Degree",
+      "InfoGeometry.EntropicInference",
+      "InfoGeometry.EntropicInferenceTest",
+      "InfoGeometry.ExponentialFamily",
+      "InfoGeometry.ExponentialFamily.Analytic.LogSumExp",
+      "InfoGeometry.ExponentialFamily.Analytic.Softmax",
+      "InfoGeometry.ExponentialFamily.Bernoulli",
+      "InfoGeometry.ExponentialFamily.Class",
+      "InfoGeometry.ExponentialFamily.Finite",
+      "InfoGeometry.ExponentialFamily.Gaussian",
+      "InfoGeometry.ExponentialFamily.GaussianHolonomy",
+      "InfoGeometry.ExponentialFamily.GaussianLadder",
+      "InfoGeometry.ExponentialFamily.KLBregman",
+      "InfoGeometry.ExponentialFamily.Legendre",
+      "InfoGeometry.ExponentialFamily.TwistedGaussian",
+      "InfoGeometry.Fenchel",
+      "InfoGeometry.Geometry.DualFlat",
+      "InfoGeometry.Geometry.KreinAsHessian",
+      "InfoGeometry.Geometry.LegendreDuality",
+      "InfoGeometry.GrandCanonical.Core",
+      "InfoGeometry.Information.MultiLogPotential",
+      "InfoGeometry.Jordan.Core",
+      "InfoGeometry.Jordan.LogDet",
+      "InfoGeometry.Jordan.SPD",
+      "InfoGeometry.KL",
+      "InfoGeometry.KL.Finite",
+      "InfoGeometry.KL.Measure",
+      "InfoGeometry.Krein.Automorphisms",
+      "InfoGeometry.Krein.CartanDecomposition",
+      "InfoGeometry.Krein.HilbertBridge",
+      "InfoGeometry.Krein.Metric",
+      "InfoGeometry.Krein.Modular",
+      "InfoGeometry.Krein.Prelude",
+      "InfoGeometry.Krein.Thermal",
+      "InfoGeometry.LLM",
+      "InfoGeometry.LLM.MaskedTransformerBlock",
+      "InfoGeometry.LLM.PositionalEncoding",
+      "InfoGeometry.LLM.TransformerBlock",
+      "InfoGeometry.Library",
+      "InfoGeometry.MaxEnt",
+      "InfoGeometry.MaxEnt.Core",
+      "InfoGeometry.MaxEnt.DualBridge",
+      "InfoGeometry.MaxEnt.Finite",
+      "InfoGeometry.MaxEnt.Jaynes",
+      "InfoGeometry.MaxEnt.JaynesCanonical",
+      "InfoGeometry.MaxEnt.JaynesInfoStatMech",
+      "InfoGeometry.MaxEnt.JaynesInfoStatMechTest",
+      "InfoGeometry.MaxEnt.JaynesRNMaxEnt",
+      "InfoGeometry.MaxEnt.Lagrange",
+      "InfoGeometry.MaxEnt.Optimality",
+      "InfoGeometry.OptimalTransport",
+      "InfoGeometry.PositiveMeasure",
+      "InfoGeometry.Potential",
+      "InfoGeometry.Potential.LogPotential",
+      "InfoGeometry.Potential.Thermo",
+      "InfoGeometry.Prequantum.Bundle",
+      "InfoGeometry.Prequantum.Connection",
+      "InfoGeometry.Prequantum.Quotient",
+      "InfoGeometry.Prequantum.Scaling",
+      "InfoGeometry.Projective.Dynamics",
+      "InfoGeometry.Projective.FaithfulKL",
+      "InfoGeometry.Projective.GaugeQuotient",
+      "InfoGeometry.Projective.GaugeReduction",
+      "InfoGeometry.Projective.LogSum",
+      "InfoGeometry.Projective.LogSumIneq",
+      "InfoGeometry.Projective.Normalize",
+      "InfoGeometry.Projective.Null",
+      "InfoGeometry.Projective.PhysicalKinematics",
+      "InfoGeometry.Projective.Projective",
+      "InfoGeometry.Projective.ProjectiveMap",
+      "InfoGeometry.Projective.Rays",
+      "InfoGeometry.Quantum.Fock",
+      "InfoGeometry.RegularizedKL",
+      "InfoGeometry.RegularizedKLTest",
+      "InfoGeometry.Renyi",
+      "InfoGeometry.SLT.ConditionalExpectation",
+      "InfoGeometry.SuperUnified",
+      "InfoGeometry.Thermal.FiniteMatrix",
+      "InfoGeometry.Thermo.FiniteDiagonal",
+      "InfoGeometry.Thermo.FiniteMatrix",
+      "InfoGeometry.Thermo.FromBregman",
+      "InfoGeometry.Thermo.FromLogDet",
+      "InfoGeometry.Thermo.Gibbs",
+      "InfoGeometry.Thermo.ThermodynamicIdentities",
+      "InfoGeometry.TransformationGroups",
+      "InfoGeometry.Twistor.NullProjective",
+      "InfoGeometry.auto_blueprints",
+      "InfoGeometry.generalizedKL"
+    ],
+    [
+      "InfoGeometry.Archive.Drafts.Degree_pre_assumptions_extraction"
+    ],
+    [
+      "InfoGeometry.Archive.Drafts.New_pre_assumptions_extraction"
+    ],
+    [
+      "InfoGeometry.Archive.Drafts.Projective_LogSum_pre_assumptions_extraction"
+    ]
+  ]
+}

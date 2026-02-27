@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.InformationTorsion
 import InfoGeometry.Convex.ProjectiveRays
 import InfoGeometry.Twistor.NullProjective
-import InfoGeometry.generalizedKL
+import InfoGeometry.Canonical.GeneralizedKL
 
 /-!
 # Research.ChiralTorsionBridge

@@ -1,5 +1,8 @@
 import InfoGeometry.Projective.Projective
 
+namespace InfoGeometry.Projective.Normalize
+end InfoGeometry.Projective.Normalize
+
 namespace PositiveMeasure
 
 variable {α : Type u}

@@ -1,6 +1,6 @@
 import InfoGeometry.MaxEnt.JaynesInfoStatMech
 
-open JaynesInfoStatMech
+open InfoGeometry.MaxEnt.JaynesInfoStatMech
 
 -- Test: maxEntDist is a valid probability distribution
 example {Ω : Type} [Fintype Ω] [Nonempty Ω] {ι : Type} [Fintype ι]

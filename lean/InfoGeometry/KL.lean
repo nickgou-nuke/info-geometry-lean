@@ -1,6 +1,7 @@
 
 
 import InfoGeometry.KL.Finite
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
 
 namespace InfoGeometry.KL

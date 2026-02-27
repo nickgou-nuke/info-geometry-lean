@@ -26,6 +26,7 @@ import InfoGeometry.Thermo.FromBregman
 import InfoGeometry.Thermo.FromLogDet
 import InfoGeometry.Thermo.Gibbs
 import InfoGeometry.Thermo.ThermodynamicIdentities
+import InfoGeometry.Canonical.ThermalLegacy
 
 /-!
 # InfoGeometry.Canonical.Thermo

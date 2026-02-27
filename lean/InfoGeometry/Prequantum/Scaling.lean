@@ -1,5 +1,8 @@
 import Mathlib.Tactic
 
+namespace InfoGeometry.Prequantum.Scaling
+end InfoGeometry.Prequantum.Scaling
+
 /-- Minimal prequantum line-bundle data (scalarized): symplectic scale `ω`,
 curvature scale `F`, and conversion constant `ℏ` with relation `F = ω / ℏ`. -/
 structure PrequantumData where

@@ -26,7 +26,7 @@ class FiniteExponentialFamily
   normalization :
     ∀ p, Finset.univ.sum (density p) = 1
 
-namespace ExponentialFamily
+namespace InfoGeometry.ExponentialFamily.Class
 
 lemma density_pos
     {α η : Type _}
@@ -36,7 +36,7 @@ lemma density_pos
   rw [ExponentialFamily.density_eq]
   exact Real.exp_pos _
 
-end ExponentialFamily
+end InfoGeometry.ExponentialFamily.Class
 
 /-!
 ## Multinomial Family

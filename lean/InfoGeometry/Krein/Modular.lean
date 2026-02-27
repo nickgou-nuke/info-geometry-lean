@@ -1,6 +1,9 @@
 import InfoGeometry.Krein.Automorphisms
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 
+namespace InfoGeometry.Krein.Modular
+end InfoGeometry.Krein.Modular
+
 section KreinModular
 
 variable {V : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [FiniteDimensional ℝ V]

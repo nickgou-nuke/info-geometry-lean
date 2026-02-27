@@ -23,13 +23,14 @@ import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.Triality
 import InfoGeometry.Canonical.CartanDecomposition
+import InfoGeometry.Canonical.SuperUnified
 
 /-!
 # InfoGeometry.Canonical.Algebra
 
 Canonical algebraic umbrella (Clifford/Krein/Jordan) for publication.
 
-Promoted stable research modules:
+Integrated canonical modules:
 - Drazin inverse calculus
 - Moore-Penrose inverse calculus
 - Triality attention core

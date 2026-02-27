@@ -20,42 +20,77 @@
     {
       "id": "core",
       "number": 1,
-      "title": "Core Foundations",
+      "title": "Core Automorphism Foundations",
       "modulePrefixes": ["InfoGeometry.Core"],
-      "includeUnmappedDecls": false,
+      "includeUnmappedDecls": true,
       "sections": [
         {
           "id": "core-1",
-          "title": "Basic lemmas",
+          "title": "Involution and Cartan interfaces",
           "nodes": [
             {
-              "label": "thm:core-trivial",
-              "kind": "theorem",
-              "title": "trivial equality",
+              "label": "def:core-involution",
+              "kind": "def",
+              "title": "Involutive automorphism interface",
               "render": "leannode",
               "milestone": true,
               "leanAnyOf": [
-                "InfoGeometry.Core.core_trivial"
+                "InfoGeometry.Core.Involution"
               ]
             },
             {
-              "label": "thm:nat-add-comm",
+              "label": "thm:core-involutive-ext",
               "kind": "theorem",
-              "title": "commutativity of addition on ℕ",
+              "title": "Extensionality for involutive automorphisms",
               "render": "leannode",
               "milestone": true,
               "leanAnyOf": [
-                "InfoGeometry.Core.nat_add_comm"
+                "InfoGeometry.Core.InvolutiveAutomorphism.ext"
               ]
             },
             {
-              "label": "thm:nat-add-assoc",
+              "label": "thm:core-cartan-decomposition",
               "kind": "theorem",
-              "title": "associativity of addition on ℕ",
+              "title": "Cartan decomposition witness",
               "render": "leannode",
               "milestone": true,
               "leanAnyOf": [
-                "InfoGeometry.Core.nat_add_assoc"
+                "InfoGeometry.Core.cartan_decomposition"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "architecture",
+      "number": 2,
+      "title": "Symmetric-Space Architecture",
+      "modulePrefixes": ["InfoGeometry.Architecture"],
+      "includeUnmappedDecls": true,
+      "sections": [
+        {
+          "id": "architecture-1",
+          "title": "Cartan symmetry interface",
+          "nodes": [
+            {
+              "label": "thm:arch-symmetric-space",
+              "kind": "theorem",
+              "title": "Symmetric space from Cartan involution",
+              "render": "leannode",
+              "milestone": true,
+              "leanAnyOf": [
+                "InfoGeometry.Architecture.symmetricSpaceOfCartan"
+              ]
+            },
+            {
+              "label": "thm:arch-cartan-involutive",
+              "kind": "theorem",
+              "title": "Cartan symmetry involutivity",
+              "render": "leannode",
+              "milestone": true,
+              "leanAnyOf": [
+                "InfoGeometry.Architecture.cartanSymmetry_involutive"
               ]
             }
           ]

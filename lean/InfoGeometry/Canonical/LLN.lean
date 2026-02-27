@@ -1,17 +1,17 @@
-import InfoGeometry.Experimental.AssumptionWrappers.LLN
+import InfoGeometry.Assumptions.LLN
 
 /-!
-# Research.LLN
+# InfoGeometry.Canonical.LLN
 
-Compatibility forwarder over `InfoGeometry.Experimental.AssumptionWrappers.LLN`.
+Canonical LLN surface built directly from `InfoGeometry.Assumptions.LLN`.
 -/
 
 namespace InfoGeometry.Canonical.LLN
 
 /-!
-Explicitly forward the LLN scaffold surface from the experimental wrapper.
+Explicitly forward the LLN scaffold surface from the assumptions layer.
 -/
-export InfoGeometry.Experimental.AssumptionWrappers.LLN (
+export InfoGeometry.Assumptions.LLN (
   empiricalAverage
   fixed_partition_slln
   fixed_partition_slln_holds

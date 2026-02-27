@@ -5,7 +5,7 @@ open scoped BigOperators
 
 universe u
 
-namespace JaynesMaxEnt
+namespace InfoGeometry.MaxEnt.JaynesCanonical
 
 variable {Ω : Type} [Fintype Ω]
 
@@ -344,4 +344,4 @@ def isAutoregressiveModel (P : ProbDist Ω) : Prop :=
   let _ := P
   True
 
-end JaynesMaxEnt
+end InfoGeometry.MaxEnt.JaynesCanonical

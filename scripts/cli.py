@@ -11,8 +11,10 @@ from . import (
     emit_markdown_index,
     auto_tag,
     filter_project_decls,
+    generate_library_index,
     make_graph,
     namespace_patch_plan,
+    refactor_plan,
 )
 
 COMMAND_MODULES: dict[str, Callable[[list[str]], int]] = {
@@ -21,7 +23,9 @@ COMMAND_MODULES: dict[str, Callable[[list[str]], int]] = {
     "auto-tag": auto_tag.main,
     "filter-project-decls": filter_project_decls.main,
     "make-graph": make_graph.main,
+    "generate-library-index": generate_library_index.main,
     "namespace-plan": namespace_patch_plan.main,
+    "refactor-plan": refactor_plan.main,
 }
 
 

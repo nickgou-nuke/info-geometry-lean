@@ -1,4 +1,6 @@
 
+import InfoGeometry.Core.GrandCanonical
+
 /-!
 # Core Derivatives
 

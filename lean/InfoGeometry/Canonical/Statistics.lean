@@ -23,14 +23,30 @@ import InfoGeometry.ExponentialFamily.Class
 import InfoGeometry.ExponentialFamily.Finite
 import InfoGeometry.ExponentialFamily.Bernoulli
 import InfoGeometry.ExponentialFamily.Gaussian
+import InfoGeometry.KL
+import InfoGeometry.MaxEnt
+import InfoGeometry.MaxEnt.DualBridge
+import InfoGeometry.MaxEnt.Finite
+import InfoGeometry.MaxEnt.Jaynes
+import InfoGeometry.MaxEnt.JaynesCanonical
+import InfoGeometry.MaxEnt.JaynesInfoStatMech
+import InfoGeometry.MaxEnt.JaynesInfoStatMechTest
+import InfoGeometry.MaxEnt.JaynesRNMaxEnt
+import InfoGeometry.MaxEnt.Lagrange
+import InfoGeometry.MaxEnt.Optimality
 import InfoGeometry.OptimalTransport
+import InfoGeometry.PositiveMeasure
+import InfoGeometry.RegularizedKL
+import InfoGeometry.RegularizedKLTest
+import InfoGeometry.Renyi
+import InfoGeometry.Canonical.ExponentialFamilyLegacy
 
 /-!
 # InfoGeometry.Canonical.Statistics
 
 Canonical KL/MaxEnt/exponential-family/statistical umbrella for publication.
 
-Promoted stable exponential-family modules:
+Integrated canonical exponential-family modules:
 - Bernoulli Hessian geometry
 - Gaussian Hessian geometry
 - Optimal-transport / KL / Bregman bridge aliases

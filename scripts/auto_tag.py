@@ -12,6 +12,7 @@ Supports filtering by:
 
 import argparse
 import json
+import re
 from pathlib import Path
 from collections import Counter
 
@@ -169,7 +170,7 @@ def main():
         print(f"-- [auto_tag] stats: {dict(stats)}")
         return
 
-    target = Path(args.target)
+    target = target_path
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(output, encoding="utf-8")
     print(f"[auto_tag] wrote {target} ({len(selected)} attributes, {len(imports)} imports)")

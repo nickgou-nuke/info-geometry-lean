@@ -1,9 +1,17 @@
 
+import InfoGeometry.PositiveMeasure
+import Mathlib.Tactic
+
 /-!
 # Gauge reduction and KL decomposition
 
 KL-like decomposition, gauge reduction, and mass-matching results.
 -/
+
+universe u
+
+namespace InfoGeometry.Projective.GaugeReduction
+end InfoGeometry.Projective.GaugeReduction
 
 namespace PositiveMeasure
 

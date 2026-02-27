@@ -1,6 +1,9 @@
 import InfoGeometry.Prequantum.Bundle
 import InfoGeometry.Krein.Metric
 
+namespace InfoGeometry.Prequantum.Connection
+end InfoGeometry.Prequantum.Connection
+
 section KreinClifford
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]

@@ -6,6 +6,9 @@ import InfoGeometry.PositiveMeasure
 Defines projective rays, the quotient, and ray-invariance of normalization.
 -/
 
+namespace InfoGeometry.Projective.Projective
+end InfoGeometry.Projective.Projective
+
 namespace PositiveMeasure
 
 variable {α : Type u}

@@ -1,19 +1,19 @@
-import InfoGeometry.Experimental.AssumptionWrappers.DualConnections
+import InfoGeometry.Assumptions.DualConnections
 
 /-!
-# Research.DualConnections
+# InfoGeometry.Canonical.DualConnections
 
-Compatibility forwarder over
-`InfoGeometry.Experimental.AssumptionWrappers.DualConnections`.
+Canonical dual-connection surface built directly from
+`InfoGeometry.Assumptions.DualConnections`.
 -/
 
 namespace InfoGeometry.Canonical.DualConnections
 
 /-!
 Explicitly forward the dual-connection scaffold surface from the
-experimental wrapper.
+assumptions layer.
 -/
-export InfoGeometry.Experimental.AssumptionWrappers.DualConnections (
+export InfoGeometry.Assumptions.DualConnections (
   fisherMetric
   amariChentsovTensor
   alphaConnection

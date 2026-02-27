@@ -1,5 +1,8 @@
 import InfoGeometry.PositiveMeasure -- canonical PositiveMeasure
 
+namespace InfoGeometry.RegularizedKL
+end InfoGeometry.RegularizedKL
+
 open Finset
 open scoped BigOperators
 

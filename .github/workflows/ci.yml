@@ -2,58 +2,80 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  build:
+  baseline:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Install elan
-      run: |
-        curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
-        echo "$HOME/.elan/bin" >> $GITHUB_PATH
-    
-    - name: Cache Lake dependencies
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.elan
-          lean/.lake
-        key: ${{ runner.os }}-lake-${{ hashFiles('lean/lake-manifest.json') }}
-        restore-keys: |
-          ${{ runner.os }}-lake-
-    
-    - name: Update Lake dependencies
-      working-directory: lean
-      run: lake update
-    
-    - name: Build project
-      working-directory: lean
-      run: lake build
+      - uses: actions/checkout@v5
 
-    - name: Lint canonical surface
-      working-directory: lean
-      run: lake lint
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
-    - name: Reject experimental imports in canonical modules
-      working-directory: lean
-      run: |
-        if rg -n "^import InfoGeometry\\.Experimental$" \
-          InfoGeometry.lean InfoGeometry/Library.lean InfoGeometry/Canonical -g '*.lean'; then
-          echo "Canonical modules must not import InfoGeometry.Experimental"
-          exit 1
-        fi
+      - name: Cache Lake dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json', 'lean-toolchain', 'lakefile.lean') }}
+          restore-keys: |
+            ${{ runner.os }}-lake-
 
-    - name: Verify archive exclusion
-      working-directory: lean
-      run: |
-        if rg -n "all_lean_files_combined" \
-          InfoGeometry.lean InfoGeometry/Library.lean InfoGeometry/Canonical -g '*.lean'; then
-          echo "Archive file must not be imported by canonical modules"
-          exit 1
-        fi
+      - name: Update Lake dependencies
+        run: lake update
+
+      - name: Baseline build
+        run: lake build
+
+      - name: Baseline graph extraction
+        run: python3 -m scripts make-graph --probe-unresolved --out docs-map/graph.json
+
+      - name: Baseline refactor plan
+        run: python3 -m scripts refactor-plan --module-graph docs-map/module_graph.json --errors .artifacts/nonbuildable_errors.json --out docs-map/refactor_plan.md
+
+      - name: Enforce archive-drafts policy
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          data = json.loads(Path("docs-map/module_graph.json").read_text(encoding="utf-8"))
+          non_buildable = data.get("non_buildable_modules", [])
+          offenders = [m for m in non_buildable if not m.startswith("InfoGeometry.Archive.Drafts.")]
+
+          if offenders:
+            print("[ci] non-archive non-buildable modules detected:")
+            for m in offenders:
+              print(f"  - {m}")
+            raise SystemExit(1)
+
+          print(f"[ci] archive policy OK: {len(non_buildable)} non-buildable modules, all under InfoGeometry.Archive.Drafts.")
+          PY
+
+      - name: Lint canonical surface
+        run: lake lint
+
+      - name: Reject experimental imports in canonical modules
+        run: |
+          if grep -REn "^import InfoGeometry\\.Experimental$" \
+            lean/InfoGeometry.lean lean/InfoGeometry/Library.lean lean/InfoGeometry/Canonical \
+            --include='*.lean'; then
+            echo "Canonical modules must not import InfoGeometry.Experimental"
+            exit 1
+          fi
+
+      - name: Verify archive exclusion from canonical imports
+        run: |
+          if grep -REn "^import InfoGeometry\\.Archive\\." \
+            lean/InfoGeometry.lean lean/InfoGeometry/Library.lean lean/InfoGeometry/Canonical \
+            --include='*.lean'; then
+            echo "Canonical modules must not import InfoGeometry.Archive.*"
+            exit 1
+          fi

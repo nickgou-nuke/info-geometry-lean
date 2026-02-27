@@ -1,5 +1,8 @@
 import InfoGeometry.Prequantum.Connection
 
+namespace InfoGeometry.Prequantum.Quotient
+end InfoGeometry.Prequantum.Quotient
+
 section KreinClifford
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]

@@ -7,7 +7,7 @@ open InfoGeometry.ExponentialFamily.Gaussian
 open InfoGeometry.Canonical.QuantumInference
 open Complex
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- 
 The Dirac Field associated with a Gaussian Family.
@@ -22,10 +22,9 @@ The Gaussian Wilson Holonomy (Discrete).
 Measures the information flux accumulated along a sequence of Gaussian parameter updates.
 Uses the path-ordered product of the matrix exponential of the covariance.
 -/
-noncomputable def gaussianWilsonLoopDiscrete (G : GaussianFamily E) (γ : List E) : ℂ :=
+noncomputable def gaussianWilsonLoopDiscrete (_G : GaussianFamily E) (_γ : List E) : ℂ :=
   -- We model the operators as matrices in a finite-dimensional representation.
   -- This traces the 'Information Phase' around the parameter loop.
-  let Dε := fun (x : E) => (gaussianDiracField G x).toLinearMap
   -- Using a placeholder for the matrix trace/exp conversion
   0
 
@@ -35,7 +34,7 @@ For a Gaussian with constant covariance, the holonomy is simply the
 exponential of the summed updates, illustrating the 'flat' nature 
 of standard Gaussian information manifolds.
 -/
-theorem gaussian_holonomy_flat (G : GaussianFamily E) (γ : List E) :
+theorem gaussian_holonomy_flat (G : GaussianFamily E) (_γ : List E) :
     -- Structural representation of flatness.
     -- In a truly flat space, path ordering is irrelevant.
     ∃ (H : E →L[ℝ] E), H = G.sigma :=

@@ -24,7 +24,7 @@ abbrev SplitSpace : ℕ → Type _
   | 0 => Fin 0 → (ℝ × ℝ)
   | n + 1 => (ℝ × ℝ) × SplitSpace n
 
-instance splitSpaceAddCommGroup : ∀ n : ℕ, AddCommGroup (SplitSpace n)
+noncomputable instance splitSpaceAddCommGroup : ∀ n : ℕ, AddCommGroup (SplitSpace n)
   | 0 => by
       change AddCommGroup (Fin 0 → (ℝ × ℝ))
       infer_instance
@@ -33,7 +33,7 @@ instance splitSpaceAddCommGroup : ∀ n : ℕ, AddCommGroup (SplitSpace n)
       change AddCommGroup ((ℝ × ℝ) × SplitSpace n)
       infer_instance
 
-instance splitSpaceModule : ∀ n : ℕ, Module ℝ (SplitSpace n)
+noncomputable instance splitSpaceModule : ∀ n : ℕ, Module ℝ (SplitSpace n)
   | 0 => by
       change Module ℝ (Fin 0 → (ℝ × ℝ))
       infer_instance

@@ -130,7 +130,25 @@ class ProjectGraph:
         for root in roots:
             full_path = root / rel_path
             if full_path.exists():
-                return full_path
+                # Verify if the declaration is likely in this file
+                content = full_path.read_text(encoding="utf-8", errors="ignore")
+                short_name = node.split(".")[-1]
+                if short_name in content:
+                    return full_path
+            
+            # If not in the module file, it might be in a submodule directory
+            # e.g. InfoGeometry.Core.SymmetricLieAlgebra might be in InfoGeometry/Core/SymmetricLie.lean
+            # Let's search in the directory corresponding to the parent namespace
+            parent_ns = ".".join(module.split(".")[:-1])
+            if parent_ns:
+                parent_dir = root / Path(*parent_ns.split("."))
+                if parent_dir.exists() and parent_dir.is_dir():
+                    short_name = node.split(".")[-1]
+                    for lean_file in parent_dir.rglob("*.lean"):
+                        content = lean_file.read_text(encoding="utf-8", errors="ignore")
+                        if f" {short_name}" in content or f"\n{short_name}" in content:
+                             return lean_file
+
         return None
 
     def get_source_code(self, node: str) -> Optional[str]:

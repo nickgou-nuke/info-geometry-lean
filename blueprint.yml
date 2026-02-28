@@ -1,6 +1,0 @@
-# Configuration for leanblueprint / plasTeX
-# base_url is used when generating clickable links to Lean source
-# github_project enables leanblueprint to format links automatically.
-
-github_project: "nickgou-nuke/info-geometry-lean"
-base_url: "https://github.com/nickgou-nuke/info-geometry-lean/blob/main/lean/"

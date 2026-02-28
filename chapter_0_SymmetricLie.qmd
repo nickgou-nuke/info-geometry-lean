@@ -1,0 +1,40 @@
+# The Algebraic Foundation: Symmetric Lie Algebras
+
+This chapter formalizes the foundational symmetry of the Information Manifold. The theory begins with the premise that the structure of inference is constrained by an underlying involutive Lie automorphism.
+
+## The Involutive Lie Structure
+
+The core object of the algebraic sector is the **`SymmetricLieAlgebra`**. It consists of a Lie algebra $\mathfrak{g}$ and an involutive automorphism $	heta \in 	ext{Aut}(\mathfrak{g})$ such that $	heta^2 = 	ext{Id}$.
+
+```lean
+-- Module: InfoGeometry.Core.SymmetricLie
+def ofInvolutiveLieAut (θ : InvolutiveLieAut L) :
+    SymmetricLieAlgebra L := 
+  { θ := ⟨θ.1, θ.2⟩
+    involutive := θ.involutive }
+```
+
+## The Cartan Decomposition
+
+The automorphism $	heta$ induces a canonical **Cartan Decomposition** of the underlying space $V$:
+
+$$V = V^+ \oplus V^-$$
+
+where $V^+$ is the **Even Subspace** and $V^-$ is the **Odd Subspace**.
+
+```lean
+-- File: InfoGeometry/Core/UnifiedGeometry.lean
+def IsEven (C : CartanDecomposition V) (v : V) : Prop :=
+  C.θ v = v
+
+def IsOdd (C : CartanDecomposition V) (v : V) : Prop :=
+  C.θ v = -v
+```
+
+### Topological Weight of the Sector
+- **Cluster Hub:** `InfoGeometry.Core.SymmetricLieAlgebra`
+- **Cluster Size:** 340 Nodes
+- **Logical Triangulations:** 1,125 Commutative Triangles
+- **Reachability (Reach):** 1
+
+The high number of commutative triangles (1,125) indicates that the Symmetric Lie structure is one of the most logically cohesive and triangulated sectors of the theory.

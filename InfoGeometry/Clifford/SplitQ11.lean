@@ -1,9 +1,9 @@
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import Mathlib.Data.Real.Basic
-import Mathlib.Tactic
 
 /-!
 # Split Quadratic Form `(1,1)`
+
 Canonical split quadratic form on `ℝ × ℝ`, reused across Clifford modules.
 -/
 
@@ -20,24 +20,25 @@ noncomputable def splitQ11 : QuadraticForm ℝ (ℝ × ℝ) :=
 
 /-- Associated bilinear form for `splitQ11`: `x₁y₁ - x₂y₂`. -/
 noncomputable def splitB11 : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ) →ₗ[ℝ] ℝ where
-  toFun q :=
-    { toFun := fun k => q.1 * k.1 - q.2 * k.2
-      map_add' := by
-        intro x y
-        simp
-        ring
-      map_smul' := by
-        intro m x
-        simp [RingHom.id_apply]
-        ring }
+  toFun q := {
+    toFun := fun k => q.1 * k.1 - q.2 * k.2
+    map_add' := by
+      intros x y
+      simp
+      ring
+    map_smul' := by
+      intros m x
+      simp [RingHom.id_apply]
+      ring
+  }
   map_add' := by
-    intro x y
+    intros x y
     apply LinearMap.ext
     intro k
     simp
     ring
   map_smul' := by
-    intro m x
+    intros m x
     apply LinearMap.ext
     intro k
     simp [RingHom.id_apply]
@@ -51,7 +52,7 @@ lemma splitB11_expand (q k : ℝ × ℝ) :
 
 lemma splitQ11_eq_splitB11_diag (x : ℝ × ℝ) :
     splitQ11 x = splitB11 x x := by
-  simp
+  simp [splitQ11_apply, splitB11_apply]
 
 @[simp] theorem splitQ11_add (x y : ℝ × ℝ) :
     splitQ11 (x + y) = splitQ11 x + splitQ11 y + 2 * splitB11 x y := by

@@ -1,6 +1,6 @@
-import Mathlib.Algebra.Ring.Basic
+import Mathlib
 
-namespace InfoGeometry.Singular
+namespace InfoGeometry.Singular.MoorePenroseAdjoint
 
 /-- 
 A typeclass for a generic adjoint operation. 
@@ -41,33 +41,37 @@ theorem MoorePenrose_unique {A B C : R}
     (hC : IsMoorePenroseInverse A C) : B = C := by
   have h1 : A * B = A * C := by
     calc
-      A * B = (A * C * A) * B := by rw [← hC.eq1]
-      _ = A * C * (A * B) := by simp [mul_assoc]
-      _ = (A * C)† * (A * B)† := by rw [hC.eq3, hB.eq3]
-      _ = (C† * A†) * (B† * A†) := by rw [AdjointLike.mul_rev, AdjointLike.mul_rev]
-      _ = C† * (A† * B† * A†) := by simp [mul_assoc]
-      _ = C† * (A * B * A)† := by rw [adjoint_mul_triple]
-      _ = C† * A† := by rw [hB.eq1]
-      _ = (A * C)† := by rw [← AdjointLike.mul_rev]
-      _ = A * C := by rw [hC.eq3]
+      A * B = (A * B)† := hB.eq3.symm
+      _ = B† * A† := by rw [AdjointLike.mul_rev]
+      _ = B† * (A * C * A)† := by rw [hC.eq1]
+      _ = B† * (A† * C† * A†) := by rw [adjoint_mul_triple]
+      _ = (B† * A†) * C† * A† := by simp [mul_assoc]
+      _ = (A * B)† * C† * A† := by rw [AdjointLike.mul_rev]
+      _ = (A * B) * C† * A† := by rw [hB.eq3]
+      _ = A * B * (A * C)† := by rw [AdjointLike.mul_rev]
+      _ = A * B * (A * C) := by rw [hC.eq3]
+      _ = (A * B * A) * C := by simp [mul_assoc]
+      _ = A * C := by rw [hB.eq1]
   have h2 : B * A = C * A := by
     calc
-      B * A = B * (A * C * A) := by rw [← hC.eq1]
-      _ = (B * A) * (C * A) := by simp [mul_assoc]
-      _ = (B * A)† * (C * A)† := by rw [hB.eq4, hC.eq4]
-      _ = (A† * B†) * (A† * C†) := by rw [AdjointLike.mul_rev, AdjointLike.mul_rev]
-      _ = (A† * B† * A†) * C† := by simp [mul_assoc]
-      _ = (A * B * A)† * C† := by rw [adjoint_mul_triple]
-      _ = A† * C† := by rw [hB.eq1]
-      _ = (C * A)† := by rw [← AdjointLike.mul_rev]
-      _ = C * A := by rw [hC.eq4]
+      B * A = (B * A)† := hB.eq4.symm
+      _ = A† * B† := by rw [AdjointLike.mul_rev]
+      _ = (A * C * A)† * B† := by rw [hC.eq1]
+      _ = (A† * C† * A†) * B† := by rw [adjoint_mul_triple]
+      _ = A† * C† * (A† * B†) := by simp [mul_assoc]
+      _ = A† * C† * (B * A)† := by rw [AdjointLike.mul_rev]
+      _ = A† * C† * (B * A) := by rw [hB.eq4]
+      _ = (C * A)† * (B * A) := by rw [AdjointLike.mul_rev]
+      _ = (C * A) * (B * A) := by rw [hC.eq4]
+      _ = C * (A * B * A) := by simp [mul_assoc]
+      _ = C * A := by rw [hB.eq1]
   calc
     B = B * A * B := hB.eq2.symm
-    _ = (B * A) * B := by simp [mul_assoc]
+    _ = (B * A) * B := by rw [mul_assoc]
     _ = (C * A) * B := by rw [h2]
-    _ = C * (A * B) := by simp [mul_assoc]
+    _ = C * (A * B) := by rw [← mul_assoc]
     _ = C * (A * C) := by rw [h1]
-    _ = C * A * C := by simp [mul_assoc]
+    _ = C * A * C := by rw [mul_assoc]
     _ = C := hC.eq2
 
 /-- The Geometric/Metric Support Projector P_{MP} = A * A^+ -/

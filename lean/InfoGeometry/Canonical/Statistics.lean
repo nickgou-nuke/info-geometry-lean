@@ -37,9 +37,10 @@ import InfoGeometry.MaxEnt.Optimality
 import InfoGeometry.OptimalTransport
 import InfoGeometry.PositiveMeasure
 import InfoGeometry.RegularizedKL
-import InfoGeometry.RegularizedKLTest
+import InfoGeometry.KL.RegularizedKLTest
 import InfoGeometry.Renyi
-import InfoGeometry.Canonical.ExponentialFamilyLegacy
+import InfoGeometry.ExponentialFamily.Class
+import InfoGeometry.ExponentialFamily.Finite
 
 /-!
 # InfoGeometry.Canonical.Statistics

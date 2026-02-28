@@ -18,18 +18,16 @@ limitations under the License.
 Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
-
-import InfoGeometry.GrandCanonical.Core
 import InfoGeometry.Thermo.FiniteDiagonal
 import InfoGeometry.Thermo.FiniteMatrix
 import InfoGeometry.Thermo.FromBregman
 import InfoGeometry.Thermo.FromLogDet
 import InfoGeometry.Thermo.Gibbs
 import InfoGeometry.Thermo.ThermodynamicIdentities
-import InfoGeometry.Canonical.ThermalLegacy
+import InfoGeometry.Thermal.FiniteMatrix
 
 /-!
 # InfoGeometry.Canonical.Thermo
 
-Canonical finite-thermodynamics umbrella (publication surface).
+Canonical thermodynamic umbrella for publication.
 -/

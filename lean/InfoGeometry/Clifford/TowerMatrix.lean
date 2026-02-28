@@ -1,7 +1,8 @@
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 import Mathlib.LinearAlgebra.Matrix.Reindex
 import Mathlib.Data.Fintype.EquivFin
-import Mathlib.Data.Matrix.Notation
+import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.Tactic
 
 open scoped Matrix
 open scoped Kronecker
@@ -25,7 +26,10 @@ noncomputable def Jn (J1 : Matrix (Fin 2) (Fin 2) ℝ) (n : ℕ) : Mat n := kron
 
 lemma Jn_sq (J1 : Matrix (Fin 2) (Fin 2) ℝ) (hJ1 : J1 * J1 = 1) : ∀ n : ℕ, (Jn J1 n) * (Jn J1 n) = (1 : Mat n)
   | 0 => by simp [Jn, kronPow]
-  | n+1 => by simp [Jn, kronPow, Matrix.mul_kronecker_mul, Jn_sq J1 hJ1 n, hJ1]
+  | n+1 => by 
+      simp [Jn, kronPow]
+      rw [Matrix.mul_kronecker_mul]
+      simp [Jn_sq J1 hJ1 n, hJ1]
 
 noncomputable def cartan (J1 : Matrix (Fin 2) (Fin 2) ℝ) (n : ℕ) (X : Mat n) : Mat n :=
   - (Jn J1 n) * Xᵀ * (Jn J1 n)
@@ -44,6 +48,6 @@ end Transpose
 
 lemma Jn_transpose (J1 : Matrix (Fin 2) (Fin 2) ℝ) (hJ1t : J1ᵀ = J1) : ∀ n : ℕ, (Jn J1 n)ᵀ = Jn J1 n
   | 0 => by simp [Jn, kronPow]
-  | n+1 => by simpa [Jn, kronPow, transpose_kronecker, Jn_transpose n, hJ1t]
+  | n+1 => by simpa [Jn, kronPow, transpose_kronecker, Jn_transpose J1 hJ1t n, hJ1t]
 
 end InfoGeometry.Clifford.TowerMatrix

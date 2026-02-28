@@ -1,6 +1,6 @@
-import InfoGeometry.Singular.MoorePenrose
+import InfoGeometry.Singular.MoorePenroseAdjoint
 import InfoGeometry.Singular.CartanWiring
-import InfoGeometry.Singular.Drazin
+import InfoGeometry.Singular.DrazinAdjoint
 
 /-!
 # InfoGeometry.Singular

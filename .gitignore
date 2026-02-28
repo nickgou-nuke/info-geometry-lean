@@ -1,10 +1,6 @@
 # Lean build/tooling artifacts
 lean/.lake/
 
-# Python artifacts
-__pycache__/
-*.pyc
-
 # Generated aggregation artifacts
 lean/all_lean_files.txt
 lean/all_lean_files_combined.lean

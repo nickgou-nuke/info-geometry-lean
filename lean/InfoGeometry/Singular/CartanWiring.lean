@@ -16,7 +16,7 @@ variable (hJ1t : J1ᵀ = J1)
 The "Nuke" Wiring: Proves that the anti-automorphism engine φ 
 satisfies the AdjointLike axioms required for the Moore-Penrose Geometric Mirror.
 -/
-noncomputable def CartanAdjoint : AdjointLike (TowerMatrix.Mat n) where
+noncomputable instance CartanAdjoint : AdjointLike (TowerMatrix.Mat n) where
   adj := φ J1 n
   invol := by 
     intro A

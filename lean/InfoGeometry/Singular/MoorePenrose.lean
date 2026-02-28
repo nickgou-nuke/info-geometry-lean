@@ -1,115 +1,87 @@
-import Mathlib.Tactic
 import Mathlib.Algebra.Ring.Basic
-import InfoGeometry.Clifford.TowerMatrix
 
 namespace InfoGeometry.Singular
 
-open scoped Matrix
-open Matrix
-
-variable {n : ℕ}
-
-/-- An "adjoint-like" involution for matrices. -/
-structure AdjointLike (M : Type*) [Ring M] where
-  adj : M → M
+/-- 
+A typeclass for a generic adjoint operation. 
+This abstracts away from standard complex-Hermitian conjugation,
+allowing the Cartan metric anti-automorphism (φ) to govern the geometry. 
+-/
+class AdjointLike (R : Type*) [Ring R] where
+  adj : R → R
   invol : ∀ A, adj (adj A) = A
   mul_rev : ∀ A B, adj (A * B) = adj B * adj A
   add : ∀ A B, adj (A + B) = adj A + adj B
-  one : adj 1 = (1 : M)
-  zero : adj 0 = (0 : M)
-  neg : ∀ A, adj (-A) = - adj A
+  zero : adj 0 = 0
+  one : adj 1 = 1
+  neg : ∀ A, adj (-A) = -adj A
 
-attribute [simp] AdjointLike.one AdjointLike.zero AdjointLike.neg
+-- Canonical postfix notation for the geometric adjoint
+postfix:max "†" => AdjointLike.adj
 
-/-- The four Penrose equations relative to an adjoint-like operation `star`. -/
-structure IsMoorePenrose {M : Type*} [Ring M] (star : AdjointLike M) (A Aplus : M) : Prop where
-  penrose1 : A * Aplus * A = A
-  penrose2 : Aplus * A * Aplus = Aplus
-  penrose3 : star.adj (A * Aplus) = (A * Aplus)
-  penrose4 : star.adj (Aplus * A) = (Aplus * A)
+section MP
+variable {R : Type*} [Ring R] [AdjointLike R]
 
-namespace IsMoorePenrose
+/-- The Four Penrose Equations defining the Moore-Penrose Inverse. -/
+structure IsMoorePenroseInverse (A B : R) : Prop where
+  eq1 : A * B * A = A
+  eq2 : B * A * B = B
+  eq3 : (A * B)† = A * B
+  eq4 : (B * A)† = B * A
 
-variable {star : AdjointLike (InfoGeometry.Clifford.TowerMatrix.Mat n)}
-variable {A Aplus : InfoGeometry.Clifford.TowerMatrix.Mat n}
+lemma adjoint_mul_triple (X Y Z : R) : (X * Y * Z)† = Z† * Y† * X† := by
+  calc (X * Y * Z)† = ((X * Y) * Z)† := rfl
+    _ = Z† * (X * Y)† := by rw [AdjointLike.mul_rev]
+    _ = Z† * (Y† * X†) := by rw [AdjointLike.mul_rev]
+    _ = Z† * Y† * X† := by rw [← mul_assoc]
 
-/-- (AA⁺)² = AA⁺. -/
-theorem Pleft_idempotent (h : IsMoorePenrose star A Aplus) :
-    (A * Aplus) * (A * Aplus) = A * Aplus := by
-  -- (A A⁺)(A A⁺) = (A A⁺ A) A⁺ = A A⁺
+/-- The Uniqueness Theorem: The Geometric Mirror is absolute. -/
+theorem MoorePenrose_unique {A B C : R} 
+    (hB : IsMoorePenroseInverse A B) 
+    (hC : IsMoorePenroseInverse A C) : B = C := by
+  have h1 : A * B = A * C := by
+    calc
+      A * B = (A * C * A) * B := by rw [← hC.eq1]
+      _ = A * C * (A * B) := by simp [mul_assoc]
+      _ = (A * C)† * (A * B)† := by rw [hC.eq3, hB.eq3]
+      _ = (C† * A†) * (B† * A†) := by rw [AdjointLike.mul_rev, AdjointLike.mul_rev]
+      _ = C† * (A† * B† * A†) := by simp [mul_assoc]
+      _ = C† * (A * B * A)† := by rw [adjoint_mul_triple]
+      _ = C† * A† := by rw [hB.eq1]
+      _ = (A * C)† := by rw [← AdjointLike.mul_rev]
+      _ = A * C := by rw [hC.eq3]
+  have h2 : B * A = C * A := by
+    calc
+      B * A = B * (A * C * A) := by rw [← hC.eq1]
+      _ = (B * A) * (C * A) := by simp [mul_assoc]
+      _ = (B * A)† * (C * A)† := by rw [hB.eq4, hC.eq4]
+      _ = (A† * B†) * (A† * C†) := by rw [AdjointLike.mul_rev, AdjointLike.mul_rev]
+      _ = (A† * B† * A†) * C† := by simp [mul_assoc]
+      _ = (A * B * A)† * C† := by rw [adjoint_mul_triple]
+      _ = A† * C† := by rw [hB.eq1]
+      _ = (C * A)† := by rw [← AdjointLike.mul_rev]
+      _ = C * A := by rw [hC.eq4]
   calc
-    (A * Aplus) * (A * Aplus)
-        = (A * Aplus * A) * Aplus := by simp [mul_assoc]
-    _ = A * Aplus := by simp [h.penrose1, mul_assoc]
+    B = B * A * B := hB.eq2.symm
+    _ = (B * A) * B := by simp [mul_assoc]
+    _ = (C * A) * B := by rw [h2]
+    _ = C * (A * B) := by simp [mul_assoc]
+    _ = C * (A * C) := by rw [h1]
+    _ = C * A * C := by simp [mul_assoc]
+    _ = C := hC.eq2
 
-/-- (A⁺A)² = A⁺A. -/
-theorem Pright_idempotent (h : IsMoorePenrose star A Aplus) :
-    (Aplus * A) * (Aplus * A) = Aplus * A := by
-  -- (A⁺ A)(A⁺ A) = (A⁺ A A⁺) A = A⁺ A
+/-- The Geometric/Metric Support Projector P_{MP} = A * A^+ -/
+def MP_Projector (A B : R) (h : IsMoorePenroseInverse A B) : R := A * B
+
+lemma MP_Projector_idempotent {A B : R} (h : IsMoorePenroseInverse A B) : 
+    (MP_Projector A B h) * (MP_Projector A B h) = MP_Projector A B h := by
+  unfold MP_Projector
   calc
-    (Aplus * A) * (Aplus * A)
-        = (Aplus * A * Aplus) * A := by simp [mul_assoc]
-    _ = Aplus * A := by simp [h.penrose2, mul_assoc]
+    (A * B) * (A * B) = (A * B * A) * B := by simp [mul_assoc]
+    _ = A * B := by rw [h.eq1]
 
-/-- †-selfadjointness of AA⁺. -/
-theorem Pleft_selfadjoint (h : IsMoorePenrose star A Aplus) :
-    star.adj (A * Aplus) = A * Aplus := h.penrose3
+lemma MP_Projector_self_adjoint {A B : R} (h : IsMoorePenroseInverse A B) : 
+    (MP_Projector A B h)† = MP_Projector A B h := h.eq3
 
-/-- †-selfadjointness of A⁺A. -/
-theorem Pright_selfadjoint (h : IsMoorePenrose star A Aplus) :
-    star.adj (Aplus * A) = Aplus * A := h.penrose4
-
-/-- P(1−P)=0 for P=AA⁺. -/
-theorem Pleft_mul_Qleft (h : IsMoorePenrose star A Aplus) :
-    (A * Aplus) * ((1 : InfoGeometry.Clifford.TowerMatrix.Mat n) - (A * Aplus)) = 0 := by
-  -- P(1-P)=P-P^2
-  simp [mul_sub, mul_one, Pleft_idempotent (h := h), sub_self]
-
-/-- (1−P)P=0 for P=AA⁺. -/
-theorem Qleft_mul_Pleft (h : IsMoorePenrose star A Aplus) :
-    ((1 : InfoGeometry.Clifford.TowerMatrix.Mat n) - (A * Aplus)) * (A * Aplus) = 0 := by
-  simp [sub_mul, one_mul, Pleft_idempotent (h := h), sub_self]
-
-/-- P(1−P)=0 for P=A⁺A. -/
-theorem Pright_mul_Qright (h : IsMoorePenrose star A Aplus) :
-    (Aplus * A) * ((1 : InfoGeometry.Clifford.TowerMatrix.Mat n) - (Aplus * A)) = 0 := by
-  simp [mul_sub, mul_one, Pright_idempotent (h := h), sub_self]
-
-/-- (1−P)P=0 for P=A⁺A. -/
-theorem Qright_mul_Pright (h : IsMoorePenrose star A Aplus) :
-    ((1 : InfoGeometry.Clifford.TowerMatrix.Mat n) - (Aplus * A)) * (Aplus * A) = 0 := by
-  simp [sub_mul, one_mul, Pright_idempotent (h := h), sub_self]
-
-/-- Four-block “double chart” decomposition induced by left/right support idempotents. -/
-theorem conformalChart (h : IsMoorePenrose star A Aplus)
-    (X : InfoGeometry.Clifford.TowerMatrix.Mat n) :
-    X
-      = (A * Aplus) * X * (Aplus * A)
-      + (A * Aplus) * X * ((1 : InfoGeometry.Clifford.TowerMatrix.Mat n) - (Aplus * A))
-      + ((1 : InfoGeometry.Clifford.TowerMatrix.Mat n) - (A * Aplus)) * X * (Aplus * A)
-      + ((1 : InfoGeometry.Clifford.TowerMatrix.Mat n) - (A * Aplus)) * X * ((1 : InfoGeometry.Clifford.TowerMatrix.Mat n) - (Aplus * A)) := by
-  let P : InfoGeometry.Clifford.TowerMatrix.Mat n := A * Aplus
-  let Q : InfoGeometry.Clifford.TowerMatrix.Mat n := (1 : _) - P
-  let R : InfoGeometry.Clifford.TowerMatrix.Mat n := Aplus * A
-  let S : InfoGeometry.Clifford.TowerMatrix.Mat n := (1 : _) - R
-
-  have hPQ : P + Q = (1 : InfoGeometry.Clifford.TowerMatrix.Mat n) := by
-    simp [Q]
-  have hRS : R + S = (1 : InfoGeometry.Clifford.TowerMatrix.Mat n) := by
-    simp [S]
-
-  calc
-    X = (1 : InfoGeometry.Clifford.TowerMatrix.Mat n) * X * (1 : InfoGeometry.Clifford.TowerMatrix.Mat n) := by simp
-    _ = (P + Q) * X * (R + S) := by simpa [hPQ, hRS]
-    _ = ((P * X + Q * X) * (R + S)) := by simp [add_mul, mul_assoc]
-    _ = (P * X) * (R + S) + (Q * X) * (R + S) := by simp [add_mul]
-    _ = (P * X * R + P * X * S) + (Q * X * R + Q * X * S) := by
-          simp [mul_add, mul_assoc, add_mul]
-    _ = P * X * R + P * X * S + Q * X * R + Q * X * S := by
-          abel
-    _ = _ := by
-          -- expand P,Q,R,S back to the goal form
-          simp [P, Q, R, S, sub_eq_add_neg, add_assoc, add_left_comm, add_comm, mul_assoc]
-
-end IsMoorePenrose
+end MP
 end InfoGeometry.Singular

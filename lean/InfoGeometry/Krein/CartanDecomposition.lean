@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.Automorphisms
+import InfoGeometry.Krein.OrthogonalGroup
 import InfoGeometry.Architecture.SymmetricSpace
 
 open InfoGeometry.Core

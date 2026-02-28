@@ -56,6 +56,8 @@ lean_lib InfoGeometry.Projective
 lean_lib InfoGeometry.MaxEnt
 -- MaxEnt imports convex and core modules as needed
 
+lean_lib InfoGeometry.Singular
+
 lean_lib InfoGeometry.Canonical
 -- the canonical umbrella imports the other sublibraries;
 -- `requires` was omitted for compatibility.

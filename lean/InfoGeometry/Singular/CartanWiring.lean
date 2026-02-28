@@ -1,11 +1,12 @@
 import InfoGeometry.Clifford.CartanInstance
-import InfoGeometry.Singular.MoorePenrose
+import InfoGeometry.Singular.MoorePenroseAdjoint
 import InfoGeometry.Clifford.Decomposition
 
-namespace InfoGeometry.Singular
+namespace InfoGeometry.Singular.CartanWiring
 
 open InfoGeometry.Clifford
 open InfoGeometry.Clifford.Decomposition
+open InfoGeometry.Singular.MoorePenroseAdjoint
 open Matrix
 
 variable {n : ℕ} (J1 : Matrix (Fin 2) (Fin 2) ℝ)
@@ -33,4 +34,4 @@ noncomputable instance CartanAdjoint : AdjointLike (TowerMatrix.Mat n) where
   zero := by simp [φ, J]
   neg := by intro A; simp [φ, J]
 
-end InfoGeometry.Singular
+end InfoGeometry.Singular.CartanWiring

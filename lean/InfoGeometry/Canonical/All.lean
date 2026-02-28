@@ -18,8 +18,9 @@ limitations under the License.
 Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
+import InfoGeometry.Analysis
+import InfoGeometry.Analysis.Graph
 import InfoGeometry.Canonical.Algebra
-import InfoGeometry.Canonical.AnalysisLegacy
 import InfoGeometry.Canonical.AnalyticalIndex
 import InfoGeometry.Canonical.AQFTOperatorInterface
 import InfoGeometry.Canonical.AnomalyInflow
@@ -48,7 +49,14 @@ import InfoGeometry.Canonical.CliffordBridge
 import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.ConformalWard
-import InfoGeometry.Canonical.CoreLegacy
+import InfoGeometry.Core
+import InfoGeometry.Core.Derivatives
+import InfoGeometry.Core.DerivativesSmoke
+import InfoGeometry.Core.Jordan
+import InfoGeometry.Core.SymmetricLie
+import InfoGeometry.Core.SymmetricLieGeneric
+import InfoGeometry.Core.SymmetricSpaces
+import InfoGeometry.Core.UnifiedGeometry
 import InfoGeometry.Canonical.CountSubstrateBridge
 import InfoGeometry.Canonical.CurvatureRGFlow
 import InfoGeometry.Canonical.Drazin
@@ -64,18 +72,24 @@ import InfoGeometry.Canonical.GrandUnificationBlueprint
 import InfoGeometry.Canonical.GrandUnificationMetric
 import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.HolographicEmergence
-import InfoGeometry.Canonical.IB
+import InfoGeometry.Assumptions.IB
 import InfoGeometry.Canonical.InformationNumber
 import InfoGeometry.Canonical.InformationTorsion
-import InfoGeometry.Canonical.IntegrationLegacy
+import InfoGeometry.KL.EntropicInferenceTest
+import InfoGeometry.SLT.ConditionalExpectation
+import InfoGeometry.TransformationGroups
+import InfoGeometry.auto_blueprints
 import InfoGeometry.Canonical.KMSSinkhornBridge
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.Krein
 import InfoGeometry.Canonical.KreinLadder
-import InfoGeometry.Canonical.LLMLegacy
-import InfoGeometry.Canonical.LLN
+import InfoGeometry.LLM
+import InfoGeometry.LLM.MaskedTransformerBlock
+import InfoGeometry.LLM.PositionalEncoding
+import InfoGeometry.LLM.TransformerBlock
+import InfoGeometry.Assumptions.LLN
 import InfoGeometry.Canonical.LorentzianRouting
-import InfoGeometry.Canonical.ManifoldHomology
+import InfoGeometry.Assumptions.ManifoldHomology
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.PathIntegral

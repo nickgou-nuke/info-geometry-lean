@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Lie.Subalgebra
 import InfoGeometry.Clifford.TowerMatrix
+import Mathlib.Tactic
 
 open scoped Matrix
 open scoped Kronecker

@@ -1,6 +1,8 @@
 import InfoGeometry.RegularizedKL
 import Mathlib.Tactic
 
+namespace InfoGeometry.KL.RegularizedKLTest
+
 open StatisticalMechanics
 
 -- basic sanity checks for the new regularization module
@@ -43,3 +45,5 @@ example :
       (ε := (0.1 : ℝ))
       hε
       (x := true))
+
+end InfoGeometry.KL.RegularizedKLTest

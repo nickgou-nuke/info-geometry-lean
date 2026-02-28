@@ -1,8 +1,9 @@
-import Mathlib.Algebra.Ring.Basic
-import Mathlib.Algebra.GroupPower.Basic
-import InfoGeometry.Singular.MoorePenrose
+import Mathlib
+import InfoGeometry.Singular.MoorePenroseAdjoint
 
-namespace InfoGeometry.Singular
+namespace InfoGeometry.Singular.DrazinAdjoint
+
+open InfoGeometry.Singular.MoorePenroseAdjoint
 
 section Drazin
 variable {R : Type*} [Ring R]
@@ -49,4 +50,4 @@ the anomaly rigorously vanishes (ε = 0). -/
 def IsNormal (A : R) : Prop := A * A† = A† * A
 
 end Anomaly
-end InfoGeometry.Singular
+end InfoGeometry.Singular.DrazinAdjoint

@@ -469,6 +469,60 @@ def emitQuiver (e : Export) : String := Id.run do
   out := out ++ "end SocraticTriple.Generated\n"
   out
 
+def escapeLeanString (s : String) : String :=
+  let s1 := s.replace "\\" "\\\\"
+  let s2 := s1.replace "\n" "\\n"
+  let s3 := s2.replace "\"" "\\\""
+  s3
+
+abbrev TacticStateData := Array String × Std.HashMap String Nat × Array (Nat × Nat × String × Nat)
+
+def emitTacticQuiver (e : Export) : String := Id.run do
+  let initData : TacticStateData := (#[], {}, #[])
+  let (_, (states, _, edges)) := StateT.run (m := Id) (do
+    let addState := fun (s : String) => do
+      let (sts, map, edgs) ← get
+      match map.get? s with
+      | some idx => pure idx
+      | none =>
+          let idx := sts.size
+          set (sts.push s, map.insert s idx, edgs)
+          pure idx
+
+    -- Add the terminal "done" state explicitly
+    let _ ← addState "no goals"
+
+    for bi in [:e.blocks.size] do
+      let blk := e.blocks[bi]!
+      for mi in [:blk.morphisms.size] do
+        let morph := blk.morphisms[mi]!
+        let stateBefore := if morph.beforeState.isEmpty then "no goals" else String.intercalate " | " morph.beforeState.toList
+        let stateAfter := if morph.afterState.isEmpty then "no goals" else String.intercalate " | " morph.afterState.toList
+        let u ← addState stateBefore
+        let v ← addState stateAfter
+
+        let (sts, map, edgs) ← get
+        let edgeIdx := edgs.size
+        set (sts, map, edgs.push (u, v, morph.tacticSyntax, edgeIdx))
+    pure ()
+  ) initData
+
+  let mut out := ""
+  out := out ++ "import Mathlib.CategoryTheory.FreeCategory\n\n"
+  out := out ++ s!"-- Auto-generated Tactic Quiver for {e.file}\n"
+  out := out ++ "namespace TacticQuiver.Generated\n\n"
+
+  out := out ++ "inductive TacticStateObj\n"
+  for i in [:states.size] do
+    out := out ++ s!"  | state_{i} -- {escapeLeanString states[i]!}\n"
+
+  out := out ++ "\ninductive TacticEdge : TacticStateObj → TacticStateObj → Type\n"
+  for (u, v, tactic, i) in edges do
+    out := out ++ s!"  | edge_{i} : TacticEdge .state_{u} .state_{v} -- {escapeLeanString tactic}\n"
+
+  out := out ++ "\nend TacticQuiver.Generated\n"
+  out
+
 end DAG
 
 open DAG
@@ -476,6 +530,11 @@ open DAG
 /-- CLI entrypoint. -/
 def main (args : List String) : IO UInt32 := do
   match args with
+  | ["--emit-tactic-quiver", outFileStr, fileStr] =>
+    let ex ← exportFile (System.FilePath.mk fileStr)
+    let quiverCode := emitTacticQuiver ex
+    IO.FS.writeFile (System.FilePath.mk outFileStr) quiverCode
+    return 0
   | ["--emit-quiver", outFileStr, fileStr] =>
     let ex ← exportFile (System.FilePath.mk fileStr)
     let quiverCode := emitQuiver ex
@@ -495,4 +554,5 @@ def main (args : List String) : IO UInt32 := do
     IO.eprintln "usage: block_export <lean-file>"
     IO.eprintln "       block_export --slice <Target.Name> <lean-file>"
     IO.eprintln "       block_export --emit-quiver <out.lean> <lean-file>"
+    IO.eprintln "       block_export --emit-tactic-quiver <out.lean> <lean-file>"
     return 1

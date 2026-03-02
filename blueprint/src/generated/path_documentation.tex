@@ -1,0 +1,27 @@
+% PATH DOCUMENTATION: The Journey from KL Divergence to Expectation
+\chapter{Path Analysis: Information Foundations}
+
+This chapter explores the formal relationship between the Kullback-Leibler (KL) divergence and the concept of mathematical expectation as formalized in the 	exttt{InfoGeometry} library.
+
+\section{The Path}
+The dependency graph reveals a direct link:
+\begin{center}
+    	exttt{InfoGeometry.klDiv} $\longrightarrow$ 	exttt{InfoGeometry.expectation}
+\end{center}
+
+\section{Formal Nodes}
+
+\subsection{Step 1: The Destination (Expectation)}
+Before defining divergence, the library establishes the notion of expectation over a probability distribution.
+\begin{definition}[blueprint="infogeometry:expectation"]
+  \inputleannode{InfoGeometry.expectation}
+\end{definition}
+
+\subsection{Step 2: The Origin (KL Divergence)}
+The KL divergence is then defined as the expectation of the log-density ratio. Its formal dependency on the expectation operator is a core architectural choice in this library.
+\begin{theorem}[blueprint="infogeometry:kldiv"]
+  \inputleannode{InfoGeometry.klDiv}
+\end{theorem}
+
+\section{Geographic Context}
+This path resides in the 	extbf{Probability \& Information} region of the codebase. It represents the transition from linear statistical operators (expectation) to non-linear information-theoretic measures (divergence).

@@ -1,0 +1,22 @@
+% Symlink or copy of print.tex from blueprint/src/
+% This file enables latexmk to find the main LaTeX source.
+% Printable blueprint document
+\documentclass[a4paper]{report}
+
+\usepackage{geometry}
+\usepackage{expl3}
+\usepackage{amssymb, amsthm, mathtools}
+\usepackage[unicode,colorlinks=true,linkcolor=blue,urlcolor=magenta, citecolor=blue]{hyperref}
+\usepackage[warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}
+\usepackage{blueprint}
+
+\input{macros/common}
+\input{macros/print}
+
+\title{My formalization project}
+\author{nickgou-nuke}
+
+\begin{document}
+\maketitle
+\input{../src/content.tex}
+\end{document}

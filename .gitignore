@@ -1,15 +1,24 @@
 # Lean build/tooling artifacts
 lean/.lake/
+.lake/
+
+# Python artifacts
+__pycache__/
+*.pyc
+.venv/
+
+# Project-specific Build/Analysis Artifacts
+.build/
+.artifacts/
 
 # Generated aggregation artifacts
 lean/all_lean_files.txt
 lean/all_lean_files_combined.lean
-.venv/
-.lake/
-lean/.lake/
 *.lean.bak
 *.log
 *.txt
-blueprint/
+
+# Documentation Output
 docs/
 docbuild/
+publication/

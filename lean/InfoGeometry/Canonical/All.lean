@@ -18,8 +18,7 @@ limitations under the License.
 Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
-import InfoGeometry.Analysis
-import InfoGeometry.Analysis.Graph
+import DAG.Basic
 import InfoGeometry.Canonical.Algebra
 import InfoGeometry.Canonical.AnalyticalIndex
 import InfoGeometry.Canonical.AQFTOperatorInterface

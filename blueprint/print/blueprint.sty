@@ -1,0 +1,28 @@
+% Copy of blueprint.sty from blueprint/src/
+\DeclareOption*{}
+\ProcessOptions
+
+% fallback definitions copied from the LeanArchitect preamble.  the
+% real macros are generated in the module header files (e.g.
+% .lake/build/blueprint/library/InfoGeometry.Core.tex) but we provide
+% defaults so that `pdflatex` works even if the headers haven't been
+% included yet.
+\makeatletter
+
+% \newleannode{name}{latex} defines a new Lean node
+\providecommand{\newleannode}[2]{%
+  \expandafter\gdef\csname leannode@#1\endcsname{#2}}
+% \inputleannode{name} inputs a Lean node
+\providecommand{\inputleannode}[1]{%
+  \csname leannode@#1\endcsname}
+
+% \newleanmodule{module}{latex} defines a new Lean module
+\providecommand{\newleanmodule}[2]{%
+  \expandafter\gdef\csname leanmodule@#1\endcsname{#2}}
+% \inputleanmodule{module} inputs a Lean module
+\providecommand{\inputleanmodule}[1]{%
+  \csname leanmodule@#1\endcsname}
+
+\makeatother
+
+\newcommand{\graphcolor}[3]{}

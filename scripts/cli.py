@@ -5,7 +5,7 @@ import argparse
 import sys
 from typing import Callable
 
-# import modules so we can dispatch to their `main` functions
+# import modules from package level
 from . import (
     build_doc_map,
     emit_markdown_index,
@@ -13,21 +13,25 @@ from . import (
     filter_project_decls,
     generate_library_index,
     make_graph,
-    graph_to_blueprint,
-    namespace_patch_plan,
     refactor_plan,
+    graph_to_blueprint,
+    cluster_theory,
+    agent_doc_gen,
+    proof_gap_report,
 )
 
-COMMAND_MODULES: dict[str, Callable[[list[str]], int]] = {
+COMMAND_MODULES: dict[str, Callable[[], int]] = {
     "build-doc-map": build_doc_map.main,
     "emit-markdown-index": emit_markdown_index.main,
     "auto-tag": auto_tag.main,
     "filter-project-decls": filter_project_decls.main,
     "make-graph": make_graph.main,
-    "graph-to-blueprint": graph_to_blueprint.main,
     "generate-library-index": generate_library_index.main,
-    "namespace-plan": namespace_patch_plan.main,
     "refactor-plan": refactor_plan.main,
+    "graph-to-blueprint": graph_to_blueprint.main,
+    "cluster-theory": cluster_theory.main,
+    "agent-doc-gen": agent_doc_gen.main,
+    "proof-gap-report": proof_gap_report.main,
 }
 
 

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "infogeometry"
+version = "0.1.0"
+description = "Utility scripts and tools for the InfoGeometry Lean project"
+authors = [ { name = "Project Authors" } ]
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+
+
+[project.scripts]
+infogeometry = "scripts.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["scripts", "tools"]
+include = ["scripts*", "tools*"]
+

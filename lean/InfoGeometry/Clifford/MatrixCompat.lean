@@ -1,5 +1,7 @@
 import InfoGeometry.Clifford.Cl11Matrix
 
+open scoped Matrix
+
 namespace InfoGeometry.Clifford.MatrixCompat
 
 open InfoGeometry.Clifford.Cl11Matrix

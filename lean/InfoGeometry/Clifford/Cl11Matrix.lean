@@ -1,183 +1,136 @@
-import InfoGeometry.Clifford.SplitQ11
-
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
-import Mathlib.LinearAlgebra.CliffordAlgebra.Grading  -- for finrank formula
-import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-import Mathlib.Data.Matrix.Notation
+import Mathlib.LinearAlgebra.CliffordAlgebra.Contraction
+import Mathlib.LinearAlgebra.CliffordAlgebra.Equivs
+import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import Mathlib.LinearAlgebra.Dimension.Finrank
+import Mathlib.LinearAlgebra.Dimension.Constructions
+import Mathlib.Algebra.Quaternion
+import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
 
-open scoped Matrix
-
 /-!
-# `Cl(1,1)` Matrix Model
+# Real Pauli Representation of Cl(1,1)
 
-Concrete `2 × 2` real-matrix model for `Cl(1,1)`, with explicit generators,
-Clifford lift, and a constructive surjectivity witness.  Closes the final
-`AlgEquiv` via `finrank`.
+This module proves the algebra isomorphism `CliffordAlgebra q11 ≃ₐ[ℝ] Matrix (Fin 2) (Fin 2) ℝ`
+using the real Pauli matrices:
+* `σ₃ = !![1, 0; 0, -1]` (squares to 1)
+* `ε  = !![0, 1; -1, 0]` (squares to -1)
+* `σ₁ = !![0, 1; 1, 0]` (the product σ₃ε)
 -/
+
+open scoped Matrix
+open scoped Quaternion
+open FiniteDimensional
 
 namespace InfoGeometry.Clifford.Cl11Matrix
 
-/-- Carrier for split-signature `(1,1)` vectors. -/
 abbrev Vec11 : Type := ℝ × ℝ
+abbrev Mat2  : Type := Matrix (Fin 2) (Fin 2) ℝ
 
-/-- Real `2 × 2` matrices. -/
-abbrev Mat2 : Type := Matrix (Fin 2) (Fin 2) ℝ
+/-- Standard split signature quadratic form on ℝ¹,¹ : q(x,y) = x² − y² -/
+noncomputable def q11 : QuadraticForm ℝ Vec11 :=
+  CliffordAlgebraQuaternion.Q (1 : ℝ) (-1 : ℝ)
 
-/-- Split quadratic form `(1,1)` on `Vec11`. -/
-noncomputable abbrev q11 : QuadraticForm ℝ Vec11 := InfoGeometry.Clifford.splitQ11
+@[simp] lemma q11_apply (v : Vec11) : q11 v = v.1 ^ 2 - v.2 ^ 2 := by
+  dsimp [q11, CliffordAlgebraQuaternion.Q]
+  ring
 
-/-- Generator squaring to `+1`. -/
-def Eplus : Mat2 := !![(1 : ℝ), 0; 0, (-1 : ℝ)]
+-- Real Pauli matrices
+def Eplus  : Mat2 := !![(1 : ℝ), 0; 0, (-1 : ℝ)]  -- σ₃
+def Eminus : Mat2 := !![(0 : ℝ), 1; (-1 : ℝ), 0] -- ε = iσ₂
+def J1     : Mat2 := !![(0 : ℝ), 1; 1, 0]        -- σ₁
 
-/-- Generator squaring to `-1`. -/
-def Eminus : Mat2 := !![(0 : ℝ), 1; (-1 : ℝ), 0]
+lemma Eplus_sq : Eplus * Eplus = 1 := by
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Eplus, Matrix.mul_apply, Fin.sum_univ_two]
 
-/-- Pseudoscalar generator `J₁ = E₊ E₋`. -/
-def J1 : Mat2 := Eplus * Eminus
+lemma Eminus_sq : Eminus * Eminus = -1 • (1 : Mat2) := by
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Eminus, Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply]
 
-lemma J1_transpose : (J1 : Mat2)ᵀ = J1 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [J1, Eplus, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
+lemma Eplus_mul_Eminus : Eplus * Eminus = J1 := by
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Eplus, Eminus, J1, Matrix.mul_apply, Fin.sum_univ_two]
 
-lemma Eplus_sq : Eplus * Eplus = (1 : Mat2) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Eplus, Matrix.mul_apply, Fin.sum_univ_two]
+lemma J1_sq : J1 * J1 = 1 := by
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J1, Matrix.mul_apply, Fin.sum_univ_two]
 
-lemma Eminus_sq : Eminus * Eminus = (-1 : ℝ) • (1 : Mat2) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Eminus, Matrix.mul_apply, Fin.sum_univ_two]
+lemma J1_transpose : J1ᵀ = J1 := by
+  ext i j; fin_cases i <;> fin_cases j <;> simp [J1, Matrix.transpose_apply]
 
-lemma J1_sq : J1 * J1 = (1 : Mat2) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [J1, Eplus, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
-
-/-- Generator map `(a,b) ↦ a E₊ + b E₋`. -/
+/-- The generating linear map v ↦ γ(v) mapping to real Pauli matrices. -/
 noncomputable def gen : Vec11 →ₗ[ℝ] Mat2 where
   toFun v := v.1 • Eplus + v.2 • Eminus
-  map_add' := by
-    intro u v
-    simp [add_smul, add_assoc, add_left_comm, add_comm]
-  map_smul' := by
-    intro a v
-    simp [smul_add, smul_smul, mul_assoc]
+  map_add' u v := by 
+    ext i j; fin_cases i <;> fin_cases j <;> (simp [Eplus, Eminus, Matrix.add_apply]; try ring)
+  map_smul' c v := by 
+    ext i j; fin_cases i <;> fin_cases j <;> (simp [Eplus, Eminus, Matrix.smul_apply]; try ring)
 
-@[simp] lemma gen_apply_pair (a b : ℝ) :
-    gen (a, b) = a • Eplus + b • Eminus := rfl
 
-/-- Clifford relation needed for `CliffordAlgebra.lift`. -/
-lemma gen_sq (v : Vec11) :
-    gen v * gen v = (q11 v) • (1 : Mat2) := by
+lemma gen_sq (v : Vec11) : gen v * gen v = (q11 v) • (1 : Mat2) := by
   rcases v with ⟨a, b⟩
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [gen, q11, InfoGeometry.Clifford.splitQ11_apply, Eplus, Eminus,
-      Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  ext i j; fin_cases i <;> fin_cases j <;>
+    (simp [gen, q11_apply, Eplus, Eminus, Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply]; ring)
 
-/-- Algebra morphism `Cl(1,1) → Mat₂(ℝ)` induced by `gen`. -/
+/-- Algebra morphism Cl(1,1) → Mat₂(ℝ) induced by the Pauli representation. -/
 noncomputable def cl11ToMat : CliffordAlgebra q11 →ₐ[ℝ] Mat2 :=
-  CliffordAlgebra.lift q11 gen (by
-    intro v
-    -- `algebraMap r = r • 1` for matrices
-    simpa [Algebra.algebraMap_eq_smul_one] using gen_sq v)
+  CliffordAlgebra.lift q11 ⟨gen, fun v => by
+    simp [Algebra.algebraMap_eq_smul_one, gen_sq v]⟩
 
-@[simp] lemma cl11ToMat_ι_one_zero :
-    cl11ToMat (CliffordAlgebra.ι q11 (1, 0)) = Eplus := by
-  simp [cl11ToMat, gen, Eplus, Eminus]
-
-@[simp] lemma cl11ToMat_ι_zero_one :
-    cl11ToMat (CliffordAlgebra.ι q11 (0, 1)) = Eminus := by
-  simp [cl11ToMat, gen, Eplus, Eminus]
-
-/-- Pseudoscalar element in `Cl(1,1)`. -/
-noncomputable def J1_cl : CliffordAlgebra q11 :=
-  (CliffordAlgebra.ι q11 (1, 0)) * (CliffordAlgebra.ι q11 (0, 1))
-
-@[simp] lemma cl11ToMat_J1 : cl11ToMat J1_cl = J1 := by
-  simp [J1_cl, J1]
-
-/-- Matrix coefficient for identity component. -/
+-- Decomposition of any 2x2 matrix into the Pauli basis
 noncomputable def alpha (M : Mat2) : ℝ := (M 0 0 + M 1 1) / 2
-/-- Matrix coefficient for `Eplus` component. -/
-noncomputable def beta (M : Mat2) : ℝ := (M 0 0 - M 1 1) / 2
-/-- Matrix coefficient for `J1` component. -/
+noncomputable def beta  (M : Mat2) : ℝ := (M 0 0 - M 1 1) / 2
 noncomputable def delta (M : Mat2) : ℝ := (M 0 1 + M 1 0) / 2
-/-- Matrix coefficient for `Eminus` component. -/
 noncomputable def gamma (M : Mat2) : ℝ := (M 0 1 - M 1 0) / 2
 
 lemma mat2_decompose (M : Mat2) :
-    M = (alpha M) • (1 : Mat2)
-      + (beta M) • Eplus
-      + (gamma M) • Eminus
-      + (delta M) • J1 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [alpha, beta, gamma, delta, Eplus, Eminus, J1] <;> ring
+    M = (alpha M) • (1 : Mat2) + (beta M) • Eplus + (gamma M) • Eminus + (delta M) • J1 := by
+  ext i j; fin_cases i <;> fin_cases j <;> (simp [alpha, beta, gamma, delta, Eplus, Eminus, J1, Matrix.smul_apply, Matrix.add_apply]; ring)
 
-/-- Constructive preimage for surjectivity. -/
+noncomputable def J1_cl : CliffordAlgebra q11 :=
+  (CliffordAlgebra.ι q11 (1, 0)) * (CliffordAlgebra.ι q11 (0, 1))
+
+/-- Inverse mapping from matrices back to Clifford elements. -/
 noncomputable def preimage (M : Mat2) : CliffordAlgebra q11 :=
-  (alpha M) • (1 : CliffordAlgebra q11)
-    + (beta M) • (CliffordAlgebra.ι q11 (1, 0))
-    + (gamma M) • (CliffordAlgebra.ι q11 (0, 1))
-    + (delta M) • J1_cl
+    (alpha M) • 1
+  + (beta M)  • (CliffordAlgebra.ι q11 (1, 0))
+  + (gamma M) • (CliffordAlgebra.ι q11 (0, 1))
+  + (delta M) • J1_cl
 
-lemma cl11ToMat_preimage (M : Mat2) :
-    cl11ToMat (preimage M)
-      = (alpha M) • (1 : Mat2)
-        + (beta M) • Eplus
-        + (gamma M) • Eminus
-        + (delta M) • J1 := by
-  -- `simp` uses the `[simp]` lemmas for images of generators + J1_cl
-  simp [preimage, map_add, map_smul]
+lemma cl11ToMat_preimage (M : Mat2) : cl11ToMat (preimage M) = M := by
+  simp only [preimage, J1_cl, map_add, map_smul, map_mul, map_one, cl11ToMat, CliffordAlgebra.lift_ι_apply]
+  have h1 : gen (1, 0) = Eplus := by ext i j; fin_cases i <;> fin_cases j <;> simp [gen, Eplus, Eminus]
+  have h2 : gen (0, 1) = Eminus := by ext i j; fin_cases i <;> fin_cases j <;> simp [gen, Eplus, Eminus]
+  simp only [h1, h2]
+  have he : Eplus * Eminus = J1 := Eplus_mul_Eminus
+  simp only [he]
+  exact (mat2_decompose M).symm
 
-lemma cl11ToMat_surjective : Function.Surjective cl11ToMat := by
-  intro M
-  refine ⟨preimage M, ?_⟩
-  calc
-    cl11ToMat (preimage M)
-        = (alpha M) • (1 : Mat2)
-          + (beta M) • Eplus
-          + (gamma M) • Eminus
-          + (delta M) • J1 := cl11ToMat_preimage M
-    _ = M := (mat2_decompose M).symm
+lemma cl11ToMat_surjective : Function.Surjective cl11ToMat :=
+  fun M ↦ ⟨preimage M, cl11ToMat_preimage M⟩
 
-/-- `finrank ℝ Mat2 = 4`. -/
-lemma finrank_mat2 : finrank ℝ Mat2 = 4 := by
-  classical
-  simp [Mat2, finrank_matrix]
+lemma finrank_mat2 : Module.finrank ℝ Mat2 = 4 := by
+  simp [Mat2, Module.finrank_matrix, Module.finrank_self]
 
-/-- `finrank ℝ Vec11 = 2`. -/
-lemma finrank_vec11 : finrank ℝ Vec11 = 2 := by
-  classical
-  simp [Vec11, finrank_prod]
+/-- Prove dim(Cl(1,1)) = 4 using the quaternion equivalence already in Mathlib. -/
+lemma finrank_cl11 : Module.finrank ℝ (CliffordAlgebra q11) = 4 := by
+  let e1 : CliffordAlgebra q11 ≃ₐ[ℝ] ℍ[ℝ, 1, 0, -1] := CliffordAlgebraQuaternion.equiv
+  let e2 : ℍ[ℝ, 1, 0, -1] ≃ₗ[ℝ] (Fin 4 → ℝ) := QuaternionAlgebra.linearEquivTuple 1 0 (-1)
+  let e3 : CliffordAlgebra q11 ≃ₗ[ℝ] (Fin 4 → ℝ) := e1.toLinearEquiv.trans e2
+  rw [LinearEquiv.finrank_eq e3]
+  simp [Fintype.card_fin]
 
-/-- `finrank ℝ (CliffordAlgebra q11) = 4` via the standard formula `2^(finrank Vec11)`. -/
-lemma finrank_cl11 : finrank ℝ (CliffordAlgebra q11) = 4 := by
-  classical
-  -- lemma name is stable in current Mathlib: `CliffordAlgebra.finrank`
-  have : finrank ℝ (CliffordAlgebra q11) = 2 ^ finrank ℝ Vec11 := by
-    simpa using (CliffordAlgebra.finrank (Q := q11) (R := ℝ) (V := Vec11))
-  -- 2^(2) = 4
-  simpa [finrank_vec11] using this
-
-/-- Surjective + equal finrank ⇒ injective. -/
-lemma cl11ToMat_injective : Function.Injective cl11ToMat := by
-  classical
-  let f : (CliffordAlgebra q11) →ₗ[ℝ] Mat2 := cl11ToMat.toLinearMap
-  have hs : Function.Surjective f := by
-    intro M
-    rcases cl11ToMat_surjective (q11 := q11) M with ⟨x, hx⟩
-    exact ⟨x, hx⟩
-  have hdim : finrank ℝ (CliffordAlgebra q11) = finrank ℝ Mat2 := by
-    simp [finrank_cl11, finrank_mat2]
-  exact (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hdim).2 hs
-
-/-- Final algebra equivalence `Cl(1,1) ≃ₐ[ℝ] M₂(ℝ)`. -/
+/-- The algebra isomorphism Cl(1,1) ≃ Mat₂(ℝ). -/
 noncomputable def cl11EquivMat : CliffordAlgebra q11 ≃ₐ[ℝ] Mat2 :=
-  AlgEquiv.ofBijective cl11ToMat ⟨cl11ToMat_injective, cl11ToMat_surjective⟩
+  AlgEquiv.ofBijective cl11ToMat (by
+    constructor
+    · -- Injectivity via dimension equality and surjectivity
+      have h_rank : Module.finrank ℝ (CliffordAlgebra q11) = Module.finrank ℝ Mat2 := by
+        rw [finrank_cl11, finrank_mat2]
+      have h_surj : Function.Surjective (cl11ToMat.toLinearMap) := cl11ToMat_surjective
+      let e1 : CliffordAlgebra q11 ≃ₐ[ℝ] ℍ[ℝ, 1, 0, -1] := CliffordAlgebraQuaternion.equiv
+      let e2 : ℍ[ℝ, 1, 0, -1] ≃ₗ[ℝ] (Fin 4 → ℝ) := QuaternionAlgebra.linearEquivTuple 1 0 (-1)
+      haveI : FiniteDimensional ℝ (CliffordAlgebra q11) := 
+        LinearEquiv.finiteDimensional (e1.toLinearEquiv.trans e2).symm
+      exact (LinearMap.injective_iff_surjective_of_finrank_eq_finrank h_rank).mpr h_surj
+    · -- Surjectivity
+      exact cl11ToMat_surjective)
 
 end InfoGeometry.Clifford.Cl11Matrix

@@ -242,7 +242,7 @@ def runIndexer (nsPrefix : String) (outDir : String) (graphOut : String) : MetaM
 
   IO.println s!"[Indexer patched] Exported {st.decls.size} atoms to {outDir}/ and wrote {graphOut}"
 
-def main (args : List String) : IO UInt32 := do
+def indexerMain (args : List String) : IO UInt32 := do
   let (importMod, nsPrefix, outDir, graphOut) ←
     match args with
     | [m, ns, o]      => pure (m, ns, o, "full_graph.json")

@@ -19,6 +19,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Library
+import InfoGeometry.Generated
 
 /-!
 # InfoGeometry

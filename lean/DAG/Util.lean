@@ -21,4 +21,36 @@ def collectDeps (e : Expr) : List Name :=
     | _ => acc
   go e []
 
+
+
+def isFromMainModule (env : Environment) (n : Name) : Bool :=
+  match env.getModuleIdxFor? n with
+  | some midx =>
+      let mods := env.header.moduleNames
+      let m := mods[midx.toNat]!
+      m == env.mainModule
+  | none => false
+
+
+def leafNameString (n : Name) : String :=
+  match (toString n).splitOn "." |>.reverse with
+  | x :: _ => x
+  | [] => ""
+
+def containsPrivateMarker (s : String) : Bool :=
+  (s.splitOn "._private.").length > 1 || s.startsWith "_private."
+
+def isGeneratedOrUnstableName (n : Name) : Bool :=
+  let s := toString n
+  let leaf := leafNameString n
+  containsPrivateMarker s ||
+  leaf.startsWith "match_" ||
+  leaf.startsWith "proof_" ||
+  leaf.startsWith "_aux" ||
+  leaf.endsWith "brecOn" ||
+  leaf.endsWith "below" ||
+  leaf.endsWith "ibelow" ||
+  leaf.endsWith "injEq" ||
+  leaf.endsWith "sizeOf_spec"
+
 end DAG

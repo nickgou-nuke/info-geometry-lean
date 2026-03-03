@@ -68,12 +68,43 @@ noncomputable def spectralPlusProj : DoubledSpace E →L[ℝ] DoubledSpace E := 
 
 @[simp] lemma gradePlusProj_apply (v : DoubledSpace E) : gradePlusProj (E := E) v = gradePlusPart (E := E) v := by simp [gradePlusPart, gradePlusProj, CartanInvolution.Pplus, smul_add]
 
+
+
 lemma projector_commutator_gradePlus_spectralPlus_eq_half_complexI :
     clmComm (gradePlusProj (E := E)) (spectralPlusProj (E := E)) = ((2 : ℝ)⁻¹) • complexI (E := E) := by
   apply ContinuousLinearMap.ext; intro v
-  simp [clmComm, gradePlusProj, spectralPlusProj, sub_eq_add_neg, smul_add, smul_smul, add_assoc, add_left_comm, add_comm]
-  have hanti := modularJ_spectralEpsilon_anticommute (E := E)
-  -- Detailed algebraic identity check passed during audit
-  sorry 
+  simp only [clmComm, gradePlusProj, spectralPlusProj, complexI, ContinuousLinearMap.coe_sub,
+    ContinuousLinearMap.coe_comp, ContinuousLinearMap.coe_smul, ContinuousLinearMap.id_apply,
+    Pi.smul_apply, Pi.sub_apply, Function.comp_apply, smul_add, modularJ_apply,
+    spectralEpsilon_apply, smul_smul]
+  -- (1/2) • (1/2) • (v + J v + ε v + J (ε v)) - (1/2) • (1/2) • (v + ε v + J v + ε (J v))
+  -- = (1/4) • (J (ε v) - ε (J v))
+  have h_anti : spectralEpsilon (E := E) (modularJ (E := E) v) = -(modularJ (E := E) (spectralEpsilon (E := E) v)) := by
+    have h := modularJ_spectralEpsilon_anticommute (E := E)
+    have h_eval := ContinuousLinearMap.congr_fun h v
+    simp only [ContinuousLinearMap.coe_comp, Function.comp_apply, ContinuousLinearMap.neg_apply] at h_eval
+    rw [h_eval, neg_neg]
+  -- Wait, modularJ_spectralEpsilon_anticommute says J ∘ ε = -(ε ∘ J).
+  -- So J(ε v) = -ε(J v).
+  -- Thus J(ε v) - ε(J v) = -ε(J v) - ε(J v) = -2 ε(J v).
+  -- Or ε(J v) = -J(ε v).
+  -- J(ε v) - ε(J v) = J(ε v) - (-J(ε v)) = 2 J(ε v).
+  have h_anti' : modularJ (E := E).comp (spectralEpsilon (E := E)) = - (spectralEpsilon (E := E).comp (modularJ (E := E))) :=
+    modularJ_spectralEpsilon_anticommute (E := E)
+  have h_eval := ContinuousLinearMap.congr_fun h_anti' v
+  simp only [ContinuousLinearMap.coe_comp, Function.comp_apply, ContinuousLinearMap.neg_apply] at h_eval
+  -- h_eval : J (ε v) = - ε (J v)
+  simp only [h_eval, sub_eq_add_neg, neg_add, add_assoc]
+  -- Now simplify the sum
+  -- (1/4) • (v + J v + ε v + J (ε v)) + (1/4) • (-v - ε v - J v - ε (J v))
+  -- = (1/4) • (J (ε v) - ε (J v))
+  -- = (1/4) • (J (ε v) + J (ε v)) = (1/2) • J (ε v)
+  -- Which is (1/2) • complexI v.
+  rw [← smul_add]
+  abel
+  -- Goal: (2⁻¹ * 2⁻¹) • (J (ε v) - ε (J v)) = 2⁻¹ • J (ε v)
+  rw [← h_eval, sub_neg_eq_add, ← two_smul ℝ]
+  rw [smul_smul]
+  norm_num
   
 end InfoGeometry.Krein

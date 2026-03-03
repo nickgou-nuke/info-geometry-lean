@@ -10,8 +10,8 @@ from pathlib import Path
 from typing import Any, Iterable
 
 if __package__ is None or __package__ == "":
-    # Support direct execution: `python3 scripts/make_graph.py ...`
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    # Support direct execution: `python3 scripts/analysis/make_graph.py ...`
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.pathing import normalize_user_path, default_docs_map_root
 from tools.pathing import lean_root

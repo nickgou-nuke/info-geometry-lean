@@ -21,7 +21,8 @@ private def componentPathCounts
       if cu != 0 then
         for ei in [:dag[u]!.size] do
           let v := dag[u]![ei]!
-          counts := counts.modify v (fun x => x + cu)
+          let old := counts[v]!
+          counts := counts.set! v (old + cu)
 
     counts
 
@@ -50,7 +51,7 @@ def pathCountFrom
       out
 
 
-/-- Component-level BFS distances. -/
+/-- Component-level BFS distances (true FIFO). -/
 private def componentDistances
   (dag : Array (Array Nat))
   (src : Nat)
@@ -60,21 +61,17 @@ private def componentDistances
     let mut dist := arrayReplicate n none
     dist := dist.set! src (some 0)
 
-    let mut queue : List Nat := [src]
+    let mut q : Array Nat := #[src]
+    let mut head : Nat := 0
 
-    while true do
-      match queue with
-      | [] => break
-      | u :: rest =>
-        queue := rest
-        match dist[u]! with
-        | none => pure ()
-        | some du =>
-          for ei in [:dag[u]!.size] do
-            let v := dag[u]![ei]!
-            if dist[v]! == none then
-              dist := dist.set! v (some (du + 1))
-              queue := v :: queue
+    while head < q.size do
+      let u := q[head]!
+      head := head + 1
+      let some du := dist[u]! | continue
+      for v in dag[u]! do
+        if dist[v]!.isNone then
+          dist := dist.set! v (some (du + 1))
+          q := q.push v
 
     dist
 
@@ -143,53 +140,77 @@ def vulnerabilityOf
         if cu != 0 then
           for pi in [:h.preds[u]!.size] do
             let p := h.preds[u]![pi]!
-            counts := counts.modify p (fun x => x + cu)
+            let old := counts[p]!
+            counts := counts.set! p (old + cu)
 
+      let sccSize : Array Nat := h.sccs.map (·.size)
       let mut sumPaths := 0
       let mut srcCount := 0
 
       for si in [:h.sccs.size] do
-        let comp := h.sccs[si]!
         let c := counts[si]!
         if c != 0 then
-          sumPaths := sumPaths + (c * comp.size)
-          srcCount := srcCount + comp.size
+          let size_si := sccSize[si]!
+          sumPaths := sumPaths + (c * size_si)
+          srcCount := srcCount + size_si
+
+      -- Subtract the destination itself from the vulnerability totals
+      if srcCount > 0 then
+        let size_dst := sccSize[dstScc]!
+        srcCount := srcCount - size_dst
+        sumPaths := sumPaths - size_dst
 
       (sumPaths, srcCount)
+
+
 
 /--
 Extract the 'True Skeleton' of the theory.
 Filters out auxiliary lemmas (`_aux`, `match_`, `proof_`, `injEq`),
-and ranks remaining nodes by a heuristic of their structural importance
+and ranks remaining concepts by a heuristic of their structural importance
 (e.g., in-degree, vulnerability, or simply being a hub).
+Emits one representative node per SCC to avoid mutual-recursion duplication.
 Returns an array of names sorted by importance.
 -/
 def extractTheorySkeleton
   (h : HydratedGraph Lean.Name)
   (minVulnerability : Nat := 1) : Array (Lean.Name × Nat × Nat) :=
   Id.run do
+    let mut candidates : Array (Lean.Name × Nat) := #[]
+
+    for si in [:h.sccs.size] do
+      let comp := h.sccs[si]!
+
+      -- Find a representative node in the SCC that is not auxiliary
+      let mut rep? : Option Lean.Name := none
+      for vi in [:comp.size] do
+        let v := comp[vi]!
+        let n := h.toGraph.nodes[v]!
+        if !isGeneratedOrUnstableName n then
+          rep? := some n
+          break
+
+      if let some n := rep? then
+        -- Fast heuristic: immediate reverse dependencies * SCC size
+        let score := h.preds[si]!.size * comp.size
+        candidates := candidates.push (n, score)
+
+    -- Sort candidates by the fast heuristic
+    let sortedCandidates := candidates.qsort (fun a b => a.2 > b.2)
+
     let mut skeleton : Array (Lean.Name × Nat × Nat) := #[]
-    for i in [:h.toGraph.nodes.size] do
-      let n := h.toGraph.nodes[i]!
-      let s := n.toString
-      -- Filter out obvious generated/auxiliary declarations
-      let isAux :=
-        s.contains "._" ||
-        s.endsWith "match_" ||
-        s.endsWith "proof_" ||
-        s.endsWith "injEq" ||
-        s.endsWith "brecOn" ||
-        s.endsWith "below" ||
-        s.endsWith "ibelow" ||
-        s.endsWith "sizeOf_spec"
+    let mut count := 0
+    let topK := 500 -- Only compute exact path counts for the top K
 
-      if !isAux then
-        let (vulPaths, vulSrcs) := vulnerabilityOf h n
-        -- Heuristic: If it is used by at least `minVulnerability` other concepts, it is part of the skeleton
-        if vulSrcs >= minVulnerability then
-          skeleton := skeleton.push (n, vulPaths, vulSrcs)
+    for (n, _) in sortedCandidates do
+      if count >= topK then
+        break
+      let (vulPaths, vulSrcs) := vulnerabilityOf h n
+      if vulSrcs >= minVulnerability then
+        skeleton := skeleton.push (n, vulPaths, vulSrcs)
+        count := count + 1
 
-    -- Sort by structural importance (number of sources that depend on it) descending
+    -- Sort the final skeleton by the exact vulnerability sources in descending order
     return skeleton.qsort (fun a b => a.2.2 > b.2.2)
 
 end DAG

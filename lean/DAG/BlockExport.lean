@@ -210,7 +210,9 @@ def exportFile (file : System.FilePath) (opts : Options := {}) : IO Export := do
       cmdPos := parserState.pos
       commands := #[] }
   let ctx : Frontend.Context := { inputCtx := inputCtx }
-  let seenRef   : IO.Ref NameSet       ← IO.mkRef {}
+  let baseSeen : NameSet :=
+    env0.constants.fold (init := ({} : NameSet)) (fun s n _ => s.insert n)
+  let seenRef : IO.Ref NameSet ← IO.mkRef baseSeen
   let declsRef  : IO.Ref (Array Name)  ← IO.mkRef #[]
   let prodRef   : IO.Ref (Array Nat)   ← IO.mkRef #[]
   let blocksRef : IO.Ref (Array Block) ← IO.mkRef #[]
@@ -249,7 +251,14 @@ def exportFile (file : System.FilePath) (opts : Options := {}) : IO Export := do
       after.env.constants.foldStage2
         (fun (acc : Array Name × NameSet) n _ =>
           let (arr, s) := acc
-          if s.contains n then (arr, s) else (arr.push n, s.insert n))
+          if s.contains n then
+            (arr, s)
+          else
+            let s := s.insert n
+            if DAG.isFromMainModule after.env n then
+              (arr.push n, s)
+            else
+              (arr, s))
         (#[], seen)
     seenRef.set seen'
     let newDecls := newDecls0.qsort Name.lt
@@ -335,16 +344,22 @@ def exportFile (file : System.FilePath) (opts : Options := {}) : IO Export := do
 
 def isScopeDeclBlock (blk : Block) : Bool :=
   let t := blk.text.trimAscii
-  t.startsWith "namespace" || t.startsWith "section" || t.startsWith "end"
+  t.startsWith "namespace" || t.startsWith "section" || t.startsWith "end" ||
+  t.startsWith "variable"  || t.startsWith "variables" ||
+  t.startsWith "parameter" || t.startsWith "parameters"
 
 def isAmbientBlock (blk : Block) : Bool :=
   let t := blk.text.trimAscii
-  t.startsWith "namespace" || t.startsWith "section" || t.startsWith "end" ||
-  t.startsWith "universe"  || t.startsWith "open"    || t.startsWith "attribute" ||
-  t.startsWith "set_option"|| t.startsWith "local"   || t.startsWith "scoped" ||
-  t.startsWith "notation"  || t.startsWith "infix"   || t.startsWith "prefix" ||
-  t.startsWith "postfix"   || t.startsWith "macro"   || t.startsWith "macro_rules" ||
-  t.startsWith "syntax"
+  t.startsWith "import"    || t.startsWith "prelude"  || t.startsWith "module" ||
+  t.startsWith "/-!"       || t.startsWith "--"       ||
+  t.startsWith "namespace" || t.startsWith "section"  || t.startsWith "end" ||
+  t.startsWith "universe"  || t.startsWith "open"     || t.startsWith "attribute" ||
+  t.startsWith "set_option"|| t.startsWith "local"    || t.startsWith "scoped" ||
+  t.startsWith "notation"  || t.startsWith "infix"    || t.startsWith "prefix" ||
+  t.startsWith "postfix"   || t.startsWith "macro"    || t.startsWith "macro_rules" ||
+  t.startsWith "syntax"    ||
+  t.startsWith "variable"  || t.startsWith "variables"||
+  t.startsWith "parameter" || t.startsWith "parameters"
 
 def minimalBlocksWithContext (e : Export) (target : Name) : Array Nat :=
   Id.run do
@@ -359,10 +374,12 @@ def minimalBlocksWithContext (e : Export) (target : Name) : Array Nat :=
 
 def renderIndices (e : Export) (indices : Array Nat) : String :=
   Id.run do
-    let mut out := ""
+    let mut b : Array String := #[]
+
     unless e.header.trimAscii.isEmpty do
-      out := out ++ e.header
-      if !out.endsWith "\n" then out := out ++ "\n"
+      b := b.push e.header
+      if !e.header.endsWith "\n" then
+        b := b.push "\n"
 
     let openFrame (f : ScopeFrame) : String :=
       match f.kind with
@@ -376,30 +393,28 @@ def renderIndices (e : Export) (indices : Array Nat) : String :=
       else "end " ++ f.name.toString ++ "\n"
 
     let mut currentScope : Array ScopeFrame := #[]
+
     for idx in indices do
       let some blk := e.blocks[idx]? | continue
       let targetScope := blk.scopes
       let mut common := 0
-      while common < currentScope.size && common < targetScope.size &&
-            currentScope[common]! == targetScope[common]! do
+      while common < currentScope.size && common < targetScope.size && currentScope[common]! == targetScope[common]! do
         common := common + 1
-      let toClose := currentScope.size - common
-      for i in [0:toClose] do
+
+      for i in [0:currentScope.size - common] do
         let sIdx := currentScope.size - 1 - i
-        let frame := currentScope[sIdx]!
-        out := out ++ closeFrame frame
-      for i in [common : targetScope.size] do
-        let frame := targetScope[i]!
-        out := out ++ openFrame frame
+        b := b.push (closeFrame currentScope[sIdx]!)
+      for i in [common:targetScope.size] do
+        b := b.push (openFrame targetScope[i]!)
       currentScope := targetScope
       if !isScopeDeclBlock blk then
-        out := out ++ blk.text
-        if !blk.text.endsWith "\n" then out := out ++ "\n"
+        b := b.push blk.text
+        if !blk.text.endsWith "\n" then b := b.push "\n"
+
     for i in [0:currentScope.size] do
       let sIdx := currentScope.size - 1 - i
-      let frame := currentScope[sIdx]!
-      out := out ++ closeFrame frame
-    out
+      b := b.push (closeFrame currentScope[sIdx]!)
+    String.intercalate "" b.toList
 
 def sliceToString (e : Export) (target : Name) : String :=
   let indices := minimalBlocksWithContext e target
@@ -407,67 +422,50 @@ def sliceToString (e : Export) (target : Name) : String :=
 
 def emitQuiver (e : Export) : String := Id.run do
   let n := e.blocks.size
-  let mut out := ""
+  let mut b : Array String := #[]
 
-  out := out ++ "import Mathlib.CategoryTheory.FreeCategory\n"
-  out := out ++ "import Mathlib.Algebra.Category.ModuleCat.Basic\n"
-  out := out ++ "import Mathlib.Data.Real.Basic\n"
-  out := out ++ "import DAG.Basic\n"
-  out := out ++ "import Socratic.Reasoning.Free\n\n"
+  b := b.push "import Mathlib.CategoryTheory.FreeCategory\n"
+  b := b.push "import Mathlib.Algebra.Category.ModuleCat.Basic\n"
+  b := b.push "import Mathlib.Data.Real.Basic\n"
+  b := b.push "import SocraticTriple\n\n"
+  b := b.push "set_option maxRecDepth 2000000\n"
 
-  out := out ++ s!"-- Auto-generated Quiver for {e.file}\n"
-  out := out ++ "namespace SocraticTriple.Generated\n\n"
+  b := b.push "namespace SocraticTriple.Generated\n\n"
+  b := b.push "inductive Obj\n"
+  for i in [:n] do
+    b := b.push s!"  | block_{i}\n"
+  b := b.push "\ninductive Hom : Obj → Obj → Type\n"
+  for u in [:n] do
+    for (v, _) in e.blockGraph.forward[u]! do
+      b := b.push s!"  | edge_{u}_{v} : Hom .block_{u} .block_{v}\n"
 
-  out := out ++ s!"abbrev NumBlocks : Nat := {n}\n"
-  out := out ++ "abbrev Obj := Fin NumBlocks\n"
-  out := out ++ "def obj (i : Nat) : Obj := ⟨i, by decide⟩\n\n"
+  b := b.push "\n@[local instance]\n"
+  b := b.push "noncomputable def fileSyntax : CategoryTheory.Category Obj :=\n"
+  b := b.push "  CategoryTheory.freeCategory {\n"
+  b := b.push "  Obj := Obj,\n"
+  b := b.push "  Hom := Hom\n"
+  b := b.push "}\n\n"
 
-  out := out ++ "inductive Edge : Obj → Obj → DAG.EdgeKind → Type\n"
+  b := b.push "noncomputable def progSem : SocraticTriple.Semantics fileSyntax (Type) :=\n"
+  b := b.push "  { obj := fun _ => PUnit,\n"
+  b := b.push "    map := fun _ => id }\n\n"
 
-  for src in [:n] do
-    let fwd := e.blockGraph.forward[src]!
-    for (dst, k) in fwd do
-      let ctor :=
-        match k with
-        | .type  => s!"e_{src}_{dst}_type"
-        | .value => s!"e_{src}_{dst}_value"
-      let kStr :=
-        match k with
-        | .type  => ".type"
-        | .value => ".value"
-      out := out ++ s!"  | {ctor} : Edge (obj {src}) (obj {dst}) {kStr}\n"
+  b := b.push "noncomputable def specSem : SocraticTriple.Semantics fileSyntax (Type) :=\n"
+  b := b.push "  { obj := fun _ => PUnit,\n"
+  b := b.push "    map := fun _ => id }\n\n"
 
-  out := out ++ "\n"
-  out := out ++ "def Hom (a b : Obj) : Type := Σ k : DAG.EdgeKind, Edge a b k\n\n"
+  b := b.push "noncomputable def socraticTriple : SocraticTriple.Hom progSem specSem :=\n"
+  b := b.push "  { app := fun _ => id,\n"
+  b := b.push "    naturality := by intro X Y f; rfl }\n\n"
 
-  out := out ++ "def fileSyntax : SocraticTriple.Syntax := {\n"
-  out := out ++ "  Obj := Obj,\n"
-  out := out ++ "  Hom := Hom\n"
-  out := out ++ "}\n\n"
+  b := b.push "noncomputable def fileReward : SocraticTriple.AgentReward fileSyntax ℝ :=\n"
+  b := b.push "{\n  obj     := fun _ => ℝ,\n"
+  b := b.push "  sem     := progSem,\n"
+  b := b.push "  encode  := { app := fun _ => fun _ => (0:ℝ), naturality := by intro X Y f; rfl }\n"
+  b := b.push "}\n\n"
 
-  out := out ++ "noncomputable def progSem : SocraticTriple.Semantics fileSyntax (Type) :=\n"
-  out := out ++ "  { obj := fun _ => PUnit,\n"
-  out := out ++ "    map := fun _ => id }\n\n"
-
-  out := out ++ "noncomputable def specSem : SocraticTriple.Semantics fileSyntax (Type) :=\n"
-  out := out ++ "  { obj := fun _ => PUnit,\n"
-  out := out ++ "    map := fun _ => id }\n\n"
-
-  out := out ++ "noncomputable def vecSem : SocraticTriple.Semantics fileSyntax (ModuleCat ℝ) :=\n"
-  out := out ++ "  { obj := fun _ => ModuleCat.of ℝ ℝ,\n"
-  out := out ++ "    map := fun _ => 𝟙 _ }\n\n"
-
-  out := out ++ "noncomputable def trivialTriple : SocraticTriple.HomTriple fileSyntax := {\n"
-  out := out ++ "  ProgSem := progSem,\n"
-  out := out ++ "  SpecSem := specSem,\n"
-  out := out ++ "  VecSem  := vecSem,\n"
-  out := out ++ "  spec_isProp := fun _ => inferInstance,\n"
-  out := out ++ "  sound   := { app := fun _ => id, naturality := by intro X Y f; rfl },\n"
-  out := out ++ "  encode  := { app := fun _ => fun _ => (0:ℝ), naturality := by intro X Y f; rfl }\n"
-  out := out ++ "}\n\n"
-
-  out := out ++ "end SocraticTriple.Generated\n"
-  out
+  b := b.push "end SocraticTriple.Generated\n"
+  String.intercalate "" b.toList
 
 def escapeLeanString (s : String) : String :=
   let s1 := s.replace "\\" "\\\\"
@@ -485,50 +483,46 @@ def emitTacticQuiver (e : Export) : String := Id.run do
       match map.get? s with
       | some idx => pure idx
       | none =>
-          let idx := sts.size
-          set (sts.push s, map.insert s idx, edgs)
-          pure idx
+        let idx := sts.size
+        set (sts.push s, map.insert s idx, edgs)
+        pure idx
 
     -- Add the terminal "done" state explicitly
     let _ ← addState "no goals"
 
-    for bi in [:e.blocks.size] do
-      let blk := e.blocks[bi]!
-      for mi in [:blk.morphisms.size] do
-        let morph := blk.morphisms[mi]!
+    for blk in e.blocks do
+      for morph in blk.morphisms do
         let stateBefore := if morph.beforeState.isEmpty then "no goals" else String.intercalate " | " morph.beforeState.toList
         let stateAfter := if morph.afterState.isEmpty then "no goals" else String.intercalate " | " morph.afterState.toList
         let u ← addState stateBefore
         let v ← addState stateAfter
-
         let (sts, map, edgs) ← get
-        let edgeIdx := edgs.size
-        set (sts, map, edgs.push (u, v, morph.tacticSyntax, edgeIdx))
-    pure ()
+        let eIdx := edgs.size
+        set (sts, map, edgs.push (u, v, morph.tacticSyntax, eIdx))
+
   ) initData
 
-  let mut out := ""
-  out := out ++ "import Mathlib.CategoryTheory.FreeCategory\n\n"
-  out := out ++ s!"-- Auto-generated Tactic Quiver for {e.file}\n"
-  out := out ++ "namespace TacticQuiver.Generated\n\n"
+  let mut b : Array String := #[]
+  b := b.push "import Mathlib.CategoryTheory.FreeCategory\n"
+  b := b.push "namespace TacticQuiver.Generated\n\n"
 
-  out := out ++ "inductive TacticStateObj\n"
+  b := b.push "inductive TacticStateObj\n"
   for i in [:states.size] do
-    out := out ++ s!"  | state_{i} -- {escapeLeanString states[i]!}\n"
+    b := b.push s!"  | state_{i} -- {escapeLeanString states[i]!}\n"
 
-  out := out ++ "\ninductive TacticEdge : TacticStateObj → TacticStateObj → Type\n"
+  b := b.push "\ninductive TacticEdge : TacticStateObj → TacticStateObj → Type\n"
   for (u, v, tactic, i) in edges do
-    out := out ++ s!"  | edge_{i} : TacticEdge .state_{u} .state_{v} -- {escapeLeanString tactic}\n"
+    b := b.push s!"  | edge_{i} : TacticEdge .state_{u} .state_{v} -- {escapeLeanString tactic}\n"
 
-  out := out ++ "\nend TacticQuiver.Generated\n"
-  out
+  b := b.push "\nend TacticQuiver.Generated\n"
+  String.intercalate "" b.toList
 
 end DAG
 
 open DAG
 
 /-- CLI entrypoint. -/
-def main (args : List String) : IO UInt32 := do
+def blockExportMain (args : List String) : IO UInt32 := do
   match args with
   | ["--emit-tactic-quiver", outFileStr, fileStr] =>
     let ex ← exportFile (System.FilePath.mk fileStr)

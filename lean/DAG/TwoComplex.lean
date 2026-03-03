@@ -10,7 +10,8 @@ structure TwoComplex (α) [BEq α] [Hashable α] where
   base  : HydratedGraph α
   edges : Array (Nat × Nat)
   faces : Array (Nat × Nat × Nat) -- (e_uv, e_vw, e_uw)
-deriving Repr
+  digons : Array (Nat × Nat) -- (e_uv, e_vu) for bidirectional isomorphisms
+  deriving Repr
 
 def buildTwoComplex {α} [BEq α] [Hashable α] (h : HydratedGraph α) : TwoComplex α := Id.run do
   let g := h.toGraph
@@ -27,7 +28,16 @@ def buildTwoComplex {α} [BEq α] [Hashable α] (h : HydratedGraph α) : TwoComp
   for i in [:edges.size] do
     edgeIndex := edgeIndex.insert edges[i]! i
 
-  -- 3. Build Faces (Commutative Triangles)
+  -- 3. Detect bidirectional edges (digons)
+  let mut digons : Array (Nat × Nat) := #[]
+  for i in [:edges.size] do
+    let (u, v) := edges[i]!
+    if let some j := edgeIndex.get? (v, u) then
+      -- add each pair only once (i < j) to avoid duplicates
+      if i < j then
+        digons := digons.push (i, j)
+
+  -- 4. Build Faces (Commutative Triangles)
   -- Optimization: Iterate u -> v, then v -> w, check u -> w
   let mut faces : Array (Nat × Nat × Nat) := #[]
   for i in [:edges.size] do
@@ -37,7 +47,7 @@ def buildTwoComplex {α} [BEq α] [Hashable α] (h : HydratedGraph α) : TwoComp
         if let some j := edgeIndex.get? (v, w) then
           faces := faces.push (i, j, k)
 
-  return { base := h, edges := edges, faces := faces }
+  return { base := h, edges := edges, faces := faces, digons := digons }
 
 def boundary1 {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array Rat) := Id.run do
   let n0 := tc.base.toGraph.nodes.size
@@ -53,15 +63,24 @@ def boundary1 {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array Ra
 
 def boundary2 {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array (Array Rat) := Id.run do
   let n1 := tc.edges.size
-  let n2 := tc.faces.size
+  let n2 := tc.faces.size + tc.digons.size
   let mut mat := Array.replicate n2 (Array.replicate n1 (0 : Rat))
-  for i in [:n2] do
+  -- Triangle faces
+  for i in [:tc.faces.size] do
     let (e1, e2, e3) := tc.faces[i]!
     let row := mat[i]!
     let row := row.set! e1 (1 : Rat)
     let row := row.set! e2 (1 : Rat)
     let row := row.set! e3 (-1 : Rat)
     mat := mat.set! i row
+  -- Digon faces (bidirectional edges)
+  for dIdx in [:tc.digons.size] do
+    let (eU, eV) := tc.digons[dIdx]!
+    let rowIdx := tc.faces.size + dIdx
+    let row := mat[rowIdx]!
+    let row := row.set! eU (1 : Rat)
+    let row := row.set! eV (-1 : Rat)
+    mat := mat.set! rowIdx row
   return mat
 
 def matMul (a : Array (Array Rat)) (b : Array (Array Rat)) : Array (Array Rat) := Id.run do
@@ -89,7 +108,7 @@ def boundarySquaredZero {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Bool 
 def eulerCharacteristic {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Int :=
   let v := tc.base.toGraph.nodes.size
   let e := tc.edges.size
-  let f := tc.faces.size
+  let f := tc.faces.size + tc.digons.size
   v - e + f
 
 def redundancySupport {α} [BEq α] [Hashable α] (tc : TwoComplex α) : Array Nat :=

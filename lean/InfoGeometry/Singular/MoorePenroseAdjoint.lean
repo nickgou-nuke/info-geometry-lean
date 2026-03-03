@@ -48,6 +48,7 @@ theorem MoorePenrose_unique {A B C : R}
       _ = (B† * A†) * C† * A† := by simp [mul_assoc]
       _ = (A * B)† * C† * A† := by rw [AdjointLike.mul_rev]
       _ = (A * B) * C† * A† := by rw [hB.eq3]
+      _ = A * B * (C† * A†) := by rw [mul_assoc]
       _ = A * B * (A * C)† := by rw [AdjointLike.mul_rev]
       _ = A * B * (A * C) := by rw [hC.eq3]
       _ = (A * B * A) * C := by simp [mul_assoc]
@@ -75,7 +76,7 @@ theorem MoorePenrose_unique {A B C : R}
     _ = C := hC.eq2
 
 /-- The Geometric/Metric Support Projector P_{MP} = A * A^+ -/
-def MP_Projector (A B : R) (h : IsMoorePenroseInverse A B) : R := A * B
+def MP_Projector (A B : R) (_h : IsMoorePenroseInverse A B) : R := A * B
 
 lemma MP_Projector_idempotent {A B : R} (h : IsMoorePenroseInverse A B) : 
     (MP_Projector A B h) * (MP_Projector A B h) = MP_Projector A B h := by
@@ -88,4 +89,4 @@ lemma MP_Projector_self_adjoint {A B : R} (h : IsMoorePenroseInverse A B) :
     (MP_Projector A B h)† = MP_Projector A B h := h.eq3
 
 end MP
-end InfoGeometry.Singular
+end InfoGeometry.Singular.MoorePenroseAdjoint

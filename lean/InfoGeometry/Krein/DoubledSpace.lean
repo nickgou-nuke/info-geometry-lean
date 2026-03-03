@@ -57,4 +57,5 @@ noncomputable instance instCartanInvolutionDoubled : Cartan.CartanInvolution (Do
   θ := (modularJ (E := E)).toLinearMap
   invol := by ext v; simp [modularJ]
 
+
 end InfoGeometry.Krein

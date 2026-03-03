@@ -7,13 +7,6 @@ LaTeX input. It can:
 - resolve declarations to source files,
 - insert inline `@[blueprint ...]` attributes at declaration positions,
 - emit a JSON position map for frontend/indexing workflows.
-"""Generate bulk `[blueprint]` tags from an existing dependency graph.
-
-This script reads `graph.json` produced by `scripts/make_graph.py`, optionally
-filters declarations by module prefixes and/or connected-component membership,
-and emits a Lean file containing `attribute [blueprint] ...` lines.
-
-Unlike LaTeX-based conversion workflows, this is graph-only bootstrapping.
 """
 
 from __future__ import annotations
@@ -26,10 +19,6 @@ import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
-from collections import Counter
-from pathlib import Path
-from typing import Any
-import sys
 
 if __package__ is None or __package__ == "":
     # Support direct execution: `python3 scripts/graph_to_blueprint.py ...`
@@ -42,10 +31,6 @@ _DECL_RE = re.compile(
     r"(?:theorem|lemma|def|abbrev|opaque|axiom|inductive|structure|class)\s+"
     r"(?P<name>[A-Za-z_][A-Za-z0-9_'.]*)\b"
 )
-
-
-def _normalize_graph_nodes(raw_nodes: list[Any]) -> list[str]:
-from tools.pathing import default_docs_map_root, default_blueprint_tags_file, normalize_user_path
 
 
 def _normalize_graph_nodes(raw_nodes: list[Any]) -> list[str]:
@@ -77,8 +62,6 @@ def _load_graph(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def _select_nodes(graph: dict[str, Any], modules: list[str], clusters: list[int]) -> tuple[list[str], Counter]:
-    stats = Counter()
 def _select_nodes(
     graph: dict[str, Any],
     modules: list[str],
@@ -316,24 +299,12 @@ def _emit_blueprint_file(target: Path, module_name: str, names: list[str], sourc
     target.write_text("\n".join(lines), encoding="utf-8")
 
 
-def main() -> int:
-    ap = argparse.ArgumentParser(description="Generate blueprint tags from graph.json")
-    ap.add_argument("--graph", default=None, help="Path to graph.json (default docs-map/graph.json)")
-    ap.add_argument("--modules", nargs="*", default=[], help="Only include nodes starting with these prefixes")
-    ap.add_argument(
-        "--clusters",
-        nargs="*",
-        type=int,
-        default=[],
-        help="Only include nodes in selected connected-component indices",
-    )
     ap.add_argument("--target", default=None, help="Lean output path")
     ap.add_argument(
         "--module",
         default="InfoGeometry.BlueprintTags",
         help="Module header for generated output file",
     )
-    ap.add_argument("--dry-run", action="store_true", help="Print summary only; do not write output")
     args = ap.parse_args()
 
     docs_root = default_docs_map_root()
@@ -383,25 +354,7 @@ def main() -> int:
     action = "would modify" if args.dry_run else "modified"
     print(f"[graph_to_blueprint] {action} {stats.get('inserted', 0)} declarations")
     print(f"[graph_to_blueprint] positions written to {positions_out}")
-    target_path = normalize_user_path(args.target, default_blueprint_tags_file())
-
-    graph = _load_graph(graph_path)
-    names, stats = _select_nodes(graph, args.modules, args.clusters)
-
-    if not names:
-        print("[graph_to_blueprint] no nodes selected, nothing to write")
-        print(f"[graph_to_blueprint] stats: {dict(stats)}")
-        return 0
-
-    if args.dry_run:
-        print(f"[graph_to_blueprint] would write {len(names)} attributes to {target_path}")
-        print(f"[graph_to_blueprint] stats: {dict(stats)}")
-        return 0
-
-    _emit_blueprint_file(target_path, args.module, names, graph_path)
-    print(f"[graph_to_blueprint] wrote {target_path} ({len(names)} attributes)")
-    print(f"[graph_to_blueprint] stats: {dict(stats)}")
-    return 0
+    return dict(positions), stats
 
 
 if __name__ == "__main__":

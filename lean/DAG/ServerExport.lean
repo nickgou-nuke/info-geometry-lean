@@ -53,14 +53,16 @@ deriving ToJson, FromJson
 /-- Conservative “context command” test based on the command text prefix. -/
 def isContextText (txt : String) : Bool :=
   let t := txt.trimAscii
-  t.startsWith "import"   || t.startsWith "prelude" || t.startsWith "module" ||
-  t.startsWith "/-!"      || t.startsWith "--"      ||
-  t.startsWith "namespace"|| t.startsWith "section" || t.startsWith "end" ||
-  t.startsWith "universe" || t.startsWith "open"    || t.startsWith "attribute" ||
-  t.startsWith "set_option"|| t.startsWith "local"  || t.startsWith "scoped" ||
-  t.startsWith "notation" || t.startsWith "infix"   || t.startsWith "prefix" ||
-  t.startsWith "postfix"  || t.startsWith "macro"   || t.startsWith "macro_rules" ||
-  t.startsWith "syntax"
+  t.startsWith "import"    || t.startsWith "prelude"  || t.startsWith "module" ||
+  t.startsWith "/-!"       || t.startsWith "--"       ||
+  t.startsWith "namespace" || t.startsWith "section"  || t.startsWith "end" ||
+  t.startsWith "universe"  || t.startsWith "open"     || t.startsWith "attribute" ||
+  t.startsWith "set_option"|| t.startsWith "local"    || t.startsWith "scoped" ||
+  t.startsWith "notation"  || t.startsWith "infix"    || t.startsWith "prefix" ||
+  t.startsWith "postfix"   || t.startsWith "macro"    || t.startsWith "macro_rules" ||
+  t.startsWith "syntax"    ||
+  t.startsWith "variable"  || t.startsWith "variables"||
+  t.startsWith "parameter" || t.startsWith "parameters"
 
 /-- Build a `DAG.Export` from a prefix of snapshots (running in IO to resolve InfoTrees). -/
 def exportFromSnaps (doc : FileWorker.EditableDocument) (snaps : Array Snapshot) (withText : Bool) :
@@ -114,7 +116,14 @@ def exportFromSnaps (doc : FileWorker.EditableDocument) (snaps : Array Snapshot)
       snap.env.constants.foldStage2
         (fun (acc : Array Name × NameSet) n _ =>
           let (arr, s) := acc
-          if s.contains n then (arr, s) else (arr.push n, s.insert n))
+          if s.contains n then
+            (arr, s)
+          else
+            let s := s.insert n
+            if DAG.isFromMainModule snap.env n then
+              (arr.push n, s)
+            else
+              (arr, s))
         (#[], seen)
     seen := seen'
     let newDecls : Array Name := newDecls0.qsort Name.lt

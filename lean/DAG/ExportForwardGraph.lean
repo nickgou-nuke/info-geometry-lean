@@ -17,7 +17,7 @@ instance : ToJson ForwardGraphJson where
       , ("forward", toJson g.forward)
       ]
 
-def indexedToForwardJson (g : IndexedGraph) : ForwardGraphJson :=
+def graphToForwardJson (g : DAG.Graph Name) : ForwardGraphJson :=
   let nodes := g.nodes.map toString
   let forward := g.forward.map (fun row =>
     row.map (fun (j, k) =>
@@ -43,15 +43,15 @@ def main (args : List String) : IO UInt32 := do
   | [importModsStr, outPath, nsPrefix] =>
       let imports := parseImports importModsStr
       let env ← importModules imports {} 0
-      let ig : IndexedGraph := envToIndexedGraph env (some nsPrefix)
-      let fg := indexedToForwardJson ig
+      let g := buildGraphFromEnv env (some nsPrefix)
+      let fg := graphToForwardJson g
       let json := ToJson.toJson fg
       let path := System.FilePath.mk outPath
       match path.parent with
       | some p => IO.FS.createDirAll p
       | none   => pure ()
       IO.FS.writeFile path json.pretty
-      IO.println s!"[ExportForwardGraph] wrote {outPath} (nodes={ig.nodes.size})"
+      IO.println s!"[ExportForwardGraph] wrote {outPath} (nodes={g.nodes.size})"
       return 0
   | _ =>
       IO.eprintln "usage: ExportForwardGraph <import-module[,module2,…]> <output.json> <ns-prefix>"

@@ -21,6 +21,7 @@ namespace InfoGeometry.Singular.AnomalyGauge
 open InfoGeometry.Singular.MoorePenroseAdjoint
 open InfoGeometry.Singular.DrazinAdjoint
 open InfoGeometry.Singular.Architecture
+open InfoGeometry.Krein
 
 section AbstractGaugeTheory
 

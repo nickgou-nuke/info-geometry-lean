@@ -35,15 +35,15 @@ open CategoryTheory
 structure HomTriple (S : Syntax) where
   ProgSem : Semantics S (Type u)
   SpecSem : Semantics S (Type u)
-  VecSem  : Semantics S (ModuleCat ℝ)
+  VecSem  : Semantics S (Type u)
 
   -- The logical specification must map to propositions.
-  spec_isProp : ∀ X : S.Obj, IsProp (SpecSem.obj X)
+  spec_isProp : ∀ X : S.Obj, Subsingleton (SpecSem.obj X)
 
   -- Programs must be logically sound.
   sound  : ProgSem.toFunctor ⟶ SpecSem.toFunctor
 
   -- Programs must have compositional geometric embeddings.
-  encode : ProgSem.toFunctor ⟶ VecSem.toFunctor ⋙ (forget₂ (ModuleCat ℝ) (Type u))
+  encode : ProgSem.toFunctor ⟶ VecSem.toFunctor
 
 end SocraticTriple

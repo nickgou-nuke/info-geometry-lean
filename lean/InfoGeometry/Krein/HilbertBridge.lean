@@ -127,7 +127,7 @@ noncomputable def isoWithLp : NeutralSpace E ≃ₗᵢ[ℝ] WithLp (2 : ENNReal)
   right_inv := val_ofWithLp
   map_add' := val_add
   map_smul' := val_smul
-  norm_map' := fun u => rfl
+  norm_map' := fun _ => rfl
 
 -- To unstick `CompleteSpace`, we just use the topology equivalence directly:
 noncomputable instance instCompleteSpace : CompleteSpace (NeutralSpace E) :=
@@ -177,6 +177,7 @@ private noncomputable def swapLIE : WithLp 2 (E × E) ≃ₗᵢ[ℝ] WithLp 2 (E
                  norm_nonneg (WithLp.toLp 2 (x, ξ) : WithLp 2 (E × E))]
     exact_mod_cast h2
 
+omit [CompleteSpace E] in
 private lemma swapLIE_selfAdj (u v : WithLp 2 (E × E)) :
     ⟪swapLIE (E := E) u, v⟫_ℝ = ⟪u, swapLIE (E := E) v⟫_ℝ := by
   rcases u with ⟨x, ξ⟩; rcases v with ⟨y, η⟩
@@ -217,7 +218,7 @@ private lemma rotation45Coeff_sq :
     rotation45Coeff ^ 2 = (1 : ℝ) / 2 := by
   unfold rotation45Coeff
   have h : 0 ≤ (1 : ℝ) / 2 := by positivity
-  simpa using Real.sq_sqrt h
+  exact Real.sq_sqrt h
 
 private lemma rotation45Coeff_mul :
     rotation45Coeff * rotation45Coeff = (1 : ℝ) / 2 := by
@@ -230,16 +231,18 @@ private noncomputable def rotation45CoordMap : E × E →ₗ[ℝ] E × E where
     (rotation45Coeff • v.1 + rotation45Coeff • v.2,
       rotation45Coeff • v.1 - rotation45Coeff • v.2)
   map_add' v w := by
-    ext <;> simp [sub_eq_add_neg, add_assoc, add_left_comm, add_comm, add_smul, smul_add]
+    ext <;> simp [sub_eq_add_neg, add_assoc, add_left_comm, add_comm, smul_add]
   map_smul' a v := by
     ext <;>
-      simp [smul_add, smul_sub, smul_smul, mul_assoc, mul_left_comm, mul_comm]
+      simp [smul_add, smul_sub, smul_smul, mul_comm]
 
+omit [CompleteSpace E] in
 @[simp] private lemma rotation45CoordMap_apply (v : E × E) :
     rotation45CoordMap v =
       (rotation45Coeff • v.1 + rotation45Coeff • v.2,
         rotation45Coeff • v.1 - rotation45Coeff • v.2) := rfl
 
+omit [CompleteSpace E] in
 private lemma rotation45CoordMap_invol (v : E × E) :
     rotation45CoordMap (rotation45CoordMap v) = v := by
   rcases v with ⟨x, ξ⟩
@@ -250,8 +253,8 @@ private lemma rotation45CoordMap_invol (v : E × E) :
           = (rotation45Coeff * rotation45Coeff) • x + (rotation45Coeff * rotation45Coeff) • ξ +
               ((rotation45Coeff * rotation45Coeff) • x -
                 (rotation45Coeff * rotation45Coeff) • ξ) := by
-                simp [rotation45CoordMap_apply, smul_add, smul_sub, smul_smul, sub_eq_add_neg,
-                  add_assoc, add_left_comm, add_comm]
+                simp [rotation45CoordMap_apply, smul_add, smul_smul, sub_eq_add_neg,
+                  add_assoc, add_left_comm]
       _ = (rotation45Coeff * rotation45Coeff) • x + (rotation45Coeff * rotation45Coeff) • x := by
             abel_nf
       _ = ((rotation45Coeff * rotation45Coeff) + (rotation45Coeff * rotation45Coeff)) • x := by
@@ -264,8 +267,8 @@ private lemma rotation45CoordMap_invol (v : E × E) :
           = (rotation45Coeff * rotation45Coeff) • x + (rotation45Coeff * rotation45Coeff) • ξ -
               ((rotation45Coeff * rotation45Coeff) • x -
                 (rotation45Coeff * rotation45Coeff) • ξ) := by
-                simp [rotation45CoordMap_apply, smul_add, smul_sub, smul_smul, sub_eq_add_neg,
-                  add_assoc, add_left_comm, add_comm]
+                simp [rotation45CoordMap_apply, smul_add, smul_smul, sub_eq_add_neg,
+                  add_assoc, add_left_comm]
       _ = (rotation45Coeff * rotation45Coeff) • ξ + (rotation45Coeff * rotation45Coeff) • ξ := by
             abel_nf
       _ = ((rotation45Coeff * rotation45Coeff) + (rotation45Coeff * rotation45Coeff)) • ξ := by
@@ -317,7 +320,7 @@ private lemma rotation45LIE_intertwines_swap (u : HilbertDoubled E) :
   rcases u with ⟨x, ξ⟩
   apply (WithLp.ofLp_injective 2)
   simp [rotation45LIE_apply, rotation45Map_apply, rotation45CoordMap_apply,
-    signFlipLIE_apply, swapLIE, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+    signFlipLIE_apply, swapLIE, sub_eq_add_neg, add_comm]
 
 /-- The 45-degree Hilbert isometric equivalence from the neutral Bogoliubov model
 to the diagonal Pontryagin model. -/

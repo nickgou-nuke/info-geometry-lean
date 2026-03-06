@@ -49,20 +49,12 @@ $H(\psi)^2 = S(\psi)^2 + \omega(\psi)^2 + 4 \cdot \text{Area}(\psi)$
 -/
 theorem information_fierz_identity [CompleteSpace E] (ψ : Krein.DoubledSpace E) :
     (infoHilbert ψ)^2 = (infoScalar ψ)^2 + (infoSymplectic ψ)^2 + 4 * (infoArea ψ) := by
-  -- 1. Unfold everything
+  rcases ψ with ⟨x, ξ⟩
   unfold infoHilbert infoScalar infoSymplectic infoArea
-  simp only [inducedSymplecticForm_eq_complex_pairing, hessianIndefiniteForm]
-  
-  -- 2. Operator evaluations
-  simp only [ContinuousLinearMap.comp_apply, _root_.complexI,
-             _root_.modularJ_apply, _root_.spectralEpsilon_apply]
-  
-  -- 3. Symmetry and algebraic reduction
-  simp only [inner_neg_left]
-  
-  -- Canonicalize inner products for ring
-  rw [real_inner_comm ψ.2 ψ.1]
-  
+  simp [inducedSymplecticForm_eq_complex_pairing, InfoGeometry.Krein.hessianIndefiniteForm,
+    InfoGeometry.hessianIndefiniteForm, hessianIndefiniteForm,
+    _root_.complexI, _root_.modularJ_apply, _root_.spectralEpsilon_apply,
+    sub_eq_add_neg]
   ring
 
 /--

@@ -109,8 +109,7 @@ lemma rho_ι_sq_scalar (v : V) :
     rho (Q := Q) (CliffordAlgebra.ι Q v) *
       rho (Q := Q) (CliffordAlgebra.ι Q v)
       = algebraMap ℝ (H →L[ℝ] H) (Q v) := by
-  simpa [rho] using
-    (CliffordAlgebra.comp_ι_sq_scalar (Q := Q) (g := rho (Q := Q)) v)
+  exact CliffordAlgebra.comp_ι_sq_scalar (Q := Q) (g := rho (Q := Q)) v
 
 lemma rho_ι_isOdd (v : V) :
     KreinGradedModule.IsOdd (H := H) (rho (Q := Q) (CliffordAlgebra.ι Q v)) := by
@@ -126,8 +125,10 @@ lemma rho_ι_isOdd (v : V) :
     _ = -((A.comp Γ).comp Γ) := by simp
     _ = -(A.comp (Γ.comp Γ)) := by simp [ContinuousLinearMap.comp_assoc]
     _ = -(A.comp (ContinuousLinearMap.id ℝ H)) := by
-          rw [show Γ.comp Γ = ContinuousLinearMap.id ℝ H by
-                simpa [Γ] using (KreinGradedModule.gradeCLM_comp_self (H := H))]
+          have hΓΓ : Γ.comp Γ = ContinuousLinearMap.id ℝ H := by
+            unfold Γ
+            exact KreinGradedModule.gradeCLM_comp_self (H := H)
+          rw [hΓΓ]
     _ = -A := by simp
 
 lemma rho_ι_isKreinSelfAdjoint (v : V) :
@@ -255,14 +256,14 @@ noncomputable def hilbertComplexI : HilbertDoubled E →L[ℝ] HilbertDoubled E 
 @[simp] lemma hilbertComplexI_apply (u : HilbertDoubled E) :
     hilbertComplexI (E := E) u =
       WithLp.toLp 2 (-(WithLp.ofLp u).2, (WithLp.ofLp u).1) := by
-  simp [hilbertComplexI, jCLM_apply_coords]
+  simp [hilbertComplexI]
 
 lemma hilbertSwap_comp_jCLM :
     (hilbertSwapCLM (E := E)).comp (KreinSpace.jCLM (H := HilbertDoubled E))
       = -((KreinSpace.jCLM (H := HilbertDoubled E)).comp (hilbertSwapCLM (E := E))) := by
   ext u
   apply (WithLp.ofLp_injective 2)
-  simp [hilbertSwapCLM_apply, jCLM_apply_coords]
+  simp [hilbertSwapCLM_apply]
 
 lemma hilbertComplexI_sq :
     (hilbertComplexI (E := E)).comp (hilbertComplexI (E := E))
@@ -282,7 +283,7 @@ lemma hilbertSwap_comp_hilbertComplexI :
 lemma kreinAdjoint_jCLM_hilbert :
     KreinSpace.kreinAdjoint (H := HilbertDoubled E) (KreinSpace.jCLM (H := HilbertDoubled E))
       = KreinSpace.jCLM (H := HilbertDoubled E) := by
-  simp [KreinSpace.kreinAdjoint, ContinuousLinearMap.comp_assoc]
+  simp [KreinSpace.kreinAdjoint]
 
 lemma adjoint_hilbertSwapCLM :
     ContinuousLinearMap.adjoint (hilbertSwapCLM (E := E)) = hilbertSwapCLM (E := E) := by
@@ -303,17 +304,18 @@ noncomputable def cl11RepLinHilbert :
   toFun v := v.1 • (KreinSpace.jCLM (H := HilbertDoubled E)) + v.2 • (hilbertComplexI (E := E))
   map_add' := by
     intro u v
-    ext x <;> simp [add_smul, add_assoc, add_left_comm, add_comm]
+    ext x
+    simp [add_smul, add_assoc, add_left_comm]
   map_smul' := by
     intro a v
-    ext x <;> simp [smul_add, smul_smul]
+    ext x
+    simp [smul_add, smul_smul]
 
 lemma cl11RepLinHilbert_apply_pair (a b : ℝ) (x y : E) :
     cl11RepLinHilbert (E := E) (a, b) (WithLp.toLp 2 (x, y))
       = WithLp.toLp 2 (a • x - b • y, b • x - a • y) := by
   apply (WithLp.ofLp_injective 2)
-  simp [cl11RepLinHilbert, hilbertComplexI_apply, jCLM_apply_coords, sub_eq_add_neg,
-    add_smul, smul_add, add_assoc, add_left_comm, add_comm]
+  simp [cl11RepLinHilbert, hilbertComplexI_apply, sub_eq_add_neg, add_comm]
 
 lemma cl11RepLinHilbert_sq (v : ℝ × ℝ) :
     (cl11RepLinHilbert (E := E) v) * (cl11RepLinHilbert (E := E) v)
@@ -350,7 +352,7 @@ noncomputable instance instSymmetricCliffordModuleHilbertDoubled :
   kreinSelfAdj_ι := by
     intro v
     rcases v with ⟨a, b⟩
-    simpa [cl11RepHilbert_ι_apply, cl11RepLinHilbert, KreinSpace.kreinAdjoint_add,
+    simp [cl11RepHilbert_ι_apply, cl11RepLinHilbert, KreinSpace.kreinAdjoint_add,
       KreinSpace.kreinAdjoint_smul, kreinAdjoint_jCLM_hilbert, kreinAdjoint_hilbertComplexI]
 
 section NeutralTransport
@@ -406,8 +408,8 @@ private noncomputable def cl11RepNeutral :
     (a : CliffordAlgebra InfoGeometry.Clifford.splitQ11) (u : NeutralSpace E) :
     (NeutralSpace.rotation45 (E := E)) (cl11RepNeutral (E := E) a u) =
       (cl11RepHilbert (E := E) a) ((NeutralSpace.rotation45 (E := E)) u) := by
-  simpa using congrArg (NeutralSpace.rotation45 (E := E))
-    (cl11RepNeutral_apply_apply (E := E) a u)
+  rw [cl11RepNeutral_apply_apply]
+  simp
 
 @[simp] lemma cl11RepNeutral_ι_apply (v : ℝ × ℝ) :
     cl11RepNeutral (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 v) =
@@ -438,7 +440,8 @@ noncomputable instance instSymmetricCliffordModuleNeutral :
     have hΓ : ΓN = (rot45Conj (E := E)).symm ΓH := by
       rfl
     have hA : AN = (rot45Conj (E := E)).symm AH := by
-      simpa [AN, AH] using cl11RepNeutral_ι_apply (E := E) v
+      unfold AN AH
+      exact cl11RepNeutral_ι_apply (E := E) v
     have hH : ΓH * AH = -(AH * ΓH) := by
       rcases v with ⟨a, b⟩
       ext u
@@ -494,13 +497,13 @@ noncomputable instance instSymmetricCliffordModuleNeutral :
                   exact hRiso (AN x) y
         _ = KreinSpace.kreinInner (H := HilbertDoubled E)
               (AH (R.toContinuousLinearEquiv x)) (R.toContinuousLinearEquiv y) := by
-                simpa [hAN_transport]
+                rw [hAN_transport x]
         _ = KreinSpace.kreinInner (H := HilbertDoubled E)
               (R.toContinuousLinearEquiv x) (AH (R.toContinuousLinearEquiv y)) := by
                 exact hAH_bilin (R.toContinuousLinearEquiv x) (R.toContinuousLinearEquiv y)
         _ = KreinSpace.kreinInner (H := HilbertDoubled E)
               (R.toContinuousLinearEquiv x) (R.toContinuousLinearEquiv (AN y)) := by
-                simpa [hAN_transport]
+                rw [hAN_transport y]
         _ = KreinSpace.kreinInner (H := NeutralSpace E) x (AN y) := by
               exact hRiso x (AN y)
     ext y
@@ -520,7 +523,7 @@ noncomputable instance instSymmetricCliffordModuleNeutral :
                 change ⟪(KreinSpace.J (H := NeutralSpace E))
                     ((KreinSpace.J (H := NeutralSpace E)) uu),
                   (KreinSpace.kreinAdjoint (H := NeutralSpace E) AN) y⟫_ℝ = _
-                simpa [KreinSpace.kreinInner_def, KreinSpace.J_invol]
+                simp [KreinSpace.kreinInner_def, KreinSpace.J_invol]
       _ = KreinSpace.kreinInner (H := NeutralSpace E)
             (AN ((KreinSpace.J (H := NeutralSpace E)) uu)) y := by
             rw [KreinSpace.kreinInner_kreinAdjoint]
@@ -528,9 +531,7 @@ noncomputable instance instSymmetricCliffordModuleNeutral :
             ((KreinSpace.J (H := NeutralSpace E)) uu) (AN y) := by
             exact hAN_bilin ((KreinSpace.J (H := NeutralSpace E)) uu) y
       _ = ⟪uu, AN y⟫_ℝ := by
-            change KreinSpace.kreinInner (H := NeutralSpace E)
-                ((KreinSpace.J (H := NeutralSpace E)) uu) (AN y) = ⟪uu, AN y⟫_ℝ
-            simpa [KreinSpace.kreinInner_def, KreinSpace.J_invol]
+            simp [KreinSpace.kreinInner_def, KreinSpace.J_invol]
 
 end NeutralTransport
 

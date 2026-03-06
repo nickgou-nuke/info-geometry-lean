@@ -15,7 +15,7 @@ structure IsDrazinInverse (A D : R) (k : ℕ) : Prop where
   eq3 : A^k = A^(k + 1) * D
 
 /-- The Spectral/Core Projector P_D = A * A^D -/
-def Drazin_Projector (A D : R) (k : ℕ) (h : IsDrazinInverse A D k) : R := A * D
+def Drazin_Projector (A D : R) (k : ℕ) (_h : IsDrazinInverse A D k) : R := A * D
 
 lemma Drazin_Projector_idempotent {A D : R} {k : ℕ} (h : IsDrazinInverse A D k) : 
     (Drazin_Projector A D k h) * (Drazin_Projector A D k h) = Drazin_Projector A D k h := by

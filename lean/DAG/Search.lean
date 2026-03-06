@@ -16,5 +16,5 @@ def searchEnv (query : String) : MetaM Unit := do
     IO.println s!"❌ No declarations found containing '{query}'."
   else
     IO.println s!"🔍 Found {results.size} declarations matching '{query}':\n"
-    for (n, t) in results.take 30 do
+    for (n, _) in results.take 30 do
       IO.println s!"{n}"

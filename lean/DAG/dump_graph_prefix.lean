@@ -23,21 +23,4 @@ elab "#dumpGraph" : command => do
     | some ci =>
         logInfo m!"{name} : {ci.type}"
 
-syntax "#dumpGraphDot" str : command
-
-elab_rules : command
-  | `(#dumpGraphDot $path:str) => do
-      let env ← getEnv
-      let g := DAG.envToGraph env
-
-      let mut lines : Array String := #["digraph InfoGeometryEnv {"]
-      for (src, dst) in g.edges do
-        lines := lines.push s!"  \"{src}\" -> \"{dst}\";"
-      lines := lines.push "}"
-
-      let outPath := path.getString
-      liftIO <| IO.FS.writeFile outPath (String.intercalate "\n" lines.toList)
-      logInfo m!"wrote DOT graph to {outPath}"
-
 #dumpGraph
--- #dumpGraphDot "/tmp/env.dot"

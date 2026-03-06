@@ -49,13 +49,4 @@ theorem modularJ_spectralEpsilon_isCl11 :
     Cl11Algebra (modularJ (E := E)) (spectralEpsilon (E := E)) :=
   modularJ_spectralEpsilon_hasCl11Relations (E := E)
 
-/--
-LIFT TO CARTAN API:
-Register `modularJ` as a Cartan involution on the doubled space (vector-level).
--/
-noncomputable instance instCartanInvolutionDoubled : Cartan.CartanInvolution (DoubledSpace E) where
-  θ := (modularJ (E := E)).toLinearMap
-  invol := by ext v; simp [modularJ]
-
-
 end InfoGeometry.Krein

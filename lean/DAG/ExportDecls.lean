@@ -85,26 +85,7 @@ def moduleNameFor (env : Environment) (declName : Name) : String :=
   | none =>
       toString env.mainModule
 
-def leafNameString (n : Name) : String :=
-  match (toString n).splitOn "." |>.reverse with
-  | x :: _ => x
-  | [] => ""
 
-def containsPrivateMarker (s : String) : Bool :=
-  (s.splitOn "._private.").length > 1 || s.startsWith "_private."
-
-def isGeneratedOrUnstableName (n : Name) : Bool :=
-  let s := toString n
-  let leaf := leafNameString n
-  containsPrivateMarker s ||
-  leaf.startsWith "match_" ||
-  leaf.startsWith "proof_" ||
-  leaf.startsWith "_aux" ||
-  leaf.endsWith "brecOn" ||
-  leaf.endsWith "below" ||
-  leaf.endsWith "ibelow" ||
-  leaf.endsWith "injEq" ||
-  leaf.endsWith "sizeOf_spec"
 
 def dedupNames (xs : List Name) : List Name :=
   (xs.foldl (fun acc n => if acc.contains n then acc else n :: acc) []).reverse

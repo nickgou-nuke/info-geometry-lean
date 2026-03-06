@@ -37,13 +37,20 @@ require «doc-gen4» from git
   @ "v4.28.0"
 
 @[default_target]
-lean_lib DAG
+lean_lib DAG where
+  globs := #[.andSubmodules `DAG]
 
 @[default_target]
-lean_lib Docs
+lean_lib Docs where
+  globs := #[.andSubmodules `Docs]
+
+@[default_target]
+lean_lib Socratic where
+  globs := #[.andSubmodules `Socratic]
 
 @[default_target]
 lean_lib InfoGeometry.GraphExport
 
 @[default_target]
 lean_lib InfoGeometry where
+  globs := #[.andSubmodules `InfoGeometry]

@@ -6,6 +6,23 @@ open Lean
 
 namespace DAG.GlobalDisassembler
 
+structure GraphNode where
+  id : Nat
+  kind : String
+  info : Json
+  deriving ToJson
+
+structure GraphEdge where
+  source : Nat
+  target : Nat
+  role : String
+  deriving ToJson
+
+structure DeclarationNode where
+  id : Nat
+  name : String
+  module : String
+  deriving ToJson
 abbrev GraphM := StateT (Std.HashMap Expr Nat × Nat × Nat) IO
 
 def nextNodeId : GraphM Nat := do
@@ -96,18 +113,18 @@ def processEnvironment (env : Environment) (outNodes outEdges outDecls outDeclEd
   let hEdges ← IO.FS.Handle.mk outEdges IO.FS.Mode.write
   let hDecls ← IO.FS.Handle.mk outDecls IO.FS.Mode.write
   let hDeclEdges ← IO.FS.Handle.mk outDeclEdges IO.FS.Mode.write
-  
+
   let mut state : Std.HashMap Expr Nat × Nat × Nat := ({}, 0, 0)
-  
+
   for (name, ci) in env.constants do
     if !(toString name).startsWith "Nat" then continue
 
     let (declId, newState) ← (writeDecl hDecls (toString name) "unknown_module").run state
     state := newState
-    
+
     let (typeId, newState2) ← (visitExprGlobal hNodes hEdges ci.type).run state
     state := newState2
-    
+
     hDeclEdges.putStrLn (toJson ({ source := declId, target := typeId, role := "HAS_TYPE" } : GraphEdge)).compress
 
     if let some val := ci.value? then

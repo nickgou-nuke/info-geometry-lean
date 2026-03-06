@@ -9,7 +9,7 @@ open DAG
 
 namespace DAG
 
-/-- 
+/--
   Optimized Categorical Shape Search.
   Instead of O(N^4) nested loops, we use Hash Joins for O(N^2) or better.
 -/
@@ -41,9 +41,9 @@ def getAllMorphisms (env : Environment) (ns? : Option Name := none) : IO (Array 
     if let some ns := ns? then
       if !ns.isPrefixOf name then continue
     match recognizeMorphismShallow ci.type with
-    | some (dom, cod) => 
+    | some (dom, cod) =>
         match dom.getAppFn, cod.getAppFn with
-        | .const d _ , .const c _ => 
+        | .const d _ , .const c _ =>
             morphs := morphs.push { decl := name, dom := d, cod := c }
         | _, _ => pure ()
     | none => pure ()
@@ -54,55 +54,43 @@ def findCommutativeSquares (env : Environment) (ns? : Option Name := none) : IO 
   let mut byDom : Std.HashMap Name (Array MorphismInfo) := {}
   for m in morphs do
     byDom := byDom.insert m.dom (byDom.getD m.dom #[] |>.push m)
-  
+
   let mut results := #[]
-  
+
   -- Iterate through pairs starting at the same node A
   for f in morphs do
     let A := f.dom
     let B := f.cod
-    
+
     -- Look for g: A -> C
     if let some g_candidates := byDom.get? A then
       for g in g_candidates do
         if f.decl == g.decl then continue -- Avoid triviality
         let C := g.cod
-        
+
         -- Look for h: B -> D
         if let some h_candidates := byDom.get? B then
           for h in h_candidates do
             let D := h.cod
-            
+
             -- Look for k: C -> D
             if let some k_candidates := byDom.get? C then
               for k in k_candidates do
                 if k.cod != D then continue
                 if h.decl == k.decl then continue
-                
+
                 -- The Commutativity Test
-                let h_of_f := Expr.lam `x (Expr.const A []) 
+                let h_of_f := Expr.lam `x (Expr.const A [])
                   (Expr.app (Expr.const h.decl []) (Expr.app (Expr.const f.decl []) (Expr.bvar 0))) .default
-                let k_of_g := Expr.lam `x (Expr.const A []) 
+                let k_of_g := Expr.lam `x (Expr.const A [])
                   (Expr.app (Expr.const k.decl []) (Expr.app (Expr.const g.decl []) (Expr.bvar 0))) .default
-                
+
                 let hash1 := computeStructuralHash h_of_f (k := 5) (blindConstants := false)
                 let hash2 := computeStructuralHash k_of_g (k := 5) (blindConstants := false)
-                
+
                 if hash1 == hash2 then
                   results := results.push (f, g, h, k)
-  
+
   return results
 
 end DAG
-
-#eval show MetaM Unit from do
-  let env ← getEnv
-  IO.println "--- Small-Scale Categorical Square Search (Nat) ---"
-  let squares ← DAG.findCommutativeSquares env (some `Nat)
-  
-  if squares.isEmpty then
-    IO.println "No commutative squares found."
-  else
-    IO.println s!"Found {squares.size} Commutative Squares!"
-    for (f, g, h, k) in squares[:5] do
-      IO.println s!"Square: ({f.decl}, {g.decl}, {h.decl}, {k.decl})"

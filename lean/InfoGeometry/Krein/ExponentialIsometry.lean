@@ -1,94 +1,68 @@
-import InfoGeometry.Krein.Metric
+import InfoGeometry.Krein.KreinSpace
 import Mathlib.Analysis.Normed.Algebra.Exponential
-import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Normed.Operator.NormedSpace
+
+set_option maxHeartbeats 1000000
 
 /-!
-# Exponential Isometry on Krein Spaces
+# Infinitesimal Isometries and Exponential Maps
 
-This module proves that the exponential of an infinitesimal isometry
-is a metric-preserving transformation (isometry) on the doubled Krein space.
+This module demonstrates that the exponential of an infinitesimal isometry
+(a skew-adjoint operator with respect to the Krein metric) is an isometry
+of the Krein space.
 
-This is a core result for the Unitary Field Theory of Information,
-identifying modular flows as parallel transport maps.
+This matches the functorial lifting of Noether/Killing vector fields to
+measure-preserving modular operators via the exponential map.
 -/
 
 namespace InfoGeometry.Krein
 
-open InfoGeometry.Clifford
-open FiniteDimensional
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [KreinSpace H]
 
-variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
+open KreinSpace
 
-/-- 
-**The Infinitesimal Isometry Lemma**:
-An operator $A$ is an infinitesimal isometry iff it is skew-adjoint
-relative to the Krein metric $J$.
-$J A^\dagger J = -A$
+/-- The fundamental symmetry J as an invertible bounded operator. -/
+noncomputable def jUnit : (H →L[ℝ] H)ˣ where
+  val := jCLM (H := H)
+  inv := jCLM (H := H)
+  val_inv := by ext x; exact J_invol x
+  inv_val := by ext x; exact J_invol x
+
+/-- `kreinAdjoint A` is identical to conjugating the Hilbert adjoint `A†` by the modular operator `J`. -/
+lemma kreinAdjoint_eq_jUnit_conj (A : H →L[ℝ] H) :
+    kreinAdjoint A = (jUnit (H := H) : H →L[ℝ] H) * ContinuousLinearMap.adjoint A * (↑((jUnit (H := H))⁻¹) : H →L[ℝ] H) := rfl
+
+/-- The exponential map commutes with the restricted modular conjugation `kreinAdjoint`. -/
+lemma exp_kreinAdjoint (A : H →L[ℝ] H) :
+    kreinAdjoint (NormedSpace.exp A) = NormedSpace.exp (kreinAdjoint A) := by
+
+  rw [kreinAdjoint_eq_jUnit_conj]
+  have h_star : ContinuousLinearMap.adjoint (NormedSpace.exp A) = NormedSpace.exp (ContinuousLinearMap.adjoint A) := NormedSpace.star_exp A
+  rw [h_star]
+  have h_conj := NormedSpace.exp_units_conj (jUnit (H := H)) (ContinuousLinearMap.adjoint A)
+  rw [← h_conj]
+  have h_rev : (jUnit (H := H) : H →L[ℝ] H) * ContinuousLinearMap.adjoint A * (↑((jUnit (H := H))⁻¹) : H →L[ℝ] H) = kreinAdjoint A := rfl
+  rw [h_rev]
+
+/--
+The exponential of a continuous skew-adjoint operator `A` is an exact Isometry in the Krěn space.
+(This corresponds to the transport of Killing vector fields generating modular shifts).
 -/
-lemma infinitesimalIsometry_iff_skewAdjoint (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
-    IsInfinitesimalIsometry (E := E) A ↔ 
-    (modularJ (E := E)).comp (A.adjoint.comp (modularJ (E := E))) = -A := by
-  constructor
-  · intro hA
-    apply ContinuousLinearMap.ext
-    intro v
-    apply (modularJ (E := E)).toContinuousLinearEquiv.injective
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.neg_apply,
-               ContinuousLinearEquiv.coe_coe, ContinuousLinearEquiv.apply_symm_apply]
-    apply ContinuousLinearMap.ext_inner_left ℝ
-    intro w
-    -- <w, J (J A† J v)> = <w, A† J v> = <A w, J v>
-    have h1 : inner ℝ w (modularJ (E := E) (modularJ (E := E) (A.adjoint (modularJ (E := E) v)))) = 
-              inner ℝ (A w) (modularJ (E := E) v) := by
-      simp only [modularJ_involution, ContinuousLinearMap.id_apply]
-      rw [ContinuousLinearMap.adjoint_inner_right]
-    -- <A w, J v> = hessianIndefiniteForm (A w) v
-    have h2 : inner ℝ (A w) (modularJ (E := E) v) = hessianIndefiniteForm (E := E) (A w) v := rfl
-    -- hA says hessianIndefiniteForm (A w) v + hessianIndefiniteForm w (A v) = 0
-    -- so hessianIndefiniteForm (A w) v = -hessianIndefiniteForm w (A v)
-    rw [h2, hA w v]
-    -- -hessianIndefiniteForm w (A v) = -<w, J (A v)>
-    simp only [hessianIndefiniteForm, modularJ_apply, neg_inj]
-    rfl
-  · intro hA v w
-    -- hessianIndefiniteForm (A v) w = <A v, J w> = <v, A† J w>
-    -- J A† J = -A => A† J = -J A
-    -- <v, A† J w> = <v, -J A w> = -<v, J A w> = -hessianIndefiniteForm v (A w)
-    have h_adj : A.adjoint.comp (modularJ (E := E)) = -(modularJ (E := E)).comp A := by
-      have h := congrArg (fun f => (modularJ (E := E)).comp f) hA
-      simpa [ContinuousLinearMap.comp_assoc, modularJ_involution] using h
-    unfold hessianIndefiniteForm
-    rw [ContinuousLinearMap.adjoint_inner_right]
-    have h_eval := congrArg (fun f => f w) h_adj
-    simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.neg_apply] at h_eval
-    rw [h_eval]
-    simp only [inner_neg_right]
-    rfl
+theorem exp_preservesMetric (A : H →L[ℝ] H) (hA : IsKreinSkewAdjoint A) (t : ℝ) :
+    IsKreinIsometry (NormedSpace.exp (t • A)) := by
 
-/-- 
-**The Exponential Isometry Theorem**:
-If $A$ is an infinitesimal isometry, then its exponential $e^A$ preserves the Krein metric.
--/
-theorem exp_preservesMetric
-    (A : DoubledSpace E →L[ℝ] DoubledSpace E)
-    (hA : IsInfinitesimalIsometry (E := E) A) (t : ℝ) :
-    preservesMetric (E := E) (NormedSpace.exp ℝ (t • A)) := by
-  -- We use the property (exp A)† = exp (A†) and J (exp A) J = exp (J A J)
-  -- If J A† J = -A, then (exp A)♯ = exp (A♯) = exp (-A) = (exp A)⁻¹
-  intro v w
-  let U := NormedSpace.exp ℝ (t • A)
-  -- Need to show <U v, J U w> = <v, J w>
-  -- Which is <v, U† J U w> = <v, J w>
-  -- So U† J U = J
-  have h_skew : (modularJ (E := E)).comp ((t • A).adjoint.comp (modularJ (E := E))) = -(t • A) := by
-    rw [ContinuousLinearMap.adjoint_smul, ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul]
-    rw [(infinitesimalIsometry_iff_skewAdjoint A).mp hA]
-    simp [smul_neg]
-  
-  -- Sketch of the final steps using exp properties:
-  -- 1. J (exp X) J = exp (J X J)
-  -- 2. (exp X)† = exp (X†)
-  -- 3. exp(-X) = (exp X)⁻¹
-  sorry
+  rw [isKreinIsometry_iff_star_comp_self]
+  have h_adj_tA : kreinAdjoint (t • A) = - (t • A) := by
+    rw [kreinAdjoint_smul, isKreinSkewAdjoint_iff_eq_neg.mp hA, smul_neg]
+  have h_adj_exp : kreinAdjoint (NormedSpace.exp (t • A)) = NormedSpace.exp (- (t • A)) := by
+    rw [exp_kreinAdjoint, h_adj_tA]
+  rw [h_adj_exp]
+  have h_add : NormedSpace.exp (- (t • A)) * NormedSpace.exp (t • A) = (1 : H →L[ℝ] H) := by
+    have h_comm : Commute (- (t • A)) (t • A) := (Commute.refl (t • A)).neg_left
+    rw [← NormedSpace.exp_add_of_commute h_comm]
+    have h_zero : - (t • A) + (t • A) = 0 := neg_add_cancel (t • A)
+    rw [h_zero]
+    exact NormedSpace.exp_zero
+  exact h_add
 
 end InfoGeometry.Krein

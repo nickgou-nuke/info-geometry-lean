@@ -1,8 +1,21 @@
 import InfoGeometry.Krein.Automorphisms
+import InfoGeometry.Krein.DoubledSpace
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 namespace InfoGeometry.Krein.Modular
 end InfoGeometry.Krein.Modular
+
+namespace InfoGeometry.Krein
+
+/-- Finite-dimensional exponential-flow interface on doubled carriers. -/
+structure FiniteDimensionalExponentialFlow (E : Type _)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [FiniteDimensional ℝ E]
+    (A : DoubledSpace E →L[ℝ] DoubledSpace E) where
+  flow : ℝ → DoubledSpace E →L[ℝ] DoubledSpace E
+  flow_zero : flow 0 = ContinuousLinearMap.id ℝ (DoubledSpace E)
+  flow_add : ∀ s t, flow (s + t) = (flow s).comp (flow t)
+
+end InfoGeometry.Krein
 
 section KreinModular
 
@@ -122,27 +135,29 @@ variable [FiniteDimensional ℝ E]
 structure ModularFlowBridge
     (J : FundamentalSymmetry V)
     (T : V →ₗ[ℝ] V) where
-  transport : V ≃L[ℝ] DoubledSpace E
+  transport : V ≃L[ℝ] InfoGeometry.Krein.DoubledSpace E
   modularFlow : ModularFlow J T
-  generatorCLM : DoubledSpace E →L[ℝ] DoubledSpace E
+  generatorCLM : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E
   generator_matches :
     generatorCLM.toLinearMap =
       transport.toLinearMap ∘ₗ modularFlow.genData.generator ∘ₗ transport.symm.toLinearMap
-  kreinFlow : FiniteDimensionalExponentialFlow (E := E) generatorCLM
+  kreinFlow : InfoGeometry.Krein.FiniteDimensionalExponentialFlow (E := E) generatorCLM
   preserves_modularOperator :
     ∀ t,
-      let Δ : DoubledSpace E →L[ℝ] DoubledSpace E :=
+      let Δ : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E :=
         (transport.toLinearMap ∘ₗ modularFlow.genData.flowData.delta ∘ₗ
           transport.symm.toLinearMap).toContinuousLinearMap
-      ((kreinFlow.flow t : DoubledSpace E →L[ℝ] DoubledSpace E).comp Δ)
-        = Δ.comp (kreinFlow.flow t : DoubledSpace E →L[ℝ] DoubledSpace E)
+      ((kreinFlow.flow t :
+          InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E).comp Δ)
+        = Δ.comp (kreinFlow.flow t :
+            InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E)
 
 /-- Forgetful map: a modular-flow bridge carries an admissible flow-stack object. -/
 def ModularFlowBridge.toFlowStack
     {J : FundamentalSymmetry V}
     {T : V →ₗ[ℝ] V}
     (B : ModularFlowBridge (E := E) J T) :
-    FiniteDimensionalExponentialFlow (E := E) B.generatorCLM :=
+    InfoGeometry.Krein.FiniteDimensionalExponentialFlow (E := E) B.generatorCLM :=
   B.kreinFlow
 
 end FlowBridge

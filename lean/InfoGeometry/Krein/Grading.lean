@@ -27,6 +27,14 @@ abbrev isGradeZero (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
 def isOdd (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
   (modularJ (E := E)).comp A = -(A.comp (modularJ (E := E)))
 
+lemma spectralEpsilon_isOdd :
+    isOdd (E := E) (spectralEpsilon (E := E)) := by
+  unfold isOdd
+  apply ContinuousLinearMap.ext
+  intro v
+  rcases v with ⟨x, y⟩
+  simp [modularJ, spectralEpsilon]
+
 lemma jordanProd_comm
     (A B : DoubledSpace E →L[ℝ] DoubledSpace E) :
     jordanProd A B = jordanProd B A := by
@@ -71,14 +79,37 @@ noncomputable def spectralPlusProj : DoubledSpace E →L[ℝ] DoubledSpace E := 
     gradePlusProj (E := E) v = gradePlusPart (E := E) v := by
   simp [gradePlusPart, gradePlusProj, smul_add]
 
-
-
-lemma projector_commutator_gradePlus_spectralPlus_eq_half_complexI :
-    clmComm (gradePlusProj (E := E)) (spectralPlusProj (E := E)) = ((2 : ℝ)⁻¹) • complexI (E := E) := by
+lemma projector_commutator_gradePlus_spectralPlus :
+    clmComm (gradePlusProj (E := E)) (spectralPlusProj (E := E))
+      = ((4 : ℝ)⁻¹) • clmComm (modularJ (E := E)) (spectralEpsilon (E := E)) := by
   apply ContinuousLinearMap.ext
   intro v
-  rcases v with ⟨x, ξ⟩
-  ext <;>
-    simp [clmComm, gradePlusProj, spectralPlusProj, complexI, modularJ, spectralEpsilon]
-  
+  simp [clmComm, gradePlusProj, spectralPlusProj, sub_eq_add_neg,
+    smul_add, smul_smul, add_assoc, add_left_comm, add_comm]
+  abel_nf
+  have hscalar : ((2 : ℝ)⁻¹ * (2 : ℝ)⁻¹) = (4 : ℝ)⁻¹ := by norm_num
+  simp [hscalar]
+
+lemma projector_commutator_gradePlus_spectralPlus_eq_half_complexI :
+    clmComm (gradePlusProj (E := E)) (spectralPlusProj (E := E))
+      = ((2 : ℝ)⁻¹) • complexI (E := E) := by
+  rw [projector_commutator_gradePlus_spectralPlus (E := E)]
+  have hanti := modularJ_spectralEpsilon_anticommute (E := E)
+  calc
+    ((4 : ℝ)⁻¹) • clmComm (modularJ (E := E)) (spectralEpsilon (E := E))
+        = ((4 : ℝ)⁻¹) •
+            ((modularJ (E := E)).comp (spectralEpsilon (E := E))
+              - (spectralEpsilon (E := E)).comp (modularJ (E := E))) := by
+              rfl
+    _ = ((4 : ℝ)⁻¹) •
+          ((modularJ (E := E)).comp (spectralEpsilon (E := E))
+            + (modularJ (E := E)).comp (spectralEpsilon (E := E))) := by
+          rw [hanti]
+          simp [sub_eq_add_neg]
+    _ = ((4 : ℝ)⁻¹) • ((2 : ℝ) • ((modularJ (E := E)).comp (spectralEpsilon (E := E)))) := by
+          simp [two_smul]
+    _ = ((2 : ℝ)⁻¹) • complexI (E := E) := by
+          have hscalar : ((4 : ℝ)⁻¹ * (2 : ℝ)) = (2 : ℝ)⁻¹ := by norm_num
+          simp [complexI, smul_smul, hscalar]
+
 end InfoGeometry.Krein

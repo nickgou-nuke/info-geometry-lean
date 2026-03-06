@@ -24,6 +24,7 @@ open InfoGeometry.Singular.MoorePenroseAdjoint
 open InfoGeometry.Singular.DrazinAdjoint
 open InfoGeometry.Singular.Architecture
 open InfoGeometry.Singular.AnomalyGauge
+open InfoGeometry.Krein
 open InfoGeometry.Canonical.GrandUnification
 open InfoGeometry.Canonical.PerelmanW
 open InfoGeometry.Canonical.WeylInformationGauge
@@ -57,15 +58,16 @@ the Lie subalgebra 𝔨 by the Anomaly Gauge Field.
 -/
 theorem natural_gradient_gauge_rotation 
     (G grad_f : HilbertDoubled E →L[ℝ] HilbertDoubled E)
-    (flow : SingularNaturalGradientFlow G grad_f) :
+    (flow : SingularNaturalGradientFlow G grad_f)
+    (hD_symm :
+      (Drazin_Projector G flow.D_inv flow.k_index flow.is_drazin)†
+        = Drazin_Projector G flow.D_inv flow.k_index flow.is_drazin) :
     IsKreinSkewAdjointH (E := E) (extractFlowAnomaly flow) := by
   -- Bridging IsKreinSkewAdjointH and the algebraic adj X = -X
   change (extractFlowAnomaly flow)† = -(extractFlowAnomaly flow)
   unfold extractFlowAnomaly
-  apply ChiralAnomaly_is_SkewAdjoint
-  -- Here we assume the Drazin projector is self-adjoint relative to the Krein metric.
-  -- This is a property of the Jordan/KKT structure on symmetric spaces.
-  sorry
+  exact ChiralAnomaly_is_SkewAdjoint
+    G flow.G_pinv flow.D_inv flow.k_index flow.is_mp flow.is_drazin hD_symm
 
 /--
 **The Master Bridge of Renormalization:**
@@ -75,10 +77,11 @@ is bounded by the norm of the Chiral Anomaly.
 lemma rg_dissipation_bounded_by_anomaly
     (flow : ScalarRicciFlow E) (τ f : ℝ → ℝ)
     (χ : HilbertDoubled E →L[ℝ] HilbertDoubled E)
+    (hDiff : Differentiable ℝ (fun s => WFunctional flow τ f s))
     (hLaw : ∀ s : ℝ, WDissipation flow τ f s = nnnorm χ) :
     Monotone (fun s => WFunctional flow τ f s) := by
   apply WFunctional_monotone_of_nonneg_dissipation (diss := fun _ => (nnnorm χ : ℝ))
-  · sorry -- Differentiability check
+  · exact hDiff
   · intro s; exact hLaw s
   · intro s; exact (nnnorm χ).2
 

@@ -9,6 +9,8 @@ Authors: Nikolay Goutev, Dimitar Tonev
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.LinearAlgebra.Matrix.DotProduct
+import Mathlib.Data.Matrix.Basic
 
 /-!
 # Robust Thermodynamic Regression (RTR) 
@@ -19,6 +21,7 @@ It serves as the formal proof backbone for the `thermofit` Python package.
 -/
 
 open scoped BigOperators
+open Matrix
 
 namespace FUSION
 
@@ -64,7 +67,7 @@ def FisherStiffness (p : Data → ℝ) (Hi : Data → Matrix (Fin k) (Fin k) ℝ
 -- Fluctuation Pressure (B): The variance of informational gradients.
 -- B = (1/ε) * Cov_p(∇ E)
 -- We define it here simply as a symmetric matrix representing this pressure.
-def FluctuationPressure (p : Data → ℝ) (gi : Data → Fin k → ℝ) (ε : ℝ) : Matrix (Fin k) (Fin k) ℝ :=
+noncomputable def FluctuationPressure (p : Data → ℝ) (gi : Data → Fin k → ℝ) (ε : ℝ) : Matrix (Fin k) (Fin k) ℝ :=
   -- B_ab = (1/ε) * Σ p_i * (g_ia - g_avg_a)(g_ib - g_avg_b)
   let g_avg : Fin k → ℝ := fun a => ∑ i : Data, p i * gi i a
   fun a b => (1 / ε) * ∑ i : Data, p i * (gi i a - g_avg a) * (gi i b - g_avg b)
@@ -90,25 +93,28 @@ the system undergoes a catastrophe, losing resolvability.
 -/
 theorem phase_transition_catastrophe
   (A B : Matrix (Fin k) (Fin k) ℝ)
-  (hA : A.PosDef)
-  (h_unstable : ∃ v : Fin k → ℝ, v ≠ 0 ∧ Matrix.dotProduct v (B *ᵥ v) ≥ Matrix.dotProduct v (A *ᵥ v)) :
+  (h_unstable : ∃ x : Fin k →₀ ℝ, x ≠ 0 ∧ (x.sum fun i xi => x.sum fun j xj => xi * B i j * xj) ≥ (x.sum fun i xi => x.sum fun j xj => xi * A i j * xj)) :
   ¬ IsResolvable k (ExactHessian k A B) :=
 by
   intro h_resolvable
   unfold IsResolvable ExactHessian at h_resolvable
-  rcases h_unstable with ⟨v, hv_nonzero, hB_ge_A⟩
+  rcases h_unstable with ⟨x, hx_nonzero, hB_ge_A⟩
   
-  -- From H being PosDef, we must have v^T H v > 0 for all non-zero v
-  have h_H_pos := h_resolvable.2 v hv_nonzero
+  -- From H being PosDef (which means H.IsHermitian ∧ 0 < x' H x for Finsupp x)
+  have h_H_pos : 0 < x.sum fun i xi => x.sum fun j xj => star xi * (A - B) i j * xj :=
+    h_resolvable.right hx_nonzero
   
-  -- Expand v^T H v = v^T (A - B) v
-  -- Matrix.dotProduct is linear, so v^T (A - B) v = v^T A v - v^T B v
-  rw [Matrix.sub_mulVec, Matrix.dotProduct_sub] at h_H_pos
+  -- Re-state the target subtraction equality
+  have h_sum_sub : (x.sum fun i xi => x.sum fun j xj => star xi * (A - B) i j * xj) =
+    (x.sum fun i xi => x.sum fun j xj => xi * A i j * xj) - (x.sum fun i xi => x.sum fun j xj => xi * B i j * xj) := by
+    simp [Matrix.sub_apply, Finsupp.sum_sub, mul_sub, sub_mul]
   
-  -- We have v^T A v - v^T B v > 0, which implies v^T A v > v^T B v
-  have h_A_gt_B : Matrix.dotProduct v (B *ᵥ v) < Matrix.dotProduct v (A *ᵥ v) := sub_pos.mp h_H_pos
-  
-  -- This directly contradicts hB_ge_A (v^T B v >= v^T A v)
+  rw [h_sum_sub] at h_H_pos
+  -- Now we have 0 < (x' A x) - (x' B x), so (x' A x) > (x' B x)
+  have h_A_gt_B : (x.sum fun i xi => x.sum fun j xj => xi * A i j * xj) > (x.sum fun i xi => x.sum fun j xj => xi * B i j * xj) :=
+    sub_pos.mp h_H_pos
+    
+  -- But our instability hypothesis says B >= A. Contradiction!
   linarith
 
 end FUSION

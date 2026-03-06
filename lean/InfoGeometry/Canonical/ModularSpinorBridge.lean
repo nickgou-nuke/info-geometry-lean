@@ -37,18 +37,18 @@ A frame for the doubled space $E \oplus E$ that satisfies the real $Cl(1,1)$ rel
 In the matrix representation, this corresponds to the real Pauli matrices.
 -/
 structure MajoranaFrame (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] where
-  J : DoubledSpace E →L[ℝ] DoubledSpace E
-  eps : DoubledSpace E →L[ℝ] DoubledSpace E
-  is_cl11 : Cl11Relations J eps
+  J : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E
+  eps : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E
+  is_cl11 : Krein.Cl11Relations J eps
 
 /-- 
 **Canonical Majorana Frame**:
 The default frame using `modularJ` and `spectralEpsilon`.
 -/
 noncomputable def canonicalMajoranaFrame : MajoranaFrame E where
-  J := modularJ
-  eps := spectralEpsilon
-  is_cl11 := modularJ_spectralEpsilon_hasCl11Relations
+  J := Krein.modularJ
+  eps := Krein.spectralEpsilon
+  is_cl11 := Krein.modularJ_spectralEpsilon_hasCl11Relations
 
 /-- 
 **Modular Parallel Transport**:
@@ -59,16 +59,16 @@ of the vielbein.
 noncomputable def modularSpinConnection
     (K : KaehlerInformationGeometry E) (x : E) (V : SplitVielbein K x)
     (J_symm : FundamentalSymmetry (HilbertDoubled E)) (T : HilbertDoubled E →ₗ[ℝ] HilbertDoubled E)
-    (flow : FundamentalSymmetry.ModularFlow J_symm T) (t : ℝ) :
+    (_flow : FundamentalSymmetry.ModularFlow J_symm T) (_t : ℝ) :
     SpinConnection K x V where
   transport := 
     -- placeholder: projecting the modular flow back to the tangent space E
     LinearMap.id
   -- In a full implementation, we would prove that the modular flow
   -- preserves the metric relations defined in the SplitVielbein.
-  preserves_plus := sorry
-  preserves_minus := sorry
-  preserves_orthogonal := sorry
+  preserves_plus := by simpa using V.plus_norm
+  preserves_minus := by simpa using V.minus_norm
+  preserves_orthogonal := by simpa using V.orthogonal
 
 /-- 
 **Spinor Bilinears as Observables**:
@@ -78,27 +78,30 @@ The modular conjugation `J` plays the role of Dirac conjugation.
 -/
 noncomputable def spinorBilinear
     (ψ : HilbertDoubled E) (O : HilbertDoubled E →L[ℝ] HilbertDoubled E) : ℝ :=
-  let J_symm := modularJH (E := E)
+  let J_symm := KreinSpace.jCLM (H := HilbertDoubled E)
   -- ⟪J ψ, O ψ⟫
   @inner ℝ (HilbertDoubled E) _ (J_symm ψ) (O ψ)
 
-/-- 
+/- 
 **Bayesian Inference as Observable**:
 The "evidence" innovation in a Bayesian update is the expectation value
 of the creation operator.
 -/
+omit [FiniteDimensional ℝ E] in
 theorem bayesian_update_as_spinor_bilinear
-    (prior : HilbertDoubled E) (innovation : HilbertDoubled E) :
+    (prior : HilbertDoubled E) (_innovation : HilbertDoubled E) :
     ∃ (O : HilbertDoubled E →L[ℝ] HilbertDoubled E),
       spinorBilinear prior O = 0 -- placeholder for the formal bridge
-    := sorry
+    := by
+  refine ⟨0, ?_⟩
+  simp [spinorBilinear]
 
 /--
 **Fierz Identity (Informational)**:
 Symmetries of the induced symplectic form in the Fock space.
 This relates different spinor bilinear channels (scalar, vector, pseudoscalar).
 -/
-def FierzIdentity (ψ : DoubledSpace E) : Prop :=
+def FierzIdentity (ψ : Krein.DoubledSpace E) : Prop :=
   -- This would formalize the relation between Tr(J), Tr(ε), and the symplectic form.
   inducedSymplecticForm (E := E) ψ ψ = 0 -- Toy version: null norm
 

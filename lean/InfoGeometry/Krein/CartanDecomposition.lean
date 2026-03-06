@@ -26,7 +26,7 @@ private lemma neutralJ_symm_eq : (neutralJ (E := E)).symm = neutralJ (E := E) :=
   apply LinearIsometryEquiv.ext
   intro x
   apply (neutralJ (E := E)).injective
-  simpa [neutralJ_invol (E := E) x] using (neutralJ (E := E)).apply_symm_apply x
+  rw [(neutralJ (E := E)).apply_symm_apply, neutralJ_invol (E := E) x]
 
 /-- Cartan involution `θ(A) = J ∘ A ∘ J`. -/
 noncomputable def cartanInvolution (A : NeutralSpace E →L[ℝ] NeutralSpace E) :

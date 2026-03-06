@@ -14,5 +14,3 @@ def searchEnv (queries : List String) : MetaM Unit := do
         IO.println n
         found := true
     if !found then IO.println "❌ Not found."
-
-#eval! searchEnv ["finrank_matrix", "equivExterior", "ExteriorAlgebra", "finrank_clif"]

@@ -16,7 +16,3 @@ def searchEnv (q : String) : MetaM Unit := do
       if count < 50 then IO.println n
       count := count + 1
   IO.println s!"Total matches for {q}: {count}"
-
-#eval! searchEnv "ExteriorAlgebra"
-#eval! searchEnv "CliffordAlgebra"
-#eval! searchEnv "finrank"

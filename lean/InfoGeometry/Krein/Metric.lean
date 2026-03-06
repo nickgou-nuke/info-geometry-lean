@@ -1,228 +1,138 @@
-import InfoGeometry.Clifford.Grading
+import InfoGeometry.Krein.HilbertBridge
+import Mathlib.Algebra.Lie.Subalgebra
+import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.Tactic.Ring
 
-section KreinClifford
+/-!
+# Neutral Metric Layer (Phase 2 Integration)
 
-variable {E : Type} [NormedAddCommGroup E]
+This module refactors the neutral Hessian metric properties to use the canonical
+`KreinSpace` predicates.
 
-section Metric
+It establishes:
+1. `preservesMetric` ↔ `IsKreinIsometry` on `NeutralSpace`.
+2. `IsInfinitesimalIsometry` ↔ `IsKreinSkewAdjoint` on `NeutralSpace`.
+3. The Lie algebra of infinitesimal isometries.
+-/
 
-variable [InnerProductSpace ℝ E]
+open scoped InnerProductSpace
 
-/-- Indefinite Hessian pairing on the doubled space. -/
-def hessianIndefiniteForm (v w : DoubledSpace E) : ℝ :=
-  inner ℝ v.1 w.2 + inner ℝ w.1 v.2
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-lemma hessianIndefiniteForm_symm (v w : DoubledSpace E) :
-    hessianIndefiniteForm (E := E) v w = hessianIndefiniteForm (E := E) w v := by
-  simp [hessianIndefiniteForm, add_comm]
+namespace InfoGeometry.Krein
 
-lemma hessianIndefiniteForm_isotropic_primal (x : E) :
-    hessianIndefiniteForm (E := E) (x, (0 : E)) (x, (0 : E)) = 0 := by
+/-- The neutral Hessian/Krein bilinear form on doubled coordinates `(x, ξ)`.
+This is the coordinate-level form used throughout projective and prequantum layers. -/
+noncomputable def hessianIndefiniteForm
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (v w : E × E) : ℝ :=
+  ⟪v.1, w.2⟫_ℝ + ⟪w.1, v.2⟫_ℝ
+
+lemma hessianIndefiniteForm_apply
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (v w : E × E) :
+    hessianIndefiniteForm (E := E) v w = ⟪v.1, w.2⟫_ℝ + ⟪w.1, v.2⟫_ℝ := rfl
+
+@[simp] lemma hessianIndefiniteForm_zero_zero
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] :
+    hessianIndefiniteForm (E := E) (0 : E × E) 0 = 0 := by
   simp [hessianIndefiniteForm]
 
-lemma hessianIndefiniteForm_isotropic_dual (ξ : E) :
-    hessianIndefiniteForm (E := E) ((0 : E), ξ) ((0 : E), ξ) = 0 := by
-  simp [hessianIndefiniteForm]
-
-/-- Metric-preserving endomorphisms of the doubled neutral space. -/
-def preservesMetric (U : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
-  ∀ v w, hessianIndefiniteForm (E := E) (U v) (U w) = hessianIndefiniteForm (E := E) v w
-
-/-- Metric-reversing endomorphisms of the doubled neutral space. -/
-def antiPreservesMetric (U : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
-  ∀ v w, hessianIndefiniteForm (E := E) (U v) (U w) = -hessianIndefiniteForm (E := E) v w
-
-/-- Infinitesimal isometries for the neutral Hessian form (Lie algebra condition). -/
-def IsInfinitesimalIsometry (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
-  ∀ v w,
-    hessianIndefiniteForm (E := E) (A v) w +
-      hessianIndefiniteForm (E := E) v (A w) = 0
-
-lemma infinitesimalIsometry_zero :
-    IsInfinitesimalIsometry (E := E) (0 : DoubledSpace E →L[ℝ] DoubledSpace E) := by
-  intro v w
-  simp [hessianIndefiniteForm]
-
-lemma infinitesimalIsometry_add
-    {A B : DoubledSpace E →L[ℝ] DoubledSpace E}
-    (hA : IsInfinitesimalIsometry (E := E) A)
-    (hB : IsInfinitesimalIsometry (E := E) B) :
-    IsInfinitesimalIsometry (E := E) (A + B) := by
-  intro v w
+/-- Bridge theorem: the coordinate Hessian form equals the canonical neutral Krein form
+via `NeutralSpace.toLp`. -/
+lemma hessianIndefiniteForm_eq_kreinInner (v w : E × E) :
+    hessianIndefiniteForm (E := E) v w =
+      KreinSpace.kreinInner (NeutralSpace.toLp (E := E) v) (NeutralSpace.toLp (E := E) w) := by
   calc
-    hessianIndefiniteForm (E := E) ((A + B) v) w
-      + hessianIndefiniteForm (E := E) v ((A + B) w)
-        = (hessianIndefiniteForm (E := E) (A v) w
-            + hessianIndefiniteForm (E := E) v (A w))
-          + (hessianIndefiniteForm (E := E) (B v) w
-              + hessianIndefiniteForm (E := E) v (B w)) := by
-                simp [ContinuousLinearMap.add_apply, hessianIndefiniteForm,
-                  inner_add_left, inner_add_right]
-                ring
-    _ = 0 + 0 := by rw [hA v w, hB v w]
-    _ = 0 := by ring
+    hessianIndefiniteForm (E := E) v w
+        = ⟪v.1, w.2⟫_ℝ + ⟪v.2, w.1⟫_ℝ := by
+            simp [hessianIndefiniteForm, real_inner_comm]
+    _ = KreinSpace.kreinInner (NeutralSpace.toLp (E := E) v) (NeutralSpace.toLp (E := E) w) := by
+            simpa [NeutralSpace.ofLp_toLp] using
+              (NeutralSpace.kreinInner_eq_hessian (E := E)
+                (NeutralSpace.toLp (E := E) v) (NeutralSpace.toLp (E := E) w)).symm
 
-lemma infinitesimalIsometry_smul
-    (a : ℝ)
-    {A : DoubledSpace E →L[ℝ] DoubledSpace E}
-    (hA : IsInfinitesimalIsometry (E := E) A) :
-    IsInfinitesimalIsometry (E := E) (a • A) := by
-  intro v w
-  have h1 : inner ℝ (a • (A v).1) w.2 = a * inner ℝ (A v).1 w.2 := by
-    simpa using (real_inner_smul_left (A v).1 w.2 a)
-  have h2 : inner ℝ w.1 (a • (A v).2) = a * inner ℝ w.1 (A v).2 := by
-    simpa using (real_inner_smul_right w.1 (A v).2 a)
-  have h3 : inner ℝ v.1 (a • (A w).2) = a * inner ℝ v.1 (A w).2 := by
-    simpa using (real_inner_smul_right v.1 (A w).2 a)
-  have h4 : inner ℝ (a • (A w).1) v.2 = a * inner ℝ (A w).1 v.2 := by
-    simpa using (real_inner_smul_left (A w).1 v.2 a)
-  calc
-    hessianIndefiniteForm (E := E) ((a • A) v) w
-      + hessianIndefiniteForm (E := E) v ((a • A) w)
-        = inner ℝ (a • (A v).1) w.2 + inner ℝ w.1 (a • (A v).2)
-          + (inner ℝ v.1 (a • (A w).2) + inner ℝ (a • (A w).1) v.2) := by
-              simp [ContinuousLinearMap.smul_apply, hessianIndefiniteForm, add_assoc]
-    _ = a * inner ℝ (A v).1 w.2 + a * inner ℝ w.1 (A v).2
-          + (a * inner ℝ v.1 (A w).2 + a * inner ℝ (A w).1 v.2) := by
-            simp [h1, h2, h3, h4]
-    _ = a *
-          (hessianIndefiniteForm (E := E) (A v) w
-            + hessianIndefiniteForm (E := E) v (A w)) := by
-            simp [hessianIndefiniteForm]
-            ring
-    _ = a * 0 := by rw [hA v w]
-    _ = 0 := by ring
+end InfoGeometry.Krein
 
-lemma preservesMetric_id :
-    preservesMetric (E := E) (ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-  intro v w
-  simp
+namespace InfoGeometry
 
-lemma preservesMetric_comp
-    {U V : DoubledSpace E →L[ℝ] DoubledSpace E}
-    (hU : preservesMetric (E := E) U)
-    (hV : preservesMetric (E := E) V) :
-    preservesMetric (E := E) (U.comp V) := by
-  intro v w
-  calc
-    hessianIndefiniteForm (E := E) ((U.comp V) v) ((U.comp V) w)
-        = hessianIndefiniteForm (E := E) (U (V v)) (U (V w)) := by rfl
-    _ = hessianIndefiniteForm (E := E) (V v) (V w) := hU (V v) (V w)
-    _ = hessianIndefiniteForm (E := E) v w := hV v w
+/-- Backward-compatible global alias for the neutral Hessian form on doubled coordinates. -/
+noncomputable abbrev hessianIndefiniteForm
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (v w : E × E) : ℝ :=
+  Krein.hessianIndefiniteForm (E := E) v w
 
-lemma antiPreservesMetric_comp
-    {U V : DoubledSpace E →L[ℝ] DoubledSpace E}
-    (hU : antiPreservesMetric (E := E) U)
-    (hV : antiPreservesMetric (E := E) V) :
-    preservesMetric (E := E) (U.comp V) := by
-  intro v w
-  calc
-    hessianIndefiniteForm (E := E) ((U.comp V) v) ((U.comp V) w)
-        = hessianIndefiniteForm (E := E) (U (V v)) (U (V w)) := by rfl
-    _ = -hessianIndefiniteForm (E := E) (V v) (V w) := hU (V v) (V w)
-    _ = -(-hessianIndefiniteForm (E := E) v w) := by rw [hV v w]
-    _ = hessianIndefiniteForm (E := E) v w := by ring
+lemma hessianIndefiniteForm_eq
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (v w : E × E) :
+    hessianIndefiniteForm (E := E) v w = Krein.hessianIndefiniteForm (E := E) v w := rfl
 
-lemma preservesMetric_comp_anti
-    {U V : DoubledSpace E →L[ℝ] DoubledSpace E}
-    (hU : preservesMetric (E := E) U)
-    (hV : antiPreservesMetric (E := E) V) :
-    antiPreservesMetric (E := E) (U.comp V) := by
-  intro v w
-  calc
-    hessianIndefiniteForm (E := E) ((U.comp V) v) ((U.comp V) w)
-        = hessianIndefiniteForm (E := E) (U (V v)) (U (V w)) := by rfl
-    _ = hessianIndefiniteForm (E := E) (V v) (V w) := hU (V v) (V w)
-    _ = -hessianIndefiniteForm (E := E) v w := hV v w
+lemma hessianIndefiniteForm_eq_kreinInner
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (v w : E × E) :
+    hessianIndefiniteForm (E := E) v w =
+      KreinSpace.kreinInner (Krein.NeutralSpace.toLp (E := E) v)
+        (Krein.NeutralSpace.toLp (E := E) w) :=
+  Krein.hessianIndefiniteForm_eq_kreinInner (E := E) v w
 
-lemma antiPreservesMetric_comp_preserves
-    {U V : DoubledSpace E →L[ℝ] DoubledSpace E}
-    (hU : antiPreservesMetric (E := E) U)
-    (hV : preservesMetric (E := E) V) :
-    antiPreservesMetric (E := E) (U.comp V) := by
-  intro v w
-  calc
-    hessianIndefiniteForm (E := E) ((U.comp V) v) ((U.comp V) w)
-        = hessianIndefiniteForm (E := E) (U (V v)) (U (V w)) := by rfl
-    _ = -hessianIndefiniteForm (E := E) (V v) (V w) := hU (V v) (V w)
-    _ = -hessianIndefiniteForm (E := E) v w := by rw [hV v w]
+end InfoGeometry
 
-lemma preservesMetric_symm
-    (U : DoubledSpace E ≃L[ℝ] DoubledSpace E)
-    (hU : preservesMetric (E := E) (U : DoubledSpace E →L[ℝ] DoubledSpace E)) :
-    preservesMetric (E := E) (U.symm : DoubledSpace E →L[ℝ] DoubledSpace E) := by
-  intro v w
-  have h := hU (U.symm v) (U.symm w)
-  simpa using h.symm
+/-- Global compatibility alias for the neutral Hessian form on doubled coordinates. -/
+noncomputable abbrev hessianIndefiniteForm
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (v w : E × E) : ℝ :=
+  InfoGeometry.Krein.hessianIndefiniteForm (E := E) v w
 
-lemma modularJ_preservesMetric :
-    preservesMetric (E := E) (modularJ (E := E)) := by
-  intro v w
-  simp [hessianIndefiniteForm, modularJ, real_inner_comm, add_comm]
+lemma hessianIndefiniteForm_eq
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (v w : E × E) :
+    hessianIndefiniteForm (E := E) v w = InfoGeometry.Krein.hessianIndefiniteForm (E := E) v w := rfl
 
-lemma spectralEpsilon_antiPreservesMetric :
-    antiPreservesMetric (E := E) (spectralEpsilon (E := E)) := by
-  intro v w
-  simp [hessianIndefiniteForm, spectralEpsilon]
-  ring
+namespace InfoGeometry.Krein.NeutralSpace
 
-lemma spectralEpsilon_infinitesimalIsometry :
-    IsInfinitesimalIsometry (E := E) (spectralEpsilon (E := E)) := by
-  intro v w
-  simp [hessianIndefiniteForm, spectralEpsilon]
-  ring
+/-- An operator on `NeutralSpace` preserves the Hessian metric iff it is a Krein isometry. -/
+abbrev preservesMetric (U : NeutralSpace E →L[ℝ] NeutralSpace E) : Prop :=
+  KreinSpace.IsKreinIsometry U
 
-lemma infinitesimalIsometry_closed_comm
-    {A B : DoubledSpace E →L[ℝ] DoubledSpace E}
-    (hA : IsInfinitesimalIsometry (E := E) A)
-    (hB : IsInfinitesimalIsometry (E := E) B) :
-    IsInfinitesimalIsometry (E := E) (clmComm A B) := by
-  intro v w
-  have hsplit₁ :
-      hessianIndefiniteForm (E := E) ((clmComm A B) v) w
-        = hessianIndefiniteForm (E := E) (A (B v)) w
-          - hessianIndefiniteForm (E := E) (B (A v)) w := by
-    simp [clmComm, hessianIndefiniteForm, sub_eq_add_neg,
-      inner_add_left, inner_add_right, inner_neg_left, inner_neg_right,
-      add_assoc, add_left_comm, add_comm]
-  have hsplit₂ :
-      hessianIndefiniteForm (E := E) v ((clmComm A B) w)
-        = hessianIndefiniteForm (E := E) v (A (B w))
-          - hessianIndefiniteForm (E := E) v (B (A w)) := by
-    simp [clmComm, hessianIndefiniteForm, sub_eq_add_neg,
-      inner_add_left, inner_add_right, inner_neg_left, inner_neg_right,
-      add_assoc, add_left_comm, add_comm]
-  have hA1 : hessianIndefiniteForm (E := E) (A (B v)) w
-      = -hessianIndefiniteForm (E := E) (B v) (A w) := by
-    linarith [hA (B v) w]
-  have hB1 : hessianIndefiniteForm (E := E) (B (A v)) w
-      = -hessianIndefiniteForm (E := E) (A v) (B w) := by
-    linarith [hB (A v) w]
-  have hA2 : hessianIndefiniteForm (E := E) v (A (B w))
-      = -hessianIndefiniteForm (E := E) (A v) (B w) := by
-    linarith [hA v (B w)]
-  have hB2 : hessianIndefiniteForm (E := E) v (B (A w))
-      = -hessianIndefiniteForm (E := E) (B v) (A w) := by
-    linarith [hB v (A w)]
-  rw [hsplit₁, hsplit₂, hA1, hB1, hA2, hB2]
-  ring
+/-- An operator on `NeutralSpace` is an infinitesimal isometry iff it is Krein-skew-adjoint. -/
+def IsInfinitesimalIsometry (A : NeutralSpace E →L[ℝ] NeutralSpace E) : Prop :=
+  KreinSpace.IsKreinSkewAdjoint A
 
-/-- Lie subalgebra of infinitesimal isometries of the neutral Hessian form. -/
-def kreinLieSubalgebra :
-    LieSubalgebra ℝ (DoubledSpace E →L[ℝ] DoubledSpace E) where
-  carrier := {A | IsInfinitesimalIsometry (E := E) A}
-  zero_mem' := infinitesimalIsometry_zero (E := E)
+/-- Project out the first component of a NeutralSpace vector. -/
+noncomputable def fst (u : NeutralSpace E) : E := (WithLp.equiv 2 (E × E) u.val).1
+
+/-- Project out the second component of a NeutralSpace vector. -/
+noncomputable def snd (u : NeutralSpace E) : E := (WithLp.equiv 2 (E × E) u.val).2
+
+lemma infinitesimalIsometry_iff_hessian (A : NeutralSpace E →L[ℝ] NeutralSpace E) :
+    IsInfinitesimalIsometry A ↔
+    ∀ v w : NeutralSpace E,
+      ⟪fst (A v), snd w⟫_ℝ + ⟪snd (A v), fst w⟫_ℝ +
+      ⟪fst v, snd (A w)⟫_ℝ + ⟪snd v, fst (A w)⟫_ℝ = 0 := by
+  rw [IsInfinitesimalIsometry, KreinSpace.isKreinSkewAdjoint_iff]
+  simp only [kreinInner_eq_hessian, add_assoc]
+  unfold fst snd
+  rfl
+
+/-- The Lie subalgebra of infinitesimal isometries for the neutral metric. -/
+noncomputable def neutralLieSubalgebra :
+    LieSubalgebra ℝ (NeutralSpace E →L[ℝ] NeutralSpace E) where
+  carrier := {A | IsInfinitesimalIsometry A}
+  zero_mem' := by
+    rw [Set.mem_setOf_eq, IsInfinitesimalIsometry, KreinSpace.isKreinSkewAdjoint_iff_eq_neg]
+    simp
   add_mem' := by
-    intro A B hA hB
-    exact infinitesimalIsometry_add (E := E) hA hB
+    intro A B hA hB; rw [Set.mem_setOf_eq] at *
+    simp only [IsInfinitesimalIsometry, KreinSpace.isKreinSkewAdjoint_iff_eq_neg] at *
+    rw [KreinSpace.kreinAdjoint_add, hA, hB, neg_add]
   smul_mem' := by
-    intro a A hA
-    exact infinitesimalIsometry_smul (E := E) a hA
+    intro c A hA; rw [Set.mem_setOf_eq] at *
+    simp only [IsInfinitesimalIsometry, KreinSpace.isKreinSkewAdjoint_iff_eq_neg] at *
+    rw [KreinSpace.kreinAdjoint_smul, hA, smul_neg]
   lie_mem' := by
-    intro A B hA hB
-    change IsInfinitesimalIsometry (E := E) (clmComm A B)
-    exact infinitesimalIsometry_closed_comm (E := E) hA hB
+    intro A B hA hB; rw [Set.mem_setOf_eq] at *
+    simp only [IsInfinitesimalIsometry, KreinSpace.isKreinSkewAdjoint_iff_eq_neg] at *
+    rw [KreinSpace.kreinAdjoint_lie, hA, hB]
+    simp [lie_skew]
 
-end Metric
-
-end KreinClifford
+end InfoGeometry.Krein.NeutralSpace

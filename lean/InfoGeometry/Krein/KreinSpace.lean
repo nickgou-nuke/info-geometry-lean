@@ -1,6 +1,13 @@
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Tactic.Linarith
+import Mathlib.Algebra.Star.Basic
+import Mathlib.LinearAlgebra.BilinearForm.Basic
+import Mathlib.LinearAlgebra.QuadraticForm.Basic
+import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.Algebra.Lie.Basic
+import Mathlib.Topology.Algebra.Module.StrongTopology
+import Mathlib.Tactic.Abel
 
 /-!
 # Real Krein Spaces — Canonical Mathlib 4.28.0 Implementation
@@ -48,6 +55,12 @@ namespace KreinSpace
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [KreinSpace H]
 
+/-- Mathlib's `exp_units_conj`, `star_exp`, etc. go through a `ℚ`-normed-algebra path.
+This global instance provides it via scalar restriction along `ℚ → ℝ`. -/
+noncomputable instance instNormedAlgebraRat_end :
+    NormedAlgebra ℚ (H →L[ℝ] H) :=
+  NormedAlgebra.restrictScalars ℚ ℝ (H →L[ℝ] H)
+
 /-! ### Fundamental symmetry as a CLM -/
 
 /-- `J` as a continuous linear map. -/
@@ -58,17 +71,30 @@ noncomputable def jCLM : H →L[ℝ] H :=
 
 @[simp] lemma jCLM_comp_self :
     jCLM.comp (jCLM (H := H)) = ContinuousLinearMap.id ℝ H := by
-  ext x; apply J_invol
+  ext x; simp [KreinSpace.J_invol]
 
-/-- J is its own Hilbert adjoint: `J† = J`. -/
-lemma jCLM_adjoint :
+@[simp] lemma jCLM_comp_jCLM_comp {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+    (A : F →L[ℝ] H) : jCLM.comp (jCLM.comp A) = A := by
+  rw [← ContinuousLinearMap.comp_assoc, jCLM_comp_self, ContinuousLinearMap.id_comp]
+
+@[simp] lemma comp_jCLM_comp_jCLM {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+    (A : H →L[ℝ] F) : (A.comp jCLM).comp jCLM = A := by
+  rw [ContinuousLinearMap.comp_assoc, jCLM_comp_self, ContinuousLinearMap.comp_id]
+
+lemma jCLM_adjoint_eq :
     ContinuousLinearMap.adjoint (jCLM (H := H)) = jCLM := by
   ext x; apply ext_inner_right ℝ; intro y
   rw [ContinuousLinearMap.adjoint_inner_left]
-  simp only [jCLM_apply]
-  exact (J_selfAdj x y).symm
+  simp [jCLM_apply, KreinSpace.J_selfAdj]
 
-/-! ### The Krein inner product -/
+/-- J is its own Hilbert adjoint: `J† = J`. -/
+@[simp] lemma adjoint_jCLM :
+    ContinuousLinearMap.adjoint (jCLM (H := H)) = jCLM (H := H) :=
+  jCLM_adjoint_eq (H := H)
+
+lemma jCLM_selfAdjoint : IsSelfAdjoint (jCLM (H := H)) := jCLM_adjoint_eq
+
+/-! ### Krein inner product and adjoint -/
 
 /-- The Krein inner product `[u, v]_J = ⟪Ju, v⟫_ℝ`. -/
 noncomputable def kreinInner (u v : H) : ℝ :=
@@ -86,33 +112,102 @@ lemma kreinInner_add_left (u₁ u₂ v : H) :
     kreinInner (u₁ + u₂) v = kreinInner u₁ v + kreinInner u₂ v := by
   simp [kreinInner_def, map_add, inner_add_left]
 
+lemma kreinInner_add_right (u v₁ v₂ : H) :
+    kreinInner u (v₁ + v₂) = kreinInner u v₁ + kreinInner u v₂ := by
+  simp [kreinInner_def, inner_add_right]
+
 lemma kreinInner_smul_left (c : ℝ) (u v : H) :
     kreinInner (c • u) v = c * kreinInner u v := by
   simp [kreinInner_def, map_smul, real_inner_smul_left]
 
-/-! ### The Krein adjoint -/
+lemma kreinInner_smul_right (c : ℝ) (u v : H) :
+    kreinInner u (c • v) = c * kreinInner u v := by
+  simp [kreinInner_def, real_inner_smul_right]
 
 /-- The Krein adjoint `A♯ = J A† J` (where `A†` is the Hilbert adjoint). -/
 noncomputable def kreinAdjoint (A : H →L[ℝ] H) : H →L[ℝ] H :=
-  jCLM.comp (ContinuousLinearMap.adjoint A |>.comp jCLM)
+    jCLM.comp ((ContinuousLinearMap.adjoint A).comp jCLM)
+
+@[simp] lemma kreinAdjoint_apply (A : H →L[ℝ] H) (u : H) :
+    kreinAdjoint A u = (J : H ≃ₗᵢ[ℝ] H) (ContinuousLinearMap.adjoint A ((J : H ≃ₗᵢ[ℝ] H) u)) := rfl
 
 /-- `[Au, v]_J = [u, A♯v]_J` — the adjoint identity in the Krein inner product. -/
 lemma kreinInner_kreinAdjoint (A : H →L[ℝ] H) (u v : H) :
     kreinInner (A u) v = kreinInner u (kreinAdjoint A v) := by
-  simp only [kreinInner_def, kreinAdjoint, jCLM_apply, ContinuousLinearMap.comp_apply]
+  simp only [kreinInner_def, kreinAdjoint_apply]
   calc ⟪(J : H ≃ₗᵢ[ℝ] H) (A u), v⟫_ℝ
       = ⟪A u, (J : H ≃ₗᵢ[ℝ] H) v⟫_ℝ := J_selfAdj (A u) v
     _ = ⟪u, ContinuousLinearMap.adjoint A ((J : H ≃ₗᵢ[ℝ] H) v)⟫_ℝ := by
           rw [ContinuousLinearMap.adjoint_inner_right]
     _ = ⟪(J : H ≃ₗᵢ[ℝ] H) u,
           (J : H ≃ₗᵢ[ℝ] H) (ContinuousLinearMap.adjoint A ((J : H ≃ₗᵢ[ℝ] H) v))⟫_ℝ := by
-          rw [J_selfAdj, J_invol]
+          rw [J_selfAdj, KreinSpace.J_invol]
+
+/-! ### Star Algebra Properties -/
+
+@[simp] lemma kreinAdjoint_id :
+    kreinAdjoint (H := H) (ContinuousLinearMap.id ℝ H) = ContinuousLinearMap.id ℝ H := by
+  simp [kreinAdjoint]
+
+@[simp] lemma kreinAdjoint_zero :
+    kreinAdjoint (H := H) (0 : H →L[ℝ] H) = 0 := by
+  ext; simp [kreinAdjoint]
+
+@[simp] lemma kreinAdjoint_add (A B : H →L[ℝ] H) :
+    kreinAdjoint (H := H) (A + B) = kreinAdjoint (H := H) A + kreinAdjoint (H := H) B := by
+  simp [kreinAdjoint, map_add]
+
+@[simp] lemma kreinAdjoint_smul (c : ℝ) (A : H →L[ℝ] H) :
+    kreinAdjoint (H := H) (c • A) = c • kreinAdjoint (H := H) A := by
+  simp [kreinAdjoint, map_smul]
+
+@[simp] lemma kreinAdjoint_comp (A B : H →L[ℝ] H) :
+    kreinAdjoint (H := H) (A.comp B) = (kreinAdjoint (H := H) B).comp (kreinAdjoint (H := H) A) := by
+  simp [kreinAdjoint, ContinuousLinearMap.adjoint_comp, ContinuousLinearMap.comp_assoc]
+
+lemma kreinAdjoint_involutive (A : H →L[ℝ] H) :
+    kreinAdjoint (H := H) (kreinAdjoint (H := H) A) = A := by
+  simp [kreinAdjoint, ContinuousLinearMap.adjoint_comp, ContinuousLinearMap.comp_assoc]
+
+@[simp] lemma kreinAdjoint_sub (A B : H →L[ℝ] H) :
+    kreinAdjoint (H := H) (A - B) = kreinAdjoint (H := H) A - kreinAdjoint (H := H) B := by
+  ext; simp [kreinAdjoint, map_sub]
+
+@[simp] lemma kreinAdjoint_mul (A B : H →L[ℝ] H) :
+    kreinAdjoint (H := H) (A * B) = kreinAdjoint (H := H) B * kreinAdjoint (H := H) A :=
+  kreinAdjoint_comp A B
+
+lemma kreinAdjoint_lie (A B : H →L[ℝ] H) :
+    kreinAdjoint (H := H) ⁅A, B⁆ = ⁅kreinAdjoint B, kreinAdjoint A⁆ := by
+  simp [Ring.lie_def]
+
+lemma kreinAdjoint_lie_neg (A B : H →L[ℝ] H) :
+    kreinAdjoint (H := H) ⁅A, B⁆
+      = - ⁅kreinAdjoint (H := H) A, kreinAdjoint (H := H) B⁆ := by
+  simpa [lie_skew] using (kreinAdjoint_lie (H := H) A B)
+
+
 
 /-- `A` is **Krein-self-adjoint** if `A♯ = A`. -/
 def IsKreinSelfAdjoint (A : H →L[ℝ] H) : Prop := kreinAdjoint A = A
 
 /-- `A` is **Krein-skew-adjoint** if `A♯ = -A`. -/
 def IsKreinSkewAdjoint (A : H →L[ℝ] H) : Prop := kreinAdjoint A = -A
+
+/-- `A` is Krein-skew-adjoint iff `A♯ = -A`. -/
+lemma isKreinSkewAdjoint_iff_eq_neg {A : H →L[ℝ] H} :
+    IsKreinSkewAdjoint A ↔ kreinAdjoint A = -A := Iff.rfl
+
+/-- The commutator of two Krein-skew-adjoint operators is Krein-skew-adjoint.
+This formally proves the Lie algebra closure of infinitesimal isometries. -/
+lemma isKreinSkewAdjoint_lie {A B : H →L[ℝ] H}
+    (hA : IsKreinSkewAdjoint A) (hB : IsKreinSkewAdjoint B) :
+    IsKreinSkewAdjoint ⁅A, B⁆ := by
+  rw [isKreinSkewAdjoint_iff_eq_neg, kreinAdjoint_lie]
+  rw [isKreinSkewAdjoint_iff_eq_neg.mp hA, isKreinSkewAdjoint_iff_eq_neg.mp hB]
+  -- ⁅-B, -A⁆ = ⁅B, A⁆ = -⁅A, B⁆
+  rw [Ring.lie_def, Ring.lie_def, neg_mul, mul_neg, neg_neg, neg_mul, mul_neg, neg_neg]
+  exact (neg_sub (A * B) (B * A)).symm
 
 /-- Characterization: Krein-skew-adjoint iff `[Au, v] + [u, Av] = 0`. -/
 lemma isKreinSkewAdjoint_iff (A : H →L[ℝ] H) :
@@ -124,14 +219,14 @@ lemma isKreinSkewAdjoint_iff (A : H →L[ℝ] H) :
   · intro h
     ext v; apply ext_inner_left ℝ; intro u
     calc ⟪u, (kreinAdjoint A) v⟫_ℝ
-        = ⟪(J : H ≃ₗᵢ[ℝ] H) ((J : H ≃ₗᵢ[ℝ] H) u), (kreinAdjoint A) v⟫_ℝ := by rw [J_invol]
+        = ⟪(J : H ≃ₗᵢ[ℝ] H) ((J : H ≃ₗᵢ[ℝ] H) u), (kreinAdjoint A) v⟫_ℝ := by rw [KreinSpace.J_invol]
       _ = kreinInner ((J : H ≃ₗᵢ[ℝ] H) u) (kreinAdjoint A v) := rfl
       _ = kreinInner (A ((J : H ≃ₗᵢ[ℝ] H) u)) v := by rw [kreinInner_kreinAdjoint]
       _ = -kreinInner ((J : H ≃ₗᵢ[ℝ] H) u) (A v) := by
             have key := h ((J : H ≃ₗᵢ[ℝ] H) u) v
             exact add_eq_zero_iff_eq_neg.mp key
       _ = -⟪(J : H ≃ₗᵢ[ℝ] H) ((J : H ≃ₗᵢ[ℝ] H) u), A v⟫_ℝ := rfl
-      _ = -⟪u, A v⟫_ℝ := by rw [J_invol]
+      _ = -⟪u, A v⟫_ℝ := by rw [KreinSpace.J_invol]
       _ = ⟪u, (-A) v⟫_ℝ := by
             simp only [ContinuousLinearMap.neg_apply, inner_neg_right]
 
@@ -139,12 +234,65 @@ lemma isKreinSkewAdjoint_iff (A : H →L[ℝ] H) :
 def IsKreinIsometry (U : H →L[ℝ] H) : Prop :=
   ∀ u v : H, kreinInner (U u) (U v) = kreinInner u v
 
+lemma isKreinIsometry_iff_star_comp_self (U : H →L[ℝ] H) :
+    IsKreinIsometry U ↔ (kreinAdjoint U).comp U = ContinuousLinearMap.id ℝ H := by
+  constructor
+  · intro h
+    ext v; apply ext_inner_left ℝ; intro u
+    calc ⟪u, (kreinAdjoint U).comp U v⟫_ℝ
+        = ⟪(J : H ≃ₗᵢ[ℝ] H) ((J : H ≃ₗᵢ[ℝ] H) u), (kreinAdjoint U).comp U v⟫_ℝ := by rw [KreinSpace.J_invol]
+      _ = kreinInner ((J : H ≃ₗᵢ[ℝ] H) u) ((kreinAdjoint U).comp U v) := rfl
+      _ = kreinInner (U ((J : H ≃ₗᵢ[ℝ] H) u)) (U v) := by rw [kreinInner_kreinAdjoint]; rfl
+      _ = kreinInner ((J : H ≃ₗᵢ[ℝ] H) u) v := h _ _
+      _ = ⟪(J : H ≃ₗᵢ[ℝ] H) ((J : H ≃ₗᵢ[ℝ] H) u), v⟫_ℝ := rfl
+      _ = ⟪u, v⟫_ℝ := by rw [KreinSpace.J_invol]
+  · intro h u v
+    rw [kreinInner_kreinAdjoint, ← ContinuousLinearMap.comp_apply, h]
+    simp
+
+lemma IsKreinIsometry.id : IsKreinIsometry (ContinuousLinearMap.id ℝ H) := fun _ _ => rfl
+
+lemma IsKreinIsometry.comp {U V : H →L[ℝ] H} (hU : IsKreinIsometry U) (hV : IsKreinIsometry V) :
+    IsKreinIsometry (U.comp V) := fun u v => by
+  rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.comp_apply, hU, hV]
+
+lemma IsKreinIsometry.inv {U : H ≃L[ℝ] H} (hU : IsKreinIsometry (U : H →L[ℝ] H)) :
+    IsKreinIsometry (U.symm : H →L[ℝ] H) := fun u v =>
+  (hU (U.symm u) (U.symm v)).symm.trans (by simp)
+
+lemma IsKreinIsometry.J : IsKreinIsometry (J (H := H) : H →L[ℝ] H) := fun u v => by
+  simp [kreinInner_def, J_invol, J_selfAdj]
+
+/-! ### Bilinear and Quadratic forms -/
+
+/-- The Krein inner product as a bilinear form. -/
+noncomputable def kreinBilin : LinearMap.BilinForm ℝ H :=
+  LinearMap.mk₂ ℝ (kreinInner (H := H))
+    (by intro u₁ u₂ v; simp [kreinInner_def, map_add, inner_add_left])
+    (by intro c u v; simp [kreinInner_def, map_smul, real_inner_smul_left, smul_eq_mul])
+    (by intro u v₁ v₂; simp [kreinInner_def, inner_add_right])
+    (by intro c u v; simp [kreinInner_def, real_inner_smul_right, smul_eq_mul])
+
+/-- The Krein metric as a quadratic map. -/
+noncomputable def kreinQuad : QuadraticMap ℝ H ℝ :=
+  (kreinBilin (H := H)).toQuadraticMap
+
+@[simp] lemma kreinQuad_apply (v : H) :
+    kreinQuad (H := H) v = kreinInner (H := H) v v := by
+  simp [kreinQuad, kreinBilin]
+
+@[simp] lemma kreinQuad_smul (c : ℝ) (v : H) :
+    kreinQuad (H := H) (c • v) = c^2 * kreinQuad (H := H) v := by
+  simp [kreinQuad_apply, kreinInner_def, inner_smul_left, inner_smul_right]
+  ring
+
 end KreinSpace
 
 /-! ## Instance 1: Any Hilbert space with `J = id` -/
 
-/-- Every complete real Hilbert space is a Krein space with `J = id`. -/
-noncomputable instance (priority := 50) instKreinSpaceOfHilbert
+/-- Every complete real Hilbert space is a Krein space with `J = id`.
+Priority is set lower than specific instances like `WithLp 2 (E × E)`. -/
+noncomputable instance (priority := 100) instKreinSpaceOfHilbert
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] :
     KreinSpace H where
   J := LinearIsometryEquiv.refl ℝ H
@@ -169,13 +317,14 @@ noncomputable instance instL2Complete : CompleteSpace (WithLp 2 (E × E)) :=
 
 /-- The sign-flip `(x,y) ↦ (x,-y)` as a linear map on `WithLp 2 (E × E)`. -/
 private noncomputable def signFlipMap : WithLp 2 (E × E) →ₗ[ℝ] WithLp 2 (E × E) :=
-  (WithLp.linearEquiv 2 ℝ (E × E)).symm.comp
+  (WithLp.linearEquiv 2 ℝ (E × E)).symm.toLinearMap.comp
     ((LinearMap.prod (LinearMap.fst ℝ E E) (-(LinearMap.snd ℝ E E))).comp
       (WithLp.linearEquiv 2 ℝ (E × E)).toLinearMap)
 
 @[simp]
 private lemma signFlipMap_apply (u : WithLp 2 (E × E)) :
-    signFlipMap u = WithLp.toLp 2 ((WithLp.ofLp u).1, -(WithLp.ofLp u).2) := rfl
+    signFlipMap u = WithLp.toLp 2 ((WithLp.ofLp u).1, -(WithLp.ofLp u).2) := by
+  simp [signFlipMap]
 
 private lemma signFlipMap_invol (u : WithLp 2 (E × E)) :
     signFlipMap (signFlipMap u) = u := by
@@ -215,8 +364,8 @@ lemma signFlipLIE_apply (u : WithLp 2 (E × E)) :
 
 /-- **The canonical diagonal `(n,n) ` Krein space**: `WithLp 2 (E × E)` with `J(x,y) = (x,-y)`.
 
-Krein inner product: `[u,v]_J = ⟪u₁,v₁⟫_ℝ - ⟪u₂,v₂⟫_ℝ`. -/
-noncomputable instance instKreinSpaceProdL2 :
+Higher priority than the generic Hilbert instance. -/
+noncomputable instance (priority := 1000) instKreinSpaceProdL2 :
     KreinSpace (WithLp 2 (E × E)) where
   J := signFlipLIE (E := E)
   J_invol := signFlipMap_invol
@@ -257,3 +406,12 @@ structure KreinEquiv (H K : Type*)
     extends H ≃L[ℝ] K where
   isometric : ∀ u v : H,
     KreinSpace.kreinInner (toFun u) (toFun v) = KreinSpace.kreinInner u v
+
+/-- Centralized ContinuousLinearEquiv conjugation for Krein automorphisms.
+Replaces ad-hoc `U ∘ A ∘ U⁻¹` throughout the codebase. -/
+noncomputable def conjKreinEquiv {H K : Type*}
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [KreinSpace H]
+    [NormedAddCommGroup K] [InnerProductSpace ℝ K] [CompleteSpace K] [KreinSpace K]
+    (U : KreinEquiv H K) :
+    (H →L[ℝ] H) ≃ₐ[ℝ] (K →L[ℝ] K) :=
+  ContinuousLinearEquiv.conjContinuousAlgEquiv U.toContinuousLinearEquiv

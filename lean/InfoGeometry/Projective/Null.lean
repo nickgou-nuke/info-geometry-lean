@@ -178,10 +178,11 @@ def IsMetricNull (v : DoubledSpace E) : Prop :=
   unfold IsMetricNull hessianIndefiniteForm
   constructor
   · intro h
-    have h' : inner ℝ x ξ + inner ℝ x ξ = 0 := by simpa [real_inner_comm] using h
+    have h' : inner ℝ x ξ + inner ℝ x ξ = 0 := by
+      simpa [InfoGeometry.Krein.hessianIndefiniteForm, real_inner_comm] using h
     linarith
   · intro h
-    simp [h]
+    simp [InfoGeometry.Krein.hessianIndefiniteForm, real_inner_comm, h]
 
 lemma hessianIndefiniteForm_smul_smul (a b : ℝ) (v w : DoubledSpace E) :
     hessianIndefiniteForm (E := E) (a • v) (b • w)

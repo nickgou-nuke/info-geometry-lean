@@ -182,7 +182,7 @@ def IsMetricNull (v : DoubledSpace E) : Prop :=
       simpa [InfoGeometry.Krein.hessianIndefiniteForm, real_inner_comm] using h
     linarith
   · intro h
-    simp [InfoGeometry.Krein.hessianIndefiniteForm, real_inner_comm, h]
+    simp [InfoGeometry.Krein.hessianIndefiniteForm, h]
 
 lemma hessianIndefiniteForm_smul_smul (a b : ℝ) (v w : DoubledSpace E) :
     hessianIndefiniteForm (E := E) (a • v) (b • w)

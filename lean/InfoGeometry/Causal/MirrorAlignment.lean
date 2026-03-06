@@ -26,25 +26,26 @@ lemma MirrorMismatch_apply_pair (a b : ℝ) :
 
 lemma MirrorMismatch_maps_NullCone {v : V} (hv : v ∈ NullCone) : MirrorMismatch v ∈ NullCone := by
   rcases v with ⟨a, b⟩
-  simp [NullCone] at hv ⊢
-  have : splitQ11 (MirrorMismatch (a, b)) = 0 := by
-    simp [MirrorMismatch_apply_pair (a := a) (b := b), splitQ11_apply]
-    have hab : a * a = b * b := by have hv' : a * a - b * b = 0 := by simpa [splitQ11_apply] using hv; linarith
-    simp [hab]
-  simpa using this
+  have hMM : MirrorMismatch (a, b) = (-(2 : ℝ)⁻¹ * b, (2 : ℝ)⁻¹ * a) :=
+    MirrorMismatch_apply_pair (a := a) (b := b)
+  simp [NullCone, splitQ11_apply, hMM] at hv ⊢
+  nlinarith
 
 theorem MirrorMismatch_ne_zero_on_NullCone {v : V} (hv : v ∈ NullCone) (h0 : v ≠ 0) : MirrorMismatch v ≠ 0 := by
   rcases v with ⟨a, b⟩
+  simp [NullCone, splitQ11_apply] at hv
   have hhalf : ((2 : ℝ)⁻¹) ≠ 0 := by norm_num
   intro hMM
-  have hpair := congrArg (fun p : ℝ × ℝ => p) (by simpa [MirrorMismatch_apply_pair (a := a) (b := b)] using hMM)
+  have hpair : (-(2 : ℝ)⁻¹ * b, (2 : ℝ)⁻¹ * a) = (0, 0) := by
+    simpa [MirrorMismatch_apply_pair (a := a) (b := b)] using hMM
   have hb : b = 0 := by
-    have : (-(2 : ℝ)⁻¹ * b) = 0 := by simpa [Prod.ext_iff] using congrArg Prod.fst hpair
-    have : ((2 : ℝ)⁻¹ * b) = 0 := by simpa using (neg_eq_zero.mp this)
-    exact (mul_eq_zero.mp this).resolve_left hhalf
+    have hfst : (-(2 : ℝ)⁻¹ * b) = 0 := congrArg Prod.fst hpair
+    have hmul : ((2 : ℝ)⁻¹) * b = 0 := by
+      nlinarith [hfst]
+    exact (mul_eq_zero.mp hmul).resolve_left hhalf
   have ha : a = 0 := by
-    have : ((2 : ℝ)⁻¹ * a) = 0 := by simpa [Prod.ext_iff] using congrArg Prod.snd hpair
-    exact (mul_eq_zero.mp this).resolve_left hhalf
+    have hsnd : ((2 : ℝ)⁻¹ * a) = 0 := congrArg Prod.snd hpair
+    exact (mul_eq_zero.mp hsnd).resolve_left hhalf
   apply h0
   ext <;> simp [ha, hb]
 

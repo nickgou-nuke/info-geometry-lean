@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.MoorePenrose
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.LinearAlgebra.Trace
 
 namespace InfoGeometry.Canonical.SpectralInference
 

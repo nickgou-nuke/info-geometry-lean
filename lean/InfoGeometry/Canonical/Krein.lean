@@ -26,6 +26,7 @@ import InfoGeometry.Krein.Metric
 import InfoGeometry.Krein.Modular
 import InfoGeometry.Krein.OrthogonalGroup
 import InfoGeometry.Krein.Prelude
+import InfoGeometry.Krein.Superalgebra
 import InfoGeometry.Krein.Thermal
 
 /-!

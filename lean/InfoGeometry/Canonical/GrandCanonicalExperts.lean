@@ -1,6 +1,6 @@
-import InfoGeometry.GrandCanonical.Core
+import InfoGeometry.Canonical.GrandCanonicalCore
 import InfoGeometry.Canonical.MixtureOfExperts
-import InfoGeometry.Clifford.SplitQ11
+import InfoGeometry.Canonical.Clifford
 import Mathlib.Analysis.Convex.Birkhoff
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 

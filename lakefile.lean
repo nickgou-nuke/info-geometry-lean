@@ -54,3 +54,7 @@ lean_lib InfoGeometry.GraphExport
 @[default_target]
 lean_lib InfoGeometry where
   globs := #[.andSubmodules `InfoGeometry]
+
+@[default_target]
+lean_lib scripts where
+  globs := #[.submodules `scripts]

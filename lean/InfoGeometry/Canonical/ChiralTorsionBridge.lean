@@ -1,4 +1,4 @@
-import InfoGeometry.Assumptions.DualConnections
+import InfoGeometry.Canonical.DualConnectionsCore
 import InfoGeometry.Canonical.BeliefDynamics
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.InformationTorsion
@@ -21,7 +21,7 @@ All statements remain hypothesis-driven and build-safe.
 
 namespace InfoGeometry.Canonical.ChiralTorsionBridge
 
-open InfoGeometry.Assumptions.DualConnections
+open InfoGeometry.Canonical.DualConnections
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.BeliefDynamics
 open InfoGeometry.Canonical.ConformalUnification

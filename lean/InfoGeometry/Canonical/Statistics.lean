@@ -31,7 +31,7 @@ import InfoGeometry.MaxEnt.Jaynes
 import InfoGeometry.MaxEnt.JaynesCanonical
 import InfoGeometry.MaxEnt.JaynesInfoStatMech
 import InfoGeometry.MaxEnt.JaynesInfoStatMechTest
-import InfoGeometry.MaxEnt.JaynesRNMaxEnt
+import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.MaxEnt.Lagrange
 import InfoGeometry.MaxEnt.Optimality
 import InfoGeometry.OptimalTransport

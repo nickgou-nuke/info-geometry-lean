@@ -1,6 +1,6 @@
 import Mathlib
 import InfoGeometry.Singular.KreinNaturalFlow
-import InfoGeometry.Singular.AnomalyGauge
+import InfoGeometry.Canonical.AnomalyGauge
 import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Canonical.PerelmanW
 import InfoGeometry.Canonical.WeylInformationGauge
@@ -23,7 +23,7 @@ namespace InfoGeometry.Singular.UnitaryBridge
 open InfoGeometry.Singular.MoorePenroseAdjoint
 open InfoGeometry.Singular.DrazinAdjoint
 open InfoGeometry.Singular.Architecture
-open InfoGeometry.Singular.AnomalyGauge
+open InfoGeometry.Canonical.AnomalyGauge
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.GrandUnification
 open InfoGeometry.Canonical.PerelmanW

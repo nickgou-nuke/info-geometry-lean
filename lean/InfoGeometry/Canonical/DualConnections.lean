@@ -1,26 +1,13 @@
-import InfoGeometry.Assumptions.DualConnections
+import InfoGeometry.Canonical.DualConnectionsCore
+import InfoGeometry.Canonical.DualConnectionsFiniteExpFamily
 
 /-!
 # InfoGeometry.Canonical.DualConnections
 
-Canonical dual-connection surface built directly from
-`InfoGeometry.Assumptions.DualConnections`.
+Canonical dual-connection surface built from the canonical core interface
+plus finite exponential-family bridges.
 -/
 
 namespace InfoGeometry.Canonical.DualConnections
-
-/-!
-Explicitly forward the dual-connection scaffold surface from the
-assumptions layer.
--/
-export InfoGeometry.Assumptions.DualConnections (
-  fisherMetric
-  amariChentsovTensor
-  alphaConnection
-  alpha_duality
-  fisherMetric_of_finProb
-  amariChentsovTensor_of_finProb
-  fisher_metric_eq_hessian_KL
-)
 
 end InfoGeometry.Canonical.DualConnections

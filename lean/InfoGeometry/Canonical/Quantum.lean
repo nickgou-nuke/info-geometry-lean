@@ -19,10 +19,12 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 
-import InfoGeometry.Quantum.Fock
+import InfoGeometry.Canonical.Fierz
+import InfoGeometry.Canonical.Fock
 
 /-!
 # InfoGeometry.Canonical.Quantum
 
-Canonical quantum-layer umbrella (publication surface).
+Canonical quantum-layer umbrella (publication surface), routed through
+canonical facades.
 -/

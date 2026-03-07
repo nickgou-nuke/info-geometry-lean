@@ -1,5 +1,5 @@
-import InfoGeometry.Jordan.LogDet
-import InfoGeometry.Thermo.FromLogDet
+import InfoGeometry.Canonical.LogDet
+import InfoGeometry.Canonical.RedLine
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean
@@ -15,6 +15,7 @@ import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.ChiralGravity
 import InfoGeometry.Canonical.ChiralTorsionBridge
 import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Canonical.WilsonLoop
 
 /-!
 # Research.Rosetta
@@ -184,6 +185,55 @@ export InfoGeometry.Canonical.BogoliubovFockSuper (
   einsteinInducedChemicalPotential
   einsteinFockDeformationOperator
   grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
+)
+
+export InfoGeometry.Canonical.RedLine (
+  logDetBarrier
+  logDetBregman
+  energyFromLogDet
+  partitionFromLogDet
+  freeEnergyFromLogDet
+  freeEnergyFromLogDet_eq_neg_scale_log_partition
+  freeEnergyFromLogDet_eq_internal_sub_scale_entropy
+  logSumExpPartition
+  logSumExp
+  logSumExpScaledPartition
+  logSumExpScaled
+  MomentFamily
+  objectiveKL
+  partitionFunction
+  gibbsMeasure
+  rnDeriv_gibbsMeasure_eq
+  rnDeriv_gibbsMeasure_toReal_eq
+  kahlerPotentialRN
+  relativeVolumeChangeRN
+  relativeModularHamiltonian
+  relativeTomitaTakesakiOp
+  modularConjugationJ
+  modularSignEpsilon
+  modularComplexI
+  tomitaRepresentation
+)
+
+export InfoGeometry.Canonical.WilsonLoop (
+  DiracField
+  diracReg
+  wilsonStep
+  wilsonPropagatorDiscrete
+  wilsonLoopDiscrete
+  continuousWilsonLoop
+  chiralPathWeight
+  chiralPathIntegral
+  expectedHolonomy
+  BeliefSystem
+  gaussianDiracField
+  gaussianWilsonLoopDiscrete
+  gaussian_holonomy_flat
+)
+
+export InfoGeometry.Canonical.BeliefAlgebra.BeliefSystem (
+  non_commutative_updates
+  InformationLieAlgebra
 )
 
 end InfoGeometry.Canonical.Rosetta

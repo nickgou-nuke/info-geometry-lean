@@ -1,12 +1,15 @@
-import InfoGeometry.Clifford.Cl11
-import InfoGeometry.Clifford.Tower
+import InfoGeometry.Canonical.Clifford
 import Mathlib.LinearAlgebra.TensorProduct.Basic
 
 open scoped TensorProduct
 
 namespace InfoGeometry.Canonical.BottPeriodicity
 
-open InfoGeometry.CliffordTower
+local notation "Q11" => InfoGeometry.CliffordTower.Q11
+local notation "SplitSpace" => InfoGeometry.CliffordTower.SplitSpace
+local notation "Qsplit" => InfoGeometry.CliffordTower.Qsplit
+local notation "Clsplit" => InfoGeometry.CliffordTower.Clsplit
+local notation "clsplit_succ_equiv" => InfoGeometry.CliffordTower.clsplit_succ_equiv
 
 section TensorLift
 

@@ -53,7 +53,7 @@ theorem information_fierz_identity [CompleteSpace E] (ψ : Krein.DoubledSpace E)
   unfold infoHilbert infoScalar infoSymplectic infoArea
   simp [inducedSymplecticForm_eq_complex_pairing, InfoGeometry.Krein.hessianIndefiniteForm,
     InfoGeometry.hessianIndefiniteForm, hessianIndefiniteForm,
-    _root_.complexI, _root_.modularJ_apply, _root_.spectralEpsilon_apply,
+    _root_.complexI,
     sub_eq_add_neg]
   ring
 

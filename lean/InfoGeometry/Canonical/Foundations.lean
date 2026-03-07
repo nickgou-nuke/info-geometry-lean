@@ -20,7 +20,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 
 import InfoGeometry.Basic
-import InfoGeometry.Assumptions
+import InfoGeometry.Axioms
 import InfoGeometry.Core
 import InfoGeometry.Convex
 import InfoGeometry.Convex.Bregman

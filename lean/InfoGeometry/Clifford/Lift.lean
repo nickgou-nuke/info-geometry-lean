@@ -19,7 +19,7 @@ lemma modularJ_complexI_anticommute :
   apply ContinuousLinearMap.ext
   intro v
   rcases v with ⟨x, y⟩
-  simp [complexI, modularJ, spectralEpsilon]
+  simp [complexI, modularJ]
 
 /-- Linear map `(a,b) ↦ a • J + b • I` into endomorphisms of `E × E`. -/
 noncomputable def cl11RepLin :
@@ -34,7 +34,7 @@ noncomputable def cl11RepLin :
 
 lemma cl11RepLin_apply_pair (a b : ℝ) (x y : E) :
     cl11RepLin (E := E) (a, b) (x, y) = ((a - b) • y, (a + b) • x) := by
-  ext <;> simp [cl11RepLin, complexI, modularJ, spectralEpsilon, sub_eq_add_neg, add_smul]
+  ext <;> simp [cl11RepLin, complexI, modularJ, sub_eq_add_neg, add_smul]
 
 /-- Key Clifford relation for `cl11RepLin`: `(aJ + bI)^2 = (a^2 - b^2) • Id`. -/
 lemma cl11RepLin_sq (v : ℝ × ℝ) :

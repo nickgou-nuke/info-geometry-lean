@@ -1,5 +1,6 @@
 import InfoGeometry.Assumptions.Determinant
-import InfoGeometry.Assumptions.DualConnections
+import InfoGeometry.Canonical.DualConnectionsCore
+import InfoGeometry.Canonical.DualConnectionsFiniteExpFamily
 import InfoGeometry.Assumptions.IB
 import InfoGeometry.Assumptions.LLN
 import InfoGeometry.Assumptions.ManifoldDegree
@@ -61,18 +62,46 @@ export InfoGeometry.Assumptions.Determinant (
 universe u v
 
 abbrev «GL» (R : Type u) (V : Type v) [CommRing R] [Fintype V] [DecidableEq V] :=
-  InfoGeometry.Assumptions.Determinant.GL R V
+  InfoGeometry.Assumptions.Determinant.«GL» R V
 
 noncomputable abbrev «SL» (R : Type u) (V : Type v)
     [CommRing R] [Fintype V] [DecidableEq V] :=
-  InfoGeometry.Assumptions.Determinant.SL R V
+  InfoGeometry.Assumptions.Determinant.«SL» R V
 
-export InfoGeometry.Assumptions.DualConnections (
+export InfoGeometry.Canonical.DualConnections (
+  FiberTangent
+  ConnectionTensor
+  fisherBilinear
+  fisherBilinear_comm
+  fisherBilinear_self_nonneg
+  chentsovTensor
+  chentsovTensor_swap_left
+  alphaConnectionTensor
+  eConnectionTensor
+  mConnectionTensor
+  alphaConnectionTensor_zero
+  alphaConnectionTensor_dual_sum
+  alphaConnectionTensor_dual_diff
+  e_m_connection_sum
   fisherMetric
   amariChentsovTensor
   alphaConnection
   alpha_duality
+  alphaConnection_of_finProb
   fisher_metric_eq_hessian_KL
+)
+
+export InfoGeometry.Canonical.DualConnections (
+  finiteExpFamilyFinProb
+  finiteExpFamilyProbMap
+  fisherCovarianceBilinear
+  fisherMetric_eq_covariance
+  centeredScore
+  fisherBilinear_eq_expectation_mul
+  fisherQuadratic_eq_fisherBilinear_centeredScore
+  finiteExpFamilyAlphaConnectionTensor
+  finiteExpFamilyAlphaConnection
+  finiteExpFamilyAlphaConnection_deformation
 )
 
 export InfoGeometry.Assumptions.LLN (

@@ -1,10 +1,8 @@
 import Mathlib
-import InfoGeometry.Singular.MoorePenroseAdjoint
-import InfoGeometry.Singular.DrazinAdjoint
-import InfoGeometry.Singular.KreinNaturalFlow
-import InfoGeometry.Krein.HilbertBridge
-import InfoGeometry.Krein.Metric
-import InfoGeometry.Krein.CartanDecomposition
+import InfoGeometry.Canonical.MoorePenroseAdjoint
+import InfoGeometry.Canonical.DrazinAdjoint
+import InfoGeometry.Canonical.KreinNaturalFlow
+import InfoGeometry.Canonical.Krein
 
 /-!
 # The Anomaly Gauge Field
@@ -16,7 +14,7 @@ Infinitesimal Isometry (a Lie algebra generator), acting as a gauge rotation tha
 preserves the degenerate causal boundary.
 -/
 
-namespace InfoGeometry.Singular.AnomalyGauge
+namespace InfoGeometry.Canonical.AnomalyGauge
 
 open InfoGeometry.Singular.MoorePenroseAdjoint
 open InfoGeometry.Singular.DrazinAdjoint
@@ -84,4 +82,4 @@ theorem anomaly_generates_isometry
   exact ChiralAnomaly_is_SkewAdjoint G G_pinv D_inv k hMP hD hD_symm
 
 end KreinAnomaly
-end InfoGeometry.Singular.AnomalyGauge
+end InfoGeometry.Canonical.AnomalyGauge

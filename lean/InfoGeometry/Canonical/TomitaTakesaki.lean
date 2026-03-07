@@ -1,4 +1,4 @@
-import InfoGeometry.Clifford.Lift
+import InfoGeometry.Canonical.Clifford
 import InfoGeometry.Canonical.GrandCanonicalExperts
 
 namespace InfoGeometry.Canonical.TomitaTakesaki

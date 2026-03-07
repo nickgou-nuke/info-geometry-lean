@@ -1,5 +1,5 @@
 import Architect
-import InfoGeometry.Geometry.DualFlat
+import InfoGeometry.Canonical.Geometry
 
 namespace InfoGeometry.Canonical.Cayley
 

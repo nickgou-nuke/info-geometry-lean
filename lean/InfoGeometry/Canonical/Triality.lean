@@ -1,5 +1,5 @@
 import Architect
-import InfoGeometry.Clifford.SplitQ11
+import InfoGeometry.Canonical.Clifford
 import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Algebra.Module.Basic

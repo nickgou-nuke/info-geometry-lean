@@ -19,6 +19,12 @@ lean/all_lean_files_combined.lean
 *.txt
 
 # Documentation Output
-docs/
+docs/**
+!docs/
+!docs/auto/
+docs/auto/**
+!docs/auto/index.md
+!docs/*_synthesis.md
+!docs/testable_predictions.md
 docbuild/
 publication/

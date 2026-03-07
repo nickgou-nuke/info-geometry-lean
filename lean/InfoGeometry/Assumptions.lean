@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Assumptions.Determinant
-import InfoGeometry.Assumptions.DualConnections
+import InfoGeometry.Canonical.DualConnections
 import InfoGeometry.Assumptions.IB
 import InfoGeometry.Assumptions.LLN
 import InfoGeometry.Assumptions.ManifoldDegree

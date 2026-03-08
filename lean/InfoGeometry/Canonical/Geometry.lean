@@ -23,6 +23,7 @@ import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Geometry.DualFlat
 import InfoGeometry.Geometry.KreinAsHessian
 import InfoGeometry.Geometry.LegendreDuality
+import InfoGeometry.Canonical.ManifoldDegree
 
 /-!
 # InfoGeometry.Canonical.Geometry

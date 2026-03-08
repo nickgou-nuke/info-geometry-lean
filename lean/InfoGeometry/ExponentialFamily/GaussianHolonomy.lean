@@ -9,7 +9,7 @@ open Complex
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- 
+/--
 The Dirac Field associated with a Gaussian Family.
 At each point in parameter space, the field is the covariance operator Σ.
 In Information Geometry, this represents the local information metric.
@@ -20,18 +20,17 @@ noncomputable def gaussianDiracField (G : GaussianFamily E) : E → (E →L[ℝ]
 /--
 The Gaussian Wilson Holonomy (Discrete).
 Measures the information flux accumulated along a sequence of Gaussian parameter updates.
-Uses the path-ordered product of the matrix exponential of the covariance.
+Uses the trace of the integrated covariance (Fisher information) updates.
 -/
-noncomputable def gaussianWilsonLoopDiscrete (_G : GaussianFamily E) (_γ : List E) : ℂ :=
-  -- We model the operators as matrices in a finite-dimensional representation.
-  -- This traces the 'Information Phase' around the parameter loop.
-  -- Using a placeholder for the matrix trace/exp conversion
-  0
+noncomputable def gaussianWilsonLoopDiscrete (G : GaussianFamily E) (γ : List E) : ℂ :=
+  -- Trace of the sum of covariance-weighted updates along the path.
+  -- This represents the geometric phase accumulated in the information fiber.
+  exp (I * (γ.map (fun dμ => (inner ℝ dμ (G.sigma dμ) : ℂ))).sum)
 
 /--
 Gaussian Holonomy Invariance:
-For a Gaussian with constant covariance, the holonomy is simply the 
-exponential of the summed updates, illustrating the 'flat' nature 
+For a Gaussian with constant covariance, the holonomy is simply the
+exponential of the summed updates, illustrating the 'flat' nature
 of standard Gaussian information manifolds.
 -/
 theorem gaussian_holonomy_flat (G : GaussianFamily E) (_γ : List E) :

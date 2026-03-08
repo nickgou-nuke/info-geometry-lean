@@ -1,6 +1,5 @@
 import InfoGeometry
 import InfoGeometry.Canonical.All
-import InfoGeometry.Assumptions
 import InfoGeometry.Architecture.SpinFactor
 import InfoGeometry.Architecture.OctonionicFlow
 import InfoGeometry.Convex.SpinFactorHessian

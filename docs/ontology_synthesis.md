@@ -29,18 +29,7 @@ realized through a soldering map into matrix algebras (`M₂(ℝ)` / split quate
 
 Interpretation: space is the geometric shadow of algebraic information states.
 
-## 3. Unified Ontological Statement
-
-The framework gives a constructive ontology:
-
-1. Algebra and measure-theoretic dynamics are primary.
-2. Time emerges from monotone computational transport.
-3. Space emerges from matrix/soldering realizations of state relations.
-
-This aligns the canonical stack with a fully derived spacetime viewpoint:
-no fixed background manifold is assumed; geometry is produced by operator flow.
-
-## 4. Fluid Circulation as Chiral Anomaly Flow
+## 3. Fluid Circulation as Chiral Anomaly Flow
 
 `Canonical/NavierStokesBridge.lean` adds an operator-to-fluid bridge layer:
 
@@ -51,8 +40,21 @@ no fixed background manifold is assumed; geometry is produced by operator flow.
 - `hasDerivAt_modularVelocity_zero` and `deriv_modularVelocity_zero` identify
   the `β = 0` differential response of modular velocity with the modular
   Hamiltonian.
-- `chiral_anomaly_sources_flow` states that the commutator anomaly sources
+- `chiral_anomaly_sources_flow` states that commutator anomaly sources
   chiral flux in the doubled/Krein setting.
 
 Interpretation: circulation is encoded as anomaly-driven modular transport;
-chiral imbalance is a flow observable, not an added primitive.
+chiral imbalance appears as a flow observable.
+
+## 4. Unified Ontological Statement
+
+The framework gives a constructive ontology:
+
+1. Algebra and measure-theoretic dynamics are primary.
+2. Time emerges from monotone computational transport.
+3. Space emerges from matrix/soldering realizations of state relations.
+4. Fluid/chiral flow emerges from operator anomalies.
+
+This aligns the canonical stack with a fully derived spacetime-and-flow viewpoint:
+no fixed background manifold is assumed; geometry and flow are produced by
+operator dynamics and their commutator residues.

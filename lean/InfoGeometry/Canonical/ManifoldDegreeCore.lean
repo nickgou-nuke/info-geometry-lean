@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ManifoldHomologyCore
+import Mathlib.Analysis.Calculus.FDeriv.Basic
 import Mathlib.Data.Int.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -8,21 +9,18 @@ import Mathlib.Topology.Order
 /-!
 # InfoGeometry.Canonical.ManifoldDegreeCore
 
-Canonical manifold-degree primitives in explicit finite/discrete settings.
+Canonical manifold-degree primitives leveraging differential geometry.
+Transitioned from discrete surrogates to Jacobian-based local degree signs.
 -/
 
 namespace InfoGeometry.Canonical.ManifoldDegree
 
-variable {M : Type*}
+variable {M : Type*} [NormedAddCommGroup M] [NormedSpace ℝ M] [FiniteDimensional ℝ M]
 
-/-- On finite carriers, every fiber is finite. -/
-theorem preimage_finite (f : M → M) (y : M) [Fintype M] :
-    (f ⁻¹' ({y} : Set M)).Finite := by
-  exact Set.toFinite _
-
+set_option linter.unusedSectionVars false in
 /--
-In a discrete topology, singleton neighborhoods isolate a chosen preimage point.
-This gives a concrete replacement for the old assumption-backed isolation lemma.
+Isolating preimages in a discrete topology (legacy support).
+On a continuous manifold, this would be provided by the Inverse Function Theorem.
 -/
 theorem exists_isolating_nhds_of_discrete
     [TopologicalSpace M] (hdisc : DiscreteTopology M)
@@ -41,28 +39,28 @@ theorem exists_isolating_nhds_of_discrete
     · have hz' : z = x := by simpa using hz
       simp [hz', hx]
 
-/-- Integer-valued sign extracted from a Jacobian determinant in finite dimension. -/
-noncomputable def localDegreeSign {n : ℕ}
-    (A : Matrix (Fin n) (Fin n) ℝ) : ℤ :=
-  if 0 ≤ A.det then 1 else -1
+/--
+The local degree sign is the sign of the Jacobian determinant.
+This is the canonical definition for Phase 1.
+-/
+noncomputable def localDegreeSign (f : M → M) (x : M) : ℤ :=
+  InfoGeometry.Canonical.ManifoldHomology.localDegreeSign f x
 
-/-- The local degree sign always evaluates to `1` or `-1`. -/
-theorem localDegreeSign_eq_one_or_neg_one {n : ℕ}
-    (A : Matrix (Fin n) (Fin n) ℝ) :
-    localDegreeSign A = 1 ∨ localDegreeSign A = -1 := by
-  by_cases h : 0 ≤ A.det
-  · left
-    simp [localDegreeSign, h]
-  · right
-    simp [localDegreeSign, h]
+set_option linter.unusedSectionVars false in
+/--
+A point is a regular value if the Jacobian is non-vanishing at all preimages.
+-/
+theorem regularValue_of_nonvanishing_jacobian
+    (f : M → M) (y : M)
+    (h : ∀ x, f x = y → LinearMap.det (fderiv ℝ f x).toLinearMap ≠ 0) :
+    InfoGeometry.Canonical.ManifoldHomology.IsRegularValue f y := by
+  exact h
 
 /--
-If the fiber over `y` is finite, it is a regular value in the canonical manifold-homology core.
+Mapping degree at a regular value `y` with a finite fiber.
 -/
-theorem regularValue_of_finite_preimage
-    (f : M → M) (y : M)
-    (h : (f ⁻¹' ({y} : Set M)).Finite) :
-    InfoGeometry.Canonical.ManifoldHomology.IsRegularValue f y :=
-  h
+noncomputable def mappingDegree (f : M → M) (y : M) (hy : InfoGeometry.Canonical.ManifoldHomology.IsRegularValue f y)
+    (hfinite : (f ⁻¹' ({y} : Set M)).Finite) : ℤ :=
+  InfoGeometry.Canonical.ManifoldHomology.mappingDegree f y hy hfinite
 
 end InfoGeometry.Canonical.ManifoldDegree

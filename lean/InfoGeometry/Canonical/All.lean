@@ -62,6 +62,7 @@ import InfoGeometry.Canonical.CountSubstrateBridge
 import InfoGeometry.Canonical.CurvatureRGFlow
 import InfoGeometry.Canonical.DeepHorizon
 import InfoGeometry.Canonical.DiracRicciBridge
+import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DualConnections
 import InfoGeometry.Canonical.EmpiricalChecks

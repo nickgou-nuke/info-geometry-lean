@@ -31,6 +31,9 @@
   - Added:
     - `lean/InfoGeometry/Canonical/ManifoldDegreeCore.lean`
     - `lean/InfoGeometry/Canonical/ManifoldDegree.lean`
+  - Added:
+    - `lean/InfoGeometry/Canonical/DeterminantCore.lean`
+    - `lean/InfoGeometry/Canonical/Determinant.lean`
   - Wired canonical imports through `InfoGeometry.Canonical.All` and `InfoGeometry.Canonical.Geometry`.
 - Next:
-  - Phase 2 (Determinant/GL-SL surface).
+  - Phase 3 (surrogate hardening by subsystem).

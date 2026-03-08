@@ -102,6 +102,7 @@ import InfoGeometry.LLM.PositionalEncoding
 import InfoGeometry.LLM.TransformerBlock
 import InfoGeometry.Canonical.LLN
 import InfoGeometry.Canonical.LorentzianRouting
+import InfoGeometry.Canonical.ManifoldDegree
 import InfoGeometry.Canonical.ManifoldHomology
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.MoorePenrose

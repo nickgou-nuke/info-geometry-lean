@@ -172,47 +172,31 @@ noncomputable def ibIteration (prob : IBProblem (X := X) (Y := Y)) :
     (X → FinProb T) → (X → FinProb T) :=
   fun p => fun x => exponentialTilt (prob := prob) p x
 
-/-- Stationarity/Gibbs marker in this finite scaffold. -/
-def ib_stationary_point_gibbs (prob : IBProblem (X := X) (Y := Y))
+/--
+Stationarity condition: the kernel `p` is a fixed point of the IB iteration.
+This is equivalent to the Gibbs-distribution characterization of stationary points.
+-/
+def ib_stationary_point (prob : IBProblem (X := X) (Y := Y))
     (pT_givenX : X → FinProb T) : Prop :=
-  argmin_exponentialTilt (prob := prob) pT_givenX
+  ibIteration prob pT_givenX = pT_givenX
 
-/-- Theorem `ib_stationary_point_gibbs_true`. -/
-theorem ib_stationary_point_gibbs_true
-    (prob : IBProblem (X := X) (Y := Y))
+/--
+Monotonicity of the IB Lagrangian under the Blahut-Arimoto iteration.
+`L(ibIteration p) ≤ L(p)`.
+-/
+theorem ib_lagrangian_monotone (prob : IBProblem (X := X) (Y := Y))
     (pT_givenX : X → FinProb T) :
-    ib_stationary_point_gibbs (prob := prob) pT_givenX := by
-  exact argmin_exponentialTilt_true (prob := prob) pT_givenX
+    ibLagrangian prob (ibIteration prob pT_givenX) ≤ ibLagrangian prob pT_givenX := by
+  -- Monotonicity follows from the alternating minimization of the variational Lagrangian.
+  -- This is a non-trivial Information Theory result (Blahut-Arimoto style).
+  sorry
 
 /--
 Convergence marker in this finite scaffold:
-the self-kernel residual vanishes.
+the Lagrangian residual between iterations vanishes.
 -/
 def ib_convergence (prob : IBProblem (X := X) (Y := Y))
     (p_opt : X → FinProb T) : Prop :=
-  KLKernel
-      (pX := InfoGeometry.EntropicInference.marginalX (X := X) (Θ := Y) prob.pXY)
-      p_opt p_opt
-    = 0
-
-/-- Theorem `ib_convergence_true`. -/
-theorem ib_convergence_true
-    (prob : IBProblem (X := X) (Y := Y))
-    (p_opt : X → FinProb T) :
-    ib_convergence (prob := prob) p_opt := by
-  unfold ib_convergence KLKernel
-  refine Finset.sum_eq_zero ?_
-  intro x hx
-  simp [InfoGeometry.EntropicInference.KL_self]
-
-/-- A priori nonnegativity of the self-kernel residual. -/
-theorem ib_convergence_nonneg
-    (prob : IBProblem (X := X) (Y := Y))
-    (p_opt : X → FinProb T) :
-    0 ≤
-  KLKernel
-      (pX := InfoGeometry.EntropicInference.marginalX (X := X) (Θ := Y) prob.pXY)
-      p_opt p_opt := by
-  exact le_of_eq (ib_convergence_true (prob := prob) (p_opt := p_opt)).symm
+  ibLagrangian prob (ibIteration prob p_opt) = ibLagrangian prob p_opt
 
 end InfoGeometry.Canonical.IB

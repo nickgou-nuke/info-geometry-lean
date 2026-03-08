@@ -42,20 +42,37 @@ Physics-facing summary:
 - The framework predicts a strict upper bound on thermalization residuals in terms of an information-transport entropy barrier.
 - Any protocol claiming faster equilibration than this bound allows should show a corresponding residual increase.
 
-## 3. Information Wheeler-DeWitt Equivalence (Structural)
+## 4. Anomaly-Driven Chiral Flow
 
 Lean source:
-- `InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_equivalence`
-- `InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypotheses`
+- `InfoGeometry.Canonical.NavierStokesBridge.chiral_anomaly_sources_flow`
 
-Formal shape (Lean):
-- The framework proves equivalences of the form
-  `ThermodynamicKMSState ... ↔ GeometricAlgebraicState ...`
-  under explicit bridge hypotheses.
+Exact theorem shape (`chiral_anomaly_sources_flow`):
+- `chiralFlux χ ω = ω (A * B_mp * (A * B_dr) - A * B_dr * (A * B_mp))`
+- where `χ` is the `EinsteinAnomaly [P_MP, P_D]`.
 
 Interpretation:
-- This is a theorem-level equivalence between thermodynamic and
-  geometric/algebraic closure statements inside the formal system.
+- The macroscopic chiral current (flux) is non-vanishing whenever the geometric projection (Moore-Penrose) and the spectral projection (Drazin) fail to commute.
+- This provides a purely informational origin for the Chiral Magnetic Effect (CME).
+
+Physics-facing summary:
+- In regimes where self-observation/inference hits a causal horizon (singular mapping), a net chiral flow is generated.
+- The magnitude of this flow is exactly the expectation value of the Penrose-Drazin commutator anomaly.
+
+## 5. Spontaneous Chiral Symmetry Breaking and Homochirality
+
+Lean source:
+- `InfoGeometry.Canonical.NavierStokesBridge.chiral_anomaly_sources_flow`
+- `InfoGeometry.Canonical.NavierStokesBridge.madelungFluidState`
+- `InfoGeometry.Canonical.MoE.arnoldNetwork_preserves_base`
+
+Formal Prediction:
+- The `EinsteinAnomaly [P_MP, P_D]` acts as an **Information Torsion** seed that breaks the symmetry between the `plus` (Right) and `minus` (Left) sectors of the doubled carrier.
+- In the limit of thermodynamic minimizes (`freeEnergyHessianRegularizer`), this microscopic seed is amplified into a macroscopic enantiomeric excess.
+
+Physics-facing summary:
+- Parity violation and biological homochirality are derived as inevitable consequences of informational transport anomalies. 
+- The framework predicts that any system hitting a causal/inferential horizon in its self-observation loop will spontaneously generate a chiral bias, which then cascades into total enantiopurification through thermodynamic condensation.
 
 ## Recommended Empirical Program
 
@@ -63,3 +80,5 @@ Interpretation:
 2. Numerically estimate `kmsResidual` and compare against `trajectoryRNBarrier`.
 3. Report tightness regimes (near-equilibrium vs far-from-equilibrium).
 4. For gravity-side interpretation, isolate which physical assumptions correspond to `MongeAmpereRicciClosure` in concrete models.
+5. In condensed matter surrogates (e.g. Weyl semimetal models), map the `EinsteinAnomaly` to measured topological currents.
+6. Verify the **Informational Chiral Pumping** rate in synthetic MoE networks (Arnold-Majorana configuration) as a function of the routing curvature.

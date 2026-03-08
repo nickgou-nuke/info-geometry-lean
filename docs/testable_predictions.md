@@ -1,6 +1,6 @@
 # Testable Physical Predictions (Lean-Extracted)
 
-This note extracts two theorem-level predictions from the canonical Lean formalization into standard physics language.
+This note extracts three theorem-level predictions from the canonical Lean formalization into standard physics language.
 
 ## 1. Entropy-to-Gravity Closure
 
@@ -9,11 +9,10 @@ Lean source:
 - `InfoGeometry.Canonical.GrandSynthesis.vacuumEinsteinEquation_of_rnEntropySource`
 - `InfoGeometry.Canonical.CalabiYauBridge.vacuumEinsteinEquation_of_constantMongeAmpere`
 
-Formal shape (Lean): under assumptions
+Exact theorem shape (`gravity_generated_by_rnEntropy`):
 - `RNEntropySourcesMongeAmpere n Kgeo M`
 - `MongeAmpereRicciClosure R Kgeo`
-
-the framework derives
+and parameters `(Kgeo, R, x, Λ, M)`, it derives
 - `IsRicciFlat R`
 - `VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ`.
 
@@ -29,8 +28,10 @@ Physics-facing summary:
 Lean source:
 - `InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier`
 
-Formal shape (Lean):
-- Given `SinkhornKMSControl n T K ω β`, for each step `k` and observables `A,B`,
+Exact theorem shape (`sinkhornStepwise_kmsResidual_le_entropyBarrier`):
+- Inputs: trajectory `T`, modular operator `K`, state family `ω`,
+  inverse temperature `β`, and drive hypothesis `hDrive : SinkhornKMSControl n T K ω β`.
+- Output: `∀ k : Nat, ∀ A B : AlgebraEnd F,`
   `kmsResidual K (ω (k + 1)) β A B ≤ trajectoryRNBarrier n T k`.
 
 Interpretation:
@@ -40,6 +41,21 @@ Interpretation:
 Physics-facing summary:
 - The framework predicts a strict upper bound on thermalization residuals in terms of an information-transport entropy barrier.
 - Any protocol claiming faster equilibration than this bound allows should show a corresponding residual increase.
+
+## 3. Information Wheeler-DeWitt Equivalence (Structural)
+
+Lean source:
+- `InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_equivalence`
+- `InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypotheses`
+
+Formal shape (Lean):
+- The framework proves equivalences of the form
+  `ThermodynamicKMSState ... ↔ GeometricAlgebraicState ...`
+  under explicit bridge hypotheses.
+
+Interpretation:
+- This is a theorem-level equivalence between thermodynamic and
+  geometric/algebraic closure statements inside the formal system.
 
 ## Recommended Empirical Program
 

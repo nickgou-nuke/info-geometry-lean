@@ -1,1 +1,0 @@
-InterSpec is currently for official US government use only.

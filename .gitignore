@@ -29,3 +29,6 @@ docs/auto/**
 !docs/keyword_index.md
 docbuild/
 publication/
+
+# Accidental vendor payloads
+interspec_src/

@@ -20,6 +20,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import InfoGeometry.Krein.KreinSpace
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Krein.DoubledAdjoint
 import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Krein.Metric
 import InfoGeometry.Krein.Thermal

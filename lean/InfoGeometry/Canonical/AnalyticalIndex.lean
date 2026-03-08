@@ -2,6 +2,10 @@ import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.ChiralAnomaly
 import InfoGeometry.Canonical.KMSSinkhornBridge
 import InfoGeometry.Canonical.RicciMongeAmpere
+import Mathlib.Algebra.Module.LinearMap.Basic
+import Mathlib.Algebra.Module.Submodule.Ker
+import Mathlib.Algebra.Module.Submodule.Range
+import Mathlib.Algebra.Module.Submodule.Lattice
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.TensorProduct.Map
 
@@ -38,33 +42,118 @@ noncomputable def chiralPartMinus (D Γ : Endomorphism V) : Endomorphism V :=
 
 /--
 Analytical index surrogate:
-`Index(D) = dim ker(D⁺) - dim ker(D⁻)`.
+`Index(D) = dim(ker(D) ∩ Im(P₊)) - dim(ker(D) ∩ Im(P₋))`.
 -/
-noncomputable def analyticalIndex (D Γ : Endomorphism V) : ℤ :=
-  (Module.finrank ℝ (LinearMap.ker (chiralPartPlus D Γ)) : ℤ) -
-    (Module.finrank ℝ (LinearMap.ker (chiralPartMinus D Γ)) : ℤ)
+noncomputable def analyticalIndex [FiniteDimensional ℝ V] (D Γ : Endomorphism V) : ℤ :=
+  (Module.finrank ℝ (LinearMap.ker D ⊓ LinearMap.range (chiralProjectorPlus Γ) : Submodule ℝ V) : ℤ) -
+    (Module.finrank ℝ (LinearMap.ker D ⊓ LinearMap.range (chiralProjectorMinus Γ) : Submodule ℝ V) : ℤ)
 
-/-- Lemma `analyticalIndex_eq_of_chiralParts_eq`. -/
-lemma analyticalIndex_eq_of_chiralParts_eq
+/-- Chiral decomposition identity: `D⁺ + D⁻ = D`. -/
+lemma chiralPartPlus_add_chiralPartMinus (D Γ : Endomorphism V) :
+    chiralPartPlus D Γ + chiralPartMinus D Γ = D := by
+  ext v
+  rw [show (chiralPartPlus D Γ + chiralPartMinus D Γ) v
+        = D ((chiralProjectorPlus Γ + chiralProjectorMinus Γ) v) by
+          simp [chiralPartPlus, chiralPartMinus, map_add]]
+  have hproj :
+      (chiralProjectorPlus Γ + chiralProjectorMinus Γ) v = v := by
+    calc
+      (chiralProjectorPlus Γ + chiralProjectorMinus Γ) v
+          = (1 / 2 : ℝ) • (((LinearMap.id : Endomorphism V) + Γ) v) +
+              (1 / 2 : ℝ) • (((LinearMap.id : Endomorphism V) - Γ) v) := by
+                simp [chiralProjectorPlus, chiralProjectorMinus]
+      _ = (1 / 2 : ℝ) •
+            ((((LinearMap.id : Endomorphism V) + Γ) v) +
+              (((LinearMap.id : Endomorphism V) - Γ) v)) := by
+              rw [← smul_add]
+      _ = (1 / 2 : ℝ) • (v + v) := by
+            simp [sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+      _ = ((1 / 2 : ℝ) + (1 / 2 : ℝ)) • v := by
+            simpa using (add_smul (1 / 2 : ℝ) (1 / 2 : ℝ) v).symm
+      _ = (1 : ℝ) • v := by norm_num
+      _ = v := by simp
+  simp [hproj]
+
+/--
+If both chiral parts coincide, the corresponding Dirac endomorphisms coincide.
+
+This is exactly the identity `D = D ∘ P₊ + D ∘ P₋` with `P₊ + P₋ = Id`.
+-/
+lemma dirac_eq_of_chiralParts_eq
     (D Γ D' Γ' : Endomorphism V)
     (hplus : chiralPartPlus D Γ = chiralPartPlus D' Γ')
     (hminus : chiralPartMinus D Γ = chiralPartMinus D' Γ') :
+    D = D' := by
+  calc
+    D = chiralPartPlus D Γ + chiralPartMinus D Γ := by
+      symm
+      exact chiralPartPlus_add_chiralPartMinus (D := D) (Γ := Γ)
+    _ = chiralPartPlus D' Γ' + chiralPartMinus D' Γ' := by
+      rw [hplus, hminus]
+    _ = D' := chiralPartPlus_add_chiralPartMinus (D := D') (Γ := Γ')
+
+/-- Lemma `analyticalIndex_eq_of_chiralParts_eq`. -/
+lemma analyticalIndex_eq_of_chiralParts_eq
+    [FiniteDimensional ℝ V]
+    (D Γ D' Γ' : Endomorphism V)
+    (hplus : chiralPartPlus D Γ = chiralPartPlus D' Γ')
+    (hminus : chiralPartMinus D Γ = chiralPartMinus D' Γ')
+    (hRangePlus :
+      LinearMap.range (chiralProjectorPlus Γ) = LinearMap.range (chiralProjectorPlus Γ'))
+    (hRangeMinus :
+      LinearMap.range (chiralProjectorMinus Γ) = LinearMap.range (chiralProjectorMinus Γ')) :
     analyticalIndex D Γ = analyticalIndex D' Γ' := by
-  rw [analyticalIndex, analyticalIndex, hplus, hminus]
+  have hD : D = D' := dirac_eq_of_chiralParts_eq D Γ D' Γ' hplus hminus
+  subst hD
+  rw [analyticalIndex, analyticalIndex, hRangePlus, hRangeMinus]
 
 /-- Index invariance along a parameterized Dirac/grading family. -/
-def IndexInvariantAlong (D Γ : ℝ → Endomorphism V) : Prop :=
+def IndexInvariantAlong [FiniteDimensional ℝ V] (D Γ : ℝ → Endomorphism V) : Prop :=
   ∀ s : ℝ, analyticalIndex (D s) (Γ s) = analyticalIndex (D 0) (Γ 0)
 
-/-- Theorem `indexInvariantAlong_of_chiralPart_const`. -/
-theorem indexInvariantAlong_of_chiralPart_const
+/--
+Index invariance from pointwise constancy of the chiral parts and of the
+projector ranges.
+-/
+theorem indexInvariantAlong_of_chiralData_const
+    [FiniteDimensional ℝ V]
     (D Γ : ℝ → Endomorphism V)
     (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
-    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0)) :
+    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0))
+    (hRangePlus :
+      ∀ s : ℝ,
+        LinearMap.range (chiralProjectorPlus (Γ s)) =
+          LinearMap.range (chiralProjectorPlus (Γ 0)))
+    (hRangeMinus :
+      ∀ s : ℝ,
+        LinearMap.range (chiralProjectorMinus (Γ s)) =
+          LinearMap.range (chiralProjectorMinus (Γ 0))) :
     IndexInvariantAlong D Γ := by
   intro s
-  exact analyticalIndex_eq_of_chiralParts_eq (D := D s) (Γ := Γ s) (D' := D 0) (Γ' := Γ 0)
-    (hplus s) (hminus s)
+  exact analyticalIndex_eq_of_chiralParts_eq
+    (D := D s) (Γ := Γ s) (D' := D 0) (Γ' := Γ 0)
+    (hplus s) (hminus s) (hRangePlus s) (hRangeMinus s)
+
+/--
+Backward-compatible constant-family criterion.
+
+This derives the chiral-data hypotheses from pointwise constancy of `D` and `Γ`.
+-/
+theorem indexInvariantAlong_of_chiralPart_const
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (hD : ∀ s : ℝ, D s = D 0)
+    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
+    IndexInvariantAlong D Γ := by
+  refine indexInvariantAlong_of_chiralData_const (D := D) (Γ := Γ) ?_ ?_ ?_ ?_
+  · intro s
+    simp [chiralPartPlus, hD s, hΓ s]
+  · intro s
+    simp [chiralPartMinus, hD s, hΓ s]
+  · intro s
+    simp [hΓ s]
+  · intro s
+    simp [hΓ s]
 
 end Core
 
@@ -81,6 +170,7 @@ def globalGrading (Γ1 : Endomorphism E) (Γn : Endomorphism F) :
 
 /-- Analytical index of the Bott-Dirac operator with chosen grading pair. -/
 noncomputable def bottAnalyticalIndex
+    [FiniteDimensional ℝ (E ⊗[ℝ] F)]
     (D1 Γ1 : Endomorphism E) (Dn Γn : Endomorphism F) : ℤ :=
   analyticalIndex (bottDirac D1 Γ1 Dn) (globalGrading Γ1 Γn)
 
@@ -90,7 +180,9 @@ def cl11GlobalGrading (Γn : Endomorphism F) :
   globalGrading (cl11Grading (E := E)) Γn
 
 /-- `Cl(1,1)` specialization of the Bott analytical index. -/
-noncomputable def cl11BottAnalyticalIndex (Dn Γn : Endomorphism F) : ℤ :=
+noncomputable def cl11BottAnalyticalIndex
+    [FiniteDimensional ℝ (DoubledSpace E ⊗[ℝ] F)]
+    (Dn Γn : Endomorphism F) : ℤ :=
   analyticalIndex
     (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn)
     (cl11GlobalGrading (E := E) Γn)
@@ -122,7 +214,7 @@ section CoupledInvariant
 variable (n : Nat)
 variable {X V : Type*}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
-  [AddCommGroup V] [Module ℝ V]
+  [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
 
 /--
 Coupled invariant package:
@@ -139,21 +231,38 @@ def SinkhornRicciIndexInvariant
     ∧ (∀ s : ℝ, flow s = 0)
     ∧ IndexInvariantAlong D Γ
 
-/-- Theorem `sinkhornRicciIndexInvariant_of_hypotheses`. -/
+/--
+Constructive Sinkhorn-Ricci-index package from explicit normalized-flow and
+constant-family hypotheses.
+-/
+theorem sinkhornRicciIndexInvariant_of_constructive_hypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hD : ∀ s : ℝ, D s = D 0)
+    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
+    SinkhornRicciIndexInvariant n T flow D Γ := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro k label
+    exact sinkhorn_dynamics_step_control (n := n) T k label
+  · refine normalizedKaehlerRicci_fixedpoint_eq_zero (E := X) flow hNorm hFixed
+  · exact indexInvariantAlong_of_chiralPart_const (D := D) (Γ := Γ) hD hΓ
+
+/-- Backward-compatible wrapper. -/
 theorem sinkhornRicciIndexInvariant_of_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
-    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0)) :
-    SinkhornRicciIndexInvariant n T flow D Γ := by
-  refine ⟨?_, ?_, ?_⟩
-  · intro k label
-    exact sinkhorn_dynamics_step_control (n := n) T k label
-  · exact normalizedKaehlerRicci_fixedpoint_eq_zero (E := X) flow hNorm hFixed
-  · exact indexInvariantAlong_of_chiralPart_const (D := D) (Γ := Γ) hplus hminus
+    (hD : ∀ s : ℝ, D s = D 0)
+    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
+    SinkhornRicciIndexInvariant n T flow D Γ :=
+  sinkhornRicciIndexInvariant_of_constructive_hypotheses
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    hNorm hFixed hD hΓ
 
 end CoupledInvariant
 
@@ -279,6 +388,7 @@ index invariance follows from a concrete Bott-Dirac flow model, without
 assuming chiral-part constancy as external hypotheses.
 -/
 theorem ConcreteCl11BottFlow.indexInvariant
+    [FiniteDimensional ℝ (DoubledSpace E ⊗[ℝ] F)]
     (B : ConcreteCl11BottFlow F) :
     IndexInvariantAlong
       (concreteDiracFamily (E := E) B)
@@ -286,8 +396,8 @@ theorem ConcreteCl11BottFlow.indexInvariant
   exact indexInvariantAlong_of_chiralPart_const
     (D := concreteDiracFamily (E := E) B)
     (Γ := concreteGradingFamily (E := E) B)
-    (concreteChiralPartPlus_const (E := E) B)
-    (concreteChiralPartMinus_const (E := E) B)
+    (by intro s; simp [concreteDiracFamily, B.Dn_const s])
+    (by intro s; simp [concreteGradingFamily, B.Γn_const s])
 
 end ConcreteFlow
 
@@ -296,7 +406,7 @@ section FullCapstone
 variable (n : Nat)
 variable {X V Fth : Type}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
-  [AddCommGroup V] [Module ℝ V]
+  [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
   [NormedAddCommGroup Fth] [NormedSpace ℝ Fth]
 
 /--
@@ -313,7 +423,31 @@ def FullThermoGeoIndexCapstone
   SinkhornRicciIndexInvariant n T flow D Γ ∧
     SinkhornKMSCapstone n T.traj K ω β
 
-/-- Theorem `fullThermoGeoIndexCapstone_of_hypotheses`. -/
+/--
+Constructive full capstone package:
+thermodynamic/KMS drive + normalized Ricci fixed-point + constant Dirac/grading families.
+-/
+theorem fullThermoGeoIndexCapstone_of_constructive_hypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd Fth)
+    (ω : Nat → AlgebraEnd Fth →L[ℝ] ℝ)
+    (β : ℝ)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hD : ∀ s : ℝ, D s = D 0)
+    (hΓ : ∀ s : ℝ, Γ s = Γ 0)
+    (hDrive : SinkhornKMSControl n T.traj K ω β) :
+    FullThermoGeoIndexCapstone n T flow D Γ K ω β := by
+  refine ⟨?_, ?_⟩
+  · exact sinkhornRicciIndexInvariant_of_constructive_hypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      hNorm hFixed hD hΓ
+  · exact sinkhornKMSCapstone_of_drive
+      (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hDrive
+
+/-- Backward-compatible wrapper. -/
 theorem fullThermoGeoIndexCapstone_of_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
@@ -323,16 +457,14 @@ theorem fullThermoGeoIndexCapstone_of_hypotheses
     (β : ℝ)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
-    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0))
+    (hD : ∀ s : ℝ, D s = D 0)
+    (hΓ : ∀ s : ℝ, Γ s = Γ 0)
     (hDrive : SinkhornKMSControl n T.traj K ω β) :
-    FullThermoGeoIndexCapstone n T flow D Γ K ω β := by
-  refine ⟨?_, ?_⟩
-  · exact sinkhornRicciIndexInvariant_of_hypotheses
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      hNorm hFixed hplus hminus
-  · exact sinkhornKMSCapstone_of_drive
-      (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hDrive
+    FullThermoGeoIndexCapstone n T flow D Γ K ω β :=
+  fullThermoGeoIndexCapstone_of_constructive_hypotheses
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (ω := ω) (β := β)
+    hNorm hFixed hD hΓ hDrive
 
 /-- Lemma `FullThermoGeoIndexCapstone`. -/
 lemma FullThermoGeoIndexCapstone.geometricAlgebraicState
@@ -365,7 +497,7 @@ section UnifiedNaming
 variable (n : Nat)
 variable {X V Fth : Type}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
-  [AddCommGroup V] [Module ℝ V]
+  [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
   [NormedAddCommGroup Fth] [NormedSpace ℝ Fth]
 
 /--

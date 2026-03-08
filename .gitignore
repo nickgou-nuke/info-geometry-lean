@@ -26,5 +26,6 @@ docs/auto/**
 !docs/auto/index.md
 !docs/*_synthesis.md
 !docs/testable_predictions.md
+!docs/keyword_index.md
 docbuild/
 publication/

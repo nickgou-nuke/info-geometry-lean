@@ -1,5 +1,11 @@
 import InfoGeometry.Projective.ProjectiveMap
 
+/-!
+# InfoGeometry.Projective.Dynamics
+
+Projective dynamical maps induced by the doubled-space `Cl(1,1)` operators.
+-/
+
 namespace InfoGeometry.Projective.Dynamics
 end InfoGeometry.Projective.Dynamics
 

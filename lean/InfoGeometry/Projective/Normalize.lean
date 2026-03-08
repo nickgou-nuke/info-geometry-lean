@@ -1,5 +1,11 @@
 import InfoGeometry.Projective.Projective
 
+/-!
+# InfoGeometry.Projective.Normalize
+
+Normalization of positive measures modulo projective ray equivalence.
+-/
+
 namespace InfoGeometry.Projective.Normalize
 end InfoGeometry.Projective.Normalize
 

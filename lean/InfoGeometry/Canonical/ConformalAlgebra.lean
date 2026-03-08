@@ -80,6 +80,7 @@ theorem scale_anomaly_emergence
   simpa [SatisfiesFlatWeights, SatisfiesPWeight, SatisfiesKWeight] using CBA.anomaly_breaks_weights
 
 omit [FiniteDimensional ℝ E] in
+/-- Theorem `scale_anomaly_breaks_weight_closure`. -/
 theorem scale_anomaly_breaks_weight_closure
     : CBA.CI.chiralScale > 0 → ¬ CBA.ConformalWeightClosure :=
   CBA.scale_anomaly_emergence

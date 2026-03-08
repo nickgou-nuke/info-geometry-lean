@@ -1,0 +1,13 @@
+[submodule "external_libs/SandiaDecay"]
+	path = external_libs/SandiaDecay
+	url = https://github.com/sandialabs/SandiaDecay.git
+	branch = master
+[submodule "external_libs/SpecUtils"]
+	path = external_libs/SpecUtils
+	url = https://github.com/sandialabs/SpecUtils.git
+[submodule "external_libs/QR-Code-generator"]
+	path = external_libs/QR-Code-generator
+	url = https://github.com/nayuki/QR-Code-generator.git
+[submodule "target/ios/InterSpec/3rd_party/ios-cmake"]
+	path = target/ios/InterSpec/3rd_party/ios-cmake
+	url = https://github.com/leetal/ios-cmake.git

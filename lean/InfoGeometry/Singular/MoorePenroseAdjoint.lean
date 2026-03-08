@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Algebra.Ring.Basic
 
 namespace InfoGeometry.Singular.MoorePenroseAdjoint
 

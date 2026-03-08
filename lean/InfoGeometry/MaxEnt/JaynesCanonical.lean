@@ -15,6 +15,7 @@ A (finite) probability distribution on `Ω` as a function `Ω → ℝ`
 with nonnegativity and total mass `1`.
 -/
 
+/-- A finite probability distribution used by the local Jaynes canonical layer. -/
 structure ProbDist (Ω : Type) [Fintype Ω] where
   f : Ω → ℝ
   nonneg : ∀ i, 0 ≤ f i
@@ -52,17 +53,20 @@ noncomputable def totalCount (counts : Ω → ℕ) : ℕ :=
 noncomputable def multiplicity (counts : Ω → ℕ) : ℕ :=
   Nat.multinomial Finset.univ counts
 
+/-- Multinomial multiplicity is strictly positive. -/
 lemma multiplicity_pos (counts : Ω → ℕ) :
     0 < multiplicity counts := by
   simpa [multiplicity] using
     (Nat.multinomial_pos (s := (Finset.univ : Finset Ω)) (f := counts))
 
+/-- Multinomial specification identity for multiplicity. -/
 lemma multiplicity_spec (counts : Ω → ℕ) :
     (∏ i, Nat.factorial (counts i)) * multiplicity counts
       = Nat.factorial (totalCount counts) := by
   simpa [multiplicity, totalCount] using
     (Nat.multinomial_spec (s := (Finset.univ : Finset Ω)) (f := counts))
 
+/-- Multinomial multiplicity is at least one. -/
 lemma multiplicity_one_le (counts : Ω → ℕ) :
     1 ≤ multiplicity counts :=
   Nat.succ_le_of_lt (multiplicity_pos counts)
@@ -71,6 +75,7 @@ lemma multiplicity_one_le (counts : Ω → ℕ) :
 noncomputable def logMultiplicity (counts : Ω → ℕ) : ℝ :=
   Real.log (multiplicity counts)
 
+/-- Log-multiplicity is nonnegative. -/
 lemma logMultiplicity_nonneg (counts : Ω → ℕ) :
     0 ≤ logMultiplicity counts := by
   unfold logMultiplicity
@@ -104,6 +109,7 @@ def AsymptoticEquipartition
 ### 3. Linear Constraints and the Feasible Set
 -/
 
+/-- A single affine expectation constraint `A·p = d`. -/
 structure LinearConstraint (Ω : Type u) [Fintype Ω] where
   A : Ω → ℝ  -- observable
   d : ℝ      -- target expectation

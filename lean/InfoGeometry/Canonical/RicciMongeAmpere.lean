@@ -97,10 +97,12 @@ noncomputable def ricci : RicciTensor E :=
 @[simp] lemma ricci_apply (u v : E) :
     S.ricci u v = S.H.metric S.x0 u v := rfl
 
+/-- Lemma `ricci_symmetric`. -/
 lemma ricci_symmetric (u v : E) :
     S.ricci u v = S.ricci v u := by
   simpa [ricci] using S.symmetric u v
 
+/-- Lemma `ricci_nonneg_diag`. -/
 lemma ricci_nonneg_diag (u : E) :
     0 ≤ S.ricci u u := by
   simpa [ricci] using S.nonneg u
@@ -204,17 +206,20 @@ def SatisfiesNormalizedKaehlerRicciFlow
     (flow : ScalarRicciFlow E) : Prop :=
   SatisfiesKaehlerRicciEvolution (E := E) flow (fun s => - flow s)
 
+/-- Lemma `satisfiesKaehlerRicciEvolution_iff`. -/
 lemma satisfiesKaehlerRicciEvolution_iff
     (flow : ScalarRicciFlow E) (rhs : ℝ → ℝ) :
     SatisfiesKaehlerRicciEvolution (E := E) flow rhs
       ↔ ∀ s : ℝ, scalarRicciBetaFunction (E := E) flow s = rhs s := Iff.rfl
 
+/-- Lemma `kaehlerRicciEvolution_beta_eq`. -/
 lemma kaehlerRicciEvolution_beta_eq
     (flow : ScalarRicciFlow E) (rhs : ℝ → ℝ)
     (hEvo : SatisfiesKaehlerRicciEvolution (E := E) flow rhs) (s : ℝ) :
     scalarRicciBetaFunction (E := E) flow s = rhs s :=
   hEvo s
 
+/-- Lemma `normalizedKaehlerRicci_beta_eq_neg`. -/
 lemma normalizedKaehlerRicci_beta_eq_neg
     (flow : ScalarRicciFlow E)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow) (s : ℝ) :
@@ -285,12 +290,14 @@ def IsEinsteinKaehlerAtWith
     (c : ℝ) (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E) : Prop :=
   ∀ u v : E, R u v = c * K.H.metric x u v
 
+/-- Lemma `isEinsteinKaehlerAtWith_to_exists`. -/
 lemma isEinsteinKaehlerAtWith_to_exists
     (c : ℝ) (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (h : IsEinsteinKaehlerAtWith c R K x) :
     IsEinsteinKaehlerAt R K x := by
   exact ⟨c, h⟩
 
+/-- Lemma `einsteinTensor_eq_metric_multiple_of_einsteinKaehlerWith`. -/
 lemma einsteinTensor_eq_metric_multiple_of_einsteinKaehlerWith
     (c : ℝ) (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (scalar : ℝ) (hEin : IsEinsteinKaehlerAtWith c R K x) :
@@ -440,6 +447,7 @@ def CurvatureTwoFormCompatibleWithEinstein
       = transportedEinsteinResidual (R := R) (K := K) (x := x)
           (scalar := scalar) (Λ := Λ) V Γ • w
 
+/-- Lemma `vacuumEinsteinAt_implies_on_transportedSplit`. -/
 lemma vacuumEinsteinAt_implies_on_transportedSplit
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (scalar Λ : ℝ)
@@ -449,6 +457,7 @@ lemma vacuumEinsteinAt_implies_on_transportedSplit
   unfold VacuumEinsteinOnTransportedSplit transportedEinsteinResidual
   simpa using hVac (Γ.transport V.ePlus) (Γ.transport V.eMinus)
 
+/-- Lemma `curvature_action_zero_of_vacuum_on_transportedSplit`. -/
 lemma curvature_action_zero_of_vacuum_on_transportedSplit
     (Ω : E → E → E →ₗ[ℝ] E)
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
@@ -462,6 +471,7 @@ lemma curvature_action_zero_of_vacuum_on_transportedSplit
   rw [hVacSplit]
   simp
 
+/-- Lemma `vacuum_on_transportedSplit_of_curvature_action_zero`. -/
 lemma vacuum_on_transportedSplit_of_curvature_action_zero
     (Ω : E → E → E →ₗ[ℝ] E)
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
@@ -607,17 +617,20 @@ def SatisfiesMongeAmperePotential (H : HessianGeometry E) (Φ : E → ℝ) : Pro
   ∀ x : E, mongeAmpereDensity H x = Real.exp (Φ x)
 
 omit [FiniteDimensional ℝ E] in
+/-- Lemma `satisfiesMongeAmpere_iff`. -/
 lemma satisfiesMongeAmpere_iff
     (H : HessianGeometry E) (ρ : E → ℝ) :
     SatisfiesMongeAmpere H ρ ↔ ∀ x : E, mongeAmpereDensity H x = ρ x := Iff.rfl
 
 omit [FiniteDimensional ℝ E] in
+/-- Lemma `satisfiesMongeAmperePotential_iff`. -/
 lemma satisfiesMongeAmperePotential_iff
     (H : HessianGeometry E) (Φ : E → ℝ) :
     SatisfiesMongeAmperePotential H Φ ↔
       ∀ x : E, mongeAmpereDensity H x = Real.exp (Φ x) := Iff.rfl
 
 omit [FiniteDimensional ℝ E] in
+/-- Lemma `mongeAmpereDensity_pos`. -/
 lemma mongeAmpereDensity_pos (H : HessianGeometry E) (x : E) :
     0 < mongeAmpereDensity H x := by
   unfold mongeAmpereDensity
@@ -628,6 +641,7 @@ noncomputable def spectralMongeAmpereDensity (IST : InfoSpectralTriple E) : ℝ 
   mongeAmpereDensity IST.H IST.x₀
 
 omit [FiniteDimensional ℝ E] in
+/-- Lemma `spectralMongeAmpereDensity_eq_exp_spectralVolume`. -/
 lemma spectralMongeAmpereDensity_eq_exp_spectralVolume (IST : InfoSpectralTriple E) :
     spectralMongeAmpereDensity IST = Real.exp (spectralVolume IST) := rfl
 
@@ -636,6 +650,7 @@ def MongeAmpereConsistentWithHeatKernel (IST : InfoSpectralTriple E) : Prop :=
   spectralMongeAmpereDensity IST = Real.exp (a0 IST)
 
 omit [FiniteDimensional ℝ E] in
+/-- Lemma `mongeAmpereConsistentWithHeatKernel`. -/
 lemma mongeAmpereConsistentWithHeatKernel (IST : InfoSpectralTriple E) :
     MongeAmpereConsistentWithHeatKernel IST := by
   unfold MongeAmpereConsistentWithHeatKernel

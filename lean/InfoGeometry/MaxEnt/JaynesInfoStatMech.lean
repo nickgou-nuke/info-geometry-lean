@@ -56,7 +56,7 @@ def IsFeasible (P : ProbDist Ω) (C : ConstraintFamily ι Ω) : Prop :=
 
 /-!
 ## 3. The exponential family (partition function, MaxEnt distribution)
-Jaynes’ general solution: `p(ω) ∝ exp(-∑ r λ_r f_r(ω))`.
+Jaynes’ general solution: `p(ω) ∝ exp(-∑ r lam_r f_r(ω))`.
 -/
 
 
@@ -95,11 +95,20 @@ noncomputable def maxEntDist (C : ConstraintFamily ι Ω) (lam : ι → ℝ) : P
   have Z_ne : partitionFunction C lam ≠ 0 := ne_of_gt Z_pos
   exact {
     p := fun ω => weight C lam ω / partitionFunction C lam,
-    nonneg := fun ω => div_nonneg (le_of_lt (Real.exp_pos (-(∑ r, lam r * C.f r ω)))) (le_of_lt Z_pos),
+    nonneg := fun ω =>
+      div_nonneg
+        (le_of_lt (Real.exp_pos (-(∑ r, lam r * C.f r ω))))
+        (le_of_lt Z_pos),
     sum_one := by
       calc
         (∑ ω, weight C lam ω / partitionFunction C lam)
-          = (∑ ω, weight C lam ω) / partitionFunction C lam := (Finset.sum_div (s := (Finset.univ : Finset Ω)) (f := fun ω => weight C lam ω) (a := partitionFunction C lam)).symm
+          = (∑ ω, weight C lam ω) / partitionFunction C lam := by
+              symm
+              simpa using
+                (Finset.sum_div
+                  (s := (Finset.univ : Finset Ω))
+                  (f := fun ω => weight C lam ω)
+                  (a := partitionFunction C lam))
         _ = partitionFunction C lam / partitionFunction C lam := rfl
         _ = 1 := div_self Z_ne
   }
@@ -177,6 +186,7 @@ noncomputable def gibbsWeight (H : DiagObservable n) (β : ℝ) (i : Fin n) : �
 noncomputable def partitionFunction (H : DiagObservable n) (β : ℝ) : ℝ :=
   ∑ i, gibbsWeight H β i
 
+/-- The diagonal thermal partition function is strictly positive. -/
 theorem partitionFunction_pos (H : DiagObservable n) (β : ℝ) :
     0 < partitionFunction H β := by
   classical
@@ -190,6 +200,7 @@ theorem partitionFunction_pos (H : DiagObservable n) (β : ℝ) :
         exact Real.exp_pos _)
       Finset.univ_nonempty)
 
+/-- The diagonal thermal partition function is nonzero. -/
 lemma partitionFunction_ne_zero (H : DiagObservable n) (β : ℝ) :
     partitionFunction H β ≠ 0 :=
   (partitionFunction_pos H β).ne'
@@ -202,15 +213,18 @@ noncomputable def logPartition (H : DiagObservable n) (β : ℝ) : ℝ :=
 noncomputable def gibbsProb (H : DiagObservable n) (β : ℝ) (i : Fin n) : ℝ :=
   gibbsWeight H β i / partitionFunction H β
 
+/-- Diagonal Gibbs probabilities are strictly positive. -/
 lemma gibbsProb_pos (H : DiagObservable n) (β : ℝ) (i : Fin n) :
     0 < gibbsProb H β i := by
   unfold gibbsProb gibbsWeight
   exact div_pos (Real.exp_pos _) (partitionFunction_pos H β)
 
+/-- Diagonal Gibbs probabilities are nonnegative. -/
 lemma gibbsProb_nonneg (H : DiagObservable n) (β : ℝ) (i : Fin n) :
     0 ≤ gibbsProb H β i :=
   (gibbsProb_pos H β i).le
 
+/-- Diagonal Gibbs probabilities normalize to one. -/
 lemma gibbsProb_sum_one (H : DiagObservable n) (β : ℝ) :
     (∑ i, gibbsProb H β i) = 1 := by
   unfold gibbsProb
@@ -287,6 +301,7 @@ noncomputable def gibbsStateDiag
   ∑ i, gibbsProb H β i * a i
 
 omit [Nonempty (Fin n)] in
+/-- Matrix and diagonal Gibbs states agree on diagonal observables. -/
 lemma gibbsStateMatrix_on_diag
     (H : DiagObservable n) (β : ℝ) (a : DiagObservable n) :
     gibbsStateMatrix H β (diagMatrix a) = gibbsStateDiag H β a := by
@@ -390,6 +405,7 @@ noncomputable def modularShiftDiag
   fun i => modularConj H t (diagMatrix a) i i
 
 omit [Nonempty (Fin n)] in
+/-- The diagonal modular shift acts trivially on diagonal observables. -/
 lemma modularShiftDiag_eq
     (H : DiagObservable n) (t : ℝ) (a : DiagObservable n) :
     modularShiftDiag H t a = a := by

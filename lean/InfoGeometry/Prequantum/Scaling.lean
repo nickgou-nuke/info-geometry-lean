@@ -1,5 +1,11 @@
 import Mathlib.Tactic
 
+/-!
+# InfoGeometry.Prequantum.Scaling
+
+Scalarized prequantum scaling laws relating curvature, symplectic scale, and `ℏ`.
+-/
+
 namespace InfoGeometry.Prequantum.Scaling
 end InfoGeometry.Prequantum.Scaling
 

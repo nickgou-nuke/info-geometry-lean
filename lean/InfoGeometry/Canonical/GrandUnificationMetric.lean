@@ -18,6 +18,7 @@ g_x(u, v) = ⟨D(gradK)_x(u), v⟩
 noncomputable def g (J : JordanKKTData E) (x : E) (u v : E) : ℝ :=
   inner ℝ (J.metric x u) v
 
+/-- Structure `MetricLaws`. -/
 structure MetricLaws (J : JordanKKTData E) : Prop where
   metric_symm : ∀ x u v, J.g x u v = J.g x v u
   bregman_local : ∀ x u,

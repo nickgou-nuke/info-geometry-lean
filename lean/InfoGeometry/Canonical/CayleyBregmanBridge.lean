@@ -5,6 +5,7 @@ namespace InfoGeometry.Canonical.Cayley
 
 open InfoGeometry.Geometry.DualFlat
 
+/-- Structure `Bridge`. -/
 @[blueprint "def:cayley-bridge"]
 structure Bridge (U B : Type*) where
   toBounded   : U → B
@@ -18,6 +19,7 @@ abbrev CayleyBridge (U B : Type*) := Bridge U B
 /-- Canonical naming alias for a Cayley transport equivalence. -/
 abbrev CayleyEquivalence (U B : Type*) := CayleyBridge U B
 
+/-- Structure `CompatibleDualFlat`. -/
 @[blueprint "def:compatible-dual-flat"]
 structure CompatibleDualFlat
     {U B : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]
@@ -41,12 +43,14 @@ abbrev CayleyDualFlatCompatibility
     (C : CayleyBridge U B) (SU : DualFlatStructure U) :=
   CayleyCompatibleDualFlat C SU
 
+/-- Definition `cayleyIdentityBridge`. -/
 def cayleyIdentityBridge (E : Type*) : CayleyBridge E E where
   toBounded x := x
   toUnbounded x := x
   left_inv _ := rfl
   right_inv _ := rfl
 
+/-- Definition `cayleyIdentityCompatibleGeometry`. -/
 def cayleyIdentityCompatibleGeometry
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (S : DualFlatStructure E) : CayleyCompatibleDualFlat (cayleyIdentityBridge E) S where
@@ -68,6 +72,7 @@ abbrev identityCompatibleGeometry
 attribute [deprecated cayleyIdentityCompatibleGeometry (since := "2026-02-26")]
   identityCompatibleGeometry
 
+/-- Theorem `cayley_pythagorean_invariance`. -/
 @[blueprint "thm:cayley-pythagorean-invariance"]
 theorem cayley_pythagorean_invariance
     {U B : Type*} [NormedAddCommGroup U] [InnerProductSpace ℝ U] [CompleteSpace U]

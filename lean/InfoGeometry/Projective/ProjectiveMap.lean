@@ -1,6 +1,12 @@
 import InfoGeometry.Projective.Rays
 import InfoGeometry.Clifford.Grading
 
+/-!
+# InfoGeometry.Projective.ProjectiveMap
+
+Descent of doubled-space linear maps to the projective ray quotient.
+-/
+
 section KreinClifford
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]

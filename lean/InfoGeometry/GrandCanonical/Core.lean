@@ -70,7 +70,8 @@ lemma gibbsWeight_sum_one
     ne_of_gt (partition_pos params β)
   calc
     ∑ x : α, Real.exp (-β * params.energy x) / ∑ y : α, Real.exp (-β * params.energy y)
-        = (∑ x : α, Real.exp (-β * params.energy x)) / ∑ y : α, Real.exp (-β * params.energy y) := by
+        = (∑ x : α, Real.exp (-β * params.energy x)) /
+            ∑ y : α, Real.exp (-β * params.energy y) := by
             symm
             simpa using
               (Finset.sum_div
@@ -219,11 +220,13 @@ lemma secondMoment_eq_secondMomentUnnormalized_div_partition
   have hZne : partition params β ≠ 0 := ne_of_gt (partition_pos params β)
   calc
     ∑ x, (Real.exp (-β * params.energy x) / partition params β) * params.energy x ^ (2 : ℕ)
-        = ∑ x, (params.energy x ^ (2 : ℕ) * Real.exp (-β * params.energy x)) / partition params β := by
+        = ∑ x, (params.energy x ^ (2 : ℕ) * Real.exp (-β * params.energy x)) /
+            partition params β := by
             refine Finset.sum_congr rfl ?_
             intro x hx
             field_simp [hZne]
-    _ = (∑ x, params.energy x ^ (2 : ℕ) * Real.exp (-β * params.energy x)) / partition params β := by
+    _ = (∑ x, params.energy x ^ (2 : ℕ) * Real.exp (-β * params.energy x)) /
+          partition params β := by
           symm
           simpa using
             (Finset.sum_div
@@ -464,8 +467,10 @@ lemma gibbsWeightGC_sum_one
   have hZne : (∑ y : α, Real.exp (-β * shiftedEnergy params μ y)) ≠ 0 :=
     ne_of_gt (partitionGC_pos params β μ)
   calc
-    ∑ x : α, Real.exp (-β * shiftedEnergy params μ x) / ∑ y : α, Real.exp (-β * shiftedEnergy params μ y)
-        = (∑ x : α, Real.exp (-β * shiftedEnergy params μ x)) / ∑ y : α, Real.exp (-β * shiftedEnergy params μ y) := by
+    ∑ x : α, Real.exp (-β * shiftedEnergy params μ x) /
+        ∑ y : α, Real.exp (-β * shiftedEnergy params μ y)
+        = (∑ x : α, Real.exp (-β * shiftedEnergy params μ x)) /
+            ∑ y : α, Real.exp (-β * shiftedEnergy params μ y) := by
             symm
             simpa using
               (Finset.sum_div
@@ -558,12 +563,15 @@ lemma meanShift_eq_firstShift_div_partition
   unfold meanShift firstShiftUnnormalized gibbsWeightGC
   have hZne : partitionGC params β μ ≠ 0 := ne_of_gt (partitionGC_pos params β μ)
   calc
-    ∑ x, (Real.exp (-β * shiftedEnergy params μ x) / partitionGC params β μ) * shiftedEnergy params μ x
-        = ∑ x, (shiftedEnergy params μ x * Real.exp (-β * shiftedEnergy params μ x)) / partitionGC params β μ := by
+    ∑ x, (Real.exp (-β * shiftedEnergy params μ x) / partitionGC params β μ) *
+        shiftedEnergy params μ x
+        = ∑ x, (shiftedEnergy params μ x * Real.exp (-β * shiftedEnergy params μ x)) /
+            partitionGC params β μ := by
             refine Finset.sum_congr rfl ?_
             intro x hx
             field_simp [hZne]
-    _ = (∑ x, shiftedEnergy params μ x * Real.exp (-β * shiftedEnergy params μ x)) / partitionGC params β μ := by
+    _ = (∑ x, shiftedEnergy params μ x * Real.exp (-β * shiftedEnergy params μ x)) /
+          partitionGC params β μ := by
           symm
           simpa using
             (Finset.sum_div
@@ -665,11 +673,13 @@ lemma meanNumber_eq_firstNumber_div_partition
   have hZne : partitionGC params β μ ≠ 0 := ne_of_gt (partitionGC_pos params β μ)
   calc
     ∑ x, (Real.exp (-β * shiftedEnergy params μ x) / partitionGC params β μ) * params.number x
-        = ∑ x, (params.number x * Real.exp (-β * shiftedEnergy params μ x)) / partitionGC params β μ := by
+        = ∑ x, (params.number x * Real.exp (-β * shiftedEnergy params μ x)) /
+            partitionGC params β μ := by
             refine Finset.sum_congr rfl ?_
             intro x hx
             field_simp [hZne]
-    _ = (∑ x, params.number x * Real.exp (-β * shiftedEnergy params μ x)) / partitionGC params β μ := by
+    _ = (∑ x, params.number x * Real.exp (-β * shiftedEnergy params μ x)) /
+          partitionGC params β μ := by
           symm
           simpa using
             (Finset.sum_div

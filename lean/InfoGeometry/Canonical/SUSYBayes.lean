@@ -19,12 +19,14 @@ section BayesianFock
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Theorem `bayesian_inference_as_creation`. -/
 theorem bayesian_inference_as_creation
     (prior dataInnovation : Krein.DoubledSpace E) :
     InfoGeometry.Canonical.Fock.bayesianUpdate (E := E) prior dataInnovation
       = prior + InfoGeometry.Canonical.Fock.creationOp (E := E) dataInnovation :=
   InfoGeometry.Canonical.Fock.bayesianUpdate_eq_creationExcitation (E := E) prior dataInnovation
 
+/-- Theorem `data_model_split_is_projector_split`. -/
 theorem data_model_split_is_projector_split (v : Krein.DoubledSpace E) :
     v = InfoGeometry.Canonical.Fock.dataPart (E := E) v
       + InfoGeometry.Canonical.Fock.modelPart (E := E) v :=
@@ -36,11 +38,13 @@ section MajoranaFierz
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
+/-- Theorem `majorana_belief_iff_zero_uncertainty`. -/
 theorem majorana_belief_iff_zero_uncertainty (ψ : Krein.DoubledSpace E) :
     InfoGeometry.Canonical.Fierz.IsMajoranaBelief (E := E) ψ
       ↔ InfoGeometry.Canonical.Fierz.infoArea (E := E) ψ = 0 :=
   InfoGeometry.Canonical.Fierz.majoranaBelief_iff_zeroArea (E := E) ψ
 
+/-- Theorem `fierz_power_conservation`. -/
 theorem fierz_power_conservation [CompleteSpace E] (ψ : Krein.DoubledSpace E) :
     (InfoGeometry.Canonical.Fierz.infoHilbert (E := E) ψ) ^ 2
       = (InfoGeometry.Canonical.Fierz.infoScalar (E := E) ψ) ^ 2
@@ -54,6 +58,7 @@ section SuperBracket
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Theorem `super_even_even_eq_commutator`. -/
 theorem super_even_even_eq_commutator
     (A B : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E) :
     InfoGeometry.Canonical.BogoliubovFockSuper.fockSuperBracket (E := E)
@@ -61,6 +66,7 @@ theorem super_even_even_eq_commutator
         InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.even A B
       = InfoGeometry.Canonical.BogoliubovFockSuper.fockCommutator (E := E) A B := rfl
 
+/-- Theorem `super_odd_odd_eq_anticommutator`. -/
 theorem super_odd_odd_eq_anticommutator
     (A B : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E) :
     InfoGeometry.Canonical.BogoliubovFockSuper.fockSuperBracket (E := E)
@@ -78,6 +84,7 @@ variable (K : KaehlerInformationGeometry E) (x : E)
 variable (scalar Λ : ℝ)
 variable (V : SplitVielbein K x) (Γ : SpinConnection K x V)
 
+/-- Theorem `einstein_inducedChemicalPotential_eq_transportedResidual`. -/
 theorem einstein_inducedChemicalPotential_eq_transportedResidual :
     InfoGeometry.Canonical.BogoliubovFockSuper.einsteinInducedChemicalPotential
       (E := E) R K x scalar Λ V Γ
@@ -85,6 +92,7 @@ theorem einstein_inducedChemicalPotential_eq_transportedResidual :
     transportedEinsteinResidual (R := R) (K := K) (x := x)
       (scalar := scalar) (Λ := Λ) V Γ := rfl
 
+/-- Theorem `grandCanonical_eq_hamiltonian_of_vacuumTransported`. -/
 theorem grandCanonical_eq_hamiltonian_of_vacuumTransported
     (B : InfoGeometry.Canonical.BogoliubovFockSuper.BogoliubovMixingParams)
     (H : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E)

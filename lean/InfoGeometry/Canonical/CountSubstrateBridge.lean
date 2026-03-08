@@ -47,11 +47,13 @@ noncomputable def empiricalProbabilityState
     ProbabilityDist α :=
   empiricalProbDist N hN
 
+/-- Theorem `empiricalProbabilityState_spec`. -/
 theorem empiricalProbabilityState_spec
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
     ∀ x : α, empiricalProbabilityState N hN x = empiricalDistribution N x :=
   fun _ => rfl
 
+/-- Theorem `exists_empiricalProbabilityState`. -/
 theorem exists_empiricalProbabilityState
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
     ∃ P : ProbabilityDist α, ∀ x : α, P x = empiricalDistribution N x :=
@@ -117,6 +119,7 @@ def EntrywisePositive (M : SinkhornMatrix n) : Prop :=
 noncomputable def countWeight (i : Fin n) : ℝ :=
   (N i : ℝ) + 1
 
+/-- Lemma `countWeight_pos`. -/
 lemma countWeight_pos (i : Fin n) : 0 < countWeight n N i := by
   unfold countWeight
   positivity
@@ -128,12 +131,14 @@ Rank-one count-induced coupling:
 noncomputable def countInducedCoupling : Coupling n :=
   fun i j => countWeight n N i * countWeight n N j
 
+/-- Lemma `countInducedCoupling_entrywisePositive`. -/
 lemma countInducedCoupling_entrywisePositive :
     EntrywisePositive n (countInducedCoupling n N) := by
   intro i j
   unfold countInducedCoupling
   exact mul_pos (countWeight_pos (n := n) (N := N) i) (countWeight_pos (n := n) (N := N) j)
 
+/-- Lemma `entrywisePositive_hasPositiveRowSums`. -/
 lemma entrywisePositive_hasPositiveRowSums
     {M : SinkhornMatrix n}
     (hM : EntrywisePositive n M) :
@@ -145,6 +150,7 @@ lemma entrywisePositive_hasPositiveRowSums
     exact Finset.single_le_sum (fun j _hj => (hM i j).le) (by simp)
   exact lt_of_lt_of_le hdiag hle
 
+/-- Lemma `entrywisePositive_hasPositiveColSums`. -/
 lemma entrywisePositive_hasPositiveColSums
     {M : SinkhornMatrix n}
     (hM : EntrywisePositive n M) :
@@ -156,6 +162,7 @@ lemma entrywisePositive_hasPositiveColSums
     exact Finset.single_le_sum (fun i _hi => (hM i j).le) (by simp)
   exact lt_of_lt_of_le hdiag hle
 
+/-- Lemma `rowNormalize_entrywisePositive`. -/
 lemma rowNormalize_entrywisePositive
     {M : SinkhornMatrix n}
     (hM : EntrywisePositive n M)
@@ -165,6 +172,7 @@ lemma rowNormalize_entrywisePositive
   unfold rowNormalize
   exact div_pos (hM i j) (hrow i)
 
+/-- Lemma `colNormalize_entrywisePositive`. -/
 lemma colNormalize_entrywisePositive
     {M : SinkhornMatrix n}
     (hM : EntrywisePositive n M)
@@ -200,20 +208,24 @@ noncomputable def countInducedPositiveIterate : Nat → PositiveSinkhornState n
 noncomputable def countInducedIterate (k : Nat) : SinkhornMatrix n :=
   (countInducedPositiveIterate (n := n) N k).M
 
+/-- Lemma `countInducedIterate_entrywisePositive`. -/
 lemma countInducedIterate_entrywisePositive (k : Nat) :
     EntrywisePositive n (countInducedIterate (n := n) N k) :=
   (countInducedPositiveIterate (n := n) N k).pos
 
+/-- Lemma `countInducedCoupling_hasPositiveRowSums`. -/
 lemma countInducedCoupling_hasPositiveRowSums :
     HasPositiveRowSums n (countInducedCoupling n N) := by
   exact entrywisePositive_hasPositiveRowSums (n := n)
     (countInducedCoupling_entrywisePositive (n := n) (N := N))
 
+/-- Lemma `countInducedCoupling_hasPositiveColSums`. -/
 lemma countInducedCoupling_hasPositiveColSums :
     HasPositiveColSums n (countInducedCoupling n N) := by
   exact entrywisePositive_hasPositiveColSums (n := n)
     (countInducedCoupling_entrywisePositive (n := n) (N := N))
 
+/-- Lemma `countInducedIterate_step`. -/
 lemma countInducedIterate_step (k : Nat) :
     SinkhornStep n (phaseAt k)
       (countInducedIterate (n := n) N k)
@@ -236,6 +248,7 @@ noncomputable def countInducedSinkhornTrajectory
   { state := countInducedIterate (n := n) N
     step := countInducedIterate_step (n := n) N }
 
+/-- Theorem `emergentTimeFlow_countInducedSinkhornTrajectory`. -/
 theorem emergentTimeFlow_countInducedSinkhornTrajectory
     :
     EmergentTimeFlow n (countInducedSinkhornTrajectory (n := n) N) := by

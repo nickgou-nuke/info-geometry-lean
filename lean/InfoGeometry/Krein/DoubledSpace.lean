@@ -1,5 +1,10 @@
 import Mathlib.Analysis.Normed.Module.Basic
-import InfoGeometry.Cartan.Involution
+
+/-!
+# InfoGeometry.Krein.DoubledSpace
+
+Canonical doubled-space (`E ⊕ E`) generators for split `Cl(1,1)` relations.
+-/
 
 namespace InfoGeometry.Krein
 
@@ -10,12 +15,18 @@ abbrev DoubledSpace (E : Type _) := E × E
 
 /-- Swap involution `J(x, y) = (y, x)`. -/
 def modularJ : DoubledSpace E →L[ℝ] DoubledSpace E where
-  toLinearMap := { toFun := fun v => (v.2, v.1), map_add' := by intro v w; simp, map_smul' := by intro a v; simp }
+  toLinearMap :=
+    { toFun := fun v => (v.2, v.1)
+      map_add' := by intro v w; simp
+      map_smul' := by intro a v; simp }
   cont := by continuity
 
 /-- Sign involution `ε(x, y) = (x, -y)`. -/
 def spectralEpsilon : DoubledSpace E →L[ℝ] DoubledSpace E where
-  toLinearMap := { toFun := fun v => (v.1, -v.2), map_add' := by intro v w; simp [add_comm], map_smul' := by intro a v; simp [smul_neg] }
+  toLinearMap :=
+    { toFun := fun v => (v.1, -v.2)
+      map_add' := by intro v w; simp [add_comm]
+      map_smul' := by intro a v; simp [smul_neg] }
   cont := by continuity
 
 /-- `I = J ∘ ε`, the canonical third generator. -/
@@ -31,14 +42,30 @@ abbrev Cl11Algebra
     (J ε : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
   Cl11Relations J ε
 
-@[simp] lemma modularJ_apply (v : DoubledSpace E) : modularJ (E := E) v = (v.2, v.1) := rfl
-@[simp] lemma spectralEpsilon_apply (v : DoubledSpace E) : spectralEpsilon (E := E) v = (v.1, -v.2) := rfl
-@[simp] lemma complexI_apply (v : DoubledSpace E) : complexI (E := E) v = (-v.2, v.1) := by simp [complexI]
+@[simp] lemma modularJ_apply (v : DoubledSpace E) :
+    modularJ (E := E) v = (v.2, v.1) := rfl
+@[simp] lemma spectralEpsilon_apply (v : DoubledSpace E) :
+    spectralEpsilon (E := E) v = (v.1, -v.2) := rfl
+@[simp] lemma complexI_apply (v : DoubledSpace E) :
+    complexI (E := E) v = (-v.2, v.1) := by
+  simp [complexI]
 
-lemma modularJ_involution : modularJ (E := E).comp (modularJ (E := E)) = ContinuousLinearMap.id ℝ (DoubledSpace E) := by ext v <;> simp [modularJ]
-lemma spectralEpsilon_involution : spectralEpsilon (E := E).comp (spectralEpsilon (E := E)) = ContinuousLinearMap.id ℝ (DoubledSpace E) := by ext v <;> simp [spectralEpsilon]
-lemma modularJ_spectralEpsilon_anticommute : modularJ (E := E).comp (spectralEpsilon (E := E)) = -((spectralEpsilon (E := E)).comp (modularJ (E := E))) := by ext v <;> simp [modularJ, spectralEpsilon]
-lemma complexI_sq : (complexI (E := E)).comp (complexI (E := E)) = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by ext v <;> simp [complexI, modularJ, spectralEpsilon]
+lemma modularJ_involution :
+    modularJ (E := E).comp (modularJ (E := E))
+      = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  ext v <;> simp [modularJ]
+lemma spectralEpsilon_involution :
+    spectralEpsilon (E := E).comp (spectralEpsilon (E := E))
+      = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  ext v <;> simp [spectralEpsilon]
+lemma modularJ_spectralEpsilon_anticommute :
+    modularJ (E := E).comp (spectralEpsilon (E := E)) =
+      -((spectralEpsilon (E := E)).comp (modularJ (E := E))) := by
+  ext v <;> simp [modularJ, spectralEpsilon]
+lemma complexI_sq :
+    (complexI (E := E)).comp (complexI (E := E))
+      = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+  ext v <;> simp [complexI, modularJ, spectralEpsilon]
 
 theorem modularJ_spectralEpsilon_hasCl11Relations :
     Cl11Relations (modularJ (E := E)) (spectralEpsilon (E := E)) := by

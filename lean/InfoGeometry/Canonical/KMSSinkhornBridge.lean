@@ -52,6 +52,7 @@ def SatisfiesApproxKMSLike
     (K : AlgebraEnd F) (ω : AlgebraEnd F →L[ℝ] ℝ) (β ε : ℝ) : Prop :=
   ∀ A B : AlgebraEnd F, kmsResidual K ω β A B ≤ ε
 
+/-- Lemma `satisfiesApproxKMSLike_of_satisfiesKMSLike`. -/
 lemma satisfiesApproxKMSLike_of_satisfiesKMSLike
     (K : AlgebraEnd F) (ω : AlgebraEnd F →L[ℝ] ℝ) (β : ℝ)
     (hKMS : SatisfiesKMSLike (E := F) K ω β) :
@@ -62,6 +63,7 @@ lemma satisfiesApproxKMSLike_of_satisfiesKMSLike
     exact sub_eq_zero.mpr (hKMS A B)
   simp [hEq]
 
+/-- Lemma `satisfiesKMSLike_of_approx_zero`. -/
 lemma satisfiesKMSLike_of_approx_zero
     (K : AlgebraEnd F) (ω : AlgebraEnd F →L[ℝ] ℝ) (β : ℝ)
     (hApprox : SatisfiesApproxKMSLike K ω β 0) :
@@ -157,6 +159,7 @@ theorem sinkhorn_stepwise_kms_bound
   exact le_trans (hDrive k A B) (trajectoryRNBarrier_monotone (n := n) T k)
 
 /- Constructive-iterate specialization in canonical naming. -/
+/-- Theorem `sinkhornIterate_kmsClosure_of_control`. -/
 theorem sinkhornIterate_kmsClosure_of_control
     (M0 : SinkhornMatrix n)
     (hrow : ∀ M : SinkhornMatrix n, HasPositiveRowSums n M)

@@ -49,6 +49,7 @@ noncomputable def xlogx (x : ℝ) : ℝ :=
 @[simp] lemma xlogx_zero : xlogx 0 = 0 := by
   simp [xlogx]
 
+/-- The helper kernel agrees with `x * log x` away from case analysis. -/
 lemma xlogx_eq_mul_log (x : ℝ) : xlogx x = x * Real.log x := by
   by_cases hx : x = 0
   · simp [xlogx, hx]
@@ -58,6 +59,7 @@ lemma xlogx_eq_mul_log (x : ℝ) : xlogx x = x * Real.log x := by
 noncomputable def ShannonEntropyXlogx (p : Fin n → ℝ) : ℝ :=
   -∑ i, xlogx (p i)
 
+/-- Shannon entropy agrees with the `xlogx` representation. -/
 lemma ShannonEntropy_eq_xlogx (p : Fin n → ℝ) :
     ShannonEntropy (n := n) p = ShannonEntropyXlogx (n := n) p := by
   unfold ShannonEntropy ShannonEntropyXlogx entropy
@@ -69,6 +71,7 @@ lemma ShannonEntropy_eq_xlogx (p : Fin n → ℝ) :
 @[simp] lemma mem_simplex_iff (p : Fin n → ℝ) :
     p ∈ Simplex n ↔ PointwiseNonneg p ∧ Normalized p := Iff.rfl
 
+/-- Membership in the simplex implies normalization. -/
 lemma normalized_of_mem_simplex {p : Fin n → ℝ} (hp : p ∈ Simplex n) :
     Normalized p :=
   hp.2
@@ -79,12 +82,12 @@ section PriorWeightedGibbs
 
 variable {n : ℕ}
 
-/-- Prior-weighted Jaynes partition function `Z_q(λ) = ∑ᵢ qᵢ exp(-λ fᵢ)`. -/
+/-- Prior-weighted Jaynes partition function `Z_q(lam) = ∑ᵢ qᵢ exp(-lam fᵢ)`. -/
 noncomputable def partitionWithPrior
     (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) : ℝ :=
   ∑ i, q.prob i * Real.exp (-lam * f i)
 
-/-- Prior-weighted Gibbs form `pᵢ(λ) = qᵢ exp(-λ fᵢ) / Z_q(λ)`. -/
+/-- Prior-weighted Gibbs form `pᵢ(lam) = qᵢ exp(-lam fᵢ) / Z_q(lam)`. -/
 noncomputable def gibbsWithPrior
     (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) : ℝ :=
   q.prob i * Real.exp (-lam * f i) / partitionWithPrior q f lam
@@ -94,6 +97,7 @@ noncomputable def gibbsExpectationWithPrior
     (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) : ℝ :=
   ∑ i, gibbsWithPrior q f lam i * f i
 
+/-- The prior-weighted partition function is strictly positive. -/
 lemma partitionWithPrior_pos
     (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) :
     0 < partitionWithPrior q f lam := by
@@ -111,11 +115,13 @@ lemma partitionWithPrior_pos
     exact mul_pos (by simpa using hi) (Real.exp_pos _)
   exact Finset.sum_pos' hnonneg hposWitness
 
+/-- The prior-weighted partition function is nonzero. -/
 lemma partitionWithPrior_ne_zero
     (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) :
     partitionWithPrior q f lam ≠ 0 :=
   (partitionWithPrior_pos q f lam).ne'
 
+/-- Prior-weighted Gibbs probabilities are pointwise nonnegative. -/
 lemma gibbsWithPrior_nonneg
     (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) :
     0 ≤ gibbsWithPrior q f lam i := by
@@ -124,6 +130,7 @@ lemma gibbsWithPrior_nonneg
     (mul_nonneg (q.nonneg i) (le_of_lt (Real.exp_pos _)))
     (le_of_lt (partitionWithPrior_pos q f lam))
 
+/-- Prior-weighted Gibbs probabilities sum to one. -/
 lemma gibbsWithPrior_sum_one
     (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) :
     ∑ i, gibbsWithPrior q f lam i = 1 := by
@@ -144,11 +151,12 @@ lemma gibbsWithPrior_sum_one
     _ = 1 := by
           exact div_self hZne
 
-/-- Prior-weighted log-partition `log Z_q(λ)`. -/
+/-- Prior-weighted log-partition `log Z_q(lam)`. -/
 noncomputable def logPartitionWithPrior
     (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) : ℝ :=
   Real.log (partitionWithPrior q f lam)
 
+/-- Prior-weighted Gibbs form as an exponential tilt with log-partition. -/
 lemma gibbsWithPrior_eq_exp_sub_logPartition
     (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) :
     gibbsWithPrior q f lam i =
@@ -193,11 +201,13 @@ noncomputable def totalCount (counts : Fin n → ℕ) : ℕ :=
 noncomputable def empiricalFreq (counts : Fin n → ℕ) (i : Fin n) : ℝ :=
   (counts i : ℝ) / (totalCount counts : ℝ)
 
+/-- Empirical frequencies are pointwise nonnegative. -/
 lemma empiricalFreq_nonneg (counts : Fin n → ℕ) (i : Fin n) :
     0 ≤ empiricalFreq counts i := by
   unfold empiricalFreq
   exact div_nonneg (by positivity) (by positivity)
 
+/-- Empirical frequencies normalize to one when total count is nonzero. -/
 lemma empiricalFreq_sum_one
     (counts : Fin n → ℕ)
     (hN : totalCount counts ≠ 0) :
@@ -226,17 +236,20 @@ noncomputable def empiricalShannonEntropy (counts : Fin n → ℕ) : ℝ :=
 noncomputable def multiplicity (counts : Fin n → ℕ) : ℕ :=
   Nat.multinomial Finset.univ counts
 
+/-- Jaynes multiplicity is strictly positive. -/
 lemma multiplicity_pos (counts : Fin n → ℕ) :
     0 < multiplicity counts := by
   simpa [multiplicity] using
     (Nat.multinomial_pos (s := (Finset.univ : Finset (Fin n))) (f := counts))
 
+/-- Multinomial specification identity for Jaynes multiplicity. -/
 lemma multiplicity_spec (counts : Fin n → ℕ) :
     (∏ i, Nat.factorial (counts i)) * multiplicity counts
       = Nat.factorial (totalCount counts) := by
   simpa [multiplicity, totalCount] using
     (Nat.multinomial_spec (s := (Finset.univ : Finset (Fin n))) (f := counts))
 
+/-- Jaynes multiplicity is at least one. -/
 lemma multiplicity_one_le (counts : Fin n → ℕ) :
     1 ≤ multiplicity counts :=
   Nat.succ_le_of_lt (multiplicity_pos counts)
@@ -245,6 +258,7 @@ lemma multiplicity_one_le (counts : Fin n → ℕ) :
 noncomputable def logMultiplicity (counts : Fin n → ℕ) : ℝ :=
   Real.log (multiplicity counts)
 
+/-- Log-multiplicity is nonnegative. -/
 lemma logMultiplicity_nonneg (counts : Fin n → ℕ) :
     0 ≤ logMultiplicity counts := by
   unfold logMultiplicity
@@ -262,6 +276,7 @@ noncomputable def thermodynamicPreference
     (N : ℝ) (counts₁ counts₂ : Fin n → ℕ) : ℝ :=
   Real.exp (N * (logMultiplicity counts₁ - logMultiplicity counts₂))
 
+/-- Thermodynamic preference ratio is strictly positive. -/
 lemma thermodynamicPreference_pos
     (N : ℝ) (counts₁ counts₂ : Fin n → ℕ) :
     0 < thermodynamicPreference N counts₁ counts₂ := by
@@ -302,6 +317,7 @@ def FeasibleClass
     p ∈ FeasibleClass A b ↔
       p ∈ Simplex n ∧ SatisfiesLinearConstraints A b p := Iff.rfl
 
+/-- Membership in a feasible class implies normalization. -/
 lemma normalized_of_mem_feasibleClass
     {A : Matrix (Fin m) (Fin n) ℝ}
     {b : Fin m → ℝ}
@@ -338,6 +354,7 @@ noncomputable def goodFraction
     (Hstar eps : ℝ) : ℝ :=
   ((goodProfiles S Hstar eps).card : ℝ) / (S.card : ℝ)
 
+/-- The good-profile fraction is nonnegative. -/
 lemma goodFraction_nonneg
     (S : Finset (Fin n → ℝ))
     (Hstar eps : ℝ) :
@@ -345,6 +362,7 @@ lemma goodFraction_nonneg
   unfold goodFraction
   positivity
 
+/-- The good-profile fraction is at most one on nonempty finite classes. -/
 lemma goodFraction_le_one
     (S : Finset (Fin n → ℝ))
     (Hstar eps : ℝ)
@@ -387,6 +405,7 @@ structure EntropyConcentrationCertificate
   nonempty : S.Nonempty
   lower_fraction_bound : eta ≤ goodFraction S Hstar eps
 
+/-- Membership in the entropy confidence interval implies entropy-band control. -/
 lemma entropyBand_of_mem_confidenceInterval
     {Hstar eps x : ℝ}
     (hx : x ∈ entropyConfidenceInterval Hstar eps) :
@@ -396,6 +415,7 @@ lemma entropyBand_of_mem_confidenceInterval
   have hright : x - Hstar ≤ eps := by linarith
   exact abs_le.mpr ⟨hleft, hright⟩
 
+/-- Entropy-band control implies membership in the confidence interval. -/
 lemma mem_confidenceInterval_of_entropyBand
     {Hstar eps x : ℝ}
     (hx : |x - Hstar| ≤ eps) :
@@ -444,6 +464,7 @@ def feasible (P : CanonicalProblem m n) : Set (Fin n → ℝ) :=
 noncomputable def gibbsCandidate (P : CanonicalProblem m n) (lam : ℝ) : Fin n → ℝ :=
   gibbs P.obs lam
 
+/-- A Gibbs candidate is feasible once linear and moment constraints are supplied. -/
 lemma gibbsCandidate_mem_feasible
     (P : CanonicalProblem m n) (lam : ℝ)
     (hlin : SatisfiesLinearConstraints P.A P.b (P.gibbsCandidate lam))
@@ -508,6 +529,7 @@ noncomputable def arSpectralDensity
     ((1 - ∑ k, a k * Real.cos (((k.1 : ℝ) + 1) * ω)) ^ (2 : ℕ)
       + (∑ k, a k * Real.sin (((k.1 : ℝ) + 1) * ω)) ^ (2 : ℕ))
 
+/-- Burg AR spectral density is nonnegative for nonnegative noise variance. -/
 lemma arSpectralDensity_nonneg
     {p : ℕ} (a : Fin p → ℝ) (σ2 ω : ℝ)
     (hσ2 : 0 ≤ σ2) :
@@ -528,6 +550,7 @@ noncomputable def BurgModel.spectrum
     {p : ℕ} (M : BurgModel p) (ω : ℝ) : ℝ :=
   arSpectralDensity M.coeff M.noiseVar ω
 
+/-- A Burg model has nonnegative spectrum at every frequency. -/
 lemma BurgModel.spectrum_nonneg
     {p : ℕ} (M : BurgModel p) (ω : ℝ) :
     0 ≤ M.spectrum ω :=

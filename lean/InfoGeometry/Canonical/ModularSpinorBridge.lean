@@ -88,6 +88,7 @@ The "evidence" innovation in a Bayesian update is the expectation value
 of the creation operator.
 -/
 omit [FiniteDimensional ℝ E] in
+/-- Theorem `bayesian_update_as_spinor_bilinear`. -/
 theorem bayesian_update_as_spinor_bilinear
     (prior : HilbertDoubled E) (_innovation : HilbertDoubled E) :
     ∃ (O : HilbertDoubled E →L[ℝ] HilbertDoubled E),

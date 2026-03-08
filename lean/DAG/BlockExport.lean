@@ -427,44 +427,37 @@ def emitQuiver (e : Export) : String := Id.run do
   b := b.push "import Mathlib.CategoryTheory.FreeCategory\n"
   b := b.push "import Mathlib.Algebra.Category.ModuleCat.Basic\n"
   b := b.push "import Mathlib.Data.Real.Basic\n"
-  b := b.push "import SocraticTriple\n\n"
+  b := b.push "import Socratic\n\n"
   b := b.push "set_option maxRecDepth 2000000\n"
 
-  b := b.push "namespace SocraticTriple.Generated\n\n"
+  b := b.push "namespace Socratic.Generated\n\n"
   b := b.push "inductive Obj\n"
   for i in [:n] do
     b := b.push s!"  | block_{i}\n"
-  b := b.push "\ninductive Hom : Obj → Obj → Type\n"
+  b := b.push "\ninductive Edge : Obj → Obj → Type\n"
   for u in [:n] do
     for (v, _) in e.blockGraph.forward[u]! do
-      b := b.push s!"  | edge_{u}_{v} : Hom .block_{u} .block_{v}\n"
+      b := b.push s!"  | edge_{u}_{v} : Edge .block_{u} .block_{v}\n"
 
-  b := b.push "\n@[local instance]\n"
-  b := b.push "noncomputable def fileSyntax : CategoryTheory.Category Obj :=\n"
-  b := b.push "  CategoryTheory.freeCategory {\n"
+  b := b.push "\nnoncomputable def fileSyntax : Socratic.Syntax := {\n"
   b := b.push "  Obj := Obj,\n"
-  b := b.push "  Hom := Hom\n"
+  b := b.push "  Hom := Edge\n"
   b := b.push "}\n\n"
 
-  b := b.push "noncomputable def progSem : SocraticTriple.Semantics fileSyntax (Type) :=\n"
+  b := b.push "noncomputable def coreSem : Socratic.Semantics fileSyntax (Type) :=\n"
   b := b.push "  { obj := fun _ => PUnit,\n"
   b := b.push "    map := fun _ => id }\n\n"
 
-  b := b.push "noncomputable def specSem : SocraticTriple.Semantics fileSyntax (Type) :=\n"
-  b := b.push "  { obj := fun _ => PUnit,\n"
-  b := b.push "    map := fun _ => id }\n\n"
-
-  b := b.push "noncomputable def socraticTriple : SocraticTriple.Hom progSem specSem :=\n"
-  b := b.push "  { app := fun _ => id,\n"
-  b := b.push "    naturality := by intro X Y f; rfl }\n\n"
-
-  b := b.push "noncomputable def fileReward : SocraticTriple.AgentReward fileSyntax ℝ :=\n"
-  b := b.push "{\n  obj     := fun _ => ℝ,\n"
-  b := b.push "  sem     := progSem,\n"
-  b := b.push "  encode  := { app := fun _ => fun _ => (0:ℝ), naturality := by intro X Y f; rfl }\n"
+  b := b.push "noncomputable def fileHomTriple : Socratic.HomTriple fileSyntax := {\n"
+  b := b.push "  ProgSem := coreSem,\n"
+  b := b.push "  SpecSem := coreSem,\n"
+  b := b.push "  VecSem := coreSem,\n"
+  b := b.push "  spec_isProp := by intro _; infer_instance,\n"
+  b := b.push "  sound := 𝟙 _,\n"
+  b := b.push "  encode := 𝟙 _\n"
   b := b.push "}\n\n"
 
-  b := b.push "end SocraticTriple.Generated\n"
+  b := b.push "end Socratic.Generated\n"
   String.intercalate "" b.toList
 
 def escapeLeanString (s : String) : String :=

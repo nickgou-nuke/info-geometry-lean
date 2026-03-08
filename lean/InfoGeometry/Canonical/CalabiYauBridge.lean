@@ -28,17 +28,20 @@ def IsRicciFlat (R : RicciTensor E) : Prop :=
 abbrev CalabiYauRicciState (R : RicciTensor E) : Prop :=
   IsRicciFlat R
 
+/-- Lemma `hasConstantMongeAmpereDensity_iff`. -/
 lemma hasConstantMongeAmpereDensity_iff
     (H : HessianGeometry E) :
     HasConstantMongeAmpereDensity H
       ↔ ∃ ρ0 : ℝ, ∀ x : E, mongeAmpereDensity H x = ρ0 := Iff.rfl
 
+/-- Lemma `hasConstantMongeAmpereDensity_of_satisfiesMongeAmpere_const`. -/
 lemma hasConstantMongeAmpereDensity_of_satisfiesMongeAmpere_const
     (H : HessianGeometry E) (ρ0 : ℝ)
     (hMA : SatisfiesMongeAmpere H (fun _ => ρ0)) :
     HasConstantMongeAmpereDensity H := by
   exact ⟨ρ0, hMA⟩
 
+/-- Lemma `satisfiesMongeAmpere_const_of_hasConstantMongeAmpereDensity`. -/
 lemma satisfiesMongeAmpere_const_of_hasConstantMongeAmpereDensity
     (H : HessianGeometry E)
     (hConst : HasConstantMongeAmpereDensity H) :
@@ -47,6 +50,7 @@ lemma satisfiesMongeAmpere_const_of_hasConstantMongeAmpereDensity
   exact ⟨ρ0, hρ0⟩
 
 omit [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] in
+/-- Lemma `ricciTensor_eq_of_isRicciFlat`. -/
 lemma ricciTensor_eq_of_isRicciFlat
     {R₁ R₂ : RicciTensor E}
     (h₁ : IsRicciFlat R₁) (h₂ : IsRicciFlat R₂) :
@@ -54,6 +58,7 @@ lemma ricciTensor_eq_of_isRicciFlat
   funext u v
   rw [h₁ u v, h₂ u v]
 
+/-- Lemma `isEinsteinKaehlerAtWith_zero_of_isRicciFlat`. -/
 lemma isEinsteinKaehlerAtWith_zero_of_isRicciFlat
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (hFlat : IsRicciFlat R) :
@@ -81,6 +86,7 @@ lemma constantMongeAmpereImpliesRicciFlat_of_isRicciFlat
   intro _hConst
   exact hFlat
 
+/-- Theorem `isRicciFlat_of_constantMongeAmpere`. -/
 theorem isRicciFlat_of_constantMongeAmpere
     (R : RicciTensor E) (K : KaehlerInformationGeometry E)
     (hBridge : MongeAmpereRicciClosure R K)
@@ -165,6 +171,7 @@ lemma constantMongeAmpereImpliesZeroSpinorial_of_spinorialState
   intro _hConst
   exact hSpin0
 
+/-- Theorem `spinorialScalarCurvature_eq_zero_of_constantMongeAmpere`. -/
 theorem spinorialScalarCurvature_eq_zero_of_constantMongeAmpere
     (IST : InfoSpectralTriple E)
     (hCY : MongeAmpereSpinorialClosure IST)

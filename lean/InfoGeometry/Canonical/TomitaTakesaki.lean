@@ -1,10 +1,8 @@
 import InfoGeometry.Canonical.Clifford
-import InfoGeometry.Canonical.GrandCanonicalExperts
 
 namespace InfoGeometry.Canonical.TomitaTakesaki
 
 open InfoGeometry.Clifford
-open InfoGeometry.Canonical.MoE
 
 /-!
 # Tomita-Takesaki Modular Atom (Split `Cl(1,1)`)
@@ -17,7 +15,7 @@ connects it to the exact split Clifford algebra used in routing:
 section CliffordAtom
 
 /-- The split Clifford algebra used by routing modules (`Cl(1,1)`). -/
-noncomputable abbrev RoutingSplitCliffordAlg := SplitCliffordAlg
+noncomputable abbrev RoutingSplitCliffordAlg := CliffordAlgebra splitQ11
 
 /-- Clifford generator corresponding to the modular conjugation direction. -/
 noncomputable def cptJ : RoutingSplitCliffordAlg :=
@@ -43,6 +41,7 @@ def cptAtomSet : Set RoutingSplitCliffordAlg :=
     cptJeps * cptJeps = algebraMap ℝ RoutingSplitCliffordAlg (-1) := by
   simp [cptJeps, splitQ11_apply]
 
+/-- Lemma `cptJ_cptJeps_anticommute`. -/
 lemma cptJ_cptJeps_anticommute :
     cptJ * cptJeps = -(cptJeps * cptJ) := by
   have hpolar : QuadraticMap.polar splitQ11 ((1 : ℝ), 0) ((0 : ℝ), 1) = 0 := by
@@ -52,6 +51,7 @@ lemma cptJ_cptJeps_anticommute :
       hpolar]
   simp
 
+/-- Lemma `iota_mem_adjoin_cptAtomSet`. -/
 lemma iota_mem_adjoin_cptAtomSet (v : ℝ × ℝ) :
     CliffordAlgebra.ι splitQ11 v ∈ Algebra.adjoin ℝ cptAtomSet := by
   have hJ : cptJ ∈ Algebra.adjoin ℝ cptAtomSet := by
@@ -83,6 +83,7 @@ lemma iota_mem_adjoin_cptAtomSet (v : ℝ × ℝ) :
       ((Algebra.adjoin ℝ cptAtomSet).smul_mem hJeps b)
   simpa [hdecomp] using hsum
 
+/-- Lemma `iota_range_subset_adjoin_cptAtomSet`. -/
 lemma iota_range_subset_adjoin_cptAtomSet :
     Set.range (CliffordAlgebra.ι splitQ11) ⊆ Algebra.adjoin ℝ cptAtomSet := by
   intro x hx
@@ -137,6 +138,7 @@ abbrev modularComplexI : DoubledSpace E →L[ℝ] DoubledSpace E :=
       = ContinuousLinearMap.id ℝ (DoubledSpace E) :=
   spectralEpsilon_involution (E := E)
 
+/-- Lemma `modularConjugationJ_anticommutes_modularSign`. -/
 lemma modularConjugationJ_anticommutes_modularSign :
     (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
       = -((modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E))) :=

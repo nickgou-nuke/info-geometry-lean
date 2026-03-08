@@ -22,6 +22,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 @[simp] theorem gaussianDiracField_apply (G : GaussianFamily E) (x : E) :
     gaussianDiracField G x = G.sigma := rfl
 
+/-- Theorem `gaussianDiracField_const`. -/
 theorem gaussianDiracField_const (G : GaussianFamily E) (x y : E) :
     gaussianDiracField G x = gaussianDiracField G y := by
   simp [gaussianDiracField_apply]

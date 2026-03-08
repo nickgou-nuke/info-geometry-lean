@@ -26,19 +26,23 @@ def twoStateEnergy : TwoState → ℝ
   | ⟨0, _⟩ => 0
   | _ => 1
 
+/-- Lemma `twoState_partition_pos`. -/
 lemma twoState_partition_pos (ε : ℝ) :
     0 < Z twoStateEnergy ε :=
   Z_pos (E := twoStateEnergy) ε
 
+/-- Lemma `twoState_gibbs_sum_one`. -/
 lemma twoState_gibbs_sum_one (ε : ℝ) :
     ∑ ω : TwoState, gibbsProb twoStateEnergy ε ω = 1 :=
   gibbsProb_sum_one (E := twoStateEnergy) ε
 
+/-- Lemma `twoState_freeEnergy_identity`. -/
 lemma twoState_freeEnergy_identity (ε : ℝ) (hε : ε ≠ 0) :
     freeEnergy twoStateEnergy ε
       = internalEnergy twoStateEnergy ε - ε * shannonEntropy twoStateEnergy ε :=
   freeEnergy_eq_internal_sub_scale_entropy (E := twoStateEnergy) ε hε
 
+/-- Lemma `twoState_freeEnergy_identity_unit`. -/
 lemma twoState_freeEnergy_identity_unit :
     freeEnergy twoStateEnergy 1
       = internalEnergy twoStateEnergy 1 - shannonEntropy twoStateEnergy 1 := by
@@ -51,6 +55,7 @@ section RoutingBounds
 variable {V : Type*} [NormedAddCommGroup V]
 variable (n : Nat) [Nonempty (Fin n)]
 
+/-- Lemma `switch_selectedRoutingEpsilon_le_one`. -/
 lemma switch_selectedRoutingEpsilon_le_one
     (β : ℝ) (x : Fin n → V) (hcol : IsBistochasticSwitch n β x)
     (label : PermMode n → CliffordLabel) :

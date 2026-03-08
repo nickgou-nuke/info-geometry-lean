@@ -25,7 +25,9 @@ noncomputable def klLike (μ ν : PositiveMeasure α ℝ) : ℝ :=
 /-- `generalizedKL = klLike + (Z ν - Z μ)` (mass slack explicitly separated). -/
 @[simp]
 lemma generalizedKL_eq_klLike_add_Z (μ ν : PositiveMeasure α ℝ) :
-    generalizedKL (α := α) μ ν = klLike (α := α) μ ν + (Z (α := α) (R := ℝ) ν - Z (α := α) (R := ℝ) μ) := by
+    generalizedKL (α := α) μ ν =
+      klLike (α := α) μ ν +
+        (Z (α := α) (R := ℝ) ν - Z (α := α) (R := ℝ) μ) := by
   unfold generalizedKL klLike gklTerm PositiveMeasure.Z
   calc
     ∑ x ∈ (Finset.univ : Finset α), (μ x * Real.log (μ x / ν x) - μ x + ν x)

@@ -1,4 +1,7 @@
-import Mathlib
+import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Data.Real.Basic
+import Mathlib.Order.Filter.Basic
+import Mathlib.Topology.Algebra.Ring.Real
 
 /-!
 # InfoGeometry.Canonical.LLNCore
@@ -19,6 +22,7 @@ def fixed_partition_slln : Prop :=
   ∃ X : Nat → Real,
     Filter.Tendsto (empiricalAverage X) Filter.atTop (nhds (0 : Real))
 
+/-- Theorem `fixed_partition_slln_holds`. -/
 theorem fixed_partition_slln_holds : fixed_partition_slln := by
   refine ⟨fun _ => 0, ?_⟩
   have hzero : empiricalAverage (fun _ : Nat => (0 : Real)) = fun _ : Nat => (0 : Real) := by
@@ -35,6 +39,7 @@ def empirical_to_theoretical_slln : Prop := fixed_partition_slln
 def ae_tendsto_ratio_to_rnDeriv : Prop :=
   ∃ r : Nat → Real, Filter.Tendsto r Filter.atTop (nhds (1 : Real))
 
+/-- Theorem `ae_tendsto_ratio_to_rnDeriv_holds`. -/
 theorem ae_tendsto_ratio_to_rnDeriv_holds : ae_tendsto_ratio_to_rnDeriv := by
   refine ⟨fun _ => 1, ?_⟩
   exact (tendsto_const_nhds :

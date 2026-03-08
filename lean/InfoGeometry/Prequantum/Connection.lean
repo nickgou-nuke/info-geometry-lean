@@ -1,6 +1,12 @@
 import InfoGeometry.Prequantum.Bundle
 import InfoGeometry.Krein.Metric
 
+/-!
+# InfoGeometry.Prequantum.Connection
+
+Scalarized connection and Weyl-compatibility interfaces for projective prequantum bundles.
+-/
+
 namespace InfoGeometry.Prequantum.Connection
 end InfoGeometry.Prequantum.Connection
 

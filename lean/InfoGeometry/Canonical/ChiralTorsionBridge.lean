@@ -62,12 +62,14 @@ noncomputable def gibbsSmoothingOnGeneralizedKL
     (β : ℝ) (μ ν μ₀ : α → ℝ) : ℝ :=
   Real.exp (-β * generalizedKL μ ν μ₀)
 
+/-- Lemma `gibbsSmoothingOnGeneralizedKL_pos`. -/
 lemma gibbsSmoothingOnGeneralizedKL_pos
     (β : ℝ) (μ ν μ₀ : α → ℝ) :
     0 < gibbsSmoothingOnGeneralizedKL β μ ν μ₀ := by
   unfold gibbsSmoothingOnGeneralizedKL
   exact Real.exp_pos _
 
+/-- Lemma `gibbsSmoothingOnGeneralizedKL_nonneg`. -/
 lemma gibbsSmoothingOnGeneralizedKL_nonneg
     (β : ℝ) (μ ν μ₀ : α → ℝ) :
     0 ≤ gibbsSmoothingOnGeneralizedKL β μ ν μ₀ := by
@@ -162,11 +164,13 @@ def chiralTorsionChentsovGibbsState_of_twistedInference
     (hChentsov := hChentsov)
     (hGibbs := gibbsSmoothingOnGeneralizedKL_pos β μ ν μ₀)
 
+/-- Lemma `twistedInference_torsion_nonzero`. -/
 lemma twistedInference_torsion_nonzero
     (T : TwistedInference E) :
     informationTorsion T.dual.nabla ≠ 0 :=
   T.has_torsion
 
+/-- Theorem `torsion_nonzero_of_chiral`. -/
 theorem torsion_nonzero_of_chiral
     (CI : ConformalInference E)
     (T : TwistedInference E)
@@ -177,6 +181,7 @@ theorem torsion_nonzero_of_chiral
     informationTorsion T.dual.nabla ≠ 0 :=
   hBridge.anomaly_induces_torsion hChiral
 
+/-- Theorem `chentsov_and_gibbs_of_bridge`. -/
 theorem chentsov_and_gibbs_of_bridge
     (CI : ConformalInference E)
     (T : TwistedInference E)
@@ -186,6 +191,7 @@ theorem chentsov_and_gibbs_of_bridge
     amariChentsovTensor p ∧ 0 < gibbsSmoothingOnGeneralizedKL β μ ν μ₀ := by
   exact ⟨hBridge.chentsov_available, hBridge.gibbs_smoothing_pos⟩
 
+/-- Theorem `chentsov_and_gibbs_of_state`. -/
 theorem chentsov_and_gibbs_of_state
     (CI : ConformalInference E)
     (T : TwistedInference E)
@@ -196,6 +202,7 @@ theorem chentsov_and_gibbs_of_state
   exact chentsov_and_gibbs_of_bridge
     (CI := CI) (T := T) (p := p) (β := β) (μ := μ) (ν := ν) (μ₀ := μ₀) hState
 
+/-- Theorem `torsion_nonzero_of_state_and_chiral`. -/
 theorem torsion_nonzero_of_state_and_chiral
     (CI : ConformalInference E)
     (T : TwistedInference E)

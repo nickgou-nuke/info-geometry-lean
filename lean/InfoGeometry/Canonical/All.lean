@@ -22,6 +22,7 @@ import DAG.Basic
 import InfoGeometry.Canonical.Algebra
 import InfoGeometry.Canonical.AnalyticalIndex
 import InfoGeometry.Canonical.AQFTOperatorInterface
+import InfoGeometry.Canonical.OperatorAlgebraBridge
 import InfoGeometry.Canonical.AnomalyGauge
 import InfoGeometry.Canonical.AnomalyInflow
 import InfoGeometry.Canonical.Attention
@@ -60,6 +61,7 @@ import InfoGeometry.Core.UnifiedGeometry
 import InfoGeometry.Canonical.CountSubstrateBridge
 import InfoGeometry.Canonical.CurvatureRGFlow
 import InfoGeometry.Canonical.DeepHorizon
+import InfoGeometry.Canonical.DiracRicciBridge
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DualConnections
 import InfoGeometry.Canonical.EmpiricalChecks
@@ -68,6 +70,7 @@ import InfoGeometry.Canonical.FormalScaffold
 import InfoGeometry.Canonical.Fock
 import InfoGeometry.Canonical.Foundations
 import InfoGeometry.Canonical.GaugeUnified
+import InfoGeometry.Canonical.GaugeGroups
 import InfoGeometry.Canonical.GaussianHolonomy
 import InfoGeometry.Canonical.Geometry
 import InfoGeometry.Canonical.GrandCanonicalCore
@@ -128,6 +131,7 @@ import InfoGeometry.Canonical.Triality
 import InfoGeometry.Canonical.Twistor
 import InfoGeometry.Canonical.WeylInformationGauge
 import InfoGeometry.Canonical.WilsonLoop
+import InfoGeometry.Canonical.YangMillsBridge
 
 /-!
 # InfoGeometry.Canonical.All

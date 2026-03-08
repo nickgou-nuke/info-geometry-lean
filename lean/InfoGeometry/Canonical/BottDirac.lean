@@ -121,6 +121,7 @@ abbrev cl11DiracSeed : Endomorphism (DoubledSpace E) :=
 abbrev cl11Grading : Endomorphism (DoubledSpace E) :=
   (spectralEpsilon (E := E)).toLinearMap
 
+/-- Lemma `cl11_isChiralDirac`. -/
 lemma cl11_isChiralDirac :
     IsChiralDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) := by
   have hAnti :
@@ -136,6 +137,7 @@ lemma cl11_isChiralDirac :
             rw [hAnti]
     _ = 0 := by simp
 
+/-- Lemma `cl11Grading_involutive`. -/
 lemma cl11Grading_involutive :
     IsInvolutiveGrading (cl11Grading (E := E)) := by
   simpa [IsInvolutiveGrading, cl11Grading] using

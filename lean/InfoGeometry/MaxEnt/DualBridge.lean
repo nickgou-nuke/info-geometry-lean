@@ -8,7 +8,7 @@ open scoped BigOperators
 Adds the standard Jaynes dual/free-energy packaging on top of
 `InfoGeometry.MaxEnt.Optimality`:
 
-- dual objective `Φ(λ) = λ E + log Z(λ)`
+- dual objective `Φ(lam) = lam E + log Z(lam)`
 - moment residual `gibbsExpectation - E`
 - Gibbs feasibility ↔ residual vanishes
 - entropy upper bound by the dual objective on the constraint set
@@ -72,7 +72,7 @@ lemma entropy_gibbs_eq_dualObjective
   simpa [dualObjective] using
     entropy_gibbs_eq (n := n) (f := f) (E := E) (lam := lam) hE
 
-/-- Weak dual bound on the feasible set: any feasible entropy is bounded by `λE + log Z(λ)`. -/
+/-- Weak dual bound on the feasible set: any feasible entropy is bounded by `lamE + log Z(lam)`. -/
 theorem entropy_le_dualObjective_on_constraint
     (f : Fin n → ℝ) (E lam : ℝ)
     (q : Fin n → ℝ)
@@ -126,7 +126,10 @@ theorem gibbs_attains_dualObjective
     entropy (gibbs f lam) 1 = dualObjective (n := n) f E lam :=
   entropy_gibbs_eq_dualObjective (n := n) (f := f) (E := E) (lam := lam) hE
 
-/-- Packaged Jaynes optimality: feasible Gibbs maximizes entropy on the one-moment constraint set. -/
+/--
+Packaged Jaynes optimality: feasible Gibbs maximizes entropy on the one-moment
+constraint set.
+-/
 theorem gibbs_maximizes_entropy_on_constraint
     (f : Fin n → ℝ) (E lam : ℝ)
     (hE : gibbsExpectation f lam = E) :

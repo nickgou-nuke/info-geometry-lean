@@ -21,6 +21,7 @@ export InfoGeometry.Quantum.Fierz (
 open InfoGeometry.Quantum.Fierz
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
+/-- Theorem `majoranaBelief_iff_zeroArea`. -/
 theorem majoranaBelief_iff_zeroArea (ψ : Krein.DoubledSpace E) :
     IsMajoranaBelief (E := E) ψ ↔ infoArea (E := E) ψ = 0 := Iff.rfl
 

@@ -5,6 +5,7 @@ namespace InfoGeometry.Canonical.CliffordBridge
 
 open InfoGeometry.Clifford
 
+/-- Theorem `q_agrees_with_Gauge_quad`. -/
 theorem q_agrees_with_Gauge_quad (v : ℝ × ℝ) :
     splitQ11 v = InfoGeometry.Canonical.Gauge.quad .split v := by
   simp [splitQ11_apply, InfoGeometry.Canonical.Gauge.quad]
@@ -15,6 +16,7 @@ theorem splitQuadratic_eq_gaugeQuadratic (v : ℝ × ℝ) :
     splitQ11 v = InfoGeometry.Canonical.Gauge.quad .split v :=
   q_agrees_with_Gauge_quad v
 
+/-- Theorem `B_agrees_with_Gauge_bilinear`. -/
 theorem B_agrees_with_Gauge_bilinear (u v : ℝ × ℝ) :
     splitB11 u v = InfoGeometry.Canonical.Gauge.bilinear .split u v := by
   rfl

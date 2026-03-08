@@ -33,6 +33,7 @@ variable (n : Nat)
 def EmergentTimeFlow (T : SinkhornTrajectory n) : Prop :=
   ∀ k : Nat, trajectoryLyapunovNext n T k ≤ trajectoryLyapunov n T k
 
+/-- Theorem `emergentTimeFlow_of_sinkhornTrajectory`. -/
 theorem emergentTimeFlow_of_sinkhornTrajectory
     (T : SinkhornTrajectory n) :
     EmergentTimeFlow n T := by
@@ -50,6 +51,7 @@ variable {E : Type}
 abbrev AnomalyScalePhase (CI : ConformalInference E) : Prop :=
   CI.ChiralInferenceState
 
+/-- Theorem `anomalyScalePhase_of_nonzeroAnomaly`. -/
 theorem anomalyScalePhase_of_nonzeroAnomaly
     (CI : ConformalInference E)
     (hAnom : CI.chiralAnomalyOperator ≠ 0) :
@@ -63,11 +65,13 @@ section TorsionHysteresis
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
+/-- Theorem `pathDependence_of_twistedInference`. -/
 theorem pathDependence_of_twistedInference
     (T : TwistedInference E) :
     UpdateOrderPathDependent T.dual.nabla :=
   twistedInference_updateOrderPathDependent (T := T)
 
+/-- Theorem `exists_gaugeOrderHysteresis_witness`. -/
 theorem exists_gaugeOrderHysteresis_witness :
     ∃ (M : Coupling 2)
       (hrow : HasPositiveRowSums 2 M)

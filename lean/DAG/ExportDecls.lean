@@ -14,17 +14,21 @@ Exports a JSON inventory of "real" declarations (theorems/defs/axioms/opaque/ind
 from a loaded Lean environment, with optional dependency filtering by namespace.
 
 Usage:
-  lake env lean --run lean/scripts/ExportDecls.lean <import-module> <namespace-prefix> <output.json> [deps-prefix]
+  lake env lean --run lean/scripts/ExportDecls.lean
+    <import-module> <namespace-prefix> <output.json> [deps-prefix]
 
 Examples:
   -- Export declarations in namespace `InfoGeometry`, keep all deps
-  lake env lean --run lean/scripts/ExportDecls.lean InfoGeometry InfoGeometry docs-map/declarations.json
+  lake env lean --run lean/scripts/ExportDecls.lean
+    InfoGeometry InfoGeometry docs-map/declarations.json
 
   -- Export declarations in namespace `InfoGeometry`, keep only `InfoGeometry.*` deps
-  lake env lean --run lean/scripts/ExportDecls.lean InfoGeometry InfoGeometry docs-map/declarations.json InfoGeometry
+  lake env lean --run lean/scripts/ExportDecls.lean
+    InfoGeometry InfoGeometry docs-map/declarations.json InfoGeometry
 
   -- Inspection mode (no namespace filter): use "*" (or "")
-  lake env lean --run lean/scripts/ExportDecls.lean InfoGeometry "*" docs-map/declarations.debug.json
+  lake env lean --run lean/scripts/ExportDecls.lean
+    InfoGeometry "*" docs-map/declarations.debug.json
 -/
 
 structure DeclRow where
@@ -134,7 +138,8 @@ def collectDecls
       match kindString? ci with
       | some k =>
           let doc ← getDocString env declName
-          let typeStr := toString ci.type -- Note: simple toString for now; can be enhanced with MetaM later
+          -- Note: simple `toString` for now; can be enhanced with `MetaM` later.
+          let typeStr := toString ci.type
           let deps := getDeps ci depsPrefix?
           rows := rows.push
             { name := toString declName
@@ -187,7 +192,9 @@ def sampleNames (env : Environment) (probePrefix : String) (limit : Nat := 40) :
       allNames.filter (fun s => s.startsWith probePrefix)
   filtered.take limit
 
-def runExport (importModsStr nsPrefix outPath : String) (depsPrefix? : Option String) : IO UInt32 := do
+def runExport
+    (importModsStr nsPrefix outPath : String)
+    (depsPrefix? : Option String) : IO UInt32 := do
   -- allow comma-separated list of modules
   let importMods := importModsStr.splitOn "," |>.map (fun s => dottedName s)
   -- build an Array Import
@@ -206,7 +213,9 @@ def runExport (importModsStr nsPrefix outPath : String) (depsPrefix? : Option St
     | some p => p
     | none   => "ALL"
 
-  IO.println s!"[ExportDecls] modules={importModsStr} namespace={nsPrefix} deps={depsMsg} count={rows.size}"
+  IO.println <|
+    s!"[ExportDecls] modules={importModsStr} namespace={nsPrefix} deps={depsMsg} " ++
+      s!"count={rows.size}"
   IO.println s!"[ExportDecls] wrote {outPath}"
 
   if rows.size = 0 then
@@ -215,7 +224,9 @@ def runExport (importModsStr nsPrefix outPath : String) (depsPrefix? : Option St
     IO.println s!"[ExportDecls] WARNING: exported 0 declarations."
     IO.println s!"[ExportDecls] Sample names in env (prefix '{probe}'): {samples}"
     IO.println s!"[ExportDecls] Hint: module name and declaration namespace may differ."
-    IO.println s!"[ExportDecls] Try namespace='*' (inspection mode) or the actual namespace from the sample."
+    IO.println <|
+      s!"[ExportDecls] Try namespace='*' (inspection mode) or the actual namespace " ++
+        s!"from the sample."
   return 0
 
 def main (args : List String) : IO UInt32 := do
@@ -227,9 +238,17 @@ def main (args : List String) : IO UInt32 := do
       runExport importModsStr nsPrefix outPath (normalizePrefix? depsPrefix)
 
   | _ =>
-      IO.eprintln "usage: ExportDecls <import-module[,module2,...]> <namespace-prefix> <output.json> [deps-prefix]"
+      IO.eprintln <|
+        "usage: ExportDecls <import-module[,module2,...]> <namespace-prefix> <output.json> " ++
+          "[deps-prefix]"
       IO.eprintln "examples:"
-      IO.eprintln "  lake env lean --run lean/scripts/ExportDecls.lean InfoGeometry.Core,InfoGeometry.Convex InfoGeometry docs-map/declarations.json"
-      IO.eprintln "  lake env lean --run lean/scripts/ExportDecls.lean InfoGeometry.Core InfoGeometry docs-map/declarations.json InfoGeometry"
-      IO.eprintln "  lake env lean --run lean/scripts/ExportDecls.lean InfoGeometry.Core \"*\" docs-map/declarations.debug.json"
+      IO.eprintln <|
+        "  lake env lean --run lean/scripts/ExportDecls.lean " ++
+          "InfoGeometry.Core,InfoGeometry.Convex InfoGeometry docs-map/declarations.json"
+      IO.eprintln <|
+        "  lake env lean --run lean/scripts/ExportDecls.lean " ++
+          "InfoGeometry.Core InfoGeometry docs-map/declarations.json InfoGeometry"
+      IO.eprintln <|
+        "  lake env lean --run lean/scripts/ExportDecls.lean " ++
+          "InfoGeometry.Core \"*\" docs-map/declarations.debug.json"
       return 1

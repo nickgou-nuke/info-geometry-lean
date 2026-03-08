@@ -39,3 +39,20 @@ The framework gives a constructive ontology:
 
 This aligns the canonical stack with a fully derived spacetime viewpoint:
 no fixed background manifold is assumed; geometry is produced by operator flow.
+
+## 4. Fluid Circulation as Chiral Anomaly Flow
+
+`Canonical/NavierStokesBridge.lean` adds an operator-to-fluid bridge layer:
+
+- `anomaly_as_fluid_state_with_density` maps `EinsteinAnomaly` into a
+  positive-density fluid state (`ρ > 0`).
+- `modular_circulation_response` defines circulation through modular pairing
+  `ω (Sigma.comp K)` instead of trace-based formulas.
+- `hasDerivAt_modularVelocity_zero` and `deriv_modularVelocity_zero` identify
+  the `β = 0` differential response of modular velocity with the modular
+  Hamiltonian.
+- `chiral_anomaly_sources_flow` states that the commutator anomaly sources
+  chiral flux in the doubled/Krein setting.
+
+Interpretation: circulation is encoded as anomaly-driven modular transport;
+chiral imbalance is a flow observable, not an added primitive.

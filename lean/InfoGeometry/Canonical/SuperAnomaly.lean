@@ -69,12 +69,14 @@ namespace SuperTraceLike
 
 variable (S : SuperTraceLike (H := H))
 
+/-- Lemma `graded_trace_commutator`. -/
 lemma graded_trace_commutator {A B : EndH H}
     (hA : IsParity (H := H) SuperParity.even A)
     (hB : IsParity (H := H) SuperParity.even B) :
     S.τ (commutator (H := H) A B) = 0 :=
   S.graded_trace hA hB
 
+/-- Lemma `graded_trace_anticommutator`. -/
 lemma graded_trace_anticommutator {A B : EndH H}
     (hA : IsParity (H := H) SuperParity.odd A)
     (hB : IsParity (H := H) SuperParity.odd B) :

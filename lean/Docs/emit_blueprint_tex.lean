@@ -3,6 +3,12 @@ import DAG.Basic
 import DAG.Hydrate
 import DAG.Analysis
 
+/-!
+# Docs.emit_blueprint_tex
+
+LaTeX blueprint emission from DAG-derived skeletons.
+-/
+
 open Lean
 open DAG
 
@@ -18,7 +24,9 @@ def emitSkeletonNode (env : Environment) (name : Name) (vulSrcs : Nat) : IO Stri
   let mut out := "\\subsection{" ++ nameStr ++ "}\n"
 
   -- Add a metric badge showing its topological importance
-  out := out ++ "\\noindent\\textbf{Topological Vulnerability:} " ++ toString vulSrcs ++ " downstream dependencies.\\\\ \n\n"
+  out := out ++
+    "\\noindent\\textbf{Topological Vulnerability:} " ++
+    toString vulSrcs ++ " downstream dependencies.\\\\ \n\n"
 
   -- Extract docstring if available
   if let some doc ← Lean.findDocString? env name then
@@ -57,7 +65,9 @@ def emitBlueprint (env : Environment) (nsPrefix : String) (outPath : String) : I
   tex := tex ++ "\\maketitle\n\n"
 
   tex := tex ++ "\\section{The Core Topological Skeleton}\n"
-  tex := tex ++ "The following concepts form the structural load-bearing pillars of the theory, ranked by their downstream impact.\n\n"
+  tex := tex ++
+    "The following concepts form the structural load-bearing pillars of the theory, " ++
+    "ranked by their downstream impact.\n\n"
 
   for (n, _, vulSrcs) in skeleton do
     let nodeTex ← emitSkeletonNode env n vulSrcs
@@ -70,8 +80,7 @@ def emitBlueprint (env : Environment) (nsPrefix : String) (outPath : String) : I
 
 end Docs
 
-
-
+/-- Top-level `--run` entry point for blueprint emission. -/
 def emit_blueprint_main (args : List String) : IO UInt32 := do
   let ns := args.headD "InfoGeometry"
   let outPath := if args.length > 1 then args[1]! else "blueprint.tex"

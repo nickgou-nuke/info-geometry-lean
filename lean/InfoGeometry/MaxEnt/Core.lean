@@ -36,6 +36,7 @@ instance (μ₀ : Measure Ω) : CoeTC (ACProbMeasure μ₀) (Measure Ω) := ⟨f
 instance (P : ACProbMeasure μ₀) : IsProbabilityMeasure P.μ :=
   ⟨by simpa using P.prob⟩
 
+/-- Equality of underlying measures implies equality after coercion. -/
 lemma coe_eq_of_measure_eq {P Q : ACProbMeasure μ₀} (h : P.μ = Q.μ) :
     (P : Measure Ω) = (Q : Measure Ω) := by
   simpa using h
@@ -64,12 +65,14 @@ def IntegrableUnder (μ : Measure Ω) (C : LinearConstraint Ω) : Prop :=
 def SatisfiesIntegrable (μ : Measure Ω) (C : LinearConstraint Ω) : Prop :=
   IntegrableUnder (μ := μ) C ∧ Satisfies (μ := μ) C
 
+/-- Projection of integrability from `SatisfiesIntegrable`. -/
 lemma SatisfiesIntegrable.integrable
     {μ : Measure Ω} {C : LinearConstraint Ω}
     (hC : SatisfiesIntegrable (μ := μ) C) :
     IntegrableUnder (μ := μ) C :=
   hC.1
 
+/-- Projection of moment equality from `SatisfiesIntegrable`. -/
 lemma SatisfiesIntegrable.satisfies
     {μ : Measure Ω} {C : LinearConstraint Ω}
     (hC : SatisfiesIntegrable (μ := μ) C) :
@@ -96,12 +99,14 @@ def ConstraintsIntegrableOn
     (constraints : Set (LinearConstraint Ω)) : Prop :=
   ∀ C ∈ constraints, LinearConstraint.IntegrableUnder (μ := μ) C
 
+/-- Integrability-aware feasibility implies plain feasibility. -/
 lemma FeasibleIntegrable_subset_Feasible
     (constraints : Set (LinearConstraint Ω)) :
     FeasibleIntegrable (μ₀ := μ₀) constraints ⊆ Feasible (μ₀ := μ₀) constraints := by
   intro P hP C hC
   exact (hP C hC).satisfies
 
+/-- Members of `FeasibleIntegrable` satisfy integrability for all constraints. -/
 lemma ConstraintsIntegrableOn_of_memFeasibleIntegrable
     (constraints : Set (LinearConstraint Ω))
     {P : ACProbMeasure μ₀}
@@ -130,6 +135,7 @@ def IsMaxEntSolutionIntegrable
     ∀ Q, Q ∈ FeasibleIntegrable (μ₀ := μ₀) constraints →
       Objective (μ₀ := μ₀) P ≤ Objective (μ₀ := μ₀) Q
 
+/-- Promote plain optimality to integrability-aware optimality when feasible-integrable. -/
 lemma IsMaxEntSolution.toIntegrable
     (constraints : Set (LinearConstraint Ω))
     {P : ACProbMeasure μ₀}

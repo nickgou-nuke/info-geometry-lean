@@ -44,6 +44,7 @@ noncomputable def analyticalIndex (D Γ : Endomorphism V) : ℤ :=
   (Module.finrank ℝ (LinearMap.ker (chiralPartPlus D Γ)) : ℤ) -
     (Module.finrank ℝ (LinearMap.ker (chiralPartMinus D Γ)) : ℤ)
 
+/-- Lemma `analyticalIndex_eq_of_chiralParts_eq`. -/
 lemma analyticalIndex_eq_of_chiralParts_eq
     (D Γ D' Γ' : Endomorphism V)
     (hplus : chiralPartPlus D Γ = chiralPartPlus D' Γ')
@@ -55,6 +56,7 @@ lemma analyticalIndex_eq_of_chiralParts_eq
 def IndexInvariantAlong (D Γ : ℝ → Endomorphism V) : Prop :=
   ∀ s : ℝ, analyticalIndex (D s) (Γ s) = analyticalIndex (D 0) (Γ 0)
 
+/-- Theorem `indexInvariantAlong_of_chiralPart_const`. -/
 theorem indexInvariantAlong_of_chiralPart_const
     (D Γ : ℝ → Endomorphism V)
     (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
@@ -105,6 +107,7 @@ variable {E F : Type*}
 def Cl11BottLaplacianZero (Dn : Endomorphism F) : Prop :=
   cl11BottLaplacian (E := E) Dn = 0
 
+/-- Theorem `cl11_bottDirac_sq_eq_zero_of_laplacian_zero`. -/
 theorem cl11_bottDirac_sq_eq_zero_of_laplacian_zero
     (Dn : Endomorphism F)
     (hZero : Cl11BottLaplacianZero (E := E) Dn) :
@@ -136,6 +139,7 @@ def SinkhornRicciIndexInvariant
     ∧ (∀ s : ℝ, flow s = 0)
     ∧ IndexInvariantAlong D Γ
 
+/-- Theorem `sinkhornRicciIndexInvariant_of_hypotheses`. -/
 theorem sinkhornRicciIndexInvariant_of_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
@@ -183,6 +187,7 @@ theorem sinkhornKMSState_of_drive
   exact sinkhorn_step_kmsClosure_of_control
     (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive
 
+/-- Theorem `sinkhornKMSCapstone_of_drive`. -/
 theorem sinkhornKMSCapstone_of_drive
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
@@ -193,6 +198,7 @@ theorem sinkhornKMSCapstone_of_drive
   refine ⟨hDrive, ?_⟩
   exact sinkhornKMSState_of_drive (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive
 
+/-- Lemma `SinkhornKMSCapstone`. -/
 lemma SinkhornKMSCapstone.kmsState
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
@@ -247,6 +253,7 @@ def concreteGradingFamily (B : ConcreteCl11BottFlow F) :
     ℝ → Endomorphism (DoubledSpace E ⊗[ℝ] F) :=
   fun s => cl11GlobalGrading (E := E) (B.Γn s)
 
+/-- Lemma `concreteChiralPartPlus_const`. -/
 lemma concreteChiralPartPlus_const
     (B : ConcreteCl11BottFlow F) :
     ∀ s : ℝ,
@@ -256,6 +263,7 @@ lemma concreteChiralPartPlus_const
   simp [concreteDiracFamily, concreteGradingFamily,
     B.Dn_const s, B.Γn_const s]
 
+/-- Lemma `concreteChiralPartMinus_const`. -/
 lemma concreteChiralPartMinus_const
     (B : ConcreteCl11BottFlow F) :
     ∀ s : ℝ,
@@ -305,6 +313,7 @@ def FullThermoGeoIndexCapstone
   SinkhornRicciIndexInvariant n T flow D Γ ∧
     SinkhornKMSCapstone n T.traj K ω β
 
+/-- Theorem `fullThermoGeoIndexCapstone_of_hypotheses`. -/
 theorem fullThermoGeoIndexCapstone_of_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
@@ -325,6 +334,7 @@ theorem fullThermoGeoIndexCapstone_of_hypotheses
   · exact sinkhornKMSCapstone_of_drive
       (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hDrive
 
+/-- Lemma `FullThermoGeoIndexCapstone`. -/
 lemma FullThermoGeoIndexCapstone.geometricAlgebraicState
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
@@ -336,6 +346,7 @@ lemma FullThermoGeoIndexCapstone.geometricAlgebraicState
     SinkhornRicciIndexInvariant n T flow D Γ :=
   hCap.1
 
+/-- Lemma `FullThermoGeoIndexCapstone`. -/
 lemma FullThermoGeoIndexCapstone.thermodynamicKMSState
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)

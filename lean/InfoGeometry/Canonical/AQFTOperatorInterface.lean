@@ -50,11 +50,13 @@ into an abstract operator algebra.
 structure AQFTOperatorRealization where
   realize : AlgebraEnd F → Obs
 
+/-- Theorem `cstarReady_of_instance`. -/
 theorem cstarReady_of_instance
     [CStarRing Obs] :
     IsCStarReady (Obs := Obs) := by
   infer_instance
 
+/-- Theorem `vonNeumannReady_of_instance`. -/
 theorem vonNeumannReady_of_instance
     [CStarRing Obs] [CompleteSpace Obs] :
     IsVonNeumannReady (Obs := Obs) := by
@@ -98,10 +100,12 @@ def realHilbertCompressionRealization :
     AQFTOperatorRealization (F := E) (Obs := RealHilbertObs E) where
   realize := firstLegCompression (E := E)
 
+/-- Theorem `realHilbertOp_cstarReady`. -/
 theorem realHilbertOp_cstarReady :
     IsCStarReady (Obs := RealHilbertObs E) := by
   infer_instance
 
+/-- Theorem `realHilbertOp_vonNeumannReady`. -/
 theorem realHilbertOp_vonNeumannReady :
     IsVonNeumannReady (Obs := RealHilbertObs E) := by
   exact ⟨realHilbertOp_cstarReady (E := E), inferInstance⟩
@@ -150,10 +154,12 @@ def complexHilbertCompressionRealization :
     ComplexAQFTOperatorRealization (H := H) (Obs := ComplexHilbertObs H) where
   realize := complexFirstLegCompression (H := H)
 
+/-- Theorem `complexHilbertOp_cstarReady`. -/
 theorem complexHilbertOp_cstarReady :
     IsCStarReady (Obs := ComplexHilbertObs H) := by
   infer_instance
 
+/-- Theorem `complexHilbertOp_vonNeumannReady`. -/
 theorem complexHilbertOp_vonNeumannReady :
     IsVonNeumannReady (Obs := ComplexHilbertObs H) := by
   exact ⟨complexHilbertOp_cstarReady (H := H), inferInstance⟩

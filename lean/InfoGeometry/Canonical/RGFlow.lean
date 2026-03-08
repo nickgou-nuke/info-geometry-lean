@@ -17,7 +17,7 @@ def InformationFlow (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
 /--
 The Beta Function of the information potential.
-β(ψ) = ∂ψ/∂λ, where λ is the logarithmic scale of coarse-graining.
+β(ψ) = ∂ψ/∂fun, where fun is the logarithmic scale of coarse-graining.
 This measures how the 'Information Mass' changes as we ignore microscopic details.
 -/
 noncomputable def betaFunction (flow : InformationFlow E) (scale : ℝ) (x : E) : ℝ :=

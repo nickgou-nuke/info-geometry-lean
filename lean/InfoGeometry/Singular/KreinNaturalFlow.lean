@@ -1,4 +1,3 @@
-import Mathlib
 import Mathlib.Analysis.Normed.Lp.ProdLp
 import Mathlib.Topology.Algebra.Module.StrongTopology
 import InfoGeometry.Singular.MoorePenroseAdjoint

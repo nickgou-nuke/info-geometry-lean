@@ -65,6 +65,7 @@ noncomputable def wilsonPropagatorDiscrete (Dε : DiracField X n) (γ : List X) 
     Matrix n n ℂ :=
   γ.foldl (fun U x => U * wilsonStep Dε dt x) 1
 
+/-- Definition `wilsonLoopDiscrete`. -/
 noncomputable def wilsonLoopDiscrete (Dε : DiracField X n) (γ : List X) (dt : ℂ) : ℂ :=
   Matrix.trace (wilsonPropagatorDiscrete Dε γ dt)
 

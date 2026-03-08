@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "[strict-check] building InfoGeometry.Library with warnings as errors"
-lake build InfoGeometry.Library --wfail
+echo "[strict-check] building default targets with warnings as errors"
+lake build --wfail
 
 echo "[strict-check] elaborating InfoGeometry/Library.lean"
 lake env lean lean/InfoGeometry/Library.lean
@@ -61,3 +61,24 @@ if rg -n "\\b(sorry|admit)\\b|content will be moved here" "${CANONICAL_PATHS[@]}
 fi
 
 echo "[strict-check] OK"
+echo "[strict-check] running naming convention audit"
+echo "[strict-check] running docstring audit"
+echo "[strict-check] running style audit"
+set +e
+python3 scripts/quality/audit_naming.py
+naming_status=$?
+python3 scripts/quality/audit_docstrings.py
+docstring_status=$?
+python3 scripts/quality/audit_style.py
+style_status=$?
+set -e
+
+if [[ $naming_status -ne 0 || $docstring_status -ne 0 || $style_status -ne 0 ]]; then
+  echo "[strict-check] quality audits failed:"
+  echo "  naming audit exit code: $naming_status"
+  echo "  docstring audit exit code: $docstring_status"
+  echo "  style audit exit code: $style_status"
+  exit 1
+fi
+
+echo "[strict-check] all quality audits passed"

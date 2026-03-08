@@ -30,6 +30,7 @@ def fisherBilinear
     (u v : FiberTangent α) : ℝ :=
   ∑ a : α, p θ a * (u a * v a)
 
+/-- Lemma `fisherBilinear_comm`. -/
 lemma fisherBilinear_comm
     (p : Θ → InfoGeometry.FinProb α)
     (θ : Θ)
@@ -38,6 +39,7 @@ lemma fisherBilinear_comm
   unfold fisherBilinear
   simp [mul_assoc, mul_comm]
 
+/-- Lemma `fisherBilinear_self_nonneg`. -/
 lemma fisherBilinear_self_nonneg
     (p : Θ → InfoGeometry.FinProb α)
     (θ : Θ)
@@ -58,6 +60,7 @@ def chentsovTensor
     (u v w : FiberTangent α) : ℝ :=
   ∑ a : α, p θ a * (u a * v a * w a)
 
+/-- Lemma `chentsovTensor_swap_left`. -/
 lemma chentsovTensor_swap_left
     (p : Θ → InfoGeometry.FinProb α)
     (θ : Θ)
@@ -88,6 +91,7 @@ noncomputable def mConnectionTensor
     (p : Θ → InfoGeometry.FinProb α) : ConnectionTensor Θ α :=
   alphaConnectionTensor Gamma0 p (-1)
 
+/-- Lemma `alphaConnectionTensor_zero`. -/
 lemma alphaConnectionTensor_zero
     (Gamma0 : ConnectionTensor Θ α)
     (p : Θ → InfoGeometry.FinProb α) :
@@ -95,6 +99,7 @@ lemma alphaConnectionTensor_zero
   funext θ u v w
   simp [alphaConnectionTensor]
 
+/-- Lemma `alphaConnectionTensor_dual_sum`. -/
 lemma alphaConnectionTensor_dual_sum
     (Gamma0 : ConnectionTensor Θ α)
     (p : Θ → InfoGeometry.FinProb α)
@@ -107,6 +112,7 @@ lemma alphaConnectionTensor_dual_sum
   unfold alphaConnectionTensor
   ring
 
+/-- Lemma `alphaConnectionTensor_dual_diff`. -/
 lemma alphaConnectionTensor_dual_diff
     (Gamma0 : ConnectionTensor Θ α)
     (p : Θ → InfoGeometry.FinProb α)
@@ -119,6 +125,7 @@ lemma alphaConnectionTensor_dual_diff
   unfold alphaConnectionTensor
   ring
 
+/-- Lemma `e_m_connection_sum`. -/
 lemma e_m_connection_sum
     (Gamma0 : ConnectionTensor Θ α)
     (p : Θ → InfoGeometry.FinProb α)

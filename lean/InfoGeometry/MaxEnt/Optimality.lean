@@ -40,6 +40,7 @@ noncomputable def gibbsDist (f : Fin n → ℝ) (lam : ℝ) :
   sum_one := gibbs_sum_one f lam
   nonneg := fun i => gibbs_nonneg f lam i
 
+/-- Cross-entropy to Gibbs equals `funE + log Z` on the constraint set. -/
 lemma crossEntropyToGibbs_eq
     (f : Fin n → ℝ) (E lam : ℝ)
     {q : Fin n → ℝ}
@@ -91,6 +92,7 @@ lemma crossEntropyToGibbs_eq
           rw [hqE, hq_norm]
           ring
 
+/-- Entropy of the Gibbs law under matched moments equals `funE + log Z`. -/
 lemma entropy_gibbs_eq
     (f : Fin n → ℝ) (E lam : ℝ)
     (hE : gibbsExpectation f lam = E) :
@@ -176,7 +178,7 @@ theorem max_ent_lagrange_multiplier_gibbs
     entropy q 1 ≤ entropy (gibbs f lam) 1 := hq_le_gibbs
     _ = entropy p 1 := hp_eq_gibbs.symm
 
-/-- MaxEnt optimality in explicit Boltzmann form `exp(-λ fᵢ)/Z`. -/
+/-- MaxEnt optimality in explicit Boltzmann form `exp(-lam fᵢ)/Z`. -/
 theorem max_ent_lagrange_multiplier
     (f : Fin n → ℝ) (E lam : ℝ)
     (p : Fin n → ℝ)

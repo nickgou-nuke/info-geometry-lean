@@ -100,22 +100,26 @@ noncomputable def weylOrderWitnessMatrix2 : Coupling 2 :=
     | 1, 1 => 4
     | _, _ => 0
 
+/-- Lemma `weylOrderWitnessMatrix2_positiveRows`. -/
 lemma weylOrderWitnessMatrix2_positiveRows :
     HasPositiveRowSums 2 weylOrderWitnessMatrix2 := by
   intro i
   fin_cases i <;> norm_num [rowSum, weylOrderWitnessMatrix2]
 
+/-- Lemma `weylOrderWitnessMatrix2_positiveCols`. -/
 lemma weylOrderWitnessMatrix2_positiveCols :
     HasPositiveColSums 2 weylOrderWitnessMatrix2 := by
   intro j
   fin_cases j <;> norm_num [colSum, weylOrderWitnessMatrix2]
 
+/-- Lemma `weylOrderWitnessMatrix2_positiveCols_afterRow`. -/
 lemma weylOrderWitnessMatrix2_positiveCols_afterRow :
     HasPositiveColSums 2
       (rowNormalize 2 weylOrderWitnessMatrix2 weylOrderWitnessMatrix2_positiveRows) := by
   intro j
   fin_cases j <;> norm_num [colSum, rowNormalize, rowSum, weylOrderWitnessMatrix2]
 
+/-- Lemma `weylOrderWitnessMatrix2_positiveRows_afterCol`. -/
 lemma weylOrderWitnessMatrix2_positiveRows_afterCol :
     HasPositiveRowSums 2
       (colNormalize 2 weylOrderWitnessMatrix2 weylOrderWitnessMatrix2_positiveCols) := by

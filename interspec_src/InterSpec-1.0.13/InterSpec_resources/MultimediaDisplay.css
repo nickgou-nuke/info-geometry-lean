@@ -1,0 +1,70 @@
+.MultimediaDialogTitle 
+{
+  /* If the InterSpec window is really narrow, the title could cause scroll-bars to appear, but oh well for now */
+  white-space: nowrap;
+}
+
+.MultimediaDisplay
+{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.MultimediaDisplay .NoContentTxt
+{
+
+}
+
+.MultimediaDisplay .AddInfo
+{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.MultimediaDisplay .Remark
+{
+
+}
+
+.MultimediaDisplay .Description
+{
+
+}
+
+.MultimediaDisplay .Time
+{
+
+}
+
+
+.MultimediaDisplay .Nav, .MultimediaDisplay .PrefAndDownload
+{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.MultimediaDisplay .Nav .Prev, .MultimediaDisplay .Nav .Next
+{
+}
+
+.MultimediaDisplay .Nav .NavPos
+{
+
+}
+
+.MultimediaDisplay .SpecImage
+{
+  /* Without subtracting the 50px for the width, we will get horizontal scroll bars if the InterSpec window is too narrow */
+  max-width: calc(50vw - 50px);
+  max-height: 50vh;
+}

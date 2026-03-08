@@ -56,6 +56,7 @@ noncomputable def routingEpsilon {n : Nat}
     (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel) : ℝ :=
   |routingChiralAnomaly w label|
 
+/-- Lemma `routingChiralAnomaly_eq_semantic_coord_gap`. -/
 lemma routingChiralAnomaly_eq_semantic_coord_gap {n : Nat}
     (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel) :
     routingChiralAnomaly w label
@@ -63,12 +64,14 @@ lemma routingChiralAnomaly_eq_semantic_coord_gap {n : Nat}
   unfold routingChiralAnomaly
   rw [cliffordSemanticState_fst_eq_plusMass, cliffordSemanticState_snd_eq_minusMass]
 
+/-- Lemma `routingEpsilon_nonneg`. -/
 lemma routingEpsilon_nonneg {n : Nat}
     (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel) :
     0 ≤ routingEpsilon w label := by
   unfold routingEpsilon
   exact abs_nonneg _
 
+/-- Lemma `routingEpsilon_le_one_of_simplex`. -/
 lemma routingEpsilon_le_one_of_simplex {n : Nat}
     (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel)
     (hw_nonneg : ∀ σ, 0 ≤ w σ)
@@ -91,6 +94,7 @@ lemma routingEpsilon_le_one_of_simplex {n : Nat}
           simp [abs_of_nonneg hp, abs_of_nonneg hq]
     _ = 1 := hsum_pm
 
+/-- Lemma `routingEpsilon_eq_semantic_gap_abs`. -/
 lemma routingEpsilon_eq_semantic_gap_abs {n : Nat}
     (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel) :
     routingEpsilon w label
@@ -152,6 +156,7 @@ noncomputable def sinkhornPermutationWeights
     (hM : M ∈ doublyStochastic ℝ (Fin n)) : PermMode n → ℝ :=
   Classical.choose (exists_eq_sum_perm_of_mem_doublyStochastic (M := M) hM)
 
+/-- Lemma `sinkhornPermutationWeights_nonneg`. -/
 lemma sinkhornPermutationWeights_nonneg
     (M : SinkhornMatrix n)
     (hM : M ∈ doublyStochastic ℝ (Fin n)) :
@@ -159,6 +164,7 @@ lemma sinkhornPermutationWeights_nonneg
   classical
   exact (Classical.choose_spec (exists_eq_sum_perm_of_mem_doublyStochastic (M := M) hM)).1
 
+/-- Lemma `sinkhornPermutationWeights_sum_one`. -/
 lemma sinkhornPermutationWeights_sum_one
     (M : SinkhornMatrix n)
     (hM : M ∈ doublyStochastic ℝ (Fin n)) :
@@ -166,6 +172,7 @@ lemma sinkhornPermutationWeights_sum_one
   classical
   exact (Classical.choose_spec (exists_eq_sum_perm_of_mem_doublyStochastic (M := M) hM)).2.1
 
+/-- Lemma `sinkhornPermutationWeights_decomposition`. -/
 lemma sinkhornPermutationWeights_decomposition
     (M : SinkhornMatrix n)
     (hM : M ∈ doublyStochastic ℝ (Fin n)) :
@@ -183,6 +190,7 @@ noncomputable def selectedRoutingEpsilon
     (label : PermMode n → CliffordLabel) : ℝ :=
   routingEpsilon (sinkhornPermutationWeights n M hM) label
 
+/-- Lemma `selectedRoutingEpsilon_le_one`. -/
 lemma selectedRoutingEpsilon_le_one
     (M : SinkhornMatrix n)
     (hM : M ∈ doublyStochastic ℝ (Fin n))
@@ -209,6 +217,7 @@ noncomputable def trajectorySelectedRoutingEpsilon
     (label : PermMode n → CliffordLabel) : ℝ :=
   selectedRoutingEpsilon n (T.traj.state k) (T.mem_doublyStochastic k) label
 
+/-- Lemma `trajectorySelectedRoutingEpsilon_le_one`. -/
 lemma trajectorySelectedRoutingEpsilon_le_one
     (T : DoublyStochasticSinkhornTrajectory n) (k : Nat)
     (label : PermMode n → CliffordLabel) :
@@ -258,6 +267,7 @@ noncomputable def sinkhornIterate
       | .row => rowNormalize n Mk (hrow Mk)
       | .col => colNormalize n Mk (hcol Mk)
 
+/-- Lemma `sinkhornIterate_step`. -/
 lemma sinkhornIterate_step
     (M0 : SinkhornMatrix n)
     (hrow : ∀ M : SinkhornMatrix n, HasPositiveRowSums n M)

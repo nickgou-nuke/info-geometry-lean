@@ -40,6 +40,7 @@ def FeasibleSetIntegrable {ι : Type*} [Fintype ι] (C : MomentFamily (Ω := Ω)
     Set (ProbabilityMeasure Ω) :=
   {P | SatisfiesIntegrable (Ω := Ω) C P}
 
+/-- Integrability-aware constraint satisfaction implies plain satisfaction. -/
 lemma SatisfiesIntegrable.satisfies
     {ι : Type*} [Fintype ι]
     {C : MomentFamily (Ω := Ω) ι} {P : ProbabilityMeasure Ω}
@@ -48,6 +49,7 @@ lemma SatisfiesIntegrable.satisfies
   intro i
   exact (hP i).2
 
+/-- The integrable feasible set is contained in the plain feasible set. -/
 lemma FeasibleSetIntegrable_subset_FeasibleSet
     {ι : Type*} [Fintype ι]
     (C : MomentFamily (Ω := Ω) ι) :
@@ -71,8 +73,8 @@ noncomputable def objectiveKL (P : ProbabilityMeasure Ω) : ℝ≥0∞ :=
 /-!
 ## 3. Gibbs / exponential-family solution via exponential tilting
 
-Given multipliers `λ : ι → ℝ`, define the Jaynes potential
-`Φ(x) = - ∑ᵢ λᵢ fᵢ(x)` and set `P_λ := μ₀.tilted Φ`.
+Given multipliers `lam : ι → ℝ`, define the Jaynes potential
+`Φ(x) = - ∑ᵢ lamᵢ fᵢ(x)` and set `P_lam := μ₀.tilted Φ`.
 -/
 
 section Gibbs
@@ -80,11 +82,11 @@ section Gibbs
 variable {ι : Type*} [Fintype ι]
 variable (C : MomentFamily (Ω := Ω) ι)
 
-/-- Jaynes/Gibbs potential `Φ(x) = -∑ᵢ λᵢ fᵢ(x)`. -/
+/-- Jaynes/Gibbs potential `Φ(x) = -∑ᵢ lamᵢ fᵢ(x)`. -/
 noncomputable def potential (lam : ι → ℝ) : Ω → ℝ :=
   fun x => -∑ i, (lam i) * (C.f i x)
 
-/-- Partition function `Z(λ) = ∫ exp(Φ(x)) dμ₀`. -/
+/-- Partition function `Z(lam) = ∫ exp(Φ(x)) dμ₀`. -/
 noncomputable def partitionFunction (lam : ι → ℝ) : ℝ :=
   ∫ x, Real.exp (potential (C := C) lam x) ∂μ₀
 
@@ -129,6 +131,7 @@ theorem rnDeriv_gibbsMeasure_eq (lam : ι → ℝ) :
       (aemeasurable_potential (μ₀ := μ₀) (C := C) lam))
 
 omit [IsProbabilityMeasure μ₀] in
+/-- The Gibbs partition function is nonnegative. -/
 lemma partitionFunction_nonneg (lam : ι → ℝ) :
     0 ≤ partitionFunction (μ₀ := μ₀) (C := C) lam := by
   unfold partitionFunction
@@ -176,6 +179,7 @@ end Gibbs
 The full variational proof (existence/uniqueness + Lagrange multipliers) is substantial.
 -/
 
+/-- Proposition interface expressing that Gibbs minimizes KL on the feasible set. -/
 def gibbs_minimizes_kl
     {ι : Type*} [Fintype ι]
     (C : MomentFamily (Ω := Ω) ι)
@@ -189,6 +193,7 @@ def gibbs_minimizes_kl
       objectiveKL (μ₀ := μ₀) (gibbs (μ₀ := μ₀) (C := C) lam hInt)
         ≤ objectiveKL (μ₀ := μ₀) P
 
+/-- CamelCase alias for the Gibbs-minimizes-KL proposition interface. -/
 def GibbsMinimizesKL
     {ι : Type*} [Fintype ι]
     (C : MomentFamily (Ω := Ω) ι)

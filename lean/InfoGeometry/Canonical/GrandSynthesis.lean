@@ -307,6 +307,7 @@ Relative-volume change surrogate induced by the RN Kahler potential.
 noncomputable def relativeVolumeChangeRN (M : SinkhornMatrix n) : ℝ :=
   Real.exp (-kahlerPotentialRN n M)
 
+/-- Lemma `relativeVolumeChangeRN_eq_exp_logJacobian`. -/
 lemma relativeVolumeChangeRN_eq_exp_logJacobian
     (M : SinkhornMatrix n) :
     relativeVolumeChangeRN n M

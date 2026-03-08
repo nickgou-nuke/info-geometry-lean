@@ -104,6 +104,7 @@ end BosonFermionSplit
 
 section KKT_Construction
 
+/-- Theorem `bracket_boson_boson_is_bosonic`. -/
 theorem bracket_boson_boson_is_bosonic
     (S : SuperKaehlerStructure (E := E))
     {A B : End E}

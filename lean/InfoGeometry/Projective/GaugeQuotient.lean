@@ -1,5 +1,11 @@
 import Mathlib.LinearAlgebra.Projectivization.Basic
 
+/-!
+# InfoGeometry.Projective.GaugeQuotient
+
+Gauge-quotient helpers for rays in projectivized linear spaces.
+-/
+
 namespace InfoGeometry.Projective
 
 open scoped LinearAlgebra.Projectivization

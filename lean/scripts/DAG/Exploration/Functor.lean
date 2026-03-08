@@ -1,6 +1,12 @@
 import Lean
 import DAG.Functor
 
+/-!
+# scripts.DAG.Exploration.Functor
+
+Exploratory script for searching small commutative-square patterns in declaration graphs.
+-/
+
 open Lean
 open DAG
 

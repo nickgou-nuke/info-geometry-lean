@@ -29,6 +29,7 @@ with the geometric-spectral mismatch.
 noncomputable def generalizedChiralPlus (CI : ConformalInference E) : E →L[ℝ] E :=
   ((2 : ℝ)⁻¹) • (CI.spectralChiralProjector + chiralGrading CI)
 
+/-- Definition `generalizedChiralMinus`. -/
 noncomputable def generalizedChiralMinus (CI : ConformalInference E) : E →L[ℝ] E :=
   ((2 : ℝ)⁻¹) • (CI.spectralChiralProjector - chiralGrading CI)
 

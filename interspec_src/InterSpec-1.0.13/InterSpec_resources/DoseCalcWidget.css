@@ -1,0 +1,168 @@
+
+.DoseCalcWidget {
+}
+
+.DoseButtonMenu {
+}
+
+.DoseCalcSideMenu{
+  width: 7.5em;
+}
+
+.DoseEnterDiv {
+  border: 1px solid #d1d1d1;
+  min-height: 255px;
+}
+
+.NarrowDose .DoseEnterDiv{
+  min-height: 175px;
+}
+
+.DoseEnterEl {
+  width: 250px;
+}
+
+.DoseEnterInd {
+  font-size: 80%;
+}
+
+.DoseDistanceAnswer {
+  
+}
+
+.DoseAnswerDiv {
+  border: 1px solid #d1d1d1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-right: 10px; /* to be about symetric with white-space on left side of dose tool*/
+}
+
+.NarrowDose .DoseAnswerDiv{
+  margin-right: 0px;
+  margin-top: 5px;
+}
+
+.DoseEnterTxt {
+  margin-top: 3px;
+  margin-left: 10px;
+}
+
+
+.DoseCalcWidget .NuclideSourceEnter {
+  margin-top: 3px;
+  margin-left: 10px;
+}
+
+.DoseAnswerCombo {
+  margin-top: 4px;
+  margin-left: 10px;
+}
+
+
+.DoseAnswerEl {
+  /* border: 1px solid #d1d1d1; */
+  width: 250px;
+}
+
+.DoseIntroDiv {
+}
+
+.DoseIntroTxtMain {
+  font-size: 120%
+}
+
+.DoseIntroTxtDetail {
+  color: gray;
+  font-size:75%
+}
+
+.DoseAnswerTxt {
+  margin: 10px;
+  padding-top: 11px;
+  height: 41px;
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+  background: white;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+.DoseIssueTxt {
+  color: red;
+  text-align: center;
+}
+
+
+.DoseColLabel {
+  text-align: center;
+  font-size: 100%;
+  color: dark-grey;
+  border-bottom: 1px solid #d1d1d1;
+}
+
+
+.DoseStayTime {
+}
+
+.DoseStayTimeHeader {
+  text-align: center;
+  border: 1px solid black;
+}
+
+.DoseStayLabelDiv {
+  border: 1px solid black;
+  border-top: none;
+}
+
+.DoseStayDose {
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.DoseStayDesc {
+  text-align: center;
+  font-size: 8px;
+}
+
+.DoseStayTimeAnsw {
+  text-align: center;
+  border: 1px solid black;
+  border-top: none;
+  border-left: none;
+}
+
+
+.DoseCalcRuntimeCheckFailMsg {
+  background: white;
+  border: 1px solid red;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.DoseCalcRuntimeCheckFailHdr {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.DoseCalcRuntimeCheckMsgTxt {
+  font-size: 14px;
+  margin: 5px;
+}
+
+.DoseCalcRuntimeCheckFailBanner {
+  color: red;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 5px;
+}
+
+.DoseCalcRuntimeCheckInstuct {
+  color: orange;
+  font-size: 14px;
+  padding: 5px;
+  padding-top: 0px;
+}

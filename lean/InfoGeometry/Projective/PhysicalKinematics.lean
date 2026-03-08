@@ -1,5 +1,11 @@
 import InfoGeometry.Projective.Rays
 
+/-!
+# InfoGeometry.Projective.PhysicalKinematics
+
+Gauge-invariant kinematics interfaces and descent principles on projective doubled states.
+-/
+
 namespace InfoGeometry.Projective
 
 /-- A minimal physics-kinematics interface:

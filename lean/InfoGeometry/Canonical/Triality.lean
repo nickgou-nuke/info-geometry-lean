@@ -11,11 +11,13 @@ namespace InfoGeometry.Canonical.Triality
 open InfoGeometry.Clifford
 open scoped BigOperators
 
+/-- Structure `TriadicCore`. -/
 @[blueprint "def:triadic-core"]
 structure TriadicCore (Q K V : Type*) where
   interact : Q → K → ℝ
   route    : Q → K → V
 
+/-- Structure `MetricTriadicCore`. -/
 @[blueprint "def:metric-triadic-core"]
 structure MetricTriadicCore (Q K V : Type*) extends TriadicCore Q K V where
   quadQ : Q → ℝ

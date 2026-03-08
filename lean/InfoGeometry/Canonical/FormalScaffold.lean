@@ -1,4 +1,3 @@
-import Mathlib
 import Architect
 import Mathlib.Analysis.InnerProductSpace.PiL2
 import Mathlib.Analysis.SpecialFunctions.Exp

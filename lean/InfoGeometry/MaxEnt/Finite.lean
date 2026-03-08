@@ -47,6 +47,7 @@ noncomputable def gibbs (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) : ℝ :=
 noncomputable def gibbsExpectation (f : Fin n → ℝ) (lam : ℝ) : ℝ :=
   ∑ i, gibbs f lam i * f i
 
+/-- The finite partition function is strictly positive on nonempty support. -/
 lemma partition_pos
     (f : Fin n → ℝ) (lam : ℝ) [Nonempty (Fin n)] :
     0 < partition f lam := by
@@ -61,22 +62,26 @@ lemma partition_pos
         exact Real.exp_pos _)
       Finset.univ_nonempty)
 
+/-- The finite partition function is nonzero on nonempty support. -/
 lemma partition_ne_zero
     (f : Fin n → ℝ) (lam : ℝ) [Nonempty (Fin n)] :
     partition f lam ≠ 0 :=
   (partition_pos f lam).ne'
 
+/-- Gibbs weights are strictly positive on nonempty support. -/
 lemma gibbs_pos
     (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) [Nonempty (Fin n)] :
     0 < gibbs f lam i := by
   unfold gibbs
   exact div_pos (Real.exp_pos _) (partition_pos f lam)
 
+/-- Gibbs weights are nonnegative on nonempty support. -/
 lemma gibbs_nonneg
     (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) [Nonempty (Fin n)] :
     0 ≤ gibbs f lam i :=
   (gibbs_pos f lam i).le
 
+/-- The Gibbs form is normalized to one on nonempty support. -/
 lemma gibbs_sum_one
     (f : Fin n → ℝ) (lam : ℝ) [Nonempty (Fin n)] :
     ∑ i, gibbs f lam i = 1 := by
@@ -133,9 +138,9 @@ Concrete finite-dimensional Jaynes/MaxEnt layer over `ProbabilityDist α`:
 
 - prior `q`
 - finite feature family `f_i`
-- Lagrange multipliers `λ_i`
-- Gibbs partition function `Z(λ)`
-- Gibbs posterior `p_λ(x) ∝ q(x) * exp(∑ λ_i f_i(x))`
+- Lagrange multipliers `lam_i`
+- Gibbs partition function `Z(lam)`
+- Gibbs posterior `p_lam(x) ∝ q(x) * exp(∑ lam_i f_i(x))`
 -/
 
 namespace InfoGeometry.MaxEnt.Finite
@@ -157,7 +162,7 @@ structure FiniteJaynesProblem (α ι : Type*) [Fintype α] [DecidableEq α] [Dec
 
 namespace FiniteJaynesProblem
 
-/-- Exponential-family score `E_λ(x) = ∑_{i ∈ index} λ_i f_i(x)`. -/
+/-- Exponential-family score `E_lam(x) = ∑_{i ∈ index} lam_i f_i(x)`. -/
 def energy (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) (x : α) : ℝ :=
   ∑ i ∈ J.index, lam i * J.feature i x
 
@@ -165,10 +170,11 @@ def energy (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) (x : α) : ℝ :=
     J.energy (fun _ => 0) x = 0 := by
   simp [energy]
 
-/-- Partition function `Z(λ) = ∑ q(x) exp(E_λ(x))`. -/
+/-- Partition function `Z(lam) = ∑ q(x) exp(E_lam(x))`. -/
 def partition (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) : ℝ :=
   ∑ x, J.prior.prob x * Real.exp (J.energy lam x)
 
+/-- The finite exponential-family partition function is nonnegative. -/
 lemma partition_nonneg (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) :
     0 ≤ J.partition lam := by
   unfold partition
@@ -180,6 +186,7 @@ lemma partition_nonneg (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) :
 def FullSupportPrior (J : FiniteJaynesProblem α ι) : Prop :=
   ∀ x, 0 < J.prior.prob x
 
+/-- Full prior support yields strict positivity of the partition function. -/
 lemma partition_pos_of_fullSupport
     (J : FiniteJaynesProblem α ι)
     [Nonempty α]
@@ -198,6 +205,7 @@ lemma partition_pos_of_fullSupport
       (by simp)
   exact lt_of_lt_of_le hx0 hle
 
+/-- Full prior support yields nonvanishing partition function. -/
 lemma partition_ne_zero_of_fullSupport
     (J : FiniteJaynesProblem α ι)
     [Nonempty α]
@@ -205,7 +213,7 @@ lemma partition_ne_zero_of_fullSupport
     J.partition lam ≠ 0 :=
   (J.partition_pos_of_fullSupport hprior lam).ne'
 
-/-- Unnormalized Gibbs weight `q(x) e^{E_λ(x)}`. -/
+/-- Unnormalized Gibbs weight `q(x) e^{E_lam(x)}`. -/
 def gibbsWeight (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) (x : α) : ℝ :=
   J.prior.prob x * Real.exp (J.energy lam x)
 
@@ -220,6 +228,7 @@ def gibbsProb
     (lam : ι → ℝ) (_hZ : J.partition lam ≠ 0) (x : α) : ℝ :=
   J.gibbsWeight lam x / J.partition lam
 
+/-- Pointwise finite Gibbs probabilities are nonnegative. -/
 lemma gibbsProb_nonneg
     (J : FiniteJaynesProblem α ι)
     (lam : ι → ℝ) (hZ : J.partition lam ≠ 0) (x : α) :
@@ -257,15 +266,17 @@ def gibbsDist
           (∑ y, J.prior.prob y * Real.exp (J.energy lam y)) := hsum_div
       _ = 1 := by exact div_self hZ
 
-/-- Finite free-energy potential `ψ(λ) = log Z(λ)`. -/
+/-- Finite free-energy potential `ψ(lam) = log Z(lam)`. -/
 def logPartition (J : FiniteJaynesProblem α ι) (lam : ι → ℝ) : ℝ :=
   Real.log (J.partition lam)
 
+/-- At zero multipliers, the finite partition function equals `1`. -/
 lemma partition_zero (J : FiniteJaynesProblem α ι) :
     J.partition (fun _ => 0) = 1 := by
   unfold partition energy
   simpa using J.prior.sum_one
 
+/-- At zero multipliers, the finite log-partition equals `0`. -/
 lemma logPartition_zero (J : FiniteJaynesProblem α ι) :
     J.logPartition (fun _ => 0) = 0 := by
   unfold logPartition
@@ -276,7 +287,7 @@ lemma logPartition_zero (J : FiniteJaynesProblem α ι) :
 def moment (_J : FiniteJaynesProblem α ι) (P : ProbabilityDist α) (f : α → ℝ) : ℝ :=
   ∑ x, P.prob x * f x
 
-/-- Constraint satisfaction for the Gibbs posterior at multipliers `λ`. -/
+/-- Constraint satisfaction for the Gibbs posterior at multipliers `lam`. -/
 def SatisfiesTargetMoments
     (J : FiniteJaynesProblem α ι)
     (lam : ι → ℝ) (hZ : J.partition lam ≠ 0) : Prop :=

@@ -56,6 +56,7 @@ structure ChiralAsymptoticModel (E : Type*) [NormedAddCommGroup E] [InnerProduct
   asymptotic : IsAsymptoticallyFree flow
 
 omit [FiniteDimensional ℝ E] in
+/-- Theorem `asymptotic_freedom_of_negative_beta`. -/
 theorem asymptotic_freedom_of_negative_beta (M : ChiralAsymptoticModel E) :
     IsAsymptoticallyFree M.flow :=
   M.asymptotic

@@ -1,5 +1,11 @@
 import InfoGeometry.Clifford.Cl11
 
+/-!
+# InfoGeometry.Projective.Rays
+
+Projective ray quotient of doubled states by nonzero real scaling.
+-/
+
 section KreinClifford
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]

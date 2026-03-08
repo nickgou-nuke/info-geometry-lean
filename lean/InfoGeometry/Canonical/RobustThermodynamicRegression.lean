@@ -61,18 +61,21 @@ variable (k : ℕ)
 
 -- Structural Stiffness (A): The expected informational curvature.
 -- A = E_p[∇^2 E]
+/-- Definition `FisherStiffness`. -/
 def FisherStiffness (p : Data → ℝ) (Hi : Data → Matrix (Fin k) (Fin k) ℝ) : Matrix (Fin k) (Fin k) ℝ :=
   ∑ i : Data, p i • Hi i
 
 -- Fluctuation Pressure (B): The variance of informational gradients.
 -- B = (1/ε) * Cov_p(∇ E)
 -- We define it here simply as a symmetric matrix representing this pressure.
+/-- Definition `FluctuationPressure`. -/
 noncomputable def FluctuationPressure (p : Data → ℝ) (gi : Data → Fin k → ℝ) (ε : ℝ) : Matrix (Fin k) (Fin k) ℝ :=
   -- B_ab = (1/ε) * Σ p_i * (g_ia - g_avg_a)(g_ib - g_avg_b)
   let g_avg : Fin k → ℝ := fun a => ∑ i : Data, p i * gi i a
   fun a b => (1 / ε) * ∑ i : Data, p i * (gi i a - g_avg a) * (gi i b - g_avg b)
 
 -- Exact Hessian: H = A - B
+/-- Definition `ExactHessian`. -/
 def ExactHessian (A B : Matrix (Fin k) (Fin k) ℝ) : Matrix (Fin k) (Fin k) ℝ :=
   A - B
 

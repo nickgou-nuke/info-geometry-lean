@@ -1,4 +1,4 @@
-import Mathlib
+import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Singular.MoorePenroseAdjoint
 import InfoGeometry.Singular.DrazinAdjoint
 

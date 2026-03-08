@@ -1,0 +1,281 @@
+
+.DetectionLimitWindowContent
+{
+  display: flex;
+  flex-direction: column;
+}
+
+.DetectionLimitTool
+{
+  display: flex;
+  flex-direction: column;
+  
+  height: 100%;
+  width: 100%;
+  /*
+  grid->setColumnStretch( 0, 1 );
+  grid->setRowStretch( grid->rowCount() - 1, 10 );
+  grid->setRowResizable( 0, true );
+  grid->setContentsMargins( 0, 0, 0, 0 );
+   */
+}
+
+.DetectionLimitTool .MdaCharts
+{
+  height: 200px;
+  
+  /* flex: 1 1 auto; */
+  
+  display: flex;
+  flex-direction: row;
+}
+
+
+.DetectionLimitTool .Inputs
+{
+  display: grid;
+}
+
+
+.DetectionLimitTool .MdaResults
+{
+  display: flex;
+  flex-direction: column;
+  
+  overflow: hidden;
+  /* flex: 1 3 auto; */
+  width: 25%;
+}
+
+.MdaCharts .MdaChi2Chart
+{
+  overflow: hidden;
+  flex: 1 1 auto;
+}
+
+.MdaCharts .D3SpectrumDisplayDiv
+{
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.DetectionLimitTool .MdaResults .MdaResultTxt
+{
+  /* this is m_bestChi2Act text, and m_upperLimit text */
+  display: block;
+  font-size: x-small;
+  margin-left: 5px;
+}
+
+
+.DetectionLimitTool .MdaErrMsg
+{
+  /* grid->addWidget( m_errorMsg, 3, 0, 1, 2 ); */
+}
+
+
+.DetectionLimitTool .MdaPeaks
+{
+  flex: 2 1 auto;
+  
+  /* grid->addWidget( m_peaks, 4, 0, 1, 2 ); */
+}
+
+
+.DetectionLimitTool .UserInputTable td
+{
+  padding-top:5px;
+  padding-bottom:5px;
+  padding-right:10px;
+}
+
+.DetectionLimitTool .UserInputTable td:first-child
+{
+  padding-left:15px;
+}
+
+.MdaErrMsg
+{
+  color: red;
+}
+
+.DetectionLimitTool button.MdaFitFwhm.Wt-btn.with-label.LightButton
+{
+  align-self: center;
+  color: red;
+  border: 1px solid red;
+}
+
+.DetectionLimitTool .MdaChartLogLin
+{
+  justify-self: end;
+  margin-right: 10px;
+}
+
+.MdaPeaksArea
+{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  
+  border: 1px solid #d1d1d1;
+  overflow: hidden;
+}
+
+.MdaPeaksTitleBar
+{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #d1d1d1;
+  
+  padding-left: 5px;
+  padding-right: 2px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.DetectionLimitTool .MdaPeaksTitleBar .MdaPeaksTitle
+{
+  font-weight:bold;
+}
+
+.DetectionLimitTool .MdaPeaksFilter
+{
+  display: flex;
+  align-items: center;
+}
+
+.MdaPeaksFilter > input
+{
+  width: 50px;
+}
+
+.DetectionLimitTool .MdaPeaks
+{
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.DetectionLimitTool .MdaPeaks .MdaPeakRow
+{
+  width: 400px;
+  display: flex;
+  flex-direction: row;
+  column-gap: 5px;
+  
+  padding: 3px;
+  margin: 5px;
+  
+  justify-content: space-around;
+  
+  border: 1px solid #d1d1d1;
+}
+
+.MdaRowSettings .MdaRoiInput
+{
+  width: 80px;
+}
+
+.MdaRowSettings .SwitchCheckbox.UseForLiklihood
+{
+  justify-content: left;
+}
+
+.MdaPeakRow .MdaRowCurrieLimitContent
+{
+  display: flex;
+  flex-direction: column;
+  padding: 3px;
+  margin: 5px;
+  border: 1px solid #d1d1d1;
+  row-gap: 2.5px;
+  font-size: smaller;
+}
+
+.MdaRowCurrieLimitContent .CurrieNSideChanRow input
+{
+  font-size: smaller;
+}
+
+.MdaPeakRow .MdaRowSettings
+{
+  display: grid;
+  grid-column-gap: 5px;
+  row-gap: 2.5px;
+}
+
+.MdaPeakRow .MdaRowCurrieMda
+{
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  row-gap: 2.5px;
+}
+
+.MdaPeakRow .MdaRowCurrieMda .MdaCurrieLimitTitle
+{
+  text-align: center;
+  font-size: x-small;
+  font-weight: bold;
+}
+
+.MdaPeakRow .MdaRowCurrieMda .CurrieNSideChanRow
+{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 5px;
+}
+
+
+.MdaPeakRow .MdaRowCurrieMda .CurrieMoreInfoBtn
+{
+  text-align: right;
+  font-size: x-small;
+}
+
+/*
+.MdaPeakRow .FixedInfo
+{
+  display: inline-block;
+  width: 300px;
+}
+ */
+
+.MdaPeakRow .CurrieTxt
+{
+  text-align: left;
+}
+
+
+.MdaResults
+{
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding: 0px;
+  padding-top: 0px;
+  border: 1px solid #d1d1d1;
+}
+
+.MdaResultTxt
+{
+  white-space: nowrap;
+}
+
+
+.MdaCurrieMoreInfoTable
+{
+  white-space: nowrap;
+  border-collapse: separate;
+  border-spacing: 5px 5px;
+}
+
+
+.MdaCurrieChart
+{
+  width: 100%;
+  height: 200px;
+  margin-bottom: 15px;
+}

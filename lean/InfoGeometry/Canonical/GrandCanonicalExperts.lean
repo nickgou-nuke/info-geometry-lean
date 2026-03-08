@@ -2,7 +2,6 @@ import InfoGeometry.Canonical.GrandCanonicalCore
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.Clifford
 import Mathlib.Analysis.Convex.Birkhoff
-import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 
 open scoped BigOperators
 
@@ -47,17 +46,20 @@ omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
     switchMatrix n β x i e = normalizedWeights n β x i e := rfl
 
 omit [NormedSpace ℝ V] in
+/-- Lemma `normalizedWeights_nonneg`. -/
 lemma normalizedWeights_nonneg (β : ℝ) (x : Fin n → V) (i e : Fin n) :
     0 ≤ normalizedWeights n β x i e := by
   unfold normalizedWeights unnormalizedWeights
   exact div_nonneg (le_of_lt (Real.exp_pos _)) (le_of_lt (routerPartition_pos n β x i))
 
 omit [NormedSpace ℝ V] in
+/-- Lemma `switchMatrix_row_sum_one`. -/
 lemma switchMatrix_row_sum_one (β : ℝ) (x : Fin n → V) (i : Fin n) :
     ∑ e : Fin n, switchMatrix n β x i e = 1 := by
   simpa [switchMatrix] using normalizedWeights_sum_one (n := n) β x i
 
 omit [NormedSpace ℝ V] in
+/-- Lemma `switchMatrix_mem_rowStochastic`. -/
 lemma switchMatrix_mem_rowStochastic (β : ℝ) (x : Fin n → V) :
     switchMatrix n β x ∈ Matrix.rowStochastic ℝ (Fin n) := by
   rw [Matrix.mem_rowStochastic_iff_sum]
@@ -76,6 +78,7 @@ def IsBistochasticSwitch (β : ℝ) (x : Fin n → V) : Prop :=
   ∀ e : Fin n, ∑ i : Fin n, switchMatrix n β x i e = 1
 
 omit [NormedSpace ℝ V] in
+/-- Lemma `switchMatrix_mem_doublyStochastic`. -/
 lemma switchMatrix_mem_doublyStochastic
     (β : ℝ) (x : Fin n → V) (hcol : IsBistochasticSwitch n β x) :
     switchMatrix n β x ∈ doublyStochastic ℝ (Fin n) := by
@@ -199,6 +202,7 @@ noncomputable def minusMass {n : Nat}
     (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel) : ℝ :=
   ∑ σ : PermMode n, if label σ = CliffordLabel.minus then w σ else 0
 
+/-- Lemma `cliffordSemanticState_fst_eq_plusMass`. -/
 lemma cliffordSemanticState_fst_eq_plusMass {n : Nat}
     (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel) :
     (cliffordSemanticState w label).1 = plusMass w label := by
@@ -211,6 +215,7 @@ lemma cliffordSemanticState_fst_eq_plusMass {n : Nat}
   · simp [splitBasisPlus]
   · simp [splitBasisMinus]
 
+/-- Lemma `cliffordSemanticState_snd_eq_minusMass`. -/
 lemma cliffordSemanticState_snd_eq_minusMass {n : Nat}
     (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel) :
     (cliffordSemanticState w label).2 = minusMass w label := by
@@ -223,6 +228,7 @@ lemma cliffordSemanticState_snd_eq_minusMass {n : Nat}
   · simp [splitBasisPlus]
   · simp [splitBasisMinus]
 
+/-- Lemma `plusMass_nonneg`. -/
 lemma plusMass_nonneg {n : Nat} {w : PermMode n → ℝ} {label : PermMode n → CliffordLabel}
     (hw : ∀ σ, 0 ≤ w σ) : 0 ≤ plusMass w label := by
   classical
@@ -233,6 +239,7 @@ lemma plusMass_nonneg {n : Nat} {w : PermMode n → ℝ} {label : PermMode n →
   · simp [h, hw σ]
   · simp [h]
 
+/-- Lemma `minusMass_nonneg`. -/
 lemma minusMass_nonneg {n : Nat} {w : PermMode n → ℝ} {label : PermMode n → CliffordLabel}
     (hw : ∀ σ, 0 ≤ w σ) : 0 ≤ minusMass w label := by
   classical
@@ -243,6 +250,7 @@ lemma minusMass_nonneg {n : Nat} {w : PermMode n → ℝ} {label : PermMode n �
   · simp [h, hw σ]
   · simp [h]
 
+/-- Lemma `plusMass_add_minusMass_eq_sum`. -/
 lemma plusMass_add_minusMass_eq_sum {n : Nat}
     (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel) :
     plusMass w label + minusMass w label = ∑ σ : PermMode n, w σ := by
@@ -255,6 +263,7 @@ lemma plusMass_add_minusMass_eq_sum {n : Nat}
   · simp
   · simp
 
+/-- Lemma `cliffordSemanticState_coord_sum_eq_weight_sum`. -/
 lemma cliffordSemanticState_coord_sum_eq_weight_sum {n : Nat}
     (w : PermMode n → ℝ) (label : PermMode n → CliffordLabel) :
     (cliffordSemanticState w label).1 + (cliffordSemanticState w label).2
@@ -288,6 +297,7 @@ def superSign : CliffordLabel → CliffordLabel → ℝ
 @[simp] lemma superSign_minus_minus :
     superSign CliffordLabel.minus CliffordLabel.minus = -1 := rfl
 
+/-- Lemma `splitB11_symm`. -/
 lemma splitB11_symm (u v : ℝ × ℝ) : splitB11 u v = splitB11 v u := by
   simp [splitB11_apply, mul_comm]
 
@@ -340,6 +350,7 @@ noncomputable abbrev SplitCliffordAlg := CliffordAlgebra splitQ11
 noncomputable def labelGenerator (a : CliffordLabel) : SplitCliffordAlg :=
   CliffordAlgebra.ι splitQ11 (cliffordBasis a)
 
+/-- Lemma `labelGenerator_sq`. -/
 lemma labelGenerator_sq (a : CliffordLabel) :
     labelGenerator a * labelGenerator a
       = algebraMap ℝ SplitCliffordAlg (splitQ11 (cliffordBasis a)) := by
@@ -438,6 +449,7 @@ lemma weightedModeCliffordState_split {n : Nat}
           else 0) := by
             rw [Finset.sum_add_distrib]
 
+/-- Lemma `modewiseCliffordState_split`. -/
 lemma modewiseCliffordState_split {n : Nat}
     (S : SplitCliffordSuperData n) (w : PermutationMode n → ℝ) :
     modewiseCliffordState S w
@@ -471,6 +483,7 @@ noncomputable def diracEulerStep (η : ℝ) (D ψ : SplitCliffordAlg) : SplitCli
     diracEulerStep 0 D ψ = ψ := by
   simp [diracEulerStep]
 
+/-- Lemma `diracAction_add_right`. -/
 lemma diracAction_add_right (D ψ₁ ψ₂ : SplitCliffordAlg) :
     diracAction D (ψ₁ + ψ₂) = diracAction D ψ₁ + diracAction D ψ₂ := by
   simp [diracAction, mul_add]
@@ -526,6 +539,7 @@ theorem exists_clifford_labeled_state_of_bistochastic
     exact minusMass_nonneg hw_nonneg
   · rw [cliffordSemanticState_coord_sum_eq_weight_sum, hw_sum]
 
+/-- Theorem `exists_modewiseClifford_rep_of_bistochastic`. -/
 theorem exists_modewiseClifford_rep_of_bistochastic
     (β : ℝ) (x : Fin n → V) (hcol : IsBistochasticSwitch n β x)
     (S : SplitCliffordSuperData n) :
@@ -617,6 +631,7 @@ lemma sinkhornTwoStep_eq_weylGauge
   rw [colNormalize_eq_rightDiagonalGauge (n := n) (M := rowNormalize n M hrow) hcol,
       rowNormalize_eq_leftDiagonalGauge (n := n) (M := M) hrow]
 
+/-- Lemma `rowSum_rowNormalize`. -/
 lemma rowSum_rowNormalize (M : SinkhornMatrix n) (hrow : HasPositiveRowSums n M) (i : Fin n) :
     rowSum n (rowNormalize n M hrow) i = 1 := by
   unfold rowSum rowNormalize
@@ -632,6 +647,7 @@ lemma rowSum_rowNormalize (M : SinkhornMatrix n) (hrow : HasPositiveRowSums n M)
                 (a := ∑ k : Fin n, M i k))
     _ = 1 := div_self hne
 
+/-- Lemma `colSum_colNormalize`. -/
 lemma colSum_colNormalize (M : SinkhornMatrix n) (hcol : HasPositiveColSums n M) (j : Fin n) :
     colSum n (colNormalize n M hcol) j = 1 := by
   unfold colSum colNormalize
@@ -655,18 +671,21 @@ noncomputable def rowLyapunov (M : SinkhornMatrix n) : ℝ :=
 noncomputable def colLyapunov (M : SinkhornMatrix n) : ℝ :=
   ∑ j : Fin n, |colSum n M j - 1|
 
+/-- Lemma `rowLyapunov_nonneg`. -/
 lemma rowLyapunov_nonneg (M : SinkhornMatrix n) : 0 ≤ rowLyapunov n M := by
   unfold rowLyapunov
   refine Finset.sum_nonneg ?_
   intro i hi
   exact abs_nonneg _
 
+/-- Lemma `colLyapunov_nonneg`. -/
 lemma colLyapunov_nonneg (M : SinkhornMatrix n) : 0 ≤ colLyapunov n M := by
   unfold colLyapunov
   refine Finset.sum_nonneg ?_
   intro j hj
   exact abs_nonneg _
 
+/-- Lemma `rowLyapunov_rowNormalize_eq_zero`. -/
 lemma rowLyapunov_rowNormalize_eq_zero (M : SinkhornMatrix n) (hrow : HasPositiveRowSums n M) :
     rowLyapunov n (rowNormalize n M hrow) = 0 := by
   unfold rowLyapunov
@@ -675,6 +694,7 @@ lemma rowLyapunov_rowNormalize_eq_zero (M : SinkhornMatrix n) (hrow : HasPositiv
   rw [rowSum_rowNormalize (n := n) M hrow i]
   simp
 
+/-- Lemma `colLyapunov_colNormalize_eq_zero`. -/
 lemma colLyapunov_colNormalize_eq_zero (M : SinkhornMatrix n) (hcol : HasPositiveColSums n M) :
     colLyapunov n (colNormalize n M hcol) = 0 := by
   unfold colLyapunov
@@ -723,18 +743,21 @@ Nonnegative column barrier functional from absolute log column-mass change.
 noncomputable def colRNBarrier (M : SinkhornMatrix n) : ℝ :=
   ∑ j : Fin n, |Real.log (colSum n M j)|
 
+/-- Lemma `rowRNBarrier_nonneg`. -/
 lemma rowRNBarrier_nonneg (M : SinkhornMatrix n) : 0 ≤ rowRNBarrier n M := by
   unfold rowRNBarrier
   refine Finset.sum_nonneg ?_
   intro i hi
   exact abs_nonneg _
 
+/-- Lemma `colRNBarrier_nonneg`. -/
 lemma colRNBarrier_nonneg (M : SinkhornMatrix n) : 0 ≤ colRNBarrier n M := by
   unfold colRNBarrier
   refine Finset.sum_nonneg ?_
   intro j hj
   exact abs_nonneg _
 
+/-- Lemma `rowRNBarrier_rowNormalize_eq_zero`. -/
 lemma rowRNBarrier_rowNormalize_eq_zero (M : SinkhornMatrix n) (hrow : HasPositiveRowSums n M) :
     rowRNBarrier n (rowNormalize n M hrow) = 0 := by
   unfold rowRNBarrier
@@ -743,6 +766,7 @@ lemma rowRNBarrier_rowNormalize_eq_zero (M : SinkhornMatrix n) (hrow : HasPositi
   rw [rowSum_rowNormalize (n := n) M hrow i]
   simp
 
+/-- Lemma `colRNBarrier_colNormalize_eq_zero`. -/
 lemma colRNBarrier_colNormalize_eq_zero (M : SinkhornMatrix n) (hcol : HasPositiveColSums n M) :
     colRNBarrier n (colNormalize n M hcol) = 0 := by
   unfold colRNBarrier
@@ -795,16 +819,19 @@ noncomputable def phaseRNBarrierAfter (phase : SinkhornPhase) (M : SinkhornMatri
   | .row => rowRNBarrier n M
   | .col => colRNBarrier n M
 
+/-- Lemma `phaseLyapunovBefore_nonneg`. -/
 lemma phaseLyapunovBefore_nonneg (phase : SinkhornPhase) (M : SinkhornMatrix n) :
     0 ≤ phaseLyapunovBefore n phase M := by
   cases phase <;>
     simp [phaseLyapunovBefore, rowLyapunov_nonneg, colLyapunov_nonneg]
 
+/-- Lemma `phaseRNBarrierBefore_nonneg`. -/
 lemma phaseRNBarrierBefore_nonneg (phase : SinkhornPhase) (M : SinkhornMatrix n) :
     0 ≤ phaseRNBarrierBefore n phase M := by
   cases phase <;>
     simp [phaseRNBarrierBefore, rowRNBarrier_nonneg, colRNBarrier_nonneg]
 
+/-- Lemma `sinkhornStep_phaseLyapunovAfter_eq_zero`. -/
 lemma sinkhornStep_phaseLyapunovAfter_eq_zero
     {phase : SinkhornPhase} {M M' : SinkhornMatrix n}
     (hstep : SinkhornStep n phase M M') :
@@ -817,6 +844,7 @@ lemma sinkhornStep_phaseLyapunovAfter_eq_zero
       rcases hstep with ⟨hcol, rfl⟩
       simpa [phaseLyapunovAfter] using colLyapunov_colNormalize_eq_zero (n := n) M hcol
 
+/-- Lemma `sinkhornStep_phaseRNBarrierAfter_eq_zero`. -/
 lemma sinkhornStep_phaseRNBarrierAfter_eq_zero
     {phase : SinkhornPhase} {M M' : SinkhornMatrix n}
     (hstep : SinkhornStep n phase M M') :
@@ -877,10 +905,12 @@ noncomputable def trajectoryRNBarrier (T : SinkhornTrajectory n) (k : Nat) : ℝ
 noncomputable def trajectoryRNBarrierNext (T : SinkhornTrajectory n) (k : Nat) : ℝ :=
   phaseRNBarrierAfter n (phaseAt k) (T.state (k + 1))
 
+/-- Theorem `trajectoryLyapunovNext_eq_zero`. -/
 theorem trajectoryLyapunovNext_eq_zero (T : SinkhornTrajectory n) (k : Nat) :
     trajectoryLyapunovNext n T k = 0 := by
   exact sinkhornStep_phaseLyapunovAfter_eq_zero (n := n) (hstep := T.step k)
 
+/-- Theorem `trajectoryRNBarrierNext_eq_zero`. -/
 theorem trajectoryRNBarrierNext_eq_zero (T : SinkhornTrajectory n) (k : Nat) :
     trajectoryRNBarrierNext n T k = 0 := by
   exact sinkhornStep_phaseRNBarrierAfter_eq_zero (n := n) (hstep := T.step k)

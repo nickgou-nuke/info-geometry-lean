@@ -1,0 +1,130 @@
+.RemoteRid
+{
+
+}
+
+.ExternalRidWidget
+{
+
+}
+
+.RemoteRid .UseInfoStack
+{
+  min-height: 100px;
+  min-width: 350px;
+}
+
+
+.ExternalRidWarningDialog .NoShowAgain
+{
+  float: right;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+
+.DrfStack
+{
+  height: 20px;
+}
+
+.RestRidInfoStack
+{
+  height: 225px;
+  width: 375px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.RestRidError
+{
+  color: red;
+}
+
+.RestRidStatus
+{
+  color: blue;
+}
+
+
+.RestRidResult
+{
+  color: black;
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.RestRidResult .ResultLabel
+{
+  font-weight: bold;
+  margin-right: 15px;
+}
+
+.RestRidResult .ResultChi2
+{
+  margin-right: 12px;
+  margin-top: 5px;
+}
+
+.RestRidResult .ResultTable
+{
+  /* color: #434C5E; */
+  margin-top: 5px;
+  border: 1px solid #4C566A;
+  flex-grow: 4;
+}
+
+.RestRidResult .ResultTable th
+{
+  border-bottom: 1px solid #4C566A;
+}
+
+.RestRidResult .ResultTable td
+{
+  border-bottom: 1px solid #D8DEE9;
+  text-align: center;
+}
+
+.RestRidResult .ResultTable td, .ResultTable th
+{
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+}
+
+.ResultTable tbody > tr:last-child > td
+{
+  border-bottom: none;
+}
+
+
+.RestRidResult .AnaWarnings
+{
+  margin-top: 5px;
+  color: #D08770;
+}
+
+.AnaWarnings > div
+{
+  margin-bottom: 4px;
+  border-left: solid 1px #EBCB8B;
+  padding-left: 4px;
+}
+
+
+.ExternalRidWidget .RidOptionCbRow
+{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.RemoteRid .AlwaysSubmitAna, .RemoteRid .ShowDialogOpt
+{
+  margin-left: 10px;
+}

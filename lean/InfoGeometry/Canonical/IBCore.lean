@@ -150,6 +150,7 @@ def argmin_exponentialTilt (prob : IBProblem (X := X) (Y := Y))
     (pT_givenX : X → FinProb T) : Prop :=
   ∀ x : X, (∑ t : T, (exponentialTilt (prob := prob) pT_givenX x).toFun t) = 1
 
+/-- Theorem `argmin_exponentialTilt_true`. -/
 theorem argmin_exponentialTilt_true
     (prob : IBProblem (X := X) (Y := Y))
     (pT_givenX : X → FinProb T) :
@@ -176,6 +177,7 @@ def ib_stationary_point_gibbs (prob : IBProblem (X := X) (Y := Y))
     (pT_givenX : X → FinProb T) : Prop :=
   argmin_exponentialTilt (prob := prob) pT_givenX
 
+/-- Theorem `ib_stationary_point_gibbs_true`. -/
 theorem ib_stationary_point_gibbs_true
     (prob : IBProblem (X := X) (Y := Y))
     (pT_givenX : X → FinProb T) :
@@ -193,6 +195,7 @@ def ib_convergence (prob : IBProblem (X := X) (Y := Y))
       p_opt p_opt
     = 0
 
+/-- Theorem `ib_convergence_true`. -/
 theorem ib_convergence_true
     (prob : IBProblem (X := X) (Y := Y))
     (p_opt : X → FinProb T) :

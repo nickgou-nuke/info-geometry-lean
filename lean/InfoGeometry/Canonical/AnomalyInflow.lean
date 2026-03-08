@@ -57,6 +57,7 @@ theorem anomaly_inflow_cancellation (L : BayesianLoop E) (IST : InfoSpectralTrip
   exact add_neg_cancel (variationChernSimons L IST)
 
 omit [FiniteDimensional ℝ E] in
+/-- Theorem `anomalyInflowClosure`. -/
 theorem anomalyInflowClosure
     (L : BayesianLoop E) (IST : InfoSpectralTriple E) :
     AnomalyInflowClosure L IST := by

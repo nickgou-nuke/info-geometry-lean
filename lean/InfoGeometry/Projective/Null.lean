@@ -1,6 +1,12 @@
 import InfoGeometry.Projective.ProjectiveMap
 import InfoGeometry.Krein.Metric
 
+/-!
+# InfoGeometry.Projective.Null
+
+Null and grading predicates on projective doubled-space rays.
+-/
+
 section KreinClifford
 
 variable {E : Type} [NormedAddCommGroup E]

@@ -26,6 +26,7 @@ def topHomologyIso (_M : Type*) : Type := Int
 def top_homology_is_Z (M : Type*) : Prop :=
   Nonempty (topHomologyIso M ≃ Int)
 
+/-- Theorem `top_homology_is_Z_true`. -/
 theorem top_homology_is_Z_true (M : Type*) : top_homology_is_Z M := by
   exact ⟨Equiv.refl Int⟩
 
@@ -37,6 +38,7 @@ noncomputable def mappingDegree {N : Type*} (f : M → N) : ℤ := by
   classical
   exact if Function.Surjective f then 1 else 0
 
+/-- Theorem `mappingDegree_nonneg`. -/
 theorem mappingDegree_nonneg {N : Type*} (f : M → N) :
     0 ≤ mappingDegree f := by
   classical
@@ -51,6 +53,7 @@ regular-value finiteness plus nonnegative degree surrogate.
 def degree_formula_via_jacobian (f : M → M) (y : M) (_hy : IsRegularValue f y) : Prop :=
   0 ≤ mappingDegree (N := M) f ∧ IsRegularValue f y
 
+/-- Theorem `degree_formula_via_jacobian_true`. -/
 theorem degree_formula_via_jacobian_true (f : M → M) (y : M) (hy : IsRegularValue f y) :
     degree_formula_via_jacobian f y hy := by
   exact ⟨mappingDegree_nonneg (M := M) f, hy⟩

@@ -4,8 +4,16 @@ import DAG.Basic
 import DAG.Hydrate
 import DAG.Analysis
 
+/-!
+# Docs.AutoTag
+
+Utilities for extracting blueprint tags from declarations in a namespace.
+-/
+
 open Lean
 open DAG
+
+namespace Docs
 
 /-- Print `[blueprint]` annotations only for the structural Core Skeleton
 of the Information Geometry theory.  The namespace is passed as a command‑line
@@ -31,3 +39,8 @@ def main (args : List String) : IO UInt32 := do
         IO.println s!"@[blueprint] {name}"
 
   return 0
+
+end Docs
+
+/-- Top-level `--run` entry point forwarding to `Docs.main`. -/
+def main : List String → IO UInt32 := Docs.main

@@ -1,6 +1,12 @@
 import InfoGeometry.Prequantum.Scaling
 import InfoGeometry.Projective.Rays
 
+/-!
+# InfoGeometry.Prequantum.Bundle
+
+Bundle-level packaging of prequantum data over projective doubled-state rays.
+-/
+
 namespace InfoGeometry.Prequantum.Bundle
 end InfoGeometry.Prequantum.Bundle
 

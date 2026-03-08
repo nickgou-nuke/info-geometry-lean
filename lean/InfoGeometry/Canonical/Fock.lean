@@ -36,13 +36,16 @@ open InfoGeometry.Quantum
 
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+/-- Theorem `bayesianUpdate_eq_creationExcitation`. -/
 theorem bayesianUpdate_eq_creationExcitation
     (prior dataInnovation : DoubledSpace E) :
     bayesianUpdate (E := E) prior dataInnovation = prior + creationOp (E := E) dataInnovation := rfl
 
+/-- Theorem `dataPart_eq_creation`. -/
 theorem dataPart_eq_creation (v : DoubledSpace E) :
     dataPart (E := E) v = creationOp (E := E) v := rfl
 
+/-- Theorem `modelPart_eq_annihilation`. -/
 theorem modelPart_eq_annihilation (v : DoubledSpace E) :
     modelPart (E := E) v = annihilationOp (E := E) v := rfl
 

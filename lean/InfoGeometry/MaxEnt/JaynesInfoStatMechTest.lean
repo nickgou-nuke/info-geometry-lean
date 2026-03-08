@@ -1,5 +1,11 @@
 import InfoGeometry.MaxEnt.JaynesInfoStatMech
 
+/-!
+# InfoGeometry.MaxEnt.JaynesInfoStatMechTest
+
+Smoke tests for the finite Jaynes information-statistical mechanics layer.
+-/
+
 open InfoGeometry.MaxEnt.JaynesInfoStatMech
 
 -- Test: maxEntDist is a valid probability distribution

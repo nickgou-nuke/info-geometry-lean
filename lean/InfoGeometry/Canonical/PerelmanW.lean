@@ -30,6 +30,7 @@ def SatisfiesWLaw
     (flow : ScalarRicciFlow E) (τ f diss : ℝ → ℝ) : Prop :=
   ∀ s : ℝ, WDissipation flow τ f s = diss s
 
+/-- Lemma `deriv_WFunctional_eq_of_law`. -/
 lemma deriv_WFunctional_eq_of_law
     (flow : ScalarRicciFlow E) (τ f diss : ℝ → ℝ)
     (hLaw : SatisfiesWLaw flow τ f diss) (s : ℝ) :
@@ -77,6 +78,7 @@ noncomputable def spinorialWDissipation
     (flow : ScalarRicciFlow E) (_IST : InfoSpectralTriple E) (scale : ℝ) : ℝ :=
   |scalarRicciBetaFunction (E := E) flow scale|
 
+/-- Lemma `spinorialWDissipation_eq_abs_spinorial_of_normalized_tracking`. -/
 lemma spinorialWDissipation_eq_abs_spinorial_of_normalized_tracking
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E) (s : ℝ)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)

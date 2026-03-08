@@ -87,11 +87,13 @@ noncomputable abbrev grandCanonicalFockEulerStep
     (ψ : DoubledSpace E) : DoubledSpace E :=
   grandCanonicalEulerStep (E := E) η B H μ ψ
 
+/-- Theorem `bogoliubovAnnihilation_kills_vacuumVector`. -/
 theorem bogoliubovAnnihilation_kills_vacuumVector
     (B : BogoliubovParams) :
     bogoliubovAnnihilation (E := E) B 0 = 0 := by
   simp [bogoliubovAnnihilation]
 
+/-- Theorem `bogoliubovCreation_kills_vacuumVector`. -/
 theorem bogoliubovCreation_kills_vacuumVector
     (B : BogoliubovParams) :
     bogoliubovCreation (E := E) B 0 = 0 := by
@@ -118,6 +120,7 @@ noncomputable abbrev fockSuperBracket
     (p q : SuperParity) (A B : FockEndomorphism E) : FockEndomorphism E :=
   superBracket (E := E) p q A B
 
+/-- Lemma `superBracket_add_left`. -/
 lemma superBracket_add_left
     (p q : SuperParity) (A₁ A₂ B : FockEnd E) :
     superBracket (E := E) p q (A₁ + A₂) B
@@ -125,6 +128,7 @@ lemma superBracket_add_left
   unfold superBracket
   simp [sub_eq_add_neg, add_assoc, add_left_comm, add_comm, smul_add]
 
+/-- Lemma `superBracket_add_right`. -/
 lemma superBracket_add_right
     (p q : SuperParity) (A B₁ B₂ : FockEnd E) :
     superBracket (E := E) p q A (B₁ + B₂)
@@ -132,6 +136,7 @@ lemma superBracket_add_right
   unfold superBracket
   simp [sub_eq_add_neg, add_assoc, add_left_comm, add_comm, smul_add]
 
+/-- Lemma `superBracket_smul_left`. -/
 lemma superBracket_smul_left
     (p q : SuperParity) (r : ℝ) (A B : FockEnd E) :
     superBracket (E := E) p q (r • A) B
@@ -139,6 +144,7 @@ lemma superBracket_smul_left
   unfold superBracket
   simp [sub_eq_add_neg, smul_smul, mul_comm]
 
+/-- Lemma `superBracket_smul_right`. -/
 lemma superBracket_smul_right
     (p q : SuperParity) (r : ℝ) (A B : FockEnd E) :
     superBracket (E := E) p q A (r • B)
@@ -203,19 +209,23 @@ structure CCRWitness : Prop where
 /-- Canonical naming alias for CCR closure witness. -/
 abbrev CCRClosure : Prop := CCRWitness (E := E)
 
+/-- Lemma `anticommutator_symm`. -/
 lemma anticommutator_symm (A B : FockEnd E) :
     anticommutator (E := E) A B = anticommutator (E := E) B A := by
   simp [anticommutator, superBracket_odd_odd, add_comm]
 
+/-- Lemma `fockAnticommutator_symm`. -/
 lemma fockAnticommutator_symm (A B : FockEndomorphism E) :
     fockAnticommutator (E := E) A B = fockAnticommutator (E := E) B A :=
   anticommutator_symm (E := E) A B
 
+/-- Lemma `commutator_swap`. -/
 lemma commutator_swap (A B : FockEnd E) :
     commutator (E := E) A B = - commutator (E := E) B A := by
   unfold commutator
   simp [superBracket_even_left, sub_eq_add_neg]
 
+/-- Lemma `fockCommutator_swap`. -/
 lemma fockCommutator_swap (A B : FockEndomorphism E) :
     fockCommutator (E := E) A B = - fockCommutator (E := E) B A :=
   commutator_swap (E := E) A B
@@ -320,6 +330,7 @@ noncomputable abbrev einsteinInducedChemicalPotential
     (V : SplitVielbein K x) (Γ : SpinConnection K x V) : ℝ :=
   inducedChemicalPotential R K x scalar Λ V Γ
 
+/-- Lemma `inducedChemicalPotential_eq_zero_of_vacuumTransported`. -/
 lemma inducedChemicalPotential_eq_zero_of_vacuumTransported
     (R : RicciTensor E)
     (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
@@ -347,6 +358,7 @@ noncomputable abbrev einsteinFockDeformationOperator
     FockEndomorphism E :=
   einsteinFockDeformation R K x scalar Λ V Γ
 
+/-- Lemma `einsteinFockDeformation_eq_zero_of_vacuumTransported`. -/
 lemma einsteinFockDeformation_eq_zero_of_vacuumTransported
     (R : RicciTensor E)
     (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
@@ -359,6 +371,7 @@ lemma einsteinFockDeformation_eq_zero_of_vacuumTransported
   rw [hμ]
   simp
 
+/-- Lemma `grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported`. -/
 lemma grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
     (B : BogoliubovParams) (H : FockEnd E)
     (R : RicciTensor E)
@@ -373,6 +386,7 @@ lemma grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
   rw [hμ]
   simp
 
+/-- Lemma `grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported`. -/
 lemma grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
     (B : BogoliubovMixingParams) (H : FockEndomorphism E)
     (R : RicciTensor E)

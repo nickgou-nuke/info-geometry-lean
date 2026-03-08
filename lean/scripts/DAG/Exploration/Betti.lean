@@ -1,6 +1,12 @@
 import Lean
 import DAG.Betti
 
+/-!
+# scripts.DAG.Exploration.Betti
+
+Exploratory script that computes basic homological summaries for declaration expression graphs.
+-/
+
 open Lean
 open DAG
 

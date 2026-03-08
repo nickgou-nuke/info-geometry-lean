@@ -1,0 +1,34 @@
+.SpecFileSummary
+{
+}
+
+.SpecFileInfo, .MeasInfo, .SpecSummChoose, .SpecSummAllowEdit
+{
+  border: 1px solid black;
+}
+
+.SpecSummChoose, .SpecSummAllowEdit
+{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  column-gap: 5px;
+}
+
+.SpecSummAllowEdit > button
+{
+  margin-left: auto;
+}
+
+.SpectrumFileSummaryLabel
+{
+  font-weight:bold;
+}
+
+div.displaySampleDiv
+{
+  text-align: center;
+  padding-top: 5px;
+}
+
+

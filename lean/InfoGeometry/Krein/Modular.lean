@@ -1,4 +1,3 @@
-import InfoGeometry.Krein.Automorphisms
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 

@@ -1,0 +1,318 @@
+
+.MobileMenuButton, .MobileMenuButton:hover
+{
+  background: grey url(images/hamburger.png);
+  margin:0;
+  padding:0;
+  position:fixed;
+  top:5px;
+  left:5px;
+  width: 32px;
+  height: 34px;
+  opacity: 0.55;
+  border: 1px solid #e6e6e6 !important;
+  -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+  -webkit-touch-callout: none !important;
+  /* outline: none; //havent tried this, but this would be standards way to remove the tap highlight... */
+  /* The z-index is set with inline styling to 8388635 */
+}
+
+.MobileMenuButton:hover {
+  opacity: 1;
+}
+
+.AuxWindow-content .MobileModal
+{
+  padding: 0px 4px 4px 4px;
+}
+
+.PhoneAuxWindowHeader
+{
+  white-space:nowrap;
+  margin-top: 0;
+  text-align: right;
+  background-color: #FAFAFA;
+}
+
+
+.MobilePrevSample
+{
+  background: url(images/resultset_first.svg);
+  background-repeat:no-repeat;
+  background-position: left;
+  background-size: 32px 32px;
+  margin:0;
+  position:fixed;
+  bottom:5px;
+  left:5px;
+  /* width: 150px;*/
+  height: 34px;
+  opacity: .75;
+  padding: 0px 20px 0px 15px  !important;
+  text-align: right;
+  
+  /* The z-index is set with inline styling to 8388635 */
+  /* z-index: 8388635; */ /*could use max val of 2147483638*/
+}
+
+.MobileNextSample
+{
+  background: url(images/resultset_last.svg);
+  background-repeat:no-repeat;
+  background-position: right;
+  background-size:32px 32px;
+  text-align: left;
+  margin:0;
+  position:fixed;
+  bottom:5px;
+  right:5px;
+  /*width: 150px;*/
+  height: 34px;
+  opacity: .75;
+  padding: 0px 15px 0px 20px !important;
+  /* The z-index is set with inline styling to 8388635 */
+  /* z-index: 8388635; */ /*could use max val of 2147483638*/
+}
+
+.MobileMenuButton.active
+{
+  /*  background: white url(images/hamburger.png);*/
+  opacity: 1.0;
+}
+
+
+.MobileWelcomeText
+{
+  margin-bottom: 5px;
+  font-size: 13px;
+}
+
+.MobileWelcomePoscriptText
+{
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+
+.CenterBtnInMblAuxWindowHeader
+{
+  /* Center button in footer/header */
+  /* display: block !important; */
+  /* margin: 0 auto !important; */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.CenterBtnInMblAuxWindowHeader[disabled]
+{
+  border: 1px solid rgba(0,0,0,0) !important;
+}
+
+.modal-footer.MobileConfirmFooter
+{
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.ModalConfirmBtn, .ModalConfirmBtn:hover
+{
+  /* Button in the footer (not header) of mobile confirmation windows. */
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: rgb(0,122,255);
+  text-decoration: underline;
+  height: 100%
+}
+
+
+.SideMenuPhone > li
+{
+  font-weight: bold;
+  padding-top: 10px;
+  padding-left: 14px;
+  padding-bottom: 8px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border-radius: 5px;
+}
+
+ul.HorizontalMenu {
+  font-size: 12px;
+  margin: 0px;
+  padding-top: 5px;
+  padding-left: 1px;
+  padding-right:1px;
+  padding-bottom: 2px;
+  height: 25px;
+  display: block;
+}
+
+ul.HorizontalMenu > li {
+  display: inline;
+  margin-right: 5px;
+  
+  font-weight: bold;
+  padding-top: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-bottom: 2px;
+  border-radius: 5px;
+}
+
+.SideMenuPhone > li.PhoneSideMenuTextItem
+{
+  /* This is for the "FAQs" tab on welcome screen, for phones.. */
+  padding-left: 8px;
+  font-size: x-small;
+}
+
+.HeavyNavMenuPhone > li
+{
+  vertical-align:middle;
+  color: #ffffff;
+}
+
+
+
+
+
+.IsotopePeaksMobileWindowContents
+{
+}
+
+
+.HeavyNavMenuPhone > .itemselected
+{
+  background: #C6C6C6;
+}
+
+
+.UseInfoTabsMobile
+{
+}
+
+.HeavyNavMenuPhone
+{
+  list-style-type: none;
+  overflow: auto;
+}
+
+
+.SideMenuPhone
+{
+  margin: 0px;
+  padding-top:30px;
+  padding-left: 1px;
+  padding-right:1px;
+  font-size: 13px;
+  width: 45px;
+}
+
+
+.ReferencePhotopeakDisplay .RefDispMobile
+{
+  padding-top: 0px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.IsPhone.Portrait button {
+  font-size: x-small;
+}
+
+.IsPhone.Portrait .modal-footer button, .IsPhone.Portrait .PhoneAuxWindowHeader button {
+  font-size: 10pt;
+}
+
+@media (max-width: 350px) {
+  .IsPhone.Portrait button {
+    font-size: 6pt;
+  }
+  
+  .IsPhone.Portrait .modal-footer button, .IsPhone.Portrait .PhoneAuxWindowHeader button {
+    font-size: 10pt;
+  }
+}
+
+.mobilePopupMenuOverlay {
+  position:fixed;
+  top:0;
+  left:0;
+  background:rgba(200,200,200,0.3);
+  width:100%;
+  height:100%;
+}
+
+
+
+
+.DbSpecFileSelectTable
+{
+}
+
+
+
+table.RecalibCoefTable
+{
+  border-collapse:collapse;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top: 10px;
+}
+
+
+.PopupDivMenuPhone
+{
+  border: solid 1px #e1e1e1;
+  background-color: #FAFAFA;
+  height: 100%;
+  width: 220px;
+  overflow-y: auto;
+  display: block; /* overide .Wt-popupmenu */
+}
+
+.PopupDivMenuPhone.Root
+{
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.6);
+}
+
+.PopupDivMenuPhone > li
+{
+  height: 30px;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.PopupDivMenuPhone li.Wt-separator
+{
+  height: 0px;
+}
+
+
+.PhoneMenuBack, .PhoneMenuClose
+{
+  background: #E6E6E6;
+}
+
+
+.PhoneDialogClose, .PhoneDialogClose:hover
+{
+  float: right;
+  background: transparent url(images/menuclose.png) no-repeat scroll left top;
+  background-position: 5 5;
+  
+  height: 26px;
+  width: 26px;
+  border: 0px;
+  padding: 0px;
+  cursor: default;
+  margin-right: 9px;
+  margin-top: 5px;
+}
+
+.PeakInfoDisplayTable
+{
+}

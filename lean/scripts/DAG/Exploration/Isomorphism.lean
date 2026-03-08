@@ -1,6 +1,12 @@
 import Lean
 import DAG.Isomorphism
 
+/-!
+# scripts.DAG.Exploration.Isomorphism
+
+Exploratory script for structural-hash and symmetry comparisons of declaration templates.
+-/
+
 open Lean
 open DAG
 
@@ -11,6 +17,9 @@ open DAG
   DAG.compareSymmetry env ``Nat.add ``Nat.mul
   DAG.compareSymmetry env ``Nat.add ``Nat.add
 
-  let e1 := Expr.lam `n (Expr.const ``Nat []) (Expr.app (Expr.const ``Nat.succ []) (Expr.bvar 0)) .default
+  let e1 :=
+    Expr.lam `n (Expr.const ``Nat [])
+      (Expr.app (Expr.const ``Nat.succ []) (Expr.bvar 0))
+      .default
   let h1 := DAG.computeStructuralHash e1 (blindConstants := true)
   IO.println s!"Custom Succ Template Hash: {h1}"

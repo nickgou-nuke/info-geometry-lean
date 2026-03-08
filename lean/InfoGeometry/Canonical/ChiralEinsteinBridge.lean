@@ -100,6 +100,7 @@ abbrev SatisfiesAnomalyDrivenScalarRicciFlow
     (flow : ScalarRicciFlow E) (A : ℝ → ℝ) : Prop :=
   SatisfiesAnomalyDrivenKaehlerRicciFlow (E := E) flow A
 
+/-- Lemma `anomalyDriven_zeroSource_iff_normalized`. -/
 lemma anomalyDriven_zeroSource_iff_normalized
     (flow : ScalarRicciFlow E) :
     SatisfiesAnomalyDrivenKaehlerRicciFlow (E := E) flow (fun _ => 0)
@@ -128,6 +129,7 @@ theorem anomalyDriven_fixedpoint_tracks_source
     _ = flow s + (- flow s + A s) := by simp [hEq']
     _ = A s := by ring
 
+/-- Theorem `anomalyDrivenScalarRicci_fixedpoint_tracks_source`. -/
 theorem anomalyDrivenScalarRicci_fixedpoint_tracks_source
     (flow : ScalarRicciFlow E) (A : ℝ → ℝ)
     (hFlow : SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow A)

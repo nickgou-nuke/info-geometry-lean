@@ -109,6 +109,7 @@ theorem chiral_commutation_link :
   simp [chiralAnomaly, spectralChiralProjector, metricChiralProjector, sub_eq_zero]
 
 omit [FiniteDimensional ℝ E] in
+/-- Theorem `chiralAnomaly_eq_zero_iff_projectorCommutation`. -/
 theorem chiralAnomaly_eq_zero_iff_projectorCommutation :
     CI.chiralAnomalyOperator = 0 ↔ CI.ProjectorCommutationClosure := by
   simpa [chiralAnomalyOperator, ProjectorCommutationClosure] using
@@ -121,16 +122,19 @@ This mirrors the Cl(1,1) grading into even and odd endomorphisms.
 -/
 def IsNormalInference : Prop := CI.chiralScale = 0
 
+/-- Definition `IsChiralInference`. -/
 def IsChiralInference : Prop := 0 < CI.chiralScale
 
 -- Legacy alias: normal inference stated via `epsilon = 0`.
 omit [FiniteDimensional ℝ E] in
+/-- Theorem `isNormalInference_iff_epsilon_eq_zero`. -/
 theorem isNormalInference_iff_epsilon_eq_zero :
     CI.IsNormalInference ↔ CI.epsilon = 0 := by
   simp [IsNormalInference, chiralScale]
 
 -- Legacy alias: chiral inference stated via `0 < epsilon`.
 omit [FiniteDimensional ℝ E] in
+/-- Theorem `isChiralInference_iff_epsilon_pos`. -/
 theorem isChiralInference_iff_epsilon_pos :
     CI.IsChiralInference ↔ 0 < CI.epsilon := by
   simp [IsChiralInference, chiralScale]

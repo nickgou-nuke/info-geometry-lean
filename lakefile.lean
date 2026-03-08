@@ -56,5 +56,9 @@ lean_lib InfoGeometry where
   globs := #[.andSubmodules `InfoGeometry]
 
 @[default_target]
+lean_lib SelfReference where
+  globs := #[.andSubmodules `SelfReference]
+
+@[default_target]
 lean_lib scripts where
   globs := #[.submodules `scripts]

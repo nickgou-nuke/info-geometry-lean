@@ -34,9 +34,11 @@ For finite-dimensional flat spaces, we assume [u, v] = 0.
 def informationTorsion (conn : Connection E) : E → E → E :=
   fun u v => conn u v - conn v u
 
+/-- Definition `IsTorsionFree`. -/
 def IsTorsionFree (conn : Connection E) : Prop :=
   informationTorsion conn = 0
 
+/-- Structure `FlatDualConnections`. -/
 structure FlatDualConnections (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   dual : DualConnections E
   torsion_free_nabla : IsTorsionFree dual.nabla

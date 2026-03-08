@@ -2,9 +2,15 @@
 
 Raw facts:
 - Lean files: `352`
-- Lean LOC (`lean/**/*.lean`): `41,866`
+- Lean LOC (all `.lean` files under `lean/`): `41,866`
 - `sorry`/`admit` in `lean/`: `0`
 - Full project check: `lake build -R`
+
+## Core synthesis
+
+- Thermodynamics: KMS control and RN-entropy barriers (`GrandSynthesis`).
+- Geometry: Monge-Ampere / Ricci closure and Einstein-vacuum branch.
+- Algebra: Clifford/Krein/operator-algebra bridges driving the same closure.
 
 ```bash
 git clone https://github.com/nklgtv-nuke/info-geometry-lean.git

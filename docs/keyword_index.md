@@ -25,6 +25,7 @@ Use this as a fast semantic map before interrogating the repository with an agen
 | Grand canonical ensemble | `lean/InfoGeometry/Canonical/GrandCanonicalExperts.lean`, `.../BogoliubovFockSuper.lean` |
 | Grand synthesis | `lean/InfoGeometry/Canonical/GrandSynthesis.lean` |
 | Holographic emergence | `lean/InfoGeometry/Canonical/HolographicEmergence.lean` |
+| Information Wheeler-DeWitt | `lean/InfoGeometry/Canonical/GrandSynthesis.lean` |
 | Information torsion | `lean/InfoGeometry/Canonical/InformationTorsion.lean`, `.../WeylInformationGauge.lean` |
 | Jaynes MaxEnt | `lean/InfoGeometry/MaxEnt/Jaynes.lean`, `.../JaynesCanonical.lean` |
 | Kasparov / KK-theory | `lean/InfoGeometry/KK/*`, `lean/InfoGeometry/Canonical/AnalyticalIndex.lean` |
@@ -51,6 +52,23 @@ Use this as a fast semantic map before interrogating the repository with an agen
 | Wilson loop | `lean/InfoGeometry/Canonical/WilsonLoop.lean` |
 | Yang-Mills bridge | `lean/InfoGeometry/Canonical/YangMillsBridge.lean` |
 | Zero-point energy | `lean/InfoGeometry/Quantum/ZeroPointEnergy.lean` |
+
+## Theorem anchors (sorted)
+
+| Theorem | File |
+| --- | --- |
+| `anomaly_as_fluid_state` | `lean/InfoGeometry/Canonical/NavierStokesBridge.lean` |
+| `anomaly_as_fluid_state_with_density` | `lean/InfoGeometry/Canonical/NavierStokesBridge.lean` |
+| `chiral_anomaly_sources_flow` | `lean/InfoGeometry/Canonical/NavierStokesBridge.lean` |
+| `deriv_modularVelocity_zero` | `lean/InfoGeometry/Canonical/NavierStokesBridge.lean` |
+| `gravity_generated_by_rnEntropy` | `lean/InfoGeometry/Canonical/GrandSynthesis.lean` |
+| `hasDerivAt_modularVelocity_zero` | `lean/InfoGeometry/Canonical/NavierStokesBridge.lean` |
+| `information_wheeler_dewitt_equivalence` | `lean/InfoGeometry/Canonical/GrandSynthesis.lean` |
+| `information_wheeler_dewitt_equivalence_of_sinkhornDrive` | `lean/InfoGeometry/Canonical/GrandSynthesis.lean` |
+| `information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypotheses` | `lean/InfoGeometry/Canonical/GrandSynthesis.lean` |
+| `modular_circulation_response` | `lean/InfoGeometry/Canonical/NavierStokesBridge.lean` |
+| `sinkhornStepwise_kmsResidual_le_entropyBarrier` | `lean/InfoGeometry/Canonical/GrandSynthesis.lean` |
+| `vacuumEinsteinEquation_of_rnEntropySource` | `lean/InfoGeometry/Canonical/GrandSynthesis.lean` |
 
 ## Agent bootstrap prompt
 

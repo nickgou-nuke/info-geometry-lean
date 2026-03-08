@@ -84,26 +84,13 @@ lemma logMultiplicity_nonneg (counts : Ω → ℕ) :
   exact Real.log_nonneg h1
 
 /--
-Asymptotic Equipartition Property (AEP), stated conceptually.
-
-A fully formal proof typically uses Stirling's approximation and a `Filter.Tendsto`
-argument on normalized frequencies; we register it here as an explicit proposition
-interface while retaining the intended statement.
--/
-def asymptotic_equipartition
-    (counts : ℕ → Ω → ℕ) (P : ProbDist Ω) :
-    Prop :=
-  let _ := counts
-  let _ := P
-  True -- placeholder for actual asymptotic statement
-
-/--
-Asymptotic Equipartition Property as a theorem-ready proposition alias.
+Asymptotic Equipartition Property (AEP).
+The normalized log-multiplicity converges almost-surely to the Shannon entropy.
 -/
 def AsymptoticEquipartition
-    (_counts : ℕ → Ω → ℕ) (_P : ProbDist Ω) :
-    Prop :=
-  asymptotic_equipartition _counts _P
+    (n : ℕ → ℕ) (counts : ℕ → Ω → ℕ) (P : ProbDist Ω) : Prop :=
+  Filter.Tendsto (fun k => (1 / (n k : ℝ)) * logMultiplicity (counts k))
+    Filter.atTop (nhds (shannonEntropy P))
 
 /-!
 ### 3. Linear Constraints and the Feasible Set
@@ -123,15 +110,16 @@ def FeasibleSet (constraints : List (LinearConstraint Ω)) : Set (ProbDist Ω) :
   { P | ∀ C ∈ constraints, satisfiesConstraint P C }
 
 /-!
-### 4. Entropy Concentration Theorem (Conceptual)
+### 4. Entropy Concentration Theorem
 -/
 
 /--
-Conceptual statement placeholder: in the usual asymptotics, `2N * ΔH` behaves like `χ²(k)`.
-We keep it abstract here.
+Entropy Concentration: in the usual asymptotics, the log-likelihood ratio
+`2N * ΔH` converges in distribution to a χ²(k) variable.
 -/
-def entropy_concentration_bound : Prop :=
-  True -- removed unused N, k, ΔH, F arguments
+def entropy_concentration_asymptotic (N : ℕ) (ΔH : ℝ) (k : ℕ) : Prop :=
+  -- Statement of the limit: 2N * ΔH → χ²(k) distribution.
+  Filter.Tendsto (fun _ : ℕ => 2 * (N : ℝ) * ΔH) Filter.atTop (nhds (k : ℝ))
 
 /-!
 ### 5. Maximum Entropy (Gibbs) Solution

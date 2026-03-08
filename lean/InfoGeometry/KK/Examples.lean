@@ -34,8 +34,8 @@ noncomputable def trivialKasparovCycle : KasparovCycle ℝ ℝ (FinModelH n) whe
   F_odd := by
     unfold KreinGradedModule.IsOdd KreinGradedModule.gradeConj
     simp
-  F_selfAdj := by
-    simp [KreinSpace.IsKreinSelfAdjoint]
+  F_skewAdj := by
+    simp [KreinSpace.IsKreinSkewAdjoint]
   K := fun _ => True
   compactLike := instCompactLikeTrueFinModel n
   F_sq_one_compact := trivial

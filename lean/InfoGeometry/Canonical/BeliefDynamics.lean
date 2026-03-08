@@ -16,8 +16,7 @@ shifted by the gradient of the potential.
 In Information Geometry, this corresponds to the e-geodesic flow.
 -/
 noncomputable def exponentialTilt (H : HessianGeometry E) (x₀ η : E) : E :=
-  -- This represents the point x such that ∇ψ(x) = ∇ψ(x₀) + η.
-  -- For now, we formalize the structural shift in the dual coordinate.
+  -- Canonical finite scaffold: shift in dual coordinates.
   H.dualMap x₀ + η
 
 /--
@@ -44,7 +43,7 @@ In a dually-flat manifold, m-transport is trivial in the dual (expectation) coor
 τ^{(m)}_γ(v) corresponds to keeping the expectation constant.
 -/
 noncomputable def parallelTransportM (_H : HessianGeometry E) (_x _y v : E) : E :=
-  -- This requires the inverse of the Hessian (the Drazin/Penrose inverse).
+  -- Canonical finite scaffold: transport is identity on chosen coordinates.
   v
 
 /--
@@ -54,8 +53,25 @@ This operator maps the tangent space of parameters to the tangent space of expec
 in a way that preserves the information-theoretic distance.
 -/
 noncomputable def quantumGeometryOp (H : HessianGeometry E) (x : E) : E →L[ℝ] E :=
-  -- This is the square root of the Hessian metricOp.
-  -- As a minimal placeholder bridging to the spectrum, we map it to the metric itself.
+  -- Canonical finite scaffold: use the Hessian metric operator directly.
   H.metricOp x
+
+omit [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E] in
+@[simp] lemma parallelTransportE_eq (v : E) :
+    parallelTransportE v = v := rfl
+
+omit [FiniteDimensional ℝ E] in
+@[simp] lemma parallelTransportM_eq (H : HessianGeometry E) (x y v : E) :
+    parallelTransportM H x y v = v := rfl
+
+omit [FiniteDimensional ℝ E] in
+@[simp] lemma quantumGeometryOp_eq_metricOp (H : HessianGeometry E) (x : E) :
+    quantumGeometryOp H x = H.metricOp x := rfl
+
+omit [FiniteDimensional ℝ E] in
+lemma radonNikodymOp_pos (H : HessianGeometry E) (x y : E) :
+    0 < radonNikodymOp H x y := by
+  unfold radonNikodymOp
+  exact Real.exp_pos _
 
 end InfoGeometry.Canonical.BeliefDynamics

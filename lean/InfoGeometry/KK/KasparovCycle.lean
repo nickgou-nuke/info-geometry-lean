@@ -31,8 +31,8 @@ structure KasparovCycle
   F : EndH H
   /-- Oddness with respect to the grading involution. -/
   F_odd : KreinGradedModule.IsOdd (H := H) F
-  /-- Krein self-adjointness of `F`. -/
-  F_selfAdj : KreinSpace.IsKreinSelfAdjoint (H := H) F
+  /-- Krein skew-adjointness of `F` (corresponds to Hilbert self-adjointness for odd operators). -/
+  F_skewAdj : KreinSpace.IsKreinSkewAdjoint (H := H) F
   /-- Compactness-like predicate used for Kasparov relations. -/
   K : EndH H → Prop
   compactLike : CompactLike K

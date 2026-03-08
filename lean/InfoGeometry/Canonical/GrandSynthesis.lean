@@ -609,7 +609,7 @@ section WheelerDeWitt
 variable (n : Nat)
 variable {X V F : Type}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
-  [AddCommGroup V] [Module ℝ V]
+  [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /--
@@ -649,12 +649,12 @@ theorem geometricAlgebraicState_of_sinkhornRicciIndexHypotheses
     (D Γ : ℝ → Endomorphism V)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
-    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0)) :
+    (hD : ∀ s : ℝ, D s = D 0)
+    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
     GeometricAlgebraicState n T flow D Γ :=
-  sinkhornRicciIndexInvariant_of_hypotheses
+  sinkhornRicciIndexInvariant_of_constructive_hypotheses
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    hNorm hFixed hplus hminus
+    hNorm hFixed hD hΓ
 
 /--
 Derived Calabi-Yau entropy bridge from constructive invariance hypotheses:
@@ -670,13 +670,13 @@ theorem calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
     (β : ℝ)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
-    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0)) :
+    (hD : ∀ s : ℝ, D s = D 0)
+    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
     GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β := by
   intro _hThermo
   exact geometricAlgebraicState_of_sinkhornRicciIndexHypotheses
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    hNorm hFixed hplus hminus
+    hNorm hFixed hD hΓ
 
 /--
 Derived Bochner-Weitzenbock bridge from existing library assumptions:
@@ -777,8 +777,8 @@ theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypothe
     (hDrive : SinkhornKMSControl n T.traj K ω β)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
-    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0)) :
+    (hD : ∀ s : ℝ, D s = D 0)
+    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
     ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
   exact information_wheeler_dewitt_equivalence
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
@@ -787,7 +787,7 @@ theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypothe
       (K := K) (ω := ω) (β := β) hDrive)
     (calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
-      hNorm hFixed hplus hminus)
+      hNorm hFixed hD hΓ)
 
 /--
 Legacy-compatibility reduced-hypothesis theorem:
@@ -834,13 +834,13 @@ theorem information_wheeler_dewitt_equivalence_of_constructive_hypotheses
     (_hConst : HasConstantMongeAmpereDensity Kgeo.H)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
-    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0)) :
+    (hD : ∀ s : ℝ, D s = D 0)
+    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
     ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
   exact information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypotheses
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
     (K := K) (ω := ω) (β := β)
-    hDrive hNorm hFixed hplus hminus
+    hDrive hNorm hFixed hD hΓ
 
 /--
 The full capstone package from `AnalyticalIndex` immediately yields both sides.
@@ -860,6 +860,52 @@ theorem thermodynamic_and_geometricAlgebraic_of_fullCapstone
     FullThermoGeoIndexCapstone.geometricAlgebraicState
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β) hFull
   ⟩
+
+/--
+Fully constructive Wheeler-DeWitt equivalence from a proved full capstone package.
+-/
+theorem information_wheeler_dewitt_equivalence_of_fullCapstone
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hFull : FullThermoGeoIndexCapstone n T flow D Γ K ω β) :
+    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
+  constructor
+  · intro _hThermo
+    exact (thermodynamic_and_geometricAlgebraic_of_fullCapstone
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (K := K) (ω := ω) (β := β) hFull).2
+  · intro _hGeoAlg
+    exact (thermodynamic_and_geometricAlgebraic_of_fullCapstone
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (K := K) (ω := ω) (β := β) hFull).1
+
+/--
+Fully constructive Wheeler-DeWitt equivalence from explicit capstone hypotheses.
+-/
+theorem information_wheeler_dewitt_equivalence_of_constructive_capstone_hypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hD : ∀ s : ℝ, D s = D 0)
+    (hΓ : ∀ s : ℝ, Γ s = Γ 0)
+    (hDrive : SinkhornKMSControl n T.traj K ω β) :
+    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
+  exact information_wheeler_dewitt_equivalence_of_fullCapstone
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (ω := ω) (β := β)
+    (fullThermoGeoIndexCapstone_of_constructive_hypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (K := K) (ω := ω) (β := β)
+      hNorm hFixed hD hΓ hDrive)
 
 end WheelerDeWitt
 

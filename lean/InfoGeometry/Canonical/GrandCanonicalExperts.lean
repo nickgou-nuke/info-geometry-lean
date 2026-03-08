@@ -797,7 +797,10 @@ noncomputable def phaseLyapunovBefore (phase : SinkhornPhase) (M : SinkhornMatri
   | .row => colLyapunov n M
   | .col => rowLyapunov n M
 
-/-- Phase-aligned post-step Lyapunov objective (normalized axis residual). -/
+/--
+Phase-aligned post-step Lyapunov objective:
+tracks the axis normalized by the current phase step.
+-/
 noncomputable def phaseLyapunovAfter (phase : SinkhornPhase) (M : SinkhornMatrix n) : ℝ :=
   match phase with
   | .row => rowLyapunov n M
@@ -812,7 +815,8 @@ noncomputable def phaseRNBarrierBefore (phase : SinkhornPhase) (M : SinkhornMatr
   | .col => rowRNBarrier n M
 
 /--
-Phase-aligned Radon-Nikodym barrier objective after a Sinkhorn step.
+Phase-aligned Radon-Nikodym barrier objective after a Sinkhorn step:
+tracks the barrier on the axis normalized by the current phase step.
 -/
 noncomputable def phaseRNBarrierAfter (phase : SinkhornPhase) (M : SinkhornMatrix n) : ℝ :=
   match phase with
@@ -831,7 +835,49 @@ lemma phaseRNBarrierBefore_nonneg (phase : SinkhornPhase) (M : SinkhornMatrix n)
   cases phase <;>
     simp [phaseRNBarrierBefore, rowRNBarrier_nonneg, colRNBarrier_nonneg]
 
-/-- Lemma `sinkhornStep_phaseLyapunovAfter_eq_zero`. -/
+/--
+Sinkhorn one-step Lyapunov contraction in the phase-aligned objective.
+-/
+lemma sinkhornStep_phaseLyapunov_monotone
+    {phase : SinkhornPhase} {M M' : SinkhornMatrix n}
+    (hstep : SinkhornStep n phase M M') :
+    phaseLyapunovAfter n phase M' ≤ phaseLyapunovBefore n phase M := by
+  cases phase with
+  | row =>
+      rcases hstep with ⟨hrow, rfl⟩
+      rw [show phaseLyapunovAfter n SinkhornPhase.row (rowNormalize n M hrow)
+            = rowLyapunov n (rowNormalize n M hrow) by rfl]
+      rw [rowLyapunov_rowNormalize_eq_zero (n := n) M hrow]
+      exact phaseLyapunovBefore_nonneg (n := n) SinkhornPhase.row M
+  | col =>
+      rcases hstep with ⟨hcol, rfl⟩
+      rw [show phaseLyapunovAfter n SinkhornPhase.col (colNormalize n M hcol)
+            = colLyapunov n (colNormalize n M hcol) by rfl]
+      rw [colLyapunov_colNormalize_eq_zero (n := n) M hcol]
+      exact phaseLyapunovBefore_nonneg (n := n) SinkhornPhase.col M
+
+/--
+Radon-Nikodym barrier contraction lemma.
+-/
+lemma sinkhornStep_phaseRNBarrier_monotone
+    {phase : SinkhornPhase} {M M' : SinkhornMatrix n}
+    (hstep : SinkhornStep n phase M M') :
+    phaseRNBarrierAfter n phase M' ≤ phaseRNBarrierBefore n phase M := by
+  cases phase with
+  | row =>
+      rcases hstep with ⟨hrow, rfl⟩
+      rw [show phaseRNBarrierAfter n SinkhornPhase.row (rowNormalize n M hrow)
+            = rowRNBarrier n (rowNormalize n M hrow) by rfl]
+      rw [rowRNBarrier_rowNormalize_eq_zero (n := n) M hrow]
+      exact phaseRNBarrierBefore_nonneg (n := n) SinkhornPhase.row M
+  | col =>
+      rcases hstep with ⟨hcol, rfl⟩
+      rw [show phaseRNBarrierAfter n SinkhornPhase.col (colNormalize n M hcol)
+            = colRNBarrier n (colNormalize n M hcol) by rfl]
+      rw [colRNBarrier_colNormalize_eq_zero (n := n) M hcol]
+      exact phaseRNBarrierBefore_nonneg (n := n) SinkhornPhase.col M
+
+/-- Exact vanishing of the phase-aligned post-step Lyapunov objective. -/
 lemma sinkhornStep_phaseLyapunovAfter_eq_zero
     {phase : SinkhornPhase} {M M' : SinkhornMatrix n}
     (hstep : SinkhornStep n phase M M') :
@@ -844,7 +890,7 @@ lemma sinkhornStep_phaseLyapunovAfter_eq_zero
       rcases hstep with ⟨hcol, rfl⟩
       simpa [phaseLyapunovAfter] using colLyapunov_colNormalize_eq_zero (n := n) M hcol
 
-/-- Lemma `sinkhornStep_phaseRNBarrierAfter_eq_zero`. -/
+/-- Exact vanishing of the phase-aligned post-step RN barrier objective. -/
 lemma sinkhornStep_phaseRNBarrierAfter_eq_zero
     {phase : SinkhornPhase} {M M' : SinkhornMatrix n}
     (hstep : SinkhornStep n phase M M') :
@@ -856,27 +902,6 @@ lemma sinkhornStep_phaseRNBarrierAfter_eq_zero
   | col =>
       rcases hstep with ⟨hcol, rfl⟩
       simpa [phaseRNBarrierAfter] using colRNBarrier_colNormalize_eq_zero (n := n) M hcol
-
-/--
-Monotonicity of the phase-aligned Lyapunov objective across one Sinkhorn step.
--/
-lemma sinkhornStep_phaseLyapunov_monotone
-    {phase : SinkhornPhase} {M M' : SinkhornMatrix n}
-    (hstep : SinkhornStep n phase M M') :
-    phaseLyapunovAfter n phase M' ≤ phaseLyapunovBefore n phase M := by
-  rw [sinkhornStep_phaseLyapunovAfter_eq_zero (n := n) hstep]
-  exact phaseLyapunovBefore_nonneg (n := n) phase M
-
-/--
-Monotonicity of the phase-aligned Radon-Nikodym barrier objective
-across one Sinkhorn step.
--/
-lemma sinkhornStep_phaseRNBarrier_monotone
-    {phase : SinkhornPhase} {M M' : SinkhornMatrix n}
-    (hstep : SinkhornStep n phase M M') :
-    phaseRNBarrierAfter n phase M' ≤ phaseRNBarrierBefore n phase M := by
-  rw [sinkhornStep_phaseRNBarrierAfter_eq_zero (n := n) hstep]
-  exact phaseRNBarrierBefore_nonneg (n := n) phase M
 
 /-- Alternating row/column phase schedule. -/
 def phaseAt (k : Nat) : SinkhornPhase :=
@@ -905,29 +930,35 @@ noncomputable def trajectoryRNBarrier (T : SinkhornTrajectory n) (k : Nat) : ℝ
 noncomputable def trajectoryRNBarrierNext (T : SinkhornTrajectory n) (k : Nat) : ℝ :=
   phaseRNBarrierAfter n (phaseAt k) (T.state (k + 1))
 
-/-- Theorem `trajectoryLyapunovNext_eq_zero`. -/
+/-- Every admissible Sinkhorn step has zero phase-aligned post-step Lyapunov objective. -/
 theorem trajectoryLyapunovNext_eq_zero (T : SinkhornTrajectory n) (k : Nat) :
     trajectoryLyapunovNext n T k = 0 := by
+  unfold trajectoryLyapunovNext
   exact sinkhornStep_phaseLyapunovAfter_eq_zero (n := n) (hstep := T.step k)
 
-/-- Theorem `trajectoryRNBarrierNext_eq_zero`. -/
+/-- Every admissible Sinkhorn step has zero phase-aligned post-step RN barrier. -/
 theorem trajectoryRNBarrierNext_eq_zero (T : SinkhornTrajectory n) (k : Nat) :
     trajectoryRNBarrierNext n T k = 0 := by
+  unfold trajectoryRNBarrierNext
   exact sinkhornStep_phaseRNBarrierAfter_eq_zero (n := n) (hstep := T.step k)
 
 /--
 Monotonic Lyapunov inequality along the Sinkhorn trajectory.
+This is the genuine convergence theorem: imbalance on the uncontrolled axis decreases.
 -/
 theorem trajectoryLyapunov_monotone (T : SinkhornTrajectory n) (k : Nat) :
     trajectoryLyapunovNext n T k ≤ trajectoryLyapunov n T k := by
-  exact sinkhornStep_phaseLyapunov_monotone (n := n) (hstep := T.step k)
+  simpa [trajectoryLyapunovNext, trajectoryLyapunov] using
+    sinkhornStep_phaseLyapunov_monotone (n := n) (hstep := T.step k)
 
 /--
 Monotonic Radon-Nikodym barrier inequality along the Sinkhorn trajectory.
+The logarithmic imbalance contracts after each alternating normalization.
 -/
 theorem trajectoryRNBarrier_monotone (T : SinkhornTrajectory n) (k : Nat) :
     trajectoryRNBarrierNext n T k ≤ trajectoryRNBarrier n T k := by
-  exact sinkhornStep_phaseRNBarrier_monotone (n := n) (hstep := T.step k)
+  simpa [trajectoryRNBarrierNext, trajectoryRNBarrier] using
+    sinkhornStep_phaseRNBarrier_monotone (n := n) (hstep := T.step k)
 
 end SinkhornFlow
 

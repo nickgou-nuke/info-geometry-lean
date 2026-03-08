@@ -91,6 +91,21 @@ def HohenbergKohnDualState
       Function.LeftInverse gradStar grad ∧ Function.RightInverse gradStar grad
 
 /--
+Explicit constructive duality state:
+inverse gradient maps directly yield the Hohenberg-Kohn duality witness.
+-/
+theorem hohenbergKohnDualState_of_inverse_maps
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (grad : Θ → (Θ →L[ℝ] ℝ))
+    (gradStar : (Θ →L[ℝ] ℝ) → Θ)
+    (hLeft : Function.LeftInverse gradStar grad)
+    (hRight : Function.RightInverse gradStar grad) :
+    HohenbergKohnDualState ψ ψStar := by
+  refine ⟨grad, gradStar, ?_⟩
+  exact legendre_involution_of_inverse_maps (grad := grad) (gradStar := gradStar) hLeft hRight
+
+/--
 Legendre involution assumptions discharge the Hohenberg-Kohn duality state.
 -/
 theorem hohenbergKohnDualState_of_legendreInvolution
@@ -98,8 +113,23 @@ theorem hohenbergKohnDualState_of_legendreInvolution
     (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
     (hLeg : LegendreInvolutionAssumptions ψ ψStar) :
     HohenbergKohnDualState ψ ψStar := by
-  refine ⟨hLeg.grad, hLeg.gradStar, ?_⟩
-  exact legendre_involution_assumption_theorem (h := hLeg)
+  exact hohenbergKohnDualState_of_inverse_maps
+    (ψ := ψ) (ψStar := ψStar)
+    (grad := hLeg.grad) (gradStar := hLeg.gradStar)
+    hLeg.left_inv hLeg.right_inv
+
+/--
+Explicit constructive Fenchel-gap closure:
+Fenchel-Young equality along a chosen `grad` implies zero gap along that `grad`.
+-/
+theorem fenchelGap_zero_along_grad_of_fenchelYoung
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (grad : Θ → (Θ →L[ℝ] ℝ))
+    (hFY : ∀ θ : Θ, FenchelYoungEquality ψ ψStar θ (grad θ)) :
+    ∀ θ : Θ, fenchelGap ψ ψStar θ (grad θ) = 0 :=
+  InfoGeometry.Geometry.fenchelGap_zero_along_grad_of_fenchelYoung
+    (ψ := ψ) (ψStar := ψStar) (grad := grad) hFY
 
 /--
 Under Legendre involution assumptions, the Fenchel gap vanishes along `grad`.
@@ -109,7 +139,8 @@ theorem fenchelGap_zero_along_grad_of_legendreInvolution
     (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
     (hLeg : LegendreInvolutionAssumptions ψ ψStar) :
     ∀ θ : Θ, fenchelGap ψ ψStar θ (hLeg.grad θ) = 0 :=
-  legendre_involution_gap_theorem (h := hLeg)
+  fenchelGap_zero_along_grad_of_fenchelYoung
+    (ψ := ψ) (ψStar := ψStar) (grad := hLeg.grad) hLeg.fenchelYoung_along_grad
 
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

@@ -148,6 +148,36 @@ lemma dual_value_of_fenchelYoungEquality
   unfold FenchelYoungEquality at hEq
   linarith
 
+/-- Explicit involution interface from inverse gradient maps. -/
+theorem legendre_involution_of_inverse_maps
+    (grad : Θ → (Θ →L[ℝ] ℝ))
+    (gradStar : (Θ →L[ℝ] ℝ) → Θ)
+    (hLeft : Function.LeftInverse gradStar grad)
+    (hRight : Function.RightInverse gradStar grad) :
+    Function.LeftInverse gradStar grad ∧
+      Function.RightInverse gradStar grad := by
+  exact ⟨hLeft, hRight⟩
+
+/-- Explicit Fenchel-Young equality along `grad` implies zero Fenchel gap along `grad`. -/
+theorem fenchelGap_zero_along_grad_of_fenchelYoung
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (grad : Θ → (Θ →L[ℝ] ℝ))
+    (hFY : ∀ θ : Θ, FenchelYoungEquality ψ ψStar θ (grad θ)) :
+    ∀ θ : Θ, fenchelGap ψ ψStar θ (grad θ) = 0 := by
+  intro θ
+  exact (fenchelYoungEquality_iff_gap_eq_zero ψ ψStar θ (grad θ)).1 (hFY θ)
+
+/-- Explicit Fenchel-Young equality along `grad` gives the dual value formula along `grad`. -/
+theorem dual_value_along_grad_of_fenchelYoung
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (grad : Θ → (Θ →L[ℝ] ℝ))
+    (hFY : ∀ θ : Θ, FenchelYoungEquality ψ ψStar θ (grad θ)) :
+    ∀ θ : Θ, ψStar (grad θ) = grad θ θ - ψ θ := by
+  intro θ
+  exact dual_value_of_fenchelYoungEquality ψ ψStar θ (grad θ) (hFY θ)
+
 /-- Assumption package typically required to state/prove Legendre involution theorems. -/
 structure LegendreInvolutionAssumptions
     (ψ : Θ → ℝ)

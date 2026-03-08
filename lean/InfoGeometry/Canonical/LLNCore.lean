@@ -1,48 +1,61 @@
 import Mathlib.Algebra.BigOperators.Ring.Finset
 import Mathlib.Data.Real.Basic
-import Mathlib.Order.Filter.Basic
-import Mathlib.Topology.Algebra.Ring.Real
+import Mathlib.Probability.StrongLaw
 
 /-!
 # InfoGeometry.Canonical.LLNCore
 
-Canonical core for SLLN/empirical-bridge draft scaffolding.
+Canonical core for SLLN/empirical convergence using mathlib probability results.
 -/
 
 namespace InfoGeometry.Canonical.LLN
 
-open scoped BigOperators
+open scoped BigOperators ProbabilityTheory
+open Filter MeasureTheory ProbabilityTheory
 
 /-- Empirical average of a real sequence over the first `n` samples. -/
 noncomputable def empiricalAverage (X : Nat → Real) (n : Nat) : Real :=
   (n : Real)⁻¹ * Finset.sum (Finset.range n) X
 
-/-- SLLN scaffold: existence of a sequence with convergent empirical average. -/
-def fixed_partition_slln : Prop :=
-  ∃ X : Nat → Real,
-    Filter.Tendsto (empiricalAverage X) Filter.atTop (nhds (0 : Real))
+/--
+Strong-law convergence statement for a real-valued stochastic process on `(Ω, μ)`.
+-/
+def fixed_partition_slln {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    (X : ℕ → Ω → ℝ) : Prop :=
+  ∀ᵐ ω ∂μ, Tendsto (fun n : ℕ => (∑ i ∈ Finset.range n, X i ω) / n) atTop (nhds μ[X 0])
 
-/-- Theorem `fixed_partition_slln_holds`. -/
-theorem fixed_partition_slln_holds : fixed_partition_slln := by
-  refine ⟨fun _ => 0, ?_⟩
-  have hzero : empiricalAverage (fun _ : Nat => (0 : Real)) = fun _ : Nat => (0 : Real) := by
-    funext n
-    simp [empiricalAverage]
-  rw [hzero]
-  exact (tendsto_const_nhds :
-    Filter.Tendsto (fun _ : Nat => (0 : Real)) Filter.atTop (nhds (0 : Real)))
+/--
+`fixed_partition_slln` from pairwise-independence, identical distribution, and integrability.
+This is exactly `ProbabilityTheory.strong_law_ae_real`.
+-/
+theorem fixed_partition_slln_holds
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
+    (X : ℕ → Ω → ℝ) (hint : Integrable (X 0) μ)
+    (hindep : Pairwise (fun i j => X i ⟂ᵢ[μ] X j))
+    (hident : ∀ i, IdentDistrib (X i) (X 0) μ μ) :
+    fixed_partition_slln μ X := by
+  simpa [fixed_partition_slln] using
+    (ProbabilityTheory.strong_law_ae_real (μ := μ) X hint hindep hident)
 
-/-- Draft empirical-to-theoretical convergence bridge. -/
-def empirical_to_theoretical_slln : Prop := fixed_partition_slln
+/-- Canonical alias used by downstream modules/docs. -/
+def empirical_to_theoretical_slln {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    (X : ℕ → Ω → ℝ) : Prop :=
+  fixed_partition_slln μ X
 
-/-- RN-ratio scaffold: existence of a ratio process converging to `1`. -/
-def ae_tendsto_ratio_to_rnDeriv : Prop :=
-  ∃ r : Nat → Real, Filter.Tendsto r Filter.atTop (nhds (1 : Real))
+/--
+Almost-everywhere convergence of a ratio process to a Radon-Nikodym derivative target.
+-/
+def ae_tendsto_ratio_to_rnDeriv
+    {Ω : Type*} [MeasurableSpace Ω] (μ : Measure Ω)
+    (ratio : ℕ → Ω → ℝ) (rnDeriv : Ω → ℝ) : Prop :=
+  ∀ᵐ ω ∂μ, Tendsto (fun n : ℕ => ratio n ω) atTop (nhds (rnDeriv ω))
 
-/-- Theorem `ae_tendsto_ratio_to_rnDeriv_holds`. -/
-theorem ae_tendsto_ratio_to_rnDeriv_holds : ae_tendsto_ratio_to_rnDeriv := by
-  refine ⟨fun _ => 1, ?_⟩
-  exact (tendsto_const_nhds :
-    Filter.Tendsto (fun _ : Nat => (1 : Real)) Filter.atTop (nhds (1 : Real)))
+/-- Introduction rule for `ae_tendsto_ratio_to_rnDeriv`. -/
+theorem ae_tendsto_ratio_to_rnDeriv_holds
+    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
+    (ratio : ℕ → Ω → ℝ) (rnDeriv : Ω → ℝ)
+    (h : ∀ᵐ ω ∂μ, Tendsto (fun n : ℕ => ratio n ω) atTop (nhds (rnDeriv ω))) :
+    ae_tendsto_ratio_to_rnDeriv μ ratio rnDeriv :=
+  h
 
 end InfoGeometry.Canonical.LLN

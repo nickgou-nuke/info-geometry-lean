@@ -117,15 +117,15 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 /--
 Modular conjugation `J` (real-linear model of antilinear conjugation on complex space).
 -/
-abbrev modularConjugationJ : DoubledSpace E →L[ℝ] DoubledSpace E :=
+noncomputable abbrev modularConjugationJ : DoubledSpace E →L[ℝ] DoubledSpace E :=
   modularJ (E := E)
 
 /-- Modular sign involution `ε = sgn(K)`. -/
-abbrev modularSignEpsilon : DoubledSpace E →L[ℝ] DoubledSpace E :=
+noncomputable abbrev modularSignEpsilon : DoubledSpace E →L[ℝ] DoubledSpace E :=
   spectralEpsilon (E := E)
 
 /-- Composite `Jε`, the split-complex structure axis. -/
-abbrev modularComplexI : DoubledSpace E →L[ℝ] DoubledSpace E :=
+noncomputable abbrev modularComplexI : DoubledSpace E →L[ℝ] DoubledSpace E :=
   complexI (E := E)
 
 @[simp] lemma modularConjugationJ_sq :

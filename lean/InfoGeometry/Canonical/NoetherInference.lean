@@ -8,7 +8,7 @@ import Mathlib.Tactic.Ring
 
 open scoped Invertible
 
-/-!
+/-! 
 # Noether Inference
 
 Compile-oriented core for the physical-informational bridges.
@@ -32,11 +32,16 @@ variable {E : Type*}
   [CompleteSpace E] [FiniteDimensional ℝ E]
 
 /-- Ambient operator space on the doubled carrier. -/
-abbrev Op := DoubledSpace E →L[ℝ] DoubledSpace E
+abbrev Op (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E
+
+/-- Local alias for the doubled carrier. -/
+abbrev DSpace (E : Type*) := InfoGeometry.Krein.DoubledSpace E
 
 /-- Information Killing field: a Krein-skew generator on the doubled space. -/
-def InformationKillingField : Type :=
-  { A : Op E // IsKreinSkewAdjoint A }
+def InformationKillingField (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] : Type _ :=
+  { A : Op E // InfoGeometry.Krein.IsKreinSkewAdjoint A }
 
 /--
 Infinitesimal Hessian invariance:
@@ -44,35 +49,29 @@ a Krein-skew generator is an infinitesimal isometry of the Hessian form.
 -/
 theorem InformationKillingField.preserves_hessian
     (A : InformationKillingField (E := E))
-    (x y : DoubledSpace E) :
+    (x y : DSpace E) :
     hessianIndefiniteForm (E := E) (A.1 x) y +
       hessianIndefiniteForm (E := E) x (A.1 y) = 0 := by
   simpa using
-    (IsKreinSkewAdjoint.hessian_infinitesimal
+    (InfoGeometry.Krein.IsKreinSkewAdjoint.hessian_infinitesimal
       (E := E) (A := A.1) A.2 x y)
 
+/-- Evaluation at a fixed doubled vector as a linear map on doubled endomorphisms. -/
+noncomputable def evalAt (v : DSpace E) : Op E →ₗ[ℝ] DSpace E :=
+  (ContinuousLinearMap.coeLM (R := ℝ) (S := ℝ) (M := DSpace E) (N₃ := DSpace E)).flip v
+
+@[simp] lemma evalAt_apply (v : DSpace E) (X : Op E) : evalAt (E := E) v X = X v := rfl
+
 /-- Fisher/Hessian bilinear form at a state `v`, evaluated on operator generators. -/
-noncomputable def fisherBilinAt (v : DoubledSpace E) :
+noncomputable def fisherBilinAt (v : DSpace E) :
     LinearMap.BilinForm ℝ (Op E) :=
-  LinearMap.mk₂ ℝ
-    (fun X Y => hessianIndefiniteForm (E := E) (X v) (Y v))
-    (by
-      intro X₁ X₂ Y
-      simp [hessianIndefiniteForm, KreinSpace.kreinInner_add_left])
-    (by
-      intro a X Y
-      simp [hessianIndefiniteForm, KreinSpace.kreinInner_smul_left])
-    (by
-      intro X Y₁ Y₂
-      simp [hessianIndefiniteForm, KreinSpace.kreinInner_add_right])
-    (by
-      intro a X Y
-      simp [hessianIndefiniteForm, KreinSpace.kreinInner_smul_right])
+  (KreinSpace.kreinBilin (H := DSpace E)).comp (evalAt (E := E) v) (evalAt (E := E) v)
 
 @[simp] lemma fisherBilinAt_apply
-    (v : DoubledSpace E) (X Y : Op E) :
-    fisherBilinAt (E := E) v X Y =
-      hessianIndefiniteForm (E := E) (X v) (Y v) := rfl
+    (v : DSpace E) (X Y : Op E) :
+    fisherBilinAt v X Y = hessianIndefiniteForm (E := E) (X v) (Y v) := by
+  simp [fisherBilinAt, hessianIndefiniteForm, LinearMap.BilinForm.comp_apply, evalAt,
+    KreinSpace.kreinBilin]
 
 section FisherKilling
 
@@ -86,18 +85,18 @@ This matches the actual API of `SymmetricLieAlgebra`.
 theorem fisher_metric_eq_killing_form_constructive
     (S : SymmetricLieAlgebra ℝ (Op E))
     (X0 Y0 : Op E)
-    (v0 : DoubledSpace E)
+    (v0 : DSpace E)
     (hB0 : S.B (S.P_minus X0) (S.P_minus Y0) ≠ 0)
     (hH0 : hessianIndefiniteForm (E := E) (X0 v0) (Y0 v0) ≠ 0)
     (hBridge :
-      ∀ (X Y : Op E) (v : DoubledSpace E),
+      ∀ (X Y : Op E) (v : DSpace E),
         hessianIndefiniteForm (E := E) (X v) (Y v) *
           S.B (S.P_minus X0) (S.P_minus Y0)
             =
         hessianIndefiniteForm (E := E) (X0 v0) (Y0 v0) *
           S.B (S.P_minus X) (S.P_minus Y)) :
     ∃ c : ℝ, c ≠ 0 ∧
-      ∀ (X Y : Op E) (v : DoubledSpace E),
+      ∀ (X Y : Op E) (v : DSpace E),
         hessianIndefiniteForm (E := E) (X v) (Y v) =
           c * S.B (S.P_minus X) (S.P_minus Y) := by
   let B0 : ℝ := S.B (S.P_minus X0) (S.P_minus Y0)
@@ -136,18 +135,18 @@ structure needed by `killingForm`.
 theorem fisher_metric_eq_killing_form
     (S : SymmetricLieAlgebra ℝ (Op E))
     (X0 Y0 : Op E)
-    (v0 : DoubledSpace E)
+    (v0 : DSpace E)
     (hB0 : S.B (S.P_minus X0) (S.P_minus Y0) ≠ 0)
     (hH0 : hessianIndefiniteForm (E := E) (X0 v0) (Y0 v0) ≠ 0)
     (hBridge :
-      ∀ (X Y : Op E) (v : DoubledSpace E),
+      ∀ (X Y : Op E) (v : DSpace E),
         hessianIndefiniteForm (E := E) (X v) (Y v) *
           S.B (S.P_minus X0) (S.P_minus Y0)
             =
         hessianIndefiniteForm (E := E) (X0 v0) (Y0 v0) *
           S.B (S.P_minus X) (S.P_minus Y)) :
     ∃ c : ℝ, c ≠ 0 ∧
-      ∀ (X Y : Op E) (v : DoubledSpace E),
+      ∀ (X Y : Op E) (v : DSpace E),
         hessianIndefiniteForm (E := E) (X v) (Y v) =
           c * S.B (S.P_minus X) (S.P_minus Y) := by
   exact fisher_metric_eq_killing_form_constructive
@@ -160,10 +159,10 @@ end FisherKilling
 Operator-valued symmetry orbit.
 `U t` is the symmetry at time `t`; the state update is `U t` applied to the prior.
 -/
-structure BayesianSymmetryOrbit (prior : DoubledSpace E) where
+structure BayesianSymmetryOrbit (prior : DSpace E) where
   generator : InformationKillingField (E := E)
   U : ℝ → Op E
-  U_zero : U 0 = ContinuousLinearMap.id ℝ (DoubledSpace E)
+  U_zero : U 0 = ContinuousLinearMap.id ℝ (DSpace E)
   preserves_hessian :
     ∀ t x y,
       hessianIndefiniteForm (E := E) (U t x) (U t y) =
@@ -171,26 +170,26 @@ structure BayesianSymmetryOrbit (prior : DoubledSpace E) where
 
 /-- The updated state at time `t`. -/
 def BayesianSymmetryOrbit.update
-    {prior : DoubledSpace E}
+    {prior : DSpace E}
     (orbit : BayesianSymmetryOrbit (E := E) prior) :
-    ℝ → DoubledSpace E :=
+    ℝ → DSpace E :=
   fun t => orbit.U t prior
 
 @[simp] theorem BayesianSymmetryOrbit.update_apply
-    {prior : DoubledSpace E}
+    {prior : DSpace E}
     (orbit : BayesianSymmetryOrbit (E := E) prior)
     (t : ℝ) :
     orbit.update t = orbit.U t prior := rfl
 
 @[simp] theorem BayesianSymmetryOrbit.update_zero
-    {prior : DoubledSpace E}
+    {prior : DSpace E}
     (orbit : BayesianSymmetryOrbit (E := E) prior) :
     orbit.update 0 = prior := by
   simp [BayesianSymmetryOrbit.update, orbit.U_zero]
 
 /-- Diagonal Hessian self-preservation along the symmetry orbit. -/
 theorem BayesianSymmetryOrbit.flow_equivariant
-    {prior : DoubledSpace E}
+    {prior : DSpace E}
     (orbit : BayesianSymmetryOrbit (E := E) prior) :
     ∀ t, hessianIndefiniteForm (E := E) (orbit.update t) (orbit.update t) =
       hessianIndefiniteForm (E := E) prior prior := by

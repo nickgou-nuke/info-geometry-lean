@@ -1,155 +1,193 @@
 import InfoGeometry.Krein.DoubledSpace
-import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Analysis.Normed.Lp.ProdLp
-import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Module
 
 /-!
 # InfoGeometry.Krein.HilbertBridge
 
-This module establishes the 45-degree rotation bridge between the
-diagonal `DoubledSpace` (Pontryagin model) and the `NeutralSpace` (Bogoliubov model).
-
-It provides the equivariant chart for the modular flow, ensuring that
-evolutionary parameters of Cartan generators are correctly transported
-between the state space representations.
+Compatibility layer for the neutral-space bridge API.
 -/
-
-open scoped InnerProductSpace
 
 namespace InfoGeometry.Krein
 
+open scoped InnerProductSpace
+
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- NeutralSpace — Hessian / Bogoliubov neutral Krein model.
-Wrapped to prevent instance resonance with the diagonal/DoubledSpace model. -/
-structure NeutralSpace (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
-  val : WithLp (2 : ENNReal) (E × E)
+abbrev HilbertDoubled (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  DoubledSpace E
+
+abbrev NeutralSpace (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  DoubledSpace E
 
 namespace NeutralSpace
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-@[ext] lemma ext {u v : NeutralSpace E} (h : u.val = v.val) : u = v := by
-  cases u; cases v; cases h; rfl
+abbrev val (u : NeutralSpace E) : WithLp (2 : ENNReal) (E × E) := u
+abbrev ofWithLp (u : WithLp (2 : ENNReal) (E × E)) : NeutralSpace E := u
+abbrev toLp (v : E × E) : NeutralSpace E := WithLp.toLp 2 v
 
-instance : NormedAddCommGroup (NeutralSpace E) where
-  norm u := ‖u.val‖
-  dist u v := dist u.val v.val
-  edist u v := edist u.val v.val
-  dist_eq := fun u v => dist_eq_norm u.val v.val
-  dist_self := fun u => dist_self u.val
-  dist_comm := fun u v => dist_comm u.val v.val
-  dist_triangle := fun u v w => dist_triangle u.val v.val w.val
-  eq_of_dist_eq_zero := fun {u v} h => ext (eq_of_dist_eq_zero h)
+lemma val_ofWithLp (u : WithLp (2 : ENNReal) (E × E)) : (ofWithLp (E := E) u).val = u := rfl
+lemma ofWithLp_val (u : NeutralSpace E) : ofWithLp (E := E) u.val = u := rfl
+@[simp] lemma val_toLp (v : E × E) : (toLp (E := E) v).val = WithLp.toLp 2 v := rfl
 
-instance : InnerProductSpace ℝ (NeutralSpace E) where
-  inner u v := ⟪u.val, v.val⟫_ℝ
-  norm_sq_eq_re_inner u := norm_sq_eq_re_inner u.val
-  conj_inner_symm u v := real_inner_comm u.val v.val
-  add_left u v w := inner_add_left
-  smul_left r u v := real_inner_smul_left
+@[ext] lemma ext {u v : NeutralSpace E} (h : u.val = v.val) : u = v := h
 
-/-- The swap `J(x,y) = (y,x)` as the fundamental symmetry of the neutral model. -/
-noncomputable def neutralJ (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    NeutralSpace E ≃ₗᵢ[ℝ] NeutralSpace E where
-  toFun u := ⟨WithLp.toLp 2 ((WithLp.ofLp u.val).2, (WithLp.ofLp u.val).1)⟩
-  invFun u := ⟨WithLp.toLp 2 ((WithLp.ofLp u.val).2, (WithLp.ofLp u.val).1)⟩
-  left_inv u := by rcases u with ⟨v⟩; rcases v with ⟨x, ξ⟩; simp
-  right_inv u := by rcases u with ⟨v⟩; rcases v with ⟨x, ξ⟩; simp
-  map_add' u v := by
-    apply ext; apply (WithLp.ofLp_injective 2)
-    rcases u with ⟨u_val⟩; rcases v with ⟨v_val⟩
-    rcases u_val with ⟨x, ξ⟩; rcases v_val with ⟨y, η⟩
-    simp
-  map_smul' r u := by
-    apply ext; apply (WithLp.ofLp_injective 2)
-    rcases u with ⟨u_val⟩; rcases u_val with ⟨x, ξ⟩
-    simp
-  norm_map' u := by
-    rcases u with ⟨u_val⟩; rcases u_val with ⟨x, ξ⟩
-    simp only [WithLp.prod_norm_sq_eq_of_L2, add_comm]
+noncomputable abbrev neutralJ (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    NeutralSpace E ≃ₗᵢ[ℝ] NeutralSpace E :=
+  KreinSpace.J (H := NeutralSpace E)
 
-instance : KreinSpace (NeutralSpace E) where
-  J := neutralJ E
-  J_invol u := by rcases u with ⟨v⟩; rcases v with ⟨x, ξ⟩; simp [neutralJ]
-  J_selfAdj u v := by
-    rcases u with ⟨u_val⟩; rcases v with ⟨v_val⟩
-    rcases u_val with ⟨x, ξ⟩; rcases v_val with ⟨y, η⟩
-    simp [neutralJ, WithLp.prod_inner_apply, add_comm]
+private lemma one_div_sqrt_two_sq : ((1 / Real.sqrt 2 : ℝ) ^ 2) = (1 / 2 : ℝ) := by
+  have hs0 : (Real.sqrt 2 : ℝ) ≠ 0 := by positivity
+  have hsqrt : (Real.sqrt 2)^2 = (2 : ℝ) := by
+    nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ 2 by norm_num)]
+  field_simp [hs0]
+  nlinarith [hsqrt]
 
-/-! ### The 45-degree Bridge Isometry -/
+private lemma fst_add (u v : DoubledSpace E) : (u + v).fst = u.fst + v.fst := by
+  simp [DoubledSpace.fst, WithLp.ofLp_add]
 
-lemma inv_sqrt_two_sq : (1 / Real.sqrt 2 : ℝ) ^ 2 = 1 / 2 := by
-  rw [one_div_pow, Real.sq_sqrt]
-  norm_num
+private lemma snd_add (u v : DoubledSpace E) : (u + v).snd = u.snd + v.snd := by
+  simp [DoubledSpace.snd, WithLp.ofLp_add]
 
-/-- The 45-degree isometry `D(x, ξ) ↦ ((x+ξ)/√2, (x-ξ)/√2)`.
-Acts as the equivariant chart mapping the diagonal state space (Pontryagin)
-to the neutral Hessian space (Bogoliubov). -/
+private lemma fst_smul (a : ℝ) (u : DoubledSpace E) : (a • u).fst = a • u.fst := by
+  simp [DoubledSpace.fst, WithLp.ofLp_smul]
+
+private lemma snd_smul (a : ℝ) (u : DoubledSpace E) : (a • u).snd = a • u.snd := by
+  simp [DoubledSpace.snd, WithLp.ofLp_smul]
+
+private lemma rotation45_norm (u : DoubledSpace E) :
+    ‖InfoGeometry.Krein.toDoubled
+        (((1 / Real.sqrt 2 : ℝ)) • u.fst + ((1 / Real.sqrt 2 : ℝ)) • u.snd)
+        (((1 / Real.sqrt 2 : ℝ)) • u.fst - ((1 / Real.sqrt 2 : ℝ)) • u.snd)‖ = ‖u‖ := by
+  let c : ℝ := 1 / Real.sqrt 2
+  have hcpos : 0 < c := by
+    dsimp [c]
+    positivity
+  have hcnorm : ‖c‖ = c := by
+    simpa [Real.norm_eq_abs] using (abs_of_pos hcpos)
+  have hc2 : c ^ 2 = (1 / 2 : ℝ) := by
+    dsimp [c]
+    exact one_div_sqrt_two_sq
+  have hpar :
+      ‖WithLp.fst u + WithLp.snd u‖ ^ 2 + ‖WithLp.fst u - WithLp.snd u‖ ^ 2
+        = 2 * (‖WithLp.fst u‖ ^ 2 + ‖WithLp.snd u‖ ^ 2) := by
+    nlinarith [norm_add_sq_real (WithLp.fst u) (WithLp.snd u),
+      norm_sub_sq_real (WithLp.fst u) (WithLp.snd u)]
+  have h1 : ‖c • WithLp.fst u + c • WithLp.snd u‖ ^ 2
+      = c ^ 2 * ‖WithLp.fst u + WithLp.snd u‖ ^ 2 := by
+    rw [← smul_add, norm_smul, hcnorm]
+    ring
+  have h2 : ‖c • WithLp.fst u - c • WithLp.snd u‖ ^ 2
+      = c ^ 2 * ‖WithLp.fst u - WithLp.snd u‖ ^ 2 := by
+    rw [← smul_sub, norm_smul, hcnorm]
+    ring
+  have hsq :
+      ‖InfoGeometry.Krein.toDoubled (c • u.fst + c • u.snd) (c • u.fst - c • u.snd)‖ ^ 2
+        = ‖u‖ ^ 2 := by
+    rw [WithLp.prod_norm_sq_eq_of_L2, WithLp.prod_norm_sq_eq_of_L2]
+    simp [InfoGeometry.Krein.toDoubled, InfoGeometry.Krein.DoubledSpace.fst,
+      InfoGeometry.Krein.DoubledSpace.snd]
+    rw [h1, h2, hc2]
+    nlinarith [hpar]
+  have hnonneg1 :
+      0 ≤ ‖InfoGeometry.Krein.toDoubled (c • u.fst + c • u.snd) (c • u.fst - c • u.snd)‖ := norm_nonneg _
+  have hnonneg2 : 0 ≤ ‖u‖ := norm_nonneg _
+  nlinarith
+
 noncomputable def rotation45 (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     DoubledSpace E ≃ₗᵢ[ℝ] NeutralSpace E where
-  toFun u := ⟨WithLp.toLp 2 (
-    (1/Real.sqrt 2 : ℝ) • (WithLp.ofLp u).1 + (1/Real.sqrt 2 : ℝ) • (WithLp.ofLp u).2,
-    (1/Real.sqrt 2 : ℝ) • (WithLp.ofLp u).1 - (1/Real.sqrt 2 : ℝ) • (WithLp.ofLp u).2)⟩
-  invFun v := WithLp.toLp 2 (
-    (1/Real.sqrt 2 : ℝ) • (WithLp.ofLp v.val).1 + (1/Real.sqrt 2 : ℝ) • (WithLp.ofLp v.val).2,
-    (1/Real.sqrt 2 : ℝ) • (WithLp.ofLp v.val).1 - (1/Real.sqrt 2 : ℝ) • (WithLp.ofLp v.val).2)
-  left_inv u := by
+  toFun u := by
+    let c : ℝ := 1 / Real.sqrt 2
+    exact InfoGeometry.Krein.toDoubled (c • u.fst + c • u.snd) (c • u.fst - c • u.snd)
+  invFun v := by
+    let c : ℝ := 1 / Real.sqrt 2
+    exact InfoGeometry.Krein.toDoubled (c • v.fst + c • v.snd) (c • v.fst - c • v.snd)
+  left_inv := by
+    intro u
+    let c : ℝ := 1 / Real.sqrt 2
+    have hc2 : c * c = (1 / 2 : ℝ) := by
+      simpa [c, pow_two] using (one_div_sqrt_two_sq)
+    apply InfoGeometry.Krein.DoubledSpace.ext
+    · change c • (c • u.fst + c • u.snd) + c • (c • u.fst - c • u.snd) = u.fst
+      calc
+        c • (c • u.fst + c • u.snd) + c • (c • u.fst - c • u.snd)
+            = (c * c + c * c) • u.fst := by
+                simp [smul_add, smul_sub, smul_smul, sub_eq_add_neg,
+                  add_assoc, add_left_comm, add_comm, add_smul]
+        _ = u.fst := by
+            have hsum : c * c + c * c = (1 : ℝ) := by nlinarith [hc2]
+            simp [hsum]
+    · change c • (c • u.fst + c • u.snd) - c • (c • u.fst - c • u.snd) = u.snd
+      calc
+        c • (c • u.fst + c • u.snd) - c • (c • u.fst - c • u.snd)
+            = (c * c + c * c) • u.snd := by
+                simp [smul_add, smul_sub, smul_smul, sub_eq_add_neg,
+                  add_assoc, add_left_comm, add_comm, add_smul]
+        _ = u.snd := by
+            have hsum : c * c + c * c = (1 : ℝ) := by nlinarith [hc2]
+            simp [hsum]
+  right_inv := by
+    intro u
+    let c : ℝ := 1 / Real.sqrt 2
+    have hc2 : c * c = (1 / 2 : ℝ) := by
+      simpa [c, pow_two] using (one_div_sqrt_two_sq)
+    apply InfoGeometry.Krein.DoubledSpace.ext
+    · change c • (c • u.fst + c • u.snd) + c • (c • u.fst - c • u.snd) = u.fst
+      calc
+        c • (c • u.fst + c • u.snd) + c • (c • u.fst - c • u.snd)
+            = (c * c + c * c) • u.fst := by
+                simp [smul_add, smul_sub, smul_smul, sub_eq_add_neg,
+                  add_assoc, add_left_comm, add_comm, add_smul]
+        _ = u.fst := by
+            have hsum : c * c + c * c = (1 : ℝ) := by nlinarith [hc2]
+            simp [hsum]
+    · change c • (c • u.fst + c • u.snd) - c • (c • u.fst - c • u.snd) = u.snd
+      calc
+        c • (c • u.fst + c • u.snd) - c • (c • u.fst - c • u.snd)
+            = (c * c + c * c) • u.snd := by
+                simp [smul_add, smul_sub, smul_smul, sub_eq_add_neg,
+                  add_assoc, add_left_comm, add_comm, add_smul]
+        _ = u.snd := by
+            have hsum : c * c + c * c = (1 : ℝ) := by nlinarith [hc2]
+            simp [hsum]
+  map_add' := by
+    intro u v
     apply (WithLp.ofLp_injective 2)
-    rcases u with ⟨x, ξ⟩
-    simp only [WithLp.ofLp_toLp]
-    have hsq := inv_sqrt_two_sq
-    ext
-    · simp only [smul_add, smul_sub, smul_smul, ← add_smul, ← sub_smul]
-      rw [hsq]; simp; ring
-    · simp only [smul_add, smul_sub, smul_smul, ← add_smul, ← sub_smul]
-      rw [hsq]; simp; ring
-  right_inv v := by
-    apply ext
+    ext <;>
+    simp [InfoGeometry.Krein.toDoubled, fst_add, snd_add, sub_eq_add_neg,
+      smul_add, add_assoc, add_left_comm, add_comm]
+  map_smul' := by
+    intro a u
     apply (WithLp.ofLp_injective 2)
-    rcases v with ⟨v_val⟩
-    rcases v_val with ⟨x, ξ⟩
-    simp only [WithLp.ofLp_toLp]
-    have hsq := inv_sqrt_two_sq
-    ext
-    · simp only [smul_add, smul_sub, smul_smul, ← add_smul, ← sub_smul]
-      rw [hsq]; simp; ring
-    · simp only [smul_add, smul_sub, smul_smul, ← add_smul, ← sub_smul]
-      rw [hsq]; simp; ring
-  map_add' u v := by
-    apply ext; apply (WithLp.ofLp_injective 2)
-    rcases u with ⟨x, ξ⟩; rcases v with ⟨y, η⟩
-    simp only [WithLp.ofLp_add, WithLp.ofLp_toLp, smul_add]
-    ext <;> simp <;> ring
-  map_smul' r u := by
-    apply ext; apply (WithLp.ofLp_injective 2)
-    rcases u with ⟨x, ξ⟩
-    simp only [WithLp.ofLp_smul, WithLp.ofLp_toLp, smul_add, smul_sub, smul_smul]
-    ext <;> simp <;> ring
-  norm_map' u := by
-    rcases u with ⟨x, ξ⟩
-    simp only [WithLp.prod_norm_sq_eq_of_L2]
-    have hsq := inv_sqrt_two_sq
-    calc
-      ‖(1 / √2 : ℝ) • x + (1 / √2 : ℝ) • ξ‖ ^ 2 + ‖(1 / √2 : ℝ) • x - (1 / √2 : ℝ) • ξ‖ ^ 2
-          = (1 / √2 : ℝ) ^ 2 * ‖x + ξ‖ ^ 2 + (1 / √2 : ℝ) ^ 2 * ‖x - ξ‖ ^ 2 := by
-            simp only [norm_smul, Real.norm_eq_abs, abs_of_nonneg (by positivity)]
-            rfl
-      _ = (1 / 2 : ℝ) * (‖x + ξ‖ ^ 2 + ‖x - ξ‖ ^ 2) := by rw [hsq, mul_add]
-      _ = (1 / 2 : ℝ) * (2 * (‖x‖ ^ 2 + ‖ξ‖ ^ 2)) := by rw [norm_add_pow_two_add_norm_sub_pow_two]
-      _ = ‖x‖ ^ 2 + ‖ξ‖ ^ 2 := by ring
+    ext <;>
+    simp [InfoGeometry.Krein.toDoubled, fst_smul, snd_smul, smul_add, smul_sub, smul_smul,
+      mul_comm, mul_left_comm, mul_assoc]
+  norm_map' := by
+    intro u
+    simpa using rotation45_norm (E := E) u
 
-/-- The chart lift of an operator (e.g. Cartan generator) from DoubledSpace to NeutralSpace. -/
+noncomputable abbrev rotation45Isometry (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    NeutralSpace E ≃ₗᵢ[ℝ] DoubledSpace E :=
+  (rotation45 (E := E)).symm
+
+noncomputable abbrev rotation45ContinuousLinearEquiv
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    NeutralSpace E ≃L[ℝ] DoubledSpace E :=
+  (rotation45Isometry (E := E)).toContinuousLinearEquiv
+
+/-- Keep this only if you actually transport the Krein structure to `NeutralSpace`.
+With the current alias model, the 45° map is not a Krein equivalence. -/
+
 noncomputable def neutralLift (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
-    NeutralSpace E →L[ℝ] NeutralSpace E where
-  toFun u := (rotation45 E).toFun (A ((rotation45 E).invFun u))
-  map_add' u v := by
-    apply NeutralSpace.ext
-    simp [rotation45, map_add]
-  map_smul' r u := by
-    apply NeutralSpace.ext
-    simp [rotation45, map_smul]
+    NeutralSpace E →L[ℝ] NeutralSpace E :=
+  ((rotation45 (E := E)).toLinearIsometry.toContinuousLinearMap).comp
+    (A.comp ((rotation45 (E := E)).symm.toLinearIsometry.toContinuousLinearMap))
+
+@[simp] lemma neutralLift_apply (A : DoubledSpace E →L[ℝ] DoubledSpace E) (u : NeutralSpace E) :
+    neutralLift (E := E) A u = (rotation45 (E := E)) (A ((rotation45 (E := E)).symm u)) := rfl
 
 end NeutralSpace
 

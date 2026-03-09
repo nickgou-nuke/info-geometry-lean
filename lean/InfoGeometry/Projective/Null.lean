@@ -102,10 +102,13 @@ def IsGradeMinusRay : ProjectiveState (E := E) → Prop :=
   unfold inGradePlus
   constructor
   · intro h
-    exact congrArg Prod.fst h
+    have hx : ξ = x := by
+      simpa [InfoGeometry.Krein.modularJ, InfoGeometry.Krein.toDoubled] using
+        congrArg (fun z : InfoGeometry.Krein.DoubledSpace E => z.fst) h
+    exact hx
   · intro h
     cases h
-    simp [modularJ]
+    simp
 
 /-- Coordinate form for grade `-`: `J(x,ξ)=-(x,ξ)` iff `ξ=-x`. -/
 @[simp] lemma inGradeMinus_iff_coords (x ξ : E) :
@@ -113,10 +116,13 @@ def IsGradeMinusRay : ProjectiveState (E := E) → Prop :=
   unfold inGradeMinus
   constructor
   · intro h
-    exact congrArg Prod.fst h
+    have hx : ξ = -x := by
+      simpa [InfoGeometry.Krein.modularJ, InfoGeometry.Krein.toDoubled] using
+        congrArg (fun z : InfoGeometry.Krein.DoubledSpace E => z.fst) h
+    exact hx
   · intro h
     cases h
-    simp [modularJ]
+    simp
 
 /-- “Grade-null” rays: points lying in either grading eigenspace. -/
 def IsGradeNullRay (q : ProjectiveState (E := E)) : Prop :=
@@ -124,11 +130,13 @@ def IsGradeNullRay (q : ProjectiveState (E := E)) : Prop :=
 
 lemma IsGradePlusRay_vacuum : IsGradePlusRay (E := E) (vacuum (E := E)) := by
   rw [vacuum_def, IsGradePlusRay_projectivize]
-  simp [inGradePlus, modularJ]
+  unfold inGradePlus
+  simpa using (modularJ (E := E)).map_zero
 
 lemma IsGradeMinusRay_vacuum : IsGradeMinusRay (E := E) (vacuum (E := E)) := by
   rw [vacuum_def, IsGradeMinusRay_projectivize]
-  simp [inGradeMinus, modularJ]
+  unfold inGradeMinus
+  simpa using (modularJ (E := E)).map_zero
 
 lemma IsGradeNullRay_vacuum : IsGradeNullRay (E := E) (vacuum (E := E)) := by
   exact Or.inl (IsGradePlusRay_vacuum (E := E))
@@ -173,82 +181,74 @@ end GradeNull
 
 section MetricNull
 
-variable [InnerProductSpace ℝ E]
+variable [InnerProductSpace ℝ E] [CompleteSpace E]
+
+local notation "Hess" => InfoGeometry.Krein.hessianIndefiniteForm
+
+private lemma Hess_smul_left (a : ℝ) (v w : DoubledSpace E) :
+    Hess (a • v) w = a * Hess v w := by
+  simpa [InfoGeometry.Krein.hessianIndefiniteForm] using
+    (KreinSpace.kreinInner_smul_left (c := a) v w)
+
+private lemma Hess_smul_right (a : ℝ) (v w : DoubledSpace E) :
+    Hess v (a • w) = a * Hess v w := by
+  simpa [InfoGeometry.Krein.hessianIndefiniteForm] using
+    (KreinSpace.kreinInner_smul_right (c := a) v w)
+
+private lemma Hess_smul_smul (a : ℝ) (v w : DoubledSpace E) :
+    Hess (a • v) (a • w) = a ^ 2 * Hess v w := by
+  rw [Hess_smul_left, Hess_smul_right]
+  ring
 
 /-- “Metric-null” / isotropic doubled vectors for the neutral Hessian form. -/
 def IsMetricNull (v : DoubledSpace E) : Prop :=
-  hessianIndefiniteForm (E := E) v v = 0
+  Hess v v = 0
 
-@[simp] lemma isMetricNull_iff_inner_eq_zero (x ξ : E) :
-    IsMetricNull (E := E) (x, ξ) ↔ inner ℝ x ξ = 0 := by
-  unfold IsMetricNull hessianIndefiniteForm
+@[simp] lemma isMetricNull_iff_norm_sq_eq (x ξ : E) :
+    IsMetricNull (E := E) (x, ξ) ↔ ‖x‖ ^ (2 : ℕ) = ‖ξ‖ ^ (2 : ℕ) := by
+  have hdiag :
+      InfoGeometry.Krein.hessianIndefiniteForm ((x, ξ) : DoubledSpace E) ((x, ξ) : DoubledSpace E)
+        = inner ℝ x x - inner ℝ ξ ξ := by
+    simpa [InfoGeometry.Krein.hessianIndefiniteForm, InfoGeometry.Krein.toDoubled] using
+      (kreinInner_prodL2 (E := E)
+        ((x, ξ) : DoubledSpace E) ((x, ξ) : DoubledSpace E))
   constructor
   · intro h
-    have h' : inner ℝ x ξ + inner ℝ x ξ = 0 := by
-      simpa [InfoGeometry.Krein.hessianIndefiniteForm, real_inner_comm] using h
-    linarith
+    have h' : inner ℝ x x - inner ℝ ξ ξ = 0 := by
+      simpa [IsMetricNull, hdiag] using h
+    have hEq : inner ℝ x x = inner ℝ ξ ξ := sub_eq_zero.mp h'
+    simpa [real_inner_self_eq_norm_sq] using hEq
   · intro h
-    simp [InfoGeometry.Krein.hessianIndefiniteForm, h]
-
-lemma hessianIndefiniteForm_smul_smul (a b : ℝ) (v w : DoubledSpace E) :
-    hessianIndefiniteForm (E := E) (a • v) (b • w)
-      = (a * b) * hessianIndefiniteForm (E := E) v w := by
-  rcases v with ⟨x, ξ⟩
-  rcases w with ⟨y, η⟩
-  have h1 : inner ℝ (a • x) (b • η) = a * inner ℝ x (b • η) := by
-    simpa using (real_inner_smul_left x (b • η) a)
-  have h2 : inner ℝ x (b • η) = b * inner ℝ x η := by
-    simpa using (real_inner_smul_right x η b)
-  have h3 : inner ℝ (b • y) (a • ξ) = b * inner ℝ y (a • ξ) := by
-    simpa using (real_inner_smul_left y (a • ξ) b)
-  have h4 : inner ℝ y (a • ξ) = a * inner ℝ y ξ := by
-    simpa using (real_inner_smul_right y ξ a)
-  calc
-    hessianIndefiniteForm (E := E) (a • (x, ξ)) (b • (y, η))
-        = inner ℝ (a • x) (b • η) + inner ℝ (b • y) (a • ξ) := by rfl
-    _ = a * inner ℝ x (b • η) + b * inner ℝ y (a • ξ) := by rw [h1, h3]
-    _ = a * (b * inner ℝ x η) + b * (a * inner ℝ y ξ) := by rw [h2, h4]
-    _ = (a * b) * (inner ℝ x η + inner ℝ y ξ) := by ring
-    _ = (a * b) * hessianIndefiniteForm (E := E) (x, ξ) (y, η) := by rfl
-
-lemma hessianIndefiniteForm_smul_left (a : ℝ) (v w : DoubledSpace E) :
-    hessianIndefiniteForm (E := E) (a • v) w
-      = a * hessianIndefiniteForm (E := E) v w := by
-  simpa using hessianIndefiniteForm_smul_smul (E := E) a 1 v w
-
-lemma hessianIndefiniteForm_smul_right (a : ℝ) (v w : DoubledSpace E) :
-    hessianIndefiniteForm (E := E) v (a • w)
-      = a * hessianIndefiniteForm (E := E) v w := by
-  simpa [mul_comm] using hessianIndefiniteForm_smul_smul (E := E) 1 a v w
-
-lemma hessianIndefiniteForm_self_smul (a : ℝ) (v : DoubledSpace E) :
-    hessianIndefiniteForm (E := E) (a • v) (a • v)
-      = (a ^ 2) * hessianIndefiniteForm (E := E) v v := by
-  simpa [pow_two, mul_assoc] using
-    hessianIndefiniteForm_smul_smul (E := E) a a v v
+    have hEq : inner ℝ x x = inner ℝ ξ ξ := by
+      simpa [real_inner_self_eq_norm_sq] using h
+    have h' : inner ℝ x x - inner ℝ ξ ξ = 0 := sub_eq_zero.mpr hEq
+    have hnull :
+        InfoGeometry.Krein.hessianIndefiniteForm ((x, ξ) : DoubledSpace E)
+          ((x, ξ) : DoubledSpace E) = 0 := by
+      simpa [hdiag] using h'
+    simpa [IsMetricNull] using hnull
 
 lemma isMetricNull_smul (a : ℝ) {v : DoubledSpace E}
     (hv : IsMetricNull (E := E) v) :
     IsMetricNull (E := E) (a • v) := by
   unfold IsMetricNull at *
   calc
-    hessianIndefiniteForm (E := E) (a • v) (a • v)
-        = (a * a) * hessianIndefiniteForm (E := E) v v := by
-            exact hessianIndefiniteForm_smul_smul (E := E) a a v v
+    Hess (a • v) (a • v) = a ^ 2 * Hess v v := by
+      simpa using Hess_smul_smul a v v
     _ = 0 := by simp [hv]
 
 lemma isMetricNull_smul_iff (a : ℝ) (ha : a ≠ 0) (v : DoubledSpace E) :
     IsMetricNull (E := E) (a • v) ↔ IsMetricNull (E := E) v := by
   unfold IsMetricNull
   have hs :
-      hessianIndefiniteForm (E := E) (a • v) (a • v)
-        = (a * a) * hessianIndefiniteForm (E := E) v v := by
-    exact hessianIndefiniteForm_smul_smul (E := E) a a v v
+      Hess (a • v) (a • v) = a ^ 2 * Hess v v := by
+    simpa using Hess_smul_smul a v v
   constructor
   · intro h
-    have hmul : (a * a) * hessianIndefiniteForm (E := E) v v = 0 := by
+    have hmul : a ^ 2 * Hess v v = 0 := by
       simpa [hs] using h
-    exact (mul_eq_zero.mp hmul).resolve_left (mul_ne_zero ha ha)
+    have ha2 : a ^ 2 ≠ 0 := by simpa [pow_two] using (mul_ne_zero ha ha)
+    exact (mul_eq_zero.mp hmul).resolve_left ha2
   · intro h
     simp [hs, h]
 
@@ -271,13 +271,13 @@ def IsMetricNullRay : ProjectiveState (E := E) → Prop :=
 
 lemma IsMetricNullRay_vacuum : IsMetricNullRay (E := E) (vacuum (E := E)) := by
   rw [vacuum_def, IsMetricNullRay_projectivize]
-  simp [IsMetricNull, hessianIndefiniteForm]
+  simp [IsMetricNull, InfoGeometry.Krein.hessianIndefiniteForm]
 
 end MetricNull
 
 section UnifiedNull
 
-variable [InnerProductSpace ℝ E]
+variable [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Unified nullness on rays: vacuum, grade-null, or metric-null. -/
 def IsNullRay (q : ProjectiveState (E := E)) : Prop :=

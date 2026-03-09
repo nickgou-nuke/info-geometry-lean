@@ -1,5 +1,6 @@
 import InfoGeometry.Prequantum.Bundle
-import InfoGeometry.Krein.Metric
+import InfoGeometry.Krein.DoubledSpace
+import Mathlib.Tactic.Ring
 
 /-!
 # InfoGeometry.Prequantum.Connection
@@ -10,9 +11,30 @@ Scalarized connection and Weyl-compatibility interfaces for projective prequantu
 namespace InfoGeometry.Prequantum.Connection
 end InfoGeometry.Prequantum.Connection
 
+namespace InfoGeometry.Prequantum
+
+open InfoGeometry.Krein
+
 section KreinClifford
 
-variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+local notation "Hess" => InfoGeometry.Krein.hessianIndefiniteForm
+
+private lemma Hess_smul_left (a : ℝ) (v w : InfoGeometry.Krein.DoubledSpace E) :
+    Hess (a • v) w = a * Hess v w := by
+  simpa [InfoGeometry.Krein.hessianIndefiniteForm] using
+    (KreinSpace.kreinInner_smul_left (c := a) v w)
+
+private lemma Hess_smul_right (a : ℝ) (v w : InfoGeometry.Krein.DoubledSpace E) :
+    Hess v (a • w) = a * Hess v w := by
+  simpa [InfoGeometry.Krein.hessianIndefiniteForm] using
+    (KreinSpace.kreinInner_smul_right (c := a) v w)
+
+private lemma Hess_smul_smul (a : ℝ) (v w : InfoGeometry.Krein.DoubledSpace E) :
+    Hess (a • v) (a • w) = a ^ 2 * Hess v w := by
+  rw [Hess_smul_left, Hess_smul_right]
+  ring
 
 namespace ProjectivePrequantumBundle
 
@@ -26,20 +48,19 @@ def covariantDerivative (P : ProjectivePrequantumBundle (E := E)) : ℝ :=
 
 lemma covariantDerivative_eq_omegaScale
     (P : ProjectivePrequantumBundle (E := E)) :
-    covariantDerivative (E := E) P = P.data.omegaScale := by
+    covariantDerivative P = P.data.omegaScale := by
   exact P.data.curvature_mul_hbar_eq_omega
 
 lemma connectionObservable_gauge
     (u : Gauge) (P : ProjectivePrequantumBundle (E := E)) :
-    connectionObservable (E := E) (u • P)
-      = connectionObservable (E := E) P / (u : ℝ) := by
+    connectionObservable (u • P) = connectionObservable P / (u : ℝ) := by
   rfl
 
 lemma covariantDerivative_gauge_invariant
     (u : Gauge) (P : ProjectivePrequantumBundle (E := E)) :
-    covariantDerivative (E := E) (u • P) = covariantDerivative (E := E) P := by
-  rw [covariantDerivative_eq_omegaScale (E := E) (P := u • P)]
-  rw [covariantDerivative_eq_omegaScale (E := E) (P := P)]
+    covariantDerivative (u • P) = covariantDerivative P := by
+  rw [covariantDerivative_eq_omegaScale (P := u • P)]
+  rw [covariantDerivative_eq_omegaScale (P := P)]
   rfl
 
 end ProjectivePrequantumBundle
@@ -47,69 +68,39 @@ end ProjectivePrequantumBundle
 /-- Weyl-compatibility predicate: the neutral Hessian form scales conformally by `a²`. -/
 def IsWeylCompatibleHessian
     (P : ProjectivePrequantumBundle (E := E)) : Prop :=
-  let _ := P
-  ∀ (u : Gauge) (v w : DoubledSpace E),
-    hessianIndefiniteForm (E := E) (u • v) (u • w)
-      = ((u : ℝ) ^ (2 : ℕ)) * hessianIndefiniteForm (E := E) v w
+    ∀ (u : Gauge) (v w : InfoGeometry.Krein.DoubledSpace E),
+    Hess (u • v) (u • w) = ((u : ℝ) ^ (2 : ℕ)) * Hess v w
 
 lemma hessianIndefiniteForm_smul_smul_weyl
-    (u : Gauge) (v w : DoubledSpace E) :
-    hessianIndefiniteForm (E := E) (u • v) (u • w)
-      = ((u : ℝ) ^ (2 : ℕ)) * hessianIndefiniteForm (E := E) v w := by
-  rcases v with ⟨v1, v2⟩
-  rcases w with ⟨w1, w2⟩
-  have h1 :
-      inner ℝ ((u : ℝ) • v1) ((u : ℝ) • w2)
-        = ((u : ℝ) ^ (2 : ℕ)) * inner ℝ v1 w2 := by
-    calc
-      inner ℝ ((u : ℝ) • v1) ((u : ℝ) • w2)
-          = (u : ℝ) * inner ℝ v1 ((u : ℝ) • w2) := by
-              simp [inner_smul_left]
-      _ = (u : ℝ) * ((u : ℝ) * inner ℝ v1 w2) := by
-            simp [inner_smul_right]
-      _ = ((u : ℝ) ^ (2 : ℕ)) * inner ℝ v1 w2 := by
-            ring
-  have h2 :
-      inner ℝ ((u : ℝ) • w1) ((u : ℝ) • v2)
-        = ((u : ℝ) ^ (2 : ℕ)) * inner ℝ w1 v2 := by
-    calc
-      inner ℝ ((u : ℝ) • w1) ((u : ℝ) • v2)
-          = (u : ℝ) * inner ℝ w1 ((u : ℝ) • v2) := by
-              simp [inner_smul_left]
-      _ = (u : ℝ) * ((u : ℝ) * inner ℝ w1 v2) := by
-            simp [inner_smul_right]
-      _ = ((u : ℝ) ^ (2 : ℕ)) * inner ℝ w1 v2 := by
-            ring
-  change
-    inner ℝ ((u : ℝ) • v1) ((u : ℝ) • w2)
-      + inner ℝ ((u : ℝ) • w1) ((u : ℝ) • v2)
-      =
-    ((u : ℝ) ^ (2 : ℕ)) * (inner ℝ v1 w2 + inner ℝ w1 v2)
-  rw [h1, h2]
-  ring
+  (u : Gauge) (v w : InfoGeometry.Krein.DoubledSpace E) :
+    Hess (u • v) (u • w) = ((u : ℝ) ^ (2 : ℕ)) * Hess v w := by
+  change Hess (((u : ℝ)) • v) (((u : ℝ)) • w) = ((u : ℝ) ^ (2 : ℕ)) * Hess v w
+  simpa using Hess_smul_smul ((u : ℝ)) v w
 
 lemma isWeylCompatibleHessian
     (P : ProjectivePrequantumBundle (E := E)) :
-    IsWeylCompatibleHessian (E := E) P := by
+    IsWeylCompatibleHessian P := by
   intro u v w
-  exact hessianIndefiniteForm_smul_smul_weyl (E := E) u v w
+  exact hessianIndefiniteForm_smul_smul_weyl u v w
 
 /-- Joint compatibility package: gauge-invariant covariant derivative plus Weyl metric scaling. -/
 structure GaugeHessianCompatible
     (P : ProjectivePrequantumBundle (E := E)) : Prop where
   covariant_gauge_invariant :
     ∀ u : Gauge,
-      ProjectivePrequantumBundle.covariantDerivative (E := E) (u • P)
-        = ProjectivePrequantumBundle.covariantDerivative (E := E) P
+      ProjectivePrequantumBundle.covariantDerivative (u • P) =
+        ProjectivePrequantumBundle.covariantDerivative P
   hessian_weyl_compatible :
-    IsWeylCompatibleHessian (E := E) P
+    IsWeylCompatibleHessian P
 
 theorem gaugeHessianCompatible
     (P : ProjectivePrequantumBundle (E := E)) :
-    GaugeHessianCompatible (E := E) P := by
+    GaugeHessianCompatible P := by
   refine ⟨?_, ?_⟩
   · intro u
-    exact ProjectivePrequantumBundle.covariantDerivative_gauge_invariant (E := E) u P
-  · exact isWeylCompatibleHessian (E := E) P
+    exact ProjectivePrequantumBundle.covariantDerivative_gauge_invariant u P
+  · exact isWeylCompatibleHessian P
 
 end KreinClifford
+
+end InfoGeometry.Prequantum

@@ -17,18 +17,13 @@ variable {E : Type _}
 abbrev DoubledEnd (E : Type _) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
   DoubledSpace E →L[ℝ] DoubledSpace E
 
-/-- Canonical linear isometry from raw doubled coordinates to `WithLp` Hilbert doubled space. -/
+/-- Canonical linear isometry between doubled and Hilbert carriers (identity under aliasing). -/
 noncomputable abbrev doubledToHilbert : DoubledSpace E ≃L[ℝ] HilbertDoubled E :=
-  (WithLp.prodContinuousLinearEquiv (p := (2 : ENNReal)) (𝕜 := ℝ) (α := E) (β := E)).symm
+  ContinuousLinearEquiv.refl ℝ (DoubledSpace E)
 
 /-- Hilbert adjoint on doubled-space endomorphisms, transported through `HilbertDoubled`. -/
 noncomputable def doubledAdjoint (A : DoubledEnd E) : DoubledEnd E :=
-  let e := doubledToHilbert (E := E)
-  let Ah : HilbertDoubled E →L[ℝ] HilbertDoubled E :=
-    (e : DoubledSpace E →L[ℝ] HilbertDoubled E).comp
-      (A.comp ((e.symm : HilbertDoubled E →L[ℝ] DoubledSpace E)))
-  (e.symm : HilbertDoubled E →L[ℝ] DoubledSpace E).comp
-    ((ContinuousLinearMap.adjoint Ah).comp (e : DoubledSpace E →L[ℝ] HilbertDoubled E))
+  ContinuousLinearMap.adjoint A
 
 /-- Krein adjoint on doubled space, using `J = spectralEpsilon`: `A♯ = J ∘ A† ∘ J`. -/
 noncomputable def doubledKreinAdjoint (A : DoubledEnd E) : DoubledEnd E :=

@@ -952,6 +952,14 @@ theorem trajectoryLyapunov_monotone (T : SinkhornTrajectory n) (k : Nat) :
     sinkhornStep_phaseLyapunov_monotone (n := n) (hstep := T.step k)
 
 /--
+Exact row-step identity on the normalized axis:
+the post-row-normalization RN barrier on rows is zero.
+-/
+theorem rn_barrier_row_step_eq_zero (M : SinkhornMatrix n) (hpos : HasPositiveRowSums n M) :
+    rowRNBarrier n (rowNormalize n M hpos) = 0 :=
+  rowRNBarrier_rowNormalize_eq_zero (n := n) M hpos
+
+/--
 Monotonic Radon-Nikodym barrier inequality along the Sinkhorn trajectory.
 The logarithmic imbalance contracts after each alternating normalization.
 -/

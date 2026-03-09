@@ -698,6 +698,33 @@ theorem bochnerWeitzenboeckBridge_of_sinkhornDrive
     (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hDrive
 
 /--
+Constructive packaging of both directional Wheeler-DeWitt bridges from
+Sinkhorn KMS drive plus normalized Ricci/index invariance hypotheses.
+-/
+theorem directionalBridges_of_sinkhornDrive_and_indexHypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hDrive : SinkhornKMSControl n T.traj K ω β)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hD : ∀ s : ℝ, D s = D 0)
+    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
+    ThermodynamicFromGeometricAlgebraic n T flow D Γ K ω β ∧
+      GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β := by
+  refine ⟨?_, ?_⟩
+  · exact bochnerWeitzenboeckBridge_of_sinkhornDrive
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (K := K) (ω := ω) (β := β) hDrive
+  · exact calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (K := K) (ω := ω) (β := β)
+      hNorm hFixed hD hΓ
+
+/--
 Compatibility wrapper with legacy Calabi-Yau assumptions retained in the
 signature. The bridge itself is now discharged constructively from `hDrive`.
 -/
@@ -725,7 +752,7 @@ Information-theoretic Wheeler-DeWitt equivalence (assumption-driven):
 thermodynamic KMS equilibrium is equivalent to geometric+algebraic closure
 once the Bochner and Calabi-Yau bridge hypotheses are provided.
 -/
-theorem information_wheeler_dewitt_equivalence
+theorem information_wheeler_dewitt_equivalence_of_directional_bridges
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
@@ -755,7 +782,7 @@ theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive
     (hDrive : SinkhornKMSControl n T.traj K ω β)
     (hCYBridge : GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β) :
     ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence
+  exact information_wheeler_dewitt_equivalence_of_directional_bridges
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
     (bochnerWeitzenboeckBridge_of_sinkhornDrive
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
@@ -780,7 +807,7 @@ theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypothe
     (hD : ∀ s : ℝ, D s = D 0)
     (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
     ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence
+  exact information_wheeler_dewitt_equivalence_of_directional_bridges
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
     (bochnerWeitzenboeckBridge_of_sinkhornDrive
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
@@ -808,13 +835,36 @@ theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_calabiYau
     (hConst : HasConstantMongeAmpereDensity Kgeo.H)
     (hCYBridge : GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β) :
     ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence
+  exact information_wheeler_dewitt_equivalence_of_directional_bridges
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
     (bochnerWeitzenboeckBridge_of_sinkhornDrive_and_constantMongeAmpere
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
       (K := K) (ω := ω) (β := β) (Kgeo := Kgeo) (R := R)
       hDrive hCY hConst)
     hCYBridge
+
+/--
+Primary Wheeler-DeWitt equivalence API:
+both directional bridges are discharged constructively from Sinkhorn-drive
+and Ricci/index invariance hypotheses.
+-/
+theorem information_wheeler_dewitt_equivalence
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hDrive : SinkhornKMSControl n T.traj K ω β)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hD : ∀ s : ℝ, D s = D 0)
+    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
+    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
+  exact information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypotheses
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (ω := ω) (β := β)
+    hDrive hNorm hFixed hD hΓ
 
 /--
 Fully constructive reduced-hypothesis Wheeler-DeWitt equivalence:

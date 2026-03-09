@@ -42,6 +42,10 @@ noncomputable def klTerm (p q : ℝ) : ℝ :=
 noncomputable def KL {α : Type} [Fintype α] (p q : FinProb α) : ℝ :=
   ∑ a, klTerm (p.toFun a) (q.toFun a)
 
+/-- Shannon entropy `H(p)`. -/
+noncomputable def entropy {α : Type} [Fintype α] (p : FinProb α) : ℝ :=
+  InfoGeometry.entropy p.toProbabilityDist
+
 /-- Negative KL as entropy-like update objective. -/
 @[blueprint "def:inference-entropy"]
 noncomputable def Entropy {α : Type} [Fintype α] (p q : FinProb α) : ℝ :=
@@ -246,6 +250,18 @@ noncomputable def factorizedJoint
         _ = ∑ θ : Θ, qΘ.toFun θ := by simp
         _ = 1 := qΘ.sum_one
   }
+
+/-- Mutual information I(X;Θ) as KL(p(x,θ) ‖ p(x)p(θ)). -/
+noncomputable def mutualInformation {X Θ : Type} [Fintype X] [Fintype Θ]
+    (p : FinProb (X × Θ)) : ℝ :=
+  KL p (assemble (marginalX p) (fun _ => marginalΘ p))
+
+/-- Mutual-information decomposition target proposition (finite-support form). -/
+def MutualInformationEqSumKL
+    {X Θ : Type} [Fintype X] [Fintype Θ] (p : FinProb (X × Θ))
+    (hp : ∀ x : X, 0 < (marginalX p).toFun x) : Prop :=
+  mutualInformation p =
+    ∑ x : X, (marginalX p).toFun x * KL (condΘGivenX p x (hp x)) (marginalΘ p)
 
 /-! ME characterization interfaces (finite case). -/
 

@@ -4,8 +4,7 @@ import InfoGeometry.KK.CompactOperatorBridge
 /-!
 # InfoGeometry.KK.KasparovCompactOperator
 
-Concrete lemmas translating abstract Kasparov compactness conditions to
-Mathlib's `IsCompactOperator` predicate.
+Concrete compact-operator consequences of the Kasparov-cycle interface.
 -/
 
 open scoped InnerProductSpace
@@ -20,25 +19,15 @@ variable [KreinSpace H] [KreinGradedModule H]
 
 variable (X : KasparovCycle A B H)
 
-/-- Marker that a Kasparov cycle uses Mathlib compact operators as its `K` predicate. -/
-def IsMathlibCompactModel : Prop :=
-  X.K = IsCompactEnd (H := H)
-
 lemma superComm_isCompactOperator_of_even_rep
-    (hModel : X.K = IsCompactEnd (H := H))
     (hπ_even : ∀ a : A, KreinGradedModule.IsEven (H := H) (X.π a))
     (a : A) :
     IsCompactOperator ((KreinGradedModule.superComm (H := H) X.F (X.π a)) : H → H) := by
-  have hcompact : X.K (KreinGradedModule.superComm (H := H) X.F (X.π a)) :=
-    superComm_compact_of_even_rep (X := X) hπ_even a
-  rw [hModel] at hcompact
-  simpa [IsCompactEnd] using hcompact
+  simpa [IsCompactEnd] using (superComm_compact_of_even_rep (X := X) hπ_even a)
 
 lemma comm_isCompactOperator_of_mathlib_compact
-    (hModel : X.K = IsCompactEnd (H := H)) (a : A) :
+    (a : A) :
     IsCompactOperator ((X.F * X.π a - X.π a * X.F : H →L[ℝ] H) : H → H) := by
-  have hcompact : X.K (X.F * X.π a - X.π a * X.F) := X.comm_compact a
-  rw [hModel] at hcompact
-  simpa [IsCompactEnd] using hcompact
+  simpa [IsCompactEnd] using (X.comm_compact a)
 
 end InfoGeometry.KK

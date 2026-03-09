@@ -19,6 +19,15 @@ if [ -x "$HOME/.elan/bin/lake" ]; then
   exit 0
 fi
 
+# Normalize APT sources to HTTPS in proxied environments where HTTP is blocked.
+if command -v sed >/dev/null 2>&1 && [ -f /etc/apt/sources.list.d/ubuntu.sources ]; then
+  sed -i -E 's|http://|https://|g' /etc/apt/sources.list.d/ubuntu.sources || true
+fi
+for f in /etc/apt/sources.list.d/*.list; do
+  [ -f "$f" ] || continue
+  sed -i -E 's|http://|https://|g' "$f" || true
+done
+
 # Try distro package first (works in some CI images without GitHub access).
 if command -v apt-get >/dev/null 2>&1; then
   echo "[install-lean] attempting apt install of elan..."

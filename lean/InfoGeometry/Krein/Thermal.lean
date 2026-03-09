@@ -44,7 +44,14 @@ lemma kmsLike_zero_implies_trace
     ∀ A B : AlgebraEnd E, ω (A * B) = ω (B * A) := by
   intro A B
   have h := hKMS A B
-  simpa [SatisfiesKMSLike, modularShift, zero_smul, neg_zero] using h
+  have hshift : modularShift (E := E) K 0 B = B := by
+    have h0 : (0 : ℝ) • K = (0 : AlgebraEnd E) := by
+      exact zero_smul ℝ K
+    unfold modularShift
+    rw [h0]
+    rw [neg_zero, h0]
+    simp [NormedSpace.exp_zero, mul_assoc]
+  simpa [SatisfiesKMSLike, hshift] using h
 
 /-- Compatibility alias for `kmsLike_zero_implies_trace`. -/
 lemma kms_zero_implies_trace
@@ -63,14 +70,26 @@ structure ThermalVacuum (K : AlgebraEnd E) where
 
 lemma spectralEpsilon_eq_zero_iff (v : DoubledSpace E) :
     spectralEpsilon (E := E) v = 0 ↔ v = 0 := by
-  rcases v with ⟨x, y⟩
   constructor
   · intro h
-    have hx : x = 0 := by simpa [spectralEpsilon] using congrArg Prod.fst h
-    have hy : y = 0 := by simpa [spectralEpsilon] using congrArg Prod.snd h
-    ext <;> simp [hx, hy]
+    have hx : v.fst = 0 := by
+      simpa [spectralEpsilon, InfoGeometry.Krein.toDoubled,
+        InfoGeometry.Krein.DoubledSpace.fst, InfoGeometry.Krein.DoubledSpace.snd] using
+        congrArg InfoGeometry.Krein.DoubledSpace.fst h
+    have hyNeg : -v.snd = 0 := by
+      simpa [spectralEpsilon, InfoGeometry.Krein.toDoubled,
+        InfoGeometry.Krein.DoubledSpace.fst, InfoGeometry.Krein.DoubledSpace.snd] using
+        congrArg InfoGeometry.Krein.DoubledSpace.snd h
+    have hy : v.snd = 0 := by
+      exact neg_eq_zero.mp (by simpa using hyNeg)
+    apply InfoGeometry.Krein.DoubledSpace.ext (u := v) (v := 0)
+    · simpa [InfoGeometry.Krein.DoubledSpace.fst] using hx
+    · simpa [InfoGeometry.Krein.DoubledSpace.snd] using hy
   · intro h
-    simp [h]
+    subst h
+    apply (WithLp.ofLp_injective 2)
+    simp [spectralEpsilon, InfoGeometry.Krein.toDoubled,
+      InfoGeometry.Krein.DoubledSpace.fst, InfoGeometry.Krein.DoubledSpace.snd]
 
 lemma ThermalVacuum.modularJ_Omega
     {K : AlgebraEnd E}

@@ -121,10 +121,10 @@ noncomputable def extractFlowAnomaly
 
 /-! ## Transport morphism: Hilbert doubled ↔ coordinate doubled -/
 
-/-- Canonical continuous linear equivalence `WithLp 2 (E×E) ≃L[ℝ] E×E`. -/
+/-- Canonical equivalence between Hilbert/coordinate doubled carriers (identity by alias). -/
 noncomputable def hilbertToDoubledEquiv :
     HilbertDoubled E ≃L[ℝ] Krein.DoubledSpace E :=
-  WithLp.prodContinuousLinearEquiv (2 : ENNReal) ℝ E E
+  ContinuousLinearEquiv.refl ℝ (Krein.DoubledSpace E)
 
 /-- Inverse canonical equivalence `E×E ≃L[ℝ] WithLp 2 (E×E)`. -/
 noncomputable def doubledToHilbertEquiv :
@@ -135,23 +135,19 @@ noncomputable def doubledToHilbertEquiv :
 noncomputable def transportToDoubled
     (A : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
     Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E :=
-  (hilbertToDoubledEquiv (E := E)).conjContinuousAlgEquiv A
+  A
 
 lemma transportToDoubled_sub
     (A B : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
     transportToDoubled (E := E) (A - B)
       = transportToDoubled (E := E) A - transportToDoubled (E := E) B := by
-  unfold transportToDoubled
-  exact (hilbertToDoubledEquiv (E := E)).conjContinuousAlgEquiv.map_sub A B
+  rfl
 
 lemma transportToDoubled_comp
     (A B : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
     transportToDoubled (E := E) (A * B)
       = (transportToDoubled (E := E) A).comp (transportToDoubled (E := E) B) := by
-  change transportToDoubled (E := E) (A * B)
-    = transportToDoubled (E := E) A * transportToDoubled (E := E) B
-  unfold transportToDoubled
-  exact (hilbertToDoubledEquiv (E := E)).conjContinuousAlgEquiv.map_mul A B
+  rfl
 
 lemma transportToDoubled_comm
     (A B : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
@@ -167,57 +163,53 @@ lemma transportToDoubled_comm
 noncomputable def cartanInvolution
     (A : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) :
     Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E :=
-  (ContinuousLinearEquiv.prodComm ℝ E E).conjContinuousAlgEquiv A
+  (modularJ (E := E)).comp (A.comp (modularJ (E := E)))
 
 omit [CompleteSpace E] in
 lemma cartanInvolution_add
     (A B : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) :
     cartanInvolution (E := E) (A + B)
       = cartanInvolution (E := E) A + cartanInvolution (E := E) B := by
-  unfold cartanInvolution
-  exact (ContinuousLinearEquiv.prodComm ℝ E E).conjContinuousAlgEquiv.map_add A B
+  apply ContinuousLinearMap.ext
+  intro x
+  apply (WithLp.ofLp_injective 2)
+  simp [cartanInvolution]
 
 omit [CompleteSpace E] in
 lemma cartanInvolution_smul (a : ℝ)
     (A : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) :
     cartanInvolution (E := E) (a • A) = a • cartanInvolution (E := E) A := by
-  calc
-    cartanInvolution (E := E) (a • A)
-        = cartanInvolution (E := E)
-            ((algebraMap ℝ
-              (Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) a) * A) := by
-            simp [Algebra.smul_def]
-    _ = cartanInvolution (E := E)
-          (algebraMap ℝ (Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) a)
-          * cartanInvolution (E := E) A := by
-            unfold cartanInvolution
-            exact (ContinuousLinearEquiv.prodComm ℝ E E).conjContinuousAlgEquiv.map_mul
-              (algebraMap ℝ (Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) a) A
-    _ = (algebraMap ℝ
-          (Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) a)
-          * cartanInvolution (E := E) A := by
-            exact congrArg
-              (fun Z =>
-                Z * cartanInvolution (E := E) A)
-              ((ContinuousLinearEquiv.prodComm ℝ E E).conjContinuousAlgEquiv.commutes a)
-    _ = a • cartanInvolution (E := E) A := by
-          simp [Algebra.smul_def]
+  apply ContinuousLinearMap.ext
+  intro x
+  apply (WithLp.ofLp_injective 2)
+  simp [cartanInvolution]
 
 omit [CompleteSpace E] in
 lemma cartanInvolution_involutive
     (A : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) :
     cartanInvolution (E := E) (cartanInvolution (E := E) A) = A := by
-  ext x <;>
-    simp [cartanInvolution, ContinuousLinearEquiv.conjContinuousAlgEquiv_apply,
-      ContinuousLinearMap.comp_assoc]
+  have hJ : ∀ z : Krein.DoubledSpace E,
+      modularJ (E := E) (modularJ (E := E) z) = z := by
+    intro z
+    simpa using congrArg (fun F => F z) (modularJ_involution (E := E))
+  apply ContinuousLinearMap.ext
+  intro x
+  apply (WithLp.ofLp_injective 2)
+  simp [cartanInvolution, hJ]
 
 omit [CompleteSpace E] in
 lemma cartanInvolution_clmComm
     (A B : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) :
     cartanInvolution (E := E) (clmComm A B)
       = clmComm (cartanInvolution (E := E) A) (cartanInvolution (E := E) B) := by
-  unfold clmComm
-  simp [cartanInvolution]
+  have hJ : ∀ z : Krein.DoubledSpace E,
+      modularJ (E := E) (modularJ (E := E) z) = z := by
+    intro z
+    simpa using congrArg (fun F => F z) (modularJ_involution (E := E))
+  apply ContinuousLinearMap.ext
+  intro x
+  apply (WithLp.ofLp_injective 2)
+  simp [clmComm, cartanInvolution, hJ, sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
 
 /-- Cartan involution packaged in the core involution API. -/
 noncomputable def cartanInvolutionAuto :

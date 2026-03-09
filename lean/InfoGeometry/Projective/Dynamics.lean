@@ -16,15 +16,15 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 namespace ProjectiveDynamics
 
 /-- Projective dynamics induced by the modular involution `J`. -/
-def J : ProjectiveState (E := E) → ProjectiveState (E := E) :=
+noncomputable def J : ProjectiveState (E := E) → ProjectiveState (E := E) :=
   projectiveMap (E := E) (modularJ (E := E))
 
 /-- Projective dynamics induced by the spectral sign operator `ε`. -/
-def epsilon : ProjectiveState (E := E) → ProjectiveState (E := E) :=
+noncomputable def epsilon : ProjectiveState (E := E) → ProjectiveState (E := E) :=
   projectiveMap (E := E) (spectralEpsilon (E := E))
 
 /-- Projective dynamics induced by the Clifford complex structure `I`. -/
-def I : ProjectiveState (E := E) → ProjectiveState (E := E) :=
+noncomputable def I : ProjectiveState (E := E) → ProjectiveState (E := E) :=
   projectiveMap (E := E) (complexI (E := E))
 
 @[simp] lemma J_projectivize (v : DoubledSpace E) :

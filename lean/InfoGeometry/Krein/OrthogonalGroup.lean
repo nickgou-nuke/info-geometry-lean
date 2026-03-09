@@ -56,6 +56,6 @@ end HessianOrthogonalGroup
 
 /-- Swap involution as an element of the Hessian orthogonal group. -/
 noncomputable def modularJHessianOrthogonal : HessianOrthogonalGroup E :=
-  ⟨neutralJEquiv, IsKreinIsometry.J⟩
+  ⟨(NeutralSpace.neutralJ (E := E)).toContinuousLinearEquiv, IsKreinIsometry.J⟩
 
 end InfoGeometry.Krein

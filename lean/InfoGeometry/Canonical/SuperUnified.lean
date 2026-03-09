@@ -73,8 +73,14 @@ theorem symplectic_is_complex_structure :
   calc
     S.J.comp S.epsilon - S.epsilon.comp S.J
         = S.J.comp S.epsilon - (-(S.J.comp S.epsilon)) := by rw [hεJ]
+    _ = (S.J.comp S.epsilon) + (S.J.comp S.epsilon) := by
+        simp [sub_eq_add_neg]
     _ = (2 : ℝ) • (S.J.comp S.epsilon) := by
-        simp [sub_eq_add_neg, two_smul]
+        calc
+          (S.J.comp S.epsilon) + (S.J.comp S.epsilon)
+              = ((1 : ℝ) + (1 : ℝ)) • (S.J.comp S.epsilon) := by
+                  simpa using (add_smul (1 : ℝ) (1 : ℝ) (S.J.comp S.epsilon)).symm
+          _ = (2 : ℝ) • (S.J.comp S.epsilon) := by norm_num
 
 end SuperKaehlerGeometry
 

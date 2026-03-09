@@ -5,11 +5,11 @@ section KreinClifford
 variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Explicit dictionary: chirality operator is the grading involution. -/
-def chiralityOperator : DoubledSpace E →L[ℝ] DoubledSpace E :=
+noncomputable def chiralityOperator : DoubledSpace E →L[ℝ] DoubledSpace E :=
   modularJ (E := E)
 
 /-- Explicit dictionary: complex-structure operator derived from Clifford generators. -/
-def complexStructureOperator : DoubledSpace E →L[ℝ] DoubledSpace E :=
+noncomputable def complexStructureOperator : DoubledSpace E →L[ℝ] DoubledSpace E :=
   complexI (E := E)
 
 /-- Endomorphism-level notion of an internal complex structure (`I^2 = -Id`). -/
@@ -35,15 +35,13 @@ noncomputable def chiralityProjMinus : DoubledSpace E →L[ℝ] DoubledSpace E :
 
 @[simp] lemma chiralityProjPlus_apply (v : DoubledSpace E) :
     chiralityProjPlus (E := E) v
-      = (((2 : ℝ)⁻¹) • (v.1 + v.2), ((2 : ℝ)⁻¹) • (v.1 + v.2)) := by
-  rcases v with ⟨x, y⟩
-  simp [chiralityProjPlus, gradePlusProj, modularJ, smul_add, add_comm]
+      = gradePlusPart (E := E) v := by
+  simpa [chiralityProjPlus] using gradePlusProj_apply (E := E) v
 
 @[simp] lemma chiralityProjMinus_apply (v : DoubledSpace E) :
     chiralityProjMinus (E := E) v
-      = (((2 : ℝ)⁻¹) • (v.1 - v.2), ((2 : ℝ)⁻¹) • (v.2 - v.1)) := by
-  rcases v with ⟨x, y⟩
-  simp [chiralityProjMinus, gradeMinusProj, modularJ, smul_add, sub_eq_add_neg]
+      = gradeMinusPart (E := E) v := by
+  simpa [chiralityProjMinus] using gradeMinusProj_apply (E := E) v
 
 lemma chiralityProjPlus_idempotent :
     (chiralityProjPlus (E := E)).comp (chiralityProjPlus (E := E))
@@ -79,7 +77,6 @@ lemma neg_complexI_isComplexStructureOp :
         = (complexI (E := E)).comp (complexI (E := E)) := by
             apply ContinuousLinearMap.ext
             intro v
-            rcases v with ⟨x, y⟩
             simp
     _ = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) :=
           complexI_sq_neg_id (E := E)
@@ -90,11 +87,11 @@ structure VacuumChoice where
   imag : DoubledSpace E →L[ℝ] DoubledSpace E
   imag_sq_neg_id : isComplexStructureOp (E := E) imag
 
-def vacuumChoicePlus : VacuumChoice (E := E) where
+noncomputable def vacuumChoicePlus : VacuumChoice (E := E) where
   imag := complexI (E := E)
   imag_sq_neg_id := complexI_isComplexStructureOp (E := E)
 
-def vacuumChoiceMinus : VacuumChoice (E := E) where
+noncomputable def vacuumChoiceMinus : VacuumChoice (E := E) where
   imag := -(complexI (E := E))
   imag_sq_neg_id := neg_complexI_isComplexStructureOp (E := E)
 
@@ -125,7 +122,6 @@ theorem vacuumChoice_switch_swaps_splits_plus :
       = vacuumSplitMinus (E := E) (vacuumChoiceMinus (E := E)) := by
   apply ContinuousLinearMap.ext
   intro v
-  rcases v with ⟨x, y⟩
   simp [vacuumSplitPlus, vacuumSplitMinus,
     vacuumChoicePlus, vacuumChoiceMinus, sub_eq_add_neg]
 
@@ -134,7 +130,6 @@ theorem vacuumChoice_switch_swaps_splits_minus :
       = vacuumSplitPlus (E := E) (vacuumChoiceMinus (E := E)) := by
   apply ContinuousLinearMap.ext
   intro v
-  rcases v with ⟨x, y⟩
   simp [vacuumSplitPlus, vacuumSplitMinus,
     vacuumChoicePlus, vacuumChoiceMinus, sub_eq_add_neg]
 

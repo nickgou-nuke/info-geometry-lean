@@ -1,6 +1,10 @@
 import InfoGeometry.Clifford.Cl11
 import InfoGeometry.Core.Involution
 import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.NormNum
+
+namespace InfoGeometry.Krein
 
 open InfoGeometry.Core
 
@@ -16,7 +20,8 @@ def clmComm
 
 lemma clmComm_eq_lie
     (A B : DoubledSpace E →L[ℝ] DoubledSpace E) :
-    clmComm A B = ⁅A, B⁆ := rfl
+    clmComm A B = ⁅A, B⁆ := by
+  ext v <;> simp [clmComm, Ring.lie_def]
 
 /-- Jordan product from the associative product on doubled-space endomorphisms. -/
 noncomputable def jordanProd
@@ -54,17 +59,18 @@ lemma comp_eq_jordan_add_half_comm
     A.comp B
       = jordanProd A B + ((2 : ℝ)⁻¹) • clmComm A B := by
   have hhalf : (((2 : ℝ)⁻¹) + ((2 : ℝ)⁻¹)) = 1 := by norm_num
-  have hsplit (x : E) : x = ((2 : ℝ)⁻¹) • x + ((2 : ℝ)⁻¹) • x := by
+  have hsplit (x : DoubledSpace E) : x = ((2 : ℝ)⁻¹) • x + ((2 : ℝ)⁻¹) • x := by
     calc
       x = (1 : ℝ) • x := by simp
       _ = ((((2 : ℝ)⁻¹) + ((2 : ℝ)⁻¹)) : ℝ) • x := by simp [hhalf]
       _ = ((2 : ℝ)⁻¹) • x + ((2 : ℝ)⁻¹) • x := by simp [add_smul]
   apply ContinuousLinearMap.ext
   intro v
-  ext <;>
-    simp [jordanProd, clmComm, sub_eq_add_neg, smul_add, add_assoc, add_left_comm]
-  · exact hsplit ((A (B v)).1)
-  · exact hsplit ((A (B v)).2)
+  calc
+    (A.comp B) v = A (B v) := rfl
+    _ = ((2 : ℝ)⁻¹) • (A (B v)) + ((2 : ℝ)⁻¹) • (A (B v)) := hsplit (A (B v))
+    _ = (jordanProd A B + ((2 : ℝ)⁻¹) • clmComm A B) v := by
+          simp [jordanProd, clmComm, sub_eq_add_neg, smul_add, add_assoc, add_left_comm]
 
 lemma even_closed_comm
     {A B : DoubledSpace E →L[ℝ] DoubledSpace E}
@@ -104,21 +110,21 @@ def inGradePlus (v : DoubledSpace E) : Prop := modularJ (E := E) v = v
 def inGradeMinus (v : DoubledSpace E) : Prop := modularJ (E := E) v = -v
 
 /-- `modularJ` packaged as an involution on doubled vectors. -/
-def modularJInvolution : InvolutiveAutomorphism (DoubledSpace E) where
+noncomputable def modularJInvolution : InvolutiveAutomorphism (DoubledSpace E) where
   toFun := modularJ (E := E)
   involutive := by
     intro v
-    rcases v with ⟨x, y⟩
-    simp [modularJ]
+    have h := congrArg (fun f => f v) (modularJ_involution (E := E))
+    simpa [ContinuousLinearMap.comp_apply, ContinuousLinearMap.id_apply] using h
 
 instance modularJInvolution_preservesLinear :
     PreservesLinear (DoubledSpace E) (modularJInvolution (E := E)) where
   map_add := by
     intro x y
-    simp [modularJInvolution, modularJ]
+    simpa [modularJInvolution] using (modularJ (E := E)).map_add x y
   map_smul := by
     intro a x
-    simp [modularJInvolution, modularJ]
+    simpa [modularJInvolution] using (modularJ (E := E)).map_smul a x
 
 /-- Grade `+` projector `(Id + J)/2`. -/
 noncomputable def gradePlusPart (v : DoubledSpace E) : DoubledSpace E :=
@@ -147,21 +153,32 @@ lemma spectralEpsilon_swaps_grades_plus_to_minus
     {v : DoubledSpace E}
     (hv : inGradePlus (E := E) v) :
     inGradeMinus (E := E) (spectralEpsilon (E := E) v) := by
-  rcases v with ⟨x, y⟩
-  have hpair : (y, x) = (x, y) := by simpa [inGradePlus, modularJ] using hv
-  have hxy : y = x := by simpa using congrArg Prod.fst hpair
-  subst hxy
-  simp [inGradeMinus, modularJ, spectralEpsilon]
+  unfold inGradePlus at hv
+  unfold inGradeMinus
+  have hanti :=
+    congrArg (fun f => f v) (modularJ_spectralEpsilon_anticommute (E := E))
+  calc
+    modularJ (E := E) (spectralEpsilon (E := E) v)
+        = -(spectralEpsilon (E := E) ((modularJ (E := E)) v)) := by
+            simpa [ContinuousLinearMap.comp_apply] using hanti
+    _ = -(spectralEpsilon (E := E) v) := by rw [hv]
 
 lemma spectralEpsilon_swaps_grades_minus_to_plus
     {v : DoubledSpace E}
     (hv : inGradeMinus (E := E) v) :
     inGradePlus (E := E) (spectralEpsilon (E := E) v) := by
-  rcases v with ⟨x, y⟩
-  have hpair : (y, x) = (-x, -y) := by simpa [inGradeMinus, modularJ] using hv
-  have hxy : y = -x := by simpa using congrArg Prod.fst hpair
-  subst hxy
-  simp [inGradePlus, modularJ, spectralEpsilon]
+  unfold inGradeMinus at hv
+  unfold inGradePlus
+  have hanti :=
+    congrArg (fun f => f v) (modularJ_spectralEpsilon_anticommute (E := E))
+  calc
+    modularJ (E := E) (spectralEpsilon (E := E) v)
+        = -(spectralEpsilon (E := E) ((modularJ (E := E)) v)) := by
+            simpa [ContinuousLinearMap.comp_apply] using hanti
+    _ = -(spectralEpsilon (E := E) (-v)) := by rw [hv]
+    _ = spectralEpsilon (E := E) v := by
+          simpa [spectralEpsilon, InfoGeometry.Krein.DoubledSpace.fst,
+            InfoGeometry.Krein.DoubledSpace.snd]
 
 /-- Odd operators anticommute with the grading involution `J`. -/
 def isOdd (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
@@ -171,7 +188,7 @@ lemma isEven_iff_gradeZero (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
     isEven (E := E) A ↔ isGradeZero (E := E) A := Iff.rfl
 
 /-- Conjugation by the grading involution on endomorphisms: `σ(A) = J ∘ A ∘ J`. -/
-def gradeConj (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
+noncomputable def gradeConj (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
     DoubledSpace E →L[ℝ] DoubledSpace E :=
   (modularJ (E := E)).comp (A.comp (modularJ (E := E)))
 
@@ -403,34 +420,50 @@ noncomputable def spectralMinusProj : DoubledSpace E →L[ℝ] DoubledSpace E :=
   simp [gradeMinusProj, Projector.minus, modularJInvolution]
 
 @[simp] lemma spectralPlusProj_apply (v : DoubledSpace E) :
-    spectralPlusProj (E := E) v = (v.1, 0) := by
-  rcases v with ⟨x, y⟩
-  have hhalf : ((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) = 1 := by norm_num
-  ext
-  · calc
-      (spectralPlusProj (E := E) (x, y)).1
-          = ((2 : ℝ)⁻¹) • x + ((2 : ℝ)⁻¹) • x := by
-              simp [spectralPlusProj, spectralEpsilon, smul_add]
-      _ = (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • x := by
-            simp [add_smul]
-      _ = (1 : ℝ) • x := by simp [hhalf]
-      _ = x := by simp
-  · simp [spectralPlusProj, spectralEpsilon, smul_add]
+    spectralPlusProj (E := E) v = InfoGeometry.Krein.toDoubled v.fst 0 := by
+  apply (WithLp.ofLp_injective 2)
+  cases h : WithLp.ofLp v with
+  | mk x y =>
+      have hfst : WithLp.fst v = x := by
+        simpa using congrArg Prod.fst h
+      have hsnd : WithLp.snd v = y := by
+        simpa using congrArg Prod.snd h
+      simp [spectralPlusProj, spectralEpsilon, InfoGeometry.Krein.toDoubled,
+        InfoGeometry.Krein.DoubledSpace.fst, InfoGeometry.Krein.DoubledSpace.snd, h,
+        smul_add]
+      constructor
+      · calc
+          ((2 : ℝ)⁻¹) • x + ((2 : ℝ)⁻¹) • WithLp.fst v
+              = ((2 : ℝ)⁻¹) • x + ((2 : ℝ)⁻¹) • x := by rw [hfst]
+          _ = ((((2 : ℝ)⁻¹) + ((2 : ℝ)⁻¹)) : ℝ) • x := by
+                  simpa using (add_smul ((2 : ℝ)⁻¹) ((2 : ℝ)⁻¹) x).symm
+          _ = (1 : ℝ) • x := by norm_num
+          _ = x := by simp
+      · rw [hsnd]
+        simp
 
 @[simp] lemma spectralMinusProj_apply (v : DoubledSpace E) :
-    spectralMinusProj (E := E) v = (0, v.2) := by
-  rcases v with ⟨x, y⟩
-  have hhalf : ((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) = 1 := by norm_num
-  ext
-  · simp [spectralMinusProj, spectralEpsilon, sub_eq_add_neg, smul_add]
-  · calc
-      (spectralMinusProj (E := E) (x, y)).2
-          = ((2 : ℝ)⁻¹) • y + ((2 : ℝ)⁻¹) • y := by
-              simp [spectralMinusProj, spectralEpsilon, sub_eq_add_neg, smul_add]
-      _ = (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • y := by
-            simp [add_smul]
-      _ = (1 : ℝ) • y := by simp [hhalf]
-      _ = y := by simp
+    spectralMinusProj (E := E) v = InfoGeometry.Krein.toDoubled 0 v.snd := by
+  apply (WithLp.ofLp_injective 2)
+  cases h : WithLp.ofLp v with
+  | mk x y =>
+      have hfst : WithLp.fst v = x := by
+        simpa using congrArg Prod.fst h
+      have hsnd : WithLp.snd v = y := by
+        simpa using congrArg Prod.snd h
+      simp [spectralMinusProj, spectralEpsilon, InfoGeometry.Krein.toDoubled,
+        InfoGeometry.Krein.DoubledSpace.fst, InfoGeometry.Krein.DoubledSpace.snd, h,
+        smul_add, sub_eq_add_neg]
+      constructor
+      · rw [hfst]
+        simp
+      · calc
+          ((2 : ℝ)⁻¹) • y + ((2 : ℝ)⁻¹) • WithLp.snd v
+              = ((2 : ℝ)⁻¹) • y + ((2 : ℝ)⁻¹) • y := by rw [hsnd]
+          _ = ((((2 : ℝ)⁻¹) + ((2 : ℝ)⁻¹)) : ℝ) • y := by
+                  simpa using (add_smul ((2 : ℝ)⁻¹) ((2 : ℝ)⁻¹) y).symm
+          _ = (1 : ℝ) • y := by norm_num
+          _ = y := by simp
 
 lemma gradePlusProj_idempotent :
     (gradePlusProj (E := E)).comp (gradePlusProj (E := E)) = gradePlusProj (E := E) := by
@@ -467,33 +500,48 @@ lemma spectralPlusProj_idempotent :
     (spectralPlusProj (E := E)).comp (spectralPlusProj (E := E)) = spectralPlusProj (E := E) := by
   apply ContinuousLinearMap.ext
   intro v
-  simp
+  apply (WithLp.ofLp_injective 2)
+  simp [spectralPlusProj_apply, InfoGeometry.Krein.toDoubled,
+    InfoGeometry.Krein.DoubledSpace.fst, InfoGeometry.Krein.DoubledSpace.snd]
 
 lemma spectralMinusProj_idempotent :
     (spectralMinusProj (E := E)).comp (spectralMinusProj (E := E)) = spectralMinusProj (E := E) := by
   apply ContinuousLinearMap.ext
   intro v
-  simp
+  apply (WithLp.ofLp_injective 2)
+  simp [spectralMinusProj_apply, InfoGeometry.Krein.toDoubled,
+    InfoGeometry.Krein.DoubledSpace.fst, InfoGeometry.Krein.DoubledSpace.snd]
 
 lemma spectralPlusProj_comp_spectralMinusProj :
     (spectralPlusProj (E := E)).comp (spectralMinusProj (E := E)) = 0 := by
   apply ContinuousLinearMap.ext
   intro v
-  simp
+  apply InfoGeometry.Krein.DoubledSpace.ext
+  · simp [spectralPlusProj_apply, spectralMinusProj_apply, InfoGeometry.Krein.toDoubled,
+      InfoGeometry.Krein.DoubledSpace.fst]
+  · simp [spectralPlusProj_apply, spectralMinusProj_apply, InfoGeometry.Krein.toDoubled,
+      InfoGeometry.Krein.DoubledSpace.snd]
 
 lemma spectralMinusProj_comp_spectralPlusProj :
     (spectralMinusProj (E := E)).comp (spectralPlusProj (E := E)) = 0 := by
   apply ContinuousLinearMap.ext
   intro v
-  simp
+  apply InfoGeometry.Krein.DoubledSpace.ext
+  · simp [spectralPlusProj_apply, spectralMinusProj_apply, InfoGeometry.Krein.toDoubled,
+      InfoGeometry.Krein.DoubledSpace.fst]
+  · simp [spectralPlusProj_apply, spectralMinusProj_apply, InfoGeometry.Krein.toDoubled,
+      InfoGeometry.Krein.DoubledSpace.snd]
 
 lemma spectralProj_sum :
     spectralPlusProj (E := E) + spectralMinusProj (E := E)
       = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
   apply ContinuousLinearMap.ext
   intro v
-  rcases v with ⟨x, y⟩
-  simp [ContinuousLinearMap.id_apply]
+  apply InfoGeometry.Krein.DoubledSpace.ext
+  · simp [ContinuousLinearMap.id_apply, spectralPlusProj_apply, spectralMinusProj_apply,
+      InfoGeometry.Krein.toDoubled, InfoGeometry.Krein.DoubledSpace.fst]
+  · simp [ContinuousLinearMap.id_apply, spectralPlusProj_apply, spectralMinusProj_apply,
+      InfoGeometry.Krein.toDoubled, InfoGeometry.Krein.DoubledSpace.snd]
 
 lemma projector_commutator_gradePlus_spectralPlus :
     clmComm (gradePlusProj (E := E)) (spectralPlusProj (E := E))
@@ -502,7 +550,6 @@ lemma projector_commutator_gradePlus_spectralPlus :
   intro v
   simp [clmComm, gradePlusProj, spectralPlusProj, sub_eq_add_neg,
     smul_add, smul_smul, add_assoc, add_left_comm, add_comm]
-  abel_nf
   have hscalar : ((2 : ℝ)⁻¹ * (2 : ℝ)⁻¹) = (4 : ℝ)⁻¹ := by norm_num
   simp [hscalar]
 
@@ -523,10 +570,25 @@ lemma projector_commutator_gradePlus_spectralPlus_eq_half_complexI :
           rw [hanti]
           simp [sub_eq_add_neg]
     _ = ((4 : ℝ)⁻¹) • ((2 : ℝ) • ((modularJ (E := E)).comp (spectralEpsilon (E := E)))) := by
-          simp [two_smul]
+          let X : DoubledSpace E →L[ℝ] DoubledSpace E :=
+            (modularJ (E := E)).comp (spectralEpsilon (E := E))
+          change ((4 : ℝ)⁻¹) • (X + X) = ((4 : ℝ)⁻¹) • ((2 : ℝ) • X)
+          calc
+            ((4 : ℝ)⁻¹) • (X + X) = ((4 : ℝ)⁻¹ • X + (4 : ℝ)⁻¹ • X) := by
+              rw [smul_add]
+            _ = (((4 : ℝ)⁻¹ + (4 : ℝ)⁻¹) : ℝ) • X := by
+              simpa using (add_smul ((4 : ℝ)⁻¹) ((4 : ℝ)⁻¹) X).symm
+            _ = ((2 : ℝ) * (4 : ℝ)⁻¹) • X := by
+              have htwo : (((4 : ℝ)⁻¹ + (4 : ℝ)⁻¹) : ℝ) = ((2 : ℝ) * (4 : ℝ)⁻¹) := by ring
+              rw [htwo]
+            _ = ((4 : ℝ)⁻¹ * (2 : ℝ)) • X := by
+              ring_nf
+            _ = ((4 : ℝ)⁻¹) • ((2 : ℝ) • X) := by
+              simp [smul_smul]
     _ = ((2 : ℝ)⁻¹) • complexI (E := E) := by
           have hscalar : ((4 : ℝ)⁻¹ * (2 : ℝ)) = (2 : ℝ)⁻¹ := by norm_num
-          simp [complexI, smul_smul, hscalar]
+          rw [smul_smul, hscalar]
+          simpa [complexI, InfoGeometry.Krein.complexI]
 
 /-- Incompatibility of geometric and spectral splittings at projector level. -/
 def splittingIncompatible : Prop :=
@@ -540,7 +602,14 @@ lemma splittingIncompatible_iff_nonzero_clifford_comm :
   constructor
   · intro h hComm
     apply h
-    simp [hComm]
+    have hzero :
+        ((4 : ℝ)⁻¹) • (0 : DoubledSpace E →L[ℝ] DoubledSpace E)
+          = (0 : DoubledSpace E →L[ℝ] DoubledSpace E) := by
+      apply ContinuousLinearMap.ext
+      intro v
+      apply (WithLp.ofLp_injective 2)
+      simp
+    simpa [hComm] using hzero
   · intro h hProj
     apply h
     have h4 : (4 : ℝ) ≠ 0 := by norm_num
@@ -550,10 +619,11 @@ lemma complexI_ne_zero [Nontrivial E] :
     complexI (E := E) ≠ 0 := by
   intro hI
   rcases exists_ne (0 : E) with ⟨x, hx⟩
-  have hAt : complexI (E := E) (x, 0) = (0 : DoubledSpace E) := by
-    simpa using congrArg (fun T => T (x, 0)) hI
+  have hAt : complexI (E := E) (InfoGeometry.Krein.toDoubled x 0) = (0 : DoubledSpace E) := by
+    simpa using congrArg (fun T => T (InfoGeometry.Krein.toDoubled x 0)) hI
   have hx0 : x = 0 := by
-    simpa [complexI, modularJ, spectralEpsilon] using congrArg Prod.snd hAt
+    simpa [complexI, modularJ, spectralEpsilon, InfoGeometry.Krein.toDoubled] using
+      congrArg InfoGeometry.Krein.DoubledSpace.snd hAt
   exact hx hx0
 
 lemma splittingIncompatible_of_nontrivial [Nontrivial E] :
@@ -617,3 +687,31 @@ lemma spectralEpsilon_isOdd :
   simpa [isOdd] using modularJ_spectralEpsilon_anticommute (E := E)
 
 end KreinClifford
+
+end InfoGeometry.Krein
+
+export InfoGeometry.Krein
+  (clmComm clmComm_eq_lie
+   jordanProd comp_eq_jordan_add_half_comm
+   isEven isGradeZero isOdd
+   inGradePlus inGradeMinus
+   gradePlusPart gradeMinusPart
+   gradePlusPart_in_plus gradeMinusPart_in_minus grade_decomposition
+   gradePlusProj gradeMinusProj spectralPlusProj spectralMinusProj
+   gradePlusProj_apply gradeMinusProj_apply
+   gradePlusProj_idempotent gradeMinusProj_idempotent
+   gradePlusProj_comp_gradeMinusProj gradeMinusProj_comp_gradePlusProj
+   gradeProj_sum
+   spectralPlusProj_apply spectralMinusProj_apply
+   spectralPlusProj_idempotent spectralMinusProj_idempotent
+   spectralPlusProj_comp_spectralMinusProj spectralMinusProj_comp_spectralPlusProj
+   spectralProj_sum
+   projector_commutator_gradePlus_spectralPlus
+   projector_commutator_gradePlus_spectralPlus_eq_half_complexI
+   splittingIncompatible splittingIncompatible_iff_nonzero_clifford_comm
+   splittingIncompatible_of_nontrivial
+   creationLike annihilationLike
+   creationLike_apply annihilationLike_apply
+   creationLike_inGradePlus annihilationLike_inGradeMinus
+   creation_annihilation_decomposition
+   spectralEpsilon_isOdd)

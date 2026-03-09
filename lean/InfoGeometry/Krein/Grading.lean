@@ -7,7 +7,8 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Commutator bracket on doubled-space endomorphisms. -/
 def clmComm (A B : DoubledSpace E →L[ℝ] DoubledSpace E) : DoubledSpace E →L[ℝ] DoubledSpace E := A.comp B - B.comp A
-lemma clmComm_eq_lie (A B : DoubledSpace E →L[ℝ] DoubledSpace E) : clmComm A B = ⁅A, B⁆ := rfl
+lemma clmComm_eq_lie (A B : DoubledSpace E →L[ℝ] DoubledSpace E) : clmComm A B = ⁅A, B⁆ := by
+  ext v <;> simp [clmComm, Ring.lie_def]
 
 /-- Jordan product from the associative product on doubled-space endomorphisms. -/
 noncomputable def jordanProd
@@ -30,10 +31,7 @@ def isOdd (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
 lemma spectralEpsilon_isOdd :
     isOdd (E := E) (spectralEpsilon (E := E)) := by
   unfold isOdd
-  apply ContinuousLinearMap.ext
-  intro v
-  rcases v with ⟨x, y⟩
-  simp [modularJ, spectralEpsilon]
+  simpa using modularJ_spectralEpsilon_anticommute (E := E)
 
 lemma jordanProd_comm
     (A B : DoubledSpace E →L[ℝ] DoubledSpace E) :
@@ -86,7 +84,6 @@ lemma projector_commutator_gradePlus_spectralPlus :
   intro v
   simp [clmComm, gradePlusProj, spectralPlusProj, sub_eq_add_neg,
     smul_add, smul_smul, add_assoc, add_left_comm, add_comm]
-  abel_nf
   have hscalar : ((2 : ℝ)⁻¹ * (2 : ℝ)⁻¹) = (4 : ℝ)⁻¹ := by norm_num
   simp [hscalar]
 
@@ -107,7 +104,21 @@ lemma projector_commutator_gradePlus_spectralPlus_eq_half_complexI :
           rw [hanti]
           simp [sub_eq_add_neg]
     _ = ((4 : ℝ)⁻¹) • ((2 : ℝ) • ((modularJ (E := E)).comp (spectralEpsilon (E := E)))) := by
-          simp [two_smul]
+          let X : DoubledSpace E →L[ℝ] DoubledSpace E :=
+            (modularJ (E := E)).comp (spectralEpsilon (E := E))
+          change ((4 : ℝ)⁻¹) • (X + X) = ((4 : ℝ)⁻¹) • ((2 : ℝ) • X)
+          calc
+            ((4 : ℝ)⁻¹) • (X + X) = ((4 : ℝ)⁻¹ • X + (4 : ℝ)⁻¹ • X) := by
+              rw [smul_add]
+            _ = (((4 : ℝ)⁻¹ + (4 : ℝ)⁻¹) : ℝ) • X := by
+              simpa using (add_smul ((4 : ℝ)⁻¹) ((4 : ℝ)⁻¹) X).symm
+            _ = ((2 : ℝ) * (4 : ℝ)⁻¹) • X := by
+              have htwo : (((4 : ℝ)⁻¹ + (4 : ℝ)⁻¹) : ℝ) = ((2 : ℝ) * (4 : ℝ)⁻¹) := by ring
+              rw [htwo]
+            _ = ((4 : ℝ)⁻¹ * (2 : ℝ)) • X := by
+              ring_nf
+            _ = ((4 : ℝ)⁻¹) • ((2 : ℝ) • X) := by
+              simp [smul_smul]
     _ = ((2 : ℝ)⁻¹) • complexI (E := E) := by
           have hscalar : ((4 : ℝ)⁻¹ * (2 : ℝ)) = (2 : ℝ)⁻¹ := by norm_num
           simp [complexI, smul_smul, hscalar]

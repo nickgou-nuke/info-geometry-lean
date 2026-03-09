@@ -1,5 +1,7 @@
 import InfoGeometry.Clifford.Grading
 
+namespace InfoGeometry.Krein
+
 section KreinClifford
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -54,7 +56,8 @@ theorem clmComm_modularJHalf_spectralEpsilonHalf :
     clmComm (modularJHalf (E := E)) (spectralEpsilonHalf (E := E))
       = complexIHalf (E := E) := by
   rw [modularJHalf, spectralEpsilonHalf, complexIHalf]
-  rw [clmComm_smul (E := E) ((2 : ℝ)⁻¹) ((2 : ℝ)⁻¹) (modularJ (E := E)) (spectralEpsilon (E := E))]
+  rw [clmComm_smul (E := E) ((2 : ℝ)⁻¹) ((2 : ℝ)⁻¹)
+        (modularJ (E := E)) (spectralEpsilon (E := E))]
   rw [clmComm_modularJ_spectralEpsilon (E := E)]
   simp [smul_smul]
 
@@ -63,7 +66,8 @@ theorem clmComm_complexIHalf_modularJHalf :
     clmComm (complexIHalf (E := E)) (modularJHalf (E := E))
       = -spectralEpsilonHalf (E := E) := by
   rw [complexIHalf, modularJHalf, spectralEpsilonHalf]
-  rw [clmComm_smul (E := E) ((2 : ℝ)⁻¹) ((2 : ℝ)⁻¹) (complexI (E := E)) (modularJ (E := E))]
+  rw [clmComm_smul (E := E) ((2 : ℝ)⁻¹) ((2 : ℝ)⁻¹)
+        (complexI (E := E)) (modularJ (E := E))]
   rw [clmComm_complexI_modularJ (E := E)]
   calc
     (((2 : ℝ)⁻¹ * (2 : ℝ)⁻¹) • ((-2 : ℝ) • spectralEpsilon (E := E))
@@ -74,14 +78,19 @@ theorem clmComm_complexIHalf_modularJHalf :
           norm_num
     _ = -(((2 : ℝ)⁻¹) • spectralEpsilon (E := E)) := by
           exact (neg_smul ((2 : ℝ)⁻¹) (spectralEpsilon (E := E)))
+    _ = -spectralEpsilonHalf (E := E) := by
+          simp [spectralEpsilonHalf]
 
 /-- Normalized commutator relation `[I', ε'] = J'`. -/
 theorem clmComm_complexIHalf_spectralEpsilonHalf :
     clmComm (complexIHalf (E := E)) (spectralEpsilonHalf (E := E))
       = modularJHalf (E := E) := by
   rw [complexIHalf, spectralEpsilonHalf, modularJHalf]
-  rw [clmComm_smul (E := E) ((2 : ℝ)⁻¹) ((2 : ℝ)⁻¹) (complexI (E := E)) (spectralEpsilon (E := E))]
+  rw [clmComm_smul (E := E) ((2 : ℝ)⁻¹) ((2 : ℝ)⁻¹)
+        (complexI (E := E)) (spectralEpsilon (E := E))]
   rw [clmComm_complexI_spectralEpsilon (E := E)]
   simp [smul_smul]
 
 end KreinClifford
+
+end InfoGeometry.Krein

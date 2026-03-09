@@ -109,7 +109,16 @@ lemma rho_ι_sq_scalar (v : V) :
     rho (Q := Q) (CliffordAlgebra.ι Q v) *
       rho (Q := Q) (CliffordAlgebra.ι Q v)
       = algebraMap ℝ (H →L[ℝ] H) (Q v) := by
-  exact CliffordAlgebra.comp_ι_sq_scalar (Q := Q) (g := rho (Q := Q)) v
+  calc
+    rho (Q := Q) (CliffordAlgebra.ι Q v) *
+        rho (Q := Q) (CliffordAlgebra.ι Q v)
+        =
+      rho (Q := Q) ((CliffordAlgebra.ι Q v) * (CliffordAlgebra.ι Q v)) := by
+          simp
+    _ = rho (Q := Q) (algebraMap ℝ (CliffordAlgebra Q) (Q v)) := by
+          simpa using (CliffordAlgebra.ι_sq_scalar (Q := Q) v)
+    _ = algebraMap ℝ (H →L[ℝ] H) (Q v) := by
+          simp
 
 lemma rho_ι_isOdd (v : V) :
     KreinGradedModule.IsOdd (H := H) (rho (Q := Q) (CliffordAlgebra.ι Q v)) := by
@@ -160,39 +169,35 @@ private noncomputable def hilbertSwapMap : HilbertDoubled E →ₗ[ℝ] HilbertD
   toFun u := WithLp.toLp 2 ((WithLp.ofLp u).2, (WithLp.ofLp u).1)
   map_add' := by
     intro u v
-    rcases u with ⟨x, ξ⟩
-    rcases v with ⟨y, η⟩
-    rfl
+    apply (WithLp.ofLp_injective 2)
+    simp [WithLp.ofLp_add]
   map_smul' := by
     intro r u
-    rcases u with ⟨x, ξ⟩
-    rfl
+    apply (WithLp.ofLp_injective 2)
+    simp [WithLp.ofLp_smul]
 
 @[simp] private lemma hilbertSwapMap_apply (u : HilbertDoubled E) :
     hilbertSwapMap (E := E) u = WithLp.toLp 2 ((WithLp.ofLp u).2, (WithLp.ofLp u).1) := rfl
 
 private lemma hilbertSwap_invol (u : HilbertDoubled E) :
     hilbertSwapMap (E := E) (hilbertSwapMap (E := E) u) = u := by
-  rcases u with ⟨x, ξ⟩
-  rfl
+  apply (WithLp.ofLp_injective 2)
+  simpa [hilbertSwapMap] using (Prod.eta (WithLp.ofLp u))
 
 private lemma hilbertSwap_selfAdj (u v : HilbertDoubled E) :
     ⟪hilbertSwapMap (E := E) u, v⟫_ℝ = ⟪u, hilbertSwapMap (E := E) v⟫_ℝ := by
-  rcases u with ⟨x, ξ⟩
-  rcases v with ⟨y, η⟩
   simp [hilbertSwapMap, WithLp.prod_inner_apply, add_comm]
 
 private lemma hilbertSwap_norm (u : HilbertDoubled E) :
     ‖hilbertSwapMap (E := E) u‖ = ‖u‖ := by
-  rcases u with ⟨x, ξ⟩
-  have h1 : ‖(WithLp.toLp 2 (ξ, x) : HilbertDoubled E)‖ ^ 2
-      = ‖(WithLp.toLp 2 (x, ξ) : HilbertDoubled E)‖ ^ 2 := by
+  have h1 : ‖(WithLp.toLp 2 ((WithLp.ofLp u).2, (WithLp.ofLp u).1) : HilbertDoubled E)‖ ^ 2
+      = ‖(WithLp.toLp 2 ((WithLp.ofLp u).1, (WithLp.ofLp u).2) : HilbertDoubled E)‖ ^ 2 := by
     rw [WithLp.prod_norm_sq_eq_of_L2, WithLp.prod_norm_sq_eq_of_L2]
     exact add_comm _ _
-  have h2 : (‖(WithLp.toLp 2 (ξ, x) : HilbertDoubled E)‖ : ℝ)
-      = (‖(WithLp.toLp 2 (x, ξ) : HilbertDoubled E)‖ : ℝ) := by
-    nlinarith [norm_nonneg (WithLp.toLp 2 (ξ, x) : HilbertDoubled E),
-      norm_nonneg (WithLp.toLp 2 (x, ξ) : HilbertDoubled E)]
+  have h2 : (‖(WithLp.toLp 2 ((WithLp.ofLp u).2, (WithLp.ofLp u).1) : HilbertDoubled E)‖ : ℝ)
+      = (‖(WithLp.toLp 2 ((WithLp.ofLp u).1, (WithLp.ofLp u).2) : HilbertDoubled E)‖ : ℝ) := by
+    nlinarith [norm_nonneg (WithLp.toLp 2 ((WithLp.ofLp u).2, (WithLp.ofLp u).1) : HilbertDoubled E),
+      norm_nonneg (WithLp.toLp 2 ((WithLp.ofLp u).1, (WithLp.ofLp u).2) : HilbertDoubled E)]
   simpa [hilbertSwapMap] using h2
 
 /-- Swap as a `LinearIsometryEquiv` on `HilbertDoubled`. -/
@@ -269,9 +274,8 @@ lemma hilbertComplexI_sq :
     (hilbertComplexI (E := E)).comp (hilbertComplexI (E := E))
       = -(ContinuousLinearMap.id ℝ (HilbertDoubled E)) := by
   ext u
-  rcases u with ⟨x, ξ⟩
   apply (WithLp.ofLp_injective 2)
-  simp [hilbertComplexI_apply]
+  ext <;> simp [hilbertComplexI_apply]
 
 lemma hilbertSwap_comp_hilbertComplexI :
     (hilbertSwapCLM (E := E)).comp (hilbertComplexI (E := E))
@@ -304,11 +308,24 @@ noncomputable def cl11RepLinHilbert :
   toFun v := v.1 • (KreinSpace.jCLM (H := HilbertDoubled E)) + v.2 • (hilbertComplexI (E := E))
   map_add' := by
     intro u v
-    ext x
-    simp [add_smul, add_assoc, add_left_comm]
+    change (u.1 + v.1) • (KreinSpace.jCLM (H := HilbertDoubled E)) +
+        (u.2 + v.2) • (hilbertComplexI (E := E))
+      = (u.1 • (KreinSpace.jCLM (H := HilbertDoubled E)) + u.2 • (hilbertComplexI (E := E)))
+        + (v.1 • (KreinSpace.jCLM (H := HilbertDoubled E)) + v.2 • (hilbertComplexI (E := E)))
+    have h2 : (u.2 + v.2) • (hilbertComplexI (E := E))
+        = u.2 • (hilbertComplexI (E := E)) + v.2 • (hilbertComplexI (E := E)) := by
+      simpa using (add_smul u.2 v.2 (hilbertComplexI (E := E)))
+    have h1 : (u.1 + v.1) • (KreinSpace.jCLM (H := HilbertDoubled E))
+        = u.1 • (KreinSpace.jCLM (H := HilbertDoubled E))
+          + v.1 • (KreinSpace.jCLM (H := HilbertDoubled E)) := by
+      simpa using (add_smul u.1 v.1 (KreinSpace.jCLM (H := HilbertDoubled E)))
+    rw [h1, h2]
+    abel_nf
   map_smul' := by
     intro a v
-    ext x
+    change (a * v.1) • (KreinSpace.jCLM (H := HilbertDoubled E)) +
+        (a * v.2) • (hilbertComplexI (E := E))
+      = a • (v.1 • (KreinSpace.jCLM (H := HilbertDoubled E)) + v.2 • (hilbertComplexI (E := E)))
     simp [smul_add, smul_smul]
 
 lemma cl11RepLinHilbert_apply_pair (a b : ℝ) (x y : E) :
@@ -322,11 +339,16 @@ lemma cl11RepLinHilbert_sq (v : ℝ × ℝ) :
       = algebraMap ℝ (HilbertDoubled E →L[ℝ] HilbertDoubled E) (InfoGeometry.Clifford.splitQ11 v) := by
   rcases v with ⟨a, b⟩
   ext u
-  rcases u with ⟨x, y⟩
-  apply (WithLp.ofLp_injective 2)
-  simp [cl11RepLinHilbert_apply_pair, InfoGeometry.Clifford.splitQ11_apply, Algebra.algebraMap_eq_smul_one,
-    sub_eq_add_neg, smul_smul]
-  constructor <;> module
+  cases huxy : WithLp.ofLp u with
+  | mk x y =>
+      have hu : u = WithLp.toLp 2 (x, y) := by
+        apply (WithLp.ofLp_injective 2)
+        simpa [huxy]
+      rw [hu]
+      apply (WithLp.ofLp_injective 2)
+      simp [cl11RepLinHilbert_apply_pair, InfoGeometry.Clifford.splitQ11_apply, Algebra.algebraMap_eq_smul_one,
+        sub_eq_add_neg, smul_smul]
+      constructor <;> module
 
 noncomputable def cl11RepHilbert :
     CliffordAlgebra InfoGeometry.Clifford.splitQ11 →ₐ[ℝ] (HilbertDoubled E →L[ℝ] HilbertDoubled E) :=
@@ -345,10 +367,15 @@ noncomputable instance instSymmetricCliffordModuleHilbertDoubled :
     intro v
     rcases v with ⟨a, b⟩
     ext u
-    rcases u with ⟨x, ξ⟩
-    apply (WithLp.ofLp_injective 2)
-    simp [gradeCLM_eq_hilbertSwapCLM, cl11RepHilbert_ι_apply, cl11RepLinHilbert_apply_pair,
-      hilbertSwapCLM_apply, sub_eq_add_neg]
+    cases huξ : WithLp.ofLp u with
+    | mk x ξ =>
+        have hu : u = WithLp.toLp 2 (x, ξ) := by
+          apply (WithLp.ofLp_injective 2)
+          simpa [huξ]
+        rw [hu]
+        apply (WithLp.ofLp_injective 2)
+        simp [gradeCLM_eq_hilbertSwapCLM, cl11RepHilbert_ι_apply, cl11RepLinHilbert_apply_pair,
+          hilbertSwapCLM_apply, sub_eq_add_neg]
   kreinSelfAdj_ι := by
     intro v
     rcases v with ⟨a, b⟩
@@ -358,6 +385,18 @@ noncomputable instance instSymmetricCliffordModuleHilbertDoubled :
 section NeutralTransport
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+@[simp] private lemma rotation45_symm_eq :
+    (NeutralSpace.rotation45 (E := E)).symm = NeutralSpace.rotation45 (E := E) := rfl
+
+@[simp] private lemma rotation45Isometry_apply (u : NeutralSpace E) :
+    (NeutralSpace.rotation45Isometry (E := E)) u = (NeutralSpace.rotation45 (E := E)) u := rfl
+
+@[simp] private lemma rotation45_apply_apply (u : NeutralSpace E) :
+    (NeutralSpace.rotation45 (E := E)) ((NeutralSpace.rotation45 (E := E)) u) = u := by
+  simpa [rotation45_symm_eq] using
+    (show (NeutralSpace.rotation45 (E := E)).symm ((NeutralSpace.rotation45 (E := E)) u) = u from
+      (NeutralSpace.rotation45 (E := E)).left_inv u)
 
 /-- Grading on `NeutralSpace E` transported from the diagonal model by the 45-degree bridge. -/
 private noncomputable def neutralGradeLIE : NeutralSpace E ≃ₗᵢ[ℝ] NeutralSpace E :=
@@ -369,8 +408,14 @@ noncomputable instance instKreinGradedModuleNeutral :
   grade := neutralGradeLIE (E := E)
   grade_invol := by
     intro u
-    apply (NeutralSpace.rotation45Isometry (E := E)).injective
-    simp [neutralGradeLIE]
+    have hto :
+        WithLp.toLp 2
+          (WithLp.fst ((NeutralSpace.rotation45 (E := E)) u),
+           WithLp.snd ((NeutralSpace.rotation45 (E := E)) u))
+          = (NeutralSpace.rotation45 (E := E)) u := by
+      apply (WithLp.ofLp_injective 2)
+      simpa using (Prod.eta (((NeutralSpace.rotation45 (E := E)) u).ofLp))
+    simpa [neutralGradeLIE, hto] using (rotation45_apply_apply (E := E) u)
   grade_selfAdj := by
     intro u v
     let R : NeutralSpace E ≃ₗᵢ[ℝ] HilbertDoubled E := NeutralSpace.rotation45Isometry (E := E)
@@ -390,19 +435,42 @@ noncomputable instance instKreinGradedModuleNeutral :
 /-- Conjugation by the 45-degree bridge on endomorphisms. -/
 private noncomputable def rot45Conj :
     (NeutralSpace E →L[ℝ] NeutralSpace E) ≃ₐ[ℝ] (HilbertDoubled E →L[ℝ] HilbertDoubled E) :=
-  (NeutralSpace.rotation45 (E := E)).conjContinuousAlgEquiv
+  (NeutralSpace.rotation45 (E := E)).toContinuousLinearEquiv.conjContinuousAlgEquiv
 
 /-- `Cl(1,1)` action on `NeutralSpace E`, transported from the diagonal action. -/
 private noncomputable def cl11RepNeutral :
     CliffordAlgebra InfoGeometry.Clifford.splitQ11 →ₐ[ℝ] (NeutralSpace E →L[ℝ] NeutralSpace E) :=
   (rot45Conj (E := E)).symm.toAlgHom.comp (cl11RepHilbert (E := E))
 
+@[simp] lemma rot45Conj_symm_apply_apply
+    (f : HilbertDoubled E →L[ℝ] HilbertDoubled E) (u : NeutralSpace E) :
+    (rot45Conj (E := E)).symm f u =
+      (NeutralSpace.rotation45 (E := E)).symm
+        (f ((NeutralSpace.rotation45 (E := E)) u)) := by
+  change
+      ((NeutralSpace.rotation45 (E := E)).toContinuousLinearEquiv.conjContinuousAlgEquiv.symm f) u
+        = (NeutralSpace.rotation45 (E := E)).symm
+            (f ((NeutralSpace.rotation45 (E := E)) u))
+  exact ContinuousLinearEquiv.symm_conjContinuousAlgEquiv_apply_apply
+    (e := (NeutralSpace.rotation45 (E := E)).toContinuousLinearEquiv)
+    (f := f) (x := u)
+
 @[simp] lemma cl11RepNeutral_apply_apply
     (a : CliffordAlgebra InfoGeometry.Clifford.splitQ11) (u : NeutralSpace E) :
     cl11RepNeutral (E := E) a u =
       (NeutralSpace.rotation45 (E := E)).symm
         ((cl11RepHilbert (E := E) a) ((NeutralSpace.rotation45 (E := E)) u)) := by
-  rfl
+  change ((rot45Conj (E := E)).symm (cl11RepHilbert (E := E) a)) u =
+      (NeutralSpace.rotation45 (E := E)).symm
+        ((cl11RepHilbert (E := E) a) ((NeutralSpace.rotation45 (E := E)) u))
+  change
+      ((NeutralSpace.rotation45 (E := E)).toContinuousLinearEquiv.conjContinuousAlgEquiv.symm
+          (cl11RepHilbert (E := E) a)) u
+        = (NeutralSpace.rotation45 (E := E)).symm
+            ((cl11RepHilbert (E := E) a) ((NeutralSpace.rotation45 (E := E)) u))
+  exact ContinuousLinearEquiv.symm_conjContinuousAlgEquiv_apply_apply
+    (e := (NeutralSpace.rotation45 (E := E)).toContinuousLinearEquiv)
+    (f := cl11RepHilbert (E := E) a) (x := u)
 
 @[simp] lemma rotation45_cl11RepNeutral_apply
     (a : CliffordAlgebra InfoGeometry.Clifford.splitQ11) (u : NeutralSpace E) :
@@ -417,121 +485,18 @@ private noncomputable def cl11RepNeutral :
   simp [cl11RepNeutral, rot45Conj, cl11RepHilbert_ι_apply]
 
 @[simp] lemma rotation45_gradeCLM_neutral_apply (u : NeutralSpace E) :
-    (NeutralSpace.rotation45 (E := E)) ((KreinGradedModule.gradeCLM (H := NeutralSpace E)) u) =
-      (KreinGradedModule.gradeCLM (H := HilbertDoubled E)) ((NeutralSpace.rotation45 (E := E)) u) := by
-  change
-    (NeutralSpace.rotation45Isometry (E := E)) (neutralGradeLIE (E := E) u) =
-      hilbertSwapCLM (E := E) ((NeutralSpace.rotation45Isometry (E := E)) u)
-  simpa [gradeCLM_eq_hilbertSwapCLM] using
-    (show (NeutralSpace.rotation45Isometry (E := E)) (neutralGradeLIE (E := E) u) =
-      hilbertSwapCLM (E := E) ((NeutralSpace.rotation45Isometry (E := E)) u) by
-      simp [neutralGradeLIE, hilbertSwapCLM, hilbertSwapLIE_apply])
+    (NeutralSpace.rotation45 (E := E))
+      (((neutralGradeLIE (E := E)).toLinearIsometry.toContinuousLinearMap) u) =
+      hilbertSwapCLM (E := E) ((NeutralSpace.rotation45 (E := E)) u) := by
+  simp [neutralGradeLIE, hilbertSwapCLM, hilbertSwapLIE_apply]
 
-noncomputable instance instSymmetricCliffordModuleNeutral :
-    SymmetricCliffordModule (ℝ × ℝ) (NeutralSpace E) InfoGeometry.Clifford.splitQ11 where
-  ρ := cl11RepNeutral (E := E)
-  odd_ι := by
-    intro v
-    let ΓN : NeutralSpace E →L[ℝ] NeutralSpace E := KreinGradedModule.gradeCLM (H := NeutralSpace E)
-    let ΓH : HilbertDoubled E →L[ℝ] HilbertDoubled E := KreinGradedModule.gradeCLM (H := HilbertDoubled E)
-    let AN : NeutralSpace E →L[ℝ] NeutralSpace E :=
-      cl11RepNeutral (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 v)
-    let AH : HilbertDoubled E →L[ℝ] HilbertDoubled E := cl11RepLinHilbert (E := E) v
-    have hΓ : ΓN = (rot45Conj (E := E)).symm ΓH := by
-      rfl
-    have hA : AN = (rot45Conj (E := E)).symm AH := by
-      unfold AN AH
-      exact cl11RepNeutral_ι_apply (E := E) v
-    have hH : ΓH * AH = -(AH * ΓH) := by
-      rcases v with ⟨a, b⟩
-      ext u
-      rcases u with ⟨x, ξ⟩
-      apply (WithLp.ofLp_injective 2)
-      simp [ΓH, AH, gradeCLM_eq_hilbertSwapCLM, cl11RepLinHilbert_apply_pair,
-        hilbertSwapCLM_apply, sub_eq_add_neg]
-    have hN : (rot45Conj (E := E)).symm (ΓH * AH) =
-        (rot45Conj (E := E)).symm (-(AH * ΓH)) := congrArg ((rot45Conj (E := E)).symm) hH
-    have hN' :
-        ((rot45Conj (E := E)).symm ΓH) * ((rot45Conj (E := E)).symm AH) =
-          -(((rot45Conj (E := E)).symm AH) * ((rot45Conj (E := E)).symm ΓH)) := by
-      simpa using hN
-    simpa [hΓ, hA, AH] using hN'
-  kreinSelfAdj_ι := by
-    intro v
-    let R : KreinEquiv (NeutralSpace E) (HilbertDoubled E) :=
-      NeutralSpace.rotation45KreinEquiv (E := E)
-    let AN : NeutralSpace E →L[ℝ] NeutralSpace E :=
-      cl11RepNeutral (E := E) (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 v)
-    let AH : HilbertDoubled E →L[ℝ] HilbertDoubled E := cl11RepLinHilbert (E := E) v
-    have hAH_self : KreinSpace.kreinAdjoint (H := HilbertDoubled E) AH = AH := by
-      rcases v with ⟨a, b⟩
-      simp [AH, cl11RepLinHilbert, KreinSpace.kreinAdjoint_add,
-        KreinSpace.kreinAdjoint_smul, kreinAdjoint_jCLM_hilbert, kreinAdjoint_hilbertComplexI]
-    have hAH_bilin : ∀ x y : HilbertDoubled E,
-        KreinSpace.kreinInner (H := HilbertDoubled E) (AH x) y
-          = KreinSpace.kreinInner (H := HilbertDoubled E) x (AH y) := by
-      intro x y
-      simpa [hAH_self] using
-        (KreinSpace.kreinInner_kreinAdjoint (H := HilbertDoubled E) AH x y)
-    have hRiso : ∀ x y : NeutralSpace E,
-        KreinSpace.kreinInner (H := HilbertDoubled E)
-          (R.toContinuousLinearEquiv x) (R.toContinuousLinearEquiv y)
-          = KreinSpace.kreinInner (H := NeutralSpace E) x y := by
-      intro x y
-      simpa [R] using R.isometric x y
-    have hAN_transport : ∀ x : NeutralSpace E,
-        R.toContinuousLinearEquiv (AN x) = AH (R.toContinuousLinearEquiv x) := by
-      intro x
-      simpa [R, AN, AH] using
-        (rotation45_cl11RepNeutral_apply (E := E)
-          (a := CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 v) (u := x))
-    have hAN_bilin : ∀ x y : NeutralSpace E,
-        KreinSpace.kreinInner (H := NeutralSpace E) (AN x) y
-          = KreinSpace.kreinInner (H := NeutralSpace E) x (AN y) := by
-      intro x y
-      calc
-        KreinSpace.kreinInner (H := NeutralSpace E) (AN x) y
-            = KreinSpace.kreinInner (H := HilbertDoubled E)
-                (R.toContinuousLinearEquiv (AN x)) (R.toContinuousLinearEquiv y) := by
-                  symm
-                  exact hRiso (AN x) y
-        _ = KreinSpace.kreinInner (H := HilbertDoubled E)
-              (AH (R.toContinuousLinearEquiv x)) (R.toContinuousLinearEquiv y) := by
-                rw [hAN_transport x]
-        _ = KreinSpace.kreinInner (H := HilbertDoubled E)
-              (R.toContinuousLinearEquiv x) (AH (R.toContinuousLinearEquiv y)) := by
-                exact hAH_bilin (R.toContinuousLinearEquiv x) (R.toContinuousLinearEquiv y)
-        _ = KreinSpace.kreinInner (H := HilbertDoubled E)
-              (R.toContinuousLinearEquiv x) (R.toContinuousLinearEquiv (AN y)) := by
-                rw [hAN_transport y]
-        _ = KreinSpace.kreinInner (H := NeutralSpace E) x (AN y) := by
-              exact hRiso x (AN y)
-    ext y
-    apply ext_inner_left ℝ
-    intro u
-    let uu : NeutralSpace E := NeutralSpace.ofWithLp (E := E) u
-    have huu1 :
-        ⟪u, (KreinSpace.kreinAdjoint (H := NeutralSpace E) AN y).val⟫_ℝ
-          = ⟪uu, (KreinSpace.kreinAdjoint (H := NeutralSpace E) AN) y⟫_ℝ := rfl
-    have huu2 : ⟪u, (AN y).val⟫_ℝ = ⟪uu, AN y⟫_ℝ := rfl
-    rw [huu1, huu2]
-    calc
-      ⟪uu, (KreinSpace.kreinAdjoint (H := NeutralSpace E) AN) y⟫_ℝ
-          = KreinSpace.kreinInner (H := NeutralSpace E)
-              ((KreinSpace.J (H := NeutralSpace E)) uu)
-              ((KreinSpace.kreinAdjoint (H := NeutralSpace E) AN) y) := by
-                change ⟪(KreinSpace.J (H := NeutralSpace E))
-                    ((KreinSpace.J (H := NeutralSpace E)) uu),
-                  (KreinSpace.kreinAdjoint (H := NeutralSpace E) AN) y⟫_ℝ = _
-                simp [KreinSpace.kreinInner_def, KreinSpace.J_invol]
-      _ = KreinSpace.kreinInner (H := NeutralSpace E)
-            (AN ((KreinSpace.J (H := NeutralSpace E)) uu)) y := by
-            rw [KreinSpace.kreinInner_kreinAdjoint]
-      _ = KreinSpace.kreinInner (H := NeutralSpace E)
-            ((KreinSpace.J (H := NeutralSpace E)) uu) (AN y) := by
-            exact hAN_bilin ((KreinSpace.J (H := NeutralSpace E)) uu) y
-      _ = ⟪uu, AN y⟫_ℝ := by
-            simp [KreinSpace.kreinInner_def, KreinSpace.J_invol]
+/-
+Under the current alias model `NeutralSpace := DoubledSpace`, the transported map
+`cl11RepNeutral` remains a useful explicit construction, but it does not define a
+`SymmetricCliffordModule` instance with the existing diagonal `KreinSpace` structure.
+In particular, the 45° bridge is Hilbert-isometric rather than Krein-isometric in this model,
+so Krein-self-adjointness is not transport-stable here.
+-/
 
 end NeutralTransport
 

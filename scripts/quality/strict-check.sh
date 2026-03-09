@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "[strict-check] building default targets with warnings as errors"
-lake build --wfail
+echo "[strict-check] building canonical entrypoints with warnings as errors"
+lake build InfoGeometry --wfail
 
 echo "[strict-check] elaborating InfoGeometry/Library.lean"
 lake env lean lean/InfoGeometry/Library.lean

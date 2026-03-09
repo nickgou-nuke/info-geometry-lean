@@ -13,6 +13,9 @@ We will not provide details on the contents of the theory here. See for yourself
    git clone https://github.com/your-username/info-geometry-lean.git
    cd info-geometry-lean
    ```
+2. Install Lean 4 + Lake (required for builds):
+   ```bash
+   scripts/build/install_lean.sh
 2. Install Lean 4 + Lake via `elan` (required for builds):
    ```bash
    # See https://leanprover.github.io/lean4/doc/quickstart.html

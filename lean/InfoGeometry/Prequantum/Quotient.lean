@@ -9,9 +9,11 @@ Gauge-orbit quotient structures for projective prequantum bundle points.
 namespace InfoGeometry.Prequantum.Quotient
 end InfoGeometry.Prequantum.Quotient
 
+namespace InfoGeometry.Prequantum
+
 section KreinClifford
 
-variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 namespace ProjectivePrequantumBundle
 
@@ -106,3 +108,5 @@ theorem eq_iff
 end ProjectivePrequantumBundle
 
 end KreinClifford
+
+end InfoGeometry.Prequantum

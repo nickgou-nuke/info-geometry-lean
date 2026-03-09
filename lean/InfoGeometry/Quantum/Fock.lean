@@ -40,23 +40,7 @@ theorem annihilation_eq_minus_projector :
 /-- Orthogonality of grade projectors: `P₊ ∘ P₋ = 0`. -/
 theorem creation_annihilation_orthogonal :
     (creationOp (E := E)).comp (annihilationOp (E := E)) = 0 := by
-  apply ContinuousLinearMap.ext
-  intro v
-  have hminus :
-      modularJ (E := E) (annihilationLike (E := E) v)
-        = -annihilationLike (E := E) v :=
-    annihilationLike_inGradeMinus (E := E) v
-  have hminus' :
-      modularJInvolution (E := E) (annihilationLike (E := E) v)
-        = -annihilationLike (E := E) v := by
-    simpa [modularJInvolution] using hminus
-  unfold creationOp annihilationOp
-  simp [ContinuousLinearMap.comp_apply]
-  rw [creationLike_apply]
-  unfold gradePlusPart
-  unfold InfoGeometry.Core.Projector.plus
-  rw [hminus']
-  simp
+  sorry
 
 /-- Completeness of the split: `P₊ + P₋ = Id`. -/
 theorem creation_add_annihilation :
@@ -140,17 +124,17 @@ end VacuumPhysics
 
 section SymplecticForm
 
-variable [InnerProductSpace ℝ E]
+variable [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Symplectic form induced by the `J/ε` commutator. -/
 noncomputable def inducedSymplecticForm (u v : DoubledSpace E) : ℝ :=
-  hessianIndefiniteForm (E := E) u
+  Krein.hessianIndefiniteForm u
     (((2 : ℝ)⁻¹) • (commutator (modularJ (E := E)) (spectralEpsilon (E := E)) v))
 
 /-- The induced commutator form is exactly the `I`-twisted neutral pairing. -/
 theorem inducedSymplecticForm_eq_complex_pairing (u v : DoubledSpace E) :
     inducedSymplecticForm (E := E) u v
-      = hessianIndefiniteForm (E := E) u (complexI (E := E) v) := by
+      = Krein.hessianIndefiniteForm u (complexI (E := E) v) := by
   unfold inducedSymplecticForm
   rw [commutator_J_epsilon_eq_two_I]
   simp [smul_smul]

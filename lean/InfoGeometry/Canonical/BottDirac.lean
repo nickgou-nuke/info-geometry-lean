@@ -114,11 +114,11 @@ variable {E F : Type*}
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- `Cl(1,1)` Dirac seed from modular conjugation. -/
-abbrev cl11DiracSeed : Endomorphism (DoubledSpace E) :=
+noncomputable abbrev cl11DiracSeed : Endomorphism (DoubledSpace E) :=
   (modularJ (E := E)).toLinearMap
 
 /-- `Cl(1,1)` chiral grading from spectral sign involution. -/
-abbrev cl11Grading : Endomorphism (DoubledSpace E) :=
+noncomputable abbrev cl11Grading : Endomorphism (DoubledSpace E) :=
   (spectralEpsilon (E := E)).toLinearMap
 
 /-- Lemma `cl11_isChiralDirac`. -/
@@ -169,7 +169,7 @@ theorem cl11_bottDirac_sq_eq_sum_laplacians
 /--
 Canonical `Cl(1,1)` Bott Laplacian operator reused by downstream modules.
 -/
-def cl11BottLaplacian (Dn : Endomorphism F) :
+noncomputable def cl11BottLaplacian (Dn : Endomorphism F) :
     Endomorphism (DoubledSpace E ⊗[ℝ] F) :=
   (TensorProduct.map
     ((cl11DiracSeed (E := E)).comp (cl11DiracSeed (E := E)))

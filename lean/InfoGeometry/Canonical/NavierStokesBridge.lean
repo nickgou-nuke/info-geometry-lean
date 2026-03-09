@@ -213,18 +213,29 @@ theorem deriv_modularVelocity_zero
 /-- Linear embedding of the base carrier into the doubled carrier (`x ↦ (x,0)`). -/
 noncomputable def embedBase : E →L[ℝ] ArnoldMajoranaCarrier E where
   toLinearMap :=
-    { toFun := fun x => (x, 0)
-      map_add' := by intro x y; simp
-      map_smul' := by intro a x; simp }
-  cont := by continuity
+    { toFun := fun x => InfoGeometry.Krein.toDoubled x 0
+      map_add' := by
+        intro x y
+        apply (WithLp.ofLp_injective 2)
+        simp [InfoGeometry.Krein.toDoubled]
+      map_smul' := by
+        intro a x
+        apply (WithLp.ofLp_injective 2)
+        simp [InfoGeometry.Krein.toDoubled, smul_zero] }
+  cont := by
+    simpa [InfoGeometry.Krein.toDoubled] using
+      (WithLp.prod_continuous_toLp (p := 2) (α := E) (β := E)).comp
+        (continuous_id.prodMk continuous_const)
 
 /-- First-component projection from doubled carrier to the base carrier. -/
 noncomputable def projBase : ArnoldMajoranaCarrier E →L[ℝ] E where
   toLinearMap :=
-    { toFun := fun v => v.1
-      map_add' := by intro v w; simp
-      map_smul' := by intro a v; simp }
-  cont := by continuity
+    { toFun := fun v => InfoGeometry.Krein.DoubledSpace.fst v
+      map_add' := by intro v w; simp [InfoGeometry.Krein.DoubledSpace.fst]
+      map_smul' := by intro a v; simp [InfoGeometry.Krein.DoubledSpace.fst] }
+  cont := by
+    simpa [InfoGeometry.Krein.DoubledSpace.fst] using
+      WithLp.continuous_fst (p := 2) (α := E) (β := E)
 
 /-- Collapses a doubled-carrier modular velocity into a base-carrier velocity field. -/
 noncomputable def collapseToBaseVelocity
@@ -241,7 +252,7 @@ def IsThermodynamicallySmoothed
 noncomputable def madelungDensity
     {K : AlgebraEnd E}
     (vac : ThermalVacuum (E := E) K) : ℝ :=
-  ‖vac.Omega.1‖ ^ (2 : ℕ) + ‖vac.Omega.2‖ ^ (2 : ℕ)
+  ‖vac.Omega.fst‖ ^ (2 : ℕ) + ‖vac.Omega.snd‖ ^ (2 : ℕ)
 
 set_option linter.unusedSectionVars false in
 /-- The Madelung density is strictly positive for nondegenerate thermal vacua. -/
@@ -249,20 +260,21 @@ lemma madelungDensity_pos
     {K : AlgebraEnd E}
     (vac : ThermalVacuum (E := E) K) :
     0 < madelungDensity (E := E) vac := by
-  rcases vac with ⟨⟨x, y⟩, _, _, hxy⟩
   dsimp [madelungDensity]
-  by_cases hx : x = 0
-  · have hy : y ≠ 0 := by
+  by_cases hx : vac.Omega.fst = 0
+  · have hy : vac.Omega.snd ≠ 0 := by
       intro hy
-      exact hxy (by simp [hx, hy])
-    have hy_pos : 0 < ‖y‖ ^ (2 : ℕ) := by
-      exact pow_pos (norm_pos_iff.mpr hy) 2
-    simpa [hx] using
-      add_pos_of_nonneg_of_pos (pow_nonneg (norm_nonneg x) 2) hy_pos
-  · have hx_pos : 0 < ‖x‖ ^ (2 : ℕ) := by
-      exact pow_pos (norm_pos_iff.mpr hx) 2
-    simpa using
-      add_pos_of_pos_of_nonneg hx_pos (pow_nonneg (norm_nonneg y) 2)
+      exact vac.vacuum_nonzero
+        (by
+          apply InfoGeometry.Krein.DoubledSpace.ext
+          · simpa [InfoGeometry.Krein.DoubledSpace.fst] using hx
+          · simpa [InfoGeometry.Krein.DoubledSpace.snd] using hy)
+    exact add_pos_of_nonneg_of_pos
+      (pow_nonneg (norm_nonneg _) 2)
+      (pow_pos (norm_pos_iff.mpr hy) 2)
+  · exact add_pos_of_pos_of_nonneg
+      (pow_pos (norm_pos_iff.mpr hx) 2)
+      (pow_nonneg (norm_nonneg _) 2)
 
 /-- Madelung phase from ensemble averaging of the modular Hamiltonian. -/
 noncomputable def madelungPhase

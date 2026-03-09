@@ -16,6 +16,10 @@ We will not provide details on the contents of the theory here. See for yourself
 2. Install Lean 4 + Lake (required for builds):
    ```bash
    scripts/build/install_lean.sh
+   ```
+   If your environment blocks GitHub/package downloads, point the installer at a reachable mirror or local file:
+   ```bash
+   LEAN_ELAN_INIT_URL=file:///path/to/elan-init.sh scripts/build/install_lean.sh
 2. Install Lean 4 + Lake via `elan` (required for builds):
    ```bash
    # See https://leanprover.github.io/lean4/doc/quickstart.html

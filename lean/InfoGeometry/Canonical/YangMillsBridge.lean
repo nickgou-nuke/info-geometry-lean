@@ -29,16 +29,11 @@ structure SUNGaugeInstantiation where
   su_model : SUN n
   /-- Formal PSU(N) projective group model contract. -/
   psu_model : PSUN n su_model
-  /-- Marker that this carrier models an `SU(N)` gauge sector. -/
-  is_su_model : Prop
-  /-- Witness that the `SU(N)` marker holds for this instantiation. -/
-  is_su_model_holds : is_su_model
 
 namespace SUNGaugeInstantiation
 
 /--
 Concrete constructor from an explicit `SU(N)`/`PSU(N)` model pair.
-The marker field is discharged by `True`.
 -/
 def ofModels
     (n : ℕ)
@@ -50,15 +45,6 @@ def ofModels
   n_ge_two := hn
   su_model := su_model
   psu_model := psu_model
-  is_su_model := True
-  is_su_model_holds := trivial
-
-@[simp] theorem is_su_model_of_ofModels
-    (n : ℕ)
-    (hn : 2 ≤ n)
-    (su_model : SUN n)
-    (psu_model : PSUN n su_model) :
-    (ofModels n hn su_model psu_model).is_su_model := trivial
 
 end SUNGaugeInstantiation
 
@@ -133,9 +119,10 @@ def ofConcreteLayers
 
 end YangMillsMassGapBridge
 
-/-- Obligation 1: explicit `SU(N)` gauge instantiation. -/
+/-- Obligation 1: nontrivial `SU(N)` gauge rank (`N ≥ 2`). The `su_model` and `psu_model`
+    fields in `SUNGaugeInstantiation` structurally guarantee an explicit gauge witness exists. -/
 def has_su_n_instantiation (B : YangMillsMassGapBridge E) : Prop :=
-  B.su_inst.is_su_model
+  2 ≤ B.su_inst.n
 
 /-- Obligation 2: existence layer via OS/Wightman-style witnesses. -/
 def has_os_wightman_existence_layer (B : YangMillsMassGapBridge E) : Prop :=
@@ -169,7 +156,7 @@ theorem millennium_obligations_of_bridge
     has_su_n_instantiation B ∧
       has_os_wightman_existence_layer B ∧
       has_strict_mass_gap B := by
-  refine ⟨B.su_inst.is_su_model_holds, ?_, B.spectral_gap_pos⟩
+  refine ⟨B.su_inst.n_ge_two, ?_, B.spectral_gap_pos⟩
   exact ⟨B.qft_layer.reflection_positivity_holds,
     B.qft_layer.osterwalder_schrader_holds,
     B.qft_layer.wightman_reconstruction_holds⟩

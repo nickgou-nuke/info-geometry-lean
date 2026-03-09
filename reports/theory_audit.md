@@ -7,6 +7,11 @@ Generated: 2026-03-09 08:53:34Z
 ```bash
 Lake version 5.0.0-src+7e01a1b (Lean version 4.28.0)
 ```
+Generated: 2026-03-09 06:23:13Z
+
+## Build toolchain status
+- lake: unavailable on PATH
+- lake fallback: not found at ~/.elan/bin/lake
 
 ## Placeholder proof debt (sorry/admit)
 

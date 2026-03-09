@@ -1,39 +1,50 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# List of canonical Lean source roots
-CANONICAL_ROOTS=(lean/InfoGeometry)
+# Canonical Lean source roots under lean/
+ALLOWED_ROOT_DIRS=(InfoGeometry DAG Docs SelfReference Socratic scripts)
+# Allowed top-level umbrella modules in lean/
+ALLOWED_TOP_LEVEL_LEAN=(InfoGeometry.lean DAG.lean Docs.lean SelfReference.lean Socratic.lean)
 
-# List of allowed non-source files in lean/
-ALLOWED=(lakefile.lean lake-manifest.json lean-toolchain scripts all_lean_files_combined.lean InfoGeometry.lean)
-
-# Find all files in lean/ that are not in canonical roots or allowed
-find lean/ -maxdepth 1 -type f | while read -r file; do
-  fname=$(basename "$file")
-  skip=false
-  for allowed in "${ALLOWED[@]}"; do
-    if [[ "$fname" == "$allowed" ]]; then
-      skip=true
-      break
-    fi
+is_allowed_top_level_lean() {
+  local f="$1"
+  for allowed in "${ALLOWED_TOP_LEVEL_LEAN[@]}"; do
+    [[ "$f" == "$allowed" ]] && return 0
   done
-  if ! $skip; then
-    echo "[orphaned-check] Orphaned file in lean/: $fname"
+  return 1
+}
+
+is_allowed_root_file() {
+  local rel="$1"
+  for d in "${ALLOWED_ROOT_DIRS[@]}"; do
+    [[ "$rel" == "$d"/* ]] && return 0
+  done
+  return 1
+}
+
+# 1) top-level lean/ files must be known umbrella modules
+while IFS= read -r file; do
+  fname=$(basename "$file")
+  if [[ "$fname" == *.lean ]] && ! is_allowed_top_level_lean "$fname"; then
+    echo "[orphaned-check] Orphaned top-level Lean file in lean/: $fname"
     exit 1
   fi
-done
+done < <(find lean/ -maxdepth 1 -type f)
 
-# Find orphaned .lean files not in InfoGeometry, Archive, Experimental, or scripts
-find lean/ -type f -name '*.lean' | while read -r file; do
-  if [[ "$file" != lean/InfoGeometry/* ]] && [[ "$file" != lean/InfoGeometry/Archive/* ]] && [[ "$file" != lean/InfoGeometry/Experimental/* ]] && [[ "$file" != lean/scripts/* ]] && [[ "$file" != lean/InfoGeometry.lean ]]; then
+# 2) all .lean files must live in allowed roots or be allowed umbrella modules
+while IFS= read -r file; do
+  rel=${file#lean/}
+  if is_allowed_top_level_lean "$rel"; then
+    continue
+  fi
+  if ! is_allowed_root_file "$rel"; then
     echo "[orphaned-check] Orphaned Lean file: $file"
     exit 1
   fi
-done
+done < <(find lean/ -type f -name '*.lean')
 
-# Optionally, check for empty folders
-# Use a temporary file to avoid pipefail with grep if no empty dirs found
-EMPTY_DIRS=$(find lean/ -type d -empty | grep -vE 'lean$|scripts$' || true)
+# 3) optionally check for empty dirs (excluding lean root)
+EMPTY_DIRS=$(find lean/ -type d -empty | grep -vE '^lean/$|^lean$' || true)
 if [[ -n "$EMPTY_DIRS" ]]; then
   echo "[orphaned-check] Empty directory found:"
   echo "$EMPTY_DIRS"

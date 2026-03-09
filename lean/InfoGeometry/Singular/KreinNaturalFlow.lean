@@ -92,9 +92,11 @@ noncomputable def OperatorNaturalGradient
     HilbertDoubled E →L[ℝ] HilbertDoubled E :=
   G_pinv * grad_f
 
-/-- Placeholder infinitesimal-isometry predicate on doubled coordinates. -/
+/-- Infinitesimal-isometry predicate on doubled coordinates:
+    `A` is Krein-skew-adjoint, i.e. `J A J = -A` for the fundamental symmetry `J`. -/
 def IsInfinitesimalIsometry
-    (_A : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) : Prop := True
+    (A : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) : Prop :=
+  KreinSpace.IsKreinSkewAdjoint (H := Krein.DoubledSpace E) A
 
 /--
 Singular Natural Gradient Flow package.

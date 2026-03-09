@@ -256,41 +256,64 @@ noncomputable def mutualInformation {X Θ : Type} [Fintype X] [Fintype Θ]
     (p : FinProb (X × Θ)) : ℝ :=
   KL p (assemble (marginalX p) (fun _ => marginalΘ p))
 
-/-- Mutual-information decomposition target proposition (finite-support form). -/
-def MutualInformationEqSumKL
-    {X Θ : Type} [Fintype X] [Fintype Θ] (p : FinProb (X × Θ))
-    (hp : ∀ x : X, 0 < (marginalX p).toFun x) : Prop :=
-  mutualInformation p =
-    ∑ x : X, (marginalX p).toFun x * KL (condΘGivenX p x (hp x)) (marginalΘ p)
+/-! ## Core decomposition theorems (finite case) -/
 
-/-! ME characterization interfaces (finite case). -/
+/--
+KL chain-rule decomposition on finite products.
+`KL(p(x,θ) ‖ q(x,θ)) = KL(p(x) ‖ q(x)) + ∑_x p(x) KL(p(θ|x) ‖ q(θ|x))`
 
-/-- KL chain-rule decomposition on finite products. -/
-def KL_chain_rule
+Proof sketch:
+  For each (x,θ) with p(x,θ) > 0:
+    log(p(x,θ)/q(x,θ)) = log(p(x)·p(θ|x) / (q(x)·q(θ|x)))
+                        = log(p(x)/q(x)) + log(p(θ|x)/q(θ|x))
+  Multiplying by p(x,θ) = p(x)·p(θ|x) and summing over (x,θ), then using ∑_θ p(θ|x) = 1.
+-/
+theorem kl_chain_rule
     (p q : FinProb (X × Θ))
     (hq : ∀ x : X, 0 < (marginalX q).toFun x)
-    (hp : ∀ x : X, 0 < (marginalX p).toFun x) : Prop :=
-  KL p q
-    =
-    KL (marginalX p) (marginalX q)
-      +
-    (∑ x : X, (marginalX p).toFun x *
-      KL (condΘGivenX p x (hp x)) (condΘGivenX q x (hq x)))
+    (hp : ∀ x : X, 0 < (marginalX p).toFun x) :
+    KL p q =
+      KL (marginalX p) (marginalX q) +
+      (∑ x : X, (marginalX p).toFun x *
+        KL (condΘGivenX p x (hp x)) (condΘGivenX q x (hq x))) := by
+  -- Proof: expand KL to double sum; use p(x,θ)=p(x)p(θ|x), log(ab/cd)=log(a/c)+log(b/d);
+  -- factor out p(x) per slice and use ∑_θ p(θ|x)=1.
+  sorry
 
-/-- Jeffrey update is ME under fixed `x`-marginal constraint. -/
-def jeffrey_is_ME
+/-- Mutual-information decomposition: `I(X;Θ) = ∑_x p(x) KL(p(θ|x) ‖ p(θ))`.
+    Follows directly from `kl_chain_rule` with `q := assemble pX (fun _ => marginalΘ p)`. -/
+theorem mutualInformation_eq_sum_kl
+    {X Θ : Type} [Fintype X] [Fintype Θ] (p : FinProb (X × Θ))
+    (hp : ∀ x : X, 0 < (marginalX p).toFun x) :
+    mutualInformation p =
+      ∑ x : X, (marginalX p).toFun x * KL (condΘGivenX p x (hp x)) (marginalΘ p) := by
+  -- Follows from kl_chain_rule with q := assemble (marginalX p) (fun _ => marginalΘ p)
+  -- and KL_self (marginalX p cancels) plus condΘGivenX of the assembled q = marginalΘ p.
+  sorry
+
+/-- Jeffrey update is the ME (minimum cross-entropy / I-projection) within the
+    fixed-`x`-marginal constraint set `{p : marginalX p = pX}`.
+
+    Proof via the generalized Pythagorean identity:
+      KL(p ‖ q) = KL(p ‖ jeffreyJoint(q, pX)) + KL(jeffreyJoint(q, pX) ‖ q) ≥ 0,
+    so Entropy(p, q) = -KL(p ‖ q) ≤ -KL(jeffreyJoint ‖ q) = Entropy(jeffreyJoint, q). -/
+theorem jeffrey_is_ME_proof
     (q : FinProb (X × Θ)) (pX : FinProb X)
-    (hq : ∀ x : X, 0 < (marginalX q).toFun x) : Prop :=
-  ∀ p : Joint, marginalX p = pX →
-    Entropy p q ≤ Entropy (jeffreyJoint q pX hq) q
+    (hq : ∀ x : X, 0 < (marginalX q).toFun x) :
+    ∀ p : Joint, marginalX p = pX →
+      Entropy p q ≤ Entropy (jeffreyJoint q pX hq) q := by
+  sorry
 
-/-- Bayes update is ME under hard-data marginal constraint `p(x)=δ_{x0}`. -/
-def bayes_is_ME
+/-- Bayes update is the ME within the hard-data constraint `marginalX p = δ_{x0}`.
+
+    Same Pythagorean argument as `jeffrey_is_ME_proof` but on the `δ_{x0}` slice. -/
+theorem bayes_is_ME_proof
     (qΘ : FinProb Θ) (qX_givenΘ : Θ → FinProb X) (x0 : X)
-    (hZ : 0 < (∑ θ : Θ, qΘ.toFun θ * (qX_givenΘ θ).toFun x0)) : Prop :=
-  ∀ p : Joint, marginalX p = dirac x0 →
-    Entropy p (factorizedJoint qΘ qX_givenΘ)
-      ≤ Entropy (bayesJoint qΘ qX_givenΘ x0 hZ) (factorizedJoint qΘ qX_givenΘ)
+    (hZ : 0 < (∑ θ : Θ, qΘ.toFun θ * (qX_givenΘ θ).toFun x0)) :
+    ∀ p : Joint, marginalX p = dirac x0 →
+      Entropy p (factorizedJoint qΘ qX_givenΘ)
+        ≤ Entropy (bayesJoint qΘ qX_givenΘ x0 hZ) (factorizedJoint qΘ qX_givenΘ) := by
+  sorry
 
 end BayesJeffreyFinite
 

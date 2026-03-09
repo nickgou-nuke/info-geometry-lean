@@ -1,79 +1,69 @@
-import Mathlib.Analysis.Normed.Module.Basic
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.ProdL2
+import Mathlib.Analysis.Normed.Lp.ProdLp
+import InfoGeometry.Krein.KreinSpace
+import Mathlib.Algebra.Lie.OfAssociative
+import Mathlib.Algebra.Lie.Basic
+import Mathlib.Algebra.Lie.Subalgebra.Basic
 
 /-!
 # InfoGeometry.Krein.DoubledSpace
 
-Canonical doubled-space (`E ⊕ E`) generators for split `Cl(1,1)` relations.
+Canonical diagonal (Pontryagin) model of the doubled information state space.
+The carrier is `WithLp 2 (E × E)`, and the fundamental symmetry is the sign flip
+`J(x, ξ) = (x, -ξ)`.
 -/
 
 namespace InfoGeometry.Krein
 
-variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- Doubled space `E ⊕ E` (geometric doubling of primal/dual sectors). -/
-abbrev DoubledSpace (E : Type _) := E × E
+/-- The doubled space E ⊕ E as the canonical L² carrier. -/
+abbrev DoubledSpace (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  WithLp 2 (E × E)
 
-/-- Swap involution `J(x, y) = (y, x)`. -/
-def modularJ : DoubledSpace E →L[ℝ] DoubledSpace E where
-  toLinearMap :=
-    { toFun := fun v => (v.2, v.1)
-      map_add' := by intro v w; simp
-      map_smul' := by intro a v; simp }
-  cont := by continuity
+-- Projection and constructor API for DoubledSpace
+def toDoubled (x ξ : E) : DoubledSpace E := WithLp.toLp 2 (x, ξ)
+def DoubledSpace.fst (u : DoubledSpace E) : E := (WithLp.ofLp u).1
+def DoubledSpace.snd (u : DoubledSpace E) : E := (WithLp.ofLp u).2
 
-/-- Sign involution `ε(x, y) = (x, -y)`. -/
-def spectralEpsilon : DoubledSpace E →L[ℝ] DoubledSpace E where
-  toLinearMap :=
-    { toFun := fun v => (v.1, -v.2)
-      map_add' := by intro v w; simp [add_comm]
-      map_smul' := by intro a v; simp [smul_neg] }
-  cont := by continuity
+@[simp] lemma fst_toDoubled (x ξ : E) : (toDoubled x ξ).fst = x := rfl
+@[simp] lemma snd_toDoubled (x ξ : E) : (toDoubled x ξ).snd = ξ := rfl
+@[simp] lemma toDoubled_fst_snd (u : DoubledSpace E) : toDoubled u.fst u.snd = u := by
+  simp [toDoubled, DoubledSpace.fst, DoubledSpace.snd, WithLp.toLp_ofLp]
 
-/-- `I = J ∘ ε`, the canonical third generator. -/
-def complexI : DoubledSpace E →L[ℝ] DoubledSpace E := modularJ.comp spectralEpsilon
+/-- The Hessian indefinite form on DoubledSpace.
+In the diagonal basis, this is exactly the Krein inner product: [x, ξ]·[y, η] = ⟪x, y⟫ - ⟪ξ, η⟫. -/
+noncomputable def hessianIndefiniteForm (u v : DoubledSpace E) : ℝ :=
+  KreinSpace.kreinInner u v
 
-structure Cl11Relations
-    (J ε : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop where
-  j_involution : J.comp J = ContinuousLinearMap.id ℝ (DoubledSpace E)
-  eps_involution : ε.comp ε = ContinuousLinearMap.id ℝ (DoubledSpace E)
-  anticommute : J.comp ε = -(ε.comp J)
+/-- Characterization of Krein skew-adjointness as infinitesimal Hessian invariance. -/
+def IsKreinSkewAdjoint (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
+  KreinSpace.IsKreinSkewAdjoint A
 
-abbrev Cl11Algebra
-    (J ε : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
-  Cl11Relations J ε
+theorem IsKreinSkewAdjoint.hessian_infinitesimal
+    {A : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hA : IsKreinSkewAdjoint A)
+    (x y : DoubledSpace E) :
+    hessianIndefiniteForm (A x) y + hessianIndefiniteForm x (A y) = 0 :=
+  (KreinSpace.isKreinSkewAdjoint_iff A).mp hA x y
 
-@[simp] lemma modularJ_apply (v : DoubledSpace E) :
-    modularJ (E := E) v = (v.2, v.1) := rfl
-@[simp] lemma spectralEpsilon_apply (v : DoubledSpace E) :
-    spectralEpsilon (E := E) v = (v.1, -v.2) := rfl
-@[simp] lemma complexI_apply (v : DoubledSpace E) :
-    complexI (E := E) v = (-v.2, v.1) := by
-  simp [complexI]
-
-lemma modularJ_involution :
-    modularJ (E := E).comp (modularJ (E := E))
-      = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
-  ext v <;> simp [modularJ]
-lemma spectralEpsilon_involution :
-    spectralEpsilon (E := E).comp (spectralEpsilon (E := E))
-      = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
-  ext v <;> simp [spectralEpsilon]
-lemma modularJ_spectralEpsilon_anticommute :
-    modularJ (E := E).comp (spectralEpsilon (E := E)) =
-      -((spectralEpsilon (E := E)).comp (modularJ (E := E))) := by
-  ext v <;> simp [modularJ, spectralEpsilon]
-lemma complexI_sq :
-    (complexI (E := E)).comp (complexI (E := E))
-      = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-  ext v <;> simp [complexI, modularJ, spectralEpsilon]
-
-theorem modularJ_spectralEpsilon_hasCl11Relations :
-    Cl11Relations (modularJ (E := E)) (spectralEpsilon (E := E)) := by
-  refine ⟨modularJ_involution (E := E), spectralEpsilon_involution (E := E),
-    modularJ_spectralEpsilon_anticommute (E := E)⟩
-
-theorem modularJ_spectralEpsilon_isCl11 :
-    Cl11Algebra (modularJ (E := E)) (spectralEpsilon (E := E)) :=
-  modularJ_spectralEpsilon_hasCl11Relations (E := E)
+/-- The Lie algebra of the information state space (Information Killing Fields). -/
+noncomputable def informationLieAlgebra (E : Type*)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    LieSubalgebra ℝ (DoubledSpace E →L[ℝ] DoubledSpace E) where
+  carrier := {A | IsKreinSkewAdjoint A}
+  zero_mem' := by simp [IsKreinSkewAdjoint, KreinSpace.isKreinSkewAdjoint_iff_eq_neg]
+  add_mem' hA hB := by
+    simp [IsKreinSkewAdjoint, KreinSpace.isKreinSkewAdjoint_iff_eq_neg] at *
+    rw [KreinSpace.kreinAdjoint_add, hA, hB, neg_add]
+  smul_mem' c A hA := by
+    simp [IsKreinSkewAdjoint, KreinSpace.isKreinSkewAdjoint_iff_eq_neg] at *
+    rw [KreinSpace.kreinAdjoint_smul, hA, smul_neg]
+  lie_mem' hA hB := by
+    simp [IsKreinSkewAdjoint, KreinSpace.isKreinSkewAdjoint_iff_eq_neg] at *
+    rw [KreinSpace.kreinAdjoint_lie, hA, hB]
+    simp [Ring.lie_def, neg_mul, mul_neg, neg_neg]
+    rw [neg_sub, add_comm]
 
 end InfoGeometry.Krein

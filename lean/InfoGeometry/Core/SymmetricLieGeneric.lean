@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Lie.Killing
+import Mathlib.Algebra.Lie.InvariantForm
 
 open scoped Invertible
 
@@ -209,6 +210,26 @@ def triple (x y z : S.𝔭) : S.𝔭 :=
 
 def curvature (x y z : S.𝔭) : S.𝔭 :=
   -S.triple x y z
+
+/-- The adjoint action of 𝔨 on 𝔭. -/
+def ad_k_on_p (x : S.𝔨) : S.𝔭 →ₗ[R] S.𝔭 where
+  toFun y := ⟨⁅(x : L), (y : L)⁆, S.bracket_k_p x.property y.property⟩
+  map_add' y₁ y₂ := by
+    ext
+    simp
+  map_smul' r y := by
+    ext
+    simp
+
+/-- A symmetric Lie algebra is isotropy irreducible if the adjoint action of 𝔨 on 𝔭
+    admits no nontrivial proper 𝔨-invariant submodules. -/
+def IsotropyIrreducible (S : SymmetricLieAlgebra R L) : Prop :=
+  ∀ (V : Submodule R S.𝔭), (∀ (x : S.𝔨), ∀ (v : S.𝔭), v ∈ V → S.ad_k_on_p x v ∈ V) →
+    V = ⊥ ∨ V = ⊤
+
+/-!
+Schur-type proportionality on `𝔭` is deferred at this layer.
+-/
 
 end SymmetricLieAlgebra
 

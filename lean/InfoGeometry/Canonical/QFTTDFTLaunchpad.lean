@@ -119,6 +119,18 @@ theorem hohenbergKohnDualState_of_legendreInvolution
     hLeg.left_inv hLeg.right_inv
 
 /--
+Concrete convex/smooth Legendre hypotheses discharge the Hohenberg-Kohn duality state.
+-/
+theorem hohenbergKohnDualState_of_concreteLegendre
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (hConcrete : LegendreConcreteHypotheses ψ ψStar) :
+    HohenbergKohnDualState ψ ψStar := by
+  exact hohenbergKohnDualState_of_legendreInvolution
+    (ψ := ψ) (ψStar := ψStar)
+    (InfoGeometry.Geometry.legendreInvolutionAssumptions_of_concrete hConcrete)
+
+/--
 Explicit constructive Fenchel-gap closure:
 Fenchel-Young equality along a chosen `grad` implies zero gap along that `grad`.
 -/
@@ -141,6 +153,14 @@ theorem fenchelGap_zero_along_grad_of_legendreInvolution
     ∀ θ : Θ, fenchelGap ψ ψStar θ (hLeg.grad θ) = 0 :=
   fenchelGap_zero_along_grad_of_fenchelYoung
     (ψ := ψ) (ψStar := ψStar) (grad := hLeg.grad) hLeg.fenchelYoung_along_grad
+
+/-- Concrete convex/smooth Legendre hypotheses imply zero Fenchel gap along `fderiv`. -/
+theorem fenchelGap_zero_along_fderiv_of_concreteLegendre
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (hConcrete : LegendreConcreteHypotheses ψ ψStar) :
+    ∀ θ : Θ, fenchelGap ψ ψStar θ (fderiv ℝ ψ θ) = 0 :=
+  InfoGeometry.Geometry.LegendreConcreteHypotheses.fenchelGap_eq_zero_along_fderiv hConcrete
 
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

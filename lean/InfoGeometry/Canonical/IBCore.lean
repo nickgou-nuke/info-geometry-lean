@@ -108,26 +108,17 @@ noncomputable def inducedMProjection (prob : IBProblem (X := X) (Y := Y))
     let pYT := jointYT prob pT_givenX
     let qT := InfoGeometry.EntropicInference.marginalΘ pYT
     if h : 0 < qT.toFun t then
-      InfoGeometry.EntropicInference.condΘGivenX (X := T) (Θ := Y)
-        (InfoGeometry.EntropicInference.assemble qT (fun _ => inducedMProjection prob pT_givenX)) -- placeholder
-        t h -- This is a circular definition in my sketch, fixing below
-      sorry
-    else
-      InfoGeometry.EntropicInference.dirac (Nonempty.some (nonemptyY prob))
-
--- Better version of inducedMProjection
-noncomputable def inducedMProjection' (prob : IBProblem (X := X) (Y := Y))
-    (pT_givenX : X → FinProb T) : T → FinProb Y :=
-  fun t =>
-    let pYT := jointYT prob pT_givenX
-    let qT := InfoGeometry.EntropicInference.marginalΘ pYT
-    if h : 0 < qT.toFun t then
       -- Bayes: p(y|t) = p(y,t) / p(t)
       -- EntropicInference has a helper for this?
       -- If not, we use the sourceCond mapping from the joint.
       sorry
     else
       InfoGeometry.EntropicInference.dirac (Nonempty.some (nonemptyY prob))
+
+/-- Backward-compatibility alias used by older drafts. -/
+noncomputable abbrev inducedMProjection' (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T) : T → FinProb Y :=
+  inducedMProjection prob pT_givenX
 
 /--
 Theorem: Non-vacuous Variational Identity.

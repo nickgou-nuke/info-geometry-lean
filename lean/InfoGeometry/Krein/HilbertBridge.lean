@@ -146,13 +146,10 @@ noncomputable def neutralLift (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
   toFun u := (rotation45 E).toFun (A ((rotation45 E).invFun u))
   map_add' u v := by
     apply NeutralSpace.ext
-    simp only [rotation45, map_add, LinearIsometryEquiv.map_add, LinearIsometryEquiv.symm_map_add]
-    -- If symm_map_add is unknown, we'll try another way.
-    sorry
+    simp [rotation45, map_add]
   map_smul' r u := by
     apply NeutralSpace.ext
-    simp only [rotation45, map_smul, LinearIsometryEquiv.map_smul, LinearIsometryEquiv.symm_map_smul]
-    sorry
+    simp [rotation45, map_smul]
 
 end NeutralSpace
 

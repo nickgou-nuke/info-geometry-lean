@@ -1,7 +1,7 @@
-import InfoGeometry.KK.CompactLike
 import InfoGeometry.Krein.Clifford
 import InfoGeometry.Krein.Superalgebra
 import InfoGeometry.Canonical.AnalyticalIndex
+import Mathlib.Analysis.Normed.Operator.Compact
 import Mathlib.Algebra.Lie.OfAssociative
 
 open scoped InnerProductSpace
@@ -12,6 +12,11 @@ open InfoGeometry.Canonical.AnalyticalIndex
 
 /-- Endomorphism algebra on a real Krein-graded Hilbert carrier. -/
 abbrev EndH (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] := H →L[ℝ] H
+
+/-- Concrete compact-operator predicate on bounded real endomorphisms. -/
+abbrev IsCompactEnd (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
+    (A : EndH H) : Prop :=
+  IsCompactOperator (A : H → H)
 
 /--
 Bounded Kasparov-cycle interface over a graded Krein module.
@@ -33,15 +38,10 @@ structure KasparovCycle
   F_odd : KreinGradedModule.IsOdd (H := H) F
   /-- Krein skew-adjointness of `F` (corresponds to Hilbert self-adjointness for odd operators). -/
   F_skewAdj : KreinSpace.IsKreinSkewAdjoint (H := H) F
-  /-- Compactness-like predicate used for Kasparov relations. -/
-  K : EndH H → Prop
-  compactLike : CompactLike K
-  /-- `F² - 1` is compact-like. -/
-  F_sq_one_compact : K (F * F - (1 : EndH H))
+  /-- `F² - 1` is compact. -/
+  F_sq_one_compact : IsCompactEnd H (F * F - (1 : EndH H))
   /-- Graded commutator condition (even algebra reps => ordinary commutator). -/
-  comm_compact : ∀ a : A, K (F * (π a) - (π a) * F)
-
-attribute [instance] KasparovCycle.compactLike
+  comm_compact : ∀ a : A, IsCompactEnd H (F * (π a) - (π a) * F)
 
 section
 variable {A B H : Type*}
@@ -61,14 +61,14 @@ noncomputable def KasparovCycle.analyticalIndex [FiniteDimensional ℝ H] : ℤ 
     (KreinGradedModule.gradeCLM (H := H)).toLinearMap
 
 /-- Lemma `comm_compact_lie`. -/
-lemma comm_compact_lie (a : A) : X.K ⁅X.F, X.π a⁆ := by
+lemma comm_compact_lie (a : A) : IsCompactEnd H ⁅X.F, X.π a⁆ := by
   simpa [Ring.lie_def] using X.comm_compact a
 
 /-- Lemma `superComm_compact_of_even_rep`. -/
 lemma superComm_compact_of_even_rep
     (hπ_even : ∀ a : A, KreinGradedModule.IsEven (H := H) (X.π a))
     (a : A) :
-    X.K (KreinGradedModule.superComm (H := H) X.F (X.π a)) := by
+    IsCompactEnd H (KreinGradedModule.superComm (H := H) X.F (X.π a)) := by
   have hsuper :
       KreinGradedModule.superComm (H := H) X.F (X.π a)
         = KreinGradedModule.comm (H := H) X.F (X.π a) :=

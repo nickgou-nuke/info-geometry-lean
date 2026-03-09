@@ -1,4 +1,3 @@
-import InfoGeometry.KK.CompactLike
 import InfoGeometry.KK.CompactOperatorBridge
 import InfoGeometry.KK.KasparovCycle
 import InfoGeometry.KK.KasparovCompactOperator

@@ -146,7 +146,7 @@ theorem kk_supercomm_compact_of_even_rep
     (X : KasparovCycle A B H)
     (hπ_even : ∀ a : A, KreinGradedModule.IsEven (H := H) (X.π a))
     (a : A) :
-    X.K (KreinGradedModule.superComm (H := H) X.F (X.π a)) := by
+    IsCompactEnd H (KreinGradedModule.superComm (H := H) X.F (X.π a)) := by
   exact InfoGeometry.KK.superComm_compact_of_even_rep (X := X) hπ_even a
 
 end KkBridge

@@ -196,6 +196,38 @@ structure CARWitness : Prop where
 /-- Canonical naming alias for CAR closure witness. -/
 abbrev CARClosure : Prop := CARWitness (E := E)
 
+namespace CARWitness
+
+/-- Constructor from explicit channel relations. -/
+theorem of_relations
+    (hAA :
+      anticommutator (E := E) (annihilationOp (E := E)) (annihilationOp (E := E)) = 0)
+    (hCC :
+      anticommutator (E := E) (creationOp (E := E)) (creationOp (E := E)) = 0)
+    (hAC :
+      anticommutator (E := E) (annihilationOp (E := E)) (creationOp (E := E))
+        = (2 : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)) :
+    CARWitness (E := E) := by
+  exact ⟨hAA, hCC, hAC⟩
+
+/--
+Concrete CAR witness in the degenerate concrete layer (`Subsingleton E`).
+In this layer all endomorphisms coincide.
+-/
+theorem of_subsingleton [Subsingleton E] : CARWitness (E := E) := by
+  refine of_relations (E := E) ?_ ?_ ?_
+  · apply ContinuousLinearMap.ext
+    intro v
+    exact Subsingleton.elim _ _
+  · apply ContinuousLinearMap.ext
+    intro v
+    exact Subsingleton.elim _ _
+  · apply ContinuousLinearMap.ext
+    intro v
+    exact Subsingleton.elim _ _
+
+end CARWitness
+
 /-- CCR witness for the base ladder pair `(a, a†)` in this Fock model. -/
 structure CCRWitness : Prop where
   ccr_annihilation :
@@ -208,6 +240,38 @@ structure CCRWitness : Prop where
 
 /-- Canonical naming alias for CCR closure witness. -/
 abbrev CCRClosure : Prop := CCRWitness (E := E)
+
+namespace CCRWitness
+
+/-- Constructor from explicit channel relations. -/
+theorem of_relations
+    (hAA :
+      commutator (E := E) (annihilationOp (E := E)) (annihilationOp (E := E)) = 0)
+    (hCC :
+      commutator (E := E) (creationOp (E := E)) (creationOp (E := E)) = 0)
+    (hAC :
+      commutator (E := E) (annihilationOp (E := E)) (creationOp (E := E))
+        = ContinuousLinearMap.id ℝ (DoubledSpace E)) :
+    CCRWitness (E := E) := by
+  exact ⟨hAA, hCC, hAC⟩
+
+/--
+Concrete CCR witness in the degenerate concrete layer (`Subsingleton E`).
+In this layer all endomorphisms coincide.
+-/
+theorem of_subsingleton [Subsingleton E] : CCRWitness (E := E) := by
+  refine of_relations (E := E) ?_ ?_ ?_
+  · apply ContinuousLinearMap.ext
+    intro v
+    exact Subsingleton.elim _ _
+  · apply ContinuousLinearMap.ext
+    intro v
+    exact Subsingleton.elim _ _
+  · apply ContinuousLinearMap.ext
+    intro v
+    exact Subsingleton.elim _ _
+
+end CCRWitness
 
 /-- Lemma `anticommutator_symm`. -/
 lemma anticommutator_symm (A B : FockEnd E) :

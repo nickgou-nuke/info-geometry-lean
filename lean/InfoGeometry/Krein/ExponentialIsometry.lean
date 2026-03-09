@@ -65,4 +65,20 @@ theorem exp_preservesMetric (A : H →L[ℝ] H) (hA : IsKreinSkewAdjoint A) (t :
     exact NormedSpace.exp_zero
   exact h_add
 
+/-- Exponential flow at time `t` as a continuous linear automorphism. -/
+noncomputable def expAutomorphism (A : H →L[ℝ] H) (t : ℝ) : H ≃L[ℝ] H := by
+  letI : Invertible (NormedSpace.exp (t • A)) := NormedSpace.invertibleExp (t • A)
+  exact ContinuousLinearEquiv.ofUnit (unitOfInvertible (NormedSpace.exp (t • A)))
+
+omit [KreinSpace H] in
+@[simp] lemma expAutomorphism_toContinuousLinearMap
+    (A : H →L[ℝ] H) (t : ℝ) :
+    ((expAutomorphism (A := A) t : H ≃L[ℝ] H) : H →L[ℝ] H) = NormedSpace.exp (t • A) := rfl
+
+/-- A Krein-skew generator exponentiates to a Krein-isometric automorphism. -/
+theorem expAutomorphism_preservesMetric
+    (A : H →L[ℝ] H) (hA : IsKreinSkewAdjoint A) (t : ℝ) :
+    IsKreinIsometry (((expAutomorphism (A := A) t : H ≃L[ℝ] H) : H →L[ℝ] H)) := by
+  simpa [expAutomorphism_toContinuousLinearMap] using exp_preservesMetric (A := A) hA t
+
 end InfoGeometry.Krein

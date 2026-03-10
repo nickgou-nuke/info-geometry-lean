@@ -270,18 +270,18 @@ theorem gibbs_is_maximum_entropy
     (hGibbs : satisfiesConstraint (gibbsDist (Ω := Ω) C lam) C) :
     shannonEntropy P ≤ shannonEntropy (gibbsDist (Ω := Ω) C lam) := by
   have hKLnonneg :
-      0 ≤ InfoGeometry.klDiv
+      0 ≤ InfoGeometry.kl_div
         P.toInfoProbabilityDist
         (gibbsDist (Ω := Ω) C lam).toInfoProbabilityDist := by
     apply InfoGeometry.KL.klDiv_nonneg_of_fullSupport
     intro i
     simpa using gibbsDist_pos (C := C) (lam := lam) i
   have hKLexpand :
-      InfoGeometry.klDiv
+      InfoGeometry.kl_div
         P.toInfoProbabilityDist
         (gibbsDist (Ω := Ω) C lam).toInfoProbabilityDist
         = ∑ i, P.f i * (Real.log (P.f i) - Real.log ((gibbsDist C lam).f i)) := by
-    unfold InfoGeometry.klDiv InfoGeometry.expectation InfoGeometry.logDensity
+    unfold InfoGeometry.kl_div InfoGeometry.expectation InfoGeometry.logDensity
     simp [ProbDist.toInfoProbabilityDist]
   have hkl :
       0 ≤ (∑ i, P.f i * Real.log (P.f i))

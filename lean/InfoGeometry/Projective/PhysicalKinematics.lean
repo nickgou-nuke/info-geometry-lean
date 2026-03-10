@@ -7,6 +7,9 @@ Gauge-invariant kinematics interfaces and descent principles on projective doubl
 -/
 
 namespace InfoGeometry.Projective
+namespace InfoGeometry.Projective
+
+open InfoGeometry.Krein
 
 /-- A minimal physics-kinematics interface:
 representatives `V`, a gauge group acting on `V`, and physical states as gauge classes. -/
@@ -42,7 +45,7 @@ def GaugeInvariant (φ : DoubledSpace E → β) : Prop :=
 
 lemma GaugeInvariant.compat {φ : DoubledSpace E → β}
     (hφ : GaugeInvariant (E := E) φ) :
-    ∀ {v w : DoubledSpace E}, SameRayDoubled (E := E) v w → φ v = φ w := by
+    ∀ {v w : DoubledSpace E}, same_ray v w → φ v = φ w := by
   intro v w hvw
   rcases hvw with ⟨a, ha, rfl⟩
   simpa using (hφ a ha v).symm

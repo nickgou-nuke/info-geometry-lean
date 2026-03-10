@@ -50,9 +50,20 @@ $H(\psi)^2 = S(\psi)^2 + \omega(\psi)^2 + 4 \cdot \text{Area}(\psi)$
 -/
 theorem information_fierz_identity (ψ : Krein.DoubledSpace E) :
     (infoHilbert ψ)^2 = (infoScalar ψ)^2 + (infoSymplectic ψ)^2 + 4 * (infoArea ψ) := by
-  obtain ⟨⟨x, ξ⟩⟩ := ψ
-  simp only [infoHilbert, infoScalar, infoSymplectic, infoArea, DoubledSpace.fst, DoubledSpace.snd, WithLp.ofLp]
-  sorry
+  obtain ⟨x, ξ⟩ := WithLp.ofLp ψ
+  unfold infoHilbert infoScalar infoSymplectic infoArea
+  unfold hessianIndefiniteForm inducedSymplecticForm
+  unfold commutator
+  simp only [DoubledSpace.fst, DoubledSpace.snd, ContinuousLinearMap.comp_apply,
+    ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply]
+  simp only [KreinSpace.kreinInner, modularJ, spectralEpsilon, toDoubled, kreinInner_prodL2]
+  -- Scalar channels are real, so inner product is symmetric
+  set X := inner ℝ x x
+  set Y := inner ℝ ξ ξ
+  set Z := inner ℝ x ξ
+  have hsymm : inner ℝ ξ x = Z := real_inner_comm x ξ
+  simp only [hsymm]
+  ring
 
 /--
 **Majorana Information Condition**:

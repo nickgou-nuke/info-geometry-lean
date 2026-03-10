@@ -26,9 +26,8 @@ section Endomorphism
 private lemma neutralJ_toContinuousLinearEquiv_symm_eq :
     ((neutralJ (E := E)).toContinuousLinearEquiv).symm
       = (neutralJ (E := E)).toContinuousLinearEquiv := by
-  ext x
-  simp [neutralJ, KreinSpace.J_invol]
-  sorry
+  rw [← LinearIsometryEquiv.toContinuousLinearEquiv_symm]
+  rfl
 
 /-- Cartan involution `θ(A) = J ∘ A ∘ J`. -/
 noncomputable def cartanInvolution (A : NeutralSpace E →L[ℝ] NeutralSpace E) :
@@ -78,12 +77,8 @@ section Group
 
 /-- Group-level Cartan involution `Θ(U) = J ∘ U ∘ J` on the Hessian orthogonal group. -/
 noncomputable def cartanInvolutionGroup (U : HessianOrthogonalGroup E) :
-    HessianOrthogonalGroup E where
-  equiv := (neutralJ (E := E)).toContinuousLinearEquiv.trans
-    (U.equiv.trans (neutralJ (E := E)).toContinuousLinearEquiv)
-  is_isometry := by
-    intro u v
-    sorry
+    HessianOrthogonalGroup E :=
+  modularJHessianOrthogonal * U * modularJHessianOrthogonal
 
 end Group
 

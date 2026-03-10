@@ -117,7 +117,7 @@ lemma ConstraintsIntegrableOn_of_memFeasibleIntegrable
 
 /-- KL objective over the feasible set. -/
 noncomputable def Objective (P : ACProbMeasure μ₀) : ℝ≥0∞ :=
-  InfoGeometry.KL.klDiv P.μ μ₀
+  InfoGeometry.KL.kl_div P.μ μ₀
 
 /-- MaxEnt optimality as constrained minimization of KL divergence. -/
 def IsMaxEntSolution

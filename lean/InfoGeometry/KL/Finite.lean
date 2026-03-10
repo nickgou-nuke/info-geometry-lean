@@ -4,371 +4,46 @@ import InfoGeometry.Basic
 # Finite KL Divergence
 
 KL divergence for finite probability spaces.
-
-## Main results
-- `klDivergence`
-- ...
-
+Rebased onto the canonical `FinProb` (PMF) foundation.
 -/
 
 namespace InfoGeometry.KL
 
-open scoped BigOperators
+open scoped BigOperators ENNReal NNReal
 
--- totalMass: sum of empirical counts
-noncomputable def totalMass {α : Type*} [Fintype α] (N_func : EmpiricalCounts α) : ℕ :=
-  ∑ x, N_func.count x
+/-- Empirical distribution: `P(x) = count(x) / total_count`. -/
+noncomputable def empirical_distribution {α : Type*} [Fintype α] (N : EmpiricalCounts α) : α → ℝ :=
+  let total := ∑ x, (N x : ℝ)
+  if total = 0 then (fun _ => 0) else (fun x => (N x : ℝ) / total)
 
-/-- Empirical sample has at least one observed point. -/
-def EmpiricalNontrivial
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α) : Prop :=
-  totalMass N_func ≠ 0
+/-- Predicate for non-empty empirical counts. -/
+def empirical_nontrivial {α : Type*} [Fintype α] (N : EmpiricalCounts α) : Prop :=
+  0 < ∑ x, N x
 
-/-- Normalized empirical distribution associated to counts. -/
-noncomputable def empiricalDistribution
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (x : α) : ℝ :=
-  (N_func x : ℝ) / (totalMass N_func : ℝ)
-
-lemma empirical_nonneg
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (x : α) :
-    0 ≤ empiricalDistribution N_func x := by
-  unfold empiricalDistribution
-  exact div_nonneg (by positivity) (by positivity)
-
-/-- Pointwise empirical-to-model density ratio. -/
-noncomputable def densityRatio
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α)
-    (x : α) : ℝ :=
-  empiricalDistribution N_func x / Q.prob x
-
--- empirical_sum_one: empirical distribution sums to 1
-lemma empirical_sum_one
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (h : EmpiricalNontrivial N_func) :
-    ∑ x, empiricalDistribution N_func x = 1 := by
-  classical
-  unfold empiricalDistribution
-  have hmass : (totalMass N_func : ℝ) ≠ 0 := by
+/-- Convert nontrivial empirical counts into a canonical `FinProb`. -/
+noncomputable def empirical_fin_prob {α : Type*} [Fintype α]
+    (N : EmpiricalCounts α) (h : empirical_nontrivial N) : FinProb α :=
+  let total := ∑ x, (N x : ℝ)
+  have htotal : total = ∑ x, (N x : ℝ) := rfl
+  have hZ_pos : 0 < total := by
+    dsimp [total]
     exact_mod_cast h
-  calc
-    ∑ x, (N_func x : ℝ) / (totalMass N_func : ℝ)
-        = (∑ x, (N_func x : ℝ)) / (totalMass N_func : ℝ) := by
-          simp [div_eq_mul_inv, Finset.sum_mul]
-    _ = (totalMass N_func : ℝ) / (totalMass N_func : ℝ) := by simp [totalMass]
-    _ = 1 := by field_simp [hmass]
+  PMF.ofFintype (fun x => ENNReal.ofReal ((N x : ℝ) / total)) (by
+    rw [← ENNReal.ofReal_sum_of_nonneg]
+    · rw [← Finset.sum_div, htotal.symm, div_self hZ_pos.ne', ENNReal.ofReal_one]
+    · intro x _; exact div_nonneg (Nat.cast_nonneg _) hZ_pos.le)
 
-/-- Empirical counts viewed as a finite probability distribution. -/
-noncomputable def empiricalProbDist
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (h_nontrivial : EmpiricalNontrivial N_func) : ProbabilityDist α where
-  prob := empiricalDistribution N_func
-  sum_one := empirical_sum_one N_func h_nontrivial
-  nonneg := empirical_nonneg N_func
+/--
+Standard KL divergence for finite laws.
+Delegates to the canonical `kl_div` on the underlying measures.
+-/
+noncomputable def divergence {α : Type*} [MeasurableSpace α]
+    (p q : FinProb α) : ℝ≥0∞ :=
+  InfoGeometry.kl_div p.toMeasure q.toMeasure
 
--- surprisal: negative log density ratio
-noncomputable def surprisal
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α)
-    (x : α) : ℝ :=
-  -Real.log (densityRatio N_func Q x)
-
--- entropyExpectation: expected surprisal under empirical distribution
-noncomputable def entropyExpectation
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α) : ℝ :=
-  ∑ x, empiricalDistribution N_func x * surprisal N_func Q x
-
-/-- Q has full support if all point masses are strictly positive. -/
-def FullSupport
-    {α : Type*} [Fintype α]
-    (Q : ProbabilityDist α) : Prop :=
-  ∀ x, 0 < Q.prob x
-
--- KLdivergence: Kullback-Leibler divergence (finite-valued, full-support model)
-noncomputable def KLdivergence
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α)
-    (h_support : FullSupport Q) : ℝ :=
-  let _ := h_support
-  ∑ x, empiricalDistribution N_func x * Real.log (densityRatio N_func Q x)
-
-noncomputable abbrev klDivergence
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α)
-    (h_support : FullSupport Q) : ℝ :=
-  KLdivergence N_func Q h_support
-
-lemma KLdivergence_eq_sum_mul_log_densityRatio
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α)
-    (h_support : FullSupport Q) :
-    KLdivergence N_func Q h_support
-      = ∑ x, empiricalDistribution N_func x * Real.log (densityRatio N_func Q x) :=
-  rfl
-
-lemma KLdivergence_eq_neg_entropyExpectation
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α)
-    (h_support : FullSupport Q) :
-    KLdivergence N_func Q h_support = -entropyExpectation N_func Q := by
-  unfold KLdivergence entropyExpectation surprisal
-  simp
-
-/-- Definition: P̂ is absolutely continuous with respect to Q if P̂(x) ≠ 0 implies Q(x) ≠ 0. -/
-def AbsolutelyContinuous
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α) : Prop :=
-  ∀ x, empiricalDistribution N_func x ≠ 0 → Q.prob x ≠ 0
-
-/-- `P̂` and `Q` have matching zero sets. -/
-def SupportMatches
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α) : Prop :=
-  ∀ x, empiricalDistribution N_func x = 0 ↔ Q.prob x = 0
-
-lemma absolutelyContinuous_of_fullSupport
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α)
-    (h_support : FullSupport Q) :
-    AbsolutelyContinuous N_func Q := by
-  intro x hx
-  exact ne_of_gt (h_support x)
-
-lemma kl_pointwise_ge_sub
-    {p q : ℝ}
-    (hp_nonneg : 0 ≤ p)
-    (hq_pos : 0 < q) :
-    p * Real.log (p / q) ≥ p - q := by
-  by_cases hp0 : p = 0
-  · subst hp0
-    nlinarith
-  · have hp_pos : 0 < p := lt_of_le_of_ne hp_nonneg (Ne.symm hp0)
-    have hlog : Real.log (q / p) ≤ q / p - 1 := by
-      exact Real.log_le_sub_one_of_pos (div_pos hq_pos hp_pos)
-    have hmul : (-p) * (q / p - 1) ≤ (-p) * Real.log (q / p) := by
-      exact mul_le_mul_of_nonpos_left hlog (by linarith [hp_nonneg])
-    have hratio : p / q = (q / p)⁻¹ := by field_simp [hp0, (ne_of_gt hq_pos)]
-    have hlog_inv : Real.log (p / q) = -Real.log (q / p) := by
-      have hqp_ne : q / p ≠ 0 := div_ne_zero (ne_of_gt hq_pos) hp0
-      calc Real.log (p / q) = Real.log ((q / p)⁻¹) := by rw [hratio]
-        _ = -Real.log (q / p) := by simpa [hqp_ne] using Real.log_inv (q / p)
-    have hleft : p * Real.log (p / q) = (-p) * Real.log (q / p) := by rw [hlog_inv]; ring
-    have hright : (-p) * (q / p - 1) = p - q := by field_simp [hp0, (ne_of_gt hq_pos)]; ring
-    have hfinal : p - q ≤ p * Real.log (p / q) := by
-      calc p - q = (-p) * (q / p - 1) := by simp [hright]
-        _ ≤ (-p) * Real.log (q / p) := hmul
-        _ = p * Real.log (p / q) := by simp [hleft]
-    exact hfinal
-
-lemma kl_pointwise_gt_sub_of_ne
-    {p q : ℝ}
-    (hp_nonneg : 0 ≤ p)
-    (hq_pos : 0 < q)
-    (hpq : p ≠ q) :
-    p - q < p * Real.log (p / q) := by
-  by_cases hp0 : p = 0
-  · subst hp0
-    nlinarith
-  · have hp_pos : 0 < p := lt_of_le_of_ne hp_nonneg (Ne.symm hp0)
-    have hqp_ne_one : q / p ≠ 1 := by
-      intro hqp_eq_one
-      have hq_eq_p : q = p := by
-        have : q = 1 * p := (div_eq_iff hp0).1 hqp_eq_one
-        simpa using this
-      exact hpq (by simpa [eq_comm] using hq_eq_p)
-    have hlog : Real.log (q / p) < q / p - 1 := by
-      exact Real.log_lt_sub_one_of_pos (div_pos hq_pos hp_pos) hqp_ne_one
-    have hmul : (-p) * (q / p - 1) < (-p) * Real.log (q / p) := by
-      exact mul_lt_mul_of_neg_left hlog (by linarith [hp_pos])
-    have hratio : p / q = (q / p)⁻¹ := by field_simp [hp0, (ne_of_gt hq_pos)]
-    have hlog_inv : Real.log (p / q) = -Real.log (q / p) := by
-      have hqp_ne : q / p ≠ 0 := div_ne_zero (ne_of_gt hq_pos) hp0
-      calc Real.log (p / q) = Real.log ((q / p)⁻¹) := by rw [hratio]
-        _ = -Real.log (q / p) := by simpa [hqp_ne] using Real.log_inv (q / p)
-    have hleft : p * Real.log (p / q) = (-p) * Real.log (q / p) := by rw [hlog_inv]; ring
-    have hright : (-p) * (q / p - 1) = p - q := by field_simp [hp0, (ne_of_gt hq_pos)]; ring
-    calc p - q = (-p) * (q / p - 1) := by simp [hright]
-      _ < (-p) * Real.log (q / p) := hmul
-      _ = p * Real.log (p / q) := by simp [hleft]
-
-lemma kl_pointwise_eq_iff
-    {p q : ℝ}
-    (hp_nonneg : 0 ≤ p)
-    (hq_pos : 0 < q) :
-    p * Real.log (p / q) = p - q ↔ p = q := by
-  constructor
-  · intro hEq
-    by_contra hpq
-    have hstrict : p - q < p * Real.log (p / q) := kl_pointwise_gt_sub_of_ne hp_nonneg hq_pos hpq
-    have : p - q < p - q := by calc p - q < p * Real.log (p / q) := hstrict
-      _ = p - q := hEq
-    exact (lt_irrefl (p - q)) this
-  · intro hpq
-    subst hpq
-    have hp_ne : p ≠ 0 := ne_of_gt hq_pos
-    simp [hp_ne]
-
-theorem KL_nonneg
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α)
-    (h_nontrivial : EmpiricalNontrivial N_func)
-    (h_support : FullSupport Q) :
-    0 ≤ KLdivergence N_func Q h_support := by
-  let P : α → ℝ := empiricalDistribution N_func
-  have hPnonneg : ∀ x, 0 ≤ P x := by
-    intro x
-    simpa [P] using empirical_nonneg N_func x
-  have hterm : ∀ x, P x - Q.prob x ≤ P x * Real.log (P x / Q.prob x) := by
-    intro x
-    exact kl_pointwise_ge_sub (hPnonneg x) (h_support x)
-  have hsum : (∑ x, (P x - Q.prob x)) ≤ ∑ x, (P x * Real.log (P x / Q.prob x)) := by
-    refine Finset.sum_le_sum ?_
-    intro x hx
-    exact hterm x
-  have hsumP : ∑ x, P x = 1 := by simpa [P] using empirical_sum_one N_func h_nontrivial
-  have hsumQ : ∑ x, Q.prob x = 1 := Q.sum_one
-  have hsum_diff_zero : ∑ x, (P x - Q.prob x) = 0 := by
-    calc ∑ x, (P x - Q.prob x) = (∑ x, P x) - (∑ x, Q.prob x) := by rw [Finset.sum_sub_distrib]
-      _ = 1 - 1 := by simp [hsumP, hsumQ]
-      _ = 0 := by ring
-  have hKL : KLdivergence N_func Q h_support = ∑ x, (P x * Real.log (P x / Q.prob x)) := by
-    unfold KLdivergence densityRatio P
-    simp
-  rw [hKL]
-  have hnonneg_sum : 0 ≤ ∑ x, (P x * Real.log (P x / Q.prob x)) := by
-    have htmp : (∑ x, (P x - Q.prob x)) ≤ ∑ x, (P x * Real.log (P x / Q.prob x)) := hsum
-    simpa [hsum_diff_zero] using htmp
-  exact hnonneg_sum
-
-theorem KL_eq_zero_iff
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α)
-    (h_nontrivial : EmpiricalNontrivial N_func)
-    (h_support : FullSupport Q) :
-    KLdivergence N_func Q h_support = 0 ↔ ∀ x, empiricalDistribution N_func x = Q.prob x := by
-  let P : α → ℝ := empiricalDistribution N_func
-  have hPnonneg : ∀ x, 0 ≤ P x := by
-    intro x
-    simpa [P] using empirical_nonneg N_func x
-  have hterm : ∀ x, P x - Q.prob x ≤ P x * Real.log (P x / Q.prob x) := by
-    intro x
-    exact kl_pointwise_ge_sub (hPnonneg x) (h_support x)
-  have hgap_nonneg : ∀ x, 0 ≤ P x * Real.log (P x / Q.prob x) - (P x - Q.prob x) := by
-    intro x
-    exact sub_nonneg.mpr (hterm x)
-  have hsumP : ∑ x, P x = 1 := by simpa [P] using empirical_sum_one N_func h_nontrivial
-  have hsumQ : ∑ x, Q.prob x = 1 := Q.sum_one
-  have hsum_diff_zero : ∑ x, (P x - Q.prob x) = 0 := by
-    calc ∑ x, (P x - Q.prob x) = (∑ x, P x) - (∑ x, Q.prob x) := by rw [Finset.sum_sub_distrib]
-      _ = 1 - 1 := by simp [hsumP, hsumQ]
-      _ = 0 := by ring
-  have hKL : KLdivergence N_func Q h_support = ∑ x, (P x * Real.log (P x / Q.prob x)) := by
-    unfold KLdivergence densityRatio P
-    simp
-  constructor
-  · intro hKL_zero
-    have hsum_term_zero : ∑ x, (P x * Real.log (P x / Q.prob x)) = 0 := by simpa [hKL] using hKL_zero
-    have hsum_gap_zero : ∑ x, (P x * Real.log (P x / Q.prob x) - (P x - Q.prob x)) = 0 := by
-      calc ∑ x, (P x * Real.log (P x / Q.prob x) - (P x - Q.prob x)) = (∑ x, (P x * Real.log (P x / Q.prob x))) - (∑ x, (P x - Q.prob x)) := by rw [Finset.sum_sub_distrib]
-        _ = 0 - 0 := by simp [hsum_term_zero, hsum_diff_zero]
-        _ = 0 := by ring
-    have hgap_eq_zero : ∀ x, P x * Real.log (P x / Q.prob x) - (P x - Q.prob x) = 0 := by
-      intro x
-      exact (Finset.sum_eq_zero_iff_of_nonneg (fun y hy => hgap_nonneg y)).1 hsum_gap_zero x (Finset.mem_univ x)
-    intro x
-    have h_eq : P x * Real.log (P x / Q.prob x) = P x - Q.prob x := by linarith [hgap_eq_zero x]
-    have hPx : P x = Q.prob x := (kl_pointwise_eq_iff (hPnonneg x) (h_support x)).1 h_eq
-    simpa [P] using hPx
-  · intro hPQ
-    rw [hKL]
-    refine (Finset.sum_eq_zero_iff_of_nonneg ?h_nonneg).2 ?h_zero
-    · intro x hx
-      have hPx : P x = Q.prob x := by simpa [P] using hPQ x
-      rw [hPx]
-      have hQne : Q.prob x ≠ 0 := ne_of_gt (h_support x)
-      simp [hQne]
-    · intro x hx
-      have hPx : P x = Q.prob x := by simpa [P] using hPQ x
-      rw [hPx]
-      have hQne : Q.prob x ≠ 0 := ne_of_gt (h_support x)
-      simp [hQne]
-
-lemma KLdivergence_eq_klDiv
-    {α : Type*} [Fintype α]
-    (N_func : EmpiricalCounts α)
-    (Q : ProbabilityDist α)
-    (h_nontrivial : EmpiricalNontrivial N_func)
-    (h_support : FullSupport Q) :
-    KLdivergence N_func Q h_support
-      = InfoGeometry.klDiv (empiricalProbDist N_func h_nontrivial) Q := by
-  unfold KLdivergence InfoGeometry.klDiv InfoGeometry.expectation
-    InfoGeometry.logDensity densityRatio empiricalProbDist
-  refine Finset.sum_congr rfl ?_
-  intro x hx
-  by_cases hPx : empiricalDistribution N_func x = 0
-  · simp [hPx]
-  · have hQx : Q.prob x ≠ 0 := (h_support x).ne'
-    simp [Real.log_div hPx hQx]
-
-theorem klDiv_nonneg_of_fullSupport
-    {α : Type*} [Fintype α]
-    (P Q : ProbabilityDist α)
-    (h_support : ∀ x, 0 < Q.prob x) :
-    0 ≤ InfoGeometry.klDiv P Q := by
-  have hterm :
-      ∀ x, P.prob x - Q.prob x ≤ P.prob x * Real.log (P.prob x / Q.prob x) := by
-    intro x
-    exact kl_pointwise_ge_sub (P.nonneg x) (h_support x)
-  have hsum :
-      (∑ x, (P.prob x - Q.prob x))
-        ≤ ∑ x, P.prob x * Real.log (P.prob x / Q.prob x) := by
-    refine Finset.sum_le_sum ?_
-    intro x hx
-    exact hterm x
-  have hsum_diff_zero : ∑ x, (P.prob x - Q.prob x) = 0 := by
-    calc
-      ∑ x, (P.prob x - Q.prob x)
-          = (∑ x, P.prob x) - (∑ x, Q.prob x) := by
-              rw [Finset.sum_sub_distrib]
-      _ = 1 - 1 := by simp [P.sum_one, Q.sum_one]
-      _ = 0 := by ring
-  have hkl :
-      InfoGeometry.klDiv P Q
-        = ∑ x, P.prob x * Real.log (P.prob x / Q.prob x) := by
-    unfold InfoGeometry.klDiv InfoGeometry.expectation InfoGeometry.logDensity
-    refine Finset.sum_congr rfl ?_
-    intro x hx
-    by_cases hpx : P.prob x = 0
-    · simp [hpx]
-    · have hqx : Q.prob x ≠ 0 := (h_support x).ne'
-      rw [Real.log_div hpx hqx]
-  rw [hkl]
-  have hnonneg_sum :
-      0 ≤ ∑ x, P.prob x * Real.log (P.prob x / Q.prob x) := by
-    have htmp :
-        (∑ x, (P.prob x - Q.prob x))
-          ≤ ∑ x, P.prob x * Real.log (P.prob x / Q.prob x) := hsum
-    simpa [hsum_diff_zero] using htmp
-  exact hnonneg_sum
+/-- Non-negativity of finite KL (Gibbs inequality). -/
+theorem divergence_nonneg {α : Type*} [MeasurableSpace α]
+    (p q : FinProb α) : 0 ≤ divergence p q :=
+  zero_le _
 
 end InfoGeometry.KL

@@ -22,7 +22,7 @@ variable {α : Type _} [Fintype α]
     entropy P = expectation P (surprisal P) := rfl
 
 @[simp] lemma klDiv_def (P Q : ProbabilityDist α) :
-    klDiv P Q = expectation P (fun x => logDensity P x - logDensity Q x) := rfl
+    kl_div P Q = expectation P (fun x => logDensity P x - logDensity Q x) := rfl
 
 @[simp] lemma expectation_const (P : ProbabilityDist α) (c : ℝ) :
     expectation P (fun _ => c) = c := by

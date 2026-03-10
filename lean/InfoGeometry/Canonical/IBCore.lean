@@ -60,39 +60,39 @@ noncomputable def jointYT (prob : IBProblem (X := X) (Y := Y))
                   exact Fintype.sum_mul_sum
                     (fun y : Y => prob.pXY.toFun (x, y))
                     (fun t : T => (pT_givenX x).toFun t)
-          _ = ∑ x : X, (InfoGeometry.EntropicInference.marginalX prob.pXY).toFun x * 1 := by
-                  simp [InfoGeometry.EntropicInference.marginalX]
-          _ = ∑ x : X, (InfoGeometry.EntropicInference.marginalX prob.pXY).toFun x := by
+          _ = ∑ x : X, (InfoGeometry.EntropicInference.marginal_x prob.pXY).toFun x * 1 := by
+                  simp [InfoGeometry.EntropicInference.marginal_x]
+          _ = ∑ x : X, (InfoGeometry.EntropicInference.marginal_x prob.pXY).toFun x := by
                   simp
           _ = 1 := by
-                  simpa using (InfoGeometry.EntropicInference.marginalX prob.pXY).sum_one }
+                  simpa using (InfoGeometry.EntropicInference.marginal_x prob.pXY).sum_one }
 
 /-- Marginal p(x). -/
-noncomputable def marginalX (prob : IBProblem (X := X) (Y := Y)) : FinProb X :=
-  InfoGeometry.EntropicInference.marginalX prob.pXY
+noncomputable def marginal_x (prob : IBProblem (X := X) (Y := Y)) : FinProb X :=
+  InfoGeometry.EntropicInference.marginal_x prob.pXY
 
 /-- Conditional $p(y|x)$. -/
 noncomputable def condYGivenX (prob : IBProblem (X := X) (Y := Y)) (x : X)
-    (hx : 0 < (marginalX prob).toFun x) : FinProb Y :=
-  InfoGeometry.EntropicInference.condΘGivenX prob.pXY x hx
+    (hx : 0 < (marginal_x prob).toFun x) : FinProb Y :=
+  InfoGeometry.EntropicInference.cond_theta_given_x prob.pXY x hx
 
 /-- The IB variational functional:
 $F(p, m, β) = I(X;T) + β \sum_x p(x) KL(p(y|x) || \sum_t p(t|x) m(y|t))$.
 -/
 noncomputable def ibVariationalFunctional (prob : IBProblem (X := X) (Y := Y))
   (pT_givenX : X → FinProb T) (mY_givenT : T → FinProb Y) : ℝ :=
-  let pX := marginalX prob
+  let pX := marginal_x prob
   let pXT : FinProb (X × T) := InfoGeometry.EntropicInference.assemble pX pT_givenX
-  InfoGeometry.EntropicInference.mutualInformation pXT +
+  InfoGeometry.EntropicInference.mutual_information pXT +
     prob.beta * (∑ x : X, pX.toFun x *
       if hx : 0 < pX.toFun x then
         InfoGeometry.EntropicInference.KL (condYGivenX prob x hx)
-          (InfoGeometry.EntropicInference.marginalΘ (InfoGeometry.EntropicInference.assemble (pT_givenX x) mY_givenT))
+          (InfoGeometry.EntropicInference.marginal_theta (InfoGeometry.EntropicInference.assemble (pT_givenX x) mY_givenT))
       else 0)
 
 /-- IB Lagrangian constant: $H(Y|X)$. -/
 noncomputable def ibLagrangianConstant (prob : IBProblem (X := X) (Y := Y)) : ℝ :=
-  let pX := marginalX prob
+  let pX := marginal_x prob
   ∑ x : X, pX.toFun x *
     if hx : 0 < pX.toFun x then
       InfoGeometry.EntropicInference.entropy (condYGivenX prob x hx)
@@ -101,15 +101,15 @@ noncomputable def ibLagrangianConstant (prob : IBProblem (X := X) (Y := Y)) : �
 /-- The IB Lagrangian: $L(p, β) = I(X;T) - β I(Y;T)$. -/
 noncomputable def ibLagrangian (prob : IBProblem (X := X) (Y := Y))
     (pT_givenX : X → FinProb T) : ℝ :=
-  let pX := marginalX prob
+  let pX := marginal_x prob
   let pXT : FinProb (X × T) := InfoGeometry.EntropicInference.assemble pX pT_givenX
   let pYT : FinProb (Y × T) := jointYT prob pT_givenX
-  InfoGeometry.EntropicInference.mutualInformation pXT - prob.beta * InfoGeometry.EntropicInference.mutualInformation pYT
+  InfoGeometry.EntropicInference.mutual_information pXT - prob.beta * InfoGeometry.EntropicInference.mutual_information pYT
 
 /-- Induced marginal $q(t)$. -/
 noncomputable def inducedMarginalT (prob : IBProblem (X := X) (Y := Y))
     (pT_givenX : X → FinProb T) : FinProb T :=
-  InfoGeometry.EntropicInference.marginalΘ (jointYT prob pT_givenX)
+  InfoGeometry.EntropicInference.marginal_theta (jointYT prob pT_givenX)
 
 /-- Induced Bayesian projection $m(y|t)$. -/
 noncomputable def inducedMProjection (prob : IBProblem (X := X) (Y := Y))
@@ -127,7 +127,7 @@ noncomputable def inducedMProjection (prob : IBProblem (X := X) (Y := Y))
         sum_one := by
           have hslice : ∑ y : Y, pYT.toFun (y, t) = qT.toFun t := by
             simp [pYT, qT, jointYT, inducedMarginalT,
-              InfoGeometry.EntropicInference.marginalΘ]
+              InfoGeometry.EntropicInference.marginal_theta]
           have htnz : qT.toFun t ≠ 0 := ne_of_gt ht
           calc
             (∑ y : Y, pYT.toFun (y, t) / qT.toFun t)
@@ -161,7 +161,7 @@ noncomputable def ibIteration (_prob : IBProblem (X := X) (Y := Y)) :
 /-- optimality residual: distance from the current encoder to its own BA update. -/
 noncomputable def ibResidual (prob : IBProblem (X := X) (Y := Y))
     (p : X → FinProb T) : ℝ :=
-  KLKernel (marginalX prob) p (ibIteration prob p)
+  KLKernel (marginal_x prob) p (ibIteration prob p)
 
 /--
 Convergence marker: Fixed-point of the Blahut-Arimoto operator.

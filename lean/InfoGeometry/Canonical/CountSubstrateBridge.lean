@@ -39,7 +39,7 @@ abbrev CountSubstrate (α : Type*) := EmpiricalCounts α
 
 /-- Nontrivial sampling hypothesis (at least one observed event). -/
 abbrev CountSubstrateNontrivial {α : Type*} [Fintype α] (N : CountSubstrate α) : Prop :=
-  EmpiricalNontrivial N
+  empirical_nontrivial N
 
 /-- Canonical empirical probability state induced by counts. -/
 noncomputable def empiricalProbabilityState {α : Type*} [Fintype α]
@@ -50,13 +50,13 @@ noncomputable def empiricalProbabilityState {α : Type*} [Fintype α]
 /-- Theorem `empiricalProbabilityState_spec`. -/
 theorem empiricalProbabilityState_spec {α : Type*} [Fintype α]
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
-    ∀ x : α, empiricalProbabilityState N hN x = empiricalDistribution N x :=
+    ∀ x : α, empiricalProbabilityState N hN x = empirical_distribution N x :=
   fun _ => rfl
 
 /-- Theorem `exists_empiricalProbabilityState`. -/
 theorem exists_empiricalProbabilityState {α : Type*} [Fintype α]
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
-    ∃ P : ProbabilityDist α, ∀ x : α, P x = empiricalDistribution N x :=
+    ∃ P : ProbabilityDist α, ∀ x : α, P x = empirical_distribution N x :=
   ⟨empiricalProbabilityState N hN, fun _ => rfl⟩
 
 end CountsToProbability
@@ -86,7 +86,7 @@ theorem countsFirst_holographicEmergence_package
     (v : UnnormalizedProjectiveState (E := X))
     (hNull : IsVacuumApexNull (E := X) Q v) :
     ∃ P : ProbabilityDist α,
-      (∀ x : α, P x = empiricalDistribution N x)
+      (∀ x : α, P x = empirical_distribution N x)
         ∧ EmergentTimeFlow n Tflow
         ∧ AnomalyScalePhase CI
         ∧ UpdateOrderPathDependent Tw.dual.nabla
@@ -280,7 +280,7 @@ theorem countsFirst_holographicEmergence_of_countInducedTrajectory
     (v : UnnormalizedProjectiveState (E := X))
     (hNull : IsVacuumApexNull (E := X) Q v) :
     ∃ P : ProbabilityDist (Fin n),
-      (∀ x : Fin n, P x = empiricalDistribution N x)
+      (∀ x : Fin n, P x = empirical_distribution N x)
         ∧ EmergentTimeFlow n (countInducedSinkhornTrajectory (n := n) N)
         ∧ AnomalyScalePhase CI
         ∧ UpdateOrderPathDependent Tw.dual.nabla

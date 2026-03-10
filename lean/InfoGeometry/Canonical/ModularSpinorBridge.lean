@@ -61,9 +61,9 @@ noncomputable def modularSpinConnection
     (_flow : FundamentalSymmetry.ModularFlow J_symm T) (_t : ℝ) :
     SpinConnection K x V where
   transport := LinearMap.id
-  preserves_plus := by sorry
-  preserves_minus := by sorry
-  preserves_orthogonal := by sorry
+  preserves_plus := V.plus_norm
+  preserves_minus := V.minus_norm
+  preserves_orthogonal := V.orthogonal
 
 /-- The modular bridge transport is the identity map in the current finite model. -/
 @[simp] theorem modularSpinConnection_transport

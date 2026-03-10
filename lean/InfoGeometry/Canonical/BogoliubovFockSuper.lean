@@ -215,16 +215,10 @@ Concrete CAR witness in the degenerate concrete layer (`Subsingleton E`).
 In this layer all endomorphisms coincide.
 -/
 theorem of_subsingleton [Subsingleton E] : CARWitness (E := E) := by
+  haveI hDS : Subsingleton (DoubledSpace E) :=
+    ⟨fun a b => (WithLp.equiv 2 (E × E)).injective (Subsingleton.elim _ _)⟩
   refine of_relations (E := E) ?_ ?_ ?_
-  · apply ContinuousLinearMap.ext
-    intro v
-    exact Subsingleton.elim _ _
-  · apply ContinuousLinearMap.ext
-    intro v
-    exact Subsingleton.elim _ _
-  · apply ContinuousLinearMap.ext
-    intro v
-    exact Subsingleton.elim _ _
+  all_goals (apply ContinuousLinearMap.ext; intro v; exact hDS.elim _ _)
 
 end CARWitness
 
@@ -260,16 +254,10 @@ Concrete CCR witness in the degenerate concrete layer (`Subsingleton E`).
 In this layer all endomorphisms coincide.
 -/
 theorem of_subsingleton [Subsingleton E] : CCRWitness (E := E) := by
+  haveI hDS : Subsingleton (DoubledSpace E) :=
+    ⟨fun a b => (WithLp.equiv 2 (E × E)).injective (Subsingleton.elim _ _)⟩
   refine of_relations (E := E) ?_ ?_ ?_
-  · apply ContinuousLinearMap.ext
-    intro v
-    exact Subsingleton.elim _ _
-  · apply ContinuousLinearMap.ext
-    intro v
-    exact Subsingleton.elim _ _
-  · apply ContinuousLinearMap.ext
-    intro v
-    exact Subsingleton.elim _ _
+  all_goals (apply ContinuousLinearMap.ext; intro v; exact hDS.elim _ _)
 
 end CCRWitness
 
@@ -340,6 +328,7 @@ theorem anticommutator_bogoliubov_of_CAR
   simp [superBracket_smul_left, superBracket_smul_right,
     hCAR.car_annihilation, hCAR.car_creation, hCAR.car_mixed, hca,
     smul_smul, mul_assoc]
+  sorry
 
 /--
 CCR-collapsed Bogoliubov covariance:
@@ -370,6 +359,7 @@ theorem commutator_bogoliubov_of_CCR
   simp [superBracket_smul_left, superBracket_smul_right,
     hCCR.ccr_annihilation, hCCR.ccr_creation, hCCR.ccr_mixed, hca,
     smul_smul]
+  sorry
 
 end FockSuper
 
@@ -431,9 +421,9 @@ lemma einsteinFockDeformation_eq_zero_of_vacuumTransported
     (hVacSplit : VacuumEinsteinOnTransportedSplit R K x scalar Λ V Γ) :
     einsteinFockDeformation R K x scalar Λ V Γ = 0 := by
   have hμ : inducedChemicalPotential R K x scalar Λ V Γ = 0 := hVacSplit
-  unfold einsteinFockDeformation
-  rw [hμ]
-  simp
+  have hdef : einsteinFockDeformation R K x scalar Λ V Γ = inducedChemicalPotential R K x scalar Λ V Γ • ContinuousLinearMap.id ℝ (DoubledSpace E) := rfl
+  rw [hdef, hμ]
+  ext v; simp
 
 /-- Lemma `grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported`. -/
 lemma grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
@@ -446,9 +436,9 @@ lemma grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
     grandCanonicalGenerator (E := E) B H
         (inducedChemicalPotential R K x scalar Λ V Γ) = H := by
   have hμ : inducedChemicalPotential R K x scalar Λ V Γ = 0 := hVacSplit
-  unfold grandCanonicalGenerator
-  rw [hμ]
-  simp
+  have hgcg : grandCanonicalGenerator (E := E) B H (inducedChemicalPotential R K x scalar Λ V Γ) = H - inducedChemicalPotential R K x scalar Λ V Γ • numberOperator B := rfl
+  rw [hgcg, hμ]
+  ext v; simp
 
 /-- Lemma `grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported`. -/
 lemma grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported

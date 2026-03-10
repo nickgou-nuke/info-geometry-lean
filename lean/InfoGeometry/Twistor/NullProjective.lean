@@ -54,7 +54,7 @@ def twistorMk (Q : QuadraticForm K V) (v : V) (hv : v ≠ 0) (hQ : Q v = 0) :
 
 section Doubled
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Mathlib-native projective states on doubled space. -/
 abbrev DoubledProjectiveState : Type _ := InfoGeometry.Convex.ProjectiveState (E := E)

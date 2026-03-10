@@ -32,29 +32,29 @@ open InfoGeometry.Twistor
 
 section CountsToProbability
 
-variable {α : Type} [Fintype α]
+variable {α : Type*} [Fintype α]
 
 /-- Count substrate: empirical event counts. -/
-abbrev CountSubstrate (α : Type) := EmpiricalCounts α
+abbrev CountSubstrate (α : Type*) := EmpiricalCounts α
 
 /-- Nontrivial sampling hypothesis (at least one observed event). -/
-abbrev CountSubstrateNontrivial (N : CountSubstrate α) : Prop :=
+abbrev CountSubstrateNontrivial {α : Type*} [Fintype α] (N : CountSubstrate α) : Prop :=
   EmpiricalNontrivial N
 
 /-- Canonical empirical probability state induced by counts. -/
-noncomputable def empiricalProbabilityState
+noncomputable def empiricalProbabilityState {α : Type*} [Fintype α]
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
     ProbabilityDist α :=
   empiricalProbDist N hN
 
 /-- Theorem `empiricalProbabilityState_spec`. -/
-theorem empiricalProbabilityState_spec
+theorem empiricalProbabilityState_spec {α : Type*} [Fintype α]
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
     ∀ x : α, empiricalProbabilityState N hN x = empiricalDistribution N x :=
   fun _ => rfl
 
 /-- Theorem `exists_empiricalProbabilityState`. -/
-theorem exists_empiricalProbabilityState
+theorem exists_empiricalProbabilityState {α : Type*} [Fintype α]
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
     ∃ P : ProbabilityDist α, ∀ x : α, P x = empiricalDistribution N x :=
   ⟨empiricalProbabilityState N hN, fun _ => rfl⟩
@@ -64,9 +64,9 @@ end CountsToProbability
 section CountsToHolographic
 
 variable (n : Nat)
-variable {α X : Type}
+variable {α : Type*} {X : Type*}
   [Fintype α]
-  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
+  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X] [FiniteDimensional ℝ X]
 
 /--
 Count-first holographic package:
@@ -260,8 +260,8 @@ end CountInducedFlow
 section CountsToHolographicDerivedFlow
 
 variable (n : Nat)
-variable {X : Type}
-  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
+variable {X : Type*}
+  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X] [FiniteDimensional ℝ X]
 
 /--
 Count-first holographic package with derived flow:

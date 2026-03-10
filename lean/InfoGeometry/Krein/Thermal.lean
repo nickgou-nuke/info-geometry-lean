@@ -5,10 +5,10 @@ import Mathlib.Analysis.Normed.Operator.Basic
 
 section KreinThermal
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Endomorphism algebra of the doubled space. -/
-abbrev AlgebraEnd (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] :=
+abbrev AlgebraEnd (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] :=
   DoubledSpace E →L[ℝ] DoubledSpace E
 
 /-- `AlgebraEnd` inherits bounded scalar multiplication from its normed-space structure. -/

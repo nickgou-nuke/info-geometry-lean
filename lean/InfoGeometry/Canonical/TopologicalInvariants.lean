@@ -7,7 +7,9 @@ open InfoGeometry.Canonical.SpectralInference
 open InfoGeometry.Canonical.InformationTorsion
 open InfoGeometry.Convex
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
+section LoopLevel
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
 A Bayesian Loop: a periodic discrete path in belief space.
@@ -28,7 +30,6 @@ noncomputable def informationChernSimons (L : BayesianLoop E) (IST : InfoSpectra
   -- Loop-closing defect measured by the terminal-to-initial divergence.
   IST.H.divergence (L.γ L.N) (L.γ 0)
 
-omit [FiniteDimensional ℝ E] in
 /--
 Bridge theorem: In a flat information manifold with zero torsion, the
 Chern-Simons winding number is identically zero (a topological invariant).
@@ -38,15 +39,24 @@ theorem cs_invariant_of_flat (L : BayesianLoop E) (IST : InfoSpectralTriple E)
     informationChernSimons L IST = 0 := by
   simp [informationChernSimons, L.periodic]
 
+end LoopLevel
+
+section ChiralIndex
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [FiniteDimensional ℝ E]
+
 /--
 Topological Index derived from Geometric Chirality.
 For a Chiral Spectral Triple, the anomaly scale ε itself provides
 a topological measure of the manifold's non-commutativity.
-By the Atiyah-Singer theorem analogue for Information Geometry, 
+By the Atiyah-Singer theorem analogue for Information Geometry,
 this relates the analytical gap [P_D, P_MP] to topological defects.
 -/
 noncomputable def chiralAnomalyIndex (CST : ChiralSpectralTriple E) : ℝ :=
   -- ε weighted by the Drazin-projector trace: anomaly strength times active spectral rank.
   CST.epsilon * LinearMap.trace ℝ E (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection CST.D CST.DD).toLinearMap
+
+end ChiralIndex
 
 end InfoGeometry.Canonical.TopologicalInvariants

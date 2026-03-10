@@ -40,14 +40,14 @@ end AbstractSignatures
 
 section Realizations
 
-variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
 variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs]
 
 /--
 Explicit realization map from the concrete finite doubled-space operator model
 into an abstract operator algebra.
 -/
-structure AQFTOperatorRealization where
+structure AQFTOperatorRealization (F : Type*) [NormedAddCommGroup F] [NormedSpace ℝ F] where
   realize : AlgebraEnd F → Obs
 
 /-- Theorem `cstarReady_of_instance`. -/
@@ -68,28 +68,45 @@ section ConcreteHilbertModels
 
 /-! ### Real Hilbert model (instantiates the AQFT interface directly) -/
 
-variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Real Hilbert bounded-operator algebra (adjoint/star model). -/
 abbrev RealHilbertObs
-    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
   E →L[ℝ] E
 
 /-- First-leg embedding `x ↦ (x,0)` into doubled space. -/
-def firstLegEmbedding : E →L[ℝ] DoubledSpace E where
+def firstLegEmbedding : E →L[ℝ] InfoGeometry.Krein.DoubledSpace E where
   toLinearMap :=
-    { toFun := fun x => (x, 0)
-      map_add' := by intro x y; simp
-      map_smul' := by intro a x; simp }
-  cont := by continuity
+    { toFun := fun x => InfoGeometry.Krein.toDoubled x (0 : E)
+      map_add' := by
+        intro x y
+        simpa using
+          (InfoGeometry.Krein.add_toDoubled
+            (x := x) (ξ := (0 : E)) (y := y) (η := (0 : E))).symm
+      map_smul' := by
+        intro a x
+        simpa using
+          (InfoGeometry.Krein.smul_toDoubled
+            (c := a) (x := x) (ξ := (0 : E))).symm }
+  cont := by
+    simpa [InfoGeometry.Krein.toDoubled] using
+      (WithLp.prod_continuous_toLp (p := 2) (α := E) (β := E)).comp
+        (continuous_id.prodMk (continuous_const (y := (0 : E))))
 
 /-- First-leg projection `(x,y) ↦ x` from doubled space. -/
-def firstLegProjection : DoubledSpace E →L[ℝ] E where
+def firstLegProjection : InfoGeometry.Krein.DoubledSpace E →L[ℝ] E where
   toLinearMap :=
-    { toFun := fun v => v.1
-      map_add' := by intro x y; rfl
-      map_smul' := by intro a x; rfl }
-  cont := by continuity
+    { toFun := fun v => InfoGeometry.Krein.DoubledSpace.fst v
+      map_add' := by
+        intro v w
+        simp [InfoGeometry.Krein.DoubledSpace.fst]
+      map_smul' := by
+        intro a v
+        simp [InfoGeometry.Krein.DoubledSpace.fst] }
+  cont := by
+    simpa [InfoGeometry.Krein.DoubledSpace.fst] using
+      WithLp.continuous_fst (p := 2) (α := E) (β := E)
 
 /-- Compression of doubled operators onto the first Hilbert leg. -/
 def firstLegCompression (A : AlgebraEnd E) : RealHilbertObs E :=
@@ -97,7 +114,7 @@ def firstLegCompression (A : AlgebraEnd E) : RealHilbertObs E :=
 
 /-- Concrete realization into real Hilbert bounded operators via first-leg compression. -/
 def realHilbertCompressionRealization :
-    AQFTOperatorRealization (F := E) (Obs := RealHilbertObs E) where
+    AQFTOperatorRealization E (Obs := RealHilbertObs E) where
   realize := firstLegCompression (E := E)
 
 /-- Theorem `realHilbertOp_cstarReady`. -/
@@ -112,33 +129,49 @@ theorem realHilbertOp_vonNeumannReady :
 
 /-! ### Complex Hilbert model (adjoint/star bounded operators) -/
 
-variable {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
 
 /-- Complex doubled operator source type (complex-linear counterpart). -/
 abbrev ComplexHilbertOp
-    (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] :=
-  DoubledSpace H →L[ℂ] DoubledSpace H
+    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] :=
+  InfoGeometry.Krein.DoubledSpace H →L[ℂ] InfoGeometry.Krein.DoubledSpace H
 
 /-- Complex Hilbert bounded-operator algebra (adjoint/star model). -/
 abbrev ComplexHilbertObs
-    (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] :=
+    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] :=
   H →L[ℂ] H
 
 /-- Complex first-leg embedding `x ↦ (x,0)` into doubled space. -/
-def complexFirstLegEmbedding : H →L[ℂ] DoubledSpace H where
+def complexFirstLegEmbedding : H →L[ℂ] InfoGeometry.Krein.DoubledSpace H where
   toLinearMap :=
-    { toFun := fun x => (x, 0)
-      map_add' := by intro x y; simp
-      map_smul' := by intro a x; simp }
-  cont := by continuity
+    { toFun := fun x => InfoGeometry.Krein.toDoubled x (0 : H)
+      map_add' := by
+        intro x y
+        simpa using
+          (InfoGeometry.Krein.add_toDoubled
+            (x := x) (ξ := (0 : H)) (y := y) (η := (0 : H))).symm
+      map_smul' := by
+        intro a x
+        apply (WithLp.ofLp_injective 2)
+        simp [InfoGeometry.Krein.toDoubled, smul_zero] }
+  cont := by
+    simpa [InfoGeometry.Krein.toDoubled] using
+      (WithLp.prod_continuous_toLp (p := 2) (α := H) (β := H)).comp
+        (continuous_id.prodMk (continuous_const (y := (0 : H))))
 
 /-- Complex first-leg projection `(x,y) ↦ x` from doubled space. -/
-def complexFirstLegProjection : DoubledSpace H →L[ℂ] H where
+def complexFirstLegProjection : InfoGeometry.Krein.DoubledSpace H →L[ℂ] H where
   toLinearMap :=
-    { toFun := fun v => v.1
-      map_add' := by intro x y; rfl
-      map_smul' := by intro a x; rfl }
-  cont := by continuity
+    { toFun := fun v => InfoGeometry.Krein.DoubledSpace.fst v
+      map_add' := by
+        intro v w
+        simp [InfoGeometry.Krein.DoubledSpace.fst]
+      map_smul' := by
+        intro a v
+        simp [InfoGeometry.Krein.DoubledSpace.fst] }
+  cont := by
+    simpa [InfoGeometry.Krein.DoubledSpace.fst] using
+      WithLp.continuous_fst (p := 2) (α := H) (β := H)
 
 /-- Complex compression of doubled operators onto the first Hilbert leg. -/
 def complexFirstLegCompression (A : ComplexHilbertOp H) : ComplexHilbertObs H :=
@@ -212,7 +245,7 @@ theorem grandCanonicalFockEulerStep_with_vonNeumannRealization
     (scalar Λ : ℝ)
     (V : SplitVielbein Kgeo x)
     (Γ : SpinConnection Kgeo x V)
-    (ψ : DoubledSpace E)
+    (ψ : InfoGeometry.Krein.DoubledSpace E)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
     IsVonNeumannReady (Obs := Obs)
       ∧ grandCanonicalFockEulerStep (E := E) η B H
@@ -257,7 +290,7 @@ theorem aqft_interface_package_with_realizations
     (scalar Λ : ℝ)
     (V : SplitVielbein Kgeo x)
     (Γ : SpinConnection Kgeo x V)
-    (ψ : DoubledSpace E)
+    (ψ : InfoGeometry.Krein.DoubledSpace E)
     (hControl : SinkhornKMSControl n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
     IsCStarReady (Obs := ObsKMS)
@@ -304,7 +337,7 @@ theorem aqft_interface_package_realHilbert
     (scalar Λ : ℝ)
     (V : SplitVielbein Kgeo x)
     (Γ : SpinConnection Kgeo x V)
-    (ψ : DoubledSpace E)
+    (ψ : InfoGeometry.Krein.DoubledSpace E)
     (hControl : SinkhornKMSControl n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
     IsCStarReady (Obs := RealHilbertObs F)

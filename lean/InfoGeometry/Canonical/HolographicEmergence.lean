@@ -44,7 +44,7 @@ end TimeFlow
 
 section AnomalyScale
 
-variable {E : Type}
+variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Anomaly-generated scale phase state (chiral branch). -/
@@ -85,8 +85,9 @@ end TorsionHysteresis
 
 section BoundaryTwistor
 
-variable {E : Type}
+variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [FiniteDimensional ℝ E]
 
 /-- Boundary closure: bulk variation cancels boundary anomaly. -/
 theorem boundaryAnomalyCancellation
@@ -97,7 +98,7 @@ theorem boundaryAnomalyCancellation
 omit [CompleteSpace E] in
 /-- Null vacuum-apex representative lifts to a twistor point. -/
 theorem vacuumApexNull_lifts_to_twistor
-    (Q : QuadraticForm ℝ (DoubledSpace E))
+    (Q : QuadraticForm ℝ (InfoGeometry.Krein.DoubledSpace E))
     (v : UnnormalizedProjectiveState (E := E))
     (hNull : IsVacuumApexNull (E := E) Q v) :
     ∃ t : DoubledTwistorSpace (E := E) Q, t = vacuumApexTwistor (E := E) Q v hNull := by
@@ -108,8 +109,9 @@ end BoundaryTwistor
 section Package
 
 variable (n : Nat)
-variable {X : Type}
+variable {X : Type*}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
+  [FiniteDimensional ℝ X]
 
 /--
 Full constructive holographic-emergence package in one theorem:
@@ -122,7 +124,7 @@ theorem holographicEmergence_package
     (Tw : TwistedInference X)
     (L : BayesianLoop X)
     (IST : InfoSpectralTriple X)
-    (Q : QuadraticForm ℝ (DoubledSpace X))
+    (Q : QuadraticForm ℝ (InfoGeometry.Krein.DoubledSpace X))
     (v : UnnormalizedProjectiveState (E := X))
     (hNull : IsVacuumApexNull (E := X) Q v) :
     EmergentTimeFlow n Tflow

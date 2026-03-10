@@ -26,10 +26,10 @@ open scoped BigOperators
 
 -- EmpiricalCounts: type for empirical counts on a finite set
 
-structure EmpiricalCounts (α : Type) where
+structure EmpiricalCounts (α : Type*) where
   count : α → ℕ
 
-instance {α : Type} : CoeFun (EmpiricalCounts α) (fun _ => α → ℕ) where
+instance {α : Type*} : CoeFun (EmpiricalCounts α) (fun _ => α → ℕ) where
   coe N := N.count
 
 
@@ -225,7 +225,7 @@ lemma FinProb.exists_pos {α : Type*} [Fintype α] (q : FinProb α) : ∃ a, 0 <
   Lean defines Real.log 0 = 0, so analytic theorems may require strict positivity of probabilities.
 -/
 
-variable {α : Type} [Fintype α]
+variable {α : Type*} [Fintype α]
 
 
 /-- Expectation under a finite distribution. -/

@@ -7,8 +7,16 @@ import InfoGeometry.Projective.Rays
 Bundle-level packaging of prequantum data over projective doubled-state rays.
 -/
 
-namespace InfoGeometry.Prequantum.Bundle
-end InfoGeometry.Prequantum.Bundle
+/-- Scalarized holonomy scale attached to prequantum connection data. -/
+def PrequantumData.holonomyScale (P : PrequantumData) : ℝ :=
+  P.curvatureScale
+
+theorem PrequantumData.holonomyScale_eq_omega_over_hbar
+    (P : PrequantumData) :
+    P.holonomyScale = P.omegaScale / P.hbar :=
+  P.curvature_law
+
+namespace InfoGeometry.Prequantum
 
 section KreinClifford
 
@@ -29,15 +37,6 @@ structure ProjectivePrequantumBundle where
   cases hBase
   cases hData
   rfl
-
-/-- Scalarized holonomy scale attached to prequantum connection data. -/
-def PrequantumData.holonomyScale (P : PrequantumData) : ℝ :=
-  P.curvatureScale
-
-theorem PrequantumData.holonomyScale_eq_omega_over_hbar
-    (P : PrequantumData) :
-    P.holonomyScale = P.omegaScale / P.hbar :=
-  P.curvature_law
 
 namespace ProjectivePrequantumBundle
 
@@ -68,3 +67,5 @@ noncomputable instance : MulAction Gauge (ProjectivePrequantumBundle (E := E)) w
 end ProjectivePrequantumBundle
 
 end KreinClifford
+
+end InfoGeometry.Prequantum

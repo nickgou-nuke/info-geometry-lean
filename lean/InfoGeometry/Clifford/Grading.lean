@@ -1,4 +1,4 @@
-import InfoGeometry.Clifford.Cl11
+import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Core.Involution
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic.Abel

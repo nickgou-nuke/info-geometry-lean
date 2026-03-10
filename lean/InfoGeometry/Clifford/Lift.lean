@@ -1,4 +1,4 @@
-import InfoGeometry.Clifford.Cl11
+import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Clifford.SplitQ11
 import InfoGeometry.Krein.Representation
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic

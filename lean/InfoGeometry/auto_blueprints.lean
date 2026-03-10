@@ -90,7 +90,7 @@ attribute [blueprint] InfoGeometry.instCoeFunEmpiricalCountsForallNat
 attribute [blueprint] InfoGeometry.instCoeFunFinProbForallReal
 attribute [blueprint] InfoGeometry.instCoeFunProbabilityDistForallReal
 attribute [blueprint] InfoGeometry.instCoeFunStrictProbabilityDistForallReal
-attribute [blueprint] InfoGeometry.klDiv
+attribute [blueprint] InfoGeometry.kl_div
 attribute [blueprint] InfoGeometry.logDensity
 attribute [blueprint] InfoGeometry.normalize
 attribute [blueprint] InfoGeometry.normalize._proof_1

@@ -1,6 +1,6 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
-import InfoGeometry.Clifford.Cl11
+import InfoGeometry.Krein.DoubledSpace
 
 namespace InfoGeometry.Geometry
 

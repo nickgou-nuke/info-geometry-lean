@@ -1,4 +1,4 @@
-import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Krein.DoubledSpaceMatrix
 
 open scoped Matrix
 

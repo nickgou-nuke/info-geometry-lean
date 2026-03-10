@@ -113,7 +113,7 @@ theorem max_ent_lagrange_multiplier_gibbs
     ∀ q, q ∈ MaxEntConstraint (n := n) f E → entropy q 1 ≤ entropy p 1 := by
   intro q hq
   have hKLnonneg :
-      0 ≤ InfoGeometry.klDiv
+      0 ≤ InfoGeometry.kl_div
         (probDistOfSimplex (n := n) q hq.1)
         (gibbsDist (n := n) f lam) := by
     apply InfoGeometry.KL.klDiv_nonneg_of_fullSupport
@@ -121,11 +121,11 @@ theorem max_ent_lagrange_multiplier_gibbs
     show 0 < (gibbsDist (n := n) f lam).prob i
     simpa [gibbsDist] using gibbs_pos (f := f) (lam := lam) i
   have hKLexpand :
-      InfoGeometry.klDiv
+      InfoGeometry.kl_div
         (probDistOfSimplex (n := n) q hq.1)
         (gibbsDist (n := n) f lam)
         = ∑ i, q i * (Real.log (q i) - Real.log (gibbs f lam i)) := by
-    unfold InfoGeometry.klDiv InfoGeometry.expectation InfoGeometry.logDensity
+    unfold InfoGeometry.kl_div InfoGeometry.expectation InfoGeometry.logDensity
     simp [probDistOfSimplex, gibbsDist]
   have hkl :
       0 ≤ (∑ i, q i * Real.log (q i)) - (∑ i, q i * Real.log (gibbs f lam i)) := by

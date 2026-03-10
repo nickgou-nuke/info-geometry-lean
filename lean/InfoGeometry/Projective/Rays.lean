@@ -1,10 +1,14 @@
-import InfoGeometry.Clifford.Cl11
+import InfoGeometry.Krein.DoubledSpace
 
 /-!
 # InfoGeometry.Projective.Rays
 
 Projective ray quotient of doubled states by nonzero real scaling.
 -/
+
+namespace InfoGeometry.Projective
+
+open InfoGeometry.Krein
 
 section KreinClifford
 
@@ -13,46 +17,40 @@ variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 /-- Cone-projectivization dictionary: vectors represent the same ray
 iff they differ by a nonzero real scalar.
 This includes the distinguished zero class (vacuum) in the quotient. -/
-def SameRayDoubled (v w : DoubledSpace E) : Prop :=
+def same_ray (v w : DoubledSpace E) : Prop :=
   ∃ a : ℝ, a ≠ 0 ∧ w = a • v
 
-lemma sameRay_refl {v : DoubledSpace E} : SameRayDoubled v v := by
-  refine ⟨1, by norm_num, ?_⟩
-  simp
+lemma same_ray_refl (v : DoubledSpace E) : same_ray v v :=
+  ⟨1, one_ne_zero, by simp⟩
 
-lemma sameRay_symm {v w : DoubledSpace E} :
-    SameRayDoubled v w → SameRayDoubled w v := by
+lemma same_ray_symm {v w : DoubledSpace E} :
+    same_ray v w → same_ray w v := by
   rintro ⟨a, ha, rfl⟩
   refine ⟨a⁻¹, inv_ne_zero ha, ?_⟩
-  calc
-    v = (a⁻¹ * a) • v := by simp [ha]
-    _ = a⁻¹ • (a • v) := by simp [smul_smul]
+  simp [ha]
 
-lemma sameRay_trans {u v w : DoubledSpace E} :
-    SameRayDoubled u v → SameRayDoubled v w → SameRayDoubled u w := by
+lemma same_ray_trans {u v w : DoubledSpace E} :
+    same_ray u v → same_ray v w → same_ray u w := by
   rintro ⟨a, ha, rfl⟩ ⟨b, hb, rfl⟩
   refine ⟨b * a, mul_ne_zero hb ha, ?_⟩
-  simp [smul_smul, mul_comm]
+  simp [mul_smul]
 
 /-- Setoid for projectivized doubled states (rays). -/
-def sameRaySetoid : Setoid (DoubledSpace E) where
-  r := SameRayDoubled
-  iseqv := ⟨
-    by intro x; exact sameRay_refl (E := E),
-    by intro x y hxy; exact sameRay_symm (E := E) hxy,
-    by intro x y z hxy hyz; exact sameRay_trans (E := E) hxy hyz
-  ⟩
+instance sameRaySetoid {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] : Setoid (DoubledSpace E) where
+  r := same_ray
+  iseqv := Equivalence.mk same_ray_refl same_ray_symm same_ray_trans
 
 /-- Cone-projective states: quotient of doubled states by nonzero real rescaling.
 Unlike strict projectivization, this retains a distinguished zero class. -/
-def ProjectiveState : Type _ := Quotient (sameRaySetoid (E := E))
+abbrev ProjectiveState (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] : Type :=
+  Quotient (sameRaySetoid (E := E))
 
 /-- Canonical projection from a doubled state to its projective ray class. -/
-def projectivize (v : DoubledSpace E) : ProjectiveState (E := E) :=
-  Quotient.mk'' v
+def projectivize (v : DoubledSpace E) : ProjectiveState E :=
+  Quotient.mk sameRaySetoid v
 
 lemma projectivize_eq_iff {v w : DoubledSpace E} :
-    projectivize (E := E) v = projectivize (E := E) w ↔ SameRayDoubled (E := E) v w := by
+    projectivize v = projectivize w ↔ same_ray v w := by
   constructor
   · intro h
     exact Quotient.exact h
@@ -72,9 +70,9 @@ instance : MulAction (Gauge) (DoubledSpace E) where
     intro u v w
     simp [smul_smul]
 
-/-- `SameRayDoubled` is exactly the orbit relation for the gauge action by `ℝˣ`. -/
-lemma sameRayDoubled_iff_gauge {v w : DoubledSpace E} :
-    SameRayDoubled (E := E) v w ↔ ∃ u : Gauge, w = u • v := by
+/-- `same_ray` is exactly the orbit relation for the gauge action by `ℝˣ`. -/
+lemma same_ray_iff_gauge {v w : DoubledSpace E} :
+    same_ray v w ↔ ∃ u : Gauge, w = u • v := by
   constructor
   · rintro ⟨a, ha, hwa⟩
     refine ⟨Units.mk0 a ha, ?_⟩
@@ -85,13 +83,15 @@ lemma sameRayDoubled_iff_gauge {v w : DoubledSpace E} :
 
 lemma projectivize_eq_projectivize_smul
     (u : Gauge) (v : DoubledSpace E) :
-    projectivize (E := E) v = projectivize (E := E) (u • v) := by
+    projectivize v = projectivize (u • v) := by
   apply Quotient.sound
-  exact (sameRayDoubled_iff_gauge (E := E)).2 ⟨u, rfl⟩
+  exact same_ray_iff_gauge.2 ⟨u, rfl⟩
 
 @[simp] lemma projectivize_smul
     (u : Gauge) (v : DoubledSpace E) :
-    projectivize (E := E) (u • v) = projectivize (E := E) v := by
-  simpa using (projectivize_eq_projectivize_smul (E := E) u v).symm
+    projectivize (u • v) = projectivize v := by
+  simpa using (projectivize_eq_projectivize_smul u v).symm
 
 end KreinClifford
+
+end InfoGeometry.Projective

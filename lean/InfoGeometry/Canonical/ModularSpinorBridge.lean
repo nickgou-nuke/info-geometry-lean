@@ -1,6 +1,6 @@
 import InfoGeometry.Krein.Modular
-import InfoGeometry.Clifford.Cl11
-import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Krein.DoubledSpaceMatrix
 import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Quantum.Fock
 import InfoGeometry.Canonical.KaehlerGeometry

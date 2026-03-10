@@ -5,291 +5,200 @@ import InfoGeometry.Krein.Metric
 # InfoGeometry.Projective.Null
 
 Null and grading predicates on projective doubled-space rays.
+Utilizes the canonical Krein-Clifford definitions.
 -/
 
-section KreinClifford
+namespace InfoGeometry.Projective
 
-variable {E : Type} [NormedAddCommGroup E]
-
-section ProjectiveNull
+open InfoGeometry.Krein
 
 section GradeNull
 
-variable [NormedSpace ℝ E]
-
-@[simp] lemma vacuum_def :
-    vacuum (E := E) = projectivize (E := E) (0 : DoubledSpace E) := rfl
+variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 lemma inGradePlus_smul (a : ℝ) {v : DoubledSpace E}
-    (hv : inGradePlus (E := E) v) :
-    inGradePlus (E := E) (a • v) := by
-  unfold inGradePlus at *
-  calc
-    modularJ (E := E) (a • v) = a • modularJ (E := E) v := by
-      exact (modularJ (E := E)).map_smul a v
-    _ = a • v := by
-      rw [hv]
+    (hv : inGradePlus v) :
+    inGradePlus (a • v) := by
+  rw [inGradePlus] at *
+  simp [hv]
 
 lemma inGradeMinus_smul (a : ℝ) {v : DoubledSpace E}
-    (hv : inGradeMinus (E := E) v) :
-    inGradeMinus (E := E) (a • v) := by
-  unfold inGradeMinus at *
-  calc
-    modularJ (E := E) (a • v) = a • modularJ (E := E) v := by
-      exact (modularJ (E := E)).map_smul a v
-    _ = a • (-v) := by
-      rw [hv]
-    _ = -(a • v) := by
-      simp [smul_neg]
+    (hv : inGradeMinus v) :
+    inGradeMinus (a • v) := by
+  rw [inGradeMinus] at *
+  simp [hv]
 
 lemma inGradePlus_smul_iff {a : ℝ} (ha : a ≠ 0) (v : DoubledSpace E) :
-    inGradePlus (E := E) (a • v) ↔ inGradePlus (E := E) v := by
+    inGradePlus (a • v) ↔ inGradePlus v := by
   constructor
   · intro hv
-    have : inGradePlus (E := E) (a⁻¹ • (a • v)) :=
-      inGradePlus_smul (E := E) a⁻¹ hv
+    have : inGradePlus (a⁻¹ • (a • v)) := inGradePlus_smul a⁻¹ hv
     simpa [smul_smul, inv_mul_cancel₀ ha] using this
   · intro hv
-    simpa using inGradePlus_smul (E := E) a hv
+    exact inGradePlus_smul a hv
 
 lemma inGradeMinus_smul_iff {a : ℝ} (ha : a ≠ 0) (v : DoubledSpace E) :
-    inGradeMinus (E := E) (a • v) ↔ inGradeMinus (E := E) v := by
+    inGradeMinus (a • v) ↔ inGradeMinus v := by
   constructor
   · intro hv
-    have : inGradeMinus (E := E) (a⁻¹ • (a • v)) :=
-      inGradeMinus_smul (E := E) a⁻¹ hv
+    have : inGradeMinus (a⁻¹ • (a • v)) := inGradeMinus_smul a⁻¹ hv
     simpa [smul_smul, inv_mul_cancel₀ ha] using this
   · intro hv
-    simpa using inGradeMinus_smul (E := E) a hv
+    exact inGradeMinus_smul a hv
 
 lemma inGradePlus_sameRay_iff {v w : DoubledSpace E}
-    (hvw : SameRayDoubled (E := E) v w) :
-    inGradePlus (E := E) v ↔ inGradePlus (E := E) w := by
+    (hvw : SameRayDoubled v w) :
+    inGradePlus v ↔ inGradePlus w := by
   rcases hvw with ⟨a, ha, rfl⟩
-  simpa using (inGradePlus_smul_iff (E := E) (v := v) ha).symm
+  rw [inGradePlus_smul_iff ha]
 
 lemma inGradeMinus_sameRay_iff {v w : DoubledSpace E}
-    (hvw : SameRayDoubled (E := E) v w) :
-    inGradeMinus (E := E) v ↔ inGradeMinus (E := E) w := by
+    (hvw : SameRayDoubled v w) :
+    inGradeMinus v ↔ inGradeMinus w := by
   rcases hvw with ⟨a, ha, rfl⟩
-  simpa using (inGradeMinus_smul_iff (E := E) (v := v) ha).symm
+  rw [inGradeMinus_smul_iff ha]
 
 /-- Grade `+` rays, well-defined on the projective quotient. -/
-def IsGradePlusRay : ProjectiveState (E := E) → Prop :=
+def IsGradePlusRay : ProjectiveState E → Prop :=
   Quotient.lift
-    (fun v : DoubledSpace E => inGradePlus (E := E) v)
+    (fun v : DoubledSpace E => inGradePlus v)
     (by
       intro v w hvw
-      exact propext (inGradePlus_sameRay_iff (E := E) (v := v) (w := w) hvw))
+      exact propext (inGradePlus_sameRay_iff hvw))
 
 /-- Grade `-` rays, well-defined on the projective quotient. -/
-def IsGradeMinusRay : ProjectiveState (E := E) → Prop :=
+def IsGradeMinusRay : ProjectiveState E → Prop :=
   Quotient.lift
-    (fun v : DoubledSpace E => inGradeMinus (E := E) v)
+    (fun v : DoubledSpace E => inGradeMinus v)
     (by
       intro v w hvw
-      exact propext (inGradeMinus_sameRay_iff (E := E) (v := v) (w := w) hvw))
+      exact propext (inGradeMinus_sameRay_iff hvw))
 
 @[simp] lemma IsGradePlusRay_projectivize (v : DoubledSpace E) :
-    IsGradePlusRay (E := E) (projectivize (E := E) v) ↔ inGradePlus (E := E) v := Iff.rfl
+    IsGradePlusRay (projectivize v) ↔ inGradePlus v := Iff.rfl
 
 @[simp] lemma IsGradeMinusRay_projectivize (v : DoubledSpace E) :
-    IsGradeMinusRay (E := E) (projectivize (E := E) v) ↔ inGradeMinus (E := E) v := Iff.rfl
+    IsGradeMinusRay (projectivize v) ↔ inGradeMinus v := Iff.rfl
 
 /-- Coordinate form for grade `+`: `J(x,ξ)=(x,ξ)` iff `ξ=x`. -/
 @[simp] lemma inGradePlus_iff_coords (x ξ : E) :
-    inGradePlus (E := E) (x, ξ) ↔ ξ = x := by
-  unfold inGradePlus
+    inGradePlus (toDoubled x ξ) ↔ ξ = x := by
+  rw [inGradePlus]
   constructor
   · intro h
-    have hx : ξ = x := by
-      simpa [InfoGeometry.Krein.modularJ, InfoGeometry.Krein.toDoubled] using
-        congrArg (fun z : InfoGeometry.Krein.DoubledSpace E => z.fst) h
-    exact hx
+    have h_snd : (modularJ E (toDoubled x ξ)).snd = (toDoubled x ξ).snd := congrArg DoubledSpace.snd h
+    simpa using h_snd
   · intro h
-    cases h
-    simp
+    subst h
+    simp [modularJ_apply]
 
 /-- Coordinate form for grade `-`: `J(x,ξ)=-(x,ξ)` iff `ξ=-x`. -/
 @[simp] lemma inGradeMinus_iff_coords (x ξ : E) :
-    inGradeMinus (E := E) (x, ξ) ↔ ξ = -x := by
-  unfold inGradeMinus
+    inGradeMinus (toDoubled x ξ) ↔ ξ = -x := by
+  rw [inGradeMinus]
   constructor
   · intro h
-    have hx : ξ = -x := by
-      simpa [InfoGeometry.Krein.modularJ, InfoGeometry.Krein.toDoubled] using
-        congrArg (fun z : InfoGeometry.Krein.DoubledSpace E => z.fst) h
-    exact hx
+    have h_snd : (modularJ E (toDoubled x ξ)).snd = (-(toDoubled x ξ)).snd := congrArg DoubledSpace.snd h
+    simpa using h_snd
   · intro h
-    cases h
-    simp
+    subst h
+    simp [modularJ_apply]
 
 /-- “Grade-null” rays: points lying in either grading eigenspace. -/
-def IsGradeNullRay (q : ProjectiveState (E := E)) : Prop :=
-  IsGradePlusRay (E := E) q ∨ IsGradeMinusRay (E := E) q
+def IsGradeNullRay (q : ProjectiveState E) : Prop :=
+  IsGradePlusRay q ∨ IsGradeMinusRay q
 
-lemma IsGradePlusRay_vacuum : IsGradePlusRay (E := E) (vacuum (E := E)) := by
-  rw [vacuum_def, IsGradePlusRay_projectivize]
-  unfold inGradePlus
-  simpa using (modularJ (E := E)).map_zero
+lemma IsGradePlusRay_vacuum : IsGradePlusRay (vacuum E) := by
+  simp [vacuum, inGradePlus]
 
-lemma IsGradeMinusRay_vacuum : IsGradeMinusRay (E := E) (vacuum (E := E)) := by
-  rw [vacuum_def, IsGradeMinusRay_projectivize]
-  unfold inGradeMinus
-  simpa using (modularJ (E := E)).map_zero
+lemma IsGradeMinusRay_vacuum : IsGradeMinusRay (vacuum E) := by
+  simp [vacuum, inGradeMinus]
 
-lemma IsGradeNullRay_vacuum : IsGradeNullRay (E := E) (vacuum (E := E)) := by
-  exact Or.inl (IsGradePlusRay_vacuum (E := E))
+lemma IsGradeNullRay_vacuum : IsGradeNullRay (vacuum E) :=
+  Or.inl IsGradePlusRay_vacuum
 
 /-- A ray cannot be both grade `+` and grade `-` unless it is the vacuum ray. -/
 lemma gradePlus_and_gradeMinus_implies_vacuum
-    (q : ProjectiveState (E := E))
-    (hqPlus : IsGradePlusRay (E := E) q)
-    (hqMinus : IsGradeMinusRay (E := E) q) :
-    q = vacuum (E := E) := by
+    (q : ProjectiveState E)
+    (hqPlus : IsGradePlusRay q)
+    (hqMinus : IsGradeMinusRay q) :
+    q = vacuum E := by
   revert hqPlus hqMinus
   refine Quotient.inductionOn q ?_
   intro v hvPlus hvMinus
-  have hvPlus' : inGradePlus (E := E) v := by
-    simpa using hvPlus
-  have hvMinus' : inGradeMinus (E := E) v := by
-    simpa using hvMinus
-  rcases v with ⟨x, ξ⟩
-  have hξx : ξ = x := (inGradePlus_iff_coords (E := E) x ξ).1 hvPlus'
-  have hξnegx : ξ = -x := (inGradeMinus_iff_coords (E := E) x ξ).1 hvMinus'
-  have hxneg : x = -x := by
-    calc
-      x = ξ := hξx.symm
-      _ = -x := hξnegx
+  obtain ⟨x, ξ⟩ := WithLp.ofLp v
+  have hv : v = toDoubled x ξ := by simp
+  rw [hv] at hvPlus hvMinus
+  have hξx : ξ = x := (inGradePlus_iff_coords x ξ).mp hvPlus
+  have hξnegx : ξ = -x := (inGradeMinus_iff_coords x ξ).mp hvMinus
+  have hxneg : x = -x := hξx.symm.trans hξnegx
   have hx0 : x = 0 := by
-    have hhalfEq : (1 / 2 : ℝ) • x = (1 / 2 : ℝ) • (-x) := by
-      exact congrArg (fun t : E => (1 / 2 : ℝ) • t) hxneg
-    calc
-      x = (1 : ℝ) • x := by simp
-      _ = (((1 / 2 : ℝ) + (1 / 2 : ℝ)) : ℝ) • x := by norm_num
-      _ = (1 / 2 : ℝ) • x + (1 / 2 : ℝ) • x := by simp [add_smul]
-      _ = (1 / 2 : ℝ) • x + (1 / 2 : ℝ) • (-x) := by rw [hhalfEq]
-      _ = (1 / 2 : ℝ) • x + -((1 / 2 : ℝ) • x) := by simp [smul_neg]
-      _ = 0 := by simp
-  have hξ0 : ξ = 0 := by
-    simpa [hx0] using hξx
-  rw [vacuum_def]
-  change projectivize (E := E) (x, ξ) = projectivize (E := E) ((0 : E), (0 : E))
-  simp [hx0, hξ0]
+    apply_fun (fun t => (1/2 : ℝ) • t) at hxneg
+    simpa [smul_neg, sub_eq_zero] using add_halves x
+  have hξ0 : ξ = 0 := hx0 ▸ hξx
+  simp [vacuum, hv, hx0, hξ0]
 
 end GradeNull
 
 section MetricNull
 
-variable [InnerProductSpace ℝ E] [CompleteSpace E]
-
-local notation "Hess" => InfoGeometry.Krein.hessianIndefiniteForm
-
-private lemma Hess_smul_left (a : ℝ) (v w : DoubledSpace E) :
-    Hess (a • v) w = a * Hess v w := by
-  simpa [InfoGeometry.Krein.hessianIndefiniteForm] using
-    (KreinSpace.kreinInner_smul_left (c := a) v w)
-
-private lemma Hess_smul_right (a : ℝ) (v w : DoubledSpace E) :
-    Hess v (a • w) = a * Hess v w := by
-  simpa [InfoGeometry.Krein.hessianIndefiniteForm] using
-    (KreinSpace.kreinInner_smul_right (c := a) v w)
-
-private lemma Hess_smul_smul (a : ℝ) (v w : DoubledSpace E) :
-    Hess (a • v) (a • w) = a ^ 2 * Hess v w := by
-  rw [Hess_smul_left, Hess_smul_right]
-  ring
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- “Metric-null” / isotropic doubled vectors for the neutral Hessian form. -/
 def IsMetricNull (v : DoubledSpace E) : Prop :=
-  Hess v v = 0
+  hessianIndefiniteForm v v = 0
 
 @[simp] lemma isMetricNull_iff_norm_sq_eq (x ξ : E) :
-    IsMetricNull (E := E) (x, ξ) ↔ ‖x‖ ^ (2 : ℕ) = ‖ξ‖ ^ (2 : ℕ) := by
-  have hdiag :
-      InfoGeometry.Krein.hessianIndefiniteForm ((x, ξ) : DoubledSpace E) ((x, ξ) : DoubledSpace E)
-        = inner ℝ x x - inner ℝ ξ ξ := by
-    simpa [InfoGeometry.Krein.hessianIndefiniteForm, InfoGeometry.Krein.toDoubled] using
-      (kreinInner_prodL2 (E := E)
-        ((x, ξ) : DoubledSpace E) ((x, ξ) : DoubledSpace E))
-  constructor
-  · intro h
-    have h' : inner ℝ x x - inner ℝ ξ ξ = 0 := by
-      simpa [IsMetricNull, hdiag] using h
-    have hEq : inner ℝ x x = inner ℝ ξ ξ := sub_eq_zero.mp h'
-    simpa [real_inner_self_eq_norm_sq] using hEq
-  · intro h
-    have hEq : inner ℝ x x = inner ℝ ξ ξ := by
-      simpa [real_inner_self_eq_norm_sq] using h
-    have h' : inner ℝ x x - inner ℝ ξ ξ = 0 := sub_eq_zero.mpr hEq
-    have hnull :
-        InfoGeometry.Krein.hessianIndefiniteForm ((x, ξ) : DoubledSpace E)
-          ((x, ξ) : DoubledSpace E) = 0 := by
-      simpa [hdiag] using h'
-    simpa [IsMetricNull] using hnull
+    IsMetricNull (toDoubled x ξ) ↔ ‖x‖ ^ 2 = ‖ξ‖ ^ 2 := by
+  unfold IsMetricNull
+  simp [hessianIndefiniteForm, kreinInner_prodL2, real_inner_self_eq_norm_sq, sub_eq_zero]
 
 lemma isMetricNull_smul (a : ℝ) {v : DoubledSpace E}
-    (hv : IsMetricNull (E := E) v) :
-    IsMetricNull (E := E) (a • v) := by
+    (hv : IsMetricNull v) :
+    IsMetricNull (a • v) := by
   unfold IsMetricNull at *
-  calc
-    Hess (a • v) (a • v) = a ^ 2 * Hess v v := by
-      simpa using Hess_smul_smul a v v
-    _ = 0 := by simp [hv]
+  simp [hessianIndefiniteForm, KreinSpace.kreinInner_smul_left, KreinSpace.kreinInner_smul_right, hv]
 
-lemma isMetricNull_smul_iff (a : ℝ) (ha : a ≠ 0) (v : DoubledSpace E) :
-    IsMetricNull (E := E) (a • v) ↔ IsMetricNull (E := E) v := by
+lemma isMetricNull_smul_iff {a : ℝ} (ha : a ≠ 0) (v : DoubledSpace E) :
+    IsMetricNull (a • v) ↔ IsMetricNull v := by
   unfold IsMetricNull
-  have hs :
-      Hess (a • v) (a • v) = a ^ 2 * Hess v v := by
-    simpa using Hess_smul_smul a v v
-  constructor
-  · intro h
-    have hmul : a ^ 2 * Hess v v = 0 := by
-      simpa [hs] using h
-    have ha2 : a ^ 2 ≠ 0 := by simpa [pow_two] using (mul_ne_zero ha ha)
-    exact (mul_eq_zero.mp hmul).resolve_left ha2
-  · intro h
-    simp [hs, h]
+  simp [hessianIndefiniteForm, KreinSpace.kreinInner_smul_left, KreinSpace.kreinInner_smul_right, ha]
 
 lemma isMetricNull_sameRay_iff {v w : DoubledSpace E}
-    (hvw : SameRayDoubled (E := E) v w) :
-    IsMetricNull (E := E) v ↔ IsMetricNull (E := E) w := by
+    (hvw : SameRayDoubled v w) :
+    IsMetricNull v ↔ IsMetricNull w := by
   rcases hvw with ⟨a, ha, rfl⟩
-  simpa using (isMetricNull_smul_iff (E := E) a ha v).symm
+  rw [isMetricNull_smul_iff ha]
 
 /-- Metric-null rays, well-defined on the projective quotient. -/
-def IsMetricNullRay : ProjectiveState (E := E) → Prop :=
+def IsMetricNullRay : ProjectiveState E → Prop :=
   Quotient.lift
-    (fun v : DoubledSpace E => IsMetricNull (E := E) v)
+    (fun v : DoubledSpace E => IsMetricNull v)
     (by
       intro v w hvw
-      exact propext (isMetricNull_sameRay_iff (E := E) (v := v) (w := w) hvw))
+      exact propext (isMetricNull_sameRay_iff hvw))
 
 @[simp] lemma IsMetricNullRay_projectivize (v : DoubledSpace E) :
-    IsMetricNullRay (E := E) (projectivize (E := E) v) ↔ IsMetricNull (E := E) v := Iff.rfl
+    IsMetricNullRay (projectivize v) ↔ IsMetricNull v := Iff.rfl
 
-lemma IsMetricNullRay_vacuum : IsMetricNullRay (E := E) (vacuum (E := E)) := by
-  rw [vacuum_def, IsMetricNullRay_projectivize]
-  simp [IsMetricNull, InfoGeometry.Krein.hessianIndefiniteForm]
+lemma IsMetricNullRay_vacuum : IsMetricNullRay (vacuum E) := by
+  simp [vacuum, IsMetricNull, hessianIndefiniteForm]
 
 end MetricNull
 
 section UnifiedNull
 
-variable [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Unified nullness on rays: vacuum, grade-null, or metric-null. -/
-def IsNullRay (q : ProjectiveState (E := E)) : Prop :=
-  q = vacuum (E := E) ∨
-  IsGradeNullRay (E := E) q ∨
-  IsMetricNullRay (E := E) q
+def IsNullRay (q : ProjectiveState E) : Prop :=
+  q = vacuum E ∨
+  IsGradeNullRay q ∨
+  IsMetricNullRay q
 
-lemma IsNullRay_vacuum : IsNullRay (E := E) (vacuum (E := E)) := by
-  exact Or.inl rfl
+lemma IsNullRay_vacuum : IsNullRay (vacuum E) :=
+  Or.inl rfl
 
 end UnifiedNull
 
-end ProjectiveNull
-
-end KreinClifford
+end InfoGeometry.Projective

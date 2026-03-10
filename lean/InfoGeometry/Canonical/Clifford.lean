@@ -19,7 +19,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 
-import InfoGeometry.Clifford.Cl11
+import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Lift
 import InfoGeometry.Clifford.Relations

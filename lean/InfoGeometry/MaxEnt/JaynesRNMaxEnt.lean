@@ -61,7 +61,7 @@ lemma FeasibleSetIntegrable_subset_FeasibleSet
 ## 2. Objective = KL divergence relative to a prior `μ₀`
 
 Jaynes’ “invariant measure” is the prior `μ₀`.
-MaxEnt w.r.t. `μ₀` is Min-KL: minimize `klDiv P μ₀`.
+MaxEnt w.r.t. `μ₀` is Min-KL: minimize `kl_div P μ₀`.
 -/
 
 variable (μ₀ : Measure Ω) [IsProbabilityMeasure μ₀]

@@ -432,13 +432,13 @@ abbrev ProjectiveProbability : Type _ := ProjectiveState (E := E)
 noncomputable def projectiveDivergence
     {μ₀ : MeasureTheory.Measure Ω}
     (P Q : UnnormalizedMeasure μ₀) : ENNReal :=
-  InfoGeometry.KL.klDiv P.representative.μ Q.representative.μ
+  InfoGeometry.KL.kl_div P.representative.μ Q.representative.μ
 
 lemma projectiveDivergence_eq_kl
     {μ₀ : MeasureTheory.Measure Ω}
     (P Q : UnnormalizedMeasure μ₀) :
     projectiveDivergence P Q
-      = InfoGeometry.KL.klDiv P.representative.μ Q.representative.μ :=
+      = InfoGeometry.KL.kl_div P.representative.μ Q.representative.μ :=
   rfl
 
 lemma projectiveDivergence_eq_of_representative_eq

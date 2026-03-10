@@ -1,183 +1,149 @@
-import Mathlib.Analysis.InnerProductSpace.Basic
+import InfoGeometry.Krein.KreinSpace
+import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Analysis.Normed.Lp.ProdLp
-import InfoGeometry.Krein.KreinSpace
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Algebra.Lie.Basic
-import Mathlib.Algebra.Lie.Subalgebra
 
 /-!
 # InfoGeometry.Krein.DoubledSpace
 
-Canonical diagonal (Pontryagin) model of the doubled information state space.
-The carrier is `WithLp 2 (E × E)`, and the fundamental symmetry is the sign flip
-`J(x, ξ) = (x, -ξ)`.
+Direct canonical doubled states `WithLp 2 (E × E)` acting as a trace-class model.
+We equip this product with the $L^2$ sum norm and Krein symmetries.
+
+Provides:
+- `DoubledSpace E`: the canonical trace-class doubled space
+- `modular_j`: swap isometry (modular swap)
+- `spectral_epsilon`: fundamental symmetry (sign flip)
+- `complex_i`: canonical complex structure $J \circ \epsilon$
 -/
 
 namespace InfoGeometry.Krein
 
-/-- The doubled space E ⊕ E as the canonical L² carrier. -/
-abbrev DoubledSpace (E : Type*) :=
-  WithLp 2 (E × E)
-
-variable {E : Type*}
-
--- Projection and constructor API for DoubledSpace
-def toDoubled (x ξ : E) : DoubledSpace E := WithLp.toLp 2 (x, ξ)
-
-instance : Coe (E × E) (DoubledSpace E) where
-  coe p := toDoubled p.1 p.2
-
-def DoubledSpace.fst (u : DoubledSpace E) : E := (WithLp.ofLp u).1
-def DoubledSpace.snd (u : DoubledSpace E) : E := (WithLp.ofLp u).2
-
-@[simp] lemma coe_prod_toDoubled (x ξ : E) : ((x, ξ) : DoubledSpace E) = toDoubled x ξ := rfl
-@[simp] lemma fst_toDoubled (x ξ : E) : (toDoubled x ξ).fst = x := rfl
-@[simp] lemma snd_toDoubled (x ξ : E) : (toDoubled x ξ).snd = ξ := rfl
-@[simp] lemma fst_snd_eq_ofLp (u : DoubledSpace E) : (u.fst, u.snd) = WithLp.ofLp u := by
-  cases h : WithLp.ofLp u with
-  | mk x ξ =>
-      simp [DoubledSpace.fst, DoubledSpace.snd, h]
-@[simp] lemma toDoubled_fst_snd (u : DoubledSpace E) : toDoubled u.fst u.snd = u := by
-  simpa [toDoubled, fst_snd_eq_ofLp] using (WithLp.toLp_ofLp (p := (2 : ENNReal)) (x := u))
-
-@[simp] lemma neg_toDoubled [AddCommGroup E] (x ξ : E) :
-    -toDoubled x ξ = toDoubled (-x) (-ξ) := rfl
-
-@[ext] lemma DoubledSpace.ext (u v : DoubledSpace E)
-    (hfst : u.fst = v.fst) (hsnd : u.snd = v.snd) : u = v := by
-  apply (WithLp.ofLp_injective 2)
-  simpa [fst_snd_eq_ofLp] using Prod.ext hfst hsnd
-
-section Algebraic
-
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-
-@[simp] lemma add_toDoubled (x ξ y η : E) :
-    toDoubled x ξ + toDoubled y η = toDoubled (x + y) (ξ + η) := rfl
-
-@[simp] lemma smul_toDoubled (c : ℝ) (x ξ : E) :
-    c • toDoubled x ξ = toDoubled (c • x) (c • ξ) := rfl
-
-@[simp] lemma fst_add (u v : DoubledSpace E) : (u + v).fst = u.fst + v.fst := rfl
-@[simp] lemma snd_add (u v : DoubledSpace E) : (u + v).snd = u.snd + v.snd := rfl
-@[simp] lemma fst_smul (c : ℝ) (u : DoubledSpace E) : (c • u).fst = c • u.fst := rfl
-@[simp] lemma snd_smul (c : ℝ) (u : DoubledSpace E) : (c • u).snd = c • u.snd := rfl
-@[simp] lemma fst_sub (u v : DoubledSpace E) : (u - v).fst = u.fst - v.fst := rfl
-@[simp] lemma snd_sub (u v : DoubledSpace E) : (u - v).snd = u.snd - v.snd := rfl
-@[simp] lemma fst_neg (u : DoubledSpace E) : (-u).fst = -u.fst := rfl
-@[simp] lemma snd_neg (u : DoubledSpace E) : (-u).snd = -u.snd := rfl
-
-end Algebraic
-
 section Compatibility
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- The swap involution `J(x, ξ) = (ξ, x)` on doubled space. -/
-noncomputable def modularJ (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] :
-    DoubledSpace E →L[ℝ] DoubledSpace E where
-  toFun u := toDoubled u.snd u.fst
-  cont := by
-    simpa [toDoubled] using
-      (WithLp.prod_continuous_toLp (p := 2) (α := E) (β := E)).comp
-        ((WithLp.continuous_snd (p := 2) (α := E) (β := E)).prodMk
-          (WithLp.continuous_fst (p := 2) (α := E) (β := E)))
+/-- Alias for the canonical doubled Hilbert space `WithLp 2 (E × E)`. -/
+abbrev DoubledSpace (E : Type*) : Type _ := WithLp (2 : ENNReal) (E × E)
+
+omit [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] in
+/-- Extensionality lemma for `DoubledSpace`. -/
+@[ext] lemma DoubledSpace.ext {u v : DoubledSpace E}
+    (hfst : WithLp.fst u = WithLp.fst v)
+    (hsnd : WithLp.snd u = WithLp.snd v) : u = v := by
+  apply (WithLp.ofLp_injective (p := (2 : ENNReal)))
+  exact Prod.ext hfst hsnd
+
+/-- Create a doubled state from a physical and a ghost component. -/
+abbrev to_doubled (x ξ : E) : DoubledSpace E := WithLp.toLp (2 : ENNReal) (x, ξ)
+
+omit [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] in
+@[simp] lemma fst_to_doubled (x ξ : E) :
+    WithLp.fst (to_doubled x ξ : DoubledSpace E) = x := rfl
+
+omit [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] in
+@[simp] lemma snd_to_doubled (x ξ : E) :
+    WithLp.snd (to_doubled x ξ : DoubledSpace E) = ξ := rfl
+
+/-- Physical coordinate projection as a continuous linear map. -/
+noncomputable abbrev fst_L : DoubledSpace E →L[ℝ] E :=
+  WithLp.fstL (p := (2 : ENNReal)) ℝ E E
+
+/-- Ghost coordinate projection as a continuous linear map. -/
+noncomputable abbrev snd_L : DoubledSpace E →L[ℝ] E :=
+  WithLp.sndL (p := (2 : ENNReal)) ℝ E E
+
+/-- The modular swap $J(x, \xi) = (\xi, x)$ as a continuous linear map. -/
+noncomputable def modular_j : DoubledSpace E →L[ℝ] DoubledSpace E where
+  toFun u := WithLp.toLp (2 : ENNReal) (WithLp.snd u, WithLp.fst u)
   map_add' u v := by
-    apply (WithLp.ofLp_injective 2)
-    simp [toDoubled, DoubledSpace.fst, DoubledSpace.snd]
+    simpa [WithLp.add_snd, WithLp.add_fst] using
+      (WithLp.toLp_add (p := (2 : ENNReal))
+        (x := (WithLp.snd u, WithLp.fst u))
+        (y := (WithLp.snd v, WithLp.fst v)))
   map_smul' c u := by
-    apply (WithLp.ofLp_injective 2)
-    simp [toDoubled, DoubledSpace.fst, DoubledSpace.snd]
-
-/-- The sign involution `ε(x, ξ) = (x, -ξ)` on doubled space. -/
-noncomputable def spectralEpsilon (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] :
-    DoubledSpace E →L[ℝ] DoubledSpace E where
-  toFun u := toDoubled u.fst (-u.snd)
+    simpa [WithLp.smul_snd, WithLp.smul_fst] using
+      (WithLp.toLp_smul (p := (2 : ENNReal)) (c := c)
+        (x := (WithLp.snd u, WithLp.fst u)))
   cont := by
-    simpa [toDoubled] using
-      (WithLp.prod_continuous_toLp (p := 2) (α := E) (β := E)).comp
-        ((WithLp.continuous_fst (p := 2) (α := E) (β := E)).prodMk
-          (continuous_neg.comp (WithLp.continuous_snd (p := 2) (α := E) (β := E))))
+    simpa using
+      (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := E) (β := E)).comp
+        ((WithLp.continuous_snd (p := (2 : ENNReal)) (α := E) (β := E)).prodMk
+         (WithLp.continuous_fst (p := (2 : ENNReal)) (α := E) (β := E)))
+
+/-- The fundamental symmetry $\epsilon(x, \xi) = (x, -\xi)$ as a continuous linear map. -/
+noncomputable def spectral_epsilon : DoubledSpace E →L[ℝ] DoubledSpace E where
+  toFun u := WithLp.toLp (2 : ENNReal) (WithLp.fst u, -WithLp.snd u)
   map_add' u v := by
-    apply (WithLp.ofLp_injective 2)
-    simp [toDoubled, DoubledSpace.fst, DoubledSpace.snd, add_comm, add_left_comm, add_assoc]
+    simpa [WithLp.add_fst, WithLp.add_snd, neg_add, add_comm] using
+      (WithLp.toLp_add (p := (2 : ENNReal))
+        (x := (WithLp.fst u, -WithLp.snd u))
+        (y := (WithLp.fst v, -WithLp.snd v)))
   map_smul' c u := by
-    apply (WithLp.ofLp_injective 2)
-    simp [toDoubled, DoubledSpace.fst, DoubledSpace.snd]
+    simpa [WithLp.smul_fst, WithLp.smul_snd, smul_neg] using
+      (WithLp.toLp_smul (p := (2 : ENNReal)) (c := c)
+        (x := (WithLp.fst u, -WithLp.snd u)))
+  cont := by
+    simpa using
+      (WithLp.prod_continuous_toLp (p := (2 : ENNReal)) (α := E) (β := E)).comp
+        ((WithLp.continuous_fst (p := (2 : ENNReal)) (α := E) (β := E)).prodMk
+         (continuous_neg.comp (WithLp.continuous_snd (p := (2 : ENNReal)) (α := E) (β := E))))
 
-/-- Canonical complex-like generator `I = J ∘ ε`. -/
-noncomputable def complexI (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E] :
-    DoubledSpace E →L[ℝ] DoubledSpace E :=
-  (modularJ (E := E)).comp (spectralEpsilon (E := E))
+/-- Canonical complex-like generator $I = J \circ \epsilon$. -/
+noncomputable def complex_i : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  modular_j.comp spectral_epsilon
 
-/-- `Cl(1,1)` compatibility relation package on doubled-space endomorphisms. -/
-def Cl11Relations (J ε : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
+/-- $Cl(1,1)$ compatibility relation package on doubled-space endomorphisms. -/
+def cl11_relations (J ε : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
   J.comp J = ContinuousLinearMap.id ℝ (DoubledSpace E) ∧
-    ε.comp ε = ContinuousLinearMap.id ℝ (DoubledSpace E) ∧
-      J.comp ε = -((ε).comp J)
+  ε.comp ε = ContinuousLinearMap.id ℝ (DoubledSpace E) ∧
+  J.comp ε = -(ε.comp J)
 
-/-- Marker alias used by legacy modules. -/
-abbrev Cl11Algebra (J ε : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
-  Cl11Relations J ε
+/-- Typeclass alias for the Clifford structure. -/
+abbrev cl11_algebra (J ε : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
+  cl11_relations J ε
 
-@[simp] lemma modularJ_apply (u : DoubledSpace E) :
-    modularJ (E := E) u = toDoubled u.snd u.fst := rfl
+omit [CompleteSpace E] in
+@[simp] lemma modular_j_apply (u : DoubledSpace E) :
+    modular_j u = WithLp.toLp (2 : ENNReal) (WithLp.snd u, WithLp.fst u) := rfl
 
-@[simp] lemma spectralEpsilon_apply (u : DoubledSpace E) :
-    spectralEpsilon (E := E) u = toDoubled u.fst (-u.snd) := rfl
+omit [CompleteSpace E] in
+@[simp] lemma spectral_epsilon_apply (u : DoubledSpace E) :
+    spectral_epsilon u = WithLp.toLp (2 : ENNReal) (WithLp.fst u, -WithLp.snd u) := rfl
 
-@[simp] lemma complexI_apply (u : DoubledSpace E) :
-    complexI (E := E) u = toDoubled (-u.snd) u.fst := by
-  apply (WithLp.ofLp_injective 2)
-  simp [complexI, modularJ, spectralEpsilon, toDoubled, DoubledSpace.fst, DoubledSpace.snd]
+omit [CompleteSpace E] in
+@[simp] lemma complex_i_apply (u : DoubledSpace E) :
+    complex_i u = WithLp.toLp (2 : ENNReal) (-WithLp.snd u, WithLp.fst u) := by
+  apply DoubledSpace.ext <;> simp [complex_i]
 
-lemma modularJ_involution :
-    (modularJ (E := E)).comp (modularJ (E := E))
-      = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
-  apply ContinuousLinearMap.ext
-  intro u
-  rcases u with ⟨p⟩
-  rcases p with ⟨x, ξ⟩
-  rfl
+lemma modular_j_involution (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    (modular_j (E := E)).comp modular_j = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  apply ContinuousLinearMap.ext; intro u
+  apply DoubledSpace.ext <;> simp
 
-lemma spectralEpsilon_involution :
-    (spectralEpsilon (E := E)).comp (spectralEpsilon (E := E))
-      = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
-  apply ContinuousLinearMap.ext
-  intro u
-  rcases u with ⟨p⟩
-  rcases p with ⟨x, ξ⟩
-  simp [spectralEpsilon, toDoubled, DoubledSpace.fst, DoubledSpace.snd]
+lemma spectral_epsilon_involution (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    (spectral_epsilon (E := E)).comp spectral_epsilon = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  apply ContinuousLinearMap.ext; intro u
+  apply DoubledSpace.ext <;> simp
 
-lemma modularJ_spectralEpsilon_anticommute :
-    (modularJ (E := E)).comp (spectralEpsilon (E := E))
-      = -((spectralEpsilon (E := E)).comp (modularJ (E := E))) := by
-  apply ContinuousLinearMap.ext
-  intro u
-  rcases u with ⟨p⟩
-  rcases p with ⟨x, ξ⟩
-  change WithLp.toLp 2 (-ξ, x) = -WithLp.toLp 2 (ξ, -x)
-  simpa using (WithLp.toLp_neg (p := 2) (x := (ξ, -x)))
+lemma modular_j_spectral_epsilon_anticommute (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    (modular_j (E := E)).comp spectral_epsilon = -(spectral_epsilon.comp modular_j) := by
+  apply ContinuousLinearMap.ext; intro u
+  apply DoubledSpace.ext <;> simp [modular_j_apply, spectral_epsilon_apply]
 
-lemma complexI_sq :
-    (complexI (E := E)).comp (complexI (E := E))
-      = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-  apply ContinuousLinearMap.ext
-  intro u
-  rcases u with ⟨p⟩
-  rcases p with ⟨x, ξ⟩
-  change WithLp.toLp 2 (-x, -ξ) = -WithLp.toLp 2 (x, ξ)
-  simpa using (WithLp.toLp_neg (p := 2) (x := (x, ξ)))
+lemma complex_i_sq (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    (complex_i (E := E)).comp complex_i = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+  apply ContinuousLinearMap.ext; intro u
+  apply DoubledSpace.ext <;> simp [complex_i]
 
-theorem modularJ_spectralEpsilon_hasCl11Relations :
-    Cl11Relations (modularJ (E := E)) (spectralEpsilon (E := E)) := by
-  refine ⟨modularJ_involution (E := E), spectralEpsilon_involution (E := E), ?_⟩
-  exact modularJ_spectralEpsilon_anticommute (E := E)
+theorem modular_j_spectral_epsilon_has_cl11_relations (E : Type*)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    cl11_relations (modular_j (E := E)) spectral_epsilon :=
+  ⟨modular_j_involution E, spectral_epsilon_involution E, modular_j_spectral_epsilon_anticommute E⟩
 
-theorem modularJ_spectralEpsilon_isCl11 :
-    Cl11Algebra (modularJ (E := E)) (spectralEpsilon (E := E)) :=
-  modularJ_spectralEpsilon_hasCl11Relations (E := E)
+theorem modular_j_spectral_epsilon_is_cl11 (E : Type*)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    cl11_algebra (modular_j (E := E)) spectral_epsilon :=
+  modular_j_spectral_epsilon_has_cl11_relations E
 
 end Compatibility
 
@@ -185,36 +151,39 @@ section KreinAnalytic
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- The Hessian indefinite form on DoubledSpace.
-In the diagonal basis, this is exactly the Krein inner product: [x, ξ]·[y, η] = ⟪x, y⟫ - ⟪ξ, η⟫. -/
-noncomputable def hessianIndefiniteForm (u v : DoubledSpace E) : ℝ :=
-  KreinSpace.kreinInner u v
+local notation "H₂" => WithLp (2 : ENNReal) (E × E)
 
-/-- Characterization of Krein skew-adjointness as infinitesimal Hessian invariance. -/
-def IsKreinSkewAdjoint (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
-  KreinSpace.IsKreinSkewAdjoint A
+/-- The Hessian indefinite form on DoubledSpace. -/
+noncomputable def hessian_indefinite_form (u v : H₂) : ℝ :=
+  KreinSpace.kreinInner (H := H₂) u v
 
-theorem IsKreinSkewAdjoint.hessian_infinitesimal
-    {A : DoubledSpace E →L[ℝ] DoubledSpace E}
-    (hA : IsKreinSkewAdjoint A)
-    (x y : DoubledSpace E) :
-    hessianIndefiniteForm (A x) y + hessianIndefiniteForm x (A y) = 0 :=
-  (KreinSpace.isKreinSkewAdjoint_iff A).mp hA x y
+/-- Characterization of Krein skew-adjointness. -/
+def is_krein_skew_adjoint (A : H₂ →L[ℝ] H₂) : Prop :=
+  KreinSpace.IsKreinSkewAdjoint (H := H₂) A
 
-/-- The Lie algebra of the information state space (Information Killing Fields). -/
-noncomputable def informationLieAlgebra (E : Type*)
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    LieSubalgebra ℝ (DoubledSpace E →L[ℝ] DoubledSpace E) where
-  carrier := {A | IsKreinSkewAdjoint A}
-  zero_mem' := by simp [IsKreinSkewAdjoint, KreinSpace.isKreinSkewAdjoint_iff_eq_neg]
+theorem is_krein_skew_adjoint_hessian_infinitesimal
+    {A : H₂ →L[ℝ] H₂}
+    (hA : is_krein_skew_adjoint A)
+    (x y : H₂) :
+    hessian_indefinite_form (A x) y + hessian_indefinite_form x (A y) = 0 :=
+  (KreinSpace.isKreinSkewAdjoint_iff (H := H₂) A).mp hA x y
+
+/-- The Lie algebra of the information state space. -/
+noncomputable def information_lie_algebra :
+    LieSubalgebra ℝ (H₂ →L[ℝ] H₂) where
+  carrier := {A | is_krein_skew_adjoint A}
+  zero_mem' := by
+    simp [is_krein_skew_adjoint, KreinSpace.isKreinSkewAdjoint_iff_eq_neg (H := H₂)]
   add_mem' hA hB := by
-    simp [IsKreinSkewAdjoint, KreinSpace.isKreinSkewAdjoint_iff_eq_neg] at hA hB ⊢
-    simpa [hA, hB, add_comm, add_left_comm, add_assoc]
+    simp [is_krein_skew_adjoint, KreinSpace.isKreinSkewAdjoint_iff_eq_neg (H := H₂)] at hA hB ⊢
+    rw [hA, hB]
+    simp [add_comm]
   smul_mem' c A hA := by
-    simp [IsKreinSkewAdjoint, KreinSpace.isKreinSkewAdjoint_iff_eq_neg] at hA ⊢
-    simpa [hA, smul_neg]
+    simp [is_krein_skew_adjoint, KreinSpace.isKreinSkewAdjoint_iff_eq_neg (H := H₂)] at hA ⊢
+    rw [hA, smul_neg]
   lie_mem' hA hB := by
-    simpa [IsKreinSkewAdjoint] using (KreinSpace.isKreinSkewAdjoint_lie (hA := hA) (hB := hB))
+    simpa [is_krein_skew_adjoint] using
+      (KreinSpace.isKreinSkewAdjoint_lie (H := H₂) (hA := hA) (hB := hB))
 
 end KreinAnalytic
 

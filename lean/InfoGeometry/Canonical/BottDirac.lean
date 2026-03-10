@@ -1,4 +1,4 @@
-import InfoGeometry.Clifford.Cl11
+import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.SpectralInference
 import Mathlib.LinearAlgebra.TensorProduct.Map
 

@@ -16,24 +16,24 @@ namespace InfoGeometry.KL
 open scoped BigOperators
 
 -- totalMass: sum of empirical counts
-noncomputable def totalMass {α : Type} [Fintype α] (N_func : EmpiricalCounts α) : ℕ :=
+noncomputable def totalMass {α : Type*} [Fintype α] (N_func : EmpiricalCounts α) : ℕ :=
   ∑ x, N_func.count x
 
 /-- Empirical sample has at least one observed point. -/
 def EmpiricalNontrivial
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α) : Prop :=
   totalMass N_func ≠ 0
 
 /-- Normalized empirical distribution associated to counts. -/
 noncomputable def empiricalDistribution
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (x : α) : ℝ :=
   (N_func x : ℝ) / (totalMass N_func : ℝ)
 
 lemma empirical_nonneg
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (x : α) :
     0 ≤ empiricalDistribution N_func x := by
@@ -42,7 +42,7 @@ lemma empirical_nonneg
 
 /-- Pointwise empirical-to-model density ratio. -/
 noncomputable def densityRatio
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α)
     (x : α) : ℝ :=
@@ -50,7 +50,7 @@ noncomputable def densityRatio
 
 -- empirical_sum_one: empirical distribution sums to 1
 lemma empirical_sum_one
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (h : EmpiricalNontrivial N_func) :
     ∑ x, empiricalDistribution N_func x = 1 := by
@@ -67,7 +67,7 @@ lemma empirical_sum_one
 
 /-- Empirical counts viewed as a finite probability distribution. -/
 noncomputable def empiricalProbDist
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (h_nontrivial : EmpiricalNontrivial N_func) : ProbabilityDist α where
   prob := empiricalDistribution N_func
@@ -76,7 +76,7 @@ noncomputable def empiricalProbDist
 
 -- surprisal: negative log density ratio
 noncomputable def surprisal
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α)
     (x : α) : ℝ :=
@@ -84,20 +84,20 @@ noncomputable def surprisal
 
 -- entropyExpectation: expected surprisal under empirical distribution
 noncomputable def entropyExpectation
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α) : ℝ :=
   ∑ x, empiricalDistribution N_func x * surprisal N_func Q x
 
 /-- Q has full support if all point masses are strictly positive. -/
 def FullSupport
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (Q : ProbabilityDist α) : Prop :=
   ∀ x, 0 < Q.prob x
 
 -- KLdivergence: Kullback-Leibler divergence (finite-valued, full-support model)
 noncomputable def KLdivergence
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α)
     (h_support : FullSupport Q) : ℝ :=
@@ -105,14 +105,14 @@ noncomputable def KLdivergence
   ∑ x, empiricalDistribution N_func x * Real.log (densityRatio N_func Q x)
 
 noncomputable abbrev klDivergence
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α)
     (h_support : FullSupport Q) : ℝ :=
   KLdivergence N_func Q h_support
 
 lemma KLdivergence_eq_sum_mul_log_densityRatio
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α)
     (h_support : FullSupport Q) :
@@ -121,7 +121,7 @@ lemma KLdivergence_eq_sum_mul_log_densityRatio
   rfl
 
 lemma KLdivergence_eq_neg_entropyExpectation
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α)
     (h_support : FullSupport Q) :
@@ -131,20 +131,20 @@ lemma KLdivergence_eq_neg_entropyExpectation
 
 /-- Definition: P̂ is absolutely continuous with respect to Q if P̂(x) ≠ 0 implies Q(x) ≠ 0. -/
 def AbsolutelyContinuous
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α) : Prop :=
   ∀ x, empiricalDistribution N_func x ≠ 0 → Q.prob x ≠ 0
 
 /-- `P̂` and `Q` have matching zero sets. -/
 def SupportMatches
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α) : Prop :=
   ∀ x, empiricalDistribution N_func x = 0 ↔ Q.prob x = 0
 
 lemma absolutelyContinuous_of_fullSupport
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α)
     (h_support : FullSupport Q) :
@@ -227,7 +227,7 @@ lemma kl_pointwise_eq_iff
     simp [hp_ne]
 
 theorem KL_nonneg
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α)
     (h_nontrivial : EmpiricalNontrivial N_func)
@@ -260,7 +260,7 @@ theorem KL_nonneg
   exact hnonneg_sum
 
 theorem KL_eq_zero_iff
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α)
     (h_nontrivial : EmpiricalNontrivial N_func)
@@ -314,7 +314,7 @@ theorem KL_eq_zero_iff
       simp [hQne]
 
 lemma KLdivergence_eq_klDiv
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (N_func : EmpiricalCounts α)
     (Q : ProbabilityDist α)
     (h_nontrivial : EmpiricalNontrivial N_func)
@@ -331,7 +331,7 @@ lemma KLdivergence_eq_klDiv
     simp [Real.log_div hPx hQx]
 
 theorem klDiv_nonneg_of_fullSupport
-    {α : Type} [Fintype α]
+    {α : Type*} [Fintype α]
     (P Q : ProbabilityDist α)
     (h_support : ∀ x, 0 < Q.prob x) :
     0 ≤ InfoGeometry.klDiv P Q := by

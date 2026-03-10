@@ -55,7 +55,10 @@ theorem anomaly_inflow_cancellation (L : BayesianLoop E) (IST : InfoSpectralTrip
             rfl
     _ = (informationChernSimons L IST + -informationChernSimons L IST) + (a0 IST + a1 IST) := by
           ring
-    _ = 0 := by simp
+    _ = a0 IST + a1 IST := by simp
+    _ = spectralVolume IST + (-spectralVolume IST) := by
+          simp [a0_eq_spectralVolume, a1_eq_neg_spectralVolume]
+    _ = 0 := by ring
 
 omit [FiniteDimensional ℝ E] in
 /-- Theorem `anomalyInflowClosure`. -/

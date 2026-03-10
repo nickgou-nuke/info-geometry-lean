@@ -12,7 +12,7 @@ namespace InfoGeometry.Convex
 
 open scoped LinearAlgebra.Projectivization
 
-variable {E : Type} [AddCommGroup E] [Module ℝ E]
+variable {E : Type*} [AddCommGroup E] [Module ℝ E]
 
 /-- “Physical states” as rays in the doubled space (excluding `0` by construction). -/
 abbrev ProjectiveState : Type _ := ℙ ℝ (DoubledSpace E)

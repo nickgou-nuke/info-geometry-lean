@@ -21,8 +21,12 @@ noncomputable def gaussianAnnihilation (G : GaussianFamily E) :
     (InfoGeometry.Canonical.KreinLadder.DoubledSpace E) →ₗ[ℝ]
       (InfoGeometry.Canonical.KreinLadder.DoubledSpace E) :=
   { toFun := fun v => toDoubled (DoubledSpace.fst v) (G.sigma (DoubledSpace.fst v))
-    map_add' := by intro x y; sorry
-    map_smul' := by intro c x; sorry }
+    map_add' := by
+      intro x y
+      apply DoubledSpace.ext <;> simp [map_add]
+    map_smul' := by
+      intro c x
+      apply DoubledSpace.ext <;> simp [map_smul] }
 
 /--
 Explicit Creation Operator for the Multivariate Gaussian Family.
@@ -32,8 +36,12 @@ noncomputable def gaussianCreation (G : GaussianFamily E) :
     (InfoGeometry.Canonical.KreinLadder.DoubledSpace E) →ₗ[ℝ]
       (InfoGeometry.Canonical.KreinLadder.DoubledSpace E) :=
   { toFun := fun v => toDoubled (DoubledSpace.fst v) (- G.sigma (DoubledSpace.fst v))
-    map_add' := by intro x y; sorry
-    map_smul' := by intro c x; sorry }
+    map_add' := by
+      intro x y
+      apply DoubledSpace.ext <;> simp [map_add, add_comm]
+    map_smul' := by
+      intro c x
+      apply DoubledSpace.ext <;> simp [map_smul, smul_neg] }
 
 omit [FiniteDimensional ℝ E] in
 /--
@@ -45,6 +53,9 @@ theorem gaussian_ccr (G : GaussianFamily E)
     (v : InfoGeometry.Canonical.KreinLadder.DoubledSpace E) :
     ((gaussianAnnihilation G) * (gaussianCreation G) - (gaussianCreation G) * (gaussianAnnihilation G)) v =
     toDoubled 0 (2 • G.sigma (DoubledSpace.fst v)) := by
-  sorry
+  simp [LinearMap.sub_apply, gaussianAnnihilation, gaussianCreation]
+  apply DoubledSpace.ext
+  · simp
+  · simp [two_smul]
 
 end InfoGeometry.ExponentialFamily.GaussianLadder

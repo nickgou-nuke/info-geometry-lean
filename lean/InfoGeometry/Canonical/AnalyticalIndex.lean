@@ -175,7 +175,7 @@ noncomputable def bottAnalyticalIndex
   analyticalIndex (bottDirac D1 Γ1 Dn) (globalGrading Γ1 Γn)
 
 /-- `Cl(1,1)` specialization of the global grading. -/
-def cl11GlobalGrading (Γn : Endomorphism F) :
+noncomputable def cl11GlobalGrading (Γn : Endomorphism F) :
     Endomorphism (DoubledSpace E ⊗[ℝ] F) :=
   globalGrading (cl11Grading (E := E)) Γn
 
@@ -353,12 +353,12 @@ structure ConcreteCl11BottFlow (F : Type*) [NormedAddCommGroup F] [NormedSpace �
   Γn_const : ∀ s : ℝ, Γn s = Γn 0
 
 /-- Induced Bott-Dirac family on `DoubledSpace E ⊗ F`. -/
-def concreteDiracFamily (B : ConcreteCl11BottFlow F) :
+noncomputable def concreteDiracFamily (B : ConcreteCl11BottFlow F) :
     ℝ → Endomorphism (DoubledSpace E ⊗[ℝ] F) :=
   fun s => bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) (B.Dn s)
 
 /-- Induced global grading family on `DoubledSpace E ⊗ F`. -/
-def concreteGradingFamily (B : ConcreteCl11BottFlow F) :
+noncomputable def concreteGradingFamily (B : ConcreteCl11BottFlow F) :
     ℝ → Endomorphism (DoubledSpace E ⊗[ℝ] F) :=
   fun s => cl11GlobalGrading (E := E) (B.Γn s)
 

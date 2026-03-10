@@ -61,16 +61,17 @@ def gaugeSetoid : Setoid (ProjectivePrequantumBundle (E := E)) where
 lemma covariantDerivative_constant_on_orbits
     {P Q : ProjectivePrequantumBundle (E := E)}
     (h : GaugeEquivalent (E := E) P Q) :
-    covariantDerivative (E := E) P = covariantDerivative (E := E) Q := by
+    ProjectivePrequantumBundle.covariantDerivative P =
+      ProjectivePrequantumBundle.covariantDerivative Q := by
   rcases h with ⟨u, rfl⟩
   symm
-  exact covariantDerivative_gauge_invariant (E := E) u P
+  exact ProjectivePrequantumBundle.covariantDerivative_gauge_invariant u P
 
 /-- The gauge-invariant scalar descends to the quotient by gauge orbits. -/
 noncomputable def covariantDerivativeOnQuotient :
     Quotient (gaugeSetoid (E := E)) → ℝ :=
   Quotient.lift
-    (fun P => covariantDerivative (E := E) P)
+    (fun P => ProjectivePrequantumBundle.covariantDerivative P)
     (by
       intro P Q hPQ
       exact covariantDerivative_constant_on_orbits (E := E) hPQ)
@@ -78,7 +79,7 @@ noncomputable def covariantDerivativeOnQuotient :
 @[simp] lemma covariantDerivativeOnQuotient_mk
     (P : ProjectivePrequantumBundle (E := E)) :
     covariantDerivativeOnQuotient (E := E) (Quotient.mk (gaugeSetoid (E := E)) P)
-      = covariantDerivative (E := E) P := rfl
+      = ProjectivePrequantumBundle.covariantDerivative P := rfl
 
 /-- The projective base ray is also gauge-invariant and descends to the quotient. -/
 noncomputable def baseOnQuotient :

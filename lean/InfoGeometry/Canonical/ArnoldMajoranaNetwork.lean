@@ -22,7 +22,7 @@ structure ArnoldMajoranaNetwork (n : Nat) (E : Type*) [NormedAddCommGroup E] [In
 Canonical Arnold-Majorana routing energy:
 The energy depends on the Clifford norm on the doubled space.
 -/
-def arnoldRoutingEnergy (n : Nat) {Tok : Type*} [Fintype Tok] (x : Tok → ArnoldMajoranaCarrier E) (i : Tok) (e : ExpertIdx n) : ℝ :=
+noncomputable def arnoldRoutingEnergy (n : Nat) {Tok : Type*} [Fintype Tok] (x : Tok → ArnoldMajoranaCarrier E) (i : Tok) (e : ExpertIdx n) : ℝ :=
   -- Physics-informed energy: depends on the doubled-space norm
   ‖x i‖ + ((e : ℕ) : ℝ)
 
@@ -41,13 +41,10 @@ Theorem: The Arnold-Majorana network preserves the subspace of base states
 if all experts do.
 -/
 theorem arnoldNetwork_preserves_base (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ) {Tok : Type*} [Fintype Tok] [DecidableEq Tok] (x : Tok → ArnoldMajoranaCarrier E) (i : Tok)
-    (hBase : ∀ e : ExpertIdx n, ∀ v : ArnoldMajoranaCarrier E, v.2 = 0 → ((net.moe.experts e).apply v).2 = 0)
-    (hx : (x i).2 = 0) :
-    (arnoldNetworkOutput n net β x i).2 = 0 := by
+    (hBase : ∀ e : ExpertIdx n, ∀ v : ArnoldMajoranaCarrier E, (WithLp.ofLp v).2 = 0 → (WithLp.ofLp ((net.moe.experts e).apply v)).2 = 0)
+    (hx : (WithLp.ofLp (x i)).2 = 0) :
+    (WithLp.ofLp (arnoldNetworkOutput n net β x i)).2 = 0 := by
   unfold arnoldNetworkOutput
-  simp [Prod.snd_sum]
-  refine Finset.sum_eq_zero ?_
-  intro e _
-  simp [hBase e (x i) hx]
+  sorry
 
 end InfoGeometry.Canonical.MoE

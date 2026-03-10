@@ -59,6 +59,15 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 @[simp] lemma smul_toDoubled (c : ℝ) (x ξ : E) :
     c • toDoubled x ξ = toDoubled (c • x) (c • ξ) := rfl
 
+@[simp] lemma fst_add (u v : DoubledSpace E) : (u + v).fst = u.fst + v.fst := rfl
+@[simp] lemma snd_add (u v : DoubledSpace E) : (u + v).snd = u.snd + v.snd := rfl
+@[simp] lemma fst_smul (c : ℝ) (u : DoubledSpace E) : (c • u).fst = c • u.fst := rfl
+@[simp] lemma snd_smul (c : ℝ) (u : DoubledSpace E) : (c • u).snd = c • u.snd := rfl
+@[simp] lemma fst_sub (u v : DoubledSpace E) : (u - v).fst = u.fst - v.fst := rfl
+@[simp] lemma snd_sub (u v : DoubledSpace E) : (u - v).snd = u.snd - v.snd := rfl
+@[simp] lemma fst_neg (u : DoubledSpace E) : (-u).fst = -u.fst := rfl
+@[simp] lemma snd_neg (u : DoubledSpace E) : (-u).snd = -u.snd := rfl
+
 end Algebraic
 
 section Compatibility

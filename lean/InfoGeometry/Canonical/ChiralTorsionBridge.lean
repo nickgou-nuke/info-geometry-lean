@@ -79,7 +79,7 @@ end GeneralizedKL
 
 section ProjectiveTwistor
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Unnormalized representative of a projective knowledge ray. -/
 abbrev UnnormalizedProjectiveState := NonzeroDoubledState (E := E)

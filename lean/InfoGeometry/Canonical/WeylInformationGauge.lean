@@ -200,7 +200,7 @@ end TorsionPathDependence
 
 section DilationSource
 
-variable {E : Type}
+variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--

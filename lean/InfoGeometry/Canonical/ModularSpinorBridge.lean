@@ -43,12 +43,12 @@ structure MajoranaFrame (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ
 
 /--
 **Canonical Majorana Frame**:
-The default frame using `modularJ` and `spectralEpsilon`.
+The default frame using `modular_j` and `spectral_epsilon`.
 -/
 noncomputable def canonicalMajoranaFrame : MajoranaFrame E where
-  J := Krein.modularJ (E := E)
-  eps := Krein.spectralEpsilon (E := E)
-  is_cl11 := Krein.modularJ_spectralEpsilon_hasCl11Relations
+  J := Krein.modular_j (E := E)
+  eps := Krein.spectral_epsilon (E := E)
+  is_cl11 := Krein.modular_j_spectral_epsilon_hasCl11Relations
 
 /--
 **Modular Parallel Transport**:
@@ -122,7 +122,7 @@ This relates different spinor bilinear channels (scalar, vector, pseudoscalar).
 -/
 def FierzIdentity (ψ : Krein.DoubledSpace E) : Prop :=
   inducedSymplecticForm (E := E) ψ ψ =
-    hessianIndefiniteForm (E := E) ψ (Krein.complexI (E := E) ψ)
+    hessian_indefinite_form (E := E) ψ (Krein.complex_i (E := E) ψ)
 
 /-- The induced commutator form satisfies the Fierz bridge identity on diagonal inputs. -/
 theorem fierzIdentity_true (ψ : Krein.DoubledSpace E) :

@@ -28,7 +28,7 @@ import InfoGeometry.MaxEnt
 import InfoGeometry.MaxEnt.DualBridge
 import InfoGeometry.MaxEnt.Finite
 import InfoGeometry.MaxEnt.Jaynes
-import InfoGeometry.MaxEnt.JaynesCanonical
+import InfoGeometry.MaxEnt.IProjection
 import InfoGeometry.MaxEnt.JaynesInfoStatMech
 import InfoGeometry.MaxEnt.JaynesInfoStatMechTest
 import InfoGeometry.Canonical.JaynesRNMaxEnt

@@ -82,27 +82,27 @@ def IsGradeMinusRay : ProjectiveState E → Prop :=
 
 /-- Coordinate form for grade `+`: `J(x,ξ)=(x,ξ)` iff `ξ=x`. -/
 @[simp] lemma inGradePlus_iff_coords (x ξ : E) :
-    inGradePlus (toDoubled x ξ) ↔ ξ = x := by
+    inGradePlus (to_doubled x ξ) ↔ ξ = x := by
   rw [inGradePlus]
   constructor
   · intro h
-    have h_snd : (modularJ E (toDoubled x ξ)).snd = (toDoubled x ξ).snd := congrArg DoubledSpace.snd h
+    have h_snd : (modular_j E (to_doubled x ξ)).snd = (to_doubled x ξ).snd := congrArg DoubledSpace.snd h
     simpa using h_snd
   · intro h
     subst h
-    simp [modularJ_apply]
+    simp [modular_j_apply]
 
 /-- Coordinate form for grade `-`: `J(x,ξ)=-(x,ξ)` iff `ξ=-x`. -/
 @[simp] lemma inGradeMinus_iff_coords (x ξ : E) :
-    inGradeMinus (toDoubled x ξ) ↔ ξ = -x := by
+    inGradeMinus (to_doubled x ξ) ↔ ξ = -x := by
   rw [inGradeMinus]
   constructor
   · intro h
-    have h_snd : (modularJ E (toDoubled x ξ)).snd = (-(toDoubled x ξ)).snd := congrArg DoubledSpace.snd h
+    have h_snd : (modular_j E (to_doubled x ξ)).snd = (-(to_doubled x ξ)).snd := congrArg DoubledSpace.snd h
     simpa using h_snd
   · intro h
     subst h
-    simp [modularJ_apply]
+    simp [modular_j_apply]
 
 /-- “Grade-null” rays: points lying in either grading eigenspace. -/
 def IsGradeNullRay (q : ProjectiveState E) : Prop :=
@@ -127,7 +127,7 @@ lemma gradePlus_and_gradeMinus_implies_vacuum
   refine Quotient.inductionOn q ?_
   intro v hvPlus hvMinus
   obtain ⟨x, ξ⟩ := WithLp.ofLp v
-  have hv : v = toDoubled x ξ := by simp
+  have hv : v = to_doubled x ξ := by simp
   rw [hv] at hvPlus hvMinus
   have hξx : ξ = x := (inGradePlus_iff_coords x ξ).mp hvPlus
   have hξnegx : ξ = -x := (inGradeMinus_iff_coords x ξ).mp hvMinus
@@ -146,23 +146,23 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSp
 
 /-- “Metric-null” / isotropic doubled vectors for the neutral Hessian form. -/
 def IsMetricNull (v : DoubledSpace E) : Prop :=
-  hessianIndefiniteForm v v = 0
+  hessian_indefinite_form v v = 0
 
 @[simp] lemma isMetricNull_iff_norm_sq_eq (x ξ : E) :
-    IsMetricNull (toDoubled x ξ) ↔ ‖x‖ ^ 2 = ‖ξ‖ ^ 2 := by
+    IsMetricNull (to_doubled x ξ) ↔ ‖x‖ ^ 2 = ‖ξ‖ ^ 2 := by
   unfold IsMetricNull
-  simp [hessianIndefiniteForm, kreinInner_prodL2, real_inner_self_eq_norm_sq, sub_eq_zero]
+  simp [hessian_indefinite_form, krein_inner_prod_l2, real_inner_self_eq_norm_sq, sub_eq_zero]
 
 lemma isMetricNull_smul (a : ℝ) {v : DoubledSpace E}
     (hv : IsMetricNull v) :
     IsMetricNull (a • v) := by
   unfold IsMetricNull at *
-  simp [hessianIndefiniteForm, KreinSpace.kreinInner_smul_left, KreinSpace.kreinInner_smul_right, hv]
+  simp [hessian_indefinite_form, KreinSpace.kreinInner_smul_left, KreinSpace.kreinInner_smul_right, hv]
 
 lemma isMetricNull_smul_iff {a : ℝ} (ha : a ≠ 0) (v : DoubledSpace E) :
     IsMetricNull (a • v) ↔ IsMetricNull v := by
   unfold IsMetricNull
-  simp [hessianIndefiniteForm, KreinSpace.kreinInner_smul_left, KreinSpace.kreinInner_smul_right, ha]
+  simp [hessian_indefinite_form, KreinSpace.kreinInner_smul_left, KreinSpace.kreinInner_smul_right, ha]
 
 lemma isMetricNull_sameRay_iff {v w : DoubledSpace E}
     (hvw : SameRayDoubled v w) :
@@ -182,7 +182,7 @@ def IsMetricNullRay : ProjectiveState E → Prop :=
     IsMetricNullRay (projectivize v) ↔ IsMetricNull v := Iff.rfl
 
 lemma IsMetricNullRay_vacuum : IsMetricNullRay (vacuum E) := by
-  simp [vacuum, IsMetricNull, hessianIndefiniteForm]
+  simp [vacuum, IsMetricNull, hessian_indefinite_form]
 
 end MetricNull
 

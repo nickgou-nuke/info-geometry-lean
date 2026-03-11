@@ -1,179 +1,171 @@
-import Architect
-import InfoGeometry.EntropicInference
+import InfoGeometry.Basic
 
 /-!
 # InfoGeometry.Canonical.IBCore
 
 Canonical core for the Information Bottleneck finite scaffold.
-This module establishes the variational foundation and BA-iteration monotonicity.
+Rebased entirely onto the `PMF` (FinProb) foundation, using monadic
+operations and `PMF.normalize` for mathematically rigorous marginalizations.
 -/
 
-open scoped BigOperators
+open scoped BigOperators ENNReal NNReal
 
 namespace InfoGeometry.Canonical.IB
 
 variable {X Y T : Type} [Fintype X] [Fintype Y] [Fintype T]
 
-/-- Local alias for the finite-probability type used by entropic-inference APIs. -/
-abbrev FinProb (α : Type*) [Fintype α] := InfoGeometry.EntropicInference.FinProb α
-
 /-- Draft IB problem package. -/
-@[blueprint "def:ib-problem"]
 structure IBProblem where
   pXY : FinProb (X × Y)
   beta : ℝ
   beta_pos : 0 < beta
 
-/-- Kernel KL used by IB drafts: ∑_x p(x) KL(p(t|x) || q(t|x)). -/
-noncomputable def KLKernel (pX : FinProb X) (p q : X → FinProb T) : ℝ :=
-  ∑ x : X, pX.toFun x * InfoGeometry.EntropicInference.KL (α := T) (p x) (q x)
-
 /-- `Y` is inhabited whenever an `IBProblem` exists. -/
 private theorem nonemptyY (prob : IBProblem (X := X) (Y := Y)) : Nonempty Y := by
-  rcases InfoGeometry.FinProb.exists_pos prob.pXY with ⟨xy, _hxy⟩
+  have h_supp := prob.pXY.support_nonempty
+  rcases h_supp with ⟨xy, _⟩
   exact ⟨xy.2⟩
 
-/-- Induced `p(y,t) = ∑_x p(x,y) p(t|x)`. -/
-noncomputable def jointYT (prob : IBProblem (X := X) (Y := Y))
-    (pT_givenX : X → FinProb T) : FinProb (Y × T) := by
-  classical
-  refine
-    { toFun := fun yt => ∑ x : X, prob.pXY.toFun (x, yt.1) * (pT_givenX x).toFun yt.2
-      nonneg := by
-        intro yt
-        refine Finset.sum_nonneg ?_
-        intro x _hx
-        exact mul_nonneg (prob.pXY.nonneg (x, yt.1)) ((pT_givenX x).nonneg yt.2)
-      sum_one := by
-        calc
-          (∑ yt : Y × T, ∑ x : X, prob.pXY.toFun (x, yt.1) * (pT_givenX x).toFun yt.2)
-              = ∑ x : X, ∑ yt : Y × T, prob.pXY.toFun (x, yt.1) * (pT_givenX x).toFun yt.2 := by
-                  rw [Finset.sum_comm]
-          _ = ∑ x : X, ∑ y : Y, ∑ t : T, prob.pXY.toFun (x, y) * (pT_givenX x).toFun t := by
-                  refine Finset.sum_congr rfl ?_
-                  intro x _hx
-                  rw [← Fintype.sum_prod_type']
-          _ = ∑ x : X, (∑ y : Y, prob.pXY.toFun (x, y)) * (∑ t : T, (pT_givenX x).toFun t) := by
-                  refine Finset.sum_congr rfl ?_
-                  intro x _hx
-                  symm
-                  exact Fintype.sum_mul_sum
-                    (fun y : Y => prob.pXY.toFun (x, y))
-                    (fun t : T => (pT_givenX x).toFun t)
-          _ = ∑ x : X, (InfoGeometry.EntropicInference.marginal_x prob.pXY).toFun x * 1 := by
-                  simp [InfoGeometry.EntropicInference.marginal_x]
-          _ = ∑ x : X, (InfoGeometry.EntropicInference.marginal_x prob.pXY).toFun x := by
-                  simp
-          _ = 1 := by
-                  simpa using (InfoGeometry.EntropicInference.marginal_x prob.pXY).sum_one }
+/-! ### Monadic Probability Manipulations -/
 
 /-- Marginal p(x). -/
 noncomputable def marginal_x (prob : IBProblem (X := X) (Y := Y)) : FinProb X :=
-  InfoGeometry.EntropicInference.marginal_x prob.pXY
+  prob.pXY.map Prod.fst
 
-/-- Conditional $p(y|x)$. -/
-noncomputable def condYGivenX (prob : IBProblem (X := X) (Y := Y)) (x : X)
-    (hx : 0 < (marginal_x prob).toFun x) : FinProb Y :=
-  InfoGeometry.EntropicInference.cond_theta_given_x prob.pXY x hx
+/-- Induced joint distribution p(y,t) = ∑_x p(x,y) p(t|x). -/
+noncomputable def jointYT (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T) : FinProb (Y × T) :=
+  prob.pXY.bind (fun (x, y) => (pT_givenX x).map (fun t => (y, t)))
 
-/-- The IB variational functional:
-$F(p, m, β) = I(X;T) + β \sum_x p(x) KL(p(y|x) || \sum_t p(t|x) m(y|t))$.
--/
-noncomputable def ibVariationalFunctional (prob : IBProblem (X := X) (Y := Y))
-  (pT_givenX : X → FinProb T) (mY_givenT : T → FinProb Y) : ℝ :=
-  let pX := marginal_x prob
-  let pXT : FinProb (X × T) := InfoGeometry.EntropicInference.assemble pX pT_givenX
-  InfoGeometry.EntropicInference.mutual_information pXT +
-    prob.beta * (∑ x : X, pX.toFun x *
-      if hx : 0 < pX.toFun x then
-        InfoGeometry.EntropicInference.KL (condYGivenX prob x hx)
-          (InfoGeometry.EntropicInference.marginal_theta (InfoGeometry.EntropicInference.assemble (pT_givenX x) mY_givenT))
-      else 0)
-
-/-- IB Lagrangian constant: $H(Y|X)$. -/
-noncomputable def ibLagrangianConstant (prob : IBProblem (X := X) (Y := Y)) : ℝ :=
-  let pX := marginal_x prob
-  ∑ x : X, pX.toFun x *
-    if hx : 0 < pX.toFun x then
-      InfoGeometry.EntropicInference.entropy (condYGivenX prob x hx)
-    else 0
-
-/-- The IB Lagrangian: $L(p, β) = I(X;T) - β I(Y;T)$. -/
-noncomputable def ibLagrangian (prob : IBProblem (X := X) (Y := Y))
-    (pT_givenX : X → FinProb T) : ℝ :=
-  let pX := marginal_x prob
-  let pXT : FinProb (X × T) := InfoGeometry.EntropicInference.assemble pX pT_givenX
-  let pYT : FinProb (Y × T) := jointYT prob pT_givenX
-  InfoGeometry.EntropicInference.mutual_information pXT - prob.beta * InfoGeometry.EntropicInference.mutual_information pYT
-
-/-- Induced marginal $q(t)$. -/
+/-- Induced marginal q(t). -/
 noncomputable def inducedMarginalT (prob : IBProblem (X := X) (Y := Y))
     (pT_givenX : X → FinProb T) : FinProb T :=
-  InfoGeometry.EntropicInference.marginal_theta (jointYT prob pT_givenX)
+  (jointYT prob pT_givenX).map Prod.snd
 
-/-- Induced Bayesian projection $m(y|t)$. -/
+/-- Joint distribution p(x,t) = p(x) p(t|x). -/
+noncomputable def jointXT (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T) : FinProb (X × T) :=
+  (marginal_x prob).bind (fun x => (pT_givenX x).map (fun t => (x, t)))
+
+/-- Independent coupling p(A)p(B). -/
+noncomputable def independentCoupling {A B : Type*} (pA : FinProb A) (pB : FinProb B) :
+    FinProb (A × B) :=
+  pA.bind (fun a => pB.map (fun b => (a, b)))
+
+/-! ### Finiteness Helpers for PMF Normalization -/
+
+/-- Summing finitely many finite values in ℝ≥0∞ yields a finite value. -/
+private lemma tsum_ne_top_of_fintype
+    {A : Type*} [Fintype A] (f : A → ℝ≥0∞) (hf : ∀ a, f a ≠ ⊤) :
+    (∑' a, f a) ≠ ⊤ := by
+  rw [tsum_fintype]
+  exact ENNReal.sum_ne_top.mpr (fun a _ => hf a)
+
+/-- Any single probability mass is strictly less than infinity. -/
+private lemma pmf_val_ne_top {A : Type*} (p : FinProb A) (a : A) : p a ≠ ⊤ := by
+  exact ne_of_lt (lt_of_le_of_lt (PMF.coe_le_one p a) ENNReal.one_lt_top)
+
+/-- The unnormalized conditional slice has finite total mass. -/
+private lemma cond_slice_ne_top
+    (prob : IBProblem (X := X) (Y := Y)) (x : X) :
+    (∑' y, prob.pXY (x, y)) ≠ ⊤ := by
+  apply tsum_ne_top_of_fintype
+  intro y
+  exact pmf_val_ne_top prob.pXY (x, y)
+
+/-- The unnormalized induced posterior slice has finite total mass. -/
+private lemma jointYT_slice_ne_top
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T) (t : T) :
+    (∑' y, jointYT prob pT_givenX (y, t)) ≠ ⊤ := by
+  apply tsum_ne_top_of_fintype
+  intro y
+  exact pmf_val_ne_top (jointYT prob pT_givenX) (y, t)
+
+/-! ### Conditionals and Projections via Normalization -/
+
+/-- Conditional $p(y|x)$. -/
+noncomputable def condYGivenX (prob : IBProblem (X := X) (Y := Y)) (x : X) : FinProb Y := by
+  classical
+  let f : Y → ℝ≥0∞ := fun y => prob.pXY (x, y)
+  by_cases h0 : (∑' y, f y) = 0
+  · let _ : Nonempty Y := nonemptyY prob
+    exact PMF.pure (Classical.arbitrary Y)
+  · exact PMF.normalize f h0 (cond_slice_ne_top prob x)
+
+/-- Induced Bayesian projection $m(y|t) = p(y,t) / q(t)$. -/
 noncomputable def inducedMProjection (prob : IBProblem (X := X) (Y := Y))
     (pT_givenX : X → FinProb T) : T → FinProb Y := by
   classical
   intro t
   let pYT := jointYT prob pT_givenX
-  let qT := inducedMarginalT prob pT_givenX
-  by_cases ht : 0 < qT.toFun t
-  · refine
-      { toFun := fun y => pYT.toFun (y, t) / qT.toFun t
-        nonneg := by
-          intro y
-          exact div_nonneg (pYT.nonneg (y, t)) (le_of_lt ht)
-        sum_one := by
-          have hslice : ∑ y : Y, pYT.toFun (y, t) = qT.toFun t := by
-            simp [pYT, qT, jointYT, inducedMarginalT,
-              InfoGeometry.EntropicInference.marginal_theta]
-          have htnz : qT.toFun t ≠ 0 := ne_of_gt ht
-          calc
-            (∑ y : Y, pYT.toFun (y, t) / qT.toFun t)
-              = (∑ y : Y, pYT.toFun (y, t)) / qT.toFun t := by
-                simp [div_eq_mul_inv, Finset.sum_mul]
-            _ = qT.toFun t / qT.toFun t := by rw [hslice]
-            _ = 1 := by exact div_self htnz }
-  · exact InfoGeometry.EntropicInference.dirac (Nonempty.some (nonemptyY prob))
+  let f : Y → ℝ≥0∞ := fun y => pYT (y, t)
+  by_cases h0 : (∑' y, f y) = 0
+  · let _ : Nonempty Y := nonemptyY prob
+    exact PMF.pure (Classical.arbitrary Y)
+  · exact PMF.normalize f h0 (jointYT_slice_ne_top prob pT_givenX t)
 
-/-- Backward-compatibility alias used by older drafts. -/
-noncomputable abbrev inducedMProjection' (prob : IBProblem (X := X) (Y := Y))
-    (pT_givenX : X → FinProb T) : T → FinProb Y :=
-  inducedMProjection prob pT_givenX
+/-! ### Information Bottleneck Functionals -/
 
-/--
-Theorem: Non-vacuous Variational Identity.
-$L(p, \beta) = F(p, m[p], \beta) - H(Y|X)$.
--/
-theorem ibLagrangian_eq_variational_functional (prob : IBProblem (X := X) (Y := Y))
-    (pT_givenX : X → FinProb T) :
-    ibLagrangian prob pT_givenX =
-      ibVariationalFunctional prob pT_givenX
-        (inducedMProjection' prob pT_givenX) - ibLagrangianConstant prob := by
-  sorry
+section InformationTheory
 
-/-- BA iteration map. -/
+variable [MeasurableSpace X] [MeasurableSingletonClass X]
+variable [MeasurableSpace Y] [MeasurableSingletonClass Y]
+variable [MeasurableSpace T] [MeasurableSingletonClass T]
+
+/-- Generic Mutual Information defined strictly via canonical KL divergence. -/
+noncomputable def mutualInformation {A B : Type*} [Fintype A] [Fintype B]
+    [MeasurableSpace A] [MeasurableSingletonClass A]
+    [MeasurableSpace B] [MeasurableSingletonClass B]
+    (pAB : FinProb (A × B)) : ℝ :=
+  let pA := pAB.map Prod.fst
+  let pB := pAB.map Prod.snd
+  (InfoGeometry.fin_kl_div pAB (independentCoupling pA pB)).toReal
+
+/-- Local definition of Shannon Entropy for the Lagrangian Constant. -/
+noncomputable def entropy {A : Type*} [Fintype A] (p : FinProb A) : ℝ :=
+  - ∑ a : A, (p a).toReal * Real.log (p a).toReal
+
+/-- The IB Lagrangian: $L(p, β) = I(X;T) - β I(Y;T)$. -/
+noncomputable def ibLagrangian (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T) : ℝ :=
+  mutualInformation (jointXT prob pT_givenX) -
+  prob.beta * mutualInformation (jointYT prob pT_givenX)
+
+/-- The IB variational functional:
+$F(p, m, β) = I(X;T) + β \sum_x p(x) KL(p(y|x) || \sum_t p(t|x) m(y|t))$. -/
+noncomputable def ibVariationalFunctional (prob : IBProblem (X := X) (Y := Y))
+  (pT_givenX : X → FinProb T) (mY_givenT : T → FinProb Y) : ℝ :=
+  let pX := marginal_x prob
+  let pXT := jointXT prob pT_givenX
+  mutualInformation pXT +
+    prob.beta * (∑ x : X, (pX x).toReal *
+      (InfoGeometry.fin_kl_div (condYGivenX prob x) ((pT_givenX x).bind mY_givenT)).toReal)
+
+/-- IB Lagrangian constant: $H(Y|X)$. -/
+noncomputable def ibLagrangianConstant (prob : IBProblem (X := X) (Y := Y)) : ℝ :=
+  let pX := marginal_x prob
+  ∑ x : X, (pX x).toReal * entropy (condYGivenX prob x)
+
+end InformationTheory
+
+/-! ### Blahut-Arimoto Iteration -/
+
+/-- BA iteration map (Placeholder for the actual encoder update). -/
 noncomputable def ibIteration (_prob : IBProblem (X := X) (Y := Y)) :
     (X → FinProb T) → (X → FinProb T) :=
-  fun p => p -- placeholder for BA update
+  fun p => p
 
-/-- optimality residual: distance from the current encoder to its own BA update. -/
-noncomputable def ibResidual (prob : IBProblem (X := X) (Y := Y))
-    (p : X → FinProb T) : ℝ :=
-  KLKernel (marginal_x prob) p (ibIteration prob p)
-
-/--
-Convergence marker: Fixed-point of the Blahut-Arimoto operator.
--/
+/-- Convergence marker: Fixed-point of the Blahut-Arimoto operator. -/
 def ib_fixedPoint (prob : IBProblem (X := X) (Y := Y))
     (p : X → FinProb T) : Prop :=
   ibIteration prob p = p
 
-/--
-One-step BA descent: The Lagrangian is non-increasing under BA iterations.
--/
+/-- One-step BA descent: The Lagrangian is non-increasing under BA iterations. -/
 theorem ib_iteration_descent (prob : IBProblem (X := X) (Y := Y))
+    [MeasurableSpace X] [MeasurableSingletonClass X]
+    [MeasurableSpace Y] [MeasurableSingletonClass Y]
+    [MeasurableSpace T] [MeasurableSingletonClass T]
     (pOld : X → FinProb T) :
     ibLagrangian prob (ibIteration prob pOld) ≤ ibLagrangian prob pOld := by
   simp [ibIteration]

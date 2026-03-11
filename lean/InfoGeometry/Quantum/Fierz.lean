@@ -23,7 +23,7 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSp
 
 /-- **Information Scalar Channel**: $S(\psi) = \langle \psi, J \psi \rangle = 2 \langle x, \xi \rangle$. -/
 noncomputable def infoScalar (ψ : Krein.DoubledSpace E) : ℝ :=
-  hessianIndefiniteForm (E := E) ψ ψ
+  hessian_indefinite_form (E := E) ψ ψ
 
 /-- **Information Symplectic Channel**: $\omega(\psi) = \langle \psi, \epsilon \psi \rangle = \|x\|^2 - \|\xi\|^2$. -/
 noncomputable def infoSymplectic (ψ : Krein.DoubledSpace E) : ℝ :=
@@ -52,11 +52,11 @@ theorem information_fierz_identity (ψ : Krein.DoubledSpace E) :
     (infoHilbert ψ)^2 = (infoScalar ψ)^2 + (infoSymplectic ψ)^2 + 4 * (infoArea ψ) := by
   obtain ⟨x, ξ⟩ := WithLp.ofLp ψ
   unfold infoHilbert infoScalar infoSymplectic infoArea
-  unfold hessianIndefiniteForm inducedSymplecticForm
+  unfold hessian_indefinite_form inducedSymplecticForm
   unfold commutator
   simp only [DoubledSpace.fst, DoubledSpace.snd, ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply]
-  simp only [KreinSpace.kreinInner, modularJ, spectralEpsilon, toDoubled, kreinInner_prodL2]
+  simp only [KreinSpace.kreinInner, modular_j, spectral_epsilon, to_doubled, krein_inner_prod_l2]
   -- Scalar channels are real, so inner product is symmetric
   set X := inner ℝ x x
   set Y := inner ℝ ξ ξ

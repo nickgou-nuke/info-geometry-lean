@@ -22,39 +22,39 @@ abbrev DoubledTensor (E F : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E]
   DoubledSpace E ⊗[ℝ] DoubledSpace F
 
 /--
-Lift `modularJ` to the tensor product via `TensorProduct.map`.
+Lift `modular_j` to the tensor product via `TensorProduct.map`.
 -/
 noncomputable def tensorModularJ : DoubledTensor E F →ₗ[ℝ] DoubledTensor E F :=
-  TensorProduct.map (modularJ (E := E)).toLinearMap (modularJ (E := F)).toLinearMap
+  TensorProduct.map (modular_j (E := E)).toLinearMap (modular_j (E := F)).toLinearMap
 
 /--
-Lift `spectralEpsilon` to the tensor product via `TensorProduct.map`.
+Lift `spectral_epsilon` to the tensor product via `TensorProduct.map`.
 -/
 noncomputable def tensorSpectralEpsilon : DoubledTensor E F →ₗ[ℝ] DoubledTensor E F :=
-  TensorProduct.map (spectralEpsilon (E := E)).toLinearMap (spectralEpsilon (E := F)).toLinearMap
+  TensorProduct.map (spectral_epsilon (E := E)).toLinearMap (spectral_epsilon (E := F)).toLinearMap
 
 @[simp] lemma tensorModularJ_tmul (u : DoubledSpace E) (v : DoubledSpace F) :
     tensorModularJ (E := E) (F := F) (u ⊗ₜ[ℝ] v)
-      = modularJ (E := E) u ⊗ₜ[ℝ] modularJ (E := F) v := by
+      = modular_j (E := E) u ⊗ₜ[ℝ] modular_j (E := F) v := by
   simp [tensorModularJ]
 
 @[simp] lemma tensorSpectralEpsilon_tmul (u : DoubledSpace E) (v : DoubledSpace F) :
     tensorSpectralEpsilon (E := E) (F := F) (u ⊗ₜ[ℝ] v)
-      = spectralEpsilon (E := E) u ⊗ₜ[ℝ] spectralEpsilon (E := F) v := by
+      = spectral_epsilon (E := E) u ⊗ₜ[ℝ] spectral_epsilon (E := F) v := by
   simp [tensorSpectralEpsilon]
 
 @[simp] lemma tensorModularJ_comp_tmul (u : DoubledSpace E) (v : DoubledSpace F) :
     ((tensorModularJ (E := E) (F := F)).comp (tensorModularJ (E := E) (F := F)))
       (u ⊗ₜ[ℝ] v)
       = u ⊗ₜ[ℝ] v := by
-  simp [tensorModularJ, LinearMap.comp_apply, modularJ]
+  simp [tensorModularJ, LinearMap.comp_apply, modular_j]
 
 @[simp] lemma tensorSpectralEpsilon_comp_tmul (u : DoubledSpace E) (v : DoubledSpace F) :
     ((tensorSpectralEpsilon (E := E) (F := F)).comp
       (tensorSpectralEpsilon (E := E) (F := F)))
       (u ⊗ₜ[ℝ] v)
       = u ⊗ₜ[ℝ] v := by
-  simp [tensorSpectralEpsilon, LinearMap.comp_apply, spectralEpsilon]
+  simp [tensorSpectralEpsilon, LinearMap.comp_apply, spectral_epsilon]
 
 end TensorLift
 

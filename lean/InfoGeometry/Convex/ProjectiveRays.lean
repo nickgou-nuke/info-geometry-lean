@@ -10,6 +10,7 @@ physical states are rays in `DoubledSpace E`, i.e. `ℙ ℝ (DoubledSpace E)`.
 
 namespace InfoGeometry.Convex
 
+open InfoGeometry.Krein
 open scoped LinearAlgebra.Projectivization
 
 variable {E : Type*} [AddCommGroup E] [Module ℝ E]

@@ -112,6 +112,10 @@ theorem kl_chain_rule
 noncomputable def mutual_information (p : Joint X Θ) : ℝ≥0∞ :=
   kl p (assemble (marginal_x p) (fun _ => marginal_theta p))
 
+/-- Dirac distribution at `x`. -/
+noncomputable def dirac {α : Type*} (x : α) : FinProb α :=
+  PMF.pure x
+
 end Decompositions
 
 end InfoGeometry.EntropicInference

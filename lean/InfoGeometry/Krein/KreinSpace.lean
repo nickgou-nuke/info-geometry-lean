@@ -372,7 +372,7 @@ noncomputable instance (priority := 1000) instKreinSpaceProdL2 :
   J_selfAdj := signFlipMap_selfAdj
 
 /-- Krein inner product on `WithLp 2 (E × E)` equals `⟪u₁,v₁⟫_ℝ - ⟪u₂,v₂⟫_ℝ`. -/
-lemma kreinInner_prodL2 (u v : WithLp 2 (E × E)) :
+lemma krein_inner_prod_l2 (u v : WithLp 2 (E × E)) :
     KreinSpace.kreinInner u v =
     ⟪(WithLp.ofLp u).1, (WithLp.ofLp v).1⟫_ℝ -
     ⟪(WithLp.ofLp u).2, (WithLp.ofLp v).2⟫_ℝ := by

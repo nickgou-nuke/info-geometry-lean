@@ -118,36 +118,36 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 Modular conjugation `J` (real-linear model of antilinear conjugation on complex space).
 -/
 noncomputable abbrev modularConjugationJ : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  modularJ (E := E)
+  modular_j (E := E)
 
 /-- Modular sign involution `ε = sgn(K)`. -/
 noncomputable abbrev modularSignEpsilon : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  spectralEpsilon (E := E)
+  spectral_epsilon (E := E)
 
 /-- Composite `Jε`, the split-complex structure axis. -/
 noncomputable abbrev modularComplexI : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  complexI (E := E)
+  complex_i (E := E)
 
 @[simp] lemma modularConjugationJ_sq :
     (modularConjugationJ (E := E)).comp (modularConjugationJ (E := E))
       = ContinuousLinearMap.id ℝ (DoubledSpace E) :=
-  modularJ_involution (E := E)
+  modular_j_involution (E := E)
 
 @[simp] lemma modularSignEpsilon_sq :
     (modularSignEpsilon (E := E)).comp (modularSignEpsilon (E := E))
       = ContinuousLinearMap.id ℝ (DoubledSpace E) :=
-  spectralEpsilon_involution (E := E)
+  spectral_epsilon_involution (E := E)
 
 /-- Lemma `modularConjugationJ_anticommutes_modularSign`. -/
 lemma modularConjugationJ_anticommutes_modularSign :
     (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
       = -((modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E))) :=
-  modularJ_spectralEpsilon_anticommute (E := E)
+  modular_j_spectral_epsilon_anticommute (E := E)
 
 @[simp] lemma modularComplexI_sq :
     (modularComplexI (E := E)).comp (modularComplexI (E := E))
       = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) :=
-  complexI_sq (E := E)
+  complex_i_sq (E := E)
 
 /--
 Canonical split-Clifford representation realized by the modular atom on doubled space.

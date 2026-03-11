@@ -21,12 +21,26 @@ variable {d : ℕ}
 /-- The finite-exponential-family density at `θ` packaged as `FinProb`. -/
 noncomputable def finiteExpFamilyFinProb
     (F : FiniteExpFamily (α := α) d)
-    (θ : Fin d → ℝ) : InfoGeometry.FinProb α where
-  toFun := density F θ
-  nonneg := by
-    intro x
+    (θ : Fin d → ℝ) : InfoGeometry.FinProb α := by
+  classical
+  have hnonneg :
+      ∀ x ∈ (Finset.univ : Finset α), 0 ≤ density F θ x := by
+    intro x hx
     exact density_nonneg (F := F) (θ := θ) (x := x)
-  sum_one := density_sum_one F θ
+  have hsum :
+      ∑ x, ENNReal.ofReal (density F θ x) = 1 := by
+    calc
+      ∑ x, ENNReal.ofReal (density F θ x)
+          = ENNReal.ofReal (∑ x, density F θ x) := by
+              simpa using
+                (ENNReal.ofReal_sum_of_nonneg
+                  (s := (Finset.univ : Finset α))
+                  (f := fun x => density F θ x)
+                  hnonneg).symm
+      _ = ENNReal.ofReal 1 := by
+            simp [density_sum_one (F := F) (θ := θ)]
+      _ = 1 := by simp
+  exact InfoGeometry.FinProb.of_fintype (fun x => ENNReal.ofReal (density F θ x)) hsum
 
 /-- Probability map induced by a finite exponential family. -/
 noncomputable def finiteExpFamilyProbMap
@@ -37,7 +51,15 @@ noncomputable def finiteExpFamilyProbMap
 @[simp] lemma finiteExpFamilyProbMap_apply
     (F : FiniteExpFamily (α := α) d)
     (θ : Fin d → ℝ) (x : α) :
-    finiteExpFamilyProbMap F θ x = density F θ x := rfl
+    finiteExpFamilyProbMap F θ x = ENNReal.ofReal (density F θ x) := by
+  simp [finiteExpFamilyProbMap, finiteExpFamilyFinProb, InfoGeometry.FinProb.of_fintype]
+
+lemma finiteExpFamilyProbMap_apply_toReal
+    (F : FiniteExpFamily (α := α) d)
+    (θ : Fin d → ℝ) (x : α) :
+    (finiteExpFamilyProbMap F θ x).toReal = density F θ x := by
+  have hnonneg : 0 ≤ density F θ x := density_nonneg (F := F) (θ := θ) (x := x)
+  simpa [finiteExpFamilyProbMap_apply] using (ENNReal.toReal_ofReal hnonneg)
 
 /-- Fisher/covariance bilinear form in parameter coordinates. -/
 noncomputable def fisherCovarianceBilinear
@@ -68,8 +90,10 @@ lemma fisherBilinear_eq_expectation_mul
     fisherBilinear (p := finiteExpFamilyProbMap F) θ u v
       = InfoGeometry.Information.expectation F θ (fun x => u x * v x) := by
   unfold fisherBilinear InfoGeometry.Information.expectation
-  unfold finiteExpFamilyProbMap finiteExpFamilyFinProb
-  simp [mul_assoc, mul_comm]
+  refine Finset.sum_congr rfl ?_
+  intro x _hx
+  have hnonneg : 0 ≤ density F θ x := density_nonneg (F := F) (θ := θ) (x := x)
+  simp [finiteExpFamilyProbMap_apply, ENNReal.toReal_ofReal, hnonneg, mul_assoc, mul_comm, mul_left_comm]
 
 /--
 Concrete Fisher bridge:

@@ -17,16 +17,16 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSp
 
 namespace ProjectivePrequantumBundle
 
-@[simp] theorem smul_base (c : Gauge) (P : ProjectivePrequantumBundle (E := E)) :
+@[simp] theorem smul_base (c : PrequantumData.Gauge) (P : ProjectivePrequantumBundle (E := E)) :
     (c • P).base = P.base := rfl
 
-@[simp] theorem smul_data (c : Gauge) (P : ProjectivePrequantumBundle (E := E)) :
+@[simp] theorem smul_data (c : PrequantumData.Gauge) (P : ProjectivePrequantumBundle (E := E)) :
     (c • P).data = c • P.data := rfl
 
 /-- Gauge-orbit relation on projective prequantum bundle points. -/
 def GaugeEquivalent
     (P Q : ProjectivePrequantumBundle (E := E)) : Prop :=
-  ∃ u : Gauge, u • P = Q
+  ∃ u : PrequantumData.Gauge, u • P = Q
 
 lemma gaugeEquivalent_refl (P : ProjectivePrequantumBundle (E := E)) :
     GaugeEquivalent (E := E) P P := by
@@ -83,7 +83,7 @@ noncomputable def covariantDerivativeOnQuotient :
 
 /-- The projective base ray is also gauge-invariant and descends to the quotient. -/
 noncomputable def baseOnQuotient :
-    Quotient (gaugeSetoid (E := E)) → ProjectiveState (E := E) :=
+    Quotient (gaugeSetoid (E := E)) → ProjectiveState E :=
   Quotient.lift
     (fun P => P.base)
     (by
@@ -96,6 +96,7 @@ noncomputable def baseOnQuotient :
     baseOnQuotient (E := E) (Quotient.mk (gaugeSetoid (E := E)) P) = P.base := rfl
 
 /-- Convenient extensional criterion. -/
+omit [CompleteSpace E] in
 theorem eq_iff
     {P Q : ProjectivePrequantumBundle (E := E)} :
     P = Q ↔ P.base = Q.base ∧ P.data = Q.data := by

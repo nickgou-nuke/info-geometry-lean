@@ -57,14 +57,14 @@ noncomputable def commutator (A B : DoubledSpace E →L[ℝ] DoubledSpace E) :
 
 /-- Weyl-style identity: `[I, J] = 2ε`. -/
 theorem commutator_I_J :
-    commutator (complexI (E := E)) (modularJ (E := E))
-      = 2 • (spectralEpsilon (E := E)) := by
+    commutator (complex_i (E := E)) (modular_j (E := E))
+      = 2 • (spectral_epsilon (E := E)) := by
   apply ContinuousLinearMap.ext
   intro v
   apply (WithLp.ofLp_injective 2)
   apply Prod.ext
-  · simp [commutator, complexI, modularJ, spectralEpsilon, two_smul]
-  · simp [commutator, complexI, modularJ, spectralEpsilon, two_smul]
+  · simp [commutator, complex_i, modular_j, spectral_epsilon, two_smul]
+  · simp [commutator, complex_i, modular_j, spectral_epsilon, two_smul]
 
 /-- The information vacuum is fixed by both grading subspaces. -/
 def vacuum : ProjectiveState (E := E) :=

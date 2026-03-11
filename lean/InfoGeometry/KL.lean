@@ -7,8 +7,16 @@ import Mathlib.Analysis.SpecialFunctions.Pow.Real
 namespace InfoGeometry.KL
 
 
-open scoped BigOperators
+open scoped BigOperators ENNReal
 
+
+/-- Empirical/model density ratio `P(x) / Q(x)`. -/
+noncomputable def densityRatio
+    {α : Type} [Fintype α]
+    (N : InfoGeometry.EmpiricalCounts α)
+    (Q : InfoGeometry.ProbabilityDist α)
+    (x : α) : ℝ :=
+  empirical_distribution N x / (Q x).toReal
 
 /-- Rényi moment functional built from the empirical/model density ratio. -/
 noncomputable def Phi
@@ -26,7 +34,7 @@ def PhiSupportFaithful
     {α : Type} [Fintype α]
     (N_func : InfoGeometry.EmpiricalCounts α)
     (Q : InfoGeometry.ProbabilityDist α) : Prop :=
-  ∀ x, empirical_distribution N_func x ≠ 0 → 0 < Q.prob x
+  ∀ x, empirical_distribution N_func x ≠ 0 → 0 < Q x
 
 
 

@@ -14,6 +14,8 @@ This module wires singular-flow structures to the canonical Mathlib-based Krein 
 It keeps the API used by downstream singular-bridge modules.
 -/
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Singular.Architecture
 
 open InfoGeometry.Singular.MoorePenroseAdjoint
@@ -161,13 +163,13 @@ lemma transportToDoubled_comm
 
 /-! ## Cartan involution on doubled endomorphisms -/
 
-/-- Cartan involution by conjugation with `modularJ` on doubled operators. -/
+/-- Cartan involution by conjugation with `modular_j` on doubled operators. -/
 noncomputable def cartanInvolution
     (A : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) :
     Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E :=
-  (modularJ (E := E)).comp (A.comp (modularJ (E := E)))
+  (modular_j (E := E)).comp (A.comp (modular_j (E := E)))
 
-omit [CompleteSpace E] in
+
 lemma cartanInvolution_add
     (A B : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) :
     cartanInvolution (E := E) (A + B)
@@ -177,7 +179,7 @@ lemma cartanInvolution_add
   apply (WithLp.ofLp_injective 2)
   simp [cartanInvolution]
 
-omit [CompleteSpace E] in
+
 lemma cartanInvolution_smul (a : ℝ)
     (A : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) :
     cartanInvolution (E := E) (a • A) = a • cartanInvolution (E := E) A := by
@@ -186,28 +188,28 @@ lemma cartanInvolution_smul (a : ℝ)
   apply (WithLp.ofLp_injective 2)
   simp [cartanInvolution]
 
-omit [CompleteSpace E] in
+
 lemma cartanInvolution_involutive
     (A : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) :
     cartanInvolution (E := E) (cartanInvolution (E := E) A) = A := by
   have hJ : ∀ z : Krein.DoubledSpace E,
-      modularJ (E := E) (modularJ (E := E) z) = z := by
+      modular_j (E := E) (modular_j (E := E) z) = z := by
     intro z
-    simpa using congrArg (fun F => F z) (modularJ_involution (E := E))
+    simpa using congrArg (fun F => F z) (modular_j_involution (E := E))
   apply ContinuousLinearMap.ext
   intro x
   apply (WithLp.ofLp_injective 2)
   simp [cartanInvolution, hJ]
 
-omit [CompleteSpace E] in
+
 lemma cartanInvolution_clmComm
     (A B : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) :
     cartanInvolution (E := E) (clmComm A B)
       = clmComm (cartanInvolution (E := E) A) (cartanInvolution (E := E) B) := by
   have hJ : ∀ z : Krein.DoubledSpace E,
-      modularJ (E := E) (modularJ (E := E) z) = z := by
+      modular_j (E := E) (modular_j (E := E) z) = z := by
     intro z
-    simpa using congrArg (fun F => F z) (modularJ_involution (E := E))
+    simpa using congrArg (fun F => F z) (modular_j_involution (E := E))
   apply ContinuousLinearMap.ext
   intro x
   apply (WithLp.ofLp_injective 2)
@@ -222,7 +224,7 @@ noncomputable def cartanInvolutionAuto :
     intro A
     simpa using cartanInvolution_involutive (E := E) A
 
-omit [CompleteSpace E] in
+
 lemma cartanInvolutionAuto_preservesLinear :
     InfoGeometry.Core.PreservesLinear
       (Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E)
@@ -234,7 +236,7 @@ lemma cartanInvolutionAuto_preservesLinear :
     intro a A
     exact cartanInvolution_smul (E := E) a A
 
-omit [CompleteSpace E] in
+
 lemma clmComm_neg_neg
     (A B : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E) :
     clmComm (-A) (-B) = clmComm A B := by

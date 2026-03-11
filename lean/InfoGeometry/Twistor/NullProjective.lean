@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.ProjectiveRays
+import InfoGeometry.Krein.DoubledSpace
 import Mathlib.LinearAlgebra.Projectivization.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 
@@ -12,6 +13,8 @@ open scoped Classical
 open scoped LinearAlgebra.Projectivization
 
 namespace InfoGeometry.Twistor
+
+open InfoGeometry.Krein
 
 variable {K : Type*} {V : Type*}
 variable [Field K] [AddCommGroup V] [Module K V]

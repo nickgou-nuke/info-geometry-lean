@@ -62,3 +62,10 @@ lean_lib SelfReference where
 @[default_target]
 lean_lib scripts where
   globs := #[.submodules `scripts]
+
+@[default_target]
+lean_lib tmp where
+  globs := #[.andSubmodules `tmp]
+
+@[default_target]
+lean_lib scratch

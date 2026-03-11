@@ -50,8 +50,8 @@ a Krein-skew generator is an infinitesimal isometry of the Hessian form.
 theorem InformationKillingField.preserves_hessian
     (A : InformationKillingField (E := E))
     (x y : DSpace E) :
-    hessianIndefiniteForm (E := E) (A.1 x) y +
-      hessianIndefiniteForm (E := E) x (A.1 y) = 0 := by
+    hessian_indefinite_form (E := E) (A.1 x) y +
+      hessian_indefinite_form (E := E) x (A.1 y) = 0 := by
   simpa using
     (InfoGeometry.Krein.IsKreinSkewAdjoint.hessian_infinitesimal
       (E := E) (A := A.1) A.2 x y)
@@ -69,8 +69,8 @@ noncomputable def fisherBilinAt (v : DSpace E) :
 
 @[simp] lemma fisherBilinAt_apply
     (v : DSpace E) (X Y : Op E) :
-    fisherBilinAt v X Y = hessianIndefiniteForm (E := E) (X v) (Y v) := by
-  simp [fisherBilinAt, hessianIndefiniteForm, LinearMap.BilinForm.comp_apply, evalAt,
+    fisherBilinAt v X Y = hessian_indefinite_form (E := E) (X v) (Y v) := by
+  simp [fisherBilinAt, hessian_indefinite_form, LinearMap.BilinForm.comp_apply, evalAt,
     KreinSpace.kreinBilin]
 
 section FisherKilling
@@ -87,41 +87,41 @@ theorem fisher_metric_eq_killing_form_constructive
     (X0 Y0 : Op E)
     (v0 : DSpace E)
     (hB0 : S.B (S.P_minus X0) (S.P_minus Y0) ≠ 0)
-    (hH0 : hessianIndefiniteForm (E := E) (X0 v0) (Y0 v0) ≠ 0)
+    (hH0 : hessian_indefinite_form (E := E) (X0 v0) (Y0 v0) ≠ 0)
     (hBridge :
       ∀ (X Y : Op E) (v : DSpace E),
-        hessianIndefiniteForm (E := E) (X v) (Y v) *
+        hessian_indefinite_form (E := E) (X v) (Y v) *
           S.B (S.P_minus X0) (S.P_minus Y0)
             =
-        hessianIndefiniteForm (E := E) (X0 v0) (Y0 v0) *
+        hessian_indefinite_form (E := E) (X0 v0) (Y0 v0) *
           S.B (S.P_minus X) (S.P_minus Y)) :
     ∃ c : ℝ, c ≠ 0 ∧
       ∀ (X Y : Op E) (v : DSpace E),
-        hessianIndefiniteForm (E := E) (X v) (Y v) =
+        hessian_indefinite_form (E := E) (X v) (Y v) =
           c * S.B (S.P_minus X) (S.P_minus Y) := by
   let B0 : ℝ := S.B (S.P_minus X0) (S.P_minus Y0)
-  let H0 : ℝ := hessianIndefiniteForm (E := E) (X0 v0) (Y0 v0)
+  let H0 : ℝ := hessian_indefinite_form (E := E) (X0 v0) (Y0 v0)
   have hB0' : B0 ≠ 0 := by simpa [B0] using hB0
   have hH0' : H0 ≠ 0 := by simpa [H0] using hH0
   refine ⟨H0 / B0, div_ne_zero hH0' hB0', ?_⟩
   intro X Y v
   let Bxy : ℝ := S.B (S.P_minus X) (S.P_minus Y)
   have hscaled :
-      hessianIndefiniteForm (E := E) (X v) (Y v) * B0 = H0 * Bxy := by
+      hessian_indefinite_form (E := E) (X v) (Y v) * B0 = H0 * Bxy := by
     simpa [B0, H0, Bxy] using hBridge X Y v
   have hdiv :
-      (hessianIndefiniteForm (E := E) (X v) (Y v) * B0) / B0 =
+      (hessian_indefinite_form (E := E) (X v) (Y v) * B0) / B0 =
         (H0 * Bxy) / B0 := by
     exact congrArg (fun z => z / B0) hscaled
   have hmain :
-      hessianIndefiniteForm (E := E) (X v) (Y v) = (H0 * Bxy) / B0 := by
+      hessian_indefinite_form (E := E) (X v) (Y v) = (H0 * Bxy) / B0 := by
     calc
-      hessianIndefiniteForm (E := E) (X v) (Y v)
-          = (hessianIndefiniteForm (E := E) (X v) (Y v) * B0) / B0 := by
+      hessian_indefinite_form (E := E) (X v) (Y v)
+          = (hessian_indefinite_form (E := E) (X v) (Y v) * B0) / B0 := by
               field_simp [hB0']
       _ = (H0 * Bxy) / B0 := hdiv
   calc
-    hessianIndefiniteForm (E := E) (X v) (Y v) = (H0 * Bxy) / B0 := hmain
+    hessian_indefinite_form (E := E) (X v) (Y v) = (H0 * Bxy) / B0 := hmain
     _ = (H0 / B0) * Bxy := by ring
     _ = (H0 / B0) * S.B (S.P_minus X) (S.P_minus Y) := by rfl
 
@@ -137,17 +137,17 @@ theorem fisher_metric_eq_killing_form
     (X0 Y0 : Op E)
     (v0 : DSpace E)
     (hB0 : S.B (S.P_minus X0) (S.P_minus Y0) ≠ 0)
-    (hH0 : hessianIndefiniteForm (E := E) (X0 v0) (Y0 v0) ≠ 0)
+    (hH0 : hessian_indefinite_form (E := E) (X0 v0) (Y0 v0) ≠ 0)
     (hBridge :
       ∀ (X Y : Op E) (v : DSpace E),
-        hessianIndefiniteForm (E := E) (X v) (Y v) *
+        hessian_indefinite_form (E := E) (X v) (Y v) *
           S.B (S.P_minus X0) (S.P_minus Y0)
             =
-        hessianIndefiniteForm (E := E) (X0 v0) (Y0 v0) *
+        hessian_indefinite_form (E := E) (X0 v0) (Y0 v0) *
           S.B (S.P_minus X) (S.P_minus Y)) :
     ∃ c : ℝ, c ≠ 0 ∧
       ∀ (X Y : Op E) (v : DSpace E),
-        hessianIndefiniteForm (E := E) (X v) (Y v) =
+        hessian_indefinite_form (E := E) (X v) (Y v) =
           c * S.B (S.P_minus X) (S.P_minus Y) := by
   exact fisher_metric_eq_killing_form_constructive
     (E := E) (S := S) (X0 := X0) (Y0 := Y0) (v0 := v0)
@@ -165,8 +165,8 @@ structure BayesianSymmetryOrbit (prior : DSpace E) where
   U_zero : U 0 = ContinuousLinearMap.id ℝ (DSpace E)
   preserves_hessian :
     ∀ t x y,
-      hessianIndefiniteForm (E := E) (U t x) (U t y) =
-        hessianIndefiniteForm (E := E) x y
+      hessian_indefinite_form (E := E) (U t x) (U t y) =
+        hessian_indefinite_form (E := E) x y
 
 /-- The updated state at time `t`. -/
 def BayesianSymmetryOrbit.update
@@ -191,8 +191,8 @@ def BayesianSymmetryOrbit.update
 theorem BayesianSymmetryOrbit.flow_equivariant
     {prior : DSpace E}
     (orbit : BayesianSymmetryOrbit (E := E) prior) :
-    ∀ t, hessianIndefiniteForm (E := E) (orbit.update t) (orbit.update t) =
-      hessianIndefiniteForm (E := E) prior prior := by
+    ∀ t, hessian_indefinite_form (E := E) (orbit.update t) (orbit.update t) =
+      hessian_indefinite_form (E := E) prior prior := by
   intro t
   simpa [BayesianSymmetryOrbit.update] using
     orbit.preserves_hessian t prior prior

@@ -120,8 +120,28 @@ noncomputable def fin_potential
     {α : Type*} [MeasurableSpace α] (p q : FinProb α) : α → ℝ :=
   potential p.toMeasure q.toMeasure
 
+/-- Expectations under a discrete finite probability law. -/
+noncomputable def expectation {α : Type*} [Fintype α]
+    (p : FinProb α) (f : α → ℝ) : ℝ :=
+  ∑ x, (p x).toReal * f x
+
+/-- Pointwise log-density: `log p(x)`. -/
+noncomputable def log_density {α : Type*} (p : FinProb α) (x : α) : ℝ :=
+  Real.log (p x).toReal
+
+/-- Pointwise surprisal: `-log p(x)`. -/
+noncomputable def surprisal {α : Type*} (p : FinProb α) (x : α) : ℝ :=
+  -log_density p x
+
+/-- Discrete Shannon entropy. -/
+noncomputable def entropy {α : Type*} [Fintype α] (p : FinProb α) : ℝ :=
+  expectation p (surprisal p)
+
 /-- Legacy aliases for backward compatibility. -/
 abbrev ProbabilityDist (α : Type*) := FinProb α
 abbrev StrictProbabilityDist (α : Type*) := FinProb α
+
+noncomputable abbrev logDensity {α : Type*} (p : FinProb α) (x : α) : ℝ :=
+  log_density p x
 
 end InfoGeometry

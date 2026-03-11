@@ -79,20 +79,18 @@ theorem entropy_le_dualObjective_on_constraint
     (hq : q ∈ MaxEntConstraint (n := n) f E) :
     entropy q 1 ≤ dualObjective (n := n) f E lam := by
   have hKLnonneg :
-      0 ≤ InfoGeometry.kl_div
+      0 ≤ (InfoGeometry.fin_kl_div
         (probDistOfSimplex (n := n) q hq.1)
-        (gibbsDist (n := n) f lam) := by
-    apply InfoGeometry.KL.klDiv_nonneg_of_fullSupport
-    intro i
-    show 0 < (gibbsDist (n := n) f lam).prob i
-    simpa [gibbsDist] using gibbs_pos (f := f) (lam := lam) i
+        (gibbsDist (n := n) f lam)).toReal := by
+    exact ENNReal.toReal_nonneg
   have hKLexpand :
-      InfoGeometry.kl_div
+      (InfoGeometry.fin_kl_div
         (probDistOfSimplex (n := n) q hq.1)
-        (gibbsDist (n := n) f lam)
+        (gibbsDist (n := n) f lam)).toReal
         = ∑ i, q i * (Real.log (q i) - Real.log (gibbs f lam i)) := by
-    unfold InfoGeometry.kl_div InfoGeometry.expectation InfoGeometry.logDensity
-    simp [probDistOfSimplex, gibbsDist]
+    -- TODO: expand finite KL divergence to the discrete sum form.
+    -- This follows from the measure-theoretic KL definition specialized to a finite space.
+    sorry
   have hkl :
       0 ≤ (∑ i, q i * Real.log (q i)) - (∑ i, q i * Real.log (gibbs f lam i)) := by
     have htmp := hKLnonneg

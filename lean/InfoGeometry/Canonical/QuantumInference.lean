@@ -24,13 +24,13 @@ def comm (x y : A) : A := x * y - y * x
 
 /--
 Canonical Commutation Relations driven by an *indefinite* Hessian bilinear form:
-⁅a x, a† y⁆ = (hessianIndefiniteForm x y) • 1.
+⁅a x, a† y⁆ = (hessian_indefinite_form x y) • 1.
 -/
 structure CCR where
-  hessianIndefiniteForm : LinearMap.BilinForm 𝕜 E
+  hessian_indefinite_form : LinearMap.BilinForm 𝕜 E
   a    : E →ₗ[𝕜] A
   adag : E →ₗ[𝕜] A
-  comm_a_adag : ∀ x y, comm (A := A) (a x) (adag y) = algebraMap 𝕜 A (hessianIndefiniteForm x y)
+  comm_a_adag : ∀ x y, comm (A := A) (a x) (adag y) = algebraMap 𝕜 A (hessian_indefinite_form x y)
   comm_a_a : ∀ x y, comm (A := A) (a x) (a y) = 0
   comm_adag_adag : ∀ x y, comm (A := A) (adag x) (adag y) = 0
 

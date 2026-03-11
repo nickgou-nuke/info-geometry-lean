@@ -46,22 +46,31 @@ private lemma one_div_sqrt_two_sq : ((1 / Real.sqrt 2 : ℝ) ^ 2) = (1 / 2 : ℝ
   field_simp [hs0]
   nlinarith [hsqrt]
 
-private lemma fst_add (u v : DoubledSpace E) : (u + v).fst = u.fst + v.fst := by
-  simp [DoubledSpace.fst, WithLp.ofLp_add]
+omit [InnerProductSpace ℝ E] [CompleteSpace E] in
+private lemma fst_add (u v : DoubledSpace E) :
+    WithLp.fst (u + v) = WithLp.fst u + WithLp.fst v := by
+  simp [WithLp.add_fst]
 
-private lemma snd_add (u v : DoubledSpace E) : (u + v).snd = u.snd + v.snd := by
-  simp [DoubledSpace.snd, WithLp.ofLp_add]
+omit [InnerProductSpace ℝ E] [CompleteSpace E] in
+private lemma snd_add (u v : DoubledSpace E) :
+    WithLp.snd (u + v) = WithLp.snd u + WithLp.snd v := by
+  simp [WithLp.add_snd]
 
-private lemma fst_smul (a : ℝ) (u : DoubledSpace E) : (a • u).fst = a • u.fst := by
-  simp [DoubledSpace.fst, WithLp.ofLp_smul]
+omit [CompleteSpace E] in
+private lemma fst_smul (a : ℝ) (u : DoubledSpace E) :
+    WithLp.fst (a • u) = a • WithLp.fst u := by
+  simp [WithLp.smul_fst]
 
-private lemma snd_smul (a : ℝ) (u : DoubledSpace E) : (a • u).snd = a • u.snd := by
-  simp [DoubledSpace.snd, WithLp.ofLp_smul]
+omit [CompleteSpace E] in
+private lemma snd_smul (a : ℝ) (u : DoubledSpace E) :
+    WithLp.snd (a • u) = a • WithLp.snd u := by
+  simp [WithLp.smul_snd]
 
+omit [CompleteSpace E] in
 private lemma rotation45_norm (u : DoubledSpace E) :
-    ‖InfoGeometry.Krein.toDoubled
-        (((1 / Real.sqrt 2 : ℝ)) • u.fst + ((1 / Real.sqrt 2 : ℝ)) • u.snd)
-        (((1 / Real.sqrt 2 : ℝ)) • u.fst - ((1 / Real.sqrt 2 : ℝ)) • u.snd)‖ = ‖u‖ := by
+    ‖InfoGeometry.Krein.to_doubled
+        (((1 / Real.sqrt 2 : ℝ)) • WithLp.fst u + ((1 / Real.sqrt 2 : ℝ)) • WithLp.snd u)
+        (((1 / Real.sqrt 2 : ℝ)) • WithLp.fst u - ((1 / Real.sqrt 2 : ℝ)) • WithLp.snd u)‖ = ‖u‖ := by
   let c : ℝ := 1 / Real.sqrt 2
   have hcpos : 0 < c := by
     dsimp [c]
@@ -76,95 +85,117 @@ private lemma rotation45_norm (u : DoubledSpace E) :
         = 2 * (‖WithLp.fst u‖ ^ 2 + ‖WithLp.snd u‖ ^ 2) := by
     nlinarith [norm_add_sq_real (WithLp.fst u) (WithLp.snd u),
       norm_sub_sq_real (WithLp.fst u) (WithLp.snd u)]
-  have h1 : ‖c • WithLp.fst u + c • WithLp.snd u‖ ^ 2
-      = c ^ 2 * ‖WithLp.fst u + WithLp.snd u‖ ^ 2 := by
+  have h1 :
+      ‖c • WithLp.fst u + c • WithLp.snd u‖ ^ 2
+        = c ^ 2 * ‖WithLp.fst u + WithLp.snd u‖ ^ 2 := by
     rw [← smul_add, norm_smul, hcnorm]
     ring
-  have h2 : ‖c • WithLp.fst u - c • WithLp.snd u‖ ^ 2
-      = c ^ 2 * ‖WithLp.fst u - WithLp.snd u‖ ^ 2 := by
+  have h2 :
+      ‖c • WithLp.fst u - c • WithLp.snd u‖ ^ 2
+        = c ^ 2 * ‖WithLp.fst u - WithLp.snd u‖ ^ 2 := by
     rw [← smul_sub, norm_smul, hcnorm]
     ring
   have hsq :
-      ‖InfoGeometry.Krein.toDoubled (c • u.fst + c • u.snd) (c • u.fst - c • u.snd)‖ ^ 2
+      ‖InfoGeometry.Krein.to_doubled
+          (c • WithLp.fst u + c • WithLp.snd u)
+          (c • WithLp.fst u - c • WithLp.snd u)‖ ^ 2
         = ‖u‖ ^ 2 := by
     rw [WithLp.prod_norm_sq_eq_of_L2, WithLp.prod_norm_sq_eq_of_L2]
-    simp [InfoGeometry.Krein.toDoubled, InfoGeometry.Krein.DoubledSpace.fst,
-      InfoGeometry.Krein.DoubledSpace.snd]
+    simp only [fst_to_doubled, snd_to_doubled]
     rw [h1, h2, hc2]
     nlinarith [hpar]
   have hnonneg1 :
-      0 ≤ ‖InfoGeometry.Krein.toDoubled (c • u.fst + c • u.snd) (c • u.fst - c • u.snd)‖ := norm_nonneg _
+      0 ≤ ‖InfoGeometry.Krein.to_doubled
+            (c • WithLp.fst u + c • WithLp.snd u)
+            (c • WithLp.fst u - c • WithLp.snd u)‖ := norm_nonneg _
   have hnonneg2 : 0 ≤ ‖u‖ := norm_nonneg _
-  nlinarith
+  nlinarith [hsq, hnonneg1, hnonneg2]
 
 noncomputable def rotation45 (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     DoubledSpace E ≃ₗᵢ[ℝ] NeutralSpace E where
   toFun u := by
     let c : ℝ := 1 / Real.sqrt 2
-    exact InfoGeometry.Krein.toDoubled (c • u.fst + c • u.snd) (c • u.fst - c • u.snd)
+    exact InfoGeometry.Krein.to_doubled
+      (c • WithLp.fst u + c • WithLp.snd u)
+      (c • WithLp.fst u - c • WithLp.snd u)
   invFun v := by
     let c : ℝ := 1 / Real.sqrt 2
-    exact InfoGeometry.Krein.toDoubled (c • v.fst + c • v.snd) (c • v.fst - c • v.snd)
+    exact InfoGeometry.Krein.to_doubled
+      (c • WithLp.fst v + c • WithLp.snd v)
+      (c • WithLp.fst v - c • WithLp.snd v)
   left_inv := by
     intro u
     let c : ℝ := 1 / Real.sqrt 2
     have hc2 : c * c = (1 / 2 : ℝ) := by
       simpa [c, pow_two] using (one_div_sqrt_two_sq)
+    have hsum : c * c + c * c = (1 : ℝ) := by
+      nlinarith [hc2]
     apply InfoGeometry.Krein.DoubledSpace.ext
-    · change c • (c • u.fst + c • u.snd) + c • (c • u.fst - c • u.snd) = u.fst
+    · change
+        c • (c • WithLp.fst u + c • WithLp.snd u) +
+          c • (c • WithLp.fst u - c • WithLp.snd u) = WithLp.fst u
       calc
-        c • (c • u.fst + c • u.snd) + c • (c • u.fst - c • u.snd)
-            = (c * c + c * c) • u.fst := by
-                simp [smul_add, smul_sub, smul_smul, sub_eq_add_neg,
-                  add_assoc, add_left_comm, add_comm, add_smul]
-        _ = u.fst := by
-            have hsum : c * c + c * c = (1 : ℝ) := by nlinarith [hc2]
+        c • (c • WithLp.fst u + c • WithLp.snd u) +
+            c • (c • WithLp.fst u - c • WithLp.snd u)
+            = (c * c + c * c) • WithLp.fst u := by
+                simp [smul_add, smul_smul, sub_eq_add_neg,
+                  add_left_comm, add_smul]
+        _ = WithLp.fst u := by
             simp [hsum]
-    · change c • (c • u.fst + c • u.snd) - c • (c • u.fst - c • u.snd) = u.snd
+    · change
+        c • (c • WithLp.fst u + c • WithLp.snd u) -
+          c • (c • WithLp.fst u - c • WithLp.snd u) = WithLp.snd u
       calc
-        c • (c • u.fst + c • u.snd) - c • (c • u.fst - c • u.snd)
-            = (c * c + c * c) • u.snd := by
-                simp [smul_add, smul_sub, smul_smul, sub_eq_add_neg,
-                  add_assoc, add_left_comm, add_comm, add_smul]
-        _ = u.snd := by
-            have hsum : c * c + c * c = (1 : ℝ) := by nlinarith [hc2]
+        c • (c • WithLp.fst u + c • WithLp.snd u) -
+            c • (c • WithLp.fst u - c • WithLp.snd u)
+            = (c * c + c * c) • WithLp.snd u := by
+                simp [smul_add, smul_smul, sub_eq_add_neg,
+                  add_left_comm, add_smul]
+        _ = WithLp.snd u := by
             simp [hsum]
+
   right_inv := by
     intro u
     let c : ℝ := 1 / Real.sqrt 2
     have hc2 : c * c = (1 / 2 : ℝ) := by
       simpa [c, pow_two] using (one_div_sqrt_two_sq)
+    have hsum : c * c + c * c = (1 : ℝ) := by
+      nlinarith [hc2]
     apply InfoGeometry.Krein.DoubledSpace.ext
-    · change c • (c • u.fst + c • u.snd) + c • (c • u.fst - c • u.snd) = u.fst
+    · change
+        c • (c • WithLp.fst u + c • WithLp.snd u) +
+          c • (c • WithLp.fst u - c • WithLp.snd u) = WithLp.fst u
       calc
-        c • (c • u.fst + c • u.snd) + c • (c • u.fst - c • u.snd)
-            = (c * c + c * c) • u.fst := by
-                simp [smul_add, smul_sub, smul_smul, sub_eq_add_neg,
-                  add_assoc, add_left_comm, add_comm, add_smul]
-        _ = u.fst := by
-            have hsum : c * c + c * c = (1 : ℝ) := by nlinarith [hc2]
+        c • (c • WithLp.fst u + c • WithLp.snd u) +
+            c • (c • WithLp.fst u - c • WithLp.snd u)
+            = (c * c + c * c) • WithLp.fst u := by
+                simp [smul_add, smul_smul, sub_eq_add_neg,
+                  add_left_comm, add_smul]
+        _ = WithLp.fst u := by
             simp [hsum]
-    · change c • (c • u.fst + c • u.snd) - c • (c • u.fst - c • u.snd) = u.snd
+    · change
+        c • (c • WithLp.fst u + c • WithLp.snd u) -
+          c • (c • WithLp.fst u - c • WithLp.snd u) = WithLp.snd u
       calc
-        c • (c • u.fst + c • u.snd) - c • (c • u.fst - c • u.snd)
-            = (c * c + c * c) • u.snd := by
-                simp [smul_add, smul_sub, smul_smul, sub_eq_add_neg,
-                  add_assoc, add_left_comm, add_comm, add_smul]
-        _ = u.snd := by
-            have hsum : c * c + c * c = (1 : ℝ) := by nlinarith [hc2]
+        c • (c • WithLp.fst u + c • WithLp.snd u) -
+            c • (c • WithLp.fst u - c • WithLp.snd u)
+            = (c * c + c * c) • WithLp.snd u := by
+                simp [smul_add, smul_smul, sub_eq_add_neg,
+                  add_left_comm, add_smul]
+        _ = WithLp.snd u := by
             simp [hsum]
   map_add' := by
     intro u v
-    apply (WithLp.ofLp_injective 2)
+    apply (WithLp.ofLp_injective (p := (2 : ENNReal)))
     ext <;>
-    simp [InfoGeometry.Krein.toDoubled, fst_add, snd_add, sub_eq_add_neg,
-      smul_add, add_assoc, add_left_comm, add_comm]
+      simp [InfoGeometry.Krein.to_doubled, sub_eq_add_neg,
+        smul_add, add_assoc, add_left_comm, add_comm]
   map_smul' := by
     intro a u
-    apply (WithLp.ofLp_injective 2)
+    apply (WithLp.ofLp_injective (p := (2 : ENNReal)))
     ext <;>
-    simp [InfoGeometry.Krein.toDoubled, fst_smul, snd_smul, smul_add, smul_sub, smul_smul,
-      mul_comm, mul_left_comm, mul_assoc]
+      simp [InfoGeometry.Krein.to_doubled, smul_add, smul_sub,
+        smul_smul, mul_comm]
   norm_map' := by
     intro u
     simpa using rotation45_norm (E := E) u

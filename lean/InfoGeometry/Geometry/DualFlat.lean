@@ -426,7 +426,7 @@ structure UnnormalizedMeasure (μ₀ : MeasureTheory.Measure Ω) where
   mass_pos : 0 < totalMass
 
 /-- Conceptual ray space of probability states via doubled-space projectivization. -/
-abbrev ProjectiveProbability : Type _ := ProjectiveState (E := E)
+abbrev ProjectiveProbability : Type _ := InfoGeometry.Projective.ProjectiveState (E := E)
 
 /-- Projective divergence on representatives: measure-theoretic KL on AC probabilities. -/
 noncomputable def projectiveDivergence

@@ -213,17 +213,17 @@ theorem deriv_modularVelocity_zero
 /-- Linear embedding of the base carrier into the doubled carrier (`x ↦ (x,0)`). -/
 noncomputable def embedBase : E →L[ℝ] ArnoldMajoranaCarrier E where
   toLinearMap :=
-    { toFun := fun x => InfoGeometry.Krein.toDoubled x 0
+    { toFun := fun x => InfoGeometry.Krein.to_doubled x 0
       map_add' := by
         intro x y
         apply (WithLp.ofLp_injective 2)
-        simp [InfoGeometry.Krein.toDoubled]
+        simp [InfoGeometry.Krein.to_doubled]
       map_smul' := by
         intro a x
         apply (WithLp.ofLp_injective 2)
-        simp [InfoGeometry.Krein.toDoubled, smul_zero] }
+        simp [InfoGeometry.Krein.to_doubled, smul_zero] }
   cont := by
-    simpa [InfoGeometry.Krein.toDoubled] using
+    simpa [InfoGeometry.Krein.to_doubled] using
       (WithLp.prod_continuous_toLp (p := 2) (α := E) (β := E)).comp
         (continuous_id.prodMk continuous_const)
 
@@ -328,10 +328,10 @@ Krein spectral projectors: $P_+ = (I + ε)/2$ and $P_- = (I - ε)/2$.
 These isolate the two types of chiral sectors.
 -/
 noncomputable def kreinPlusProjector : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) + spectralEpsilon)
+  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) + spectral_epsilon)
 
 noncomputable def kreinMinusProjector : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) - spectralEpsilon)
+  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) - spectral_epsilon)
 
 /--
 Two-type Chiral Charges:

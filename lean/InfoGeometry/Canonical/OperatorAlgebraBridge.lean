@@ -49,7 +49,7 @@ theorem modular_atom_is_cl11 :
       (modularConjugationJ (E := E))
       (modularSignEpsilon (E := E)) := by
   simpa [modularConjugationJ, modularSignEpsilon] using
-    (InfoGeometry.Krein.modularJ_spectralEpsilon_isCl11 (E := E))
+    (InfoGeometry.Krein.modular_j_spectral_epsilon_isCl11 (E := E))
 
 end ModularAtom
 

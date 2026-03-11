@@ -78,19 +78,19 @@ abbrev RealHilbertObs
 /-- First-leg embedding `x ↦ (x,0)` into doubled space. -/
 def firstLegEmbedding : E →L[ℝ] InfoGeometry.Krein.DoubledSpace E where
   toLinearMap :=
-    { toFun := fun x => InfoGeometry.Krein.toDoubled x (0 : E)
+    { toFun := fun x => InfoGeometry.Krein.to_doubled x (0 : E)
       map_add' := by
         intro x y
         simpa using
-          (InfoGeometry.Krein.add_toDoubled
+          (InfoGeometry.Krein.add_to_doubled
             (x := x) (ξ := (0 : E)) (y := y) (η := (0 : E))).symm
       map_smul' := by
         intro a x
         simpa using
-          (InfoGeometry.Krein.smul_toDoubled
+          (InfoGeometry.Krein.smul_to_doubled
             (c := a) (x := x) (ξ := (0 : E))).symm }
   cont := by
-    simpa [InfoGeometry.Krein.toDoubled] using
+    simpa [InfoGeometry.Krein.to_doubled] using
       (WithLp.prod_continuous_toLp (p := 2) (α := E) (β := E)).comp
         (continuous_id.prodMk (continuous_const (y := (0 : E))))
 
@@ -144,18 +144,18 @@ abbrev ComplexHilbertObs
 /-- Complex first-leg embedding `x ↦ (x,0)` into doubled space. -/
 def complexFirstLegEmbedding : H →L[ℂ] InfoGeometry.Krein.DoubledSpace H where
   toLinearMap :=
-    { toFun := fun x => InfoGeometry.Krein.toDoubled x (0 : H)
+    { toFun := fun x => InfoGeometry.Krein.to_doubled x (0 : H)
       map_add' := by
         intro x y
         simpa using
-          (InfoGeometry.Krein.add_toDoubled
+          (InfoGeometry.Krein.add_to_doubled
             (x := x) (ξ := (0 : H)) (y := y) (η := (0 : H))).symm
       map_smul' := by
         intro a x
         apply (WithLp.ofLp_injective 2)
-        simp [InfoGeometry.Krein.toDoubled, smul_zero] }
+        simp [InfoGeometry.Krein.to_doubled, smul_zero] }
   cont := by
-    simpa [InfoGeometry.Krein.toDoubled] using
+    simpa [InfoGeometry.Krein.to_doubled] using
       (WithLp.prod_continuous_toLp (p := 2) (α := H) (β := H)).comp
         (continuous_id.prodMk (continuous_const (y := (0 : H))))
 

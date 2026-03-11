@@ -44,15 +44,15 @@ noncomputable def P (L : InformationLadder E) : E →L[ℝ] E :=
 /-- The Annihilation operator acting on the DoubledSpace (Primal-Dual Bundle). -/
 noncomputable def annihilation : (DoubledSpace E) →ₗ[ℝ] (DoubledSpace E) :=
   -- Maps (x, θ) to (a x, a θ) restricted to the information subspace.
-  { toFun := fun v => toDoubled ((L.a_op.comp L.P) v.fst) ((L.a_op.comp L.P) v.snd)
+  { toFun := fun v => to_doubled ((L.a_op.comp L.P) v.fst) ((L.a_op.comp L.P) v.snd)
     map_add' := by
       intro v w
       apply (WithLp.ofLp_injective 2)
-      simp [toDoubled, DoubledSpace.fst, DoubledSpace.snd, (L.a_op.comp L.P).map_add]
+      simp [to_doubled, DoubledSpace.fst, DoubledSpace.snd, (L.a_op.comp L.P).map_add]
     map_smul' := by
       intro c v
       apply (WithLp.ofLp_injective 2)
-      simp [toDoubled, DoubledSpace.fst, DoubledSpace.snd, (L.a_op.comp L.P).map_smul] }
+      simp [to_doubled, DoubledSpace.fst, DoubledSpace.snd, (L.a_op.comp L.P).map_smul] }
 
 /--
 The Creation operator defined as the Krein-adjoint of the annihilation operator.
@@ -60,15 +60,15 @@ This is where the indefinite Krein metric enters the physics of inference.
 -/
 noncomputable def creation : (DoubledSpace E) →ₗ[ℝ] (DoubledSpace E) :=
   -- Structural definition for the formalization.
-  { toFun := fun v => toDoubled ((-(L.a_op.comp L.P)) v.fst) ((-(L.a_op.comp L.P)) v.snd)
+  { toFun := fun v => to_doubled ((-(L.a_op.comp L.P)) v.fst) ((-(L.a_op.comp L.P)) v.snd)
     map_add' := by
       intro v w
       apply (WithLp.ofLp_injective 2)
-      simp [toDoubled, DoubledSpace.fst, DoubledSpace.snd, map_add]
+      simp [to_doubled, DoubledSpace.fst, DoubledSpace.snd, map_add]
     map_smul' := by
       intro c v
       apply (WithLp.ofLp_injective 2)
-      simp [toDoubled, DoubledSpace.fst, DoubledSpace.snd, map_smul] }
+      simp [to_doubled, DoubledSpace.fst, DoubledSpace.snd, map_smul] }
 
 end InformationLadder
 

@@ -25,12 +25,12 @@ noncomputable abbrev doubledToHilbert : DoubledSpace E ≃L[ℝ] HilbertDoubled 
 noncomputable def doubledAdjoint (A : DoubledEnd E) : DoubledEnd E :=
   ContinuousLinearMap.adjoint A
 
-/-- Krein adjoint on doubled space, using `J = spectralEpsilon`: `A♯ = J ∘ A† ∘ J`. -/
+/-- Krein adjoint on doubled space, using `J = spectral_epsilon`: `A♯ = J ∘ A† ∘ J`. -/
 noncomputable def doubledKreinAdjoint (A : DoubledEnd E) : DoubledEnd E :=
-  (spectralEpsilon (E := E)).comp ((doubledAdjoint (E := E) A).comp (spectralEpsilon (E := E)))
+  (spectral_epsilon (E := E)).comp ((doubledAdjoint (E := E) A).comp (spectral_epsilon (E := E)))
 
 @[simp] lemma doubledKreinAdjoint_apply (A : DoubledEnd E) (x : DoubledSpace E) :
     doubledKreinAdjoint (E := E) A x =
-      (spectralEpsilon (E := E)) ((doubledAdjoint (E := E) A) ((spectralEpsilon (E := E)) x)) := rfl
+      (spectral_epsilon (E := E)) ((doubledAdjoint (E := E) A) ((spectral_epsilon (E := E)) x)) := rfl
 
 end InfoGeometry.Krein

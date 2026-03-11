@@ -115,11 +115,11 @@ variable {E F : Type*}
 
 /-- `Cl(1,1)` Dirac seed from modular conjugation. -/
 noncomputable abbrev cl11DiracSeed : Endomorphism (DoubledSpace E) :=
-  (modularJ (E := E)).toLinearMap
+  (modular_j (E := E)).toLinearMap
 
 /-- `Cl(1,1)` chiral grading from spectral sign involution. -/
 noncomputable abbrev cl11Grading : Endomorphism (DoubledSpace E) :=
-  (spectralEpsilon (E := E)).toLinearMap
+  (spectral_epsilon (E := E)).toLinearMap
 
 /-- Lemma `cl11_isChiralDirac`. -/
 lemma cl11_isChiralDirac :
@@ -128,7 +128,7 @@ lemma cl11_isChiralDirac :
       cl11DiracSeed (E := E).comp (cl11Grading (E := E))
         = -(cl11Grading (E := E).comp (cl11DiracSeed (E := E))) := by
     simpa [cl11DiracSeed, cl11Grading] using
-      congrArg ContinuousLinearMap.toLinearMap (modularJ_spectralEpsilon_anticommute (E := E))
+      congrArg ContinuousLinearMap.toLinearMap (modular_j_spectral_epsilon_anticommute (E := E))
   calc
     cl11DiracSeed (E := E).comp (cl11Grading (E := E))
         + cl11Grading (E := E).comp (cl11DiracSeed (E := E))
@@ -141,11 +141,11 @@ lemma cl11_isChiralDirac :
 lemma cl11Grading_involutive :
     IsInvolutiveGrading (cl11Grading (E := E)) := by
   simpa [IsInvolutiveGrading, cl11Grading] using
-    congrArg ContinuousLinearMap.toLinearMap (spectralEpsilon_involution (E := E))
+    congrArg ContinuousLinearMap.toLinearMap (spectral_epsilon_involution (E := E))
 
 /--
 Concrete Bott-Dirac splitting for the `Cl(1,1)` pair
-`(modularJ, spectralEpsilon)` on the first tensor factor.
+`(modular_j, spectral_epsilon)` on the first tensor factor.
 -/
 theorem cl11_bottDirac_sq_eq_sum_laplacians
     (Dn : Endomorphism F) :

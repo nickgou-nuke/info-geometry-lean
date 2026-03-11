@@ -78,7 +78,7 @@ section Group
 /-- Group-level Cartan involution `Θ(U) = J ∘ U ∘ J` on the Hessian orthogonal group. -/
 noncomputable def cartanInvolutionGroup (U : HessianOrthogonalGroup E) :
     HessianOrthogonalGroup E :=
-  modularJHessianOrthogonal * U * modularJHessianOrthogonal
+  modular_jHessianOrthogonal * U * modular_jHessianOrthogonal
 
 end Group
 

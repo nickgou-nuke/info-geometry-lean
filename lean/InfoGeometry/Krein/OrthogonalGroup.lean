@@ -55,7 +55,7 @@ instance : Coe (HessianOrthogonalGroup E) (NeutralSpace E ≃L[ℝ] NeutralSpace
 end HessianOrthogonalGroup
 
 /-- Swap involution as an element of the Hessian orthogonal group. -/
-noncomputable def modularJHessianOrthogonal : HessianOrthogonalGroup E :=
+noncomputable def modular_jHessianOrthogonal : HessianOrthogonalGroup E :=
   ⟨(NeutralSpace.neutralJ (E := E)).toContinuousLinearEquiv, IsKreinIsometry.J⟩
 
 end InfoGeometry.Krein

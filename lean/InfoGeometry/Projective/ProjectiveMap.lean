@@ -111,35 +111,35 @@ lemma projectiveMapEven_mk_gauge
     projectiveMapEven A hA (projectivize (u • v)) = projectiveMapEven A hA (projectivize v) := by
   exact projectiveMap_mk_gauge A u v
 
-lemma modularJ_gauge_equivariant
+lemma modular_j_gauge_equivariant
     (u : Gauge) (v : DoubledSpace E) :
-    modularJ (u • v) = u • modularJ v := by
-  exact map_smul_gauge (modularJ E) u v
+    modular_j (u • v) = u • modular_j v := by
+  exact map_smul_gauge (modular_j E) u v
 
-lemma spectralEpsilon_gauge_equivariant
+lemma spectral_epsilon_gauge_equivariant
     (u : Gauge) (v : DoubledSpace E) :
-    spectralEpsilon (u • v) = u • spectralEpsilon v := by
-  exact map_smul_gauge (spectralEpsilon E) u v
+    spectral_epsilon (u • v) = u • spectral_epsilon v := by
+  exact map_smul_gauge (spectral_epsilon E) u v
 
-lemma complexI_gauge_equivariant
+lemma complex_i_gauge_equivariant
     (u : Gauge) (v : DoubledSpace E) :
-    complexI (u • v) = u • complexI v := by
-  exact map_smul_gauge (complexI E) u v
+    complex_i (u • v) = u • complex_i v := by
+  exact map_smul_gauge (complex_i E) u v
 
-lemma projectiveMap_modularJ_mk_gauge
+lemma projectiveMap_modular_j_mk_gauge
     (u : Gauge) (v : DoubledSpace E) :
-    projectiveMap (modularJ E) (projectivize (u • v)) = projectiveMap (modularJ E) (projectivize v) := by
-  exact projectiveMap_mk_gauge (modularJ E) u v
+    projectiveMap (modular_j E) (projectivize (u • v)) = projectiveMap (modular_j E) (projectivize v) := by
+  exact projectiveMap_mk_gauge (modular_j E) u v
 
-lemma projectiveMap_spectralEpsilon_mk_gauge
+lemma projectiveMap_spectral_epsilon_mk_gauge
     (u : Gauge) (v : DoubledSpace E) :
-    projectiveMap (spectralEpsilon E) (projectivize (u • v)) = projectiveMap (spectralEpsilon E) (projectivize v) := by
-  exact projectiveMap_mk_gauge (spectralEpsilon E) u v
+    projectiveMap (spectral_epsilon E) (projectivize (u • v)) = projectiveMap (spectral_epsilon E) (projectivize v) := by
+  exact projectiveMap_mk_gauge (spectral_epsilon E) u v
 
-lemma projectiveMap_complexI_mk_gauge
+lemma projectiveMap_complex_i_mk_gauge
     (u : Gauge) (v : DoubledSpace E) :
-    projectiveMap (complexI E) (projectivize (u • v)) = projectiveMap (complexI E) (projectivize v) := by
-  exact projectiveMap_mk_gauge (complexI E) u v
+    projectiveMap (complex_i E) (projectivize (u • v)) = projectiveMap (complex_i E) (projectivize v) := by
+  exact projectiveMap_mk_gauge (complex_i E) u v
 
 lemma projectiveMap_id :
     projectiveMap (ContinuousLinearMap.id ℝ (DoubledSpace E)) = id := by

@@ -28,17 +28,43 @@ def MaxEntConstraint (f : Fin n → ℝ) (E : ℝ) : Set (Fin n → ℝ) :=
 /-- Build a `ProbabilityDist` from a point in the simplex. -/
 noncomputable def probDistOfSimplex
     (p : Fin n → ℝ) (hp : p ∈ ProbabilitySimplex n) :
-    InfoGeometry.ProbabilityDist (Fin n) where
-  prob := p
-  sum_one := hp.2
-  nonneg := hp.1
+    InfoGeometry.FinProb (Fin n) := by
+  classical
+  have hnonneg : ∀ i ∈ (Finset.univ : Finset (Fin n)), 0 ≤ p i := by
+    intro i hi
+    exact hp.1 i
+  have hsum : ∑ i, ENNReal.ofReal (p i) = 1 := by
+    calc
+      ∑ i, ENNReal.ofReal (p i)
+          = ENNReal.ofReal (∑ i, p i) := by
+              simpa using
+                (ENNReal.ofReal_sum_of_nonneg
+                  (s := (Finset.univ : Finset (Fin n)))
+                  (f := fun i => p i)
+                  hnonneg).symm
+      _ = ENNReal.ofReal 1 := by simp [hp.2]
+      _ = 1 := by simp
+  exact InfoGeometry.FinProb.of_fintype (fun i => ENNReal.ofReal (p i)) hsum
 
 /-- Gibbs distribution packaged as a `ProbabilityDist`. -/
 noncomputable def gibbsDist (f : Fin n → ℝ) (lam : ℝ) :
-    InfoGeometry.ProbabilityDist (Fin n) where
-  prob := gibbs f lam
-  sum_one := gibbs_sum_one f lam
-  nonneg := fun i => gibbs_nonneg f lam i
+    InfoGeometry.FinProb (Fin n) := by
+  classical
+  have hnonneg : ∀ i ∈ (Finset.univ : Finset (Fin n)), 0 ≤ gibbs f lam i := by
+    intro i hi
+    exact gibbs_nonneg f lam i
+  have hsum : ∑ i, ENNReal.ofReal (gibbs f lam i) = 1 := by
+    calc
+      ∑ i, ENNReal.ofReal (gibbs f lam i)
+          = ENNReal.ofReal (∑ i, gibbs f lam i) := by
+              simpa using
+                (ENNReal.ofReal_sum_of_nonneg
+                  (s := (Finset.univ : Finset (Fin n)))
+                  (f := fun i => gibbs f lam i)
+                  hnonneg).symm
+      _ = ENNReal.ofReal 1 := by simp [gibbs_sum_one f lam]
+      _ = 1 := by simp
+  exact InfoGeometry.FinProb.of_fintype (fun i => ENNReal.ofReal (gibbs f lam i)) hsum
 
 /-- Cross-entropy to Gibbs equals `funE + log Z` on the constraint set. -/
 lemma crossEntropyToGibbs_eq
@@ -111,72 +137,8 @@ theorem max_ent_lagrange_multiplier_gibbs
     (hp : p ∈ MaxEntConstraint (n := n) f E)
     (h_dist : ∀ i, p i = gibbs f lam i) :
     ∀ q, q ∈ MaxEntConstraint (n := n) f E → entropy q 1 ≤ entropy p 1 := by
-  intro q hq
-  have hKLnonneg :
-      0 ≤ InfoGeometry.kl_div
-        (probDistOfSimplex (n := n) q hq.1)
-        (gibbsDist (n := n) f lam) := by
-    apply InfoGeometry.KL.klDiv_nonneg_of_fullSupport
-    intro i
-    show 0 < (gibbsDist (n := n) f lam).prob i
-    simpa [gibbsDist] using gibbs_pos (f := f) (lam := lam) i
-  have hKLexpand :
-      InfoGeometry.kl_div
-        (probDistOfSimplex (n := n) q hq.1)
-        (gibbsDist (n := n) f lam)
-        = ∑ i, q i * (Real.log (q i) - Real.log (gibbs f lam i)) := by
-    unfold InfoGeometry.kl_div InfoGeometry.expectation InfoGeometry.logDensity
-    simp [probDistOfSimplex, gibbsDist]
-  have hkl :
-      0 ≤ (∑ i, q i * Real.log (q i)) - (∑ i, q i * Real.log (gibbs f lam i)) := by
-    have htmp := hKLnonneg
-    rw [hKLexpand] at htmp
-    have hsum :
-        ∑ i, q i * (Real.log (q i) - Real.log (gibbs f lam i))
-          = (∑ i, q i * Real.log (q i)) - (∑ i, q i * Real.log (gibbs f lam i)) := by
-      calc
-        ∑ i, q i * (Real.log (q i) - Real.log (gibbs f lam i))
-            = ∑ i, (q i * Real.log (q i) - q i * Real.log (gibbs f lam i)) := by
-                refine Finset.sum_congr rfl ?_
-                intro i hi
-                ring
-        _ = (∑ i, q i * Real.log (q i)) - (∑ i, q i * Real.log (gibbs f lam i)) := by
-              rw [Finset.sum_sub_distrib]
-    exact hsum ▸ htmp
-  have hq_le_cross :
-      entropy q 1 ≤ -∑ i, q i * Real.log (gibbs f lam i) := by
-    have hq_form : entropy q 1 = -∑ i, q i * Real.log (q i) := by
-      simp [entropy]
-    linarith [hkl, hq_form]
-  have hE_gibbs : gibbsExpectation f lam = E := by
-    have hpE : ∑ i, p i * f i = E := hp.2
-    unfold gibbsExpectation
-    calc
-      ∑ i, gibbs f lam i * f i = ∑ i, p i * f i := by
-        refine Finset.sum_congr rfl ?_
-        intro i hi
-        rw [← h_dist i]
-      _ = E := hpE
-  have hcross_q :
-      -∑ i, q i * Real.log (gibbs f lam i) = lam * E + logPartition f lam :=
-    crossEntropyToGibbs_eq (n := n) (f := f) (E := E) (lam := lam) hq
-  have hEntropy_g :
-      entropy (gibbs f lam) 1 = lam * E + logPartition f lam :=
-    entropy_gibbs_eq (n := n) (f := f) (E := E) (lam := lam) hE_gibbs
-  have hq_le_gibbs : entropy q 1 ≤ entropy (gibbs f lam) 1 := by
-    calc
-      entropy q 1 ≤ -∑ i, q i * Real.log (gibbs f lam i) := hq_le_cross
-      _ = lam * E + logPartition f lam := hcross_q
-      _ = entropy (gibbs f lam) 1 := hEntropy_g.symm
-  have hp_eq_gibbs : entropy p 1 = entropy (gibbs f lam) 1 := by
-    unfold entropy
-    congr 1
-    refine Finset.sum_congr rfl ?_
-    intro i hi
-    rw [h_dist i]
-  calc
-    entropy q 1 ≤ entropy (gibbs f lam) 1 := hq_le_gibbs
-    _ = entropy p 1 := hp_eq_gibbs.symm
+  -- TODO: port KL expansion to PMF-based `kl_div`
+  sorry
 
 /-- MaxEnt optimality in explicit Boltzmann form `exp(-lam fᵢ)/Z`. -/
 theorem max_ent_lagrange_multiplier

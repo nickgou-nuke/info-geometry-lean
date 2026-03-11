@@ -116,7 +116,7 @@ lemma rho_ι_sq_scalar (v : V) :
       rho (Q := Q) ((CliffordAlgebra.ι Q v) * (CliffordAlgebra.ι Q v)) := by
           simp
     _ = rho (Q := Q) (algebraMap ℝ (CliffordAlgebra Q) (Q v)) := by
-          simpa using (CliffordAlgebra.ι_sq_scalar (Q := Q) v)
+          simp
     _ = algebraMap ℝ (H →L[ℝ] H) (Q v) := by
           simp
 
@@ -245,7 +245,7 @@ noncomputable instance instKreinGradedModuleHilbertDoubled :
         = KreinSpace.kreinInner (H := HilbertDoubled E) u v := by
             simp [KreinSpace.kreinInner_def, KreinSpace.jCLM_apply]
     _ = ⟪(WithLp.ofLp u).1, (WithLp.ofLp v).1⟫_ℝ - ⟪(WithLp.ofLp u).2, (WithLp.ofLp v).2⟫_ℝ := by
-          simpa using kreinInner_prodL2 (E := E) u v
+          simpa using krein_inner_prod_l2 (E := E) u v
     _ = ⟪WithLp.toLp 2 ((WithLp.ofLp u).1, -(WithLp.ofLp u).2), v⟫_ℝ := by
           simp [WithLp.prod_inner_apply, sub_eq_add_neg]
 
@@ -343,7 +343,7 @@ lemma cl11RepLinHilbert_sq (v : ℝ × ℝ) :
   | mk x y =>
       have hu : u = WithLp.toLp 2 (x, y) := by
         apply (WithLp.ofLp_injective 2)
-        simpa [huxy]
+        simp [huxy]
       rw [hu]
       apply (WithLp.ofLp_injective 2)
       simp [cl11RepLinHilbert_apply_pair, InfoGeometry.Clifford.splitQ11_apply, Algebra.algebraMap_eq_smul_one,
@@ -371,7 +371,7 @@ noncomputable instance instSymmetricCliffordModuleHilbertDoubled :
     | mk x ξ =>
         have hu : u = WithLp.toLp 2 (x, ξ) := by
           apply (WithLp.ofLp_injective 2)
-          simpa [huξ]
+          simp [huξ]
         rw [hu]
         apply (WithLp.ofLp_injective 2)
         simp [gradeCLM_eq_hilbertSwapCLM, cl11RepHilbert_ι_apply, cl11RepLinHilbert_apply_pair,
@@ -415,14 +415,14 @@ noncomputable instance instKreinGradedModuleNeutral :
           = (NeutralSpace.rotation45 (E := E)) u := by
       apply (WithLp.ofLp_injective 2)
       simpa using (Prod.eta (((NeutralSpace.rotation45 (E := E)) u).ofLp))
-    simpa [neutralGradeLIE, hto] using (rotation45_apply_apply (E := E) u)
+    simp [neutralGradeLIE, hto]
   grade_selfAdj := by
     intro u v
     let R : NeutralSpace E ≃ₗᵢ[ℝ] HilbertDoubled E := NeutralSpace.rotation45Isometry (E := E)
     calc
       ⟪neutralGradeLIE (E := E) u, v⟫_ℝ
           = ⟪R (neutralGradeLIE (E := E) u), R v⟫_ℝ := by
-              simpa [R] using (R.inner_map_map (neutralGradeLIE (E := E) u) v).symm
+              simp [R]
       _ = ⟪hilbertSwapLIE (E := E) (R u), R v⟫_ℝ := by
             simp [neutralGradeLIE, R]
       _ = ⟪R u, hilbertSwapLIE (E := E) (R v)⟫_ℝ := by
@@ -430,7 +430,7 @@ noncomputable instance instKreinGradedModuleNeutral :
       _ = ⟪R u, R (neutralGradeLIE (E := E) v)⟫_ℝ := by
             simp [neutralGradeLIE, R]
       _ = ⟪u, neutralGradeLIE (E := E) v⟫_ℝ := by
-            simpa [R] using (R.inner_map_map u (neutralGradeLIE (E := E) v))
+            simp [R]
 
 /-- Conjugation by the 45-degree bridge on endomorphisms. -/
 private noncomputable def rot45Conj :

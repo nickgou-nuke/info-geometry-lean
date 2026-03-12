@@ -9,6 +9,8 @@ Gauge-orbit quotient structures for projective prequantum bundle points.
 namespace InfoGeometry.Prequantum.Quotient
 end InfoGeometry.Prequantum.Quotient
 
+open InfoGeometry.Projective
+
 namespace InfoGeometry.Prequantum
 
 section KreinClifford

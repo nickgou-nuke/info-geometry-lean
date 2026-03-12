@@ -13,6 +13,8 @@ This module provides a toy Fock-style interface on `DoubledSpace E`, linking:
 Matches the naming conventions in the project's CAR-style dictionary.
 -/
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Quantum
 
 open InfoGeometry.Krein

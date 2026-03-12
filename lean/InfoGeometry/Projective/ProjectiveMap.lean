@@ -8,6 +8,8 @@ Descent of doubled-space linear maps to the pointed projective ray space.
 This correctly accounts for the "vacuum" (the zero class) as the apex of the cone.
 -/
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Projective
 
 open InfoGeometry.Krein

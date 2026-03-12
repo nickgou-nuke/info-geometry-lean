@@ -17,6 +17,7 @@ This file intentionally reuses existing proved objects, with no new axioms.
 namespace InfoGeometry.Canonical.QFTTDFTLaunchpad
 
 open InfoGeometry.Geometry
+open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical.KMSSinkhornBridge
 open InfoGeometry.Canonical.MoE
@@ -26,7 +27,7 @@ open InfoGeometry.Canonical.RicciMongeAmpere
 section AQFT
 
 variable (n : Nat)
-variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 /--
 AQFT closure theorem:
@@ -190,7 +191,7 @@ end TDFT
 section Launchpad
 
 variable (n : Nat)
-variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable {Θ : Type*} [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]
 

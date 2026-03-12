@@ -22,12 +22,19 @@ real carrier and connects vorticity to the commutator anomaly
 namespace InfoGeometry.Canonical
 
 open scoped InnerProductSpace
+open InfoGeometry.Krein
 
 /-- Linearized velocity field (Jacobian-level) on a real Hilbert carrier. -/
 abbrev VelocityField
     (E : Type _)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : Type _ :=
   E →L[ℝ] E
+
+/-- Endomorphisms on the canonical doubled carrier. -/
+abbrev AlgebraEnd
+    (E : Type _)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : Type _ :=
+  DoubledSpace E →L[ℝ] DoubledSpace E
 
 /--
 A linearized incompressible fluid state.
@@ -177,7 +184,6 @@ def modularVelocity
     AlgebraEnd E :=
   β • modularHamiltonian (E := E) K
 
-omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 /--
 Differential identity at `β = 0`:
 the modular-velocity linear response is the modular Hamiltonian.
@@ -188,27 +194,28 @@ theorem hasDerivAt_modularVelocity_zero
       (fun β : ℝ => modularVelocity (E := E) β K)
       (modularHamiltonian (E := E) K)
       0 := by
-  simpa [modularVelocity, modularHamiltonian] using
-    ((hasDerivAt_id (x := (0 : ℝ))).smul_const (modularHamiltonian (E := E) K))
+  let e : ℝ →L[ℝ] AlgebraEnd E :=
+    (ContinuousLinearMap.id ℝ ℝ).smulRight (modularHamiltonian (E := E) K)
+  have hF : HasFDerivAt (fun β : ℝ => modularVelocity (E := E) β K) e 0 := by
+    simpa [e, modularVelocity, modularHamiltonian] using (e.hasFDerivAt (x := (0 : ℝ)))
+  have hD : HasDerivAt
+      (fun β : ℝ => modularVelocity (E := E) β K)
+      (e 1)
+      0 := hF.hasDerivAt
+  simpa [e, modularVelocity, modularHamiltonian] using hD
 
-omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 /-- Derivative form of `hasDerivAt_modularVelocity_zero`. -/
 theorem deriv_modularVelocity_zero
     (K : AlgebraEnd E) :
     deriv (fun β : ℝ => modularVelocity (E := E) β K) 0 =
       modularHamiltonian (E := E) K := by
-  have hDerivAt :
-      HasDerivAt
-        (fun β : ℝ => modularVelocity (E := E) β K)
-        (modularHamiltonian (E := E) K)
-        (0 : ℝ) :=
-    hasDerivAt_modularVelocity_zero (E := E) K
-  exact HasDerivAt.deriv
-    (𝕜 := ℝ)
-    (f := fun β : ℝ => modularVelocity (E := E) β K)
-    (x := (0 : ℝ))
-    (f' := modularHamiltonian (E := E) K)
-    hDerivAt
+  letI : IsBoundedSMul ℝ (AlgebraEnd E) := by
+    refine IsBoundedSMul.of_norm_smul_le (α := ℝ) (β := AlgebraEnd E) ?_
+    intro c f
+    exact (ContinuousLinearMap.opNorm_smul_le (𝕜₂ := ℝ)
+      (E := DoubledSpace E) (F := DoubledSpace E) c f)
+  change deriv (fun β : ℝ => β • K) 0 = K
+  simpa using (((hasDerivAt_id (0 : ℝ)).smul_const K).deriv)
 
 /-- Linear embedding of the base carrier into the doubled carrier (`x ↦ (x,0)`). -/
 noncomputable def embedBase : E →L[ℝ] ArnoldMajoranaCarrier E where
@@ -230,11 +237,11 @@ noncomputable def embedBase : E →L[ℝ] ArnoldMajoranaCarrier E where
 /-- First-component projection from doubled carrier to the base carrier. -/
 noncomputable def projBase : ArnoldMajoranaCarrier E →L[ℝ] E where
   toLinearMap :=
-    { toFun := fun v => InfoGeometry.Krein.DoubledSpace.fst v
-      map_add' := by intro v w; simp [InfoGeometry.Krein.DoubledSpace.fst]
-      map_smul' := by intro a v; simp [InfoGeometry.Krein.DoubledSpace.fst] }
+    { toFun := fun v => WithLp.fst v
+      map_add' := by intro v w; simp [WithLp.add_fst]
+      map_smul' := by intro a v; simp [WithLp.smul_fst] }
   cont := by
-    simpa [InfoGeometry.Krein.DoubledSpace.fst] using
+    simpa using
       WithLp.continuous_fst (p := 2) (α := E) (β := E)
 
 /-- Collapses a doubled-carrier modular velocity into a base-carrier velocity field. -/
@@ -252,7 +259,7 @@ def IsThermodynamicallySmoothed
 noncomputable def madelungDensity
     {K : AlgebraEnd E}
     (vac : ThermalVacuum (E := E) K) : ℝ :=
-  ‖vac.Omega.fst‖ ^ (2 : ℕ) + ‖vac.Omega.snd‖ ^ (2 : ℕ)
+  ‖WithLp.fst vac.Omega‖ ^ (2 : ℕ) + ‖WithLp.snd vac.Omega‖ ^ (2 : ℕ)
 
 set_option linter.unusedSectionVars false in
 /-- The Madelung density is strictly positive for nondegenerate thermal vacua. -/
@@ -261,14 +268,14 @@ lemma madelungDensity_pos
     (vac : ThermalVacuum (E := E) K) :
     0 < madelungDensity (E := E) vac := by
   dsimp [madelungDensity]
-  by_cases hx : vac.Omega.fst = 0
-  · have hy : vac.Omega.snd ≠ 0 := by
+  by_cases hx : WithLp.fst vac.Omega = 0
+  · have hy : WithLp.snd vac.Omega ≠ 0 := by
       intro hy
       exact vac.vacuum_nonzero
         (by
           apply InfoGeometry.Krein.DoubledSpace.ext
-          · simpa [InfoGeometry.Krein.DoubledSpace.fst] using hx
-          · simpa [InfoGeometry.Krein.DoubledSpace.snd] using hy)
+          · simpa using hx
+          · simpa using hy)
     exact add_pos_of_nonneg_of_pos
       (pow_nonneg (norm_nonneg _) 2)
       (pow_pos (norm_pos_iff.mpr hy) 2)
@@ -328,10 +335,10 @@ Krein spectral projectors: $P_+ = (I + ε)/2$ and $P_- = (I - ε)/2$.
 These isolate the two types of chiral sectors.
 -/
 noncomputable def kreinPlusProjector : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) + spectral_epsilon)
+  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) + spectral_epsilon (E := E))
 
 noncomputable def kreinMinusProjector : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) - spectral_epsilon)
+  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) - spectral_epsilon (E := E))
 
 /--
 Two-type Chiral Charges:

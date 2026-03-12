@@ -23,8 +23,9 @@ noncomputable def empiricalFinProb {α : Type*} [Fintype α] [Nonempty α]
     (N : EmpiricalCounts α) (h : 0 < ∑ x, N x) : FinProb α :=
   let total := ∑ x, (N x : ℝ)
   have hZ_pos : 0 < total := by
-    simp only [total, Nat.cast_sum]
-    exact Nat.cast_pos.mpr h
+    have h' : (0 : ℝ) < ∑ x, (N x : ℝ) := by
+      exact_mod_cast h
+    simpa [total] using h'
   PMF.ofFintype (fun x => ENNReal.ofReal ((N x : ℝ) / total)) (by
     rw [← ENNReal.ofReal_sum_of_nonneg (fun x _ => div_nonneg (Nat.cast_nonneg _) hZ_pos.le)]
     rw [← Finset.sum_div, div_self hZ_pos.ne', ENNReal.ofReal_one])

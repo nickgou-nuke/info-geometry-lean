@@ -20,6 +20,7 @@ open scoped Kronecker
 
 namespace InfoGeometry.Canonical.GrandSynthesis
 
+open InfoGeometry.Krein
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.BottDirac
 open InfoGeometry.Canonical.CalabiYauBridge
@@ -400,7 +401,7 @@ end EntropicCalabiBridge
 section EntropyFlow
 
 variable (n : Nat)
-variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 /-- Entropy monotonicity surrogate along Sinkhorn flow (RN barrier form). -/
 def SinkhornEntropyMonotoneRN (T : SinkhornTrajectory n) : Prop :=
@@ -439,7 +440,7 @@ end EntropyFlow
 section Algebraic
 
 variable {E F : Type*}
-  [NormedAddCommGroup E] [NormedSpace ℝ E]
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /--
@@ -478,7 +479,7 @@ end Algebraic
 section LichnerowiczBridge
 
 variable {A F : Type*}
-  [NormedAddCommGroup A] [NormedSpace ℝ A]
+  [NormedAddCommGroup A] [InnerProductSpace ℝ A] [CompleteSpace A]
   [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 /--
@@ -557,7 +558,7 @@ section Capstone
 
 variable (n : Nat)
 variable {X E F : Type*}
-  [NormedAddCommGroup E] [NormedSpace ℝ E]
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /--
@@ -610,7 +611,7 @@ variable (n : Nat)
 variable {X V F : Type}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
   [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
-  [NormedAddCommGroup F] [NormedSpace ℝ F]
+  [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 /--
 Bochner-Weitzenbock bridge hypothesis:

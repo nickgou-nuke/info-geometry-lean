@@ -36,10 +36,10 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSp
 A frame for the doubled space $E \oplus E$ that satisfies the real $Cl(1,1)$ relations.
 In the matrix representation, this corresponds to the real Pauli matrices.
 -/
-structure MajoranaFrame (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] where
+structure MajoranaFrame (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   J : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E
   eps : Krein.DoubledSpace E →L[ℝ] Krein.DoubledSpace E
-  is_cl11 : Krein.Cl11Relations J eps
+  is_cl11 : Krein.cl11_relations J eps
 
 /--
 **Canonical Majorana Frame**:
@@ -48,7 +48,7 @@ The default frame using `modular_j` and `spectral_epsilon`.
 noncomputable def canonicalMajoranaFrame : MajoranaFrame E where
   J := Krein.modular_j (E := E)
   eps := Krein.spectral_epsilon (E := E)
-  is_cl11 := Krein.modular_j_spectral_epsilon_hasCl11Relations
+  is_cl11 := Krein.modular_j_spectral_epsilon_has_cl11_relations E
 
 /--
 **Modular Parallel Transport**:

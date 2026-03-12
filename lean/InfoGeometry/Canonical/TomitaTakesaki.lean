@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.Clifford
 namespace InfoGeometry.Canonical.TomitaTakesaki
 
 open InfoGeometry.Clifford
+open InfoGeometry.Krein
 
 /-!
 # Tomita-Takesaki Modular Atom (Split `Cl(1,1)`)
@@ -112,7 +113,7 @@ end CliffordAtom
 
 section ModularRealization
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
 Modular conjugation `J` (real-linear model of antilinear conjugation on complex space).

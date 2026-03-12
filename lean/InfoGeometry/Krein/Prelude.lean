@@ -1,8 +1,11 @@
+import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Clifford.Grading
+
+open InfoGeometry.Krein
 
 section KreinClifford
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Explicit dictionary: chirality operator is the grading involution. -/
 noncomputable def chiralityOperator : DoubledSpace E →L[ℝ] DoubledSpace E :=
@@ -35,13 +38,11 @@ noncomputable def chiralityProjMinus : DoubledSpace E →L[ℝ] DoubledSpace E :
 
 @[simp] lemma chiralityProjPlus_apply (v : DoubledSpace E) :
     chiralityProjPlus (E := E) v
-      = gradePlusPart (E := E) v := by
-  simpa [chiralityProjPlus] using gradePlusProj_apply (E := E) v
+      = gradePlusProj (E := E) v := rfl
 
 @[simp] lemma chiralityProjMinus_apply (v : DoubledSpace E) :
     chiralityProjMinus (E := E) v
-      = gradeMinusPart (E := E) v := by
-  simpa [chiralityProjMinus] using gradeMinusProj_apply (E := E) v
+      = gradeMinusProj (E := E) v := rfl
 
 lemma chiralityProjPlus_idempotent :
     (chiralityProjPlus (E := E)).comp (chiralityProjPlus (E := E))
@@ -55,13 +56,19 @@ lemma chiralityProjMinus_idempotent :
 
 lemma chiralityProjPlus_comp_chiralityProjMinus :
     (chiralityProjPlus (E := E)).comp (chiralityProjMinus (E := E)) = 0 := by
-  simpa [chiralityProjPlus, chiralityProjMinus] using
-    gradePlusProj_comp_gradeMinusProj (E := E)
+  apply ContinuousLinearMap.ext
+  intro v
+  apply DoubledSpace.ext <;>
+    simp [chiralityProjPlus, chiralityProjMinus, gradePlusProj, gradeMinusProj,
+      modular_j_apply, sub_eq_add_neg, add_assoc, add_comm, smul_add]
 
 lemma chiralityProjMinus_comp_chiralityProjPlus :
     (chiralityProjMinus (E := E)).comp (chiralityProjPlus (E := E)) = 0 := by
-  simpa [chiralityProjPlus, chiralityProjMinus] using
-    gradeMinusProj_comp_gradePlusProj (E := E)
+  apply ContinuousLinearMap.ext
+  intro v
+  apply DoubledSpace.ext <;>
+    simp [chiralityProjPlus, chiralityProjMinus, gradePlusProj, gradeMinusProj,
+      modular_j_apply, sub_eq_add_neg, add_assoc, add_comm, smul_add]
 
 lemma chiralityProjPlus_add_chiralityProjMinus :
     chiralityProjPlus (E := E) + chiralityProjMinus (E := E)

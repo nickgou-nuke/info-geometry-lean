@@ -116,6 +116,22 @@ theorem chiralAnomaly_eq_zero_iff_projectorCommutation :
     (CI.chiral_commutation_link)
 
 /--
+Constructive forward direction: vanishing anomaly implies projector commutation.
+-/
+theorem projectorCommutationClosure_of_chiralAnomaly_eq_zero
+    (hχ : CI.chiralAnomalyOperator = 0) :
+    CI.ProjectorCommutationClosure :=
+  (CI.chiralAnomaly_eq_zero_iff_projectorCommutation).1 hχ
+
+/--
+Constructive reverse direction: projector commutation implies vanishing anomaly.
+-/
+theorem chiralAnomaly_eq_zero_of_projectorCommutationClosure
+    (hComm : CI.ProjectorCommutationClosure) :
+    CI.chiralAnomalyOperator = 0 :=
+  (CI.chiralAnomaly_eq_zero_iff_projectorCommutation).2 hComm
+
+/--
 Cartan-like Decomposition of the Information Manifold.
 The space decomposes into a Normal sector (ε = 0) and a Chiral sector (ε > 0).
 This mirrors the Cl(1,1) grading into even and odd endomorphisms.

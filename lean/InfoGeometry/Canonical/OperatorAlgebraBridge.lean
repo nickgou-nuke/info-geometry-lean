@@ -71,7 +71,7 @@ theorem sinkhorn_kms_closure_in_cstar_target
     (β : ℝ)
     (h_control : SinkhornKMSControl n T K ω β) :
     IsCStarLayer (Obs := Obs) ∧ SinkhornKMSClosure n T K ω β := by
-  exact sinkhorn_kmsClosure_with_cstarRealization
+  exact sinkhorn_kmsClosure_with_cstarRealization_of_sinkhornControl
     (n := n) (F := F) (Obs := Obs) real
     (T := T) (K := K) (ω := ω) (β := β) h_control
 
@@ -133,7 +133,7 @@ theorem cstar_vonneumann_kms_fock_package
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
             (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
           = ψ + η • H ψ := by
-  exact aqft_interface_package_with_realizations
+  exact aqft_interface_package_with_realizations_of_sinkhornControl
     (n := n)
     (F := F) (ObsKMS := ObsKMS)
     (E := E) (ObsFock := ObsFock)

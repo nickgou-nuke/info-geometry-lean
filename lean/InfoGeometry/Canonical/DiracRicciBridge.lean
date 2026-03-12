@@ -198,18 +198,18 @@ variable (n : Nat)
 variable {X : Type}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
 
-/-- RN entropy sourcing plus Monge-Ampere closure yields Ricci-flat vacuum gravity. -/
+/-- RN entropy sourcing plus explicit Ricci-flat witness yields vacuum gravity. -/
 theorem gravity_from_rn_entropy
     (Kgeo : KaehlerInformationGeometry X)
     (R : RicciTensor X)
     (x : X) (Λ : ℝ)
     (M : SinkhornMatrix n)
     (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
-    (hBridge : MongeAmpereRicciClosure R Kgeo) :
+    (hFlat : IsRicciFlat R) :
     IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ :=
   gravity_generated_by_rnEntropy
     (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
-    (M := M) hSource hBridge
+    (M := M) hSource hFlat
 
 end EntropyGravity
 

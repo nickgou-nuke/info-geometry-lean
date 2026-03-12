@@ -166,6 +166,24 @@ theorem sinkhorn_control_of_step_kmsClosure
   simpa [hzero] using hAB
 
 /--
+Closure equivalence: in this finite Sinkhorn scaffold, the control inequality and
+exact stepwise KMS closure are equivalent.
+-/
+theorem sinkhornKMSControl_iff_kmsClosure
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ) :
+    SinkhornKMSControl n T K ω β ↔ SinkhornKMSClosure n T K ω β := by
+  constructor
+  · intro hControl
+    exact sinkhorn_step_kmsClosure_of_control
+      (n := n) (T := T) (K := K) (ω := ω) (β := β) hControl
+  · intro hClosure
+    exact sinkhorn_control_of_step_kmsClosure
+      (n := n) (T := T) (K := K) (ω := ω) (β := β) hClosure
+
+/--
 Stepwise quantitative control: KMS residual is bounded by the pre-step RN barrier.
 -/
 theorem sinkhorn_stepwise_kms_bound
@@ -178,6 +196,23 @@ theorem sinkhorn_stepwise_kms_bound
       kmsResidual K (ω (k + 1)) β A B ≤ trajectoryRNBarrier n T k := by
   intro k A B
   exact le_trans (hDrive k A B) (trajectoryRNBarrier_monotone (n := n) T k)
+
+/--
+Closure-first quantitative form: the pre-step RN-barrier bound follows directly
+from exact KMS closure.
+-/
+theorem sinkhorn_stepwise_kms_bound_of_kmsClosure
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hClosure : SinkhornKMSClosure n T K ω β) :
+    ∀ k : Nat, ∀ A B : AlgebraEnd F,
+      kmsResidual K (ω (k + 1)) β A B ≤ trajectoryRNBarrier n T k := by
+  have hDrive : SinkhornKMSControl n T K ω β :=
+    sinkhorn_control_of_step_kmsClosure (n := n) (T := T) (K := K) (ω := ω) (β := β) hClosure
+  exact sinkhorn_stepwise_kms_bound
+    (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive
 
 /- Constructive-iterate specialization in canonical naming. -/
 /-- Theorem `sinkhornIterate_kmsClosure_of_control`. -/

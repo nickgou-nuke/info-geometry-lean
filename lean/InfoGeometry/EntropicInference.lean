@@ -539,6 +539,239 @@ theorem kl_pythagorean_jeffrey_of
           InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure := by
       simpa [add_comm, add_left_comm, add_assoc]
 
+/--
+Constructive KL-Pythagorean theorem in `toReal` form for strictly positive finite joints.
+
+This version removes explicit `KlChainRule` hypotheses by deriving the chain-rule
+equalities from `kl_chain_rule_toReal_strict`.
+-/
+theorem kl_pythagorean_jeffrey_toReal_strict
+    [DecidableEq X] [DecidableEq Θ]
+    [MeasurableSingletonClass X] [MeasurableSingletonClass Θ]
+    [Nonempty Θ]
+    (p q : Joint X Θ)
+    (p_x : FinProb X)
+    (hposp : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
+    (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal)
+    (hmarg : marginal_x p = p_x) :
+    (kl p q).toReal =
+      (kl p (jeffrey_joint q p_x
+        (marginal_x_full_support_of_joint_toReal_pos q hposq))).toReal
+      +
+      (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+  let hq : ∀ x : X, x ∈ (marginal_x q).support :=
+    marginal_x_full_support_of_joint_toReal_pos q hposq
+  let qStar : Joint X Θ := jeffrey_joint q p_x hq
+
+  have hpos_p_x : ∀ x : X, 0 < (p_x x).toReal := by
+    intro x
+    simpa [hmarg] using (marginal_x_toReal_pos_of_joint_toReal_pos p hposp x)
+
+  have hpos_qStar : ∀ x : X, ∀ θ : Θ, 0 < (qStar (x, θ)).toReal := by
+    intro x θ
+    have hcond_pos :
+        0 <
+          (cond_theta_given_x q x (hq x) θ).toReal := by
+      rw [cond_theta_given_x_toReal_ratio q hposq x θ]
+      exact div_pos (hposq x θ) (marginal_x_toReal_pos_of_joint_toReal_pos q hposq x)
+    have hqStar_apply :
+        qStar (x, θ) = p_x x * cond_theta_given_x q x (hq x) θ := by
+      simpa [qStar, jeffrey_joint] using
+        (assemble_apply p_x (fun x => cond_theta_given_x q x (hq x)) x θ)
+    rw [hqStar_apply, ENNReal.toReal_mul]
+    exact mul_pos (hpos_p_x x) hcond_pos
+
+  have hqStar_support : ∀ x : X, x ∈ (marginal_x qStar).support :=
+    marginal_x_full_support_of_joint_toReal_pos qStar hpos_qStar
+  have hp_support : ∀ x : X, x ∈ (marginal_x p).support :=
+    marginal_x_full_support_of_joint_toReal_pos p hposp
+
+  have hmx_qstar : marginal_x qStar = p_x := by
+    simpa [qStar] using marginal_x_jeffrey_joint (q := q) (p_x := p_x) hq
+
+  have hkl_self_toReal :
+      (InfoGeometry.kl_div (α := X) p_x.toMeasure p_x.toMeasure).toReal = 0 := by
+    simpa [InfoGeometry.kl_div] using
+      congrArg ENNReal.toReal
+        (InformationTheory.klDiv_self (μ := (p_x.toMeasure : MeasureTheory.Measure X)))
+
+  have hres :
+      (kl p qStar).toReal =
+        ∑ x : X, (marginal_x p x).toReal *
+          (InfoGeometry.kl_div (α := Θ)
+            (cond_theta_given_x p x (hp_support x)).toMeasure
+            (cond_theta_given_x q x (hq x)).toMeasure).toReal := by
+    have htmp :=
+      kl_chain_rule_toReal_strict
+        (p := p) (q := qStar) (hposp := hposp) (hposq := hpos_qStar)
+    rw [htmp]
+    rw [hmarg, hmx_qstar, hkl_self_toReal, zero_add]
+    refine Finset.sum_congr rfl ?_
+    intro x hx
+    have hxpx : x ∈ p_x.support := by
+      have hne : p_x x ≠ 0 := by
+        intro h0
+        exact (ne_of_gt (hpos_p_x x)) (by simpa [h0])
+      exact (PMF.mem_support_iff p_x x).2 hne
+    have hcond :
+        cond_theta_given_x qStar x (hqStar_support x) =
+          cond_theta_given_x q x (hq x) := by
+      calc
+        cond_theta_given_x qStar x (hqStar_support x)
+            = cond_theta_given_x qStar x (by simpa [hmx_qstar] using hxpx) := by
+                exact congrArg (fun h : x ∈ (marginal_x qStar).support =>
+                  cond_theta_given_x qStar x h) (Subsingleton.elim _ _)
+        _ = cond_theta_given_x q x (hq x) := by
+            simpa [qStar] using
+              (cond_theta_given_x_jeffrey_joint
+                (q := q) (p_x := p_x) (hq := hq) (x := x) hxpx)
+    rw [hcond]
+
+  have hchain1 :=
+    kl_chain_rule_toReal_strict (p := p) (q := q) (hposp := hposp) (hposq := hposq)
+
+  calc
+    (kl p q).toReal
+        =
+          (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal
+          +
+          (∑ x : X, (marginal_x p x).toReal *
+            (InfoGeometry.kl_div (α := Θ)
+              (cond_theta_given_x p x (hp_support x)).toMeasure
+              (cond_theta_given_x q x (hq x)).toMeasure).toReal) := by
+      rw [hchain1]
+      simpa [hmarg]
+    _ =
+          (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal
+          +
+          (kl p qStar).toReal := by
+      rw [hres]
+    _ =
+          (kl p qStar).toReal
+          +
+          (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+      ring
+    _ =
+          (kl p (jeffrey_joint q p_x
+            (marginal_x_full_support_of_joint_toReal_pos q hposq))).toReal
+          +
+          (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+      simpa [qStar, hq]
+
+/--
+If the right argument `Q` has strictly positive atoms (in `toReal`), then
+`KL(P ‖ Q)` is finite (`≠ ⊤`) for finite PMFs.
+-/
+lemma kl_div_ne_top_of_right_toReal_pos
+    {α : Type*} [Fintype α] [DecidableEq α]
+    [MeasurableSpace α] [MeasurableSingletonClass α]
+    (P Q : FinProb α)
+    (hQ : ∀ x : α, 0 < (Q x).toReal) :
+    InfoGeometry.kl_div (α := α) P.toMeasure Q.toMeasure ≠ ⊤ := by
+  change InformationTheory.klDiv P.toMeasure Q.toMeasure ≠ ⊤
+  rw [InformationTheory.klDiv_ne_top_iff]
+  refine ⟨?_, ?_⟩
+  · intro s hQs
+    have hs : MeasurableSet s := (Set.toFinite s).measurableSet
+    have hQs' : Disjoint Q.support s := (Q.toMeasure_apply_eq_zero_iff hs).1 hQs
+    refine (P.toMeasure_apply_eq_zero_iff hs).2 ?_
+    refine Set.disjoint_left.2 ?_
+    intro x _hxP hxS
+    have hxQ : x ∈ Q.support := by
+      refine (Q.mem_support_iff x).2 ?_
+      intro h0
+      have : 0 < (Q x).toReal := hQ x
+      simp [h0] at this
+    exact (Set.disjoint_left.1 hQs' hxQ) hxS
+  · simpa using
+      (InfoGeometry.MaxEnt.IProjection.integrable_of_fintype
+        (f := MeasureTheory.llr P.toMeasure Q.toMeasure) (μ := P.toMeasure))
+
+/--
+Constructive KL-Pythagorean theorem in `ℝ≥0∞` form for strictly positive finite joints.
+
+This is the `ℝ≥0∞` lift of `kl_pythagorean_jeffrey_toReal_strict`, with
+finiteness discharged constructively from strict positivity.
+-/
+theorem kl_pythagorean_jeffrey_strict
+    [DecidableEq X] [DecidableEq Θ]
+    [MeasurableSingletonClass X] [MeasurableSingletonClass Θ]
+    [Nonempty Θ]
+    (p q : Joint X Θ)
+    (p_x : FinProb X)
+    (hposp : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
+    (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal)
+    (hmarg : marginal_x p = p_x) :
+    kl p q =
+      kl p (jeffrey_joint q p_x
+        (marginal_x_full_support_of_joint_toReal_pos q hposq))
+      +
+      InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure := by
+  let hq : ∀ x : X, x ∈ (marginal_x q).support :=
+    marginal_x_full_support_of_joint_toReal_pos q hposq
+  let qStar : Joint X Θ := jeffrey_joint q p_x hq
+
+  have htoReal :
+      (kl p q).toReal =
+        (kl p qStar).toReal +
+        (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+    simpa [qStar, hq] using
+      kl_pythagorean_jeffrey_toReal_strict
+        (p := p) (q := q) (p_x := p_x) (hposp := hposp) (hposq := hposq) (hmarg := hmarg)
+
+  have hpos_qStar : ∀ x : X, ∀ θ : Θ, 0 < (qStar (x, θ)).toReal := by
+    intro x θ
+    have hpos_px : 0 < (p_x x).toReal := by
+      simpa [hmarg] using (marginal_x_toReal_pos_of_joint_toReal_pos p hposp x)
+    have hcond_pos :
+        0 < (cond_theta_given_x q x (hq x) θ).toReal := by
+      rw [cond_theta_given_x_toReal_ratio q hposq x θ]
+      exact div_pos (hposq x θ) (marginal_x_toReal_pos_of_joint_toReal_pos q hposq x)
+    have hqStar_apply :
+        qStar (x, θ) = p_x x * cond_theta_given_x q x (hq x) θ := by
+      simpa [qStar, jeffrey_joint] using
+        (assemble_apply p_x (fun x => cond_theta_given_x q x (hq x)) x θ)
+    rw [hqStar_apply, ENNReal.toReal_mul]
+    exact mul_pos hpos_px hcond_pos
+
+  have hq_joint_pos : ∀ xt : X × Θ, 0 < (q xt).toReal := by
+    intro xt
+    exact hposq xt.1 xt.2
+
+  have hqStar_joint_pos : ∀ xt : X × Θ, 0 < (qStar xt).toReal := by
+    intro xt
+    exact hpos_qStar xt.1 xt.2
+
+  have hmxq_pos : ∀ x : X, 0 < (marginal_x q x).toReal :=
+    marginal_x_toReal_pos_of_joint_toReal_pos q hposq
+
+  have hleft_ne_top : kl p q ≠ ⊤ := by
+    simpa [kl] using
+      (kl_div_ne_top_of_right_toReal_pos (P := p) (Q := q) hq_joint_pos)
+
+  have hright1_ne_top : kl p qStar ≠ ⊤ := by
+    simpa [kl] using
+      (kl_div_ne_top_of_right_toReal_pos (P := p) (Q := qStar) hqStar_joint_pos)
+
+  have hright2_ne_top :
+      InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure ≠ ⊤ := by
+    exact kl_div_ne_top_of_right_toReal_pos (P := p_x) (Q := marginal_x q) hmxq_pos
+
+  have hsum_ne_top :
+      kl p qStar +
+        InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure ≠ ⊤ := by
+    exact ENNReal.add_ne_top.2 ⟨hright1_ne_top, hright2_ne_top⟩
+
+  have htoReal_sum :
+      (kl p q).toReal =
+        (kl p qStar +
+          InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+    rw [ENNReal.toReal_add hright1_ne_top hright2_ne_top]
+    exact htoReal
+
+  apply (ENNReal.toReal_eq_toReal_iff' hleft_ne_top hsum_ne_top).mp
+  exact htoReal_sum
+
 /-- Mutual information `I(X;Θ)`. -/
 noncomputable def mutual_information (p : Joint X Θ) : ℝ≥0∞ :=
   kl p (assemble (marginal_x p) (fun _ => marginal_theta p))

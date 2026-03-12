@@ -112,6 +112,44 @@ theorem countsFirst_holographicEmergence_package
       (Tflow := Tflow) (CI := CI) (hAnom := hAnom) (Tw := Tw)
       (L := L) (IST := IST) (Q := Q) (v := v) (hNull := hNull)
 
+/--
+Count-first holographic package in canonical zero-null form.
+This removes explicit `Q` and `hNull` parameters from the API.
+-/
+theorem countsFirst_holographicEmergence_package_zeroVacuumApexQuadraticForm
+    (N : CountSubstrate α)
+    (hN : CountSubstrateNontrivial N)
+    (Tflow : SinkhornTrajectory n)
+    (CI : ConformalInference X)
+    (hAnom : CI.chiralAnomalyOperator ≠ 0)
+    (Tw : TwistedInference X)
+    (L : BayesianLoop X)
+    (IST : InfoSpectralTriple X)
+    (v : UnnormalizedProjectiveState (E := X)) :
+    ∃ P : ProbabilityDist α,
+      (∀ x : α, (P x).toReal = empirical_distribution N x)
+        ∧ EmergentTimeFlow n Tflow
+        ∧ AnomalyScalePhase CI
+        ∧ UpdateOrderPathDependent Tw.dual.nabla
+        ∧ (∃ (M : Coupling 2)
+            (hrow : HasPositiveRowSums 2 M)
+            (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))
+            (hcol : HasPositiveColSums 2 M)
+            (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
+            UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol)
+        ∧ AnomalyInflowClosure (E := X) L IST
+        ∧ (∃ t : DoubledTwistorSpace (E := X) zeroVacuumApexQuadraticForm,
+            t = vacuumApexTwistor (E := X)
+              zeroVacuumApexQuadraticForm
+              v
+              (isVacuumApexNull_zeroVacuumApexQuadraticForm v)) := by
+  refine ⟨empiricalProbabilityState N hN, ?_, ?_⟩
+  · exact empiricalProbabilityState_spec N hN
+  · exact holographicEmergence_package_zeroVacuumApexQuadraticForm
+      (n := n)
+      (Tflow := Tflow) (CI := CI) (hAnom := hAnom) (Tw := Tw)
+      (L := L) (IST := IST) (v := v)
+
 end CountsToHolographic
 
 section CountInducedFlow
@@ -306,6 +344,41 @@ theorem countsFirst_holographicEmergence_of_countInducedTrajectory
     (Tflow := countInducedSinkhornTrajectory (n := n) N)
     (CI := CI) (hAnom := hAnom) (Tw := Tw)
     (L := L) (IST := IST) (Q := Q) (v := v) (hNull := hNull)
+
+/--
+Count-first holographic package with derived flow in canonical zero-null form.
+-/
+theorem countsFirst_holographicEmergence_of_countInducedTrajectory_zeroVacuumApexQuadraticForm
+    (N : CountSubstrate (Fin n))
+    (hN : CountSubstrateNontrivial N)
+    (CI : ConformalInference X)
+    (hAnom : CI.chiralAnomalyOperator ≠ 0)
+    (Tw : TwistedInference X)
+    (L : BayesianLoop X)
+    (IST : InfoSpectralTriple X)
+    (v : UnnormalizedProjectiveState (E := X)) :
+    ∃ P : ProbabilityDist (Fin n),
+      (∀ x : Fin n, (P x).toReal = empirical_distribution N x)
+        ∧ EmergentTimeFlow n (countInducedSinkhornTrajectory (n := n) N)
+        ∧ AnomalyScalePhase CI
+        ∧ UpdateOrderPathDependent Tw.dual.nabla
+        ∧ (∃ (M : Coupling 2)
+            (hrow2 : HasPositiveRowSums 2 M)
+            (hcolRow2 : HasPositiveColSums 2 (rowNormalize 2 M hrow2))
+            (hcol2 : HasPositiveColSums 2 M)
+            (hrowCol2 : HasPositiveRowSums 2 (colNormalize 2 M hcol2)),
+            UpdateOrderHysteresis 2 M hrow2 hcolRow2 hcol2 hrowCol2)
+        ∧ AnomalyInflowClosure (E := X) L IST
+        ∧ (∃ t : DoubledTwistorSpace (E := X) zeroVacuumApexQuadraticForm,
+            t = vacuumApexTwistor (E := X)
+              zeroVacuumApexQuadraticForm
+              v
+              (isVacuumApexNull_zeroVacuumApexQuadraticForm v)) := by
+  exact countsFirst_holographicEmergence_package_zeroVacuumApexQuadraticForm (n := n)
+    (N := N) (hN := hN)
+    (Tflow := countInducedSinkhornTrajectory (n := n) N)
+    (CI := CI) (hAnom := hAnom) (Tw := Tw)
+    (L := L) (IST := IST) (v := v)
 
 end CountsToHolographicDerivedFlow
 

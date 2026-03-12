@@ -255,6 +255,16 @@ def IsThermodynamicallySmoothed
   LinearMap.trace ℝ E
     (collapseToBaseVelocity (E := E) (modularVelocity (E := E) β K)).toLinearMap = 0
 
+/--
+Canonical smoothing witness at thermal equilibrium (`β = 0`):
+the collapsed modular velocity vanishes, hence its divergence trace is zero.
+-/
+theorem isThermodynamicallySmoothed_zero_beta
+    (K : AlgebraEnd E) :
+    IsThermodynamicallySmoothed (E := E) 0 K := by
+  unfold IsThermodynamicallySmoothed
+  simp [collapseToBaseVelocity, modularVelocity]
+
 /-- Madelung density from the doubled real thermal vacuum amplitude. -/
 noncomputable def madelungDensity
     {K : AlgebraEnd E}
@@ -312,6 +322,25 @@ noncomputable def madelungFluidState
     (hSmooth : IsThermodynamicallySmoothed β K) :
     (madelungFluidState β K vac ω hSmooth).u
       = collapseToBaseVelocity (E := E) (modularVelocity β K) := rfl
+
+/--
+Canonical equilibrium Madelung state with smoothing discharged constructively
+from `β = 0`.
+-/
+noncomputable def madelungFluidState_zero
+    (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K)
+    (ω : AlgebraEnd E →L[ℝ] ℝ) :
+    FluidState E :=
+  madelungFluidState (E := E) 0 K vac ω
+    (isThermodynamicallySmoothed_zero_beta (E := E) K)
+
+@[simp] theorem madelungFluidState_zero_velocity
+    (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K)
+    (ω : AlgebraEnd E →L[ℝ] ℝ) :
+    (madelungFluidState_zero (E := E) K vac ω).u = 0 := by
+  simp [madelungFluidState_zero, madelungFluidState, collapseToBaseVelocity, modularVelocity]
 
 end MadelungBridge
 

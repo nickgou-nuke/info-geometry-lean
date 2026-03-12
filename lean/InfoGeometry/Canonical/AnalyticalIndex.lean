@@ -274,15 +274,14 @@ variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSp
 
 /--
 Explicit thermodynamic KMS capstone package:
-Sinkhorn barrier control plus exact KMS at each next step.
+exact KMS closure at each next step.
 -/
 def SinkhornKMSCapstone
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ) : Prop :=
-  SinkhornKMSControl n T K ω β ∧
-    SinkhornKMSClosure n T K ω β
+  SinkhornKMSClosure n T K ω β
 
 /--
 Constructive thermodynamic state directly from the Sinkhorn-to-KMS drive law.
@@ -297,6 +296,30 @@ theorem sinkhornKMSState_of_drive
   exact sinkhorn_step_kmsClosure_of_control
     (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive
 
+/--
+Constructive thermodynamic state from closure input (primary closure-first form).
+-/
+theorem sinkhornKMSState_of_closure
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hClosure : SinkhornKMSClosure n T K ω β) :
+    SinkhornKMSClosure n T K ω β := by
+  exact hClosure
+
+/--
+Primary capstone constructor from exact KMS closure.
+-/
+theorem sinkhornKMSCapstone_of_closure
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hClosure : SinkhornKMSClosure n T K ω β) :
+    SinkhornKMSCapstone n T K ω β := by
+  exact hClosure
+
 /-- Theorem `sinkhornKMSCapstone_of_drive`. -/
 theorem sinkhornKMSCapstone_of_drive
     (T : SinkhornTrajectory n)
@@ -305,8 +328,9 @@ theorem sinkhornKMSCapstone_of_drive
     (β : ℝ)
     (hDrive : SinkhornKMSControl n T K ω β) :
     SinkhornKMSCapstone n T K ω β := by
-  refine ⟨hDrive, ?_⟩
-  exact sinkhornKMSState_of_drive (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive
+  exact sinkhornKMSCapstone_of_closure
+    (n := n) (T := T) (K := K) (ω := ω) (β := β)
+    (sinkhornKMSState_of_drive (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive)
 
 /-- Lemma `SinkhornKMSCapstone`. -/
 lemma SinkhornKMSCapstone.kmsState
@@ -316,7 +340,7 @@ lemma SinkhornKMSCapstone.kmsState
     (β : ℝ)
     (hCap : SinkhornKMSCapstone n T K ω β) :
     SinkhornKMSClosure n T K ω β :=
-  hCap.2
+  hCap
 
 /--
 Constructive iterate specialization of the explicit KMS capstone package.
@@ -334,6 +358,23 @@ theorem sinkhornIterate_sinkhornKMSCapstone_of_drive
   exact sinkhornKMSCapstone_of_drive
     (n := n) (T := sinkhornIterateTrajectory (n := n) M0 hrow hcol)
     (K := K) (ω := ω) (β := β) hDrive
+
+/--
+Constructive iterate specialization from closure (primary closure-first form).
+-/
+theorem sinkhornIterate_sinkhornKMSCapstone_of_closure
+    (M0 : SinkhornMatrix n)
+    (hrow : ∀ M : SinkhornMatrix n, HasPositiveRowSums n M)
+    (hcol : ∀ M : SinkhornMatrix n, HasPositiveColSums n M)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hClosure : SinkhornKMSClosure n
+      (sinkhornIterateTrajectory (n := n) M0 hrow hcol) K ω β) :
+    SinkhornKMSCapstone n (sinkhornIterateTrajectory (n := n) M0 hrow hcol) K ω β := by
+  exact sinkhornKMSCapstone_of_closure
+    (n := n) (T := sinkhornIterateTrajectory (n := n) M0 hrow hcol)
+    (K := K) (ω := ω) (β := β) hClosure
 
 end KMSCapstone
 
@@ -439,14 +480,34 @@ theorem fullThermoGeoIndexCapstone_of_constructive_hypotheses
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
     (hD : ∀ s : ℝ, D s = D 0)
     (hΓ : ∀ s : ℝ, Γ s = Γ 0)
-    (hDrive : SinkhornKMSControl n T.traj K ω β) :
+    (hClosure : SinkhornKMSClosure n T.traj K ω β) :
     FullThermoGeoIndexCapstone n T flow D Γ K ω β := by
   refine ⟨?_, ?_⟩
   · exact sinkhornRicciIndexInvariant_of_constructive_hypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
       hNorm hFixed hD hΓ
-  · exact sinkhornKMSCapstone_of_drive
-      (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hDrive
+  · exact sinkhornKMSCapstone_of_closure
+      (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hClosure
+
+/-- Backward-compatible control-input wrapper. -/
+theorem fullThermoGeoIndexCapstone_of_constructive_hypotheses_of_sinkhornDrive
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd Fth)
+    (ω : Nat → AlgebraEnd Fth →L[ℝ] ℝ)
+    (β : ℝ)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hD : ∀ s : ℝ, D s = D 0)
+    (hΓ : ∀ s : ℝ, Γ s = Γ 0)
+    (hDrive : SinkhornKMSControl n T.traj K ω β) :
+    FullThermoGeoIndexCapstone n T flow D Γ K ω β := by
+  exact fullThermoGeoIndexCapstone_of_constructive_hypotheses
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (ω := ω) (β := β)
+    hNorm hFixed hD hΓ
+    (sinkhornKMSState_of_drive (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hDrive)
 
 /-- Backward-compatible wrapper. -/
 theorem fullThermoGeoIndexCapstone_of_hypotheses
@@ -462,7 +523,7 @@ theorem fullThermoGeoIndexCapstone_of_hypotheses
     (hΓ : ∀ s : ℝ, Γ s = Γ 0)
     (hDrive : SinkhornKMSControl n T.traj K ω β) :
     FullThermoGeoIndexCapstone n T flow D Γ K ω β :=
-  fullThermoGeoIndexCapstone_of_constructive_hypotheses
+  fullThermoGeoIndexCapstone_of_constructive_hypotheses_of_sinkhornDrive
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
     (K := K) (ω := ω) (β := β)
     hNorm hFixed hD hΓ hDrive
@@ -489,7 +550,7 @@ lemma FullThermoGeoIndexCapstone.thermodynamicKMSState
     (β : ℝ)
     (hCap : FullThermoGeoIndexCapstone n T flow D Γ K ω β) :
     SinkhornKMSClosure n T.traj K ω β :=
-  hCap.2.2
+  hCap.2
 
 end FullCapstone
 

@@ -98,7 +98,6 @@ noncomputable def baseOnQuotient :
     baseOnQuotient (E := E) (Quotient.mk (gaugeSetoid (E := E)) P) = P.base := rfl
 
 /-- Convenient extensional criterion. -/
-omit [CompleteSpace E] in
 theorem eq_iff
     {P Q : ProjectivePrequantumBundle (E := E)} :
     P = Q ↔ P.base = Q.base ∧ P.data = Q.data := by

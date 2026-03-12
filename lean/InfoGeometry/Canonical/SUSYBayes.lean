@@ -17,7 +17,7 @@ open InfoGeometry.Canonical.KaehlerGeometry
 
 section BayesianFock
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Theorem `bayesian_inference_as_creation`. -/
 theorem bayesian_inference_as_creation
@@ -56,7 +56,7 @@ end MajoranaFierz
 
 section SuperBracket
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Theorem `super_even_even_eq_commutator`. -/
 theorem super_even_even_eq_commutator

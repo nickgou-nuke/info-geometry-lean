@@ -13,6 +13,7 @@ open scoped TensorProduct
 
 namespace InfoGeometry.Canonical.AnalyticalIndex
 
+open InfoGeometry.Krein
 open InfoGeometry.Canonical.BottDirac
 open InfoGeometry.Canonical.ChiralAnomaly
 open InfoGeometry.Canonical.KMSSinkhornBridge
@@ -160,7 +161,7 @@ end Core
 section Bott
 
 variable {E F : Type*}
-  [NormedAddCommGroup E] [NormedSpace ℝ E]
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Global grading on the Bott tensor space: `Γ_bott = Γ₁ ⊗ Γₙ`. -/
@@ -192,7 +193,7 @@ end Bott
 section Laplacian
 
 variable {E F : Type*}
-  [NormedAddCommGroup E] [NormedSpace ℝ E]
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Vanishing condition for the split Bott Laplacian term. -/
@@ -269,7 +270,7 @@ end CoupledInvariant
 section KMSCapstone
 
 variable (n : Nat)
-variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 /--
 Explicit thermodynamic KMS capstone package:
@@ -339,7 +340,7 @@ end KMSCapstone
 section ConcreteFlow
 
 variable {E F : Type*}
-  [NormedAddCommGroup E] [NormedSpace ℝ E]
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /--
@@ -407,7 +408,7 @@ variable (n : Nat)
 variable {X V Fth : Type}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
   [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
-  [NormedAddCommGroup Fth] [NormedSpace ℝ Fth]
+  [NormedAddCommGroup Fth] [InnerProductSpace ℝ Fth] [CompleteSpace Fth]
 
 /--
 Full capstone package:
@@ -498,7 +499,7 @@ variable (n : Nat)
 variable {X V Fth : Type}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
   [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
-  [NormedAddCommGroup Fth] [NormedSpace ℝ Fth]
+  [NormedAddCommGroup Fth] [InnerProductSpace ℝ Fth] [CompleteSpace Fth]
 
 /--
 Unified thermodynamic state naming used by higher-level synthesis modules.

@@ -40,51 +40,29 @@ noncomputable def C (hJ1_sq : J1 * J1 = 1) (hJ1t : J1ᵀ = J1) :
     C (J1 := J1) (n := n) hJ1_sq hJ1t X = θf X := rfl
 
 lemma C_isCartanInvolution :
-    Cartan.IsCartanInvolution (C (J1 := J1) (n := n) hJ1_sq hJ1t) := by
+    Cartan.IsCartanInvolution ((C (J1 := J1) (n := n) hJ1_sq hJ1t).toLinearMap) := by
   simpa [C] using (θₗ_involutive (J1 := J1) (n := n) hJ1_sq hJ1t)
 
 lemma mem_Ck_iff (X : Matn (n := n)) :
-    X ∈ Cartan.k (θ := C (J1 := J1) (n := n) hJ1_sq hJ1t) ↔ θf X = X := by
-  constructor
-  · rintro ⟨Y, rfl⟩
-    exact Cartan.theta_Pplus
-      (θ := C (J1 := J1) (n := n) hJ1_sq hJ1t)
-      (hθ := C_isCartanInvolution (J1 := J1) (n := n) hJ1_sq hJ1t) Y
-  · intro hX
-    refine ⟨X, ?_⟩
-    change Cartan.Pplus (θ := C (J1 := J1) (n := n) hJ1_sq hJ1t) X = X
-    dsimp [Cartan.Pplus]
-    rw [hX, ← two_smul ℝ X, ← smul_assoc]
-    simp
+    X ∈ Decomposition.kSub (J1 := J1) (n := n) ↔ θf X = X := by
+  simpa using (Decomposition.mem_k_iff (J1 := J1) (n := n) X)
 
 lemma mem_Cp_iff (X : Matn (n := n)) :
-    X ∈ Cartan.p (θ := C (J1 := J1) (n := n) hJ1_sq hJ1t) ↔ θf X = -X := by
-  constructor
-  · rintro ⟨Y, rfl⟩
-    exact Cartan.theta_Pminus
-      (θ := C (J1 := J1) (n := n) hJ1_sq hJ1t)
-      (hθ := C_isCartanInvolution (J1 := J1) (n := n) hJ1_sq hJ1t) Y
-  · intro hX
-    refine ⟨X, ?_⟩
-    change Cartan.Pminus (θ := C (J1 := J1) (n := n) hJ1_sq hJ1t) X = X
-    dsimp [Cartan.Pminus]
-    rw [hX, sub_neg_eq_add, ← two_smul ℝ X, ← smul_assoc]
-    simp
+    X ∈ Decomposition.pSub (J1 := J1) (n := n) ↔ θf X = -X := by
+  simpa using (Decomposition.mem_p_iff (J1 := J1) (n := n) X)
+
+noncomputable def Ck : Submodule ℝ (Matn (n := n)) :=
+  Decomposition.kSub (J1 := J1) (n := n)
+
+noncomputable def Cp : Submodule ℝ (Matn (n := n)) :=
+  Decomposition.pSub (J1 := J1) (n := n)
 
 lemma kSub_eq_k :
     Decomposition.kSub (J1 := J1) (n := n)
-      = Cartan.k (θ := C (J1 := J1) (n := n) hJ1_sq hJ1t) := by
-  ext X
-  have hk := Decomposition.mem_k_iff (J1 := J1) (n := n) X
-  have hc := mem_Ck_iff (J1 := J1) (n := n) hJ1_sq hJ1t X
-  exact hk.trans hc.symm
+      = Ck (J1 := J1) (n := n) := rfl
 
 lemma pSub_eq_p :
     Decomposition.pSub (J1 := J1) (n := n)
-      = Cartan.p (θ := C (J1 := J1) (n := n) hJ1_sq hJ1t) := by
-  ext X
-  have hk := Decomposition.mem_p_iff (J1 := J1) (n := n) X
-  have hc := mem_Cp_iff (J1 := J1) (n := n) hJ1_sq hJ1t X
-  exact hk.trans hc.symm
+      = Cp (J1 := J1) (n := n) := rfl
 
 end InfoGeometry.Clifford.CartanInstance

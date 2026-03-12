@@ -4,7 +4,7 @@ namespace InfoGeometry.Krein
 
 section KreinClifford
 
-variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Dilation operator extracted from the commutator `[J, ε]`. -/
 noncomputable def dilationOperator : DoubledSpace E →L[ℝ] DoubledSpace E :=

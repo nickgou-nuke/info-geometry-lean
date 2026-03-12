@@ -45,6 +45,9 @@ theorem arnoldNetwork_preserves_base (n : Nat) (net : ArnoldMajoranaNetwork n E)
     (hx : (WithLp.ofLp (x i)).2 = 0) :
     (WithLp.ofLp (arnoldNetworkOutput n net β x i)).2 = 0 := by
   unfold arnoldNetworkOutput
-  sorry
+  have hzero : ∀ e : ExpertIdx n, WithLp.snd ((net.moe.experts e).apply (x i)) = 0 := by
+    intro e
+    simpa using hBase e (x i) hx
+  simp [Prod.snd_sum, hzero]
 
 end InfoGeometry.Canonical.MoE

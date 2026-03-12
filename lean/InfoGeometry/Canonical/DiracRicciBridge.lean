@@ -178,7 +178,7 @@ end BottDiracRicci
 section BottSplitting
 
 variable {E F : Type*}
-  [NormedAddCommGroup E] [NormedSpace ℝ E]
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Canonical Cl(1,1) Bott-Dirac square equals the canonical Bott Laplacian. -/

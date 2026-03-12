@@ -7,6 +7,27 @@ namespace InfoGeometry.Canonical.KMSSinkhornBridge
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.ChiralAnomaly
+open InfoGeometry.Krein
+
+/-- Doubled-space endomorphisms used for thermal/KMS operator statements. -/
+abbrev AlgebraEnd
+    (E : Type*)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : Type _ :=
+  DoubledSpace E →L[ℝ] DoubledSpace E
+
+/-- CamelCase compatibility alias for `InfoGeometry.Krein.modular_shift`. -/
+noncomputable abbrev modularShift
+    {E : Type*}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (K : AlgebraEnd E) (β : ℝ) (B : AlgebraEnd E) : AlgebraEnd E :=
+  InfoGeometry.Krein.modular_shift (E := E) K β B
+
+/-- CamelCase compatibility alias for `InfoGeometry.Krein.satisfies_kms_like`. -/
+abbrev SatisfiesKMSLike
+    {E : Type*}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (K : AlgebraEnd E) (ω : AlgebraEnd E →L[ℝ] ℝ) (β : ℝ) : Prop :=
+  InfoGeometry.Krein.satisfies_kms_like (E := E) K ω β
 
 section RouterHamiltonian
 
@@ -14,7 +35,7 @@ variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 variable (n : Nat) [Nonempty (Fin n)]
 
 /-- Router-amplitude space over experts. -/
-abbrev RouterAmplitude := Fin n → ℝ
+abbrev RouterAmplitude := EuclideanSpace ℝ (Fin n)
 
 /-- Mean router energy over experts for a fixed token index. -/
 noncomputable def routerMeanEnergy (x : Fin n → V) (i : Fin n) : ℝ :=
@@ -39,7 +60,7 @@ end RouterHamiltonian
 
 section KMSResidual
 
-variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 /-- Absolute algebraic KMS residual for a pair of observables. -/
 noncomputable def kmsResidual
@@ -84,7 +105,7 @@ end KMSResidual
 section SinkhornBridge
 
 variable (n : Nat)
-variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 /--
 Control hypothesis coupling Sinkhorn balancing to KMS residuals:

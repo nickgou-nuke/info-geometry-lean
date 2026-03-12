@@ -6,6 +6,8 @@ open scoped TensorProduct
 
 namespace InfoGeometry.Canonical.BottDirac
 
+open InfoGeometry.Krein
+
 section Core
 
 variable {E F : Type*}
@@ -110,7 +112,7 @@ end SpectralBridge
 section Cl11Bridge
 
 variable {E F : Type*}
-  [NormedAddCommGroup E] [NormedSpace ℝ E]
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- `Cl(1,1)` Dirac seed from modular conjugation. -/

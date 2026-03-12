@@ -13,6 +13,8 @@ Constructive theorem package for the full chain:
 - boundary anomaly cancellation plus vacuum-apex twistor lift
 -/
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.HolographicEmergence
 
 open InfoGeometry.Canonical.MoE

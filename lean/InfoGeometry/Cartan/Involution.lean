@@ -3,6 +3,8 @@ import Mathlib.Algebra.Field.Basic
 import Mathlib.Algebra.GroupWithZero.Invertible
 import Mathlib.Tactic.Abel
 
+set_option linter.unusedVariables false
+
 /-!
 # Cartan Involution Foundation (Strictly Algebraic)
 

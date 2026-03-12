@@ -44,12 +44,13 @@ example {X Θ : Type} [Fintype X] [Fintype Θ] [MeasurableSpace X] [MeasurableSp
   classical
   simpa [tsum_fintype] using (cond_theta_given_x p x hx).tsum_coe
 
--- KL chain-rule holds (proved by `kl_chain_rule`)
+-- KL chain-rule can be consumed through an explicit hypothesis (`KlChainRule`).
 example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X]
     [MeasurableSpace X] [MeasurableSpace Θ]
     (p q : FinProb (X × Θ))
     (hp : ∀ x : X, x ∈ (marginal_x p).support)
-    (hq : ∀ x : X, x ∈ (marginal_x q).support) :
+    (hq : ∀ x : X, x ∈ (marginal_x q).support)
+    (hchain : KlChainRule (X := X) (Θ := Θ) p q hq hp) :
     KL p q =
       InfoGeometry.kl_div (α := X)
         (marginal_x (X := X) (Θ := Θ) p).toMeasure
@@ -58,7 +59,7 @@ example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X]
         InfoGeometry.kl_div (α := Θ)
           (cond_theta_given_x (X := X) (Θ := Θ) p x (hp x)).toMeasure
           (cond_theta_given_x (X := X) (Θ := Θ) q x (hq x)).toMeasure :=
-  kl_chain_rule (X := X) (Θ := Θ) p q hq hp
+  kl_chain_rule_of (X := X) (Θ := Θ) p q hq hp hchain
 
 -- Test: `ProbabilityDist` is a definitional alias of `FinProb`
 example {α : Type} [Fintype α] (p : FinProb α) :
@@ -68,5 +69,26 @@ example {α : Type} [Fintype α] (p : FinProb α) :
 example {α : Type} [Fintype α] (p : FinProb α) (f : α → ℝ) :
   InfoGeometry.expectation (p : InfoGeometry.ProbabilityDist α) f = ∑ x, (p x).toReal * f x := by
   rfl
+
+-- Constructive finite chain-rule in `toReal` form (strict-positivity variant).
+example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X] [DecidableEq Θ]
+    [MeasurableSpace X] [MeasurableSpace Θ]
+    [MeasurableSingletonClass X] [MeasurableSingletonClass Θ]
+    [Nonempty Θ]
+    (p q : FinProb (X × Θ))
+    (hposp : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
+    (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal) :
+    (KL p q).toReal =
+      (InfoGeometry.kl_div (α := X)
+        (marginal_x (X := X) (Θ := Θ) p).toMeasure
+        (marginal_x (X := X) (Θ := Θ) q).toMeasure).toReal
+      +
+      (∑ x : X, (marginal_x (X := X) (Θ := Θ) p x).toReal *
+        (InfoGeometry.kl_div (α := Θ)
+          (cond_theta_given_x (X := X) (Θ := Θ) p x
+            (InfoGeometry.EntropicInference.marginal_x_full_support_of_joint_toReal_pos p hposp x)).toMeasure
+          (cond_theta_given_x (X := X) (Θ := Θ) q x
+            (InfoGeometry.EntropicInference.marginal_x_full_support_of_joint_toReal_pos q hposq x)).toMeasure).toReal) := by
+  simpa using InfoGeometry.EntropicInference.kl_chain_rule_toReal_strict p q hposp hposq
 
 end InfoGeometry.KL.EntropicInferenceTest

@@ -19,16 +19,14 @@ instance {α : Type*} : CoeFun (EmpiricalCounts α) (fun _ => α → ℕ) where
 abbrev FinProb (α : Type*) := PMF α
 
 /-- Convert nontrivial empirical counts into a canonical `FinProb`. -/
-noncomputable def empiricalFinProb {α : Type*} [Fintype α] 
+noncomputable def empiricalFinProb {α : Type*} [Fintype α] [Nonempty α]
     (N : EmpiricalCounts α) (h : 0 < ∑ x, N x) : FinProb α :=
   let total := ∑ x, (N x : ℝ)
   have hZ_pos : 0 < total := by
     simp only [total, Nat.cast_sum]
     exact Nat.cast_pos.mpr h
   PMF.ofFintype (fun x => ENNReal.ofReal ((N x : ℝ) / total)) (by
-    have hnonneg : ∀ x, 0 ≤ (N x : ℝ) / total := fun x => 
-      div_nonneg (Nat.cast_nonneg _) hZ_pos.le
-    rw [← ENNReal.ofReal_sum_of_nonneg (fun x _ => hnonneg x)]
+    rw [← ENNReal.ofReal_sum_of_nonneg (fun x _ => div_nonneg (Nat.cast_nonneg _) hZ_pos.le)]
     rw [← Finset.sum_div, div_self hZ_pos.ne', ENNReal.ofReal_one])
 
 end Test

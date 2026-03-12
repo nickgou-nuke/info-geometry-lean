@@ -14,7 +14,6 @@ noncomputable section
 
 variable {α ι : Type*}
 variable [Fintype α] [MeasurableSpace α] [MeasurableSingletonClass α]
-variable [DecidableEq ι]
 
 /--
 Every real-valued function on a finite type is integrable against a finite measure.
@@ -25,7 +24,7 @@ lemma integrable_of_fintype (f : α → ℝ) (μ : Measure α) [IsFiniteMeasure 
   let C : ℝ := ∑ y : α, ‖f y‖
   have hf_meas : AEStronglyMeasurable f μ :=
     (measurable_of_finite f).aestronglyMeasurable
-  refine MeasureTheory.Integrable.of_bound hf_meas C ?_
+  refine (MeasureTheory.Integrable.of_bound (μ := μ) (f := f) hf_meas C ?_)
   filter_upwards with x
   have hx :
       ‖f x‖ ≤ ∑ y : α, ‖f y‖ := by
@@ -98,7 +97,7 @@ The distribution that minimizes KL divergence to a prior `q` subject to
 linear constraints is the unique Gibbs distribution that satisfies those constraints.
 -/
 theorem gibbs_is_minimizer
-    [DecidableEq α]
+    [DecidableEq α] [DecidableEq ι]
     (J : FiniteJaynesProblem α ι)
     (hprior : J.FullSupportPrior)
     [Nonempty α] (lam : ι → ℝ) (hZ : J.partition lam ≠ 0)
@@ -138,7 +137,7 @@ theorem gibbs_is_minimizer
 Uniqueness of the I-Projection.
 -/
 theorem gibbs_is_unique_minimizer
-    [DecidableEq α]
+    [DecidableEq α] [DecidableEq ι]
     (J : FiniteJaynesProblem α ι)
     (hprior : J.FullSupportPrior)
     [Nonempty α] (lam : ι → ℝ) (hZ : J.partition lam ≠ 0)

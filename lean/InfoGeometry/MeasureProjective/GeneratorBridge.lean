@@ -12,7 +12,7 @@ open InfoGeometry.MeasureProjective
 open InfoGeometry.Measure.DiscreteRN
 open InfoGeometry.MeasureProjective.Normalized
 
-variable {α : Type*} [MeasurableSpace α] [Nonempty α] [MeasurableSingletonClass α]
+variable {α : Type*} [MeasurableSpace α] [Countable α] [Nonempty α] [MeasurableSingletonClass α]
 
 /--
 On the PMF slice, the projective logarithmic generator evaluates almost everywhere

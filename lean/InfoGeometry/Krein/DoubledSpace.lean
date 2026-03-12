@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Cartan.Involution
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Analysis.Normed.Lp.ProdLp
@@ -17,6 +18,8 @@ Provides:
 -/
 
 namespace InfoGeometry.Krein
+
+open InfoGeometry.Cartan
 
 section Compatibility
 
@@ -144,6 +147,40 @@ theorem modular_j_spectral_epsilon_is_cl11 (E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     cl11_algebra (modular_j (E := E)) spectral_epsilon :=
   modular_j_spectral_epsilon_has_cl11_relations E
+
+/-- Modular J as a linear equivalence. -/
+noncomputable def modular_jLE (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    DoubledSpace E ≃ₗ[ℝ] DoubledSpace E :=
+  { modular_j (E := E).toLinearMap with
+    invFun := modular_j (E := E)
+    left_inv := fun x => by
+      have h := congrArg (fun f => f x) (modular_j_involution E)
+      simpa using h
+    right_inv := fun x => by
+      have h := congrArg (fun f => f x) (modular_j_involution E)
+      simpa using h }
+
+/-- Spectral epsilon as a linear equivalence. -/
+noncomputable def spectral_epsilonLE (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    DoubledSpace E ≃ₗ[ℝ] DoubledSpace E :=
+  { spectral_epsilon (E := E).toLinearMap with
+    invFun := spectral_epsilon (E := E)
+    left_inv := fun x => by
+      have h := congrArg (fun f => f x) (spectral_epsilon_involution E)
+      simpa using h
+    right_inv := fun x => by
+      have h := congrArg (fun f => f x) (spectral_epsilon_involution E)
+      simpa using h }
+
+lemma modular_j_is_cartan (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    IsCartanInvolution (modular_jLE E).toLinearMap := by
+  have h := modular_j_involution E
+  exact congrArg ContinuousLinearMap.toLinearMap h
+
+lemma spectral_epsilon_is_cartan (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    IsCartanInvolution (spectral_epsilonLE E).toLinearMap := by
+  have h := spectral_epsilon_involution E
+  exact congrArg ContinuousLinearMap.toLinearMap h
 
 end Compatibility
 

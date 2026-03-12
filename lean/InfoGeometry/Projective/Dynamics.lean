@@ -11,7 +11,10 @@ end InfoGeometry.Projective.Dynamics
 
 section KreinClifford
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+open InfoGeometry.Krein
+open InfoGeometry.Projective
+
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 namespace ProjectiveDynamics
 

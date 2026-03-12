@@ -17,6 +17,7 @@ No new axioms are introduced.
 namespace InfoGeometry.Canonical.CountSubstrateBridge
 
 open InfoGeometry
+open InfoGeometry.Krein
 open InfoGeometry.KL
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.ChiralAnomaly
@@ -45,19 +46,25 @@ abbrev CountSubstrateNontrivial {α : Type*} [Fintype α] (N : CountSubstrate α
 noncomputable def empiricalProbabilityState {α : Type*} [Fintype α]
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
     ProbabilityDist α :=
-  empiricalProbDist N hN
+  empirical_fin_prob N hN
 
 /-- Theorem `empiricalProbabilityState_spec`. -/
 theorem empiricalProbabilityState_spec {α : Type*} [Fintype α]
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
-    ∀ x : α, empiricalProbabilityState N hN x = empirical_distribution N x :=
-  fun _ => rfl
+    ∀ x : α, (empiricalProbabilityState N hN x).toReal = empirical_distribution N x := by
+  intro x
+  have htotal_pos : 0 < ∑ y, (N y : ℝ) := by
+    exact_mod_cast hN
+  have hratio_nonneg : 0 ≤ (N x : ℝ) / (∑ y, (N y : ℝ)) := by
+    exact div_nonneg (Nat.cast_nonneg _) htotal_pos.le
+  simp [empiricalProbabilityState, empirical_fin_prob, empirical_distribution,
+    htotal_pos.ne', hratio_nonneg]
 
 /-- Theorem `exists_empiricalProbabilityState`. -/
 theorem exists_empiricalProbabilityState {α : Type*} [Fintype α]
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
-    ∃ P : ProbabilityDist α, ∀ x : α, P x = empirical_distribution N x :=
-  ⟨empiricalProbabilityState N hN, fun _ => rfl⟩
+    ∃ P : ProbabilityDist α, ∀ x : α, (P x).toReal = empirical_distribution N x :=
+  ⟨empiricalProbabilityState N hN, empiricalProbabilityState_spec N hN⟩
 
 end CountsToProbability
 
@@ -86,7 +93,7 @@ theorem countsFirst_holographicEmergence_package
     (v : UnnormalizedProjectiveState (E := X))
     (hNull : IsVacuumApexNull (E := X) Q v) :
     ∃ P : ProbabilityDist α,
-      (∀ x : α, P x = empirical_distribution N x)
+      (∀ x : α, (P x).toReal = empirical_distribution N x)
         ∧ EmergentTimeFlow n Tflow
         ∧ AnomalyScalePhase CI
         ∧ UpdateOrderPathDependent Tw.dual.nabla
@@ -97,9 +104,10 @@ theorem countsFirst_holographicEmergence_package
             (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
             UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol)
         ∧ AnomalyInflowClosure (E := X) L IST
-        ∧ (∃ t : DoubledTwistorSpace (E := X) Q, t = vacuumApexTwistor (E := X) Q v hNull) := by
+        ∧ (∃ t : DoubledTwistorSpace (E := X) Q,
+            t = vacuumApexTwistor (E := X) (Q := Q) v hNull) := by
   refine ⟨empiricalProbabilityState N hN, ?_, ?_⟩
-  · exact fun _ => rfl
+  · exact empiricalProbabilityState_spec N hN
   · exact holographicEmergence_package (n := n)
       (Tflow := Tflow) (CI := CI) (hAnom := hAnom) (Tw := Tw)
       (L := L) (IST := IST) (Q := Q) (v := v) (hNull := hNull)
@@ -280,7 +288,7 @@ theorem countsFirst_holographicEmergence_of_countInducedTrajectory
     (v : UnnormalizedProjectiveState (E := X))
     (hNull : IsVacuumApexNull (E := X) Q v) :
     ∃ P : ProbabilityDist (Fin n),
-      (∀ x : Fin n, P x = empirical_distribution N x)
+      (∀ x : Fin n, (P x).toReal = empirical_distribution N x)
         ∧ EmergentTimeFlow n (countInducedSinkhornTrajectory (n := n) N)
         ∧ AnomalyScalePhase CI
         ∧ UpdateOrderPathDependent Tw.dual.nabla
@@ -291,7 +299,8 @@ theorem countsFirst_holographicEmergence_of_countInducedTrajectory
             (hrowCol2 : HasPositiveRowSums 2 (colNormalize 2 M hcol2)),
             UpdateOrderHysteresis 2 M hrow2 hcolRow2 hcol2 hrowCol2)
         ∧ AnomalyInflowClosure (E := X) L IST
-        ∧ (∃ t : DoubledTwistorSpace (E := X) Q, t = vacuumApexTwistor (E := X) Q v hNull) := by
+        ∧ (∃ t : DoubledTwistorSpace (E := X) Q,
+            t = vacuumApexTwistor (E := X) (Q := Q) v hNull) := by
   exact countsFirst_holographicEmergence_package (n := n)
     (N := N) (hN := hN)
     (Tflow := countInducedSinkhornTrajectory (n := n) N)

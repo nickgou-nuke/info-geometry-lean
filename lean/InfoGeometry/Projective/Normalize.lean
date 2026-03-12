@@ -1,4 +1,4 @@
-import InfoGeometry.Projective.Projective
+import InfoGeometry.Projective.Bridge
 
 /-!
 # InfoGeometry.Projective.Normalize
@@ -26,16 +26,32 @@ lemma normalize_eq_of_sameRay
   symm
   exact normalize_scale (α := α) (c := c) hc μ
 
-/-- Canonical simplex representative of a projective ray. -/
-noncomputable def normalizeOnProj : Proj (α := α) → PositiveMeasure α ℝ :=
+/-- Legacy quotient-based normalization map (kept private). -/
+private noncomputable def normalizeOnProjLegacy : Proj (α := α) → PositiveMeasure α ℝ :=
   Quotient.lift
     (fun μ => normalize (α := α) (R := ℝ) μ)
     (by
       intro μ ν h
       exact normalize_eq_of_sameRay (α := α) h)
 
+/-- Normalization on cone-interior rays via the bridge equivalence. -/
+noncomputable def normalizeOnConeInteriorStateSpace :
+    InfoGeometry.Projective.ConeInteriorStateSpace
+      ((InfoGeometry.Projective.positiveOrthant (α := α)).cone) → PositiveMeasure α ℝ :=
+  normalizeOnProjLegacy (α := α) ∘
+    (InfoGeometry.Projective.coneInteriorStateSpaceToProjectiveClass (α := α))
+
+/-- Canonical simplex representative of a projective ray. -/
+noncomputable def normalizeOnProj : Proj (α := α) → PositiveMeasure α ℝ :=
+  normalizeOnConeInteriorStateSpace (α := α) ∘
+    (InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace (α := α))
+
 @[simp] lemma normalizeOnProj_mk (μ : PositiveMeasure α ℝ) :
-    normalizeOnProj (α := α) (Quotient.mk _ μ) = normalize (α := α) (R := ℝ) μ := rfl
+    normalizeOnProj (α := α) (Quotient.mk _ μ) = normalize (α := α) (R := ℝ) μ := by
+  unfold normalizeOnProj normalizeOnConeInteriorStateSpace
+  rw [Function.comp_apply, Function.comp_apply]
+  rw [InfoGeometry.Projective.coneInteriorStateSpaceToProjectiveClass_projectiveClass]
+  rfl
 
 /-- The canonical representative has unit mass. -/
 @[simp] lemma Z_normalizeOnProj (q : Proj (α := α)) :

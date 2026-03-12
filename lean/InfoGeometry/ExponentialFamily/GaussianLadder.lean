@@ -20,13 +20,15 @@ Maps (x, θ) to (x, Σ x).
 noncomputable def gaussianAnnihilation (G : GaussianFamily E) :
     (InfoGeometry.Canonical.KreinLadder.DoubledSpace E) →ₗ[ℝ]
       (InfoGeometry.Canonical.KreinLadder.DoubledSpace E) :=
-  { toFun := fun v => to_doubled (DoubledSpace.fst v) (G.sigma (DoubledSpace.fst v))
+  { toFun := fun v => to_doubled (WithLp.fst v) (G.sigma (WithLp.fst v))
     map_add' := by
       intro x y
-      apply DoubledSpace.ext <;> simp [map_add]
+      apply (WithLp.ofLp_injective 2)
+      simp [to_doubled, map_add]
     map_smul' := by
       intro c x
-      apply DoubledSpace.ext <;> simp [map_smul] }
+      apply (WithLp.ofLp_injective 2)
+      simp [to_doubled, map_smul] }
 
 /--
 Explicit Creation Operator for the Multivariate Gaussian Family.
@@ -35,13 +37,15 @@ Maps (x, θ) to (x, - Σ x).
 noncomputable def gaussianCreation (G : GaussianFamily E) :
     (InfoGeometry.Canonical.KreinLadder.DoubledSpace E) →ₗ[ℝ]
       (InfoGeometry.Canonical.KreinLadder.DoubledSpace E) :=
-  { toFun := fun v => to_doubled (DoubledSpace.fst v) (- G.sigma (DoubledSpace.fst v))
+  { toFun := fun v => to_doubled (WithLp.fst v) (- G.sigma (WithLp.fst v))
     map_add' := by
       intro x y
-      apply DoubledSpace.ext <;> simp [map_add, add_comm]
+      apply (WithLp.ofLp_injective 2)
+      simp [to_doubled, map_add, add_comm, add_left_comm, add_assoc]
     map_smul' := by
       intro c x
-      apply DoubledSpace.ext <;> simp [map_smul, smul_neg] }
+      apply (WithLp.ofLp_injective 2)
+      simp [to_doubled, map_smul, smul_neg] }
 
 omit [FiniteDimensional ℝ E] in
 /--
@@ -51,11 +55,10 @@ Fisher Information metric (the covariance operator Σ).
 -/
 theorem gaussian_ccr (G : GaussianFamily E)
     (v : InfoGeometry.Canonical.KreinLadder.DoubledSpace E) :
-    ((gaussianAnnihilation G) * (gaussianCreation G) - (gaussianCreation G) * (gaussianAnnihilation G)) v =
-    to_doubled 0 (2 • G.sigma (DoubledSpace.fst v)) := by
-  simp [LinearMap.sub_apply, gaussianAnnihilation, gaussianCreation]
-  apply DoubledSpace.ext
-  · simp
-  · simp [two_smul]
+    ((gaussianAnnihilation G).comp (gaussianCreation G)
+      - (gaussianCreation G).comp (gaussianAnnihilation G)) v =
+    to_doubled 0 (2 • G.sigma (WithLp.fst v)) := by
+  apply (WithLp.ofLp_injective 2)
+  ext <;> simp [gaussianAnnihilation, gaussianCreation, to_doubled, two_smul]
 
 end InfoGeometry.ExponentialFamily.GaussianLadder

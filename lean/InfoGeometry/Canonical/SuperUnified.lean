@@ -13,13 +13,14 @@ Clifford-style endomorphism algebra on `DoubledSpace E` viewed through:
 namespace InfoGeometry.SuperUnified
 
 open InfoGeometry.Jordan
+open InfoGeometry.Krein
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 section SuperAlgebra
 
 /-- Endomorphisms on the doubled space. -/
-abbrev End (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] :=
+abbrev End (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
   DoubledSpace E →L[ℝ] DoubledSpace E
 
 /-- Super-commutator / Lie bracket. -/
@@ -33,8 +34,21 @@ noncomputable def jordanProduct (A B : End E) : End E :=
 /-- Clifford decomposition `AB = {A,B} + (1/2)[A,B]`. -/
 theorem clifford_decomposition (A B : End E) :
     A.comp B = jordanProduct A B + (2 : ℝ)⁻¹ • lieBracket A B := by
-  simpa [jordanProduct, lieBracket, jordanProd, clmComm] using
-    (comp_eq_jordan_add_half_comm (E := E) A B)
+  have hsum :
+      (A.comp B + B.comp A) + (A.comp B - B.comp A) = (2 : ℝ) • (A.comp B) := by
+    calc
+      (A.comp B + B.comp A) + (A.comp B - B.comp A)
+          = A.comp B + A.comp B := by
+              simp [sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+      _ = (2 : ℝ) • (A.comp B) := by
+            simpa using (two_smul ℝ (A.comp B)).symm
+  symm
+  calc
+    jordanProduct A B + (2 : ℝ)⁻¹ • lieBracket A B
+        = (2 : ℝ)⁻¹ • ((A.comp B + B.comp A) + (A.comp B - B.comp A)) := by
+            simp [jordanProduct, lieBracket, smul_add, smul_sub, sub_eq_add_neg]
+    _ = (2 : ℝ)⁻¹ • ((2 : ℝ) • (A.comp B)) := by rw [hsum]
+    _ = A.comp B := by simp [smul_smul]
 
 end SuperAlgebra
 

@@ -16,17 +16,18 @@ namespace InfoGeometry.Canonical.BogoliubovFockSuper
 
 open InfoGeometry.Quantum
 open InfoGeometry.Canonical.RicciMongeAmpere
+open InfoGeometry.Krein
 
 section FockSuper
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Endomorphisms of the doubled/Fock state space. -/
-abbrev FockEnd (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] :=
+abbrev FockEnd (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
   DoubledSpace E →L[ℝ] DoubledSpace E
 
 /-- Canonical naming alias for Fock endomorphisms. -/
-abbrev FockEndomorphism (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] :=
+abbrev FockEndomorphism (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
   FockEnd E
 
 /-- Real Bogoliubov mixing parameters with split normalization. -/
@@ -328,7 +329,8 @@ theorem anticommutator_bogoliubov_of_CAR
   simp [superBracket_smul_left, superBracket_smul_right,
     hCAR.car_annihilation, hCAR.car_creation, hCAR.car_mixed, hca,
     smul_smul, mul_assoc]
-  sorry
+  ext w
+  simp [add_assoc]
 
 /--
 CCR-collapsed Bogoliubov covariance:
@@ -359,7 +361,8 @@ theorem commutator_bogoliubov_of_CCR
   simp [superBracket_smul_left, superBracket_smul_right,
     hCCR.ccr_annihilation, hCCR.ccr_creation, hCCR.ccr_mixed, hca,
     smul_smul]
-  sorry
+  ext w
+  simp [add_assoc]
 
 end FockSuper
 

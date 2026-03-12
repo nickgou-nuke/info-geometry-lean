@@ -41,7 +41,7 @@ abbrev DSpace (E : Type*) := InfoGeometry.Krein.DoubledSpace E
 /-- Information Killing field: a Krein-skew generator on the doubled space. -/
 def InformationKillingField (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] : Type _ :=
-  { A : Op E // InfoGeometry.Krein.IsKreinSkewAdjoint A }
+  { A : Op E // InfoGeometry.Krein.is_krein_skew_adjoint A }
 
 /--
 Infinitesimal Hessian invariance:
@@ -53,7 +53,7 @@ theorem InformationKillingField.preserves_hessian
     hessian_indefinite_form (E := E) (A.1 x) y +
       hessian_indefinite_form (E := E) x (A.1 y) = 0 := by
   simpa using
-    (InfoGeometry.Krein.IsKreinSkewAdjoint.hessian_infinitesimal
+    (InfoGeometry.Krein.is_krein_skew_adjoint_hessian_infinitesimal
       (E := E) (A := A.1) A.2 x y)
 
 /-- Evaluation at a fixed doubled vector as a linear map on doubled endomorphisms. -/

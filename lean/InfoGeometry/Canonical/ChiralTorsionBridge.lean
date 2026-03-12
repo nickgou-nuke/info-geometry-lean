@@ -27,6 +27,7 @@ open InfoGeometry.Canonical.BeliefDynamics
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.InformationTorsion
 open InfoGeometry.Twistor
+open InfoGeometry.Krein
 
 section VolumeRN
 
@@ -79,7 +80,7 @@ end GeneralizedKL
 
 section ProjectiveTwistor
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Unnormalized representative of a projective knowledge ray. -/
 abbrev UnnormalizedProjectiveState := NonzeroDoubledState (E := E)

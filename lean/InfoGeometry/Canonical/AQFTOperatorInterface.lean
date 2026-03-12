@@ -15,6 +15,7 @@ AQFT operator-algebra interface layer:
 
 namespace InfoGeometry.Canonical.AQFTOperatorInterface
 
+open InfoGeometry.Krein
 open InfoGeometry.Canonical.KMSSinkhornBridge
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.QFTTDFTLaunchpad
@@ -40,14 +41,15 @@ end AbstractSignatures
 
 section Realizations
 
-variable {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs]
 
 /--
 Explicit realization map from the concrete finite doubled-space operator model
 into an abstract operator algebra.
 -/
-structure AQFTOperatorRealization (F : Type*) [NormedAddCommGroup F] [NormedSpace ℝ F] where
+structure AQFTOperatorRealization
+    (F : Type*) [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] where
   realize : AlgebraEnd F → Obs
 
 /-- Theorem `cstarReady_of_instance`. -/
@@ -81,14 +83,12 @@ def firstLegEmbedding : E →L[ℝ] InfoGeometry.Krein.DoubledSpace E where
     { toFun := fun x => InfoGeometry.Krein.to_doubled x (0 : E)
       map_add' := by
         intro x y
-        simpa using
-          (InfoGeometry.Krein.add_to_doubled
-            (x := x) (ξ := (0 : E)) (y := y) (η := (0 : E))).symm
+        apply (WithLp.ofLp_injective 2)
+        simp [InfoGeometry.Krein.to_doubled]
       map_smul' := by
         intro a x
-        simpa using
-          (InfoGeometry.Krein.smul_to_doubled
-            (c := a) (x := x) (ξ := (0 : E))).symm }
+        apply (WithLp.ofLp_injective 2)
+        simp [InfoGeometry.Krein.to_doubled, smul_zero] }
   cont := by
     simpa [InfoGeometry.Krein.to_doubled] using
       (WithLp.prod_continuous_toLp (p := 2) (α := E) (β := E)).comp
@@ -97,15 +97,15 @@ def firstLegEmbedding : E →L[ℝ] InfoGeometry.Krein.DoubledSpace E where
 /-- First-leg projection `(x,y) ↦ x` from doubled space. -/
 def firstLegProjection : InfoGeometry.Krein.DoubledSpace E →L[ℝ] E where
   toLinearMap :=
-    { toFun := fun v => InfoGeometry.Krein.DoubledSpace.fst v
+    { toFun := fun v => WithLp.fst v
       map_add' := by
         intro v w
-        simp [InfoGeometry.Krein.DoubledSpace.fst]
+        simp [WithLp.add_fst]
       map_smul' := by
         intro a v
-        simp [InfoGeometry.Krein.DoubledSpace.fst] }
+        simp [WithLp.smul_fst] }
   cont := by
-    simpa [InfoGeometry.Krein.DoubledSpace.fst] using
+    simpa using
       WithLp.continuous_fst (p := 2) (α := E) (β := E)
 
 /-- Compression of doubled operators onto the first Hilbert leg. -/
@@ -147,9 +147,8 @@ def complexFirstLegEmbedding : H →L[ℂ] InfoGeometry.Krein.DoubledSpace H whe
     { toFun := fun x => InfoGeometry.Krein.to_doubled x (0 : H)
       map_add' := by
         intro x y
-        simpa using
-          (InfoGeometry.Krein.add_to_doubled
-            (x := x) (ξ := (0 : H)) (y := y) (η := (0 : H))).symm
+        apply (WithLp.ofLp_injective 2)
+        simp [InfoGeometry.Krein.to_doubled]
       map_smul' := by
         intro a x
         apply (WithLp.ofLp_injective 2)
@@ -162,15 +161,15 @@ def complexFirstLegEmbedding : H →L[ℂ] InfoGeometry.Krein.DoubledSpace H whe
 /-- Complex first-leg projection `(x,y) ↦ x` from doubled space. -/
 def complexFirstLegProjection : InfoGeometry.Krein.DoubledSpace H →L[ℂ] H where
   toLinearMap :=
-    { toFun := fun v => InfoGeometry.Krein.DoubledSpace.fst v
+    { toFun := fun v => WithLp.fst v
       map_add' := by
         intro v w
-        simp [InfoGeometry.Krein.DoubledSpace.fst]
+        simp [WithLp.add_fst]
       map_smul' := by
         intro a v
-        simp [InfoGeometry.Krein.DoubledSpace.fst] }
+        simp [WithLp.smul_fst] }
   cont := by
-    simpa [InfoGeometry.Krein.DoubledSpace.fst] using
+    simpa using
       WithLp.continuous_fst (p := 2) (α := H) (β := H)
 
 /-- Complex compression of doubled operators onto the first Hilbert leg. -/
@@ -202,7 +201,7 @@ end ConcreteHilbertModels
 section KMSInterface
 
 variable (n : Nat)
-variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs] [CStarRing Obs]
 
 /--
@@ -263,7 +262,7 @@ end FockInterface
 section UnifiedInterface
 
 variable (n : Nat)
-variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 variable {ObsKMS : Type*} [NonUnitalNormedRing ObsKMS] [StarRing ObsKMS] [CStarRing ObsKMS]
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable {ObsFock : Type*} [NonUnitalNormedRing ObsFock] [StarRing ObsFock]

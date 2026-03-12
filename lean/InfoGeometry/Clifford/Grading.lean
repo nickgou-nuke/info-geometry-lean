@@ -67,6 +67,20 @@ noncomputable def gradePlusProj : DoubledSpace E →L[ℝ] DoubledSpace E :=
 noncomputable def gradeMinusProj : DoubledSpace E →L[ℝ] DoubledSpace E :=
   (⅟ (2 : ℝ)) • ((ContinuousLinearMap.id ℝ (DoubledSpace E)) - modular_j (E := E))
 
+/-- Coordinate-free alias for the `+` chirality component. -/
+noncomputable abbrev gradePlusPart (v : DoubledSpace E) : DoubledSpace E :=
+  gradePlusProj (E := E) v
+
+/-- Coordinate-free alias for the `-` chirality component. -/
+noncomputable abbrev gradeMinusPart (v : DoubledSpace E) : DoubledSpace E :=
+  gradeMinusProj (E := E) v
+
+@[simp] lemma gradePlusProj_apply (v : DoubledSpace E) :
+    gradePlusProj (E := E) v = gradePlusPart (E := E) v := rfl
+
+@[simp] lemma gradeMinusProj_apply (v : DoubledSpace E) :
+    gradeMinusProj (E := E) v = gradeMinusPart (E := E) v := rfl
+
 /-- Spectral projector `(Id + ε)/2`. -/
 noncomputable def spectralPlusProj : DoubledSpace E →L[ℝ] DoubledSpace E :=
   (⅟ (2 : ℝ)) • ((ContinuousLinearMap.id ℝ (DoubledSpace E)) + spectral_epsilon (E := E))
@@ -99,6 +113,24 @@ lemma gradeProj_sum :
   have h := LinearMap.congr_fun (Pplus_add_Pminus_eq_id (modular_jLE E).toLinearMap) v
   simp only [gradePlusProj, gradeMinusProj, Pplus, Pminus, ContinuousLinearMap.add_apply] at h ⊢
   exact h
+
+lemma gradePlusProj_comp_gradeMinusProj :
+    (gradePlusProj (E := E)).comp (gradeMinusProj (E := E)) = 0 := by
+  apply ContinuousLinearMap.ext
+  intro v
+  apply DoubledSpace.ext <;>
+    simp [gradePlusProj, gradeMinusProj, modular_j_apply, sub_eq_add_neg,
+      add_assoc, add_left_comm, add_comm, smul_add, smul_sub,
+      mul_assoc, mul_left_comm, mul_comm]
+
+lemma gradeMinusProj_comp_gradePlusProj :
+    (gradeMinusProj (E := E)).comp (gradePlusProj (E := E)) = 0 := by
+  apply ContinuousLinearMap.ext
+  intro v
+  apply DoubledSpace.ext <;>
+    simp [gradePlusProj, gradeMinusProj, modular_j_apply, sub_eq_add_neg,
+      add_assoc, add_left_comm, add_comm, smul_add, smul_sub,
+      mul_assoc, mul_left_comm, mul_comm]
 
 lemma spectralPlusProj_idempotent :
     (spectralPlusProj (E := E)).comp (spectralPlusProj (E := E)) = spectralPlusProj (E := E) := by
@@ -157,7 +189,10 @@ export InfoGeometry.Krein
    isEven isOdd
    inGradePlus inGradeMinus
    gradePlusProj gradeMinusProj spectralPlusProj spectralMinusProj
+   gradePlusPart gradeMinusPart
+   gradePlusProj_apply gradeMinusProj_apply
    gradePlusProj_idempotent gradeMinusProj_idempotent
+   gradePlusProj_comp_gradeMinusProj gradeMinusProj_comp_gradePlusProj
    gradeProj_sum
    spectralPlusProj_idempotent spectralMinusProj_idempotent
    spectralProj_sum

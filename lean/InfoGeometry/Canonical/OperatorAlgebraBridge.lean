@@ -18,6 +18,7 @@ interfaces:
 
 namespace InfoGeometry.Canonical.OperatorAlgebraBridge
 
+open InfoGeometry.Krein
 open InfoGeometry.Canonical.AQFTOperatorInterface
 open InfoGeometry.Canonical.KMSSinkhornBridge
 open InfoGeometry.Canonical.MoE
@@ -41,22 +42,22 @@ end Signatures
 
 section ModularAtom
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- The Tomita modular pair realizes split `Cl(1,1)` on doubled real space. -/
 theorem modular_atom_is_cl11 :
-    InfoGeometry.Krein.Cl11Algebra
+    InfoGeometry.Krein.cl11_algebra
       (modularConjugationJ (E := E))
       (modularSignEpsilon (E := E)) := by
   simpa [modularConjugationJ, modularSignEpsilon] using
-    (InfoGeometry.Krein.modular_j_spectral_epsilon_isCl11 (E := E))
+    (InfoGeometry.Krein.modular_j_spectral_epsilon_is_cl11 (E := E))
 
 end ModularAtom
 
 section AqftClosure
 
 variable (n : Nat)
-variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs] [CStarRing Obs]
 
 /--
@@ -79,7 +80,7 @@ end AqftClosure
 section UnifiedPackage
 
 variable (n : Nat)
-variable {F : Type} [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 variable {ObsKMS : Type*}
   [NonUnitalNormedRing ObsKMS] [StarRing ObsKMS] [CStarRing ObsKMS]
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

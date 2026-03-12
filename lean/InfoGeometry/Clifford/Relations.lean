@@ -1,5 +1,7 @@
 import InfoGeometry.Clifford.Grading
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Krein
 
 section KreinClifford

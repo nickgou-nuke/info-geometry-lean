@@ -11,6 +11,9 @@ This implementation is strictly algebraic, avoiding coordinate-based L2 proofs
 to ensure performance and generality across general Hilbert spaces.
 -/
 
+set_option linter.unusedSectionVars false
+set_option linter.unusedSimpArgs false
+
 namespace InfoGeometry.Krein
 
 open InfoGeometry.Cartan

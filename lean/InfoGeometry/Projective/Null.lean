@@ -7,6 +7,9 @@ import InfoGeometry.Krein.Metric
 Null and grading predicates on projective doubled-space rays.
 -/
 
+set_option linter.unusedSectionVars false
+set_option linter.unnecessarySimpa false
+
 namespace InfoGeometry.Projective
 
 open InfoGeometry.Krein

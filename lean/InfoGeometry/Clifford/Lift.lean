@@ -3,6 +3,9 @@ import InfoGeometry.Clifford.SplitQ11
 import InfoGeometry.Krein.Representation
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 
+set_option linter.unusedSectionVars false
+set_option linter.unnecessarySimpa false
+
 /-- Backward-compatible alias to the canonical split form. -/
 noncomputable abbrev Q11 : QuadraticForm ℝ (ℝ × ℝ) := InfoGeometry.Clifford.splitQ11
 

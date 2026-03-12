@@ -15,6 +15,9 @@ This module refactors the neutral Hessian metric properties to use the canonical
 
 open scoped InnerProductSpace
 
+set_option linter.unusedSimpArgs false
+set_option linter.unnecessarySimpa false
+
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 namespace InfoGeometry.Krein

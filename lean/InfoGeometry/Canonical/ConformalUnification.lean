@@ -3,6 +3,8 @@ import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.SpectralInference
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Canonical.ConformalUnification
 
 open InfoGeometry.Canonical.MoorePenrose

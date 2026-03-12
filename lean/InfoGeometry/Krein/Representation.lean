@@ -3,6 +3,8 @@ import InfoGeometry.Krein.DoubledSpace
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.Tactic
 
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Krein
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

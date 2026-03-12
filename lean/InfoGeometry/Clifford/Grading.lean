@@ -21,6 +21,7 @@ relying on the properties of involutive linear equivalences from the Cartan laye
 -/
 
 set_option linter.unusedSectionVars false
+set_option linter.unusedSimpArgs false
 
 namespace InfoGeometry.Krein
 

@@ -41,13 +41,21 @@ noncomputable def chiralPartPlus (D Γ : Endomorphism V) : Endomorphism V :=
 noncomputable def chiralPartMinus (D Γ : Endomorphism V) : Endomorphism V :=
   D.comp (chiralProjectorMinus Γ)
 
+/-- Positive-chiral index slice `ker(D) ∩ Im(P₊)`. -/
+noncomputable def chiralKernelSlicePlus (D Γ : Endomorphism V) : Submodule ℝ V :=
+  LinearMap.ker D ⊓ LinearMap.range (chiralProjectorPlus Γ)
+
+/-- Negative-chiral index slice `ker(D) ∩ Im(P₋)`. -/
+noncomputable def chiralKernelSliceMinus (D Γ : Endomorphism V) : Submodule ℝ V :=
+  LinearMap.ker D ⊓ LinearMap.range (chiralProjectorMinus Γ)
+
 /--
 Analytical index model:
 `Index(D) = dim(ker(D) ∩ Im(P₊)) - dim(ker(D) ∩ Im(P₋))`.
 -/
 noncomputable def analyticalIndex [FiniteDimensional ℝ V] (D Γ : Endomorphism V) : ℤ :=
-  (Module.finrank ℝ (LinearMap.ker D ⊓ LinearMap.range (chiralProjectorPlus Γ) : Submodule ℝ V) : ℤ) -
-    (Module.finrank ℝ (LinearMap.ker D ⊓ LinearMap.range (chiralProjectorMinus Γ) : Submodule ℝ V) : ℤ)
+  (Module.finrank ℝ (chiralKernelSlicePlus D Γ) : ℤ) -
+    (Module.finrank ℝ (chiralKernelSliceMinus D Γ) : ℤ)
 
 /-- Chiral decomposition identity: `D⁺ + D⁻ = D`. -/
 lemma chiralPartPlus_add_chiralPartMinus (D Γ : Endomorphism V) :
@@ -106,34 +114,51 @@ lemma analyticalIndex_eq_of_chiralParts_eq
     analyticalIndex D Γ = analyticalIndex D' Γ' := by
   have hD : D = D' := dirac_eq_of_chiralParts_eq D Γ D' Γ' hplus hminus
   subst hD
-  rw [analyticalIndex, analyticalIndex, hRangePlus, hRangeMinus]
+  unfold analyticalIndex chiralKernelSlicePlus chiralKernelSliceMinus
+  rw [hRangePlus, hRangeMinus]
 
 /-- Index invariance along a parameterized Dirac/grading family. -/
 def IndexInvariantAlong [FiniteDimensional ℝ V] (D Γ : ℝ → Endomorphism V) : Prop :=
   ∀ s : ℝ, analyticalIndex (D s) (Γ s) = analyticalIndex (D 0) (Γ 0)
 
 /--
-Index invariance from pointwise constancy of the chiral parts and of the
-projector ranges.
+Deformation data for index invariance: each chiral kernel slice at time `s` is
+linearly equivalent to the baseline slice at `0`.
 -/
-theorem indexInvariantAlong_of_chiralData_const
+def ChiralSliceIsoAlong [FiniteDimensional ℝ V] (D Γ : ℝ → Endomorphism V) : Prop :=
+  (∀ s : ℝ,
+      Nonempty
+        ((chiralKernelSlicePlus (D s) (Γ s)) ≃ₗ[ℝ]
+          (chiralKernelSlicePlus (D 0) (Γ 0))))
+    ∧
+  (∀ s : ℝ,
+      Nonempty
+        ((chiralKernelSliceMinus (D s) (Γ s)) ≃ₗ[ℝ]
+          (chiralKernelSliceMinus (D 0) (Γ 0))))
+
+/--
+Genuine deformation-style index invariance:
+if both chiral index slices are linearly equivalent along the path, the
+analytical index is invariant.
+-/
+theorem indexInvariantAlong_of_chiralSliceIso
     [FiniteDimensional ℝ V]
     (D Γ : ℝ → Endomorphism V)
-    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
-    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0))
-    (hRangePlus :
-      ∀ s : ℝ,
-        LinearMap.range (chiralProjectorPlus (Γ s)) =
-          LinearMap.range (chiralProjectorPlus (Γ 0)))
-    (hRangeMinus :
-      ∀ s : ℝ,
-        LinearMap.range (chiralProjectorMinus (Γ s)) =
-          LinearMap.range (chiralProjectorMinus (Γ 0))) :
+    (hIso : ChiralSliceIsoAlong D Γ) :
     IndexInvariantAlong D Γ := by
   intro s
-  exact analyticalIndex_eq_of_chiralParts_eq
-    (D := D s) (Γ := Γ s) (D' := D 0) (Γ' := Γ 0)
-    (hplus s) (hminus s) (hRangePlus s) (hRangeMinus s)
+  rcases hIso.1 s with ⟨ePlus⟩
+  rcases hIso.2 s with ⟨eMinus⟩
+  have hPlusFinrank :
+      Module.finrank ℝ (chiralKernelSlicePlus (D s) (Γ s)) =
+        Module.finrank ℝ (chiralKernelSlicePlus (D 0) (Γ 0)) := by
+    simpa using ePlus.finrank_eq
+  have hMinusFinrank :
+      Module.finrank ℝ (chiralKernelSliceMinus (D s) (Γ s)) =
+        Module.finrank ℝ (chiralKernelSliceMinus (D 0) (Γ 0)) := by
+    simpa using eMinus.finrank_eq
+  unfold analyticalIndex
+  simp [hPlusFinrank, hMinusFinrank]
 
 end Core
 
@@ -228,26 +253,17 @@ theorem sinkhornRicciIndexInvariant_of_components
   exact ⟨hSinkhorn, hRicciZero, hIndex⟩
 
 /--
-Derived constructor for the coupled invariant package from canonical hypotheses:
-doubly-stochastic Sinkhorn dynamics, normalized scalar Kähler-Ricci fixed-point,
-and pointwise-constant chiral decomposition/range data.
+Derived constructor for the coupled invariant package from normalized
+scalar Kähler-Ricci fixed-point and deformation-style chiral slice
+equivalences.
 -/
-theorem sinkhornRicciIndexInvariant_of_derived_state_hypotheses
+theorem sinkhornRicciIndexInvariant_of_sliceIso_state_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
-    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0))
-    (hRangePlus :
-      ∀ s : ℝ,
-        LinearMap.range (chiralProjectorPlus (Γ s)) =
-          LinearMap.range (chiralProjectorPlus (Γ 0)))
-    (hRangeMinus :
-      ∀ s : ℝ,
-        LinearMap.range (chiralProjectorMinus (Γ s)) =
-          LinearMap.range (chiralProjectorMinus (Γ 0))) :
+    (hIso : ChiralSliceIsoAlong D Γ) :
     SinkhornRicciIndexInvariant n T flow D Γ := by
   refine sinkhornRicciIndexInvariant_of_components
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
@@ -256,8 +272,7 @@ theorem sinkhornRicciIndexInvariant_of_derived_state_hypotheses
     exact sinkhorn_dynamics_step_control (n := n) T k label
   · exact normalizedKaehlerRicci_fixedpoint_eq_zero
       (E := X) flow hNorm hFixed
-  · exact indexInvariantAlong_of_chiralData_const
-      (D := D) (Γ := Γ) hplus hminus hRangePlus hRangeMinus
+  · exact indexInvariantAlong_of_chiralSliceIso (D := D) (Γ := Γ) hIso
 
 end CoupledInvariant
 

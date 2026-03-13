@@ -616,30 +616,15 @@ variable {X V F : Type}
   [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
   [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
-/--
-State-level geometric+algebraic closure (identity constructor).
--/
-theorem geometricAlgebraicState_of_sinkhornRicciIndexHypotheses
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
-    GeometricAlgebraicState n T flow D Γ := hGeoAlg
-
-/--
-Calabi-Yau entropy bridge from an established geometric+algebraic state.
--/
-theorem calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
+/-- Explicit thermodynamic-to-geometric directional hypothesis. -/
+abbrev ThermodynamicToGeometric
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
-    ThermodynamicKMSState n T K ω β → GeometricAlgebraicState n T flow D Γ := by
-  intro _hThermo
-  exact hGeoAlg
+    (β : ℝ) : Prop :=
+  ThermodynamicKMSState n T K ω β → GeometricAlgebraicState n T flow D Γ
 
 /--
 IB-dynamics Bochner-Weitzenboeck bridge:
@@ -663,11 +648,10 @@ theorem bochnerWeitzenboeckBridge_of_ibDynamics
     (Ω : DoubledSpace F)
     (hΩ : Ω ≠ 0)
     (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω) :
-    GeometricAlgebraicState n T flow D Γ →
-      ThermodynamicKMSState n T K
-        (ibInducedObservableWeighted
-          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
+    ThermodynamicKMSState n T K
+      (ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
   have hControl :
       SinkhornKMSControl n T.traj K
         (ibInducedObservableWeighted
@@ -688,7 +672,6 @@ theorem bochnerWeitzenboeckBridge_of_ibDynamics
       (ω := ibInducedObservableWeighted
         (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
         pTrajectory x0 t0 (omegaSeed (F := F) Ω)) (β := β) hControl
-  intro _hGeoAlg
   exact hClosure
 
 /--
@@ -713,7 +696,13 @@ theorem directionalBridges_of_ibDynamics_and_indexHypotheses
     (Ω : DoubledSpace F)
     (hΩ : Ω ≠ 0)
     (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω)
-    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
+    (hThermoToGeo :
+      ThermodynamicToGeometric (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+        (K := K)
+        (ω := ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω))
+        (β := β)) :
     (GeometricAlgebraicState n T flow D Γ →
       ThermodynamicKMSState n T K
         (ibInducedObservableWeighted
@@ -725,25 +714,55 @@ theorem directionalBridges_of_ibDynamics_and_indexHypotheses
           pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β →
         GeometricAlgebraicState n T flow D Γ) := by
   refine ⟨?_, ?_⟩
-  · exact bochnerWeitzenboeckBridge_of_ibDynamics
+  · intro _hGeoAlg
+    exact bochnerWeitzenboeckBridge_of_ibDynamics
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
       (K := K) (β := β)
       (prob := prob) (pTrajectory := pTrajectory)
       hStep (x0 := x0) (t0 := t0)
       (Ω := Ω) hΩ hStruct
-  · exact calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ibInducedObservableWeighted
-        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) (β := β)
-      hGeoAlg
+  · exact hThermoToGeo
 
 /--
-Reduced-hypothesis Wheeler-DeWitt equivalence (IB-dynamics form):
-both directions are discharged from
-`IB trajectory dynamics + SinkhornRicciIndexInvariant`.
+Reduced-hypothesis Wheeler-DeWitt implication (IB-dynamics form):
+`IB trajectory dynamics + expectation-seed structure` imply thermodynamic closure.
 -/
-theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses
+theorem information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω) :
+    GeometricAlgebraicState n T flow D Γ →
+      ThermodynamicKMSState n T K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
+  intro _hGeoAlg
+  exact bochnerWeitzenboeckBridge_of_ibDynamics
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (β := β)
+    (prob := prob) (pTrajectory := pTrajectory)
+    hStep (x0 := x0) (t0 := t0)
+    (Ω := Ω) hΩ hStruct
+
+/--
+Conditional Wheeler-DeWitt equivalence (IB-dynamics form):
+the reverse direction is explicit via `ThermodynamicToGeometric`.
+-/
+theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses_of_thermodynamicToGeometric
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
@@ -761,7 +780,13 @@ theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses
     (Ω : DoubledSpace F)
     (hΩ : Ω ≠ 0)
     (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω)
-    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
+    (hThermoToGeo :
+      ThermodynamicToGeometric (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+        (K := K)
+        (ω := ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω))
+        (β := β)) :
     ThermodynamicKMSState n T K
       (ibInducedObservableWeighted
         (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
@@ -769,14 +794,9 @@ theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses
       ↔ GeometricAlgebraicState n T flow D Γ := by
   constructor
   · intro hThermo
-    exact calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ibInducedObservableWeighted
-        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) (β := β)
-      hGeoAlg hThermo
+    exact hThermoToGeo hThermo
   · intro hGeoAlg
-    exact bochnerWeitzenboeckBridge_of_ibDynamics
+    exact information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
       (K := K) (β := β)
       (prob := prob) (pTrajectory := pTrajectory)
@@ -784,11 +804,10 @@ theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses
       (Ω := Ω) hΩ hStruct hGeoAlg
 
 /--
-Primary Wheeler-DeWitt equivalence API:
-both directional bridges are discharged constructively from
-IB iterate dynamics and a geometric+algebraic state.
+Primary Wheeler-DeWitt implication API:
+constructively discharges the geometric-to-thermodynamic direction.
 -/
-theorem information_wheeler_dewitt_equivalence
+theorem information_wheeler_dewitt_implication
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
@@ -805,166 +824,63 @@ theorem information_wheeler_dewitt_equivalence
     (x0 : Xib) (t0 : Tib)
     (Ω : DoubledSpace F)
     (hΩ : Ω ≠ 0)
-    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω)
-    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
-    ThermodynamicKMSState n T K
-      (ibInducedObservableWeighted
-        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
-      ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    (K := K) (β := β)
-    (prob := prob) (pTrajectory := pTrajectory)
-    hStep (x0 := x0) (t0 := t0)
-    (Ω := Ω) hΩ hStruct hGeoAlg
-
-/--
-Explicit-hypothesis Wheeler-DeWitt equivalence:
-derive the seed-KMS structural package from joint-kernel modular defect and
-commutator orthogonality on `Ω`.
--/
-theorem information_wheeler_dewitt_equivalence_of_jointKernel_commutator
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (β : ℝ)
-    {Xib Yib Tib : Type}
-    [Fintype Xib] [Fintype Yib] [Fintype Tib]
-    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
-    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
-    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
-    (prob : IBProblem (X := Xib) (Y := Yib))
-    (pTrajectory : Nat → Xib → FinProb Tib)
-    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
-    (x0 : Xib) (t0 : Tib)
-    (Ω : DoubledSpace F)
-    (hΩ : Ω ≠ 0)
-    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
-    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
-    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
-    ThermodynamicKMSState n T K
-      (ibInducedObservableWeighted
-        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
-      ↔ GeometricAlgebraicState n T flow D Γ := by
-  have hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω :=
-    expectationSeedKMSHypotheses_of_jointKernel_commutator
-      (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
-  exact information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    (K := K) (β := β)
-    (prob := prob) (pTrajectory := pTrajectory)
-    hStep (x0 := x0) (t0 := t0)
-    (Ω := Ω) hΩ hStruct hGeoAlg
-
-/--
-Fully derived state-hypothesis Wheeler-DeWitt equivalence:
-`GeometricAlgebraicState` is constructively discharged from normalized scalar
-Kähler-Ricci fixed-point and chiral index-invariance data.
--/
-theorem information_wheeler_dewitt_equivalence_of_fully_derived_state_hypotheses
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (β : ℝ)
-    {Xib Yib Tib : Type}
-    [Fintype Xib] [Fintype Yib] [Fintype Tib]
-    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
-    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
-    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
-    (prob : IBProblem (X := Xib) (Y := Yib))
-    (pTrajectory : Nat → Xib → FinProb Tib)
-    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
-    (x0 : Xib) (t0 : Tib)
-    (Ω : DoubledSpace F)
-    (hΩ : Ω ≠ 0)
-    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
-    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0))
-    (hRangePlus :
-      ∀ s : ℝ,
-        LinearMap.range (chiralProjectorPlus (Γ s)) =
-          LinearMap.range (chiralProjectorPlus (Γ 0)))
-    (hRangeMinus :
-      ∀ s : ℝ,
-        LinearMap.range (chiralProjectorMinus (Γ s)) =
-          LinearMap.range (chiralProjectorMinus (Γ 0))) :
-    ThermodynamicKMSState n T K
-      (ibInducedObservableWeighted
-        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
-      ↔ GeometricAlgebraicState n T flow D Γ := by
-  have hGeoAlg : GeometricAlgebraicState n T flow D Γ :=
-    sinkhornRicciIndexInvariant_of_derived_state_hypotheses
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      hNorm hFixed hplus hminus hRangePlus hRangeMinus
-  exact information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    (K := K) (β := β)
-    (prob := prob) (pTrajectory := pTrajectory)
-    hStep (x0 := x0) (t0 := t0)
-    (Ω := Ω) hΩ hStruct hGeoAlg
-
-/--
-Fully derived Wheeler-DeWitt equivalence from explicit seed-KMS derivation data
-and derived geometric/algebraic state hypotheses.
--/
-theorem information_wheeler_dewitt_equivalence_of_fully_derived_hypotheses
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (β : ℝ)
-    {Xib Yib Tib : Type}
-    [Fintype Xib] [Fintype Yib] [Fintype Tib]
-    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
-    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
-    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
-    (prob : IBProblem (X := Xib) (Y := Yib))
-    (pTrajectory : Nat → Xib → FinProb Tib)
-    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
-    (x0 : Xib) (t0 : Tib)
-    (Ω : DoubledSpace F)
-    (hΩ : Ω ≠ 0)
-    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
-    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
-    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0))
-    (hRangePlus :
-      ∀ s : ℝ,
-        LinearMap.range (chiralProjectorPlus (Γ s)) =
-          LinearMap.range (chiralProjectorPlus (Γ 0)))
-    (hRangeMinus :
-      ∀ s : ℝ,
-        LinearMap.range (chiralProjectorMinus (Γ s)) =
-          LinearMap.range (chiralProjectorMinus (Γ 0))) :
-    ThermodynamicKMSState n T K
-      (ibInducedObservableWeighted
-        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
-      ↔ GeometricAlgebraicState n T flow D Γ := by
-  have hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω :=
-    expectationSeedKMSHypotheses_of_jointKernel_commutator
-      (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
-  exact information_wheeler_dewitt_equivalence_of_fully_derived_state_hypotheses
+    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω) :
+    GeometricAlgebraicState n T flow D Γ →
+      ThermodynamicKMSState n T K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
+  exact information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
     (K := K) (β := β)
     (prob := prob) (pTrajectory := pTrajectory)
     hStep (x0 := x0) (t0 := t0)
     (Ω := Ω) hΩ hStruct
-    hNorm hFixed hplus hminus hRangePlus hRangeMinus
 
 /--
-State-hypothesis API variant: delegates to the reduced state-level API.
+Explicit-hypothesis Wheeler-DeWitt implication:
+derive the seed-KMS structural package from joint-kernel modular defect and
+commutator orthogonality on `Ω`.
 -/
-theorem information_wheeler_dewitt_equivalence_of_state_hypotheses
+theorem information_wheeler_dewitt_implication_of_jointKernel_commutator
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω) :
+    GeometricAlgebraicState n T flow D Γ →
+      ThermodynamicKMSState n T K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
+  have hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω :=
+    expectationSeedKMSHypotheses_of_jointKernel_commutator
+      (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
+  exact information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (β := β)
+    (prob := prob) (pTrajectory := pTrajectory)
+    hStep (x0 := x0) (t0 := t0)
+    (Ω := Ω) hΩ hStruct
+
+/--
+Canonical fully derived state-hypothesis Wheeler-DeWitt implication using
+deformation equivalences of chiral index slices (non-constancy path).
+-/
+theorem information_wheeler_dewitt_implication_of_sliceIso_state_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
@@ -982,18 +898,100 @@ theorem information_wheeler_dewitt_equivalence_of_state_hypotheses
     (Ω : DoubledSpace F)
     (hΩ : Ω ≠ 0)
     (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω)
-    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
-    ThermodynamicKMSState n T K
-      (ibInducedObservableWeighted
-        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
-      ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hIso : ChiralSliceIsoAlong D Γ) :
+    GeometricAlgebraicState n T flow D Γ →
+      ThermodynamicKMSState n T K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
+  have hGeoAlg : GeometricAlgebraicState n T flow D Γ :=
+    sinkhornRicciIndexInvariant_of_sliceIso_state_hypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      hNorm hFixed hIso
+  intro _hGeoAlgArg
+  exact information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
     (K := K) (β := β)
     (prob := prob) (pTrajectory := pTrajectory)
     hStep (x0 := x0) (t0 := t0)
     (Ω := Ω) hΩ hStruct hGeoAlg
+
+/--
+Fully derived Wheeler-DeWitt implication from explicit seed-KMS derivation data
+and derived geometric/algebraic state hypotheses.
+-/
+theorem information_wheeler_dewitt_implication_of_fully_derived_hypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hIso : ChiralSliceIsoAlong D Γ) :
+    GeometricAlgebraicState n T flow D Γ →
+      ThermodynamicKMSState n T K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
+  have hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω :=
+    expectationSeedKMSHypotheses_of_jointKernel_commutator
+      (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
+  exact information_wheeler_dewitt_implication_of_sliceIso_state_hypotheses
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (β := β)
+    (prob := prob) (pTrajectory := pTrajectory)
+    hStep (x0 := x0) (t0 := t0)
+    (Ω := Ω) hΩ hStruct
+    hNorm hFixed hIso
+
+/--
+State-hypothesis API variant: delegates to the reduced state-level implication API.
+-/
+theorem information_wheeler_dewitt_implication_of_state_hypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω) :
+    GeometricAlgebraicState n T flow D Γ →
+      ThermodynamicKMSState n T K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
+  exact information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (β := β)
+    (prob := prob) (pTrajectory := pTrajectory)
+    hStep (x0 := x0) (t0 := t0)
+    (Ω := Ω) hΩ hStruct
 
 /--
 The full capstone package from `AnalyticalIndex` immediately yields both sides.

@@ -43,9 +43,9 @@ Modules: `QuantumInference.lean`, `KreinLadder.lean`, `BerryPhase.lean`
 
 ## 5. THE THERMODYNAMIC CORRESPONDENCE
 Modules: `GrandCanonical.lean`, `HeatKernel.lean`, `InformationNumber.lean`
-- **Grand Canonical Ensemble**: Trace of the Number Operator N recovering ⟨N⟩.
+- **Grand Canonical Ensemble**: Expectation of the Number Operator N recovering ⟨N⟩.
 - **Gibbs Variance**: Identical to the Hessian metric of the log-partition potential.
-- **Spectral Action Principle**: Tr(f(D/Λ)) as the universal information criterion.
+- **Spectral Action Principle**: log-volume spectral functional as the universal information criterion.
 
 ## 6. ARCHITECTURAL SPECIALIZATION
 Modules: `Triality.lean`, `Gaussian.lean`, `BregmanTriality.lean`

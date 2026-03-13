@@ -60,6 +60,9 @@ if rg -n "\\b(sorry|admit)\\b|content will be moved here" "${CANONICAL_PATHS[@]}
   exit 1
 fi
 
+echo "[strict-check] running surrogate dependency audit"
+scripts/audit_surrogates.sh
+
 echo "[strict-check] OK"
 echo "[strict-check] running naming convention audit"
 echo "[strict-check] running docstring audit"

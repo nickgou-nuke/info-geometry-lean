@@ -29,34 +29,6 @@ section AQFT
 variable (n : Nat)
 variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
-/--
-AQFT closure theorem:
-Sinkhorn control yields exact KMS closure at every next iterate.
--/
-theorem aqft_kmsClosure_of_sinkhornControl
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hControl : SinkhornKMSControl n T K ω β) :
-    SinkhornKMSClosure n T K ω β :=
-  sinkhorn_step_kmsClosure_of_control
-    (n := n) (T := T) (K := K) (ω := ω) (β := β) hControl
-
-/--
-AQFT closure theorem (closure-first form):
-exact KMS closure can be used directly, while Sinkhorn control is discharged
-constructively via `sinkhorn_control_of_step_kmsClosure` when needed downstream.
--/
-theorem aqft_kmsClosure_of_sinkhornClosure
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hClosure : SinkhornKMSClosure n T K ω β) :
-    SinkhornKMSClosure n T K ω β := by
-  exact hClosure
-
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
@@ -232,53 +204,6 @@ theorem aqft_tdft_constructive_launchpad
     (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
     (flow : InformationFlow E)
     (scale0 : ℝ)
-    (hControl : SinkhornKMSControl n T K ω β)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
-    (hLeg : LegendreInvolutionAssumptions ψ ψStar)
-    (hFixed : IsFixedPoint flow scale0) :
-    SinkhornKMSClosure n T K ω β
-      ∧ grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ0
-            = ψ0 + η • H ψ0
-      ∧ HohenbergKohnDualState ψ ψStar
-      ∧ RungeGrossStationaryDualState flow scale0 := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact aqft_kmsClosure_of_sinkhornControl
-      (n := n) (T := T) (K := K) (ω := ω) (β := β) hControl
-  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
-      (E := E) (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ := ψ0) hVacSplit
-  · exact hohenbergKohnDualState_of_legendreInvolution
-      (ψ := ψ) (ψStar := ψStar) hLeg
-  · exact rungeGrossStationaryDualState_of_fixedPoint
-      (flow := flow) (scale0 := scale0) hFixed
-
-/--
-Unified constructive launchpad (closure-first form):
-the AQFT piece is supplied as exact KMS closure, and converted to control only
-when an external interface requires `SinkhornKMSControl`.
--/
-theorem aqft_tdft_constructive_launchpad_of_kmsClosure
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ0 : DoubledSpace E)
-    (ψ : Θ → ℝ)
-    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
-    (flow : InformationFlow E)
-    (scale0 : ℝ)
     (hClosure : SinkhornKMSClosure n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
     (hLeg : LegendreInvolutionAssumptions ψ ψStar)
@@ -290,15 +215,16 @@ theorem aqft_tdft_constructive_launchpad_of_kmsClosure
             = ψ0 + η • H ψ0
       ∧ HohenbergKohnDualState ψ ψStar
       ∧ RungeGrossStationaryDualState flow scale0 := by
-  have hControl : SinkhornKMSControl n T K ω β :=
-    sinkhorn_control_of_step_kmsClosure (n := n) (T := T) (K := K) (ω := ω) (β := β) hClosure
-  exact aqft_tdft_constructive_launchpad
-    (n := n) (T := T) (K := K) (ω := ω) (β := β)
-    (η := η) (B := B) (H := H)
-    (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-    (V := V) (Γ := Γ) (ψ0 := ψ0)
-    (ψ := ψ) (ψStar := ψStar) (flow := flow) (scale0 := scale0)
-    hControl hVacSplit hLeg hFixed
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact hClosure
+  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
+      (E := E) (η := η) (B := B) (H := H)
+      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) (ψ := ψ0) hVacSplit
+  · exact hohenbergKohnDualState_of_legendreInvolution
+      (ψ := ψ) (ψStar := ψStar) hLeg
+  · exact rungeGrossStationaryDualState_of_fixedPoint
+      (flow := flow) (scale0 := scale0) hFixed
 
 end Launchpad
 

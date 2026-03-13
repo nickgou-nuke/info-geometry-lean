@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.InformationTorsion
-import Mathlib.LinearAlgebra.Matrix.Trace
 
 namespace InfoGeometry.Canonical.BeliefAlgebra
 

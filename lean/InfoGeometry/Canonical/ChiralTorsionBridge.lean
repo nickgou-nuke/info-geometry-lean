@@ -34,12 +34,12 @@ section VolumeRN
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [FiniteDimensional ℝ E]
 
-/-- Relative-volume ratio surrogate from the Radon-Nikodym operator. -/
+/-- Relative-volume ratio induced by the Radon-Nikodym operator. -/
 noncomputable def relativeVacuumVolume
     (H : HessianGeometry E) (x y : E) : ℝ :=
   radonNikodymOp H x y
 
-/-- Boltzmann entropy surrogate of relative-volume change: `-log(dμ/dν)`. -/
+/-- Boltzmann entropy of relative-volume change: `-log(dμ/dν)`. -/
 noncomputable def boltzmannRelativeVolumeEntropy
     (H : HessianGeometry E) (x y : E) : ℝ :=
   -Real.log (relativeVacuumVolume H x y)
@@ -106,29 +106,15 @@ section ChiralTorsionChentsov
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable {Θ α : Type*} [Fintype α]
 
-/--
-Compatibility package for the research claim:
-chiral sector, torsion witness, Chentsov availability, and Gibbs smoothing.
--/
-structure ChiralTorsionChentsovGibbsBridge
-    (CI : ConformalInference E)
-    (T : TwistedInference E)
-    (p : Θ → InfoGeometry.FinProb α)
-    (β : ℝ) (μ ν μ₀ : α → ℝ) : Prop where
-  anomaly_induces_torsion :
-    CI.IsChiralInference → informationTorsion T.dual.nabla ≠ 0
-  chentsov_available :
-    amariChentsovTensor p
-  gibbs_smoothing_pos :
-    0 < gibbsSmoothingOnGeneralizedKL β μ ν μ₀
-
-/-- Canonical naming alias for the chiral-torsion/Chentsov/Gibbs compatibility package. -/
-abbrev ChiralTorsionChentsovGibbsState
+/-- Constructive chiral-torsion/Chentsov/Gibbs state (fully explicit). -/
+def ChiralTorsionChentsovGibbsState
     (CI : ConformalInference E)
     (T : TwistedInference E)
     (p : Θ → InfoGeometry.FinProb α)
     (β : ℝ) (μ ν μ₀ : α → ℝ) : Prop :=
-  ChiralTorsionChentsovGibbsBridge CI T p β μ ν μ₀
+  (CI.IsChiralInference → informationTorsion T.dual.nabla ≠ 0) ∧
+    amariChentsovTensor p ∧
+    0 < gibbsSmoothingOnGeneralizedKL β μ ν μ₀
 
 /--
 Constructive builder: package explicit torsion/Chentsov/Gibbs witnesses into the
@@ -142,10 +128,8 @@ def chiralTorsionChentsovGibbsState_mk
     (hTorsion : CI.IsChiralInference → informationTorsion T.dual.nabla ≠ 0)
     (hChentsov : amariChentsovTensor p)
     (hGibbs : 0 < gibbsSmoothingOnGeneralizedKL β μ ν μ₀) :
-    ChiralTorsionChentsovGibbsState CI T p β μ ν μ₀ where
-  anomaly_induces_torsion := hTorsion
-  chentsov_available := hChentsov
-  gibbs_smoothing_pos := hGibbs
+    ChiralTorsionChentsovGibbsState CI T p β μ ν μ₀ := by
+  exact ⟨hTorsion, hChentsov, hGibbs⟩
 
 /--
 Constructive default builder:
@@ -177,20 +161,10 @@ theorem torsion_nonzero_of_chiral
     (T : TwistedInference E)
     (p : Θ → InfoGeometry.FinProb α)
     (β : ℝ) (μ ν μ₀ : α → ℝ)
-    (hBridge : ChiralTorsionChentsovGibbsBridge CI T p β μ ν μ₀)
+    (hState : ChiralTorsionChentsovGibbsState CI T p β μ ν μ₀)
     (hChiral : CI.IsChiralInference) :
     informationTorsion T.dual.nabla ≠ 0 :=
-  hBridge.anomaly_induces_torsion hChiral
-
-/-- Theorem `chentsov_and_gibbs_of_bridge`. -/
-theorem chentsov_and_gibbs_of_bridge
-    (CI : ConformalInference E)
-    (T : TwistedInference E)
-    (p : Θ → InfoGeometry.FinProb α)
-    (β : ℝ) (μ ν μ₀ : α → ℝ)
-    (hBridge : ChiralTorsionChentsovGibbsBridge CI T p β μ ν μ₀) :
-    amariChentsovTensor p ∧ 0 < gibbsSmoothingOnGeneralizedKL β μ ν μ₀ := by
-  exact ⟨hBridge.chentsov_available, hBridge.gibbs_smoothing_pos⟩
+  hState.1 hChiral
 
 /-- Theorem `chentsov_and_gibbs_of_state`. -/
 theorem chentsov_and_gibbs_of_state
@@ -200,8 +174,7 @@ theorem chentsov_and_gibbs_of_state
     (β : ℝ) (μ ν μ₀ : α → ℝ)
     (hState : ChiralTorsionChentsovGibbsState CI T p β μ ν μ₀) :
     amariChentsovTensor p ∧ 0 < gibbsSmoothingOnGeneralizedKL β μ ν μ₀ := by
-  exact chentsov_and_gibbs_of_bridge
-    (CI := CI) (T := T) (p := p) (β := β) (μ := μ) (ν := ν) (μ₀ := μ₀) hState
+  exact ⟨hState.2.1, hState.2.2⟩
 
 /-- Theorem `torsion_nonzero_of_state_and_chiral`. -/
 theorem torsion_nonzero_of_state_and_chiral

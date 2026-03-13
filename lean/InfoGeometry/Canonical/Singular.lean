@@ -1,5 +1,4 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
-import Mathlib.LinearAlgebra.Trace
 import InfoGeometry.Canonical.Clifford
 
 /-!

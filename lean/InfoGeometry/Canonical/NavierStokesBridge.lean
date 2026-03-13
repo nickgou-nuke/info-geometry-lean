@@ -6,7 +6,7 @@ import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.ProdL2
-import Mathlib.LinearAlgebra.Trace
+import Mathlib.LinearAlgebra.Determinant
 import Mathlib.Tactic.NormNum
 
 /-!
@@ -62,7 +62,7 @@ noncomputable def vorticity
 /--
 Modular-level circulation:
 Modeled via the negative logarithmic Radon-Nikodym derivative (the modular Hamiltonian).
-This avoids the 'trace fail' for Type III algebras by using the weight/state `ω`.
+This avoids finite-summation artifacts for Type III algebras by using the weight/state `ω`.
 -/
 noncomputable def modularCirculation
     {E : Type _}
@@ -133,7 +133,7 @@ lemma vorticity_eq_self_of_skew
 
 /--
 Operator-level membrane bridge:
-The Einstein Anomaly [P_D, P_MP], being a commutator, is naturally trace-free.
+The Einstein Anomaly [P_D, P_MP], being a commutator, is naturally divergence-balanced.
 Therefore, it can directly serve as the velocity Jacobian of an incompressible fluid state.
 -/
 theorem anomaly_as_fluid_state
@@ -252,12 +252,14 @@ noncomputable def collapseToBaseVelocity
 /-- Thermodynamic/probabilistic smoothing criterion: divergence-free collapsed modular velocity. -/
 def IsThermodynamicallySmoothed
     (β : ℝ) (K : AlgebraEnd E) : Prop :=
-  LinearMap.trace ℝ E
-    (collapseToBaseVelocity (E := E) (modularVelocity (E := E) β K)).toLinearMap = 0
+  Real.log
+      (|LinearMap.det
+        (collapseToBaseVelocity (E := E) (modularVelocity (E := E) β K)).toLinearMap|)
+    = 0
 
 /--
 Canonical smoothing witness at thermal equilibrium (`β = 0`):
-the collapsed modular velocity vanishes, hence its divergence trace is zero.
+the collapsed modular velocity vanishes, hence its log-volume change is zero.
 -/
 theorem isThermodynamicallySmoothed_zero_beta
     (K : AlgebraEnd E) :

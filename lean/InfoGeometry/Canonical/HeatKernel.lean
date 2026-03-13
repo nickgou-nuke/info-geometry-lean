@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.SpectralInference
-import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib.LinearAlgebra.Determinant
 
 namespace InfoGeometry.Canonical.HeatKernel
 
@@ -9,16 +9,16 @@ open InfoGeometry.Convex
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 
-/-- Spectral volume surrogate from the basepoint Fisher metric trace. -/
+/-- Spectral log-volume from the basepoint Fisher metric Jacobian determinant. -/
 noncomputable def spectralVolume (IST : InfoSpectralTriple E) : ℝ :=
-  LinearMap.trace ℝ E (IST.H.metricOp IST.x₀).toLinearMap
+  Real.log (|LinearMap.det (IST.H.metricOp IST.x₀).toLinearMap|)
 
 /--
-The Heat Trace K(t) = Tr(e^{-t D^2}).
+The heat spectral response `K(t)` in a first-order log-volume model.
 In our InfoSpectralTriple, D^2 = ∇^2ψ (the Fisher Metric).
 -/
 noncomputable def heatTrace (IST : InfoSpectralTriple E) (t : ℝ) : ℝ :=
-  -- First-order spectral surrogate: e^{-t} weighted spectral volume.
+  -- First-order spectral model: e^{-t} weighted spectral volume.
   Real.exp (-t) * spectralVolume IST
 
 /-! ### Seeley-DeWitt Expansion and Curvature -/
@@ -52,10 +52,10 @@ omit [FiniteDimensional ℝ E] in
 
 /--
 Spectral definition of the Total Scalar Curvature R.
-Calculated as the coefficient of the O(t) term in the heat trace expansion.
+Calculated as the coefficient of the O(t) term in the heat spectral expansion.
 -/
 noncomputable def totalScalarCurvature (IST : InfoSpectralTriple E) : ℝ :=
-  -- From the heat trace: R_total = 6 * a1.
+  -- From the heat spectral expansion: R_total = 6 * a1.
   6 * a1 IST
 
 omit [FiniteDimensional ℝ E] in

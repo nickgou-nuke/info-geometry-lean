@@ -220,38 +220,6 @@ theorem sinkhorn_kmsClosure_with_cstarRealization
   refine ⟨cstarReady_of_instance (Obs := Obs), ?_⟩
   exact hClosure
 
-/-- Backward-compatible control-input wrapper. -/
-theorem sinkhorn_kmsClosure_with_cstarRealization_of_sinkhornControl
-    (_real : AQFTOperatorRealization (F := F) (Obs := Obs))
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hControl : SinkhornKMSControl n T K ω β) :
-    IsCStarReady (Obs := Obs) ∧ SinkhornKMSClosure n T K ω β := by
-  exact sinkhorn_kmsClosure_with_cstarRealization
-    (n := n) (F := F) (Obs := Obs) _real
-    (T := T) (K := K) (ω := ω) (β := β)
-    (aqft_kmsClosure_of_sinkhornControl
-      (n := n) (T := T) (K := K) (ω := ω) (β := β) hControl)
-
-/--
-C*-ready interface theorem (closure-first form):
-if exact KMS closure is available, control is discharged internally before
-calling the legacy control-based wrapper.
--/
-theorem sinkhorn_kmsClosure_with_cstarRealization_of_kmsClosure
-    (_real : AQFTOperatorRealization (F := F) (Obs := Obs))
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hClosure : SinkhornKMSClosure n T K ω β) :
-    IsCStarReady (Obs := Obs) ∧ SinkhornKMSClosure n T K ω β := by
-  exact sinkhorn_kmsClosure_with_cstarRealization
-    (n := n) (F := F) (Obs := Obs) _real
-    (T := T) (K := K) (ω := ω) (β := β) hClosure
-
 end KMSInterface
 
 section FockInterface
@@ -342,90 +310,6 @@ theorem aqft_interface_package_with_realizations
       (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
   exact ⟨hK.1, hF.1, hK.2, hF.2⟩
 
-/-- Backward-compatible control-input wrapper. -/
-theorem aqft_interface_package_with_realizations_of_sinkhornControl
-    (realKMS : AQFTOperatorRealization (F := F) (Obs := ObsKMS))
-    (realFock : AQFTOperatorRealization (F := E) (Obs := ObsFock))
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (hControl : SinkhornKMSControl n T K ω β)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsCStarReady (Obs := ObsKMS)
-      ∧ IsVonNeumannReady (Obs := ObsFock)
-      ∧ SinkhornKMSClosure n T K ω β
-      ∧ grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-            = ψ + η • H ψ := by
-  exact aqft_interface_package_with_realizations
-    (n := n)
-    (F := F) (ObsKMS := ObsKMS)
-    (E := E) (ObsFock := ObsFock)
-    (realKMS := realKMS)
-    (realFock := realFock)
-    (T := T) (K := K) (ω := ω) (β := β)
-    (η := η) (B := B) (H := H)
-    (R := R) (Kgeo := Kgeo) (x := x)
-    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
-    (aqft_kmsClosure_of_sinkhornControl
-      (n := n) (T := T) (K := K) (ω := ω) (β := β) hControl)
-    hVacSplit
-
-/--
-Unified interface package (closure-first form):
-the KMS closure hypothesis is accepted directly and converted to Sinkhorn
-control only for legacy wrappers.
--/
-theorem aqft_interface_package_with_realizations_of_kmsClosure
-    (realKMS : AQFTOperatorRealization (F := F) (Obs := ObsKMS))
-    (realFock : AQFTOperatorRealization (F := E) (Obs := ObsFock))
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (hClosure : SinkhornKMSClosure n T K ω β)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsCStarReady (Obs := ObsKMS)
-      ∧ IsVonNeumannReady (Obs := ObsFock)
-      ∧ SinkhornKMSClosure n T K ω β
-      ∧ grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-            = ψ + η • H ψ := by
-  exact aqft_interface_package_with_realizations
-    (n := n)
-    (F := F) (ObsKMS := ObsKMS)
-    (E := E) (ObsFock := ObsFock)
-    (realKMS := realKMS)
-    (realFock := realFock)
-    (T := T) (K := K) (ω := ω) (β := β)
-    (η := η) (B := B) (H := H)
-    (R := R) (Kgeo := Kgeo) (x := x)
-    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
-    hClosure hVacSplit
-
 end UnifiedInterface
 
 section ConcreteInterfaceInstances
@@ -462,79 +346,6 @@ theorem aqft_interface_package_realHilbert
             (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
             = ψ + η • Hf ψ := by
   exact aqft_interface_package_with_realizations
-    (n := n)
-    (F := F) (ObsKMS := RealHilbertObs F)
-    (E := E) (ObsFock := RealHilbertObs E)
-    (realKMS := realHilbertCompressionRealization (E := F))
-    (realFock := realHilbertCompressionRealization (E := E))
-    (T := T) (K := K) (ω := ω) (β := β)
-    (η := η) (B := B) (H := Hf)
-    (R := R) (Kgeo := Kgeo) (x := x)
-    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
-    hClosure hVacSplit
-
-/-- Backward-compatible control-input wrapper. -/
-theorem aqft_interface_package_realHilbert_of_sinkhornControl
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (Hf : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (hControl : SinkhornKMSControl n T K ω β)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsCStarReady (Obs := RealHilbertObs F)
-      ∧ IsVonNeumannReady (Obs := RealHilbertObs E)
-      ∧ SinkhornKMSClosure n T K ω β
-      ∧ grandCanonicalFockEulerStep (E := E) η B Hf
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-            = ψ + η • Hf ψ := by
-  exact aqft_interface_package_realHilbert
-    (n := n) (T := T) (K := K) (ω := ω) (β := β)
-    (η := η) (B := B) (Hf := Hf)
-    (R := R) (Kgeo := Kgeo) (x := x)
-    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
-    (aqft_kmsClosure_of_sinkhornControl
-      (n := n) (T := T) (K := K) (ω := ω) (β := β) hControl)
-    hVacSplit
-
-/--
-Direct real-Hilbert instantiation (closure-first form).
--/
-theorem aqft_interface_package_realHilbert_of_kmsClosure
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (Hf : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (hClosure : SinkhornKMSClosure n T K ω β)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsCStarReady (Obs := RealHilbertObs F)
-      ∧ IsVonNeumannReady (Obs := RealHilbertObs E)
-      ∧ SinkhornKMSClosure n T K ω β
-      ∧ grandCanonicalFockEulerStep (E := E) η B Hf
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-            = ψ + η • Hf ψ := by
-  exact aqft_interface_package_with_realizations_of_kmsClosure
     (n := n)
     (F := F) (ObsKMS := RealHilbertObs F)
     (E := E) (ObsFock := RealHilbertObs E)

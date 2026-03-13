@@ -52,23 +52,6 @@ example {X Θ : Type} [Fintype X] [Fintype Θ] [MeasurableSpace X] [MeasurableSp
   classical
   simpa [tsum_fintype] using (cond_theta_given_x p x hx).tsum_coe
 
--- KL chain-rule can be consumed through an explicit hypothesis (`KlChainRule`).
-example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X]
-    [MeasurableSpace X] [MeasurableSpace Θ]
-    (p q : FinProb (X × Θ))
-    (hp : ∀ x : X, x ∈ (marginal_x p).support)
-    (hq : ∀ x : X, x ∈ (marginal_x q).support)
-    (hchain : KlChainRule (X := X) (Θ := Θ) p q hq hp) :
-    KL p q =
-      InfoGeometry.kl_div (α := X)
-        (marginal_x (X := X) (Θ := Θ) p).toMeasure
-        (marginal_x (X := X) (Θ := Θ) q).toMeasure +
-      ∑ x : X, (p.map Prod.fst x) *
-        InfoGeometry.kl_div (α := Θ)
-          (cond_theta_given_x (X := X) (Θ := Θ) p x (hp x)).toMeasure
-          (cond_theta_given_x (X := X) (Θ := Θ) q x (hq x)).toMeasure :=
-  kl_chain_rule_of (X := X) (Θ := Θ) p q hq hp hchain
-
 -- Test: `ProbabilityDist` is a definitional alias of `FinProb`
 example {α : Type} [Fintype α] (p : FinProb α) :
   (p : InfoGeometry.ProbabilityDist α) = p := rfl

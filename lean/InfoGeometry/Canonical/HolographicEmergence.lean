@@ -114,8 +114,8 @@ lemma isVacuumApexNull_zeroVacuumApexQuadraticForm
     IsVacuumApexNull (E := E) (zeroVacuumApexQuadraticForm (E := E)) v := by
   simp [IsVacuumApexNull, zeroVacuumApexQuadraticForm]
 
-/-- Null vacuum-apex representative lifts to a twistor point. -/
-theorem vacuumApexNull_lifts_to_twistor
+/-- Null vacuum-apex representative lifts to a twistor point from an explicit null witness. -/
+theorem vacuumApexNull_lifts_to_twistor_of_isVacuumApexNull
     (Q : QuadraticForm ℝ (InfoGeometry.Krein.DoubledSpace E))
     (v : UnnormalizedProjectiveState (E := E))
     (hNull : IsVacuumApexNull (E := E) Q v) :
@@ -144,6 +144,21 @@ theorem vacuumApexTwistorClosure_of_isVacuumApexNull
 Canonical twistor lift with no external nullness hypothesis:
 the null witness is discharged by `zeroVacuumApexQuadraticForm`.
 -/
+theorem vacuumApexNull_lifts_to_twistor
+    (v : UnnormalizedProjectiveState (E := E)) :
+    ∃ t : DoubledTwistorSpace (E := E) (zeroVacuumApexQuadraticForm (E := E)),
+      t = vacuumApexTwistor (E := E)
+        (zeroVacuumApexQuadraticForm (E := E))
+        v
+        (isVacuumApexNull_zeroVacuumApexQuadraticForm (E := E) v) := by
+  exact vacuumApexNull_lifts_to_twistor_of_isVacuumApexNull (E := E)
+    (Q := zeroVacuumApexQuadraticForm (E := E))
+    (v := v)
+    (hNull := isVacuumApexNull_zeroVacuumApexQuadraticForm (E := E) v)
+
+/--
+Backward-compatible alias for the canonical zero-null twistor lift.
+-/
 theorem vacuumApexNull_lifts_to_twistor_zeroVacuumApexQuadraticForm
     (v : UnnormalizedProjectiveState (E := E)) :
     ∃ t : DoubledTwistorSpace (E := E) (zeroVacuumApexQuadraticForm (E := E)),
@@ -151,10 +166,7 @@ theorem vacuumApexNull_lifts_to_twistor_zeroVacuumApexQuadraticForm
         (zeroVacuumApexQuadraticForm (E := E))
         v
         (isVacuumApexNull_zeroVacuumApexQuadraticForm (E := E) v) := by
-  exact vacuumApexNull_lifts_to_twistor (E := E)
-    (Q := zeroVacuumApexQuadraticForm (E := E))
-    (v := v)
-    (hNull := isVacuumApexNull_zeroVacuumApexQuadraticForm (E := E) v)
+  exact vacuumApexNull_lifts_to_twistor (E := E) v
 
 /--
 Closure-first twistor lift: no external nullness hypothesis is required.
@@ -184,7 +196,7 @@ variable {X : Type*}
 Full constructive holographic-emergence package in one theorem:
 time-flow + anomaly-scale + torsion/hysteresis + boundary/twistor closure.
 -/
-theorem holographicEmergence_package
+theorem holographicEmergence_package_of_isVacuumApexNull
     (Tflow : SinkhornTrajectory n)
     (CI : ConformalInference X)
     (hAnom : CI.chiralAnomalyOperator ≠ 0)
@@ -201,7 +213,7 @@ theorem holographicEmergence_package
           (hrow : HasPositiveRowSums 2 M)
           (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))
           (hcol : HasPositiveColSums 2 M)
-          (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
+      (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
           UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol)
       ∧ AnomalyInflowClosure (E := X) L IST
       ∧ (∃ t : DoubledTwistorSpace (E := X) Q, t = vacuumApexTwistor (E := X) Q v hNull) := by
@@ -211,11 +223,44 @@ theorem holographicEmergence_package
   · exact pathDependence_of_twistedInference (T := Tw)
   · exact exists_gaugeOrderHysteresis_witness
   · exact boundaryAnomalyCancellation (E := X) L IST
-  · exact vacuumApexNull_lifts_to_twistor (E := X) Q v hNull
+  · exact vacuumApexNull_lifts_to_twistor_of_isVacuumApexNull (E := X) Q v hNull
 
 /--
 Full constructive holographic-emergence package in canonical zero-null form.
 This removes the external `hNull` argument from the user-facing API.
+-/
+theorem holographicEmergence_package
+    (Tflow : SinkhornTrajectory n)
+    (CI : ConformalInference X)
+    (hAnom : CI.chiralAnomalyOperator ≠ 0)
+    (Tw : TwistedInference X)
+    (L : BayesianLoop X)
+    (IST : InfoSpectralTriple X)
+    (v : UnnormalizedProjectiveState (E := X)) :
+    EmergentTimeFlow n Tflow
+      ∧ AnomalyScalePhase CI
+      ∧ UpdateOrderPathDependent Tw.dual.nabla
+      ∧ (∃ (M : Coupling 2)
+          (hrow : HasPositiveRowSums 2 M)
+          (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))
+          (hcol : HasPositiveColSums 2 M)
+          (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
+          UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol)
+      ∧ AnomalyInflowClosure (E := X) L IST
+      ∧ (∃ t : DoubledTwistorSpace (E := X) (zeroVacuumApexQuadraticForm (E := X)),
+          t = vacuumApexTwistor (E := X)
+            (zeroVacuumApexQuadraticForm (E := X))
+            v
+            (isVacuumApexNull_zeroVacuumApexQuadraticForm (E := X) v)) := by
+  exact holographicEmergence_package_of_isVacuumApexNull (n := n)
+    (Tflow := Tflow) (CI := CI) (hAnom := hAnom) (Tw := Tw)
+    (L := L) (IST := IST)
+    (Q := zeroVacuumApexQuadraticForm (E := X))
+    (v := v)
+    (hNull := isVacuumApexNull_zeroVacuumApexQuadraticForm (E := X) v)
+
+/--
+Backward-compatible alias for the canonical zero-null package.
 -/
 theorem holographicEmergence_package_zeroVacuumApexQuadraticForm
     (Tflow : SinkhornTrajectory n)
@@ -242,10 +287,7 @@ theorem holographicEmergence_package_zeroVacuumApexQuadraticForm
             (isVacuumApexNull_zeroVacuumApexQuadraticForm (E := X) v)) := by
   exact holographicEmergence_package (n := n)
     (Tflow := Tflow) (CI := CI) (hAnom := hAnom) (Tw := Tw)
-    (L := L) (IST := IST)
-    (Q := zeroVacuumApexQuadraticForm (E := X))
-    (v := v)
-    (hNull := isVacuumApexNull_zeroVacuumApexQuadraticForm (E := X) v)
+    (L := L) (IST := IST) (v := v)
 
 end Package
 

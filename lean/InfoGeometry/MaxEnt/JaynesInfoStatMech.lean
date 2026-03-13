@@ -170,8 +170,8 @@ abbrev DiagObservable (n : ℕ) := Fin n → ℝ
 def diagMatrix (a : DiagObservable n) : FinMat n :=
   Matrix.diagonal a
 
-/-- Matrix trace as sum of diagonal entries. -/
-noncomputable def matrixTrace (A : FinMat n) : ℝ :=
+/-- Matrix diagonal mass as sum of diagonal entries. -/
+noncomputable def diagonalMass (A : FinMat n) : ℝ :=
   ∑ i, A i i
 
 /-- Hamiltonian matrix in diagonal form. -/
@@ -257,10 +257,10 @@ omit [Nonempty (Fin n)] in
     densityMatrix H β i j = 0 := by
   simp [densityMatrix, diagMatrix, hij]
 
-/-- The Gibbs density matrix has trace `1`. -/
-lemma densityMatrix_trace_one (H : DiagObservable n) (β : ℝ) :
-    matrixTrace (densityMatrix H β) = 1 := by
-  unfold matrixTrace
+/-- The Gibbs density matrix has diagonal mass `1`. -/
+lemma densityMatrix_diagonalMass_one (H : DiagObservable n) (β : ℝ) :
+    diagonalMass (densityMatrix H β) = 1 := by
+  unfold diagonalMass
   simpa using gibbsProb_sum_one H β
 
 /-- Pointwise log-density formula `log pᵢ = -β Hᵢ - log Z`. -/

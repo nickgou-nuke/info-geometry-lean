@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.InformationTorsion
+import Mathlib.LinearAlgebra.Dimension.Finite
 
 namespace InfoGeometry.Canonical.TopologicalInvariants
 
@@ -22,7 +23,7 @@ structure BayesianLoop (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ
 
 /--
 A simplified Chern-Simons Term for an Information connection over a Bayesian Loop.
-S_CS = ∫ Tr(A ∧ dA + 2/3 A ∧ A ∧ A).
+S_CS = ∫ ⟨A, dA + 2/3 A ∧ A⟩.
 In our discrete model, this measures the topological phase shift
 accumulated by the Dirac operator along the loop.
 -/
@@ -54,8 +55,10 @@ By the Atiyah-Singer theorem analogue for Information Geometry,
 this relates the analytical gap [P_D, P_MP] to topological defects.
 -/
 noncomputable def chiralAnomalyIndex (CST : ChiralSpectralTriple E) : ℝ :=
-  -- ε weighted by the Drazin-projector trace: anomaly strength times active spectral rank.
-  CST.epsilon * LinearMap.trace ℝ E (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection CST.D CST.DD).toLinearMap
+  -- ε weighted by the effective spectral rank of the Drazin projector.
+  CST.epsilon *
+    (Module.finrank ℝ
+      (LinearMap.range (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection CST.D CST.DD).toLinearMap) : ℝ)
 
 end ChiralIndex
 

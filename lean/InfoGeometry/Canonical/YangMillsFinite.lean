@@ -47,30 +47,23 @@ def ofModels
 
 end FiniteGaugeData
 
-/-- Finite QFT witness layer. -/
-structure FiniteQFTLayer where
-  reflectionPositive : Prop
-  reflectionPositive_holds : reflectionPositive
-  osterwalderSchrader : Prop
-  osterwalderSchrader_holds : osterwalderSchrader
-  wightmanReconstruction : Prop
-  wightmanReconstruction_holds : wightmanReconstruction
+/--
+Finite QFT closure state:
+there exists a nonzero positive-time expectation seed with structural KMS
+hypotheses.
+
+This removes manual per-obligation witness fields and makes the QFT layer
+derive from canonical modular seed data.
+-/
+def FiniteQFTLayer
+    (E : Type)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : Prop :=
+  ∃ (K : AlgebraEnd E) (β : ℝ) (Ω : InfoGeometry.Krein.DoubledSpace E),
+    ExpectationSeedKMSHypotheses (F := E) K β Ω ∧
+      Ω ≠ 0 ∧
+      PositiveTimeVector Ω
 
 namespace FiniteQFTLayer
-
-/-- Constructor from explicit reflection/OS/Wightman proofs. -/
-def ofProofs
-    {R O W : Prop}
-    (hR : R)
-    (hO : O)
-    (hW : W) :
-    FiniteQFTLayer where
-  reflectionPositive := R
-  reflectionPositive_holds := hR
-  osterwalderSchrader := O
-  osterwalderSchrader_holds := hO
-  wightmanReconstruction := W
-  wightmanReconstruction_holds := hW
 
 /-- Reflection-positivity marker from the expectation seed. -/
 def expectationSeedReflectionPositivity
@@ -135,17 +128,27 @@ def ofExpectationSeedFinite
     (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
     (hΩ_nonzero : Ω ≠ 0)
     (hΩ_posTime : PositiveTimeVector Ω) :
-    FiniteQFTLayer :=
-  ofProofs
-    (R := expectationSeedReflectionPositivity (E := E) K β Ω)
-    (hR := expectationSeedReflectionPositivity_of_hypotheses
-      (E := E) (K := K) (β := β) (Ω := Ω) hStruct)
-    (O := finiteOsterwalderSchraderLayer (E := E) Ω)
-    (hO := finiteOsterwalderSchraderLayer_of_positiveTimeVector
-      (E := E) (Ω := Ω) hΩ_posTime)
-    (W := finiteWightmanReconstructionLayer (E := E) K β Ω)
-    (hW := finiteWightmanReconstructionLayer_of_expectationSeed
-      (E := E) (K := K) (β := β) (Ω := Ω) hStruct hΩ_nonzero)
+    FiniteQFTLayer E :=
+  ⟨K, β, Ω, hStruct, hΩ_nonzero, hΩ_posTime⟩
+
+/--
+Derived finite QFT obligations from the closure state:
+reflection positivity, finite OS layer, and finite Wightman reconstruction.
+-/
+theorem existenceClaims_of_layer
+    (hLayer : FiniteQFTLayer E) :
+    ∃ (K : AlgebraEnd E) (β : ℝ) (Ω : InfoGeometry.Krein.DoubledSpace E),
+      expectationSeedReflectionPositivity (E := E) K β Ω ∧
+        finiteOsterwalderSchraderLayer (E := E) Ω ∧
+        finiteWightmanReconstructionLayer (E := E) K β Ω := by
+  rcases hLayer with ⟨K, β, Ω, hStruct, hΩ_nonzero, hΩ_posTime⟩
+  refine ⟨K, β, Ω, ?_, ?_, ?_⟩
+  · exact expectationSeedReflectionPositivity_of_hypotheses
+      (E := E) (K := K) (β := β) (Ω := Ω) hStruct
+  · exact finiteOsterwalderSchraderLayer_of_positiveTimeVector
+      (E := E) (Ω := Ω) hΩ_posTime
+  · exact finiteWightmanReconstructionLayer_of_expectationSeed
+      (E := E) (K := K) (β := β) (Ω := Ω) hStruct hΩ_nonzero
 
 end FiniteQFTLayer
 
@@ -185,11 +188,11 @@ theorem spectralGapFromLogDet_pos_of_coercive
   exact lt_of_lt_of_le hvol (le_max_right _ _)
 
 /-- Finite constructive Yang-Mills bridge package. -/
-structure FiniteYangMillsBridge (E : Type*) [NormedAddCommGroup E]
+structure FiniteYangMillsBridge (E : Type) [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [CompleteSpace E] where
   gauge : FiniteGaugeData
   rg_model : ChiralAsymptoticModel E
-  qft_layer : FiniteQFTLayer
+  qft_layer : FiniteQFTLayer E
   spectral_gap : ℝ
   spectral_gap_pos : 0 < spectral_gap
   gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap
@@ -200,7 +203,7 @@ namespace FiniteYangMillsBridge
 def ofConcrete
     (gauge : FiniteGaugeData)
     (rg_model : ChiralAsymptoticModel E)
-    (qft_layer : FiniteQFTLayer)
+    (qft_layer : FiniteQFTLayer E)
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
@@ -243,23 +246,29 @@ def hasGaugeRank (B : FiniteYangMillsBridge E) : Prop :=
   2 ≤ B.gauge.n
 
 /-- Obligation 2: finite existence layer. -/
-def hasExistenceLayer (B : FiniteYangMillsBridge E) : Prop :=
-  B.qft_layer.reflectionPositive ∧
-    B.qft_layer.osterwalderSchrader ∧
-    B.qft_layer.wightmanReconstruction
+def hasExistenceLayer (_B : FiniteYangMillsBridge E) : Prop :=
+  FiniteQFTLayer E
 
 /-- Obligation 3: strict finite mass gap. -/
 def hasStrictMassGap (B : FiniteYangMillsBridge E) : Prop :=
   0 < B.spectral_gap
 
+/--
+Expanded finite existence claims derived from the bridge's closure state.
+-/
+theorem existenceClaims_of_bridge
+    (B : FiniteYangMillsBridge E) :
+    ∃ (K : AlgebraEnd E) (β : ℝ) (Ω : InfoGeometry.Krein.DoubledSpace E),
+      FiniteQFTLayer.expectationSeedReflectionPositivity (E := E) K β Ω ∧
+        FiniteQFTLayer.finiteOsterwalderSchraderLayer (E := E) Ω ∧
+        FiniteQFTLayer.finiteWightmanReconstructionLayer (E := E) K β Ω :=
+  FiniteQFTLayer.existenceClaims_of_layer B.qft_layer
+
 /-- Consolidated finite milestone theorem. -/
 theorem obligations_of_bridge
     (B : FiniteYangMillsBridge E) :
     hasGaugeRank B ∧ hasExistenceLayer B ∧ hasStrictMassGap B := by
-  refine ⟨B.gauge.n_ge_two, ?_, B.spectral_gap_pos⟩
-  exact ⟨B.qft_layer.reflectionPositive_holds,
-    B.qft_layer.osterwalderSchrader_holds,
-    B.qft_layer.wightmanReconstruction_holds⟩
+  exact ⟨B.gauge.n_ge_two, B.qft_layer, B.spectral_gap_pos⟩
 
 /-- Fully constructive finite milestone theorem in the log-det route. -/
 theorem obligations_of_expectationSeedFromLogDet

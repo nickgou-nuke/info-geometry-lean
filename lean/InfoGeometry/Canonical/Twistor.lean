@@ -20,9 +20,12 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 
 import InfoGeometry.Twistor.NullProjective
+import InfoGeometry.Twistor.Incidence
 
 /-!
 # InfoGeometry.Canonical.Twistor
 
-Canonical twistor-layer umbrella (publication surface).
+Canonical twistor-layer umbrella (publication surface), including:
+- null/projective layer,
+- incidence/light-ray layer.
 -/

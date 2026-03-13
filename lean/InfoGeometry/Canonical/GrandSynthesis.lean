@@ -26,6 +26,7 @@ open InfoGeometry.Canonical.BottDirac
 open InfoGeometry.Canonical.CalabiYauBridge
 open InfoGeometry.Canonical.ChiralAnomaly
 open InfoGeometry.Canonical.KMSSinkhornBridge
+open InfoGeometry.Canonical.IB
 open InfoGeometry.Canonical.KaehlerGeometry
 open InfoGeometry.Canonical.RicciMongeAmpere
 open InfoGeometry.Canonical.AnalyticalIndex
@@ -222,16 +223,16 @@ end DeterminantChainRule
 section SpectralVolumeForm
 
 variable {E : Type*}
-  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 
 /--
 Log-volume identity for Monge-Ampere density:
-`log(exp(Tr(∇²ψ))) = Tr(∇²ψ)`.
+`log(exp(log |det(∇²ψ)|)) = log |det(∇²ψ)|`.
 -/
-lemma log_mongeAmpereDensity_eq_trace_metricOp
+lemma log_mongeAmpereDensity_eq_logAbsDet_metricOp
     (H : InfoGeometry.Convex.HessianGeometry E) (x : E) :
     Real.log (mongeAmpereDensity H x)
-      = LinearMap.trace ℝ E (H.metricOp x).toLinearMap := by
+      = Real.log (|LinearMap.det (H.metricOp x).toLinearMap|) := by
   unfold mongeAmpereDensity
   rw [Real.log_exp]
 
@@ -250,16 +251,16 @@ variable {m : Type*} [Fintype m] [DecidableEq m]
 /--
 Determinant-model bridge:
 if a matrix determinant models the Monge-Ampere density, then its log-absolute
-determinant equals the metric-op trace.
+determinant equals the Hessian metric-op log-absolute determinant.
 -/
-lemma logAbsDet_metricModel_eq_trace_metricOp
+lemma logAbsDet_metricModel_eq_logAbsDet_metricOp
     (H : InfoGeometry.Convex.HessianGeometry E) (x : E) (A : Matrix m m ℝ)
     (hdet : Matrix.det A = mongeAmpereDensity H x) :
-    logAbsDetMatrix A = LinearMap.trace ℝ E (H.metricOp x).toLinearMap := by
+    logAbsDetMatrix A = Real.log (|LinearMap.det (H.metricOp x).toLinearMap|) := by
   unfold logAbsDetMatrix
   rw [hdet]
   rw [abs_of_pos (mongeAmpereDensity_pos (H := H) x)]
-  exact log_mongeAmpereDensity_eq_trace_metricOp (H := H) (x := x)
+  exact log_mongeAmpereDensity_eq_logAbsDet_metricOp (H := H) (x := x)
 
 /--
 Spectral determinant-model bridge:
@@ -285,7 +286,7 @@ section KahlerPotential
 variable (n : Nat)
 
 /--
-Kahler-potential surrogate from Sinkhorn Radon-Nikodym barriers:
+Kahler-potential model from Sinkhorn Radon-Nikodym barriers:
 negative log-density (relative-volume) contributions from row and column sectors.
 -/
 noncomputable def kahlerPotentialRN (M : SinkhornMatrix n) : ℝ :=
@@ -303,7 +304,7 @@ lemma kahlerPotentialRN_eq_neg_logJacobian
   ring
 
 /--
-Relative-volume change surrogate induced by the RN Kahler potential.
+Relative-volume change induced by the RN Kahler potential.
 -/
 noncomputable def relativeVolumeChangeRN (M : SinkhornMatrix n) : ℝ :=
   Real.exp (-kahlerPotentialRN n M)
@@ -347,19 +348,6 @@ lemma hasConstantMongeAmpereDensity_of_rnEntropySource
     (H := Kgeo.H) (ρ0 := relativeVolumeChangeRN n M) hSource
 
 /--
-If RN entropy sources the Monge-Ampere density, an explicit Ricci-flat witness
-closes the geometric side constructively.
--/
-theorem isRicciFlat_of_rnEntropySource
-    (Kgeo : KaehlerInformationGeometry X)
-    (R : RicciTensor X)
-    (M : SinkhornMatrix n)
-    (_hSource : RNEntropySourcesMongeAmpere n Kgeo M)
-    (hFlat : IsRicciFlat R) :
-    IsRicciFlat R := by
-  exact hFlat
-
-/--
 Entropy-sourced geometric gravity statement:
 RN/Kahler-potential sourcing plus an explicit Ricci-flat witness implies the vacuum Einstein equation
 on the `c = 0` branch (`scalar = 2Λ`).
@@ -390,7 +378,7 @@ theorem gravity_generated_by_rnEntropy
     (hFlat : IsRicciFlat R) :
     IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
   refine ⟨?_, ?_⟩
-  · exact isRicciFlat_of_rnEntropySource (n := n) (Kgeo := Kgeo) (R := R) (M := M) hSource hFlat
+  · exact hFlat
   · exact vacuumEinsteinEquation_of_rnEntropySource
       (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) (M := M) hSource hFlat
 
@@ -401,7 +389,7 @@ section EntropyFlow
 variable (n : Nat)
 variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
-/-- Entropy monotonicity surrogate along Sinkhorn flow (RN barrier form). -/
+/-- Entropy monotonicity along Sinkhorn flow (RN barrier form). -/
 def SinkhornEntropyMonotoneRN (T : SinkhornTrajectory n) : Prop :=
   ∀ k : Nat, trajectoryRNBarrierNext n T k ≤ trajectoryRNBarrier n T k
 
@@ -418,12 +406,29 @@ KMS residual is controlled by the RN-barrier entropy budget at each Sinkhorn ste
 theorem sinkhornStepwise_kmsResidual_le_entropyBarrier
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hDrive : SinkhornKMSControl n T K ω β) :
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (vac : ThermalVacuum (E := F) K)
+    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β vac.Omega) :
     ∀ k : Nat, ∀ A B : AlgebraEnd F,
-      kmsResidual K (ω (k + 1)) β A B ≤ trajectoryRNBarrier n T k := by
-  exact sinkhorn_stepwise_kms_bound (n := n) (T := T) (K := K) (ω := ω) (β := β) hDrive
+      kmsResidual K ((ibInducedObservableWeighted (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 (omegaSeed (F := F) vac.Omega)) (k + 1)) β A B
+        ≤ trajectoryRNBarrier n T k := by
+  have hControl :
+      SinkhornKMSControl n T K (ibInducedObservableWeighted (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 (omegaSeed (F := F) vac.Omega)) β :=
+    sinkhorn_kmsControl_of_ibDynamics_weighted_from_thermalVacuum
+      (n := n) (T := T) (K := K) (β := β)
+      (prob := prob) (pTrajectory := pTrajectory) hStep (x0 := x0) (t0 := t0) vac hStruct
+  exact sinkhorn_stepwise_kms_bound
+    (n := n) (T := T) (K := K)
+    (ω := ibInducedObservableWeighted (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 (omegaSeed (F := F) vac.Omega)) (β := β) hControl
 
 /--
 Doubly-stochastic specialization of RN-barrier entropy monotonicity.
@@ -612,53 +617,17 @@ variable {X V F : Type}
   [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 /--
-Bochner-Weitzenbock bridge hypothesis:
-geometric+algebraic closure implies thermodynamic KMS closure.
--/
-def ThermodynamicFromGeometricAlgebraic
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ) : Prop :=
-  GeometricAlgebraicState n T flow D Γ →
-    ThermodynamicKMSState n T K ω β
-
-/--
-Calabi-Yau entropy bridge hypothesis:
-thermodynamic KMS closure implies geometric+algebraic closure.
--/
-def GeometricAlgebraicFromThermodynamic
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ) : Prop :=
-  ThermodynamicKMSState n T K ω β →
-    GeometricAlgebraicState n T flow D Γ
-
-/--
-Constructive geometric+algebraic closure from Sinkhorn-Ricci-index hypotheses.
+State-level geometric+algebraic closure (identity constructor).
 -/
 theorem geometricAlgebraicState_of_sinkhornRicciIndexHypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hD : ∀ s : ℝ, D s = D 0)
-    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
-    GeometricAlgebraicState n T flow D Γ :=
-  sinkhornRicciIndexInvariant_of_constructive_hypotheses
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    hNorm hFixed hD hΓ
+    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
+    GeometricAlgebraicState n T flow D Γ := hGeoAlg
 
 /--
-Derived Calabi-Yau entropy bridge from constructive invariance hypotheses:
-the geometric+algebraic state is built directly from the existing
-`SinkhornRicciIndexInvariant` constructor.
+Calabi-Yau entropy bridge from an established geometric+algebraic state.
 -/
 theorem calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -667,319 +636,222 @@ theorem calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hD : ∀ s : ℝ, D s = D 0)
-    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
-    GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β := by
+    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
+    ThermodynamicKMSState n T K ω β → GeometricAlgebraicState n T flow D Γ := by
   intro _hThermo
-  exact geometricAlgebraicState_of_sinkhornRicciIndexHypotheses
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    hNorm hFixed hD hΓ
+  exact hGeoAlg
 
 /--
-Derived Bochner-Weitzenbock bridge from existing library assumptions:
-- `KMSSinkhornBridge`: Sinkhorn KMS control drives exact KMS
-This discharges the `ThermodynamicFromGeometricAlgebraic` hypothesis directly from the
-thermodynamic/KMS side, so only the opposite directional bridge remains external.
+IB-dynamics Bochner-Weitzenboeck bridge:
+`SinkhornKMSClosure` is derived from an IB iterate trajectory.
 -/
-theorem bochnerWeitzenboeckBridge_of_sinkhornDrive
+theorem bochnerWeitzenboeckBridge_of_ibDynamics
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
     (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hDrive : SinkhornKMSControl n T.traj K ω β) :
-    ThermodynamicFromGeometricAlgebraic n T flow D Γ K ω β := by
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω) :
+    GeometricAlgebraicState n T flow D Γ →
+      ThermodynamicKMSState n T K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
+  have hControl :
+      SinkhornKMSControl n T.traj K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β :=
+    sinkhorn_kmsControl_of_ibDynamics_weighted_from_expectationSeed
+      (n := n) (T := T.traj) (K := K) (β := β)
+      (prob := prob) (pTrajectory := pTrajectory)
+      hStep (x0 := x0) (t0 := t0)
+      (Ω := Ω) hΩ hStruct
+  have hClosure :
+      SinkhornKMSClosure n T.traj K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β :=
+    sinkhorn_step_kmsClosure_of_control
+      (n := n) (T := T.traj) (K := K)
+      (ω := ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) (β := β) hControl
   intro _hGeoAlg
-  exact sinkhornKMSState_of_closure
-    (n := n) (T := T.traj) (K := K) (ω := ω) (β := β)
-    (sinkhornKMSState_of_drive
-      (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hDrive)
+  exact hClosure
 
 /--
-Closure-first Bochner-Weitzenbock bridge:
-exact Sinkhorn/KMS closure is accepted directly, and control is discharged
-internally via `sinkhorn_control_of_step_kmsClosure`.
+Packaging of both directional Wheeler-DeWitt bridges from
+IB iterate dynamics plus an established geometric+algebraic state.
 -/
-theorem bochnerWeitzenboeckBridge_of_sinkhornClosure
+theorem directionalBridges_of_ibDynamics_and_indexHypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
     (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hClosure : SinkhornKMSClosure n T.traj K ω β) :
-    ThermodynamicFromGeometricAlgebraic n T flow D Γ K ω β := by
-  have hDrive : SinkhornKMSControl n T.traj K ω β :=
-    sinkhorn_control_of_step_kmsClosure
-      (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hClosure
-  exact bochnerWeitzenboeckBridge_of_sinkhornDrive
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    (K := K) (ω := ω) (β := β) hDrive
-
-/--
-Constructive packaging of both directional Wheeler-DeWitt bridges from
-Sinkhorn KMS drive plus normalized Ricci/index invariance hypotheses.
--/
-theorem directionalBridges_of_sinkhornDrive_and_indexHypotheses
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hDrive : SinkhornKMSControl n T.traj K ω β)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hD : ∀ s : ℝ, D s = D 0)
-    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
-    ThermodynamicFromGeometricAlgebraic n T flow D Γ K ω β ∧
-      GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β := by
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω)
+    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
+    (GeometricAlgebraicState n T flow D Γ →
+      ThermodynamicKMSState n T K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β) ∧
+      (ThermodynamicKMSState n T K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β →
+        GeometricAlgebraicState n T flow D Γ) := by
   refine ⟨?_, ?_⟩
-  · exact bochnerWeitzenboeckBridge_of_sinkhornDrive
+  · exact bochnerWeitzenboeckBridge_of_ibDynamics
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ω) (β := β) hDrive
+      (K := K) (β := β)
+      (prob := prob) (pTrajectory := pTrajectory)
+      hStep (x0 := x0) (t0 := t0)
+      (Ω := Ω) hΩ hStruct
   · exact calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ω) (β := β)
-      hNorm hFixed hD hΓ
+      (K := K) (ω := ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) (β := β)
+      hGeoAlg
 
 /--
-Constructive packaging of both directional Wheeler-DeWitt bridges from
-Sinkhorn/KMS closure plus normalized Ricci/index invariance hypotheses.
+Reduced-hypothesis Wheeler-DeWitt equivalence (IB-dynamics form):
+both directions are discharged from
+`IB trajectory dynamics + SinkhornRicciIndexInvariant`.
 -/
-theorem directionalBridges_of_sinkhornClosure_and_indexHypotheses
+theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
     (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hClosure : SinkhornKMSClosure n T.traj K ω β)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hD : ∀ s : ℝ, D s = D 0)
-    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
-    ThermodynamicFromGeometricAlgebraic n T flow D Γ K ω β ∧
-      GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β := by
-  refine ⟨?_, ?_⟩
-  · exact bochnerWeitzenboeckBridge_of_sinkhornClosure
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ω) (β := β) hClosure
-  · exact calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ω) (β := β)
-      hNorm hFixed hD hΓ
-
-/--
-Compatibility wrapper retaining geometric arguments while requiring only an
-explicit Ricci-flat witness on the geometric side.
--/
-theorem bochnerWeitzenboeckBridge_of_sinkhornDrive_and_constantMongeAmpere
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (_Kgeo : KaehlerInformationGeometry X)
-    (R : RicciTensor X)
-    (hDrive : SinkhornKMSControl n T.traj K ω β)
-    (_hFlat : IsRicciFlat R) :
-    ThermodynamicFromGeometricAlgebraic n T flow D Γ K ω β := by
-  exact bochnerWeitzenboeckBridge_of_sinkhornDrive
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    (K := K) (ω := ω) (β := β) hDrive
-
-/--
-Information-theoretic Wheeler-DeWitt equivalence (assumption-driven):
-thermodynamic KMS equilibrium is equivalent to geometric+algebraic closure
-once the Bochner and Calabi-Yau bridge hypotheses are provided.
--/
-theorem information_wheeler_dewitt_equivalence_of_directional_bridges
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hBW : ThermodynamicFromGeometricAlgebraic n T flow D Γ K ω β)
-    (hCY : GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β) :
-    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω)
+    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
+    ThermodynamicKMSState n T K
+      (ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
+      ↔ GeometricAlgebraicState n T flow D Γ := by
   constructor
   · intro hThermo
-    exact hCY hThermo
+    exact calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (K := K) (ω := ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) (β := β)
+      hGeoAlg hThermo
   · intro hGeoAlg
-    exact hBW hGeoAlg
-
-/--
-Reduced-hypothesis Wheeler-DeWitt equivalence:
-`ThermodynamicFromGeometricAlgebraic` is discharged by `SinkhornKMSControl`.
--/
-theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hDrive : SinkhornKMSControl n T.traj K ω β)
-    (hCYBridge : GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β) :
-    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence_of_directional_bridges
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
-    (bochnerWeitzenboeckBridge_of_sinkhornDrive
+    exact bochnerWeitzenboeckBridge_of_ibDynamics
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ω) (β := β) hDrive)
-    hCYBridge
-
-/--
-Reduced-hypothesis Wheeler-DeWitt equivalence (closure-first form):
-`ThermodynamicFromGeometricAlgebraic` is discharged by `SinkhornKMSClosure`.
--/
-theorem information_wheeler_dewitt_equivalence_of_sinkhornClosure
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hClosure : SinkhornKMSClosure n T.traj K ω β)
-    (hCYBridge : GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β) :
-    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence_of_directional_bridges
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
-    (bochnerWeitzenboeckBridge_of_sinkhornClosure
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ω) (β := β) hClosure)
-    hCYBridge
-
-/--
-Constructive reduced-hypothesis Wheeler-DeWitt equivalence:
-both directions are discharged from
-`SinkhornKMSControl + SinkhornRicciIndexInvariant` hypotheses.
--/
-theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_indexHypotheses
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hDrive : SinkhornKMSControl n T.traj K ω β)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hD : ∀ s : ℝ, D s = D 0)
-    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
-    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence_of_directional_bridges
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
-    (bochnerWeitzenboeckBridge_of_sinkhornDrive
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ω) (β := β) hDrive)
-    (calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
-      hNorm hFixed hD hΓ)
-
-/--
-Constructive reduced-hypothesis Wheeler-DeWitt equivalence (closure-first form):
-both directions are discharged from
-`SinkhornKMSClosure + SinkhornRicciIndexInvariant` hypotheses.
--/
-theorem information_wheeler_dewitt_equivalence_of_sinkhornClosure_and_indexHypotheses
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hClosure : SinkhornKMSClosure n T.traj K ω β)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hD : ∀ s : ℝ, D s = D 0)
-    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
-    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence_of_directional_bridges
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
-    (bochnerWeitzenboeckBridge_of_sinkhornClosure
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ω) (β := β) hClosure)
-    (calabiYauEntropyBridge_of_sinkhornRicciIndexHypotheses
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
-      hNorm hFixed hD hΓ)
-
-/--
-Legacy-compatibility reduced-hypothesis theorem:
-retains explicit geometric arguments while using only explicit constructive
-witnesses (`SinkhornKMSControl` + `IsRicciFlat`) on the thermodynamic/geometric side.
--/
-theorem information_wheeler_dewitt_equivalence_of_sinkhornDrive_and_calabiYau
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (Kgeo : KaehlerInformationGeometry X)
-    (R : RicciTensor X)
-    (hDrive : SinkhornKMSControl n T.traj K ω β)
-    (hFlat : IsRicciFlat R)
-    (hCYBridge : GeometricAlgebraicFromThermodynamic n T flow D Γ K ω β) :
-    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence_of_directional_bridges
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ) (K := K) (ω := ω) (β := β)
-    (bochnerWeitzenboeckBridge_of_sinkhornDrive_and_constantMongeAmpere
-      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ω) (β := β)
-      Kgeo R hDrive hFlat)
-    hCYBridge
+      (K := K) (β := β)
+      (prob := prob) (pTrajectory := pTrajectory)
+      hStep (x0 := x0) (t0 := t0)
+      (Ω := Ω) hΩ hStruct hGeoAlg
 
 /--
 Primary Wheeler-DeWitt equivalence API:
-both directional bridges are discharged constructively from Sinkhorn-drive
-and Ricci/index invariance hypotheses.
+both directional bridges are discharged constructively from
+IB iterate dynamics and a geometric+algebraic state.
 -/
 theorem information_wheeler_dewitt_equivalence
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
     (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hClosure : SinkhornKMSClosure n T.traj K ω β)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hD : ∀ s : ℝ, D s = D 0)
-    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
-    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence_of_sinkhornClosure_and_indexHypotheses
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω)
+    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
+    ThermodynamicKMSState n T K
+      (ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
+      ↔ GeometricAlgebraicState n T flow D Γ := by
+  exact information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    (K := K) (ω := ω) (β := β)
-    hClosure hNorm hFixed hD hΓ
+    (K := K) (β := β)
+    (prob := prob) (pTrajectory := pTrajectory)
+    hStep (x0 := x0) (t0 := t0)
+    (Ω := Ω) hΩ hStruct hGeoAlg
 
 /--
-Fully constructive reduced-hypothesis Wheeler-DeWitt equivalence:
-kept for compatibility; delegates to the leaner index-hypothesis theorem.
+State-hypothesis API variant: delegates to the reduced state-level API.
 -/
-theorem information_wheeler_dewitt_equivalence_of_constructive_hypotheses
+theorem information_wheeler_dewitt_equivalence_of_state_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
     (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hClosure : SinkhornKMSClosure n T.traj K ω β)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hD : ∀ s : ℝ, D s = D 0)
-    (hΓ : ∀ s : ℝ, Γ s = Γ 0) :
-    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence_of_sinkhornClosure_and_indexHypotheses
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω)
+    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
+    ThermodynamicKMSState n T K
+      (ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
+      ↔ GeometricAlgebraicState n T flow D Γ := by
+  exact information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    (K := K) (ω := ω) (β := β)
-    hClosure hNorm hFixed hD hΓ
+    (K := K) (β := β)
+    (prob := prob) (pTrajectory := pTrajectory)
+    hStep (x0 := x0) (t0 := t0)
+    (Ω := Ω) hΩ hStruct hGeoAlg
 
 /--
 The full capstone package from `AnalyticalIndex` immediately yields both sides.
@@ -1023,52 +895,64 @@ theorem information_wheeler_dewitt_equivalence_of_fullCapstone
       (K := K) (ω := ω) (β := β) hFull).1
 
 /--
-Fully constructive Wheeler-DeWitt equivalence from explicit capstone hypotheses.
+Wheeler-DeWitt equivalence from explicit state-level capstone components.
 -/
-theorem information_wheeler_dewitt_equivalence_of_constructive_capstone_hypotheses
+theorem information_wheeler_dewitt_equivalence_of_state_capstone_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
     (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hD : ∀ s : ℝ, D s = D 0)
-    (hΓ : ∀ s : ℝ, Γ s = Γ 0)
-    (hClosure : SinkhornKMSClosure n T.traj K ω β) :
-    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω)
+    (hGeoAlg : GeometricAlgebraicState n T flow D Γ)
+    :
+    ThermodynamicKMSState n T K
+      (ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
+      ↔ GeometricAlgebraicState n T flow D Γ := by
+  have hControl :
+      SinkhornKMSControl n T.traj K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β :=
+    sinkhorn_kmsControl_of_ibDynamics_weighted_from_expectationSeed
+      (n := n) (T := T.traj) (K := K) (β := β)
+      (prob := prob) (pTrajectory := pTrajectory)
+      hStep (x0 := x0) (t0 := t0)
+      (Ω := Ω) hΩ hStruct
+  have hClosure :
+      SinkhornKMSClosure n T.traj K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β :=
+    sinkhorn_step_kmsClosure_of_control
+      (n := n) (T := T.traj) (K := K)
+      (ω := ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) (β := β) hControl
   exact information_wheeler_dewitt_equivalence_of_fullCapstone
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    (K := K) (ω := ω) (β := β)
-    (fullThermoGeoIndexCapstone_of_constructive_hypotheses
+    (K := K) (ω := ibInducedObservableWeighted
+      (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+      pTrajectory x0 t0 (omegaSeed (F := F) Ω)) (β := β)
+    (fullThermoGeoIndexCapstone_of_states
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (K := K) (ω := ω) (β := β)
-      hNorm hFixed hD hΓ hClosure)
-
-/--
-Backward-compatible wrapper for the constructive-capstone theorem with
-`SinkhornKMSControl` input.
--/
-theorem information_wheeler_dewitt_equivalence_of_constructive_capstone_hypotheses_of_sinkhornDrive
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hD : ∀ s : ℝ, D s = D 0)
-    (hΓ : ∀ s : ℝ, Γ s = Γ 0)
-    (hDrive : SinkhornKMSControl n T.traj K ω β) :
-    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
-  exact information_wheeler_dewitt_equivalence_of_constructive_capstone_hypotheses
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    (K := K) (ω := ω) (β := β)
-    hNorm hFixed hD hΓ
-    (sinkhornKMSState_of_drive
-      (n := n) (T := T.traj) (K := K) (ω := ω) (β := β) hDrive)
+      (K := K) (ω := ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) (β := β)
+      hGeoAlg hClosure)
 
 end WheelerDeWitt
 

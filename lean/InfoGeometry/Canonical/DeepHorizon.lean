@@ -47,7 +47,9 @@ export InfoGeometry.Canonical.HolographicEmergence (
   pathDependence_of_twistedInference
   exists_gaugeOrderHysteresis_witness
   boundaryAnomalyCancellation
+  vacuumApexNull_lifts_to_twistor_of_isVacuumApexNull
   vacuumApexNull_lifts_to_twistor
+  holographicEmergence_package_of_isVacuumApexNull
   holographicEmergence_package
 )
 

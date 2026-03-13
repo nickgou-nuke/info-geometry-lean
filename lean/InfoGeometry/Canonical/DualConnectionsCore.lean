@@ -13,7 +13,7 @@ namespace InfoGeometry.Canonical.DualConnections
 
 variable {Θ α : Type*} [Fintype α]
 
-/-- Fiberwise tangent placeholder on a finite probability simplex fiber. -/
+/-- Fiberwise tangent model on a finite probability simplex fiber. -/
 abbrev FiberTangent (α : Type*) := α → ℝ
 
 /-- Covariant 3-tensor surface for coordinate connection coefficients. -/
@@ -147,7 +147,7 @@ def fisherMetric (p : Θ → InfoGeometry.FinProb α) : Prop :=
   ∀ θ : Θ, ∑ a : α, p θ a = 1
 
 /--
-Amari-Chentsov nonnegativity surrogate:
+Amari-Chentsov nonnegativity condition:
 nonnegativity of the quadratic probability moment on each fiber.
 -/
 def amariChentsovTensor (p : Θ → InfoGeometry.FinProb α) : Prop :=

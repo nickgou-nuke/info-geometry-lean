@@ -54,36 +54,36 @@ omit [CompleteSpace H] [KreinSpace H] [KreinGradedModule H] in
   simp [superComm, paritySign, sub_eq_add_neg]
 
 /--
-Supertrace-like anomaly functional: a linear functional vanishing on graded
+Superweight-like anomaly functional: a linear functional vanishing on graded
 commutators of homogeneous elements.
 -/
-structure SuperTraceLike where
+structure SuperWeightLike where
   τ : EndH H →ₗ[ℝ] ℝ
-  graded_trace :
+  graded_weight :
     ∀ {p q : SuperParity} {A B : EndH H},
       IsParity (H := H) p A →
       IsParity (H := H) q B →
       τ (superComm (H := H) p q A B) = 0
 
-namespace SuperTraceLike
+namespace SuperWeightLike
 
-variable (S : SuperTraceLike (H := H))
+variable (S : SuperWeightLike (H := H))
 
-/-- Lemma `graded_trace_commutator`. -/
-lemma graded_trace_commutator {A B : EndH H}
+/-- Lemma `graded_weight_commutator`. -/
+lemma graded_weight_commutator {A B : EndH H}
     (hA : IsParity (H := H) SuperParity.even A)
     (hB : IsParity (H := H) SuperParity.even B) :
     S.τ (commutator (H := H) A B) = 0 :=
-  S.graded_trace hA hB
+  S.graded_weight hA hB
 
-/-- Lemma `graded_trace_anticommutator`. -/
-lemma graded_trace_anticommutator {A B : EndH H}
+/-- Lemma `graded_weight_anticommutator`. -/
+lemma graded_weight_anticommutator {A B : EndH H}
     (hA : IsParity (H := H) SuperParity.odd A)
     (hB : IsParity (H := H) SuperParity.odd B) :
     S.τ (anticommutator (H := H) A B) = 0 := by
   simpa [anticommutator] using
-    (S.graded_trace (p := SuperParity.odd) (q := SuperParity.odd) hA hB)
+    (S.graded_weight (p := SuperParity.odd) (q := SuperParity.odd) hA hB)
 
-end SuperTraceLike
+end SuperWeightLike
 
 end InfoGeometry.Canonical.SuperAnomaly

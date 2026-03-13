@@ -40,8 +40,8 @@ noncomputable def satisfies_kms
   satisfies_kms_like K ω β
 
 omit [CompleteSpace E] in
-/-- At `β = 0`, the KMS-like identity reduces to trace symmetry `ω (A B) = ω (B A)`. -/
-lemma kms_like_zero_implies_trace
+/-- At `β = 0`, the KMS-like identity reduces to commutation symmetry `ω (A B) = ω (B A)`. -/
+lemma kms_like_zero_implies_commutation
     (K : EndH)
     (ω : EndH →L[ℝ] ℝ)
     (hKMS : satisfies_kms_like K ω 0) :
@@ -53,13 +53,13 @@ lemma kms_like_zero_implies_trace
   simpa [hshift] using h
 
 omit [CompleteSpace E] in
-/-- Compatibility alias for `kms_like_zero_implies_trace`. -/
-lemma kms_zero_implies_trace
+/-- Compatibility alias for `kms_like_zero_implies_commutation`. -/
+lemma kms_zero_implies_commutation
     (K : EndH)
     (ω : EndH →L[ℝ] ℝ)
     (hKMS : satisfies_kms K ω 0) :
     ∀ A B : EndH, ω (A * B) = ω (B * A) :=
-  kms_like_zero_implies_trace K ω hKMS
+  kms_like_zero_implies_commutation K ω hKMS
 
 /-- Thermal vacuum data for a chosen modular generator `K`. -/
 structure ThermalVacuum (K : EndH) where

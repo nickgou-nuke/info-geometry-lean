@@ -151,6 +151,33 @@ lemma modularConjugationJ_anticommutes_modularSign :
   complex_i_sq (E := E)
 
 /--
+Canonical positive-time subspace in doubled form:
+vectors with matched components `(x, x)`.
+-/
+def PositiveTimeVector (Ω : DoubledSpace E) : Prop :=
+  ∃ x : E, Ω = to_doubled x x
+
+/--
+On the canonical positive-time subspace, modular conjugation `J` fixes vectors.
+-/
+lemma modularConjugationJ_fixed_of_positiveTimeVector
+    (Ω : DoubledSpace E)
+    (hΩ : PositiveTimeVector (E := E) Ω) :
+    modularConjugationJ (E := E) Ω = Ω := by
+  rcases hΩ with ⟨x, rfl⟩
+  apply DoubledSpace.ext <;> simp [modularConjugationJ, modular_j]
+
+/--
+Reflection quadratic form is nonnegative on the canonical positive-time subspace.
+-/
+theorem reflectionQuadratic_nonneg_of_positiveTimeVector
+    (Ω : DoubledSpace E)
+    (hΩ : PositiveTimeVector (E := E) Ω) :
+    0 ≤ inner ℝ ((modularConjugationJ (E := E)) Ω) Ω := by
+  rw [modularConjugationJ_fixed_of_positiveTimeVector (E := E) Ω hΩ]
+  exact real_inner_self_nonneg
+
+/--
 Canonical split-Clifford representation realized by the modular atom on doubled space.
 -/
 noncomputable abbrev tomitaRepresentation :

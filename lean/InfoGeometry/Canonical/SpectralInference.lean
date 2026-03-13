@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.MoorePenrose
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.LinearAlgebra.Trace
+import Mathlib.LinearAlgebra.Determinant
 
 namespace InfoGeometry.Canonical.SpectralInference
 
@@ -85,11 +85,12 @@ namespace RegularizedSpectralTriple
 variable (RST : RegularizedSpectralTriple E)
 
 /--
-The Spectral Action Principle: S(D) = Tr(f(D^D / Λ)).
-In our toy model, we compute the trace of the Drazin-regularized Dirac operator.
+The Spectral Action Principle in log-volume form.
+In this model we use the log-absolute Jacobian determinant of the regularized
+Dirac operator as the spectral action generator.
 -/
 noncomputable def spectralAction (Λ : ℝ) : ℝ :=
-  LinearMap.trace ℝ E (ContinuousLinearMap.toLinearMap ((1 / Λ) • RST.DD))
+  Real.log (|LinearMap.det (ContinuousLinearMap.toLinearMap ((1 / Λ) • RST.DD))|)
 
 end RegularizedSpectralTriple
 
@@ -117,11 +118,12 @@ noncomputable def epsilon (CST : ChiralSpectralTriple E) : ℝ :=
 
 /--
 The Anomaly-Shifted Spectral Action.
-S(D) = Tr(f((D^D + ε I) / Λ)).
+Log-volume spectral action of the shifted operator `((D^D + ε I) / Λ)`.
 The chiral anomaly ε acts as a generated mass/scale term.
 -/
 noncomputable def chiralSpectralAction (Λ : ℝ) : ℝ :=
-  LinearMap.trace ℝ E (ContinuousLinearMap.toLinearMap ((1 / Λ) • (CST.DD + CST.epsilon • 1)))
+  Real.log
+    (|LinearMap.det (ContinuousLinearMap.toLinearMap ((1 / Λ) • (CST.DD + CST.epsilon • 1)))|)
 
 end ChiralSpectralTriple
 

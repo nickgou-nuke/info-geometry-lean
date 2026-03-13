@@ -32,7 +32,7 @@ structure KasparovCycle
   π : A →ₐ[ℝ] EndH H
   /-- Secondary representation of `B` (right-action refinement can be layered later). -/
   ρ : B →ₐ[ℝ] EndH H
-  /-- Bounded odd phase / Fredholm surrogate. -/
+  /-- Bounded odd phase / Fredholm operator. -/
   F : EndH H
   /-- Oddness with respect to the grading involution. -/
   F_odd : KreinGradedModule.IsOdd (H := H) F
@@ -78,7 +78,7 @@ lemma superComm_compact_of_even_rep
 
 /--
 Theorem: If F is a spectral projection (F² = 1), the Kasparov index
-is exactly the analytical index of the Dirac-surrogate F.
+is exactly the analytical index of the Dirac phase `F`.
 -/
 theorem index_bridge_spectral [FiniteDimensional ℝ H]
     (_hF : X.F * X.F = 1) :

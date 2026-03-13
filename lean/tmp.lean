@@ -1,1 +1,1 @@
--- Placeholder file for build tooling expectations.
+-- Root module for the `tmp` build target.

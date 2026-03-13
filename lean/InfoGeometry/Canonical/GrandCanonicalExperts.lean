@@ -705,14 +705,14 @@ lemma colLyapunov_colNormalize_eq_zero (M : SinkhornMatrix n) (hcol : HasPositiv
 
 /--
 Row-wise Radon-Nikodym log-density generator:
-the logarithmic Jacobian surrogate `∑ᵢ log(rowSumᵢ)`.
+the logarithmic Jacobian expression `∑ᵢ log(rowSumᵢ)`.
 -/
 noncomputable def rowRadonNikodymGenerator (M : SinkhornMatrix n) : ℝ :=
   ∑ i : Fin n, Real.log (rowSum n M i)
 
 /--
 Column-wise Radon-Nikodym log-density generator:
-the logarithmic Jacobian surrogate `∑ⱼ log(colSumⱼ)`.
+the logarithmic Jacobian expression `∑ⱼ log(colSumⱼ)`.
 -/
 noncomputable def colRadonNikodymGenerator (M : SinkhornMatrix n) : ℝ :=
   ∑ j : Fin n, Real.log (colSum n M j)

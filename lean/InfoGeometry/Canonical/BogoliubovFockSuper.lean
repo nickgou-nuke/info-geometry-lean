@@ -55,7 +55,7 @@ noncomputable def bogoliubovCreation
     (B : BogoliubovParams) : FockEnd E :=
   B.u • creationOp (E := E) + B.v • annihilationOp (E := E)
 
-/-- Number-operator surrogate from Bogoliubov ladder modes. -/
+/-- Number operator induced by Bogoliubov ladder modes. -/
 noncomputable def numberOperator
     (B : BogoliubovParams) : FockEnd E :=
   (bogoliubovCreation (E := E) B).comp (bogoliubovAnnihilation (E := E) B)

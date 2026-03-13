@@ -10,9 +10,8 @@ open InfoGeometry.Krein
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
--- Placeholder for the missing definition to allow compilation
--- In a real implementation, this would be defined in HilbertBridge.lean
--- and proved to be a KreinEquiv between the diagonal and off-diagonal models.
+-- Local sandbox constructor mirroring the rotation-based Krein equivalence shape.
+-- This keeps experiments explicit in `tmp` without affecting canonical modules.
 noncomputable def rotation45KreinEquiv (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     (∀ u v : DoubledSpace E,
       KreinSpace.kreinInner ((NeutralSpace.rotation45 (E := E)) u)

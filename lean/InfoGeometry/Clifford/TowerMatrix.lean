@@ -2,6 +2,7 @@ import Mathlib.LinearAlgebra.Matrix.Kronecker
 import Mathlib.LinearAlgebra.Matrix.Reindex
 import Mathlib.Data.Fintype.EquivFin
 import Mathlib.LinearAlgebra.Matrix.Notation
+import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.Tactic
 
 open scoped Matrix
@@ -68,6 +69,47 @@ lemma cartan_involutive (J1 : Matrix (Fin 2) (Fin 2) ℝ) (n : ℕ)
             simp [Matrix.mul_assoc]
     _   = X := by
             simp [hJJ']
+
+/--
+Cartan involution intertwines with the canonical matrix inverse.
+This is the matrix-level compatibility needed to connect `ModularMirror` and Cartan wiring.
+-/
+lemma cartan_inv_of_isUnit (J1 : Matrix (Fin 2) (Fin 2) ℝ) (n : ℕ)
+    (hJJ : (Jn J1 n) * (Jn J1 n) = (1 : Mat n)) (_hJt : (Jn J1 n)ᵀ = (Jn J1 n))
+    {X : Mat n} (hX : IsUnit X.det) :
+    cartan J1 n X⁻¹ = (cartan J1 n X)⁻¹ := by
+  set J : Mat n := Jn J1 n
+  have hJJ' : J * J = (1 : Mat n) := by simpa [J] using hJJ
+  have hJinv : J⁻¹ = J := by
+    simpa using (Matrix.inv_eq_left_inv (A := J) (B := J) hJJ')
+  have hXt : IsUnit (Xᵀ).det := Matrix.isUnit_det_transpose (A := X) hX
+  have hJdet : IsUnit J.det := Matrix.isUnit_det_of_left_inverse (A := J) (B := J) hJJ'
+  have hA : IsUnit (J * Xᵀ * J).det := by
+    simpa [Matrix.det_mul, Matrix.mul_assoc] using (hJdet.mul (hXt.mul hJdet))
+  have hneg_inv : (-(J * Xᵀ * J))⁻¹ = -((J * Xᵀ * J)⁻¹) := by
+    apply Matrix.inv_eq_left_inv (A := -(J * Xᵀ * J)) (B := -((J * Xᵀ * J)⁻¹))
+    calc
+      (-((J * Xᵀ * J)⁻¹)) * (-(J * Xᵀ * J))
+          = (J * Xᵀ * J)⁻¹ * (J * Xᵀ * J) := by simp
+      _ = 1 := Matrix.nonsing_inv_mul (A := J * Xᵀ * J) hA
+  calc
+    cartan J1 n X⁻¹
+        = -(J * (X⁻¹)ᵀ * J) := by simp [cartan, J]
+    _ = -(J * (Xᵀ)⁻¹ * J) := by
+          simp [Matrix.transpose_nonsing_inv]
+    _ = -((J * Xᵀ * J)⁻¹) := by
+          have hmul : (J * Xᵀ * J)⁻¹ = J * (Xᵀ)⁻¹ * J := by
+            calc
+              (J * Xᵀ * J)⁻¹
+                  = ((J * Xᵀ) * J)⁻¹ := by simp [Matrix.mul_assoc]
+              _ = J⁻¹ * (J * Xᵀ)⁻¹ := by simp [Matrix.mul_inv_rev]
+              _ = J⁻¹ * ((Xᵀ)⁻¹ * J⁻¹) := by simp [Matrix.mul_inv_rev]
+              _ = J * (Xᵀ)⁻¹ * J := by simp [hJinv, Matrix.mul_assoc]
+          rw [hmul]
+    _ = (cartan J1 n X)⁻¹ := by
+          calc
+            -((J * Xᵀ * J)⁻¹) = (-(J * Xᵀ * J))⁻¹ := by simpa using hneg_inv.symm
+            _ = (cartan J1 n X)⁻¹ := by simp [cartan, J, Matrix.mul_assoc]
 
 section Transpose
 lemma transpose_kronecker {m p : Type*} (A : Matrix m m ℝ) (B : Matrix p p ℝ) : (A ⊗ₖ B)ᵀ = (Aᵀ ⊗ₖ Bᵀ) := by

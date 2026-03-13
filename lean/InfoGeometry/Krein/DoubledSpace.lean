@@ -7,11 +7,11 @@ import Mathlib.Analysis.Normed.Lp.ProdLp
 /-!
 # InfoGeometry.Krein.DoubledSpace
 
-Direct canonical doubled states `WithLp 2 (E × E)` acting as a trace-class model.
+Direct canonical doubled states `WithLp 2 (E × E)` acting as an `L²` doubled model.
 We equip this product with the $L^2$ sum norm and Krein symmetries.
 
 Provides:
-- `DoubledSpace E`: the canonical trace-class doubled space
+- `DoubledSpace E`: the canonical doubled space
 - `modular_j`: swap isometry (modular swap)
 - `spectral_epsilon`: fundamental symmetry (sign flip)
 - `complex_i`: canonical complex structure $J \circ \epsilon$

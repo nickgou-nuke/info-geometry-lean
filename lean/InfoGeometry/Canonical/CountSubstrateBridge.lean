@@ -80,7 +80,7 @@ Count-first holographic package:
 from nontrivial empirical counts we construct an empirical probability state,
 then pair it with the existing constructive holographic-emergence chain.
 -/
-theorem countsFirst_holographicEmergence_package
+theorem countsFirst_holographicEmergence_package_of_isVacuumApexNull
     (N : CountSubstrate α)
     (hN : CountSubstrateNontrivial N)
     (Tflow : SinkhornTrajectory n)
@@ -108,7 +108,7 @@ theorem countsFirst_holographicEmergence_package
             t = vacuumApexTwistor (E := X) (Q := Q) v hNull) := by
   refine ⟨empiricalProbabilityState N hN, ?_, ?_⟩
   · exact empiricalProbabilityState_spec N hN
-  · exact holographicEmergence_package (n := n)
+  · exact holographicEmergence_package_of_isVacuumApexNull (n := n)
       (Tflow := Tflow) (CI := CI) (hAnom := hAnom) (Tw := Tw)
       (L := L) (IST := IST) (Q := Q) (v := v) (hNull := hNull)
 
@@ -116,7 +116,7 @@ theorem countsFirst_holographicEmergence_package
 Count-first holographic package in canonical zero-null form.
 This removes explicit `Q` and `hNull` parameters from the API.
 -/
-theorem countsFirst_holographicEmergence_package_zeroVacuumApexQuadraticForm
+theorem countsFirst_holographicEmergence_package
     (N : CountSubstrate α)
     (hN : CountSubstrateNontrivial N)
     (Tflow : SinkhornTrajectory n)
@@ -145,10 +145,45 @@ theorem countsFirst_holographicEmergence_package_zeroVacuumApexQuadraticForm
               (isVacuumApexNull_zeroVacuumApexQuadraticForm v)) := by
   refine ⟨empiricalProbabilityState N hN, ?_, ?_⟩
   · exact empiricalProbabilityState_spec N hN
-  · exact holographicEmergence_package_zeroVacuumApexQuadraticForm
+  · exact holographicEmergence_package
       (n := n)
       (Tflow := Tflow) (CI := CI) (hAnom := hAnom) (Tw := Tw)
       (L := L) (IST := IST) (v := v)
+
+/--
+Backward-compatible alias for the canonical zero-null count-first holographic package.
+-/
+theorem countsFirst_holographicEmergence_package_zeroVacuumApexQuadraticForm
+    (N : CountSubstrate α)
+    (hN : CountSubstrateNontrivial N)
+    (Tflow : SinkhornTrajectory n)
+    (CI : ConformalInference X)
+    (hAnom : CI.chiralAnomalyOperator ≠ 0)
+    (Tw : TwistedInference X)
+    (L : BayesianLoop X)
+    (IST : InfoSpectralTriple X)
+    (v : UnnormalizedProjectiveState (E := X)) :
+    ∃ P : ProbabilityDist α,
+      (∀ x : α, (P x).toReal = empirical_distribution N x)
+        ∧ EmergentTimeFlow n Tflow
+        ∧ AnomalyScalePhase CI
+        ∧ UpdateOrderPathDependent Tw.dual.nabla
+        ∧ (∃ (M : Coupling 2)
+            (hrow : HasPositiveRowSums 2 M)
+            (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))
+            (hcol : HasPositiveColSums 2 M)
+            (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
+            UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol)
+        ∧ AnomalyInflowClosure (E := X) L IST
+        ∧ (∃ t : DoubledTwistorSpace (E := X) zeroVacuumApexQuadraticForm,
+            t = vacuumApexTwistor (E := X)
+              zeroVacuumApexQuadraticForm
+              v
+              (isVacuumApexNull_zeroVacuumApexQuadraticForm v)) := by
+  exact countsFirst_holographicEmergence_package (n := n)
+    (N := N) (hN := hN)
+    (Tflow := Tflow) (CI := CI) (hAnom := hAnom) (Tw := Tw)
+    (L := L) (IST := IST) (v := v)
 
 end CountsToHolographic
 
@@ -314,7 +349,7 @@ Count-first holographic package with derived flow:
 the trajectory input is eliminated and replaced by the canonical
 count-induced Sinkhorn iterate trajectory.
 -/
-theorem countsFirst_holographicEmergence_of_countInducedTrajectory
+theorem countsFirst_holographicEmergence_of_countInducedTrajectory_of_isVacuumApexNull
     (N : CountSubstrate (Fin n))
     (hN : CountSubstrateNontrivial N)
     (CI : ConformalInference X)
@@ -339,7 +374,7 @@ theorem countsFirst_holographicEmergence_of_countInducedTrajectory
         ∧ AnomalyInflowClosure (E := X) L IST
         ∧ (∃ t : DoubledTwistorSpace (E := X) Q,
             t = vacuumApexTwistor (E := X) (Q := Q) v hNull) := by
-  exact countsFirst_holographicEmergence_package (n := n)
+  exact countsFirst_holographicEmergence_package_of_isVacuumApexNull (n := n)
     (N := N) (hN := hN)
     (Tflow := countInducedSinkhornTrajectory (n := n) N)
     (CI := CI) (hAnom := hAnom) (Tw := Tw)
@@ -347,6 +382,41 @@ theorem countsFirst_holographicEmergence_of_countInducedTrajectory
 
 /--
 Count-first holographic package with derived flow in canonical zero-null form.
+-/
+theorem countsFirst_holographicEmergence_of_countInducedTrajectory
+    (N : CountSubstrate (Fin n))
+    (hN : CountSubstrateNontrivial N)
+    (CI : ConformalInference X)
+    (hAnom : CI.chiralAnomalyOperator ≠ 0)
+    (Tw : TwistedInference X)
+    (L : BayesianLoop X)
+    (IST : InfoSpectralTriple X)
+    (v : UnnormalizedProjectiveState (E := X)) :
+    ∃ P : ProbabilityDist (Fin n),
+      (∀ x : Fin n, (P x).toReal = empirical_distribution N x)
+        ∧ EmergentTimeFlow n (countInducedSinkhornTrajectory (n := n) N)
+        ∧ AnomalyScalePhase CI
+        ∧ UpdateOrderPathDependent Tw.dual.nabla
+        ∧ (∃ (M : Coupling 2)
+            (hrow2 : HasPositiveRowSums 2 M)
+            (hcolRow2 : HasPositiveColSums 2 (rowNormalize 2 M hrow2))
+            (hcol2 : HasPositiveColSums 2 M)
+            (hrowCol2 : HasPositiveRowSums 2 (colNormalize 2 M hcol2)),
+            UpdateOrderHysteresis 2 M hrow2 hcolRow2 hcol2 hrowCol2)
+        ∧ AnomalyInflowClosure (E := X) L IST
+        ∧ (∃ t : DoubledTwistorSpace (E := X) zeroVacuumApexQuadraticForm,
+            t = vacuumApexTwistor (E := X)
+              zeroVacuumApexQuadraticForm
+              v
+              (isVacuumApexNull_zeroVacuumApexQuadraticForm v)) := by
+  exact countsFirst_holographicEmergence_package (n := n)
+    (N := N) (hN := hN)
+    (Tflow := countInducedSinkhornTrajectory (n := n) N)
+    (CI := CI) (hAnom := hAnom) (Tw := Tw)
+    (L := L) (IST := IST) (v := v)
+
+/--
+Backward-compatible alias for the canonical derived-flow count-first package.
 -/
 theorem countsFirst_holographicEmergence_of_countInducedTrajectory_zeroVacuumApexQuadraticForm
     (N : CountSubstrate (Fin n))
@@ -374,10 +444,8 @@ theorem countsFirst_holographicEmergence_of_countInducedTrajectory_zeroVacuumApe
               zeroVacuumApexQuadraticForm
               v
               (isVacuumApexNull_zeroVacuumApexQuadraticForm v)) := by
-  exact countsFirst_holographicEmergence_package_zeroVacuumApexQuadraticForm (n := n)
-    (N := N) (hN := hN)
-    (Tflow := countInducedSinkhornTrajectory (n := n) N)
-    (CI := CI) (hAnom := hAnom) (Tw := Tw)
+  exact countsFirst_holographicEmergence_of_countInducedTrajectory (n := n)
+    (N := N) (hN := hN) (CI := CI) (hAnom := hAnom) (Tw := Tw)
     (L := L) (IST := IST) (v := v)
 
 end CountsToHolographicDerivedFlow

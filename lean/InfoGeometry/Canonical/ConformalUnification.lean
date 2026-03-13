@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.SpectralInference
+import InfoGeometry.Canonical.ChiralEinsteinBridge
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 set_option linter.unusedSectionVars false
@@ -10,6 +11,8 @@ namespace InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.Canonical.SpectralInference
+open InfoGeometry.Canonical.ChiralEinsteinBridge
+open InfoGeometry.Canonical.RicciMongeAmpere
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 
@@ -131,6 +134,40 @@ theorem chiralAnomaly_eq_zero_of_projectors_commute
         = CI.metricChiralProjector * CI.spectralChiralProjector) :
     CI.chiralAnomalyOperator = 0 :=
   (CI.chiralAnomalyOperator_eq_zero_iff_projectors_commute).2 hComm
+
+/--
+Constructive projector-commutation closure from scalar anomaly-driven Kähler-Ricci
+dynamics at normalized RG fixed point.
+
+This discharges commutation without assuming it directly:
+the dynamics force `flow = 0` and `flow = chiralScale`, hence `chiralScale = 0`,
+which forces vanishing anomaly and therefore projector commutation.
+-/
+theorem projectors_commute_of_anomalyDriven_normalized_fixedpoint
+    (flow : ScalarRicciFlow E)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := E) flow s = 0)
+    (hAnomFlow :
+      SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow
+        (fun _ => CI.chiralScale)) :
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      = CI.metricChiralProjector * CI.spectralChiralProjector := by
+  have hFlowZero : ∀ s : ℝ, flow s = 0 :=
+    normalizedKaehlerRicci_fixedpoint_eq_zero
+      (E := E) (flow := flow) hNorm hFixed
+  have hFlowTracksScale : ∀ s : ℝ, flow s = CI.chiralScale :=
+    anomalyDrivenScalarRicci_fixedpoint_tracks_source
+      (E := E) (flow := flow) (A := fun _ => CI.chiralScale)
+      hAnomFlow hFixed
+  have hScaleZero : CI.chiralScale = 0 := by
+    calc
+      CI.chiralScale = flow 0 := by simpa using (hFlowTracksScale 0).symm
+      _ = 0 := hFlowZero 0
+  have hNormAnom : ‖CI.chiralAnomalyOperator‖₊ = 0 := by
+    simpa [chiralScale, epsilon, chiralAnomalyOperator] using hScaleZero
+  have hAnomZero : CI.chiralAnomalyOperator = 0 :=
+    (nnnorm_eq_zero).1 hNormAnom
+  exact CI.projectors_commute_of_chiralAnomaly_eq_zero hAnomZero
 
 /--
 Cartan-like Decomposition of the Information Manifold.

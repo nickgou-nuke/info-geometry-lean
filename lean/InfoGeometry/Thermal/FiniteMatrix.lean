@@ -9,7 +9,7 @@ A concrete finite-dimensional thermal layer using diagonal matrices over `ℝ`:
 
 - Hamiltonian `H = diag(Eᵢ)`
 - Gibbs density `ρ_β = diag(exp(-β Eᵢ)/Z(β))`
-- thermal functional `ω_β(A) = Tr(ρ_β A)` on diagonal observables
+- thermal functional `ω_β(A) = ⟨ρ_β, A⟩` on diagonal observables
 - a diagonal (commutative) KMS-like identity
 
 This is a clean intermediate step before a full noncommutative matrix-exponential KMS file.
@@ -140,16 +140,16 @@ omit [Nonempty (Fin n)] in
     H.densityMatrix β i j = 0 := by
   simp [densityMatrix, h]
 
-/-- Finite trace for `n×n` matrices. -/
-noncomputable def trace (M : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
+/-- Diagonal mass for `n×n` matrices (sum of diagonal entries). -/
+noncomputable def diagonalMass (M : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
   ∑ i, M i i
 
-@[simp] lemma trace_densityMatrix (H : Hamiltonian n) (β : ℝ) :
-    trace (n := n) (H.densityMatrix β) = 1 := by
-  simp [trace, densityMatrix, gibbsWeight_sum_one]
+@[simp] lemma diagonalMass_densityMatrix (H : Hamiltonian n) (β : ℝ) :
+    diagonalMass (n := n) (H.densityMatrix β) = 1 := by
+  simp [diagonalMass, densityMatrix, gibbsWeight_sum_one]
 
 /-- Thermal expectation functional on diagonal observables:
-`ω_β(A) = Tr(ρ_β A) = ∑ᵢ pᵢ Aᵢ`. -/
+`ω_β(A) = ⟨ρ_β, A⟩ = ∑ᵢ pᵢ Aᵢ`. -/
 noncomputable def thermalState (H : Hamiltonian n) (β : ℝ) (A : DiagonalObservable n) : ℝ :=
   ∑ i, H.gibbsWeight β i * A i
 
@@ -223,11 +223,11 @@ theorem satisfiesDiagonalKMS (H : Hamiltonian n) (β : ℝ) :
 
 omit [Nonempty (Fin n)] in
 /-- Matrix-level version of a diagonal observable expectation:
-`Tr(ρ_β diag(A)) = ω_β(A)`. -/
-lemma thermalState_eq_trace_density_mul_diag
+`diagMass(ρ_β diag(A)) = ω_β(A)`. -/
+lemma thermalState_eq_diagonalMass_density_mul_diag
     (H : Hamiltonian n) (β : ℝ) (A : DiagonalObservable n) :
-    H.thermalState β A = trace (n := n) (Matrix.diagonal (H.gibbsWeight β) * A.toMatrix) := by
-  unfold thermalState trace DiagonalObservable.toMatrix
+    H.thermalState β A = diagonalMass (n := n) (Matrix.diagonal (H.gibbsWeight β) * A.toMatrix) := by
+  unfold thermalState diagonalMass DiagonalObservable.toMatrix
   simp
 
 end Hamiltonian

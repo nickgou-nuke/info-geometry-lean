@@ -121,9 +121,7 @@ export InfoGeometry.Canonical.ChiralTorsionBridge (
   vacuumApexTwistor
   ChiralTorsionChentsovGibbsState
   chentsov_and_gibbs_of_state
-  ChiralTorsionChentsovGibbsBridge
   torsion_nonzero_of_chiral
-  chentsov_and_gibbs_of_bridge
 )
 
 export InfoGeometry.Canonical.AnomalyInflow (

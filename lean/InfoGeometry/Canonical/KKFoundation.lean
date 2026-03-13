@@ -7,5 +7,5 @@ import InfoGeometry.Canonical.SuperAnomaly
 
 Canonical Phase-6A/6B interface umbrella:
 - bounded KK interface (`IsCompactOperator`, `KasparovCycle`, `KasparovProductData`)
-- physical bridge interfaces (`SpinConnection`, `SuperTraceLike`)
+- physical bridge interfaces (`SpinConnection`, `SuperWeightLike`)
 -/

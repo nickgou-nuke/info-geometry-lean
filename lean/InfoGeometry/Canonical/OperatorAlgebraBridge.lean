@@ -69,24 +69,9 @@ theorem sinkhorn_kms_closure_in_cstar_target
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
-    (h_control : SinkhornKMSControl n T K ω β) :
-    IsCStarLayer (Obs := Obs) ∧ SinkhornKMSClosure n T K ω β := by
-  exact sinkhorn_kmsClosure_with_cstarRealization_of_sinkhornControl
-    (n := n) (F := F) (Obs := Obs) real
-    (T := T) (K := K) (ω := ω) (β := β) h_control
-
-/--
-Closure-first variant of `sinkhorn_kms_closure_in_cstar_target`.
--/
-theorem sinkhorn_kms_closure_in_cstar_target_of_kmsClosure
-    (real : AQFTOperatorRealization (F := F) (Obs := Obs))
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
     (h_closure : SinkhornKMSClosure n T K ω β) :
     IsCStarLayer (Obs := Obs) ∧ SinkhornKMSClosure n T K ω β := by
-  exact sinkhorn_kmsClosure_with_cstarRealization_of_kmsClosure
+  exact sinkhorn_kmsClosure_with_cstarRealization
     (n := n) (F := F) (Obs := Obs) real
     (T := T) (K := K) (ω := ω) (β := β) h_closure
 
@@ -124,46 +109,6 @@ theorem cstar_vonneumann_kms_fock_package
     (V : InfoGeometry.Canonical.RicciMongeAmpere.SplitVielbein Kgeo x)
     (Γ : InfoGeometry.Canonical.RicciMongeAmpere.SpinConnection Kgeo x V)
     (ψ : DoubledSpace E)
-    (h_control : SinkhornKMSControl n T K ω β)
-    (h_vac_split : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsCStarLayer (Obs := ObsKMS) ∧
-      IsVonNeumannLayer (Obs := ObsFock) ∧
-      SinkhornKMSClosure n T K ω β ∧
-      grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-          = ψ + η • H ψ := by
-  exact aqft_interface_package_with_realizations_of_sinkhornControl
-    (n := n)
-    (F := F) (ObsKMS := ObsKMS)
-    (E := E) (ObsFock := ObsFock)
-    (realKMS := real_kms) (realFock := real_fock)
-    (T := T) (K := K) (ω := ω) (β := β)
-    (η := η) (B := B) (H := H)
-    (R := R) (Kgeo := Kgeo) (x := x)
-    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
-    h_control h_vac_split
-
-/--
-Closure-first variant of the canonical AQFT package.
--/
-theorem cstar_vonneumann_kms_fock_package_of_kmsClosure
-    (real_kms : AQFTOperatorRealization (F := F) (Obs := ObsKMS))
-    (real_fock : AQFTOperatorRealization (F := E) (Obs := ObsFock))
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : InfoGeometry.Canonical.RicciMongeAmpere.SplitVielbein Kgeo x)
-    (Γ : InfoGeometry.Canonical.RicciMongeAmpere.SpinConnection Kgeo x V)
-    (ψ : DoubledSpace E)
     (h_closure : SinkhornKMSClosure n T K ω β)
     (h_vac_split : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
     IsCStarLayer (Obs := ObsKMS) ∧
@@ -173,7 +118,7 @@ theorem cstar_vonneumann_kms_fock_package_of_kmsClosure
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
             (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
           = ψ + η • H ψ := by
-  exact aqft_interface_package_with_realizations_of_kmsClosure
+  exact aqft_interface_package_with_realizations
     (n := n)
     (F := F) (ObsKMS := ObsKMS)
     (E := E) (ObsFock := ObsFock)

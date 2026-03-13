@@ -79,16 +79,16 @@ variable [Invertible (2 : ℝ)]
 variable [Module.Free ℝ (Op E)] [Module.Finite ℝ (Op E)]
 
 /--
-Constructive Fisher-Killing proportionality from an explicit global bridge.
+Constructive Fisher-Killing proportionality from an explicit global scaling relation.
 This matches the actual API of `SymmetricLieAlgebra`.
 -/
-theorem fisher_metric_eq_killing_form_constructive
+theorem fisher_metric_eq_killing_form_of_scaled_relation
     (S : SymmetricLieAlgebra ℝ (Op E))
     (X0 Y0 : Op E)
     (v0 : DSpace E)
     (hB0 : S.B (S.P_minus X0) (S.P_minus Y0) ≠ 0)
     (hH0 : hessian_indefinite_form (E := E) (X0 v0) (Y0 v0) ≠ 0)
-    (hBridge :
+    (hScaled :
       ∀ (X Y : Op E) (v : DSpace E),
         hessian_indefinite_form (E := E) (X v) (Y v) *
           S.B (S.P_minus X0) (S.P_minus Y0)
@@ -108,7 +108,7 @@ theorem fisher_metric_eq_killing_form_constructive
   let Bxy : ℝ := S.B (S.P_minus X) (S.P_minus Y)
   have hscaled :
       hessian_indefinite_form (E := E) (X v) (Y v) * B0 = H0 * Bxy := by
-    simpa [B0, H0, Bxy] using hBridge X Y v
+    simpa [B0, H0, Bxy] using hScaled X Y v
   have hdiv :
       (hessian_indefinite_form (E := E) (X v) (Y v) * B0) / B0 =
         (H0 * Bxy) / B0 := by
@@ -124,34 +124,6 @@ theorem fisher_metric_eq_killing_form_constructive
     hessian_indefinite_form (E := E) (X v) (Y v) = (H0 * Bxy) / B0 := hmain
     _ = (H0 / B0) * Bxy := by ring
     _ = (H0 / B0) * S.B (S.P_minus X) (S.P_minus Y) := by rfl
-
-/--
-User-facing Fisher-Killing bridge on the ambient symmetric Lie algebra.
-
-It is intentionally stated on `Op E`, not on `InformationKillingField`,
-because this subtype does not automatically inherit the full Lie-algebra
-structure needed by `killingForm`.
--/
-theorem fisher_metric_eq_killing_form
-    (S : SymmetricLieAlgebra ℝ (Op E))
-    (X0 Y0 : Op E)
-    (v0 : DSpace E)
-    (hB0 : S.B (S.P_minus X0) (S.P_minus Y0) ≠ 0)
-    (hH0 : hessian_indefinite_form (E := E) (X0 v0) (Y0 v0) ≠ 0)
-    (hBridge :
-      ∀ (X Y : Op E) (v : DSpace E),
-        hessian_indefinite_form (E := E) (X v) (Y v) *
-          S.B (S.P_minus X0) (S.P_minus Y0)
-            =
-        hessian_indefinite_form (E := E) (X0 v0) (Y0 v0) *
-          S.B (S.P_minus X) (S.P_minus Y)) :
-    ∃ c : ℝ, c ≠ 0 ∧
-      ∀ (X Y : Op E) (v : DSpace E),
-        hessian_indefinite_form (E := E) (X v) (Y v) =
-          c * S.B (S.P_minus X) (S.P_minus Y) := by
-  exact fisher_metric_eq_killing_form_constructive
-    (E := E) (S := S) (X0 := X0) (Y0 := Y0) (v0 := v0)
-    (hB0 := hB0) (hH0 := hH0) (hBridge := hBridge)
 
 end FisherKilling
 

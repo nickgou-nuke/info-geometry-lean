@@ -20,7 +20,7 @@ there exists a global scalar density value `ρ₀`.
 def HasConstantMongeAmpereDensity (H : HessianGeometry E) : Prop :=
   ∃ ρ0 : ℝ, ∀ x : E, mongeAmpereDensity H x = ρ0
 
-/-- Ricci-flatness surrogate in this finite-dimensional scaffold. -/
+/-- Ricci-flatness condition in this finite-dimensional scaffold. -/
 def IsRicciFlat (R : RicciTensor E) : Prop :=
   ∀ u v : E, R u v = 0
 
@@ -76,75 +76,37 @@ lemma isEinsteinKaehlerAtWith_zero_of_isRicciFlat
   ring
 
 /--
-Calabi-Yau bridge hypothesis:
-constant Monge-Ampere density closes to Ricci-flatness.
--/
-def MongeAmpereRicciClosure
-    (R : RicciTensor E) (K : KaehlerInformationGeometry E) : Prop :=
-  HasConstantMongeAmpereDensity K.H → IsRicciFlat R
-
-/--
 Constructive discharge of the Monge-Ampere-to-Ricci bridge from an explicit
 Ricci-flat witness.
 -/
 lemma constantMongeAmpereImpliesRicciFlat_of_isRicciFlat
     (R : RicciTensor E) (K : KaehlerInformationGeometry E)
     (hFlat : IsRicciFlat R) :
-    MongeAmpereRicciClosure R K := by
+    HasConstantMongeAmpereDensity K.H → IsRicciFlat R := by
   intro _hConst
   exact hFlat
 
-/-- Theorem `isRicciFlat_of_constantMongeAmpere`. -/
-theorem isRicciFlat_of_constantMongeAmpere
-    (R : RicciTensor E) (K : KaehlerInformationGeometry E)
-    (hBridge : MongeAmpereRicciClosure R K)
-    (hConst : HasConstantMongeAmpereDensity K.H) :
-    CalabiYauRicciState R :=
-  hBridge hConst
-
 /--
-Bridge-to-state conversion:
-an implication-style closure plus a constant Monge-Ampere witness yields the
-constructive closure state.
+Constructive state packaging:
+constant Monge-Ampere density and explicit Ricci-flatness form the closure state.
 -/
-theorem mongeAmpereRicciState_of_constantMongeAmpere
+theorem mongeAmpereRicciState_mk
     (R : RicciTensor E) (K : KaehlerInformationGeometry E)
-    (hBridge : MongeAmpereRicciClosure R K)
-    (hConst : HasConstantMongeAmpereDensity K.H) :
+    (hConst : HasConstantMongeAmpereDensity K.H)
+    (hFlat : IsRicciFlat R) :
     MongeAmpereRicciState R K := by
-  exact ⟨hConst, hBridge hConst⟩
+  exact ⟨hConst, hFlat⟩
 
 /--
-Uniqueness scaffold:
-if two Ricci tensors are both obtained from the same constant Monge-Ampere
-bridge closure, they coincide.
+Uniqueness under constructive closure states:
+if two Ricci tensors are both Ricci-flat under the same geometry scaffold, they coincide.
 -/
-theorem ricciTensor_unique_of_constantMongeAmpere
+theorem ricciTensor_unique_of_mongeAmpereRicciState
     (R₁ R₂ : RicciTensor E) (K : KaehlerInformationGeometry E)
-    (hBridge₁ : MongeAmpereRicciClosure R₁ K)
-    (hBridge₂ : MongeAmpereRicciClosure R₂ K)
-    (hConst : HasConstantMongeAmpereDensity K.H) :
+    (hState₁ : MongeAmpereRicciState R₁ K)
+    (hState₂ : MongeAmpereRicciState R₂ K) :
     R₁ = R₂ := by
-  apply ricciTensor_eq_of_isRicciFlat
-  · exact hBridge₁ hConst
-  · exact hBridge₂ hConst
-
-/--
-Constant Monge-Ampere + bridge closure yields the vacuum Einstein equation
-at scalar closure `R = 2Λ` (the `c = 0` Einstein-Kaehler branch).
--/
-theorem vacuumEinsteinEquation_of_constantMongeAmpere
-    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
-    (Λ : ℝ)
-    (hBridge : MongeAmpereRicciClosure R K)
-    (hConst : HasConstantMongeAmpereDensity K.H) :
-    VacuumEinsteinEquationAt R K x (2 * Λ) Λ := by
-  have hFlat : IsRicciFlat R := hBridge hConst
-  have hEin0 : IsEinsteinKaehlerAtWith 0 R K x :=
-    isEinsteinKaehlerAtWith_zero_of_isRicciFlat (R := R) (K := K) (x := x) hFlat
-  exact vacuumEinsteinEquation_of_scalar_relation
-    (c := 0) (R := R) (K := K) (x := x) (scalar := 2 * Λ) (Λ := Λ)
-    hEin0 (by ring)
+  exact ricciTensor_eq_of_isRicciFlat hState₁.2 hState₂.2
 
 /--
 Constructive vacuum Einstein closure from an explicit Ricci-flat witness

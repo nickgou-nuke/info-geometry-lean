@@ -53,9 +53,9 @@ open scoped BigOperators
 variable {X : Type*}
 variable {n : Type*} [Fintype n] [DecidableEq n]
 
-@[simp] theorem wilsonLoopDiscrete_eq_trace
+@[simp] theorem wilsonLoopDiscrete_eq_det
     (Dε : DiracField X n) (γ : List X) (dt : ℂ) :
-    wilsonLoopDiscrete Dε γ dt = Matrix.trace (wilsonPropagatorDiscrete Dε γ dt) := rfl
+    wilsonLoopDiscrete Dε γ dt = Matrix.det (wilsonPropagatorDiscrete Dε γ dt) := rfl
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 

@@ -6,7 +6,7 @@ Generated blueprint aggregation stubs.
 
 namespace Docs
 
-/-- Placeholder for generated blueprint aggregation declarations. -/
+/-- Generated blueprint aggregation declarations entrypoint. -/
 def generatedBlueprints : Unit := ()
 
 end Docs

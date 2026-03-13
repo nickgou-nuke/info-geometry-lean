@@ -141,36 +141,6 @@ noncomputable abbrev KL {X Θ : Type*} [Fintype X] [Fintype Θ] [MeasurableSpace
     (p q : Joint X Θ) : ℝ≥0∞ := kl p q
 
 /--
-KL chain-rule decomposition:
-`KL(p(x,θ) ‖ q(x,θ)) = KL(p(x) ‖ q(x)) + ∑_x p(x) KL(p(θ|x) ‖ q(θ|x))`
--/
-def KlChainRule
-    (p q : Joint X Θ)
-    (hq : ∀ x : X, x ∈ (marginal_x q).support)
-    (hp : ∀ x : X, x ∈ (marginal_x p).support) :
-    Prop :=
-  kl p q =
-    InfoGeometry.kl_div (α := X) (marginal_x p).toMeasure (marginal_x q).toMeasure +
-    (∑ x : X, (p.map Prod.fst x) *
-      InfoGeometry.kl_div (α := Θ)
-        (cond_theta_given_x p x (hp x)).toMeasure
-        (cond_theta_given_x q x (hq x)).toMeasure)
-
-/-- Chain-rule equality under an explicit chain-rule hypothesis. -/
-theorem kl_chain_rule_of
-    (p q : Joint X Θ)
-    (hq : ∀ x : X, x ∈ (marginal_x q).support)
-    (hp : ∀ x : X, x ∈ (marginal_x p).support)
-    (hchain : KlChainRule p q hq hp) :
-    kl p q =
-      InfoGeometry.kl_div (α := X) (marginal_x p).toMeasure (marginal_x q).toMeasure +
-      (∑ x : X, (p.map Prod.fst x) *
-        InfoGeometry.kl_div (α := Θ)
-          (cond_theta_given_x p x (hp x)).toMeasure
-          (cond_theta_given_x q x (hq x)).toMeasure) :=
-  hchain
-
-/--
 Full-support transport along a marginal identity.
 This is only a convenience lemma for the finite/full-support formulation.
 -/
@@ -459,85 +429,6 @@ lemma cond_theta_given_x_jeffrey_joint
   simpa [jeffrey_joint] using
     (cond_theta_given_x_assemble (p_x := p_x)
       (r := fun x => cond_theta_given_x q x (hq x)) (x := x) hx)
-
-/--
-KL-Pythagorean theorem for Jeffrey update, under chain-rule hypotheses.
-
-The Jeffrey projection splits KL into a marginal term plus a residual term.
--/
-theorem kl_pythagorean_jeffrey_of
-    (p q : Joint X Θ)
-    (p_x : FinProb X)
-    (hq : ∀ x : X, x ∈ (marginal_x q).support)
-    (hp : ∀ x : X, x ∈ (marginal_x p).support)
-    (hmarg : marginal_x p = p_x)
-    (hqStar : ∀ x : X, x ∈ (marginal_x (jeffrey_joint q p_x hq)).support)
-    (hchain1 : KlChainRule p q hq hp)
-    (hchain2 : KlChainRule p (jeffrey_joint q p_x hq) hqStar hp) :
-    kl p q =
-      kl p (jeffrey_joint q p_x hq) +
-      InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure := by
-  let qStar : Joint X Θ := jeffrey_joint q p_x hq
-
-  have hqStar' : ∀ x : X, x ∈ (marginal_x qStar).support := by
-    intro x
-    simpa [qStar] using hqStar x
-
-  have hchain2' : KlChainRule p qStar hqStar' hp := by
-    simpa [qStar] using hchain2
-
-  have hmx_qstar : marginal_x qStar = p_x := by
-    simpa [qStar] using marginal_x_jeffrey_joint (q := q) (p_x := p_x) hq
-
-  have hp_x_full : ∀ x : X, x ∈ p_x.support := by
-    intro x
-    simpa [hmx_qstar] using hqStar' x
-
-  have hkl_self :
-      InfoGeometry.kl_div (α := X) p_x.toMeasure p_x.toMeasure = 0 := by
-    simpa [InfoGeometry.kl_div] using
-      (InformationTheory.klDiv_self (μ := (p_x.toMeasure : MeasureTheory.Measure X)))
-
-  have hres :
-      kl p qStar =
-        ∑ x : X, (p.map Prod.fst x) *
-          InfoGeometry.kl_div (α := Θ)
-            (cond_theta_given_x p x (hp x)).toMeasure
-            (cond_theta_given_x q x (hq x)).toMeasure := by
-    have hcond' :
-        ∀ x : X,
-          cond_theta_given_x qStar x (hqStar' x) =
-            cond_theta_given_x q x (hq x) := by
-      intro x
-      have hxpx : x ∈ p_x.support := hp_x_full x
-      simpa [qStar] using
-        (cond_theta_given_x_jeffrey_joint (q := q) (p_x := p_x) (hq := hq) (x := x) hxpx)
-    have htmp :=
-      kl_chain_rule_of (p := p) (q := qStar) (hq := hqStar') (hp := hp) hchain2'
-    rw [htmp]
-    rw [hmarg, hmx_qstar, hkl_self, zero_add]
-    refine Finset.sum_congr rfl ?_
-    intro x hx
-    rw [hcond' x]
-
-  calc
-    kl p q
-        =
-          InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure +
-          (∑ x : X, (p.map Prod.fst x) *
-            InfoGeometry.kl_div (α := Θ)
-              (cond_theta_given_x p x (hp x)).toMeasure
-              (cond_theta_given_x q x (hq x)).toMeasure) := by
-      rw [kl_chain_rule_of (p := p) (q := q) (hq := hq) (hp := hp) hchain1]
-      simp [hmarg]
-    _ =
-          InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure +
-          kl p qStar := by
-      rw [hres]
-    _ =
-          kl p qStar +
-          InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure := by
-      simpa [add_comm, add_left_comm, add_assoc]
 
 /--
 Constructive KL-Pythagorean theorem in `toReal` form for strictly positive finite joints.

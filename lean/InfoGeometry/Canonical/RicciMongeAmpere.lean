@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.CurvatureRGFlow
 import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.KaehlerGeometry
 import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.LinearAlgebra.Determinant
 
 open scoped BigOperators
 
@@ -29,7 +29,7 @@ structure RicciData (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   ricci : RicciTensor E
   symmetric : ∀ u v, ricci u v = ricci v u
 
-/-- Scalar curvature surrogate from a chosen finite frame. -/
+/-- Scalar curvature computed on a chosen finite frame. -/
 noncomputable def scalarCurvatureOnFrame
     {n : Nat} (R : RicciTensor E) (frame : Fin n → E) : ℝ :=
   ∑ i : Fin n, R (frame i) (frame i)
@@ -44,7 +44,7 @@ def IsEinsteinKaehlerAt
 
 /--
 Under the Einstein-Kähler condition, frame scalar curvature is the same
-constant multiple of the frame metric trace.
+constant multiple of the frame metric diagonal energy sum.
 -/
 lemma scalarCurvatureOnFrame_eq_einstein_multiple
     {n : Nat}
@@ -260,7 +260,7 @@ section EinsteinEquation
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- Stress-energy tensor surrogate in the information-geometric setting. -/
+/-- Stress-energy tensor in the information-geometric setting. -/
 abbrev StressEnergyTensor (E : Type*) := E → E → ℝ
 
 /-- Einstein tensor `G = Ric - (1/2) R g` at basepoint `x`. -/
@@ -357,7 +357,7 @@ structure SplitVielbein
   orthogonal : K.H.metric x ePlus eMinus = 0
 
 /--
-Minimal spin-connection surrogate as a linear transport map preserving the
+Minimal spin-connection model as a linear transport map preserving the
 split vielbein relations.
 -/
 structure SpinConnection
@@ -409,7 +409,7 @@ theorem einsteinTensor_transport_split_mixed_eq_zero_of_scalar_closure
       (c := c) (R := R) (K := K) (x := x) (scalar := scalar) (V := V) (Γ := Γ) hEin]
   simp [hScalar]
 
-/-- Skew-symmetry condition for a curvature 2-form surrogate. -/
+/-- Skew-symmetry condition for a curvature 2-form model. -/
 def IsSkewCurvatureTwoForm (Ω : E → E → E →ₗ[ℝ] E) : Prop :=
   ∀ u v : E, Ω u v = - Ω v u
 
@@ -602,11 +602,11 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [CompleteSpace E] [FiniteDimensional ℝ E]
 
 /--
-Monge-Ampère density surrogate from the Hessian metric operator:
-`exp(Tr(∇²ψ(x)))`.
+Monge-Ampère density model from the Hessian metric operator:
+`exp(log |det(∇²ψ(x))|)`.
 -/
 noncomputable def mongeAmpereDensity (H : HessianGeometry E) (x : E) : ℝ :=
-  Real.exp (LinearMap.trace ℝ E (H.metricOp x).toLinearMap)
+  Real.exp (Real.log (|LinearMap.det (H.metricOp x).toLinearMap|))
 
 /-- Target-form Monge-Ampère equation against a prescribed density `ρ`. -/
 def SatisfiesMongeAmpere (H : HessianGeometry E) (ρ : E → ℝ) : Prop :=
@@ -616,20 +616,17 @@ def SatisfiesMongeAmpere (H : HessianGeometry E) (ρ : E → ℝ) : Prop :=
 def SatisfiesMongeAmperePotential (H : HessianGeometry E) (Φ : E → ℝ) : Prop :=
   ∀ x : E, mongeAmpereDensity H x = Real.exp (Φ x)
 
-omit [FiniteDimensional ℝ E] in
 /-- Lemma `satisfiesMongeAmpere_iff`. -/
 lemma satisfiesMongeAmpere_iff
     (H : HessianGeometry E) (ρ : E → ℝ) :
     SatisfiesMongeAmpere H ρ ↔ ∀ x : E, mongeAmpereDensity H x = ρ x := Iff.rfl
 
-omit [FiniteDimensional ℝ E] in
 /-- Lemma `satisfiesMongeAmperePotential_iff`. -/
 lemma satisfiesMongeAmperePotential_iff
     (H : HessianGeometry E) (Φ : E → ℝ) :
     SatisfiesMongeAmperePotential H Φ ↔
       ∀ x : E, mongeAmpereDensity H x = Real.exp (Φ x) := Iff.rfl
 
-omit [FiniteDimensional ℝ E] in
 /-- Lemma `mongeAmpereDensity_pos`. -/
 lemma mongeAmpereDensity_pos (H : HessianGeometry E) (x : E) :
     0 < mongeAmpereDensity H x := by
@@ -640,16 +637,15 @@ lemma mongeAmpereDensity_pos (H : HessianGeometry E) (x : E) :
 noncomputable def spectralMongeAmpereDensity (IST : InfoSpectralTriple E) : ℝ :=
   mongeAmpereDensity IST.H IST.x₀
 
-omit [FiniteDimensional ℝ E] in
 /-- Lemma `spectralMongeAmpereDensity_eq_exp_spectralVolume`. -/
 lemma spectralMongeAmpereDensity_eq_exp_spectralVolume (IST : InfoSpectralTriple E) :
-    spectralMongeAmpereDensity IST = Real.exp (spectralVolume IST) := rfl
+    spectralMongeAmpereDensity IST = Real.exp (spectralVolume IST) := by
+  simp [spectralMongeAmpereDensity, mongeAmpereDensity, InfoGeometry.Canonical.HeatKernel.spectralVolume]
 
 /-- Heat-kernel/Monge-Ampère consistency at the basepoint. -/
 def MongeAmpereConsistentWithHeatKernel (IST : InfoSpectralTriple E) : Prop :=
   spectralMongeAmpereDensity IST = Real.exp (a0 IST)
 
-omit [FiniteDimensional ℝ E] in
 /-- Lemma `mongeAmpereConsistentWithHeatKernel`. -/
 lemma mongeAmpereConsistentWithHeatKernel (IST : InfoSpectralTriple E) :
     MongeAmpereConsistentWithHeatKernel IST := by

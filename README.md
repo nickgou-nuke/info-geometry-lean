@@ -5,6 +5,7 @@ Raw facts:
 - Lean LOC (all `.lean` files under `lean/`): `41,866`
 - `sorry`/`admit` in `lean/`: `0`
 - Full project check: `lake build -R`
+- Surrogate-isolation audit: `scripts/audit_surrogates.sh`
 
 ## Core synthesis
 

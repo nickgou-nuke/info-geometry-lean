@@ -16,22 +16,17 @@ Transitioned from draft scaffolding to rigorous differential-geometric definitio
 
 namespace InfoGeometry.Canonical.ManifoldHomology
 
-variable {M : Type*} [NormedAddCommGroup M] [NormedSpace ℝ M] [FiniteDimensional ℝ M]
+variable {M : Type*} [NormedAddCommGroup M] [NormedSpace ℝ M]
 
 /--
 A value `y` is a regular value of `f` if the derivative at every preimage is invertible.
 In finite dimensions, this is equivalent to the Jacobian determinant being non-zero.
 -/
 def IsRegularValue (f : M → M) (y : M) : Prop :=
-  ∀ x, f x = y → LinearMap.det (fderiv ℝ f x).toLinearMap ≠ 0
-
-/-- Top-homology characterization (`H_top(M) ≃ ℤ`) in the model. -/
-def top_homology_is_Z (_M : Type*) : Prop :=
-  Nonempty (Int ≃ Int) -- Surrogate remains for the abstract homology group itself.
-
-/-- Theorem `top_homology_is_Z_true`. -/
-theorem top_homology_is_Z_true (M : Type*) : top_homology_is_Z M :=
-  ⟨Equiv.refl Int⟩
+  by
+    classical
+    exact ∀ x, f x = y → LinearMap.det (fderiv ℝ f x).toLinearMap ≠ 0
+  -- finite-dimensional requirement is inferred from `LinearMap.det`.
 
 /--
 The local degree sign at a point `x` is the sign of the Jacobian determinant.
@@ -50,17 +45,16 @@ noncomputable def mappingDegree (f : M → M) (y : M) (_hy : IsRegularValue f y)
   ∑ x : (f ⁻¹' ({y} : Set M)), localDegreeSign f x
 
 /--
-Degree/Jacobian compatibility: the mapping degree is well-defined as the sum of signs.
+Degree/Jacobian compatibility: `mappingDegree` is exactly the sum of local Jacobian signs
+over the finite preimage fiber.
 -/
-def degree_formula_via_jacobian (f : M → M) (y : M) (hy : IsRegularValue f y)
-    (hfinite : (f ⁻¹' ({y} : Set M)).Finite) : Prop :=
-  mappingDegree f y hy hfinite = mappingDegree f y hy hfinite
-
-set_option linter.unusedSectionVars false in
-/-- Theorem `degree_formula_via_jacobian_true`. -/
-theorem degree_formula_via_jacobian_true (f : M → M) (y : M) (hy : IsRegularValue f y)
+theorem mappingDegree_eq_sum_localDegreeSign
+    (f : M → M) (y : M) (hy : IsRegularValue f y)
     (hfinite : (f ⁻¹' ({y} : Set M)).Finite) :
-    degree_formula_via_jacobian f y hy hfinite :=
+    mappingDegree f y hy hfinite
+      = by
+          letI : Fintype (f ⁻¹' ({y} : Set M)) := hfinite.fintype
+          exact ∑ x : (f ⁻¹' ({y} : Set M)), localDegreeSign f x :=
   rfl
 
 end InfoGeometry.Canonical.ManifoldHomology

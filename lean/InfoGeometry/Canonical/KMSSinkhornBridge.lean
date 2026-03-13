@@ -828,41 +828,6 @@ theorem sinkhorn_kmsControl_of_ibDynamics_weighted_from_thermalVacuum
     (Ω := vac.Omega) vac.vacuum_nonzero hStruct
 
 /--
-Backward-compatible unbundled form of the expectation-seed theorem.
--/
-theorem sinkhorn_kmsControl_of_ibDynamics_weighted_from_ibData
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (β : ℝ)
-    {Xib Yib Tib : Type}
-    [Fintype Xib] [Fintype Yib] [Fintype Tib]
-    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
-    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
-    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
-    (prob : IBProblem (X := Xib) (Y := Yib))
-    (pTrajectory : Nat → Xib → FinProb Tib)
-    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
-    (x0 : Xib) (t0 : Tib)
-    (Ω : DoubledSpace F)
-    (hΩ : Ω ≠ 0)
-    (hModularOnOmega :
-      ∀ B : AlgebraEnd F,
-        modularShift (E := F) K β B Ω = B Ω)
-    (hCyclicOnOmega :
-      ∀ A B : AlgebraEnd F,
-        inner ℝ ((A * B) Ω) Ω = inner ℝ ((B * A) Ω) Ω) :
-    SinkhornKMSControl n T K
-      (ibInducedObservableWeighted
-        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
-  exact sinkhorn_kmsControl_of_ibDynamics_weighted_from_expectationSeed
-    (n := n) (T := T) (K := K) (β := β)
-    (prob := prob) (pTrajectory := pTrajectory)
-    hStep (x0 := x0) (t0 := t0)
-    (Ω := Ω) hΩ
-    ⟨hModularOnOmega, hCyclicOnOmega⟩
-
-/--
 Fully explicit weighted IB-to-Sinkhorn control using derivable seed-KMS inputs:
 joint-kernel modular defect and commutator orthogonality on `Ω`.
 -/

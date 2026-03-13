@@ -65,6 +65,107 @@ noncomputable def modularSpinConnection
   preserves_minus := V.minus_norm
   preserves_orthogonal := V.orthogonal
 
+/-- Linear embedding of `E` into the physical channel of `HilbertDoubled E`. -/
+noncomputable def doubledPlusEmbedL : E →ₗ[ℝ] HilbertDoubled E where
+  toFun x := Krein.to_doubled x (0 : E)
+  map_add' x y := by
+    simpa [Krein.to_doubled] using
+      (WithLp.toLp_add (p := (2 : ENNReal)) (x := (x, (0 : E))) (y := (y, (0 : E))))
+  map_smul' a x := by
+    simpa [Krein.to_doubled] using
+      (WithLp.toLp_smul (p := (2 : ENNReal)) (c := a) (x := (x, (0 : E))))
+
+/-- Linear projection from `HilbertDoubled E` onto the physical channel `E`. -/
+noncomputable def doubledPlusProjectL : HilbertDoubled E →ₗ[ℝ] E :=
+  (Krein.fst_L (E := E)).toLinearMap
+
+/--
+Transport on `E` induced by modular flow on doubled space:
+embed to doubled physical channel, evolve by `flow t`, project back.
+-/
+noncomputable def modularFlowInducedTransport
+    (J_symm : FundamentalSymmetry (HilbertDoubled E)) (T : HilbertDoubled E →ₗ[ℝ] HilbertDoubled E)
+    (flow : FundamentalSymmetry.ModularFlow J_symm T) (t : ℝ) :
+    E →ₗ[ℝ] E :=
+  (doubledPlusProjectL (E := E)).comp ((flow.flow t).comp (doubledPlusEmbedL (E := E)))
+
+@[simp] theorem modularFlowInducedTransport_eq_id_of_flow_id
+    (J_symm : FundamentalSymmetry (HilbertDoubled E)) (T : HilbertDoubled E →ₗ[ℝ] HilbertDoubled E)
+    (flow : FundamentalSymmetry.ModularFlow J_symm T) (t : ℝ)
+    (hFlowId : flow.flow t = LinearMap.id) :
+    modularFlowInducedTransport (E := E) J_symm T flow t = LinearMap.id := by
+  ext x
+  unfold modularFlowInducedTransport doubledPlusProjectL doubledPlusEmbedL
+  change WithLp.fst ((flow.flow t) (Krein.to_doubled x (0 : E))) = x
+  rw [hFlowId]
+  simp [Krein.to_doubled]
+
+noncomputable def modularSpinConnection_of_flowFixedSplit
+    (K : KaehlerInformationGeometry E) (x : E) (V : SplitVielbein K x)
+    (J_symm : FundamentalSymmetry (HilbertDoubled E)) (T : HilbertDoubled E →ₗ[ℝ] HilbertDoubled E)
+    (flow : FundamentalSymmetry.ModularFlow J_symm T) (t : ℝ)
+    (hPlusFixed : modularFlowInducedTransport (E := E) J_symm T flow t V.ePlus = V.ePlus)
+    (hMinusFixed : modularFlowInducedTransport (E := E) J_symm T flow t V.eMinus = V.eMinus) :
+    SpinConnection K x V where
+  transport := modularFlowInducedTransport (E := E) J_symm T flow t
+  preserves_plus := by
+    simpa [hPlusFixed] using V.plus_norm
+  preserves_minus := by
+    simpa [hMinusFixed] using V.minus_norm
+  preserves_orthogonal := by
+    simpa [hPlusFixed, hMinusFixed] using V.orthogonal
+
+/--
+If the modular flow is identity at time `t`, the flow-driven and finite fallback
+spin connections coincide at transport level.
+-/
+theorem modularSpinConnection_of_flowId_eq_fallback
+    (K : KaehlerInformationGeometry E) (x : E) (V : SplitVielbein K x)
+    (J_symm : FundamentalSymmetry (HilbertDoubled E)) (T : HilbertDoubled E →ₗ[ℝ] HilbertDoubled E)
+    (flow : FundamentalSymmetry.ModularFlow J_symm T) (t : ℝ)
+    (hFlowId : flow.flow t = LinearMap.id) :
+    modularSpinConnection_of_flowFixedSplit (E := E) K x V J_symm T flow t
+      (by
+        have hT :
+            modularFlowInducedTransport (E := E) J_symm T flow t = LinearMap.id :=
+          modularFlowInducedTransport_eq_id_of_flow_id (E := E) J_symm T flow t hFlowId
+        simpa [hT] using (rfl : V.ePlus = V.ePlus))
+      (by
+        have hT :
+            modularFlowInducedTransport (E := E) J_symm T flow t = LinearMap.id :=
+          modularFlowInducedTransport_eq_id_of_flow_id (E := E) J_symm T flow t hFlowId
+        simpa [hT] using (rfl : V.eMinus = V.eMinus))
+      =
+    modularSpinConnection (E := E) K x V J_symm T flow t := by
+  have hT :
+      modularFlowInducedTransport (E := E) J_symm T flow t = LinearMap.id :=
+    modularFlowInducedTransport_eq_id_of_flow_id (E := E) J_symm T flow t hFlowId
+  cases V
+  simp [modularSpinConnection_of_flowFixedSplit, modularSpinConnection, hT]
+
+/--
+At `t = 0`, every modular flow induces the finite fallback transport.
+-/
+theorem modularSpinConnection_of_flow_zero_eq_fallback
+    (K : KaehlerInformationGeometry E) (x : E) (V : SplitVielbein K x)
+    (J_symm : FundamentalSymmetry (HilbertDoubled E)) (T : HilbertDoubled E →ₗ[ℝ] HilbertDoubled E)
+    (flow : FundamentalSymmetry.ModularFlow J_symm T) :
+    modularSpinConnection_of_flowFixedSplit (E := E) K x V J_symm T flow 0
+      (by
+        have hT :
+            modularFlowInducedTransport (E := E) J_symm T flow 0 = LinearMap.id :=
+          modularFlowInducedTransport_eq_id_of_flow_id (E := E) J_symm T flow 0 flow.flow_zero
+        simpa [hT] using (rfl : V.ePlus = V.ePlus))
+      (by
+        have hT :
+            modularFlowInducedTransport (E := E) J_symm T flow 0 = LinearMap.id :=
+          modularFlowInducedTransport_eq_id_of_flow_id (E := E) J_symm T flow 0 flow.flow_zero
+        simpa [hT] using (rfl : V.eMinus = V.eMinus))
+      =
+    modularSpinConnection (E := E) K x V J_symm T flow 0 := by
+  simpa using modularSpinConnection_of_flowId_eq_fallback
+    (E := E) K x V J_symm T flow 0 flow.flow_zero
+
 /-- The modular bridge transport is the identity map in the current finite model. -/
 @[simp] theorem modularSpinConnection_transport
     (K : KaehlerInformationGeometry E) (x : E) (V : SplitVielbein K x)

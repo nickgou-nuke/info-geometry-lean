@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.ChiralEinsteinBridge
+import InfoGeometry.Canonical.GrandSynthesis
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 set_option linter.unusedSectionVars false
@@ -12,6 +13,7 @@ open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.Canonical.SpectralInference
 open InfoGeometry.Canonical.ChiralEinsteinBridge
+open InfoGeometry.Canonical.GrandSynthesis
 open InfoGeometry.Canonical.RicciMongeAmpere
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
@@ -168,6 +170,69 @@ theorem projectors_commute_of_anomalyDriven_normalized_fixedpoint
   have hAnomZero : CI.chiralAnomalyOperator = 0 :=
     (nnnorm_eq_zero).1 hNormAnom
   exact CI.projectors_commute_of_chiralAnomaly_eq_zero hAnomZero
+
+/--
+Derive anomaly-driven scalar Ricci dynamics from normalized Kähler-Ricci flow
+once the conformal chiral scale vanishes (`ε = 0`).
+-/
+theorem anomalyDrivenScalarRicciFlow_of_normalized_and_chiralScale_zero
+    (flow : ScalarRicciFlow E)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
+    (hScaleZero : CI.chiralScale = 0) :
+    SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow (fun _ => CI.chiralScale) := by
+  have hZeroSource :
+      SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow (fun _ => 0) :=
+    (anomalyDriven_zeroSource_iff_normalized (E := E) (flow := flow)).2 hNorm
+  intro s
+  simpa [hScaleZero] using hZeroSource s
+
+/--
+Normality (`ε = 0`) from the Kähler/log-det layer:
+if the conformal chiral scale matches the RN Kähler potential and the RN
+relative volume is unit, then `ε = 0`.
+-/
+theorem chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (hUnitVolume : relativeVolumeChangeRN n M = 1) :
+    CI.chiralScale = 0 := by
+  have hNegKZero : -kahlerPotentialRN n M = 0 := by
+    have hLog :
+        Real.log (relativeVolumeChangeRN n M) = Real.log (1 : ℝ) :=
+      congrArg Real.log hUnitVolume
+    simpa [relativeVolumeChangeRN] using hLog
+  have hKZero : kahlerPotentialRN n M = 0 := by
+    have h := congrArg Neg.neg hNegKZero
+    simpa using h
+  calc
+    CI.chiralScale = kahlerPotentialRN n M := hScaleFromKahler
+    _ = 0 := hKZero
+
+/--
+Projector commutation from the Kähler/log-det layer without an explicit
+anomaly-flow witness argument.
+-/
+theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint
+    (flow : ScalarRicciFlow E)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := E) flow s = 0)
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (hUnitVolume : relativeVolumeChangeRN n M = 1) :
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      = CI.metricChiralProjector * CI.spectralChiralProjector := by
+  have hScaleZero : CI.chiralScale = 0 :=
+    CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
+      (M := M) hScaleFromKahler hUnitVolume
+  have hAnomFlow :
+      SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow
+        (fun _ => CI.chiralScale) :=
+    CI.anomalyDrivenScalarRicciFlow_of_normalized_and_chiralScale_zero
+      (flow := flow) hNorm hScaleZero
+  exact CI.projectors_commute_of_anomalyDriven_normalized_fixedpoint
+    (flow := flow) hNorm hFixed hAnomFlow
 
 /--
 Cartan-like Decomposition of the Information Manifold.

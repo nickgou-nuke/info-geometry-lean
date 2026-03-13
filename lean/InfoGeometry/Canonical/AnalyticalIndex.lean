@@ -138,6 +138,190 @@ def ChiralSliceIsoAlong [FiniteDimensional ℝ V] (D Γ : ℝ → Endomorphism V
           (chiralKernelSliceMinus (D 0) (Γ 0))))
 
 /--
+Conjugacy data for a Dirac/grading family along a transport flow of linear
+equivalences.
+-/
+def ChiralConjugacyAlong [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (eFlow : ℝ → V ≃ₗ[ℝ] V) : Prop :=
+  (∀ s : ℝ, (D 0).comp (eFlow s).toLinearMap = (eFlow s).toLinearMap.comp (D s)) ∧
+    (∀ s : ℝ, (Γ 0).comp (eFlow s).toLinearMap = (eFlow s).toLinearMap.comp (Γ s))
+
+/-- Conjugacy transports kernels exactly along a linear equivalence. -/
+lemma map_ker_eq_of_conjugacy
+    (Ds D0 : Endomorphism V)
+    (e : V ≃ₗ[ℝ] V)
+    (hConj : D0.comp e.toLinearMap = e.toLinearMap.comp Ds) :
+    (LinearMap.ker Ds).map e.toLinearMap = LinearMap.ker D0 := by
+  ext v
+  constructor
+  · intro hv
+    rcases hv with ⟨x, hx, rfl⟩
+    change D0 (e x) = 0
+    have hConjX : D0 (e x) = e (Ds x) := by
+      simpa [LinearMap.comp_apply] using (LinearMap.congr_fun hConj x)
+    rw [hConjX, hx, map_zero]
+  · intro hv
+    refine ⟨e.symm v, ?_, by simp⟩
+    have hConjX : D0 (e (e.symm v)) = e (Ds (e.symm v)) := by
+      simpa [LinearMap.comp_apply] using (LinearMap.congr_fun hConj (e.symm v))
+    have hImageZero : e (Ds (e.symm v)) = 0 := by
+      calc
+        e (Ds (e.symm v)) = D0 (e (e.symm v)) := by simpa using hConjX.symm
+        _ = D0 v := by simp
+        _ = 0 := hv
+    exact e.injective (by simpa using hImageZero)
+
+/-- Conjugacy transports ranges exactly along a linear equivalence. -/
+lemma map_range_eq_of_conjugacy
+    (Ps P0 : Endomorphism V)
+    (e : V ≃ₗ[ℝ] V)
+    (hConj : P0.comp e.toLinearMap = e.toLinearMap.comp Ps) :
+    (LinearMap.range Ps).map e.toLinearMap = LinearMap.range P0 := by
+  ext v
+  constructor
+  · intro hv
+    rcases hv with ⟨x, hx, rfl⟩
+    rcases hx with ⟨y, rfl⟩
+    refine ⟨e y, ?_⟩
+    have hConjY : P0 (e y) = e (Ps y) := by
+      simpa [LinearMap.comp_apply] using (LinearMap.congr_fun hConj y)
+    simpa [hConjY]
+  · intro hv
+    rcases hv with ⟨x, rfl⟩
+    refine ⟨Ps (e.symm x), ?_, ?_⟩
+    · exact ⟨e.symm x, rfl⟩
+    · have hConjX : P0 (e (e.symm x)) = e (Ps (e.symm x)) := by
+        simpa [LinearMap.comp_apply] using (LinearMap.congr_fun hConj (e.symm x))
+      simpa using hConjX.symm
+
+/-- Chiral projector `P₊` respects grading conjugacy. -/
+lemma chiralProjectorPlus_comp_of_conjugacy
+    (Γs Γ0 : Endomorphism V)
+    (e : V ≃ₗ[ℝ] V)
+    (hConj : Γ0.comp e.toLinearMap = e.toLinearMap.comp Γs) :
+    (chiralProjectorPlus Γ0).comp e.toLinearMap =
+      e.toLinearMap.comp (chiralProjectorPlus Γs) := by
+  ext v
+  have hConjV : Γ0 (e v) = e (Γs v) := by
+    simpa [LinearMap.comp_apply] using (LinearMap.congr_fun hConj v)
+  simp [chiralProjectorPlus, LinearMap.comp_apply, hConjV, map_add, map_smul]
+
+/-- Chiral projector `P₋` respects grading conjugacy. -/
+lemma chiralProjectorMinus_comp_of_conjugacy
+    (Γs Γ0 : Endomorphism V)
+    (e : V ≃ₗ[ℝ] V)
+    (hConj : Γ0.comp e.toLinearMap = e.toLinearMap.comp Γs) :
+    (chiralProjectorMinus Γ0).comp e.toLinearMap =
+      e.toLinearMap.comp (chiralProjectorMinus Γs) := by
+  ext v
+  have hConjV : Γ0 (e v) = e (Γs v) := by
+    simpa [LinearMap.comp_apply] using (LinearMap.congr_fun hConj v)
+  simp [chiralProjectorMinus, LinearMap.comp_apply, hConjV, map_sub, map_smul]
+
+/-- Conjugacy transports the positive chiral kernel slice exactly. -/
+lemma map_chiralKernelSlicePlus_eq_of_conjugacy
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (s : ℝ)
+    (e : V ≃ₗ[ℝ] V)
+    (hD : (D 0).comp e.toLinearMap = e.toLinearMap.comp (D s))
+    (hΓ : (Γ 0).comp e.toLinearMap = e.toLinearMap.comp (Γ s)) :
+    (chiralKernelSlicePlus (D s) (Γ s)).map e.toLinearMap =
+      chiralKernelSlicePlus (D 0) (Γ 0) := by
+  unfold chiralKernelSlicePlus
+  calc
+    (LinearMap.ker (D s) ⊓ LinearMap.range (chiralProjectorPlus (Γ s))).map e.toLinearMap
+        =
+      (LinearMap.ker (D s)).map e.toLinearMap ⊓
+        (LinearMap.range (chiralProjectorPlus (Γ s))).map e.toLinearMap := by
+          simpa using
+            (Submodule.map_inf (f := e.toLinearMap)
+              (p := LinearMap.ker (D s))
+              (q := LinearMap.range (chiralProjectorPlus (Γ s)))
+              e.injective)
+    _ = LinearMap.ker (D 0) ⊓ LinearMap.range (chiralProjectorPlus (Γ 0)) := by
+      rw [map_ker_eq_of_conjugacy (Ds := D s) (D0 := D 0) (e := e) hD,
+        map_range_eq_of_conjugacy
+          (Ps := chiralProjectorPlus (Γ s))
+          (P0 := chiralProjectorPlus (Γ 0))
+          (e := e)
+          (chiralProjectorPlus_comp_of_conjugacy
+            (Γs := Γ s) (Γ0 := Γ 0) (e := e) hΓ)]
+
+/-- Conjugacy transports the negative chiral kernel slice exactly. -/
+lemma map_chiralKernelSliceMinus_eq_of_conjugacy
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (s : ℝ)
+    (e : V ≃ₗ[ℝ] V)
+    (hD : (D 0).comp e.toLinearMap = e.toLinearMap.comp (D s))
+    (hΓ : (Γ 0).comp e.toLinearMap = e.toLinearMap.comp (Γ s)) :
+    (chiralKernelSliceMinus (D s) (Γ s)).map e.toLinearMap =
+      chiralKernelSliceMinus (D 0) (Γ 0) := by
+  unfold chiralKernelSliceMinus
+  calc
+    (LinearMap.ker (D s) ⊓ LinearMap.range (chiralProjectorMinus (Γ s))).map e.toLinearMap
+        =
+      (LinearMap.ker (D s)).map e.toLinearMap ⊓
+        (LinearMap.range (chiralProjectorMinus (Γ s))).map e.toLinearMap := by
+          simpa using
+            (Submodule.map_inf (f := e.toLinearMap)
+              (p := LinearMap.ker (D s))
+              (q := LinearMap.range (chiralProjectorMinus (Γ s)))
+              e.injective)
+    _ = LinearMap.ker (D 0) ⊓ LinearMap.range (chiralProjectorMinus (Γ 0)) := by
+      rw [map_ker_eq_of_conjugacy (Ds := D s) (D0 := D 0) (e := e) hD,
+        map_range_eq_of_conjugacy
+          (Ps := chiralProjectorMinus (Γ s))
+          (P0 := chiralProjectorMinus (Γ 0))
+          (e := e)
+          (chiralProjectorMinus_comp_of_conjugacy
+            (Γs := Γ s) (Γ0 := Γ 0) (e := e) hΓ)]
+
+/--
+Conjugacy-to-iso bridge: if `D(s), Γ(s)` are conjugate to the baseline by a
+linear-equivalence flow, then both chiral kernel slices are linearly equivalent
+to their baseline slices.
+-/
+theorem chiralSliceIsoAlong_of_conjugacy
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (eFlow : ℝ → V ≃ₗ[ℝ] V)
+    (hConj : ChiralConjugacyAlong D Γ eFlow) :
+    ChiralSliceIsoAlong D Γ := by
+  rcases hConj with ⟨hDConj, hΓConj⟩
+  refine ⟨?_, ?_⟩
+  · intro s
+    let e := eFlow s
+    let eMap :
+        (chiralKernelSlicePlus (D s) (Γ s)) ≃ₗ[ℝ]
+          ((chiralKernelSlicePlus (D s) (Γ s)).map e.toLinearMap) :=
+      Submodule.equivMapOfInjective
+        (f := e.toLinearMap) (i := e.injective)
+        (p := chiralKernelSlicePlus (D s) (Γ s))
+    have hMap :
+        (chiralKernelSlicePlus (D s) (Γ s)).map e.toLinearMap =
+          chiralKernelSlicePlus (D 0) (Γ 0) :=
+      map_chiralKernelSlicePlus_eq_of_conjugacy
+        (D := D) (Γ := Γ) (s := s) (e := e) (hD := hDConj s) (hΓ := hΓConj s)
+    exact ⟨eMap.trans (LinearEquiv.ofEq _ _ hMap)⟩
+  · intro s
+    let e := eFlow s
+    let eMap :
+        (chiralKernelSliceMinus (D s) (Γ s)) ≃ₗ[ℝ]
+          ((chiralKernelSliceMinus (D s) (Γ s)).map e.toLinearMap) :=
+      Submodule.equivMapOfInjective
+        (f := e.toLinearMap) (i := e.injective)
+        (p := chiralKernelSliceMinus (D s) (Γ s))
+    have hMap :
+        (chiralKernelSliceMinus (D s) (Γ s)).map e.toLinearMap =
+          chiralKernelSliceMinus (D 0) (Γ 0) :=
+      map_chiralKernelSliceMinus_eq_of_conjugacy
+        (D := D) (Γ := Γ) (s := s) (e := e) (hD := hDConj s) (hΓ := hΓConj s)
+    exact ⟨eMap.trans (LinearEquiv.ofEq _ _ hMap)⟩
+
+/--
 Modular-flow / Clifford-bundle transport hypothesis for the chiral kernel slices.
 
 At each scale `s`, transport by `σ s` and Clifford action `clAct ℓ` sends the
@@ -233,6 +417,18 @@ theorem indexInvariantAlong_of_chiralSliceIso
     simpa using eMinus.finrank_eq
   unfold analyticalIndex
   simp [hPlusFinrank, hMinusFinrank]
+
+/-- Index invariance from flow-conjugacy of the Dirac/grading family. -/
+theorem indexInvariantAlong_of_conjugacy
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (eFlow : ℝ → V ≃ₗ[ℝ] V)
+    (hConj : ChiralConjugacyAlong D Γ eFlow) :
+    IndexInvariantAlong D Γ := by
+  exact indexInvariantAlong_of_chiralSliceIso
+    (D := D) (Γ := Γ)
+    (hIso := chiralSliceIsoAlong_of_conjugacy
+      (D := D) (Γ := Γ) (eFlow := eFlow) hConj)
 
 /--
 Direct deformation invariance route:
@@ -370,6 +566,29 @@ theorem sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
       (E := X) flow hNorm hFixed
   · exact indexInvariantAlong_of_modularCliffordTransport
       (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans
+
+/--
+Derived constructor using primitive flow-conjugacy hypotheses:
+the Dirac/grading family is transported to baseline by linear equivalences.
+-/
+theorem sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (eFlow : ℝ → V ≃ₗ[ℝ] V)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hConj : ChiralConjugacyAlong D Γ eFlow) :
+    SinkhornRicciIndexInvariant n T flow D Γ := by
+  refine sinkhornRicciIndexInvariant_of_components
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    ?_ ?_ ?_
+  · intro k label
+    exact sinkhorn_dynamics_step_control (n := n) T k label
+  · exact normalizedKaehlerRicci_fixedpoint_eq_zero
+      (E := X) flow hNorm hFixed
+  · exact indexInvariantAlong_of_conjugacy
+      (D := D) (Γ := Γ) (eFlow := eFlow) hConj
 
 end CoupledInvariant
 

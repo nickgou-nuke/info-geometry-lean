@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.GrandUnification
 import Mathlib.Analysis.InnerProductSpace.Positive
+import Mathlib.Analysis.Calculus.Deriv.Slope
 
 namespace InfoGeometry.Canonical.GrandUnification.JordanKKTData
 
@@ -63,16 +64,75 @@ theorem metric_symmetry
   metric_symmetry_of_metricPositive J hPos x u v
 
 /--
-Second-order local Bregman expansion statement.
-
-This is a formulation target for the metric layer and is intentionally left as a
-proposition (no derived theorem is claimed at this layer until proved from
-calculus assumptions on `J.K` / `J.gradK`).
+Along any ray `x + ε • u`, the first-order part of the Bregman divergence
+vanishes at `ε = 0`. Equivalently, the derivative at the origin is zero.
 -/
-def BregmanLocalSecondOrder (J : JordanKKTData E) : Prop :=
-  ∀ x u : E,
-    Filter.Tendsto (fun ε : ℝ => (J.DBregman (x + ε • u) x) / (ε ^ 2))
+  theorem hasDerivAt_DBregman_ray_zero
+    (J : JordanKKTData E) (x u : E) :
+    HasDerivAt (fun ε : ℝ => J.DBregman (x + ε • u) x) 0 0 := by
+  have hLine0 : HasDerivAt (fun ε : ℝ => ε • u) u 0 := by
+    simpa [one_smul] using (hasDerivAt_id' (0 : ℝ)).smul_const u
+  have hLine : HasDerivAt (fun ε : ℝ => x + ε • u) u 0 := by
+    simpa [Function.comp] using hLine0.const_add x
+  have hK :
+      HasDerivAt (fun ε : ℝ => J.K (x + ε • u))
+        (inner ℝ (J.gradK x) u) 0 := by
+    have hComp :
+        HasDerivAt (J.K ∘ fun ε : ℝ => x + ε • u)
+          ((InnerProductSpace.toDual ℝ E (J.gradK x)) u) 0 := by
+      exact (J.hasFDerivAt_K x).comp_hasDerivAt_of_eq (x := 0) hLine (by simp)
+    simpa [Function.comp, InnerProductSpace.toDual_apply_apply] using hComp
+  have hConst : HasDerivAt (fun _ : ℝ => J.K x) 0 0 := by
+    simpa using (hasDerivAt_const (x := (0 : ℝ)) (J.K x))
+  have hLinSmul :
+      HasDerivAt (fun ε : ℝ => inner ℝ (J.gradK x) (ε • u))
+        (inner ℝ (J.gradK x) u) 0 := by
+    have hMul :
+        HasDerivAt (fun ε : ℝ => ε * inner ℝ (J.gradK x) u)
+          (inner ℝ (J.gradK x) u) 0 := by
+      simpa using (hasDerivAt_id' (0 : ℝ)).mul_const (inner ℝ (J.gradK x) u)
+    have hEq :
+        (fun ε : ℝ => inner ℝ (J.gradK x) (ε • u))
+          = (fun ε : ℝ => ε * inner ℝ (J.gradK x) u) := by
+      funext ε
+      simp [inner_smul_right]
+    simpa [hEq] using hMul
+  have hLin :
+      HasDerivAt
+        (fun ε : ℝ => inner ℝ (J.gradK x) ((x + ε • u) - x))
+        (inner ℝ (J.gradK x) u) 0 := by
+    simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using hLinSmul
+  have h :
+      HasDerivAt
+        (fun ε : ℝ => J.K (x + ε • u) - J.K x -
+            inner ℝ (J.gradK x) ((x + ε • u) - x))
+        ((inner ℝ (J.gradK x) u) - 0 - (inner ℝ (J.gradK x) u)) 0 := by
+    exact (hK.sub hConst).sub hLin
+  simpa [JordanKKTData.DBregman] using h
+
+/--
+Equivalent slope statement: along any positive ray parameter, the normalized
+Bregman increment `D(x+εu,x)/ε` tends to `0` as `ε → 0+`.
+-/
+theorem tendsto_DBregman_div_eps_right_zero
+    (J : JordanKKTData E) (x u : E) :
+    Filter.Tendsto (fun ε : ℝ => J.DBregman (x + ε • u) x / ε)
       (nhdsWithin 0 (Set.Ioi 0))
-      (nhds ((1 / 2 : ℝ) * J.g x u u))
+      (nhds 0) := by
+  let f : ℝ → ℝ := fun ε => J.DBregman (x + ε • u) x
+  have hDeriv : HasDerivAt f 0 0 := by
+    simpa [f] using hasDerivAt_DBregman_ray_zero (J := J) x u
+  have hSlope :
+      Filter.Tendsto (fun ε : ℝ => ε⁻¹ * (f ε - f 0))
+        (nhdsWithin 0 (Set.Ioi 0))
+        (nhds 0) := by
+    simpa using hDeriv.tendsto_slope_zero_right
+  have h0 : f 0 = 0 := by
+    simp [f]
+  have hEq :
+      (fun ε : ℝ => ε⁻¹ * (f ε - f 0)) =ᶠ[nhdsWithin 0 (Set.Ioi 0)] (fun ε : ℝ => f ε / ε) := by
+    filter_upwards [self_mem_nhdsWithin] with ε hε
+    simp [h0, div_eq_mul_inv, mul_comm]
+  exact hSlope.congr' hEq
 
 end InfoGeometry.Canonical.GrandUnification.JordanKKTData

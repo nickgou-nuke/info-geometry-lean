@@ -1,9 +1,12 @@
+import InfoGeometry.Canonical.YangMillsFinite
+
 /-!
 # InfoGeometry.Canonical.YangMillsBridge
 
-This canonical module is intentionally stable-only.
-All witness-layer Yang-Mills bridge scaffolding was moved to:
-`InfoGeometry.Unstable.YangMillsBridge`.
+Stable Yang-Mills canonical surface.
+
+Finite constructive closure is exposed through:
+`InfoGeometry.Canonical.YangMillsFinite`.
 -/
 
 namespace InfoGeometry.Canonical.YangMillsBridge

@@ -308,19 +308,6 @@ lemma omegaSeed_nonzero_of_thermalVacuum
   expectationSeedFunctional_nonzero (F := F) vac.Omega vac.vacuum_nonzero
 
 /--
-Structural hypotheses certifying KMS for the expectation seed.
-These are the finite algebraic Tomita-style conditions used by this bridge.
--/
-structure ExpectationSeedKMSHypotheses
-    (K : AlgebraEnd F) (β : ℝ) (Ω : DoubledSpace F) : Prop where
-  modularOnOmega :
-    ∀ B : AlgebraEnd F,
-      modularShift (E := F) K β B Ω = B Ω
-  cyclicOnOmega :
-    ∀ A B : AlgebraEnd F,
-      inner ℝ ((A * B) Ω) Ω = inner ℝ ((B * A) Ω) Ω
-
-/--
 Joint-kernel hypothesis on `Ω`: the modular defect `(σ_β(B) - B)` annihilates
 `Ω` for every observable `B`.
 -/
@@ -367,21 +354,6 @@ lemma cyclicOnOmega_of_commutator_orthogonal
   exact sub_eq_zero.mp hSub
 
 /--
-Constructive packing of `ExpectationSeedKMSHypotheses` from the explicit
-joint-kernel and commutator-orthogonality inputs.
--/
-theorem expectationSeedKMSHypotheses_of_jointKernel_commutator
-    (K : AlgebraEnd F)
-    (β : ℝ)
-    (Ω : DoubledSpace F)
-    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
-    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω) :
-    ExpectationSeedKMSHypotheses (F := F) K β Ω := by
-  refine ⟨?_, ?_⟩
-  · exact modularOnOmega_of_jointKernel (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel
-  · exact cyclicOnOmega_of_commutator_orthogonal (F := F) (Ω := Ω) hCommOrthogonal
-
-/--
 Structural KMS theorem for the expectation seed:
 if the modularly shifted observable acts identically on `Ω` and the induced
 vector-state pairing is cyclic on products, then `ωSeed` satisfies KMS.
@@ -418,19 +390,6 @@ theorem expectationSeedFunctional_kms_of_structural
               (expectationSeedFunctional_apply (F := F) Ω (B * A)).symm
 
 /--
-Packaged KMS law for `ωSeed` from explicit structural hypotheses.
--/
-theorem omegaSeed_kms_of_hypotheses
-    (K : AlgebraEnd F)
-    (β : ℝ)
-    (Ω : DoubledSpace F)
-    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω) :
-    SatisfiesKMSLike (E := F) K (omegaSeed (F := F) Ω) β := by
-  exact expectationSeedFunctional_kms_of_structural
-    (F := F) (K := K) (β := β) (Ω := Ω)
-    hStruct.modularOnOmega hStruct.cyclicOnOmega
-
-/--
 KMS law for `ωSeed` from explicit joint-kernel and commutator-orthogonality
 hypotheses.
 -/
@@ -441,10 +400,10 @@ theorem omegaSeed_kms_of_jointKernel_commutator
     (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
     (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω) :
     SatisfiesKMSLike (E := F) K (omegaSeed (F := F) Ω) β := by
-  exact omegaSeed_kms_of_hypotheses
+  exact expectationSeedFunctional_kms_of_structural
     (F := F) (K := K) (β := β) (Ω := Ω)
-    (expectationSeedKMSHypotheses_of_jointKernel_commutator
-      (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal)
+    (modularOnOmega_of_jointKernel (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel)
+    (cyclicOnOmega_of_commutator_orthogonal (F := F) (Ω := Ω) hCommOrthogonal)
 
 /--
 IB-side Radon-Nikodym ratio at coordinate `(x0,t0)` and step `k`.
@@ -753,81 +712,6 @@ theorem sinkhorn_kmsControl_of_ibDynamics_weighted
     (x0 := x0) (t0 := t0) (ωSeed := ωSeed) hSeedKMS
 
 /--
-IB-to-Sinkhorn control for the weighted family using a nonzero expectation seed
-`ωSeed(A) = ⟪A Ω, Ω⟫` and explicit structural KMS hypotheses.
--/
-theorem sinkhorn_kmsControl_of_ibDynamics_weighted_from_expectationSeed
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (β : ℝ)
-    {Xib Yib Tib : Type}
-    [Fintype Xib] [Fintype Yib] [Fintype Tib]
-    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
-    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
-    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
-    (prob : IBProblem (X := Xib) (Y := Yib))
-    (pTrajectory : Nat → Xib → FinProb Tib)
-    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
-    (x0 : Xib) (t0 : Tib)
-    (Ω : DoubledSpace F)
-    (hΩ : Ω ≠ 0)
-    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω) :
-    SinkhornKMSControl n T K
-      (ibInducedObservableWeighted
-        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
-  have hSeedNonzero : omegaSeed (F := F) Ω ≠ 0 :=
-    expectationSeedFunctional_nonzero (F := F) Ω hΩ
-  have hSeedKMS :
-      SatisfiesKMSLike (E := F) K (omegaSeed (F := F) Ω) β :=
-    omegaSeed_kms_of_hypotheses (F := F) (K := K) (β := β) (Ω := Ω) hStruct
-  have _hWeightedNonzero :
-      ∀ k : Nat,
-        ibInducedObservableWeighted
-          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-          pTrajectory x0 t0 (omegaSeed (F := F) Ω) k ≠ 0 :=
-    ibInducedObservableWeighted_nonzero
-      (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-      (pTrajectory := pTrajectory) (x0 := x0) (t0 := t0)
-      (ωSeed := omegaSeed (F := F) Ω)
-      hSeedNonzero
-  refine sinkhorn_kmsControl_of_ibDynamics_weighted
-    (n := n) (T := T) (K := K) (β := β)
-    (prob := prob) (pTrajectory := pTrajectory)
-    hStep (x0 := x0) (t0 := t0)
-    (ωSeed := omegaSeed (F := F) Ω)
-    hSeedKMS
-
-/--
-Canonical specialization: seed `ωSeed` with a nonzero thermal vacuum vector.
--/
-theorem sinkhorn_kmsControl_of_ibDynamics_weighted_from_thermalVacuum
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (β : ℝ)
-    {Xib Yib Tib : Type}
-    [Fintype Xib] [Fintype Yib] [Fintype Tib]
-    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
-    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
-    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
-    (prob : IBProblem (X := Xib) (Y := Yib))
-    (pTrajectory : Nat → Xib → FinProb Tib)
-    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
-    (x0 : Xib) (t0 : Tib)
-    (vac : ThermalVacuum (E := F) K)
-    (hStruct :
-      ExpectationSeedKMSHypotheses (F := F) K β vac.Omega) :
-    SinkhornKMSControl n T K
-      (ibInducedObservableWeighted
-        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-        pTrajectory x0 t0 (omegaSeed (F := F) vac.Omega)) β := by
-  exact sinkhorn_kmsControl_of_ibDynamics_weighted_from_expectationSeed
-    (n := n) (T := T) (K := K) (β := β)
-    (prob := prob) (pTrajectory := pTrajectory)
-    hStep (x0 := x0) (t0 := t0)
-    (Ω := vac.Omega) vac.vacuum_nonzero hStruct
-
-/--
 Fully explicit weighted IB-to-Sinkhorn control using derivable seed-KMS inputs:
 joint-kernel modular defect and commutator orthogonality on `Ω`.
 -/
@@ -852,13 +736,26 @@ theorem sinkhorn_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator
       (ibInducedObservableWeighted
         (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
         pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
-  refine sinkhorn_kmsControl_of_ibDynamics_weighted_from_expectationSeed
+  have hSeedNonzero : omegaSeed (F := F) Ω ≠ 0 :=
+    expectationSeedFunctional_nonzero (F := F) Ω hΩ
+  have hSeedKMS :
+      SatisfiesKMSLike (E := F) K (omegaSeed (F := F) Ω) β :=
+    omegaSeed_kms_of_jointKernel_commutator
+      (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
+  have _hWeightedNonzero :
+      ∀ k : Nat,
+        ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω) k ≠ 0 :=
+    ibInducedObservableWeighted_nonzero
+      (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+      (pTrajectory := pTrajectory) (x0 := x0) (t0 := t0)
+      (ωSeed := omegaSeed (F := F) Ω) hSeedNonzero
+  refine sinkhorn_kmsControl_of_ibDynamics_weighted
     (n := n) (T := T) (K := K) (β := β)
     (prob := prob) (pTrajectory := pTrajectory)
     hStep (x0 := x0) (t0 := t0)
-    (Ω := Ω) hΩ ?_
-  exact expectationSeedKMSHypotheses_of_jointKernel_commutator
-    (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
+    (ωSeed := omegaSeed (F := F) Ω) hSeedKMS
 
 end SinkhornBridge
 

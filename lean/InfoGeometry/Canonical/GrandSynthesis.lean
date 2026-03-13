@@ -764,7 +764,7 @@ Wheeler-DeWitt equivalence (IB-dynamics form) from modular-flow / Clifford-bundl
 transport hypotheses for chiral slices: the reverse direction is discharged
 constructively from `hNorm + hFixed + hTrans`.
 -/
-theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_sliceIso_state_hypotheses
+theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_modularCliffordTransport_state_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
@@ -848,7 +848,7 @@ theorem information_wheeler_dewitt_implication
 Canonical fully derived state-hypothesis Wheeler-DeWitt implication using
 modular-flow / Clifford-bundle transport of chiral index slices (non-constancy path).
 -/
-theorem information_wheeler_dewitt_implication_of_sliceIso_state_hypotheses
+theorem information_wheeler_dewitt_implication_of_modularCliffordTransport_state_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
@@ -928,7 +928,7 @@ theorem information_wheeler_dewitt_implication_of_fully_derived_hypotheses
         (ibInducedObservableWeighted
           (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
           pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
-  exact information_wheeler_dewitt_implication_of_sliceIso_state_hypotheses
+  exact information_wheeler_dewitt_implication_of_modularCliffordTransport_state_hypotheses
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
     (K := K) (β := β)
     (prob := prob) (pTrajectory := pTrajectory)

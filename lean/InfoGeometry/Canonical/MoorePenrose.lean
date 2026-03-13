@@ -2,6 +2,7 @@ import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.Star.SelfAdjoint
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Analysis.Normed.Ring.Basic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Canonical.Drazin
 
 namespace InfoGeometry.Canonical.MoorePenrose
@@ -70,6 +71,20 @@ end IsMoorePenroseInverse
 
 /-! ### Chiral Anomaly and Scale Generation -/
 
+/-- Spectral projector from Drazin data. -/
+def spectralProjector {R : Type*} [Ring R] (a a_d : R) : R :=
+  IsDrazinInverse.projection a a_d
+
+/-- Metric projector from Moore-Penrose data. -/
+def metricProjector {R : Type*} [Ring R] [StarRing R] (a a_mp : R) : R :=
+  IsMoorePenroseInverse.leftProjector a a_mp
+
+/--
+Projector mismatch `Δ = P_D - P_MP` between spectral and metric sectors.
+-/
+def projectorMismatch {R : Type*} [Ring R] [StarRing R] (a a_d a_mp : R) : R :=
+  spectralProjector a a_d - metricProjector a a_mp
+
 /--
 The Chiral Anomaly Operator (χ).
 Defined as the commutator between the spectral projector (Drazin) 
@@ -80,6 +95,37 @@ def chiralAnomaly {R : Type*} [Ring R] [StarRing R] (a a_d a_mp : R) : R :=
   let P_D := IsDrazinInverse.projection a a_d
   let P_L := IsMoorePenroseInverse.leftProjector a a_mp
   P_D * P_L - P_L * P_D
+
+/--
+Algebraic identity: the anomaly commutator is the mismatch commutator with the
+metric projector.
+-/
+theorem chiralAnomaly_eq_mismatch_commutator_metric
+    {R : Type*} [Ring R] [StarRing R] (a a_d a_mp : R) :
+    chiralAnomaly a a_d a_mp =
+      projectorMismatch a a_d a_mp * metricProjector a a_mp
+        - metricProjector a a_mp * projectorMismatch a a_d a_mp := by
+  unfold chiralAnomaly projectorMismatch spectralProjector metricProjector
+  unfold IsDrazinInverse.projection IsMoorePenroseInverse.leftProjector
+  noncomm_ring
+
+/--
+If the spectral-metric mismatch vanishes, the anomaly vanishes.
+-/
+theorem chiralAnomaly_eq_zero_of_projectorMismatch_eq_zero
+    {R : Type*} [Ring R] [StarRing R] {a a_d a_mp : R}
+    (hΔ : projectorMismatch a a_d a_mp = 0) :
+    chiralAnomaly a a_d a_mp = 0 := by
+  rw [chiralAnomaly_eq_mismatch_commutator_metric]
+  simp [hΔ]
+
+/-- Vanishing mismatch is equivalent to projector equality. -/
+theorem projectorMismatch_eq_zero_iff
+    {R : Type*} [Ring R] [StarRing R] {a a_d a_mp : R} :
+    projectorMismatch a a_d a_mp = 0 ↔
+      spectralProjector a a_d = metricProjector a a_mp := by
+  unfold projectorMismatch
+  exact sub_eq_zero
 
 /--
 The Emergent Scale ε.

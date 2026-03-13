@@ -6,6 +6,7 @@ import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Algebra.Module.Submodule.Ker
 import Mathlib.Algebra.Module.Submodule.Range
 import Mathlib.Algebra.Module.Submodule.Lattice
+import Mathlib.Algebra.Module.Submodule.Map
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.TensorProduct.Map
 
@@ -135,6 +136,79 @@ def ChiralSliceIsoAlong [FiniteDimensional ℝ V] (D Γ : ℝ → Endomorphism V
       Nonempty
         ((chiralKernelSliceMinus (D s) (Γ s)) ≃ₗ[ℝ]
           (chiralKernelSliceMinus (D 0) (Γ 0))))
+
+/--
+Modular-flow / Clifford-bundle transport hypothesis for the chiral kernel slices.
+
+At each scale `s`, transport by `σ s` and Clifford action `clAct ℓ` sends the
+`±` chiral kernel slice at `s` to the baseline slice at `0`. The designated
+`unit` Clifford label acts as identity.
+-/
+def ChiralSliceModularCliffordTransportAlong
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    {ι : Type*}
+    (σ : ℝ → Endomorphism V)
+    (clAct : ι → Endomorphism V)
+    (unit : ι) : Prop :=
+  clAct unit = LinearMap.id ∧
+    (∀ s : ℝ, Function.Injective (σ s)) ∧
+    (∀ s : ℝ, ∀ ℓ : ι,
+      (chiralKernelSlicePlus (D s) (Γ s)).map ((clAct ℓ).comp (σ s))
+        = chiralKernelSlicePlus (D 0) (Γ 0)) ∧
+    (∀ s : ℝ, ∀ ℓ : ι,
+      (chiralKernelSliceMinus (D s) (Γ s)).map ((clAct ℓ).comp (σ s))
+        = chiralKernelSliceMinus (D 0) (Γ 0))
+
+/--
+Transport-to-iso bridge: modular/Clifford transport of the chiral slices yields
+the deformation-style slice isomorphisms used by index invariance.
+-/
+theorem chiralSliceIsoAlong_of_modularCliffordTransport
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    {ι : Type*}
+    (σ : ℝ → Endomorphism V)
+    (clAct : ι → Endomorphism V)
+    (unit : ι)
+    (hTrans : ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
+    ChiralSliceIsoAlong D Γ := by
+  rcases hTrans with ⟨hUnit, hσInj, hPlusMap, hMinusMap⟩
+  refine ⟨?_, ?_⟩
+  · intro s
+    let f : Endomorphism V := (clAct unit).comp (σ s)
+    have hf : Function.Injective f := by
+      intro x y hxy
+      have hxy' : (σ s) x = (σ s) y := by
+        simpa [f, hUnit] using hxy
+      exact hσInj s hxy'
+    let eMap :
+        (chiralKernelSlicePlus (D s) (Γ s)) ≃ₗ[ℝ]
+          ((chiralKernelSlicePlus (D s) (Γ s)).map f) :=
+      Submodule.equivMapOfInjective
+        (f := f) (i := hf) (p := chiralKernelSlicePlus (D s) (Γ s))
+    have hEq :
+        (chiralKernelSlicePlus (D s) (Γ s)).map f
+          = chiralKernelSlicePlus (D 0) (Γ 0) := by
+      simpa [f] using hPlusMap s unit
+    exact ⟨eMap.trans (LinearEquiv.ofEq _ _ hEq)⟩
+  · intro s
+    let f : Endomorphism V := (clAct unit).comp (σ s)
+    have hf : Function.Injective f := by
+      intro x y hxy
+      have hxy' : (σ s) x = (σ s) y := by
+        simpa [f, hUnit] using hxy
+      exact hσInj s hxy'
+    let eMap :
+        (chiralKernelSliceMinus (D s) (Γ s)) ≃ₗ[ℝ]
+          ((chiralKernelSliceMinus (D s) (Γ s)).map f) :=
+      Submodule.equivMapOfInjective
+        (f := f) (i := hf) (p := chiralKernelSliceMinus (D s) (Γ s))
+    have hEq :
+        (chiralKernelSliceMinus (D s) (Γ s)).map f
+          = chiralKernelSliceMinus (D 0) (Γ 0) := by
+      simpa [f] using hMinusMap s unit
+    exact ⟨eMap.trans (LinearEquiv.ofEq _ _ hEq)⟩
 
 /--
 Genuine deformation-style index invariance:
@@ -273,6 +347,29 @@ theorem sinkhornRicciIndexInvariant_of_sliceIso_state_hypotheses
   · exact normalizedKaehlerRicci_fixedpoint_eq_zero
       (E := X) flow hNorm hFixed
   · exact indexInvariantAlong_of_chiralSliceIso (D := D) (Γ := Γ) hIso
+
+/--
+Derived constructor using modular-flow / Clifford-bundle transport hypotheses
+for the chiral slices.
+-/
+theorem sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    {ι : Type*}
+    (σ : ℝ → Endomorphism V)
+    (clAct : ι → Endomorphism V)
+    (unit : ι)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hTrans :
+      ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
+    SinkhornRicciIndexInvariant n T flow D Γ := by
+  exact sinkhornRicciIndexInvariant_of_sliceIso_state_hypotheses
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    hNorm hFixed
+    (chiralSliceIsoAlong_of_modularCliffordTransport
+      (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans)
 
 end CoupledInvariant
 

@@ -251,15 +251,12 @@ theorem sinkhornControl_of_sampledIB
     (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω) :
     SinkhornKMSControl n T K
       (sampledObservable (prob := prob) S x0 t0 Ω) β := by
-  have hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω :=
-    expectationSeedKMSHypotheses_of_jointKernel_commutator
-      (F := E) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
   simpa [sampledObservable] using
-    (sinkhorn_kmsControl_of_ibDynamics_weighted_from_expectationSeed
+    (sinkhorn_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator
       (n := n) (T := T) (K := K) (β := β)
       (prob := prob) (pTrajectory := S.pTrajectory)
       (hStep := S.step) (x0 := x0) (t0 := t0)
-      (Ω := Ω) hΩ hStruct)
+      (Ω := Ω) hΩ hJointKernel hCommOrthogonal)
 
 /--
 Sampled IB dynamics induce exact stepwise KMS closure.

@@ -49,8 +49,8 @@ end FiniteGaugeData
 
 /--
 Finite QFT closure state:
-there exists a nonzero positive-time expectation seed with structural KMS
-hypotheses.
+there exists a nonzero positive-time expectation seed with explicit
+joint-kernel and commutator-orthogonality hypotheses.
 
 This removes manual per-obligation witness fields and makes the QFT layer
 derive from canonical modular seed data.
@@ -59,7 +59,8 @@ def FiniteQFTLayer
     (E : Type)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : Prop :=
   ∃ (K : AlgebraEnd E) (β : ℝ) (Ω : InfoGeometry.Krein.DoubledSpace E),
-    ExpectationSeedKMSHypotheses (F := E) K β Ω ∧
+    JointKernelOnOmega (F := E) K β Ω ∧
+      CommutatorOrthogonalOnOmega (F := E) Ω ∧
       Ω ≠ 0 ∧
       PositiveTimeVector Ω
 
@@ -72,15 +73,17 @@ def expectationSeedReflectionPositivity
     (Ω : InfoGeometry.Krein.DoubledSpace E) : Prop :=
   SatisfiesKMSLike (E := E) K (omegaSeed (F := E) Ω) β
 
-/-- Constructive reflection positivity from canonical expectation-seed hypotheses. -/
+/-- Constructive reflection positivity from explicit seed-KMS derivation hypotheses. -/
 theorem expectationSeedReflectionPositivity_of_hypotheses
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω) :
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω) :
     expectationSeedReflectionPositivity (E := E) K β Ω := by
   simpa [expectationSeedReflectionPositivity] using
-    (omegaSeed_kms_of_hypotheses (F := E) (K := K) (β := β) (Ω := Ω) hStruct)
+    (omegaSeed_kms_of_jointKernel_commutator
+      (F := E) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal)
 
 /-- Finite OS-like marker induced by modular reflection geometry. -/
 def finiteOsterwalderSchraderLayer
@@ -112,11 +115,13 @@ theorem finiteWightmanReconstructionLayer_of_expectationSeed
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω)
     (hΩ : Ω ≠ 0) :
     finiteWightmanReconstructionLayer (E := E) K β Ω := by
   refine ⟨omegaSeed (F := E) Ω, rfl, ?_, ?_⟩
-  · exact omegaSeed_kms_of_hypotheses (F := E) (K := K) (β := β) (Ω := Ω) hStruct
+  · exact omegaSeed_kms_of_jointKernel_commutator
+      (F := E) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
   · simpa [omegaSeed] using
       (expectationSeedFunctional_nonzero (F := E) Ω hΩ)
 
@@ -125,11 +130,12 @@ def ofExpectationSeedFinite
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω)
     (hΩ_nonzero : Ω ≠ 0)
     (hΩ_posTime : PositiveTimeVector Ω) :
     FiniteQFTLayer E :=
-  ⟨K, β, Ω, hStruct, hΩ_nonzero, hΩ_posTime⟩
+  ⟨K, β, Ω, hJointKernel, hCommOrthogonal, hΩ_nonzero, hΩ_posTime⟩
 
 /--
 Derived finite QFT obligations from the closure state:
@@ -141,14 +147,14 @@ theorem existenceClaims_of_layer
       expectationSeedReflectionPositivity (E := E) K β Ω ∧
         finiteOsterwalderSchraderLayer (E := E) Ω ∧
         finiteWightmanReconstructionLayer (E := E) K β Ω := by
-  rcases hLayer with ⟨K, β, Ω, hStruct, hΩ_nonzero, hΩ_posTime⟩
+  rcases hLayer with ⟨K, β, Ω, hJointKernel, hCommOrthogonal, hΩ_nonzero, hΩ_posTime⟩
   refine ⟨K, β, Ω, ?_, ?_, ?_⟩
   · exact expectationSeedReflectionPositivity_of_hypotheses
-      (E := E) (K := K) (β := β) (Ω := Ω) hStruct
+      (E := E) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
   · exact finiteOsterwalderSchraderLayer_of_positiveTimeVector
       (E := E) (Ω := Ω) hΩ_posTime
   · exact finiteWightmanReconstructionLayer_of_expectationSeed
-      (E := E) (K := K) (β := β) (Ω := Ω) hStruct hΩ_nonzero
+      (E := E) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal hΩ_nonzero
 
 end FiniteQFTLayer
 
@@ -226,7 +232,8 @@ noncomputable def ofExpectationSeedFromLogDet
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω)
     (hΩ_nonzero : Ω ≠ 0)
     (hΩ_posTime : PositiveTimeVector Ω)
     (J : AlgebraEnd E)
@@ -234,7 +241,8 @@ noncomputable def ofExpectationSeedFromLogDet
     FiniteYangMillsBridge E :=
   ofConcrete (E := E) gauge rg_model
     (FiniteQFTLayer.ofExpectationSeedFinite
-      (E := E) (K := K) (β := β) (Ω := Ω) hStruct hΩ_nonzero hΩ_posTime)
+      (E := E) (K := K) (β := β) (Ω := Ω)
+      hJointKernel hCommOrthogonal hΩ_nonzero hΩ_posTime)
     (spectralGapFromLogDet (E := E) rg_model J)
     (spectralGapFromLogDet_pos_of_coercive
       (E := E) (rg_model := rg_model) (J := J) hCoercive)
@@ -278,13 +286,15 @@ theorem obligations_of_expectationSeedFromLogDet
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω)
     (hΩ_nonzero : Ω ≠ 0)
     (hΩ_posTime : PositiveTimeVector Ω)
     (J : AlgebraEnd E)
     (hCoercive : logDetCoercive (E := E) J) :
     let B := ofExpectationSeedFromLogDet
-      (E := E) gauge rg_model K β Ω hStruct hΩ_nonzero hΩ_posTime J hCoercive
+      (E := E) gauge rg_model K β Ω hJointKernel hCommOrthogonal
+      hΩ_nonzero hΩ_posTime J hCoercive
     hasGaugeRank B ∧ hasExistenceLayer B ∧ hasStrictMassGap B := by
   intro B
   exact obligations_of_bridge (E := E) B

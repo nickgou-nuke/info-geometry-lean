@@ -35,6 +35,9 @@ require LeanArchitect from git
 require «doc-gen4» from git
   "https://github.com/leanprover/doc-gen4.git"
   @ "v4.28.0"
+require Canonical from git
+  "https://github.com/chasenorman/CanonicalLean.git"
+  @ "v4.28.0"
 
 @[default_target]
 lean_lib DAG where

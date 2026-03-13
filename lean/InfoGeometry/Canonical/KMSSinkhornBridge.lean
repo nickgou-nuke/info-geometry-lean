@@ -321,6 +321,67 @@ structure ExpectationSeedKMSHypotheses
       inner ℝ ((A * B) Ω) Ω = inner ℝ ((B * A) Ω) Ω
 
 /--
+Joint-kernel hypothesis on `Ω`: the modular defect `(σ_β(B) - B)` annihilates
+`Ω` for every observable `B`.
+-/
+def JointKernelOnOmega
+    (K : AlgebraEnd F) (β : ℝ) (Ω : DoubledSpace F) : Prop :=
+  ∀ B : AlgebraEnd F, (modularShift (E := F) K β B - B) Ω = 0
+
+/--
+Commutator orthogonality on `Ω`:
+the expectation pairing of `[A,B]Ω` against `Ω` vanishes.
+-/
+def CommutatorOrthogonalOnOmega
+    (Ω : DoubledSpace F) : Prop :=
+  ∀ A B : AlgebraEnd F, inner ℝ (((A * B - B * A) Ω)) Ω = 0
+
+/--
+`JointKernelOnOmega` implies the structural modular-on-`Ω` identity.
+-/
+lemma modularOnOmega_of_jointKernel
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    (Ω : DoubledSpace F)
+    (hJointKernel : JointKernelOnOmega (F := F) K β Ω) :
+    ∀ B : AlgebraEnd F, modularShift (E := F) K β B Ω = B Ω := by
+  intro B
+  have hB : (modularShift (E := F) K β B - B) Ω = 0 := hJointKernel B
+  have hSub : modularShift (E := F) K β B Ω - B Ω = 0 := by
+    simpa using hB
+  exact sub_eq_zero.mp hSub
+
+/--
+Commutator orthogonality implies cyclic expectation pairing on products.
+-/
+lemma cyclicOnOmega_of_commutator_orthogonal
+    (Ω : DoubledSpace F)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω) :
+    ∀ A B : AlgebraEnd F,
+      inner ℝ ((A * B) Ω) Ω = inner ℝ ((B * A) Ω) Ω := by
+  intro A B
+  have hAB : inner ℝ (((A * B - B * A) Ω)) Ω = 0 := hCommOrthogonal A B
+  have hSub :
+      inner ℝ ((A * B) Ω) Ω - inner ℝ ((B * A) Ω) Ω = 0 := by
+    simpa [inner_sub_left] using hAB
+  exact sub_eq_zero.mp hSub
+
+/--
+Constructive packing of `ExpectationSeedKMSHypotheses` from the explicit
+joint-kernel and commutator-orthogonality inputs.
+-/
+theorem expectationSeedKMSHypotheses_of_jointKernel_commutator
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    (Ω : DoubledSpace F)
+    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω) :
+    ExpectationSeedKMSHypotheses (F := F) K β Ω := by
+  refine ⟨?_, ?_⟩
+  · exact modularOnOmega_of_jointKernel (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel
+  · exact cyclicOnOmega_of_commutator_orthogonal (F := F) (Ω := Ω) hCommOrthogonal
+
+/--
 Structural KMS theorem for the expectation seed:
 if the modularly shifted observable acts identically on `Ω` and the induced
 vector-state pairing is cyclic on products, then `ωSeed` satisfies KMS.
@@ -368,6 +429,22 @@ theorem omegaSeed_kms_of_hypotheses
   exact expectationSeedFunctional_kms_of_structural
     (F := F) (K := K) (β := β) (Ω := Ω)
     hStruct.modularOnOmega hStruct.cyclicOnOmega
+
+/--
+KMS law for `ωSeed` from explicit joint-kernel and commutator-orthogonality
+hypotheses.
+-/
+theorem omegaSeed_kms_of_jointKernel_commutator
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    (Ω : DoubledSpace F)
+    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω) :
+    SatisfiesKMSLike (E := F) K (omegaSeed (F := F) Ω) β := by
+  exact omegaSeed_kms_of_hypotheses
+    (F := F) (K := K) (β := β) (Ω := Ω)
+    (expectationSeedKMSHypotheses_of_jointKernel_commutator
+      (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal)
 
 /--
 IB-side Radon-Nikodym ratio at coordinate `(x0,t0)` and step `k`.
@@ -784,6 +861,39 @@ theorem sinkhorn_kmsControl_of_ibDynamics_weighted_from_ibData
     hStep (x0 := x0) (t0 := t0)
     (Ω := Ω) hΩ
     ⟨hModularOnOmega, hCyclicOnOmega⟩
+
+/--
+Fully explicit weighted IB-to-Sinkhorn control using derivable seed-KMS inputs:
+joint-kernel modular defect and commutator orthogonality on `Ω`.
+-/
+theorem sinkhorn_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω) :
+    SinkhornKMSControl n T K
+      (ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
+  refine sinkhorn_kmsControl_of_ibDynamics_weighted_from_expectationSeed
+    (n := n) (T := T) (K := K) (β := β)
+    (prob := prob) (pTrajectory := pTrajectory)
+    hStep (x0 := x0) (t0 := t0)
+    (Ω := Ω) hΩ ?_
+  exact expectationSeedKMSHypotheses_of_jointKernel_commutator
+    (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
 
 end SinkhornBridge
 

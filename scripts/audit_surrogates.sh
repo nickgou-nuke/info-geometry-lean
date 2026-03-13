@@ -115,4 +115,24 @@ if [[ -n "$REFLEXIVE_HITS" ]]; then
   exit 1
 fi
 
+echo "[surrogate-audit] checking canonical surface for forbidden Canonical tactic usage"
+CANONICAL_SURFACE_PATHS=(lean/InfoGeometry.lean lean/InfoGeometry/Library.lean lean/InfoGeometry/Canonical)
+# Disallow keeping `canonical` tactic calls in stable modules; it is allowed only as a temporary synthesis helper.
+# Match both:
+#   - `by canonical`
+#   - tactic-block line `canonical`
+# Only match executable tactic syntax (not prose): canonical followed by `(`, `[`, number, or EOL.
+CANONICAL_HITS=$(
+  rg -n -g '*.lean' \
+    "by[[:space:]]+canonical([[:space:]]*(\\[|\\(|[0-9]|$))|^[[:space:]]*canonical([[:space:]]*(\\[|\\(|[0-9]|$))" \
+    "${CANONICAL_SURFACE_PATHS[@]}" \
+  | rg -v ":[0-9]+:[[:space:]]*(--|/--|/-)" || true
+)
+
+if [[ -n "$CANONICAL_HITS" ]]; then
+  echo "$CANONICAL_HITS"
+  echo "[surrogate-audit] canonical tactic calls are forbidden in stable canonical modules"
+  exit 1
+fi
+
 echo "[surrogate-audit] OK"

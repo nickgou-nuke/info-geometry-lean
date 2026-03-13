@@ -184,83 +184,83 @@ noncomputable abbrev fockCommutator (A B : FockEndomorphism E) : FockEndomorphis
 noncomputable abbrev fockAnticommutator (A B : FockEndomorphism E) : FockEndomorphism E :=
   anticommutator (E := E) A B
 
-/-- CAR witness for the base ladder pair `(a, a†)` in this Fock model. -/
-structure CARWitness : Prop where
-  car_annihilation :
-    anticommutator (E := E) (annihilationOp (E := E)) (annihilationOp (E := E)) = 0
-  car_creation :
-    anticommutator (E := E) (creationOp (E := E)) (creationOp (E := E)) = 0
-  car_mixed :
-    anticommutator (E := E) (annihilationOp (E := E)) (creationOp (E := E))
-      = (2 : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
-
-/-- Canonical naming alias for CAR closure witness. -/
-abbrev CARClosure : Prop := CARWitness (E := E)
-
-namespace CARWitness
-
-/-- Constructor from explicit channel relations. -/
-theorem of_relations
-    (hAA :
-      anticommutator (E := E) (annihilationOp (E := E)) (annihilationOp (E := E)) = 0)
-    (hCC :
-      anticommutator (E := E) (creationOp (E := E)) (creationOp (E := E)) = 0)
-    (hAC :
-      anticommutator (E := E) (annihilationOp (E := E)) (creationOp (E := E))
-        = (2 : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)) :
-    CARWitness (E := E) := by
-  exact ⟨hAA, hCC, hAC⟩
+/--
+Exact odd-odd self bracket for the annihilation projector:
+`{a, a} = 2a` in the doubled-projector model.
+-/
+theorem anticommutator_annihilation_self :
+    anticommutator (E := E) (annihilationOp (E := E)) (annihilationOp (E := E))
+      = (2 : ℝ) • annihilationOp (E := E) := by
+  unfold anticommutator
+  rw [superBracket_odd_odd]
+  calc
+    (annihilationOp (E := E)).comp (annihilationOp (E := E))
+        + (annihilationOp (E := E)).comp (annihilationOp (E := E))
+      = annihilationOp (E := E) + annihilationOp (E := E) := by
+          simp [annihilation_eq_minus_projector, gradeMinusProj_idempotent]
+    _ = (2 : ℝ) • annihilationOp (E := E) := by
+          ext w
+          simp [two_smul]
 
 /--
-Concrete CAR witness in the degenerate concrete layer (`Subsingleton E`).
-In this layer all endomorphisms coincide.
+Exact odd-odd self bracket for the creation projector:
+`{a†, a†} = 2a†` in the doubled-projector model.
 -/
-theorem of_subsingleton [Subsingleton E] : CARWitness (E := E) := by
-  haveI hDS : Subsingleton (DoubledSpace E) :=
-    ⟨fun a b => (WithLp.equiv 2 (E × E)).injective (Subsingleton.elim _ _)⟩
-  refine of_relations (E := E) ?_ ?_ ?_
-  all_goals (apply ContinuousLinearMap.ext; intro v; exact hDS.elim _ _)
-
-end CARWitness
-
-/-- CCR witness for the base ladder pair `(a, a†)` in this Fock model. -/
-structure CCRWitness : Prop where
-  ccr_annihilation :
-    commutator (E := E) (annihilationOp (E := E)) (annihilationOp (E := E)) = 0
-  ccr_creation :
-    commutator (E := E) (creationOp (E := E)) (creationOp (E := E)) = 0
-  ccr_mixed :
-    commutator (E := E) (annihilationOp (E := E)) (creationOp (E := E))
-      = ContinuousLinearMap.id ℝ (DoubledSpace E)
-
-/-- Canonical naming alias for CCR closure witness. -/
-abbrev CCRClosure : Prop := CCRWitness (E := E)
-
-namespace CCRWitness
-
-/-- Constructor from explicit channel relations. -/
-theorem of_relations
-    (hAA :
-      commutator (E := E) (annihilationOp (E := E)) (annihilationOp (E := E)) = 0)
-    (hCC :
-      commutator (E := E) (creationOp (E := E)) (creationOp (E := E)) = 0)
-    (hAC :
-      commutator (E := E) (annihilationOp (E := E)) (creationOp (E := E))
-        = ContinuousLinearMap.id ℝ (DoubledSpace E)) :
-    CCRWitness (E := E) := by
-  exact ⟨hAA, hCC, hAC⟩
+theorem anticommutator_creation_self :
+    anticommutator (E := E) (creationOp (E := E)) (creationOp (E := E))
+      = (2 : ℝ) • creationOp (E := E) := by
+  unfold anticommutator
+  rw [superBracket_odd_odd]
+  calc
+    (creationOp (E := E)).comp (creationOp (E := E))
+        + (creationOp (E := E)).comp (creationOp (E := E))
+      = creationOp (E := E) + creationOp (E := E) := by
+          simp [creation_eq_plus_projector, gradePlusProj_idempotent]
+    _ = (2 : ℝ) • creationOp (E := E) := by
+          ext w
+          simp [two_smul]
 
 /--
-Concrete CCR witness in the degenerate concrete layer (`Subsingleton E`).
-In this layer all endomorphisms coincide.
+Exact mixed odd-odd bracket for grade projectors:
+`{a, a†} = 0`.
 -/
-theorem of_subsingleton [Subsingleton E] : CCRWitness (E := E) := by
-  haveI hDS : Subsingleton (DoubledSpace E) :=
-    ⟨fun a b => (WithLp.equiv 2 (E × E)).injective (Subsingleton.elim _ _)⟩
-  refine of_relations (E := E) ?_ ?_ ?_
-  all_goals (apply ContinuousLinearMap.ext; intro v; exact hDS.elim _ _)
+theorem anticommutator_annihilation_creation :
+    anticommutator (E := E) (annihilationOp (E := E)) (creationOp (E := E)) = 0 := by
+  unfold anticommutator
+  rw [superBracket_odd_odd]
+  simp [annihilation_eq_minus_projector, creation_eq_plus_projector,
+    gradeMinusProj_comp_gradePlusProj, gradePlusProj_comp_gradeMinusProj]
 
-end CCRWitness
+/--
+Exact even-even self bracket for the annihilation projector:
+`[a, a] = 0`.
+-/
+theorem commutator_annihilation_self :
+    commutator (E := E) (annihilationOp (E := E)) (annihilationOp (E := E)) = 0 := by
+  unfold commutator
+  rw [superBracket_even_left]
+  simp
+
+/--
+Exact even-even self bracket for the creation projector:
+`[a†, a†] = 0`.
+-/
+theorem commutator_creation_self :
+    commutator (E := E) (creationOp (E := E)) (creationOp (E := E)) = 0 := by
+  unfold commutator
+  rw [superBracket_even_left]
+  simp
+
+/--
+Exact mixed even-even bracket for grade projectors:
+`[a, a†] = 0`.
+-/
+theorem commutator_annihilation_creation :
+    commutator (E := E) (annihilationOp (E := E)) (creationOp (E := E)) = 0 := by
+  unfold commutator
+  rw [superBracket_even_left]
+  simp [annihilation_eq_minus_projector, creation_eq_plus_projector,
+    gradeMinusProj_comp_gradePlusProj, gradePlusProj_comp_gradeMinusProj]
 
 /-- Lemma `anticommutator_symm`. -/
 lemma anticommutator_symm (A B : FockEnd E) :
@@ -302,67 +302,92 @@ theorem superBracket_bogoliubov_covariance
   ac_rfl
 
 /--
-CAR-collapsed Bogoliubov covariance:
-under CAR witness, odd-odd bracket of transformed ladder modes is the
-weighted sum of the mixed CAR channel.
+Constructive odd-odd Bogoliubov bracket in the doubled-projector model:
+`{a_B, a†_B} = 2uv · Id`.
 -/
-theorem anticommutator_bogoliubov_of_CAR
-    (B : BogoliubovParams) (hCAR : CARWitness (E := E)) :
+theorem anticommutator_bogoliubov_projector_model
+    (B : BogoliubovParams) :
     anticommutator (E := E)
         (bogoliubovAnnihilation (E := E) B)
         (bogoliubovCreation (E := E) B)
       =
-      ((B.u * B.u) • ((2 : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)))
-        + ((B.v * B.v) • ((2 : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E))) := by
+      (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E) := by
   have hCov :=
     superBracket_bogoliubov_covariance (E := E) (p := SuperParity.odd) (q := SuperParity.odd) B
-  have hca :
-      anticommutator (E := E) (creationOp (E := E)) (annihilationOp (E := E))
-        = (2 : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E) := by
-    calc
-      anticommutator (E := E) (creationOp (E := E)) (annihilationOp (E := E))
-          = anticommutator (E := E) (annihilationOp (E := E)) (creationOp (E := E)) := by
-            exact anticommutator_symm (E := E) _ _
-      _ = (2 : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E) := hCAR.car_mixed
-  unfold anticommutator
-  rw [hCov]
-  simp [superBracket_smul_left, superBracket_smul_right,
-    hCAR.car_annihilation, hCAR.car_creation, hCAR.car_mixed, hca,
-    smul_smul, mul_assoc]
-  ext w
-  simp [add_assoc]
+  have hmm :
+      (annihilationOp (E := E)).comp (annihilationOp (E := E)) = annihilationOp (E := E) := by
+    simp [annihilation_eq_minus_projector, gradeMinusProj_idempotent]
+  have hpp :
+      (creationOp (E := E)).comp (creationOp (E := E)) = creationOp (E := E) := by
+    simp [creation_eq_plus_projector, gradePlusProj_idempotent]
+  have hmp :
+      (annihilationOp (E := E)).comp (creationOp (E := E)) = 0 := by
+    simp [annihilation_eq_minus_projector, creation_eq_plus_projector, gradeMinusProj_comp_gradePlusProj]
+  have hpm :
+      (creationOp (E := E)).comp (annihilationOp (E := E)) = 0 := by
+    simp [annihilation_eq_minus_projector, creation_eq_plus_projector, gradePlusProj_comp_gradeMinusProj]
+  have hExpand :
+      anticommutator (E := E)
+          (bogoliubovAnnihilation (E := E) B)
+          (bogoliubovCreation (E := E) B)
+        =
+        (B.u * B.u) • (0 : FockEnd E) +
+          ((B.u * B.v) • annihilationOp (E := E) + (B.u * B.v) • annihilationOp (E := E)) +
+          ((B.u * B.v) • creationOp (E := E) + (B.u * B.v) • creationOp (E := E) +
+            (B.v * B.v) • (0 : FockEnd E)) := by
+    have huv : B.v * B.u = B.u * B.v := by ring
+    unfold anticommutator
+    rw [hCov]
+    simp [superBracket_smul_left, superBracket_smul_right,
+      superBracket_odd_odd, hmm, hpp, hmp, hpm, smul_smul, mul_comm]
+  rw [hExpand]
+  calc
+    (B.u * B.u) • (0 : FockEnd E) +
+      ((B.u * B.v) • annihilationOp (E := E) + (B.u * B.v) • annihilationOp (E := E)) +
+      ((B.u * B.v) • creationOp (E := E) + (B.u * B.v) • creationOp (E := E) +
+        (B.v * B.v) • (0 : FockEnd E))
+        = ((B.u * B.v + B.u * B.v) : ℝ) •
+          (annihilationOp (E := E) + creationOp (E := E)) := by
+            have hzeroU : (B.u * B.u) • (0 : FockEnd E) = 0 := by
+              ext w
+              simp
+            have hzeroV : (B.v * B.v) • (0 : FockEnd E) = 0 := by
+              ext w
+              simp
+            rw [hzeroU, hzeroV]
+            simp [add_smul, smul_add, add_assoc, add_comm]
+    _ = ((B.u * B.v + B.u * B.v) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+            have hsum :
+                annihilationOp (E := E) + creationOp (E := E)
+                  = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+              simpa [add_comm] using creation_add_annihilation (E := E)
+            rw [hsum]
+    _ = (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+            have hcoef : (B.u * B.v + B.u * B.v : ℝ) = B.u * (B.v * 2) := by ring
+            rw [hcoef]
 
 /--
-CCR-collapsed Bogoliubov covariance:
-under CCR witness, even-even bracket of transformed ladder modes is the
-weighted sum of the mixed CCR channel.
+Constructive even-even Bogoliubov bracket in the doubled-projector model:
+`[a_B, a†_B] = 0`.
 -/
-theorem commutator_bogoliubov_of_CCR
-    (B : BogoliubovParams) (hCCR : CCRWitness (E := E)) :
+theorem commutator_bogoliubov_projector_model
+    (B : BogoliubovParams) :
     commutator (E := E)
         (bogoliubovAnnihilation (E := E) B)
         (bogoliubovCreation (E := E) B)
-      =
-      ((B.u * B.u) • ContinuousLinearMap.id ℝ (DoubledSpace E))
-        + ((B.v * B.v) • (-(ContinuousLinearMap.id ℝ (DoubledSpace E)))) := by
+      = 0 := by
   have hCov :=
     superBracket_bogoliubov_covariance (E := E) (p := SuperParity.even) (q := SuperParity.even) B
-  have hca :
-      commutator (E := E) (creationOp (E := E)) (annihilationOp (E := E))
-        = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-    calc
-      commutator (E := E) (creationOp (E := E)) (annihilationOp (E := E))
-          = - commutator (E := E) (annihilationOp (E := E)) (creationOp (E := E)) := by
-            exact commutator_swap (E := E) _ _
-      _ = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-            rw [hCCR.ccr_mixed]
+  have hmp :
+      (annihilationOp (E := E)).comp (creationOp (E := E)) = 0 := by
+    simp [annihilation_eq_minus_projector, creation_eq_plus_projector, gradeMinusProj_comp_gradePlusProj]
+  have hpm :
+      (creationOp (E := E)).comp (annihilationOp (E := E)) = 0 := by
+    simp [annihilation_eq_minus_projector, creation_eq_plus_projector, gradePlusProj_comp_gradeMinusProj]
   unfold commutator
   rw [hCov]
-  simp [superBracket_smul_left, superBracket_smul_right,
-    hCCR.ccr_annihilation, hCCR.ccr_creation, hCCR.ccr_mixed, hca,
-    smul_smul]
-  ext w
-  simp [add_assoc]
+  simp [superBracket_smul_left, superBracket_smul_right, superBracket_even_left,
+    hmp, hpm]
 
 end FockSuper
 

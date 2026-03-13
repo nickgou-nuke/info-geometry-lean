@@ -150,6 +150,72 @@ lemma modularConjugationJ_anticommutes_modularSign :
       = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) :=
   complex_i_sq (E := E)
 
+/-- `J` is even for the doubled-space `Z₂` grading. -/
+lemma modularConjugationJ_isEven :
+    isEven (E := E) (modularConjugationJ (E := E)) := by
+  unfold isEven modularConjugationJ
+  rfl
+
+/-- `ε = sgn(K)` is odd for the doubled-space `Z₂` grading. -/
+lemma modularSignEpsilon_isOdd :
+    isOdd (E := E) (modularSignEpsilon (E := E)) := by
+  simpa [modularSignEpsilon] using (spectral_epsilon_isOdd (E := E))
+
+/-- `Jε` is odd for the doubled-space `Z₂` grading. -/
+lemma modularComplexI_isOdd :
+    isOdd (E := E) (modularComplexI (E := E)) := by
+  simpa [modularComplexI] using (complex_i_isOdd (E := E))
+
+/--
+Odd-odd channel for the modular CPT atom vanishes:
+`Jε + εJ = 0`.
+-/
+lemma modularConjugationJ_anticommutator_modularSignEpsilon :
+    (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
+      + (modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E))
+      = 0 := by
+  have hanti := modularConjugationJ_anticommutes_modularSign (E := E)
+  calc
+    (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
+        + (modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E))
+      = -((modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E)))
+          + (modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E)) := by rw [hanti]
+    _ = 0 := by abel
+
+/--
+Even-odd channel for the modular CPT atom:
+`[J, ε] = 2(Jε)`.
+-/
+lemma modularConjugationJ_commutator_modularSignEpsilon :
+    (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
+      - (modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E))
+      = (2 : ℝ) • ((modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))) := by
+  have hanti := modularConjugationJ_anticommutes_modularSign (E := E)
+  let A := (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
+  have htwo : (2 : ℝ) • A = A + A := by
+    simpa using (two_smul ℝ A)
+  calc
+    (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
+        - (modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E))
+      = A + A := by
+          simp [A, sub_eq_add_neg, hanti]
+    _ = (2 : ℝ) • A := by rw [htwo]
+    _ = (2 : ℝ) • ((modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))) := by
+          simp [A]
+
+/--
+Canonical supergraded package for the modular CPT atom `⟨1, ε, J, Jε⟩`.
+-/
+theorem modularCPT_supergraded_lie_package :
+    isEven (E := E) (modularConjugationJ (E := E)) ∧
+      isOdd (E := E) (modularSignEpsilon (E := E)) ∧
+      isOdd (E := E) (modularComplexI (E := E)) ∧
+      (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
+        + (modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E)) = 0 := by
+  exact ⟨modularConjugationJ_isEven (E := E), modularSignEpsilon_isOdd (E := E),
+    modularComplexI_isOdd (E := E),
+    modularConjugationJ_anticommutator_modularSignEpsilon (E := E)⟩
+
 /--
 Canonical positive-time subspace in doubled form:
 vectors with matched components `(x, x)`.

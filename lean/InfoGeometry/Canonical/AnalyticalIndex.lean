@@ -227,6 +227,38 @@ theorem sinkhornRicciIndexInvariant_of_components
     SinkhornRicciIndexInvariant n T flow D Γ := by
   exact ⟨hSinkhorn, hRicciZero, hIndex⟩
 
+/--
+Derived constructor for the coupled invariant package from canonical hypotheses:
+doubly-stochastic Sinkhorn dynamics, normalized scalar Kähler-Ricci fixed-point,
+and pointwise-constant chiral decomposition/range data.
+-/
+theorem sinkhornRicciIndexInvariant_of_derived_state_hypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
+    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0))
+    (hRangePlus :
+      ∀ s : ℝ,
+        LinearMap.range (chiralProjectorPlus (Γ s)) =
+          LinearMap.range (chiralProjectorPlus (Γ 0)))
+    (hRangeMinus :
+      ∀ s : ℝ,
+        LinearMap.range (chiralProjectorMinus (Γ s)) =
+          LinearMap.range (chiralProjectorMinus (Γ 0))) :
+    SinkhornRicciIndexInvariant n T flow D Γ := by
+  refine sinkhornRicciIndexInvariant_of_components
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    ?_ ?_ ?_
+  · intro k label
+    exact sinkhorn_dynamics_step_control (n := n) T k label
+  · exact normalizedKaehlerRicci_fixedpoint_eq_zero
+      (E := X) flow hNorm hFixed
+  · exact indexInvariantAlong_of_chiralData_const
+      (D := D) (Γ := Γ) hplus hminus hRangePlus hRangeMinus
+
 end CoupledInvariant
 
 section KMSCapstone

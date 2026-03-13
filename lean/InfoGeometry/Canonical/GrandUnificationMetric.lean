@@ -50,31 +50,29 @@ theorem metric_nonneg_of_metricPositive
   unfold g
   exact (hPos x).inner_nonneg_left u
 
-/-- Structure `MetricLaws`. -/
-structure MetricLaws (J : JordanKKTData E) : Prop where
-  metric_positive : MetricPositive J
-  bregman_local : ∀ x u,
-    Filter.Tendsto (fun ε : ℝ => (J.DBregman (x + ε • u) x) / (ε ^ 2))
-      (nhdsWithin 0 (Set.Ioi 0)) (nhds ((1 / 2 : ℝ) * J.g x u u))
-
 /--
 Bridge theorem: the Riemannian metric is symmetric once symmetry is
 provided by the concrete model.
 -/
 @[blueprint "thm:grand-unification-metric-symmetry"]
-theorem metric_symmetry (J : JordanKKTData E) (L : MetricLaws J) (x u v : E) :
+theorem metric_symmetry
+    (J : JordanKKTData E)
+    (hPos : MetricPositive J)
+    (x u v : E) :
     J.g x u v = J.g x v u :=
-  metric_symmetry_of_metricPositive J L.metric_positive x u v
+  metric_symmetry_of_metricPositive J hPos x u v
 
 /--
-Local expansion of Bregman divergence:
-D_K(x + εu, x) = 1/2 ε² g_x(u, u) + O(ε³).
-This theorem binds the macroscopic divergence to the microscopic Riemannian metric.
+Second-order local Bregman expansion statement.
+
+This is a formulation target for the metric layer and is intentionally left as a
+proposition (no derived theorem is claimed at this layer until proved from
+calculus assumptions on `J.K` / `J.gradK`).
 -/
-@[blueprint "thm:grand-unification-bregman-local-metric"]
-theorem dbregman_local_limit (J : JordanKKTData E) (L : MetricLaws J) (x u : E) :
+def BregmanLocalSecondOrder (J : JordanKKTData E) : Prop :=
+  ∀ x u : E,
     Filter.Tendsto (fun ε : ℝ => (J.DBregman (x + ε • u) x) / (ε ^ 2))
-      (nhdsWithin 0 (Set.Ioi 0)) (nhds ((1 / 2 : ℝ) * J.g x u u)) :=
-  L.bregman_local (x := x) (u := u)
+      (nhdsWithin 0 (Set.Ioi 0))
+      (nhds ((1 / 2 : ℝ) * J.g x u u))
 
 end InfoGeometry.Canonical.GrandUnification.JordanKKTData

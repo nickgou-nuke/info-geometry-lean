@@ -94,11 +94,6 @@ noncomputable abbrev chiralScale : ℝ := CI.epsilon
 
 /-! ### 3. Unification Theorems -/
 
-/-- Canonical closure condition: spectral and metric projectors commute. -/
-def ProjectorCommutationClosure : Prop :=
-  CI.spectralChiralProjector * CI.metricChiralProjector
-    = CI.metricChiralProjector * CI.spectralChiralProjector
-
 omit [FiniteDimensional ℝ E] in
 /--
 Theorem: The chiral anomaly vanishes exactly when the spectral and metric
@@ -111,27 +106,31 @@ theorem chiral_commutation_link :
   simp [chiralAnomaly, spectralChiralProjector, metricChiralProjector, sub_eq_zero]
 
 omit [FiniteDimensional ℝ E] in
-/-- Theorem `chiralAnomaly_eq_zero_iff_projectorCommutation`. -/
-theorem chiralAnomaly_eq_zero_iff_projectorCommutation :
-    CI.chiralAnomalyOperator = 0 ↔ CI.ProjectorCommutationClosure := by
-  simpa [chiralAnomalyOperator, ProjectorCommutationClosure] using
-    (CI.chiral_commutation_link)
+/-- Vanishing anomaly iff spectral and metric projectors commute. -/
+theorem chiralAnomalyOperator_eq_zero_iff_projectors_commute :
+    CI.chiralAnomalyOperator = 0 ↔
+      CI.spectralChiralProjector * CI.metricChiralProjector
+        = CI.metricChiralProjector * CI.spectralChiralProjector := by
+  simpa [chiralAnomalyOperator] using (CI.chiral_commutation_link)
 
 /--
 Constructive forward direction: vanishing anomaly implies projector commutation.
 -/
-theorem projectorCommutationClosure_of_chiralAnomaly_eq_zero
+theorem projectors_commute_of_chiralAnomaly_eq_zero
     (hχ : CI.chiralAnomalyOperator = 0) :
-    CI.ProjectorCommutationClosure :=
-  (CI.chiralAnomaly_eq_zero_iff_projectorCommutation).1 hχ
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      = CI.metricChiralProjector * CI.spectralChiralProjector :=
+  (CI.chiralAnomalyOperator_eq_zero_iff_projectors_commute).1 hχ
 
 /--
 Constructive reverse direction: projector commutation implies vanishing anomaly.
 -/
-theorem chiralAnomaly_eq_zero_of_projectorCommutationClosure
-    (hComm : CI.ProjectorCommutationClosure) :
+theorem chiralAnomaly_eq_zero_of_projectors_commute
+    (hComm :
+      CI.spectralChiralProjector * CI.metricChiralProjector
+        = CI.metricChiralProjector * CI.spectralChiralProjector) :
     CI.chiralAnomalyOperator = 0 :=
-  (CI.chiralAnomaly_eq_zero_iff_projectorCommutation).2 hComm
+  (CI.chiralAnomalyOperator_eq_zero_iff_projectors_commute).2 hComm
 
 /--
 Cartan-like Decomposition of the Information Manifold.

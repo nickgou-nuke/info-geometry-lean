@@ -234,6 +234,24 @@ theorem indexInvariantAlong_of_chiralSliceIso
   unfold analyticalIndex
   simp [hPlusFinrank, hMinusFinrank]
 
+/--
+Direct deformation invariance route:
+modular-flow / Clifford-bundle transport of chiral slices implies analytical
+index invariance along the full family.
+-/
+theorem indexInvariantAlong_of_modularCliffordTransport
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    {ι : Type*}
+    (σ : ℝ → Endomorphism V)
+    (clAct : ι → Endomorphism V)
+    (unit : ι)
+    (hTrans : ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
+    IndexInvariantAlong D Γ := by
+  exact indexInvariantAlong_of_chiralSliceIso (D := D) (Γ := Γ)
+    (chiralSliceIsoAlong_of_modularCliffordTransport
+      (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans)
+
 end Core
 
 section Bott
@@ -327,28 +345,6 @@ theorem sinkhornRicciIndexInvariant_of_components
   exact ⟨hSinkhorn, hRicciZero, hIndex⟩
 
 /--
-Derived constructor for the coupled invariant package from normalized
-scalar Kähler-Ricci fixed-point and deformation-style chiral slice
-equivalences.
--/
-theorem sinkhornRicciIndexInvariant_of_sliceIso_state_hypotheses
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
-    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hIso : ChiralSliceIsoAlong D Γ) :
-    SinkhornRicciIndexInvariant n T flow D Γ := by
-  refine sinkhornRicciIndexInvariant_of_components
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    ?_ ?_ ?_
-  · intro k label
-    exact sinkhorn_dynamics_step_control (n := n) T k label
-  · exact normalizedKaehlerRicci_fixedpoint_eq_zero
-      (E := X) flow hNorm hFixed
-  · exact indexInvariantAlong_of_chiralSliceIso (D := D) (Γ := Γ) hIso
-
-/--
 Derived constructor using modular-flow / Clifford-bundle transport hypotheses
 for the chiral slices.
 -/
@@ -365,11 +361,15 @@ theorem sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
     (hTrans :
       ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
     SinkhornRicciIndexInvariant n T flow D Γ := by
-  exact sinkhornRicciIndexInvariant_of_sliceIso_state_hypotheses
+  refine sinkhornRicciIndexInvariant_of_components
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    hNorm hFixed
-    (chiralSliceIsoAlong_of_modularCliffordTransport
-      (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans)
+    ?_ ?_ ?_
+  · intro k label
+    exact sinkhorn_dynamics_step_control (n := n) T k label
+  · exact normalizedKaehlerRicci_fixedpoint_eq_zero
+      (E := X) flow hNorm hFixed
+  · exact indexInvariantAlong_of_modularCliffordTransport
+      (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans
 
 end CoupledInvariant
 

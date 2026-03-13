@@ -216,6 +216,30 @@ theorem modularCPT_supergraded_lie_package :
     modularComplexI_isOdd (E := E),
     modularConjugationJ_anticommutator_modularSignEpsilon (E := E)⟩
 
+/-- Canonical modular CPT supercharge, `Q := Jε`. -/
+noncomputable def modularCPTSupercharge : Supercharge (E := E) where
+  Q := modularComplexI (E := E)
+  odd := modularComplexI_isOdd (E := E)
+
+/-- The modular CPT supercharge squares to `-Id`. -/
+lemma modularCPTSupercharge_hamiltonian :
+    superHamiltonian (modularCPTSupercharge (E := E))
+      = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+  simpa [modularCPTSupercharge, modularComplexI] using
+    (complex_iSupercharge_hamiltonian (E := E))
+
+/-- `Q = Jε` maps grade-plus states to grade-minus states. -/
+lemma modularCPTSupercharge_maps_plus_to_minus
+    {v : DoubledSpace E} (hv : inGradePlus (E := E) v) :
+    inGradeMinus (E := E) ((modularCPTSupercharge (E := E)).Q v) := by
+  exact supercharge_maps_plus_to_minus (S := modularCPTSupercharge (E := E)) hv
+
+/-- `Q = Jε` maps grade-minus states to grade-plus states. -/
+lemma modularCPTSupercharge_maps_minus_to_plus
+    {v : DoubledSpace E} (hv : inGradeMinus (E := E) v) :
+    inGradePlus (E := E) ((modularCPTSupercharge (E := E)).Q v) := by
+  exact supercharge_maps_minus_to_plus (S := modularCPTSupercharge (E := E)) hv
+
 /--
 Canonical positive-time subspace in doubled form:
 vectors with matched components `(x, x)`.

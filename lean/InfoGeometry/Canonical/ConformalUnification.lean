@@ -145,7 +145,7 @@ This discharges commutation without assuming it directly:
 the dynamics force `flow = 0` and `flow = chiralScale`, hence `chiralScale = 0`,
 which forces vanishing anomaly and therefore projector commutation.
 -/
-theorem projectors_commute_of_anomalyDriven_normalized_fixedpoint
+private theorem projectors_commute_of_anomalyDriven_normalized_fixedpoint
     (flow : ScalarRicciFlow E)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := E) flow s = 0)
@@ -231,8 +231,8 @@ theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint
         (fun _ => CI.chiralScale) :=
     CI.anomalyDrivenScalarRicciFlow_of_normalized_and_chiralScale_zero
       (flow := flow) hNorm hScaleZero
-  exact CI.projectors_commute_of_anomalyDriven_normalized_fixedpoint
-    (flow := flow) hNorm hFixed hAnomFlow
+  exact projectors_commute_of_anomalyDriven_normalized_fixedpoint
+    (CI := CI) (flow := flow) hNorm hFixed hAnomFlow
 
 /--
 Cartan-like Decomposition of the Information Manifold.

@@ -133,6 +133,7 @@ import InfoGeometry.Canonical.Triality
 import InfoGeometry.Canonical.Twistor
 import InfoGeometry.Canonical.WeylInformationGauge
 import InfoGeometry.Canonical.WilsonLoop
+import InfoGeometry.Canonical.YangMillsFinite
 
 /-!
 # InfoGeometry.Canonical.All

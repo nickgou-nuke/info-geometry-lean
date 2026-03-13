@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
+import Mathlib.Tactic.NoncommRing
 
 namespace InfoGeometry.Canonical.Drazin
 
@@ -16,11 +17,45 @@ variable {R : Type*} [Ring R] {a b : R} {k : ℕ}
 /-- Definition `projection`. -/
 def projection (a b : R) : R := a * b
 
+/-- Complementary Drazin projector `Q = 1 - P`. -/
+def complementaryProjection (a b : R) : R := 1 - projection a b
+
 /-- Theorem `projection_is_idempotent`. -/
 theorem projection_is_idempotent (h : IsDrazinInverse a b k) : 
     (projection a b) * (projection a b) = projection a b := by
   unfold projection
   rw [mul_assoc, ← mul_assoc b a b, h.idempotent]
+
+/-- The complementary Drazin projector is idempotent. -/
+theorem complementaryProjection_is_idempotent (h : IsDrazinInverse a b k) :
+    (complementaryProjection a b) * (complementaryProjection a b) =
+      complementaryProjection a b := by
+  have hP : (projection a b) * (projection a b) = projection a b :=
+    projection_is_idempotent h
+  unfold complementaryProjection
+  noncomm_ring [hP]
+
+/-- The Drazin projector and its complement are left-orthogonal. -/
+theorem projection_mul_complementaryProjection (h : IsDrazinInverse a b k) :
+    projection a b * complementaryProjection a b = 0 := by
+  have hP : (projection a b) * (projection a b) = projection a b :=
+    projection_is_idempotent h
+  unfold complementaryProjection
+  noncomm_ring [hP]
+
+/-- The Drazin projector and its complement are right-orthogonal. -/
+theorem complementaryProjection_mul_projection (h : IsDrazinInverse a b k) :
+    complementaryProjection a b * projection a b = 0 := by
+  have hP : (projection a b) * (projection a b) = projection a b :=
+    projection_is_idempotent h
+  unfold complementaryProjection
+  noncomm_ring [hP]
+
+/-- Drazin projector decomposition of identity: `P + Q = 1`. -/
+theorem projection_add_complementaryProjection :
+    projection a b + complementaryProjection a b = (1 : R) := by
+  unfold complementaryProjection
+  noncomm_ring
 
 /-- Theorem `projection_comm`. -/
 theorem projection_comm (h : IsDrazinInverse a b k) : 

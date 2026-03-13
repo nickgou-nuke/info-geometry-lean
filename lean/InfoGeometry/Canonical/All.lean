@@ -83,6 +83,7 @@ import InfoGeometry.Canonical.GrandUnificationMetric
 import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.HolographicEmergence
 import InfoGeometry.Canonical.IB
+import InfoGeometry.Canonical.InformationCalculus
 import InfoGeometry.Canonical.InformationNumber
 import InfoGeometry.Canonical.InformationTorsion
 import InfoGeometry.Canonical.KKFoundation

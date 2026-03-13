@@ -618,16 +618,6 @@ variable {X V F : Type}
   [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
   [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
-/-- Explicit thermodynamic-to-geometric directional hypothesis. -/
-abbrev ThermodynamicToGeometric
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ) : Prop :=
-  ThermodynamicKMSState n T K ω β → GeometricAlgebraicState n T flow D Γ
-
 /--
 IB-dynamics Bochner-Weitzenboeck bridge:
 `SinkhornKMSClosure` is derived from an IB iterate trajectory.
@@ -679,7 +669,7 @@ theorem bochnerWeitzenboeckBridge_of_ibDynamics
 
 /--
 Packaging of both directional Wheeler-DeWitt bridges from
-IB iterate dynamics plus an established geometric+algebraic state.
+IB iterate dynamics plus derived slice-iso geometric state hypotheses.
 -/
 theorem directionalBridges_of_ibDynamics_and_indexHypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -700,13 +690,9 @@ theorem directionalBridges_of_ibDynamics_and_indexHypotheses
     (hΩ : Ω ≠ 0)
     (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
     (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
-    (hThermoToGeo :
-      ThermodynamicToGeometric (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-        (K := K)
-        (ω := ibInducedObservableWeighted
-          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-          pTrajectory x0 t0 (omegaSeed (F := F) Ω))
-        (β := β)) :
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hIso : ChiralSliceIsoAlong D Γ) :
     (GeometricAlgebraicState n T flow D Γ →
       ThermodynamicKMSState n T K
         (ibInducedObservableWeighted
@@ -725,7 +711,10 @@ theorem directionalBridges_of_ibDynamics_and_indexHypotheses
       (prob := prob) (pTrajectory := pTrajectory)
       hStep (x0 := x0) (t0 := t0)
       (Ω := Ω) hΩ hJointKernel hCommOrthogonal
-  · exact hThermoToGeo
+  · intro _hThermo
+    exact sinkhornRicciIndexInvariant_of_sliceIso_state_hypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      hNorm hFixed hIso
 
 /--
 Reduced-hypothesis Wheeler-DeWitt implication (IB-dynamics form):
@@ -765,10 +754,11 @@ theorem information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
     (Ω := Ω) hΩ hJointKernel hCommOrthogonal
 
 /--
-Conditional Wheeler-DeWitt equivalence (IB-dynamics form):
-the reverse direction is explicit via `ThermodynamicToGeometric`.
+Wheeler-DeWitt equivalence (IB-dynamics form) from slice-iso state hypotheses:
+the reverse direction is discharged constructively from
+`hNorm + hFixed + hIso`.
 -/
-theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses_of_thermodynamicToGeometric
+theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_sliceIso_state_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
@@ -787,21 +777,19 @@ theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses
     (hΩ : Ω ≠ 0)
     (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
     (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
-    (hThermoToGeo :
-      ThermodynamicToGeometric (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-        (K := K)
-        (ω := ibInducedObservableWeighted
-          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-          pTrajectory x0 t0 (omegaSeed (F := F) Ω))
-        (β := β)) :
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hIso : ChiralSliceIsoAlong D Γ) :
     ThermodynamicKMSState n T K
       (ibInducedObservableWeighted
         (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
         pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
       ↔ GeometricAlgebraicState n T flow D Γ := by
   constructor
-  · intro hThermo
-    exact hThermoToGeo hThermo
+  · intro _hThermo
+    exact sinkhornRicciIndexInvariant_of_sliceIso_state_hypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      hNorm hFixed hIso
   · intro hGeoAlg
     exact information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)

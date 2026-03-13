@@ -129,6 +129,14 @@ noncomputable abbrev modularSignEpsilon : DoubledSpace E →L[ℝ] DoubledSpace 
 noncomputable abbrev modularComplexI : DoubledSpace E →L[ℝ] DoubledSpace E :=
   complex_i (E := E)
 
+/--
+Legacy/Clifford compatibility: the modular complex axis `Jε` coincides with the
+dilation generator extracted from `[J, ε]`.
+-/
+lemma modularComplexI_eq_dilationOperator :
+    modularComplexI (E := E) = dilationOperator (E := E) := by
+  simpa [modularComplexI] using (dilationOperator_eq_complex_i (E := E)).symm
+
 @[simp] lemma modularConjugationJ_sq :
     (modularConjugationJ (E := E)).comp (modularConjugationJ (E := E))
       = ContinuousLinearMap.id ℝ (DoubledSpace E) :=
@@ -233,6 +241,11 @@ lemma modularCPTSupercharge_maps_plus_to_minus
     {v : DoubledSpace E} (hv : inGradePlus (E := E) v) :
     inGradeMinus (E := E) ((modularCPTSupercharge (E := E)).Q v) := by
   exact supercharge_maps_plus_to_minus (S := modularCPTSupercharge (E := E)) hv
+
+/-- The modular CPT supercharge agrees with the legacy dilation generator. -/
+lemma modularCPTSupercharge_Q_eq_dilationOperator :
+    (modularCPTSupercharge (E := E)).Q = dilationOperator (E := E) := by
+  simpa [modularCPTSupercharge] using modularComplexI_eq_dilationOperator (E := E)
 
 /-- `Q = Jε` maps grade-minus states to grade-plus states. -/
 lemma modularCPTSupercharge_maps_minus_to_plus

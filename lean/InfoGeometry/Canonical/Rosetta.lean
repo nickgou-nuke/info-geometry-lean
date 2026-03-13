@@ -16,6 +16,9 @@ import InfoGeometry.Canonical.ChiralGravity
 import InfoGeometry.Canonical.ChiralTorsionBridge
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.WilsonLoop
+import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Canonical.Twistor
+import InfoGeometry.Canonical.Singular
 
 /-!
 # Research.Rosetta
@@ -169,20 +172,44 @@ export InfoGeometry.Canonical.BogoliubovFockSuper (
   fockSuperBracket
   fockCommutator
   fockAnticommutator
-  CARWitness
-  CARClosure
-  CCRWitness
-  CCRClosure
+  anticommutator_annihilation_self
+  anticommutator_creation_self
+  anticommutator_annihilation_creation
+  commutator_annihilation_self
+  commutator_creation_self
+  commutator_annihilation_creation
   anticommutator_symm
   fockAnticommutator_symm
   commutator_swap
   fockCommutator_swap
   superBracket_bogoliubov_covariance
-  anticommutator_bogoliubov_of_CAR
-  commutator_bogoliubov_of_CCR
+  anticommutator_bogoliubov_projector_model
+  commutator_bogoliubov_projector_model
   einsteinInducedChemicalPotential
   einsteinFockDeformationOperator
   grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
+)
+
+export InfoGeometry.Canonical.TomitaTakesaki (
+  modularCPTSupercharge
+  modularComplexI_eq_dilationOperator
+  modularCPTSupercharge_Q_eq_dilationOperator
+)
+
+export InfoGeometry.Canonical (
+  IsMoorePenroseInverse
+  IsDrazinInverse
+  EinsteinAnomaly
+  exists_regularization_pair_of_isUnit
+  EinsteinAnomaly_eq_zero_of_regularization_pair
+)
+
+export InfoGeometry.Twistor.Incidence (
+  Twistor
+  Incident
+  pointAction
+  twistorMap
+  incident_points_null_separated
 )
 
 export InfoGeometry.Canonical.RedLine (

@@ -75,16 +75,19 @@ lemma isEinsteinKaehlerAtWith_zero_of_isRicciFlat
   rw [hFlat u v]
   ring
 
-/--
-Constructive discharge of the Monge-Ampere-to-Ricci bridge from an explicit
-Ricci-flat witness.
--/
-lemma constantMongeAmpereImpliesRicciFlat_of_isRicciFlat
+/-- Projection: a `MongeAmpereRicciState` carries the constant-density witness. -/
+theorem hasConstantMongeAmpereDensity_of_mongeAmpereRicciState
     (R : RicciTensor E) (K : KaehlerInformationGeometry E)
-    (hFlat : IsRicciFlat R) :
-    HasConstantMongeAmpereDensity K.H → IsRicciFlat R := by
-  intro _hConst
-  exact hFlat
+    (hState : MongeAmpereRicciState R K) :
+    HasConstantMongeAmpereDensity K.H :=
+  hState.1
+
+/-- Projection: a `MongeAmpereRicciState` carries Ricci-flatness. -/
+theorem isRicciFlat_of_mongeAmpereRicciState
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E)
+    (hState : MongeAmpereRicciState R K) :
+    IsRicciFlat R :=
+  hState.2
 
 /--
 Constructive state packaging:
@@ -143,53 +146,48 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [CompleteSpace E]
 
 /--
-Calabi-Yau spectral closure hypothesis:
-constant Monge-Ampere density forces vanishing spinorial scalar curvature.
+Constructive Calabi-Yau spectral closure state:
+constant Monge-Ampere density together with vanishing spinorial scalar curvature.
 -/
 def MongeAmpereSpinorialClosure
     (IST : InfoSpectralTriple E) : Prop :=
-  HasConstantMongeAmpereDensity IST.H → spinorialScalarCurvature IST = 0
+  HasConstantMongeAmpereDensity IST.H ∧ spinorialScalarCurvature IST = 0
 
 /-- Constructive spectral Calabi-Yau state (non-bridge form). -/
 def CalabiYauSpinorialState (IST : InfoSpectralTriple E) : Prop :=
   spinorialScalarCurvature IST = 0
 
-/--
-Constructive discharge of the Monge-Ampere-to-spinorial bridge from an explicit
-zero-spinorial witness.
--/
-lemma constantMongeAmpereImpliesZeroSpinorial_of_spinorialState
+/-- Constructor for the spinorial closure state. -/
+theorem mongeAmpereSpinorialClosure_mk
     (IST : InfoSpectralTriple E)
+    (hConst : HasConstantMongeAmpereDensity IST.H)
     (hSpin0 : CalabiYauSpinorialState IST) :
     MongeAmpereSpinorialClosure IST := by
-  intro _hConst
-  exact hSpin0
+  exact ⟨hConst, hSpin0⟩
 
-/-- Theorem `spinorialScalarCurvature_eq_zero_of_constantMongeAmpere`. -/
-theorem spinorialScalarCurvature_eq_zero_of_constantMongeAmpere
+/-- Extract spinorial vanishing from the constructive spinorial closure state. -/
+theorem spinorialScalarCurvature_eq_zero_of_mongeAmpereSpinorialClosure
     (IST : InfoSpectralTriple E)
-    (hCY : MongeAmpereSpinorialClosure IST)
-    (hConst : HasConstantMongeAmpereDensity IST.H) :
+    (hCY : MongeAmpereSpinorialClosure IST) :
     CalabiYauSpinorialState IST :=
-  hCY hConst
+  hCY.2
 
 /--
 Connection to the `W`-flow layer:
 under normalized spinorial tracking, Calabi-Yau closure makes `W` constant.
 -/
-theorem W_constant_of_constantMongeAmpere
+theorem W_constant_of_mongeAmpereSpinorialClosure
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E)
     (W : ℝ → ℝ)
     (hDiff : Differentiable ℝ W)
     (hW : ∀ s : ℝ, deriv W s = spinorialWDissipation flow IST s)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
     (hTrack : ∀ t : ℝ, flow t = spinorialScalarCurvature IST)
-    (hCY : MongeAmpereSpinorialClosure IST)
-    (hConst : HasConstantMongeAmpereDensity IST.H) :
+    (hCY : MongeAmpereSpinorialClosure IST) :
     ∃ c : ℝ, ∀ s : ℝ, W s = c := by
   exact W_constant_of_spinorial_zero
     (E := E) (flow := flow) (IST := IST) (W := W)
-    hDiff hW hNorm hTrack (hCY hConst)
+    hDiff hW hNorm hTrack hCY.2
 
 /--
 Constructive `W`-constancy closure from an explicit zero-spinorial witness

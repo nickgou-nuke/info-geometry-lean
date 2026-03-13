@@ -81,6 +81,7 @@ export InfoGeometry.Canonical.ConformalUnification.ConformalInference (
   chiralAnomalyOperator_eq_zero_iff_projectors_commute
   projectors_commute_of_chiralAnomaly_eq_zero
   chiralAnomaly_eq_zero_of_projectors_commute
+  projectors_commute_of_anomalyDriven_normalized_fixedpoint
   IsNormalInference
   IsChiralInference
   NormalInferenceState

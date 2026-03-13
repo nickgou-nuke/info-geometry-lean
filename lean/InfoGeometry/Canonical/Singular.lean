@@ -63,4 +63,53 @@ theorem einsteinAnomaly_skew_adjoint (a b_mp b_dr : R) (k : ℕ)
   simp only [star_sub, star_mul, h_mp.ab_star, h_dr_star]
   rw [neg_sub]
 
+/-!
+## Constructive Nondegenerate Existence
+
+For invertible (`IsUnit`) elements, generalized inverses are constructively
+realized by the ordinary inverse.
+-/
+
+/--
+Constructive Moore-Penrose inverse existence in the nondegenerate case.
+If `a` is invertible, `a⁻¹` satisfies the Moore-Penrose axioms.
+-/
+theorem exists_moorePenroseInverse_of_isUnit
+    (a : R) (ha : IsUnit a) :
+    ∃ b : R, IsMoorePenroseInverse a b := by
+  rcases ha with ⟨u, rfl⟩
+  refine ⟨↑u⁻¹, ?_⟩
+  constructor <;> simp
+
+/--
+Constructive Drazin inverse existence in the nondegenerate case.
+If `a` is invertible, `a⁻¹` is a Drazin inverse with index `k = 0`.
+-/
+theorem exists_drazinInverse_of_isUnit
+    {S : Type*} [Ring S]
+    (a : S) (ha : IsUnit a) :
+    ∃ b : S, IsDrazinInverse a b 0 := by
+  rcases ha with ⟨u, rfl⟩
+  refine ⟨↑u⁻¹, ?_⟩
+  constructor <;> simp
+
+/--
+Joint constructive generalized-inverse package in the nondegenerate case.
+The same inverse witness simultaneously satisfies Moore-Penrose and Drazin (`k=0`).
+-/
+theorem exists_regularization_pair_of_isUnit
+    (a : R) (ha : IsUnit a) :
+    ∃ b : R, IsMoorePenroseInverse a b ∧ IsDrazinInverse a b 0 := by
+  rcases ha with ⟨u, rfl⟩
+  refine ⟨↑u⁻¹, ?_⟩
+  constructor <;> constructor <;> simp
+
+@[simp] theorem EinsteinAnomaly_eq_zero_of_regularization_pair
+    (a b : R)
+    (h_mp : IsMoorePenroseInverse a b)
+    (h_dr : IsDrazinInverse a b 0) :
+    EinsteinAnomaly a b b 0 h_mp h_dr = 0 := by
+  unfold EinsteinAnomaly
+  simp
+
 end InfoGeometry.Canonical

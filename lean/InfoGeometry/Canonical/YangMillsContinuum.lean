@@ -1,4 +1,6 @@
 import InfoGeometry.Canonical.KMSSinkhornBridge
+import Mathlib.Analysis.Calculus.Deriv.Mul
+import Mathlib.Analysis.SpecialFunctions.Exponential
 
 /-!
 # InfoGeometry.Canonical.YangMillsContinuum
@@ -62,6 +64,10 @@ noncomputable def modularHamiltonian
     (M : ModularRadonNikodymData E) : EndH E :=
   (-Real.log M.rnDerivative) • idEndH E
 
+/-- Operator commutator `[K, A] = K A - A K`. -/
+def commutator (K A : EndH E) : EndH E :=
+  K * A - A * K
+
 @[simp] lemma modularOperator_eq_rn
     (M : ModularRadonNikodymData E) :
     M.modularOperator = M.rnDerivative • idEndH E := rfl
@@ -95,6 +101,35 @@ noncomputable def modularAutomorphismGroup
     (A : EndH E) :
     modularAutomorphismGroup M 0 A = A := by
   simp [modularAutomorphismGroup, modularShift, InfoGeometry.Krein.modular_shift]
+
+/--
+Infinitesimal generator identity at the origin:
+\[
+  \frac{d}{dτ}\Big|_{τ=0}\, \big(e^{τK} A e^{-τK}\big) = [K, A].
+\]
+-/
+theorem hasDerivAt_modularShift_zero_eq_commutator
+    (K A : EndH E) :
+    HasDerivAt (fun τ : ℝ => modularShift (E := E) K τ A) (commutator K A) 0 := by
+  have hExpL : HasDerivAt (fun τ : ℝ => NormedSpace.exp (τ • K)) K 0 := by
+    simpa using (hasDerivAt_exp_smul_const (x := K) (t := (0 : ℝ)))
+  have hExpR : HasDerivAt (fun τ : ℝ => NormedSpace.exp ((-τ) • K)) (-K) 0 := by
+    simpa [neg_smul] using (hasDerivAt_exp_smul_const (x := -K) (t := (0 : ℝ)))
+  have hProd :
+      HasDerivAt
+        (fun τ : ℝ =>
+          (NormedSpace.exp (τ • K) * A) * NormedSpace.exp ((-τ) • K))
+        (((K * A) * NormedSpace.exp ((-(0 : ℝ)) • K)) +
+          ((NormedSpace.exp (0 • K) * A) * (-K)))
+        0 := by
+    simpa [mul_assoc] using (hExpL.mul_const A).mul hExpR
+  simpa [commutator, modularShift, InfoGeometry.Krein.modular_shift, sub_eq_add_neg, mul_assoc] using hProd
+
+/-- Scalar derivative corollary of `hasDerivAt_modularShift_zero_eq_commutator`. -/
+theorem deriv_modularShift_zero_eq_commutator
+    (K A : EndH E) :
+    deriv (fun τ : ℝ => modularShift (E := E) K τ A) 0 = commutator K A :=
+  (hasDerivAt_modularShift_zero_eq_commutator (K := K) (A := A)).deriv
 
 /--
 Derived additive-time law for the modular automorphism group:
@@ -146,6 +181,25 @@ theorem automorphismFlowLaw_of_modularRadonNikodymData
   refine ⟨?_⟩
   intro s t A
   exact modularAutomorphismGroup_add (M := M) s t A
+
+/--
+Infinitesimal modular-flow generator at the origin:
+the derivative of `σ_τ(A)` at `τ = 0` is the commutator with the modular Hamiltonian.
+-/
+theorem hasDerivAt_modularAutomorphismGroup_zero_eq_commutator
+    (M : ModularRadonNikodymData E) (A : EndH E) :
+    HasDerivAt (fun τ : ℝ => modularAutomorphismGroup M τ A)
+      (commutator M.modularHamiltonian A) 0 := by
+  simpa [modularAutomorphismGroup] using
+    (hasDerivAt_modularShift_zero_eq_commutator
+      (K := M.modularHamiltonian) (A := A))
+
+/-- Scalar derivative corollary for the modular automorphism group at `τ = 0`. -/
+theorem deriv_modularAutomorphismGroup_zero_eq_commutator
+    (M : ModularRadonNikodymData E) (A : EndH E) :
+    deriv (fun τ : ℝ => modularAutomorphismGroup M τ A) 0
+      = commutator M.modularHamiltonian A :=
+  (hasDerivAt_modularAutomorphismGroup_zero_eq_commutator (M := M) (A := A)).deriv
 
 end ModularRadonNikodymData
 

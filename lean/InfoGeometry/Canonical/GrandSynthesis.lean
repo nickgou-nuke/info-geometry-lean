@@ -723,6 +723,56 @@ theorem directionalBridges_of_ibDynamics_and_indexHypotheses
       (σ := σ) (clAct := clAct) (unit := unit) hNorm hFixed hTrans
 
 /--
+Packaging of both directional Wheeler-DeWitt bridges from
+IB iterate dynamics plus primitive flow-conjugacy hypotheses for Dirac/grading.
+-/
+theorem directionalBridges_of_ibDynamics_and_conjugacy_indexHypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (eFlow : ℝ → V ≃ₗ[ℝ] V)
+    (hConj : ChiralConjugacyAlong D Γ eFlow) :
+    (GeometricAlgebraicState n T flow D Γ →
+      ThermodynamicKMSState n T K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β) ∧
+      (ThermodynamicKMSState n T K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β →
+        GeometricAlgebraicState n T flow D Γ) := by
+  refine ⟨?_, ?_⟩
+  · intro _hGeoAlg
+    exact bochnerWeitzenboeckBridge_of_ibDynamics
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (K := K) (β := β)
+      (prob := prob) (pTrajectory := pTrajectory)
+      hStep (x0 := x0) (t0 := t0)
+      (Ω := Ω) hΩ hJointKernel hCommOrthogonal
+  · intro _hThermo
+    exact sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (eFlow := eFlow) hNorm hFixed hConj
+
+/--
 Reduced-hypothesis Wheeler-DeWitt implication (IB-dynamics form):
 `IB trajectory dynamics + explicit joint-kernel/commutator hypotheses`
 imply thermodynamic closure.
@@ -893,6 +943,96 @@ theorem information_wheeler_dewitt_implication_of_modularCliffordTransport_state
     (Ω := Ω) hΩ hJointKernel hCommOrthogonal hGeoAlg
 
 /--
+Canonical fully derived state-hypothesis Wheeler-DeWitt implication using
+primitive flow-conjugacy hypotheses for Dirac/grading (non-constancy path).
+-/
+theorem information_wheeler_dewitt_implication_of_conjugacy_state_hypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (eFlow : ℝ → V ≃ₗ[ℝ] V)
+    (hConj : ChiralConjugacyAlong D Γ eFlow) :
+    GeometricAlgebraicState n T flow D Γ →
+      ThermodynamicKMSState n T K
+        (ibInducedObservableWeighted
+          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
+  have hGeoAlg : GeometricAlgebraicState n T flow D Γ :=
+    sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (eFlow := eFlow) hNorm hFixed hConj
+  intro _hGeoAlgArg
+  exact information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (β := β)
+    (prob := prob) (pTrajectory := pTrajectory)
+    hStep (x0 := x0) (t0 := t0)
+    (Ω := Ω) hΩ hJointKernel hCommOrthogonal hGeoAlg
+
+/--
+Wheeler-DeWitt equivalence (IB-dynamics form) from primitive flow-conjugacy
+hypotheses for Dirac/grading: the reverse direction is discharged
+constructively from `hNorm + hFixed + hConj`.
+-/
+theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_conjugacy_state_hypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (eFlow : ℝ → V ≃ₗ[ℝ] V)
+    (hConj : ChiralConjugacyAlong D Γ eFlow) :
+    ThermodynamicKMSState n T K
+      (ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
+      ↔ GeometricAlgebraicState n T flow D Γ := by
+  constructor
+  · intro _hThermo
+    exact sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (eFlow := eFlow) hNorm hFixed hConj
+  · intro hGeoAlg
+    exact information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (K := K) (β := β)
+      (prob := prob) (pTrajectory := pTrajectory)
+      hStep (x0 := x0) (t0 := t0)
+      (Ω := Ω) hΩ hJointKernel hCommOrthogonal hGeoAlg
+
+/--
 Fully derived Wheeler-DeWitt implication from explicit seed-KMS derivation data
 and derived geometric/algebraic state hypotheses.
 -/
@@ -917,24 +1057,20 @@ theorem information_wheeler_dewitt_implication_of_fully_derived_hypotheses
     (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    {ι : Type*}
-    (σ : ℝ → Endomorphism V)
-    (clAct : ι → Endomorphism V)
-    (unit : ι)
-    (hTrans :
-      ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
+    (eFlow : ℝ → V ≃ₗ[ℝ] V)
+    (hConj : ChiralConjugacyAlong D Γ eFlow) :
     GeometricAlgebraicState n T flow D Γ →
       ThermodynamicKMSState n T K
         (ibInducedObservableWeighted
           (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
           pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
-  exact information_wheeler_dewitt_implication_of_modularCliffordTransport_state_hypotheses
+  exact information_wheeler_dewitt_implication_of_conjugacy_state_hypotheses
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
     (K := K) (β := β)
     (prob := prob) (pTrajectory := pTrajectory)
     hStep (x0 := x0) (t0 := t0)
     (Ω := Ω) hΩ hJointKernel hCommOrthogonal
-    (σ := σ) (clAct := clAct) (unit := unit) hNorm hFixed hTrans
+    (eFlow := eFlow) hNorm hFixed hConj
 
 /--
 The full capstone package from `AnalyticalIndex` immediately yields both sides.

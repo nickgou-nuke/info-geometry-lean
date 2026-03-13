@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Canonical.InformationTorsion
@@ -18,6 +19,7 @@ namespace InfoGeometry.Canonical.WeylInformationGauge
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.BogoliubovFockSuper
+open InfoGeometry.Canonical.ConformalAlgebra
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.InformationTorsion
 open InfoGeometry.Canonical.RicciMongeAmpere
@@ -262,5 +264,49 @@ theorem nonzeroAnomaly_sources_transportedEinsteinResidual
     (chiralInferenceState_of_nonzero_anomaly (CI := CI) hAnom)
 
 end DilationSource
+
+section CartanWeylClosure
+
+variable {E : Type*}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
+
+/--
+Cartan generator split specialized to Weyl-gauge interpretation:
+`M` is volume-preserving and `D` is Weyl-dilation.
+-/
+theorem cartanWeyl_generator_split
+    (CBA : ConformalBeliefAlgebra E)
+    (hCartan : CBA.GeneratorCartanDecomposition) :
+    CBA.IsVolumePreservingPart CBA.M ∧ CBA.IsWeylDilationPart CBA.D := by
+  exact CBA.cartan_generator_split hCartan
+
+/--
+Cartan/Weyl closure theorem:
+if the conformal generators satisfy the Cartan split and the transported Einstein
+residual is sourced by the chiral scale, then any nonzero anomaly forces a
+nonzero transported Einstein residual.
+-/
+theorem cartanWeyl_dilation_sources_transportedEinsteinResidual
+    (CBA : ConformalBeliefAlgebra E)
+    (hCartan : CBA.GeneratorCartanDecomposition)
+    (R : RicciTensor E)
+    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein K x) (Γ : SpinConnection K x V)
+    (hSource :
+      transportedEinsteinResidual (R := R) (K := K) (x := x)
+        (scalar := scalar) (Λ := Λ) V Γ = CBA.CI.chiralScale)
+    (hAnom : CBA.CI.chiralAnomalyOperator ≠ 0) :
+    CBA.IsVolumePreservingPart CBA.M
+      ∧ CBA.IsWeylDilationPart CBA.D
+      ∧ transportedEinsteinResidual (R := R) (K := K) (x := x)
+          (scalar := scalar) (Λ := Λ) V Γ ≠ 0 := by
+  refine ⟨(CBA.M_in_volumePreserving_of_cartan hCartan),
+    (CBA.D_in_weylDilation_of_cartan hCartan), ?_⟩
+  exact nonzeroAnomaly_sources_transportedEinsteinResidual
+    (CI := CBA.CI) (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ)
+    (V := V) (Γ := Γ) hSource hAnom
+
+end CartanWeylClosure
 
 end InfoGeometry.Canonical.WeylInformationGauge

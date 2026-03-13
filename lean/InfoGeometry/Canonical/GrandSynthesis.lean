@@ -820,6 +820,57 @@ theorem information_wheeler_dewitt_equivalence
     (Ω := Ω) hΩ hStruct hGeoAlg
 
 /--
+Fully derived state-hypothesis Wheeler-DeWitt equivalence:
+`GeometricAlgebraicState` is constructively discharged from normalized scalar
+Kähler-Ricci fixed-point and chiral index-invariance data.
+-/
+theorem information_wheeler_dewitt_equivalence_of_fully_derived_state_hypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hplus : ∀ s : ℝ, chiralPartPlus (D s) (Γ s) = chiralPartPlus (D 0) (Γ 0))
+    (hminus : ∀ s : ℝ, chiralPartMinus (D s) (Γ s) = chiralPartMinus (D 0) (Γ 0))
+    (hRangePlus :
+      ∀ s : ℝ,
+        LinearMap.range (chiralProjectorPlus (Γ s)) =
+          LinearMap.range (chiralProjectorPlus (Γ 0)))
+    (hRangeMinus :
+      ∀ s : ℝ,
+        LinearMap.range (chiralProjectorMinus (Γ s)) =
+          LinearMap.range (chiralProjectorMinus (Γ 0))) :
+    ThermodynamicKMSState n T K
+      (ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
+      ↔ GeometricAlgebraicState n T flow D Γ := by
+  have hGeoAlg : GeometricAlgebraicState n T flow D Γ :=
+    sinkhornRicciIndexInvariant_of_derived_state_hypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      hNorm hFixed hplus hminus hRangePlus hRangeMinus
+  exact information_wheeler_dewitt_equivalence_of_ibDynamics_and_indexHypotheses
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (β := β)
+    (prob := prob) (pTrajectory := pTrajectory)
+    hStep (x0 := x0) (t0 := t0)
+    (Ω := Ω) hΩ hStruct hGeoAlg
+
+/--
 State-hypothesis API variant: delegates to the reduced state-level API.
 -/
 theorem information_wheeler_dewitt_equivalence_of_state_hypotheses

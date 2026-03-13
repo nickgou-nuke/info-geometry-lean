@@ -94,6 +94,93 @@ theorem exists_drazinInverse_of_isUnit
   constructor <;> simp
 
 /--
+Constructive Moore-Penrose inverse existence in the degenerate projector case.
+If `a` is a self-adjoint idempotent, then `a` is its own Moore-Penrose inverse.
+-/
+theorem exists_moorePenroseInverse_of_selfAdjoint_idempotent
+    (a : R)
+    (ha_idem : a * a = a)
+    (ha_star : star a = a) :
+    ∃ b : R, IsMoorePenroseInverse a b := by
+  refine ⟨a, ?_⟩
+  constructor
+  · calc
+      a * a * a = (a * a) * a := by simp [mul_assoc]
+      _ = a * a := by simpa [ha_idem]
+      _ = a := ha_idem
+  · calc
+      a * a * a = (a * a) * a := by simp [mul_assoc]
+      _ = a * a := by simpa [ha_idem]
+      _ = a := ha_idem
+  · calc
+      star (a * a) = star a * star a := by simpa using star_mul a a
+      _ = a * a := by simpa [ha_star]
+  · calc
+      star (a * a) = star a * star a := by simpa using star_mul a a
+      _ = a * a := by simpa [ha_star]
+
+/--
+Constructive Drazin inverse existence in the degenerate projector case.
+If `a` is idempotent, then `a` is its own Drazin inverse with index `k = 1`.
+-/
+theorem exists_drazinInverse_of_idempotent
+    {S : Type*} [Ring S]
+    (a : S)
+    (ha_idem : a * a = a) :
+    ∃ b : S, IsDrazinInverse a b 1 := by
+  refine ⟨a, ?_⟩
+  constructor
+  · simp
+  · calc
+      a * a * a = (a * a) * a := by simp [mul_assoc]
+      _ = a * a := by simpa [ha_idem]
+      _ = a := ha_idem
+  · calc
+      a ^ (1 + 1) * a = (a * a) * a := by simp [pow_succ, mul_assoc]
+      _ = a * a := by simpa [ha_idem]
+      _ = a := ha_idem
+      _ = a ^ 1 := by simp
+
+/--
+Joint constructive generalized-inverse package in the projector case.
+For self-adjoint idempotent `a`, the same witness `a` satisfies both
+Moore-Penrose and Drazin (`k = 1`) axioms.
+-/
+theorem exists_regularization_pair_of_selfAdjoint_idempotent
+    (a : R)
+    (ha_idem : a * a = a)
+    (ha_star : star a = a) :
+    ∃ b : R, IsMoorePenroseInverse a b ∧ IsDrazinInverse a b 1 := by
+  refine ⟨a, ?_⟩
+  constructor
+  · constructor
+    · calc
+        a * a * a = (a * a) * a := by simp [mul_assoc]
+        _ = a * a := by simpa [ha_idem]
+        _ = a := ha_idem
+    · calc
+        a * a * a = (a * a) * a := by simp [mul_assoc]
+        _ = a * a := by simpa [ha_idem]
+        _ = a := ha_idem
+    · calc
+        star (a * a) = star a * star a := by simpa using star_mul a a
+        _ = a * a := by simpa [ha_star]
+    · calc
+        star (a * a) = star a * star a := by simpa using star_mul a a
+        _ = a * a := by simpa [ha_star]
+  · constructor
+    · simp
+    · calc
+        a * a * a = (a * a) * a := by simp [mul_assoc]
+        _ = a * a := by simpa [ha_idem]
+        _ = a := ha_idem
+    · calc
+        a ^ (1 + 1) * a = (a * a) * a := by simp [pow_succ, mul_assoc]
+        _ = a * a := by simpa [ha_idem]
+        _ = a := ha_idem
+        _ = a ^ 1 := by simp
+
+/--
 Joint constructive generalized-inverse package in the nondegenerate case.
 The same inverse witness simultaneously satisfies Moore-Penrose and Drazin (`k=0`).
 -/
@@ -111,5 +198,42 @@ theorem exists_regularization_pair_of_isUnit
     EinsteinAnomaly a b b 0 h_mp h_dr = 0 := by
   unfold EinsteinAnomaly
   simp
+
+@[simp] theorem EinsteinAnomaly_eq_zero_of_selfAdjoint_idempotent
+    (a : R)
+    (ha_idem : a * a = a)
+    (ha_star : star a = a) :
+    EinsteinAnomaly a a a 1
+      (by
+        constructor
+        · calc
+            a * a * a = (a * a) * a := by simp [mul_assoc]
+            _ = a * a := by simpa [ha_idem]
+            _ = a := ha_idem
+        · calc
+            a * a * a = (a * a) * a := by simp [mul_assoc]
+            _ = a * a := by simpa [ha_idem]
+            _ = a := ha_idem
+        · calc
+            star (a * a) = star a * star a := by simpa using star_mul a a
+            _ = a * a := by simpa [ha_star]
+        · calc
+            star (a * a) = star a * star a := by simpa using star_mul a a
+            _ = a * a := by simpa [ha_star])
+      (by
+        constructor
+        · simp
+        · calc
+            a * a * a = (a * a) * a := by simp [mul_assoc]
+            _ = a * a := by simpa [ha_idem]
+            _ = a := ha_idem
+        · calc
+            a ^ (1 + 1) * a = (a * a) * a := by simp [pow_succ, mul_assoc]
+            _ = a * a := by simpa [ha_idem]
+            _ = a := ha_idem
+            _ = a ^ 1 := by simp)
+      = 0 := by
+  unfold EinsteinAnomaly
+  simp [ha_idem]
 
 end InfoGeometry.Canonical

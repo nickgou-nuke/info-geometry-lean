@@ -165,20 +165,14 @@ lemma modularAutomorphismGroup_add
           simp [mul_assoc]
 
 /--
-Flow law interface for additive-time modular automorphisms.
-This is the continuum group-law contract for `σ_{s+t} = σ_s ∘ σ_t`.
+Additive-time law for modular automorphisms, stated directly as a theorem:
+`σ_{s+t} = σ_s ∘ σ_t`.
 -/
-structure AutomorphismFlowLaw (M : ModularRadonNikodymData E) : Prop where
-  add :
+theorem modularAutomorphismGroup_additive
+    (M : ModularRadonNikodymData E) :
     ∀ s t : ℝ, ∀ A : EndH E,
       modularAutomorphismGroup M (s + t) A =
-        modularAutomorphismGroup M s (modularAutomorphismGroup M t A)
-
-/-- Compatibility constructor: the flow-law interface is derivable from modular data. -/
-theorem automorphismFlowLaw_of_modularRadonNikodymData
-    (M : ModularRadonNikodymData E) :
-    AutomorphismFlowLaw M := by
-  refine ⟨?_⟩
+        modularAutomorphismGroup M s (modularAutomorphismGroup M t A) := by
   intro s t A
   exact modularAutomorphismGroup_add (M := M) s t A
 
@@ -253,9 +247,13 @@ theorem sinkhornControl_of_sampledIB
     (x0 : Xib) (t0 : Tib)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
     (hΩ : Ω ≠ 0)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω) :
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω) :
     SinkhornKMSControl n T K
       (sampledObservable (prob := prob) S x0 t0 Ω) β := by
+  have hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω :=
+    expectationSeedKMSHypotheses_of_jointKernel_commutator
+      (F := E) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
   simpa [sampledObservable] using
     (sinkhorn_kmsControl_of_ibDynamics_weighted_from_expectationSeed
       (n := n) (T := T) (K := K) (β := β)
@@ -274,7 +272,8 @@ theorem sinkhornClosure_of_sampledIB
     (x0 : Xib) (t0 : Tib)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
     (hΩ : Ω ≠ 0)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω) :
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω) :
     SinkhornKMSClosure n T K
       (sampledObservable (prob := prob) S x0 t0 Ω) β := by
   exact sinkhorn_step_kmsClosure_of_control
@@ -284,7 +283,7 @@ theorem sinkhornClosure_of_sampledIB
     (sinkhornControl_of_sampledIB
       (n := n) (prob := prob)
       (T := T) (K := K) (β := β) (S := S)
-      (x0 := x0) (t0 := t0) (Ω := Ω) hΩ hStruct)
+      (x0 := x0) (t0 := t0) (Ω := Ω) hΩ hJointKernel hCommOrthogonal)
 
 end IBSampledFlow
 

@@ -669,7 +669,8 @@ theorem bochnerWeitzenboeckBridge_of_ibDynamics
 
 /--
 Packaging of both directional Wheeler-DeWitt bridges from
-IB iterate dynamics plus derived slice-iso geometric state hypotheses.
+IB iterate dynamics plus modular-flow / Clifford-bundle transport hypotheses
+for chiral slices.
 -/
 theorem directionalBridges_of_ibDynamics_and_indexHypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -692,7 +693,12 @@ theorem directionalBridges_of_ibDynamics_and_indexHypotheses
     (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hIso : ChiralSliceIsoAlong D Γ) :
+    {ι : Type*}
+    (σ : ℝ → Endomorphism V)
+    (clAct : ι → Endomorphism V)
+    (unit : ι)
+    (hTrans :
+      ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
     (GeometricAlgebraicState n T flow D Γ →
       ThermodynamicKMSState n T K
         (ibInducedObservableWeighted
@@ -712,9 +718,9 @@ theorem directionalBridges_of_ibDynamics_and_indexHypotheses
       hStep (x0 := x0) (t0 := t0)
       (Ω := Ω) hΩ hJointKernel hCommOrthogonal
   · intro _hThermo
-    exact sinkhornRicciIndexInvariant_of_sliceIso_state_hypotheses
+    exact sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      hNorm hFixed hIso
+      (σ := σ) (clAct := clAct) (unit := unit) hNorm hFixed hTrans
 
 /--
 Reduced-hypothesis Wheeler-DeWitt implication (IB-dynamics form):
@@ -754,9 +760,9 @@ theorem information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
     (Ω := Ω) hΩ hJointKernel hCommOrthogonal
 
 /--
-Wheeler-DeWitt equivalence (IB-dynamics form) from slice-iso state hypotheses:
-the reverse direction is discharged constructively from
-`hNorm + hFixed + hIso`.
+Wheeler-DeWitt equivalence (IB-dynamics form) from modular-flow / Clifford-bundle
+transport hypotheses for chiral slices: the reverse direction is discharged
+constructively from `hNorm + hFixed + hTrans`.
 -/
 theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_sliceIso_state_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -779,7 +785,12 @@ theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_sliceIso_state_
     (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hIso : ChiralSliceIsoAlong D Γ) :
+    {ι : Type*}
+    (σ : ℝ → Endomorphism V)
+    (clAct : ι → Endomorphism V)
+    (unit : ι)
+    (hTrans :
+      ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
     ThermodynamicKMSState n T K
       (ibInducedObservableWeighted
         (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
@@ -787,9 +798,9 @@ theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_sliceIso_state_
       ↔ GeometricAlgebraicState n T flow D Γ := by
   constructor
   · intro _hThermo
-    exact sinkhornRicciIndexInvariant_of_sliceIso_state_hypotheses
+    exact sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      hNorm hFixed hIso
+      (σ := σ) (clAct := clAct) (unit := unit) hNorm hFixed hTrans
   · intro hGeoAlg
     exact information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
@@ -835,7 +846,7 @@ theorem information_wheeler_dewitt_implication
 
 /--
 Canonical fully derived state-hypothesis Wheeler-DeWitt implication using
-deformation equivalences of chiral index slices (non-constancy path).
+modular-flow / Clifford-bundle transport of chiral index slices (non-constancy path).
 -/
 theorem information_wheeler_dewitt_implication_of_sliceIso_state_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -858,16 +869,21 @@ theorem information_wheeler_dewitt_implication_of_sliceIso_state_hypotheses
     (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hIso : ChiralSliceIsoAlong D Γ) :
+    {ι : Type*}
+    (σ : ℝ → Endomorphism V)
+    (clAct : ι → Endomorphism V)
+    (unit : ι)
+    (hTrans :
+      ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
     GeometricAlgebraicState n T flow D Γ →
       ThermodynamicKMSState n T K
         (ibInducedObservableWeighted
           (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
           pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
   have hGeoAlg : GeometricAlgebraicState n T flow D Γ :=
-    sinkhornRicciIndexInvariant_of_sliceIso_state_hypotheses
+    sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      hNorm hFixed hIso
+      (σ := σ) (clAct := clAct) (unit := unit) hNorm hFixed hTrans
   intro _hGeoAlgArg
   exact information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
@@ -901,7 +917,12 @@ theorem information_wheeler_dewitt_implication_of_fully_derived_hypotheses
     (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hIso : ChiralSliceIsoAlong D Γ) :
+    {ι : Type*}
+    (σ : ℝ → Endomorphism V)
+    (clAct : ι → Endomorphism V)
+    (unit : ι)
+    (hTrans :
+      ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
     GeometricAlgebraicState n T flow D Γ →
       ThermodynamicKMSState n T K
         (ibInducedObservableWeighted
@@ -913,7 +934,7 @@ theorem information_wheeler_dewitt_implication_of_fully_derived_hypotheses
     (prob := prob) (pTrajectory := pTrajectory)
     hStep (x0 := x0) (t0 := t0)
     (Ω := Ω) hΩ hJointKernel hCommOrthogonal
-    hNorm hFixed hIso
+    (σ := σ) (clAct := clAct) (unit := unit) hNorm hFixed hTrans
 
 /--
 The full capstone package from `AnalyticalIndex` immediately yields both sides.

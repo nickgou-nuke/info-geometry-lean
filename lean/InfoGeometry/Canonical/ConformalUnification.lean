@@ -175,7 +175,7 @@ private theorem projectors_commute_of_anomalyDriven_normalized_fixedpoint
 Derive anomaly-driven scalar Ricci dynamics from normalized Kähler-Ricci flow
 once the conformal chiral scale vanishes (`ε = 0`).
 -/
-theorem anomalyDrivenScalarRicciFlow_of_normalized_and_chiralScale_zero
+private theorem anomalyDrivenScalarRicciFlow_of_normalized_and_chiralScale_zero
     (flow : ScalarRicciFlow E)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
     (hScaleZero : CI.chiralScale = 0) :
@@ -213,6 +213,25 @@ theorem chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
 Projector commutation from the Kähler/log-det layer without an explicit
 anomaly-flow witness argument.
 -/
+private theorem anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
+    (flow : ScalarRicciFlow E)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (hUnitVolume : relativeVolumeChangeRN n M = 1) :
+    SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow
+      (fun _ => CI.chiralScale) := by
+  have hScaleZero : CI.chiralScale = 0 :=
+    CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
+      (M := M) hScaleFromKahler hUnitVolume
+  exact CI.anomalyDrivenScalarRicciFlow_of_normalized_and_chiralScale_zero
+    (flow := flow) hNorm hScaleZero
+
+/--
+Projector commutation from the Kähler/log-det layer without an explicit
+anomaly-flow witness argument.
+-/
 theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint
     (flow : ScalarRicciFlow E)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
@@ -223,14 +242,11 @@ theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint
     (hUnitVolume : relativeVolumeChangeRN n M = 1) :
     CI.spectralChiralProjector * CI.metricChiralProjector
       = CI.metricChiralProjector * CI.spectralChiralProjector := by
-  have hScaleZero : CI.chiralScale = 0 :=
-    CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
-      (M := M) hScaleFromKahler hUnitVolume
   have hAnomFlow :
       SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow
         (fun _ => CI.chiralScale) :=
-    CI.anomalyDrivenScalarRicciFlow_of_normalized_and_chiralScale_zero
-      (flow := flow) hNorm hScaleZero
+    CI.anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
+      (flow := flow) (M := M) hNorm hScaleFromKahler hUnitVolume
   exact projectors_commute_of_anomalyDriven_normalized_fixedpoint
     (CI := CI) (flow := flow) hNorm hFixed hAnomFlow
 

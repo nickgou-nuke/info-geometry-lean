@@ -15,6 +15,8 @@ import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.ChiralGravity
 import InfoGeometry.Canonical.ChiralTorsionBridge
 import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Canonical.ConformalAlgebra
+import InfoGeometry.Canonical.WeylInformationGauge
 import InfoGeometry.Canonical.WilsonLoop
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.Twistor
@@ -87,6 +89,39 @@ export InfoGeometry.Canonical.ConformalUnification.ConformalInference (
   IsChiralInference
   NormalInferenceState
   ChiralInferenceState
+)
+
+export InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra (
+  SatisfiesPWeight
+  SatisfiesKWeight
+  SatisfiesMasterRelation
+  SatisfiesFlatWeights
+  ConformalWeightClosure
+  GeneratorCartanDecomposition
+  GradingInvolutive
+  cartanInvolution
+  IsVolumePreservingPart
+  IsWeylDilationPart
+  M_in_volumePreserving_of_cartan
+  D_in_weylDilation_of_cartan
+  cartan_generator_split
+  cartanInvolution_involutive_of_gradingInvolutive
+  cartanInvolution_eq_self_of_volumePreserving_of_gradingInvolutive
+  cartanInvolution_eq_neg_self_of_weylDilation_of_gradingInvolutive
+  volumePreserving_of_cartanInvolution_eq_self_of_gradingInvolutive
+  weylDilation_of_cartanInvolution_eq_neg_self_of_gradingInvolutive
+  cartanInvolution_eq_self_iff_volumePreserving_of_gradingInvolutive
+  cartanInvolution_eq_neg_self_iff_weylDilation_of_gradingInvolutive
+  commutator
+  commutator_volumePreserving_volumePreserving
+  commutator_volumePreserving_weylDilation
+  commutator_weylDilation_weylDilation
+  scale_anomaly_obstructs_weyl_flatness
+)
+
+export InfoGeometry.Canonical.WeylInformationGauge (
+  cartanWeyl_generator_split
+  cartanWeyl_dilation_sources_transportedEinsteinResidual
 )
 
 export InfoGeometry.Canonical.SuperInference (

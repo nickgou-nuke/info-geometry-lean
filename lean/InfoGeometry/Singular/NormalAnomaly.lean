@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Ring.Basic
-import InfoGeometry.Singular.MoorePenroseAdjoint
-import InfoGeometry.Singular.DrazinAdjoint
+import InfoGeometry.Singular.MoorePenrose
+import InfoGeometry.Singular.Drazin
 
 /-!
 # Normal Metrics and Anomaly Vanishing
@@ -13,8 +13,8 @@ and geometric mirrors align perfectly, and the Anomaly vanishes.
 
 namespace InfoGeometry.Singular.NormalAnomaly
 
-open InfoGeometry.Singular.MoorePenroseAdjoint
-open InfoGeometry.Singular.DrazinAdjoint
+open InfoGeometry.Singular.MoorePenrose
+open InfoGeometry.Singular.Drazin
 
 variable {R : Type*} [Ring R] [StarRing R]
 

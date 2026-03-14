@@ -1,6 +1,6 @@
 import Mathlib
-import InfoGeometry.Canonical.MoorePenroseAdjoint
-import InfoGeometry.Canonical.DrazinAdjoint
+import InfoGeometry.Singular.MoorePenrose
+import InfoGeometry.Singular.Drazin
 import InfoGeometry.Canonical.KreinNaturalFlow
 import InfoGeometry.Canonical.Krein
 
@@ -16,8 +16,8 @@ preserves the degenerate causal boundary.
 
 namespace InfoGeometry.Canonical.AnomalyGauge
 
-open InfoGeometry.Singular.MoorePenroseAdjoint
-open InfoGeometry.Singular.DrazinAdjoint
+open InfoGeometry.Singular.MoorePenrose
+open InfoGeometry.Singular.Drazin
 open InfoGeometry.Singular.Architecture
 open InfoGeometry.Krein
 

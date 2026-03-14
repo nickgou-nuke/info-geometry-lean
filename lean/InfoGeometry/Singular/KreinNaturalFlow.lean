@@ -1,7 +1,7 @@
 import Mathlib.Analysis.Normed.Lp.ProdLp
 import Mathlib.Topology.Algebra.Module.StrongTopology
-import InfoGeometry.Singular.MoorePenroseAdjoint
-import InfoGeometry.Singular.DrazinAdjoint
+import InfoGeometry.Singular.MoorePenrose
+import InfoGeometry.Singular.Drazin
 import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Krein.KreinSpace
@@ -18,8 +18,8 @@ set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.Singular.Architecture
 
-open InfoGeometry.Singular.MoorePenroseAdjoint
-open InfoGeometry.Singular.DrazinAdjoint
+open InfoGeometry.Singular.MoorePenrose
+open InfoGeometry.Singular.Drazin
 open InfoGeometry.Krein
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]

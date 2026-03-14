@@ -20,8 +20,8 @@ The glue is the Cartan involution and the resulting Chiral Anomaly.
 
 namespace InfoGeometry.Singular.UnitaryBridge
 
-open InfoGeometry.Singular.MoorePenroseAdjoint
-open InfoGeometry.Singular.DrazinAdjoint
+open InfoGeometry.Singular.MoorePenrose
+open InfoGeometry.Singular.Drazin
 open InfoGeometry.Singular.Architecture
 open InfoGeometry.Canonical.AnomalyGauge
 open InfoGeometry.Krein

@@ -1,5 +1,5 @@
 import InfoGeometry.Singular.CartanWiring
-import InfoGeometry.Singular.MoorePenroseAdjoint
+import InfoGeometry.Singular.MoorePenrose
 import InfoGeometry.Convex.HessianGeometry
 import Mathlib.Tactic
 
@@ -21,7 +21,7 @@ We show here that this $G^{+}$ is precisely the Moore-Penrose inverse
 in the native `StarRing` adjoint framework.
 -/
 
-open InfoGeometry.Singular.MoorePenroseAdjoint
+open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Clifford.Decomposition
 open InfoGeometry.Clifford.TowerMatrix
 open Matrix

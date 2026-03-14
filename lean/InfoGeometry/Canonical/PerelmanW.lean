@@ -64,6 +64,37 @@ theorem WFunctional_strictMono_of_pos_dissipation
   rw [deriv_WFunctional_eq_of_law flow τ f diss hLaw s]
   exact hPos s
 
+/--
+Barrier-driven monotonicity:
+if dissipation dominates a nonnegative barrier pointwise, `W` is monotone.
+-/
+theorem WFunctional_monotone_of_lower_barrier
+    (flow : ScalarRicciFlow E) (τ f diss barrier : ℝ → ℝ)
+    (hDiff : Differentiable ℝ (fun t => WFunctional flow τ f t))
+    (hLaw : SatisfiesWLaw flow τ f diss)
+    (hLower : ∀ s : ℝ, barrier s ≤ diss s)
+    (hBarrierNonneg : ∀ s : ℝ, 0 ≤ barrier s) :
+    Monotone (fun t => WFunctional flow τ f t) := by
+  refine WFunctional_monotone_of_nonneg_dissipation
+    (flow := flow) (τ := τ) (f := f) (diss := diss) hDiff hLaw ?_
+  intro s
+  exact le_trans (hBarrierNonneg s) (hLower s)
+
+/--
+Barrier-driven strict monotonicity:
+if dissipation dominates a strictly positive barrier pointwise, `W` is strictly monotone.
+-/
+theorem WFunctional_strictMono_of_lower_pos_barrier
+    (flow : ScalarRicciFlow E) (τ f diss barrier : ℝ → ℝ)
+    (hLaw : SatisfiesWLaw flow τ f diss)
+    (hLower : ∀ s : ℝ, barrier s ≤ diss s)
+    (hBarrierPos : ∀ s : ℝ, 0 < barrier s) :
+    StrictMono (fun t => WFunctional flow τ f t) := by
+  refine WFunctional_strictMono_of_pos_dissipation
+    (flow := flow) (τ := τ) (f := f) (diss := diss) hLaw ?_
+  intro s
+  exact lt_of_lt_of_le (hBarrierPos s) (hLower s)
+
 end Core
 
 section SpinorialBridge

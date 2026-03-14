@@ -9,7 +9,7 @@ import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Canonical.Clifford
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.Drazin
-import InfoGeometry.Singular.DrazinAdjoint
+import InfoGeometry.Singular.Drazin
 
 /-!
 # Einstein Universe: Singular Regularization
@@ -242,14 +242,14 @@ theorem exists_drazinInverse_endomorphism_of_isUnit
 Global constructive Drazin inverse existence in finite dimensions.
 
 This closes the canonical Drazin layer by importing the Fitting-based constructive
-existence theorem from `InfoGeometry.Singular.DrazinAdjoint` and translating it to
+existence theorem from `InfoGeometry.Singular.Drazin` and translating it to
 the canonical predicate.
 -/
 theorem exists_drazinInverse_global
     [FiniteDimensional ℝ E]
     (A : E →L[ℝ] E) :
     ∃ (k : ℕ) (B : E →L[ℝ] E), IsDrazinInverse A B k := by
-  rcases InfoGeometry.Singular.DrazinAdjoint.exists_drazinInverse_global
+  rcases InfoGeometry.Singular.Drazin.exists_drazinInverse_global
       (K := ℝ) (V := E) (A := A.toLinearMap) with ⟨k, Blin, hDlin⟩
   let B : E →L[ℝ] E := LinearMap.toContinuousLinearMap Blin
   have hCommLin : A.toLinearMap * B.toLinearMap = B.toLinearMap * A.toLinearMap := by

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.Fock
+import InfoGeometry.Quantum.RealMajorana
 import InfoGeometry.Canonical.RicciMongeAmpere
 
 /-!
@@ -462,6 +463,30 @@ theorem bogoliubov_projector_superalgebra
   · exact commutator_bogoliubov_projector_model (E := E) B
 
 end FockSuper
+
+section CliffordCAR
+
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/--
+Constructive derivation of CAR from the split-Clifford real Majorana layer.
+
+This is the canonical reformulation of the old ladder-primitive target:
+CAR is proved for transported real Majorana fields, while ladder operators are
+derived later from polarization choices.
+-/
+theorem car_realization_of_clifford
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := DoubledSpace E))
+    (T : InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform (S := DoubledSpace E) M) :
+    InfoGeometry.Quantum.RealMajorana.MajoranaCARWitness
+      (S := DoubledSpace E)
+      (fun u v => inner ℝ u v)
+      (InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.transportGamma (T := T)) := by
+  exact
+    InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.car_realization_of_clifford
+      (T := T)
+
+end CliffordCAR
 
 section EinsteinBridge
 

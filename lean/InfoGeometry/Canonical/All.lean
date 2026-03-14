@@ -76,6 +76,7 @@ import InfoGeometry.Canonical.GaussianHolonomy
 import InfoGeometry.Canonical.Geometry
 import InfoGeometry.Canonical.GrandCanonicalCore
 import InfoGeometry.Canonical.GrandCanonicalExperts
+import InfoGeometry.Canonical.MasterSynthesis
 import InfoGeometry.Canonical.GrandSynthesis
 import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Canonical.GrandUnificationBlueprint

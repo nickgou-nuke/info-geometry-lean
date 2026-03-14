@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.CategoryTheory.ConcreteCategory.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Krein.Representation
 import InfoGeometry.Quantum.RealKCategory
 
 open CategoryTheory
@@ -214,6 +215,94 @@ theorem majorana_car_of_splitClifford :
 
 end SplitCliffordDatum
 
+/-- Canonical `RealMajoranaCore` on doubled space with `(J, ε, Π) = (modular_j, spectral_epsilon, spectral_epsilon)`. -/
+noncomputable def cl11DoubledCore (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] : RealMajoranaCore where
+  V := InfoGeometry.Krein.DoubledSpace E
+  J := (InfoGeometry.Krein.modular_j (E := E)).toLinearMap
+  eps := (InfoGeometry.Krein.spectral_epsilon (E := E)).toLinearMap
+  Pi := (InfoGeometry.Krein.spectral_epsilon (E := E)).toLinearMap
+  J_sq := by
+    exact congrArg ContinuousLinearMap.toLinearMap (InfoGeometry.Krein.modular_j_involution E)
+  eps_sq := by
+    exact congrArg ContinuousLinearMap.toLinearMap (InfoGeometry.Krein.spectral_epsilon_involution E)
+  Pi_sq := by
+    exact congrArg ContinuousLinearMap.toLinearMap (InfoGeometry.Krein.spectral_epsilon_involution E)
+  J_eps_anticomm := by
+    exact congrArg ContinuousLinearMap.toLinearMap
+      (InfoGeometry.Krein.modular_j_spectral_epsilon_anticommute E)
+
+/-- `Cl(1,1)` representation with codomain in linear endomorphisms (forgetting continuity). -/
+noncomputable def cl11RepLinear (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] :
+    CliffordAlgebra InfoGeometry.Clifford.splitQ11 →ₐ[ℝ]
+      (InfoGeometry.Krein.DoubledSpace E →ₗ[ℝ] InfoGeometry.Krein.DoubledSpace E) where
+  toFun a := (InfoGeometry.Krein.cl11Rep (E := E) a).toLinearMap
+  map_one' := by
+    exact congrArg ContinuousLinearMap.toLinearMap ((InfoGeometry.Krein.cl11Rep (E := E)).map_one)
+  map_mul' a b := by
+    exact congrArg ContinuousLinearMap.toLinearMap ((InfoGeometry.Krein.cl11Rep (E := E)).map_mul a b)
+  map_zero' := by
+    exact congrArg ContinuousLinearMap.toLinearMap ((InfoGeometry.Krein.cl11Rep (E := E)).map_zero)
+  map_add' a b := by
+    exact congrArg ContinuousLinearMap.toLinearMap ((InfoGeometry.Krein.cl11Rep (E := E)).map_add a b)
+  commutes' r := by
+    exact congrArg ContinuousLinearMap.toLinearMap ((InfoGeometry.Krein.cl11Rep (E := E)).commutes r)
+
+/-- Concrete split `Cl(1,1)` representation datum on the doubled Majorana core. -/
+noncomputable def cl11SplitCliffordDatum (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] :
+    SplitCliffordDatum (cl11DoubledCore E) where
+  Mode := ℝ × ℝ
+  Q := InfoGeometry.Clifford.splitQ11
+  rho := cl11RepLinear E
+
+/-- Primitive CAR theorem specialized to the concrete doubled-space split-`Cl(1,1)` datum. -/
+theorem majorana_car_of_concrete_cl11 (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] :
+    MajoranaCARWitness (cl11DoubledCore E)
+      (SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E))
+      (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E)) := by
+  simpa using
+    (SplitCliffordDatum.majorana_car_of_splitClifford
+      (X := cl11DoubledCore E) (D := cl11SplitCliffordDatum E))
+
+section Cl11NullModes
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/-- The `g = polar(Q)/2` pairing for concrete split-`Cl(1,1)` is `x₁y₁ - x₂y₂`. -/
+lemma cl11_majoranaPairing_apply (u v : ℝ × ℝ) :
+    SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E) u v
+      = u.1 * v.1 - u.2 * v.2 := by
+  unfold SplitCliffordDatum.majoranaPairing cl11SplitCliffordDatum
+  simp [QuadraticMap.polar, InfoGeometry.Clifford.splitQ11_apply]
+  ring_nf
+
+/-- Canonical null mode `u_- = (1/2, 1/2)`. -/
+noncomputable def cl11_uMinus : (cl11SplitCliffordDatum E).Mode := ((1 / 2 : ℝ), (1 / 2 : ℝ))
+
+/-- Canonical null mode `u_+ = (1/2, -1/2)`. -/
+noncomputable def cl11_uPlus : (cl11SplitCliffordDatum E).Mode := ((1 / 2 : ℝ), (-(1 / 2 : ℝ)))
+
+lemma cl11_uMinus_isotropic :
+    SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E) (cl11_uMinus (E := E))
+      (cl11_uMinus (E := E)) = 0 := by
+  simp [cl11_uMinus, cl11_majoranaPairing_apply]
+
+lemma cl11_uPlus_isotropic :
+    SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E) (cl11_uPlus (E := E))
+      (cl11_uPlus (E := E)) = 0 := by
+  simp [cl11_uPlus, cl11_majoranaPairing_apply]
+
+lemma cl11_uMinus_uPlus_pairing_half :
+    SplitCliffordDatum.majoranaPairing (cl11SplitCliffordDatum E) (cl11_uMinus (E := E))
+      (cl11_uPlus (E := E)) = (1 / 2 : ℝ) := by
+  simp [cl11_uMinus, cl11_uPlus, cl11_majoranaPairing_apply]
+  ring
+
+end Cl11NullModes
+
 /-- Polarization data is extra structure on top of a real Majorana core object. -/
 structure Polarization (X : RealMajoranaCore) where
   Pplus : X →ₗ[ℝ] X
@@ -226,11 +315,13 @@ structure Polarization (X : RealMajoranaCore) where
   comm_Pi_plus : Pplus.comp X.Pi = X.Pi.comp Pplus
   comm_Pi_minus : Pminus.comp X.Pi = X.Pi.comp Pminus
 
-/-- Derived ladder-operator package, not primitive. -/
+/-- CAR ladder package: nilpotent ladders with mixed anticommutator identity. -/
 structure LadderPresentation (X : RealMajoranaCore) where
   create : X →ₗ[ℝ] X
   annihil : X →ₗ[ℝ] X
-  split : create + annihil = (LinearMap.id : X →ₗ[ℝ] X)
+  create_sq : anticommutator create create = 0
+  annihil_sq : anticommutator annihil annihil = 0
+  mixed : anticommutator annihil create = (LinearMap.id : X →ₗ[ℝ] X)
 
 /-- Object-level category: Majorana core + chosen polarization. -/
 structure PolarizedMajorana where
@@ -306,117 +397,10 @@ noncomputable def forgetToRealKVect :
 
 end PolarizedMajorana
 
-/-- Object-level category: Majorana core + derived ladder presentation. -/
+/-- Object-level bundle: core Majorana object plus a CAR ladder presentation. -/
 structure LadderMajorana where
   core : RealMajoranaCore
   ladder : LadderPresentation core
-
-namespace LadderMajorana
-
-/-- Morphisms preserve both core operators and derived ladder maps. -/
-@[ext] structure Hom (X Y : LadderMajorana) where
-  homCore : X.core ⟶ Y.core
-  comm_create : homCore.hom.comp X.ladder.create = Y.ladder.create.comp homCore.hom
-  comm_annihil : homCore.hom.comp X.ladder.annihil = Y.ladder.annihil.comp homCore.hom
-
-noncomputable instance : Category LadderMajorana where
-  Hom X Y := Hom X Y
-  id X :=
-    { homCore := 𝟙 X.core
-      comm_create := by ext x <;> rfl
-      comm_annihil := by ext x <;> rfl }
-  comp {X Y Z} f g :=
-    { homCore := f.homCore ≫ g.homCore
-      comm_create := by
-        calc
-          ((f.homCore ≫ g.homCore).hom).comp X.ladder.create
-              = (g.homCore.hom.comp f.homCore.hom).comp X.ladder.create := by rfl
-          _ = g.homCore.hom.comp (f.homCore.hom.comp X.ladder.create) := by
-                simp [LinearMap.comp_assoc]
-          _ = g.homCore.hom.comp (Y.ladder.create.comp f.homCore.hom) := by
-                rw [f.comm_create]
-          _ = (g.homCore.hom.comp Y.ladder.create).comp f.homCore.hom := by
-                simp [LinearMap.comp_assoc]
-          _ = (Z.ladder.create.comp g.homCore.hom).comp f.homCore.hom := by
-                rw [g.comm_create]
-          _ = Z.ladder.create.comp (g.homCore.hom.comp f.homCore.hom) := by
-                simp [LinearMap.comp_assoc]
-          _ = Z.ladder.create.comp ((f.homCore ≫ g.homCore).hom) := by rfl
-      comm_annihil := by
-        calc
-          ((f.homCore ≫ g.homCore).hom).comp X.ladder.annihil
-              = (g.homCore.hom.comp f.homCore.hom).comp X.ladder.annihil := by rfl
-          _ = g.homCore.hom.comp (f.homCore.hom.comp X.ladder.annihil) := by
-                simp [LinearMap.comp_assoc]
-          _ = g.homCore.hom.comp (Y.ladder.annihil.comp f.homCore.hom) := by
-                rw [f.comm_annihil]
-          _ = (g.homCore.hom.comp Y.ladder.annihil).comp f.homCore.hom := by
-                simp [LinearMap.comp_assoc]
-          _ = (Z.ladder.annihil.comp g.homCore.hom).comp f.homCore.hom := by
-                rw [g.comm_annihil]
-          _ = Z.ladder.annihil.comp (g.homCore.hom.comp f.homCore.hom) := by
-                simp [LinearMap.comp_assoc]
-          _ = Z.ladder.annihil.comp ((f.homCore ≫ g.homCore).hom) := by rfl }
-
-@[simp] lemma hom_id (X : LadderMajorana) :
-    ((𝟙 X : X ⟶ X).homCore.hom) = LinearMap.id := rfl
-
-@[simp] lemma hom_comp {X Y Z : LadderMajorana} (f : X ⟶ Y) (g : Y ⟶ Z) :
-    ((f ≫ g).homCore.hom) = g.homCore.hom.comp f.homCore.hom := rfl
-
-/-- Forget derived ladder structure, keep only the core Majorana object. -/
-noncomputable def forgetToCore : LadderMajorana ⥤ RealMajoranaCore where
-  obj X := X.core
-  map {X Y} f := f.homCore
-  map_id X := by
-    rfl
-  map_comp f g := by
-    rfl
-
-/-- Forget ladder structure and then forget down to the `K`-only real category. -/
-noncomputable def forgetToRealKVect :
-    LadderMajorana ⥤ InfoGeometry.Quantum.RealKCategory.RealKVect :=
-  forgetToCore ⋙ RealMajoranaCore.toRealKVect
-
-end LadderMajorana
-
-/-- Derived ladder object from a polarization choice. -/
-noncomputable def ladderOfPolarization (X : PolarizedMajorana) : LadderMajorana where
-  core := X.core
-  ladder :=
-    { create := X.polarization.Pplus
-      annihil := X.polarization.Pminus
-      split := X.polarization.sum_id }
-
-/-- Categorical bridge: polarization choices induce ladder presentations. -/
-noncomputable def polarizationToLadder : PolarizedMajorana ⥤ LadderMajorana where
-  obj X := ladderOfPolarization X
-  map {X Y} f :=
-    { homCore := f.homCore
-      comm_create := f.comm_Pplus
-      comm_annihil := f.comm_Pminus }
-  map_id X := by
-    apply LadderMajorana.Hom.ext
-    apply RealMajoranaCore.Hom.ext
-    ext x
-    rfl
-  map_comp f g := by
-    apply LadderMajorana.Hom.ext
-    apply RealMajoranaCore.Hom.ext
-    ext x
-    rfl
-
-/-- Forgetting to core commutes with the derived polarization-to-ladder functor. -/
-theorem polarizationToLadder_forgetToCore_factors :
-    polarizationToLadder ⋙ LadderMajorana.forgetToCore
-      = PolarizedMajorana.forgetToCore := by
-  rfl
-
-/-- Forgetting to `RealKVect` commutes with the derived polarization-to-ladder functor. -/
-theorem polarizationToLadder_forget_factors :
-    polarizationToLadder ⋙ LadderMajorana.forgetToRealKVect
-      = PolarizedMajorana.forgetToRealKVect := by
-  rfl
 
 /--
 Compatibility datum tying a chosen polarization to two distinguished Majorana modes.
@@ -426,45 +410,58 @@ structure PolarizedLadderRealization (X : PolarizedMajorana)
     (D : SplitCliffordDatum X.core) where
   uMinus : D.Mode
   uPlus : D.Mode
-  annihil_eq :
-    (polarizationToLadder.obj X).ladder.annihil = SplitCliffordDatum.majoranaField D uMinus
-  create_eq :
-    (polarizationToLadder.obj X).ladder.create = SplitCliffordDatum.majoranaField D uPlus
   minus_isotropic : SplitCliffordDatum.majoranaPairing D uMinus uMinus = 0
   plus_isotropic : SplitCliffordDatum.majoranaPairing D uPlus uPlus = 0
   mixed_half : SplitCliffordDatum.majoranaPairing D uMinus uPlus = (1 / 2 : ℝ)
 
+/-- Build a CAR ladder presentation from polarized null modes in a split-Clifford realization. -/
+noncomputable def ladderOfRealization
+    (X : PolarizedMajorana) (D : SplitCliffordDatum X.core)
+    (hPol : PolarizedLadderRealization X D) :
+    LadderPresentation X.core := by
+  refine
+    { create := SplitCliffordDatum.majoranaField D hPol.uPlus
+      annihil := SplitCliffordDatum.majoranaField D hPol.uMinus
+      create_sq := ?_
+      annihil_sq := ?_
+      mixed := ?_ }
+  · have hMaj := SplitCliffordDatum.majorana_car_of_splitClifford (D := D)
+    simpa [hPol.plus_isotropic] using hMaj hPol.uPlus hPol.uPlus
+  · have hMaj := SplitCliffordDatum.majorana_car_of_splitClifford (D := D)
+    simpa [hPol.minus_isotropic] using hMaj hPol.uMinus hPol.uMinus
+  · have hMaj := SplitCliffordDatum.majorana_car_of_splitClifford (D := D)
+    have hScalar : (2 * SplitCliffordDatum.majoranaPairing D hPol.uMinus hPol.uPlus : ℝ) = 1 := by
+      rw [hPol.mixed_half]
+      norm_num
+    calc
+      anticommutator (SplitCliffordDatum.majoranaField D hPol.uMinus)
+          (SplitCliffordDatum.majoranaField D hPol.uPlus)
+          = (2 * SplitCliffordDatum.majoranaPairing D hPol.uMinus hPol.uPlus)
+              • (LinearMap.id : X.core →ₗ[ℝ] X.core) := by
+                simpa using hMaj hPol.uMinus hPol.uPlus
+      _ = (1 : ℝ) • (LinearMap.id : X.core →ₗ[ℝ] X.core) := by rw [hScalar]
+      _ = (LinearMap.id : X.core →ₗ[ℝ] X.core) := by simp
+
+/-- Bundle the derived CAR ladder with the same underlying core object. -/
+noncomputable def ladderMajoranaOfRealization
+    (X : PolarizedMajorana) (D : SplitCliffordDatum X.core)
+    (hPol : PolarizedLadderRealization X D) : LadderMajorana where
+  core := X.core
+  ladder := ladderOfRealization X D hPol
+
 /--
 Derived ladder CAR theorem from primitive split-Clifford Majorana CAR and
-polarization compatibility.
+polarized null-mode compatibility.
 -/
 theorem polarized_ladder_car_of_majorana
     (X : PolarizedMajorana)
     (hCliff : SplitCliffordDatum X.core)
     (hPol : PolarizedLadderRealization X hCliff) :
     CARWitness X.core
-      ((polarizationToLadder.obj X).ladder.annihil)
-      ((polarizationToLadder.obj X).ladder.create) := by
-  rcases hPol with ⟨uMinus, uPlus, hAnn, hCreate, hMinusIso, hPlusIso, hMixed⟩
-  have hMaj := SplitCliffordDatum.majorana_car_of_splitClifford (D := hCliff)
-  constructor
-  · rw [hAnn]
-    simpa [hMinusIso] using hMaj uMinus uMinus
-  constructor
-  · rw [hCreate]
-    simpa [hPlusIso] using hMaj uPlus uPlus
-  · rw [hAnn, hCreate]
-    have hScalar :
-        (2 * SplitCliffordDatum.majoranaPairing hCliff uMinus uPlus : ℝ) = 1 := by
-      rw [hMixed]
-      norm_num
-    calc
-      anticommutator (SplitCliffordDatum.majoranaField hCliff uMinus)
-          (SplitCliffordDatum.majoranaField hCliff uPlus)
-          = (2 * SplitCliffordDatum.majoranaPairing hCliff uMinus uPlus)
-              • (LinearMap.id : X.core →ₗ[ℝ] X.core) := by
-                simpa using hMaj uMinus uPlus
-      _ = (1 : ℝ) • (LinearMap.id : X.core →ₗ[ℝ] X.core) := by rw [hScalar]
-      _ = (LinearMap.id : X.core →ₗ[ℝ] X.core) := by simp
+      (ladderOfRealization X hCliff hPol).annihil
+      (ladderOfRealization X hCliff hPol).create := by
+  exact ⟨(ladderOfRealization X hCliff hPol).annihil_sq,
+    (ladderOfRealization X hCliff hPol).create_sq,
+    (ladderOfRealization X hCliff hPol).mixed⟩
 
 end InfoGeometry.Quantum.RealMajoranaCategory

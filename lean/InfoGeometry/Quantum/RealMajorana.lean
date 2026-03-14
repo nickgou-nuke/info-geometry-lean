@@ -30,6 +30,14 @@ noncomputable def anticommutator (A B : EndS (S := S)) : EndS (S := S) :=
   A.comp B + B.comp A
 
 /--
+Constructive CAR witness for a real Majorana field `γ` with pairing `g`.
+-/
+def MajoranaCARWitness (g : S → S → ℝ) (γ : S → EndS (S := S)) : Prop :=
+  ∀ u v : S,
+    anticommutator (γ u) (γ v)
+      = (2 * g u v) • ContinuousLinearMap.id ℝ S
+
+/--
 Primitive real Majorana datum:
 CAR representation and real involutive operator package `(J, ε, Π)`.
 -/
@@ -52,6 +60,18 @@ structure RealMajoranaDatum where
 namespace RealMajoranaDatum
 
 variable (M : RealMajoranaDatum (S := S))
+
+/-- Canonical real pairing used in the Majorana CAR channel. -/
+def pairing (u v : S) : ℝ := inner ℝ u v
+
+/--
+Primitive constructive CAR theorem: the split-Clifford Majorana field already
+realizes CAR in the real channel.
+-/
+theorem car_realization_of_clifford :
+    MajoranaCARWitness (S := S) (pairing (S := S)) M.gamma := by
+  intro u v
+  simpa [pairing] using M.car u v
 
 /-- Internal square-minus-one operator `K := J ∘ ε`. -/
 noncomputable def K : EndS (S := S) :=
@@ -446,6 +466,16 @@ theorem transportGamma_car (u v : S) :
             simpa [transportGamma] using M.car (T.B u) (T.B v)
     _ = (2 * inner ℝ u v) • ContinuousLinearMap.id ℝ S := by
           rw [T.preserves_inner u v]
+
+/--
+Constructive CAR theorem after real Bogoliubov transport: CAR is preserved
+because transport acts by an isometric real automorphism on the Majorana mode
+space.
+-/
+theorem car_realization_of_clifford :
+    MajoranaCARWitness (S := S) (fun u v => inner ℝ u v) (transportGamma (T := T)) := by
+  intro u v
+  exact T.transportGamma_car u v
 
 /-- Transport a polarization involution by Bogoliubov conjugation. -/
 noncomputable def transportP (P0 : KPolarization (S := S) M) : EndS (S := S) :=

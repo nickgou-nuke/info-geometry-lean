@@ -119,6 +119,7 @@ import InfoGeometry.Canonical.Quantum
 import InfoGeometry.Canonical.QuantumInference
 import InfoGeometry.Canonical.RGFlow
 import InfoGeometry.Canonical.RicciMongeAmpere
+import InfoGeometry.Canonical.RealBdG
 import InfoGeometry.Canonical.RedLine
 import InfoGeometry.Canonical.Rosetta
 import InfoGeometry.Canonical.SpectralInference

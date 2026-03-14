@@ -344,6 +344,20 @@ theorem chiralSliceIsoAlong_of_noZeroEigenCrossing
     (D := D) (Γ := Γ) (s0 := s) (hNoEig := hNoEig s)
 
 /--
+Continuous-path closure (current finite-dimensional constructive form):
+chiral-slice isomorphism is derived via the no-zero-eigenvalue-crossing route.
+
+The continuity-only theorem is false in general; the no-crossing hypothesis is
+the precise analytic protection condition currently formalized.
+-/
+theorem chiralSliceIsoAlong_of_continuous_path
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (hNoEig : ∀ s : ℝ, ChiralNoZeroEigenCrossingNear D s) :
+    ChiralSliceIsoAlong D Γ := by
+  exact chiralSliceIsoAlong_of_noZeroEigenCrossing (D := D) (Γ := Γ) hNoEig
+
+/--
 Conjugacy data for a Dirac/grading family along a transport flow of linear
 equivalences.
 -/
@@ -636,6 +650,17 @@ theorem indexInvariantAlong_of_noZeroEigenCrossing
     (D := D) (Γ := Γ)
     (hIso := chiralSliceIsoAlong_of_noZeroEigenCrossing
       (D := D) (Γ := Γ) hNoEig)
+
+/--
+Continuous-path index invariance (current finite-dimensional constructive form):
+obtained from no-zero-eigenvalue crossing along the path.
+-/
+theorem indexInvariantAlong_of_continuous_path
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (hNoEig : ∀ s : ℝ, ChiralNoZeroEigenCrossingNear D s) :
+    IndexInvariantAlong D Γ := by
+  exact indexInvariantAlong_of_noZeroEigenCrossing (D := D) (Γ := Γ) hNoEig
 
 /-- Index invariance from flow-conjugacy of the Dirac/grading family. -/
 theorem indexInvariantAlong_of_conjugacy

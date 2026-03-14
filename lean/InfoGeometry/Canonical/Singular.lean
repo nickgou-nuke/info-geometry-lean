@@ -9,6 +9,7 @@ import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Canonical.Clifford
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Singular.DrazinAdjoint
 
 /-!
 # Einstein Universe: Singular Regularization
@@ -236,6 +237,46 @@ theorem exists_drazinInverse_endomorphism_of_isUnit
   refine ⟨0, ?_⟩
   rcases exists_drazinInverse_of_isUnit (a := A) hA with ⟨B, hB⟩
   exact ⟨B, hB⟩
+
+/--
+Global constructive Drazin inverse existence in finite dimensions.
+
+This closes the canonical Drazin layer by importing the Fitting-based constructive
+existence theorem from `InfoGeometry.Singular.DrazinAdjoint` and translating it to
+the canonical predicate.
+-/
+theorem exists_drazinInverse_global
+    [FiniteDimensional ℝ E]
+    (A : E →L[ℝ] E) :
+    ∃ (k : ℕ) (B : E →L[ℝ] E), IsDrazinInverse A B k := by
+  rcases InfoGeometry.Singular.DrazinAdjoint.exists_drazinInverse_global
+      (K := ℝ) (V := E) (A := A.toLinearMap) with ⟨k, Blin, hDlin⟩
+  let B : E →L[ℝ] E := LinearMap.toContinuousLinearMap Blin
+  have hCommLin : A.toLinearMap * B.toLinearMap = B.toLinearMap * A.toLinearMap := by
+    simpa [B] using hDlin.2.1
+  have hIdemLin : B.toLinearMap * A.toLinearMap * B.toLinearMap = B.toLinearMap := by
+    simpa [B] using hDlin.1
+  have hPowLin : A.toLinearMap ^ (k + 1) * B.toLinearMap = A.toLinearMap ^ k := by
+    simpa [B] using hDlin.2.2.symm
+  refine ⟨k, B, InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk ?_ ?_ ?_⟩
+  · ext x
+    simpa using congrArg (fun f : E →ₗ[ℝ] E => f x) hCommLin
+  · ext x
+    simpa using congrArg (fun f : E →ₗ[ℝ] E => f x) hIdemLin
+  ·
+    have hPowCont : (A ^ (k + 1) * B).toLinearMap = (A ^ k).toLinearMap := by
+      change (ContinuousLinearMap.toLinearMapRingHom : (E →L[ℝ] E) →+* (E →ₗ[ℝ] E))
+          (A ^ (k + 1) * B) =
+        (ContinuousLinearMap.toLinearMapRingHom : (E →L[ℝ] E) →+* (E →ₗ[ℝ] E))
+          (A ^ k)
+      simpa [map_mul, map_pow, B] using hPowLin
+    have hPow' : A ^ (k + 1) * B = ((A ^ k).toLinearMap).toContinuousLinearMap :=
+      (ContinuousLinearMap.toLinearMap_eq_iff_eq_toContinuousLinearMap
+          (g := A ^ (k + 1) * B) (f := (A ^ k).toLinearMap)).1 hPowCont
+    have hRoundTrip : ((A ^ k).toLinearMap).toContinuousLinearMap = A ^ k := by
+      exact (LinearMap.toContinuousLinearMap_eq_iff_eq_toLinearMap
+        (f := (A ^ k).toLinearMap) (g := A ^ k)).2 rfl
+    exact hPow'.trans hRoundTrip
 
 /--
 Global constructive Moore-Penrose inverse existence on finite-dimensional

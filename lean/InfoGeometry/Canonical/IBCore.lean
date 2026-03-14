@@ -278,6 +278,19 @@ theorem pTrajectory_eq_iterate_of_step
       simp [Function.iterate_succ_apply']
 
 /--
+Constructive contraction packaging:
+`K < 1` plus a Lipschitz witness for the BA step map yields `ContractingWith K`.
+-/
+theorem ibBlahutArimotoStep_contracting_of_lipschitz
+    [EMetricSpace (X → FinProb T)]
+    (prob : IBProblem (X := X) (Y := Y))
+    {Kc : NNReal}
+    (hK : Kc < 1)
+    (hLip : LipschitzWith Kc (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob)) :
+    ContractingWith Kc (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob) := by
+  exact ⟨hK, hLip⟩
+
+/--
 Banach fixed-point convergence for arbitrary BA-recursive trajectories.
 
 Given a strict contraction witness for `ibBlahutArimotoStep prob` on a complete
@@ -349,6 +362,29 @@ theorem tendsto_ibTrajectory_fixedPoint_of_contracting
       (pTrajectory := ibTrajectory prob p0)
       (hStep := ibTrajectory_succ (prob := prob) (p0 := p0))
       (hContr := hContr))
+
+/--
+Lipschitz-driven convergence route:
+if one proves the BA step map is `K`-Lipschitz with `K < 1`, Banach closure
+follows immediately for the canonical IB trajectory.
+-/
+theorem tendsto_ibTrajectory_fixedPoint_of_lipschitz
+    [MetricSpace (X → FinProb T)]
+    [CompleteSpace (X → FinProb T)]
+    [Nonempty (X → FinProb T)]
+    (prob : IBProblem (X := X) (Y := Y))
+    (p0 : X → FinProb T)
+    {Kc : NNReal}
+    (hK : Kc < 1)
+    (hLip : LipschitzWith Kc (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob)) :
+    ∃ p_star : X → FinProb T,
+      Filter.Tendsto (ibTrajectory prob p0) Filter.atTop (nhds p_star) ∧
+      ibBlahutArimotoStep prob p_star = p_star := by
+  exact tendsto_ibTrajectory_fixedPoint_of_contracting
+    (prob := prob) (p0 := p0)
+    (F := ibBlahutArimotoStep prob) (hF := rfl)
+    (hContr := ibBlahutArimotoStep_contracting_of_lipschitz
+      (prob := prob) hK hLip)
 
 /--
 KL Lyapunov functional with a frozen BA target:

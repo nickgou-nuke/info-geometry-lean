@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.CategoryTheory.ConcreteCategory.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Clifford.Grading
 import InfoGeometry.Krein.Representation
 import InfoGeometry.Quantum.RealKCategory
 
@@ -315,6 +316,145 @@ structure Polarization (X : RealMajoranaCore) where
   comm_Pi_plus : Pplus.comp X.Pi = X.Pi.comp Pplus
   comm_Pi_minus : Pminus.comp X.Pi = X.Pi.comp Pminus
 
+section Cl11Polarization
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+@[simp] lemma spectralPlusProj_apply_to_doubled (x y : E) :
+    InfoGeometry.Krein.spectralPlusProj (E := E) (InfoGeometry.Krein.to_doubled x y)
+      = InfoGeometry.Krein.to_doubled x (0 : E) := by
+  have hhalf (z : E) : ((2 : ℝ)⁻¹) • z + ((2 : ℝ)⁻¹) • z = z := by
+    calc
+      ((2 : ℝ)⁻¹) • z + ((2 : ℝ)⁻¹) • z
+          = (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • z := by
+              simpa using (add_smul ((2 : ℝ)⁻¹) ((2 : ℝ)⁻¹) z).symm
+      _ = z := by norm_num
+  apply InfoGeometry.Krein.DoubledSpace.ext <;>
+    simp [InfoGeometry.Krein.spectralPlusProj, InfoGeometry.Krein.to_doubled,
+      InfoGeometry.Krein.spectral_epsilon_apply, hhalf]
+
+@[simp] lemma spectralMinusProj_apply_to_doubled (x y : E) :
+    InfoGeometry.Krein.spectralMinusProj (E := E) (InfoGeometry.Krein.to_doubled x y)
+      = InfoGeometry.Krein.to_doubled (0 : E) y := by
+  have hhalf (z : E) : ((2 : ℝ)⁻¹) • z + ((2 : ℝ)⁻¹) • z = z := by
+    calc
+      ((2 : ℝ)⁻¹) • z + ((2 : ℝ)⁻¹) • z
+          = (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • z := by
+              simpa using (add_smul ((2 : ℝ)⁻¹) ((2 : ℝ)⁻¹) z).symm
+      _ = z := by norm_num
+  apply InfoGeometry.Krein.DoubledSpace.ext <;>
+    simp [InfoGeometry.Krein.spectralMinusProj, InfoGeometry.Krein.to_doubled,
+      InfoGeometry.Krein.spectral_epsilon_apply, hhalf]
+
+lemma spectralPlusProj_comp_spectralMinusProj :
+    (InfoGeometry.Krein.spectralPlusProj (E := E)).comp (InfoGeometry.Krein.spectralMinusProj (E := E)) = 0 := by
+  apply ContinuousLinearMap.ext
+  intro v
+  have hv : InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+    apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hv]
+  apply InfoGeometry.Krein.DoubledSpace.ext <;>
+    simp [ContinuousLinearMap.comp_apply]
+
+lemma spectralMinusProj_comp_spectralPlusProj :
+    (InfoGeometry.Krein.spectralMinusProj (E := E)).comp (InfoGeometry.Krein.spectralPlusProj (E := E)) = 0 := by
+  apply ContinuousLinearMap.ext
+  intro v
+  have hv : InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+    apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hv]
+  apply InfoGeometry.Krein.DoubledSpace.ext <;>
+    simp [ContinuousLinearMap.comp_apply]
+
+lemma spectralPlusProj_comm_Pi :
+    (InfoGeometry.Krein.spectralPlusProj (E := E)).comp (InfoGeometry.Krein.spectral_epsilon (E := E))
+      = (InfoGeometry.Krein.spectral_epsilon (E := E)).comp (InfoGeometry.Krein.spectralPlusProj (E := E)) := by
+  apply ContinuousLinearMap.ext
+  intro v
+  have hv : InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+    apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hv]
+  apply InfoGeometry.Krein.DoubledSpace.ext <;>
+    simp [ContinuousLinearMap.comp_apply]
+
+lemma spectralMinusProj_comm_Pi :
+    (InfoGeometry.Krein.spectralMinusProj (E := E)).comp (InfoGeometry.Krein.spectral_epsilon (E := E))
+      = (InfoGeometry.Krein.spectral_epsilon (E := E)).comp (InfoGeometry.Krein.spectralMinusProj (E := E)) := by
+  apply ContinuousLinearMap.ext
+  intro v
+  have hv : InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+    apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hv]
+  apply InfoGeometry.Krein.DoubledSpace.ext <;>
+    simp [ContinuousLinearMap.comp_apply]
+
+/-- Canonical spectral polarization on the concrete doubled-space `Cl(1,1)` core. -/
+noncomputable def cl11CanonicalPolarization : Polarization (cl11DoubledCore E) where
+  Pplus := (InfoGeometry.Krein.spectralPlusProj (E := E)).toLinearMap
+  Pminus := (InfoGeometry.Krein.spectralMinusProj (E := E)).toLinearMap
+  plus_idem := by
+    exact congrArg ContinuousLinearMap.toLinearMap (InfoGeometry.Krein.spectralPlusProj_idempotent (E := E))
+  minus_idem := by
+    exact congrArg ContinuousLinearMap.toLinearMap (InfoGeometry.Krein.spectralMinusProj_idempotent (E := E))
+  cross₁ := by
+    exact congrArg ContinuousLinearMap.toLinearMap (spectralPlusProj_comp_spectralMinusProj (E := E))
+  cross₂ := by
+    exact congrArg ContinuousLinearMap.toLinearMap (spectralMinusProj_comp_spectralPlusProj (E := E))
+  sum_id := by
+    exact congrArg ContinuousLinearMap.toLinearMap (InfoGeometry.Krein.spectralProj_sum (E := E))
+  comm_Pi_plus := by
+    exact congrArg ContinuousLinearMap.toLinearMap (spectralPlusProj_comm_Pi (E := E))
+  comm_Pi_minus := by
+    exact congrArg ContinuousLinearMap.toLinearMap (spectralMinusProj_comm_Pi (E := E))
+
+@[simp] lemma cl11_majoranaField_uMinus_apply_to_doubled (x y : E) :
+    SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus (E := E))
+      (InfoGeometry.Krein.to_doubled x y)
+      = InfoGeometry.Krein.to_doubled (0 : E) x := by
+  have hhalf (z : E) :
+      ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • z) = z := by
+    have hscalar : (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) = 1 := by norm_num
+    simpa [hscalar]
+  change (InfoGeometry.Krein.cl11Rep (E := E)
+      (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (cl11_uMinus (E := E)))
+      (InfoGeometry.Krein.to_doubled x y))
+    = InfoGeometry.Krein.to_doubled (0 : E) x
+  rw [InfoGeometry.Krein.cl11Rep_ι_apply]
+  calc
+    (InfoGeometry.Krein.cl11RepLin (E := E) ((1 / 2 : ℝ), (1 / 2 : ℝ)))
+        (InfoGeometry.Krein.to_doubled x y)
+      = InfoGeometry.Krein.to_doubled (0 : E) ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • x) := by
+          simpa [cl11_uMinus, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
+            (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
+              (E := E) ((1 / 2 : ℝ)) ((1 / 2 : ℝ)) x y)
+    _ = InfoGeometry.Krein.to_doubled (0 : E) x := by
+          simpa [hhalf]
+
+@[simp] lemma cl11_majoranaField_uPlus_apply_to_doubled (x y : E) :
+    SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus (E := E))
+      (InfoGeometry.Krein.to_doubled x y)
+      = InfoGeometry.Krein.to_doubled y (0 : E) := by
+  have hhalf (z : E) :
+      ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • z) = z := by
+    have hscalar : (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) = 1 := by norm_num
+    simpa [hscalar]
+  change (InfoGeometry.Krein.cl11Rep (E := E)
+      (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (cl11_uPlus (E := E)))
+      (InfoGeometry.Krein.to_doubled x y))
+    = InfoGeometry.Krein.to_doubled y (0 : E)
+  rw [InfoGeometry.Krein.cl11Rep_ι_apply]
+  calc
+    (InfoGeometry.Krein.cl11RepLin (E := E) ((1 / 2 : ℝ), (-(1 / 2 : ℝ))))
+        (InfoGeometry.Krein.to_doubled x y)
+      = InfoGeometry.Krein.to_doubled ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • y) (0 : E) := by
+          simpa [cl11_uPlus, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
+            (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
+              (E := E) ((1 / 2 : ℝ)) (-(1 / 2 : ℝ)) x y)
+    _ = InfoGeometry.Krein.to_doubled y (0 : E) := by
+          simpa [hhalf]
+
+end Cl11Polarization
+
 /-- CAR ladder package: nilpotent ladders with mixed anticommutator identity. -/
 structure LadderPresentation (X : RealMajoranaCore) where
   create : X →ₗ[ℝ] X
@@ -413,6 +553,14 @@ structure PolarizedLadderRealization (X : PolarizedMajorana)
   minus_isotropic : SplitCliffordDatum.majoranaPairing D uMinus uMinus = 0
   plus_isotropic : SplitCliffordDatum.majoranaPairing D uPlus uPlus = 0
   mixed_half : SplitCliffordDatum.majoranaPairing D uMinus uPlus = (1 / 2 : ℝ)
+  compatible_plus :
+    X.polarization.Pplus
+      = (SplitCliffordDatum.majoranaField D uPlus).comp
+          (SplitCliffordDatum.majoranaField D uMinus)
+  compatible_minus :
+    X.polarization.Pminus
+      = (SplitCliffordDatum.majoranaField D uMinus).comp
+          (SplitCliffordDatum.majoranaField D uPlus)
 
 /-- Build a CAR ladder presentation from polarized null modes in a split-Clifford realization. -/
 noncomputable def ladderOfRealization
@@ -463,5 +611,81 @@ theorem polarized_ladder_car_of_majorana
   exact ⟨(ladderOfRealization X hCliff hPol).annihil_sq,
     (ladderOfRealization X hCliff hPol).create_sq,
     (ladderOfRealization X hCliff hPol).mixed⟩
+
+section Cl11ConcreteRealization
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/-- Canonical polarized object on the concrete doubled-space `Cl(1,1)` core. -/
+noncomputable def cl11CanonicalPolarizedMajorana : PolarizedMajorana where
+  core := cl11DoubledCore E
+  polarization := cl11CanonicalPolarization (E := E)
+
+/-- Concrete `Cl(1,1)` null modes realize ladders compatible with canonical spectral polarization. -/
+noncomputable def cl11_concrete_ladder_realization :
+    PolarizedLadderRealization (cl11CanonicalPolarizedMajorana (E := E))
+      (cl11SplitCliffordDatum E) := by
+  refine
+    { uMinus := cl11_uMinus (E := E)
+      uPlus := cl11_uPlus (E := E)
+      minus_isotropic := cl11_uMinus_isotropic (E := E)
+      plus_isotropic := cl11_uPlus_isotropic (E := E)
+      mixed_half := cl11_uMinus_uPlus_pairing_half (E := E)
+      compatible_plus := ?_
+      compatible_minus := ?_ }
+  · ext v
+    have hv : InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+      apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+    rw [← hv]
+    have hL :
+        (cl11CanonicalPolarizedMajorana (E := E)).polarization.Pplus
+            (InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v))
+          = InfoGeometry.Krein.to_doubled (WithLp.fst v) (0 : E) := by
+      unfold cl11CanonicalPolarizedMajorana cl11CanonicalPolarization
+      change (InfoGeometry.Krein.spectralPlusProj (E := E))
+          (InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v))
+        = InfoGeometry.Krein.to_doubled (WithLp.fst v) (0 : E)
+      exact spectralPlusProj_apply_to_doubled (E := E) (x := WithLp.fst v) (y := WithLp.snd v)
+    have hR :
+        ((SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus (E := E))).comp
+            (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus (E := E))))
+          (InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v))
+          = InfoGeometry.Krein.to_doubled (WithLp.fst v) (0 : E) := by
+      simp [LinearMap.comp_apply]
+    exact hL.trans hR.symm
+  · ext v
+    have hv : InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+      apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+    rw [← hv]
+    have hL :
+        (cl11CanonicalPolarizedMajorana (E := E)).polarization.Pminus
+            (InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v))
+          = InfoGeometry.Krein.to_doubled (0 : E) (WithLp.snd v) := by
+      unfold cl11CanonicalPolarizedMajorana cl11CanonicalPolarization
+      change (InfoGeometry.Krein.spectralMinusProj (E := E))
+          (InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v))
+        = InfoGeometry.Krein.to_doubled (0 : E) (WithLp.snd v)
+      exact spectralMinusProj_apply_to_doubled (E := E) (x := WithLp.fst v) (y := WithLp.snd v)
+    have hR :
+        ((SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uMinus (E := E))).comp
+            (SplitCliffordDatum.majoranaField (cl11SplitCliffordDatum E) (cl11_uPlus (E := E))))
+          (InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v))
+          = InfoGeometry.Krein.to_doubled (0 : E) (WithLp.snd v) := by
+      simp [LinearMap.comp_apply]
+    exact hL.trans hR.symm
+
+/-- Final concrete CAR theorem: canonical spectral polarization + concrete split-`Cl(1,1)` datum. -/
+theorem car_realization_of_clifford_concrete :
+    CARWitness (cl11CanonicalPolarizedMajorana (E := E)).core
+      (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := E))
+        (cl11SplitCliffordDatum E) (cl11_concrete_ladder_realization (E := E))).annihil
+      (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := E))
+        (cl11SplitCliffordDatum E) (cl11_concrete_ladder_realization (E := E))).create := by
+  exact polarized_ladder_car_of_majorana
+    (X := cl11CanonicalPolarizedMajorana (E := E))
+    (hCliff := cl11SplitCliffordDatum E)
+    (hPol := cl11_concrete_ladder_realization (E := E))
+
+end Cl11ConcreteRealization
 
 end InfoGeometry.Quantum.RealMajoranaCategory

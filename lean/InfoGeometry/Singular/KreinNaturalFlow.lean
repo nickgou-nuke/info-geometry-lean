@@ -59,30 +59,7 @@ noncomputable abbrev kreinAdjointH
 /-- Hilbert-carrier skew-adjointness predicate used by singular bridge files. -/
 abbrev IsKreinSkewAdjointH
     (X : HilbertDoubled E →L[ℝ] HilbertDoubled E) : Prop :=
-  kreinAdjointH (E := E) X = -X
-
-/--
-The adjoint interface for singular Moore-Penrose/Drazin algebraic API
-on the Hilbert-doubled carrier.
--/
-noncomputable instance KreinAdjointH_AdjointLike :
-    AdjointLike (HilbertDoubled E →L[ℝ] HilbertDoubled E) where
-  adj := kreinAdjointH (E := E)
-  invol := fun A => kreinAdjointH_involutive (E := E) A
-  mul_rev := fun A B => kreinAdjointH_comp (E := E) A B
-  add := fun A B => kreinAdjointH_add (E := E) A B
-  zero := by
-    ext v
-    simp [kreinAdjointH, KreinSpace.kreinAdjoint]
-  one := by
-    change kreinAdjointH (E := E) (ContinuousLinearMap.id ℝ (HilbertDoubled E))
-      = ContinuousLinearMap.id ℝ (HilbertDoubled E)
-    unfold kreinAdjointH
-    exact KreinSpace.kreinAdjoint_id (H := HilbertDoubled E)
-  neg := by
-    intro A
-    ext v
-    simp [kreinAdjointH, KreinSpace.kreinAdjoint]
+  X† = -X
 
 /--
 Natural gradient operator on the singular boundary:

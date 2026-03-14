@@ -307,6 +307,33 @@ theorem cartanWeyl_dilation_sources_transportedEinsteinResidual
     (CI := CBA.CI) (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ)
     (V := V) (Γ := Γ) hSource hAnom
 
+/--
+Cartan/Weyl closure in primitive form (no bundled split witness):
+given explicit compact/non-compact sector hypotheses for `(M,D)`, nonzero
+anomaly still forces nonzero transported Einstein residual under the same
+source relation.
+-/
+theorem cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts
+    (CBA : ConformalBeliefAlgebra E)
+    (hM : CBA.IsVolumePreservingPart CBA.M)
+    (hD : CBA.IsWeylDilationPart CBA.D)
+    (R : RicciTensor E)
+    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein K x) (Γ : SpinConnection K x V)
+    (hSource :
+      transportedEinsteinResidual (R := R) (K := K) (x := x)
+        (scalar := scalar) (Λ := Λ) V Γ = CBA.CI.chiralScale)
+    (hAnom : CBA.CI.chiralAnomalyOperator ≠ 0) :
+    CBA.IsVolumePreservingPart CBA.M
+      ∧ CBA.IsWeylDilationPart CBA.D
+      ∧ transportedEinsteinResidual (R := R) (K := K) (x := x)
+          (scalar := scalar) (Λ := Λ) V Γ ≠ 0 := by
+  refine ⟨hM, hD, ?_⟩
+  exact nonzeroAnomaly_sources_transportedEinsteinResidual
+    (CI := CBA.CI) (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ)
+    (V := V) (Γ := Γ) hSource hAnom
+
 end CartanWeylClosure
 
 end InfoGeometry.Canonical.WeylInformationGauge

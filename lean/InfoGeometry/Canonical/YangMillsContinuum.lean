@@ -195,6 +195,34 @@ theorem deriv_modularAutomorphismGroup_zero_eq_commutator
       = commutator M.modularHamiltonian A :=
   (hasDerivAt_modularAutomorphismGroup_zero_eq_commutator (M := M) (A := A)).deriv
 
+/--
+Connes-Rovelli thermal-time identity (operator form):
+identifying thermal parameters identifies modular evolution.
+-/
+theorem modularAutomorphismGroup_eq_of_time_eq
+    (M : ModularRadonNikodymData E)
+    {τ t : ℝ} (hτt : τ = t) (A : EndH E) :
+    modularAutomorphismGroup M τ A = modularAutomorphismGroup M t A := by
+  simpa [hτt]
+
+/--
+Facade proposition for thermal-time interpretation:
+equal thermal parameters yield equal modular automorphism action.
+-/
+def ConnesRovelliThermalTimeIdentity
+    (M : ModularRadonNikodymData E) : Prop :=
+  ∀ (τ t : ℝ) (A : EndH E), τ = t →
+    modularAutomorphismGroup M τ A = modularAutomorphismGroup M t A
+
+/--
+Canonical proof of the Connes-Rovelli thermal-time identity.
+-/
+theorem connesRovelliThermalTimeIdentity
+    (M : ModularRadonNikodymData E) :
+    ConnesRovelliThermalTimeIdentity M := by
+  intro τ t A hτt
+  exact modularAutomorphismGroup_eq_of_time_eq (M := M) hτt A
+
 end ModularRadonNikodymData
 
 /--
@@ -224,6 +252,75 @@ variable [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
 variable [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
 variable [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
 variable {prob : IBProblem (X := Xib) (Y := Yib)}
+
+/--
+Component-form sampled observable from a raw IB trajectory.
+-/
+noncomputable def sampledObservableOfTrajectory
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (x0 : Xib) (t0 : Tib)
+    (Ω : InfoGeometry.Krein.DoubledSpace E) :
+    Nat → EndH E →L[ℝ] ℝ :=
+  ibInducedObservableWeighted
+    (F := E) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+    pTrajectory x0 t0 (omegaSeed (F := E) Ω)
+
+/--
+Component-form theorem: sampled IB recursion implies Sinkhorn-KMS control for
+the weighted expectation observable.
+-/
+theorem sinkhornControl_of_sampledIB_components
+    (T : InfoGeometry.Canonical.MoE.SinkhornTrajectory n)
+    (K : EndH E)
+    (β : ℝ)
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω) :
+    SinkhornKMSControl n T K
+      (sampledObservableOfTrajectory
+        (E := E) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 Ω) β := by
+  simpa [sampledObservableOfTrajectory] using
+    (sinkhorn_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator
+      (n := n) (T := T) (K := K) (β := β)
+      (prob := prob) (pTrajectory := pTrajectory)
+      (hStep := hStep) (x0 := x0) (t0 := t0)
+      (Ω := Ω) hΩ hJointKernel hCommOrthogonal)
+
+/--
+Component-form theorem: sampled IB recursion implies exact stepwise KMS
+closure.
+-/
+theorem sinkhornClosure_of_sampledIB_components
+    (T : InfoGeometry.Canonical.MoE.SinkhornTrajectory n)
+    (K : EndH E)
+    (β : ℝ)
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω) :
+    SinkhornKMSClosure n T K
+      (sampledObservableOfTrajectory
+        (E := E) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 Ω) β := by
+  exact sinkhorn_step_kmsClosure_of_control
+    (n := n) (T := T) (K := K)
+    (ω := sampledObservableOfTrajectory
+      (E := E) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+      pTrajectory x0 t0 Ω)
+    (β := β)
+    (sinkhornControl_of_sampledIB_components
+      (n := n)
+      (T := T) (K := K) (β := β)
+      (pTrajectory := pTrajectory) (hStep := hStep)
+      (x0 := x0) (t0 := t0) (Ω := Ω) hΩ hJointKernel hCommOrthogonal)
 
 /-- Canonical weighted observable sampled from an IB trajectory. -/
 noncomputable def sampledObservable

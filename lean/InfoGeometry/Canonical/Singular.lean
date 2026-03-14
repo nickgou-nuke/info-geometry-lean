@@ -1,5 +1,14 @@
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.InnerProductSpace.Projection.Basic
+import Mathlib.Analysis.InnerProductSpace.Projection.Submodule
+import Mathlib.LinearAlgebra.Dimension.Finite
+import Mathlib.Analysis.Normed.Module.Basic
+import Mathlib.Analysis.Normed.Operator.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Canonical.Clifford
+import InfoGeometry.Canonical.MoorePenrose
+import InfoGeometry.Canonical.Drazin
 
 /-!
 # Einstein Universe: Singular Regularization
@@ -10,32 +19,19 @@ namespace InfoGeometry.Canonical
 
 variable {R : Type*} [Ring R] [StarRing R]
 
-/--
-Axioms for the Moore-Penrose inverse (Geometric Mirror).
-Source: EINSTEIN/EinsteinLean/Singular.lean
--/
-structure IsMoorePenroseInverse (a b : R) : Prop where
-  aba : a * b * a = a
-  bab : b * a * b = b
-  ab_star : star (a * b) = a * b
-  ba_star : star (b * a) = b * a
+/-- Canonical Moore-Penrose inverse predicate (re-export alias). -/
+abbrev IsMoorePenroseInverse (a b : R) : Prop :=
+  InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse a b
 
-/--
-Axioms for the Drazin inverse (Spectral Mirror).
-Source: EINSTEIN/EinsteinLean/Singular.lean
--/
-structure IsDrazinInverse (a b : R) (k : ℕ) : Prop where
-  comm : a * b = b * a
-  bab : b * a * b = b
-  pow : a^(k + 1) * b = a^k
+/-- Canonical Drazin inverse predicate (re-export alias). -/
+abbrev IsDrazinInverse (a b : R) (k : ℕ) : Prop :=
+  InfoGeometry.Canonical.Drazin.IsDrazinInverse a b k
 
 /--
 The "Einstein Anomaly"
 Defined as the commutator of the Geometric (MP) and Spectral (Drazin) projectors.
 -/
-def EinsteinAnomaly (a b_mp b_dr : R) (_k : ℕ)
-  (_h_mp : IsMoorePenroseInverse a b_mp)
-  (_h_dr : IsDrazinInverse a b_dr _k) : R :=
+def EinsteinAnomaly (a b_mp b_dr : R) : R :=
   let P_MP := a * b_mp
   let P_D  := a * b_dr
   P_MP * P_D - P_D * P_MP
@@ -46,7 +42,7 @@ Degenerate manifolds in the Einstein Universe are stabilized by the generalized 
 -/
 theorem RegularizationStability (a b_mp : R) (h_mp : IsMoorePenroseInverse a b_mp) :
   a * b_mp * a = a :=
-  h_mp.aba
+  h_mp.aba_eq_a
 
 /--
 Theorem: Chiral/Einstein Anomaly Skew-Adjointness
@@ -55,10 +51,10 @@ is strictly skew-adjoint when both projectors are self-adjoint.
 -/
 theorem einsteinAnomaly_skew_adjoint (a b_mp b_dr : R) (k : ℕ)
     (h_mp : IsMoorePenroseInverse a b_mp)
-    (h_dr : IsDrazinInverse a b_dr k)
+    (_h_dr : IsDrazinInverse a b_dr k)
     (h_dr_star : star (a * b_dr) = a * b_dr) :
-    star (EinsteinAnomaly a b_mp b_dr k h_mp h_dr) =
-      - (EinsteinAnomaly a b_mp b_dr k h_mp h_dr) := by
+    star (EinsteinAnomaly a b_mp b_dr) =
+      - (EinsteinAnomaly a b_mp b_dr) := by
   unfold EinsteinAnomaly
   simp only [star_sub, star_mul, h_mp.ab_star, h_dr_star]
   rw [neg_sub]
@@ -103,7 +99,7 @@ theorem exists_moorePenroseInverse_of_selfAdjoint_idempotent
     (ha_star : star a = a) :
     ∃ b : R, IsMoorePenroseInverse a b := by
   refine ⟨a, ?_⟩
-  constructor
+  refine ⟨?_, ?_, ?_, ?_⟩
   · calc
       a * a * a = (a * a) * a := by simp [mul_assoc]
       _ = a * a := by simpa [ha_idem]
@@ -129,7 +125,7 @@ theorem exists_drazinInverse_of_idempotent
     (ha_idem : a * a = a) :
     ∃ b : S, IsDrazinInverse a b 1 := by
   refine ⟨a, ?_⟩
-  constructor
+  refine ⟨?_, ?_, ?_⟩
   · simp
   · calc
       a * a * a = (a * a) * a := by simp [mul_assoc]
@@ -152,8 +148,8 @@ theorem exists_regularization_pair_of_selfAdjoint_idempotent
     (ha_star : star a = a) :
     ∃ b : R, IsMoorePenroseInverse a b ∧ IsDrazinInverse a b 1 := by
   refine ⟨a, ?_⟩
-  constructor
-  · constructor
+  refine ⟨?_, ?_⟩
+  · refine ⟨?_, ?_, ?_, ?_⟩
     · calc
         a * a * a = (a * a) * a := by simp [mul_assoc]
         _ = a * a := by simpa [ha_idem]
@@ -168,7 +164,7 @@ theorem exists_regularization_pair_of_selfAdjoint_idempotent
     · calc
         star (a * a) = star a * star a := by simpa using star_mul a a
         _ = a * a := by simpa [ha_star]
-  · constructor
+  · refine ⟨?_, ?_, ?_⟩
     · simp
     · calc
         a * a * a = (a * a) * a := by simp [mul_assoc]
@@ -189,13 +185,15 @@ theorem exists_regularization_pair_of_isUnit
     ∃ b : R, IsMoorePenroseInverse a b ∧ IsDrazinInverse a b 0 := by
   rcases ha with ⟨u, rfl⟩
   refine ⟨↑u⁻¹, ?_⟩
-  constructor <;> constructor <;> simp
+  refine ⟨?_, ?_⟩
+  · refine ⟨?_, ?_, ?_, ?_⟩ <;> simp
+  · refine ⟨?_, ?_, ?_⟩ <;> simp
 
 @[simp] theorem EinsteinAnomaly_eq_zero_of_regularization_pair
     (a b : R)
-    (h_mp : IsMoorePenroseInverse a b)
-    (h_dr : IsDrazinInverse a b 0) :
-    EinsteinAnomaly a b b 0 h_mp h_dr = 0 := by
+    (_h_mp : IsMoorePenroseInverse a b)
+    (_h_dr : IsDrazinInverse a b 0) :
+    EinsteinAnomaly a b b = 0 := by
   unfold EinsteinAnomaly
   simp
 
@@ -203,37 +201,229 @@ theorem exists_regularization_pair_of_isUnit
     (a : R)
     (ha_idem : a * a = a)
     (ha_star : star a = a) :
-    EinsteinAnomaly a a a 1
-      (by
-        constructor
-        · calc
-            a * a * a = (a * a) * a := by simp [mul_assoc]
-            _ = a * a := by simpa [ha_idem]
-            _ = a := ha_idem
-        · calc
-            a * a * a = (a * a) * a := by simp [mul_assoc]
-            _ = a * a := by simpa [ha_idem]
-            _ = a := ha_idem
-        · calc
-            star (a * a) = star a * star a := by simpa using star_mul a a
-            _ = a * a := by simpa [ha_star]
-        · calc
-            star (a * a) = star a * star a := by simpa using star_mul a a
-            _ = a * a := by simpa [ha_star])
-      (by
-        constructor
-        · simp
-        · calc
-            a * a * a = (a * a) * a := by simp [mul_assoc]
-            _ = a * a := by simpa [ha_idem]
-            _ = a := ha_idem
-        · calc
-            a ^ (1 + 1) * a = (a * a) * a := by simp [pow_succ, mul_assoc]
-            _ = a * a := by simpa [ha_idem]
-            _ = a := ha_idem
-            _ = a ^ 1 := by simp)
-      = 0 := by
+    EinsteinAnomaly a a a = 0 := by
   unfold EinsteinAnomaly
   simp [ha_idem]
+
+
+/-!
+## Endomorphism Constructive Existence
+
+Provable constructive existence results for finite-dimensional endomorphisms
+in the nondegenerate (`IsUnit`) regime.
+-/
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/--
+Constructive Moore-Penrose inverse existence for nondegenerate endomorphisms.
+-/
+theorem exists_moorePenroseInverse_endomorphism_of_isUnit
+    [FiniteDimensional ℝ E]
+    (A : E →L[ℝ] E)
+    (hA : IsUnit A) :
+    ∃ (B : E →L[ℝ] E), IsMoorePenroseInverse A B := by
+  exact exists_moorePenroseInverse_of_isUnit (a := A) hA
+
+/--
+Constructive Drazin inverse existence for nondegenerate endomorphisms.
+-/
+theorem exists_drazinInverse_endomorphism_of_isUnit
+    [FiniteDimensional ℝ E]
+    (A : E →L[ℝ] E)
+    (hA : IsUnit A) :
+    ∃ (k : ℕ) (B : E →L[ℝ] E), IsDrazinInverse A B k := by
+  refine ⟨0, ?_⟩
+  rcases exists_drazinInverse_of_isUnit (a := A) hA with ⟨B, hB⟩
+  exact ⟨B, hB⟩
+
+/--
+Global constructive Moore-Penrose inverse existence on finite-dimensional
+real Hilbert spaces.
+
+Construction: invert `A` on `ker(A)ᗮ`, kill `range(A)ᗮ`.
+-/
+theorem exists_moorePenroseInverse_global
+    [FiniteDimensional ℝ E]
+    (A : E →L[ℝ] E) :
+    ∃ (B : E →L[ℝ] E), IsMoorePenroseInverse A B := by
+  let K : Submodule ℝ E := A.kerᗮ
+  let R : Submodule ℝ E := A.range
+
+  let Ares : K →ₗ[ℝ] R :=
+    { toFun := fun x => ⟨A x.1, ⟨x.1, rfl⟩⟩
+      map_add' := by
+        intro x y
+        ext
+        simp
+      map_smul' := by
+        intro c x
+        ext
+        simp }
+
+  have hAres_injective : Function.Injective Ares := by
+    intro x y hxy
+    apply Subtype.ext
+    have hval : A (x : E) = A y := congrArg Subtype.val hxy
+    have hker : ((x - y : K) : E) ∈ A.ker := by
+      change A ((x - y : K) : E) = 0
+      simpa [map_sub, hval]
+    have horth : ((x - y : K) : E) ∈ A.kerᗮ := by
+      simpa [K] using (x - y : K).2
+    have hbot : ((x - y : K) : E) ∈ (⊥ : Submodule ℝ E) := by
+      have : ((x - y : K) : E) ∈ A.ker ⊓ A.kerᗮ := ⟨hker, horth⟩
+      simpa [Submodule.inf_orthogonal_eq_bot] using this
+    simpa [sub_eq_zero] using hbot
+
+  have hKorth_eq_ker : Kᗮ = A.ker := by
+    simpa [K] using (A.ker.orthogonal_orthogonal : A.kerᗮᗮ = A.ker)
+
+  have hA_on_Kproj : ∀ x : E, A ((K.orthogonalProjection x : K) : E) = A x := by
+    intro x
+    have hsplit : K.starProjection x + Kᗮ.starProjection x = x :=
+      K.starProjection_add_starProjection_orthogonal x
+    have hkerOrthPart_mem : Kᗮ.starProjection x ∈ Kᗮ := by
+      change ((Kᗮ.orthogonalProjection x : Kᗮ) : E) ∈ Kᗮ
+      exact (Kᗮ.orthogonalProjection x).2
+    have hkerPart_mem : Kᗮ.starProjection x ∈ A.ker := by
+      simpa [hKorth_eq_ker] using hkerOrthPart_mem
+    have hkerPart_zero : A (Kᗮ.starProjection x) = 0 := by
+      simpa [LinearMap.mem_ker] using hkerPart_mem
+    have hAx :
+        A (K.starProjection x) + A (Kᗮ.starProjection x) = A x := by
+      simpa [map_add] using congrArg A hsplit
+    have hAx' : A (K.starProjection x) = A x := by
+      calc
+        A (K.starProjection x) = A (K.starProjection x) + A (Kᗮ.starProjection x) := by
+          rw [hkerPart_zero, add_zero]
+        _ = A x := hAx
+    change A (K.starProjection x) = A x
+    exact hAx'
+
+  have hAres_surjective : Function.Surjective Ares := by
+    intro y
+    rcases y with ⟨y, hy⟩
+    rcases hy with ⟨x, hx⟩
+    refine ⟨K.orthogonalProjection x, ?_⟩
+    apply Subtype.ext
+    calc
+      A ((K.orthogonalProjection x : K) : E) = A x := hA_on_Kproj x
+      _ = y := hx
+
+  let e : K ≃ₗ[ℝ] R := LinearEquiv.ofBijective Ares ⟨hAres_injective, hAres_surjective⟩
+  let eCLM : K →L[ℝ] R := LinearMap.toContinuousLinearMap e.toLinearMap
+  let eSymm : R →L[ℝ] K := LinearMap.toContinuousLinearMap e.symm.toLinearMap
+  let B : E →L[ℝ] E := K.subtypeL.comp (eSymm.comp R.orthogonalProjection)
+
+  have he_id : eCLM.comp eSymm = ContinuousLinearMap.id ℝ R := by
+    ext r
+    simp [eCLM, eSymm]
+
+  have hsymm_id : eSymm.comp eCLM = ContinuousLinearMap.id ℝ K := by
+    ext k
+    simp [eCLM, eSymm]
+
+  have hAcompSubtype : A.comp K.subtypeL = R.subtypeL.comp eCLM := by
+    ext k
+    simp [eCLM, e, Ares]
+
+  have hAB : A.comp B = R.starProjection := by
+    ext x
+    have hAstep := DFunLike.congr_fun hAcompSubtype (eSymm (R.orthogonalProjection x))
+    calc
+      A (B x) = R.subtypeL (eCLM (eSymm (R.orthogonalProjection x))) := by
+        simpa [B, ContinuousLinearMap.comp_apply] using hAstep
+      _ = R.subtypeL ((eCLM.comp eSymm) (R.orthogonalProjection x)) := by
+        rfl
+      _ = R.subtypeL ((ContinuousLinearMap.id ℝ R) (R.orthogonalProjection x)) := by
+        rw [DFunLike.congr_fun he_id (R.orthogonalProjection x)]
+      _ = R.starProjection x := by
+        rfl
+
+  have hprojA : R.orthogonalProjection.comp A = eCLM.comp K.orthogonalProjection := by
+    ext x
+    have hAx_mem : A x ∈ R := by
+      exact ⟨x, rfl⟩
+    have hleft : ((R.orthogonalProjection.comp A) x : E) = A x := by
+      simpa using congrArg Subtype.val
+        (R.orthogonalProjection_mem_subspace_eq_self ⟨A x, hAx_mem⟩)
+    have hright0 :
+        ((eCLM.comp K.orthogonalProjection) x : E) =
+          A ((K.orthogonalProjection x : K) : E) := by
+      simp [ContinuousLinearMap.comp_apply, eCLM, e, Ares]
+    have hright : ((eCLM.comp K.orthogonalProjection) x : E) = A x := by
+      exact hright0.trans (hA_on_Kproj x)
+    exact hleft.trans hright.symm
+
+  have hBA : B.comp A = K.starProjection := by
+    ext x
+    have hprojAx :
+        R.orthogonalProjection (A x) = eCLM (K.orthogonalProjection x) := by
+      simpa [ContinuousLinearMap.comp_apply] using DFunLike.congr_fun hprojA x
+    have hsymmAx :
+        eSymm (eCLM (K.orthogonalProjection x)) =
+          (ContinuousLinearMap.id ℝ K) (K.orthogonalProjection x) := by
+      simpa [ContinuousLinearMap.comp_apply] using
+        DFunLike.congr_fun hsymm_id (K.orthogonalProjection x)
+    calc
+      B (A x) = K.subtypeL (eSymm (R.orthogonalProjection (A x))) := by
+        rfl
+      _ = K.subtypeL (eSymm (eCLM (K.orthogonalProjection x))) := by
+        rw [hprojAx]
+      _ = K.subtypeL ((ContinuousLinearMap.id ℝ K) (K.orthogonalProjection x)) := by
+        rw [hsymmAx]
+      _ = K.starProjection x := by
+        rfl
+
+  have hBmem : ∀ x : E, B x ∈ K := by
+    intro x
+    simpa [B] using (eSymm (R.orthogonalProjection x)).2
+
+  have haba : A * B * A = A := by
+    ext x
+    have hxR : A x ∈ R := ⟨x, rfl⟩
+    have hproj : R.starProjection (A x) = A x :=
+      (R.starProjection_eq_self_iff).2 hxR
+    calc
+      ((A * B * A) x) = (A.comp B) (A x) := by
+        simp [ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_assoc]
+      _ = R.starProjection (A x) := by
+        simpa [hAB]
+      _ = A x := hproj
+
+  have hbab : B * A * B = B := by
+    ext x
+    have hproj : K.starProjection (B x) = B x :=
+      (K.starProjection_eq_self_iff).2 (hBmem x)
+    calc
+      ((B * A * B) x) = (B.comp A) (B x) := by
+        simp [ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_assoc]
+      _ = K.starProjection (B x) := by
+        simpa [hBA]
+      _ = B x := hproj
+
+  have habstar : star (A * B) = A * B := by
+    have hstarR : star R.starProjection = R.starProjection := by
+      simpa [IsSelfAdjoint] using
+        (isSelfAdjoint_starProjection R : IsSelfAdjoint R.starProjection)
+    calc
+      star (A * B) = star R.starProjection := by
+        simpa [ContinuousLinearMap.mul_def, hAB]
+      _ = R.starProjection := hstarR
+      _ = A * B := by
+        simpa [ContinuousLinearMap.mul_def, hAB]
+
+  have hbastar : star (B * A) = B * A := by
+    have hstarK : star K.starProjection = K.starProjection := by
+      simpa [IsSelfAdjoint] using
+        (isSelfAdjoint_starProjection K : IsSelfAdjoint K.starProjection)
+    calc
+      star (B * A) = star K.starProjection := by
+        simpa [ContinuousLinearMap.mul_def, hBA]
+      _ = K.starProjection := hstarK
+      _ = B * A := by
+        simpa [ContinuousLinearMap.mul_def, hBA]
+
+  exact ⟨B, ⟨haba, hbab, habstar, hbastar⟩⟩
 
 end InfoGeometry.Canonical

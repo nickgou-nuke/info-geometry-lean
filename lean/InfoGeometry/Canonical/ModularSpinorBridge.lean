@@ -149,6 +149,62 @@ noncomputable def spinorBilinear
   -- ⟪J ψ, O ψ⟫
   @inner ℝ (HilbertDoubled E) _ (J_symm ψ) (O ψ)
 
+/--
+Weak-value numerator for a pre/post-selected pair in doubled space:
+`⟪post, O pre⟫`.
+-/
+noncomputable def weakValueNumerator
+    (post pre : HilbertDoubled E)
+    (O : HilbertDoubled E →L[ℝ] HilbertDoubled E) : ℝ :=
+  @inner ℝ (HilbertDoubled E) _ post (O pre)
+
+/-- Weak-value denominator for a pre/post-selected pair: `⟪post, pre⟫`. -/
+noncomputable def weakValueDenominator
+    (post pre : HilbertDoubled E) : ℝ :=
+  @inner ℝ (HilbertDoubled E) _ post pre
+
+/-- Weak value as ratio numerator/denominator. -/
+noncomputable def weakValue
+    (post pre : HilbertDoubled E)
+    (O : HilbertDoubled E →L[ℝ] HilbertDoubled E) : ℝ :=
+  weakValueNumerator (E := E) post pre O / weakValueDenominator (E := E) post pre
+
+/--
+When the post-selected state is the modular conjugate `J pre`, the weak-value
+numerator is exactly the spinorial bilinear channel.
+-/
+theorem weakValueNumerator_modularConjugate_eq_spinorBilinear
+    (pre : HilbertDoubled E)
+    (O : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
+    weakValueNumerator (E := E) ((KreinSpace.jCLM (H := HilbertDoubled E)) pre) pre O
+      = spinorBilinear (E := E) pre O := by
+  simp [weakValueNumerator, spinorBilinear]
+
+/--
+Aharonov-TSVF weak-value numerator identity:
+for post-state `J pre`, the weak-value numerator is exactly the spinor bilinear.
+-/
+theorem weakValue_numerator_eq_spinorBilinear
+    (pre : HilbertDoubled E)
+    (O : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
+    weakValueNumerator (E := E) ((KreinSpace.jCLM (H := HilbertDoubled E)) pre) pre O
+      = spinorBilinear (E := E) pre O :=
+  weakValueNumerator_modularConjugate_eq_spinorBilinear (E := E) pre O
+
+/--
+Explicit modular weak-value identity:
+for post-state `J pre`, weak value is the spinorial bilinear divided by the
+modular overlap `⟪J pre, pre⟫`.
+-/
+theorem weakValue_modularConjugate_eq_spinorBilinear_div_overlap
+    (pre : HilbertDoubled E)
+    (O : HilbertDoubled E →L[ℝ] HilbertDoubled E) :
+    weakValue (E := E) ((KreinSpace.jCLM (H := HilbertDoubled E)) pre) pre O
+      = spinorBilinear (E := E) pre O /
+          weakValueDenominator (E := E) ((KreinSpace.jCLM (H := HilbertDoubled E)) pre) pre := by
+  unfold weakValue
+  rw [weakValueNumerator_modularConjugate_eq_spinorBilinear (E := E) (pre := pre) (O := O)]
+
 /-
 **Bayesian Inference as Observable**:
 The "evidence" innovation in a Bayesian update is the expectation value

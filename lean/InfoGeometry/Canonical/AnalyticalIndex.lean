@@ -9,6 +9,7 @@ import Mathlib.Algebra.Module.Submodule.Lattice
 import Mathlib.Algebra.Module.Submodule.Map
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.TensorProduct.Map
+import Mathlib.Topology.LocallyConstant.Basic
 
 open scoped TensorProduct
 
@@ -136,6 +137,211 @@ def ChiralSliceIsoAlong [FiniteDimensional ℝ V] (D Γ : ℝ → Endomorphism V
       Nonempty
         ((chiralKernelSliceMinus (D s) (Γ s)) ≃ₗ[ℝ]
           (chiralKernelSliceMinus (D 0) (Γ 0))))
+
+/--
+Algebraic deformation bridge:
+if the positive/negative chiral slice dimensions are constant along the path,
+then each slice is linearly equivalent to the baseline slice.
+-/
+theorem chiralSliceIsoAlong_of_const_finrank
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (hPlus :
+      ∀ s t : ℝ,
+        Module.finrank ℝ (chiralKernelSlicePlus (D s) (Γ s)) =
+          Module.finrank ℝ (chiralKernelSlicePlus (D t) (Γ t)))
+    (hMinus :
+      ∀ s t : ℝ,
+        Module.finrank ℝ (chiralKernelSliceMinus (D s) (Γ s)) =
+          Module.finrank ℝ (chiralKernelSliceMinus (D t) (Γ t))) :
+    ChiralSliceIsoAlong D Γ := by
+  refine ⟨?_, ?_⟩
+  · intro s
+    exact ⟨LinearEquiv.ofFinrankEq
+      (chiralKernelSlicePlus (D s) (Γ s))
+      (chiralKernelSlicePlus (D 0) (Γ 0))
+      (hPlus s 0)⟩
+  · intro s
+    exact ⟨LinearEquiv.ofFinrankEq
+      (chiralKernelSliceMinus (D s) (Γ s))
+      (chiralKernelSliceMinus (D 0) (Γ 0))
+      (hMinus s 0)⟩
+
+/--
+No-zero-crossing hypothesis on chiral kernel dimensions along a path.
+
+This is the analytic frontier assumption needed to prevent kernel jumps:
+continuity and grading anticommutation alone do not force this.
+-/
+def ChiralNoZeroCrossingAlong [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V) : Prop :=
+  (∀ s t : ℝ,
+      Module.finrank ℝ (chiralKernelSlicePlus (D s) (Γ s)) =
+        Module.finrank ℝ (chiralKernelSlicePlus (D t) (Γ t)))
+    ∧
+  (∀ s t : ℝ,
+      Module.finrank ℝ (chiralKernelSliceMinus (D s) (Γ s)) =
+        Module.finrank ℝ (chiralKernelSliceMinus (D t) (Γ t)))
+
+/--
+Local no-zero-crossing condition at scale `s0`:
+there is an open neighborhood where both chiral kernel finranks are fixed to
+their value at `s0`.
+-/
+def ChiralNoZeroCrossingNear [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V) (s0 : ℝ) : Prop :=
+  ∃ U : Set ℝ,
+    IsOpen U ∧
+    s0 ∈ U ∧
+    (∀ s : ℝ, s ∈ U →
+      Module.finrank ℝ (chiralKernelSlicePlus (D s) (Γ s)) =
+        Module.finrank ℝ (chiralKernelSlicePlus (D s0) (Γ s0))) ∧
+    (∀ s : ℝ, s ∈ U →
+      Module.finrank ℝ (chiralKernelSliceMinus (D s) (Γ s)) =
+        Module.finrank ℝ (chiralKernelSliceMinus (D s0) (Γ s0)))
+
+/--
+No-zero-eigenvalue-crossing near `s0`:
+in an open neighborhood of `s0`, the Dirac endomorphism stays bijective.
+
+This is the finite-dimensional zero-spectral-gap-at-origin condition.
+-/
+def ChiralNoZeroEigenCrossingNear [FiniteDimensional ℝ V]
+    (D : ℝ → Endomorphism V) (s0 : ℝ) : Prop :=
+  ∃ U : Set ℝ,
+    IsOpen U ∧
+    s0 ∈ U ∧
+    (∀ s : ℝ, s ∈ U → Function.Bijective (D s))
+
+/--
+No-zero-eigenvalue-crossing implies local no-zero-crossing of chiral slice
+dimensions.
+-/
+theorem chiralNoZeroCrossingNear_of_noZeroEigenCrossingNear
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (s0 : ℝ)
+    (hNoEig : ChiralNoZeroEigenCrossingNear D s0) :
+    ChiralNoZeroCrossingNear D Γ s0 := by
+  rcases hNoEig with ⟨U, hUOpen, hs0U, hBij⟩
+  refine ⟨U, hUOpen, hs0U, ?_, ?_⟩
+  · intro s hsU
+    have hKerEqBot : LinearMap.ker (D s) = ⊥ := by
+      exact LinearMap.ker_eq_bot.mpr (hBij s hsU).1
+    have hKerEqBot0 : LinearMap.ker (D s0) = ⊥ := by
+      exact LinearMap.ker_eq_bot.mpr (hBij s0 hs0U).1
+    have hPlusZero :
+        Module.finrank ℝ (chiralKernelSlicePlus (D s) (Γ s)) = 0 := by
+      unfold chiralKernelSlicePlus
+      rw [hKerEqBot]
+      simp
+    have hPlusZero0 :
+        Module.finrank ℝ (chiralKernelSlicePlus (D s0) (Γ s0)) = 0 := by
+      unfold chiralKernelSlicePlus
+      rw [hKerEqBot0]
+      simp
+    exact hPlusZero.trans hPlusZero0.symm
+  · intro s hsU
+    have hKerEqBot : LinearMap.ker (D s) = ⊥ := by
+      exact LinearMap.ker_eq_bot.mpr (hBij s hsU).1
+    have hKerEqBot0 : LinearMap.ker (D s0) = ⊥ := by
+      exact LinearMap.ker_eq_bot.mpr (hBij s0 hs0U).1
+    have hMinusZero :
+        Module.finrank ℝ (chiralKernelSliceMinus (D s) (Γ s)) = 0 := by
+      unfold chiralKernelSliceMinus
+      rw [hKerEqBot]
+      simp
+    have hMinusZero0 :
+        Module.finrank ℝ (chiralKernelSliceMinus (D s0) (Γ s0)) = 0 := by
+      unfold chiralKernelSliceMinus
+      rw [hKerEqBot0]
+      simp
+    exact hMinusZero.trans hMinusZero0.symm
+
+/--
+Analytic frontier theorem (gap form):
+if every scale has a neighborhood with no chiral zero crossing, then the pair
+of chiral finranks is locally constant along the path.
+-/
+theorem chiralSlice_finrank_locallyConstant_of_gap
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (hGap : ∀ s : ℝ, ChiralNoZeroCrossingNear D Γ s) :
+    IsLocallyConstant
+      (fun s : ℝ =>
+        ( Module.finrank ℝ (chiralKernelSlicePlus (D s) (Γ s))
+        , Module.finrank ℝ (chiralKernelSliceMinus (D s) (Γ s)) )) := by
+  rw [IsLocallyConstant.iff_eventually_eq]
+  intro s0
+  rcases hGap s0 with ⟨U, hUOpen, hs0U, hPlusConst, hMinusConst⟩
+  filter_upwards [hUOpen.mem_nhds hs0U] with s hsU
+  exact Prod.ext (hPlusConst s hsU) (hMinusConst s hsU)
+
+/--
+Global no-zero-crossing along `ℝ` from the local gap condition.
+
+Since `ℝ` is preconnected, local constancy of the finrank pair forces global
+constancy.
+-/
+theorem chiralNoZeroCrossingAlong_of_gap
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (hGap : ∀ s : ℝ, ChiralNoZeroCrossingNear D Γ s) :
+    ChiralNoZeroCrossingAlong D Γ := by
+  let f : ℝ → ℕ × ℕ := fun s =>
+    ( Module.finrank ℝ (chiralKernelSlicePlus (D s) (Γ s))
+    , Module.finrank ℝ (chiralKernelSliceMinus (D s) (Γ s)) )
+  have hfLoc : IsLocallyConstant f :=
+    chiralSlice_finrank_locallyConstant_of_gap (D := D) (Γ := Γ) hGap
+  refine ⟨?_, ?_⟩
+  · intro s t
+    exact congrArg Prod.fst (hfLoc.apply_eq_of_preconnectedSpace s t)
+  · intro s t
+    exact congrArg Prod.snd (hfLoc.apply_eq_of_preconnectedSpace s t)
+
+/-!
+Theorem-level closure for slice transport currently requires the explicit
+no-zero-crossing condition (constant `±` chiral-slice dimensions).
+
+The stronger analytic theorem deriving this from continuity, grading, and a
+spectral-gap condition is a separate frontier result.
+-/
+theorem chiralSliceIsoAlong_of_noZeroCrossing
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (hNoCross : ChiralNoZeroCrossingAlong D Γ) :
+    ChiralSliceIsoAlong D Γ := by
+  rcases hNoCross with ⟨hPlus, hMinus⟩
+  exact chiralSliceIsoAlong_of_const_finrank
+    (D := D) (Γ := Γ) hPlus hMinus
+
+/--
+Topological invariance route in two proved steps:
+gap neighborhood `⇒` global no-zero-crossing `⇒` chiral slice isomorphism.
+-/
+theorem chiralSliceIsoAlong_of_gap
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (hGap : ∀ s : ℝ, ChiralNoZeroCrossingNear D Γ s) :
+    ChiralSliceIsoAlong D Γ := by
+  exact chiralSliceIsoAlong_of_noZeroCrossing
+    (D := D) (Γ := Γ)
+    (hNoCross := chiralNoZeroCrossingAlong_of_gap (D := D) (Γ := Γ) hGap)
+
+/--
+Direct zero-eigenvalue-crossing route:
+local bijectivity of `D(s)` along the path implies chiral-slice transport
+invariance.
+-/
+theorem chiralSliceIsoAlong_of_noZeroEigenCrossing
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (hNoEig : ∀ s : ℝ, ChiralNoZeroEigenCrossingNear D s) :
+    ChiralSliceIsoAlong D Γ := by
+  apply chiralSliceIsoAlong_of_gap (D := D) (Γ := Γ)
+  intro s
+  exact chiralNoZeroCrossingNear_of_noZeroEigenCrossingNear
+    (D := D) (Γ := Γ) (s0 := s) (hNoEig := hNoEig s)
 
 /--
 Conjugacy data for a Dirac/grading family along a transport flow of linear
@@ -418,6 +624,19 @@ theorem indexInvariantAlong_of_chiralSliceIso
   unfold analyticalIndex
   simp [hPlusFinrank, hMinusFinrank]
 
+/--
+Index invariance as a direct consequence of no zero-eigenvalue crossing.
+-/
+theorem indexInvariantAlong_of_noZeroEigenCrossing
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (hNoEig : ∀ s : ℝ, ChiralNoZeroEigenCrossingNear D s) :
+    IndexInvariantAlong D Γ := by
+  exact indexInvariantAlong_of_chiralSliceIso
+    (D := D) (Γ := Γ)
+    (hIso := chiralSliceIsoAlong_of_noZeroEigenCrossing
+      (D := D) (Γ := Γ) hNoEig)
+
 /-- Index invariance from flow-conjugacy of the Dirac/grading family. -/
 theorem indexInvariantAlong_of_conjugacy
     [FiniteDimensional ℝ V]
@@ -447,6 +666,30 @@ theorem indexInvariantAlong_of_modularCliffordTransport
   exact indexInvariantAlong_of_chiralSliceIso (D := D) (Γ := Γ)
     (chiralSliceIsoAlong_of_modularCliffordTransport
       (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans)
+
+/--
+Direct primitive-hypothesis form of modular/Clifford transport invariance:
+no bundled transport witness is required.
+-/
+theorem indexInvariantAlong_of_modularCliffordTransport_components
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    {ι : Type*}
+    (σ : ℝ → Endomorphism V)
+    (clAct : ι → Endomorphism V)
+    (unit : ι)
+    (hUnit : clAct unit = LinearMap.id)
+    (hσInj : ∀ s : ℝ, Function.Injective (σ s))
+    (hPlusMap : ∀ s : ℝ, ∀ ℓ : ι,
+      (chiralKernelSlicePlus (D s) (Γ s)).map ((clAct ℓ).comp (σ s))
+        = chiralKernelSlicePlus (D 0) (Γ 0))
+    (hMinusMap : ∀ s : ℝ, ∀ ℓ : ι,
+      (chiralKernelSliceMinus (D s) (Γ s)).map ((clAct ℓ).comp (σ s))
+        = chiralKernelSliceMinus (D 0) (Γ 0)) :
+    IndexInvariantAlong D Γ := by
+  exact indexInvariantAlong_of_modularCliffordTransport
+    (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit)
+    (hTrans := ⟨hUnit, hσInj, hPlusMap, hMinusMap⟩)
 
 end Core
 
@@ -566,6 +809,40 @@ theorem sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
       (E := X) flow hNorm hFixed
   · exact indexInvariantAlong_of_modularCliffordTransport
       (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans
+
+/--
+Primitive-hypothesis form of the coupled Sinkhorn/Ricci/index invariant:
+modular/Clifford transport is supplied as explicit component equalities.
+-/
+theorem sinkhornRicciIndexInvariant_of_modularCliffordTransport_components_state_hypotheses
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    {ι : Type*}
+    (σ : ℝ → Endomorphism V)
+    (clAct : ι → Endomorphism V)
+    (unit : ι)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (hUnit : clAct unit = LinearMap.id)
+    (hσInj : ∀ s : ℝ, Function.Injective (σ s))
+    (hPlusMap : ∀ s : ℝ, ∀ ℓ : ι,
+      (chiralKernelSlicePlus (D s) (Γ s)).map ((clAct ℓ).comp (σ s))
+        = chiralKernelSlicePlus (D 0) (Γ 0))
+    (hMinusMap : ∀ s : ℝ, ∀ ℓ : ι,
+      (chiralKernelSliceMinus (D s) (Γ s)).map ((clAct ℓ).comp (σ s))
+        = chiralKernelSliceMinus (D 0) (Γ 0)) :
+    SinkhornRicciIndexInvariant n T flow D Γ := by
+  refine sinkhornRicciIndexInvariant_of_components
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    ?_ ?_ ?_
+  · intro k label
+    exact sinkhorn_dynamics_step_control (n := n) T k label
+  · exact normalizedKaehlerRicci_fixedpoint_eq_zero
+      (E := X) flow hNorm hFixed
+  · exact indexInvariantAlong_of_modularCliffordTransport_components
+      (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit)
+      hUnit hσInj hPlusMap hMinusMap
 
 /--
 Derived constructor using primitive flow-conjugacy hypotheses:

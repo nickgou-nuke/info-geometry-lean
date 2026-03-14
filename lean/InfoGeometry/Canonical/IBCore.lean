@@ -1,4 +1,5 @@
 import InfoGeometry.Basic
+import Mathlib.Topology.MetricSpace.Contracting
 
 /-!
 # InfoGeometry.Canonical.IBCore
@@ -225,6 +226,20 @@ noncomputable def ibTrajectory
     ibTrajectory prob p0 (k + 1) = ibBlahutArimotoStep prob (ibTrajectory prob p0 k) := rfl
 
 /--
+The recursive IB trajectory is exactly the iterate sequence of the one-step
+Blahut-Arimoto map.
+-/
+@[simp] theorem ibTrajectory_eq_iterate
+    (prob : IBProblem (X := X) (Y := Y))
+    (p0 : X → FinProb T) (k : Nat) :
+    ibTrajectory prob p0 k = (ibBlahutArimotoStep prob)^[k] p0 := by
+  induction k with
+  | zero =>
+      simp [ibTrajectory]
+  | succ k hk =>
+      simp [ibTrajectory, Function.iterate_succ_apply', hk]
+
+/--
 Existence of an explicit total IB trajectory satisfying the BA recursion.
 -/
 theorem exists_ibTrajectory
@@ -236,6 +251,104 @@ theorem exists_ibTrajectory
   refine ⟨ibTrajectory prob p0, rfl, ?_⟩
   intro k
   rfl
+
+/--
+Contraction-driven convergence of the IB trajectory.
+
+This is the Banach fixed-point closure for the canonical BA recursion:
+once `ibBlahutArimotoStep` is shown contracting on the encoder space,
+the generated IB trajectory converges to a unique fixed point.
+-/
+theorem pTrajectory_eq_iterate_of_step
+    (prob : IBProblem (X := X) (Y := Y))
+    (pTrajectory : Nat → X → FinProb T)
+    (hStep :
+      ∀ k : Nat,
+        pTrajectory (k + 1)
+          = ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob (pTrajectory k)) :
+    ∀ n : Nat,
+      pTrajectory n
+        = (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob)^[n] (pTrajectory 0) := by
+  intro n
+  induction n with
+  | zero =>
+      simp
+  | succ n ih =>
+      rw [hStep, ih]
+      simp [Function.iterate_succ_apply']
+
+/--
+Banach fixed-point convergence for arbitrary BA-recursive trajectories.
+
+Given a strict contraction witness for `ibBlahutArimotoStep prob` on a complete
+encoder metric space, every trajectory satisfying the BA recursion converges to
+the unique fixed point.
+-/
+theorem tendsto_ibTrajectory_fixedPoint
+    [MetricSpace (X → FinProb T)]
+    [CompleteSpace (X → FinProb T)]
+    [Nonempty (X → FinProb T)]
+    (prob : IBProblem (X := X) (Y := Y))
+    (pTrajectory : Nat → X → FinProb T)
+    (hStep :
+      ∀ k : Nat,
+        pTrajectory (k + 1)
+          = ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob (pTrajectory k))
+    {Kc : NNReal}
+    (hContr :
+      ContractingWith Kc (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob)) :
+    ∃ p_star : X → FinProb T,
+      Filter.Tendsto pTrajectory Filter.atTop (nhds p_star) ∧
+      ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p_star = p_star := by
+  let p_star :=
+    ContractingWith.fixedPoint (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob) hContr
+  have hiter :
+      ∀ n : Nat,
+        pTrajectory n
+          = (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob)^[n] (pTrajectory 0) :=
+    pTrajectory_eq_iterate_of_step (prob := prob) (pTrajectory := pTrajectory) hStep
+  have htend :
+      Filter.Tendsto
+        (fun n => (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob)^[n] (pTrajectory 0))
+        Filter.atTop (nhds p_star) := by
+    simpa [p_star] using
+      (ContractingWith.tendsto_iterate_fixedPoint
+        (f := ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob)
+        (hf := hContr) (pTrajectory 0))
+  have hEq :
+      pTrajectory =
+        (fun n => (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob)^[n] (pTrajectory 0)) := by
+    funext n
+    exact hiter n
+  refine ⟨p_star, ?_, ?_⟩
+  · exact hEq ▸ htend
+  · simpa [p_star] using
+      (ContractingWith.fixedPoint_isFixedPt
+        (f := ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob) (hf := hContr))
+
+/--
+Contraction-driven convergence of the canonical recursively defined IB trajectory.
+-/
+theorem tendsto_ibTrajectory_fixedPoint_of_contracting
+    [MetricSpace (X → FinProb T)]
+    [CompleteSpace (X → FinProb T)]
+    [Nonempty (X → FinProb T)]
+    (prob : IBProblem (X := X) (Y := Y))
+    (p0 : X → FinProb T)
+    (F : (X → FinProb T) → (X → FinProb T))
+    (hF : F = ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob)
+    {Kc : NNReal}
+    (hContr : ContractingWith Kc F) :
+    ∃ p_star : X → FinProb T,
+      Filter.Tendsto (ibTrajectory prob p0) Filter.atTop (nhds p_star) ∧
+      ibBlahutArimotoStep prob p_star = p_star := by
+  subst hF
+  simpa using
+    (tendsto_ibTrajectory_fixedPoint
+      (prob := prob)
+      (pTrajectory := ibTrajectory prob p0)
+      (hStep := ibTrajectory_succ (prob := prob) (p0 := p0))
+      (hContr := hContr))
 
 /--
 KL Lyapunov functional with a frozen BA target:

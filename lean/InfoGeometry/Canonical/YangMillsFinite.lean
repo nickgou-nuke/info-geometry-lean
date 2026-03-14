@@ -24,46 +24,6 @@ open InfoGeometry.Canonical.TomitaTakesaki
 variable {E : Type}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- Finite `SU(N)`/`PSU(N)` gauge instantiation data. -/
-structure FiniteGaugeData where
-  n : ℕ
-  n_ge_two : 2 ≤ n
-  su_model : SUN n
-  psu_model : PSUN n su_model
-
-namespace FiniteGaugeData
-
-/-- Concrete constructor from explicit `SU(N)`/`PSU(N)` models. -/
-def ofModels
-    (n : ℕ)
-    (hn : 2 ≤ n)
-    (su_model : SUN n)
-    (psu_model : PSUN n su_model) :
-    FiniteGaugeData where
-  n := n
-  n_ge_two := hn
-  su_model := su_model
-  psu_model := psu_model
-
-end FiniteGaugeData
-
-/--
-Finite QFT closure state:
-there exists a nonzero positive-time expectation seed with explicit
-joint-kernel and commutator-orthogonality hypotheses.
-
-This removes manual per-obligation witness fields and makes the QFT layer
-derive from canonical modular seed data.
--/
-def FiniteQFTLayer
-    (E : Type)
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : Prop :=
-  ∃ (K : AlgebraEnd E) (β : ℝ) (Ω : InfoGeometry.Krein.DoubledSpace E),
-    JointKernelOnOmega (F := E) K β Ω ∧
-      CommutatorOrthogonalOnOmega (F := E) Ω ∧
-      Ω ≠ 0 ∧
-      PositiveTimeVector Ω
-
 namespace FiniteQFTLayer
 
 /-- Reflection-positivity marker from the expectation seed. -/
@@ -125,37 +85,6 @@ theorem finiteWightmanReconstructionLayer_of_expectationSeed
   · simpa [omegaSeed] using
       (expectationSeedFunctional_nonzero (F := E) Ω hΩ)
 
-/-- Fully constructive finite QFT layer from canonical modular/expectation data. -/
-def ofExpectationSeedFinite
-    (K : AlgebraEnd E)
-    (β : ℝ)
-    (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
-    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω)
-    (hΩ_nonzero : Ω ≠ 0)
-    (hΩ_posTime : PositiveTimeVector Ω) :
-    FiniteQFTLayer E :=
-  ⟨K, β, Ω, hJointKernel, hCommOrthogonal, hΩ_nonzero, hΩ_posTime⟩
-
-/--
-Derived finite QFT obligations from the closure state:
-reflection positivity, finite OS layer, and finite Wightman reconstruction.
--/
-theorem existenceClaims_of_layer
-    (hLayer : FiniteQFTLayer E) :
-    ∃ (K : AlgebraEnd E) (β : ℝ) (Ω : InfoGeometry.Krein.DoubledSpace E),
-      expectationSeedReflectionPositivity (E := E) K β Ω ∧
-        finiteOsterwalderSchraderLayer (E := E) Ω ∧
-        finiteWightmanReconstructionLayer (E := E) K β Ω := by
-  rcases hLayer with ⟨K, β, Ω, hJointKernel, hCommOrthogonal, hΩ_nonzero, hΩ_posTime⟩
-  refine ⟨K, β, Ω, ?_, ?_, ?_⟩
-  · exact expectationSeedReflectionPositivity_of_hypotheses
-      (E := E) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
-  · exact finiteOsterwalderSchraderLayer_of_positiveTimeVector
-      (E := E) (Ω := Ω) hΩ_posTime
-  · exact finiteWightmanReconstructionLayer_of_expectationSeed
-      (E := E) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal hΩ_nonzero
-
 end FiniteQFTLayer
 
 /--
@@ -196,9 +125,18 @@ theorem spectralGapFromLogDet_pos_of_coercive
 /-- Finite constructive Yang-Mills bridge package. -/
 structure FiniteYangMillsBridge (E : Type) [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [CompleteSpace E] where
-  gauge : FiniteGaugeData
+  n : ℕ
+  n_ge_two : 2 ≤ n
+  su_model : SUN n
+  psu_model : PSUN n su_model
   rg_model : ChiralAsymptoticModel E
-  qft_layer : FiniteQFTLayer E
+  K : AlgebraEnd E
+  β : ℝ
+  Ω : InfoGeometry.Krein.DoubledSpace E
+  hJointKernel : JointKernelOnOmega (F := E) K β Ω
+  hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω
+  hΩ_nonzero : Ω ≠ 0
+  hΩ_posTime : PositiveTimeVector Ω
   spectral_gap : ℝ
   spectral_gap_pos : 0 < spectral_gap
   gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap
@@ -207,16 +145,34 @@ namespace FiniteYangMillsBridge
 
 /-- Constructor from explicit finite gauge/QFT/RG/gap data. -/
 def ofConcrete
-    (gauge : FiniteGaugeData)
+    (n : ℕ)
+    (n_ge_two : 2 ≤ n)
+    (su_model : SUN n)
+    (psu_model : PSUN n su_model)
     (rg_model : ChiralAsymptoticModel E)
-    (qft_layer : FiniteQFTLayer E)
+    (K : AlgebraEnd E)
+    (β : ℝ)
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω)
+    (hΩ_nonzero : Ω ≠ 0)
+    (hΩ_posTime : PositiveTimeVector Ω)
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
     FiniteYangMillsBridge E where
-  gauge := gauge
+  n := n
+  n_ge_two := n_ge_two
+  su_model := su_model
+  psu_model := psu_model
   rg_model := rg_model
-  qft_layer := qft_layer
+  K := K
+  β := β
+  Ω := Ω
+  hJointKernel := hJointKernel
+  hCommOrthogonal := hCommOrthogonal
+  hΩ_nonzero := hΩ_nonzero
+  hΩ_posTime := hΩ_posTime
   spectral_gap := spectral_gap
   spectral_gap_pos := spectral_gap_pos
   gamma_le_spectral_gap := gamma_le_spectral_gap
@@ -227,7 +183,10 @@ QFT witnesses come from expectation-seed data and gap comes from log-det coerciv
 -/
 noncomputable def ofExpectationSeedFromLogDet
     [FiniteDimensional ℝ (InfoGeometry.Krein.DoubledSpace E)]
-    (gauge : FiniteGaugeData)
+    (n : ℕ)
+    (n_ge_two : 2 ≤ n)
+    (su_model : SUN n)
+    (psu_model : PSUN n su_model)
     (rg_model : ChiralAsymptoticModel E)
     (K : AlgebraEnd E)
     (β : ℝ)
@@ -239,10 +198,8 @@ noncomputable def ofExpectationSeedFromLogDet
     (J : AlgebraEnd E)
     (hCoercive : logDetCoercive (E := E) J) :
     FiniteYangMillsBridge E :=
-  ofConcrete (E := E) gauge rg_model
-    (FiniteQFTLayer.ofExpectationSeedFinite
-      (E := E) (K := K) (β := β) (Ω := Ω)
-      hJointKernel hCommOrthogonal hΩ_nonzero hΩ_posTime)
+  ofConcrete (E := E) n n_ge_two su_model psu_model rg_model K β Ω
+    hJointKernel hCommOrthogonal hΩ_nonzero hΩ_posTime
     (spectralGapFromLogDet (E := E) rg_model J)
     (spectralGapFromLogDet_pos_of_coercive
       (E := E) (rg_model := rg_model) (J := J) hCoercive)
@@ -251,11 +208,13 @@ noncomputable def ofExpectationSeedFromLogDet
 
 /-- Obligation 1: nontrivial gauge rank (`N ≥ 2`). -/
 def hasGaugeRank (B : FiniteYangMillsBridge E) : Prop :=
-  2 ≤ B.gauge.n
+  2 ≤ B.n
 
 /-- Obligation 2: finite existence layer. -/
-def hasExistenceLayer (_B : FiniteYangMillsBridge E) : Prop :=
-  FiniteQFTLayer E
+def hasExistenceLayer (B : FiniteYangMillsBridge E) : Prop :=
+  FiniteQFTLayer.expectationSeedReflectionPositivity (E := E) B.K B.β B.Ω ∧
+    FiniteQFTLayer.finiteOsterwalderSchraderLayer (E := E) B.Ω ∧
+    FiniteQFTLayer.finiteWightmanReconstructionLayer (E := E) B.K B.β B.Ω
 
 /-- Obligation 3: strict finite mass gap. -/
 def hasStrictMassGap (B : FiniteYangMillsBridge E) : Prop :=
@@ -270,18 +229,37 @@ theorem existenceClaims_of_bridge
       FiniteQFTLayer.expectationSeedReflectionPositivity (E := E) K β Ω ∧
         FiniteQFTLayer.finiteOsterwalderSchraderLayer (E := E) Ω ∧
         FiniteQFTLayer.finiteWightmanReconstructionLayer (E := E) K β Ω :=
-  FiniteQFTLayer.existenceClaims_of_layer B.qft_layer
+  ⟨B.K, B.β, B.Ω,
+    FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses
+      (E := E) (K := B.K) (β := B.β) (Ω := B.Ω) B.hJointKernel B.hCommOrthogonal,
+    FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector
+      (E := E) (Ω := B.Ω) B.hΩ_posTime,
+    FiniteQFTLayer.finiteWightmanReconstructionLayer_of_expectationSeed
+      (E := E) (K := B.K) (β := B.β) (Ω := B.Ω)
+      B.hJointKernel B.hCommOrthogonal B.hΩ_nonzero⟩
 
 /-- Consolidated finite milestone theorem. -/
 theorem obligations_of_bridge
     (B : FiniteYangMillsBridge E) :
     hasGaugeRank B ∧ hasExistenceLayer B ∧ hasStrictMassGap B := by
-  exact ⟨B.gauge.n_ge_two, B.qft_layer, B.spectral_gap_pos⟩
+  refine ⟨B.n_ge_two, ?_, B.spectral_gap_pos⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses
+      (E := E) (K := B.K) (β := B.β) (Ω := B.Ω)
+      B.hJointKernel B.hCommOrthogonal
+  · exact FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector
+      (E := E) (Ω := B.Ω) B.hΩ_posTime
+  · exact FiniteQFTLayer.finiteWightmanReconstructionLayer_of_expectationSeed
+      (E := E) (K := B.K) (β := B.β) (Ω := B.Ω)
+      B.hJointKernel B.hCommOrthogonal B.hΩ_nonzero
 
 /-- Fully constructive finite milestone theorem in the log-det route. -/
 theorem obligations_of_expectationSeedFromLogDet
     [FiniteDimensional ℝ (InfoGeometry.Krein.DoubledSpace E)]
-    (gauge : FiniteGaugeData)
+    (n : ℕ)
+    (n_ge_two : 2 ≤ n)
+    (su_model : SUN n)
+    (psu_model : PSUN n su_model)
     (rg_model : ChiralAsymptoticModel E)
     (K : AlgebraEnd E)
     (β : ℝ)
@@ -293,7 +271,7 @@ theorem obligations_of_expectationSeedFromLogDet
     (J : AlgebraEnd E)
     (hCoercive : logDetCoercive (E := E) J) :
     let B := ofExpectationSeedFromLogDet
-      (E := E) gauge rg_model K β Ω hJointKernel hCommOrthogonal
+      (E := E) n n_ge_two su_model psu_model rg_model K β Ω hJointKernel hCommOrthogonal
       hΩ_nonzero hΩ_posTime J hCoercive
     hasGaugeRank B ∧ hasExistenceLayer B ∧ hasStrictMassGap B := by
   intro B

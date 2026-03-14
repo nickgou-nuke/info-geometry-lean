@@ -97,6 +97,24 @@ Maps the generators to the 𝔨 ⊕ 𝔭 sectors.
 def GeneratorCartanDecomposition : Prop :=
   IsCompactBeliefUpdate CBA.CI CBA.M ∧ IsNonCompactBeliefUpdate CBA.CI CBA.D
 
+/--
+`GeneratorCartanDecomposition` is exactly the conjunction of compactness of `M`
+and non-compactness (Weyl-dilation type) of `D`.
+-/
+theorem generatorCartanDecomposition_iff :
+    CBA.GeneratorCartanDecomposition
+      ↔ IsCompactBeliefUpdate CBA.CI CBA.M ∧ IsNonCompactBeliefUpdate CBA.CI CBA.D := by
+  rfl
+
+/--
+Direct constructor for the Cartan split from primitive sector hypotheses.
+-/
+theorem generatorCartanDecomposition_of_parts
+    (hM : IsCompactBeliefUpdate CBA.CI CBA.M)
+    (hD : IsNonCompactBeliefUpdate CBA.CI CBA.D) :
+    CBA.GeneratorCartanDecomposition := by
+  exact ⟨hM, hD⟩
+
 /-- Cartan grading involutivity hypothesis `Γ^2 = 1`. -/
 def GradingInvolutive : Prop :=
   chiralGrading CBA.CI * chiralGrading CBA.CI = (1 : E →L[ℝ] E)

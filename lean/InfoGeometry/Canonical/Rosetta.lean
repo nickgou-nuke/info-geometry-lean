@@ -19,7 +19,9 @@ import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Canonical.WeylInformationGauge
 import InfoGeometry.Canonical.WilsonLoop
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Canonical.ModularSpinorBridge
 import InfoGeometry.Canonical.Twistor
+import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.Singular
 
 /-!
@@ -74,17 +76,26 @@ export InfoGeometry.Canonical.ConformalUnification.ConformalInference (
   P
   K
   D
+  specialConformal_eq_modularInversion_translation
+  translation_eq_modularInversion_specialConformal
   spectralChiralProjector
   metricChiralProjector
   chiralAnomaly
   chiralAnomalyOperator
   chiralScale
+  chiralScale_eq_projectorObstruction_norm
   chiral_commutation_link
   chiralAnomalyOperator_eq_zero_iff_projectors_commute
   projectors_commute_of_chiralAnomaly_eq_zero
   chiralAnomaly_eq_zero_of_projectors_commute
+  chiralScale_eq_zero_of_projectors_commute
+  chiralScale_ne_zero_of_projectors_not_commute
   chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
+  projectors_commute_of_chiralScale_eq_zero
+  projectors_commute_of_kahlerLogDet_unitRelativeVolume
+  anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
   projectors_commute_of_kahlerLogDet_normalized_fixedpoint
+  einsteinEquation_of_projectorObstruction_source
   IsNormalInference
   IsChiralInference
   NormalInferenceState
@@ -98,6 +109,8 @@ export InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra (
   SatisfiesFlatWeights
   ConformalWeightClosure
   GeneratorCartanDecomposition
+  generatorCartanDecomposition_iff
+  generatorCartanDecomposition_of_parts
   GradingInvolutive
   cartanInvolution
   IsVolumePreservingPart
@@ -122,6 +135,7 @@ export InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra (
 export InfoGeometry.Canonical.WeylInformationGauge (
   cartanWeyl_generator_split
   cartanWeyl_dilation_sources_transportedEinsteinResidual
+  cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts
 )
 
 export InfoGeometry.Canonical.SuperInference (
@@ -134,6 +148,15 @@ export InfoGeometry.Canonical.SuperInference (
   superCharge_boson_eq_zero
   superCharge_fermion_eq_dualMap
   susyHamiltonian_eq_self
+)
+
+export InfoGeometry.Canonical.ModularSpinorBridge (
+  spinorBilinear
+  weakValueNumerator
+  weakValueDenominator
+  weakValue
+  weakValueNumerator_modularConjugate_eq_spinorBilinear
+  weakValue_modularConjugate_eq_spinorBilinear_div_overlap
 )
 
 export InfoGeometry.Canonical.ChiralCliffordBridge (
@@ -173,6 +196,15 @@ export InfoGeometry.Canonical.AnomalyInflow (
   AnomalyInflowClosure
   anomalyInflowClosure
   anomaly_inflow_cancellation
+)
+
+export InfoGeometry.Canonical.BerryPhase (
+  berryConnection
+  informationBerryPhase
+  informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex
+  informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank
+  informationBerryPhase_ne_zero_of_loopLength_ne_zero_of_chiralAnomalyIndex_ne_zero
+  berry_phase_vanishes_for_normal
 )
 
 export InfoGeometry.Canonical.ChiralEinsteinBridge (

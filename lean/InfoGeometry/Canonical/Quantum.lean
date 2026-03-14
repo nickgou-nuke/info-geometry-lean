@@ -22,6 +22,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 import InfoGeometry.Canonical.Fierz
 import InfoGeometry.Canonical.Fock
 import InfoGeometry.Quantum.RealKCategory
+import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Quantum.RealMajorana
 
 /-!

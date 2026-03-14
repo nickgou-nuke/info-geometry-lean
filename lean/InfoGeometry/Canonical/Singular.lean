@@ -258,7 +258,8 @@ theorem exists_drazinInverse_global
     simpa [B] using hDlin.1
   have hPowLin : A.toLinearMap ^ (k + 1) * B.toLinearMap = A.toLinearMap ^ k := by
     simpa [B] using hDlin.2.2.symm
-  refine ⟨k, B, InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk ?_ ?_ ?_⟩
+  refine ⟨k, B, InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk
+    (hcomm := ?_) (hidempotent := ?_) (hpower := ?_)⟩
   · ext x
     simpa using congrArg (fun f : E →ₗ[ℝ] E => f x) hCommLin
   · ext x

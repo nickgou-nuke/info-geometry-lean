@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Category.ModuleCat.Basic
+import Mathlib.CategoryTheory.Equivalence
 import Mathlib.LinearAlgebra.Complex.Module
 
 /-!
@@ -34,6 +35,22 @@ attribute [instance] RealKVect.instAddCommGroup RealKVect.instModule
 instance : CoeSort RealKVect (Type u) := ⟨RealKVect.V⟩
 
 namespace RealKVect
+
+/-- Scalar decomposition in a complex module: `z • v = re(z)•v + im(z)•(I•v)`. -/
+private lemma complex_smul_eq_re_im_I_smul
+    {V : Type u} [AddCommGroup V] [Module ℂ V]
+    (z : ℂ) (v : V) :
+    z • v = z.re • v + z.im • ((Complex.I : ℂ) • v) := by
+  calc
+    z • v = ((z.re : ℂ) + z.im * Complex.I) • v := by rw [Complex.re_add_im]
+    _ = (z.re : ℂ) • v + (z.im * Complex.I) • v := by rw [add_smul]
+    _ = z.re • v + z.im • ((Complex.I : ℂ) • v) := by
+      refine congrArg (fun t => z.re • v + t) ?_
+      calc
+        (z.im * Complex.I) • v = (z.im : ℂ) • ((Complex.I : ℂ) • v) := by
+          simpa [smul_smul]
+        _ = z.im • ((Complex.I : ℂ) • v) := by
+          rfl
 
 /-- Morphisms in `RealKVect`: real-linear maps commuting with `K`. -/
 @[ext] structure Hom (X Y : RealKVect) where
@@ -170,14 +187,113 @@ noncomputable def complexToRealK : ModuleCat ℂ ⥤ RealKVect where
   map_comp f g := by
     rfl
 
-/- TODO:
-Add `unitIsoComplexRealK`, `counitIsoComplexRealK`, and package
-`ModuleCat ℂ ≌ RealKVect`.
-
-The core functors `complexToRealK` and `realKToComplex` are implemented and
-compile; remaining work is coercion-heavy instance alignment between bundled
-module structures in unit/counit component linearity proofs.
+/--
+Unit natural isomorphism for the real/complex bridge:
+`𝟭_(ModuleCat ℂ) ≅ complexToRealK ⋙ realKToComplex`.
 -/
+noncomputable def unitIsoComplexRealK :
+    𝟭 (ModuleCat ℂ) ≅ complexToRealK ⋙ realKToComplex :=
+  NatIso.ofComponents
+    (fun W => by
+      letI : Module ℂ (complexToRealK.obj W) := complexModule (complexToRealK.obj W)
+      refine LinearEquiv.toModuleIso ?_
+      refine
+        { toFun := fun x => x
+          invFun := fun x => x
+          left_inv := by intro x; rfl
+          right_inv := by intro x; rfl
+          map_add' := by intro x y; rfl
+          map_smul' := ?_ }
+      intro z x
+      simpa [complexSMul, complexToRealK] using
+        (complex_smul_eq_re_im_I_smul (V := W) z x))
+    (by
+      intro X Y f
+      ext x
+      rfl)
+
+noncomputable abbrev RoundTripObj (X : RealKVect) : RealKVect :=
+  (realKToComplex ⋙ complexToRealK).obj X
+
+private abbrev smulOrig (X : RealKVect) (r : ℝ) (x : X) : X := r • x
+
+noncomputable abbrev smulRoundTrip (X : RealKVect) (r : ℝ) (x : RoundTripObj X) : RoundTripObj X :=
+  complexSMul X (r : ℂ) (x : X)
+
+private lemma roundTrip_smul_eq_smulRoundTrip (X : RealKVect) (r : ℝ) (x : RoundTripObj X) :
+    (r • x : RoundTripObj X) = smulRoundTrip X r x := by
+  rfl
+
+private lemma smulRoundTrip_eq_smulOrig (X : RealKVect) (r : ℝ) (x : RoundTripObj X) :
+    ((smulRoundTrip X r x : RoundTripObj X) : X) = smulOrig X r (x : X) := by
+  simp [smulRoundTrip, smulOrig, complexSMul]
+
+/--
+Counit natural isomorphism for the real/complex bridge:
+`realKToComplex ⋙ complexToRealK ≅ 𝟭_RealKVect`.
+-/
+noncomputable def counitIsoComplexRealK :
+    realKToComplex ⋙ complexToRealK ≅ 𝟭 RealKVect :=
+  NatIso.ofComponents
+    (fun X => by
+      let homX : (realKToComplex ⋙ complexToRealK).obj X ⟶ X :=
+        { hom :=
+            { toFun := fun x => x
+              map_add' := by intro x y; rfl
+              map_smul' := by
+                intro r x
+                rw [RingHom.id_apply]
+                rw [roundTrip_smul_eq_smulRoundTrip X r x]
+                change ((smulRoundTrip X r x : RoundTripObj X) : X) = smulOrig X r (x : X)
+                exact smulRoundTrip_eq_smulOrig X r x }
+          comm := by
+            ext x
+            change complexSMul X Complex.I x = X.K x
+            simp [complexSMul] }
+      let invX : X ⟶ (realKToComplex ⋙ complexToRealK).obj X :=
+        { hom :=
+            { toFun := fun x => x
+              map_add' := by intro x y; rfl
+              map_smul' := by
+                intro r x
+                rw [RingHom.id_apply]
+                rw [roundTrip_smul_eq_smulRoundTrip X r (x : RoundTripObj X)]
+                change smulOrig X r x = (smulRoundTrip X r (x : RoundTripObj X) : RoundTripObj X)
+                exact (smulRoundTrip_eq_smulOrig X r (x : RoundTripObj X)).symm }
+          comm := by
+            ext x
+            change X.K x = complexSMul X Complex.I x
+            simp [complexSMul] }
+      refine
+        { hom := homX
+          inv := invX
+          hom_inv_id := by
+            apply RealKVect.Hom.ext
+            ext x
+            rfl
+          inv_hom_id := by
+            apply RealKVect.Hom.ext
+            ext x
+            rfl })
+    (by
+      intro X Y f
+      apply RealKVect.Hom.ext
+      ext x
+      rfl)
+
+/--
+Full categorical equivalence between complex modules and real modules equipped
+with an internal square-minus-one operator.
+-/
+noncomputable def moduleCatComplexEquivRealKVect : ModuleCat ℂ ≌ RealKVect where
+  functor := complexToRealK
+  inverse := realKToComplex
+  unitIso := unitIsoComplexRealK
+  counitIso := counitIsoComplexRealK
+  functor_unitIso_comp X := by
+    apply RealKVect.Hom.ext
+    ext x
+    rfl
 
 end RealKVect
 

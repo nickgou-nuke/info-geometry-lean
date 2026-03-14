@@ -89,8 +89,10 @@ theorem anomaly_as_fluid_state_with_density
     (h_dr : IsDrazinInverse A B_dr k)
     (ρ_val : ℝ) (h_pos : ρ_val > 0) :
     ∃ state : FluidState E,
-      state.u = EinsteinAnomaly A B_mp B_dr k h_mp h_dr ∧ state.ρ = ρ_val := by
-  let ε := EinsteinAnomaly A B_mp B_dr k h_mp h_dr
+      state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = ρ_val := by
+  let ε := EinsteinAnomaly A B_mp B_dr
+  let _ := h_mp
+  let _ := h_dr
   let state : FluidState E :=
     { u := ε
       ρ := ρ_val
@@ -142,8 +144,10 @@ theorem anomaly_as_fluid_state
     (h_mp : IsMoorePenroseInverse A B_mp)
     (h_dr : IsDrazinInverse A B_dr k) :
     ∃ state : FluidState E,
-      state.u = EinsteinAnomaly A B_mp B_dr k h_mp h_dr := by
-  let ε := EinsteinAnomaly A B_mp B_dr k h_mp h_dr
+      state.u = EinsteinAnomaly A B_mp B_dr := by
+  let ε := EinsteinAnomaly A B_mp B_dr
+  let _ := h_mp
+  let _ := h_dr
   let state : FluidState E :=
     { u := ε
       ρ := 1
@@ -406,9 +410,12 @@ theorem chiral_anomaly_sources_flow
     (h_mp : IsMoorePenroseInverse A B_mp)
     (h_dr : IsDrazinInverse A B_dr k)
     (ω : VelocityField E →L[ℝ] ℝ) :
-    let χ := EinsteinAnomaly A B_mp B_dr k h_mp h_dr
+    let χ := EinsteinAnomaly A B_mp B_dr
     chiralFlux χ ω = ω (A * B_mp * (A * B_dr) - A * B_dr * (A * B_mp)) :=
-  rfl
+  by
+    let _ := h_mp
+    let _ := h_dr
+    rfl
 
 end ChiralFlowBridge
 

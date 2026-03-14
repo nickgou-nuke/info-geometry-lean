@@ -21,6 +21,35 @@ variable {E : Type}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
+Legacy bundle alias for seed-KMS structural hypotheses.
+Prefer using the explicit split hypotheses
+`JointKernelOnOmega` and `CommutatorOrthogonalOnOmega`.
+-/
+abbrev ExpectationSeedKMSHypotheses
+    {F : Type}
+    [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    (Ω : InfoGeometry.Krein.DoubledSpace F) : Prop :=
+  JointKernelOnOmega (F := F) K β Ω ∧
+    CommutatorOrthogonalOnOmega (F := F) Ω
+
+/--
+Legacy compatibility theorem for the old bundled seed-KMS hypothesis.
+Routes directly through the canonical split-hypothesis theorem.
+-/
+theorem omegaSeed_kms_of_hypotheses
+    {F : Type}
+    [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    (Ω : InfoGeometry.Krein.DoubledSpace F)
+    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω) :
+    SatisfiesKMSLike (E := F) K (omegaSeed (F := F) Ω) β := by
+  exact omegaSeed_kms_of_jointKernel_commutator
+    (F := F) (K := K) (β := β) (Ω := Ω) hStruct.1 hStruct.2
+
+/--
 Minimal `SU(N)` gauge instantiation contract.
 Updated to use the formal group structures from the hierarchy layer.
 -/

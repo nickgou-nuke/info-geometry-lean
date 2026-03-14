@@ -4,15 +4,30 @@ import Mathlib.Tactic.NoncommRing
 
 namespace InfoGeometry.Canonical.Drazin
 
-/-- Structure `IsDrazinInverse`. -/
-structure IsDrazinInverse {R : Type*} [Ring R] (a b : R) (k : ℕ) : Prop where
-  comm       : a * b = b * a
-  idempotent : b * a * b = b
-  power      : a^(k + 1) * b = a^k
+/-- Predicate encoding the Drazin inverse laws. -/
+def IsDrazinInverse {R : Type*} [Ring R] (a b : R) (k : ℕ) : Prop :=
+  a * b = b * a ∧ b * a * b = b ∧ a^(k + 1) * b = a^k
 
 namespace IsDrazinInverse
 
 variable {R : Type*} [Ring R] {a b : R} {k : ℕ}
+
+/-- Constructor for the Drazin laws predicate. -/
+theorem mk
+    (hcomm : a * b = b * a)
+    (hidempotent : b * a * b = b)
+    (hpower : a^(k + 1) * b = a^k) :
+    IsDrazinInverse a b k :=
+  ⟨hcomm, hidempotent, hpower⟩
+
+/-- Commutation law for a Drazin inverse witness. -/
+theorem comm (h : IsDrazinInverse a b k) : a * b = b * a := h.1
+
+/-- Idempotent law for a Drazin inverse witness. -/
+theorem idempotent (h : IsDrazinInverse a b k) : b * a * b = b := h.2.1
+
+/-- Power law for a Drazin inverse witness. -/
+theorem power (h : IsDrazinInverse a b k) : a^(k + 1) * b = a^k := h.2.2
 
 /-- Definition `projection`. -/
 def projection (a b : R) : R := a * b

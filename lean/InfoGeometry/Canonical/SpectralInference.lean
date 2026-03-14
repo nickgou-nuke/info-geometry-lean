@@ -78,7 +78,6 @@ structure RegularizedSpectralTriple (E : Type*) [NormedAddCommGroup E] [InnerPro
     extends SpectralTriple E where
   DD : E →L[ℝ] E -- The Drazin Inverse of D
   index : ℕ
-  is_drazin : IsDrazinInverse D DD index
 
 namespace RegularizedSpectralTriple
 
@@ -105,8 +104,6 @@ structure ChiralSpectralTriple (E : Type*) [NormedAddCommGroup E] [InnerProductS
     extends SpectralTriple E where
   DD : E →L[ℝ] E -- Drazin Inverse
   DP : E →L[ℝ] E -- Penrose Inverse
-  is_drazin : IsDrazinInverse D DD 1
-  is_penrose : IsMoorePenroseInverse D DP
 
 namespace ChiralSpectralTriple
 

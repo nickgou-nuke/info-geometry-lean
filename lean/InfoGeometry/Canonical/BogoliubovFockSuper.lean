@@ -176,6 +176,26 @@ noncomputable abbrev commutator (A B : FockEnd E) : FockEnd E :=
 noncomputable abbrev anticommutator (A B : FockEnd E) : FockEnd E :=
   superBracket (E := E) SuperParity.odd SuperParity.odd A B
 
+/--
+Standard CAR package for an odd-operator pair.
+
+This is intentionally separated from the current doubled-projector model:
+for projector-derived odd generators, these identities generally fail.
+-/
+def IsCARPair (a adag : FockEnd E) : Prop :=
+  anticommutator (E := E) a a = 0 ∧
+    anticommutator (E := E) adag adag = 0 ∧
+    anticommutator (E := E) a adag = ContinuousLinearMap.id ℝ (DoubledSpace E)
+
+/--
+Constructive closure package actually realized by the doubled-projector model.
+-/
+def IsProjectorSuperPair (a adag : FockEnd E) : Prop :=
+  anticommutator (E := E) a a = (2 : ℝ) • a ∧
+    anticommutator (E := E) adag adag = (2 : ℝ) • adag ∧
+    anticommutator (E := E) a adag = 0 ∧
+    commutator (E := E) a adag = 0
+
 /-- Canonical naming alias for even-even channel on Fock endomorphisms. -/
 noncomputable abbrev fockCommutator (A B : FockEndomorphism E) : FockEndomorphism E :=
   commutator (E := E) A B
@@ -261,6 +281,40 @@ theorem commutator_annihilation_creation :
   rw [superBracket_even_left]
   simp [annihilation_eq_minus_projector, creation_eq_plus_projector,
     gradeMinusProj_comp_gradePlusProj, gradePlusProj_comp_gradeMinusProj]
+
+/--
+The canonical doubled-space odd pair is a projector-super pair.
+-/
+theorem projectorSuperPair_base :
+    IsProjectorSuperPair (E := E) (annihilationOp (E := E)) (creationOp (E := E)) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact anticommutator_annihilation_self (E := E)
+  · exact anticommutator_creation_self (E := E)
+  · exact anticommutator_annihilation_creation (E := E)
+  · exact commutator_annihilation_creation (E := E)
+
+/--
+Honesty theorem: the canonical doubled-projector odd pair is not a standard CAR
+pair on nontrivial doubled space.
+-/
+theorem not_isCARPair_base [Nontrivial E] :
+    ¬ IsCARPair (E := E) (annihilationOp (E := E)) (creationOp (E := E) ) := by
+  intro hCAR
+  rcases hCAR with ⟨_, _, hMixedId⟩
+  have hMixedZero :
+      anticommutator (E := E) (annihilationOp (E := E)) (creationOp (E := E)) = 0 :=
+    anticommutator_annihilation_creation (E := E)
+  have hIdZero : (ContinuousLinearMap.id ℝ (DoubledSpace E)) = 0 := by
+    calc
+      ContinuousLinearMap.id ℝ (DoubledSpace E)
+          = anticommutator (E := E) (annihilationOp (E := E)) (creationOp (E := E)) := by
+              simpa using hMixedId.symm
+      _ = 0 := hMixedZero
+  rcases exists_ne (0 : DoubledSpace E) with ⟨x, hx⟩
+  have : x = (0 : DoubledSpace E) := by
+    have hEval := DFunLike.congr_fun hIdZero x
+    simpa using hEval
+  exact hx this
 
 /-- Lemma `anticommutator_symm`. -/
 lemma anticommutator_symm (A B : FockEnd E) :
@@ -388,6 +442,24 @@ theorem commutator_bogoliubov_projector_model
   rw [hCov]
   simp [superBracket_smul_left, superBracket_smul_right, superBracket_even_left,
     hmp, hpm]
+
+/--
+Constructive closure theorem for Bogoliubov-mixed odd generators in the
+doubled-projector model.
+-/
+theorem bogoliubov_projector_superalgebra
+    (B : BogoliubovParams) :
+    anticommutator (E := E)
+        (bogoliubovAnnihilation (E := E) B)
+        (bogoliubovCreation (E := E) B)
+      = (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
+    ∧
+    commutator (E := E)
+        (bogoliubovAnnihilation (E := E) B)
+        (bogoliubovCreation (E := E) B) = 0 := by
+  refine ⟨?_, ?_⟩
+  · exact anticommutator_bogoliubov_projector_model (E := E) B
+  · exact commutator_bogoliubov_projector_model (E := E) B
 
 end FockSuper
 

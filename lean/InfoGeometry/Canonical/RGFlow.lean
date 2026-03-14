@@ -62,9 +62,9 @@ Fixed Point of the RG Flow.
 A belief manifold is at a fixed point if its geometry is scale-invariant.
 In Information Geometry, these are often the 'Maximum Entropy' or 'Least Informative' states.
 -/
-structure IsFixedPoint (flow : InformationFlow E) (scale0 : ℝ) : Prop where
-  beta_zero : ∀ x, betaFunction flow scale0 x = 0
-  dual_zero : ∀ x, deriv (fun t => (flow t).dualMap x) scale0 = 0
+def IsFixedPoint (flow : InformationFlow E) (scale0 : ℝ) : Prop :=
+  (∀ x, betaFunction flow scale0 x = 0) ∧
+    (∀ x, deriv (fun t => (flow t).dualMap x) scale0 = 0)
 
 /--
 Flow invariance at scale `scale0`:
@@ -277,6 +277,6 @@ At a fixed point, the dual map is scale-invariant by definition.
 theorem dual_map_invariant_at_fixed_point
     (flow : InformationFlow E) (scale0 : ℝ) (h : IsFixedPoint flow scale0) (x : E) :
     deriv (fun t => (flow t).dualMap x) scale0 = 0 :=
-  h.dual_zero x
+  h.2 x
 
 end InfoGeometry.Canonical.RGFlow

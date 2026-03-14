@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.GrandUnificationMetric
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.SpectralInference
@@ -27,8 +28,6 @@ structure ConformalInference (E : Type*) [NormedAddCommGroup E] [InnerProductSpa
   A : E →L[ℝ] E      -- The Information Operator (e.g. Fisher Metric or Dirac)
   A_D : E →L[ℝ] E    -- The Drazin Inverse (Spectral Regularization)
   A_MP : E →L[ℝ] E   -- The Moore-Penrose Inverse (Metric Regularization)
-  h_drazin : IsDrazinInverse A A_D 1
-  h_penrose : IsMoorePenroseInverse A A_MP
 
 namespace ConformalInference
 
@@ -47,6 +46,33 @@ Special Conformal Information Generator (K).
 Identified with the Moore-Penrose inverse A+, representing metric inversion.
 -/
 def K : E →L[ℝ] E := CI.A_MP
+
+/--
+Conformal inversion realization of the special conformal generator:
+if `J` implements inversion on translation, then `K = J P J`.
+-/
+theorem specialConformal_eq_modularInversion_translation
+    (J : E →L[ℝ] E)
+    (hJPJ : J * CI.P * J = CI.K) :
+    CI.K = J * CI.P * J := by
+  simpa using hJPJ.symm
+
+/--
+Involutive inversion (`J² = 1`) recovers translation from special conformal
+generator: `P = J K J`.
+-/
+theorem translation_eq_modularInversion_specialConformal
+    (J : E →L[ℝ] E)
+    (hJ2 : J * J = (1 : E →L[ℝ] E))
+    (hJPJ : J * CI.P * J = CI.K) :
+    J * CI.K * J = CI.P := by
+  calc
+    J * CI.K * J = J * (J * CI.P * J) * J := by rw [hJPJ]
+    _ = (J * J) * CI.P * (J * J) := by
+          simp [mul_assoc]
+    _ = (1 : E →L[ℝ] E) * CI.P * (1 : E →L[ℝ] E) := by
+          simp [hJ2]
+    _ = CI.P := by simp
 
 /-- 
 Emergent Information Dilation Generator (D).
@@ -97,6 +123,16 @@ noncomputable def epsilon : ℝ :=
 /-- Canonical naming alias for the anomaly scale. -/
 noncomputable abbrev chiralScale : ℝ := CI.epsilon
 
+/--
+Exact obstruction identity: the anomaly source scale is the norm of the
+projector commutator.
+-/
+theorem chiralScale_eq_projectorObstruction_norm :
+    CI.chiralScale =
+      ‖CI.spectralChiralProjector * CI.metricChiralProjector
+          - CI.metricChiralProjector * CI.spectralChiralProjector‖₊ := by
+  simp [chiralScale, epsilon, chiralAnomaly, spectralChiralProjector, metricChiralProjector]
+
 /-! ### 3. Unification Theorems -/
 
 omit [FiniteDimensional ℝ E] in
@@ -136,6 +172,28 @@ theorem chiralAnomaly_eq_zero_of_projectors_commute
         = CI.metricChiralProjector * CI.spectralChiralProjector) :
     CI.chiralAnomalyOperator = 0 :=
   (CI.chiralAnomalyOperator_eq_zero_iff_projectors_commute).2 hComm
+
+/-- Commuting projectors force zero anomaly source scale. -/
+theorem chiralScale_eq_zero_of_projectors_commute
+    (hComm :
+      CI.spectralChiralProjector * CI.metricChiralProjector
+        = CI.metricChiralProjector * CI.spectralChiralProjector) :
+    CI.chiralScale = 0 := by
+  have hAnomZero : CI.chiralAnomalyOperator = 0 :=
+    CI.chiralAnomaly_eq_zero_of_projectors_commute hComm
+  simpa [chiralScale, epsilon, chiralAnomalyOperator, hAnomZero]
+
+/-- Non-commuting projectors force nonzero anomaly source scale. -/
+theorem chiralScale_ne_zero_of_projectors_not_commute
+    (hCommNe :
+      CI.spectralChiralProjector * CI.metricChiralProjector
+        ≠ CI.metricChiralProjector * CI.spectralChiralProjector) :
+    CI.chiralScale ≠ 0 := by
+  intro hScaleZero
+  have hNorm : ‖CI.chiralAnomalyOperator‖₊ = 0 := by
+    simpa [chiralScale, epsilon, chiralAnomalyOperator] using hScaleZero
+  have hAnomZero : CI.chiralAnomalyOperator = 0 := (nnnorm_eq_zero).1 hNorm
+  exact hCommNe ((CI.chiralAnomalyOperator_eq_zero_iff_projectors_commute).1 hAnomZero)
 
 /--
 Constructive projector-commutation closure from scalar anomaly-driven Kähler-Ricci
@@ -210,10 +268,44 @@ theorem chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
     _ = 0 := hKZero
 
 /--
-Projector commutation from the Kähler/log-det layer without an explicit
-anomaly-flow witness argument.
+Zero anomaly scale implies projector commutation.
+
+This gives a direct algebraic closure path from scalar normality (`χ = 0`)
+to vanishing projector obstruction.
 -/
-private theorem anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
+theorem projectors_commute_of_chiralScale_eq_zero
+    (hScaleZero : CI.chiralScale = 0) :
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      = CI.metricChiralProjector * CI.spectralChiralProjector := by
+  have hNormAnom : ‖CI.chiralAnomalyOperator‖₊ = 0 := by
+    simpa [chiralScale, epsilon, chiralAnomalyOperator] using hScaleZero
+  have hAnomZero : CI.chiralAnomalyOperator = 0 :=
+    (nnnorm_eq_zero).1 hNormAnom
+  exact CI.projectors_commute_of_chiralAnomaly_eq_zero hAnomZero
+
+/--
+Projector commutation directly from the Kähler/log-det layer:
+matching `χ` to the RN Kähler potential and unit relative volume force
+`χ = 0`, hence vanishing projector obstruction.
+-/
+theorem projectors_commute_of_kahlerLogDet_unitRelativeVolume
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (hUnitVolume : relativeVolumeChangeRN n M = 1) :
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      = CI.metricChiralProjector * CI.spectralChiralProjector := by
+  exact CI.projectors_commute_of_chiralScale_eq_zero
+    (CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
+      (M := M) hScaleFromKahler hUnitVolume)
+
+/--
+Canonical anomaly-flow derivation from the Kähler/log-det layer.
+
+This discharges the anomaly-flow witness directly from normalized Kähler-Ricci
+flow and unit relative volume in the log-det potential layer.
+-/
+theorem anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
     (flow : ScalarRicciFlow E)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
     {n : Nat}
@@ -229,8 +321,12 @@ private theorem anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
     (flow := flow) hNorm hScaleZero
 
 /--
-Projector commutation from the Kähler/log-det layer without an explicit
-anomaly-flow witness argument.
+Projector commutation from normalized Kähler/log-det data at a scalar Ricci
+fixed point.
+
+This discharges the anomaly-flow witness internally:
+`hAnomFlow` is derived from the Kähler/log-det layer and then fed into the
+fixed-point commutation closure.
 -/
 theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint
     (flow : ScalarRicciFlow E)
@@ -246,9 +342,25 @@ theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint
       SatisfiesAnomalyDrivenScalarRicciFlow (E := E) flow
         (fun _ => CI.chiralScale) :=
     CI.anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
-      (flow := flow) (M := M) hNorm hScaleFromKahler hUnitVolume
-  exact projectors_commute_of_anomalyDriven_normalized_fixedpoint
-    (CI := CI) (flow := flow) hNorm hFixed hAnomFlow
+      (flow := flow) hNorm (M := M) hScaleFromKahler hUnitVolume
+  exact CI.projectors_commute_of_anomalyDriven_normalized_fixedpoint
+    (flow := flow) hNorm hFixed hAnomFlow
+
+/--
+Einstein closure with anomaly source taken directly from the projector-obstruction
+scale `χ = ‖[P_D,P_MP]‖`.
+-/
+theorem einsteinEquation_of_projectorObstruction_source
+    (c : ℝ) (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x) :
+    EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+      (anomalyStressEnergyAt Kgeo x CI.chiralScale) := by
+  exact einsteinEquation_of_anomaly_source
+    (E := E)
+    (c := c) (R := R) (K := Kgeo) (x := x)
+    (Λ := Λ) (κ := κ) (A := CI.chiralScale) hEin
 
 /--
 Cartan-like Decomposition of the Information Manifold.
@@ -279,6 +391,27 @@ abbrev NormalInferenceState : Prop := CI.IsNormalInference
 
 /-- Canonical alias for the chiral information state. -/
 abbrev ChiralInferenceState : Prop := CI.IsChiralInference
+
+
+/--
+Zero anomaly follows from the normalized Kähler/log-det flow assumptions used
+to derive projector commutation.
+-/
+theorem chiralAnomaly_eq_zero_of_kahlerLogDet_normalized_fixedpoint
+    (flow : ScalarRicciFlow E)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := E) flow s = 0)
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (hUnitVolume : relativeVolumeChangeRN n M = 1) :
+    CI.chiralAnomalyOperator = 0 := by
+  have hComm :
+      CI.spectralChiralProjector * CI.metricChiralProjector
+        = CI.metricChiralProjector * CI.spectralChiralProjector :=
+    CI.projectors_commute_of_kahlerLogDet_normalized_fixedpoint
+      (flow := flow) hNorm hFixed (M := M) hScaleFromKahler hUnitVolume
+  exact CI.chiralAnomaly_eq_zero_of_projectors_commute hComm
 
 end ConformalInference
 

@@ -16,7 +16,7 @@ namespace InfoGeometry.Singular.NormalAnomaly
 open InfoGeometry.Singular.MoorePenroseAdjoint
 open InfoGeometry.Singular.DrazinAdjoint
 
-variable {R : Type*} [Ring R] [AdjointLike R]
+variable {R : Type*} [Ring R] [StarRing R]
 
 /-- 
 An element is "EP" (Equal Projector) if its Moore-Penrose inverse 

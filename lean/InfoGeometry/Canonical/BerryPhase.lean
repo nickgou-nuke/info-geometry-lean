@@ -36,6 +36,58 @@ noncomputable def informationBerryPhase (L : BayesianLoop E) (CST : ChiralSpectr
   -- Discrete loop period times anomaly index.
   (L.N : ℝ) * chiralAnomalyIndex CST
 
+/--
+Topological anomaly flux enclosed by a Bayesian loop.
+-/
+noncomputable def anomalyFlux (L : BayesianLoop E) (CST : ChiralSpectralTriple E) : ℝ :=
+  (L.N : ℝ) * chiralAnomalyIndex CST
+
+/--
+Loop-holonomy identity: Berry phase equals anomaly flux.
+-/
+theorem berryPhase_eq_anomaly_flux
+    (L : BayesianLoop E) (CST : ChiralSpectralTriple E) :
+    informationBerryPhase L CST = anomalyFlux L CST := rfl
+
+/--
+Exact decomposition of the Berry phase into loop length and anomaly index.
+-/
+theorem informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex
+    (L : BayesianLoop E) (CST : ChiralSpectralTriple E) :
+    informationBerryPhase L CST = (L.N : ℝ) * chiralAnomalyIndex CST := rfl
+
+/--
+Expanded form: Berry phase equals loop length times `ε` times spectral projector rank.
+-/
+theorem informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank
+    (L : BayesianLoop E) (CST : ChiralSpectralTriple E) :
+    informationBerryPhase L CST
+      = (L.N : ℝ) * CST.epsilon *
+          (Module.finrank ℝ
+            (LinearMap.range
+              (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection CST.D CST.DD).toLinearMap) : ℝ) := by
+  simp [informationBerryPhase, chiralAnomalyIndex, mul_assoc]
+
+/--
+If loop length is nonzero and chiral anomaly index is nonzero, the Berry phase
+is nonzero.
+-/
+theorem informationBerryPhase_ne_zero_of_loopLength_ne_zero_of_chiralAnomalyIndex_ne_zero
+    (L : BayesianLoop E) (CST : ChiralSpectralTriple E)
+    (hLoop : (L.N : ℝ) ≠ 0)
+    (hIdx : chiralAnomalyIndex CST ≠ 0) :
+    informationBerryPhase L CST ≠ 0 := by
+  simpa [informationBerryPhase] using mul_ne_zero hLoop hIdx
+
+/--
+Nontrivial anomaly flux implies nontrivial Berry holonomy.
+-/
+theorem berryPhase_ne_zero_of_anomaly_flux_ne_zero
+    (L : BayesianLoop E) (CST : ChiralSpectralTriple E)
+    (hFlux : anomalyFlux L CST ≠ 0) :
+    informationBerryPhase L CST ≠ 0 := by
+  simpa [informationBerryPhase, anomalyFlux] using hFlux
+
 omit [FiniteDimensional ℝ E] in
 /--
 Theorem: In a normal belief manifold (ε = 0), the Berry Phase vanishes.

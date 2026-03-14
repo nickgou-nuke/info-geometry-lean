@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Clifford
+import Mathlib.Analysis.Normed.Algebra.Exponential
 
 namespace InfoGeometry.Canonical.TomitaTakesaki
 
@@ -115,6 +116,48 @@ section ModularRealization
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
+local notation "EndH" => DoubledSpace E →L[ℝ] DoubledSpace E
+
+noncomputable local instance : NormedRing EndH := inferInstance
+noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
+local instance : IsTopologicalRing EndH := inferInstance
+local instance : CompleteSpace EndH := inferInstance
+
+/--
+Conjugation by an involution (`J² = 1`) as a ring endomorphism on doubled-space
+endomorphisms.
+-/
+private noncomputable def involutiveConjugationRingHom
+    (J : EndH)
+    (hJ2 : J * J = (1 : EndH)) :
+    EndH →+* EndH where
+  toFun A := J * A * J
+  map_zero' := by simp [mul_assoc]
+  map_add' A B := by simp [mul_add, add_mul, mul_assoc]
+  map_one' := by
+    calc
+      J * (1 : EndH) * J = J * J := by simp [mul_assoc]
+      _ = (1 : EndH) := hJ2
+  map_mul' A B := by
+    calc
+      J * (A * B) * J = J * A * B * J := by simp [mul_assoc]
+      _ = J * A * (J * J) * B * J := by rw [hJ2]; simp [mul_assoc]
+      _ = (J * A * J) * (J * B * J) := by simp [mul_assoc]
+
+/--
+Involutive conjugation transports exponentials:
+`J exp(X) J = exp(J X J)` when `J² = 1`.
+-/
+private theorem involutiveConjugation_exp
+    (J X : EndH)
+    (hJ2 : J * J = (1 : EndH)) :
+    J * NormedSpace.exp X * J = NormedSpace.exp (J * X * J) := by
+  let φ : EndH →+* EndH := involutiveConjugationRingHom (E := E) J hJ2
+  have hφcont : Continuous φ := by
+    simpa [φ, involutiveConjugationRingHom, mul_assoc] using
+      ((continuous_const.mul continuous_id).mul continuous_const)
+  simpa [φ, involutiveConjugationRingHom] using (NormedSpace.map_exp φ hφcont X)
+
 /--
 Modular conjugation `J` (real-linear model of antilinear conjugation on complex space).
 -/
@@ -210,6 +253,72 @@ lemma modularConjugationJ_commutator_modularSignEpsilon :
     _ = (2 : ℝ) • A := by rw [htwo]
     _ = (2 : ℝ) • ((modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))) := by
           simp [A]
+
+/--
+Tomita inversion identity on the modular sign generator:
+\[
+J \exp(\tau\,\varepsilon) J = \exp(-\tau\,\varepsilon).
+\]
+-/
+theorem modularConjugationJ_exp_modularSignEpsilon
+    (τ : ℝ) :
+    (modularConjugationJ (E := E)) *
+        NormedSpace.exp (τ • (modularSignEpsilon (E := E))) *
+        (modularConjugationJ (E := E))
+      = NormedSpace.exp ((-τ) • (modularSignEpsilon (E := E))) := by
+  have hJ2 : (modularConjugationJ (E := E)) * (modularConjugationJ (E := E))
+      = (1 : EndH) := by
+    change (modularConjugationJ (E := E)).comp (modularConjugationJ (E := E))
+      = ContinuousLinearMap.id ℝ (DoubledSpace E)
+    simpa using (modularConjugationJ_sq (E := E))
+  have hAnti :
+      (modularConjugationJ (E := E)) * (modularSignEpsilon (E := E))
+        = -((modularSignEpsilon (E := E)) * (modularConjugationJ (E := E))) := by
+    simpa using (modularConjugationJ_anticommutes_modularSign (E := E))
+  have hConjSign :
+      (modularConjugationJ (E := E)) * (modularSignEpsilon (E := E))
+          * (modularConjugationJ (E := E))
+        = -(modularSignEpsilon (E := E)) := by
+    calc
+      (modularConjugationJ (E := E)) * (modularSignEpsilon (E := E))
+          * (modularConjugationJ (E := E))
+          = (-(modularSignEpsilon (E := E) * modularConjugationJ (E := E)))
+              * modularConjugationJ (E := E) := by
+                rw [hAnti]
+      _ = -((modularSignEpsilon (E := E)) * (modularConjugationJ (E := E) *
+            modularConjugationJ (E := E))) := by
+              simp [mul_assoc]
+      _ = -((modularSignEpsilon (E := E)) * (1 : EndH)) := by
+            rw [hJ2]
+      _ = -(modularSignEpsilon (E := E)) := by simp
+  have hConjScaled :
+      (modularConjugationJ (E := E)) * (τ • (modularSignEpsilon (E := E)))
+          * (modularConjugationJ (E := E))
+        = (-τ) • (modularSignEpsilon (E := E)) := by
+    calc
+      (modularConjugationJ (E := E)) * (τ • (modularSignEpsilon (E := E)))
+          * (modularConjugationJ (E := E))
+          = τ •
+              ((modularConjugationJ (E := E)) * (modularSignEpsilon (E := E))
+                * (modularConjugationJ (E := E))) := by
+                simp [smul_mul_assoc, mul_smul, mul_assoc]
+      _ = τ • (-(modularSignEpsilon (E := E))) := by rw [hConjSign]
+      _ = (-τ) • (modularSignEpsilon (E := E)) := by simp [smul_neg, neg_smul]
+  calc
+    (modularConjugationJ (E := E)) *
+        NormedSpace.exp (τ • (modularSignEpsilon (E := E))) *
+        (modularConjugationJ (E := E))
+        = NormedSpace.exp
+            ((modularConjugationJ (E := E)) *
+              (τ • (modularSignEpsilon (E := E))) *
+              (modularConjugationJ (E := E))) := by
+              simpa using involutiveConjugation_exp
+                (E := E)
+                (J := modularConjugationJ (E := E))
+                (X := τ • (modularSignEpsilon (E := E)))
+                hJ2
+    _ = NormedSpace.exp ((-τ) • (modularSignEpsilon (E := E))) := by
+          rw [hConjScaled]
 
 /--
 Canonical supergraded package for the modular CPT atom `⟨1, ε, J, Jε⟩`.

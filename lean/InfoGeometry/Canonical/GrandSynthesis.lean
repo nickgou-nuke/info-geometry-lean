@@ -669,8 +669,8 @@ theorem bochnerWeitzenboeckBridge_of_ibDynamics
 
 /--
 Packaging of both directional Wheeler-DeWitt bridges from
-IB iterate dynamics plus modular-flow / Clifford-bundle transport hypotheses
-for chiral slices.
+IB iterate dynamics plus primitive modular-flow / Clifford-bundle transport
+component hypotheses for chiral slices.
 -/
 theorem directionalBridges_of_ibDynamics_and_indexHypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -697,8 +697,14 @@ theorem directionalBridges_of_ibDynamics_and_indexHypotheses
     (σ : ℝ → Endomorphism V)
     (clAct : ι → Endomorphism V)
     (unit : ι)
-    (hTrans :
-      ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
+    (hUnit : clAct unit = LinearMap.id)
+    (hσInj : ∀ s : ℝ, Function.Injective (σ s))
+    (hPlusMap : ∀ s : ℝ, ∀ ℓ : ι,
+      (chiralKernelSlicePlus (D s) (Γ s)).map ((clAct ℓ).comp (σ s))
+        = chiralKernelSlicePlus (D 0) (Γ 0))
+    (hMinusMap : ∀ s : ℝ, ∀ ℓ : ι,
+      (chiralKernelSliceMinus (D s) (Γ s)).map ((clAct ℓ).comp (σ s))
+        = chiralKernelSliceMinus (D 0) (Γ 0)) :
     (GeometricAlgebraicState n T flow D Γ →
       ThermodynamicKMSState n T K
         (ibInducedObservableWeighted
@@ -718,9 +724,10 @@ theorem directionalBridges_of_ibDynamics_and_indexHypotheses
       hStep (x0 := x0) (t0 := t0)
       (Ω := Ω) hΩ hJointKernel hCommOrthogonal
   · intro _hThermo
-    exact sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
+    exact sinkhornRicciIndexInvariant_of_modularCliffordTransport_components_state_hypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (σ := σ) (clAct := clAct) (unit := unit) hNorm hFixed hTrans
+      (σ := σ) (clAct := clAct) (unit := unit)
+      hNorm hFixed hUnit hσInj hPlusMap hMinusMap
 
 /--
 Packaging of both directional Wheeler-DeWitt bridges from
@@ -810,9 +817,10 @@ theorem information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
     (Ω := Ω) hΩ hJointKernel hCommOrthogonal
 
 /--
-Wheeler-DeWitt equivalence (IB-dynamics form) from modular-flow / Clifford-bundle
-transport hypotheses for chiral slices: the reverse direction is discharged
-constructively from `hNorm + hFixed + hTrans`.
+Wheeler-DeWitt equivalence (IB-dynamics form) from primitive modular-flow /
+Clifford-bundle transport component hypotheses for chiral slices:
+the reverse direction is discharged constructively from
+`hNorm + hFixed + hUnit + hσInj + hPlusMap + hMinusMap`.
 -/
 theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_modularCliffordTransport_state_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -839,8 +847,14 @@ theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_modularClifford
     (σ : ℝ → Endomorphism V)
     (clAct : ι → Endomorphism V)
     (unit : ι)
-    (hTrans :
-      ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
+    (hUnit : clAct unit = LinearMap.id)
+    (hσInj : ∀ s : ℝ, Function.Injective (σ s))
+    (hPlusMap : ∀ s : ℝ, ∀ ℓ : ι,
+      (chiralKernelSlicePlus (D s) (Γ s)).map ((clAct ℓ).comp (σ s))
+        = chiralKernelSlicePlus (D 0) (Γ 0))
+    (hMinusMap : ∀ s : ℝ, ∀ ℓ : ι,
+      (chiralKernelSliceMinus (D s) (Γ s)).map ((clAct ℓ).comp (σ s))
+        = chiralKernelSliceMinus (D 0) (Γ 0)) :
     ThermodynamicKMSState n T K
       (ibInducedObservableWeighted
         (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
@@ -848,9 +862,10 @@ theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_modularClifford
       ↔ GeometricAlgebraicState n T flow D Γ := by
   constructor
   · intro _hThermo
-    exact sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
+    exact sinkhornRicciIndexInvariant_of_modularCliffordTransport_components_state_hypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (σ := σ) (clAct := clAct) (unit := unit) hNorm hFixed hTrans
+      (σ := σ) (clAct := clAct) (unit := unit)
+      hNorm hFixed hUnit hσInj hPlusMap hMinusMap
   · intro hGeoAlg
     exact information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
@@ -896,7 +911,8 @@ theorem information_wheeler_dewitt_implication
 
 /--
 Canonical fully derived state-hypothesis Wheeler-DeWitt implication using
-modular-flow / Clifford-bundle transport of chiral index slices (non-constancy path).
+primitive modular-flow / Clifford-bundle transport component hypotheses of chiral
+index slices (non-constancy path).
 -/
 theorem information_wheeler_dewitt_implication_of_modularCliffordTransport_state_hypotheses
     (T : DoublyStochasticSinkhornTrajectory n)
@@ -923,17 +939,24 @@ theorem information_wheeler_dewitt_implication_of_modularCliffordTransport_state
     (σ : ℝ → Endomorphism V)
     (clAct : ι → Endomorphism V)
     (unit : ι)
-    (hTrans :
-      ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
+    (hUnit : clAct unit = LinearMap.id)
+    (hσInj : ∀ s : ℝ, Function.Injective (σ s))
+    (hPlusMap : ∀ s : ℝ, ∀ ℓ : ι,
+      (chiralKernelSlicePlus (D s) (Γ s)).map ((clAct ℓ).comp (σ s))
+        = chiralKernelSlicePlus (D 0) (Γ 0))
+    (hMinusMap : ∀ s : ℝ, ∀ ℓ : ι,
+      (chiralKernelSliceMinus (D s) (Γ s)).map ((clAct ℓ).comp (σ s))
+        = chiralKernelSliceMinus (D 0) (Γ 0)) :
     GeometricAlgebraicState n T flow D Γ →
       ThermodynamicKMSState n T K
         (ibInducedObservableWeighted
           (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
           pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
   have hGeoAlg : GeometricAlgebraicState n T flow D Γ :=
-    sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
+    sinkhornRicciIndexInvariant_of_modularCliffordTransport_components_state_hypotheses
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-      (σ := σ) (clAct := clAct) (unit := unit) hNorm hFixed hTrans
+      (σ := σ) (clAct := clAct) (unit := unit)
+      hNorm hFixed hUnit hσInj hPlusMap hMinusMap
   intro _hGeoAlgArg
   exact information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)

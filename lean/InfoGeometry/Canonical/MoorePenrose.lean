@@ -20,16 +20,37 @@ The Moore-Penrose inverse `b` of an element `a` satisfies:
 4. `(b * a)* = b * a`  (Left projector is self-adjoint)
 -/
 
-/-- Axioms for the Moore-Penrose inverse of `a`. -/
-structure IsMoorePenroseInverse {R : Type*} [Ring R] [StarRing R] (a b : R) : Prop where
-  aba_eq_a : a * b * a = a
-  bab_eq_b : b * a * b = b
-  ab_star  : star (a * b) = a * b
-  ba_star  : star (b * a) = b * a
+/-- Predicate encoding the Moore-Penrose inverse laws. -/
+def IsMoorePenroseInverse {R : Type*} [Ring R] [StarRing R] (a b : R) : Prop :=
+  a * b * a = a ∧
+  b * a * b = b ∧
+  star (a * b) = a * b ∧
+  star (b * a) = b * a
 
 namespace IsMoorePenroseInverse
 
 variable {R : Type*} [Ring R] [StarRing R] {a b : R}
+
+/-- Constructor for the Moore-Penrose laws predicate. -/
+theorem mk
+    (haba : a * b * a = a)
+    (hbab : b * a * b = b)
+    (habstar : star (a * b) = a * b)
+    (hbastar : star (b * a) = b * a) :
+    IsMoorePenroseInverse a b :=
+  ⟨haba, hbab, habstar, hbastar⟩
+
+/-- Penrose relation `a b a = a`. -/
+theorem aba_eq_a (h : IsMoorePenroseInverse a b) : a * b * a = a := h.1
+
+/-- Penrose relation `b a b = b`. -/
+theorem bab_eq_b (h : IsMoorePenroseInverse a b) : b * a * b = b := h.2.1
+
+/-- Self-adjointness of `a*b`. -/
+theorem ab_star (h : IsMoorePenroseInverse a b) : star (a * b) = a * b := h.2.2.1
+
+/-- Self-adjointness of `b*a`. -/
+theorem ba_star (h : IsMoorePenroseInverse a b) : star (b * a) = b * a := h.2.2.2
 
 /-- The geometric projection onto the range of `a`. -/
 def rightProjector (a b : R) : R := a * b

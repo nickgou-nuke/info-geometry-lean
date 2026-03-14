@@ -23,16 +23,20 @@ open InfoGeometry.Krein
 
 section AbstractGaugeTheory
 
-variable {R : Type*} [Ring R] [AdjointLike R]
+variable {R : Type*} [Ring R] [StarRing R]
 
 /-- 
 **The Fundamental Commutator Lemma:**
-In any ring equipped with a geometric involution (AdjointLike), the commutator 
+In any star ring, the commutator
 of two self-adjoint elements is strictly skew-adjoint.
 -/
 lemma commutator_is_skew_adjoint (A B : R) (hA : A† = A) (hB : B† = B) :
     (A * B - B * A)† = -(A * B - B * A) := by
-  simp only [sub_eq_add_neg, AdjointLike.add, AdjointLike.neg, AdjointLike.mul_rev, hA, hB, neg_add, neg_neg, add_comm]
+  calc
+    (A * B - B * A)† = (B * A - A * B) := by
+      simp [sub_eq_add_neg, hA, hB]
+    _ = -(A * B - B * A) := by
+      simp [sub_eq_add_neg]
 
 /-- 
 **The Anomaly is a Gauge Field:**

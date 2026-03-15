@@ -35,6 +35,84 @@ def IsConnesCocycle
   ∀ s t : ℝ, u (s + t) = (u s) * (σ s (u t))
 
 /--
+Constructive scalar bridge from operator cocycles to real multiplicative cocycles.
+
+`toScalar` is the scalar observable, and `sigma_invariant` enforces compatibility
+with the modular action.
+-/
+structure ScalarCocycleBridge
+    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H)) where
+  toScalar : AlgebraEnd H →* ℝˣ
+  sigma_invariant : ∀ s A, toScalar (σ s A) = toScalar A
+
+/--
+Scalar cocycle induced from an operator cocycle via a scalar bridge.
+-/
+noncomputable def scalarCocycle
+    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
+    (u : ℝ → AlgebraEnd H)
+    (B : ScalarCocycleBridge (H := H) σ) : ℝ → ℝˣ :=
+  fun t => B.toScalar (u t)
+
+/--
+Multiplicative cocycle law for the induced scalar cocycle.
+-/
+theorem scalarCocycle_mul
+    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) :
+    ∀ s t : ℝ,
+      scalarCocycle (H := H) σ u B (s + t)
+        = scalarCocycle (H := H) σ u B s * scalarCocycle (H := H) σ u B t := by
+  intro s t
+  unfold scalarCocycle
+  calc
+    B.toScalar (u (s + t))
+        = B.toScalar ((u s) * (σ s (u t))) := by rw [hCocycle s t]
+    _ = B.toScalar (u s) * B.toScalar (σ s (u t)) := by
+          rw [B.toScalar.map_mul]
+    _ = B.toScalar (u s) * B.toScalar (u t) := by
+          rw [B.sigma_invariant s (u t)]
+
+/--
+Additive cocycle potential induced from the scalar cocycle by logarithm.
+-/
+noncomputable def cocycleLogPotential
+    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
+    (u : ℝ → AlgebraEnd H)
+    (B : ScalarCocycleBridge (H := H) σ) : ℝ → ℝ :=
+  fun t => Real.log |((scalarCocycle (H := H) σ u B t : ℝˣ) : ℝ)|
+
+/--
+Additivity of the logarithmic cocycle potential.
+-/
+theorem cocycleLogPotential_add
+    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) :
+    ∀ s t : ℝ,
+      cocycleLogPotential (H := H) σ u B (s + t)
+        = cocycleLogPotential (H := H) σ u B s
+          + cocycleLogPotential (H := H) σ u B t := by
+  intro s t
+  have hmul :
+      scalarCocycle (H := H) σ u B (s + t)
+        = scalarCocycle (H := H) σ u B s * scalarCocycle (H := H) σ u B t :=
+    scalarCocycle_mul (H := H) σ u hCocycle B s t
+  have hmulVal :
+      ((scalarCocycle (H := H) σ u B (s + t) : ℝˣ) : ℝ)
+        =
+      ((scalarCocycle (H := H) σ u B s : ℝˣ) : ℝ)
+        * ((scalarCocycle (H := H) σ u B t : ℝˣ) : ℝ) := by
+    exact congrArg (fun z : ℝˣ => (z : ℝ)) hmul
+  unfold cocycleLogPotential
+  rw [hmulVal, abs_mul, Real.log_mul]
+  · exact abs_ne_zero.mpr (Units.ne_zero _)
+  · exact abs_ne_zero.mpr (Units.ne_zero _)
+
+/--
 Theorem: The Log-Cocycle generates an Additive Potential.
 In the Type III context, the derivative of the Connes cocycle recovers 
 the relative entropy / modular Hamiltonian.
@@ -42,8 +120,10 @@ the relative entropy / modular Hamiltonian.
 theorem cocycle_additive_potential
     (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
     (u : ℝ → AlgebraEnd H)
-    (hCocycle : IsConnesCocycle σ u) :
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) :
     ∃ (Φ : ℝ → ℝ), ∀ s t, Φ (s + t) = Φ s + Φ t :=
-  ⟨fun _ => 0, fun _ _ => by simp⟩ -- Structural witness for additivity.
+  ⟨cocycleLogPotential (H := H) σ u B,
+    cocycleLogPotential_add (H := H) σ u hCocycle B⟩
 
 end InfoGeometry.Volume.ConnesCocycle

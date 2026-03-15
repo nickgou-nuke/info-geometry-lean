@@ -1802,36 +1802,32 @@ theorem ibBlahutArimotoStepFrozen_descent_frozenTargetGap
 
 /--
 Bridge theorem: frozen variational descent follows from a decomposition of the
-variational functional into a constant offset plus the explicit frozen KL gap.
+variational functional into a constant offset plus the fully internal frozen free energy.
+
+This bridges the external gap decomposition to the internal canonical descent.
 -/
 theorem ibVariationalFunctional_frozen_descent_of_gap_decomposition
+    [DecidableEq T]
     (prob : IBProblem (X := X) (Y := Y))
     (qT : FinProb T)
     (mY_givenT : T → FinProb Y)
     (p : X → FinProb T)
+    (hq : ∀ t : T, 0 < (qT t).toReal)
     (C : ℝ)
     (hStepDecomp :
       ibVariationalFunctional prob
         (ibBlahutArimotoStepFrozen prob qT mY_givenT) mY_givenT
-        = C + baFrozenTargetGapWith prob qT mY_givenT
+        = C + ibVariationalFunctionalFrozen prob qT mY_givenT
             (ibBlahutArimotoStepFrozen prob qT mY_givenT))
     (hPDecomp :
       ibVariationalFunctional prob p mY_givenT
-        = C + baFrozenTargetGapWith prob qT mY_givenT p) :
+        = C + ibVariationalFunctionalFrozen prob qT mY_givenT p) :
     ibVariationalFunctional prob
       (ibBlahutArimotoStepFrozen prob qT mY_givenT) mY_givenT
     ≤ ibVariationalFunctional prob p mY_givenT := by
   rw [hStepDecomp, hPDecomp]
-  have hzero :
-      baFrozenTargetGapWith prob qT mY_givenT
-        (ibBlahutArimotoStepFrozen prob qT mY_givenT) = 0 :=
-    baFrozenTargetGapWith_step_eq_zero (prob := prob) (qT := qT) (mY_givenT := mY_givenT)
-  rw [hzero, add_zero]
-  have hnonneg :
-      0 ≤ baFrozenTargetGapWith prob qT mY_givenT p :=
-    baFrozenTargetGapWith_nonneg
-      (prob := prob) (qT := qT) (mY_givenT := mY_givenT) (p := p)
-  simpa [add_comm, add_left_comm, add_assoc] using add_le_add_left hnonneg C
+  have h_descent := ibVariationalFunctional_frozen_descent prob qT mY_givenT hq p
+  linarith
 
 /-- Nonnegativity of the frozen-target KL Lyapunov functional. -/
 lemma baFrozenTargetGap_nonneg

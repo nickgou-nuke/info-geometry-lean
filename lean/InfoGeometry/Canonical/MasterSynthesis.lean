@@ -230,9 +230,10 @@ theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
       InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G))
     (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G)
     (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle σ u)
+    (hBridge : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := G) σ)
     (hGeneratorLift :
       CocycleGeneratorLift n Tflow
-        (CocycleEntropyPotential (H := G) σ u hCocycle)) :
+        (CocycleEntropyPotential (H := G) σ u hBridge)) :
     0 < S.variance_limit
       ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
           (anomalyStressEnergyAt Kgeo x CI.chiralScale)
@@ -257,6 +258,6 @@ theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
     ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12⟩
   refine ⟨h1, h2, h3, h4, h5, h6, h7, h8, ?_, h10, h11, h12⟩
   exact topologicalBekensteinBound_of_connesCocycle_generatorLift
-    (n := n) (H := G) (σ := σ) (u := u) (T := Tflow) hCocycle hGeneratorLift
+    (n := n) (H := G) (σ := σ) (u := u) (T := Tflow) hCocycle hBridge hGeneratorLift
 
 end InfoGeometry.Canonical.MasterSynthesis

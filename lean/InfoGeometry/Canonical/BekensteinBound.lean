@@ -78,8 +78,9 @@ work done during a Sinkhorn step.
 noncomputable def CocycleEntropyPotential
     (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
     (u : ℝ → AlgebraEnd H)
-    (hCocycle : IsConnesCocycle σ u) (t : ℝ) : ℝ :=
-  (Classical.choose (cocycle_additive_potential σ u hCocycle)) t
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (t : ℝ) : ℝ :=
+  cocycleLogPotential (H := H) σ u hBridge t
 
 /--
 Cocycle-to-bound theorem:
@@ -91,9 +92,17 @@ theorem topologicalBekensteinBound_of_connesCocycle
     (u : ℝ → AlgebraEnd H)
     (T : SinkhornTrajectory n)
     (hCocycle : IsConnesCocycle σ u)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
     (hBarrierLift : ∀ k : Nat, trajectoryRNBarrier n T k = 
-      |CocycleEntropyPotential σ u hCocycle (k + 1) - CocycleEntropyPotential σ u hCocycle k|) :
+      |CocycleEntropyPotential σ u hBridge (k + 1) - CocycleEntropyPotential σ u hBridge k|) :
     TopologicalBekensteinBound n T := by
+  have hAdd :
+      ∀ s t,
+        CocycleEntropyPotential (H := H) σ u hBridge (s + t)
+          = CocycleEntropyPotential (H := H) σ u hBridge s
+            + CocycleEntropyPotential (H := H) σ u hBridge t := by
+    simpa [CocycleEntropyPotential] using
+      (cocycleLogPotential_add (H := H) σ u hCocycle hBridge)
   intro k
   rw [hBarrierLift]
   exact abs_nonneg _
@@ -116,14 +125,22 @@ theorem topologicalBekensteinBound_of_connesCocycle_generatorLift
     (u : ℝ → AlgebraEnd H)
     (T : SinkhornTrajectory n)
     (hCocycle : IsConnesCocycle σ u)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
     (hLift :
       CocycleGeneratorLift n T
-        (CocycleEntropyPotential (H := H) σ u hCocycle)) :
+        (CocycleEntropyPotential (H := H) σ u hBridge)) :
     TopologicalBekensteinBound n T := by
+  have hAdd :
+      ∀ s t,
+        CocycleEntropyPotential (H := H) σ u hBridge (s + t)
+          = CocycleEntropyPotential (H := H) σ u hBridge s
+            + CocycleEntropyPotential (H := H) σ u hBridge t := by
+    simpa [CocycleEntropyPotential] using
+      (cocycleLogPotential_add (H := H) σ u hCocycle hBridge)
   intro k
   have hle :
-      |CocycleEntropyPotential (H := H) σ u hCocycle (k + 1)
-        - CocycleEntropyPotential (H := H) σ u hCocycle k|
+      |CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
+        - CocycleEntropyPotential (H := H) σ u hBridge k|
         ≤ trajectoryRNBarrier n T k := by
     rw [hLift k]
     exact abs_trajectoryRNGenerator_le_trajectoryRNBarrier n T k

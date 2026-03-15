@@ -413,6 +413,35 @@ theorem chiralAnomaly_eq_zero_of_kahlerLogDet_normalized_fixedpoint
       (flow := flow) hNorm hFixed (M := M) hScaleFromKahler hUnitVolume
   exact CI.chiralAnomaly_eq_zero_of_projectors_commute hComm
 
+/--
+The Structure Constant Operator (Σ).
+Defined as the commutator of the spectral (Drazin) and metric (Penrose) projectors.
+This operator sets the scale for the non-commutative deformation of the 
+information volume form.
+-/
+def actionStructureConstantOp : E →L[ℝ] E :=
+  CI.P_D.comp CI.P_MP - CI.P_MP.comp CI.P_D
+
+/--
+The Scalar Unit of Action (h).
+The operator norm of the structure constant operator.
+This sets the fundamental 'grain' or 'scale' of the information manifold.
+-/
+noncomputable def unitOfAction : ℝ :=
+  ‖CI.actionStructureConstantOp‖
+
+/--
+Theorem: Scale generation from non-commutativity.
+If the spectral and metric projectors do not commute (Chiral Anomaly),
+the unit of action is strictly positive.
+-/
+theorem unitOfAction_pos_of_noncommute
+    (hAnom : CI.P_D.comp CI.P_MP ≠ CI.P_MP.comp CI.P_D) :
+    0 < CI.unitOfAction := by
+  unfold unitOfAction actionStructureConstantOp
+  simp only [norm_pos_iff, ne_eq]
+  exact sub_ne_zero.mpr hAnom
+
 end ConformalInference
 
 end InfoGeometry.Canonical.ConformalUnification

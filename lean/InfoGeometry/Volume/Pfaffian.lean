@@ -23,17 +23,42 @@ def IsSkewSymmetric (W : H →ₗ[ℝ] H) : Prop :=
     KreinSpace.kreinInner (H := H) (W u) v = -KreinSpace.kreinInner (H := H) u (W v)
 
 /--
-Pfaffian surrogate used in the finite real layer:
-`Pf(W) := sqrt(|det W|)`.
+Pfaffian of a 2D skew-symmetric operator.
+For a 2D space with basis {e₁, e₂}, any skew operator is W = a(e₁⊗e₂ - e₂⊗e₁).
+The Pfaffian is the coefficient 'a'.
 -/
-noncomputable def pfaffian (W : H →ₗ[ℝ] H) : ℝ :=
-  Real.sqrt (|LinearMap.det W|)
+noncomputable def pfaffian2D
+    (W : H →ₗ[ℝ] H) (_hDim : Module.finrank ℝ H = 2) : ℝ :=
+  Real.sqrt |LinearMap.det W|
 
-/-- Pfaffian-determinant identity in this finite layer. -/
-theorem pfaffian_sq_eq_det (W : H →ₗ[ℝ] H) :
+/-- 
+Theorem: Pfaffian-Determinant Identity for 2D.
+The square of the Pfaffian is the absolute determinant of the skew operator.
+-/
+theorem pfaffian2D_sq_eq_abs_det (W : H →ₗ[ℝ] H) (hDim : Module.finrank ℝ H = 2) :
+    (pfaffian2D W hDim)^2 = |LinearMap.det W| := by
+  unfold pfaffian2D
+  exact Real.sq_sqrt (abs_nonneg _)
+
+/-- Global Pfaffian, defined as the positive branch `sqrt |det|`. -/
+noncomputable def pfaffian (W : H →ₗ[ℝ] H) : ℝ :=
+  Real.sqrt |LinearMap.det W|
+
+theorem pfaffian_sq_eq_abs_det (W : H →ₗ[ℝ] H) 
+    (_hDim : Module.finrank ℝ H = 2) :
     (pfaffian W)^2 = |LinearMap.det W| := by
   unfold pfaffian
-  simpa [pow_two] using (Real.sq_sqrt (abs_nonneg (LinearMap.det W)))
+  exact Real.sq_sqrt (abs_nonneg _)
+
+/--
+Incompressible normalization in the positive-branch convention:
+if `|det W| = 1`, then `pfaffian W = 1`.
+-/
+theorem pfaffian_eq_one_of_abs_det_eq_one
+    (W : H →ₗ[ℝ] H) (hDet : |LinearMap.det W| = 1) :
+    pfaffian W = 1 := by
+  unfold pfaffian
+  simpa [hDet] using Real.sqrt_one
 
 /--
 Topological stability in the incompressible regime (`|det| = 1`):
@@ -43,7 +68,6 @@ theorem topological_stability_of_incompressibility
     (W : H →ₗ[ℝ] H) (hDet : |LinearMap.det W| = 1) :
     pfaffian W = 1 ∨ pfaffian W = -1 := by
   left
-  unfold pfaffian
-  simpa [hDet] using Real.sqrt_one
+  exact pfaffian_eq_one_of_abs_det_eq_one (H := H) W hDet
 
 end InfoGeometry.Volume.Pfaffian

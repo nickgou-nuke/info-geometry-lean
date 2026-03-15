@@ -1,5 +1,6 @@
 import InfoGeometry.Basic
 import InfoGeometry.MaxEnt.IProjection
+import InfoGeometry.Measure.Normalized
 import Mathlib.Topology.MetricSpace.Contracting
 
 /-!
@@ -574,10 +575,76 @@ lemma pmf_normalize_eq_of_scale
           rw [div_eq_mul_inv]
 
 /--
+`toReal` pointwise formula for `PMF.normalize`.
+-/
+lemma pmf_normalize_apply_toReal
+    (f : T → ℝ≥0∞)
+    (hf0 : (∑' t, f t) ≠ 0)
+    (hfTop : (∑' t, f t) ≠ ⊤)
+    (t : T) :
+    ((PMF.normalize f hf0 hfTop t).toReal)
+      = (f t).toReal * ((∑' x, f x).toReal)⁻¹ := by
+  rw [PMF.normalize_apply, ENNReal.toReal_mul, ENNReal.toReal_inv]
+
+/--
 Two score functions lie on the same positive projective ray.
 -/
 def SameScoreRay (f g : T → ℝ≥0∞) : Prop :=
   ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ g = fun t => c * f t
+
+lemma SameScoreRay.refl (f : T → ℝ≥0∞) :
+    SameScoreRay (T := T) f f := by
+  refine ⟨1, one_ne_zero, ENNReal.one_ne_top, ?_⟩
+  funext t
+  simp
+
+lemma SameScoreRay.symm {f g : T → ℝ≥0∞}
+    (h : SameScoreRay (T := T) f g) :
+    SameScoreRay (T := T) g f := by
+  rcases h with ⟨c, hc0, hcTop, rfl⟩
+  refine ⟨c⁻¹, ENNReal.inv_ne_zero.mpr hcTop, ENNReal.inv_ne_top.mpr hc0, ?_⟩
+  funext t
+  have hmul : c⁻¹ * (c * f t) = f t := by
+    calc
+      c⁻¹ * (c * f t) = (c⁻¹ * c) * f t := by ac_rfl
+      _ = 1 * f t := by rw [ENNReal.inv_mul_cancel hc0 hcTop]
+      _ = f t := by simp
+  simpa [mul_assoc] using hmul.symm
+
+lemma SameScoreRay.trans {f g h : T → ℝ≥0∞}
+    (hfg : SameScoreRay (T := T) f g)
+    (hgh : SameScoreRay (T := T) g h) :
+    SameScoreRay (T := T) f h := by
+  rcases hfg with ⟨c₁, hc₁0, hc₁Top, hg⟩
+  rcases hgh with ⟨c₂, hc₂0, hc₂Top, hh⟩
+  refine ⟨c₂ * c₁, mul_ne_zero hc₂0 hc₁0, ENNReal.mul_ne_top hc₂Top hc₁Top, ?_⟩
+  funext t
+  rw [hh, hg]
+  simp [mul_assoc, mul_comm, mul_left_comm]
+
+instance sameScoreRaySetoid : Setoid (T → ℝ≥0∞) where
+  r := SameScoreRay (T := T)
+  iseqv := by
+    refine ⟨SameScoreRay.refl (T := T), ?_, ?_⟩
+    · intro f g hfg
+      exact SameScoreRay.symm (T := T) hfg
+    · intro f g h hfg hgh
+      exact SameScoreRay.trans (T := T) hfg hgh
+
+/--
+Radial (volume-changing) degree of an unnormalized score: total slice mass.
+-/
+noncomputable def scoreRayDegree (f : T → ℝ≥0∞) : ℝ≥0∞ :=
+  ∑' t, f t
+
+/--
+Projective (volume-preserving) gauge section of an unnormalized score.
+-/
+noncomputable def scoreProjectiveGauge
+    (f : T → ℝ≥0∞)
+    (hf0 : scoreRayDegree (T := T) f ≠ 0)
+    (hfTop : scoreRayDegree (T := T) f ≠ ⊤) : FinProb T :=
+  PMF.normalize f hf0 hfTop
 
 /--
 Normalization depends only on the projective ray of the score.
@@ -607,6 +674,100 @@ lemma pmf_normalize_eq_of_sameScoreRay
   cases hTopeq
   exact pmf_normalize_eq_of_scale
     (T := T) f hf0 hfTop c hc0 hcTop
+
+/-- Dilation rescales score-ray degree multiplicatively. -/
+lemma scoreRayDegree_scale
+    (f : T → ℝ≥0∞)
+    (c : ℝ≥0∞) :
+    scoreRayDegree (T := T) (fun t => c * f t)
+      = c * scoreRayDegree (T := T) f := by
+  unfold scoreRayDegree
+  rw [ENNReal.tsum_mul_left]
+
+/--
+Projective gauge is invariant on score rays.
+-/
+lemma scoreProjectiveGauge_eq_of_sameScoreRay
+    {f g : T → ℝ≥0∞}
+    (hRay : SameScoreRay (T := T) f g)
+    (hf0 : scoreRayDegree (T := T) f ≠ 0)
+    (hfTop : scoreRayDegree (T := T) f ≠ ⊤)
+    (hg0 : scoreRayDegree (T := T) g ≠ 0)
+    (hgTop : scoreRayDegree (T := T) g ≠ ⊤) :
+    scoreProjectiveGauge (T := T) g hg0 hgTop
+      = scoreProjectiveGauge (T := T) f hf0 hfTop := by
+  exact pmf_normalize_eq_of_sameScoreRay
+    (T := T) hRay hf0 hfTop hg0 hgTop
+
+/--
+Finite nonzero score slice: a concrete representative of a projective score ray.
+-/
+structure ScoreSlice where
+  f : T → ℝ≥0∞
+  nonzero : scoreRayDegree (T := T) f ≠ 0
+  finite : scoreRayDegree (T := T) f ≠ ⊤
+
+instance scoreSliceSetoid : Setoid (ScoreSlice (T := T)) where
+  r s₁ s₂ := SameScoreRay (T := T) s₁.f s₂.f
+  iseqv := by
+    refine ⟨?_, ?_, ?_⟩
+    · intro s
+      exact SameScoreRay.refl (T := T) s.f
+    · intro s₁ s₂ h
+      exact SameScoreRay.symm (T := T) h
+    · intro s₁ s₂ s₃ h₁₂ h₂₃
+      exact SameScoreRay.trans (T := T) h₁₂ h₂₃
+
+/-- Projective score-ray state space (unnormalized cone modulo positive scaling). -/
+abbrev ScoreRay : Type := Quotient (scoreSliceSetoid (T := T))
+
+namespace ScoreSlice
+
+/-- Canonical PMF gauge section attached to a concrete nonzero finite score slice. -/
+noncomputable def gaugeSection (s : ScoreSlice (T := T)) : FinProb T :=
+  scoreProjectiveGauge (T := T) s.f s.nonzero s.finite
+
+end ScoreSlice
+
+namespace ScoreRay
+
+/-- Canonical PMF gauge section attached to a projective score ray class. -/
+noncomputable def gaugeSection : ScoreRay (T := T) → FinProb T :=
+  Quotient.lift
+    (fun s : ScoreSlice (T := T) => s.gaugeSection)
+    (by
+      intro s₁ s₂ hs
+      exact scoreProjectiveGauge_eq_of_sameScoreRay
+        (T := T)
+        hs
+        s₁.nonzero s₁.finite
+        s₂.nonzero s₂.finite |> Eq.symm)
+
+@[simp] theorem gaugeSection_mk (s : ScoreSlice (T := T)) :
+    gaugeSection (T := T) (Quotient.mk (scoreSliceSetoid (T := T)) s) = s.gaugeSection := rfl
+
+end ScoreRay
+
+/--
+Radial/projective factorization for any finite nonzero score slice.
+-/
+lemma score_radial_projective_factorization
+    (f : T → ℝ≥0∞)
+    (hf0 : scoreRayDegree (T := T) f ≠ 0)
+    (hfTop : scoreRayDegree (T := T) f ≠ ⊤)
+    (t : T) :
+    scoreRayDegree (T := T) f
+      * (scoreProjectiveGauge (T := T) f hf0 hfTop t)
+      = f t := by
+  unfold scoreRayDegree scoreProjectiveGauge
+  rw [PMF.normalize_apply]
+  have hcancel : (∑' x, f x) * (∑' x, f x)⁻¹ = 1 := by
+    simpa [scoreRayDegree] using (ENNReal.mul_inv_cancel hf0 hfTop)
+  calc
+    (∑' x, f x) * (f t * (∑' x, f x)⁻¹)
+        = f t * ((∑' x, f x) * (∑' x, f x)⁻¹) := by ac_rfl
+    _ = f t * 1 := by rw [hcancel]
+    _ = f t := by simp
 
 /--
 Normalization of an already normalized finite law is proof-irrelevant and
@@ -823,6 +984,56 @@ noncomputable def ibBlahutArimotoStep
     (inducedMProjection prob pT_givenX)
 
 /--
+Primary BA object: the unnormalized score field (projective ray representative).
+-/
+noncomputable def ibBlahutArimotoStepUnnormalized
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T) : X → T → ℝ≥0∞ :=
+  baScore prob pT_givenX
+
+/--
+Canonical BA score slice as a finite nonzero representative in the unnormalized cone.
+-/
+noncomputable def ibBlahutArimotoScoreSlice
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T)
+    (x : X) : ScoreSlice (T := T) where
+  f := ibBlahutArimotoStepUnnormalized prob pT_givenX x
+  nonzero := baScore_slice_ne_zero prob pT_givenX x
+  finite := baScore_slice_ne_top prob pT_givenX x
+
+/--
+Canonical BA score ray (projective unnormalized state) at each slice `x`.
+-/
+noncomputable def ibBlahutArimotoScoreRay
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T) : X → ScoreRay (T := T) :=
+  fun x => Quotient.mk (scoreSliceSetoid (T := T))
+    (ibBlahutArimotoScoreSlice prob pT_givenX x)
+
+/--
+If BA unnormalized scores are slice-wise on the same projective ray, BA score rays coincide.
+-/
+theorem ibBlahutArimotoScoreRay_eq_of_sameScoreRay
+    (prob : IBProblem (X := X) (Y := Y))
+    (p q : X → FinProb T)
+    (hRay : ∀ x : X, SameScoreRay (T := T) (baScore prob p x) (baScore prob q x)) :
+    ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob p
+      =
+    ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob q := by
+  funext x
+  apply Quotient.sound
+  simpa [ibBlahutArimotoScoreSlice, ibBlahutArimotoStepUnnormalized] using hRay x
+
+/--
+Radial degree (volume-changing part) of the BA unnormalized score at a slice.
+-/
+noncomputable def ibBlahutArimotoStepDegree
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T) (x : X) : ℝ≥0∞ :=
+  scoreRayDegree (T := T) (ibBlahutArimotoStepUnnormalized prob pT_givenX x)
+
+/--
 When the BA score mass is nonzero, the BA step is exactly the normalization
 of the BA score.
 -/
@@ -840,6 +1051,325 @@ lemma ibBlahutArimotoStep_apply_eq_normalize
     exact Subsingleton.elim _ _
   cases hproof
   rfl
+
+/--
+The normalized BA update is exactly the projective gauge-fixing of the
+unnormalized BA score.
+-/
+lemma ibBlahutArimotoStep_eq_scoreProjectiveGauge
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T) (x : X) :
+    ibBlahutArimotoStep prob pT_givenX x
+      =
+    scoreProjectiveGauge (T := T)
+      (ibBlahutArimotoStepUnnormalized prob pT_givenX x)
+      (baScore_slice_ne_zero prob pT_givenX x)
+      (baScore_slice_ne_top prob pT_givenX x) := by
+  simpa [scoreProjectiveGauge, ibBlahutArimotoStepUnnormalized] using
+    (ibBlahutArimotoStep_apply_eq_normalize
+      (X := X) (Y := Y) (T := T) prob pT_givenX x
+      (baScore_slice_ne_zero prob pT_givenX x))
+
+/--
+BA normalization is exactly the gauge section of the BA score ray.
+-/
+lemma ibBlahutArimotoStep_eq_scoreRayGaugeSection
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T)
+    (x : X) :
+    ibBlahutArimotoStep prob pT_givenX x
+      = ScoreRay.gaugeSection (T := T) (ibBlahutArimotoScoreRay prob pT_givenX x) := by
+  simp [ibBlahutArimotoScoreRay, ibBlahutArimotoScoreSlice,
+    ScoreSlice.gaugeSection, ibBlahutArimotoStep_eq_scoreProjectiveGauge]
+
+/--
+Normalized BA updates are derived from score rays: equality of BA score-ray maps
+implies equality of BA normalized updates.
+-/
+theorem ibBlahutArimotoStep_eq_of_scoreRay_eq
+    (prob : IBProblem (X := X) (Y := Y))
+    (p q : X → FinProb T)
+    (hRay :
+      ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob p
+        =
+      ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob q) :
+    ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p
+      =
+    ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q := by
+  funext x
+  have hx :
+      ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob p x
+        =
+      ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob q x := by
+    simpa using congrArg (fun F => F x) hRay
+  calc
+    ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p x
+        = ScoreRay.gaugeSection (T := T)
+            (ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob p x) :=
+          ibBlahutArimotoStep_eq_scoreRayGaugeSection
+            (X := X) (Y := Y) (T := T) prob p x
+    _ = ScoreRay.gaugeSection (T := T)
+          (ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob q x) := by
+          simpa [hx]
+    _ = ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q x := by
+          symm
+          exact ibBlahutArimotoStep_eq_scoreRayGaugeSection
+            (X := X) (Y := Y) (T := T) prob q x
+
+/--
+Global BA update equality from slice-wise score-ray equivalence.
+This is the canonical corollary: PMF-level equality is derived from ray-level equality.
+-/
+theorem ibBlahutArimotoStep_eq_of_sameScoreRay
+    (prob : IBProblem (X := X) (Y := Y))
+    (p q : X → FinProb T)
+    (hRay : ∀ x : X, SameScoreRay (T := T) (baScore prob p x) (baScore prob q x)) :
+    ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p
+      =
+    ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q := by
+  exact ibBlahutArimotoStep_eq_of_scoreRay_eq
+    (X := X) (Y := Y) (T := T) prob p q
+    (ibBlahutArimotoScoreRay_eq_of_sameScoreRay
+      (X := X) (Y := Y) (T := T) prob p q hRay)
+
+/--
+Slice-wise radial/projective decomposition of BA:
+unnormalized score = degree × normalized projective representative.
+-/
+theorem ibBlahutArimotoStep_radial_projective_split
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T)
+    (x : X) (t : T) :
+    ibBlahutArimotoStepDegree prob pT_givenX x
+      * (ibBlahutArimotoStep prob pT_givenX x t)
+      =
+    ibBlahutArimotoStepUnnormalized prob pT_givenX x t := by
+  unfold ibBlahutArimotoStepDegree
+  rw [ibBlahutArimotoStep_eq_scoreProjectiveGauge (X := X) (Y := Y) (T := T) prob pT_givenX x]
+  exact score_radial_projective_factorization
+    (T := T)
+    (f := ibBlahutArimotoStepUnnormalized prob pT_givenX x)
+    (hf0 := baScore_slice_ne_zero prob pT_givenX x)
+    (hfTop := baScore_slice_ne_top prob pT_givenX x)
+    t
+
+/--
+Intrinsic BA projective invariance under positive finite per-slice dilations of
+the unnormalized score.
+-/
+theorem ibBlahutArimotoStep_eq_of_score_ray_scale
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T)
+    (κ : X → ℝ≥0∞)
+    (hκ0 : ∀ x : X, κ x ≠ 0)
+    (hκTop : ∀ x : X, κ x ≠ ⊤) :
+    (fun x =>
+      PMF.normalize
+        (fun t => κ x * ibBlahutArimotoStepUnnormalized prob pT_givenX x t)
+        (by
+          simpa [ibBlahutArimotoStepUnnormalized, ENNReal.tsum_mul_left] using
+            (mul_ne_zero (hκ0 x) (baScore_slice_ne_zero prob pT_givenX x)))
+        (by
+          rw [ENNReal.tsum_mul_left]
+          simpa [ibBlahutArimotoStepUnnormalized] using
+            (ENNReal.mul_ne_top (hκTop x) (baScore_slice_ne_top prob pT_givenX x))))
+      = ibBlahutArimotoStep prob pT_givenX := by
+  funext x
+  rw [ibBlahutArimotoStep_eq_scoreProjectiveGauge (X := X) (Y := Y) (T := T) prob pT_givenX x]
+  exact pmf_normalize_eq_of_scale
+    (T := T)
+    (f := ibBlahutArimotoStepUnnormalized prob pT_givenX x)
+    (hf0 := baScore_slice_ne_zero prob pT_givenX x)
+    (hfTop := baScore_slice_ne_top prob pT_givenX x)
+    (c := κ x) (hκ0 x) (hκTop x)
+
+/--
+Cartan-style split under BA-score dilations:
+radial degree scales multiplicatively, projective BA update is invariant.
+-/
+theorem ibBlahutArimotoStep_dilation_split
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T)
+    (κ : X → ℝ≥0∞)
+    (hκ0 : ∀ x : X, κ x ≠ 0)
+    (hκTop : ∀ x : X, κ x ≠ ⊤) :
+    (∀ x : X,
+      scoreRayDegree (T := T)
+        (fun t => κ x * ibBlahutArimotoStepUnnormalized prob pT_givenX x t)
+          = κ x * ibBlahutArimotoStepDegree prob pT_givenX x)
+    ∧
+    ((fun x =>
+      PMF.normalize
+        (fun t => κ x * ibBlahutArimotoStepUnnormalized prob pT_givenX x t)
+        (by
+          simpa [ibBlahutArimotoStepUnnormalized, ENNReal.tsum_mul_left] using
+            (mul_ne_zero (hκ0 x) (baScore_slice_ne_zero prob pT_givenX x)))
+        (by
+          rw [ENNReal.tsum_mul_left]
+          simpa [ibBlahutArimotoStepUnnormalized] using
+            (ENNReal.mul_ne_top (hκTop x) (baScore_slice_ne_top prob pT_givenX x))))
+      = ibBlahutArimotoStep prob pT_givenX) := by
+  refine ⟨?_, ?_⟩
+  · intro x
+    unfold ibBlahutArimotoStepDegree
+    simpa [ibBlahutArimotoStepUnnormalized] using
+      scoreRayDegree_scale
+        (T := T)
+        (f := ibBlahutArimotoStepUnnormalized prob pT_givenX x)
+        (c := κ x)
+  · exact ibBlahutArimotoStep_eq_of_score_ray_scale
+      (X := X) (Y := Y) (T := T) prob pT_givenX κ hκ0 hκTop
+
+section MeasureProjectiveBridge
+
+variable [Nonempty T]
+
+/--
+Canonical BA slice as a measure-projective ray class.
+This keeps the ontology at ray level, with normalization only as section choice.
+-/
+noncomputable def ibBlahutArimotoProjectiveState
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T) :
+    X → InfoGeometry.MeasureProjective.ProjectiveState T :=
+  fun x =>
+    InfoGeometry.MeasureProjective.Normalized.pmfToProjectiveState
+      (ibBlahutArimotoStep prob pT_givenX x)
+
+/--
+Slice equality of BA updates under score-ray equivalence.
+-/
+lemma ibBlahutArimotoStep_slice_eq_of_sameScoreRay
+    (prob : IBProblem (X := X) (Y := Y))
+    (p q : X → FinProb T)
+    (x : X)
+    (hRay : SameScoreRay (T := T) (baScore prob p x) (baScore prob q x)) :
+    ibBlahutArimotoStep prob p x = ibBlahutArimotoStep prob q x := by
+  have hp :
+      (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p) x
+        = PMF.normalize
+            (baScore prob p x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob p x) := by
+    simpa using
+      (ibBlahutArimotoStep_apply_eq_normalize
+        (X := X) (Y := Y) (T := T) prob p x
+        (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x))
+  have hq :
+      (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q) x
+        = PMF.normalize
+            (baScore prob q x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x) := by
+    simpa using
+      (ibBlahutArimotoStep_apply_eq_normalize
+        (X := X) (Y := Y) (T := T) prob q x
+        (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x))
+  have hnorm :
+      PMF.normalize
+          (baScore prob q x)
+          (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+          (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x)
+        =
+      PMF.normalize
+          (baScore prob p x)
+          (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x)
+          (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob p x) := by
+    simpa using
+      (pmf_normalize_eq_of_sameScoreRay
+        (T := T)
+        (hRay := hRay)
+        (hf0 := baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x)
+        (hfTop := baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob p x)
+        (hg0 := baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+        (hgTop := baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x))
+  rw [hp, hq]
+  exact hnorm.symm
+
+/--
+Global BA projective-state invariance under slice-wise score-ray equivalence.
+-/
+theorem ibBlahutArimotoProjectiveState_eq_of_sameScoreRay
+    (prob : IBProblem (X := X) (Y := Y))
+    (p q : X → FinProb T)
+    (hRay : ∀ x : X, SameScoreRay (T := T) (baScore prob p x) (baScore prob q x)) :
+    ibBlahutArimotoProjectiveState (X := X) (Y := Y) (T := T) prob p
+      =
+    ibBlahutArimotoProjectiveState (X := X) (Y := Y) (T := T) prob q := by
+  funext x
+  have hstep :
+      ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p x
+        = ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q x :=
+    ibBlahutArimotoStep_slice_eq_of_sameScoreRay
+      (X := X) (Y := Y) (T := T) prob p q x (hRay x)
+  simpa [ibBlahutArimotoProjectiveState, hstep]
+
+/--
+Projective BA state equality derived directly from equality of BA score-ray maps.
+-/
+theorem ibBlahutArimotoProjectiveState_eq_of_scoreRay_eq
+    (prob : IBProblem (X := X) (Y := Y))
+    (p q : X → FinProb T)
+    (hRay :
+      ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob p
+        =
+      ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob q) :
+    ibBlahutArimotoProjectiveState (X := X) (Y := Y) (T := T) prob p
+      =
+    ibBlahutArimotoProjectiveState (X := X) (Y := Y) (T := T) prob q := by
+  have hstep :
+      ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p
+        =
+      ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q :=
+    ibBlahutArimotoStep_eq_of_scoreRay_eq
+      (X := X) (Y := Y) (T := T) prob p q hRay
+  funext x
+  simpa [ibBlahutArimotoProjectiveState] using
+    congrArg InfoGeometry.MeasureProjective.Normalized.pmfToProjectiveState
+      (congrArg (fun F => F x) hstep)
+
+/--
+BA projective-state invariance under positive finite score dilations.
+-/
+theorem ibBlahutArimotoProjectiveState_eq_of_score_ray_scale
+    (prob : IBProblem (X := X) (Y := Y))
+    (pT_givenX : X → FinProb T)
+    (κ : X → ℝ≥0∞)
+    (hκ0 : ∀ x : X, κ x ≠ 0)
+    (hκTop : ∀ x : X, κ x ≠ ⊤) :
+    (fun x =>
+      InfoGeometry.MeasureProjective.Normalized.pmfToProjectiveState
+        (PMF.normalize
+          (fun t => κ x * ibBlahutArimotoStepUnnormalized prob pT_givenX x t)
+          (by
+            simpa [ibBlahutArimotoStepUnnormalized, ENNReal.tsum_mul_left] using
+              (mul_ne_zero (hκ0 x) (baScore_slice_ne_zero prob pT_givenX x)))
+          (by
+            rw [ENNReal.tsum_mul_left]
+            simpa [ibBlahutArimotoStepUnnormalized] using
+              (ENNReal.mul_ne_top (hκTop x) (baScore_slice_ne_top prob pT_givenX x)))))
+      =
+    ibBlahutArimotoProjectiveState (X := X) (Y := Y) (T := T) prob pT_givenX := by
+  funext x
+  have hscale :=
+    ibBlahutArimotoStep_eq_of_score_ray_scale
+      (X := X) (Y := Y) (T := T) prob pT_givenX κ hκ0 hκTop
+  have hx :
+      PMF.normalize
+          (fun t => κ x * ibBlahutArimotoStepUnnormalized prob pT_givenX x t)
+          (by
+            simpa [ibBlahutArimotoStepUnnormalized, ENNReal.tsum_mul_left] using
+              (mul_ne_zero (hκ0 x) (baScore_slice_ne_zero prob pT_givenX x)))
+          (by
+            rw [ENNReal.tsum_mul_left]
+            simpa [ibBlahutArimotoStepUnnormalized] using
+              (ENNReal.mul_ne_top (hκTop x) (baScore_slice_ne_top prob pT_givenX x)))
+        = ibBlahutArimotoStep prob pT_givenX x := by
+    simpa using congrArg (fun f => f x) hscale
+  simpa [ibBlahutArimotoProjectiveState] using
+    congrArg InfoGeometry.MeasureProjective.Normalized.pmfToProjectiveState hx
+
+end MeasureProjectiveBridge
 
 /--
 The intrinsic BA score is the frozen score specialized to induced target data.
@@ -981,6 +1511,72 @@ lemma finProbMassNndist_eval_le_encoderMassNndist
     (Finset.mem_univ x)
 
 /--
+Intrinsic normalize stability under projective score-ray equivalence:
+if two BA scores at slice `x` lie on the same positive ray, their normalized
+updates coincide, hence the mass-sup distance vanishes (`K = 0`).
+-/
+theorem ibBlahutArimotoStep_pointwise_massNndist_le_zero_of_sameScoreRay
+    (prob : IBProblem (X := X) (Y := Y))
+    (p q : X → FinProb T)
+    (hRay : ∀ x : X, SameScoreRay (T := T) (baScore prob p x) (baScore prob q x)) :
+    ∀ x : X,
+      finProbMassNndist (T := T)
+        ((ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p) x)
+        ((ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q) x)
+        ≤ (0 : ℝ≥0) * finProbMassNndist (T := T) (p x) (q x) := by
+  intro x
+  have hp :
+      (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p) x
+        = PMF.normalize
+            (baScore prob p x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob p x) := by
+    simpa using
+      (ibBlahutArimotoStep_apply_eq_normalize
+        (X := X) (Y := Y) (T := T) prob p x
+        (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x))
+  have hq :
+      (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q) x
+        = PMF.normalize
+            (baScore prob q x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x) := by
+    simpa using
+      (ibBlahutArimotoStep_apply_eq_normalize
+        (X := X) (Y := Y) (T := T) prob q x
+        (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x))
+  have hnorm :
+      PMF.normalize
+          (baScore prob q x)
+          (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+          (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x)
+        =
+      PMF.normalize
+          (baScore prob p x)
+          (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x)
+          (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob p x) := by
+    simpa using
+      (pmf_normalize_eq_of_sameScoreRay
+        (T := T)
+        (hRay := hRay x)
+        (hf0 := baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x)
+        (hfTop := baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob p x)
+        (hg0 := baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+        (hgTop := baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x))
+  have hstep :
+      (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p) x
+        = (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q) x := by
+    rw [hp, hq]
+    exact hnorm.symm
+  have hdist :
+      finProbMassNndist (T := T)
+        ((ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p) x)
+        ((ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q) x)
+        = 0 := by
+    simpa [hstep, finProbMassNndist]
+  simpa [hdist]
+
+/--
 Concrete contraction lift in the explicit mass sup metric:
 pointwise contraction on each `x` implies global contraction on encoders.
 -/
@@ -1017,6 +1613,83 @@ theorem ibBlahutArimotoStep_encoderMassNndist_le_of_pointwise
           (f := fun x : X => finProbMassNndist (T := T) (p x) (q x))
           (Finset.mem_univ x)
       exact mul_le_mul_of_nonneg_left hsup Kc.2
+
+/--
+Global encoder contraction under slice-wise score-ray equivalence (`K = 0`).
+-/
+theorem ibBlahutArimotoStep_encoderMassNndist_le_zero_of_sameScoreRay
+    (prob : IBProblem (X := X) (Y := Y))
+    (hRay :
+      ∀ p q : X → FinProb T, ∀ x : X,
+        SameScoreRay (T := T) (baScore prob p x) (baScore prob q x)) :
+    ∀ p q : X → FinProb T,
+      encoderMassNndist (X := X) (T := T)
+        (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p)
+        (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q)
+        ≤ (0 : ℝ≥0) * encoderMassNndist (X := X) (T := T) p q := by
+  exact ibBlahutArimotoStep_encoderMassNndist_le_of_pointwise
+    (X := X) (Y := Y) (T := T) (prob := prob) (Kc := 0)
+    (hPointwise := by
+      intro p q x
+      exact ibBlahutArimotoStep_pointwise_massNndist_le_zero_of_sameScoreRay
+        (X := X) (Y := Y) (T := T) prob p q (fun x' => hRay p q x') x)
+
+/--
+Pointwise zero-contraction corollary driven directly by BA score-ray map equality.
+-/
+theorem ibBlahutArimotoStep_pointwise_massNndist_le_zero_of_scoreRay_eq
+    (prob : IBProblem (X := X) (Y := Y))
+    (p q : X → FinProb T)
+    (hRay :
+      ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob p
+        =
+      ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob q) :
+    ∀ x : X,
+      finProbMassNndist (T := T)
+        ((ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p) x)
+        ((ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q) x)
+        ≤ (0 : ℝ≥0) * finProbMassNndist (T := T) (p x) (q x) := by
+  intro x
+  have hstep :
+      (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p) x
+        = (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q) x := by
+    simpa using congrArg (fun F => F x)
+      (ibBlahutArimotoStep_eq_of_scoreRay_eq
+        (X := X) (Y := Y) (T := T) prob p q hRay)
+  have hdist :
+      finProbMassNndist (T := T)
+        ((ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p) x)
+        ((ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q) x)
+        = 0 := by
+    simpa [hstep, finProbMassNndist]
+  simpa [hdist]
+
+/--
+Global zero-contraction corollary driven directly by BA score-ray map equality.
+-/
+theorem ibBlahutArimotoStep_encoderMassNndist_le_zero_of_scoreRay_eq
+    (prob : IBProblem (X := X) (Y := Y))
+    (p q : X → FinProb T)
+    (hRay :
+      ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob p
+        =
+      ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob q) :
+    encoderMassNndist (X := X) (T := T)
+      (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p)
+      (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q)
+      ≤ (0 : ℝ≥0) * encoderMassNndist (X := X) (T := T) p q := by
+  unfold encoderMassNndist
+  refine Finset.sup_le ?_
+  intro x hx
+  calc
+    finProbMassNndist (T := T)
+        ((ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p) x)
+        ((ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q) x)
+        ≤ (0 : ℝ≥0) * finProbMassNndist (T := T) (p x) (q x) :=
+      ibBlahutArimotoStep_pointwise_massNndist_le_zero_of_scoreRay_eq
+        (X := X) (Y := Y) (T := T) prob p q hRay x
+    _ = 0 := by simp
+    _ = (0 : ℝ≥0) * encoderMassNndist (X := X) (T := T) p q := by simp
 
 /--
 Pointwise BA contraction reduction:
@@ -1098,6 +1771,292 @@ theorem ibBlahutArimotoStep_pointwise_massNndist_le_of_normalize_intrinsicNonzer
           ≤ Kc * finProbMassNndist (T := T) (p x) (q x) := by
   intro p q x
   simpa [ibBlahutArimotoStep] using hNormalize p q x
+
+/--
+Internal normalize-form zero-contraction witness:
+slice-wise score-ray equivalence implies the normalize inequality with `K = 0`.
+-/
+theorem baNormalize_pointwise_massNndist_le_zero_of_sameScoreRay
+    (prob : IBProblem (X := X) (Y := Y))
+    (hRay :
+      ∀ p q : X → FinProb T, ∀ x : X,
+        SameScoreRay (T := T) (baScore prob p x) (baScore prob q x)) :
+    ∀ p q : X → FinProb T, ∀ x : X,
+      finProbMassNndist (T := T)
+        (PMF.normalize (baScore prob p x)
+          (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x)
+          (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob p x))
+        (PMF.normalize (baScore prob q x)
+          (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+          (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x))
+        ≤ (0 : ℝ≥0) * finProbMassNndist (T := T) (p x) (q x) := by
+  intro p q x
+  have hnorm :
+      PMF.normalize (baScore prob q x)
+          (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+          (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x)
+        =
+      PMF.normalize (baScore prob p x)
+          (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x)
+          (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob p x) := by
+    simpa using
+      (pmf_normalize_eq_of_sameScoreRay
+        (T := T)
+        (hRay := hRay p q x)
+        (hf0 := baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x)
+        (hfTop := baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob p x)
+        (hg0 := baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+        (hgTop := baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x))
+  have hdist :
+      finProbMassNndist (T := T)
+        (PMF.normalize (baScore prob p x)
+          (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x)
+          (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob p x))
+        (PMF.normalize (baScore prob q x)
+          (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+          (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x))
+        = 0 := by
+    have hnorm' :
+        PMF.normalize (baScore prob p x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob p x)
+          =
+        PMF.normalize (baScore prob q x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x) := hnorm.symm
+    have hrewrite :
+        finProbMassNndist (T := T)
+          (PMF.normalize (baScore prob p x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob p x))
+          (PMF.normalize (baScore prob q x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x))
+          =
+        finProbMassNndist (T := T)
+          (PMF.normalize (baScore prob q x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x))
+          (PMF.normalize (baScore prob q x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x)) := by
+      exact congrArg
+        (fun r =>
+          finProbMassNndist (T := T) r
+            (PMF.normalize (baScore prob q x)
+              (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+              (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x)))
+        hnorm'
+    calc
+      finProbMassNndist (T := T)
+          (PMF.normalize (baScore prob p x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob p x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob p x))
+          (PMF.normalize (baScore prob q x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x))
+          =
+        finProbMassNndist (T := T)
+          (PMF.normalize (baScore prob q x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x))
+          (PMF.normalize (baScore prob q x)
+            (baScore_slice_ne_zero (X := X) (Y := Y) (T := T) prob q x)
+            (baScore_slice_ne_top (X := X) (Y := Y) (T := T) prob q x)) := by
+              exact hrewrite
+      _ = 0 := by simp [finProbMassNndist]
+  simpa [hdist]
+
+/--
+General normalize-Lipschitz estimate (nonzero `Kc`) under explicit lower-mass
+control on score slices.
+
+The bound is driven by:
+- slice mass lower bound (`m`)
+- pointwise score Lipschitz (`Kscore`)
+- reciprocal-mass Lipschitz (`Kinv`)
+- pointwise score upper bound (`ub`)
+-/
+theorem baNormalize_pointwise_massNndist_le_of_massRecipLipschitz
+    (prob : IBProblem (X := X) (Y := Y))
+    {m Kscore Kinv ub : ℝ}
+    (Kc : ℝ≥0)
+    (hm : 0 < m)
+    (hKscore_nonneg : 0 ≤ Kscore)
+    (hKinv_nonneg : 0 ≤ Kinv)
+    (hKc : (Kc : ℝ) = Kscore / m + ub * Kinv)
+    (hMassLower :
+      ∀ p : X → FinProb T, ∀ x : X,
+        m ≤ ((∑' t, baScore prob p x t).toReal))
+    (hScoreUpper :
+      ∀ p : X → FinProb T, ∀ x : X, ∀ t : T,
+        (baScore prob p x t).toReal ≤ ub)
+    (hScoreLip :
+      ∀ p q : X → FinProb T, ∀ x : X, ∀ t : T,
+        |(baScore prob p x t).toReal - (baScore prob q x t).toReal|
+          ≤ Kscore * ((finProbMassNndist (T := T) (p x) (q x) : ℝ)))
+    (hMassInvLip :
+      ∀ p q : X → FinProb T, ∀ x : X,
+        |((∑' t, baScore prob p x t).toReal)⁻¹
+            - ((∑' t, baScore prob q x t).toReal)⁻¹|
+          ≤ Kinv * ((finProbMassNndist (T := T) (p x) (q x) : ℝ))) :
+    ∀ p q : X → FinProb T, ∀ x : X,
+      finProbMassNndist (T := T)
+        (PMF.normalize (baScore prob p x) (baScore_slice_ne_zero prob p x) (baScore_slice_ne_top prob p x))
+        (PMF.normalize (baScore prob q x) (baScore_slice_ne_zero prob q x) (baScore_slice_ne_top prob q x))
+        ≤ Kc * (finProbMassNndist (T := T) (p x) (q x)) := by
+  intro p q x
+  let d : ℝ := (finProbMassNndist (T := T) (p x) (q x) : ℝ)
+  have hd_nonneg : 0 ≤ d := by
+    exact (show 0 ≤ (finProbMassNndist (T := T) (p x) (q x) : ℝ≥0) from (finProbMassNndist (T := T) (p x) (q x)).2)
+  unfold finProbMassNndist
+  refine Finset.sup_le ?_
+  intro t ht
+  have hdist_nndist_real :
+      ((nndist
+        ((PMF.normalize (baScore prob p x) (baScore_slice_ne_zero prob p x) (baScore_slice_ne_top prob p x) t).toReal)
+        ((PMF.normalize (baScore prob q x) (baScore_slice_ne_zero prob q x) (baScore_slice_ne_top prob q x) t).toReal) : ℝ))
+        ≤ (Kc : ℝ) * d := by
+    let Sp : ℝ := ((∑' τ, baScore prob p x τ).toReal)
+    let Sq : ℝ := ((∑' τ, baScore prob q x τ).toReal)
+    let a : ℝ := (baScore prob p x t).toReal
+    let b : ℝ := (baScore prob q x t).toReal
+    have hSp_ge : m ≤ Sp := by simpa [Sp] using hMassLower p x
+    have hSq_ge : m ≤ Sq := by simpa [Sq] using hMassLower q x
+    have hSp_pos : 0 < Sp := lt_of_lt_of_le hm hSp_ge
+    have hSq_pos : 0 < Sq := lt_of_lt_of_le hm hSq_ge
+    have hSpInv_le : Sp⁻¹ ≤ m⁻¹ := (inv_le_inv₀ hSp_pos hm).2 hSp_ge
+    have hSpInv_nonneg : 0 ≤ Sp⁻¹ := by positivity
+    have hb_nonneg : 0 ≤ b := by
+      simpa [b] using (ENNReal.toReal_nonneg : 0 ≤ (baScore prob q x t).toReal)
+    have hNum : |a - b| ≤ Kscore * d := by
+      simpa [a, b, d] using hScoreLip p q x t
+    have hInv : |Sp⁻¹ - Sq⁻¹| ≤ Kinv * d := by
+      simpa [Sp, Sq, d] using hMassInvLip p q x
+    have hb_le_ub : b ≤ ub := by
+      simpa [b] using hScoreUpper q x t
+    have htri :
+        |a * Sp⁻¹ - b * Sq⁻¹|
+          ≤ |a * Sp⁻¹ - b * Sp⁻¹| + |b * Sp⁻¹ - b * Sq⁻¹| := by
+      exact abs_sub_le _ _ _
+    have hfirst :
+        |a * Sp⁻¹ - b * Sp⁻¹| = |a - b| * Sp⁻¹ := by
+      have hsplit : a * Sp⁻¹ - b * Sp⁻¹ = (a - b) * Sp⁻¹ := by ring
+      rw [hsplit, abs_mul, abs_of_nonneg hSpInv_nonneg]
+    have hsecond :
+        |b * Sp⁻¹ - b * Sq⁻¹| = b * |Sp⁻¹ - Sq⁻¹| := by
+      have hsplit : b * Sp⁻¹ - b * Sq⁻¹ = b * (Sp⁻¹ - Sq⁻¹) := by ring
+      rw [hsplit, abs_mul, abs_of_nonneg hb_nonneg]
+    have hfirst_le :
+        |a * Sp⁻¹ - b * Sp⁻¹| ≤ (Kscore * d) * m⁻¹ := by
+      rw [hfirst]
+      have hKd_nonneg : 0 ≤ Kscore * d := mul_nonneg hKscore_nonneg hd_nonneg
+      have h1 : |a - b| * Sp⁻¹ ≤ (Kscore * d) * Sp⁻¹ :=
+        mul_le_mul_of_nonneg_right hNum hSpInv_nonneg
+      have h2 : (Kscore * d) * Sp⁻¹ ≤ (Kscore * d) * m⁻¹ :=
+        mul_le_mul_of_nonneg_left hSpInv_le hKd_nonneg
+      exact le_trans h1 h2
+    have hsecond_le :
+        |b * Sp⁻¹ - b * Sq⁻¹| ≤ ub * (Kinv * d) := by
+      rw [hsecond]
+      have hKd_nonneg : 0 ≤ Kinv * d := mul_nonneg hKinv_nonneg hd_nonneg
+      have h1 : b * |Sp⁻¹ - Sq⁻¹| ≤ b * (Kinv * d) :=
+        mul_le_mul_of_nonneg_left hInv hb_nonneg
+      have h2 : b * (Kinv * d) ≤ ub * (Kinv * d) :=
+        mul_le_mul_of_nonneg_right hb_le_ub hKd_nonneg
+      exact le_trans h1 h2
+    have htotal :
+        |a * Sp⁻¹ - b * Sq⁻¹| ≤ (Kscore * d) * m⁻¹ + ub * (Kinv * d) := by
+      exact le_trans htri (add_le_add hfirst_le hsecond_le)
+    have hrhs :
+        (Kscore * d) * m⁻¹ + ub * (Kinv * d)
+          = (Kscore / m + ub * Kinv) * d := by
+      calc
+        (Kscore * d) * m⁻¹ + ub * (Kinv * d)
+            = (Kscore * m⁻¹ + ub * Kinv) * d := by ring
+        _ = (Kscore / m + ub * Kinv) * d := by
+              rw [div_eq_mul_inv]
+    have hnorm_p :
+        ((PMF.normalize (baScore prob p x) (baScore_slice_ne_zero prob p x) (baScore_slice_ne_top prob p x) t).toReal)
+          = a * Sp⁻¹ := by
+      simpa [a, Sp] using
+        (pmf_normalize_apply_toReal
+          (T := T)
+          (f := baScore prob p x)
+          (hf0 := baScore_slice_ne_zero prob p x)
+          (hfTop := baScore_slice_ne_top prob p x)
+          (t := t))
+    have hnorm_q :
+        ((PMF.normalize (baScore prob q x) (baScore_slice_ne_zero prob q x) (baScore_slice_ne_top prob q x) t).toReal)
+          = b * Sq⁻¹ := by
+      simpa [b, Sq] using
+        (pmf_normalize_apply_toReal
+          (T := T)
+          (f := baScore prob q x)
+          (hf0 := baScore_slice_ne_zero prob q x)
+          (hfTop := baScore_slice_ne_top prob q x)
+          (t := t))
+    have hdist_real :
+        |((PMF.normalize (baScore prob p x) (baScore_slice_ne_zero prob p x) (baScore_slice_ne_top prob p x) t).toReal)
+          - ((PMF.normalize (baScore prob q x) (baScore_slice_ne_zero prob q x) (baScore_slice_ne_top prob q x) t).toReal)|
+          ≤ (Kc : ℝ) * d := by
+      calc
+        |((PMF.normalize (baScore prob p x) (baScore_slice_ne_zero prob p x) (baScore_slice_ne_top prob p x) t).toReal)
+          - ((PMF.normalize (baScore prob q x) (baScore_slice_ne_zero prob q x) (baScore_slice_ne_top prob q x) t).toReal)|
+            = |a * Sp⁻¹ - b * Sq⁻¹| := by
+                rw [hnorm_p, hnorm_q]
+        _ ≤ (Kscore * d) * m⁻¹ + ub * (Kinv * d) := htotal
+        _ = (Kscore / m + ub * Kinv) * d := hrhs
+        _ = (Kc : ℝ) * d := by rw [hKc]
+    simpa [Real.nndist_eq] using hdist_real
+  exact_mod_cast hdist_nndist_real
+
+/--
+Global BA contraction in `encoderMassNndist` obtained from the explicit
+normalize-Lipschitz estimate with lower-mass control.
+-/
+theorem ibBlahutArimotoStep_encoderMassNndist_le_of_massRecipLipschitz
+    (prob : IBProblem (X := X) (Y := Y))
+    {m Kscore Kinv ub : ℝ}
+    (Kc : ℝ≥0)
+    (hm : 0 < m)
+    (hKscore_nonneg : 0 ≤ Kscore)
+    (hKinv_nonneg : 0 ≤ Kinv)
+    (hKc : (Kc : ℝ) = Kscore / m + ub * Kinv)
+    (hMassLower :
+      ∀ p : X → FinProb T, ∀ x : X,
+        m ≤ ((∑' t, baScore prob p x t).toReal))
+    (hScoreUpper :
+      ∀ p : X → FinProb T, ∀ x : X, ∀ t : T,
+        (baScore prob p x t).toReal ≤ ub)
+    (hScoreLip :
+      ∀ p q : X → FinProb T, ∀ x : X, ∀ t : T,
+        |(baScore prob p x t).toReal - (baScore prob q x t).toReal|
+          ≤ Kscore * ((finProbMassNndist (T := T) (p x) (q x) : ℝ)))
+    (hMassInvLip :
+      ∀ p q : X → FinProb T, ∀ x : X,
+        |((∑' t, baScore prob p x t).toReal)⁻¹
+            - ((∑' t, baScore prob q x t).toReal)⁻¹|
+          ≤ Kinv * ((finProbMassNndist (T := T) (p x) (q x) : ℝ))) :
+    ∀ p q : X → FinProb T,
+      encoderMassNndist (X := X) (T := T)
+        (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p)
+        (ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q)
+        ≤ Kc * encoderMassNndist (X := X) (T := T) p q := by
+  exact ibBlahutArimotoStep_encoderMassNndist_le_of_pointwise
+    (X := X) (Y := Y) (T := T) (prob := prob)
+    (hPointwise :=
+      baNormalize_pointwise_massNndist_le_of_massRecipLipschitz
+        (X := X) (Y := Y) (T := T)
+        (prob := prob) (Kc := Kc)
+        (hm := hm)
+        (hKscore_nonneg := hKscore_nonneg)
+        (hKinv_nonneg := hKinv_nonneg)
+        (hKc := hKc)
+        (hMassLower := hMassLower)
+        (hScoreUpper := hScoreUpper)
+        (hScoreLip := hScoreLip)
+        (hMassInvLip := hMassInvLip))
 
 /--
 Global BA contraction reduction with intrinsic nonzero-score discharge:
@@ -1747,6 +2706,164 @@ theorem ibVariationalFunctional_frozen_descent
   simpa [ibVariationalFunctionalFrozen] using
     (ibFrozenFreeEnergy_frozen_descent
       (X := X) (Y := Y) (T := T) prob qT mY_givenT hq p)
+
+/--
+The 'loose' IB variational functional (thermodynamic upper bound):
+$F_{loose}(p, m, q) = \sum_x p(x) [ KL(p(t|x) || q(t)) + \beta \sum_t p(t|x) KL(p(y|x) || m(y|t)) ]$.
+
+This functional admits an exact slice-wise Jaynes/Gibbs decomposition.
+-/
+noncomputable def ibVariationalFunctionalLoose
+    (prob : IBProblem (X := X) (Y := Y))
+    (p : X → FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (qT : FinProb T) : ℝ :=
+  ibFrozenFreeEnergy prob qT mY_givenT p
+
+/--
+Theorem: Loose functional identity.
+The loose variational functional is exactly the sum of local free energies.
+-/
+theorem ibVariationalFunctionalLoose_eq_sum_local
+    (prob : IBProblem (X := X) (Y := Y))
+    (p : X → FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (qT : FinProb T) :
+    ibVariationalFunctionalLoose prob p mY_givenT qT =
+    let pX := marginal_x prob
+    ∑ x : X, (pX x).toReal *
+      ((InfoGeometry.fin_kl_div (p x) qT).toReal
+        + prob.beta * ∑ t : T, (p x t).toReal *
+            (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal) := rfl
+
+/--
+The 'strict' variational functional is bounded above by the 'loose' functional.
+This is a direct consequence of the convexity of the KL divergence (Jensen's inequality).
+-/
+theorem ibVariationalFunctional_le_loose
+    (prob : IBProblem (X := X) (Y := Y))
+    (p : X → FinProb T)
+    (mY_givenT : T → FinProb Y)
+    (qT : FinProb T)
+    (hMI :
+      mutualInformation (jointXT (prob := prob) p)
+        = ∑ x : X, ((marginal_x (prob := prob) x).toReal *
+            (InfoGeometry.fin_kl_div (p x) qT).toReal))
+    (hJensen :
+      ∀ x : X,
+        (InfoGeometry.fin_kl_div (condYGivenX prob x) ((p x).bind mY_givenT)).toReal
+          ≤
+        ∑ t : T, (p x t).toReal *
+          (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal) :
+    ibVariationalFunctional prob p mY_givenT ≤
+    ibVariationalFunctionalLoose prob p mY_givenT qT := by
+  let pX := marginal_x (prob := prob)
+  unfold ibVariationalFunctional ibVariationalFunctionalLoose ibFrozenFreeEnergy
+  let A : ℝ :=
+    ∑ x : X, (pX x).toReal * (InfoGeometry.fin_kl_div (p x) qT).toReal
+  let B : ℝ :=
+    ∑ x : X,
+      (pX x).toReal *
+        (InfoGeometry.fin_kl_div (condYGivenX prob x) ((p x).bind mY_givenT)).toReal
+  let C : ℝ :=
+    ∑ x : X,
+      (pX x).toReal *
+        (∑ t : T, (p x t).toReal *
+          (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)
+  have hLeft :
+      (have pX := marginal_x (prob := prob)
+       have pXT := jointXT (prob := prob) p
+       mutualInformation pXT +
+         prob.beta *
+           ∑ x : X,
+             (pX x).toReal *
+               (InfoGeometry.fin_kl_div (condYGivenX prob x) ((p x).bind mY_givenT)).toReal)
+        =
+      A + prob.beta * B := by
+    simp [A, B, pX, hMI]
+  rw [hLeft]
+  have hWeighted :
+      B ≤ C := by
+    unfold B C
+    refine Finset.sum_le_sum ?_
+    intro x _hx
+    exact mul_le_mul_of_nonneg_left (hJensen x) ((pX x).toReal_nonneg)
+  have hβnn : 0 ≤ prob.beta := le_of_lt prob.beta_pos
+  have hBetaWeighted :
+      prob.beta * B ≤ prob.beta * C := by
+    exact mul_le_mul_of_nonneg_left hWeighted hβnn
+  have hMain :
+      A + prob.beta * B ≤ A + prob.beta * C := by
+    simpa [add_comm, add_left_comm, add_assoc] using add_le_add_left hBetaWeighted A
+  have hRight :
+      (have pX := marginal_x (prob := prob)
+       ∑ x : X,
+         (pX x).toReal *
+           ((InfoGeometry.fin_kl_div (p x) qT).toReal
+             + prob.beta * ∑ t : T, (p x t).toReal *
+                 (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal))
+        =
+      (∑ x : X,
+          (pX x).toReal *
+            ((InfoGeometry.fin_kl_div (p x) qT).toReal
+              + prob.beta * ∑ t : T, (p x t).toReal *
+                  (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)) := by
+    simp [pX]
+  have hRhs :
+      (∑ x : X,
+          (pX x).toReal *
+            ((InfoGeometry.fin_kl_div (p x) qT).toReal
+              + prob.beta * ∑ t : T, (p x t).toReal *
+                  (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal))
+        = A + prob.beta * C := by
+    calc
+      (∑ x : X,
+          (pX x).toReal *
+            ((InfoGeometry.fin_kl_div (p x) qT).toReal
+              + prob.beta * ∑ t : T, (p x t).toReal *
+                  (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal))
+          =
+        ∑ x : X,
+          ((pX x).toReal * (InfoGeometry.fin_kl_div (p x) qT).toReal
+            +
+            (pX x).toReal *
+              (prob.beta * ∑ t : T, (p x t).toReal *
+                (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)) := by
+              refine Finset.sum_congr rfl ?_
+              intro x hx
+              ring
+      _ =
+        (∑ x : X, (pX x).toReal * (InfoGeometry.fin_kl_div (p x) qT).toReal)
+          +
+        (∑ x : X,
+            (pX x).toReal *
+              (prob.beta * ∑ t : T, (p x t).toReal *
+                (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)) := by
+              rw [Finset.sum_add_distrib]
+      _ =
+        (∑ x : X, (pX x).toReal * (InfoGeometry.fin_kl_div (p x) qT).toReal)
+          +
+        (∑ x : X,
+            prob.beta *
+              ((pX x).toReal *
+                (∑ t : T, (p x t).toReal *
+                  (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal))) := by
+              refine congrArg (fun z => (∑ x : X, (pX x).toReal * (InfoGeometry.fin_kl_div (p x) qT).toReal) + z) ?_
+              refine Finset.sum_congr rfl ?_
+              intro x hx
+              ring
+      _ =
+        (∑ x : X, (pX x).toReal * (InfoGeometry.fin_kl_div (p x) qT).toReal)
+          +
+        prob.beta *
+          (∑ x : X,
+              (pX x).toReal *
+                (∑ t : T, (p x t).toReal *
+                  (InfoGeometry.fin_kl_div (condYGivenX prob x) (mY_givenT t)).toReal)) := by
+              rw [Finset.mul_sum]
+      _ = A + prob.beta * C := by simp [A, C]
+  rw [hRight]
+  exact (by simpa [A, B, C] using hMain.trans_eq hRhs.symm)
 
 /-- Nonnegativity of the explicit frozen-target KL Lyapunov functional. -/
 lemma baFrozenTargetGapWith_nonneg

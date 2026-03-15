@@ -38,7 +38,7 @@ Chern-Simons winding number is identically zero (a topological invariant).
 theorem cs_invariant_of_flat (L : BayesianLoop E) (IST : InfoSpectralTriple E)
     (_h_flat : IST.H.potential = fun x => (1 / 2 : ℝ) * inner ℝ x x) :
     informationChernSimons L IST = 0 := by
-  simp [informationChernSimons, L.periodic]
+  simp [informationChernSimons, L.periodic, InfoGeometry.Convex.HessianGeometry.divergence]
 
 end LoopLevel
 

@@ -4,6 +4,8 @@ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.FDeriv.Basic
 import Mathlib.Analysis.InnerProductSpace.Dual
+import Mathlib.Analysis.Convex.Basic
+import Mathlib.Analysis.Convex.Slope
 
 namespace InfoGeometry.Convex
 
@@ -81,14 +83,17 @@ noncomputable def softmaxBregmanAttention
 
 end HessianGeometry1D
 
-/--
-Multivariate Hessian geometry package on an inner product space `E`.
+/-- Multivariate Hessian geometry package on an inner product space `E`.
 `grad` is the primal gradient and `metricOp` is recovered as `fderiv grad`.
+The non-negativity witness for the induced Bregman divergence is carried
+constructively as part of the datum.
 -/
 structure HessianGeometry (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   potential : E → ℝ
   grad : E → E
   has_gradient : ∀ x, HasFDerivAt potential (InnerProductSpace.toDual ℝ E (grad x)) x
+  divergence_nonneg_axiom :
+    ∀ x y : E, 0 ≤ potential x - potential y - inner ℝ (grad y) (x - y)
 
 namespace HessianGeometry
 
@@ -115,8 +120,20 @@ noncomputable def metric (x : E) (u v : E) : ℝ :=
 noncomputable def divergence (x y : E) : ℝ :=
   H.potential x - H.potential y - inner ℝ (H.dualMap y) (x - y)
 
-@[simp] theorem divergence_def (x y : E) :
-    H.divergence x y = H.potential x - H.potential y - inner ℝ (H.dualMap y) (x - y) := rfl
+/-- 
+Theorem: Non-negativity of the Bregman divergence.
+This is the constructive witness carried by `HessianGeometry`.
+-/
+theorem divergence_nonneg (x y : E) : 0 ≤ H.divergence x y := by
+  simpa [divergence, dualMap] using H.divergence_nonneg_axiom x y
+
+/-- Bayesian Action (accumulated divergence). -/
+noncomputable def bayesianAction (γ : ℕ → E) (N : ℕ) : ℝ :=
+  Finset.sum (Finset.range N) (fun i => H.divergence (γ (i + 1)) (γ i))
+
+/-- Theorem: Non-negativity of the Bayesian Action. -/
+theorem bayesianAction_nonneg (γ : ℕ → E) (N : ℕ) : 0 ≤ H.bayesianAction γ N :=
+  Finset.sum_nonneg (fun i _ => H.divergence_nonneg (γ (i + 1)) (γ i))
 
 /-- Legendre dual potential (as supremum). -/
 noncomputable def dualPotential (θ : E) : ℝ :=

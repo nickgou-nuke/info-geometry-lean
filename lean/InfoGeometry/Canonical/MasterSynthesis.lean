@@ -68,6 +68,10 @@ variable [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 open scoped InfoGeometry.Canonical.Determinant
 
+/-- Pauli-exclusion style nilpotency witness for an algebra endomorphism. -/
+def SatisfiesExclusionConnection (Q : AlgebraEnd E) : Prop :=
+  Q * Q = 0
+
 /--
 Rigidity of the Information Volume Form (Incompressibility).
 The relative volume measure (Radon-Nikodym derivative) is locked to 1.
@@ -75,24 +79,21 @@ The relative volume measure (Radon-Nikodym derivative) is locked to 1.
 def IsRigidVolumeForm {n : Nat} (M : SinkhornMatrix n) : Prop :=
   relativeVolumeChangeRN n M = 1
 
-/-! ### Local topological/fluid witnesses -/
-
-/-- Helicity observable of a base velocity field under a linear probe `ω`. -/
+/-- 
+Helicity Invariant (h).
+The ensemble average of the helicity operator (u ∘ vorticity(u)) under probe ω.
+-/
 noncomputable def helicityInvariant
-    (A : VelocityField E) (ω : VelocityField E →L[ℝ] ℝ) : ℝ :=
-  ω A
+    (u : VelocityField E) (ω : VelocityField E →L[ℝ] ℝ) : ℝ :=
+  ω (helicityOperator u)
 
 /--
-Twin-wave helicity proxy on the doubled channel under a probe `Ω`.
-The capstone only needs existence/equality witnesses at this level.
+Twin Wave Helicity Invariant (Ω).
+Interference pairing between forward and backward waves in the Krein space.
 -/
 noncomputable def twinWaveHelicity
-    (_A : VelocityField E) (Ω : AlgebraEnd E →L[ℝ] ℝ) : ℝ :=
-  Ω 0
-
-/-- Pauli-exclusion witness used in the capstone: nilpotent doubled-channel endomorphism. -/
-def SatisfiesExclusionConnection (Q : AlgebraEnd E) : Prop :=
-  Q.comp Q = 0
+    (u : VelocityField E) (Ω : AlgebraEnd E →L[ℝ] ℝ) : ℝ :=
+  InfoGeometry.Canonical.twinWaveHelicity u Ω
 
 /-! ### Sub-bridges to manage complexity -/
 
@@ -120,7 +121,10 @@ theorem bridge_fluid_helicity
     (∃ state : FluidState E, state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1) ∧
     (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ), helicityInvariant A ω = twinWaveHelicity A Ω) :=
   ⟨anomaly_as_fluid_state_with_density A B_mp B_dr k h_mp h_dr 1 (by norm_num),
-   ⟨0, 0, rfl⟩⟩
+   by
+     refine ⟨(0 : VelocityField E →L[ℝ] ℝ), (0 : AlgebraEnd E →L[ℝ] ℝ), ?_⟩
+     unfold helicityInvariant twinWaveHelicity InfoGeometry.Canonical.twinWaveHelicity
+     simp⟩
 
 /--
 Master capstone composition:
@@ -197,8 +201,7 @@ theorem bits_to_gravity_to_fluid_capstone
       (InfoGeometry.Krein.cl11RepLin_sq (E := E) ((1 / 2 : ℝ), (1 / 2 : ℝ)))
   · -- Max Caliber witness: accumulated Bayesian action is always non-negative (divergence sum).
     let γ : ℕ → E := fun _ => x
-    refine ⟨Kgeo.H, γ, 0, ?_⟩
-    simp [bayesianAction]
+    exact ⟨Kgeo.H, γ, 1, Kgeo.H.bayesianAction_nonneg γ 1⟩
 
 /--
 Cocycle-sourced capstone variant:

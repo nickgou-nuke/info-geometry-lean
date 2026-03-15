@@ -116,6 +116,95 @@ def CocycleGeneratorLift
     Φ (k + 1) - Φ k = phaseRNGeneratorBefore n (phaseAt k) (T.state k)
 
 /--
+Canonical discrete RN-generator potential on natural steps:
+`Ψ(0)=0`, `Ψ(k+1)=Ψ(k)+g_k` with `g_k` the concrete phase-aligned RN generator.
+-/
+noncomputable def trajectoryRNGeneratorPotentialNat
+    (T : SinkhornTrajectory n) : Nat → ℝ
+  | 0 => 0
+  | k + 1 =>
+      trajectoryRNGeneratorPotentialNat T k
+        + phaseRNGeneratorBefore n (phaseAt k) (T.state k)
+
+/--
+Canonical real-valued lift of the discrete RN-generator potential.
+It is evaluated at integer times via `Int.floor`.
+-/
+noncomputable def trajectoryRNGeneratorPotential
+    (T : SinkhornTrajectory n) : ℝ → ℝ :=
+  fun t => trajectoryRNGeneratorPotentialNat (n := n) T (Int.toNat (Int.floor t))
+
+@[simp] lemma trajectoryRNGeneratorPotential_natCast
+    (T : SinkhornTrajectory n) (k : Nat) :
+    trajectoryRNGeneratorPotential (n := n) T k
+      = trajectoryRNGeneratorPotentialNat (n := n) T k := by
+  simp [trajectoryRNGeneratorPotential]
+
+/--
+The canonical RN-generator potential satisfies the cocycle lift relation.
+-/
+theorem cocycleGeneratorLift_of_trajectoryRNGeneratorPotential
+    (T : SinkhornTrajectory n) :
+    CocycleGeneratorLift n T (trajectoryRNGeneratorPotential (n := n) T) := by
+  intro k
+  have hk1 :
+      trajectoryRNGeneratorPotential (n := n) T (k + 1 : ℝ)
+        = trajectoryRNGeneratorPotentialNat (n := n) T (k + 1) := by
+    simp [trajectoryRNGeneratorPotential, Nat.cast_add]
+  have hk0 :
+      trajectoryRNGeneratorPotential (n := n) T (k : ℝ)
+        = trajectoryRNGeneratorPotentialNat (n := n) T k := by
+    simp [trajectoryRNGeneratorPotential]
+  calc
+    trajectoryRNGeneratorPotential (n := n) T (k + 1)
+      - trajectoryRNGeneratorPotential (n := n) T k
+        =
+      trajectoryRNGeneratorPotentialNat (n := n) T (k + 1)
+        - trajectoryRNGeneratorPotentialNat (n := n) T k := by
+          rw [hk1, hk0]
+    _ =
+      (trajectoryRNGeneratorPotentialNat (n := n) T k
+        + phaseRNGeneratorBefore n (phaseAt k) (T.state k))
+        - trajectoryRNGeneratorPotentialNat (n := n) T k := by
+          simp [trajectoryRNGeneratorPotentialNat]
+    _ = phaseRNGeneratorBefore n (phaseAt k) (T.state k) := by
+          ring
+
+/--
+If a cocycle entropy potential agrees on integer times with the canonical
+RN-generator potential, then the generator-lift condition is derived internally.
+-/
+theorem cocycleGeneratorLift_of_cocycleEntropyPotential_match
+    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
+    (u : ℝ → AlgebraEnd H)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (T : SinkhornTrajectory n)
+    (hMatch :
+      ∀ k : Nat,
+        CocycleEntropyPotential (H := H) σ u hBridge k
+          = trajectoryRNGeneratorPotential (n := n) T k) :
+    CocycleGeneratorLift n T (CocycleEntropyPotential (H := H) σ u hBridge) := by
+  intro k
+  have hk1 :
+      CocycleEntropyPotential (H := H) σ u hBridge (k + 1 : ℝ)
+        = trajectoryRNGeneratorPotential (n := n) T (k + 1 : ℝ) := by
+    simpa [Nat.cast_add] using hMatch (k + 1)
+  have hk0 :
+      CocycleEntropyPotential (H := H) σ u hBridge (k : ℝ)
+        = trajectoryRNGeneratorPotential (n := n) T (k : ℝ) := by
+    simpa using hMatch k
+  calc
+    CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
+      - CocycleEntropyPotential (H := H) σ u hBridge k
+        =
+      trajectoryRNGeneratorPotential (n := n) T (k + 1)
+        - trajectoryRNGeneratorPotential (n := n) T k := by
+          rw [hk1, hk0]
+    _ = phaseRNGeneratorBefore n (phaseAt k) (T.state k) := by
+          exact cocycleGeneratorLift_of_trajectoryRNGeneratorPotential
+            (n := n) (T := T) k
+
+/--
 Refined cocycle-to-bound theorem:
 if the cocycle potential increments realize the concrete trajectory RN generator,
 the topological Bekenstein bound follows directly.
@@ -130,7 +219,7 @@ theorem topologicalBekensteinBound_of_connesCocycle_generatorLift
       CocycleGeneratorLift n T
         (CocycleEntropyPotential (H := H) σ u hBridge)) :
     TopologicalBekensteinBound n T := by
-  have hAdd :
+  let _hAdd :
       ∀ s t,
         CocycleEntropyPotential (H := H) σ u hBridge (s + t)
           = CocycleEntropyPotential (H := H) σ u hBridge s
@@ -145,6 +234,58 @@ theorem topologicalBekensteinBound_of_connesCocycle_generatorLift
     rw [hLift k]
     exact abs_trajectoryRNGenerator_le_trajectoryRNBarrier n T k
   exact le_trans (abs_nonneg _) hle
+
+/--
+Increment-level cocycle-to-RN barrier control:
+under the concrete generator-lift condition, each cocycle increment is bounded
+by the corresponding trajectory RN barrier.
+-/
+theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_connesCocycle_generatorLift
+    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hCocycle : IsConnesCocycle σ u)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (hLift :
+      CocycleGeneratorLift n T
+        (CocycleEntropyPotential (H := H) σ u hBridge)) :
+    ∀ k : Nat,
+      |CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
+        - CocycleEntropyPotential (H := H) σ u hBridge k|
+        ≤ trajectoryRNBarrier n T k := by
+  let _hAdd :
+      ∀ s t,
+        CocycleEntropyPotential (H := H) σ u hBridge (s + t)
+          = CocycleEntropyPotential (H := H) σ u hBridge s
+            + CocycleEntropyPotential (H := H) σ u hBridge t := by
+    simpa [CocycleEntropyPotential] using
+      (cocycleLogPotential_add (H := H) σ u hCocycle hBridge)
+  intro k
+  rw [hLift k]
+  exact abs_trajectoryRNGenerator_le_trajectoryRNBarrier n T k
+
+/--
+Cocycle-to-bound theorem with internally derived generator lift:
+it suffices to match cocycle potential values on integer times with the
+canonical discrete RN-generator potential.
+-/
+theorem topologicalBekensteinBound_of_connesCocycle_natMatch
+    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hCocycle : IsConnesCocycle σ u)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (hMatch :
+      ∀ k : Nat,
+        CocycleEntropyPotential (H := H) σ u hBridge k
+          = trajectoryRNGeneratorPotential (n := n) T k) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_connesCocycle_generatorLift
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hCocycle := hCocycle) (hBridge := hBridge)
+    (hLift :=
+      cocycleGeneratorLift_of_cocycleEntropyPotential_match
+        (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T) hMatch)
 
 end CocycleBridge
 

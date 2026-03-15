@@ -349,24 +349,28 @@ lemma hasConstantMongeAmpereDensity_of_rnEntropySource
 
 /--
 Entropy-sourced geometric gravity statement:
-RN/Kahler-potential sourcing plus an explicit Ricci-flat witness implies the vacuum Einstein equation
-on the `c = 0` branch (`scalar = 2Λ`).
+RN/Kahler-potential sourcing plus unit relative-volume closure and a metric RN
+bridge implies the vacuum Einstein equation on the `c = 0` branch (`scalar = 2Λ`).
 -/
 theorem vacuumEinsteinEquation_of_rnEntropySource
     (Kgeo : KaehlerInformationGeometry X)
     (R : RicciTensor X)
     (x : X) (Λ : ℝ)
     (M : SinkhornMatrix n)
-    (_hSource : RNEntropySourcesMongeAmpere n Kgeo M)
-    (hFlat : IsRicciFlat R) :
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (hUnit : relativeVolumeChangeRN n M = 1)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
     VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
-  exact vacuumEinsteinEquation_of_isRicciFlat
-    (R := R) (K := Kgeo) (x := x) (Λ := Λ) hFlat
+  have hUnitState : UnitRelativeVolumeState Kgeo := by
+    intro x'
+    simpa [RNEntropySourcesMongeAmpere, hUnit] using hSource x'
+  exact vacuumEinsteinEquation_of_unitRelativeVolume
+    (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hBridge
 
 /--
 Capstone entropy-to-gravity statement:
-if RN/Kahler entropy sources Monge-Ampere density and an explicit Ricci-flat
-witness is given, then the induced information geometry is Ricci-flat and satisfies
+if RN/Kahler entropy sources Monge-Ampere density and unit relative-volume closure
+is equipped with a metric RN bridge, then the induced information geometry is Ricci-flat and satisfies
 the vacuum Einstein equation (`c = 0`, `scalar = 2Λ`).
 -/
 theorem gravity_generated_by_rnEntropy
@@ -375,12 +379,18 @@ theorem gravity_generated_by_rnEntropy
     (x : X) (Λ : ℝ)
     (M : SinkhornMatrix n)
     (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
-    (hFlat : IsRicciFlat R) :
+    (hUnit : relativeVolumeChangeRN n M = 1)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
     IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  have hUnitState : UnitRelativeVolumeState Kgeo := by
+    intro x'
+    simpa [RNEntropySourcesMongeAmpere, hUnit] using hSource x'
   refine ⟨?_, ?_⟩
-  · exact hFlat
+  · exact isRicciFlat_of_unitRelativeVolume
+      (R := R) (K := Kgeo) (x := x) hUnitState hBridge
   · exact vacuumEinsteinEquation_of_rnEntropySource
-      (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ) (M := M) hSource hFlat
+      (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
+      (M := M) hSource hUnit hBridge
 
 end EntropicCalabiBridge
 

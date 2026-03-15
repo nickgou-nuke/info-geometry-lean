@@ -66,7 +66,6 @@ lean_lib SelfReference where
 lean_lib scripts where
   globs := #[.submodules `scripts]
 
-@[default_target]
 lean_lib tmp where
   globs := #[.andSubmodules `tmp]
 

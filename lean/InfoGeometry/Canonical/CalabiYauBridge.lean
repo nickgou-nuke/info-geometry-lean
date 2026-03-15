@@ -20,6 +20,13 @@ there exists a global scalar density value `ρ₀`.
 def HasConstantMongeAmpereDensity (H : HessianGeometry E) : Prop :=
   ∃ ρ0 : ℝ, ∀ x : E, mongeAmpereDensity H x = ρ0
 
+/--
+Unit relative-volume state in RN/Monge-Ampère form.
+This is the normalized-volume branch `ρ ≡ 1`.
+-/
+def UnitRelativeVolumeState (K : KaehlerInformationGeometry E) : Prop :=
+  SatisfiesMongeAmpere K.H (fun _ => (1 : ℝ))
+
 /-- Ricci-flatness condition in this finite-dimensional scaffold. -/
 def IsRicciFlat (R : RicciTensor E) : Prop :=
   ∀ u v : E, R u v = 0
@@ -75,6 +82,28 @@ lemma isEinsteinKaehlerAtWith_zero_of_isRicciFlat
   rw [hFlat u v]
   ring
 
+/--
+Metric-side reverse bridge on the zero branch:
+`Ric = 0 · g` implies Ricci-flatness.
+-/
+lemma isRicciFlat_of_isEinsteinKaehlerAtWith_zero
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (hEin0 : IsEinsteinKaehlerAtWith 0 R K x) :
+    IsRicciFlat R := by
+  intro u v
+  simpa using hEin0 u v
+
+/--
+Bridge package from unit RN-relative-volume state to the Einstein zero branch.
+
+This isolates the geometric/model-specific implication
+`ρ ≡ 1  ⇒  Ric = 0 · g` as explicit data rather than assuming Ricci-flatness.
+-/
+structure MetricRNRicciBridge
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E) : Prop where
+  unitVolume_to_einstein_zero :
+    UnitRelativeVolumeState K → IsEinsteinKaehlerAtWith 0 R K x
+
 /-- Projection: a `MongeAmpereRicciState` carries the constant-density witness. -/
 theorem hasConstantMongeAmpereDensity_of_mongeAmpereRicciState
     (R : RicciTensor E) (K : KaehlerInformationGeometry E)
@@ -125,6 +154,32 @@ theorem vacuumEinsteinEquation_of_isRicciFlat
   exact vacuumEinsteinEquation_of_scalar_relation
     (c := 0) (R := R) (K := K) (x := x) (scalar := 2 * Λ) (Λ := Λ)
     hEin0 (by ring)
+
+/--
+Constructive Ricci-flat derivation from unit relative-volume state via the
+metric RN bridge.
+-/
+theorem isRicciFlat_of_unitRelativeVolume
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (hUnit : UnitRelativeVolumeState K)
+    (hBridge : MetricRNRicciBridge R K x) :
+    IsRicciFlat R := by
+  exact isRicciFlat_of_isEinsteinKaehlerAtWith_zero
+    (R := R) (K := K) (x := x) (hBridge.unitVolume_to_einstein_zero hUnit)
+
+/--
+Constructive vacuum Einstein closure from unit relative-volume state
+and a metric RN bridge.
+-/
+theorem vacuumEinsteinEquation_of_unitRelativeVolume
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (Λ : ℝ)
+    (hUnit : UnitRelativeVolumeState K)
+    (hBridge : MetricRNRicciBridge R K x) :
+    VacuumEinsteinEquationAt R K x (2 * Λ) Λ := by
+  exact vacuumEinsteinEquation_of_isRicciFlat
+    (R := R) (K := K) (x := x) (Λ := Λ)
+    (isRicciFlat_of_unitRelativeVolume (R := R) (K := K) (x := x) hUnit hBridge)
 
 /--
 Constructive closure theorem in state form:

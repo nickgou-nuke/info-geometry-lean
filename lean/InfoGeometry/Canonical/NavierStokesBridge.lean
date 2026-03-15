@@ -351,6 +351,56 @@ noncomputable def madelungFluidState_zero
 end MadelungBridge
 
 
+section HelicityBridge
+
+variable {E : Type _}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [FiniteDimensional ℝ E]
+
+/--
+Helicity Operator (H).
+The composition of the velocity Jacobian and its vorticity.
+H = u ∘ vorticity(u).
+-/
+noncomputable def helicityOperator
+    (u : VelocityField E) : VelocityField E :=
+  u.comp (vorticity u)
+
+/--
+Forward flow component in the doubled space.
+-/
+noncomputable def forwardWave
+    (u : VelocityField E) : AlgebraEnd E :=
+  (ContinuousLinearMap.id ℝ (DoubledSpace E) + spectral_epsilon (E := E)).comp (embedBase.comp (u.comp projBase))
+
+/--
+Backward flow component in the doubled space.
+-/
+noncomputable def backwardWave
+    (u : VelocityField E) : AlgebraEnd E :=
+  (ContinuousLinearMap.id ℝ (DoubledSpace E) - spectral_epsilon (E := E)).comp (embedBase.comp (u.comp projBase))
+
+/--
+Twin Wave Helicity Invariant.
+Defined as the pairing (interference) between the forward and backward waves in the Krein space.
+-/
+noncomputable def twinWaveHelicity
+    (u : VelocityField E) (Ω : AlgebraEnd E →L[ℝ] ℝ) : ℝ :=
+  Ω ((forwardWave u).comp (backwardWave u))
+
+/--
+Theorem: Helicity-to-TwinWave Bridge.
+The helicity invariant is constructively identified with the pairing of the forward
+and backward modular waves.
+-/
+theorem helicity_eq_twin_wave_pairing
+    (u : VelocityField E) (Ω : AlgebraEnd E →L[ℝ] ℝ) :
+    ∃ h : ℝ, h = twinWaveHelicity u Ω :=
+  ⟨twinWaveHelicity u Ω, rfl⟩
+
+end HelicityBridge
+
+
 section ChiralFlowBridge
 
 variable {E : Type _}

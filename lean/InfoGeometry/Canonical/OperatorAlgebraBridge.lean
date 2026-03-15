@@ -63,7 +63,7 @@ variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs] [CStarRing Obs]
 /--
 Sinkhorn-driven KMS closure persists under realizations into C*-algebra targets.
 -/
-theorem sinkhorn_kms_closure_in_cstar_target
+theorem sinkhorn_kms_closure_in_cstar
     (real : AQFTOperatorRealization (F := F) (Obs := Obs))
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)

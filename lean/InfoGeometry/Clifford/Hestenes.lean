@@ -1,5 +1,6 @@
-import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Clifford.SplitQ11
 import Mathlib.Analysis.Complex.Trigonometric
+import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 
 /-!
 # Hestenes Geometric Algebra for Information Fluids
@@ -13,13 +14,18 @@ information manifold.
 
 namespace InfoGeometry.Clifford.Hestenes
 
+open InfoGeometry.Clifford
+
+/-- Concrete split-signature Clifford algebra `Cl(1,1)`. -/
+abbrev Cl11 := CliffordAlgebra splitQ11
+
 /--
 Pseudoscalar (I).
 Representing the signed unit volume element.
 For Cl(1,1), I² = 1.
 -/
-def Pseudoscalar (n : ℕ) : ℝ :=
-  1 -- Placeholder for the algebraic pseudoscalar object.
+noncomputable def Pseudoscalar : Cl11 :=
+  CliffordAlgebra.ι splitQ11 (1, 0) * CliffordAlgebra.ι splitQ11 (0, 1)
 
 /--
 Exponential Map of the Pseudoscalar.
@@ -43,7 +49,7 @@ theorem expPseudoscalar_is_scaling (θ : ℝ) :
 Bridge: Pseudoscalar as Signed Volume.
 Identifies the top-level GA form with the Radon-Nikodym derivative.
 -/
-def IsSignedVolume (I : ℝ) (RN : ℝ) : Prop :=
-  I = RN
+def IsSignedVolume (RN : ℝ) : Prop :=
+  ∃ ρ : Cl11 →ₗ[ℝ] ℝ, ρ Pseudoscalar = RN
 
 end InfoGeometry.Clifford.Hestenes

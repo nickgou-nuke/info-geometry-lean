@@ -52,11 +52,40 @@ lemma hasFDerivAt_logPartition (η : E) :
     simp [hsymm, hcomm, InnerProductSpace.toDual_apply_apply]
     ring_nf
 
+/-- Non-negativity of the Gaussian Bregman form in primal coordinates. -/
+lemma divergence_form_nonneg (η₁ η₂ : E) :
+    0 ≤ G.logPartition η₁ - G.logPartition η₂ - inner ℝ (G.sigma η₂) (η₁ - η₂) := by
+  have hform :
+      G.logPartition η₁ - G.logPartition η₂ - inner ℝ (G.sigma η₂) (η₁ - η₂)
+        = (1 / 2 : ℝ) * inner ℝ (η₁ - η₂) (G.sigma (η₁ - η₂)) := by
+    unfold logPartition
+    simp [inner_sub_left, inner_sub_right, map_sub]
+    have hcross : inner ℝ η₁ (G.sigma η₂) = inner ℝ η₂ (G.sigma η₁) := by
+      calc
+        inner ℝ η₁ (G.sigma η₂) = inner ℝ (G.sigma η₁) η₂ := by
+          simpa using (G.sigma_symm.isSymmetric η₁ η₂).symm
+        _ = inner ℝ η₂ (G.sigma η₁) := by simp [real_inner_comm]
+    have hcross' : inner ℝ (G.sigma η₂) η₁ = inner ℝ η₂ (G.sigma η₁) := by
+      calc
+        inner ℝ (G.sigma η₂) η₁ = inner ℝ η₁ (G.sigma η₂) := by simp [real_inner_comm]
+        _ = inner ℝ η₂ (G.sigma η₁) := hcross
+    have hdiag : inner ℝ (G.sigma η₂) η₂ = inner ℝ η₂ (G.sigma η₂) := by
+      simp [real_inner_comm]
+    rw [hcross, hcross', hdiag]
+    ring_nf
+  rw [hform]
+  by_cases hzero : η₁ - η₂ = 0
+  · simp [hzero]
+  · have hpos : 0 < inner ℝ (η₁ - η₂) (G.sigma (η₁ - η₂)) :=
+      G.sigma_pos (η₁ - η₂) hzero
+    nlinarith
+
 /-- Gaussian family as a Multivariate Hessian Geometry. -/
 noncomputable def hessianGeometry : HessianGeometry E where
   potential := G.logPartition
   grad := G.sigma
   has_gradient := G.hasFDerivAt_logPartition
+  divergence_nonneg_axiom := G.divergence_form_nonneg
 
 /-- The Bregman divergence of the Gaussian family is the squared Mahalanobis distance. -/
 @[blueprint "thm:gaussian-mahalanobis-divergence"]

@@ -15,6 +15,16 @@ script strictCheck (args) do
   }
   child.wait
 
+script semanticAudit (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["scripts/quality/audit_semantic.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script graphToBlueprint (args) do
   -- simple wrapper to run the Python converter from the graph
   let child ← IO.Process.spawn {
@@ -62,7 +72,6 @@ lean_lib InfoGeometry where
 lean_lib SelfReference where
   globs := #[.andSubmodules `SelfReference]
 
-@[default_target]
 lean_lib scripts where
   globs := #[.submodules `scripts]
 

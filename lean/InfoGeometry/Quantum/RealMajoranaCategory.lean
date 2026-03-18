@@ -9,6 +9,11 @@ open CategoryTheory
 
 universe u
 
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSimpArgs false
+set_option linter.unusedSectionVars false
+set_option linter.unnecessarySeqFocus false
+
 namespace InfoGeometry.Quantum.RealMajoranaCategory
 
 /-- Primitive real Majorana core object: real module + involutive operator package. -/
@@ -315,6 +320,208 @@ structure Polarization (X : RealMajoranaCore) where
   sum_id : Pplus + Pminus = (LinearMap.id : X →ₗ[ℝ] X)
   comm_Pi_plus : Pplus.comp X.Pi = X.Pi.comp Pplus
   comm_Pi_minus : Pminus.comp X.Pi = X.Pi.comp Pminus
+
+namespace Polarization
+
+variable {X : RealMajoranaCore}
+
+/-- Involution associated to a split polarization (`Pplus - Pminus`). -/
+noncomputable def involution (P0 : Polarization X) : X →ₗ[ℝ] X :=
+  P0.Pplus - P0.Pminus
+
+/-- The polarization involution commutes with parity `Pi`. -/
+theorem involution_comm_Pi (P0 : Polarization X) :
+    P0.involution.comp X.Pi = X.Pi.comp P0.involution := by
+  calc
+    (P0.Pplus - P0.Pminus).comp X.Pi
+        = P0.Pplus.comp X.Pi - P0.Pminus.comp X.Pi := by simp [LinearMap.sub_comp]
+    _ = X.Pi.comp P0.Pplus - X.Pi.comp P0.Pminus := by
+          rw [P0.comm_Pi_plus, P0.comm_Pi_minus]
+    _ = X.Pi.comp (P0.Pplus - P0.Pminus) := by simp [LinearMap.comp_sub]
+
+/-- The involution associated to a split polarization squares to identity. -/
+theorem involution_sq (P0 : Polarization X) :
+    P0.involution.comp P0.involution = (LinearMap.id : X →ₗ[ℝ] X) := by
+  ext x
+  have hplus : P0.Pplus (P0.Pplus x) = P0.Pplus x := by
+    simpa [LinearMap.comp_apply] using
+      congrArg (fun F : X →ₗ[ℝ] X => F x) P0.plus_idem
+  have hminus : P0.Pminus (P0.Pminus x) = P0.Pminus x := by
+    simpa [LinearMap.comp_apply] using
+      congrArg (fun F : X →ₗ[ℝ] X => F x) P0.minus_idem
+  have hcross₁ : P0.Pplus (P0.Pminus x) = 0 := by
+    simpa [LinearMap.comp_apply] using
+      congrArg (fun F : X →ₗ[ℝ] X => F x) P0.cross₁
+  have hcross₂ : P0.Pminus (P0.Pplus x) = 0 := by
+    simpa [LinearMap.comp_apply] using
+      congrArg (fun F : X →ₗ[ℝ] X => F x) P0.cross₂
+  have hsum : P0.Pplus x + P0.Pminus x = x := by
+    have h := congrArg (fun F : X →ₗ[ℝ] X => F x) P0.sum_id
+    simpa [LinearMap.add_apply, add_assoc, add_left_comm, add_comm] using h
+  calc
+    (P0.involution.comp P0.involution) x
+        = P0.Pplus (P0.Pplus x) - P0.Pplus (P0.Pminus x)
+            - P0.Pminus (P0.Pplus x) + P0.Pminus (P0.Pminus x) := by
+              simp [involution, LinearMap.comp_apply, sub_eq_add_neg,
+                add_assoc, add_left_comm, add_comm]
+    _ = P0.Pplus x + P0.Pminus x := by
+          simp [hplus, hminus, hcross₁, hcross₂, sub_eq_add_neg,
+            add_assoc, add_left_comm, add_comm]
+    _ = x := hsum
+
+private lemma half_smul_add_half_smul (y : X) :
+    (1 / 2 : ℝ) • ((1 / 2 : ℝ) • y + (1 / 2 : ℝ) • y) = (1 / 2 : ℝ) • y := by
+  calc
+    (1 / 2 : ℝ) • ((1 / 2 : ℝ) • y + (1 / 2 : ℝ) • y)
+        = (1 / 2 : ℝ) • (((1 / 2 : ℝ) + (1 / 2 : ℝ)) • y) := by
+            simp [add_smul]
+    _ = (1 / 2 : ℝ) • y := by norm_num
+
+/-- Construct split polarization data from an involution. -/
+noncomputable def ofInvolution
+    (P : X →ₗ[ℝ] X)
+    (P_sq : P.comp P = (LinearMap.id : X →ₗ[ℝ] X))
+    (comm_Pi : P.comp X.Pi = X.Pi.comp P) :
+    Polarization X where
+  Pplus := (1 / 2 : ℝ) • ((LinearMap.id : X →ₗ[ℝ] X) + P)
+  Pminus := (1 / 2 : ℝ) • ((LinearMap.id : X →ₗ[ℝ] X) - P)
+  plus_idem := by
+    ext x
+    have hPP : P (P x) = x := by
+      simpa [LinearMap.comp_apply] using
+        congrArg (fun F : X →ₗ[ℝ] X => F x) P_sq
+    calc
+      (((1 / 2 : ℝ) • ((LinearMap.id : X →ₗ[ℝ] X) + P)).comp
+          ((1 / 2 : ℝ) • ((LinearMap.id : X →ₗ[ℝ] X) + P))) x
+          = (1 / 2 : ℝ) • ((1 / 2 : ℝ) • (x + P x) + (1 / 2 : ℝ) • (x + P x)) := by
+              simp [LinearMap.comp_apply, hPP, smul_add,
+                add_assoc, add_left_comm, add_comm]
+      _ = (1 / 2 : ℝ) • (x + P x) := by
+            simpa using half_smul_add_half_smul (X := X) (y := x + P x)
+      _ = ((1 / 2 : ℝ) • ((LinearMap.id : X →ₗ[ℝ] X) + P)) x := by
+            simp
+  minus_idem := by
+    ext x
+    have hPP : P (P x) = x := by
+      simpa [LinearMap.comp_apply] using
+        congrArg (fun F : X →ₗ[ℝ] X => F x) P_sq
+    calc
+      (((1 / 2 : ℝ) • ((LinearMap.id : X →ₗ[ℝ] X) - P)).comp
+          ((1 / 2 : ℝ) • ((LinearMap.id : X →ₗ[ℝ] X) - P))) x
+          = (1 / 2 : ℝ) • ((1 / 2 : ℝ) • (x - P x) + (1 / 2 : ℝ) • (x - P x)) := by
+              simp [LinearMap.comp_apply, hPP, sub_eq_add_neg,
+                smul_add, smul_sub, add_assoc, add_left_comm, add_comm]
+      _ = (1 / 2 : ℝ) • (x - P x) := by
+            simpa using half_smul_add_half_smul (X := X) (y := x - P x)
+      _ = ((1 / 2 : ℝ) • ((LinearMap.id : X →ₗ[ℝ] X) - P)) x := by
+            simp [sub_eq_add_neg, smul_sub]
+  cross₁ := by
+    ext x
+    have hPP : P (P x) = x := by
+      simpa [LinearMap.comp_apply] using
+        congrArg (fun F : X →ₗ[ℝ] X => F x) P_sq
+    simp [sub_eq_add_neg, hPP, smul_add, smul_sub,
+      add_assoc, add_left_comm, add_comm]
+  cross₂ := by
+    ext x
+    have hPP : P (P x) = x := by
+      simpa [LinearMap.comp_apply] using
+        congrArg (fun F : X →ₗ[ℝ] X => F x) P_sq
+    simp [sub_eq_add_neg, hPP, smul_add, smul_sub,
+      add_assoc, add_left_comm, add_comm]
+  sum_id := by
+    have hhalf (x : X) : (1 / 2 : ℝ) • x + (1 / 2 : ℝ) • x = x := by
+      calc
+        (1 / 2 : ℝ) • x + (1 / 2 : ℝ) • x
+            = ((1 / 2 : ℝ) + (1 / 2 : ℝ)) • x := by simp [add_smul]
+        _ = x := by norm_num
+    ext x
+    simpa [sub_eq_add_neg, smul_add, smul_sub, add_assoc, add_left_comm, add_comm]
+      using hhalf x
+  comm_Pi_plus := by
+    ext x
+    have hcomm : P (X.Pi x) = X.Pi (P x) := by
+      simpa [LinearMap.comp_apply] using
+        congrArg (fun F : X →ₗ[ℝ] X => F x) comm_Pi
+    simp [hcomm, smul_add]
+  comm_Pi_minus := by
+    ext x
+    have hcomm : P (X.Pi x) = X.Pi (P x) := by
+      simpa [LinearMap.comp_apply] using
+        congrArg (fun F : X →ₗ[ℝ] X => F x) comm_Pi
+    simp [hcomm, smul_add, smul_sub, sub_eq_add_neg,
+      add_assoc, add_left_comm, add_comm]
+
+/-- Round-trip (`involution -> split -> involution`) recovers the input involution. -/
+theorem involution_ofInvolution
+    (P : X →ₗ[ℝ] X)
+    (P_sq : P.comp P = (LinearMap.id : X →ₗ[ℝ] X))
+    (comm_Pi : P.comp X.Pi = X.Pi.comp P) :
+    (ofInvolution (X := X) P P_sq comm_Pi).involution = P := by
+  have hhalf (y : X) : (1 / 2 : ℝ) • y + (1 / 2 : ℝ) • y = y := by
+    calc
+      (1 / 2 : ℝ) • y + (1 / 2 : ℝ) • y
+          = ((1 / 2 : ℝ) + (1 / 2 : ℝ)) • y := by simp [add_smul]
+      _ = y := by norm_num
+  ext x
+  simpa [involution, ofInvolution, sub_eq_add_neg, smul_add, smul_sub,
+    add_assoc, add_left_comm, add_comm] using hhalf (P x)
+
+/-- Round-trip (`split -> involution -> split`) recovers `Pplus`. -/
+theorem ofInvolution_involution_Pplus (P0 : Polarization X) :
+    (ofInvolution (X := X) P0.involution P0.involution_sq P0.involution_comm_Pi).Pplus
+      = P0.Pplus := by
+  ext x
+  have hsum : P0.Pplus x + P0.Pminus x = x := by
+    have h := congrArg (fun F : X →ₗ[ℝ] X => F x) P0.sum_id
+    simpa [LinearMap.add_apply, add_assoc, add_left_comm, add_comm] using h
+  have hInv : P0.involution x = P0.Pplus x - P0.Pminus x := by
+    simp [involution]
+  calc
+    ((ofInvolution (X := X) P0.involution P0.involution_sq P0.involution_comm_Pi).Pplus) x
+        = (1 / 2 : ℝ) • (x + P0.involution x) := by
+            simp [ofInvolution]
+    _ = (1 / 2 : ℝ) • (x + (P0.Pplus x - P0.Pminus x)) := by rw [hInv]
+    _ = (1 / 2 : ℝ) • ((P0.Pplus x + P0.Pminus x) + (P0.Pplus x - P0.Pminus x)) := by
+        nth_rewrite 1 [← hsum]
+        rfl
+    _ = (1 / 2 : ℝ) • (P0.Pplus x + P0.Pplus x) := by
+          simp [sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+    _ = P0.Pplus x := by
+          calc
+            (1 / 2 : ℝ) • (P0.Pplus x + P0.Pplus x)
+                = (1 / 2 : ℝ) • ((2 : ℝ) • P0.Pplus x) := by simp [two_smul]
+            _ = P0.Pplus x := by
+                  norm_num [smul_smul]
+
+/-- Round-trip (`split -> involution -> split`) recovers `Pminus`. -/
+theorem ofInvolution_involution_Pminus (P0 : Polarization X) :
+    (ofInvolution (X := X) P0.involution P0.involution_sq P0.involution_comm_Pi).Pminus
+      = P0.Pminus := by
+  ext x
+  have hsum : P0.Pplus x + P0.Pminus x = x := by
+    have h := congrArg (fun F : X →ₗ[ℝ] X => F x) P0.sum_id
+    simpa [LinearMap.add_apply, add_assoc, add_left_comm, add_comm] using h
+  have hInv : P0.involution x = P0.Pplus x - P0.Pminus x := by
+    simp [involution]
+  calc
+    ((ofInvolution (X := X) P0.involution P0.involution_sq P0.involution_comm_Pi).Pminus) x
+        = (1 / 2 : ℝ) • (x - P0.involution x) := by
+            simp [ofInvolution]
+    _ = (1 / 2 : ℝ) • (x - (P0.Pplus x - P0.Pminus x)) := by rw [hInv]
+    _ = (1 / 2 : ℝ) • ((P0.Pplus x + P0.Pminus x) - (P0.Pplus x - P0.Pminus x)) := by
+        nth_rewrite 1 [← hsum]
+        rfl
+    _ = (1 / 2 : ℝ) • (P0.Pminus x + P0.Pminus x) := by
+          simp [sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+    _ = P0.Pminus x := by
+          calc
+            (1 / 2 : ℝ) • (P0.Pminus x + P0.Pminus x)
+                = (1 / 2 : ℝ) • ((2 : ℝ) • P0.Pminus x) := by simp [two_smul]
+            _ = P0.Pminus x := by
+                  norm_num [smul_smul]
+
+end Polarization
 
 section Cl11Polarization
 

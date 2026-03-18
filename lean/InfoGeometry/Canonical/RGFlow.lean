@@ -2,15 +2,19 @@ import InfoGeometry.Convex.HessianGeometry
 import Mathlib.Analysis.Calculus.FDeriv.Basic
 import Mathlib.Topology.MetricSpace.Contracting
 
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSectionVars false
+set_option linter.unusedSimpArgs false
+
 namespace InfoGeometry.Canonical.RGFlow
 
 open InfoGeometry.Convex
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
 A Renormalization Group (RG) Flow on information manifolds.
-This represents the evolution of the belief geometry as the 'resolution' 
+This represents the evolution of the belief geometry as the 'resolution'
 of the data changes (coarse-graining).
 -/
 def InformationFlow (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
@@ -50,7 +54,9 @@ def generatedDiscreteFlow (F : RGStepMap E) (H0 : HessianGeometry E) : DiscreteI
 
 /--
 The Beta Function of the information potential.
-β(ψ) = ∂ψ/∂fun, where fun is the logarithmic scale of coarse-graining.
+This is the totalized scalar derivative of the potential along the RG scale.
+It is useful as a readout, but the canonical stationary notion below is stated
+using `HasDerivAt`, not `deriv`.
 This measures how the 'Information Mass' changes as we ignore microscopic details.
 -/
 noncomputable def betaFunction (flow : InformationFlow E) (scale : ℝ) (x : E) : ℝ :=
@@ -58,13 +64,13 @@ noncomputable def betaFunction (flow : InformationFlow E) (scale : ℝ) (x : E) 
   deriv (fun t => (flow t).potential x) scale
 
 /--
-Fixed Point of the RG Flow.
-A belief manifold is at a fixed point if its geometry is scale-invariant.
-In Information Geometry, these are often the 'Maximum Entropy' or 'Least Informative' states.
+Stationarity at scale `scale0`.
+Both the potential path and the dual-map path have derivative zero at `scale0`
+in the honest `HasDerivAt` sense.
 -/
-def IsFixedPoint (flow : InformationFlow E) (scale0 : ℝ) : Prop :=
-  (∀ x, betaFunction flow scale0 x = 0) ∧
-    (∀ x, deriv (fun t => (flow t).dualMap x) scale0 = 0)
+def IsStationaryAtScale (flow : InformationFlow E) (scale0 : ℝ) : Prop :=
+  (∀ x, HasDerivAt (fun t => (flow t).potential x) 0 scale0) ∧
+    (∀ x, HasDerivAt (fun t => (flow t).dualMap x) 0 scale0)
 
 /--
 Flow invariance at scale `scale0`:
@@ -86,25 +92,25 @@ def ModularCliffordFlowInvariantAtScale
     {ι : Type*}
     (flow : InformationFlow E) (scale0 : ℝ)
     (σ : ℝ → E →ₗ[ℝ] E)
-    (clAct : ι → E →ₗ[ℝ] E)
+    (cliffordAction : ι → E →ₗ[ℝ] E)
     (unit : ι) : Prop :=
-  clAct unit = LinearMap.id ∧
+  cliffordAction unit = LinearMap.id ∧
     (∀ t : ℝ, Function.Surjective (σ t)) ∧
     (∀ t : ℝ, ∀ x : E, ∀ ℓ : ι,
-      (flow t).potential ((clAct ℓ) (σ t x)) =
-        (flow scale0).potential ((clAct ℓ) (σ t x))) ∧
+      (flow t).potential ((cliffordAction ℓ) (σ t x)) =
+        (flow scale0).potential ((cliffordAction ℓ) (σ t x))) ∧
     (∀ t : ℝ, ∀ x : E, ∀ ℓ : ι,
-      (flow t).dualMap ((clAct ℓ) (σ t x)) =
-        (flow scale0).dualMap ((clAct ℓ) (σ t x)))
+      (flow t).dualMap ((cliffordAction ℓ) (σ t x)) =
+        (flow scale0).dualMap ((cliffordAction ℓ) (σ t x)))
 
 theorem flowInvariantAtScale_of_modularCliffordFlowInvariant
     {ι : Type*}
     (flow : InformationFlow E) (scale0 : ℝ)
     (σ : ℝ → E →ₗ[ℝ] E)
-    (clAct : ι → E →ₗ[ℝ] E)
+    (cliffordAction : ι → E →ₗ[ℝ] E)
     (unit : ι)
     (hInv : ModularCliffordFlowInvariantAtScale
-      (E := E) (ι := ι) flow scale0 σ clAct unit) :
+      (E := E) (ι := ι) flow scale0 σ cliffordAction unit) :
     FlowInvariantAtScale flow scale0 := by
   rcases hInv with ⟨hUnit, hSurj, hPot, hDual⟩
   refine ⟨?_, ?_⟩
@@ -121,18 +127,18 @@ theorem modularCliffordFlowInvariant_of_flowInvariant
     {ι : Type*}
     (flow : InformationFlow E) (scale0 : ℝ)
     (σ : ℝ → E →ₗ[ℝ] E)
-    (clAct : ι → E →ₗ[ℝ] E)
+    (cliffordAction : ι → E →ₗ[ℝ] E)
     (unit : ι)
-    (hUnit : clAct unit = LinearMap.id)
+    (hUnit : cliffordAction unit = LinearMap.id)
     (hSurj : ∀ t : ℝ, Function.Surjective (σ t))
     (hInv : FlowInvariantAtScale flow scale0) :
     ModularCliffordFlowInvariantAtScale
-      (E := E) (ι := ι) flow scale0 σ clAct unit := by
+      (E := E) (ι := ι) flow scale0 σ cliffordAction unit := by
   refine ⟨hUnit, hSurj, ?_, ?_⟩
   · intro t x ℓ
-    exact hInv.1 ((clAct ℓ) (σ t x)) t
+    exact hInv.1 ((cliffordAction ℓ) (σ t x)) t
   · intro t x ℓ
-    exact hInv.2 ((clAct ℓ) (σ t x)) t
+    exact hInv.2 ((cliffordAction ℓ) (σ t x)) t
 
 theorem modularCliffordFlowInvariant_id_of_flowInvariant
     (flow : InformationFlow E) (scale0 : ℝ)
@@ -153,20 +159,19 @@ theorem modularCliffordFlowInvariant_id_of_flowInvariant
     refine ⟨x, ?_⟩
     simp
 
-theorem isFixedPoint_of_flowInvariant
+theorem isStationaryAtScale_of_flowInvariant
     (flow : InformationFlow E) (scale0 : ℝ)
     (hInv : FlowInvariantAtScale flow scale0) :
-    IsFixedPoint flow scale0 := by
+    IsStationaryAtScale flow scale0 := by
   refine ⟨?_, ?_⟩
   · intro x
-    unfold betaFunction
     have hfun :
         (fun t => (flow t).potential x) =
           (fun _ : ℝ => (flow scale0).potential x) := by
       funext t
       exact hInv.1 x t
     rw [hfun]
-    simp
+    simpa using (hasDerivAt_const scale0 ((flow scale0).potential x))
   · intro x
     have hfun :
         (fun t => (flow t).dualMap x) =
@@ -174,20 +179,28 @@ theorem isFixedPoint_of_flowInvariant
       funext t
       exact hInv.2 x t
     rw [hfun]
-    simp
+    simpa using (hasDerivAt_const scale0 ((flow scale0).dualMap x))
 
-theorem isFixedPoint_of_modularCliffordFlowInvariant
+theorem isStationaryAtScale_of_modularCliffordFlowInvariant
     {ι : Type*}
     (flow : InformationFlow E) (scale0 : ℝ)
     (σ : ℝ → E →ₗ[ℝ] E)
-    (clAct : ι → E →ₗ[ℝ] E)
+    (cliffordAction : ι → E →ₗ[ℝ] E)
     (unit : ι)
     (hInv : ModularCliffordFlowInvariantAtScale
-      (E := E) (ι := ι) flow scale0 σ clAct unit) :
-    IsFixedPoint flow scale0 :=
-  isFixedPoint_of_flowInvariant (E := E) flow scale0
+      (E := E) (ι := ι) flow scale0 σ cliffordAction unit) :
+    IsStationaryAtScale flow scale0 :=
+  isStationaryAtScale_of_flowInvariant (E := E) flow scale0
     (flowInvariantAtScale_of_modularCliffordFlowInvariant
-      (E := E) (ι := ι) flow scale0 σ clAct unit hInv)
+      (E := E) (ι := ι) flow scale0 σ cliffordAction unit hInv)
+
+theorem betaFunction_eq_zero_at_stationary_scale
+    (flow : InformationFlow E) (scale0 : ℝ)
+    (hStationary : IsStationaryAtScale flow scale0)
+    (x : E) :
+    betaFunction flow scale0 x = 0 := by
+  unfold betaFunction
+  simpa using (hStationary.1 x).deriv
 
 @[simp] theorem betaFunction_constantFlow
     (H : HessianGeometry E) (scale : ℝ) (x : E) :
@@ -202,24 +215,26 @@ theorem isFixedPoint_of_modularCliffordFlowInvariant
   simpa using (deriv_const (x := scale) (c := H.dualMap x))
 
 /--
-Every constant RG flow is a fixed point at every scale.
+Every constant RG flow is stationary at every scale.
 -/
-theorem isFixedPoint_constantFlow
+theorem isStationaryAtScale_constantFlow
     (H : HessianGeometry E) (scale0 : ℝ) :
-    IsFixedPoint (constantFlow (E := E) H) scale0 := by
+    IsStationaryAtScale (constantFlow (E := E) H) scale0 := by
   refine ⟨?_, ?_⟩
   · intro x
-    simpa using betaFunction_constantFlow (E := E) H scale0 x
+    unfold constantFlow
+    simpa using (hasDerivAt_const scale0 (H.potential x))
   · intro x
-    simpa using dualDeriv_constantFlow (E := E) H scale0 x
+    unfold constantFlow
+    simpa using (hasDerivAt_const scale0 (H.dualMap x))
 
 /--
-Constructive fixed-point existence for constant RG flows.
+Constructive stationary-scale existence for constant RG flows.
 -/
-theorem exists_isFixedPoint_constantFlow
+theorem exists_isStationaryAtScale_constantFlow
     (H : HessianGeometry E) :
-    ∃ scale0 : ℝ, IsFixedPoint (constantFlow (E := E) H) scale0 :=
-  ⟨0, isFixedPoint_constantFlow (E := E) H 0⟩
+    ∃ scale0 : ℝ, IsStationaryAtScale (constantFlow (E := E) H) scale0 :=
+  ⟨0, isStationaryAtScale_constantFlow (E := E) H 0⟩
 
 section Contraction
 
@@ -270,13 +285,13 @@ theorem modularCliffordFlowInvariant_constantFlow_id
     (E := E) (flow := constantFlow (E := E) H) (scale0 := scale0)
     (flowInvariantAtScale_constantFlow (E := E) H scale0)
 
-omit [FiniteDimensional ℝ E] in
 /--
-At a fixed point, the dual map is scale-invariant by definition.
+At a stationary scale, the dual-map derivative vanishes.
 -/
-theorem dual_map_invariant_at_fixed_point
-    (flow : InformationFlow E) (scale0 : ℝ) (h : IsFixedPoint flow scale0) (x : E) :
+theorem dual_map_deriv_eq_zero_at_stationary_scale
+    (flow : InformationFlow E) (scale0 : ℝ)
+    (hStationary : IsStationaryAtScale flow scale0) (x : E) :
     deriv (fun t => (flow t).dualMap x) scale0 = 0 :=
-  h.2 x
+  (hStationary.2 x).deriv
 
 end InfoGeometry.Canonical.RGFlow

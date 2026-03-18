@@ -13,6 +13,11 @@ This module keeps the primitive quantum layer fully real:
 - Bogoliubov transport is real conjugation by an automorphism.
 -/
 
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSimpArgs false
+set_option linter.unusedSectionVars false
+set_option linter.unnecessarySeqFocus false
+
 namespace InfoGeometry.Quantum.RealMajorana
 
 open CategoryTheory
@@ -278,7 +283,12 @@ noncomputable def transportK : EndS (S := S) :=
 noncomputable def transportPi : EndS (S := S) :=
   T.B.comp (M.Pi.comp T.Binv)
 
-/-- Transported Majorana field. -/
+/--
+Transported Majorana field by mode-space pushforward.
+
+Here transport acts on the mode argument: `transportGamma v = gamma (B v)`.
+This is distinct from conjugation transport on target endomorphisms.
+-/
 noncomputable def transportGamma (v : S) : EndS (S := S) :=
   M.gamma (T.B v)
 
@@ -598,32 +608,41 @@ noncomputable instance : Category (KPolarization (S := S) M) where
 @[simp] lemma hom_comp {P Q R : KPolarization (S := S) M} (f : P ⟶ Q) (g : Q ⟶ R) :
     ((f ≫ g).f) = g.f.comp f.f := rfl
 
-/-- Derived ladder-operator presentation from polarization, not primitive. -/
-structure LadderPresentation where
-  annihilation : EndS (S := S)
-  creation : EndS (S := S)
-  split_sum : annihilation + creation = ContinuousLinearMap.id ℝ S
+/--
+Derived projector split from a polarization involution.
 
-namespace LadderPresentation
+This is **not** primitive CAR ladder data; it is the `(plus/minus)` projector splitting
+associated to `P^2 = Id`.
+-/
+structure PolarizationSplit where
+  Pminus : EndS (S := S)
+  Pplus : EndS (S := S)
+  minus_idem : Pminus.comp Pminus = Pminus
+  plus_idem : Pplus.comp Pplus = Pplus
+  cross_minus_plus : Pminus.comp Pplus = 0
+  cross_plus_minus : Pplus.comp Pminus = 0
+  split_sum : Pminus + Pplus = ContinuousLinearMap.id ℝ S
 
-/-- Morphisms in the derived ladder-presentation category. -/
-@[ext] structure Hom (A B : LadderPresentation (S := S)) where
+namespace PolarizationSplit
+
+/-- Morphisms in the derived polarization-split category. -/
+@[ext] structure Hom (A B : PolarizationSplit (S := S)) where
   f : EndS (S := S)
   finv : EndS (S := S)
   left_inv : finv.comp f = ContinuousLinearMap.id ℝ S
   right_inv : f.comp finv = ContinuousLinearMap.id ℝ S
-  intertwines_ann : B.annihilation.comp f = f.comp A.annihilation
-  intertwines_cre : B.creation.comp f = f.comp A.creation
+  intertwines_minus : B.Pminus.comp f = f.comp A.Pminus
+  intertwines_plus : B.Pplus.comp f = f.comp A.Pplus
 
-noncomputable instance : Category (LadderPresentation (S := S)) where
+noncomputable instance : Category (PolarizationSplit (S := S)) where
   Hom A B := Hom A B
   id A :=
     { f := ContinuousLinearMap.id ℝ S
       finv := ContinuousLinearMap.id ℝ S
       left_inv := by simp
       right_inv := by simp
-      intertwines_ann := by simp
-      intertwines_cre := by simp }
+      intertwines_minus := by simp
+      intertwines_plus := by simp }
   comp {A B C} g h :=
     { f := h.f.comp g.f
       finv := g.finv.comp h.finv
@@ -645,36 +664,88 @@ noncomputable instance : Category (LadderPresentation (S := S)) where
           simpa [ContinuousLinearMap.comp_apply] using
             congrArg (fun F : EndS (S := S) => F x) h.right_inv
         simpa [ContinuousLinearMap.comp_apply, hg] using hh
-      intertwines_ann := by
+      intertwines_minus := by
         calc
-          C.annihilation.comp (h.f.comp g.f)
-              = (C.annihilation.comp h.f).comp g.f := by simp [ContinuousLinearMap.comp_assoc]
-          _ = (h.f.comp B.annihilation).comp g.f := by rw [h.intertwines_ann]
-          _ = h.f.comp (B.annihilation.comp g.f) := by simp [ContinuousLinearMap.comp_assoc]
-          _ = h.f.comp (g.f.comp A.annihilation) := by rw [g.intertwines_ann]
-          _ = (h.f.comp g.f).comp A.annihilation := by simp [ContinuousLinearMap.comp_assoc]
-      intertwines_cre := by
+          C.Pminus.comp (h.f.comp g.f)
+              = (C.Pminus.comp h.f).comp g.f := by simp [ContinuousLinearMap.comp_assoc]
+          _ = (h.f.comp B.Pminus).comp g.f := by rw [h.intertwines_minus]
+          _ = h.f.comp (B.Pminus.comp g.f) := by simp [ContinuousLinearMap.comp_assoc]
+          _ = h.f.comp (g.f.comp A.Pminus) := by rw [g.intertwines_minus]
+          _ = (h.f.comp g.f).comp A.Pminus := by simp [ContinuousLinearMap.comp_assoc]
+      intertwines_plus := by
         calc
-          C.creation.comp (h.f.comp g.f)
-              = (C.creation.comp h.f).comp g.f := by simp [ContinuousLinearMap.comp_assoc]
-          _ = (h.f.comp B.creation).comp g.f := by rw [h.intertwines_cre]
-          _ = h.f.comp (B.creation.comp g.f) := by simp [ContinuousLinearMap.comp_assoc]
-          _ = h.f.comp (g.f.comp A.creation) := by rw [g.intertwines_cre]
-          _ = (h.f.comp g.f).comp A.creation := by simp [ContinuousLinearMap.comp_assoc] }
+          C.Pplus.comp (h.f.comp g.f)
+              = (C.Pplus.comp h.f).comp g.f := by simp [ContinuousLinearMap.comp_assoc]
+          _ = (h.f.comp B.Pplus).comp g.f := by rw [h.intertwines_plus]
+          _ = h.f.comp (B.Pplus.comp g.f) := by simp [ContinuousLinearMap.comp_assoc]
+          _ = h.f.comp (g.f.comp A.Pplus) := by rw [g.intertwines_plus]
+          _ = (h.f.comp g.f).comp A.Pplus := by simp [ContinuousLinearMap.comp_assoc] }
 
-@[simp] lemma hom_id (A : LadderPresentation (S := S)) :
+@[simp] lemma hom_id (A : PolarizationSplit (S := S)) :
     ((𝟙 A : A ⟶ A).f) = ContinuousLinearMap.id ℝ S := rfl
 
-@[simp] lemma hom_comp {A B C : LadderPresentation (S := S)} (f : A ⟶ B) (g : B ⟶ C) :
+@[simp] lemma hom_comp {A B C : PolarizationSplit (S := S)} (f : A ⟶ B) (g : B ⟶ C) :
     ((f ≫ g).f) = g.f.comp f.f := rfl
 
-end LadderPresentation
+end PolarizationSplit
 
-/-- Canonical derived ladder presentation from a polarization involution `P`. -/
-noncomputable def ladderOfPolarization (P : KPolarization (S := S) M) :
-    LadderPresentation (S := S) where
-  annihilation := (1 / 2 : ℝ) • (ContinuousLinearMap.id ℝ S - P.P)
-  creation := (1 / 2 : ℝ) • (ContinuousLinearMap.id ℝ S + P.P)
+private lemma half_smul_add_half_smul (y : S) :
+  (1 / 2 : ℝ) • ((1 / 2 : ℝ) • y + (1 / 2 : ℝ) • y) = (1 / 2 : ℝ) • y := by
+  calc
+  (1 / 2 : ℝ) • ((1 / 2 : ℝ) • y + (1 / 2 : ℝ) • y)
+    = (1 / 2 : ℝ) • (((1 / 2 : ℝ) + (1 / 2 : ℝ)) • y) := by
+      simp [add_smul]
+  _ = (1 / 2 : ℝ) • y := by norm_num
+
+/-- Canonical derived projector split from a polarization involution `P`. -/
+noncomputable def splitOfPolarization (P : KPolarization (S := S) M) :
+    PolarizationSplit (S := S) where
+  Pminus := (1 / 2 : ℝ) • (ContinuousLinearMap.id ℝ S - P.P)
+  Pplus := (1 / 2 : ℝ) • (ContinuousLinearMap.id ℝ S + P.P)
+  minus_idem := by
+    ext x
+    have hPP : P.P (P.P x) = x := by
+      simpa [ContinuousLinearMap.comp_apply] using
+        congrArg (fun F : EndS (S := S) => F x) P.P_sq
+    calc
+      (((1 / 2 : ℝ) • (ContinuousLinearMap.id ℝ S - P.P)).comp
+          ((1 / 2 : ℝ) • (ContinuousLinearMap.id ℝ S - P.P))) x
+          = (1 / 2 : ℝ) • ((1 / 2 : ℝ) • (x - P.P x) + (1 / 2 : ℝ) • (x - P.P x)) := by
+              simp [ContinuousLinearMap.comp_apply, hPP, sub_eq_add_neg,
+                smul_add, smul_sub, add_assoc, add_left_comm, add_comm]
+      _ = (1 / 2 : ℝ) • (x - P.P x) := by
+            simpa using half_smul_add_half_smul (S := S) (y := x - P.P x)
+      _ = ((1 / 2 : ℝ) • (ContinuousLinearMap.id ℝ S - P.P)) x := by
+            simp [sub_eq_add_neg, smul_sub]
+  plus_idem := by
+    ext x
+    have hPP : P.P (P.P x) = x := by
+      simpa [ContinuousLinearMap.comp_apply] using
+        congrArg (fun F : EndS (S := S) => F x) P.P_sq
+    calc
+      (((1 / 2 : ℝ) • (ContinuousLinearMap.id ℝ S + P.P)).comp
+          ((1 / 2 : ℝ) • (ContinuousLinearMap.id ℝ S + P.P))) x
+          = (1 / 2 : ℝ) • ((1 / 2 : ℝ) • (x + P.P x) + (1 / 2 : ℝ) • (x + P.P x)) := by
+              simp [ContinuousLinearMap.comp_apply, hPP, smul_add,
+                add_assoc, add_left_comm, add_comm]
+      _ = (1 / 2 : ℝ) • (x + P.P x) := by
+            simpa using half_smul_add_half_smul (S := S) (y := x + P.P x)
+      _ = ((1 / 2 : ℝ) • (ContinuousLinearMap.id ℝ S + P.P)) x := by
+            simp
+  cross_minus_plus := by
+    ext x
+    have hPP : P.P (P.P x) = x := by
+      simpa [ContinuousLinearMap.comp_apply] using
+        congrArg (fun F : EndS (S := S) => F x) P.P_sq
+    simp [sub_eq_add_neg, hPP, smul_add, smul_sub,
+      add_assoc, add_left_comm, add_comm]
+  cross_plus_minus := by
+    ext x
+    have hPP : P.P (P.P x) = x := by
+      simpa [ContinuousLinearMap.comp_apply] using
+        congrArg (fun F : EndS (S := S) => F x) P.P_sq
+    simp [sub_eq_add_neg, hPP, smul_add, smul_sub,
+      add_assoc, add_left_comm, add_comm]
   split_sum := by
     have hhalf (x : S) : (1 / 2 : ℝ) • x + (1 / 2 : ℝ) • x = x := by
       calc
@@ -685,46 +756,132 @@ noncomputable def ladderOfPolarization (P : KPolarization (S := S) M) :
     simpa [sub_eq_add_neg, smul_add, smul_sub, add_assoc, add_left_comm, add_comm]
       using hhalf x
 
-/-- The polarization involution is recovered as `creation - annihilation`. -/
-lemma creation_sub_annihilation_eq_P (P : KPolarization (S := S) M) :
-    (ladderOfPolarization (M := M) P).creation
-      - (ladderOfPolarization (M := M) P).annihilation = P.P := by
+/-- The polarization involution is recovered as `Pplus - Pminus`. -/
+lemma plus_sub_minus_eq_P (P : KPolarization (S := S) M) :
+    (splitOfPolarization (M := M) P).Pplus
+      - (splitOfPolarization (M := M) P).Pminus = P.P := by
   have hhalf (x : S) : (1 / 2 : ℝ) • (P.P x) + (1 / 2 : ℝ) • (P.P x) = P.P x := by
     calc
       (1 / 2 : ℝ) • (P.P x) + (1 / 2 : ℝ) • (P.P x)
           = ((1 / 2 : ℝ) + (1 / 2 : ℝ)) • (P.P x) := by simp [add_smul]
       _ = P.P x := by norm_num
   ext x
-  simpa [ladderOfPolarization, sub_eq_add_neg, smul_add, smul_sub, add_assoc, add_left_comm, add_comm]
+  simpa [splitOfPolarization, sub_eq_add_neg, smul_add, smul_sub, add_assoc, add_left_comm, add_comm]
     using hhalf x
 
-/-- Transport a polarization morphism into a ladder-presentation morphism. -/
-noncomputable def Hom.toLadderHom
+/-- Involution associated to a polarization split datum. -/
+noncomputable def involutionOfSplit (A : PolarizationSplit (S := S)) : EndS (S := S) :=
+  A.Pplus - A.Pminus
+
+/-- The involution associated to a projector split squares to identity. -/
+theorem involutionOfSplit_sq (A : PolarizationSplit (S := S)) :
+    (involutionOfSplit (S := S) A).comp (involutionOfSplit (S := S) A)
+      = ContinuousLinearMap.id ℝ S := by
+  ext x
+  have hplus : A.Pplus (A.Pplus x) = A.Pplus x := by
+    simpa [ContinuousLinearMap.comp_apply] using
+      congrArg (fun F : EndS (S := S) => F x) A.plus_idem
+  have hminus : A.Pminus (A.Pminus x) = A.Pminus x := by
+    simpa [ContinuousLinearMap.comp_apply] using
+      congrArg (fun F : EndS (S := S) => F x) A.minus_idem
+  have hcrossPM : A.Pplus (A.Pminus x) = 0 := by
+    simpa [ContinuousLinearMap.comp_apply] using
+      congrArg (fun F : EndS (S := S) => F x) A.cross_plus_minus
+  have hcrossMP : A.Pminus (A.Pplus x) = 0 := by
+    simpa [ContinuousLinearMap.comp_apply] using
+      congrArg (fun F : EndS (S := S) => F x) A.cross_minus_plus
+  have hsum : A.Pplus x + A.Pminus x = x := by
+    have h := congrArg (fun F : EndS (S := S) => F x) A.split_sum
+    simpa [ContinuousLinearMap.add_apply, add_assoc, add_left_comm, add_comm] using h
+  calc
+    ((involutionOfSplit (S := S) A).comp (involutionOfSplit (S := S) A)) x
+        = A.Pplus (A.Pplus x) - A.Pplus (A.Pminus x)
+            - A.Pminus (A.Pplus x) + A.Pminus (A.Pminus x) := by
+              simp [involutionOfSplit, sub_eq_add_neg, ContinuousLinearMap.comp_apply,
+                add_assoc, add_left_comm, add_comm]
+    _ = A.Pplus x + A.Pminus x := by
+          simp [hplus, hminus, hcrossPM, hcrossMP, sub_eq_add_neg,
+            add_assoc, add_left_comm, add_comm]
+    _ = x := hsum
+
+/-- Build a `K`-compatible involution from a split presentation plus compatibility proof. -/
+noncomputable def ofSplit
+    (A : PolarizationSplit (S := S))
+    (hAnti : (involutionOfSplit (S := S) A).comp M.K
+      = -(M.K.comp (involutionOfSplit (S := S) A))) :
+    KPolarization (S := S) M where
+  P := involutionOfSplit (S := S) A
+  P_sq := involutionOfSplit_sq (S := S) A
+  P_K_anticomm := hAnti
+
+/-- The involution reconstructed from the canonical split is exactly `P`. -/
+theorem ofSplit_splitOfPolarization_P (P : KPolarization (S := S) M) :
+    (ofSplit (S := S) (M := M)
+      (splitOfPolarization (M := M) P)
+      (by simpa [involutionOfSplit, plus_sub_minus_eq_P] using P.P_K_anticomm)).P
+        = P.P := by
+  simpa [ofSplit, involutionOfSplit] using plus_sub_minus_eq_P (M := M) P
+
+/-- Transport a polarization morphism into a split-presentation morphism. -/
+noncomputable def Hom.toSplitHom
     {P Q : KPolarization (S := S) M} (h : P ⟶ Q) :
-    ladderOfPolarization (M := M) P ⟶ ladderOfPolarization (M := M) Q where
+    splitOfPolarization (M := M) P ⟶ splitOfPolarization (M := M) Q where
   f := h.f
   finv := h.finv
   left_inv := h.left_inv
   right_inv := h.right_inv
-  intertwines_ann := by
+  intertwines_minus := by
     ext x
-    simp [ladderOfPolarization, ContinuousLinearMap.sub_comp, ContinuousLinearMap.comp_sub,
+    simp [splitOfPolarization, ContinuousLinearMap.sub_comp, ContinuousLinearMap.comp_sub,
       h.intertwines, ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul]
-  intertwines_cre := by
+  intertwines_plus := by
     ext x
-    simp [ladderOfPolarization, ContinuousLinearMap.add_comp, ContinuousLinearMap.comp_add,
+    simp [splitOfPolarization, ContinuousLinearMap.add_comp, ContinuousLinearMap.comp_add,
       h.intertwines, ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul]
 
 /--
-Functor from polarization choices to derived ladder-operator presentations.
-This is the canonical "derived, not primitive" bridge.
+Functor from polarization choices to derived split presentations.
+This is the canonical projector-splitting bridge.
 -/
-noncomputable def polarizationToLadder :
-    KPolarization (S := S) M ⥤ LadderPresentation (S := S) where
-  obj P := ladderOfPolarization (M := M) P
-  map h := h.toLadderHom (M := M)
+noncomputable def polarizationToSplit :
+    KPolarization (S := S) M ⥤ PolarizationSplit (S := S) where
+  obj P := splitOfPolarization (M := M) P
+  map h := h.toSplitHom (M := M)
   map_id P := by rfl
   map_comp f g := by rfl
+
+/-- Backward-compatible alias: historical name for split projector data. -/
+abbrev LadderPresentation (S : Type*)
+    [NormedAddCommGroup S] [InnerProductSpace ℝ S] [CompleteSpace S] :=
+  PolarizationSplit (S := S)
+
+/-- Backward-compatible alias: historical constructor name. -/
+noncomputable abbrev ladderOfPolarization
+    (P : KPolarization (S := S) M) : LadderPresentation (S := S) :=
+  splitOfPolarization (M := M) P
+
+/-- Backward-compatible theorem alias. -/
+lemma creation_sub_annihilation_eq_P (P : KPolarization (S := S) M) :
+    (ladderOfPolarization P).Pplus
+      - (ladderOfPolarization P).Pminus = P.P :=
+  plus_sub_minus_eq_P (M := M) P
+
+/-- Backward-compatible alias for morphism transport into split data. -/
+noncomputable abbrev Hom.toLadderHom
+    {P Q : KPolarization (S := S) M} (h : P ⟶ Q) :
+  ladderOfPolarization P ⟶ ladderOfPolarization Q :=
+  Hom.toSplitHom (M := M) h
+
+/-- Backward-compatible alias for the split functor. -/
+noncomputable abbrev polarizationToLadder :
+  KPolarization (S := S) M ⥤ LadderPresentation (S := S) :=
+  polarizationToSplit (M := M)
+
+attribute [deprecated PolarizationSplit (since := "2026-03-16")] LadderPresentation
+attribute [deprecated splitOfPolarization (since := "2026-03-16")] ladderOfPolarization
+attribute [deprecated plus_sub_minus_eq_P (since := "2026-03-16")] creation_sub_annihilation_eq_P
+attribute [deprecated Hom.toSplitHom (since := "2026-03-16")] Hom.toLadderHom
+attribute [deprecated polarizationToSplit (since := "2026-03-16")] polarizationToLadder
 
 end KPolarization
 

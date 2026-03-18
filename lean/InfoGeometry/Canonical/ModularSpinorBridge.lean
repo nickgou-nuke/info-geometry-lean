@@ -5,6 +5,7 @@ import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Quantum.Fock
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Krein.HilbertBridge
+set_option linter.unusedSectionVars false
 
 /-!
 # Modular Spinor Bridge

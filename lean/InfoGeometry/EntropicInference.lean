@@ -29,6 +29,7 @@ noncomputable def marginal_x (p : Joint X Θ) : FinProb X :=
 noncomputable def marginal_theta (p : Joint X Θ) : FinProb Θ :=
   p.map Prod.snd
 
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
 /-- Pointwise formula for the `X`-marginal as a finite fiber sum. -/
 lemma marginal_x_apply_sum (p : Joint X Θ) (x : X) :
     (marginal_x p) x = ∑ θ : Θ, p (x, θ) := by
@@ -64,6 +65,7 @@ noncomputable def cond_theta_given_x
     _ = (marginal_x p x) * ((marginal_x p x)⁻¹) := by simp [hmx]
     _ = 1 := by simpa [hne, htop] using ENNReal.mul_inv_cancel hne htop
 
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
 /-- Pointwise ratio formula for the finite conditional `p(θ | x)`. -/
 lemma cond_theta_given_x_apply
     (p : Joint X Θ) (x : X)
@@ -76,6 +78,7 @@ noncomputable def assemble (p_x : FinProb X) (p_theta_given_x : X → FinProb Θ
     Joint X Θ :=
   p_x.bind (fun x => (p_theta_given_x x).map (fun θ => (x, θ)))
 
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
 /-- Pointwise formula for an assembled joint law. -/
 lemma assemble_apply (p_x : FinProb X) (p_theta_given_x : X → FinProb Θ) (x : X) (θ : Θ) :
     assemble p_x p_theta_given_x (x, θ) = p_x x * p_theta_given_x x θ := by
@@ -93,6 +96,7 @@ lemma assemble_apply (p_x : FinProb X) (p_theta_given_x : X → FinProb Θ) (x :
     · simp [hxa]
   simp [hmap]
 
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
 /-- Marginalizing an assembled joint recovers the original marginal `p_x`. -/
 theorem marginal_x_assemble (p_x : FinProb X) (p_theta_given_x : X → FinProb Θ) :
     marginal_x (assemble p_x p_theta_given_x) = p_x := by
@@ -119,6 +123,7 @@ noncomputable def jeffrey_joint
     Joint X Θ :=
   assemble p_x (fun x => cond_theta_given_x q x (hq x))
 
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
 lemma marginal_x_jeffrey_joint
     (q : Joint X Θ) (p_x : FinProb X)
     (hq : ∀ x, x ∈ (marginal_x q).support) :
@@ -140,6 +145,7 @@ noncomputable def kl (p q : Joint X Θ) : ℝ≥0∞ :=
 noncomputable abbrev KL {X Θ : Type*} [Fintype X] [Fintype Θ] [MeasurableSpace X] [MeasurableSpace Θ]
     (p q : Joint X Θ) : ℝ≥0∞ := kl p q
 
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
 /--
 Full-support transport along a marginal identity.
 This is only a convenience lemma for the finite/full-support formulation.
@@ -152,9 +158,10 @@ lemma full_support_of_marginal_eq
   intro x
   simpa [← hmarg] using hp x
 
-/--
-Strict positivity of all joint atoms implies strict positivity of each `X`-marginal atom.
--/
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  Strict positivity of all joint atoms implies strict positivity of each `X`-marginal atom.
+  -/
 lemma marginal_x_toReal_pos_of_joint_toReal_pos
     [Nonempty Θ]
     (p : Joint X Θ)
@@ -180,9 +187,10 @@ lemma marginal_x_toReal_pos_of_joint_toReal_pos
     exact ENNReal.toReal_mono ((marginal_x p).apply_ne_top x) hterm_le
   exact lt_of_lt_of_le hterm_pos hle_real
 
-/--
-Strict positivity of all joint atoms implies full support of the `X`-marginal.
--/
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  Strict positivity of all joint atoms implies full support of the `X`-marginal.
+  -/
 lemma marginal_x_full_support_of_joint_toReal_pos
     [Nonempty Θ]
     (p : Joint X Θ)
@@ -194,12 +202,13 @@ lemma marginal_x_full_support_of_joint_toReal_pos
   have hmx_ne_zero_real : (marginal_x p x).toReal ≠ 0 := ne_of_gt hmx_pos
   have hmx_ne_zero : marginal_x p x ≠ 0 := by
     intro hzero
-    exact hmx_ne_zero_real (by simpa [hzero])
+    exact hmx_ne_zero_real (by simp [hzero])
   exact (PMF.mem_support_iff (marginal_x p) x).2 hmx_ne_zero
 
-/--
-`toReal` ratio formula for finite conditionals under strict positivity.
--/
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  `toReal` ratio formula for finite conditionals under strict positivity.
+  -/
 lemma cond_theta_given_x_toReal_ratio
     [Nonempty Θ]
     (p : Joint X Θ)
@@ -211,9 +220,10 @@ lemma cond_theta_given_x_toReal_ratio
     cond_theta_given_x_apply p x (marginal_x_full_support_of_joint_toReal_pos p hpos x) θ
   rw [hcond, ENNReal.toReal_mul, ENNReal.toReal_inv, div_eq_mul_inv]
 
-/--
-Factorization of a strictly positive joint into marginal times conditional, in `toReal` form.
--/
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  Factorization of a strictly positive joint into marginal times conditional, in `toReal` form.
+  -/
 lemma joint_toReal_factor_marginal_conditional
     [Nonempty Θ]
     (p : Joint X Θ)
@@ -229,11 +239,12 @@ lemma joint_toReal_factor_marginal_conditional
   rw [hratio]
   field_simp [hpx_ne]
 
-/--
-Pointwise logarithmic split:
-`log (p(x,θ)/q(x,θ)) = log (p(x)/q(x)) + log (p(θ|x)/q(θ|x))`,
-for strictly positive finite joints.
--/
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  Pointwise logarithmic split:
+  `log (p(x,θ)/q(x,θ)) = log (p(x)/q(x)) + log (p(θ|x)/q(θ|x))`,
+  for strictly positive finite joints.
+  -/
 lemma pointwise_log_split
     [Nonempty Θ]
     (p q : Joint X Θ)
@@ -394,10 +405,11 @@ theorem kl_chain_rule_toReal_strict
   intro x _hx
   rw [h_cond_each x]
 
-/--
-Conditionals of an assembled joint recover the input kernel.
-This is the finite `Θ | X` reconstruction lemma.
--/
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  Conditionals of an assembled joint recover the input kernel.
+  This is the finite `Θ | X` reconstruction lemma.
+  -/
 lemma cond_theta_given_x_assemble
     (p_x : FinProb X) (r : X → FinProb Θ)
     {x : X} (hx : x ∈ p_x.support) :
@@ -415,9 +427,10 @@ lemma cond_theta_given_x_assemble
     _ = (p_x x * (p_x x)⁻¹) * r x θ := by ac_rfl
     _ = r x θ := by simp [hcancel]
 
-/--
-Jeffrey update preserves the conditional family `q(θ | x)`.
--/
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  Jeffrey update preserves the conditional family `q(θ | x)`.
+  -/
 lemma cond_theta_given_x_jeffrey_joint
     (q : Joint X Θ) (p_x : FinProb X)
     (hq : ∀ x : X, x ∈ (marginal_x q).support)
@@ -482,9 +495,7 @@ theorem kl_pythagorean_jeffrey_toReal_strict
 
   have hkl_self_toReal :
       (InfoGeometry.kl_div (α := X) p_x.toMeasure p_x.toMeasure).toReal = 0 := by
-    simpa [InfoGeometry.kl_div] using
-      congrArg ENNReal.toReal
-        (InformationTheory.klDiv_self (μ := (p_x.toMeasure : MeasureTheory.Measure X)))
+      simp [InfoGeometry.kl_div]
 
   have hres :
       (kl p qStar).toReal =
@@ -501,8 +512,7 @@ theorem kl_pythagorean_jeffrey_toReal_strict
     intro x hx
     have hxpx : x ∈ p_x.support := by
       have hne : p_x x ≠ 0 := by
-        intro h0
-        exact (ne_of_gt (hpos_p_x x)) (by simpa [h0])
+        exact fun h0 => (ne_of_gt (hpos_p_x x)) (by simp [h0])
       exact (PMF.mem_support_iff p_x x).2 hne
     have hcond :
         cond_theta_given_x qStar x (hqStar_support x) =
@@ -530,8 +540,7 @@ theorem kl_pythagorean_jeffrey_toReal_strict
             (InfoGeometry.kl_div (α := Θ)
               (cond_theta_given_x p x (hp_support x)).toMeasure
               (cond_theta_given_x q x (hq x)).toMeasure).toReal) := by
-      rw [hchain1]
-      simpa [hmarg]
+      simpa [hmarg] using hchain1
     _ =
           (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal
           +
@@ -547,7 +556,7 @@ theorem kl_pythagorean_jeffrey_toReal_strict
             (marginal_x_full_support_of_joint_toReal_pos q hposq))).toReal
           +
           (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
-      simpa [qStar, hq]
+        simp [qStar]
 
 /--
 If the right argument `Q` has strictly positive atoms (in `toReal`), then
@@ -574,7 +583,7 @@ lemma kl_div_ne_top_of_right_toReal_pos
       have : 0 < (Q x).toReal := hQ x
       simp [h0] at this
     exact (Set.disjoint_left.1 hQs' hxQ) hxS
-  · simpa using
+  · exact
       (InfoGeometry.MaxEnt.IProjection.integrable_of_fintype
         (f := MeasureTheory.llr P.toMeasure Q.toMeasure) (μ := P.toMeasure))
 

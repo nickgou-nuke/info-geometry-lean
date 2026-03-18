@@ -1,6 +1,7 @@
 import InfoGeometry.ExponentialFamily.Gaussian
 import InfoGeometry.Canonical.KreinLadder
 import InfoGeometry.Canonical.QuantumInference
+set_option linter.unusedSimpArgs false
 
 namespace InfoGeometry.ExponentialFamily.GaussianLadder
 

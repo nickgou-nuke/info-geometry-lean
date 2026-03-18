@@ -9,6 +9,7 @@ import DAG.JsonInstances
 import DAG.KernelExtract
 import DAG.SCC
 import DAG.Search
+import DAG.SearchCore
 import DAG.SearchRank
 import DAG.ServerExport
 import DAG.Topo

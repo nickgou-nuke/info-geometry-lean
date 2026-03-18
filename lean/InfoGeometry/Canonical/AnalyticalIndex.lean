@@ -10,6 +10,7 @@ import Mathlib.Algebra.Module.Submodule.Map
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.TensorProduct.Map
 import Mathlib.Topology.LocallyConstant.Basic
+set_option linter.unnecessarySimpa false
 
 open scoped TensorProduct
 
@@ -615,30 +616,6 @@ theorem chiralSliceIsoAlong_of_modularCliffordTransport
     exact ⟨eMap.trans (LinearEquiv.ofEq _ _ hEq)⟩
 
 /--
-Genuine deformation-style index invariance:
-if both chiral index slices are linearly equivalent along the path, the
-analytical index is invariant.
--/
-theorem indexInvariantAlong_of_chiralSliceIso
-    [FiniteDimensional ℝ V]
-    (D Γ : ℝ → Endomorphism V)
-    (hIso : ChiralSliceIsoAlong D Γ) :
-    IndexInvariantAlong D Γ := by
-  intro s
-  rcases hIso.1 s with ⟨ePlus⟩
-  rcases hIso.2 s with ⟨eMinus⟩
-  have hPlusFinrank :
-      Module.finrank ℝ (chiralKernelSlicePlus (D s) (Γ s)) =
-        Module.finrank ℝ (chiralKernelSlicePlus (D 0) (Γ 0)) := by
-    simpa using ePlus.finrank_eq
-  have hMinusFinrank :
-      Module.finrank ℝ (chiralKernelSliceMinus (D s) (Γ s)) =
-        Module.finrank ℝ (chiralKernelSliceMinus (D 0) (Γ 0)) := by
-    simpa using eMinus.finrank_eq
-  unfold analyticalIndex
-  simp [hPlusFinrank, hMinusFinrank]
-
-/--
 Index invariance as a direct consequence of no zero-eigenvalue crossing.
 -/
 theorem indexInvariantAlong_of_noZeroEigenCrossing
@@ -646,10 +623,21 @@ theorem indexInvariantAlong_of_noZeroEigenCrossing
     (D Γ : ℝ → Endomorphism V)
     (hNoEig : ∀ s : ℝ, ChiralNoZeroEigenCrossingNear D s) :
     IndexInvariantAlong D Γ := by
-  exact indexInvariantAlong_of_chiralSliceIso
-    (D := D) (Γ := Γ)
-    (hIso := chiralSliceIsoAlong_of_noZeroEigenCrossing
-      (D := D) (Γ := Γ) hNoEig)
+  intro s
+  let hIso :=
+    chiralSliceIsoAlong_of_noZeroEigenCrossing (D := D) (Γ := Γ) hNoEig
+  rcases hIso.1 s with ⟨ePlus⟩
+  rcases hIso.2 s with ⟨eMinus⟩
+  have hPlusFinrank :
+      Module.finrank ℝ (chiralKernelSlicePlus (D s) (Γ s)) =
+        Module.finrank ℝ (chiralKernelSlicePlus (D 0) (Γ 0)) :=
+    ePlus.finrank_eq
+  have hMinusFinrank :
+      Module.finrank ℝ (chiralKernelSliceMinus (D s) (Γ s)) =
+        Module.finrank ℝ (chiralKernelSliceMinus (D 0) (Γ 0)) :=
+    eMinus.finrank_eq
+  unfold analyticalIndex
+  simp [hPlusFinrank, hMinusFinrank]
 
 /--
 Continuous-path index invariance (current finite-dimensional constructive form):
@@ -669,10 +657,21 @@ theorem indexInvariantAlong_of_conjugacy
     (eFlow : ℝ → V ≃ₗ[ℝ] V)
     (hConj : ChiralConjugacyAlong D Γ eFlow) :
     IndexInvariantAlong D Γ := by
-  exact indexInvariantAlong_of_chiralSliceIso
-    (D := D) (Γ := Γ)
-    (hIso := chiralSliceIsoAlong_of_conjugacy
-      (D := D) (Γ := Γ) (eFlow := eFlow) hConj)
+  intro s
+  let hIso :=
+    chiralSliceIsoAlong_of_conjugacy (D := D) (Γ := Γ) (eFlow := eFlow) hConj
+  rcases hIso.1 s with ⟨ePlus⟩
+  rcases hIso.2 s with ⟨eMinus⟩
+  have hPlusFinrank :
+      Module.finrank ℝ (chiralKernelSlicePlus (D s) (Γ s)) =
+        Module.finrank ℝ (chiralKernelSlicePlus (D 0) (Γ 0)) :=
+    ePlus.finrank_eq
+  have hMinusFinrank :
+      Module.finrank ℝ (chiralKernelSliceMinus (D s) (Γ s)) =
+        Module.finrank ℝ (chiralKernelSliceMinus (D 0) (Γ 0)) :=
+    eMinus.finrank_eq
+  unfold analyticalIndex
+  simp [hPlusFinrank, hMinusFinrank]
 
 /--
 Direct deformation invariance route:
@@ -688,9 +687,22 @@ theorem indexInvariantAlong_of_modularCliffordTransport
     (unit : ι)
     (hTrans : ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
     IndexInvariantAlong D Γ := by
-  exact indexInvariantAlong_of_chiralSliceIso (D := D) (Γ := Γ)
-    (chiralSliceIsoAlong_of_modularCliffordTransport
-      (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans)
+  intro s
+  let hIso :=
+    chiralSliceIsoAlong_of_modularCliffordTransport
+      (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans
+  rcases hIso.1 s with ⟨ePlus⟩
+  rcases hIso.2 s with ⟨eMinus⟩
+  have hPlusFinrank :
+      Module.finrank ℝ (chiralKernelSlicePlus (D s) (Γ s)) =
+        Module.finrank ℝ (chiralKernelSlicePlus (D 0) (Γ 0)) :=
+    ePlus.finrank_eq
+  have hMinusFinrank :
+      Module.finrank ℝ (chiralKernelSliceMinus (D s) (Γ s)) =
+        Module.finrank ℝ (chiralKernelSliceMinus (D 0) (Γ 0)) :=
+    eMinus.finrank_eq
+  unfold analyticalIndex
+  simp [hPlusFinrank, hMinusFinrank]
 
 /--
 Direct primitive-hypothesis form of modular/Clifford transport invariance:

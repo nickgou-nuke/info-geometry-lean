@@ -30,5 +30,9 @@ docs/auto/**
 docbuild/
 publication/
 
+# Generated DAG extraction payloads
+docs-map/declarations*.json
+reports/theory-dag-*/declarations.json
+
 # Accidental vendor payloads
 interspec_src/

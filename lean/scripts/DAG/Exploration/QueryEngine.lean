@@ -1,5 +1,6 @@
 import Lean
 import DAG.QueryEngine
+import scripts.DAG.Exploration.Common
 
 /-!
 # scripts.DAG.Exploration.QueryEngine
@@ -25,12 +26,18 @@ def findRecursiveTheorems (depth : Nat) : DAG.QueryM (Name × Name) := do
       return (name, n)
   | _ => where_ false; return (name, name)
 
-#eval show MetaM Unit from do
-  let env ← getEnv
+private def imports : Array Import := #[
+  { module := `DAG.QueryEngine }
+]
+
+private def runQueryEngine (env : Environment) : IO Unit := do
   let queryState : DAG.QueryState := { env := env }
 
-  Lean.logInfo "Running Deep Reasoning Query on Nat namespace (depth 10) for recursors..."
+  IO.println "Running Deep Reasoning Query on Nat namespace (depth 10) for recursors..."
   let results := (findRecursiveTheorems 10 queryState).eraseDups
-  Lean.logInfo s!"Found {results.length} recursive theorems/matches in Nat (depth 10):"
+  IO.println s!"Found {results.length} recursive theorems/matches in Nat (depth 10):"
   for (thm, rec) in results.take 10 do
-    Lean.logInfo s!"  - {thm} uses {rec}"
+    IO.println s!"  - {thm} uses {rec}"
+
+def main : IO Unit :=
+  ScriptDAGExploration.runEnvScript imports runQueryEngine

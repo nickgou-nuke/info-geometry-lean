@@ -304,9 +304,13 @@ export InfoGeometry.Canonical.RedLine (
   relativeVolumeChangeRN
   relativeModularHamiltonian
   relativeTomitaTakesakiOp
+  DiagonalPositiveTimeVector
+  PositiveTimeVector
   modularConjugationJ
   modularSignEpsilon
   modularComplexI
+  modularSignAdditiveModularFlow
+  modularAtomRepresentation
   tomitaRepresentation
 )
 

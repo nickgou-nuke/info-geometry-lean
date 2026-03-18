@@ -33,10 +33,11 @@ import InfoGeometry.Projective.PhysicalKinematics
 import InfoGeometry.Projective.Projective
 import InfoGeometry.Projective.ProjectiveMap
 import InfoGeometry.Projective.Rays
-import InfoGeometry.Projective.TwistorBridge
 
 /-!
 # InfoGeometry.Canonical.Projective
 
 Canonical projective-layer umbrella (publication surface).
+The zero-null twistor bridge is quarantined and must be imported explicitly from
+`InfoGeometry.Unstable.Quarantine` while it remains proof-vacuous.
 -/

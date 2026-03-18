@@ -11,6 +11,8 @@ Source graph: /home/goutev/LEAN4/info-geometry-lean/docs-map/graph.json
 namespace InfoGeometry.BlueprintTags
 
 -- auto-generated blueprint annotations
--- declarations are already registered in `InfoGeometry.auto_blueprints`
+-- declarations are registered in `InfoGeometry.auto_blueprints`
+-- and exposed through this dedicated LeanArchitect-facing module so the
+-- canonical publication surface does not pull the full coverage layer by default.
 
 end InfoGeometry.BlueprintTags

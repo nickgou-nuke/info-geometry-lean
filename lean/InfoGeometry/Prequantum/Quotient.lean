@@ -1,4 +1,6 @@
 import InfoGeometry.Prequantum.Connection
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSectionVars false
 
 /-!
 # InfoGeometry.Prequantum.Quotient
@@ -66,8 +68,7 @@ lemma covariantDerivative_constant_on_orbits
     ProjectivePrequantumBundle.covariantDerivative P =
       ProjectivePrequantumBundle.covariantDerivative Q := by
   rcases h with ⟨u, rfl⟩
-  symm
-  exact ProjectivePrequantumBundle.covariantDerivative_gauge_invariant u P
+  simpa using (ProjectivePrequantumBundle.covariantDerivative_smul (E := E) u P).symm
 
 /-- The gauge-invariant scalar descends to the quotient by gauge orbits. -/
 noncomputable def covariantDerivativeOnQuotient :

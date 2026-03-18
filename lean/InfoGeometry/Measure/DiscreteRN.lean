@@ -5,6 +5,7 @@ import Mathlib.MeasureTheory.Measure.Decomposition.Lebesgue
 import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
 import Mathlib.Probability.ProbabilityMassFunction.Constructions
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
+set_option linter.unnecessarySimpa false
 
 set_option autoImplicit false
 
@@ -33,6 +34,7 @@ lemma set_lintegral_singleton (ν : Measure α) (f : α → ℝ≥0∞) (x : α)
       simpa [s] using
         (MeasureTheory.lintegral_const (μ := ν.restrict s) (c := f x))
 
+omit [Countable α] in
 /--
 On a discrete space, the Radon–Nikodym derivative at a point of positive measure
 is exactly the ratio of the singleton measures.
@@ -42,17 +44,12 @@ theorem rnDeriv_eq_div_of_singleton
     [μ.HaveLebesgueDecomposition ν] (x : α)
     (h_ac : μ ≪ ν) (hνx : ν ({x} : Set α) ≠ 0) :
     μ.rnDeriv ν x = μ ({x} : Set α) / ν ({x} : Set α) := by
-  have hμeq : μ = ν.withDensity (μ.rnDeriv ν) := by
-    have h_dec := μ.haveLebesgueDecomposition_add ν
-    have h_sing : μ.singularPart ν = 0 := Measure.singularPart_eq_zero_of_ac h_ac
-    simpa [h_sing] using h_dec
   have hsingleton :
       μ ({x} : Set α) = μ.rnDeriv ν x * ν ({x} : Set α) := by
     calc
-      μ ({x} : Set α) = (ν.withDensity (μ.rnDeriv ν)) ({x} : Set α) := by
-        simpa using congrArg (fun ρ : Measure α => ρ ({x} : Set α)) hμeq
-      _ = ∫⁻ y in ({x} : Set α), μ.rnDeriv ν y ∂ν := by
-        rw [withDensity_apply _ (measurableSet_singleton x)]
+      μ ({x} : Set α) = ∫⁻ y in ({x} : Set α), μ.rnDeriv ν y ∂ν := by
+        symm
+        exact Measure.setLIntegral_rnDeriv' h_ac (measurableSet_singleton x)
       _ = μ.rnDeriv ν x * ν ({x} : Set α) := by
         exact set_lintegral_singleton ν (μ.rnDeriv ν) x
   have hνx_top : ν ({x} : Set α) ≠ ⊤ := by
@@ -62,6 +59,7 @@ theorem rnDeriv_eq_div_of_singleton
     simpa [mul_comm] using hsingleton.symm
   exact (ENNReal.eq_div_iff hνx hνx_top).2 hsingleton'
 
+omit [Countable α] in
 /--
 For probability mass functions, the abstract Radon–Nikodym derivative
 coincides with the discrete coordinate ratio almost everywhere.
@@ -98,7 +96,7 @@ theorem rnDeriv_pmf_eq_div
           (rnDeriv_eq_div_of_singleton P.toMeasure Q.toMeasure x hPQ <| by
             simpa [hQmeas] using hQx)
       exact hbad hEq
-    simp [hbad, hPx]
+    simp [hPx]
   · simp [hbad]
 
 end InfoGeometry.Measure.DiscreteRN

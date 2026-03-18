@@ -309,7 +309,7 @@ theorem not_isCARPair_base [Nontrivial E] :
     calc
       ContinuousLinearMap.id ℝ (DoubledSpace E)
           = anticommutator (E := E) (annihilationOp (E := E)) (creationOp (E := E)) := by
-              simpa using hMixedId.symm
+              rw [hMixedId.symm]
       _ = 0 := hMixedZero
   rcases exists_ne (0 : DoubledSpace E) with ⟨x, hx⟩
   have : x = (0 : DoubledSpace E) := by

@@ -1,6 +1,7 @@
 import Lean
 import Lean.Data.Json
 import DAG.Disassembler
+import scripts.DAG.Exploration.Common
 
 /-!
 # scripts.DAG.Exploration.Disassembler
@@ -11,14 +12,16 @@ Exploratory script for disassembling declarations into expression-graph JSON sum
 open Lean
 open DAG
 
--- A test to evaluate the disassembler on `Nat.add`
-#eval show Lean.MetaM Unit from do
-  let env ← Lean.getEnv
+private def imports : Array Import := #[
+  { module := `DAG.Disassembler }
+]
+
+private def runDisassembler (env : Environment) : IO Unit := do
   if let some graph := DAG.disassembleConst env ``Nat.add then
-    let msg :=
-      m!"Disassembled Nat.add into {graph.nodes.size} nodes and " ++
-        m!"{graph.edges.size} edges."
-    Lean.logInfo msg
-    -- Lean.logInfo (toJson graph).pretty -- Uncomment to see the full JSON dump
+    IO.println s!"Disassembled Nat.add into {graph.nodes.size} nodes and {graph.edges.size} edges."
+    -- IO.println (toJson graph).pretty -- Uncomment to see the full JSON dump
   else
-    Lean.logWarning "Could not find or disassemble Nat.add"
+    IO.println "Could not find or disassemble Nat.add"
+
+def main : IO Unit :=
+  ScriptDAGExploration.runEnvScript imports runDisassembler

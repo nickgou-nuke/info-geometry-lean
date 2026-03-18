@@ -83,7 +83,7 @@ theorem finiteWightmanReconstructionLayer_of_expectationSeed
   · exact omegaSeed_kms_of_jointKernel_commutator
       (F := E) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
   · simpa [omegaSeed] using
-      (expectationSeedFunctional_nonzero (F := E) Ω hΩ)
+      (omegaSeed_nonzero (F := E) Ω hΩ)
 
 end FiniteQFTLayer
 

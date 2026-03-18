@@ -221,7 +221,7 @@ theorem finiteWightmanReconstructionLayer_of_expectationSeed
   · rfl
   · exact omegaSeed_kms_of_hypotheses (F := E) (K := K) (β := β) (Ω := Ω) hStruct
   · simpa [omegaSeed] using
-      (expectationSeedFunctional_nonzero (F := E) Ω hΩ)
+      (omegaSeed_nonzero (F := E) Ω hΩ)
 
 /--
 Concrete constructor where reflection positivity is not supplied externally:

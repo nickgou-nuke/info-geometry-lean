@@ -1,5 +1,6 @@
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Jordan.Core
+set_option linter.unusedSimpArgs false
 
 /-!
 # The Super-Kähler Geometry of Information
@@ -72,17 +73,16 @@ noncomputable def symplecticFormOp : End E :=
 noncomputable def metricOp : End E :=
   jordanProduct S.epsilon S.epsilon
 
-/-- Supercharge square equals Hamiltonian identity. -/
-theorem supercharge_squared_is_hamiltonian :
-    S.epsilon.comp S.epsilon = ContinuousLinearMap.id ℝ (DoubledSpace E) :=
-  S.eps_sq
-
 /-- Commutator closes to `2 * (J ∘ ε)`. -/
 theorem symplectic_is_complex_structure :
     symplecticFormOp S = (2 : ℝ) • (S.J.comp S.epsilon) := by
   have hεJ : S.epsilon.comp S.J = -(S.J.comp S.epsilon) := by
-    have h := congrArg (fun T => -T) S.anticomm
-    simpa using h.symm
+    have hsum : S.epsilon.comp S.J + S.J.comp S.epsilon = 0 := by
+      calc
+        S.epsilon.comp S.J + S.J.comp S.epsilon
+            = S.epsilon.comp S.J + -(S.epsilon.comp S.J) := by rw [S.anticomm]
+        _ = 0 := by simp
+    exact eq_neg_of_add_eq_zero_left hsum
   unfold symplecticFormOp lieBracket
   calc
     S.J.comp S.epsilon - S.epsilon.comp S.J

@@ -1,7 +1,7 @@
 import InfoGeometry
 import InfoGeometry.Canonical.All
+import InfoGeometry.Interpretation.ThermodynamicDictionary
 import InfoGeometry.Architecture.SpinFactor
-import InfoGeometry.Architecture.OctonionicFlow
 import InfoGeometry.Convex.SpinFactorHessian
 import InfoGeometry.Quantum.ZeroPointEnergy
 

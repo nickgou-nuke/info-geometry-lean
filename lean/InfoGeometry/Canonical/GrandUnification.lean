@@ -70,17 +70,16 @@ noncomputable def DBregman (J : JordanKKTData E) (x y : E) : ℝ :=
     HasFDerivAt J.K (InnerProductSpace.toDual ℝ E (J.gradK x)) x := by
   simpa [K] using J.has_gradient x
 
-/-- The Bregman divergence is strictly positive for distinct points. -/
-theorem DBregman_pos (J : JordanKKTData E) {x y : E} (h : x ≠ y) :
-    0 < J.DBregman x y := by
-  simpa [DBregman, K] using J.dbregman_pos_of_ne x y h
-
 /-- The Bregman divergence is always non-negative. -/
 theorem DBregman_nonneg (J : JordanKKTData E) (x y : E) : 0 ≤ J.DBregman x y := by
   by_cases h : x = y
   · rw [h]
     simp
-  · exact le_of_lt (J.DBregman_pos h)
+  · have hpos : 0 < J.DBregman x y := by
+      change 0 <
+        (- Real.log (J.detJ x)) - (- Real.log (J.detJ y)) - inner ℝ (J.gradK y) (x - y)
+      exact J.dbregman_pos_of_ne x y h
+    exact le_of_lt hpos
 
 /-- The fundamental identity of Bregman geometry: distance is zero iff points are identical. -/
 @[blueprint "thm:grand-unification-bregman-identity", simp]
@@ -90,7 +89,10 @@ theorem DBregman_eq_zero_iff (J : JordanKKTData E) (x y : E) :
   · intro h
     by_contra hne
     -- If x ≠ y, then DBregman > 0, which contradicts DBregman = 0
-    have hpos := J.DBregman_pos hne
+    have hpos : 0 < J.DBregman x y := by
+      change 0 <
+        (- Real.log (J.detJ x)) - (- Real.log (J.detJ y)) - inner ℝ (J.gradK y) (x - y)
+      exact J.dbregman_pos_of_ne x y hne
     linarith [hpos, h]
   · rintro rfl
     exact J.DBregman_self x
@@ -117,7 +119,8 @@ theorem fenchel_young_equality (J : JordanKKTData E) (x : E)
     · subst hxeq
       exact le_rfl
     · have hpos : 0 < J.K x' - J.K x - inner ℝ (J.gradK x) (x' - x) := by
-        simpa [K] using J.dbregman_pos_of_ne x' x hxeq
+        have hraw := J.dbregman_pos_of_ne x' x hxeq
+        simpa [K] using hraw
       rw [inner_sub_right] at hpos
       have hlt' : inner ℝ (J.gradK x) x' - J.K x' < inner ℝ (J.gradK x) x - J.K x := by
         linarith

@@ -8,8 +8,10 @@ import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.CalabiYauBridge
 import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Canonical.UniversalVolume
-import InfoGeometry.Canonical.DeterminantCore
+import InfoGeometry.Canonical.Determinant
+import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Canonical.BekensteinBound
+import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Clifford.Hestenes
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Canonical.SpectralInference
@@ -19,9 +21,9 @@ import InfoGeometry.Volume.Pfaffian
 /-!
 # InfoGeometry.Canonical.MasterSynthesis
 
-Capstone composition module linking the canonical bridges. 
+Capstone composition module linking the canonical bridges.
 
-This module proves the "Hardened Unification": 
+This module proves the "Hardened Unification":
 1. Cramer-Rao / zero-point lower bound (`Quantum.ZeroPointEnergy`)
 2. Projector-obstruction sourced Einstein equation (`ConformalUnification`)
 3. Anomaly-as-fluid-state bridge (`NavierStokesBridge`)
@@ -33,7 +35,7 @@ This module proves the "Hardened Unification":
 9. Kitaev Tiling Identity (`KitaevChain`)
 
 The unification is established through the **Rigidity of the Volume Form**
-(the Radon-Nikodym derivative), which identifies information-theoretic 
+(the Radon-Nikodym derivative), which identifies information-theoretic
 incompressibility with physical stability.
 -/
 
@@ -56,6 +58,7 @@ open InfoGeometry.Canonical.KaehlerGeometry
 open InfoGeometry.Canonical.CalabiYauBridge
 open InfoGeometry.Canonical.UniversalVolume
 open InfoGeometry.Canonical.Determinant
+open InfoGeometry.Canonical.MongeAmpereCramerRao
 open InfoGeometry.Canonical.BekensteinBound
 open InfoGeometry.Clifford.Hestenes
 open InfoGeometry.Convex
@@ -72,6 +75,52 @@ open scoped InfoGeometry.Canonical.Determinant
 def SatisfiesExclusionConnection (Q : AlgebraEnd E) : Prop :=
   Q * Q = 0
 
+omit [FiniteDimensional ℝ E] in
+/--
+Constructive anomaly-exclusion witness from the canonical lightlike split-`Cl(1,1)` mode.
+-/
+theorem anomalyExclusion_witness :
+    ∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q := by
+  let Q : AlgebraEnd E := InfoGeometry.Krein.cl11RepLin (E := E) ((1 / 2 : ℝ), (1 / 2 : ℝ))
+  refine ⟨Q, ?_⟩
+  unfold SatisfiesExclusionConnection
+  simpa [Q, InfoGeometry.Clifford.splitQ11_apply] using
+    (InfoGeometry.Krein.cl11RepLin_sq (E := E) ((1 / 2 : ℝ), (1 / 2 : ℝ)))
+
+/--
+Anomaly-exclusion package:
+vanishing projector obstruction yields commutation closure, while exclusion is
+discharged by a constructive nilpotent witness.
+-/
+theorem anomalyExclusion_package_of_chiralAnomaly_eq_zero
+    (CI : ConformalInference E)
+    (hAnom : CI.chiralAnomalyOperator = 0) :
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      = CI.metricChiralProjector * CI.spectralChiralProjector
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q) := by
+  refine ⟨CI.projectors_commute_of_chiralAnomaly_eq_zero hAnom, ?_⟩
+  exact anomalyExclusion_witness (E := E)
+
+/--
+Kähler/log-det anomaly-exclusion package:
+if the anomaly scale is identified with the RN Kähler potential and unit
+relative volume holds, projector obstruction closes and exclusion has a
+constructive witness.
+-/
+theorem anomalyExclusion_package_of_kahlerLogDet_unitRelativeVolume
+    (CI : ConformalInference E)
+    {n : Nat}
+    (M : SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (hUnitVolume : relativeVolumeChangeRN n M = 1) :
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      = CI.metricChiralProjector * CI.spectralChiralProjector
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q) := by
+  refine ⟨
+    CI.projectors_commute_of_kahlerLogDet_unitRelativeVolume
+      (M := M) hScaleFromKahler hUnitVolume,
+    anomalyExclusion_witness (E := E)⟩
+
 /--
 Rigidity of the Information Volume Form (Incompressibility).
 The relative volume measure (Radon-Nikodym derivative) is locked to 1.
@@ -79,7 +128,7 @@ The relative volume measure (Radon-Nikodym derivative) is locked to 1.
 def IsRigidVolumeForm {n : Nat} (M : SinkhornMatrix n) : Prop :=
   relativeVolumeChangeRN n M = 1
 
-/-- 
+/--
 Helicity Invariant (h).
 The ensemble average of the helicity operator (u ∘ vorticity(u)) under probe ω.
 -/
@@ -115,16 +164,19 @@ theorem bridge_zpe_gravity
 
 theorem bridge_fluid_helicity
     (A B_mp B_dr : VelocityField E)
-    (k : ℕ)
-    (h_mp : IsMoorePenroseInverse A B_mp)
-    (h_dr : IsDrazinInverse A B_dr k) :
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω) :
     (∃ state : FluidState E, state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1) ∧
-    (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ), helicityInvariant A ω = twinWaveHelicity A Ω) :=
-  ⟨anomaly_as_fluid_state_with_density A B_mp B_dr k h_mp h_dr 1 (by norm_num),
-   by
-     refine ⟨(0 : VelocityField E →L[ℝ] ℝ), (0 : AlgebraEnd E →L[ℝ] ℝ), ?_⟩
-     unfold helicityInvariant twinWaveHelicity InfoGeometry.Canonical.twinWaveHelicity
-     simp⟩
+    (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
+      helicityInvariant A ω' = twinWaveHelicity A Ω') :=
+  by
+    let state : FluidState E :=
+      anomalyFluidStateWithDensity (E := E) A B_mp B_dr 1 (by norm_num)
+    have hState :
+        state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1 := by
+      constructor <;> rfl
+    exact ⟨⟨state, hState.1, hState.2⟩, ⟨ω, Ω, hHelicity⟩⟩
 
 /--
 Master capstone composition:
@@ -153,14 +205,16 @@ theorem bits_to_gravity_to_fluid_capstone
     (Λ κ : ℝ)
     (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
     (A B_mp B_dr : VelocityField E)
-    (k : ℕ)
-    (h_mp : IsMoorePenroseInverse A B_mp)
-    (h_dr : IsDrazinInverse A B_dr k)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
     (IST : InfoSpectralTriple F)
     (hBal : LichnerowiczBalancedCl11 (A := E) IST)
     (n : Nat)
-    (Tflow : SinkhornTrajectory n) :
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ) :
     -- 1. ZPE is positive (Cramer-Rao topological obstruction)
     0 < S.variance_limit
     -- 2. Gravity is generated by the Anomaly-sourced Einstein equation
@@ -186,12 +240,14 @@ theorem bits_to_gravity_to_fluid_capstone
     -- 11. Hestenes GA Weyl Scaling: exp(θ I) generates the volume scale.
       ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
     -- 12. Kitaev Tiling Identity: Total volume is the product of microscopic Pfaffians.
-      ∧ (∀ chain : List KitaevCell, ∃ Vol : ℝ, Vol = (chain.map (fun c => c.pfaffian)).prod) := by
+      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
   let hZPE := bridge_zpe_gravity S hRankPos CI c R Kgeo x Λ κ hEin
-  let hFH := bridge_fluid_helicity A B_mp B_dr k h_mp h_dr
-  refine ⟨hZPE.1, hZPE.2, hFH.1, Mod.connesRovelliThermalTimeIdentity, 
+  let hFH := bridge_fluid_helicity A B_mp B_dr ω Ω hHelicity
+  refine ⟨hZPE.1, hZPE.2, hFH.1, Mod.connesRovelliThermalTimeIdentity,
           cl11_bottDirac_sq_eq_zero_of_lichnerowiczBalanced (A := E) IST hBal,
-          hFH.2, ?_, logAbsVolume_add, topologicalBekensteinBound_of_sinkhornTrajectory (n := n) Tflow, ?_, 
+      hFH.2, ?_, capstone_logAbsVolume_add_from_zeta,
+      topologicalBekensteinBound_of_sinkhornTrajectory (n := n) Tflow, ?_,
           expPseudoscalar_is_scaling, kitaev_tiling_identity⟩
   · -- Concrete lightlike split-`Cl(1,1)` witness; CAR nilpotency is already established upstream.
     let Q : AlgebraEnd E := InfoGeometry.Krein.cl11RepLin (E := E) ((1 / 2 : ℝ), (1 / 2 : ℝ))
@@ -199,9 +255,117 @@ theorem bits_to_gravity_to_fluid_capstone
     unfold SatisfiesExclusionConnection
     simpa [Q, InfoGeometry.Clifford.splitQ11_apply] using
       (InfoGeometry.Krein.cl11RepLin_sq (E := E) ((1 / 2 : ℝ), (1 / 2 : ℝ)))
-  · -- Max Caliber witness: accumulated Bayesian action is always non-negative (divergence sum).
-    let γ : ℕ → E := fun _ => x
-    exact ⟨Kgeo.H, γ, 1, Kgeo.H.bayesianAction_nonneg γ 1⟩
+  · -- Max Caliber witness from caller-supplied trajectory and horizon.
+    exact ⟨Kgeo.H, γ, N, InfoGeometry.Canonical.SpectralInference.bayesianAction_nonneg Kgeo.H γ N⟩
+
+/--
+Capstone-facing squeezing bound:
+if the capstone supplies the Bekenstein barrier clause and `|t|` is budgeted by
+that barrier at step `k`, then logarithmic squeezing shear is bounded by
+`4 * trajectoryRNBarrier`.
+-/
+theorem squeezingLogShear_bound_of_capstone_bekenstein_clause
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (hBekenstein : ∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+    (k : Nat)
+    (t : ℝ)
+    (hTime : |t| ≤ trajectoryRNBarrier n Tflow k) :
+    |squeezingLogShear t| ≤ 4 * trajectoryRNBarrier n Tflow k := by
+  exact abs_squeezingLogShear_le_of_topologicalBekensteinBound
+    (n := n) (T := Tflow) hBekenstein k t hTime
+
+/--
+Tuple-extraction corollary:
+from the capstone conjunction itself, extract the Bekenstein clause and derive
+the squeezing-log-shear bound under a matching RN time budget.
+-/
+theorem squeezingLogShear_bound_of_capstone_conjunction
+    (S : SpinFactorState E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (A B_mp B_dr : VelocityField E)
+    (Mod : ModularRadonNikodymData E)
+    (IST : InfoSpectralTriple F)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (hCapstone :
+      0 < S.variance_limit
+        ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+            (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+        ∧ (∃ state : FluidState E, state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1)
+        ∧ Mod.ConnesRovelliThermalTimeIdentity
+        ∧ (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) (spectralDiracLinear IST)).comp
+            (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) (spectralDiracLinear IST)) = 0
+        ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+            helicityInvariant A ω = twinWaveHelicity A Ω)
+        ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+        ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+            LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+        ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+        ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+        ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod))
+    (k : Nat)
+    (t : ℝ)
+    (hTime : |t| ≤ trajectoryRNBarrier n Tflow k) :
+    |squeezingLogShear t| ≤ 4 * trajectoryRNBarrier n Tflow k := by
+  rcases hCapstone with ⟨_, _, _, _, _, _, _, _, hBekenstein, _, _, _⟩
+  exact squeezingLogShear_bound_of_capstone_bekenstein_clause
+    n Tflow hBekenstein k t hTime
+
+/--
+Convenience corollary:
+invoke `bits_to_gravity_to_fluid_capstone` internally and immediately extract
+the Bekenstein clause to bound logarithmic squeezing shear.
+-/
+theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (IST : InfoSpectralTriple F)
+    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
+    (j : Nat)
+    (t : ℝ)
+    (hTime : |t| ≤ trajectoryRNBarrier n Tflow j) :
+    |squeezingLogShear t| ≤ 4 * trajectoryRNBarrier n Tflow j := by
+  have hCapstone :=
+    bits_to_gravity_to_fluid_capstone
+      (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
+      (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
+      (hEin := hEin)
+      (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+      (hHelicity := hHelicity)
+      (Mod := Mod) (IST := IST) (hBal := hBal)
+      (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+  exact squeezingLogShear_bound_of_capstone_conjunction
+    (S := S) (CI := CI) (c := c)
+    (R := R) (Kgeo := Kgeo) (x := x)
+    (Λ := Λ) (κ := κ)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr)
+    (Mod := Mod) (IST := IST)
+    (n := n) (Tflow := Tflow)
+    hCapstone j t hTime
 
 /--
 Cocycle-sourced capstone variant:
@@ -219,18 +383,19 @@ theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
     (Λ κ : ℝ)
     (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
     (A B_mp B_dr : VelocityField E)
-    (k : ℕ)
-    (h_mp : IsMoorePenroseInverse A B_mp)
-    (h_dr : IsDrazinInverse A B_dr k)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
     (IST : InfoSpectralTriple F)
     (hBal : LichnerowiczBalancedCl11 (A := E) IST)
     (n : Nat)
     (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
     {G : Type}
     [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [FiniteDimensional ℝ G]
-    (σ : ℝ →* (InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G ≃ₐ[ℝ]
-      InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G))
+    (σ : InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow (H := G))
     (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G)
     (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle σ u)
     (hBridge : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := G) σ)
@@ -251,16 +416,85 @@ theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
           LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
       ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
       ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
-      ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-      ∧ (∀ chain : List KitaevCell, ∃ Vol : ℝ, Vol = (chain.map (fun c => c.pfaffian)).prod) := by
+        ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
   rcases bits_to_gravity_to_fluid_capstone
       (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
       (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
-      (A := A) (B_mp := B_mp) (B_dr := B_dr) (k := k) (h_mp := h_mp) (h_dr := h_dr)
-      (Mod := Mod) (IST := IST) (hBal := hBal) (n := n) (Tflow := Tflow) with
+      (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+      (hHelicity := hHelicity)
+      (Mod := Mod) (IST := IST) (hBal := hBal) (n := n) (Tflow := Tflow)
+      (γ := γ) (N := N) with
     ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12⟩
   refine ⟨h1, h2, h3, h4, h5, h6, h7, h8, ?_, h10, h11, h12⟩
   exact topologicalBekensteinBound_of_connesCocycle_generatorLift
     (n := n) (H := G) (σ := σ) (u := u) (T := Tflow) hCocycle hBridge hGeneratorLift
+
+/--
+Tomita-specialized cocycle-sourced capstone variant using the canonical
+modular-sign additive flow.
+-/
+theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (IST : InfoSpectralTriple F)
+    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
+    {G : Type}
+    [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [FiniteDimensional ℝ G]
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G)
+    (hCocycle :
+      InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := G))
+        u)
+    (hBridge :
+      InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := G)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := G)))
+    (hGeneratorLift :
+      CocycleGeneratorLift n Tflow
+        (TomitaCocycleEntropyPotential (H := G) u hBridge)) :
+    0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E, state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1)
+      ∧ Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) (spectralDiracLinear IST)).comp
+          (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) (spectralDiracLinear IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+        ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+  exact bits_to_gravity_to_fluid_capstone_cocycle_sourced
+    (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+    (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+    (hHelicity := hHelicity)
+    (Mod := Mod) (IST := IST) (hBal := hBal) (n := n) (Tflow := Tflow)
+    (γ := γ) (N := N)
+    (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := G))
+    (u := u) (hCocycle := hCocycle) (hBridge := hBridge)
+    (hGeneratorLift := by simpa [TomitaCocycleEntropyPotential] using hGeneratorLift)
 
 end InfoGeometry.Canonical.MasterSynthesis

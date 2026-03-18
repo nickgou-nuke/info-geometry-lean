@@ -90,3 +90,7 @@ def emit_blueprint_main (args : List String) : IO UInt32 := do
 
   Docs.emitBlueprint env ns outPath
   return 0
+
+/-- `lake env lean --run` entrypoint. -/
+def main (args : List String) : IO UInt32 :=
+  emit_blueprint_main args

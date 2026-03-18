@@ -1,4 +1,6 @@
 import InfoGeometry.Canonical.TomitaTakesaki
+set_option linter.unusedSimpArgs false
+set_option linter.unusedSectionVars false
 
 /-!
 # InfoGeometry.Canonical.RealBdG

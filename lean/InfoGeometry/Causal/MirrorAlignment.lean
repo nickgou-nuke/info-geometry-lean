@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Clifford.SplitQ11
 import InfoGeometry.Krein.Grading
+set_option linter.unusedVariables false
 
 namespace InfoGeometry.Causal
 

@@ -2,6 +2,8 @@ import InfoGeometry.MeasureProjective
 import InfoGeometry.Measure.DiscreteRN
 import InfoGeometry.Measure.Normalized
 import Mathlib.MeasureTheory.Measure.LogLikelihoodRatio
+set_option linter.unusedSimpArgs false
+set_option linter.unusedSectionVars false
 
 set_option autoImplicit false
 

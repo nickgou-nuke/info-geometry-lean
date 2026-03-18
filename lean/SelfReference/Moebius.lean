@@ -1,5 +1,6 @@
 import SelfReference.Core
 import InfoGeometry.Krein.DoubledSpace
+set_option linter.unusedSectionVars false
 
 namespace SelfReference
 

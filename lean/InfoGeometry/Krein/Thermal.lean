@@ -25,6 +25,43 @@ noncomputable def modular_shift
     (K : EndH) (β : ℝ) (B : EndH) : EndH :=
   (NormedSpace.exp (β • K)) * B * (NormedSpace.exp ((-β) • K))
 
+omit [CompleteSpace E] in
+@[simp] lemma modular_shift_zero
+    (K : EndH) (B : EndH) :
+    modular_shift K 0 B = B := by
+  simp [modular_shift]
+
+/--
+Additive-time law for exponential modular conjugation:
+`σ_{s+t} = σ_s ∘ σ_t`.
+-/
+lemma modular_shift_add
+    (K : EndH) (s t : ℝ) (B : EndH) :
+    modular_shift K (s + t) B =
+      modular_shift K s (modular_shift K t B) := by
+  have h_comm : Commute (s • K) (t • K) :=
+    ((Commute.refl K).smul_left s).smul_right t
+  have h_comm_neg : Commute ((-t) • K) ((-s) • K) :=
+    ((Commute.refl K).smul_left (-t)).smul_right (-s)
+  unfold modular_shift
+  change
+    NormedSpace.exp ((s + t) • K) * B * NormedSpace.exp ((-(s + t)) • K) =
+      NormedSpace.exp (s • K) *
+          (NormedSpace.exp (t • K) * B * NormedSpace.exp ((-t) • K)) *
+        NormedSpace.exp ((-s) • K)
+  calc
+    NormedSpace.exp ((s + t) • K) * B * NormedSpace.exp ((-(s + t)) • K)
+        = (NormedSpace.exp (s • K) * NormedSpace.exp (t • K)) * B *
+            (NormedSpace.exp ((-t) • K) * NormedSpace.exp ((-s) • K)) := by
+          rw [← NormedSpace.exp_add_of_commute h_comm]
+          rw [← NormedSpace.exp_add_of_commute h_comm_neg]
+          simp [add_smul, mul_assoc, add_comm]
+    _ = NormedSpace.exp (s • K) *
+          (NormedSpace.exp (t • K) * B * NormedSpace.exp ((-t) • K)) *
+        NormedSpace.exp ((-s) • K) := by
+          ring_nf
+          simp [mul_assoc]
+
 /-- Simplified KMS-like algebraic identity at inverse temperature `β`. -/
 noncomputable def satisfies_kms_like
     (K : EndH)

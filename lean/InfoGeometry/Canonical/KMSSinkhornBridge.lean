@@ -2,6 +2,7 @@ import InfoGeometry.Krein.Thermal
 import InfoGeometry.Canonical.ChiralAnomaly
 import InfoGeometry.Canonical.IBCore
 import Mathlib.Analysis.InnerProductSpace.LinearMap
+set_option linter.unnecessarySeqFocus false
 
 open scoped BigOperators
 
@@ -76,33 +77,6 @@ def SatisfiesApproxKMSLike
     (K : AlgebraEnd F) (ω : AlgebraEnd F →L[ℝ] ℝ) (β ε : ℝ) : Prop :=
   ∀ A B : AlgebraEnd F, kmsResidual K ω β A B ≤ ε
 
-/-- Lemma `satisfiesApproxKMSLike_of_satisfiesKMSLike`. -/
-lemma satisfiesApproxKMSLike_of_satisfiesKMSLike
-    (K : AlgebraEnd F) (ω : AlgebraEnd F →L[ℝ] ℝ) (β : ℝ)
-    (hKMS : SatisfiesKMSLike (E := F) K ω β) :
-    SatisfiesApproxKMSLike K ω β 0 := by
-  intro A B
-  unfold kmsResidual
-  have hEq : ω (A * modularShift (E := F) K β B) - ω (B * A) = 0 := by
-    exact sub_eq_zero.mpr (hKMS A B)
-  simp [hEq]
-
-/-- Lemma `satisfiesKMSLike_of_approx_zero`. -/
-lemma satisfiesKMSLike_of_approx_zero
-    (K : AlgebraEnd F) (ω : AlgebraEnd F →L[ℝ] ℝ) (β : ℝ)
-    (hApprox : SatisfiesApproxKMSLike K ω β 0) :
-    SatisfiesKMSLike (E := F) K ω β := by
-  intro A B
-  have hle : kmsResidual K ω β A B ≤ 0 := hApprox A B
-  have hEqAbs : kmsResidual K ω β A B = 0 :=
-    le_antisymm hle (by
-      unfold kmsResidual
-      exact abs_nonneg _)
-  have hEqSub :
-      ω (A * modularShift (E := F) K β B) - ω (B * A) = 0 := by
-    exact abs_eq_zero.mp (by simpa [kmsResidual] using hEqAbs)
-  exact sub_eq_zero.mp hEqSub
-
 end KMSResidual
 
 section SinkhornBridge
@@ -133,6 +107,71 @@ def SinkhornKMSClosure
   ∀ k : Nat, SatisfiesKMSLike (E := F) K (ω (k + 1)) β
 
 /--
+Approximate stepwise KMS closure tracked by the RN barrier budget.
+-/
+def SinkhornApproxKMSClosure
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ) : Prop :=
+  ∀ k : Nat,
+    SatisfiesApproxKMSLike K (ω (k + 1)) β (trajectoryRNBarrierNext n T k)
+
+/--
+Control implies approximate stepwise KMS closure, with no zero-barrier collapse.
+-/
+theorem sinkhorn_step_approxKMSClosure_of_control
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hControl : SinkhornKMSControl n T K ω β) :
+    SinkhornApproxKMSClosure n T K ω β := by
+  intro k A B
+  exact hControl k A B
+
+/--
+Approximate stepwise closure upgrades to exact KMS closure when the RN barrier
+vanishes identically.
+-/
+theorem sinkhorn_step_kmsClosure_of_approxClosure_of_barrierZero
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hApproxClosure : SinkhornApproxKMSClosure n T K ω β)
+    (hBarrierZero : ∀ k : Nat, trajectoryRNBarrierNext n T k = 0) :
+    SinkhornKMSClosure n T K ω β := by
+  intro k A B
+  have hle : kmsResidual K (ω (k + 1)) β A B ≤ 0 := by
+    have hAB :
+        kmsResidual K (ω (k + 1)) β A B
+          ≤ trajectoryRNBarrierNext n T k :=
+      hApproxClosure k A B
+    simpa [hBarrierZero k] using hAB
+  have hEqAbs : kmsResidual K (ω (k + 1)) β A B = 0 :=
+    le_antisymm hle (by
+      unfold kmsResidual
+      exact abs_nonneg _)
+  have hEqSub :
+      ω (k + 1) (A * modularShift (E := F) K β B) - ω (k + 1) (B * A) = 0 := by
+    exact abs_eq_zero.mp (by simpa [kmsResidual] using hEqAbs)
+  exact sub_eq_zero.mp hEqSub
+
+/--
+Approximate stepwise closure directly yields Sinkhorn control.
+-/
+theorem sinkhorn_control_of_step_approxKMSClosure
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hApproxClosure : SinkhornApproxKMSClosure n T K ω β) :
+    SinkhornKMSControl n T K ω β := by
+  intro k A B
+  exact hApproxClosure k A B
+
+/--
 Canonical theorem name: Sinkhorn control closes to exact KMS at each next step.
 -/
 theorem sinkhorn_step_kmsClosure_of_control
@@ -142,14 +181,12 @@ theorem sinkhorn_step_kmsClosure_of_control
     (β : ℝ)
     (hControl : SinkhornKMSControl n T K ω β) :
     SinkhornKMSClosure n T K ω β := by
-  intro k
-  apply satisfiesKMSLike_of_approx_zero (K := K) (ω := ω (k + 1)) (β := β)
-  intro A B
-  have hAB : kmsResidual K (ω (k + 1)) β A B ≤ trajectoryRNBarrierNext n T k :=
-    hControl k A B
-  have hzero : trajectoryRNBarrierNext n T k = 0 :=
-    trajectoryRNBarrierNext_eq_zero (n := n) T k
-  simpa [hzero] using hAB
+  exact sinkhorn_step_kmsClosure_of_approxClosure_of_barrierZero
+    (n := n) (T := T) (K := K) (ω := ω) (β := β)
+    (hApproxClosure :=
+      sinkhorn_step_approxKMSClosure_of_control
+        (n := n) (T := T) (K := K) (ω := ω) (β := β) hControl)
+    (hBarrierZero := fun k => trajectoryRNBarrierNext_eq_zero (n := n) T k)
 
 /-- Canonical theorem name: exact KMS closure implies Sinkhorn control. -/
 theorem sinkhorn_control_of_step_kmsClosure
@@ -159,14 +196,20 @@ theorem sinkhorn_control_of_step_kmsClosure
     (β : ℝ)
     (hClosure : SinkhornKMSClosure n T K ω β) :
     SinkhornKMSControl n T K ω β := by
-  intro k A B
-  have hApprox :
-      SatisfiesApproxKMSLike K (ω (k + 1)) β 0 :=
-    satisfiesApproxKMSLike_of_satisfiesKMSLike (K := K) (ω := ω (k + 1)) (β := β) (hClosure k)
-  have hAB : kmsResidual K (ω (k + 1)) β A B ≤ 0 := hApprox A B
-  have hzero : trajectoryRNBarrierNext n T k = 0 :=
-    trajectoryRNBarrierNext_eq_zero (n := n) T k
-  simpa [hzero] using hAB
+  have hApproxClosure : SinkhornApproxKMSClosure n T K ω β := by
+    intro k A B
+    have hEq :
+        ω (k + 1) (A * modularShift (E := F) K β B) - ω (k + 1) (B * A) = 0 := by
+      rw [sub_eq_zero]
+      exact hClosure k A B
+    have hAB : kmsResidual K (ω (k + 1)) β A B ≤ 0 := by
+      unfold kmsResidual
+      simp [hEq]
+    have hzero : trajectoryRNBarrierNext n T k = 0 :=
+      trajectoryRNBarrierNext_eq_zero (n := n) T k
+    simpa [hzero] using hAB
+  exact sinkhorn_control_of_step_approxKMSClosure
+    (n := n) (T := T) (K := K) (ω := ω) (β := β) hApproxClosure
 
 /--
 Closure equivalence: in this finite Sinkhorn scaffold, the control inequality and
@@ -285,7 +328,7 @@ noncomputable abbrev omegaSeed (Ω : DoubledSpace F) :
   simp
 
 /-- Nontriviality of the expectation seed from a nonzero doubled state. -/
-lemma expectationSeedFunctional_nonzero
+private lemma expectationSeedFunctional_nonzero
     (Ω : DoubledSpace F)
     (hΩ : Ω ≠ 0) :
     expectationSeedFunctional (F := F) Ω ≠ 0 := by
@@ -297,15 +340,24 @@ lemma expectationSeedFunctional_nonzero
   have hnormsq : ‖Ω‖ ^ (2 : Nat) = 0 := by
     simpa [expectationSeedFunctional_id (F := F) Ω] using hid
   have hnorm : ‖Ω‖ = 0 := by
-    exact sq_eq_zero_iff.mp (by simpa [pow_two] using hnormsq)
+    have hsq : ‖Ω‖ * ‖Ω‖ = 0 := by
+      simpa [pow_two] using hnormsq
+    nlinarith [sq_nonneg ‖Ω‖]
   exact hΩ (norm_eq_zero.mp hnorm)
+
+/-- Nontriviality of `ωSeed` from a nonzero doubled state. -/
+lemma omegaSeed_nonzero
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0) :
+    omegaSeed (F := F) Ω ≠ 0 := by
+  simpa [omegaSeed] using expectationSeedFunctional_nonzero (F := F) Ω hΩ
 
 /-- Nontriviality of `ωSeed` from a nonzero thermal vacuum vector. -/
 lemma omegaSeed_nonzero_of_thermalVacuum
     (K : AlgebraEnd F)
     (vac : ThermalVacuum (E := F) K) :
     omegaSeed (F := F) vac.Omega ≠ 0 :=
-  expectationSeedFunctional_nonzero (F := F) vac.Omega vac.vacuum_nonzero
+  omegaSeed_nonzero (F := F) vac.Omega vac.vacuum_nonzero
 
 /--
 Joint-kernel hypothesis on `Ω`: the modular defect `(σ_β(B) - B)` annihilates
@@ -380,14 +432,12 @@ theorem expectationSeedFunctional_kms_of_structural
     expectationSeedFunctional (F := F) Ω
       (A * modularShift (E := F) K β B)
         = inner ℝ ((A * modularShift (E := F) K β B) Ω) Ω := by
-            simpa using
-              (expectationSeedFunctional_apply
-                (F := F) Ω (A * modularShift (E := F) K β B))
+            exact expectationSeedFunctional_apply
+              (F := F) Ω (A * modularShift (E := F) K β B)
     _ = inner ℝ ((A * B) Ω) Ω := hAB
     _ = inner ℝ ((B * A) Ω) Ω := hCyclicOnOmega A B
     _ = expectationSeedFunctional (F := F) Ω (B * A) := by
-            simpa using
-              (expectationSeedFunctional_apply (F := F) Ω (B * A)).symm
+            exact (expectationSeedFunctional_apply (F := F) Ω (B * A)).symm
 
 /--
 KMS law for `ωSeed` from explicit joint-kernel and commutator-orthogonality
@@ -459,6 +509,18 @@ noncomputable def ibObservableWeight
     (pTrajectory : Nat → Xib → FinProb Tib)
     (x0 : Xib) (t0 : Tib) (k : Nat) : ℝ :=
   Real.exp (-(ibRNPotential (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 k))
+
+lemma ibObservableWeight_pos
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (x0 : Xib) (t0 : Tib) (k : Nat) :
+    0 < ibObservableWeight (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 k := by
+  unfold ibObservableWeight
+  exact Real.exp_pos _
 
 /-- Relative volume change induced by the RN generating potential. -/
 noncomputable abbrev ibRelativeVolumeChange
@@ -580,6 +642,104 @@ lemma ibObservableWeight_ne_zero
   Real.exp_ne_zero _
 
 /--
+Explicit IB-side RN-potential barrier budget:
+frozen BA-gap plus a strictly positive RN-potential weight term.
+-/
+noncomputable def ibRNPotentialBarrierBudget
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (x0 : Xib) (t0 : Tib) (k : Nat) : ℝ :=
+  baFrozenTargetGap prob (pTrajectory k) (pTrajectory (k + 1))
+    + ibObservableWeight (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 (k + 1)
+
+lemma ibRNPotentialBarrierBudget_pos
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (x0 : Xib) (t0 : Tib) (k : Nat) :
+    0 < ibRNPotentialBarrierBudget
+      (Xib := Xib) (Yib := Yib) (Tib := Tib) prob pTrajectory x0 t0 k := by
+  unfold ibRNPotentialBarrierBudget
+  exact add_pos_of_nonneg_of_pos
+    (baFrozenTargetGap_nonneg (prob := prob) (pAnchor := pTrajectory k) (p := pTrajectory (k + 1)))
+    (ibObservableWeight_pos
+      (Xib := Xib) (Yib := Yib) (Tib := Tib)
+      (pTrajectory := pTrajectory) (x0 := x0) (t0 := t0) (k := k + 1))
+
+/--
+IB-driven KMS control with explicit RN-potential barrier budget.
+-/
+def IBRNPotentialKMSControl
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (x0 : Xib) (t0 : Tib) : Prop :=
+  ∀ k : Nat, ∀ A B : AlgebraEnd F,
+    kmsResidual K (ω (k + 1)) β A B
+      ≤ ibRNPotentialBarrierBudget
+          (Xib := Xib) (Yib := Yib) (Tib := Tib) prob pTrajectory x0 t0 k
+
+/--
+IB-driven approximate KMS closure tracked by the explicit RN-potential budget.
+-/
+def IBRNPotentialApproxKMSClosure
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (x0 : Xib) (t0 : Tib) : Prop :=
+  ∀ k : Nat,
+    SatisfiesApproxKMSLike K (ω (k + 1)) β
+      (ibRNPotentialBarrierBudget
+        (Xib := Xib) (Yib := Yib) (Tib := Tib) prob pTrajectory x0 t0 k)
+
+/-- Budgeted control immediately yields budgeted approximate KMS closure. -/
+theorem ibRNPotentialApproxKMSClosure_of_control
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (x0 : Xib) (t0 : Tib)
+    (hControl : IBRNPotentialKMSControl
+      (F := F) (K := K) (ω := ω) (β := β)
+      (Xib := Xib) (Yib := Yib) (Tib := Tib)
+      prob pTrajectory x0 t0) :
+    IBRNPotentialApproxKMSClosure
+      (F := F) (K := K) (ω := ω) (β := β)
+      (Xib := Xib) (Yib := Yib) (Tib := Tib)
+      prob pTrajectory x0 t0 := by
+  intro k A B
+  exact hControl k A B
+
+/--
 Nonzero IB-induced observable family:
 scale a seed observable state by an RN-potential-induced positive weight.
 -/
@@ -681,6 +841,128 @@ theorem hResidualLeGap_of_ibInducedObservableWeighted
   exact baFrozenTargetGap_nonneg (prob := prob) (pAnchor := pTrajectory k) (p := pTrajectory (k + 1))
 
 /--
+Constructive residual domination by the explicit positive RN-potential budget.
+
+This avoids the degenerate zero-barrier closure by keeping a strictly positive
+stepwise budget term derived from RN potential data.
+-/
+theorem hResidualLeRNPotentialBudget_of_ibInducedObservableWeighted
+    (K : AlgebraEnd F) (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (x0 : Xib) (t0 : Tib)
+    (ωSeed : AlgebraEnd F →L[ℝ] ℝ)
+    (hSeedKMS : SatisfiesKMSLike (E := F) K ωSeed β) :
+    ∀ k : Nat, ∀ A B : AlgebraEnd F,
+      kmsResidual K ((ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 ωSeed) (k + 1)) β A B
+        ≤ ibRNPotentialBarrierBudget
+            (Xib := Xib) (Yib := Yib) (Tib := Tib) prob pTrajectory x0 t0 k := by
+  intro k A B
+  have hGap :
+      kmsResidual K ((ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 ωSeed) (k + 1)) β A B
+        ≤ baFrozenTargetGap prob (pTrajectory k) (pTrajectory (k + 1)) :=
+    hResidualLeGap_of_ibInducedObservableWeighted
+      (K := K) (β := β) (prob := prob) (pTrajectory := pTrajectory)
+      (x0 := x0) (t0 := t0) (ωSeed := ωSeed) hSeedKMS k A B
+  have hGapLeBudget :
+      baFrozenTargetGap prob (pTrajectory k) (pTrajectory (k + 1))
+        ≤ ibRNPotentialBarrierBudget
+            (Xib := Xib) (Yib := Yib) (Tib := Tib) prob pTrajectory x0 t0 k := by
+    unfold ibRNPotentialBarrierBudget
+    exact le_add_of_nonneg_right
+      (ibObservableWeight_pos
+        (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        (pTrajectory := pTrajectory) (x0 := x0) (t0 := t0) (k := k + 1)).le
+  exact le_trans hGap hGapLeBudget
+
+/--
+IB-driven control with explicit positive RN-potential barrier budgets.
+-/
+theorem ibRNPotential_kmsControl_of_ibDynamics_weighted
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (_hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (ωSeed : AlgebraEnd F →L[ℝ] ℝ)
+    (hSeedKMS : SatisfiesKMSLike (E := F) K ωSeed β) :
+    IBRNPotentialKMSControl
+      (F := F)
+      (K := K)
+      (ω := ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 ωSeed)
+      (β := β)
+      (Xib := Xib) (Yib := Yib) (Tib := Tib)
+      prob pTrajectory x0 t0 := by
+  intro k A B
+  exact hResidualLeRNPotentialBudget_of_ibInducedObservableWeighted
+    (K := K) (β := β) (prob := prob) (pTrajectory := pTrajectory)
+    (x0 := x0) (t0 := t0) (ωSeed := ωSeed) hSeedKMS k A B
+
+/--
+IB-driven approximate KMS closure with explicit RN-potential budget.
+-/
+theorem ibRNPotential_approxKMSClosure_of_ibDynamics_weighted
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (ωSeed : AlgebraEnd F →L[ℝ] ℝ)
+    (hSeedKMS : SatisfiesKMSLike (E := F) K ωSeed β) :
+    IBRNPotentialApproxKMSClosure
+      (F := F)
+      (K := K)
+      (ω := ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 ωSeed)
+      (β := β)
+      (Xib := Xib) (Yib := Yib) (Tib := Tib)
+      prob pTrajectory x0 t0 := by
+  exact ibRNPotentialApproxKMSClosure_of_control
+    (F := F)
+    (K := K)
+    (ω := ibInducedObservableWeighted
+      (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 ωSeed)
+    (β := β)
+    (Xib := Xib) (Yib := Yib) (Tib := Tib)
+    (prob := prob)
+    (pTrajectory := pTrajectory)
+    (x0 := x0)
+    (t0 := t0)
+    (hControl :=
+      ibRNPotential_kmsControl_of_ibDynamics_weighted
+        (F := F)
+        (K := K)
+        (β := β)
+        (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        (prob := prob)
+        (pTrajectory := pTrajectory)
+        (_hStep := hStep)
+        (x0 := x0)
+        (t0 := t0)
+        (ωSeed := ωSeed)
+        hSeedKMS)
+
+/--
 IB-to-Sinkhorn control for the nonzero weighted observable family.
 -/
 theorem sinkhorn_kmsControl_of_ibDynamics_weighted
@@ -737,7 +1019,7 @@ theorem sinkhorn_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator
         (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
         pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
   have hSeedNonzero : omegaSeed (F := F) Ω ≠ 0 :=
-    expectationSeedFunctional_nonzero (F := F) Ω hΩ
+    omegaSeed_nonzero (F := F) Ω hΩ
   have hSeedKMS :
       SatisfiesKMSLike (E := F) K (omegaSeed (F := F) Ω) β :=
     omegaSeed_kms_of_jointKernel_commutator
@@ -756,6 +1038,110 @@ theorem sinkhorn_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator
     (prob := prob) (pTrajectory := pTrajectory)
     hStep (x0 := x0) (t0 := t0)
     (ωSeed := omegaSeed (F := F) Ω) hSeedKMS
+
+/--
+Fully explicit weighted IB-driven control with an RN-potential budget,
+derived from joint-kernel and commutator-orthogonality hypotheses.
+-/
+theorem ibRNPotential_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (_hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω) :
+    IBRNPotentialKMSControl
+      (F := F)
+      (K := K)
+      (ω := ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω))
+      (β := β)
+      (Xib := Xib) (Yib := Yib) (Tib := Tib)
+      prob pTrajectory x0 t0 := by
+  have _hSeedNonzero : omegaSeed (F := F) Ω ≠ 0 :=
+    omegaSeed_nonzero (F := F) Ω hΩ
+  have hSeedKMS :
+      SatisfiesKMSLike (E := F) K (omegaSeed (F := F) Ω) β :=
+    omegaSeed_kms_of_jointKernel_commutator
+      (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
+  exact ibRNPotential_kmsControl_of_ibDynamics_weighted
+    (F := F)
+    (K := K)
+    (β := β)
+    (Xib := Xib) (Yib := Yib) (Tib := Tib)
+    (prob := prob)
+    (pTrajectory := pTrajectory)
+    (_hStep := _hStep)
+    (x0 := x0)
+    (t0 := t0)
+    (ωSeed := omegaSeed (F := F) Ω)
+    hSeedKMS
+
+/--
+Joint-kernel/commutator route to RN-potential-budgeted approximate KMS closure.
+-/
+theorem ibRNPotential_approxKMSClosure_of_ibDynamics_weighted_from_jointKernel_commutator
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω) :
+    IBRNPotentialApproxKMSClosure
+      (F := F)
+      (K := K)
+      (ω := ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω))
+      (β := β)
+      (Xib := Xib) (Yib := Yib) (Tib := Tib)
+      prob pTrajectory x0 t0 := by
+  exact ibRNPotentialApproxKMSClosure_of_control
+    (F := F)
+    (K := K)
+    (ω := ibInducedObservableWeighted
+      (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+      pTrajectory x0 t0 (omegaSeed (F := F) Ω))
+    (β := β)
+    (Xib := Xib) (Yib := Yib) (Tib := Tib)
+    (prob := prob)
+    (pTrajectory := pTrajectory)
+    (x0 := x0)
+    (t0 := t0)
+    (hControl :=
+      ibRNPotential_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator
+        (F := F)
+        (K := K)
+        (β := β)
+        (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        (prob := prob)
+        (pTrajectory := pTrajectory)
+        (_hStep := hStep)
+        (x0 := x0)
+        (t0 := t0)
+        (Ω := Ω)
+        (hΩ := hΩ)
+        (hJointKernel := hJointKernel)
+        (hCommOrthogonal := hCommOrthogonal))
 
 end SinkhornBridge
 

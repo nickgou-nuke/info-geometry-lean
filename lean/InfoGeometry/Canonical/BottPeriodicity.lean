@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.Clifford
 import Mathlib.LinearAlgebra.TensorProduct.Basic
+set_option linter.unnecessarySimpa false
 
 open scoped TensorProduct
 

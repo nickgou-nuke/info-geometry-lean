@@ -1,5 +1,6 @@
 import InfoGeometry.ExponentialFamily.Finite
 import InfoGeometry.Potential.LogPotential
+set_option linter.unusedSectionVars false
 
 /-!
 # KL–Bregman Bridge (Finite Exponential Family)

@@ -1,6 +1,8 @@
 import InfoGeometry.Prequantum.Bundle
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib.Tactic.Ring
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSectionVars false
 
 /-!
 # InfoGeometry.Prequantum.Connection
@@ -42,66 +44,33 @@ namespace ProjectivePrequantumBundle
 
 /-- Scalar connection observable carried by a projective prequantum bundle point. -/
 def connectionObservable (P : ProjectivePrequantumBundle (E := E)) : ℝ :=
-  P.data.holonomyScale
+  P.data.connectionScale
 
-/-- Scalar covariant-derivative proxy `F * ℏ`, invariant under Weyl rescaling. -/
+/-- Scalar covariant-derivative proxy `F * ℏ`, inherited from the underlying datum. -/
 def covariantDerivative (P : ProjectivePrequantumBundle (E := E)) : ℝ :=
-  P.data.curvatureScale * P.data.hbar
-
-lemma covariantDerivative_eq_omegaScale
-    (P : ProjectivePrequantumBundle (E := E)) :
-    covariantDerivative P = P.data.omegaScale := by
-  exact P.data.curvature_mul_hbar_eq_omega
+  P.data.covariantScale
 
 lemma connectionObservable_gauge
     (u : PrequantumData.Gauge) (P : ProjectivePrequantumBundle (E := E)) :
     connectionObservable (u • P) = connectionObservable P / (u : ℝ) := by
-  rfl
+  change PrequantumData.connectionScale (u • P.data) =
+      PrequantumData.connectionScale P.data / (u : ℝ)
+  simpa using PrequantumData.connectionScale_smul u P.data
 
-lemma covariantDerivative_gauge_invariant
+@[simp] lemma covariantDerivative_smul
     (u : PrequantumData.Gauge) (P : ProjectivePrequantumBundle (E := E)) :
     covariantDerivative (u • P) = covariantDerivative P := by
-  rw [covariantDerivative_eq_omegaScale (P := u • P)]
-  rw [covariantDerivative_eq_omegaScale (P := P)]
-  rfl
+  change PrequantumData.covariantScale (u • P.data) =
+      PrequantumData.covariantScale P.data
+  simpa using PrequantumData.covariantScale_smul u P.data
 
 end ProjectivePrequantumBundle
-
-/-- Weyl-compatibility predicate: the neutral Hessian form scales conformally by `a²`. -/
-def IsWeylCompatibleHessian
-    (P : ProjectivePrequantumBundle (E := E)) : Prop :=
-    ∀ (u : PrequantumData.Gauge) (v w : InfoGeometry.Krein.DoubledSpace E),
-    Hess (u • v) (u • w) = ((u : ℝ) ^ (2 : ℕ)) * Hess v w
 
 lemma hessian_indefinite_form_smul_smul_weyl
   (u : PrequantumData.Gauge) (v w : InfoGeometry.Krein.DoubledSpace E) :
     Hess (u • v) (u • w) = ((u : ℝ) ^ (2 : ℕ)) * Hess v w := by
   change Hess (((u : ℝ)) • v) (((u : ℝ)) • w) = ((u : ℝ) ^ (2 : ℕ)) * Hess v w
   simpa using Hess_smul_smul ((u : ℝ)) v w
-
-lemma isWeylCompatibleHessian
-    (P : ProjectivePrequantumBundle (E := E)) :
-    IsWeylCompatibleHessian P := by
-  intro u v w
-  exact hessian_indefinite_form_smul_smul_weyl u v w
-
-/-- Joint compatibility package: gauge-invariant covariant derivative plus Weyl metric scaling. -/
-structure GaugeHessianCompatible
-    (P : ProjectivePrequantumBundle (E := E)) : Prop where
-  covariant_gauge_invariant :
-    ∀ u : PrequantumData.Gauge,
-      ProjectivePrequantumBundle.covariantDerivative (u • P) =
-        ProjectivePrequantumBundle.covariantDerivative P
-  hessian_weyl_compatible :
-    IsWeylCompatibleHessian P
-
-theorem gaugeHessianCompatible
-    (P : ProjectivePrequantumBundle (E := E)) :
-    GaugeHessianCompatible P := by
-  refine ⟨?_, ?_⟩
-  · intro u
-    exact ProjectivePrequantumBundle.covariantDerivative_gauge_invariant u P
-  · exact isWeylCompatibleHessian P
 
 end KreinClifford
 

@@ -5,6 +5,7 @@ import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.LinearAlgebra.BilinearForm.Hom
 import Mathlib.Tactic.FieldSimp
 import Mathlib.Tactic.Ring
+set_option linter.unusedSectionVars false
 
 open scoped Invertible
 
@@ -156,17 +157,7 @@ def BayesianSymmetryOrbit.update
 @[simp] theorem BayesianSymmetryOrbit.update_zero
     {prior : DSpace E}
     (orbit : BayesianSymmetryOrbit (E := E) prior) :
-    orbit.update 0 = prior := by
+  orbit.update 0 = prior := by
   simp [BayesianSymmetryOrbit.update, orbit.U_zero]
-
-/-- Diagonal Hessian self-preservation along the symmetry orbit. -/
-theorem BayesianSymmetryOrbit.flow_equivariant
-    {prior : DSpace E}
-    (orbit : BayesianSymmetryOrbit (E := E) prior) :
-    ∀ t, hessian_indefinite_form (E := E) (orbit.update t) (orbit.update t) =
-      hessian_indefinite_form (E := E) prior prior := by
-  intro t
-  simpa [BayesianSymmetryOrbit.update] using
-    orbit.preserves_hessian t prior prior
 
 end InfoGeometry.Canonical.NoetherInference

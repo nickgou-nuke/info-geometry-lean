@@ -3,6 +3,7 @@ import InfoGeometry.Projective.Orthant
 import InfoGeometry.Projective.SelfDualCone
 import Mathlib.Topology.Constructions
 import Mathlib.Topology.Order.DenselyOrdered
+set_option linter.unnecessarySimpa false
 
 /-!
 # Positive-Measure / Cone Bridge

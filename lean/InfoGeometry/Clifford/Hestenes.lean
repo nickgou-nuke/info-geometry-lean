@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQ11
+import InfoGeometry.Clifford.Lift
 import Mathlib.Analysis.Complex.Trigonometric
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 
@@ -51,5 +52,21 @@ Identifies the top-level GA form with the Radon-Nikodym derivative.
 -/
 def IsSignedVolume (RN : ℝ) : Prop :=
   ∃ ρ : Cl11 →ₗ[ℝ] ℝ, ρ Pseudoscalar = RN
+
+section Representation
+
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/--
+Concrete representation bridge:
+the Cl(1,1) pseudoscalar maps to the doubled-space spectral involution.
+-/
+lemma cl11Rep_pseudoscalar_eq_spectral_epsilon :
+    cl11Rep (E := E) Pseudoscalar
+      = InfoGeometry.Krein.spectral_epsilon (E := E) := by
+  simpa [Pseudoscalar, Q11] using
+    (cl11Rep_pseudoscalar (E := E))
+
+end Representation
 
 end InfoGeometry.Clifford.Hestenes

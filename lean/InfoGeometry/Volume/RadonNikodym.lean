@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.LogGenerator
 import InfoGeometry.Volume.LogPotential
 
 /-!
@@ -10,6 +11,7 @@ providing a constructive structure interface.
 
 namespace InfoGeometry.Volume.RadonNikodym
 
+open InfoGeometry.Canonical
 open InfoGeometry.Volume.Base
 open InfoGeometry.Volume.LogPotential
 
@@ -25,15 +27,41 @@ structure HasScalarRNBridge (A : Type*) [Monoid A] where
   rn_eq_logAbs_vol : ∀ a, rn a = Real.log |((vol a : ℝˣ) : ℝ)|
 
 /--
+Any scalar Radon-Nikodym bridge yields an exact multiplicative-to-additive
+bridge through the volume character and logarithmic linearization.
+-/
+noncomputable def HasScalarRNBridge.toExactBridge {A : Type*} [Monoid A]
+    (B : HasScalarRNBridge A) :
+    ExactMultiplicativeToAdditiveBridge A ℝˣ ℝ where
+  toExactAbelianizingBridge := ⟨B.vol⟩
+  toAdditiveLinearization := logAbsUnitsLinearization
+
+/-- High-level logarithmic generator induced by a scalar RN bridge. -/
+noncomputable def HasScalarRNBridge.toLogGenerator {A : Type*} [Monoid A]
+    (B : HasScalarRNBridge A) : LogGenerator A ℝ :=
+  (ExactDescentLogGenerator.ofBridge B.toExactBridge).toLogGenerator
+
+/-- The RN potential is the additive invariant of the exact bridge. -/
+theorem rn_eq_additiveInvariant {A : Type*} [Monoid A]
+    (B : HasScalarRNBridge A) (a : A) :
+    B.rn a = B.toExactBridge.additiveInvariant a := by
+  rw [B.rn_eq_logAbs_vol]
+  rfl
+
+/-- The RN potential is the value of the induced high-level logarithmic generator. -/
+theorem rn_eq_logGenerator {A : Type*} [Monoid A]
+    (B : HasScalarRNBridge A) (a : A) :
+    B.rn a = B.toLogGenerator.logGen a := by
+  exact rn_eq_additiveInvariant B a
+
+/--
 Multiplicative chain rule for the scalar RN bridge.
 If the bridge holds, the RN derivative of a composition is the sum of derivatives.
 -/
-theorem rn_chain_rule {A : Type*} [Group A] (B : HasScalarRNBridge A) (f g : A) :
+theorem rn_chain_rule {A : Type*} [Monoid A] (B : HasScalarRNBridge A) (f g : A) :
     B.rn (f * g) = B.rn f + B.rn g := by
-  rw [B.rn_eq_logAbs_vol, B.rn_eq_logAbs_vol, B.rn_eq_logAbs_vol]
-  rw [B.vol.map_mul]
-  rw [Units.val_mul, abs_mul, Real.log_mul]
-  · exact abs_ne_zero.mpr (Units.ne_zero _)
-  · exact abs_ne_zero.mpr (Units.ne_zero _)
+  rw [rn_eq_additiveInvariant]
+  rw [rn_eq_additiveInvariant, rn_eq_additiveInvariant]
+  exact ExactMultiplicativeToAdditiveBridge.additiveInvariant_mul B.toExactBridge f g
 
 end InfoGeometry.Volume.RadonNikodym

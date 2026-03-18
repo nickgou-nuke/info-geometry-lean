@@ -1,6 +1,8 @@
 import InfoGeometry.Volume.Base
 import InfoGeometry.Krein.KreinSpace
 import Mathlib.LinearAlgebra.Determinant
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSectionVars false
 
 /-!
 # Majorana Pfaffians

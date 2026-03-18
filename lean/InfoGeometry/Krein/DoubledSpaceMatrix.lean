@@ -1,6 +1,7 @@
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic
+set_option linter.unusedSectionVars false
 
 /-!
 # DoubledSpaceMatrix

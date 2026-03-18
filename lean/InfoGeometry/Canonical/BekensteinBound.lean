@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.GrandCanonicalExperts
+import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Volume.ConnesCocycle
 
 /-!
@@ -65,18 +66,18 @@ lemma abs_trajectoryRNGenerator_le_trajectoryRNBarrier
     (T : SinkhornTrajectory n) (k : Nat) :
     |phaseRNGeneratorBefore n (phaseAt k) (T.state k)| ≤ trajectoryRNBarrier n T k := by
   unfold trajectoryRNBarrier
-  cases phaseAt k <;> simp [phaseRNGeneratorBefore, rowRNBarrier, colRNBarrier]
+  cases phaseAt k <;> simp [phaseRNGeneratorBefore]
   · exact Finset.abs_sum_le_sum_abs _ _
   · exact Finset.abs_sum_le_sum_abs _ _
 
 /--
 Cocycle Entropy Potential.
 The additive potential Φ derived from the Connes RN-cocycle.
-The absolute increment |Φ(k+1) - Φ(k)| represents the information-theoretic 
+The absolute increment |Φ(k+1) - Φ(k)| represents the information-theoretic
 work done during a Sinkhorn step.
 -/
 noncomputable def CocycleEntropyPotential
-    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
+  (σ : AdditiveModularFlow (H := H))
     (u : ℝ → AlgebraEnd H)
     (hBridge : ScalarCocycleBridge (H := H) σ)
     (t : ℝ) : ℝ :=
@@ -84,16 +85,16 @@ noncomputable def CocycleEntropyPotential
 
 /--
 Cocycle-to-bound theorem:
-the Topological Bekenstein Bound is a verified consequence of the 
+the Topological Bekenstein Bound is a verified consequence of the
 Connes RN-cocycle layer.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle
-    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
+  (σ : AdditiveModularFlow (H := H))
     (u : ℝ → AlgebraEnd H)
     (T : SinkhornTrajectory n)
     (hCocycle : IsConnesCocycle σ u)
     (hBridge : ScalarCocycleBridge (H := H) σ)
-    (hBarrierLift : ∀ k : Nat, trajectoryRNBarrier n T k = 
+    (hBarrierLift : ∀ k : Nat, trajectoryRNBarrier n T k =
       |CocycleEntropyPotential σ u hBridge (k + 1) - CocycleEntropyPotential σ u hBridge k|) :
     TopologicalBekensteinBound n T := by
   have hAdd :
@@ -150,7 +151,7 @@ theorem cocycleGeneratorLift_of_trajectoryRNGeneratorPotential
   have hk1 :
       trajectoryRNGeneratorPotential (n := n) T (k + 1 : ℝ)
         = trajectoryRNGeneratorPotentialNat (n := n) T (k + 1) := by
-    simp [trajectoryRNGeneratorPotential, Nat.cast_add]
+    simp [trajectoryRNGeneratorPotential]
   have hk0 :
       trajectoryRNGeneratorPotential (n := n) T (k : ℝ)
         = trajectoryRNGeneratorPotentialNat (n := n) T k := by
@@ -175,7 +176,7 @@ If a cocycle entropy potential agrees on integer times with the canonical
 RN-generator potential, then the generator-lift condition is derived internally.
 -/
 theorem cocycleGeneratorLift_of_cocycleEntropyPotential_match
-    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
+  (σ : AdditiveModularFlow (H := H))
     (u : ℝ → AlgebraEnd H)
     (hBridge : ScalarCocycleBridge (H := H) σ)
     (T : SinkhornTrajectory n)
@@ -210,7 +211,7 @@ if the cocycle potential increments realize the concrete trajectory RN generator
 the topological Bekenstein bound follows directly.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle_generatorLift
-    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
+  (σ : AdditiveModularFlow (H := H))
     (u : ℝ → AlgebraEnd H)
     (T : SinkhornTrajectory n)
     (hCocycle : IsConnesCocycle σ u)
@@ -241,7 +242,7 @@ under the concrete generator-lift condition, each cocycle increment is bounded
 by the corresponding trajectory RN barrier.
 -/
 theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_connesCocycle_generatorLift
-    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
+  (σ : AdditiveModularFlow (H := H))
     (u : ℝ → AlgebraEnd H)
     (T : SinkhornTrajectory n)
     (hCocycle : IsConnesCocycle σ u)
@@ -270,7 +271,7 @@ it suffices to match cocycle potential values on integer times with the
 canonical discrete RN-generator potential.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle_natMatch
-    (σ : ℝ →* (AlgebraEnd H ≃ₐ[ℝ] AlgebraEnd H))
+  (σ : AdditiveModularFlow (H := H))
     (u : ℝ → AlgebraEnd H)
     (T : SinkhornTrajectory n)
     (hCocycle : IsConnesCocycle σ u)
@@ -287,6 +288,159 @@ theorem topologicalBekensteinBound_of_connesCocycle_natMatch
       cocycleGeneratorLift_of_cocycleEntropyPotential_match
         (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T) hMatch)
 
+/--
+Casini-style relative-entropy profile on discrete Sinkhorn steps.
+-/
+abbrev RelativeEntropyProfile := Nat → ℝ
+
+/--
+Casini bridge data: cocycle increment is identified with relative-entropy drop,
+and that drop is identified with the concrete phase-aligned RN generator.
+-/
+structure CasiniIncrementBridge
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (T : SinkhornTrajectory n)
+    (relEnt : RelativeEntropyProfile) : Prop where
+  cocycle_increment_eq_relEnt_drop :
+    ∀ k : Nat,
+      CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
+        - CocycleEntropyPotential (H := H) σ u hBridge k
+        = relEnt k - relEnt (k + 1)
+  relEnt_drop_eq_phaseRN :
+    ∀ k : Nat,
+      relEnt k - relEnt (k + 1)
+        = phaseRNGeneratorBefore n (phaseAt k) (T.state k)
+  relEnt_monotone :
+    ∀ k : Nat, relEnt (k + 1) ≤ relEnt k
+
+/--
+From Casini bridge data we derive the concrete cocycle generator-lift condition.
+-/
+theorem cocycleGeneratorLift_of_casiniIncrementBridge
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (T : SinkhornTrajectory n)
+    (relEnt : RelativeEntropyProfile)
+    (hCasini : CasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt) :
+    CocycleGeneratorLift n T (CocycleEntropyPotential (H := H) σ u hBridge) := by
+  intro k
+  calc
+    CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
+      - CocycleEntropyPotential (H := H) σ u hBridge k
+        = relEnt k - relEnt (k + 1) :=
+          hCasini.cocycle_increment_eq_relEnt_drop k
+    _ = phaseRNGeneratorBefore n (phaseAt k) (T.state k) :=
+          hCasini.relEnt_drop_eq_phaseRN k
+
+/--
+Relative-entropy drops are nonnegative under the Casini monotonicity condition.
+-/
+theorem relEnt_drop_nonneg_of_casiniIncrementBridge
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (T : SinkhornTrajectory n)
+    (relEnt : RelativeEntropyProfile)
+    (hCasini : CasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt) :
+    ∀ k : Nat, 0 ≤ relEnt k - relEnt (k + 1) := by
+  intro k
+  linarith [hCasini.relEnt_monotone k]
+
+/--
+Casini-route cocycle-to-bound theorem:
+`hLift` is derived internally from relative-entropy bridge data.
+-/
+theorem topologicalBekensteinBound_of_connesCocycle_casiniIncrement
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hCocycle : IsConnesCocycle σ u)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (relEnt : RelativeEntropyProfile)
+    (hCasini : CasiniIncrementBridge (n := n) (H := H) σ u hBridge T relEnt) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_connesCocycle_generatorLift
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hCocycle := hCocycle) (hBridge := hBridge)
+    (hLift :=
+      cocycleGeneratorLift_of_casiniIncrementBridge
+        (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge)
+        (T := T) (relEnt := relEnt) hCasini)
+
 end CocycleBridge
+
+section TomitaSpecialization
+
+variable (n : Nat)
+variable {H : Type*}
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+
+/--
+Tomita-specialized cocycle entropy potential driven by the modular-sign flow.
+-/
+noncomputable abbrev TomitaCocycleEntropyPotential
+    (u : ℝ → AlgebraEnd H)
+    (hBridge :
+      ScalarCocycleBridge (H := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (t : ℝ) : ℝ :=
+  CocycleEntropyPotential (H := H)
+    (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+    u hBridge t
+
+/--
+Tomita-specialized cocycle-to-bound theorem under the concrete generator-lift
+condition for the modular-sign flow.
+-/
+theorem topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hCocycle :
+      IsConnesCocycle
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        u)
+    (hBridge :
+      ScalarCocycleBridge (H := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (hLift :
+      CocycleGeneratorLift n T
+        (TomitaCocycleEntropyPotential (H := H) u hBridge)) :
+    TopologicalBekensteinBound n T := by
+  simpa [TomitaCocycleEntropyPotential] using
+    topologicalBekensteinBound_of_connesCocycle_generatorLift
+      (n := n) (H := H)
+      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (u := u) (T := T) (hCocycle := hCocycle) (hBridge := hBridge) (hLift := hLift)
+
+/--
+Tomita-specialized Casini-route cocycle-to-bound theorem.
+-/
+theorem topologicalBekensteinBound_of_tomitaConnesCocycle_casiniIncrement
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hCocycle :
+      IsConnesCocycle
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        u)
+    (hBridge :
+      ScalarCocycleBridge (H := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (relEnt : RelativeEntropyProfile)
+    (hCasini :
+      CasiniIncrementBridge (n := n) (H := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        u hBridge T relEnt) :
+    TopologicalBekensteinBound n T := by
+  simpa [TomitaCocycleEntropyPotential] using
+    topologicalBekensteinBound_of_connesCocycle_casiniIncrement
+      (n := n) (H := H)
+      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (u := u) (T := T) (hCocycle := hCocycle) (hBridge := hBridge)
+      (relEnt := relEnt) (hCasini := hCasini)
+
+end TomitaSpecialization
 
 end InfoGeometry.Canonical.BekensteinBound

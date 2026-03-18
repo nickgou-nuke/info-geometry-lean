@@ -1,5 +1,7 @@
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Clifford.Grading
+set_option linter.unusedSimpArgs false
+set_option linter.unusedSectionVars false
 
 open InfoGeometry.Krein
 

@@ -10,8 +10,8 @@ open scoped InnerProductSpace
 Canonical bridge from the framework's dynamical layers to operator-algebra
 interfaces:
 
-- C*-ready and von-Neumann-ready AQFT targets
-- Sinkhorn-to-KMS closure in operator targets
+- C*-ready and complete-C*-ready AQFT targets
+- Sinkhorn-to-KMS closure packaged with operator-target readiness
 - Tomita-Takesaki modular atom on doubled real space
 - bounded KK supercommutator compactness interface
 -/
@@ -35,8 +35,8 @@ variable (Obs : Type*) [NonUnitalNormedRing Obs] [StarRing Obs]
 /-- Canonical alias for C*-ready operator targets. -/
 abbrev IsCStarLayer : Prop := IsCStarReady (Obs := Obs)
 
-/-- Canonical alias for von-Neumann-ready operator targets. -/
-abbrev IsVonNeumannLayer : Prop := IsVonNeumannReady (Obs := Obs)
+/-- Canonical alias for complete-C*-ready operator targets. -/
+abbrev IsCompleteCStarLayer : Prop := IsCompleteCStarReady (Obs := Obs)
 
 end Signatures
 
@@ -61,18 +61,17 @@ variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSp
 variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs] [CStarRing Obs]
 
 /--
-Sinkhorn-driven KMS closure persists under realizations into C*-algebra targets.
+Package Sinkhorn-driven KMS closure together with C*-readiness of the target.
 -/
 theorem sinkhorn_kms_closure_in_cstar
-    (real : AQFTOperatorRealization (F := F) (Obs := Obs))
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
     (h_closure : SinkhornKMSClosure n T K ω β) :
     IsCStarLayer (Obs := Obs) ∧ SinkhornKMSClosure n T K ω β := by
-  exact sinkhorn_kmsClosure_with_cstarRealization
-    (n := n) (F := F) (Obs := Obs) real
+  exact sinkhorn_kmsClosure_packaged_with_cstarReady
+    (n := n) (F := F) (Obs := Obs)
     (T := T) (K := K) (ω := ω) (β := β) h_closure
 
 end AqftClosure
@@ -89,12 +88,10 @@ variable {ObsFock : Type*}
   [CompleteSpace ObsFock]
 
 /--
-Canonical AQFT package combining C* readiness, von-Neumann readiness, KMS
+Canonical AQFT package combining C* readiness, complete-C* readiness, KMS
 closure, and the reduced grand-canonical Euler law.
 -/
-theorem cstar_vonneumann_kms_fock_package
-    (real_kms : AQFTOperatorRealization (F := F) (Obs := ObsKMS))
-    (real_fock : AQFTOperatorRealization (F := E) (Obs := ObsFock))
+theorem cstar_completeCStar_kms_fock_package
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
@@ -112,17 +109,16 @@ theorem cstar_vonneumann_kms_fock_package
     (h_closure : SinkhornKMSClosure n T K ω β)
     (h_vac_split : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
     IsCStarLayer (Obs := ObsKMS) ∧
-      IsVonNeumannLayer (Obs := ObsFock) ∧
+      IsCompleteCStarLayer (Obs := ObsFock) ∧
       SinkhornKMSClosure n T K ω β ∧
       grandCanonicalFockEulerStep (E := E) η B H
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
             (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
           = ψ + η • H ψ := by
-  exact aqft_interface_package_with_realizations
+  exact aqft_readiness_package
     (n := n)
     (F := F) (ObsKMS := ObsKMS)
     (E := E) (ObsFock := ObsFock)
-    (realKMS := real_kms) (realFock := real_fock)
     (T := T) (K := K) (ω := ω) (β := β)
     (η := η) (B := B) (H := H)
     (R := R) (Kgeo := Kgeo) (x := x)

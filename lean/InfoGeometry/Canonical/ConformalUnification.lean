@@ -1,10 +1,14 @@
 import InfoGeometry.Canonical.GrandUnificationMetric
+import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.GrandSynthesis
 import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Tactic.NoncommRing
+set_option linter.unusedSimpArgs false
+set_option linter.unnecessarySimpa false
 
 set_option linter.unusedSectionVars false
 
@@ -19,15 +23,79 @@ open InfoGeometry.Canonical.RicciMongeAmpere
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 
-/-- 
+/--
 Conformal Inference Structure.
-Formalizes the unification of Conformal Algebra, Generalized Inverses, 
+Formalizes the unification of Conformal Algebra, Generalized Inverses,
 and Geometric Chirality.
 -/
-structure ConformalInference (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
-  A : E →L[ℝ] E      -- The Information Operator (e.g. Fisher Metric or Dirac)
-  A_D : E →L[ℝ] E    -- The Drazin Inverse (Spectral Regularization)
-  A_MP : E →L[ℝ] E   -- The Moore-Penrose Inverse (Metric Regularization)
+structure ConformalInference (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] extends InfoGeometry.Canonical.InverseKernel E where
+
+/--
+Certified conformal inference package.
+
+This is the proof-carrying refinement of `ConformalInference`: the supplied
+Drazin and Moore-Penrose regularizations are certified against the base
+operator `A`.
+-/
+structure CertifiedConformalInference (E : Type*) [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E] extends ConformalInference E where
+  drazinIndex : ℕ
+  hDrazin : IsDrazinInverse A A_D drazinIndex
+  hMoorePenrose : IsMoorePenroseInverse A A_MP
+
+namespace CertifiedConformalInference
+
+variable (CCI : CertifiedConformalInference E)
+
+/-- Adapter from the conformal surface to the canonical certified inverse kernel. -/
+abbrev toCertifiedInverseKernel : InfoGeometry.Canonical.CertifiedInverseKernel E :=
+  { toInverseKernel := CCI.toConformalInference.toInverseKernel
+    drazinIndex := CCI.drazinIndex
+    hDrazin := CCI.hDrazin
+    hMoorePenrose := CCI.hMoorePenrose }
+
+/-- The certified Drazin spectral projector. -/
+abbrev spectralProjector : E →L[ℝ] E := CCI.toCertifiedInverseKernel.spectralProjector
+
+/-- The certified Moore-Penrose range projector. -/
+abbrev mpRangeProjector : E →L[ℝ] E :=
+  CCI.toCertifiedInverseKernel.mpRangeProjector
+
+/-- The certified Moore-Penrose domain projector. -/
+abbrev metricProjector : E →L[ℝ] E := CCI.toCertifiedInverseKernel.metricProjector
+
+/-- The certified Drazin spectral projector is idempotent. -/
+theorem spectralProjector_idempotent :
+    CCI.spectralProjector * CCI.spectralProjector = CCI.spectralProjector := by
+  simpa [CertifiedConformalInference.spectralProjector] using
+    CCI.toCertifiedInverseKernel.spectralProjector_idempotent
+
+/-- The certified Moore-Penrose range projector is idempotent. -/
+theorem mpRangeProjector_idempotent :
+    CCI.mpRangeProjector * CCI.mpRangeProjector = CCI.mpRangeProjector := by
+  simpa [CertifiedConformalInference.mpRangeProjector] using
+    CCI.toCertifiedInverseKernel.mpRangeProjector_idempotent
+
+/-- The certified Moore-Penrose domain projector is idempotent. -/
+theorem metricProjector_idempotent :
+    CCI.metricProjector * CCI.metricProjector = CCI.metricProjector := by
+  simpa [CertifiedConformalInference.metricProjector] using
+    CCI.toCertifiedInverseKernel.metricProjector_idempotent
+
+/-- The certified Moore-Penrose domain projector is self-adjoint. -/
+theorem metricProjector_star :
+    star CCI.metricProjector = CCI.metricProjector := by
+  simpa [CertifiedConformalInference.metricProjector] using
+    CCI.toCertifiedInverseKernel.metricProjector_star
+
+/-- The certified Moore-Penrose range projector is self-adjoint. -/
+theorem mpRangeProjector_star :
+    star CCI.mpRangeProjector = CCI.mpRangeProjector := by
+  simpa [CertifiedConformalInference.mpRangeProjector] using
+    CCI.toCertifiedInverseKernel.mpRangeProjector_star
+
+end CertifiedConformalInference
 
 namespace ConformalInference
 
@@ -35,13 +103,13 @@ variable (CI : ConformalInference E)
 
 /-! ### 1. Conformal Generators -/
 
-/-- 
+/--
 Information Translation Generator (P).
 Identified with the primary information operator A.
 -/
 def P : E →L[ℝ] E := CI.A
 
-/-- 
+/--
 Special Conformal Information Generator (K).
 Identified with the Moore-Penrose inverse A+, representing metric inversion.
 -/
@@ -74,7 +142,7 @@ theorem translation_eq_modularInversion_specialConformal
           simp [hJ2]
     _ = CI.P := by simp
 
-/-- 
+/--
 Emergent Information Dilation Generator (D).
 D = 1/2 [P, K].
 This operator generates the 'Information Scale' flow.
@@ -82,9 +150,20 @@ This operator generates the 'Information Scale' flow.
 noncomputable def D : E →L[ℝ] E :=
   ((2 : ℝ)⁻¹) • (CI.P * CI.K - CI.K * CI.P)
 
+/--
+The dilation operator is exactly half the difference between the Moore-Penrose
+range and domain projectors.
+-/
+theorem dilation_eq_half_sub_mp_projectors :
+    CI.D =
+      ((2 : ℝ)⁻¹) •
+        (IsMoorePenroseInverse.rightProjector CI.A CI.A_MP
+          - IsMoorePenroseInverse.leftProjector CI.A CI.A_MP) := by
+  simp [D, P, K, IsMoorePenroseInverse.rightProjector, IsMoorePenroseInverse.leftProjector]
+
 /-! ### 2. Chiral Projectors and Anomaly -/
 
-/-- 
+/--
 Spectral Chiral Projector (P_D).
 Filters the belief space based on algebraic/nilpotent structure.
 -/
@@ -93,7 +172,7 @@ def P_D : E →L[ℝ] E := IsDrazinInverse.projection CI.A CI.A_D
 /-- Canonical naming alias for the spectral chiral projector. -/
 abbrev spectralChiralProjector : E →L[ℝ] E := CI.P_D
 
-/-- 
+/--
 Metric Chiral Projector (P_MP).
 Filters the belief space based on metric orthogonality.
 -/
@@ -102,7 +181,16 @@ def P_MP : E →L[ℝ] E := IsMoorePenroseInverse.leftProjector CI.A CI.A_MP
 /-- Canonical naming alias for the metric chiral projector. -/
 abbrev metricChiralProjector : E →L[ℝ] E := CI.P_MP
 
-/-- 
+/--
+Moore-Penrose range projector.
+This is the right-projector convention used by `Singular.EinsteinAnomaly`.
+-/
+def P_MP_right : E →L[ℝ] E := IsMoorePenroseInverse.rightProjector CI.A CI.A_MP
+
+/-- Canonical naming alias for the right Moore-Penrose projector. -/
+abbrev metricRangeProjector : E →L[ℝ] E := CI.P_MP_right
+
+/--
 The Geometric Chiral Anomaly (χ).
 χ = [P_D, P_MP].
 This measures the topological 'twist' between information gain and metric distance.
@@ -113,7 +201,37 @@ noncomputable def chiralAnomaly : E →L[ℝ] E :=
 /-- Canonical naming alias for the chiral-anomaly operator. -/
 noncomputable abbrev chiralAnomalyOperator : E →L[ℝ] E := CI.chiralAnomaly
 
-/-- 
+/--
+Right-projector chiral anomaly.
+This is the anomaly built from the Moore-Penrose range projector instead of the
+left projector used in `CI.chiralAnomaly`.
+-/
+noncomputable def rightChiralAnomaly : E →L[ℝ] E :=
+  CI.P_D * CI.P_MP_right - CI.P_MP_right * CI.P_D
+
+/--
+The singular Einstein anomaly is exactly the negative of the right-projector
+chiral anomaly.
+-/
+theorem einsteinAnomaly_eq_neg_rightChiralAnomaly :
+    InfoGeometry.Canonical.EinsteinAnomaly CI.A CI.A_MP CI.A_D = -CI.rightChiralAnomaly := by
+  unfold InfoGeometry.Canonical.EinsteinAnomaly rightChiralAnomaly P_D P_MP_right
+  unfold IsDrazinInverse.projection IsMoorePenroseInverse.rightProjector
+  noncomm_ring
+
+/--
+If the Moore-Penrose left and right projectors coincide, then the singular
+Einstein anomaly is the negative of the conformal left-projector anomaly.
+-/
+theorem einsteinAnomaly_eq_neg_chiralAnomaly_of_projectorAgreement
+    (hProj :
+      IsMoorePenroseInverse.rightProjector CI.A CI.A_MP =
+        IsMoorePenroseInverse.leftProjector CI.A CI.A_MP) :
+    InfoGeometry.Canonical.EinsteinAnomaly CI.A CI.A_MP CI.A_D = -CI.chiralAnomalyOperator := by
+  rw [CI.einsteinAnomaly_eq_neg_rightChiralAnomaly]
+  simp [rightChiralAnomaly, chiralAnomalyOperator, chiralAnomaly, P_D, P_MP_right, P_MP, hProj]
+
+/--
 The Scale Constant ε.
 Generated by the non-commutativity of spectral and metric information.
 -/
@@ -132,6 +250,52 @@ theorem chiralScale_eq_projectorObstruction_norm :
       ‖CI.spectralChiralProjector * CI.metricChiralProjector
           - CI.metricChiralProjector * CI.spectralChiralProjector‖₊ := by
   simp [chiralScale, epsilon, chiralAnomaly, spectralChiralProjector, metricChiralProjector]
+
+/--
+The commutator of the Drazin spectral projector with the dilation operator
+decomposes into the difference of its commutators with the Moore-Penrose range
+and domain projectors.
+-/
+theorem spectralProjector_commutator_dilation_eq_half_sub_mp_projector_commutators :
+    CI.P_D * CI.D - CI.D * CI.P_D =
+      ((2 : ℝ)⁻¹) •
+        ((CI.P_D * IsMoorePenroseInverse.rightProjector CI.A CI.A_MP
+            - IsMoorePenroseInverse.rightProjector CI.A CI.A_MP * CI.P_D)
+          -
+          (CI.P_D * IsMoorePenroseInverse.leftProjector CI.A CI.A_MP
+            - IsMoorePenroseInverse.leftProjector CI.A CI.A_MP * CI.P_D)) := by
+  rw [CI.dilation_eq_half_sub_mp_projectors]
+  simp [sub_eq_add_neg, smul_sub]
+  noncomm_ring
+
+/--
+Equivalent bridge form: the spectral-projector/dilation commutator is half the
+difference between the spectral-vs-range-projector commutator and the chiral
+anomaly operator.
+-/
+theorem spectralProjector_commutator_dilation_eq_half_sub_anomaly :
+    CI.P_D * CI.D - CI.D * CI.P_D =
+      ((2 : ℝ)⁻¹) •
+        ((CI.P_D * IsMoorePenroseInverse.rightProjector CI.A CI.A_MP
+            - IsMoorePenroseInverse.rightProjector CI.A CI.A_MP * CI.P_D)
+          - CI.chiralAnomalyOperator) := by
+  rw [CI.spectralProjector_commutator_dilation_eq_half_sub_mp_projector_commutators]
+  simp [chiralAnomalyOperator, chiralAnomaly, P_MP, metricChiralProjector,
+    IsMoorePenroseInverse.leftProjector]
+
+/--
+Bridge identity between the singular/right-projector anomaly convention and the
+conformal/left-projector anomaly convention.
+-/
+theorem spectralProjector_commutator_dilation_eq_neg_half_einstein_plus_chiral :
+    CI.P_D * CI.D - CI.D * CI.P_D =
+      -((2 : ℝ)⁻¹) •
+        (InfoGeometry.Canonical.EinsteinAnomaly CI.A CI.A_MP CI.A_D + CI.chiralAnomalyOperator) := by
+  rw [CI.spectralProjector_commutator_dilation_eq_half_sub_anomaly]
+  rw [CI.einsteinAnomaly_eq_neg_rightChiralAnomaly]
+  simp [rightChiralAnomaly, chiralAnomalyOperator, chiralAnomaly, P_MP_right,
+    IsMoorePenroseInverse.rightProjector, sub_eq_add_neg, add_assoc, add_left_comm,
+    add_comm, smul_add, smul_neg]
 
 /-! ### 3. Unification Theorems -/
 
@@ -300,6 +464,31 @@ theorem projectors_commute_of_kahlerLogDet_unitRelativeVolume
       (M := M) hScaleFromKahler hUnitVolume)
 
 /--
+Log-det barrier self-concordance mechanics package:
+unit relative volume in the RN layer forces zero Kähler potential, zero anomaly
+scale, normal inference, and projector-obstruction closure.
+-/
+theorem logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolume
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (hUnitVolume : relativeVolumeChangeRN n M = 1) :
+    kahlerPotentialRN n M = 0
+      ∧ CI.chiralScale = 0
+      ∧ (CI.spectralChiralProjector * CI.metricChiralProjector
+            = CI.metricChiralProjector * CI.spectralChiralProjector) := by
+  have hScaleZero : CI.chiralScale = 0 :=
+    CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
+      (M := M) hScaleFromKahler hUnitVolume
+  have hKahlerZero : kahlerPotentialRN n M = 0 := by
+    calc
+      kahlerPotentialRN n M = CI.chiralScale := by
+        simpa [eq_comm] using hScaleFromKahler
+      _ = 0 := hScaleZero
+  refine ⟨hKahlerZero, hScaleZero, ?_⟩
+  exact CI.projectors_commute_of_chiralScale_eq_zero hScaleZero
+
+/--
 Canonical anomaly-flow derivation from the Kähler/log-det layer.
 
 This discharges the anomaly-flow witness directly from normalized Kähler-Ricci
@@ -369,6 +558,20 @@ This mirrors the Cl(1,1) grading into even and odd endomorphisms.
 -/
 def IsNormalInference : Prop := CI.chiralScale = 0
 
+/--
+Normal-inference corollary from the log-det self-concordance mechanics package.
+-/
+theorem isNormalInference_of_logDetBarrier_selfConcordance_mechanics
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (hUnitVolume : relativeVolumeChangeRN n M = 1) :
+    IsNormalInference (CI := CI) := by
+  have hMechanics :=
+    CI.logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolume
+      (M := M) hScaleFromKahler hUnitVolume
+  simpa [IsNormalInference] using hMechanics.2.1
+
 /-- Definition `IsChiralInference`. -/
 def IsChiralInference : Prop := 0 < CI.chiralScale
 
@@ -376,21 +579,21 @@ def IsChiralInference : Prop := 0 < CI.chiralScale
 omit [FiniteDimensional ℝ E] in
 /-- Theorem `isNormalInference_iff_epsilon_eq_zero`. -/
 theorem isNormalInference_iff_epsilon_eq_zero :
-    CI.IsNormalInference ↔ CI.epsilon = 0 := by
+    IsNormalInference (CI := CI) ↔ CI.epsilon = 0 := by
   simp [IsNormalInference, chiralScale]
 
 -- Legacy alias: chiral inference stated via `0 < epsilon`.
 omit [FiniteDimensional ℝ E] in
 /-- Theorem `isChiralInference_iff_epsilon_pos`. -/
 theorem isChiralInference_iff_epsilon_pos :
-    CI.IsChiralInference ↔ 0 < CI.epsilon := by
+    IsChiralInference (CI := CI) ↔ 0 < CI.epsilon := by
   simp [IsChiralInference, chiralScale]
 
 /-- Canonical alias for the normal (non-chiral) information state. -/
-abbrev NormalInferenceState : Prop := CI.IsNormalInference
+abbrev NormalInferenceState : Prop := IsNormalInference (CI := CI)
 
 /-- Canonical alias for the chiral information state. -/
-abbrev ChiralInferenceState : Prop := CI.IsChiralInference
+abbrev ChiralInferenceState : Prop := IsChiralInference (CI := CI)
 
 
 /--
@@ -416,7 +619,7 @@ theorem chiralAnomaly_eq_zero_of_kahlerLogDet_normalized_fixedpoint
 /--
 The Structure Constant Operator (Σ).
 Defined as the commutator of the spectral (Drazin) and metric (Penrose) projectors.
-This operator sets the scale for the non-commutative deformation of the 
+This operator sets the scale for the non-commutative deformation of the
 information volume form.
 -/
 def actionStructureConstantOp : E →L[ℝ] E :=
@@ -429,6 +632,31 @@ This sets the fundamental 'grain' or 'scale' of the information manifold.
 -/
 noncomputable def unitOfAction : ℝ :=
   ‖CI.actionStructureConstantOp‖
+
+/-- The structure-constant operator is exactly the chiral-anomaly operator. -/
+theorem actionStructureConstantOp_eq_chiralAnomalyOperator :
+    CI.actionStructureConstantOp = CI.chiralAnomalyOperator := by
+  ext x
+  rfl
+
+/-- The scalar unit of action coincides with the chiral anomaly scale. -/
+theorem unitOfAction_eq_chiralScale :
+    CI.unitOfAction = CI.chiralScale := by
+  simp [unitOfAction, chiralScale, epsilon, CI.actionStructureConstantOp_eq_chiralAnomalyOperator]
+
+/-- In the normal phase, the unit of action vanishes. -/
+theorem unitOfAction_eq_zero_of_normalInference
+    (hNormal : NormalInferenceState (CI := CI)) :
+    CI.unitOfAction = 0 := by
+  rw [CI.unitOfAction_eq_chiralScale]
+  exact hNormal
+
+/-- In the chiral phase, the unit of action is strictly positive. -/
+theorem unitOfAction_pos_of_chiralInference
+    (hChiral : ChiralInferenceState (CI := CI)) :
+    0 < CI.unitOfAction := by
+  rw [CI.unitOfAction_eq_chiralScale]
+  exact hChiral
 
 /--
 Theorem: Scale generation from non-commutativity.

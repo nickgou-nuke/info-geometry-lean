@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.Drazin
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.LinearAlgebra.Dimension.Finite
+set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.Canonical.InformationNumber
 

@@ -1,6 +1,7 @@
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.SpectralInference
 import Mathlib.LinearAlgebra.TensorProduct.Map
+set_option linter.unusedSectionVars false
 
 open scoped TensorProduct
 

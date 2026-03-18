@@ -1,4 +1,5 @@
 import InfoGeometry.Basic
+set_option linter.unnecessarySimpa false
 
 open scoped BigOperators ENNReal
 

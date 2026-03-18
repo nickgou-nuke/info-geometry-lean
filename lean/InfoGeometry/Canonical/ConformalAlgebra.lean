@@ -2,30 +2,32 @@ import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.ChiralCliffordBridge
 import Mathlib.Tactic.NoncommRing
 
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSectionVars false
+set_option linter.unusedSimpArgs false
+set_option linter.unnecessarySeqFocus false
+
 namespace InfoGeometry.Canonical.ConformalAlgebra
 
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.ChiralCliffordBridge
-open InfoGeometry.Canonical.MoorePenrose
-open InfoGeometry.Canonical.Drazin
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 
-/-- 
-The Full Conformal Information Algebra.
-Constructed over a Chiral Conformal Inference structure.
-Generators:
-- P: Translation (Information Flow A)
-- K: Special Conformal (Metric Inverse A+)
-- D: Dilation (1/2 [P, K])
-- M: Information Lorentz/Rotation generator.
+/--
+Conformal belief-algebra scaffold over a chiral conformal inference structure.
+
+This layer fixes the dilation generator canonically from `CI.D` and carries an
+additional chosen generator `M` for the Cartan/volume-preserving sector.
 -/
 structure ConformalBeliefAlgebra (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   CI : ConformalInference E
-  /-- The Information Lorentz Generator M = 1/2 {P, K} - id_info. -/
+  /-- Chosen Cartan/volume-preserving generator. -/
   M : E →L[ℝ] E
-  /-- The Dilation Generator D = 1/2 [P, K]. -/
+  /-- Canonical dilation generator inherited from `CI`. -/
   D : E →L[ℝ] E := CI.D
+  /-- `D` is definitionally tied to the conformal-inference dilation operator. -/
+  D_def : D = CI.D := by rfl
   /-- Positive anomaly obstructs the flat conformal weight equations. -/
   anomaly_breaks_weights :
       CI.chiralScale > 0 →
@@ -35,27 +37,30 @@ namespace ConformalBeliefAlgebra
 
 variable (CBA : ConformalBeliefAlgebra E)
 
+/-- The dilation field is canonically inherited from the underlying conformal inference. -/
+theorem D_eq_CI_D : CBA.D = CBA.CI.D :=
+  CBA.D_def
+
 /-! ### 1. Fundamental Commutation Relations -/
 
-/-- 
+/--
 Conformal Weight of Translation: [D, P] = P.
-In Information Geometry, this means the Dilation flow scales the 
+In Information Geometry, this means the Dilation flow scales the
 information flow A linearly.
 -/
 def SatisfiesPWeight : Prop :=
   CBA.D * CBA.CI.P - CBA.CI.P * CBA.D = CBA.CI.P
 
-/-- 
+/--
 Conformal Weight of Special Conformal: [D, K] = -K.
 This means the Dilation flow contracts the metric inverse A+.
 -/
 def SatisfiesKWeight : Prop :=
   CBA.D * CBA.CI.K - CBA.CI.K * CBA.D = - CBA.CI.K
 
-/-- 
-The Master Conformal Relation: [K, P] = 2 (η D - M).
-This bridges the information aggregation (K) and flow (P) to the 
-scale (D) and rotation (M).
+/--
+The master conformal relation witness:
+`[K, P] = 2 (η • D - M)` for a chosen scalar coefficient `η`.
 -/
 def SatisfiesMasterRelation (η : ℝ) : Prop :=
   CBA.CI.K * CBA.CI.P - CBA.CI.P * CBA.CI.K = 2 • (η • CBA.D - CBA.M)
@@ -224,9 +229,11 @@ theorem volumePreserving_of_cartanInvolution_eq_self_of_gradingInvolutive
     simpa [Γ, GradingInvolutive] using hΓSq
   have hθ' : Γ * X * Γ = X := by
     simpa [Γ, ConformalBeliefAlgebra.cartanInvolution] using hθ
+  have hXΓ : X * Γ = (Γ * X * Γ) * Γ := by
+    simpa [mul_assoc] using congrArg (fun Y => Y * Γ) hθ'.symm
   have hComm : X * Γ = Γ * X := by
     calc
-      X * Γ = (Γ * X * Γ) * Γ := by rw [hθ']
+      X * Γ = (Γ * X * Γ) * Γ := hXΓ
       _ = Γ * X * (Γ * Γ) := by simp [mul_assoc]
       _ = Γ * X * (1 : E →L[ℝ] E) := by rw [hΓSq']
       _ = Γ * X := by simp

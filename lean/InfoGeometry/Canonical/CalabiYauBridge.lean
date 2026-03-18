@@ -1,4 +1,6 @@
 import InfoGeometry.Canonical.PerelmanW
+set_option linter.unnecessarySeqFocus false
+set_option linter.unnecessarySimpa false
 
 namespace InfoGeometry.Canonical.CalabiYauBridge
 
@@ -103,6 +105,100 @@ structure MetricRNRicciBridge
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E) : Prop where
   unitVolume_to_einstein_zero :
     UnitRelativeVolumeState K → IsEinsteinKaehlerAtWith 0 R K x
+
+/--
+Metric-derived RN bridge:
+`R` is explicitly identified with the metric-derived Ricci tensor, and unit
+relative volume forces that metric-derived tensor to vanish.
+-/
+structure MetricDerivedRNRicciBridge
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E) : Prop where
+  ricci_eq_metricDerived :
+    R = ricciFromMetricOp K.H x
+  unitVolume_metricDerived_zero :
+    UnitRelativeVolumeState K → ∀ u v : E, ricciFromMetricOp K.H x u v = 0
+
+/--
+Every metric-derived RN bridge induces the abstract metric-to-Ricci bridge.
+-/
+theorem metricRNRicciBridge_of_metricDerived
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (hM : MetricDerivedRNRicciBridge R K x) :
+    MetricRNRicciBridge R K x := by
+  refine ⟨?_⟩
+  intro hUnit u v
+  calc
+    R u v = ricciFromMetricOp K.H x u v := by
+      simpa [hM.ricci_eq_metricDerived]
+    _ = 0 := hM.unitVolume_metricDerived_zero hUnit u v
+    _ = (0 : ℝ) * K.H.metric x u v := by ring
+
+/--
+Constructive Ricci-flat derivation from unit relative volume via the
+metric-derived RN bridge.
+-/
+theorem isRicciFlat_of_unitRelativeVolume_metricDerived
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (hUnit : UnitRelativeVolumeState K)
+    (hM : MetricDerivedRNRicciBridge R K x) :
+    IsRicciFlat R := by
+  exact isRicciFlat_of_isEinsteinKaehlerAtWith_zero
+    (R := R) (K := K) (x := x)
+    ((metricRNRicciBridge_of_metricDerived
+      (R := R) (K := K) (x := x) hM).unitVolume_to_einstein_zero hUnit)
+
+/--
+Constructive vacuum Einstein closure from unit relative volume via the
+metric-derived RN bridge.
+-/
+theorem vacuumEinsteinEquation_of_unitRelativeVolume_metricDerived
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (Λ : ℝ)
+    (hUnit : UnitRelativeVolumeState K)
+    (hM : MetricDerivedRNRicciBridge R K x) :
+    VacuumEinsteinEquationAt R K x (2 * Λ) Λ := by
+  have hEin0 : IsEinsteinKaehlerAtWith 0 R K x :=
+    (metricRNRicciBridge_of_metricDerived
+      (R := R) (K := K) (x := x) hM).unitVolume_to_einstein_zero hUnit
+  exact vacuumEinsteinEquation_of_scalar_relation
+    (c := 0) (R := R) (K := K) (x := x) (scalar := 2 * Λ) (Λ := Λ)
+    hEin0 (by ring)
+
+/--
+AdS-like Einstein branch: negative Einstein multiple with positive scale.
+-/
+def IsAdSLikeEinsteinAt
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E) : Prop :=
+  ∃ Λ : ℝ, 0 < Λ ∧ IsEinsteinKaehlerAtWith (-Λ) R K x
+
+/--
+Any Einstein-Kähler branch with negative coefficient is AdS-like.
+-/
+theorem isAdSLikeEinsteinAt_of_negative_einstein
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (c : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R K x)
+    (hc : c < 0) :
+    IsAdSLikeEinsteinAt R K x := by
+  refine ⟨-c, by linarith, ?_⟩
+  intro u v
+  calc
+    R u v = c * K.H.metric x u v := hEin u v
+    _ = (-(-c)) * K.H.metric x u v := by ring
+
+/--
+AdS-like Einstein branch yields a vacuum Einstein equation with zero scalar
+closure in this normalization.
+-/
+theorem vacuumEinsteinEquation_zeroScalar_of_isAdSLikeEinsteinAt
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (hAdS : IsAdSLikeEinsteinAt R K x) :
+    ∃ Λ : ℝ, 0 < Λ ∧ VacuumEinsteinEquationAt R K x 0 Λ := by
+  rcases hAdS with ⟨Λ, hΛpos, hEin⟩
+  refine ⟨Λ, hΛpos, ?_⟩
+  exact vacuumEinsteinEquation_of_scalar_relation
+    (c := -Λ) (R := R) (K := K) (x := x) (scalar := 0) (Λ := Λ)
+    hEin (by ring)
 
 /-- Projection: a `MongeAmpereRicciState` carries the constant-density witness. -/
 theorem hasConstantMongeAmpereDensity_of_mongeAmpereRicciState

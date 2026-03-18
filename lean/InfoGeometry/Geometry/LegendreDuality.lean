@@ -149,6 +149,16 @@ lemma dual_value_of_fenchelYoungEquality
   unfold FenchelYoungEquality at hEq
   linarith
 
+lemma primal_value_of_fenchelYoungEquality
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (θ : Θ)
+    (η : Θ →L[ℝ] ℝ)
+    (hEq : FenchelYoungEquality ψ ψStar θ η) :
+    ψ θ = η θ - ψStar η := by
+  unfold FenchelYoungEquality at hEq
+  linarith
+
 /-- Explicit involution interface from inverse gradient maps. -/
 theorem legendre_involution_of_inverse_maps
     (grad : Θ → (Θ →L[ℝ] ℝ))

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.LogGenerator
+import InfoGeometry.Canonical.SpineAttributes
 
 namespace InfoGeometry.Canonical
 
@@ -16,6 +17,8 @@ This file introduces the abstract stages
 /-- Flow/transport generated from an additive logarithmic generator. -/
 structure GeneratedFlow (G F : Type*) where
   flowOf : G → F
+
+attribute [spine_object] GeneratedFlow
 
 namespace GeneratedFlow
 
@@ -49,6 +52,8 @@ structure CocycleGeneratedFlow (T F : Type*) where
 structure GeometricResponse (F R : Type*) where
   responseOf : F → R
 
+attribute [spine_object] GeometricResponse
+
 namespace GeometricResponse
 
 variable {W G F R : Type*}
@@ -61,6 +66,10 @@ def along (resp : GeometricResponse F R) (Φ : GeneratedFlow G F) : G → R :=
 def fromLogGenerator (resp : GeometricResponse F R) (Φ : GeneratedFlow G F)
     (L : LogGenerator W G) : W → R :=
   fun w => resp.responseOf (Φ.flowOf (L.logGen w))
+
+attribute [spine_functor, spine_functor_lift] GeneratedFlow.along
+attribute [spine_functor, spine_functor_responder] GeometricResponse.along
+attribute [spine_functor, spine_functor_responder] GeometricResponse.fromLogGenerator
 
 end GeometricResponse
 
@@ -76,6 +85,9 @@ def generate (L : LogGenerator W G) (Φ : GeneratedFlow G F) : W → F :=
 def respond (L : LogGenerator W G) (Φ : GeneratedFlow G F)
     (resp : GeometricResponse F R) : W → R :=
   GeometricResponse.fromLogGenerator resp Φ L
+
+attribute [spine_functor, spine_functor_lift] LogGenerator.generate
+attribute [spine_functor, spine_functor_responder] LogGenerator.respond
 
 end LogGenerator
 

@@ -5,6 +5,7 @@ import DAG.Util
 import DAG.JsonInstances
 import DAG.Hydrate
 import DAG.Analysis
+import InfoGeometry.Canonical.SpineAttributes
 
 open Lean
 open Lean.Parser
@@ -32,20 +33,173 @@ structure TacticMorphism where
   afterState   : Array String
 deriving Repr, ToJson, FromJson, Inhabited
 
+/--
+One top-level command slice plus the declarations it produces.
+
+`primaryProduces` records stable, user-authored declarations.
+`auxProduces` records generated/unstable declarations such as matchers,
+equation lemmas, and private auxiliaries.
+
+The derived view `blk.produces` preserves the legacy flat projection.
+-/
 structure Block where
-  idx        : Nat
-  startUtf8  : String.Pos.Raw
-  stopUtf8   : String.Pos.Raw
-  startPos   : Position
-  stopPos    : Position
-  text       : String
-  scopes     : Array ScopeFrame
-  produces   : Array Name
-  affects    : Array Name
-  morphisms  : Array TacticMorphism
-  docStrings : Array String
-  typeStrings: Array String
-deriving ToJson, FromJson, Inhabited
+  idx             : Nat
+  stableId        : String
+  startUtf8       : String.Pos.Raw
+  stopUtf8        : String.Pos.Raw
+  startPos        : Position
+  stopPos         : Position
+  text            : String
+  scopes          : Array ScopeFrame
+  primaryProduces : Array Name
+  auxProduces     : Array Name
+  primarySpineTags : Array (Name × Array String)
+  spineTags       : Array String
+  affects         : Array Name
+  morphisms       : Array TacticMorphism
+  docStrings      : Array String
+  typeStrings     : Array String
+deriving Inhabited
+
+namespace Block
+
+/-- Legacy flat view of declarations produced by a block. -/
+def produces (blk : Block) : Array Name :=
+  (blk.primaryProduces ++ blk.auxProduces).qsort Name.lt
+
+end Block
+
+/-- Deterministic block identifier within a file, based on the command span. -/
+def mkStableBlockId (startUtf8 stopUtf8 : String.Pos.Raw) : String :=
+  s!"block:{startUtf8.byteIdx}-{stopUtf8.byteIdx}"
+
+/-- Split declarations into stable primary outputs and generated auxiliaries. -/
+def classifyProducedDecls (decls : Array Name) : Array Name × Array Name := Id.run do
+  let mut primaryDecls : Array Name := #[]
+  let mut auxDecls : Array Name := #[]
+  for n in decls do
+    if isGeneratedOrUnstableName n then
+      auxDecls := auxDecls.push n
+    else
+      primaryDecls := primaryDecls.push n
+  (primaryDecls, auxDecls)
+
+/-- Semantic declarations authored directly by source blocks. -/
+def primaryDeclSet (blocks : Array Block) : Std.HashSet Name :=
+  Id.run do
+    let mut out : Std.HashSet Name := {}
+    for blk in blocks do
+      for n in blk.primaryProduces do
+        out := out.insert n
+    out
+
+/-- Snapshot semantic spine tags for primary declarations produced by a block. -/
+def collectPrimarySpineTags (env : Environment) (primaryDecls : Array Name) :
+    Array (Name × Array String) :=
+  primaryDecls.map fun n => (n, InfoGeometry.Canonical.spineTagStringsOf env n)
+
+/-- Deduplicated block-level summary of per-primary semantic spine tags. -/
+def summarizeSpineTags (primarySpineTags : Array (Name × Array String)) : Array String := Id.run do
+  let mut seen : Std.HashSet String := {}
+  let mut out : Array String := #[]
+  for (_, tags) in primarySpineTags do
+    for tag in tags do
+      if !seen.contains tag then
+        seen := seen.insert tag
+        out := out.push tag
+  out
+
+private def toJsonPrimarySpineTags (primarySpineTags : Array (Name × Array String)) : Json :=
+  Json.arr <| primarySpineTags.map fun (declName, tags) =>
+    Json.mkObj [("decl", toJson declName), ("tags", toJson tags)]
+
+private def fromJsonPrimarySpineTags? (j : Json) : Except String (Array (Name × Array String)) := do
+  let entries ← j.getArr?
+  let mut out : Array (Name × Array String) := #[]
+  for entry in entries do
+    let declName ← entry.getObjValAs? Name "decl"
+    let tags ← entry.getObjValAs? (Array String) "tags"
+    out := out.push (declName, tags)
+  pure out
+
+instance : ToJson Block where
+  toJson blk :=
+    Json.mkObj
+      [ ("idx", toJson blk.idx)
+      , ("stableId", toJson blk.stableId)
+      , ("startUtf8", toJson blk.startUtf8)
+      , ("stopUtf8", toJson blk.stopUtf8)
+      , ("startPos", toJson blk.startPos)
+      , ("stopPos", toJson blk.stopPos)
+      , ("text", toJson blk.text)
+      , ("scopes", toJson blk.scopes)
+      , ("primaryProduces", toJson blk.primaryProduces)
+      , ("auxProduces", toJson blk.auxProduces)
+      , ("primarySpineTags", toJsonPrimarySpineTags blk.primarySpineTags)
+      , ("spineTags", toJson blk.spineTags)
+      , ("produces", toJson blk.produces)
+      , ("affects", toJson blk.affects)
+      , ("morphisms", toJson blk.morphisms)
+      , ("docStrings", toJson blk.docStrings)
+      , ("typeStrings", toJson blk.typeStrings)
+      ]
+
+instance : FromJson Block where
+  fromJson? j := do
+    let idx ← j.getObjValAs? Nat "idx"
+    let startUtf8 ← j.getObjValAs? String.Pos.Raw "startUtf8"
+    let stopUtf8 ← j.getObjValAs? String.Pos.Raw "stopUtf8"
+    let stableId :=
+      match j.getObjValAs? String "stableId" with
+      | .ok s => s
+      | .error _ => mkStableBlockId startUtf8 stopUtf8
+    let startPos ← j.getObjValAs? Position "startPos"
+    let stopPos ← j.getObjValAs? Position "stopPos"
+    let text ← j.getObjValAs? String "text"
+    let scopes ← j.getObjValAs? (Array ScopeFrame) "scopes"
+    let legacyProduces :=
+      match j.getObjValAs? (Array Name) "produces" with
+      | .ok xs => xs
+      | .error _ => #[]
+    let primaryProduces :=
+      match j.getObjValAs? (Array Name) "primaryProduces" with
+      | .ok xs => xs
+      | .error _ => legacyProduces.filter (fun n => !isGeneratedOrUnstableName n)
+    let auxProduces :=
+      match j.getObjValAs? (Array Name) "auxProduces" with
+      | .ok xs => xs
+      | .error _ => legacyProduces.filter isGeneratedOrUnstableName
+    let primarySpineTags :=
+      match j.getObjVal? "primarySpineTags" with
+      | .ok raw => fromJsonPrimarySpineTags? raw
+      | .error _ => .ok (primaryProduces.map fun n => (n, #[]))
+    let primarySpineTags ← primarySpineTags
+    let spineTags :=
+      match j.getObjValAs? (Array String) "spineTags" with
+      | .ok xs => xs
+      | .error _ => summarizeSpineTags primarySpineTags
+    let affects ← j.getObjValAs? (Array Name) "affects"
+    let morphisms ← j.getObjValAs? (Array TacticMorphism) "morphisms"
+    let docStrings ← j.getObjValAs? (Array String) "docStrings"
+    let typeStrings ← j.getObjValAs? (Array String) "typeStrings"
+    pure {
+      idx := idx
+      stableId := stableId
+      startUtf8 := startUtf8
+      stopUtf8 := stopUtf8
+      startPos := startPos
+      stopPos := stopPos
+      text := text
+      scopes := scopes
+      primaryProduces := primaryProduces
+      auxProduces := auxProduces
+      primarySpineTags := primarySpineTags
+      spineTags := spineTags
+      affects := affects
+      morphisms := morphisms
+      docStrings := docStrings
+      typeStrings := typeStrings
+    }
 
 /-- Export result for a file. -/
 structure Export where
@@ -266,6 +420,10 @@ def exportFile (file : System.FilePath) (opts : Options := {}) : IO Export := do
       declsRef.modify (· ++ newDecls)
       prodRef.modify  (· ++ Array.replicate newDecls.size blockIdx)
 
+    let (primaryDecls, auxDecls) := classifyProducedDecls newDecls
+    let primarySpineTags := collectPrimarySpineTags after.env primaryDecls
+    let spineTags := summarizeSpineTags primarySpineTags
+
     -- Semantic deps + morphisms via InfoTree: only process new trees since last command
     let trees := after.infoState.trees
     let prev ← treesRef.get
@@ -302,13 +460,17 @@ def exportFile (file : System.FilePath) (opts : Options := {}) : IO Export := do
     let scopes := (← scopeRef.get).reverse.toArray
     let blk : Block :=
       { idx := blockIdx
+        stableId := mkStableBlockId r.start r.stop
         startUtf8 := r.start
         stopUtf8 := r.stop
         startPos := startPos
         stopPos := stopPos
         text := text
         scopes := scopes
-        produces := newDecls
+        primaryProduces := primaryDecls
+        auxProduces := auxDecls
+        primarySpineTags := primarySpineTags
+        spineTags := spineTags
         affects := affects
         morphisms := ms
         docStrings := docStrings
@@ -325,7 +487,7 @@ def exportFile (file : System.FilePath) (opts : Options := {}) : IO Export := do
 
   -- True Skeleton extraction
   let hydratedG := DAG.hydrate graph
-  let skelPairs := DAG.extractTheorySkeleton hydratedG 1
+  let skelPairs := DAG.extractTheorySkeletonWithPreferred hydratedG (primaryDeclSet blocks) 1
   let mut skelMap : Array (Name × Nat) := #[]
   for i in [:skelPairs.size] do
     let (n, _, rank) := skelPairs[i]!
@@ -421,7 +583,15 @@ def sliceToString (e : Export) (target : Name) : String :=
   renderIndices e indices
 
 def emitQuiver (e : Export) : String := Id.run do
-  let n := e.blocks.size
+  let mut semanticBlocks : Array Nat := #[]
+  let mut semanticOf : Std.HashMap Nat Nat := {}
+  for i in [:e.blocks.size] do
+    let blk := e.blocks[i]!
+    if !blk.primaryProduces.isEmpty then
+      let semanticIdx := semanticBlocks.size
+      semanticBlocks := semanticBlocks.push i
+      semanticOf := semanticOf.insert i semanticIdx
+  let n := semanticBlocks.size
   let mut b : Array String := #[]
 
   b := b.push "import Mathlib.CategoryTheory.FreeCategory\n"
@@ -435,8 +605,10 @@ def emitQuiver (e : Export) : String := Id.run do
   for i in [:n] do
     b := b.push s!"  | block_{i}\n"
   b := b.push "\ninductive Edge : Obj → Obj → Type\n"
-  for u in [:n] do
-    for (v, _) in e.blockGraph.forward[u]! do
+  for origU in semanticBlocks do
+    let some u := semanticOf.get? origU | continue
+    for (origV, _) in e.blockGraph.forward[origU]! do
+      let some v := semanticOf.get? origV | continue
       b := b.push s!"  | edge_{u}_{v} : Edge .block_{u} .block_{v}\n"
 
   b := b.push "\nnoncomputable def fileSyntax : Socratic.Syntax := {\n"

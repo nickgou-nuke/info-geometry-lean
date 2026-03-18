@@ -133,6 +133,10 @@ def exportFromSnaps (doc : FileWorker.EditableDocument) (snaps : Array Snapshot)
       decls := decls ++ newDecls
       producer := producer ++ Array.replicate newDecls.size blockIdx
 
+    let (primaryDecls, auxDecls) := classifyProducedDecls newDecls
+    let primarySpineTags := collectPrimarySpineTags snap.env primaryDecls
+    let spineTags := summarizeSpineTags primarySpineTags
+
     let blockMorphisms ← extractMorphisms snap.infoTree
 
     let mut docStrings : Array String := #[]
@@ -149,13 +153,17 @@ def exportFromSnaps (doc : FileWorker.EditableDocument) (snaps : Array Snapshot)
 
     blocks := blocks.push
       { idx := blockIdx
+        stableId := mkStableBlockId start stop
         startUtf8 := start
         stopUtf8 := stop
         startPos := startPos
         stopPos := stopPos
         text := if withText then txtFull else ""
         scopes := scopeStack.reverse.toArray
-        produces := newDecls
+        primaryProduces := primaryDecls
+        auxProduces := auxDecls
+        primarySpineTags := primarySpineTags
+        spineTags := spineTags
         affects := #[]
         morphisms := blockMorphisms
         docStrings := docStrings
@@ -186,7 +194,7 @@ def exportFromSnaps (doc : FileWorker.EditableDocument) (snaps : Array Snapshot)
       let blockGraph := buildBlockGraph graph prodMap blocks.size
 
       let hydratedG := DAG.hydrate graph
-      let skelPairs := DAG.extractTheorySkeleton hydratedG 1
+      let skelPairs := DAG.extractTheorySkeletonWithPreferred hydratedG (primaryDeclSet blocks) 1
       let mut skelMap : Array (Name × Nat) := #[]
       for i in [:skelPairs.size] do
         let (n, _, rank) := skelPairs[i]!
@@ -226,15 +234,15 @@ def getTargets (_pos : Lsp.Position) : RequestM (RequestTask (Array TargetInfo))
   RequestM.mapTaskCostly t fun (snapsList, _) => do
     let (ex, _) ← exportFromSnaps doc snapsList.toArray false
     let mut out := #[]
-    for i in [:ex.decls.size] do
-      let name := ex.decls[i]!
-      let bIdx := ex.producer[i]!
-      let some block := ex.blocks[bIdx]? | continue
+    for block in ex.blocks do
+      if block.primaryProduces.isEmpty then
+        continue
       let range : Lsp.Range := {
         start := { line := block.startPos.line - 1, character := block.startPos.column },
         «end» := { line := block.stopPos.line - 1, character := block.stopPos.column }
       }
-      out := out.push { name := name, range := range }
+      for name in block.primaryProduces do
+        out := out.push { name := name, range := range }
     return out
 
 /-- Server RPC: compute a slice (block indices) for `params.target` in the currently open document. -/

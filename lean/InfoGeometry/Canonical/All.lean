@@ -55,6 +55,9 @@ import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.LogGenerator
 import InfoGeometry.Canonical.GeneratedFlow
+import InfoGeometry.Canonical.WeylGaugeField
+import InfoGeometry.Canonical.WeylTransport
+import InfoGeometry.Canonical.WeylTransportChiralBridge
 import InfoGeometry.Canonical.MultiplicativeToAdditiveBridge
 import InfoGeometry.Canonical.PartitionHierarchy
 import InfoGeometry.Canonical.DualConnections

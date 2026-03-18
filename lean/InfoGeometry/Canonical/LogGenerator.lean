@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.MultiplicativeToAdditiveBridge
+import InfoGeometry.Canonical.SpineAttributes
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 namespace InfoGeometry.Canonical
@@ -23,6 +24,8 @@ structure RelativeWeight (X W : Type*) where
 /-- Additive logarithmic generator extracted from a relative weight. -/
 structure LogGenerator (W G : Type*) where
   logGen : W → G
+
+attribute [spine_object] RelativeWeight LogGenerator
 
 namespace LogGenerator
 
@@ -72,6 +75,9 @@ theorem map_mul (L : ExactDescentLogGenerator M S A) (x y : M) :
     L.additiveInvariant (x * y) = L.additiveInvariant x + L.additiveInvariant y :=
   ExactMultiplicativeToAdditiveBridge.additiveInvariant_mul L.toBridge x y
 
+attribute [spine_morphism, spine_functor, spine_functor_constructor]
+  ExactDescentLogGenerator.toLogGenerator
+
 end ExactDescentLogGenerator
 
 /--
@@ -109,6 +115,9 @@ theorem map_mul_defect (L : DefectiveDescentLogGenerator M S A) (x y : M) :
       L.additiveDefect x y + (L.additiveInvariant x + L.additiveInvariant y) :=
   DefectiveMultiplicativeToAdditiveBridge.additiveInvariant_mul L.toBridge x y
 
+attribute [spine_morphism, spine_functor, spine_functor_constructor]
+  DefectiveDescentLogGenerator.toLogGenerator
+
 end DefectiveDescentLogGenerator
 
 /--
@@ -141,6 +150,9 @@ theorem map_mul_of_commute (L : OperatorLogGenerator O A) {x y : O}
     (hxy : Commute x y) :
     L.linearize (x * y) = L.linearize x + L.linearize y :=
   FunctionalCalculusLinearization.map_mul_of_commute_apply L.toLinearization hxy
+
+attribute [spine_morphism, spine_functor, spine_functor_constructor]
+  OperatorLogGenerator.toLogGenerator
 
 end OperatorLogGenerator
 

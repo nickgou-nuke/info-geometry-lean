@@ -172,23 +172,36 @@ and ranks remaining concepts by a heuristic of their structural importance
 Emits one representative node per SCC to avoid mutual-recursion duplication.
 Returns an array of names sorted by importance.
 -/
-def extractTheorySkeleton
+private def pickTheoryRepresentative?
   (h : HydratedGraph Lean.Name)
+  (comp : Array Nat)
+  (preferred? : Option (Std.HashSet Lean.Name)) : Option Lean.Name :=
+  Id.run do
+    if let some preferred := preferred? then
+      for vi in [:comp.size] do
+        let v := comp[vi]!
+        let n := h.toGraph.nodes[v]!
+        if preferred.contains n then
+          return some n
+
+    for vi in [:comp.size] do
+      let v := comp[vi]!
+      let n := h.toGraph.nodes[v]!
+      if !isGeneratedOrUnstableName n then
+        return some n
+
+    return none
+
+private def extractTheorySkeletonCore
+  (h : HydratedGraph Lean.Name)
+  (preferred? : Option (Std.HashSet Lean.Name))
   (minVulnerability : Nat := 1) : Array (Lean.Name × Nat × Nat) :=
   Id.run do
     let mut candidates : Array (Lean.Name × Nat) := #[]
 
     for si in [:h.sccs.size] do
       let comp := h.sccs[si]!
-
-      -- Find a representative node in the SCC that is not auxiliary
-      let mut rep? : Option Lean.Name := none
-      for vi in [:comp.size] do
-        let v := comp[vi]!
-        let n := h.toGraph.nodes[v]!
-        if !isGeneratedOrUnstableName n then
-          rep? := some n
-          break
+      let rep? := pickTheoryRepresentative? h comp preferred?
 
       if let some n := rep? then
         -- Fast heuristic: immediate reverse dependencies * SCC size
@@ -212,5 +225,25 @@ def extractTheorySkeleton
 
     -- Sort the final skeleton by the exact vulnerability sources in descending order
     return skeleton.qsort (fun a b => a.2.2 > b.2.2)
+
+/--
+Extract the 'True Skeleton' of the theory, preferring representatives from a
+caller-supplied semantic set and falling back to the legacy non-generated-name
+heuristic when no preferred declaration is present in an SCC.
+-/
+def extractTheorySkeletonWithPreferred
+  (h : HydratedGraph Lean.Name)
+  (preferred : Std.HashSet Lean.Name)
+  (minVulnerability : Nat := 1) : Array (Lean.Name × Nat × Nat) :=
+  extractTheorySkeletonCore h (some preferred) minVulnerability
+
+/--
+Extract the 'True Skeleton' of the theory using the legacy representative
+selection heuristic.
+-/
+def extractTheorySkeleton
+  (h : HydratedGraph Lean.Name)
+  (minVulnerability : Nat := 1) : Array (Lean.Name × Nat × Nat) :=
+  extractTheorySkeletonCore h none minVulnerability
 
 end DAG

@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.MoorePenrose
+import InfoGeometry.Canonical.SpineAttributes
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 namespace InfoGeometry.Canonical
@@ -34,6 +35,8 @@ structure CertifiedInverseKernel (E : Type*) [NormedAddCommGroup E] [InnerProduc
   drazinIndex : ℕ
   hDrazin : IsDrazinInverse A A_D drazinIndex
   hMoorePenrose : IsMoorePenroseInverse A A_MP
+
+attribute [spine_object] CertifiedInverseKernel
 
 namespace InverseKernel
 

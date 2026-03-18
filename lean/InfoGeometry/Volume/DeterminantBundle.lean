@@ -1,5 +1,6 @@
 import InfoGeometry.Volume.Base
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
+set_option linter.unusedSimpArgs false
 
 /-!
 # Determinant Bundle of Information Manifolds

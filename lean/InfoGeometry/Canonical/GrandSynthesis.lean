@@ -225,6 +225,7 @@ section SpectralVolumeForm
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 
+omit [FiniteDimensional ℝ E] in
 /--
 Log-volume identity for Monge-Ampere density:
 `log(exp(log |det(∇²ψ)|)) = log |det(∇²ψ)|`.
@@ -236,14 +237,12 @@ lemma log_mongeAmpereDensity_eq_logAbsDet_metricOp
   unfold mongeAmpereDensity
   rw [Real.log_exp]
 
-/--
-Spectral specialization of the log-volume identity at the basepoint.
--/
-lemma log_spectralMongeAmpereDensity_eq_spectralVolume
+/-- Spectral specialization of the log-volume identity at the basepoint. -/
+lemma log_spectralMongeAmpereDensity_eq_basepointLogVolume
     (IST : InfoSpectralTriple E) :
     Real.log (spectralMongeAmpereDensity IST)
-      = InfoGeometry.Canonical.HeatKernel.spectralVolume IST := by
-  rw [spectralMongeAmpereDensity_eq_exp_spectralVolume]
+      = spectralBasepointLogVolume IST := by
+  rw [spectralMongeAmpereDensity_eq_exp_spectralBasepointLogVolume]
   rw [Real.log_exp]
 
 variable {m : Type*} [Fintype m] [DecidableEq m]
@@ -267,17 +266,17 @@ Spectral determinant-model bridge:
 if a matrix determinant models the spectral Monge-Ampere density, then its
 log-absolute determinant equals spectral volume.
 -/
-lemma logAbsDet_spectralModel_eq_spectralVolume
+lemma logAbsDet_spectralModel_eq_basepointLogVolume
     (IST : InfoSpectralTriple E) (A : Matrix m m ℝ)
     (hdet : Matrix.det A = spectralMongeAmpereDensity IST) :
-    logAbsDetMatrix A = InfoGeometry.Canonical.HeatKernel.spectralVolume IST := by
+    logAbsDetMatrix A = spectralBasepointLogVolume IST := by
   unfold logAbsDetMatrix
   rw [hdet]
   have hpos : 0 < spectralMongeAmpereDensity IST := by
-    rw [spectralMongeAmpereDensity_eq_exp_spectralVolume]
+    rw [spectralMongeAmpereDensity_eq_exp_spectralBasepointLogVolume]
     exact Real.exp_pos _
   rw [abs_of_pos hpos]
-  exact log_spectralMongeAmpereDensity_eq_spectralVolume (IST := IST)
+  exact log_spectralMongeAmpereDensity_eq_basepointLogVolume (IST := IST)
 
 end SpectralVolumeForm
 
@@ -628,6 +627,7 @@ variable {X V F : Type}
   [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
   [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
+omit [FiniteDimensional ℝ V] in
 /--
 IB-dynamics Bochner-Weitzenboeck bridge:
 `SinkhornKMSClosure` is derived from an IB iterate trajectory.
@@ -655,6 +655,9 @@ theorem bochnerWeitzenboeckBridge_of_ibDynamics
       (ibInducedObservableWeighted
         (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
         pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
+  let _ := flow
+  let _ := D
+  let _ := Γ
   have hControl :
       SinkhornKMSControl n T.traj K
         (ibInducedObservableWeighted

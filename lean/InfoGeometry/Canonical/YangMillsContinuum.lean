@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Volume.ConnesCocycle
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Exponential
+set_option linter.unnecessarySimpa false
 
 /-!
 # InfoGeometry.Canonical.YangMillsContinuum
@@ -100,7 +102,9 @@ noncomputable def modularAutomorphismGroup
     (M : ModularRadonNikodymData E)
     (A : EndH E) :
     modularAutomorphismGroup M 0 A = A := by
-  simp [modularAutomorphismGroup, modularShift, InfoGeometry.Krein.modular_shift]
+  simpa [modularAutomorphismGroup] using
+    (InfoGeometry.Krein.modular_shift_zero
+      (E := E) M.modularHamiltonian A)
 
 /--
 Infinitesimal generator identity at the origin:
@@ -140,29 +144,9 @@ lemma modularAutomorphismGroup_add
     (s t : ℝ) (A : EndH E) :
     modularAutomorphismGroup M (s + t) A =
       modularAutomorphismGroup M s (modularAutomorphismGroup M t A) := by
-  let K : EndH E := M.modularHamiltonian
-  have h_comm : Commute (s • K) (t • K) :=
-    ((Commute.refl K).smul_left s).smul_right t
-  have h_comm_neg : Commute ((-t) • K) ((-s) • K) :=
-    ((Commute.refl K).smul_left (-t)).smul_right (-s)
-  unfold modularAutomorphismGroup modularShift InfoGeometry.Krein.modular_shift
-  change
-    NormedSpace.exp ((s + t) • K) * A * NormedSpace.exp ((-(s + t)) • K) =
-      NormedSpace.exp (s • K) *
-          (NormedSpace.exp (t • K) * A * NormedSpace.exp ((-t) • K)) *
-        NormedSpace.exp ((-s) • K)
-  calc
-    NormedSpace.exp ((s + t) • K) * A * NormedSpace.exp ((-(s + t)) • K)
-        = (NormedSpace.exp (s • K) * NormedSpace.exp (t • K)) * A *
-            (NormedSpace.exp ((-t) • K) * NormedSpace.exp ((-s) • K)) := by
-          rw [← NormedSpace.exp_add_of_commute h_comm]
-          rw [← NormedSpace.exp_add_of_commute h_comm_neg]
-          simp [K, add_smul, mul_assoc, add_comm]
-    _ = NormedSpace.exp (s • K) *
-          (NormedSpace.exp (t • K) * A * NormedSpace.exp ((-t) • K)) *
-        NormedSpace.exp ((-s) • K) := by
-          ring_nf
-          simp [mul_assoc]
+  simpa [modularAutomorphismGroup] using
+    (InfoGeometry.Krein.modular_shift_add
+      (E := E) M.modularHamiltonian s t A)
 
 /--
 Additive-time law for modular automorphisms, stated directly as a theorem:
@@ -203,7 +187,7 @@ theorem modularAutomorphismGroup_eq_of_time_eq
     (M : ModularRadonNikodymData E)
     {τ t : ℝ} (hτt : τ = t) (A : EndH E) :
     modularAutomorphismGroup M τ A = modularAutomorphismGroup M t A := by
-  simpa [hτt]
+  simp [hτt]
 
 /--
 Facade proposition for thermal-time interpretation:
@@ -222,6 +206,51 @@ theorem connesRovelliThermalTimeIdentity
     ConnesRovelliThermalTimeIdentity M := by
   intro τ t A hτt
   exact modularAutomorphismGroup_eq_of_time_eq (M := M) hτt A
+
+/--
+Canonical additive-time automorphism-group package attached to the modular
+Hamiltonian.
+-/
+noncomputable def toAdditiveModularFlow
+    (M : ModularRadonNikodymData E) :
+    InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow (H := E) :=
+  InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator
+    (H := E) M.modularHamiltonian
+
+@[simp] theorem toAdditiveModularFlow_apply
+    (M : ModularRadonNikodymData E) (t : ℝ) (A : EndH E) :
+    M.toAdditiveModularFlow t A = modularAutomorphismGroup M t A := rfl
+
+/--
+Formal Type III modular interface extracted from primitive RN data.
+
+This packages the operator dictionary (`Δ`, `K`) together with the additive
+flow law and infinitesimal commutator generator into a single canonical object.
+-/
+structure TypeIIIModularInterface
+    (M : ModularRadonNikodymData E) : Prop where
+  modularOperator_eq_rn :
+    M.modularOperator = M.rnDerivative • idEndH E
+  modularHamiltonian_eq_neg_log_rn :
+    M.modularHamiltonian = (-Real.log M.rnDerivative) • idEndH E
+  modularAutomorphismGroup_additive :
+    ∀ s t : ℝ, ∀ A : EndH E,
+      modularAutomorphismGroup M (s + t) A =
+        modularAutomorphismGroup M s (modularAutomorphismGroup M t A)
+  infinitesimal_generator_at_zero :
+    ∀ A : EndH E,
+      HasDerivAt (fun τ : ℝ => modularAutomorphismGroup M τ A)
+        (commutator M.modularHamiltonian A) 0
+
+/-- Canonical Type III modular interface, internalized from RN primitives. -/
+theorem typeIIIModularInterface
+    (M : ModularRadonNikodymData E) :
+    TypeIIIModularInterface (E := E) M := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact modularOperator_eq_rn (M := M)
+  · exact modularHamiltonian_eq_neg_log_rn (M := M)
+  · exact modularAutomorphismGroup_additive (M := M)
+  · exact hasDerivAt_modularAutomorphismGroup_zero_eq_commutator (M := M)
 
 end ModularRadonNikodymData
 

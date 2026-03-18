@@ -4,13 +4,13 @@ import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 /-!
-# Research.AQFTOperatorInterface
+# InfoGeometry.Canonical.AQFTOperatorInterface
 
-AQFT operator-algebra interface layer:
+AQFT operator-algebra preparation layer:
 
-- abstract C*-ready / von-Neumann-ready signatures
-- concrete finite-model realizations over existing `AlgebraEnd` infrastructure
-- constructive closure theorems reusing the proved Sinkhorn-KMS and Fock vacuum bridges
+- abstract C*-ready / complete-C*-ready signatures
+- concrete finite-model interpretation/compression maps over existing `AlgebraEnd` infrastructure
+- packaging theorems pairing readiness certificates with already-proved concrete AQFT statements
 -/
 
 namespace InfoGeometry.Canonical.AQFTOperatorInterface
@@ -31,10 +31,10 @@ variable [NonUnitalNormedRing Obs] [StarRing Obs]
 abbrev IsCStarReady : Prop := CStarRing Obs
 
 /--
-Abstract von-Neumann-ready AQFT signature used in this library:
-C*-ready plus completeness.
+Abstract complete-C*-ready AQFT signature used in this library:
+this is only `CStarRing` plus completeness, not a von Neumann notion.
 -/
-abbrev IsVonNeumannReady : Prop :=
+abbrev IsCompleteCStarReady : Prop :=
   IsCStarReady Obs ∧ CompleteSpace Obs
 
 end AbstractSignatures
@@ -45,12 +45,13 @@ variable {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteS
 variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs]
 
 /--
-Explicit realization map from the concrete finite doubled-space operator model
-into an abstract operator algebra.
+Explicit interpretation map from the concrete finite doubled-space operator model
+into an abstract operator target.
+No algebraic or star-preserving properties are imposed here.
 -/
-structure AQFTOperatorRealization
+structure AQFTOperatorInterpretation
     (F : Type*) [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] where
-  realize : AlgebraEnd F → Obs
+  interpret : AlgebraEnd F → Obs
 
 /-- Theorem `cstarReady_of_instance`. -/
 theorem cstarReady_of_instance
@@ -58,10 +59,10 @@ theorem cstarReady_of_instance
     IsCStarReady (Obs := Obs) := by
   infer_instance
 
-/-- Theorem `vonNeumannReady_of_instance`. -/
-theorem vonNeumannReady_of_instance
+/-- Theorem `completeCStarReady_of_instance`. -/
+theorem completeCStarReady_of_instance
     [CStarRing Obs] [CompleteSpace Obs] :
-    IsVonNeumannReady (Obs := Obs) := by
+    IsCompleteCStarReady (Obs := Obs) := by
   exact ⟨cstarReady_of_instance (Obs := Obs), inferInstance⟩
 
 end Realizations
@@ -112,19 +113,19 @@ def firstLegProjection : InfoGeometry.Krein.DoubledSpace E →L[ℝ] E where
 def firstLegCompression (A : AlgebraEnd E) : RealHilbertObs E :=
   (firstLegProjection (E := E)).comp (A.comp (firstLegEmbedding (E := E)))
 
-/-- Concrete realization into real Hilbert bounded operators via first-leg compression. -/
-def realHilbertCompressionRealization :
-    AQFTOperatorRealization E (Obs := RealHilbertObs E) where
-  realize := firstLegCompression (E := E)
+/-- Concrete interpretation into real Hilbert bounded operators via first-leg compression. -/
+def realHilbertCompressionInterpretation :
+    AQFTOperatorInterpretation E (Obs := RealHilbertObs E) where
+  interpret := firstLegCompression (E := E)
 
 /-- Theorem `realHilbertOp_cstarReady`. -/
 theorem realHilbertOp_cstarReady :
     IsCStarReady (Obs := RealHilbertObs E) := by
   infer_instance
 
-/-- Theorem `realHilbertOp_vonNeumannReady`. -/
-theorem realHilbertOp_vonNeumannReady :
-    IsVonNeumannReady (Obs := RealHilbertObs E) := by
+/-- Theorem `realHilbertOp_completeCStarReady`. -/
+theorem realHilbertOp_completeCStarReady :
+    IsCompleteCStarReady (Obs := RealHilbertObs E) := by
   exact ⟨realHilbertOp_cstarReady (E := E), inferInstance⟩
 
 /-! ### Complex Hilbert model (adjoint/star bounded operators) -/
@@ -176,24 +177,24 @@ def complexFirstLegProjection : InfoGeometry.Krein.DoubledSpace H →L[ℂ] H wh
 def complexFirstLegCompression (A : ComplexHilbertOp H) : ComplexHilbertObs H :=
   (complexFirstLegProjection (H := H)).comp (A.comp (complexFirstLegEmbedding (H := H)))
 
-/-- Complex-operator realization wrapper (complex-source counterpart). -/
-structure ComplexAQFTOperatorRealization
+/-- Complex-operator interpretation wrapper (complex-source counterpart). -/
+structure ComplexAQFTOperatorInterpretation
     (Obs : Type*) [NonUnitalNormedRing Obs] [StarRing Obs] where
-  realize : ComplexHilbertOp H → Obs
+  interpret : ComplexHilbertOp H → Obs
 
-/-- Complex realization into Hilbert bounded operators via first-leg compression. -/
-def complexHilbertCompressionRealization :
-    ComplexAQFTOperatorRealization (H := H) (Obs := ComplexHilbertObs H) where
-  realize := complexFirstLegCompression (H := H)
+/-- Complex interpretation into Hilbert bounded operators via first-leg compression. -/
+def complexHilbertCompressionInterpretation :
+    ComplexAQFTOperatorInterpretation (H := H) (Obs := ComplexHilbertObs H) where
+  interpret := complexFirstLegCompression (H := H)
 
 /-- Theorem `complexHilbertOp_cstarReady`. -/
 theorem complexHilbertOp_cstarReady :
     IsCStarReady (Obs := ComplexHilbertObs H) := by
   infer_instance
 
-/-- Theorem `complexHilbertOp_vonNeumannReady`. -/
-theorem complexHilbertOp_vonNeumannReady :
-    IsVonNeumannReady (Obs := ComplexHilbertObs H) := by
+/-- Theorem `complexHilbertOp_completeCStarReady`. -/
+theorem complexHilbertOp_completeCStarReady :
+    IsCompleteCStarReady (Obs := ComplexHilbertObs H) := by
   exact ⟨complexHilbertOp_cstarReady (H := H), inferInstance⟩
 
 end ConcreteHilbertModels
@@ -205,12 +206,11 @@ variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSp
 variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs] [CStarRing Obs]
 
 /--
-C*-ready interface theorem:
-given any realization of concrete operators into a C*-algebraic target,
-the constructive Sinkhorn-to-KMS closure still holds on the concrete dynamics.
+Packaging theorem:
+pair C*-readiness of the target with the already-proved concrete Sinkhorn-to-KMS
+closure theorem.
 -/
-theorem sinkhorn_kmsClosure_with_cstarRealization
-    (_real : AQFTOperatorRealization (F := F) (Obs := Obs))
+theorem sinkhorn_kmsClosure_packaged_with_cstarReady
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
@@ -228,12 +228,11 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSp
 variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs] [CStarRing Obs] [CompleteSpace Obs]
 
 /--
-Von-Neumann-ready interface theorem:
-given any realization of concrete Fock operators into a complete C*-target,
-vacuum-transported Einstein residual still collapses the grand-canonical Euler step.
+Packaging theorem:
+pair complete-C*-readiness of the target with the already-proved concrete
+vacuum-transported grand-canonical Euler collapse.
 -/
-theorem grandCanonicalFockEulerStep_with_vonNeumannRealization
-    (_real : AQFTOperatorRealization (F := E) (Obs := Obs))
+theorem grandCanonicalFockEulerStep_packaged_with_completeCStarReady
     (η : ℝ)
     (B : BogoliubovMixingParams)
     (H : FockEndomorphism E)
@@ -245,12 +244,12 @@ theorem grandCanonicalFockEulerStep_with_vonNeumannRealization
     (Γ : SpinConnection Kgeo x V)
     (ψ : InfoGeometry.Krein.DoubledSpace E)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsVonNeumannReady (Obs := Obs)
+    IsCompleteCStarReady (Obs := Obs)
       ∧ grandCanonicalFockEulerStep (E := E) η B H
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
             (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
             = ψ + η • H ψ := by
-  refine ⟨vonNeumannReady_of_instance (Obs := Obs), ?_⟩
+  refine ⟨completeCStarReady_of_instance (Obs := Obs), ?_⟩
   exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
     (E := E) (η := η) (B := B) (H := H)
     (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
@@ -268,13 +267,11 @@ variable {ObsFock : Type*} [NonUnitalNormedRing ObsFock] [StarRing ObsFock]
   [CStarRing ObsFock] [CompleteSpace ObsFock]
 
 /--
-Unified interface package:
-with explicit realization maps into C*- / von-Neumann-ready targets,
-the concrete AQFT closures are preserved.
+Unified readiness package:
+pair C*- / complete-C*-readiness certificates with the already-proved concrete
+AQFT closure statements.
 -/
-theorem aqft_interface_package_with_realizations
-    (realKMS : AQFTOperatorRealization (F := F) (Obs := ObsKMS))
-    (realFock : AQFTOperatorRealization (F := E) (Obs := ObsFock))
+theorem aqft_readiness_package
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
@@ -292,19 +289,19 @@ theorem aqft_interface_package_with_realizations
     (hClosure : SinkhornKMSClosure n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
     IsCStarReady (Obs := ObsKMS)
-      ∧ IsVonNeumannReady (Obs := ObsFock)
+      ∧ IsCompleteCStarReady (Obs := ObsFock)
       ∧ SinkhornKMSClosure n T K ω β
       ∧ grandCanonicalFockEulerStep (E := E) η B H
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
             (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
             = ψ + η • H ψ := by
   have hK :=
-    sinkhorn_kmsClosure_with_cstarRealization
-      (n := n) (F := F) (Obs := ObsKMS) realKMS
+    sinkhorn_kmsClosure_packaged_with_cstarReady
+      (n := n) (F := F) (Obs := ObsKMS)
       (T := T) (K := K) (ω := ω) (β := β) hClosure
   have hF :=
-    grandCanonicalFockEulerStep_with_vonNeumannRealization
-      (E := E) (Obs := ObsFock) realFock
+    grandCanonicalFockEulerStep_packaged_with_completeCStarReady
+      (E := E) (Obs := ObsFock)
       (η := η) (B := B) (H := H)
       (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
       (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
@@ -319,9 +316,9 @@ variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSp
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
-Direct real-Hilbert instantiation of the unified AQFT interface package.
+Direct real-Hilbert instantiation of the unified readiness package.
 -/
-theorem aqft_interface_package_realHilbert
+theorem aqft_readiness_package_realHilbert
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
@@ -339,18 +336,16 @@ theorem aqft_interface_package_realHilbert
     (hClosure : SinkhornKMSClosure n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
     IsCStarReady (Obs := RealHilbertObs F)
-      ∧ IsVonNeumannReady (Obs := RealHilbertObs E)
+      ∧ IsCompleteCStarReady (Obs := RealHilbertObs E)
       ∧ SinkhornKMSClosure n T K ω β
       ∧ grandCanonicalFockEulerStep (E := E) η B Hf
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
             (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
             = ψ + η • Hf ψ := by
-  exact aqft_interface_package_with_realizations
+  exact aqft_readiness_package
     (n := n)
     (F := F) (ObsKMS := RealHilbertObs F)
     (E := E) (ObsFock := RealHilbertObs E)
-    (realKMS := realHilbertCompressionRealization (E := F))
-    (realFock := realHilbertCompressionRealization (E := E))
     (T := T) (K := K) (ω := ω) (β := β)
     (η := η) (B := B) (H := Hf)
     (R := R) (Kgeo := Kgeo) (x := x)

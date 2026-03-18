@@ -20,6 +20,11 @@ open CategoryTheory
 
 universe u
 
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSimpArgs false
+set_option linter.unusedSectionVars false
+set_option linter.unnecessarySeqFocus false
+
 namespace InfoGeometry.Quantum.RealKCategory
 
 /-- Real vector spaces with an internal complex axis `K^2 = -Id`. -/

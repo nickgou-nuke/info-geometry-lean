@@ -1,5 +1,6 @@
 import InfoGeometry.Basic
 import Mathlib.Algebra.BigOperators.Field
+set_option linter.unusedSectionVars false
 
 open scoped BigOperators
 

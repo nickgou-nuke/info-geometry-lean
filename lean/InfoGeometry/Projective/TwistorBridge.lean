@@ -1,5 +1,7 @@
 import InfoGeometry.Projective.Normalize
 import InfoGeometry.Twistor.NullProjective
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSectionVars false
 
 /-!
 # Positive-Measure Projective/Twistor Bridge

@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.QuantumInference
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.SpectralInference
 import Mathlib.LinearAlgebra.Determinant
+set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.Canonical.BerryPhase
 

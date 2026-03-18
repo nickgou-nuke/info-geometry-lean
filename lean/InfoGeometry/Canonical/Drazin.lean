@@ -36,7 +36,7 @@ def projection (a b : R) : R := a * b
 def complementaryProjection (a b : R) : R := 1 - projection a b
 
 /-- Theorem `projection_is_idempotent`. -/
-theorem projection_is_idempotent (h : IsDrazinInverse a b k) : 
+theorem projection_is_idempotent (h : IsDrazinInverse a b k) :
     (projection a b) * (projection a b) = projection a b := by
   unfold projection
   rw [mul_assoc, ← mul_assoc b a b, h.idempotent]
@@ -73,7 +73,7 @@ theorem projection_add_complementaryProjection :
   noncomm_ring
 
 /-- Theorem `projection_comm`. -/
-theorem projection_comm (h : IsDrazinInverse a b k) : 
+theorem projection_comm (h : IsDrazinInverse a b k) :
     (projection a b) * b = b * (projection a b) := by
   unfold projection
   calc
@@ -81,7 +81,7 @@ theorem projection_comm (h : IsDrazinInverse a b k) :
     _ = b * (a * b) := by rw [mul_assoc]
 
 /-- Theorem `power_le`. -/
-theorem power_le (h : IsDrazinInverse a b k) {m : ℕ} (hm : k ≤ m) : 
+theorem power_le (h : IsDrazinInverse a b k) {m : ℕ} (hm : k ≤ m) :
     a^(m + 1) * b = a^m := by
   obtain ⟨t, rfl⟩ := Nat.exists_eq_add_of_le hm
   calc
@@ -96,7 +96,9 @@ theorem power_le (h : IsDrazinInverse a b k) {m : ℕ} (hm : k ≤ m) :
 /-- Lemma `inverse_eq_pow_mul_pow`. -/
 lemma inverse_eq_pow_mul_pow (h : IsDrazinInverse a b k) (n : ℕ) :
     b = b^(n + 1) * a^n := by
-  have hba : Commute b a := h.comm.symm
+  have hba : Commute b a := by
+    show b * a = a * b
+    exact h.comm.symm
   have hbase : b * b * a = b := by
     calc
       b * b * a = b * (b * a) := by rw [mul_assoc]

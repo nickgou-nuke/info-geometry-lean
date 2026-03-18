@@ -1,9 +1,10 @@
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Canonical.CurvatureRGFlow
-import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.KaehlerGeometry
+import InfoGeometry.Canonical.SpectralInference
 import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.LinearAlgebra.Determinant
+set_option linter.unusedSectionVars false
 
 open scoped BigOperators
 
@@ -11,7 +12,6 @@ namespace InfoGeometry.Canonical.RicciMongeAmpere
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.CurvatureRGFlow
-open InfoGeometry.Canonical.HeatKernel
 open InfoGeometry.Canonical.KaehlerGeometry
 open InfoGeometry.Canonical.SpectralInference
 
@@ -94,22 +94,12 @@ variable (S : StrongRicciFromHessian E)
 noncomputable def ricci : RicciTensor E :=
   ricciFromMetricOp S.H S.x0
 
-@[simp] lemma ricci_apply (u v : E) :
+  @[simp] lemma ricci_apply (u v : E) :
     S.ricci u v = S.H.metric S.x0 u v := rfl
 
-/-- Lemma `ricci_symmetric`. -/
-lemma ricci_symmetric (u v : E) :
-    S.ricci u v = S.ricci v u := by
-  simpa [ricci] using S.symmetric u v
-
-/-- Lemma `ricci_nonneg_diag`. -/
-lemma ricci_nonneg_diag (u : E) :
-    0 ≤ S.ricci u u := by
-  simpa [ricci] using S.nonneg u
-
-/--
-If a Kähler package shares the same Hessian metric, the metric-derived Ricci
-tensor satisfies Einstein-Kähler with proportionality constant `1`.
+  /--
+  If a Kähler package shares the same Hessian metric, the metric-derived Ricci
+  tensor satisfies Einstein-Kähler with proportionality constant `1`.
 -/
 lemma isEinsteinKaehlerAt
     (K : KaehlerInformationGeometry E) (hH : K.H = S.H) :
@@ -535,13 +525,17 @@ section SpinorialEinsteinBridge
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [CompleteSpace E]
 
+/-- Basepoint log-volume extracted directly from the Hessian metric operator. -/
+noncomputable def spectralBasepointLogVolume (IST : InfoSpectralTriple E) : ℝ :=
+  Real.log (|LinearMap.det (IST.H.metricOp IST.x₀).toLinearMap|)
+
 /-- Scalar curvature extracted from the spinorial/spectral side. -/
 noncomputable def spinorialScalarCurvature (IST : InfoSpectralTriple E) : ℝ :=
-  totalScalarCurvature IST
+  -6 * spectralBasepointLogVolume IST
 
-@[simp] lemma spinorialScalarCurvature_eq_totalScalarCurvature
+@[simp] lemma spinorialScalarCurvature_eq_neg_six_spectralBasepointLogVolume
     (IST : InfoSpectralTriple E) :
-    spinorialScalarCurvature IST = totalScalarCurvature IST := rfl
+    spinorialScalarCurvature IST = -6 * spectralBasepointLogVolume IST := rfl
 
 /--
 Spinorial closure to vacuum Einstein equation:
@@ -637,21 +631,20 @@ lemma mongeAmpereDensity_pos (H : HessianGeometry E) (x : E) :
 noncomputable def spectralMongeAmpereDensity (IST : InfoSpectralTriple E) : ℝ :=
   mongeAmpereDensity IST.H IST.x₀
 
-/-- Lemma `spectralMongeAmpereDensity_eq_exp_spectralVolume`. -/
-lemma spectralMongeAmpereDensity_eq_exp_spectralVolume (IST : InfoSpectralTriple E) :
-    spectralMongeAmpereDensity IST = Real.exp (spectralVolume IST) := by
-  simp [spectralMongeAmpereDensity, mongeAmpereDensity, InfoGeometry.Canonical.HeatKernel.spectralVolume]
+/-- Basepoint Monge-Ampère density equals the exponential of basepoint log-volume. -/
+lemma spectralMongeAmpereDensity_eq_exp_spectralBasepointLogVolume
+    (IST : InfoSpectralTriple E) :
+    spectralMongeAmpereDensity IST = Real.exp (spectralBasepointLogVolume IST) := by
+  simp [spectralMongeAmpereDensity, mongeAmpereDensity, spectralBasepointLogVolume]
 
-/-- Heat-kernel/Monge-Ampère consistency at the basepoint. -/
-def MongeAmpereConsistentWithHeatKernel (IST : InfoSpectralTriple E) : Prop :=
-  spectralMongeAmpereDensity IST = Real.exp (a0 IST)
+/-- Basepoint Monge-Ampère consistency in log-volume form. -/
+def MongeAmpereConsistentAtBasepoint (IST : InfoSpectralTriple E) : Prop :=
+  spectralMongeAmpereDensity IST = Real.exp (spectralBasepointLogVolume IST)
 
-/-- Lemma `mongeAmpereConsistentWithHeatKernel`. -/
-lemma mongeAmpereConsistentWithHeatKernel (IST : InfoSpectralTriple E) :
-    MongeAmpereConsistentWithHeatKernel IST := by
-  unfold MongeAmpereConsistentWithHeatKernel
-  rw [spectralMongeAmpereDensity_eq_exp_spectralVolume]
-  simp [a0]
+/-- The basepoint Monge-Ampère density is consistent with its explicit log-volume model. -/
+lemma mongeAmpereConsistentAtBasepoint (IST : InfoSpectralTriple E) :
+    MongeAmpereConsistentAtBasepoint IST := by
+  exact spectralMongeAmpereDensity_eq_exp_spectralBasepointLogVolume IST
 
 end MongeAmpere
 

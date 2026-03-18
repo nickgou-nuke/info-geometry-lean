@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.Fock
+set_option linter.unusedSectionVars false
 
 /-!
 # InfoGeometry.Canonical.Fock

@@ -46,7 +46,7 @@ end IsDrazinInverse
 /-- The Spectral/Core Projector P_D = A * A^D -/
 def Drazin_Projector (A D : R) (k : ℕ) (_h : IsDrazinInverse A D k) : R := A * D
 
-lemma Drazin_Projector_idempotent {A D : R} {k : ℕ} (h : IsDrazinInverse A D k) : 
+lemma Drazin_Projector_idempotent {A D : R} {k : ℕ} (h : IsDrazinInverse A D k) :
     (Drazin_Projector A D k h) * (Drazin_Projector A D k h) = Drazin_Projector A D k h := by
   unfold Drazin_Projector
   calc
@@ -77,8 +77,11 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
   let Ker : Submodule K V := (A ^ k).ker
   let Ran : Submodule K V := (A ^ k).range
 
+  have hk_le : N ≤ k := by
+    simp [k]
+
   have hk : IsCompl Ker Ran := by
-    exact hN k (by simpa [k] using Nat.le_succ N)
+    exact hN k hk_le
 
   -- Projection `V → Ran` along `Ker`.
   let πRan : V →ₗ[K] Ran := Ran.linearProjOfIsCompl Ker hk.symm
@@ -95,7 +98,7 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
           _ = (A ^ (k + 1)) y := by simp [pow_succ]
           _ = (A * A ^ k) y := by simp [pow_succ']
           _ = A ((A ^ k) y) := by rfl
-      _ = A x.1 := by simpa [hy]
+      _ = A x.1 := by simp [hy]
 
   -- Restriction `A|Ran : Ran → Ran`.
   let AR : Ran →ₗ[K] Ran := LinearMap.codRestrict Ran (A ∘ₗ Ran.subtype) hA_map_Ran
@@ -112,7 +115,7 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
   have hAR_inj : Function.Injective AR := by
     intro x y hxy
     apply Subtype.ext
-    have hzero : AR (x - y) = 0 := by simpa [map_sub, hxy]
+    have hzero : AR (x - y) = 0 := by simp [map_sub, hxy]
     have hzA : A ((x - y : Ran).1) = 0 := congrArg Subtype.val hzero
     have hzKer : ((x - y : Ran).1) ∈ Ker := by
       change (A ^ N.succ) ((x - y : Ran).1) = 0
@@ -160,7 +163,7 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
     change (A ^ k) (A x) = 0
     calc
       (A ^ k) (A x) = A ((A ^ k) x) := hpowA_apply x
-      _ = 0 := by simpa [hx0]
+      _ = 0 := by simp [hx0]
 
   have hD_mul_A : D * A = P := by
     ext x
@@ -185,7 +188,7 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
       unfold P
       simp [map_add, hπK, hπR]
     calc
-      (D * A) x = D (A ((xK : V) + xR)) := by simpa [hsum]
+      (D * A) x = D (A ((xK : V) + xR)) := by simp [hsum]
       _ = D (A (xK : V) + A xR) := by simp [map_add]
       _ = Ran.subtype (eRan.symm (πRan (A (xK : V) + A xR))) := by rfl
       _ = Ran.subtype (eRan.symm (πRan (A (xK : V)) + πRan (A xR))) := by
@@ -194,9 +197,9 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
       _ = Ran.subtype (eRan.symm (AR xR)) := by
         rw [hARxR_eq]
         simp
-      _ = (xR : V) := by simpa [hleftInv]
+      _ = (xR : V) := by simp [hleftInv]
       _ = P ((xK : V) + xR) := by symm; exact hP_on_sum
-      _ = P x := by simpa [hsum]
+      _ = P x := by simp [hsum]
 
   have hD_mem_Ran : ∀ x : V, D x ∈ Ran := by
     intro x
@@ -234,10 +237,10 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
       simp [map_add, hπK, hπR]
     have hAk_xK : (A ^ k) (xK : V) = 0 := xK.2
     calc
-      ((A ^ k) * P) x = (A ^ k) (P ((xK : V) + xR)) := by simpa [hsum]
+      ((A ^ k) * P) x = (A ^ k) (P ((xK : V) + xR)) := by simp [hsum]
       _ = (A ^ k) (xR : V) := by rw [hP_on_sum]
       _ = (A ^ k) ((xK : V) + xR) := by simp [map_add, hAk_xK]
-      _ = (A ^ k) x := by simpa [hsum]
+      _ = (A ^ k) x := by simp [hsum]
 
   have hEq1 : D * A * D = D := by
     calc
@@ -250,7 +253,7 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
 
   have hEq3 : A ^ k = A ^ (k + 1) * D := by
     calc
-      A ^ k = (A ^ k) * P := by simpa [hAk_mul_P]
+      A ^ k = (A ^ k) * P := by simp [hAk_mul_P]
       _ = (A ^ k) * (A * D) := by rw [hA_mul_D]
       _ = (A ^ (k + 1)) * D := by simp [pow_succ, mul_assoc]
 
@@ -261,23 +264,23 @@ end DrazinLinear
 section Anomaly
 variable {R : Type*} [Ring R] [StarRing R]
 
-/-- 
-THE CHIRAL ANOMALY: 
+/--
+THE CHIRAL ANOMALY:
 The commutator of the Geometric Mirror (MP) and the Spectral Mirror (Drazin).
 χ = [P_MP, P_D]
 
-This formally isolates the metric-spectral mismatch that occurs strictly 
-on the singular causal boundary. 
+This formally isolates the metric-spectral mismatch that occurs strictly
+on the singular causal boundary.
 -/
-def ChiralAnomaly (A B D : R) (k : ℕ) 
-    (hMP : IsMoorePenroseInverse A B) 
+def ChiralAnomaly (A B D : R) (k : ℕ)
+    (hMP : IsMoorePenroseInverse A B)
     (hD : IsDrazinInverse A D k) : R :=
   let P_MP := MP_Projector A B hMP
   let P_D := Drazin_Projector A D k hD
   P_MP * P_D - P_D * P_MP
 
-/-- The Normal Metric Property: 
-If the matrix commutes with its geometric adjoint (AA† = A†A), 
+/-- The Normal Metric Property:
+If the matrix commutes with its geometric adjoint (AA† = A†A),
 the anomaly rigorously vanishes (ε = 0). -/
 def IsNormal (A : R) : Prop := A * A† = A† * A
 

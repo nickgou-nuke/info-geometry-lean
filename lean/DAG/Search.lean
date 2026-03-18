@@ -1,12 +1,9 @@
 import Lean
+import DAG.SearchCore
 
 open Lean Meta
 
 namespace DAG.Search
-
-/-- Case-insensitive substring check. -/
-private def containsCI (hay needle : String) : Bool :=
-  hay.toLower.contains needle.toLower
 
 /-- Broad namespace suffixes that are poor discriminators in search. -/
 private def isStopToken (t : String) : Bool :=
@@ -48,14 +45,6 @@ private def nameTokens (name : String) : List String :=
   let normalized := (camelSplit.filter (fun t => t != "")).map String.toLower
   normalized.eraseDups
 
-/-- Collect all declaration names once. -/
-private def collectNames (env : Environment) : Array String :=
-  Id.run do
-    let mut names : Array String := #[]
-    for (name, _) in env.constants do
-      names := names.push (toString name)
-    return names
-
 /-- Filter declaration names by predicate. -/
 private def filterNames (names : Array String) (p : String → Bool) : Array String :=
   Id.run do
@@ -69,7 +58,7 @@ private def filterNames (names : Array String) (p : String → Bool) : Array Str
 private def printTokenHints (names : Array String) (tokens : List String) : MetaM Unit := do
   IO.println "Closest token-wise matches:"
   for t in tokens do
-    let tokenMatches := filterNames names (fun n => containsCI n t)
+    let tokenMatches := filterNames names (fun n => DAG.SearchCore.containsCI n t)
     IO.println s!"  - {t}: {tokenMatches.size}"
     if tokenMatches.size > 2000 then
       IO.println "      (too broad, refine token)"
@@ -113,7 +102,7 @@ private def rankedNearMatches (names : Array String) (tokens : List String) :
     (#[], #[])
   else
     let tokenPools : Array (String × Array String) :=
-      (tokens.toArray.map fun t => (t, filterNames names (fun n => containsCI n t)))
+      (tokens.toArray.map fun t => (t, filterNames names (fun n => DAG.SearchCore.containsCI n t)))
     let rankCandidates :=
       (tokenPools.foldl (init := none) fun best (_, pool) =>
         if pool.isEmpty then
@@ -140,7 +129,7 @@ private def rankedNearMatches (names : Array String) (tokens : List String) :
           let mut out : Array String := #[]
           let mut seen : Std.HashSet String := {}
           for (t, _) in tokenOrder do
-            let pool := (filterNames names (fun n => containsCI n t)).qsort (fun a b =>
+            let pool := (filterNames names (fun n => DAG.SearchCore.containsCI n t)).qsort (fun a b =>
               a.length < b.length || (a.length = b.length && a < b))
             for n in pool.take 15 do
               if !seen.contains n then
@@ -155,11 +144,11 @@ private def rankedNearMatches (names : Array String) (tokens : List String) :
 
 /-- Search a query against a pre-collected declaration-name array. -/
 private def searchInNames (names : Array String) (query : String) : MetaM Unit := do
-  let direct := filterNames names (fun n => containsCI n query)
+  let direct := filterNames names (fun n => DAG.SearchCore.containsCI n query)
   let tokens := queryTokens query
   let fallback :=
     if direct.isEmpty && tokens.length > 1 then
-      filterNames names (fun n => tokens.all (fun t => containsCI n t))
+      filterNames names (fun n => tokens.all (fun t => DAG.SearchCore.containsCI n t))
     else
       #[]
   let (nearStrict, nearRelaxed) :=
@@ -186,13 +175,13 @@ private def searchInNames (names : Array String) (query : String) : MetaM Unit :
 /-- Environment search with strict-hybrid and ranked-near fallback. -/
 def searchEnv (query : String) : MetaM Unit := do
   let env ← getEnv
-  let names := collectNames env
+  let names := DAG.SearchCore.collectNames env
   searchInNames names query
 
 /-- Run multiple searches using one pre-collected environment name table. -/
 def searchEnvMany (queries : List String) : MetaM Unit := do
   let env ← getEnv
-  let names := collectNames env
+  let names := DAG.SearchCore.collectNames env
   for q in queries do
     searchInNames names q
 

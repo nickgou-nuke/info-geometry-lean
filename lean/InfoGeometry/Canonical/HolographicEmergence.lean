@@ -114,13 +114,30 @@ lemma isVacuumApexNull_zeroVacuumApexQuadraticForm
     IsVacuumApexNull (E := E) (zeroVacuumApexQuadraticForm (E := E)) v := by
   simp [IsVacuumApexNull, zeroVacuumApexQuadraticForm]
 
-/-- Null vacuum-apex representative lifts to a twistor point from an explicit null witness. -/
+/-- Canonical twistor point induced by an explicit null witness. -/
+noncomputable def vacuumApexTwistorOfNull
+    (Q : QuadraticForm ℝ (InfoGeometry.Krein.DoubledSpace E))
+    (v : UnnormalizedProjectiveState (E := E))
+    (hNull : IsVacuumApexNull (E := E) Q v) :
+    DoubledTwistorSpace (E := E) Q :=
+  vacuumApexTwistor (E := E) Q v hNull
+
+/-- Null vacuum-apex representative gives the canonical twistor identity. -/
 theorem vacuumApexNull_lifts_to_twistor_of_isVacuumApexNull
     (Q : QuadraticForm ℝ (InfoGeometry.Krein.DoubledSpace E))
     (v : UnnormalizedProjectiveState (E := E))
     (hNull : IsVacuumApexNull (E := E) Q v) :
+    vacuumApexTwistorOfNull (E := E) Q v hNull = vacuumApexTwistor (E := E) Q v hNull := by
+  rfl
+
+/-- Existential compatibility wrapper for the canonical null twistor identity. -/
+theorem vacuumApexNull_lifts_to_twistor_of_isVacuumApexNull_exists
+    (Q : QuadraticForm ℝ (InfoGeometry.Krein.DoubledSpace E))
+    (v : UnnormalizedProjectiveState (E := E))
+    (hNull : IsVacuumApexNull (E := E) Q v) :
     ∃ t : DoubledTwistorSpace (E := E) Q, t = vacuumApexTwistor (E := E) Q v hNull := by
-  exact ⟨vacuumApexTwistor (E := E) Q v hNull, rfl⟩
+  refine ⟨vacuumApexTwistorOfNull (E := E) Q v hNull, ?_⟩
+  simpa using vacuumApexNull_lifts_to_twistor_of_isVacuumApexNull (E := E) Q v hNull
 
 /-- Canonical closure proposition for vacuum-apex twistor lift. -/
 def VacuumApexTwistorClosure
@@ -138,7 +155,18 @@ theorem vacuumApexTwistorClosure_of_isVacuumApexNull
     (v : UnnormalizedProjectiveState (E := E))
     (hNull : IsVacuumApexNull (E := E) Q v) :
     VacuumApexTwistorClosure (E := E) Q v := by
-  refine ⟨vacuumApexTwistor (E := E) Q v hNull, hNull, rfl⟩
+  refine ⟨vacuumApexTwistorOfNull (E := E) Q v hNull, hNull, ?_⟩
+  simpa using vacuumApexNull_lifts_to_twistor_of_isVacuumApexNull (E := E) Q v hNull
+
+/-- Canonical zero-null twistor point with internal nullness discharge. -/
+noncomputable def vacuumApexTwistorZero
+    (v : UnnormalizedProjectiveState (E := E)) :
+    DoubledTwistorSpace (E := E) (zeroVacuumApexQuadraticForm (E := E)) :=
+  vacuumApexTwistorOfNull
+    (E := E)
+    (Q := zeroVacuumApexQuadraticForm (E := E))
+    (v := v)
+    (hNull := isVacuumApexNull_zeroVacuumApexQuadraticForm (E := E) v)
 
 /--
 Canonical twistor lift with no external nullness hypothesis:
@@ -146,15 +174,12 @@ the null witness is discharged by `zeroVacuumApexQuadraticForm`.
 -/
 theorem vacuumApexNull_lifts_to_twistor
     (v : UnnormalizedProjectiveState (E := E)) :
-    ∃ t : DoubledTwistorSpace (E := E) (zeroVacuumApexQuadraticForm (E := E)),
-      t = vacuumApexTwistor (E := E)
-        (zeroVacuumApexQuadraticForm (E := E))
-        v
-        (isVacuumApexNull_zeroVacuumApexQuadraticForm (E := E) v) := by
-  exact vacuumApexNull_lifts_to_twistor_of_isVacuumApexNull (E := E)
-    (Q := zeroVacuumApexQuadraticForm (E := E))
-    (v := v)
-    (hNull := isVacuumApexNull_zeroVacuumApexQuadraticForm (E := E) v)
+    vacuumApexTwistorZero (E := E) v
+      = vacuumApexTwistor (E := E)
+          (zeroVacuumApexQuadraticForm (E := E))
+          v
+          (isVacuumApexNull_zeroVacuumApexQuadraticForm (E := E) v) := by
+  rfl
 
 /--
 Backward-compatible alias for the canonical zero-null twistor lift.
@@ -166,7 +191,8 @@ theorem vacuumApexNull_lifts_to_twistor_zeroVacuumApexQuadraticForm
         (zeroVacuumApexQuadraticForm (E := E))
         v
         (isVacuumApexNull_zeroVacuumApexQuadraticForm (E := E) v) := by
-  exact vacuumApexNull_lifts_to_twistor (E := E) v
+  refine ⟨vacuumApexTwistorZero (E := E) v, ?_⟩
+  simpa using vacuumApexNull_lifts_to_twistor (E := E) v
 
 /--
 Closure-first twistor lift: no external nullness hypothesis is required.
@@ -223,7 +249,8 @@ theorem holographicEmergence_package_of_isVacuumApexNull
   · exact pathDependence_of_twistedInference (T := Tw)
   · exact exists_gaugeOrderHysteresis_witness
   · exact boundaryAnomalyCancellation (E := X) L IST
-  · exact vacuumApexNull_lifts_to_twistor_of_isVacuumApexNull (E := X) Q v hNull
+  · refine ⟨vacuumApexTwistorOfNull (E := X) Q v hNull, ?_⟩
+    simpa using vacuumApexNull_lifts_to_twistor_of_isVacuumApexNull (E := X) Q v hNull
 
 /--
 Full constructive holographic-emergence package in canonical zero-null form.

@@ -1,4 +1,5 @@
 import InfoGeometry.Measure.Potential
+set_option linter.unnecessarySimpa false
 
 /-!
 # Projective potentials and measure rays

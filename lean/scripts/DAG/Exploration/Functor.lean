@@ -1,5 +1,6 @@
 import Lean
 import DAG.Functor
+import scripts.DAG.Exploration.Common
 
 /-!
 # scripts.DAG.Exploration.Functor
@@ -10,8 +11,11 @@ Exploratory script for searching small commutative-square patterns in declaratio
 open Lean
 open DAG
 
-#eval show MetaM Unit from do
-  let env ← getEnv
+private def imports : Array Import := #[
+  { module := `DAG.Functor }
+]
+
+private def runFunctor (env : Environment) : IO Unit := do
   IO.println "--- Small-Scale Categorical Square Search (Nat) ---"
   let squares ← DAG.findCommutativeSquares env (some `Nat)
 
@@ -21,3 +25,6 @@ open DAG
     IO.println s!"Found {squares.size} Commutative Squares!"
     for (f, g, h, k) in squares[:5] do
       IO.println s!"Square: ({f.decl}, {g.decl}, {h.decl}, {k.decl})"
+
+def main : IO Unit :=
+  ScriptDAGExploration.runEnvScript imports runFunctor

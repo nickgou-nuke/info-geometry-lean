@@ -4,14 +4,15 @@ import InfoGeometry.Canonical.KMSSinkhornBridge
 import InfoGeometry.Canonical.RGFlow
 
 /-!
-# Research.QFTTDFTLaunchpad
+# InfoGeometry.Canonical.QFTTDFTLaunchpad
 
-Constructive launchpad layer for AQFT/TDFT-oriented developments:
+Constructive launchpad layer for AQFT/TDFT-oriented developments.
 
 - AQFT side: Sinkhorn-driven KMS closure and Bogoliubov/Fock vacuum reduction.
 - TDFT side: Legendre involution (density/potential duality) and RG-stationary dual map.
 
-This file intentionally reuses existing proved objects, with no new axioms.
+This file packages already-proved AQFT and TDFT ingredients into a unified
+canonical interface, with no new axioms.
 -/
 
 namespace InfoGeometry.Canonical.QFTTDFTLaunchpad
@@ -68,29 +69,35 @@ variable {Θ : Type*} [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]
 
 /--
 Hohenberg-Kohn-style duality state:
-primal gradient and dual inverse are mutually inverse.
+primal/dual data satisfy Fenchel majorization, Fenchel-Young equality along the
+chosen gradient, and the primal/dual maps are mutually inverse.
 -/
 def HohenbergKohnDualState
-    (_ψ : Θ → ℝ)
-    (_ψStar : (Θ →L[ℝ] ℝ) → ℝ) : Prop :=
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ) : Prop :=
   ∃ grad : Θ → (Θ →L[ℝ] ℝ),
     ∃ gradStar : (Θ →L[ℝ] ℝ) → Θ,
-      Function.LeftInverse gradStar grad ∧ Function.RightInverse gradStar grad
+      IsFenchelMajorized ψ ψStar
+        ∧ Function.LeftInverse gradStar grad
+        ∧ Function.RightInverse gradStar grad
+        ∧ ∀ θ : Θ, FenchelYoungEquality ψ ψStar θ (grad θ)
 
 /--
 Explicit constructive duality state:
-inverse gradient maps directly yield the Hohenberg-Kohn duality witness.
+Fenchel/Legendre data together with inverse gradient maps directly yield the
+Hohenberg-Kohn duality witness.
 -/
 theorem hohenbergKohnDualState_of_inverse_maps
     (ψ : Θ → ℝ)
     (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
     (grad : Θ → (Θ →L[ℝ] ℝ))
     (gradStar : (Θ →L[ℝ] ℝ) → Θ)
+    (hConj : IsFenchelMajorized ψ ψStar)
     (hLeft : Function.LeftInverse gradStar grad)
-    (hRight : Function.RightInverse gradStar grad) :
+    (hRight : Function.RightInverse gradStar grad)
+    (hFY : ∀ θ : Θ, FenchelYoungEquality ψ ψStar θ (grad θ)) :
     HohenbergKohnDualState ψ ψStar := by
-  refine ⟨grad, gradStar, ?_⟩
-  exact legendre_involution_of_inverse_maps (grad := grad) (gradStar := gradStar) hLeft hRight
+  exact ⟨grad, gradStar, hConj, hLeft, hRight, hFY⟩
 
 /--
 Legendre involution assumptions discharge the Hohenberg-Kohn duality state.
@@ -103,7 +110,7 @@ theorem hohenbergKohnDualState_of_legendreInvolution
   exact hohenbergKohnDualState_of_inverse_maps
     (ψ := ψ) (ψStar := ψStar)
     (grad := hLeg.grad) (gradStar := hLeg.gradStar)
-    hLeg.left_inv hLeg.right_inv
+    hLeg.conjugate hLeg.left_inv hLeg.right_inv hLeg.fenchelYoung_along_grad
 
 /--
 Concrete convex/smooth Legendre hypotheses discharge the Hohenberg-Kohn duality state.
@@ -153,45 +160,41 @@ variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
-Runge-Gross-style stationary dual-map state at RG fixed point.
+Runge-Gross-style stationary dual-map state at RG scale `scale0`.
 -/
 def RungeGrossStationaryDualState
     (flow : InformationFlow E)
     (scale0 : ℝ) : Prop :=
-  ∀ x : E, deriv (fun t => (flow t).dualMap x) scale0 = 0
+  ∀ x : E, HasDerivAt (fun t => (flow t).dualMap x) 0 scale0
 
 /--
-RG fixed point constructively implies stationary dual-map dynamics.
+RG stationarity constructively implies stationary dual-map dynamics.
 -/
-theorem rungeGrossStationaryDualState_of_fixedPoint
+theorem rungeGrossStationaryDualState_of_stationaryAtScale
     (flow : InformationFlow E)
     (scale0 : ℝ)
-    (hFixed : IsFixedPoint flow scale0) :
+    (hStationary : IsStationaryAtScale flow scale0) :
     RungeGrossStationaryDualState flow scale0 := by
-  intro x
-  exact dual_map_invariant_at_fixed_point
-    (flow := flow) (scale0 := scale0) hFixed x
+  exact hStationary.2
 
 /--
 Constructive stationary dual-map state from RG flow invariance.
 -/
 theorem rungeGrossStationaryDualState_of_flowInvariant
-    [FiniteDimensional ℝ E]
     (flow : InformationFlow E)
     (scale0 : ℝ) :
     FlowInvariantAtScale flow scale0 →
       RungeGrossStationaryDualState flow scale0 := by
   intro hInv
-  exact rungeGrossStationaryDualState_of_fixedPoint
+  exact rungeGrossStationaryDualState_of_stationaryAtScale
     (flow := flow) (scale0 := scale0)
-    (isFixedPoint_of_flowInvariant (E := E) flow scale0 hInv)
+    (isStationaryAtScale_of_flowInvariant (E := E) flow scale0 hInv)
 
 /--
 Constructive stationary dual-map state from modular-flow/Clifford-action
 invariance on the bundle.
 -/
 theorem rungeGrossStationaryDualState_of_modularCliffordFlowInvariant
-    [FiniteDimensional ℝ E]
     {ι : Type*}
     (flow : InformationFlow E)
     (scale0 : ℝ)
@@ -201,9 +204,9 @@ theorem rungeGrossStationaryDualState_of_modularCliffordFlowInvariant
     (hInv : ModularCliffordFlowInvariantAtScale
       (E := E) (ι := ι) flow scale0 σ cliffordAction unit) :
     RungeGrossStationaryDualState flow scale0 := by
-  exact rungeGrossStationaryDualState_of_fixedPoint
+  exact rungeGrossStationaryDualState_of_stationaryAtScale
     (flow := flow) (scale0 := scale0)
-    (isFixedPoint_of_modularCliffordFlowInvariant
+    (isStationaryAtScale_of_modularCliffordFlowInvariant
       (E := E) (ι := ι) flow scale0 σ cliffordAction unit hInv)
 
 /--
@@ -211,7 +214,6 @@ Constant-flow corollary of flow-invariant stationarity.
 -/
 theorem rungeGrossStationaryDualState_of_constantFlow
     (H : InfoGeometry.Convex.HessianGeometry E)
-    [FiniteDimensional ℝ E]
     (scale0 : ℝ) :
     RungeGrossStationaryDualState (constantFlow (E := E) H) scale0 := by
   exact rungeGrossStationaryDualState_of_modularCliffordFlowInvariant
@@ -233,7 +235,7 @@ variable {Θ : Type*} [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]
 
 /--
 Unified constructive launchpad:
-AQFT closure + vacuum-reduced Fock step + TDFT duality and fixed-point stationarity.
+AQFT closure + vacuum-reduced Fock step + TDFT duality and RG stationarity.
 -/
 theorem aqft_tdft_constructive_launchpad
     (T : SinkhornTrajectory n)
@@ -257,7 +259,7 @@ theorem aqft_tdft_constructive_launchpad
     (hClosure : SinkhornKMSClosure n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
     (hLeg : LegendreInvolutionAssumptions ψ ψStar)
-    (hFixed : IsFixedPoint flow scale0) :
+    (hStationary : IsStationaryAtScale flow scale0) :
     SinkhornKMSClosure n T K ω β
       ∧ grandCanonicalFockEulerStep (E := E) η B H
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
@@ -273,11 +275,11 @@ theorem aqft_tdft_constructive_launchpad
       (V := V) (Γ := Γ) (ψ := ψ0) hVacSplit
   · exact hohenbergKohnDualState_of_legendreInvolution
       (ψ := ψ) (ψStar := ψStar) hLeg
-  · exact rungeGrossStationaryDualState_of_fixedPoint
-      (flow := flow) (scale0 := scale0) hFixed
+  · exact rungeGrossStationaryDualState_of_stationaryAtScale
+      (flow := flow) (scale0 := scale0) hStationary
 
 /--
-Constructive launchpad specialization with no fixed-point witness argument:
+Constructive launchpad specialization with no explicit stationarity witness:
 for constant RG flow, stationarity is derived canonically.
 -/
 theorem aqft_tdft_constructive_launchpad_of_constantFlow
@@ -298,7 +300,6 @@ theorem aqft_tdft_constructive_launchpad_of_constantFlow
     (ψ : Θ → ℝ)
     (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
     (Hrg : InfoGeometry.Convex.HessianGeometry E)
-    [FiniteDimensional ℝ E]
     (scale0 : ℝ)
     (hClosure : SinkhornKMSClosure n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
@@ -318,17 +319,11 @@ theorem aqft_tdft_constructive_launchpad_of_constantFlow
     (ψ := ψ) (ψStar := ψStar)
     (flow := constantFlow (E := E) Hrg) (scale0 := scale0)
     (hClosure := hClosure) (hVacSplit := hVacSplit) (hLeg := hLeg)
-    (hFixed := isFixedPoint_of_modularCliffordFlowInvariant
-      (E := E) (ι := Unit)
-      (flow := constantFlow (E := E) Hrg) (scale0 := scale0)
-      (σ := fun _ : ℝ => (LinearMap.id : E →ₗ[ℝ] E))
-      (clAct := fun _ : Unit => (LinearMap.id : E →ₗ[ℝ] E))
-      (unit := ())
-      (modularCliffordFlowInvariant_constantFlow_id (E := E) Hrg scale0))
+    (hStationary := isStationaryAtScale_constantFlow (E := E) Hrg scale0)
 
 /--
-Invariant-flow specialization: no explicit fixed-point witness argument; fixed
-point is derived from flow invariance.
+Invariant-flow specialization: no explicit stationarity witness argument;
+stationarity is derived from flow invariance.
 -/
 theorem aqft_tdft_constructive_launchpad_of_flowInvariant
     (T : SinkhornTrajectory n)
@@ -348,7 +343,6 @@ theorem aqft_tdft_constructive_launchpad_of_flowInvariant
     (ψ : Θ → ℝ)
     (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
     (flow : InformationFlow E)
-    [FiniteDimensional ℝ E]
     (scale0 : ℝ)
     (hClosure : SinkhornKMSClosure n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
@@ -369,11 +363,11 @@ theorem aqft_tdft_constructive_launchpad_of_flowInvariant
     (ψ := ψ) (ψStar := ψStar)
     (flow := flow) (scale0 := scale0)
     (hClosure := hClosure) (hVacSplit := hVacSplit) (hLeg := hLeg)
-    (hFixed := isFixedPoint_of_flowInvariant (E := E) flow scale0 hInv)
+    (hStationary := isStationaryAtScale_of_flowInvariant (E := E) flow scale0 hInv)
 
 /--
-Modular/Clifford-bundle specialization: no explicit fixed-point witness
-argument; fixed point is derived from modular-flow and Clifford-action
+Modular/Clifford-bundle specialization: no explicit stationarity witness
+argument; stationarity is derived from modular-flow and Clifford-action
 invariance.
 -/
 theorem aqft_tdft_constructive_launchpad_of_modularCliffordFlowInvariant
@@ -394,7 +388,6 @@ theorem aqft_tdft_constructive_launchpad_of_modularCliffordFlowInvariant
     (ψ : Θ → ℝ)
     (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
     (flow : InformationFlow E)
-    [FiniteDimensional ℝ E]
     (scale0 : ℝ)
     {ι : Type*}
     (σ : ℝ → E →ₗ[ℝ] E)
@@ -420,7 +413,7 @@ theorem aqft_tdft_constructive_launchpad_of_modularCliffordFlowInvariant
     (ψ := ψ) (ψStar := ψStar)
     (flow := flow) (scale0 := scale0)
     (hClosure := hClosure) (hVacSplit := hVacSplit) (hLeg := hLeg)
-    (hFixed := isFixedPoint_of_modularCliffordFlowInvariant
+    (hStationary := isStationaryAtScale_of_modularCliffordFlowInvariant
       (E := E) (ι := ι) flow scale0 σ cliffordAction unit hInv)
 
 end Launchpad

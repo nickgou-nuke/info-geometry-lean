@@ -1,6 +1,7 @@
 import Mathlib.CategoryTheory.ConcreteCategory.Basic
 import InfoGeometry.Quantum.RealKCategory
 import InfoGeometry.Quantum.RealMajoranaCategory
+set_option linter.unusedVariables false
 
 open CategoryTheory
 

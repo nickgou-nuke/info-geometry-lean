@@ -59,9 +59,13 @@ export InfoGeometry.Canonical.GrandSynthesis (
 )
 
 export InfoGeometry.Canonical.TomitaTakesaki (
+  DiagonalPositiveTimeVector
+  PositiveTimeVector
   modularConjugationJ
   modularSignEpsilon
   modularComplexI
+  modularSignAdditiveModularFlow
+  modularAtomRepresentation
   tomitaRepresentation
 )
 

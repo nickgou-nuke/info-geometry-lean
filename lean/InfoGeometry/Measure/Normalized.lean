@@ -3,6 +3,7 @@ import Mathlib.Probability.ProbabilityMassFunction.Basic
 import Mathlib.Probability.ProbabilityMassFunction.Constructions
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.MeasureTheory.Measure.LogLikelihoodRatio
+set_option linter.unnecessarySimpa false
 
 set_option autoImplicit false
 set_option linter.unusedSectionVars false

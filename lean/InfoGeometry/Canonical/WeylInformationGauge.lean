@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Canonical.InformationTorsion
+set_option linter.unusedSectionVars false
 
 /-!
 # Research.WeylInformationGauge

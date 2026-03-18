@@ -1,5 +1,6 @@
 import InfoGeometry.Projective.FaithfulKL
 import InfoGeometry.Projective.Normalize
+set_option linter.unnecessarySimpa false
 
 /-!
 # Cone-facing KL/Gauge Reduction

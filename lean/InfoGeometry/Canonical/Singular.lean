@@ -16,6 +16,10 @@ import InfoGeometry.Singular.Drazin
 Integrating Drazin and Moore-Penrose inverses for degenerate metrics.
 -/
 
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSectionVars false
+set_option linter.unusedVariables false
+
 namespace InfoGeometry.Canonical
 
 variable {R : Type*} [Ring R] [StarRing R]

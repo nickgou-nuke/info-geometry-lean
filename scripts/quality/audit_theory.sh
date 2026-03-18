@@ -61,6 +61,27 @@ mkdir -p reports
   echo '```'
   echo
 
+  echo "## Quarantine Boundary Audit"
+  echo
+  echo '```text'
+  bash scripts/enforce_quarantine_imports.sh || true
+  echo '```'
+  echo
+
+  echo "## Exact Constructivity Audit"
+  echo
+  echo '```text'
+  python3 scripts/quality/audit_constructivity.py --mode full || true
+  echo '```'
+  echo
+
+  echo "## Review-Only Surrogate Audit"
+  echo
+  echo '```text'
+  python3 scripts/quality/audit_constructivity.py --mode review || true
+  echo '```'
+  echo
+
   echo "## Notes"
   echo "- This report is static when lake is unavailable; full proof checking requires successful lake build."
 } > "$REPORT"

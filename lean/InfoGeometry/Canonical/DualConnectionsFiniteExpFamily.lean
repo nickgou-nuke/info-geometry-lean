@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.DualConnectionsCore
 import InfoGeometry.Information.MultiLogPotential
 import Mathlib.Tactic.Ring
+set_option linter.unusedSimpArgs false
 
 open scoped BigOperators
 

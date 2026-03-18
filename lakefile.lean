@@ -75,6 +75,14 @@ lean_lib SelfReference where
 lean_lib scripts where
   globs := #[.submodules `scripts]
 
+lean_exe semanticBlockExport where
+  root := `scripts.DAG.Exploration.SemanticBlockExport
+  supportInterpreter := true
+
+lean_exe semanticBlockServer where
+  root := `scripts.DAG.Exploration.SemanticBlockServer
+  supportInterpreter := true
+
 lean_lib tmp where
   globs := #[.andSubmodules `tmp]
 

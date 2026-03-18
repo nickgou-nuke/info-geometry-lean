@@ -351,6 +351,7 @@ partial def runCommands (hook : FrontendM Unit) : FrontendM Unit := do
 /-- Export a file. -/
 def exportFile (file : System.FilePath) (opts : Options := {}) : IO Export := do
   Lean.initSearchPath (← Lean.findSysroot)
+  let opts := Elab.async.setIfNotSet opts false
   let input ← IO.FS.readFile file
   let inputCtx := Parser.mkInputContext input file.toString
   let (headerStx, parserState, msgs) ← Parser.parseHeader inputCtx
@@ -409,10 +410,7 @@ def exportFile (file : System.FilePath) (opts : Options := {}) : IO Export := do
             (arr, s)
           else
             let s := s.insert n
-            if DAG.isFromMainModule after.env n then
-              (arr.push n, s)
-            else
-              (arr, s))
+            (arr.push n, s))
         (#[], seen)
     seenRef.set seen'
     let newDecls := newDecls0.qsort Name.lt

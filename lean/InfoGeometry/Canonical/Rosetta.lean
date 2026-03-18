@@ -17,6 +17,9 @@ import InfoGeometry.Canonical.ChiralTorsionBridge
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Canonical.WeylInformationGauge
+import InfoGeometry.Canonical.WeylGaugeField
+import InfoGeometry.Canonical.WeylTransport
+import InfoGeometry.Canonical.WeylTransportChiralBridge
 import InfoGeometry.Canonical.WilsonLoop
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.ModularSpinorBridge
@@ -136,6 +139,75 @@ export InfoGeometry.Canonical.WeylInformationGauge (
   cartanWeyl_generator_split
   cartanWeyl_dilation_sources_transportedEinsteinResidual
   cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts
+)
+
+export InfoGeometry.Canonical (
+  WeylGaugeField
+  WeylGaugeParameter
+  WeylFieldStrength
+  WeylDifferentialOperator
+  WeylTrajectory
+  WeylLineIntegrator
+  WeylHolonomyMap
+  ScaleEquivariantFlow
+)
+
+export InfoGeometry.Canonical.WeylGaugeField (
+  toGeneratedFlow
+  along
+  respond
+  transform
+  transformByPotential
+  covariantDerivative
+  transformSection
+  fieldStrength
+  IsFlat
+  IsGaugeInvariant
+  respond_transform_eq_of_isGaugeInvariant
+  fieldStrength_transformByPotential_eq
+  covariantDerivative_transformSection_eq
+  connectionAlong
+  generatedAlong
+  responseAlong
+  curvatureAlong
+  covariantSectionAlong
+  curvatureAlong_transformByPotential_eq
+  covariantSectionAlong_transform_eq
+  covariantGeneratedFlow
+  respondCovariantFlow
+  respondCovariantFlow_transform_eq
+)
+
+export InfoGeometry.Canonical.WeylTrajectory (
+  along
+)
+
+export InfoGeometry.Canonical.ScaleEquivariantFlow (
+  transportObservable
+  IsCocycle
+  transportObservable_isCocycle
+)
+
+export InfoGeometry.Canonical.WeylLineIntegrator (
+  finiteSumIntegrator
+  finiteSumIntegrator_integrate_eq
+  finiteSumIntegrator_integrateConnection_eq_sum
+  finiteSumIntegrator_holonomy_eq_sum
+  finiteSumIntegrator_integrateCurvature_eq_sum
+  finiteSumIntegrator_integrateCurvature_eq_zero_of_flat
+  integrateConnection
+  integrateCurvature
+  integrateCurvature_transformByPotential_eq
+  holonomy
+  gaugeCompensatedHolonomy
+  gaugeCompensatedHolonomy_eq_base_of_boundary_law
+)
+
+export InfoGeometry.Canonical.WeylTransportBridge (
+  FlatCurvatureChiralScaleBridge
+  holonomy_eq_chiralScale_of_flat
+  finiteSumFlatCurvatureChiralScaleBridge
+  finiteSum_holonomy_eq_chiralScale_of_flat
 )
 
 export InfoGeometry.Canonical.SuperInference (

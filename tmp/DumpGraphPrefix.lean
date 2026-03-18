@@ -23,4 +23,4 @@ elab "#dumpGraph" : command => do
     | some ci =>
         logInfo m!"{name} : {ci.type}"
 
-#dumpGraph
+-- Run `#dumpGraph` manually in an editor or ad hoc script when needed.

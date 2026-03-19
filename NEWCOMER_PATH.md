@@ -27,6 +27,7 @@ Read these in order:
 1. [README.md](/home/goutev/LEAN4/info-geometry-lean/README.md)
 2. [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
 3. [docs/auto/index.md](/home/goutev/LEAN4/info-geometry-lean/docs/auto/index.md)
+4. [THEORY_CANOPY.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY.md)
 
 Then run:
 

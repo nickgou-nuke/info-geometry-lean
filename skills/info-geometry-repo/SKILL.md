@@ -90,6 +90,8 @@ Thin adjunct modules such as `CompactOperatorBridge`, `Product`, and `KasparovCo
 
 - For commands and standard runs: read `references/commands.md`
 - For module/frontier orientation: read `references/module-map.md`
+- For prompt-ready bridge exploration over the current KK -> AnalyticalIndex -> GrandSynthesis frontier:
+  read `references/frontier-prompt.md`
 
 ## Agent Discipline
 

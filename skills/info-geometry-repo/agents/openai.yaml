@@ -1,0 +1,7 @@
+interface:
+  display_name: "InfoGeometry Repo"
+  short_description: "Bootstrap work in the InfoGeometry Lean repo"
+  default_prompt: "Use $info-geometry-repo to orient on this repository, choose the right DAG workflow, and bootstrap a safe analysis or bridge-closing pass."
+
+policy:
+  allow_implicit_invocation: true

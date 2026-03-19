@@ -53,6 +53,7 @@ structure Block where
   scopes          : Array ScopeFrame
   primaryProduces : Array Name
   auxProduces     : Array Name
+  primaryDeps     : Array Name
   primarySpineTags : Array (Name × Array String)
   spineTags       : Array String
   affects         : Array Name
@@ -98,6 +99,22 @@ def collectPrimarySpineTags (env : Environment) (primaryDecls : Array Name) :
     Array (Name × Array String) :=
   primaryDecls.map fun n => (n, InfoGeometry.Canonical.spineTagStringsOf env n)
 
+/-- Collect semantic dependency names for primary declarations produced by a block. -/
+def collectPrimaryDeps (env : Environment) (primaryDecls auxDecls : Array Name) : Array Name :=
+  Id.run do
+    let producedSet : Std.HashSet Name :=
+      (primaryDecls ++ auxDecls).foldl (init := {}) fun s n => s.insert n
+    let mut deps : NameSet := {}
+    for n in primaryDecls do
+      match env.find? n with
+      | none => pure ()
+      | some ci =>
+          let edges := edgesFromConstantInfo ci
+          for (dep, _) in edges do
+            if !producedSet.contains dep then
+              deps := deps.insert dep
+    deps.toArray.qsort Name.lt
+
 /-- Deduplicated block-level summary of per-primary semantic spine tags. -/
 def summarizeSpineTags (primarySpineTags : Array (Name × Array String)) : Array String := Id.run do
   let mut seen : Std.HashSet String := {}
@@ -135,6 +152,7 @@ instance : ToJson Block where
       , ("scopes", toJson blk.scopes)
       , ("primaryProduces", toJson blk.primaryProduces)
       , ("auxProduces", toJson blk.auxProduces)
+      , ("primaryDeps", toJson blk.primaryDeps)
       , ("primarySpineTags", toJsonPrimarySpineTags blk.primarySpineTags)
       , ("spineTags", toJson blk.spineTags)
       , ("produces", toJson blk.produces)
@@ -169,6 +187,10 @@ instance : FromJson Block where
       match j.getObjValAs? (Array Name) "auxProduces" with
       | .ok xs => xs
       | .error _ => legacyProduces.filter isGeneratedOrUnstableName
+    let primaryDeps :=
+      match j.getObjValAs? (Array Name) "primaryDeps" with
+      | .ok xs => xs
+      | .error _ => #[]
     let primarySpineTags :=
       match j.getObjVal? "primarySpineTags" with
       | .ok raw => fromJsonPrimarySpineTags? raw
@@ -193,6 +215,7 @@ instance : FromJson Block where
       scopes := scopes
       primaryProduces := primaryProduces
       auxProduces := auxProduces
+      primaryDeps := primaryDeps
       primarySpineTags := primarySpineTags
       spineTags := spineTags
       affects := affects
@@ -419,6 +442,7 @@ def exportFile (file : System.FilePath) (opts : Options := {}) : IO Export := do
       prodRef.modify  (· ++ Array.replicate newDecls.size blockIdx)
 
     let (primaryDecls, auxDecls) := classifyProducedDecls newDecls
+    let primaryDeps := collectPrimaryDeps after.env primaryDecls auxDecls
     let primarySpineTags := collectPrimarySpineTags after.env primaryDecls
     let spineTags := summarizeSpineTags primarySpineTags
 
@@ -467,6 +491,7 @@ def exportFile (file : System.FilePath) (opts : Options := {}) : IO Export := do
         scopes := scopes
         primaryProduces := primaryDecls
         auxProduces := auxDecls
+        primaryDeps := primaryDeps
         primarySpineTags := primarySpineTags
         spineTags := spineTags
         affects := affects

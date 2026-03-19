@@ -176,6 +176,7 @@ def main() -> int:
 
     if not args.skip_auto_docs:
         run(["python3", "tools/generate_auto_docs.py"], cwd=root)
+        run(["python3", "tools/generate_self_optimization_report.py"], cwd=root)
 
     print("[update-repo-docs] done", flush=True)
     return 0

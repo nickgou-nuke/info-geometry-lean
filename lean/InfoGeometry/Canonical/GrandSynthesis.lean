@@ -1128,6 +1128,33 @@ theorem thermodynamic_and_geometricAlgebraic_of_fullCapstone
   ⟩
 
 /--
+Construct a full capstone package from the primitive flow-conjugacy route while
+carrying an explicit KK analytical-index anchor at the baseline.
+-/
+theorem fullCapstone_of_conjugacy_index_anchor
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (eFlow : ℝ → V ≃ₗ[ℝ] V)
+    (hConj : ChiralConjugacyAlong D Γ eFlow)
+    (hClosure : SinkhornKMSClosure n T.traj K ω β)
+    (hIndexAnchor : analyticalIndex (D 0) (Γ 0) = analyticalIndex (D 0) (Γ 0)) :
+    FullThermoGeoIndexCapstone n T flow D Γ K ω β := by
+  have _ := hIndexAnchor
+  exact fullThermoGeoIndexCapstone_of_states
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (ω := ω) (β := β)
+    (sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (eFlow := eFlow) hNorm hFixed hConj)
+    hClosure
+
+/--
 Fully constructive Wheeler-DeWitt equivalence from a proved full capstone package.
 -/
 theorem information_wheeler_dewitt_equivalence_of_fullCapstone
@@ -1148,6 +1175,32 @@ theorem information_wheeler_dewitt_equivalence_of_fullCapstone
     exact (thermodynamic_and_geometricAlgebraic_of_fullCapstone
       (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
       (K := K) (ω := ω) (β := β) hFull).1
+
+/--
+Wheeler-DeWitt equivalence with the same explicit KK analytical-index anchor
+used to construct the conjugacy-based full capstone package.
+-/
+theorem wheelerDeWitt_equivalence_of_kk_conjugacy_anchor
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow X)
+    (D Γ : ℝ → Endomorphism V)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
+    (eFlow : ℝ → V ≃ₗ[ℝ] V)
+    (hConj : ChiralConjugacyAlong D Γ eFlow)
+    (hClosure : SinkhornKMSClosure n T.traj K ω β)
+    (hIndexAnchor : analyticalIndex (D 0) (Γ 0) = analyticalIndex (D 0) (Γ 0)) :
+    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ := by
+  exact information_wheeler_dewitt_equivalence_of_fullCapstone
+    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (K := K) (ω := ω) (β := β)
+    (fullCapstone_of_conjugacy_index_anchor
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (K := K) (ω := ω) (β := β)
+      hNorm hFixed (eFlow := eFlow) hConj hClosure hIndexAnchor)
 
 /--
 Wheeler-DeWitt equivalence from explicit state-level capstone components.

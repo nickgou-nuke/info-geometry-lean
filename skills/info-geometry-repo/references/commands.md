@@ -111,6 +111,47 @@ Dry isolated optimization cycle:
 python3 tools/run_optimization_cycle.py
 ```
 
+This reuses the persistent optimization lab by default.
+It also hydrates that lab from the main repo's local `.lake` cache before the
+targeted build.
+
+Dry isolated optimization cycle with an explicit frontier row and tracked
+candidate packet selection:
+
+```bash
+python3 tools/run_optimization_cycle.py \
+  --frontier-index 0 \
+  --candidate-index 0
+```
+
+Force a fresh sterile worktree only when you explicitly want a cold baseline:
+
+```bash
+python3 tools/run_optimization_cycle.py \
+  --fresh-worktree \
+  --frontier-index 0 \
+  --candidate-index 0
+```
+
+Reuse a specific existing lab directly:
+
+```bash
+python3 tools/run_optimization_cycle.py \
+  --reuse-worktree /tmp/info-geometry-autoopt/current \
+  --frontier-index 0 \
+  --candidate-index 0
+```
+
+Remove a worktree only when you explicitly want to discard it:
+
+```bash
+python3 tools/run_optimization_cycle.py \
+  --fresh-worktree \
+  --cleanup-worktree \
+  --frontier-index 0 \
+  --candidate-index 0
+```
+
 ## Declaration-level exports
 
 Forward graph:

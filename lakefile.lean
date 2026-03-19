@@ -45,9 +45,6 @@ require LeanArchitect from git
 require «doc-gen4» from git
   "https://github.com/leanprover/doc-gen4.git"
   @ "v4.28.0"
-require Canonical from git
-  "https://github.com/chasenorman/CanonicalLean.git"
-  @ "v4.28.0"
 
 @[default_target]
 lean_lib DAG where
@@ -82,9 +79,3 @@ lean_exe semanticBlockExport where
 lean_exe semanticBlockServer where
   root := `scripts.DAG.Exploration.SemanticBlockServer
   supportInterpreter := true
-
-lean_lib tmp where
-  globs := #[.andSubmodules `tmp]
-
-@[default_target]
-lean_lib scratch

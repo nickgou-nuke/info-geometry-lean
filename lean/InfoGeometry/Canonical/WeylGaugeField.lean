@@ -257,6 +257,22 @@ theorem fieldStrength_transformByPotential_eq
   funext x
   simp [transformByPotential, WeylDifferentialOperator.map_sub]
 
+/--
+Gauge-invariant responses are unchanged by local potential gauge
+transformation as well.
+-/
+theorem respond_transformByPotential_eq_of_isGaugeInvariant
+    (Δ : WeylDifferentialOperator K X A)
+    (B : WeylGaugeField X A)
+    (α : WeylGaugeParameter X A)
+    (resp : GeometricResponse A R)
+    (L : LogGenerator W X)
+    (hInv : IsGaugeInvariant resp) :
+    (B.transformByPotential Δ α).respond resp L = B.respond resp L := by
+  funext w
+  simpa [sub_eq_add_neg] using
+    hInv (B.gaugeOf (L.logGen w)) (-Δ.diff α.shiftOf (L.logGen w))
+
 /-- Covariant derivative obeys the Weyl compensation law. -/
 theorem covariantDerivative_transformSection_eq
     (Δ : WeylDifferentialOperator K X A)

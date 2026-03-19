@@ -86,6 +86,30 @@ theorem index_bridge_spectral [FiniteDimensional ℝ H]
       X.F.toLinearMap
       (KreinGradedModule.gradeCLM (H := H)).toLinearMap := rfl
 
+/--
+Transport the KK analytical index through any path whose analytical index is
+already known to be invariant and whose baseline agrees with the Kasparov data.
+-/
+theorem analyticalIndex_eq_of_indexInvariantAlong [FiniteDimensional ℝ H]
+    (D Γ : ℝ → InfoGeometry.Canonical.BottDirac.Endomorphism H)
+    (hD0 : D 0 = X.F.toLinearMap)
+    (hΓ0 : Γ 0 = (KreinGradedModule.gradeCLM (H := H)).toLinearMap)
+    (hInv : InfoGeometry.Canonical.AnalyticalIndex.IndexInvariantAlong D Γ) :
+    ∀ s : ℝ,
+      InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex (D s) (Γ s) =
+        X.analyticalIndex := by
+  intro s
+  calc
+    InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex (D s) (Γ s)
+        =
+          InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex (D 0) (Γ 0) := hInv s
+    _ = InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
+          X.F.toLinearMap
+          (KreinGradedModule.gradeCLM (H := H)).toLinearMap := by
+          rw [hD0, hΓ0]
+    _ = X.analyticalIndex := by
+          rfl
+
 end
 
 end InfoGeometry.KK

@@ -42,6 +42,9 @@ The authoritative chain is:
    python3 tools/run_optimization_cycle.py
    ```
 
+   This now defaults to a persistent reusable lab under `/tmp`, not to a fresh
+   sterile worktree on every invocation.
+
 3. Inspect the current frontier:
    - local bridge kernel: `reports/dag/skynet-v2-frontier.md`
    - downstream consumers: `reports/dag/skynet-v2-frontier-reverse.md`
@@ -49,6 +52,9 @@ The authoritative chain is:
 4. Build a proposal packet from:
    - `skills/info-geometry-repo/references/frontier-prompt.md`
    - `skills/info-geometry-repo/references/bridge-candidates.md`
+
+   The current runner can already materialize one tracked bridge candidate into
+   the isolated quarantine module in report-only form.
 
 5. Make the smallest useful change:
    - one bridge lemma,
@@ -64,6 +70,14 @@ The authoritative chain is:
 
    and it is created only inside the isolated worktree, not in the canonical
    working tree.
+
+   The default worktree policy is:
+
+   - reuse the persistent lab if it already exists
+   - create the persistent lab if it does not yet exist
+   - create a fresh sterile worktree only with `--fresh-worktree`
+   - destroy a worktree only with explicit cleanup intent
+   - hydrate the lab from the main repo's local `.lake` cache before building
 
 7. Validate in Lean:
 
@@ -150,4 +164,22 @@ Run one isolated dry optimization cycle with:
 
 ```bash
 python3 tools/run_optimization_cycle.py
+```
+
+Select a specific frontier row and candidate sketch with:
+
+```bash
+python3 tools/run_optimization_cycle.py \
+  --frontier-index 0 \
+  --candidate-index 0
+```
+
+Force a brand-new sterile worktree only when you actually want an ab initio
+baseline:
+
+```bash
+python3 tools/run_optimization_cycle.py \
+  --fresh-worktree \
+  --frontier-index 0 \
+  --candidate-index 0
 ```

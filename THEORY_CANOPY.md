@@ -116,8 +116,23 @@ This file is informed by:
 
 It is therefore a **curated semantic map**, not a raw import listing.
 
+## A Second Deep Root Map
+
+This canopy is centered on the currently verified KK/index bridge.
+
+There is also a second, deeper root-centered map focused on:
+
+- Radon-Nikodym density
+- relative volume change
+- Kähler/RN potential
+- Weyl gauge transport
+- modular RN data
+
+For that route, read [THEORY_CANOPY_RN_GAUGE.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY_RN_GAUGE.md).
+
 ## Related Entry Points
 
+- `THEORY_CANOPY_RN_GAUGE.md`
 - `README.md`
 - `NEWCOMER_PATH.md`
 - `lean/DAG/README.md`

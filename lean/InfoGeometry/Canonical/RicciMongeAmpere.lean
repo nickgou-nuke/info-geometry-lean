@@ -621,9 +621,22 @@ lemma satisfiesMongeAmperePotential_iff
     SatisfiesMongeAmperePotential H Φ ↔
       ∀ x : E, mongeAmpereDensity H x = Real.exp (Φ x) := Iff.rfl
 
+/--
+Promote a density-form Monge-Ampere witness to potential form once the target
+density is known to be an exponential potential.
+-/
+lemma satisfiesMongeAmperePotential_of_satisfiesMongeAmpere_eq_exp
+    (H : HessianGeometry E)
+    (ρ Φ : E → ℝ)
+    (hMA : SatisfiesMongeAmpere H ρ)
+    (hExp : ∀ x : E, ρ x = Real.exp (Φ x)) :
+    SatisfiesMongeAmperePotential H Φ := by
+  intro x
+  rw [hMA x, hExp x]
+
 /-- Lemma `mongeAmpereDensity_pos`. -/
 lemma mongeAmpereDensity_pos (H : HessianGeometry E) (x : E) :
-    0 < mongeAmpereDensity H x := by
+  0 < mongeAmpereDensity H x := by
   unfold mongeAmpereDensity
   exact Real.exp_pos _
 

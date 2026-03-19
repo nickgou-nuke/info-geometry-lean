@@ -1,50 +1,62 @@
-# InfoGeometry Documentation Crosswalk
+# InfoGeometry Auto Status
 
-This file is generated. It maps thesis chapters/sections/nodes to compiled Lean declarations.
+Status:
+- generated from local repository state and trusted DAG artifacts
+- authoritative for current metrics/frontier snapshot
+- preferred refresh path: `python3 tools/update_repo_docs.py`
+- low-level generator: `python3 tools/generate_auto_docs.py`
 
-## Canonical Synthesis Notes
+## Repository Scale
+- Lean files under `lean/`: **444**
+- Lean LOC under `lean/`: **74,391**
 
-- [Deep Horizon Synthesis](../deep_horizon_synthesis.md)
-- [Cocycle Detailed-Balance Synthesis](../cocycle_detailed_balance_synthesis.md)
-- [Determinant Tensor-Entropy Synthesis](../determinant_tensor_entropy_synthesis.md)
-- [D4 Crystal Synthesis](../d4_crystal_synthesis.md)
-- [Drazin Conformal Synthesis](../drazin_conformal_synthesis.md)
-- [Gravity Gauge Synthesis](../gravity_gauge_synthesis.md)
-- [LLM Triality Synthesis](../llm_triality_synthesis.md)
-- [Ontology Synthesis](../ontology_synthesis.md)
-- [PRL Abstract/Intro Draft](../prl_abstract_intro_synthesis.md)
-- [Red Line Synthesis](../red_line_synthesis.md)
-- [Testable Physical Predictions](../testable_predictions.md)
-- [Witten Synthesis](../witten_synthesis.md)
+## Trusted Semantic Exports
+| Module | Semantic nodes | Semantic edges | Skeleton nodes | Top hubs |
+| :--- | ---: | ---: | ---: | :--- |
+| `KasparovCycle` | 7 | 26 | 4 | `InfoGeometry.KK.EndH`, `InfoGeometry.KK.IsCompactEnd`, `InfoGeometry.KK.KasparovCycle` |
+| `AnalyticalIndex` | 59 | 209 | 42 | `InfoGeometry.Canonical.AnalyticalIndex.chiralProjectorPlus`, `InfoGeometry.Canonical.AnalyticalIndex.chiralProjectorMinus`, `InfoGeometry.Canonical.AnalyticalIndex.chiralKernelSliceMinus` |
+| `OperatorAlgebraBridge` | 6 | 3 | 2 | `InfoGeometry.Canonical.OperatorAlgebraBridge.IsCStarLayer`, `InfoGeometry.Canonical.OperatorAlgebraBridge.IsCompleteCStarLayer` |
+| `GrandSynthesis` | 56 | 90 | 30 | `InfoGeometry.Canonical.GrandSynthesis.bochnerWeitzenboeckBridge_of_ibDynamics`, `InfoGeometry.Canonical.GrandSynthesis.kahlerPotentialRN`, `InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses` |
 
-## Coverage Summary
+## Verified Bridge Snapshot
+- seed declaration: `InfoGeometry.KK.KasparovCycle.analyticalIndex`
+- seed block: `block:2093-2449`
+- direct hard dependency detected: `InfoGeometry.KK.KasparovCycle.analyticalIndex -> InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
 
-- Total declarations: **165**
-- Explicitly mapped declarations: **0**
-- Auto-mapped coverage declarations: **0**
-- Total mapped declarations: **0**
-- Unmapped declarations: **165**
-- Unresolved explicit nodes: **3**
+## Skynet v2 Frontier
+- graph nodes: **128**
+- graph edges: **647**
+- cross-module edges: **319**
+- seed blocks: **1**
 
-## Unresolved Explicit Nodes
+### Local Bridge Kernel (`--walk both`)
+- `InfoGeometry.KK.KasparovCycle`
+- `InfoGeometry.KK.index_bridge_spectral`
+- `InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
+- `InfoGeometry.KK.superComm_compact_of_even_rep`
+- `InfoGeometry.KK.comm_compact_lie`
+- `InfoGeometry.KK.EndH`
 
-- `thm:core-trivial` (core/core-1): missing `InfoGeometry.Core.core_trivial`
-- `thm:nat-add-comm` (core/core-1): missing `InfoGeometry.Core.nat_add_comm`
-- `thm:nat-add-assoc` (core/core-1): missing `InfoGeometry.Core.nat_add_assoc`
+### Downstream Consumer Frontier (`--walk reverse`)
+- `InfoGeometry.KK.index_bridge_spectral`
+- `InfoGeometry.Canonical.AnalyticalIndex.chiralSliceIsoAlong_of_noZeroEigenCrossing`
+- `InfoGeometry.Canonical.AnalyticalIndex.sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses`
+- `InfoGeometry.Canonical.AnalyticalIndex.indexInvariantAlong_of_conjugacy`
+- `InfoGeometry.Canonical.AnalyticalIndex.chiralSliceIsoAlong_of_conjugacy`
+- `InfoGeometry.Canonical.AnalyticalIndex.chiralSliceIsoAlong_of_gap`
 
-## Chapter 1. Core Foundations
+### First GrandSynthesis Consumer Hits
+- `InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_equivalence_of_state_capstone_hypotheses`
+- `InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_equivalence_of_fullCapstone`
 
-**Module prefixes**
-- `InfoGeometry.Core`
+## Current Reading Order
+1. `README.md`
+2. `lean/DAG/README.md`
+3. `skills/info-geometry-repo/references/frontier-prompt.md`
+4. `skills/info-geometry-repo/references/bridge-candidates.md`
 
-### Basic lemmas
+## Notes
+- This page is a generated status view, not a narrative design document.
+- Generated DAG JSONs under `reports/dag/` are intentionally untracked.
+- Historical crosswalk/intake documents may still exist, but this page reflects the current trusted bridge workflow.
 
-- **thm:core-trivial** — trivial equality
-  - Lean: *(unresolved)*
-  - Milestone: yes
-- **thm:nat-add-comm** — commutativity of addition on ℕ
-  - Lean: *(unresolved)*
-  - Milestone: yes
-- **thm:nat-add-assoc** — associativity of addition on ℕ
-  - Lean: *(unresolved)*
-  - Milestone: yes

@@ -21,6 +21,7 @@ lake build DAG semanticBlockExport semanticBlockServer
 lake build scripts.DAG.Exploration.HarvestDiagnostics
 lake build scripts.DAG.Exploration.LiftNaturalityDiagnostics
 lake build scripts.DAG.Exploration.NaturalityPromoter
+python3 -m py_compile tools/skynet_v2.py
 ```
 
 ## Trusted semantic block export
@@ -45,6 +46,58 @@ Known-good heavy examples:
 - `WeylTransport`
 - `KasparovCycle`
 - `OperatorAlgebraBridge`
+
+## Frontier discovery
+
+Reverse consumer search from the KK seed:
+
+```bash
+python3 tools/skynet_v2.py \
+  --input reports/dag/KasparovCycle.semantic-block.stdlib.json \
+  --input reports/dag/AnalyticalIndex.semantic-block.stdlib.json \
+  --input reports/dag/OperatorAlgebraBridge.semantic-block.stdlib.json \
+  --input reports/dag/GrandSynthesis.semantic-block.stdlib.json \
+  --seed KasparovCycle.analyticalIndex \
+  --walk reverse \
+  --top 12 \
+  --json-out reports/dag/skynet-v2-frontier-reverse.json \
+  --md-out reports/dag/skynet-v2-frontier-reverse.md
+```
+
+Local bridge kernel around the seed:
+
+```bash
+python3 tools/skynet_v2.py \
+  --input reports/dag/KasparovCycle.semantic-block.stdlib.json \
+  --input reports/dag/AnalyticalIndex.semantic-block.stdlib.json \
+  --input reports/dag/OperatorAlgebraBridge.semantic-block.stdlib.json \
+  --input reports/dag/GrandSynthesis.semantic-block.stdlib.json \
+  --seed KasparovCycle.analyticalIndex \
+  --walk both \
+  --top 12 \
+  --json-out reports/dag/skynet-v2-frontier.json \
+  --md-out reports/dag/skynet-v2-frontier.md
+```
+
+## Generated status page
+
+```bash
+python3 tools/generate_auto_docs.py
+```
+
+## End-to-end documentation refresh
+
+Using current trusted semantic exports:
+
+```bash
+python3 tools/update_repo_docs.py
+```
+
+Including a fresh heavy-module semantic export pass:
+
+```bash
+python3 tools/update_repo_docs.py --refresh-exports
+```
 
 ## Declaration-level exports
 

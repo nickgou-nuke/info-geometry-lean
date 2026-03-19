@@ -20,6 +20,17 @@ Trusted semantic block exports already exist for large capstones:
 
 These are produced through the external stdlib server path, not through fragile in-process elaboration.
 
+Current trusted multi-module frontier graph:
+- `128` semantic block nodes
+- `647` edges
+- `319` cross-module edges
+
+The first verified vertical bridge is:
+
+`InfoGeometry.KK.KasparovCycle.analyticalIndex`
+→ `InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
+→ `InfoGeometry.Canonical.GrandSynthesis.*`
+
 ## Repository Map
 
 ### Domain layer
@@ -49,6 +60,8 @@ These are produced through the external stdlib server path, not through fragile 
   External Python LSP/RPC orchestrator for trusted semantic block export.
 - `reports/dag/`
   Generated graph artifacts. These are intentionally untracked.
+- `tools/skynet_v2.py`
+  Report-only semantic frontier explorer over trusted semantic block graphs.
 
 ## Build
 
@@ -71,6 +84,7 @@ lake build DAG semanticBlockExport semanticBlockServer
 lake build scripts.DAG.Exploration.HarvestDiagnostics
 lake build scripts.DAG.Exploration.LiftNaturalityDiagnostics
 lake build scripts.DAG.Exploration.NaturalityPromoter
+python3 -m py_compile tools/skynet_v2.py
 ```
 
 ## Semantic DAG Export
@@ -95,6 +109,48 @@ Why this path matters:
 - it produces semantic block graphs filtered to `primaryProduces`, while preserving `auxProduces` in the causal substrate.
 
 For advanced tooling details, read [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md).
+The generated auto status page lives at [index.md](/home/goutev/LEAN4/info-geometry-lean/docs/auto/index.md).
+
+## Frontier Discovery
+
+The current frontier-discovery path is:
+
+1. export trusted semantic block JSONs for heavy modules;
+2. load them into `tools/skynet_v2.py`;
+3. run diffusion from a named seed using `--walk forward|reverse|both`;
+4. use the resulting frontier packet for candidate bridge statements, not proofs.
+
+Example:
+
+```bash
+python3 tools/skynet_v2.py \
+  --input reports/dag/KasparovCycle.semantic-block.stdlib.json \
+  --input reports/dag/AnalyticalIndex.semantic-block.stdlib.json \
+  --input reports/dag/OperatorAlgebraBridge.semantic-block.stdlib.json \
+  --input reports/dag/GrandSynthesis.semantic-block.stdlib.json \
+  --seed KasparovCycle.analyticalIndex \
+  --walk reverse \
+  --top 12 \
+  --json-out reports/dag/skynet-v2-frontier-reverse.json \
+  --md-out reports/dag/skynet-v2-frontier-reverse.md
+```
+
+Operational rule:
+- `forward` shows dependencies/bases,
+- `reverse` shows downstream consumers,
+- `both` shows the local bridge kernel around the seed.
+
+To regenerate the tracked auto status page from current local artifacts:
+
+```bash
+python3 tools/generate_auto_docs.py
+```
+
+To refresh the frontier packets and the tracked auto status page in one step:
+
+```bash
+python3 tools/update_repo_docs.py
+```
 
 ## How To Read The Theory Topology
 
@@ -113,6 +169,7 @@ Current KK frontier picture:
 - `KasparovCycle` is the real KK core
 - `CompactOperatorBridge`, `Product`, and `KasparovCompactOperator` are thin adjunct modules
 - the first large vertical frontier is `KasparovCycle.analyticalIndex -> Canonical.AnalyticalIndex`
+- reverse frontier discovery now reaches `GrandSynthesis` consumer theorems from the KK seed
 
 ## Agent Bootstrap
 
@@ -128,6 +185,9 @@ If you are using a coding agent, the minimal bootstrap sequence is:
    or frontier analysis
 
 There is also a repo-specific agent skill in `skills/info-geometry-repo/`.
+For bridge work, the most relevant references are:
+- `skills/info-geometry-repo/references/frontier-prompt.md`
+- `skills/info-geometry-repo/references/bridge-candidates.md`
 
 ## Release Integrity
 

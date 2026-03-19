@@ -99,6 +99,12 @@ Including a fresh heavy-module semantic export pass:
 python3 tools/update_repo_docs.py --refresh-exports
 ```
 
+Self-optimization cycle sheet:
+
+```bash
+python3 tools/generate_self_optimization_report.py
+```
+
 ## Declaration-level exports
 
 Forward graph:

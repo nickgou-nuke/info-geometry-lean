@@ -14,8 +14,10 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from build_lock import acquire_build_lock
     from pathing import repo_root
 else:
+    from tools.build_lock import acquire_build_lock
     from tools.pathing import repo_root
 
 
@@ -538,6 +540,7 @@ def main() -> int:
     run_dir = (root / args.runs_dir / run_id).resolve()
     run_dir.mkdir(parents=True, exist_ok=True)
     lock_path: Path | None = None
+    build_lock = None
 
     write_manifest(
         run_dir / "preflight.json",
@@ -593,6 +596,7 @@ def main() -> int:
 
     try:
         lock_path = acquire_worktree_lock(worktree_path, run_id)
+        build_lock = acquire_build_lock(None, f"run-optimization-cycle:{run_id}")
         relative_file = Path(args.relative_file)
         quarantine_path = worktree_path / relative_file
         quarantine_path.parent.mkdir(parents=True, exist_ok=True)
@@ -642,6 +646,7 @@ def main() -> int:
             "relativeFile": str(relative_file),
             "quarantineFile": str(quarantine_path),
             "worktreeLock": str(lock_path),
+            "buildLock": str(build_lock.lock_path),
             "worktreeCommand": asdict(worktree_cmd) if worktree_cmd is not None else None,
             "hydration": {
                 "copiedPackages": hydration.copied_packages,
@@ -674,6 +679,8 @@ def main() -> int:
             manifest["cleanupSkipped"] = "targeted_build_failed"
             write_manifest(run_dir / "manifest.json", manifest)
     finally:
+        if build_lock is not None:
+            build_lock.release()
         release_worktree_lock(lock_path)
 
     print(f"[run-optimization-cycle] run dir: {run_dir}")

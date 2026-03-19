@@ -4,6 +4,9 @@ This directory holds historical automation scripts and scratch Lean files kept
 for provenance, but removed from the active build and supported automation
 surface.
 
+They may still contain useful ideas, partial workflows, or abandoned proof
+search directions. Treat them as design archaeology, not as current entrypoints.
+
 Current authoritative automation lives in:
 
 - `tools/semantic_block_export.py`
@@ -20,3 +23,9 @@ Archived here:
 
 - legacy autonomous proof-discovery scripts from the old `skynet` path
 - scratch Lean files removed from the package build surface
+
+Practical rule:
+
+- mine this directory for ideas or historical context;
+- do not route new automation through it unless you are intentionally reviving
+  an old line of work.

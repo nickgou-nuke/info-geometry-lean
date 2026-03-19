@@ -33,6 +33,9 @@ publication/
 # Generated DAG extraction payloads
 docs-map/declarations*.json
 reports/theory-dag-*/declarations.json
+reports/dag/
+reports/lift-naturality-diagnostics.md
+reports/naturality-promoter.md
 
 # Accidental vendor payloads
 interspec_src/

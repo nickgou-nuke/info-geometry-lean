@@ -7,6 +7,8 @@ This repository has two tightly coupled layers:
 
 It is therefore both a theorem repository and a structural analysis environment for the theory itself.
 
+If you are new to the repository, start with [NEWCOMER_PATH.md](/home/goutev/LEAN4/info-geometry-lean/NEWCOMER_PATH.md) before diving into the full DAG/tooling stack.
+
 ## Verified Shape
 
 Current repository scale:
@@ -62,6 +64,21 @@ The first verified vertical bridge is:
   Generated graph artifacts. These are intentionally untracked.
 - `tools/skynet_v2.py`
   Report-only semantic frontier explorer over trusted semantic block graphs.
+
+## Current vs Legacy
+
+Use this split when entering the repository for the first time.
+
+| Surface | Status | What to use it for |
+| --- | --- | --- |
+| `lean/InfoGeometry/Canonical`, `lean/InfoGeometry/KK`, `lean/InfoGeometry/Library.lean` | Current | Main theorem library and publication surface |
+| `lean/DAG`, `lean/scripts/DAG/Exploration` | Current | Graph extraction, semantic export, diagnostics, frontier analysis |
+| `tools/semantic_block_export.py`, `tools/skynet_v2.py`, `tools/update_repo_docs.py` | Current | Trusted heavy-module export and auto-doc/frontier workflow |
+| `docs/auto/index.md`, `lean/DAG/README.md`, `skills/info-geometry-repo/` | Current | Operational documentation and agent bootstrap |
+| `archive/legacy/` | Archived but useful | Historical automation and scratch material worth mining for ideas, but not part of the supported build surface |
+| `reports/dag/` | Generated / ignore for editing | Untracked analysis artifacts regenerated from the current code |
+
+The archive is intentionally kept in-tree for provenance and idea recovery. Start with current surfaces first, then consult [archive/README.md](/home/goutev/LEAN4/info-geometry-lean/archive/README.md) only if you are explicitly researching historical approaches.
 
 ## Build
 
@@ -188,6 +205,8 @@ There is also a repo-specific agent skill in `skills/info-geometry-repo/`.
 For bridge work, the most relevant references are:
 - `skills/info-geometry-repo/references/frontier-prompt.md`
 - `skills/info-geometry-repo/references/bridge-candidates.md`
+
+For historical context or discarded automation ideas, see [archive/README.md](/home/goutev/LEAN4/info-geometry-lean/archive/README.md).
 
 ## Release Integrity
 

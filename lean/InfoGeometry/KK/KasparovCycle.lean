@@ -110,6 +110,53 @@ theorem analyticalIndex_eq_of_indexInvariantAlong [FiniteDimensional ℝ H]
     _ = X.analyticalIndex := by
           rfl
 
+/--
+Conjugacy-specialized transport of the KK analytical index.
+-/
+theorem analyticalIndex_eq_of_conjugacy [FiniteDimensional ℝ H]
+    (D Γ : ℝ → InfoGeometry.Canonical.BottDirac.Endomorphism H)
+    (eFlow : ℝ → H ≃ₗ[ℝ] H)
+    (hD0 : D 0 = X.F.toLinearMap)
+    (hΓ0 : Γ 0 = (KreinGradedModule.gradeCLM (H := H)).toLinearMap)
+    (hConj : InfoGeometry.Canonical.AnalyticalIndex.ChiralConjugacyAlong D Γ eFlow) :
+    ∀ s : ℝ,
+      InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex (D s) (Γ s) =
+        X.analyticalIndex := by
+  exact analyticalIndex_eq_of_indexInvariantAlong
+    (X := X)
+    (D := D)
+    (Γ := Γ)
+    hD0
+    hΓ0
+    (InfoGeometry.Canonical.AnalyticalIndex.indexInvariantAlong_of_conjugacy
+      (D := D) (Γ := Γ) (eFlow := eFlow) hConj)
+
+/--
+Modular/Clifford-transport specialization of the KK analytical index bridge.
+-/
+theorem analyticalIndex_eq_of_modularCliffordTransport [FiniteDimensional ℝ H]
+    (D Γ : ℝ → InfoGeometry.Canonical.BottDirac.Endomorphism H)
+    {ι : Type*}
+    (σ : ℝ → InfoGeometry.Canonical.BottDirac.Endomorphism H)
+    (clAct : ι → InfoGeometry.Canonical.BottDirac.Endomorphism H)
+    (unit : ι)
+    (hD0 : D 0 = X.F.toLinearMap)
+    (hΓ0 : Γ 0 = (KreinGradedModule.gradeCLM (H := H)).toLinearMap)
+    (hTrans :
+      InfoGeometry.Canonical.AnalyticalIndex.ChiralSliceModularCliffordTransportAlong
+        (D := D) (Γ := Γ) σ clAct unit) :
+    ∀ s : ℝ,
+      InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex (D s) (Γ s) =
+        X.analyticalIndex := by
+  exact analyticalIndex_eq_of_indexInvariantAlong
+    (X := X)
+    (D := D)
+    (Γ := Γ)
+    hD0
+    hΓ0
+    (InfoGeometry.Canonical.AnalyticalIndex.indexInvariantAlong_of_modularCliffordTransport
+      (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans)
+
 end
 
 end InfoGeometry.KK

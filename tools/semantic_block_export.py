@@ -15,8 +15,10 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from build_lock import acquire_build_lock
     from pathing import repo_root
 else:
+    from tools.build_lock import acquire_build_lock
     from tools.pathing import repo_root
 
 
@@ -24,7 +26,7 @@ class JsonRpcError(RuntimeError):
     pass
 
 
-RPC_IMPORT = "import DAG.ServerExport\n"
+RPC_IMPORT = "import DAG.SemanticServerRpc\n"
 
 
 class LspClient:
@@ -294,16 +296,21 @@ def export_semantic_blocks(
 ) -> None:
     repo = repo_root()
     cmd, env = server_command(repo, server_mode)
+    effective_inject_rpc_import = inject_rpc_import_flag or server_mode == "stdlib"
+    if server_mode == "stdlib" and not inject_rpc_import_flag:
+        log_stage("auto-enable RPC shim import for stdlib server mode")
     log_stage(f"server command: {' '.join(cmd)}")
-    client = LspClient(cmd, repo, env, transcript_path, stderr_path)
     abs_input = input_path.resolve()
     uri = abs_input.as_uri()
     original_text = abs_input.read_text(encoding="utf-8")
-    if inject_rpc_import_flag:
+    if effective_inject_rpc_import:
         text, byte_delta, line_delta = inject_rpc_import(original_text)
     else:
         text, byte_delta, line_delta = original_text, 0, 0
     workspace_uri = repo.resolve().as_uri()
+    build_lock = acquire_build_lock(None, f"semantic-block-export:{abs_input}")
+    log_stage(f"build lock acquired: {build_lock.lock_path}")
+    client = LspClient(cmd, repo, env, transcript_path, stderr_path)
 
     try:
         log_stage("initialize")
@@ -352,17 +359,46 @@ def export_semantic_blocks(
         )
         session_id = rpc_connected["sessionId"]
         log_stage(f"rpc/call DAG.Server.semanticBlocks session={session_id}")
-        result = client.request(
-            "$/lean/rpc/call",
-            {
-                "textDocument": {"uri": uri},
-                "position": {"line": 0, "character": 0},
-                "sessionId": session_id,
-                "method": "DAG.Server.semanticBlocks",
-                "params": {"withText": False},
-            },
-            timeout_s=timeout_s,
-        )
+        rpc_params = {
+            "textDocument": {"uri": uri},
+            "position": {"line": 0, "character": 0},
+            "sessionId": session_id,
+            "method": "DAG.Server.semanticBlocks",
+            "params": {"withText": False},
+        }
+        try:
+            result = client.request(
+                "$/lean/rpc/call",
+                rpc_params,
+                timeout_s=timeout_s,
+            )
+        except JsonRpcError as exc:
+            msg = str(exc)
+            if (
+                server_mode == "stdlib"
+                and effective_inject_rpc_import
+                and "No RPC method 'DAG.Server.semanticBlocks' found" in msg
+            ):
+                log_stage("rpc method missing; wait for diagnostics and retry once")
+                client.request(
+                    "textDocument/waitForDiagnostics",
+                    {"uri": uri, "version": 1},
+                    timeout_s=timeout_s,
+                )
+                client.drain(timeout_s=min(1.0, timeout_s))
+                rpc_connected = client.request(
+                    "$/lean/rpc/connect",
+                    {"uri": uri},
+                    timeout_s=timeout_s,
+                )
+                rpc_params["sessionId"] = rpc_connected["sessionId"]
+                result = client.request(
+                    "$/lean/rpc/call",
+                    rpc_params,
+                    timeout_s=timeout_s,
+                )
+            else:
+                raise
         result = normalize_payload(result, byte_delta, line_delta)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(
@@ -375,6 +411,7 @@ def export_semantic_blocks(
         client.notify("exit", {})
     finally:
         client.close()
+        build_lock.release()
 
 
 def parse_args() -> argparse.Namespace:
@@ -408,7 +445,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--inject-rpc-import",
         action="store_true",
-        help="Inject `import DAG.ServerExport` into the virtual didOpen text (experimental; mainly for stdlib server experiments).",
+        help="Force injection of `import DAG.SemanticServerRpc` into the virtual didOpen text. Stdlib mode auto-enables this shim.",
     )
     parser.add_argument(
         "--skip-wait-for-diagnostics",

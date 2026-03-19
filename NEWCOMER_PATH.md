@@ -29,6 +29,7 @@ Read these in order:
 3. [docs/auto/index.md](/home/goutev/LEAN4/info-geometry-lean/docs/auto/index.md)
 4. [THEORY_CANOPY.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY.md)
 5. [THEORY_CANOPY_RN_GAUGE.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY_RN_GAUGE.md)
+6. [UNIVERSAL_VOLUME_STACK.md](/home/goutev/LEAN4/info-geometry-lean/UNIVERSAL_VOLUME_STACK.md)
 
 Then run:
 

@@ -172,6 +172,7 @@ In practice:
 
 ## Related Entry Points
 
+- [UNIVERSAL_VOLUME_STACK.md](/home/goutev/LEAN4/info-geometry-lean/UNIVERSAL_VOLUME_STACK.md)
 - [THEORY_CANOPY.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY.md)
 - [README.md](/home/goutev/LEAN4/info-geometry-lean/README.md)
 - [NEWCOMER_PATH.md](/home/goutev/LEAN4/info-geometry-lean/NEWCOMER_PATH.md)

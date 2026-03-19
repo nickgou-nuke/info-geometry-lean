@@ -5,6 +5,7 @@ import InfoGeometry.Canonical.KMSSinkhornBridge
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.AnalyticalIndex
+import InfoGeometry.KK.KasparovCycle
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Kronecker
 
@@ -618,6 +619,102 @@ theorem grandSynthesis_of_axioms
     (E := E) (Dn := Dn) hAlg
 
 end Capstone
+
+section KkIndexBridge
+
+variable (n : Nat)
+variable {A B Xgeo H : Type}
+  [NormedRing A] [NormedRing B]
+  [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+  [NormedAddCommGroup Xgeo] [InnerProductSpace ℝ Xgeo] [CompleteSpace Xgeo]
+  [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+  [KreinSpace H] [KreinGradedModule H]
+  [FiniteDimensional ℝ H]
+
+/--
+Any geometric-algebraic state already carries the KK analytical index along the
+Dirac/grading path, provided the baseline matches the Kasparov data.
+-/
+theorem kk_analyticalIndex_eq_of_geometricAlgebraicState
+    (Xk : InfoGeometry.KK.KasparovCycle A B H)
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow Xgeo)
+    (D Γ : ℝ → Endomorphism H)
+    (hD0 : D 0 = Xk.F.toLinearMap)
+    (hΓ0 : Γ 0 = (KreinGradedModule.gradeCLM (H := H)).toLinearMap)
+    (hGeoAlg : GeometricAlgebraicState n T flow D Γ) :
+    ∀ s : ℝ, analyticalIndex (D s) (Γ s) = Xk.analyticalIndex := by
+  exact InfoGeometry.KK.analyticalIndex_eq_of_indexInvariantAlong
+    (X := Xk)
+    (D := D)
+    (Γ := Γ)
+    hD0
+    hΓ0
+    hGeoAlg.2.2
+
+/--
+Conjugacy-state specialization of the KK analytical-index bridge on the
+GrandSynthesis branch.
+-/
+theorem kk_analyticalIndex_eq_of_conjugacy_state_hypotheses
+    (Xk : InfoGeometry.KK.KasparovCycle A B H)
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow Xgeo)
+    (D Γ : ℝ → Endomorphism H)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := Xgeo) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := Xgeo) flow s = 0)
+    (eFlow : ℝ → H ≃ₗ[ℝ] H)
+    (hConj : ChiralConjugacyAlong D Γ eFlow)
+    (hD0 : D 0 = Xk.F.toLinearMap)
+    (hΓ0 : Γ 0 = (KreinGradedModule.gradeCLM (H := H)).toLinearMap) :
+    ∀ s : ℝ, analyticalIndex (D s) (Γ s) = Xk.analyticalIndex := by
+  exact kk_analyticalIndex_eq_of_geometricAlgebraicState
+    (n := n)
+    (Xk := Xk)
+    (T := T)
+    (flow := flow)
+    (D := D)
+    (Γ := Γ)
+    hD0
+    hΓ0
+    (sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (eFlow := eFlow) hNorm hFixed hConj)
+
+/--
+Modular/Clifford-transport specialization of the KK analytical-index bridge on
+the GrandSynthesis branch.
+-/
+theorem kk_analyticalIndex_eq_of_modularCliffordTransport_state_hypotheses
+    (Xk : InfoGeometry.KK.KasparovCycle A B H)
+    (T : DoublyStochasticSinkhornTrajectory n)
+    (flow : ScalarRicciFlow Xgeo)
+    (D Γ : ℝ → Endomorphism H)
+    {ι : Type*}
+    (σ : ℝ → Endomorphism H)
+    (clAct : ι → Endomorphism H)
+    (unit : ι)
+    (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := Xgeo) flow)
+    (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := Xgeo) flow s = 0)
+    (hTrans :
+      ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit)
+    (hD0 : D 0 = Xk.F.toLinearMap)
+    (hΓ0 : Γ 0 = (KreinGradedModule.gradeCLM (H := H)).toLinearMap) :
+    ∀ s : ℝ, analyticalIndex (D s) (Γ s) = Xk.analyticalIndex := by
+  exact kk_analyticalIndex_eq_of_geometricAlgebraicState
+    (n := n)
+    (Xk := Xk)
+    (T := T)
+    (flow := flow)
+    (D := D)
+    (Γ := Γ)
+    hD0
+    hΓ0
+    (sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
+      (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+      (σ := σ) (clAct := clAct) (unit := unit) hNorm hFixed hTrans)
+
+end KkIndexBridge
 
 section WheelerDeWitt
 

@@ -105,6 +105,12 @@ Self-optimization cycle sheet:
 python3 tools/generate_self_optimization_report.py
 ```
 
+Dry isolated optimization cycle:
+
+```bash
+python3 tools/run_optimization_cycle.py
+```
+
 ## Declaration-level exports
 
 Forward graph:

@@ -36,6 +36,12 @@ The authoritative chain is:
    python3 tools/update_repo_docs.py --refresh-exports
    ```
 
+   For one isolated dry optimization cycle without any model hook yet:
+
+   ```bash
+   python3 tools/run_optimization_cycle.py
+   ```
+
 3. Inspect the current frontier:
    - local bridge kernel: `reports/dag/skynet-v2-frontier.md`
    - downstream consumers: `reports/dag/skynet-v2-frontier-reverse.md`
@@ -51,6 +57,13 @@ The authoritative chain is:
    - or one documentation/bootstrap improvement.
 
 6. Keep generated or speculative work quarantined until validated.
+
+   In the current dry scaffold, the quarantine target is:
+
+   - `lean/InfoGeometry/Unstable/AutoOptCycle.lean`
+
+   and it is created only inside the isolated worktree, not in the canonical
+   working tree.
 
 7. Validate in Lean:
 
@@ -76,6 +89,9 @@ Why:
 - graph-guided exploration is useful,
 - but failed proposals are expected,
 - and Lean validation needs a safe rollback boundary.
+
+The current runner implements this with `git worktree`, not by switching
+branches in the main working tree.
 
 ## What The Repository Can Safely Optimize
 
@@ -128,4 +144,10 @@ Regenerate it with:
 
 ```bash
 python3 tools/generate_self_optimization_report.py
+```
+
+Run one isolated dry optimization cycle with:
+
+```bash
+python3 tools/run_optimization_cycle.py
 ```

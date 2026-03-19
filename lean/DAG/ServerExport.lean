@@ -142,6 +142,7 @@ def exportFromSnaps (doc : FileWorker.EditableDocument) (snaps : Array Snapshot)
       producer := producer ++ Array.replicate newDecls.size blockIdx
 
     let (primaryDecls, auxDecls) := classifyProducedDecls newDecls
+    let primaryDeps := collectPrimaryDeps snap.env primaryDecls auxDecls
     let primarySpineTags := collectPrimarySpineTags snap.env primaryDecls
     let spineTags := summarizeSpineTags primarySpineTags
 
@@ -156,6 +157,7 @@ def exportFromSnaps (doc : FileWorker.EditableDocument) (snaps : Array Snapshot)
         scopes := scopeStack.reverse.toArray
         primaryProduces := primaryDecls
         auxProduces := auxDecls
+        primaryDeps := primaryDeps
         primarySpineTags := primarySpineTags
         spineTags := spineTags
         affects := #[]
@@ -272,7 +274,10 @@ private def blockJson (blk : Block) : Json :=
     , ("startPos", toJson blk.startPos)
     , ("stopPos", toJson blk.stopPos)
     , ("primaryProduces", toJson blk.primaryProduces)
+    , ("primaryDeps", toJson blk.primaryDeps)
+    , ("primarySpineTags", toJson blk.primarySpineTags)
     , ("spineTags", toJson blk.spineTags)
+    , ("affects", toJson blk.affects)
     ]
 
 private def skeletonEntryJson (blocks : Array Block) (entry : Nat × Nat × Nat) : Json :=
@@ -286,7 +291,31 @@ private def skeletonEntryJson (blocks : Array Block) (entry : Nat × Nat × Nat)
     , ("startPos", toJson blk.startPos)
     , ("stopPos", toJson blk.stopPos)
     , ("primaryProduces", toJson blk.primaryProduces)
+    , ("primaryDeps", toJson blk.primaryDeps)
+    , ("primarySpineTags", toJson blk.primarySpineTags)
     , ("spineTags", toJson blk.spineTags)
+    , ("affects", toJson blk.affects)
+    ]
+
+private def edgeKindJson (k : EdgeKind) : Json :=
+  match k with
+  | .type => toJson ("type" : String)
+  | .value => toJson ("value" : String)
+
+private def semanticEdgeJson (blocks : Array Block) (g : DAG.Graph Nat)
+    (srcLocal dstLocal : Nat) (k : EdgeKind) : Json :=
+  let srcOrig := g.nodes[srcLocal]!
+  let dstOrig := g.nodes[dstLocal]!
+  let srcBlk := blocks[srcOrig]!
+  let dstBlk := blocks[dstOrig]!
+  Json.mkObj
+    [ ("src", toJson srcLocal)
+    , ("dst", toJson dstLocal)
+    , ("srcBlockIdx", toJson srcOrig)
+    , ("dstBlockIdx", toJson dstOrig)
+    , ("srcStableId", toJson srcBlk.stableId)
+    , ("dstStableId", toJson dstBlk.stableId)
+    , ("kind", edgeKindJson k)
     ]
 
 def semanticBlocksPayload (ex : Export) : Json :=
@@ -297,6 +326,13 @@ def semanticBlocksPayload (ex : Export) : Json :=
   let skeleton := semanticBlockSkeleton hydrated 1
   let edgeCount := semanticG.forward.foldl (init := 0) fun acc row => acc + row.size
   let semanticBlocks := semanticG.nodes.map fun origIdx => blockJson (ex.blocks[origIdx]!)
+  let semanticEdges :=
+    Id.run do
+      let mut out : Array Json := #[]
+      for i in [:semanticG.forward.size] do
+        for (j, k) in semanticG.forward[i]! do
+          out := out.push (semanticEdgeJson ex.blocks semanticG i j k)
+      out
   Json.mkObj
     [ ("sourceFile", toJson ex.file)
     , ("rawBlocks", toJson ex.blocks.size)
@@ -306,6 +342,7 @@ def semanticBlocksPayload (ex : Export) : Json :=
     , ("semanticBlockEdges", toJson edgeCount)
     , ("semanticSkeletonNodes", toJson skeleton.size)
     , ("blocks", Json.arr semanticBlocks)
+    , ("edges", Json.arr semanticEdges)
     , ("skeleton", Json.arr <| skeleton.map (skeletonEntryJson ex.blocks))
     ]
 

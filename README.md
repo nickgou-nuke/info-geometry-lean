@@ -8,6 +8,7 @@ This repository has two tightly coupled layers:
 It is therefore both a theorem repository and a structural analysis environment for the theory itself.
 
 If you are new to the repository, start with [NEWCOMER_PATH.md](/home/goutev/LEAN4/info-geometry-lean/NEWCOMER_PATH.md) before diving into the full DAG/tooling stack.
+If you want the semantic “top view” of the theory, read [THEORY_CANOPY.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY.md).
 
 ## Verified Shape
 

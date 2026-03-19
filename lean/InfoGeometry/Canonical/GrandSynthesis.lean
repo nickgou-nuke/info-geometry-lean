@@ -348,6 +348,86 @@ lemma hasConstantMongeAmpereDensity_of_rnEntropySource
     (H := Kgeo.H) (ρ0 := relativeVolumeChangeRN n M) hSource
 
 /--
+RN entropy sourcing can be read in potential form: the Monge-Ampere density is
+the exponential of the negative RN/Kähler potential.
+-/
+lemma rnEntropySourcesMongeAmperePotential
+    (Kgeo : KaehlerInformationGeometry X)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M) :
+    SatisfiesMongeAmperePotential Kgeo.H (fun _ => -kahlerPotentialRN n M) := by
+  intro x
+  rw [hSource x, relativeVolumeChangeRN]
+
+/--
+Pointwise log form of RN entropy sourcing: the logarithmic Monge-Ampere density
+is exactly the negative RN/Kähler potential.
+-/
+lemma log_mongeAmpereDensity_eq_neg_kahlerPotentialRN_of_rnEntropySource
+    (Kgeo : KaehlerInformationGeometry X)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (x : X) :
+    Real.log (mongeAmpereDensity Kgeo.H x) = -kahlerPotentialRN n M := by
+  rw [hSource x, relativeVolumeChangeRN]
+  simp
+
+/--
+Equivalent pointwise form: the RN/Kähler potential is minus the logarithmic
+Monge-Ampere density under RN entropy sourcing.
+-/
+lemma kahlerPotentialRN_eq_neg_log_mongeAmpereDensity_of_rnEntropySource
+    (Kgeo : KaehlerInformationGeometry X)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (x : X) :
+    kahlerPotentialRN n M = -Real.log (mongeAmpereDensity Kgeo.H x) := by
+  calc
+    kahlerPotentialRN n M = -(-kahlerPotentialRN n M) := by ring
+    _ = -Real.log (mongeAmpereDensity Kgeo.H x) := by
+      rw [log_mongeAmpereDensity_eq_neg_kahlerPotentialRN_of_rnEntropySource
+        (n := n) (Kgeo := Kgeo) (M := M) hSource x]
+
+/--
+If the Kähler logarithmic potential `logF` matches the negative RN/Kähler
+potential, then RN entropy sourcing upgrades directly to a `logF`-driven
+Monge-Ampere potential witness.
+-/
+lemma rnEntropySourcesMongeAmperePotential_of_logF_eq_neg_kahlerPotentialRN
+    (Kgeo : KaehlerInformationGeometry X)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (hLogF : ∀ x : X, Kgeo.logF x = -kahlerPotentialRN n M) :
+    SatisfiesMongeAmperePotential Kgeo.H Kgeo.logF := by
+  intro x
+  calc
+    mongeAmpereDensity Kgeo.H x = Real.exp (-kahlerPotentialRN n M) := by
+      exact rnEntropySourcesMongeAmperePotential
+        (n := n) (Kgeo := Kgeo) (M := M) hSource x
+    _ = Real.exp (Kgeo.logF x) := by
+      rw [hLogF x]
+
+/--
+Pointwise logarithmic Monge-Ampere closure along the same bridge: when `logF`
+coincides with the negative RN/Kähler potential, the logarithmic Monge-Ampere
+density is exactly `logF`.
+-/
+lemma log_mongeAmpereDensity_eq_logF_of_rnEntropySource_of_logF_eq_neg_kahlerPotentialRN
+    (Kgeo : KaehlerInformationGeometry X)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (hLogF : ∀ x : X, Kgeo.logF x = -kahlerPotentialRN n M)
+    (x : X) :
+    Real.log (mongeAmpereDensity Kgeo.H x) = Kgeo.logF x := by
+  calc
+    Real.log (mongeAmpereDensity Kgeo.H x) = -kahlerPotentialRN n M := by
+      exact log_mongeAmpereDensity_eq_neg_kahlerPotentialRN_of_rnEntropySource
+        (n := n) (Kgeo := Kgeo) (M := M) hSource x
+    _ = Kgeo.logF x := by
+      symm
+      exact hLogF x
+
+/--
 Entropy-sourced geometric gravity statement:
 RN/Kahler-potential sourcing plus unit relative-volume closure and a metric RN
 bridge implies the vacuum Einstein equation on the `c = 0` branch (`scalar = 2Λ`).

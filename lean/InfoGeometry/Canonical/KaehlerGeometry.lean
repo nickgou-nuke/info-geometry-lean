@@ -42,6 +42,12 @@ The metric is recovered as the Hessian of this potential.
 -/
 def logF : E → ℝ := K.H.potential
 
+omit [FiniteDimensional ℝ E] in
+@[simp] theorem logF_eq_potential : K.logF = K.H.potential := rfl
+
+omit [FiniteDimensional ℝ E] in
+@[simp] theorem logF_apply (x : E) : K.logF x = K.H.potential x := rfl
+
 /--
 The Symplectic Curvature associated with the Kähler structure.
 This measures the 'Area' of information enclosed by a belief loop.

@@ -30,6 +30,7 @@ There are three different views of the theory, and they should not be mixed:
 3. Semantic block graph
 - Built from block export, but filtered to `primaryProduces`.
 - This removes generated `_proof_*`, `match_*`, and auxiliary elaborator noise from the semantic presentation layer while keeping causal provenance intact underneath.
+- It now also carries `primaryDeps`, explicit semantic block edges, and enough metadata for frontier diffusion in Python.
 
 The practical rule is:
 
@@ -192,6 +193,8 @@ This path yields:
 - `semanticSkeletonNodes`
 - filtered `blocks`
 - filtered `skeleton`
+- explicit `edges`
+- per-block `primaryDeps`
 
 The important operational flags are:
 - `--server-mode stdlib`
@@ -218,6 +221,54 @@ These tools are report-only by design. They identify:
 - grouped functor obligations,
 - strict commutative-square candidates.
 
+### Workflow E: Multi-module frontier discovery (`Skynet v2`)
+
+Use this after exporting trusted semantic block JSONs for the heavy modules you
+want to connect.
+
+```bash
+python3 tools/skynet_v2.py \
+  --input reports/dag/KasparovCycle.semantic-block.stdlib.json \
+  --input reports/dag/AnalyticalIndex.semantic-block.stdlib.json \
+  --input reports/dag/OperatorAlgebraBridge.semantic-block.stdlib.json \
+  --input reports/dag/GrandSynthesis.semantic-block.stdlib.json \
+  --seed KasparovCycle.analyticalIndex \
+  --walk reverse \
+  --top 12 \
+  --json-out reports/dag/skynet-v2-frontier-reverse.json \
+  --md-out reports/dag/skynet-v2-frontier-reverse.md
+```
+
+Walk modes:
+- `forward`
+  dependency/base search
+- `reverse`
+  consumer/downstream search
+- `both`
+  local bridge kernel around the seed
+
+To regenerate the tracked auto status page after refreshing exports/frontiers:
+
+```bash
+python3 tools/generate_auto_docs.py
+```
+
+To rerun the frontier packets and regenerate the tracked status page together:
+
+```bash
+python3 tools/update_repo_docs.py
+```
+
+To include a full trusted export refresh for the heavy default modules:
+
+```bash
+python3 tools/update_repo_docs.py --refresh-exports
+```
+
+Current verified use case:
+- `KasparovCycle.analyticalIndex` crosses into `Canonical.AnalyticalIndex`
+- reverse frontier reaches `GrandSynthesis` Wheeler-DeWitt consumers
+
 ## 6) Semantic Block Export Invariants
 
 The semantic block export now preserves a deliberate split:
@@ -228,6 +279,7 @@ The semantic block export now preserves a deliberate split:
 Concretely:
 - `auxProduces` stay in `decls`, `producer`, and dependency roll-up logic
 - `primaryProduces` drive semantic block nodes and semantic skeleton selection
+- `primaryDeps` record hard declaration dependencies of the block's primary declarations
 - `primarySpineTags` gives per-primary declaration semantic tags
 - `spineTags` is a deduplicated block-level summary cache
 
@@ -310,9 +362,9 @@ Current first-step canonicalization (implemented):
 - Optional umbrella/API normalization in `DAG.lean`.
 
 ### Phase 6
-- Typed frontier extraction over semantic block graphs.
-- Diffusion / restart-walk over purified semantic web.
-- LLM-facing frontier packets for candidate bridge statements.
+- Typed frontier extraction over semantic block graphs. Partial: done.
+- Diffusion / restart-walk over purified semantic web. Partial: done via `tools/skynet_v2.py`.
+- LLM-facing frontier packets for candidate bridge statements. Partial: done via skill references and report-only packets.
 
 ## 11) Build/Validation Commands
 

@@ -175,10 +175,20 @@ To regenerate the tracked auto status page from current local artifacts:
 python3 tools/generate_auto_docs.py
 ```
 
-To refresh the frontier packets and the tracked auto status page in one step:
+To refresh the frontier packets and the tracked auto status page from the
+current trusted semantic export set:
 
 ```bash
 python3 tools/update_repo_docs.py
+```
+
+To refresh semantic exports first, then rebuild the frontier from the full
+current export set:
+
+```bash
+python3 tools/update_repo_docs.py --refresh-exports
+python3 tools/update_repo_docs.py --refresh-exports all
+python3 tools/update_repo_docs.py --refresh-exports changed
 ```
 
 This refresh now also regenerates the tracked bridge-candidate packet from the

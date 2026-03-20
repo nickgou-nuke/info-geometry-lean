@@ -235,6 +235,53 @@ theorem exists_zeroMode_of_dim_mismatch
     (H := H)
     (hasZeroMode_of_dim_mismatch (M := M) P0 H hodd hdim)
 
+/--
+Bogoliubov conjugation preserves nontrivial kernel: any zero mode of `H`
+pushes forward to a zero mode of `B ∘ H ∘ B⁻¹`.
+-/
+theorem hasZeroMode_conjugate_of_hasZeroMode
+    (T : RealBogoliubovTransform (S := S) M)
+    {H : EndS (S := S)}
+    (hH : HasZeroMode (S := S) H) :
+    HasZeroMode (S := S) (T.B.comp (H.comp T.Binv)) := by
+  rcases exists_zeroMode_of_hasZeroMode (S := S) (H := H) hH with ⟨v, hv, hv0⟩
+  unfold HasZeroMode
+  intro hbot
+  have hBv_ne : T.B v ≠ 0 := by
+    intro hBv
+    apply hv0
+    have h := congrArg T.Binv hBv
+    simpa using h
+  have hKerEq :
+      (T.B.comp (H.comp T.Binv)) (T.B v) = 0 := by
+    calc
+      (T.B.comp (H.comp T.Binv)) (T.B v)
+          = T.B (H (T.Binv (T.B v))) := by
+              simp [ContinuousLinearMap.comp_apply]
+      _ = T.B (H v) := by simp
+      _ = 0 := by simp [hv]
+  have hKer :
+      T.B v ∈ (T.B.comp (H.comp T.Binv)).toLinearMap.ker := by
+    simpa using hKerEq
+  have : T.B v ∈ (⊥ : Submodule ℝ S) := by
+    rw [← hbot]
+    exact hKer
+  have hBvZero : T.B v = 0 := by
+    simpa using this
+  exact hBv_ne hBvZero
+
+/--
+Explicit witness form of `hasZeroMode_conjugate_of_hasZeroMode`.
+-/
+theorem exists_zeroMode_of_hasZeroMode_conjugate
+    (T : RealBogoliubovTransform (S := S) M)
+    {H : EndS (S := S)}
+    (hH : HasZeroMode (S := S) H) :
+    ∃ v : S, (T.B.comp (H.comp T.Binv)) v = 0 ∧ v ≠ 0 := by
+  exact exists_zeroMode_of_hasZeroMode (S := S)
+    (H := T.B.comp (H.comp T.Binv))
+    (hasZeroMode_conjugate_of_hasZeroMode (M := M) (T := T) hH)
+
 end Core
 
 section ChainBridge
@@ -562,6 +609,49 @@ theorem zero_mode_is_information_sink_concrete_of_boundaryLocalization
       (M := M) (P0 := P0) (localOp := localOp) (chain := chain) hLoc)
 
 /--
+Bogoliubov-stable concrete bulk-boundary correspondence:
+the zero-mode conclusion survives conjugation by any real Bogoliubov transform.
+-/
+theorem bulk_boundary_correspondence_concrete_of_boundaryLocalization_under_bogoliubov
+    (T : RealBogoliubovTransform (S := S) M)
+    (localOp : KitaevCell → EndS (S := S))
+    (chain : List KitaevCell)
+    (hTopo : topologicalIndexZ2 chain = 1)
+    (hPHS : ∀ c : KitaevCell,
+      ParticleHoleSymmetric (M := M) (P0 := P0) (localOp c))
+    (hLoc : BoundaryLocalizationBridge (M := M) (P0 := P0) localOp chain) :
+    HasZeroMode (S := S)
+      (T.B.comp
+        ((globalChainOperatorFromOpenChain (S := S) localOp chain).comp T.Binv)) := by
+  exact hasZeroMode_conjugate_of_hasZeroMode (M := M) (T := T)
+    (bulk_boundary_correspondence_concrete_of_boundaryLocalization
+      (M := M) (P0 := P0) (localOp := localOp)
+      (chain := chain) hTopo hPHS hLoc)
+
+/--
+Bogoliubov-stable concrete information-sink witness:
+a boundary-localized zero mode persists under real Bogoliubov conjugation.
+-/
+theorem zero_mode_is_information_sink_concrete_of_boundaryLocalization_under_bogoliubov
+    (T : RealBogoliubovTransform (S := S) M)
+    (localOp : KitaevCell → EndS (S := S))
+    (chain : List KitaevCell)
+    (hTopo : topologicalIndexZ2 chain = 1)
+    (hPHS : ∀ c : KitaevCell,
+      ParticleHoleSymmetric (M := M) (P0 := P0) (localOp c))
+    (hLoc : BoundaryLocalizationBridge (M := M) (P0 := P0) localOp chain) :
+    ∃ v : S,
+      v ∈ (T.B.comp
+        ((globalChainOperatorFromOpenChain (S := S) localOp chain).comp T.Binv)).toLinearMap.ker
+        ∧ v ≠ 0 := by
+  rcases exists_zeroMode_of_hasZeroMode_conjugate (M := M) (T := T)
+      (H := globalChainOperatorFromOpenChain (S := S) localOp chain)
+      (bulk_boundary_correspondence_concrete_of_boundaryLocalization
+        (M := M) (P0 := P0) (localOp := localOp)
+        (chain := chain) hTopo hPHS hLoc) with ⟨v, hv, hv0⟩
+  exact ⟨v, hv, hv0⟩
+
+/--
 Turnkey example theorem:
 from a simplified boundary model package, derive the concrete end-to-end
 bulk-boundary correspondence in one step.
@@ -607,6 +697,47 @@ theorem zero_mode_is_information_sink_concrete_of_simplifiedBoundaryModel
     chain
     hTopo
     hPHS
+    (boundaryLocalizationBridge_of_simplifiedBoundaryModel
+      (M := M) (P0 := P0) (localOp := localOp) (chain := chain) hSimple)
+
+/--
+Bogoliubov-stable simplified-boundary-model bulk-boundary correspondence.
+-/
+theorem bulk_boundary_correspondence_concrete_of_simplifiedBoundaryModel_under_bogoliubov
+    (T : RealBogoliubovTransform (S := S) M)
+    (localOp : KitaevCell → EndS (S := S))
+    (chain : List KitaevCell)
+    (hTopo : topologicalIndexZ2 chain = 1)
+    (hPHS : ∀ c : KitaevCell,
+      ParticleHoleSymmetric (M := M) (P0 := P0) (localOp c))
+    (hSimple : SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain) :
+    HasZeroMode (S := S)
+      (T.B.comp
+        ((globalChainOperatorFromOpenChain (S := S) localOp chain).comp T.Binv)) := by
+  exact bulk_boundary_correspondence_concrete_of_boundaryLocalization_under_bogoliubov
+    (M := M) (P0 := P0) (T := T)
+    (localOp := localOp) (chain := chain) hTopo hPHS
+    (boundaryLocalizationBridge_of_simplifiedBoundaryModel
+      (M := M) (P0 := P0) (localOp := localOp) (chain := chain) hSimple)
+
+/--
+Bogoliubov-stable simplified-boundary-model zero-mode witness.
+-/
+theorem zero_mode_is_information_sink_concrete_of_simplifiedBoundaryModel_under_bogoliubov
+    (T : RealBogoliubovTransform (S := S) M)
+    (localOp : KitaevCell → EndS (S := S))
+    (chain : List KitaevCell)
+    (hTopo : topologicalIndexZ2 chain = 1)
+    (hPHS : ∀ c : KitaevCell,
+      ParticleHoleSymmetric (M := M) (P0 := P0) (localOp c))
+    (hSimple : SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain) :
+    ∃ v : S,
+      v ∈ (T.B.comp
+        ((globalChainOperatorFromOpenChain (S := S) localOp chain).comp T.Binv)).toLinearMap.ker
+        ∧ v ≠ 0 := by
+  exact zero_mode_is_information_sink_concrete_of_boundaryLocalization_under_bogoliubov
+    (M := M) (P0 := P0) (T := T)
+    (localOp := localOp) (chain := chain) hTopo hPHS
     (boundaryLocalizationBridge_of_simplifiedBoundaryModel
       (M := M) (P0 := P0) (localOp := localOp) (chain := chain) hSimple)
 

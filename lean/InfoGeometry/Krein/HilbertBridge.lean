@@ -6,36 +6,271 @@ import Mathlib.Tactic.Module
 /-!
 # InfoGeometry.Krein.HilbertBridge
 
-Compatibility layer for the neutral-space bridge API.
+Hardened Hilbert/neutral bridge API over type-distinct wrappers of `DoubledSpace`.
 -/
 
 namespace InfoGeometry.Krein
 
 open scoped InnerProductSpace
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+universe u
 
-abbrev HilbertDoubled (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
-  DoubledSpace E
+variable {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-abbrev NeutralSpace (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
-  DoubledSpace E
+abbrev HilbertDoubled (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  ULift.{u} (DoubledSpace E)
+
+namespace HilbertDoubled
+
+variable {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+noncomputable instance : NormedAddCommGroup (HilbertDoubled E) := inferInstance
+noncomputable instance : NormedSpace ℝ (HilbertDoubled E) := inferInstance
+noncomputable instance : CompleteSpace (HilbertDoubled E) := inferInstance
+
+instance : Coe (HilbertDoubled E) (DoubledSpace E) := ⟨ULift.down⟩
+instance : CoeTC (HilbertDoubled E) (WithLp (2 : ENNReal) (E × E)) := ⟨fun u => (u : DoubledSpace E)⟩
+instance : CoeTC (WithLp (2 : ENNReal) (E × E)) (HilbertDoubled E) := ⟨fun u => ⟨u⟩⟩
+
+noncomputable instance : Inner ℝ (HilbertDoubled E) where
+  inner u v := ⟪((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)),
+    (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))⟫_ℝ
+
+noncomputable instance : InnerProductSpace ℝ (HilbertDoubled E) where
+  norm_sq_eq_re_inner := by
+    intro u
+    change ‖((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))‖ ^ 2 =
+      RCLike.re ⟪((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)),
+        (((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))⟫_ℝ
+    simp
+  conj_inner_symm := by
+    intro u v
+    exact
+      (inner_conj_symm (𝕜 := ℝ)
+        (((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
+        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))))
+  add_left := by
+    intro u v w
+    simpa using
+      (inner_add_left
+        (((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
+        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
+        (((w : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))))
+  smul_left := by
+    intro u v r
+    simpa using
+      (real_inner_smul_left
+        (((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
+        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
+        r)
+
+noncomputable instance : KreinSpace (HilbertDoubled E) where
+  J :=
+    { toFun := fun u => ⟨KreinSpace.J (H := DoubledSpace E) (u : DoubledSpace E)⟩
+      invFun := fun u => ⟨KreinSpace.J (H := DoubledSpace E) (u : DoubledSpace E)⟩
+      left_inv := by
+        intro u
+        apply ULift.ext
+        simpa using (KreinSpace.J_invol (H := DoubledSpace E) (u : DoubledSpace E))
+      right_inv := by
+        intro u
+        apply ULift.ext
+        simpa using (KreinSpace.J_invol (H := DoubledSpace E) (u : DoubledSpace E))
+      map_add' := by
+        intro u v
+        apply ULift.ext
+        simp
+      map_smul' := by
+        intro a u
+        apply ULift.ext
+        simp
+      norm_map' := by
+        intro u
+        simpa using (KreinSpace.J (H := DoubledSpace E)).norm_map (u : DoubledSpace E) }
+  J_invol := by
+    intro u
+    apply ULift.ext
+    simpa using (KreinSpace.J_invol (H := DoubledSpace E) (u : DoubledSpace E))
+  J_selfAdj := by
+    intro u v
+    simpa using
+      (KreinSpace.J_selfAdj (H := DoubledSpace E)
+        ((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))
+        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))))
+
+abbrev val (u : HilbertDoubled E) : WithLp (2 : ENNReal) (E × E) := (u : DoubledSpace E)
+abbrev ofLp (u : HilbertDoubled E) : E × E := WithLp.ofLp (u : DoubledSpace E)
+abbrev ofWithLp (u : WithLp (2 : ENNReal) (E × E)) : HilbertDoubled E := ⟨u⟩
+abbrev toLp (v : E × E) : HilbertDoubled E := ⟨WithLp.toLp 2 v⟩
+
+lemma val_ofWithLp (u : WithLp (2 : ENNReal) (E × E)) : (ofWithLp (E := E) u).val = u := rfl
+lemma ofWithLp_val (u : HilbertDoubled E) : ofWithLp (E := E) u.val = u := by
+  cases u
+  rfl
+@[simp] lemma val_toLp (v : E × E) : (toLp (E := E) v).val = WithLp.toLp 2 v := rfl
+@[simp] lemma coe_toLp (v : E × E) : ((toLp (E := E) v : HilbertDoubled E) : DoubledSpace E) = WithLp.toLp 2 v := rfl
+@[simp] lemma ofLp_toLp (v : E × E) : ofLp (toLp (E := E) v) = v := rfl
+@[simp] lemma toLp_ofLp (u : HilbertDoubled E) : toLp (E := E) (ofLp u) = u := by
+  cases u
+  rfl
+@[simp] lemma fst_ofWithLp (u : WithLp (2 : ENNReal) (E × E)) :
+    WithLp.fst (ofWithLp (E := E) u).val = WithLp.fst u := rfl
+@[simp] lemma snd_ofWithLp (u : WithLp (2 : ENNReal) (E × E)) :
+    WithLp.snd (ofWithLp (E := E) u).val = WithLp.snd u := rfl
+@[simp] lemma fst_toLp (v : E × E) : WithLp.fst (toLp (E := E) v).val = v.1 := rfl
+@[simp] lemma snd_toLp (v : E × E) : WithLp.snd (toLp (E := E) v).val = v.2 := rfl
+
+@[ext] lemma ext {u v : HilbertDoubled E} (h : u.val = v.val) : u = v := by
+  cases u
+  cases v
+  simp at h
+  cases h
+  rfl
+
+noncomputable def ofDoubledLIE : DoubledSpace E ≃ₗᵢ[ℝ] HilbertDoubled E where
+  toLinearEquiv :=
+    { toFun := fun u => ⟨u⟩
+      invFun := fun u => (u : DoubledSpace E)
+      left_inv := by
+        intro u
+        rfl
+      right_inv := by
+        intro u
+        apply ext
+        rfl
+      map_add' := by
+        intro u v
+        rfl
+      map_smul' := by
+        intro a u
+        rfl }
+  norm_map' := by
+    intro u
+    rfl
+
+noncomputable abbrev toDoubledLIE : HilbertDoubled E ≃ₗᵢ[ℝ] DoubledSpace E :=
+  (ofDoubledLIE (E := E)).symm
+
+noncomputable abbrev ofDoubledContinuousLinearEquiv : DoubledSpace E ≃L[ℝ] HilbertDoubled E :=
+  (ofDoubledLIE (E := E)).toContinuousLinearEquiv
+
+noncomputable abbrev toDoubledContinuousLinearEquiv : HilbertDoubled E ≃L[ℝ] DoubledSpace E :=
+  (toDoubledLIE (E := E)).toContinuousLinearEquiv
+
+end HilbertDoubled
+
+/--
+Neutral carrier wrapper used to keep the Hessian/neutral chart type-distinct from the diagonal
+`DoubledSpace` carrier.
+-/
+abbrev NeutralSpace (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  ULift.{u} (DoubledSpace E)
 
 namespace NeutralSpace
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-abbrev val (u : NeutralSpace E) : WithLp (2 : ENNReal) (E × E) := u
-abbrev ofWithLp (u : WithLp (2 : ENNReal) (E × E)) : NeutralSpace E := u
-abbrev toLp (v : E × E) : NeutralSpace E := WithLp.toLp 2 v
+noncomputable instance : NormedAddCommGroup (NeutralSpace E) := inferInstance
+noncomputable instance : NormedSpace ℝ (NeutralSpace E) := inferInstance
+noncomputable instance : CompleteSpace (NeutralSpace E) := inferInstance
+
+instance : Coe (NeutralSpace E) (DoubledSpace E) := ⟨ULift.down⟩
+
+noncomputable instance : Inner ℝ (NeutralSpace E) where
+  inner u v := ⟪((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)),
+    (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))⟫_ℝ
+
+noncomputable instance : InnerProductSpace ℝ (NeutralSpace E) where
+  norm_sq_eq_re_inner := by
+    intro u
+    change ‖((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))‖ ^ 2 =
+      RCLike.re ⟪((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)),
+        (((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))⟫_ℝ
+    simp
+  conj_inner_symm := by
+    intro u v
+    exact
+      (inner_conj_symm (𝕜 := ℝ)
+        (((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
+        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))))
+  add_left := by
+    intro u v w
+    simpa using
+      (inner_add_left
+        (((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
+        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
+        (((w : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))))
+  smul_left := by
+    intro u v r
+    simpa using
+      (real_inner_smul_left
+        (((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
+        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E)))
+        r)
+
+noncomputable instance : KreinSpace (NeutralSpace E) where
+  J :=
+    { toFun := fun u => ⟨KreinSpace.J (H := DoubledSpace E) (u : DoubledSpace E)⟩
+      invFun := fun u => ⟨KreinSpace.J (H := DoubledSpace E) (u : DoubledSpace E)⟩
+      left_inv := by
+        intro u
+        apply ULift.ext
+        simpa using (KreinSpace.J_invol (H := DoubledSpace E) (u : DoubledSpace E))
+      right_inv := by
+        intro u
+        apply ULift.ext
+        simpa using (KreinSpace.J_invol (H := DoubledSpace E) (u : DoubledSpace E))
+      map_add' := by
+        intro u v
+        apply ULift.ext
+        simp
+      map_smul' := by
+        intro a u
+        apply ULift.ext
+        simp
+      norm_map' := by
+        intro u
+        simpa using (KreinSpace.J (H := DoubledSpace E)).norm_map (u : DoubledSpace E) }
+  J_invol := by
+    intro u
+    apply ULift.ext
+    simpa using (KreinSpace.J_invol (H := DoubledSpace E) (u : DoubledSpace E))
+  J_selfAdj := by
+    intro u v
+    simpa using
+      (KreinSpace.J_selfAdj (H := DoubledSpace E)
+        ((u : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))
+        (((v : DoubledSpace E) : WithLp (2 : ENNReal) (E × E))))
+
+abbrev val (u : NeutralSpace E) : WithLp (2 : ENNReal) (E × E) := (u : DoubledSpace E)
+abbrev ofLp (u : NeutralSpace E) : E × E := WithLp.ofLp (u : DoubledSpace E)
+abbrev ofWithLp (u : WithLp (2 : ENNReal) (E × E)) : NeutralSpace E := ⟨u⟩
+abbrev toLp (v : E × E) : NeutralSpace E := ⟨WithLp.toLp 2 v⟩
 
 lemma val_ofWithLp (u : WithLp (2 : ENNReal) (E × E)) : (ofWithLp (E := E) u).val = u := rfl
-lemma ofWithLp_val (u : NeutralSpace E) : ofWithLp (E := E) u.val = u := rfl
+lemma ofWithLp_val (u : NeutralSpace E) : ofWithLp (E := E) u.val = u := by
+  cases u
+  rfl
 @[simp] lemma val_toLp (v : E × E) : (toLp (E := E) v).val = WithLp.toLp 2 v := rfl
+lemma fst_coe (u : NeutralSpace E) : WithLp.fst (u : DoubledSpace E) = u.ofLp.1 := rfl
+lemma snd_coe (u : NeutralSpace E) : WithLp.snd (u : DoubledSpace E) = u.ofLp.2 := rfl
+lemma fst_val (u : NeutralSpace E) : WithLp.fst u.val = u.ofLp.1 := rfl
+lemma snd_val (u : NeutralSpace E) : WithLp.snd u.val = u.ofLp.2 := rfl
+@[simp] lemma fst_ofWithLp (u : WithLp (2 : ENNReal) (E × E)) :
+    WithLp.fst (ofWithLp (E := E) u).val = WithLp.fst u := rfl
+@[simp] lemma snd_ofWithLp (u : WithLp (2 : ENNReal) (E × E)) :
+    WithLp.snd (ofWithLp (E := E) u).val = WithLp.snd u := rfl
+@[simp] lemma fst_toLp (v : E × E) : WithLp.fst (toLp (E := E) v).val = v.1 := rfl
+@[simp] lemma snd_toLp (v : E × E) : WithLp.snd (toLp (E := E) v).val = v.2 := rfl
 
-@[ext] lemma ext {u v : NeutralSpace E} (h : u.val = v.val) : u = v := h
+@[ext] lemma ext {u v : NeutralSpace E} (h : u.val = v.val) : u = v := by
+  cases u
+  cases v
+  simp at h
+  cases h
+  rfl
 
-noncomputable abbrev neutralJ (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+noncomputable abbrev neutralJ (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     NeutralSpace E ≃ₗᵢ[ℝ] NeutralSpace E :=
   KreinSpace.J (H := NeutralSpace E)
 
@@ -111,18 +346,19 @@ private lemma rotation45_norm (u : DoubledSpace E) :
   have hnonneg2 : 0 ≤ ‖u‖ := norm_nonneg _
   nlinarith [hsq, hnonneg1, hnonneg2]
 
-noncomputable def rotation45 (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+noncomputable def rotation45 (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     DoubledSpace E ≃ₗᵢ[ℝ] NeutralSpace E where
   toFun u := by
     let c : ℝ := 1 / Real.sqrt 2
-    exact InfoGeometry.Krein.to_doubled
+    exact NeutralSpace.ofWithLp (E := E) <|
+      InfoGeometry.Krein.to_doubled
       (c • WithLp.fst u + c • WithLp.snd u)
       (c • WithLp.fst u - c • WithLp.snd u)
   invFun v := by
     let c : ℝ := 1 / Real.sqrt 2
     exact InfoGeometry.Krein.to_doubled
-      (c • WithLp.fst v + c • WithLp.snd v)
-      (c • WithLp.fst v - c • WithLp.snd v)
+      (c • WithLp.fst (v : DoubledSpace E) + c • WithLp.snd (v : DoubledSpace E))
+      (c • WithLp.fst (v : DoubledSpace E) - c • WithLp.snd (v : DoubledSpace E))
   left_inv := by
     intro u
     let c : ℝ := 1 / Real.sqrt 2
@@ -161,37 +397,42 @@ noncomputable def rotation45 (E : Type*) [NormedAddCommGroup E] [InnerProductSpa
       simpa [c, pow_two] using (one_div_sqrt_two_sq)
     have hsum : c * c + c * c = (1 : ℝ) := by
       nlinarith [hc2]
+    apply NeutralSpace.ext
     apply InfoGeometry.Krein.DoubledSpace.ext
     · change
-        c • (c • WithLp.fst u + c • WithLp.snd u) +
-          c • (c • WithLp.fst u - c • WithLp.snd u) = WithLp.fst u
+        c • (c • WithLp.fst (u : DoubledSpace E) + c • WithLp.snd (u : DoubledSpace E)) +
+          c • (c • WithLp.fst (u : DoubledSpace E) - c • WithLp.snd (u : DoubledSpace E)) =
+            WithLp.fst (u : DoubledSpace E)
       calc
-        c • (c • WithLp.fst u + c • WithLp.snd u) +
-            c • (c • WithLp.fst u - c • WithLp.snd u)
-            = (c * c + c * c) • WithLp.fst u := by
+        c • (c • WithLp.fst (u : DoubledSpace E) + c • WithLp.snd (u : DoubledSpace E)) +
+            c • (c • WithLp.fst (u : DoubledSpace E) - c • WithLp.snd (u : DoubledSpace E))
+            = (c * c + c * c) • WithLp.fst (u : DoubledSpace E) := by
                 simp [smul_add, smul_smul, sub_eq_add_neg,
                   add_left_comm, add_smul]
-        _ = WithLp.fst u := by
+        _ = WithLp.fst (u : DoubledSpace E) := by
             simp [hsum]
     · change
-        c • (c • WithLp.fst u + c • WithLp.snd u) -
-          c • (c • WithLp.fst u - c • WithLp.snd u) = WithLp.snd u
+        c • (c • WithLp.fst (u : DoubledSpace E) + c • WithLp.snd (u : DoubledSpace E)) -
+          c • (c • WithLp.fst (u : DoubledSpace E) - c • WithLp.snd (u : DoubledSpace E)) =
+            WithLp.snd (u : DoubledSpace E)
       calc
-        c • (c • WithLp.fst u + c • WithLp.snd u) -
-            c • (c • WithLp.fst u - c • WithLp.snd u)
-            = (c * c + c * c) • WithLp.snd u := by
+        c • (c • WithLp.fst (u : DoubledSpace E) + c • WithLp.snd (u : DoubledSpace E)) -
+            c • (c • WithLp.fst (u : DoubledSpace E) - c • WithLp.snd (u : DoubledSpace E))
+            = (c * c + c * c) • WithLp.snd (u : DoubledSpace E) := by
                 simp [smul_add, smul_smul, sub_eq_add_neg,
                   add_left_comm, add_smul]
-        _ = WithLp.snd u := by
+        _ = WithLp.snd (u : DoubledSpace E) := by
             simp [hsum]
   map_add' := by
     intro u v
+    apply NeutralSpace.ext
     apply (WithLp.ofLp_injective (p := (2 : ENNReal)))
     ext <;>
       simp [InfoGeometry.Krein.to_doubled, sub_eq_add_neg,
         smul_add, add_assoc, add_left_comm, add_comm]
   map_smul' := by
     intro a u
+    apply NeutralSpace.ext
     apply (WithLp.ofLp_injective (p := (2 : ENNReal)))
     ext <;>
       simp [InfoGeometry.Krein.to_doubled, smul_add, smul_sub,
@@ -200,17 +441,34 @@ noncomputable def rotation45 (E : Type*) [NormedAddCommGroup E] [InnerProductSpa
     intro u
     simpa using rotation45_norm (E := E) u
 
-noncomputable abbrev rotation45Isometry (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+noncomputable abbrev rotation45Isometry (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     NeutralSpace E ≃ₗᵢ[ℝ] DoubledSpace E :=
   (rotation45 (E := E)).symm
 
 noncomputable abbrev rotation45ContinuousLinearEquiv
-    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     NeutralSpace E ≃L[ℝ] DoubledSpace E :=
   (rotation45Isometry (E := E)).toContinuousLinearEquiv
 
+noncomputable abbrev rotation45ToHilbert
+    (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    NeutralSpace E ≃ₗᵢ[ℝ] HilbertDoubled E :=
+  (rotation45Isometry (E := E)).trans (HilbertDoubled.ofDoubledLIE (E := E))
+
+noncomputable abbrev rotation45ToHilbertContinuousLinearEquiv
+    (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    NeutralSpace E ≃L[ℝ] HilbertDoubled E :=
+  (rotation45ToHilbert (E := E)).toContinuousLinearEquiv
+
+@[simp] lemma rotation45_symm_toLp_pair
+    (x ξ : E) :
+    ((rotation45 (E := E)).symm) (toLp (E := E) (x, ξ)) =
+      let c : ℝ := 1 / Real.sqrt 2
+      InfoGeometry.Krein.to_doubled (c • x + c • ξ) (c • x - c • ξ) := rfl
+
 /-- Keep this only if you actually transport the Krein structure to `NeutralSpace`.
-With the current alias model, the 45° map is not a Krein equivalence. -/
+In the hardened wrapper model, the 45° map is a Hilbert/linear transport bridge; a full
+`KreinEquiv` statement would require additional structure-preservation proofs. -/
 
 noncomputable def neutralLift (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
     NeutralSpace E →L[ℝ] NeutralSpace E :=

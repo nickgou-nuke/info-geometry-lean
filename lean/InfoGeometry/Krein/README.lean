@@ -38,11 +38,11 @@ There are **two** fundamental symmetries used in the project, and they define **
 - Krein form: `⟪x₁,y₁⟫ - ⟪x₂,y₂⟫`
 
 2) Neutral Hessian/Bogoliubov model (cross-term):
-- carrier: `NeutralSpace E` (currently a compatibility alias of `DoubledSpace E`)
+- carrier: `NeutralSpace E` (a hardened wrapper over `DoubledSpace E`)
 - symmetry: `J_neut(x,y) = (y, x)`
 - Krein form: `⟪x₁,y₂⟫ + ⟪x₂,y₁⟫`
 
-Under the current compatibility model, the diagonal and neutral carriers coincide as types.
+The diagonal and neutral carriers are now type-distinct, with explicit transport maps.
 
 ## Canonical equivalence between models (implemented bridge)
 
@@ -50,10 +50,11 @@ The diagonal and neutral charts are related by the 45° rotation:
 
 `P(x,y) := ( (x+y)/√2 , (x-y)/√2 )`.
 
-This is implemented as `NeutralSpace.rotation45` and
-`NeutralSpace.rotation45ContinuousLinearEquiv` in `HilbertBridge.lean`.
-In the current alias model this bridge is used as a Hilbert/continuous-linear transport
-surface (not as a `KreinEquiv`).
+This is implemented as `NeutralSpace.rotation45`,
+`NeutralSpace.rotation45ContinuousLinearEquiv`, and `NeutralSpace.rotation45ToHilbert`
+in `HilbertBridge.lean`.
+At present this bridge is used as a Hilbert/continuous-linear transport surface; a full
+`KreinEquiv` theorem would require additional structure-preservation proofs.
 
 ## Layer 4 status (Clifford modules)
 

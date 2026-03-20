@@ -189,118 +189,38 @@ theorem dual_value_along_grad_of_fenchelYoung
   intro θ
   exact dual_value_of_fenchelYoungEquality ψ ψStar θ (grad θ) (hFY θ)
 
-/-- Assumption package typically required to state/prove Legendre involution theorems. -/
-structure LegendreInvolutionAssumptions
-    (ψ : Θ → ℝ)
-    (ψStar : (Θ →L[ℝ] ℝ) → ℝ) where
-  conjugate : IsFenchelMajorized ψ ψStar
-  diff : Differentiable ℝ ψ
-  grad : Θ → (Θ →L[ℝ] ℝ)
-  gradStar : (Θ →L[ℝ] ℝ) → Θ
-  grad_eq_fderiv : ∀ θ, grad θ = fderiv ℝ ψ θ
-  left_inv : Function.LeftInverse gradStar grad
-  right_inv : Function.RightInverse gradStar grad
-  fenchelYoung_along_grad :
-    ∀ θ, FenchelYoungEquality ψ ψStar θ (grad θ)
-
-lemma LegendreInvolutionAssumptions.fenchelYoung_eq
-    {ψ : Θ → ℝ}
-    {ψStar : (Θ →L[ℝ] ℝ) → ℝ}
-    (h : LegendreInvolutionAssumptions ψ ψStar)
-    (θ : Θ) :
-    FenchelYoungEquality ψ ψStar θ (h.grad θ) :=
-  h.fenchelYoung_along_grad θ
-
-lemma LegendreInvolutionAssumptions.fenchelGap_eq_zero_along_grad
-    {ψ : Θ → ℝ}
-    {ψStar : (Θ →L[ℝ] ℝ) → ℝ}
-    (h : LegendreInvolutionAssumptions ψ ψStar)
-    (θ : Θ) :
-    fenchelGap ψ ψStar θ (h.grad θ) = 0 := by
-  exact
-    (fenchelYoungEquality_iff_gap_eq_zero ψ ψStar θ (h.grad θ)).1
-      (h.fenchelYoung_along_grad θ)
-
-lemma LegendreInvolutionAssumptions.dual_value_along_grad
-    {ψ : Θ → ℝ}
-    {ψStar : (Θ →L[ℝ] ℝ) → ℝ}
-    (h : LegendreInvolutionAssumptions ψ ψStar)
-    (θ : Θ) :
-    ψStar (h.grad θ) = h.grad θ θ - ψ θ := by
-  exact dual_value_of_fenchelYoungEquality ψ ψStar θ (h.grad θ)
-    (h.fenchelYoung_along_grad θ)
-
-/-- Interface theorem: involution assumptions provide gradient/dual-gradient inverses. -/
-theorem legendre_involution_assumption_theorem
-    {ψ : Θ → ℝ}
-    {ψStar : (Θ →L[ℝ] ℝ) → ℝ}
-    (h : LegendreInvolutionAssumptions ψ ψStar) :
-    Function.LeftInverse h.gradStar h.grad ∧
-      Function.RightInverse h.gradStar h.grad := by
-  exact ⟨h.left_inv, h.right_inv⟩
-
-/-- Stronger interface: involution assumptions imply zero Fenchel gap along `grad`. -/
-theorem legendre_involution_gap_theorem
-    {ψ : Θ → ℝ}
-    {ψStar : (Θ →L[ℝ] ℝ) → ℝ}
-    (h : LegendreInvolutionAssumptions ψ ψStar) :
-    ∀ θ, fenchelGap ψ ψStar θ (h.grad θ) = 0 :=
-  h.fenchelGap_eq_zero_along_grad
-
-/--
-Concrete Legendre hypotheses:
-convex/smooth primal potential, exact conjugacy with bounded support sets,
-and explicit inverse dual maps on the concrete gradient `fderiv`.
--/
-structure LegendreConcreteHypotheses
-    (ψ : Θ → ℝ)
-    (ψStar : (Θ →L[ℝ] ℝ) → ℝ) where
-  convex : ConvexOn ℝ Set.univ ψ
-  diff : Differentiable ℝ ψ
-  conjugate_exact : IsFenchelConjugate ψ ψStar
-  support_bdd : ∀ η, BddAbove (legendreSupport ψ η)
-  gradStar : (Θ →L[ℝ] ℝ) → Θ
-  left_inv : Function.LeftInverse gradStar (fun θ => fderiv ℝ ψ θ)
-  right_inv : Function.RightInverse gradStar (fun θ => fderiv ℝ ψ θ)
-  dual_value_on_fderiv :
-    ∀ θ, ψStar (fderiv ℝ ψ θ) = fderiv ℝ ψ θ θ - ψ θ
-
-namespace LegendreConcreteHypotheses
+section ConcreteLegendre
 
 variable {ψ : Θ → ℝ}
 variable {ψStar : (Θ →L[ℝ] ℝ) → ℝ}
 
-/-- Convert concrete convex/smooth Legendre data to the legacy involution package. -/
-noncomputable def toInvolutionAssumptions
-    (h : LegendreConcreteHypotheses (Θ := Θ) ψ ψStar) :
-    LegendreInvolutionAssumptions ψ ψStar where
-  conjugate := h.conjugate_exact.isFenchelMajorized (hBdd := h.support_bdd)
-  diff := h.diff
-  grad := fun θ => fderiv ℝ ψ θ
-  gradStar := h.gradStar
-  grad_eq_fderiv := fun _ => rfl
-  left_inv := h.left_inv
-  right_inv := h.right_inv
-  fenchelYoung_along_grad := by
-    intro θ
-    exact fenchelYoungEquality_of_dual_value ψ ψStar θ (fderiv ℝ ψ θ)
-      (h.dual_value_on_fderiv θ)
+/-- Exact conjugacy with bounded support implies Fenchel majorization. -/
+theorem isFenchelMajorized_of_concrete
+    (hConj : IsFenchelConjugate ψ ψStar)
+    (hSupport : ∀ η, BddAbove (legendreSupport ψ η)) :
+    IsFenchelMajorized ψ ψStar :=
+  hConj.isFenchelMajorized (hBdd := hSupport)
 
-/-- Zero Fenchel gap along the concrete gradient from concrete Legendre hypotheses. -/
-theorem fenchelGap_eq_zero_along_fderiv
-    (h : LegendreConcreteHypotheses (Θ := Θ) ψ ψStar) :
+/-- Exact dual-value equality implies Fenchel-Young equality along `fderiv`. -/
+theorem fenchelYoung_along_fderiv_of_concrete
+    (hDualValue :
+      ∀ θ, ψStar (fderiv ℝ ψ θ) = fderiv ℝ ψ θ θ - ψ θ) :
+    ∀ θ, FenchelYoungEquality ψ ψStar θ (fderiv ℝ ψ θ) := by
+  intro θ
+  exact fenchelYoungEquality_of_dual_value ψ ψStar θ (fderiv ℝ ψ θ)
+    (hDualValue θ)
+
+/-- Zero Fenchel gap along `fderiv` from explicit dual-value equality. -/
+theorem fenchelGap_eq_zero_along_fderiv_of_concrete
+    (hDualValue :
+      ∀ θ, ψStar (fderiv ℝ ψ θ) = fderiv ℝ ψ θ θ - ψ θ) :
     ∀ θ, fenchelGap ψ ψStar θ (fderiv ℝ ψ θ) = 0 := by
   intro θ
-  exact (toInvolutionAssumptions (Θ := Θ) h).fenchelGap_eq_zero_along_grad θ
+  exact
+    (fenchelYoungEquality_iff_gap_eq_zero ψ ψStar θ (fderiv ℝ ψ θ)).1
+      ((fenchelYoung_along_fderiv_of_concrete
+        (ψ := ψ) (ψStar := ψStar) hDualValue) θ)
 
-end LegendreConcreteHypotheses
-
-/-- Public constructor from concrete convex/smooth data. -/
-noncomputable def legendreInvolutionAssumptions_of_concrete
-    {ψ : Θ → ℝ}
-    {ψStar : (Θ →L[ℝ] ℝ) → ℝ}
-    (h : LegendreConcreteHypotheses (Θ := Θ) ψ ψStar) :
-    LegendreInvolutionAssumptions ψ ψStar :=
-  h.toInvolutionAssumptions
+end ConcreteLegendre
 
 end InfoGeometry.Geometry

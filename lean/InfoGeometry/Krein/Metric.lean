@@ -54,22 +54,13 @@ private lemma hessian_indefinite_form_explicit (u v : DoubledSpace E) :
 lemma hessian_indefinite_formCoord_eq_hessianDoubled (v w : E × E) :
     hessian_indefinite_formCoord v w =
       hessian_indefinite_form
-        ((NeutralSpace.rotation45 (E := E)).symm (NeutralSpace.toLp (E := E) v))
-        ((NeutralSpace.rotation45 (E := E)).symm (NeutralSpace.toLp (E := E) w)) := by
+        ((NeutralSpace.rotation45Isometry (E := E)) (NeutralSpace.toLp (E := E) v))
+        ((NeutralSpace.rotation45Isometry (E := E)) (NeutralSpace.toLp (E := E) w)) := by
   rcases v with ⟨x, ξ⟩
   rcases w with ⟨y, η⟩
   let c : ℝ := 1 / Real.sqrt 2
   have hc2 : c ^ 2 = (1 / 2 : ℝ) := by
     simpa [c] using one_div_sqrt_two_sq_metric
-  have hsymm : (NeutralSpace.rotation45 (E := E)).symm = NeutralSpace.rotation45 (E := E) := rfl
-  have hrotv :
-      (NeutralSpace.rotation45 (E := E)) (NeutralSpace.toLp (E := E) (x, ξ)) =
-        InfoGeometry.Krein.to_doubled (c • x + c • ξ) (c • x - c • ξ) := by
-    simp [NeutralSpace.rotation45, NeutralSpace.toLp, c, InfoGeometry.Krein.to_doubled]
-  have hrotw :
-      (NeutralSpace.rotation45 (E := E)) (NeutralSpace.toLp (E := E) (y, η)) =
-        InfoGeometry.Krein.to_doubled (c • y + c • η) (c • y - c • η) := by
-    simp [NeutralSpace.rotation45, NeutralSpace.toLp, c, InfoGeometry.Krein.to_doubled]
   unfold hessian_indefinite_formCoord
   -- Expand the rotated Krein form explicitly and simplify.
   have hrot :
@@ -144,9 +135,9 @@ lemma hessian_indefinite_formCoord_eq_hessianDoubled (v w : E × E) :
         = c ^ 2 * (⟪x + ξ, y + η⟫_ℝ - ⟪x - ξ, y - η⟫_ℝ) := by
             simpa [hfinal]
     _ = hessian_indefinite_form
-          ((NeutralSpace.rotation45 (E := E)).symm (NeutralSpace.toLp (E := E) (x, ξ)))
-          ((NeutralSpace.rotation45 (E := E)).symm (NeutralSpace.toLp (E := E) (y, η))) := by
-            simpa [hsymm, hrotv, hrotw] using hrot.symm
+          ((NeutralSpace.rotation45Isometry (E := E)) (NeutralSpace.toLp (E := E) (x, ξ)))
+          ((NeutralSpace.rotation45Isometry (E := E)) (NeutralSpace.toLp (E := E) (y, η))) := by
+            simpa [NeutralSpace.rotation45Isometry, c] using hrot.symm
 
 end InfoGeometry.Krein
 
@@ -169,12 +160,17 @@ noncomputable def neutralLieSubalgebra :
     intro A B hA hB
     simp [IsInfinitesimalIsometry,
       KreinSpace.isKreinSkewAdjoint_iff_eq_neg (H := NeutralSpace E)] at hA hB ⊢
-    simpa [hA, hB, add_comm, add_left_comm, add_assoc]
+    rw [hA, hB]
+    simp [add_comm, add_left_comm, add_assoc]
   smul_mem' := by
     intro c A hA
     simp [IsInfinitesimalIsometry,
       KreinSpace.isKreinSkewAdjoint_iff_eq_neg (H := NeutralSpace E)] at hA ⊢
-    simpa [hA, smul_neg]
+    rw [hA]
+    apply ContinuousLinearMap.ext
+    intro x
+    apply NeutralSpace.ext
+    simp
   lie_mem' := by
     intro A B hA hB
     simpa [IsInfinitesimalIsometry] using

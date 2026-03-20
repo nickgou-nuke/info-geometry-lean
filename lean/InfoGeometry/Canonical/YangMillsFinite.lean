@@ -33,8 +33,8 @@ def expectationSeedReflectionPositivity
     (Ω : InfoGeometry.Krein.DoubledSpace E) : Prop :=
   SatisfiesKMSLike (E := E) K (omegaSeed (F := E) Ω) β
 
-/-- Constructive reflection positivity from explicit seed-KMS derivation hypotheses. -/
-theorem expectationSeedReflectionPositivity_of_hypotheses
+/-- Constructive reflection positivity from the joint-kernel and commutator hypotheses. -/
+theorem expectationSeedReflectionPositivity_of_jointKernel_commutator
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
@@ -44,6 +44,20 @@ theorem expectationSeedReflectionPositivity_of_hypotheses
   simpa [expectationSeedReflectionPositivity] using
     (omegaSeed_kms_of_jointKernel_commutator
       (F := E) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal)
+
+/-- Compatibility alias for the older theorem name. -/
+theorem expectationSeedReflectionPositivity_of_hypotheses
+    (K : AlgebraEnd E)
+    (β : ℝ)
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω) :
+    expectationSeedReflectionPositivity (E := E) K β Ω :=
+  expectationSeedReflectionPositivity_of_jointKernel_commutator
+    (E := E) (K := K) (β := β) (Ω := Ω) hJointKernel hCommOrthogonal
+
+attribute [deprecated expectationSeedReflectionPositivity_of_jointKernel_commutator (since := "2026-03-20")]
+  expectationSeedReflectionPositivity_of_hypotheses
 
 /-- Finite OS-like marker induced by modular reflection geometry. -/
 def finiteOsterwalderSchraderLayer
@@ -230,7 +244,7 @@ theorem existenceClaims_of_bridge
         FiniteQFTLayer.finiteOsterwalderSchraderLayer (E := E) Ω ∧
         FiniteQFTLayer.finiteWightmanReconstructionLayer (E := E) K β Ω :=
   ⟨B.K, B.β, B.Ω,
-    FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses
+    FiniteQFTLayer.expectationSeedReflectionPositivity_of_jointKernel_commutator
       (E := E) (K := B.K) (β := B.β) (Ω := B.Ω) B.hJointKernel B.hCommOrthogonal,
     FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector
       (E := E) (Ω := B.Ω) B.hΩ_posTime,
@@ -244,7 +258,7 @@ theorem obligations_of_bridge
     hasGaugeRank B ∧ hasExistenceLayer B ∧ hasStrictMassGap B := by
   refine ⟨B.n_ge_two, ?_, B.spectral_gap_pos⟩
   refine ⟨?_, ?_, ?_⟩
-  · exact FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses
+  · exact FiniteQFTLayer.expectationSeedReflectionPositivity_of_jointKernel_commutator
       (E := E) (K := B.K) (β := B.β) (Ω := B.Ω)
       B.hJointKernel B.hCommOrthogonal
   · exact FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector

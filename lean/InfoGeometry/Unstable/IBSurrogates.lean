@@ -3,8 +3,10 @@ import InfoGeometry.Canonical.IBCore
 /-!
 # InfoGeometry.Unstable.IBSurrogates
 
-Isolated placeholder layer for Information Bottleneck iteration.
-These definitions are explicitly unstable and must not be used by canonical proofs.
+Legacy unstable compatibility layer around the canonical finite
+Information Bottleneck Blahut-Arimoto step.
+These names are kept for local experimentation and now route directly
+through the proved canonical IB dynamics.
 -/
 
 namespace InfoGeometry.Unstable.IBSurrogates
@@ -13,27 +15,30 @@ open scoped BigOperators ENNReal NNReal
 open InfoGeometry.Canonical.IB
 
 variable {X Y T : Type} [Fintype X] [Fintype Y] [Fintype T]
+variable [MeasurableSpace X] [MeasurableSingletonClass X]
+variable [MeasurableSpace Y] [MeasurableSingletonClass Y]
+variable [MeasurableSpace T] [MeasurableSingletonClass T]
 
-/-- BA iteration placeholder (identity map). -/
+/-- Legacy unstable name for the canonical one-step BA update. -/
 noncomputable def ibIteration
-    (_prob : IBProblem (X := X) (Y := Y)) :
+    (prob : IBProblem (X := X) (Y := Y)) :
     (X → InfoGeometry.FinProb T) → (X → InfoGeometry.FinProb T) :=
-  fun p => p
+  ibBlahutArimotoStep prob
 
-/-- Fixed-point marker for the unstable BA placeholder. -/
+/-- Fixed-point marker for the canonical BA step under the legacy unstable name. -/
 def ib_fixedPoint
     (prob : IBProblem (X := X) (Y := Y))
     (p : X → InfoGeometry.FinProb T) : Prop :=
   ibIteration prob p = p
 
-/-- One-step descent for the unstable BA placeholder. -/
+/-- Legacy unstable one-step descent wrapper for the canonical frozen-target gap theorem. -/
 theorem ib_iteration_descent
     (prob : IBProblem (X := X) (Y := Y))
-    [MeasurableSpace X] [MeasurableSingletonClass X]
-    [MeasurableSpace Y] [MeasurableSingletonClass Y]
-    [MeasurableSpace T] [MeasurableSingletonClass T]
     (pOld : X → InfoGeometry.FinProb T) :
-    ibLagrangian prob (ibIteration prob pOld) ≤ ibLagrangian prob pOld := by
-  simp [ibIteration]
+    baFrozenTargetGap prob pOld (ibIteration prob pOld) ≤
+      baFrozenTargetGap prob pOld pOld := by
+  simpa [ibIteration] using
+    (ibBlahutArimotoStep_descent_frozenTarget
+      (X := X) (Y := Y) (T := T) (prob := prob) (pOld := pOld))
 
 end InfoGeometry.Unstable.IBSurrogates

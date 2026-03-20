@@ -179,51 +179,12 @@ def HasExponentialRNFormSigmaFinite
     exact HasExponentialRNForm μ₀ constraints Λ P
 
 /-!
-## Dual/Fenchel Interface (Structural)
+## Dual/Fenchel Finite-Support API
 
-This section packages the assumptions typically needed to pass from primal
-MaxEnt optimality to exponential-family RN form via a Fenchel-duality route.
+This section exposes the proved finite-support route from primal MaxEnt
+optimality to exponential-family RN form. No extra bundled certificate layer
+is kept in the stable surface.
 -/
-
-/-- Assumptions for deriving exponential RN form from Fenchel duality. -/
-structure FenchelDualAssumptions
-    (μ₀ : Measure Ω)
-    (constraints : Set (LinearConstraint Ω))
-    (index : Finset (LinearConstraint Ω)) where
-  /-- The finite index family exactly represents the ambient constraint set. -/
-  index_exact : ∀ C, C ∈ constraints ↔ C ∈ index
-  /-- Abstract dual objective functional (kept structural at this layer). -/
-  dualObjective : (index → ℝ) → ℝ≥0∞
-  /-- Weak duality: dual value lower-bounds every feasible primal value. -/
-  weakDuality :
-    ∀ {P : ACProbMeasure μ₀},
-      P ∈ Feasible (μ₀ := μ₀) constraints →
-        ∀ Λ : index → ℝ,
-          dualObjective Λ ≤ Objective (μ₀ := μ₀) P
-  /-- Strong duality at an optimal primal point. -/
-  strongDualityAtOpt :
-    ∀ {P : ACProbMeasure μ₀},
-      IsMaxEntSolution (μ₀ := μ₀) constraints P →
-        ∃ Λ : index → ℝ, Objective (μ₀ := μ₀) P = dualObjective Λ
-  /-- Equality case bridge to exponential-form RN density. -/
-  equalityImpliesExponential :
-    ∀ {P : ACProbMeasure μ₀} {Λ : index → ℝ},
-      P ∈ Feasible (μ₀ := μ₀) constraints →
-        Objective (μ₀ := μ₀) P = dualObjective Λ →
-          HasExponentialRNForm μ₀ index Λ P
-
-/-- Fenchel-duality skeleton:
-MaxEnt optimality implies exponential RN form under explicit dual assumptions. -/
-theorem IsMaxEntSolution.hasExponentialRNForm_of_fenchel
-    {μ₀ : Measure Ω}
-    {constraints : Set (LinearConstraint Ω)}
-    {index : Finset (LinearConstraint Ω)}
-    (hFenchel : FenchelDualAssumptions μ₀ constraints index)
-    {P : ACProbMeasure μ₀}
-    (hP : IsMaxEntSolution (μ₀ := μ₀) constraints P) :
-    ∃ Λ : index → ℝ, HasExponentialRNForm μ₀ index Λ P := by
-  rcases hFenchel.strongDualityAtOpt hP with ⟨Λ, hEq⟩
-  exact ⟨Λ, hFenchel.equalityImpliesExponential hP.1 hEq⟩
 
 /--
 Finite-support duality API (unbundled):
@@ -234,11 +195,6 @@ theorem IsMaxEntSolution.hasExponentialRNForm_of_finiteSupportDuality
     {μ₀ : Measure Ω}
     {index : Finset (LinearConstraint Ω)}
     (dualObjective : (index → ℝ) → ℝ≥0∞)
-    (weakDuality :
-      ∀ {P : ACProbMeasure μ₀},
-        P ∈ Feasible (μ₀ := μ₀) (index : Set (LinearConstraint Ω)) →
-          ∀ Λ : index → ℝ,
-            dualObjective Λ ≤ Objective (μ₀ := μ₀) P)
     (strongDualityAtOpt :
       ∀ {P : ACProbMeasure μ₀},
         IsMaxEntSolution (μ₀ := μ₀) (index : Set (LinearConstraint Ω)) P →
@@ -251,46 +207,7 @@ theorem IsMaxEntSolution.hasExponentialRNForm_of_finiteSupportDuality
     {P : ACProbMeasure μ₀}
     (hP : IsMaxEntSolution (μ₀ := μ₀) (index : Set (LinearConstraint Ω)) P) :
     ∃ Λ : index → ℝ, HasExponentialRNForm μ₀ index Λ P := by
-  let hFenchel : FenchelDualAssumptions μ₀ (index : Set (LinearConstraint Ω)) index :=
-    { index_exact := by
-        intro C
-        simp
-      dualObjective := dualObjective
-      weakDuality := weakDuality
-      strongDualityAtOpt := strongDualityAtOpt
-      equalityImpliesExponential := equalityImpliesExponential }
-  exact IsMaxEntSolution.hasExponentialRNForm_of_fenchel
-    (hFenchel := hFenchel) hP
-
-/--
-Constructor for `FenchelDualAssumptions` in the finite-support case.
-This keeps backward compatibility while exposing the unbundled finite API.
--/
-def fenchelDualAssumptions_of_finiteSupport
-    {μ₀ : Measure Ω}
-    (index : Finset (LinearConstraint Ω))
-    (dualObjective : (index → ℝ) → ℝ≥0∞)
-    (weakDuality :
-      ∀ {P : ACProbMeasure μ₀},
-        P ∈ Feasible (μ₀ := μ₀) (index : Set (LinearConstraint Ω)) →
-          ∀ Λ : index → ℝ,
-            dualObjective Λ ≤ Objective (μ₀ := μ₀) P)
-    (strongDualityAtOpt :
-      ∀ {P : ACProbMeasure μ₀},
-        IsMaxEntSolution (μ₀ := μ₀) (index : Set (LinearConstraint Ω)) P →
-          ∃ Λ : index → ℝ, Objective (μ₀ := μ₀) P = dualObjective Λ)
-    (equalityImpliesExponential :
-      ∀ {P : ACProbMeasure μ₀} {Λ : index → ℝ},
-        P ∈ Feasible (μ₀ := μ₀) (index : Set (LinearConstraint Ω)) →
-          Objective (μ₀ := μ₀) P = dualObjective Λ →
-            HasExponentialRNForm μ₀ index Λ P) :
-    FenchelDualAssumptions μ₀ (index : Set (LinearConstraint Ω)) index where
-  index_exact := by
-    intro C
-    simp
-  dualObjective := dualObjective
-  weakDuality := weakDuality
-  strongDualityAtOpt := strongDualityAtOpt
-  equalityImpliesExponential := equalityImpliesExponential
+  rcases strongDualityAtOpt hP with ⟨Λ, hEq⟩
+  exact ⟨Λ, equalityImpliesExponential hP.1 hEq⟩
 
 end InfoGeometry.MaxEnt

@@ -105,6 +105,18 @@ Self-optimization cycle sheet:
 python3 tools/generate_self_optimization_report.py
 ```
 
+Surrogate debt index:
+
+```bash
+python3 tools/generate_surrogate_index.py
+```
+
+Vacuity / alias-debt index:
+
+```bash
+python3 tools/generate_vacuity_index.py
+```
+
 Dry isolated optimization cycle:
 
 ```bash

@@ -13,7 +13,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 /--
 The Variation of the Chern-Simons term under a localized belief update.
 This is the bulk topological response encoded by the loop-level Chern-Simons
-surrogate from the information connection.
+term from the information connection.
 -/
 noncomputable def variationChernSimons (L : BayesianLoop E) (IST : InfoSpectralTriple E) : ℝ :=
   informationChernSimons L IST
@@ -54,7 +54,7 @@ omit [FiniteDimensional ℝ E] in
 omit [FiniteDimensional ℝ E] in
 /--
 The reduced inflow identity:
-if the loop-level Chern-Simons surrogate vanishes on a flat information
+if the loop-level Chern-Simons term vanishes on a flat information
 manifold, then the bulk variation is canceled by the reduced boundary spectral
 defect.
 -/

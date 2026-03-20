@@ -17,9 +17,29 @@ variable {E : Type _}
 abbrev DoubledEnd (E : Type _) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
   DoubledSpace E →L[ℝ] DoubledSpace E
 
-/-- Canonical linear isometry between doubled and Hilbert carriers (identity under aliasing). -/
+/-- Canonical linear isometry between doubled and Hilbert wrappers. -/
 noncomputable abbrev doubledToHilbert : DoubledSpace E ≃L[ℝ] HilbertDoubled E :=
-  ContinuousLinearEquiv.refl ℝ (DoubledSpace E)
+  { toLinearEquiv :=
+      { toFun := fun u => ⟨u⟩
+        invFun := fun u => (u : DoubledSpace E)
+        left_inv := by
+          intro u
+          rfl
+        right_inv := by
+          intro u
+          apply HilbertDoubled.ext
+          rfl
+        map_add' := by
+          intro u v
+          rfl
+        map_smul' := by
+          intro a u
+          rfl }
+    continuous_toFun := by
+      simpa using (continuous_uliftUp : Continuous (ULift.up : DoubledSpace E → HilbertDoubled E))
+    continuous_invFun := by
+      simpa using
+        (continuous_uliftDown : Continuous (ULift.down : HilbertDoubled E → DoubledSpace E)) }
 
 /-- Hilbert adjoint on doubled-space endomorphisms, transported through `HilbertDoubled`. -/
 noncomputable def doubledAdjoint (A : DoubledEnd E) : DoubledEnd E :=

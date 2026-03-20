@@ -100,29 +100,29 @@ theorem hohenbergKohnDualState_of_inverse_maps
   exact ⟨grad, gradStar, hConj, hLeft, hRight, hFY⟩
 
 /--
-Legendre involution assumptions discharge the Hohenberg-Kohn duality state.
--/
-theorem hohenbergKohnDualState_of_legendreInvolution
-    (ψ : Θ → ℝ)
-    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
-    (hLeg : LegendreInvolutionAssumptions ψ ψStar) :
-    HohenbergKohnDualState ψ ψStar := by
-  exact hohenbergKohnDualState_of_inverse_maps
-    (ψ := ψ) (ψStar := ψStar)
-    (grad := hLeg.grad) (gradStar := hLeg.gradStar)
-    hLeg.conjugate hLeg.left_inv hLeg.right_inv hLeg.fenchelYoung_along_grad
-
-/--
 Concrete convex/smooth Legendre hypotheses discharge the Hohenberg-Kohn duality state.
 -/
 theorem hohenbergKohnDualState_of_concreteLegendre
     (ψ : Θ → ℝ)
     (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
-    (hConcrete : LegendreConcreteHypotheses ψ ψStar) :
+    (hConj : IsFenchelConjugate ψ ψStar)
+    (hSupport : ∀ η, BddAbove (legendreSupport ψ η))
+    (gradStar : (Θ →L[ℝ] ℝ) → Θ)
+    (hLeft : Function.LeftInverse gradStar (fun θ => fderiv ℝ ψ θ))
+    (hRight : Function.RightInverse gradStar (fun θ => fderiv ℝ ψ θ))
+    (hDualValue :
+      ∀ θ, ψStar (fderiv ℝ ψ θ) = fderiv ℝ ψ θ θ - ψ θ) :
     HohenbergKohnDualState ψ ψStar := by
-  exact hohenbergKohnDualState_of_legendreInvolution
+  exact hohenbergKohnDualState_of_inverse_maps
     (ψ := ψ) (ψStar := ψStar)
-    (InfoGeometry.Geometry.legendreInvolutionAssumptions_of_concrete hConcrete)
+    (grad := fun θ => fderiv ℝ ψ θ)
+    (gradStar := gradStar)
+    (hConj := InfoGeometry.Geometry.isFenchelMajorized_of_concrete
+      (ψ := ψ) (ψStar := ψStar) hConj hSupport)
+    (hLeft := hLeft)
+    (hRight := hRight)
+    (hFY := InfoGeometry.Geometry.fenchelYoung_along_fderiv_of_concrete
+      (ψ := ψ) (ψStar := ψStar) hDualValue)
 
 /--
 Explicit constructive Fenchel-gap closure:
@@ -137,24 +137,15 @@ theorem fenchelGap_zero_along_grad_of_fenchelYoung
   InfoGeometry.Geometry.fenchelGap_zero_along_grad_of_fenchelYoung
     (ψ := ψ) (ψStar := ψStar) (grad := grad) hFY
 
-/--
-Under Legendre involution assumptions, the Fenchel gap vanishes along `grad`.
--/
-theorem fenchelGap_zero_along_grad_of_legendreInvolution
-    (ψ : Θ → ℝ)
-    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
-    (hLeg : LegendreInvolutionAssumptions ψ ψStar) :
-    ∀ θ : Θ, fenchelGap ψ ψStar θ (hLeg.grad θ) = 0 :=
-  fenchelGap_zero_along_grad_of_fenchelYoung
-    (ψ := ψ) (ψStar := ψStar) (grad := hLeg.grad) hLeg.fenchelYoung_along_grad
-
 /-- Concrete convex/smooth Legendre hypotheses imply zero Fenchel gap along `fderiv`. -/
 theorem fenchelGap_zero_along_fderiv_of_concreteLegendre
     (ψ : Θ → ℝ)
     (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
-    (hConcrete : LegendreConcreteHypotheses ψ ψStar) :
+    (hDualValue :
+      ∀ θ, ψStar (fderiv ℝ ψ θ) = fderiv ℝ ψ θ θ - ψ θ) :
     ∀ θ : Θ, fenchelGap ψ ψStar θ (fderiv ℝ ψ θ) = 0 :=
-  InfoGeometry.Geometry.LegendreConcreteHypotheses.fenchelGap_eq_zero_along_fderiv hConcrete
+  InfoGeometry.Geometry.fenchelGap_eq_zero_along_fderiv_of_concrete
+    (ψ := ψ) (ψStar := ψStar) hDualValue
 
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -258,7 +249,7 @@ theorem aqft_tdft_constructive_launchpad
     (scale0 : ℝ)
     (hClosure : SinkhornKMSClosure n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
-    (hLeg : LegendreInvolutionAssumptions ψ ψStar)
+    (hHK : HohenbergKohnDualState ψ ψStar)
     (hStationary : IsStationaryAtScale flow scale0) :
     SinkhornKMSClosure n T K ω β
       ∧ grandCanonicalFockEulerStep (E := E) η B H
@@ -273,8 +264,7 @@ theorem aqft_tdft_constructive_launchpad
       (E := E) (η := η) (B := B) (H := H)
       (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
       (V := V) (Γ := Γ) (ψ := ψ0) hVacSplit
-  · exact hohenbergKohnDualState_of_legendreInvolution
-      (ψ := ψ) (ψStar := ψStar) hLeg
+  · exact hHK
   · exact rungeGrossStationaryDualState_of_stationaryAtScale
       (flow := flow) (scale0 := scale0) hStationary
 
@@ -303,7 +293,7 @@ theorem aqft_tdft_constructive_launchpad_of_constantFlow
     (scale0 : ℝ)
     (hClosure : SinkhornKMSClosure n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
-    (hLeg : LegendreInvolutionAssumptions ψ ψStar) :
+    (hHK : HohenbergKohnDualState ψ ψStar) :
     SinkhornKMSClosure n T K ω β
       ∧ grandCanonicalFockEulerStep (E := E) η B H
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
@@ -318,7 +308,7 @@ theorem aqft_tdft_constructive_launchpad_of_constantFlow
     (V := V) (Γ := Γ) (ψ0 := ψ0)
     (ψ := ψ) (ψStar := ψStar)
     (flow := constantFlow (E := E) Hrg) (scale0 := scale0)
-    (hClosure := hClosure) (hVacSplit := hVacSplit) (hLeg := hLeg)
+    (hClosure := hClosure) (hVacSplit := hVacSplit) (hHK := hHK)
     (hStationary := isStationaryAtScale_constantFlow (E := E) Hrg scale0)
 
 /--
@@ -346,7 +336,7 @@ theorem aqft_tdft_constructive_launchpad_of_flowInvariant
     (scale0 : ℝ)
     (hClosure : SinkhornKMSClosure n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
-    (hLeg : LegendreInvolutionAssumptions ψ ψStar)
+    (hHK : HohenbergKohnDualState ψ ψStar)
     (hInv : FlowInvariantAtScale flow scale0) :
     SinkhornKMSClosure n T K ω β
       ∧ grandCanonicalFockEulerStep (E := E) η B H
@@ -362,7 +352,7 @@ theorem aqft_tdft_constructive_launchpad_of_flowInvariant
     (V := V) (Γ := Γ) (ψ0 := ψ0)
     (ψ := ψ) (ψStar := ψStar)
     (flow := flow) (scale0 := scale0)
-    (hClosure := hClosure) (hVacSplit := hVacSplit) (hLeg := hLeg)
+    (hClosure := hClosure) (hVacSplit := hVacSplit) (hHK := hHK)
     (hStationary := isStationaryAtScale_of_flowInvariant (E := E) flow scale0 hInv)
 
 /--
@@ -395,7 +385,7 @@ theorem aqft_tdft_constructive_launchpad_of_modularCliffordFlowInvariant
     (unit : ι)
     (hClosure : SinkhornKMSClosure n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
-    (hLeg : LegendreInvolutionAssumptions ψ ψStar)
+    (hHK : HohenbergKohnDualState ψ ψStar)
     (hInv : ModularCliffordFlowInvariantAtScale
       (E := E) (ι := ι) flow scale0 σ cliffordAction unit) :
     SinkhornKMSClosure n T K ω β
@@ -412,7 +402,7 @@ theorem aqft_tdft_constructive_launchpad_of_modularCliffordFlowInvariant
     (V := V) (Γ := Γ) (ψ0 := ψ0)
     (ψ := ψ) (ψStar := ψStar)
     (flow := flow) (scale0 := scale0)
-    (hClosure := hClosure) (hVacSplit := hVacSplit) (hLeg := hLeg)
+    (hClosure := hClosure) (hVacSplit := hVacSplit) (hHK := hHK)
     (hStationary := isStationaryAtScale_of_modularCliffordFlowInvariant
       (E := E) (ι := ι) flow scale0 σ cliffordAction unit hInv)
 

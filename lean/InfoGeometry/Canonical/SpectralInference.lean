@@ -106,7 +106,7 @@ namespace RegularizedSpectralTriple
 variable (RST : RegularizedSpectralTriple E)
 
 /--
-Reduced log-det spectral-action surrogate.
+Reduced log-det spectral-action model.
 In this finite-dimensional model we use the log-absolute Jacobian determinant of
 the regularized Dirac operator as the scalar spectral-action proxy.
 -/
@@ -125,7 +125,7 @@ abbrev toRegularizedSpectralTriple : RegularizedSpectralTriple E :=
     DD := CRST.DD
     index := CRST.index }
 
-/-- Certified regularized spectral-action surrogate. -/
+/-- Certified regularized spectral-action model. -/
 noncomputable def spectralAction (Λ : ℝ) : ℝ :=
   RegularizedSpectralTriple.spectralAction CRST.toRegularizedSpectralTriple Λ
 
@@ -184,7 +184,7 @@ noncomputable def epsilon (CST : ChiralSpectralTriple E) : ℝ :=
   chiralScale CST.D CST.DD CST.DP
 
 /--
-Reduced anomaly-shifted log-det spectral-action surrogate.
+Reduced anomaly-shifted log-det spectral-action model.
 This is the log-volume proxy of the shifted operator `((D^D + ε I) / Λ)`.
 -/
 noncomputable def chiralSpectralAction (Λ : ℝ) : ℝ :=
@@ -214,7 +214,7 @@ abbrev toChiralSpectralTriple : ChiralSpectralTriple E :=
 noncomputable def epsilon : ℝ :=
   ChiralSpectralTriple.epsilon CCST.toChiralSpectralTriple
 
-/-- Certified anomaly-shifted spectral-action surrogate. -/
+/-- Certified anomaly-shifted spectral-action model. -/
 noncomputable def chiralSpectralAction (Λ : ℝ) : ℝ :=
   ChiralSpectralTriple.chiralSpectralAction CCST.toChiralSpectralTriple Λ
 

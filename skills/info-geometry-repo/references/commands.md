@@ -87,16 +87,28 @@ python3 tools/generate_auto_docs.py
 
 ## End-to-end documentation refresh
 
-Using current trusted semantic exports:
+Using the current trusted semantic export set:
 
 ```bash
 python3 tools/update_repo_docs.py
 ```
 
-Including a fresh heavy-module semantic export pass:
+Refreshing the tracked heavy-module subset first:
 
 ```bash
 python3 tools/update_repo_docs.py --refresh-exports
+```
+
+Refreshing every current semantic export first:
+
+```bash
+python3 tools/update_repo_docs.py --refresh-exports all
+```
+
+Refreshing tracked Lean modules changed in `HEAD` or the current index/worktree first:
+
+```bash
+python3 tools/update_repo_docs.py --refresh-exports changed
 ```
 
 Self-optimization cycle sheet:

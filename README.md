@@ -14,6 +14,7 @@ If you want the shortest exact path through the Universal Volume / RN stack, rea
 If you want the current trust/debt boundary for assumptions, wrappers, and surrogate surfaces, read [SURROGATE_INDEX.md](/home/goutev/LEAN4/info-geometry-lean/SURROGATE_INDEX.md).
 If you want the current alias/vacuity debt boundary, read [VACUITY_INDEX.md](/home/goutev/LEAN4/info-geometry-lean/VACUITY_INDEX.md).
 If you want the current thin-bridge audit for definitional identities and direct-forward bridge surfaces, read [BRIDGE_THINNESS_INDEX.md](/home/goutev/LEAN4/info-geometry-lean/BRIDGE_THINNESS_INDEX.md).
+If you want the current dual-lane creative/critical LLM workflow for frontier packets, read [LLM_FRONTIER_PROTOCOL.md](/home/goutev/LEAN4/info-geometry-lean/LLM_FRONTIER_PROTOCOL.md).
 
 ## Verified Shape
 

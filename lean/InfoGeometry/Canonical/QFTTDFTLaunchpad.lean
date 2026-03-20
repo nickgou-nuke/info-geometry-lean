@@ -61,6 +61,42 @@ theorem grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
       (E := E) (B := B) (H := H) (R := R) (K := Kgeo) (x := x)
       (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit]
 
+/--
+Vacuum-transported AQFT package:
+the Bogoliubov projector superalgebra remains explicit while the
+grand-canonical Fock Euler step collapses to the pure Hamiltonian Euler step.
+-/
+theorem grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_of_vacuumTransported
+    (η : ℝ)
+    (B : BogoliubovMixingParams)
+    (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein Kgeo x)
+    (Γ : SpinConnection Kgeo x V)
+    (ψ : DoubledSpace E)
+    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
+    fockAnticommutator (E := E)
+        (bogoliubovAnnihilation (E := E) B)
+        (bogoliubovCreation (E := E) B)
+      = (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
+    ∧ fockCommutator (E := E)
+        (bogoliubovAnnihilation (E := E) B)
+        (bogoliubovCreation (E := E) B) = 0
+    ∧ grandCanonicalFockEulerStep (E := E) η B H
+        (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+          (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
+        = ψ + η • H ψ := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact (bogoliubov_projector_superalgebra (E := E) B).1
+  · exact (bogoliubov_projector_superalgebra (E := E) B).2
+  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
+      (E := E) (η := η) (B := B) (H := H)
+      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
+
 end AQFT
 
 section TDFT

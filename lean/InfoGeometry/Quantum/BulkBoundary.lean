@@ -422,6 +422,110 @@ structure SimplifiedBoundaryModel
     BoundaryLocalizedZeroModePair (M := M) (P0 := P0) localOp chain →
       Module.finrank ℝ P0.plus ≠ Module.finrank ℝ P0.minus
 
+omit [FiniteDimensional ℝ S] in
+/--
+If a real Bogoliubov transform preserves the chosen polarization, then a
+boundary-localized `(plus/minus)` zero-mode pair is transported to a new
+boundary-localized pair for the conjugated open-chain operator.
+-/
+theorem boundaryLocalizedZeroModePair_under_bogoliubov_of_preservesPolarization
+    (T : RealBogoliubovTransform (S := S) M)
+    (hpres : T.preservesPolarization P0)
+    (localOp : KitaevCell → EndS (S := S))
+    (chain : List KitaevCell)
+    (hPair : BoundaryLocalizedZeroModePair (M := M) (P0 := P0) localOp chain) :
+    ∃ ψplus ψminus : S,
+      ψplus ≠ 0 ∧ ψminus ≠ 0
+        ∧ ψplus ∈ P0.plus ∧ ψminus ∈ P0.minus
+        ∧ (T.B.comp
+            ((globalChainOperatorFromOpenChain (S := S) localOp chain).comp T.Binv)) ψplus = 0
+        ∧ (T.B.comp
+            ((globalChainOperatorFromOpenChain (S := S) localOp chain).comp T.Binv)) ψminus = 0 := by
+  rcases hPair with ⟨ψplus, ψminus, hψplus0, hψminus0, hplus, hminus, hkerPlus, hkerMinus⟩
+  refine ⟨T.B ψplus, T.B ψminus, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · intro hzero
+    apply hψplus0
+    have h := congrArg T.Binv hzero
+    simpa using h
+  · intro hzero
+    apply hψminus0
+    have h := congrArg T.Binv hzero
+    simpa using h
+  · exact T.map_plus_of_preserves (P0 := P0) hpres ψplus hplus
+  · exact T.map_minus_of_preserves (P0 := P0) hpres ψminus hminus
+  · calc
+      (T.B.comp
+          ((globalChainOperatorFromOpenChain (S := S) localOp chain).comp T.Binv)) (T.B ψplus)
+          = T.B
+              ((globalChainOperatorFromOpenChain (S := S) localOp chain)
+                (T.Binv (T.B ψplus))) := by
+                  simp [ContinuousLinearMap.comp_apply]
+      _ = T.B
+            ((globalChainOperatorFromOpenChain (S := S) localOp chain) ψplus) := by
+              simp
+      _ = 0 := by simp [hkerPlus]
+  · calc
+      (T.B.comp
+          ((globalChainOperatorFromOpenChain (S := S) localOp chain).comp T.Binv)) (T.B ψminus)
+          = T.B
+              ((globalChainOperatorFromOpenChain (S := S) localOp chain)
+                (T.Binv (T.B ψminus))) := by
+                  simp [ContinuousLinearMap.comp_apply]
+      _ = T.B
+            ((globalChainOperatorFromOpenChain (S := S) localOp chain) ψminus) := by
+              simp
+      _ = 0 := by simp [hkerMinus]
+
+omit [FiniteDimensional ℝ S] in
+/--
+Specialization of the transported boundary-localized zero-mode pair to the
+canonical chirality polarization `P = J`. The resulting pair lies directly in
+the primitive real Weyl sectors.
+-/
+theorem weylZeroModePair_under_bogoliubov_of_preservesChiralityPolarization
+    (T : RealBogoliubovTransform (S := S) M)
+    (hpres : T.preservesPolarization (M.chiralityPolarization))
+    (localOp : KitaevCell → EndS (S := S))
+    (chain : List KitaevCell)
+    (hPair : BoundaryLocalizedZeroModePair
+      (M := M) (P0 := M.chiralityPolarization) localOp chain) :
+    ∃ ψplus ψminus : S,
+      ψplus ≠ 0 ∧ ψminus ≠ 0
+        ∧ ψplus ∈ M.weylPlus ∧ ψminus ∈ M.weylMinus
+        ∧ (T.B.comp
+            ((globalChainOperatorFromOpenChain (S := S) localOp chain).comp T.Binv)) ψplus = 0
+        ∧ (T.B.comp
+            ((globalChainOperatorFromOpenChain (S := S) localOp chain).comp T.Binv)) ψminus = 0 := by
+  simpa using boundaryLocalizedZeroModePair_under_bogoliubov_of_preservesPolarization
+    (M := M) (P0 := M.chiralityPolarization) (T := T) (hpres := hpres)
+    (localOp := localOp) (chain := chain) hPair
+
+omit [FiniteDimensional ℝ S] in
+/--
+Simplified-boundary-model transport:
+negative phase still yields a boundary-localized `(plus/minus)` zero-mode pair
+after Bogoliubov conjugation, provided the transform preserves the chosen
+polarization.
+-/
+theorem boundaryLocalizedZeroModePair_of_negativePhase_under_bogoliubov_of_simplifiedBoundaryModel_of_preservesPolarization
+    (T : RealBogoliubovTransform (S := S) M)
+    (hpres : T.preservesPolarization P0)
+    (localOp : KitaevCell → EndS (S := S))
+    (chain : List KitaevCell)
+    (hNeg : topologicalIndex chain = -1)
+    (hSimple : SimplifiedBoundaryModel (M := M) (P0 := P0) localOp chain) :
+    ∃ ψplus ψminus : S,
+      ψplus ≠ 0 ∧ ψminus ≠ 0
+        ∧ ψplus ∈ P0.plus ∧ ψminus ∈ P0.minus
+        ∧ (T.B.comp
+            ((globalChainOperatorFromOpenChain (S := S) localOp chain).comp T.Binv)) ψplus = 0
+        ∧ (T.B.comp
+            ((globalChainOperatorFromOpenChain (S := S) localOp chain).comp T.Binv)) ψminus = 0 := by
+  exact boundaryLocalizedZeroModePair_under_bogoliubov_of_preservesPolarization
+    (M := M) (P0 := P0) (T := T) (hpres := hpres)
+    (localOp := localOp) (chain := chain)
+    (hSimple.boundaryPair_of_negativePhase hNeg)
+
 omit [CompleteSpace S] [FiniteDimensional ℝ S] in
 /--
 Instantiate `BoundaryLocalizationBridge` from the simplified boundary model.

@@ -180,6 +180,7 @@ def main() -> int:
         run(["python3", "tools/generate_surrogate_index.py"], cwd=root)
         run(["python3", "tools/generate_vacuity_index.py"], cwd=root)
         run(["python3", "tools/generate_bridge_thinness_index.py"], cwd=root)
+        run(["python3", "tools/generate_llm_frontier_prompts.py"], cwd=root)
 
     print("[update-repo-docs] done", flush=True)
     return 0

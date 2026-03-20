@@ -214,16 +214,11 @@ theorem hohenbergKohnDualState_of_concreteLegendre
     (hDualValue :
       ∀ θ, ψStar (fderiv ℝ ψ θ) = fderiv ℝ ψ θ θ - ψ θ) :
     HohenbergKohnDualState ψ ψStar := by
-  exact hohenbergKohnDualState_of_inverse_maps
-    (ψ := ψ) (ψStar := ψStar)
-    (grad := fun θ => fderiv ℝ ψ θ)
-    (gradStar := gradStar)
-    (hConj := InfoGeometry.Geometry.isFenchelMajorized_of_concrete
-      (ψ := ψ) (ψStar := ψStar) hConj hSupport)
-    (hLeft := hLeft)
-    (hRight := hRight)
-    (hFY := InfoGeometry.Geometry.fenchelYoung_along_fderiv_of_concrete
-      (ψ := ψ) (ψStar := ψStar) hDualValue)
+  refine ⟨fun θ => fderiv ℝ ψ θ, gradStar, ?_, hLeft, hRight, ?_⟩
+  · exact InfoGeometry.Geometry.isFenchelMajorized_of_concrete
+      (ψ := ψ) (ψStar := ψStar) hConj hSupport
+  · exact InfoGeometry.Geometry.fenchelYoung_along_fderiv_of_concrete
+      (ψ := ψ) (ψStar := ψStar) hDualValue
 
 /--
 Explicit constructive Fenchel-gap closure:
@@ -267,7 +262,8 @@ theorem rungeGrossStationaryDualState_of_stationaryAtScale
     (scale0 : ℝ)
     (hStationary : IsStationaryAtScale flow scale0) :
     RungeGrossStationaryDualState flow scale0 := by
-  exact hStationary.2
+  intro x
+  exact hStationary.2 x
 
 /--
 Constructive stationary dual-map state from RG flow invariance.
@@ -458,13 +454,17 @@ theorem aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra
             = ψ0 + η • H ψ0
       ∧ HohenbergKohnDualState ψ ψStar
       ∧ RungeGrossStationaryDualState flow scale0 := by
-  rcases grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_of_vacuumTransported
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact hClosure
+  · exact (bogoliubov_projector_superalgebra (E := E) B).1
+  · exact (bogoliubov_projector_superalgebra (E := E) B).2
+  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
       (E := E) (η := η) (B := B) (H := H)
       (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ := ψ0) hVacSplit with ⟨hAnti, hComm, hEuler⟩
-  exact ⟨hClosure, hAnti, hComm, hEuler, hHK,
-    rungeGrossStationaryDualState_of_stationaryAtScale
-      (flow := flow) (scale0 := scale0) hStationary⟩
+      (V := V) (Γ := Γ) (ψ := ψ0) hVacSplit
+  · exact hHK
+  · exact rungeGrossStationaryDualState_of_stationaryAtScale
+      (flow := flow) (scale0 := scale0) hStationary
 
 /--
 Unified constructive launchpad with explicit Bogoliubov projector-superalgebra,

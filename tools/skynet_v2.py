@@ -4,10 +4,12 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import unquote, urlparse
 
 if __package__ in (None, ""):
     import sys
@@ -24,6 +26,32 @@ class Edge:
     dst: str
     kind: str
     detail: str | None = None
+
+
+@dataclass(frozen=True)
+class AuditFinding:
+    file: str
+    line: int | None
+    name: str
+    category: str
+    priority: str
+
+
+THINNESS_BONUS = {"high": 0.08, "medium": 0.04, "low": 0.015}
+VACUITY_BONUS = {"high": 0.10, "medium": 0.05, "low": 0.02}
+SURROGATE_BONUS = {"high": 0.12, "medium": 0.06, "low": 0.03}
+UNIFICATION_ADJUSTMENT = {
+    "repo_specific_unification": 0.03,
+    "classical_adjacent_model": 0.015,
+    "classical_specialization": 0.0,
+    "mostly_classical": 0.0,
+    "mixed_capstone_surface": -0.015,
+    "packaging_heavy_bridge_surface": -0.03,
+}
+QUEUE_RE = re.compile(
+    r"^- `(?P<priority>[^`]+)` `(?P<category>[^`]+)` `(?P<name>[^`]+)` at "
+    r"`(?P<file>[^`:]+)(?::(?P<line>\d+))?`$"
+)
 
 
 def normalize_user_path(path: str | None, default: Path) -> Path:
@@ -44,6 +72,109 @@ def semantic_json_paths(inputs: list[str]) -> list[Path]:
 
 def load_payload(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def normalize_source_file(source_file: str) -> str:
+    value = source_file.strip()
+    if value.startswith("file://"):
+        parsed = urlparse(value)
+        value = unquote(parsed.path or value[len("file://") :])
+    path = Path(value)
+    if path.is_absolute():
+        try:
+            return str(path.resolve().relative_to(repo_root()))
+        except ValueError:
+            return str(path)
+    return value
+
+
+def parse_queue_audit(path: Path) -> list[AuditFinding]:
+    if not path.exists():
+        return []
+    findings: list[AuditFinding] = []
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        match = QUEUE_RE.match(line)
+        if not match:
+            continue
+        findings.append(
+            AuditFinding(
+                file=match.group("file"),
+                line=int(match.group("line")) if match.group("line") else None,
+                name=match.group("name"),
+                category=match.group("category"),
+                priority=match.group("priority"),
+            )
+        )
+    return findings
+
+
+def parse_unification_statuses(path: Path) -> dict[str, str]:
+    if not path.exists():
+        return {}
+    statuses: dict[str, str] = {}
+    in_table = False
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if line == "## Module Split":
+            in_table = True
+            continue
+        if not in_table:
+            continue
+        if not line.startswith("|"):
+            if statuses:
+                break
+            continue
+        if line.startswith("| Module |") or line.startswith("| ---"):
+            continue
+        cells = [cell.strip() for cell in line.strip("|").split("|")]
+        if len(cells) < 2:
+            continue
+        module = cells[0].strip("`")
+        status = cells[1].strip("`")
+        if module and status:
+            statuses[module] = status
+    return statuses
+
+
+def module_of_source_file(source_file: str) -> str:
+    value = normalize_source_file(source_file)
+    if value.startswith("lean/"):
+        value = value[len("lean/") :]
+    if value.endswith(".lean"):
+        value = value[: -len(".lean")]
+    return value.replace("/", ".")
+
+
+def strongest_match(
+    findings: list[AuditFinding], source_file: str, decls: list[str], stable_id: str
+) -> AuditFinding | None:
+    decl_set = set(decls)
+    candidates = [
+        finding
+        for finding in findings
+        if finding.file == source_file or finding.name in decl_set or finding.name == stable_id
+    ]
+    if not candidates:
+        return None
+    priority_order = {"high": 0, "medium": 1, "low": 2}
+    return sorted(
+        candidates,
+        key=lambda finding: (
+            priority_order.get(finding.priority, 9),
+            finding.line if finding.line is not None else 10**9,
+            finding.name,
+        ),
+    )[0]
+
+
+def load_frontier_audits(root: Path) -> dict[str, Any]:
+    return {
+        "thinness": parse_queue_audit(root / "BRIDGE_THINNESS_INDEX.md"),
+        "vacuity": parse_queue_audit(root / "VACUITY_INDEX.md"),
+        "surrogate": parse_queue_audit(root / "SURROGATE_INDEX.md"),
+        "unification": parse_unification_statuses(root / "UNIFICATION_INDEX.md"),
+    }
 
 
 def block_decl_names(block: dict[str, Any]) -> list[str]:
@@ -198,12 +329,11 @@ def random_walk_with_restart(
     return p
 
 
-def frontier_rows(
+def frontier_candidates(
     web: SemanticWeb,
     ranks: dict[str, float],
     seeds: list[str],
     walk: str,
-    limit: int,
 ) -> list[dict[str, Any]]:
     seed_set = set(seeds)
     rows: list[dict[str, Any]] = []
@@ -223,8 +353,9 @@ def frontier_rows(
         rows.append(
             {
                 "stableId": sid,
-                "score": score,
+                "rawScore": score,
                 "sourceFile": meta["sourceFile"],
+                "repoSourceFile": normalize_source_file(meta["sourceFile"]),
                 "primaryProduces": meta["primaryProduces"],
                 "spineTags": meta["spineTags"],
                 "affects": meta["affects"][:12],
@@ -232,9 +363,85 @@ def frontier_rows(
                 "seedLinkDetails": [e.detail for e in seed_links if e.detail],
             }
         )
-        if len(rows) >= limit:
-            break
     return rows
+
+
+def score_frontier_rows(rows: list[dict[str, Any]], audits: dict[str, Any]) -> list[dict[str, Any]]:
+    scored: list[dict[str, Any]] = []
+    for row in rows:
+        source_file = str(row.get("repoSourceFile") or row["sourceFile"])
+        decls = [str(x) for x in row.get("primaryProduces", [])]
+        stable_id = str(row.get("stableId", ""))
+        adjustments: list[dict[str, Any]] = []
+
+        thin_match = strongest_match(audits.get("thinness", []), source_file, decls, stable_id)
+        if thin_match is not None:
+            value = THINNESS_BONUS.get(thin_match.priority, 0.0)
+            adjustments.append(
+                {
+                    "kind": "thinness_debt_bonus",
+                    "value": value,
+                    "priority": thin_match.priority,
+                    "category": thin_match.category,
+                    "matchedName": thin_match.name,
+                    "matchedFile": thin_match.file,
+                }
+            )
+
+        vacuity_match = strongest_match(audits.get("vacuity", []), source_file, decls, stable_id)
+        if vacuity_match is not None:
+            value = VACUITY_BONUS.get(vacuity_match.priority, 0.0)
+            adjustments.append(
+                {
+                    "kind": "vacuity_debt_bonus",
+                    "value": value,
+                    "priority": vacuity_match.priority,
+                    "category": vacuity_match.category,
+                    "matchedName": vacuity_match.name,
+                    "matchedFile": vacuity_match.file,
+                }
+            )
+
+        surrogate_match = strongest_match(audits.get("surrogate", []), source_file, decls, stable_id)
+        if surrogate_match is not None:
+            value = SURROGATE_BONUS.get(surrogate_match.priority, 0.0)
+            adjustments.append(
+                {
+                    "kind": "surrogate_debt_bonus",
+                    "value": value,
+                    "priority": surrogate_match.priority,
+                    "category": surrogate_match.category,
+                    "matchedName": surrogate_match.name,
+                    "matchedFile": surrogate_match.file,
+                }
+            )
+
+        module_name = module_of_source_file(source_file)
+        module_status = audits.get("unification", {}).get(module_name)
+        if module_status is not None:
+            value = UNIFICATION_ADJUSTMENT.get(module_status, 0.0)
+            if not math.isclose(value, 0.0):
+                adjustments.append(
+                    {
+                        "kind": "unification_status_adjustment",
+                        "value": value,
+                        "status": module_status,
+                        "module": module_name,
+                    }
+                )
+
+        adjusted_score = float(row["rawScore"]) + sum(float(item["value"]) for item in adjustments)
+        scored.append(
+            {
+                **row,
+                "score": adjusted_score,
+                "scoreAdjustments": adjustments,
+                "repoSourceFile": source_file,
+                "moduleName": module_name,
+                "moduleStatus": module_status,
+            }
+        )
+    return scored
 
 
 def unresolved_affects(web: SemanticWeb, seeds: list[str], limit: int) -> list[str]:
@@ -258,7 +465,6 @@ def render_markdown(
     web: SemanticWeb,
     seed_names: list[str],
     seeds: list[str],
-    ranks: dict[str, float],
     frontier: list[dict[str, Any]],
     walk: str,
     out_json: Path,
@@ -294,13 +500,30 @@ def render_markdown(
             decls = ", ".join(row["primaryProduces"]) or row["stableId"]
             tags = ", ".join(row["spineTags"]) or "-"
             seed_kinds = ", ".join(row["seedLinkKinds"]) or "-"
+            score_bits = [f"priority-score: `{row['score']:.6f}`", f"raw-score: `{row['rawScore']:.6f}`"]
+            if row.get("moduleStatus"):
+                score_bits.append(f"module-status: `{row['moduleStatus']}`")
             lines.append(
                 f"- `{decls}`\n"
-                f"  source: `{row['sourceFile']}`\n"
-                f"  score: `{row['score']:.6f}`\n"
+                f"  source: `{row.get('repoSourceFile') or row['sourceFile']}`\n"
+                f"  {' | '.join(score_bits)}\n"
                 f"  tags: `{tags}`\n"
                 f"  seed-links: `{seed_kinds}`"
             )
+            for adjustment in row.get("scoreAdjustments", []):
+                detail = adjustment.get("kind", "adjustment")
+                value = float(adjustment.get("value", 0.0))
+                extras: list[str] = []
+                if adjustment.get("priority"):
+                    extras.append(str(adjustment["priority"]))
+                if adjustment.get("category"):
+                    extras.append(str(adjustment["category"]))
+                if adjustment.get("matchedName"):
+                    extras.append(str(adjustment["matchedName"]))
+                if adjustment.get("status"):
+                    extras.append(str(adjustment["status"]))
+                suffix = f" ({', '.join(extras)})" if extras else ""
+                lines.append(f"  adjustment: `{detail}` `{value:+.3f}`{suffix}")
     lines.append("")
     unresolved = unresolved_affects(web, seeds, limit=15)
     lines.append("## Unresolved Seed Dependencies")
@@ -370,6 +593,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    root = repo_root()
     inputs = semantic_json_paths(args.input)
     if not inputs:
         raise SystemExit("no semantic block JSON inputs found")
@@ -390,10 +614,13 @@ def main() -> int:
         raise SystemExit(f"no seed blocks matched {seed_names}")
 
     ranks = random_walk_with_restart(web, seeds, walk=args.walk, restart=args.restart, steps=args.steps)
-    frontier = frontier_rows(web, ranks, seeds, walk=args.walk, limit=args.top)
+    audits = load_frontier_audits(root)
+    frontier = score_frontier_rows(frontier_candidates(web, ranks, seeds, walk=args.walk), audits)
+    frontier.sort(key=lambda row: (row["score"], row["rawScore"]), reverse=True)
+    frontier = frontier[: args.top]
 
-    out_json = normalize_user_path(args.json_out, repo_root() / args.json_out)
-    out_md = normalize_user_path(args.md_out, repo_root() / args.md_out)
+    out_json = normalize_user_path(args.json_out, root / args.json_out)
+    out_md = normalize_user_path(args.md_out, root / args.md_out)
     out_json.parent.mkdir(parents=True, exist_ok=True)
     out_md.parent.mkdir(parents=True, exist_ok=True)
 
@@ -409,10 +636,16 @@ def main() -> int:
         "affectEdgesAdded": cross_module_edges,
         "loadedInputs": loaded,
         "frontier": frontier,
+        "auditSignals": {
+            "thinnessCount": len(audits.get("thinness", [])),
+            "vacuityCount": len(audits.get("vacuity", [])),
+            "surrogateCount": len(audits.get("surrogate", [])),
+            "unificationModuleCount": len(audits.get("unification", {})),
+        },
         "unresolvedSeedDependencies": unresolved_affects(web, seeds, limit=50),
     }
     out_json.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    out_md.write_text(render_markdown(web, seed_names, seeds, ranks, frontier, args.walk, out_json), encoding="utf-8")
+    out_md.write_text(render_markdown(web, seed_names, seeds, frontier, args.walk, out_json), encoding="utf-8")
 
     print(f"[skynet-v2] loaded inputs: {len(loaded)}")
     print(f"[skynet-v2] nodes: {len(web.nodes)}")

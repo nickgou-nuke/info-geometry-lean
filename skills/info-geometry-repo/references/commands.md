@@ -123,10 +123,34 @@ Bridge thinness index:
 python3 tools/generate_bridge_thinness_index.py
 ```
 
+Unification index:
+
+```bash
+python3 tools/generate_unification_index.py
+```
+
+Debt-targeted replacement packet:
+
+```bash
+python3 tools/generate_debt_candidates.py
+```
+
 Dual LLM frontier prompts:
 
 ```bash
 python3 tools/generate_llm_frontier_prompts.py
+```
+
+Dual LLM debt-replacement prompts:
+
+```bash
+python3 tools/generate_llm_debt_prompts.py
+```
+
+Generate the bridge-candidate packet directly from the current trusted frontier:
+
+```bash
+python3 tools/generate_bridge_candidates.py
 ```
 
 Dry isolated optimization cycle:
@@ -146,6 +170,44 @@ candidate packet selection:
 python3 tools/run_optimization_cycle.py \
   --frontier-index 0 \
   --candidate-index 0
+```
+
+Dry isolated optimization cycle with an external proof-attempt hook and one
+compiler-feedback retry:
+
+```bash
+python3 tools/run_optimization_cycle.py \
+  --frontier-index 0 \
+  --candidate-index 0 \
+  --proof-attempt-command 'python3 tools/proof_driver.py --context {context_json}' \
+  --proof-attempt-retries 1
+```
+
+Do not run the raw tracked debt packet directly (it is report-only):
+
+```bash
+python3 tools/run_optimization_cycle.py \
+  --candidate-packet skills/info-geometry-repo/references/debt-candidates.md \
+  --candidate-index 0
+```
+
+Instead, run against a reviewed debt packet carrying a concrete quarantine-ready sketch:
+
+```bash
+python3 tools/run_optimization_cycle.py \
+  --candidate-packet <reviewed-debt-candidates.md> \
+  --candidate-index 0
+```
+
+Dry isolated optimization cycle against a reviewed bridge packet carrying a
+concrete quarantine-ready sketch:
+
+```bash
+python3 tools/run_optimization_cycle.py \
+  --candidate-packet skills/info-geometry-repo/references/bridge-reviewed-candidates.md \
+  --candidate-index 0 \
+  --proof-attempt-command 'python3 tools/proof_driver.py --context {context_json}' \
+  --proof-attempt-retries 1
 ```
 
 Force a fresh sterile worktree only when you explicitly want a cold baseline:

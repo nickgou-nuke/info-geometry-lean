@@ -14,7 +14,10 @@ If you want the shortest exact path through the Universal Volume / RN stack, rea
 If you want the current trust/debt boundary for assumptions, wrappers, and surrogate surfaces, read [SURROGATE_INDEX.md](/home/goutev/LEAN4/info-geometry-lean/SURROGATE_INDEX.md).
 If you want the current alias/vacuity debt boundary, read [VACUITY_INDEX.md](/home/goutev/LEAN4/info-geometry-lean/VACUITY_INDEX.md).
 If you want the current thin-bridge audit for definitional identities and direct-forward bridge surfaces, read [BRIDGE_THINNESS_INDEX.md](/home/goutev/LEAN4/info-geometry-lean/BRIDGE_THINNESS_INDEX.md).
+If you want the current theorem-to-literature and module-level unification audit, read [UNIFICATION_INDEX.md](/home/goutev/LEAN4/info-geometry-lean/UNIFICATION_INDEX.md).
 If you want the current dual-lane creative/critical LLM workflow for frontier packets, read [LLM_FRONTIER_PROTOCOL.md](/home/goutev/LEAN4/info-geometry-lean/LLM_FRONTIER_PROTOCOL.md).
+If you want the current dual-lane creative/critical LLM workflow for constructive debt replacement, read [LLM_DEBT_PROTOCOL.md](/home/goutev/LEAN4/info-geometry-lean/LLM_DEBT_PROTOCOL.md).
+If you want the current manually reviewed quarantine-ready bridge packet for concrete frontier runs, read [bridge-reviewed-candidates.md](/home/goutev/LEAN4/info-geometry-lean/skills/info-geometry-repo/references/bridge-reviewed-candidates.md).
 
 ## Verified Shape
 
@@ -142,7 +145,9 @@ The current frontier-discovery path is:
 1. export trusted semantic block JSONs for heavy modules;
 2. load them into `tools/skynet_v2.py`;
 3. run diffusion from a named seed using `--walk forward|reverse|both`;
-4. use the resulting frontier packet for candidate bridge statements, not proofs.
+4. let Skynet apply debt-aware scheduling signals from the tracked audits;
+5. generate report-only bridge candidates from the frontier packet;
+6. use those candidate bridge statements as quarantine inputs, not proofs.
 
 Example:
 
@@ -175,6 +180,9 @@ To refresh the frontier packets and the tracked auto status page in one step:
 ```bash
 python3 tools/update_repo_docs.py
 ```
+
+This refresh now also regenerates the tracked bridge-candidate packet from the
+current trusted frontier and audit state.
 
 ## How To Read The Theory Topology
 

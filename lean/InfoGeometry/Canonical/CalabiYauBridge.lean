@@ -63,8 +63,10 @@ lemma satisfiesMongeAmpere_const_of_hasConstantMongeAmpereDensity
     (H : HessianGeometry E)
     (hConst : HasConstantMongeAmpereDensity H) :
     ∃ ρ0 : ℝ, SatisfiesMongeAmpere H (fun _ => ρ0) := by
-  rcases hConst with ⟨ρ0, hρ0⟩
-  exact ⟨ρ0, hρ0⟩
+  obtain ⟨ρ0, hρ0⟩ := hConst
+  refine ⟨ρ0, ?_⟩
+  intro x
+  exact hρ0 x
 
 omit [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] in
 /-- Lemma `ricciTensor_eq_of_isRicciFlat`. -/
@@ -142,27 +144,29 @@ theorem isRicciFlat_of_unitRelativeVolume_metricDerived
     (hUnit : UnitRelativeVolumeState K)
     (hM : MetricDerivedRNRicciBridge R K x) :
     IsRicciFlat R := by
-  exact isRicciFlat_of_isEinsteinKaehlerAtWith_zero
-    (R := R) (K := K) (x := x)
-    ((metricRNRicciBridge_of_metricDerived
-      (R := R) (K := K) (x := x) hM).unitVolume_to_einstein_zero hUnit)
+  intro u v
+  have hRicciEq : R u v = ricciFromMetricOp K.H x u v := by
+    have := congrFun (congrFun hM.ricci_eq_metricDerived u) v
+    simpa using this
+  calc
+    R u v = ricciFromMetricOp K.H x u v := hRicciEq
+    _ = 0 := hM.unitVolume_metricDerived_zero hUnit u v
 
 /--
 Constructive vacuum Einstein closure from unit relative volume via the
 metric-derived RN bridge.
 -/
-theorem vacuumEinsteinEquation_of_unitRelativeVolume_metricDerived
+  theorem vacuumEinsteinEquation_of_unitRelativeVolume_metricDerived
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (Λ : ℝ)
     (hUnit : UnitRelativeVolumeState K)
     (hM : MetricDerivedRNRicciBridge R K x) :
     VacuumEinsteinEquationAt R K x (2 * Λ) Λ := by
-  have hEin0 : IsEinsteinKaehlerAtWith 0 R K x :=
-    (metricRNRicciBridge_of_metricDerived
-      (R := R) (K := K) (x := x) hM).unitVolume_to_einstein_zero hUnit
-  exact vacuumEinsteinEquation_of_scalar_relation
-    (c := 0) (R := R) (K := K) (x := x) (scalar := 2 * Λ) (Λ := Λ)
-    hEin0 (by ring)
+  intro u v
+  unfold einsteinTensorAt
+  rw [isRicciFlat_of_unitRelativeVolume_metricDerived
+    (R := R) (K := K) (x := x) hUnit hM u v]
+  ring
 
 /--
 AdS-like Einstein branch: negative Einstein multiple with positive scale.
@@ -234,7 +238,8 @@ theorem ricciTensor_unique_of_mongeAmpereRicciState
     (hState₁ : MongeAmpereRicciState R₁ K)
     (hState₂ : MongeAmpereRicciState R₂ K) :
     R₁ = R₂ := by
-  exact ricciTensor_eq_of_isRicciFlat hState₁.2 hState₂.2
+  funext u v
+  rw [hState₁.2 u v, hState₂.2 u v]
 
 /--
 Constructive vacuum Einstein closure from an explicit Ricci-flat witness
@@ -260,8 +265,10 @@ theorem isRicciFlat_of_unitRelativeVolume
     (hUnit : UnitRelativeVolumeState K)
     (hBridge : MetricRNRicciBridge R K x) :
     IsRicciFlat R := by
-  exact isRicciFlat_of_isEinsteinKaehlerAtWith_zero
-    (R := R) (K := K) (x := x) (hBridge.unitVolume_to_einstein_zero hUnit)
+  intro u v
+  calc
+    R u v = (0 : ℝ) * K.H.metric x u v := hBridge.unitVolume_to_einstein_zero hUnit u v
+    _ = 0 := by ring
 
 /--
 Constructive vacuum Einstein closure from unit relative-volume state
@@ -273,9 +280,10 @@ theorem vacuumEinsteinEquation_of_unitRelativeVolume
     (hUnit : UnitRelativeVolumeState K)
     (hBridge : MetricRNRicciBridge R K x) :
     VacuumEinsteinEquationAt R K x (2 * Λ) Λ := by
-  exact vacuumEinsteinEquation_of_isRicciFlat
-    (R := R) (K := K) (x := x) (Λ := Λ)
-    (isRicciFlat_of_unitRelativeVolume (R := R) (K := K) (x := x) hUnit hBridge)
+  intro u v
+  unfold einsteinTensorAt
+  rw [isRicciFlat_of_unitRelativeVolume (R := R) (K := K) (x := x) hUnit hBridge u v]
+  ring
 
 /--
 Constructive closure theorem in state form:
@@ -286,8 +294,10 @@ theorem vacuumEinsteinEquation_of_mongeAmpereRicciState
     (Λ : ℝ)
     (hState : MongeAmpereRicciState R K) :
     VacuumEinsteinEquationAt R K x (2 * Λ) Λ := by
-  exact vacuumEinsteinEquation_of_isRicciFlat
-    (R := R) (K := K) (x := x) (Λ := Λ) hState.2
+  intro u v
+  unfold einsteinTensorAt
+  rw [hState.2 u v]
+  ring
 
 end MongeAmpereRicci
 

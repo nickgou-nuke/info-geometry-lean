@@ -428,16 +428,14 @@ theorem aqft_readiness_package_with_projectorSuperPair_base
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
             (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
             = ψ + η • H ψ := by
-  rcases aqft_readiness_package
-      (n := n)
-      (F := F) (ObsKMS := ObsKMS)
-      (E := E) (ObsFock := ObsFock)
-      (T := T) (K := K) (ω := ω) (β := β)
-      (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x)
-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
-      hClosure hVacSplit with ⟨hCStar, hCompleteCStar, hClosure', hEuler⟩
-  exact ⟨hCStar, hCompleteCStar, hClosure', projectorSuperPair_base (E := E), hEuler⟩
+  refine ⟨?_, ?_, ?_, projectorSuperPair_base (E := E), ?_⟩
+  · exact cstarReady_of_instance (Obs := ObsKMS)
+  · exact completeCStarReady_of_instance (Obs := ObsFock)
+  · exact hClosure
+  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
+      (E := E) (η := η) (B := B) (H := H)
+      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
 
 end UnifiedInterface
 
@@ -487,26 +485,17 @@ theorem aqft_tdft_constructive_launchpad_packaged_with_aqft_readiness
             = ψ0 + η • H ψ0
       ∧ HohenbergKohnDualState ψ ψStar
       ∧ RungeGrossStationaryDualState flow scale0 := by
-  rcases aqft_readiness_package
-      (n := n)
-      (F := F) (ObsKMS := ObsKMS)
-      (E := E) (ObsFock := ObsFock)
-      (T := T) (K := K) (ω := ω) (β := β)
-      (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x)
-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ0)
-      hClosure hVacSplit with ⟨hCStar, hCompleteCStar, hClosure', hEuler⟩
-  rcases aqft_tdft_constructive_launchpad
-      (n := n)
-      (T := T) (K := K) (ω := ω) (β := β)
-      (η := η) (B := B) (H := H)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact cstarReady_of_instance (Obs := ObsKMS)
+  · exact completeCStarReady_of_instance (Obs := ObsFock)
+  · exact hClosure
+  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
+      (E := E) (η := η) (B := B) (H := H)
       (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ0 := ψ0)
-      (ψ := ψ) (ψStar := ψStar)
-      (flow := flow) (scale0 := scale0)
-      (hClosure := hClosure) (hVacSplit := hVacSplit) (hHK := hHK)
-      (hStationary := hStationary) with ⟨_, hEuler', hHK', hRG⟩
-  exact ⟨hCStar, hCompleteCStar, hClosure', hEuler', hHK', hRG⟩
+      (V := V) (Γ := Γ) (ψ := ψ0) hVacSplit
+  · exact hHK
+  · exact rungeGrossStationaryDualState_of_stationaryAtScale
+      (flow := flow) (scale0 := scale0) hStationary
 
 /--
 Unified AQFT/TDFT launchpad with Bogoliubov projector-superalgebra packaged
@@ -551,27 +540,19 @@ theorem aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra_
             = ψ0 + η • H ψ0
       ∧ HohenbergKohnDualState ψ ψStar
       ∧ RungeGrossStationaryDualState flow scale0 := by
-  rcases aqft_readiness_package
-      (n := n)
-      (F := F) (ObsKMS := ObsKMS)
-      (E := E) (ObsFock := ObsFock)
-      (T := T) (K := K) (ω := ω) (β := β)
-      (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x)
-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ0)
-      hClosure hVacSplit with ⟨hCStar, hCompleteCStar, hClosure', hEuler⟩
-  rcases aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra
-      (n := n)
-      (T := T) (K := K) (ω := ω) (β := β)
-      (η := η) (B := B) (H := H)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact cstarReady_of_instance (Obs := ObsKMS)
+  · exact completeCStarReady_of_instance (Obs := ObsFock)
+  · exact hClosure
+  · exact (bogoliubov_projector_superalgebra (E := E) B).1
+  · exact (bogoliubov_projector_superalgebra (E := E) B).2
+  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
+      (E := E) (η := η) (B := B) (H := H)
       (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ0 := ψ0)
-      (ψ := ψ) (ψStar := ψStar)
-      (flow := flow) (scale0 := scale0)
-      (hClosure := hClosure) (hVacSplit := hVacSplit) (hHK := hHK)
-      (hStationary := hStationary) with ⟨_, hAnti, hComm, hEuler', hHK', hRG⟩
-  exact ⟨hCStar, hCompleteCStar, hClosure', hAnti, hComm,
-    hEuler', hHK', hRG⟩
+      (V := V) (Γ := Γ) (ψ := ψ0) hVacSplit
+  · exact hHK
+  · exact rungeGrossStationaryDualState_of_stationaryAtScale
+      (flow := flow) (scale0 := scale0) hStationary
 
 /--
 Unified AQFT/TDFT launchpad packaged together with operator readiness and the
@@ -612,26 +593,17 @@ theorem aqft_tdft_constructive_launchpad_packaged_with_aqft_readiness_and_projec
             = ψ0 + η • H ψ0
       ∧ HohenbergKohnDualState ψ ψStar
       ∧ RungeGrossStationaryDualState flow scale0 := by
-  rcases aqft_readiness_package_with_projectorSuperPair_base
-      (n := n)
-      (F := F) (ObsKMS := ObsKMS)
-      (E := E) (ObsFock := ObsFock)
-      (T := T) (K := K) (ω := ω) (β := β)
-      (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x)
-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ0)
-      hClosure hVacSplit with ⟨hCStar, hCompleteCStar, hClosure', hProj, hEuler⟩
-  rcases aqft_tdft_constructive_launchpad
-      (n := n)
-      (T := T) (K := K) (ω := ω) (β := β)
-      (η := η) (B := B) (H := H)
+  refine ⟨?_, ?_, ?_, projectorSuperPair_base (E := E), ?_, ?_, ?_⟩
+  · exact cstarReady_of_instance (Obs := ObsKMS)
+  · exact completeCStarReady_of_instance (Obs := ObsFock)
+  · exact hClosure
+  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
+      (E := E) (η := η) (B := B) (H := H)
       (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ0 := ψ0)
-      (ψ := ψ) (ψStar := ψStar)
-      (flow := flow) (scale0 := scale0)
-      (hClosure := hClosure) (hVacSplit := hVacSplit) (hHK := hHK)
-      (hStationary := hStationary) with ⟨_, hEuler', hHK', hRG⟩
-  exact ⟨hCStar, hCompleteCStar, hClosure', hProj, hEuler', hHK', hRG⟩
+      (V := V) (Γ := Γ) (ψ := ψ0) hVacSplit
+  · exact hHK
+  · exact rungeGrossStationaryDualState_of_stationaryAtScale
+      (flow := flow) (scale0 := scale0) hStationary
 
 end UnifiedLaunchpadInterface
 
@@ -711,18 +683,15 @@ theorem realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_pr
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
             (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
             = ψ + η • Hf ψ := by
-  rcases realHilbertCompressionInterpretation_packaged_with_completeCStarReady
-      (E := E) with ⟨hInterp, hComplete⟩
-  rcases aqft_readiness_package_with_projectorSuperPair_base
-      (n := n)
-      (F := F) (ObsKMS := RealHilbertObs F)
-      (E := E) (ObsFock := RealHilbertObs E)
-      (T := T) (K := K) (ω := ω) (β := β)
-      (η := η) (B := B) (H := Hf)
-      (R := R) (Kgeo := Kgeo) (x := x)
-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
-      hClosure hVacSplit with ⟨hCStar, _, hClosure', hProj, hEuler⟩
-  exact ⟨hInterp, hCStar, hComplete, hClosure', hProj, hEuler⟩
+  refine ⟨⟨realHilbertCompressionInterpretation (E := E)⟩, ?_, ?_, ?_, ?_, ?_⟩
+  · exact cstarReady_of_instance (Obs := RealHilbertObs F)
+  · exact realHilbertOp_completeCStarReady (E := E)
+  · exact hClosure
+  · exact projectorSuperPair_base (E := E)
+  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
+      (E := E) (η := η) (B := B) (H := Hf)
+      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
 
 end ConcreteInterfaceInstances
 

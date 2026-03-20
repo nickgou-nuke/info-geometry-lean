@@ -118,7 +118,7 @@ def render_critical(frontier_context: str, candidate_packet: str, thinness_index
     lines.append("- Reject any candidate that invents unsupported repo vocabulary.")
     lines.append("- Reject any candidate whose likely proof is just `rfl`, direct forwarding, or tuple repackaging unless the name is explicitly downgraded.")
     lines.append("- Do not claim proof completion.")
-    lines.append("- Convert only credible candidates into minimal Lean-facing theorem sketches and attack plans.")
+    lines.append("- Convert only credible candidates into minimal Lean-facing theorem sketches, attack plans, and quarantine-ready concrete sketches when justified.")
     lines.append("")
     lines.append("## Task")
     lines.append("")
@@ -132,6 +132,7 @@ def render_critical(frontier_context: str, candidate_packet: str, thinness_index
     lines.append("4. `proof ingredients already present in repo`")
     lines.append("5. `thinness risk` (`definitional` / `forwarder` / `packaging` / `substantive`) ")
     lines.append("6. `quarantine recommendation` (`yes` / `no`) ")
+    lines.append("7. `Lean-ready materialization sketch` (`none` unless the candidate is concrete and recommended for quarantine) ")
     lines.append("")
     lines.append("Then end with:")
     lines.append("- `Top 3 survivors`")
@@ -166,6 +167,7 @@ def render_critical(frontier_context: str, candidate_packet: str, thinness_index
     lines.append("- Prefer candidates that can become small insertable lemmas.")
     lines.append("- Downgrade grand names if the likely proof is only structural packaging.")
     lines.append("- If a candidate survives, keep it small enough for quarantine first and canonical promotion later.")
+    lines.append("- A materialization sketch must be compilable Lean syntax in the current repo vocabulary; it may be a small quarantine wrapper over already existing theorems.")
     return "\n".join(lines) + "\n"
 
 

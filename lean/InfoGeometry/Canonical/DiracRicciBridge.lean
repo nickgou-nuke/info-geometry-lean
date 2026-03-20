@@ -33,11 +33,6 @@ section RnJacobian
 
 variable (n : Nat)
 
-/-- RN relative-volume change is exactly `exp(-K_RN)`. -/
-@[simp] theorem relative_volume_change_rn_eq_exp_neg_kahler
-    (M : SinkhornMatrix n) :
-    relativeVolumeChangeRN n M = Real.exp (-kahlerPotentialRN n M) := rfl
-
 /-- Positivity of the RN relative-volume factor. -/
 theorem relative_volume_change_rn_pos
     (M : SinkhornMatrix n) :
@@ -49,7 +44,7 @@ theorem relative_volume_change_rn_pos
 theorem neg_log_relative_volume_change_rn
     (M : SinkhornMatrix n) :
     -Real.log (relativeVolumeChangeRN n M) = kahlerPotentialRN n M := by
-  rw [relative_volume_change_rn_eq_exp_neg_kahler (n := n) M]
+  unfold relativeVolumeChangeRN
   simp
 
 end RnJacobian
@@ -82,12 +77,6 @@ section JordanBarrier
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- Jordan/KKT barrier potential has the canonical `-log(detJ)` form. -/
-@[simp] theorem jordan_kkt_barrier_eq_neg_log_det
-    (J : JordanKKTData E) (x : E) :
-    J.K x = -Real.log (J.detJ x) := by
-  exact JordanKKTData.K_def (J := J) x
-
 /-- Jordan/KKT Bregman divergence is nonnegative. -/
 theorem jordan_kkt_bregman_nonneg
     (J : JordanKKTData E) (x y : E) :
@@ -100,12 +89,6 @@ section LogDetBarrier
 
 variable {n : ℕ}
 
-/-- Log-det barrier is the negative logarithm of the Jordan determinant. -/
-@[simp] theorem log_det_barrier_eq_neg_log_det'
-    (X : InfoGeometry.Jordan.SPD n) :
-    logDetBarrier X = -Real.log (Matrix.det X.mat) := by
-  exact logDetBarrier_eq_neg_log_det (X := X)
-
 /-- Burg/Bregman energy from the log-det barrier is nonnegative. -/
 theorem burg_energy_nonnegative
     (X Y : InfoGeometry.Jordan.SPD n) :
@@ -117,14 +100,6 @@ end LogDetBarrier
 section ThermoBarrier
 
 variable {n : ℕ} {Ω : Type _} [Fintype Ω]
-
-/-- Log-det free energy keeps the canonical `-ε log Z` form. -/
-@[simp] theorem free_energy_from_log_det_eq_neg_scale_log_partition'
-    (X0 : InfoGeometry.Jordan.SPD n)
-    (X : Ω → InfoGeometry.Jordan.SPD n)
-    (ε : ℝ) :
-    freeEnergyFromLogDet X0 X ε = -ε * Real.log (partitionFromLogDet X0 X ε) := by
-  exact freeEnergyFromLogDet_eq_neg_scale_log_partition (X0 := X0) (X := X) ε
 
 variable [Nonempty Ω]
 
@@ -248,7 +223,7 @@ theorem gravity_from_rn_entropy
     intro x'
     have hSource' :
         mongeAmpereDensity Kgeo.H x' = relativeVolumeChangeRN n M := by
-      simpa [relative_volume_change_rn_eq_exp_neg_kahler (n := n) (M := M)] using hSource x'
+      simpa using hSource x'
     exact hSource'.trans hUnit
   refine ⟨?_, ?_⟩
   · exact isRicciFlat_of_unitRelativeVolume

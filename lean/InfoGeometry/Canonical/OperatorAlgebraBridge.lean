@@ -161,17 +161,16 @@ theorem cstar_completeCStar_kms_fock_bogoliubov_projector_package
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
             (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
           = ψ + η • H ψ := by
-  rcases cstar_completeCStar_kms_fock_package
-      (n := n)
-      (F := F) (ObsKMS := ObsKMS)
-      (E := E) (ObsFock := ObsFock)
-      (T := T) (K := K) (ω := ω) (β := β)
-      (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x)
-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
-      h_closure h_vac_split with ⟨hCStar, hCompleteCStar, hKMS, hEuler⟩
-  rcases bogoliubov_projector_superalgebra (E := E) B with ⟨hAnti, hComm⟩
-  exact ⟨hCStar, hCompleteCStar, hKMS, hAnti, hComm, hEuler⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact cstarReady_of_instance (Obs := ObsKMS)
+  · exact completeCStarReady_of_instance (Obs := ObsFock)
+  · exact h_closure
+  · exact (bogoliubov_projector_superalgebra (E := E) B).1
+  · exact (bogoliubov_projector_superalgebra (E := E) B).2
+  · exact InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
+      (E := E) (η := η) (B := B) (H := H)
+      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) (ψ := ψ) h_vac_split
 
 /--
 Canonical AQFT package combining operator-target readiness, Sinkhorn/KMS
@@ -205,16 +204,14 @@ theorem cstar_completeCStar_kms_fock_projectorSuperPair_base_package
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
             (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
           = ψ + η • H ψ := by
-  rcases cstar_completeCStar_kms_fock_package
-      (n := n)
-      (F := F) (ObsKMS := ObsKMS)
-      (E := E) (ObsFock := ObsFock)
-      (T := T) (K := K) (ω := ω) (β := β)
-      (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x)
-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
-      h_closure h_vac_split with ⟨hCStar, hCompleteCStar, hKMS, hEuler⟩
-  exact ⟨hCStar, hCompleteCStar, hKMS, projectorSuperPair_base (E := E), hEuler⟩
+  refine ⟨?_, ?_, ?_, projectorSuperPair_base (E := E), ?_⟩
+  · exact cstarReady_of_instance (Obs := ObsKMS)
+  · exact completeCStarReady_of_instance (Obs := ObsFock)
+  · exact h_closure
+  · exact InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
+      (E := E) (η := η) (B := B) (H := H)
+      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) (ψ := ψ) h_vac_split
 
 end UnifiedPackage
 

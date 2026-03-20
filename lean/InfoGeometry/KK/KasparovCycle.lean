@@ -77,14 +77,39 @@ lemma superComm_compact_of_even_rep
   simpa [KreinGradedModule.comm] using X.comm_compact a
 
 /--
-Theorem: If F is a spectral projection (F² = 1), the Kasparov index
-is exactly the analytical index of the Dirac phase `F`.
+If `F² = 1`, then the constant Dirac/grading family determined by the Kasparov
+phase has no zero-eigenvalue crossing and therefore has invariant analytical
+index.
 -/
 theorem index_bridge_spectral [FiniteDimensional ℝ H]
-    (_hF : X.F * X.F = 1) :
-    X.analyticalIndex = InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
-      X.F.toLinearMap
-      (KreinGradedModule.gradeCLM (H := H)).toLinearMap := rfl
+    (hF : X.F * X.F = 1) :
+    InfoGeometry.Canonical.AnalyticalIndex.IndexInvariantAlong
+      (fun _ : ℝ => X.F.toLinearMap)
+      (fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap) := by
+  have hSq : ∀ x : H, X.F (X.F x) = x := by
+    intro x
+    simpa using DFunLike.congr_fun hF x
+  have hInj : Function.Injective X.F.toLinearMap := by
+    intro x y hxy
+    calc
+      x = X.F (X.F x) := by symm; exact hSq x
+      _ = X.F (X.F y) := by simpa using congrArg X.F hxy
+      _ = y := hSq y
+  have hSurj : Function.Surjective X.F.toLinearMap :=
+    (LinearMap.injective_iff_surjective (f := X.F.toLinearMap)).mp hInj
+  have hNoEig :
+      ∀ s : ℝ,
+        InfoGeometry.Canonical.AnalyticalIndex.ChiralNoZeroEigenCrossingNear
+          (fun _ : ℝ => X.F.toLinearMap) s := by
+    intro s
+    refine ⟨Set.univ, isOpen_univ, by simp, ?_⟩
+    intro t ht
+    exact ⟨hInj, hSurj⟩
+  simpa using
+    (InfoGeometry.Canonical.AnalyticalIndex.indexInvariantAlong_of_noZeroEigenCrossing
+      (D := fun _ : ℝ => X.F.toLinearMap)
+      (Γ := fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap)
+      hNoEig)
 
 /--
 Transport the KK analytical index through any path whose analytical index is

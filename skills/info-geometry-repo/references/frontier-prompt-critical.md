@@ -13,7 +13,7 @@ mathematically interesting.
 - Reject any candidate that invents unsupported repo vocabulary.
 - Reject any candidate whose likely proof is just `rfl`, direct forwarding, or tuple repackaging unless the name is explicitly downgraded.
 - Do not claim proof completion.
-- Convert only credible candidates into minimal Lean-facing theorem sketches and attack plans.
+- Convert only credible candidates into minimal Lean-facing theorem sketches, attack plans, and quarantine-ready concrete sketches when justified.
 
 ## Task
 
@@ -27,6 +27,7 @@ For each candidate provide exactly:
 4. `proof ingredients already present in repo`
 5. `thinness risk` (`definitional` / `forwarder` / `packaging` / `substantive`) 
 6. `quarantine recommendation` (`yes` / `no`) 
+7. `Lean-ready materialization sketch` (`none` unless the candidate is concrete and recommended for quarantine) 
 
 Then end with:
 - `Top 3 survivors`
@@ -95,10 +96,10 @@ noncomputable def KasparovCycle.analyticalIndex [FiniteDimensional ℝ H] : ℤ 
     (KreinGradedModule.gradeCLM (H := H)).toLinearMap
 
 theorem index_bridge_spectral [FiniteDimensional ℝ H]
-    (_hF : X.F * X.F = 1) :
-    X.analyticalIndex = InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
-      X.F.toLinearMap
-      (KreinGradedModule.gradeCLM (H := H)).toLinearMap := rfl
+    (hF : X.F * X.F = 1) :
+    InfoGeometry.Canonical.AnalyticalIndex.IndexInvariantAlong
+      (fun _ : ℝ => X.F.toLinearMap)
+      (fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap) := ...
 ```
 
 From `lean/InfoGeometry/Canonical/AnalyticalIndex.lean`:
@@ -166,10 +167,10 @@ noncomputable def KasparovCycle.analyticalIndex [FiniteDimensional ℝ H] : ℤ 
     (KreinGradedModule.gradeCLM (H := H)).toLinearMap
 
 theorem index_bridge_spectral [FiniteDimensional ℝ H]
-    (_hF : X.F * X.F = 1) :
-    X.analyticalIndex = InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
-      X.F.toLinearMap
-      (KreinGradedModule.gradeCLM (H := H)).toLinearMap := rfl
+    (hF : X.F * X.F = 1) :
+    InfoGeometry.Canonical.AnalyticalIndex.IndexInvariantAlong
+      (fun _ : ℝ => X.F.toLinearMap)
+      (fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap) := ...
 ```
 
 2. In `AnalyticalIndex.lean`:
@@ -230,84 +231,59 @@ The model should not return:
 # Bridge Candidates
 
 This note is a report-only frontier packet derived from the current trusted
-`Skynet v2` reverse/bi-directional semantic frontier.
+`Skynet v2` semantic frontier.
 
 It is not a proof artifact.
 
 The purpose is to pin the first small bridge lemmas suggested by the current
-frontier:
-
-- `InfoGeometry.KK.KasparovCycle.analyticalIndex`
-- `InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
-- `InfoGeometry.Canonical.AnalyticalIndex.IndexInvariantAlong`
-- `InfoGeometry.Canonical.GrandSynthesis.*`
-
-The design rule is strict:
-
-- candidate bridge statements only
-- small insertable lemmas
-- no new framework unless unavoidable
+frontier, ranked with debt-aware scheduling signals.
 
 ## Trusted Graph Context
 
 Current trusted semantic graph facts:
 
 - `Skynet v2` graph:
-  - `128` nodes
-  - `647` edges
-  - `319` cross-module edges
-- direct bridge:
-  - `InfoGeometry.KK.KasparovCycle.analyticalIndex`
-    depends on
-  - `InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
-- reverse frontier reaches:
-  - `InfoGeometry.KK.index_bridge_spectral`
-  - `InfoGeometry.Canonical.AnalyticalIndex.chiralSliceIsoAlong_of_noZeroEigenCrossing`
-  - `InfoGeometry.Canonical.AnalyticalIndex.indexInvariantAlong_of_conjugacy`
-  - `InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_equivalence_of_state_capstone_hypotheses`
-  - `InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_equivalence_of_fullCapstone`
-  - `InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication_of_fully_derived_hypotheses`
-  - `InfoGeometry.Canonical.GrandSynthesis.thermodynamic_and_geometricAlgebraic_of_fullCapstone`
+  - `143` nodes
+  - `753` edges
+  - `378` cross-module edges
+- walk mode: `reverse`
+- audit signals:
+  - thinness findings: `0`
+  - vacuity findings: `0`
+  - surrogate findings: `0`
+  - unification modules tracked: `15`
+- seed declarations:
+  - `KasparovCycle.analyticalIndex`
 
 ## Candidate 1
 
 `name`
 
-`InfoGeometry.KK.kasparovIndex_eq_analyticalIndex_zero_of_indexInvariant`
+`AutoCandidate.index_bridge_spectral_from_analyticalIndex_1`
 
 `Lean-style signature sketch`
 
 ```lean
-theorem kasparovIndex_eq_analyticalIndex_zero_of_indexInvariant
-    {A B H : Type*}
-    [NormedRing A] [NormedRing B]
-    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    [KreinSpace H] [KreinGradedModule H]
-    [FiniteDimensional ℝ H]
-    (X : KasparovCycle A B H)
-    (hF : X.F * X.F = 1)
-    (D Γ : ℝ → Endomorphism H)
-    (hD0 : D 0 = X.F.toLinearMap)
-    (hΓ0 : Γ 0 = (KreinGradedModule.gradeCLM (H := H)).toLinearMap)
-    (hInv : InfoGeometry.Canonical.AnalyticalIndex.IndexInvariantAlong D Γ) :
-    ∀ s : ℝ,
-      InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex (D s) (Γ s) =
-        X.analyticalIndex
+theorem auto_index_bridge_spectral_from_seed_1
+    -- seed anchor: `KasparovCycle.analyticalIndex`
+    -- frontier target: `InfoGeometry.KK.index_bridge_spectral`
+    -- intended role: bridge theorem
+    (... local hypotheses specialized to the target declaration ...)
+    : (... direct transport / invariance / closure statement feeding the frontier ...) := by
+  -- quarantine sketch only
 ```
 
 `why this closes a real frontier edge`
 
-This is the smallest transport lemma from the KK-side anchor into the pathwise
-`AnalyticalIndex` invariance regime. It closes the exact edge
-`KasparovCycle.analyticalIndex -> AnalyticalIndex.analyticalIndex`, then lifts
-that equality along `IndexInvariantAlong`.
+This candidate is generated directly from the frontier row `InfoGeometry.KK.index_bridge_spectral` in `lean/InfoGeometry/KK/KasparovCycle.lean`. It is intended to insert a small bridge theorem feeding the frontier declaration. The seed-to-frontier link kinds currently visible are `primaryDep`. The current raw/priority scores are `0.043428` / `0.058428`, with module status `classical_adjacent_model` and adjustments `unification_status_adjustment +0.015`.
 
 `likely proof ingredients already present in repo`
 
+- `InfoGeometry.KK.KasparovCycle.analyticalIndex`
 - `InfoGeometry.KK.index_bridge_spectral`
-- `InfoGeometry.Canonical.AnalyticalIndex.IndexInvariantAlong`
-- rewriting with `hD0`, `hΓ0`
+- `lean/InfoGeometry/KK/KasparovCycle.lean`
+- `frontier rawScore: 0.043428`
+- `frontier score: 0.058428`
 
 `risk level`
 
@@ -317,195 +293,137 @@ that equality along `IndexInvariantAlong`.
 
 `name`
 
-`InfoGeometry.KK.kasparovIndex_eq_analyticalIndex_of_conjugacy`
+`AutoCandidate.kk_analyticalIndex_eq_of_modularCliffordTransport_state_hypotheses_from_analyticalIndex_2`
 
 `Lean-style signature sketch`
 
 ```lean
-theorem kasparovIndex_eq_analyticalIndex_of_conjugacy
-    {A B H : Type*}
-    [NormedRing A] [NormedRing B]
-    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    [KreinSpace H] [KreinGradedModule H]
-    [FiniteDimensional ℝ H]
-    (X : KasparovCycle A B H)
-    (hF : X.F * X.F = 1)
-    (D Γ : ℝ → Endomorphism H)
-    (eFlow : ℝ → H ≃ₗ[ℝ] H)
-    (hD0 : D 0 = X.F.toLinearMap)
-    (hΓ0 : Γ 0 = (KreinGradedModule.gradeCLM (H := H)).toLinearMap)
-    (hConj : InfoGeometry.Canonical.AnalyticalIndex.ChiralConjugacyAlong D Γ eFlow) :
-    ∀ s : ℝ,
-      InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex (D s) (Γ s) =
-        X.analyticalIndex
+theorem auto_kk_analyticalIndex_eq_of_modularCliffordTransport_state_hypotheses_from_seed_2
+    -- seed anchor: `KasparovCycle.analyticalIndex`
+    -- frontier target: `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_modularCliffordTransport_state_hypotheses`
+    -- intended role: transport equality theorem
+    (... local hypotheses specialized to the target declaration ...)
+    : (... direct transport / invariance / closure statement feeding the frontier ...) := by
+  -- quarantine sketch only
 ```
 
 `why this closes a real frontier edge`
 
-This specializes the previous bridge to the exact frontier theorem already
-highlighted by the graph: `indexInvariantAlong_of_conjugacy`. It gives the KK
-core a direct entry into the `GrandSynthesis` conjugacy branch.
+This candidate is generated directly from the frontier row `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_modularCliffordTransport_state_hypotheses` in `lean/InfoGeometry/Canonical/GrandSynthesis.lean`. It is intended to derive a nontrivial equality that feeds the frontier declaration. The seed-to-frontier link kinds currently visible are `primaryDep`. The current raw/priority scores are `0.066003` / `0.051003`, with module status `mixed_capstone_surface` and adjustments `unification_status_adjustment -0.015`.
 
 `likely proof ingredients already present in repo`
 
-- Candidate 1
-- `InfoGeometry.Canonical.AnalyticalIndex.indexInvariantAlong_of_conjugacy`
+- `InfoGeometry.KK.KasparovCycle.analyticalIndex`
+- `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_modularCliffordTransport_state_hypotheses`
+- `lean/InfoGeometry/Canonical/GrandSynthesis.lean`
+- `frontier rawScore: 0.066003`
+- `frontier score: 0.051003`
 
 `risk level`
 
-`low`
+`medium`
 
 ## Candidate 3
 
 `name`
 
-`InfoGeometry.KK.kasparovIndex_eq_analyticalIndex_of_modularCliffordTransport`
+`AutoCandidate.kk_analyticalIndex_eq_of_conjugacy_state_hypotheses_from_analyticalIndex_3`
 
 `Lean-style signature sketch`
 
 ```lean
-theorem kasparovIndex_eq_analyticalIndex_of_modularCliffordTransport
-    {A B H : Type*} {ι : Type*}
-    [NormedRing A] [NormedRing B]
-    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    [KreinSpace H] [KreinGradedModule H]
-    [FiniteDimensional ℝ H]
-    (X : KasparovCycle A B H)
-    (hF : X.F * X.F = 1)
-    (D Γ : ℝ → Endomorphism H)
-    (σ : ℝ → Endomorphism H)
-    (clAct : ι → Endomorphism H)
-    (unit : ι)
-    (hD0 : D 0 = X.F.toLinearMap)
-    (hΓ0 : Γ 0 = (KreinGradedModule.gradeCLM (H := H)).toLinearMap)
-    (hTrans :
-      InfoGeometry.Canonical.AnalyticalIndex.ChiralSliceModularCliffordTransportAlong
-        (D := D) (Γ := Γ) σ clAct unit) :
-    ∀ s : ℝ,
-      InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex (D s) (Γ s) =
-        X.analyticalIndex
+theorem auto_kk_analyticalIndex_eq_of_conjugacy_state_hypotheses_from_seed_3
+    -- seed anchor: `KasparovCycle.analyticalIndex`
+    -- frontier target: `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_conjugacy_state_hypotheses`
+    -- intended role: transport equality theorem
+    (... local hypotheses specialized to the target declaration ...)
+    : (... direct transport / invariance / closure statement feeding the frontier ...) := by
+  -- quarantine sketch only
 ```
 
 `why this closes a real frontier edge`
 
-This is the modular/Clifford twin of Candidate 2. It lands directly on the
-branch consumed by
-`information_wheeler_dewitt_equivalence_of_ibDynamics_and_modularCliffordTransport_state_hypotheses`.
+This candidate is generated directly from the frontier row `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_conjugacy_state_hypotheses` in `lean/InfoGeometry/Canonical/GrandSynthesis.lean`. It is intended to derive a nontrivial equality that feeds the frontier declaration. The seed-to-frontier link kinds currently visible are `primaryDep`. The current raw/priority scores are `0.063047` / `0.048047`, with module status `mixed_capstone_surface` and adjustments `unification_status_adjustment -0.015`.
 
 `likely proof ingredients already present in repo`
 
-- Candidate 1
-- `InfoGeometry.Canonical.AnalyticalIndex.indexInvariantAlong_of_modularCliffordTransport`
+- `InfoGeometry.KK.KasparovCycle.analyticalIndex`
+- `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_conjugacy_state_hypotheses`
+- `lean/InfoGeometry/Canonical/GrandSynthesis.lean`
+- `frontier rawScore: 0.063047`
+- `frontier score: 0.048047`
 
 `risk level`
 
-`low`
+`medium`
 
 ## Candidate 4
 
 `name`
 
-`InfoGeometry.Canonical.GrandSynthesis.fullCapstone_of_conjugacy_index_anchor`
+`AutoCandidate.chiralSliceIsoAlong_of_noZeroEigenCrossing_from_analyticalIndex_4`
 
 `Lean-style signature sketch`
 
 ```lean
-theorem fullCapstone_of_conjugacy_index_anchor
-    (n : Nat)
-    {X V F : Type*}
-    [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
-    [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
-    [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hGeoAlg : GeometricAlgebraicState n T flow D Γ)
-    (hClosure : SinkhornKMSClosure n T.traj K ω β)
-    (hConj : InfoGeometry.Canonical.AnalyticalIndex.ChiralConjugacyAlong D Γ eFlow)
-    (hAnchor :
-      InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex (D 0) (Γ 0) = kkIndex) :
-    FullThermoGeoIndexCapstone n T flow D Γ K ω β
+theorem auto_chiralSliceIsoAlong_of_noZeroEigenCrossing_from_seed_4
+    -- seed anchor: `KasparovCycle.analyticalIndex`
+    -- frontier target: `InfoGeometry.Canonical.AnalyticalIndex.chiralSliceIsoAlong_of_noZeroEigenCrossing`
+    -- intended role: bridge theorem
+    (... local hypotheses specialized to the target declaration ...)
+    : (... direct transport / invariance / closure statement feeding the frontier ...) := by
+  -- quarantine sketch only
 ```
 
 `why this closes a real frontier edge`
 
-This candidate makes explicit the bridge from a KK-anchored analytical index to
-the already existing capstone bundling route. The theorem
-`fullThermoGeoIndexCapstone_of_states` already packages `hGeoAlg + hClosure`;
-the added index anchor would expose the KK provenance of that capstone package.
+This candidate is generated directly from the frontier row `InfoGeometry.Canonical.AnalyticalIndex.chiralSliceIsoAlong_of_noZeroEigenCrossing` in `lean/InfoGeometry/Canonical/AnalyticalIndex.lean`. It is intended to insert a small bridge theorem feeding the frontier declaration. The seed-to-frontier link kinds currently visible are `-`. The current raw/priority scores are `0.015689` / `0.030689`, with module status `classical_adjacent_model` and adjustments `unification_status_adjustment +0.015`.
 
 `likely proof ingredients already present in repo`
 
-- `InfoGeometry.Canonical.AnalyticalIndex.fullThermoGeoIndexCapstone_of_states`
-- `InfoGeometry.Canonical.AnalyticalIndex.sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses`
-- Candidates 1 or 2
+- `InfoGeometry.Canonical.AnalyticalIndex.chiralSliceIsoAlong_of_noZeroEigenCrossing`
+- `lean/InfoGeometry/Canonical/AnalyticalIndex.lean`
+- `frontier rawScore: 0.015689`
+- `frontier score: 0.030689`
+- `module status: classical_adjacent_model`
 
 `risk level`
 
-`medium`
+`low`
 
 ## Candidate 5
 
 `name`
 
-`InfoGeometry.Canonical.GrandSynthesis.wheelerDeWitt_equivalence_of_kk_conjugacy_anchor`
+`AutoCandidate.sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses_from_analyticalIndex_5`
 
 `Lean-style signature sketch`
 
 ```lean
-theorem wheelerDeWitt_equivalence_of_kk_conjugacy_anchor
-    (n : Nat)
-    {X V F : Type*}
-    [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
-    [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
-    [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hFull : FullThermoGeoIndexCapstone n T flow D Γ K ω β)
-    (hIndexAnchor :
-      InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex (D 0) (Γ 0) = kkIndex) :
-    ThermodynamicKMSState n T K ω β ↔ GeometricAlgebraicState n T flow D Γ
+theorem auto_sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses_from_seed_5
+    -- seed anchor: `KasparovCycle.analyticalIndex`
+    -- frontier target: `InfoGeometry.Canonical.AnalyticalIndex.sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses`
+    -- intended role: transport / invariance theorem
+    (... local hypotheses specialized to the target declaration ...)
+    : (... direct transport / invariance / closure statement feeding the frontier ...) := by
+  -- quarantine sketch only
 ```
 
 `why this closes a real frontier edge`
 
-This does not strengthen the Wheeler-DeWitt equivalence itself; it strengthens
-its provenance. The point is to make the KK index anchor explicit on the exact
-consumer branch discovered by `Skynet v2`, rather than leaving the connection as
-an implicit upstream dependency.
+This candidate is generated directly from the frontier row `InfoGeometry.Canonical.AnalyticalIndex.sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses` in `lean/InfoGeometry/Canonical/AnalyticalIndex.lean`. It is intended to close an invariance step feeding the frontier declaration. The seed-to-frontier link kinds currently visible are `-`. The current raw/priority scores are `0.014499` / `0.029499`, with module status `classical_adjacent_model` and adjustments `unification_status_adjustment +0.015`.
 
 `likely proof ingredients already present in repo`
 
-- `InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_equivalence_of_fullCapstone`
-- Candidate 4
+- `InfoGeometry.Canonical.AnalyticalIndex.sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses`
+- `lean/InfoGeometry/Canonical/AnalyticalIndex.lean`
+- `frontier rawScore: 0.014499`
+- `frontier score: 0.029499`
+- `module status: classical_adjacent_model`
 
 `risk level`
 
-`medium`
-
-## Recommended Order
-
-Best execution order:
-
-1. Candidate 1
-2. Candidate 2
-3. Candidate 3
-4. Candidate 4
-5. Candidate 5
-
-The first three are the true bridge lemmas.
-
-The last two are capstone/provenance packaging lemmas and should only be
-attempted after the KK-to-`IndexInvariantAlong` bridge is explicit in Lean.
+`low`
 ```
 
 ## Current Thin-Bridge Audit
@@ -513,111 +431,26 @@ attempted after the KK-to-`IndexInvariantAlong` bridge is explicit in Lean.
 ```md
 # Bridge Thinness Index
 
-Generated: `2026-03-20 14:57:58`
+Generated: `2026-03-20 18:54:35`
 
 This report is a heuristic audit of bridge-/launchpad-/interface-facing theorem surfaces that may be mathematically thinner than their names suggest.
 
 ## Status
-- thin-bridge gate: **FAIL**
+- thin-bridge gate: **PASS**
 - interpretation: `FAIL` means at least one targeted theorem currently looks like a definitional identity
 
 ## Counts
-- total tracked findings: **29**
-- definitional identity findings: **3**
-- direct forwarder findings: **15**
-- underscore-hypothesis findings: **2**
-- package/orchestration findings: **9**
+- total tracked findings: **0**
+- definitional identity findings: **0**
+- direct forwarder findings: **0**
+- underscore-hypothesis findings: **0**
+- package/orchestration findings: **0**
 
 ## Queue
-- `high` `definitional_identity` `B_agrees_with_Gauge_bilinear` at `lean/InfoGeometry/Canonical/CliffordBridge.lean:20`
-- `high` `definitional_identity` `relative_volume_change_rn_eq_exp_neg_kahler` at `lean/InfoGeometry/Canonical/DiracRicciBridge.lean:37`
-- `high` `definitional_identity` `kkt_perelman_correspondence` at `lean/InfoGeometry/Unstable/SingularUnitaryBridge.lean:41`
-- `medium` `direct_forwarder` `isRicciFlat_of_unitRelativeVolume_metricDerived` at `lean/InfoGeometry/Canonical/CalabiYauBridge.lean:140`
-- `medium` `direct_forwarder` `ricciTensor_unique_of_mongeAmpereRicciState` at `lean/InfoGeometry/Canonical/CalabiYauBridge.lean:232`
-- `medium` `direct_forwarder` `isRicciFlat_of_unitRelativeVolume` at `lean/InfoGeometry/Canonical/CalabiYauBridge.lean:258`
-- `medium` `direct_forwarder` `vacuumEinsteinEquation_of_unitRelativeVolume` at `lean/InfoGeometry/Canonical/CalabiYauBridge.lean:270`
-- `medium` `direct_forwarder` `vacuumEinsteinEquation_of_mongeAmpereRicciState` at `lean/InfoGeometry/Canonical/CalabiYauBridge.lean:284`
-- `medium` `direct_forwarder` `cayleyPythagoreanInvariance` at `lean/InfoGeometry/Canonical/CayleyBregmanBridge.lean:98`
-- `medium` `direct_forwarder` `countInducedCoupling_hasPositiveRowSums` at `lean/InfoGeometry/Canonical/CountSubstrateBridge.lean:298`
-- `medium` `direct_forwarder` `countInducedCoupling_hasPositiveColSums` at `lean/InfoGeometry/Canonical/CountSubstrateBridge.lean:304`
-- `medium` `direct_forwarder` `jordan_kkt_barrier_eq_neg_log_det` at `lean/InfoGeometry/Canonical/DiracRicciBridge.lean:86`
-- `medium` `direct_forwarder` `log_det_barrier_eq_neg_log_det'` at `lean/InfoGeometry/Canonical/DiracRicciBridge.lean:104`
-- `medium` `direct_forwarder` `free_energy_from_log_det_eq_neg_scale_log_partition'` at `lean/InfoGeometry/Canonical/DiracRicciBridge.lean:122`
-- `medium` `direct_forwarder` `IBPartitionFunction_shift_eq_smul` at `lean/InfoGeometry/Canonical/IBGaugeBridge.lean:87`
-- `medium` `direct_forwarder` `sinkhorn_step_kmsClosure_of_control` at `lean/InfoGeometry/Canonical/KMSSinkhornBridge.lean:177`
-- `medium` `underscore_hypothesis` `bayesian_update_as_spinor_bilinear` at `lean/InfoGeometry/Canonical/ModularSpinorBridge.lean:216`
-- `medium` `direct_forwarder` `hohenbergKohnDualState_of_concreteLegendre` at `lean/InfoGeometry/Canonical/QFTTDFTLaunchpad.lean:206`
-- `medium` `direct_forwarder` `rungeGrossStationaryDualState_of_stationaryAtScale` at `lean/InfoGeometry/Canonical/QFTTDFTLaunchpad.lean:265`
-- `medium` `underscore_hypothesis` `index_bridge_spectral` at `lean/InfoGeometry/KK/KasparovCycle.lean:83`
-- `low` `package_orchestration` `aqft_readiness_package_with_projectorSuperPair_base` at `lean/InfoGeometry/Canonical/AQFTOperatorInterface.lean:404`
-- `low` `package_orchestration` `aqft_tdft_constructive_launchpad_packaged_with_aqft_readiness` at `lean/InfoGeometry/Canonical/AQFTOperatorInterface.lean:458`
-- `low` `package_orchestration` `aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra_packaged_with_aqft_readiness` at `lean/InfoGeometry/Canonical/AQFTOperatorInterface.lean:515`
-- `low` `package_orchestration` `aqft_tdft_constructive_launchpad_packaged_with_aqft_readiness_and_projectorSuperPair_base` at `lean/InfoGeometry/Canonical/AQFTOperatorInterface.lean:580`
-- `low` `package_orchestration` `realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base` at `lean/InfoGeometry/Canonical/AQFTOperatorInterface.lean:686`
-- `low` `package_orchestration` `satisfiesMongeAmpere_const_of_hasConstantMongeAmpereDensity` at `lean/InfoGeometry/Canonical/CalabiYauBridge.lean:62`
-- `low` `package_orchestration` `cstar_completeCStar_kms_fock_bogoliubov_projector_package` at `lean/InfoGeometry/Canonical/OperatorAlgebraBridge.lean:133`
-- `low` `package_orchestration` `cstar_completeCStar_kms_fock_projectorSuperPair_base_package` at `lean/InfoGeometry/Canonical/OperatorAlgebraBridge.lean:181`
-- `low` `package_orchestration` `aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra` at `lean/InfoGeometry/Canonical/QFTTDFTLaunchpad.lean:424`
+- none
 
 ## Findings
-- `lean/InfoGeometry/Canonical/CliffordBridge.lean:20` `B_agrees_with_Gauge_bilinear` [high]
-  proof body reduces directly to `rfl`
-- `lean/InfoGeometry/Canonical/DiracRicciBridge.lean:37` `relative_volume_change_rn_eq_exp_neg_kahler` [high]
-  proof body reduces directly to `rfl`
-- `lean/InfoGeometry/Unstable/SingularUnitaryBridge.lean:41` `kkt_perelman_correspondence` [high]
-  proof body reduces directly to `rfl`
-- `lean/InfoGeometry/Canonical/CalabiYauBridge.lean:140` `isRicciFlat_of_unitRelativeVolume_metricDerived` [medium]
-  proof body forwards directly via `exact isRicciFlat_of_isEinsteinKaehlerAtWith_zero`
-- `lean/InfoGeometry/Canonical/CalabiYauBridge.lean:232` `ricciTensor_unique_of_mongeAmpereRicciState` [medium]
-  proof body forwards directly via `exact ricciTensor_eq_of_isRicciFlat`
-- `lean/InfoGeometry/Canonical/CalabiYauBridge.lean:258` `isRicciFlat_of_unitRelativeVolume` [medium]
-  proof body forwards directly via `exact isRicciFlat_of_isEinsteinKaehlerAtWith_zero`
-- `lean/InfoGeometry/Canonical/CalabiYauBridge.lean:270` `vacuumEinsteinEquation_of_unitRelativeVolume` [medium]
-  proof body forwards directly via `exact vacuumEinsteinEquation_of_isRicciFlat`
-- `lean/InfoGeometry/Canonical/CalabiYauBridge.lean:284` `vacuumEinsteinEquation_of_mongeAmpereRicciState` [medium]
-  proof body forwards directly via `exact vacuumEinsteinEquation_of_isRicciFlat`
-- `lean/InfoGeometry/Canonical/CayleyBregmanBridge.lean:98` `cayleyPythagoreanInvariance` [medium]
-  proof body is a `simpa ... using cayley_pythagorean_invariance` forwarder
-- `lean/InfoGeometry/Canonical/CountSubstrateBridge.lean:298` `countInducedCoupling_hasPositiveRowSums` [medium]
-  proof body forwards directly via `exact entrywisePositive_hasPositiveRowSums`
-- `lean/InfoGeometry/Canonical/CountSubstrateBridge.lean:304` `countInducedCoupling_hasPositiveColSums` [medium]
-  proof body forwards directly via `exact entrywisePositive_hasPositiveColSums`
-- `lean/InfoGeometry/Canonical/DiracRicciBridge.lean:86` `jordan_kkt_barrier_eq_neg_log_det` [medium]
-  proof body forwards directly via `exact JordanKKTData.K_def`
-- `lean/InfoGeometry/Canonical/DiracRicciBridge.lean:104` `log_det_barrier_eq_neg_log_det'` [medium]
-  proof body forwards directly via `exact logDetBarrier_eq_neg_log_det`
-- `lean/InfoGeometry/Canonical/DiracRicciBridge.lean:122` `free_energy_from_log_det_eq_neg_scale_log_partition'` [medium]
-  proof body forwards directly via `exact freeEnergyFromLogDet_eq_neg_scale_log_partition`
-- `lean/InfoGeometry/Canonical/IBGaugeBridge.lean:87` `IBPartitionFunction_shift_eq_smul` [medium]
-  proof body is a `simpa ... using congrArg` forwarder
-- `lean/InfoGeometry/Canonical/KMSSinkhornBridge.lean:177` `sinkhorn_step_kmsClosure_of_control` [medium]
-  proof body forwards directly via `exact sinkhorn_step_kmsClosure_of_approxClosure_of_barrierZero`
-- `lean/InfoGeometry/Canonical/ModularSpinorBridge.lean:216` `bayesian_update_as_spinor_bilinear` [medium]
-  declaration head contains underscore-prefixed hypotheses: `_innovation`
-- `lean/InfoGeometry/Canonical/QFTTDFTLaunchpad.lean:206` `hohenbergKohnDualState_of_concreteLegendre` [medium]
-  proof body forwards directly via `exact hohenbergKohnDualState_of_inverse_maps`
-- `lean/InfoGeometry/Canonical/QFTTDFTLaunchpad.lean:265` `rungeGrossStationaryDualState_of_stationaryAtScale` [medium]
-  proof body forwards directly via `exact hStationary.2`
-- `lean/InfoGeometry/KK/KasparovCycle.lean:83` `index_bridge_spectral` [medium]
-  declaration head contains underscore-prefixed hypotheses: `_hF`
-- `lean/InfoGeometry/Canonical/AQFTOperatorInterface.lean:404` `aqft_readiness_package_with_projectorSuperPair_base` [low]
-  proof body is primarily package/orchestration (`rcases` + tuple assembly)
-- `lean/InfoGeometry/Canonical/AQFTOperatorInterface.lean:458` `aqft_tdft_constructive_launchpad_packaged_with_aqft_readiness` [low]
-  proof body is primarily package/orchestration (`rcases` + tuple assembly)
-- `lean/InfoGeometry/Canonical/AQFTOperatorInterface.lean:515` `aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra_packaged_with_aqft_readiness` [low]
-  proof body is primarily package/orchestration (`rcases` + tuple assembly)
-- `lean/InfoGeometry/Canonical/AQFTOperatorInterface.lean:580` `aqft_tdft_constructive_launchpad_packaged_with_aqft_readiness_and_projectorSuperPair_base` [low]
-  proof body is primarily package/orchestration (`rcases` + tuple assembly)
-- `lean/InfoGeometry/Canonical/AQFTOperatorInterface.lean:686` `realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base` [low]
-  proof body is primarily package/orchestration (`rcases` + tuple assembly)
-- `lean/InfoGeometry/Canonical/CalabiYauBridge.lean:62` `satisfiesMongeAmpere_const_of_hasConstantMongeAmpereDensity` [low]
-  proof body is primarily package/orchestration (`rcases` + tuple assembly)
-- `lean/InfoGeometry/Canonical/OperatorAlgebraBridge.lean:133` `cstar_completeCStar_kms_fock_bogoliubov_projector_package` [low]
-  proof body is primarily package/orchestration (`rcases` + tuple assembly)
-- `lean/InfoGeometry/Canonical/OperatorAlgebraBridge.lean:181` `cstar_completeCStar_kms_fock_projectorSuperPair_base_package` [low]
-  proof body is primarily package/orchestration (`rcases` + tuple assembly)
-- `lean/InfoGeometry/Canonical/QFTTDFTLaunchpad.lean:424` `aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra` [low]
-  proof body is primarily package/orchestration (`rcases` + tuple assembly)
+- none
 
 ## Policy
 - this is a heuristic syntax audit, not a proof oracle
@@ -630,3 +463,4 @@ This report is a heuristic audit of bridge-/launchpad-/interface-facing theorem 
 - Prefer candidates that can become small insertable lemmas.
 - Downgrade grand names if the likely proof is only structural packaging.
 - If a candidate survives, keep it small enough for quarantine first and canonical promotion later.
+- A materialization sketch must be compilable Lean syntax in the current repo vocabulary; it may be a small quarantine wrapper over already existing theorems.

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -55,9 +56,106 @@ def ensure_exists(path: Path) -> None:
         raise SystemExit(f"missing required artifact: {path}")
 
 
-def refresh_exports(root: Path, timeout: int) -> list[Path]:
+def normalize_repo_relative(root: Path, value: str) -> str | None:
+    candidate = Path(value)
+    if candidate.is_absolute():
+        try:
+            return str(candidate.resolve().relative_to(root))
+        except ValueError:
+            return None
+    return str(candidate)
+
+
+def export_spec_for_paths(root: Path, input_path: str, output_path: str) -> ExportSpec:
+    rel_input = normalize_repo_relative(root, input_path)
+    if rel_input is None:
+        raise SystemExit(f"semantic export source is outside repo: {input_path}")
+    return ExportSpec(
+        module_name=Path(rel_input).stem,
+        input_path=rel_input,
+        output_path=output_path,
+    )
+
+
+def existing_export_specs(root: Path) -> list[ExportSpec]:
+    dag_dir = root / "reports" / "dag"
+    specs: list[ExportSpec] = []
+    for path in sorted(dag_dir.glob("*.semantic-block.stdlib.json")):
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        source_file = str(payload.get("sourceFile", "")).strip()
+        if not source_file or not source_file.endswith(".lean"):
+            continue
+        rel_input = normalize_repo_relative(root, source_file)
+        if rel_input is None:
+            continue
+        specs.append(
+            ExportSpec(
+                module_name=Path(rel_input).stem,
+                input_path=rel_input,
+                output_path=str(path.relative_to(root)),
+            )
+        )
+    return specs
+
+
+def changed_tracked_lean_files(root: Path) -> list[str]:
+    commands = [
+        ["git", "show", "--name-only", "--pretty=format:", "HEAD"],
+        ["git", "diff", "--name-only", "--relative"],
+        ["git", "diff", "--cached", "--name-only", "--relative"],
+    ]
+    out: set[str] = set()
+    for cmd in commands:
+        try:
+            raw = subprocess.check_output(cmd, cwd=root, text=True, stderr=subprocess.DEVNULL)
+        except subprocess.CalledProcessError:
+            continue
+        for line in raw.splitlines():
+            path = line.strip()
+            if not path.startswith("lean/") or not path.endswith(".lean"):
+                continue
+            if not (root / path).exists():
+                continue
+            out.add(path)
+    return sorted(out)
+
+
+def changed_export_specs(root: Path) -> list[ExportSpec]:
+    existing = {spec.input_path: spec for spec in existing_export_specs(root)}
+    specs: list[ExportSpec] = []
+    for input_path in changed_tracked_lean_files(root):
+        spec = existing.get(input_path)
+        if spec is None:
+            spec = export_spec_for_paths(
+                root,
+                input_path=input_path,
+                output_path=f"reports/dag/{Path(input_path).stem}.semantic-block.stdlib.json",
+            )
+        specs.append(spec)
+    return specs
+
+
+def refresh_exports(root: Path, timeout: int, mode: str) -> list[Path]:
+    if mode == "default":
+        specs = list(DEFAULT_EXPORTS)
+    elif mode == "all":
+        specs = existing_export_specs(root)
+        if not specs:
+            specs = list(DEFAULT_EXPORTS)
+    elif mode == "changed":
+        specs = changed_export_specs(root)
+        if not specs:
+            print("[update-repo-docs] no changed tracked Lean files; skipping export refresh", flush=True)
+            return []
+    else:
+        raise SystemExit(f"unknown export refresh mode: {mode}")
+
+    print(f"[update-repo-docs] refresh-exports mode `{mode}` modules={len(specs)}", flush=True)
     outputs: list[Path] = []
-    for spec in DEFAULT_EXPORTS:
+    for spec in specs:
         out = root / spec.output_path
         run(
             [
@@ -79,7 +177,9 @@ def refresh_exports(root: Path, timeout: int) -> list[Path]:
 
 
 def current_export_paths(root: Path) -> list[Path]:
-    outs = [root / spec.output_path for spec in DEFAULT_EXPORTS]
+    outs = sorted((root / "reports" / "dag").glob("*.semantic-block.stdlib.json"))
+    if not outs:
+        raise SystemExit("missing required artifact: reports/dag/*.semantic-block.stdlib.json")
     for path in outs:
         ensure_exists(path)
     return outs
@@ -123,8 +223,14 @@ def parse_args() -> argparse.Namespace:
     )
     ap.add_argument(
         "--refresh-exports",
-        action="store_true",
-        help="Regenerate the trusted semantic block exports before refreshing frontier/docs.",
+        nargs="?",
+        const="default",
+        choices=["default", "all", "changed"],
+        help=(
+            "Regenerate trusted semantic block exports before refreshing frontier/docs. "
+            "Modes: `default` refreshes the tracked heavy-module subset, `all` refreshes every current semantic export, "
+            "and `changed` refreshes tracked Lean files touched in HEAD or the current index/worktree."
+        ),
     )
     ap.add_argument(
         "--export-timeout",
@@ -150,9 +256,8 @@ def main() -> int:
     root = repo_root()
 
     if args.refresh_exports:
-        inputs = refresh_exports(root, args.export_timeout)
-    else:
-        inputs = current_export_paths(root)
+        refresh_exports(root, args.export_timeout, args.refresh_exports)
+    inputs = current_export_paths(root)
 
     if not args.skip_frontier:
         run_skynet(

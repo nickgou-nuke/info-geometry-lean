@@ -305,6 +305,55 @@ theorem aqft_tdft_constructive_launchpad
       (flow := flow) (scale0 := scale0) hStationary
 
 /--
+Unified constructive launchpad with explicit Bogoliubov projector-superalgebra
+closure carried alongside the AQFT/TDFT package.
+-/
+theorem aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (η : ℝ)
+    (B : BogoliubovMixingParams)
+    (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein Kgeo x)
+    (Γ : SpinConnection Kgeo x V)
+    (ψ0 : DoubledSpace E)
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (flow : InformationFlow E)
+    (scale0 : ℝ)
+    (hClosure : SinkhornKMSClosure n T K ω β)
+    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
+    (hHK : HohenbergKohnDualState ψ ψStar)
+    (hStationary : IsStationaryAtScale flow scale0) :
+    SinkhornKMSClosure n T K ω β
+      ∧ fockAnticommutator (E := E)
+          (bogoliubovAnnihilation (E := E) B)
+          (bogoliubovCreation (E := E) B)
+          = (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
+      ∧ fockCommutator (E := E)
+          (bogoliubovAnnihilation (E := E) B)
+          (bogoliubovCreation (E := E) B) = 0
+      ∧ grandCanonicalFockEulerStep (E := E) η B H
+          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ0
+            = ψ0 + η • H ψ0
+      ∧ HohenbergKohnDualState ψ ψStar
+      ∧ RungeGrossStationaryDualState flow scale0 := by
+  rcases grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_of_vacuumTransported
+      (E := E) (η := η) (B := B) (H := H)
+      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) (ψ := ψ0) hVacSplit with ⟨hAnti, hComm, hEuler⟩
+  exact ⟨hClosure, hAnti, hComm, hEuler, hHK,
+    rungeGrossStationaryDualState_of_stationaryAtScale
+      (flow := flow) (scale0 := scale0) hStationary⟩
+
+/--
 Constructive launchpad specialization with no explicit stationarity witness:
 for constant RG flow, stationarity is derived canonically.
 -/
@@ -338,6 +387,56 @@ theorem aqft_tdft_constructive_launchpad_of_constantFlow
       ∧ HohenbergKohnDualState ψ ψStar
       ∧ RungeGrossStationaryDualState (constantFlow (E := E) Hrg) scale0 := by
   exact aqft_tdft_constructive_launchpad
+    (n := n) (T := T) (K := K) (ω := ω) (β := β)
+    (η := η) (B := B) (H := H)
+    (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+    (V := V) (Γ := Γ) (ψ0 := ψ0)
+    (ψ := ψ) (ψStar := ψStar)
+    (flow := constantFlow (E := E) Hrg) (scale0 := scale0)
+    (hClosure := hClosure) (hVacSplit := hVacSplit) (hHK := hHK)
+    (hStationary := isStationaryAtScale_constantFlow (E := E) Hrg scale0)
+
+/--
+Constant-flow specialization with explicit Bogoliubov projector-superalgebra
+closure.
+-/
+theorem aqft_tdft_constructive_launchpad_of_constantFlow_with_bogoliubov_projector_superalgebra
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (η : ℝ)
+    (B : BogoliubovMixingParams)
+    (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein Kgeo x)
+    (Γ : SpinConnection Kgeo x V)
+    (ψ0 : DoubledSpace E)
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (Hrg : InfoGeometry.Convex.HessianGeometry E)
+    (scale0 : ℝ)
+    (hClosure : SinkhornKMSClosure n T K ω β)
+    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
+    (hHK : HohenbergKohnDualState ψ ψStar) :
+    SinkhornKMSClosure n T K ω β
+      ∧ fockAnticommutator (E := E)
+          (bogoliubovAnnihilation (E := E) B)
+          (bogoliubovCreation (E := E) B)
+          = (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
+      ∧ fockCommutator (E := E)
+          (bogoliubovAnnihilation (E := E) B)
+          (bogoliubovCreation (E := E) B) = 0
+      ∧ grandCanonicalFockEulerStep (E := E) η B H
+          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ0
+            = ψ0 + η • H ψ0
+      ∧ HohenbergKohnDualState ψ ψStar
+      ∧ RungeGrossStationaryDualState (constantFlow (E := E) Hrg) scale0 := by
+  exact aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra
     (n := n) (T := T) (K := K) (ω := ω) (β := β)
     (η := η) (B := B) (H := H)
     (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
@@ -392,6 +491,57 @@ theorem aqft_tdft_constructive_launchpad_of_flowInvariant
     (hStationary := isStationaryAtScale_of_flowInvariant (E := E) flow scale0 hInv)
 
 /--
+Invariant-flow specialization with explicit Bogoliubov projector-superalgebra
+closure.
+-/
+theorem aqft_tdft_constructive_launchpad_of_flowInvariant_with_bogoliubov_projector_superalgebra
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (η : ℝ)
+    (B : BogoliubovMixingParams)
+    (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein Kgeo x)
+    (Γ : SpinConnection Kgeo x V)
+    (ψ0 : DoubledSpace E)
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (flow : InformationFlow E)
+    (scale0 : ℝ)
+    (hClosure : SinkhornKMSClosure n T K ω β)
+    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
+    (hHK : HohenbergKohnDualState ψ ψStar)
+    (hInv : FlowInvariantAtScale flow scale0) :
+    SinkhornKMSClosure n T K ω β
+      ∧ fockAnticommutator (E := E)
+          (bogoliubovAnnihilation (E := E) B)
+          (bogoliubovCreation (E := E) B)
+          = (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
+      ∧ fockCommutator (E := E)
+          (bogoliubovAnnihilation (E := E) B)
+          (bogoliubovCreation (E := E) B) = 0
+      ∧ grandCanonicalFockEulerStep (E := E) η B H
+          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ0
+            = ψ0 + η • H ψ0
+      ∧ HohenbergKohnDualState ψ ψStar
+      ∧ RungeGrossStationaryDualState flow scale0 := by
+  exact aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra
+    (n := n) (T := T) (K := K) (ω := ω) (β := β)
+    (η := η) (B := B) (H := H)
+    (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+    (V := V) (Γ := Γ) (ψ0 := ψ0)
+    (ψ := ψ) (ψStar := ψStar)
+    (flow := flow) (scale0 := scale0)
+    (hClosure := hClosure) (hVacSplit := hVacSplit) (hHK := hHK)
+    (hStationary := isStationaryAtScale_of_flowInvariant (E := E) flow scale0 hInv)
+
+/--
 Modular/Clifford-bundle specialization: no explicit stationarity witness
 argument; stationarity is derived from modular-flow and Clifford-action
 invariance.
@@ -432,6 +582,63 @@ theorem aqft_tdft_constructive_launchpad_of_modularCliffordFlowInvariant
       ∧ HohenbergKohnDualState ψ ψStar
       ∧ RungeGrossStationaryDualState flow scale0 := by
   exact aqft_tdft_constructive_launchpad
+    (n := n) (T := T) (K := K) (ω := ω) (β := β)
+    (η := η) (B := B) (H := H)
+    (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+    (V := V) (Γ := Γ) (ψ0 := ψ0)
+    (ψ := ψ) (ψStar := ψStar)
+    (flow := flow) (scale0 := scale0)
+    (hClosure := hClosure) (hVacSplit := hVacSplit) (hHK := hHK)
+    (hStationary := isStationaryAtScale_of_modularCliffordFlowInvariant
+      (E := E) (ι := ι) flow scale0 σ cliffordAction unit hInv)
+
+/--
+Modular/Clifford-flow-invariant specialization with explicit Bogoliubov
+projector-superalgebra closure.
+-/
+theorem aqft_tdft_constructive_launchpad_of_modularCliffordFlowInvariant_with_bogoliubov_projector_superalgebra
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (η : ℝ)
+    (B : BogoliubovMixingParams)
+    (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein Kgeo x)
+    (Γ : SpinConnection Kgeo x V)
+    (ψ0 : DoubledSpace E)
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (flow : InformationFlow E)
+    (scale0 : ℝ)
+    {ι : Type*}
+    (σ : ℝ → E →ₗ[ℝ] E)
+    (cliffordAction : ι → E →ₗ[ℝ] E)
+    (unit : ι)
+    (hClosure : SinkhornKMSClosure n T K ω β)
+    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
+    (hHK : HohenbergKohnDualState ψ ψStar)
+    (hInv : ModularCliffordFlowInvariantAtScale
+      (E := E) (ι := ι) flow scale0 σ cliffordAction unit) :
+    SinkhornKMSClosure n T K ω β
+      ∧ fockAnticommutator (E := E)
+          (bogoliubovAnnihilation (E := E) B)
+          (bogoliubovCreation (E := E) B)
+          = (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
+      ∧ fockCommutator (E := E)
+          (bogoliubovAnnihilation (E := E) B)
+          (bogoliubovCreation (E := E) B) = 0
+      ∧ grandCanonicalFockEulerStep (E := E) η B H
+          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ0
+            = ψ0 + η • H ψ0
+      ∧ HohenbergKohnDualState ψ ψStar
+      ∧ RungeGrossStationaryDualState flow scale0 := by
+  exact aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra
     (n := n) (T := T) (K := K) (ω := ω) (β := β)
     (η := η) (B := B) (H := H)
     (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)

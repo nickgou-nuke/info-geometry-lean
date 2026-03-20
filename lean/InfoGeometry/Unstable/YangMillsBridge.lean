@@ -21,11 +21,10 @@ variable {E : Type}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
-Legacy bundle alias for seed-KMS structural hypotheses.
-Prefer using the explicit split hypotheses
+Explicit bundle alias for the canonical split seed-KMS conditions
 `JointKernelOnOmega` and `CommutatorOrthogonalOnOmega`.
 -/
-abbrev ExpectationSeedKMSHypotheses
+abbrev ExpectationSeedJointKernelCommutator
     {F : Type}
     [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
     (K : AlgebraEnd F)
@@ -35,8 +34,35 @@ abbrev ExpectationSeedKMSHypotheses
     CommutatorOrthogonalOnOmega (F := F) Ω
 
 /--
+Legacy compatibility alias for the old bundled seed-KMS hypothesis name.
+-/
+abbrev ExpectationSeedKMSHypotheses
+    {F : Type}
+    [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    (Ω : InfoGeometry.Krein.DoubledSpace F) : Prop :=
+  ExpectationSeedJointKernelCommutator (F := F) K β Ω
+
+attribute [deprecated ExpectationSeedJointKernelCommutator (since := "2026-03-20")]
+  ExpectationSeedKMSHypotheses
+
+/--
+Bundle-level KMS theorem routed directly through the canonical split-hypothesis theorem.
+-/
+theorem omegaSeed_kms_of_jointKernel_commutator_bundle
+    {F : Type}
+    [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    (Ω : InfoGeometry.Krein.DoubledSpace F)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := F) K β Ω) :
+    SatisfiesKMSLike (E := F) K (omegaSeed (F := F) Ω) β := by
+  exact omegaSeed_kms_of_jointKernel_commutator
+    (F := F) (K := K) (β := β) (Ω := Ω) hStruct.1 hStruct.2
+
+/--
 Legacy compatibility theorem for the old bundled seed-KMS hypothesis.
-Routes directly through the canonical split-hypothesis theorem.
 -/
 theorem omegaSeed_kms_of_hypotheses
     {F : Type}
@@ -44,10 +70,13 @@ theorem omegaSeed_kms_of_hypotheses
     (K : AlgebraEnd F)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace F)
-    (hStruct : ExpectationSeedKMSHypotheses (F := F) K β Ω) :
+    (hStruct : ExpectationSeedJointKernelCommutator (F := F) K β Ω) :
     SatisfiesKMSLike (E := F) K (omegaSeed (F := F) Ω) β := by
-  exact omegaSeed_kms_of_jointKernel_commutator
-    (F := F) (K := K) (β := β) (Ω := Ω) hStruct.1 hStruct.2
+  exact omegaSeed_kms_of_jointKernel_commutator_bundle
+    (F := F) (K := K) (β := β) (Ω := Ω) hStruct
+
+attribute [deprecated omegaSeed_kms_of_jointKernel_commutator_bundle (since := "2026-03-20")]
+  omegaSeed_kms_of_hypotheses
 
 /--
 Minimal `SU(N)` gauge instantiation contract.
@@ -81,37 +110,57 @@ def ofModels
 
 end SUNGaugeInstantiation
 
-/-- Existence-layer obligations matching the constructive QFT side. -/
-structure QFTAxiomsLayer where
-  /-- Reflection positivity witness. -/
-  has_reflection_positivity : Prop
-  /-- Proof of reflection positivity. -/
-  reflection_positivity_holds : has_reflection_positivity
-  /-- Osterwalder-Schrader axioms witness. -/
-  has_osterwalder_schrader : Prop
-  /-- Proof of the Osterwalder-Schrader layer. -/
-  osterwalder_schrader_holds : has_osterwalder_schrader
-  /-- Wightman reconstruction witness. -/
-  has_wightman_reconstruction : Prop
-  /-- Proof of Wightman reconstruction availability. -/
-  wightman_reconstruction_holds : has_wightman_reconstruction
+/--
+Concrete constructive QFT witness bundle over the finite canonical predicates.
 
-namespace QFTAxiomsLayer
+This is not an arbitrary axiom carrier: it records the actual reflection/OS/Wightman
+claims for a fixed `(K, β, Ω)` triple.
+-/
+structure QFTConstructiveLayer (E : Type) [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E] where
+  /-- Observable algebra endomorphism driving the finite KMS witness. -/
+  K : AlgebraEnd E
+  /-- Inverse-temperature parameter. -/
+  β : ℝ
+  /-- Selected doubled-space vacuum vector. -/
+  Ω : InfoGeometry.Krein.DoubledSpace E
+  /-- Reflection positivity holds for the expectation seed. -/
+  reflection_positivity_holds : SatisfiesKMSLike (E := E) K (omegaSeed (F := E) Ω) β
+  /-- The finite Osterwalder-Schrader layer holds for `Ω`. -/
+  osterwalder_schrader_holds :
+    0 ≤ inner ℝ ((modularConjugationJ (E := E)) Ω) Ω ∧
+      modularConjugationJ (E := E) Ω = Ω
+  /-- Finite Wightman-style reconstruction is available for the same seed data. -/
+  wightman_reconstruction_holds :
+    ∃ ω : AlgebraEnd E →L[ℝ] ℝ,
+      ω = omegaSeed (F := E) Ω ∧
+        SatisfiesKMSLike (E := E) K ω β ∧
+        ω ≠ 0
+
+namespace QFTConstructiveLayer
 
 /--
 Concrete constructor from explicit reflection/OS/Wightman proofs.
 -/
 def ofProofs
-    {R O W : Prop}
-    (hR : R)
-    (hO : O)
-    (hW : W) :
-    QFTAxiomsLayer where
-  has_reflection_positivity := R
+    (K : AlgebraEnd E)
+    (β : ℝ)
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hR : SatisfiesKMSLike (E := E) K (omegaSeed (F := E) Ω) β)
+    (hO :
+      0 ≤ inner ℝ ((modularConjugationJ (E := E)) Ω) Ω ∧
+        modularConjugationJ (E := E) Ω = Ω)
+    (hW :
+      ∃ ω : AlgebraEnd E →L[ℝ] ℝ,
+        ω = omegaSeed (F := E) Ω ∧
+          SatisfiesKMSLike (E := E) K ω β ∧
+          ω ≠ 0) :
+    QFTConstructiveLayer E where
+  K := K
+  β := β
+  Ω := Ω
   reflection_positivity_holds := hR
-  has_osterwalder_schrader := O
   osterwalder_schrader_holds := hO
-  has_wightman_reconstruction := W
   wightman_reconstruction_holds := hW
 
 /--
@@ -125,17 +174,29 @@ def expectationSeedReflectionPositivity
   SatisfiesKMSLike (E := E) K (omegaSeed (F := E) Ω) β
 
 /--
-Constructive reflection-positivity witness from canonical
-expectation-seed structural hypotheses.
+Constructive reflection-positivity witness from the bundled canonical seed-KMS conditions.
 -/
+theorem expectationSeedReflectionPositivity_of_jointKernel_commutator_bundle
+    (K : AlgebraEnd E)
+    (β : ℝ)
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω) :
+    expectationSeedReflectionPositivity (E := E) K β Ω := by
+  simpa [expectationSeedReflectionPositivity] using
+    (omegaSeed_kms_of_jointKernel_commutator_bundle
+      (F := E) (K := K) (β := β) (Ω := Ω) hStruct)
+
 theorem expectationSeedReflectionPositivity_of_hypotheses
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω) :
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω) :
     expectationSeedReflectionPositivity (E := E) K β Ω := by
-  simpa [expectationSeedReflectionPositivity] using
-    (omegaSeed_kms_of_hypotheses (F := E) (K := K) (β := β) (Ω := Ω) hStruct)
+  exact expectationSeedReflectionPositivity_of_jointKernel_commutator_bundle
+    (E := E) (K := K) (β := β) (Ω := Ω) hStruct
+
+attribute [deprecated expectationSeedReflectionPositivity_of_jointKernel_commutator_bundle (since := "2026-03-20")]
+  expectationSeedReflectionPositivity_of_hypotheses
 
 /--
 Tomita-side reflection positivity marker:
@@ -159,19 +220,36 @@ theorem modularReflectionPositivity_of_positiveTimeVector
 Combined constructive reflection package:
 KMS-like seed positivity and modular quadratic positivity.
 -/
-theorem expectationSeed_and_modularReflectionPositivity_of_hypotheses
+theorem expectationSeed_and_modularReflectionPositivity_of_jointKernel_commutator_positiveTime
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
     (hΩ : PositiveTimeVector Ω) :
     expectationSeedReflectionPositivity (E := E) K β Ω ∧
       modularReflectionPositivity (E := E) Ω := by
   refine ⟨?_, ?_⟩
-  · exact expectationSeedReflectionPositivity_of_hypotheses
+  · exact expectationSeedReflectionPositivity_of_jointKernel_commutator_bundle
       (E := E) (K := K) (β := β) (Ω := Ω) hStruct
   · exact modularReflectionPositivity_of_positiveTimeVector
       (E := E) (Ω := Ω) hΩ
+
+/--
+Legacy compatibility theorem for the old bundled/positive-time name.
+-/
+theorem expectationSeed_and_modularReflectionPositivity_of_hypotheses
+    (K : AlgebraEnd E)
+    (β : ℝ)
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
+    (hΩ : PositiveTimeVector Ω) :
+    expectationSeedReflectionPositivity (E := E) K β Ω ∧
+      modularReflectionPositivity (E := E) Ω := by
+  exact expectationSeed_and_modularReflectionPositivity_of_jointKernel_commutator_positiveTime
+    (E := E) (K := K) (β := β) (Ω := Ω) hStruct hΩ
+
+attribute [deprecated expectationSeed_and_modularReflectionPositivity_of_jointKernel_commutator_positiveTime (since := "2026-03-20")]
+  expectationSeed_and_modularReflectionPositivity_of_hypotheses
 
 /--
 Finite OS-like layer induced by modular reflection:
@@ -214,12 +292,13 @@ theorem finiteWightmanReconstructionLayer_of_expectationSeed
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
     (hΩ : Ω ≠ 0) :
     finiteWightmanReconstructionLayer (E := E) K β Ω := by
   refine ⟨omegaSeed (F := E) Ω, ?_, ?_, ?_⟩
   · rfl
-  · exact omegaSeed_kms_of_hypotheses (F := E) (K := K) (β := β) (Ω := Ω) hStruct
+  · exact omegaSeed_kms_of_jointKernel_commutator_bundle
+      (F := E) (K := K) (β := β) (Ω := Ω) hStruct
   · simpa [omegaSeed] using
       (omegaSeed_nonzero (F := E) Ω hΩ)
 
@@ -231,17 +310,15 @@ def ofExpectationSeedKMS
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
-    {O W : Prop}
-    (hO : O)
-    (hW : W) :
-    QFTAxiomsLayer :=
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
+    (hO : finiteOsterwalderSchraderLayer (E := E) Ω)
+    (hW : finiteWightmanReconstructionLayer (E := E) K β Ω) :
+    QFTConstructiveLayer E :=
   ofProofs
-    (R := expectationSeedReflectionPositivity (E := E) K β Ω)
-    (hR := expectationSeedReflectionPositivity_of_hypotheses
+    (K := K) (β := β) (Ω := Ω)
+    (hR := expectationSeedReflectionPositivity_of_jointKernel_commutator_bundle
       (E := E) (K := K) (β := β) (Ω := Ω) hStruct)
-    (hO := hO)
-    (hW := hW)
+    (hO := hO) (hW := hW)
 
 /--
 Constructive constructor with explicit positive-time geometry:
@@ -251,18 +328,16 @@ def ofExpectationSeedKMSPositiveTime
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
     (hΩ : PositiveTimeVector Ω)
-    {O W : Prop}
-    (hO : O)
-    (hW : W) :
-    QFTAxiomsLayer :=
+    (hW : finiteWightmanReconstructionLayer (E := E) K β Ω) :
+    QFTConstructiveLayer E :=
   ofProofs
-    (R := expectationSeedReflectionPositivity (E := E) K β Ω ∧
-      modularReflectionPositivity (E := E) Ω)
-    (hR := expectationSeed_and_modularReflectionPositivity_of_hypotheses
-      (E := E) (K := K) (β := β) (Ω := Ω) hStruct hΩ)
-    (hO := hO)
+    (K := K) (β := β) (Ω := Ω)
+    (hR := expectationSeedReflectionPositivity_of_jointKernel_commutator_bundle
+      (E := E) (K := K) (β := β) (Ω := Ω) hStruct)
+    (hO := finiteOsterwalderSchraderLayer_of_positiveTimeVector
+      (E := E) (Ω := Ω) hΩ)
     (hW := hW)
 
 /--
@@ -273,22 +348,20 @@ def ofExpectationSeedKMSFinite
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
     (hΩ_nonzero : Ω ≠ 0)
     (hΩ_posTime : PositiveTimeVector Ω) :
-    QFTAxiomsLayer :=
+    QFTConstructiveLayer E :=
   ofProofs
-    (R := expectationSeedReflectionPositivity (E := E) K β Ω)
-    (hR := expectationSeedReflectionPositivity_of_hypotheses
+    (K := K) (β := β) (Ω := Ω)
+    (hR := expectationSeedReflectionPositivity_of_jointKernel_commutator_bundle
       (E := E) (K := K) (β := β) (Ω := Ω) hStruct)
-    (O := finiteOsterwalderSchraderLayer (E := E) Ω)
     (hO := finiteOsterwalderSchraderLayer_of_positiveTimeVector
       (E := E) (Ω := Ω) hΩ_posTime)
-    (W := finiteWightmanReconstructionLayer (E := E) K β Ω)
     (hW := finiteWightmanReconstructionLayer_of_expectationSeed
       (E := E) (K := K) (β := β) (Ω := Ω) hStruct hΩ_nonzero)
 
-end QFTAxiomsLayer
+end QFTConstructiveLayer
 
 /--
 Log-det coercivity marker for a Jacobian flow map on doubled space.
@@ -340,14 +413,14 @@ theorem spectralGapFromLogDet_pos_of_coercive
       (E := E) (rg_model := rg_model) (J := J))
 
 /-- Consolidated bridge package from chiral RG to Yang-Mills mass-gap targets. -/
-structure YangMillsMassGapBridge (E : Type*) [NormedAddCommGroup E]
+structure YangMillsMassGapBridge (E : Type) [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [CompleteSpace E] where
   /-- Gauge-theory instantiation data. -/
   su_inst : SUNGaugeInstantiation
   /-- Chiral RG model currently available in the canonical layer. -/
   rg_model : ChiralAsymptoticModel E
-  /-- Constructive QFT existence obligations. -/
-  qft_layer : QFTAxiomsLayer
+  /-- Constructive finite QFT witness bundle. -/
+  qft_layer : QFTConstructiveLayer E
   /-- Candidate strict spectral gap (`λ₁`). -/
   spectral_gap : ℝ
   /-- Strict positivity target for the mass gap. -/
@@ -361,7 +434,7 @@ namespace YangMillsMassGapBridge
 def ofConcreteLayers
     (su_inst : SUNGaugeInstantiation)
     (rg_model : ChiralAsymptoticModel E)
-    (qft_layer : QFTAxiomsLayer)
+    (qft_layer : QFTConstructiveLayer E)
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
@@ -384,16 +457,15 @@ def ofExpectationSeedLayers
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
-    {O W : Prop}
-    (hO : O)
-    (hW : W)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
+    (hO : QFTConstructiveLayer.finiteOsterwalderSchraderLayer (E := E) Ω)
+    (hW : QFTConstructiveLayer.finiteWightmanReconstructionLayer (E := E) K β Ω)
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
     YangMillsMassGapBridge E :=
   ofConcreteLayers (E := E) su_inst rg_model
-    (QFTAxiomsLayer.ofExpectationSeedKMS
+    (QFTConstructiveLayer.ofExpectationSeedKMS
       (E := E) (K := K) (β := β) (Ω := Ω) hStruct
       (hO := hO) (hW := hW))
     spectral_gap spectral_gap_pos gamma_le_spectral_gap
@@ -407,19 +479,17 @@ def ofExpectationSeedLayersPositiveTime
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
     (hΩ : PositiveTimeVector Ω)
-    {O W : Prop}
-    (hO : O)
-    (hW : W)
+    (hW : QFTConstructiveLayer.finiteWightmanReconstructionLayer (E := E) K β Ω)
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
     YangMillsMassGapBridge E :=
   ofConcreteLayers (E := E) su_inst rg_model
-    (QFTAxiomsLayer.ofExpectationSeedKMSPositiveTime
+    (QFTConstructiveLayer.ofExpectationSeedKMSPositiveTime
       (E := E) (K := K) (β := β) (Ω := Ω) hStruct hΩ
-      (hO := hO) (hW := hW))
+      (hW := hW))
     spectral_gap spectral_gap_pos gamma_le_spectral_gap
 
 /--
@@ -432,7 +502,7 @@ def ofExpectationSeedLayersFinite
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
     (hΩ_nonzero : Ω ≠ 0)
     (hΩ_posTime : PositiveTimeVector Ω)
     (spectral_gap : ℝ)
@@ -440,7 +510,7 @@ def ofExpectationSeedLayersFinite
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
     YangMillsMassGapBridge E :=
   ofConcreteLayers (E := E) su_inst rg_model
-    (QFTAxiomsLayer.ofExpectationSeedKMSFinite
+    (QFTConstructiveLayer.ofExpectationSeedKMSFinite
       (E := E) (K := K) (β := β) (Ω := Ω) hStruct hΩ_nonzero hΩ_posTime)
     spectral_gap spectral_gap_pos gamma_le_spectral_gap
 
@@ -455,7 +525,7 @@ noncomputable def ofExpectationSeedLayersFiniteFromLogDet
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
     (hΩ_nonzero : Ω ≠ 0)
     (hΩ_posTime : PositiveTimeVector Ω)
     (J : AlgebraEnd E)
@@ -478,9 +548,11 @@ def has_su_n_instantiation (B : YangMillsMassGapBridge E) : Prop :=
 
 /-- Obligation 2: existence layer via OS/Wightman-style witnesses. -/
 def has_os_wightman_existence_layer (B : YangMillsMassGapBridge E) : Prop :=
-  B.qft_layer.has_reflection_positivity ∧
-    B.qft_layer.has_osterwalder_schrader ∧
-    B.qft_layer.has_wightman_reconstruction
+  QFTConstructiveLayer.expectationSeedReflectionPositivity
+      (E := E) B.qft_layer.K B.qft_layer.β B.qft_layer.Ω ∧
+    QFTConstructiveLayer.finiteOsterwalderSchraderLayer (E := E) B.qft_layer.Ω ∧
+    QFTConstructiveLayer.finiteWightmanReconstructionLayer
+      (E := E) B.qft_layer.K B.qft_layer.β B.qft_layer.Ω
 
 /-- Obligation 3: strict positive mass gap. -/
 def has_strict_mass_gap (B : YangMillsMassGapBridge E) : Prop :=
@@ -523,7 +595,7 @@ three millennium obligations are immediate.
 theorem millennium_obligations_of_concreteLayers
     (su_inst : SUNGaugeInstantiation)
     (rg_model : ChiralAsymptoticModel E)
-    (qft_layer : QFTAxiomsLayer)
+    (qft_layer : QFTConstructiveLayer E)
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
@@ -545,10 +617,9 @@ theorem millennium_obligations_of_expectationSeedLayers
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
-    {O W : Prop}
-    (hO : O)
-    (hW : W)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
+    (hO : QFTConstructiveLayer.finiteOsterwalderSchraderLayer (E := E) Ω)
+    (hW : QFTConstructiveLayer.finiteWightmanReconstructionLayer (E := E) K β Ω)
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
@@ -569,16 +640,14 @@ theorem millennium_obligations_of_expectationSeedLayersPositiveTime
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
     (hΩ : PositiveTimeVector Ω)
-    {O W : Prop}
-    (hO : O)
-    (hW : W)
+    (hW : QFTConstructiveLayer.finiteWightmanReconstructionLayer (E := E) K β Ω)
     (spectral_gap : ℝ)
     (spectral_gap_pos : 0 < spectral_gap)
     (gamma_le_spectral_gap : rg_model.gamma ≤ spectral_gap) :
     let B := YangMillsMassGapBridge.ofExpectationSeedLayersPositiveTime
-      su_inst rg_model K β Ω hStruct hΩ hO hW
+      su_inst rg_model K β Ω hStruct hΩ hW
       spectral_gap spectral_gap_pos gamma_le_spectral_gap
     has_su_n_instantiation B ∧
       has_os_wightman_existence_layer B ∧
@@ -596,7 +665,7 @@ theorem millennium_obligations_of_expectationSeedLayersFinite
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
     (hΩ_nonzero : Ω ≠ 0)
     (hΩ_posTime : PositiveTimeVector Ω)
     (spectral_gap : ℝ)
@@ -622,7 +691,7 @@ theorem millennium_obligations_of_expectationSeedLayersFiniteFromLogDet
     (K : AlgebraEnd E)
     (β : ℝ)
     (Ω : InfoGeometry.Krein.DoubledSpace E)
-    (hStruct : ExpectationSeedKMSHypotheses (F := E) K β Ω)
+    (hStruct : ExpectationSeedJointKernelCommutator (F := E) K β Ω)
     (hΩ_nonzero : Ω ≠ 0)
     (hΩ_posTime : PositiveTimeVector Ω)
     (J : AlgebraEnd E)

@@ -37,24 +37,32 @@ noncomputable def cartanInvolution (A : NeutralSpace E →L[ℝ] NeutralSpace E)
 lemma cartanInvolution_add (A B : NeutralSpace E →L[ℝ] NeutralSpace E) :
     cartanInvolution (E := E) (A + B)
       = cartanInvolution (E := E) A + cartanInvolution (E := E) B := by
-  ext x
+  apply ContinuousLinearMap.ext
+  intro x
+  apply NeutralSpace.ext
   simp [cartanInvolution, conjugateCLM, conjEnd]
 
 lemma cartanInvolution_smul (a : ℝ) (A : NeutralSpace E →L[ℝ] NeutralSpace E) :
     cartanInvolution (E := E) (a • A) = a • cartanInvolution (E := E) A := by
-  ext x
+  apply ContinuousLinearMap.ext
+  intro x
+  apply NeutralSpace.ext
   simp [cartanInvolution, conjugateCLM, conjEnd]
 
 lemma cartanInvolution_involutive (A : NeutralSpace E →L[ℝ] NeutralSpace E) :
     cartanInvolution (E := E) (cartanInvolution (E := E) A) = A := by
-  ext x
+  apply ContinuousLinearMap.ext
+  intro x
+  apply NeutralSpace.ext
   simp [cartanInvolution, conjugateCLM, conjEnd,
     KreinSpace.J_invol, neutralJ_toContinuousLinearEquiv_symm_eq]
 
 lemma cartanInvolution_comp (A B : NeutralSpace E →L[ℝ] NeutralSpace E) :
     cartanInvolution (E := E) (A.comp B)
       = (cartanInvolution (E := E) A).comp (cartanInvolution (E := E) B) := by
-  ext x
+  apply ContinuousLinearMap.ext
+  intro x
+  apply NeutralSpace.ext
   simp [cartanInvolution, conjugateCLM, conjEnd, ContinuousLinearMap.comp_apply]
 
 /-- Cartan involution intertwined with the ambient Lie bracket. -/
@@ -68,7 +76,11 @@ lemma cartanInvolution_lie (A B : NeutralSpace E →L[ℝ] NeutralSpace E) :
   have hsub : ∀ X Y : NeutralSpace E →L[ℝ] NeutralSpace E,
       cartanInvolution (E := E) (X - Y) =
         cartanInvolution (E := E) X - cartanInvolution (E := E) Y :=
-    fun X Y => by ext x; simp [cartanInvolution, conjugateCLM, conjEnd]
+    fun X Y => by
+      apply ContinuousLinearMap.ext
+      intro x
+      apply NeutralSpace.ext
+      simp [cartanInvolution, conjugateCLM, conjEnd]
   simp only [Ring.lie_def, hsub, hmul]
 
 end Endomorphism

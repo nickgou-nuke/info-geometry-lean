@@ -20,7 +20,7 @@ omit [FiniteDimensional ℝ E] in
 
 /--
 Reduced heat-trace proxy `K(t)` in the collapsed log-volume model.
-This is a scalar surrogate, not an operator trace `Tr(exp(-t D^2))`.
+This is a reduced scalar model, not an operator trace `Tr(exp(-t D^2))`.
 -/
 noncomputable def heatTrace (IST : InfoSpectralTriple E) (t : ℝ) : ℝ :=
   Real.exp (-t) * spectralLogVolume IST

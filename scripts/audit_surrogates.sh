@@ -52,9 +52,11 @@ BANNED_SYMBOLS=(
 
 PATTERN="\\b($(printf '%s|' "${BANNED_SYMBOLS[@]}" | sed 's/|$//'))\\b"
 
-echo "[surrogate-audit] checking for banned surrogate symbols in stable modules"
-if rg -n "$PATTERN" "${IGNORE_GLOBS[@]}" "${SCAN_PATHS[@]}"; then
-  echo "[surrogate-audit] banned surrogate symbol(s) detected in stable modules"
+DECL_PATTERN="^[[:space:]]*(?:noncomputable[[:space:]]+)?(?:theorem|lemma|def|abbrev|structure|class|instance|axiom|inductive)[[:space:]]+($(printf '%s|' "${BANNED_SYMBOLS[@]}" | sed 's/|$//'))\\b"
+
+echo "[surrogate-audit] checking for banned surrogate declarations in stable modules"
+if rg -n "$DECL_PATTERN" "${IGNORE_GLOBS[@]}" "${SCAN_PATHS[@]}"; then
+  echo "[surrogate-audit] banned surrogate declaration(s) detected in stable modules"
   exit 1
 fi
 

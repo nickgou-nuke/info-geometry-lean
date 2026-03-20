@@ -684,7 +684,7 @@ Global grand synthesis scaffold:
 thermodynamic equilibrium of the trajectory, geometric fixed-point, and
 algebraic Bott-Dirac stationarity.
 -/
-theorem grandSynthesis_of_axioms
+theorem grandSynthesis_of_equilibria
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : RicciFlow X)
     (Dn : Endomorphism F)

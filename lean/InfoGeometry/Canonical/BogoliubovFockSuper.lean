@@ -220,8 +220,9 @@ theorem anticommutator_annihilation_self :
       = annihilationOp (E := E) + annihilationOp (E := E) := by
           simp [annihilation_eq_minus_projector, gradeMinusProj_idempotent]
     _ = (2 : ℝ) • annihilationOp (E := E) := by
-          ext w
-          simp [two_smul]
+          apply ContinuousLinearMap.ext
+          intro w
+          apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [two_smul]
 
 /--
 Exact odd-odd self bracket for the creation projector:
@@ -238,8 +239,9 @@ theorem anticommutator_creation_self :
       = creationOp (E := E) + creationOp (E := E) := by
           simp [creation_eq_plus_projector, gradePlusProj_idempotent]
     _ = (2 : ℝ) • creationOp (E := E) := by
-          ext w
-          simp [two_smul]
+          apply ContinuousLinearMap.ext
+          intro w
+          apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [two_smul]
 
 /--
 Exact mixed odd-odd bracket for grade projectors:
@@ -404,11 +406,13 @@ theorem anticommutator_bogoliubov_projector_model
         = ((B.u * B.v + B.u * B.v) : ℝ) •
           (annihilationOp (E := E) + creationOp (E := E)) := by
             have hzeroU : (B.u * B.u) • (0 : FockEnd E) = 0 := by
-              ext w
-              simp
+              apply ContinuousLinearMap.ext
+              intro w
+              apply InfoGeometry.Krein.DoubledSpace.ext <;> simp
             have hzeroV : (B.v * B.v) • (0 : FockEnd E) = 0 := by
-              ext w
-              simp
+              apply ContinuousLinearMap.ext
+              intro w
+              apply InfoGeometry.Krein.DoubledSpace.ext <;> simp
             rw [hzeroU, hzeroV]
             simp [add_smul, smul_add, add_assoc, add_comm]
     _ = ((B.u * B.v + B.u * B.v) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E) := by
@@ -548,7 +552,9 @@ lemma einsteinFockDeformation_eq_zero_of_vacuumTransported
   have hμ : inducedChemicalPotential R K x scalar Λ V Γ = 0 := hVacSplit
   have hdef : einsteinFockDeformation R K x scalar Λ V Γ = inducedChemicalPotential R K x scalar Λ V Γ • ContinuousLinearMap.id ℝ (DoubledSpace E) := rfl
   rw [hdef, hμ]
-  ext v; simp
+  apply ContinuousLinearMap.ext
+  intro v
+  apply InfoGeometry.Krein.DoubledSpace.ext <;> simp
 
 /-- Lemma `grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported`. -/
 lemma grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
@@ -563,7 +569,9 @@ lemma grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
   have hμ : inducedChemicalPotential R K x scalar Λ V Γ = 0 := hVacSplit
   have hgcg : grandCanonicalGenerator (E := E) B H (inducedChemicalPotential R K x scalar Λ V Γ) = H - inducedChemicalPotential R K x scalar Λ V Γ • numberOperator B := rfl
   rw [hgcg, hμ]
-  ext v; simp
+  apply ContinuousLinearMap.ext
+  intro v
+  apply InfoGeometry.Krein.DoubledSpace.ext <;> simp
 
 /-- Lemma `grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported`. -/
 lemma grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported

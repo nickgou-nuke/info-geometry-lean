@@ -173,7 +173,222 @@ theorem cstar_completeCStar_kms_fock_bogoliubov_projector_package
   rcases bogoliubov_projector_superalgebra (E := E) B with ⟨hAnti, hComm⟩
   exact ⟨hCStar, hCompleteCStar, hKMS, hAnti, hComm, hEuler⟩
 
+/--
+Canonical AQFT package combining operator-target readiness, Sinkhorn/KMS
+closure, the canonical doubled-projector super-pair, and the vacuum-reduced
+grand-canonical Euler law.
+-/
+theorem cstar_completeCStar_kms_fock_projectorSuperPair_base_package
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (η : ℝ)
+    (B : BogoliubovMixingParams)
+    (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E)
+    (scalar Λ : ℝ)
+    (V : InfoGeometry.Canonical.RicciMongeAmpere.SplitVielbein Kgeo x)
+    (Γ : InfoGeometry.Canonical.RicciMongeAmpere.SpinConnection Kgeo x V)
+    (ψ : DoubledSpace E)
+    (h_closure : SinkhornKMSClosure n T K ω β)
+    (h_vac_split : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
+    IsCStarLayer (Obs := ObsKMS) ∧
+      IsCompleteCStarLayer (Obs := ObsFock) ∧
+      SinkhornKMSClosure n T K ω β ∧
+      IsProjectorSuperPair
+        (InfoGeometry.Quantum.annihilationOp (E := E))
+        (InfoGeometry.Quantum.creationOp (E := E)) ∧
+      grandCanonicalFockEulerStep (E := E) η B H
+          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
+          = ψ + η • H ψ := by
+  rcases cstar_completeCStar_kms_fock_package
+      (n := n)
+      (F := F) (ObsKMS := ObsKMS)
+      (E := E) (ObsFock := ObsFock)
+      (T := T) (K := K) (ω := ω) (β := β)
+      (η := η) (B := B) (H := H)
+      (R := R) (Kgeo := Kgeo) (x := x)
+      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
+      h_closure h_vac_split with ⟨hCStar, hCompleteCStar, hKMS, hEuler⟩
+  exact ⟨hCStar, hCompleteCStar, hKMS, projectorSuperPair_base (E := E), hEuler⟩
+
 end UnifiedPackage
+
+section UnifiedLaunchpadPackage
+
+variable (n : Nat)
+variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+variable {ObsKMS : Type*}
+  [NonUnitalNormedRing ObsKMS] [StarRing ObsKMS] [CStarRing ObsKMS]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {ObsFock : Type*}
+  [NonUnitalNormedRing ObsFock] [StarRing ObsFock] [CStarRing ObsFock]
+  [CompleteSpace ObsFock]
+variable {Θ : Type*} [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]
+
+/--
+Canonical operator-layer version of the unified AQFT/TDFT launchpad packaged
+with C* and complete-C* readiness.
+-/
+theorem cstar_completeCStar_kms_fock_tdft_launchpad_package
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (η : ℝ)
+    (B : BogoliubovMixingParams)
+    (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E)
+    (scalar Λ : ℝ)
+    (V : InfoGeometry.Canonical.RicciMongeAmpere.SplitVielbein Kgeo x)
+    (Γ : InfoGeometry.Canonical.RicciMongeAmpere.SpinConnection Kgeo x V)
+    (ψ0 : DoubledSpace E)
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (flow : InfoGeometry.Canonical.RGFlow.InformationFlow E)
+    (scale0 : ℝ)
+    (hClosure : SinkhornKMSClosure n T K ω β)
+    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
+    (hHK : InfoGeometry.Canonical.QFTTDFTLaunchpad.HohenbergKohnDualState ψ ψStar)
+    (hStationary : InfoGeometry.Canonical.RGFlow.IsStationaryAtScale flow scale0) :
+    IsCStarLayer (Obs := ObsKMS)
+      ∧ IsCompleteCStarLayer (Obs := ObsFock)
+      ∧ SinkhornKMSClosure n T K ω β
+      ∧ grandCanonicalFockEulerStep (E := E) η B H
+          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ0
+          = ψ0 + η • H ψ0
+      ∧ InfoGeometry.Canonical.QFTTDFTLaunchpad.HohenbergKohnDualState ψ ψStar
+      ∧ InfoGeometry.Canonical.QFTTDFTLaunchpad.RungeGrossStationaryDualState flow scale0 := by
+  exact aqft_tdft_constructive_launchpad_packaged_with_aqft_readiness
+    (n := n)
+    (F := F) (ObsKMS := ObsKMS)
+    (E := E) (ObsFock := ObsFock)
+    (T := T) (K := K) (ω := ω) (β := β)
+    (η := η) (B := B) (H := H)
+    (R := R) (Kgeo := Kgeo) (x := x)
+    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)
+    (ψ0 := ψ0) (ψ := ψ) (ψStar := ψStar)
+    (flow := flow) (scale0 := scale0)
+    (hClosure := hClosure) (hVacSplit := hVacSplit)
+    (hHK := hHK) (hStationary := hStationary)
+
+/--
+Canonical operator-layer version of the unified AQFT/TDFT launchpad with the
+explicit Bogoliubov projector-superalgebra carried alongside the readiness
+package.
+-/
+theorem cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (η : ℝ)
+    (B : BogoliubovMixingParams)
+    (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E)
+    (scalar Λ : ℝ)
+    (V : InfoGeometry.Canonical.RicciMongeAmpere.SplitVielbein Kgeo x)
+    (Γ : InfoGeometry.Canonical.RicciMongeAmpere.SpinConnection Kgeo x V)
+    (ψ0 : DoubledSpace E)
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (flow : InfoGeometry.Canonical.RGFlow.InformationFlow E)
+    (scale0 : ℝ)
+    (hClosure : SinkhornKMSClosure n T K ω β)
+    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
+    (hHK : InfoGeometry.Canonical.QFTTDFTLaunchpad.HohenbergKohnDualState ψ ψStar)
+    (hStationary : InfoGeometry.Canonical.RGFlow.IsStationaryAtScale flow scale0) :
+    IsCStarLayer (Obs := ObsKMS)
+      ∧ IsCompleteCStarLayer (Obs := ObsFock)
+      ∧ SinkhornKMSClosure n T K ω β
+      ∧ fockAnticommutator (E := E)
+          (bogoliubovAnnihilation (E := E) B)
+          (bogoliubovCreation (E := E) B)
+        = (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
+      ∧ fockCommutator (E := E)
+          (bogoliubovAnnihilation (E := E) B)
+          (bogoliubovCreation (E := E) B) = 0
+      ∧ grandCanonicalFockEulerStep (E := E) η B H
+          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ0
+          = ψ0 + η • H ψ0
+      ∧ InfoGeometry.Canonical.QFTTDFTLaunchpad.HohenbergKohnDualState ψ ψStar
+      ∧ InfoGeometry.Canonical.QFTTDFTLaunchpad.RungeGrossStationaryDualState flow scale0 := by
+  exact aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra_packaged_with_aqft_readiness
+    (n := n)
+    (F := F) (ObsKMS := ObsKMS)
+    (E := E) (ObsFock := ObsFock)
+    (T := T) (K := K) (ω := ω) (β := β)
+    (η := η) (B := B) (H := H)
+    (R := R) (Kgeo := Kgeo) (x := x)
+    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)
+    (ψ0 := ψ0) (ψ := ψ) (ψStar := ψStar)
+    (flow := flow) (scale0 := scale0)
+    (hClosure := hClosure) (hVacSplit := hVacSplit)
+    (hHK := hHK) (hStationary := hStationary)
+
+/--
+Canonical operator-layer version of the unified AQFT/TDFT launchpad carrying
+the canonical doubled-projector super-pair alongside C* readiness.
+-/
+theorem cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (η : ℝ)
+    (B : BogoliubovMixingParams)
+    (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E)
+    (scalar Λ : ℝ)
+    (V : InfoGeometry.Canonical.RicciMongeAmpere.SplitVielbein Kgeo x)
+    (Γ : InfoGeometry.Canonical.RicciMongeAmpere.SpinConnection Kgeo x V)
+    (ψ0 : DoubledSpace E)
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (flow : InfoGeometry.Canonical.RGFlow.InformationFlow E)
+    (scale0 : ℝ)
+    (hClosure : SinkhornKMSClosure n T K ω β)
+    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
+    (hHK : InfoGeometry.Canonical.QFTTDFTLaunchpad.HohenbergKohnDualState ψ ψStar)
+    (hStationary : InfoGeometry.Canonical.RGFlow.IsStationaryAtScale flow scale0) :
+    IsCStarLayer (Obs := ObsKMS)
+      ∧ IsCompleteCStarLayer (Obs := ObsFock)
+      ∧ SinkhornKMSClosure n T K ω β
+      ∧ IsProjectorSuperPair
+          (InfoGeometry.Quantum.annihilationOp (E := E))
+          (InfoGeometry.Quantum.creationOp (E := E))
+      ∧ grandCanonicalFockEulerStep (E := E) η B H
+          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ0
+          = ψ0 + η • H ψ0
+      ∧ InfoGeometry.Canonical.QFTTDFTLaunchpad.HohenbergKohnDualState ψ ψStar
+      ∧ InfoGeometry.Canonical.QFTTDFTLaunchpad.RungeGrossStationaryDualState flow scale0 := by
+  exact aqft_tdft_constructive_launchpad_packaged_with_aqft_readiness_and_projectorSuperPair_base
+    (n := n)
+    (F := F) (ObsKMS := ObsKMS)
+    (E := E) (ObsFock := ObsFock)
+    (T := T) (K := K) (ω := ω) (β := β)
+    (η := η) (B := B) (H := H)
+    (R := R) (Kgeo := Kgeo) (x := x)
+    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)
+    (ψ0 := ψ0) (ψ := ψ) (ψStar := ψStar)
+    (flow := flow) (scale0 := scale0)
+    (hClosure := hClosure) (hVacSplit := hVacSplit)
+    (hHK := hHK) (hStationary := hStationary)
+
+end UnifiedLaunchpadPackage
 
 section KkBridge
 

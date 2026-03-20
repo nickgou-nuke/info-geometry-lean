@@ -243,6 +243,51 @@ lemma K_maps_minus_to_plus (x : S) (hx : x ∈ P0.minus) :
 
 end KPolarization
 
+namespace RealMajoranaDatum
+
+variable (M : RealMajoranaDatum (S := S))
+
+/--
+Canonical polarization coming from chirality involution `J`.
+
+This makes the `plus/minus` polarization sectors coincide with the primitive
+real Weyl sectors.
+-/
+noncomputable def chiralityPolarization : KPolarization (S := S) M where
+  P := M.J
+  P_sq := M.J_sq
+  P_K_anticomm := by
+    ext x
+    have hJJ_eps : M.J (M.J (M.eps x)) = M.eps x := by
+      simpa [ContinuousLinearMap.comp_apply] using
+        congrArg (fun f : EndS (S := S) => f (M.eps x)) M.J_sq
+    have hJJ_x : M.J (M.J x) = x := by
+      simpa [ContinuousLinearMap.comp_apply] using
+        congrArg (fun f : EndS (S := S) => f x) M.J_sq
+    have hantiJ : M.J (M.eps (M.J x)) = -(M.eps (M.J (M.J x))) := by
+      simpa [ContinuousLinearMap.comp_apply] using
+        congrArg (fun f : EndS (S := S) => f (M.J x)) M.Jeps_anticomm
+    have hneganti : -(M.J (M.eps (M.J x))) = M.eps x := by
+      have h := congrArg Neg.neg hantiJ
+      simpa [hJJ_x] using h
+    calc
+      (M.J.comp M.K) x = M.eps x := by
+        simp [RealMajoranaDatum.K, ContinuousLinearMap.comp_apply, hJJ_eps]
+      _ = -(M.J (M.eps (M.J x))) := by simpa using hneganti.symm
+      _ = (-(M.K.comp M.J)) x := by
+        simp [RealMajoranaDatum.K, ContinuousLinearMap.comp_apply]
+
+@[simp] lemma chiralityPolarization_P :
+    (M.chiralityPolarization).P = M.J := rfl
+
+@[simp] lemma chiralityPolarization_plus :
+    (M.chiralityPolarization).plus = M.weylPlus := rfl
+
+@[simp] lemma chiralityPolarization_minus :
+    (M.chiralityPolarization).minus = M.weylMinus := rfl
+
+end RealMajoranaDatum
+
 /--
 Real Bogoliubov transform on Majorana mode space.
 -/

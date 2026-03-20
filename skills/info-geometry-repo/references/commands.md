@@ -117,6 +117,12 @@ Vacuity / alias-debt index:
 python3 tools/generate_vacuity_index.py
 ```
 
+Bridge thinness index:
+
+```bash
+python3 tools/generate_bridge_thinness_index.py
+```
+
 Dry isolated optimization cycle:
 
 ```bash

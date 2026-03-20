@@ -90,10 +90,14 @@ theorem IBPartitionFunction_shift_eq_smul
     IBPartitionFunction qT β (distortionShift D c) x
       =
     ENNReal.ofReal (Real.exp (-β * c)) * IBPartitionFunction qT β D x := by
-  simpa [IBPartitionFunction, partitionFunction, smul_eq_mul] using
-    congrArg
+  have hUniv :
+      IBUnnormalized qT β (distortionShift D c) x Set.univ
+        =
+      (ENNReal.ofReal (Real.exp (-β * c)) • IBUnnormalized qT β D x) Set.univ := by
+    exact congrArg
       (fun μ : Measure T => μ Set.univ)
       (IBUnnormalized_shift_eq_smul (qT := qT) (β := β) (c := c) (D := D) (x := x) hβD)
+  simpa [IBPartitionFunction, partitionFunction, Measure.smul_apply, smul_eq_mul] using hUniv
 
 /-- Nonzero raw slices stay nonzero under additive gauge shifts. -/
 theorem IBUnnormalized_shift_ne_zero

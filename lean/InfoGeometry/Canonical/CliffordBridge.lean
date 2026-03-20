@@ -9,7 +9,7 @@ open InfoGeometry.Clifford
 theorem q_agrees_with_Gauge_quad (v : ℝ × ℝ) :
     splitQ11 v = InfoGeometry.Canonical.Gauge.quad .split v := by
   simp [splitQ11_apply, InfoGeometry.Canonical.Gauge.quad]
-  ring
+  ring_nf
 
 /-- Canonical naming for split quadratic-form agreement with gauge quadratic form. -/
 theorem splitQuadratic_eq_gaugeQuadratic (v : ℝ × ℝ) :
@@ -19,7 +19,9 @@ theorem splitQuadratic_eq_gaugeQuadratic (v : ℝ × ℝ) :
 /-- Theorem `B_agrees_with_Gauge_bilinear`. -/
 theorem B_agrees_with_Gauge_bilinear (u v : ℝ × ℝ) :
     splitB11 u v = InfoGeometry.Canonical.Gauge.bilinear .split u v := by
-  rfl
+  rcases u with ⟨u1, u2⟩
+  rcases v with ⟨v1, v2⟩
+  simp [splitB11_apply, InfoGeometry.Canonical.Gauge.bilinear]
 
 /-- Canonical naming for split bilinear-form agreement with gauge bilinear form. -/
 theorem splitBilinear_eq_gaugeBilinear (u v : ℝ × ℝ) :

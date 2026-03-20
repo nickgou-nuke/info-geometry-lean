@@ -33,15 +33,6 @@ open InfoGeometry.Canonical.RicciMongeAmpere
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
-**The KKT-Perelman Bridge:**
-The KKT barrier potential `K = -log detJ` is the functional generator for the 
-singular geometry. On the renormalization path, it maps to the constant part 
-of the Perelman `W` functional.
--/
-theorem kkt_perelman_correspondence (J : JordanKKTData E) (x : E) :
-    J.K x = - Real.log (J.detJ x) := rfl
-
-/--
 **The Anomaly-Gauge Bridge:**
 The Chiral Anomaly acts as the gauge field that restores metric invariance 
 when the Weyl scale transform becomes singular.

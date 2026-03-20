@@ -297,14 +297,16 @@ lemma countInducedIterate_entrywisePositive (k : Nat) :
 /-- Lemma `countInducedCoupling_hasPositiveRowSums`. -/
 lemma countInducedCoupling_hasPositiveRowSums :
     HasPositiveRowSums n (countInducedCoupling n N) := by
+  intro i
   exact entrywisePositive_hasPositiveRowSums (n := n)
-    (countInducedCoupling_entrywisePositive (n := n) (N := N))
+    (countInducedCoupling_entrywisePositive (n := n) (N := N)) i
 
 /-- Lemma `countInducedCoupling_hasPositiveColSums`. -/
 lemma countInducedCoupling_hasPositiveColSums :
     HasPositiveColSums n (countInducedCoupling n N) := by
+  intro j
   exact entrywisePositive_hasPositiveColSums (n := n)
-    (countInducedCoupling_entrywisePositive (n := n) (N := N))
+    (countInducedCoupling_entrywisePositive (n := n) (N := N)) j
 
 /-- Lemma `countInducedIterate_step`. -/
 lemma countInducedIterate_step (k : Nat) :

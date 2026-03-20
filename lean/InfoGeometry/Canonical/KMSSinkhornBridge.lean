@@ -181,12 +181,15 @@ theorem sinkhorn_step_kmsClosure_of_control
     (β : ℝ)
     (hControl : SinkhornKMSControl n T K ω β) :
     SinkhornKMSClosure n T K ω β := by
+  intro k A B
+  have hApproxClosure : SinkhornApproxKMSClosure n T K ω β :=
+    sinkhorn_step_approxKMSClosure_of_control
+      (n := n) (T := T) (K := K) (ω := ω) (β := β) hControl
   exact sinkhorn_step_kmsClosure_of_approxClosure_of_barrierZero
     (n := n) (T := T) (K := K) (ω := ω) (β := β)
-    (hApproxClosure :=
-      sinkhorn_step_approxKMSClosure_of_control
-        (n := n) (T := T) (K := K) (ω := ω) (β := β) hControl)
-    (hBarrierZero := fun k => trajectoryRNBarrierNext_eq_zero (n := n) T k)
+    (hApproxClosure := hApproxClosure)
+    (hBarrierZero := fun j => trajectoryRNBarrierNext_eq_zero (n := n) T j)
+    k A B
 
 /-- Canonical theorem name: exact KMS closure implies Sinkhorn control. -/
 theorem sinkhorn_control_of_step_kmsClosure

@@ -53,17 +53,23 @@ noncomputable def canonicalMajoranaFrame : MajoranaFrame E where
 
 /-- Linear embedding of `E` into the physical channel of `HilbertDoubled E`. -/
 noncomputable def doubledPlusEmbedL : E →ₗ[ℝ] HilbertDoubled E where
-  toFun x := Krein.to_doubled x (0 : E)
+  toFun x := HilbertDoubled.toLp (E := E) (x, (0 : E))
   map_add' x y := by
-    simpa [Krein.to_doubled] using
+    apply HilbertDoubled.ext
+    simpa [HilbertDoubled.toLp] using
       (WithLp.toLp_add (p := (2 : ENNReal)) (x := (x, (0 : E))) (y := (y, (0 : E))))
   map_smul' a x := by
-    simpa [Krein.to_doubled] using
+    apply HilbertDoubled.ext
+    simpa [HilbertDoubled.toLp] using
       (WithLp.toLp_smul (p := (2 : ENNReal)) (c := a) (x := (x, (0 : E))))
 
 /-- Linear projection from `HilbertDoubled E` onto the physical channel `E`. -/
-noncomputable def doubledPlusProjectL : HilbertDoubled E →ₗ[ℝ] E :=
-  (Krein.fst_L (E := E)).toLinearMap
+noncomputable def doubledPlusProjectL : HilbertDoubled E →ₗ[ℝ] E where
+  toFun u := (HilbertDoubled.ofLp (E := E) u).1
+  map_add' u v := by
+    simp [HilbertDoubled.ofLp]
+  map_smul' a u := by
+    simp [HilbertDoubled.ofLp]
 
 /--
 Transport on `E` induced by modular flow on doubled space:
@@ -82,9 +88,8 @@ noncomputable def modularFlowInducedTransport
     modularFlowInducedTransport (E := E) J_symm T flow t = LinearMap.id := by
   ext x
   unfold modularFlowInducedTransport doubledPlusProjectL doubledPlusEmbedL
-  change WithLp.fst ((flow.flow t) (Krein.to_doubled x (0 : E))) = x
   rw [hFlowId]
-  simp [Krein.to_doubled]
+  simp [HilbertDoubled.ofLp, HilbertDoubled.toLp]
 
 noncomputable def modularSpinConnection_of_flowFixedSplit
     (K : KaehlerInformationGeometry E) (x : E) (V : SplitVielbein K x)
@@ -214,7 +219,7 @@ of the creation operator.
 omit [FiniteDimensional ℝ E] in
 /-- Theorem `bayesian_update_as_spinor_bilinear`. -/
 theorem bayesian_update_as_spinor_bilinear
-    (prior : HilbertDoubled E) (_innovation : HilbertDoubled E) :
+    (prior : HilbertDoubled E) :
     ∃ (O : HilbertDoubled E →L[ℝ] HilbertDoubled E),
       spinorBilinear prior O = ‖prior‖ ^ 2
     := by

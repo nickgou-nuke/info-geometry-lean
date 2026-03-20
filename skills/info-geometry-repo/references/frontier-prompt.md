@@ -52,10 +52,10 @@ noncomputable def KasparovCycle.analyticalIndex [FiniteDimensional ℝ H] : ℤ 
     (KreinGradedModule.gradeCLM (H := H)).toLinearMap
 
 theorem index_bridge_spectral [FiniteDimensional ℝ H]
-    (_hF : X.F * X.F = 1) :
-    X.analyticalIndex = InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
-      X.F.toLinearMap
-      (KreinGradedModule.gradeCLM (H := H)).toLinearMap := rfl
+    (hF : X.F * X.F = 1) :
+    InfoGeometry.Canonical.AnalyticalIndex.IndexInvariantAlong
+      (fun _ : ℝ => X.F.toLinearMap)
+      (fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap) := ...
 ```
 
 From `lean/InfoGeometry/Canonical/AnalyticalIndex.lean`:
@@ -123,10 +123,10 @@ noncomputable def KasparovCycle.analyticalIndex [FiniteDimensional ℝ H] : ℤ 
     (KreinGradedModule.gradeCLM (H := H)).toLinearMap
 
 theorem index_bridge_spectral [FiniteDimensional ℝ H]
-    (_hF : X.F * X.F = 1) :
-    X.analyticalIndex = InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
-      X.F.toLinearMap
-      (KreinGradedModule.gradeCLM (H := H)).toLinearMap := rfl
+    (hF : X.F * X.F = 1) :
+    InfoGeometry.Canonical.AnalyticalIndex.IndexInvariantAlong
+      (fun _ : ℝ => X.F.toLinearMap)
+      (fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap) := ...
 ```
 
 2. In `AnalyticalIndex.lean`:

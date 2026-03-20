@@ -92,6 +92,8 @@ Thin adjunct modules such as `CompactOperatorBridge`, `Product`, and `KasparovCo
 - For module/frontier orientation: read `references/module-map.md`
 - For prompt-ready bridge exploration over the current KK -> AnalyticalIndex -> GrandSynthesis frontier:
   read `references/frontier-prompt.md`
+- For the split creative/critical LLM evaluation workflow over the current trusted frontier:
+  read `references/frontier-prompt-creative.md` and `references/frontier-prompt-critical.md`
 - For the current first-strike candidate bridge lemmas on that frontier:
   read `references/bridge-candidates.md`
 

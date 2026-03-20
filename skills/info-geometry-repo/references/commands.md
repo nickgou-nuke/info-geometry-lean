@@ -123,6 +123,12 @@ Bridge thinness index:
 python3 tools/generate_bridge_thinness_index.py
 ```
 
+Dual LLM frontier prompts:
+
+```bash
+python3 tools/generate_llm_frontier_prompts.py
+```
+
 Dry isolated optimization cycle:
 
 ```bash

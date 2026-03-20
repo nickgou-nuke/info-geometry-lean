@@ -62,6 +62,35 @@ theorem grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
       (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit]
 
 /--
+Deeper vacuum-collapse form:
+the full vacuum Einstein equation at the basepoint already implies the
+transported-frame collapse of the grand-canonical Fock step.
+-/
+theorem grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumEinsteinAt
+    (η : ℝ)
+    (B : BogoliubovMixingParams)
+    (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein Kgeo x)
+    (Γ : SpinConnection Kgeo x V)
+    (ψ : DoubledSpace E)
+    (hVac : VacuumEinsteinEquationAt R Kgeo x scalar Λ) :
+    grandCanonicalFockEulerStep (E := E) η B H
+      (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+        (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
+      = ψ + η • H ψ := by
+  exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
+    (E := E) (η := η) (B := B) (H := H)
+    (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+    (V := V) (Γ := Γ) (ψ := ψ)
+    (vacuumEinsteinAt_implies_on_transportedSplit
+      (R := R) (K := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) hVac)
+
+/--
 Vacuum-transported AQFT package:
 the Bogoliubov projector superalgebra remains explicit while the
 grand-canonical Fock Euler step collapses to the pure Hamiltonian Euler step.
@@ -96,6 +125,42 @@ theorem grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_of_vac
       (E := E) (η := η) (B := B) (H := H)
       (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
       (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
+
+/--
+Deeper vacuum-collapse package:
+the full vacuum Einstein equation at the basepoint already yields the explicit
+Bogoliubov projector-superalgebra package together with Fock-step collapse.
+-/
+theorem grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_of_vacuumEinsteinAt
+    (η : ℝ)
+    (B : BogoliubovMixingParams)
+    (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein Kgeo x)
+    (Γ : SpinConnection Kgeo x V)
+    (ψ : DoubledSpace E)
+    (hVac : VacuumEinsteinEquationAt R Kgeo x scalar Λ) :
+    fockAnticommutator (E := E)
+        (bogoliubovAnnihilation (E := E) B)
+        (bogoliubovCreation (E := E) B)
+      = (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
+    ∧ fockCommutator (E := E)
+        (bogoliubovAnnihilation (E := E) B)
+        (bogoliubovCreation (E := E) B) = 0
+    ∧ grandCanonicalFockEulerStep (E := E) η B H
+        (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+          (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
+        = ψ + η • H ψ := by
+  exact grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_of_vacuumTransported
+    (E := E) (η := η) (B := B) (H := H)
+    (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+    (V := V) (Γ := Γ) (ψ := ψ)
+    (vacuumEinsteinAt_implies_on_transportedSplit
+      (R := R) (K := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) hVac)
 
 end AQFT
 
@@ -305,6 +370,54 @@ theorem aqft_tdft_constructive_launchpad
       (flow := flow) (scale0 := scale0) hStationary
 
 /--
+Unified constructive launchpad from the deeper basepoint vacuum Einstein
+equation, rather than a pre-packaged transported-split witness.
+-/
+theorem aqft_tdft_constructive_launchpad_of_vacuumEinsteinAt
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (η : ℝ)
+    (B : BogoliubovMixingParams)
+    (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein Kgeo x)
+    (Γ : SpinConnection Kgeo x V)
+    (ψ0 : DoubledSpace E)
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (flow : InformationFlow E)
+    (scale0 : ℝ)
+    (hClosure : SinkhornKMSClosure n T K ω β)
+    (hVac : VacuumEinsteinEquationAt R Kgeo x scalar Λ)
+    (hHK : HohenbergKohnDualState ψ ψStar)
+    (hStationary : IsStationaryAtScale flow scale0) :
+    SinkhornKMSClosure n T K ω β
+      ∧ grandCanonicalFockEulerStep (E := E) η B H
+          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ0
+            = ψ0 + η • H ψ0
+      ∧ HohenbergKohnDualState ψ ψStar
+      ∧ RungeGrossStationaryDualState flow scale0 := by
+  exact aqft_tdft_constructive_launchpad
+    (n := n) (T := T) (K := K) (ω := ω) (β := β)
+    (η := η) (B := B) (H := H)
+    (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+    (V := V) (Γ := Γ) (ψ0 := ψ0)
+    (ψ := ψ) (ψStar := ψStar)
+    (flow := flow) (scale0 := scale0)
+    (hClosure := hClosure)
+    (hVacSplit := vacuumEinsteinAt_implies_on_transportedSplit
+      (R := R) (K := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) hVac)
+    (hHK := hHK)
+    (hStationary := hStationary)
+
+/--
 Unified constructive launchpad with explicit Bogoliubov projector-superalgebra
 closure carried alongside the AQFT/TDFT package.
 -/
@@ -352,6 +465,61 @@ theorem aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra
   exact ⟨hClosure, hAnti, hComm, hEuler, hHK,
     rungeGrossStationaryDualState_of_stationaryAtScale
       (flow := flow) (scale0 := scale0) hStationary⟩
+
+/--
+Unified constructive launchpad with explicit Bogoliubov projector-superalgebra,
+derived directly from the basepoint vacuum Einstein equation.
+-/
+theorem aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra_of_vacuumEinsteinAt
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
+    (β : ℝ)
+    (η : ℝ)
+    (B : BogoliubovMixingParams)
+    (H : FockEndomorphism E)
+    (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
+    (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein Kgeo x)
+    (Γ : SpinConnection Kgeo x V)
+    (ψ0 : DoubledSpace E)
+    (ψ : Θ → ℝ)
+    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
+    (flow : InformationFlow E)
+    (scale0 : ℝ)
+    (hClosure : SinkhornKMSClosure n T K ω β)
+    (hVac : VacuumEinsteinEquationAt R Kgeo x scalar Λ)
+    (hHK : HohenbergKohnDualState ψ ψStar)
+    (hStationary : IsStationaryAtScale flow scale0) :
+    SinkhornKMSClosure n T K ω β
+      ∧ fockAnticommutator (E := E)
+          (bogoliubovAnnihilation (E := E) B)
+          (bogoliubovCreation (E := E) B)
+          = (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
+      ∧ fockCommutator (E := E)
+          (bogoliubovAnnihilation (E := E) B)
+          (bogoliubovCreation (E := E) B) = 0
+      ∧ grandCanonicalFockEulerStep (E := E) η B H
+          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ0
+            = ψ0 + η • H ψ0
+      ∧ HohenbergKohnDualState ψ ψStar
+      ∧ RungeGrossStationaryDualState flow scale0 := by
+  exact aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra
+    (n := n) (T := T) (K := K) (ω := ω) (β := β)
+    (η := η) (B := B) (H := H)
+    (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+    (V := V) (Γ := Γ) (ψ0 := ψ0)
+    (ψ := ψ) (ψStar := ψStar)
+    (flow := flow) (scale0 := scale0)
+    (hClosure := hClosure)
+    (hVacSplit := vacuumEinsteinAt_implies_on_transportedSplit
+      (R := R) (K := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) hVac)
+    (hHK := hHK)
+    (hStationary := hStationary)
 
 /--
 Constructive launchpad specialization with no explicit stationarity witness:

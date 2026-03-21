@@ -11,7 +11,7 @@ dilation layer.
 
 This file stays at the level currently justified by the codebase:
 - the Jacobi expansion for `[D, χ]`
-- the finite-dimensional trace vanishing of the dilation commutator
+- the finite-dimensional trace vanishing of the dilation generator
 - the resulting no-go theorem for a nontrivial finite-dimensional trace anomaly
 -/
 
@@ -52,21 +52,20 @@ section TraceAnomaly
 /--
 In finite dimensions, the trace of the dilation generator vanishes exactly.
 
-This is the trace-zero property of a commutator: `D = (1/2) [P, K]`.
+Using `D = (1/2) (P_D - P_MP)`, it is enough to show that the spectral and
+metric Moore-Penrose projectors have equal trace. This follows from cyclicity:
+`tr (A ∘ A_MP) = tr (A_MP ∘ A)`.
 -/
 theorem trace_dilation_eq_zero :
     LinearMap.trace ℝ E CI.D.toLinearMap = 0 := by
-  have hProjectorTrace :
-      LinearMap.trace ℝ E
+  rw [CI.dilation_eq_half_sub_mp_projectors]
+  have : LinearMap.trace ℝ E
           ((IsMoorePenroseInverse.rightProjector CI.A CI.A_MP : E →L[ℝ] E).toLinearMap) =
         LinearMap.trace ℝ E
-          ((IsMoorePenroseInverse.leftProjector CI.A CI.A_MP : E →L[ℝ] E).toLinearMap) := by
-    simpa [IsMoorePenroseInverse.rightProjector, IsMoorePenroseInverse.leftProjector] using
+          ((IsMoorePenroseInverse.leftProjector CI.A CI.A_MP : E →L[ℝ] E).toLinearMap) :=
+    by simpa [IsMoorePenroseInverse.rightProjector, IsMoorePenroseInverse.leftProjector] using
       LinearMap.trace_mul_comm (R := ℝ) (M := E) CI.A.toLinearMap CI.A_MP.toLinearMap
-  rw [CI.dilation_eq_half_sub_mp_projectors]
-  simp [sub_eq_add_neg]
-  rw [hProjectorTrace]
-  simp
+  simp [sub_eq_add_neg, this]
 
 /--
 Finite-dimensional trace-anomaly no-go theorem.
@@ -79,14 +78,16 @@ theorem normal_phase_of_trace_anomaly_in_finite_dim
     (hTraceAnomaly :
       LinearMap.trace ℝ E CI.D.toLinearMap =
         CI.chiralScale * LinearMap.trace ℝ E CI.P_D.toLinearMap)
-    (hRankPos : LinearMap.trace ℝ E CI.P_D.toLinearMap ≠ 0) :
+    (hTracePD_ne_zero : LinearMap.trace ℝ E CI.P_D.toLinearMap ≠ 0) :
     CI.IsNormalInference := by
   have hScaleMul : CI.chiralScale * LinearMap.trace ℝ E CI.P_D.toLinearMap = 0 := by
     calc
       CI.chiralScale * LinearMap.trace ℝ E CI.P_D.toLinearMap
           = LinearMap.trace ℝ E CI.D.toLinearMap := hTraceAnomaly.symm
       _ = 0 := trace_dilation_eq_zero (CI := CI)
-  exact (mul_eq_zero.mp hScaleMul).resolve_right hRankPos
+  have hScaleZero : CI.chiralScale = 0 :=
+    (mul_eq_zero.mp hScaleMul).resolve_right hTracePD_ne_zero
+  simpa [ConformalInference.IsNormalInference] using hScaleZero
 
 end TraceAnomaly
 

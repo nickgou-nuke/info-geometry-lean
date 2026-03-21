@@ -512,8 +512,8 @@ theorem exists_network_fixed_transportWeylPlus_nonzero_ker_of_experts_fix_of_wey
     (net : ArnoldMajoranaNetwork n E)
     (β : ℝ)
     [Nonempty (Fin n)]
-    (localOp : KitaevCell → ArnoldMajoranaCarrier E →L[ℝ] ArnoldMajoranaCarrier E)
-    (chain : List KitaevCell)
+    (localOp : InfoGeometry.Quantum.KitaevChain.KitaevCell → ArnoldMajoranaCarrier E →L[ℝ] ArnoldMajoranaCarrier E)
+    (chain : List InfoGeometry.Quantum.KitaevChain.KitaevCell)
     (hPair :
       ∃ ψplus ψminus : ArnoldMajoranaCarrier E,
         ψplus ≠ 0 ∧ ψminus ≠ 0
@@ -556,8 +556,8 @@ theorem exists_network_fixed_transportWeylMinus_nonzero_ker_of_experts_fix_of_we
     (net : ArnoldMajoranaNetwork n E)
     (β : ℝ)
     [Nonempty (Fin n)]
-    (localOp : KitaevCell → ArnoldMajoranaCarrier E →L[ℝ] ArnoldMajoranaCarrier E)
-    (chain : List KitaevCell)
+    (localOp : InfoGeometry.Quantum.KitaevChain.KitaevCell → ArnoldMajoranaCarrier E →L[ℝ] ArnoldMajoranaCarrier E)
+    (chain : List InfoGeometry.Quantum.KitaevChain.KitaevCell)
     (hPair :
       ∃ ψplus ψminus : ArnoldMajoranaCarrier E,
         ψplus ≠ 0 ∧ ψminus ≠ 0
@@ -601,21 +601,21 @@ theorem exists_network_fixed_transportWeylPlus_nonzero_ker_of_experts_fix_of_sim
     (net : ArnoldMajoranaNetwork n E)
     (β : ℝ)
     [Nonempty (Fin n)]
-    (localOp : KitaevCell → ArnoldMajoranaCarrier E →L[ℝ] ArnoldMajoranaCarrier E)
-    (chain : List KitaevCell)
+    (localOp : InfoGeometry.Quantum.KitaevChain.KitaevCell → ArnoldMajoranaCarrier E →L[ℝ] ArnoldMajoranaCarrier E)
+    (chain : List InfoGeometry.Quantum.KitaevChain.KitaevCell)
     (hNeg : InfoGeometry.Quantum.KitaevChain.topologicalIndex chain = -1)
     (hSimple :
       InfoGeometry.Quantum.BulkBoundary.SimplifiedBoundaryModel
         (M := M) (P0 := M.chiralityPolarization) localOp chain)
     (hfix : ∀ e : ExpertIdx n, ∀ v : ArnoldMajoranaCarrier E,
-      v ∈ T.transportWeylPlus →
+      v ∈ M.weylPlus →
       (T.B.comp
         ((InfoGeometry.Quantum.BulkBoundary.globalChainOperatorFromOpenChain
           (S := ArnoldMajoranaCarrier E) localOp chain).comp T.Binv)) v = 0 →
       (net.moe.experts e).apply v = v) :
     ∃ ψplus : ArnoldMajoranaCarrier E,
       arnoldNetworkOutput n net β (fun _ : Unit => ψplus) () = ψplus
-        ∧ ψplus ∈ T.transportWeylPlus
+        ∧ ψplus ∈ M.weylPlus
         ∧ (T.B.comp
             ((InfoGeometry.Quantum.BulkBoundary.globalChainOperatorFromOpenChain
               (S := ArnoldMajoranaCarrier E) localOp chain).comp T.Binv)) ψplus = 0
@@ -624,21 +624,13 @@ theorem exists_network_fixed_transportWeylPlus_nonzero_ker_of_experts_fix_of_sim
       InfoGeometry.Quantum.BulkBoundary.BoundaryLocalizedZeroModePair
         (M := M) (P0 := M.chiralityPolarization) localOp chain :=
     hSimple.boundaryPair_of_negativePhase hNeg
-  have hPair :
-      ∃ ψplus ψminus : ArnoldMajoranaCarrier E,
-        ψplus ≠ 0 ∧ ψminus ≠ 0
-          ∧ ψplus ∈ T.transportWeylPlus ∧ ψminus ∈ T.transportWeylMinus
-          ∧ (T.B.comp
-              ((InfoGeometry.Quantum.BulkBoundary.globalChainOperatorFromOpenChain
-                (S := ArnoldMajoranaCarrier E) localOp chain).comp T.Binv)) ψplus = 0
-          ∧ (T.B.comp
-              ((InfoGeometry.Quantum.BulkBoundary.globalChainOperatorFromOpenChain
-                (S := ArnoldMajoranaCarrier E) localOp chain).comp T.Binv)) ψminus = 0 :=
-    InfoGeometry.Quantum.BulkBoundary.weylZeroModePair_under_bogoliubov_of_preservesChiralityPolarization
-      (M := M) (T := T) (hpres := hpres) (localOp := localOp) (chain := chain) hPair0
-  exact exists_network_fixed_transportWeylPlus_nonzero_ker_of_experts_fix_of_weylZeroModePair
-    (T := T) (n := n) (net := net) (β := β) (localOp := localOp) (chain := chain)
-    hPair hfix
+  rcases InfoGeometry.Quantum.BulkBoundary.weylZeroModePair_under_bogoliubov_of_preservesChiralityPolarization
+      (M := M) (T := T) (hpres := hpres) (localOp := localOp) (chain := chain) hPair0 with
+    ⟨ψplus, ψminus, hψplusNe, hψminusNe, hPlus, hMinus, hKerPlus, hKerMinus⟩
+  refine ⟨ψplus, ?_, hPlus, hKerPlus, hψplusNe⟩
+  exact arnoldNetworkOutput_eq_of_experts_fix
+    (n := n) (net := net) (β := β) (x := fun _ : Unit => ψplus) (i := ())
+    (hfix := fun e => hfix e ψplus hPlus hKerPlus)
 
 /--
 Turn a simplified-boundary-model negative phase into a concrete fixed nonzero
@@ -654,21 +646,21 @@ theorem exists_network_fixed_transportWeylMinus_nonzero_ker_of_experts_fix_of_si
     (net : ArnoldMajoranaNetwork n E)
     (β : ℝ)
     [Nonempty (Fin n)]
-    (localOp : KitaevCell → ArnoldMajoranaCarrier E →L[ℝ] ArnoldMajoranaCarrier E)
-    (chain : List KitaevCell)
+    (localOp : InfoGeometry.Quantum.KitaevChain.KitaevCell → ArnoldMajoranaCarrier E →L[ℝ] ArnoldMajoranaCarrier E)
+    (chain : List InfoGeometry.Quantum.KitaevChain.KitaevCell)
     (hNeg : InfoGeometry.Quantum.KitaevChain.topologicalIndex chain = -1)
     (hSimple :
       InfoGeometry.Quantum.BulkBoundary.SimplifiedBoundaryModel
         (M := M) (P0 := M.chiralityPolarization) localOp chain)
     (hfix : ∀ e : ExpertIdx n, ∀ v : ArnoldMajoranaCarrier E,
-      v ∈ T.transportWeylMinus →
+      v ∈ M.weylMinus →
       (T.B.comp
         ((InfoGeometry.Quantum.BulkBoundary.globalChainOperatorFromOpenChain
           (S := ArnoldMajoranaCarrier E) localOp chain).comp T.Binv)) v = 0 →
       (net.moe.experts e).apply v = v) :
     ∃ ψminus : ArnoldMajoranaCarrier E,
       arnoldNetworkOutput n net β (fun _ : Unit => ψminus) () = ψminus
-        ∧ ψminus ∈ T.transportWeylMinus
+        ∧ ψminus ∈ M.weylMinus
         ∧ (T.B.comp
             ((InfoGeometry.Quantum.BulkBoundary.globalChainOperatorFromOpenChain
               (S := ArnoldMajoranaCarrier E) localOp chain).comp T.Binv)) ψminus = 0
@@ -677,20 +669,12 @@ theorem exists_network_fixed_transportWeylMinus_nonzero_ker_of_experts_fix_of_si
       InfoGeometry.Quantum.BulkBoundary.BoundaryLocalizedZeroModePair
         (M := M) (P0 := M.chiralityPolarization) localOp chain :=
     hSimple.boundaryPair_of_negativePhase hNeg
-  have hPair :
-      ∃ ψplus ψminus : ArnoldMajoranaCarrier E,
-        ψplus ≠ 0 ∧ ψminus ≠ 0
-          ∧ ψplus ∈ T.transportWeylPlus ∧ ψminus ∈ T.transportWeylMinus
-          ∧ (T.B.comp
-              ((InfoGeometry.Quantum.BulkBoundary.globalChainOperatorFromOpenChain
-                (S := ArnoldMajoranaCarrier E) localOp chain).comp T.Binv)) ψplus = 0
-          ∧ (T.B.comp
-              ((InfoGeometry.Quantum.BulkBoundary.globalChainOperatorFromOpenChain
-                (S := ArnoldMajoranaCarrier E) localOp chain).comp T.Binv)) ψminus = 0 :=
-    InfoGeometry.Quantum.BulkBoundary.weylZeroModePair_under_bogoliubov_of_preservesChiralityPolarization
-      (M := M) (T := T) (hpres := hpres) (localOp := localOp) (chain := chain) hPair0
-  exact exists_network_fixed_transportWeylMinus_nonzero_ker_of_experts_fix_of_weylZeroModePair
-    (T := T) (n := n) (net := net) (β := β) (localOp := localOp) (chain := chain)
-    hPair hfix
+  rcases InfoGeometry.Quantum.BulkBoundary.weylZeroModePair_under_bogoliubov_of_preservesChiralityPolarization
+      (M := M) (T := T) (hpres := hpres) (localOp := localOp) (chain := chain) hPair0 with
+    ⟨ψplus, ψminus, hψplusNe, hψminusNe, hPlus, hMinus, hKerPlus, hKerMinus⟩
+  refine ⟨ψminus, ?_, hMinus, hKerMinus, hψminusNe⟩
+  exact arnoldNetworkOutput_eq_of_experts_fix
+    (n := n) (net := net) (β := β) (x := fun _ : Unit => ψminus) (i := ())
+    (hfix := fun e => hfix e ψminus hMinus hKerMinus)
 
 end InfoGeometry.Canonical.MoE

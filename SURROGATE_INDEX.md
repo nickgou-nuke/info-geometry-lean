@@ -1,23 +1,29 @@
 # Surrogate Index
 
-Generated: `2026-03-20 18:54:35`
+Generated: `2026-03-21 15:13:26`
 
 This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and named contract interfaces so surrogate debt can be replaced aggressively with real proofs.
 
 ## Hard Gate
 - `scripts/audit_surrogates.sh`: **PASS**
 - last gate output:
-  - `[surrogate-audit] checking for direct open/namespace references to InfoGeometry.Unstable`
-  - `[surrogate-audit] checking for placeholder/surrogate keywords outside allowed paths`
-  - `[surrogate-audit] checking for banned surrogate declarations in stable modules`
   - `[surrogate-audit] checking canonical modules for reflexive Prop wrappers (heuristic)`
   - `[surrogate-audit] checking canonical surface for forbidden Canonical tactic usage`
+  - `[surrogate-audit] checking stable surface for exact nonconstructive patterns`
+  - `Constructivity audit (stable surface)`
+  - `No exact constructivity violations found.`
   - `[surrogate-audit] OK`
 
 ## Counts
 - total tracked findings: **0**
 - proof holes: **0**
 - explicit axiom declarations: **0**
+- quarantine manifest drift findings: **0**
+- vacuous `trivial` theorems: **0**
+- constant `Prop := True/False` surfaces: **0**
+- universal `∀ _, True` fields: **0**
+- zero quadratic-form surrogates: **0**
+- scaled-zero quadratic-form surrogates: **0**
 - conditional theorem wrappers (`_of_axioms/_of_hypotheses/_of_assumptions`): **0**
 - named contract declarations (`Axioms/Hypotheses/Assumptions`): **0**
 - contract constructors (`to...Assumptions`, `..._of_concrete`, `..._of_finiteSupport`): **0**
@@ -33,6 +39,30 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
 - none
 
 ## Explicit Axiom Declarations
+
+- none
+
+## Quarantine Manifest Drift
+
+- none
+
+## Vacuous `trivial` Theorems
+
+- none
+
+## Constant `Prop := True/False` Surfaces
+
+- none
+
+## Universal `∀ _, True` Fields
+
+- none
+
+## Zero Quadratic-Form Surrogates
+
+- none
+
+## Scaled-Zero Quadratic-Form Surrogates
 
 - none
 
@@ -53,8 +83,10 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
 - none
 
 ## Policy
-- explicit proof holes and explicit axioms are not acceptable end-state theory surface
+- explicit proof holes, explicit axioms, and quarantine-manifest drift are not acceptable end-state theory surface
+- vacuous closed proofs (`trivial`, `Prop := True/False`, universal-True fields) count as surrogate debt even when Lean accepts them
+- zero-valued surrogate constructions count as debt when they stand in for real mathematical content
 - conditional wrappers are tolerated only when the missing obligation is explicit and scheduled for replacement
 - contract declarations must not be confused with completed proofs
 - contract constructors are lower-risk adapters from concrete data into contract surfaces; they should not dominate the replacement queue
-- replacement priority is: canonical proof holes -> stable axioms -> canonical conditional wrappers -> open contract interfaces
+- replacement priority is: canonical proof holes/vacuous proofs -> manifest drift and stable axioms -> canonical conditional wrappers -> open contract interfaces

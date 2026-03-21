@@ -137,4 +137,10 @@ if [[ -n "$CANONICAL_HITS" ]]; then
   exit 1
 fi
 
+echo "[surrogate-audit] checking stable surface for exact nonconstructive patterns"
+if ! python3 scripts/quality/audit_constructivity.py --mode stable; then
+  echo "[surrogate-audit] exact nonconstructive patterns detected in stable modules"
+  exit 1
+fi
+
 echo "[surrogate-audit] OK"

@@ -930,6 +930,223 @@ attribute [deprecated polarizationToSplit (since := "2026-03-16")] polarizationT
 
 end KPolarization
 
+/--
+Polarization choice on a fixed real Majorana datum, regarded as an object of
+the stricter symmetry category.
+-/
+structure PolarizedMajorana (M : RealMajoranaDatum (S := S)) where
+  polarization : KPolarization (S := S) M
+
+namespace PolarizedMajorana
+
+variable {M : RealMajoranaDatum (S := S)}
+
+/-- Canonical embedding of a raw polarization into the stricter symmetry category. -/
+def ofPolarization (P : KPolarization (S := S) M) : PolarizedMajorana (S := S) M :=
+  ⟨P⟩
+
+@[simp] lemma ofPolarization_polarization (P : KPolarization (S := S) M) :
+    (ofPolarization (S := S) P).polarization = P := rfl
+
+/--
+Morphisms between polarized Majorana objects are genuine internal symmetries:
+invertible isometries intertwining the chosen polarization and preserving the
+Majorana datum `(K, Π, γ)`.
+-/
+@[ext] structure Hom (X Y : PolarizedMajorana (S := S) M) where
+  f : EndS (S := S)
+  finv : EndS (S := S)
+  left_inv : finv.comp f = ContinuousLinearMap.id ℝ S
+  right_inv : f.comp finv = ContinuousLinearMap.id ℝ S
+  preserves_inner : ∀ u v : S, inner ℝ (f u) (f v) = inner ℝ u v
+  intertwines_polarization : Y.polarization.P.comp f = f.comp X.polarization.P
+  K_linear : M.KLinear f
+  Pi_even : M.PiEven f
+  gamma_equivariant : ∀ u : S, M.gamma (f u) = (f.comp (M.gamma u)).comp finv
+
+noncomputable instance : Category (PolarizedMajorana (S := S) M) where
+  Hom X Y := PolarizedMajorana.Hom X Y
+  id X :=
+    { f := ContinuousLinearMap.id ℝ S
+      finv := ContinuousLinearMap.id ℝ S
+      left_inv := by simp
+      right_inv := by simp
+      preserves_inner := by
+        intro u v
+        rfl
+      intertwines_polarization := by simp
+      K_linear := by
+        simp [RealMajoranaDatum.KLinear]
+      Pi_even := by
+        simp [RealMajoranaDatum.PiEven]
+      gamma_equivariant := by
+        intro u
+        simp [ContinuousLinearMap.comp_assoc] }
+  comp {X Y Z} g h :=
+    { f := h.f.comp g.f
+      finv := g.finv.comp h.finv
+      left_inv := by
+        ext x
+        have hh : h.finv (h.f (g.f x)) = g.f x := by
+          simpa [ContinuousLinearMap.comp_apply] using
+            congrArg (fun F : EndS (S := S) => F (g.f x)) h.left_inv
+        have hg : g.finv (g.f x) = x := by
+          simpa [ContinuousLinearMap.comp_apply] using
+            congrArg (fun F : EndS (S := S) => F x) g.left_inv
+        simpa [ContinuousLinearMap.comp_apply, hh] using hg
+      right_inv := by
+        ext x
+        have hg : g.f (g.finv (h.finv x)) = h.finv x := by
+          simpa [ContinuousLinearMap.comp_apply] using
+            congrArg (fun F : EndS (S := S) => F (h.finv x)) g.right_inv
+        have hh : h.f (h.finv x) = x := by
+          simpa [ContinuousLinearMap.comp_apply] using
+            congrArg (fun F : EndS (S := S) => F x) h.right_inv
+        simpa [ContinuousLinearMap.comp_apply, hg] using hh
+      preserves_inner := by
+        intro u v
+        calc
+          inner ℝ ((h.f.comp g.f) u) ((h.f.comp g.f) v)
+              = inner ℝ (g.f u) (g.f v) := by
+                  simpa [ContinuousLinearMap.comp_apply] using
+                    h.preserves_inner (g.f u) (g.f v)
+          _ = inner ℝ u v := by
+                exact g.preserves_inner u v
+      intertwines_polarization := by
+        calc
+          Z.polarization.P.comp (h.f.comp g.f)
+              = (Z.polarization.P.comp h.f).comp g.f := by
+                  simp [ContinuousLinearMap.comp_assoc]
+          _ = (h.f.comp Y.polarization.P).comp g.f := by
+                rw [h.intertwines_polarization]
+          _ = h.f.comp (Y.polarization.P.comp g.f) := by
+                simp [ContinuousLinearMap.comp_assoc]
+          _ = h.f.comp (g.f.comp X.polarization.P) := by
+                rw [g.intertwines_polarization]
+          _ = (h.f.comp g.f).comp X.polarization.P := by
+                simp [ContinuousLinearMap.comp_assoc]
+      K_linear := by
+        unfold RealMajoranaDatum.KLinear
+        calc
+          (h.f.comp g.f).comp M.K = h.f.comp (g.f.comp M.K) := by
+            simp [ContinuousLinearMap.comp_assoc]
+          _ = h.f.comp (M.K.comp g.f) := by rw [g.K_linear]
+          _ = (h.f.comp M.K).comp g.f := by
+                simp [ContinuousLinearMap.comp_assoc]
+          _ = (M.K.comp h.f).comp g.f := by rw [h.K_linear]
+          _ = M.K.comp (h.f.comp g.f) := by
+                simp [ContinuousLinearMap.comp_assoc]
+      Pi_even := by
+        unfold RealMajoranaDatum.PiEven
+        calc
+          (h.f.comp g.f).comp M.Pi = h.f.comp (g.f.comp M.Pi) := by
+            simp [ContinuousLinearMap.comp_assoc]
+          _ = h.f.comp (M.Pi.comp g.f) := by rw [g.Pi_even]
+          _ = (h.f.comp M.Pi).comp g.f := by
+                simp [ContinuousLinearMap.comp_assoc]
+          _ = (M.Pi.comp h.f).comp g.f := by rw [h.Pi_even]
+          _ = M.Pi.comp (h.f.comp g.f) := by
+                simp [ContinuousLinearMap.comp_assoc]
+      gamma_equivariant := by
+        intro u
+        calc
+          M.gamma ((h.f.comp g.f) u)
+              = ((h.f.comp (M.gamma (g.f u))).comp h.finv) := by
+                  simpa [ContinuousLinearMap.comp_apply] using
+                    h.gamma_equivariant (g.f u)
+          _ = ((h.f.comp ((g.f.comp (M.gamma u)).comp g.finv)).comp h.finv) := by
+                rw [g.gamma_equivariant u]
+          _ = (((h.f.comp g.f).comp (M.gamma u)).comp (g.finv.comp h.finv)) := by
+                simp [ContinuousLinearMap.comp_assoc] }
+
+@[simp] lemma hom_id (X : PolarizedMajorana (S := S) M) :
+    ((𝟙 X : X ⟶ X).f) = ContinuousLinearMap.id ℝ S := rfl
+
+@[simp] lemma hom_comp
+    {X Y Z : PolarizedMajorana (S := S) M} (f : X ⟶ Y) (g : Y ⟶ Z) :
+    ((f ≫ g).f) = g.f.comp f.f := rfl
+
+/-- Forget a strict symmetry morphism down to the weaker polarization category. -/
+def Hom.toPolarizationHom
+    {X Y : PolarizedMajorana (S := S) M} (h : X ⟶ Y) :
+    X.polarization ⟶ Y.polarization where
+  f := h.f
+  finv := h.finv
+  left_inv := h.left_inv
+  right_inv := h.right_inv
+  intertwines := h.intertwines_polarization
+
+/-- Conjugation form of `γ`-equivariance. -/
+theorem Hom.gamma_intertwines
+    {X Y : PolarizedMajorana (S := S) M} (h : X ⟶ Y) (u : S) :
+    (M.gamma (h.f u)).comp h.f = h.f.comp (M.gamma u) := by
+  ext x
+  have hEq := congrArg (fun F : EndS (S := S) => F (h.f x)) (h.gamma_equivariant u)
+  have hx : h.finv (h.f x) = x := by
+    simpa [ContinuousLinearMap.comp_apply] using
+      congrArg (fun F : EndS (S := S) => F x) h.left_inv
+  simpa [ContinuousLinearMap.comp_apply, hx] using hEq
+
+/-- Every strict symmetry morphism underlies a real Bogoliubov transform. -/
+def Hom.toBogoliubovTransform
+    {X Y : PolarizedMajorana (S := S) M} (h : X ⟶ Y) :
+    RealBogoliubovTransform (S := S) M where
+  B := h.f
+  Binv := h.finv
+  left_inv := h.left_inv
+  right_inv := h.right_inv
+  preserves_inner := h.preserves_inner
+  parity_even := h.Pi_even.symm
+
+/--
+The Bogoliubov transform underlying a strict symmetry morphism transports the
+source polarization exactly onto the target polarization.
+-/
+theorem Hom.toBogoliubovTransform_transportP_eq
+    {X Y : PolarizedMajorana (S := S) M} (h : X ⟶ Y) :
+    (h.toBogoliubovTransform).transportP X.polarization = Y.polarization.P := by
+  ext x
+  have hfx : h.f (h.finv x) = x := by
+    simpa [ContinuousLinearMap.comp_apply] using
+      congrArg (fun F : EndS (S := S) => F x) h.right_inv
+  change (h.f.comp (X.polarization.P.comp h.finv)) x = Y.polarization.P x
+  calc
+    (h.f.comp (X.polarization.P.comp h.finv)) x
+        = ((Y.polarization.P.comp h.f).comp h.finv) x := by
+            simp [ContinuousLinearMap.comp_assoc, h.intertwines_polarization]
+    _ = Y.polarization.P ((h.f.comp h.finv) x) := by
+          rfl
+    _ = Y.polarization.P x := by
+          simpa [ContinuousLinearMap.comp_apply, hfx]
+
+/--
+An endomorphism in the strict symmetry category preserves the chosen
+polarization in the Bogoliubov sense.
+-/
+theorem Hom.toBogoliubovTransform_preservesPolarization
+    {X : PolarizedMajorana (S := S) M} (h : X ⟶ X) :
+    (h.toBogoliubovTransform).preservesPolarization X.polarization := by
+  simpa [Hom.toBogoliubovTransform, RealBogoliubovTransform.preservesPolarization] using
+    h.intertwines_polarization
+
+/-- Forgetful functor from strict Majorana symmetries to raw polarizations. -/
+noncomputable def forgetToPolarization :
+    PolarizedMajorana (S := S) M ⥤ KPolarization (S := S) M where
+  obj X := X.polarization
+  map h := h.toPolarizationHom
+  map_id X := by rfl
+  map_comp f g := by rfl
+
+/-- Canonical projector-splitting bridge for the strict symmetry category. -/
+noncomputable def toSplit :
+    PolarizedMajorana (S := S) M ⥤ KPolarization.PolarizationSplit (S := S) where
+  obj X := KPolarization.splitOfPolarization (M := M) X.polarization
+  map h := KPolarization.Hom.toSplitHom (M := M) h.toPolarizationHom
+  map_id X := by rfl
+  map_comp f g := by rfl
+
+end PolarizedMajorana
+
 end Core
 
 end InfoGeometry.Quantum.RealMajorana

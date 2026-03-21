@@ -1,4 +1,3 @@
-import InfoGeometry.Architecture.OctonionicFlow
 import InfoGeometry.Canonical.AQFTOperatorInterface
 import InfoGeometry.Canonical.AnomalyDilationBridge
 import InfoGeometry.Canonical.BeliefDynamics
@@ -27,7 +26,6 @@ import InfoGeometry.Canonical.WeylInformationGauge
 import InfoGeometry.Canonical.YangMillsFinite
 import InfoGeometry.Canonical.YangMillsBridge
 import InfoGeometry.Canonical.YangMillsContinuum
-import InfoGeometry.Exploration.Legacy.Claims
 import InfoGeometry.Prequantum.Connection
 import InfoGeometry.Prequantum.Quotient
 import InfoGeometry.Projective.TwistorBridge

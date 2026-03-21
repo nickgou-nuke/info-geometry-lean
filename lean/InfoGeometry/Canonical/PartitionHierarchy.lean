@@ -84,7 +84,7 @@ variable [Fintype α]
 
 /-- Trivial one-cell coarse graining of a finite grand-canonical model. -/
 def grandCanonicalTrivialCoarse : FiniteCoarseGraining α PUnit :=
-  FiniteCoarseGraining.trivial α
+  FiniteCoarseGraining.singleton α
 
 /-- The grand-canonical partition is the total microscopic Boltzmann partition. -/
 @[simp] theorem grandCanonical_partition_eq_totalPartition
@@ -97,7 +97,7 @@ def grandCanonicalTrivialCoarse : FiniteCoarseGraining α PUnit :=
     GrandCanonical.partition params β =
       fiberPartition grandCanonicalTrivialCoarse params.energy β PUnit.unit := by
   rw [grandCanonical_partition_eq_totalPartition]
-  exact (FiniteCoarseGraining.fiberWeight_trivial_eq_totalWeight
+  exact (FiniteCoarseGraining.fiberWeight_singleton_eq_totalWeight
     (X := α) (w := boltzmannWeight params.energy β)).symm
 
 /-- The grand-canonical log potential is the trivial-level coarse log-partition potential. -/
@@ -123,7 +123,7 @@ def grandCanonicalTrivialCoarse : FiniteCoarseGraining α PUnit :=
       fiberPartition grandCanonicalTrivialCoarse (fun x => GrandCanonical.shiftedEnergy params μ x)
         β PUnit.unit := by
   rw [GrandCanonical.partitionGC]
-  exact (FiniteCoarseGraining.fiberWeight_trivial_eq_totalWeight
+  exact (FiniteCoarseGraining.fiberWeight_singleton_eq_totalWeight
     (X := α)
     (w := boltzmannWeight (fun x => GrandCanonical.shiftedEnergy params μ x) β)).symm
 

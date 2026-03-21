@@ -21,6 +21,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import InfoGeometry.Canonical.Fierz
 import InfoGeometry.Canonical.Fock
+import InfoGeometry.Quantum.Hurwitz
 import InfoGeometry.Quantum.RealKCategory
 import InfoGeometry.Quantum.SplitCliffordAtom
 import InfoGeometry.Quantum.RealMajoranaCategory

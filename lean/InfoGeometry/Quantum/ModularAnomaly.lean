@@ -114,6 +114,44 @@ theorem modularAnomalyGenerator_eq_commutator_shadow :
 
 end BridgeTheorem
 
+section RosettaBridge
+
+variable (U : X ≃L[ℝ] X)
+variable (σGen : X →L[ℝ] X)
+
+/--
+Unified anomaly bridge: modular cocycle generator equals the commutator-shadow form.
+This is the reusable transport-facing theorem surface for anomaly identifications.
+-/
+theorem unified_anomaly_bridge
+    (hFlow : HasDerivAt (fun t => (M.sigma t : X →L[ℝ] X)) σGen 0)
+    (hFlowNeg : HasDerivAt (fun t => (M.sigma (-t) : X →L[ℝ] X)) (-σGen) 0) :
+    M.modularAnomalyGenerator U =
+      (U.symm : X →L[ℝ] X).comp
+        (σGen.comp (U : X →L[ℝ] X) - (U : X →L[ℝ] X).comp σGen) := by
+  exact modularAnomalyGenerator_eq_commutator_shadow
+    (M := M) (U := U) (σGen := σGen) hFlow hFlowNeg
+
+/--
+Projector-mismatch specialization of the unified bridge.
+When the flow generator is a transported commutator source `(P_mp ∘ P_d - P_d ∘ P_mp)`,
+the modular anomaly generator is exactly its conjugated commutator shadow.
+-/
+theorem einstein_anomaly_is_modular_generator
+    (P_mp P_d : X →L[ℝ] X)
+    (hFlow : HasDerivAt (fun t => (M.sigma t : X →L[ℝ] X)) σGen 0)
+    (hFlowNeg : HasDerivAt (fun t => (M.sigma (-t) : X →L[ℝ] X)) (-σGen) 0)
+    (hGen : σGen = (P_mp.comp P_d - P_d.comp P_mp)) :
+    M.modularAnomalyGenerator U =
+      (U.symm : X →L[ℝ] X).comp
+        ((P_mp.comp P_d - P_d.comp P_mp).comp (U : X →L[ℝ] X)
+          - (U : X →L[ℝ] X).comp (P_mp.comp P_d - P_d.comp P_mp)) := by
+  subst hGen
+  exact unified_anomaly_bridge
+    (M := M) (U := U) (σGen := (P_mp.comp P_d - P_d.comp P_mp)) hFlow hFlowNeg
+
+end RosettaBridge
+
 end TopologicalMajoranaShadow
 
 namespace Cl11Shadow
@@ -207,7 +245,11 @@ def scalarBlock (r : ℝ) : Matrix (Fin N) (Fin N) ℝ :=
 
 lemma scalarBlock_eq_smul_one (r : ℝ) :
     scalarBlock (N := N) r = r • (1 : Matrix (Fin N) (Fin N) ℝ) := by
-  simpa [scalarBlock] using (Matrix.smul_one_eq_diagonal (m := Fin N) r).symm
+  ext i j
+  by_cases hij : i = j
+  · subst hij
+    simp [scalarBlock]
+  · simp [scalarBlock, hij]
 
 noncomputable def constInvertible (r : ℝ) [Invertible r] : Invertible (fun _ : Fin N => r) where
   invOf := fun _ => ⅟r
@@ -396,8 +438,8 @@ theorem latticeAnomalyCommutator_sigmaMatrix
         (scalarBlock (N := N) ((-2 : ℝ) * Real.sinh t))
         (0 : Matrix (Fin N) (Fin N) ℝ) := by
   rw [latticeAnomalyCommutator_eq_blocks]
-  ext i j <;> cases i <;> cases j <;>
-    simp [scalarBlock, two_smul] <;> ring_nf
+  ext i j
+  cases i <;> cases j <;> simp [scalarBlock, two_smul] <;> ring_nf
 
 /-- Finite-dimensional Witten index extracted from the anomaly-free `A` block. -/
 def wittenIndex (U : Matrix (Fin N ⊕ Fin N) (Fin N ⊕ Fin N) ℝ) : ℝ :=
@@ -464,6 +506,49 @@ theorem det_sigmaMatrix (t : ℝ) :
     _ = 1 := by
           simp [hcz]
 
+/-- Lower unitriangular factor in the LDU decomposition of `sigmaMatrix`. -/
+noncomputable def sigmaLower (t : ℝ) :
+    Matrix (Fin N ⊕ Fin N) (Fin N ⊕ Fin N) ℝ :=
+  Matrix.fromBlocks
+    (1 : Matrix (Fin N) (Fin N) ℝ)
+    (0 : Matrix (Fin N) (Fin N) ℝ)
+    (scalarBlock (N := N) (Real.sinh t / Real.cosh t))
+    (1 : Matrix (Fin N) (Fin N) ℝ)
+
+/-- Diagonal factor in the LDU decomposition of `sigmaMatrix`. -/
+noncomputable def sigmaDiag (t : ℝ) :
+    Matrix (Fin N ⊕ Fin N) (Fin N ⊕ Fin N) ℝ :=
+  Matrix.fromBlocks
+    (scalarBlock (N := N) (Real.cosh t))
+    (0 : Matrix (Fin N) (Fin N) ℝ)
+    (0 : Matrix (Fin N) (Fin N) ℝ)
+    (scalarBlock (N := N) ((Real.cosh t)⁻¹))
+
+/-- Upper unitriangular factor in the LDU decomposition of `sigmaMatrix`. -/
+noncomputable def sigmaUpper (t : ℝ) :
+    Matrix (Fin N ⊕ Fin N) (Fin N ⊕ Fin N) ℝ :=
+  Matrix.fromBlocks
+    (1 : Matrix (Fin N) (Fin N) ℝ)
+    (scalarBlock (N := N) (Real.sinh t / Real.cosh t))
+    (0 : Matrix (Fin N) (Fin N) ℝ)
+    (1 : Matrix (Fin N) (Fin N) ℝ)
+
+/-- Candidate LDU product associated to the hyperbolic lattice flow. -/
+noncomputable def sigmaLDUProduct (t : ℝ) :
+    Matrix (Fin N ⊕ Fin N) (Fin N ⊕ Fin N) ℝ :=
+  sigmaLower (N := N) t * sigmaDiag (N := N) t * sigmaUpper (N := N) t
+
+/--
+Parity protection through LDU transport: once the explicit factorization is identified,
+the determinant is forced to remain `1`.
+-/
+theorem det_sigmaLDUProduct_eq_one_of_factorization
+    (t : ℝ)
+    (hLDU : sigmaMatrix (N := N) t = sigmaLDUProduct (N := N) t) :
+    Matrix.det (sigmaLDUProduct (N := N) t) = 1 := by
+  rw [← hLDU]
+  exact det_sigmaMatrix (N := N) t
+
 noncomputable instance sigmaMatrix_blockD_invertible (t : ℝ) :
     Invertible (blockD (sigmaMatrix (N := N) t)) := by
   let c : ℝ := Real.cosh t
@@ -471,19 +556,19 @@ noncomputable instance sigmaMatrix_blockD_invertible (t : ℝ) :
   letI : Invertible c := invertibleOfNonzero hcz
   simpa [blockD, sigmaMatrix, c] using (scalarBlockInvertible (N := N) c)
 
-/-- Berezinian-style Schur-complement index around the bottom-right block. -/
-noncomputable def berezinianIndex
+/-- Schur-complement determinant factorization around the bottom-right block. -/
+noncomputable def schurDet
     (U : Matrix (Fin N ⊕ Fin N) (Fin N ⊕ Fin N) ℝ)
     [Invertible (blockD U)] : ℝ :=
   Matrix.det (blockD U) *
     Matrix.det (blockA U - blockB U * ⅟(blockD U) * blockC U)
 
-theorem berezinianIndex_eq_det
+theorem schurDet_eq_det
     (U : Matrix (Fin N ⊕ Fin N) (Fin N ⊕ Fin N) ℝ)
     [Invertible (blockD U)] :
-    berezinianIndex (N := N) U = Matrix.det U := by
+    schurDet (N := N) U = Matrix.det U := by
   calc
-    berezinianIndex (N := N) U
+    schurDet (N := N) U
       = Matrix.det (blockD U) * Matrix.det (blockA U - blockB U * ⅟(blockD U) * blockC U) := rfl
     _ = Matrix.det (Matrix.fromBlocks (blockA U) (blockB U) (blockC U) (blockD U)) := by
       symm
@@ -491,10 +576,17 @@ theorem berezinianIndex_eq_det
     _ = Matrix.det U := by
       simpa using congrArg Matrix.det (matrix_eq_fromBlocks U).symm
 
-theorem berezinianIndex_sigmaMatrix (t : ℝ) :
-    berezinianIndex (N := N) (sigmaMatrix (N := N) t) = 1 := by
-  rw [berezinianIndex_eq_det]
+theorem schurDet_sigmaMatrix (t : ℝ) :
+    schurDet (N := N) (sigmaMatrix (N := N) t) = 1 := by
+  rw [schurDet_eq_det]
   exact det_sigmaMatrix (N := N) t
+
+/-- True Berezinian (superdeterminant) around the bottom-right block. -/
+noncomputable def berezinian
+    (U : Matrix (Fin N ⊕ Fin N) (Fin N ⊕ Fin N) ℝ)
+    [Invertible (blockD U)] : ℝ :=
+  Matrix.det (blockA U - blockB U * ⅟(blockD U) * blockC U) /
+    Matrix.det (blockD U)
 
 /-- Topological parity index of the lattice modular flow. -/
 theorem invariant_parity_index (t : ℝ) :
@@ -525,9 +617,9 @@ theorem thermal_berezinian_index (t : ℝ) :
   rw [← Real.rpow_natCast (1 / Real.cosh t) N, ← Real.rpow_natCast (Real.cosh t) N]
   rw [one_div, Real.inv_rpow hpos.le]
   have hneg : ((Real.cosh t) ^ (N : ℝ))⁻¹ = (Real.cosh t) ^ (-(N : ℝ)) := by
-    simpa using (Real.rpow_neg hpos.le (N : ℝ)).symm
-  rw [hneg]
-  rw [← Real.rpow_sub hpos (-(N : ℝ)) (N : ℝ)]
+    exact (Real.rpow_neg hpos.le (N : ℝ)).symm
+  rw [div_eq_mul_inv, hneg]
+  rw [← Real.rpow_add hpos (-(N : ℝ)) (-(N : ℝ))]
   congr 1
   ring
 

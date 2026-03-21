@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from dataclasses import dataclass
@@ -253,6 +254,7 @@ def print_findings(mode: str, findings: list[Finding]) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Audit Lean files for exact nonconstructive patterns.")
     parser.add_argument("--mode", choices=("stable", "full", "review"), default="stable")
+    parser.add_argument("--json", action="store_true", dest="as_json")
     args = parser.parse_args()
 
     findings: list[Finding] = scan_manifest_consistency()
@@ -261,7 +263,13 @@ def main() -> int:
         findings.extend(scan_file(path, include_review=include_review))
 
     findings.sort(key=lambda item: (item.path, item.line, item.category))
-    print_findings(args.mode, findings)
+    if args.as_json:
+        print(json.dumps({
+            "mode": args.mode,
+            "findings": [finding.__dict__ for finding in findings],
+        }, indent=2))
+    else:
+        print_findings(args.mode, findings)
 
     if args.mode == "stable" and findings:
         return 1

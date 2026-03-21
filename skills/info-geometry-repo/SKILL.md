@@ -1,6 +1,6 @@
 ---
 name: info-geometry-repo
-description: Use when working inside the InfoGeometry Lean 4 repository and you need the repo-specific bootstrap sequence, DAG/semantic-export workflows, trusted graph paths, or the current bridge/frontier map across KK, AnalyticalIndex, OperatorAlgebraBridge, WeylTransport, and GrandSynthesis.
+description: Use when working inside the InfoGeometry Lean 4 repository and you need the repo-specific bootstrap sequence, DAG/semantic-export workflows, trusted graph paths, or the current bridge/frontier map across KK, AnalyticalIndex, Rosetta, ModularAnomaly, Weyl transport, HurwitzRGFlow, and GrandSynthesis.
 ---
 
 # InfoGeometry Repo
@@ -42,6 +42,16 @@ Do not mix these graph views:
 
 For large files, semantic block export through the external stdlib server path is the trusted route.
 
+## Hard Proof Policy
+
+Treat vacuous success as failure for frontier accounting.
+
+- Do not accept `sorry`, `admit`, `axiom`, placeholder contracts, or equivalent proof gaps on the stable theory path.
+- Treat `trivial`, direct assumption unpacking, alias transport, and definitional repackaging as packaging, not proof progress.
+- Only count a result as real closure when it starts from existing concrete repo data, constructs the needed witness or bridge in Lean, and proves a nonvacuous relation or invariant.
+- If a theorem is assumption-driven, façade-level, or merely transport bookkeeping, label it explicitly as such.
+- Never present a conditional wrapper or restated hypothesis as completed unification.
+
 ## Default Workflow
 
 1. Identify the task type:
@@ -77,12 +87,13 @@ Why:
 
 ## Current Frontier Map
 
-The current vertical bridge picture is:
+The current visible bridge picture is multi-spined:
 
-- KK core: `InfoGeometry.KK.KasparovCycle`
-- first large frontier: `InfoGeometry.Canonical.AnalyticalIndex`
-- vertical operator layer: `InfoGeometry.Canonical.OperatorAlgebraBridge`
-- large transport/synthesis layers: `WeylTransport`, `GrandSynthesis`
+- KK / index trunk: `InfoGeometry.KK.KasparovCycle` -> `InfoGeometry.Canonical.AnalyticalIndex` -> `InfoGeometry.Canonical.GrandSynthesis`
+- Rosetta / modular trunk: `BogoliubovFockSuper`, `TomitaTakesaki`, `InfoGeometry.Quantum.ModularAnomaly`, `InfoGeometry.Canonical.Rosetta`
+- Weyl transport branch: `WeylGaugeField`, `WeylTransport`, `WeylInformationGauge`, then into Rosetta's KK and Jordan/KKT bridge theorems
+- discrete / RG branch: `InfoGeometry.Quantum.Hurwitz`, `InfoGeometry.Quantum.HurwitzRGFlow`, `InfoGeometry.Canonical.RGFlow`
+- finite phase branch: `InfoGeometry.Quantum.KitaevChain`
 
 Thin adjunct modules such as `CompactOperatorBridge`, `Product`, and `KasparovCompactOperator` are not the main articulation hubs.
 

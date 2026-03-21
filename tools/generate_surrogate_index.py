@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import json
 import re
 import subprocess
 import sys
@@ -34,6 +35,17 @@ SURROGATE_MARKER_RE = re.compile(r"\b(?:placeholder|surrogate)\b", re.IGNORECASE
 DEPRECATED_ATTR_RE = re.compile(r"^\s*attribute\s+\[deprecated.*\]\s+([A-Za-z0-9_'.]+)")
 NAME_ONLY_RE = re.compile(r"^\s*([A-Za-z0-9_'.]+)\s*$")
 
+CONSTRUCTIVITY_CATEGORY_MAP = {
+    "proof-hole": "proof_hole",
+    "axiom": "axiom_decl",
+    "quarantine-manifest": "quarantine_manifest",
+    "prop-constant": "prop_constant",
+    "trivial-theorem": "trivial_theorem",
+    "universal-true-field": "universal_true_field",
+    "zero-quadratic-form": "zero_quadratic_form",
+    "scaled-zero-quadratic-form": "scaled_zero_quadratic_form",
+}
+
 
 @dataclass(frozen=True)
 class Decl:
@@ -58,6 +70,18 @@ def relpath(path: Path, root: Path) -> str:
     return str(path.relative_to(root))
 
 
+def module_to_relpath(root: Path, raw: str) -> str:
+    if raw.endswith('.lean') or '/' in raw:
+        return raw
+    lean_path = root / 'lean' / Path(raw.replace('.', '/')).with_suffix('.lean')
+    if lean_path.exists():
+        return relpath(lean_path, root)
+    direct_path = root / Path(raw.replace('.', '/')).with_suffix('.lean')
+    if direct_path.exists():
+        return relpath(direct_path, root)
+    return raw
+
+
 def is_comment_line(line: str, in_block_comment: bool = False) -> bool:
     stripped = line.strip()
     return in_block_comment or stripped.startswith("--") or stripped.startswith("/-") or stripped.startswith("-/") or stripped.startswith("*")
@@ -73,15 +97,70 @@ def file_bucket(rel: str) -> str:
 
 def priority_for(category: str, rel: str) -> str:
     bucket = file_bucket(rel)
-    if category in {"proof_hole", "axiom_decl"}:
+    if category in {"proof_hole", "axiom_decl", "quarantine_manifest", "prop_constant", "trivial_theorem", "universal_true_field"}:
         return "critical" if bucket != "unstable" else "medium"
-    if category == "conditional_theorem":
-        return "high" if bucket == "canonical" else "medium"
+    if category in {"zero_quadratic_form", "scaled_zero_quadratic_form", "conditional_theorem"}:
+        return "high" if bucket == "canonical" else "medium" if bucket != "unstable" else "low"
     if category == "contract_constructor":
         return "low"
     if category == "contract_decl":
         return "medium" if bucket != "unstable" else "low"
     return "low"
+
+
+def find_decl_at_or_before(path: Path, line: int) -> Decl | None:
+    last_decl: Decl | None = None
+    for idx, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        match = DECL_RE.match(raw)
+        if match:
+            kind, name = match.group(1), match.group(2)
+            last_decl = Decl(kind=kind, name=name, line=idx, head=raw.strip())
+        if idx >= line:
+            break
+    return last_decl
+
+
+def collect_constructivity_findings(root: Path) -> list[Finding]:
+    proc = subprocess.run(
+        ["python3", "scripts/quality/audit_constructivity.py", "--mode", "stable", "--json"],
+        cwd=root,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    payload = json.loads(proc.stdout or '{"findings": []}')
+    findings: list[Finding] = []
+    for item in payload.get("findings", []):
+        mapped = CONSTRUCTIVITY_CATEGORY_MAP.get(item["category"])
+        if mapped is None or mapped in {"proof_hole", "axiom_decl"}:
+            continue
+        rel = module_to_relpath(root, item["path"])
+        path = root / rel
+        decl = find_decl_at_or_before(path, int(item["line"])) if path.exists() else None
+        findings.append(
+            Finding(
+                file=rel,
+                line=int(item["line"]),
+                decl_kind=decl.kind if decl is not None else "unknown",
+                name=decl.name if decl is not None else "<unscoped>",
+                category=mapped,
+                priority=priority_for(mapped, rel),
+                note=item["detail"],
+            )
+        )
+    return findings
+
+
+def dedupe_findings(findings: list[Finding]) -> list[Finding]:
+    seen: set[tuple[str, int, str, str]] = set()
+    out: list[Finding] = []
+    for item in findings:
+        key = (item.file, item.line, item.category, item.name)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(item)
+    return out
 
 
 def collect_findings(root: Path) -> list[Finding]:
@@ -268,6 +347,12 @@ def render_md(findings: list[Finding], gate_ok: bool, gate_output: str) -> str:
     lines.append(f"- total tracked findings: **{len(findings)}**")
     lines.append(f"- proof holes: **{counts['category']['proof_hole']}**")
     lines.append(f"- explicit axiom declarations: **{counts['category']['axiom_decl']}**")
+    lines.append(f"- quarantine manifest drift findings: **{counts['category']['quarantine_manifest']}**")
+    lines.append(f"- vacuous `trivial` theorems: **{counts['category']['trivial_theorem']}**")
+    lines.append(f"- constant `Prop := True/False` surfaces: **{counts['category']['prop_constant']}**")
+    lines.append(f"- universal `∀ _, True` fields: **{counts['category']['universal_true_field']}**")
+    lines.append(f"- zero quadratic-form surrogates: **{counts['category']['zero_quadratic_form']}**")
+    lines.append(f"- scaled-zero quadratic-form surrogates: **{counts['category']['scaled_zero_quadratic_form']}**")
     lines.append(f"- conditional theorem wrappers (`_of_axioms/_of_hypotheses/_of_assumptions`): **{counts['category']['conditional_theorem']}**")
     lines.append(f"- named contract declarations (`Axioms/Hypotheses/Assumptions`): **{counts['category']['contract_decl']}**")
     lines.append(f"- contract constructors (`to...Assumptions`, `..._of_concrete`, `..._of_finiteSupport`): **{counts['category']['contract_constructor']}**")
@@ -286,6 +371,12 @@ def render_md(findings: list[Finding], gate_ok: bool, gate_output: str) -> str:
     for category, title in [
         ("proof_hole", "Explicit Proof Holes"),
         ("axiom_decl", "Explicit Axiom Declarations"),
+        ("quarantine_manifest", "Quarantine Manifest Drift"),
+        ("trivial_theorem", "Vacuous `trivial` Theorems"),
+        ("prop_constant", "Constant `Prop := True/False` Surfaces"),
+        ("universal_true_field", "Universal `∀ _, True` Fields"),
+        ("zero_quadratic_form", "Zero Quadratic-Form Surrogates"),
+        ("scaled_zero_quadratic_form", "Scaled-Zero Quadratic-Form Surrogates"),
         ("conditional_theorem", "Conditional Theorem Surface"),
         ("contract_decl", "Named Contract Declarations"),
         ("contract_constructor", "Contract Constructors"),
@@ -306,11 +397,13 @@ def render_md(findings: list[Finding], gate_ok: bool, gate_output: str) -> str:
             )
         lines.append("")
     lines.append("## Policy")
-    lines.append("- explicit proof holes and explicit axioms are not acceptable end-state theory surface")
+    lines.append("- explicit proof holes, explicit axioms, and quarantine-manifest drift are not acceptable end-state theory surface")
+    lines.append("- vacuous closed proofs (`trivial`, `Prop := True/False`, universal-True fields) count as surrogate debt even when Lean accepts them")
+    lines.append("- zero-valued surrogate constructions count as debt when they stand in for real mathematical content")
     lines.append("- conditional wrappers are tolerated only when the missing obligation is explicit and scheduled for replacement")
     lines.append("- contract declarations must not be confused with completed proofs")
     lines.append("- contract constructors are lower-risk adapters from concrete data into contract surfaces; they should not dominate the replacement queue")
-    lines.append("- replacement priority is: canonical proof holes -> stable axioms -> canonical conditional wrappers -> open contract interfaces")
+    lines.append("- replacement priority is: canonical proof holes/vacuous proofs -> manifest drift and stable axioms -> canonical conditional wrappers -> open contract interfaces")
     lines.append("")
     return "\n".join(lines)
 
@@ -328,7 +421,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     root = repo_root()
-    findings = collect_findings(root)
+    findings = dedupe_findings(collect_findings(root) + collect_constructivity_findings(root))
     gate_ok, gate_output = run_surrogate_gate(root)
     out = root / args.out
     out.write_text(render_md(findings, gate_ok, gate_output), encoding="utf-8")

@@ -7,6 +7,16 @@ This repository has two tightly coupled layers:
 
 It is therefore both a theorem repository and a structural analysis environment for the theory itself.
 
+## Hard Proof Policy
+
+This repository does not count vacuous acceptance by Lean as mathematical closure.
+
+- `sorry`, `admit`, `axiom`, and placeholder contract surfaces are banned from the stable theorem story.
+- A theorem that is only `trivial`, direct assumption unpacking, alias transport, or definitional repackaging does not count as frontier progress.
+- Real progress means: start from existing concrete data already present in the repo, construct the needed witness or bridge in Lean, and prove a nonvacuous relation, invariance, obstruction, or existence result.
+- Assumption-driven wrappers, API façades, and packaging theorems are allowed only when labeled honestly as packaging, not presented as completed unification.
+- The absence of `sorry` is necessary but not sufficient; the result must also be constructive and nonvacuous.
+
 If you are new to the repository, start with [NEWCOMER_PATH.md](/home/goutev/LEAN4/info-geometry-lean/NEWCOMER_PATH.md) before diving into the full DAG/tooling stack.
 If you want the semantic “top view” of the theory, read [THEORY_CANOPY.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY.md).
 If your interest is the deeper measure / RN / gauge substrate, also read [THEORY_CANOPY_RN_GAUGE.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY_RN_GAUGE.md).

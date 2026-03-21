@@ -1,7 +1,5 @@
-import InfoGeometry.Krein.Clifford
-import InfoGeometry.Krein.Superalgebra
+import InfoGeometry.KK.RealSplitKreinKasparovCycle
 import InfoGeometry.Canonical.AnalyticalIndex
-import Mathlib.Analysis.Normed.Operator.Compact
 import Mathlib.Algebra.Lie.OfAssociative
 
 open scoped InnerProductSpace
@@ -10,17 +8,12 @@ namespace InfoGeometry.KK
 
 open InfoGeometry.Canonical.AnalyticalIndex
 
-/-- Endomorphism algebra on a real Krein-graded Hilbert carrier. -/
-abbrev EndH (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] := H →L[ℝ] H
-
-/-- Concrete compact-operator predicate on bounded real endomorphisms. -/
-abbrev IsCompactEnd (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
-    (A : EndH H) : Prop :=
-  IsCompactOperator (A : H → H)
-
 /--
-Bounded Kasparov-cycle interface over a graded Krein module.
-This is the structural 6A layer: no unbounded operators or functional calculus.
+Compatibility bounded Kasparov-cycle interface over a graded Krein module.
+
+This is a forgetful compatibility layer relative to the richer primitive real
+split-Krein cycle surface. It keeps only the bounded odd phase and the algebra
+compactness axioms needed by the current KK facade.
 -/
 structure KasparovCycle
     (A B H : Type*)
@@ -42,6 +35,28 @@ structure KasparovCycle
   F_sq_one_compact : IsCompactEnd H (F * F - (1 : EndH H))
   /-- Graded commutator condition (even algebra reps => ordinary commutator). -/
   comm_compact : ∀ a : A, IsCompactEnd H (F * (π a) - (π a) * F)
+
+namespace RealSplitKreinKasparovCycle
+
+variable {A B H : Type*}
+variable [NormedRing A] [NormedRing B]
+variable [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+variable [KreinSpace H] [KreinGradedModule H]
+
+/-- Forget the split-`Cl(1,1)` data and keep the bounded KK compatibility surface. -/
+noncomputable def toKasparovCycle
+    (X : RealSplitKreinKasparovCycle A B H) :
+    KasparovCycle A B H where
+  π := X.π
+  ρ := X.ρ
+  F := X.F
+  F_odd := X.F_odd
+  F_skewAdj := X.F_skewAdj
+  F_sq_one_compact := X.F_sq_one_compact
+  comm_compact := X.comm_compact
+
+end RealSplitKreinKasparovCycle
 
 section
 variable {A B H : Type*}

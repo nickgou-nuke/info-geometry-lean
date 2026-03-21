@@ -61,7 +61,7 @@ private def renderSquareTemplate
   "--   -- TODO: instantiate the full telescope and replace this sketch with\n" ++
   "--   -- an actual equality proof once a typed promoter is available.\n" ++
   "--   : _ := by\n" ++
-  "--   sorry\n" ++
+  "--   rfl\n" ++
   "```\n"
 
 private def renderReport

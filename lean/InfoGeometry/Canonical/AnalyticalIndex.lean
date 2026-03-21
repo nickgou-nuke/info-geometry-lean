@@ -14,6 +14,18 @@ set_option linter.unnecessarySimpa false
 
 open scoped TensorProduct
 
+/-
+This file formalizes a finite-dimensional kernel-slice asymmetry model for a
+Dirac/grading pair. The split maps
+
+`P₊ = (1/2) (Id + Γ)`, `P₋ = (1/2) (Id - Γ)`
+
+are defined without imposing grading axioms. Under the additional Bott-Dirac
+hypotheses `Γ ∘ Γ = Id` and `D ∘ Γ + Γ ∘ D = 0` (packaged in the Bott-Dirac
+layer as `IsInvolutiveGrading Γ` and `IsChiralDirac D Γ` when the ambient space
+is normed), they recover the usual projector/odd-Dirac interpretation.
+-/
+
 namespace InfoGeometry.Canonical.AnalyticalIndex
 
 open InfoGeometry.Krein
@@ -28,39 +40,62 @@ section Core
 variable {V : Type*}
   [AddCommGroup V] [Module ℝ V]
 
-/-- Chiral projector `P₊ = (1/2)(Id + Γ)`. -/
+/--
+Formal positive chiral-splitting map `P₊ = (1/2)(Id + Γ)`.
+
+If `Γ` satisfies `IsInvolutiveGrading`, then this becomes an idempotent
+projector onto the positive grading sector.
+-/
 noncomputable def chiralProjectorPlus (Γ : Endomorphism V) : Endomorphism V :=
   ((1 / 2 : ℝ) • ((LinearMap.id : Endomorphism V) + Γ))
 
-/-- Chiral projector `P₋ = (1/2)(Id - Γ)`. -/
+/--
+Formal negative chiral-splitting map `P₋ = (1/2)(Id - Γ)`.
+
+If `Γ` satisfies `IsInvolutiveGrading`, then this becomes an idempotent
+projector onto the negative grading sector.
+-/
 noncomputable def chiralProjectorMinus (Γ : Endomorphism V) : Endomorphism V :=
   ((1 / 2 : ℝ) • ((LinearMap.id : Endomorphism V) - Γ))
 
-/-- Positive-chiral component `D⁺ := D ∘ P₊`. -/
+/-- Formal positive chiral component `D⁺ := D ∘ P₊`. -/
 noncomputable def chiralPartPlus (D Γ : Endomorphism V) : Endomorphism V :=
   D.comp (chiralProjectorPlus Γ)
 
-/-- Negative-chiral component `D⁻ := D ∘ P₋`. -/
+/-- Formal negative chiral component `D⁻ := D ∘ P₋`. -/
 noncomputable def chiralPartMinus (D Γ : Endomorphism V) : Endomorphism V :=
   D.comp (chiralProjectorMinus Γ)
 
-/-- Positive-chiral index slice `ker(D) ∩ Im(P₊)`. -/
+/--
+Formal positive kernel slice `ker(D) ∩ Im(P₊)`.
+
+Under `IsInvolutiveGrading Γ` and `IsChiralDirac D Γ`, this is the usual
+positive chiral kernel sector.
+-/
 noncomputable def chiralKernelSlicePlus (D Γ : Endomorphism V) : Submodule ℝ V :=
   LinearMap.ker D ⊓ LinearMap.range (chiralProjectorPlus Γ)
 
-/-- Negative-chiral index slice `ker(D) ∩ Im(P₋)`. -/
+/--
+Formal negative kernel slice `ker(D) ∩ Im(P₋)`.
+
+Under `IsInvolutiveGrading Γ` and `IsChiralDirac D Γ`, this is the usual
+negative chiral kernel sector.
+-/
 noncomputable def chiralKernelSliceMinus (D Γ : Endomorphism V) : Submodule ℝ V :=
   LinearMap.ker D ⊓ LinearMap.range (chiralProjectorMinus Γ)
 
 /--
-Analytical index model:
+Finite-dimensional formal analytical-index model:
 `Index(D) = dim(ker(D) ∩ Im(P₊)) - dim(ker(D) ∩ Im(P₋))`.
+
+With `IsInvolutiveGrading Γ` and `IsChiralDirac D Γ`, this matches the usual
+chiral kernel-asymmetry formula.
 -/
 noncomputable def analyticalIndex [FiniteDimensional ℝ V] (D Γ : Endomorphism V) : ℤ :=
   (Module.finrank ℝ (chiralKernelSlicePlus D Γ) : ℤ) -
     (Module.finrank ℝ (chiralKernelSliceMinus D Γ) : ℤ)
 
-/-- Chiral decomposition identity: `D⁺ + D⁻ = D`. -/
+/-- Formal chiral-splitting identity: `D⁺ + D⁻ = D`. -/
 lemma chiralPartPlus_add_chiralPartMinus (D Γ : Endomorphism V) :
     chiralPartPlus D Γ + chiralPartMinus D Γ = D := by
   ext v
@@ -85,6 +120,100 @@ lemma chiralPartPlus_add_chiralPartMinus (D Γ : Endomorphism V) :
       _ = (1 : ℝ) • v := by norm_num
       _ = v := by simp
   simp [hproj]
+
+/--
+Under `Γ ∘ Γ = Id`, `P₊` is an idempotent projector.
+-/
+lemma chiralProjectorPlus_comp_self_of_square_eq_id
+    (Γ : Endomorphism V)
+    (hΓSq : Γ.comp Γ = (LinearMap.id : Endomorphism V)) :
+    (chiralProjectorPlus Γ).comp (chiralProjectorPlus Γ) = chiralProjectorPlus Γ := by
+  ext v
+  have hΓv : Γ (Γ v) = v := by
+    have h := congrArg (fun T : Endomorphism V => T v) hΓSq
+    simpa [LinearMap.comp_apply] using h
+  have hSum :
+      (v + Γ v) + (Γ v + v) = (2 : ℝ) • (v + Γ v) := by
+    simpa [two_smul, smul_add, add_assoc, add_left_comm, add_comm]
+  calc
+    ((chiralProjectorPlus Γ).comp (chiralProjectorPlus Γ)) v
+        = (1 / 2 : ℝ) • (((1 / 2 : ℝ) • (v + Γ v)) + ((1 / 2 : ℝ) • (Γ v + v))) := by
+            simp [chiralProjectorPlus, LinearMap.comp_apply, map_add, map_smul, hΓv]
+    _ = (1 / 2 : ℝ) • ((1 / 2 : ℝ) • ((v + Γ v) + (Γ v + v))) := by
+          rw [← smul_add]
+    _ = (1 / 2 : ℝ) • ((1 / 2 : ℝ) • ((2 : ℝ) • (v + Γ v))) := by rw [hSum]
+    _ = (((1 / 2 : ℝ) * ((1 / 2 : ℝ) * (2 : ℝ))) : ℝ) • (v + Γ v) := by
+          simp [smul_smul]
+    _ = (1 / 2 : ℝ) • (v + Γ v) := by norm_num
+    _ = chiralProjectorPlus Γ v := by simp [chiralProjectorPlus]
+
+/--
+Under `Γ ∘ Γ = Id`, `P₋` is an idempotent projector.
+-/
+lemma chiralProjectorMinus_comp_self_of_square_eq_id
+    (Γ : Endomorphism V)
+    (hΓSq : Γ.comp Γ = (LinearMap.id : Endomorphism V)) :
+    (chiralProjectorMinus Γ).comp (chiralProjectorMinus Γ) = chiralProjectorMinus Γ := by
+  ext v
+  have hΓv : Γ (Γ v) = v := by
+    have h := congrArg (fun T : Endomorphism V => T v) hΓSq
+    simpa [LinearMap.comp_apply] using h
+  have hDiff :
+      (v - Γ v) - (Γ v - v) = (2 : ℝ) • (v - Γ v) := by
+    simp [sub_eq_add_neg, two_smul, smul_add, add_assoc, add_left_comm, add_comm]
+  calc
+    ((chiralProjectorMinus Γ).comp (chiralProjectorMinus Γ)) v
+        = (1 / 2 : ℝ) • (((1 / 2 : ℝ) • (v - Γ v)) - ((1 / 2 : ℝ) • (Γ v - v))) := by
+            simp [chiralProjectorMinus, LinearMap.comp_apply, map_sub, map_smul, hΓv]
+    _ = (1 / 2 : ℝ) • ((1 / 2 : ℝ) • ((v - Γ v) - (Γ v - v))) := by
+          rw [← smul_sub]
+    _ = (1 / 2 : ℝ) • ((1 / 2 : ℝ) • ((2 : ℝ) • (v - Γ v))) := by rw [hDiff]
+    _ = (((1 / 2 : ℝ) * ((1 / 2 : ℝ) * (2 : ℝ))) : ℝ) • (v - Γ v) := by
+          simp [smul_smul]
+    _ = (1 / 2 : ℝ) • (v - Γ v) := by norm_num
+    _ = chiralProjectorMinus Γ v := by simp [chiralProjectorMinus]
+
+/--
+If `D ∘ Γ + Γ ∘ D = 0`, then `D` carries the positive split into the negative
+split: `D ∘ P₊ = P₋ ∘ D`.
+-/
+lemma chiralPartPlus_eq_projectorMinus_comp_of_anticommute
+    (D Γ : Endomorphism V)
+    (hAnti : D.comp Γ + Γ.comp D = 0) :
+    chiralPartPlus D Γ = (chiralProjectorMinus Γ).comp D := by
+  ext v
+  have hAntiV : D (Γ v) + Γ (D v) = 0 := by
+    have h := congrArg (fun T : Endomorphism V => T v) hAnti
+    simpa [LinearMap.comp_apply, LinearMap.add_apply] using h
+  have hDΓ : D (Γ v) = -Γ (D v) := by
+    exact eq_neg_of_add_eq_zero_left hAntiV
+  calc
+    chiralPartPlus D Γ v = (1 / 2 : ℝ) • (D v + D (Γ v)) := by
+      simp [chiralPartPlus, chiralProjectorPlus, LinearMap.comp_apply, map_add, map_smul]
+    _ = (1 / 2 : ℝ) • (D v - Γ (D v)) := by rw [hDΓ, sub_eq_add_neg]
+    _ = ((chiralProjectorMinus Γ).comp D) v := by
+      simp [chiralProjectorMinus, LinearMap.comp_apply]
+
+/--
+If `D ∘ Γ + Γ ∘ D = 0`, then `D` carries the negative split into the positive
+split: `D ∘ P₋ = P₊ ∘ D`.
+-/
+lemma chiralPartMinus_eq_projectorPlus_comp_of_anticommute
+    (D Γ : Endomorphism V)
+    (hAnti : D.comp Γ + Γ.comp D = 0) :
+    chiralPartMinus D Γ = (chiralProjectorPlus Γ).comp D := by
+  ext v
+  have hAntiV : D (Γ v) + Γ (D v) = 0 := by
+    have h := congrArg (fun T : Endomorphism V => T v) hAnti
+    simpa [LinearMap.comp_apply, LinearMap.add_apply] using h
+  have hDΓ : D (Γ v) = -Γ (D v) := by
+    exact eq_neg_of_add_eq_zero_left hAntiV
+  calc
+    chiralPartMinus D Γ v = (1 / 2 : ℝ) • (D v - D (Γ v)) := by
+      simp [chiralPartMinus, chiralProjectorMinus, LinearMap.comp_apply, map_sub, map_smul]
+    _ = (1 / 2 : ℝ) • (D v + Γ (D v)) := by rw [hDΓ, sub_eq_add_neg, neg_neg]
+    _ = ((chiralProjectorPlus Γ).comp D) v := by
+      simp [chiralProjectorPlus, LinearMap.comp_apply]
 
 /--
 If both chiral parts coincide, the corresponding Dirac endomorphisms coincide.
@@ -217,6 +346,10 @@ def ChiralNoZeroEigenCrossingNear [FiniteDimensional ℝ V]
 /--
 No-zero-eigenvalue-crossing implies local no-zero-crossing of chiral slice
 dimensions.
+
+This is the trivial-kernel branch of the local gap argument: bijectivity forces
+`ker(D s) = 0`, so both chiral kernel slices vanish throughout the
+neighborhood.
 -/
 theorem chiralNoZeroCrossingNear_of_noZeroEigenCrossingNear
     [FiniteDimensional ℝ V]
@@ -345,13 +478,13 @@ theorem chiralSliceIsoAlong_of_noZeroEigenCrossing
     (D := D) (Γ := Γ) (s0 := s) (hNoEig := hNoEig s)
 
 /--
-Continuous-path closure (current finite-dimensional constructive form):
+Path-level no-zero-eigenvalue-crossing closure:
 chiral-slice isomorphism is derived via the no-zero-eigenvalue-crossing route.
 
-The continuity-only theorem is false in general; the no-crossing hypothesis is
-the precise analytic protection condition currently formalized.
+This is not a continuity-only theorem: the local gap hypothesis is the precise
+analytic protection condition currently formalized.
 -/
-theorem chiralSliceIsoAlong_of_continuous_path
+theorem chiralSliceIsoAlong_of_noZeroEigenCrossing_path
     [FiniteDimensional ℝ V]
     (D Γ : ℝ → Endomorphism V)
     (hNoEig : ∀ s : ℝ, ChiralNoZeroEigenCrossingNear D s) :
@@ -442,7 +575,6 @@ lemma chiralProjectorMinus_comp_of_conjugacy
 
 /-- Conjugacy transports the positive chiral kernel slice exactly. -/
 lemma map_chiralKernelSlicePlus_eq_of_conjugacy
-    [FiniteDimensional ℝ V]
     (D Γ : ℝ → Endomorphism V)
     (s : ℝ)
     (e : V ≃ₗ[ℝ] V)
@@ -472,7 +604,6 @@ lemma map_chiralKernelSlicePlus_eq_of_conjugacy
 
 /-- Conjugacy transports the negative chiral kernel slice exactly. -/
 lemma map_chiralKernelSliceMinus_eq_of_conjugacy
-    [FiniteDimensional ℝ V]
     (D Γ : ℝ → Endomorphism V)
     (s : ℝ)
     (e : V ≃ₗ[ℝ] V)
@@ -547,7 +678,9 @@ Modular-flow / Clifford-bundle transport hypothesis for the chiral kernel slices
 
 At each scale `s`, transport by `σ s` and Clifford action `clAct ℓ` sends the
 `±` chiral kernel slice at `s` to the baseline slice at `0`. The designated
-`unit` Clifford label acts as identity.
+`unit` Clifford label acts as identity. The stronger `∀ ℓ` transport data is
+stored for higher-level capstone packaging, while the basic deformation bridge
+only uses the `unit` branch.
 -/
 def ChiralSliceModularCliffordTransportAlong
     [FiniteDimensional ℝ V]
@@ -566,19 +699,25 @@ def ChiralSliceModularCliffordTransportAlong
         = chiralKernelSliceMinus (D 0) (Γ 0))
 
 /--
-Transport-to-iso bridge: modular/Clifford transport of the chiral slices yields
-the deformation-style slice isomorphisms used by index invariance.
+Unit-transport bridge: the distinguished Clifford branch already suffices to
+transport the chiral slices to the baseline.
 -/
-theorem chiralSliceIsoAlong_of_modularCliffordTransport
+theorem chiralSliceIsoAlong_of_modularCliffordUnitTransport
     [FiniteDimensional ℝ V]
     (D Γ : ℝ → Endomorphism V)
     {ι : Type*}
     (σ : ℝ → Endomorphism V)
     (clAct : ι → Endomorphism V)
     (unit : ι)
-    (hTrans : ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
+    (hUnit : clAct unit = LinearMap.id)
+    (hσInj : ∀ s : ℝ, Function.Injective (σ s))
+    (hPlusUnitMap : ∀ s : ℝ,
+      (chiralKernelSlicePlus (D s) (Γ s)).map ((clAct unit).comp (σ s))
+        = chiralKernelSlicePlus (D 0) (Γ 0))
+    (hMinusUnitMap : ∀ s : ℝ,
+      (chiralKernelSliceMinus (D s) (Γ s)).map ((clAct unit).comp (σ s))
+        = chiralKernelSliceMinus (D 0) (Γ 0)) :
     ChiralSliceIsoAlong D Γ := by
-  rcases hTrans with ⟨hUnit, hσInj, hPlusMap, hMinusMap⟩
   refine ⟨?_, ?_⟩
   · intro s
     let f : Endomorphism V := (clAct unit).comp (σ s)
@@ -595,7 +734,7 @@ theorem chiralSliceIsoAlong_of_modularCliffordTransport
     have hEq :
         (chiralKernelSlicePlus (D s) (Γ s)).map f
           = chiralKernelSlicePlus (D 0) (Γ 0) := by
-      simpa [f] using hPlusMap s unit
+      simpa [f] using hPlusUnitMap s
     exact ⟨eMap.trans (LinearEquiv.ofEq _ _ hEq)⟩
   · intro s
     let f : Endomorphism V := (clAct unit).comp (σ s)
@@ -612,20 +751,36 @@ theorem chiralSliceIsoAlong_of_modularCliffordTransport
     have hEq :
         (chiralKernelSliceMinus (D s) (Γ s)).map f
           = chiralKernelSliceMinus (D 0) (Γ 0) := by
-      simpa [f] using hMinusMap s unit
+      simpa [f] using hMinusUnitMap s
     exact ⟨eMap.trans (LinearEquiv.ofEq _ _ hEq)⟩
 
 /--
-Index invariance as a direct consequence of no zero-eigenvalue crossing.
+Transport-to-iso bridge: modular/Clifford transport of the chiral slices yields
+the deformation-style slice isomorphisms used by index invariance.
 -/
-theorem indexInvariantAlong_of_noZeroEigenCrossing
+theorem chiralSliceIsoAlong_of_modularCliffordTransport
     [FiniteDimensional ℝ V]
     (D Γ : ℝ → Endomorphism V)
-    (hNoEig : ∀ s : ℝ, ChiralNoZeroEigenCrossingNear D s) :
+    {ι : Type*}
+    (σ : ℝ → Endomorphism V)
+    (clAct : ι → Endomorphism V)
+    (unit : ι)
+    (hTrans : ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
+    ChiralSliceIsoAlong D Γ := by
+  rcases hTrans with ⟨hUnit, hσInj, hPlusMap, hMinusMap⟩
+  exact chiralSliceIsoAlong_of_modularCliffordUnitTransport
+    (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit)
+    hUnit hσInj (fun s => hPlusMap s unit) (fun s => hMinusMap s unit)
+
+/--
+Slice-transport invariance implies analytical-index invariance.
+-/
+theorem indexInvariantAlong_of_chiralSliceIsoAlong
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (hIso : ChiralSliceIsoAlong D Γ) :
     IndexInvariantAlong D Γ := by
   intro s
-  let hIso :=
-    chiralSliceIsoAlong_of_noZeroEigenCrossing (D := D) (Γ := Γ) hNoEig
   rcases hIso.1 s with ⟨ePlus⟩
   rcases hIso.2 s with ⟨eMinus⟩
   have hPlusFinrank :
@@ -640,10 +795,22 @@ theorem indexInvariantAlong_of_noZeroEigenCrossing
   simp [hPlusFinrank, hMinusFinrank]
 
 /--
-Continuous-path index invariance (current finite-dimensional constructive form):
+Index invariance as a direct consequence of no zero-eigenvalue crossing.
+-/
+theorem indexInvariantAlong_of_noZeroEigenCrossing
+    [FiniteDimensional ℝ V]
+    (D Γ : ℝ → Endomorphism V)
+    (hNoEig : ∀ s : ℝ, ChiralNoZeroEigenCrossingNear D s) :
+    IndexInvariantAlong D Γ := by
+  exact indexInvariantAlong_of_chiralSliceIsoAlong
+    (D := D) (Γ := Γ)
+    (chiralSliceIsoAlong_of_noZeroEigenCrossing (D := D) (Γ := Γ) hNoEig)
+
+/--
+Path-level no-zero-eigenvalue-crossing index invariance:
 obtained from no-zero-eigenvalue crossing along the path.
 -/
-theorem indexInvariantAlong_of_continuous_path
+theorem indexInvariantAlong_of_noZeroEigenCrossing_path
     [FiniteDimensional ℝ V]
     (D Γ : ℝ → Endomorphism V)
     (hNoEig : ∀ s : ℝ, ChiralNoZeroEigenCrossingNear D s) :
@@ -657,21 +824,9 @@ theorem indexInvariantAlong_of_conjugacy
     (eFlow : ℝ → V ≃ₗ[ℝ] V)
     (hConj : ChiralConjugacyAlong D Γ eFlow) :
     IndexInvariantAlong D Γ := by
-  intro s
-  let hIso :=
-    chiralSliceIsoAlong_of_conjugacy (D := D) (Γ := Γ) (eFlow := eFlow) hConj
-  rcases hIso.1 s with ⟨ePlus⟩
-  rcases hIso.2 s with ⟨eMinus⟩
-  have hPlusFinrank :
-      Module.finrank ℝ (chiralKernelSlicePlus (D s) (Γ s)) =
-        Module.finrank ℝ (chiralKernelSlicePlus (D 0) (Γ 0)) :=
-    ePlus.finrank_eq
-  have hMinusFinrank :
-      Module.finrank ℝ (chiralKernelSliceMinus (D s) (Γ s)) =
-        Module.finrank ℝ (chiralKernelSliceMinus (D 0) (Γ 0)) :=
-    eMinus.finrank_eq
-  unfold analyticalIndex
-  simp [hPlusFinrank, hMinusFinrank]
+  exact indexInvariantAlong_of_chiralSliceIsoAlong
+    (D := D) (Γ := Γ)
+    (chiralSliceIsoAlong_of_conjugacy (D := D) (Γ := Γ) (eFlow := eFlow) hConj)
 
 /--
 Direct deformation invariance route:
@@ -687,22 +842,10 @@ theorem indexInvariantAlong_of_modularCliffordTransport
     (unit : ι)
     (hTrans : ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
     IndexInvariantAlong D Γ := by
-  intro s
-  let hIso :=
-    chiralSliceIsoAlong_of_modularCliffordTransport
-      (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans
-  rcases hIso.1 s with ⟨ePlus⟩
-  rcases hIso.2 s with ⟨eMinus⟩
-  have hPlusFinrank :
-      Module.finrank ℝ (chiralKernelSlicePlus (D s) (Γ s)) =
-        Module.finrank ℝ (chiralKernelSlicePlus (D 0) (Γ 0)) :=
-    ePlus.finrank_eq
-  have hMinusFinrank :
-      Module.finrank ℝ (chiralKernelSliceMinus (D s) (Γ s)) =
-        Module.finrank ℝ (chiralKernelSliceMinus (D 0) (Γ 0)) :=
-    eMinus.finrank_eq
-  unfold analyticalIndex
-  simp [hPlusFinrank, hMinusFinrank]
+  exact indexInvariantAlong_of_chiralSliceIsoAlong
+    (D := D) (Γ := Γ)
+    (chiralSliceIsoAlong_of_modularCliffordTransport
+      (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans)
 
 /--
 Direct primitive-hypothesis form of modular/Clifford transport invariance:
@@ -736,23 +879,36 @@ variable {E F : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
-/-- Global grading on the Bott tensor space: `Γ_bott = Γ₁ ⊗ Γₙ`. -/
+/--
+Formal global split map on the Bott tensor space: `Γ_bott = Γ₁ ⊗ Γₙ`.
+
+When the tensor factors satisfy the corresponding grading hypotheses, this is
+the global Bott grading.
+-/
 def globalGrading (Γ1 : Endomorphism E) (Γn : Endomorphism F) :
     Endomorphism (E ⊗[ℝ] F) :=
   TensorProduct.map Γ1 Γn
 
-/-- Analytical index of the Bott-Dirac operator with chosen grading pair. -/
+/--
+Formal analytical index of the Bott-Dirac operator with the chosen tensor split
+map.
+-/
 noncomputable def bottAnalyticalIndex
     [FiniteDimensional ℝ (E ⊗[ℝ] F)]
     (D1 Γ1 : Endomorphism E) (Dn Γn : Endomorphism F) : ℤ :=
   analyticalIndex (bottDirac D1 Γ1 Dn) (globalGrading Γ1 Γn)
 
-/-- `Cl(1,1)` specialization of the global grading. -/
+/--
+`Cl(1,1)` specialization of the formal global split map.
+
+This is a genuine global grading when the second factor carries the appropriate
+grading structure.
+-/
 noncomputable def cl11GlobalGrading (Γn : Endomorphism F) :
     Endomorphism (DoubledSpace E ⊗[ℝ] F) :=
   globalGrading (cl11Grading (E := E)) Γn
 
-/-- `Cl(1,1)` specialization of the Bott analytical index. -/
+/-- `Cl(1,1)` specialization of the formal Bott analytical index. -/
 noncomputable def cl11BottAnalyticalIndex
     [FiniteDimensional ℝ (DoubledSpace E ⊗[ℝ] F)]
     (Dn Γn : Endomorphism F) : ℤ :=

@@ -8,10 +8,17 @@ import InfoGeometry.Canonical.RicciMongeAmpere
 
 Bogoliubov/Fock superalgebra lift over the doubled state space:
 
-- Bogoliubov-mixed creation/annihilation operators
+- projector-super mixing on doubled-space creation/annihilation projectors
 - `ℤ₂` super-bracket on Fock endomorphisms
 - grand-canonical generator with chemical potential
-- bridge from transported Einstein residual to Fock deformation scale
+- scalar bridge from transported Einstein residual to a Fock deformation scale
+
+The file is intentionally split into two theorem surfaces:
+
+- `FockSuper`: the projector-super branch, where doubled-space projectors are
+  treated as odd generators but are not claimed to satisfy CAR.
+- `CliffordCAR`: the genuine CAR branch, imported from the split-`Cl(1,1)`
+  Clifford null-mode construction.
 -/
 
 namespace InfoGeometry.Canonical.BogoliubovFockSuper
@@ -19,6 +26,8 @@ namespace InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Quantum
 open InfoGeometry.Canonical.RicciMongeAmpere
 open InfoGeometry.Krein
+
+/-! ## Projector-Super Branch -/
 
 section FockSuper
 
@@ -32,21 +41,41 @@ abbrev FockEnd (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [Comp
 abbrev FockEndomorphism (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
   FockEnd E
 
-/-- Real Bogoliubov mixing parameters with split normalization. -/
-structure BogoliubovParams where
+/--
+Neutral hyperbolic mixing parameters for the projector-super branch.
+
+The constraint `u^2 - v^2 = 1` matches the hyperbolic parameterization used by
+`ofAngle`, but the projector-super theorems in this section do not, by
+themselves, imply fermionic CAR preservation.
+-/
+structure HyperbolicMixingParams where
   u : ℝ
   v : ℝ
   normalization : u ^ 2 - v ^ 2 = 1
 
-/-- Canonical naming alias for Bogoliubov mixing parameters. -/
-abbrev BogoliubovMixingParams := BogoliubovParams
+namespace HyperbolicMixingParams
+
+/-- Hyperbolic-angle constructor `u = cosh θ`, `v = sinh θ`. -/
+noncomputable def ofAngle (θ : ℝ) : HyperbolicMixingParams where
+  u := Real.cosh θ
+  v := Real.sinh θ
+  normalization := by
+    simpa [pow_two] using Real.cosh_sq_sub_sinh_sq θ
+
+end HyperbolicMixingParams
+
+/-- Backward-compatible alias for the older projector-branch parameter name. -/
+abbrev BogoliubovParams := HyperbolicMixingParams
+
+/-- Backward-compatible alias for the older mixing-parameter surface. -/
+abbrev BogoliubovMixingParams := HyperbolicMixingParams
 
 /--
 Bogoliubov annihilation operator:
 `a_B = u a + v a†`.
 -/
 noncomputable def bogoliubovAnnihilation
-    (B : BogoliubovParams) : FockEnd E :=
+    (B : HyperbolicMixingParams) : FockEnd E :=
   B.u • annihilationOp (E := E) + B.v • creationOp (E := E)
 
 /--
@@ -54,12 +83,12 @@ Bogoliubov creation operator:
 `a†_B = u a† + v a`.
 -/
 noncomputable def bogoliubovCreation
-    (B : BogoliubovParams) : FockEnd E :=
+    (B : HyperbolicMixingParams) : FockEnd E :=
   B.u • creationOp (E := E) + B.v • annihilationOp (E := E)
 
 /-- Number operator induced by Bogoliubov ladder modes. -/
 noncomputable def numberOperator
-    (B : BogoliubovParams) : FockEnd E :=
+    (B : HyperbolicMixingParams) : FockEnd E :=
   (bogoliubovCreation (E := E) B).comp (bogoliubovAnnihilation (E := E) B)
 
 /-- Canonical naming alias for the Bogoliubov number operator. -/
@@ -69,7 +98,7 @@ noncomputable abbrev bogoliubovNumberOperator
 
 /-- Grand-canonical generator `H - μ N_B`. -/
 noncomputable def grandCanonicalGenerator
-    (B : BogoliubovParams) (H : FockEnd E) (μ : ℝ) : FockEnd E :=
+    (B : HyperbolicMixingParams) (H : FockEnd E) (μ : ℝ) : FockEnd E :=
   H - μ • numberOperator (E := E) B
 
 /-- Canonical naming alias for the grand-canonical Fock generator. -/
@@ -80,7 +109,7 @@ noncomputable abbrev grandCanonicalFockGenerator
 
 /-- One Euler step of grand-canonical Fock evolution. -/
 noncomputable def grandCanonicalEulerStep
-    (η : ℝ) (B : BogoliubovParams) (H : FockEnd E) (μ : ℝ)
+    (η : ℝ) (B : HyperbolicMixingParams) (H : FockEnd E) (μ : ℝ)
     (ψ : DoubledSpace E) : DoubledSpace E :=
   ψ + η • grandCanonicalGenerator (E := E) B H μ ψ
 
@@ -90,17 +119,29 @@ noncomputable abbrev grandCanonicalFockEulerStep
     (ψ : DoubledSpace E) : DoubledSpace E :=
   grandCanonicalEulerStep (E := E) η B H μ ψ
 
-/-- Theorem `bogoliubovAnnihilation_kills_vacuumVector`. -/
-theorem bogoliubovAnnihilation_kills_vacuumVector
-    (B : BogoliubovParams) :
+/-- Every Bogoliubov-mixed annihilation operator sends `0` to `0`. -/
+theorem bogoliubovAnnihilation_map_zero
+    (B : HyperbolicMixingParams) :
     bogoliubovAnnihilation (E := E) B 0 = 0 := by
   simp [bogoliubovAnnihilation]
 
-/-- Theorem `bogoliubovCreation_kills_vacuumVector`. -/
-theorem bogoliubovCreation_kills_vacuumVector
-    (B : BogoliubovParams) :
+/-- Every Bogoliubov-mixed creation operator sends `0` to `0`. -/
+theorem bogoliubovCreation_map_zero
+    (B : HyperbolicMixingParams) :
     bogoliubovCreation (E := E) B 0 = 0 := by
   simp [bogoliubovCreation]
+
+@[deprecated bogoliubovAnnihilation_map_zero (since := "2026-03-21")]
+theorem bogoliubovAnnihilation_kills_vacuumVector
+    (B : HyperbolicMixingParams) :
+    bogoliubovAnnihilation (E := E) B 0 = 0 :=
+  bogoliubovAnnihilation_map_zero (E := E) B
+
+@[deprecated bogoliubovCreation_map_zero (since := "2026-03-21")]
+theorem bogoliubovCreation_kills_vacuumVector
+    (B : HyperbolicMixingParams) :
+    bogoliubovCreation (E := E) B 0 = 0 :=
+  bogoliubovCreation_map_zero (E := E) B
 
 /-- `ℤ₂` grading parity labels for superalgebra brackets. -/
 inductive SuperParity where
@@ -346,7 +387,7 @@ Bogoliubov covariance (mode expansion form) for the graded super bracket.
 This is the core transport law before imposing CAR/CCR closure.
 -/
 theorem superBracket_bogoliubov_covariance
-    (p q : SuperParity) (B : BogoliubovParams) :
+    (p q : SuperParity) (B : HyperbolicMixingParams) :
     superBracket (E := E) p q
         (bogoliubovAnnihilation (E := E) B)
         (bogoliubovCreation (E := E) B)
@@ -364,7 +405,7 @@ Constructive odd-odd Bogoliubov bracket in the doubled-projector model:
 `{a_B, a†_B} = 2uv · Id`.
 -/
 theorem anticommutator_bogoliubov_projector_model
-    (B : BogoliubovParams) :
+    (B : HyperbolicMixingParams) :
     anticommutator (E := E)
         (bogoliubovAnnihilation (E := E) B)
         (bogoliubovCreation (E := E) B)
@@ -431,7 +472,7 @@ Constructive even-even Bogoliubov bracket in the doubled-projector model:
 `[a_B, a†_B] = 0`.
 -/
 theorem commutator_bogoliubov_projector_model
-    (B : BogoliubovParams) :
+    (B : HyperbolicMixingParams) :
     commutator (E := E)
         (bogoliubovAnnihilation (E := E) B)
         (bogoliubovCreation (E := E) B)
@@ -454,7 +495,7 @@ Constructive closure theorem for Bogoliubov-mixed odd generators in the
 doubled-projector model.
 -/
 theorem bogoliubov_projector_superalgebra
-    (B : BogoliubovParams) :
+    (B : HyperbolicMixingParams) :
     anticommutator (E := E)
         (bogoliubovAnnihilation (E := E) B)
         (bogoliubovCreation (E := E) B)
@@ -467,7 +508,29 @@ theorem bogoliubov_projector_superalgebra
   · exact anticommutator_bogoliubov_projector_model (E := E) B
   · exact commutator_bogoliubov_projector_model (E := E) B
 
+/--
+For the hyperbolic-angle parameterization, the projector anomaly coefficient
+collapses to `sinh (2θ)`.
+-/
+theorem anticommutator_ofAngle_projector_model
+    (θ : ℝ) :
+    anticommutator (E := E)
+        (bogoliubovAnnihilation (E := E) (HyperbolicMixingParams.ofAngle θ))
+        (bogoliubovCreation (E := E) (HyperbolicMixingParams.ofAngle θ))
+      = (Real.sinh (2 * θ)) • ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  rw [anticommutator_bogoliubov_projector_model]
+  congr 1
+  calc
+    (HyperbolicMixingParams.ofAngle θ).u * ((HyperbolicMixingParams.ofAngle θ).v * 2)
+        = 2 * Real.sinh θ * Real.cosh θ := by
+            simp [HyperbolicMixingParams.ofAngle]
+            ring
+    _ = Real.sinh (2 * θ) := by
+          rw [Real.sinh_two_mul]
+
 end FockSuper
+
+/-! ## Genuine Clifford/CAR Branch -/
 
 section CliffordCAR
 
@@ -713,11 +776,16 @@ theorem cliffordConcreteIsCARPair :
 
 end CliffordCAR
 
+/-! ## Scalar Einstein/Fock Deformation Bridge -/
+
 section EinsteinBridge
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- Einstein-transported residual viewed as a chemical-potential shift. -/
+/--
+Einstein-transported residual viewed as a scalar deformation scale, used here
+as a chemical-potential proxy.
+-/
 noncomputable def inducedChemicalPotential
     (R : RicciTensor E)
     (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
@@ -726,7 +794,7 @@ noncomputable def inducedChemicalPotential
   transportedEinsteinResidual (R := R) (K := K) (x := x)
     (scalar := scalar) (Λ := Λ) V Γ
 
-/-- Canonical naming alias for Einstein-induced chemical potential. -/
+/-- Canonical naming alias for the Einstein-induced scalar deformation scale. -/
 noncomputable abbrev einsteinInducedChemicalPotential
     (R : RicciTensor E)
     (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
@@ -744,7 +812,10 @@ lemma inducedChemicalPotential_eq_zero_of_vacuumTransported
     inducedChemicalPotential R K x scalar Λ V Γ = 0 :=
   hVacSplit
 
-/-- Einstein-residual deformation as a scalar multiple of identity on Fock space. -/
+/--
+Scalar identity deformation on Fock space induced by the Einstein residual
+proxy.
+-/
 noncomputable def einsteinFockDeformation
     (R : RicciTensor E)
     (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
@@ -753,7 +824,7 @@ noncomputable def einsteinFockDeformation
     FockEnd E :=
   inducedChemicalPotential R K x scalar Λ V Γ • ContinuousLinearMap.id ℝ (DoubledSpace E)
 
-/-- Canonical naming alias for Einstein-induced Fock deformation operator. -/
+/-- Canonical naming alias for the Einstein-induced scalar Fock deformation. -/
 noncomputable abbrev einsteinFockDeformationOperator
     (R : RicciTensor E)
     (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
@@ -779,7 +850,7 @@ lemma einsteinFockDeformation_eq_zero_of_vacuumTransported
 
 /-- Lemma `grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported`. -/
 lemma grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
-    (B : BogoliubovParams) (H : FockEnd E)
+    (B : HyperbolicMixingParams) (H : FockEnd E)
     (R : RicciTensor E)
     (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
     (scalar Λ : ℝ)
@@ -812,7 +883,7 @@ lemma grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
 end EinsteinBridge
 
 attribute [deprecated FockEndomorphism (since := "2026-02-26")] FockEnd
-attribute [deprecated BogoliubovMixingParams (since := "2026-02-26")] BogoliubovParams
+attribute [deprecated HyperbolicMixingParams (since := "2026-03-21")] BogoliubovParams
 attribute [deprecated bogoliubovNumberOperator (since := "2026-02-26")] numberOperator
 attribute [deprecated grandCanonicalFockGenerator (since := "2026-02-26")] grandCanonicalGenerator
 attribute [deprecated grandCanonicalFockEulerStep (since := "2026-02-26")] grandCanonicalEulerStep

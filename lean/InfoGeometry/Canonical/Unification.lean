@@ -171,4 +171,130 @@ noncomputable def canonicalScalarRosetta
 
 end ScalarRosetta
 
+section Cl11LatticeRosetta
+
+open InfoGeometry.Quantum.ModularAnomaly.Cl11LatticeBridge
+
+variable {n : ℕ}
+
+noncomputable local instance : NormedAddCommGroup (cl11DoubledCore (FinModel (N := n))) := by
+  change NormedAddCommGroup (InfoGeometry.Krein.DoubledSpace (FinModel (N := n)))
+  infer_instance
+
+noncomputable local instance : NormedSpace ℝ (cl11DoubledCore (FinModel (N := n))) := by
+  change NormedSpace ℝ (InfoGeometry.Krein.DoubledSpace (FinModel (N := n)))
+  infer_instance
+
+noncomputable local instance : InnerProductSpace ℝ (cl11DoubledCore (FinModel (N := n))) := by
+  change InnerProductSpace ℝ (InfoGeometry.Krein.DoubledSpace (FinModel (N := n)))
+  infer_instance
+
+noncomputable local instance : CompleteSpace (cl11DoubledCore (FinModel (N := n))) := by
+  change CompleteSpace (InfoGeometry.Krein.DoubledSpace (FinModel (N := n)))
+  infer_instance
+
+noncomputable local instance : KreinSpace (cl11DoubledCore (FinModel (N := n))) := by
+  change KreinSpace (InfoGeometry.Krein.DoubledSpace (FinModel (N := n)))
+  infer_instance
+
+noncomputable local instance :
+    NormedRing
+      (ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n)) := inferInstance
+
+noncomputable local instance :
+    NormedAlgebra ℝ
+      (ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n)) := inferInstance
+
+noncomputable local instance :
+    CompleteSpace
+      (ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n)) := by
+  infer_instance
+
+local instance :
+    IsTopologicalRing
+      (ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n)) := inferInstance
+
+/--
+Finite-dimensional `Cl(1,1)` Rosetta package:
+a continuous canonical modular anomaly together with its transported lattice
+shadow under the coordinate avatar functor.
+-/
+structure Cl11LatticeRosettaStone (n : ℕ) where
+  symmetry :
+    ContinuousCarrier (N := n) ≃L[ℝ] ContinuousCarrier (N := n)
+  continuousAnomaly :
+    ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n)
+  latticeAnomaly :
+    LatticeCarrier (N := n) →L[ℝ] LatticeCarrier (N := n)
+  h_transport :
+    latticeAvatarCLM (N := n) continuousAnomaly = latticeAnomaly
+
+/--
+Canonical continuous `Cl(1,1)` anomaly operator attached to a symmetry `U`.
+
+This is the explicit commutator-shadow formula already identified with the
+continuous modular anomaly generator in `Quantum.ModularAnomaly`.
+-/
+noncomputable def canonicalContinuousCl11Anomaly
+    (U : ContinuousCarrier (N := n) ≃L[ℝ] ContinuousCarrier (N := n)) :
+    ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n) :=
+  let ε : ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n) :=
+    Cl11Shadow.canonicalCl11Generator (E := FinModel (N := n))
+  (U.symm : ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n)).comp
+    (ε.comp (U : ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n))
+      - (U : ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n)).comp ε)
+
+/--
+Canonical lattice commutator shadow transported by the lattice avatar of `U`.
+-/
+noncomputable def canonicalLatticeCl11Anomaly
+    (U : ContinuousCarrier (N := n) ≃L[ℝ] ContinuousCarrier (N := n)) :
+    LatticeCarrier (N := n) →L[ℝ] LatticeCarrier (N := n) :=
+  latticeCommutatorShadow (N := n) (latticeAutomorphismAvatar (N := n) U)
+
+/--
+Concrete continuous-to-lattice transport theorem for the canonical `Cl(1,1)`
+anomaly operator.
+-/
+theorem latticeAvatar_canonicalContinuousCl11Anomaly
+    (U : ContinuousCarrier (N := n) ≃L[ℝ] ContinuousCarrier (N := n)) :
+    latticeAvatarCLM (N := n) (canonicalContinuousCl11Anomaly (n := n) U) =
+      canonicalLatticeCl11Anomaly (n := n) U := by
+  have hCont :
+      (Cl11Shadow.canonicalCl11TopologicalShadow (E := FinModel (N := n))).modularAnomalyGenerator U =
+        canonicalContinuousCl11Anomaly (n := n) U := by
+    simpa [canonicalContinuousCl11Anomaly] using
+      (Cl11Shadow.modularAnomalyGenerator_eq_canonicalCl11_commutator_shadow
+        (E := FinModel (N := n)) (U := U))
+  rw [← hCont]
+  simpa [canonicalLatticeCl11Anomaly] using
+    (latticeAvatar_canonicalCl11_modularAnomalyGenerator (N := n) U)
+
+/--
+Canonical `Cl(1,1)` Rosetta constructor from the modular anomaly transport
+theorem.
+-/
+noncomputable def canonicalCl11LatticeRosettaStone
+    (U : ContinuousCarrier (N := n) ≃L[ℝ] ContinuousCarrier (N := n)) :
+    Cl11LatticeRosettaStone n where
+  symmetry := U
+  continuousAnomaly := canonicalContinuousCl11Anomaly (n := n) U
+  latticeAnomaly := canonicalLatticeCl11Anomaly (n := n) U
+  h_transport := latticeAvatar_canonicalContinuousCl11Anomaly (n := n) U
+
+namespace Cl11LatticeRosettaStone
+
+variable (R : Cl11LatticeRosettaStone n)
+
+/--
+The lattice anomaly is exactly the avatar of the continuous canonical anomaly.
+-/
+theorem continuous_eq_lattice_shadow :
+    latticeAvatarCLM (N := n) R.continuousAnomaly = R.latticeAnomaly :=
+  R.h_transport
+
+end Cl11LatticeRosettaStone
+
+end Cl11LatticeRosetta
+
 end InfoGeometry.Canonical.Unification

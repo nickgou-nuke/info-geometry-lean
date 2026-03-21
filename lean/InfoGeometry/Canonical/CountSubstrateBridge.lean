@@ -8,10 +8,10 @@ import InfoGeometry.Canonical.HolographicEmergence
 Constructive count-first bridge:
 
 - empirical counts induce a normalized probability state
-- the induced probability state can be paired with the existing
-  holographic-emergence theorem package
+- count-induced Sinkhorn trajectories provide a constructive flow
 
-No new axioms are introduced.
+This module defines the mapping from empirical event counts to informational
+dynamics. Vacuous zero-quadratic-form scaffolds have been removed.
 -/
 
 namespace InfoGeometry.Canonical.CountSubstrateBridge
@@ -29,7 +29,6 @@ open InfoGeometry.Canonical.AnomalyInflow
 open InfoGeometry.Canonical.TopologicalInvariants
 open InfoGeometry.Canonical.ChiralTorsionBridge
 open InfoGeometry.Canonical.SpectralInference
-open InfoGeometry.Twistor
 
 section CountsToProbability
 
@@ -67,125 +66,6 @@ theorem exists_empiricalProbabilityState {α : Type*} [Fintype α]
   ⟨empiricalProbabilityState N hN, empiricalProbabilityState_spec N hN⟩
 
 end CountsToProbability
-
-section CountsToHolographic
-
-variable (n : Nat)
-variable {α : Type*} {X : Type*}
-  [Fintype α]
-  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X] [FiniteDimensional ℝ X]
-
-/--
-Count-first holographic package:
-from nontrivial empirical counts we construct an empirical probability state,
-then pair it with the existing constructive holographic-emergence chain.
--/
-theorem countsFirst_holographicEmergence_package_of_isVacuumApexNull
-    (N : CountSubstrate α)
-    (hN : CountSubstrateNontrivial N)
-    (Tflow : SinkhornTrajectory n)
-    (CI : ConformalInference X)
-    (hAnom : CI.chiralAnomalyOperator ≠ 0)
-    (Tw : TwistedInference X)
-    (L : BayesianLoop X)
-    (IST : InfoSpectralTriple X)
-    (Q : QuadraticForm ℝ (DoubledSpace X))
-    (v : UnnormalizedProjectiveState (E := X))
-    (hNull : IsVacuumApexNull (E := X) Q v) :
-    ∃ P : ProbabilityDist α,
-      (∀ x : α, (P x).toReal = empirical_distribution N x)
-        ∧ EmergentTimeFlow n Tflow
-        ∧ AnomalyScalePhase CI
-        ∧ UpdateOrderPathDependent Tw.dual.nabla
-        ∧ (∃ (M : Coupling 2)
-            (hrow : HasPositiveRowSums 2 M)
-            (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))
-            (hcol : HasPositiveColSums 2 M)
-            (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
-            UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol)
-        ∧ AnomalyInflowClosure (E := X) L IST
-        ∧ (∃ t : DoubledTwistorSpace (E := X) Q,
-            t = vacuumApexTwistor (E := X) (Q := Q) v hNull) := by
-  refine ⟨empiricalProbabilityState N hN, ?_, ?_⟩
-  · exact empiricalProbabilityState_spec N hN
-  · exact holographicEmergence_package_of_isVacuumApexNull (n := n)
-      (Tflow := Tflow) (CI := CI) (hAnom := hAnom) (Tw := Tw)
-      (L := L) (IST := IST) (Q := Q) (v := v) (hNull := hNull)
-
-/--
-Count-first holographic package in canonical zero-null form.
-This removes explicit `Q` and `hNull` parameters from the API.
--/
-theorem countsFirst_holographicEmergence_package
-    (N : CountSubstrate α)
-    (hN : CountSubstrateNontrivial N)
-    (Tflow : SinkhornTrajectory n)
-    (CI : ConformalInference X)
-    (hAnom : CI.chiralAnomalyOperator ≠ 0)
-    (Tw : TwistedInference X)
-    (L : BayesianLoop X)
-    (IST : InfoSpectralTriple X)
-    (v : UnnormalizedProjectiveState (E := X)) :
-    ∃ P : ProbabilityDist α,
-      (∀ x : α, (P x).toReal = empirical_distribution N x)
-        ∧ EmergentTimeFlow n Tflow
-        ∧ AnomalyScalePhase CI
-        ∧ UpdateOrderPathDependent Tw.dual.nabla
-        ∧ (∃ (M : Coupling 2)
-            (hrow : HasPositiveRowSums 2 M)
-            (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))
-            (hcol : HasPositiveColSums 2 M)
-            (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
-            UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol)
-        ∧ AnomalyInflowClosure (E := X) L IST
-        ∧ (∃ t : DoubledTwistorSpace (E := X) zeroVacuumApexQuadraticForm,
-            t = vacuumApexTwistor (E := X)
-              zeroVacuumApexQuadraticForm
-              v
-              (isVacuumApexNull_zeroVacuumApexQuadraticForm v)) := by
-  refine ⟨empiricalProbabilityState N hN, ?_, ?_⟩
-  · exact empiricalProbabilityState_spec N hN
-  · exact holographicEmergence_package
-      (n := n)
-      (Tflow := Tflow) (CI := CI) (hAnom := hAnom) (Tw := Tw)
-      (L := L) (IST := IST) (v := v)
-
-/--
-Backward-compatible alias for the canonical zero-null count-first holographic package.
--/
-theorem countsFirst_holographicEmergence_package_zeroVacuumApexQuadraticForm
-    (N : CountSubstrate α)
-    (hN : CountSubstrateNontrivial N)
-    (Tflow : SinkhornTrajectory n)
-    (CI : ConformalInference X)
-    (hAnom : CI.chiralAnomalyOperator ≠ 0)
-    (Tw : TwistedInference X)
-    (L : BayesianLoop X)
-    (IST : InfoSpectralTriple X)
-    (v : UnnormalizedProjectiveState (E := X)) :
-    ∃ P : ProbabilityDist α,
-      (∀ x : α, (P x).toReal = empirical_distribution N x)
-        ∧ EmergentTimeFlow n Tflow
-        ∧ AnomalyScalePhase CI
-        ∧ UpdateOrderPathDependent Tw.dual.nabla
-        ∧ (∃ (M : Coupling 2)
-            (hrow : HasPositiveRowSums 2 M)
-            (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))
-            (hcol : HasPositiveColSums 2 M)
-            (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
-            UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol)
-        ∧ AnomalyInflowClosure (E := X) L IST
-        ∧ (∃ t : DoubledTwistorSpace (E := X) zeroVacuumApexQuadraticForm,
-            t = vacuumApexTwistor (E := X)
-              zeroVacuumApexQuadraticForm
-              v
-              (isVacuumApexNull_zeroVacuumApexQuadraticForm v)) := by
-  exact countsFirst_holographicEmergence_package (n := n)
-    (N := N) (hN := hN)
-    (Tflow := Tflow) (CI := CI) (hAnom := hAnom) (Tw := Tw)
-    (L := L) (IST := IST) (v := v)
-
-end CountsToHolographic
 
 section CountInducedFlow
 
@@ -243,26 +123,6 @@ lemma entrywisePositive_hasPositiveColSums
     exact Finset.single_le_sum (fun i _hi => (hM i j).le) (by simp)
   exact lt_of_lt_of_le hdiag hle
 
-/-- Lemma `rowNormalize_entrywisePositive`. -/
-lemma rowNormalize_entrywisePositive
-    {M : SinkhornMatrix n}
-    (hM : EntrywisePositive n M)
-    (hrow : HasPositiveRowSums n M) :
-    EntrywisePositive n (rowNormalize n M hrow) := by
-  intro i j
-  unfold rowNormalize
-  exact div_pos (hM i j) (hrow i)
-
-/-- Lemma `colNormalize_entrywisePositive`. -/
-lemma colNormalize_entrywisePositive
-    {M : SinkhornMatrix n}
-    (hM : EntrywisePositive n M)
-    (hcol : HasPositiveColSums n M) :
-    EntrywisePositive n (colNormalize n M hcol) := by
-  intro i j
-  unfold colNormalize
-  exact div_pos (hM i j) (hcol j)
-
 /-- Matrix together with an entrywise-positivity certificate. -/
 structure PositiveSinkhornState where
   M : SinkhornMatrix n
@@ -284,29 +144,27 @@ noncomputable def countInducedPositiveIterate : Nat → PositiveSinkhornState n
             entrywisePositive_hasPositiveColSums (n := n) Sk.pos
           ⟨colNormalize n Sk.M hcol,
             colNormalize_entrywisePositive (n := n) Sk.pos hcol⟩
+where
+  rowNormalize_entrywisePositive
+      {M : SinkhornMatrix n}
+      (hM : EntrywisePositive n M)
+      (hrow : HasPositiveRowSums n M) :
+      EntrywisePositive n (rowNormalize n M hrow) := by
+    intro i j
+    unfold rowNormalize
+    exact div_pos (hM i j) (hrow i)
+  colNormalize_entrywisePositive
+      {M : SinkhornMatrix n}
+      (hM : EntrywisePositive n M)
+      (hcol : HasPositiveColSums n M) :
+      EntrywisePositive n (colNormalize n M hcol) := by
+    intro i j
+    unfold colNormalize
+    exact div_pos (hM i j) (hcol j)
 
 /-- Matrix trajectory component extracted from the positive iterate state. -/
 noncomputable def countInducedIterate (k : Nat) : SinkhornMatrix n :=
   (countInducedPositiveIterate (n := n) N k).M
-
-/-- Lemma `countInducedIterate_entrywisePositive`. -/
-lemma countInducedIterate_entrywisePositive (k : Nat) :
-    EntrywisePositive n (countInducedIterate (n := n) N k) :=
-  (countInducedPositiveIterate (n := n) N k).pos
-
-/-- Lemma `countInducedCoupling_hasPositiveRowSums`. -/
-lemma countInducedCoupling_hasPositiveRowSums :
-    HasPositiveRowSums n (countInducedCoupling n N) := by
-  intro i
-  exact entrywisePositive_hasPositiveRowSums (n := n)
-    (countInducedCoupling_entrywisePositive (n := n) (N := N)) i
-
-/-- Lemma `countInducedCoupling_hasPositiveColSums`. -/
-lemma countInducedCoupling_hasPositiveColSums :
-    HasPositiveColSums n (countInducedCoupling n N) := by
-  intro j
-  exact entrywisePositive_hasPositiveColSums (n := n)
-    (countInducedCoupling_entrywisePositive (n := n) (N := N)) j
 
 /-- Lemma `countInducedIterate_step`. -/
 lemma countInducedIterate_step (k : Nat) :
@@ -339,117 +197,5 @@ theorem emergentTimeFlow_countInducedSinkhornTrajectory
     (countInducedSinkhornTrajectory (n := n) N)
 
 end CountInducedFlow
-
-section CountsToHolographicDerivedFlow
-
-variable (n : Nat)
-variable {X : Type*}
-  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X] [FiniteDimensional ℝ X]
-
-/--
-Count-first holographic package with derived flow:
-the trajectory input is eliminated and replaced by the canonical
-count-induced Sinkhorn iterate trajectory.
--/
-theorem countsFirst_holographicEmergence_of_countInducedTrajectory_of_isVacuumApexNull
-    (N : CountSubstrate (Fin n))
-    (hN : CountSubstrateNontrivial N)
-    (CI : ConformalInference X)
-    (hAnom : CI.chiralAnomalyOperator ≠ 0)
-    (Tw : TwistedInference X)
-    (L : BayesianLoop X)
-    (IST : InfoSpectralTriple X)
-    (Q : QuadraticForm ℝ (DoubledSpace X))
-    (v : UnnormalizedProjectiveState (E := X))
-    (hNull : IsVacuumApexNull (E := X) Q v) :
-    ∃ P : ProbabilityDist (Fin n),
-      (∀ x : Fin n, (P x).toReal = empirical_distribution N x)
-        ∧ EmergentTimeFlow n (countInducedSinkhornTrajectory (n := n) N)
-        ∧ AnomalyScalePhase CI
-        ∧ UpdateOrderPathDependent Tw.dual.nabla
-        ∧ (∃ (M : Coupling 2)
-            (hrow2 : HasPositiveRowSums 2 M)
-            (hcolRow2 : HasPositiveColSums 2 (rowNormalize 2 M hrow2))
-            (hcol2 : HasPositiveColSums 2 M)
-            (hrowCol2 : HasPositiveRowSums 2 (colNormalize 2 M hcol2)),
-            UpdateOrderHysteresis 2 M hrow2 hcolRow2 hcol2 hrowCol2)
-        ∧ AnomalyInflowClosure (E := X) L IST
-        ∧ (∃ t : DoubledTwistorSpace (E := X) Q,
-            t = vacuumApexTwistor (E := X) (Q := Q) v hNull) := by
-  exact countsFirst_holographicEmergence_package_of_isVacuumApexNull (n := n)
-    (N := N) (hN := hN)
-    (Tflow := countInducedSinkhornTrajectory (n := n) N)
-    (CI := CI) (hAnom := hAnom) (Tw := Tw)
-    (L := L) (IST := IST) (Q := Q) (v := v) (hNull := hNull)
-
-/--
-Count-first holographic package with derived flow in canonical zero-null form.
--/
-theorem countsFirst_holographicEmergence_of_countInducedTrajectory
-    (N : CountSubstrate (Fin n))
-    (hN : CountSubstrateNontrivial N)
-    (CI : ConformalInference X)
-    (hAnom : CI.chiralAnomalyOperator ≠ 0)
-    (Tw : TwistedInference X)
-    (L : BayesianLoop X)
-    (IST : InfoSpectralTriple X)
-    (v : UnnormalizedProjectiveState (E := X)) :
-    ∃ P : ProbabilityDist (Fin n),
-      (∀ x : Fin n, (P x).toReal = empirical_distribution N x)
-        ∧ EmergentTimeFlow n (countInducedSinkhornTrajectory (n := n) N)
-        ∧ AnomalyScalePhase CI
-        ∧ UpdateOrderPathDependent Tw.dual.nabla
-        ∧ (∃ (M : Coupling 2)
-            (hrow2 : HasPositiveRowSums 2 M)
-            (hcolRow2 : HasPositiveColSums 2 (rowNormalize 2 M hrow2))
-            (hcol2 : HasPositiveColSums 2 M)
-            (hrowCol2 : HasPositiveRowSums 2 (colNormalize 2 M hcol2)),
-            UpdateOrderHysteresis 2 M hrow2 hcolRow2 hcol2 hrowCol2)
-        ∧ AnomalyInflowClosure (E := X) L IST
-        ∧ (∃ t : DoubledTwistorSpace (E := X) zeroVacuumApexQuadraticForm,
-            t = vacuumApexTwistor (E := X)
-              zeroVacuumApexQuadraticForm
-              v
-              (isVacuumApexNull_zeroVacuumApexQuadraticForm v)) := by
-  exact countsFirst_holographicEmergence_package (n := n)
-    (N := N) (hN := hN)
-    (Tflow := countInducedSinkhornTrajectory (n := n) N)
-    (CI := CI) (hAnom := hAnom) (Tw := Tw)
-    (L := L) (IST := IST) (v := v)
-
-/--
-Backward-compatible alias for the canonical derived-flow count-first package.
--/
-theorem countsFirst_holographicEmergence_of_countInducedTrajectory_zeroVacuumApexQuadraticForm
-    (N : CountSubstrate (Fin n))
-    (hN : CountSubstrateNontrivial N)
-    (CI : ConformalInference X)
-    (hAnom : CI.chiralAnomalyOperator ≠ 0)
-    (Tw : TwistedInference X)
-    (L : BayesianLoop X)
-    (IST : InfoSpectralTriple X)
-    (v : UnnormalizedProjectiveState (E := X)) :
-    ∃ P : ProbabilityDist (Fin n),
-      (∀ x : Fin n, (P x).toReal = empirical_distribution N x)
-        ∧ EmergentTimeFlow n (countInducedSinkhornTrajectory (n := n) N)
-        ∧ AnomalyScalePhase CI
-        ∧ UpdateOrderPathDependent Tw.dual.nabla
-        ∧ (∃ (M : Coupling 2)
-            (hrow2 : HasPositiveRowSums 2 M)
-            (hcolRow2 : HasPositiveColSums 2 (rowNormalize 2 M hrow2))
-            (hcol2 : HasPositiveColSums 2 M)
-            (hrowCol2 : HasPositiveRowSums 2 (colNormalize 2 M hcol2)),
-            UpdateOrderHysteresis 2 M hrow2 hcolRow2 hcol2 hrowCol2)
-        ∧ AnomalyInflowClosure (E := X) L IST
-        ∧ (∃ t : DoubledTwistorSpace (E := X) zeroVacuumApexQuadraticForm,
-            t = vacuumApexTwistor (E := X)
-              zeroVacuumApexQuadraticForm
-              v
-              (isVacuumApexNull_zeroVacuumApexQuadraticForm v)) := by
-  exact countsFirst_holographicEmergence_of_countInducedTrajectory (n := n)
-    (N := N) (hN := hN) (CI := CI) (hAnom := hAnom) (Tw := Tw)
-    (L := L) (IST := IST) (v := v)
-
-end CountsToHolographicDerivedFlow
 
 end InfoGeometry.Canonical.CountSubstrateBridge

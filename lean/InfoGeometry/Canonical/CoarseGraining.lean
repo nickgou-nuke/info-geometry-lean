@@ -37,15 +37,15 @@ theorem totalWeight_eq_sum_fiberWeight
     totalWeight w = ∑ y, G.fiberWeight w y := by
   simpa [totalWeight, fiberWeight] using (Fintype.sum_fiberwise G.project w).symm
 
-/-- Trivial coarse graining retaining only one macrostate. -/
-def trivial (X : Type*) : FiniteCoarseGraining X PUnit where
+/-- Singleton coarse graining retaining only one macrostate. -/
+def singleton (X : Type*) : FiniteCoarseGraining X PUnit where
   project := fun _ => PUnit.unit
 
-/-- Trivial coarse graining keeps the full total weight in its unique fiber. -/
-theorem fiberWeight_trivial_eq_totalWeight
+/-- Singleton coarse graining keeps the full total weight in its unique fiber. -/
+theorem fiberWeight_singleton_eq_totalWeight
     (w : X → R) :
-    (trivial X).fiberWeight w PUnit.unit = totalWeight w := by
-  simpa [trivial] using (totalWeight_eq_sum_fiberWeight (G := trivial X) w).symm
+    (singleton X).fiberWeight w PUnit.unit = totalWeight w := by
+  simpa [singleton] using (totalWeight_eq_sum_fiberWeight (G := singleton X) w).symm
 
 end FiniteCoarseGraining
 

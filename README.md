@@ -2,7 +2,7 @@
 
 This repository has two tightly coupled layers:
 
-1. a Lean 4 theory library for information geometry, operator-algebraic structure, gauge transport, chiral/index constructions, and synthesis modules such as `GrandSynthesis`;
+1. a Lean 4 theory library for information geometry, gauge transport, operator/K-theoretic structure, modular/CPT bridges, discrete phase scaffolds, and synthesis modules such as `GrandSynthesis` and `Rosetta`;
 2. a semantic DAG engine that extracts declaration-level and source-block-level theory topology from Lean while filtering elaborator noise for heavy modules.
 
 It is therefore both a theorem repository and a structural analysis environment for the theory itself.
@@ -22,26 +22,38 @@ If you want the current manually reviewed quarantine-ready bridge packet for con
 ## Verified Shape
 
 Current repository scale:
-- Lean files under `lean/`: `444`
-- Lean LOC under `lean/`: `74,329`
+- Lean files under `lean/`: `450`
+- Lean LOC under `lean/`: `73,067`
 
-Trusted semantic block exports already exist for large capstones:
-- `GrandSynthesis`: `56` semantic block nodes, `90` edges, `30` skeleton nodes
-- `AnalyticalIndex`: `59` semantic block nodes, `209` edges, `42` skeleton nodes
-- `KasparovCycle`: `7` semantic block nodes, `26` edges, `4` skeleton nodes
+Current synchronized bridge families:
+- KK / analytical-index / synthesis:
+  `InfoGeometry.KK.KasparovCycle.analyticalIndex`
+  → `InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
+  → `InfoGeometry.Canonical.GrandSynthesis.*`
+- source-tension / Rosetta / modular anomaly:
+  `Singular`, `RicciMongeAmpere`, `BogoliubovFockSuper`, `TomitaTakesaki`
+  → `InfoGeometry.Canonical.Rosetta.*`
+  → `InfoGeometry.Quantum.ModularAnomaly.*`
+- Weyl-scale transport into KK and Jordan/KKT:
+  `WeylTransport`, `WeylInformationGauge`
+  → `Rosetta.weylScaleTransportShadow_to_modularCliffordTransport`
+  → `Rosetta.kk_analyticalIndex_eq_of_weylScaleTransport`
+  and `Rosetta.weylScaleTransportScalarShadow_generalized_pythagorean_of_jordanBregman`
+- discrete Hurwitz shell into RG stationarity:
+  `InfoGeometry.Quantum.Hurwitz`
+  → `InfoGeometry.Quantum.HurwitzRGFlow`
+  → `InfoGeometry.Canonical.RGFlow`
+- finite Pfaffian-sign phase boundary:
+  `InfoGeometry.Quantum.KitaevChain.index_change_forces_defect_crossing`
 
-These are produced through the external stdlib server path, not through fragile in-process elaboration.
+Tracked trusted semantic exports exist for heavy capstones such as:
+- `GrandSynthesis`
+- `AnalyticalIndex`
+- `KasparovCycle`
+- `CayleyBregmanBridge`
+- `BogoliubovFockSuper`
 
-Current trusted multi-module frontier graph:
-- `128` semantic block nodes
-- `647` edges
-- `319` cross-module edges
-
-The first verified vertical bridge is:
-
-`InfoGeometry.KK.KasparovCycle.analyticalIndex`
-→ `InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
-→ `InfoGeometry.Canonical.GrandSynthesis.*`
+The exact frontier graph counts are intentionally not duplicated here. Use the tracked status page at [index.md](/home/goutev/LEAN4/info-geometry-lean/docs/auto/index.md) and the current packets under `reports/dag/` for live numbers after refresh.
 
 ## Repository Map
 
@@ -57,10 +69,20 @@ The first verified vertical bridge is:
   Bounded KK core.
 - `lean/InfoGeometry/Canonical/AnalyticalIndex.lean`
   Large chiral/index-invariance web.
-- `lean/InfoGeometry/Canonical/OperatorAlgebraBridge.lean`
-  Vertical bridge toward operator-algebra readiness.
+- `lean/InfoGeometry/Canonical/Rosetta.lean`
+  Assumption-driven capstone transport façade linking source tension, Weyl transport, KK invariance, Jordan/KKT geometry, and modular anomaly presentations.
+- `lean/InfoGeometry/Quantum/ModularAnomaly.lean`
+  Real-Majorana modular cocycle shadow plus finite lattice anomaly / determinant / Berezinian layer.
+- `lean/InfoGeometry/Quantum/HurwitzRGFlow.lean`
+  Discrete 24-chart Hurwitz shell bridge into RG stationarity.
+- `lean/InfoGeometry/Quantum/KitaevChain.lean`
+  Finite Pfaffian-sign chain scaffold with critical/defect crossing theorems.
+- `lean/InfoGeometry/Canonical/DoubleCopyUnification.lean`
+  Thin checked double-copy implication surface.
 - `lean/InfoGeometry/Canonical/GrandSynthesis.lean`
-  Capstone synthesis layer.
+  Large synthesis layer.
+- `lean/InfoGeometry/Canonical/GrandSynthesisDoubleCopy.lean`
+  Double-copy flavored synthesis surface above the core unification layer.
 
 ### Tooling layer
 
@@ -71,9 +93,11 @@ The first verified vertical bridge is:
 - `tools/semantic_block_export.py`
   External Python LSP/RPC orchestrator for trusted semantic block export.
 - `reports/dag/`
-  Generated graph artifacts. These are intentionally untracked.
+  Generated graph artifacts. These are intentionally untracked or regenerated.
 - `tools/skynet_v2.py`
   Report-only semantic frontier explorer over trusted semantic block graphs.
+- `tools/update_repo_docs.py`
+  Refreshes tracked frontier/docs surfaces from the current trusted export set.
 
 ## Current vs Legacy
 
@@ -81,16 +105,22 @@ Use this split when entering the repository for the first time.
 
 | Surface | Status | What to use it for |
 | --- | --- | --- |
-| `lean/InfoGeometry/Canonical`, `lean/InfoGeometry/KK`, `lean/InfoGeometry/Library.lean` | Current | Main theorem library and publication surface |
+| `lean/InfoGeometry/Canonical`, `lean/InfoGeometry/KK`, `lean/InfoGeometry/Library.lean`, `lean/InfoGeometry/Quantum` | Current | Main theorem library and publication surface |
 | `lean/DAG`, `lean/scripts/DAG/Exploration` | Current | Graph extraction, semantic export, diagnostics, frontier analysis |
 | `tools/semantic_block_export.py`, `tools/skynet_v2.py`, `tools/update_repo_docs.py` | Current | Trusted heavy-module export and auto-doc/frontier workflow |
 | `docs/auto/index.md`, `lean/DAG/README.md`, `skills/info-geometry-repo/` | Current | Operational documentation and agent bootstrap |
 | `archive/legacy/` | Archived but useful | Historical automation and scratch material worth mining for ideas, but not part of the supported build surface |
-| `reports/dag/` | Generated / ignore for editing | Untracked analysis artifacts regenerated from the current code |
+| `reports/dag/` | Generated / inspect after refresh | Analysis artifacts regenerated from the current code and export set |
 
 The archive is intentionally kept in-tree for provenance and idea recovery. Start with current surfaces first, then consult [archive/README.md](/home/goutev/LEAN4/info-geometry-lean/archive/README.md) only if you are explicitly researching historical approaches.
 
 ## Build
+
+Full project build:
+
+```bash
+lake build InfoGeometry.All
+```
 
 Canonical umbrella build:
 
@@ -98,7 +128,7 @@ Canonical umbrella build:
 lake build InfoGeometry.Canonical.All
 ```
 
-Full project rebuild:
+Recursive rebuild:
 
 ```bash
 lake build -R
@@ -191,7 +221,7 @@ python3 tools/update_repo_docs.py --refresh-exports all
 python3 tools/update_repo_docs.py --refresh-exports changed
 ```
 
-This refresh now also regenerates the tracked bridge-candidate packet from the
+This refresh also regenerates the tracked bridge-candidate packet from the
 current trusted frontier and audit state.
 
 ## How To Read The Theory Topology
@@ -207,11 +237,11 @@ There are three useful views:
 3. semantic block graph
 - best for human-facing theory structure and bridge hunting
 
-Current KK frontier picture:
-- `KasparovCycle` is the real KK core
-- `CompactOperatorBridge`, `Product`, and `KasparovCompactOperator` are thin adjunct modules
-- the first large vertical frontier is `KasparovCycle.analyticalIndex -> Canonical.AnalyticalIndex`
-- reverse frontier discovery now reaches `GrandSynthesis` consumer theorems from the KK seed
+Current topology picture:
+- the KK / analytical-index corridor remains the cleanest classical-style vertical trunk;
+- `Canonical.Rosetta` now exposes the assumption-driven source-tension transport façade joining singular, Weyl, KK, Jordan/KKT, and modular surfaces;
+- `Quantum.ModularAnomaly` and `Quantum.KitaevChain` provide finite quantum/topological shadow layers;
+- `Quantum.HurwitzRGFlow` is the checked discrete-shell bridge into RG stationarity.
 
 ## Agent Bootstrap
 
@@ -219,11 +249,13 @@ If you are using a coding agent, the minimal bootstrap sequence is:
 
 1. read [docs/keyword_index.md](/home/goutev/LEAN4/info-geometry-lean/docs/keyword_index.md)
 2. read [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
-3. build the canonical umbrella
+3. build `InfoGeometry.All`
 4. decide whether the task is:
+   KK/index work,
+   modular/Rosetta work,
+   discrete phase/RG work,
    global topology,
-   single-file semantic export,
-   bridge closing,
+   semantic export,
    or frontier analysis
 
 There is also a repo-specific agent skill in `skills/info-geometry-repo/`.

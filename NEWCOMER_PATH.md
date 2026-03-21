@@ -25,23 +25,25 @@ So it is both:
 Read these in order:
 
 1. [README.md](/home/goutev/LEAN4/info-geometry-lean/README.md)
-2. [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
-3. [docs/auto/index.md](/home/goutev/LEAN4/info-geometry-lean/docs/auto/index.md)
-4. [THEORY_CANOPY.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY.md)
-5. [THEORY_CANOPY_RN_GAUGE.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY_RN_GAUGE.md)
-6. [UNIVERSAL_VOLUME_STACK.md](/home/goutev/LEAN4/info-geometry-lean/UNIVERSAL_VOLUME_STACK.md)
+2. [THEORY_CANOPY.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY.md)
+3. [UNIFICATION_INDEX.md](/home/goutev/LEAN4/info-geometry-lean/UNIFICATION_INDEX.md)
+4. [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
+5. [docs/auto/index.md](/home/goutev/LEAN4/info-geometry-lean/docs/auto/index.md)
+6. [THEORY_CANOPY_RN_GAUGE.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY_RN_GAUGE.md)
 
 Then run:
 
 ```bash
-lake build InfoGeometry.Canonical.All
+lake build InfoGeometry.All
 ```
 
-That gives you the main theorem umbrella before you touch any graph tooling.
+If you only need the canonical publication surface first, `lake build InfoGeometry.Canonical.All` is the smaller entrypoint.
 
-## The Main Theory Route
+## The Main Theory Routes
 
-If your interest is the mathematics first, orient yourself through these files:
+Choose one route instead of trying to read everything linearly.
+
+### Route A: KK / analytical-index / synthesis
 
 1. `lean/InfoGeometry/Canonical/GeneratedFlow.lean`
 2. `lean/InfoGeometry/KK/KasparovCycle.lean`
@@ -52,6 +54,29 @@ If your interest is the mathematics first, orient yourself through these files:
 That route roughly follows:
 
 `GeneratedFlow` -> `KasparovCycle` -> `AnalyticalIndex` -> `OperatorAlgebraBridge` -> `GrandSynthesis`
+
+### Route B: modular / CPT / Rosetta
+
+1. `lean/InfoGeometry/Quantum/RealMajoranaCategory.lean`
+2. `lean/InfoGeometry/Canonical/BogoliubovFockSuper.lean`
+3. `lean/InfoGeometry/Canonical/TomitaTakesaki.lean`
+4. `lean/InfoGeometry/Quantum/ModularAnomaly.lean`
+5. `lean/InfoGeometry/Canonical/Rosetta.lean`
+
+That route roughly follows:
+
+`RealMajoranaCategory` -> `BogoliubovFockSuper` -> `TomitaTakesaki` -> `ModularAnomaly` -> `Rosetta`
+
+### Route C: discrete shell / RG / phase boundary
+
+1. `lean/InfoGeometry/Quantum/Hurwitz.lean`
+2. `lean/InfoGeometry/Quantum/HurwitzRGFlow.lean`
+3. `lean/InfoGeometry/Canonical/RGFlow.lean`
+4. `lean/InfoGeometry/Quantum/KitaevChain.lean`
+
+That route roughly follows:
+
+`Hurwitz` -> `HurwitzRGFlow` -> `RGFlow` -> `KitaevChain`
 
 ## The Tooling Route
 
@@ -73,7 +98,7 @@ Use these as the active, supported surfaces:
 
 | Area | Current entrypoints |
 | --- | --- |
-| theorem library | `lean/InfoGeometry/`, `lean/InfoGeometry/Library.lean`, `lean/InfoGeometry/Canonical/All.lean` |
+| theorem library | `lean/InfoGeometry/`, `lean/InfoGeometry/Library.lean`, `lean/InfoGeometry/Canonical/All.lean`, `lean/InfoGeometry/Quantum` |
 | graph engine | `lean/DAG/` |
 | Lean report wrappers | `lean/scripts/DAG/Exploration/` |
 | trusted heavy-module export | `tools/semantic_block_export.py` |
@@ -95,7 +120,13 @@ Do not start here unless you have a specific reason:
 
 ## First Useful Commands
 
-Build the main theorem surface:
+Build the full theorem surface:
+
+```bash
+lake build InfoGeometry.All
+```
+
+Build the canonical umbrella:
 
 ```bash
 lake build InfoGeometry.Canonical.All
@@ -138,28 +169,33 @@ python3 tools/skynet_v2.py \
   --top 12
 ```
 
-## Current Verified Story
+## Current Verified Stories
 
-The current repository documentation and tooling support this verified bridge:
+The synchronized newcomer mental models are now:
 
-`InfoGeometry.KK.KasparovCycle.analyticalIndex`
--> `InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
--> `InfoGeometry.Canonical.GrandSynthesis.*`
+- KK/index/synthesis:
+  `InfoGeometry.KK.KasparovCycle.analyticalIndex`
+  -> `InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
+  -> `InfoGeometry.Canonical.GrandSynthesis.*`
+- source-tension / Rosetta / modular anomaly:
+  `Singular`, `RicciMongeAmpere`, `BogoliubovFockSuper`, `TomitaTakesaki`
+  -> `InfoGeometry.Canonical.Rosetta.*`
+  -> `InfoGeometry.Quantum.ModularAnomaly.*`
+- discrete shell / RG / finite phase boundary:
+  `InfoGeometry.Quantum.Hurwitz`
+  -> `InfoGeometry.Quantum.HurwitzRGFlow`
+  -> `InfoGeometry.Canonical.RGFlow`
+  with finite topological phase crossing in `InfoGeometry.Quantum.KitaevChain`
 
-This is the main newcomer mental model for the current frontier.
+## Second-Pass Architecture Notes
 
-## How To Use The Audit Note
+After this file, the best second-pass maps are:
 
-The outsider audit at
-[codebase-functionality-structure-audit-20260319.md](/home/goutev/LEAN4/info-geometry-lean/reports/codebase-functionality-structure-audit-20260319.md)
-is useful as a second-pass architectural summary.
+1. [THEORY_CANOPY.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY.md)
+2. [UNIFICATION_INDEX.md](/home/goutev/LEAN4/info-geometry-lean/UNIFICATION_INDEX.md)
+3. [docs/keyword_index.md](/home/goutev/LEAN4/info-geometry-lean/docs/keyword_index.md)
 
-Use it after this document, not before it.
-
-Reason:
-
-- this file tells you where to start
-- the audit note tells you what another reader independently reconstructed
+Use those after this document, not before it.
 
 ## If You Are A Coding Agent
 
@@ -167,12 +203,15 @@ Start with:
 
 1. this file
 2. [README.md](/home/goutev/LEAN4/info-geometry-lean/README.md)
-3. [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
-4. [skills/info-geometry-repo/SKILL.md](/home/goutev/LEAN4/info-geometry-lean/skills/info-geometry-repo/SKILL.md)
+3. [THEORY_CANOPY.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY.md)
+4. [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
+5. [skills/info-geometry-repo/SKILL.md](/home/goutev/LEAN4/info-geometry-lean/skills/info-geometry-repo/SKILL.md)
 
 Then decide whether the task is:
 
-- theorem-library work
+- KK/index work
+- modular/Rosetta work
+- discrete phase/RG work
 - graph extraction
 - frontier discovery
 - documentation refresh

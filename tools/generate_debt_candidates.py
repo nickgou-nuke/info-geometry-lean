@@ -254,6 +254,12 @@ def category_hint(index_name: str, category: str) -> str:
     hints = {
         ("surrogate", "proof_hole"): "replace the explicit proof hole with a real Lean proof",
         ("surrogate", "axiom_decl"): "replace the explicit axiom with a proved theorem surface",
+        ("surrogate", "quarantine_manifest"): "repair the quarantine bookkeeping so every unstable debt surface is tracked by a live module or removed",
+        ("surrogate", "prop_constant"): "replace the constant Prop surface with a theorem that relates real existing structures",
+        ("surrogate", "trivial_theorem"): "replace the trivial proof with a constructive derivation from load-bearing hypotheses",
+        ("surrogate", "universal_true_field"): "replace the universal-True field with a real invariant or remove the empty interface",
+        ("surrogate", "zero_quadratic_form"): "replace the zero quadratic-form surrogate with the intended constructed quadratic form",
+        ("surrogate", "scaled_zero_quadratic_form"): "replace the scaled-zero quadratic-form surrogate with a genuine nonzero construction",
         ("surrogate", "conditional_theorem"): "eliminate the conditional wrapper by proving the missing obligation constructively",
         ("surrogate", "contract_decl"): "replace the open contract surface with a concrete proved interface or theorem",
         ("surrogate", "contract_constructor"): "reduce dependence on contract constructors by proving the target directly from concrete data",

@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.ChiralEinsteinBridge
-import InfoGeometry.Canonical.GrandSynthesis
+import InfoGeometry.Canonical.GrandCanonicalExperts
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Tactic.NoncommRing
 set_option linter.unusedSimpArgs false
@@ -18,7 +18,7 @@ open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.Canonical.SpectralInference
 open InfoGeometry.Canonical.ChiralEinsteinBridge
-open InfoGeometry.Canonical.GrandSynthesis
+open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.RicciMongeAmpere
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]

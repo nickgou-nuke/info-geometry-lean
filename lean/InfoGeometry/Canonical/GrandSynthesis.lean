@@ -281,45 +281,6 @@ lemma logAbsDet_spectralModel_eq_basepointLogVolume
 
 end SpectralVolumeForm
 
-section KahlerPotential
-
-variable (n : Nat)
-
-/--
-Kahler-potential model from Sinkhorn Radon-Nikodym barriers:
-negative log-density (relative-volume) contributions from row and column sectors.
--/
-noncomputable def kahlerPotentialRN (M : SinkhornMatrix n) : ℝ :=
-  rowBarrierPotential n M + colBarrierPotential n M
-
-/--
-Equivalent negative-log Jacobian form:
-`K = -(row log RN + col log RN)`.
--/
-lemma kahlerPotentialRN_eq_neg_logJacobian
-    (M : SinkhornMatrix n) :
-    kahlerPotentialRN n M
-      = -(rowRadonNikodymGenerator n M + colRadonNikodymGenerator n M) := by
-  unfold kahlerPotentialRN rowBarrierPotential colBarrierPotential
-  ring
-
-/--
-Relative-volume change induced by the RN Kahler potential.
--/
-noncomputable def relativeVolumeChangeRN (M : SinkhornMatrix n) : ℝ :=
-  Real.exp (-kahlerPotentialRN n M)
-
-/-- Lemma `relativeVolumeChangeRN_eq_exp_logJacobian`. -/
-lemma relativeVolumeChangeRN_eq_exp_logJacobian
-    (M : SinkhornMatrix n) :
-    relativeVolumeChangeRN n M
-      = Real.exp (rowRadonNikodymGenerator n M + colRadonNikodymGenerator n M) := by
-  unfold relativeVolumeChangeRN
-  rw [kahlerPotentialRN_eq_neg_logJacobian]
-  ring_nf
-
-end KahlerPotential
-
 section EntropicCalabiBridge
 
 variable (n : Nat)
@@ -795,6 +756,7 @@ theorem kk_analyticalIndex_eq_of_modularCliffordTransport_state_hypotheses
       (σ := σ) (clAct := clAct) (unit := unit) hNorm hFixed hTrans)
 
 end KkIndexBridge
+
 
 section WheelerDeWitt
 

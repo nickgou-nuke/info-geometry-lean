@@ -750,6 +750,45 @@ lemma rowRNBarrier_nonneg (M : SinkhornMatrix n) : 0 ≤ rowRNBarrier n M := by
   intro i hi
   exact abs_nonneg _
 
+section KahlerPotential
+
+variable (n : Nat)
+
+/--
+Kahler-potential model from Sinkhorn Radon-Nikodym barriers:
+negative log-density (relative-volume) contributions from row and column sectors.
+-/
+noncomputable def kahlerPotentialRN (M : SinkhornMatrix n) : ℝ :=
+  rowBarrierPotential n M + colBarrierPotential n M
+
+/--
+Equivalent negative-log Jacobian form:
+`K = -(row log RN + col log RN)`.
+-/
+lemma kahlerPotentialRN_eq_neg_logJacobian
+    (M : SinkhornMatrix n) :
+    kahlerPotentialRN n M
+      = -(rowRadonNikodymGenerator n M + colRadonNikodymGenerator n M) := by
+  unfold kahlerPotentialRN rowBarrierPotential colBarrierPotential
+  ring
+
+/--
+Relative-volume change induced by the RN Kahler potential.
+-/
+noncomputable def relativeVolumeChangeRN (M : SinkhornMatrix n) : ℝ :=
+  Real.exp (-kahlerPotentialRN n M)
+
+/-- Lemma `relativeVolumeChangeRN_eq_exp_logJacobian`. -/
+lemma relativeVolumeChangeRN_eq_exp_logJacobian
+    (M : SinkhornMatrix n) :
+    relativeVolumeChangeRN n M
+      = Real.exp (rowRadonNikodymGenerator n M + colRadonNikodymGenerator n M) := by
+  unfold relativeVolumeChangeRN
+  rw [kahlerPotentialRN_eq_neg_logJacobian]
+  ring_nf
+
+end KahlerPotential
+
 /-- Lemma `colRNBarrier_nonneg`. -/
 lemma colRNBarrier_nonneg (M : SinkhornMatrix n) : 0 ≤ colRNBarrier n M := by
   unfold colRNBarrier

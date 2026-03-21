@@ -1,5 +1,7 @@
 import Mathlib.Algebra.Quaternion
 import Mathlib.Analysis.InnerProductSpace.Basic
+import InfoGeometry.Quantum.RealMajoranaCategory
+import InfoGeometry.Krein.DoubledSpace
 
 set_option linter.unusedSectionVars false
 
@@ -7,6 +9,7 @@ namespace InfoGeometry.Quantum.Hurwitz
 
 open scoped Quaternion
 open scoped BigOperators
+open InfoGeometry.Quantum.RealMajoranaCategory
 
 noncomputable section
 
@@ -85,6 +88,54 @@ def discreteLaplacian (psi : LatticeState) (q : HurwitzNode) : ℝ :=
 @[simp] theorem supercharge_sq_eq_laplacian (psi : LatticeState) :
     superchargeQ (superchargeQ psi) = discreteLaplacian psi := by
   rfl
+
+section RealMajoranaLayer
+
+variable {E : Type*}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/-- Real Majorana doubled core used by the strictly real lattice layer. -/
+noncomputable abbrev X := cl11DoubledCore E
+
+/-- Majorana-valued lattice states over the Hurwitz shell coordinates. -/
+abbrev MajoranaState := HurwitzNode → X (E := E)
+
+/-- Polymorphic nearest-neighbor hop aggregator over the 24-shell. -/
+def hop {V : Type*} [AddCommMonoid V] (ψ : HurwitzNode → V) (q : HurwitzNode) : V :=
+  Finset.sum hurwitzDirections (fun i => ψ (q + hurwitzDirection i))
+
+/-- Prior (first) leg of a Majorana-valued state. -/
+def priorPart (ψ : MajoranaState (E := E)) : HurwitzNode → E :=
+  fun q => WithLp.fst (ψ q)
+
+/-- Data (second) leg of a Majorana-valued state. -/
+def dataPart (ψ : MajoranaState (E := E)) : HurwitzNode → E :=
+  fun q => WithLp.snd (ψ q)
+
+/--
+Strictly real supercharge on the doubled core:
+off-diagonal exchange of hopped prior/data legs.
+-/
+noncomputable def superchargeMajorana (ψ : MajoranaState (E := E)) (q : HurwitzNode) :
+    X (E := E) :=
+  InfoGeometry.Krein.to_doubled
+    (hop (dataPart (E := E) ψ) q)
+    (hop (priorPart (E := E) ψ) q)
+
+/-- Hamiltonian induced by the real supercharge (`Q^2` by construction). -/
+noncomputable def latticeHamiltonianMajorana (ψ : MajoranaState (E := E)) (q : HurwitzNode) :
+    X (E := E) :=
+  superchargeMajorana (E := E) (fun x => superchargeMajorana (E := E) ψ x) q
+
+/-- Operator-imaginary axis inherited from the real Majorana core. -/
+noncomputable def K : X (E := E) →ₗ[ℝ] X (E := E) :=
+  (cl11DoubledCore E).K
+
+@[simp] theorem K_sq :
+    (K (E := E)).comp (K (E := E)) = -((LinearMap.id : X (E := E) →ₗ[ℝ] X (E := E))) := by
+  simpa [K] using (cl11DoubledCore E).K_sq
+
+end RealMajoranaLayer
 
 end
 

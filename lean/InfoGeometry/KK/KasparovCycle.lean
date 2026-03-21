@@ -112,6 +112,28 @@ theorem index_bridge_spectral [FiniteDimensional ℝ H]
       hNoEig)
 
 /--
+Frontier materialization (candidate 1):
+the spectral bridge yields explicit index transport from the Kasparov seed.
+-/
+theorem auto_index_bridge_spectral_from_seed_1 [FiniteDimensional ℝ H]
+    (hF : X.F * X.F = 1) :
+    ∀ s : ℝ,
+      InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
+        ((fun _ : ℝ => X.F.toLinearMap) s)
+        ((fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap) s)
+        = X.analyticalIndex := by
+  intro s
+  have hInv := index_bridge_spectral (X := X) hF
+  calc
+    InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
+        ((fun _ : ℝ => X.F.toLinearMap) s)
+        ((fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap) s)
+        = InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
+            ((fun _ : ℝ => X.F.toLinearMap) 0)
+            ((fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap) 0) := hInv s
+    _ = X.analyticalIndex := rfl
+
+/--
 Transport the KK analytical index through any path whose analytical index is
 already known to be invariant and whose baseline agrees with the Kasparov data.
 -/

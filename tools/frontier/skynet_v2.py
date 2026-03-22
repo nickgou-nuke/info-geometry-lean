@@ -15,7 +15,7 @@ if __package__ in (None, ""):
     import sys
 
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from pathing import repo_root
+    from tools.pathing import repo_root
 else:
     from tools.pathing import repo_root
 

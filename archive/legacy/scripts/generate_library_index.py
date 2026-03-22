@@ -16,7 +16,7 @@ from typing import Any
 
 if __package__ is None or __package__ == "":
     # Support direct execution: `python3 scripts/generate_library_index.py`
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from tools.graph import ProjectGraph
 from tools.pathing import default_docs_map_root, normalize_user_path

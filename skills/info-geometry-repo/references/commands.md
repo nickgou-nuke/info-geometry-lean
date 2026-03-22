@@ -5,13 +5,13 @@
 Canonical umbrella:
 
 ```bash
-python3 tools/run_locked_lake_build.py InfoGeometry.Canonical.All
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.Canonical.All
 ```
 
 Full rebuild:
 
 ```bash
-python3 tools/run_locked_lake_build.py -R
+python3 tools/infra/run_locked_lake_build.py -R
 ```
 
 DAG tooling:
@@ -21,7 +21,7 @@ lake build DAG semanticBlockExport semanticBlockServer
 lake build scripts.DAG.Exploration.HarvestDiagnostics
 lake build scripts.DAG.Exploration.LiftNaturalityDiagnostics
 lake build scripts.DAG.Exploration.NaturalityPromoter
-python3 -m py_compile tools/skynet_v2.py
+python3 -m py_compile tools/frontier/skynet_v2.py
 ```
 
 ## Authoritative declaration DAG and blueprint workflow
@@ -29,11 +29,11 @@ python3 -m py_compile tools/skynet_v2.py
 Refresh the public declaration graph and the LeanArchitect-facing blueprint surface:
 
 ```bash
-python3 tools/refresh_decl_graph.py
-python3 tools/refresh_blueprint_tags.py
-python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags
-python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprint
-python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprintJson
+python3 tools/infra/refresh_decl_graph.py
+python3 tools/infra/refresh_blueprint_tags.py
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprint
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprintJson
 ```
 
 The declaration DAG lives in `artifacts/dag/`.
@@ -44,7 +44,7 @@ The human-facing blueprint workflow is documented in `blueprint/README.md`.
 Template:
 
 ```bash
-python3 tools/semantic_block_export.py \
+python3 tools/frontier/semantic_block_export.py \
   lean/InfoGeometry/Canonical/<Module>.lean \
   reports/dag/<Module>.semantic-block.stdlib.json \
   --server-mode stdlib \
@@ -67,7 +67,7 @@ Known-good heavy examples:
 Reverse consumer search from the KK seed:
 
 ```bash
-python3 tools/skynet_v2.py \
+python3 tools/frontier/skynet_v2.py \
   --input reports/dag/KasparovCycle.semantic-block.stdlib.json \
   --input reports/dag/AnalyticalIndex.semantic-block.stdlib.json \
   --input reports/dag/OperatorAlgebraBridge.semantic-block.stdlib.json \
@@ -82,7 +82,7 @@ python3 tools/skynet_v2.py \
 Local bridge kernel around the seed:
 
 ```bash
-python3 tools/skynet_v2.py \
+python3 tools/frontier/skynet_v2.py \
   --input reports/dag/KasparovCycle.semantic-block.stdlib.json \
   --input reports/dag/AnalyticalIndex.semantic-block.stdlib.json \
   --input reports/dag/OperatorAlgebraBridge.semantic-block.stdlib.json \
@@ -97,7 +97,7 @@ python3 tools/skynet_v2.py \
 ## Generated status page
 
 ```bash
-python3 tools/generate_auto_docs.py
+python3 tools/docs/generate_auto_docs.py
 ```
 
 ## End-to-end documentation refresh
@@ -105,33 +105,33 @@ python3 tools/generate_auto_docs.py
 Using the current trusted semantic export set:
 
 ```bash
-python3 tools/update_repo_docs.py
+python3 tools/docs/update_repo_docs.py
 ```
 
 Refreshing the tracked heavy-module subset first:
 
 ```bash
-python3 tools/update_repo_docs.py --refresh-exports
+python3 tools/docs/update_repo_docs.py --refresh-exports
 ```
 
 Refreshing every current semantic export first:
 
 ```bash
-python3 tools/update_repo_docs.py --refresh-exports all
+python3 tools/docs/update_repo_docs.py --refresh-exports all
 ```
 
 Refreshing tracked Lean modules changed in `HEAD` or the current index/worktree first:
 
 ```bash
-python3 tools/update_repo_docs.py --refresh-exports changed
+python3 tools/docs/update_repo_docs.py --refresh-exports changed
 ```
 
 Refresh the public authoritative declaration graph and regenerate the causal-order report:
 
 ```bash
-python3 tools/refresh_decl_graph.py
+python3 tools/infra/refresh_decl_graph.py
 
-python3 tools/generate_causal_report.py \
+python3 tools/infra/generate_causal_report.py \
   --out reports/dag/true-root-order.md \
   --json-out reports/dag/true-root-order.json
 ```
@@ -139,7 +139,7 @@ python3 tools/generate_causal_report.py \
 OpenClaw target selector from the current causal-order JSON:
 
 ```bash
-python3 tools/select_openclaw_target.py \
+python3 tools/infra/select_openclaw_target.py \
   --input reports/dag/true-root-order.json \
   --json-out reports/dag/openclaw-targets.json \
   --md-out reports/dag/openclaw-targets.md
@@ -284,16 +284,19 @@ python3 tools/run_optimization_cycle.py \
   --candidate-index 0
 ```
 
-## Declaration-level exports
+## Compatibility / auxiliary declaration exports
 
-Forward graph:
+The authoritative declaration-DAG workflow is the `artifacts/dag/` lane above.
+Use the commands below only for compatibility checks or one-off auxiliary diagnostics.
+
+Legacy forward graph compatibility export:
 
 ```bash
 lake env lean --run lean/DAG/ExportForwardGraph.lean \
   InfoGeometry docs-map/module_graph.json InfoGeometry
 ```
 
-Skeleton:
+Auxiliary skeleton export:
 
 ```bash
 lake env lean --run lean/DAG/SkeletonExport.lean \

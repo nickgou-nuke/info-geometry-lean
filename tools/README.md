@@ -3,6 +3,14 @@
 This directory contains the Python-side orchestration for the InfoGeometry DAG,
 audit, frontier, and optimization workflows.
 
+Canonical maintained entrypoints now live under:
+- [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md)
+- [tools/frontier/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/frontier/README.md)
+- [tools/docs/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/docs/README.md)
+
+Top-level `tools/*.py` entrypoints remain as compatibility wrappers for now, but
+the subdirectories above are the supported canonical paths.
+
 Read this hierarchy in order:
 
 1. [README.md](/home/goutev/LEAN4/info-geometry-lean/README.md)
@@ -25,13 +33,13 @@ Inputs:
 - `artifacts/dag/index/decls.jsonl`
 
 Authoritative refresh path:
-- [refresh_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/refresh_decl_graph.py)
+- [refresh_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/refresh_decl_graph.py)
 - [Indexer.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/Indexer.lean)
 
 Primary Python consumers:
-- [generate_causal_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_causal_report.py)
-- [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/select_openclaw_target.py)
-- [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/classify_missing_all.py)
+- [generate_causal_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_causal_report.py)
+- [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py)
+- [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/classify_missing_all.py)
 
 Use this lane when the question is:
 - what is the root set?
@@ -46,14 +54,14 @@ Inputs:
 - `artifacts/dag/index/decls.jsonl`
 
 Authoritative refresh path:
-- [refresh_blueprint_tags.py](/home/goutev/LEAN4/info-geometry-lean/tools/refresh_blueprint_tags.py)
+- [refresh_blueprint_tags.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/refresh_blueprint_tags.py)
 - [auto_blueprints.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/auto_blueprints.lean)
 - [BlueprintTags.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/BlueprintTags.lean)
 
 Primary build consumers:
-- `python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags`
-- `python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprint`
-- `python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprintJson`
+- `python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags`
+- `python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprint`
+- `python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprintJson`
 
 Use this lane when the question is:
 - which declarations are blueprint-covered?
@@ -65,12 +73,12 @@ Use this lane when the question is:
 Use this for heavy-file semantic structure and frontier discovery.
 
 Authoritative exporter:
-- [semantic_block_export.py](/home/goutev/LEAN4/info-geometry-lean/tools/semantic_block_export.py)
+- [semantic_block_export.py](/home/goutev/LEAN4/info-geometry-lean/tools/frontier/semantic_block_export.py)
 
 Primary consumers:
-- [skynet_v2.py](/home/goutev/LEAN4/info-geometry-lean/tools/skynet_v2.py)
-- [generate_auto_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_auto_docs.py)
-- [update_repo_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/update_repo_docs.py)
+- [skynet_v2.py](/home/goutev/LEAN4/info-geometry-lean/tools/frontier/skynet_v2.py)
+- [generate_auto_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/docs/generate_auto_docs.py)
+- [update_repo_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/docs/update_repo_docs.py)
 
 Use this lane when the question is:
 - what is the semantic frontier around a heavy theorem?

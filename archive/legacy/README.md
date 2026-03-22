@@ -9,10 +9,10 @@ search directions. Treat them as design archaeology, not as current entrypoints.
 
 Current authoritative automation lives in:
 
-- `tools/semantic_block_export.py`
-- `tools/skynet_v2.py`
-- `tools/generate_auto_docs.py`
-- `tools/update_repo_docs.py`
+- `tools/frontier/semantic_block_export.py`
+- `tools/frontier/skynet_v2.py`
+- `tools/docs/generate_auto_docs.py`
+- `tools/docs/update_repo_docs.py`
 
 Current active Lean tooling lives primarily in:
 
@@ -22,6 +22,7 @@ Current active Lean tooling lives primarily in:
 Archived here:
 
 - legacy autonomous proof-discovery scripts from the old `skynet` path
+- legacy graph/bootstrap blueprint generators archived from `scripts/` and `scripts/docs/`
 - archived declaration-graph wrapper now served through `tools/graph.py` as a compatibility shim
 - scratch Lean files removed from the package build surface
 

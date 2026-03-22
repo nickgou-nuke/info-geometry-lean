@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """LEGACY bulk blueprint tag generator from `docs-map/declarations.json`.
 
-The supported current workflow is `tools/refresh_blueprint_tags.py`, which uses
+The supported current workflow is `tools/infra/refresh_blueprint_tags.py`, which uses
 the public declaration DAG export under `artifacts/dag/`. Keep this script only
 for compatibility with the older `docs-map` lane.
 
@@ -22,7 +22,7 @@ import sys
 
 if __package__ is None or __package__ == "":
     # Support direct execution: `python3 scripts/docs/auto_tag.py ...`
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.utils import prefix_match
 

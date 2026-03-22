@@ -74,7 +74,7 @@ Use this as a fast semantic map before interrogating the repository with an agen
 
 ```text
 Read docs/keyword_index.md first.
-Then run lake build -R.
+Then run python3 tools/infra/run_locked_lake_build.py -R InfoGeometry.All.
 Then map each major claim to exact theorem names and file paths.
 Separate proved statements from physical interpretation.
 ```

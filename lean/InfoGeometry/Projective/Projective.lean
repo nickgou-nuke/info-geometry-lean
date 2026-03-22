@@ -9,6 +9,8 @@ Defines projective rays, the quotient, and ray-invariance of normalization.
 namespace InfoGeometry.Projective.Projective
 end InfoGeometry.Projective.Projective
 
+namespace InfoGeometry
+
 namespace PositiveMeasure
 
 variable {α : Type u}
@@ -79,3 +81,5 @@ lemma normalize_scale (c : ℝ) (hc : 0 < c) (μ : PositiveMeasure α ℝ) :
 
 end NormalizeGauge
 end PositiveMeasure
+
+end InfoGeometry

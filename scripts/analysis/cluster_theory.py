@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# scripts/cluster_theory.py  (patched: outputs full membership + stable hub + keeps samples)
+# LEGACY clustering tool over the older full_graph.json lane.
+# Keep for exploratory theory clustering only; it is not the authoritative causal-order pipeline.
 
 import argparse
 import json

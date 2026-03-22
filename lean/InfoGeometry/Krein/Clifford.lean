@@ -4,6 +4,8 @@ import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Clifford.SplitQ11
 import Mathlib.Tactic.Module
 
+namespace InfoGeometry.Krein
+
 /-!
 # Krein-Clifford Bridge
 
@@ -147,6 +149,7 @@ lemma rho_ι_isKreinSelfAdjoint (v : V) :
 
 end SymmetricCliffordModule
 
+
 namespace KreinSpace
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [KreinSpace H]
@@ -158,8 +161,6 @@ noncomputable abbrev kreinQForm : QuadraticForm ℝ H := kreinQuad (H := H)
 noncomputable abbrev KreinClifford := CliffordAlgebra (kreinQForm (H := H))
 
 end KreinSpace
-
-namespace InfoGeometry.Krein
 
 section Phase5Concrete
 

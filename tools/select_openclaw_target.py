@@ -355,8 +355,9 @@ def render_markdown(result: dict[str, Any]) -> str:
     lines.append(f"- roots: `{summary.get('roots', 0)}`")
     lines.append(f"- capstones: `{summary.get('capstones', 0)}`")
     if coverage:
-        lines.append(f"- declaration-index files: `{coverage.get('decl_index_files', 0)}` / repo Lean files `{coverage.get('repo_lean_files', 0)}`")
-        lines.append(f"- missing Lean files from graph coverage: `{coverage.get('missing_repo_files_count', 0)}`")
+        lines.append(f"- declaration-index files: `{coverage.get('decl_index_files', 0)}` / declaration-bearing source files `{coverage.get('repo_decl_files', coverage.get('repo_lean_files', 0))}`")
+        lines.append(f"- import-only / umbrella Lean files: `{coverage.get('import_only_files_count', 0)}`")
+        lines.append(f"- missing declaration-bearing files from graph coverage: `{coverage.get('missing_decl_files_count', coverage.get('missing_repo_files_count', 0))}`")
         lines.append(f"- debt files outside graph coverage: `{coverage.get('uncovered_debt_file_count', 0)}`")
     lines.append("")
     if coverage.get("is_partial"):

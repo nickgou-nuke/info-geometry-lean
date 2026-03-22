@@ -13,15 +13,13 @@ import networkx as nx
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
-    from tools.graph import ProjectGraph
-    from tools.pathing import repo_root
+    from tools.pathing import default_decl_graph_file, default_decl_metadata_file, repo_root
 else:
-    from tools.graph import ProjectGraph
-    from tools.pathing import repo_root
+    from tools.pathing import default_decl_graph_file, default_decl_metadata_file, repo_root
 
 
-DEFAULT_GRAPH = ".build/full_graph.json"
-DEFAULT_DECLS = ".build/index/decls.jsonl"
+DEFAULT_GRAPH = str(default_decl_graph_file().relative_to(repo_root()))
+DEFAULT_DECLS = str(default_decl_metadata_file().relative_to(repo_root()))
 DEFAULT_THINNESS_INDEX = "BRIDGE_THINNESS_INDEX.md"
 DEFAULT_VACUITY_INDEX = "VACUITY_INDEX.md"
 DEFAULT_SURROGATE_INDEX = "SURROGATE_INDEX.md"
@@ -45,6 +43,25 @@ INDEX_WEIGHTS = {
     "vacuity": 2.5,
     "surrogate": 3.0,
 }
+
+NOISE_LABEL_PATTERNS = (
+    '._',
+    '.match_',
+    '.proof_',
+    '.brecOn',
+    '.below',
+    '.injEq',
+    '.sizeOf_spec',
+)
+
+
+def is_noise_label(name: str) -> bool:
+    return any(pattern in name for pattern in NOISE_LABEL_PATTERNS)
+
+
+DECLARATION_SURFACE_RE = re.compile(
+    r"(?m)^[ \t]*(?:@[^\n]*\n[ \t]*)*(?:(?:protected|private|noncomputable|unsafe|partial|scoped)\s+)*(?:theorem|lemma|def|abbrev|inductive|structure|class|instance|axiom|opaque|syntax|macro_rules|macro|elab|declare_syntax_cat|notation|infixl|infixr|infix|prefix|postfix|mixfix)\b"
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -110,6 +127,53 @@ def collect_repo_lean_files(root: Path) -> list[str]:
     if not base.exists():
         return []
     return sorted(str(path.relative_to(root)) for path in base.rglob("*.lean"))
+
+
+def strip_lean_comments(source: str) -> str:
+    out: list[str] = []
+    i = 0
+    n = len(source)
+    block_depth = 0
+    while i < n:
+        if block_depth > 0:
+            if source.startswith("/-", i):
+                block_depth += 1
+                i += 2
+                continue
+            if source.startswith("-/", i):
+                block_depth -= 1
+                i += 2
+                continue
+            if source[i] == "\n":
+                out.append("\n")
+            i += 1
+            continue
+
+        if source.startswith("--", i):
+            j = source.find("\n", i)
+            if j == -1:
+                break
+            out.append("\n")
+            i = j + 1
+            continue
+        if source.startswith("/-", i):
+            block_depth = 1
+            i += 2
+            continue
+
+        out.append(source[i])
+        i += 1
+
+    return "".join(out)
+
+
+def file_has_declaration_surface(path: Path) -> bool:
+    try:
+        source = path.read_text(encoding="utf-8")
+    except OSError:
+        return False
+    stripped = strip_lean_comments(source)
+    return bool(DECLARATION_SURFACE_RE.search(stripped))
 
 
 def load_decl_metadata(path: Path, root: Path) -> dict[str, dict[str, Any]]:
@@ -216,7 +280,16 @@ def compute_graph_coverage(
     )
     covered_decl_file_set = set(covered_decl_files)
     repo_files = collect_repo_lean_files(root)
-    missing_repo_files = sorted(path for path in repo_files if path not in covered_decl_file_set)
+
+    decl_bearing_files: list[str] = []
+    import_only_files: list[str] = []
+    for rel_path in repo_files:
+        if file_has_declaration_surface(root / rel_path):
+            decl_bearing_files.append(rel_path)
+        else:
+            import_only_files.append(rel_path)
+
+    missing_decl_files = sorted(path for path in decl_bearing_files if path not in covered_decl_file_set)
 
     uncovered_debt_by_file: dict[str, dict[str, Any]] = {}
     for index_name, findings in findings_by_index.items():
@@ -261,24 +334,45 @@ def compute_graph_coverage(
 
     return {
         "repo_lean_files": len(repo_files),
+        "repo_decl_files": len(decl_bearing_files),
         "decl_index_files": len(covered_decl_files),
-        "missing_repo_files_count": len(missing_repo_files),
-        "missing_repo_files": missing_repo_files,
-        "is_partial": len(missing_repo_files) > 0,
+        "import_only_files_count": len(import_only_files),
+        "import_only_files": import_only_files,
+        "missing_decl_files_count": len(missing_decl_files),
+        "missing_decl_files": missing_decl_files,
+        "missing_repo_files_count": len(missing_decl_files),
+        "missing_repo_files": missing_decl_files,
+        "is_partial": len(missing_decl_files) > 0,
         "uncovered_debt_files": uncovered_debt_files,
         "uncovered_debt_file_count": len(uncovered_debt_files),
     }
 
 
-def build_dependency_graph(graph_path: Path) -> tuple[ProjectGraph, nx.DiGraph]:
-    project_graph = ProjectGraph(graph_path=graph_path)
-    clean = project_graph.filter_noise().copy()
+def build_dependency_graph(graph_path: Path) -> nx.DiGraph:
+    obj = json.loads(graph_path.read_text(encoding="utf-8"))
+    raw_nodes = [str(name) for name in obj.get("nodes", [])]
+    keep = {name for name in raw_nodes if not is_noise_label(name)}
+
     dep_g = nx.DiGraph()
-    dep_g.add_nodes_from(clean.nodes())
-    for src, dst in clean.edges():
-        if src != dst:
-            dep_g.add_edge(src, dst)
-    return project_graph, dep_g
+    dep_g.add_nodes_from(sorted(keep))
+
+    forward = obj.get("forward", [])
+    for src_idx, adj in enumerate(forward):
+        if src_idx >= len(raw_nodes):
+            continue
+        src = raw_nodes[src_idx]
+        if src not in keep or not isinstance(adj, list):
+            continue
+        for item in adj:
+            if not isinstance(item, list) or len(item) != 2:
+                continue
+            dst_idx, _kind = item
+            if not isinstance(dst_idx, int) or dst_idx < 0 or dst_idx >= len(raw_nodes):
+                continue
+            dst = raw_nodes[dst_idx]
+            if dst in keep and src != dst:
+                dep_g.add_edge(src, dst)
+    return dep_g
 
 
 def component_representative(members: set[str]) -> str:
@@ -602,8 +696,10 @@ def build_report_payload(
             "audit_counts": audit_counts,
             "graph_coverage": {
                 "repo_lean_files": coverage["repo_lean_files"],
+                "repo_decl_files": coverage["repo_decl_files"],
                 "decl_index_files": coverage["decl_index_files"],
-                "missing_repo_files_count": coverage["missing_repo_files_count"],
+                "import_only_files_count": coverage["import_only_files_count"],
+                "missing_decl_files_count": coverage["missing_decl_files_count"],
                 "is_partial": coverage["is_partial"],
                 "uncovered_debt_file_count": coverage["uncovered_debt_file_count"],
             },
@@ -671,7 +767,8 @@ def render_markdown(payload: dict[str, Any]) -> str:
     lines.append("")
     lines.append("Trusted inputs and outputs are split intentionally:")
     lines.append("")
-    lines.append("- `.build/full_graph.json` and `.build/index/decls.jsonl` are the trusted declaration-graph inputs")
+    lines.append("- `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl` are the public authoritative declaration-graph inputs")
+    lines.append("- `.build/` remains a transient Lean build cache and compatibility fallback, not the documented public DAG surface")
     lines.append("- `reports/dag/true-root-order.{md,json}` are derived causal-order reports")
     lines.append("- `reports/dag/openclaw-targets.{md,json}` are derived operational rankings on top of that causal report")
     lines.append("")
@@ -693,21 +790,30 @@ def render_markdown(payload: dict[str, Any]) -> str:
     lines.append(f"- vacuity findings: `{audit_counts.get('vacuity', 0)}`")
     lines.append(f"- surrogate findings: `{audit_counts.get('surrogate', 0)}`")
     lines.append(f"- repo Lean files under `lean/InfoGeometry`: `{coverage.get('repo_lean_files', 0)}`")
+    lines.append(f"- declaration-bearing source files under `lean/InfoGeometry`: `{coverage.get('repo_decl_files', 0)}`")
+    lines.append(f"- import-only / umbrella Lean files: `{coverage.get('import_only_files_count', 0)}`")
     lines.append(f"- declaration-index files in current `.build` graph: `{coverage.get('decl_index_files', 0)}`")
-    lines.append(f"- missing Lean files from declaration graph coverage: `{coverage.get('missing_repo_files_count', 0)}`")
+    lines.append(f"- missing declaration-bearing files from graph coverage: `{coverage.get('missing_decl_files_count', 0)}`")
     lines.append(f"- debt files currently outside graph coverage: `{coverage.get('uncovered_debt_file_count', 0)}`")
     lines.append("")
     lines.append("## Coverage Warning")
     if coverage.get("is_partial"):
         lines.append(
-            "- The current `.build` declaration graph is partial relative to the live `lean/InfoGeometry` tree, "
-            "so causal-order rankings do not cover the full repository."
+            "- The current `.build` declaration graph is partial relative to the live declaration-bearing `lean/InfoGeometry` files."
+        )
+        lines.append(
+            "- Import-only and umbrella files are counted separately and do not trigger this coverage gate."
         )
         lines.append(
             "- Any debt file listed below is invisible to the current graph-based inertia ranking and must not be treated as resolved."
         )
     else:
-        lines.append("- The current `.build` declaration graph covers the live `lean/InfoGeometry` tree.")
+        lines.append(
+            "- The current `.build` declaration graph covers the live declaration-bearing `lean/InfoGeometry` files."
+        )
+        lines.append(
+            "- Import-only and umbrella files are counted separately and do not trigger the coverage gate."
+        )
     uncovered_debt_files = coverage.get("uncovered_debt_files", [])
     if uncovered_debt_files:
         lines.append("")
@@ -718,10 +824,10 @@ def render_markdown(payload: dict[str, Any]) -> str:
                 f"- `{row.get('file')}{line_suffix}` | score `{row.get('score', 0.0):.2f}` | "
                 f"indices `{', '.join(row.get('indices', [])) or '-'}` | priorities `{', '.join(row.get('priorities', [])) or '-'}`"
             )
-    if coverage.get("missing_repo_files"):
+    if coverage.get("missing_decl_files"):
         lines.append("")
-        lines.append("### First Missing Lean Files")
-        for file_name in coverage["missing_repo_files"][:20]:
+        lines.append("### First Missing Declaration-Bearing Lean Files")
+        for file_name in coverage["missing_decl_files"][:20]:
             lines.append(f"- `{file_name}`")
     lines.append("")
     lines.append("## Root Set")
@@ -830,7 +936,7 @@ def main() -> int:
         surrogate_path,
     )
 
-    _project_graph, dep_g = build_dependency_graph(graph_path)
+    dep_g = build_dependency_graph(graph_path)
     components, _comp_of, dep_comp_g = scc_condensation(dep_g)
     causal_g = dep_comp_g.reverse(copy=True)
     min_depth, max_depth, best_pred = compute_depths(causal_g)
@@ -865,7 +971,7 @@ def main() -> int:
     if coverage.get("is_partial") and not args.allow_partial_coverage:
         errors.append(
             "declaration graph coverage is partial "
-            f"({coverage.get('decl_index_files', 0)} / {coverage.get('repo_lean_files', 0)} files)"
+            f"({coverage.get('decl_index_files', 0)} / {coverage.get('repo_decl_files', 0)} declaration-bearing files)"
         )
     if coverage.get("uncovered_debt_file_count", 0) and not args.allow_uncovered_debt:
         errors.append(

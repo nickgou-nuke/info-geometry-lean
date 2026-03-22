@@ -5,13 +5,13 @@
 Canonical umbrella:
 
 ```bash
-lake build InfoGeometry.Canonical.All
+python3 tools/run_locked_lake_build.py InfoGeometry.Canonical.All
 ```
 
 Full rebuild:
 
 ```bash
-lake build -R
+python3 tools/run_locked_lake_build.py -R
 ```
 
 DAG tooling:
@@ -23,6 +23,21 @@ lake build scripts.DAG.Exploration.LiftNaturalityDiagnostics
 lake build scripts.DAG.Exploration.NaturalityPromoter
 python3 -m py_compile tools/skynet_v2.py
 ```
+
+## Authoritative declaration DAG and blueprint workflow
+
+Refresh the public declaration graph and the LeanArchitect-facing blueprint surface:
+
+```bash
+python3 tools/refresh_decl_graph.py
+python3 tools/refresh_blueprint_tags.py
+python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags
+python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprint
+python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprintJson
+```
+
+The declaration DAG lives in `artifacts/dag/`.
+The human-facing blueprint workflow is documented in `blueprint/README.md`.
 
 ## Trusted semantic block export
 
@@ -111,12 +126,12 @@ Refreshing tracked Lean modules changed in `HEAD` or the current index/worktree 
 python3 tools/update_repo_docs.py --refresh-exports changed
 ```
 
-Absolute causal-order report from the trusted declaration graph artifacts under `.build/`:
+Refresh the public authoritative declaration graph and regenerate the causal-order report:
 
 ```bash
+python3 tools/refresh_decl_graph.py
+
 python3 tools/generate_causal_report.py \
-  --graph .build/full_graph.json \
-  --decls .build/index/decls.jsonl \
   --out reports/dag/true-root-order.md \
   --json-out reports/dag/true-root-order.json
 ```

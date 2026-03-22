@@ -8,10 +8,11 @@ import Mathlib.Tactic
 KL-like decomposition, gauge reduction, and mass-matching results.
 -/
 
-universe u
 
-namespace InfoGeometry.Projective.GaugeReduction
-end InfoGeometry.Projective.GaugeReduction
+namespace InfoGeometry
+
+namespace Projective.GaugeReduction
+end Projective.GaugeReduction
 
 namespace PositiveMeasure
 
@@ -50,6 +51,7 @@ lemma generalizedKL_eq_klLike_add_Z (μ ν : PositiveMeasure α ℝ) :
           + ((∑ x ∈ (Finset.univ : Finset α), ν x)
               - (∑ x ∈ (Finset.univ : Finset α), μ x)) := by
             ring
+    _ = klLike (α := α) μ ν + (Z (α := α) (R := ℝ) ν - Z (α := α) (R := ℝ) μ) := rfl
 
 /-- If masses match, generalized KL collapses to the log-ratio sum. -/
 @[simp]
@@ -187,52 +189,52 @@ lemma generalizedKL_projective_radial_decomposition [Nonempty α]
     intro a ha
     rw [hμpt a, hνpt a]
   have hkl :
-      klLike (α := α) μ ν
+    klLike (α := α) μ ν
+      =
+    Z (α := α) (R := ℝ) μ
+      * klLike (α := α)
+          (normalize (α := α) (R := ℝ) μ)
+          (normalize (α := α) (R := ℝ) ν)
+      + Z (α := α) (R := ℝ) μ * Real.log
+          (Z (α := α) (R := ℝ) μ / Z (α := α) (R := ℝ) ν) := by
+  calc
+    klLike (α := α) μ ν
         =
+      klLike (α := α)
+        (scale (Z (α := α) (R := ℝ) μ)
+          (Z_pos (α := α) (R := ℝ) μ)
+          (normalize (α := α) (R := ℝ) μ))
+        (scale (Z (α := α) (R := ℝ) ν)
+          (Z_pos (α := α) (R := ℝ) ν)
+          (normalize (α := α) (R := ℝ) ν)) := by
+          exact hkl_scale_to_original.symm
+    _ =
       Z (α := α) (R := ℝ) μ
         * klLike (α := α)
             (normalize (α := α) (R := ℝ) μ)
             (normalize (α := α) (R := ℝ) ν)
-        + Z (α := α) (R := ℝ) μ * Real.log
-            (Z (α := α) (R := ℝ) μ / Z (α := α) (R := ℝ) ν) := by
-    calc
-      klLike (α := α) μ ν
-          =
-        klLike (α := α)
-          (scale (Z (α := α) (R := ℝ) μ)
-            (Z_pos (α := α) (R := ℝ) μ)
-            (normalize (α := α) (R := ℝ) μ))
-          (scale (Z (α := α) (R := ℝ) ν)
-            (Z_pos (α := α) (R := ℝ) ν)
-            (normalize (α := α) (R := ℝ) ν)) := by
-            exact hkl_scale_to_original.symm
-      _ =
-        Z (α := α) (R := ℝ) μ
-          * klLike (α := α)
-              (normalize (α := α) (R := ℝ) μ)
-              (normalize (α := α) (R := ℝ) ν)
-          +
-        Z (α := α) (R := ℝ) μ
-          * Z (α := α) (R := ℝ) (normalize (α := α) (R := ℝ) μ)
-          * Real.log (Z (α := α) (R := ℝ) μ / Z (α := α) (R := ℝ) ν) := by
-            simpa using
-              klLike_scale_scale_two (α := α)
-                (c := Z (α := α) (R := ℝ) μ)
-                (d := Z (α := α) (R := ℝ) ν)
-                (hc := Z_pos (α := α) (R := ℝ) μ)
-                (hd := Z_pos (α := α) (R := ℝ) ν)
-                (μ := normalize (α := α) (R := ℝ) μ)
-                (ν := normalize (α := α) (R := ℝ) ν)
-      _ =
-        Z (α := α) (R := ℝ) μ
-          * klLike (α := α)
-              (normalize (α := α) (R := ℝ) μ)
-              (normalize (α := α) (R := ℝ) ν)
-          +
-        Z (α := α) (R := ℝ) μ
-          * Real.log (Z (α := α) (R := ℝ) μ / Z (α := α) (R := ℝ) ν) := by
-            rw [Z_normalize (α := α) (R := ℝ) μ]
-            ring
+        +
+      Z (α := α) (R := ℝ) μ
+        * Z (α := α) (R := ℝ) (normalize (α := α) (R := ℝ) μ)
+        * Real.log (Z (α := α) (R := ℝ) μ / Z (α := α) (R := ℝ) ν) := by
+          simpa using
+            klLike_scale_scale_two (α := α)
+              (c := Z (α := α) (R := ℝ) μ)
+              (d := Z (α := α) (R := ℝ) ν)
+              (hc := Z_pos (α := α) (R := ℝ) μ)
+              (hd := Z_pos (α := α) (R := ℝ) ν)
+              (μ := normalize (α := α) (R := ℝ) μ)
+              (ν := normalize (α := α) (R := ℝ) ν)
+    _ =
+      Z (α := α) (R := ℝ) μ
+        * klLike (α := α)
+            (normalize (α := α) (R := ℝ) μ)
+            (normalize (α := α) (R := ℝ) ν)
+        +
+      Z (α := α) (R := ℝ) μ
+        * Real.log (Z (α := α) (R := ℝ) μ / Z (α := α) (R := ℝ) ν) := by
+          rw [Z_normalize (α := α) (R := ℝ) μ]
+          ring
   have hnorm :
       generalizedKL (α := α)
           (normalize (α := α) (R := ℝ) μ)
@@ -330,3 +332,5 @@ lemma generalizedKL_scale_scale (c : ℝ) (hc : 0 < c)
           simp [Finset.mul_sum]
 
 end PositiveMeasure
+
+end InfoGeometry

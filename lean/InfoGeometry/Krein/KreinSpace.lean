@@ -36,8 +36,7 @@ set_option maxRecDepth 10000
 
 open scoped InnerProductSpace
 
-/-! ## The KreinSpace Typeclass -/
-
+namespace InfoGeometry.Krein
 /-- A **real Krein space**: a complete real inner product space with a fundamental symmetry `J`.
 
 **Usage**: `variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [KreinSpace H]`
@@ -415,3 +414,6 @@ noncomputable def conjKreinEquiv {H K : Type*}
     (U : KreinEquiv H K) :
     (H →L[ℝ] H) ≃ₐ[ℝ] (K →L[ℝ] K) :=
   ContinuousLinearEquiv.conjContinuousAlgEquiv U.toContinuousLinearEquiv
+
+
+end InfoGeometry.Krein

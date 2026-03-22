@@ -13,6 +13,7 @@ Read these first:
 
 1. `/home/goutev/LEAN4/info-geometry-lean/README.md`
 2. `/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md`
+3. `/home/goutev/LEAN4/info-geometry-lean/tools/README.md`
 
 Then read only the specific reference file(s) you need from `references/`.
 
@@ -43,10 +44,11 @@ Do not mix these graph views:
 For large files, semantic block export through the external stdlib server path is the trusted route.
 
 Artifact placement matters:
-- `.build/full_graph.json` and `.build/index/decls.jsonl` are the trusted declaration-level inputs for causal-order analysis.
+- `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl` are the public authoritative declaration-level inputs for causal-order analysis.
+- `.build/` remains a transient build cache and explicit compatibility fallback, not the documented public DAG surface.
 - `reports/dag/*.semantic-block.stdlib.json` are trusted semantic block exports.
 - `reports/dag/true-root-order.{md,json}` and `reports/dag/openclaw-targets.{md,json}` are derived reports and should be regenerated, not hand-maintained.
-- If those layers disagree, trust the `.build/` declaration graph as the source of causal order and regenerate the `reports/dag/` views.
+- If those layers disagree, trust the `artifacts/dag/` declaration graph as the source of causal order and regenerate the `reports/dag/` views.
 
 ## Hard Proof Policy
 
@@ -68,9 +70,11 @@ Treat vacuous success as failure for frontier accounting.
 
 2. Build only what you need first.
 
-3. Prefer semantic block export for heavy capstone modules.
+3. For full or umbrella builds, use `python3 tools/run_locked_lake_build.py ...` and never start two of them concurrently.
 
-4. Treat generated `reports/dag/` artifacts as disposable outputs, not tracked source.
+4. Prefer semantic block export for heavy capstone modules.
+
+5. Treat generated `reports/dag/` artifacts as disposable outputs, not tracked source.
 
 ## Trusted Heavy-File Export Path
 

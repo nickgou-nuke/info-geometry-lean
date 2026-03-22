@@ -2,6 +2,8 @@ import Mathlib.Data.Finset.Lattice.Fold
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
 
+namespace InfoGeometry
+
 section LargeDeviations
 
 /-- Finite-parameter Cramér transform (Legendre-Fenchel on a finite grid `Θ`). -/
@@ -79,3 +81,5 @@ lemma cramerRateOn_singleton (θ0 : ℝ) (ψ : ℝ → ℝ) (η : ℝ) :
     exact le_rfl
 
 end LargeDeviations
+
+end InfoGeometry

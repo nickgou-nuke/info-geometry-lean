@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-"""Generate Lean file containing bulk `attribute [blueprint]` annotations
-for declarations listed in docs-map/declarations.json.
+"""LEGACY bulk blueprint tag generator from `docs-map/declarations.json`.
+
+The supported current workflow is `tools/refresh_blueprint_tags.py`, which uses
+the public declaration DAG export under `artifacts/dag/`. Keep this script only
+for compatibility with the older `docs-map` lane.
 
 Coverage tagging only. Keep curated milestone labels as explicit
 `@[blueprint "label"]` in source files.

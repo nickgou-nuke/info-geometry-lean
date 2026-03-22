@@ -5,11 +5,11 @@ Status:
 - authoritative for current metrics/frontier snapshot
 - preferred refresh path: `python3 tools/update_repo_docs.py`
 - low-level generator: `python3 tools/generate_auto_docs.py`
-- declaration-level causal-order inputs live under `.build/`; derived frontier/causal reports live under `reports/dag/`
+- declaration-level causal-order inputs live under `artifacts/dag/`; derived frontier/causal reports live under `reports/dag/`
 
 ## Repository Scale
-- Lean files under `lean/`: **456**
-- Lean LOC under `lean/`: **75,387**
+- Lean files under `lean/`: **475**
+- Lean LOC under `lean/`: **75,847**
 
 ## Trusted Semantic Exports
 | Module | Semantic nodes | Semantic edges | Skeleton nodes | Top hubs |
@@ -53,13 +53,15 @@ Status:
 ## Current Reading Order
 1. `README.md`
 2. `lean/DAG/README.md`
-3. `skills/info-geometry-repo/references/frontier-prompt.md`
-4. `skills/info-geometry-repo/references/bridge-candidates.md`
+3. `tools/README.md`
+4. `skills/info-geometry-repo/references/frontier-prompt.md`
+5. `skills/info-geometry-repo/references/bridge-candidates.md`
 
 ## Notes
 - This page is a generated status view, not a narrative design document.
-- Trusted declaration graph inputs for causal-order analysis live under `.build/full_graph.json` and `.build/index/decls.jsonl`.
-- Treat causal-order rankings as provisional until `reports/dag/true-root-order.md` shows no coverage warning; the current `.build` graph may be partial.
+- Trusted declaration graph inputs for causal-order analysis live under `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`.
+- Treat causal-order rankings as provisional until `reports/dag/true-root-order.md` shows no coverage warning; the public `artifacts/dag/` graph may still be partial if `InfoGeometry.All` omits declaration-bearing branches.
+- Use `reports/dag/missing-all-classification.md` to classify the remaining declaration-bearing files outside `InfoGeometry.All` into direct imports, branch-façade expansions, namespace fixes, and noncanonical exclusions.
 - Generated semantic exports and derived frontier/causal JSONs under `reports/dag/` are intentionally untracked.
 - Historical crosswalk/intake documents may still exist, but this page reflects the current trusted bridge workflow.
 

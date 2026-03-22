@@ -23,8 +23,9 @@ Archived here:
 
 - legacy autonomous proof-discovery scripts from the old `skynet` path
 - legacy graph/bootstrap blueprint generators archived from `scripts/` and `scripts/docs/`
+- archived docs-map/module-graph compatibility lane (`make_graph.py`, `refactor_plan.py`, and `GraphExport.lean`)
 - archived declaration-graph wrapper now served through `tools/graph.py` as a compatibility shim
-- scratch Lean files removed from the package build surface
+- dummy, timeout-probe, and duplicate-shadow Lean files removed from the package build surface
 
 Practical rule:
 

@@ -63,6 +63,14 @@ DECLARATION_SURFACE_RE = re.compile(
     r"(?m)^[ \t]*(?:@[^\n]*\n[ \t]*)*(?:(?:protected|private|noncomputable|unsafe|partial|scoped)\s+)*(?:theorem|lemma|def|abbrev|inductive|structure|class|instance|axiom|opaque|syntax|macro_rules|macro|elab|declare_syntax_cat|notation|infixl|infixr|infix|prefix|postfix|mixfix)\b"
 )
 
+COVERAGE_EXCLUDE_PREFIXES = (
+    "lean/InfoGeometry/Unstable/",
+)
+
+
+def is_coverage_excluded(rel_path: str) -> bool:
+    return any(rel_path.startswith(prefix) for prefix in COVERAGE_EXCLUDE_PREFIXES)
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -275,11 +283,13 @@ def compute_graph_coverage(
         {
             str(meta.get("file", "")).strip()
             for meta in decl_meta.values()
-            if str(meta.get("file", "")).strip()
+            if str(meta.get("file", "")).strip() and not is_coverage_excluded(str(meta.get("file", "")).strip())
         }
     )
     covered_decl_file_set = set(covered_decl_files)
-    repo_files = collect_repo_lean_files(root)
+    all_repo_files = collect_repo_lean_files(root)
+    excluded_repo_files = sorted(path for path in all_repo_files if is_coverage_excluded(path))
+    repo_files = [path for path in all_repo_files if not is_coverage_excluded(path)]
 
     decl_bearing_files: list[str] = []
     import_only_files: list[str] = []
@@ -295,7 +305,7 @@ def compute_graph_coverage(
     for index_name, findings in findings_by_index.items():
         for finding in findings:
             file_name = str(finding.get("file", "")).strip()
-            if not file_name or file_name in covered_decl_file_set:
+            if not file_name or file_name in covered_decl_file_set or is_coverage_excluded(file_name):
                 continue
             entry = uncovered_debt_by_file.setdefault(
                 file_name,
@@ -336,6 +346,8 @@ def compute_graph_coverage(
         "repo_lean_files": len(repo_files),
         "repo_decl_files": len(decl_bearing_files),
         "decl_index_files": len(covered_decl_files),
+        "excluded_lean_files_count": len(excluded_repo_files),
+        "excluded_lean_files": excluded_repo_files,
         "import_only_files_count": len(import_only_files),
         "import_only_files": import_only_files,
         "missing_decl_files_count": len(missing_decl_files),
@@ -789,30 +801,31 @@ def render_markdown(payload: dict[str, Any]) -> str:
     lines.append(f"- thinness findings: `{audit_counts.get('thinness', 0)}`")
     lines.append(f"- vacuity findings: `{audit_counts.get('vacuity', 0)}`")
     lines.append(f"- surrogate findings: `{audit_counts.get('surrogate', 0)}`")
-    lines.append(f"- repo Lean files under `lean/InfoGeometry`: `{coverage.get('repo_lean_files', 0)}`")
-    lines.append(f"- declaration-bearing source files under `lean/InfoGeometry`: `{coverage.get('repo_decl_files', 0)}`")
+    lines.append(f"- repo Lean files under `lean/InfoGeometry` in coverage scope: `{coverage.get('repo_lean_files', 0)}`")
+    lines.append(f"- declaration-bearing source files in coverage scope: `{coverage.get('repo_decl_files', 0)}`")
+    lines.append(f"- excluded quarantine Lean files: `{coverage.get('excluded_lean_files_count', 0)}`")
     lines.append(f"- import-only / umbrella Lean files: `{coverage.get('import_only_files_count', 0)}`")
-    lines.append(f"- declaration-index files in current `.build` graph: `{coverage.get('decl_index_files', 0)}`")
+    lines.append(f"- declaration-index files in authoritative `artifacts/dag` graph: `{coverage.get('decl_index_files', 0)}`")
     lines.append(f"- missing declaration-bearing files from graph coverage: `{coverage.get('missing_decl_files_count', 0)}`")
     lines.append(f"- debt files currently outside graph coverage: `{coverage.get('uncovered_debt_file_count', 0)}`")
     lines.append("")
     lines.append("## Coverage Warning")
     if coverage.get("is_partial"):
         lines.append(
-            "- The current `.build` declaration graph is partial relative to the live declaration-bearing `lean/InfoGeometry` files."
+            "- The authoritative `artifacts/dag` declaration graph is partial relative to the live in-scope declaration-bearing `lean/InfoGeometry` files."
         )
         lines.append(
-            "- Import-only and umbrella files are counted separately and do not trigger this coverage gate."
+            "- Quarantine files under `lean/InfoGeometry/Unstable/` are excluded from this coverage gate; import-only umbrella files are also counted separately."
         )
         lines.append(
             "- Any debt file listed below is invisible to the current graph-based inertia ranking and must not be treated as resolved."
         )
     else:
         lines.append(
-            "- The current `.build` declaration graph covers the live declaration-bearing `lean/InfoGeometry` files."
+            "- The authoritative `artifacts/dag` declaration graph covers the live in-scope declaration-bearing `lean/InfoGeometry` files."
         )
         lines.append(
-            "- Import-only and umbrella files are counted separately and do not trigger the coverage gate."
+            "- Quarantine files under `lean/InfoGeometry/Unstable/` are excluded from this coverage gate; import-only umbrella files are also counted separately."
         )
     uncovered_debt_files = coverage.get("uncovered_debt_files", [])
     if uncovered_debt_files:

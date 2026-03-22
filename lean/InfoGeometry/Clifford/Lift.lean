@@ -90,3 +90,39 @@ lemma cl11Rep_pseudoscalar :
   simpa [Q11, cl11Rep] using (InfoGeometry.Krein.cl11Rep_pseudoscalar (E := E))
 
 end KreinClifford
+
+
+namespace InfoGeometry.Clifford.Lift
+
+/-- Canonical namespaced alias for the split `Cl(1,1)` quadratic form. -/
+noncomputable abbrev Q11 : QuadraticForm ℝ (ℝ × ℝ) := _root_.Q11
+
+@[simp] lemma Q11_apply (v : ℝ × ℝ) : Q11 v = v.1 * v.1 - v.2 * v.2 := by
+  simpa [Q11] using (_root_.Q11_apply v)
+
+export InfoGeometry.Krein
+  ( modular_j_complex_i_anticommute
+    cl11RepLin
+    cl11RepLin_sq
+    cl11Rep
+    cl11Rep_ι_apply
+    cl11Rep_ι_one_zero
+    cl11Rep_ι_zero_one
+    cl11Rep_ι_one_zero_sq
+    cl11Rep_ι_zero_one_sq
+    cl11Rep_ι_one_zero_anticommute_ι_zero_one
+    cl11Rep_pseudoscalar )
+
+section KreinClifford
+
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+omit [CompleteSpace E] in
+lemma cl11RepLin_apply_pair (a b : ℝ) (x y : E) :
+    cl11RepLin (E := E) (a, b) (InfoGeometry.Krein.to_doubled x y)
+      = InfoGeometry.Krein.to_doubled ((a - b) • y) ((a + b) • x) := by
+  simpa using (_root_.cl11RepLin_apply_pair (E := E) a b x y)
+
+end KreinClifford
+
+end InfoGeometry.Clifford.Lift

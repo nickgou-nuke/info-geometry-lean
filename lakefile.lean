@@ -68,8 +68,6 @@ lean_lib Docs where
 lean_lib Socratic where
   globs := #[.andSubmodules `Socratic]
 
-@[default_target]
-lean_lib InfoGeometry.GraphExport
 
 @[default_target]
 lean_lib InfoGeometry where

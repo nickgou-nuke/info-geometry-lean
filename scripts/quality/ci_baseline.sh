@@ -1,35 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# LEGACY docs-map baseline.
-# This script still exercises the older module-graph lane for compatibility.
-# The authoritative declaration DAG refresh path is `python3 tools/infra/refresh_decl_graph.py`.
-#
+# Current declaration-DAG baseline.
+# This script deliberately avoids the archived docs-map/module_graph lane.
 # Steps kept here:
-# 1) full build
-# 2) graph extraction with per-module probe
-# 3) deterministic refactor plan
+# 1) locked public build
+# 2) authoritative declaration-DAG refresh
+# 3) rooted causal-order / coverage refresh
+# 4) missing-All classification refresh
 
-python3 tools/infra/run_locked_lake_build.py
-python3 -m scripts make-graph --probe-unresolved --out docs-map/graph.json
-python3 -m scripts refactor-plan \
-  --module-graph docs-map/module_graph.json \
-  --errors .artifacts/nonbuildable_errors.json \
-  --out docs-map/refactor_plan.md
-
-python3 - <<'PY'
-import json
-from pathlib import Path
-
-data = json.loads(Path("docs-map/module_graph.json").read_text(encoding="utf-8"))
-non_buildable = data.get("non_buildable_modules", [])
-offenders = [m for m in non_buildable if not m.startswith("InfoGeometry.Archive.Drafts.")]
-
-if offenders:
-    print("[ci_baseline] non-archive non-buildable modules detected:")
-    for m in offenders:
-        print(f"  - {m}")
-    raise SystemExit(1)
-
-print(f"[ci_baseline] OK: {len(non_buildable)} non-buildable modules, all in Archive/Drafts.")
-PY
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.All
+python3 tools/infra/refresh_decl_graph.py
+python3 tools/infra/generate_causal_report.py \
+  --out reports/dag/true-root-order.md \
+  --json-out reports/dag/true-root-order.json
+python3 tools/infra/classify_missing_all.py

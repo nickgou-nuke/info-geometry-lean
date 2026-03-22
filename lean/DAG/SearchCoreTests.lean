@@ -5,26 +5,26 @@ open DAG.SearchCore
 namespace DAG
 
 def sampleNames : Array String := #[
-  "InfoGeometry.Foo.alpha",
-  "InfoGeometry.Bar.beta",
+  "Test.Foo.alpha",
+  "Test.Bar.beta",
   "DAG.SearchRank.searchEnv",
   "Socratic.Core"
 ]
 
-example : containsCI "InfoGeometry.Foo.alpha" "foo" = true := by
+example : containsCI "Test.Foo.alpha" "foo" = true := by
   native_decide
 
-example : containsCI "InfoGeometry.Foo.alpha" "zzz" = false := by
-  native_decide
-
-example :
-    queryContains sampleNames "InfoGeometry" =
-      #["InfoGeometry.Foo.alpha", "InfoGeometry.Bar.beta"] := by
+example : containsCI "Test.Foo.alpha" "zzz" = false := by
   native_decide
 
 example :
-    queryContainsCI sampleNames "infogeometry" =
-      #["InfoGeometry.Foo.alpha", "InfoGeometry.Bar.beta"] := by
+    queryContains sampleNames "Test" =
+      #["Test.Foo.alpha", "Test.Bar.beta"] := by
+  native_decide
+
+example :
+    queryContainsCI sampleNames "test" =
+      #["Test.Foo.alpha", "Test.Bar.beta"] := by
   native_decide
 
 example : (queryContainsWithCount sampleNames "search").2 = 1 := by

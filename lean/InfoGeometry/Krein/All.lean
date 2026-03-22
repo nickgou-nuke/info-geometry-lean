@@ -39,7 +39,6 @@ import InfoGeometry.Krein.Dilation
 import InfoGeometry.Krein.ExponentialIsometry
 import InfoGeometry.Krein.Prelude
 import InfoGeometry.Krein.DoubledSpaceMatrix
-import InfoGeometry.Krein.TestTimeout
 import InfoGeometry.Krein.README
 
 /-!

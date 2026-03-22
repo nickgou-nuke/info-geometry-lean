@@ -7,7 +7,7 @@ Use these scripts for:
 - authoritative declaration-DAG refresh under `artifacts/dag/`
 - blueprint tag refresh and LeanArchitect preparation
 - locked build execution
-- causal-order reporting and `InfoGeometry.All` coverage classification
+- causal-order reporting, theorem-surface classification, full and filtered NetworkX graph exports, and `InfoGeometry.All` coverage classification
 
 Canonical entrypoints:
 - [refresh_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/refresh_decl_graph.py)
@@ -15,6 +15,8 @@ Canonical entrypoints:
 - [run_locked_lake_build.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/run_locked_lake_build.py)
 - [generate_causal_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_causal_report.py)
 - [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/classify_missing_all.py)
+- [generate_theorem_surface_index.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_theorem_surface_index.py)
+- [plot_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/plot_decl_graph.py)
 - [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py)
 
 Rule:
@@ -23,3 +25,5 @@ Rule:
 
 Top-level `tools/*.py` entrypoints remain as compatibility wrappers, but this
 directory is the canonical maintained surface.
+
+Outputs from `plot_decl_graph.py` include both the full declaration/module graphs and the filtered theorem-surface frontier graphs under `reports/dag/`.

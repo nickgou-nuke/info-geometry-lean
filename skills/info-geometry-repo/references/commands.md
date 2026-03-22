@@ -145,6 +145,26 @@ python3 tools/infra/select_openclaw_target.py \
   --md-out reports/dag/openclaw-targets.md
 ```
 
+Theorem-surface classifier from the current declaration export and live debt indices:
+
+```bash
+python3 tools/infra/generate_theorem_surface_index.py \
+  --md-out reports/dag/theorem-surface-index.md \
+  --json-out reports/dag/theorem-surface-index.json
+```
+
+Declaration DAG NetworkX export, readable module plot, and filtered theorem-surface frontier view:
+
+```bash
+python3 tools/infra/plot_decl_graph.py \
+  --decl-graphml-out reports/dag/declaration-networkx.graphml \
+  --module-graphml-out reports/dag/module-networkx.graphml \
+  --module-svg-out reports/dag/module-networkx.svg \
+  --frontier-decl-graphml-out reports/dag/declaration-networkx-frontier.graphml \
+  --frontier-module-graphml-out reports/dag/module-networkx-frontier.graphml \
+  --frontier-module-svg-out reports/dag/module-networkx-frontier.svg
+```
+
 Self-optimization cycle sheet:
 
 ```bash
@@ -289,12 +309,9 @@ python3 tools/run_optimization_cycle.py \
 The authoritative declaration-DAG workflow is the `artifacts/dag/` lane above.
 Use the commands below only for compatibility checks or one-off auxiliary diagnostics.
 
-Legacy forward graph compatibility export:
+Legacy forward/module-graph export: archived.
 
-```bash
-lake env lean --run lean/DAG/ExportForwardGraph.lean \
-  InfoGeometry docs-map/module_graph.json InfoGeometry
-```
+If you need the old docs-map/module_graph lane for historical comparison, use the archived helper under `archive/legacy/scripts/make_graph.py`.
 
 Auxiliary skeleton export:
 

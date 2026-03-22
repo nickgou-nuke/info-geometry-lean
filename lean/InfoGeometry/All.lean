@@ -19,7 +19,6 @@ import InfoGeometry.Singular.All
 import InfoGeometry.Thermo.All
 import InfoGeometry.Volume.All
 
-import InfoGeometry.Bar
 import InfoGeometry.Basic
 import InfoGeometry.Cartan
 import InfoGeometry.Cramer

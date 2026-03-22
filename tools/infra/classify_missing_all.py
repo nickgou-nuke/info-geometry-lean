@@ -15,13 +15,6 @@ else:
 
 
 EXCLUDE_NONCANONICAL = {
-    'lean/InfoGeometry/Bar.lean',
-    'lean/InfoGeometry/Foo.lean',
-    'lean/InfoGeometry/GraphExport.lean',
-    'lean/InfoGeometry/Krein/TestTimeout.lean',
-    'lean/InfoGeometry/Unstable/IBSurrogates.lean',
-    'lean/InfoGeometry/Unstable/SingularUnitaryBridge.lean',
-    'lean/InfoGeometry/Unstable/YangMillsBridge.lean',
 }
 
 NAMESPACE_OR_ATTRIBUTION_FIX = {
@@ -35,7 +28,6 @@ NAMESPACE_OR_ATTRIBUTION_FIX = {
 }
 
 DUPLICATE_OR_SHADOW = {
-    'lean/InfoGeometry/Clifford/SplitTower.lean',
 }
 
 DIRECT_CANONICAL_PREFIXES = (
@@ -162,11 +154,9 @@ def main() -> int:
 
     notes = [
         'This report is a canonicalization plan, not a proof of semantic validity; every listed file already compiles in the default `InfoGeometry` library build.',
-        'Files under `exclude_noncanonical` are intentionally not candidates for the public umbrella because they are tooling, unstable wrappers, timeout probes, or trivial stubs.',
+        'Files under `lean/InfoGeometry/Unstable/` are treated as quarantine and excluded from the authoritative `InfoGeometry.All` coverage metric.',
+        'Legacy scaffolding such as the old GraphExport compatibility lane and dummy fixture modules were archived out of `lean/InfoGeometry` in favor of the authoritative `artifacts/dag` pipeline.',
         'Files under `namespace_or_attribution_fix` are not clean umbrella omissions; at least part of the problem is that their public declarations live under a shifted namespace or are poorly attributed by the declaration exporter.',
-        'Example: `Projective/Normalize.lean` publishes key declarations under `PositiveMeasure.*`, and `Krein/Superalgebra.lean` publishes under `KreinGradedModule.*`.',
-        'Example: `Clifford/SplitTower.lean` appears shadowed by `Clifford/Tower.lean` in the declaration index and should be deduplicated before any umbrella import decision.',
-        'The safest next import pass is: add the remaining `Canonical/*` direct candidates first, then expand branch façades for projective/measure/quantum/singular branches, then fix namespace-attribution mismatches.',
     ]
 
     payload = {

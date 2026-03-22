@@ -31,3 +31,19 @@ def μ₀_example : Fin 3 → ℝ := fun _ => 1
 
 -- #eval generalizedKL μ_example ν_example μ₀_example
 -- evaluation disabled because `Real.log` is noncomputable
+
+
+namespace InfoGeometry.Canonical
+
+/-- Canonical namespaced surface for the finite unnormalized generalized KL divergence. -/
+noncomputable abbrev generalizedKL {α : Type*} [Fintype α]
+    (μ ν μ₀ : α → ℝ) : ℝ :=
+  _root_.generalizedKL μ ν μ₀
+
+abbrev μ_example : Fin 3 → ℝ := _root_.μ_example
+
+abbrev ν_example : Fin 3 → ℝ := _root_.ν_example
+
+abbrev μ₀_example : Fin 3 → ℝ := _root_.μ₀_example
+
+end InfoGeometry.Canonical

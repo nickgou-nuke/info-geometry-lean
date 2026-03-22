@@ -23,7 +23,7 @@ It serves as the formal proof backbone for the `thermofit` Python package.
 open scoped BigOperators
 open Matrix
 
-namespace FUSION
+namespace InfoGeometry.Canonical.FUSION
 
 -- Define abstract sets for our Data and Parameter space
 variable {Data : Type} [Fintype Data] [Nonempty Data]

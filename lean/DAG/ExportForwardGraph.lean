@@ -2,6 +2,18 @@ import Lean
 import Lean.Data.Json
 import DAG.Basic
 
+/-!
+# DAG.ExportForwardGraph
+
+Compatibility forward-graph exporter.
+
+This file still exports a declaration DAG as a simple forward adjacency JSON,
+but it is no longer the authoritative repository-wide causal-order pipeline.
+For the current trusted declaration export, use `tools/refresh_decl_graph.py`
+(or `lean/DAG/Indexer.lean` directly) and consume
+`artifacts/dag/full_graph.json` together with `artifacts/dag/index/decls.jsonl`.
+-/
+
 open Lean
 open DAG
 

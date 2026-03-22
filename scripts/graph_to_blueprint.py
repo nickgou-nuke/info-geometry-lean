@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
-"""Annotate Lean source with `@[blueprint]` tags from a dependency graph.
+"""LEGACY bootstrap tool for annotating Lean source with `@[blueprint]` tags from `docs-map/graph.json`.
 
-This script bootstraps blueprint coverage directly from `graph.json` without
-LaTeX input. It can:
+This script belongs to the older graph-only blueprint lane. The supported current
+workflow is:
+- `python3 tools/refresh_decl_graph.py`
+- `python3 tools/refresh_blueprint_tags.py`
+- `lake build InfoGeometry.BlueprintTags:blueprint`
+
+Keep this script for archaeology or one-off conversions only. It can:
 - select declarations from the graph (optionally by module prefix / component),
 - resolve declarations to source files,
 - insert inline `@[blueprint ...]` attributes at declaration positions,

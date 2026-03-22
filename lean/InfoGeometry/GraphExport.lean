@@ -11,9 +11,14 @@ namespace InfoGeometry
 /-!
 `ExportGraph.lean`
 
+Legacy compatibility exporter for older Python/JSON graph consumers.
+
 Dump the dependency graph produced by `DAG.buildGraphFromEnv` as
 JSON.  The graph format is intentionally minimal, suitable for post‑processing
 in Python or other tools.
+
+For the current public declaration DAG lane, use `tools/refresh_decl_graph.py`
+which wraps `lean/DAG/Indexer.lean` and writes to `artifacts/dag/`.
 
 Usage:
 

@@ -10,24 +10,26 @@ open Lean
 /-!
 `ExportDecls.lean`
 
-Exports a JSON inventory of "real" declarations (theorems/defs/axioms/opaque/inductives)
+Compatibility declaration-inventory exporter.
+
+This file still exports a filtered JSON inventory of "real" declarations (theorems/defs/axioms/opaque/inductives)
 from a loaded Lean environment, with optional dependency filtering by namespace.
 
 Usage:
-  lake env lean --run lean/scripts/ExportDecls.lean
+  lake env lean --run lean/DAG/ExportDecls.lean
     <import-module> <namespace-prefix> <output.json> [deps-prefix]
 
 Examples:
   -- Export declarations in namespace `InfoGeometry`, keep all deps
-  lake env lean --run lean/scripts/ExportDecls.lean
+  lake env lean --run lean/DAG/ExportDecls.lean
     InfoGeometry InfoGeometry docs-map/declarations.json
 
   -- Export declarations in namespace `InfoGeometry`, keep only `InfoGeometry.*` deps
-  lake env lean --run lean/scripts/ExportDecls.lean
+  lake env lean --run lean/DAG/ExportDecls.lean
     InfoGeometry InfoGeometry docs-map/declarations.json InfoGeometry
 
   -- Inspection mode (no namespace filter): use "*" (or "")
-  lake env lean --run lean/scripts/ExportDecls.lean
+  lake env lean --run lean/DAG/ExportDecls.lean
     InfoGeometry "*" docs-map/declarations.debug.json
 -/
 
@@ -243,12 +245,12 @@ def main (args : List String) : IO UInt32 := do
           "[deps-prefix]"
       IO.eprintln "examples:"
       IO.eprintln <|
-        "  lake env lean --run lean/scripts/ExportDecls.lean " ++
+        "  lake env lean --run lean/DAG/ExportDecls.lean " ++
           "InfoGeometry.Core,InfoGeometry.Convex InfoGeometry docs-map/declarations.json"
       IO.eprintln <|
-        "  lake env lean --run lean/scripts/ExportDecls.lean " ++
+        "  lake env lean --run lean/DAG/ExportDecls.lean " ++
           "InfoGeometry.Core InfoGeometry docs-map/declarations.json InfoGeometry"
       IO.eprintln <|
-        "  lake env lean --run lean/scripts/ExportDecls.lean " ++
+        "  lake env lean --run lean/DAG/ExportDecls.lean " ++
           "InfoGeometry.Core \"*\" docs-map/declarations.debug.json"
       return 1

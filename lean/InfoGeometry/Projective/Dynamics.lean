@@ -6,8 +6,11 @@ import InfoGeometry.Projective.ProjectiveMap
 Projective dynamical maps induced by the doubled-space `Cl(1,1)` operators.
 -/
 
-namespace InfoGeometry.Projective.Dynamics
-end InfoGeometry.Projective.Dynamics
+
+namespace InfoGeometry
+
+namespace Projective.Dynamics
+end Projective.Dynamics
 
 section KreinClifford
 
@@ -53,7 +56,7 @@ lemma projectiveMap_neg_id :
   have hsmul : projectivize (E := E) ((-1 : Gauge) • v) = projectivize (E := E) v := by
     simpa using (projectivize_smul (E := E) (-1 : Gauge) v)
   simpa using hsmul
-
+  
 /-- `J² = Id` on projective states. -/
 lemma J_sq :
     (J (E := E)) ∘ (J (E := E)) = id := by
@@ -61,7 +64,7 @@ lemma J_sq :
     (J (E := E)) ∘ (J (E := E))
         = projectiveMap (E := E) ((modular_j (E := E)).comp (modular_j (E := E))) := by
             symm
-            simpa [J] using
+            simpa [ProjectiveDynamics.J] using
               (projectiveMap_comp (E := E) (modular_j (E := E)) (modular_j (E := E)))
     _ = projectiveMap (E := E) (ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
           simp [modular_j_involution (E := E)]
@@ -75,7 +78,7 @@ lemma epsilon_sq :
         = projectiveMap (E := E)
             ((spectral_epsilon (E := E)).comp (spectral_epsilon (E := E))) := by
               symm
-              simpa [epsilon] using
+              simpa [ProjectiveDynamics.epsilon] using
                 (projectiveMap_comp (E := E)
                   (spectral_epsilon (E := E)) (spectral_epsilon (E := E)))
     _ = projectiveMap (E := E) (ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
@@ -89,7 +92,7 @@ lemma I_sq :
     (I (E := E)) ∘ (I (E := E))
         = projectiveMap (E := E) ((complex_i (E := E)).comp (complex_i (E := E))) := by
             symm
-            simpa [I] using
+            simpa [ProjectiveDynamics.I] using
               (projectiveMap_comp (E := E) (complex_i (E := E)) (complex_i (E := E)))
     _ = projectiveMap (E := E) (-(ContinuousLinearMap.id ℝ (DoubledSpace E))) := by
           rw [complex_i_sq (E := E)]
@@ -107,3 +110,5 @@ lemma I_sq :
 end ProjectiveDynamics
 
 end KreinClifford
+
+end InfoGeometry

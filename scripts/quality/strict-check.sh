@@ -2,7 +2,7 @@
 set -euo pipefail
 
 echo "[strict-check] building canonical entrypoints with warnings as errors"
-lake build InfoGeometry --wfail
+python3 tools/run_locked_lake_build.py InfoGeometry --wfail
 
 echo "[strict-check] elaborating InfoGeometry/Library.lean"
 lake env lean lean/InfoGeometry/Library.lean

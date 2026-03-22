@@ -12,6 +12,8 @@ This module defines the categorical structure for real Krein spaces:
 open CategoryTheory
 open scoped InnerProductSpace
 
+namespace InfoGeometry.Krein
+
 /-- Bundled object for the category of real Krein spaces. -/
 structure Krein where
   H : Type*
@@ -38,3 +40,5 @@ noncomputable instance : Category Krein where
         rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.comp_apply, g.isometric, f.isometric] }
 
 end Krein
+
+end InfoGeometry.Krein

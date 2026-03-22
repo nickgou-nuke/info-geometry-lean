@@ -1,0 +1,117 @@
+# Tooling Hierarchy
+
+This directory contains the Python-side orchestration for the InfoGeometry DAG,
+audit, frontier, and optimization workflows.
+
+Read this hierarchy in order:
+
+1. [README.md](/home/goutev/LEAN4/info-geometry-lean/README.md)
+- repository-wide proof policy, trusted artifact placement, and current-vs-legacy split
+
+2. [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
+- Lean-side graph engine, export lanes, and authoritative declaration/semantic workflows
+
+3. `tools/README.md` (this file)
+- Python orchestration hierarchy and script status
+
+## Current Hierarchy
+
+### Level 1: Authoritative declaration-DAG pipeline
+
+Use this for causal order, coverage, and rooted partial-order analysis.
+
+Inputs:
+- `artifacts/dag/full_graph.json`
+- `artifacts/dag/index/decls.jsonl`
+
+Authoritative refresh path:
+- [refresh_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/refresh_decl_graph.py)
+- [Indexer.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/Indexer.lean)
+
+Primary Python consumers:
+- [generate_causal_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_causal_report.py)
+- [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/select_openclaw_target.py)
+- [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/classify_missing_all.py)
+
+Use this lane when the question is:
+- what is the root set?
+- what is the true causal order?
+- which declaration-bearing files are still outside `InfoGeometry.All`?
+
+### Level 2: Authoritative blueprint / LeanArchitect pipeline
+
+Use this for theorem-level blueprint coverage and exact LeanArchitect extraction.
+
+Inputs:
+- `artifacts/dag/index/decls.jsonl`
+
+Authoritative refresh path:
+- [refresh_blueprint_tags.py](/home/goutev/LEAN4/info-geometry-lean/tools/refresh_blueprint_tags.py)
+- [auto_blueprints.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/auto_blueprints.lean)
+- [BlueprintTags.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/BlueprintTags.lean)
+
+Primary build consumers:
+- `python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags`
+- `python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprint`
+- `python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprintJson`
+
+Use this lane when the question is:
+- which declarations are blueprint-covered?
+- what exact TeX / JSON does LeanArchitect emit for the current theory surface?
+- how do I separate exhaustive formal node extraction from curated mathematical exposition?
+
+### Level 3: Authoritative semantic-block pipeline
+
+Use this for heavy-file semantic structure and frontier discovery.
+
+Authoritative exporter:
+- [semantic_block_export.py](/home/goutev/LEAN4/info-geometry-lean/tools/semantic_block_export.py)
+
+Primary consumers:
+- [skynet_v2.py](/home/goutev/LEAN4/info-geometry-lean/tools/skynet_v2.py)
+- [generate_auto_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_auto_docs.py)
+- [update_repo_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/update_repo_docs.py)
+
+Use this lane when the question is:
+- what is the semantic frontier around a heavy theorem?
+- which semantic blocks bridge KK -> AnalyticalIndex -> GrandSynthesis?
+- what is the human-facing block structure of a capstone file?
+
+### Level 4: Current audit/report generators
+
+These are current and supported, but they are report generators rather than graph roots.
+
+- [generate_surrogate_index.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_surrogate_index.py)
+- [generate_vacuity_index.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_vacuity_index.py)
+- [generate_bridge_thinness_index.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_bridge_thinness_index.py)
+- [generate_unification_index.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_unification_index.py)
+- [generate_bridge_candidates.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_bridge_candidates.py)
+- [generate_debt_candidates.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_debt_candidates.py)
+- [generate_llm_frontier_prompts.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_llm_frontier_prompts.py)
+- [generate_llm_debt_prompts.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_llm_debt_prompts.py)
+- [generate_self_optimization_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_self_optimization_report.py)
+
+### Level 5: Current quarantine/optimization lane
+
+These are current, but operational rather than canonical.
+
+- [run_optimization_cycle.py](/home/goutev/LEAN4/info-geometry-lean/tools/run_optimization_cycle.py)
+- [proof_driver.py](/home/goutev/LEAN4/info-geometry-lean/tools/proof_driver.py)
+- [failure_correction_driver.py](/home/goutev/LEAN4/info-geometry-lean/tools/failure_correction_driver.py)
+- [build_lock.py](/home/goutev/LEAN4/info-geometry-lean/tools/build_lock.py)
+
+### Level 6: Compatibility / limited / legacy surfaces
+
+These still exist for older consumers or ad hoc inspection, but they are not the canonical causal-order source of truth.
+
+- [graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/graph.py)
+  Compatibility shim that re-exports the archived NetworkX wrapper from `archive/legacy/scripts/graph.py`.
+- any workflow centered on `docs-map/graph.json`
+  Compatibility only. Do not treat it as the authoritative causal substrate.
+
+## Practical Rule
+
+If there is disagreement between layers:
+- trust the declaration DAG in `artifacts/dag/` for causal order
+- trust semantic block JSONs in `reports/dag/*.semantic-block.stdlib.json` for human-facing heavy-file structure
+- regenerate derived markdown/JSON reports instead of editing them by hand

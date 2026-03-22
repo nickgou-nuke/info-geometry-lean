@@ -257,7 +257,7 @@ def indexerMain (args : List String) : IO UInt32 := do
     match args with
     | [m, ns, o]      => pure (m, ns, o, "full_graph.json")
     | [m, ns, o, go]  => pure (m, ns, o, go)
-    | _               => pure ("InfoGeometry.Library", "InfoGeometry", "index", "full_graph.json")
+    | _               => pure ("InfoGeometry.All", "InfoGeometry", "artifacts/dag/index", "artifacts/dag/full_graph.json")
 
   let env ← importModules (parseImports importModsStr) {} 0
   let coreContext : Core.Context := { fileName := "<Indexer>", fileMap := default }

@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Generate a deterministic LaTeX index from the exported dependency graph."""
+"""LEGACY compatibility generator for the exhaustive LaTeX library index.
+
+This script still depends on `tools.graph` and the older graph wrapper surface.
+Prefer the dedicated `InfoGeometry.BlueprintTags` LeanArchitect lane for exact
+formal extraction, with curated narrative assembled under `blueprint/README.md`.
+"""
 from __future__ import annotations
 
 import argparse

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# scripts/build_theory_manifest.py (patched: merges decls+morphisms+topology+clusters, validates completeness)
+# LEGACY manifest builder over the older full_graph/theory_toc/topological_metrics lane.
+# Keep for archaeology and one-off comparisons; prefer artifacts/dag + the current causal report stack.
 
 import argparse
 import json

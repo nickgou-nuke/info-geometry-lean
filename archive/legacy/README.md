@@ -22,6 +22,7 @@ Current active Lean tooling lives primarily in:
 Archived here:
 
 - legacy autonomous proof-discovery scripts from the old `skynet` path
+- archived declaration-graph wrapper now served through `tools/graph.py` as a compatibility shim
 - scratch Lean files removed from the package build surface
 
 Practical rule:

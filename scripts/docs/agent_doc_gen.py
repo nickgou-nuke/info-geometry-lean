@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Generate LaTeX documentation for a declaration and graph-neighborhood."""
+"""LEGACY compatibility generator for local declaration-neighborhood LaTeX stubs.
+
+This script still depends on `tools.graph` and the older graph wrapper lane.
+Prefer the authoritative blueprint workflow centered on `InfoGeometry.BlueprintTags`
+and LeanArchitect outputs.
+"""
 from __future__ import annotations
 
 import argparse

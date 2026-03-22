@@ -182,3 +182,46 @@ noncomputable def omegaScaleOnQuotient :
     omegaScaleOnQuotient (Quotient.mk _ P) = P.omegaScale := rfl
 
 end PrequantumData
+
+
+namespace InfoGeometry.Prequantum.Scaling
+
+/-- Canonical namespaced façade for the scalarized prequantum scaling data. -/
+abbrev PrequantumData := _root_.PrequantumData
+
+namespace PrequantumData
+
+@[ext] theorem ext
+    {P Q : PrequantumData}
+    (hOmega : P.omegaScale = Q.omegaScale)
+    (hCurv : P.curvatureScale = Q.curvatureScale)
+    (hHbar : P.hbar = Q.hbar) :
+    P = Q := by
+  simpa using (_root_.PrequantumData.ext hOmega hCurv hHbar)
+
+noncomputable abbrev rescaleHbar
+    (P : PrequantumData) (c : ℝ) (hc : c ≠ 0) : PrequantumData :=
+  _root_.PrequantumData.rescaleHbar P c hc
+
+abbrev Gauge := _root_.PrequantumData.Gauge
+
+abbrev connectionScale (P : PrequantumData) : ℝ :=
+  _root_.PrequantumData.connectionScale P
+
+abbrev covariantScale (P : PrequantumData) : ℝ :=
+  _root_.PrequantumData.covariantScale P
+
+abbrev GaugeEquivalent (P Q : PrequantumData) : Prop :=
+  _root_.PrequantumData.GaugeEquivalent P Q
+
+noncomputable abbrev covariantScaleOnQuotient :
+    Quotient _root_.PrequantumData.gaugeSetoid → ℝ :=
+  _root_.PrequantumData.covariantScaleOnQuotient
+
+noncomputable abbrev omegaScaleOnQuotient :
+    Quotient _root_.PrequantumData.gaugeSetoid → ℝ :=
+  _root_.PrequantumData.omegaScaleOnQuotient
+
+end PrequantumData
+
+end InfoGeometry.Prequantum.Scaling

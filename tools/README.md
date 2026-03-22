@@ -40,11 +40,15 @@ Primary Python consumers:
 - [generate_causal_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_causal_report.py)
 - [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py)
 - [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/classify_missing_all.py)
+- [generate_theorem_surface_index.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_theorem_surface_index.py)
+- [plot_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/plot_decl_graph.py)
 
 Use this lane when the question is:
 - what is the root set?
 - what is the true causal order?
 - which declaration-bearing files are still outside `InfoGeometry.All`?
+- how do I open the current declaration DAG as a NetworkX/GraphML graph?
+- how do I isolate only the hypothesis/package/surrogate frontier?
 
 ### Level 2: Authoritative blueprint / LeanArchitect pipeline
 
@@ -114,8 +118,8 @@ These still exist for older consumers or ad hoc inspection, but they are not the
 
 - [graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/graph.py)
   Compatibility shim that re-exports the archived NetworkX wrapper from `archive/legacy/scripts/graph.py`.
-- any workflow centered on `docs-map/graph.json`
-  Compatibility only. Do not treat it as the authoritative causal substrate.
+- any workflow centered on `docs-map/graph.json` or `archive/legacy/scripts/make_graph.py`
+  Archived compatibility only. Do not treat it as the authoritative causal substrate.
 
 ## Practical Rule
 

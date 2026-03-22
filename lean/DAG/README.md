@@ -59,10 +59,10 @@ The repository currently has four graph/export lanes, and they should be kept se
 4. Compatibility / legacy lane
 - [ExportForwardGraph.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/ExportForwardGraph.lean)
 - [ExportDecls.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/ExportDecls.lean)
-- [InfoGeometry/GraphExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/GraphExport.lean)
 - [tools/graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/graph.py) and older `docs-map/graph.json` consumers
+- archived module-graph compatibility tools under [archive/legacy/](/home/goutev/LEAN4/info-geometry-lean/archive/legacy/README.md)
 
-These compatibility surfaces remain useful for inspection and older downstream tools, but they are not the canonical causal-order substrate.
+These compatibility surfaces are archived for inspection only and are not the canonical causal-order substrate.
 
 ## 1) Current Trust Model
 

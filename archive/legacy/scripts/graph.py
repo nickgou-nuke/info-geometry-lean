@@ -3,7 +3,7 @@
 
 Do not treat this module as the canonical causal-order source of truth. The
 current authoritative declaration graph lives under `artifacts/dag/full_graph.json`
-and `artifacts/dag/index/decls.jsonl`, refreshed via `tools/refresh_decl_graph.py`.
+and `artifacts/dag/index/decls.jsonl`, refreshed via `tools/infra/refresh_decl_graph.py`.
 """
 from __future__ import annotations
 
@@ -88,7 +88,7 @@ class ProjectGraph:
         """Invoke the Lean export script to rebuild the graph.json and reload it."""
         print("[ProjectGraph] Rebuilding graph from Lean environment...")
         subprocess.run(
-            ["python3", "-m", "scripts", "make-graph"],
+            ["python3", "archive/legacy/scripts/make_graph.py"],
             check=True,
             cwd=repo_root(),
         )

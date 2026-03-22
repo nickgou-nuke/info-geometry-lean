@@ -155,3 +155,84 @@ theorem vacuumChoice_switch_swaps_polarizations_minus :
     vacuumChoice_switch_swaps_splits_minus (E := E)
 
 end KreinClifford
+
+
+namespace InfoGeometry.Krein.Prelude
+
+section KreinClifford
+
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+noncomputable abbrev chiralityOperator : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  _root_.chiralityOperator (E := E)
+
+noncomputable abbrev complexStructureOperator : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  _root_.complexStructureOperator (E := E)
+
+abbrev isComplexStructureOp (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
+  _root_.isComplexStructureOp (E := E) A
+
+theorem complex_i_sq_neg_id :
+    (complex_i (E := E)).comp (complex_i (E := E))
+      = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+  simpa using (_root_.complex_i_sq_neg_id (E := E))
+
+theorem complex_i_isComplexStructureOp :
+    isComplexStructureOp (E := E) (complex_i (E := E)) := by
+  simpa [isComplexStructureOp] using (_root_.complex_i_isComplexStructureOp (E := E))
+
+noncomputable abbrev chiralityProjPlus : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  _root_.chiralityProjPlus (E := E)
+
+noncomputable abbrev chiralityProjMinus : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  _root_.chiralityProjMinus (E := E)
+
+abbrev VacuumChoice
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  _root_.VacuumChoice (E := E)
+
+noncomputable abbrev vacuumChoicePlus : VacuumChoice E :=
+  _root_.vacuumChoicePlus (E := E)
+
+noncomputable abbrev vacuumChoiceMinus : VacuumChoice E :=
+  _root_.vacuumChoiceMinus (E := E)
+
+noncomputable abbrev vacuumSplitPlus
+    (V : VacuumChoice E) : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  _root_.vacuumSplitPlus (E := E) V
+
+noncomputable abbrev vacuumSplitMinus
+    (V : VacuumChoice E) : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  _root_.vacuumSplitMinus (E := E) V
+
+noncomputable abbrev vacuumPolarizationPlus
+    (V : VacuumChoice E) : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  _root_.vacuumPolarizationPlus (E := E) V
+
+noncomputable abbrev vacuumPolarizationMinus
+    (V : VacuumChoice E) : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  _root_.vacuumPolarizationMinus (E := E) V
+
+theorem vacuumChoice_switch_swaps_splits_plus :
+    vacuumSplitPlus (E := E) (vacuumChoicePlus (E := E))
+      = vacuumSplitMinus (E := E) (vacuumChoiceMinus (E := E)) := by
+  simpa using (_root_.vacuumChoice_switch_swaps_splits_plus (E := E))
+
+theorem vacuumChoice_switch_swaps_splits_minus :
+    vacuumSplitMinus (E := E) (vacuumChoicePlus (E := E))
+      = vacuumSplitPlus (E := E) (vacuumChoiceMinus (E := E)) := by
+  simpa using (_root_.vacuumChoice_switch_swaps_splits_minus (E := E))
+
+theorem vacuumChoice_switch_swaps_polarizations_plus :
+    vacuumPolarizationPlus (E := E) (vacuumChoicePlus (E := E))
+      = vacuumPolarizationMinus (E := E) (vacuumChoiceMinus (E := E)) := by
+  simpa using (_root_.vacuumChoice_switch_swaps_polarizations_plus (E := E))
+
+theorem vacuumChoice_switch_swaps_polarizations_minus :
+    vacuumPolarizationMinus (E := E) (vacuumChoicePlus (E := E))
+      = vacuumPolarizationPlus (E := E) (vacuumChoiceMinus (E := E)) := by
+  simpa using (_root_.vacuumChoice_switch_swaps_polarizations_minus (E := E))
+
+end KreinClifford
+
+end InfoGeometry.Krein.Prelude

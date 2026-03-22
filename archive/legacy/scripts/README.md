@@ -19,6 +19,12 @@ Archived here in this cleanup:
   Old manifest builder over `full_graph.json` / `theory_toc.json`.
 - `cluster_theory.py`
   Old Leiden clustering tool over the pre-authoritative `full_graph.json` lane.
+- `make_graph.py`
+  Old docs-map/module_graph exporter over the archived `InfoGeometry.GraphExport` Lean lane.
+- `refactor_plan.py`
+  Old deterministic plan generator over `docs-map/module_graph.json`.
+- `ci_baseline_docsmap.sh`
+  Old CI-style baseline script for the archived docs-map/module_graph lane.
 
 Current replacements:
 - declaration DAG: `tools/infra/refresh_decl_graph.py`

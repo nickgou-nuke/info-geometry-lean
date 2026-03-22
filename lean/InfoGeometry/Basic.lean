@@ -3,7 +3,7 @@ import Mathlib.Probability.ProbabilityMassFunction.Basic
 import Mathlib.Probability.ProbabilityMassFunction.Constructions
 import Mathlib.MeasureTheory.Measure.ProbabilityMeasure
 import Mathlib.MeasureTheory.Measure.LogLikelihoodRatio
-import Mathlib.InformationTheory.KullbackLeibler.Basic
+import InfoGeometry.KL.Measure
 
 /-!
 # Basic
@@ -15,7 +15,7 @@ enabling seamless integration with Mathlib's `Measure` and `ProbabilityMeasure` 
 ## Main results
 - `FinProb`: Alias for `PMF α`, the canonical discrete probability law.
 - `potential`: Information-geometric potential defined as the negative log-likelihood ratio.
-- `kl_div`: Kullback–Leibler divergence defined on general measures.
+- `kl_div`: backward-compatible top-level wrapper for `InfoGeometry.KL.kl_div`.
 -/
 
 namespace InfoGeometry
@@ -104,13 +104,13 @@ theorem potential_smul_right_ae
   simpa [potential, sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
     congrArg (fun t : ℝ => -t) hx
 
-/-- Canonical KL divergence on measures. -/
-noncomputable def kl_div
+/-- Backward-compatible top-level wrapper for `InfoGeometry.KL.kl_div`. -/
+noncomputable abbrev kl_div
     {α : Type*} [MeasurableSpace α]
     (μ ν : MeasureTheory.Measure α) : ℝ≥0∞ :=
-  InformationTheory.klDiv μ ν
+  InfoGeometry.KL.kl_div μ ν
 
-/-- Discrete convenience wrapper for KL divergence. -/
+/-- Backward-compatible top-level finite wrapper over the canonical measure KL surface. -/
 noncomputable def fin_kl_div
     {α : Type*} [MeasurableSpace α] (p q : FinProb α) : ℝ≥0∞ :=
   kl_div p.toMeasure q.toMeasure

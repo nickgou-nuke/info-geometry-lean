@@ -1,8 +1,17 @@
 
-
+import InfoGeometry.KL.Measure
 import InfoGeometry.KL.Finite
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
+/-!
+# InfoGeometry.KL
+
+Canonical KL umbrella:
+- `KL.Measure` gives the measure-theoretic facade `InfoGeometry.KL.kl_div`;
+- `KL.Finite` gives the normalized finite/PMF slice;
+- the primitive cone/projective state geometry lives in the measure/projective
+  foundation and is not redefined here.
+-/
 
 namespace InfoGeometry.KL
 

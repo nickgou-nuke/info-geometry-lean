@@ -112,6 +112,9 @@ import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Canonical.RealBdG
 import InfoGeometry.Canonical.SpectralInference
+import InfoGeometry.Canonical.SingularBoundaryCorrection
+import InfoGeometry.Canonical.CalabiYauSingularBridge
+import InfoGeometry.Canonical.SingularTransportSystem
 import InfoGeometry.Canonical.Statistics
 import InfoGeometry.Canonical.SuperInference
 import InfoGeometry.Canonical.SUSYBayes

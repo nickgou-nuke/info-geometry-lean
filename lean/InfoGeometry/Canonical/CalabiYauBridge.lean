@@ -13,7 +13,7 @@ open InfoGeometry.Canonical.SpectralInference
 section MongeAmpereRicci
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-  [CompleteSpace E]
+  [CompleteSpace E] [FiniteDimensional ℝ E]
 
 /--
 Constant Monge-Ampere density scaffold:
@@ -117,8 +117,126 @@ structure MetricDerivedRNRicciBridge
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E) : Prop where
   ricci_eq_metricDerived :
     R = ricciFromMetricOp K.H x
+  metricOpNondegenerate :
+    MetricOpNondegenerate K.H
+  metricLogDetTwiceDifferentiable :
+    MetricLogDetTwiceDifferentiable K.H
   unitVolume_metricDerived_zero :
     UnitRelativeVolumeState K → ∀ u v : E, ricciFromMetricOp K.H x u v = 0
+
+/-- Unit relative volume forces the metric log-determinant to vanish pointwise. -/
+lemma metricLogDet_eq_zero_of_unitRelativeVolume
+    (K : KaehlerInformationGeometry E)
+    (hUnit : UnitRelativeVolumeState K)
+    (hdet : MetricOpNondegenerate K.H) :
+    ∀ x : E, metricLogDet K.H x = 0 := by
+  intro x
+  have hMA : mongeAmpereDensity K.H x = 1 := hUnit x
+  have hExp : Real.exp (metricLogDet K.H x) = 1 := by
+    unfold metricLogDet
+    rw [Real.exp_log (abs_pos.mpr (hdet x))]
+    simpa [mongeAmpereDensity] using hMA
+  have habs_pos :
+      0 < |LinearMap.det (K.H.metricOp x).toLinearMap| := by
+    exact abs_pos.mpr (hdet x)
+  have habs_eq_one :
+      |LinearMap.det (K.H.metricOp x).toLinearMap| = 1 := by
+    unfold metricLogDet at hExp
+    rw [Real.exp_log habs_pos] at hExp
+    exact hExp
+  unfold metricLogDet
+  rw [habs_eq_one, Real.log_one]
+
+/-- The first derivative of the metric log-determinant vanishes on the unit-volume branch. -/
+lemma fderiv_metricLogDet_eq_zero_of_unitRelativeVolume
+    (K : KaehlerInformationGeometry E)
+    (hUnit : UnitRelativeVolumeState K)
+    (hdet : MetricOpNondegenerate K.H)
+    (hDiff : MetricLogDetTwiceDifferentiable K.H) :
+    ∀ x : E, fderiv ℝ (metricLogDet K.H) x = 0 := by
+  intro x
+  have hconst : metricLogDet K.H = fun _ : E => (0 : ℝ) := by
+    funext y
+    exact metricLogDet_eq_zero_of_unitRelativeVolume (K := K) hUnit hdet y
+  have hconst0 : ∀ y : E, metricLogDet K.H y = 0 := by
+    intro y
+    exact congrFun hconst y
+  have hDiffAt : DifferentiableAt ℝ (metricLogDet K.H) x :=
+    (metricLogDet_differentiable (H := K.H) hDiff).differentiableAt
+  have hHas :
+      HasFDerivAt (metricLogDet K.H) (fderiv ℝ (metricLogDet K.H) x) x :=
+    hDiffAt.hasFDerivAt
+  have hEventually : (fun _ : E => (0 : ℝ)) =ᶠ[nhds x] metricLogDet K.H := by
+    filter_upwards with y
+    exact (hconst0 y).symm
+  have hZeroHas :
+      HasFDerivAt (fun _ : E => (0 : ℝ)) (fderiv ℝ (metricLogDet K.H) x) x :=
+    hHas.congr_of_eventuallyEq hEventually
+  have hConstHas :
+      HasFDerivAt (fun _ : E => (0 : ℝ)) (0 : E →L[ℝ] ℝ) x :=
+    by simpa using (hasFDerivAt_const (x := x) (c := (0 : ℝ)))
+  exact hZeroHas.unique hConstHas
+
+/-- The metric-derived Ricci tensor vanishes once the log-determinant chain collapses. -/
+lemma ricciFromMetricOp_eq_zero_of_unitRelativeVolume
+    (K : KaehlerInformationGeometry E) (x : E)
+    (hUnit : UnitRelativeVolumeState K)
+    (hdet : MetricOpNondegenerate K.H)
+    (hDiff : MetricLogDetTwiceDifferentiable K.H) :
+    ∀ u v : E, ricciFromMetricOp K.H x u v = 0 := by
+  intro u v
+  have hfdZero :
+      ∀ y : E, fderiv ℝ (metricLogDet K.H) y = 0 :=
+    fderiv_metricLogDet_eq_zero_of_unitRelativeVolume
+      (K := K) hUnit hdet hDiff
+  have hInnerDiffAt :
+      DifferentiableAt ℝ (fun y => fderiv ℝ (metricLogDet K.H) y u) x :=
+    metricLogDet_fderiv_apply_differentiableAt (H := K.H) hDiff u x
+  have hInnerHas :
+      HasFDerivAt
+        (fun y => fderiv ℝ (metricLogDet K.H) y u)
+        (fderiv ℝ (fun y => fderiv ℝ (metricLogDet K.H) y u) x)
+        x :=
+    hInnerDiffAt.hasFDerivAt
+  have hInnerEventually :
+      (fun _ : E => (0 : ℝ)) =ᶠ[nhds x] fun y => fderiv ℝ (metricLogDet K.H) y u := by
+    filter_upwards with y
+    have hy : fderiv ℝ (metricLogDet K.H) y = 0 := hfdZero y
+    exact (congrArg (fun L : E →L[ℝ] ℝ => L u) hy).symm
+  have hInnerZeroHas :
+      HasFDerivAt
+        (fun _ : E => (0 : ℝ))
+        (fderiv ℝ (fun y => fderiv ℝ (metricLogDet K.H) y u) x)
+        x :=
+    hInnerHas.congr_of_eventuallyEq hInnerEventually
+  have hConstHas :
+      HasFDerivAt (fun _ : E => (0 : ℝ)) (0 : E →L[ℝ] ℝ) x :=
+    by simpa using (hasFDerivAt_const (x := x) (c := (0 : ℝ)))
+  have hSecondZero :
+      fderiv ℝ (fun y => fderiv ℝ (metricLogDet K.H) y u) x = 0 :=
+    hInnerZeroHas.unique hConstHas
+  unfold ricciFromMetricOp
+  rw [hSecondZero]
+  simp
+
+/--
+Constructive instantiation of the metric-derived bridge via true
+differential log-det calculus. This leverages the formal definition
+of Ricci as the log-det Hessian, proving it vanishes when volume is constant.
+-/
+lemma MetricDerivedRNRicciBridge.ofUnitRelativeVolume_fderiv
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (hEq : R = ricciFromMetricOp K.H x)
+    (hDiff : MetricLogDetTwiceDifferentiable K.H)
+    (hdet : MetricOpNondegenerate K.H) :
+    MetricDerivedRNRicciBridge R K x where
+  ricci_eq_metricDerived := hEq
+  metricOpNondegenerate := hdet
+  metricLogDetTwiceDifferentiable := hDiff
+  unitVolume_metricDerived_zero := by
+    intro hUnit
+    exact ricciFromMetricOp_eq_zero_of_unitRelativeVolume
+      (K := K) (x := x) hUnit hdet hDiff
 
 /--
 Every metric-derived RN bridge induces the abstract metric-to-Ricci bridge.
@@ -286,10 +404,10 @@ theorem vacuumEinsteinEquation_of_unitRelativeVolume
   ring
 
 /--
-Constructive closure theorem in state form:
-from `MongeAmpereRicciState` we obtain the vacuum Einstein equation.
+Constructive closure theorem in explicit state form:
+from the `IsRicciFlat` portion of the state, we obtain the vacuum Einstein equation.
 -/
-theorem vacuumEinsteinEquation_of_mongeAmpereRicciState
+theorem vacuumEinsteinEquation_of_isRicciFlatState
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (Λ : ℝ)
     (hState : MongeAmpereRicciState R K) :
@@ -304,7 +422,7 @@ end MongeAmpereRicci
 section WBridge
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-  [CompleteSpace E]
+  [CompleteSpace E] [FiniteDimensional ℝ E]
 
 /--
 Constructive Calabi-Yau spectral closure state:
@@ -335,9 +453,10 @@ theorem spinorialScalarCurvature_eq_zero_of_mongeAmpereSpinorialClosure
 
 /--
 Connection to the `W`-flow layer:
-under normalized spinorial tracking, Calabi-Yau closure makes `W` constant.
+under normalized spinorial tracking, the explicit spinorial vanishing
+portion of the closure makes `W` constant.
 -/
-theorem W_constant_of_mongeAmpereSpinorialClosure
+theorem W_constant_of_spinorialClosureState
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E)
     (W : ℝ → ℝ)
     (hDiff : Differentiable ℝ W)

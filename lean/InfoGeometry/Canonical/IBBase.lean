@@ -1,4 +1,5 @@
 import InfoGeometry.Basic
+import InfoGeometry.KL.Finite
 import InfoGeometry.MaxEnt.IProjection
 import InfoGeometry.Measure.Normalized
 

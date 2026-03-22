@@ -143,6 +143,74 @@ def line_of(text: str, offset: int) -> int:
     return text.count("\n", 0, offset) + 1
 
 
+def strip_comments(text: str) -> str:
+    out: list[str] = []
+    i = 0
+    n = len(text)
+    block_depth = 0
+    in_line = False
+    in_string = False
+    while i < n:
+        ch = text[i]
+        nxt = text[i + 1] if i + 1 < n else ""
+
+        if in_line:
+            if ch == "\n":
+                in_line = False
+                out.append("\n")
+            else:
+                out.append(" ")
+            i += 1
+            continue
+
+        if block_depth > 0:
+            if ch == "\n":
+                out.append("\n")
+                i += 1
+                continue
+            if ch == "/" and nxt == "-":
+                block_depth += 1
+                out.extend("  ")
+                i += 2
+                continue
+            if ch == "-" and nxt == "/":
+                block_depth -= 1
+                out.extend("  ")
+                i += 2
+                continue
+            out.append(" ")
+            i += 1
+            continue
+
+        if in_string:
+            out.append(ch)
+            if ch == '"' and (i == 0 or text[i - 1] != "\\"):
+                in_string = False
+            i += 1
+            continue
+
+        if ch == '"':
+            in_string = True
+            out.append(ch)
+            i += 1
+            continue
+        if ch == "-" and nxt == "-":
+            in_line = True
+            out.extend("  ")
+            i += 2
+            continue
+        if ch == "/" and nxt == "-":
+            block_depth = 1
+            out.extend("  ")
+            i += 2
+            continue
+
+        out.append(ch)
+        i += 1
+
+    return "".join(out)
+
+
 def scan_manifest_consistency() -> list[Finding]:
     manifest = read_quarantine_manifest()
     quarantine = ROOT / "lean/InfoGeometry/Unstable/Quarantine.lean"
@@ -169,66 +237,67 @@ def scan_manifest_consistency() -> list[Finding]:
 
 def scan_file(path: Path, *, include_review: bool = False) -> list[Finding]:
     text = path.read_text()
+    scan_text = strip_comments(text)
     rpath = rel(path)
     findings: list[Finding] = []
 
-    for match in PROOF_HOLE_RE.finditer(text):
-        findings.append(Finding("proof-hole", rpath, line_of(text, match.start()), match.group(0)))
-    for match in AXIOM_RE.finditer(text):
-        findings.append(Finding("axiom", rpath, line_of(text, match.start()), "axiom declaration"))
-    for match in TRUE_PROP_RE.finditer(text):
-        findings.append(Finding("prop-constant", rpath, line_of(text, match.start()), "declaration reduces to True"))
-    for match in FALSE_PROP_RE.finditer(text):
-        findings.append(Finding("prop-constant", rpath, line_of(text, match.start()), "declaration reduces to False"))
-    for match in TRIVIAL_THEOREM_RE.finditer(text):
-        findings.append(Finding("trivial-theorem", rpath, line_of(text, match.start()), "theorem/lemma proven by trivial"))
-    for match in UNIVERSAL_TRUE_FIELD_RE.finditer(text):
-        findings.append(Finding("universal-true-field", rpath, line_of(text, match.start()), "field stores ∀ _, True"))
-    for match in ZERO_QUADRATIC_FORM_RE.finditer(text):
-        findings.append(Finding("zero-quadratic-form", rpath, line_of(text, match.start()), "quadratic form declaration reduces to 0"))
-    for match in SCALED_ZERO_QUADRATIC_FORM_RE.finditer(text):
+    for match in PROOF_HOLE_RE.finditer(scan_text):
+        findings.append(Finding("proof-hole", rpath, line_of(scan_text, match.start()), match.group(0)))
+    for match in AXIOM_RE.finditer(scan_text):
+        findings.append(Finding("axiom", rpath, line_of(scan_text, match.start()), "axiom declaration"))
+    for match in TRUE_PROP_RE.finditer(scan_text):
+        findings.append(Finding("prop-constant", rpath, line_of(scan_text, match.start()), "declaration reduces to True"))
+    for match in FALSE_PROP_RE.finditer(scan_text):
+        findings.append(Finding("prop-constant", rpath, line_of(scan_text, match.start()), "declaration reduces to False"))
+    for match in TRIVIAL_THEOREM_RE.finditer(scan_text):
+        findings.append(Finding("trivial-theorem", rpath, line_of(scan_text, match.start()), "theorem/lemma proven by trivial"))
+    for match in UNIVERSAL_TRUE_FIELD_RE.finditer(scan_text):
+        findings.append(Finding("universal-true-field", rpath, line_of(scan_text, match.start()), "field stores ∀ _, True"))
+    for match in ZERO_QUADRATIC_FORM_RE.finditer(scan_text):
+        findings.append(Finding("zero-quadratic-form", rpath, line_of(scan_text, match.start()), "quadratic form declaration reduces to 0"))
+    for match in SCALED_ZERO_QUADRATIC_FORM_RE.finditer(scan_text):
         findings.append(
             Finding(
                 "scaled-zero-quadratic-form",
                 rpath,
-                line_of(text, match.start()),
+                line_of(scan_text, match.start()),
                 "quadratic form declaration scales a zero quadratic form surrogate",
             )
         )
     if include_review:
-        for match in REVIEW_CONSTANT_LITERAL_FUN_RE.finditer(text):
+        for match in REVIEW_CONSTANT_LITERAL_FUN_RE.finditer(scan_text):
             findings.append(
                 Finding(
                     "review-constant-function",
                     rpath,
-                    line_of(text, match.start()),
+                    line_of(scan_text, match.start()),
                     f"{match.group('field')} is a constant function returning {match.group('value')}",
                 )
             )
-        for match in REVIEW_IDENTITY_FUN_RE.finditer(text):
+        for match in REVIEW_IDENTITY_FUN_RE.finditer(scan_text):
             findings.append(
                 Finding(
                     "review-identity-function",
                     rpath,
-                    line_of(text, match.start()),
+                    line_of(scan_text, match.start()),
                     f"{match.group('field')} is an identity function",
                 )
             )
-        for match in REVIEW_ID_LINEAR_MAP_RE.finditer(text):
+        for match in REVIEW_ID_LINEAR_MAP_RE.finditer(scan_text):
             findings.append(
                 Finding(
                     "review-identity-linear-map",
                     rpath,
-                    line_of(text, match.start()),
+                    line_of(scan_text, match.start()),
                     f"{match.group('field')} is a constant {match.group('kind')}.id map",
                 )
             )
-        for match in REVIEW_PROJECTION_THEOREM_RE.finditer(text):
+        for match in REVIEW_PROJECTION_THEOREM_RE.finditer(scan_text):
             findings.append(
                 Finding(
                     "review-projection-theorem",
                     rpath,
-                    line_of(text, match.start()),
+                    line_of(scan_text, match.start()),
                     f"{match.group('name')} reduces to `{match.group('body').strip()}`",
                 )
             )

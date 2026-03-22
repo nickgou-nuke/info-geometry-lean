@@ -11,7 +11,14 @@ Constructive count-first bridge:
 - count-induced Sinkhorn trajectories provide a constructive flow
 
 This module defines the mapping from empirical event counts to informational
-dynamics. Vacuous zero-quadratic-form scaffolds have been removed.
+dynamics. The bridge uses a regularized empirical substrate: counts are smoothed
+by a pseudocount of +1 per channel. This ensures that the induced rank-one 
+coupling matrix is entrywise positive, allowing the Sinkhorn trajectory to be
+constructed without support-degeneracy branching.
+
+The induced flow is implemented through an explicit outer-product initialization
+(rank-one coupling), serving as a constructive corridor from empirical counts to 
+the emergent time flow.
 -/
 
 namespace InfoGeometry.Canonical.CountSubstrateBridge
@@ -138,12 +145,12 @@ noncomputable def countInducedPositiveIterate : Nat → PositiveSinkhornState n
           let hrow : HasPositiveRowSums n Sk.M :=
             entrywisePositive_hasPositiveRowSums (n := n) Sk.pos
           ⟨rowNormalize n Sk.M hrow,
-            rowNormalize_entrywisePositive (n := n) Sk.pos hrow⟩
+            rowNormalize_entrywisePositive Sk.pos hrow⟩
       | .col =>
           let hcol : HasPositiveColSums n Sk.M :=
             entrywisePositive_hasPositiveColSums (n := n) Sk.pos
           ⟨colNormalize n Sk.M hcol,
-            colNormalize_entrywisePositive (n := n) Sk.pos hcol⟩
+            colNormalize_entrywisePositive Sk.pos hcol⟩
 where
   rowNormalize_entrywisePositive
       {M : SinkhornMatrix n}

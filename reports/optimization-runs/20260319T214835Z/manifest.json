@@ -1,0 +1,100 @@
+{
+  "branchName": "auto-opt/dry-cycle-20260319T212203Z",
+  "candidatePacket": "/home/goutev/LEAN4/info-geometry-lean/skills/info-geometry-repo/references/bridge-candidates.md",
+  "chosenFrontier": {
+    "affects": [],
+    "primaryProduces": [
+      "InfoGeometry.KK.index_bridge_spectral"
+    ],
+    "score": 0.16605225976519247,
+    "seedLinkDetails": [
+      "InfoGeometry.KK.KasparovCycle.analyticalIndex"
+    ],
+    "seedLinkKinds": [
+      "primaryDep"
+    ],
+    "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/KK/KasparovCycle.lean",
+    "spineTags": [],
+    "stableId": "block:3117-3498"
+  },
+  "cleanupWorktree": false,
+  "environment": {
+    "cwd": "/home/goutev/LEAN4/info-geometry-lean",
+    "python": "/home/goutev/LEAN4/info-geometry-lean/.venv/bin/python3"
+  },
+  "freshWorktree": false,
+  "frontierContext": [
+    "InfoGeometry.KK.index_bridge_spectral",
+    "InfoGeometry.Canonical.AnalyticalIndex.chiralSliceIsoAlong_of_noZeroEigenCrossing",
+    "InfoGeometry.Canonical.AnalyticalIndex.sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses"
+  ],
+  "frontierJson": "/home/goutev/LEAN4/info-geometry-lean/reports/dag/skynet-v2-frontier-reverse.json",
+  "gitHead": "0f53315a4e893a3045007963fe28f0702edeee7e",
+  "hydration": {
+    "buildCopy": {
+      "argv": [
+        "cp",
+        "-a",
+        "-n",
+        "/home/goutev/LEAN4/info-geometry-lean/.lake/build/.",
+        "/tmp/info-geometry-autoopt/20260319T212203Z/.lake/build"
+      ],
+      "returncode": 0,
+      "stderr_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T214835Z/hydrate-build.stderr.log",
+      "stdout_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T214835Z/hydrate-build.stdout.log"
+    },
+    "copiedBuild": true,
+    "copiedPackages": true,
+    "packageCopy": {
+      "argv": [
+        "cp",
+        "-a",
+        "-n",
+        "/home/goutev/LEAN4/info-geometry-lean/.lake/packages/.",
+        "/tmp/info-geometry-autoopt/20260319T212203Z/.lake/packages"
+      ],
+      "returncode": 0,
+      "stderr_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T214835Z/hydrate-packages.stderr.log",
+      "stdout_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T214835Z/hydrate-packages.stdout.log"
+    }
+  },
+  "module": "InfoGeometry.Unstable.AutoOptCycle",
+  "quarantineFile": "/tmp/info-geometry-autoopt/20260319T212203Z/lean/InfoGeometry/Unstable/AutoOptCycle.lean",
+  "relativeFile": "lean/InfoGeometry/Unstable/AutoOptCycle.lean",
+  "reuseWorktree": "/tmp/info-geometry-autoopt/20260319T212203Z",
+  "runId": "20260319T214835Z",
+  "seedBlocks": [
+    "block:2093-2449"
+  ],
+  "seedNames": [
+    "KasparovCycle.analyticalIndex"
+  ],
+  "selectedCandidate": {
+    "name": "InfoGeometry.KK.kasparovIndex_eq_analyticalIndex_zero_of_indexInvariant",
+    "ordinal": 1,
+    "proof_ingredients": [
+      "`InfoGeometry.KK.index_bridge_spectral`",
+      "`InfoGeometry.Canonical.AnalyticalIndex.IndexInvariantAlong`",
+      "rewriting with `hD0`, `h\u03930`"
+    ],
+    "risk": "low",
+    "signature_sketch": "theorem kasparovIndex_eq_analyticalIndex_zero_of_indexInvariant\n    {A B H : Type*}\n    [NormedRing A] [NormedRing B]\n    [NormedAlgebra \u211d A] [NormedAlgebra \u211d B]\n    [NormedAddCommGroup H] [InnerProductSpace \u211d H] [CompleteSpace H]\n    [KreinSpace H] [KreinGradedModule H]\n    [FiniteDimensional \u211d H]\n    (X : KasparovCycle A B H)\n    (hF : X.F * X.F = 1)\n    (D \u0393 : \u211d \u2192 Endomorphism H)\n    (hD0 : D 0 = X.F.toLinearMap)\n    (h\u03930 : \u0393 0 = (KreinGradedModule.gradeCLM (H := H)).toLinearMap)\n    (hInv : InfoGeometry.Canonical.AnalyticalIndex.IndexInvariantAlong D \u0393) :\n    \u2200 s : \u211d,\n      InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex (D s) (\u0393 s) =\n        X.analyticalIndex",
+    "why": "This is the smallest transport lemma from the KK-side anchor into the pathwise\n`AnalyticalIndex` invariance regime. It closes the exact edge\n`KasparovCycle.analyticalIndex -> AnalyticalIndex.analyticalIndex`, then lifts\nthat equality along `IndexInvariantAlong`."
+  },
+  "status": "ok",
+  "targetedBuild": {
+    "argv": [
+      "lake",
+      "build",
+      "InfoGeometry.Unstable.AutoOptCycle"
+    ],
+    "returncode": 0,
+    "stderr_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T214835Z/targeted-build.stderr.log",
+    "stdout_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T214835Z/targeted-build.stdout.log"
+  },
+  "walk": "reverse",
+  "worktreeCommand": null,
+  "worktreeLock": "/tmp/info-geometry-autoopt/20260319T212203Z/.autoopt.lock",
+  "worktreeMode": "reused-explicit",
+  "worktreePath": "/tmp/info-geometry-autoopt/20260319T212203Z"
+}

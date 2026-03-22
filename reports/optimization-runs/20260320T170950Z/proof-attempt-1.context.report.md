@@ -1,0 +1,15 @@
+# Proof Driver Report
+
+- run id: `20260320T170950Z`
+- attempt: `1`
+- verdict: `materialized`
+- materialized: `True`
+- quarantine file: `/tmp/info-geometry-autoopt/current/lean/InfoGeometry/Unstable/AutoOptCycle.lean`
+- candidate: `ReviewedCandidate.index_bridge_spectral_constant_family`
+- frontier target: `InfoGeometry.KK.index_bridge_spectral`
+- sketch source: `materialization_sketch`
+- review verdict: `accept`
+- quarantine recommendation: `yes`
+
+## Reasons
+- none

@@ -1,0 +1,714 @@
+{
+  "seedNames": [
+    "double_copy_geometric_equilibrium_imp",
+    "KasparovCycle.analyticalIndex"
+  ],
+  "seedBlocks": [
+    "block:2093-2449"
+  ],
+  "seedStableIds": [
+    "block:2093-2449"
+  ],
+  "walk": "both",
+  "moduleCount": 36,
+  "nodeCount": 855,
+  "edgeCount": 7281,
+  "crossModuleEdgesAdded": 3928,
+  "affectEdgesAdded": 3928,
+  "loadedInputs": [
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/AQFTOperatorInterface.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/AnalyticalIndex.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/ArnoldMajoranaNetwork.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/BogoliubovFockSuper.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/BulkBoundary.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/CalabiYauBridge.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/CartanDecomposition.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/CayleyBregmanBridge.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/ChiralGravity.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/Clifford.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/CliffordBridge.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/CompactOperatorBridge.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/ConnesCocycle.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/DoubleCopyUnification.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/DoubledAdjoint.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/GeneratedFlow.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/GrandSynthesis.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/GrandSynthesisDoubleCopy.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/HilbertBridge.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/KK.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/KKFoundation.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/KaehlerGeometry.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/KasparovCompactOperator.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/KasparovCycle.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/KitaevChain.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/LogPotential.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/NoetherInference.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/OperatorAlgebraBridge.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/Product.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/QFTTDFTLaunchpad.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/RadonNikodym.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/RealMajorana.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/RicciMongeAmpere.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/UniversalVolume.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/WeylGaugeField.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/WeylTransport.semantic-block.stdlib.json"
+  ],
+  "frontier": [
+    {
+      "stableId": "block:677-1810",
+      "rawScore": 0.08558403255523245,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/KK/KasparovCycle.lean",
+      "repoSourceFile": "lean/InfoGeometry/KK/KasparovCycle.lean",
+      "primaryProduces": [
+        "InfoGeometry.KK.KasparovCycle",
+        "InfoGeometry.KK.KasparovCycle.F",
+        "InfoGeometry.KK.KasparovCycle.F_odd",
+        "InfoGeometry.KK.KasparovCycle.F_skewAdj",
+        "InfoGeometry.KK.KasparovCycle.F_sq_one_compact",
+        "InfoGeometry.KK.KasparovCycle._sizeOf_1",
+        "InfoGeometry.KK.KasparovCycle._sizeOf_inst",
+        "InfoGeometry.KK.KasparovCycle.casesOn",
+        "InfoGeometry.KK.KasparovCycle.comm_compact",
+        "InfoGeometry.KK.KasparovCycle.ctorIdx",
+        "InfoGeometry.KK.KasparovCycle.mk",
+        "InfoGeometry.KK.KasparovCycle.noConfusion",
+        "InfoGeometry.KK.KasparovCycle.noConfusionType",
+        "InfoGeometry.KK.KasparovCycle.rec",
+        "InfoGeometry.KK.KasparovCycle.recOn",
+        "InfoGeometry.KK.KasparovCycle.π",
+        "InfoGeometry.KK.KasparovCycle.ρ",
+        "InfoGeometry.KK.KasparovCycle.mk._flat_ctor",
+        "InfoGeometry.KK.KasparovCycle.mk.inj",
+        "InfoGeometry.KK.KasparovCycle.mk.noConfusion"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [
+        "primaryDep",
+        "primaryDep"
+      ],
+      "seedLinkDetails": [
+        "InfoGeometry.KK.KasparovCycle",
+        "InfoGeometry.KK.KasparovCycle.F"
+      ],
+      "score": 0.10058403255523245,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.015,
+          "status": "classical_adjacent_model",
+          "module": "InfoGeometry.KK.KasparovCycle"
+        }
+      ],
+      "moduleName": "InfoGeometry.KK.KasparovCycle",
+      "moduleStatus": "classical_adjacent_model"
+    },
+    {
+      "stableId": "block:530-925",
+      "rawScore": 0.06010205172769622,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/Clifford.lean",
+      "repoSourceFile": "lean/InfoGeometry/Krein/Clifford.lean",
+      "primaryProduces": [
+        "KreinGradedModule",
+        "KreinGradedModule.casesOn",
+        "KreinGradedModule.ctorIdx",
+        "KreinGradedModule.grade",
+        "KreinGradedModule.grade_invol",
+        "KreinGradedModule.grade_selfAdj",
+        "KreinGradedModule.mk",
+        "KreinGradedModule.noConfusion",
+        "KreinGradedModule.noConfusionType",
+        "KreinGradedModule.rec",
+        "KreinGradedModule.recOn",
+        "KreinGradedModule.mk._flat_ctor",
+        "KreinGradedModule.mk.noConfusion"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [
+        "primaryDep"
+      ],
+      "seedLinkDetails": [
+        "KreinGradedModule"
+      ],
+      "score": 0.06010205172769622,
+      "scoreAdjustments": [],
+      "moduleName": "InfoGeometry.Krein.Clifford",
+      "moduleStatus": null
+    },
+    {
+      "stableId": "block:2105-2417",
+      "rawScore": 0.03549158967444149,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/AnalyticalIndex.lean",
+      "repoSourceFile": "lean/InfoGeometry/Canonical/AnalyticalIndex.lean",
+      "primaryProduces": [
+        "InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [
+        "primaryDep"
+      ],
+      "seedLinkDetails": [
+        "InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex"
+      ],
+      "score": 0.05049158967444149,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.015,
+          "status": "classical_adjacent_model",
+          "module": "InfoGeometry.Canonical.AnalyticalIndex"
+        }
+      ],
+      "moduleName": "InfoGeometry.Canonical.AnalyticalIndex",
+      "moduleStatus": "classical_adjacent_model"
+    },
+    {
+      "stableId": "block:3117-3498",
+      "rawScore": 0.03150215235793879,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/KK/KasparovCycle.lean",
+      "repoSourceFile": "lean/InfoGeometry/KK/KasparovCycle.lean",
+      "primaryProduces": [
+        "InfoGeometry.KK.index_bridge_spectral"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [
+        "primaryDep"
+      ],
+      "seedLinkDetails": [
+        "InfoGeometry.KK.KasparovCycle.analyticalIndex"
+      ],
+      "score": 0.04650215235793879,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.015,
+          "status": "classical_adjacent_model",
+          "module": "InfoGeometry.KK.KasparovCycle"
+        }
+      ],
+      "moduleName": "InfoGeometry.KK.KasparovCycle",
+      "moduleStatus": "classical_adjacent_model"
+    },
+    {
+      "stableId": "block:1098-1261",
+      "rawScore": 0.042217745761382174,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Krein/Clifford.lean",
+      "repoSourceFile": "lean/InfoGeometry/Krein/Clifford.lean",
+      "primaryProduces": [
+        "KreinGradedModule.gradeCLM"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [
+        "primaryDep"
+      ],
+      "seedLinkDetails": [
+        "KreinGradedModule.gradeCLM"
+      ],
+      "score": 0.042217745761382174,
+      "scoreAdjustments": [],
+      "moduleName": "InfoGeometry.Krein.Clifford",
+      "moduleStatus": null
+    },
+    {
+      "stableId": "block:2601-3117",
+      "rawScore": 0.020164663633252505,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/KK/KasparovCycle.lean",
+      "repoSourceFile": "lean/InfoGeometry/KK/KasparovCycle.lean",
+      "primaryProduces": [
+        "InfoGeometry.KK.superComm_compact_of_even_rep"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.035164663633252505,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.015,
+          "status": "classical_adjacent_model",
+          "module": "InfoGeometry.KK.KasparovCycle"
+        }
+      ],
+      "moduleName": "InfoGeometry.KK.KasparovCycle",
+      "moduleStatus": "classical_adjacent_model"
+    },
+    {
+      "stableId": "block:2449-2601",
+      "rawScore": 0.015039534076536513,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/KK/KasparovCycle.lean",
+      "repoSourceFile": "lean/InfoGeometry/KK/KasparovCycle.lean",
+      "primaryProduces": [
+        "InfoGeometry.KK.comm_compact_lie"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.030039534076536513,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.015,
+          "status": "classical_adjacent_model",
+          "module": "InfoGeometry.KK.KasparovCycle"
+        }
+      ],
+      "moduleName": "InfoGeometry.KK.KasparovCycle",
+      "moduleStatus": "classical_adjacent_model"
+    },
+    {
+      "stableId": "block:23146-23636",
+      "rawScore": 1.6946907251801104e-07,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "repoSourceFile": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "primaryProduces": [
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Pminus",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Pplus",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit._sizeOf_1",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit._sizeOf_inst",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.casesOn",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.cross_minus_plus",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.cross_plus_minus",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.ctorIdx",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.minus_idem",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.mk",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.noConfusion",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.noConfusionType",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.plus_idem",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.rec",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.recOn",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.split_sum",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.mk._flat_ctor",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.mk.inj",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.mk.noConfusion"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.030000169469072517,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.03,
+          "status": "repo_specific_unification",
+          "module": "InfoGeometry.Quantum.RealMajorana"
+        }
+      ],
+      "moduleName": "InfoGeometry.Quantum.RealMajorana",
+      "moduleStatus": "repo_specific_unification"
+    },
+    {
+      "stableId": "block:1280-1849",
+      "rawScore": 4.528177720097083e-08,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "repoSourceFile": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "primaryProduces": [
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.J",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.J_sq",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.Jeps_anticomm",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.Pi",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.Pi_sq",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum._sizeOf_1",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum._sizeOf_inst",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.car",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.casesOn",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.ctorIdx",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.eps",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.eps_sq",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.gamma",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.mk",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.noConfusion",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.noConfusionType",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.rec",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.recOn",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.mk._flat_ctor",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.mk.inj",
+        "InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.mk.noConfusion"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.0300000452817772,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.03,
+          "status": "repo_specific_unification",
+          "module": "InfoGeometry.Quantum.RealMajorana"
+        }
+      ],
+      "moduleName": "InfoGeometry.Quantum.RealMajorana",
+      "moduleStatus": "repo_specific_unification"
+    },
+    {
+      "stableId": "block:786-870",
+      "rawScore": 3.968859518848351e-08,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "repoSourceFile": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "primaryProduces": [
+        "InfoGeometry.Quantum.RealMajorana.EndS"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.030000039688595187,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.03,
+          "status": "repo_specific_unification",
+          "module": "InfoGeometry.Quantum.RealMajorana"
+        }
+      ],
+      "moduleName": "InfoGeometry.Quantum.RealMajorana",
+      "moduleStatus": "repo_specific_unification"
+    },
+    {
+      "stableId": "block:26919-29706",
+      "rawScore": 3.462975320800192e-08,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "repoSourceFile": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "primaryProduces": [
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.splitOfPolarization",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.splitOfPolarization._proof_1",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.splitOfPolarization._proof_2",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.splitOfPolarization._proof_3",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.splitOfPolarization._proof_4",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.splitOfPolarization._proof_5"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.030000034629753206,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.03,
+          "status": "repo_specific_unification",
+          "module": "InfoGeometry.Quantum.RealMajorana"
+        }
+      ],
+      "moduleName": "InfoGeometry.Quantum.RealMajorana",
+      "moduleStatus": "repo_specific_unification"
+    },
+    {
+      "stableId": "block:5657-6033",
+      "rawScore": 3.2021421994008296e-08,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "repoSourceFile": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "primaryProduces": [
+        "InfoGeometry.Quantum.RealMajorana.KPolarization",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.P",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.P_K_anticomm",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.P_sq",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization._sizeOf_1",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization._sizeOf_inst",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.casesOn",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.ctorIdx",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.mk",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.noConfusion",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.noConfusionType",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.rec",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.recOn",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.mk._flat_ctor",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.mk.inj",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.mk.noConfusion"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.030000032021421992,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.03,
+          "status": "repo_specific_unification",
+          "module": "InfoGeometry.Quantum.RealMajorana"
+        }
+      ],
+      "moduleName": "InfoGeometry.Quantum.RealMajorana",
+      "moduleStatus": "repo_specific_unification"
+    },
+    {
+      "stableId": "block:30505-32126",
+      "rawScore": 2.6491062978230855e-08,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "repoSourceFile": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "primaryProduces": [
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.involutionOfSplit_sq",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.involutionOfSplit.eq_1"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.030000026491062978,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.03,
+          "status": "repo_specific_unification",
+          "module": "InfoGeometry.Quantum.RealMajorana"
+        }
+      ],
+      "moduleName": "InfoGeometry.Quantum.RealMajorana",
+      "moduleStatus": "repo_specific_unification"
+    },
+    {
+      "stableId": "block:32922-33661",
+      "rawScore": 2.6345162892067496e-08,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "repoSourceFile": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "primaryProduces": [
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.Hom.toSplitHom",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.Hom.toSplitHom._proof_1",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.Hom.toSplitHom._proof_2"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.03000002634516289,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.03,
+          "status": "repo_specific_unification",
+          "module": "InfoGeometry.Quantum.RealMajorana"
+        }
+      ],
+      "moduleName": "InfoGeometry.Quantum.RealMajorana",
+      "moduleStatus": "repo_specific_unification"
+    },
+    {
+      "stableId": "block:29706-30335",
+      "rawScore": 2.2465092027406356e-08,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "repoSourceFile": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "primaryProduces": [
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.plus_sub_minus_eq_P",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.splitOfPolarization.eq_1",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.mk.congr_simp"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.030000022465092025,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.03,
+          "status": "repo_specific_unification",
+          "module": "InfoGeometry.Quantum.RealMajorana"
+        }
+      ],
+      "moduleName": "InfoGeometry.Quantum.RealMajorana",
+      "moduleStatus": "repo_specific_unification"
+    },
+    {
+      "stableId": "block:24054-26298",
+      "rawScore": 2.195094131717561e-08,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "repoSourceFile": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "primaryProduces": [
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_1",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_10",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_11",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_12",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_13",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_14",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_15",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_16",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_17",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_18",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_19",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_2",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_20",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_21",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_22",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_23",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_24",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_25",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_3",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_4",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_5",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_6",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_7",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_8",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.instCategory._proof_9"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.030000021950941317,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.03,
+          "status": "repo_specific_unification",
+          "module": "InfoGeometry.Quantum.RealMajorana"
+        }
+      ],
+      "moduleName": "InfoGeometry.Quantum.RealMajorana",
+      "moduleStatus": "repo_specific_unification"
+    },
+    {
+      "stableId": "block:23665-24054",
+      "rawScore": 1.8846235785918042e-08,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "repoSourceFile": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "primaryProduces": [
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom._sizeOf_1",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom._sizeOf_inst",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.casesOn",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.ctorIdx",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.ext",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.ext_iff",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.f",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.finv",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.intertwines_minus",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.intertwines_plus",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.left_inv",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.mk",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.noConfusion",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.noConfusionType",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.rec",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.recOn",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.right_inv",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.mk._flat_ctor",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.mk.inj",
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit.Hom.mk.noConfusion"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.030000018846235786,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.03,
+          "status": "repo_specific_unification",
+          "module": "InfoGeometry.Quantum.RealMajorana"
+        }
+      ],
+      "moduleName": "InfoGeometry.Quantum.RealMajorana",
+      "moduleStatus": "repo_specific_unification"
+    },
+    {
+      "stableId": "block:9541-9941",
+      "rawScore": 1.6462052572832863e-08,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "repoSourceFile": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "primaryProduces": [
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.B",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.Binv",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform._sizeOf_1",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform._sizeOf_inst",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.casesOn",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.ctorIdx",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.left_inv",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.mk",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.noConfusion",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.noConfusionType",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.parity_even",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.preserves_inner",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.rec",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.recOn",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.right_inv",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.mk._flat_ctor",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.mk.inj",
+        "InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform.mk.noConfusion"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.03000001646205257,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.03,
+          "status": "repo_specific_unification",
+          "module": "InfoGeometry.Quantum.RealMajorana"
+        }
+      ],
+      "moduleName": "InfoGeometry.Quantum.RealMajorana",
+      "moduleStatus": "repo_specific_unification"
+    },
+    {
+      "stableId": "block:30335-30505",
+      "rawScore": 1.2457795862934261e-08,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "repoSourceFile": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "primaryProduces": [
+        "InfoGeometry.Quantum.RealMajorana.KPolarization.involutionOfSplit"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.030000012457795863,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.03,
+          "status": "repo_specific_unification",
+          "module": "InfoGeometry.Quantum.RealMajorana"
+        }
+      ],
+      "moduleName": "InfoGeometry.Quantum.RealMajorana",
+      "moduleStatus": "repo_specific_unification"
+    },
+    {
+      "stableId": "block:870-1015",
+      "rawScore": 1.191869046086612e-08,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "repoSourceFile": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "primaryProduces": [
+        "InfoGeometry.Quantum.RealMajorana.anticommutator",
+        "InfoGeometry.Quantum.RealMajorana.anticommutator._proof_1",
+        "InfoGeometry.Quantum.RealMajorana.anticommutator._proof_2"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.03000001191869046,
+      "scoreAdjustments": [
+        {
+          "kind": "unification_status_adjustment",
+          "value": 0.03,
+          "status": "repo_specific_unification",
+          "module": "InfoGeometry.Quantum.RealMajorana"
+        }
+      ],
+      "moduleName": "InfoGeometry.Quantum.RealMajorana",
+      "moduleStatus": "repo_specific_unification"
+    }
+  ],
+  "auditSignals": {
+    "thinnessCount": 0,
+    "vacuityCount": 0,
+    "surrogateCount": 0,
+    "unificationModuleCount": 15
+  },
+  "unresolvedSeedDependencies": []
+}

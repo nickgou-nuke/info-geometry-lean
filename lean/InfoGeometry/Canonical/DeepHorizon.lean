@@ -50,15 +50,6 @@ export InfoGeometry.Canonical.HolographicEmergence (
   anomalyScalePhase_of_nonzeroAnomaly
   pathDependence_of_twistedInference
   exists_gaugeOrderHysteresis_witness
-  boundaryAnomalyCancellation
-  vacuumApexTwistorOfNull
-  vacuumApexTwistorZero
-  vacuumApexNull_lifts_to_twistor_of_isVacuumApexNull
-  vacuumApexNull_lifts_to_twistor_of_isVacuumApexNull_exists
-  vacuumApexNull_lifts_to_twistor
-  vacuumApexNull_lifts_to_twistor_zeroVacuumApexQuadraticForm
-  holographicEmergence_package_of_isVacuumApexNull
-  holographicEmergence_package
 )
 
 end InfoGeometry.Canonical.DeepHorizon

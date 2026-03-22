@@ -137,6 +137,7 @@ def render_index(
     lines.append("- authoritative for current metrics/frontier snapshot")
     lines.append("- preferred refresh path: `python3 tools/update_repo_docs.py`")
     lines.append("- low-level generator: `python3 tools/generate_auto_docs.py`")
+    lines.append("- declaration-level causal-order inputs live under `.build/`; derived frontier/causal reports live under `reports/dag/`")
     lines.append("")
     lines.append("## Repository Scale")
     lines.append(f"- Lean files under `lean/`: **{lean_files}**")
@@ -185,7 +186,9 @@ def render_index(
     lines.append("")
     lines.append("## Notes")
     lines.append("- This page is a generated status view, not a narrative design document.")
-    lines.append("- Generated DAG JSONs under `reports/dag/` are intentionally untracked.")
+    lines.append("- Trusted declaration graph inputs for causal-order analysis live under `.build/full_graph.json` and `.build/index/decls.jsonl`.")
+    lines.append("- Treat causal-order rankings as provisional until `reports/dag/true-root-order.md` shows no coverage warning; the current `.build` graph may be partial.")
+    lines.append("- Generated semantic exports and derived frontier/causal JSONs under `reports/dag/` are intentionally untracked.")
     lines.append("- Historical crosswalk/intake documents may still exist, but this page reflects the current trusted bridge workflow.")
     lines.append("")
     return "\n".join(lines) + "\n"

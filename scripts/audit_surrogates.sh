@@ -143,4 +143,11 @@ if ! python3 scripts/quality/audit_constructivity.py --mode stable; then
   exit 1
 fi
 
+echo "[surrogate-audit] checking stable surface for uninstantiated bridge assumptions and vacuous bridge debt"
+python3 tools/generate_vacuity_index.py
+if rg -n "vacuity gate: \\*\\*FAIL\\*\\*" VACUITY_INDEX.md >/dev/null; then
+  echo "[surrogate-audit] vacuity debt detected on the stable surface"
+  exit 1
+fi
+
 echo "[surrogate-audit] OK"

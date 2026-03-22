@@ -1,0 +1,80 @@
+{
+  "branchName": "auto-opt/dry-cycle-20260319T105235Z",
+  "chosenFrontier": {
+    "affects": [],
+    "primaryProduces": [
+      "InfoGeometry.KK.index_bridge_spectral"
+    ],
+    "score": 0.16605225976519247,
+    "seedLinkDetails": [
+      "InfoGeometry.KK.KasparovCycle.analyticalIndex"
+    ],
+    "seedLinkKinds": [
+      "primaryDep"
+    ],
+    "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/KK/KasparovCycle.lean",
+    "spineTags": [],
+    "stableId": "block:3117-3498"
+  },
+  "cleanupCommand": {
+    "argv": [
+      "git",
+      "worktree",
+      "remove",
+      "--force",
+      "/tmp/info-geometry-autoopt/20260319T105235Z"
+    ],
+    "returncode": 0,
+    "stderr_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T105235Z/git-worktree-remove.stderr.log",
+    "stdout_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T105235Z/git-worktree-remove.stdout.log"
+  },
+  "cleanupWorktree": true,
+  "environment": {
+    "cwd": "/home/goutev/LEAN4/info-geometry-lean",
+    "python": "/home/goutev/LEAN4/info-geometry-lean/.venv/bin/python3"
+  },
+  "frontierContext": [
+    "InfoGeometry.KK.index_bridge_spectral",
+    "InfoGeometry.Canonical.AnalyticalIndex.chiralSliceIsoAlong_of_noZeroEigenCrossing",
+    "InfoGeometry.Canonical.AnalyticalIndex.sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses"
+  ],
+  "frontierJson": "/home/goutev/LEAN4/info-geometry-lean/reports/dag/skynet-v2-frontier-reverse.json",
+  "gitHead": "241029a233c8b0ef9817cdac19ca0eb48cc66e80",
+  "module": "InfoGeometry.Unstable.AutoOptCycle",
+  "quarantineFile": "/tmp/info-geometry-autoopt/20260319T105235Z/lean/InfoGeometry/Unstable/AutoOptCycle.lean",
+  "relativeFile": "lean/InfoGeometry/Unstable/AutoOptCycle.lean",
+  "runId": "20260319T105235Z",
+  "seedBlocks": [
+    "block:2093-2449"
+  ],
+  "seedNames": [
+    "KasparovCycle.analyticalIndex"
+  ],
+  "status": "ok",
+  "targetedBuild": {
+    "argv": [
+      "lake",
+      "build",
+      "InfoGeometry.Unstable.AutoOptCycle"
+    ],
+    "returncode": 0,
+    "stderr_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T105235Z/targeted-build.stderr.log",
+    "stdout_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T105235Z/targeted-build.stdout.log"
+  },
+  "walk": "reverse",
+  "worktreeCommand": {
+    "argv": [
+      "git",
+      "worktree",
+      "add",
+      "-b",
+      "auto-opt/dry-cycle-20260319T105235Z",
+      "/tmp/info-geometry-autoopt/20260319T105235Z",
+      "HEAD"
+    ],
+    "returncode": 0,
+    "stderr_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T105235Z/git-worktree-add.stderr.log",
+    "stdout_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T105235Z/git-worktree-add.stdout.log"
+  },
+  "worktreePath": "/tmp/info-geometry-autoopt/20260319T105235Z"
+}

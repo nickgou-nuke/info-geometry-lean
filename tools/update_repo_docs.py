@@ -268,6 +268,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Do not regenerate docs/auto/index.md.",
     )
+    ap.add_argument(
+        "--skip-decl-refresh",
+        action="store_true",
+        help="Do not refresh the public declaration-DAG artifacts before causal-order reports.",
+    )
     return ap.parse_args()
 
 
@@ -305,14 +310,13 @@ def main() -> int:
         run(["python3", "tools/generate_surrogate_index.py"], cwd=root)
         run(["python3", "tools/generate_vacuity_index.py"], cwd=root)
         run(["python3", "tools/generate_bridge_thinness_index.py"], cwd=root)
+        if not args.skip_decl_refresh:
+            run(["python3", "tools/refresh_decl_graph.py"], cwd=root)
         run(
             [
                 "python3",
                 "tools/generate_causal_report.py",
-                "--graph",
-                ".build/full_graph.json",
-                "--decls",
-                ".build/index/decls.jsonl",
+                "--allow-partial-coverage",
                 "--out",
                 "reports/dag/true-root-order.md",
                 "--json-out",
@@ -320,6 +324,7 @@ def main() -> int:
             ],
             cwd=root,
         )
+        run(["python3", "tools/classify_missing_all.py"], cwd=root)
         run(["python3", "tools/select_openclaw_target.py"], cwd=root)
         run(["python3", "tools/generate_unification_index.py"], cwd=root)
         run(["python3", "tools/generate_debt_candidates.py"], cwd=root)

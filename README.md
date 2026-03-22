@@ -144,25 +144,69 @@ The exact frontier graph counts are intentionally not duplicated here. Use the t
 ## Artifact Placement
 
 Keep these graph layers distinct:
-- `.build/full_graph.json` and `.build/index/decls.jsonl` are the trusted declaration-level inputs for causal-order analysis.
+- `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl` are the public authoritative declaration-level inputs for causal-order analysis.
 - `reports/dag/*.semantic-block.stdlib.json` are trusted semantic block exports for heavy modules.
-- `reports/dag/true-root-order.{md,json}` are derived absolute causal-order reports built from the `.build/` graph artifacts plus the tracked audits.
+- `reports/dag/true-root-order.{md,json}` are derived absolute causal-order reports built from the `artifacts/dag/` graph artifacts plus the tracked audits.
 - `reports/dag/openclaw-targets.{md,json}` are derived operational rankings built from `true-root-order.json`.
 
-The mismatch that kept reappearing came from tool drift across two graph eras: older declaration-graph tooling assumed `full_graph.json` and `index/decls.jsonl` at repo root, while the current index/build workflow emits those trusted artifacts under `.build/`. A second drift then appeared when the causal report was updated to refresh markdown without refreshing its JSON sibling, leaving the target selector to read stale `true-root-order.json` state.
+The mismatch that kept reappearing came from tool drift across two graph eras: older declaration-graph tooling assumed `full_graph.json` and `index/decls.jsonl` at repo root, while a later generation pushed the trusted declaration export into the hidden `.build/` cache. The current repository policy is to keep the authoritative declaration graph in the public `artifacts/dag/` lane instead, with `.build/` treated only as a transient build cache or explicit compatibility fallback. A second drift then appeared when the causal report was updated to refresh markdown without refreshing its JSON sibling, leaving the target selector to read stale `true-root-order.json` state.
+
+## Tooling Hierarchy
+
+Read the operational documentation in this order:
+
+1. [README.md](/home/goutev/LEAN4/info-geometry-lean/README.md)
+- repository-wide proof policy, artifact placement, and current-vs-legacy split
+
+2. [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
+- Lean-side graph engine and export-lane hierarchy
+
+3. [tools/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/README.md)
+- Python orchestration hierarchy and script status
+
+The hierarchy of trust is:
+
+1. authoritative declaration DAG lane
+- [refresh_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/refresh_decl_graph.py) -> [Indexer.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/Indexer.lean) -> `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`
+- consumed by [generate_causal_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_causal_report.py), [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/select_openclaw_target.py), and [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/classify_missing_all.py)
+
+2. authoritative blueprint / LeanArchitect lane
+- [refresh_blueprint_tags.py](/home/goutev/LEAN4/info-geometry-lean/tools/refresh_blueprint_tags.py) -> [auto_blueprints.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/auto_blueprints.lean) and [BlueprintTags.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/BlueprintTags.lean)
+- consumed by `python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags`, `python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprint`, and `python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprintJson`
+- human-facing narrative lives under [blueprint/README.md](/home/goutev/LEAN4/info-geometry-lean/blueprint/README.md) and `blueprint/src/generated/content.tex`
+
+3. authoritative semantic-block lane
+- [semantic_block_export.py](/home/goutev/LEAN4/info-geometry-lean/tools/semantic_block_export.py) -> `reports/dag/*.semantic-block.stdlib.json`
+- consumed by [skynet_v2.py](/home/goutev/LEAN4/info-geometry-lean/tools/skynet_v2.py), [generate_auto_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_auto_docs.py), and [update_repo_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/update_repo_docs.py)
+
+4. limited native auxiliary lane
+- [RootOrderExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/RootOrderExport.lean) and similar native reports are useful, but they are not the default current refresh path
+
+5. compatibility / legacy lane
+- [ExportForwardGraph.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/ExportForwardGraph.lean)
+- [ExportDecls.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/ExportDecls.lean)
+- [GraphExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/GraphExport.lean)
+- [graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/graph.py)
+- `docs-map/graph.json`
+
+These compatibility surfaces are still useful for ad hoc inspection and older consumers, but they are not the canonical source of causal order.
 
 ## Current vs Legacy
 
 Use this split when entering the repository for the first time.
 
 | Surface | Status | What to use it for |
-| --- | --- | --- |
 | `lean/InfoGeometry/Canonical`, `lean/InfoGeometry/KK`, `lean/InfoGeometry/Library.lean`, `lean/InfoGeometry/Quantum` | Current | Main theorem library and publication surface |
-| `lean/DAG`, `lean/scripts/DAG/Exploration` | Current | Graph extraction, semantic export, diagnostics, frontier analysis |
-| `tools/semantic_block_export.py`, `tools/skynet_v2.py`, `tools/update_repo_docs.py` | Current | Trusted heavy-module export and auto-doc/frontier workflow |
-| `docs/auto/index.md`, `lean/DAG/README.md`, `skills/info-geometry-repo/` | Current | Operational documentation and agent bootstrap |
+| `tools/refresh_decl_graph.py` + `lean/DAG/Indexer.lean` + `artifacts/dag/full_graph.json` + `artifacts/dag/index/decls.jsonl` | Current / authoritative | Declaration-level causal order, coverage, and rooted partial-order analysis |
+| `tools/generate_causal_report.py`, `tools/select_openclaw_target.py`, `tools/classify_missing_all.py` | Current / authoritative | Causal reports, operational rankings, and `All`-coverage classification |
+| `tools/refresh_blueprint_tags.py`, `lean/InfoGeometry/auto_blueprints.lean`, `lean/InfoGeometry/BlueprintTags.lean`, LeanArchitect `:blueprint` / `:blueprintJson` facets | Current / authoritative | Blueprint coverage refresh and exact theorem-to-TeX/JSON extraction |
+| `tools/semantic_block_export.py`, `tools/skynet_v2.py`, `tools/update_repo_docs.py` | Current / authoritative | Trusted heavy-module export and frontier workflow |
+| `lean/DAG/RootOrderExport.lean`, `lean/DAG/SkeletonExport.lean`, `lean/scripts/DAG/Exploration/*` | Current / auxiliary | Native reports and diagnostics that sit beside, not above, the authoritative `artifacts/dag` pipeline |
+| `lean/DAG/ExportForwardGraph.lean`, `lean/DAG/ExportDecls.lean`, `lean/InfoGeometry/GraphExport.lean` | Compatibility / limited | Older declaration export paths, one-off inspection, and legacy downstream consumers |
+| `tools/graph.py`, `docs-map/graph.json` | Legacy / compatibility | Older NetworkX-based graph consumer; do not treat as canonical causal-order truth |
 | `archive/legacy/` | Archived but useful | Historical automation and scratch material worth mining for ideas, but not part of the supported build surface |
 | `reports/dag/` | Generated / inspect after refresh | Analysis artifacts regenerated from the current code and export set |
+
 
 The archive is intentionally kept in-tree for provenance and idea recovery. Start with current surfaces first, then consult [archive/README.md](/home/goutev/LEAN4/info-geometry-lean/archive/README.md) only if you are explicitly researching historical approaches.
 
@@ -171,20 +215,24 @@ The archive is intentionally kept in-tree for provenance and idea recovery. Star
 Full project build:
 
 ```bash
-lake build InfoGeometry.All
+python3 tools/run_locked_lake_build.py InfoGeometry.All
 ```
 
 Canonical umbrella build:
 
 ```bash
-lake build InfoGeometry.Canonical.All
+python3 tools/run_locked_lake_build.py InfoGeometry.Canonical.All
 ```
 
 Recursive rebuild:
 
 ```bash
-lake build -R
+python3 tools/run_locked_lake_build.py -R
 ```
+
+Single-build rule:
+- do not launch multiple full or umbrella builds concurrently
+- use `python3 tools/run_locked_lake_build.py ...` so a second build fails fast on the shared build lock
 
 DAG and semantic-export tooling:
 
@@ -217,7 +265,8 @@ Why this path matters:
 - it avoids host/guest `[init]` collisions on heavy files;
 - it produces semantic block graphs filtered to `primaryProduces`, while preserving `auxProduces` in the causal substrate.
 
-For advanced tooling details, read [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md).
+For advanced Lean-side graph details, read [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md).
+For Python-side orchestration status, read [tools/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/README.md).
 The generated auto status page lives at [index.md](/home/goutev/LEAN4/info-geometry-lean/docs/auto/index.md).
 
 ## Frontier Discovery

@@ -17,6 +17,8 @@ It provides:
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [KreinSpace H]
 
+namespace InfoGeometry.Krein
+
 /-- The **Krein state space** is the projectivization of a Krein space.
 This construction takes nonzero vectors modulo the action of the gauge group `ℝˣ`. -/
 abbrev KreinStateSpace (H : Type*)
@@ -59,3 +61,5 @@ def NullCone (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] [Compl
   {s | kreinSign s = 0}
 
 end KreinStateSpace
+
+end InfoGeometry.Krein

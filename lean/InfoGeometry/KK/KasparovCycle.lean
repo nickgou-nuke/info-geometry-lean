@@ -136,6 +136,23 @@ theorem index_bridge_spectral [FiniteDimensional ℝ H] :
   simp
 
 /--
+REFINED SPECTRAL INDEX BRIDGE:
+For a spectral Kasparov phase (F² = 1), the constant Dirac/grading family
+has zero analytical index at every point, derived from the constructive
+spectral bridge.
+-/
+theorem index_bridge_spectral_zero_family [FiniteDimensional ℝ H]
+    (hF : X.F * X.F = 1) :
+    ∀ s : ℝ,
+      InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
+        ((fun _ : ℝ => X.F.toLinearMap) s)
+        ((fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap) s)
+        = 0 := by
+  intro s
+  simp only
+  exact index_bridge_spectral_zero X hF
+
+/--
 Frontier materialization (candidate 1):
 the spectral bridge yields explicit zero-index transport from the Kasparov seed.
 -/
@@ -147,7 +164,7 @@ theorem auto_index_bridge_spectral_from_seed_1 [FiniteDimensional ℝ H]
         ((fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap) s)
         = 0 := by
   intro s
-  exact index_bridge_spectral_zero X hF
+  exact index_bridge_spectral_zero_family X hF
 
 /--
 Transport the KK analytical index through any path whose analytical index is

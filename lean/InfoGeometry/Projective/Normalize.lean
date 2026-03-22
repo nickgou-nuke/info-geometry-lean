@@ -7,29 +7,27 @@ Normalization of positive measures modulo projective ray equivalence.
 -/
 
 namespace InfoGeometry.Projective.Normalize
-end InfoGeometry.Projective.Normalize
 
-namespace PositiveMeasure
-
-variable {α : Type u}
+namespace InfoGeometry.Projective.Normalize
 
 section NormalizeOnProj
 
+variable {α : Type u}
 variable [Fintype α] [Nonempty α]
 
 /-- Normalization is constant on projective rays. -/
 lemma normalize_eq_of_sameRay
     {μ ν : PositiveMeasure α ℝ}
-    (h : SameRay μ ν) :
-    normalize (α := α) (R := ℝ) μ = normalize (α := α) (R := ℝ) ν := by
+    (h : PositiveMeasure.SameRay μ ν) :
+    PositiveMeasure.normalize (α := α) (R := ℝ) μ = PositiveMeasure.normalize (α := α) (R := ℝ) ν := by
   rcases h with ⟨c, hc, rfl⟩
   symm
-  exact normalize_scale (α := α) (c := c) hc μ
+  exact PositiveMeasure.normalize_scale (α := α) (c := c) hc μ
 
 /-- Legacy quotient-based normalization map (kept private). -/
-private noncomputable def normalizeOnProjLegacy : Proj (α := α) → PositiveMeasure α ℝ :=
+private noncomputable def normalizeOnProjLegacy : PositiveMeasure.Proj (α := α) → PositiveMeasure α ℝ :=
   Quotient.lift
-    (fun μ => normalize (α := α) (R := ℝ) μ)
+    (fun μ => PositiveMeasure.normalize (α := α) (R := ℝ) μ)
     (by
       intro μ ν h
       exact normalize_eq_of_sameRay (α := α) h)
@@ -42,24 +40,24 @@ noncomputable def normalizeOnConeInteriorStateSpace :
     (InfoGeometry.Projective.coneInteriorStateSpaceToProjectiveClass (α := α))
 
 /-- Canonical simplex representative of a projective ray. -/
-noncomputable def normalizeOnProj : Proj (α := α) → PositiveMeasure α ℝ :=
+noncomputable def normalizeOnProj : PositiveMeasure.Proj (α := α) → PositiveMeasure α ℝ :=
   normalizeOnConeInteriorStateSpace (α := α) ∘
     (InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace (α := α))
 
 @[simp] lemma normalizeOnProj_mk (μ : PositiveMeasure α ℝ) :
-    normalizeOnProj (α := α) (Quotient.mk _ μ) = normalize (α := α) (R := ℝ) μ := by
+    normalizeOnProj (α := α) (Quotient.mk _ μ) = PositiveMeasure.normalize (α := α) (R := ℝ) μ := by
   unfold normalizeOnProj normalizeOnConeInteriorStateSpace
   rw [Function.comp_apply, Function.comp_apply]
   rw [InfoGeometry.Projective.coneInteriorStateSpaceToProjectiveClass_projectiveClass]
   rfl
 
 /-- The canonical representative has unit mass. -/
-@[simp] lemma Z_normalizeOnProj (q : Proj (α := α)) :
-    Z (α := α) (R := ℝ) (normalizeOnProj (α := α) q) = 1 := by
+@[simp] lemma Z_normalizeOnProj (q : PositiveMeasure.Proj (α := α)) :
+    PositiveMeasure.Z (α := α) (R := ℝ) (normalizeOnProj (α := α) q) = 1 := by
   refine Quotient.inductionOn q ?_
   intro μ
-  simpa using (Z_normalize (α := α) (R := ℝ) μ)
+  simpa using (PositiveMeasure.Z_normalize (α := α) (R := ℝ) μ)
 
 end NormalizeOnProj
 
-end PositiveMeasure
+end InfoGeometry.Projective.Normalize

@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-"""Generate bulk `[blueprint]` tags from an existing dependency graph.
+"""LEGACY graph-only generator for bulk `[blueprint]` tags.
 
-This script reads `graph.json` produced by `scripts/make_graph.py`, optionally
+This script reads `docs-map/graph.json` from the older declaration-graph lane.
+The supported current workflow is `tools/refresh_blueprint_tags.py` backed by
+`artifacts/dag/index/decls.jsonl` and the dedicated `InfoGeometry.BlueprintTags`
+LeanArchitect surface. This file is kept for compatibility and archaeology.
+
+This script optionally
 filters declarations by module prefixes and/or connected-component membership,
 and emits a Lean file containing `attribute [blueprint] ...` lines.
 

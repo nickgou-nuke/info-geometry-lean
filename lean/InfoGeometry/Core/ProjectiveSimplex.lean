@@ -16,7 +16,7 @@ Mathematical Hierarchy:
 4. Normalized Distributions (stdSimplex via gauge-fixing)
 -/
 
-namespace InfoGeometry.Canonical
+namespace InfoGeometry.Core
 
 open LinearAlgebra
 open scoped LinearAlgebra.Projectivization
@@ -43,4 +43,4 @@ noncomputable def gaugeFix {ι : Type*} [Fintype ι] (p : ℙ ℝ (ι → ℝ)) 
     rw [← Finset.mul_sum]
     exact inv_mul_cancel₀ h_mass⟩
 
-end InfoGeometry.Canonical
+end InfoGeometry.Core

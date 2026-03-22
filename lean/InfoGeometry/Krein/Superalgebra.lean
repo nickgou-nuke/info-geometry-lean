@@ -4,6 +4,8 @@ import Mathlib.Tactic.Module
 
 open scoped InnerProductSpace
 
+namespace InfoGeometry.Krein
+
 namespace KreinGradedModule
 
 variable {H : Type*}
@@ -19,7 +21,7 @@ noncomputable def comm (A B : EndH H) : EndH H := A * B - B * A
 /-- Ordinary anticommutator `{A,B} = AB + BA`. -/
 noncomputable def anticomm (A B : EndH H) : EndH H := A * B + B * A
 
-omit [CompleteSpace H] [KreinSpace H] [KreinGradedModule H] in
+/-- Ordinary commutator `⁅A, B⁆` in `LieAlgebra`. -/
 lemma comm_eq_lie (A B : EndH H) : comm A B = ⁅A, B⁆ := rfl
 
 @[simp] lemma gradeConj_add (A B : EndH H) :
@@ -149,3 +151,5 @@ lemma superComm_odd_odd
   simp [comm, anticomm]
 
 end KreinGradedModule
+
+end InfoGeometry.Krein

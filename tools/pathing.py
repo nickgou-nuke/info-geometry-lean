@@ -40,8 +40,64 @@ def default_docs_map_root() -> Path:
     return r / "docs-map"
 
 
+def default_artifacts_root() -> Path:
+    return repo_root() / "artifacts"
+
+
+def default_decl_artifact_root() -> Path:
+    return default_artifacts_root() / "dag"
+
+
+def default_decl_graph_file() -> Path:
+    return default_decl_artifact_root() / "full_graph.json"
+
+
+def default_decl_index_dir() -> Path:
+    return default_decl_artifact_root() / "index"
+
+
+def default_decl_metadata_file() -> Path:
+    return default_decl_index_dir() / "decls.jsonl"
+
+
+def default_build_decl_artifact_root() -> Path:
+    return repo_root() / ".build"
+
+
+def default_build_decl_graph_file() -> Path:
+    return default_build_decl_artifact_root() / "full_graph.json"
+
+
+def default_build_decl_index_dir() -> Path:
+    return default_build_decl_artifact_root() / "index"
+
+
+def default_build_decl_metadata_file() -> Path:
+    return default_build_decl_index_dir() / "decls.jsonl"
+
+
+def resolve_decl_graph_file() -> Path:
+    return resolve_existing(default_decl_graph_file(), default_build_decl_graph_file())
+
+
+def resolve_decl_metadata_file() -> Path:
+    return resolve_existing(default_decl_metadata_file(), default_build_decl_metadata_file())
+
+
+def default_auto_blueprints_file() -> Path:
+    return default_src_root() / "auto_blueprints.lean"
+
+
 def default_blueprint_tags_file() -> Path:
     return default_src_root() / "BlueprintTags.lean"
+
+
+def default_blueprint_root() -> Path:
+    return repo_root() / "blueprint"
+
+
+def default_blueprint_generated_dir() -> Path:
+    return default_blueprint_root() / "src" / "generated"
 
 
 def normalize_user_path(p: str | None, default_path: Path) -> Path:

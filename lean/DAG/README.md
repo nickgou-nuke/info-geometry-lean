@@ -37,6 +37,33 @@ The practical rule is:
 Declaration graph for global topology.
 Semantic block graph for human-facing theory structure.
 
+## 0.5) Hierarchy And Status
+
+The repository currently has four graph/export lanes, and they should be kept separate:
+
+1. Authoritative declaration-DAG lane
+- [Indexer.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/Indexer.lean)
+- low-level exporter behind the public `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl` lane
+- this is the canonical source for causal order, coverage, and rooted partial-order analysis
+
+2. Authoritative semantic-block lane
+- [BlockExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/BlockExport.lean) for in-process block slicing
+- [ServerExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/ServerExport.lean) plus [semantic_block_export.py](/home/goutev/LEAN4/info-geometry-lean/tools/semantic_block_export.py) for the trusted heavy-file path
+- outputs `reports/dag/*.semantic-block.stdlib.json`
+
+3. Native auxiliary / limited lane
+- [RootOrderExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/RootOrderExport.lean)
+- [SkeletonExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/SkeletonExport.lean)
+- useful for native reports, but not the default current refresh path
+
+4. Compatibility / legacy lane
+- [ExportForwardGraph.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/ExportForwardGraph.lean)
+- [ExportDecls.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/ExportDecls.lean)
+- [InfoGeometry/GraphExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/GraphExport.lean)
+- [tools/graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/graph.py) and older `docs-map/graph.json` consumers
+
+These compatibility surfaces remain useful for inspection and older downstream tools, but they are not the canonical causal-order substrate.
+
 ## 1) Current Trust Model
 
 The repository now has two export paths with different trust levels:
@@ -135,29 +162,36 @@ The distinction is intentional:
 
 ## 5) Primary Workflows
 
-### Workflow A: Whole-module declaration topology
+### Workflow A: Authoritative declaration topology and causal order
 
-Use this when you want SCCs, dominators, and declaration-level skeletons over an import closure.
+Use this when you want the current rooted partial order, coverage metrics, and declaration-level causal geometry over the authoritative umbrella import root.
 
-Step 1: export the forward declaration graph
+Step 1: export the authoritative declaration graph and declaration index
 
 ```bash
-lake env lean --run lean/DAG/ExportForwardGraph.lean \
-  InfoGeometry docs-map/module_graph.json InfoGeometry
+python3 tools/refresh_decl_graph.py
 ```
 
-Step 2: extract the vulnerability-ranked skeleton
+Step 2: build the rooted causal-order report
 
 ```bash
-lake env lean --run lean/DAG/SkeletonExport.lean \
-  InfoGeometry InfoGeometry docs-map/skeleton.json
+python3 tools/generate_causal_report.py \
+  --out reports/dag/true-root-order.md \
+  --json-out reports/dag/true-root-order.json
+```
+
+Step 3: classify declaration-bearing files still outside `InfoGeometry.All`
+
+```bash
+python3 tools/classify_missing_all.py
 ```
 
 Use this path for:
-- articulation hubs,
-- SCC condensation,
-- vulnerability/influence rankings,
-- high-level architecture audits.
+- root-set extraction,
+- topological layers,
+- declaration coverage,
+- `InfoGeometry.All` absorption planning,
+- causal-order reports.
 
 ### Workflow B: Source-level block slicing
 
@@ -258,6 +292,20 @@ To rerun the frontier packets and regenerate the tracked status page together:
 ```bash
 python3 tools/update_repo_docs.py
 ```
+
+### Compatibility workflow: older declaration exports
+
+These remain useful for older consumers and one-off inspection, but they are not the authoritative current causal-order path.
+
+```bash
+lake env lean --run lean/DAG/ExportForwardGraph.lean \
+  InfoGeometry.All docs-map/module_graph.json InfoGeometry
+
+lake env lean --run lean/DAG/ExportDecls.lean \
+  InfoGeometry.All InfoGeometry docs-map/declarations.json InfoGeometry
+```
+
+If these outputs disagree with `artifacts/dag/full_graph.json` or `artifacts/dag/index/decls.jsonl`, trust the `artifacts/dag/` artifacts and regenerate the derived reports. The `.build/` copies are only transient cache/fallback surfaces.
 
 To include a full trusted export refresh for the heavy default modules:
 

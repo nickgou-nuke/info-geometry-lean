@@ -2,7 +2,7 @@
 """LEGACY graph-only generator for bulk `[blueprint]` tags.
 
 This script reads `docs-map/graph.json` from the older declaration-graph lane.
-The supported current workflow is `tools/refresh_blueprint_tags.py` backed by
+The supported current workflow is `tools/infra/refresh_blueprint_tags.py` backed by
 `artifacts/dag/index/decls.jsonl` and the dedicated `InfoGeometry.BlueprintTags`
 LeanArchitect surface. This file is kept for compatibility and archaeology.
 
@@ -24,11 +24,11 @@ import sys
 
 if __package__ is None or __package__ == "":
     # Support direct execution: `python3 scripts/docs/graph_to_blueprint.py ...`
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 if __package__ is None or __package__ == "":
     # Support direct execution: `python3 scripts/graph_to_blueprint.py ...`
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from tools.pathing import default_docs_map_root, default_blueprint_tags_file, normalize_user_path
 

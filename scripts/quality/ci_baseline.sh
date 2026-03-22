@@ -3,14 +3,14 @@ set -euo pipefail
 
 # LEGACY docs-map baseline.
 # This script still exercises the older module-graph lane for compatibility.
-# The authoritative declaration DAG refresh path is `python3 tools/refresh_decl_graph.py`.
+# The authoritative declaration DAG refresh path is `python3 tools/infra/refresh_decl_graph.py`.
 #
 # Steps kept here:
 # 1) full build
 # 2) graph extraction with per-module probe
 # 3) deterministic refactor plan
 
-python3 tools/run_locked_lake_build.py
+python3 tools/infra/run_locked_lake_build.py
 python3 -m scripts make-graph --probe-unresolved --out docs-map/graph.json
 python3 -m scripts refactor-plan \
   --module-graph docs-map/module_graph.json \

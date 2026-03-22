@@ -31,13 +31,17 @@ Read these in order:
 5. [docs/auto/index.md](/home/goutev/LEAN4/info-geometry-lean/docs/auto/index.md)
 6. [THEORY_CANOPY_RN_GAUGE.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY_RN_GAUGE.md)
 
-Then run:
+Then run the locked full build:
 
 ```bash
-lake build InfoGeometry.All
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.All
 ```
 
-If you only need the canonical publication surface first, `lake build InfoGeometry.Canonical.All` is the smaller entrypoint.
+If you only need the canonical publication surface first, use:
+
+```bash
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.Canonical.All
+```
 
 ## The Main Theory Routes
 
@@ -85,8 +89,8 @@ If your interest is the meta-tooling first, orient yourself through these files:
 1. `lean/DAG/BlockExport.lean`
 2. `lean/DAG/ServerExport.lean`
 3. `lean/scripts/DAG/Exploration/SemanticBlockServer.lean`
-4. `tools/semantic_block_export.py`
-5. `tools/skynet_v2.py`
+4. `tools/frontier/semantic_block_export.py`
+5. `tools/frontier/skynet_v2.py`
 
 That route roughly follows:
 
@@ -101,9 +105,9 @@ Use these as the active, supported surfaces:
 | theorem library | `lean/InfoGeometry/`, `lean/InfoGeometry/Library.lean`, `lean/InfoGeometry/Canonical/All.lean`, `lean/InfoGeometry/Quantum` |
 | graph engine | `lean/DAG/` |
 | Lean report wrappers | `lean/scripts/DAG/Exploration/` |
-| trusted heavy-module export | `tools/semantic_block_export.py` |
-| frontier analysis | `tools/skynet_v2.py` |
-| auto docs refresh | `tools/update_repo_docs.py` |
+| trusted heavy-module export | `tools/frontier/semantic_block_export.py` |
+| frontier analysis | `tools/frontier/skynet_v2.py` |
+| auto docs refresh | `tools/docs/update_repo_docs.py` |
 | agent bootstrap | `skills/info-geometry-repo/` |
 
 ## What To Ignore At First
@@ -114,7 +118,7 @@ Do not start here unless you have a specific reason:
 | --- | --- |
 | `archive/` | useful for provenance and idea recovery, but not authoritative for current work |
 | `reports/dag/` | generated artifacts, not source of truth |
-| `archive/legacy/scripts/skynet.py` | historical automation path replaced by `tools/skynet_v2.py` |
+| `archive/legacy/scripts/skynet.py` | historical automation path replaced by `tools/frontier/skynet_v2.py` |
 | archived scratch Lean files | design archaeology, not current build surface |
 | `lean/InfoGeometry/Unstable/` | quarantine area, not the canonical publication path |
 
@@ -123,13 +127,13 @@ Do not start here unless you have a specific reason:
 Build the full theorem surface:
 
 ```bash
-lake build InfoGeometry.All
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.All
 ```
 
 Build the canonical umbrella:
 
 ```bash
-lake build InfoGeometry.Canonical.All
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.Canonical.All
 ```
 
 Build the DAG/tooling surface:
@@ -141,13 +145,13 @@ lake build DAG semanticBlockExport semanticBlockServer
 Refresh tracked frontier/docs artifacts from current local graph data:
 
 ```bash
-python3 tools/update_repo_docs.py
+python3 tools/docs/update_repo_docs.py
 ```
 
 Run the trusted heavy-module semantic export path:
 
 ```bash
-python3 tools/semantic_block_export.py \
+python3 tools/frontier/semantic_block_export.py \
   lean/InfoGeometry/Canonical/GrandSynthesis.lean \
   reports/dag/GrandSynthesis.semantic-block.stdlib.json \
   --server-mode stdlib \
@@ -159,7 +163,7 @@ python3 tools/semantic_block_export.py \
 Run frontier discovery from the KK seed:
 
 ```bash
-python3 tools/skynet_v2.py \
+python3 tools/frontier/skynet_v2.py \
   --input reports/dag/KasparovCycle.semantic-block.stdlib.json \
   --input reports/dag/AnalyticalIndex.semantic-block.stdlib.json \
   --input reports/dag/OperatorAlgebraBridge.semantic-block.stdlib.json \

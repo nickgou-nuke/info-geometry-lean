@@ -1,0 +1,32 @@
+# Archived Legacy Scripts
+
+These scripts were removed from the active `scripts` CLI and the maintained
+documentation/build pipeline. They are kept only for archaeology, one-off
+conversions, or historical comparison work.
+
+Archived here in this cleanup:
+- `graph_to_blueprint_inplace.py`
+  Old in-place source patcher for `@[blueprint]` tags from the `docs-map` lane.
+- `graph_to_blueprint_bulk.py`
+  Old bulk `attribute [blueprint] ...` file generator from the `docs-map` lane.
+- `auto_tag.py`
+  Old bulk blueprint tagger using `docs-map/declarations.json`.
+- `generate_library_index.py`
+  Old exhaustive LaTeX index generator over `tools.graph` / `docs-map`.
+- `agent_doc_gen.py`
+  Old local declaration-neighborhood LaTeX stub generator over `tools.graph`.
+- `build_theory_manifest.py`
+  Old manifest builder over `full_graph.json` / `theory_toc.json`.
+- `cluster_theory.py`
+  Old Leiden clustering tool over the pre-authoritative `full_graph.json` lane.
+
+Current replacements:
+- declaration DAG: `tools/infra/refresh_decl_graph.py`
+- blueprint coverage: `tools/infra/refresh_blueprint_tags.py`
+- heavy semantic export: `tools/frontier/semantic_block_export.py`
+- frontier analysis: `tools/frontier/skynet_v2.py`
+- status/doc refresh: `tools/docs/update_repo_docs.py`
+
+Practical rule:
+- do not route new automation through these files
+- use them only when you explicitly need legacy behavior for comparison or conversion

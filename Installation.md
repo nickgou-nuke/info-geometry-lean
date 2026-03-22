@@ -8,36 +8,31 @@ We will not provide details on the contents of the theory here. See for yourself
 
 ## Instructions for Audit
 
-1. Clone the repository:
+1. Clone the repository from the remote you actually use:
    ```bash
-   git clone https://github.com/your-username/info-geometry-lean.git
+   git clone <repo-url> info-geometry-lean
    cd info-geometry-lean
    ```
-2. Install Lean 4 + Lake (required for builds):
+   Replace `<repo-url>` with your chosen GitHub remote for this repository.
+2. Install Lean 4 + Lake:
    ```bash
    scripts/build/install_lean.sh
    ```
-   If your environment blocks GitHub/package downloads, point the installer at a reachable mirror or local file:
+   If your environment blocks GitHub or package downloads, point the installer at a reachable mirror or local file:
    ```bash
    LEAN_ELAN_INIT_URL=file:///path/to/elan-init.sh scripts/build/install_lean.sh
-2. Install Lean 4 + Lake via `elan` (required for builds):
-   ```bash
-   # See https://leanprover.github.io/lean4/doc/quickstart.html
-   # ensure `lake` is on PATH (often ~/.elan/bin)
    ```
-3. Run a build:
+   You can also install `elan` manually; just make sure `lake` is on `PATH`.
+3. Verify the canonical theorem surface with the locked build wrapper:
    ```bash
-   scripts/build/run_lake_build.sh
+   scripts/build/run_lake_build.sh InfoGeometry.All
    ```
-4. Install a coding agent (e.g., Gemini):
+   For a forced rebuild, use:
    ```bash
-   # Follow local installation instructions for your chosen agent
+   python3 tools/infra/run_locked_lake_build.py -R InfoGeometry.All
    ```
-5. Run the agent inside the repository:
-   ```bash
-   gemini
-   ```
-6. Interrogate the agent. 
+4. Optional: install a coding agent for repo-local work.
+5. Interrogate the agent.
    - Ask it to audit the theory.
-   - Run `lake build -R` to verify the mathematical proofs interactively.
+   - Use `python3 tools/infra/run_locked_lake_build.py ...` for full or umbrella builds so concurrent builds are refused instead of stuttering the workspace.
    - Explore the consequences.

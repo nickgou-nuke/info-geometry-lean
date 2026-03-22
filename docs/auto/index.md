@@ -3,13 +3,13 @@
 Status:
 - generated from local repository state and trusted DAG artifacts
 - authoritative for current metrics/frontier snapshot
-- preferred refresh path: `python3 tools/update_repo_docs.py`
-- low-level generator: `python3 tools/generate_auto_docs.py`
+- preferred refresh path: `python3 tools/docs/update_repo_docs.py`
+- low-level generator: `python3 tools/docs/generate_auto_docs.py`
 - declaration-level causal-order inputs live under `artifacts/dag/`; derived frontier/causal reports live under `reports/dag/`
 
 ## Repository Scale
 - Lean files under `lean/`: **475**
-- Lean LOC under `lean/`: **75,847**
+- Lean LOC under `lean/`: **81,755**
 
 ## Trusted Semantic Exports
 | Module | Semantic nodes | Semantic edges | Skeleton nodes | Top hubs |

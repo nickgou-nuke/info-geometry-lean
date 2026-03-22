@@ -26,10 +26,10 @@ script semanticAudit (args) do
   child.wait
 
 script graphToBlueprint (args) do
-  -- legacy wrapper for the archived graph-to-blueprint bootstrap path
+  -- archived compatibility wrapper for the old graph-only blueprint bootstrap path
   let child ← IO.Process.spawn {
-    cmd := "python",
-    args := #["-m", "scripts", "graph-to-blueprint"] ++ args.toArray,
+    cmd := "python3",
+    args := #["archive/legacy/scripts/graph_to_blueprint_inplace.py"] ++ args.toArray,
     stdin := .inherit,
     stdout := .inherit,
     stderr := .inherit
@@ -39,7 +39,7 @@ script graphToBlueprint (args) do
 script refreshBlueprintTags (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",
-    args := #["tools/refresh_blueprint_tags.py"] ++ args.toArray,
+    args := #["tools/infra/refresh_blueprint_tags.py"] ++ args.toArray,
     stdin := .inherit,
     stdout := .inherit,
     stderr := .inherit

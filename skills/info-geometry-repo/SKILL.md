@@ -28,7 +28,7 @@ The repo has two layers:
 2. tooling layer
 - `lean/DAG/`
 - `lean/scripts/DAG/Exploration/`
-- `tools/semantic_block_export.py`
+- `tools/frontier/semantic_block_export.py`
 
 Do not mix these graph views:
 
@@ -70,7 +70,7 @@ Treat vacuous success as failure for frontier accounting.
 
 2. Build only what you need first.
 
-3. For full or umbrella builds, use `python3 tools/run_locked_lake_build.py ...` and never start two of them concurrently.
+3. For full or umbrella builds, use `python3 tools/infra/run_locked_lake_build.py ...` and never start two of them concurrently.
 
 4. Prefer semantic block export for heavy capstone modules.
 
@@ -81,7 +81,7 @@ Treat vacuous success as failure for frontier accounting.
 Use:
 
 ```bash
-python3 tools/semantic_block_export.py \
+python3 tools/frontier/semantic_block_export.py \
   <input.lean> \
   <output.json> \
   --server-mode stdlib \

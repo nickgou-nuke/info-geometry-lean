@@ -7,6 +7,8 @@ set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.Canonical.Unification
 
+open InfoGeometry.Krein
+
 open InfoGeometry.Quantum.ModularAnomaly
 open InfoGeometry.Quantum.RealMajoranaCategory
 

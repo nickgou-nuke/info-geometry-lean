@@ -11,6 +11,8 @@ open scoped InnerProductSpace
 
 namespace InfoGeometry.KK
 
+open InfoGeometry.Krein
+
 variable {A B H : Type*}
 variable [NormedRing A] [NormedRing B]
 variable [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]

@@ -3,6 +3,8 @@ import InfoGeometry.Quantum.BulkBoundary
 
 namespace InfoGeometry.Quantum.BulkBoundary
 
+open InfoGeometry.Krein
+
 open InfoGeometry.KK
 open InfoGeometry.Canonical.AnalyticalIndex
 

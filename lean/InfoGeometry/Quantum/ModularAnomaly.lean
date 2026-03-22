@@ -21,6 +21,8 @@ set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.Quantum.ModularAnomaly
 
+open InfoGeometry.Krein
+
 open InfoGeometry.Quantum.RealMajoranaCategory
 
 /--

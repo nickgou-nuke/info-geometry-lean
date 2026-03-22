@@ -10,6 +10,8 @@ split-Krein cycle.
 
 namespace InfoGeometry.KK
 
+open InfoGeometry.Krein
+
 open scoped InnerProductSpace
 
 variable {A B H : Type*}

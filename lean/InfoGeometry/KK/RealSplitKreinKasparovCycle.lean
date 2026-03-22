@@ -6,6 +6,8 @@ open scoped InnerProductSpace
 
 namespace InfoGeometry.KK
 
+open InfoGeometry.Krein
+
 /-- Endomorphism algebra on a real Krein-graded Hilbert carrier. -/
 abbrev EndH (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] := H →L[ℝ] H
 

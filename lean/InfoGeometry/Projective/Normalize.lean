@@ -8,8 +8,6 @@ Normalization of positive measures modulo projective ray equivalence.
 
 namespace InfoGeometry.Projective.Normalize
 
-namespace InfoGeometry.Projective.Normalize
-
 section NormalizeOnProj
 
 variable {α : Type u}
@@ -44,7 +42,7 @@ noncomputable def normalizeOnProj : PositiveMeasure.Proj (α := α) → Positive
   normalizeOnConeInteriorStateSpace (α := α) ∘
     (InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace (α := α))
 
-@[simp] lemma normalizeOnProj_mk (μ : PositiveMeasure α ℝ) :
+@[simp] lemma normalizeOnProj_mk (μ : InfoGeometry.PositiveMeasure α ℝ) :
     normalizeOnProj (α := α) (Quotient.mk _ μ) = PositiveMeasure.normalize (α := α) (R := ℝ) μ := by
   unfold normalizeOnProj normalizeOnConeInteriorStateSpace
   rw [Function.comp_apply, Function.comp_apply]
@@ -52,12 +50,42 @@ noncomputable def normalizeOnProj : PositiveMeasure.Proj (α := α) → Positive
   rfl
 
 /-- The canonical representative has unit mass. -/
-@[simp] lemma Z_normalizeOnProj (q : PositiveMeasure.Proj (α := α)) :
+@[simp] lemma Z_normalizeOnProj (q : InfoGeometry.PositiveMeasure.Proj (α := α)) :
     PositiveMeasure.Z (α := α) (R := ℝ) (normalizeOnProj (α := α) q) = 1 := by
   refine Quotient.inductionOn q ?_
   intro μ
   simpa using (PositiveMeasure.Z_normalize (α := α) (R := ℝ) μ)
 
 end NormalizeOnProj
+
+namespace InfoGeometry.PositiveMeasure
+
+section NormalizeCompat
+
+variable {α : Type u}
+variable [Fintype α] [Nonempty α]
+
+noncomputable abbrev normalizeOnConeInteriorStateSpace :
+    InfoGeometry.Projective.ConeInteriorStateSpace
+      ((InfoGeometry.Projective.positiveOrthant (α := α)).cone) →
+      InfoGeometry.PositiveMeasure α ℝ :=
+  InfoGeometry.Projective.Normalize.normalizeOnConeInteriorStateSpace (α := α)
+
+noncomputable abbrev normalizeOnProj : InfoGeometry.PositiveMeasure.Proj (α := α) → InfoGeometry.PositiveMeasure α ℝ :=
+  InfoGeometry.Projective.Normalize.normalizeOnProj (α := α)
+
+@[simp] lemma normalizeOnProj_mk (μ : InfoGeometry.PositiveMeasure α ℝ) :
+    normalizeOnProj (α := α) (Quotient.mk _ μ) = PositiveMeasure.normalize (α := α) (R := ℝ) μ := by
+  simpa [normalizeOnProj] using
+    (InfoGeometry.Projective.Normalize.normalizeOnProj_mk (α := α) μ)
+
+@[simp] lemma Z_normalizeOnProj (q : InfoGeometry.PositiveMeasure.Proj (α := α)) :
+    PositiveMeasure.Z (α := α) (R := ℝ) (normalizeOnProj (α := α) q) = 1 := by
+  simpa [normalizeOnProj] using
+    (InfoGeometry.Projective.Normalize.Z_normalizeOnProj (α := α) q)
+
+end NormalizeCompat
+
+end InfoGeometry.PositiveMeasure
 
 end InfoGeometry.Projective.Normalize

@@ -4,6 +4,8 @@ open scoped InnerProductSpace
 
 namespace InfoGeometry.KK
 
+open InfoGeometry.Krein
+
 /--
 Interface target for the Kasparov product in the bounded layer.
 This packages the output cycle while deferring concrete tensor-product analysis.

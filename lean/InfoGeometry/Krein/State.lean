@@ -15,7 +15,7 @@ It provides:
 3. `kreinSign`: Well-defined sign of the indefinite form on the state space.
 -/
 
-variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [KreinSpace H]
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [InfoGeometry.Krein.KreinSpace H]
 
 namespace InfoGeometry.Krein
 

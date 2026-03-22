@@ -123,12 +123,12 @@ lemma projectiveClassToTwistor_normalizeOnProj
     (hNull : ∀ μ : PositiveMeasure α ℝ, Q (positiveMeasureToEuclidean (α := α) μ) = 0)
     (q : PositiveMeasure.Proj (α := α)) :
     projectiveClassToTwistor (α := α) Q hNull
-      (Quotient.mk _ (PositiveMeasure.normalizeOnProj (α := α) q))
+      (Quotient.mk _ (InfoGeometry.Projective.Normalize.normalizeOnProj (α := α) q))
     =
     projectiveClassToTwistor (α := α) Q hNull q := by
   refine Quotient.inductionOn q ?_
   intro μ
-  simpa [PositiveMeasure.normalizeOnProj_mk] using
+  simpa [InfoGeometry.Projective.Normalize.normalizeOnProj_mk] using
     projectiveClassToTwistor_mk_normalize (α := α) (Q := Q) (hNull := hNull) μ
 
 /-- Cone-interior-state-space view of the twistor bridge. -/

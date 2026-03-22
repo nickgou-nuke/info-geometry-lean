@@ -13,6 +13,8 @@ Finite chain layer where macroscopic volume is the product of local Pfaffians.
 
 namespace InfoGeometry.Quantum.KitaevChain
 
+open InfoGeometry.Krein
+
 open InfoGeometry.Quantum.RealMajoranaCategory
 open InfoGeometry.Volume.Pfaffian
 

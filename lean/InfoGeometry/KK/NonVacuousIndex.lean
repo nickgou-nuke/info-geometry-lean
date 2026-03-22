@@ -2,6 +2,8 @@ import InfoGeometry.KK.KasparovCycle
 
 namespace InfoGeometry.KK.NonVacuousIndex
 
+open InfoGeometry.Krein
+
 open InfoGeometry.Canonical.AnalyticalIndex
 
 variable {A B H : Type*}

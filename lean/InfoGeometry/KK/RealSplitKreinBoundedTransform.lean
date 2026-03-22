@@ -6,6 +6,8 @@ open scoped InnerProductSpace
 
 namespace InfoGeometry.KK
 
+open InfoGeometry.Krein
+
 /-!
 # Real Split Krein Bounded Transform
 

@@ -23,7 +23,6 @@ namespace InfoGeometry.Canonical.LogSpine
 
 open InfoGeometry
 open InfoGeometry.Jordan
-open InfoGeometry.Canonical.ZetaDeterminant
 open InfoGeometry.Thermal
 
 /--
@@ -39,7 +38,7 @@ The Jordan log-det barrier is exactly the zeta-regularized log-determinant.
 -/
 theorem jordan_logdet_eq_zeta_determinant
     (n : Nat) (X : SPD n) :
-    logDetBarrier X = zetaLogDetBarrier X := by
+    logDetBarrier X = InfoGeometry.Canonical.Determinant.zetaLogDetBarrier X := by
   -- zetaLogDetBarrier X is definitionally -Real.log (Matrix.det X.mat)
   rfl
 
@@ -49,8 +48,8 @@ The Modular Hamiltonian (energy levels) induces the log-partition function.
 -/
 theorem modular_hamiltonian_to_log_partition
     (n : Nat) (H : Hamiltonian n) (β : ℝ) :
-    let Z := partitionFunction H β
-    Real.log Z = Real.log (∑ i, Real.exp (-β * H i)) := rfl
+    let Z := H.partition β
+    Real.log Z = Real.log (∑ i, Real.exp (-β * H.energy i)) := rfl
 
 /--
 Spine Identification 4:
@@ -71,7 +70,7 @@ The Full Spine:
 Free energy acts as the unified generating functional for the entire spine.
 -/
 noncomputable def freeEnergySpine (n : Nat) (H : Hamiltonian n) (β : ℝ) : ℝ :=
-  - (1 / β) * Real.log (partitionFunction H β)
+  - (1 / β) * Real.log (H.partition β)
 
 end LogSpine
 

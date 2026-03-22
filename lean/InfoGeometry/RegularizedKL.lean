@@ -146,3 +146,84 @@ lemma sum_regularizedPMF_eq_one
           exact div_self (ne_of_gt hZpos)
 
 end StatisticalMechanics
+
+
+namespace InfoGeometry.RegularizedKL
+
+noncomputable abbrev regTotalCount {α : Type*} [Fintype α] [Nonempty α]
+    (count : α → ℕ) (ε : ℝ) : ℝ :=
+  StatisticalMechanics.regTotalCount count ε
+
+noncomputable abbrev regularizedPositiveMeasure
+    {α : Type*} [Fintype α] [Nonempty α]
+    (count : α → ℕ) (ε : ℝ) (hε : 0 < ε) : PositiveMeasure α ℝ :=
+  StatisticalMechanics.regularizedPositiveMeasure count ε hε
+
+@[simp] theorem regularizedPositiveMeasure_apply
+    {α : Type*} [Fintype α] [Nonempty α]
+    (count : α → ℕ) (ε : ℝ) (hε : 0 < ε) (x : α) :
+    regularizedPositiveMeasure count ε hε x = (count x : ℝ) + ε := by
+  simpa [regularizedPositiveMeasure] using
+    (StatisticalMechanics.regularizedPositiveMeasure_apply count ε hε x)
+
+lemma regTotalCount_pos
+    {α : Type*} [Fintype α] [Nonempty α]
+    (count : α → ℕ) (ε : ℝ) (hε : 0 < ε) :
+    0 < regTotalCount count ε := by
+  simpa [regTotalCount] using StatisticalMechanics.regTotalCount_pos count ε hε
+
+noncomputable abbrev regularizedPMF
+    {α : Type*} [Fintype α] [Nonempty α]
+    (count : α → ℕ) (ε : ℝ) (hε : 0 < ε) : α → ℝ :=
+  StatisticalMechanics.regularizedPMF count ε hε
+
+@[simp] theorem regularizedPMF_eq
+    {α : Type*} [Fintype α] [Nonempty α]
+    (count : α → ℕ) (ε : ℝ) (hε : 0 < ε) (x : α) :
+    regularizedPMF count ε hε x = ((count x : ℝ) + ε) / regTotalCount count ε := by
+  simpa [regularizedPMF, regTotalCount] using
+    (StatisticalMechanics.regularizedPMF_eq count ε hε x)
+
+lemma regularizedPMF_strictly_pos
+    {α : Type*} [Fintype α] [Nonempty α]
+    (count : α → ℕ) (ε : ℝ) (hε : 0 < ε) (x : α) :
+    0 < regularizedPMF count ε hε x := by
+  simpa [regularizedPMF] using
+    (StatisticalMechanics.regularizedPMF_strictly_pos count ε hε x)
+
+noncomputable abbrev klDivergence
+    {α : Type*} [Fintype α] (P Q : α → ℝ) : ℝ :=
+  StatisticalMechanics.klDivergence P Q
+
+noncomputable abbrev regularizedKL
+    {α : Type*} [Fintype α] [Nonempty α]
+    (countP countQ : α → ℕ) (ε : ℝ) (hε : 0 < ε) : ℝ :=
+  StatisticalMechanics.regularizedKL countP countQ ε hε
+
+noncomputable abbrev regularizedGeneralizedKL
+    {α : Type*} [Fintype α] [Nonempty α]
+    (countP countQ : α → ℕ) (ε : ℝ) (hε : 0 < ε) : ℝ :=
+  StatisticalMechanics.regularizedGeneralizedKL countP countQ ε hε
+
+lemma regularizedGeneralizedKL_nonneg
+    {α : Type*} [Fintype α] [Nonempty α]
+    (countP countQ : α → ℕ) (ε : ℝ) (hε : 0 < ε) :
+    0 ≤ regularizedGeneralizedKL countP countQ ε hε := by
+  simpa [regularizedGeneralizedKL] using
+    (StatisticalMechanics.regularizedGeneralizedKL_nonneg countP countQ ε hε)
+
+lemma regularized_kl_is_safe
+    {α : Type*} [Fintype α] [Nonempty α]
+    (countP countQ : α → ℕ) (ε : ℝ) (hε : 0 < ε) (x : α) :
+    0 < (regularizedPMF countP ε hε x) / (regularizedPMF countQ ε hε x) := by
+  simpa [regularizedPMF] using
+    (StatisticalMechanics.regularized_kl_is_safe countP countQ ε hε x)
+
+lemma sum_regularizedPMF_eq_one
+    {α : Type*} [Fintype α] [Nonempty α]
+    (count : α → ℕ) (ε : ℝ) (hε : 0 < ε) :
+    ∑ x : α, regularizedPMF count ε hε x = 1 := by
+  simpa [regularizedPMF] using
+    (StatisticalMechanics.sum_regularizedPMF_eq_one count ε hε)
+
+end InfoGeometry.RegularizedKL

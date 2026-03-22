@@ -23,6 +23,13 @@ Derived reports live elsewhere:
 - `reports/dag/true-root-order.{md,json}`
 - `reports/dag/openclaw-targets.{md,json}`
 - `reports/dag/missing-all-classification.{md,json}`
+- `reports/dag/theorem-surface-index.{md,json}`
+- `reports/dag/declaration-networkx.graphml`
+- `reports/dag/module-networkx.graphml`
+- `reports/dag/module-networkx.svg`
+- `reports/dag/declaration-networkx-frontier.graphml`
+- `reports/dag/module-networkx-frontier.graphml`
+- `reports/dag/module-networkx-frontier.svg`
 
 Policy:
 - treat `artifacts/dag/` as the documented public declaration-graph lane

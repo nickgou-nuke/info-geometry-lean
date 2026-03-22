@@ -29,7 +29,6 @@ import InfoGeometry.Canonical.YangMillsContinuum
 import InfoGeometry.Prequantum.Connection
 import InfoGeometry.Prequantum.Quotient
 import InfoGeometry.Projective.TwistorBridge
-import InfoGeometry.Unstable.IBSurrogates
 import InfoGeometry.Unstable.SingularUnitaryBridge
 import InfoGeometry.Unstable.YangMillsBridge
 

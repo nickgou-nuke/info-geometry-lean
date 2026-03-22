@@ -23,7 +23,7 @@ which wraps `lean/DAG/Indexer.lean` and writes to `artifacts/dag/`.
 Usage:
 
 ```sh
-lake env lean --run lean/InfoGeometry/GraphExport.lean <import-modules> <output.json> [ns-prefix]
+lake env lean --run archive/legacy/lean/InfoGeometry/GraphExport.lean <import-modules> <output.json> [ns-prefix]
 ```
 
 `<import-modules>` is a comma-separated list of modules to load before
@@ -33,7 +33,7 @@ is used implicitly.
 Example:
 
 ```sh
-lake env lean --run lean/InfoGeometry/GraphExport.lean InfoGeometry InfoGeometry/graph.json
+lake env lean --run archive/legacy/lean/InfoGeometry/GraphExport.lean InfoGeometry InfoGeometry/graph.json
 ```
 -/
 

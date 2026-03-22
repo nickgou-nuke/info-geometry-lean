@@ -24,7 +24,7 @@ def run_export(import_mods: str, out: Path, ns_prefix: str = "InfoGeometry") -> 
         "env",
         "lean",
         "--run",
-        "lean/InfoGeometry/GraphExport.lean",
+        "archive/legacy/lean/InfoGeometry/GraphExport.lean",
         import_mods,
         str(out),
         ns_prefix,

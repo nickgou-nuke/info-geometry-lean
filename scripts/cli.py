@@ -11,8 +11,6 @@ from . import (
     build_doc_map,
     emit_markdown_index,
     filter_project_decls,
-    make_graph,
-    refactor_plan,
     proof_gap_report,
 )
 
@@ -20,8 +18,6 @@ COMMAND_MODULES: dict[str, Callable[[], int]] = {
     "build-doc-map": build_doc_map.main,
     "emit-markdown-index": emit_markdown_index.main,
     "filter-project-decls": filter_project_decls.main,
-    "make-graph": make_graph.main,
-    "refactor-plan": refactor_plan.main,
     "proof-gap-report": proof_gap_report.main,
 }
 
@@ -31,7 +27,7 @@ def main() -> int:
         prog="scripts",
         description=(
             "Active compatibility CLI for the remaining scripts/ lane. "
-            "Archived blueprint/bootstrap generators now live under archive/legacy/scripts/."
+            "Archived graph/bootstrap generators now live under archive/legacy/scripts/."
         ),
     )
     ap.add_argument("command", choices=COMMAND_MODULES.keys(),

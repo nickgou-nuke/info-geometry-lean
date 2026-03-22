@@ -168,7 +168,7 @@ The hierarchy of trust is:
 
 1. authoritative declaration DAG lane
 - [refresh_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/refresh_decl_graph.py) -> [Indexer.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/Indexer.lean) -> `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`
-- consumed by [generate_causal_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_causal_report.py), [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py), and [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/classify_missing_all.py)
+- consumed by [generate_causal_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_causal_report.py), [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py), [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/classify_missing_all.py), [generate_theorem_surface_index.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_theorem_surface_index.py), and [plot_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/plot_decl_graph.py)
 
 2. authoritative blueprint / LeanArchitect lane
 - [refresh_blueprint_tags.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/refresh_blueprint_tags.py) -> [auto_blueprints.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/auto_blueprints.lean) and [BlueprintTags.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/BlueprintTags.lean)
@@ -185,11 +185,11 @@ The hierarchy of trust is:
 5. compatibility / legacy lane
 - [ExportForwardGraph.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/ExportForwardGraph.lean)
 - [ExportDecls.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/ExportDecls.lean)
-- [GraphExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/GraphExport.lean)
 - [graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/graph.py)
 - `docs-map/graph.json`
+- archived module-graph helpers under [archive/legacy/](/home/goutev/LEAN4/info-geometry-lean/archive/legacy/README.md)
 
-These compatibility surfaces are still useful for ad hoc inspection and older consumers, but they are not the canonical source of causal order.
+These compatibility surfaces are archived for archaeology only and are not part of the canonical causal-order workflow.
 
 ## Current vs Legacy
 
@@ -198,12 +198,12 @@ Use this split when entering the repository for the first time.
 | Surface | Status | What to use it for |
 | `lean/InfoGeometry/Canonical`, `lean/InfoGeometry/KK`, `lean/InfoGeometry/Library.lean`, `lean/InfoGeometry/Quantum` | Current | Main theorem library and publication surface |
 | `tools/infra/refresh_decl_graph.py` + `lean/DAG/Indexer.lean` + `artifacts/dag/full_graph.json` + `artifacts/dag/index/decls.jsonl` | Current / authoritative | Declaration-level causal order, coverage, and rooted partial-order analysis |
-| `tools/infra/generate_causal_report.py`, `tools/infra/select_openclaw_target.py`, `tools/infra/classify_missing_all.py` | Current / authoritative | Causal reports, operational rankings, and `All`-coverage classification |
+| `tools/infra/generate_causal_report.py`, `tools/infra/select_openclaw_target.py`, `tools/infra/classify_missing_all.py`, `tools/infra/generate_theorem_surface_index.py`, `tools/infra/plot_decl_graph.py` | Current / authoritative | Causal reports, operational rankings, theorem-surface classification, `All`-coverage analysis, and both full/tracked-frontier NetworkX graph exports |
 | `tools/infra/refresh_blueprint_tags.py`, `lean/InfoGeometry/auto_blueprints.lean`, `lean/InfoGeometry/BlueprintTags.lean`, LeanArchitect `:blueprint` / `:blueprintJson` facets | Current / authoritative | Blueprint coverage refresh and exact theorem-to-TeX/JSON extraction |
 | `tools/frontier/semantic_block_export.py`, `tools/frontier/skynet_v2.py`, `tools/docs/update_repo_docs.py` | Current / authoritative | Trusted heavy-module export and frontier workflow |
 | `lean/DAG/RootOrderExport.lean`, `lean/DAG/SkeletonExport.lean`, `lean/scripts/DAG/Exploration/*` | Current / auxiliary | Native reports and diagnostics that sit beside, not above, the authoritative `artifacts/dag` pipeline |
-| `lean/DAG/ExportForwardGraph.lean`, `lean/DAG/ExportDecls.lean`, `lean/InfoGeometry/GraphExport.lean` | Compatibility / limited | Older declaration export paths, one-off inspection, and legacy downstream consumers |
-| `tools/graph.py`, `docs-map/graph.json` | Legacy / compatibility | Older NetworkX-based graph consumer; do not treat as canonical causal-order truth |
+| `lean/DAG/ExportForwardGraph.lean`, `lean/DAG/ExportDecls.lean` | Compatibility / limited | Older declaration export paths kept only for auxiliary inspection beside the authoritative `artifacts/dag` lane |
+| `tools/graph.py`, `docs-map/graph.json`, `archive/legacy/scripts/make_graph.py` | Legacy / compatibility | Older module-graph consumer lane; archived and not part of canonical causal-order truth |
 | `archive/legacy/` | Archived but useful | Historical automation and scratch material worth mining for ideas, but not part of the supported build surface |
 | `reports/dag/` | Generated / inspect after refresh | Analysis artifacts regenerated from the current code and export set |
 

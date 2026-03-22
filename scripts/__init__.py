@@ -7,9 +7,7 @@ after archiving the old graph/bootstrap generators into `archive/legacy/`.
 from __future__ import annotations
 
 from .analysis import (
-    make_graph,
     filter_project_decls,
-    refactor_plan,
     utils,
 )
 
@@ -21,9 +19,7 @@ from .docs import (
 )
 
 __all__ = [
-    "make_graph",
     "filter_project_decls",
-    "refactor_plan",
     "utils",
     "build_doc_map",
     "emit_markdown_index",

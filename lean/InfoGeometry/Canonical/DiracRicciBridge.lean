@@ -207,7 +207,7 @@ section EntropyGravity
 
 variable (n : Nat)
 variable {X : Type}
-  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
+  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X] [FiniteDimensional ℝ X]
 
 /-- RN entropy sourcing plus unit-volume metric bridge yields vacuum gravity. -/
 theorem gravity_from_rn_entropy

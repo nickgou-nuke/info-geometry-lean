@@ -1,0 +1,62 @@
+{
+  "branchName": "auto-opt/dry-cycle-20260320T161028Z",
+  "candidatePacket": "/home/goutev/LEAN4/info-geometry-lean/skills/info-geometry-repo/references/bridge-candidates.md",
+  "chosenFrontier": {
+    "affects": [],
+    "moduleName": "InfoGeometry.KK.KasparovCycle",
+    "moduleStatus": "classical_adjacent_model",
+    "primaryProduces": [
+      "InfoGeometry.KK.index_bridge_spectral"
+    ],
+    "rawScore": 0.043428354557759896,
+    "repoSourceFile": "lean/InfoGeometry/KK/KasparovCycle.lean",
+    "score": 0.058428354557759896,
+    "scoreAdjustments": [
+      {
+        "kind": "unification_status_adjustment",
+        "module": "InfoGeometry.KK.KasparovCycle",
+        "status": "classical_adjacent_model",
+        "value": 0.015
+      }
+    ],
+    "seedLinkDetails": [
+      "InfoGeometry.KK.KasparovCycle.analyticalIndex"
+    ],
+    "seedLinkKinds": [
+      "primaryDep"
+    ],
+    "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/KK/KasparovCycle.lean",
+    "spineTags": [],
+    "stableId": "block:3117-3498"
+  },
+  "freshWorktree": true,
+  "frontierJson": "/home/goutev/LEAN4/info-geometry-lean/reports/dag/skynet-v2-frontier-reverse.json",
+  "gitHead": "adab8a2a5f4d0411983df7193afb8bdf7c9c487f",
+  "proofAttemptCommandTemplate": "/home/goutev/LEAN4/info-geometry-lean/.venv/bin/python /home/goutev/LEAN4/info-geometry-lean/tools/proof_driver.py --context {context_json}",
+  "proofAttemptRetries": 1,
+  "reuseWorktree": null,
+  "runId": "20260320T161028Z",
+  "seedBlocks": [
+    "block:2093-2449"
+  ],
+  "seedNames": [
+    "KasparovCycle.analyticalIndex"
+  ],
+  "selectedCandidate": {
+    "name": "AutoCandidate.index_bridge_spectral_from_analyticalIndex_1",
+    "ordinal": 1,
+    "proof_ingredients": [
+      "`InfoGeometry.KK.KasparovCycle.analyticalIndex`",
+      "`InfoGeometry.KK.index_bridge_spectral`",
+      "`lean/InfoGeometry/KK/KasparovCycle.lean`",
+      "`frontier rawScore: 0.043428`",
+      "`frontier score: 0.058428`"
+    ],
+    "risk": "low",
+    "signature_sketch": "theorem auto_index_bridge_spectral_from_seed_1\n    -- seed anchor: `KasparovCycle.analyticalIndex`\n    -- frontier target: `InfoGeometry.KK.index_bridge_spectral`\n    -- intended role: bridge theorem\n    (... local hypotheses specialized to the target declaration ...)\n    : (... direct transport / invariance / closure statement feeding the frontier ...) := by\n  -- quarantine sketch only",
+    "why": "This candidate is generated directly from the frontier row `InfoGeometry.KK.index_bridge_spectral` in `lean/InfoGeometry/KK/KasparovCycle.lean`. It is intended to insert a small bridge theorem feeding the frontier declaration. The seed-to-frontier link kinds currently visible are `primaryDep`. The current raw/priority scores are `0.043428` / `0.058428`, with module status `classical_adjacent_model` and adjustments `unification_status_adjustment +0.015`."
+  },
+  "walk": "reverse",
+  "worktreeMode": "created-fresh",
+  "worktreePath": "/tmp/info-geometry-autoopt/20260320T161028Z"
+}

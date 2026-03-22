@@ -1,0 +1,22 @@
+{
+  "branchName": "auto-opt/dry-cycle-20260319T163541Z",
+  "frontierJson": "/home/goutev/LEAN4/info-geometry-lean/reports/dag/skynet-v2-frontier-reverse.json",
+  "gitHead": "0f53315a4e893a3045007963fe28f0702edeee7e",
+  "runId": "20260319T163541Z",
+  "status": "worktree_failed",
+  "worktreeCommand": {
+    "argv": [
+      "git",
+      "worktree",
+      "add",
+      "-b",
+      "auto-opt/dry-cycle-20260319T163541Z",
+      "/tmp/info-geometry-autoopt/20260319T163541Z",
+      "HEAD"
+    ],
+    "returncode": 255,
+    "stderr_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T163541Z/git-worktree-add.stderr.log",
+    "stdout_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260319T163541Z/git-worktree-add.stdout.log"
+  },
+  "worktreePath": "/tmp/info-geometry-autoopt/20260319T163541Z"
+}

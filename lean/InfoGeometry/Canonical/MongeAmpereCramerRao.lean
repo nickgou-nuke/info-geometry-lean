@@ -53,16 +53,15 @@ lemma log_mongeAmpereDensity_eq_logAbsDet_cramerRaoMetric
     Real.log (mongeAmpereDensity H x)
       = Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) := by
   unfold mongeAmpereDensity cramerRaoMetricOp
-  rw [Real.log_exp]
+  rfl
 
 /-- Under nondegeneracy, Monge-Ampere density is absolute determinant of the Cramer-Rao metric. -/
 lemma mongeAmpereDensity_eq_absDet_cramerRaoMetric_of_nondegenerate
     (H : HessianGeometry E) (x : E)
-    (hdet : LinearMap.det (cramerRaoMetricOp H x).toLinearMap ≠ 0) :
+    (_hdet : LinearMap.det (cramerRaoMetricOp H x).toLinearMap ≠ 0) :
     mongeAmpereDensity H x = |LinearMap.det (cramerRaoMetricOp H x).toLinearMap| := by
   unfold mongeAmpereDensity cramerRaoMetricOp
-  rw [Real.exp_log]
-  exact abs_pos.mpr hdet
+  rfl
 
 /-- Incompressible Monge-Ampere plus nondegeneracy implies unit Cramer-Rao determinant magnitude. -/
 theorem absDet_cramerRaoMetric_eq_one_of_incompressible

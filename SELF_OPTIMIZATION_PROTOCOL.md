@@ -33,7 +33,7 @@ The authoritative chain is:
 2. Refresh the current trusted repository state:
 
    ```bash
-   python3 tools/update_repo_docs.py --refresh-exports
+   python3 tools/docs/update_repo_docs.py --refresh-exports
    ```
 
    For one isolated dry optimization cycle without any model hook yet:
@@ -79,12 +79,14 @@ The authoritative chain is:
    - destroy a worktree only with explicit cleanup intent
    - hydrate the lab from the main repo's local `.lake` cache before building
 
-7. Validate in Lean:
+7. Validate in Lean with the locked build wrapper:
 
    ```bash
-   lake build InfoGeometry.Canonical.All
-   lake build -R
+   python3 tools/infra/run_locked_lake_build.py InfoGeometry.Canonical.All
+   python3 tools/infra/run_locked_lake_build.py -R InfoGeometry.All
    ```
+
+   Do not start a second full or umbrella build while one is already running.
 
 8. Refresh trusted graph evidence again and compare the frontier.
 
@@ -127,9 +129,9 @@ It is not a license for:
 
 The current self-optimization loop depends on:
 
-- `tools/semantic_block_export.py`
-- `tools/skynet_v2.py`
-- `tools/update_repo_docs.py`
+- `tools/frontier/semantic_block_export.py`
+- `tools/frontier/skynet_v2.py`
+- `tools/docs/update_repo_docs.py`
 - `docs/auto/index.md`
 - `reports/dag/skynet-v2-frontier.json`
 - `reports/dag/skynet-v2-frontier-reverse.json`

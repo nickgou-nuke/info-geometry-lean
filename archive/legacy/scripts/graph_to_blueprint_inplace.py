@@ -3,9 +3,9 @@
 
 This script belongs to the older graph-only blueprint lane. The supported current
 workflow is:
-- `python3 tools/refresh_decl_graph.py`
-- `python3 tools/refresh_blueprint_tags.py`
-- `lake build InfoGeometry.BlueprintTags:blueprint`
+- `python3 tools/infra/refresh_decl_graph.py`
+- `python3 tools/infra/refresh_blueprint_tags.py`
+- `python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprint`
 
 Keep this script for archaeology or one-off conversions only. It can:
 - select declarations from the graph (optionally by module prefix / component),
@@ -27,7 +27,7 @@ from typing import Any
 
 if __package__ is None or __package__ == "":
     # Support direct execution: `python3 scripts/graph_to_blueprint.py ...`
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from tools.pathing import default_docs_map_root, normalize_user_path, lean_root
 

@@ -7,4 +7,4 @@ future tooling to depend on them via a ``python -m`` invocation or a
 packaging setup.
 """
 
-__all__ = ["pathing", "graph"]
+__all__ = ["pathing", "graph", "infra", "docs", "frontier"]

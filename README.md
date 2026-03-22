@@ -53,8 +53,8 @@ If you want the current manually reviewed quarantine-ready bridge packet for con
 ## Verified Shape
 
 Current repository scale:
-- Lean files under `lean/`: `450`
-- Lean LOC under `lean/`: `73,067`
+- Lean files under `lean/`: `475`
+- Lean LOC under `lean/`: `81,755`
 
 Current synchronized structural stories:
 - primitive real split-Krein spine:
@@ -132,13 +132,13 @@ The exact frontier graph counts are intentionally not duplicated here. Use the t
   Importable graph/topology engine.
 - `lean/scripts/DAG/Exploration/`
   Lean report generators and entrypoints.
-- `tools/semantic_block_export.py`
+- `tools/frontier/semantic_block_export.py`
   External Python LSP/RPC orchestrator for trusted semantic block export.
 - `reports/dag/`
   Generated graph artifacts. These are intentionally untracked or regenerated.
-- `tools/skynet_v2.py`
+- `tools/frontier/skynet_v2.py`
   Report-only semantic frontier explorer over trusted semantic block graphs.
-- `tools/update_repo_docs.py`
+- `tools/docs/update_repo_docs.py`
   Refreshes tracked frontier/docs surfaces from the current trusted export set.
 
 ## Artifact Placement
@@ -167,17 +167,17 @@ Read the operational documentation in this order:
 The hierarchy of trust is:
 
 1. authoritative declaration DAG lane
-- [refresh_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/refresh_decl_graph.py) -> [Indexer.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/Indexer.lean) -> `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`
-- consumed by [generate_causal_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_causal_report.py), [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/select_openclaw_target.py), and [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/classify_missing_all.py)
+- [refresh_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/refresh_decl_graph.py) -> [Indexer.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/Indexer.lean) -> `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`
+- consumed by [generate_causal_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_causal_report.py), [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py), and [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/classify_missing_all.py)
 
 2. authoritative blueprint / LeanArchitect lane
-- [refresh_blueprint_tags.py](/home/goutev/LEAN4/info-geometry-lean/tools/refresh_blueprint_tags.py) -> [auto_blueprints.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/auto_blueprints.lean) and [BlueprintTags.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/BlueprintTags.lean)
-- consumed by `python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags`, `python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprint`, and `python3 tools/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprintJson`
+- [refresh_blueprint_tags.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/refresh_blueprint_tags.py) -> [auto_blueprints.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/auto_blueprints.lean) and [BlueprintTags.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/BlueprintTags.lean)
+- consumed by `python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags`, `python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprint`, and `python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprintJson`
 - human-facing narrative lives under [blueprint/README.md](/home/goutev/LEAN4/info-geometry-lean/blueprint/README.md) and `blueprint/src/generated/content.tex`
 
 3. authoritative semantic-block lane
-- [semantic_block_export.py](/home/goutev/LEAN4/info-geometry-lean/tools/semantic_block_export.py) -> `reports/dag/*.semantic-block.stdlib.json`
-- consumed by [skynet_v2.py](/home/goutev/LEAN4/info-geometry-lean/tools/skynet_v2.py), [generate_auto_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/generate_auto_docs.py), and [update_repo_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/update_repo_docs.py)
+- [semantic_block_export.py](/home/goutev/LEAN4/info-geometry-lean/tools/frontier/semantic_block_export.py) -> `reports/dag/*.semantic-block.stdlib.json`
+- consumed by [skynet_v2.py](/home/goutev/LEAN4/info-geometry-lean/tools/frontier/skynet_v2.py), [generate_auto_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/docs/generate_auto_docs.py), and [update_repo_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/docs/update_repo_docs.py)
 
 4. limited native auxiliary lane
 - [RootOrderExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/RootOrderExport.lean) and similar native reports are useful, but they are not the default current refresh path
@@ -197,10 +197,10 @@ Use this split when entering the repository for the first time.
 
 | Surface | Status | What to use it for |
 | `lean/InfoGeometry/Canonical`, `lean/InfoGeometry/KK`, `lean/InfoGeometry/Library.lean`, `lean/InfoGeometry/Quantum` | Current | Main theorem library and publication surface |
-| `tools/refresh_decl_graph.py` + `lean/DAG/Indexer.lean` + `artifacts/dag/full_graph.json` + `artifacts/dag/index/decls.jsonl` | Current / authoritative | Declaration-level causal order, coverage, and rooted partial-order analysis |
-| `tools/generate_causal_report.py`, `tools/select_openclaw_target.py`, `tools/classify_missing_all.py` | Current / authoritative | Causal reports, operational rankings, and `All`-coverage classification |
-| `tools/refresh_blueprint_tags.py`, `lean/InfoGeometry/auto_blueprints.lean`, `lean/InfoGeometry/BlueprintTags.lean`, LeanArchitect `:blueprint` / `:blueprintJson` facets | Current / authoritative | Blueprint coverage refresh and exact theorem-to-TeX/JSON extraction |
-| `tools/semantic_block_export.py`, `tools/skynet_v2.py`, `tools/update_repo_docs.py` | Current / authoritative | Trusted heavy-module export and frontier workflow |
+| `tools/infra/refresh_decl_graph.py` + `lean/DAG/Indexer.lean` + `artifacts/dag/full_graph.json` + `artifacts/dag/index/decls.jsonl` | Current / authoritative | Declaration-level causal order, coverage, and rooted partial-order analysis |
+| `tools/infra/generate_causal_report.py`, `tools/infra/select_openclaw_target.py`, `tools/infra/classify_missing_all.py` | Current / authoritative | Causal reports, operational rankings, and `All`-coverage classification |
+| `tools/infra/refresh_blueprint_tags.py`, `lean/InfoGeometry/auto_blueprints.lean`, `lean/InfoGeometry/BlueprintTags.lean`, LeanArchitect `:blueprint` / `:blueprintJson` facets | Current / authoritative | Blueprint coverage refresh and exact theorem-to-TeX/JSON extraction |
+| `tools/frontier/semantic_block_export.py`, `tools/frontier/skynet_v2.py`, `tools/docs/update_repo_docs.py` | Current / authoritative | Trusted heavy-module export and frontier workflow |
 | `lean/DAG/RootOrderExport.lean`, `lean/DAG/SkeletonExport.lean`, `lean/scripts/DAG/Exploration/*` | Current / auxiliary | Native reports and diagnostics that sit beside, not above, the authoritative `artifacts/dag` pipeline |
 | `lean/DAG/ExportForwardGraph.lean`, `lean/DAG/ExportDecls.lean`, `lean/InfoGeometry/GraphExport.lean` | Compatibility / limited | Older declaration export paths, one-off inspection, and legacy downstream consumers |
 | `tools/graph.py`, `docs-map/graph.json` | Legacy / compatibility | Older NetworkX-based graph consumer; do not treat as canonical causal-order truth |
@@ -215,24 +215,24 @@ The archive is intentionally kept in-tree for provenance and idea recovery. Star
 Full project build:
 
 ```bash
-python3 tools/run_locked_lake_build.py InfoGeometry.All
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.All
 ```
 
 Canonical umbrella build:
 
 ```bash
-python3 tools/run_locked_lake_build.py InfoGeometry.Canonical.All
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.Canonical.All
 ```
 
 Recursive rebuild:
 
 ```bash
-python3 tools/run_locked_lake_build.py -R
+python3 tools/infra/run_locked_lake_build.py -R
 ```
 
 Single-build rule:
 - do not launch multiple full or umbrella builds concurrently
-- use `python3 tools/run_locked_lake_build.py ...` so a second build fails fast on the shared build lock
+- use `python3 tools/infra/run_locked_lake_build.py ...` so a second build fails fast on the shared build lock
 
 DAG and semantic-export tooling:
 
@@ -241,7 +241,7 @@ lake build DAG semanticBlockExport semanticBlockServer
 lake build scripts.DAG.Exploration.HarvestDiagnostics
 lake build scripts.DAG.Exploration.LiftNaturalityDiagnostics
 lake build scripts.DAG.Exploration.NaturalityPromoter
-python3 -m py_compile tools/skynet_v2.py
+python3 -m py_compile tools/frontier/skynet_v2.py
 ```
 
 ## Semantic DAG Export
@@ -249,7 +249,7 @@ python3 -m py_compile tools/skynet_v2.py
 For large Mathlib-heavy modules, use the trusted stdlib server path:
 
 ```bash
-python3 tools/semantic_block_export.py \
+python3 tools/frontier/semantic_block_export.py \
   lean/InfoGeometry/Canonical/GrandSynthesis.lean \
   reports/dag/GrandSynthesis.semantic-block.stdlib.json \
   --server-mode stdlib \
@@ -274,7 +274,7 @@ The generated auto status page lives at [index.md](/home/goutev/LEAN4/info-geome
 The current frontier-discovery path is:
 
 1. export trusted semantic block JSONs for heavy modules;
-2. load them into `tools/skynet_v2.py`;
+2. load them into `tools/frontier/skynet_v2.py`;
 3. run diffusion from a named seed using `--walk forward|reverse|both`;
 4. let Skynet apply debt-aware scheduling signals from the tracked audits;
 5. generate report-only bridge candidates from the frontier packet;
@@ -283,7 +283,7 @@ The current frontier-discovery path is:
 Example:
 
 ```bash
-python3 tools/skynet_v2.py \
+python3 tools/frontier/skynet_v2.py \
   --input reports/dag/KasparovCycle.semantic-block.stdlib.json \
   --input reports/dag/AnalyticalIndex.semantic-block.stdlib.json \
   --input reports/dag/OperatorAlgebraBridge.semantic-block.stdlib.json \
@@ -298,7 +298,7 @@ python3 tools/skynet_v2.py \
 Example mixed-seed true-category packet around the current primitive split-Krein and index spine:
 
 ```bash
-python3 tools/skynet_v2.py \
+python3 tools/frontier/skynet_v2.py \
   --input reports/dag/KasparovCycle.semantic-block.stdlib.json \
   --input reports/dag/RealSplitClifford.semantic-block.stdlib.json \
   --input reports/dag/RealSplitKreinKasparovCycle.semantic-block.stdlib.json \
@@ -324,24 +324,24 @@ True DAG depth must be measured from the exported graph's dependency root set, n
 To regenerate the tracked auto status page from current local artifacts:
 
 ```bash
-python3 tools/generate_auto_docs.py
+python3 tools/docs/generate_auto_docs.py
 ```
 
 To refresh the frontier packets and the tracked auto status page from the current trusted semantic export set:
 
 ```bash
-python3 tools/update_repo_docs.py
+python3 tools/docs/update_repo_docs.py
 ```
 
 To refresh semantic exports first, then rebuild the frontier from the full current export set:
 
 ```bash
-python3 tools/update_repo_docs.py --refresh-exports
-python3 tools/update_repo_docs.py --refresh-exports all
-python3 tools/update_repo_docs.py --refresh-exports changed
+python3 tools/docs/update_repo_docs.py --refresh-exports
+python3 tools/docs/update_repo_docs.py --refresh-exports all
+python3 tools/docs/update_repo_docs.py --refresh-exports changed
 ```
 
-`tools/update_repo_docs.py --refresh-exports ...` now degrades per-module semantic-export failures on thin façade modules to warnings, keeps any existing export artifact, and continues. Treat those warnings as tooling noise to inspect, not as proof that the whole graph refresh failed.
+`tools/docs/update_repo_docs.py --refresh-exports ...` now degrades per-module semantic-export failures on thin façade modules to warnings, keeps any existing export artifact, and continues. Treat those warnings as tooling noise to inspect, not as proof that the whole graph refresh failed.
 
 This refresh also regenerates the tracked bridge-candidate packet from the current trusted frontier and audit state.
 

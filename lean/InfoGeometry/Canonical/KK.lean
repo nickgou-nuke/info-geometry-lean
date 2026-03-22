@@ -1,6 +1,7 @@
 import InfoGeometry.KK.CompactOperatorBridge
 import InfoGeometry.KK.RealSplitKreinCompactOperator
 import InfoGeometry.KK.KasparovCycle
+import InfoGeometry.KK.RealSplitKreinResolvent
 import InfoGeometry.KK.RealSplitKreinUnboundedCycle
 import InfoGeometry.KK.KasparovCompactOperator
 import InfoGeometry.KK.Product

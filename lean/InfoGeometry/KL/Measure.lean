@@ -5,6 +5,10 @@ import Mathlib.InformationTheory.KullbackLeibler.Basic
 
 Measure-theoretic Kullback-Leibler divergence, re-exported from Mathlib's
 `InformationTheory` namespace into the project namespace.
+
+This is the canonical measure-level KL facade. It is a downstream compatibility
+surface over the repo's cone/projective state geometry, where normalization is a
+gauge choice rather than a primitive datum.
 -/
 
 open MeasureTheory
@@ -17,17 +21,6 @@ noncomputable abbrev kl_div
     {α : Type _} [MeasurableSpace α]
     (μ ν : Measure α) : ℝ≥0∞ :=
   InformationTheory.klDiv μ ν
-
-/- Explicit aliases to disambiguate from finite/discrete KL APIs. -/
-noncomputable abbrev measureKlDiv
-    {α : Type _} [MeasurableSpace α]
-    (μ ν : Measure α) : ℝ≥0∞ :=
-  kl_div μ ν
-
-noncomputable abbrev klDivMeasure
-    {α : Type _} [MeasurableSpace α]
-    (μ ν : Measure α) : ℝ≥0∞ :=
-  kl_div μ ν
 
 lemma klDiv_of_not_ac
     {α : Type _} [MeasurableSpace α]

@@ -71,12 +71,12 @@ example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X] [DecidableEq Θ]
     (hposp : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
     (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal) :
     (KL p q).toReal =
-      (InfoGeometry.kl_div (α := X)
+      (InfoGeometry.KL.kl_div (α := X)
         (marginal_x (X := X) (Θ := Θ) p).toMeasure
         (marginal_x (X := X) (Θ := Θ) q).toMeasure).toReal
       +
       (∑ x : X, (marginal_x (X := X) (Θ := Θ) p x).toReal *
-        (InfoGeometry.kl_div (α := Θ)
+        (InfoGeometry.KL.kl_div (α := Θ)
           (cond_theta_given_x (X := X) (Θ := Θ) p x
             (InfoGeometry.EntropicInference.marginal_x_full_support_of_joint_toReal_pos p hposp x)).toMeasure
           (cond_theta_given_x (X := X) (Θ := Θ) q x
@@ -95,7 +95,7 @@ example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X] [DecidableEq Θ]
       (KL p (jeffrey_joint q (marginal_x p)
         (InfoGeometry.EntropicInference.marginal_x_full_support_of_joint_toReal_pos q hposq))).toReal
       +
-      (InfoGeometry.kl_div (α := X)
+      (InfoGeometry.KL.kl_div (α := X)
         (marginal_x p).toMeasure
         (marginal_x q).toMeasure).toReal := by
   simpa using InfoGeometry.EntropicInference.kl_pythagorean_jeffrey_toReal_strict
@@ -113,7 +113,7 @@ example {X Θ : Type} [Fintype X] [Fintype Θ] [DecidableEq X] [DecidableEq Θ]
       KL p (jeffrey_joint q (marginal_x p)
         (InfoGeometry.EntropicInference.marginal_x_full_support_of_joint_toReal_pos q hposq))
       +
-      InfoGeometry.kl_div (α := X)
+      InfoGeometry.KL.kl_div (α := X)
         (marginal_x p).toMeasure
         (marginal_x q).toMeasure := by
   simpa using InfoGeometry.EntropicInference.kl_pythagorean_jeffrey_strict
@@ -142,7 +142,7 @@ example :
     kl p q =
       kl p (jeffrey_joint q p_x
         (fun x => hq_support_of_strict_pos (q := q) hposq x))
-      + InfoGeometry.kl_div (α := X_test) p_x.toMeasure (marginal_x q).toMeasure := by
+      + InfoGeometry.KL.kl_div (α := X_test) p_x.toMeasure (marginal_x q).toMeasure := by
   simpa using
     kl_pythagorean_jeffrey_strict
       (p := p) (q := q) (p_x := p_x) hposp hposq hmarg
@@ -151,7 +151,7 @@ example :
     (kl p q).toReal =
       (kl p (jeffrey_joint q p_x
         (fun x => hq_support_of_strict_pos (q := q) hposq x))).toReal
-      + (InfoGeometry.kl_div (α := X_test) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+      + (InfoGeometry.KL.kl_div (α := X_test) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
   simpa using
     kl_pythagorean_jeffrey_toReal_strict
       (p := p) (q := q) (p_x := p_x) hposp hposq hmarg

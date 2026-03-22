@@ -266,6 +266,7 @@ def category_hint(index_name: str, category: str) -> str:
         ("surrogate", "surrogate_marker"): "remove the placeholder-marked surface by replacing it with a proved construction",
         ("vacuity", "carrier_alias"): "replace the alias-driven bridge with a mathematically explicit transport layer",
         ("vacuity", "identity_transport"): "replace identity transport with a proved transport theorem",
+        ("vacuity", "uninstantiated_bridge_assumption"): "replace the theorem-surface bridge witness with a constructed realization or prove the result from existing concrete data",
         ("vacuity", "explicit_vacuity_marker"): "remove the explicit alias-model compatibility layer from the active path",
         ("thinness", "definitional_identity"): "replace the definitional identity with a substantive proof",
         ("thinness", "direct_forwarder"): "replace the direct forwarder with a local constructive derivation",

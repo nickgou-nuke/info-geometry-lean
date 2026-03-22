@@ -120,6 +120,20 @@ structure SinkhornCertificate (β : ℝ) (x : Fin n → V) where
       ∈ doublyStochastic ℝ (Fin n)
 
 omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
+/-- Construct a certificate trivially when the switch is already bistochastic. -/
+noncomputable def SinkhornCertificate.ofBistochastic
+    (β : ℝ) (x : Fin n → V) (hcol : IsBistochasticSwitch n β x) :
+    SinkhornCertificate (n := n) β x where
+  leftScale := fun _ => 1
+  rightScale := fun _ => 1
+  leftScale_pos _ := zero_lt_one
+  rightScale_pos _ := zero_lt_one
+  balanced_mem_doublyStochastic := by
+    have h1 : Matrix.diagonal (fun (_ : Fin n) => (1 : ℝ)) = 1 := Matrix.diagonal_one
+    rw [h1, Matrix.one_mul, Matrix.mul_one]
+    exact switchMatrix_mem_doublyStochastic (n := n) β x hcol
+
+omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
 /--
 Any Sinkhorn-balanced switch matrix admits a permutation simplex decomposition.
 -/

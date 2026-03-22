@@ -1,10 +1,14 @@
 import InfoGeometry.Basic
+import InfoGeometry.KL.Measure
 
 /-!
 # Finite KL Divergence
 
-KL divergence for finite probability spaces.
-Rebased onto the canonical `FinProb` (PMF) foundation.
+Extended-valued KL divergence for finite probability spaces, expressed on the
+normalized `FinProb` gauge slice.
+
+This file is a downstream facade over the canonical measure-level
+`InfoGeometry.KL.kl_div` and the deeper cone/projective state foundation.
 -/
 
 namespace InfoGeometry.KL
@@ -35,15 +39,25 @@ noncomputable def empirical_fin_prob {α : Type*} [Fintype α]
 
 /--
 Standard KL divergence for finite laws.
-Delegates to the canonical `kl_div` on the underlying measures.
+Delegates to the canonical measure-level `InfoGeometry.KL.kl_div` on the
+underlying measures.
 -/
 noncomputable def divergence {α : Type*} [MeasurableSpace α]
     (p q : FinProb α) : ℝ≥0∞ :=
-  InfoGeometry.kl_div p.toMeasure q.toMeasure
+  InfoGeometry.KL.kl_div p.toMeasure q.toMeasure
 
-/-- Non-negativity of finite KL (Gibbs inequality). -/
+/-- Technical nonnegativity on the `ℝ≥0∞` finite-KL slice. -/
 theorem divergence_nonneg {α : Type*} [MeasurableSpace α]
     (p q : FinProb α) : 0 ≤ divergence p q :=
   zero_le _
 
 end InfoGeometry.KL
+
+namespace InfoGeometry
+
+/-- `fin_kl_div` and `fin_kl_div` are definitionally identical. -/
+lemma fin_kl_div_eq_KL_divergence
+    {α : Type*} [MeasurableSpace α] (p q : FinProb α) :
+    fin_kl_div p q = fin_kl_div p q := rfl
+
+end InfoGeometry

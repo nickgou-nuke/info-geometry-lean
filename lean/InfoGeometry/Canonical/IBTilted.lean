@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.IBNormalize
+import InfoGeometry.KL.Finite
 import Mathlib.Probability.ProbabilityMassFunction.Integrals
 import Mathlib.MeasureTheory.Measure.Tilted
 

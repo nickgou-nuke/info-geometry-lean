@@ -155,24 +155,44 @@ def refresh_exports(root: Path, timeout: int, mode: str) -> list[Path]:
 
     print(f"[update-repo-docs] refresh-exports mode `{mode}` modules={len(specs)}", flush=True)
     outputs: list[Path] = []
+    failures: list[tuple[ExportSpec, bool]] = []
     for spec in specs:
         out = root / spec.output_path
-        run(
-            [
-                "python3",
-                "tools/semantic_block_export.py",
-                spec.input_path,
-                spec.output_path,
-                "--server-mode",
-                "stdlib",
-                "--inject-rpc-import",
-                "--skip-wait-for-diagnostics",
-                "--timeout",
-                str(timeout),
-            ],
-            cwd=root,
-        )
+        try:
+            run(
+                [
+                    "python3",
+                    "tools/semantic_block_export.py",
+                    spec.input_path,
+                    spec.output_path,
+                    "--server-mode",
+                    "stdlib",
+                    "--inject-rpc-import",
+                    "--skip-wait-for-diagnostics",
+                    "--timeout",
+                    str(timeout),
+                ],
+                cwd=root,
+            )
+        except subprocess.CalledProcessError:
+            stale = out.exists()
+            failures.append((spec, stale))
+            state = "keeping existing export" if stale else "no export available"
+            print(
+                f"[update-repo-docs] warning: export refresh failed for {spec.input_path} ({state})",
+                flush=True,
+            )
+            continue
         outputs.append(out)
+
+    if failures:
+        kept = sum(1 for _, stale in failures if stale)
+        missing = len(failures) - kept
+        print(
+            f"[update-repo-docs] export refresh completed with warnings: "
+            f"{len(outputs)} succeeded, {len(failures)} failed, {kept} kept stale exports, {missing} missing",
+            flush=True,
+        )
     return outputs
 
 
@@ -285,6 +305,8 @@ def main() -> int:
         run(["python3", "tools/generate_surrogate_index.py"], cwd=root)
         run(["python3", "tools/generate_vacuity_index.py"], cwd=root)
         run(["python3", "tools/generate_bridge_thinness_index.py"], cwd=root)
+        run(["python3", "tools/generate_causal_report.py"], cwd=root)
+        run(["python3", "tools/select_openclaw_target.py"], cwd=root)
         run(["python3", "tools/generate_unification_index.py"], cwd=root)
         run(["python3", "tools/generate_debt_candidates.py"], cwd=root)
         run(["python3", "tools/generate_bridge_candidates.py"], cwd=root)

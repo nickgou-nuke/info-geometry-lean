@@ -1,4 +1,5 @@
 import InfoGeometry.Basic
+import InfoGeometry.KL.Finite
 
 /-!
 # Core Entropy
@@ -65,7 +66,7 @@ section FintypeMeasurable
 variable [MeasurableSpace α]
 
 @[simp] lemma klDiv_def (P Q : ProbabilityDist α) :
-    InfoGeometry.kl_div P.toMeasure Q.toMeasure = InfoGeometry.fin_kl_div P Q := rfl
+    InfoGeometry.KL.kl_div P.toMeasure Q.toMeasure = InfoGeometry.fin_kl_div P Q := rfl
 
 end FintypeMeasurable
 

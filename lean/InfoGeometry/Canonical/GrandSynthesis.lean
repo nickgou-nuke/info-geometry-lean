@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.CalabiYauBridge
 import InfoGeometry.Canonical.KMSSinkhornBridge
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.RicciMongeAmpere
+import InfoGeometry.Canonical.SingularTransportSystem
 import InfoGeometry.Canonical.AnalyticalIndex
 import InfoGeometry.KK.KasparovCycle
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -226,24 +227,29 @@ section SpectralVolumeForm
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 
-omit [FiniteDimensional ℝ E] in
 /--
 Log-volume identity for Monge-Ampere density:
-`log(exp(log |det(∇²ψ)|)) = log |det(∇²ψ)|`.
+on the nondegenerate branch, `log ρ = log |det(∇²ψ)|`.
 -/
 lemma log_mongeAmpereDensity_eq_logAbsDet_metricOp
-    (H : InfoGeometry.Convex.HessianGeometry E) (x : E) :
+    [FiniteDimensional ℝ E]
+    (H : InfoGeometry.Convex.HessianGeometry E) (x : E)
+    (hdet : LinearMap.det (H.metricOp x).toLinearMap ≠ 0) :
     Real.log (mongeAmpereDensity H x)
       = Real.log (|LinearMap.det (H.metricOp x).toLinearMap|) := by
-  unfold mongeAmpereDensity
-  rw [Real.log_exp]
+  have hρ :
+      mongeAmpereDensity H x = Real.exp (metricLogDet H x) :=
+    mongeAmpereDensity_eq_exp_metricLogDet (H := H) (x := x) hdet
+  rw [hρ, Real.log_exp]
+  rfl
 
 /-- Spectral specialization of the log-volume identity at the basepoint. -/
 lemma log_spectralMongeAmpereDensity_eq_basepointLogVolume
-    (IST : InfoSpectralTriple E) :
+    (IST : InfoSpectralTriple E)
+    (h_det : LinearMap.det (IST.H.metricOp IST.x₀).toLinearMap ≠ 0) :
     Real.log (spectralMongeAmpereDensity IST)
       = spectralBasepointLogVolume IST := by
-  rw [spectralMongeAmpereDensity_eq_exp_spectralBasepointLogVolume]
+  rw [spectralMongeAmpereDensity_eq_exp_spectralBasepointLogVolume IST h_det]
   rw [Real.log_exp]
 
 variable {m : Type*} [Fintype m] [DecidableEq m]
@@ -254,13 +260,15 @@ if a matrix determinant models the Monge-Ampere density, then its log-absolute
 determinant equals the Hessian metric-op log-absolute determinant.
 -/
 lemma logAbsDet_metricModel_eq_logAbsDet_metricOp
+    [FiniteDimensional ℝ E]
     (H : InfoGeometry.Convex.HessianGeometry E) (x : E) (A : Matrix m m ℝ)
+    (h_det : LinearMap.det (H.metricOp x).toLinearMap ≠ 0)
     (hdet : Matrix.det A = mongeAmpereDensity H x) :
     logAbsDetMatrix A = Real.log (|LinearMap.det (H.metricOp x).toLinearMap|) := by
   unfold logAbsDetMatrix
   rw [hdet]
-  rw [abs_of_pos (mongeAmpereDensity_pos (H := H) x)]
-  exact log_mongeAmpereDensity_eq_logAbsDet_metricOp (H := H) (x := x)
+  rw [abs_of_pos (mongeAmpereDensity_pos (H := H) (x := x) h_det)]
+  exact log_mongeAmpereDensity_eq_logAbsDet_metricOp (H := H) (x := x) h_det
 
 /--
 Spectral determinant-model bridge:
@@ -269,15 +277,16 @@ log-absolute determinant equals spectral volume.
 -/
 lemma logAbsDet_spectralModel_eq_basepointLogVolume
     (IST : InfoSpectralTriple E) (A : Matrix m m ℝ)
+    (h_det_m : LinearMap.det (IST.H.metricOp IST.x₀).toLinearMap ≠ 0)
     (hdet : Matrix.det A = spectralMongeAmpereDensity IST) :
     logAbsDetMatrix A = spectralBasepointLogVolume IST := by
   unfold logAbsDetMatrix
   rw [hdet]
   have hpos : 0 < spectralMongeAmpereDensity IST := by
-    rw [spectralMongeAmpereDensity_eq_exp_spectralBasepointLogVolume]
+    rw [spectralMongeAmpereDensity_eq_exp_spectralBasepointLogVolume IST h_det_m]
     exact Real.exp_pos _
   rw [abs_of_pos hpos]
-  exact log_spectralMongeAmpereDensity_eq_basepointLogVolume (IST := IST)
+  exact log_spectralMongeAmpereDensity_eq_basepointLogVolume (IST := IST) h_det_m
 
 end SpectralVolumeForm
 
@@ -286,6 +295,7 @@ section EntropicCalabiBridge
 variable (n : Nat)
 variable {X : Type}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
+  [FiniteDimensional ℝ X]
 
 /--
 Entropy-sourced Monge-Ampere hypothesis:
@@ -609,6 +619,72 @@ theorem cl11_bottDirac_sq_eq_zero_of_lichnerowiczBalanced
   exact hBal
 
 end LichnerowiczBridge
+
+section SingularBoundaryExtension
+
+variable {E : Type*}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/--
+Singular extension of the bulk transport law:
+when the certified boundary obstruction vanishes, the logarithmic transport
+observable closes on the non-anomalous sector contributions.
+-/
+theorem logDivergence_eq_bulkSectors_of_boundaryScale_eq_zero
+    (S : SingularTransportSystem E)
+    (hBoundary : S.boundary.boundaryScale = 0) :
+    S.logDivergence =
+      S.radialTerm + S.projectiveTerm + S.nilpotentTerm + S.gradedTerm := by
+  exact S.logDivergence_split_of_boundaryScale_eq_zero hBoundary
+
+/--
+Singular extension of bulk radial closure:
+if the boundary obstruction vanishes, the radial term is determined by the
+remaining non-anomalous sectors.
+-/
+theorem radial_transport_closes_of_boundaryScale_eq_zero
+    (S : SingularTransportSystem E)
+    (hBoundary : S.boundary.boundaryScale = 0) :
+    S.radialTerm =
+      S.logDivergence - S.projectiveTerm - S.nilpotentTerm - S.gradedTerm := by
+  exact S.regular_radial_transport_closes_of_boundaryScale_eq_zero hBoundary
+
+/--
+The scalar anomaly term is exactly the norm-shadow of the certified projector
+commutator obstruction carried by the primitive boundary layer.
+-/
+theorem anomalyTerm_eq_projectorObstruction_norm
+    (S : SingularTransportSystem E) :
+    S.anomalyTerm =
+      ‖S.boundary.spectralProjector * S.boundary.leftProjector
+          - S.boundary.leftProjector * S.boundary.spectralProjector‖₊ := by
+  rw [S.anomalyTerm_eq_projector_commutator_norm,
+    S.boundary.boundaryScale_eq_projectorObstruction_norm]
+
+/--
+Boundary-anomaly freeness is equivalent to commutation of the certified Drazin
+and Moore-Penrose projectors in the primitive singular boundary layer.
+-/
+theorem boundaryGenerator_eq_zero_iff_projectors_commute
+    (S : SingularTransportSystem E) :
+    S.boundary.boundaryGenerator = 0
+      ↔ S.boundary.spectralProjector * S.boundary.leftProjector =
+          S.boundary.leftProjector * S.boundary.spectralProjector := by
+  exact S.boundaryGenerator_eq_zero_iff_projectors_commute
+
+/--
+Vanishing boundary generator forces the primitive singular boundary layer to
+close to regular radial transport.
+-/
+theorem regularRadialTransportCloses_of_boundaryGenerator_eq_zero
+    (S : SingularTransportSystem E)
+    (hZero : S.boundary.boundaryGenerator = 0) :
+    S.boundary.regularRadialTransportCloses := by
+  have hScale : S.boundary.boundaryScale = 0 := by
+    exact (S.boundary.boundaryScale_eq_zero_iff_boundaryGenerator_eq_zero).mpr hZero
+  exact S.boundary.regular_radial_transport_closes_of_boundaryScale_eq_zero hScale
+
+end SingularBoundaryExtension
 
 section Capstone
 

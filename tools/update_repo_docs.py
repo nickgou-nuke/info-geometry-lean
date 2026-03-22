@@ -305,7 +305,21 @@ def main() -> int:
         run(["python3", "tools/generate_surrogate_index.py"], cwd=root)
         run(["python3", "tools/generate_vacuity_index.py"], cwd=root)
         run(["python3", "tools/generate_bridge_thinness_index.py"], cwd=root)
-        run(["python3", "tools/generate_causal_report.py"], cwd=root)
+        run(
+            [
+                "python3",
+                "tools/generate_causal_report.py",
+                "--graph",
+                ".build/full_graph.json",
+                "--decls",
+                ".build/index/decls.jsonl",
+                "--out",
+                "reports/dag/true-root-order.md",
+                "--json-out",
+                "reports/dag/true-root-order.json",
+            ],
+            cwd=root,
+        )
         run(["python3", "tools/select_openclaw_target.py"], cwd=root)
         run(["python3", "tools/generate_unification_index.py"], cwd=root)
         run(["python3", "tools/generate_debt_candidates.py"], cwd=root)

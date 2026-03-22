@@ -4,12 +4,11 @@ This document is the second top-level semantic map of the repository.
 
 It complements [THEORY_CANOPY.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY.md).
 
-The first canopy is centered on the currently verified KK/index bridge:
+The first canopy is centered on visible high-level trunks. This second canopy is
+centered on one of the deepest root systems of the theory:
 
-`KasparovCycle -> AnalyticalIndex -> GrandSynthesis`
-
-This second canopy is centered on a different deep root system:
-
+- unnormalized counts
+- rays and relative weights
 - Radon-Nikodym density
 - relative volume change
 - Kähler/RN potential
@@ -18,8 +17,7 @@ This second canopy is centered on a different deep root system:
 
 The main claim of this map is:
 
-> RN density, volume change, and gauge transport are not peripheral decoration.
-> They form one of the deepest root systems of the theory.
+> RN density, unnormalized count/ray structure, volume change, and gauge transport are not peripheral decoration. They form one of the deepest root systems of the theory.
 
 ## The Short Picture
 
@@ -35,13 +33,29 @@ The RN / gauge story currently reads like this:
 This is not a single linear chain in the code. It is a braided root system whose
 branches meet again in the synthesis layer.
 
+## Why This Is Below Normalized Probability
+
+Normalized probability language is not the primitive starting point of this
+route.
+
+The lower semantic order here is:
+
+1. raw counts / relative weights / rays
+2. RN lift and relative density
+3. relative log-density and modular/RN operator data
+4. volume change and Kähler potential
+5. only later, normalized entropy and probability-facing interpretations
+
+So if you are trying to identify the true axiomatic base, this is one of the
+places to start.
+
 ## The RN / Gauge Layers
 
 | Layer | Role | Main file(s) | Key hubs / concepts |
 | --- | --- | --- | --- |
-| Primitive RN density | finite-model RN/log-density seed | `lean/InfoGeometry/Canonical/GrandSynthesis.lean` | `relativeCountDensity`, `relativeLogDensityMean`, `relativeModularHamiltonian`, `relativeTomitaTakesakiOp`, `relativeCountDensity_eq_rn_lift` |
+| Primitive count / RN density | finite-model count, ray, and RN seed | `lean/InfoGeometry/Canonical/GrandSynthesis.lean` | `relativeCountDensity`, `relativeLogDensityMean`, `relativeModularHamiltonian`, `relativeTomitaTakesakiOp`, `relativeCountDensity_eq_rn_lift` |
 | RN volume / Kähler trunk | RN Jacobian, Kähler potential, relative volume factor | `lean/InfoGeometry/Canonical/GrandSynthesis.lean`, `lean/InfoGeometry/Canonical/DiracRicciBridge.lean` | `kahlerPotentialRN`, `relativeVolumeChangeRN`, `RNEntropySourcesMongeAmpere` |
-| Gauge transport trunk | local Weyl field + scale-equivariant transport | `lean/InfoGeometry/Canonical/WeylGaugeField.lean`, `lean/InfoGeometry/Canonical/WeylTransport.lean` | `WeylGaugeField`, `WeylGaugeField.along`, `WeylGaugeField.respond`, `ScaleEquivariantFlow`, `connectionAlong`, `generatedAlong` |
+| Gauge transport trunk | local Weyl field plus scale-equivariant transport | `lean/InfoGeometry/Canonical/WeylGaugeField.lean`, `lean/InfoGeometry/Canonical/WeylTransport.lean` | `WeylGaugeField`, `WeylGaugeField.along`, `WeylGaugeField.respond`, `ScaleEquivariantFlow`, `connectionAlong`, `generatedAlong` |
 | Modular continuum branch | continuum modular structure internalized from RN primitives | `lean/InfoGeometry/Canonical/YangMillsContinuum.lean` | `ModularRadonNikodymData` and its derived modular interface |
 | Synthesis / closure layer | RN-volume and gauge information reappear in capstone closure theorems | `lean/InfoGeometry/Canonical/ConformalUnification.lean`, `lean/InfoGeometry/Canonical/GrandSynthesis.lean` | conformal collapse from `kahlerPotentialRN` and `relativeVolumeChangeRN`, Wheeler-DeWitt-facing synthesis |
 
@@ -61,7 +75,7 @@ In [GrandSynthesis.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry
 So RN density is not only a downstream interpretation. It appears as a primitive
 encoding layer.
 
-### 2. Volume change is treated as semantic structure, not a side calculation
+### 2. Volume change is semantic structure, not a side calculation
 
 The same file defines:
 
@@ -94,43 +108,6 @@ the DAG tooling:
 That means the gauge branch is not just mathematically deep; it is also
 structurally visible to the current automation machinery.
 
-## Current Graph Evidence
-
-Two trusted semantic exports already support this root map.
-
-### `WeylTransport`
-
-Trusted artifact:
-
-- `reports/dag/WeylTransport.semantic-block.stdlib.json`
-
-Current scale:
-
-- `44` semantic block nodes
-- `201` semantic edges
-- `24` skeleton nodes
-
-That is a large transport trunk, not a thin helper file.
-
-### `GrandSynthesis`
-
-Trusted artifact:
-
-- `reports/dag/GrandSynthesis.semantic-block.stdlib.json`
-
-Current scale:
-
-- `56` semantic block nodes
-- `90` semantic edges
-- `30` skeleton nodes
-
-And its key hubs already include RN-volume terms:
-
-- `kahlerPotentialRN`
-- `relativeVolumeChangeRN`
-
-So the capstone crown itself confirms that RN volume structure is not marginal.
-
 ## The Deep Root Family
 
 If you want the shortest RN/gauge reading route through the theory, use:
@@ -150,7 +127,7 @@ If you want the shortest RN/gauge reading route through the theory, use:
    Read the continuum modular interface extracted from RN primitives.
 
 This is the best current deep-root route if your intuition is that
-measure/RN/gauge structure is the real substrate.
+count/RN/gauge structure is the real substrate.
 
 ## Relationship To The KK Canopy
 
@@ -161,8 +138,7 @@ They capture two different vertical stories:
 - KK/index canopy:
   the currently verified bridge discovered by `Skynet v2`
 - RN/gauge canopy:
-  the likely deeper geometric/modular substrate that feeds multiple higher
-  branches
+  the deeper geometric/modular substrate that feeds multiple higher branches
 
 In practice:
 

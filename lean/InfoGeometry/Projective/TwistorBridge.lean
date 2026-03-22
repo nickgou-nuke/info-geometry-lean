@@ -1,6 +1,7 @@
 import InfoGeometry.PositiveMeasure
 import InfoGeometry.Krein.DoubledSpace
-import InfoGeometry.Projective.Projective
+import InfoGeometry.Projective.Bridge
+import InfoGeometry.Projective.Normalize
 import InfoGeometry.Twistor.NullProjective
 
 /-!
@@ -10,7 +11,7 @@ Bridge between Euclidean projectivization and twistor spaces.
 This module defines the mapping from positive-measure rays to twistor points
 under a fixed null quadratic form.
 
-Vacuous zero-quadratic-form scaffolds have been removed in favor of 
+Vacuous zero-quadratic-form scaffolds have been removed in favor of
 nontrivial constructive witnesses.
 -/
 
@@ -19,10 +20,11 @@ namespace InfoGeometry.Projective.TwistorBridge
 open InfoGeometry.Krein
 open InfoGeometry.Projective
 open InfoGeometry.Twistor
+open scoped Projectivization
 
 section EuclideanTwistorBridge
 
-variable {α : Type*} [Fintype α]
+variable {α : Type*} [Fintype α] [Nonempty α]
 
 /--
 Map from a positive-measure ray to a twistor point under a null quadratic form.
@@ -37,10 +39,39 @@ noncomputable def projectiveClassToTwistor
     (by
       intro μ₁ μ₂ hray
       rcases hray with ⟨c, hc, rfl⟩
-      simp [twistorMk, positiveMeasureToEuclidean, TwistorSpace.mk_eq_mk_iff]
-      refine ⟨c, hc, ?_⟩
-      ext a
-      simp [PositiveMeasure.scale_apply]
+      let v : EuclideanSpace ℝ α := positiveMeasureToEuclidean (α := α) μ₁
+      have hv0 : v ≠ 0 := positiveMeasureToEuclidean_ne_zero (α := α) μ₁
+      have hcv0 : c • v ≠ 0 := smul_ne_zero (ne_of_gt hc) hv0
+      have hscaled :
+          positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ₁) = c • v := by
+        simpa [v] using positiveMeasureToEuclidean_scale (α := α) c hc μ₁
+      have hmkScaled :
+          Projectivization.mk ℝ
+              (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ₁))
+              (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c hc μ₁))
+            =
+          Projectivization.mk ℝ (c • v) hcv0 := by
+        apply (Projectivization.mk_eq_mk_iff ℝ
+          (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ₁))
+          (c • v)
+          (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c hc μ₁))
+          hcv0).2
+        refine ⟨1, ?_⟩
+        simpa [one_smul] using hscaled.symm
+      have hmkRay :
+          Projectivization.mk ℝ (c • v) hcv0 = Projectivization.mk ℝ v hv0 := by
+        apply (Projectivization.mk_eq_mk_iff ℝ (c • v) v hcv0 hv0).2
+        refine ⟨Units.mk0 c (ne_of_gt hc), ?_⟩
+        simp
+      have hmkGoal :
+          Projectivization.mk ℝ v hv0
+            =
+          Projectivization.mk ℝ
+              (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ₁))
+              (positiveMeasureToEuclidean_ne_zero (α := α) (PositiveMeasure.scale c hc μ₁)) := by
+        exact hmkRay.symm.trans hmkScaled.symm
+      apply Subtype.ext
+      simpa [twistorMk, v] using hmkGoal
     )
 
 @[simp] lemma projectiveClassToTwistor_mk
@@ -55,15 +86,15 @@ noncomputable def projectiveClassToTwistor
       (hNull μ) := rfl
 
 /--
-Theorem: Projection to a twistor space is equivalent to Euclidean projectivization
-at the level of value representatives.
+Theorem: Projection to a twistor space is equivalent to the cone-interior
+projective representative at the level of value representatives.
 -/
 theorem projectiveClassToTwistor_val
     (Q : QuadraticForm ℝ (EuclideanSpace ℝ α))
     (hNull : ∀ μ : PositiveMeasure α ℝ, Q (positiveMeasureToEuclidean (α := α) μ) = 0)
     (q : PositiveMeasure.Proj (α := α)) :
     (projectiveClassToTwistor (α := α) Q hNull q).1
-      = projectiveClassToEuclideanProjectivization (α := α) q := by
+      = (projectiveClassToConeInteriorStateSpace (α := α) q).1 := by
   refine Quotient.inductionOn q ?_
   intro μ
   rfl
@@ -106,7 +137,7 @@ noncomputable def coneInteriorStateSpaceToTwistor
     (hNull : ∀ μ : PositiveMeasure α ℝ, Q (positiveMeasureToEuclidean (α := α) μ) = 0) :
     ConeInteriorStateSpace ((positiveOrthant (α := α)).cone) → TwistorSpace Q :=
   projectiveClassToTwistor (α := α) Q hNull ∘
-    projectiveClassToEuclideanProjectivization (α := α)
+    coneInteriorStateSpaceToProjectiveClass (α := α)
 
 end EuclideanTwistorBridge
 

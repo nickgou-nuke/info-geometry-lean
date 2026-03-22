@@ -65,6 +65,15 @@ structure IndexerState where
 
 abbrev IndexerM := StateRefT IndexerState MetaM
 
+def parseImports (s : String) : Array Import :=
+  let pieces : List String :=
+    (String.splitOn s ",").filter (fun x => x != "")
+  let vals : List Import :=
+    pieces.map fun m =>
+      { module := (String.splitOn m ".").foldl (init := Name.anonymous) fun acc part =>
+          if part.isEmpty then acc else Name.str acc part }
+  vals.toArray
+
 def getKindString (ci : ConstantInfo) : String :=
   match ci with
   | .thmInfo _    => "theorem"
@@ -192,7 +201,8 @@ def runIndexer (nsPrefix : String) (outDir : String) (graphOut : String) : MetaM
   let (_, st) ← (consts.forM fun n => do
     if let some ci := env.find? n then
       let s := n.toString
-      if !(s.contains "._" || s.endsWith "match_" || s.endsWith "proof_" || s.endsWith "injEq") then
+      if !(s.contains "._" || s.endsWith "match_" || s.endsWith "proof_" ||
+          s.endsWith "injEq") then
         processConstant n ci
   ).run {}
 
@@ -243,14 +253,17 @@ def runIndexer (nsPrefix : String) (outDir : String) (graphOut : String) : MetaM
   IO.println s!"[Indexer patched] Exported {st.decls.size} atoms to {outDir}/ and wrote {graphOut}"
 
 def indexerMain (args : List String) : IO UInt32 := do
-  let (importMod, nsPrefix, outDir, graphOut) ←
+  let (importModsStr, nsPrefix, outDir, graphOut) ←
     match args with
     | [m, ns, o]      => pure (m, ns, o, "full_graph.json")
     | [m, ns, o, go]  => pure (m, ns, o, go)
     | _               => pure ("InfoGeometry.Library", "InfoGeometry", "index", "full_graph.json")
 
-  let env ← importModules #[{ module := importMod.toName }] {} 0
+  let env ← importModules (parseImports importModsStr) {} 0
   let coreContext : Core.Context := { fileName := "<Indexer>", fileMap := default }
 
   let _ ← ((runIndexer nsPrefix outDir graphOut).run {} {}).toIO coreContext { env := env }
   return 0
+
+def main (args : List String) : IO UInt32 :=
+  indexerMain args

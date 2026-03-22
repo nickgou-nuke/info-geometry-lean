@@ -15,6 +15,8 @@ partition/log-sum-exp -> free energy, with RN/Jaynes and modular lifts.
 
 namespace InfoGeometry.Canonical.RedLine
 
+open InfoGeometry.Canonical.MoE
+
 export InfoGeometry.Canonical.LogDet (
   logDetBarrier
   logDetBregman
@@ -48,11 +50,14 @@ export InfoGeometry.Canonical.JaynesRNMaxEnt (
   GibbsMinimizesKL
 )
 
-export InfoGeometry.Canonical.GrandSynthesis (
+export InfoGeometry.Canonical.MoE (
   kahlerPotentialRN
   kahlerPotentialRN_eq_neg_logJacobian
   relativeVolumeChangeRN
   relativeVolumeChangeRN_eq_exp_logJacobian
+)
+
+export InfoGeometry.Canonical.GrandSynthesis (
   relativeModularHamiltonian
   relativeTomitaTakesakiOp
   relativeTomitaTakesakiOp_apply

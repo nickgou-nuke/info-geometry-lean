@@ -1,17 +1,17 @@
 # Surrogate Index
 
-Generated: `2026-03-21 15:13:26`
+Generated: `2026-03-22 13:30:19`
 
 This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and named contract interfaces so surrogate debt can be replaced aggressively with real proofs.
 
 ## Hard Gate
 - `scripts/audit_surrogates.sh`: **PASS**
 - last gate output:
-  - `[surrogate-audit] checking canonical modules for reflexive Prop wrappers (heuristic)`
-  - `[surrogate-audit] checking canonical surface for forbidden Canonical tactic usage`
-  - `[surrogate-audit] checking stable surface for exact nonconstructive patterns`
   - `Constructivity audit (stable surface)`
   - `No exact constructivity violations found.`
+  - `[surrogate-audit] checking stable surface for uninstantiated bridge assumptions and vacuous bridge debt`
+  - `[generate-vacuity-index] wrote /home/goutev/LEAN4/info-geometry-lean/VACUITY_INDEX.md`
+  - `[generate-vacuity-index] findings=0 gate=PASS`
   - `[surrogate-audit] OK`
 
 ## Counts

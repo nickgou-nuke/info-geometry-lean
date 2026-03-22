@@ -42,6 +42,12 @@ Do not mix these graph views:
 
 For large files, semantic block export through the external stdlib server path is the trusted route.
 
+Artifact placement matters:
+- `.build/full_graph.json` and `.build/index/decls.jsonl` are the trusted declaration-level inputs for causal-order analysis.
+- `reports/dag/*.semantic-block.stdlib.json` are trusted semantic block exports.
+- `reports/dag/true-root-order.{md,json}` and `reports/dag/openclaw-targets.{md,json}` are derived reports and should be regenerated, not hand-maintained.
+- If those layers disagree, trust the `.build/` declaration graph as the source of causal order and regenerate the `reports/dag/` views.
+
 ## Hard Proof Policy
 
 Treat vacuous success as failure for frontier accounting.

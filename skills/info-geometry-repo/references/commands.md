@@ -111,6 +111,25 @@ Refreshing tracked Lean modules changed in `HEAD` or the current index/worktree 
 python3 tools/update_repo_docs.py --refresh-exports changed
 ```
 
+Absolute causal-order report from the trusted declaration graph artifacts under `.build/`:
+
+```bash
+python3 tools/generate_causal_report.py \
+  --graph .build/full_graph.json \
+  --decls .build/index/decls.jsonl \
+  --out reports/dag/true-root-order.md \
+  --json-out reports/dag/true-root-order.json
+```
+
+OpenClaw target selector from the current causal-order JSON:
+
+```bash
+python3 tools/select_openclaw_target.py \
+  --input reports/dag/true-root-order.json \
+  --json-out reports/dag/openclaw-targets.json \
+  --md-out reports/dag/openclaw-targets.md
+```
+
 Self-optimization cycle sheet:
 
 ```bash

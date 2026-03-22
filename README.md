@@ -2,10 +2,31 @@
 
 This repository has two tightly coupled layers:
 
-1. a Lean 4 theory library for information geometry, gauge transport, operator/K-theoretic structure, modular/CPT bridges, discrete phase scaffolds, and synthesis modules such as `GrandSynthesis` and `Rosetta`;
+1. a Lean 4 theory library for information geometry, gauge transport, operator/K-theoretic structure, modular/CPT bridges, discrete phase scaffolds, and synthesis modules;
 2. a semantic DAG engine that extracts declaration-level and source-block-level theory topology from Lean while filtering elaborator noise for heavy modules.
 
 It is therefore both a theorem repository and a structural analysis environment for the theory itself.
+
+## Axiomatic Goal
+
+The standing goal of the repository is:
+
+> identify the true axiomatic base of the theory, then build upward lemma by lemma and theorem by theorem from that base.
+
+That base is not a single declaration. It is a root set.
+
+The current intended order of primitiveness is:
+
+1. unnormalized count, ray, and Radon-Nikodym structure
+- relative count density, relative volume change, modular/RN data, and the measure-theoretic substrate below normalized probability language
+2. graded real operator geometry
+- `KreinGradedModule`, real Krein carriers, endomorphism language, and the internal split-Clifford atom
+3. internal square-minus-one axis
+- `K := J.comp eps`, with external scalar `complex_i` treated as legacy-only naming, not primitive data
+4. derived normalized information geometry
+- entropy, KL, Jaynes, IB, gauge transport, analytical index, modular anomaly, and synthesis layers
+
+Normalized probabilities are therefore not the deepest floor here. Unnormalized counts, rays, and RN derivatives sit lower in the semantic stack.
 
 ## Hard Proof Policy
 
@@ -18,8 +39,8 @@ This repository does not count vacuous acceptance by Lean as mathematical closur
 - The absence of `sorry` is necessary but not sufficient; the result must also be constructive and nonvacuous.
 
 If you are new to the repository, start with [NEWCOMER_PATH.md](/home/goutev/LEAN4/info-geometry-lean/NEWCOMER_PATH.md) before diving into the full DAG/tooling stack.
-If you want the semantic “top view” of the theory, read [THEORY_CANOPY.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY.md).
-If your interest is the deeper measure / RN / gauge substrate, also read [THEORY_CANOPY_RN_GAUGE.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY_RN_GAUGE.md).
+If you want the semantic top view of the theory, read [THEORY_CANOPY.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY.md).
+If you want the deeper count / ray / RN / gauge substrate, also read [THEORY_CANOPY_RN_GAUGE.md](/home/goutev/LEAN4/info-geometry-lean/THEORY_CANOPY_RN_GAUGE.md).
 If you want the shortest exact path through the Universal Volume / RN stack, read [UNIVERSAL_VOLUME_STACK.md](/home/goutev/LEAN4/info-geometry-lean/UNIVERSAL_VOLUME_STACK.md).
 If you want the current trust/debt boundary for assumptions, wrappers, and surrogate surfaces, read [SURROGATE_INDEX.md](/home/goutev/LEAN4/info-geometry-lean/SURROGATE_INDEX.md).
 If you want the current alias/vacuity debt boundary, read [VACUITY_INDEX.md](/home/goutev/LEAN4/info-geometry-lean/VACUITY_INDEX.md).
@@ -35,26 +56,35 @@ Current repository scale:
 - Lean files under `lean/`: `450`
 - Lean LOC under `lean/`: `73,067`
 
-Current synchronized bridge families:
+Current synchronized structural stories:
+- primitive real split-Krein spine:
+  `InfoGeometry.Krein.KreinGradedModule`
+  -> `InfoGeometry.Quantum.RealSplitClifford.RealSplitCl11Action`
+  -> `InfoGeometry.KK.RealSplitKreinKasparovCycle`
+  -> `InfoGeometry.KK.RealSplitKreinUnboundedCycle`
 - KK / analytical-index / synthesis:
   `InfoGeometry.KK.KasparovCycle.analyticalIndex`
-  → `InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
-  → `InfoGeometry.Canonical.GrandSynthesis.*`
+  -> `InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
+  -> `InfoGeometry.Canonical.GrandSynthesis.*`
 - source-tension / Rosetta / modular anomaly:
   `Singular`, `RicciMongeAmpere`, `BogoliubovFockSuper`, `TomitaTakesaki`
-  → `InfoGeometry.Canonical.Rosetta.*`
-  → `InfoGeometry.Quantum.ModularAnomaly.*`
+  -> `InfoGeometry.Canonical.Rosetta.*`
+  -> `InfoGeometry.Quantum.ModularAnomaly.*`
 - Weyl-scale transport into KK and Jordan/KKT:
   `WeylTransport`, `WeylInformationGauge`
-  → `Rosetta.weylScaleTransportShadow_to_modularCliffordTransport`
-  → `Rosetta.kk_analyticalIndex_eq_of_weylScaleTransport`
+  -> `Rosetta.weylScaleTransportShadow_to_modularCliffordTransport`
+  -> `Rosetta.kk_analyticalIndex_eq_of_weylScaleTransport`
   and `Rosetta.weylScaleTransportScalarShadow_generalized_pythagorean_of_jordanBregman`
 - discrete Hurwitz shell into RG stationarity:
   `InfoGeometry.Quantum.Hurwitz`
-  → `InfoGeometry.Quantum.HurwitzRGFlow`
-  → `InfoGeometry.Canonical.RGFlow`
+  -> `InfoGeometry.Quantum.HurwitzRGFlow`
+  -> `InfoGeometry.Canonical.RGFlow`
 - finite Pfaffian-sign phase boundary:
   `InfoGeometry.Quantum.KitaevChain.index_change_forces_defect_crossing`
+- deeper count / RN / gauge substrate:
+  `relativeCountDensity`, `relativeVolumeChangeRN`, `relativeTomitaTakesakiOp`
+  -> `WeylGaugeField`, `WeylTransport`, `YangMillsContinuum`
+  -> synthesis surfaces
 
 Tracked trusted semantic exports exist for heavy capstones such as:
 - `GrandSynthesis`
@@ -75,8 +105,14 @@ The exact frontier graph counts are intentionally not duplicated here. Use the t
   Local Weyl-gauge layer.
 - `lean/InfoGeometry/Canonical/WeylTransport.lean`
   Heavy transport/integration layer.
+- `lean/InfoGeometry/Quantum/RealSplitClifford.lean`
+  Primitive real split `Cl(1,1)` atom.
+- `lean/InfoGeometry/KK/RealSplitKreinKasparovCycle.lean`
+  Primitive bounded real split-Krein Fredholm-like cycle.
+- `lean/InfoGeometry/KK/RealSplitKreinUnboundedCycle.lean`
+  Primitive domain-based unbounded split-Krein scaffold.
 - `lean/InfoGeometry/KK/KasparovCycle.lean`
-  Bounded KK core.
+  Legacy-compatible KK façade above the new primitive split-Krein layer.
 - `lean/InfoGeometry/Canonical/AnalyticalIndex.lean`
   Large chiral/index-invariance web.
 - `lean/InfoGeometry/Canonical/Rosetta.lean`
@@ -87,12 +123,8 @@ The exact frontier graph counts are intentionally not duplicated here. Use the t
   Discrete 24-chart Hurwitz shell bridge into RG stationarity.
 - `lean/InfoGeometry/Quantum/KitaevChain.lean`
   Finite Pfaffian-sign chain scaffold with critical/defect crossing theorems.
-- `lean/InfoGeometry/Canonical/DoubleCopyUnification.lean`
-  Thin checked double-copy implication surface.
 - `lean/InfoGeometry/Canonical/GrandSynthesis.lean`
   Large synthesis layer.
-- `lean/InfoGeometry/Canonical/GrandSynthesisDoubleCopy.lean`
-  Double-copy flavored synthesis surface above the core unification layer.
 
 ### Tooling layer
 
@@ -108,6 +140,16 @@ The exact frontier graph counts are intentionally not duplicated here. Use the t
   Report-only semantic frontier explorer over trusted semantic block graphs.
 - `tools/update_repo_docs.py`
   Refreshes tracked frontier/docs surfaces from the current trusted export set.
+
+## Artifact Placement
+
+Keep these graph layers distinct:
+- `.build/full_graph.json` and `.build/index/decls.jsonl` are the trusted declaration-level inputs for causal-order analysis.
+- `reports/dag/*.semantic-block.stdlib.json` are trusted semantic block exports for heavy modules.
+- `reports/dag/true-root-order.{md,json}` are derived absolute causal-order reports built from the `.build/` graph artifacts plus the tracked audits.
+- `reports/dag/openclaw-targets.{md,json}` are derived operational rankings built from `true-root-order.json`.
+
+The mismatch that kept reappearing came from tool drift across two graph eras: older declaration-graph tooling assumed `full_graph.json` and `index/decls.jsonl` at repo root, while the current index/build workflow emits those trusted artifacts under `.build/`. A second drift then appeared when the causal report was updated to refresh markdown without refreshing its JSON sibling, leaving the target selector to read stale `true-root-order.json` state.
 
 ## Current vs Legacy
 
@@ -204,10 +246,31 @@ python3 tools/skynet_v2.py \
   --md-out reports/dag/skynet-v2-frontier-reverse.md
 ```
 
-Operational rule:
-- `forward` shows dependencies/bases,
-- `reverse` shows downstream consumers,
-- `both` shows the local bridge kernel around the seed.
+Example mixed-seed true-category packet around the current primitive split-Krein and index spine:
+
+```bash
+python3 tools/skynet_v2.py \
+  --input reports/dag/KasparovCycle.semantic-block.stdlib.json \
+  --input reports/dag/RealSplitClifford.semantic-block.stdlib.json \
+  --input reports/dag/RealSplitKreinKasparovCycle.semantic-block.stdlib.json \
+  --input reports/dag/RealSplitKreinUnboundedCycle.semantic-block.stdlib.json \
+  --seed KasparovCycle.analyticalIndex \
+  --seed RealSplitCl11Action \
+  --seed RealSplitKreinKasparovCycle \
+  --seed RealSplitKreinUnboundedCycle \
+  --walk both \
+  --top 21 \
+  --json-out reports/dag/skynet-v2-frontier-true-category.json \
+  --md-out reports/dag/skynet-v2-frontier-true-category.md
+```
+
+Operational rules:
+- `forward` shows dependencies/bases;
+- `reverse` shows downstream consumers;
+- `both` shows the local bridge kernel around the seed set;
+- seed distance is not absolute theory depth.
+
+True DAG depth must be measured from the exported graph's dependency root set, not from the chosen Skynet seeds. A DAG usually has many primitive roots, not one common root.
 
 To regenerate the tracked auto status page from current local artifacts:
 
@@ -215,15 +278,13 @@ To regenerate the tracked auto status page from current local artifacts:
 python3 tools/generate_auto_docs.py
 ```
 
-To refresh the frontier packets and the tracked auto status page from the
-current trusted semantic export set:
+To refresh the frontier packets and the tracked auto status page from the current trusted semantic export set:
 
 ```bash
 python3 tools/update_repo_docs.py
 ```
 
-To refresh semantic exports first, then rebuild the frontier from the full
-current export set:
+To refresh semantic exports first, then rebuild the frontier from the full current export set:
 
 ```bash
 python3 tools/update_repo_docs.py --refresh-exports
@@ -231,8 +292,9 @@ python3 tools/update_repo_docs.py --refresh-exports all
 python3 tools/update_repo_docs.py --refresh-exports changed
 ```
 
-This refresh also regenerates the tracked bridge-candidate packet from the
-current trusted frontier and audit state.
+`tools/update_repo_docs.py --refresh-exports ...` now degrades per-module semantic-export failures on thin façade modules to warnings, keeps any existing export artifact, and continues. Treat those warnings as tooling noise to inspect, not as proof that the whole graph refresh failed.
+
+This refresh also regenerates the tracked bridge-candidate packet from the current trusted frontier and audit state.
 
 ## How To Read The Theory Topology
 
@@ -248,8 +310,12 @@ There are three useful views:
 - best for human-facing theory structure and bridge hunting
 
 Current topology picture:
+- the repository should be read as a DAG with a root set, not as a single-spine tree;
+- absolute depth from true dependency roots and distance from a chosen seed set are different metrics;
+- the deepest visible floors include unnormalized count/ray/RN structure, `KreinGradedModule`, the real split `Cl(1,1)` atom, and the operator carrier language on real Krein spaces;
 - the KK / analytical-index corridor remains the cleanest classical-style vertical trunk;
-- `Canonical.Rosetta` now exposes the assumption-driven source-tension transport façade joining singular, Weyl, KK, Jordan/KKT, and modular surfaces;
+- the primitive real split-Krein KK spine is now explicit and separate from the legacy KK façade;
+- `Canonical.Rosetta` exposes the current source-tension transport façade joining singular, Weyl, KK, Jordan/KKT, and modular surfaces;
 - `Quantum.ModularAnomaly` and `Quantum.KitaevChain` provide finite quantum/topological shadow layers;
 - `Quantum.HurwitzRGFlow` is the checked discrete-shell bridge into RG stationarity.
 
@@ -258,10 +324,13 @@ Current topology picture:
 If you are using a coding agent, the minimal bootstrap sequence is:
 
 1. read [docs/keyword_index.md](/home/goutev/LEAN4/info-geometry-lean/docs/keyword_index.md)
-2. read [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
-3. build `InfoGeometry.All`
-4. decide whether the task is:
+2. read [README.md](/home/goutev/LEAN4/info-geometry-lean/README.md)
+3. read [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
+4. build `InfoGeometry.All`
+5. decide whether the task is:
+   primitive/root-set work,
    KK/index work,
+   count/RN/gauge work,
    modular/Rosetta work,
    discrete phase/RG work,
    global topology,

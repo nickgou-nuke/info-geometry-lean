@@ -4,6 +4,7 @@ namespace InfoGeometry.RegularizedKL
 end InfoGeometry.RegularizedKL
 
 open Finset
+open InfoGeometry
 open scoped BigOperators
 
 /- Utility file capturing the “Path 2” regularization / Laplace smoothing

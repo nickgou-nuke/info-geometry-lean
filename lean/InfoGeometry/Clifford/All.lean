@@ -10,7 +10,6 @@ import InfoGeometry.Clifford.Relations
 import InfoGeometry.Clifford.Soldering
 import InfoGeometry.Clifford.Spacetime
 import InfoGeometry.Clifford.SplitQ11
-import InfoGeometry.Clifford.SplitTower
 import InfoGeometry.Clifford.Supercharge
 import InfoGeometry.Clifford.Tower
 import InfoGeometry.Clifford.TowerMatrix

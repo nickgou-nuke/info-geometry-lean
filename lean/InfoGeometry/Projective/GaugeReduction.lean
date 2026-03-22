@@ -197,8 +197,8 @@ lemma generalizedKL_projective_radial_decomposition [Nonempty α]
           (normalize (α := α) (R := ℝ) ν)
       + Z (α := α) (R := ℝ) μ * Real.log
           (Z (α := α) (R := ℝ) μ / Z (α := α) (R := ℝ) ν) := by
-  calc
-    klLike (α := α) μ ν
+    calc
+      klLike (α := α) μ ν
         =
       klLike (α := α)
         (scale (Z (α := α) (R := ℝ) μ)

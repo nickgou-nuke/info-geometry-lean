@@ -6,6 +6,8 @@ open scoped InnerProductSpace
 
 namespace InfoGeometry.KK
 
+open InfoGeometry.Krein
+
 open InfoGeometry.Canonical.AnalyticalIndex
 
 /--
@@ -164,7 +166,7 @@ theorem auto_index_bridge_spectral_from_seed_1 [FiniteDimensional ℝ H]
         ((fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap) s)
         = 0 := by
   intro s
-  exact index_bridge_spectral_zero_family X hF
+  exact index_bridge_spectral_zero_family X hF s
 
 /--
 Transport the KK analytical index through any path whose analytical index is

@@ -13,6 +13,8 @@ The constructive core here is the determinant-square-root identity.
 
 namespace InfoGeometry.Volume.Pfaffian
 
+open InfoGeometry.Krein
+
 variable {H : Type*}
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [KreinSpace H]
 variable [FiniteDimensional ℝ H]

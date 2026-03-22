@@ -26,33 +26,33 @@ abbrev OrthantConeInteriorStateSpace :=
 noncomputable def klLikeOnProj
     (q r : PositiveMeasure.Proj (α := α)) : ℝ :=
   PositiveMeasure.klLike (α := α)
-    (PositiveMeasure.normalizeOnProj (α := α) q)
-    (PositiveMeasure.normalizeOnProj (α := α) r)
+    (InfoGeometry.Projective.Normalize.normalizeOnProj (α := α) q)
+    (InfoGeometry.Projective.Normalize.normalizeOnProj (α := α) r)
 
 /-- Generalized KL on projective classes via canonical simplex representatives. -/
 noncomputable def generalizedKLOnProj
     (q r : PositiveMeasure.Proj (α := α)) : ℝ :=
   PositiveMeasure.generalizedKL (α := α)
-    (PositiveMeasure.normalizeOnProj (α := α) q)
-    (PositiveMeasure.normalizeOnProj (α := α) r)
+    (InfoGeometry.Projective.Normalize.normalizeOnProj (α := α) q)
+    (InfoGeometry.Projective.Normalize.normalizeOnProj (α := α) r)
 
 @[simp] lemma klLikeOnProj_mk
-    (μ ν : PositiveMeasure α ℝ) :
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
     klLikeOnProj (α := α) (Quotient.mk _ μ) (Quotient.mk _ ν)
       =
     PositiveMeasure.klLike (α := α)
       (PositiveMeasure.normalize (α := α) (R := ℝ) μ)
       (PositiveMeasure.normalize (α := α) (R := ℝ) ν) := by
-  simp [klLikeOnProj, PositiveMeasure.normalizeOnProj_mk]
+  simp [klLikeOnProj, InfoGeometry.Projective.Normalize.normalizeOnProj_mk]
 
 @[simp] lemma generalizedKLOnProj_mk
-    (μ ν : PositiveMeasure α ℝ) :
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
     generalizedKLOnProj (α := α) (Quotient.mk _ μ) (Quotient.mk _ ν)
       =
     PositiveMeasure.generalizedKL (α := α)
       (PositiveMeasure.normalize (α := α) (R := ℝ) μ)
       (PositiveMeasure.normalize (α := α) (R := ℝ) ν) := by
-  simp [generalizedKLOnProj, PositiveMeasure.normalizeOnProj_mk]
+  simp [generalizedKLOnProj, InfoGeometry.Projective.Normalize.normalizeOnProj_mk]
 
 /-- On projective classes (simplex gauge), generalized KL equals `klLike`. -/
 @[simp] lemma generalizedKLOnProj_eq_klLikeOnProj
@@ -60,7 +60,7 @@ noncomputable def generalizedKLOnProj
     generalizedKLOnProj (α := α) q r = klLikeOnProj (α := α) q r := by
   refine Quotient.inductionOn₂ q r ?_
   intro μ ν
-  simpa [generalizedKLOnProj, klLikeOnProj, PositiveMeasure.normalizeOnProj_mk] using
+  simpa [generalizedKLOnProj, klLikeOnProj, InfoGeometry.Projective.Normalize.normalizeOnProj_mk] using
     (PositiveMeasure.generalizedKL_normalize_eq_klLike_normalize (α := α) μ ν)
 
 /-- Faithful nonnegativity in projective gauge. -/
@@ -69,7 +69,7 @@ lemma generalizedKLOnProj_nonneg
     0 ≤ generalizedKLOnProj (α := α) q r := by
   refine Quotient.inductionOn₂ q r ?_
   intro μ ν
-  simpa [generalizedKLOnProj, PositiveMeasure.normalizeOnProj_mk] using
+  simpa [generalizedKLOnProj, InfoGeometry.Projective.Normalize.normalizeOnProj_mk] using
     (PositiveMeasure.generalizedKL_normalize_nonneg (α := α) μ ν)
 
 /-- Faithful nonnegativity of the KL-like projective form. -/
@@ -81,7 +81,7 @@ lemma klLikeOnProj_nonneg
 
 /-- Radial/projective decomposition with the projective part expressed by `generalizedKLOnProj`. -/
 lemma generalizedKL_projective_radial_decomposition_onProj
-    (μ ν : PositiveMeasure α ℝ) :
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
     PositiveMeasure.generalizedKL (α := α) μ ν
       =
     PositiveMeasure.Z (α := α) (R := ℝ) μ
@@ -89,22 +89,22 @@ lemma generalizedKL_projective_radial_decomposition_onProj
       + PositiveMeasure.gklTerm
           (PositiveMeasure.Z (α := α) (R := ℝ) μ)
           (PositiveMeasure.Z (α := α) (R := ℝ) ν) := by
-  simpa [generalizedKLOnProj, PositiveMeasure.normalizeOnProj_mk] using
+  simpa [generalizedKLOnProj, InfoGeometry.Projective.Normalize.normalizeOnProj_mk] using
     (PositiveMeasure.generalizedKL_projective_radial_decomposition (α := α) μ ν)
 
 /-- Cone-facing KL-like divergence via canonical simplex representatives. -/
 noncomputable def klLikeOnConeInteriorStateSpace
     (s t : OrthantConeInteriorStateSpace (α := α)) : ℝ :=
   PositiveMeasure.klLike (α := α)
-    (PositiveMeasure.normalizeOnConeInteriorStateSpace (α := α) s)
-    (PositiveMeasure.normalizeOnConeInteriorStateSpace (α := α) t)
+    (InfoGeometry.Projective.Normalize.normalizeOnConeInteriorStateSpace (α := α) s)
+    (InfoGeometry.Projective.Normalize.normalizeOnConeInteriorStateSpace (α := α) t)
 
 /-- Cone-facing generalized KL via canonical simplex representatives. -/
 noncomputable def generalizedKLOnConeInteriorStateSpace
     (s t : OrthantConeInteriorStateSpace (α := α)) : ℝ :=
   PositiveMeasure.generalizedKL (α := α)
-    (PositiveMeasure.normalizeOnConeInteriorStateSpace (α := α) s)
-    (PositiveMeasure.normalizeOnConeInteriorStateSpace (α := α) t)
+    (InfoGeometry.Projective.Normalize.normalizeOnConeInteriorStateSpace (α := α) s)
+    (InfoGeometry.Projective.Normalize.normalizeOnConeInteriorStateSpace (α := α) t)
 
 @[simp] lemma klLikeOnConeInteriorStateSpace_projectiveClass
     (q r : PositiveMeasure.Proj (α := α)) :
@@ -113,7 +113,7 @@ noncomputable def generalizedKLOnConeInteriorStateSpace
       (projectiveClassToConeInteriorStateSpace (α := α) r)
       =
     klLikeOnProj (α := α) q r := by
-  simp [klLikeOnConeInteriorStateSpace, klLikeOnProj, PositiveMeasure.normalizeOnProj]
+  simp [klLikeOnConeInteriorStateSpace, klLikeOnProj, InfoGeometry.Projective.Normalize.normalizeOnProj]
 
 @[simp] lemma generalizedKLOnConeInteriorStateSpace_projectiveClass
     (q r : PositiveMeasure.Proj (α := α)) :
@@ -123,7 +123,7 @@ noncomputable def generalizedKLOnConeInteriorStateSpace
       =
     generalizedKLOnProj (α := α) q r := by
   simp [generalizedKLOnConeInteriorStateSpace, generalizedKLOnProj,
-    PositiveMeasure.normalizeOnProj]
+    InfoGeometry.Projective.Normalize.normalizeOnProj]
 
 /-- Cone-facing gauge reduction: generalized KL equals `klLike`. -/
 @[simp] lemma generalizedKLOnConeInteriorStateSpace_eq_klLikeOnConeInteriorStateSpace
@@ -181,7 +181,7 @@ end ConeFacingKL
 
 end InfoGeometry.Projective
 
-namespace PositiveMeasure
+namespace InfoGeometry.PositiveMeasure
 
 section ConeFacingKLWrappers
 
@@ -210,7 +210,7 @@ noncomputable abbrev generalizedKLOnConeInteriorStateSpace
   InfoGeometry.Projective.generalizedKLOnConeInteriorStateSpace (α := α) s t
 
 @[simp] lemma klLikeOnProj_mk
-    (μ ν : PositiveMeasure α ℝ) :
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
     klLikeOnProj (α := α) (Quotient.mk _ μ) (Quotient.mk _ ν)
       =
     klLike (α := α)
@@ -220,7 +220,7 @@ noncomputable abbrev generalizedKLOnConeInteriorStateSpace
     (InfoGeometry.Projective.klLikeOnProj_mk (α := α) μ ν)
 
 @[simp] lemma generalizedKLOnProj_mk
-    (μ ν : PositiveMeasure α ℝ) :
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
     generalizedKLOnProj (α := α) (Quotient.mk _ μ) (Quotient.mk _ ν)
       =
     generalizedKL (α := α)
@@ -237,4 +237,4 @@ noncomputable abbrev generalizedKLOnConeInteriorStateSpace
 
 end ConeFacingKLWrappers
 
-end PositiveMeasure
+end InfoGeometry.PositiveMeasure

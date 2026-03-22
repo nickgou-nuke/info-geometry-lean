@@ -138,7 +138,7 @@ variable {X Θ : Type*} [Fintype X] [Fintype Θ] [MeasurableSpace X] [Measurable
 
 /-- Kullback–Leibler divergence on joints. -/
 noncomputable def kl (p q : Joint X Θ) : ℝ≥0∞ :=
-  InfoGeometry.kl_div (α := X × Θ)
+  InfoGeometry.KL.kl_div (α := X × Θ)
     (p.toMeasure : MeasureTheory.Measure (X × Θ))
     (q.toMeasure : MeasureTheory.Measure (X × Θ))
 
@@ -301,10 +301,10 @@ theorem kl_chain_rule_toReal_strict
     (hposp : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
     (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal) :
     (kl p q).toReal =
-      (InfoGeometry.kl_div (α := X) (marginal_x p).toMeasure (marginal_x q).toMeasure).toReal
+      (InfoGeometry.KL.kl_div (α := X) (marginal_x p).toMeasure (marginal_x q).toMeasure).toReal
       +
       (∑ x : X, (marginal_x p x).toReal *
-        (InfoGeometry.kl_div (α := Θ)
+        (InfoGeometry.KL.kl_div (α := Θ)
           (cond_theta_given_x p x (marginal_x_full_support_of_joint_toReal_pos p hposp x)).toMeasure
           (cond_theta_given_x q x (marginal_x_full_support_of_joint_toReal_pos q hposq x)).toMeasure).toReal) := by
   let hp : ∀ x : X, x ∈ (marginal_x p).support := marginal_x_full_support_of_joint_toReal_pos p hposp
@@ -327,22 +327,22 @@ theorem kl_chain_rule_toReal_strict
 
   have h_joint :
       (kl p q).toReal = ∑ xt : X × Θ, (p xt).toReal * Real.log ((p xt).toReal / (q xt).toReal) := by
-    simpa [kl, InfoGeometry.kl_div] using
+    simpa [kl, InfoGeometry.KL.kl_div] using
       (InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio (P := p) (Q := q) hQ_joint)
   have h_marg :
-      (InfoGeometry.kl_div (α := X) (marginal_x p).toMeasure (marginal_x q).toMeasure).toReal
+      (InfoGeometry.KL.kl_div (α := X) (marginal_x p).toMeasure (marginal_x q).toMeasure).toReal
         = ∑ x : X, (marginal_x p x).toReal * logx x := by
-    simpa [logx, InfoGeometry.kl_div] using
+    simpa [logx, InfoGeometry.KL.kl_div] using
       (InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio
         (P := marginal_x p) (Q := marginal_x q) hQ_marg)
   have h_cond_each :
       ∀ x : X,
-        (InfoGeometry.kl_div (α := Θ)
+        (InfoGeometry.KL.kl_div (α := Θ)
           (cond_theta_given_x p x (hp x)).toMeasure
           (cond_theta_given_x q x (hq x)).toMeasure).toReal
         = ∑ θ : Θ, cp x θ * logc x θ := by
     intro x
-    simpa [cp, logc, InfoGeometry.kl_div] using
+    simpa [cp, logc, InfoGeometry.KL.kl_div] using
       (InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio
         (P := cond_theta_given_x p x (hp x))
         (Q := cond_theta_given_x q x (hq x))
@@ -462,7 +462,7 @@ theorem kl_pythagorean_jeffrey_toReal_strict
       (kl p (jeffrey_joint q p_x
         (marginal_x_full_support_of_joint_toReal_pos q hposq))).toReal
       +
-      (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+      (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
   let hq : ∀ x : X, x ∈ (marginal_x q).support :=
     marginal_x_full_support_of_joint_toReal_pos q hposq
   let qStar : Joint X Θ := jeffrey_joint q p_x hq
@@ -494,13 +494,13 @@ theorem kl_pythagorean_jeffrey_toReal_strict
     simpa [qStar] using marginal_x_jeffrey_joint (q := q) (p_x := p_x) hq
 
   have hkl_self_toReal :
-      (InfoGeometry.kl_div (α := X) p_x.toMeasure p_x.toMeasure).toReal = 0 := by
-      simp [InfoGeometry.kl_div]
+      (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure p_x.toMeasure).toReal = 0 := by
+      simp [InfoGeometry.KL.kl_div]
 
   have hres :
       (kl p qStar).toReal =
         ∑ x : X, (marginal_x p x).toReal *
-          (InfoGeometry.kl_div (α := Θ)
+          (InfoGeometry.KL.kl_div (α := Θ)
             (cond_theta_given_x p x (hp_support x)).toMeasure
             (cond_theta_given_x q x (hq x)).toMeasure).toReal := by
     have htmp :=
@@ -534,28 +534,28 @@ theorem kl_pythagorean_jeffrey_toReal_strict
   calc
     (kl p q).toReal
         =
-          (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal
+          (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal
           +
           (∑ x : X, (marginal_x p x).toReal *
-            (InfoGeometry.kl_div (α := Θ)
+            (InfoGeometry.KL.kl_div (α := Θ)
               (cond_theta_given_x p x (hp_support x)).toMeasure
               (cond_theta_given_x q x (hq x)).toMeasure).toReal) := by
       simpa [hmarg] using hchain1
     _ =
-          (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal
+          (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal
           +
           (kl p qStar).toReal := by
       rw [hres]
     _ =
           (kl p qStar).toReal
           +
-          (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+          (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
       ring
     _ =
           (kl p (jeffrey_joint q p_x
             (marginal_x_full_support_of_joint_toReal_pos q hposq))).toReal
           +
-          (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+          (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
         simp [qStar]
 
 /--
@@ -567,7 +567,7 @@ lemma kl_div_ne_top_of_right_toReal_pos
     [MeasurableSpace α] [MeasurableSingletonClass α]
     (P Q : FinProb α)
     (hQ : ∀ x : α, 0 < (Q x).toReal) :
-    InfoGeometry.kl_div (α := α) P.toMeasure Q.toMeasure ≠ ⊤ := by
+    InfoGeometry.KL.kl_div (α := α) P.toMeasure Q.toMeasure ≠ ⊤ := by
   change InformationTheory.klDiv P.toMeasure Q.toMeasure ≠ ⊤
   rw [InformationTheory.klDiv_ne_top_iff]
   refine ⟨?_, ?_⟩
@@ -606,7 +606,7 @@ theorem kl_pythagorean_jeffrey_strict
       kl p (jeffrey_joint q p_x
         (marginal_x_full_support_of_joint_toReal_pos q hposq))
       +
-      InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure := by
+      InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure := by
   let hq : ∀ x : X, x ∈ (marginal_x q).support :=
     marginal_x_full_support_of_joint_toReal_pos q hposq
   let qStar : Joint X Θ := jeffrey_joint q p_x hq
@@ -614,7 +614,7 @@ theorem kl_pythagorean_jeffrey_strict
   have htoReal :
       (kl p q).toReal =
         (kl p qStar).toReal +
-        (InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+        (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
     simpa [qStar, hq] using
       kl_pythagorean_jeffrey_toReal_strict
         (p := p) (q := q) (p_x := p_x) (hposp := hposp) (hposq := hposq) (hmarg := hmarg)
@@ -654,18 +654,18 @@ theorem kl_pythagorean_jeffrey_strict
       (kl_div_ne_top_of_right_toReal_pos (P := p) (Q := qStar) hqStar_joint_pos)
 
   have hright2_ne_top :
-      InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure ≠ ⊤ := by
+      InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure ≠ ⊤ := by
     exact kl_div_ne_top_of_right_toReal_pos (P := p_x) (Q := marginal_x q) hmxq_pos
 
   have hsum_ne_top :
       kl p qStar +
-        InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure ≠ ⊤ := by
+        InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure ≠ ⊤ := by
     exact ENNReal.add_ne_top.2 ⟨hright1_ne_top, hright2_ne_top⟩
 
   have htoReal_sum :
       (kl p q).toReal =
         (kl p qStar +
-          InfoGeometry.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+          InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
     rw [ENNReal.toReal_add hright1_ne_top hright2_ne_top]
     exact htoReal
 

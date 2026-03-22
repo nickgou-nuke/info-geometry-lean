@@ -1,4 +1,4 @@
-import InfoGeometry.KK.RealSplitKreinKasparovCycle
+import InfoGeometry.KK.RealSplitKreinResolvent
 
 open scoped InnerProductSpace
 
@@ -20,8 +20,8 @@ Primitive unbounded real split-Krein cycle interface.
 
 This first-pass object stores explicit domain-level data for the unbounded
 operator, grading compatibility, a concrete bounded commutator representative,
-and a concrete bounded resolvent representative. It still remains an interface
-scaffold rather than a full unbounded-KK calculus.
+and primitive resolvent control packaged as separate bounded data. It still
+remains an interface scaffold rather than a full unbounded-KK calculus.
 -/
 structure RealSplitKreinUnboundedCycle
     (A B H : Type*)
@@ -49,13 +49,7 @@ structure RealSplitKreinUnboundedCycle
   D_krein_skewAdj :
     ∀ x y : {x // x ∈ domain},
       KreinSpace.kreinInner (H := H) (D x) y.1 + KreinSpace.kreinInner (H := H) x.1 (D y) = 0
-  resolventShift : ℝ
-  resolvent : EndH H
-  resolvent_preserves_domain : ∀ x : H, resolvent x ∈ domain
-  resolvent_left :
-    ∀ x : H,
-      D ⟨resolvent x, resolvent_preserves_domain x⟩ - resolventShift • resolvent x = x
-  resolvent_compact : IsCompactEnd H resolvent
+  resolventData : RealSplitKreinResolventData H domain D
   commutator : A → EndH H
   commutator_formula :
     ∀ a : A, ∀ x : {x // x ∈ domain},
@@ -81,6 +75,34 @@ theorem K_sq
     X.K.comp X.K = -(ContinuousLinearMap.id ℝ H) :=
   X.cl11.K_sq
 
+/-- The chosen real shift for the primitive resolvent packet. -/
+abbrev resolventShift
+    (X : RealSplitKreinUnboundedCycle A B H) : ℝ :=
+  X.resolventData.shift
+
+/-- The bounded resolvent representative for the unbounded primitive carrier. -/
+abbrev resolvent
+    (X : RealSplitKreinUnboundedCycle A B H) : EndH H :=
+  X.resolventData.resolvent
+
+/-- The resolvent maps the ambient carrier back into the operator domain. -/
+lemma resolvent_preserves_domain
+    (X : RealSplitKreinUnboundedCycle A B H) (x : H) :
+    X.resolvent x ∈ X.domain :=
+  X.resolventData.resolvent_preserves_domain x
+
+/-- The stored resolvent satisfies the left identity for `D - λ`. -/
+lemma resolvent_left
+    (X : RealSplitKreinUnboundedCycle A B H) (x : H) :
+    X.D ⟨X.resolvent x, X.resolvent_preserves_domain x⟩ - X.resolventShift • X.resolvent x = x :=
+  X.resolventData.left_resolvent x
+
+/-- The primitive resolvent representative is compact. -/
+lemma resolvent_compact
+    (X : RealSplitKreinUnboundedCycle A B H) :
+    IsCompactEnd H X.resolvent :=
+  X.resolventData.compact
+
 /-- The grading acts on the operator domain by primitive closure. -/
 noncomputable def gradeOnDomain
     (X : RealSplitKreinUnboundedCycle A B H) :
@@ -99,6 +121,26 @@ def rhoOnDomain
     (X : RealSplitKreinUnboundedCycle A B H) (b : B) :
     {x // x ∈ X.domain} → {x // x ∈ X.domain}
   | ⟨x, hx⟩ => ⟨(X.ρ b) x, X.ρ_preserves_domain b hx⟩
+
+lemma pi_comp_resolvent_compact
+    (X : RealSplitKreinUnboundedCycle A B H) (a : A) :
+    IsCompactEnd H ((X.π a).comp X.resolvent) :=
+  X.resolventData.comp_left_isCompactEnd (X.π a)
+
+lemma resolvent_comp_pi_compact
+    (X : RealSplitKreinUnboundedCycle A B H) (a : A) :
+    IsCompactEnd H (X.resolvent.comp (X.π a)) :=
+  X.resolventData.comp_right_isCompactEnd (X.π a)
+
+lemma rho_comp_resolvent_compact
+    (X : RealSplitKreinUnboundedCycle A B H) (b : B) :
+    IsCompactEnd H ((X.ρ b).comp X.resolvent) :=
+  X.resolventData.comp_left_isCompactEnd (X.ρ b)
+
+lemma resolvent_comp_rho_compact
+    (X : RealSplitKreinUnboundedCycle A B H) (b : B) :
+    IsCompactEnd H (X.resolvent.comp (X.ρ b)) :=
+  X.resolventData.comp_right_isCompactEnd (X.ρ b)
 
 @[simp] lemma resolvent_mem_domain
     (X : RealSplitKreinUnboundedCycle A B H) (x : H) :

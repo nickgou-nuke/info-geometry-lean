@@ -337,7 +337,7 @@ lemma finiteSliceObjective_eq_kl_to_next_minus_logPartition_of_supportFaithful
       ∑ t : T,
         ((probMeasureToPMF p) t).toReal *
           Real.log (((probMeasureToPMF p) t).toReal / ((probMeasureToPMF q_n) t).toReal) := by
-    simpa [InfoGeometry.fin_kl_div, InfoGeometry.kl_div] using
+    simpa [InfoGeometry.fin_kl_div, InfoGeometry.KL.kl_div] using
       (toReal_fin_klDiv_eq_sum_log_ratio_of_supportFaithful
         (P := probMeasureToPMF p)
         (Q := probMeasureToPMF q_n)
@@ -352,7 +352,7 @@ lemma finiteSliceObjective_eq_kl_to_next_minus_logPartition_of_supportFaithful
           Real.log
             (((probMeasureToPMF p) t).toReal /
               ((probMeasureToPMF (IBNextEncoder q_n β D hInt x)) t).toReal) := by
-    simpa [InfoGeometry.fin_kl_div, InfoGeometry.kl_div] using
+    simpa [InfoGeometry.fin_kl_div, InfoGeometry.KL.kl_div] using
       (toReal_fin_klDiv_eq_sum_log_ratio_of_supportFaithful
         (P := probMeasureToPMF p)
         (Q := probMeasureToPMF (IBNextEncoder q_n β D hInt x))
@@ -458,7 +458,7 @@ lemma finiteSliceObjective_minimized_by_IBNextEncoder_of_supportFaithful
       (InfoGeometry.fin_kl_div
         (probMeasureToPMF (IBNextEncoder q_n β D hInt x))
         (probMeasureToPMF (IBNextEncoder q_n β D hInt x))).toReal = 0 := by
-    simp [InfoGeometry.fin_kl_div, InfoGeometry.kl_div]
+    simp [InfoGeometry.fin_kl_div]
   rw [hnextEq, hpEq, hself]
   linarith
 

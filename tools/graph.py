@@ -48,19 +48,36 @@ class ProjectGraph:
         nodes = data.get("nodes", [])
         self.g.add_nodes_from(nodes)
 
-        for edge in data.get("edges", []):
-            if len(edge) == 2:
-                u, target_info = edge
-                if isinstance(target_info, list) and len(target_info) == 2:
-                    v, kind = target_info
+        if data.get("edges"):
+            for edge in data.get("edges", []):
+                if len(edge) == 2:
+                    u, target_info = edge
+                    if isinstance(target_info, list) and len(target_info) == 2:
+                        v, kind = target_info
+                        self.g.add_edge(u, v, kind=kind)
+                    else:
+                        # Fallback for simple [u, v] pairs
+                        v = target_info
+                        self.g.add_edge(u, v, kind="unknown")
+                elif len(edge) == 3:
+                    u, v, kind = edge
                     self.g.add_edge(u, v, kind=kind)
-                else:
-                    # Fallback for simple [u, v] pairs
-                    v = target_info
-                    self.g.add_edge(u, v, kind="unknown")
-            elif len(edge) == 3:
-                u, v, kind = edge
-                self.g.add_edge(u, v, kind=kind)
+            return
+
+        forward = data.get("forward", [])
+        for src_idx, adj in enumerate(forward):
+            if src_idx >= len(nodes):
+                continue
+            u = nodes[src_idx]
+            if not isinstance(adj, list):
+                continue
+            for item in adj:
+                if not isinstance(item, list) or len(item) != 2:
+                    continue
+                dst_idx, kind = item
+                if not isinstance(dst_idx, int) or dst_idx < 0 or dst_idx >= len(nodes):
+                    continue
+                self.g.add_edge(u, nodes[dst_idx], kind=kind)
 
     def rebuild(self) -> None:
         """Invoke the Lean export script to rebuild the graph.json and reload it."""
@@ -184,8 +201,22 @@ def load_graph(path: Path) -> dict[str, Any]:
         return json.load(f)
 
 def edges_as_tuples(data: dict[str, Any]) -> Iterable[Tuple[str, str]]:
-    for e in data.get('edges', []):
-        yield (e[0], e[1])
+    if data.get("edges"):
+        for e in data.get("edges", []):
+            yield (e[0], e[1])
+        return
+
+    all_nodes = data.get("nodes", [])
+    for src_idx, adj in enumerate(data.get("forward", [])):
+        if src_idx >= len(all_nodes) or not isinstance(adj, list):
+            continue
+        for item in adj:
+            if not isinstance(item, list) or len(item) != 2:
+                continue
+            dst_idx, _kind = item
+            if not isinstance(dst_idx, int) or dst_idx < 0 or dst_idx >= len(all_nodes):
+                continue
+            yield (all_nodes[src_idx], all_nodes[dst_idx])
 
 def nodes(data: dict[str, Any]) -> Iterable[str]:
     return data.get('nodes', [])

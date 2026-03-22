@@ -108,7 +108,7 @@ lemma klDiv_eq_fin_klDiv_toReal
     klDiv (encoder : Measure T) (ref : Measure T) hKL
       =
     (InfoGeometry.fin_kl_div (probMeasureToPMF encoder) (probMeasureToPMF ref)).toReal := by
-  unfold klDiv klDivENN InfoGeometry.KL.kl_div InfoGeometry.fin_kl_div InfoGeometry.kl_div
+  unfold klDiv klDivENN InfoGeometry.KL.kl_div InfoGeometry.fin_kl_div
   simp [probMeasureToPMF_toMeasure]
 
 theorem IBGlobalFreeEnergy_eq_finiteWeighted
@@ -215,7 +215,7 @@ lemma klDiv_ne_top_of_supportFaithful
   have h_int :
       Integrable (MeasureTheory.llr P.toMeasure Q.toMeasure) P.toMeasure :=
     InfoGeometry.MaxEnt.IProjection.integrable_of_fintype _ _
-  simpa [InfoGeometry.fin_kl_div, InfoGeometry.kl_div] using
+  simpa [InfoGeometry.fin_kl_div, InfoGeometry.KL.kl_div] using
     (InformationTheory.klDiv_ne_top_iff).2 ⟨h_ac, h_int⟩
 
 lemma toReal_fin_klDiv_eq_sum_log_ratio_of_supportFaithful
@@ -600,7 +600,7 @@ theorem finiteWeightedKL_bind_marginal_decomposition
           =
         ∑ t : T, (encoder x t).toReal * Real.log ((encoder x t).toReal / (q t).toReal) := by
     intro x
-    simpa [InfoGeometry.fin_kl_div, InfoGeometry.kl_div] using
+    simpa [InfoGeometry.fin_kl_div, InfoGeometry.KL.kl_div] using
       (toReal_fin_klDiv_eq_sum_log_ratio_of_supportFaithful
         (P := encoder x) (Q := q) (hQ := hq x))
   have hnextKL :
@@ -610,7 +610,7 @@ theorem finiteWeightedKL_bind_marginal_decomposition
         ∑ t : T,
           (encoder x t).toReal * Real.log ((encoder x t).toReal / ((pX.bind encoder) t).toReal) := by
     intro x
-    simpa [InfoGeometry.fin_kl_div, InfoGeometry.kl_div] using
+    simpa [InfoGeometry.fin_kl_div, InfoGeometry.KL.kl_div] using
       (toReal_fin_klDiv_eq_sum_log_ratio_of_supportFaithful
         (P := encoder x) (Q := pX.bind encoder) (hQ := hnext x))
   have hmarg_support :
@@ -620,7 +620,7 @@ theorem finiteWeightedKL_bind_marginal_decomposition
       (InfoGeometry.fin_kl_div (pX.bind encoder) q).toReal
         =
       ∑ t : T, ((pX.bind encoder) t).toReal * Real.log (((pX.bind encoder) t).toReal / (q t).toReal) := by
-    simpa [InfoGeometry.fin_kl_div, InfoGeometry.kl_div] using
+    simpa [InfoGeometry.fin_kl_div, InfoGeometry.KL.kl_div] using
       (toReal_fin_klDiv_eq_sum_log_ratio_of_supportFaithful
         (P := pX.bind encoder) (Q := q) (hQ := hmarg_support))
   let qNext := pX.bind encoder

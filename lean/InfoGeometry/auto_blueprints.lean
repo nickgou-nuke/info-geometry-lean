@@ -313,11 +313,11 @@ attribute [blueprint] InfoGeometry.MaxEnt.Finite.FiniteJaynesProblem.logPartitio
 attribute [blueprint] InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum.K
 attribute [blueprint] InfoGeometry.Quantum.RealMajoranaCategory.SplitCliffordDatum.majoranaPairing
 attribute [blueprint] InfoGeometry.Canonical.WeylGaugeParameter
-attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.BogoliubovParams.u
+attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.HyperbolicMixingParams.u
 attribute [blueprint] InfoGeometry.Thermal.DiagonalObservable.mk
 attribute [blueprint] InfoGeometry.KL.EntropicInferenceTest.State
 attribute [blueprint] InfoGeometry.Krein.HilbertDoubled.toLp
-attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.BogoliubovParams.v
+attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.HyperbolicMixingParams.v
 attribute [blueprint] InfoGeometry.EntropicInference.Joint
 attribute [blueprint] InfoGeometry.Quantum.RealMajorana.KPolarization.Hom.f
 attribute [blueprint] InfoGeometry.CliffordTower.splitSpaceModule
@@ -437,7 +437,7 @@ attribute [blueprint] InfoGeometry.Canonical.SpectralInference.CertifiedRegulari
 attribute [blueprint] InfoGeometry.MaxEnt.totalCount
 attribute [blueprint] InfoGeometry.MaxEnt.JaynesInfoStatMech.ProbDist
 attribute [blueprint] InfoGeometry.Clifford.Soldering.Vec22
-attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.kahlerPotentialRN
+attribute [blueprint] InfoGeometry.Canonical.MoE.kahlerPotentialRN
 attribute [blueprint] InfoGeometry.Projective.InfoGeometry.Projective.PhysicalKinematics
 attribute [blueprint] InfoGeometry.Core.SymmetricLieAlgebra.plusPart
 attribute [blueprint] InfoGeometry.Core.SymmetricLieAlgebra.minusPart
@@ -460,7 +460,7 @@ attribute [blueprint] InfoGeometry.KK.FinModelE
 attribute [blueprint] InfoGeometry.Canonical.WeylGaugeField.IsFlat
 attribute [blueprint] InfoGeometry.Canonical.OperatorLogGenerator
 attribute [blueprint] InfoGeometry.Canonical.IBMeasure.IBUnnormalized
-attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.relativeVolumeChangeRN
+attribute [blueprint] InfoGeometry.Canonical.MoE.relativeVolumeChangeRN
 attribute [blueprint] InfoGeometry.Canonical.CalabiYauBridge.UnitRelativeVolumeState
 attribute [blueprint] InfoGeometry.Canonical.GaugeGroups.PSUN
 attribute [blueprint] InfoGeometry.Canonical.Attention.Head

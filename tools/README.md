@@ -56,6 +56,7 @@ Use this lane when the question is:
 - how do I recover stable condensation components, strict dominators, and canonical root witness paths?
 - how do I recover source bundles, repeated path motifs, and compression carriers instead of only adjacency?
 - which hydrated carriers are structurally bleeding across native component closures?
+- what is the next OpenClaw target once coverage gaps are closed?
 
 ### Level 2: Authoritative blueprint / LeanArchitect pipeline
 

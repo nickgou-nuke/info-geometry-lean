@@ -29,6 +29,8 @@ DEFAULT_STRUCTURE = str(default_decl_structure_file().relative_to(repo_root()))
 DEFAULT_BIPARTITE = str(default_source_sink_bipartite_file().relative_to(repo_root()))
 DEFAULT_JSON_OUT = "reports/dag/structural-anti-bleed.json"
 DEFAULT_MD_OUT = "reports/dag/structural-anti-bleed.md"
+DEFAULT_HOTSPOTS_JSON_OUT = "reports/dag/structural-hotspots.json"
+DEFAULT_HOTSPOTS_MD_OUT = "reports/dag/structural-hotspots.md"
 
 
 def parse_args() -> argparse.Namespace:
@@ -42,6 +44,8 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--bipartite", default=DEFAULT_BIPARTITE)
     ap.add_argument("--json-out", default=DEFAULT_JSON_OUT)
     ap.add_argument("--md-out", default=DEFAULT_MD_OUT)
+    ap.add_argument("--hotspots-json-out", default=DEFAULT_HOTSPOTS_JSON_OUT)
+    ap.add_argument("--hotspots-md-out", default=DEFAULT_HOTSPOTS_MD_OUT)
     ap.add_argument("--top", type=int, default=25)
     return ap.parse_args()
 
@@ -374,6 +378,8 @@ def pairwise_bleed_scan(
     return violations
 
 
+
+
 def summarize_violations(violations: list[dict[str, Any]]) -> dict[str, Any]:
     by_source: dict[str, dict[str, Any]] = defaultdict(
         lambda: {"target_count": 0, "total_missing": 0, "total_overlap": 0, "targets": []}
@@ -418,6 +424,136 @@ def summarize_violations(violations: list[dict[str, Any]]) -> dict[str, Any]:
         "worst_sources": worst_sources,
         "worst_targets": worst_targets,
     }
+
+
+def anchor_status_index(anchor_report: dict[str, Any]) -> dict[str, str]:
+    out: dict[str, str] = {}
+    for row in anchor_report.get("strictly_safe", []):
+        out[str(row.get("hydrated_id", ""))] = "strictly_safe"
+    for row in anchor_report.get("anchored", []):
+        out[str(row.get("hydrated_id", ""))] = "anchored"
+    for row in anchor_report.get("unanchored", []):
+        out[str(row.get("hydrated_id", ""))] = "unanchored"
+    return out
+
+
+def selector_score(row: dict[str, Any]) -> float:
+    return round(
+        8.0 * float(row.get("bleed_source_count", 0))
+        + 3.0 * float(row.get("bleed_missing_mass", 0))
+        + 2.0 * float(row.get("native_dominator_pressure", 0))
+        + 1.5 * float(row.get("native_corridor_reuse", 0))
+        + 0.5 * float(row.get("bleed_target_count", 0))
+        + 0.05 * float(row.get("compression_potential", 0.0))
+        + 0.1 * float(row.get("path_multiplicity", 0)),
+        4,
+    )
+
+
+def build_structural_hotspots(
+    hydrated_by_id: dict[str, dict[str, Any]],
+    violations: list[dict[str, Any]],
+    anchor_report: dict[str, Any],
+) -> dict[str, Any]:
+    anchor_status = anchor_status_index(anchor_report)
+    rows: dict[str, dict[str, Any]] = {}
+
+    for hydrated_id, hydrated in hydrated_by_id.items():
+        native_root_witnesses = [str(x) for x in hydrated.get("native_root_witnesses", []) if str(x)]
+        supporting_atomic_decls = [str(x) for x in hydrated.get("supporting_atomic_decls", []) if str(x)]
+        top_root_witness = str(hydrated.get("top_root_witness", ""))
+        if not top_root_witness:
+            top_root_witness = native_root_witnesses[0] if native_root_witnesses else (supporting_atomic_decls[0] if supporting_atomic_decls else "")
+        rows[hydrated_id] = {
+            "hydrated_id": hydrated_id,
+            "module": str(hydrated.get("module", hydrated_id)),
+            "sink_role": str(hydrated.get("sink_role", "unknown")),
+            "support_size": len(hydrated.get("native_component_ids", []) or []),
+            "bleed_source_count": 0,
+            "bleed_target_count": 0,
+            "bleed_missing_mass": 0,
+            "bleed_target_missing_mass": 0,
+            "bleed_overlap_mass": 0,
+            "bleed_target_overlap_mass": 0,
+            "native_dominator_pressure": int(hydrated.get("native_dominator_pressure", 0) or 0),
+            "native_corridor_reuse": int(hydrated.get("native_corridor_reuse", 0) or 0),
+            "native_corridor_count": int(hydrated.get("native_corridor_count", 0) or 0),
+            "compression_potential": float(hydrated.get("compression_potential", 0.0) or 0.0),
+            "path_multiplicity": int(hydrated.get("path_multiplicity", 0) or 0),
+            "anchor_status": anchor_status.get(hydrated_id, "unknown"),
+            "shared_strict_dominator_representatives": list(hydrated.get("native_strict_dominator_representatives", []) or []),
+            "top_root_witness": top_root_witness,
+            "top_native_corridor_representatives": list(hydrated.get("top_native_corridor_representatives", []) or []),
+        }
+
+    for row in violations:
+        source_id = str(row["source_hydrated_id"])
+        target_id = str(row["target_hydrated_id"])
+        source_stats = rows.setdefault(source_id, {"hydrated_id": source_id, "module": row["source_module"]})
+        source_stats["bleed_source_count"] = int(source_stats.get("bleed_source_count", 0)) + 1
+        source_stats["bleed_missing_mass"] = int(source_stats.get("bleed_missing_mass", 0)) + int(row["missing_count"])
+        source_stats["bleed_overlap_mass"] = int(source_stats.get("bleed_overlap_mass", 0)) + int(row["overlap_count"])
+
+        target_stats = rows.setdefault(target_id, {"hydrated_id": target_id, "module": row["target_module"]})
+        target_stats["bleed_target_count"] = int(target_stats.get("bleed_target_count", 0)) + 1
+        target_stats["bleed_target_missing_mass"] = int(target_stats.get("bleed_target_missing_mass", 0)) + int(row["missing_count"])
+        target_stats["bleed_target_overlap_mass"] = int(target_stats.get("bleed_target_overlap_mass", 0)) + int(row["overlap_count"])
+
+    ranked = []
+    for row in rows.values():
+        row["selector_score"] = selector_score(row)
+        if (
+            int(row.get("bleed_source_count", 0)) > 0
+            or int(row.get("bleed_target_count", 0)) > 0
+            or int(row.get("native_dominator_pressure", 0)) > 0
+            or int(row.get("native_corridor_reuse", 0)) > 0
+        ):
+            ranked.append(row)
+
+    ranked.sort(
+        key=lambda row: (
+            -float(row["selector_score"]),
+            -int(row.get("bleed_source_count", 0)),
+            -int(row.get("bleed_missing_mass", 0)),
+            -int(row.get("native_dominator_pressure", 0)),
+            -int(row.get("native_corridor_reuse", 0)),
+            row.get("module", row.get("hydrated_id", "")),
+        )
+    )
+    return {
+        "summary": {
+            "active_carrier_count": len(ranked),
+            "top_selector_score": float(ranked[0]["selector_score"]) if ranked else 0.0,
+        },
+        "rows": ranked,
+    }
+
+
+def render_hotspots_markdown(
+    structure_path: Path,
+    bipartite_path: Path,
+    hotspots: dict[str, Any],
+    top: int,
+) -> str:
+    rows = hotspots.get("rows", [])
+    summary = hotspots.get("summary", {})
+    lines: list[str] = []
+    lines.append("# Structural Hotspots")
+    lines.append("")
+    lines.append(f"- structure: `{structure_path}`")
+    lines.append(f"- bipartite artifact: `{bipartite_path}`")
+    lines.append("- score model: anti-bleed source pressure + missing mass + native dominator pressure + corridor reuse")
+    lines.append(f"- active carriers: **{summary.get('active_carrier_count', 0)}**")
+    lines.append(f"- top selector score: **{summary.get('top_selector_score', 0.0)}**")
+    lines.append("")
+    lines.append("| Rank | Carrier | Score | Bleed src | Bleed tgt | Missing | Dom pressure | Corridor reuse | Top root witness |")
+    lines.append("| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |")
+    for rank, row in enumerate(rows[:top], start=1):
+        lines.append(
+            f"| {rank} | `{row['module']}` | {float(row['selector_score']):.3f} | {int(row.get('bleed_source_count', 0))} | {int(row.get('bleed_target_count', 0))} | {int(row.get('bleed_missing_mass', 0))} | {int(row.get('native_dominator_pressure', 0))} | {int(row.get('native_corridor_reuse', 0))} | `{row.get('top_root_witness', '')}` |"
+        )
+    lines.append("")
+    return "\n".join(lines)
 
 
 def render_markdown(
@@ -499,6 +635,8 @@ def main() -> int:
     bipartite_path = normalize_user_path(args.bipartite, default_source_sink_bipartite_file())
     json_out = normalize_user_path(args.json_out, repo_root() / DEFAULT_JSON_OUT)
     md_out = normalize_user_path(args.md_out, repo_root() / DEFAULT_MD_OUT)
+    hotspots_json_out = normalize_user_path(args.hotspots_json_out, repo_root() / DEFAULT_HOTSPOTS_JSON_OUT)
+    hotspots_md_out = normalize_user_path(args.hotspots_md_out, repo_root() / DEFAULT_HOTSPOTS_MD_OUT)
 
     structure = load_json(structure_path)
     bipartite = load_json(bipartite_path)
@@ -523,6 +661,8 @@ def main() -> int:
     )
     summary = summarize_violations(violations)
 
+    hotspots = build_structural_hotspots(hydrated_by_id, violations, anchor_report)
+
     payload = {
         "kind": "structural_anti_bleed_diagnostic",
         "structure_artifact": str(structure_path),
@@ -535,10 +675,20 @@ def main() -> int:
             "violations": violations,
             "summary": summary,
         },
+        "structural_hotspots": hotspots,
+    }
+
+    hotspots_payload = {
+        "kind": "structural_hotspots",
+        "structure_artifact": str(structure_path),
+        "bipartite_artifact": str(bipartite_path),
+        **hotspots,
     }
 
     json_out.parent.mkdir(parents=True, exist_ok=True)
     md_out.parent.mkdir(parents=True, exist_ok=True)
+    hotspots_json_out.parent.mkdir(parents=True, exist_ok=True)
+    hotspots_md_out.parent.mkdir(parents=True, exist_ok=True)
     json_out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     md_out.write_text(
         render_markdown(
@@ -551,9 +701,21 @@ def main() -> int:
         ),
         encoding="utf-8",
     )
+    hotspots_json_out.write_text(json.dumps(hotspots_payload, indent=2), encoding="utf-8")
+    hotspots_md_out.write_text(
+        render_hotspots_markdown(
+            structure_path,
+            bipartite_path,
+            hotspots,
+            args.top,
+        ),
+        encoding="utf-8",
+    )
 
     print(f"[structural-anti-bleed] wrote {json_out}")
     print(f"[structural-anti-bleed] wrote {md_out}")
+    print(f"[structural-hotspots] wrote {hotspots_json_out}")
+    print(f"[structural-hotspots] wrote {hotspots_md_out}")
     return 0
 
 

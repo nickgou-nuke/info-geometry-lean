@@ -43,4 +43,9 @@ Outputs from `plot_decl_graph.py` include the full declaration/module graphs, th
 `check_bipartite_bleed.py` then checks pairwise anti-bleed directly on the native structural layer:
 - support source: hydrated `native_component_ids`, with incidence fallback
 - closure source: native `dependencyComponentIds` on the condensation DAG
-- outputs: `reports/dag/structural-anti-bleed.{json,md}`
+- outputs: `reports/dag/structural-anti-bleed.{json,md}` and `reports/dag/structural-hotspots.{json,md}`
+
+`select_openclaw_target.py` is now a thin operational selector over current coverage plus structural hotspots:
+- uncovered declaration-bearing debt outside graph coverage outranks everything else
+- otherwise the selector ranks the native structural-hotspots surface directly
+- outputs: `reports/dag/openclaw-targets.{json,md}`

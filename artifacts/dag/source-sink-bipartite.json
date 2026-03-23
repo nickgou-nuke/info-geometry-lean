@@ -257,11 +257,11 @@
       "reachable_sinks": 2,
       "closest_sink_distance": 2,
       "flow_in_degree": 0,
-      "flow_out_degree": 1116,
+      "flow_out_degree": 1117,
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
       ],
-      "source_score": 14.3719
+      "source_score": 14.3737
     },
     {
       "name": "InfoGeometry.Krein.instL2NormedGroup",
@@ -271,11 +271,11 @@
       "reachable_sinks": 2,
       "closest_sink_distance": 2,
       "flow_in_degree": 0,
-      "flow_out_degree": 1007,
+      "flow_out_degree": 1008,
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
       ],
-      "source_score": 14.1668
+      "source_score": 14.1687
     },
     {
       "name": "InfoGeometry.Canonical.MoE.HasPositiveRowSums",
@@ -439,11 +439,11 @@
       "reachable_sinks": 2,
       "closest_sink_distance": 1,
       "flow_in_degree": 2,
-      "flow_out_degree": 92,
+      "flow_out_degree": 93,
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
       ],
-      "source_score": 9.4866
+      "source_score": 9.5078
     },
     {
       "name": "InfoGeometry.Canonical.MoE.SinkhornPhase.casesOn",
@@ -596,11 +596,11 @@
       "reachable_sinks": 2,
       "closest_sink_distance": 2,
       "flow_in_degree": 4,
-      "flow_out_degree": 20,
+      "flow_out_degree": 21,
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
       ],
-      "source_score": 6.3154
+      "source_score": 6.4043
     },
     {
       "name": "InfoGeometry.FinProb",
@@ -1055,6 +1055,20 @@
       "source_score": 3.0689
     },
     {
+      "name": "InfoGeometry.Canonical.MongeAmpereCramerRao.abs_squeezingLogShear_le_of_abs_time_le_barrier",
+      "module": "InfoGeometry.Canonical.MongeAmpereCramerRao",
+      "category": "likely_constructive",
+      "kind": "theorem",
+      "reachable_sinks": 2,
+      "closest_sink_distance": 2,
+      "flow_in_degree": 2,
+      "flow_out_degree": 2,
+      "sink_modules": [
+        "InfoGeometry.Canonical.ConnesArakiFramework"
+      ],
+      "source_score": 3.0059
+    },
+    {
       "name": "InfoGeometry.Canonical.ChiralAnomaly.routingEpsilon_le_one_of_simplex",
       "module": "InfoGeometry.Canonical.ChiralAnomaly",
       "category": "likely_constructive",
@@ -1081,6 +1095,20 @@
         "InfoGeometry.Canonical.CalabiYauBridge"
       ],
       "source_score": 2.9649
+    },
+    {
+      "name": "InfoGeometry.Canonical.MongeAmpereCramerRao.abs_squeezingLogShear_eq_four_mul_abs",
+      "module": "InfoGeometry.Canonical.MongeAmpereCramerRao",
+      "category": "likely_constructive",
+      "kind": "theorem",
+      "reachable_sinks": 2,
+      "closest_sink_distance": 3,
+      "flow_in_degree": 2,
+      "flow_out_degree": 2,
+      "sink_modules": [
+        "InfoGeometry.Canonical.ConnesArakiFramework"
+      ],
+      "source_score": 2.9226
     },
     {
       "name": "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone",
@@ -1345,6 +1373,20 @@
       "flow_out_degree": 1,
       "sink_modules": [
         "InfoGeometry.Canonical.GrandSynthesis"
+      ],
+      "source_score": 2.2472
+    },
+    {
+      "name": "InfoGeometry.Canonical.MongeAmpereCramerRao.squeezingLogShear_eq_four_mul",
+      "module": "InfoGeometry.Canonical.MongeAmpereCramerRao",
+      "category": "likely_constructive",
+      "kind": "theorem",
+      "reachable_sinks": 2,
+      "closest_sink_distance": 4,
+      "flow_in_degree": 3,
+      "flow_out_degree": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.ConnesArakiFramework"
       ],
       "source_score": 2.2472
     },
@@ -1671,34 +1713,6 @@
       "source_score": 1.6761
     },
     {
-      "name": "InfoGeometry.Volume.ConnesCocycle.cocycleLogPotential_add",
-      "module": "InfoGeometry.Volume.ConnesCocycle",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 7,
-      "flow_out_degree": 4,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 1.6418
-    },
-    {
-      "name": "InfoGeometry.Canonical.MongeAmpereCramerRao.abs_squeezingLogShear_le_of_abs_time_le_barrier",
-      "module": "InfoGeometry.Canonical.MongeAmpereCramerRao",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 2,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 1.6196
-    },
-    {
       "name": "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_cl11BottLaplacian",
       "module": "InfoGeometry.Canonical.BottDirac",
       "category": "likely_constructive",
@@ -1711,20 +1725,6 @@
         "InfoGeometry.Canonical.GrandSynthesis"
       ],
       "source_score": 1.5428
-    },
-    {
-      "name": "InfoGeometry.Canonical.MongeAmpereCramerRao.abs_squeezingLogShear_eq_four_mul_abs",
-      "module": "InfoGeometry.Canonical.MongeAmpereCramerRao",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 2,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 1.5363
     },
     {
       "name": "InfoGeometry.Canonical.AnalyticalIndex.indexInvariantAlong_of_chiralSliceIsoAlong",
@@ -1909,20 +1909,6 @@
       "source_score": 1.3486
     },
     {
-      "name": "InfoGeometry.Canonical.BekensteinBound.topologicalBekensteinBound_of_connesCocycle_generatorLift",
-      "module": "InfoGeometry.Canonical.BekensteinBound",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 14,
-      "flow_out_degree": 4,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 1.3418
-    },
-    {
       "name": "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_smul_left",
       "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
       "category": "likely_constructive",
@@ -2061,34 +2047,6 @@
         "InfoGeometry.Canonical.AQFTOperatorInterface"
       ],
       "source_score": 1.1863
-    },
-    {
-      "name": "InfoGeometry.Canonical.BekensteinBound.topologicalBekensteinBound_of_tomitaConnesCocycle_casiniIncrement",
-      "module": "InfoGeometry.Canonical.BekensteinBound",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 9,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 1.1486
-    },
-    {
-      "name": "InfoGeometry.Canonical.MongeAmpereCramerRao.squeezingLogShear_eq_four_mul",
-      "module": "InfoGeometry.Canonical.MongeAmpereCramerRao",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 3,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 1.1486
     },
     {
       "name": "InfoGeometry.Canonical.AnalyticalIndex.chiralProjectorMinus_comp_of_conjugacy",
@@ -2231,20 +2189,6 @@
       "source_score": 0.9986
     },
     {
-      "name": "InfoGeometry.Canonical.BekensteinBound.abs_trajectoryRNGenerator_le_trajectoryRNBarrier",
-      "module": "InfoGeometry.Canonical.BekensteinBound",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 12,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 0.9863
-    },
-    {
       "name": "InfoGeometry.Canonical.AnalyticalIndex.map_chiralKernelSliceMinus_eq_of_conjugacy",
       "module": "InfoGeometry.Canonical.AnalyticalIndex",
       "category": "likely_constructive",
@@ -2301,20 +2245,6 @@
       "source_score": 0.9486
     },
     {
-      "name": "InfoGeometry.Canonical.BekensteinBound.CasiniIncrementBridge.cocycle_increment_eq_relEnt_drop",
-      "module": "InfoGeometry.Canonical.BekensteinBound",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 7,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 0.9486
-    },
-    {
       "name": "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial",
       "module": "InfoGeometry.Canonical.RicciMongeAmpere",
       "category": "likely_constructive",
@@ -2341,20 +2271,6 @@
         "InfoGeometry.Canonical.AQFTOperatorInterface"
       ],
       "source_score": 0.9363
-    },
-    {
-      "name": "InfoGeometry.Canonical.BekensteinBound.topologicalBekensteinBound_of_connesCocycle_casiniIncrement",
-      "module": "InfoGeometry.Canonical.BekensteinBound",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 10,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 0.9319
     },
     {
       "name": "InfoGeometry.Canonical.MoE.sinkhornTwoStep_eq_weylGauge",
@@ -2399,20 +2315,6 @@
       "source_score": 0.8986
     },
     {
-      "name": "InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge.sigma_invariant",
-      "module": "InfoGeometry.Volume.ConnesCocycle",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 6,
-      "flow_in_degree": 7,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 0.8915
-    },
-    {
       "name": "InfoGeometry.Canonical.AnalyticalIndex.FullThermoGeoIndexCapstone.geometricAlgebraicState",
       "module": "InfoGeometry.Canonical.AnalyticalIndex",
       "category": "likely_constructive",
@@ -2423,20 +2325,6 @@
       "flow_out_degree": 1,
       "sink_modules": [
         "InfoGeometry.Canonical.GrandSynthesis"
-      ],
-      "source_score": 0.8486
-    },
-    {
-      "name": "InfoGeometry.Canonical.BekensteinBound.CasiniIncrementBridge.relEnt_drop_eq_phaseRN",
-      "module": "InfoGeometry.Canonical.BekensteinBound",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 9,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
       ],
       "source_score": 0.8486
     },
@@ -2481,34 +2369,6 @@
         "InfoGeometry.Canonical.GrandSynthesis"
       ],
       "source_score": 0.7653
-    },
-    {
-      "name": "InfoGeometry.Volume.ConnesCocycle.scalarCocycle_mul",
-      "module": "InfoGeometry.Volume.ConnesCocycle",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 5,
-      "flow_in_degree": 10,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 0.7653
-    },
-    {
-      "name": "InfoGeometry.Canonical.BekensteinBound.cocycleGeneratorLift_of_casiniIncrementBridge",
-      "module": "InfoGeometry.Canonical.BekensteinBound",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 13,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 0.6986
     },
     {
       "name": "InfoGeometry.Canonical.BogoliubovFockSuper.commutator_bogoliubov_projector_model",
@@ -2761,17 +2621,17 @@
       "severity": 2
     },
     {
-      "name": "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData",
+      "name": "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
       "module": "InfoGeometry.Canonical.ConnesArakiFramework",
       "category": "package_reprojection",
       "kind": "theorem",
       "burn_down_rank": 6,
       "flow_out_degree": 0,
-      "flow_in_degree": 10,
+      "flow_in_degree": 9,
       "severity": 2
     },
     {
-      "name": "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
+      "name": "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
       "module": "InfoGeometry.Canonical.ConnesArakiFramework",
       "category": "package_reprojection",
       "kind": "theorem",
@@ -3800,7 +3660,7 @@
     {
       "source": "InfoGeometry.Krein.DoubledSpace",
       "source_module": "InfoGeometry.Krein.DoubledSpace",
-      "source_score": 14.3719,
+      "source_score": 14.3737,
       "sink": "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
       "sink_module": "InfoGeometry.Canonical.ConnesArakiFramework",
       "sink_category": "package_reprojection",
@@ -3838,65 +3698,9 @@
       "compression_potential": 4.0
     },
     {
-      "source": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-      "source_module": "InfoGeometry.Krein.Thermal",
-      "source_score": 25.3784,
-      "sink": "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData",
-      "sink_module": "InfoGeometry.Canonical.ConnesArakiFramework",
-      "sink_category": "package_reprojection",
-      "path_nodes": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
-        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
-      ],
-      "path_modules": [
-        "InfoGeometry.Krein.Thermal",
-        "InfoGeometry.Volume.ConnesCocycle",
-        "InfoGeometry.Canonical.TomitaTakesaki",
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "path_component_ids": [
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:14274548561181103404",
-        "component:10510543447486048737",
-        "component:4188097888448423333",
-        "component:11173082599891773994"
-      ],
-      "path_component_representatives": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
-        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
-      ],
-      "path_length": 5,
-      "motif_signature": [
-        "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "modular_shift",
-        "modularShiftAlgEquiv",
-        "additiveModularFlowOfGenerator",
-        "modularSignAdditiveModularFlow",
-        "topologicalBekensteinBound_of_tomitaConnesArakiData"
-      ],
-      "motif_signature_text": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> topologicalBekensteinBound_of_tomitaConnesArakiData",
-      "source_bundle": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
-        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow"
-      ],
-      "compression_potential": 10.0
-    },
-    {
       "source": "InfoGeometry.Krein.DoubledSpace",
       "source_module": "InfoGeometry.Krein.DoubledSpace",
-      "source_score": 14.3719,
+      "source_score": 14.3737,
       "sink": "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
       "sink_module": "InfoGeometry.Canonical.ConnesArakiFramework",
       "sink_category": "package_reprojection",
@@ -3932,6 +3736,62 @@
         "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd"
       ],
       "compression_potential": 4.0
+    },
+    {
+      "source": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+      "source_module": "InfoGeometry.Krein.Thermal",
+      "source_score": 25.3784,
+      "sink": "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+      "sink_module": "InfoGeometry.Canonical.ConnesArakiFramework",
+      "sink_category": "package_reprojection",
+      "path_nodes": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop"
+      ],
+      "path_modules": [
+        "InfoGeometry.Krein.Thermal",
+        "InfoGeometry.Volume.ConnesCocycle",
+        "InfoGeometry.Canonical.TomitaTakesaki",
+        "InfoGeometry.Canonical.ConnesArakiFramework"
+      ],
+      "path_component_ids": [
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:14274548561181103404",
+        "component:10510543447486048737",
+        "component:4188097888448423333",
+        "component:18089539564452124112"
+      ],
+      "path_component_representatives": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop"
+      ],
+      "path_length": 5,
+      "motif_signature": [
+        "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "modular_shift",
+        "modularShiftAlgEquiv",
+        "additiveModularFlowOfGenerator",
+        "modularSignAdditiveModularFlow",
+        "abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop"
+      ],
+      "motif_signature_text": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+      "source_bundle": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow"
+      ],
+      "compression_potential": 10.0
     },
     {
       "source": "InfoGeometry.Canonical.MoE.colSum_colNormalize",
@@ -4416,8 +4276,8 @@
         "InfoGeometry.Canonical.ConnesArakiFramework"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "path_multiplicity": 2,
       "avg_path_length": 5.0,
@@ -5475,7 +5335,7 @@
         "component:14274548561181103404",
         "component:10510543447486048737",
         "component:4188097888448423333",
-        "component:11173082599891773994"
+        "component:15358866442594511405"
       ],
       "top_native_corridor_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -5483,7 +5343,7 @@
         "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
         "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
         "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -5867,7 +5727,7 @@
         "component:14274548561181103404",
         "component:10510543447486048737",
         "component:4188097888448423333",
-        "component:11173082599891773994"
+        "component:15358866442594511405"
       ],
       "top_native_corridor_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -5875,7 +5735,7 @@
         "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
         "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
         "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -6117,8 +5977,8 @@
       "supporting_atomic_decls": [
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "minimal_source_bundle": "bundle:0a91955841c3",
       "canonical_downstream_sink_family": [
@@ -6135,7 +5995,7 @@
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> topologicalBekensteinBound_of_tomitaConnesArakiData",
+          "signature": "DoubledSpace -> AlgebraEnd -> sizeOf_spec",
           "count": 1
         }
       ],
@@ -6143,14 +6003,14 @@
       "native_component_ids": [
         "component:17468677433589831255",
         "component:17149530735150950143",
-        "component:15358866442594511405",
-        "component:11173082599891773994"
+        "component:18089539564452124112",
+        "component:15358866442594511405"
       ],
       "native_component_representatives": [
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "native_root_witnesses": [
         "InfoGeometry.Krein.DoubledSpace",
@@ -6165,6 +6025,14 @@
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.noConfusion",
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
+        "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
+        "InfoGeometry.Canonical.ConnesArakiFramework.TomitaConnesArakiData",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
         "InfoGeometry.Canonical.MoE.SinkhornPhase",
         "InfoGeometry.Canonical.MoE.SinkhornPhase.col",
         "InfoGeometry.Canonical.MoE.SinkhornPhase.rec",
@@ -6174,17 +6042,12 @@
         "InfoGeometry.Canonical.MoE.trajectoryRNBarrier",
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_arakiRelativeEntropyDrop_restricted_le_trajectoryRNBarrier",
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_restrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.BekensteinBound.abs_trajectoryRNGenerator_le_trajectoryRNBarrier",
-        "InfoGeometry.Canonical.BekensteinBound.topologicalBekensteinBound_of_connesCocycle_generatorLift",
-        "InfoGeometry.Canonical.BekensteinBound.topologicalBekensteinBound_of_connesCocycle_casiniIncrement",
-        "InfoGeometry.Canonical.BekensteinBound.topologicalBekensteinBound_of_tomitaConnesCocycle_casiniIncrement",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 1,
-      "native_depth_max": 11,
+      "native_depth_max": 10,
       "native_dominator_pressure": 0,
       "native_corridor_reuse": 10,
       "native_corridor_count": 4,
@@ -6195,7 +6058,7 @@
         "component:14274548561181103404",
         "component:10510543447486048737",
         "component:4188097888448423333",
-        "component:11173082599891773994"
+        "component:15358866442594511405"
       ],
       "top_native_corridor_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -6203,7 +6066,7 @@
         "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
         "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
         "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -6232,7 +6095,7 @@
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> topologicalBekensteinBound_of_tomitaConnesArakiData",
+          "signature": "DoubledSpace -> AlgebraEnd -> sizeOf_spec",
           "count": 1
         }
       ],
@@ -6270,7 +6133,7 @@
         "component:14274548561181103404",
         "component:10510543447486048737",
         "component:4188097888448423333",
-        "component:11173082599891773994"
+        "component:15358866442594511405"
       ],
       "top_native_corridor_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -6278,7 +6141,7 @@
         "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
         "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
         "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -7675,7 +7538,7 @@
           "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
           "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
           "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-          "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+          "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop"
         ]
       ],
       "native_canonical_component_path_example": [
@@ -7695,8 +7558,8 @@
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
@@ -7736,7 +7599,7 @@
           "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
           "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
           "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-          "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+          "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop"
         ]
       ],
       "native_canonical_component_path_example": [
@@ -7756,8 +7619,8 @@
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
@@ -7797,7 +7660,7 @@
           "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
           "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
           "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-          "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+          "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop"
         ]
       ],
       "native_canonical_component_path_example": [
@@ -7817,8 +7680,8 @@
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
@@ -7858,7 +7721,7 @@
           "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
           "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
           "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-          "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+          "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop"
         ]
       ],
       "native_canonical_component_path_example": [
@@ -7878,8 +7741,8 @@
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
@@ -9660,7 +9523,7 @@
       "compression_potential": 10.0
     },
     {
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
       "path_count": 1,
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
@@ -9672,7 +9535,7 @@
       "compression_potential": 10.0
     },
     {
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> topologicalBekensteinBound_of_tomitaConnesArakiData",
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
       "path_count": 1,
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
@@ -10251,8 +10114,8 @@
         "InfoGeometry.Canonical.ConnesArakiFramework"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "path_multiplicity": 2,
       "avg_path_length": 5.0,
@@ -11310,7 +11173,7 @@
         "component:14274548561181103404",
         "component:10510543447486048737",
         "component:4188097888448423333",
-        "component:11173082599891773994"
+        "component:15358866442594511405"
       ],
       "top_native_corridor_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -11318,7 +11181,7 @@
         "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
         "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
         "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -11702,7 +11565,7 @@
         "component:14274548561181103404",
         "component:10510543447486048737",
         "component:4188097888448423333",
-        "component:11173082599891773994"
+        "component:15358866442594511405"
       ],
       "top_native_corridor_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -11710,7 +11573,7 @@
         "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
         "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
         "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -11952,8 +11815,8 @@
       "supporting_atomic_decls": [
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "minimal_source_bundle": "bundle:0a91955841c3",
       "canonical_downstream_sink_family": [
@@ -11970,7 +11833,7 @@
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> topologicalBekensteinBound_of_tomitaConnesArakiData",
+          "signature": "DoubledSpace -> AlgebraEnd -> sizeOf_spec",
           "count": 1
         }
       ],
@@ -11978,14 +11841,14 @@
       "native_component_ids": [
         "component:17468677433589831255",
         "component:17149530735150950143",
-        "component:15358866442594511405",
-        "component:11173082599891773994"
+        "component:18089539564452124112",
+        "component:15358866442594511405"
       ],
       "native_component_representatives": [
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "native_root_witnesses": [
         "InfoGeometry.Krein.DoubledSpace",
@@ -12000,6 +11863,14 @@
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.noConfusion",
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
         "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
+        "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
+        "InfoGeometry.Canonical.ConnesArakiFramework.TomitaConnesArakiData",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
         "InfoGeometry.Canonical.MoE.SinkhornPhase",
         "InfoGeometry.Canonical.MoE.SinkhornPhase.col",
         "InfoGeometry.Canonical.MoE.SinkhornPhase.rec",
@@ -12009,17 +11880,12 @@
         "InfoGeometry.Canonical.MoE.trajectoryRNBarrier",
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_arakiRelativeEntropyDrop_restricted_le_trajectoryRNBarrier",
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_restrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
-        "InfoGeometry.Canonical.BekensteinBound.abs_trajectoryRNGenerator_le_trajectoryRNBarrier",
-        "InfoGeometry.Canonical.BekensteinBound.topologicalBekensteinBound_of_connesCocycle_generatorLift",
-        "InfoGeometry.Canonical.BekensteinBound.topologicalBekensteinBound_of_connesCocycle_casiniIncrement",
-        "InfoGeometry.Canonical.BekensteinBound.topologicalBekensteinBound_of_tomitaConnesCocycle_casiniIncrement",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 1,
-      "native_depth_max": 11,
+      "native_depth_max": 10,
       "native_dominator_pressure": 0,
       "native_corridor_reuse": 10,
       "native_corridor_count": 4,
@@ -12030,7 +11896,7 @@
         "component:14274548561181103404",
         "component:10510543447486048737",
         "component:4188097888448423333",
-        "component:11173082599891773994"
+        "component:15358866442594511405"
       ],
       "top_native_corridor_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -12038,7 +11904,7 @@
         "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
         "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
         "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -12067,7 +11933,7 @@
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> topologicalBekensteinBound_of_tomitaConnesArakiData",
+          "signature": "DoubledSpace -> AlgebraEnd -> sizeOf_spec",
           "count": 1
         }
       ],
@@ -12105,7 +11971,7 @@
         "component:14274548561181103404",
         "component:10510543447486048737",
         "component:4188097888448423333",
-        "component:11173082599891773994"
+        "component:15358866442594511405"
       ],
       "top_native_corridor_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -12113,7 +11979,7 @@
         "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
         "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
         "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -13226,7 +13092,7 @@
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> topologicalBekensteinBound_of_tomitaConnesArakiData",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
           "count": 1
         }
       ],
@@ -13248,7 +13114,7 @@
           "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
           "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
           "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-          "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+          "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop"
         ]
       ]
     },
@@ -13264,7 +13130,7 @@
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> topologicalBekensteinBound_of_tomitaConnesArakiData",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
           "count": 1
         }
       ],
@@ -13286,7 +13152,7 @@
           "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
           "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
           "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-          "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+          "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop"
         ]
       ]
     },
@@ -13302,7 +13168,7 @@
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> topologicalBekensteinBound_of_tomitaConnesArakiData",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
           "count": 1
         }
       ],
@@ -13324,7 +13190,7 @@
           "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
           "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
           "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-          "InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_of_tomitaConnesArakiData"
+          "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop"
         ]
       ]
     },

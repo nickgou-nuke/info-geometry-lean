@@ -1043,6 +1043,42 @@ theorem sinkhorn_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator
     (ωSeed := omegaSeed (F := F) Ω) hSeedKMS
 
 /--
+Joint-kernel/commutator route to exact weighted Sinkhorn KMS closure.
+-/
+theorem sinkhorn_kmsClosure_of_ibDynamics_weighted_from_jointKernel_commutator
+    (T : SinkhornTrajectory n)
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    {Xib Yib Tib : Type}
+    [Fintype Xib] [Fintype Yib] [Fintype Tib]
+    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
+    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
+    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
+    (prob : IBProblem (X := Xib) (Y := Yib))
+    (pTrajectory : Nat → Xib → FinProb Tib)
+    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : DoubledSpace F)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω) :
+    SinkhornKMSClosure n T K
+      (ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
+  exact sinkhorn_step_kmsClosure_of_control
+    (n := n) (T := T) (K := K)
+    (ω := ibInducedObservableWeighted
+      (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+      pTrajectory x0 t0 (omegaSeed (F := F) Ω))
+    (β := β)
+    (sinkhorn_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator
+      (n := n) (T := T) (K := K) (β := β)
+      (prob := prob) (pTrajectory := pTrajectory)
+      hStep (x0 := x0) (t0 := t0)
+      (Ω := Ω) hΩ hJointKernel hCommOrthogonal)
+
+/--
 Fully explicit weighted IB-driven control with an RN-potential budget,
 derived from joint-kernel and commutator-orthogonality hypotheses.
 -/

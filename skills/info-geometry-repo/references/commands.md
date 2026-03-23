@@ -183,6 +183,16 @@ python3 tools/infra/generate_source_sink_compression.py \
   --svg-out reports/dag/source-sink-incidence.svg
 ```
 
+Native structural anti-bleed diagnostic:
+
+```bash
+python3 tools/infra/check_bipartite_bleed.py \
+  --structure artifacts/dag/structural-topology.json \
+  --bipartite artifacts/dag/source-sink-bipartite.json \
+  --json-out reports/dag/structural-anti-bleed.json \
+  --md-out reports/dag/structural-anti-bleed.md
+```
+
 ConformalUnification topological patch and prompt packet:
 
 ```bash

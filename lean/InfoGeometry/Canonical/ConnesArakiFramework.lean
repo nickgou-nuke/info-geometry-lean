@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.BekensteinBound
+import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Volume.ConnesCocycle
 
 /-!
 # InfoGeometry.Canonical.ConnesArakiFramework
@@ -51,16 +53,6 @@ variable {σ : AdditiveModularFlow (H := H)}
 variable {u : ℝ → AlgebraEnd H}
 variable {T : SinkhornTrajectory n}
 
-/-- Relative-entropy drops are nonnegative under the Casini monotonicity clause. -/
-private lemma arakiRelativeEntropyDrop_nonneg
-  (D : ConnesArakiData (H := H) σ u T) :
-    ∀ k : Nat, 0 ≤ arakiRelativeEntropyDrop D.relEnt k := by
-  intro k
-  simpa [arakiRelativeEntropyDrop] using
-    relEnt_drop_nonneg_of_casiniIncrementBridge
-      (n := n) (H := H) (σ := σ) (u := u)
-      (hBridge := D.bridge) (T := T) (relEnt := D.relEnt) D.casini k
-
 /-- Each Araki relative-entropy drop is controlled by the trajectory RN barrier. -/
 private lemma abs_arakiRelativeEntropyDrop_le_trajectoryRNBarrier
   (D : ConnesArakiData (H := H) σ u T) :
@@ -82,7 +74,6 @@ and one-step drops are controlled in absolute value.
 structure ArakiRelativeEntropyRestrictionDropMonotone
     (relEnt : ArakiRelativeEntropyProfile)
     (relEntRestricted : ArakiRelativeEntropyProfile) : Prop where
-  pointwise_le : ∀ k : Nat, relEntRestricted k ≤ relEnt k
   drop_abs_le :
     ∀ k : Nat,
       |arakiRelativeEntropyDrop relEntRestricted k|
@@ -93,7 +84,7 @@ Restricted-drop RN-barrier control:
 if restriction drops are dominated by ambient drops, they inherit the same
 trajectory RN barrier bound.
 -/
-theorem abs_arakiRelativeEntropyDrop_restricted_le_trajectoryRNBarrier
+private theorem abs_arakiRelativeEntropyDrop_restricted_le_trajectoryRNBarrier
     (D : ConnesArakiData (H := H) σ u T)
     {relEntRestricted : ArakiRelativeEntropyProfile}
     (hRestrDrop :
@@ -110,7 +101,7 @@ Canonical entropy-drop-to-squeezing theorem:
 ambient and restricted Araki-drop presentations both flow through the same
 restriction-aware interface.
 -/
-theorem abs_squeezingLogShear_le_of_abs_time_le_arakiRelativeEntropyDrop
+private theorem abs_squeezingLogShear_le_of_abs_time_le_arakiRelativeEntropyDrop
   (D : ConnesArakiData (H := H) σ u T)
     {relEntRestricted : ArakiRelativeEntropyProfile}
     (hRestrDrop :

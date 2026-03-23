@@ -138,9 +138,7 @@ export InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra (
 )
 
 export InfoGeometry.Canonical.WeylInformationGauge (
-  cartanWeyl_generator_split
   cartanWeyl_dilation_sources_transportedEinsteinResidual
-  cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts
 )
 
 export InfoGeometry.Canonical (

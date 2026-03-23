@@ -26,18 +26,33 @@ python3 -m py_compile tools/frontier/skynet_v2.py
 
 ## Authoritative declaration DAG and blueprint workflow
 
-Refresh the public declaration graph and the LeanArchitect-facing blueprint surface:
+Refresh the maintained DAG and blueprint lane in this exact order:
 
 ```bash
 python3 tools/infra/refresh_decl_graph.py
 python3 tools/infra/refresh_blueprint_tags.py
 python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags
+python3 tools/infra/generate_source_sink_compression.py
+python3 tools/infra/generate_causal_report.py \
+  --out reports/dag/true-root-order.md \
+  --json-out reports/dag/true-root-order.json
+python3 tools/infra/check_bipartite_bleed.py
+python3 tools/infra/generate_structural_dedup.py
+python3 tools/infra/generate_structural_fibers.py
+python3 tools/infra/select_openclaw_target.py
+```
+
+Optional LeanArchitect exports after the maintained refresh:
+
+```bash
 python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprint
 python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprintJson
 ```
 
 The declaration DAG lives in `artifacts/dag/`.
-That refresh emits `full_graph.json`, `index/decls.jsonl`, and the native `structural-topology.json` artifact before the source-sink correspondence layer is regenerated.
+`refresh_decl_graph.py` emits `full_graph.json`, `index/decls.jsonl`, and the native `structural-topology.json` artifact first.
+Then `generate_source_sink_compression.py` regenerates `artifacts/dag/source-sink-bipartite.json` on top of that authoritative export.
+Do not run those two steps in parallel, or the bipartite layer can read stale declaration exports.
 The human-facing blueprint workflow is documented in `blueprint/README.md`.
 
 ## Trusted semantic block export

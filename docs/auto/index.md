@@ -9,7 +9,7 @@ Status:
 
 ## Repository Scale
 - Lean files under `lean/`: **468**
-- Lean LOC under `lean/`: **82,682**
+- Lean LOC under `lean/`: **81,758**
 
 ## Trusted Semantic Exports
 | Module | Semantic nodes | Semantic edges | Skeleton nodes | Top hubs |

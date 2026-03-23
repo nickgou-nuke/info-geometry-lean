@@ -62,6 +62,21 @@ Use this lane when the question is:
 - where does the bulk source-sink packet split into independent corridor fibers before hydrated projection?
 - what is the next OpenClaw target once coverage gaps are closed?
 
+Current maintained DAG refresh sequence:
+- `refresh_decl_graph.py`
+- `refresh_blueprint_tags.py`
+- `run_locked_lake_build.py InfoGeometry.BlueprintTags`
+- `generate_source_sink_compression.py`
+- `generate_causal_report.py`
+- `check_bipartite_bleed.py`
+- `generate_structural_dedup.py`
+- `generate_structural_fibers.py`
+- `select_openclaw_target.py`
+
+Staleness rule:
+- do not run `generate_source_sink_compression.py` before `refresh_decl_graph.py` has fully completed
+- do not interpret `reports/dag/*` as current until the full sequence above has run
+
 ### Level 2: Authoritative blueprint / LeanArchitect pipeline
 
 Use this for theorem-level blueprint coverage and exact LeanArchitect extraction.

@@ -65,6 +65,25 @@ Treat vacuous success as failure for frontier accounting.
 - If a theorem is assumption-driven, façade-level, or merely transport bookkeeping, label it explicitly as such.
 - Never present a conditional wrapper or restated hypothesis as completed unification.
 
+## Current DAG Pipeline Order
+
+For the maintained DAG pipeline, use this exact order:
+
+1. `python3 tools/infra/refresh_decl_graph.py`
+2. `python3 tools/infra/refresh_blueprint_tags.py`
+3. `python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags`
+4. `python3 tools/infra/generate_source_sink_compression.py`
+5. `python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json`
+6. `python3 tools/infra/check_bipartite_bleed.py`
+7. `python3 tools/infra/generate_structural_dedup.py`
+8. `python3 tools/infra/generate_structural_fibers.py`
+9. `python3 tools/infra/select_openclaw_target.py`
+
+Important:
+- do not run `generate_source_sink_compression.py` before `refresh_decl_graph.py` has completed
+- do not trust `reports/dag/*` until the whole sequence above has finished
+- blueprint refresh belongs in the maintained path because stale `auto_blueprints.lean` breaks the auxiliary theorem surface
+
 ## Default Workflow
 
 1. Identify the task type:

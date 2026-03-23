@@ -18,18 +18,18 @@
   "hotspot_modules": [
     {
       "module": "InfoGeometry.Canonical.AQFTOperatorInterface",
-      "strength": 196,
-      "out_weight": 95,
-      "in_weight": 101,
-      "decl_count": 49,
+      "strength": 178,
+      "out_weight": 88,
+      "in_weight": 90,
+      "decl_count": 46,
       "dominant_surface": "surrogate_or_vacuous",
       "hypothesis_bridge": 0,
       "package_reprojection": 0,
-      "surrogate_or_vacuous": 49,
+      "surrogate_or_vacuous": 46,
       "hotspot_rank": 1,
-      "replaceable_surface_mass": 196.0,
-      "support_pressure": 297.0,
-      "burn_down_score": 1116.63,
+      "replaceable_surface_mass": 184.0,
+      "support_pressure": 268.0,
+      "burn_down_score": 1029.427,
       "dominant_pressure": "surrogate_or_vacuous",
       "primary_action": "direct constructive replacement",
       "surrogate_share": 1.0,
@@ -210,13 +210,13 @@
       "reachable_sinks": 3,
       "closest_sink_distance": 1,
       "flow_in_degree": 0,
-      "flow_out_degree": 1115,
+      "flow_out_degree": 1096,
       "sink_modules": [
         "InfoGeometry.Canonical.AQFTOperatorInterface",
         "InfoGeometry.Canonical.ConnesArakiFramework",
         "InfoGeometry.Canonical.YangMillsFinite"
       ],
-      "source_score": 21.5552
+      "source_score": 21.5037
     },
     {
       "name": "InfoGeometry.Krein.instL2NormedGroup",
@@ -226,13 +226,13 @@
       "reachable_sinks": 3,
       "closest_sink_distance": 2,
       "flow_in_degree": 0,
-      "flow_out_degree": 1007,
+      "flow_out_degree": 988,
       "sink_modules": [
         "InfoGeometry.Canonical.AQFTOperatorInterface",
         "InfoGeometry.Canonical.ConnesArakiFramework",
         "InfoGeometry.Canonical.YangMillsFinite"
       ],
-      "source_score": 21.0835
+      "source_score": 21.0264
     },
     {
       "name": "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
@@ -242,13 +242,13 @@
       "reachable_sinks": 4,
       "closest_sink_distance": 1,
       "flow_in_degree": 0,
-      "flow_out_degree": 155,
+      "flow_out_degree": 138,
       "sink_modules": [
         "InfoGeometry.Canonical.CalabiYauBridge",
         "InfoGeometry.Canonical.GrandSynthesis",
         "InfoGeometry.Canonical.WeylInformationGauge"
       ],
-      "source_score": 20.725
+      "source_score": 20.2666
     },
     {
       "name": "InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry.H",
@@ -452,20 +452,6 @@
       "source_score": 8.0924
     },
     {
-      "name": "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-      "module": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 13,
-      "flow_out_degree": 13,
-      "sink_modules": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface"
-      ],
-      "source_score": 7.9742
-    },
-    {
       "name": "InfoGeometry.Canonical.MoE.rowNormalize",
       "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
       "category": "neutral_definition",
@@ -494,6 +480,20 @@
       "source_score": 7.517
     },
     {
+      "name": "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+      "module": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "category": "likely_constructive",
+      "kind": "theorem",
+      "reachable_sinks": 3,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 13,
+      "flow_out_degree": 8,
+      "sink_modules": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface"
+      ],
+      "source_score": 6.7578
+    },
+    {
       "name": "InfoGeometry.Canonical.RicciMongeAmpere.IsEinsteinKaehlerAtWith",
       "module": "InfoGeometry.Canonical.RicciMongeAmpere",
       "category": "neutral_definition",
@@ -509,21 +509,6 @@
       "source_score": 6.725
     },
     {
-      "name": "InfoGeometry.Canonical.RicciMongeAmpere.VacuumEinsteinEquationAt",
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 5,
-      "flow_out_degree": 19,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CalabiYauBridge",
-        "InfoGeometry.Canonical.GrandSynthesis"
-      ],
-      "source_score": 6.339
-    },
-    {
       "name": "InfoGeometry.FinProb",
       "module": "InfoGeometry.Basic",
       "category": "neutral_definition",
@@ -536,6 +521,21 @@
         "InfoGeometry.Canonical.CountSubstrateBridge"
       ],
       "source_score": 6.284
+    },
+    {
+      "name": "InfoGeometry.Canonical.RicciMongeAmpere.VacuumEinsteinEquationAt",
+      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 2,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 5,
+      "flow_out_degree": 15,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CalabiYauBridge",
+        "InfoGeometry.Canonical.GrandSynthesis"
+      ],
+      "source_score": 5.9164
     },
     {
       "name": "InfoGeometry.Canonical.MoE.SinkhornPhase.casesOn",
@@ -560,11 +560,11 @@
       "reachable_sinks": 1,
       "closest_sink_distance": 1,
       "flow_in_degree": 2,
-      "flow_out_degree": 151,
+      "flow_out_degree": 136,
       "sink_modules": [
         "InfoGeometry.Canonical.YangMillsFinite"
       ],
-      "source_score": 5.4304
+      "source_score": 5.3273
     },
     {
       "name": "InfoGeometry.ProbabilityDist",
@@ -1578,20 +1578,6 @@
       "source_score": 1.8626
     },
     {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 12,
-      "flow_out_degree": 5,
-      "sink_modules": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface"
-      ],
-      "source_score": 1.8459
-    },
-    {
       "name": "InfoGeometry.KL.empirical_nontrivial",
       "module": "InfoGeometry.KL.Finite",
       "category": "neutral_definition",
@@ -1982,6 +1968,20 @@
         "InfoGeometry.Canonical.GrandSynthesis"
       ],
       "source_score": 1.303
+    },
+    {
+      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
+      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
+      "category": "likely_constructive",
+      "kind": "theorem",
+      "reachable_sinks": 1,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 12,
+      "flow_out_degree": 2,
+      "sink_modules": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface"
+      ],
+      "source_score": 1.2863
     },
     {
       "name": "InfoGeometry.Canonical.SingularTransportSystem.logDivergence_split",
@@ -2432,7 +2432,7 @@
       "kind": "theorem",
       "burn_down_rank": 1,
       "flow_out_degree": 0,
-      "flow_in_degree": 18,
+      "flow_in_degree": 20,
       "severity": 3
     },
     {
@@ -2779,8 +2779,6 @@
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ],
       "path_modules": [
@@ -2794,8 +2792,6 @@
         "component:16534585782605764621",
         "component:9965274629092262251",
         "component:1481359671053209092",
-        "component:66930808371112915",
-        "component:8566582317311372998",
         "component:8087954748158813479"
       ],
       "path_component_representatives": [
@@ -2803,33 +2799,29 @@
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ],
-      "path_length": 6,
+      "path_length": 4,
       "motif_signature": [
         "ext",
         "grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
         "grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
         "grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "aqft_readiness_package",
         "aqft_readiness_package_realHilbert"
       ],
-      "motif_signature_text": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
+      "motif_signature_text": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
       "source_bundle": [
         "InfoGeometry.Krein.DoubledSpace.ext",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported"
       ],
-      "compression_potential": 24.0
+      "compression_potential": 16.0
     },
     {
       "source": "InfoGeometry.Krein.DoubledSpace",
       "source_module": "InfoGeometry.Krein.DoubledSpace",
-      "source_score": 21.5552,
+      "source_score": 21.5037,
       "sink": "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation_packaged_with_completeCStarReady",
       "sink_module": "InfoGeometry.Canonical.AQFTOperatorInterface",
       "sink_category": "surrogate_or_vacuous",
@@ -3036,7 +3028,7 @@
     {
       "source": "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
       "source_module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "source_score": 20.725,
+      "source_score": 20.2666,
       "sink": "InfoGeometry.Canonical.CalabiYauBridge.metricRNRicciBridge_of_metricDerived",
       "sink_module": "InfoGeometry.Canonical.CalabiYauBridge",
       "sink_category": "package_reprojection",
@@ -3122,7 +3114,7 @@
     {
       "source": "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
       "source_module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "source_score": 20.725,
+      "source_score": 20.2666,
       "sink": "InfoGeometry.Canonical.CalabiYauBridge.vacuumEinsteinEquation_of_isRicciFlatState",
       "sink_module": "InfoGeometry.Canonical.CalabiYauBridge",
       "sink_category": "package_reprojection",
@@ -3291,7 +3283,7 @@
     {
       "source": "InfoGeometry.Krein.DoubledSpace",
       "source_module": "InfoGeometry.Krein.DoubledSpace",
-      "source_score": 21.5552,
+      "source_score": 21.5037,
       "sink": "InfoGeometry.Canonical.YangMillsFinite.gamma_le_spectralGapFromLogDet",
       "sink_module": "InfoGeometry.Canonical.YangMillsFinite",
       "sink_category": "package_reprojection",
@@ -3632,7 +3624,7 @@
     {
       "source": "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
       "source_module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "source_score": 20.725,
+      "source_score": 20.2666,
       "sink": "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts",
       "sink_module": "InfoGeometry.Canonical.WeylInformationGauge",
       "sink_category": "hypothesis_bridge",
@@ -3805,6 +3797,79 @@
   ],
   "atomic_nodes": [
     {
+      "atomic_id": "bundle:0028c6102da5",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.RicciMongeAmpere"
+      ],
+      "source_categories": {
+        "likely_constructive": 2
+      },
+      "source_kinds": {
+        "theorem": 2
+      },
+      "source_purity_score": 1.0,
+      "scc_id": null,
+      "native_component_ids": [
+        "component:12034888009852967888",
+        "component:6962366064367096486"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
+      ],
+      "native_root_witness_component_ids": [
+        "component:17307048669515318500",
+        "component:239102362479398997",
+        "component:13321817166593493584",
+        "component:9094815593027018565",
+        "component:4335331422268153555",
+        "component:12034888009852967888",
+        "component:6962366064367096486"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.CurvatureRGFlow.ScalarCurvatureFlow",
+        "InfoGeometry.Canonical.RicciMongeAmpere.ScalarRicciFlow",
+        "InfoGeometry.Canonical.RicciMongeAmpere.scalarRicciBetaFunction",
+        "InfoGeometry.Canonical.RicciMongeAmpere.SatisfiesKaehlerRicciEvolution",
+        "InfoGeometry.Canonical.RicciMongeAmpere.SatisfiesNormalizedKaehlerRicciFlow",
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
+      ],
+      "native_strict_dominator_component_ids": [
+        "component:6962366064367096486",
+        "component:12872802310037879064",
+        "component:6737202943390071912"
+      ],
+      "native_strict_dominator_representatives": [
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial",
+        "InfoGeometry.Canonical.PerelmanW.spinorialWDissipation_eq_abs_spinorial_of_normalized_tracking",
+        "InfoGeometry.Canonical.PerelmanW.deriv_W_eq_abs_spinorial_of_normalized_tracking"
+      ],
+      "native_depth_min": 1,
+      "native_depth_max": 6,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CalabiYauBridge"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.CalabiYauBridge.W_constant_of_spinorialClosureState",
+        "InfoGeometry.Canonical.CalabiYauBridge.W_constant_of_spinorialState"
+      ],
+      "path_multiplicity": 2,
+      "avg_path_length": 5.0,
+      "motif_signature": "normalizedKaehlerRicci_beta_eq_neg -> normalizedKaehlerRicci_beta_eq_neg_spinorial -> spinorialWDissipation_eq_abs_spinorial_of_normalized_tracking -> deriv_W_eq_abs_spinorial_of_normalized_tracking -> W_constant_of_spinorial_zero -> W_constant_of_spinorialClosureState",
+      "compression_potential": 20.0
+    },
+    {
       "atomic_id": "bundle:41a270f5d592",
       "kind": "source_bundle",
       "category": "source_bundle",
@@ -3892,82 +3957,9 @@
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ],
       "path_multiplicity": 1,
-      "avg_path_length": 6.0,
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
-      "compression_potential": 24.0
-    },
-    {
-      "atomic_id": "bundle:0028c6102da5",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
-      ],
-      "source_modules": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "source_categories": {
-        "likely_constructive": 2
-      },
-      "source_kinds": {
-        "theorem": 2
-      },
-      "source_purity_score": 1.0,
-      "scc_id": null,
-      "native_component_ids": [
-        "component:12034888009852967888",
-        "component:6962366064367096486"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
-      ],
-      "native_root_witness_component_ids": [
-        "component:17307048669515318500",
-        "component:239102362479398997",
-        "component:13321817166593493584",
-        "component:9094815593027018565",
-        "component:4335331422268153555",
-        "component:12034888009852967888",
-        "component:6962366064367096486"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Canonical.CurvatureRGFlow.ScalarCurvatureFlow",
-        "InfoGeometry.Canonical.RicciMongeAmpere.ScalarRicciFlow",
-        "InfoGeometry.Canonical.RicciMongeAmpere.scalarRicciBetaFunction",
-        "InfoGeometry.Canonical.RicciMongeAmpere.SatisfiesKaehlerRicciEvolution",
-        "InfoGeometry.Canonical.RicciMongeAmpere.SatisfiesNormalizedKaehlerRicciFlow",
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:6962366064367096486",
-        "component:12872802310037879064",
-        "component:6737202943390071912"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial",
-        "InfoGeometry.Canonical.PerelmanW.spinorialWDissipation_eq_abs_spinorial_of_normalized_tracking",
-        "InfoGeometry.Canonical.PerelmanW.deriv_W_eq_abs_spinorial_of_normalized_tracking"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 6,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CalabiYauBridge"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.CalabiYauBridge.W_constant_of_spinorialClosureState",
-        "InfoGeometry.Canonical.CalabiYauBridge.W_constant_of_spinorialState"
-      ],
-      "path_multiplicity": 2,
-      "avg_path_length": 5.0,
-      "motif_signature": "normalizedKaehlerRicci_beta_eq_neg -> normalizedKaehlerRicci_beta_eq_neg_spinorial -> spinorialWDissipation_eq_abs_spinorial_of_normalized_tracking -> deriv_W_eq_abs_spinorial_of_normalized_tracking -> W_constant_of_spinorial_zero -> W_constant_of_spinorialClosureState",
-      "compression_potential": 20.0
+      "avg_path_length": 4.0,
+      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
+      "compression_potential": 16.0
     },
     {
       "atomic_id": "bundle:75b746d0432c",
@@ -5123,11 +5115,11 @@
           "count": 1
         },
         {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
+          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
           "count": 1
         }
       ],
-      "compression_potential": 74.0,
+      "compression_potential": 66.0,
       "native_component_ids": [
         "component:9763222080385001759",
         "component:10262190868562801872",
@@ -5156,8 +5148,6 @@
         "component:16534585782605764621",
         "component:9965274629092262251",
         "component:1481359671053209092",
-        "component:66930808371112915",
-        "component:8566582317311372998",
         "component:8087954748158813479"
       ],
       "top_native_corridor_representatives": [
@@ -5165,8 +5155,6 @@
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ]
     },
@@ -5177,14 +5165,12 @@
       "module": "InfoGeometry.Canonical.AQFTOperatorInterface",
       "sink_role": "consumer_sink",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_with_projectorSuperPair_base",
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexFirstLegCompression",
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation",
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady"
+        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_packaged_with_completeCStarReady"
       ],
       "minimal_source_bundle": "bundle:242522d62b7c",
       "canonical_downstream_sink_family": [
@@ -5201,30 +5187,26 @@
           "count": 1
         },
         {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
+          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
           "count": 1
         }
       ],
-      "compression_potential": 60.0,
+      "compression_potential": 52.0,
       "native_component_ids": [
-        "component:8566582317311372998",
         "component:8087954748158813479",
         "component:950925262963055119",
         "component:153449903441505901",
         "component:6362826645756287706",
         "component:6709493446721290577",
-        "component:9694268562283536608",
-        "component:66930808371112915"
+        "component:9694268562283536608"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_with_projectorSuperPair_base",
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexFirstLegCompression",
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation",
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady"
+        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_packaged_with_completeCStarReady"
       ],
       "native_root_witnesses": [
         "InfoGeometry.Krein.DoubledSpace",
@@ -5238,8 +5220,6 @@
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
         "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_with_projectorSuperPair_base",
         "InfoGeometry.Krein.to_doubled",
@@ -5263,16 +5243,14 @@
       ],
       "native_strict_dominator_component_ids": [
         "component:6362826645756287706",
-        "component:6709493446721290577",
-        "component:8566582317311372998"
+        "component:6709493446721290577"
       ],
       "native_strict_dominator_representatives": [
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package"
+        "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation_packaged_with_completeCStarReady"
       ],
       "native_depth_min": 1,
-      "native_depth_max": 13,
+      "native_depth_max": 12,
       "native_dominator_pressure": 0,
       "native_corridor_reuse": 8,
       "native_corridor_count": 4,
@@ -5282,8 +5260,6 @@
         "component:16534585782605764621",
         "component:9965274629092262251",
         "component:1481359671053209092",
-        "component:66930808371112915",
-        "component:8566582317311372998",
         "component:8087954748158813479"
       ],
       "top_native_corridor_representatives": [
@@ -5291,8 +5267,6 @@
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ]
     },
@@ -5325,11 +5299,11 @@
           "count": 1
         },
         {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
+          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
           "count": 1
         }
       ],
-      "compression_potential": 48.0,
+      "compression_potential": 40.0,
       "native_component_ids": [
         "component:16493071777789832982",
         "component:6576644083310003992",
@@ -5394,8 +5368,6 @@
         "component:16534585782605764621",
         "component:9965274629092262251",
         "component:1481359671053209092",
-        "component:66930808371112915",
-        "component:8566582317311372998",
         "component:8087954748158813479"
       ],
       "top_native_corridor_representatives": [
@@ -5403,8 +5375,6 @@
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ]
     },
@@ -5595,73 +5565,6 @@
         "InfoGeometry.Canonical.PerelmanW.deriv_W_eq_abs_spinorial_of_normalized_tracking",
         "InfoGeometry.Canonical.PerelmanW.W_constant_of_spinorial_zero",
         "InfoGeometry.Canonical.CalabiYauBridge.W_constant_of_spinorialState"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported"
-      ],
-      "minimal_source_bundle": "bundle:41a270f5d592",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface"
-      ],
-      "path_multiplicity": 1,
-      "path_motif_signatures": [
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
-          "count": 1
-        }
-      ],
-      "compression_potential": 24.0,
-      "native_component_ids": [
-        "component:1481359671053209092"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.modular_j",
-        "InfoGeometry.Krein.gradeMinusProj",
-        "InfoGeometry.Krein.annihilationLike",
-        "InfoGeometry.Quantum.annihilationOp",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubovAnnihilation",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.numberOperator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 10,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 3,
-      "native_corridor_count": 1,
-      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
-      "top_native_corridor_component_ids": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:1481359671053209092",
-        "component:66930808371112915",
-        "component:8566582317311372998",
-        "component:8087954748158813479"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ]
     },
     {
@@ -6201,6 +6104,69 @@
         "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
         "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
         "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteWightmanReconstructionLayer_of_expectationSeed"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported"
+      ],
+      "minimal_source_bundle": "bundle:41a270f5d592",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface"
+      ],
+      "path_multiplicity": 1,
+      "path_motif_signatures": [
+        {
+          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
+          "count": 1
+        }
+      ],
+      "compression_potential": 16.0,
+      "native_component_ids": [
+        "component:1481359671053209092"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.modular_j",
+        "InfoGeometry.Krein.gradeMinusProj",
+        "InfoGeometry.Krein.annihilationLike",
+        "InfoGeometry.Quantum.annihilationOp",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubovAnnihilation",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.numberOperator",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 10,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 3,
+      "native_corridor_count": 1,
+      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
+      "top_native_corridor_component_ids": [
+        "component:10262190868562801872",
+        "component:16534585782605764621",
+        "component:9965274629092262251",
+        "component:1481359671053209092",
+        "component:8087954748158813479"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Krein.DoubledSpace.ext",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ]
     },
     {
@@ -6954,230 +6920,6 @@
   ],
   "incidence_edges": [
     {
-      "atomic_id": "bundle:41a270f5d592",
-      "hydrated_id": "InfoGeometry.Canonical.AQFTOperatorInterface",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "sink",
-      "bundle_id": "bundle:41a270f5d592",
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
-      "witness_count": 1,
-      "compression_score": 24.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:1481359671053209092",
-        "component:66930808371112915",
-        "component:8566582317311372998",
-        "component:8087954748158813479"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface"
-      ],
-      "hydrated_role": "consumer_sink"
-    },
-    {
-      "atomic_id": "bundle:41a270f5d592",
-      "hydrated_id": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:41a270f5d592",
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
-      "witness_count": 1,
-      "compression_score": 24.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:1481359671053209092",
-        "component:66930808371112915",
-        "component:8566582317311372998",
-        "component:8087954748158813479"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface"
-      ],
-      "hydrated_role": "constructive_source"
-    },
-    {
-      "atomic_id": "bundle:41a270f5d592",
-      "hydrated_id": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:41a270f5d592",
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
-      "witness_count": 1,
-      "compression_score": 24.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:1481359671053209092",
-        "component:66930808371112915",
-        "component:8566582317311372998",
-        "component:8087954748158813479"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface"
-      ],
-      "hydrated_role": "constructive_source"
-    },
-    {
-      "atomic_id": "bundle:41a270f5d592",
-      "hydrated_id": "InfoGeometry.Krein.DoubledSpace",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:41a270f5d592",
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
-      "witness_count": 1,
-      "compression_score": 24.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:1481359671053209092",
-        "component:66930808371112915",
-        "component:8566582317311372998",
-        "component:8087954748158813479"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface"
-      ],
-      "hydrated_role": "constructive_source"
-    },
-    {
       "atomic_id": "bundle:0028c6102da5",
       "hydrated_id": "InfoGeometry.Canonical.CalabiYauBridge",
       "role": "supports",
@@ -7357,6 +7099,198 @@
       ],
       "sink_modules": [
         "InfoGeometry.Canonical.CalabiYauBridge"
+      ],
+      "hydrated_role": "constructive_source"
+    },
+    {
+      "atomic_id": "bundle:41a270f5d592",
+      "hydrated_id": "InfoGeometry.Canonical.AQFTOperatorInterface",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "sink",
+      "bundle_id": "bundle:41a270f5d592",
+      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
+      "witness_count": 1,
+      "compression_score": 16.0,
+      "canonical_path_example": [
+        "InfoGeometry.Krein.DoubledSpace.ext",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Krein.DoubledSpace.ext",
+          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+          "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:10262190868562801872",
+        "component:16534585782605764621",
+        "component:9965274629092262251",
+        "component:1481359671053209092",
+        "component:8087954748158813479"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Krein.DoubledSpace.ext",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface"
+      ],
+      "hydrated_role": "consumer_sink"
+    },
+    {
+      "atomic_id": "bundle:41a270f5d592",
+      "hydrated_id": "InfoGeometry.Canonical.BogoliubovFockSuper",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "source",
+      "bundle_id": "bundle:41a270f5d592",
+      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
+      "witness_count": 1,
+      "compression_score": 16.0,
+      "canonical_path_example": [
+        "InfoGeometry.Krein.DoubledSpace.ext",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Krein.DoubledSpace.ext",
+          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+          "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:10262190868562801872",
+        "component:16534585782605764621",
+        "component:9965274629092262251",
+        "component:1481359671053209092",
+        "component:8087954748158813479"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Krein.DoubledSpace.ext",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface"
+      ],
+      "hydrated_role": "constructive_source"
+    },
+    {
+      "atomic_id": "bundle:41a270f5d592",
+      "hydrated_id": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "source",
+      "bundle_id": "bundle:41a270f5d592",
+      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
+      "witness_count": 1,
+      "compression_score": 16.0,
+      "canonical_path_example": [
+        "InfoGeometry.Krein.DoubledSpace.ext",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Krein.DoubledSpace.ext",
+          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+          "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:10262190868562801872",
+        "component:16534585782605764621",
+        "component:9965274629092262251",
+        "component:1481359671053209092",
+        "component:8087954748158813479"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Krein.DoubledSpace.ext",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface"
+      ],
+      "hydrated_role": "constructive_source"
+    },
+    {
+      "atomic_id": "bundle:41a270f5d592",
+      "hydrated_id": "InfoGeometry.Krein.DoubledSpace",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "source",
+      "bundle_id": "bundle:41a270f5d592",
+      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
+      "witness_count": 1,
+      "compression_score": 16.0,
+      "canonical_path_example": [
+        "InfoGeometry.Krein.DoubledSpace.ext",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Krein.DoubledSpace.ext",
+          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+          "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:10262190868562801872",
+        "component:16534585782605764621",
+        "component:9965274629092262251",
+        "component:1481359671053209092",
+        "component:8087954748158813479"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Krein.DoubledSpace.ext",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface"
       ],
       "hydrated_role": "constructive_source"
     },
@@ -9264,7 +9198,7 @@
   ],
   "motif_families": [
     {
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
+      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
       "path_count": 1,
       "sink_modules": [
         "InfoGeometry.Canonical.AQFTOperatorInterface"
@@ -9272,8 +9206,8 @@
       "source_modules": [
         "InfoGeometry.Krein.DoubledSpace"
       ],
-      "avg_path_length": 6.0,
-      "compression_potential": 24.0
+      "avg_path_length": 4.0,
+      "compression_potential": 16.0
     },
     {
       "motif_signature": "DoubledSpace -> complexFirstLegCompression -> complexHilbertCompressionInterpretation -> complexHilbertCompressionInterpretation_packaged_with_completeCStarReady",
@@ -9590,6 +9524,79 @@
   ],
   "bundles": [
     {
+      "atomic_id": "bundle:0028c6102da5",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.RicciMongeAmpere"
+      ],
+      "source_categories": {
+        "likely_constructive": 2
+      },
+      "source_kinds": {
+        "theorem": 2
+      },
+      "source_purity_score": 1.0,
+      "scc_id": null,
+      "native_component_ids": [
+        "component:12034888009852967888",
+        "component:6962366064367096486"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
+      ],
+      "native_root_witness_component_ids": [
+        "component:17307048669515318500",
+        "component:239102362479398997",
+        "component:13321817166593493584",
+        "component:9094815593027018565",
+        "component:4335331422268153555",
+        "component:12034888009852967888",
+        "component:6962366064367096486"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.CurvatureRGFlow.ScalarCurvatureFlow",
+        "InfoGeometry.Canonical.RicciMongeAmpere.ScalarRicciFlow",
+        "InfoGeometry.Canonical.RicciMongeAmpere.scalarRicciBetaFunction",
+        "InfoGeometry.Canonical.RicciMongeAmpere.SatisfiesKaehlerRicciEvolution",
+        "InfoGeometry.Canonical.RicciMongeAmpere.SatisfiesNormalizedKaehlerRicciFlow",
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
+      ],
+      "native_strict_dominator_component_ids": [
+        "component:6962366064367096486",
+        "component:12872802310037879064",
+        "component:6737202943390071912"
+      ],
+      "native_strict_dominator_representatives": [
+        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial",
+        "InfoGeometry.Canonical.PerelmanW.spinorialWDissipation_eq_abs_spinorial_of_normalized_tracking",
+        "InfoGeometry.Canonical.PerelmanW.deriv_W_eq_abs_spinorial_of_normalized_tracking"
+      ],
+      "native_depth_min": 1,
+      "native_depth_max": 6,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CalabiYauBridge"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.CalabiYauBridge.W_constant_of_spinorialClosureState",
+        "InfoGeometry.Canonical.CalabiYauBridge.W_constant_of_spinorialState"
+      ],
+      "path_multiplicity": 2,
+      "avg_path_length": 5.0,
+      "motif_signature": "normalizedKaehlerRicci_beta_eq_neg -> normalizedKaehlerRicci_beta_eq_neg_spinorial -> spinorialWDissipation_eq_abs_spinorial_of_normalized_tracking -> deriv_W_eq_abs_spinorial_of_normalized_tracking -> W_constant_of_spinorial_zero -> W_constant_of_spinorialClosureState",
+      "compression_potential": 20.0
+    },
+    {
       "atomic_id": "bundle:41a270f5d592",
       "kind": "source_bundle",
       "category": "source_bundle",
@@ -9677,82 +9684,9 @@
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ],
       "path_multiplicity": 1,
-      "avg_path_length": 6.0,
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
-      "compression_potential": 24.0
-    },
-    {
-      "atomic_id": "bundle:0028c6102da5",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
-      ],
-      "source_modules": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "source_categories": {
-        "likely_constructive": 2
-      },
-      "source_kinds": {
-        "theorem": 2
-      },
-      "source_purity_score": 1.0,
-      "scc_id": null,
-      "native_component_ids": [
-        "component:12034888009852967888",
-        "component:6962366064367096486"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
-      ],
-      "native_root_witness_component_ids": [
-        "component:17307048669515318500",
-        "component:239102362479398997",
-        "component:13321817166593493584",
-        "component:9094815593027018565",
-        "component:4335331422268153555",
-        "component:12034888009852967888",
-        "component:6962366064367096486"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Canonical.CurvatureRGFlow.ScalarCurvatureFlow",
-        "InfoGeometry.Canonical.RicciMongeAmpere.ScalarRicciFlow",
-        "InfoGeometry.Canonical.RicciMongeAmpere.scalarRicciBetaFunction",
-        "InfoGeometry.Canonical.RicciMongeAmpere.SatisfiesKaehlerRicciEvolution",
-        "InfoGeometry.Canonical.RicciMongeAmpere.SatisfiesNormalizedKaehlerRicciFlow",
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg",
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:6962366064367096486",
-        "component:12872802310037879064",
-        "component:6737202943390071912"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.normalizedKaehlerRicci_beta_eq_neg_spinorial",
-        "InfoGeometry.Canonical.PerelmanW.spinorialWDissipation_eq_abs_spinorial_of_normalized_tracking",
-        "InfoGeometry.Canonical.PerelmanW.deriv_W_eq_abs_spinorial_of_normalized_tracking"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 6,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CalabiYauBridge"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.CalabiYauBridge.W_constant_of_spinorialClosureState",
-        "InfoGeometry.Canonical.CalabiYauBridge.W_constant_of_spinorialState"
-      ],
-      "path_multiplicity": 2,
-      "avg_path_length": 5.0,
-      "motif_signature": "normalizedKaehlerRicci_beta_eq_neg -> normalizedKaehlerRicci_beta_eq_neg_spinorial -> spinorialWDissipation_eq_abs_spinorial_of_normalized_tracking -> deriv_W_eq_abs_spinorial_of_normalized_tracking -> W_constant_of_spinorial_zero -> W_constant_of_spinorialClosureState",
-      "compression_potential": 20.0
+      "avg_path_length": 4.0,
+      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
+      "compression_potential": 16.0
     },
     {
       "atomic_id": "bundle:75b746d0432c",
@@ -10908,11 +10842,11 @@
           "count": 1
         },
         {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
+          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
           "count": 1
         }
       ],
-      "compression_potential": 74.0,
+      "compression_potential": 66.0,
       "native_component_ids": [
         "component:9763222080385001759",
         "component:10262190868562801872",
@@ -10941,8 +10875,6 @@
         "component:16534585782605764621",
         "component:9965274629092262251",
         "component:1481359671053209092",
-        "component:66930808371112915",
-        "component:8566582317311372998",
         "component:8087954748158813479"
       ],
       "top_native_corridor_representatives": [
@@ -10950,8 +10882,6 @@
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ]
     },
@@ -10962,14 +10892,12 @@
       "module": "InfoGeometry.Canonical.AQFTOperatorInterface",
       "sink_role": "consumer_sink",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_with_projectorSuperPair_base",
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexFirstLegCompression",
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation",
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady"
+        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_packaged_with_completeCStarReady"
       ],
       "minimal_source_bundle": "bundle:242522d62b7c",
       "canonical_downstream_sink_family": [
@@ -10986,30 +10914,26 @@
           "count": 1
         },
         {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
+          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
           "count": 1
         }
       ],
-      "compression_potential": 60.0,
+      "compression_potential": 52.0,
       "native_component_ids": [
-        "component:8566582317311372998",
         "component:8087954748158813479",
         "component:950925262963055119",
         "component:153449903441505901",
         "component:6362826645756287706",
         "component:6709493446721290577",
-        "component:9694268562283536608",
-        "component:66930808371112915"
+        "component:9694268562283536608"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_with_projectorSuperPair_base",
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexFirstLegCompression",
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation",
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady"
+        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_packaged_with_completeCStarReady"
       ],
       "native_root_witnesses": [
         "InfoGeometry.Krein.DoubledSpace",
@@ -11023,8 +10947,6 @@
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
         "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_with_projectorSuperPair_base",
         "InfoGeometry.Krein.to_doubled",
@@ -11048,16 +10970,14 @@
       ],
       "native_strict_dominator_component_ids": [
         "component:6362826645756287706",
-        "component:6709493446721290577",
-        "component:8566582317311372998"
+        "component:6709493446721290577"
       ],
       "native_strict_dominator_representatives": [
         "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package"
+        "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertCompressionInterpretation_packaged_with_completeCStarReady"
       ],
       "native_depth_min": 1,
-      "native_depth_max": 13,
+      "native_depth_max": 12,
       "native_dominator_pressure": 0,
       "native_corridor_reuse": 8,
       "native_corridor_count": 4,
@@ -11067,8 +10987,6 @@
         "component:16534585782605764621",
         "component:9965274629092262251",
         "component:1481359671053209092",
-        "component:66930808371112915",
-        "component:8566582317311372998",
         "component:8087954748158813479"
       ],
       "top_native_corridor_representatives": [
@@ -11076,8 +10994,6 @@
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ]
     },
@@ -11110,11 +11026,11 @@
           "count": 1
         },
         {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
+          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
           "count": 1
         }
       ],
-      "compression_potential": 48.0,
+      "compression_potential": 40.0,
       "native_component_ids": [
         "component:16493071777789832982",
         "component:6576644083310003992",
@@ -11179,8 +11095,6 @@
         "component:16534585782605764621",
         "component:9965274629092262251",
         "component:1481359671053209092",
-        "component:66930808371112915",
-        "component:8566582317311372998",
         "component:8087954748158813479"
       ],
       "top_native_corridor_representatives": [
@@ -11188,8 +11102,6 @@
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
         "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ]
     },
@@ -11380,73 +11292,6 @@
         "InfoGeometry.Canonical.PerelmanW.deriv_W_eq_abs_spinorial_of_normalized_tracking",
         "InfoGeometry.Canonical.PerelmanW.W_constant_of_spinorial_zero",
         "InfoGeometry.Canonical.CalabiYauBridge.W_constant_of_spinorialState"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported"
-      ],
-      "minimal_source_bundle": "bundle:41a270f5d592",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface"
-      ],
-      "path_multiplicity": 1,
-      "path_motif_signatures": [
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
-          "count": 1
-        }
-      ],
-      "compression_potential": 24.0,
-      "native_component_ids": [
-        "component:1481359671053209092"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.modular_j",
-        "InfoGeometry.Krein.gradeMinusProj",
-        "InfoGeometry.Krein.annihilationLike",
-        "InfoGeometry.Quantum.annihilationOp",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubovAnnihilation",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.numberOperator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 10,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 3,
-      "native_corridor_count": 1,
-      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
-      "top_native_corridor_component_ids": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:1481359671053209092",
-        "component:66930808371112915",
-        "component:8566582317311372998",
-        "component:8087954748158813479"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ]
     },
     {
@@ -11986,6 +11831,69 @@
         "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
         "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
         "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteWightmanReconstructionLayer_of_expectationSeed"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported"
+      ],
+      "minimal_source_bundle": "bundle:41a270f5d592",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface"
+      ],
+      "path_multiplicity": 1,
+      "path_motif_signatures": [
+        {
+          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
+          "count": 1
+        }
+      ],
+      "compression_potential": 16.0,
+      "native_component_ids": [
+        "component:1481359671053209092"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.modular_j",
+        "InfoGeometry.Krein.gradeMinusProj",
+        "InfoGeometry.Krein.annihilationLike",
+        "InfoGeometry.Quantum.annihilationOp",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubovAnnihilation",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.numberOperator",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 10,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 3,
+      "native_corridor_count": 1,
+      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
+      "top_native_corridor_component_ids": [
+        "component:10262190868562801872",
+        "component:16534585782605764621",
+        "component:9965274629092262251",
+        "component:1481359671053209092",
+        "component:8087954748158813479"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Krein.DoubledSpace.ext",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+        "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
       ]
     },
     {
@@ -12742,7 +12650,7 @@
       "source_module": "InfoGeometry.Krein.DoubledSpace",
       "target_module": "InfoGeometry.Canonical.BogoliubovFockSuper",
       "path_count": 3,
-      "compression_potential": 48.0,
+      "compression_potential": 40.0,
       "direct_projection": true,
       "hypothesis_packets": [
         {
@@ -12754,7 +12662,7 @@
           "count": 1
         },
         {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
+          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
           "count": 1
         }
       ],
@@ -12781,8 +12689,6 @@
           "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
           "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
           "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
           "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
         ]
       ]
@@ -12819,60 +12725,6 @@
           "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
           "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
           "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_with_projectorSuperPair_base"
-        ]
-      ]
-    },
-    {
-      "source_module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "target_module": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
-      "path_count": 1,
-      "compression_potential": 24.0,
-      "direct_projection": true,
-      "hypothesis_packets": [
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
-          "count": 1
-        }
-      ],
-      "bundle_ids": [
-        "bundle:41a270f5d592"
-      ],
-      "atomic_path_examples": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-        ]
-      ]
-    },
-    {
-      "source_module": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
-      "target_module": "InfoGeometry.Canonical.AQFTOperatorInterface",
-      "path_count": 1,
-      "compression_potential": 24.0,
-      "direct_projection": true,
-      "hypothesis_packets": [
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> grandCanonicalFockEulerStep_packaged_with_completeCStarReady -> aqft_readiness_package -> aqft_readiness_package_realHilbert",
-          "count": 1
-        }
-      ],
-      "bundle_ids": [
-        "bundle:41a270f5d592"
-      ],
-      "atomic_path_examples": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
         ]
       ]
     },
@@ -12949,6 +12801,56 @@
           "InfoGeometry.Canonical.PerelmanW.deriv_W_eq_abs_spinorial_of_normalized_tracking",
           "InfoGeometry.Canonical.PerelmanW.W_constant_of_spinorial_zero",
           "InfoGeometry.Canonical.CalabiYauBridge.W_constant_of_spinorialState"
+        ]
+      ]
+    },
+    {
+      "source_module": "InfoGeometry.Canonical.BogoliubovFockSuper",
+      "target_module": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "path_count": 1,
+      "compression_potential": 16.0,
+      "direct_projection": true,
+      "hypothesis_packets": [
+        {
+          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
+          "count": 1
+        }
+      ],
+      "bundle_ids": [
+        "bundle:41a270f5d592"
+      ],
+      "atomic_path_examples": [
+        [
+          "InfoGeometry.Krein.DoubledSpace.ext",
+          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+          "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+        ]
+      ]
+    },
+    {
+      "source_module": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
+      "target_module": "InfoGeometry.Canonical.AQFTOperatorInterface",
+      "path_count": 1,
+      "compression_potential": 16.0,
+      "direct_projection": true,
+      "hypothesis_packets": [
+        {
+          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported -> aqft_readiness_package_realHilbert",
+          "count": 1
+        }
+      ],
+      "bundle_ids": [
+        "bundle:41a270f5d592"
+      ],
+      "atomic_path_examples": [
+        [
+          "InfoGeometry.Krein.DoubledSpace.ext",
+          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
+          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
+          "InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported",
+          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
         ]
       ]
     },

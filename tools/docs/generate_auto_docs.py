@@ -10,9 +10,9 @@ if __package__ in (None, ""):
     import sys
 
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from tools.pathing import repo_root
+    from tools.pathing import default_source_sink_bipartite_file, repo_root
 else:
-    from tools.pathing import repo_root
+    from tools.pathing import default_source_sink_bipartite_file, repo_root
 
 
 @dataclass
@@ -115,7 +115,7 @@ def burndown_names(burndown_obj: dict[str, Any], limit: int = 5) -> list[str]:
 
 def compression_bundle_names(obj: dict[str, Any], limit: int = 4) -> list[str]:
     out: list[str] = []
-    for row in obj.get("bundles", [])[:limit]:
+    for row in obj.get("atomic_nodes", obj.get("bundles", []))[:limit]:
         bundle_id = str(row.get("bundle_id", "")).strip()
         motif = str(row.get("motif_signature", "")).strip()
         if bundle_id:
@@ -125,7 +125,7 @@ def compression_bundle_names(obj: dict[str, Any], limit: int = 4) -> list[str]:
 
 def compression_module_names(obj: dict[str, Any], limit: int = 4) -> list[str]:
     out: list[str] = []
-    for row in obj.get("hydrated_modules", [])[:limit]:
+    for row in obj.get("hydrated_nodes", obj.get("hydrated_modules", []))[:limit]:
         module = str(row.get("module", "")).strip()
         if module:
             out.append(module)
@@ -167,7 +167,7 @@ def render_index(
     lines.append("- authoritative for current metrics/frontier snapshot")
     lines.append("- preferred refresh path: `python3 tools/docs/update_repo_docs.py`")
     lines.append("- low-level generator: `python3 tools/docs/generate_auto_docs.py`")
-    lines.append("- declaration-level causal-order inputs live under `artifacts/dag/`; derived frontier/causal reports and NetworkX exports live under `reports/dag/`")
+    lines.append("- declaration-level causal-order inputs live under `artifacts/dag/`; readable frontier/causal reports and NetworkX exports live under `reports/dag/`")
     lines.append("")
     lines.append("## Repository Scale")
     lines.append(f"- Lean files under `lean/`: **{lean_files}**")
@@ -214,7 +214,7 @@ def render_index(
         lines.append(f"- `{name}`")
     lines.append("")
     lines.append("## Source-Sink Compression")
-    lines.append("- incidence-layer view between the atomic declaration DAG and the hydrated module graph")
+    lines.append("- public bipartite incidence artifact between the atomic declaration DAG and the hydrated module graph")
     lines.append("- exposes canonical source bundles, repeated path motifs, and module-level compression carriers")
     for name in compression_bundle_names(source_sink_compression):
         lines.append(f"- source bundle `{name}`")
@@ -231,7 +231,7 @@ def render_index(
     lines.append("## Notes")
     lines.append("- This page is a generated status view, not a narrative design document.")
     lines.append("- Trusted declaration graph inputs for causal-order analysis live under `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`.")
-    lines.append("- NetworkX-readable graph outputs live under `reports/dag/declaration-networkx.graphml`, `reports/dag/module-networkx.graphml`, `reports/dag/module-networkx.svg`, the filtered frontier siblings `*-frontier.graphml` / `*-frontier.svg`, the burn-down reports `reports/dag/frontier-burndown.{md,json}`, and the incidence-layer compression outputs `reports/dag/source-sink-compression.{md,json}` plus `reports/dag/source-sink-incidence.{graphml,svg}`.")
+    lines.append("- Public DAG artifacts now include `artifacts/dag/source-sink-bipartite.json` alongside `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`; readable projections live under `reports/dag/`, including `source-sink-compression.md` and `source-sink-incidence.{graphml,svg}`.")
     lines.append("- Treat causal-order rankings as provisional until `reports/dag/true-root-order.md` shows no coverage warning; the public `artifacts/dag/` graph may still be partial if `InfoGeometry.All` omits declaration-bearing branches.")
     lines.append("- Use `reports/dag/missing-all-classification.md` to classify the remaining declaration-bearing files outside `InfoGeometry.All` into direct imports, branch-façade expansions, namespace fixes, and noncanonical exclusions.")
     lines.append("- Generated semantic exports and derived frontier/causal JSONs under `reports/dag/` are intentionally untracked.")
@@ -255,7 +255,7 @@ def main() -> int:
     both_frontier_path = reports / "skynet-v2-frontier.json"
     reverse_frontier_path = reports / "skynet-v2-frontier-reverse.json"
     frontier_burndown_path = reports / "frontier-burndown.json"
-    source_sink_compression_path = reports / "source-sink-compression.json"
+    source_sink_compression_path = default_source_sink_bipartite_file()
 
     missing = [
         str(p.relative_to(root))

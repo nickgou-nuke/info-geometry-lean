@@ -5,7 +5,7 @@ Status:
 - authoritative for current metrics/frontier snapshot
 - preferred refresh path: `python3 tools/docs/update_repo_docs.py`
 - low-level generator: `python3 tools/docs/generate_auto_docs.py`
-- declaration-level causal-order inputs live under `artifacts/dag/`; derived frontier/causal reports and NetworkX exports live under `reports/dag/`
+- declaration-level causal-order inputs live under `artifacts/dag/`; readable frontier/causal reports and NetworkX exports live under `reports/dag/`
 
 ## Repository Scale
 - Lean files under `lean/`: **467**
@@ -59,12 +59,8 @@ Status:
 - `InfoGeometry.Canonical.CountSubstrateBridge`
 
 ## Source-Sink Compression
-- incidence-layer view between the atomic declaration DAG and the hydrated module graph
+- public bipartite incidence artifact between the atomic declaration DAG and the hydrated module graph
 - exposes canonical source bundles, repeated path motifs, and module-level compression carriers
-- source bundle `B1: instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base`
-- source bundle `B2: instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier`
-- source bundle `B3: instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop`
-- source bundle `B4: SinkhornMatrix -> M -> eq_def`
 - hydrated carrier `InfoGeometry.Krein.Thermal`
 - hydrated carrier `InfoGeometry.Canonical.KMSSinkhornBridge`
 - hydrated carrier `InfoGeometry.Canonical.AQFTOperatorInterface`
@@ -80,7 +76,7 @@ Status:
 ## Notes
 - This page is a generated status view, not a narrative design document.
 - Trusted declaration graph inputs for causal-order analysis live under `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`.
-- NetworkX-readable graph outputs live under `reports/dag/declaration-networkx.graphml`, `reports/dag/module-networkx.graphml`, `reports/dag/module-networkx.svg`, the filtered frontier siblings `*-frontier.graphml` / `*-frontier.svg`, the burn-down reports `reports/dag/frontier-burndown.{md,json}`, and the incidence-layer compression outputs `reports/dag/source-sink-compression.{md,json}` plus `reports/dag/source-sink-incidence.{graphml,svg}`.
+- Public DAG artifacts now include `artifacts/dag/source-sink-bipartite.json` alongside `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`; readable projections live under `reports/dag/`, including `source-sink-compression.md` and `source-sink-incidence.{graphml,svg}`.
 - Treat causal-order rankings as provisional until `reports/dag/true-root-order.md` shows no coverage warning; the public `artifacts/dag/` graph may still be partial if `InfoGeometry.All` omits declaration-bearing branches.
 - Use `reports/dag/missing-all-classification.md` to classify the remaining declaration-bearing files outside `InfoGeometry.All` into direct imports, branch-façade expansions, namespace fixes, and noncanonical exclusions.
 - Generated semantic exports and derived frontier/causal JSONs under `reports/dag/` are intentionally untracked.

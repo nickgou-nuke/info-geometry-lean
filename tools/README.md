@@ -31,6 +31,7 @@ Use this for causal order, coverage, and rooted partial-order analysis.
 Inputs:
 - `artifacts/dag/full_graph.json`
 - `artifacts/dag/index/decls.jsonl`
+- `artifacts/dag/source-sink-bipartite.json`
 
 Authoritative refresh path:
 - [refresh_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/refresh_decl_graph.py)

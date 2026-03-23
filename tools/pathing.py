@@ -60,6 +60,10 @@ def default_decl_metadata_file() -> Path:
     return default_decl_index_dir() / "decls.jsonl"
 
 
+def default_source_sink_bipartite_file() -> Path:
+    return default_decl_artifact_root() / "source-sink-bipartite.json"
+
+
 def default_build_decl_artifact_root() -> Path:
     return repo_root() / ".build"
 

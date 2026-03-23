@@ -144,12 +144,12 @@ The exact frontier graph counts are intentionally not duplicated here. Use the t
 ## Artifact Placement
 
 Keep these graph layers distinct:
-- `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl` are the public authoritative declaration-level inputs for causal-order analysis.
-- `reports/dag/*.semantic-block.stdlib.json` are trusted semantic block exports for heavy modules.
-- `reports/dag/true-root-order.{md,json}` are derived absolute causal-order reports built from the `artifacts/dag/` graph artifacts plus the tracked audits.
-- `reports/dag/openclaw-targets.{md,json}` are derived operational rankings built from `true-root-order.json`.
+- `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl` are the public authoritative atomic declaration-DAG inputs for causal-order analysis.
+- `artifacts/dag/source-sink-bipartite.json` is the public authoritative correspondence object between atomic declaration truth and hydrated readable carriers.
+- `reports/dag/true-root-order.{md,json}`, `reports/dag/openclaw-targets.{md,json}`, `reports/dag/source-sink-compression.{md,json}`, and the GraphML / SVG views under `reports/dag/` are derived readable reports built from the authoritative `artifacts/dag/` layer plus the tracked audits.
+- `reports/dag/*.semantic-block.stdlib.json` are trusted semantic block exports for heavy modules and stay separate from the declaration-DAG / correspondence lane.
 
-The mismatch that kept reappearing came from tool drift across two graph eras: older declaration-graph tooling assumed `full_graph.json` and `index/decls.jsonl` at repo root, while a later generation pushed the trusted declaration export into the hidden `.build/` cache. The current repository policy is to keep the authoritative declaration graph in the public `artifacts/dag/` lane instead, with `.build/` treated only as a transient build cache or explicit compatibility fallback. A second drift then appeared when the causal report was updated to refresh markdown without refreshing its JSON sibling, leaving the target selector to read stale `true-root-order.json` state.
+The mismatch that kept reappearing came from tool drift across two graph eras: older declaration-graph tooling assumed `full_graph.json` and `index/decls.jsonl` at repo root, while a later generation pushed the trusted declaration export into the hidden `.build/` cache. The current repository policy is to keep the authoritative atomic DAG and its public correspondence layer in `artifacts/dag/`, with `.build/` treated only as a transient build cache or explicit compatibility fallback. A second drift then appeared when readable markdown/JSON reports were refreshed without refreshing their authoritative inputs, leaving downstream selectors and graph summaries to read stale state.
 
 ## Tooling Hierarchy
 
@@ -166,9 +166,10 @@ Read the operational documentation in this order:
 
 The hierarchy of trust is:
 
-1. authoritative declaration DAG lane
+1. authoritative declaration DAG and correspondence lane
 - [refresh_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/refresh_decl_graph.py) -> [Indexer.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/Indexer.lean) -> `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`
-- consumed by [generate_causal_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_causal_report.py), [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py), [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/classify_missing_all.py), [generate_theorem_surface_index.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_theorem_surface_index.py), and [plot_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/plot_decl_graph.py)
+- [generate_source_sink_compression.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_source_sink_compression.py) -> `artifacts/dag/source-sink-bipartite.json`
+- consumed by [generate_causal_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_causal_report.py), [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py), [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/classify_missing_all.py), [generate_theorem_surface_index.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_theorem_surface_index.py), [plot_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/plot_decl_graph.py), and the readable `reports/dag/*` projections
 
 2. authoritative blueprint / LeanArchitect lane
 - [refresh_blueprint_tags.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/refresh_blueprint_tags.py) -> [auto_blueprints.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/auto_blueprints.lean) and [BlueprintTags.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/BlueprintTags.lean)
@@ -197,8 +198,9 @@ Use this split when entering the repository for the first time.
 
 | Surface | Status | What to use it for |
 | `lean/InfoGeometry/Canonical`, `lean/InfoGeometry/KK`, `lean/InfoGeometry/Library.lean`, `lean/InfoGeometry/Quantum` | Current | Main theorem library and publication surface |
-| `tools/infra/refresh_decl_graph.py` + `lean/DAG/Indexer.lean` + `artifacts/dag/full_graph.json` + `artifacts/dag/index/decls.jsonl` | Current / authoritative | Declaration-level causal order, coverage, and rooted partial-order analysis |
-| `tools/infra/generate_causal_report.py`, `tools/infra/select_openclaw_target.py`, `tools/infra/classify_missing_all.py`, `tools/infra/generate_theorem_surface_index.py`, `tools/infra/plot_decl_graph.py` | Current / authoritative | Causal reports, operational rankings, theorem-surface classification, `All`-coverage analysis, and both full/tracked-frontier NetworkX graph exports |
+| `tools/infra/refresh_decl_graph.py` + `lean/DAG/Indexer.lean` + `artifacts/dag/full_graph.json` + `artifacts/dag/index/decls.jsonl` | Current / authoritative | Atomic declaration-level causal order, coverage, and rooted partial-order analysis |
+| `tools/infra/generate_source_sink_compression.py` + `artifacts/dag/source-sink-bipartite.json` | Current / authoritative | Stable correspondence layer between atomic declaration truth and hydrated readable carriers; source bundles, motif signatures, witness counts, and compression carriers |
+| `tools/infra/generate_causal_report.py`, `tools/infra/select_openclaw_target.py`, `tools/infra/classify_missing_all.py`, `tools/infra/generate_theorem_surface_index.py`, `tools/infra/plot_decl_graph.py` | Current / authoritative | Readable causal reports, operational rankings, theorem-surface classification, source-sink compression views, and full/tracked-frontier NetworkX graph exports |
 | `tools/infra/refresh_blueprint_tags.py`, `lean/InfoGeometry/auto_blueprints.lean`, `lean/InfoGeometry/BlueprintTags.lean`, LeanArchitect `:blueprint` / `:blueprintJson` facets | Current / authoritative | Blueprint coverage refresh and exact theorem-to-TeX/JSON extraction |
 | `tools/frontier/semantic_block_export.py`, `tools/frontier/skynet_v2.py`, `tools/docs/update_repo_docs.py` | Current / authoritative | Trusted heavy-module export and frontier workflow |
 | `lean/DAG/RootOrderExport.lean`, `lean/DAG/SkeletonExport.lean`, `lean/scripts/DAG/Exploration/*` | Current / auxiliary | Native reports and diagnostics that sit beside, not above, the authoritative `artifacts/dag` pipeline |
@@ -347,15 +349,18 @@ This refresh also regenerates the tracked bridge-candidate packet from the curre
 
 ## How To Read The Theory Topology
 
-There are three useful views:
+There are four useful views:
 
 1. declaration DAG
 - best for SCCs, dominators, and global bottlenecks
 
-2. block export
+2. source-sink bipartite correspondence artifact
+- best for source bundles, repeated path motifs, canonical witness paths, and projection from atomic theorem packets into hydrated carriers
+
+3. block export
 - best for source attribution and minimal slices
 
-3. semantic block graph
+4. semantic block graph
 - best for human-facing theory structure and bridge hunting
 
 Current topology picture:
@@ -375,7 +380,7 @@ If you are using a coding agent, the minimal bootstrap sequence is:
 1. read [docs/keyword_index.md](/home/goutev/LEAN4/info-geometry-lean/docs/keyword_index.md)
 2. read [README.md](/home/goutev/LEAN4/info-geometry-lean/README.md)
 3. read [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
-4. build `InfoGeometry.All`
+4. run `python3 tools/infra/run_locked_lake_build.py InfoGeometry.All`
 5. decide whether the task is:
    primitive/root-set work,
    KK/index work,

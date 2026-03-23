@@ -75,51 +75,14 @@ private lemma abs_arakiRelativeEntropyDrop_le_trajectoryRNBarrier
   exact abs_trajectoryRNGenerator_le_trajectoryRNBarrier (n := n) T k
 
 /--
-Entropy-drop-to-squeezing theorem:
-if flow time is budgeted by an Araki relative-entropy drop at step `k`, then
-logarithmic squeezing shear is bounded by the RN barrier at that step.
--/
-theorem abs_squeezingLogShear_le_of_abs_time_le_arakiRelativeEntropyDrop
-  (D : ConnesArakiData (H := H) σ u T)
-    (k : Nat)
-    (t : ℝ)
-    (hTime : |t| ≤ arakiRelativeEntropyDrop D.relEnt k) :
-    |squeezingLogShear t| ≤ 4 * trajectoryRNBarrier n T k := by
-  have hDropNonneg : 0 ≤ arakiRelativeEntropyDrop D.relEnt k :=
-    arakiRelativeEntropyDrop_nonneg (H := H) (σ := σ) (u := u) (T := T) D k
-  have hTimeAbs : |t| ≤ |arakiRelativeEntropyDrop D.relEnt k| := by
-    simpa [abs_of_nonneg hDropNonneg] using hTime
-  have hShearToDrop :
-      |squeezingLogShear t| ≤ 4 * |arakiRelativeEntropyDrop D.relEnt k| :=
-    abs_squeezingLogShear_le_of_abs_time_le_barrier (t := t)
-      (b := |arakiRelativeEntropyDrop D.relEnt k|) hTimeAbs
-  have hDropToBarrier :
-      |arakiRelativeEntropyDrop D.relEnt k| ≤ trajectoryRNBarrier n T k :=
-    abs_arakiRelativeEntropyDrop_le_trajectoryRNBarrier
-      (H := H) (σ := σ) (u := u) (T := T) D k
-  have hScale :
-      4 * |arakiRelativeEntropyDrop D.relEnt k| ≤ 4 * trajectoryRNBarrier n T k := by
-    nlinarith [hDropToBarrier]
-  exact le_trans hShearToDrop hScale
-
-/--
-Monotonicity interface under subalgebra restriction:
-the restricted Araki relative entropy is pointwise bounded by the ambient one.
--/
-structure ArakiRelativeEntropyRestrictionMonotone
-    (relEnt : ArakiRelativeEntropyProfile)
-    (relEntRestricted : ArakiRelativeEntropyProfile) : Prop where
-  pointwise_le : ∀ k : Nat, relEntRestricted k ≤ relEnt k
-
-/--
 Quantitative restriction interface:
-in addition to pointwise monotonicity, one-step drops are controlled in
-absolute value.
+the restricted Araki relative entropy is pointwise bounded by the ambient one,
+and one-step drops are controlled in absolute value.
 -/
 structure ArakiRelativeEntropyRestrictionDropMonotone
     (relEnt : ArakiRelativeEntropyProfile)
     (relEntRestricted : ArakiRelativeEntropyProfile) : Prop where
-  pointwise : ArakiRelativeEntropyRestrictionMonotone relEnt relEntRestricted
+  pointwise_le : ∀ k : Nat, relEntRestricted k ≤ relEnt k
   drop_abs_le :
     ∀ k : Nat,
       |arakiRelativeEntropyDrop relEntRestricted k|
@@ -143,13 +106,12 @@ theorem abs_arakiRelativeEntropyDrop_restricted_le_trajectoryRNBarrier
       (H := H) (σ := σ) (u := u) (T := T) D k)
 
 /--
-Restricted-drop squeezing bound:
-time budgets controlled by restricted Araki drops imply the same RN-barrier
-squeezing bound, providing a monotonicity interface toward QNEC/Bekenstein
-applications.
+Canonical entropy-drop-to-squeezing theorem:
+ambient and restricted Araki-drop presentations both flow through the same
+restriction-aware interface.
 -/
-theorem abs_squeezingLogShear_le_of_abs_time_le_restrictedArakiRelativeEntropyDrop
-    (D : ConnesArakiData (H := H) σ u T)
+theorem abs_squeezingLogShear_le_of_abs_time_le_arakiRelativeEntropyDrop
+  (D : ConnesArakiData (H := H) σ u T)
     {relEntRestricted : ArakiRelativeEntropyProfile}
     (hRestrDrop :
       ArakiRelativeEntropyRestrictionDropMonotone D.relEnt relEntRestricted)
@@ -157,18 +119,18 @@ theorem abs_squeezingLogShear_le_of_abs_time_le_restrictedArakiRelativeEntropyDr
     (t : ℝ)
     (hTime : |t| ≤ |arakiRelativeEntropyDrop relEntRestricted k|) :
     |squeezingLogShear t| ≤ 4 * trajectoryRNBarrier n T k := by
-  have hShearToRestrictedDrop :
+  have hShearToDrop :
       |squeezingLogShear t| ≤ 4 * |arakiRelativeEntropyDrop relEntRestricted k| :=
-    abs_squeezingLogShear_le_of_abs_time_le_barrier
-      (t := t) (b := |arakiRelativeEntropyDrop relEntRestricted k|) hTime
-  have hRestrictedDropToBarrier :
+    abs_squeezingLogShear_le_of_abs_time_le_barrier (t := t)
+      (b := |arakiRelativeEntropyDrop relEntRestricted k|) hTime
+  have hDropToBarrier :
       |arakiRelativeEntropyDrop relEntRestricted k| ≤ trajectoryRNBarrier n T k :=
     abs_arakiRelativeEntropyDrop_restricted_le_trajectoryRNBarrier
       (H := H) (σ := σ) (u := u) (T := T) D hRestrDrop k
   have hScale :
       4 * |arakiRelativeEntropyDrop relEntRestricted k| ≤ 4 * trajectoryRNBarrier n T k := by
-    nlinarith [hRestrictedDropToBarrier]
-  exact le_trans hShearToRestrictedDrop hScale
+    nlinarith [hDropToBarrier]
+  exact le_trans hShearToDrop hScale
 
 end Core
 
@@ -188,29 +150,23 @@ abbrev TomitaConnesArakiData
     u T
 
 /--
-Tomita-specialized entropy-drop-to-squeezing theorem.
+Tomita-specialized canonical squeezing endpoint:
+ambient and restricted Araki-drop presentations both flow through the same
+restricted-drop interface.
 -/
 theorem abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop
     (D : TomitaConnesArakiData (H := H) u T)
+    {relEntRestricted : ArakiRelativeEntropyProfile}
+    (hRestrDrop :
+      ArakiRelativeEntropyRestrictionDropMonotone D.relEnt relEntRestricted)
     (k : Nat)
     (t : ℝ)
-    (hTime : |t| ≤ arakiRelativeEntropyDrop D.relEnt k) :
+    (hTime : |t| ≤ |arakiRelativeEntropyDrop relEntRestricted k|) :
     |squeezingLogShear t| ≤ 4 * trajectoryRNBarrier n T k := by
   exact abs_squeezingLogShear_le_of_abs_time_le_arakiRelativeEntropyDrop
     (H := H)
     (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
-    (u := u) (T := T) D k t hTime
-
-/--
-Tomita-specialized Bekenstein-bound corollary extracted from Connes-Araki data.
--/
-theorem topologicalBekensteinBound_of_tomitaConnesArakiData
-    (D : TomitaConnesArakiData (H := H) u T) :
-    TopologicalBekensteinBound n T := by
-  exact topologicalBekensteinBound_of_tomitaConnesCocycle_casiniIncrement
-    (n := n) (H := H) (u := u) (T := T)
-    (hCocycle := D.cocycle) (hBridge := D.bridge)
-    (relEnt := D.relEnt) (hCasini := D.casini)
+    (u := u) (T := T) D hRestrDrop k t hTime
 
 /--
 Carrier-completing endpoint: Tomita-specialized Connes-Araki data gives the
@@ -234,27 +190,13 @@ theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
                 InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
                   (E := H) β B)
             = ω (B * A) := by
-  refine ⟨topologicalBekensteinBound_of_tomitaConnesArakiData
-    (n := n) (H := H) (u := u) (T := T) D, ?_⟩
+  refine ⟨topologicalBekensteinBound_of_tomitaConnesCocycle_casiniIncrement
+    (n := n) (H := H) (u := u) (T := T)
+    (hCocycle := D.cocycle) (hBridge := D.bridge)
+    (relEnt := D.relEnt) (hCasini := D.casini), ?_⟩
   exact InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow_kms_of_satisfies_kms_like
     (E := H) (ω := ω) (β := β) hKMS
 
-/--
-Tomita-specialized restricted-drop squeezing bound.
--/
-theorem abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop
-    (D : TomitaConnesArakiData (H := H) u T)
-    {relEntRestricted : ArakiRelativeEntropyProfile}
-    (hRestrDrop :
-      ArakiRelativeEntropyRestrictionDropMonotone D.relEnt relEntRestricted)
-    (k : Nat)
-    (t : ℝ)
-    (hTime : |t| ≤ |arakiRelativeEntropyDrop relEntRestricted k|) :
-    |squeezingLogShear t| ≤ 4 * trajectoryRNBarrier n T k := by
-  exact abs_squeezingLogShear_le_of_abs_time_le_restrictedArakiRelativeEntropyDrop
-    (H := H)
-    (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
-    (u := u) (T := T) D hRestrDrop k t hTime
 
 end TomitaSpecialization
 

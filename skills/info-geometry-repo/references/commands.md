@@ -146,6 +146,8 @@ python3 tools/infra/check_bipartite_bleed.py
 
 python3 tools/infra/generate_structural_dedup.py
 
+python3 tools/infra/generate_structural_fibers.py
+
 python3 tools/infra/select_openclaw_target.py \
   --input reports/dag/true-root-order.json \
   --structural-hotspots reports/dag/structural-hotspots.json \
@@ -208,6 +210,16 @@ python3 tools/infra/generate_structural_dedup.py \
   --bipartite artifacts/dag/source-sink-bipartite.json \
   --json-out reports/dag/structural-dedup.json \
   --md-out reports/dag/structural-dedup.md
+```
+
+Packet-conditioned structural fiber report:
+
+```bash
+python3 tools/infra/generate_structural_fibers.py \
+  --structure artifacts/dag/structural-topology.json \
+  --bipartite artifacts/dag/source-sink-bipartite.json \
+  --json-out reports/dag/structural-fibers.json \
+  --md-out reports/dag/structural-fibers.md
 ```
 
 ConformalUnification topological patch and prompt packet:

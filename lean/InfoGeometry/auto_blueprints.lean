@@ -1228,7 +1228,7 @@ attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.cl11_bottDirac_sq_eq
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.directionalBridges_of_ibDynamics_and_conjugacy_indexHypotheses
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.directionalBridges_of_ibDynamics_and_indexHypotheses
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.doublyStochastic_sinkhornEntropyMonotoneRN
-attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.fullCapstone_of_conjugacy_index_anchor
+attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.fullCapstone_of_conjugacy_kmsClosure
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.grandSynthesis_of_equilibria
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.grandSynthesis_step
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.gravity_generated_by_rnEntropy
@@ -1279,7 +1279,7 @@ attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kms
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.thermodynamicEquilibrium_of_doublyStochastic
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.thermodynamic_and_geometricAlgebraic_of_fullCapstone
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.vacuumEinsteinEquation_of_rnEntropySource
-attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.wheelerDeWitt_equivalence_of_kk_conjugacy_anchor
+attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.wheelerDeWitt_equivalence_of_conjugacy_kmsClosure
 attribute [blueprint] InfoGeometry.Canonical.GrandUnification.IsJordanKKTGeometry
 attribute [blueprint] InfoGeometry.Canonical.GrandUnification.JordanKKTData.DBregman
 attribute [blueprint] InfoGeometry.Canonical.GrandUnification.JordanKKTData.DBregman.eq_1

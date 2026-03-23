@@ -330,6 +330,7 @@ def main() -> int:
         run(["python3", "tools/infra/generate_source_sink_compression.py"], cwd=root)
         run(["python3", "tools/infra/check_bipartite_bleed.py"], cwd=root)
         run(["python3", "tools/infra/generate_structural_dedup.py"], cwd=root)
+        run(["python3", "tools/infra/generate_structural_fibers.py"], cwd=root)
         run(["python3", "tools/infra/select_openclaw_target.py"], cwd=root)
         run(["python3", "tools/generate_unification_index.py"], cwd=root)
         run(["python3", "tools/generate_debt_candidates.py"], cwd=root)

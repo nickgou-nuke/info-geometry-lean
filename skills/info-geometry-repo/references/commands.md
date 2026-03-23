@@ -144,6 +144,8 @@ python3 tools/infra/generate_source_sink_compression.py
 
 python3 tools/infra/check_bipartite_bleed.py
 
+python3 tools/infra/generate_structural_dedup.py
+
 python3 tools/infra/select_openclaw_target.py \
   --input reports/dag/true-root-order.json \
   --structural-hotspots reports/dag/structural-hotspots.json \
@@ -196,6 +198,16 @@ python3 tools/infra/check_bipartite_bleed.py \
   --bipartite artifacts/dag/source-sink-bipartite.json \
   --json-out reports/dag/structural-anti-bleed.json \
   --md-out reports/dag/structural-anti-bleed.md
+```
+
+Native structural dedup / quotient-candidate report:
+
+```bash
+python3 tools/infra/generate_structural_dedup.py \
+  --structure artifacts/dag/structural-topology.json \
+  --bipartite artifacts/dag/source-sink-bipartite.json \
+  --json-out reports/dag/structural-dedup.json \
+  --md-out reports/dag/structural-dedup.md
 ```
 
 ConformalUnification topological patch and prompt packet:

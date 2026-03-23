@@ -9,7 +9,7 @@ Status:
 
 ## Repository Scale
 - Lean files under `lean/`: **468**
-- Lean LOC under `lean/`: **82,086**
+- Lean LOC under `lean/`: **82,210**
 
 ## Trusted Semantic Exports
 | Module | Semantic nodes | Semantic edges | Skeleton nodes | Top hubs |
@@ -61,10 +61,10 @@ Status:
 ## Source-Sink Compression
 - public bipartite incidence artifact between the atomic declaration DAG and the hydrated module graph
 - exposes canonical source bundles, repeated path motifs, and module-level compression carriers
-- hydrated carrier `InfoGeometry.Krein.Thermal`
-- hydrated carrier `InfoGeometry.Canonical.KMSSinkhornBridge`
+- hydrated carrier `InfoGeometry.Krein.DoubledSpace`
 - hydrated carrier `InfoGeometry.Canonical.AQFTOperatorInterface`
-- hydrated carrier `InfoGeometry.Canonical.GrandSynthesis`
+- hydrated carrier `InfoGeometry.Canonical.BogoliubovFockSuper`
+- hydrated carrier `InfoGeometry.Krein.Thermal`
 
 ## Current Reading Order
 1. `README.md`
@@ -77,7 +77,7 @@ Status:
 - This page is a generated status view, not a narrative design document.
 - Trusted declaration graph inputs for causal-order analysis live under `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`.
 - Native Lean structural analysis now lives under `artifacts/dag/structural-topology.json` with stable condensation ids, membership, dominators, and canonical root-witness paths.
-- Public DAG artifacts now include `artifacts/dag/source-sink-bipartite.json` alongside `artifacts/dag/full_graph.json`, `artifacts/dag/index/decls.jsonl`, and `artifacts/dag/structural-topology.json`; readable projections live under `reports/dag/`, including `source-sink-compression.md` and `source-sink-incidence.{graphml,svg}`.
+- Public DAG artifacts now include `artifacts/dag/source-sink-bipartite.json` alongside `artifacts/dag/full_graph.json`, `artifacts/dag/index/decls.jsonl`, and `artifacts/dag/structural-topology.json`; readable projections live under `reports/dag/`, including `source-sink-compression.md`, `structural-anti-bleed.md`, `structural-dedup.md`, and `source-sink-incidence.{graphml,svg}`.
 - Treat causal-order rankings as provisional until `reports/dag/true-root-order.md` shows no coverage warning; the public `artifacts/dag/` graph may still be partial if `InfoGeometry.All` omits declaration-bearing branches.
 - Use `reports/dag/missing-all-classification.md` to classify the remaining declaration-bearing files outside `InfoGeometry.All` into direct imports, branch-façade expansions, namespace fixes, and noncanonical exclusions.
 - Generated semantic exports and derived frontier/causal JSONs under `reports/dag/` are intentionally untracked.

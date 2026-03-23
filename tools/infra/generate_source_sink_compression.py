@@ -264,6 +264,42 @@ def motif_signature(path_nodes: list[str]) -> list[str]:
     return collapse_consecutive([motif_label(name) for name in path_nodes])
 
 
+GENERATED_DECL_SHORT_NAMES = {
+    'rec', 'recOn', 'casesOn', 'brecOn', 'binductionOn',
+    'noConfusion', 'noConfusionType', 'sizeOf_spec',
+}
+
+
+def is_generated_decl_name(name: str) -> bool:
+    short = name.rsplit('.', 1)[-1]
+    return (
+        short in GENERATED_DECL_SHORT_NAMES
+        or name.endswith('.inj')
+        or name.endswith('.injEq')
+        or name.endswith('.casesOn')
+        or name.endswith('.rec')
+        or name.endswith('.recOn')
+        or name.endswith('.brecOn')
+        or name.endswith('.binductionOn')
+        or name.endswith('.noConfusion')
+        or name.endswith('.noConfusionType')
+        or name.endswith('.sizeOf_spec')
+    )
+
+
+def preferred_module_support_for_path(
+    decl_graph: nx.DiGraph,
+    path_nodes: list[str],
+    module: str,
+) -> list[str]:
+    module_nodes = [
+        node for node in path_nodes
+        if str(decl_graph.nodes[node].get('module', 'unknown')) == module
+    ]
+    real_nodes = [node for node in module_nodes if not is_generated_decl_name(str(node))]
+    return real_nodes if real_nodes else module_nodes
+
+
 def select_hotspot_modules(frontier_module_graph: nx.DiGraph, count: int) -> list[dict[str, Any]]:
     hotspot_rows = module_strength_rows(frontier_module_graph)[: max(count, 1)]
     return burn_down_rows(hotspot_rows)
@@ -286,6 +322,8 @@ def select_sink_rows(
         if module not in hotspot_rank:
             continue
         if category not in FRONTIER_CATEGORIES or kind != "theorem":
+            continue
+        if is_generated_decl_name(str(node)):
             continue
         candidates.append(
             {
@@ -417,6 +455,7 @@ def bundle_key_for_path(decl_graph: nx.DiGraph, path_nodes: list[str]) -> tuple[
         for node in path_nodes
         if str(decl_graph.nodes[node].get("surface_category", "unknown")) in {"likely_constructive", "neutral_definition"}
         and str(decl_graph.nodes[node].get("kind", "unknown")) in FALLBACK_SOURCE_KINDS
+        and not is_generated_decl_name(str(node))
     ]
     return tuple(bundle or [path_nodes[0]])
 
@@ -626,9 +665,8 @@ def summarize_hydrated_projection(
             if corridor_ids:
                 stats["corridors"].add(corridor_ids)
                 corridor_modules[corridor_ids].add(module)
-            for node in entry["path_nodes"]:
-                if str(decl_graph.nodes[node].get("module", "unknown")) == module:
-                    stats["atomic_support"].add(node)
+            for node in preferred_module_support_for_path(decl_graph, entry["path_nodes"], module):
+                stats["atomic_support"].add(node)
 
         for src_module, dst_module in zip(module_path, module_path[1:]):
             edge = edge_stats.setdefault(

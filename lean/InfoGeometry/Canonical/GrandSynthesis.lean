@@ -873,27 +873,11 @@ theorem bochnerWeitzenboeckBridge_of_ibDynamics
   let _ := flow
   let _ := D
   let _ := Γ
-  have hControl :
-      SinkhornKMSControl n T.traj K
-        (ibInducedObservableWeighted
-          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β :=
-    sinkhorn_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator
-      (n := n) (T := T.traj) (K := K) (β := β)
-      (prob := prob) (pTrajectory := pTrajectory)
-      hStep (x0 := x0) (t0 := t0)
-      (Ω := Ω) hΩ hJointKernel hCommOrthogonal
-  have hClosure :
-      SinkhornKMSClosure n T.traj K
-        (ibInducedObservableWeighted
-          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β :=
-    sinkhorn_step_kmsClosure_of_control
-      (n := n) (T := T.traj) (K := K)
-      (ω := ibInducedObservableWeighted
-        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) (β := β) hControl
-  exact hClosure
+  exact sinkhorn_kmsClosure_of_ibDynamics_weighted_from_jointKernel_commutator
+    (n := n) (T := T.traj) (K := K) (β := β)
+    (prob := prob) (pTrajectory := pTrajectory)
+    hStep (x0 := x0) (t0 := t0)
+    (Ω := Ω) hΩ hJointKernel hCommOrthogonal
 
 /--
 Packaging of both directional Wheeler-DeWitt bridges from
@@ -1446,26 +1430,16 @@ theorem information_wheeler_dewitt_equivalence_of_state_capstone_hypotheses
         (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
         pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
       ↔ GeometricAlgebraicState n T flow D Γ := by
-  have hControl :
-      SinkhornKMSControl n T.traj K
-        (ibInducedObservableWeighted
-          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β :=
-    sinkhorn_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator
-      (n := n) (T := T.traj) (K := K) (β := β)
-      (prob := prob) (pTrajectory := pTrajectory)
-      hStep (x0 := x0) (t0 := t0)
-      (Ω := Ω) hΩ hJointKernel hCommOrthogonal
   have hClosure :
       SinkhornKMSClosure n T.traj K
         (ibInducedObservableWeighted
           (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
           pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β :=
-    sinkhorn_step_kmsClosure_of_control
-      (n := n) (T := T.traj) (K := K)
-      (ω := ibInducedObservableWeighted
-        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) (β := β) hControl
+    sinkhorn_kmsClosure_of_ibDynamics_weighted_from_jointKernel_commutator
+      (n := n) (T := T.traj) (K := K) (β := β)
+      (prob := prob) (pTrajectory := pTrajectory)
+      hStep (x0 := x0) (t0 := t0)
+      (Ω := Ω) hΩ hJointKernel hCommOrthogonal
   exact information_wheeler_dewitt_equivalence_of_fullCapstone
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
     (K := K) (ω := ibInducedObservableWeighted

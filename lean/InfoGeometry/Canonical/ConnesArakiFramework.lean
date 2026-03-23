@@ -213,6 +213,34 @@ theorem topologicalBekensteinBound_of_tomitaConnesArakiData
     (relEnt := D.relEnt) (hCasini := D.casini)
 
 /--
+Carrier-completing endpoint: Tomita-specialized Connes-Araki data gives the
+trajectorywise Bekenstein bound, while a thermal KMS-like hypothesis for the
+modular-sign generator is re-expressed directly in the Tomita modular-flow
+language used by the Connes-Araki carrier.
+-/
+theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
+    (D : TomitaConnesArakiData (H := H) u T)
+    (ω : AlgebraEnd H →L[ℝ] ℝ)
+    (β : ℝ)
+    (hKMS :
+      InfoGeometry.Krein.satisfies_kms_like
+        (E := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon (E := H))
+        ω β) :
+    TopologicalBekensteinBound n T
+      ∧ ∀ A B : AlgebraEnd H,
+          ω
+              (A *
+                InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+                  (E := H) β B)
+            = ω (B * A) := by
+  refine ⟨topologicalBekensteinBound_of_tomitaConnesArakiData
+    (n := n) (H := H) (u := u) (T := T) D, ?_⟩
+  intro A B
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow_apply]
+    using hKMS A B
+
+/--
 Tomita-specialized restricted-drop squeezing bound.
 -/
 theorem abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop

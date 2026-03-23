@@ -54,27 +54,27 @@ Semantic block graph for human-facing theory structure.
 The repository currently has four graph/export lanes, and they should be kept separate:
 
 1. Authoritative declaration-DAG lane
-- [Indexer.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/Indexer.lean)
-- [StructuralExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/StructuralExport.lean)
+- [Indexer.lean](lean/DAG/Indexer.lean)
+- [StructuralExport.lean](lean/DAG/StructuralExport.lean)
 - low-level exporter behind the public `artifacts/dag/full_graph.json`, `artifacts/dag/index/decls.jsonl`, and `artifacts/dag/structural-topology.json` lane
-- [tools/infra/generate_source_sink_compression.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_source_sink_compression.py) then lifts the atomic export plus native structural topology into the public correspondence object `artifacts/dag/source-sink-bipartite.json`
+- [tools/infra/generate_source_sink_compression.py](tools/infra/generate_source_sink_compression.py) then lifts the atomic export plus native structural topology into the public correspondence object `artifacts/dag/source-sink-bipartite.json`
 - together these are the canonical source for causal order, native structural invariants, and correspondence between atomic truth and hydrated readable carriers
 
 2. Authoritative semantic-block lane
-- [BlockExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/BlockExport.lean) for in-process block slicing
-- [ServerExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/ServerExport.lean) plus [semantic_block_export.py](/home/goutev/LEAN4/info-geometry-lean/tools/semantic_block_export.py) for the trusted heavy-file path
+- [BlockExport.lean](lean/DAG/BlockExport.lean) for in-process block slicing
+- [ServerExport.lean](lean/DAG/ServerExport.lean) plus [semantic_block_export.py](tools/semantic_block_export.py) for the trusted heavy-file path
 - outputs `reports/dag/*.semantic-block.stdlib.json`
 
 3. Native auxiliary / limited lane
-- [RootOrderExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/RootOrderExport.lean)
-- [SkeletonExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/SkeletonExport.lean)
+- [RootOrderExport.lean](lean/DAG/RootOrderExport.lean)
+- [SkeletonExport.lean](lean/DAG/SkeletonExport.lean)
 - useful for native reports, but not the default current refresh path
 
 4. Compatibility / legacy lane
-- [ExportForwardGraph.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/ExportForwardGraph.lean)
-- [ExportDecls.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/ExportDecls.lean)
-- [tools/graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/graph.py) and older `docs-map/graph.json` consumers
-- archived module-graph compatibility tools under [archive/legacy/](/home/goutev/LEAN4/info-geometry-lean/archive/legacy/README.md)
+- [ExportForwardGraph.lean](lean/DAG/ExportForwardGraph.lean)
+- [ExportDecls.lean](lean/DAG/ExportDecls.lean)
+- [tools/graph.py](tools/graph.py) and older `docs-map/graph.json` consumers
+- archived module-graph compatibility tools under [archive/legacy/](archive/legacy/README.md)
 
 These compatibility surfaces are archived for inspection only and are not the canonical causal-order substrate.
 
@@ -133,12 +133,12 @@ Environment -> Graph -> HydratedGraph -> Structural topology artifact -> Public 
 ## 3) Layered Architecture
 
 ### Layer A: Graph Kernel
-- `Basic.lean`: graph structures and extraction from Lean `Environment`.
-- `Util.lean`: dependency walkers and generated-name filtering helpers.
-- `SCC.lean`: Tarjan SCC decomposition.
-- `Topo.lean`: topological sorting.
-- `Dominators.lean`: dominator analysis (bit-vector implementation).
-- `Hydrate.lean`: composes the above into `HydratedGraph`.
+- `Basic.lean`: graph structures (`Graph α`, `HydratedGraph α`, `EdgeKind`) and extraction from a Lean `Environment`. Edge collection peels both `.proj` heads and constant folds from `Expr` to capture hidden dependencies that `foldConsts` alone would miss.
+- `Util.lean`: dependency walkers and generated-name filtering helpers (`arrayReplicate`, noise-label predicates).
+- `SCC.lean`: Tarjan's O(V+E) SCC decomposition — iterative DFS with `lowlink` tracking and an explicit stack; `partial` annotation covers the well-foundedness gap.
+- `Topo.lean`: Kahn's O(V+E) topological sort on the condensed DAG; seeded by zero-indegree nodes computed from the predecessor map.
+- `Dominators.lean`: fixed-point bit-vector dominator analysis — `dom[u] = {u} ∪ ⋂_{p∈preds(u)} dom[p]` iterated in topological order using `ByteArray` bit packing (AND + single-bit SET).
+- `Hydrate.lean`: composes the above into `HydratedGraph` — runs Tarjan → Kahn → bit-vector dominators in sequence; builds the condensed DAG by deduplicating cross-SCC edges with a `Std.HashSet (Nat × Nat)`.
 
 ### Layer B: Graph Analysis
 - `Analysis.lean`: path counts, distance maps, influence and vulnerability summaries, skeleton extraction.
@@ -161,17 +161,72 @@ Environment -> Graph -> HydratedGraph -> Structural topology artifact -> Public 
 - `ExportDecls.lean`: declaration inventory + dependencies.
 - `ExportForwardGraph.lean`: forward graph JSON export.
 - `GlobalDisassembler.lean`: stream disassembly to JSONL files.
-- `JsonInstances.lean`: JSON codecs.
+- `JsonInstances.lean`: JSON codecs for all core types (`Graph`, `HydratedGraph`, `Block`, `Export`).
+- `Indexer.lean`: authoritative entry point — runs as `lake env lean --run`; drives `IndexerM` over the elaborated environment to emit `decls.jsonl`, `edges.jsonl`, `morphisms.jsonl`, `types.jsonl`, `full_graph.json`.
+- `StructuralExport.lean`: emits `structural-topology.json` from the hydrated SCC graph; preserves stable component ids, layer BFS, deepest chains, dominator chains, and canonical root-witness paths.
 - `BlockExport.lean`: command-block slicing, tactic morphisms, block DAG, quiver emitters.
 - `ServerExport.lean`: RPC methods over editor snapshots, including semantic block export.
 - `SemanticServerRpc.lean`: explicit builtin RPC registration shim for server integration.
 - `SkeletonExport.lean`: "true skeleton" export via vulnerability ranking.
+- `RootOrderExport.lean`: root → capstone traversal order export.
 
 ### Auxiliary
 - `Functor.lean`: categorical morphism recognition and commutative-square search.
 - `Indexer.lean`: patched indexing pipeline with morphism extraction and graph JSON.
 - `LiftNaturality.lean`: shared lift-pattern recognizer for naturality diagnostics/promoters.
 - `FindFinrank.lean`, `KernelExtract.lean`: utility and support modules.
+
+## 3.5) End-to-End Data Flow
+
+```
+Lean environment (InfoGeometry.All)
+        │
+        ▼  lake env lean --run lean/DAG/Indexer.lean
+  ┌─────────────────────────────────────┐
+  │  IndexerM (StateRefT MetaM)         │
+  │  ├─ buildGraphFromEnv()  → Basic    │
+  │  ├─ hydrate()                       │
+  │  │    ├─ tarjan()        → SCC      │
+  │  │    ├─ topo()          → Topo     │
+  │  │    └─ dominators()    → Doms     │
+  │  ├─ emitStructuralTopology() → StructuralExport │
+  │  └─ processConstant() per decl      │
+  │       ├─ recognizeMorphism()        │
+  │       └─ addEdge() (deduped)        │
+  └─────────────────────────────────────┘
+        │
+        ▼  artifacts/dag/
+  ┌──────────────────────────────────────────────────┐
+  │  full_graph.json          (flat forward adjacency)│
+  │  structural-topology.json (SCC/dominator/layers)  │
+  │  index/decls.jsonl        (per-decl metadata)     │
+  │  index/edges.jsonl        (typed dep edges)       │
+  │  index/morphisms.jsonl    (Hom/Equiv/Iso/Map)     │
+  │  index/types.jsonl        (unique type strings)   │
+  └──────────────────────────────────────────────────┘
+        │
+        ▼  tools/infra/ (Python + NetworkX)
+  ┌──────────────────────────────────────────────────────────────┐
+  │  refresh_decl_graph.py          ← shells to Indexer.lean     │
+  │  plot_decl_graph.py             ← shared NetworkX loader     │
+  │  generate_causal_report.py      ← root/capstone/layer ranks  │
+  │  generate_source_sink_compression.py ← bipartite layer       │
+  │  generate_structural_dedup.py   ← WL-hash quotient candidates│
+  │  generate_structural_fibers.py  ← packet-conditioned fibers  │
+  │  generate_theorem_surface_index.py ← surface classification  │
+  │  classify_missing_all.py        ← coverage gap detection     │
+  │  check_bipartite_bleed.py       ← anti-bleed validation      │
+  │  select_openclaw_target.py      ← hotspot prioritisation     │
+  │  refresh_blueprint_tags.py      ← blueprint annotation sync  │
+  └──────────────────────────────────────────────────────────────┘
+        │
+        ▼  reports/dag/  (human-readable outputs)
+  true-root-order.{md,json}   source-sink-compression.{md,json}
+  frontier-burndown.{md,json} module-networkx.{graphml,svg}  …
+```
+
+All Python scripts resolve paths exclusively through `tools/pathing.py`. No tool
+hardcodes artifact locations.
 
 ## 4) Repository Structure Around DAG
 
@@ -191,6 +246,26 @@ The distinction is intentional:
 
 `lean/DAG` is reusable library code.
 `lean/scripts/DAG/...` is executable/report surface.
+
+## 4.5) `tools/infra/` Script Reference
+
+All scripts in `tools/infra/` consume DAG artifacts produced by `Indexer.lean` and
+route paths through `tools/pathing.py`.
+
+| Script | Inputs | Outputs | Purpose |
+|---|---|---|---|
+| `refresh_decl_graph.py` | Lean env via `Indexer.lean` | `full_graph.json`, `structural-topology.json`, `index/*.jsonl` | **Canonical tick** — shells to `lake env lean --run lean/DAG/Indexer.lean`; everything downstream depends on this |
+| `plot_decl_graph.py` | `full_graph.json`, `decls.jsonl`, optional surface index | `declaration-networkx.graphml`, `module-networkx.{graphml,svg}`, frontier variants, `networkx-graph-summary.json` | Shared NetworkX loader used as a library by other scripts; also a standalone graph renderer |
+| `generate_causal_report.py` | `full_graph.json`, `decls.jsonl`, debt indices | `reports/dag/true-root-order.{md,json}` | Root/capstone extraction, topological layers, debt-weighted ranking; coverage gap detection |
+| `generate_source_sink_compression.py` | `full_graph.json`, `decls.jsonl`, `structural-topology.json`, surface index | `source-sink-bipartite.json`, `source-sink-compression.{md,json}`, `source-sink-incidence.{graphml,svg}` | Bipartite bundle/carrier incidence layer; motif matching; compression scoring |
+| `generate_structural_dedup.py` | `full_graph.json`, `decls.jsonl`, `structural-topology.json` | `reports/dag/structural-dedup-candidates.{md,json}` | WL-hash-driven quotient candidates for declaration deduplication |
+| `generate_structural_fibers.py` | `source-sink-bipartite.json` | `reports/dag/structural-fibers.{md,json}` | Packet-conditioned fiber decomposition of the bipartite layer |
+| `generate_theorem_surface_index.py` | `decls.jsonl` | `reports/dag/theorem-surface-index.json` | Classifies theorems by surface category (constructive / bridge / surrogate / neutral) |
+| `classify_missing_all.py` | `decls.jsonl`, `lean/InfoGeometry/` file tree | `reports/dag/missing-all-classification.md` | Finds declaration-bearing `.lean` files absent from `InfoGeometry.All` |
+| `check_bipartite_bleed.py` | `source-sink-bipartite.json` | console / exit code | Validates that no source bundle bleeds into the wrong sink partition |
+| `select_openclaw_target.py` | causal report JSON, surface index | console / `reports/dag/openclaw-target.json` | Picks the highest-priority structural hotspot for the OpenClaw driver |
+| `refresh_blueprint_tags.py` | `decls.jsonl`, `BlueprintTags.lean` | updated `BlueprintTags.lean` | Synchronises blueprint annotation sites with the current declaration metadata |
+| `run_locked_lake_build.py` | — | — | Thin locked-build wrapper around `lake build` |
 
 ## 5) Primary Workflows
 
@@ -430,25 +505,27 @@ Current first-step canonicalization (implemented):
 ## 10) Near-Term Implementation Plan
 
 ### Phase 1 (done)
-- Shared search core extraction.
-- Search module deduplication.
+- Shared search core extraction (`SearchCore.lean`).
+- Search module deduplication — `Search.lean`, `SearchRank.lean`, `FinalSearch.lean` consume shared helpers.
+- `SearchCoreTests.lean` for deterministic behaviour checks.
 
-### Phase 2
-- Canonical expression dependency fold extraction for:
-  - `Util.collectDeps`,
-  - `Basic.collectExprConsts`,
-  - `Indexer.collectConsts`.
+### Phase 2 (open)
+- Canonical expression dependency fold extraction. Three independent implementations currently exist:
+  - `Util.collectDeps` — walks `ConstantInfo` recursively via environment lookups.
+  - `Basic.collectExprConsts` — `foldConsts` + explicit `.proj` head peeling.
+  - `Indexer.collectConsts` — direct `foldConsts` without proj head coverage.
+  - Target: single shared primitive covering all three call sites.
 
-### Phase 3
+### Phase 3 (open)
 - Unify local/global expression disassembly logic (`Disassembler` and `GlobalDisassembler`).
 
-### Phase 4
+### Phase 4 (open)
 - Consolidate context-block heuristics shared by `BlockExport` and `ServerExport`.
 
-### Phase 5
-- Optional umbrella/API normalization in `DAG.lean`.
+### Phase 5 (open)
+- Optional umbrella/API normalization in `DAG.lean` (currently `import`-only, no re-export shims).
 
-### Phase 6
+### Phase 6 (partial)
 - Typed frontier extraction over semantic block graphs. Partial: done.
 - Diffusion / restart-walk over purified semantic web. Partial: done via `tools/skynet_v2.py`.
 - LLM-facing frontier packets for candidate bridge statements. Partial: done via skill references and report-only packets.

@@ -267,7 +267,7 @@ def motif_signature(path_nodes: list[str]) -> list[str]:
 
 GENERATED_DECL_SHORT_NAMES = {
     'rec', 'recOn', 'casesOn', 'brecOn', 'binductionOn',
-    'noConfusion', 'noConfusionType', 'sizeOf_spec',
+    'noConfusion', 'noConfusionType', 'sizeOf_spec', 'congr_simp',
 }
 EQUATION_THEOREM_RE = re.compile(r'^eq_\d+$')
 
@@ -321,6 +321,23 @@ def is_structure_field_projection(decl_graph: nx.DiGraph, name: str) -> bool:
     )
 
 
+def is_nested_local_theorem_surface(decl_graph: nx.DiGraph, name: str) -> bool:
+    if name not in decl_graph or '.' not in name:
+        return False
+    data = decl_graph.nodes[name]
+    if str(data.get('kind', '')) != 'theorem':
+        return False
+    parent = name.rsplit('.', 1)[0]
+    if parent not in decl_graph:
+        return False
+    parent_data = decl_graph.nodes[parent]
+    if str(parent_data.get('kind', '')) != 'def':
+        return False
+    short = name.rsplit('.', 1)[-1]
+    doc = str(data.get('doc', '') or '').strip()
+    return not doc and short[:1].islower()
+
+
 def select_hotspot_modules(frontier_module_graph: nx.DiGraph, count: int) -> list[dict[str, Any]]:
     hotspot_rows = module_strength_rows(frontier_module_graph)[: max(count, 1)]
     return burn_down_rows(hotspot_rows)
@@ -347,6 +364,8 @@ def select_sink_rows(
         if is_generated_decl_name(str(node)):
             continue
         if is_structure_field_projection(decl_graph, str(node)):
+            continue
+        if is_nested_local_theorem_surface(decl_graph, str(node)):
             continue
         candidates.append(
             {

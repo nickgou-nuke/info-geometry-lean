@@ -874,7 +874,6 @@ attribute [blueprint] InfoGeometry.Canonical.ConformalWard.conformal_ward_identi
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.drop_abs_le
-attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise_le
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.bridge
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.casini
@@ -882,8 +881,6 @@ attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiDat
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.relEnt
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.TomitaConnesArakiData
-attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.abs_arakiRelativeEntropyDrop_restricted_le_trajectoryRNBarrier
-attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_arakiRelativeEntropyDrop
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.arakiRelativeEntropyDrop
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.arakiRelativeEntropyDrop.eq_1

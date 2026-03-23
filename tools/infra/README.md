@@ -18,6 +18,7 @@ Canonical entrypoints:
 - [generate_theorem_surface_index.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_theorem_surface_index.py)
 - [plot_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/plot_decl_graph.py)
 - [generate_source_sink_compression.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_source_sink_compression.py)
+- [check_bipartite_bleed.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/check_bipartite_bleed.py)
 - [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py)
 
 Rule:
@@ -38,3 +39,8 @@ Outputs from `plot_decl_graph.py` include the full declaration/module graphs, th
 - native structure: condensation ids, membership, dominators, and canonical root-witness paths
 - generation layer: source bundles -> hydrated carriers
 - hydrated readability: module carriers with path multiplicity, motif signatures, and compression potential
+
+`check_bipartite_bleed.py` then checks pairwise anti-bleed directly on the native structural layer:
+- support source: hydrated `native_component_ids`, with incidence fallback
+- closure source: native `dependencyComponentIds` on the condensation DAG
+- outputs: `reports/dag/structural-anti-bleed.{json,md}`

@@ -462,38 +462,6 @@ theorem sinkhornEntropyMonotoneRN
   exact trajectoryRNBarrier_monotone (n := n) T k
 
 /--
-KMS residual is controlled by the RN-barrier entropy budget at each Sinkhorn step.
--/
-theorem sinkhornStepwise_kmsResidual_le_entropyBarrier
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (β : ℝ)
-    {Xib Yib Tib : Type}
-    [Fintype Xib] [Fintype Yib] [Fintype Tib]
-    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
-    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
-    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
-    (prob : IBProblem (X := Xib) (Y := Yib))
-    (pTrajectory : Nat → Xib → FinProb Tib)
-    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
-    (x0 : Xib) (t0 : Tib)
-    (vac : ThermalVacuum (E := F) K)
-    (hJointKernel : JointKernelOnOmega (F := F) K β vac.Omega)
-    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) vac.Omega) :
-    ∀ k : Nat, ∀ A B : AlgebraEnd F,
-      kmsResidual K ((ibInducedObservableWeighted (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 (omegaSeed (F := F) vac.Omega)) (k + 1)) β A B
-        ≤ trajectoryRNBarrier n T k := by
-  have hControl :
-      SinkhornKMSControl n T K (ibInducedObservableWeighted (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 (omegaSeed (F := F) vac.Omega)) β :=
-    sinkhorn_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator
-      (n := n) (T := T) (K := K) (β := β)
-      (prob := prob) (pTrajectory := pTrajectory) hStep (x0 := x0) (t0 := t0)
-      (Ω := vac.Omega) vac.vacuum_nonzero hJointKernel hCommOrthogonal
-  exact sinkhorn_stepwise_kms_bound
-    (n := n) (T := T) (K := K)
-    (ω := ibInducedObservableWeighted (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib) pTrajectory x0 t0 (omegaSeed (F := F) vac.Omega)) (β := β) hControl
-
-/--
 Doubly-stochastic specialization of RN-barrier entropy monotonicity.
 -/
 theorem doublyStochastic_sinkhornEntropyMonotoneRN
@@ -715,25 +683,6 @@ theorem grandSynthesis_step
   · exact (sinkhorn_dynamics_step_control (n := n) T k label).2
   · exact cl11_bottDirac_sq_eq_zero_of_algebraicEquilibrium
       (E := E) (Dn := Dn) hAlg
-
-/--
-Global grand synthesis scaffold:
-thermodynamic equilibrium of the trajectory, geometric fixed-point, and
-algebraic Bott-Dirac stationarity.
--/
-theorem grandSynthesis_of_equilibria
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : RicciFlow X)
-    (Dn : Endomorphism F)
-    (hGeo : GeometricEquilibrium flow)
-    (hAlg : AlgebraicEquilibriumCl11 (E := E) Dn) :
-    ThermodynamicEquilibrium n T ∧
-      GeometricEquilibrium flow ∧
-      (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn).comp
-        (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn) = 0 := by
-  refine ⟨thermodynamicEquilibrium_of_doublyStochastic (n := n) T, hGeo, ?_⟩
-  exact cl11_bottDirac_sq_eq_zero_of_algebraicEquilibrium
-    (E := E) (Dn := Dn) hAlg
 
 end Capstone
 
@@ -1085,41 +1034,6 @@ theorem information_wheeler_dewitt_equivalence_of_ibDynamics_and_modularClifford
       (prob := prob) (pTrajectory := pTrajectory)
       hStep (x0 := x0) (t0 := t0)
       (Ω := Ω) hΩ hJointKernel hCommOrthogonal hGeoAlg
-
-/--
-Primary Wheeler-DeWitt implication API:
-constructively discharges the geometric-to-thermodynamic direction.
--/
-theorem information_wheeler_dewitt_implication
-    (T : DoublyStochasticSinkhornTrajectory n)
-    (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (K : AlgebraEnd F)
-    (β : ℝ)
-    {Xib Yib Tib : Type}
-    [Fintype Xib] [Fintype Yib] [Fintype Tib]
-    [MeasurableSpace Xib] [MeasurableSingletonClass Xib]
-    [MeasurableSpace Yib] [MeasurableSingletonClass Yib]
-    [MeasurableSpace Tib] [MeasurableSingletonClass Tib]
-    (prob : IBProblem (X := Xib) (Y := Yib))
-    (pTrajectory : Nat → Xib → FinProb Tib)
-    (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
-    (x0 : Xib) (t0 : Tib)
-    (Ω : DoubledSpace F)
-    (hΩ : Ω ≠ 0)
-    (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
-    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω) :
-    GeometricAlgebraicState n T flow D Γ →
-      ThermodynamicKMSState n T K
-        (ibInducedObservableWeighted
-          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
-  exact information_wheeler_dewitt_implication_of_ibDynamics_and_indexHypotheses
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
-    (K := K) (β := β)
-    (prob := prob) (pTrajectory := pTrajectory)
-    hStep (x0 := x0) (t0 := t0)
-    (Ω := Ω) hΩ hJointKernel hCommOrthogonal
 
 /--
 Canonical fully derived state-hypothesis Wheeler-DeWitt implication using

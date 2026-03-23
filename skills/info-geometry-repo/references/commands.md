@@ -37,6 +37,7 @@ python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags:blueprin
 ```
 
 The declaration DAG lives in `artifacts/dag/`.
+That refresh emits `full_graph.json`, `index/decls.jsonl`, and the native `structural-topology.json` artifact before the source-sink correspondence layer is regenerated.
 The human-facing blueprint workflow is documented in `blueprint/README.md`.
 
 ## Trusted semantic block export
@@ -126,7 +127,7 @@ Refreshing tracked Lean modules changed in `HEAD` or the current index/worktree 
 python3 tools/docs/update_repo_docs.py --refresh-exports changed
 ```
 
-Refresh the public authoritative declaration graph and regenerate the causal-order report:
+Refresh the public authoritative declaration graph, native structural topology, and regenerate the causal-order report:
 
 ```bash
 python3 tools/infra/refresh_decl_graph.py
@@ -174,6 +175,7 @@ Source-bundle / sink-bundle compression layer and incidence graph:
 
 ```bash
 python3 tools/infra/generate_source_sink_compression.py \
+  --structure artifacts/dag/structural-topology.json \
   --artifact-out artifacts/dag/source-sink-bipartite.json \
   --md-out reports/dag/source-sink-compression.md \
   --json-out reports/dag/source-sink-compression.json \

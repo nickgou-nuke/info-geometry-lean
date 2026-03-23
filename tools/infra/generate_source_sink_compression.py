@@ -29,7 +29,13 @@ if __package__ in (None, ""):
         module_strength_rows,
         normalize_user_path,
     )
-    from tools.pathing import default_decl_graph_file, default_decl_metadata_file, default_source_sink_bipartite_file, repo_root
+    from tools.pathing import (
+        default_decl_graph_file,
+        default_decl_metadata_file,
+        default_decl_structure_file,
+        default_source_sink_bipartite_file,
+        repo_root,
+    )
 else:
     from tools.infra.plot_decl_graph import (
         FRONTIER_CATEGORIES,
@@ -42,11 +48,18 @@ else:
         module_strength_rows,
         normalize_user_path,
     )
-    from tools.pathing import default_decl_graph_file, default_decl_metadata_file, default_source_sink_bipartite_file, repo_root
+    from tools.pathing import (
+        default_decl_graph_file,
+        default_decl_metadata_file,
+        default_decl_structure_file,
+        default_source_sink_bipartite_file,
+        repo_root,
+    )
 
 
 DEFAULT_GRAPH = str(default_decl_graph_file().relative_to(repo_root()))
 DEFAULT_DECLS = str(default_decl_metadata_file().relative_to(repo_root()))
+DEFAULT_STRUCTURE = str(default_decl_structure_file().relative_to(repo_root()))
 DEFAULT_SURFACE_INDEX = "reports/dag/theorem-surface-index.json"
 DEFAULT_MD_OUT = "reports/dag/source-sink-compression.md"
 DEFAULT_JSON_OUT = "reports/dag/source-sink-compression.json"
@@ -95,6 +108,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--graph", default=DEFAULT_GRAPH, help="Declaration DAG JSON from the Lean Indexer.")
     ap.add_argument("--decls", default=DEFAULT_DECLS, help="Declaration metadata JSONL.")
     ap.add_argument("--surface-index", default=DEFAULT_SURFACE_INDEX)
+    ap.add_argument("--structure", default=DEFAULT_STRUCTURE)
     ap.add_argument("--md-out", default=DEFAULT_MD_OUT)
     ap.add_argument("--json-out", default=DEFAULT_JSON_OUT)
     ap.add_argument("--artifact-out", default=DEFAULT_ARTIFACT_OUT)
@@ -111,6 +125,121 @@ def parse_args() -> argparse.Namespace:
 
 def short_name(name: str) -> str:
     return name.rsplit(".", 1)[-1]
+
+
+def load_native_structure(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    return raw if isinstance(raw, dict) else {}
+
+
+def ordered_unique(items: list[str]) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for item in items:
+        if not item or item in seen:
+            continue
+        seen.add(item)
+        out.append(item)
+    return out
+
+
+def build_native_lookup(payload: dict[str, Any]) -> dict[str, Any]:
+    components_by_id: dict[str, dict[str, Any]] = {}
+    decl_to_component: dict[str, dict[str, Any]] = {}
+
+    for row in payload.get("components", []):
+        if not isinstance(row, dict):
+            continue
+        component_id = str(row.get("componentId", ""))
+        if component_id:
+            components_by_id[component_id] = row
+
+    for row in payload.get("membership", []):
+        if not isinstance(row, dict):
+            continue
+        decl_name = str(row.get("declName", ""))
+        component_id = str(row.get("componentId", ""))
+        if not decl_name or not component_id:
+            continue
+        component = components_by_id.get(component_id, {})
+        decl_to_component[decl_name] = {
+            "component_id": component_id,
+            "component_index": int(row.get("componentIndex", 0)),
+            "representative": str(row.get("representative", component.get("representative", ""))),
+            "depth_min": int(component.get("depthMin", 0)),
+            "depth_max": int(component.get("depthMax", 0)),
+            "depth_spread": int(component.get("depthSpread", 0)),
+            "canonical_root_witness": [str(x) for x in component.get("canonicalRootWitness", [])],
+            "canonical_root_witness_component_ids": [str(x) for x in component.get("canonicalRootWitnessComponentIds", [])],
+            "strict_dominator_component_ids": [str(x) for x in component.get("strictDominatorComponentIds", [])],
+            "strict_dominator_representatives": [str(x) for x in component.get("strictDominatorRepresentatives", [])],
+        }
+
+    return {
+        "raw": payload,
+        "components_by_id": components_by_id,
+        "decl_to_component": decl_to_component,
+    }
+
+
+def native_component_corridor(path_nodes: list[str], native_lookup: dict[str, Any]) -> tuple[list[str], list[str]]:
+    decl_to_component = native_lookup.get("decl_to_component", {}) if native_lookup else {}
+    component_ids: list[str] = []
+    representatives: list[str] = []
+    last_component = ""
+    for node in path_nodes:
+        info = decl_to_component.get(node)
+        if not info:
+            continue
+        component_id = str(info.get("component_id", ""))
+        representative = str(info.get("representative", ""))
+        if not component_id or component_id == last_component:
+            continue
+        component_ids.append(component_id)
+        representatives.append(representative)
+        last_component = component_id
+    return component_ids, representatives
+
+
+def summarize_native_decls(decls: list[str], native_lookup: dict[str, Any]) -> dict[str, Any]:
+    decl_to_component = native_lookup.get("decl_to_component", {}) if native_lookup else {}
+    component_ids = ordered_unique([
+        str(decl_to_component[name].get("component_id", ""))
+        for name in decls
+        if name in decl_to_component
+    ])
+    component_infos = [decl_to_component[name] for name in decls if name in decl_to_component]
+    root_witnesses = ordered_unique(
+        [rep for info in component_infos for rep in info.get("canonical_root_witness", [])]
+    )
+    root_witness_component_ids = ordered_unique(
+        [cid for info in component_infos for cid in info.get("canonical_root_witness_component_ids", [])]
+    )
+    strict_dominator_component_ids = ordered_unique(
+        [cid for info in component_infos for cid in info.get("strict_dominator_component_ids", [])]
+    )
+    strict_dominator_representatives = ordered_unique(
+        [rep for info in component_infos for rep in info.get("strict_dominator_representatives", [])]
+    )
+    component_representatives = ordered_unique([
+        str(decl_to_component[name].get("representative", ""))
+        for name in decls
+        if name in decl_to_component
+    ])
+    depth_mins = [int(info.get("depth_min", 0)) for info in component_infos]
+    depth_maxs = [int(info.get("depth_max", 0)) for info in component_infos]
+    return {
+        "component_ids": component_ids,
+        "component_representatives": component_representatives,
+        "root_witnesses": root_witnesses,
+        "root_witness_component_ids": root_witness_component_ids,
+        "strict_dominator_component_ids": strict_dominator_component_ids,
+        "strict_dominator_representatives": strict_dominator_representatives,
+        "depth_min": min(depth_mins) if depth_mins else 0,
+        "depth_max": max(depth_maxs) if depth_maxs else 0,
+    }
 
 
 def collapse_consecutive(items: list[str]) -> list[str]:
@@ -297,6 +426,7 @@ def build_canonical_paths(
     sink_rows: list[dict[str, Any]],
     sink_to_candidates: dict[str, list[dict[str, Any]]],
     source_stats: dict[str, dict[str, Any]],
+    native_lookup: dict[str, Any],
 ) -> list[dict[str, Any]]:
     entries: list[dict[str, Any]] = []
     for sink_row in sink_rows:
@@ -311,6 +441,7 @@ def build_canonical_paths(
             continue
         path_nodes = list(reversed(consumer_to_source))
         path_modules = collapse_consecutive([str(decl_graph.nodes[node].get("module", "unknown")) for node in path_nodes])
+        path_component_ids, path_component_representatives = native_component_corridor(path_nodes, native_lookup)
         bundle = bundle_key_for_path(decl_graph, path_nodes)
         motifs = motif_signature(path_nodes)
         sink_weight = float(SINK_CATEGORY_WEIGHT.get(str(sink_row["category"]), 1.0))
@@ -325,6 +456,8 @@ def build_canonical_paths(
                 "sink_category": str(sink_row["category"]),
                 "path_nodes": path_nodes,
                 "path_modules": path_modules,
+                "path_component_ids": path_component_ids,
+                "path_component_representatives": path_component_representatives,
                 "path_length": len(path_nodes) - 1,
                 "motif_signature": motifs,
                 "motif_signature_text": " -> ".join(motifs),
@@ -565,6 +698,7 @@ def build_bipartite_artifact(
     bundle_ids: dict[tuple[str, ...], str],
     entries: list[dict[str, Any]],
     hydrated_modules: list[dict[str, Any]],
+    native_lookup: dict[str, Any],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     hydrated_by_module = {row["module"]: row for row in hydrated_modules}
     incidence: dict[tuple[str, str, str], dict[str, Any]] = {}
@@ -609,6 +743,8 @@ def build_bipartite_artifact(
         bundle_categories = Counter(str(decl_graph.nodes[name].get("surface_category", "unknown")) for name in bundle_decls)
         bundle_kinds = Counter(str(decl_graph.nodes[name].get("kind", "unknown")) for name in bundle_decls)
         constructive_count = sum(1 for name in bundle_decls if str(decl_graph.nodes[name].get("surface_category", "unknown")) == "likely_constructive")
+        native_summary = summarize_native_decls(bundle_decls, native_lookup)
+        component_ids = list(native_summary["component_ids"])
         atomic_nodes.append(
             {
                 "atomic_id": str(row["bundle_id"]),
@@ -620,7 +756,15 @@ def build_bipartite_artifact(
                 "source_categories": dict(sorted(bundle_categories.items())),
                 "source_kinds": dict(sorted(bundle_kinds.items())),
                 "source_purity_score": round(constructive_count / max(len(bundle_decls), 1), 4),
-                "scc_id": None,
+                "scc_id": component_ids[0] if len(component_ids) == 1 else None,
+                "native_component_ids": component_ids,
+                "native_component_representatives": list(native_summary["component_representatives"]),
+                "native_root_witness_component_ids": list(native_summary["root_witness_component_ids"]),
+                "native_root_witnesses": list(native_summary["root_witnesses"]),
+                "native_strict_dominator_component_ids": list(native_summary["strict_dominator_component_ids"]),
+                "native_strict_dominator_representatives": list(native_summary["strict_dominator_representatives"]),
+                "native_depth_min": int(native_summary["depth_min"]),
+                "native_depth_max": int(native_summary["depth_max"]),
                 "sink_modules": list(row["sink_modules"]),
                 "sink_names": list(row["sink_names"]),
                 "path_multiplicity": int(row["path_multiplicity"]),
@@ -632,6 +776,7 @@ def build_bipartite_artifact(
 
     hydrated_nodes: list[dict[str, Any]] = []
     for row in hydrated_modules:
+        native_summary = summarize_native_decls(list(row["supporting_atomic_decls"]), native_lookup)
         hydrated_nodes.append(
             {
                 "hydrated_id": str(row["module"]),
@@ -645,6 +790,12 @@ def build_bipartite_artifact(
                 "path_multiplicity": int(row["path_multiplicity"]),
                 "path_motif_signatures": list(row["path_motif_signatures"]),
                 "compression_potential": float(row["compression_potential"]),
+                "native_component_ids": list(native_summary["component_ids"]),
+                "native_component_representatives": list(native_summary["component_representatives"]),
+                "native_root_witnesses": list(native_summary["root_witnesses"]),
+                "native_strict_dominator_representatives": list(native_summary["strict_dominator_representatives"]),
+                "native_depth_min": int(native_summary["depth_min"]),
+                "native_depth_max": int(native_summary["depth_max"]),
             }
         )
 
@@ -653,6 +804,9 @@ def build_bipartite_artifact(
         hydrated = hydrated_by_module.get(stats["hydrated_id"], {})
         top_motif = stats["motif_counts"].most_common(1)[0][0] if stats["motif_counts"] else ""
         canonical_paths = list(stats["canonical_witness_paths"])
+        native_component_ids, native_component_representatives = native_component_corridor(
+            canonical_paths[0] if canonical_paths else [], native_lookup
+        )
         incidence_edges.append(
             {
                 "atomic_id": str(stats["atomic_id"]),
@@ -666,6 +820,8 @@ def build_bipartite_artifact(
                 "compression_score": round(float(stats["compression_score"]), 3),
                 "canonical_path_example": canonical_paths[0] if canonical_paths else [],
                 "canonical_witness_paths": canonical_paths,
+                "native_canonical_component_path_example": native_component_ids,
+                "native_canonical_component_representatives": native_component_representatives,
                 "sink_names": sorted(stats["sink_names"]),
                 "sink_modules": sorted(stats["sink_modules"]),
                 "hydrated_role": str(hydrated.get("sink_role", "unknown")),
@@ -829,7 +985,8 @@ def render_markdown(
     lines.append("")
     lines.append("Model:")
     lines.append("- atomic graph: declaration-to-declaration DAG under `artifacts/dag/full_graph.json`")
-    lines.append("- incidence layer: source bundles -> sink theorems grouped by canonical atomic support paths")
+    lines.append("- native structure: condensed SCC topology, dominator summaries, and canonical root witness paths under `artifacts/dag/structural-topology.json`")
+    lines.append("- incidence layer: source bundles -> sink theorems grouped by canonical atomic support paths and enriched with native component corridors")
     lines.append("- bundle ids are content-stable hashes of sorted bundle members, not rank-based labels")
     lines.append("- hydrated projection: module-level carriers enriched with source bundles, sink families, motifs, and compression potential")
     lines.append("")
@@ -914,6 +1071,7 @@ def main() -> int:
     graph_path = normalize_user_path(args.graph, root)
     decls_path = normalize_user_path(args.decls, root)
     surface_index_path = normalize_user_path(args.surface_index, root)
+    structure_path = normalize_user_path(args.structure, root)
     md_out = normalize_user_path(args.md_out, root)
     json_out = normalize_user_path(args.json_out, root)
     artifact_out = normalize_user_path(args.artifact_out, root)
@@ -921,6 +1079,8 @@ def main() -> int:
     svg_out = normalize_user_path(args.svg_out, root)
 
     decl_meta = load_decl_meta(decls_path, root)
+    native_structure = load_native_structure(structure_path)
+    native_lookup = build_native_lookup(native_structure)
     surface_categories = load_surface_categories(surface_index_path, decl_meta)
     decl_graph = build_declaration_graph(graph_path, decl_meta, surface_categories)
     flow_graph = decl_graph.reverse(copy=True)
@@ -949,7 +1109,7 @@ def main() -> int:
             row["name"],
         ),
     )
-    entries = build_canonical_paths(decl_graph, sink_rows, sink_to_candidates, source_stats)
+    entries = build_canonical_paths(decl_graph, sink_rows, sink_to_candidates, source_stats, native_lookup)
     bundle_rows, bundle_ids = summarize_bundles(entries)
     motif_rows = summarize_motif_families(entries)
     hydrated_modules, hydrated_edges = summarize_hydrated_projection(decl_graph, entries, bundle_ids)
@@ -959,6 +1119,7 @@ def main() -> int:
         bundle_ids,
         entries,
         hydrated_modules,
+        native_lookup,
     )
     incidence_graph = build_incidence_graph(
         decl_graph,
@@ -973,8 +1134,9 @@ def main() -> int:
         "kind": "source_sink_bipartite",
         "model": {
             "atomic_graph": str(graph_path.relative_to(root)),
+            "native_structure": str(structure_path.relative_to(root)) if structure_path.exists() else "",
             "surface_index": str(surface_index_path.relative_to(root)),
-            "incidence_layer": "canonical source bundles -> sink theorems via shortest atomic support paths",
+            "incidence_layer": "canonical source bundles -> sink theorems via shortest atomic support paths, enriched by native component ids and witness corridors",
             "hydrated_projection": "module carriers enriched with source bundles, sink families, motifs, and compression potential",
             "flow_orientation": "constructive sources -> downstream sinks",
         },
@@ -1019,6 +1181,7 @@ def main() -> int:
     nx.write_graphml(incidence_graph, graphml_out)
     plot_incidence_graph(incidence_graph, svg_out)
 
+    print(f"[source-sink-compression] used {structure_path}")
     print(f"[source-sink-compression] wrote {md_out}")
     print(f"[source-sink-compression] wrote {artifact_out}")
     print(f"[source-sink-compression] wrote {json_out}")

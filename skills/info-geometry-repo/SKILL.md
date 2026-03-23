@@ -48,11 +48,12 @@ For large files, semantic block export through the external stdlib server path i
 
 Artifact placement matters:
 - `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl` are the public authoritative atomic declaration-DAG inputs for causal-order analysis.
+- `artifacts/dag/structural-topology.json` is the public authoritative native structural-analysis layer with stable condensation ids, membership, dominators, and canonical root-witness paths.
 - `artifacts/dag/source-sink-bipartite.json` is the public authoritative correspondence object between atomic declaration truth and hydrated readable carriers.
 - `.build/` remains a transient build cache and explicit compatibility fallback, not the documented public DAG surface.
 - `reports/dag/*.semantic-block.stdlib.json` are trusted semantic block exports.
 - `reports/dag/true-root-order.{md,json}`, `reports/dag/openclaw-targets.{md,json}`, and the GraphML / SVG source-sink views are derived reports and should be regenerated, not hand-maintained.
-- If those layers disagree, trust the atomic DAG first, then the bipartite correspondence artifact, and regenerate the `reports/dag/` views.
+- If those layers disagree, trust the atomic DAG first, then the native structural topology, then the bipartite correspondence artifact, and regenerate the `reports/dag/` views.
 
 ## Hard Proof Policy
 

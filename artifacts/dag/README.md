@@ -6,18 +6,19 @@ artifacts used for causal-order analysis.
 Current refresh path:
 
 ```bash
-python3 tools/refresh_decl_graph.py
+python3 tools/infra/refresh_decl_graph.py
 ```
 
 That wrapper calls:
 
 ```bash
-lake env lean --run lean/DAG/Indexer.lean InfoGeometry.All InfoGeometry artifacts/dag/index artifacts/dag/full_graph.json
+lake env lean --run lean/DAG/Indexer.lean   InfoGeometry.All   InfoGeometry   artifacts/dag/index   artifacts/dag/full_graph.json   artifacts/dag/structural-topology.json
 ```
 
 Authoritative inputs here:
 - `artifacts/dag/full_graph.json`
 - `artifacts/dag/index/decls.jsonl`
+- `artifacts/dag/structural-topology.json`
 - `artifacts/dag/source-sink-bipartite.json`
 
 Derived reports live elsewhere:
@@ -45,7 +46,17 @@ Policy:
 - treat `.build/` as a transient Lean build cache and compatibility fallback only
 - regenerate these artifacts; do not hand-edit them
 
-`source-sink-bipartite.json` is the maintained correspondence object between the atomic declaration DAG and the hydrated readable layer.
+`structural-topology.json` is the maintained native structural-analysis object downstream of the Lean `HydratedGraph`.
+
+It exposes:
+- stable component ids
+- component membership
+- condensation edges
+- root/capstone/layer summaries
+- strict dominator summaries
+- canonical root-witness component paths
+
+`source-sink-bipartite.json` is the maintained correspondence object between the atomic declaration DAG, the native structural layer, and the hydrated readable layer.
 
 It exposes a stable bipartite schema:
 - `atomic_nodes`: source bundles / condensed atomic packets

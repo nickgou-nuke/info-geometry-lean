@@ -15,26 +15,32 @@ The DAG subsystem is not only a dependency exporter. It includes:
 
 ## 0) What This Subsystem Gives You
 
-There are three different views of the theory, and they should not be mixed:
+There are four different views of the theory, and they should not be mixed:
 
 1. Declaration DAG
 - Nodes are declarations.
 - Edges are type/value dependencies.
 - Use this for whole-library topology, dominators, SCCs, and coarse bottleneck analysis.
 
-2. Block export / causal provenance
+2. Source-sink bipartite correspondence artifact
+- Nodes are typed atomic packets and hydrated readable carriers.
+- Incidence edges preserve bundle ids, motif signatures, witness counts, compression scores, and canonical path examples.
+- Use this for source-sink compression, path-packet transport, and projection from atomic theorem truth into readable module carriers.
+
+3. Block export / causal provenance
 - Nodes are source command blocks.
 - The exporter records which declarations each block produced.
 - This is the right layer for source-level attribution and semantic slicing.
 
-3. Semantic block graph
+4. Semantic block graph
 - Built from block export, but filtered to `primaryProduces`.
 - This removes generated `_proof_*`, `match_*`, and auxiliary elaborator noise from the semantic presentation layer while keeping causal provenance intact underneath.
 - It now also carries `primaryDeps`, explicit semantic block edges, and enough metadata for frontier diffusion in Python.
 
 The practical rule is:
 
-Declaration graph for global topology.
+Declaration graph for global topology and atomic truth.
+Bipartite correspondence artifact for generation, compression, and bundle transport.
 Semantic block graph for human-facing theory structure.
 
 ## 0.5) Hierarchy And Status
@@ -44,7 +50,8 @@ The repository currently has four graph/export lanes, and they should be kept se
 1. Authoritative declaration-DAG lane
 - [Indexer.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/Indexer.lean)
 - low-level exporter behind the public `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl` lane
-- this is the canonical source for causal order, coverage, and rooted partial-order analysis
+- [tools/infra/generate_source_sink_compression.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_source_sink_compression.py) then lifts that atomic export into the public correspondence object `artifacts/dag/source-sink-bipartite.json`
+- together these are the canonical source for causal order, coverage, and correspondence between atomic truth and hydrated readable carriers
 
 2. Authoritative semantic-block lane
 - [BlockExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/BlockExport.lean) for in-process block slicing
@@ -66,7 +73,15 @@ These compatibility surfaces are archived for inspection only and are not the ca
 
 ## 1) Current Trust Model
 
-The repository now has two export paths with different trust levels:
+For public graph artifacts, the trust order is:
+
+1. Atomic declaration DAG under `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`
+2. Public correspondence artifact under `artifacts/dag/source-sink-bipartite.json`
+3. Readable reports and graph views under `reports/dag/`
+
+If those layers disagree, trust the atomic DAG first, then the bipartite correspondence artifact, and regenerate the readable reports.
+
+The repository also has two source-attribution export paths with different trust levels:
 
 1. In-process block export (`DAG.BlockExport.exportFile`)
 - Fast and useful for small/medium files.
@@ -85,7 +100,7 @@ This process boundary matters. It avoids host/guest `[init]` collisions that can
 
 ## 2) Conceptual Model
 
-At the center are two graph forms:
+At the center are three graph forms:
 
 1. `Graph alpha` in `Basic.lean`
 - Nodes are declarations or synthetic entities.
@@ -94,9 +109,14 @@ At the center are two graph forms:
 2. `HydratedGraph alpha` in `Basic.lean` + `Hydrate.lean`
 - Adds SCC decomposition, condensed DAG, predecessor map, topological order, and dominator sets.
 
+3. Public source-sink correspondence artifact under `artifacts/dag/source-sink-bipartite.json`
+- Built downstream of the exported declaration DAG.
+- Connects typed atomic source bundles to hydrated readable carriers.
+- Preserves bundle ids, motif signatures, witness counts, compression scores, and canonical path examples.
+
 This gives a progression:
 
-Environment -> Graph -> SCC DAG -> Metrics/Queries/Exports
+Environment -> Graph -> SCC DAG -> Public correspondence artifact -> Metrics/Queries/Readable projections
 
 ## 3) Layered Architecture
 
@@ -162,9 +182,9 @@ The distinction is intentional:
 
 ## 5) Primary Workflows
 
-### Workflow A: Authoritative declaration topology and causal order
+### Workflow A: Authoritative declaration topology, correspondence, and causal order
 
-Use this when you want the current rooted partial order, coverage metrics, and declaration-level causal geometry over the authoritative umbrella import root.
+Use this when you want the current rooted partial order, coverage metrics, declaration-level causal geometry, and the maintained correspondence layer over the authoritative umbrella import root.
 
 Step 1: export the authoritative declaration graph and declaration index
 
@@ -172,7 +192,14 @@ Step 1: export the authoritative declaration graph and declaration index
 python3 tools/refresh_decl_graph.py
 ```
 
-Step 2: build the rooted causal-order report
+Step 2: derive the public source-sink correspondence artifact
+
+```bash
+python3 tools/infra/generate_source_sink_compression.py \
+  --artifact-out artifacts/dag/source-sink-bipartite.json
+```
+
+Step 3: build the rooted causal-order report
 
 ```bash
 python3 tools/generate_causal_report.py \
@@ -180,7 +207,7 @@ python3 tools/generate_causal_report.py \
   --json-out reports/dag/true-root-order.json
 ```
 
-Step 3: classify declaration-bearing files still outside `InfoGeometry.All`
+Step 4: classify declaration-bearing files still outside `InfoGeometry.All`
 
 ```bash
 python3 tools/classify_missing_all.py
@@ -190,6 +217,7 @@ Use this path for:
 - root-set extraction,
 - topological layers,
 - declaration coverage,
+- source-bundle / sink-carrier correspondence,
 - `InfoGeometry.All` absorption planning,
 - causal-order reports.
 

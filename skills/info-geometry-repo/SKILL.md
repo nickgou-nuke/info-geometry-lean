@@ -33,22 +33,26 @@ The repo has two layers:
 Do not mix these graph views:
 
 1. declaration DAG
-- global topology, SCCs, dominators, bottlenecks
+- global topology, SCCs, dominators, bottlenecks, and atomic theorem truth
 
-2. block export
+2. source-sink bipartite correspondence artifact
+- source bundles, hydrated carriers, repeated path motifs, witness counts, and compression potential
+
+3. block export
 - source attribution, slices, quiver emission
 
-3. semantic block graph
+4. semantic block graph
 - purified human-facing theory structure using `primaryProduces`
 
 For large files, semantic block export through the external stdlib server path is the trusted route.
 
 Artifact placement matters:
-- `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl` are the public authoritative declaration-level inputs for causal-order analysis.
+- `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl` are the public authoritative atomic declaration-DAG inputs for causal-order analysis.
+- `artifacts/dag/source-sink-bipartite.json` is the public authoritative correspondence object between atomic declaration truth and hydrated readable carriers.
 - `.build/` remains a transient build cache and explicit compatibility fallback, not the documented public DAG surface.
 - `reports/dag/*.semantic-block.stdlib.json` are trusted semantic block exports.
-- `reports/dag/true-root-order.{md,json}` and `reports/dag/openclaw-targets.{md,json}` are derived reports and should be regenerated, not hand-maintained.
-- If those layers disagree, trust the `artifacts/dag/` declaration graph as the source of causal order and regenerate the `reports/dag/` views.
+- `reports/dag/true-root-order.{md,json}`, `reports/dag/openclaw-targets.{md,json}`, and the GraphML / SVG source-sink views are derived reports and should be regenerated, not hand-maintained.
+- If those layers disagree, trust the atomic DAG first, then the bipartite correspondence artifact, and regenerate the `reports/dag/` views.
 
 ## Hard Proof Policy
 

@@ -567,13 +567,18 @@ def module_role(roles: set[str]) -> str:
     return "mixed"
 
 
+
+
 def summarize_hydrated_projection(
     decl_graph: nx.DiGraph,
     entries: list[dict[str, Any]],
     bundle_ids: dict[tuple[str, ...], str],
+    native_lookup: dict[str, Any],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     module_stats: dict[str, dict[str, Any]] = {}
     edge_stats: dict[tuple[str, str], dict[str, Any]] = {}
+    corridor_modules: dict[tuple[str, ...], set[str]] = defaultdict(set)
+    corridor_representatives: dict[tuple[str, ...], tuple[str, ...]] = {}
 
     for entry in entries:
         bundle = tuple(entry["source_bundle"])
@@ -585,6 +590,10 @@ def summarize_hydrated_projection(
         module_path = collapse_consecutive(list(entry["path_modules"]))
         motif_text = str(entry["motif_signature_text"])
         compression = float(entry["compression_potential"])
+        corridor_ids = tuple(str(x) for x in entry.get("path_component_ids", []) if str(x))
+        corridor_reps = tuple(str(x) for x in entry.get("path_component_representatives", []) if str(x))
+        if corridor_ids and corridor_ids not in corridor_representatives:
+            corridor_representatives[corridor_ids] = corridor_reps
 
         for module in module_path:
             stats = module_stats.setdefault(
@@ -599,6 +608,7 @@ def summarize_hydrated_projection(
                     "sink_names": set(),
                     "path_multiplicity": 0,
                     "compression_potential": 0.0,
+                    "corridors": set(),
                 },
             )
             stats["path_multiplicity"] += 1
@@ -613,6 +623,9 @@ def summarize_hydrated_projection(
                 stats["roles"].add("source")
             else:
                 stats["roles"].add("transport")
+            if corridor_ids:
+                stats["corridors"].add(corridor_ids)
+                corridor_modules[corridor_ids].add(module)
             for node in entry["path_nodes"]:
                 if str(decl_graph.nodes[node].get("module", "unknown")) == module:
                     stats["atomic_support"].add(node)
@@ -637,13 +650,45 @@ def summarize_hydrated_projection(
             if len(edge["atomic_path_examples"]) < 3:
                 edge["atomic_path_examples"].append(list(entry["path_nodes"]))
 
+    module_native_summaries = {
+        module: summarize_native_decls(sorted(stats["atomic_support"]), native_lookup)
+        for module, stats in module_stats.items()
+    }
+    global_dominator_counts: Counter[str] = Counter()
+    for native_summary in module_native_summaries.values():
+        for cid in set(native_summary["strict_dominator_component_ids"]):
+            global_dominator_counts[cid] += 1
+
     hydrated_modules: list[dict[str, Any]] = []
     for module, stats in module_stats.items():
+        native_summary = module_native_summaries[module]
         top_bundle = stats["bundle_counts"].most_common(1)[0][0] if stats["bundle_counts"] else ""
         motif_rows = [
             {"signature": signature, "count": count}
             for signature, count in stats["motif_counts"].most_common(3)
         ]
+        corridor_reuse = sum(
+            max(0, len(corridor_modules.get(corridor, set())) - 1)
+            for corridor in stats["corridors"]
+        )
+        dominator_pressure = sum(
+            max(0, global_dominator_counts.get(cid, 0) - 1)
+            for cid in native_summary["strict_dominator_component_ids"]
+        )
+        top_corridor = max(
+            stats["corridors"],
+            key=lambda corridor: (
+                len(corridor_modules.get(corridor, set())),
+                len(corridor),
+                corridor_representatives.get(corridor, corridor),
+            ),
+            default=(),
+        )
+        top_root_witness = (
+            native_summary["root_witnesses"][0]
+            if native_summary["root_witnesses"]
+            else (sorted(stats["atomic_support"])[0] if stats["atomic_support"] else "")
+        )
         hydrated_modules.append(
             {
                 "module": module,
@@ -654,11 +699,26 @@ def summarize_hydrated_projection(
                 "path_multiplicity": int(stats["path_multiplicity"]),
                 "path_motif_signatures": motif_rows,
                 "compression_potential": round(float(stats["compression_potential"]), 3),
+                "native_component_ids": list(native_summary["component_ids"]),
+                "native_component_representatives": list(native_summary["component_representatives"]),
+                "native_root_witnesses": list(native_summary["root_witnesses"]),
+                "native_strict_dominator_component_ids": list(native_summary["strict_dominator_component_ids"]),
+                "native_strict_dominator_representatives": list(native_summary["strict_dominator_representatives"]),
+                "native_depth_min": int(native_summary["depth_min"]),
+                "native_depth_max": int(native_summary["depth_max"]),
+                "native_dominator_pressure": int(dominator_pressure),
+                "native_corridor_reuse": int(corridor_reuse),
+                "native_corridor_count": int(len(stats["corridors"])),
+                "top_root_witness": str(top_root_witness),
+                "top_native_corridor_component_ids": list(top_corridor),
+                "top_native_corridor_representatives": list(corridor_representatives.get(top_corridor, ())),
             }
         )
     hydrated_modules.sort(
         key=lambda row: (
             -float(row["compression_potential"]),
+            -int(row["native_corridor_reuse"]),
+            -int(row["native_dominator_pressure"]),
             -int(row["path_multiplicity"]),
             row["module"],
         )
@@ -776,7 +836,6 @@ def build_bipartite_artifact(
 
     hydrated_nodes: list[dict[str, Any]] = []
     for row in hydrated_modules:
-        native_summary = summarize_native_decls(list(row["supporting_atomic_decls"]), native_lookup)
         hydrated_nodes.append(
             {
                 "hydrated_id": str(row["module"]),
@@ -790,12 +849,19 @@ def build_bipartite_artifact(
                 "path_multiplicity": int(row["path_multiplicity"]),
                 "path_motif_signatures": list(row["path_motif_signatures"]),
                 "compression_potential": float(row["compression_potential"]),
-                "native_component_ids": list(native_summary["component_ids"]),
-                "native_component_representatives": list(native_summary["component_representatives"]),
-                "native_root_witnesses": list(native_summary["root_witnesses"]),
-                "native_strict_dominator_representatives": list(native_summary["strict_dominator_representatives"]),
-                "native_depth_min": int(native_summary["depth_min"]),
-                "native_depth_max": int(native_summary["depth_max"]),
+                "native_component_ids": list(row.get("native_component_ids", [])),
+                "native_component_representatives": list(row.get("native_component_representatives", [])),
+                "native_root_witnesses": list(row.get("native_root_witnesses", [])),
+                "native_strict_dominator_component_ids": list(row.get("native_strict_dominator_component_ids", [])),
+                "native_strict_dominator_representatives": list(row.get("native_strict_dominator_representatives", [])),
+                "native_depth_min": int(row.get("native_depth_min", 0)),
+                "native_depth_max": int(row.get("native_depth_max", 0)),
+                "native_dominator_pressure": int(row.get("native_dominator_pressure", 0)),
+                "native_corridor_reuse": int(row.get("native_corridor_reuse", 0)),
+                "native_corridor_count": int(row.get("native_corridor_count", 0)),
+                "top_root_witness": str(row.get("top_root_witness", "")),
+                "top_native_corridor_component_ids": list(row.get("top_native_corridor_component_ids", [])),
+                "top_native_corridor_representatives": list(row.get("top_native_corridor_representatives", [])),
             }
         )
 
@@ -1043,13 +1109,13 @@ def render_markdown(
     lines.append("")
     lines.append("## Hydrated Module Projection")
     lines.append("")
-    lines.append("| Rank | Module | Role | Paths | Compression | Source bundle | Top motif |")
-    lines.append("| --- | --- | --- | ---: | ---: | --- | --- |")
+    lines.append("| Rank | Module | Role | Paths | Compression | Dom pressure | Corridor reuse | Top root witness |")
+    lines.append("| --- | --- | --- | ---: | ---: | ---: | ---: | --- |")
     for rank, row in enumerate(hydrated_modules[:15], start=1):
-        top_motif = row["path_motif_signatures"][0]["signature"] if row["path_motif_signatures"] else ""
         lines.append(
             f"| {rank} | `{row['module']}` | `{row['sink_role']}` | {int(row['path_multiplicity'])} | "
-            f"{float(row['compression_potential']):.3f} | `{row['minimal_source_bundle']}` | `{top_motif}` |"
+            f"{float(row['compression_potential']):.3f} | {int(row.get('native_dominator_pressure', 0))} | "
+            f"{int(row.get('native_corridor_reuse', 0))} | `{row.get('top_root_witness', '')}` |"
         )
     lines.append("")
     lines.append("## Hydrated Edge Projection")
@@ -1112,7 +1178,7 @@ def main() -> int:
     entries = build_canonical_paths(decl_graph, sink_rows, sink_to_candidates, source_stats, native_lookup)
     bundle_rows, bundle_ids = summarize_bundles(entries)
     motif_rows = summarize_motif_families(entries)
-    hydrated_modules, hydrated_edges = summarize_hydrated_projection(decl_graph, entries, bundle_ids)
+    hydrated_modules, hydrated_edges = summarize_hydrated_projection(decl_graph, entries, bundle_ids, native_lookup)
     atomic_nodes, hydrated_nodes, incidence_edges = build_bipartite_artifact(
         decl_graph,
         bundle_rows,

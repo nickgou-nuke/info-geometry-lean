@@ -137,11 +137,16 @@ python3 tools/infra/generate_causal_report.py \
   --json-out reports/dag/true-root-order.json
 ```
 
-OpenClaw target selector from the current causal-order JSON:
+Native structural hotspot refresh plus OpenClaw target selection:
 
 ```bash
+python3 tools/infra/generate_source_sink_compression.py
+
+python3 tools/infra/check_bipartite_bleed.py
+
 python3 tools/infra/select_openclaw_target.py \
   --input reports/dag/true-root-order.json \
+  --structural-hotspots reports/dag/structural-hotspots.json \
   --json-out reports/dag/openclaw-targets.json \
   --md-out reports/dag/openclaw-targets.md
 ```

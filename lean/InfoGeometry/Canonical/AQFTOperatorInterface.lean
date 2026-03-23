@@ -1,4 +1,6 @@
-import InfoGeometry.Canonical.QFTTDFTLaunchpad
+import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.IBCore
 import Mathlib.Analysis.CStarAlgebra.Basic
 import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
@@ -20,7 +22,6 @@ open InfoGeometry.Krein
 open InfoGeometry.Canonical.KMSSinkhornBridge
 open InfoGeometry.Canonical.IB
 open InfoGeometry.Canonical.MoE
-open InfoGeometry.Canonical.QFTTDFTLaunchpad
 open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical.RicciMongeAmpere
 
@@ -52,7 +53,9 @@ into an abstract operator target.
 No algebraic or star-preserving properties are imposed here.
 -/
 structure AQFTOperatorInterpretation
-    (F : Type*) [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] where
+    (F : Type*) (Obs : Type*)
+    [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+    [NonUnitalNormedRing Obs] [StarRing Obs] where
   interpret : AlgebraEnd F → Obs
 
 /-- Theorem `cstarReady_of_instance`. -/
@@ -117,7 +120,7 @@ def firstLegCompression (A : AlgebraEnd E) : RealHilbertObs E :=
 
 /-- Concrete interpretation into real Hilbert bounded operators via first-leg compression. -/
 def realHilbertCompressionInterpretation :
-    AQFTOperatorInterpretation E (Obs := RealHilbertObs E) where
+    AQFTOperatorInterpretation E (RealHilbertObs E) where
   interpret := firstLegCompression (E := E)
 
 /-- Theorem `realHilbertOp_cstarReady`. -/
@@ -129,16 +132,6 @@ theorem realHilbertOp_cstarReady :
 theorem realHilbertOp_completeCStarReady :
     IsCompleteCStarReady (Obs := RealHilbertObs E) := by
   exact ⟨realHilbertOp_cstarReady (E := E), inferInstance⟩
-
-/--
-Package the concrete real-Hilbert compression interpretation with the complete
-C*-readiness of its target.
--/
-theorem realHilbertCompressionInterpretation_packaged_with_completeCStarReady :
-    Nonempty (AQFTOperatorInterpretation E (Obs := RealHilbertObs E))
-      ∧ IsCompleteCStarReady (Obs := RealHilbertObs E) := by
-  exact ⟨⟨realHilbertCompressionInterpretation (E := E)⟩,
-    realHilbertOp_completeCStarReady (E := E)⟩
 
 /-! ### Complex Hilbert model (adjoint/star bounded operators) -/
 
@@ -191,12 +184,14 @@ def complexFirstLegCompression (A : ComplexHilbertOp H) : ComplexHilbertObs H :=
 
 /-- Complex-operator interpretation wrapper (complex-source counterpart). -/
 structure ComplexAQFTOperatorInterpretation
-    (Obs : Type*) [NonUnitalNormedRing Obs] [StarRing Obs] where
+    (H : Type*) (Obs : Type*)
+    [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+    [NonUnitalNormedRing Obs] [StarRing Obs] where
   interpret : ComplexHilbertOp H → Obs
 
 /-- Complex interpretation into Hilbert bounded operators via first-leg compression. -/
 def complexHilbertCompressionInterpretation :
-    ComplexAQFTOperatorInterpretation (H := H) (Obs := ComplexHilbertObs H) where
+    ComplexAQFTOperatorInterpretation H (ComplexHilbertObs H) where
   interpret := complexFirstLegCompression (H := H)
 
 /-- Theorem `complexHilbertOp_cstarReady`. -/
@@ -209,16 +204,6 @@ theorem complexHilbertOp_completeCStarReady :
     IsCompleteCStarReady (Obs := ComplexHilbertObs H) := by
   exact ⟨complexHilbertOp_cstarReady (H := H), inferInstance⟩
 
-/--
-Package the concrete complex-Hilbert compression interpretation with the
-complete C*-readiness of its target.
--/
-theorem complexHilbertCompressionInterpretation_packaged_with_completeCStarReady :
-    Nonempty (ComplexAQFTOperatorInterpretation (H := H) (Obs := ComplexHilbertObs H))
-      ∧ IsCompleteCStarReady (Obs := ComplexHilbertObs H) := by
-  exact ⟨⟨complexHilbertCompressionInterpretation (H := H)⟩,
-    complexHilbertOp_completeCStarReady (H := H)⟩
-
 end ConcreteHilbertModels
 
 section KMSInterface
@@ -228,102 +213,6 @@ variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSp
 variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs] [CStarRing Obs]
 
 end KMSInterface
-
-section FockInterface
-
-variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs] [CStarRing Obs] [CompleteSpace Obs]
-
-/--
-Packaging theorem:
-pair complete-C*-readiness of the target with the already-proved Bogoliubov
-projector superalgebra and the vacuum-transported grand-canonical Euler
-collapse.
--/
-theorem grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_packaged_with_completeCStarReady
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsCompleteCStarReady (Obs := Obs)
-      ∧ fockAnticommutator (E := E)
-          (bogoliubovAnnihilation (E := E) B)
-          (bogoliubovCreation (E := E) B)
-          = (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
-      ∧ fockCommutator (E := E)
-          (bogoliubovAnnihilation (E := E) B)
-          (bogoliubovCreation (E := E) B) = 0
-      ∧ grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-            = ψ + η • H ψ := by
-  refine ⟨completeCStarReady_of_instance (Obs := Obs), ?_, ?_, ?_⟩
-  · exact (bogoliubov_projector_superalgebra (E := E) B).1
-  · exact (bogoliubov_projector_superalgebra (E := E) B).2
-  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
-      (E := E) (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
-
-end FockInterface
-
-section UnifiedInterface
-
-variable (n : Nat)
-variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
-variable {ObsKMS : Type*} [NonUnitalNormedRing ObsKMS] [StarRing ObsKMS] [CStarRing ObsKMS]
-variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable {ObsFock : Type*} [NonUnitalNormedRing ObsFock] [StarRing ObsFock]
-  [CStarRing ObsFock] [CompleteSpace ObsFock]
-
-/--
-Canonical AQFT readiness endpoint carrying the doubled-projector super-pair
-alongside the concrete AQFT closure statements.
--/
-theorem aqft_readiness_package_with_projectorSuperPair_base
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (hClosure : SinkhornKMSClosure n T K ω β)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsCStarReady (Obs := ObsKMS)
-      ∧ IsCompleteCStarReady (Obs := ObsFock)
-      ∧ SinkhornKMSClosure n T K ω β
-      ∧ IsProjectorSuperPair
-          (InfoGeometry.Quantum.annihilationOp (E := E))
-          (InfoGeometry.Quantum.creationOp (E := E))
-      ∧ grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-            = ψ + η • H ψ := by
-  refine ⟨?_, ?_, ?_, projectorSuperPair_base (E := E), ?_⟩
-  · exact cstarReady_of_instance (Obs := ObsKMS)
-  · exact completeCStarReady_of_instance (Obs := ObsFock)
-  · exact hClosure
-  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
-      (E := E) (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
-
-end UnifiedInterface
 
 section UnifiedLaunchpadInterface
 
@@ -335,161 +224,6 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSp
 variable {ObsFock : Type*} [NonUnitalNormedRing ObsFock] [StarRing ObsFock]
   [CStarRing ObsFock] [CompleteSpace ObsFock]
 variable {Θ : Type*} [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]
-
-/--
-Unified AQFT/TDFT launchpad packaged together with operator-target readiness.
--/
-theorem aqft_tdft_constructive_launchpad_packaged_with_aqft_readiness
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ0 : InfoGeometry.Krein.DoubledSpace E)
-    (ψ : Θ → ℝ)
-    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
-    (flow : InfoGeometry.Canonical.RGFlow.InformationFlow E)
-    (scale0 : ℝ)
-    (hClosure : SinkhornKMSClosure n T K ω β)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
-    (hHK : HohenbergKohnDualState ψ ψStar)
-    (hStationary : InfoGeometry.Canonical.RGFlow.IsStationaryAtScale flow scale0) :
-    IsCStarReady (Obs := ObsKMS)
-      ∧ IsCompleteCStarReady (Obs := ObsFock)
-      ∧ SinkhornKMSClosure n T K ω β
-      ∧ grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ0
-            = ψ0 + η • H ψ0
-      ∧ HohenbergKohnDualState ψ ψStar
-      ∧ RungeGrossStationaryDualState flow scale0 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact cstarReady_of_instance (Obs := ObsKMS)
-  · exact completeCStarReady_of_instance (Obs := ObsFock)
-  · exact hClosure
-  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
-      (E := E) (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ := ψ0) hVacSplit
-  · exact hHK
-  · exact rungeGrossStationaryDualState_of_stationaryAtScale
-      (flow := flow) (scale0 := scale0) hStationary
-
-/--
-Unified AQFT/TDFT launchpad with Bogoliubov projector-superalgebra packaged
-together with operator-target readiness.
--/
-theorem aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra_packaged_with_aqft_readiness
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ0 : InfoGeometry.Krein.DoubledSpace E)
-    (ψ : Θ → ℝ)
-    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
-    (flow : InfoGeometry.Canonical.RGFlow.InformationFlow E)
-    (scale0 : ℝ)
-    (hClosure : SinkhornKMSClosure n T K ω β)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
-    (hHK : HohenbergKohnDualState ψ ψStar)
-    (hStationary : InfoGeometry.Canonical.RGFlow.IsStationaryAtScale flow scale0) :
-    IsCStarReady (Obs := ObsKMS)
-      ∧ IsCompleteCStarReady (Obs := ObsFock)
-      ∧ SinkhornKMSClosure n T K ω β
-      ∧ fockAnticommutator (E := E)
-          (bogoliubovAnnihilation (E := E) B)
-          (bogoliubovCreation (E := E) B)
-          = (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E)
-      ∧ fockCommutator (E := E)
-          (bogoliubovAnnihilation (E := E) B)
-          (bogoliubovCreation (E := E) B) = 0
-      ∧ grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ0
-            = ψ0 + η • H ψ0
-      ∧ HohenbergKohnDualState ψ ψStar
-      ∧ RungeGrossStationaryDualState flow scale0 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact cstarReady_of_instance (Obs := ObsKMS)
-  · exact completeCStarReady_of_instance (Obs := ObsFock)
-  · exact hClosure
-  · exact (bogoliubov_projector_superalgebra (E := E) B).1
-  · exact (bogoliubov_projector_superalgebra (E := E) B).2
-  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
-      (E := E) (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ := ψ0) hVacSplit
-  · exact hHK
-  · exact rungeGrossStationaryDualState_of_stationaryAtScale
-      (flow := flow) (scale0 := scale0) hStationary
-
-/--
-Unified AQFT/TDFT launchpad packaged together with operator readiness and the
-canonical doubled-projector super-pair.
--/
-theorem aqft_tdft_constructive_launchpad_packaged_with_aqft_readiness_and_projectorSuperPair_base
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ0 : InfoGeometry.Krein.DoubledSpace E)
-    (ψ : Θ → ℝ)
-    (ψStar : (Θ →L[ℝ] ℝ) → ℝ)
-    (flow : InfoGeometry.Canonical.RGFlow.InformationFlow E)
-    (scale0 : ℝ)
-    (hClosure : SinkhornKMSClosure n T K ω β)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ)
-    (hHK : HohenbergKohnDualState ψ ψStar)
-    (hStationary : InfoGeometry.Canonical.RGFlow.IsStationaryAtScale flow scale0) :
-    IsCStarReady (Obs := ObsKMS)
-      ∧ IsCompleteCStarReady (Obs := ObsFock)
-      ∧ SinkhornKMSClosure n T K ω β
-      ∧ IsProjectorSuperPair
-          (InfoGeometry.Quantum.annihilationOp (E := E))
-          (InfoGeometry.Quantum.creationOp (E := E))
-      ∧ grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ0
-            = ψ0 + η • H ψ0
-      ∧ HohenbergKohnDualState ψ ψStar
-      ∧ RungeGrossStationaryDualState flow scale0 := by
-  refine ⟨?_, ?_, ?_, projectorSuperPair_base (E := E), ?_, ?_, ?_⟩
-  · exact cstarReady_of_instance (Obs := ObsKMS)
-  · exact completeCStarReady_of_instance (Obs := ObsFock)
-  · exact hClosure
-  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
-      (E := E) (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ := ψ0) hVacSplit
-  · exact hHK
-  · exact rungeGrossStationaryDualState_of_stationaryAtScale
-      (flow := flow) (scale0 := scale0) hStationary
 
 end UnifiedLaunchpadInterface
 
@@ -528,10 +262,15 @@ theorem aqft_readiness_package_realHilbert
             = ψ + η • Hf ψ := by
   refine ⟨cstarReady_of_instance (Obs := RealHilbertObs F), ?_, hClosure, ?_⟩
   · exact realHilbertOp_completeCStarReady (E := E)
-  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
-      (E := E) (η := η) (B := B) (H := Hf)
-      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
+  ·
+    change ψ + η •
+      (grandCanonicalFockGenerator (E := E) B Hf
+        (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+          (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ))) ψ
+      = ψ + η • Hf ψ
+    rw [grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
+      (E := E) (B := B) (H := Hf) (R := R) (K := Kgeo) (x := x)
+      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit]
 
 /--
 Direct real-Hilbert instantiation that keeps the concrete compression
@@ -555,7 +294,7 @@ theorem realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_pr
     (ψ : InfoGeometry.Krein.DoubledSpace E)
     (hClosure : SinkhornKMSClosure n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    Nonempty (AQFTOperatorInterpretation E (Obs := RealHilbertObs E))
+    Nonempty (AQFTOperatorInterpretation E (RealHilbertObs E))
       ∧ IsCStarReady (Obs := RealHilbertObs F)
       ∧ IsCompleteCStarReady (Obs := RealHilbertObs E)
       ∧ SinkhornKMSClosure n T K ω β
@@ -571,11 +310,15 @@ theorem realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_pr
   · exact realHilbertOp_completeCStarReady (E := E)
   · exact hClosure
   · exact projectorSuperPair_base (E := E)
-  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
-      (E := E) (η := η) (B := B) (H := Hf)
-      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
-
+  ·
+    change ψ + η •
+      (grandCanonicalFockGenerator (E := E) B Hf
+        (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+          (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ))) ψ
+      = ψ + η • Hf ψ
+    rw [grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
+      (E := E) (B := B) (H := Hf) (R := R) (K := Kgeo) (x := x)
+      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit]
 
 /--
 Direct constructive AQFT readiness package from IB dynamics plus the thermal
@@ -609,7 +352,7 @@ theorem realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_pr
     (Γ : SpinConnection Kgeo x V)
     (ψ : InfoGeometry.Krein.DoubledSpace E)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    Nonempty (AQFTOperatorInterpretation E (Obs := RealHilbertObs E))
+    Nonempty (AQFTOperatorInterpretation E (RealHilbertObs E))
       ∧ IsCStarReady (Obs := RealHilbertObs F)
       ∧ IsCompleteCStarReady (Obs := RealHilbertObs E)
       ∧ SinkhornKMSClosure n T K

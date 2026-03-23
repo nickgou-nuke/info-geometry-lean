@@ -144,23 +144,23 @@
     },
     {
       "module": "InfoGeometry.Canonical.WeylInformationGauge",
-      "strength": 81,
-      "out_weight": 37,
-      "in_weight": 44,
-      "decl_count": 23,
-      "dominant_surface": "hypothesis_bridge",
-      "hypothesis_bridge": 1,
-      "package_reprojection": 22,
+      "strength": 79,
+      "out_weight": 36,
+      "in_weight": 43,
+      "decl_count": 21,
+      "dominant_surface": "package_reprojection",
+      "hypothesis_bridge": 0,
+      "package_reprojection": 21,
       "surrogate_or_vacuous": 0,
       "hotspot_rank": 7,
-      "replaceable_surface_mass": 45.0,
-      "support_pressure": 125.0,
-      "burn_down_score": 217.633,
+      "replaceable_surface_mass": 42.0,
+      "support_pressure": 122.0,
+      "burn_down_score": 202.112,
       "dominant_pressure": "package_reprojection",
-      "primary_action": "construct witnesses behind packaged hypotheses",
+      "primary_action": "collapse package layer",
       "surrogate_share": 0.0,
-      "package_share": 0.9565,
-      "hypothesis_share": 0.0435,
+      "package_share": 1.0,
+      "hypothesis_share": 0.0,
       "burn_down_rank": 7
     },
     {
@@ -187,34 +187,19 @@
   ],
   "source_nodes": [
     {
-      "name": "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
+      "name": "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
       "category": "neutral_definition",
       "kind": "def",
       "reachable_sinks": 3,
       "closest_sink_distance": 1,
       "flow_in_degree": 0,
-      "flow_out_degree": 126,
+      "flow_out_degree": 158,
       "sink_modules": [
-        "InfoGeometry.Canonical.CalabiYauBridge",
+        "InfoGeometry.Canonical.CountSubstrateBridge",
         "InfoGeometry.Canonical.WeylInformationGauge"
       ],
-      "source_score": 15.0561
-    },
-    {
-      "name": "InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry.H",
-      "module": "InfoGeometry.Canonical.KaehlerGeometry",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 2,
-      "flow_out_degree": 103,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CalabiYauBridge",
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 14.3619
+      "source_score": 15.7255
     },
     {
       "name": "InfoGeometry.FinProb",
@@ -231,19 +216,49 @@
       "source_score": 12.2346
     },
     {
-      "name": "InfoGeometry.Convex.HessianGeometry.metricOp",
-      "module": "InfoGeometry.Convex.HessianGeometry",
+      "name": "InfoGeometry.Canonical.MoE.HasPositiveRowSums",
+      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
       "category": "neutral_definition",
       "kind": "def",
       "reachable_sinks": 3,
-      "closest_sink_distance": 2,
+      "closest_sink_distance": 1,
       "flow_in_degree": 2,
-      "flow_out_degree": 50,
+      "flow_out_degree": 46,
       "sink_modules": [
-        "InfoGeometry.Canonical.CalabiYauBridge",
+        "InfoGeometry.Canonical.CountSubstrateBridge",
         "InfoGeometry.Canonical.WeylInformationGauge"
       ],
-      "source_score": 12.0871
+      "source_score": 12.0136
+    },
+    {
+      "name": "InfoGeometry.Canonical.MoE.HasPositiveColSums",
+      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 3,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 2,
+      "flow_out_degree": 45,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CountSubstrateBridge",
+        "InfoGeometry.Canonical.WeylInformationGauge"
+      ],
+      "source_score": 11.9504
+    },
+    {
+      "name": "InfoGeometry.Canonical.MoE.Coupling",
+      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 3,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 1,
+      "flow_out_degree": 38,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CountSubstrateBridge",
+        "InfoGeometry.Canonical.WeylInformationGauge"
+      ],
+      "source_score": 11.5166
     },
     {
       "name": "InfoGeometry.Krein.DoubledSpace.ext",
@@ -261,6 +276,80 @@
       "source_score": 11.2666
     },
     {
+      "name": "InfoGeometry.Canonical.MoE.rowNormalize",
+      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 3,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 3,
+      "flow_out_degree": 35,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CountSubstrateBridge",
+        "InfoGeometry.Canonical.WeylInformationGauge"
+      ],
+      "source_score": 11.1828
+    },
+    {
+      "name": "InfoGeometry.Canonical.MoE.colNormalize",
+      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 3,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 3,
+      "flow_out_degree": 34,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CountSubstrateBridge",
+        "InfoGeometry.Canonical.WeylInformationGauge"
+      ],
+      "source_score": 11.1006
+    },
+    {
+      "name": "InfoGeometry.Canonical.MoE.colSum",
+      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 3,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 1,
+      "flow_out_degree": 24,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CountSubstrateBridge",
+        "InfoGeometry.Canonical.WeylInformationGauge"
+      ],
+      "source_score": 10.2243
+    },
+    {
+      "name": "InfoGeometry.Canonical.MoE.rowSum",
+      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 3,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 1,
+      "flow_out_degree": 24,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CountSubstrateBridge",
+        "InfoGeometry.Canonical.WeylInformationGauge"
+      ],
+      "source_score": 10.2243
+    },
+    {
+      "name": "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
+      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 2,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 0,
+      "flow_out_degree": 125,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CalabiYauBridge"
+      ],
+      "source_score": 10.1884
+    },
+    {
       "name": "InfoGeometry.ProbabilityDist",
       "module": "InfoGeometry.Basic",
       "category": "neutral_definition",
@@ -273,6 +362,20 @@
         "InfoGeometry.Canonical.CountSubstrateBridge"
       ],
       "source_score": 9.7957
+    },
+    {
+      "name": "InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry.H",
+      "module": "InfoGeometry.Canonical.KaehlerGeometry",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 2,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 2,
+      "flow_out_degree": 103,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CalabiYauBridge"
+      ],
+      "source_score": 9.7079
     },
     {
       "name": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -290,34 +393,18 @@
       "source_score": 9.2603
     },
     {
-      "name": "InfoGeometry.Convex.HessianGeometry.metric",
+      "name": "InfoGeometry.Convex.HessianGeometry.metricOp",
       "module": "InfoGeometry.Convex.HessianGeometry",
       "category": "neutral_definition",
       "kind": "def",
       "reachable_sinks": 2,
-      "closest_sink_distance": 1,
+      "closest_sink_distance": 2,
       "flow_in_degree": 2,
-      "flow_out_degree": 71,
+      "flow_out_degree": 50,
       "sink_modules": [
-        "InfoGeometry.Canonical.CalabiYauBridge",
-        "InfoGeometry.Canonical.WeylInformationGauge"
+        "InfoGeometry.Canonical.CalabiYauBridge"
       ],
-      "source_score": 8.9809
-    },
-    {
-      "name": "InfoGeometry.Convex.HessianGeometry.grad",
-      "module": "InfoGeometry.Convex.HessianGeometry",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 1,
-      "flow_out_degree": 12,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CalabiYauBridge",
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 8.1172
+      "source_score": 8.1358
     },
     {
       "name": "InfoGeometry.EmpiricalCounts.count",
@@ -392,18 +479,18 @@
       "source_score": 5.6431
     },
     {
-      "name": "InfoGeometry.Canonical.MoE.SinkhornMatrix",
-      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "name": "InfoGeometry.Convex.HessianGeometry.grad",
+      "module": "InfoGeometry.Convex.HessianGeometry",
       "category": "neutral_definition",
       "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 0,
-      "flow_out_degree": 158,
+      "reachable_sinks": 2,
+      "closest_sink_distance": 3,
+      "flow_in_degree": 1,
+      "flow_out_degree": 12,
       "sink_modules": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
+        "InfoGeometry.Canonical.CalabiYauBridge"
       ],
-      "source_score": 5.5752
+      "source_score": 5.4781
     },
     {
       "name": "InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd",
@@ -466,18 +553,18 @@
       "source_score": 4.7405
     },
     {
-      "name": "InfoGeometry.Canonical.ConformalUnification.ConformalInference.chiralScale",
-      "module": "InfoGeometry.Canonical.ConformalUnification",
+      "name": "InfoGeometry.Convex.HessianGeometry.metric",
+      "module": "InfoGeometry.Convex.HessianGeometry",
       "category": "neutral_definition",
       "kind": "def",
       "reachable_sinks": 1,
       "closest_sink_distance": 1,
       "flow_in_degree": 2,
-      "flow_out_degree": 73,
+      "flow_out_degree": 71,
       "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
+        "InfoGeometry.Canonical.CalabiYauBridge"
       ],
-      "source_score": 4.7175
+      "source_score": 4.6905
     },
     {
       "name": "InfoGeometry.KL.empirical_distribution",
@@ -492,34 +579,6 @@
         "InfoGeometry.Canonical.CountSubstrateBridge"
       ],
       "source_score": 4.5589
-    },
-    {
-      "name": "InfoGeometry.Canonical.MoE.HasPositiveRowSums",
-      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 2,
-      "flow_out_degree": 46,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "source_score": 4.2712
-    },
-    {
-      "name": "InfoGeometry.Canonical.MoE.HasPositiveColSums",
-      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 2,
-      "flow_out_degree": 45,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "source_score": 4.2501
     },
     {
       "name": "InfoGeometry.Canonical.MoE.phaseAt",
@@ -548,118 +607,6 @@
         "InfoGeometry.Canonical.AQFTOperatorInterface"
       ],
       "source_score": 4.1589
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.CI",
-      "module": "InfoGeometry.Canonical.ConformalAlgebra",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 2,
-      "flow_out_degree": 39,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 4.1136
-    },
-    {
-      "name": "InfoGeometry.Canonical.InverseKernel.A",
-      "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 1,
-      "flow_out_degree": 46,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 4.0212
-    },
-    {
-      "name": "InfoGeometry.Canonical.MoE.rowNormalize",
-      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 3,
-      "flow_out_degree": 35,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "source_score": 3.9609
-    },
-    {
-      "name": "InfoGeometry.Canonical.MoE.colNormalize",
-      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 3,
-      "flow_out_degree": 34,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "source_score": 3.9335
-    },
-    {
-      "name": "InfoGeometry.Canonical.MoE.Coupling",
-      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 1,
-      "flow_out_degree": 38,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "source_score": 3.8889
-    },
-    {
-      "name": "InfoGeometry.Canonical.InverseKernel.A_MP",
-      "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 1,
-      "flow_out_degree": 40,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.8877
-    },
-    {
-      "name": "InfoGeometry.Canonical.RicciMongeAmpere.SplitVielbein.ePlus",
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 2,
-      "flow_out_degree": 33,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.7887
-    },
-    {
-      "name": "InfoGeometry.Canonical.RicciMongeAmpere.SplitVielbein.eMinus",
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 2,
-      "flow_out_degree": 30,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.6991
     },
     {
       "name": "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity",
@@ -691,76 +638,6 @@
       "source_score": 3.6335
     },
     {
-      "name": "InfoGeometry.Canonical.ConformalUnification.ConformalInference.chiralAnomalyOperator",
-      "module": "InfoGeometry.Canonical.ConformalUnification",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 2,
-      "flow_out_degree": 23,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.6189
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D",
-      "module": "InfoGeometry.Canonical.ConformalAlgebra",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 1,
-      "flow_out_degree": 21,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.5855
-    },
-    {
-      "name": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
-      "module": "InfoGeometry.Canonical.Drazin",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 0,
-      "flow_out_degree": 27,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.5673
-    },
-    {
-      "name": "InfoGeometry.Canonical.MoE.colSum",
-      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 1,
-      "flow_out_degree": 24,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "source_score": 3.5414
-    },
-    {
-      "name": "InfoGeometry.Canonical.MoE.rowSum",
-      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 1,
-      "flow_out_degree": 24,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "source_score": 3.5414
-    },
-    {
       "name": "InfoGeometry.Canonical.RicciMongeAmpere.IsEinsteinKaehlerAtWith",
       "module": "InfoGeometry.Canonical.RicciMongeAmpere",
       "category": "neutral_definition",
@@ -773,20 +650,6 @@
         "InfoGeometry.Canonical.CalabiYauBridge"
       ],
       "source_score": 3.5189
-    },
-    {
-      "name": "InfoGeometry.Canonical.InverseKernel.A_D",
-      "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 1,
-      "flow_out_degree": 27,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.5173
     },
     {
       "name": "InfoGeometry.KL.empirical_nontrivial",
@@ -859,20 +722,6 @@
       "source_score": 3.3022
     },
     {
-      "name": "InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector",
-      "module": "InfoGeometry.Canonical.MoorePenrose",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 0,
-      "flow_out_degree": 18,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.1957
-    },
-    {
       "name": "InfoGeometry.Canonical.MoE.SinkhornPhase.casesOn",
       "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
       "category": "neutral_definition",
@@ -885,132 +734,6 @@
         "InfoGeometry.Canonical.CountSubstrateBridge"
       ],
       "source_score": 3.1904
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.IsVolumePreservingPart",
-      "module": "InfoGeometry.Canonical.ConformalAlgebra",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 3,
-      "flow_out_degree": 15,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.1832
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.M",
-      "module": "InfoGeometry.Canonical.ConformalAlgebra",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 1,
-      "flow_out_degree": 13,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.1581
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.IsWeylDilationPart",
-      "module": "InfoGeometry.Canonical.ConformalAlgebra",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 3,
-      "flow_out_degree": 14,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.1226
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConformalUnification.ConformalInference.chiralAnomaly",
-      "module": "InfoGeometry.Canonical.ConformalUnification",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 3,
-      "flow_out_degree": 16,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.0737
-    },
-    {
-      "name": "InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector",
-      "module": "InfoGeometry.Canonical.MoorePenrose",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 0,
-      "flow_out_degree": 15,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.0332
-    },
-    {
-      "name": "InfoGeometry.Canonical.RicciMongeAmpere.einsteinTensorAt",
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 4,
-      "flow_out_degree": 16,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.0237
-    },
-    {
-      "name": "InfoGeometry.Canonical.RicciMongeAmpere.SpinConnection.transport",
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 3,
-      "flow_out_degree": 15,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 3.0165
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConformalUnification.ConformalInference.P_D",
-      "module": "InfoGeometry.Canonical.ConformalUnification",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 5,
-      "flow_out_degree": 18,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 2.9957
-    },
-    {
-      "name": "InfoGeometry.Canonical.RicciMongeAmpere.transportedEinsteinResidual",
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 10,
-      "flow_out_degree": 17,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 2.9444
     },
     {
       "name": "InfoGeometry.Canonical.KMSSinkhornBridge.expectationSeedFunctional_apply",
@@ -1084,34 +807,6 @@
         "InfoGeometry.Canonical.YangMillsFinite"
       ],
       "source_score": 2.6526
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConformalUnification.ConformalInference.IsChiralInference",
-      "module": "InfoGeometry.Canonical.ConformalUnification",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 2,
-      "flow_out_degree": 10,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 2.6349
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConformalUnification.ConformalInference.P_MP",
-      "module": "InfoGeometry.Canonical.ConformalUnification",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 5,
-      "flow_out_degree": 11,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 2.5649
     },
     {
       "name": "InfoGeometry.Canonical.KMSSinkhornBridge.cyclicOnOmega_of_commutator_orthogonal",
@@ -1196,20 +891,6 @@
         "InfoGeometry.Canonical.AQFTOperatorInterface"
       ],
       "source_score": 2.1972
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConformalUnification.ConformalInference.epsilon",
-      "module": "InfoGeometry.Canonical.ConformalUnification",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 2,
-      "flow_out_degree": 5,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 2.1792
     },
     {
       "name": "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
@@ -1338,20 +1019,6 @@
         "InfoGeometry.Canonical.AQFTOperatorInterface"
       ],
       "source_score": 1.9794
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConformalUnification.ConformalInference.ChiralInferenceState",
-      "module": "InfoGeometry.Canonical.ConformalUnification",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 2,
-      "flow_out_degree": 4,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 1.9418
     },
     {
       "name": "InfoGeometry.Krein.gradePlusProj_comp_gradeMinusProj",
@@ -1606,34 +1273,6 @@
       "source_score": 1.3196
     },
     {
-      "name": "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-      "module": "InfoGeometry.Canonical.ConformalAlgebra",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 8,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 1.3196
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.M_in_volumePreserving_of_cartan",
-      "module": "InfoGeometry.Canonical.ConformalAlgebra",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 8,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 1.3196
-    },
-    {
       "name": "InfoGeometry.Canonical.MoE.minusMass_nonneg",
       "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
       "category": "likely_constructive",
@@ -1730,20 +1369,6 @@
         "InfoGeometry.Canonical.GrandSynthesis"
       ],
       "source_score": 1.2363
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-      "module": "InfoGeometry.Canonical.ConformalAlgebra",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 8,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_score": 1.1986
     },
     {
       "name": "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_creation",
@@ -2236,16 +1861,6 @@
       "severity": 2
     },
     {
-      "name": "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split",
-      "module": "InfoGeometry.Canonical.WeylInformationGauge",
-      "category": "package_reprojection",
-      "kind": "theorem",
-      "burn_down_rank": 7,
-      "flow_out_degree": 0,
-      "flow_in_degree": 7,
-      "severity": 2
-    },
-    {
       "name": "InfoGeometry.Canonical.WeylInformationGauge.twistedInference_not_torsionFree",
       "module": "InfoGeometry.Canonical.WeylInformationGauge",
       "category": "package_reprojection",
@@ -2256,14 +1871,24 @@
       "severity": 2
     },
     {
-      "name": "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts",
+      "name": "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2",
       "module": "InfoGeometry.Canonical.WeylInformationGauge",
-      "category": "hypothesis_bridge",
+      "category": "package_reprojection",
       "kind": "theorem",
       "burn_down_rank": 7,
-      "flow_out_degree": 0,
+      "flow_out_degree": 1,
       "flow_in_degree": 14,
-      "severity": 1
+      "severity": 2
+    },
+    {
+      "name": "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2",
+      "module": "InfoGeometry.Canonical.WeylInformationGauge",
+      "category": "package_reprojection",
+      "kind": "theorem",
+      "burn_down_rank": 7,
+      "flow_out_degree": 1,
+      "flow_in_degree": 12,
+      "severity": 2
     }
   ],
   "incidence_entries": [
@@ -2633,7 +2258,7 @@
     {
       "source": "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
       "source_module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "source_score": 15.0561,
+      "source_score": 10.1884,
       "sink": "InfoGeometry.Canonical.CalabiYauBridge.hasConstantMongeAmpereDensity_of_mongeAmpereRicciState",
       "sink_module": "InfoGeometry.Canonical.CalabiYauBridge",
       "sink_category": "package_reprojection",
@@ -2667,7 +2292,7 @@
     {
       "source": "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
       "source_module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "source_score": 15.0561,
+      "source_score": 10.1884,
       "sink": "InfoGeometry.Canonical.CalabiYauBridge.isAdSLikeEinsteinAt_of_negative_einstein",
       "sink_module": "InfoGeometry.Canonical.CalabiYauBridge",
       "sink_category": "package_reprojection",
@@ -2959,50 +2584,38 @@
       "compression_potential": 10.0
     },
     {
-      "source": "InfoGeometry.EmpiricalCounts.count",
-      "source_module": "InfoGeometry.Basic",
-      "source_score": 7.6437,
+      "source": "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+      "source_module": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "source_score": 15.7255,
       "sink": "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step",
       "sink_module": "InfoGeometry.Canonical.CountSubstrateBridge",
       "sink_category": "package_reprojection",
       "path_nodes": [
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
         "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
       ],
       "path_modules": [
-        "InfoGeometry.Basic",
+        "InfoGeometry.Canonical.GrandCanonicalExperts",
         "InfoGeometry.Canonical.CountSubstrateBridge"
       ],
       "path_component_ids": [
-        "component:4656725501581992545",
-        "component:7216553221444926170",
-        "component:5427218958085078421",
-        "component:7133550868940475362",
+        "component:5163628140961790995",
         "component:3659115172308645770"
       ],
       "path_component_representatives": [
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
         "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
       ],
-      "path_length": 4,
+      "path_length": 1,
       "motif_signature": [
-        "count",
-        "countWeight",
-        "countInducedCoupling",
-        "countInducedPositiveIterate",
+        "SinkhornMatrix",
         "countInducedIterate_step"
       ],
-      "motif_signature_text": "count -> countWeight -> countInducedCoupling -> countInducedPositiveIterate -> countInducedIterate_step",
+      "motif_signature_text": "SinkhornMatrix -> countInducedIterate_step",
       "source_bundle": [
-        "InfoGeometry.EmpiricalCounts.count"
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix"
       ],
-      "compression_potential": 8.0
+      "compression_potential": 2.0
     },
     {
       "source": "InfoGeometry.FinProb",
@@ -3250,45 +2863,6 @@
       "compression_potential": 4.0
     },
     {
-      "source": "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-      "source_module": "InfoGeometry.Canonical.ConformalAlgebra",
-      "source_score": 1.3196,
-      "sink": "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split",
-      "sink_module": "InfoGeometry.Canonical.WeylInformationGauge",
-      "sink_category": "package_reprojection",
-      "path_nodes": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "path_modules": [
-        "InfoGeometry.Canonical.ConformalAlgebra",
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "path_component_ids": [
-        "component:4654806429351781593",
-        "component:2416797024896115109",
-        "component:4162063381965024350"
-      ],
-      "path_component_representatives": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "path_length": 2,
-      "motif_signature": [
-        "D_in_weylDilation_of_cartan",
-        "cartan_generator_split",
-        "cartanWeyl_generator_split"
-      ],
-      "motif_signature_text": "D_in_weylDilation_of_cartan -> cartan_generator_split -> cartanWeyl_generator_split",
-      "source_bundle": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "compression_potential": 4.0
-    },
-    {
       "source": "InfoGeometry.Canonical.InformationTorsion.TwistedInference.has_torsion",
       "source_module": "InfoGeometry.Canonical.InformationTorsion",
       "source_score": 2.2459,
@@ -3323,38 +2897,82 @@
       "compression_potential": 2.0
     },
     {
-      "source": "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
-      "source_module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "source_score": 15.0561,
-      "sink": "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts",
+      "source": "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+      "source_module": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "source_score": 15.7255,
+      "sink": "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2",
       "sink_module": "InfoGeometry.Canonical.WeylInformationGauge",
-      "sink_category": "hypothesis_bridge",
+      "sink_category": "package_reprojection",
       "path_nodes": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts"
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
       ],
       "path_modules": [
-        "InfoGeometry.Canonical.RicciMongeAmpere",
+        "InfoGeometry.Canonical.GrandCanonicalExperts",
         "InfoGeometry.Canonical.WeylInformationGauge"
       ],
       "path_component_ids": [
-        "component:10455294631636848907",
-        "component:13863507379125655234"
+        "component:5163628140961790995",
+        "component:7922504523384844929",
+        "component:7587237284867047883"
       ],
       "path_component_representatives": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts"
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
       ],
-      "path_length": 1,
+      "path_length": 2,
       "motif_signature": [
-        "RicciTensor",
-        "cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts"
+        "SinkhornMatrix",
+        "Coupling",
+        "weylOrderHysteresis_on_witnessMatrix2"
       ],
-      "motif_signature_text": "RicciTensor -> cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts",
+      "motif_signature_text": "SinkhornMatrix -> Coupling -> weylOrderHysteresis_on_witnessMatrix2",
       "source_bundle": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor"
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling"
       ],
-      "compression_potential": 1.0
+      "compression_potential": 4.0
+    },
+    {
+      "source": "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+      "source_module": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "source_score": 15.7255,
+      "sink": "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2",
+      "sink_module": "InfoGeometry.Canonical.WeylInformationGauge",
+      "sink_category": "package_reprojection",
+      "path_nodes": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2"
+      ],
+      "path_modules": [
+        "InfoGeometry.Canonical.GrandCanonicalExperts",
+        "InfoGeometry.Canonical.WeylInformationGauge"
+      ],
+      "path_component_ids": [
+        "component:5163628140961790995",
+        "component:7922504523384844929",
+        "component:17358870213217137232"
+      ],
+      "path_component_representatives": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2"
+      ],
+      "path_length": 2,
+      "motif_signature": [
+        "SinkhornMatrix",
+        "Coupling",
+        "exists_updateOrderHysteresis_n2"
+      ],
+      "motif_signature_text": "SinkhornMatrix -> Coupling -> exists_updateOrderHysteresis_n2",
+      "source_bundle": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling"
+      ],
+      "compression_potential": 4.0
     }
   ],
   "atomic_nodes": [
@@ -3855,6 +3473,61 @@
       "compression_potential": 10.0
     },
     {
+      "atomic_id": "bundle:5b6143845c08",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.GrandCanonicalExperts"
+      ],
+      "source_categories": {
+        "neutral_definition": 2
+      },
+      "source_kinds": {
+        "def": 2
+      },
+      "source_purity_score": 0.0,
+      "scc_id": null,
+      "native_component_ids": [
+        "component:5163628140961790995",
+        "component:7922504523384844929"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling"
+      ],
+      "native_root_witness_component_ids": [
+        "component:5163628140961790995",
+        "component:7922504523384844929"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.WeylInformationGauge"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
+      ],
+      "path_multiplicity": 2,
+      "avg_path_length": 2.0,
+      "motif_signature": "SinkhornMatrix -> Coupling -> weylOrderHysteresis_on_witnessMatrix2",
+      "compression_potential": 8.0
+    },
+    {
       "atomic_id": "bundle:4375a9804c9a",
       "kind": "source_bundle",
       "category": "source_bundle",
@@ -3910,56 +3583,6 @@
       "compression_potential": 8.0
     },
     {
-      "atomic_id": "bundle:61e5b6d3d14a",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.EmpiricalCounts.count"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.EmpiricalCounts.count"
-      ],
-      "source_modules": [
-        "InfoGeometry.Basic"
-      ],
-      "source_categories": {
-        "neutral_definition": 1
-      },
-      "source_kinds": {
-        "def": 1
-      },
-      "source_purity_score": 0.0,
-      "scc_id": "component:4656725501581992545",
-      "native_component_ids": [
-        "component:4656725501581992545"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.EmpiricalCounts.count"
-      ],
-      "native_root_witness_component_ids": [
-        "component:1944460515774496911",
-        "component:4656725501581992545"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.EmpiricalCounts",
-        "InfoGeometry.EmpiricalCounts.count"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
-      ],
-      "path_multiplicity": 1,
-      "avg_path_length": 4.0,
-      "motif_signature": "count -> countWeight -> countInducedCoupling -> countInducedPositiveIterate -> countInducedIterate_step",
-      "compression_potential": 8.0
-    },
-    {
       "atomic_id": "bundle:300d70f7272f",
       "kind": "source_bundle",
       "category": "source_bundle",
@@ -3997,85 +3620,15 @@
       "native_depth_min": 0,
       "native_depth_max": 0,
       "sink_modules": [
-        "InfoGeometry.Canonical.CalabiYauBridge",
-        "InfoGeometry.Canonical.WeylInformationGauge"
+        "InfoGeometry.Canonical.CalabiYauBridge"
       ],
       "sink_names": [
         "InfoGeometry.Canonical.CalabiYauBridge.hasConstantMongeAmpereDensity_of_mongeAmpereRicciState",
-        "InfoGeometry.Canonical.CalabiYauBridge.isAdSLikeEinsteinAt_of_negative_einstein",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts"
+        "InfoGeometry.Canonical.CalabiYauBridge.isAdSLikeEinsteinAt_of_negative_einstein"
       ],
-      "path_multiplicity": 3,
+      "path_multiplicity": 2,
       "avg_path_length": 1.0,
       "motif_signature": "RicciTensor -> hasConstantMongeAmpereDensity_of_mongeAmpereRicciState",
-      "compression_potential": 5.0
-    },
-    {
-      "atomic_id": "bundle:da059e763df4",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "source_modules": [
-        "InfoGeometry.Canonical.ConformalAlgebra"
-      ],
-      "source_categories": {
-        "likely_constructive": 2
-      },
-      "source_kinds": {
-        "theorem": 2
-      },
-      "source_purity_score": 1.0,
-      "scc_id": null,
-      "native_component_ids": [
-        "component:4654806429351781593",
-        "component:2416797024896115109"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "native_root_witness_component_ids": [
-        "component:7460434478947080021",
-        "component:16947511616951878918",
-        "component:2772777728287998640",
-        "component:13252962363255113342",
-        "component:8353176993906138515",
-        "component:4654806429351781593",
-        "component:2416797024896115109"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.toInverseKernel",
-        "InfoGeometry.Canonical.ChiralCliffordBridge.chiralGrading",
-        "InfoGeometry.Canonical.ChiralCliffordBridge.IsNonCompactBeliefUpdate",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.IsWeylDilationPart",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:4162063381965024350"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 6,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "path_multiplicity": 1,
-      "avg_path_length": 2.0,
-      "motif_signature": "D_in_weylDilation_of_cartan -> cartan_generator_split -> cartanWeyl_generator_split",
       "compression_potential": 4.0
     },
     {
@@ -4445,6 +3998,54 @@
       "compression_potential": 2.0
     },
     {
+      "atomic_id": "bundle:bfd21fb58d2e",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.GrandCanonicalExperts"
+      ],
+      "source_categories": {
+        "neutral_definition": 1
+      },
+      "source_kinds": {
+        "def": 1
+      },
+      "source_purity_score": 0.0,
+      "scc_id": "component:5163628140961790995",
+      "native_component_ids": [
+        "component:5163628140961790995"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix"
+      ],
+      "native_root_witness_component_ids": [
+        "component:5163628140961790995"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 0,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CountSubstrateBridge"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
+      ],
+      "path_multiplicity": 1,
+      "avg_path_length": 1.0,
+      "motif_signature": "SinkhornMatrix -> countInducedIterate_step",
+      "compression_potential": 2.0
+    },
+    {
       "atomic_id": "bundle:73c48faf5d55",
       "kind": "source_bundle",
       "category": "source_bundle",
@@ -4569,10 +4170,9 @@
       "canonical_downstream_sink_family": [
         "InfoGeometry.Canonical.CalabiYauBridge",
         "InfoGeometry.Canonical.GrandSynthesis",
-        "InfoGeometry.Canonical.PerelmanW",
-        "InfoGeometry.Canonical.WeylInformationGauge"
+        "InfoGeometry.Canonical.PerelmanW"
       ],
-      "path_multiplicity": 10,
+      "path_multiplicity": 9,
       "path_motif_signatures": [
         {
           "signature": "spectralMongeAmpereDensity_eq_exp_spectralBasepointLogVolume -> logAbsDet_spectralModel_eq_basepointLogVolume",
@@ -4587,7 +4187,7 @@
           "count": 1
         }
       ],
-      "compression_potential": 71.0,
+      "compression_potential": 70.0,
       "native_component_ids": [
         "component:10455294631636848907",
         "component:239102362479398997",
@@ -4631,8 +4231,8 @@
       "native_depth_min": 0,
       "native_depth_max": 6,
       "native_dominator_pressure": 1,
-      "native_corridor_reuse": 12,
-      "native_corridor_count": 10,
+      "native_corridor_reuse": 11,
+      "native_corridor_count": 9,
       "top_root_witness": "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
       "top_native_corridor_component_ids": [
         "component:12034888009852967888",
@@ -4831,67 +4431,68 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Canonical.CountSubstrateBridge",
+      "hydrated_id": "InfoGeometry.Canonical.GrandCanonicalExperts",
       "kind": "module",
       "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.CountSubstrateBridge",
-      "sink_role": "consumer_sink",
+      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "sink_role": "constructive_source",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
-        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec",
-        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
+        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
+        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
+        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
+        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone"
       ],
-      "minimal_source_bundle": "bundle:4375a9804c9a",
+      "minimal_source_bundle": "bundle:5b6143845c08",
       "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
+        "InfoGeometry.Canonical.CountSubstrateBridge",
+        "InfoGeometry.Canonical.WeylInformationGauge"
       ],
-      "path_multiplicity": 4,
+      "path_multiplicity": 5,
       "path_motif_signatures": [
-        {
-          "signature": "FinProb -> ProbabilityDist -> exists_empiricalProbabilityState",
-          "count": 1
-        },
         {
           "signature": "colSum_colNormalize -> colLyapunov_colNormalize_eq_zero -> sinkhornStep_phaseLyapunov_monotone -> trajectoryLyapunov_monotone -> emergentTimeFlow_of_sinkhornTrajectory -> emergentTimeFlow_countInducedSinkhornTrajectory",
           "count": 1
         },
         {
-          "signature": "count -> countWeight -> countInducedCoupling -> countInducedPositiveIterate -> countInducedIterate_step",
+          "signature": "SinkhornMatrix -> countInducedIterate_step",
+          "count": 1
+        },
+        {
+          "signature": "colSum_colNormalize -> colNormalize_has_unit_colMarginal -> sinkhornGaugeFixing_is_marginal_closure",
           "count": 1
         }
       ],
-      "compression_potential": 26.0,
+      "compression_potential": 24.0,
       "native_component_ids": [
-        "component:5427218958085078421",
-        "component:3659115172308645770",
-        "component:7133550868940475362",
-        "component:7216553221444926170",
-        "component:3511471665661212481",
-        "component:5178848135990654348",
-        "component:12554217960194167455"
+        "component:7922504523384844929",
+        "component:5163628140961790995",
+        "component:2329086880270250659",
+        "component:13846296117804372990",
+        "component:17766323741888977149",
+        "component:2898204392676569374",
+        "component:13099352215028501443"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
-        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec",
-        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
+        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
+        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
+        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
+        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone"
       ],
       "native_root_witnesses": [
-        "InfoGeometry.EmpiricalCounts",
-        "InfoGeometry.Canonical.CountSubstrateBridge.CountSubstrate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling_entrywisePositive",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step",
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.MoE.colSum",
+        "InfoGeometry.Canonical.MoE.HasPositiveColSums",
+        "InfoGeometry.Canonical.MoE.colNormalize",
+        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
+        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
+        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
         "InfoGeometry.Canonical.MoE.SinkhornPhase",
         "InfoGeometry.Canonical.MoE.SinkhornPhase.col",
         "InfoGeometry.Canonical.MoE.SinkhornPhase.rec",
@@ -4900,32 +4501,20 @@
         "InfoGeometry.Canonical.MoE.phaseLyapunovBefore",
         "InfoGeometry.Canonical.MoE.phaseLyapunovBefore_nonneg",
         "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
-        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone",
-        "InfoGeometry.Canonical.HolographicEmergence.emergentTimeFlow_of_sinkhornTrajectory",
-        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.KL.empirical_nontrivial",
-        "InfoGeometry.Canonical.CountSubstrateBridge.CountSubstrateNontrivial",
-        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState",
-        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec",
-        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone"
       ],
       "native_strict_dominator_component_ids": [
-        "component:6199173966004879302",
-        "component:3511471665661212481",
-        "component:12554217960194167455"
+        "component:4780890059279383582"
       ],
       "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedSinkhornTrajectory",
-        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
-        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure"
       ],
-      "native_depth_min": 1,
-      "native_depth_max": 10,
-      "native_dominator_pressure": 1,
-      "native_corridor_reuse": 5,
-      "native_corridor_count": 4,
-      "top_root_witness": "InfoGeometry.EmpiricalCounts",
+      "native_depth_min": 0,
+      "native_depth_max": 8,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 6,
+      "native_corridor_count": 5,
+      "top_root_witness": "InfoGeometry.Canonical.MoE.SinkhornMatrix",
       "top_native_corridor_component_ids": [
         "component:17766323741888977149",
         "component:2329086880270250659",
@@ -5323,6 +4912,110 @@
       ]
     },
     {
+      "hydrated_id": "InfoGeometry.Canonical.CountSubstrateBridge",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.CountSubstrateBridge",
+      "sink_role": "consumer_sink",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step",
+        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
+        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec",
+        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+      ],
+      "minimal_source_bundle": "bundle:4375a9804c9a",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.CountSubstrateBridge"
+      ],
+      "path_multiplicity": 4,
+      "path_motif_signatures": [
+        {
+          "signature": "FinProb -> ProbabilityDist -> exists_empiricalProbabilityState",
+          "count": 1
+        },
+        {
+          "signature": "colSum_colNormalize -> colLyapunov_colNormalize_eq_zero -> sinkhornStep_phaseLyapunov_monotone -> trajectoryLyapunov_monotone -> emergentTimeFlow_of_sinkhornTrajectory -> emergentTimeFlow_countInducedSinkhornTrajectory",
+          "count": 1
+        },
+        {
+          "signature": "SinkhornMatrix -> countInducedIterate_step",
+          "count": 1
+        }
+      ],
+      "compression_potential": 20.0,
+      "native_component_ids": [
+        "component:3659115172308645770",
+        "component:3511471665661212481",
+        "component:5178848135990654348",
+        "component:12554217960194167455"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step",
+        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
+        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec",
+        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.EmpiricalCounts",
+        "InfoGeometry.Canonical.CountSubstrateBridge.CountSubstrate",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling_entrywisePositive",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step",
+        "InfoGeometry.Canonical.MoE.SinkhornPhase",
+        "InfoGeometry.Canonical.MoE.SinkhornPhase.col",
+        "InfoGeometry.Canonical.MoE.SinkhornPhase.rec",
+        "InfoGeometry.Canonical.MoE.SinkhornPhase.casesOn",
+        "InfoGeometry.Canonical.MoE.instReprSinkhornPhase.repr.match_1",
+        "InfoGeometry.Canonical.MoE.phaseLyapunovBefore",
+        "InfoGeometry.Canonical.MoE.phaseLyapunovBefore_nonneg",
+        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
+        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone",
+        "InfoGeometry.Canonical.HolographicEmergence.emergentTimeFlow_of_sinkhornTrajectory",
+        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
+        "InfoGeometry.EmpiricalCounts.count",
+        "InfoGeometry.KL.empirical_nontrivial",
+        "InfoGeometry.Canonical.CountSubstrateBridge.CountSubstrateNontrivial",
+        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState",
+        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec",
+        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+      ],
+      "native_strict_dominator_component_ids": [
+        "component:6199173966004879302",
+        "component:3511471665661212481",
+        "component:12554217960194167455"
+      ],
+      "native_strict_dominator_representatives": [
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedSinkhornTrajectory",
+        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
+        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+      ],
+      "native_depth_min": 1,
+      "native_depth_max": 10,
+      "native_dominator_pressure": 1,
+      "native_corridor_reuse": 5,
+      "native_corridor_count": 4,
+      "top_root_witness": "InfoGeometry.EmpiricalCounts",
+      "top_native_corridor_component_ids": [
+        "component:17766323741888977149",
+        "component:2329086880270250659",
+        "component:2898204392676569374",
+        "component:13099352215028501443",
+        "component:809410548603626455",
+        "component:3511471665661212481"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
+        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
+        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
+        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone",
+        "InfoGeometry.Canonical.HolographicEmergence.emergentTimeFlow_of_sinkhornTrajectory",
+        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory"
+      ]
+    },
+    {
       "hydrated_id": "InfoGeometry.Canonical.YangMillsFinite",
       "kind": "module",
       "carrier_type": "module",
@@ -5415,76 +5108,6 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Basic",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Basic",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.FinProb",
-        "InfoGeometry.ProbabilityDist"
-      ],
-      "minimal_source_bundle": "bundle:4375a9804c9a",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "path_multiplicity": 3,
-      "path_motif_signatures": [
-        {
-          "signature": "FinProb -> ProbabilityDist -> exists_empiricalProbabilityState",
-          "count": 1
-        },
-        {
-          "signature": "count -> countWeight -> countInducedCoupling -> countInducedPositiveIterate -> countInducedIterate_step",
-          "count": 1
-        },
-        {
-          "signature": "FinProb -> ProbabilityDist -> empiricalProbabilityState_spec",
-          "count": 1
-        }
-      ],
-      "compression_potential": 16.0,
-      "native_component_ids": [
-        "component:4656725501581992545",
-        "component:13630467622424436332",
-        "component:1577952749969550235"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.FinProb",
-        "InfoGeometry.ProbabilityDist"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.EmpiricalCounts",
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.FinProb",
-        "InfoGeometry.ProbabilityDist"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 0,
-      "native_depth_max": 1,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 3,
-      "native_corridor_count": 3,
-      "top_root_witness": "InfoGeometry.EmpiricalCounts",
-      "top_native_corridor_component_ids": [
-        "component:4656725501581992545",
-        "component:7216553221444926170",
-        "component:5427218958085078421",
-        "component:7133550868940475362",
-        "component:3659115172308645770"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
-      ]
-    },
-    {
       "hydrated_id": "InfoGeometry.Canonical.KMSSinkhornBridge",
       "kind": "module",
       "carrier_type": "module",
@@ -5560,94 +5183,91 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "hydrated_id": "InfoGeometry.Canonical.WeylInformationGauge",
       "kind": "module",
       "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
-      "sink_role": "constructive_source",
+      "module": "InfoGeometry.Canonical.WeylInformationGauge",
+      "sink_role": "consumer_sink",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
-        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
-        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
-        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
-        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone"
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2",
+        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure",
+        "InfoGeometry.Canonical.WeylInformationGauge.twistedInference_not_torsionFree",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
       ],
-      "minimal_source_bundle": "bundle:fae31152362a",
+      "minimal_source_bundle": "bundle:5b6143845c08",
       "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.CountSubstrateBridge",
         "InfoGeometry.Canonical.WeylInformationGauge"
       ],
-      "path_multiplicity": 2,
+      "path_multiplicity": 4,
       "path_motif_signatures": [
         {
-          "signature": "colSum_colNormalize -> colLyapunov_colNormalize_eq_zero -> sinkhornStep_phaseLyapunov_monotone -> trajectoryLyapunov_monotone -> emergentTimeFlow_of_sinkhornTrajectory -> emergentTimeFlow_countInducedSinkhornTrajectory",
+          "signature": "colSum_colNormalize -> colNormalize_has_unit_colMarginal -> sinkhornGaugeFixing_is_marginal_closure",
           "count": 1
         },
         {
-          "signature": "colSum_colNormalize -> colNormalize_has_unit_colMarginal -> sinkhornGaugeFixing_is_marginal_closure",
+          "signature": "has_torsion -> twistedInference_not_torsionFree",
+          "count": 1
+        },
+        {
+          "signature": "SinkhornMatrix -> Coupling -> weylOrderHysteresis_on_witnessMatrix2",
           "count": 1
         }
       ],
       "compression_potential": 14.0,
       "native_component_ids": [
-        "component:2329086880270250659",
-        "component:13846296117804372990",
-        "component:17766323741888977149",
-        "component:2898204392676569374",
-        "component:13099352215028501443"
+        "component:17358870213217137232",
+        "component:4780890059279383582",
+        "component:1856079536901877148",
+        "component:7587237284867047883"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
-        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
-        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
-        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
-        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone"
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2",
+        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure",
+        "InfoGeometry.Canonical.WeylInformationGauge.twistedInference_not_torsionFree",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
       ],
       "native_root_witnesses": [
         "InfoGeometry.Canonical.MoE.SinkhornMatrix",
         "InfoGeometry.Canonical.MoE.colSum",
         "InfoGeometry.Canonical.MoE.HasPositiveColSums",
         "InfoGeometry.Canonical.MoE.colNormalize",
-        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
-        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
-        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
-        "InfoGeometry.Canonical.MoE.SinkhornPhase",
-        "InfoGeometry.Canonical.MoE.SinkhornPhase.col",
-        "InfoGeometry.Canonical.MoE.SinkhornPhase.rec",
-        "InfoGeometry.Canonical.MoE.SinkhornPhase.casesOn",
-        "InfoGeometry.Canonical.MoE.instReprSinkhornPhase.repr.match_1",
-        "InfoGeometry.Canonical.MoE.phaseLyapunovBefore",
-        "InfoGeometry.Canonical.MoE.phaseLyapunovBefore_nonneg",
-        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
-        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone"
+        "InfoGeometry.Canonical.WeylInformationGauge.colThenRowUpdate",
+        "InfoGeometry.Canonical.WeylInformationGauge.UpdateOrderHysteresis",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2",
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2",
+        "InfoGeometry.Canonical.MoE.colNormalize_eq_rightDiagonalGauge",
+        "InfoGeometry.Canonical.MoE.sinkhornTwoStep_eq_weylGauge",
+        "InfoGeometry.Canonical.MoE.sinkhornTwoStep_eq_twoSidedGauge",
+        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornTwoStep_eq_informationWeylGauge",
+        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure",
+        "InfoGeometry.Canonical.InformationTorsion.Connection",
+        "InfoGeometry.Canonical.InformationTorsion.DualConnections.nabla",
+        "InfoGeometry.Canonical.InformationTorsion.TwistedInference.has_torsion",
+        "InfoGeometry.Canonical.WeylInformationGauge.twistedInference_not_torsionFree"
       ],
       "native_strict_dominator_component_ids": [
-        "component:4780890059279383582"
+        "component:8670361820252078261",
+        "component:17358870213217137232"
       ],
       "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure"
+        "InfoGeometry.Canonical.HolographicEmergence.exists_gaugeOrderHysteresis_witness",
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2"
       ],
       "native_depth_min": 1,
       "native_depth_max": 8,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 3,
-      "native_corridor_count": 2,
+      "native_corridor_reuse": 4,
+      "native_corridor_count": 4,
       "top_root_witness": "InfoGeometry.Canonical.MoE.SinkhornMatrix",
       "top_native_corridor_component_ids": [
         "component:17766323741888977149",
-        "component:2329086880270250659",
-        "component:2898204392676569374",
-        "component:13099352215028501443",
-        "component:809410548603626455",
-        "component:3511471665661212481"
+        "component:13846296117804372990",
+        "component:4780890059279383582"
       ],
       "top_native_corridor_representatives": [
         "InfoGeometry.Canonical.MoE.colSum_colNormalize",
-        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
-        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
-        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone",
-        "InfoGeometry.Canonical.HolographicEmergence.emergentTimeFlow_of_sinkhornTrajectory",
-        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory"
+        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
+        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure"
       ]
     },
     {
@@ -5790,101 +5410,6 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Canonical.WeylInformationGauge",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.WeylInformationGauge",
-      "sink_role": "consumer_sink",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure",
-        "InfoGeometry.Canonical.WeylInformationGauge.twistedInference_not_torsionFree"
-      ],
-      "minimal_source_bundle": "bundle:3d6ab2c5be66",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "path_multiplicity": 4,
-      "path_motif_signatures": [
-        {
-          "signature": "colSum_colNormalize -> colNormalize_has_unit_colMarginal -> sinkhornGaugeFixing_is_marginal_closure",
-          "count": 1
-        },
-        {
-          "signature": "D_in_weylDilation_of_cartan -> cartan_generator_split -> cartanWeyl_generator_split",
-          "count": 1
-        },
-        {
-          "signature": "has_torsion -> twistedInference_not_torsionFree",
-          "count": 1
-        }
-      ],
-      "compression_potential": 11.0,
-      "native_component_ids": [
-        "component:13863507379125655234",
-        "component:4162063381965024350",
-        "component:4780890059279383582",
-        "component:1856079536901877148"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure",
-        "InfoGeometry.Canonical.WeylInformationGauge.twistedInference_not_torsionFree"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.toInverseKernel",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.P_D",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.chiralAnomaly",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.epsilon",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.chiralScale",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.IsChiralInference",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.ChiralInferenceState",
-        "InfoGeometry.Canonical.WeylInformationGauge.chiralInferenceState_of_nonzero_anomaly",
-        "InfoGeometry.Canonical.WeylInformationGauge.nonzeroAnomaly_sources_transportedEinsteinResidual",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts",
-        "InfoGeometry.Canonical.ChiralCliffordBridge.chiralGrading",
-        "InfoGeometry.Canonical.ChiralCliffordBridge.IsNonCompactBeliefUpdate",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.IsWeylDilationPart",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split",
-        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
-        "InfoGeometry.Canonical.MoE.colSum",
-        "InfoGeometry.Canonical.MoE.HasPositiveColSums",
-        "InfoGeometry.Canonical.MoE.colNormalize",
-        "InfoGeometry.Canonical.MoE.colNormalize_eq_rightDiagonalGauge",
-        "InfoGeometry.Canonical.MoE.sinkhornTwoStep_eq_weylGauge",
-        "InfoGeometry.Canonical.MoE.sinkhornTwoStep_eq_twoSidedGauge",
-        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornTwoStep_eq_informationWeylGauge",
-        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure",
-        "InfoGeometry.Canonical.InformationTorsion.Connection",
-        "InfoGeometry.Canonical.InformationTorsion.DualConnections.nabla",
-        "InfoGeometry.Canonical.InformationTorsion.TwistedInference.has_torsion",
-        "InfoGeometry.Canonical.WeylInformationGauge.twistedInference_not_torsionFree"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 10,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 4,
-      "native_corridor_count": 4,
-      "top_root_witness": "InfoGeometry.Canonical.ConformalUnification.ConformalInference",
-      "top_native_corridor_component_ids": [
-        "component:17766323741888977149",
-        "component:13846296117804372990",
-        "component:4780890059279383582"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
-        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
-        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure"
-      ]
-    },
-    {
       "hydrated_id": "InfoGeometry.Canonical.HolographicEmergence",
       "kind": "module",
       "carrier_type": "module",
@@ -5950,6 +5475,63 @@
         "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone",
         "InfoGeometry.Canonical.HolographicEmergence.emergentTimeFlow_of_sinkhornTrajectory",
         "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Basic",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Basic",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.FinProb",
+        "InfoGeometry.ProbabilityDist"
+      ],
+      "minimal_source_bundle": "bundle:4375a9804c9a",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.CountSubstrateBridge"
+      ],
+      "path_multiplicity": 2,
+      "path_motif_signatures": [
+        {
+          "signature": "FinProb -> ProbabilityDist -> exists_empiricalProbabilityState",
+          "count": 1
+        },
+        {
+          "signature": "FinProb -> ProbabilityDist -> empiricalProbabilityState_spec",
+          "count": 1
+        }
+      ],
+      "compression_potential": 8.0,
+      "native_component_ids": [
+        "component:13630467622424436332",
+        "component:1577952749969550235"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.FinProb",
+        "InfoGeometry.ProbabilityDist"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.FinProb",
+        "InfoGeometry.ProbabilityDist"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 1,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 2,
+      "native_corridor_count": 2,
+      "top_root_witness": "InfoGeometry.FinProb",
+      "top_native_corridor_component_ids": [
+        "component:13630467622424436332",
+        "component:1577952749969550235",
+        "component:12554217960194167455"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.FinProb",
+        "InfoGeometry.ProbabilityDist",
+        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
       ]
     },
     {
@@ -6019,68 +5601,6 @@
         "InfoGeometry.Canonical.SingularTransportSystem.anomalyTerm_eq_projector_commutator_norm",
         "InfoGeometry.Canonical.SingularTransportSystem.regular_radial_transport_closes_of_boundaryScale_eq_zero",
         "InfoGeometry.Canonical.GrandSynthesis.radial_transport_closes_of_boundaryScale_eq_zero"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Canonical.ConformalAlgebra",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.ConformalAlgebra",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "minimal_source_bundle": "bundle:da059e763df4",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "path_multiplicity": 1,
-      "path_motif_signatures": [
-        {
-          "signature": "D_in_weylDilation_of_cartan -> cartan_generator_split -> cartanWeyl_generator_split",
-          "count": 1
-        }
-      ],
-      "compression_potential": 4.0,
-      "native_component_ids": [
-        "component:4654806429351781593",
-        "component:2416797024896115109"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.toInverseKernel",
-        "InfoGeometry.Canonical.ChiralCliffordBridge.chiralGrading",
-        "InfoGeometry.Canonical.ChiralCliffordBridge.IsNonCompactBeliefUpdate",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.IsWeylDilationPart",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:4162063381965024350"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 6,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 1,
-      "native_corridor_count": 1,
-      "top_root_witness": "InfoGeometry.Canonical.ConformalUnification.ConformalInference",
-      "top_native_corridor_component_ids": [
-        "component:4654806429351781593",
-        "component:2416797024896115109",
-        "component:4162063381965024350"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
       ]
     },
     {
@@ -7231,147 +6751,96 @@
       "hydrated_role": "consumer_sink"
     },
     {
-      "atomic_id": "bundle:61e5b6d3d14a",
-      "hydrated_id": "InfoGeometry.Basic",
+      "atomic_id": "bundle:5b6143845c08",
+      "hydrated_id": "InfoGeometry.Canonical.GrandCanonicalExperts",
       "role": "supports",
       "projection_kind": "node_support",
       "carrier_role": "source",
-      "bundle_id": "bundle:61e5b6d3d14a",
-      "motif_signature": "count -> countWeight -> countInducedCoupling -> countInducedPositiveIterate -> countInducedIterate_step",
-      "witness_count": 1,
+      "bundle_id": "bundle:5b6143845c08",
+      "motif_signature": "SinkhornMatrix -> Coupling -> weylOrderHysteresis_on_witnessMatrix2",
+      "witness_count": 2,
       "compression_score": 8.0,
       "canonical_path_example": [
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
       ],
       "canonical_witness_paths": [
         [
-          "InfoGeometry.EmpiricalCounts.count",
-          "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-          "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-          "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-          "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:4656725501581992545",
-        "component:7216553221444926170",
-        "component:5427218958085078421",
-        "component:7133550868940475362",
-        "component:3659115172308645770"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "hydrated_role": "constructive_source"
-    },
-    {
-      "atomic_id": "bundle:61e5b6d3d14a",
-      "hydrated_id": "InfoGeometry.Canonical.CountSubstrateBridge",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "sink",
-      "bundle_id": "bundle:61e5b6d3d14a",
-      "motif_signature": "count -> countWeight -> countInducedCoupling -> countInducedPositiveIterate -> countInducedIterate_step",
-      "witness_count": 1,
-      "compression_score": 8.0,
-      "canonical_path_example": [
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.EmpiricalCounts.count",
-          "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-          "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-          "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-          "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:4656725501581992545",
-        "component:7216553221444926170",
-        "component:5427218958085078421",
-        "component:7133550868940475362",
-        "component:3659115172308645770"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "hydrated_role": "consumer_sink"
-    },
-    {
-      "atomic_id": "bundle:300d70f7272f",
-      "hydrated_id": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:300d70f7272f",
-      "motif_signature": "RicciTensor -> hasConstantMongeAmpereDensity_of_mongeAmpereRicciState",
-      "witness_count": 3,
-      "compression_score": 5.0,
-      "canonical_path_example": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
-        "InfoGeometry.Canonical.CalabiYauBridge.hasConstantMongeAmpereDensity_of_mongeAmpereRicciState"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
-          "InfoGeometry.Canonical.CalabiYauBridge.hasConstantMongeAmpereDensity_of_mongeAmpereRicciState"
+          "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+          "InfoGeometry.Canonical.MoE.Coupling",
+          "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
         ],
         [
-          "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
-          "InfoGeometry.Canonical.CalabiYauBridge.isAdSLikeEinsteinAt_of_negative_einstein"
-        ],
-        [
-          "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
-          "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts"
+          "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+          "InfoGeometry.Canonical.MoE.Coupling",
+          "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2"
         ]
       ],
       "native_canonical_component_path_example": [
-        "component:10455294631636848907",
-        "component:8540576812877942915"
+        "component:5163628140961790995",
+        "component:7922504523384844929",
+        "component:7587237284867047883"
       ],
       "native_canonical_component_representatives": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
-        "InfoGeometry.Canonical.CalabiYauBridge.hasConstantMongeAmpereDensity_of_mongeAmpereRicciState"
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.CalabiYauBridge.hasConstantMongeAmpereDensity_of_mongeAmpereRicciState",
-        "InfoGeometry.Canonical.CalabiYauBridge.isAdSLikeEinsteinAt_of_negative_einstein",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts"
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
       ],
       "sink_modules": [
-        "InfoGeometry.Canonical.CalabiYauBridge",
         "InfoGeometry.Canonical.WeylInformationGauge"
       ],
       "hydrated_role": "constructive_source"
+    },
+    {
+      "atomic_id": "bundle:5b6143845c08",
+      "hydrated_id": "InfoGeometry.Canonical.WeylInformationGauge",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "sink",
+      "bundle_id": "bundle:5b6143845c08",
+      "motif_signature": "SinkhornMatrix -> Coupling -> weylOrderHysteresis_on_witnessMatrix2",
+      "witness_count": 2,
+      "compression_score": 8.0,
+      "canonical_path_example": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+          "InfoGeometry.Canonical.MoE.Coupling",
+          "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
+        ],
+        [
+          "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+          "InfoGeometry.Canonical.MoE.Coupling",
+          "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:5163628140961790995",
+        "component:7922504523384844929",
+        "component:7587237284867047883"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.WeylInformationGauge"
+      ],
+      "hydrated_role": "consumer_sink"
     },
     {
       "atomic_id": "bundle:300d70f7272f",
@@ -7413,6 +6882,47 @@
         "InfoGeometry.Canonical.CalabiYauBridge"
       ],
       "hydrated_role": "consumer_sink"
+    },
+    {
+      "atomic_id": "bundle:300d70f7272f",
+      "hydrated_id": "InfoGeometry.Canonical.RicciMongeAmpere",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "source",
+      "bundle_id": "bundle:300d70f7272f",
+      "motif_signature": "RicciTensor -> hasConstantMongeAmpereDensity_of_mongeAmpereRicciState",
+      "witness_count": 2,
+      "compression_score": 4.0,
+      "canonical_path_example": [
+        "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
+        "InfoGeometry.Canonical.CalabiYauBridge.hasConstantMongeAmpereDensity_of_mongeAmpereRicciState"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
+          "InfoGeometry.Canonical.CalabiYauBridge.hasConstantMongeAmpereDensity_of_mongeAmpereRicciState"
+        ],
+        [
+          "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
+          "InfoGeometry.Canonical.CalabiYauBridge.isAdSLikeEinsteinAt_of_negative_einstein"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:10455294631636848907",
+        "component:8540576812877942915"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
+        "InfoGeometry.Canonical.CalabiYauBridge.hasConstantMongeAmpereDensity_of_mongeAmpereRicciState"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.CalabiYauBridge.hasConstantMongeAmpereDensity_of_mongeAmpereRicciState",
+        "InfoGeometry.Canonical.CalabiYauBridge.isAdSLikeEinsteinAt_of_negative_einstein"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.CalabiYauBridge"
+      ],
+      "hydrated_role": "constructive_source"
     },
     {
       "atomic_id": "bundle:193ba8466bec",
@@ -7727,86 +7237,6 @@
       "hydrated_role": "constructive_source"
     },
     {
-      "atomic_id": "bundle:da059e763df4",
-      "hydrated_id": "InfoGeometry.Canonical.ConformalAlgebra",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:da059e763df4",
-      "motif_signature": "D_in_weylDilation_of_cartan -> cartan_generator_split -> cartanWeyl_generator_split",
-      "witness_count": 1,
-      "compression_score": 4.0,
-      "canonical_path_example": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-          "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-          "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:4654806429351781593",
-        "component:2416797024896115109",
-        "component:4162063381965024350"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "hydrated_role": "constructive_source"
-    },
-    {
-      "atomic_id": "bundle:da059e763df4",
-      "hydrated_id": "InfoGeometry.Canonical.WeylInformationGauge",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "sink",
-      "bundle_id": "bundle:da059e763df4",
-      "motif_signature": "D_in_weylDilation_of_cartan -> cartan_generator_split -> cartanWeyl_generator_split",
-      "witness_count": 1,
-      "compression_score": 4.0,
-      "canonical_path_example": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-          "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-          "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:4654806429351781593",
-        "component:2416797024896115109",
-        "component:4162063381965024350"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "hydrated_role": "consumer_sink"
-    },
-    {
       "atomic_id": "bundle:073250397f74",
       "hydrated_id": "InfoGeometry.Canonical.KMSSinkhornBridge",
       "role": "supports",
@@ -8095,40 +7525,76 @@
       "hydrated_role": "constructive_source"
     },
     {
-      "atomic_id": "bundle:300d70f7272f",
-      "hydrated_id": "InfoGeometry.Canonical.WeylInformationGauge",
+      "atomic_id": "bundle:bfd21fb58d2e",
+      "hydrated_id": "InfoGeometry.Canonical.CountSubstrateBridge",
       "role": "supports",
       "projection_kind": "node_support",
       "carrier_role": "sink",
-      "bundle_id": "bundle:300d70f7272f",
-      "motif_signature": "RicciTensor -> cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts",
+      "bundle_id": "bundle:bfd21fb58d2e",
+      "motif_signature": "SinkhornMatrix -> countInducedIterate_step",
       "witness_count": 1,
-      "compression_score": 1.0,
+      "compression_score": 2.0,
       "canonical_path_example": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts"
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
       ],
       "canonical_witness_paths": [
         [
-          "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
-          "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts"
+          "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+          "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
         ]
       ],
       "native_canonical_component_path_example": [
-        "component:10455294631636848907",
-        "component:13863507379125655234"
+        "component:5163628140961790995",
+        "component:3659115172308645770"
       ],
       "native_canonical_component_representatives": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts"
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts"
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
       ],
       "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
+        "InfoGeometry.Canonical.CountSubstrateBridge"
       ],
       "hydrated_role": "consumer_sink"
+    },
+    {
+      "atomic_id": "bundle:bfd21fb58d2e",
+      "hydrated_id": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "source",
+      "bundle_id": "bundle:bfd21fb58d2e",
+      "motif_signature": "SinkhornMatrix -> countInducedIterate_step",
+      "witness_count": 1,
+      "compression_score": 2.0,
+      "canonical_path_example": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+          "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:5163628140961790995",
+        "component:3659115172308645770"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.CountSubstrateBridge"
+      ],
+      "hydrated_role": "constructive_source"
     }
   ],
   "motif_families": [
@@ -8241,18 +7707,6 @@
       "compression_potential": 8.0
     },
     {
-      "motif_signature": "count -> countWeight -> countInducedCoupling -> countInducedPositiveIterate -> countInducedIterate_step",
-      "path_count": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "source_modules": [
-        "InfoGeometry.Basic"
-      ],
-      "avg_path_length": 4.0,
-      "compression_potential": 8.0
-    },
-    {
       "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> finiteWightmanReconstructionLayer_of_expectationSeed",
       "path_count": 1,
       "sink_modules": [
@@ -8275,18 +7729,6 @@
       ],
       "avg_path_length": 2.0,
       "compression_potential": 8.0
-    },
-    {
-      "motif_signature": "D_in_weylDilation_of_cartan -> cartan_generator_split -> cartanWeyl_generator_split",
-      "path_count": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_modules": [
-        "InfoGeometry.Canonical.ConformalAlgebra"
-      ],
-      "avg_path_length": 2.0,
-      "compression_potential": 4.0
     },
     {
       "motif_signature": "FinProb -> ProbabilityDist -> empiricalProbabilityState_spec",
@@ -8322,6 +7764,30 @@
         "InfoGeometry.Canonical.RicciMongeAmpere"
       ],
       "avg_path_length": 1.0,
+      "compression_potential": 4.0
+    },
+    {
+      "motif_signature": "SinkhornMatrix -> Coupling -> exists_updateOrderHysteresis_n2",
+      "path_count": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.WeylInformationGauge"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.GrandCanonicalExperts"
+      ],
+      "avg_path_length": 2.0,
+      "compression_potential": 4.0
+    },
+    {
+      "motif_signature": "SinkhornMatrix -> Coupling -> weylOrderHysteresis_on_witnessMatrix2",
+      "path_count": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.WeylInformationGauge"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.GrandCanonicalExperts"
+      ],
+      "avg_path_length": 2.0,
       "compression_potential": 4.0
     },
     {
@@ -8397,6 +7863,18 @@
       "compression_potential": 2.0
     },
     {
+      "motif_signature": "SinkhornMatrix -> countInducedIterate_step",
+      "path_count": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CountSubstrateBridge"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.GrandCanonicalExperts"
+      ],
+      "avg_path_length": 1.0,
+      "compression_potential": 2.0
+    },
+    {
       "motif_signature": "has_torsion -> twistedInference_not_torsionFree",
       "path_count": 1,
       "sink_modules": [
@@ -8419,18 +7897,6 @@
       ],
       "avg_path_length": 1.0,
       "compression_potential": 2.0
-    },
-    {
-      "motif_signature": "RicciTensor -> cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts",
-      "path_count": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "source_modules": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "avg_path_length": 1.0,
-      "compression_potential": 1.0
     }
   ],
   "bundles": [
@@ -8931,6 +8397,61 @@
       "compression_potential": 10.0
     },
     {
+      "atomic_id": "bundle:5b6143845c08",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.GrandCanonicalExperts"
+      ],
+      "source_categories": {
+        "neutral_definition": 2
+      },
+      "source_kinds": {
+        "def": 2
+      },
+      "source_purity_score": 0.0,
+      "scc_id": null,
+      "native_component_ids": [
+        "component:5163628140961790995",
+        "component:7922504523384844929"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling"
+      ],
+      "native_root_witness_component_ids": [
+        "component:5163628140961790995",
+        "component:7922504523384844929"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.WeylInformationGauge"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
+      ],
+      "path_multiplicity": 2,
+      "avg_path_length": 2.0,
+      "motif_signature": "SinkhornMatrix -> Coupling -> weylOrderHysteresis_on_witnessMatrix2",
+      "compression_potential": 8.0
+    },
+    {
       "atomic_id": "bundle:4375a9804c9a",
       "kind": "source_bundle",
       "category": "source_bundle",
@@ -8986,56 +8507,6 @@
       "compression_potential": 8.0
     },
     {
-      "atomic_id": "bundle:61e5b6d3d14a",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.EmpiricalCounts.count"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.EmpiricalCounts.count"
-      ],
-      "source_modules": [
-        "InfoGeometry.Basic"
-      ],
-      "source_categories": {
-        "neutral_definition": 1
-      },
-      "source_kinds": {
-        "def": 1
-      },
-      "source_purity_score": 0.0,
-      "scc_id": "component:4656725501581992545",
-      "native_component_ids": [
-        "component:4656725501581992545"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.EmpiricalCounts.count"
-      ],
-      "native_root_witness_component_ids": [
-        "component:1944460515774496911",
-        "component:4656725501581992545"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.EmpiricalCounts",
-        "InfoGeometry.EmpiricalCounts.count"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
-      ],
-      "path_multiplicity": 1,
-      "avg_path_length": 4.0,
-      "motif_signature": "count -> countWeight -> countInducedCoupling -> countInducedPositiveIterate -> countInducedIterate_step",
-      "compression_potential": 8.0
-    },
-    {
       "atomic_id": "bundle:300d70f7272f",
       "kind": "source_bundle",
       "category": "source_bundle",
@@ -9073,85 +8544,15 @@
       "native_depth_min": 0,
       "native_depth_max": 0,
       "sink_modules": [
-        "InfoGeometry.Canonical.CalabiYauBridge",
-        "InfoGeometry.Canonical.WeylInformationGauge"
+        "InfoGeometry.Canonical.CalabiYauBridge"
       ],
       "sink_names": [
         "InfoGeometry.Canonical.CalabiYauBridge.hasConstantMongeAmpereDensity_of_mongeAmpereRicciState",
-        "InfoGeometry.Canonical.CalabiYauBridge.isAdSLikeEinsteinAt_of_negative_einstein",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts"
+        "InfoGeometry.Canonical.CalabiYauBridge.isAdSLikeEinsteinAt_of_negative_einstein"
       ],
-      "path_multiplicity": 3,
+      "path_multiplicity": 2,
       "avg_path_length": 1.0,
       "motif_signature": "RicciTensor -> hasConstantMongeAmpereDensity_of_mongeAmpereRicciState",
-      "compression_potential": 5.0
-    },
-    {
-      "atomic_id": "bundle:da059e763df4",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "source_modules": [
-        "InfoGeometry.Canonical.ConformalAlgebra"
-      ],
-      "source_categories": {
-        "likely_constructive": 2
-      },
-      "source_kinds": {
-        "theorem": 2
-      },
-      "source_purity_score": 1.0,
-      "scc_id": null,
-      "native_component_ids": [
-        "component:4654806429351781593",
-        "component:2416797024896115109"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "native_root_witness_component_ids": [
-        "component:7460434478947080021",
-        "component:16947511616951878918",
-        "component:2772777728287998640",
-        "component:13252962363255113342",
-        "component:8353176993906138515",
-        "component:4654806429351781593",
-        "component:2416797024896115109"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.toInverseKernel",
-        "InfoGeometry.Canonical.ChiralCliffordBridge.chiralGrading",
-        "InfoGeometry.Canonical.ChiralCliffordBridge.IsNonCompactBeliefUpdate",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.IsWeylDilationPart",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:4162063381965024350"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 6,
-      "sink_modules": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "path_multiplicity": 1,
-      "avg_path_length": 2.0,
-      "motif_signature": "D_in_weylDilation_of_cartan -> cartan_generator_split -> cartanWeyl_generator_split",
       "compression_potential": 4.0
     },
     {
@@ -9521,6 +8922,54 @@
       "compression_potential": 2.0
     },
     {
+      "atomic_id": "bundle:bfd21fb58d2e",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.GrandCanonicalExperts"
+      ],
+      "source_categories": {
+        "neutral_definition": 1
+      },
+      "source_kinds": {
+        "def": 1
+      },
+      "source_purity_score": 0.0,
+      "scc_id": "component:5163628140961790995",
+      "native_component_ids": [
+        "component:5163628140961790995"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix"
+      ],
+      "native_root_witness_component_ids": [
+        "component:5163628140961790995"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 0,
+      "sink_modules": [
+        "InfoGeometry.Canonical.CountSubstrateBridge"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
+      ],
+      "path_multiplicity": 1,
+      "avg_path_length": 1.0,
+      "motif_signature": "SinkhornMatrix -> countInducedIterate_step",
+      "compression_potential": 2.0
+    },
+    {
       "atomic_id": "bundle:73c48faf5d55",
       "kind": "source_bundle",
       "category": "source_bundle",
@@ -9645,10 +9094,9 @@
       "canonical_downstream_sink_family": [
         "InfoGeometry.Canonical.CalabiYauBridge",
         "InfoGeometry.Canonical.GrandSynthesis",
-        "InfoGeometry.Canonical.PerelmanW",
-        "InfoGeometry.Canonical.WeylInformationGauge"
+        "InfoGeometry.Canonical.PerelmanW"
       ],
-      "path_multiplicity": 10,
+      "path_multiplicity": 9,
       "path_motif_signatures": [
         {
           "signature": "spectralMongeAmpereDensity_eq_exp_spectralBasepointLogVolume -> logAbsDet_spectralModel_eq_basepointLogVolume",
@@ -9663,7 +9111,7 @@
           "count": 1
         }
       ],
-      "compression_potential": 71.0,
+      "compression_potential": 70.0,
       "native_component_ids": [
         "component:10455294631636848907",
         "component:239102362479398997",
@@ -9707,8 +9155,8 @@
       "native_depth_min": 0,
       "native_depth_max": 6,
       "native_dominator_pressure": 1,
-      "native_corridor_reuse": 12,
-      "native_corridor_count": 10,
+      "native_corridor_reuse": 11,
+      "native_corridor_count": 9,
       "top_root_witness": "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
       "top_native_corridor_component_ids": [
         "component:12034888009852967888",
@@ -9907,67 +9355,68 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Canonical.CountSubstrateBridge",
+      "hydrated_id": "InfoGeometry.Canonical.GrandCanonicalExperts",
       "kind": "module",
       "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.CountSubstrateBridge",
-      "sink_role": "consumer_sink",
+      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "sink_role": "constructive_source",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
-        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec",
-        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
+        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
+        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
+        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
+        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone"
       ],
-      "minimal_source_bundle": "bundle:4375a9804c9a",
+      "minimal_source_bundle": "bundle:5b6143845c08",
       "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
+        "InfoGeometry.Canonical.CountSubstrateBridge",
+        "InfoGeometry.Canonical.WeylInformationGauge"
       ],
-      "path_multiplicity": 4,
+      "path_multiplicity": 5,
       "path_motif_signatures": [
-        {
-          "signature": "FinProb -> ProbabilityDist -> exists_empiricalProbabilityState",
-          "count": 1
-        },
         {
           "signature": "colSum_colNormalize -> colLyapunov_colNormalize_eq_zero -> sinkhornStep_phaseLyapunov_monotone -> trajectoryLyapunov_monotone -> emergentTimeFlow_of_sinkhornTrajectory -> emergentTimeFlow_countInducedSinkhornTrajectory",
           "count": 1
         },
         {
-          "signature": "count -> countWeight -> countInducedCoupling -> countInducedPositiveIterate -> countInducedIterate_step",
+          "signature": "SinkhornMatrix -> countInducedIterate_step",
+          "count": 1
+        },
+        {
+          "signature": "colSum_colNormalize -> colNormalize_has_unit_colMarginal -> sinkhornGaugeFixing_is_marginal_closure",
           "count": 1
         }
       ],
-      "compression_potential": 26.0,
+      "compression_potential": 24.0,
       "native_component_ids": [
-        "component:5427218958085078421",
-        "component:3659115172308645770",
-        "component:7133550868940475362",
-        "component:7216553221444926170",
-        "component:3511471665661212481",
-        "component:5178848135990654348",
-        "component:12554217960194167455"
+        "component:7922504523384844929",
+        "component:5163628140961790995",
+        "component:2329086880270250659",
+        "component:13846296117804372990",
+        "component:17766323741888977149",
+        "component:2898204392676569374",
+        "component:13099352215028501443"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
-        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec",
-        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
+        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
+        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
+        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
+        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone"
       ],
       "native_root_witnesses": [
-        "InfoGeometry.EmpiricalCounts",
-        "InfoGeometry.Canonical.CountSubstrateBridge.CountSubstrate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling_entrywisePositive",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step",
+        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+        "InfoGeometry.Canonical.MoE.Coupling",
+        "InfoGeometry.Canonical.MoE.colSum",
+        "InfoGeometry.Canonical.MoE.HasPositiveColSums",
+        "InfoGeometry.Canonical.MoE.colNormalize",
+        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
+        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
+        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
         "InfoGeometry.Canonical.MoE.SinkhornPhase",
         "InfoGeometry.Canonical.MoE.SinkhornPhase.col",
         "InfoGeometry.Canonical.MoE.SinkhornPhase.rec",
@@ -9976,32 +9425,20 @@
         "InfoGeometry.Canonical.MoE.phaseLyapunovBefore",
         "InfoGeometry.Canonical.MoE.phaseLyapunovBefore_nonneg",
         "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
-        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone",
-        "InfoGeometry.Canonical.HolographicEmergence.emergentTimeFlow_of_sinkhornTrajectory",
-        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.KL.empirical_nontrivial",
-        "InfoGeometry.Canonical.CountSubstrateBridge.CountSubstrateNontrivial",
-        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState",
-        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec",
-        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone"
       ],
       "native_strict_dominator_component_ids": [
-        "component:6199173966004879302",
-        "component:3511471665661212481",
-        "component:12554217960194167455"
+        "component:4780890059279383582"
       ],
       "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedSinkhornTrajectory",
-        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
-        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure"
       ],
-      "native_depth_min": 1,
-      "native_depth_max": 10,
-      "native_dominator_pressure": 1,
-      "native_corridor_reuse": 5,
-      "native_corridor_count": 4,
-      "top_root_witness": "InfoGeometry.EmpiricalCounts",
+      "native_depth_min": 0,
+      "native_depth_max": 8,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 6,
+      "native_corridor_count": 5,
+      "top_root_witness": "InfoGeometry.Canonical.MoE.SinkhornMatrix",
       "top_native_corridor_component_ids": [
         "component:17766323741888977149",
         "component:2329086880270250659",
@@ -10399,6 +9836,110 @@
       ]
     },
     {
+      "hydrated_id": "InfoGeometry.Canonical.CountSubstrateBridge",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.CountSubstrateBridge",
+      "sink_role": "consumer_sink",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step",
+        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
+        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec",
+        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+      ],
+      "minimal_source_bundle": "bundle:4375a9804c9a",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.CountSubstrateBridge"
+      ],
+      "path_multiplicity": 4,
+      "path_motif_signatures": [
+        {
+          "signature": "FinProb -> ProbabilityDist -> exists_empiricalProbabilityState",
+          "count": 1
+        },
+        {
+          "signature": "colSum_colNormalize -> colLyapunov_colNormalize_eq_zero -> sinkhornStep_phaseLyapunov_monotone -> trajectoryLyapunov_monotone -> emergentTimeFlow_of_sinkhornTrajectory -> emergentTimeFlow_countInducedSinkhornTrajectory",
+          "count": 1
+        },
+        {
+          "signature": "SinkhornMatrix -> countInducedIterate_step",
+          "count": 1
+        }
+      ],
+      "compression_potential": 20.0,
+      "native_component_ids": [
+        "component:3659115172308645770",
+        "component:3511471665661212481",
+        "component:5178848135990654348",
+        "component:12554217960194167455"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step",
+        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
+        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec",
+        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.EmpiricalCounts",
+        "InfoGeometry.Canonical.CountSubstrateBridge.CountSubstrate",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling_entrywisePositive",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate",
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step",
+        "InfoGeometry.Canonical.MoE.SinkhornPhase",
+        "InfoGeometry.Canonical.MoE.SinkhornPhase.col",
+        "InfoGeometry.Canonical.MoE.SinkhornPhase.rec",
+        "InfoGeometry.Canonical.MoE.SinkhornPhase.casesOn",
+        "InfoGeometry.Canonical.MoE.instReprSinkhornPhase.repr.match_1",
+        "InfoGeometry.Canonical.MoE.phaseLyapunovBefore",
+        "InfoGeometry.Canonical.MoE.phaseLyapunovBefore_nonneg",
+        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
+        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone",
+        "InfoGeometry.Canonical.HolographicEmergence.emergentTimeFlow_of_sinkhornTrajectory",
+        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
+        "InfoGeometry.EmpiricalCounts.count",
+        "InfoGeometry.KL.empirical_nontrivial",
+        "InfoGeometry.Canonical.CountSubstrateBridge.CountSubstrateNontrivial",
+        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState",
+        "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec",
+        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+      ],
+      "native_strict_dominator_component_ids": [
+        "component:6199173966004879302",
+        "component:3511471665661212481",
+        "component:12554217960194167455"
+      ],
+      "native_strict_dominator_representatives": [
+        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedSinkhornTrajectory",
+        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory",
+        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+      ],
+      "native_depth_min": 1,
+      "native_depth_max": 10,
+      "native_dominator_pressure": 1,
+      "native_corridor_reuse": 5,
+      "native_corridor_count": 4,
+      "top_root_witness": "InfoGeometry.EmpiricalCounts",
+      "top_native_corridor_component_ids": [
+        "component:17766323741888977149",
+        "component:2329086880270250659",
+        "component:2898204392676569374",
+        "component:13099352215028501443",
+        "component:809410548603626455",
+        "component:3511471665661212481"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
+        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
+        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
+        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone",
+        "InfoGeometry.Canonical.HolographicEmergence.emergentTimeFlow_of_sinkhornTrajectory",
+        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory"
+      ]
+    },
+    {
       "hydrated_id": "InfoGeometry.Canonical.YangMillsFinite",
       "kind": "module",
       "carrier_type": "module",
@@ -10491,76 +10032,6 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Basic",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Basic",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.FinProb",
-        "InfoGeometry.ProbabilityDist"
-      ],
-      "minimal_source_bundle": "bundle:4375a9804c9a",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.CountSubstrateBridge"
-      ],
-      "path_multiplicity": 3,
-      "path_motif_signatures": [
-        {
-          "signature": "FinProb -> ProbabilityDist -> exists_empiricalProbabilityState",
-          "count": 1
-        },
-        {
-          "signature": "count -> countWeight -> countInducedCoupling -> countInducedPositiveIterate -> countInducedIterate_step",
-          "count": 1
-        },
-        {
-          "signature": "FinProb -> ProbabilityDist -> empiricalProbabilityState_spec",
-          "count": 1
-        }
-      ],
-      "compression_potential": 16.0,
-      "native_component_ids": [
-        "component:4656725501581992545",
-        "component:13630467622424436332",
-        "component:1577952749969550235"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.FinProb",
-        "InfoGeometry.ProbabilityDist"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.EmpiricalCounts",
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.FinProb",
-        "InfoGeometry.ProbabilityDist"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 0,
-      "native_depth_max": 1,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 3,
-      "native_corridor_count": 3,
-      "top_root_witness": "InfoGeometry.EmpiricalCounts",
-      "top_native_corridor_component_ids": [
-        "component:4656725501581992545",
-        "component:7216553221444926170",
-        "component:5427218958085078421",
-        "component:7133550868940475362",
-        "component:3659115172308645770"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.EmpiricalCounts.count",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-        "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
-      ]
-    },
-    {
       "hydrated_id": "InfoGeometry.Canonical.KMSSinkhornBridge",
       "kind": "module",
       "carrier_type": "module",
@@ -10636,94 +10107,91 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "hydrated_id": "InfoGeometry.Canonical.WeylInformationGauge",
       "kind": "module",
       "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
-      "sink_role": "constructive_source",
+      "module": "InfoGeometry.Canonical.WeylInformationGauge",
+      "sink_role": "consumer_sink",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
-        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
-        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
-        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
-        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone"
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2",
+        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure",
+        "InfoGeometry.Canonical.WeylInformationGauge.twistedInference_not_torsionFree",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
       ],
-      "minimal_source_bundle": "bundle:fae31152362a",
+      "minimal_source_bundle": "bundle:5b6143845c08",
       "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.CountSubstrateBridge",
         "InfoGeometry.Canonical.WeylInformationGauge"
       ],
-      "path_multiplicity": 2,
+      "path_multiplicity": 4,
       "path_motif_signatures": [
         {
-          "signature": "colSum_colNormalize -> colLyapunov_colNormalize_eq_zero -> sinkhornStep_phaseLyapunov_monotone -> trajectoryLyapunov_monotone -> emergentTimeFlow_of_sinkhornTrajectory -> emergentTimeFlow_countInducedSinkhornTrajectory",
+          "signature": "colSum_colNormalize -> colNormalize_has_unit_colMarginal -> sinkhornGaugeFixing_is_marginal_closure",
           "count": 1
         },
         {
-          "signature": "colSum_colNormalize -> colNormalize_has_unit_colMarginal -> sinkhornGaugeFixing_is_marginal_closure",
+          "signature": "has_torsion -> twistedInference_not_torsionFree",
+          "count": 1
+        },
+        {
+          "signature": "SinkhornMatrix -> Coupling -> weylOrderHysteresis_on_witnessMatrix2",
           "count": 1
         }
       ],
       "compression_potential": 14.0,
       "native_component_ids": [
-        "component:2329086880270250659",
-        "component:13846296117804372990",
-        "component:17766323741888977149",
-        "component:2898204392676569374",
-        "component:13099352215028501443"
+        "component:17358870213217137232",
+        "component:4780890059279383582",
+        "component:1856079536901877148",
+        "component:7587237284867047883"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
-        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
-        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
-        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
-        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone"
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2",
+        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure",
+        "InfoGeometry.Canonical.WeylInformationGauge.twistedInference_not_torsionFree",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
       ],
       "native_root_witnesses": [
         "InfoGeometry.Canonical.MoE.SinkhornMatrix",
         "InfoGeometry.Canonical.MoE.colSum",
         "InfoGeometry.Canonical.MoE.HasPositiveColSums",
         "InfoGeometry.Canonical.MoE.colNormalize",
-        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
-        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
-        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
-        "InfoGeometry.Canonical.MoE.SinkhornPhase",
-        "InfoGeometry.Canonical.MoE.SinkhornPhase.col",
-        "InfoGeometry.Canonical.MoE.SinkhornPhase.rec",
-        "InfoGeometry.Canonical.MoE.SinkhornPhase.casesOn",
-        "InfoGeometry.Canonical.MoE.instReprSinkhornPhase.repr.match_1",
-        "InfoGeometry.Canonical.MoE.phaseLyapunovBefore",
-        "InfoGeometry.Canonical.MoE.phaseLyapunovBefore_nonneg",
-        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
-        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone"
+        "InfoGeometry.Canonical.WeylInformationGauge.colThenRowUpdate",
+        "InfoGeometry.Canonical.WeylInformationGauge.UpdateOrderHysteresis",
+        "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2",
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2",
+        "InfoGeometry.Canonical.MoE.colNormalize_eq_rightDiagonalGauge",
+        "InfoGeometry.Canonical.MoE.sinkhornTwoStep_eq_weylGauge",
+        "InfoGeometry.Canonical.MoE.sinkhornTwoStep_eq_twoSidedGauge",
+        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornTwoStep_eq_informationWeylGauge",
+        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure",
+        "InfoGeometry.Canonical.InformationTorsion.Connection",
+        "InfoGeometry.Canonical.InformationTorsion.DualConnections.nabla",
+        "InfoGeometry.Canonical.InformationTorsion.TwistedInference.has_torsion",
+        "InfoGeometry.Canonical.WeylInformationGauge.twistedInference_not_torsionFree"
       ],
       "native_strict_dominator_component_ids": [
-        "component:4780890059279383582"
+        "component:8670361820252078261",
+        "component:17358870213217137232"
       ],
       "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure"
+        "InfoGeometry.Canonical.HolographicEmergence.exists_gaugeOrderHysteresis_witness",
+        "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2"
       ],
       "native_depth_min": 1,
       "native_depth_max": 8,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 3,
-      "native_corridor_count": 2,
+      "native_corridor_reuse": 4,
+      "native_corridor_count": 4,
       "top_root_witness": "InfoGeometry.Canonical.MoE.SinkhornMatrix",
       "top_native_corridor_component_ids": [
         "component:17766323741888977149",
-        "component:2329086880270250659",
-        "component:2898204392676569374",
-        "component:13099352215028501443",
-        "component:809410548603626455",
-        "component:3511471665661212481"
+        "component:13846296117804372990",
+        "component:4780890059279383582"
       ],
       "top_native_corridor_representatives": [
         "InfoGeometry.Canonical.MoE.colSum_colNormalize",
-        "InfoGeometry.Canonical.MoE.colLyapunov_colNormalize_eq_zero",
-        "InfoGeometry.Canonical.MoE.sinkhornStep_phaseLyapunov_monotone",
-        "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone",
-        "InfoGeometry.Canonical.HolographicEmergence.emergentTimeFlow_of_sinkhornTrajectory",
-        "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory"
+        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
+        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure"
       ]
     },
     {
@@ -10866,101 +10334,6 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Canonical.WeylInformationGauge",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.WeylInformationGauge",
-      "sink_role": "consumer_sink",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure",
-        "InfoGeometry.Canonical.WeylInformationGauge.twistedInference_not_torsionFree"
-      ],
-      "minimal_source_bundle": "bundle:3d6ab2c5be66",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "path_multiplicity": 4,
-      "path_motif_signatures": [
-        {
-          "signature": "colSum_colNormalize -> colNormalize_has_unit_colMarginal -> sinkhornGaugeFixing_is_marginal_closure",
-          "count": 1
-        },
-        {
-          "signature": "D_in_weylDilation_of_cartan -> cartan_generator_split -> cartanWeyl_generator_split",
-          "count": 1
-        },
-        {
-          "signature": "has_torsion -> twistedInference_not_torsionFree",
-          "count": 1
-        }
-      ],
-      "compression_potential": 11.0,
-      "native_component_ids": [
-        "component:13863507379125655234",
-        "component:4162063381965024350",
-        "component:4780890059279383582",
-        "component:1856079536901877148"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure",
-        "InfoGeometry.Canonical.WeylInformationGauge.twistedInference_not_torsionFree"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.toInverseKernel",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.P_D",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.chiralAnomaly",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.epsilon",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.chiralScale",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.IsChiralInference",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.ChiralInferenceState",
-        "InfoGeometry.Canonical.WeylInformationGauge.chiralInferenceState_of_nonzero_anomaly",
-        "InfoGeometry.Canonical.WeylInformationGauge.nonzeroAnomaly_sources_transportedEinsteinResidual",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts",
-        "InfoGeometry.Canonical.ChiralCliffordBridge.chiralGrading",
-        "InfoGeometry.Canonical.ChiralCliffordBridge.IsNonCompactBeliefUpdate",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.IsWeylDilationPart",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split",
-        "InfoGeometry.Canonical.MoE.SinkhornMatrix",
-        "InfoGeometry.Canonical.MoE.colSum",
-        "InfoGeometry.Canonical.MoE.HasPositiveColSums",
-        "InfoGeometry.Canonical.MoE.colNormalize",
-        "InfoGeometry.Canonical.MoE.colNormalize_eq_rightDiagonalGauge",
-        "InfoGeometry.Canonical.MoE.sinkhornTwoStep_eq_weylGauge",
-        "InfoGeometry.Canonical.MoE.sinkhornTwoStep_eq_twoSidedGauge",
-        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornTwoStep_eq_informationWeylGauge",
-        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure",
-        "InfoGeometry.Canonical.InformationTorsion.Connection",
-        "InfoGeometry.Canonical.InformationTorsion.DualConnections.nabla",
-        "InfoGeometry.Canonical.InformationTorsion.TwistedInference.has_torsion",
-        "InfoGeometry.Canonical.WeylInformationGauge.twistedInference_not_torsionFree"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 10,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 4,
-      "native_corridor_count": 4,
-      "top_root_witness": "InfoGeometry.Canonical.ConformalUnification.ConformalInference",
-      "top_native_corridor_component_ids": [
-        "component:17766323741888977149",
-        "component:13846296117804372990",
-        "component:4780890059279383582"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Canonical.MoE.colSum_colNormalize",
-        "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
-        "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure"
-      ]
-    },
-    {
       "hydrated_id": "InfoGeometry.Canonical.HolographicEmergence",
       "kind": "module",
       "carrier_type": "module",
@@ -11026,6 +10399,63 @@
         "InfoGeometry.Canonical.MoE.trajectoryLyapunov_monotone",
         "InfoGeometry.Canonical.HolographicEmergence.emergentTimeFlow_of_sinkhornTrajectory",
         "InfoGeometry.Canonical.CountSubstrateBridge.emergentTimeFlow_countInducedSinkhornTrajectory"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Basic",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Basic",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.FinProb",
+        "InfoGeometry.ProbabilityDist"
+      ],
+      "minimal_source_bundle": "bundle:4375a9804c9a",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.CountSubstrateBridge"
+      ],
+      "path_multiplicity": 2,
+      "path_motif_signatures": [
+        {
+          "signature": "FinProb -> ProbabilityDist -> exists_empiricalProbabilityState",
+          "count": 1
+        },
+        {
+          "signature": "FinProb -> ProbabilityDist -> empiricalProbabilityState_spec",
+          "count": 1
+        }
+      ],
+      "compression_potential": 8.0,
+      "native_component_ids": [
+        "component:13630467622424436332",
+        "component:1577952749969550235"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.FinProb",
+        "InfoGeometry.ProbabilityDist"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.FinProb",
+        "InfoGeometry.ProbabilityDist"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 1,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 2,
+      "native_corridor_count": 2,
+      "top_root_witness": "InfoGeometry.FinProb",
+      "top_native_corridor_component_ids": [
+        "component:13630467622424436332",
+        "component:1577952749969550235",
+        "component:12554217960194167455"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.FinProb",
+        "InfoGeometry.ProbabilityDist",
+        "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
       ]
     },
     {
@@ -11095,68 +10525,6 @@
         "InfoGeometry.Canonical.SingularTransportSystem.anomalyTerm_eq_projector_commutator_norm",
         "InfoGeometry.Canonical.SingularTransportSystem.regular_radial_transport_closes_of_boundaryScale_eq_zero",
         "InfoGeometry.Canonical.GrandSynthesis.radial_transport_closes_of_boundaryScale_eq_zero"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Canonical.ConformalAlgebra",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.ConformalAlgebra",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "minimal_source_bundle": "bundle:da059e763df4",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.WeylInformationGauge"
-      ],
-      "path_multiplicity": 1,
-      "path_motif_signatures": [
-        {
-          "signature": "D_in_weylDilation_of_cartan -> cartan_generator_split -> cartanWeyl_generator_split",
-          "count": 1
-        }
-      ],
-      "compression_potential": 4.0,
-      "native_component_ids": [
-        "component:4654806429351781593",
-        "component:2416797024896115109"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference",
-        "InfoGeometry.Canonical.ConformalUnification.ConformalInference.toInverseKernel",
-        "InfoGeometry.Canonical.ChiralCliffordBridge.chiralGrading",
-        "InfoGeometry.Canonical.ChiralCliffordBridge.IsNonCompactBeliefUpdate",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.IsWeylDilationPart",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:4162063381965024350"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 6,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 1,
-      "native_corridor_count": 1,
-      "top_root_witness": "InfoGeometry.Canonical.ConformalUnification.ConformalInference",
-      "top_native_corridor_component_ids": [
-        "component:4654806429351781593",
-        "component:2416797024896115109",
-        "component:4162063381965024350"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-        "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-        "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
       ]
     },
     {
@@ -11366,50 +10734,6 @@
       ]
     },
     {
-      "source_module": "InfoGeometry.Basic",
-      "target_module": "InfoGeometry.Canonical.CountSubstrateBridge",
-      "path_count": 3,
-      "compression_potential": 16.0,
-      "direct_projection": true,
-      "hypothesis_packets": [
-        {
-          "signature": "FinProb -> ProbabilityDist -> exists_empiricalProbabilityState",
-          "count": 1
-        },
-        {
-          "signature": "count -> countWeight -> countInducedCoupling -> countInducedPositiveIterate -> countInducedIterate_step",
-          "count": 1
-        },
-        {
-          "signature": "FinProb -> ProbabilityDist -> empiricalProbabilityState_spec",
-          "count": 1
-        }
-      ],
-      "bundle_ids": [
-        "bundle:4375a9804c9a",
-        "bundle:61e5b6d3d14a"
-      ],
-      "atomic_path_examples": [
-        [
-          "InfoGeometry.FinProb",
-          "InfoGeometry.ProbabilityDist",
-          "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
-        ],
-        [
-          "InfoGeometry.EmpiricalCounts.count",
-          "InfoGeometry.Canonical.CountSubstrateBridge.countWeight",
-          "InfoGeometry.Canonical.CountSubstrateBridge.countInducedCoupling",
-          "InfoGeometry.Canonical.CountSubstrateBridge.countInducedPositiveIterate",
-          "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
-        ],
-        [
-          "InfoGeometry.FinProb",
-          "InfoGeometry.ProbabilityDist",
-          "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec"
-        ]
-      ]
-    },
-    {
       "source_module": "InfoGeometry.Canonical.KMSSinkhornBridge",
       "target_module": "InfoGeometry.Canonical.YangMillsFinite",
       "path_count": 3,
@@ -11451,6 +10775,48 @@
           "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
           "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
           "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteWightmanReconstructionLayer_of_expectationSeed"
+        ]
+      ]
+    },
+    {
+      "source_module": "InfoGeometry.Canonical.GrandCanonicalExperts",
+      "target_module": "InfoGeometry.Canonical.WeylInformationGauge",
+      "path_count": 3,
+      "compression_potential": 12.0,
+      "direct_projection": true,
+      "hypothesis_packets": [
+        {
+          "signature": "colSum_colNormalize -> colNormalize_has_unit_colMarginal -> sinkhornGaugeFixing_is_marginal_closure",
+          "count": 1
+        },
+        {
+          "signature": "SinkhornMatrix -> Coupling -> weylOrderHysteresis_on_witnessMatrix2",
+          "count": 1
+        },
+        {
+          "signature": "SinkhornMatrix -> Coupling -> exists_updateOrderHysteresis_n2",
+          "count": 1
+        }
+      ],
+      "bundle_ids": [
+        "bundle:5b6143845c08",
+        "bundle:3d6ab2c5be66"
+      ],
+      "atomic_path_examples": [
+        [
+          "InfoGeometry.Canonical.MoE.colSum_colNormalize",
+          "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
+          "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure"
+        ],
+        [
+          "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+          "InfoGeometry.Canonical.MoE.Coupling",
+          "InfoGeometry.Canonical.WeylInformationGauge.weylOrderHysteresis_on_witnessMatrix2"
+        ],
+        [
+          "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+          "InfoGeometry.Canonical.MoE.Coupling",
+          "InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2"
         ]
       ]
     },
@@ -11597,6 +10963,38 @@
       ]
     },
     {
+      "source_module": "InfoGeometry.Basic",
+      "target_module": "InfoGeometry.Canonical.CountSubstrateBridge",
+      "path_count": 2,
+      "compression_potential": 8.0,
+      "direct_projection": true,
+      "hypothesis_packets": [
+        {
+          "signature": "FinProb -> ProbabilityDist -> exists_empiricalProbabilityState",
+          "count": 1
+        },
+        {
+          "signature": "FinProb -> ProbabilityDist -> empiricalProbabilityState_spec",
+          "count": 1
+        }
+      ],
+      "bundle_ids": [
+        "bundle:4375a9804c9a"
+      ],
+      "atomic_path_examples": [
+        [
+          "InfoGeometry.FinProb",
+          "InfoGeometry.ProbabilityDist",
+          "InfoGeometry.Canonical.CountSubstrateBridge.exists_empiricalProbabilityState"
+        ],
+        [
+          "InfoGeometry.FinProb",
+          "InfoGeometry.ProbabilityDist",
+          "InfoGeometry.Canonical.CountSubstrateBridge.empiricalProbabilityState_spec"
+        ]
+      ]
+    },
+    {
       "source_module": "InfoGeometry.Canonical.SingularTransportSystem",
       "target_module": "InfoGeometry.Canonical.GrandSynthesis",
       "path_count": 2,
@@ -11656,48 +11054,24 @@
       ]
     },
     {
-      "source_module": "InfoGeometry.Canonical.ConformalAlgebra",
-      "target_module": "InfoGeometry.Canonical.WeylInformationGauge",
-      "path_count": 1,
-      "compression_potential": 4.0,
-      "direct_projection": true,
-      "hypothesis_packets": [
-        {
-          "signature": "D_in_weylDilation_of_cartan -> cartan_generator_split -> cartanWeyl_generator_split",
-          "count": 1
-        }
-      ],
-      "bundle_ids": [
-        "bundle:da059e763df4"
-      ],
-      "atomic_path_examples": [
-        [
-          "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
-          "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
-          "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
-        ]
-      ]
-    },
-    {
       "source_module": "InfoGeometry.Canonical.GrandCanonicalExperts",
-      "target_module": "InfoGeometry.Canonical.WeylInformationGauge",
+      "target_module": "InfoGeometry.Canonical.CountSubstrateBridge",
       "path_count": 1,
-      "compression_potential": 4.0,
+      "compression_potential": 2.0,
       "direct_projection": true,
       "hypothesis_packets": [
         {
-          "signature": "colSum_colNormalize -> colNormalize_has_unit_colMarginal -> sinkhornGaugeFixing_is_marginal_closure",
+          "signature": "SinkhornMatrix -> countInducedIterate_step",
           "count": 1
         }
       ],
       "bundle_ids": [
-        "bundle:3d6ab2c5be66"
+        "bundle:bfd21fb58d2e"
       ],
       "atomic_path_examples": [
         [
-          "InfoGeometry.Canonical.MoE.colSum_colNormalize",
-          "InfoGeometry.Canonical.MoE.colNormalize_has_unit_colMarginal",
-          "InfoGeometry.Canonical.WeylInformationGauge.sinkhornGaugeFixing_is_marginal_closure"
+          "InfoGeometry.Canonical.MoE.SinkhornMatrix",
+          "InfoGeometry.Canonical.CountSubstrateBridge.countInducedIterate_step"
         ]
       ]
     },
@@ -11764,28 +11138,6 @@
         [
           "InfoGeometry.Krein.DoubledSpace",
           "InfoGeometry.Canonical.YangMillsFinite.gamma_le_spectralGapFromLogDet"
-        ]
-      ]
-    },
-    {
-      "source_module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "target_module": "InfoGeometry.Canonical.WeylInformationGauge",
-      "path_count": 1,
-      "compression_potential": 1.0,
-      "direct_projection": true,
-      "hypothesis_packets": [
-        {
-          "signature": "RicciTensor -> cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts",
-          "count": 1
-        }
-      ],
-      "bundle_ids": [
-        "bundle:300d70f7272f"
-      ],
-      "atomic_path_examples": [
-        [
-          "InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor",
-          "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts"
         ]
       ]
     }

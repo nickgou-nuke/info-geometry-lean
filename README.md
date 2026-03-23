@@ -193,6 +193,25 @@ The hierarchy of trust is:
 
 These compatibility surfaces are archived for archaeology only and are not part of the canonical causal-order workflow.
 
+## Current Maintained DAG Refresh Order
+
+When you are using the live DAG pipeline, refresh it in this order:
+
+1. `python3 tools/infra/refresh_decl_graph.py`
+2. `python3 tools/infra/refresh_blueprint_tags.py`
+3. `python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags`
+4. `python3 tools/infra/generate_source_sink_compression.py`
+5. `python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json`
+6. `python3 tools/infra/check_bipartite_bleed.py`
+7. `python3 tools/infra/generate_structural_dedup.py`
+8. `python3 tools/infra/generate_structural_fibers.py`
+9. `python3 tools/infra/select_openclaw_target.py`
+
+Operational rule:
+- wait for each upstream step to finish before running the downstream one
+- do not run `generate_source_sink_compression.py` in parallel with `refresh_decl_graph.py`, or the bipartite layer may read stale declaration exports
+- treat `reports/dag/*` as stale until this sequence completes
+
 ## Current vs Legacy
 
 Use this split when entering the repository for the first time.

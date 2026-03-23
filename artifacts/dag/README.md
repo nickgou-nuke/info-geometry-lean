@@ -30,6 +30,11 @@ Derived reports live elsewhere:
 - `reports/dag/declaration-networkx-frontier.graphml`
 - `reports/dag/module-networkx-frontier.graphml`
 - `reports/dag/module-networkx-frontier.svg`
+- `reports/dag/module-networkx-frontier-hotspots.graphml`
+- `reports/dag/module-networkx-frontier-hotspots.svg`
+- `reports/dag/module-networkx-frontier-hotspots.json`
+- `reports/dag/frontier-burndown.md`
+- `reports/dag/frontier-burndown.json`
 
 Policy:
 - treat `artifacts/dag/` as the documented public declaration-graph lane

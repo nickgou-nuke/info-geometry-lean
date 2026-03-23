@@ -243,12 +243,12 @@ frontier, ranked with debt-aware scheduling signals.
 Current trusted semantic graph facts:
 
 - `Skynet v2` graph:
-  - `1366` nodes
-  - `11707` edges
-  - `6365` cross-module edges
+  - `1500` nodes
+  - `12458` edges
+  - `6704` cross-module edges
 - walk mode: `reverse`
 - audit signals:
-  - thinness findings: `1`
+  - thinness findings: `0`
   - vacuity findings: `0`
   - surrogate findings: `0`
   - unification modules tracked: `15`
@@ -275,15 +275,15 @@ theorem auto_index_bridge_spectral_from_seed_1
 
 `why this closes a real frontier edge`
 
-This candidate is generated directly from the frontier row `InfoGeometry.KK.index_bridge_spectral` in `lean/InfoGeometry/KK/KasparovCycle.lean`. It is intended to insert a small bridge theorem feeding the frontier declaration. The seed-to-frontier link kinds currently visible are `primaryDep`. The current raw/priority scores are `0.040361` / `0.055361`, with module status `classical_adjacent_model` and adjustments `unification_status_adjustment +0.015`.
+This candidate is generated directly from the frontier row `InfoGeometry.KK.index_bridge_spectral` in `lean/InfoGeometry/KK/KasparovCycle.lean`. It is intended to insert a small bridge theorem feeding the frontier declaration. The seed-to-frontier link kinds currently visible are `primaryDep`. The current raw/priority scores are `0.040332` / `0.055332`, with module status `classical_adjacent_model` and adjustments `unification_status_adjustment +0.015`.
 
 `likely proof ingredients already present in repo`
 
 - `InfoGeometry.KK.KasparovCycle.analyticalIndex`
 - `InfoGeometry.KK.index_bridge_spectral`
 - `lean/InfoGeometry/KK/KasparovCycle.lean`
-- `frontier rawScore: 0.040361`
-- `frontier score: 0.055361`
+- `frontier rawScore: 0.040332`
+- `frontier score: 0.055332`
 
 `risk level`
 
@@ -309,15 +309,15 @@ theorem auto_kk_analyticalIndex_eq_of_modularCliffordTransport_state_hypotheses_
 
 `why this closes a real frontier edge`
 
-This candidate is generated directly from the frontier row `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_modularCliffordTransport_state_hypotheses` in `lean/InfoGeometry/Canonical/GrandSynthesis.lean`. It is intended to derive a nontrivial equality that feeds the frontier declaration. The seed-to-frontier link kinds currently visible are `primaryDep`. The current raw/priority scores are `0.057267` / `0.042267`, with module status `mixed_capstone_surface` and adjustments `unification_status_adjustment -0.015`.
+This candidate is generated directly from the frontier row `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_modularCliffordTransport_state_hypotheses` in `lean/InfoGeometry/Canonical/GrandSynthesis.lean`. It is intended to derive a nontrivial equality that feeds the frontier declaration. The seed-to-frontier link kinds currently visible are `primaryDep`. The current raw/priority scores are `0.057164` / `0.042164`, with module status `mixed_capstone_surface` and adjustments `unification_status_adjustment -0.015`.
 
 `likely proof ingredients already present in repo`
 
 - `InfoGeometry.KK.KasparovCycle.analyticalIndex`
 - `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_modularCliffordTransport_state_hypotheses`
 - `lean/InfoGeometry/Canonical/GrandSynthesis.lean`
-- `frontier rawScore: 0.057267`
-- `frontier score: 0.042267`
+- `frontier rawScore: 0.057164`
+- `frontier score: 0.042164`
 
 `risk level`
 
@@ -343,15 +343,15 @@ theorem auto_kk_analyticalIndex_eq_of_conjugacy_state_hypotheses_from_seed_3
 
 `why this closes a real frontier edge`
 
-This candidate is generated directly from the frontier row `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_conjugacy_state_hypotheses` in `lean/InfoGeometry/Canonical/GrandSynthesis.lean`. It is intended to derive a nontrivial equality that feeds the frontier declaration. The seed-to-frontier link kinds currently visible are `primaryDep`. The current raw/priority scores are `0.056868` / `0.041868`, with module status `mixed_capstone_surface` and adjustments `unification_status_adjustment -0.015`.
+This candidate is generated directly from the frontier row `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_conjugacy_state_hypotheses` in `lean/InfoGeometry/Canonical/GrandSynthesis.lean`. It is intended to derive a nontrivial equality that feeds the frontier declaration. The seed-to-frontier link kinds currently visible are `primaryDep`. The current raw/priority scores are `0.056797` / `0.041797`, with module status `mixed_capstone_surface` and adjustments `unification_status_adjustment -0.015`.
 
 `likely proof ingredients already present in repo`
 
 - `InfoGeometry.KK.KasparovCycle.analyticalIndex`
 - `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_conjugacy_state_hypotheses`
 - `lean/InfoGeometry/Canonical/GrandSynthesis.lean`
-- `frontier rawScore: 0.056868`
-- `frontier score: 0.041868`
+- `frontier rawScore: 0.056797`
+- `frontier score: 0.041797`
 
 `risk level`
 
@@ -377,14 +377,14 @@ theorem auto_bulk_boundary_correspondence_concrete_from_seed_4
 
 `why this closes a real frontier edge`
 
-This candidate is generated directly from the frontier row `InfoGeometry.Quantum.BulkBoundary.bulk_boundary_correspondence_concrete` in `lean/InfoGeometry/Quantum/BulkBoundary.lean`. It is intended to close a two-way bridge feeding the frontier declaration. The seed-to-frontier link kinds currently visible are `-`. The current raw/priority scores are `0.001941` / `0.031941`, with module status `repo_specific_unification` and adjustments `unification_status_adjustment +0.030`.
+This candidate is generated directly from the frontier row `InfoGeometry.Quantum.BulkBoundary.bulk_boundary_correspondence_concrete` in `lean/InfoGeometry/Quantum/BulkBoundary.lean`. It is intended to close a two-way bridge feeding the frontier declaration. The seed-to-frontier link kinds currently visible are `-`. The current raw/priority scores are `0.001783` / `0.031783`, with module status `repo_specific_unification` and adjustments `unification_status_adjustment +0.030`.
 
 `likely proof ingredients already present in repo`
 
 - `InfoGeometry.Quantum.BulkBoundary.bulk_boundary_correspondence_concrete`
 - `lean/InfoGeometry/Quantum/BulkBoundary.lean`
-- `frontier rawScore: 0.001941`
-- `frontier score: 0.031941`
+- `frontier rawScore: 0.001783`
+- `frontier score: 0.031783`
 - `module status: repo_specific_unification`
 
 `risk level`
@@ -411,14 +411,14 @@ theorem auto_zero_mode_is_information_sink_concrete_of_simplifiedBoundaryModel_f
 
 `why this closes a real frontier edge`
 
-This candidate is generated directly from the frontier row `InfoGeometry.Quantum.BulkBoundary.zero_mode_is_information_sink_concrete_of_simplifiedBoundaryModel` in `lean/InfoGeometry/Quantum/BulkBoundary.lean`. It is intended to insert a small bridge theorem feeding the frontier declaration. The seed-to-frontier link kinds currently visible are `-`. The current raw/priority scores are `0.001564` / `0.031564`, with module status `repo_specific_unification` and adjustments `unification_status_adjustment +0.030`.
+This candidate is generated directly from the frontier row `InfoGeometry.Quantum.BulkBoundary.zero_mode_is_information_sink_concrete_of_simplifiedBoundaryModel` in `lean/InfoGeometry/Quantum/BulkBoundary.lean`. It is intended to insert a small bridge theorem feeding the frontier declaration. The seed-to-frontier link kinds currently visible are `-`. The current raw/priority scores are `0.001437` / `0.031437`, with module status `repo_specific_unification` and adjustments `unification_status_adjustment +0.030`.
 
 `likely proof ingredients already present in repo`
 
 - `InfoGeometry.Quantum.BulkBoundary.zero_mode_is_information_sink_concrete_of_simplifiedBoundaryModel`
 - `lean/InfoGeometry/Quantum/BulkBoundary.lean`
-- `frontier rawScore: 0.001564`
-- `frontier score: 0.031564`
+- `frontier rawScore: 0.001437`
+- `frontier score: 0.031437`
 - `module status: repo_specific_unification`
 
 `risk level`
@@ -431,27 +431,27 @@ This candidate is generated directly from the frontier row `InfoGeometry.Quantum
 ```md
 # Bridge Thinness Index
 
-Generated: `2026-03-22 11:50:53`
+Generated: `2026-03-22 22:53:31`
 
 This report is a heuristic audit of bridge-/launchpad-/interface-facing theorem surfaces that may be mathematically thinner than their names suggest.
 
 ## Status
-- thin-bridge gate: **PASS**
+- thin-bridge gate: **FAIL**
 - interpretation: `FAIL` means at least one targeted theorem currently looks like a definitional identity
 
 ## Counts
 - total tracked findings: **1**
-- definitional identity findings: **0**
-- direct forwarder findings: **1**
+- definitional identity findings: **1**
+- direct forwarder findings: **0**
 - underscore-hypothesis findings: **0**
 - package/orchestration findings: **0**
 
 ## Queue
-- `medium` `direct_forwarder` `unified_anomaly_bridge` at `lean/InfoGeometry/Quantum/ModularAnomaly.lean:131`
+- `high` `definitional_identity` `rn_potential_eq_neg_log_density` at `lean/InfoGeometry/Canonical/LogSpineBridge.lean:32`
 
 ## Findings
-- `lean/InfoGeometry/Quantum/ModularAnomaly.lean:131` `unified_anomaly_bridge` [medium]
-  proof body forwards directly via `exact modularAnomalyGenerator_eq_commutator_shadow`
+- `lean/InfoGeometry/Canonical/LogSpineBridge.lean:32` `rn_potential_eq_neg_log_density` [high]
+  proof body reduces directly to `rfl`
 
 ## Policy
 - this is a heuristic syntax audit, not a proof oracle

@@ -53,10 +53,10 @@ shrunk by a critical lane, and then materialized into quarantine for Lean valida
 
 ## Audit Context
 
-- surrogate findings: `1`
+- surrogate findings: `0`
 - vacuity findings: `0`
 - thin-bridge findings: `1`
-- aggregated replacement targets: `2`
+- aggregated replacement targets: `1`
 
 ## Selection Rule
 
@@ -69,67 +69,32 @@ shrunk by a critical lane, and then materialized into quarantine for Lean valida
 
 `name`
 
-`DebtCandidate.repair_expressing_1`
+`DebtCandidate.repair_rn_potential_eq_neg_log_density_1`
 
 `Lean-style signature sketch`
 
 ```lean
-axiom expressing the modular symmetry relation at the carrier level.
--/ := by
+theorem rn_potential_eq_neg_log_density (p : FinProb α) (x : α) :
+    log_density p x = Real.log (p x).toReal := by
   -- constructive replacement target generated from the tracked debt packet
 ```
 
 `why this closes a real frontier edge`
 
-This candidate targets the tracked debt surface `expressing` at `lean/InfoGeometry/Quantum/ModularAnomaly.lean:261`. It aggregates the audit signals `surrogate:axiom_decl (critical)`. A successful replacement would replace the explicit axiom with a proved theorem surface.
+This candidate targets the tracked debt surface `rn_potential_eq_neg_log_density` at `lean/InfoGeometry/Canonical/LogSpineBridge.lean:32`. It aggregates the audit signals `thinness:definitional_identity (high)`. A successful replacement would replace the definitional identity with a substantive proof.
 
 `likely proof ingredients already present in repo`
 
-- `target file: lean/InfoGeometry/Quantum/ModularAnomaly.lean`
-- `target line: 261`
-- `strongest priority: critical`
-- `audit signals: surrogate:axiom_decl (critical)`
-- `nearby declarations: einstein_anomaly_is_modular_generator, IdCLM, expFlow, expFlow_toContinuousLinearMap, expFlow_zero, expFlow_add`
-- `surrogate debt goal: replace the explicit axiom with a proved theorem surface`
+- `target file: lean/InfoGeometry/Canonical/LogSpineBridge.lean`
+- `target line: 32`
+- `strongest priority: high`
+- `audit signals: thinness:definitional_identity (high)`
+- `nearby declarations: jordan_logdet_eq_zeta_determinant, modular_hamiltonian_to_log_partition, kahler_spine_entropy_identity, freeEnergySpine`
+- `thin-bridge debt goal: replace the definitional identity with a substantive proof`
 
 `risk level`
 
 `high`
-
-## Candidate 2
-
-`name`
-
-`DebtCandidate.repair_unified_anomaly_bridge_2`
-
-`Lean-style signature sketch`
-
-```lean
-theorem unified_anomaly_bridge
-    (hFlow : HasDerivAt (fun t => (M.sigma t : X →L[ℝ] X)) σGen 0)
-    (hFlowNeg : HasDerivAt (fun t => (M.sigma (-t) : X →L[ℝ] X)) (-σGen) 0) :
-    M.modularAnomalyGenerator U =
-      (U.symm : X →L[ℝ] X).comp
-        (σGen.comp (U : X →L[ℝ] X) - (U : X →L[ℝ] X).comp σGen) := by
-  -- constructive replacement target generated from the tracked debt packet
-```
-
-`why this closes a real frontier edge`
-
-This candidate targets the tracked debt surface `unified_anomaly_bridge` at `lean/InfoGeometry/Quantum/ModularAnomaly.lean:131`. It aggregates the audit signals `thinness:direct_forwarder (medium)`. A successful replacement would replace the direct forwarder with a local constructive derivation.
-
-`likely proof ingredients already present in repo`
-
-- `target file: lean/InfoGeometry/Quantum/ModularAnomaly.lean`
-- `target line: 131`
-- `strongest priority: medium`
-- `audit signals: thinness:direct_forwarder (medium)`
-- `nearby declarations: TopologicalMajoranaShadow, modularCocycle, IsAnomalyFree, modularAnomalyGenerator, sigma_zero_clm, modularCocycle_zero`
-- `thin-bridge debt goal: replace the direct forwarder with a local constructive derivation`
-
-`risk level`
-
-`medium`
 ```
 
 ## Surrogate Index
@@ -137,7 +102,7 @@ This candidate targets the tracked debt surface `unified_anomaly_bridge` at `lea
 ```md
 # Surrogate Index
 
-Generated: `2026-03-22 11:50:53`
+Generated: `2026-03-22 22:53:31`
 
 This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and named contract interfaces so surrogate debt can be replaced aggressively with real proofs.
 
@@ -152,9 +117,9 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
   - `[surrogate-audit] OK`
 
 ## Counts
-- total tracked findings: **1**
+- total tracked findings: **0**
 - proof holes: **0**
-- explicit axiom declarations: **1**
+- explicit axiom declarations: **0**
 - quarantine manifest drift findings: **0**
 - vacuous `trivial` theorems: **0**
 - constant `Prop := True/False` surfaces: **0**
@@ -166,11 +131,10 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
 - contract constructors (`to...Assumptions`, `..._of_concrete`, `..._of_finiteSupport`): **0**
 - stable surrogate/placeholder markers: **0**
 - canonical findings: **0**
-- other stable findings: **1**
+- other stable findings: **0**
 - unstable/archive findings: **0**
 
 ## Aggressive Replacement Queue
-- `critical` `axiom_decl` expressing at `lean/InfoGeometry/Quantum/ModularAnomaly.lean:261`
 
 ## Explicit Proof Holes
 
@@ -178,7 +142,7 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
 
 ## Explicit Axiom Declarations
 
-- `lean/InfoGeometry/Quantum/ModularAnomaly.lean:261` `axiom expressing` [critical]
+- none
 
 ## Quarantine Manifest Drift
 
@@ -235,7 +199,7 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
 ```md
 # Vacuity Index
 
-Generated: `2026-03-22 11:50:53`
+Generated: `2026-03-22 22:53:31`
 
 This report tracks alias-driven and definitional-identity surfaces that can make a bridge look mathematically deeper than it currently is.
 
@@ -266,27 +230,27 @@ This report tracks alias-driven and definitional-identity surfaces that can make
 ```md
 # Bridge Thinness Index
 
-Generated: `2026-03-22 11:50:53`
+Generated: `2026-03-22 22:53:31`
 
 This report is a heuristic audit of bridge-/launchpad-/interface-facing theorem surfaces that may be mathematically thinner than their names suggest.
 
 ## Status
-- thin-bridge gate: **PASS**
+- thin-bridge gate: **FAIL**
 - interpretation: `FAIL` means at least one targeted theorem currently looks like a definitional identity
 
 ## Counts
 - total tracked findings: **1**
-- definitional identity findings: **0**
-- direct forwarder findings: **1**
+- definitional identity findings: **1**
+- direct forwarder findings: **0**
 - underscore-hypothesis findings: **0**
 - package/orchestration findings: **0**
 
 ## Queue
-- `medium` `direct_forwarder` `unified_anomaly_bridge` at `lean/InfoGeometry/Quantum/ModularAnomaly.lean:131`
+- `high` `definitional_identity` `rn_potential_eq_neg_log_density` at `lean/InfoGeometry/Canonical/LogSpineBridge.lean:32`
 
 ## Findings
-- `lean/InfoGeometry/Quantum/ModularAnomaly.lean:131` `unified_anomaly_bridge` [medium]
-  proof body forwards directly via `exact modularAnomalyGenerator_eq_commutator_shadow`
+- `lean/InfoGeometry/Canonical/LogSpineBridge.lean:32` `rn_potential_eq_neg_log_density` [high]
+  proof body reduces directly to `rfl`
 
 ## Policy
 - this is a heuristic syntax audit, not a proof oracle

@@ -104,6 +104,15 @@ def frontier_names(frontier_obj: dict[str, Any], limit: int = 6) -> list[str]:
     return out
 
 
+def burndown_names(burndown_obj: dict[str, Any], limit: int = 5) -> list[str]:
+    out: list[str] = []
+    for row in burndown_obj.get("rows", [])[:limit]:
+        name = str(row.get("module", "")).strip()
+        if name:
+            out.append(name)
+    return out
+
+
 def frontier_names_matching(frontier_obj: dict[str, Any], needle: str, limit: int = 4) -> list[str]:
     out: list[str] = []
     for row in frontier_obj.get("frontier", []):
@@ -126,6 +135,7 @@ def render_index(
     summaries: list[ModuleSummary],
     both_frontier: dict[str, Any],
     reverse_frontier: dict[str, Any],
+    frontier_burndown: dict[str, Any],
     seed_block: str,
     seed_deps: list[str],
 ) -> str:
@@ -178,6 +188,11 @@ def render_index(
         for name in grand_synthesis_hits:
             lines.append(f"- `{name}`")
         lines.append("")
+    lines.append("## Frontier Burn-Down")
+    lines.append("- weighted clean-up order for the current top frontier hotspot modules")
+    for name in burndown_names(frontier_burndown):
+        lines.append(f"- `{name}`")
+    lines.append("")
     lines.append("## Current Reading Order")
     lines.append("1. `README.md`")
     lines.append("2. `lean/DAG/README.md`")
@@ -188,7 +203,7 @@ def render_index(
     lines.append("## Notes")
     lines.append("- This page is a generated status view, not a narrative design document.")
     lines.append("- Trusted declaration graph inputs for causal-order analysis live under `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`.")
-    lines.append("- NetworkX-readable graph outputs live under `reports/dag/declaration-networkx.graphml`, `reports/dag/module-networkx.graphml`, `reports/dag/module-networkx.svg`, and the filtered frontier siblings `*-frontier.graphml` / `*-frontier.svg`.")
+    lines.append("- NetworkX-readable graph outputs live under `reports/dag/declaration-networkx.graphml`, `reports/dag/module-networkx.graphml`, `reports/dag/module-networkx.svg`, the filtered frontier siblings `*-frontier.graphml` / `*-frontier.svg`, and the burn-down reports `reports/dag/frontier-burndown.{md,json}`.")
     lines.append("- Treat causal-order rankings as provisional until `reports/dag/true-root-order.md` shows no coverage warning; the public `artifacts/dag/` graph may still be partial if `InfoGeometry.All` omits declaration-bearing branches.")
     lines.append("- Use `reports/dag/missing-all-classification.md` to classify the remaining declaration-bearing files outside `InfoGeometry.All` into direct imports, branch-façade expansions, namespace fixes, and noncanonical exclusions.")
     lines.append("- Generated semantic exports and derived frontier/causal JSONs under `reports/dag/` are intentionally untracked.")
@@ -211,8 +226,9 @@ def main() -> int:
     ]
     both_frontier_path = reports / "skynet-v2-frontier.json"
     reverse_frontier_path = reports / "skynet-v2-frontier-reverse.json"
+    frontier_burndown_path = reports / "frontier-burndown.json"
 
-    missing = [str(p.relative_to(root)) for p in module_files + [both_frontier_path, reverse_frontier_path] if not p.exists()]
+    missing = [str(p.relative_to(root)) for p in module_files + [both_frontier_path, reverse_frontier_path, frontier_burndown_path] if not p.exists()]
     if missing:
         raise SystemExit("missing required generated artifacts:\n" + "\n".join(f"- {m}" for m in missing))
 
@@ -220,6 +236,7 @@ def main() -> int:
     summaries = [summarize_module(p) for p in module_files]
     both_frontier = load_json(both_frontier_path)
     reverse_frontier = load_json(reverse_frontier_path)
+    frontier_burndown = load_json(frontier_burndown_path)
     seed_block, seed_deps = seed_bridge_summary(module_files[0])
 
     out = render_index(
@@ -228,6 +245,7 @@ def main() -> int:
         summaries=summaries,
         both_frontier=both_frontier,
         reverse_frontier=reverse_frontier,
+        frontier_burndown=frontier_burndown,
         seed_block=seed_block,
         seed_deps=seed_deps,
     )

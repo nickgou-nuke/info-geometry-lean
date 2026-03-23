@@ -162,7 +162,23 @@ python3 tools/infra/plot_decl_graph.py \
   --module-svg-out reports/dag/module-networkx.svg \
   --frontier-decl-graphml-out reports/dag/declaration-networkx-frontier.graphml \
   --frontier-module-graphml-out reports/dag/module-networkx-frontier.graphml \
-  --frontier-module-svg-out reports/dag/module-networkx-frontier.svg
+  --frontier-module-svg-out reports/dag/module-networkx-frontier.svg \
+  --frontier-hotspot-graphml-out reports/dag/module-networkx-frontier-hotspots.graphml \
+  --frontier-hotspot-svg-out reports/dag/module-networkx-frontier-hotspots.svg \
+  --frontier-hotspot-json-out reports/dag/module-networkx-frontier-hotspots.json \
+  --frontier-burndown-md-out reports/dag/frontier-burndown.md \
+  --frontier-burndown-json-out reports/dag/frontier-burndown.json
+```
+
+ConformalUnification topological patch and prompt packet:
+
+```bash
+python3 tools/frontier/extract_module_patch.py \
+  --seed-module InfoGeometry.Canonical.ConformalUnification \
+  --json-out reports/dag/ConformalUnification-topological-patch.json \
+  --md-out reports/dag/ConformalUnification-topological-patch.md \
+  --graphml-out reports/dag/ConformalUnification-topological-patch.graphml \
+  --svg-out reports/dag/ConformalUnification-topological-patch.svg
 ```
 
 Self-optimization cycle sheet:

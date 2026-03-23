@@ -670,6 +670,35 @@ theorem unitOfAction_pos_of_noncommute
   simp only [norm_pos_iff, ne_eq]
   exact sub_ne_zero.mpr hAnom
 
+
+/--
+Constructive bridge from the RN/Kahler/log-det lane into the normal phase.
+-/
+theorem isNormalInference_of_kahlerLogDet_unitRelativeVolume
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (hUnitVolume : relativeVolumeChangeRN n M = 1) :
+    CI.IsNormalInference := by
+  have hZero :=
+    CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
+      (M := M) hScaleFromKahler hUnitVolume
+  simpa [ConformalInference.IsNormalInference] using hZero
+
+/--
+Constructive zero-anomaly endpoint at unit relative volume.
+-/
+theorem chiralAnomalyOperator_eq_zero_of_unitRelativeVolume
+    {n : Nat}
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)
+    (hUnitVolume : relativeVolumeChangeRN n M = 1) :
+    CI.chiralAnomalyOperator = 0 := by
+  have hCommute :=
+    CI.projectors_commute_of_kahlerLogDet_unitRelativeVolume
+      (M := M) hScaleFromKahler hUnitVolume
+  exact CI.chiralAnomaly_eq_zero_of_projectors_commute hCommute
+
 end ConformalInference
 
 end InfoGeometry.Canonical.ConformalUnification

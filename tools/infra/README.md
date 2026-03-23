@@ -19,6 +19,7 @@ Canonical entrypoints:
 - [plot_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/plot_decl_graph.py)
 - [generate_source_sink_compression.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_source_sink_compression.py)
 - [check_bipartite_bleed.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/check_bipartite_bleed.py)
+- [generate_structural_dedup.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_structural_dedup.py)
 - [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py)
 
 Rule:
@@ -44,6 +45,12 @@ Outputs from `plot_decl_graph.py` include the full declaration/module graphs, th
 - support source: hydrated `native_component_ids`, with incidence fallback
 - closure source: native `dependencyComponentIds` on the condensation DAG
 - outputs: `reports/dag/structural-anti-bleed.{json,md}` and `reports/dag/structural-hotspots.{json,md}`
+
+`generate_structural_dedup.py` then emits quotient candidates over the same native correspondence surface:
+- `dedup_families`: sink-surface merge candidates with one packet and multiple packaged endpoints
+- `shadow_relations`: source/transport/consumer reflections that share a packet but should not be merged
+- `assumption_packet_reuse`: repeated bundle/motif packets that still feed multiple carriers or sinks
+- outputs: `reports/dag/structural-dedup.{json,md}`
 
 `select_openclaw_target.py` is now a thin operational selector over current coverage plus structural hotspots:
 - uncovered declaration-bearing debt outside graph coverage outranks everything else

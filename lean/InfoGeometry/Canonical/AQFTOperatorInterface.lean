@@ -315,38 +315,6 @@ theorem grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_packag
       (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
       (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
 
-/--
-Packaging theorem:
-pair complete-C*-readiness of the target with the canonical doubled-projector
-super-pair and the vacuum-transported grand-canonical Euler collapse.
--/
-theorem grandCanonicalFockEulerStep_and_projectorSuperPair_base_packaged_with_completeCStarReady
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsCompleteCStarReady (Obs := Obs)
-      ∧ IsProjectorSuperPair
-          (InfoGeometry.Quantum.annihilationOp (E := E))
-          (InfoGeometry.Quantum.creationOp (E := E))
-      ∧ grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-            = ψ + η • H ψ := by
-  refine ⟨completeCStarReady_of_instance (Obs := Obs), ?_, ?_⟩
-  · exact projectorSuperPair_base (E := E)
-  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
-      (E := E) (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
-
 end FockInterface
 
 section UnifiedInterface
@@ -400,7 +368,7 @@ theorem aqft_readiness_package
   exact ⟨hK.1, hF.1, hK.2, hF.2⟩
 
 /--
-Unified readiness package carrying the canonical doubled-projector super-pair
+Canonical AQFT readiness endpoint carrying the doubled-projector super-pair
 alongside the concrete AQFT closure statements.
 -/
 theorem aqft_readiness_package_with_projectorSuperPair_base

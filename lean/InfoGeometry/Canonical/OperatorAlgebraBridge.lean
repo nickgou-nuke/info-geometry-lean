@@ -60,20 +60,6 @@ variable (n : Nat)
 variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs] [CStarRing Obs]
 
-/--
-Package Sinkhorn-driven KMS closure together with C*-readiness of the target.
--/
-theorem sinkhorn_kms_closure_in_cstar
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (h_closure : SinkhornKMSClosure n T K ω β) :
-    IsCStarLayer (Obs := Obs) ∧ SinkhornKMSClosure n T K ω β := by
-  exact sinkhorn_kmsClosure_packaged_with_cstarReady
-    (n := n) (F := F) (Obs := Obs)
-    (T := T) (K := K) (ω := ω) (β := β) h_closure
-
 end AqftClosure
 
 section UnifiedPackage
@@ -86,91 +72,6 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSp
 variable {ObsFock : Type*}
   [NonUnitalNormedRing ObsFock] [StarRing ObsFock] [CStarRing ObsFock]
   [CompleteSpace ObsFock]
-
-/--
-Canonical AQFT package combining C* readiness, complete-C* readiness, KMS
-closure, and the reduced grand-canonical Euler law.
--/
-theorem cstar_completeCStar_kms_fock_package
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : InfoGeometry.Canonical.RicciMongeAmpere.SplitVielbein Kgeo x)
-    (Γ : InfoGeometry.Canonical.RicciMongeAmpere.SpinConnection Kgeo x V)
-    (ψ : DoubledSpace E)
-    (h_closure : SinkhornKMSClosure n T K ω β)
-    (h_vac_split : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsCStarLayer (Obs := ObsKMS) ∧
-      IsCompleteCStarLayer (Obs := ObsFock) ∧
-      SinkhornKMSClosure n T K ω β ∧
-      grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-          = ψ + η • H ψ := by
-  exact aqft_readiness_package
-    (n := n)
-    (F := F) (ObsKMS := ObsKMS)
-    (E := E) (ObsFock := ObsFock)
-    (T := T) (K := K) (ω := ω) (β := β)
-    (η := η) (B := B) (H := H)
-    (R := R) (Kgeo := Kgeo) (x := x)
-    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
-    h_closure h_vac_split
-
-/--
-Canonical AQFT package combining operator-target readiness, Sinkhorn/KMS
-closure, the Bogoliubov projector superalgebra, and the vacuum-reduced
-grand-canonical Euler law.
--/
-theorem cstar_completeCStar_kms_fock_bogoliubov_projector_package
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : InfoGeometry.Canonical.RicciMongeAmpere.SplitVielbein Kgeo x)
-    (Γ : InfoGeometry.Canonical.RicciMongeAmpere.SpinConnection Kgeo x V)
-    (ψ : DoubledSpace E)
-    (h_closure : SinkhornKMSClosure n T K ω β)
-    (h_vac_split : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsCStarLayer (Obs := ObsKMS) ∧
-      IsCompleteCStarLayer (Obs := ObsFock) ∧
-      SinkhornKMSClosure n T K ω β ∧
-      fockAnticommutator (E := E)
-          (bogoliubovAnnihilation (E := E) B)
-          (bogoliubovCreation (E := E) B)
-        = (B.u * (B.v * 2) : ℝ) • ContinuousLinearMap.id ℝ (DoubledSpace E) ∧
-      fockCommutator (E := E)
-          (bogoliubovAnnihilation (E := E) B)
-          (bogoliubovCreation (E := E) B) = 0 ∧
-      grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-          = ψ + η • H ψ := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact cstarReady_of_instance (Obs := ObsKMS)
-  · exact completeCStarReady_of_instance (Obs := ObsFock)
-  · exact h_closure
-  · exact (bogoliubov_projector_superalgebra (E := E) B).1
-  · exact (bogoliubov_projector_superalgebra (E := E) B).2
-  · exact InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
-      (E := E) (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ := ψ) h_vac_split
 
 /--
 Canonical AQFT package combining operator-target readiness, Sinkhorn/KMS

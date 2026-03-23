@@ -23,6 +23,21 @@ Canonical entrypoints:
 - [generate_structural_fibers.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_structural_fibers.py)
 - [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py)
 
+Current safe DAG refresh order:
+- `python3 tools/infra/refresh_decl_graph.py`
+- `python3 tools/infra/refresh_blueprint_tags.py`
+- `python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags`
+- `python3 tools/infra/generate_source_sink_compression.py`
+- `python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json`
+- `python3 tools/infra/check_bipartite_bleed.py`
+- `python3 tools/infra/generate_structural_dedup.py`
+- `python3 tools/infra/generate_structural_fibers.py`
+- `python3 tools/infra/select_openclaw_target.py`
+
+Staleness rule:
+- `refresh_decl_graph.py` must finish before `generate_source_sink_compression.py` starts
+- otherwise `source-sink-bipartite.json` can lag behind the authoritative declaration export
+
 Rule:
 - for full or umbrella builds, use the locked build wrapper here
 - do not start concurrent `lake build` jobs from different terminals or MCP sessions

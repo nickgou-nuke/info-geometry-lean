@@ -227,55 +227,12 @@ variable (n : Nat)
 variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs] [CStarRing Obs]
 
-/--
-Packaging theorem:
-pair C*-readiness of the target with the already-proved concrete Sinkhorn-to-KMS
-closure theorem.
--/
-theorem sinkhorn_kmsClosure_packaged_with_cstarReady
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (hClosure : SinkhornKMSClosure n T K ω β) :
-    IsCStarReady (Obs := Obs) ∧ SinkhornKMSClosure n T K ω β := by
-  refine ⟨cstarReady_of_instance (Obs := Obs), ?_⟩
-  exact hClosure
-
 end KMSInterface
 
 section FockInterface
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs] [CStarRing Obs] [CompleteSpace Obs]
-
-/--
-Packaging theorem:
-pair complete-C*-readiness of the target with the already-proved concrete
-vacuum-transported grand-canonical Euler collapse.
--/
-theorem grandCanonicalFockEulerStep_packaged_with_completeCStarReady
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsCompleteCStarReady (Obs := Obs)
-      ∧ grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-            = ψ + η • H ψ := by
-  refine ⟨completeCStarReady_of_instance (Obs := Obs), ?_⟩
-  exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
-    (E := E) (η := η) (B := B) (H := H)
-    (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-    (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
 
 /--
 Packaging theorem:
@@ -325,47 +282,6 @@ variable {ObsKMS : Type*} [NonUnitalNormedRing ObsKMS] [StarRing ObsKMS] [CStarR
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable {ObsFock : Type*} [NonUnitalNormedRing ObsFock] [StarRing ObsFock]
   [CStarRing ObsFock] [CompleteSpace ObsFock]
-
-/--
-Unified readiness package:
-pair C*- / complete-C*-readiness certificates with the already-proved concrete
-AQFT closure statements.
--/
-theorem aqft_readiness_package
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (H : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (hClosure : SinkhornKMSClosure n T K ω β)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsCStarReady (Obs := ObsKMS)
-      ∧ IsCompleteCStarReady (Obs := ObsFock)
-      ∧ SinkhornKMSClosure n T K ω β
-      ∧ grandCanonicalFockEulerStep (E := E) η B H
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-            = ψ + η • H ψ := by
-  have hK :=
-    sinkhorn_kmsClosure_packaged_with_cstarReady
-      (n := n) (F := F) (Obs := ObsKMS)
-      (T := T) (K := K) (ω := ω) (β := β) hClosure
-  have hF :=
-    grandCanonicalFockEulerStep_packaged_with_completeCStarReady
-      (E := E) (Obs := ObsFock)
-      (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
-  exact ⟨hK.1, hF.1, hK.2, hF.2⟩
 
 /--
 Canonical AQFT readiness endpoint carrying the doubled-projector super-pair
@@ -610,15 +526,12 @@ theorem aqft_readiness_package_realHilbert
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
             (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
             = ψ + η • Hf ψ := by
-  exact aqft_readiness_package
-    (n := n)
-    (F := F) (ObsKMS := RealHilbertObs F)
-    (E := E) (ObsFock := RealHilbertObs E)
-    (T := T) (K := K) (ω := ω) (β := β)
-    (η := η) (B := B) (H := Hf)
-    (R := R) (Kgeo := Kgeo) (x := x)
-    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
-    hClosure hVacSplit
+  refine ⟨cstarReady_of_instance (Obs := RealHilbertObs F), ?_, hClosure, ?_⟩
+  · exact realHilbertOp_completeCStarReady (E := E)
+  · exact grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
+      (E := E) (η := η) (B := B) (H := Hf)
+      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) (ψ := ψ) hVacSplit
 
 /--
 Direct real-Hilbert instantiation that keeps the concrete compression

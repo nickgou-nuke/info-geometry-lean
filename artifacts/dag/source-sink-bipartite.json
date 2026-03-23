@@ -18,9 +18,9 @@
   "hotspot_modules": [
     {
       "module": "InfoGeometry.Canonical.AQFTOperatorInterface",
-      "strength": 125,
-      "out_weight": 58,
-      "in_weight": 67,
+      "strength": 123,
+      "out_weight": 57,
+      "in_weight": 66,
       "decl_count": 39,
       "dominant_surface": "surrogate_or_vacuous",
       "hypothesis_bridge": 0,
@@ -28,8 +28,8 @@
       "surrogate_or_vacuous": 39,
       "hotspot_rank": 5,
       "replaceable_surface_mass": 156.0,
-      "support_pressure": 192.0,
-      "burn_down_score": 820.98,
+      "support_pressure": 189.0,
+      "burn_down_score": 818.536,
       "dominant_pressure": "surrogate_or_vacuous",
       "primary_action": "direct constructive replacement",
       "surrogate_share": 1.0,
@@ -629,11 +629,11 @@
       "reachable_sinks": 2,
       "closest_sink_distance": 1,
       "flow_in_degree": 10,
-      "flow_out_degree": 7,
+      "flow_out_degree": 6,
       "sink_modules": [
         "InfoGeometry.Canonical.AQFTOperatorInterface"
       ],
-      "source_score": 4.3944
+      "source_score": 4.1589
     },
     {
       "name": "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.CI",
@@ -2194,16 +2194,6 @@
   ],
   "sink_nodes": [
     {
-      "name": "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
-      "module": "InfoGeometry.Canonical.AQFTOperatorInterface",
-      "category": "surrogate_or_vacuous",
-      "kind": "theorem",
-      "burn_down_rank": 1,
-      "flow_out_degree": 0,
-      "flow_in_degree": 21,
-      "severity": 3
-    },
-    {
       "name": "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertOp_completeCStarReady",
       "module": "InfoGeometry.Canonical.AQFTOperatorInterface",
       "category": "surrogate_or_vacuous",
@@ -2220,17 +2210,27 @@
       "kind": "theorem",
       "burn_down_rank": 1,
       "flow_out_degree": 1,
-      "flow_in_degree": 27,
+      "flow_in_degree": 24,
       "severity": 3
     },
     {
-      "name": "InfoGeometry.Canonical.AQFTOperatorInterface.complexHilbertOp_cstarReady",
+      "name": "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
       "module": "InfoGeometry.Canonical.AQFTOperatorInterface",
       "category": "surrogate_or_vacuous",
       "kind": "theorem",
       "burn_down_rank": 1,
       "flow_out_degree": 1,
-      "flow_in_degree": 2,
+      "flow_in_degree": 21,
+      "severity": 3
+    },
+    {
+      "name": "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertOp_completeCStarReady",
+      "module": "InfoGeometry.Canonical.AQFTOperatorInterface",
+      "category": "surrogate_or_vacuous",
+      "kind": "theorem",
+      "burn_down_rank": 1,
+      "flow_out_degree": 1,
+      "flow_in_degree": 4,
       "severity": 3
     },
     {
@@ -2469,61 +2469,6 @@
       "source": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
       "source_module": "InfoGeometry.Krein.Thermal",
       "source_score": 11.5629,
-      "sink": "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
-      "sink_module": "InfoGeometry.Canonical.AQFTOperatorInterface",
-      "sink_category": "surrogate_or_vacuous",
-      "path_nodes": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Krein.satisfies_kms_like",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "path_modules": [
-        "InfoGeometry.Krein.Thermal",
-        "InfoGeometry.Canonical.KMSSinkhornBridge",
-        "InfoGeometry.Canonical.AQFTOperatorInterface"
-      ],
-      "path_component_ids": [
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:9449498726415301504",
-        "component:11033057023290376818",
-        "component:6306551777906829278",
-        "component:8087954748158813479"
-      ],
-      "path_component_representatives": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Krein.satisfies_kms_like",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ],
-      "path_length": 5,
-      "motif_signature": [
-        "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "modular_shift",
-        "satisfies_kms_like",
-        "SatisfiesKMSLike",
-        "SinkhornKMSClosure",
-        "aqft_readiness_package_realHilbert"
-      ],
-      "motif_signature_text": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
-      "source_bundle": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Krein.satisfies_kms_like",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure"
-      ],
-      "compression_potential": 20.0
-    },
-    {
-      "source": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-      "source_module": "InfoGeometry.Krein.Thermal",
-      "source_score": 11.5629,
       "sink": "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
       "sink_module": "InfoGeometry.Canonical.AQFTOperatorInterface",
       "sink_category": "surrogate_or_vacuous",
@@ -2566,6 +2511,61 @@
         "realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
       ],
       "motif_signature_text": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
+      "source_bundle": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure"
+      ],
+      "compression_potential": 20.0
+    },
+    {
+      "source": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+      "source_module": "InfoGeometry.Krein.Thermal",
+      "source_score": 11.5629,
+      "sink": "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
+      "sink_module": "InfoGeometry.Canonical.AQFTOperatorInterface",
+      "sink_category": "surrogate_or_vacuous",
+      "path_nodes": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "path_modules": [
+        "InfoGeometry.Krein.Thermal",
+        "InfoGeometry.Canonical.KMSSinkhornBridge",
+        "InfoGeometry.Canonical.AQFTOperatorInterface"
+      ],
+      "path_component_ids": [
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:9449498726415301504",
+        "component:11033057023290376818",
+        "component:6306551777906829278",
+        "component:8087954748158813479"
+      ],
+      "path_component_representatives": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
+        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+      ],
+      "path_length": 5,
+      "motif_signature": [
+        "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "modular_shift",
+        "satisfies_kms_like",
+        "SatisfiesKMSLike",
+        "SinkhornKMSClosure",
+        "aqft_readiness_package_realHilbert"
+      ],
+      "motif_signature_text": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
       "source_bundle": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
@@ -3587,7 +3587,7 @@
       ],
       "path_multiplicity": 2,
       "avg_path_length": 5.0,
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
       "compression_potential": 40.0
     },
     {
@@ -4639,11 +4639,11 @@
       "path_multiplicity": 5,
       "path_motif_signatures": [
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
           "count": 1
         },
         {
@@ -4715,11 +4715,11 @@
       "path_multiplicity": 5,
       "path_motif_signatures": [
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
           "count": 1
         },
         {
@@ -4798,11 +4798,11 @@
       "path_multiplicity": 2,
       "path_motif_signatures": [
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
           "count": 1
         }
       ],
@@ -4827,23 +4827,14 @@
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.even",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.rec",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.casesOn",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.ctorIdx",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign.match_1",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.IsProjectorSuperPair",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
         "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
       ],
       "native_strict_dominator_component_ids": [
+        "component:3472858480797778595",
         "component:8030394887243617970"
       ],
       "native_strict_dominator_representatives": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
         "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base_of_ibDynamics_weighted_from_jointKernel_commutator"
       ],
       "native_depth_min": 1,
@@ -6279,7 +6270,7 @@
       "projection_kind": "node_support",
       "carrier_role": "sink",
       "bundle_id": "bundle:1b64759ff4b6",
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
       "witness_count": 2,
       "compression_score": 40.0,
       "canonical_path_example": [
@@ -6288,7 +6279,7 @@
         "InfoGeometry.Krein.satisfies_kms_like",
         "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
         "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+        "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
       ],
       "canonical_witness_paths": [
         [
@@ -6297,7 +6288,7 @@
           "InfoGeometry.Krein.satisfies_kms_like",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+          "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
         ],
         [
           "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -6305,7 +6296,7 @@
           "InfoGeometry.Krein.satisfies_kms_like",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
+          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
         ]
       ],
       "native_canonical_component_path_example": [
@@ -6314,7 +6305,7 @@
         "component:9449498726415301504",
         "component:11033057023290376818",
         "component:6306551777906829278",
-        "component:8087954748158813479"
+        "component:3472858480797778595"
       ],
       "native_canonical_component_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -6322,7 +6313,7 @@
         "InfoGeometry.Krein.satisfies_kms_like",
         "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
         "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+        "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
       ],
       "sink_names": [
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
@@ -6340,7 +6331,7 @@
       "projection_kind": "node_support",
       "carrier_role": "source",
       "bundle_id": "bundle:1b64759ff4b6",
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
       "witness_count": 2,
       "compression_score": 40.0,
       "canonical_path_example": [
@@ -6349,7 +6340,7 @@
         "InfoGeometry.Krein.satisfies_kms_like",
         "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
         "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+        "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
       ],
       "canonical_witness_paths": [
         [
@@ -6358,7 +6349,7 @@
           "InfoGeometry.Krein.satisfies_kms_like",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+          "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
         ],
         [
           "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -6366,7 +6357,7 @@
           "InfoGeometry.Krein.satisfies_kms_like",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
+          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
         ]
       ],
       "native_canonical_component_path_example": [
@@ -6375,7 +6366,7 @@
         "component:9449498726415301504",
         "component:11033057023290376818",
         "component:6306551777906829278",
-        "component:8087954748158813479"
+        "component:3472858480797778595"
       ],
       "native_canonical_component_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -6383,7 +6374,7 @@
         "InfoGeometry.Krein.satisfies_kms_like",
         "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
         "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+        "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
       ],
       "sink_names": [
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
@@ -6401,7 +6392,7 @@
       "projection_kind": "node_support",
       "carrier_role": "source",
       "bundle_id": "bundle:1b64759ff4b6",
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
       "witness_count": 2,
       "compression_score": 40.0,
       "canonical_path_example": [
@@ -6410,7 +6401,7 @@
         "InfoGeometry.Krein.satisfies_kms_like",
         "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
         "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+        "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
       ],
       "canonical_witness_paths": [
         [
@@ -6419,7 +6410,7 @@
           "InfoGeometry.Krein.satisfies_kms_like",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+          "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
         ],
         [
           "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -6427,7 +6418,7 @@
           "InfoGeometry.Krein.satisfies_kms_like",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
+          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
         ]
       ],
       "native_canonical_component_path_example": [
@@ -6436,7 +6427,7 @@
         "component:9449498726415301504",
         "component:11033057023290376818",
         "component:6306551777906829278",
-        "component:8087954748158813479"
+        "component:3472858480797778595"
       ],
       "native_canonical_component_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -6444,7 +6435,7 @@
         "InfoGeometry.Krein.satisfies_kms_like",
         "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
         "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+        "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
       ],
       "sink_names": [
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
@@ -8597,7 +8588,7 @@
       ],
       "path_multiplicity": 2,
       "avg_path_length": 5.0,
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
       "compression_potential": 40.0
     },
     {
@@ -9649,11 +9640,11 @@
       "path_multiplicity": 5,
       "path_motif_signatures": [
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
           "count": 1
         },
         {
@@ -9725,11 +9716,11 @@
       "path_multiplicity": 5,
       "path_motif_signatures": [
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
           "count": 1
         },
         {
@@ -9808,11 +9799,11 @@
       "path_multiplicity": 2,
       "path_motif_signatures": [
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
           "count": 1
         }
       ],
@@ -9837,23 +9828,14 @@
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
         "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.even",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.rec",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.casesOn",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.ctorIdx",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign.match_1",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.IsProjectorSuperPair",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
         "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
       ],
       "native_strict_dominator_component_ids": [
+        "component:3472858480797778595",
         "component:8030394887243617970"
       ],
       "native_strict_dominator_representatives": [
+        "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
         "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base_of_ibDynamics_weighted_from_jointKernel_commutator"
       ],
       "native_depth_min": 1,
@@ -11290,11 +11272,11 @@
       "direct_projection": true,
       "hypothesis_packets": [
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
           "count": 1
         },
         {
@@ -11313,7 +11295,7 @@
           "InfoGeometry.Krein.satisfies_kms_like",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+          "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
         ],
         [
           "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -11321,7 +11303,7 @@
           "InfoGeometry.Krein.satisfies_kms_like",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
+          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
         ],
         [
           "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -11340,11 +11322,11 @@
       "direct_projection": true,
       "hypothesis_packets": [
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> aqft_readiness_package_realHilbert",
           "count": 1
         }
       ],
@@ -11358,7 +11340,7 @@
           "InfoGeometry.Krein.satisfies_kms_like",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
+          "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
         ],
         [
           "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
@@ -11366,7 +11348,7 @@
           "InfoGeometry.Krein.satisfies_kms_like",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
           "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base"
+          "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
         ]
       ]
     },

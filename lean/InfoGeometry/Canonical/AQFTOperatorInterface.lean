@@ -206,27 +206,6 @@ theorem complexHilbertOp_completeCStarReady :
 
 end ConcreteHilbertModels
 
-section KMSInterface
-
-variable (n : Nat)
-variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
-variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs] [CStarRing Obs]
-
-end KMSInterface
-
-section UnifiedLaunchpadInterface
-
-variable (n : Nat)
-variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
-variable {ObsKMS : Type*}
-  [NonUnitalNormedRing ObsKMS] [StarRing ObsKMS] [CStarRing ObsKMS]
-variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable {ObsFock : Type*} [NonUnitalNormedRing ObsFock] [StarRing ObsFock]
-  [CStarRing ObsFock] [CompleteSpace ObsFock]
-variable {Θ : Type*} [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]
-
-end UnifiedLaunchpadInterface
-
 section ConcreteInterfaceInstances
 
 variable (n : Nat)
@@ -305,20 +284,20 @@ theorem realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_pr
           (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
             (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
             = ψ + η • Hf ψ := by
-  refine ⟨⟨realHilbertCompressionInterpretation (E := E)⟩, ?_, ?_, ?_, ?_, ?_⟩
-  · exact cstarReady_of_instance (Obs := RealHilbertObs F)
-  · exact realHilbertOp_completeCStarReady (E := E)
-  · exact hClosure
-  · exact projectorSuperPair_base (E := E)
-  ·
-    change ψ + η •
-      (grandCanonicalFockGenerator (E := E) B Hf
-        (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-          (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ))) ψ
-      = ψ + η • Hf ψ
-    rw [grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
-      (E := E) (B := B) (H := Hf) (R := R) (K := Kgeo) (x := x)
-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit]
+  have hReady :=
+    aqft_readiness_package_realHilbert
+      (n := n) (F := F) (E := E)
+      (T := T) (K := K) (ω := ω) (β := β)
+      (η := η) (B := B) (Hf := Hf)
+      (R := R) (Kgeo := Kgeo) (x := x)
+      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
+      hClosure hVacSplit
+  exact ⟨⟨realHilbertCompressionInterpretation (E := E)⟩,
+    hReady.1,
+    hReady.2.1,
+    hReady.2.2.1,
+    projectorSuperPair_base (E := E),
+    hReady.2.2.2⟩
 
 /--
 Direct constructive AQFT readiness package from IB dynamics plus the thermal

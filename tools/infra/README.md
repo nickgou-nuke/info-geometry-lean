@@ -26,4 +26,4 @@ Rule:
 Top-level `tools/*.py` entrypoints remain as compatibility wrappers, but this
 directory is the canonical maintained surface.
 
-Outputs from `plot_decl_graph.py` include both the full declaration/module graphs and the filtered theorem-surface frontier graphs under `reports/dag/`.
+Outputs from `plot_decl_graph.py` include the full declaration/module graphs, the filtered theorem-surface frontier graphs, a dedicated top-20 frontier hotspot view, and a weighted frontier burn-down ranking under `reports/dag/`.

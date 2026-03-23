@@ -25,9 +25,9 @@ Status:
 - direct hard dependency detected: `InfoGeometry.KK.KasparovCycle.analyticalIndex -> InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
 
 ## Skynet v2 Frontier
-- graph nodes: **1366**
-- graph edges: **11707**
-- cross-module edges: **6365**
+- graph nodes: **1500**
+- graph edges: **12458**
+- cross-module edges: **6704**
 - seed blocks: **1**
 
 ### Local Bridge Kernel (`--walk both`)
@@ -50,6 +50,14 @@ Status:
 - `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_modularCliffordTransport_state_hypotheses`
 - `InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_conjugacy_state_hypotheses`
 
+## Frontier Burn-Down
+- weighted clean-up order for the current top frontier hotspot modules
+- `InfoGeometry.Canonical.ConformalUnification`
+- `InfoGeometry.Canonical.YangMillsContinuum`
+- `InfoGeometry.Canonical.ConformalAlgebra`
+- `InfoGeometry.Canonical.AQFTOperatorInterface`
+- `InfoGeometry.Canonical.GrandSynthesis`
+
 ## Current Reading Order
 1. `README.md`
 2. `lean/DAG/README.md`
@@ -60,7 +68,7 @@ Status:
 ## Notes
 - This page is a generated status view, not a narrative design document.
 - Trusted declaration graph inputs for causal-order analysis live under `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`.
-- NetworkX-readable graph outputs live under `reports/dag/declaration-networkx.graphml`, `reports/dag/module-networkx.graphml`, `reports/dag/module-networkx.svg`, and the filtered frontier siblings `*-frontier.graphml` / `*-frontier.svg`.
+- NetworkX-readable graph outputs live under `reports/dag/declaration-networkx.graphml`, `reports/dag/module-networkx.graphml`, `reports/dag/module-networkx.svg`, the filtered frontier siblings `*-frontier.graphml` / `*-frontier.svg`, and the burn-down reports `reports/dag/frontier-burndown.{md,json}`.
 - Treat causal-order rankings as provisional until `reports/dag/true-root-order.md` shows no coverage warning; the public `artifacts/dag/` graph may still be partial if `InfoGeometry.All` omits declaration-bearing branches.
 - Use `reports/dag/missing-all-classification.md` to classify the remaining declaration-bearing files outside `InfoGeometry.All` into direct imports, branch-façade expansions, namespace fixes, and noncanonical exclusions.
 - Generated semantic exports and derived frontier/causal JSONs under `reports/dag/` are intentionally untracked.

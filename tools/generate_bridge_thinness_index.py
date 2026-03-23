@@ -81,7 +81,7 @@ def trim_proof(proof: str) -> str:
     for line in proof.splitlines():
         stripped = line.strip()
         if stripped.startswith("/--") or stripped.startswith("--"):
-            break
+            continue
         kept.append(line)
     return "\n".join(kept).strip()
 

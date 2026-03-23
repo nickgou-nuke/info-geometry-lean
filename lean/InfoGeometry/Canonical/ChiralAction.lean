@@ -60,9 +60,8 @@ theorem chiralDirac_eq_of_unitRelativeVolume
     (hUnitVolume : InfoGeometry.Canonical.MoE.relativeVolumeChangeRN n M = 1) :
     chiralDirac IST CI g = IST.D := by
   have hNormal : CI.IsNormalInference := by
-    simpa [ConformalInference.IsNormalInference] using
-      (CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
-        (M := M) hScaleFromKahler hUnitVolume)
+    exact CI.isNormalInference_of_kahlerLogDet_unitRelativeVolume
+      (M := M) hScaleFromKahler hUnitVolume
   exact chiral_action_reduces_for_normal IST CI g 0 hNormal
 
 end InfoGeometry.Canonical.ChiralAction

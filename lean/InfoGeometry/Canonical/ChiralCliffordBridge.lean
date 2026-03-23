@@ -84,4 +84,20 @@ theorem cartan_collapse_of_normal (CI : ConformalInference E) (h_norm : CI.IsNor
     simpa [ConformalInference.chiralScale, ConformalInference.epsilon] using he
   exact (nnnorm_eq_zero).mp hn
 
+
+/--
+Unit relative volume collapses the Cartan anomaly through the normality bridge.
+-/
+theorem cartan_collapse_of_unitRelativeVolume
+    {n : Nat}
+    (CI : ConformalInference E)
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M)
+    (hUnitVolume : InfoGeometry.Canonical.MoE.relativeVolumeChangeRN n M = 1) :
+    CI.chiralAnomaly = 0 := by
+  have hNormal : CI.IsNormalInference :=
+    CI.isNormalInference_of_kahlerLogDet_unitRelativeVolume
+      (M := M) hScaleFromKahler hUnitVolume
+  exact cartan_collapse_of_normal CI hNormal
+
 end InfoGeometry.Canonical.ChiralCliffordBridge

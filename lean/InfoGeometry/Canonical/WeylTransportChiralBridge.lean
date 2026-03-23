@@ -100,4 +100,29 @@ theorem finiteSum_holonomy_eq_chiralScale_of_flat
       (B := B)
       hFlat
 
+
+omit [Fintype I] in
+/--
+Flat Weyl holonomy collapses to zero when unit relative volume forces the
+conformal inference into the normal phase.
+-/
+theorem holonomy_eq_zero_of_flat_of_unitRelativeVolume
+    {n : Nat}
+    (CI : ConformalInference E)
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge : FlatCurvatureChiralScaleBridge (CI := CI) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B)
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M)
+    (hUnitVolume : InfoGeometry.Canonical.MoE.relativeVolumeChangeRN n M = 1) :
+    bridge.lineIntegrator.holonomy bridge.holonomyMap B γ = 0 := by
+  have hScaleZero :=
+    CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
+      (M := M) hScaleFromKahler hUnitVolume
+  rw [holonomy_eq_chiralScale_of_flat
+      (CI := CI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat]
+  exact hScaleZero
+
 end InfoGeometry.Canonical.WeylTransportBridge

@@ -17,6 +17,7 @@ Canonical entrypoints:
 - [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/classify_missing_all.py)
 - [generate_theorem_surface_index.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_theorem_surface_index.py)
 - [plot_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/plot_decl_graph.py)
+- [generate_source_sink_compression.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_source_sink_compression.py)
 - [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py)
 
 Rule:
@@ -27,3 +28,8 @@ Top-level `tools/*.py` entrypoints remain as compatibility wrappers, but this
 directory is the canonical maintained surface.
 
 Outputs from `plot_decl_graph.py` include the full declaration/module graphs, the filtered theorem-surface frontier graphs, a dedicated top-20 frontier hotspot view, and a weighted frontier burn-down ranking under `reports/dag/`.
+
+`generate_source_sink_compression.py` adds the missing incidence layer:
+- atomic truth: declaration DAG
+- generation layer: source bundles -> sink theorems
+- hydrated readability: module carriers with path multiplicity, motif signatures, and compression potential

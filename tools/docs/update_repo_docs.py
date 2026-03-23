@@ -327,6 +327,7 @@ def main() -> int:
         run(["python3", "tools/infra/classify_missing_all.py"], cwd=root)
         run(["python3", "tools/infra/generate_theorem_surface_index.py"], cwd=root)
         run(["python3", "tools/infra/plot_decl_graph.py"], cwd=root)
+        run(["python3", "tools/infra/generate_source_sink_compression.py"], cwd=root)
         run(["python3", "tools/infra/select_openclaw_target.py"], cwd=root)
         run(["python3", "tools/generate_unification_index.py"], cwd=root)
         run(["python3", "tools/generate_debt_candidates.py"], cwd=root)

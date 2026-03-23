@@ -113,6 +113,25 @@ def burndown_names(burndown_obj: dict[str, Any], limit: int = 5) -> list[str]:
     return out
 
 
+def compression_bundle_names(obj: dict[str, Any], limit: int = 4) -> list[str]:
+    out: list[str] = []
+    for row in obj.get("bundles", [])[:limit]:
+        bundle_id = str(row.get("bundle_id", "")).strip()
+        motif = str(row.get("motif_signature", "")).strip()
+        if bundle_id:
+            out.append(f"{bundle_id}: {motif}" if motif else bundle_id)
+    return out
+
+
+def compression_module_names(obj: dict[str, Any], limit: int = 4) -> list[str]:
+    out: list[str] = []
+    for row in obj.get("hydrated_modules", [])[:limit]:
+        module = str(row.get("module", "")).strip()
+        if module:
+            out.append(module)
+    return out
+
+
 def frontier_names_matching(frontier_obj: dict[str, Any], needle: str, limit: int = 4) -> list[str]:
     out: list[str] = []
     for row in frontier_obj.get("frontier", []):
@@ -136,6 +155,7 @@ def render_index(
     both_frontier: dict[str, Any],
     reverse_frontier: dict[str, Any],
     frontier_burndown: dict[str, Any],
+    source_sink_compression: dict[str, Any],
     seed_block: str,
     seed_deps: list[str],
 ) -> str:
@@ -193,6 +213,14 @@ def render_index(
     for name in burndown_names(frontier_burndown):
         lines.append(f"- `{name}`")
     lines.append("")
+    lines.append("## Source-Sink Compression")
+    lines.append("- incidence-layer view between the atomic declaration DAG and the hydrated module graph")
+    lines.append("- exposes canonical source bundles, repeated path motifs, and module-level compression carriers")
+    for name in compression_bundle_names(source_sink_compression):
+        lines.append(f"- source bundle `{name}`")
+    for name in compression_module_names(source_sink_compression):
+        lines.append(f"- hydrated carrier `{name}`")
+    lines.append("")
     lines.append("## Current Reading Order")
     lines.append("1. `README.md`")
     lines.append("2. `lean/DAG/README.md`")
@@ -203,7 +231,7 @@ def render_index(
     lines.append("## Notes")
     lines.append("- This page is a generated status view, not a narrative design document.")
     lines.append("- Trusted declaration graph inputs for causal-order analysis live under `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`.")
-    lines.append("- NetworkX-readable graph outputs live under `reports/dag/declaration-networkx.graphml`, `reports/dag/module-networkx.graphml`, `reports/dag/module-networkx.svg`, the filtered frontier siblings `*-frontier.graphml` / `*-frontier.svg`, and the burn-down reports `reports/dag/frontier-burndown.{md,json}`.")
+    lines.append("- NetworkX-readable graph outputs live under `reports/dag/declaration-networkx.graphml`, `reports/dag/module-networkx.graphml`, `reports/dag/module-networkx.svg`, the filtered frontier siblings `*-frontier.graphml` / `*-frontier.svg`, the burn-down reports `reports/dag/frontier-burndown.{md,json}`, and the incidence-layer compression outputs `reports/dag/source-sink-compression.{md,json}` plus `reports/dag/source-sink-incidence.{graphml,svg}`.")
     lines.append("- Treat causal-order rankings as provisional until `reports/dag/true-root-order.md` shows no coverage warning; the public `artifacts/dag/` graph may still be partial if `InfoGeometry.All` omits declaration-bearing branches.")
     lines.append("- Use `reports/dag/missing-all-classification.md` to classify the remaining declaration-bearing files outside `InfoGeometry.All` into direct imports, branch-façade expansions, namespace fixes, and noncanonical exclusions.")
     lines.append("- Generated semantic exports and derived frontier/causal JSONs under `reports/dag/` are intentionally untracked.")
@@ -227,8 +255,13 @@ def main() -> int:
     both_frontier_path = reports / "skynet-v2-frontier.json"
     reverse_frontier_path = reports / "skynet-v2-frontier-reverse.json"
     frontier_burndown_path = reports / "frontier-burndown.json"
+    source_sink_compression_path = reports / "source-sink-compression.json"
 
-    missing = [str(p.relative_to(root)) for p in module_files + [both_frontier_path, reverse_frontier_path, frontier_burndown_path] if not p.exists()]
+    missing = [
+        str(p.relative_to(root))
+        for p in module_files + [both_frontier_path, reverse_frontier_path, frontier_burndown_path, source_sink_compression_path]
+        if not p.exists()
+    ]
     if missing:
         raise SystemExit("missing required generated artifacts:\n" + "\n".join(f"- {m}" for m in missing))
 
@@ -237,6 +270,7 @@ def main() -> int:
     both_frontier = load_json(both_frontier_path)
     reverse_frontier = load_json(reverse_frontier_path)
     frontier_burndown = load_json(frontier_burndown_path)
+    source_sink_compression = load_json(source_sink_compression_path)
     seed_block, seed_deps = seed_bridge_summary(module_files[0])
 
     out = render_index(
@@ -246,6 +280,7 @@ def main() -> int:
         both_frontier=both_frontier,
         reverse_frontier=reverse_frontier,
         frontier_burndown=frontier_burndown,
+        source_sink_compression=source_sink_compression,
         seed_block=seed_block,
         seed_deps=seed_deps,
     )

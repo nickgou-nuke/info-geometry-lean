@@ -4,7 +4,7 @@ This directory contains the maintained infrastructure entrypoints for the
 repository.
 
 Use these scripts for:
-- authoritative declaration-DAG refresh under `artifacts/dag/`
+- authoritative declaration-DAG refresh and native structural-topology export under `artifacts/dag/`
 - blueprint tag refresh and LeanArchitect preparation
 - locked build execution
 - causal-order reporting, theorem-surface classification, full and filtered NetworkX graph exports, and `InfoGeometry.All` coverage classification
@@ -29,7 +29,12 @@ directory is the canonical maintained surface.
 
 Outputs from `plot_decl_graph.py` include the full declaration/module graphs, the filtered theorem-surface frontier graphs, a dedicated top-20 frontier hotspot view, and a weighted frontier burn-down ranking under `reports/dag/`.
 
-`generate_source_sink_compression.py` adds the missing incidence layer and now emits the public artifact `artifacts/dag/source-sink-bipartite.json`:
+`refresh_decl_graph.py` now emits the full native declaration artifact family under `artifacts/dag/`:
+- atomic truth: `full_graph.json` + `index/decls.jsonl`
+- native structural topology: `structural-topology.json`
+
+`generate_source_sink_compression.py` then adds the correspondence layer and emits the public artifact `artifacts/dag/source-sink-bipartite.json`:
 - atomic truth: declaration DAG
+- native structure: condensation ids, membership, dominators, and canonical root-witness paths
 - generation layer: source bundles -> hydrated carriers
 - hydrated readability: module carriers with path multiplicity, motif signatures, and compression potential

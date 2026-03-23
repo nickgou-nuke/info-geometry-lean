@@ -26,11 +26,12 @@ Read this hierarchy in order:
 
 ### Level 1: Authoritative declaration-DAG pipeline
 
-Use this for causal order, coverage, and rooted partial-order analysis.
+Use this for causal order, coverage, rooted partial-order analysis, and native structural topology.
 
 Inputs:
 - `artifacts/dag/full_graph.json`
 - `artifacts/dag/index/decls.jsonl`
+- `artifacts/dag/structural-topology.json`
 - `artifacts/dag/source-sink-bipartite.json`
 
 Authoritative refresh path:
@@ -51,6 +52,7 @@ Use this lane when the question is:
 - which declaration-bearing files are still outside `InfoGeometry.All`?
 - how do I open the current declaration DAG as a NetworkX/GraphML graph?
 - how do I isolate only the hypothesis/package/surrogate frontier?
+- how do I recover stable condensation components, strict dominators, and canonical root witness paths?
 - how do I recover source bundles, repeated path motifs, and compression carriers instead of only adjacency?
 
 ### Level 2: Authoritative blueprint / LeanArchitect pipeline

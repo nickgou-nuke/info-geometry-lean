@@ -90,7 +90,7 @@ lemma isEinsteinKaehlerAtWith_zero_of_isRicciFlat
 Metric-side reverse bridge on the zero branch:
 `Ric = 0 · g` implies Ricci-flatness.
 -/
-lemma isRicciFlat_of_isEinsteinKaehlerAtWith_zero
+private lemma isRicciFlat_of_isEinsteinKaehlerAtWith_zero
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (hEin0 : IsEinsteinKaehlerAtWith 0 R K x) :
     IsRicciFlat R := by
@@ -241,7 +241,7 @@ lemma MetricDerivedRNRicciBridge.ofUnitRelativeVolume_fderiv
 /--
 Every metric-derived RN bridge induces the abstract metric-to-Ricci bridge.
 -/
-theorem metricRNRicciBridge_of_metricDerived
+private theorem metricRNRicciBridge_of_metricDerived
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (hM : MetricDerivedRNRicciBridge R K x) :
     MetricRNRicciBridge R K x := by
@@ -363,7 +363,7 @@ theorem ricciTensor_unique_of_mongeAmpereRicciState
 Constructive vacuum Einstein closure from an explicit Ricci-flat witness
 (non-bridge form).
 -/
-theorem vacuumEinsteinEquation_of_isRicciFlat
+private theorem vacuumEinsteinEquation_of_isRicciFlat
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (Λ : ℝ)
     (hFlat : IsRicciFlat R) :
@@ -407,7 +407,7 @@ theorem vacuumEinsteinEquation_of_unitRelativeVolume
 Constructive closure theorem in explicit state form:
 from the `IsRicciFlat` portion of the state, we obtain the vacuum Einstein equation.
 -/
-theorem vacuumEinsteinEquation_of_isRicciFlatState
+private theorem vacuumEinsteinEquation_of_isRicciFlatState
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (Λ : ℝ)
     (hState : MongeAmpereRicciState R K) :

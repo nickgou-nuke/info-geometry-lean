@@ -9,7 +9,7 @@ Status:
 
 ## Repository Scale
 - Lean files under `lean/`: **468**
-- Lean LOC under `lean/`: **81,430**
+- Lean LOC under `lean/`: **81,424**
 
 ## Trusted Semantic Exports
 | Module | Semantic nodes | Semantic edges | Skeleton nodes | Top hubs |
@@ -64,7 +64,7 @@ Status:
 - hydrated carrier `InfoGeometry.Canonical.RicciMongeAmpere`
 - hydrated carrier `InfoGeometry.Canonical.PerelmanW`
 - hydrated carrier `InfoGeometry.Krein.DoubledSpace`
-- hydrated carrier `InfoGeometry.Canonical.CalabiYauBridge`
+- hydrated carrier `InfoGeometry.Canonical.CountSubstrateBridge`
 
 ## Current Reading Order
 1. `README.md`

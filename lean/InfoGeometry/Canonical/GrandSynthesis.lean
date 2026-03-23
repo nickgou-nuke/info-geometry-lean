@@ -403,7 +403,7 @@ Entropy-sourced geometric gravity statement:
 RN/Kahler-potential sourcing plus unit relative-volume closure and a metric RN
 bridge implies the vacuum Einstein equation on the `c = 0` branch (`scalar = 2Λ`).
 -/
-theorem vacuumEinsteinEquation_of_rnEntropySource
+private theorem vacuumEinsteinEquation_of_rnEntropySource
     (Kgeo : KaehlerInformationGeometry X)
     (R : RicciTensor X)
     (x : X) (Λ : ℝ)
@@ -424,7 +424,7 @@ if RN/Kahler entropy sources Monge-Ampere density and unit relative-volume closu
 is equipped with a metric RN bridge, then the induced information geometry is Ricci-flat and satisfies
 the vacuum Einstein equation (`c = 0`, `scalar = 2Λ`).
 -/
-theorem gravity_generated_by_rnEntropy
+private theorem gravity_generated_by_rnEntropy
     (Kgeo : KaehlerInformationGeometry X)
     (R : RicciTensor X)
     (x : X) (Λ : ℝ)

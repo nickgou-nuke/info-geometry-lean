@@ -20,6 +20,7 @@ Canonical entrypoints:
 - [generate_source_sink_compression.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_source_sink_compression.py)
 - [check_bipartite_bleed.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/check_bipartite_bleed.py)
 - [generate_structural_dedup.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_structural_dedup.py)
+- [generate_structural_fibers.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_structural_fibers.py)
 - [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py)
 
 Rule:
@@ -51,6 +52,12 @@ Outputs from `plot_decl_graph.py` include the full declaration/module graphs, th
 - `shadow_relations`: source/transport/consumer reflections that share a packet but should not be merged
 - `assumption_packet_reuse`: repeated bundle/motif packets that still feed multiple carriers or sinks
 - outputs: `reports/dag/structural-dedup.{json,md}`
+
+`generate_structural_fibers.py` then emits a packet-conditioned bulk fiber decomposition over the same native correspondence surface:
+- `packet_fibers`: per-packet corridor strands with wrapper counts, role chains, and native corridor representatives
+- `source_sink_fiber_groups`: grouped packet classes for one broad source family and one consumer family
+- `sink_family_entanglements`: sink-side bulk entanglement where several packet corridors converge into one family
+- outputs: `reports/dag/structural-fibers.{json,md}`
 
 `select_openclaw_target.py` is now a thin operational selector over current coverage plus structural hotspots:
 - uncovered declaration-bearing debt outside graph coverage outranks everything else

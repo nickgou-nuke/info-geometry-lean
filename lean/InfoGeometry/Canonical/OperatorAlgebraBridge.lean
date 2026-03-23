@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.KKFoundation
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.QFTTDFTLaunchpad
 import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.RicciMongeAmpere
 
@@ -25,7 +26,6 @@ namespace InfoGeometry.Canonical.OperatorAlgebraBridge
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.AQFTOperatorInterface
 open InfoGeometry.Canonical.KMSSinkhornBridge
-open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical.RicciMongeAmpere
 open InfoGeometry.Canonical.TomitaTakesaki
@@ -75,7 +75,7 @@ closure, the canonical doubled-projector super-pair, and the vacuum-reduced
 grand-canonical Euler law.
 -/
 theorem cstar_completeCStar_kms_fock_projectorSuperPair_base_package
-    (T : SinkhornTrajectory n)
+    (T : InfoGeometry.Canonical.MoE.SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
@@ -134,7 +134,7 @@ Canonical operator-layer version of the unified AQFT/TDFT launchpad packaged
 with C* and complete-C* readiness.
 -/
 theorem cstar_completeCStar_kms_fock_tdft_launchpad_package
-    (T : SinkhornTrajectory n)
+    (T : InfoGeometry.Canonical.MoE.SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
@@ -188,7 +188,7 @@ explicit Bogoliubov projector-superalgebra carried alongside the readiness
 package.
 -/
 theorem cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package
-    (T : SinkhornTrajectory n)
+    (T : InfoGeometry.Canonical.MoE.SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)
@@ -250,7 +250,7 @@ Canonical operator-layer version of the unified AQFT/TDFT launchpad carrying
 the canonical doubled-projector super-pair alongside C* readiness.
 -/
 theorem cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package
-    (T : SinkhornTrajectory n)
+    (T : InfoGeometry.Canonical.MoE.SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
     (β : ℝ)

@@ -3,10 +3,11 @@ import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Canonical.InformationTorsion
+import InfoGeometry.Canonical.RicciMongeAmpere
 set_option linter.unusedSectionVars false
 
 /-!
-# Research.WeylInformationGauge
+# InfoGeometry.Canonical.WeylInformationGauge
 
 Constructive Weyl-gauge layer for information geometry:
 
@@ -275,7 +276,7 @@ variable {E : Type*}
 Cartan generator split specialized to Weyl-gauge interpretation:
 `M` is volume-preserving and `D` is Weyl-dilation.
 -/
-theorem cartanWeyl_generator_split
+private theorem cartanWeyl_generator_split
     (CBA : ConformalBeliefAlgebra E)
     (hCartan : CBA.GeneratorCartanDecomposition) :
     CBA.IsVolumePreservingPart CBA.M ∧ CBA.IsWeylDilationPart CBA.D := by
@@ -314,7 +315,7 @@ given explicit compact/non-compact sector hypotheses for `(M,D)`, nonzero
 anomaly still forces nonzero transported Einstein residual under the same
 source relation.
 -/
-theorem cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts
+private theorem cartanWeyl_dilation_sources_transportedEinsteinResidual_of_parts
     (CBA : ConformalBeliefAlgebra E)
     (hM : CBA.IsVolumePreservingPart CBA.M)
     (hD : CBA.IsWeylDilationPart CBA.D)

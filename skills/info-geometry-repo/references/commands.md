@@ -170,6 +170,16 @@ python3 tools/infra/plot_decl_graph.py \
   --frontier-burndown-json-out reports/dag/frontier-burndown.json
 ```
 
+Source-bundle / sink-bundle compression layer and incidence graph:
+
+```bash
+python3 tools/infra/generate_source_sink_compression.py \
+  --md-out reports/dag/source-sink-compression.md \
+  --json-out reports/dag/source-sink-compression.json \
+  --graphml-out reports/dag/source-sink-incidence.graphml \
+  --svg-out reports/dag/source-sink-incidence.svg
+```
+
 ConformalUnification topological patch and prompt packet:
 
 ```bash

@@ -42,6 +42,7 @@ Primary Python consumers:
 - [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/classify_missing_all.py)
 - [generate_theorem_surface_index.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_theorem_surface_index.py)
 - [plot_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/plot_decl_graph.py)
+- [generate_source_sink_compression.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_source_sink_compression.py)
 
 Use this lane when the question is:
 - what is the root set?
@@ -49,6 +50,7 @@ Use this lane when the question is:
 - which declaration-bearing files are still outside `InfoGeometry.All`?
 - how do I open the current declaration DAG as a NetworkX/GraphML graph?
 - how do I isolate only the hypothesis/package/surrogate frontier?
+- how do I recover source bundles, repeated path motifs, and compression carriers instead of only adjacency?
 
 ### Level 2: Authoritative blueprint / LeanArchitect pipeline
 

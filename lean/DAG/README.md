@@ -22,17 +22,22 @@ There are four different views of the theory, and they should not be mixed:
 - Edges are type/value dependencies.
 - Use this for whole-library topology, dominators, SCCs, and coarse bottleneck analysis.
 
-2. Source-sink bipartite correspondence artifact
+2. Native structural topology artifact
+- Lean emits this as `artifacts/dag/structural-topology.json` from the hydrated SCC DAG.
+- It preserves stable component ids, membership, condensation edges, layer summaries, strict dominators, and canonical root-witness paths.
+- Use this for native condensation-level structure before hydrating into readable carriers.
+
+3. Source-sink bipartite correspondence artifact
 - Nodes are typed atomic packets and hydrated readable carriers.
 - Incidence edges preserve bundle ids, motif signatures, witness counts, compression scores, and canonical path examples.
 - Use this for source-sink compression, path-packet transport, and projection from atomic theorem truth into readable module carriers.
 
-3. Block export / causal provenance
+4. Block export / causal provenance
 - Nodes are source command blocks.
 - The exporter records which declarations each block produced.
 - This is the right layer for source-level attribution and semantic slicing.
 
-4. Semantic block graph
+5. Semantic block graph
 - Built from block export, but filtered to `primaryProduces`.
 - This removes generated `_proof_*`, `match_*`, and auxiliary elaborator noise from the semantic presentation layer while keeping causal provenance intact underneath.
 - It now also carries `primaryDeps`, explicit semantic block edges, and enough metadata for frontier diffusion in Python.
@@ -40,6 +45,7 @@ There are four different views of the theory, and they should not be mixed:
 The practical rule is:
 
 Declaration graph for global topology and atomic truth.
+Native structural topology artifact for condensed SCC-level invariants and witness paths.
 Bipartite correspondence artifact for generation, compression, and bundle transport.
 Semantic block graph for human-facing theory structure.
 
@@ -49,9 +55,10 @@ The repository currently has four graph/export lanes, and they should be kept se
 
 1. Authoritative declaration-DAG lane
 - [Indexer.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/Indexer.lean)
-- low-level exporter behind the public `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl` lane
-- [tools/infra/generate_source_sink_compression.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_source_sink_compression.py) then lifts that atomic export into the public correspondence object `artifacts/dag/source-sink-bipartite.json`
-- together these are the canonical source for causal order, coverage, and correspondence between atomic truth and hydrated readable carriers
+- [StructuralExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/StructuralExport.lean)
+- low-level exporter behind the public `artifacts/dag/full_graph.json`, `artifacts/dag/index/decls.jsonl`, and `artifacts/dag/structural-topology.json` lane
+- [tools/infra/generate_source_sink_compression.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_source_sink_compression.py) then lifts the atomic export plus native structural topology into the public correspondence object `artifacts/dag/source-sink-bipartite.json`
+- together these are the canonical source for causal order, native structural invariants, and correspondence between atomic truth and hydrated readable carriers
 
 2. Authoritative semantic-block lane
 - [BlockExport.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/BlockExport.lean) for in-process block slicing
@@ -76,10 +83,11 @@ These compatibility surfaces are archived for inspection only and are not the ca
 For public graph artifacts, the trust order is:
 
 1. Atomic declaration DAG under `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`
-2. Public correspondence artifact under `artifacts/dag/source-sink-bipartite.json`
-3. Readable reports and graph views under `reports/dag/`
+2. Native structural topology under `artifacts/dag/structural-topology.json`
+3. Public correspondence artifact under `artifacts/dag/source-sink-bipartite.json`
+4. Readable reports and graph views under `reports/dag/`
 
-If those layers disagree, trust the atomic DAG first, then the bipartite correspondence artifact, and regenerate the readable reports.
+If those layers disagree, trust the atomic DAG first, then the native structural topology, then the bipartite correspondence artifact, and regenerate the readable reports.
 
 The repository also has two source-attribution export paths with different trust levels:
 
@@ -100,7 +108,7 @@ This process boundary matters. It avoids host/guest `[init]` collisions that can
 
 ## 2) Conceptual Model
 
-At the center are three graph forms:
+At the center are four graph forms:
 
 1. `Graph alpha` in `Basic.lean`
 - Nodes are declarations or synthetic entities.
@@ -109,14 +117,18 @@ At the center are three graph forms:
 2. `HydratedGraph alpha` in `Basic.lean` + `Hydrate.lean`
 - Adds SCC decomposition, condensed DAG, predecessor map, topological order, and dominator sets.
 
-3. Public source-sink correspondence artifact under `artifacts/dag/source-sink-bipartite.json`
-- Built downstream of the exported declaration DAG.
+3. Public native structural topology artifact under `artifacts/dag/structural-topology.json`
+- Emitted directly from the Lean hydrated graph.
+- Preserves stable component ids, membership, condensation edges, layer summaries, strict dominators, and canonical root-witness paths.
+
+4. Public source-sink correspondence artifact under `artifacts/dag/source-sink-bipartite.json`
+- Built downstream of the exported declaration DAG plus the native structural topology.
 - Connects typed atomic source bundles to hydrated readable carriers.
 - Preserves bundle ids, motif signatures, witness counts, compression scores, and canonical path examples.
 
 This gives a progression:
 
-Environment -> Graph -> SCC DAG -> Public correspondence artifact -> Metrics/Queries/Readable projections
+Environment -> Graph -> HydratedGraph -> Structural topology artifact -> Public correspondence artifact -> Metrics/Queries/Readable projections
 
 ## 3) Layered Architecture
 
@@ -186,23 +198,22 @@ The distinction is intentional:
 
 Use this when you want the current rooted partial order, coverage metrics, declaration-level causal geometry, and the maintained correspondence layer over the authoritative umbrella import root.
 
-Step 1: export the authoritative declaration graph and declaration index
+Step 1: export the authoritative declaration graph, declaration index, and native structural topology
 
 ```bash
-python3 tools/refresh_decl_graph.py
+python3 tools/infra/refresh_decl_graph.py
 ```
 
-Step 2: derive the public source-sink correspondence artifact
+Step 2: derive the public source-sink correspondence artifact from the atomic DAG plus the native structural topology
 
 ```bash
-python3 tools/infra/generate_source_sink_compression.py \
-  --artifact-out artifacts/dag/source-sink-bipartite.json
+python3 tools/infra/generate_source_sink_compression.py   --structure artifacts/dag/structural-topology.json   --artifact-out artifacts/dag/source-sink-bipartite.json
 ```
 
 Step 3: build the rooted causal-order report
 
 ```bash
-python3 tools/generate_causal_report.py \
+python3 tools/infra/generate_causal_report.py \
   --out reports/dag/true-root-order.md \
   --json-out reports/dag/true-root-order.json
 ```
@@ -210,7 +221,7 @@ python3 tools/generate_causal_report.py \
 Step 4: classify declaration-bearing files still outside `InfoGeometry.All`
 
 ```bash
-python3 tools/classify_missing_all.py
+python3 tools/infra/classify_missing_all.py
 ```
 
 Use this path for:

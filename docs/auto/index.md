@@ -8,8 +8,8 @@ Status:
 - declaration-level causal-order inputs live under `artifacts/dag/`; readable frontier/causal reports and NetworkX exports live under `reports/dag/`
 
 ## Repository Scale
-- Lean files under `lean/`: **467**
-- Lean LOC under `lean/`: **81,702**
+- Lean files under `lean/`: **468**
+- Lean LOC under `lean/`: **82,086**
 
 ## Trusted Semantic Exports
 | Module | Semantic nodes | Semantic edges | Skeleton nodes | Top hubs |
@@ -76,7 +76,8 @@ Status:
 ## Notes
 - This page is a generated status view, not a narrative design document.
 - Trusted declaration graph inputs for causal-order analysis live under `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`.
-- Public DAG artifacts now include `artifacts/dag/source-sink-bipartite.json` alongside `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`; readable projections live under `reports/dag/`, including `source-sink-compression.md` and `source-sink-incidence.{graphml,svg}`.
+- Native Lean structural analysis now lives under `artifacts/dag/structural-topology.json` with stable condensation ids, membership, dominators, and canonical root-witness paths.
+- Public DAG artifacts now include `artifacts/dag/source-sink-bipartite.json` alongside `artifacts/dag/full_graph.json`, `artifacts/dag/index/decls.jsonl`, and `artifacts/dag/structural-topology.json`; readable projections live under `reports/dag/`, including `source-sink-compression.md` and `source-sink-incidence.{graphml,svg}`.
 - Treat causal-order rankings as provisional until `reports/dag/true-root-order.md` shows no coverage warning; the public `artifacts/dag/` graph may still be partial if `InfoGeometry.All` omits declaration-bearing branches.
 - Use `reports/dag/missing-all-classification.md` to classify the remaining declaration-bearing files outside `InfoGeometry.All` into direct imports, branch-façade expansions, namespace fixes, and noncanonical exclusions.
 - Generated semantic exports and derived frontier/causal JSONs under `reports/dag/` are intentionally untracked.

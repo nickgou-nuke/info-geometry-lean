@@ -11,12 +11,14 @@ if __package__ in (None, ""):
     from tools.pathing import (
         default_decl_graph_file,
         default_decl_index_dir,
+        default_decl_structure_file,
         repo_root,
     )
 else:
     from tools.pathing import (
         default_decl_graph_file,
         default_decl_index_dir,
+        default_decl_structure_file,
         repo_root,
     )
 
@@ -52,6 +54,11 @@ def parse_args() -> argparse.Namespace:
         default=str(default_decl_graph_file().relative_to(repo_root())),
         help="Output path for full_graph.json.",
     )
+    parser.add_argument(
+        "--structure-out",
+        default=str(default_decl_structure_file().relative_to(repo_root())),
+        help="Output path for the native structural-topology artifact.",
+    )
     return parser.parse_args()
 
 
@@ -67,8 +74,10 @@ def main() -> int:
     root = repo_root()
     index_dir = normalize_output(root, args.index_dir)
     graph_out = normalize_output(root, args.graph_out)
+    structure_out = normalize_output(root, args.structure_out)
     index_dir.mkdir(parents=True, exist_ok=True)
     graph_out.parent.mkdir(parents=True, exist_ok=True)
+    structure_out.parent.mkdir(parents=True, exist_ok=True)
 
     cmd = [
         "lake",
@@ -80,10 +89,12 @@ def main() -> int:
         args.namespace,
         str(index_dir),
         str(graph_out),
+        str(structure_out),
     ]
     print(f"[refresh-decl-graph] running: {' '.join(cmd)}", flush=True)
     subprocess.run(cmd, cwd=root, check=True)
     print(f"[refresh-decl-graph] wrote {graph_out}", flush=True)
+    print(f"[refresh-decl-graph] wrote {structure_out}", flush=True)
     print(f"[refresh-decl-graph] wrote {index_dir}", flush=True)
     return 0
 

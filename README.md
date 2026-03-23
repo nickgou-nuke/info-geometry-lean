@@ -145,11 +145,12 @@ The exact frontier graph counts are intentionally not duplicated here. Use the t
 
 Keep these graph layers distinct:
 - `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl` are the public authoritative atomic declaration-DAG inputs for causal-order analysis.
+- `artifacts/dag/structural-topology.json` is the public authoritative native structural-analysis layer emitted by Lean: stable condensation-node ids, component membership, condensation edges, layer data, dominator summaries, and canonical root-witness paths.
 - `artifacts/dag/source-sink-bipartite.json` is the public authoritative correspondence object between atomic declaration truth and hydrated readable carriers.
 - `reports/dag/true-root-order.{md,json}`, `reports/dag/openclaw-targets.{md,json}`, `reports/dag/source-sink-compression.{md,json}`, and the GraphML / SVG views under `reports/dag/` are derived readable reports built from the authoritative `artifacts/dag/` layer plus the tracked audits.
 - `reports/dag/*.semantic-block.stdlib.json` are trusted semantic block exports for heavy modules and stay separate from the declaration-DAG / correspondence lane.
 
-The mismatch that kept reappearing came from tool drift across two graph eras: older declaration-graph tooling assumed `full_graph.json` and `index/decls.jsonl` at repo root, while a later generation pushed the trusted declaration export into the hidden `.build/` cache. The current repository policy is to keep the authoritative atomic DAG and its public correspondence layer in `artifacts/dag/`, with `.build/` treated only as a transient build cache or explicit compatibility fallback. A second drift then appeared when readable markdown/JSON reports were refreshed without refreshing their authoritative inputs, leaving downstream selectors and graph summaries to read stale state.
+The mismatch that kept reappearing came from tool drift across two graph eras: older declaration-graph tooling assumed `full_graph.json` and `index/decls.jsonl` at repo root, while a later generation pushed the trusted declaration export into the hidden `.build/` cache. The current repository policy is to keep the authoritative atomic DAG, native structural topology, and public correspondence layer in `artifacts/dag/`, with `.build/` treated only as a transient build cache or explicit compatibility fallback. A second drift then appeared when readable markdown/JSON reports were refreshed without refreshing their authoritative inputs, leaving downstream selectors and graph summaries to read stale state.
 
 ## Tooling Hierarchy
 
@@ -166,8 +167,8 @@ Read the operational documentation in this order:
 
 The hierarchy of trust is:
 
-1. authoritative declaration DAG and correspondence lane
-- [refresh_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/refresh_decl_graph.py) -> [Indexer.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/Indexer.lean) -> `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`
+1. authoritative declaration DAG, native structure, and correspondence lane
+- [refresh_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/refresh_decl_graph.py) -> [Indexer.lean](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/Indexer.lean) -> `artifacts/dag/full_graph.json`, `artifacts/dag/index/decls.jsonl`, and `artifacts/dag/structural-topology.json`
 - [generate_source_sink_compression.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_source_sink_compression.py) -> `artifacts/dag/source-sink-bipartite.json`
 - consumed by [generate_causal_report.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_causal_report.py), [select_openclaw_target.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/select_openclaw_target.py), [classify_missing_all.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/classify_missing_all.py), [generate_theorem_surface_index.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_theorem_surface_index.py), [plot_decl_graph.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/plot_decl_graph.py), and the readable `reports/dag/*` projections
 
@@ -199,6 +200,7 @@ Use this split when entering the repository for the first time.
 | Surface | Status | What to use it for |
 | `lean/InfoGeometry/Canonical`, `lean/InfoGeometry/KK`, `lean/InfoGeometry/Library.lean`, `lean/InfoGeometry/Quantum` | Current | Main theorem library and publication surface |
 | `tools/infra/refresh_decl_graph.py` + `lean/DAG/Indexer.lean` + `artifacts/dag/full_graph.json` + `artifacts/dag/index/decls.jsonl` | Current / authoritative | Atomic declaration-level causal order, coverage, and rooted partial-order analysis |
+| `tools/infra/refresh_decl_graph.py` + `lean/DAG/StructuralExport.lean` + `artifacts/dag/structural-topology.json` | Current / authoritative | Native condensed structural topology with stable component ids, membership, condensation edges, layer data, dominator summaries, and canonical root-witness paths |
 | `tools/infra/generate_source_sink_compression.py` + `artifacts/dag/source-sink-bipartite.json` | Current / authoritative | Stable correspondence layer between atomic declaration truth and hydrated readable carriers; source bundles, motif signatures, witness counts, and compression carriers |
 | `tools/infra/generate_causal_report.py`, `tools/infra/select_openclaw_target.py`, `tools/infra/classify_missing_all.py`, `tools/infra/generate_theorem_surface_index.py`, `tools/infra/plot_decl_graph.py` | Current / authoritative | Readable causal reports, operational rankings, theorem-surface classification, source-sink compression views, and full/tracked-frontier NetworkX graph exports |
 | `tools/infra/refresh_blueprint_tags.py`, `lean/InfoGeometry/auto_blueprints.lean`, `lean/InfoGeometry/BlueprintTags.lean`, LeanArchitect `:blueprint` / `:blueprintJson` facets | Current / authoritative | Blueprint coverage refresh and exact theorem-to-TeX/JSON extraction |

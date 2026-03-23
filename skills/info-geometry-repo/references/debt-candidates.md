@@ -10,10 +10,10 @@ shrunk by a critical lane, and then materialized into quarantine for Lean valida
 
 ## Audit Context
 
-- surrogate findings: `1`
+- surrogate findings: `0`
 - vacuity findings: `0`
 - thin-bridge findings: `1`
-- aggregated replacement targets: `2`
+- aggregated replacement targets: `1`
 
 ## Selection Rule
 
@@ -26,64 +26,29 @@ shrunk by a critical lane, and then materialized into quarantine for Lean valida
 
 `name`
 
-`DebtCandidate.repair_expressing_1`
+`DebtCandidate.repair_rn_potential_eq_neg_log_density_1`
 
 `Lean-style signature sketch`
 
 ```lean
-axiom expressing the modular symmetry relation at the carrier level.
--/ := by
+theorem rn_potential_eq_neg_log_density (p : FinProb α) (x : α) :
+    log_density p x = Real.log (p x).toReal := by
   -- constructive replacement target generated from the tracked debt packet
 ```
 
 `why this closes a real frontier edge`
 
-This candidate targets the tracked debt surface `expressing` at `lean/InfoGeometry/Quantum/ModularAnomaly.lean:261`. It aggregates the audit signals `surrogate:axiom_decl (critical)`. A successful replacement would replace the explicit axiom with a proved theorem surface.
+This candidate targets the tracked debt surface `rn_potential_eq_neg_log_density` at `lean/InfoGeometry/Canonical/LogSpineBridge.lean:32`. It aggregates the audit signals `thinness:definitional_identity (high)`. A successful replacement would replace the definitional identity with a substantive proof.
 
 `likely proof ingredients already present in repo`
 
-- `target file: lean/InfoGeometry/Quantum/ModularAnomaly.lean`
-- `target line: 261`
-- `strongest priority: critical`
-- `audit signals: surrogate:axiom_decl (critical)`
-- `nearby declarations: einstein_anomaly_is_modular_generator, IdCLM, expFlow, expFlow_toContinuousLinearMap, expFlow_zero, expFlow_add`
-- `surrogate debt goal: replace the explicit axiom with a proved theorem surface`
+- `target file: lean/InfoGeometry/Canonical/LogSpineBridge.lean`
+- `target line: 32`
+- `strongest priority: high`
+- `audit signals: thinness:definitional_identity (high)`
+- `nearby declarations: jordan_logdet_eq_zeta_determinant, modular_hamiltonian_to_log_partition, kahler_spine_entropy_identity, freeEnergySpine`
+- `thin-bridge debt goal: replace the definitional identity with a substantive proof`
 
 `risk level`
 
 `high`
-
-## Candidate 2
-
-`name`
-
-`DebtCandidate.repair_unified_anomaly_bridge_2`
-
-`Lean-style signature sketch`
-
-```lean
-theorem unified_anomaly_bridge
-    (hFlow : HasDerivAt (fun t => (M.sigma t : X →L[ℝ] X)) σGen 0)
-    (hFlowNeg : HasDerivAt (fun t => (M.sigma (-t) : X →L[ℝ] X)) (-σGen) 0) :
-    M.modularAnomalyGenerator U =
-      (U.symm : X →L[ℝ] X).comp
-        (σGen.comp (U : X →L[ℝ] X) - (U : X →L[ℝ] X).comp σGen) := by
-  -- constructive replacement target generated from the tracked debt packet
-```
-
-`why this closes a real frontier edge`
-
-This candidate targets the tracked debt surface `unified_anomaly_bridge` at `lean/InfoGeometry/Quantum/ModularAnomaly.lean:131`. It aggregates the audit signals `thinness:direct_forwarder (medium)`. A successful replacement would replace the direct forwarder with a local constructive derivation.
-
-`likely proof ingredients already present in repo`
-
-- `target file: lean/InfoGeometry/Quantum/ModularAnomaly.lean`
-- `target line: 131`
-- `strongest priority: medium`
-- `audit signals: thinness:direct_forwarder (medium)`
-- `nearby declarations: TopologicalMajoranaShadow, modularCocycle, IsAnomalyFree, modularAnomalyGenerator, sigma_zero_clm, modularCocycle_zero`
-- `thin-bridge debt goal: replace the direct forwarder with a local constructive derivation`
-
-`risk level`
-
-`medium`

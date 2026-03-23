@@ -47,4 +47,22 @@ theorem chiral_action_reduces_for_normal (IST : InfoSpectralTriple E) (CI : Conf
   unfold chiralDirac
   rw [hc, smul_zero, add_zero]
 
+
+/--
+Under unit relative volume, the chiral Dirac perturbation collapses to the
+base Dirac operator.
+-/
+theorem chiralDirac_eq_of_unitRelativeVolume
+    {n : Nat}
+    (IST : InfoSpectralTriple E) (CI : ConformalInference E) (g : ℝ)
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M)
+    (hUnitVolume : InfoGeometry.Canonical.MoE.relativeVolumeChangeRN n M = 1) :
+    chiralDirac IST CI g = IST.D := by
+  have hNormal : CI.IsNormalInference := by
+    simpa [ConformalInference.IsNormalInference] using
+      (CI.chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
+        (M := M) hScaleFromKahler hUnitVolume)
+  exact chiral_action_reduces_for_normal IST CI g 0 hNormal
+
 end InfoGeometry.Canonical.ChiralAction

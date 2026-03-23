@@ -9,7 +9,7 @@ Status:
 
 ## Repository Scale
 - Lean files under `lean/`: **468**
-- Lean LOC under `lean/`: **81,758**
+- Lean LOC under `lean/`: **81,463**
 
 ## Trusted Semantic Exports
 | Module | Semantic nodes | Semantic edges | Skeleton nodes | Top hubs |
@@ -61,9 +61,9 @@ Status:
 ## Source-Sink Compression
 - public bipartite incidence artifact between the atomic declaration DAG and the hydrated module graph
 - exposes canonical source bundles, repeated path motifs, and module-level compression carriers
-- hydrated carrier `InfoGeometry.Krein.DoubledSpace`
+- hydrated carrier `InfoGeometry.Krein.Thermal`
+- hydrated carrier `InfoGeometry.Canonical.KMSSinkhornBridge`
 - hydrated carrier `InfoGeometry.Canonical.AQFTOperatorInterface`
-- hydrated carrier `InfoGeometry.Canonical.BogoliubovFockSuper`
 - hydrated carrier `InfoGeometry.Canonical.RicciMongeAmpere`
 
 ## Current Reading Order

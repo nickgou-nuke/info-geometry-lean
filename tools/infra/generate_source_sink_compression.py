@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import sys
@@ -28,7 +29,7 @@ if __package__ in (None, ""):
         module_strength_rows,
         normalize_user_path,
     )
-    from tools.pathing import default_decl_graph_file, default_decl_metadata_file, repo_root
+    from tools.pathing import default_decl_graph_file, default_decl_metadata_file, default_source_sink_bipartite_file, repo_root
 else:
     from tools.infra.plot_decl_graph import (
         FRONTIER_CATEGORIES,
@@ -41,7 +42,7 @@ else:
         module_strength_rows,
         normalize_user_path,
     )
-    from tools.pathing import default_decl_graph_file, default_decl_metadata_file, repo_root
+    from tools.pathing import default_decl_graph_file, default_decl_metadata_file, default_source_sink_bipartite_file, repo_root
 
 
 DEFAULT_GRAPH = str(default_decl_graph_file().relative_to(repo_root()))
@@ -51,6 +52,7 @@ DEFAULT_MD_OUT = "reports/dag/source-sink-compression.md"
 DEFAULT_JSON_OUT = "reports/dag/source-sink-compression.json"
 DEFAULT_GRAPHML_OUT = "reports/dag/source-sink-incidence.graphml"
 DEFAULT_SVG_OUT = "reports/dag/source-sink-incidence.svg"
+DEFAULT_ARTIFACT_OUT = str(default_source_sink_bipartite_file().relative_to(repo_root()))
 
 SIDE_COLORS = {
     "source": "#2E8B57",
@@ -95,6 +97,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--surface-index", default=DEFAULT_SURFACE_INDEX)
     ap.add_argument("--md-out", default=DEFAULT_MD_OUT)
     ap.add_argument("--json-out", default=DEFAULT_JSON_OUT)
+    ap.add_argument("--artifact-out", default=DEFAULT_ARTIFACT_OUT)
     ap.add_argument("--graphml-out", default=DEFAULT_GRAPHML_OUT)
     ap.add_argument("--svg-out", default=DEFAULT_SVG_OUT)
     ap.add_argument("--hotspot-module-count", type=int, default=8)
@@ -332,6 +335,11 @@ def build_canonical_paths(
     return entries
 
 
+def deterministic_bundle_id(bundle: tuple[str, ...]) -> str:
+    basis = "\n".join(sorted(bundle)).encode("utf-8")
+    return f"bundle:{hashlib.sha1(basis).hexdigest()[:12]}"
+
+
 def summarize_bundles(entries: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[tuple[str, ...], str]]:
     grouped: dict[tuple[str, ...], list[dict[str, Any]]] = defaultdict(list)
     for entry in entries:
@@ -350,7 +358,7 @@ def summarize_bundles(entries: list[dict[str, Any]]) -> tuple[list[dict[str, Any
         ),
         start=1,
     ):
-        bundle_id = f"B{idx}"
+        bundle_id = deterministic_bundle_id(bundle)
         bundle_ids[bundle] = bundle_id
         motif_counts = Counter(entry["motif_signature_text"] for entry in bundle_entries)
         sink_modules = sorted({str(entry["sink_module"]) for entry in bundle_entries})
@@ -551,6 +559,130 @@ def summarize_hydrated_projection(
     return hydrated_modules, hydrated_edges
 
 
+def build_bipartite_artifact(
+    decl_graph: nx.DiGraph,
+    bundle_rows: list[dict[str, Any]],
+    bundle_ids: dict[tuple[str, ...], str],
+    entries: list[dict[str, Any]],
+    hydrated_modules: list[dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    hydrated_by_module = {row["module"]: row for row in hydrated_modules}
+    incidence: dict[tuple[str, str, str], dict[str, Any]] = {}
+
+    for entry in entries:
+        bundle_key = tuple(entry["source_bundle"])
+        bundle_id = bundle_ids[bundle_key]
+        bundle_source_modules = {
+            str(decl_graph.nodes[node].get("module", "unknown")) for node in entry["source_bundle"]
+        }
+        for module in collapse_consecutive(list(entry["path_modules"])):
+            carrier_role = "sink" if module == entry["sink_module"] else "source" if module in bundle_source_modules else "transport"
+            key = (bundle_id, module, carrier_role)
+            stats = incidence.setdefault(
+                key,
+                {
+                    "atomic_id": bundle_id,
+                    "hydrated_id": module,
+                    "role": "supports",
+                    "carrier_role": carrier_role,
+                    "projection_kind": "node_support",
+                    "bundle_id": bundle_id,
+                    "motif_counts": Counter(),
+                    "witness_count": 0,
+                    "compression_score": 0.0,
+                    "canonical_witness_paths": [],
+                    "sink_names": set(),
+                    "sink_modules": set(),
+                },
+            )
+            stats["motif_counts"][str(entry["motif_signature_text"])] += 1
+            stats["witness_count"] += 1
+            stats["compression_score"] += float(entry["compression_potential"])
+            stats["sink_names"].add(str(entry["sink"]))
+            stats["sink_modules"].add(str(entry["sink_module"]))
+            if len(stats["canonical_witness_paths"]) < 3:
+                stats["canonical_witness_paths"].append(list(entry["path_nodes"]))
+
+    atomic_nodes: list[dict[str, Any]] = []
+    for row in bundle_rows:
+        bundle_decls = list(row["source_bundle"])
+        bundle_categories = Counter(str(decl_graph.nodes[name].get("surface_category", "unknown")) for name in bundle_decls)
+        bundle_kinds = Counter(str(decl_graph.nodes[name].get("kind", "unknown")) for name in bundle_decls)
+        constructive_count = sum(1 for name in bundle_decls if str(decl_graph.nodes[name].get("surface_category", "unknown")) == "likely_constructive")
+        atomic_nodes.append(
+            {
+                "atomic_id": str(row["bundle_id"]),
+                "kind": "source_bundle",
+                "category": "source_bundle",
+                "source_bundle": bundle_decls,
+                "supporting_atomic_decls": bundle_decls,
+                "source_modules": list(row["source_modules"]),
+                "source_categories": dict(sorted(bundle_categories.items())),
+                "source_kinds": dict(sorted(bundle_kinds.items())),
+                "source_purity_score": round(constructive_count / max(len(bundle_decls), 1), 4),
+                "scc_id": None,
+                "sink_modules": list(row["sink_modules"]),
+                "sink_names": list(row["sink_names"]),
+                "path_multiplicity": int(row["path_multiplicity"]),
+                "avg_path_length": float(row["avg_path_length"]),
+                "motif_signature": str(row["motif_signature"]),
+                "compression_potential": float(row["compression_potential"]),
+            }
+        )
+
+    hydrated_nodes: list[dict[str, Any]] = []
+    for row in hydrated_modules:
+        hydrated_nodes.append(
+            {
+                "hydrated_id": str(row["module"]),
+                "kind": "module",
+                "carrier_type": "module",
+                "module": str(row["module"]),
+                "sink_role": str(row["sink_role"]),
+                "supporting_atomic_decls": list(row["supporting_atomic_decls"]),
+                "minimal_source_bundle": str(row["minimal_source_bundle"]),
+                "canonical_downstream_sink_family": list(row["canonical_downstream_sink_family"]),
+                "path_multiplicity": int(row["path_multiplicity"]),
+                "path_motif_signatures": list(row["path_motif_signatures"]),
+                "compression_potential": float(row["compression_potential"]),
+            }
+        )
+
+    incidence_edges: list[dict[str, Any]] = []
+    for (_, _, _), stats in incidence.items():
+        hydrated = hydrated_by_module.get(stats["hydrated_id"], {})
+        top_motif = stats["motif_counts"].most_common(1)[0][0] if stats["motif_counts"] else ""
+        canonical_paths = list(stats["canonical_witness_paths"])
+        incidence_edges.append(
+            {
+                "atomic_id": str(stats["atomic_id"]),
+                "hydrated_id": str(stats["hydrated_id"]),
+                "role": str(stats["role"]),
+                "projection_kind": str(stats["projection_kind"]),
+                "carrier_role": str(stats["carrier_role"]),
+                "bundle_id": str(stats["bundle_id"]),
+                "motif_signature": top_motif,
+                "witness_count": int(stats["witness_count"]),
+                "compression_score": round(float(stats["compression_score"]), 3),
+                "canonical_path_example": canonical_paths[0] if canonical_paths else [],
+                "canonical_witness_paths": canonical_paths,
+                "sink_names": sorted(stats["sink_names"]),
+                "sink_modules": sorted(stats["sink_modules"]),
+                "hydrated_role": str(hydrated.get("sink_role", "unknown")),
+            }
+        )
+    incidence_edges.sort(
+        key=lambda row: (
+            -float(row["compression_score"]),
+            -int(row["witness_count"]),
+            row["atomic_id"],
+            row["hydrated_id"],
+            row["role"],
+        )
+    )
+    return atomic_nodes, hydrated_nodes, incidence_edges
+
+
 def build_incidence_graph(
     decl_graph: nx.DiGraph,
     bundle_rows: list[dict[str, Any]],
@@ -698,6 +830,7 @@ def render_markdown(
     lines.append("Model:")
     lines.append("- atomic graph: declaration-to-declaration DAG under `artifacts/dag/full_graph.json`")
     lines.append("- incidence layer: source bundles -> sink theorems grouped by canonical atomic support paths")
+    lines.append("- bundle ids are content-stable hashes of sorted bundle members, not rank-based labels")
     lines.append("- hydrated projection: module-level carriers enriched with source bundles, sink families, motifs, and compression potential")
     lines.append("")
     lines.append("Flow orientation:")
@@ -783,6 +916,7 @@ def main() -> int:
     surface_index_path = normalize_user_path(args.surface_index, root)
     md_out = normalize_user_path(args.md_out, root)
     json_out = normalize_user_path(args.json_out, root)
+    artifact_out = normalize_user_path(args.artifact_out, root)
     graphml_out = normalize_user_path(args.graphml_out, root)
     svg_out = normalize_user_path(args.svg_out, root)
 
@@ -819,6 +953,13 @@ def main() -> int:
     bundle_rows, bundle_ids = summarize_bundles(entries)
     motif_rows = summarize_motif_families(entries)
     hydrated_modules, hydrated_edges = summarize_hydrated_projection(decl_graph, entries, bundle_ids)
+    atomic_nodes, hydrated_nodes, incidence_edges = build_bipartite_artifact(
+        decl_graph,
+        bundle_rows,
+        bundle_ids,
+        entries,
+        hydrated_modules,
+    )
     incidence_graph = build_incidence_graph(
         decl_graph,
         bundle_rows,
@@ -828,6 +969,8 @@ def main() -> int:
     )
 
     payload = {
+        "schema_version": 1,
+        "kind": "source_sink_bipartite",
         "model": {
             "atomic_graph": str(graph_path.relative_to(root)),
             "surface_index": str(surface_index_path.relative_to(root)),
@@ -845,14 +988,18 @@ def main() -> int:
         "source_nodes": source_rows,
         "sink_nodes": sink_rows,
         "incidence_entries": entries,
-        "bundles": bundle_rows,
+        "atomic_nodes": atomic_nodes,
+        "hydrated_nodes": hydrated_nodes,
+        "incidence_edges": incidence_edges,
         "motif_families": motif_rows,
-        "hydrated_modules": hydrated_modules,
+        "bundles": atomic_nodes,
+        "hydrated_modules": hydrated_nodes,
         "hydrated_edges": hydrated_edges,
     }
 
     md_out.parent.mkdir(parents=True, exist_ok=True)
     json_out.parent.mkdir(parents=True, exist_ok=True)
+    artifact_out.parent.mkdir(parents=True, exist_ok=True)
     graphml_out.parent.mkdir(parents=True, exist_ok=True)
     svg_out.parent.mkdir(parents=True, exist_ok=True)
     md_out.write_text(
@@ -867,11 +1014,13 @@ def main() -> int:
         ),
         encoding="utf-8",
     )
+    artifact_out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     json_out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     nx.write_graphml(incidence_graph, graphml_out)
     plot_incidence_graph(incidence_graph, svg_out)
 
     print(f"[source-sink-compression] wrote {md_out}")
+    print(f"[source-sink-compression] wrote {artifact_out}")
     print(f"[source-sink-compression] wrote {json_out}")
     print(f"[source-sink-compression] wrote {graphml_out}")
     print(f"[source-sink-compression] wrote {svg_out}")

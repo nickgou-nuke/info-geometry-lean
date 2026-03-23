@@ -18,8 +18,12 @@ lake env lean --run lean/DAG/Indexer.lean InfoGeometry.All InfoGeometry artifact
 Authoritative inputs here:
 - `artifacts/dag/full_graph.json`
 - `artifacts/dag/index/decls.jsonl`
+- `artifacts/dag/source-sink-bipartite.json`
 
 Derived reports live elsewhere:
+- `reports/dag/source-sink-compression.md`
+- `reports/dag/source-sink-incidence.graphml`
+- `reports/dag/source-sink-incidence.svg`
 - `reports/dag/true-root-order.{md,json}`
 - `reports/dag/openclaw-targets.{md,json}`
 - `reports/dag/missing-all-classification.{md,json}`
@@ -40,3 +44,10 @@ Policy:
 - treat `artifacts/dag/` as the documented public declaration-graph lane
 - treat `.build/` as a transient Lean build cache and compatibility fallback only
 - regenerate these artifacts; do not hand-edit them
+
+`source-sink-bipartite.json` is the maintained correspondence object between the atomic declaration DAG and the hydrated readable layer.
+
+It exposes a stable bipartite schema:
+- `atomic_nodes`: source bundles / condensed atomic packets
+- `hydrated_nodes`: readable module carriers
+- `incidence_edges`: typed correspondence edges with `role`, `projection_kind`, witness counts, canonical path examples, motif signatures, and compression scores

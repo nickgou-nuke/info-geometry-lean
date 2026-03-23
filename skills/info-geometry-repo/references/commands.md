@@ -174,6 +174,7 @@ Source-bundle / sink-bundle compression layer and incidence graph:
 
 ```bash
 python3 tools/infra/generate_source_sink_compression.py \
+  --artifact-out artifacts/dag/source-sink-bipartite.json \
   --md-out reports/dag/source-sink-compression.md \
   --json-out reports/dag/source-sink-compression.json \
   --graphml-out reports/dag/source-sink-incidence.graphml \

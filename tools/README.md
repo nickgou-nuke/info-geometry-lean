@@ -47,6 +47,7 @@ Primary Python consumers:
 - [generate_source_sink_compression.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_source_sink_compression.py)
 - [check_bipartite_bleed.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/check_bipartite_bleed.py)
 - [generate_structural_dedup.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_structural_dedup.py)
+- [generate_structural_fibers.py](/home/goutev/LEAN4/info-geometry-lean/tools/infra/generate_structural_fibers.py)
 
 Use this lane when the question is:
 - what is the root set?
@@ -58,6 +59,7 @@ Use this lane when the question is:
 - how do I recover source bundles, repeated path motifs, and compression carriers instead of only adjacency?
 - which hydrated carriers are structurally bleeding across native component closures?
 - which theorem surfaces are really the same semantic packet under different packaging?
+- where does the bulk source-sink packet split into independent corridor fibers before hydrated projection?
 - what is the next OpenClaw target once coverage gaps are closed?
 
 ### Level 2: Authoritative blueprint / LeanArchitect pipeline

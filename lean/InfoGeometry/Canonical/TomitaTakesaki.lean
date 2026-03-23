@@ -345,6 +345,23 @@ noncomputable def modularSignAdditiveModularFlow :
         (E := E) (modularSignEpsilon (E := E)) τ A := rfl
 
 /--
+Thermal KMS-like relation for the modular-sign generator, restated directly in
+the additive modular-flow language used by the Tomita carrier.
+-/
+theorem modularSignAdditiveModularFlow_kms_of_satisfies_kms_like
+    (ω : EndH →L[ℝ] ℝ)
+    (β : ℝ)
+    (hKMS :
+      InfoGeometry.Krein.satisfies_kms_like
+        (E := E)
+        (modularSignEpsilon (E := E))
+        ω β) :
+    ∀ A B : EndH,
+      ω (A * modularSignAdditiveModularFlow (E := E) β B) = ω (B * A) := by
+  intro A B
+  simpa [modularSignAdditiveModularFlow_apply] using hKMS A B
+
+/--
 Canonical supergraded package for the modular CPT atom `⟨1, ε, J, Jε⟩`.
 -/
 theorem modularCPT_supergraded_lie_package :

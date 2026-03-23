@@ -207,7 +207,7 @@
       "module": "InfoGeometry.Krein.Thermal",
       "category": "likely_constructive",
       "kind": "theorem",
-      "reachable_sinks": 11,
+      "reachable_sinks": 10,
       "closest_sink_distance": 4,
       "flow_in_degree": 3,
       "flow_out_degree": 8,
@@ -217,7 +217,7 @@
         "InfoGeometry.Canonical.GrandSynthesis",
         "InfoGeometry.Canonical.YangMillsFinite"
       ],
-      "source_score": 25.3784
+      "source_score": 23.0759
     },
     {
       "name": "InfoGeometry.Canonical.MoE.SinkhornMatrix",
@@ -248,34 +248,6 @@
         "InfoGeometry.Canonical.WeylInformationGauge"
       ],
       "source_score": 15.0389
-    },
-    {
-      "name": "InfoGeometry.Krein.DoubledSpace",
-      "module": "InfoGeometry.Krein.DoubledSpace",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 0,
-      "flow_out_degree": 1117,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 14.3737
-    },
-    {
-      "name": "InfoGeometry.Krein.instL2NormedGroup",
-      "module": "InfoGeometry.Krein.KreinSpace",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 0,
-      "flow_out_degree": 1008,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 14.1687
     },
     {
       "name": "InfoGeometry.Canonical.MoE.HasPositiveRowSums",
@@ -432,20 +404,6 @@
       "source_score": 9.801
     },
     {
-      "name": "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-      "module": "InfoGeometry.Volume.ConnesCocycle",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 2,
-      "flow_out_degree": 93,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 9.5078
-    },
-    {
       "name": "InfoGeometry.Canonical.MoE.SinkhornPhase.casesOn",
       "module": "InfoGeometry.Canonical.GrandCanonicalExperts",
       "category": "neutral_definition",
@@ -533,20 +491,6 @@
       "source_score": 7.217
     },
     {
-      "name": "InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle",
-      "module": "InfoGeometry.Volume.ConnesCocycle",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 5,
-      "flow_out_degree": 27,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 6.9846
-    },
-    {
       "name": "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_odd_odd",
       "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
       "category": "likely_constructive",
@@ -587,20 +531,6 @@
         "InfoGeometry.Canonical.CalabiYauBridge"
       ],
       "source_score": 6.5043
-    },
-    {
-      "name": "InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow.toFun",
-      "module": "InfoGeometry.Volume.ConnesCocycle",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 4,
-      "flow_out_degree": 21,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_score": 6.4043
     },
     {
       "name": "InfoGeometry.FinProb",
@@ -997,6 +927,20 @@
         "InfoGeometry.Canonical.CalabiYauBridge"
       ],
       "source_score": 3.4292
+    },
+    {
+      "name": "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+      "module": "InfoGeometry.Canonical.ChiralRGFlow",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 1,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 1,
+      "flow_out_degree": 16,
+      "sink_modules": [
+        "InfoGeometry.Canonical.YangMillsFinite"
+      ],
+      "source_score": 3.3404
     },
     {
       "name": "InfoGeometry.Canonical.KMSSinkhornBridge.sinkhorn_kmsControl_of_ibDynamics_weighted_from_jointKernel_commutator",
@@ -2541,23 +2485,23 @@
       "severity": 2
     },
     {
-      "name": "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj",
+      "name": "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1",
       "module": "InfoGeometry.Canonical.YangMillsFinite",
       "category": "package_reprojection",
       "kind": "theorem",
       "burn_down_rank": 4,
       "flow_out_degree": 0,
-      "flow_in_degree": 12,
+      "flow_in_degree": 5,
       "severity": 2
     },
     {
-      "name": "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec",
+      "name": "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap",
       "module": "InfoGeometry.Canonical.YangMillsFinite",
       "category": "package_reprojection",
       "kind": "theorem",
       "burn_down_rank": 4,
       "flow_out_degree": 0,
-      "flow_in_degree": 12,
+      "flow_in_degree": 4,
       "severity": 2
     },
     {
@@ -2611,26 +2555,6 @@
       "severity": 2
     },
     {
-      "name": "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
-      "module": "InfoGeometry.Canonical.ConnesArakiFramework",
-      "category": "package_reprojection",
-      "kind": "theorem",
-      "burn_down_rank": 6,
-      "flow_out_degree": 0,
-      "flow_in_degree": 10,
-      "severity": 2
-    },
-    {
-      "name": "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
-      "module": "InfoGeometry.Canonical.ConnesArakiFramework",
-      "category": "package_reprojection",
-      "kind": "theorem",
-      "burn_down_rank": 6,
-      "flow_out_degree": 0,
-      "flow_in_degree": 9,
-      "severity": 2
-    },
-    {
       "name": "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
       "module": "InfoGeometry.Canonical.ConnesArakiFramework",
       "category": "package_reprojection",
@@ -2638,6 +2562,26 @@
       "burn_down_rank": 6,
       "flow_out_degree": 0,
       "flow_in_degree": 9,
+      "severity": 2
+    },
+    {
+      "name": "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise",
+      "module": "InfoGeometry.Canonical.ConnesArakiFramework",
+      "category": "package_reprojection",
+      "kind": "theorem",
+      "burn_down_rank": 6,
+      "flow_out_degree": 0,
+      "flow_in_degree": 3,
+      "severity": 2
+    },
+    {
+      "name": "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le",
+      "module": "InfoGeometry.Canonical.ConnesArakiFramework",
+      "category": "package_reprojection",
+      "kind": "theorem",
+      "burn_down_rank": 6,
+      "flow_out_degree": 0,
+      "flow_in_degree": 2,
       "severity": 2
     },
     {
@@ -2938,7 +2882,7 @@
     {
       "source": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
       "source_module": "InfoGeometry.Krein.Thermal",
-      "source_score": 25.3784,
+      "source_score": 23.0759,
       "sink": "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier",
       "sink_module": "InfoGeometry.Canonical.GrandSynthesis",
       "sink_category": "package_reprojection",
@@ -2988,7 +2932,7 @@
     {
       "source": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
       "source_module": "InfoGeometry.Krein.Thermal",
-      "source_score": 25.3784,
+      "source_score": 23.0759,
       "sink": "InfoGeometry.Canonical.GrandSynthesis.wheelerDeWitt_equivalence_of_kk_conjugacy_anchor",
       "sink_module": "InfoGeometry.Canonical.GrandSynthesis",
       "sink_category": "package_reprojection",
@@ -3043,7 +2987,7 @@
     {
       "source": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
       "source_module": "InfoGeometry.Krein.Thermal",
-      "source_score": 25.3784,
+      "source_score": 23.0759,
       "sink": "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication",
       "sink_module": "InfoGeometry.Canonical.GrandSynthesis",
       "sink_category": "package_reprojection",
@@ -3352,16 +3296,16 @@
     {
       "source": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
       "source_module": "InfoGeometry.Krein.Thermal",
-      "source_score": 25.3784,
-      "sink": "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj",
+      "source_score": 23.0759,
+      "sink": "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1",
       "sink_module": "InfoGeometry.Canonical.YangMillsFinite",
       "sink_category": "package_reprojection",
       "path_nodes": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj"
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
       ],
       "path_modules": [
         "InfoGeometry.Krein.Thermal",
@@ -3371,83 +3315,67 @@
       "path_component_ids": [
         "component:202087514678487686",
         "component:11158173442598228089",
-        "component:11709838850413126274",
-        "component:7517963383668046864",
-        "component:3112277199951581998"
+        "component:9449498726415301504",
+        "component:11033057023290376818",
+        "component:6296732144952278227"
       ],
       "path_component_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj"
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
       ],
       "path_length": 4,
       "motif_signature": [
         "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "modular_shift",
-        "modularShift",
-        "JointKernelOnOmega",
-        "inj"
+        "satisfies_kms_like",
+        "SatisfiesKMSLike",
+        "eq_1"
       ],
-      "motif_signature_text": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> inj",
+      "motif_signature_text": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> eq_1",
       "source_bundle": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike"
       ],
       "compression_potential": 8.0
     },
     {
-      "source": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-      "source_module": "InfoGeometry.Krein.Thermal",
-      "source_score": 25.3784,
-      "sink": "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec",
+      "source": "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+      "source_module": "InfoGeometry.Canonical.ChiralRGFlow",
+      "source_score": 3.3404,
+      "sink": "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap",
       "sink_module": "InfoGeometry.Canonical.YangMillsFinite",
       "sink_category": "package_reprojection",
       "path_nodes": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec"
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
       ],
       "path_modules": [
-        "InfoGeometry.Krein.Thermal",
-        "InfoGeometry.Canonical.KMSSinkhornBridge",
+        "InfoGeometry.Canonical.ChiralRGFlow",
         "InfoGeometry.Canonical.YangMillsFinite"
       ],
       "path_component_ids": [
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:11709838850413126274",
-        "component:7517963383668046864",
-        "component:419134356416399225"
+        "component:6779113019034598783",
+        "component:10926903322678266672"
       ],
       "path_component_representatives": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec"
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
       ],
-      "path_length": 4,
+      "path_length": 1,
       "motif_signature": [
-        "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "modular_shift",
-        "modularShift",
-        "JointKernelOnOmega",
-        "sizeOf_spec"
+        "gamma",
+        "gamma_le_spectral_gap"
       ],
-      "motif_signature_text": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sizeOf_spec",
+      "motif_signature_text": "gamma -> gamma_le_spectral_gap",
       "source_bundle": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
       ],
-      "compression_potential": 8.0
+      "compression_potential": 2.0
     },
     {
       "source": "InfoGeometry.Canonical.MoE.SinkhornMatrix",
@@ -3604,7 +3532,7 @@
     {
       "source": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
       "source_module": "InfoGeometry.Krein.Thermal",
-      "source_score": 25.3784,
+      "source_score": 23.0759,
       "sink": "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
       "sink_module": "InfoGeometry.Canonical.ConnesArakiFramework",
       "sink_category": "package_reprojection",
@@ -3658,89 +3586,9 @@
       "compression_potential": 10.0
     },
     {
-      "source": "InfoGeometry.Krein.DoubledSpace",
-      "source_module": "InfoGeometry.Krein.DoubledSpace",
-      "source_score": 14.3737,
-      "sink": "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
-      "sink_module": "InfoGeometry.Canonical.ConnesArakiFramework",
-      "sink_category": "package_reprojection",
-      "path_nodes": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj"
-      ],
-      "path_modules": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle",
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "path_component_ids": [
-        "component:9763222080385001759",
-        "component:1721276107715120023",
-        "component:17468677433589831255"
-      ],
-      "path_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj"
-      ],
-      "path_length": 2,
-      "motif_signature": [
-        "DoubledSpace",
-        "AlgebraEnd",
-        "inj"
-      ],
-      "motif_signature_text": "DoubledSpace -> AlgebraEnd -> inj",
-      "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd"
-      ],
-      "compression_potential": 4.0
-    },
-    {
-      "source": "InfoGeometry.Krein.DoubledSpace",
-      "source_module": "InfoGeometry.Krein.DoubledSpace",
-      "source_score": 14.3737,
-      "sink": "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
-      "sink_module": "InfoGeometry.Canonical.ConnesArakiFramework",
-      "sink_category": "package_reprojection",
-      "path_nodes": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec"
-      ],
-      "path_modules": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle",
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "path_component_ids": [
-        "component:9763222080385001759",
-        "component:1721276107715120023",
-        "component:17149530735150950143"
-      ],
-      "path_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec"
-      ],
-      "path_length": 2,
-      "motif_signature": [
-        "DoubledSpace",
-        "AlgebraEnd",
-        "sizeOf_spec"
-      ],
-      "motif_signature_text": "DoubledSpace -> AlgebraEnd -> sizeOf_spec",
-      "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd"
-      ],
-      "compression_potential": 4.0
-    },
-    {
       "source": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
       "source_module": "InfoGeometry.Krein.Thermal",
-      "source_score": 25.3784,
+      "source_score": 23.0759,
       "sink": "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
       "sink_module": "InfoGeometry.Canonical.ConnesArakiFramework",
       "sink_category": "package_reprojection",
@@ -3792,6 +3640,82 @@
         "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow"
       ],
       "compression_potential": 10.0
+    },
+    {
+      "source": "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+      "source_module": "InfoGeometry.Canonical.BekensteinBound",
+      "source_score": 5.7494,
+      "sink": "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise",
+      "sink_module": "InfoGeometry.Canonical.ConnesArakiFramework",
+      "sink_category": "package_reprojection",
+      "path_nodes": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise"
+      ],
+      "path_modules": [
+        "InfoGeometry.Canonical.BekensteinBound",
+        "InfoGeometry.Canonical.ConnesArakiFramework"
+      ],
+      "path_component_ids": [
+        "component:18184683777520980768",
+        "component:4745881161588238468",
+        "component:4877398884864614661"
+      ],
+      "path_component_representatives": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise"
+      ],
+      "path_length": 2,
+      "motif_signature": [
+        "RelativeEntropyProfile",
+        "ArakiRelativeEntropyProfile",
+        "pointwise"
+      ],
+      "motif_signature_text": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise",
+      "source_bundle": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
+      ],
+      "compression_potential": 4.0
+    },
+    {
+      "source": "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+      "source_module": "InfoGeometry.Canonical.BekensteinBound",
+      "source_score": 5.7494,
+      "sink": "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le",
+      "sink_module": "InfoGeometry.Canonical.ConnesArakiFramework",
+      "sink_category": "package_reprojection",
+      "path_nodes": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le"
+      ],
+      "path_modules": [
+        "InfoGeometry.Canonical.BekensteinBound",
+        "InfoGeometry.Canonical.ConnesArakiFramework"
+      ],
+      "path_component_ids": [
+        "component:18184683777520980768",
+        "component:4745881161588238468",
+        "component:4534120800394436257"
+      ],
+      "path_component_representatives": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le"
+      ],
+      "path_length": 2,
+      "motif_signature": [
+        "RelativeEntropyProfile",
+        "ArakiRelativeEntropyProfile",
+        "pointwise_le"
+      ],
+      "motif_signature_text": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise_le",
+      "source_bundle": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
+      ],
+      "compression_potential": 4.0
     },
     {
       "source": "InfoGeometry.Canonical.MoE.colSum_colNormalize",
@@ -3950,82 +3874,6 @@
     }
   ],
   "atomic_nodes": [
-    {
-      "atomic_id": "bundle:6ce7959e3a89",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
-      ],
-      "source_modules": [
-        "InfoGeometry.Krein.Thermal"
-      ],
-      "source_categories": {
-        "likely_constructive": 1,
-        "neutral_definition": 3
-      },
-      "source_kinds": {
-        "def": 3,
-        "theorem": 1
-      },
-      "source_purity_score": 0.25,
-      "scc_id": null,
-      "native_component_ids": [
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:11709838850413126274",
-        "component:7517963383668046864"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
-      ],
-      "native_root_witness_component_ids": [
-        "component:9763222080385001759",
-        "component:5655393144097822170",
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:11709838850413126274",
-        "component:7517963383668046864"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 5,
-      "sink_modules": [
-        "InfoGeometry.Canonical.GrandSynthesis",
-        "InfoGeometry.Canonical.YangMillsFinite"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication",
-        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec"
-      ],
-      "path_multiplicity": 4,
-      "avg_path_length": 4.0,
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
-      "compression_potential": 32.0
-    },
     {
       "atomic_id": "bundle:421c663276d8",
       "kind": "source_bundle",
@@ -4360,6 +4208,79 @@
       "avg_path_length": 4.5,
       "motif_signature": "ext -> modularConjugationJ_fixed_of_diagonalPositiveTimeVector -> modularConjugationJ_fixed_of_positiveTimeVector -> finiteOsterwalderSchraderLayer_of_positiveTimeVector -> existenceClaims_of_bridge",
       "compression_potential": 18.0
+    },
+    {
+      "atomic_id": "bundle:6ce7959e3a89",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
+      ],
+      "source_modules": [
+        "InfoGeometry.Krein.Thermal"
+      ],
+      "source_categories": {
+        "likely_constructive": 1,
+        "neutral_definition": 3
+      },
+      "source_kinds": {
+        "def": 3,
+        "theorem": 1
+      },
+      "source_purity_score": 0.25,
+      "scc_id": null,
+      "native_component_ids": [
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:11709838850413126274",
+        "component:7517963383668046864"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
+      ],
+      "native_root_witness_component_ids": [
+        "component:9763222080385001759",
+        "component:5655393144097822170",
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:11709838850413126274",
+        "component:7517963383668046864"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 5,
+      "sink_modules": [
+        "InfoGeometry.Canonical.GrandSynthesis"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication",
+        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
+      ],
+      "path_multiplicity": 2,
+      "avg_path_length": 4.0,
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
+      "compression_potential": 16.0
     },
     {
       "atomic_id": "bundle:bfd21fb58d2e",
@@ -4734,58 +4655,124 @@
       "compression_potential": 10.0
     },
     {
-      "atomic_id": "bundle:488f2edd801c",
+      "atomic_id": "bundle:8fc792a6a679",
       "kind": "source_bundle",
       "category": "source_bundle",
       "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd"
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
       ],
       "supporting_atomic_decls": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd"
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
       ],
       "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
+        "InfoGeometry.Canonical.BekensteinBound"
       ],
       "source_categories": {
-        "neutral_definition": 2
+        "neutral_definition": 1
       },
       "source_kinds": {
-        "def": 2
+        "def": 1
       },
       "source_purity_score": 0.0,
-      "scc_id": null,
+      "scc_id": "component:18184683777520980768",
       "native_component_ids": [
-        "component:9763222080385001759",
-        "component:1721276107715120023"
+        "component:18184683777520980768"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd"
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
       ],
       "native_root_witness_component_ids": [
-        "component:9763222080385001759",
-        "component:1721276107715120023"
+        "component:18184683777520980768"
       ],
       "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd"
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 0,
-      "native_depth_max": 1,
+      "native_depth_max": 0,
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec"
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le"
       ],
       "path_multiplicity": 2,
       "avg_path_length": 2.0,
-      "motif_signature": "DoubledSpace -> AlgebraEnd -> inj",
+      "motif_signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise",
+      "compression_potential": 8.0
+    },
+    {
+      "atomic_id": "bundle:963f31d9e3af",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike"
+      ],
+      "source_modules": [
+        "InfoGeometry.Krein.Thermal"
+      ],
+      "source_categories": {
+        "likely_constructive": 1,
+        "neutral_definition": 3
+      },
+      "source_kinds": {
+        "def": 3,
+        "theorem": 1
+      },
+      "source_purity_score": 0.25,
+      "scc_id": null,
+      "native_component_ids": [
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:9449498726415301504",
+        "component:11033057023290376818"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike"
+      ],
+      "native_root_witness_component_ids": [
+        "component:9763222080385001759",
+        "component:5655393144097822170",
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:9449498726415301504",
+        "component:11033057023290376818"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 5,
+      "sink_modules": [
+        "InfoGeometry.Canonical.YangMillsFinite"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+      ],
+      "path_multiplicity": 1,
+      "avg_path_length": 4.0,
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> eq_1",
       "compression_potential": 8.0
     },
     {
@@ -5142,6 +5129,56 @@
       "compression_potential": 4.0
     },
     {
+      "atomic_id": "bundle:032f19f224c4",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.ChiralRGFlow"
+      ],
+      "source_categories": {
+        "neutral_definition": 1
+      },
+      "source_kinds": {
+        "def": 1
+      },
+      "source_purity_score": 0.0,
+      "scc_id": "component:6779113019034598783",
+      "native_component_ids": [
+        "component:6779113019034598783"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "native_root_witness_component_ids": [
+        "component:9196863483386825534",
+        "component:6779113019034598783"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel",
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.YangMillsFinite"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
+      ],
+      "path_multiplicity": 1,
+      "avg_path_length": 1.0,
+      "motif_signature": "gamma -> gamma_le_spectral_gap",
+      "compression_potential": 2.0
+    },
+    {
       "atomic_id": "bundle:237037d1f3ab",
       "kind": "source_bundle",
       "category": "source_bundle",
@@ -5202,18 +5239,16 @@
       "module": "InfoGeometry.Krein.DoubledSpace",
       "sink_role": "constructive_source",
       "supporting_atomic_decls": [
-        "InfoGeometry.Krein.DoubledSpace",
         "InfoGeometry.Krein.DoubledSpace.ext",
         "InfoGeometry.Krein.spectral_epsilon_involution"
       ],
       "minimal_source_bundle": "bundle:421c663276d8",
       "canonical_downstream_sink_family": [
         "InfoGeometry.Canonical.AQFTOperatorInterface",
-        "InfoGeometry.Canonical.ConnesArakiFramework",
         "InfoGeometry.Canonical.GrandSynthesis",
         "InfoGeometry.Canonical.YangMillsFinite"
       ],
-      "path_multiplicity": 9,
+      "path_multiplicity": 7,
       "path_motif_signatures": [
         {
           "signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_packaged_with_completeCStarReady",
@@ -5228,14 +5263,12 @@
           "count": 1
         }
       ],
-      "compression_potential": 98.0,
+      "compression_potential": 90.0,
       "native_component_ids": [
-        "component:9763222080385001759",
         "component:10262190868562801872",
         "component:13856048145206016671"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace",
         "InfoGeometry.Krein.DoubledSpace.ext",
         "InfoGeometry.Krein.spectral_epsilon_involution"
       ],
@@ -5246,11 +5279,11 @@
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
-      "native_depth_min": 0,
+      "native_depth_min": 1,
       "native_depth_max": 2,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 19,
-      "native_corridor_count": 9,
+      "native_corridor_reuse": 15,
+      "native_corridor_count": 7,
       "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
       "top_native_corridor_component_ids": [
         "component:10262190868562801872",
@@ -5269,81 +5302,6 @@
         "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Krein.Thermal",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Krein.Thermal",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Krein.satisfies_kms_like"
-      ],
-      "minimal_source_bundle": "bundle:6ce7959e3a89",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.ConnesArakiFramework",
-        "InfoGeometry.Canonical.GrandSynthesis",
-        "InfoGeometry.Canonical.YangMillsFinite"
-      ],
-      "path_multiplicity": 7,
-      "path_motif_signatures": [
-        {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
-          "count": 1
-        },
-        {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> wheelerDeWitt_equivalence_of_kk_conjugacy_anchor",
-          "count": 1
-        },
-        {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> information_wheeler_dewitt_implication",
-          "count": 1
-        }
-      ],
-      "compression_potential": 62.0,
-      "native_component_ids": [
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:9449498726415301504"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Krein.satisfies_kms_like"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Krein.satisfies_kms_like"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 4,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 16,
-      "native_corridor_count": 7,
-      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
-      "top_native_corridor_component_ids": [
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:14274548561181103404",
-        "component:10510543447486048737",
-        "component:4188097888448423333",
-        "component:15358866442594511405"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
-        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -5571,23 +5529,23 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "hydrated_id": "InfoGeometry.Krein.Thermal",
       "kind": "module",
       "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "module": "InfoGeometry.Krein.Thermal",
       "sink_role": "constructive_source",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift"
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like"
       ],
       "minimal_source_bundle": "bundle:6ce7959e3a89",
       "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.ConnesArakiFramework",
         "InfoGeometry.Canonical.GrandSynthesis",
         "InfoGeometry.Canonical.YangMillsFinite"
       ],
-      "path_multiplicity": 5,
+      "path_multiplicity": 6,
       "path_motif_signatures": [
         {
           "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
@@ -5602,53 +5560,47 @@
           "count": 1
         }
       ],
-      "compression_potential": 42.0,
+      "compression_potential": 54.0,
       "native_component_ids": [
-        "component:7517963383668046864",
-        "component:11033057023290376818",
-        "component:6306551777906829278",
-        "component:11709838850413126274"
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:9449498726415301504"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift"
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like"
       ],
       "native_root_witnesses": [
         "InfoGeometry.Krein.DoubledSpace",
         "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Krein.satisfies_kms_like",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure"
+        "InfoGeometry.Krein.satisfies_kms_like"
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 1,
-      "native_depth_max": 6,
+      "native_depth_max": 4,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 10,
-      "native_corridor_count": 5,
+      "native_corridor_reuse": 14,
+      "native_corridor_count": 6,
       "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
       "top_native_corridor_component_ids": [
         "component:202087514678487686",
         "component:11158173442598228089",
-        "component:9449498726415301504",
-        "component:11033057023290376818",
-        "component:6306551777906829278",
-        "component:17941388603212254760"
+        "component:14274548561181103404",
+        "component:10510543447486048737",
+        "component:4188097888448423333",
+        "component:15358866442594511405"
       ],
       "top_native_corridor_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Krein.satisfies_kms_like",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.GrandSynthesis.wheelerDeWitt_equivalence_of_kk_conjugacy_anchor"
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -5860,112 +5812,84 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Canonical.YangMillsFinite",
+      "hydrated_id": "InfoGeometry.Canonical.KMSSinkhornBridge",
       "kind": "module",
       "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.YangMillsFinite",
-      "sink_role": "consumer_sink",
+      "module": "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "sink_role": "constructive_source",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.existenceClaims_of_bridge",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift"
       ],
-      "minimal_source_bundle": "bundle:43867cf01b31",
+      "minimal_source_bundle": "bundle:6ce7959e3a89",
       "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.GrandSynthesis",
         "InfoGeometry.Canonical.YangMillsFinite"
       ],
       "path_multiplicity": 4,
       "path_motif_signatures": [
         {
-          "signature": "ext -> modularConjugationJ_fixed_of_diagonalPositiveTimeVector -> modularConjugationJ_fixed_of_positiveTimeVector -> finiteOsterwalderSchraderLayer_of_positiveTimeVector -> existenceClaims_of_bridge",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
           "count": 1
         },
         {
-          "signature": "ext -> modularConjugationJ_fixed_of_diagonalPositiveTimeVector -> modularConjugationJ_fixed_of_positiveTimeVector -> finiteOsterwalderSchraderLayer_of_positiveTimeVector -> obligations_of_bridge -> RN/K\u00e4hler/log-det",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> wheelerDeWitt_equivalence_of_kk_conjugacy_anchor",
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> inj",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> information_wheeler_dewitt_implication",
           "count": 1
         }
       ],
       "compression_potential": 34.0,
       "native_component_ids": [
-        "component:15743762670488889697",
-        "component:2491689311522162915",
-        "component:3112277199951581998",
-        "component:419134356416399225",
-        "component:1058931600093603412",
-        "component:5835116512914996753"
+        "component:7517963383668046864",
+        "component:11033057023290376818",
+        "component:6306551777906829278",
+        "component:11709838850413126274"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.existenceClaims_of_bridge",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift"
       ],
       "native_root_witnesses": [
         "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.modular_j",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_fixed_of_diagonalPositiveTimeVector",
-        "InfoGeometry.Canonical.TomitaTakesaki.reflectionQuadratic_nonneg_of_diagonalPositiveTimeVector",
-        "InfoGeometry.Canonical.TomitaTakesaki.reflectionQuadratic_nonneg_of_positiveTimeVector",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
         "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Krein.satisfies_kms_like",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.expectationSeedFunctional_kms_of_structural",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed_kms_of_jointKernel_commutator",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_jointKernel_commutator",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.existenceClaims_of_bridge",
         "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
         "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.rec",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.casesOn",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.noConfusionType",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.noConfusion",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.noConfusion",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure"
       ],
-      "native_strict_dominator_component_ids": [
-        "component:5835116512914996753"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
-      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
       "native_depth_min": 1,
-      "native_depth_max": 12,
+      "native_depth_max": 6,
       "native_dominator_pressure": 0,
       "native_corridor_reuse": 8,
       "native_corridor_count": 4,
       "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
       "top_native_corridor_component_ids": [
-        "component:10262190868562801872",
-        "component:12040235705932493953",
-        "component:3501140465135722042",
-        "component:15743762670488889697",
-        "component:1058931600093603412",
-        "component:5835116512914996753"
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:9449498726415301504",
+        "component:11033057023290376818",
+        "component:6306551777906829278",
+        "component:17941388603212254760"
       ],
       "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_fixed_of_diagonalPositiveTimeVector",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_fixed_of_positiveTimeVector",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
+        "InfoGeometry.Canonical.GrandSynthesis.wheelerDeWitt_equivalence_of_kk_conjugacy_anchor"
       ]
     },
     {
@@ -5975,8 +5899,9 @@
       "module": "InfoGeometry.Canonical.ConnesArakiFramework",
       "sink_role": "consumer_sink",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le",
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
@@ -5991,40 +5916,37 @@
           "count": 1
         },
         {
-          "signature": "DoubledSpace -> AlgebraEnd -> inj",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
           "count": 1
         },
         {
-          "signature": "DoubledSpace -> AlgebraEnd -> sizeOf_spec",
+          "signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise",
           "count": 1
         }
       ],
       "compression_potential": 28.0,
       "native_component_ids": [
-        "component:17468677433589831255",
-        "component:17149530735150950143",
+        "component:4745881161588238468",
+        "component:4877398884864614661",
+        "component:4534120800394436257",
         "component:18089539564452124112",
         "component:15358866442594511405"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le",
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "native_root_witnesses": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le",
         "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow.toFun",
-        "InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.rec",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.casesOn",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.noConfusionType",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.noConfusion",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.noConfusion",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
         "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
@@ -6047,11 +5969,11 @@
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 1,
-      "native_depth_max": 10,
+      "native_depth_max": 9,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 10,
+      "native_corridor_reuse": 8,
       "native_corridor_count": 4,
-      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
+      "top_root_witness": "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
       "top_native_corridor_component_ids": [
         "component:202087514678487686",
         "component:11158173442598228089",
@@ -6070,78 +5992,107 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Volume.ConnesCocycle",
+      "hydrated_id": "InfoGeometry.Canonical.YangMillsFinite",
       "kind": "module",
       "carrier_type": "module",
-      "module": "InfoGeometry.Volume.ConnesCocycle",
-      "sink_role": "constructive_source",
+      "module": "InfoGeometry.Canonical.YangMillsFinite",
+      "sink_role": "consumer_sink",
       "supporting_atomic_decls": [
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
-        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv"
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.existenceClaims_of_bridge",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
       ],
-      "minimal_source_bundle": "bundle:0a91955841c3",
+      "minimal_source_bundle": "bundle:43867cf01b31",
       "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
+        "InfoGeometry.Canonical.YangMillsFinite"
       ],
       "path_multiplicity": 4,
       "path_motif_signatures": [
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
+          "signature": "ext -> modularConjugationJ_fixed_of_diagonalPositiveTimeVector -> modularConjugationJ_fixed_of_positiveTimeVector -> finiteOsterwalderSchraderLayer_of_positiveTimeVector -> existenceClaims_of_bridge",
           "count": 1
         },
         {
-          "signature": "DoubledSpace -> AlgebraEnd -> inj",
+          "signature": "ext -> modularConjugationJ_fixed_of_diagonalPositiveTimeVector -> modularConjugationJ_fixed_of_positiveTimeVector -> finiteOsterwalderSchraderLayer_of_positiveTimeVector -> obligations_of_bridge -> RN/K\u00e4hler/log-det",
           "count": 1
         },
         {
-          "signature": "DoubledSpace -> AlgebraEnd -> sizeOf_spec",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> eq_1",
           "count": 1
         }
       ],
       "compression_potential": 28.0,
       "native_component_ids": [
-        "component:1721276107715120023",
-        "component:10510543447486048737",
-        "component:14274548561181103404"
+        "component:6296732144952278227",
+        "component:15743762670488889697",
+        "component:2491689311522162915",
+        "component:10926903322678266672",
+        "component:1058931600093603412",
+        "component:5835116512914996753"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
-        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv"
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.existenceClaims_of_bridge",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
       ],
       "native_root_witnesses": [
         "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
         "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
-        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator"
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1",
+        "InfoGeometry.Krein.modular_j",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_fixed_of_diagonalPositiveTimeVector",
+        "InfoGeometry.Canonical.TomitaTakesaki.reflectionQuadratic_nonneg_of_diagonalPositiveTimeVector",
+        "InfoGeometry.Canonical.TomitaTakesaki.reflectionQuadratic_nonneg_of_positiveTimeVector",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.expectationSeedFunctional_kms_of_structural",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed_kms_of_jointKernel_commutator",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_jointKernel_commutator",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.existenceClaims_of_bridge",
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel",
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
       ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
+      "native_strict_dominator_component_ids": [
+        "component:5835116512914996753"
+      ],
+      "native_strict_dominator_representatives": [
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
+      ],
       "native_depth_min": 1,
-      "native_depth_max": 5,
+      "native_depth_max": 10,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 10,
+      "native_corridor_reuse": 7,
       "native_corridor_count": 4,
       "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
       "top_native_corridor_component_ids": [
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:14274548561181103404",
-        "component:10510543447486048737",
-        "component:4188097888448423333",
-        "component:15358866442594511405"
+        "component:10262190868562801872",
+        "component:12040235705932493953",
+        "component:3501140465135722042",
+        "component:15743762670488889697",
+        "component:1058931600093603412",
+        "component:5835116512914996753"
       ],
       "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
-        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
+        "InfoGeometry.Krein.DoubledSpace.ext",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_fixed_of_diagonalPositiveTimeVector",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_fixed_of_positiveTimeVector",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
       ]
     },
     {
@@ -6288,6 +6239,73 @@
         "InfoGeometry.Canonical.MoE.Coupling",
         "InfoGeometry.Canonical.WeylInformationGauge.weylOrderWitnessMatrix2",
         "InfoGeometry.Canonical.WeylInformationGauge.weylOrderWitnessMatrix2.eq_1"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Volume.ConnesCocycle",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Volume.ConnesCocycle",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv"
+      ],
+      "minimal_source_bundle": "bundle:0a91955841c3",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.ConnesArakiFramework"
+      ],
+      "path_multiplicity": 2,
+      "path_motif_signatures": [
+        {
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
+          "count": 1
+        },
+        {
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+          "count": 1
+        }
+      ],
+      "compression_potential": 20.0,
+      "native_component_ids": [
+        "component:10510543447486048737",
+        "component:14274548561181103404"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 5,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 6,
+      "native_corridor_count": 2,
+      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
+      "top_native_corridor_component_ids": [
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:14274548561181103404",
+        "component:10510543447486048737",
+        "component:4188097888448423333",
+        "component:15358866442594511405"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -6834,6 +6852,59 @@
       ]
     },
     {
+      "hydrated_id": "InfoGeometry.Canonical.BekensteinBound",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.BekensteinBound",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
+      ],
+      "minimal_source_bundle": "bundle:8fc792a6a679",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.ConnesArakiFramework"
+      ],
+      "path_multiplicity": 2,
+      "path_motif_signatures": [
+        {
+          "signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise",
+          "count": 1
+        },
+        {
+          "signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise_le",
+          "count": 1
+        }
+      ],
+      "compression_potential": 8.0,
+      "native_component_ids": [
+        "component:18184683777520980768"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 0,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 2,
+      "native_corridor_count": 2,
+      "top_root_witness": "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+      "top_native_corridor_component_ids": [
+        "component:18184683777520980768",
+        "component:4745881161588238468",
+        "component:4534120800394436257"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le"
+      ]
+    },
+    {
       "hydrated_id": "InfoGeometry.Basic",
       "kind": "module",
       "carrier_type": "module",
@@ -6946,6 +7017,54 @@
       ]
     },
     {
+      "hydrated_id": "InfoGeometry.Canonical.ChiralRGFlow",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.ChiralRGFlow",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "minimal_source_bundle": "bundle:032f19f224c4",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.YangMillsFinite"
+      ],
+      "path_multiplicity": 1,
+      "path_motif_signatures": [
+        {
+          "signature": "gamma -> gamma_le_spectral_gap",
+          "count": 1
+        }
+      ],
+      "compression_potential": 2.0,
+      "native_component_ids": [
+        "component:6779113019034598783"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel",
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 1,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 1,
+      "native_corridor_count": 1,
+      "top_root_witness": "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel",
+      "top_native_corridor_component_ids": [
+        "component:6779113019034598783",
+        "component:10926903322678266672"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
+      ]
+    },
+    {
       "hydrated_id": "InfoGeometry.Canonical.InformationTorsion",
       "kind": "module",
       "carrier_type": "module",
@@ -6996,138 +7115,6 @@
     }
   ],
   "incidence_edges": [
-    {
-      "atomic_id": "bundle:6ce7959e3a89",
-      "hydrated_id": "InfoGeometry.Canonical.KMSSinkhornBridge",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:6ce7959e3a89",
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
-      "witness_count": 4,
-      "compression_score": 32.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-          "InfoGeometry.Krein.modular_shift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-          "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
-        ],
-        [
-          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-          "InfoGeometry.Krein.modular_shift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-          "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication"
-        ],
-        [
-          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-          "InfoGeometry.Krein.modular_shift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-          "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:11709838850413126274",
-        "component:7517963383668046864",
-        "component:6168829171562063645"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication",
-        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.GrandSynthesis",
-        "InfoGeometry.Canonical.YangMillsFinite"
-      ],
-      "hydrated_role": "constructive_source"
-    },
-    {
-      "atomic_id": "bundle:6ce7959e3a89",
-      "hydrated_id": "InfoGeometry.Krein.Thermal",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:6ce7959e3a89",
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
-      "witness_count": 4,
-      "compression_score": 32.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-          "InfoGeometry.Krein.modular_shift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-          "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
-        ],
-        [
-          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-          "InfoGeometry.Krein.modular_shift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-          "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication"
-        ],
-        [
-          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-          "InfoGeometry.Krein.modular_shift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-          "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:11709838850413126274",
-        "component:7517963383668046864",
-        "component:6168829171562063645"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication",
-        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.GrandSynthesis",
-        "InfoGeometry.Canonical.YangMillsFinite"
-      ],
-      "hydrated_role": "constructive_source"
-    },
     {
       "atomic_id": "bundle:421c663276d8",
       "hydrated_id": "InfoGeometry.Canonical.AQFTOperatorInterface",
@@ -7978,12 +7965,12 @@
     },
     {
       "atomic_id": "bundle:6ce7959e3a89",
-      "hydrated_id": "InfoGeometry.Canonical.YangMillsFinite",
+      "hydrated_id": "InfoGeometry.Canonical.KMSSinkhornBridge",
       "role": "supports",
       "projection_kind": "node_support",
-      "carrier_role": "sink",
+      "carrier_role": "source",
       "bundle_id": "bundle:6ce7959e3a89",
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> inj",
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
       "witness_count": 2,
       "compression_score": 16.0,
       "canonical_path_example": [
@@ -7991,7 +7978,7 @@
         "InfoGeometry.Krein.modular_shift",
         "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
         "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj"
+        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
       ],
       "canonical_witness_paths": [
         [
@@ -7999,14 +7986,14 @@
           "InfoGeometry.Krein.modular_shift",
           "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
           "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-          "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj"
+          "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
         ],
         [
           "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
           "InfoGeometry.Krein.modular_shift",
           "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
           "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-          "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec"
+          "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication"
         ]
       ],
       "native_canonical_component_path_example": [
@@ -8014,23 +8001,79 @@
         "component:11158173442598228089",
         "component:11709838850413126274",
         "component:7517963383668046864",
-        "component:3112277199951581998"
+        "component:6168829171562063645"
       ],
       "native_canonical_component_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
         "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
         "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj"
+        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec"
+        "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication",
+        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
       ],
       "sink_modules": [
-        "InfoGeometry.Canonical.YangMillsFinite"
+        "InfoGeometry.Canonical.GrandSynthesis"
       ],
-      "hydrated_role": "consumer_sink"
+      "hydrated_role": "constructive_source"
+    },
+    {
+      "atomic_id": "bundle:6ce7959e3a89",
+      "hydrated_id": "InfoGeometry.Krein.Thermal",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "source",
+      "bundle_id": "bundle:6ce7959e3a89",
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
+      "witness_count": 2,
+      "compression_score": 16.0,
+      "canonical_path_example": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
+        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+          "InfoGeometry.Krein.modular_shift",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
+          "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
+        ],
+        [
+          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+          "InfoGeometry.Krein.modular_shift",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
+          "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:11709838850413126274",
+        "component:7517963383668046864",
+        "component:6168829171562063645"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
+        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication",
+        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.GrandSynthesis"
+      ],
+      "hydrated_role": "constructive_source"
     },
     {
       "atomic_id": "bundle:bfd21fb58d2e",
@@ -8749,91 +8792,45 @@
       "hydrated_role": "constructive_source"
     },
     {
-      "atomic_id": "bundle:488f2edd801c",
-      "hydrated_id": "InfoGeometry.Canonical.ConnesArakiFramework",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "sink",
-      "bundle_id": "bundle:488f2edd801c",
-      "motif_signature": "DoubledSpace -> AlgebraEnd -> inj",
-      "witness_count": 2,
-      "compression_score": 8.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.DoubledSpace",
-          "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-          "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj"
-        ],
-        [
-          "InfoGeometry.Krein.DoubledSpace",
-          "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-          "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:9763222080385001759",
-        "component:1721276107715120023",
-        "component:17468677433589831255"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "hydrated_role": "consumer_sink"
-    },
-    {
-      "atomic_id": "bundle:488f2edd801c",
-      "hydrated_id": "InfoGeometry.Krein.DoubledSpace",
+      "atomic_id": "bundle:8fc792a6a679",
+      "hydrated_id": "InfoGeometry.Canonical.BekensteinBound",
       "role": "supports",
       "projection_kind": "node_support",
       "carrier_role": "source",
-      "bundle_id": "bundle:488f2edd801c",
-      "motif_signature": "DoubledSpace -> AlgebraEnd -> inj",
+      "bundle_id": "bundle:8fc792a6a679",
+      "motif_signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise",
       "witness_count": 2,
       "compression_score": 8.0,
       "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj"
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise"
       ],
       "canonical_witness_paths": [
         [
-          "InfoGeometry.Krein.DoubledSpace",
-          "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-          "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj"
+          "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+          "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+          "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise"
         ],
         [
-          "InfoGeometry.Krein.DoubledSpace",
-          "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-          "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec"
+          "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+          "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+          "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le"
         ]
       ],
       "native_canonical_component_path_example": [
-        "component:9763222080385001759",
-        "component:1721276107715120023",
-        "component:17468677433589831255"
+        "component:18184683777520980768",
+        "component:4745881161588238468",
+        "component:4877398884864614661"
       ],
       "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj"
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec"
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le"
       ],
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
@@ -8841,48 +8838,192 @@
       "hydrated_role": "constructive_source"
     },
     {
-      "atomic_id": "bundle:488f2edd801c",
-      "hydrated_id": "InfoGeometry.Volume.ConnesCocycle",
+      "atomic_id": "bundle:8fc792a6a679",
+      "hydrated_id": "InfoGeometry.Canonical.ConnesArakiFramework",
       "role": "supports",
       "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:488f2edd801c",
-      "motif_signature": "DoubledSpace -> AlgebraEnd -> inj",
+      "carrier_role": "sink",
+      "bundle_id": "bundle:8fc792a6a679",
+      "motif_signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise",
       "witness_count": 2,
       "compression_score": 8.0,
       "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj"
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise"
       ],
       "canonical_witness_paths": [
         [
-          "InfoGeometry.Krein.DoubledSpace",
-          "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-          "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj"
+          "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+          "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+          "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise"
         ],
         [
-          "InfoGeometry.Krein.DoubledSpace",
-          "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-          "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec"
+          "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+          "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+          "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le"
         ]
       ],
       "native_canonical_component_path_example": [
-        "component:9763222080385001759",
-        "component:1721276107715120023",
-        "component:17468677433589831255"
+        "component:18184683777520980768",
+        "component:4745881161588238468",
+        "component:4877398884864614661"
       ],
       "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj"
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec"
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le"
       ],
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
+      ],
+      "hydrated_role": "consumer_sink"
+    },
+    {
+      "atomic_id": "bundle:963f31d9e3af",
+      "hydrated_id": "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "source",
+      "bundle_id": "bundle:963f31d9e3af",
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> eq_1",
+      "witness_count": 1,
+      "compression_score": 8.0,
+      "canonical_path_example": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+          "InfoGeometry.Krein.modular_shift",
+          "InfoGeometry.Krein.satisfies_kms_like",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+          "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:9449498726415301504",
+        "component:11033057023290376818",
+        "component:6296732144952278227"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.YangMillsFinite"
+      ],
+      "hydrated_role": "constructive_source"
+    },
+    {
+      "atomic_id": "bundle:963f31d9e3af",
+      "hydrated_id": "InfoGeometry.Canonical.YangMillsFinite",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "sink",
+      "bundle_id": "bundle:963f31d9e3af",
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> eq_1",
+      "witness_count": 1,
+      "compression_score": 8.0,
+      "canonical_path_example": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+          "InfoGeometry.Krein.modular_shift",
+          "InfoGeometry.Krein.satisfies_kms_like",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+          "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:9449498726415301504",
+        "component:11033057023290376818",
+        "component:6296732144952278227"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.YangMillsFinite"
+      ],
+      "hydrated_role": "consumer_sink"
+    },
+    {
+      "atomic_id": "bundle:963f31d9e3af",
+      "hydrated_id": "InfoGeometry.Krein.Thermal",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "source",
+      "bundle_id": "bundle:963f31d9e3af",
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> eq_1",
+      "witness_count": 1,
+      "compression_score": 8.0,
+      "canonical_path_example": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+          "InfoGeometry.Krein.modular_shift",
+          "InfoGeometry.Krein.satisfies_kms_like",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+          "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:9449498726415301504",
+        "component:11033057023290376818",
+        "component:6296732144952278227"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.YangMillsFinite"
       ],
       "hydrated_role": "constructive_source"
     },
@@ -9377,6 +9518,78 @@
       "hydrated_role": "consumer_sink"
     },
     {
+      "atomic_id": "bundle:032f19f224c4",
+      "hydrated_id": "InfoGeometry.Canonical.ChiralRGFlow",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "source",
+      "bundle_id": "bundle:032f19f224c4",
+      "motif_signature": "gamma -> gamma_le_spectral_gap",
+      "witness_count": 1,
+      "compression_score": 2.0,
+      "canonical_path_example": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+          "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:6779113019034598783",
+        "component:10926903322678266672"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.YangMillsFinite"
+      ],
+      "hydrated_role": "constructive_source"
+    },
+    {
+      "atomic_id": "bundle:032f19f224c4",
+      "hydrated_id": "InfoGeometry.Canonical.YangMillsFinite",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "sink",
+      "bundle_id": "bundle:032f19f224c4",
+      "motif_signature": "gamma -> gamma_le_spectral_gap",
+      "witness_count": 1,
+      "compression_score": 2.0,
+      "canonical_path_example": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+          "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:6779113019034598783",
+        "component:10926903322678266672"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.YangMillsFinite"
+      ],
+      "hydrated_role": "consumer_sink"
+    },
+    {
       "atomic_id": "bundle:237037d1f3ab",
       "hydrated_id": "InfoGeometry.Canonical.InformationTorsion",
       "role": "supports",
@@ -9595,18 +9808,6 @@
       "compression_potential": 8.0
     },
     {
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> inj",
-      "path_count": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.YangMillsFinite"
-      ],
-      "source_modules": [
-        "InfoGeometry.Krein.Thermal"
-      ],
-      "avg_path_length": 4.0,
-      "compression_potential": 8.0
-    },
-    {
       "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
       "path_count": 1,
       "sink_modules": [
@@ -9619,7 +9820,7 @@
       "compression_potential": 8.0
     },
     {
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sizeOf_spec",
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> eq_1",
       "path_count": 1,
       "sink_modules": [
         "InfoGeometry.Canonical.YangMillsFinite"
@@ -9655,30 +9856,6 @@
       "compression_potential": 4.0
     },
     {
-      "motif_signature": "DoubledSpace -> AlgebraEnd -> inj",
-      "path_count": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
-      ],
-      "avg_path_length": 2.0,
-      "compression_potential": 4.0
-    },
-    {
-      "motif_signature": "DoubledSpace -> AlgebraEnd -> sizeOf_spec",
-      "path_count": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
-      ],
-      "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
-      ],
-      "avg_path_length": 2.0,
-      "compression_potential": 4.0
-    },
-    {
       "motif_signature": "RN/K\u00e4hler/log-det -> unitRelativeVolume",
       "path_count": 1,
       "sink_modules": [
@@ -9686,6 +9863,30 @@
       ],
       "source_modules": [
         "InfoGeometry.Canonical.RicciMongeAmpere"
+      ],
+      "avg_path_length": 2.0,
+      "compression_potential": 4.0
+    },
+    {
+      "motif_signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise",
+      "path_count": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.ConnesArakiFramework"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.BekensteinBound"
+      ],
+      "avg_path_length": 2.0,
+      "compression_potential": 4.0
+    },
+    {
+      "motif_signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise_le",
+      "path_count": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.ConnesArakiFramework"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.BekensteinBound"
       ],
       "avg_path_length": 2.0,
       "compression_potential": 4.0
@@ -9775,6 +9976,18 @@
       "compression_potential": 2.0
     },
     {
+      "motif_signature": "gamma -> gamma_le_spectral_gap",
+      "path_count": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.YangMillsFinite"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.ChiralRGFlow"
+      ],
+      "avg_path_length": 1.0,
+      "compression_potential": 2.0
+    },
+    {
       "motif_signature": "has_torsion -> twistedInference_not_torsionFree",
       "path_count": 1,
       "sink_modules": [
@@ -9788,82 +10001,6 @@
     }
   ],
   "bundles": [
-    {
-      "atomic_id": "bundle:6ce7959e3a89",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
-      ],
-      "source_modules": [
-        "InfoGeometry.Krein.Thermal"
-      ],
-      "source_categories": {
-        "likely_constructive": 1,
-        "neutral_definition": 3
-      },
-      "source_kinds": {
-        "def": 3,
-        "theorem": 1
-      },
-      "source_purity_score": 0.25,
-      "scc_id": null,
-      "native_component_ids": [
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:11709838850413126274",
-        "component:7517963383668046864"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
-      ],
-      "native_root_witness_component_ids": [
-        "component:9763222080385001759",
-        "component:5655393144097822170",
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:11709838850413126274",
-        "component:7517963383668046864"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 5,
-      "sink_modules": [
-        "InfoGeometry.Canonical.GrandSynthesis",
-        "InfoGeometry.Canonical.YangMillsFinite"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication",
-        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec"
-      ],
-      "path_multiplicity": 4,
-      "avg_path_length": 4.0,
-      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
-      "compression_potential": 32.0
-    },
     {
       "atomic_id": "bundle:421c663276d8",
       "kind": "source_bundle",
@@ -10198,6 +10335,79 @@
       "avg_path_length": 4.5,
       "motif_signature": "ext -> modularConjugationJ_fixed_of_diagonalPositiveTimeVector -> modularConjugationJ_fixed_of_positiveTimeVector -> finiteOsterwalderSchraderLayer_of_positiveTimeVector -> existenceClaims_of_bridge",
       "compression_potential": 18.0
+    },
+    {
+      "atomic_id": "bundle:6ce7959e3a89",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
+      ],
+      "source_modules": [
+        "InfoGeometry.Krein.Thermal"
+      ],
+      "source_categories": {
+        "likely_constructive": 1,
+        "neutral_definition": 3
+      },
+      "source_kinds": {
+        "def": 3,
+        "theorem": 1
+      },
+      "source_purity_score": 0.25,
+      "scc_id": null,
+      "native_component_ids": [
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:11709838850413126274",
+        "component:7517963383668046864"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
+      ],
+      "native_root_witness_component_ids": [
+        "component:9763222080385001759",
+        "component:5655393144097822170",
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:11709838850413126274",
+        "component:7517963383668046864"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 5,
+      "sink_modules": [
+        "InfoGeometry.Canonical.GrandSynthesis"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication",
+        "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
+      ],
+      "path_multiplicity": 2,
+      "avg_path_length": 4.0,
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
+      "compression_potential": 16.0
     },
     {
       "atomic_id": "bundle:bfd21fb58d2e",
@@ -10572,58 +10782,124 @@
       "compression_potential": 10.0
     },
     {
-      "atomic_id": "bundle:488f2edd801c",
+      "atomic_id": "bundle:8fc792a6a679",
       "kind": "source_bundle",
       "category": "source_bundle",
       "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd"
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
       ],
       "supporting_atomic_decls": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd"
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
       ],
       "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
+        "InfoGeometry.Canonical.BekensteinBound"
       ],
       "source_categories": {
-        "neutral_definition": 2
+        "neutral_definition": 1
       },
       "source_kinds": {
-        "def": 2
+        "def": 1
       },
       "source_purity_score": 0.0,
-      "scc_id": null,
+      "scc_id": "component:18184683777520980768",
       "native_component_ids": [
-        "component:9763222080385001759",
-        "component:1721276107715120023"
+        "component:18184683777520980768"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd"
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
       ],
       "native_root_witness_component_ids": [
-        "component:9763222080385001759",
-        "component:1721276107715120023"
+        "component:18184683777520980768"
       ],
       "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd"
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 0,
-      "native_depth_max": 1,
+      "native_depth_max": 0,
       "sink_modules": [
         "InfoGeometry.Canonical.ConnesArakiFramework"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec"
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le"
       ],
       "path_multiplicity": 2,
       "avg_path_length": 2.0,
-      "motif_signature": "DoubledSpace -> AlgebraEnd -> inj",
+      "motif_signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise",
+      "compression_potential": 8.0
+    },
+    {
+      "atomic_id": "bundle:963f31d9e3af",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike"
+      ],
+      "source_modules": [
+        "InfoGeometry.Krein.Thermal"
+      ],
+      "source_categories": {
+        "likely_constructive": 1,
+        "neutral_definition": 3
+      },
+      "source_kinds": {
+        "def": 3,
+        "theorem": 1
+      },
+      "source_purity_score": 0.25,
+      "scc_id": null,
+      "native_component_ids": [
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:9449498726415301504",
+        "component:11033057023290376818"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike"
+      ],
+      "native_root_witness_component_ids": [
+        "component:9763222080385001759",
+        "component:5655393144097822170",
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:9449498726415301504",
+        "component:11033057023290376818"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 5,
+      "sink_modules": [
+        "InfoGeometry.Canonical.YangMillsFinite"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
+      ],
+      "path_multiplicity": 1,
+      "avg_path_length": 4.0,
+      "motif_signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> eq_1",
       "compression_potential": 8.0
     },
     {
@@ -10980,6 +11256,56 @@
       "compression_potential": 4.0
     },
     {
+      "atomic_id": "bundle:032f19f224c4",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.ChiralRGFlow"
+      ],
+      "source_categories": {
+        "neutral_definition": 1
+      },
+      "source_kinds": {
+        "def": 1
+      },
+      "source_purity_score": 0.0,
+      "scc_id": "component:6779113019034598783",
+      "native_component_ids": [
+        "component:6779113019034598783"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "native_root_witness_component_ids": [
+        "component:9196863483386825534",
+        "component:6779113019034598783"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel",
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.YangMillsFinite"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
+      ],
+      "path_multiplicity": 1,
+      "avg_path_length": 1.0,
+      "motif_signature": "gamma -> gamma_le_spectral_gap",
+      "compression_potential": 2.0
+    },
+    {
       "atomic_id": "bundle:237037d1f3ab",
       "kind": "source_bundle",
       "category": "source_bundle",
@@ -11040,18 +11366,16 @@
       "module": "InfoGeometry.Krein.DoubledSpace",
       "sink_role": "constructive_source",
       "supporting_atomic_decls": [
-        "InfoGeometry.Krein.DoubledSpace",
         "InfoGeometry.Krein.DoubledSpace.ext",
         "InfoGeometry.Krein.spectral_epsilon_involution"
       ],
       "minimal_source_bundle": "bundle:421c663276d8",
       "canonical_downstream_sink_family": [
         "InfoGeometry.Canonical.AQFTOperatorInterface",
-        "InfoGeometry.Canonical.ConnesArakiFramework",
         "InfoGeometry.Canonical.GrandSynthesis",
         "InfoGeometry.Canonical.YangMillsFinite"
       ],
-      "path_multiplicity": 9,
+      "path_multiplicity": 7,
       "path_motif_signatures": [
         {
           "signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> grandCanonicalFockEulerStep_and_bogoliubov_projector_superalgebra_packaged_with_completeCStarReady",
@@ -11066,14 +11390,12 @@
           "count": 1
         }
       ],
-      "compression_potential": 98.0,
+      "compression_potential": 90.0,
       "native_component_ids": [
-        "component:9763222080385001759",
         "component:10262190868562801872",
         "component:13856048145206016671"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace",
         "InfoGeometry.Krein.DoubledSpace.ext",
         "InfoGeometry.Krein.spectral_epsilon_involution"
       ],
@@ -11084,11 +11406,11 @@
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
-      "native_depth_min": 0,
+      "native_depth_min": 1,
       "native_depth_max": 2,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 19,
-      "native_corridor_count": 9,
+      "native_corridor_reuse": 15,
+      "native_corridor_count": 7,
       "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
       "top_native_corridor_component_ids": [
         "component:10262190868562801872",
@@ -11107,81 +11429,6 @@
         "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_packaged_with_completeCStarReady",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package",
         "InfoGeometry.Canonical.AQFTOperatorInterface.aqft_readiness_package_realHilbert"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Krein.Thermal",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Krein.Thermal",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Krein.satisfies_kms_like"
-      ],
-      "minimal_source_bundle": "bundle:6ce7959e3a89",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.ConnesArakiFramework",
-        "InfoGeometry.Canonical.GrandSynthesis",
-        "InfoGeometry.Canonical.YangMillsFinite"
-      ],
-      "path_multiplicity": 7,
-      "path_motif_signatures": [
-        {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
-          "count": 1
-        },
-        {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> wheelerDeWitt_equivalence_of_kk_conjugacy_anchor",
-          "count": 1
-        },
-        {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> information_wheeler_dewitt_implication",
-          "count": 1
-        }
-      ],
-      "compression_potential": 62.0,
-      "native_component_ids": [
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:9449498726415301504"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Krein.satisfies_kms_like"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Krein.satisfies_kms_like"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 4,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 16,
-      "native_corridor_count": 7,
-      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
-      "top_native_corridor_component_ids": [
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:14274548561181103404",
-        "component:10510543447486048737",
-        "component:4188097888448423333",
-        "component:15358866442594511405"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
-        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -11409,23 +11656,23 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "hydrated_id": "InfoGeometry.Krein.Thermal",
       "kind": "module",
       "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "module": "InfoGeometry.Krein.Thermal",
       "sink_role": "constructive_source",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift"
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like"
       ],
       "minimal_source_bundle": "bundle:6ce7959e3a89",
       "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.ConnesArakiFramework",
         "InfoGeometry.Canonical.GrandSynthesis",
         "InfoGeometry.Canonical.YangMillsFinite"
       ],
-      "path_multiplicity": 5,
+      "path_multiplicity": 6,
       "path_motif_signatures": [
         {
           "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
@@ -11440,53 +11687,47 @@
           "count": 1
         }
       ],
-      "compression_potential": 42.0,
+      "compression_potential": 54.0,
       "native_component_ids": [
-        "component:7517963383668046864",
-        "component:11033057023290376818",
-        "component:6306551777906829278",
-        "component:11709838850413126274"
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:9449498726415301504"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift"
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like"
       ],
       "native_root_witnesses": [
         "InfoGeometry.Krein.DoubledSpace",
         "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Krein.satisfies_kms_like",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure"
+        "InfoGeometry.Krein.satisfies_kms_like"
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 1,
-      "native_depth_max": 6,
+      "native_depth_max": 4,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 10,
-      "native_corridor_count": 5,
+      "native_corridor_reuse": 14,
+      "native_corridor_count": 6,
       "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
       "top_native_corridor_component_ids": [
         "component:202087514678487686",
         "component:11158173442598228089",
-        "component:9449498726415301504",
-        "component:11033057023290376818",
-        "component:6306551777906829278",
-        "component:17941388603212254760"
+        "component:14274548561181103404",
+        "component:10510543447486048737",
+        "component:4188097888448423333",
+        "component:15358866442594511405"
       ],
       "top_native_corridor_representatives": [
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Krein.satisfies_kms_like",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-        "InfoGeometry.Canonical.GrandSynthesis.wheelerDeWitt_equivalence_of_kk_conjugacy_anchor"
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -11698,112 +11939,84 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Canonical.YangMillsFinite",
+      "hydrated_id": "InfoGeometry.Canonical.KMSSinkhornBridge",
       "kind": "module",
       "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.YangMillsFinite",
-      "sink_role": "consumer_sink",
+      "module": "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "sink_role": "constructive_source",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.existenceClaims_of_bridge",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift"
       ],
-      "minimal_source_bundle": "bundle:43867cf01b31",
+      "minimal_source_bundle": "bundle:6ce7959e3a89",
       "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.GrandSynthesis",
         "InfoGeometry.Canonical.YangMillsFinite"
       ],
       "path_multiplicity": 4,
       "path_motif_signatures": [
         {
-          "signature": "ext -> modularConjugationJ_fixed_of_diagonalPositiveTimeVector -> modularConjugationJ_fixed_of_positiveTimeVector -> finiteOsterwalderSchraderLayer_of_positiveTimeVector -> existenceClaims_of_bridge",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
           "count": 1
         },
         {
-          "signature": "ext -> modularConjugationJ_fixed_of_diagonalPositiveTimeVector -> modularConjugationJ_fixed_of_positiveTimeVector -> finiteOsterwalderSchraderLayer_of_positiveTimeVector -> obligations_of_bridge -> RN/K\u00e4hler/log-det",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> wheelerDeWitt_equivalence_of_kk_conjugacy_anchor",
           "count": 1
         },
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> inj",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> information_wheeler_dewitt_implication",
           "count": 1
         }
       ],
       "compression_potential": 34.0,
       "native_component_ids": [
-        "component:15743762670488889697",
-        "component:2491689311522162915",
-        "component:3112277199951581998",
-        "component:419134356416399225",
-        "component:1058931600093603412",
-        "component:5835116512914996753"
+        "component:7517963383668046864",
+        "component:11033057023290376818",
+        "component:6306551777906829278",
+        "component:11709838850413126274"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.existenceClaims_of_bridge",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
+        "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift"
       ],
       "native_root_witnesses": [
         "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.modular_j",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_fixed_of_diagonalPositiveTimeVector",
-        "InfoGeometry.Canonical.TomitaTakesaki.reflectionQuadratic_nonneg_of_diagonalPositiveTimeVector",
-        "InfoGeometry.Canonical.TomitaTakesaki.reflectionQuadratic_nonneg_of_positiveTimeVector",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
         "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Krein.satisfies_kms_like",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.expectationSeedFunctional_kms_of_structural",
-        "InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed_kms_of_jointKernel_commutator",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_jointKernel_commutator",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.existenceClaims_of_bridge",
         "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
         "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.rec",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.casesOn",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.noConfusionType",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.noConfusion",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.noConfusion",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure"
       ],
-      "native_strict_dominator_component_ids": [
-        "component:5835116512914996753"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
-      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
       "native_depth_min": 1,
-      "native_depth_max": 12,
+      "native_depth_max": 6,
       "native_dominator_pressure": 0,
       "native_corridor_reuse": 8,
       "native_corridor_count": 4,
       "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
       "top_native_corridor_component_ids": [
-        "component:10262190868562801872",
-        "component:12040235705932493953",
-        "component:3501140465135722042",
-        "component:15743762670488889697",
-        "component:1058931600093603412",
-        "component:5835116512914996753"
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:9449498726415301504",
+        "component:11033057023290376818",
+        "component:6306551777906829278",
+        "component:17941388603212254760"
       ],
       "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_fixed_of_diagonalPositiveTimeVector",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_fixed_of_positiveTimeVector",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
-        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
+        "InfoGeometry.Canonical.GrandSynthesis.wheelerDeWitt_equivalence_of_kk_conjugacy_anchor"
       ]
     },
     {
@@ -11813,8 +12026,9 @@
       "module": "InfoGeometry.Canonical.ConnesArakiFramework",
       "sink_role": "consumer_sink",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le",
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
@@ -11829,40 +12043,37 @@
           "count": 1
         },
         {
-          "signature": "DoubledSpace -> AlgebraEnd -> inj",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
           "count": 1
         },
         {
-          "signature": "DoubledSpace -> AlgebraEnd -> sizeOf_spec",
+          "signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise",
           "count": 1
         }
       ],
       "compression_potential": 28.0,
       "native_component_ids": [
-        "component:17468677433589831255",
-        "component:17149530735150950143",
+        "component:4745881161588238468",
+        "component:4877398884864614661",
+        "component:4534120800394436257",
         "component:18089539564452124112",
         "component:15358866442594511405"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le",
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
         "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ],
       "native_root_witnesses": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le",
         "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow.toFun",
-        "InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.rec",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.casesOn",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.noConfusionType",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.noConfusion",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.noConfusion",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj",
-        "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec",
         "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
@@ -11885,11 +12096,11 @@
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 1,
-      "native_depth_max": 10,
+      "native_depth_max": 9,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 10,
+      "native_corridor_reuse": 8,
       "native_corridor_count": 4,
-      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
+      "top_root_witness": "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
       "top_native_corridor_component_ids": [
         "component:202087514678487686",
         "component:11158173442598228089",
@@ -11908,78 +12119,107 @@
       ]
     },
     {
-      "hydrated_id": "InfoGeometry.Volume.ConnesCocycle",
+      "hydrated_id": "InfoGeometry.Canonical.YangMillsFinite",
       "kind": "module",
       "carrier_type": "module",
-      "module": "InfoGeometry.Volume.ConnesCocycle",
-      "sink_role": "constructive_source",
+      "module": "InfoGeometry.Canonical.YangMillsFinite",
+      "sink_role": "consumer_sink",
       "supporting_atomic_decls": [
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
-        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv"
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.existenceClaims_of_bridge",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
       ],
-      "minimal_source_bundle": "bundle:0a91955841c3",
+      "minimal_source_bundle": "bundle:43867cf01b31",
       "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.ConnesArakiFramework"
+        "InfoGeometry.Canonical.YangMillsFinite"
       ],
       "path_multiplicity": 4,
       "path_motif_signatures": [
         {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
+          "signature": "ext -> modularConjugationJ_fixed_of_diagonalPositiveTimeVector -> modularConjugationJ_fixed_of_positiveTimeVector -> finiteOsterwalderSchraderLayer_of_positiveTimeVector -> existenceClaims_of_bridge",
           "count": 1
         },
         {
-          "signature": "DoubledSpace -> AlgebraEnd -> inj",
+          "signature": "ext -> modularConjugationJ_fixed_of_diagonalPositiveTimeVector -> modularConjugationJ_fixed_of_positiveTimeVector -> finiteOsterwalderSchraderLayer_of_positiveTimeVector -> obligations_of_bridge -> RN/K\u00e4hler/log-det",
           "count": 1
         },
         {
-          "signature": "DoubledSpace -> AlgebraEnd -> sizeOf_spec",
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> eq_1",
           "count": 1
         }
       ],
       "compression_potential": 28.0,
       "native_component_ids": [
-        "component:1721276107715120023",
-        "component:10510543447486048737",
-        "component:14274548561181103404"
+        "component:6296732144952278227",
+        "component:15743762670488889697",
+        "component:2491689311522162915",
+        "component:10926903322678266672",
+        "component:1058931600093603412",
+        "component:5835116512914996753"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
-        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv"
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.existenceClaims_of_bridge",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
       ],
       "native_root_witnesses": [
         "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
         "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
         "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
-        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator"
+        "InfoGeometry.Krein.satisfies_kms_like",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1",
+        "InfoGeometry.Krein.modular_j",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_fixed_of_diagonalPositiveTimeVector",
+        "InfoGeometry.Canonical.TomitaTakesaki.reflectionQuadratic_nonneg_of_diagonalPositiveTimeVector",
+        "InfoGeometry.Canonical.TomitaTakesaki.reflectionQuadratic_nonneg_of_positiveTimeVector",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.expectationSeedFunctional_kms_of_structural",
+        "InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed_kms_of_jointKernel_commutator",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_jointKernel_commutator",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.existenceClaims_of_bridge",
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel",
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
       ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
+      "native_strict_dominator_component_ids": [
+        "component:5835116512914996753"
+      ],
+      "native_strict_dominator_representatives": [
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
+      ],
       "native_depth_min": 1,
-      "native_depth_max": 5,
+      "native_depth_max": 10,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 10,
+      "native_corridor_reuse": 7,
       "native_corridor_count": 4,
       "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
       "top_native_corridor_component_ids": [
-        "component:202087514678487686",
-        "component:11158173442598228089",
-        "component:14274548561181103404",
-        "component:10510543447486048737",
-        "component:4188097888448423333",
-        "component:15358866442594511405"
+        "component:10262190868562801872",
+        "component:12040235705932493953",
+        "component:3501140465135722042",
+        "component:15743762670488889697",
+        "component:1058931600093603412",
+        "component:5835116512914996753"
       ],
       "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-        "InfoGeometry.Krein.modular_shift",
-        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
-        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
-        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
-        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
+        "InfoGeometry.Krein.DoubledSpace.ext",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_fixed_of_diagonalPositiveTimeVector",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_fixed_of_positiveTimeVector",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_bridge",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.obligations_of_expectationSeedFromLogDet"
       ]
     },
     {
@@ -12126,6 +12366,73 @@
         "InfoGeometry.Canonical.MoE.Coupling",
         "InfoGeometry.Canonical.WeylInformationGauge.weylOrderWitnessMatrix2",
         "InfoGeometry.Canonical.WeylInformationGauge.weylOrderWitnessMatrix2.eq_1"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Volume.ConnesCocycle",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Volume.ConnesCocycle",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv"
+      ],
+      "minimal_source_bundle": "bundle:0a91955841c3",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.ConnesArakiFramework"
+      ],
+      "path_multiplicity": 2,
+      "path_motif_signatures": [
+        {
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop",
+          "count": 1
+        },
+        {
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShiftAlgEquiv -> additiveModularFlowOfGenerator -> modularSignAdditiveModularFlow -> abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop",
+          "count": 1
+        }
+      ],
+      "compression_potential": 20.0,
+      "native_component_ids": [
+        "component:10510543447486048737",
+        "component:14274548561181103404"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.instNormedRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 5,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 6,
+      "native_corridor_count": 2,
+      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
+      "top_native_corridor_component_ids": [
+        "component:202087514678487686",
+        "component:11158173442598228089",
+        "component:14274548561181103404",
+        "component:10510543447486048737",
+        "component:4188097888448423333",
+        "component:15358866442594511405"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+        "InfoGeometry.Krein.modular_shift",
+        "InfoGeometry.Volume.ConnesCocycle.modularShiftAlgEquiv",
+        "InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator",
+        "InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow",
+        "InfoGeometry.Canonical.ConnesArakiFramework.abs_squeezingLogShear_le_of_abs_time_le_tomitaRestrictedArakiRelativeEntropyDrop"
       ]
     },
     {
@@ -12672,6 +12979,59 @@
       ]
     },
     {
+      "hydrated_id": "InfoGeometry.Canonical.BekensteinBound",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.BekensteinBound",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
+      ],
+      "minimal_source_bundle": "bundle:8fc792a6a679",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.ConnesArakiFramework"
+      ],
+      "path_multiplicity": 2,
+      "path_motif_signatures": [
+        {
+          "signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise",
+          "count": 1
+        },
+        {
+          "signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise_le",
+          "count": 1
+        }
+      ],
+      "compression_potential": 8.0,
+      "native_component_ids": [
+        "component:18184683777520980768"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 0,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 2,
+      "native_corridor_count": 2,
+      "top_root_witness": "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+      "top_native_corridor_component_ids": [
+        "component:18184683777520980768",
+        "component:4745881161588238468",
+        "component:4534120800394436257"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+        "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le"
+      ]
+    },
+    {
       "hydrated_id": "InfoGeometry.Basic",
       "kind": "module",
       "carrier_type": "module",
@@ -12784,6 +13144,54 @@
       ]
     },
     {
+      "hydrated_id": "InfoGeometry.Canonical.ChiralRGFlow",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.ChiralRGFlow",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "minimal_source_bundle": "bundle:032f19f224c4",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.YangMillsFinite"
+      ],
+      "path_multiplicity": 1,
+      "path_motif_signatures": [
+        {
+          "signature": "gamma -> gamma_le_spectral_gap",
+          "count": 1
+        }
+      ],
+      "compression_potential": 2.0,
+      "native_component_ids": [
+        "component:6779113019034598783"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel",
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 1,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 1,
+      "native_corridor_count": 1,
+      "top_root_witness": "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel",
+      "top_native_corridor_component_ids": [
+        "component:6779113019034598783",
+        "component:10926903322678266672"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+        "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
+      ]
+    },
+    {
       "hydrated_id": "InfoGeometry.Canonical.InformationTorsion",
       "kind": "module",
       "carrier_type": "module",
@@ -12884,55 +13292,6 @@
       ]
     },
     {
-      "source_module": "InfoGeometry.Krein.Thermal",
-      "target_module": "InfoGeometry.Canonical.KMSSinkhornBridge",
-      "path_count": 5,
-      "compression_potential": 42.0,
-      "direct_projection": true,
-      "hypothesis_packets": [
-        {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
-          "count": 1
-        },
-        {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> wheelerDeWitt_equivalence_of_kk_conjugacy_anchor",
-          "count": 1
-        },
-        {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> information_wheeler_dewitt_implication",
-          "count": 1
-        }
-      ],
-      "bundle_ids": [
-        "bundle:6ce7959e3a89",
-        "bundle:1b64759ff4b6"
-      ],
-      "atomic_path_examples": [
-        [
-          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-          "InfoGeometry.Krein.modular_shift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-          "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
-        ],
-        [
-          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-          "InfoGeometry.Krein.modular_shift",
-          "InfoGeometry.Krein.satisfies_kms_like",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
-          "InfoGeometry.Canonical.GrandSynthesis.wheelerDeWitt_equivalence_of_kk_conjugacy_anchor"
-        ],
-        [
-          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-          "InfoGeometry.Krein.modular_shift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-          "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication"
-        ]
-      ]
-    },
-    {
       "source_module": "InfoGeometry.Canonical.BogoliubovFockSuper",
       "target_module": "InfoGeometry.Canonical.AQFTOperatorInterface",
       "path_count": 3,
@@ -12974,6 +13333,56 @@
           "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
           "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
           "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalFockEulerStep_and_projectorSuperPair_base_packaged_with_completeCStarReady"
+        ]
+      ]
+    },
+    {
+      "source_module": "InfoGeometry.Krein.Thermal",
+      "target_module": "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "path_count": 4,
+      "compression_potential": 34.0,
+      "direct_projection": true,
+      "hypothesis_packets": [
+        {
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sinkhornStepwise_kmsResidual_le_entropyBarrier",
+          "count": 1
+        },
+        {
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> SinkhornKMSClosure -> wheelerDeWitt_equivalence_of_kk_conjugacy_anchor",
+          "count": 1
+        },
+        {
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> information_wheeler_dewitt_implication",
+          "count": 1
+        }
+      ],
+      "bundle_ids": [
+        "bundle:6ce7959e3a89",
+        "bundle:1b64759ff4b6",
+        "bundle:963f31d9e3af"
+      ],
+      "atomic_path_examples": [
+        [
+          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+          "InfoGeometry.Krein.modular_shift",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
+          "InfoGeometry.Canonical.GrandSynthesis.sinkhornStepwise_kmsResidual_le_entropyBarrier"
+        ],
+        [
+          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+          "InfoGeometry.Krein.modular_shift",
+          "InfoGeometry.Krein.satisfies_kms_like",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure",
+          "InfoGeometry.Canonical.GrandSynthesis.wheelerDeWitt_equivalence_of_kk_conjugacy_anchor"
+        ],
+        [
+          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+          "InfoGeometry.Krein.modular_shift",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
+          "InfoGeometry.Canonical.GrandSynthesis.information_wheeler_dewitt_implication"
         ]
       ]
     },
@@ -13269,42 +13678,6 @@
       ]
     },
     {
-      "source_module": "InfoGeometry.Canonical.KMSSinkhornBridge",
-      "target_module": "InfoGeometry.Canonical.YangMillsFinite",
-      "path_count": 2,
-      "compression_potential": 16.0,
-      "direct_projection": true,
-      "hypothesis_packets": [
-        {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> inj",
-          "count": 1
-        },
-        {
-          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> modularShift -> JointKernelOnOmega -> sizeOf_spec",
-          "count": 1
-        }
-      ],
-      "bundle_ids": [
-        "bundle:6ce7959e3a89"
-      ],
-      "atomic_path_examples": [
-        [
-          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-          "InfoGeometry.Krein.modular_shift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-          "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.inj"
-        ],
-        [
-          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-          "InfoGeometry.Krein.modular_shift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.modularShift",
-          "InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega",
-          "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.mk.sizeOf_spec"
-        ]
-      ]
-    },
-    {
       "source_module": "InfoGeometry.Canonical.GrandCanonicalExperts",
       "target_module": "InfoGeometry.Canonical.CountSubstrateBridge",
       "path_count": 3,
@@ -13526,66 +13899,59 @@
       ]
     },
     {
-      "source_module": "InfoGeometry.Krein.DoubledSpace",
-      "target_module": "InfoGeometry.Volume.ConnesCocycle",
-      "path_count": 2,
-      "compression_potential": 8.0,
-      "direct_projection": true,
-      "hypothesis_packets": [
-        {
-          "signature": "DoubledSpace -> AlgebraEnd -> inj",
-          "count": 1
-        },
-        {
-          "signature": "DoubledSpace -> AlgebraEnd -> sizeOf_spec",
-          "count": 1
-        }
-      ],
-      "bundle_ids": [
-        "bundle:488f2edd801c"
-      ],
-      "atomic_path_examples": [
-        [
-          "InfoGeometry.Krein.DoubledSpace",
-          "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-          "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj"
-        ],
-        [
-          "InfoGeometry.Krein.DoubledSpace",
-          "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-          "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec"
-        ]
-      ]
-    },
-    {
-      "source_module": "InfoGeometry.Volume.ConnesCocycle",
+      "source_module": "InfoGeometry.Canonical.BekensteinBound",
       "target_module": "InfoGeometry.Canonical.ConnesArakiFramework",
       "path_count": 2,
       "compression_potential": 8.0,
       "direct_projection": true,
       "hypothesis_packets": [
         {
-          "signature": "DoubledSpace -> AlgebraEnd -> inj",
+          "signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise",
           "count": 1
         },
         {
-          "signature": "DoubledSpace -> AlgebraEnd -> sizeOf_spec",
+          "signature": "RelativeEntropyProfile -> ArakiRelativeEntropyProfile -> pointwise_le",
           "count": 1
         }
       ],
       "bundle_ids": [
-        "bundle:488f2edd801c"
+        "bundle:8fc792a6a679"
       ],
       "atomic_path_examples": [
         [
-          "InfoGeometry.Krein.DoubledSpace",
-          "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-          "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.inj"
+          "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+          "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+          "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionDropMonotone.pointwise"
         ],
         [
-          "InfoGeometry.Krein.DoubledSpace",
-          "InfoGeometry.Volume.ConnesCocycle.AlgebraEnd",
-          "InfoGeometry.Canonical.ConnesArakiFramework.ConnesArakiData.mk.sizeOf_spec"
+          "InfoGeometry.Canonical.BekensteinBound.RelativeEntropyProfile",
+          "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyProfile",
+          "InfoGeometry.Canonical.ConnesArakiFramework.ArakiRelativeEntropyRestrictionMonotone.pointwise_le"
+        ]
+      ]
+    },
+    {
+      "source_module": "InfoGeometry.Canonical.KMSSinkhornBridge",
+      "target_module": "InfoGeometry.Canonical.YangMillsFinite",
+      "path_count": 1,
+      "compression_potential": 8.0,
+      "direct_projection": true,
+      "hypothesis_packets": [
+        {
+          "signature": "instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace -> modular_shift -> satisfies_kms_like -> SatisfiesKMSLike -> eq_1",
+          "count": 1
+        }
+      ],
+      "bundle_ids": [
+        "bundle:963f31d9e3af"
+      ],
+      "atomic_path_examples": [
+        [
+          "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
+          "InfoGeometry.Krein.modular_shift",
+          "InfoGeometry.Krein.satisfies_kms_like",
+          "InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike",
+          "InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"
         ]
       ]
     },
@@ -13632,6 +13998,28 @@
           "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan",
           "InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.cartan_generator_split",
           "InfoGeometry.Canonical.WeylInformationGauge.cartanWeyl_generator_split"
+        ]
+      ]
+    },
+    {
+      "source_module": "InfoGeometry.Canonical.ChiralRGFlow",
+      "target_module": "InfoGeometry.Canonical.YangMillsFinite",
+      "path_count": 1,
+      "compression_potential": 2.0,
+      "direct_projection": true,
+      "hypothesis_packets": [
+        {
+          "signature": "gamma -> gamma_le_spectral_gap",
+          "count": 1
+        }
+      ],
+      "bundle_ids": [
+        "bundle:032f19f224c4"
+      ],
+      "atomic_path_examples": [
+        [
+          "InfoGeometry.Canonical.ChiralRGFlow.ChiralAsymptoticModel.gamma",
+          "InfoGeometry.Canonical.YangMillsFinite.FiniteYangMillsBridge.gamma_le_spectral_gap"
         ]
       ]
     },

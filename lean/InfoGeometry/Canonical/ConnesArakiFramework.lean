@@ -236,9 +236,8 @@ theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
             = ω (B * A) := by
   refine ⟨topologicalBekensteinBound_of_tomitaConnesArakiData
     (n := n) (H := H) (u := u) (T := T) D, ?_⟩
-  intro A B
-  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow_apply]
-    using hKMS A B
+  exact InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow_kms_of_satisfies_kms_like
+    (E := H) (ω := ω) (β := β) hKMS
 
 /--
 Tomita-specialized restricted-drop squeezing bound.

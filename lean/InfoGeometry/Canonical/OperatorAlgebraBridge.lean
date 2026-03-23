@@ -1,6 +1,10 @@
 import InfoGeometry.Canonical.AQFTOperatorInterface
 import InfoGeometry.Canonical.KKFoundation
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Canonical.QFTTDFTLaunchpad
+import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Canonical.RicciMongeAmpere
 
 open scoped InnerProductSpace
 
@@ -54,14 +58,6 @@ theorem modular_atom_is_cl11 :
 
 end ModularAtom
 
-section AqftClosure
-
-variable (n : Nat)
-variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
-variable {Obs : Type*} [NonUnitalNormedRing Obs] [StarRing Obs] [CStarRing Obs]
-
-end AqftClosure
-
 section UnifiedPackage
 
 variable (n : Nat)
@@ -109,10 +105,15 @@ theorem cstar_completeCStar_kms_fock_projectorSuperPair_base_package
   · exact cstarReady_of_instance (Obs := ObsKMS)
   · exact completeCStarReady_of_instance (Obs := ObsFock)
   · exact h_closure
-  · exact InfoGeometry.Canonical.QFTTDFTLaunchpad.grandCanonicalFockEulerStep_eq_hamiltonianStep_of_vacuumTransported
-      (E := E) (η := η) (B := B) (H := H)
-      (R := R) (Kgeo := Kgeo) (x := x) (scalar := scalar) (Λ := Λ)
-      (V := V) (Γ := Γ) (ψ := ψ) h_vac_split
+  ·
+    change ψ + η •
+      (grandCanonicalFockGenerator (E := E) B H
+        (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+          (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ))) ψ
+      = ψ + η • H ψ
+    rw [grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
+      (E := E) (B := B) (H := H) (R := R) (K := Kgeo) (x := x)
+      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) h_vac_split]
 
 end UnifiedPackage
 
@@ -164,18 +165,22 @@ theorem cstar_completeCStar_kms_fock_tdft_launchpad_package
           = ψ0 + η • H ψ0
       ∧ InfoGeometry.Canonical.QFTTDFTLaunchpad.HohenbergKohnDualState ψ ψStar
       ∧ InfoGeometry.Canonical.QFTTDFTLaunchpad.RungeGrossStationaryDualState flow scale0 := by
-  exact aqft_tdft_constructive_launchpad_packaged_with_aqft_readiness
-    (n := n)
-    (F := F) (ObsKMS := ObsKMS)
-    (E := E) (ObsFock := ObsFock)
-    (T := T) (K := K) (ω := ω) (β := β)
-    (η := η) (B := B) (H := H)
-    (R := R) (Kgeo := Kgeo) (x := x)
-    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)
-    (ψ0 := ψ0) (ψ := ψ) (ψStar := ψStar)
-    (flow := flow) (scale0 := scale0)
-    (hClosure := hClosure) (hVacSplit := hVacSplit)
-    (hHK := hHK) (hStationary := hStationary)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact cstarReady_of_instance (Obs := ObsKMS)
+  · exact completeCStarReady_of_instance (Obs := ObsFock)
+  · exact hClosure
+  ·
+    change ψ0 + η •
+      (grandCanonicalFockGenerator (E := E) B H
+        (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+          (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ))) ψ0
+      = ψ0 + η • H ψ0
+    rw [grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
+      (E := E) (B := B) (H := H) (R := R) (K := Kgeo) (x := x)
+      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit]
+  · exact hHK
+  · exact InfoGeometry.Canonical.QFTTDFTLaunchpad.rungeGrossStationaryDualState_of_stationaryAtScale
+      (flow := flow) (scale0 := scale0) hStationary
 
 /--
 Canonical operator-layer version of the unified AQFT/TDFT launchpad with the
@@ -221,18 +226,24 @@ theorem cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_pa
           = ψ0 + η • H ψ0
       ∧ InfoGeometry.Canonical.QFTTDFTLaunchpad.HohenbergKohnDualState ψ ψStar
       ∧ InfoGeometry.Canonical.QFTTDFTLaunchpad.RungeGrossStationaryDualState flow scale0 := by
-  exact aqft_tdft_constructive_launchpad_with_bogoliubov_projector_superalgebra_packaged_with_aqft_readiness
-    (n := n)
-    (F := F) (ObsKMS := ObsKMS)
-    (E := E) (ObsFock := ObsFock)
-    (T := T) (K := K) (ω := ω) (β := β)
-    (η := η) (B := B) (H := H)
-    (R := R) (Kgeo := Kgeo) (x := x)
-    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)
-    (ψ0 := ψ0) (ψ := ψ) (ψStar := ψStar)
-    (flow := flow) (scale0 := scale0)
-    (hClosure := hClosure) (hVacSplit := hVacSplit)
-    (hHK := hHK) (hStationary := hStationary)
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact cstarReady_of_instance (Obs := ObsKMS)
+  · exact completeCStarReady_of_instance (Obs := ObsFock)
+  · exact hClosure
+  · exact (bogoliubov_projector_superalgebra (E := E) B).1
+  · exact (bogoliubov_projector_superalgebra (E := E) B).2
+  ·
+    change ψ0 + η •
+      (grandCanonicalFockGenerator (E := E) B H
+        (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+          (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ))) ψ0
+      = ψ0 + η • H ψ0
+    rw [grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
+      (E := E) (B := B) (H := H) (R := R) (K := Kgeo) (x := x)
+      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit]
+  · exact hHK
+  · exact InfoGeometry.Canonical.QFTTDFTLaunchpad.rungeGrossStationaryDualState_of_stationaryAtScale
+      (flow := flow) (scale0 := scale0) hStationary
 
 /--
 Canonical operator-layer version of the unified AQFT/TDFT launchpad carrying
@@ -273,18 +284,22 @@ theorem cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base
           = ψ0 + η • H ψ0
       ∧ InfoGeometry.Canonical.QFTTDFTLaunchpad.HohenbergKohnDualState ψ ψStar
       ∧ InfoGeometry.Canonical.QFTTDFTLaunchpad.RungeGrossStationaryDualState flow scale0 := by
-  exact aqft_tdft_constructive_launchpad_packaged_with_aqft_readiness_and_projectorSuperPair_base
-    (n := n)
-    (F := F) (ObsKMS := ObsKMS)
-    (E := E) (ObsFock := ObsFock)
-    (T := T) (K := K) (ω := ω) (β := β)
-    (η := η) (B := B) (H := H)
-    (R := R) (Kgeo := Kgeo) (x := x)
-    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)
-    (ψ0 := ψ0) (ψ := ψ) (ψStar := ψStar)
-    (flow := flow) (scale0 := scale0)
-    (hClosure := hClosure) (hVacSplit := hVacSplit)
-    (hHK := hHK) (hStationary := hStationary)
+  refine ⟨?_, ?_, ?_, projectorSuperPair_base (E := E), ?_, ?_, ?_⟩
+  · exact cstarReady_of_instance (Obs := ObsKMS)
+  · exact completeCStarReady_of_instance (Obs := ObsFock)
+  · exact hClosure
+  ·
+    change ψ0 + η •
+      (grandCanonicalFockGenerator (E := E) B H
+        (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+          (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ))) ψ0
+      = ψ0 + η • H ψ0
+    rw [grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
+      (E := E) (B := B) (H := H) (R := R) (K := Kgeo) (x := x)
+      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit]
+  · exact hHK
+  · exact InfoGeometry.Canonical.QFTTDFTLaunchpad.rungeGrossStationaryDualState_of_stationaryAtScale
+      (flow := flow) (scale0 := scale0) hStationary
 
 end UnifiedLaunchpadPackage
 

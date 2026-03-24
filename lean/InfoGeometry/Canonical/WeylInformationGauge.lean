@@ -33,7 +33,7 @@ variable (n : Nat)
 /--
 Canonical Weyl-gauge form of one Sinkhorn two-step update.
 -/
-theorem sinkhornTwoStep_eq_informationWeylGauge
+private theorem sinkhornTwoStep_eq_informationWeylGauge
     (M : Coupling n)
     (hrow : HasPositiveRowSums n M)
     (hcol : HasPositiveColSums n (rowNormalize n M hrow)) :
@@ -48,7 +48,7 @@ Gauge-fixing closure for Sinkhorn/Weyl update:
 row closure holds after the left gauge step, and column closure holds after
 the right gauge step.
 -/
-theorem sinkhornGaugeFixing_is_marginal_closure
+private theorem sinkhornGaugeFixing_is_marginal_closure
     (M : Coupling n)
     (hrow : HasPositiveRowSums n M)
     (hcol : HasPositiveColSums n (rowNormalize n M hrow)) :
@@ -135,7 +135,7 @@ Concrete noncommutation witness:
 for the explicit `2 × 2` matrix `[[1,2],[3,4]]`, row→col and col→row
 two-step updates are different.
 -/
-theorem weylOrderHysteresis_on_witnessMatrix2 :
+private theorem weylOrderHysteresis_on_witnessMatrix2 :
     UpdateOrderHysteresis 2
       weylOrderWitnessMatrix2
       weylOrderWitnessMatrix2_positiveRows
@@ -150,7 +150,7 @@ theorem weylOrderHysteresis_on_witnessMatrix2 :
 /--
 Existence form of update-order hysteresis at `n = 2`.
 -/
-theorem exists_updateOrderHysteresis_n2 :
+private theorem exists_updateOrderHysteresis_n2 :
     ∃ (M : Coupling 2)
       (hrow : HasPositiveRowSums 2 M)
       (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))
@@ -194,7 +194,7 @@ theorem twistedInference_updateOrderPathDependent
 /--
 Twisted inference cannot be torsion-free.
 -/
-theorem twistedInference_not_torsionFree
+private theorem twistedInference_not_torsionFree
     (T : TwistedInference E) :
     ¬ IsTorsionFree T.dual.nabla := by
   intro hFree
@@ -225,7 +225,7 @@ Dilation/anomaly sourcing statement:
 if the induced chemical potential equals the chiral scale and the conformal
 state is chiral, then the transported Einstein residual is nonzero.
 -/
-theorem dilationAnomaly_sources_transportedEinsteinResidual
+private theorem dilationAnomaly_sources_transportedEinsteinResidual
     (CI : ConformalInference E)
     (R : RicciTensor E)
     (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
@@ -288,7 +288,7 @@ if the conformal generators satisfy the Cartan split and the transported Einstei
 residual is sourced by the chiral scale, then any nonzero anomaly forces a
 nonzero transported Einstein residual.
 -/
-theorem cartanWeyl_dilation_sources_transportedEinsteinResidual
+private theorem cartanWeyl_dilation_sources_transportedEinsteinResidual
     (CBA : ConformalBeliefAlgebra E)
     (hCartan : CBA.GeneratorCartanDecomposition)
     (R : RicciTensor E)

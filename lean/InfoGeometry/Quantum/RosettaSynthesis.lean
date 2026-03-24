@@ -58,13 +58,19 @@ theorem rosetta_source_tension_synthesis
       ∧ M.modularAnomalyGenerator U =
           (U.symm : Xc →L[ℝ] Xc).comp
             (epsCLM.comp (U : Xc →L[ℝ] Xc) - (U : Xc →L[ℝ] Xc).comp epsCLM) := by
-  rcases rosetta_source_tension_three_presentations
-      (CBA := CBA) (hCartan := hCartan)
-      (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)
-      (hSource := hSource) (hAnom := hAnom)
-      (M := M) (epsCLM := epsCLM) (hSigmaMap := hSigmaMap) (U := U) with
-    ⟨_, _, _, hScale, hChem, hLift, hMod⟩
-  exact ⟨hScale, hChem, hLift, hMod⟩
+  let _ := hCartan
+  let _ := hAnom
+  exact ⟨
+    sourceTension_eq_transportedEinsteinResidual
+      (CBA := CBA) (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) hSource,
+    transportedEinsteinResidual_eq_einsteinInducedChemicalPotential
+      (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ),
+    einsteinInducedChemicalPotential_lift_eq_einsteinFockDeformationOperator
+      (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ),
+    modularAnomalyGenerator_eq_commutator_of_transport_source
+      (M := M) (epsCLM := epsCLM) (hSigmaMap := hSigmaMap) (U := U)
+  ⟩
 
 /--
 If the transported Einstein residual vanishes, then the chiral scale and

@@ -84,7 +84,7 @@ theorem WFunctional_monotone_of_lower_barrier
 Barrier-driven strict monotonicity:
 if dissipation dominates a strictly positive barrier pointwise, `W` is strictly monotone.
 -/
-theorem WFunctional_strictMono_of_lower_pos_barrier
+private theorem WFunctional_strictMono_of_lower_pos_barrier
     (flow : ScalarRicciFlow E) (τ f diss barrier : ℝ → ℝ)
     (hLaw : SatisfiesWLaw flow τ f diss)
     (hLower : ∀ s : ℝ, barrier s ≤ diss s)
@@ -138,7 +138,7 @@ theorem deriv_W_eq_abs_spinorial_of_normalized_tracking
 /--
 Monotonicity of `W` for the normalized spinorial-tracking flow.
 -/
-theorem W_monotone_of_spinorial_normalized_tracking
+private theorem W_monotone_of_spinorial_normalized_tracking
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E)
     (W : ℝ → ℝ)
     (hDiff : Differentiable ℝ W)
@@ -172,7 +172,7 @@ theorem W_strictMono_of_spinorial_nonzero
 /--
 If the tracked spinorial scalar is zero, any `W` obeying the spinorial law is constant.
 -/
-theorem W_constant_of_spinorial_zero
+private theorem W_constant_of_spinorial_zero
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E)
     (W : ℝ → ℝ)
     (hDiff : Differentiable ℝ W)

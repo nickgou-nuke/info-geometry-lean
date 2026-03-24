@@ -576,9 +576,18 @@ private theorem W_constant_of_spinorialClosureState
     (hTrack : ∀ t : ℝ, flow t = spinorialScalarCurvature IST)
     (hCY : MongeAmpereSpinorialClosure IST) :
     ∃ c : ℝ, ∀ s : ℝ, W s = c := by
-  exact W_constant_of_spinorial_zero
-    (E := E) (flow := flow) (IST := IST) (W := W)
-    hDiff hW hNorm hTrack hCY.2
+  refine ⟨W 0, ?_⟩
+  intro s
+  have hDerivZero : ∀ t : ℝ, deriv W t = 0 := by
+    intro t
+    calc
+      deriv W t = |spinorialScalarCurvature IST| := by
+        rw [deriv_W_eq_abs_spinorial_of_normalized_tracking
+          (E := E) (flow := flow) (IST := IST) (W := W) hW hNorm hTrack t]
+      _ = 0 := by
+        rw [hCY.2]
+        simp
+  simpa using is_const_of_deriv_eq_zero (f := W) hDiff hDerivZero s 0
 
 /--
 Constructive `W`-constancy closure from an explicit zero-spinorial witness
@@ -593,9 +602,18 @@ private theorem W_constant_of_spinorialState
     (hTrack : ∀ t : ℝ, flow t = spinorialScalarCurvature IST)
     (hSpin0 : CalabiYauSpinorialState IST) :
     ∃ c : ℝ, ∀ s : ℝ, W s = c := by
-  exact W_constant_of_spinorial_zero
-    (E := E) (flow := flow) (IST := IST) (W := W)
-    hDiff hW hNorm hTrack hSpin0
+  refine ⟨W 0, ?_⟩
+  intro s
+  have hDerivZero : ∀ t : ℝ, deriv W t = 0 := by
+    intro t
+    calc
+      deriv W t = |spinorialScalarCurvature IST| := by
+        rw [deriv_W_eq_abs_spinorial_of_normalized_tracking
+          (E := E) (flow := flow) (IST := IST) (W := W) hW hNorm hTrack t]
+      _ = 0 := by
+        rw [hSpin0]
+        simp
+  simpa using is_const_of_deriv_eq_zero (f := W) hDiff hDerivZero s 0
 
 end WBridge
 

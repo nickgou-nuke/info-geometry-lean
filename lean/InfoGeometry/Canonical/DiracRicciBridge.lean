@@ -135,8 +135,11 @@ theorem w_monotone_of_dirac_ricci_entropy_law
     (hLaw : satisfies_dirac_ricci_entropy_law flow IST W) :
     Monotone W := by
   rcases hLaw with ⟨hW, hNorm, hTrack⟩
-  exact W_monotone_of_spinorial_normalized_tracking
-    (E := E) (flow := flow) (IST := IST) (W := W) hDiff hW hNorm hTrack
+  apply monotone_of_deriv_nonneg hDiff
+  intro s
+  rw [deriv_W_eq_abs_spinorial_of_normalized_tracking
+    (E := E) (flow := flow) (IST := IST) (W := W) hW hNorm hTrack s]
+  exact abs_nonneg _
 
 /--
 Jordan barrier push-back monotonicity:

@@ -1,7 +1,8 @@
 import InfoGeometry.Canonical.AnomalyInflow
 import InfoGeometry.Canonical.ChiralTorsionBridge
 import InfoGeometry.Canonical.SinkhornFoundation
-import InfoGeometry.Canonical.WeylInformationGauge
+import InfoGeometry.Canonical.WeylPathHysteresis
+import InfoGeometry.Canonical.WeylAnomalySource
 
 /-!
 # Research.HolographicEmergence

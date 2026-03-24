@@ -68,7 +68,7 @@ theorem empiricalProbabilityState_spec {α : Type*} [Fintype α]
     htotal_pos.ne', hratio_nonneg]
 
 /-- Theorem `exists_empiricalProbabilityState`. -/
-theorem exists_empiricalProbabilityState {α : Type*} [Fintype α]
+private theorem exists_empiricalProbabilityState {α : Type*} [Fintype α]
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
     ∃ P : ProbabilityDist α, ∀ x : α, (P x).toReal = empirical_distribution N x :=
   ⟨empiricalProbabilityState N hN, empiricalProbabilityState_spec N hN⟩

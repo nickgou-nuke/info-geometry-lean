@@ -72,7 +72,7 @@ private lemma satisfiesMongeAmpere_const_of_hasConstantMongeAmpereDensity
 
 omit [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] in
 /-- Lemma `ricciTensor_eq_of_isRicciFlat`. -/
-lemma ricciTensor_eq_of_isRicciFlat
+private lemma ricciTensor_eq_of_isRicciFlat
     {R₁ R₂ : RicciTensor E}
     (h₁ : IsRicciFlat R₁) (h₂ : IsRicciFlat R₂) :
     R₁ = R₂ := by
@@ -474,7 +474,7 @@ theorem log_mongeAmpereDensity_eq_neg_kahlerPotentialRN_of_rnEntropySource
 Equivalent pointwise form: the RN/Kähler potential is minus the logarithmic
 Monge-Ampere density under RN entropy sourcing.
 -/
-theorem kahlerPotentialRN_eq_neg_log_mongeAmpereDensity_of_rnEntropySource
+private theorem kahlerPotentialRN_eq_neg_log_mongeAmpereDensity_of_rnEntropySource
     (n : Nat)
     (Kgeo : KaehlerInformationGeometry E)
     (M : SinkhornMatrix n)
@@ -512,7 +512,7 @@ Pointwise logarithmic Monge-Ampere closure along the same bridge: when `logF`
 coincides with the negative RN/Kähler potential, the logarithmic Monge-Ampere
 density is exactly `logF`.
 -/
-theorem log_mongeAmpereDensity_eq_logF_of_rnEntropySource_of_logF_eq_neg_kahlerPotentialRN
+private theorem log_mongeAmpereDensity_eq_logF_of_rnEntropySource_of_logF_eq_neg_kahlerPotentialRN
     (n : Nat)
     (Kgeo : KaehlerInformationGeometry E)
     (M : SinkhornMatrix n)

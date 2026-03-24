@@ -54,7 +54,7 @@ theorem WFunctional_monotone_of_nonneg_dissipation
 /--
 Strict monotonicity of `W` from strictly positive dissipation law.
 -/
-theorem WFunctional_strictMono_of_pos_dissipation
+private theorem WFunctional_strictMono_of_pos_dissipation
     (flow : ScalarRicciFlow E) (τ f diss : ℝ → ℝ)
     (hLaw : SatisfiesWLaw flow τ f diss)
     (hPos : ∀ s : ℝ, 0 < diss s) :
@@ -68,7 +68,7 @@ theorem WFunctional_strictMono_of_pos_dissipation
 Barrier-driven monotonicity:
 if dissipation dominates a nonnegative barrier pointwise, `W` is monotone.
 -/
-theorem WFunctional_monotone_of_lower_barrier
+private theorem WFunctional_monotone_of_lower_barrier
     (flow : ScalarRicciFlow E) (τ f diss barrier : ℝ → ℝ)
     (hDiff : Differentiable ℝ (fun t => WFunctional flow τ f t))
     (hLaw : SatisfiesWLaw flow τ f diss)
@@ -155,7 +155,7 @@ private theorem W_monotone_of_spinorial_normalized_tracking
 /--
 Strict monotonicity of `W` when the spinorial scalar curvature is nonzero.
 -/
-theorem W_strictMono_of_spinorial_nonzero
+private theorem W_strictMono_of_spinorial_nonzero
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E)
     (W : ℝ → ℝ)
     (hW : ∀ s : ℝ, deriv W s = spinorialWDissipation flow IST s)

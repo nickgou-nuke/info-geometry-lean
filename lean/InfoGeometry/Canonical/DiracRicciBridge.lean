@@ -153,29 +153,11 @@ theorem w_monotone_of_dirac_ricci_entropy_law_of_jordan_barrier_lower_bound
     (hLaw : satisfies_dirac_ricci_entropy_law flow IST W)
     (hLower : ∀ s : ℝ, J.DBregman x y ≤ spinorialWDissipation flow IST s) :
     Monotone W := by
-  rcases hLaw with ⟨hW, hNorm, hTrack⟩
-  have hLawW :
-      SatisfiesWLaw (E := E) flow (fun _ => 0) W (spinorialWDissipation flow IST) := by
-    intro s
-    simpa [WDissipation, WFunctional] using hW s
-  have hBarrierNonneg : ∀ s : ℝ, 0 ≤ (fun _ => J.DBregman x y) s := by
-    intro s
-    simpa using jordan_kkt_bregman_nonneg (J := J) x y
-  have hLower' : ∀ s : ℝ, (fun _ => J.DBregman x y) s ≤ spinorialWDissipation flow IST s := by
-    intro s
-    simpa using hLower s
-  have hDiffWFun :
-      Differentiable ℝ (fun t => WFunctional flow (fun _ => 0) W t) := by
-    simpa [WFunctional] using hDiff
-  simpa [WFunctional] using
-    (WFunctional_monotone_of_lower_barrier
-      (E := E)
-      (flow := flow)
-      (τ := fun _ => 0)
-      (f := W)
-      (diss := spinorialWDissipation flow IST)
-      (barrier := fun _ => J.DBregman x y)
-      hDiffWFun hLawW hLower' hBarrierNonneg)
+  rcases hLaw with ⟨hW, _hNorm, _hTrack⟩
+  apply monotone_of_deriv_nonneg hDiff
+  intro s
+  rw [hW s]
+  exact le_trans (jordan_kkt_bregman_nonneg (J := J) x y) (hLower s)
 
 /-- Strict monotonicity when the tracked spinorial scalar curvature is nonzero. -/
 theorem w_strict_mono_of_dirac_ricci_entropy_law
@@ -184,8 +166,11 @@ theorem w_strict_mono_of_dirac_ricci_entropy_law
     (hSpin : spinorialScalarCurvature IST ≠ 0) :
     StrictMono W := by
   rcases hLaw with ⟨hW, hNorm, hTrack⟩
-  exact W_strictMono_of_spinorial_nonzero
-    (E := E) (flow := flow) (IST := IST) (W := W) hW hNorm hTrack hSpin
+  apply strictMono_of_deriv_pos
+  intro s
+  rw [deriv_W_eq_abs_spinorial_of_normalized_tracking
+    (E := E) (flow := flow) (IST := IST) (W := W) hW hNorm hTrack s]
+  exact abs_pos.mpr hSpin
 
 end BottDiracRicci
 

@@ -137,10 +137,6 @@ export InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra (
   scale_anomaly_obstructs_weyl_flatness
 )
 
-export InfoGeometry.Canonical.WeylInformationGauge (
-  cartanWeyl_dilation_sources_transportedEinsteinResidual
-)
-
 export InfoGeometry.Canonical (
   WeylGaugeField
   WeylGaugeParameter
@@ -507,7 +503,7 @@ Facade theorem packaging the three checked presentations of the same source
 surface: scalar transport, chemical-potential lift, and modular commutator
 shadow.
 -/
-theorem rosetta_source_tension_three_presentations
+private theorem rosetta_source_tension_three_presentations
     [FiniteDimensional ℝ E]
     (CBA : ConformalBeliefAlgebra E)
     (hCartan : CBA.GeneratorCartanDecomposition)
@@ -543,10 +539,12 @@ theorem rosetta_source_tension_three_presentations
       CBA.IsVolumePreservingPart CBA.M
         ∧ CBA.IsWeylDilationPart CBA.D
         ∧ InfoGeometry.Canonical.RicciMongeAmpere.transportedEinsteinResidual (R := R) (K := K) (x := x)
-            (scalar := scalar) (Λ := Λ) V Γ ≠ 0 :=
-    cartanWeyl_dilation_sources_transportedEinsteinResidual
-      (CBA := CBA) (hCartan := hCartan) (R := R) (K := K) (x := x)
-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hSource hAnom
+            (scalar := scalar) (Λ := Λ) V Γ ≠ 0 := by
+    refine ⟨CBA.M_in_volumePreserving_of_cartan hCartan,
+      CBA.D_in_weylDilation_of_cartan hCartan, ?_⟩
+    exact InfoGeometry.Canonical.WeylInformationGauge.nonzeroAnomaly_sources_transportedEinsteinResidual
+      (CI := CBA.CI) (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) hSource hAnom
   rcases hWeyl with ⟨hM, hD, _hResidual⟩
   refine ⟨modularComplexI_eq_dilationOperator (E := E), hM, hD, ?_, ?_, ?_, ?_⟩
   · exact sourceTension_eq_transportedEinsteinResidual
@@ -563,7 +561,7 @@ theorem rosetta_source_tension_three_presentations
 Compatibility wrapper preserving the earlier Rosetta capstone surface while now
 factoring through the explicit helper theorem family above.
 -/
-theorem modularCPT_source_rosetta
+private theorem modularCPT_source_rosetta
     [FiniteDimensional ℝ E]
     (CBA : ConformalBeliefAlgebra E)
     (hCartan : CBA.GeneratorCartanDecomposition)
@@ -591,10 +589,12 @@ theorem modularCPT_source_rosetta
       CBA.IsVolumePreservingPart CBA.M
         ∧ CBA.IsWeylDilationPart CBA.D
         ∧ InfoGeometry.Canonical.RicciMongeAmpere.transportedEinsteinResidual (R := R) (K := K) (x := x)
-            (scalar := scalar) (Λ := Λ) V Γ ≠ 0 :=
-    cartanWeyl_dilation_sources_transportedEinsteinResidual
-      (CBA := CBA) (hCartan := hCartan) (R := R) (K := K) (x := x)
-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hSource hAnom
+            (scalar := scalar) (Λ := Λ) V Γ ≠ 0 := by
+    refine ⟨CBA.M_in_volumePreserving_of_cartan hCartan,
+      CBA.D_in_weylDilation_of_cartan hCartan, ?_⟩
+    exact InfoGeometry.Canonical.WeylInformationGauge.nonzeroAnomaly_sources_transportedEinsteinResidual
+      (CI := CBA.CI) (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ)
+      (V := V) (Γ := Γ) hSource hAnom
   rcases hWeyl with ⟨hM, hD, hResidual⟩
   have hPack := rosetta_source_tension_three_presentations
     (CBA := CBA) (hCartan := hCartan) (R := R) (K := K) (x := x)
@@ -646,7 +646,7 @@ both chiral slices to the baseline through the Clifford label action, then it
 instantiates the modular/Clifford transport hypothesis used by the analytical
 index layer.
 -/
-theorem weylScaleTransportShadow_to_modularCliffordTransport
+private theorem weylScaleTransportShadow_to_modularCliffordTransport
     (Ξ : ScaleEquivariantFlow I F A)
     (phaseOf : A → P)
     (realize : P → InfoGeometry.Canonical.BottDirac.Endomorphism H)
@@ -676,7 +676,7 @@ theorem weylScaleTransportShadow_to_modularCliffordTransport
 Weyl scale transport yields analytical-index invariance once its endomorphism
 shadow satisfies the modular/Clifford slice-transport requirements.
 -/
-theorem indexInvariantAlong_of_weylScaleTransport
+private theorem indexInvariantAlong_of_weylScaleTransport
     (Ξ : ScaleEquivariantFlow I F A)
     (phaseOf : A → P)
     (realize : P → InfoGeometry.Canonical.BottDirac.Endomorphism H)

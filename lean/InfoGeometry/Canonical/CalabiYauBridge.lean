@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.PerelmanW
+import InfoGeometry.Canonical.GrandCanonicalExperts
 set_option linter.unnecessarySeqFocus false
 set_option linter.unnecessarySimpa false
 
@@ -8,6 +9,7 @@ open InfoGeometry.Convex
 open InfoGeometry.Canonical.KaehlerGeometry
 open InfoGeometry.Canonical.RicciMongeAmpere
 open InfoGeometry.Canonical.PerelmanW
+open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.SpectralInference
 
 section MongeAmpereRicci
@@ -46,20 +48,20 @@ def MongeAmpereRicciState
   HasConstantMongeAmpereDensity K.H ∧ IsRicciFlat R
 
 /-- Lemma `hasConstantMongeAmpereDensity_iff`. -/
-lemma hasConstantMongeAmpereDensity_iff
+private lemma hasConstantMongeAmpereDensity_iff
     (H : HessianGeometry E) :
     HasConstantMongeAmpereDensity H
       ↔ ∃ ρ0 : ℝ, ∀ x : E, mongeAmpereDensity H x = ρ0 := Iff.rfl
 
 /-- Lemma `hasConstantMongeAmpereDensity_of_satisfiesMongeAmpere_const`. -/
-lemma hasConstantMongeAmpereDensity_of_satisfiesMongeAmpere_const
+private lemma hasConstantMongeAmpereDensity_of_satisfiesMongeAmpere_const
     (H : HessianGeometry E) (ρ0 : ℝ)
     (hMA : SatisfiesMongeAmpere H (fun _ => ρ0)) :
     HasConstantMongeAmpereDensity H := by
   exact ⟨ρ0, hMA⟩
 
 /-- Lemma `satisfiesMongeAmpere_const_of_hasConstantMongeAmpereDensity`. -/
-lemma satisfiesMongeAmpere_const_of_hasConstantMongeAmpereDensity
+private lemma satisfiesMongeAmpere_const_of_hasConstantMongeAmpereDensity
     (H : HessianGeometry E)
     (hConst : HasConstantMongeAmpereDensity H) :
     ∃ ρ0 : ℝ, SatisfiesMongeAmpere H (fun _ => ρ0) := by
@@ -78,7 +80,7 @@ lemma ricciTensor_eq_of_isRicciFlat
   rw [h₁ u v, h₂ u v]
 
 /-- Lemma `isEinsteinKaehlerAtWith_zero_of_isRicciFlat`. -/
-lemma isEinsteinKaehlerAtWith_zero_of_isRicciFlat
+private lemma isEinsteinKaehlerAtWith_zero_of_isRicciFlat
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (hFlat : IsRicciFlat R) :
     IsEinsteinKaehlerAtWith 0 R K x := by
@@ -296,7 +298,7 @@ def IsAdSLikeEinsteinAt
 /--
 Any Einstein-Kähler branch with negative coefficient is AdS-like.
 -/
-theorem isAdSLikeEinsteinAt_of_negative_einstein
+private theorem isAdSLikeEinsteinAt_of_negative_einstein
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (c : ℝ)
     (hEin : IsEinsteinKaehlerAtWith c R K x)
@@ -312,7 +314,7 @@ theorem isAdSLikeEinsteinAt_of_negative_einstein
 AdS-like Einstein branch yields a vacuum Einstein equation with zero scalar
 closure in this normalization.
 -/
-theorem vacuumEinsteinEquation_zeroScalar_of_isAdSLikeEinsteinAt
+private theorem vacuumEinsteinEquation_zeroScalar_of_isAdSLikeEinsteinAt
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (hAdS : IsAdSLikeEinsteinAt R K x) :
     ∃ Λ : ℝ, 0 < Λ ∧ VacuumEinsteinEquationAt R K x 0 Λ := by
@@ -323,14 +325,14 @@ theorem vacuumEinsteinEquation_zeroScalar_of_isAdSLikeEinsteinAt
     hEin (by ring)
 
 /-- Projection: a `MongeAmpereRicciState` carries the constant-density witness. -/
-theorem hasConstantMongeAmpereDensity_of_mongeAmpereRicciState
+private theorem hasConstantMongeAmpereDensity_of_mongeAmpereRicciState
     (R : RicciTensor E) (K : KaehlerInformationGeometry E)
     (hState : MongeAmpereRicciState R K) :
     HasConstantMongeAmpereDensity K.H :=
   hState.1
 
 /-- Projection: a `MongeAmpereRicciState` carries Ricci-flatness. -/
-theorem isRicciFlat_of_mongeAmpereRicciState
+private theorem isRicciFlat_of_mongeAmpereRicciState
     (R : RicciTensor E) (K : KaehlerInformationGeometry E)
     (hState : MongeAmpereRicciState R K) :
     IsRicciFlat R :=
@@ -340,7 +342,7 @@ theorem isRicciFlat_of_mongeAmpereRicciState
 Constructive state packaging:
 constant Monge-Ampere density and explicit Ricci-flatness form the closure state.
 -/
-theorem mongeAmpereRicciState_mk
+private theorem mongeAmpereRicciState_mk
     (R : RicciTensor E) (K : KaehlerInformationGeometry E)
     (hConst : HasConstantMongeAmpereDensity K.H)
     (hFlat : IsRicciFlat R) :
@@ -351,7 +353,7 @@ theorem mongeAmpereRicciState_mk
 Uniqueness under constructive closure states:
 if two Ricci tensors are both Ricci-flat under the same geometry scaffold, they coincide.
 -/
-theorem ricciTensor_unique_of_mongeAmpereRicciState
+private theorem ricciTensor_unique_of_mongeAmpereRicciState
     (R₁ R₂ : RicciTensor E) (K : KaehlerInformationGeometry E)
     (hState₁ : MongeAmpereRicciState R₁ K)
     (hState₂ : MongeAmpereRicciState R₂ K) :
@@ -417,6 +419,115 @@ private theorem vacuumEinsteinEquation_of_isRicciFlatState
   rw [hState.2 u v]
   ring
 
+
+/--
+Entropy-sourced Monge-Ampere hypothesis:
+the Monge-Ampere density is the RN-induced relative-volume factor
+`exp(-K_RN)` associated to a Sinkhorn matrix state.
+-/
+def RNEntropySourcesMongeAmpere
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n) : Prop :=
+  SatisfiesMongeAmpere Kgeo.H (fun _ => relativeVolumeChangeRN n M)
+
+/--
+Constant-density witness extracted from RN-entropy Monge-Ampere sourcing.
+-/
+private theorem hasConstantMongeAmpereDensity_of_rnEntropySource
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M) :
+    HasConstantMongeAmpereDensity Kgeo.H :=
+  hasConstantMongeAmpereDensity_of_satisfiesMongeAmpere_const
+    (H := Kgeo.H) (ρ0 := relativeVolumeChangeRN n M) hSource
+
+/--
+RN entropy sourcing can be read in potential form: the Monge-Ampere density is
+the exponential of the negative RN/Kähler potential.
+-/
+theorem rnEntropySourcesMongeAmperePotential
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M) :
+    SatisfiesMongeAmperePotential Kgeo.H (fun _ => -kahlerPotentialRN n M) := by
+  intro x
+  rw [hSource x, relativeVolumeChangeRN]
+
+/--
+Pointwise log form of RN entropy sourcing: the logarithmic Monge-Ampere density
+is exactly the negative RN/Kähler potential.
+-/
+theorem log_mongeAmpereDensity_eq_neg_kahlerPotentialRN_of_rnEntropySource
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (x : E) :
+    Real.log (mongeAmpereDensity Kgeo.H x) = -kahlerPotentialRN n M := by
+  rw [hSource x, relativeVolumeChangeRN]
+  simp
+
+/--
+Equivalent pointwise form: the RN/Kähler potential is minus the logarithmic
+Monge-Ampere density under RN entropy sourcing.
+-/
+theorem kahlerPotentialRN_eq_neg_log_mongeAmpereDensity_of_rnEntropySource
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (x : E) :
+    kahlerPotentialRN n M = -Real.log (mongeAmpereDensity Kgeo.H x) := by
+  calc
+    kahlerPotentialRN n M = -(-kahlerPotentialRN n M) := by ring
+    _ = -Real.log (mongeAmpereDensity Kgeo.H x) := by
+      rw [log_mongeAmpereDensity_eq_neg_kahlerPotentialRN_of_rnEntropySource
+        (n := n) (Kgeo := Kgeo) (M := M) hSource x]
+
+/--
+If the Kähler logarithmic potential `logF` matches the negative RN/Kähler
+potential, then RN entropy sourcing upgrades directly to a `logF`-driven
+Monge-Ampere potential witness.
+-/
+theorem rnEntropySourcesMongeAmperePotential_of_logF_eq_neg_kahlerPotentialRN
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (hLogF : ∀ x : E, Kgeo.logF x = -kahlerPotentialRN n M) :
+    SatisfiesMongeAmperePotential Kgeo.H Kgeo.logF := by
+  intro x
+  calc
+    mongeAmpereDensity Kgeo.H x = Real.exp (-kahlerPotentialRN n M) := by
+      exact rnEntropySourcesMongeAmperePotential
+        (n := n) (Kgeo := Kgeo) (M := M) hSource x
+    _ = Real.exp (Kgeo.logF x) := by
+      rw [hLogF x]
+
+/--
+Pointwise logarithmic Monge-Ampere closure along the same bridge: when `logF`
+coincides with the negative RN/Kähler potential, the logarithmic Monge-Ampere
+density is exactly `logF`.
+-/
+theorem log_mongeAmpereDensity_eq_logF_of_rnEntropySource_of_logF_eq_neg_kahlerPotentialRN
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (hLogF : ∀ x : E, Kgeo.logF x = -kahlerPotentialRN n M)
+    (x : E) :
+    Real.log (mongeAmpereDensity Kgeo.H x) = Kgeo.logF x := by
+  calc
+    Real.log (mongeAmpereDensity Kgeo.H x) = -kahlerPotentialRN n M := by
+      exact log_mongeAmpereDensity_eq_neg_kahlerPotentialRN_of_rnEntropySource
+        (n := n) (Kgeo := Kgeo) (M := M) hSource x
+    _ = Kgeo.logF x := by
+      symm
+      exact hLogF x
+
 end MongeAmpereRicci
 
 section WBridge
@@ -437,7 +548,7 @@ def CalabiYauSpinorialState (IST : InfoSpectralTriple E) : Prop :=
   spinorialScalarCurvature IST = 0
 
 /-- Constructor for the spinorial closure state. -/
-theorem mongeAmpereSpinorialClosure_mk
+private theorem mongeAmpereSpinorialClosure_mk
     (IST : InfoSpectralTriple E)
     (hConst : HasConstantMongeAmpereDensity IST.H)
     (hSpin0 : CalabiYauSpinorialState IST) :
@@ -445,7 +556,7 @@ theorem mongeAmpereSpinorialClosure_mk
   exact ⟨hConst, hSpin0⟩
 
 /-- Extract spinorial vanishing from the constructive spinorial closure state. -/
-theorem spinorialScalarCurvature_eq_zero_of_mongeAmpereSpinorialClosure
+private theorem spinorialScalarCurvature_eq_zero_of_mongeAmpereSpinorialClosure
     (IST : InfoSpectralTriple E)
     (hCY : MongeAmpereSpinorialClosure IST) :
     CalabiYauSpinorialState IST :=
@@ -456,7 +567,7 @@ Connection to the `W`-flow layer:
 under normalized spinorial tracking, the explicit spinorial vanishing
 portion of the closure makes `W` constant.
 -/
-theorem W_constant_of_spinorialClosureState
+private theorem W_constant_of_spinorialClosureState
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E)
     (W : ℝ → ℝ)
     (hDiff : Differentiable ℝ W)
@@ -473,7 +584,7 @@ theorem W_constant_of_spinorialClosureState
 Constructive `W`-constancy closure from an explicit zero-spinorial witness
 (non-bridge form).
 -/
-theorem W_constant_of_spinorialState
+private theorem W_constant_of_spinorialState
     (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E)
     (W : ℝ → ℝ)
     (hDiff : Differentiable ℝ W)

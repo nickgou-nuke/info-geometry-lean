@@ -1,5 +1,5 @@
 import InfoGeometry.Canonical.IBMeasure
-import InfoGeometry.MeasureProjective
+import InfoGeometry.Canonical.ProjectiveStateCore
 set_option linter.unnecessarySimpa false
 set_option linter.unusedSectionVars false
 
@@ -9,7 +9,7 @@ open scoped ENNReal
 namespace InfoGeometry.Canonical.IBGaugeBridge
 
 open InfoGeometry.Canonical.IBMeasure
-open InfoGeometry.MeasureProjective
+open InfoGeometry.Canonical.ProjectiveStateCore
 
 variable {X T : Type*} [MeasurableSpace X] [MeasurableSpace T] [Nonempty T]
 
@@ -43,7 +43,7 @@ noncomputable def ibProjectiveState
     (β : ℝ) (D : X → T → ℝ) (x : X)
     [IsFiniteMeasure (IBUnnormalized qT β D x)]
     (h_nz : IBUnnormalized qT β D x ≠ 0) :
-    ProjectiveState.normalize (ibProjectiveState qT β D x h_nz) = IBGibbs qT β D x := by
+    normalize (ibProjectiveState qT β D x h_nz) = IBGibbs qT β D x := by
   simp [ibProjectiveState, ibNonzeroUState, IBGibbs, IBNormalize]
 
 /-- Additive distortion shifts rescale the raw unnormalized Gibbs slice by a positive constant. -/

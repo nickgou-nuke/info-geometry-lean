@@ -81,8 +81,17 @@ theorem exists_gaugeOrderHysteresis_witness :
       (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))
       (hcol : HasPositiveColSums 2 M)
       (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
-      UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol :=
-  exists_updateOrderHysteresis_n2
+      UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol := by
+  refine ⟨weylOrderWitnessMatrix2,
+    weylOrderWitnessMatrix2_positiveRows,
+    weylOrderWitnessMatrix2_positiveCols_afterRow,
+    weylOrderWitnessMatrix2_positiveCols,
+    weylOrderWitnessMatrix2_positiveRows_afterCol,
+    ?_⟩
+  unfold UpdateOrderHysteresis rowThenColUpdate colThenRowUpdate
+  intro hEq
+  have h00 := congrArg (fun A => A (0 : Fin 2) (0 : Fin 2)) hEq
+  norm_num [colNormalize, rowNormalize, rowSum, colSum, weylOrderWitnessMatrix2] at h00
 
 end TorsionHysteresis
 

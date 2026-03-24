@@ -79,7 +79,7 @@ omit [FiniteDimensional ℝ E] in
 /--
 Constructive anomaly-exclusion witness from the canonical lightlike split-`Cl(1,1)` mode.
 -/
-theorem anomalyExclusion_witness :
+private theorem anomalyExclusion_witness :
     ∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q := by
   let Q : AlgebraEnd E := InfoGeometry.Krein.cl11RepLin (E := E) ((1 / 2 : ℝ), (1 / 2 : ℝ))
   refine ⟨Q, ?_⟩
@@ -92,7 +92,7 @@ Anomaly-exclusion package:
 vanishing projector obstruction yields commutation closure, while exclusion is
 discharged by a constructive nilpotent witness.
 -/
-theorem anomalyExclusion_package_of_chiralAnomaly_eq_zero
+private theorem anomalyExclusion_package_of_chiralAnomaly_eq_zero
     (CI : ConformalInference E)
     (hAnom : CI.chiralAnomalyOperator = 0) :
     CI.spectralChiralProjector * CI.metricChiralProjector
@@ -107,7 +107,7 @@ if the anomaly scale is identified with the RN Kähler potential and unit
 relative volume holds, projector obstruction closes and exclusion has a
 constructive witness.
 -/
-theorem anomalyExclusion_package_of_kahlerLogDet_unitRelativeVolume
+private theorem anomalyExclusion_package_of_kahlerLogDet_unitRelativeVolume
     (CI : ConformalInference E)
     {n : Nat}
     (M : SinkhornMatrix n)
@@ -146,7 +146,7 @@ noncomputable def twinWaveHelicity
 
 /-! ### Sub-bridges to manage complexity -/
 
-theorem bridge_zpe_gravity
+private theorem bridge_zpe_gravity
     (S : SpinFactorState E)
     (hRankPos : 0 < Module.finrank ℝ E)
     (CI : ConformalInference E)
@@ -162,7 +162,7 @@ theorem bridge_zpe_gravity
   ⟨zero_point_energy_topological_obstruction S hRankPos,
    CI.einsteinEquation_of_projectorObstruction_source c R Kgeo x Λ κ hEin⟩
 
-theorem bridge_fluid_helicity
+private theorem bridge_fluid_helicity
     (A B_mp B_dr : VelocityField E)
     (ω : VelocityField E →L[ℝ] ℝ)
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
@@ -194,7 +194,7 @@ Master capstone composition:
 All pieces are interpreted under the **Rigidity of the Volume Form** principle,
 ensuring the information flow is volume-preserving (unitary).
 -/
-theorem bits_to_gravity_to_fluid_capstone
+private theorem bits_to_gravity_to_fluid_capstone
     (S : SpinFactorState E)
     (hRankPos : 0 < Module.finrank ℝ E)
     (CI : ConformalInference E)
@@ -264,7 +264,7 @@ if the capstone supplies the Bekenstein barrier clause and `|t|` is budgeted by
 that barrier at step `k`, then logarithmic squeezing shear is bounded by
 `4 * trajectoryRNBarrier`.
 -/
-theorem squeezingLogShear_bound_of_capstone_bekenstein_clause
+private theorem squeezingLogShear_bound_of_capstone_bekenstein_clause
     (n : Nat)
     (Tflow : SinkhornTrajectory n)
     (hBekenstein : ∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
@@ -280,7 +280,7 @@ Tuple-extraction corollary:
 from the capstone conjunction itself, extract the Bekenstein clause and derive
 the squeezing-log-shear bound under a matching RN time budget.
 -/
-theorem squeezingLogShear_bound_of_capstone_conjunction
+private theorem squeezingLogShear_bound_of_capstone_conjunction
     (S : SpinFactorState E)
     (CI : ConformalInference E)
     (c : ℝ)
@@ -324,7 +324,7 @@ Convenience corollary:
 invoke `bits_to_gravity_to_fluid_capstone` internally and immediately extract
 the Bekenstein clause to bound logarithmic squeezing shear.
 -/
-theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone
+private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone
     (S : SpinFactorState E)
     (hRankPos : 0 < Module.finrank ℝ E)
     (CI : ConformalInference E)
@@ -372,7 +372,7 @@ Cocycle-sourced capstone variant:
 the topological Bekenstein clause is discharged from the RN cocycle layer
 via `topologicalBekensteinBound_of_connesCocycle`.
 -/
-theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
+private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
     (S : SpinFactorState E)
     (hRankPos : 0 < Module.finrank ℝ E)
     (CI : ConformalInference E)
@@ -435,7 +435,7 @@ theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
 Tomita-specialized cocycle-sourced capstone variant using the canonical
 modular-sign additive flow.
 -/
-theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
+private theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
     (S : SpinFactorState E)
     (hRankPos : 0 < Module.finrank ℝ E)
     (CI : ConformalInference E)

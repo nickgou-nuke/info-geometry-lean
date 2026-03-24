@@ -9,7 +9,7 @@ Status:
 
 ## Repository Scale
 - Lean files under `lean/`: **468**
-- Lean LOC under `lean/`: **81,421**
+- Lean LOC under `lean/`: **81,417**
 
 ## Trusted Semantic Exports
 | Module | Semantic nodes | Semantic edges | Skeleton nodes | Top hubs |
@@ -63,8 +63,8 @@ Status:
 - exposes canonical source bundles, repeated path motifs, and module-level compression carriers
 - hydrated carrier `InfoGeometry.Canonical.RicciMongeAmpere`
 - hydrated carrier `InfoGeometry.Canonical.PerelmanW`
-- hydrated carrier `InfoGeometry.Krein.DoubledSpace`
-- hydrated carrier `InfoGeometry.Canonical.GrandCanonicalExperts`
+- hydrated carrier `InfoGeometry.Canonical.KMSSinkhornBridge`
+- hydrated carrier `InfoGeometry.Krein.Thermal`
 
 ## Current Reading Order
 1. `README.md`

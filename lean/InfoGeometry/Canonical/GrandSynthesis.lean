@@ -275,7 +275,7 @@ Spectral determinant-model bridge:
 if a matrix determinant models the spectral Monge-Ampere density, then its
 log-absolute determinant equals spectral volume.
 -/
-lemma logAbsDet_spectralModel_eq_basepointLogVolume
+private lemma logAbsDet_spectralModel_eq_basepointLogVolume
     (IST : InfoSpectralTriple E) (A : Matrix m m ℝ)
     (h_det_m : LinearMap.det (IST.H.metricOp IST.x₀).toLinearMap ≠ 0)
     (hdet : Matrix.det A = spectralMongeAmpereDensity IST) :
@@ -296,107 +296,6 @@ variable (n : Nat)
 variable {X : Type}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
   [FiniteDimensional ℝ X]
-
-/--
-Entropy-sourced Monge-Ampere hypothesis:
-the Monge-Ampere density is the RN-induced relative-volume factor
-`exp(-K_RN)` associated to a Sinkhorn matrix state.
--/
-def RNEntropySourcesMongeAmpere
-    (Kgeo : KaehlerInformationGeometry X)
-    (M : SinkhornMatrix n) : Prop :=
-  SatisfiesMongeAmpere Kgeo.H (fun _ => relativeVolumeChangeRN n M)
-
-/--
-Constant-density witness extracted from RN-entropy Monge-Ampere sourcing.
--/
-lemma hasConstantMongeAmpereDensity_of_rnEntropySource
-    (Kgeo : KaehlerInformationGeometry X)
-    (M : SinkhornMatrix n)
-    (hSource : RNEntropySourcesMongeAmpere n Kgeo M) :
-    HasConstantMongeAmpereDensity Kgeo.H :=
-  hasConstantMongeAmpereDensity_of_satisfiesMongeAmpere_const
-    (H := Kgeo.H) (ρ0 := relativeVolumeChangeRN n M) hSource
-
-/--
-RN entropy sourcing can be read in potential form: the Monge-Ampere density is
-the exponential of the negative RN/Kähler potential.
--/
-lemma rnEntropySourcesMongeAmperePotential
-    (Kgeo : KaehlerInformationGeometry X)
-    (M : SinkhornMatrix n)
-    (hSource : RNEntropySourcesMongeAmpere n Kgeo M) :
-    SatisfiesMongeAmperePotential Kgeo.H (fun _ => -kahlerPotentialRN n M) := by
-  intro x
-  rw [hSource x, relativeVolumeChangeRN]
-
-/--
-Pointwise log form of RN entropy sourcing: the logarithmic Monge-Ampere density
-is exactly the negative RN/Kähler potential.
--/
-lemma log_mongeAmpereDensity_eq_neg_kahlerPotentialRN_of_rnEntropySource
-    (Kgeo : KaehlerInformationGeometry X)
-    (M : SinkhornMatrix n)
-    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
-    (x : X) :
-    Real.log (mongeAmpereDensity Kgeo.H x) = -kahlerPotentialRN n M := by
-  rw [hSource x, relativeVolumeChangeRN]
-  simp
-
-/--
-Equivalent pointwise form: the RN/Kähler potential is minus the logarithmic
-Monge-Ampere density under RN entropy sourcing.
--/
-lemma kahlerPotentialRN_eq_neg_log_mongeAmpereDensity_of_rnEntropySource
-    (Kgeo : KaehlerInformationGeometry X)
-    (M : SinkhornMatrix n)
-    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
-    (x : X) :
-    kahlerPotentialRN n M = -Real.log (mongeAmpereDensity Kgeo.H x) := by
-  calc
-    kahlerPotentialRN n M = -(-kahlerPotentialRN n M) := by ring
-    _ = -Real.log (mongeAmpereDensity Kgeo.H x) := by
-      rw [log_mongeAmpereDensity_eq_neg_kahlerPotentialRN_of_rnEntropySource
-        (n := n) (Kgeo := Kgeo) (M := M) hSource x]
-
-/--
-If the Kähler logarithmic potential `logF` matches the negative RN/Kähler
-potential, then RN entropy sourcing upgrades directly to a `logF`-driven
-Monge-Ampere potential witness.
--/
-lemma rnEntropySourcesMongeAmperePotential_of_logF_eq_neg_kahlerPotentialRN
-    (Kgeo : KaehlerInformationGeometry X)
-    (M : SinkhornMatrix n)
-    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
-    (hLogF : ∀ x : X, Kgeo.logF x = -kahlerPotentialRN n M) :
-    SatisfiesMongeAmperePotential Kgeo.H Kgeo.logF := by
-  intro x
-  calc
-    mongeAmpereDensity Kgeo.H x = Real.exp (-kahlerPotentialRN n M) := by
-      exact rnEntropySourcesMongeAmperePotential
-        (n := n) (Kgeo := Kgeo) (M := M) hSource x
-    _ = Real.exp (Kgeo.logF x) := by
-      rw [hLogF x]
-
-/--
-Pointwise logarithmic Monge-Ampere closure along the same bridge: when `logF`
-coincides with the negative RN/Kähler potential, the logarithmic Monge-Ampere
-density is exactly `logF`.
--/
-lemma log_mongeAmpereDensity_eq_logF_of_rnEntropySource_of_logF_eq_neg_kahlerPotentialRN
-    (Kgeo : KaehlerInformationGeometry X)
-    (M : SinkhornMatrix n)
-    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
-    (hLogF : ∀ x : X, Kgeo.logF x = -kahlerPotentialRN n M)
-    (x : X) :
-    Real.log (mongeAmpereDensity Kgeo.H x) = Kgeo.logF x := by
-  calc
-    Real.log (mongeAmpereDensity Kgeo.H x) = -kahlerPotentialRN n M := by
-      exact log_mongeAmpereDensity_eq_neg_kahlerPotentialRN_of_rnEntropySource
-        (n := n) (Kgeo := Kgeo) (M := M) hSource x
-    _ = Kgeo.logF x := by
-      symm
-      exact hLogF x
 
 /--
 Entropy-sourced geometric gravity statement:
@@ -486,7 +385,7 @@ def AlgebraicEquilibriumCl11 (Dn : Endomorphism F) : Prop :=
 /--
 If the Cl(1,1)-Bott Laplacian is zero, then the squared Bott-Dirac operator is zero.
 -/
-theorem cl11_bottDirac_sq_eq_zero_of_algebraicEquilibrium
+private theorem cl11_bottDirac_sq_eq_zero_of_algebraicEquilibrium
     (Dn : Endomorphism F)
     (hAlg : AlgebraicEquilibriumCl11 (E := E) Dn) :
     (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn).comp
@@ -496,7 +395,7 @@ theorem cl11_bottDirac_sq_eq_zero_of_algebraicEquilibrium
 /--
 Pointwise harmonicity of a Bott state at algebraic equilibrium.
 -/
-theorem cl11_bottDirac_sq_apply_eq_zero_of_algebraicEquilibrium
+private theorem cl11_bottDirac_sq_apply_eq_zero_of_algebraicEquilibrium
     (Dn : Endomorphism F)
     (hAlg : AlgebraicEquilibriumCl11 (E := E) Dn)
     (ψ : DoubledSpace E ⊗[ℝ] F) :
@@ -598,7 +497,7 @@ Singular extension of the bulk transport law:
 when the certified boundary obstruction vanishes, the logarithmic transport
 observable closes on the non-anomalous sector contributions.
 -/
-theorem logDivergence_eq_bulkSectors_of_boundaryScale_eq_zero
+private theorem logDivergence_eq_bulkSectors_of_boundaryScale_eq_zero
     (S : SingularTransportSystem E)
     (hBoundary : S.boundary.boundaryScale = 0) :
     S.logDivergence =
@@ -610,7 +509,7 @@ Singular extension of bulk radial closure:
 if the boundary obstruction vanishes, the radial term is determined by the
 remaining non-anomalous sectors.
 -/
-theorem radial_transport_closes_of_boundaryScale_eq_zero
+private theorem radial_transport_closes_of_boundaryScale_eq_zero
     (S : SingularTransportSystem E)
     (hBoundary : S.boundary.boundaryScale = 0) :
     S.radialTerm =
@@ -621,7 +520,7 @@ theorem radial_transport_closes_of_boundaryScale_eq_zero
 The scalar anomaly term is exactly the norm-shadow of the certified projector
 commutator obstruction carried by the primitive boundary layer.
 -/
-theorem anomalyTerm_eq_projectorObstruction_norm
+private theorem anomalyTerm_eq_projectorObstruction_norm
     (S : SingularTransportSystem E) :
     S.anomalyTerm =
       ‖S.boundary.spectralProjector * S.boundary.leftProjector
@@ -633,7 +532,7 @@ theorem anomalyTerm_eq_projectorObstruction_norm
 Boundary-anomaly freeness is equivalent to commutation of the certified Drazin
 and Moore-Penrose projectors in the primitive singular boundary layer.
 -/
-theorem boundaryGenerator_eq_zero_iff_projectors_commute
+private theorem boundaryGenerator_eq_zero_iff_projectors_commute
     (S : SingularTransportSystem E) :
     S.boundary.boundaryGenerator = 0
       ↔ S.boundary.spectralProjector * S.boundary.leftProjector =
@@ -666,7 +565,7 @@ One-step grand synthesis control:
 thermodynamic control from Sinkhorn, plus externally supplied geometric fixed-point
 and algebraic Cl(1,1)-Bott equilibrium.
 -/
-theorem grandSynthesis_step
+private theorem grandSynthesis_step
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : RicciFlow X)
     (Dn : Endomorphism F)

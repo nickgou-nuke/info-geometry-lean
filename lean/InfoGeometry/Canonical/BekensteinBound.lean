@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.GrandCanonicalExperts
+import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Volume.ConnesCocycle
 

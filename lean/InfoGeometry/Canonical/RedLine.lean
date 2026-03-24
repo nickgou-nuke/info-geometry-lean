@@ -2,6 +2,9 @@ import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.LogDet
+import InfoGeometry.Canonical.ProjectiveStateCore
+import InfoGeometry.Canonical.PositiveRayProjectiveBridge
+import InfoGeometry.Canonical.RelativeGeneratorCore
 import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
@@ -11,6 +14,7 @@ import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.LogSumExp
 import InfoGeometry.Canonical.ThermoFromLogDet
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Volume.LogPotential
 
 /-!
 # InfoGeometry.Canonical.RedLine
@@ -28,6 +32,11 @@ export InfoGeometry.Canonical.LogDet (
   logDetBarrier
   logDetBregman
   logDetBarrier_eq_neg_log_det
+)
+
+export InfoGeometry.Volume.LogPotential (
+  LogAbsVolume
+  logAbsVolume_add
 )
 
 export InfoGeometry.Canonical.ThermoFromLogDet (
@@ -79,6 +88,50 @@ export InfoGeometry.Canonical.RicciMongeAmpere (
   mongeAmpereDensity_eq_exp_metricLogDet
   metricLogDet_eq_log_mongeAmpereDensity
   scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet
+)
+
+export InfoGeometry.Canonical.ProjectiveStateCore (
+  UState
+  NonzeroUState
+  SameRay
+  sameRaySetoid
+  ProjectiveState
+  logPotential
+  AEAddConst
+  PotentialClass
+  logPotentialClass
+  self_eq_mass_smul_normalize
+  normalize
+  logGenerator
+  logGeneratorClass
+  normalizedSlice
+  probMeasureToUState
+  probMeasureToNonzero
+  probMeasureToProjectiveState
+  normalize_probMeasureToProjectiveState
+  pmfToProbMeasure
+  pmfToProjectiveState
+  normalize_pmfToProjectiveState
+  probMeasureToPMF
+  probMeasureToPMF_apply
+  probMeasureToPMF_pmfToProbMeasure
+  pmfToProbMeasure_probMeasureToPMF
+  logPotential_pmf_eq_log_rnDeriv
+  logPotential_pmf_self_ae
+)
+
+export InfoGeometry.Canonical.RelativeGeneratorCore (
+  logPotential_smul_left_ae
+  logPotential_smul_right_ae
+  logGenerator_self
+  logGeneratorClass_invariant
+)
+
+export InfoGeometry.Canonical.PositiveRayProjectiveBridge (
+  positiveRayToProjectiveState
+  positiveRayToProjectiveState_normalize_eq
+  positiveRay_logGenerator_eq_relativeModularPotential_ae
+  positiveRay_logGenerator_eq_relativeModularPotential
 )
 
 export InfoGeometry.Canonical.PositiveRayCore (

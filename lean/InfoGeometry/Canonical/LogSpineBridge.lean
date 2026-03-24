@@ -1,8 +1,7 @@
 import InfoGeometry.Basic
-import InfoGeometry.Jordan.LogDet
+import InfoGeometry.Canonical.RedLine
 import InfoGeometry.Canonical.ZetaDeterminant
 import InfoGeometry.Thermal.FiniteMatrix
-import InfoGeometry.Volume.LogPotential
 
 /-!
 # InfoGeometry.Canonical.LogSpineBridge
@@ -22,11 +21,12 @@ The spine identifies the following as one canonical object:
 namespace InfoGeometry.Canonical.LogSpine
 
 open InfoGeometry
+open InfoGeometry.Canonical.RedLine
 open InfoGeometry.Jordan
 open InfoGeometry.Thermal
 
 /--
-Spine Identification 1: 
+Spine Identification 1:
 The RN potential is definitionally the negative log-density.
 -/
 theorem rn_potential_eq_neg_log_density (p : FinProb α) (x : α) :
@@ -39,8 +39,8 @@ The Jordan log-det barrier is exactly the zeta-regularized log-determinant.
 theorem jordan_logdet_eq_zeta_determinant
     (n : Nat) (X : SPD n) :
     logDetBarrier X = InfoGeometry.Canonical.Determinant.zetaLogDetBarrier X := by
-  -- zetaLogDetBarrier X is definitionally -Real.log (Matrix.det X.mat)
-  rfl
+  simpa using
+    (InfoGeometry.Canonical.Determinant.zetaLogDetBarrier_eq_logDetBarrier (X := X)).symm
 
 /--
 Spine Identification 3:

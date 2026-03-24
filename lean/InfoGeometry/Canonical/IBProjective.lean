@@ -1,5 +1,7 @@
 import InfoGeometry.Basic
 import InfoGeometry.Measure.Normalized
+import InfoGeometry.Canonical.ProjectiveStateCore
+import InfoGeometry.Canonical.PositiveRayCore
 
 /-!
 # InfoGeometry.Canonical.IBProjective
@@ -220,7 +222,114 @@ noncomputable def gaugeSection : ScoreRay (T := T) → FinProb T :=
 @[simp] theorem gaugeSection_mk (s : ScoreSlice (T := T)) :
     gaugeSection (T := T) (Quotient.mk (scoreSliceSetoid (T := T)) s) = s.gaugeSection := rfl
 
+section ProjectiveState
+
+open InfoGeometry.Canonical.ProjectiveStateCore
+
+variable [MeasurableSpace T] [MeasurableSingletonClass T] [Nonempty T]
+
+/-- A concrete nonzero finite IB score slice viewed in the widened projective-state substrate. -/
+noncomputable def toProjectiveState (s : ScoreSlice (T := T)) : ProjectiveState T :=
+  pmfToProjectiveState s.gaugeSection
+
+@[simp] theorem normalize_toProjectiveState (s : ScoreSlice (T := T)) :
+    normalize (toProjectiveState s) = pmfToProbMeasure s.gaugeSection := by
+  simpa [toProjectiveState]
+
+/-- A projective IB score ray viewed in the widened nonnegative projective substrate. -/
+noncomputable def projectiveState : ScoreRay (T := T) → ProjectiveState T :=
+  Quotient.lift
+    (fun s : ScoreSlice (T := T) => toProjectiveState s)
+    (by
+      intro s₁ s₂ hs
+      exact congrArg pmfToProjectiveState <|
+        scoreProjectiveGauge_eq_of_sameScoreRay
+          (T := T)
+          hs
+          s₁.nonzero s₁.finite
+          s₂.nonzero s₂.finite |>.symm)
+
+@[simp] theorem projectiveState_mk (s : ScoreSlice (T := T)) :
+    projectiveState (T := T) (Quotient.mk (scoreSliceSetoid (T := T)) s) = toProjectiveState s := rfl
+
+@[simp] theorem normalize_projectiveState
+    (q : ScoreRay (T := T)) :
+    normalize (projectiveState (T := T) q) = pmfToProbMeasure (gaugeSection (T := T) q) := by
+  refine Quotient.inductionOn q ?_
+  intro s
+  simp [projectiveState, toProjectiveState]
+
+end ProjectiveState
+
 end ScoreRay
+
+/--
+Full-support finite score slice: zeros and infinities are excluded pointwise, so
+this slice lands in the strict-positive `PositiveRay` corridor.
+-/
+structure FullSupportScoreSlice extends ScoreSlice (T := T) where
+  pointwise_nonzero : ∀ t : T, f t ≠ 0
+  pointwise_finite : ∀ t : T, f t ≠ ⊤
+
+instance fullSupportScoreSliceSetoid : Setoid (FullSupportScoreSlice (T := T)) where
+  r s₁ s₂ := SameScoreRay (T := T) s₁.f s₂.f
+  iseqv := by
+    refine ⟨?_, ?_, ?_⟩
+    · intro s
+      exact SameScoreRay.refl (T := T) s.f
+    · intro s₁ s₂ h
+      exact SameScoreRay.symm (T := T) h
+    · intro s₁ s₂ s₃ h₁₂ h₂₃
+      exact SameScoreRay.trans (T := T) h₁₂ h₂₃
+
+/-- Full-support score-ray state space. -/
+abbrev FullSupportScoreRay : Type := Quotient (fullSupportScoreSliceSetoid (T := T))
+
+namespace FullSupportScoreSlice
+
+open InfoGeometry.Canonical.PositiveRayCore
+
+/-- A full-support score slice as a strictly positive real-valued measure. -/
+noncomputable def toPositiveMeasure (s : FullSupportScoreSlice (T := T)) : InfoGeometry.PositiveMeasure T ℝ where
+  mass := fun t => (s.f t).toReal
+  pos := fun t => ENNReal.toReal_pos (s.pointwise_nonzero t) (s.pointwise_finite t)
+
+@[simp] theorem toPositiveMeasure_apply (s : FullSupportScoreSlice (T := T)) (t : T) :
+    toPositiveMeasure s t = (s.f t).toReal := rfl
+
+lemma sameRay_toPositiveMeasure
+    {s₁ s₂ : FullSupportScoreSlice (T := T)}
+    (hs : SameScoreRay (T := T) s₁.f s₂.f) :
+    InfoGeometry.PositiveMeasure.SameRay (toPositiveMeasure s₁) (toPositiveMeasure s₂) := by
+  rcases hs with ⟨c, hc0, hcTop, hscale⟩
+  refine ⟨c.toReal, ENNReal.toReal_pos hc0 hcTop, ?_⟩
+  ext t
+  change (s₂.f t).toReal = c.toReal * (s₁.f t).toReal
+  rw [hscale]
+  simp [ENNReal.toReal_mul]
+
+/-- A full-support score slice as a strict-positive projective ray. -/
+noncomputable def positiveRay (s : FullSupportScoreSlice (T := T)) : PositiveRay T :=
+  Quotient.mk _ (toPositiveMeasure s)
+
+end FullSupportScoreSlice
+
+namespace FullSupportScoreRay
+
+open InfoGeometry.Canonical.PositiveRayCore
+
+/-- Full-support score rays land canonically in the strict-positive `PositiveRay` substrate. -/
+noncomputable def positiveRay : FullSupportScoreRay (T := T) → PositiveRay T :=
+  Quotient.lift
+    (fun s : FullSupportScoreSlice (T := T) => s.positiveRay)
+    (by
+      intro s₁ s₂ hs
+      exact Quotient.sound <| FullSupportScoreSlice.sameRay_toPositiveMeasure (T := T) hs)
+
+@[simp] theorem positiveRay_mk (s : FullSupportScoreSlice (T := T)) :
+    positiveRay (T := T) (Quotient.mk (fullSupportScoreSliceSetoid (T := T)) s) = s.positiveRay := rfl
+
+end FullSupportScoreRay
 
 /--
 Radial/projective factorization for any finite nonzero score slice.

@@ -508,8 +508,8 @@ noncomputable def ibBlahutArimotoProjectiveState
     (pT_givenX : X → FinProb T) :
     X → InfoGeometry.MeasureProjective.ProjectiveState T :=
   fun x =>
-    InfoGeometry.MeasureProjective.Normalized.pmfToProjectiveState
-      (ibBlahutArimotoStep prob pT_givenX x)
+    ScoreRay.projectiveState (T := T)
+      (ibBlahutArimotoScoreRay (X := X) (Y := Y) (T := T) prob pT_givenX x)
 
 /--
 Slice equality of BA updates under score-ray equivalence.
@@ -571,13 +571,12 @@ theorem ibBlahutArimotoProjectiveState_eq_of_sameScoreRay
     ibBlahutArimotoProjectiveState (X := X) (Y := Y) (T := T) prob p
       =
     ibBlahutArimotoProjectiveState (X := X) (Y := Y) (T := T) prob q := by
+  have hScore :=
+    ibBlahutArimotoScoreRay_eq_of_sameScoreRay
+      (X := X) (Y := Y) (T := T) prob p q hRay
   funext x
-  have hstep :
-      ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p x
-        = ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q x :=
-    ibBlahutArimotoStep_slice_eq_of_sameScoreRay
-      (X := X) (Y := Y) (T := T) prob p q x (hRay x)
-  simpa [ibBlahutArimotoProjectiveState, hstep]
+  simpa [ibBlahutArimotoProjectiveState] using
+    congrArg (fun F => ScoreRay.projectiveState (T := T) (F x)) hScore
 
 /--
 Projective BA state equality derived directly from equality of BA score-ray maps.
@@ -592,16 +591,9 @@ theorem ibBlahutArimotoProjectiveState_eq_of_scoreRay_eq
     ibBlahutArimotoProjectiveState (X := X) (Y := Y) (T := T) prob p
       =
     ibBlahutArimotoProjectiveState (X := X) (Y := Y) (T := T) prob q := by
-  have hstep :
-      ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob p
-        =
-      ibBlahutArimotoStep (X := X) (Y := Y) (T := T) prob q :=
-    ibBlahutArimotoStep_eq_of_scoreRay_eq
-      (X := X) (Y := Y) (T := T) prob p q hRay
   funext x
   simpa [ibBlahutArimotoProjectiveState] using
-    congrArg InfoGeometry.MeasureProjective.Normalized.pmfToProjectiveState
-      (congrArg (fun F => F x) hstep)
+    congrArg (fun F => ScoreRay.projectiveState (T := T) (F x)) hRay
 
 /--
 BA projective-state invariance under positive finite score dilations.

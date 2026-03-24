@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.IBCore
@@ -13,7 +14,7 @@ AQFT operator-algebra preparation layer:
 
 - abstract C*-ready / complete-C*-ready signatures
 - concrete finite-model interpretation/compression maps over existing `AlgebraEnd` infrastructure
-- packaging theorems pairing readiness certificates with already-proved concrete AQFT statements
+- static readiness packages and constructive AQFT endpoints
 -/
 
 namespace InfoGeometry.Canonical.AQFTOperatorInterface
@@ -57,18 +58,6 @@ structure AQFTOperatorInterpretation
     [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
     [NonUnitalNormedRing Obs] [StarRing Obs] where
   interpret : AlgebraEnd F → Obs
-
-/-- Theorem `cstarReady_of_instance`. -/
-theorem cstarReady_of_instance
-    [CStarRing Obs] :
-    IsCStarReady (Obs := Obs) := by
-  infer_instance
-
-/-- Theorem `completeCStarReady_of_instance`. -/
-theorem completeCStarReady_of_instance
-    [CStarRing Obs] [CompleteSpace Obs] :
-    IsCompleteCStarReady (Obs := Obs) := by
-  exact ⟨cstarReady_of_instance (Obs := Obs), inferInstance⟩
 
 end Realizations
 
@@ -122,16 +111,6 @@ def firstLegCompression (A : AlgebraEnd E) : RealHilbertObs E :=
 def realHilbertCompressionInterpretation :
     AQFTOperatorInterpretation E (RealHilbertObs E) where
   interpret := firstLegCompression (E := E)
-
-/-- Theorem `realHilbertOp_cstarReady`. -/
-theorem realHilbertOp_cstarReady :
-    IsCStarReady (Obs := RealHilbertObs E) := by
-  infer_instance
-
-/-- Theorem `realHilbertOp_completeCStarReady`. -/
-theorem realHilbertOp_completeCStarReady :
-    IsCompleteCStarReady (Obs := RealHilbertObs E) := by
-  exact ⟨realHilbertOp_cstarReady (E := E), inferInstance⟩
 
 /-! ### Complex Hilbert model (adjoint/star bounded operators) -/
 
@@ -194,32 +173,44 @@ def complexHilbertCompressionInterpretation :
     ComplexAQFTOperatorInterpretation H (ComplexHilbertObs H) where
   interpret := complexFirstLegCompression (H := H)
 
-/-- Theorem `complexHilbertOp_cstarReady`. -/
-theorem complexHilbertOp_cstarReady :
-    IsCStarReady (Obs := ComplexHilbertObs H) := by
-  infer_instance
-
-/-- Theorem `complexHilbertOp_completeCStarReady`. -/
-theorem complexHilbertOp_completeCStarReady :
-    IsCompleteCStarReady (Obs := ComplexHilbertObs H) := by
-  exact ⟨complexHilbertOp_cstarReady (H := H), inferInstance⟩
-
 end ConcreteHilbertModels
 
-section ConcreteInterfaceInstances
+section CanonicalEndpoint
 
-variable (n : Nat)
 variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
-Direct real-Hilbert instantiation of the unified readiness package.
+Static AQFT readiness data for the real Hilbert model.
 -/
-theorem aqft_readiness_package_realHilbert
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
+structure AQFTReadinessPackage
+    (F E : Type)
+    [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
+  isCStarReadyF : IsCStarReady (Obs := RealHilbertObs F)
+  isCompleteCStarReadyE : IsCompleteCStarReady (Obs := RealHilbertObs E)
+  interpretation : AQFTOperatorInterpretation E (RealHilbertObs E)
+  projectorSuperPair :
+    IsProjectorSuperPair (E := E)
+      (InfoGeometry.Quantum.annihilationOp (E := E))
+      (InfoGeometry.Quantum.creationOp (E := E))
+
+/-- Canonical static readiness package for the real Hilbert AQFT model. -/
+def aqftReadinessPackageRealHilbert :
+    AQFTReadinessPackage F E where
+  isCStarReadyF := by
+    infer_instance
+  isCompleteCStarReadyE := by
+    exact ⟨by infer_instance, inferInstance⟩
+  interpretation := realHilbertCompressionInterpretation (E := E)
+  projectorSuperPair := projectorSuperPair_base (E := E)
+
+/--
+Constructive Fock-side payload:
+vacuum-transported splitting identifies the grand-canonical Euler step with
+the underlying Hamiltonian update.
+-/
+theorem grandCanonicalEulerStep_eq_of_vacuumSplit
     (η : ℝ)
     (B : BogoliubovMixingParams)
     (Hf : FockEndomorphism E)
@@ -230,80 +221,27 @@ theorem aqft_readiness_package_realHilbert
     (V : SplitVielbein Kgeo x)
     (Γ : SpinConnection Kgeo x V)
     (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (hClosure : SinkhornKMSClosure n T K ω β)
     (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    IsCStarReady (Obs := RealHilbertObs F)
-      ∧ IsCompleteCStarReady (Obs := RealHilbertObs E)
-      ∧ SinkhornKMSClosure n T K ω β
-      ∧ grandCanonicalFockEulerStep (E := E) η B Hf
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-            = ψ + η • Hf ψ := by
-  refine ⟨cstarReady_of_instance (Obs := RealHilbertObs F), ?_, hClosure, ?_⟩
-  · exact realHilbertOp_completeCStarReady (E := E)
-  ·
-    change ψ + η •
+    grandCanonicalFockEulerStep (E := E) η B Hf
+      (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
+        (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
+      = ψ + η • Hf ψ := by
+  change ψ + η •
       (grandCanonicalFockGenerator (E := E) B Hf
         (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
           (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ))) ψ
-      = ψ + η • Hf ψ
-    rw [grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
-      (E := E) (B := B) (H := Hf) (R := R) (K := Kgeo) (x := x)
-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit]
+    = ψ + η • Hf ψ
+  rw [grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
+    (E := E) (B := B) (H := Hf) (R := R) (K := Kgeo) (x := x)
+    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit]
 
 /--
-Direct real-Hilbert instantiation that keeps the concrete compression
-interpretation visible while carrying the AQFT readiness package and the
-canonical doubled-projector super-pair.
+Constructive thermal payload:
+derive weighted Sinkhorn-KMS closure from IB dynamics through the
+joint-kernel/commutator route.
 -/
-theorem realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base
-    (T : SinkhornTrajectory n)
-    (K : AlgebraEnd F)
-    (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
-    (β : ℝ)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (Hf : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (hClosure : SinkhornKMSClosure n T K ω β)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    Nonempty (AQFTOperatorInterpretation E (RealHilbertObs E))
-      ∧ IsCStarReady (Obs := RealHilbertObs F)
-      ∧ IsCompleteCStarReady (Obs := RealHilbertObs E)
-      ∧ SinkhornKMSClosure n T K ω β
-      ∧ IsProjectorSuperPair
-          (InfoGeometry.Quantum.annihilationOp (E := E))
-          (InfoGeometry.Quantum.creationOp (E := E))
-      ∧ grandCanonicalFockEulerStep (E := E) η B Hf
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-            = ψ + η • Hf ψ := by
-  have hReady :=
-    aqft_readiness_package_realHilbert
-      (n := n) (F := F) (E := E)
-      (T := T) (K := K) (ω := ω) (β := β)
-      (η := η) (B := B) (Hf := Hf)
-      (R := R) (Kgeo := Kgeo) (x := x)
-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
-      hClosure hVacSplit
-  exact ⟨⟨realHilbertCompressionInterpretation (E := E)⟩,
-    hReady.1,
-    hReady.2.1,
-    hReady.2.2.1,
-    projectorSuperPair_base (E := E),
-    hReady.2.2.2⟩
-
-/--
-Direct constructive AQFT readiness package from IB dynamics plus the thermal
-joint-kernel/commutator route to weighted Sinkhorn KMS closure.
--/
-theorem realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base_of_ibDynamics_weighted_from_jointKernel_commutator
+theorem ibWeightedKMSClosure_of_jointKernel_commutator
+    (n : Nat)
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (β : ℝ)
@@ -315,57 +253,22 @@ theorem realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_pr
     (prob : IBProblem (X := Xib) (Y := Yib))
     (pTrajectory : Nat → Xib → FinProb Tib)
     (hStep : ∀ k : Nat, pTrajectory (k + 1) = ibBlahutArimotoStep prob (pTrajectory k))
-    (x0 : Xib) (t0 : Tib)
+    (x0 : Xib)
+    (t0 : Tib)
     (Ω : InfoGeometry.Krein.DoubledSpace F)
     (hΩ : Ω ≠ 0)
     (hJointKernel : JointKernelOnOmega (F := F) K β Ω)
-    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω)
-    (η : ℝ)
-    (B : BogoliubovMixingParams)
-    (Hf : FockEndomorphism E)
-    (R : RicciTensor E)
-    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
-    (x : E)
-    (scalar Λ : ℝ)
-    (V : SplitVielbein Kgeo x)
-    (Γ : SpinConnection Kgeo x V)
-    (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (hVacSplit : VacuumEinsteinOnTransportedSplit R Kgeo x scalar Λ V Γ) :
-    Nonempty (AQFTOperatorInterpretation E (RealHilbertObs E))
-      ∧ IsCStarReady (Obs := RealHilbertObs F)
-      ∧ IsCompleteCStarReady (Obs := RealHilbertObs E)
-      ∧ SinkhornKMSClosure n T K
-          (ibInducedObservableWeighted
-            (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-            pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β
-      ∧ IsProjectorSuperPair
-          (InfoGeometry.Quantum.annihilationOp (E := E))
-          (InfoGeometry.Quantum.creationOp (E := E))
-      ∧ grandCanonicalFockEulerStep (E := E) η B Hf
-          (einsteinInducedChemicalPotential (R := R) (K := Kgeo) (x := x)
-            (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)) ψ
-            = ψ + η • Hf ψ := by
-  have hClosure :
-      SinkhornKMSClosure n T K
-        (ibInducedObservableWeighted
-          (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-          pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β :=
-    sinkhorn_kmsClosure_of_ibDynamics_weighted_from_jointKernel_commutator
-      (n := n) (T := T) (K := K) (β := β)
-      (prob := prob) (pTrajectory := pTrajectory)
-      hStep (x0 := x0) (t0 := t0)
-      (Ω := Ω) hΩ hJointKernel hCommOrthogonal
-  exact realHilbertCompressionInterpretation_packaged_with_aqft_readiness_and_projectorSuperPair_base
-    (n := n) (F := F) (E := E)
-    (T := T) (K := K)
-    (ω := ibInducedObservableWeighted
-      (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
-      pTrajectory x0 t0 (omegaSeed (F := F) Ω))
-    (β := β) (η := η) (B := B) (Hf := Hf)
-    (R := R) (Kgeo := Kgeo) (x := x)
-    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) (ψ := ψ)
-    hClosure hVacSplit
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := F) Ω) :
+    SinkhornKMSClosure n T K
+      (ibInducedObservableWeighted
+        (F := F) (Xib := Xib) (Yib := Yib) (Tib := Tib)
+        pTrajectory x0 t0 (omegaSeed (F := F) Ω)) β := by
+  exact sinkhorn_kmsClosure_of_ibDynamics_weighted_from_jointKernel_commutator
+    (n := n) (T := T) (K := K) (β := β)
+    (prob := prob) (pTrajectory := pTrajectory)
+    hStep (x0 := x0) (t0 := t0)
+    (Ω := Ω) hΩ hJointKernel hCommOrthogonal
 
-end ConcreteInterfaceInstances
+end CanonicalEndpoint
 
 end InfoGeometry.Canonical.AQFTOperatorInterface

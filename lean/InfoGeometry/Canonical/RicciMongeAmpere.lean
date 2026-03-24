@@ -2,6 +2,7 @@ import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Canonical.CurvatureRGFlow
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.SpectralInference
+import InfoGeometry.Canonical.RelativePotentialScalarBridge
 import Mathlib.Analysis.Calculus.MeanValue
 import Mathlib.Analysis.Calculus.FDeriv.Congr
 import Mathlib.LinearAlgebra.Determinant
@@ -691,6 +692,25 @@ lemma mongeAmpereDensity_eq_exp_metricLogDet
   unfold mongeAmpereDensity metricLogDet
   rw [Real.exp_log]
   exact abs_pos.mpr h_det
+
+/-- On the nondegenerate branch, metric log-determinant is the log Monge-Ampère density. -/
+lemma metricLogDet_eq_log_mongeAmpereDensity
+    (H : HessianGeometry E) (x : E)
+    (h_det : LinearMap.det (H.metricOp x).toLinearMap ≠ 0) :
+    metricLogDet H x = Real.log (mongeAmpereDensity H x) := by
+  rw [mongeAmpereDensity_eq_exp_metricLogDet (H := H) (x := x) h_det]
+  rw [Real.log_exp]
+
+/-- The singleton modular potential of Monge-Ampère density is minus the metric log-det. -/
+lemma scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet
+    (H : HessianGeometry E) (x : E)
+    (h_det : LinearMap.det (H.metricOp x).toLinearMap ≠ 0) :
+    InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+        (mongeAmpereDensity H x)
+        (mongeAmpereDensity_pos (H := H) (x := x) h_det)
+      = -metricLogDet H x := by
+  rw [InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
+  rw [← metricLogDet_eq_log_mongeAmpereDensity (H := H) (x := x) h_det]
 
 /-- Spectral-triple basepoint Monge-Ampère density. -/
 noncomputable def spectralMongeAmpereDensity (IST : InfoSpectralTriple E) : ℝ :=

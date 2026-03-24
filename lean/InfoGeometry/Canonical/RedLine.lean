@@ -1,6 +1,13 @@
-import InfoGeometry.Canonical.GrandSynthesis
+import InfoGeometry.Canonical.RelativePotentialCountBridge
+import InfoGeometry.Canonical.RelativePotentialScalarBridge
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.LogDet
+import InfoGeometry.Canonical.PositiveRayCore
+import InfoGeometry.Canonical.RelativePotentialCore
+import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
+import InfoGeometry.Canonical.SinkhornFoundation
+import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.LogSumExp
 import InfoGeometry.Canonical.ThermoFromLogDet
 import InfoGeometry.Canonical.TomitaTakesaki
@@ -55,12 +62,100 @@ export InfoGeometry.Canonical.MoE (
   kahlerPotentialRN_eq_neg_logJacobian
   relativeVolumeChangeRN
   relativeVolumeChangeRN_eq_exp_logJacobian
+  kahlerPotentialRN_eq_scalarModularPotential_relativeVolumeChangeRN
 )
 
-export InfoGeometry.Canonical.GrandSynthesis (
+export InfoGeometry.Canonical.KMSSinkhornBridge (
+  ibRNPotential_eq_scalarModularPotential_relativeVolumeChange
+  jacobianRelativeVolume
+  jacobianLogPotential
+  exp_neg_jacobianLogPotential_eq_jacobianRelativeVolume
+  jacobianLogPotential_eq_scalarModularPotential
+)
+
+export InfoGeometry.Canonical.RicciMongeAmpere (
+  metricLogDet
+  mongeAmpereDensity
+  mongeAmpereDensity_eq_exp_metricLogDet
+  metricLogDet_eq_log_mongeAmpereDensity
+  scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet
+)
+
+export InfoGeometry.Canonical.PositiveRayCore (
+  PositiveRay
+  PositiveOrthantRaySpace
+  toConeInteriorStateSpace
+  ofConeInteriorStateSpace
+  gaugeSection
+  Z_gaugeSection
+  logDensity
+  modularPotential
+  gaugeSection_eq_exp_logDensity
+  gaugeSection_eq_exp_neg_modularPotential
+)
+
+export InfoGeometry.Canonical.RelativePotentialCore (
+  representativeRelativeDensity
+  representativeRelativeLogDensity
+  representativeModularPotential
+  representativeRelativeLogDensity_eq_log_sub_log
+  representativeRelativeDensity_eq_exp_representativeRelativeLogDensity
+  representativeModularPotential_eq_neg_representativeRelativeLogDensity
+  representativeRelativeLogDensity_scale_left
+  representativeRelativeLogDensity_scale_right
+  representativeRelativeLogDensity_scale_scale
+  representativeModularPotential_scale_left
+  representativeModularPotential_scale_right
+  relativeDensity
+  relativeLogDensity
+  relativeModularPotential
+  relativeLogDensity_eq_logDensity_sub_logDensity
+  relativeDensity_eq_exp_relativeLogDensity
+  relativeModularPotential_eq_neg_relativeLogDensity
+  relativeModularPotential_eq_logDensity_base_sub_logDensity
+  gaugeSection_eq_relativeDensity_mul_gaugeSection
+  relativeDensity_self
+  relativeLogDensity_self
+  relativeModularPotential_self
+)
+
+export InfoGeometry.Canonical.RelativePotentialScalarBridge (
+  scalarPositiveMeasure
+  scalarLogDensity
+  scalarModularPotential
+  representativeRelativeDensity_scalar
+  representativeRelativeLogDensity_scalar
+  representativeModularPotential_scalar
+  scalarLogDensity_eq_log
+  scalarModularPotential_eq_neg_log
+  exp_neg_scalarModularPotential_eq
+)
+
+export InfoGeometry.Canonical.RelativePotentialDiscreteBridge (
+  gaugeSectionFinProb
+  toProjectiveState
+  gaugeSectionFinProb_absolutelyContinuous
+  projectiveLogGenerator_eq_relativeModularPotential_ae
+  projectiveLogGenerator_eq_relativeModularPotential
+)
+
+export InfoGeometry.Canonical.RelativePotentialCountBridge (
+  RelativeCounts
+  relativeCountDensity
+  relativeCountDensity_eq_rn_lift
+  relativeCountLogDensity
+  relativeLogDensityMean
   relativeModularHamiltonian
   relativeTomitaTakesakiOp
   relativeTomitaTakesakiOp_apply
+  positiveMeasureOfCounts
+  countMass
+  countRay
+  gaugeSection_countRay_apply
+  relativeDensity_countRay_eq_massRatio_mul_relativeCountDensity
+  relativeLogDensity_countRay_eq_relativeCountLogDensity_add_massShift
+  relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_add_massShift
+  projectiveLogGenerator_countRay_eq_neg_relativeCountLogDensity_add_massShift
 )
 
 export InfoGeometry.Canonical.TomitaTakesaki (

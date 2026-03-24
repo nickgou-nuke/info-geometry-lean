@@ -1,4 +1,5 @@
 import InfoGeometry.KL.Finite
+import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.ChiralAnomaly
 import InfoGeometry.Canonical.HolographicEmergence
 

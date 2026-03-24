@@ -132,6 +132,10 @@ import InfoGeometry.Canonical.RGFlow
 import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Canonical.RealBdG
+import InfoGeometry.Canonical.PositiveRayCore
+import InfoGeometry.Canonical.RelativePotentialCore
+import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
+import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.Canonical.RedLine
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.SingularBoundaryCorrection

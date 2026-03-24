@@ -2,7 +2,6 @@ import InfoGeometry.Canonical.AnomalyGauge
 import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.Projective
-import InfoGeometry.Canonical.WeylInformationGauge
 import InfoGeometry.MeasureProjective
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Tactic.NoncommRing

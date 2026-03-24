@@ -16,7 +16,7 @@ import InfoGeometry.Canonical.ChiralGravity
 import InfoGeometry.Canonical.ChiralTorsionBridge
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.ConformalAlgebra
-import InfoGeometry.Canonical.WeylInformationGauge
+import InfoGeometry.Canonical.WeylAnomalySource
 import InfoGeometry.Canonical.WeylGaugeField
 import InfoGeometry.Canonical.WeylTransport
 import InfoGeometry.Canonical.WeylTransportChiralBridge

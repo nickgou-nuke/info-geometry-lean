@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.GrandSynthesis
 import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Canonical.LogDet
-import InfoGeometry.Canonical.PerelmanW
+import InfoGeometry.Canonical.PerelmanWSpinorial
 import InfoGeometry.Canonical.ThermoFromLogDet
 
 /-!

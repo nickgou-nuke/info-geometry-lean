@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.ChiralAnomaly
-import InfoGeometry.Canonical.CalabiYauBridge
+import InfoGeometry.Canonical.CalabiYauMetricRicci
+import InfoGeometry.Canonical.CalabiYauRNMongeAmpere
 import InfoGeometry.Canonical.KMSSinkhornBridge
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.RicciMongeAmpere

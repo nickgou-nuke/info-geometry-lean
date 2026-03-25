@@ -1,64 +1,27 @@
-# Declaration DAG Artifacts
+# DAG Artifacts
 
-This directory is the public authoritative home of the declaration-level DAG
-artifacts used for causal-order analysis.
+This directory is the authoritative home of the maintained graph artifacts.
 
-Current refresh path:
+## Authoritative files
+
+- `full_graph.json`
+- `structural-topology.json`
+- `index/decls.jsonl`
+- `index/edges.jsonl`
+- `source-sink-bipartite.json`
+
+## How they are refreshed
 
 ```bash
 python3 tools/infra/refresh_decl_graph.py
+python3 tools/infra/generate_theorem_surface_index.py
+python3 tools/infra/generate_source_sink_compression.py
 ```
 
-That wrapper calls:
+and the rest of the maintained report stack from [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md).
 
-```bash
-lake env lean --run lean/DAG/Indexer.lean   InfoGeometry.All   InfoGeometry   artifacts/dag/index   artifacts/dag/full_graph.json   artifacts/dag/structural-topology.json
-```
+## Policy
 
-Authoritative inputs here:
-- `artifacts/dag/full_graph.json`
-- `artifacts/dag/index/decls.jsonl`
-- `artifacts/dag/structural-topology.json`
-- `artifacts/dag/source-sink-bipartite.json`
-
-Derived reports live elsewhere:
-- `reports/dag/source-sink-compression.md`
-- `reports/dag/source-sink-incidence.graphml`
-- `reports/dag/source-sink-incidence.svg`
-- `reports/dag/true-root-order.{md,json}`
-- `reports/dag/openclaw-targets.{md,json}`
-- `reports/dag/missing-all-classification.{md,json}`
-- `reports/dag/theorem-surface-index.{md,json}`
-- `reports/dag/declaration-networkx.graphml`
-- `reports/dag/module-networkx.graphml`
-- `reports/dag/module-networkx.svg`
-- `reports/dag/declaration-networkx-frontier.graphml`
-- `reports/dag/module-networkx-frontier.graphml`
-- `reports/dag/module-networkx-frontier.svg`
-- `reports/dag/module-networkx-frontier-hotspots.graphml`
-- `reports/dag/module-networkx-frontier-hotspots.svg`
-- `reports/dag/module-networkx-frontier-hotspots.json`
-- `reports/dag/frontier-burndown.md`
-- `reports/dag/frontier-burndown.json`
-
-Policy:
-- treat `artifacts/dag/` as the documented public declaration-graph lane
-- treat `.build/` as a transient Lean build cache and compatibility fallback only
-- regenerate these artifacts; do not hand-edit them
-
-`structural-topology.json` is the maintained native structural-analysis object downstream of the Lean `HydratedGraph`.
-
-It exposes:
-- stable component ids
-- component membership
-- condensation edges
-- root/capstone/layer summaries
-- strict dominator summaries
-- canonical root-witness component paths
-
-`source-sink-bipartite.json` is the maintained correspondence object between the atomic declaration DAG, the native structural layer, and the hydrated readable layer.
-
-It exposes a stable bipartite schema:
-- `atomic_nodes`: source bundles / condensed atomic packets
-- `hydrated_nodes`: readable module carriers
-- `incidence_edges`: typed correspondence edges with `role`, `projection_kind`, witness counts, canonical path examples, motif signatures, and compression scores
+- Treat `artifacts/dag/` as the source of truth for graph data.
+- Treat `.build/` as a transient build cache or fallback, not as documented graph truth.
+- Regenerate these artifacts; do not hand-edit them.

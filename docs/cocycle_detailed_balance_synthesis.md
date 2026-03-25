@@ -1,50 +1,36 @@
-# Cocycles, Chain Rules, and Broken Detailed Balance
+# Cocycle and Detailed-Balance Note
 
-This note captures the modular-probabilistic chain:
-Radon-Nikodym composition, logarithmic flattening, and irreversibility under
-noncommutative update transport.
+This is a conceptual note, not an authoritative statement of current theorem names.
 
-## 1. Radon-Nikodym Chain Rule and Modular Cocycles
+## Current owner modules
 
-In the canonical modular layer (notably `Canonical/GrandSynthesis.lean`),
-relative density transport is represented through Tomita-Takesaki style
-operators on doubled/Krein carriers.
+The current cocycle / relative-generator vocabulary is split across:
+- `lean/InfoGeometry/Canonical/ProjectiveStateCore.lean`
+- `lean/InfoGeometry/Canonical/RelativeGeneratorCore.lean`
+- `lean/InfoGeometry/Canonical/RelativePotentialCore.lean`
+- `lean/InfoGeometry/Canonical/RelativePotentialScalarBridge.lean`
+- `lean/InfoGeometry/Canonical/RedLine.lean`
+- `lean/InfoGeometry/Volume/ConnesCocycle.lean`
+- `lean/InfoGeometry/Canonical/TomitaTakesaki.lean`
+- `lean/InfoGeometry/Canonical/GeneratedFlow.lean`
 
-- Classical chain rule (`dμ/dλ = (dμ/dν) (dν/dλ)`) is multiplicative.
-- In modular/operator language, this is the cocycle composition law for
-  relative state transport.
-- Relative modular objects encode state-change flow as a Connes-style 1-cocycle
-  pattern.
+## Stable structural picture
 
-## 2. Log Deformation and Additive Thermodynamic Charges
+The repo now distinguishes three layers that older documents often conflated:
+- projective nonnegative state language;
+- wide relative generator / logarithmic potential language, typically up to AE equivalence or under support hypotheses;
+- strict-positive pointwise log-potential language.
 
-Applying `-log` converts multiplicative density chains into additive quantities.
+At the scalar or strictly positive slice, multiplicative relative density becomes additive log-density, and modular potential is the negative of that log-density. At the wide measure-projective level, the same idea is carried by projective generators rather than naive pointwise formulas.
 
-- Multiplicative ratio transport becomes additive potential transport.
-- In the canonical `LogSumExp`/thermodynamic bridge, additive energies are
-  normalized into partition-style aggregates.
-- This realizes the geometric-to-thermodynamic deformation:
-  ratio geometry -> additive free-energy-like functionals.
+## Detailed-balance interpretation
 
-## 3. Cycles, Hysteresis, and Broken Detailed Balance
+Reversible or near-reversible update laws should be read through the current operator and transport owners rather than through older synthesis prose:
+- `lean/InfoGeometry/Canonical/SinkhornKMSCore.lean`
+- `lean/InfoGeometry/Canonical/KMSSinkhornScalarPotential.lean`
+- `lean/InfoGeometry/Canonical/KMSSinkhornWeightedTransport.lean`
+- `lean/InfoGeometry/Krein/Thermal.lean`
 
-For looped update paths, commutativity determines reversibility.
+## Verification rule
 
-- Flat/invariant regimes admit vanishing cycle defect and reversible closure
-  (detailed balance).
-- In noncommutative update order regimes (hysteresis), path composition differs
-  by order and generates cycle defect.
-- This defect is the operator-geometric source of torsion/anomaly and thus
-  macroscopic irreversibility.
-
-## 4. Unified Statement
-
-The framework unifies:
-
-1. RN chain composition,
-2. cocycle transport in modular flow,
-3. logarithmic thermodynamic linearization,
-4. and broken detailed balance from noncommutative update order.
-
-So entropy-producing irreversibility appears as a structural consequence of
-nontrivial cocycle holonomy in the information-geometry operator stack.
+Use this note only as a map. For current facts, inspect the owner files and the maintained reports.

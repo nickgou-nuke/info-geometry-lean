@@ -1,4 +1,5 @@
-import InfoGeometry.Canonical.AQFTOperatorInterface
+import InfoGeometry.Canonical.AQFTOperatorSignatures
+import InfoGeometry.Canonical.AQFTOperatorEndpoints
 import InfoGeometry.Canonical.KKFoundation
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.QFTTDFTLaunchpad

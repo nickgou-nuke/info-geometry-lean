@@ -1,38 +1,82 @@
-# The Grand Unification of the Physics of Information
+# Installation and First Build
 
-This repository contains the grand unification of the physics of information, formalized in Lean 4.
+This repository uses:
+- Lean toolchain: `leanprover/lean4:v4.28.0`
+- Lake package management via [lakefile.lean](/home/goutev/LEAN4/info-geometry-lean/lakefile.lean)
+- optional repo-local Python environment under `.venv`
 
-Nothing more, and nothing less.
+## Prerequisites
 
-We will not provide details on the contents of the theory here. See for yourself.
+Install:
+- `git`
+- `python3`
+- `pip`
+- `elan` with Lean 4 support
 
-## Instructions for Audit
+## Clone and bootstrap
 
-1. Clone the repository from the remote you actually use:
-   ```bash
-   git clone <repo-url> info-geometry-lean
-   cd info-geometry-lean
-   ```
-   Replace `<repo-url>` with your chosen GitHub remote for this repository.
-2. Install Lean 4 + Lake:
-   ```bash
-   scripts/build/install_lean.sh
-   ```
-   If your environment blocks GitHub or package downloads, point the installer at a reachable mirror or local file:
-   ```bash
-   LEAN_ELAN_INIT_URL=file:///path/to/elan-init.sh scripts/build/install_lean.sh
-   ```
-   You can also install `elan` manually; just make sure `lake` is on `PATH`.
-3. Verify the canonical theorem surface with the locked build wrapper:
-   ```bash
-   scripts/build/run_lake_build.sh InfoGeometry.All
-   ```
-   For a forced rebuild, use:
-   ```bash
-   python3 tools/infra/run_locked_lake_build.py -R InfoGeometry.All
-   ```
-4. Optional: install a coding agent for repo-local work.
-5. Interrogate the agent.
-   - Ask it to audit the theory.
-   - Use `python3 tools/infra/run_locked_lake_build.py ...` for full or umbrella builds so concurrent builds are refused instead of stuttering the workspace.
-   - Explore the consequences.
+```bash
+git clone <your-remote> info-geometry-lean
+cd info-geometry-lean
+```
+
+Optional but recommended for mathlib cache:
+
+```bash
+lake exe cache get
+```
+
+## Python environment
+
+The repo does not require a large Python dependency stack for basic builds, but the tooling is easier to use from a local virtual environment.
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -e .
+```
+
+If you use the local skill validator or other YAML-aware tooling, also install:
+
+```bash
+python -m pip install PyYAML
+```
+
+## First Lean builds
+
+Small smoke build:
+
+```bash
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.Canonical.All
+```
+
+Full umbrella build:
+
+```bash
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.All
+```
+
+Repo quality gate:
+
+```bash
+lake script run strictCheck
+```
+
+## First graph refresh
+
+```bash
+python3 tools/infra/refresh_decl_graph.py
+python3 tools/infra/refresh_blueprint_tags.py
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags
+python3 tools/infra/generate_theorem_surface_index.py
+python3 tools/infra/generate_source_sink_compression.py
+```
+
+Continue with the rest of the maintained sequence from [README.md](/home/goutev/LEAN4/info-geometry-lean/README.md) or [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md).
+
+## Notes
+
+- Use the locked build wrapper for umbrella builds; do not run concurrent `lake build` jobs.
+- Treat `reports/` and `docs/auto/` as generated outputs, not as setup instructions.
+- If a document disagrees with the code, trust the code and the maintained scripts.

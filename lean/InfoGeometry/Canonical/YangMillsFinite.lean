@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.ChiralRGFlow
 import InfoGeometry.Canonical.GaugeGroups
-import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.KMSSinkhornSeedState
+import InfoGeometry.Canonical.KMSSinkhornScalarPotential
 import InfoGeometry.Canonical.TomitaTakesaki
 
 /-!

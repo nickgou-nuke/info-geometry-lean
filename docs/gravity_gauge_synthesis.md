@@ -1,39 +1,28 @@
-# Gravity Gauge Synthesis
+# Gravity / Gauge Topic Map
 
-This note summarizes the canonical synthesis between kinematics, Einstein-scale
-gravity bridges, and Weyl gauge scaling in the InfoGeometry Lean stack.
+This is a current owner map, not a live proof summary.
 
-## Chain Overview
+## Current owner modules
 
-1. Kinematics and thermal vacuum:
-   Bogoliubov mixing deforms doubled-state creation/annihilation channels.
-2. Grand-canonical deformation:
-   Einstein residual transport shifts the effective chemical potential.
-3. Einstein-Kahler closure:
-   Monge-Ampere constraints and anomaly sourcing close curvature equations.
-4. Cartan algebraic split:
-   symmetric-Lie decomposition isolates compact/boost channels.
-5. Weyl gauge scaling:
-   Sinkhorn balancing acts as a two-sided gauge scaling law.
-6. Projective conformal quotient:
-   ray-level collapse captures scale-invariant physical observables.
+Geometry, gauge, and anomaly-source material is currently distributed across:
+- `lean/InfoGeometry/Canonical/BogoliubovFockSuper.lean`
+- `lean/InfoGeometry/Canonical/ChiralEinsteinBridge.lean`
+- `lean/InfoGeometry/Canonical/RicciMongeAmpere.lean`
+- `lean/InfoGeometry/Canonical/CalabiYauMetricRicci.lean`
+- `lean/InfoGeometry/Canonical/CalabiYauRNMongeAmpere.lean`
+- `lean/InfoGeometry/Canonical/CalabiYauWBridge.lean`
+- `lean/InfoGeometry/Canonical/WeylGaugeField.lean`
+- `lean/InfoGeometry/Canonical/WeylPathHysteresis.lean`
+- `lean/InfoGeometry/Canonical/WeylAnomalySource.lean`
 
-## Canonical Route In Code
+## Structural reading
 
-1. `Canonical/BogoliubovFockSuper.lean`:
-   Bogoliubov parameters, grand-canonical generator, Einstein-Fock deformation.
-2. `Canonical/CalabiYauBridge.lean` and `Canonical/ChiralEinsteinBridge.lean`:
-   Monge-Ampere to Ricci/vacuum-Einstein bridges with anomaly coupling.
-3. `Core/SymmetricLieGeneric.lean` and `Canonical/SpinConnection.lean`:
-   Cartan split laws and transport-connection structure.
-4. `Canonical/WeylInformationGauge.lean`:
-   Sinkhorn-to-Weyl gauge equivalence.
-5. `Projective/Dynamics.lean`:
-   projective ray quotient and conformal collapse behavior.
+The old monolithic `WeylInformationGauge` and `CalabiYauBridge` stories have been split by ownership. Read the current packet as:
+- lower metric and Monge-Ampere geometry;
+- Weyl/path-dependence transport;
+- anomaly-source forcing;
+- higher consumers that re-export or use those lower layers.
 
-## Canonical Entry Points
+## Verification rule
 
-- `InfoGeometry.Canonical.BogoliubovFockSuper`
-- `InfoGeometry.Canonical.ChiralEinsteinBridge`
-- `InfoGeometry.Canonical.SpinConnection`
-- `InfoGeometry.Canonical.WeylInformationGauge`
+For actual theorems, inspect the owner files. Do not infer live theorem names or current file boundaries from older synthesis prose.

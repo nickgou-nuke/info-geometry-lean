@@ -1,34 +1,25 @@
-# Drazin Conformal Synthesis
+# Drazin / Conformal / Anomaly Topic Map
 
-This note summarizes the singular-boundary bridge between Drazin/Moore-Penrose
-projectors, conformal closure, and chiral scale anomaly in the canonical stack.
+This is a current owner map for the singular and conformal operator packet.
 
-## Chain Overview
+## Current owner modules
 
-1. Singular resolution:
-   Drazin and Moore-Penrose inverses induce spectral and geometric projectors.
-2. Boundary commutator:
-   the chiral anomaly is the projector commutator on the degenerate sector.
-3. Emergent scale:
-   anomaly norm defines a nontrivial absolute scale parameter.
-4. Conformal obstruction:
-   positive anomaly breaks flat Weyl-weight closure.
-5. Projective null boundary:
-   degenerate Krein null rays identify the boundary where scale emerges.
+The packet is currently organized around:
+- `lean/InfoGeometry/Canonical/Drazin.lean`
+- `lean/InfoGeometry/Canonical/MoorePenrose.lean`
+- `lean/InfoGeometry/Canonical/SingularBoundaryCorrection.lean`
+- `lean/InfoGeometry/Canonical/ConformalAlgebra.lean`
+- `lean/InfoGeometry/Canonical/ConformalUnification.lean`
+- `lean/InfoGeometry/Canonical/AnomalyGauge.lean`
+- `lean/InfoGeometry/Canonical/AnomalyDilationBridge.lean`
 
-## Canonical Route In Code
+## Current structural reading
 
-1. `Canonical/Drazin.lean`:
-   Drazin inverse, projection, and splitting interfaces.
-2. `Canonical/MoorePenrose.lean`:
-   Moore-Penrose inverse and anomaly/scale definitions.
-3. `Canonical/ConformalAlgebra.lean`:
-   conformal generators and anomaly-driven closure obstruction theorem.
-4. `Canonical/Projective.lean` and `Canonical/Krein.lean`:
-   projective ray/null-cone boundary interfaces.
+The repo no longer supports reading this packet through a single grand synthesis document. The live structure is:
+- inverse and projector language at the singular layer;
+- conformal and anomaly-source closure in the conformal layer;
+- higher consumers elsewhere.
 
-## Canonical Entry Points
+## Caution
 
-- `InfoGeometry.Canonical.Drazin`
-- `InfoGeometry.Canonical.MoorePenrose`
-- `InfoGeometry.Canonical.ConformalAlgebra`
+This note does not certify any physical interpretation. It only points to the current formal owners.

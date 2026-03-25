@@ -1,27 +1,24 @@
 # Bridge Thinness Index
 
-Generated: `2026-03-22 23:04:48`
+This file explains the bridge-thinness audit and its purpose.
 
-This report is a heuristic audit of bridge-/launchpad-/interface-facing theorem surfaces that may be mathematically thinner than their names suggest.
+## What thinness means
 
-## Status
-- thin-bridge gate: **PASS**
-- interpretation: `FAIL` means at least one targeted theorem currently looks like a definitional identity
+A bridge is thin when its public theorem surface mostly consists of:
+- definitional identities;
+- one-step re-exports from lower files;
+- orientation rewrites;
+- packaging over already-proved lower statements.
 
-## Counts
-- total tracked findings: **0**
-- definitional identity findings: **0**
-- direct forwarder findings: **0**
-- underscore-hypothesis findings: **0**
-- package/orchestration findings: **0**
+Thin bridges are not automatically wrong, but they should not dominate the public mathematical story.
 
-## Queue
-- none
+## Current tooling
 
-## Findings
-- none
+Use:
+- `tools/generate_bridge_thinness_index.py`
+- `tools/infra/generate_theorem_surface_index.py`
+- `tools/infra/generate_semantic_quotient.py`
 
 ## Policy
-- this is a heuristic syntax audit, not a proof oracle
-- `rfl`/direct-forward/package findings are review targets, not automatic verdicts of invalid mathematics
-- the purpose is to keep bridge names aligned with actual proof depth
+
+If a thin bridge is real lower-owner mathematics, keep it low. If it is only shell packaging, internalize it or move it behind the owner file.

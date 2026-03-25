@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.CalabiYauBridge
+import InfoGeometry.Canonical.CalabiYauMetricRicci
 import InfoGeometry.Canonical.SingularTransportSystem
 
 /-!

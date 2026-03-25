@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.ConformalAlgebra
-import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.InformationNumber
 import InfoGeometry.Canonical.PathIntegral
 import InfoGeometry.Canonical.ChiralRGFlow

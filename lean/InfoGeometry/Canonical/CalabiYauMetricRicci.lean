@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.PerelmanW
+import InfoGeometry.Canonical.PerelmanWSpinorial
 import InfoGeometry.Canonical.GrandCanonicalExperts
 set_option linter.unnecessarySeqFocus false
 set_option linter.unnecessarySimpa false

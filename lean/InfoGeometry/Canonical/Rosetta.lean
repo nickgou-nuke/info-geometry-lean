@@ -24,7 +24,8 @@ import InfoGeometry.Canonical.WilsonLoop
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.ModularSpinorBridge
 import InfoGeometry.Canonical.Twistor
-import InfoGeometry.Canonical.BerryPhase
+import InfoGeometry.Canonical.BerryConnection
+import InfoGeometry.Canonical.BerryHolonomy
 import InfoGeometry.Canonical.Singular
 import InfoGeometry.Canonical.RosettaSourceBridge
 import InfoGeometry.Canonical.RosettaScaleTransport

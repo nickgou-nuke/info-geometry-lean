@@ -2,7 +2,7 @@ import Mathlib
 import InfoGeometry.Singular.KreinNaturalFlow
 import InfoGeometry.Canonical.AnomalyGauge
 import InfoGeometry.Canonical.GrandUnification
-import InfoGeometry.Canonical.PerelmanW
+import InfoGeometry.Canonical.PerelmanWCore
 import InfoGeometry.Canonical.WeylInformationGauge
 import InfoGeometry.Canonical.RicciMongeAmpere
 

@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.AnomalyInflow
-import InfoGeometry.Canonical.ChiralTorsionBridge
 import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.WeylPathHysteresis
 import InfoGeometry.Canonical.WeylAnomalySource
@@ -25,7 +24,6 @@ open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.WeylInformationGauge
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.InformationTorsion
-open InfoGeometry.Canonical.ChiralTorsionBridge
 open InfoGeometry.Canonical.AnomalyInflow
 open InfoGeometry.Canonical.TopologicalInvariants
 open InfoGeometry.Canonical.SpectralInference

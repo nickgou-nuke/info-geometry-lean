@@ -35,7 +35,6 @@ open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.InformationTorsion
 open InfoGeometry.Canonical.AnomalyInflow
 open InfoGeometry.Canonical.TopologicalInvariants
-open InfoGeometry.Canonical.ChiralTorsionBridge
 open InfoGeometry.Canonical.SpectralInference
 
 section CountsToProbability

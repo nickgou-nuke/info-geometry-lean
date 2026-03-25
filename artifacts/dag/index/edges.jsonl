@@ -28351,16 +28351,6 @@
 {"dst":"InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd","kind":"value","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"}
 {"dst":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity","kind":"value","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"}
 {"dst":"InfoGeometry.Krein.DoubledSpace","kind":"value","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1"}
-{"dst":"InfoGeometry.Canonical.KMSSinkhornBridge.CommutatorOrthogonalOnOmega","kind":"type","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses"}
-{"dst":"InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd","kind":"type","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses"}
-{"dst":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity","kind":"type","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses"}
-{"dst":"InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega","kind":"type","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses"}
-{"dst":"InfoGeometry.Krein.DoubledSpace","kind":"type","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses"}
-{"dst":"InfoGeometry.Canonical.KMSSinkhornBridge.CommutatorOrthogonalOnOmega","kind":"value","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses"}
-{"dst":"InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd","kind":"value","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses"}
-{"dst":"InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega","kind":"value","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses"}
-{"dst":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_jointKernel_commutator","kind":"value","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses"}
-{"dst":"InfoGeometry.Krein.DoubledSpace","kind":"value","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses"}
 {"dst":"InfoGeometry.Canonical.KMSSinkhornBridge.CommutatorOrthogonalOnOmega","kind":"type","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_jointKernel_commutator"}
 {"dst":"InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd","kind":"type","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_jointKernel_commutator"}
 {"dst":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity","kind":"type","src":"InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_jointKernel_commutator"}

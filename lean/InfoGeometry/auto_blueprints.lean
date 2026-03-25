@@ -3128,7 +3128,6 @@ attribute [blueprint] InfoGeometry.Canonical.YangMillsContinuum.idEndH
 attribute [blueprint] InfoGeometry.Canonical.YangMillsContinuum.idEndH.eq_1
 attribute [blueprint] InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity
 attribute [blueprint] InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity.eq_1
-attribute [blueprint] InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_hypotheses
 attribute [blueprint] InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.expectationSeedReflectionPositivity_of_jointKernel_commutator
 attribute [blueprint] InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer
 attribute [blueprint] InfoGeometry.Canonical.YangMillsFinite.FiniteQFTLayer.finiteOsterwalderSchraderLayer_of_positiveTimeVector

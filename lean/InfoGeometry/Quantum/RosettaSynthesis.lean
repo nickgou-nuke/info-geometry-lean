@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.Rosetta
+import InfoGeometry.Canonical.RosettaSourceBridge
 
 namespace InfoGeometry.Quantum.RosettaSynthesis
 
@@ -51,9 +51,9 @@ theorem rosetta_source_tension_synthesis
           (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) V Γ
       ∧ InfoGeometry.Canonical.RicciMongeAmpere.transportedEinsteinResidual
           (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) V Γ
-          = einsteinInducedChemicalPotential R K x scalar Λ V Γ
-      ∧ einsteinFockDeformationOperator R K x scalar Λ V Γ
-          = einsteinInducedChemicalPotential R K x scalar Λ V Γ
+          = InfoGeometry.Canonical.BogoliubovFockSuper.einsteinInducedChemicalPotential R K x scalar Λ V Γ
+      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.einsteinFockDeformationOperator R K x scalar Λ V Γ
+          = InfoGeometry.Canonical.BogoliubovFockSuper.einsteinInducedChemicalPotential R K x scalar Λ V Γ
               • ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)
       ∧ M.modularAnomalyGenerator U =
           (U.symm : Xc →L[ℝ] Xc).comp
@@ -94,13 +94,13 @@ theorem rosetta_anomaly_free_triality
     (hChem :
       InfoGeometry.Canonical.RicciMongeAmpere.transportedEinsteinResidual
           (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) V Γ
-        = einsteinInducedChemicalPotential R K x scalar Λ V Γ)
+        = InfoGeometry.Canonical.BogoliubovFockSuper.einsteinInducedChemicalPotential R K x scalar Λ V Γ)
     (hResidual0 :
       InfoGeometry.Canonical.RicciMongeAmpere.transportedEinsteinResidual
           (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) V Γ = 0)
     (hMod0 : M.modularAnomalyGenerator U = 0) :
     CBA.CI.chiralScale = 0
-      ∧ einsteinInducedChemicalPotential R K x scalar Λ V Γ = 0
+      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.einsteinInducedChemicalPotential R K x scalar Λ V Γ = 0
       ∧ M.modularAnomalyGenerator U = 0 := by
   refine ⟨?_, ?_, hMod0⟩
   · calc
@@ -109,7 +109,7 @@ theorem rosetta_anomaly_free_triality
             (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) V Γ := hScale
       _ = 0 := hResidual0
   · calc
-      einsteinInducedChemicalPotential R K x scalar Λ V Γ =
+      InfoGeometry.Canonical.BogoliubovFockSuper.einsteinInducedChemicalPotential R K x scalar Λ V Γ =
           InfoGeometry.Canonical.RicciMongeAmpere.transportedEinsteinResidual
             (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) V Γ := hChem.symm
       _ = 0 := hResidual0

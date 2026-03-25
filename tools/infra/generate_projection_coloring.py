@@ -169,6 +169,18 @@ def main() -> int:
     )
     source_set = set(source_modules)
 
+    for group in fibers.get("source_sink_fiber_groups", []):
+        if not isinstance(group, dict):
+            continue
+        source_set.update(parse_module_list(group.get("source_modules")))
+
+    for family in fibers.get("sink_family_entanglements", []):
+        if not isinstance(family, dict):
+            continue
+        source_set.update(parse_module_list(family.get("source_modules")))
+
+    source_modules = sorted(source_set)
+
     out_by_source: dict[str, dict[str, float]] = defaultdict(dict)
     in_by_target: dict[str, dict[str, float]] = defaultdict(dict)
     for row in hydrated_edges:

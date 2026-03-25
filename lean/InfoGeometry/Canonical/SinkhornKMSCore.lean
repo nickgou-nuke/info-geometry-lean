@@ -118,7 +118,7 @@ def SinkhornApproxKMSClosure
 /--
 Control implies approximate stepwise KMS closure, with no zero-barrier collapse.
 -/
-theorem sinkhorn_step_approxKMSClosure_of_control
+private theorem sinkhorn_step_approxKMSClosure_of_control
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
@@ -159,7 +159,7 @@ theorem sinkhorn_step_kmsClosure_of_approxClosure_of_barrierZero
 /--
 Approximate stepwise closure directly yields Sinkhorn control.
 -/
-theorem sinkhorn_control_of_step_approxKMSClosure
+private theorem sinkhorn_control_of_step_approxKMSClosure
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
@@ -190,7 +190,7 @@ theorem sinkhorn_step_kmsClosure_of_control
     k A B
 
 /-- Canonical theorem name: exact KMS closure implies Sinkhorn control. -/
-theorem sinkhorn_control_of_step_kmsClosure
+private theorem sinkhorn_control_of_step_kmsClosure
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
@@ -216,7 +216,7 @@ theorem sinkhorn_control_of_step_kmsClosure
 Closure equivalence: in this finite Sinkhorn scaffold, the control inequality and
 exact stepwise KMS closure are equivalent.
 -/
-theorem sinkhornKMSControl_iff_kmsClosure
+private theorem sinkhornKMSControl_iff_kmsClosure
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)
@@ -248,7 +248,7 @@ theorem sinkhorn_stepwise_kms_bound
 Closure-first quantitative form: the pre-step RN-barrier bound follows directly
 from exact KMS closure.
 -/
-theorem sinkhorn_stepwise_kms_bound_of_kmsClosure
+private theorem sinkhorn_stepwise_kms_bound_of_kmsClosure
     (T : SinkhornTrajectory n)
     (K : AlgebraEnd F)
     (ω : Nat → AlgebraEnd F →L[ℝ] ℝ)

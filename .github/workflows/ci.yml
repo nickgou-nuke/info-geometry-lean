@@ -79,3 +79,6 @@ jobs:
             echo "Canonical modules must not import InfoGeometry.Archive.*"
             exit 1
           fi
+
+      - name: Enforce surrogate isolation
+        run: scripts/audit_surrogates.sh

@@ -12,3 +12,4 @@ if ! command -v lake >/dev/null 2>&1; then
 fi
 
 exec lake build "$@"
+exec python3 tools/infra/run_locked_lake_build.py "$@"

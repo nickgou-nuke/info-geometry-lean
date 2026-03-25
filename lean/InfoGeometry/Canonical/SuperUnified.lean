@@ -1,5 +1,6 @@
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Jordan.Core
+set_option linter.unusedSimpArgs false
 
 /-!
 # The Super-Kähler Geometry of Information
@@ -13,13 +14,14 @@ Clifford-style endomorphism algebra on `DoubledSpace E` viewed through:
 namespace InfoGeometry.SuperUnified
 
 open InfoGeometry.Jordan
+open InfoGeometry.Krein
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 section SuperAlgebra
 
 /-- Endomorphisms on the doubled space. -/
-abbrev End (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] :=
+abbrev End (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
   DoubledSpace E →L[ℝ] DoubledSpace E
 
 /-- Super-commutator / Lie bracket. -/
@@ -33,8 +35,21 @@ noncomputable def jordanProduct (A B : End E) : End E :=
 /-- Clifford decomposition `AB = {A,B} + (1/2)[A,B]`. -/
 theorem clifford_decomposition (A B : End E) :
     A.comp B = jordanProduct A B + (2 : ℝ)⁻¹ • lieBracket A B := by
-  simpa [jordanProduct, lieBracket, jordanProd, clmComm] using
-    (comp_eq_jordan_add_half_comm (E := E) A B)
+  have hsum :
+      (A.comp B + B.comp A) + (A.comp B - B.comp A) = (2 : ℝ) • (A.comp B) := by
+    calc
+      (A.comp B + B.comp A) + (A.comp B - B.comp A)
+          = A.comp B + A.comp B := by
+              simp [sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
+      _ = (2 : ℝ) • (A.comp B) := by
+            simpa using (two_smul ℝ (A.comp B)).symm
+  symm
+  calc
+    jordanProduct A B + (2 : ℝ)⁻¹ • lieBracket A B
+        = (2 : ℝ)⁻¹ • ((A.comp B + B.comp A) + (A.comp B - B.comp A)) := by
+            simp [jordanProduct, lieBracket, smul_add, smul_sub, sub_eq_add_neg]
+    _ = (2 : ℝ)⁻¹ • ((2 : ℝ) • (A.comp B)) := by rw [hsum]
+    _ = A.comp B := by simp [smul_smul]
 
 end SuperAlgebra
 
@@ -58,23 +73,28 @@ noncomputable def symplecticFormOp : End E :=
 noncomputable def metricOp : End E :=
   jordanProduct S.epsilon S.epsilon
 
-/-- Supercharge square equals Hamiltonian identity. -/
-theorem supercharge_squared_is_hamiltonian :
-    S.epsilon.comp S.epsilon = ContinuousLinearMap.id ℝ (DoubledSpace E) :=
-  S.eps_sq
-
 /-- Commutator closes to `2 * (J ∘ ε)`. -/
 theorem symplectic_is_complex_structure :
     symplecticFormOp S = (2 : ℝ) • (S.J.comp S.epsilon) := by
   have hεJ : S.epsilon.comp S.J = -(S.J.comp S.epsilon) := by
-    have h := congrArg (fun T => -T) S.anticomm
-    simpa using h.symm
+    have hsum : S.epsilon.comp S.J + S.J.comp S.epsilon = 0 := by
+      calc
+        S.epsilon.comp S.J + S.J.comp S.epsilon
+            = S.epsilon.comp S.J + -(S.epsilon.comp S.J) := by rw [S.anticomm]
+        _ = 0 := by simp
+    exact eq_neg_of_add_eq_zero_left hsum
   unfold symplecticFormOp lieBracket
   calc
     S.J.comp S.epsilon - S.epsilon.comp S.J
         = S.J.comp S.epsilon - (-(S.J.comp S.epsilon)) := by rw [hεJ]
+    _ = (S.J.comp S.epsilon) + (S.J.comp S.epsilon) := by
+        simp [sub_eq_add_neg]
     _ = (2 : ℝ) • (S.J.comp S.epsilon) := by
-        simp [sub_eq_add_neg, two_smul]
+        calc
+          (S.J.comp S.epsilon) + (S.J.comp S.epsilon)
+              = ((1 : ℝ) + (1 : ℝ)) • (S.J.comp S.epsilon) := by
+                  simpa using (add_smul (1 : ℝ) (1 : ℝ) (S.J.comp S.epsilon)).symm
+          _ = (2 : ℝ) • (S.J.comp S.epsilon) := by norm_num
 
 end SuperKaehlerGeometry
 

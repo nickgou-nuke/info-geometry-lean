@@ -10,7 +10,7 @@ import Mathlib.Topology.Order
 # InfoGeometry.Canonical.ManifoldDegreeCore
 
 Canonical manifold-degree primitives leveraging differential geometry.
-Transitioned from discrete surrogates to Jacobian-based local degree signs.
+Transitioned from discrete encodings to Jacobian-based local degree signs.
 -/
 
 namespace InfoGeometry.Canonical.ManifoldDegree

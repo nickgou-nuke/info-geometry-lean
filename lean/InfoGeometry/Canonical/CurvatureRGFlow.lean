@@ -1,10 +1,8 @@
-import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.RGFlow
 import Mathlib.Analysis.Calculus.MeanValue
 
 namespace InfoGeometry.Canonical.CurvatureRGFlow
 
-open InfoGeometry.Canonical.HeatKernel
 open InfoGeometry.Canonical.RGFlow
 open InfoGeometry.Convex
 

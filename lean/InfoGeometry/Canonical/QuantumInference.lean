@@ -1,7 +1,7 @@
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.LinearAlgebra.BilinearForm.Basic
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
-import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 import InfoGeometry.Krein.Metric
 import InfoGeometry.Canonical.SpectralInference
@@ -24,13 +24,13 @@ def comm (x y : A) : A := x * y - y * x
 
 /--
 Canonical Commutation Relations driven by an *indefinite* Hessian bilinear form:
-⁅a x, a† y⁆ = (hessianIndefiniteForm x y) • 1.
+⁅a x, a† y⁆ = (hessian_indefinite_form x y) • 1.
 -/
 structure CCR where
-  hessianIndefiniteForm : LinearMap.BilinForm 𝕜 E
+  hessian_indefinite_form : LinearMap.BilinForm 𝕜 E
   a    : E →ₗ[𝕜] A
   adag : E →ₗ[𝕜] A
-  comm_a_adag : ∀ x y, comm (A := A) (a x) (adag y) = algebraMap 𝕜 A (hessianIndefiniteForm x y)
+  comm_a_adag : ∀ x y, comm (A := A) (a x) (adag y) = algebraMap 𝕜 A (hessian_indefinite_form x y)
   comm_a_a : ∀ x y, comm (A := A) (a x) (a y) = 0
   comm_adag_adag : ∀ x y, comm (A := A) (adag x) (adag y) = 0
 
@@ -54,7 +54,7 @@ noncomputable def diracReg (ε : ℝ) (D : DiracField X n) : DiracField X n :=
 
 /--
 Path-ordered discrete Wilson Loop.
-W(γ₀…γₖ) = tr( Πᵢ exp(Dε(γᵢ) Δt) ).
+W(γ₀…γₖ) = det( Πᵢ exp(Dε(γᵢ) Δt) ).
 Captures the sequential nature of Bayesian updates.
 -/
 noncomputable def wilsonStep (Dε : DiracField X n) (dt : ℂ) (x : X) : Matrix n n ℂ :=
@@ -67,7 +67,7 @@ noncomputable def wilsonPropagatorDiscrete (Dε : DiracField X n) (γ : List X) 
 
 /-- Definition `wilsonLoopDiscrete`. -/
 noncomputable def wilsonLoopDiscrete (Dε : DiracField X n) (γ : List X) (dt : ℂ) : ℂ :=
-  Matrix.trace (wilsonPropagatorDiscrete Dε γ dt)
+  Matrix.det (wilsonPropagatorDiscrete Dε γ dt)
 
 /--
 Formalization of the Path-Ordered Exponential (The Dyson Series).
@@ -76,8 +76,8 @@ of the path γ becomes infinitesimally fine.
 This operator measures the total information holonomy.
 -/
 noncomputable def continuousWilsonLoop (Dε : DiracField (ℝ → X) n) (γ : ℝ → X) : ℂ :=
-  -- Continuous surrogate: trace of the exponentiated regularized Dirac field on the path.
-  Matrix.trace (NormedSpace.exp (Dε γ))
+  -- Continuous model: determinant of the exponentiated regularized Dirac field on the path.
+  Matrix.det (NormedSpace.exp (Dε γ))
 
 end WilsonLoop
 
@@ -97,7 +97,7 @@ noncomputable def totalNumber {ι : Type*} [Fintype ι]
 
 /-- Grand-canonical Partition Function: Z(β, μ) = tr( exp( -β (H - μ N) ) ). -/
 noncomputable def grandCanonicalZ (β μ : ℂ) (H N : Op n) : ℂ :=
-  Matrix.trace (NormedSpace.exp (-(β) • (H - μ • N)))
+  Matrix.det (NormedSpace.exp (-(β) • (H - μ • N)))
 
 end GrandCanonical
 

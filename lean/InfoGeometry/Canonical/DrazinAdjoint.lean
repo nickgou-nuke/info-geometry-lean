@@ -1,4 +1,4 @@
-import InfoGeometry.Singular.DrazinAdjoint
+import InfoGeometry.Singular.Drazin
 
 /-!
 # InfoGeometry.Canonical.DrazinAdjoint

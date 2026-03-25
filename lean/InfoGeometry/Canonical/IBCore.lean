@@ -1,14 +1,21 @@
-import Architect
-import InfoGeometry.EntropicInference
+import InfoGeometry.Canonical.IBUnnormalized
+import InfoGeometry.Canonical.IBNormalize
+import InfoGeometry.Canonical.IBTilted
+import InfoGeometry.Canonical.IBDynamics
+import InfoGeometry.Canonical.IBFrozenDescent
+import InfoGeometry.Canonical.IBFiniteIteration
 
 /-!
 # InfoGeometry.Canonical.IBCore
 
-Canonical core for the Information Bottleneck finite scaffold.
-This module establishes the variational foundation and BA-iteration monotonicity.
+Canonical umbrella for the finite Information Bottleneck stack:
+- unnormalized finite-measure score layer
+- normalization bridge to PMFs
+- tilted/Jaynes measure layer
+- BA/projective dynamics
+- frozen free-energy and Lyapunov descent
+- iteration-level frozen-target and current-target descent
 -/
-
-open scoped BigOperators
 
 namespace InfoGeometry.Canonical.IB
 

@@ -3,6 +3,7 @@ set -euo pipefail
 
 echo "[strict-check] building canonical entrypoints with warnings as errors"
 lake build InfoGeometry --wfail
+python3 tools/run_locked_lake_build.py InfoGeometry --wfail
 
 echo "[strict-check] elaborating InfoGeometry/Library.lean"
 lake env lean lean/InfoGeometry/Library.lean
@@ -59,6 +60,15 @@ if rg -n "\\b(sorry|admit)\\b|content will be moved here" "${CANONICAL_PATHS[@]}
   echo "[strict-check] placeholder content detected"
   exit 1
 fi
+
+echo "[strict-check] enforcing quarantine boundary"
+bash scripts/enforce_quarantine_imports.sh
+
+echo "[strict-check] running constructivity audit on stable surface"
+python3 scripts/quality/audit_constructivity.py --mode stable
+
+echo "[strict-check] running surrogate dependency audit"
+scripts/audit_surrogates.sh
 
 echo "[strict-check] OK"
 echo "[strict-check] running naming convention audit"

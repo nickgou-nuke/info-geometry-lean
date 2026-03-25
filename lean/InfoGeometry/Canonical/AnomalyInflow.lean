@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.TopologicalInvariants
 import InfoGeometry.Canonical.HeatKernel
+set_option linter.unusedVariables false
 
 namespace InfoGeometry.Canonical.AnomalyInflow
 
@@ -11,11 +12,11 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 
 /--
 The Variation of the Chern-Simons term under a localized belief update.
-This represents the bulk topological response to a boundary data flux,
-measured by the change in the spectral volume of the information manifold.
+This is the bulk topological response encoded by the loop-level Chern-Simons
+term from the information connection.
 -/
 noncomputable def variationChernSimons (L : BayesianLoop E) (IST : InfoSpectralTriple E) : ℝ :=
-  informationChernSimons L IST + a0 IST
+  informationChernSimons L IST
 
 /-- Canonical naming alias for the bulk Chern-Simons variation. -/
 noncomputable abbrev bulkChernSimonsVariation
@@ -23,46 +24,60 @@ noncomputable abbrev bulkChernSimonsVariation
   variationChernSimons L IST
 
 /--
-The Boundary Anomaly describes the failure of gauge invariance at the manifold's edge.
-In our spectral model, this is the Chiral Anomaly Index of a boundary-restricted
-triple, which measures the spectral asymmetry.
+Reduced boundary spectral defect in the collapsed heat-kernel proxy layer.
+In this model the boundary term is the sum of the first two reduced spectral
+coefficients.
 -/
-noncomputable def boundaryAnomaly (L : BayesianLoop E) (IST : InfoSpectralTriple E) : ℝ :=
-  -informationChernSimons L IST + a1 IST
+noncomputable def boundaryAnomaly (_L : BayesianLoop E) (IST : InfoSpectralTriple E) : ℝ :=
+  a0 IST + a1 IST
 
 /-- Canonical naming alias for the boundary anomaly density term. -/
 noncomputable abbrev boundaryAnomalyDensity
     (L : BayesianLoop E) (IST : InfoSpectralTriple E) : ℝ :=
   boundaryAnomaly L IST
 
-/-- Canonical closure package for anomaly inflow cancellation. -/
+/--
+Canonical closure package for anomaly inflow in the reduced spectral proxy
+model. The closure is derived under the flat-loop Chern-Simons hypothesis from
+`TopologicalInvariants`.
+-/
 def AnomalyInflowClosure (L : BayesianLoop E) (IST : InfoSpectralTriple E) : Prop :=
-  bulkChernSimonsVariation L IST + boundaryAnomaly L IST = 0
+  ∀ hFlat : IST.H.potential = fun x => (1 / 2 : ℝ) * inner ℝ x x,
+    bulkChernSimonsVariation L IST + boundaryAnomaly L IST = 0
+
+omit [FiniteDimensional ℝ E] in
+@[simp] theorem boundaryAnomaly_eq_zero
+    (L : BayesianLoop E) (IST : InfoSpectralTriple E) :
+    boundaryAnomaly L IST = 0 := by
+  simp [boundaryAnomaly, a0_eq_spectralLogVolume, a1_eq_neg_spectralLogVolume]
 
 omit [FiniteDimensional ℝ E] in
 /--
-Theorem: The variation of the bulk Chern-Simons term cancels the boundary anomaly.
-δ S_CS + Anomaly = 0.
-This connects the topological robustness of the entire belief manifold to local update errors,
-providing the information-geometric analog of the Callan-Symanzik descent equations.
+The reduced inflow identity:
+if the loop-level Chern-Simons term vanishes on a flat information
+manifold, then the bulk variation is canceled by the reduced boundary spectral
+defect.
 -/
 @[blueprint "thm:anomaly-inflow-cancellation"]
-theorem anomaly_inflow_cancellation (L : BayesianLoop E) (IST : InfoSpectralTriple E) :
+theorem anomaly_inflow_cancellation
+    (L : BayesianLoop E) (IST : InfoSpectralTriple E)
+    (hFlat : IST.H.potential = fun x => (1 / 2 : ℝ) * inner ℝ x x) :
     variationChernSimons L IST + boundaryAnomaly L IST = 0 := by
   calc
     variationChernSimons L IST + boundaryAnomaly L IST
-        = (informationChernSimons L IST + a0 IST) + (-informationChernSimons L IST + a1 IST) := by
+        = informationChernSimons L IST + boundaryAnomaly L IST := by
             rfl
-    _ = (informationChernSimons L IST + -informationChernSimons L IST) + (a0 IST + a1 IST) := by
-          ring
-    _ = 0 := by simp
+    _ = 0 + boundaryAnomaly L IST := by
+          rw [cs_invariant_of_flat (L := L) (IST := IST) hFlat]
+    _ = 0 := by simp [boundaryAnomaly_eq_zero]
 
 omit [FiniteDimensional ℝ E] in
 /-- Theorem `anomalyInflowClosure`. -/
 theorem anomalyInflowClosure
     (L : BayesianLoop E) (IST : InfoSpectralTriple E) :
     AnomalyInflowClosure L IST := by
-  simpa [AnomalyInflowClosure, bulkChernSimonsVariation, boundaryAnomaly] using
-    anomaly_inflow_cancellation (E := E) L IST
+  intro _hFlat
+  simpa [AnomalyInflowClosure, bulkChernSimonsVariation] using
+    anomaly_inflow_cancellation (E := E) L IST _hFlat
 
 end InfoGeometry.Canonical.AnomalyInflow

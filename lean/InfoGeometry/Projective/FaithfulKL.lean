@@ -5,8 +5,11 @@ import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic
 
-namespace InfoGeometry.Projective.FaithfulKL
-end InfoGeometry.Projective.FaithfulKL
+
+namespace InfoGeometry
+
+namespace Projective.FaithfulKL
+end Projective.FaithfulKL
 
 open scoped BigOperators
 
@@ -84,3 +87,5 @@ lemma generalizedKL_normalize_nonneg [Nonempty α]
   exact h
 
 end PositiveMeasure
+
+end InfoGeometry

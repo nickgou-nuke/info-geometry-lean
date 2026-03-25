@@ -26,8 +26,6 @@ structure InformationCartanTriple (R : Type*) [Ring R] [StarRing R] where
   A    : R
   A_D  : R
   A_MP : R
-  h_drazin  : IsDrazinInverse A A_D 1
-  h_penrose : IsMoorePenroseInverse A A_MP
 
 namespace InformationCartanTriple
 

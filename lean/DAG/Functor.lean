@@ -3,6 +3,7 @@ import DAG.Basic
 import DAG.Disassembler
 import DAG.Isomorphism
 import DAG.QueryEngine
+import InfoGeometry.Canonical.SpineAttributes
 
 open Lean
 open DAG
@@ -20,37 +21,96 @@ structure MorphismInfo where
   cod  : Name
   deriving BEq, Hashable, Repr
 
-/-- Shallow, pure morphism recognition to avoid MetaM/whnf overhead during global scans. -/
-def recognizeMorphismShallow (e : Expr) : Option (Expr × Expr) :=
+/--
+Pure extraction of direct unary-arrow signatures after skipping leading implicit
+and instance binders. This keeps authority separate from extraction, while still
+harvesting declarations such as `X.toY` that are parameterized over universes
+and typeclasses before their principal object argument.
+-/
+partial def extractDirectMorphismSignature (e : Expr) : Option (Expr × Expr) :=
   match e with
-  | .forallE _ d b _ =>
-      if !b.hasLooseBVars then some (d, b) else none
-  | _ =>
-      let fn := e.getAppFn
-      let args := e.getAppArgs
-      if fn.isConst && args.size >= 2 then
-        let s := fn.constName!.toString
-        if s.endsWith "Hom" || s.endsWith "Equiv" || s.endsWith "Iso" || s.endsWith "Map" then
-          some (args[args.size - 2]!, args[args.size - 1]!)
-        else none
-      else none
+  | .forallE _ d b bi =>
+      if bi.isExplicit then
+        if !(b.hasLooseBVar 0) then some (d, b) else none
+      else
+        extractDirectMorphismSignature b
+  | _ => none
 
-def getAllMorphisms (env : Environment) (ns? : Option Name := none) : IO (Array MorphismInfo) := do
-  let mut morphs := #[]
+/-- Conservative extraction of named morphism-family signatures. -/
+def extractNamedMorphismSignature (e : Expr) : Option (Expr × Expr) :=
+  let fn := e.getAppFn
+  let args := e.getAppArgs
+  if fn.isConst && args.size >= 2 then
+    let s := fn.constName!.toString
+    if s.endsWith "Hom" || s.endsWith "Equiv" || s.endsWith "Iso" || s.endsWith "Map" then
+      some (args[args.size - 2]!, args[args.size - 1]!)
+    else none
+  else none
+
+/-- Pure structural extraction of domain/codomain without authority semantics. -/
+def extractMorphismSignature (e : Expr) : Option (Expr × Expr) :=
+  extractDirectMorphismSignature e <|> extractNamedMorphismSignature e
+
+/-- Legacy heuristic recognizer retained for discovery mode. -/
+def recognizeMorphismShallow (e : Expr) : Option (Expr × Expr) :=
+  extractMorphismSignature e
+
+private def isHeuristicMorphismName (declName : Name) : Bool :=
+  let s := declName.toString
+  s.endsWith "Hom" || s.endsWith "Equiv" || s.endsWith "Iso" || s.endsWith "Map"
+
+private def mkCanonicalMorphismInfo? (declName : Name) (e : Expr) : Option MorphismInfo := do
+  let (dom, cod) ← extractMorphismSignature e
+  match dom.getAppFn, cod.getAppFn with
+  | .const d _ , .const c _ =>
+      some { decl := declName, dom := d, cod := c }
+  | _, _ =>
+      none
+
+private def mkHeuristicMorphismInfo? (declName : Name) (e : Expr) : Option MorphismInfo := do
+  if !(isHeuristicMorphismName declName) && (extractNamedMorphismSignature e).isNone then
+    none
+  else
+    mkCanonicalMorphismInfo? declName e
+
+structure MorphismHarvest where
+  canonical     : Array MorphismInfo
+  heuristicOnly : Array MorphismInfo
+  deriving Repr
+
+def getAllMorphismsWithDiagnostics (env : Environment) (ns? : Option Name := none) :
+    IO MorphismHarvest := do
+  let mut canonical := #[]
+  let mut heuristicOnly := #[]
   for (name, ci) in env.constants do
     if let some ns := ns? then
       if !ns.isPrefixOf name then continue
-    match recognizeMorphismShallow ci.type with
-    | some (dom, cod) =>
-        match dom.getAppFn, cod.getAppFn with
-        | .const d _ , .const c _ =>
-            morphs := morphs.push { decl := name, dom := d, cod := c }
-        | _, _ => pure ()
-    | none => pure ()
-  return morphs
+    let isTagged := InfoGeometry.Canonical.isSpineMorphism env name
+    if isTagged then
+      match mkCanonicalMorphismInfo? name ci.type with
+      | some info =>
+          canonical := canonical.push info
+      | none =>
+          pure ()
+    else
+      match mkHeuristicMorphismInfo? name ci.type with
+      | some info =>
+          heuristicOnly := heuristicOnly.push info
+      | none =>
+          pure ()
+  return { canonical := canonical, heuristicOnly := heuristicOnly }
 
-def findCommutativeSquares (env : Environment) (ns? : Option Name := none) : IO (Array (MorphismInfo × MorphismInfo × MorphismInfo × MorphismInfo)) := do
-  let morphs ← getAllMorphisms env ns?
+def getAllMorphisms (env : Environment) (ns? : Option Name := none) (strict : Bool := true) :
+    IO (Array MorphismInfo) := do
+  let harvest ← getAllMorphismsWithDiagnostics env ns?
+  if strict then
+    return harvest.canonical
+  else
+    return harvest.canonical ++ harvest.heuristicOnly
+
+def findCommutativeSquares (env : Environment) (ns? : Option Name := none) (strict : Bool := true) :
+    IO (Array (MorphismInfo × MorphismInfo × MorphismInfo × MorphismInfo)) := do
+  let morphs ← getAllMorphisms env ns? (strict := strict)
   let mut byDom : Std.HashMap Name (Array MorphismInfo) := {}
   for m in morphs do
     byDom := byDom.insert m.dom (byDom.getD m.dom #[] |>.push m)

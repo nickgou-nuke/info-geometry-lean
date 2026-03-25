@@ -1,17 +1,22 @@
 import InfoGeometry.Canonical.AnomalyInflow
-import InfoGeometry.Canonical.ChiralTorsionBridge
-import InfoGeometry.Canonical.WeylInformationGauge
+import InfoGeometry.Canonical.SinkhornFoundation
+import InfoGeometry.Canonical.WeylPathHysteresis
+import InfoGeometry.Canonical.WeylAnomalySource
 
 /-!
 # Research.HolographicEmergence
 
-Constructive theorem package for the full chain:
+Constructive theorem package for the holographic chain:
 
 - emergent time-flow from Sinkhorn/Weyl gauge dynamics
 - anomaly-to-scale (chiral phase) emergence
 - torsion/path-dependence and explicit update-order hysteresis witness
-- boundary anomaly cancellation plus vacuum-apex twistor lift
+
+This module provides the stable, non-vacuous components of the holographic 
+emergence bridge. Degenerate zero-quadratic-form scaffolds have been removed.
 -/
+
+set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.Canonical.HolographicEmergence
 
@@ -19,11 +24,9 @@ open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.WeylInformationGauge
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.InformationTorsion
-open InfoGeometry.Canonical.ChiralTorsionBridge
 open InfoGeometry.Canonical.AnomalyInflow
 open InfoGeometry.Canonical.TopologicalInvariants
 open InfoGeometry.Canonical.SpectralInference
-open InfoGeometry.Twistor
 
 section TimeFlow
 
@@ -44,7 +47,7 @@ end TimeFlow
 
 section AnomalyScale
 
-variable {E : Type}
+variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Anomaly-generated scale phase state (chiral branch). -/
@@ -78,72 +81,18 @@ theorem exists_gaugeOrderHysteresis_witness :
       (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))
       (hcol : HasPositiveColSums 2 M)
       (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
-      UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol :=
-  exists_updateOrderHysteresis_n2
+      UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol := by
+  refine ⟨weylOrderWitnessMatrix2,
+    weylOrderWitnessMatrix2_positiveRows,
+    weylOrderWitnessMatrix2_positiveCols_afterRow,
+    weylOrderWitnessMatrix2_positiveCols,
+    weylOrderWitnessMatrix2_positiveRows_afterCol,
+    ?_⟩
+  unfold UpdateOrderHysteresis rowThenColUpdate colThenRowUpdate
+  intro hEq
+  have h00 := congrArg (fun A => A (0 : Fin 2) (0 : Fin 2)) hEq
+  norm_num [colNormalize, rowNormalize, rowSum, colSum, weylOrderWitnessMatrix2] at h00
 
 end TorsionHysteresis
-
-section BoundaryTwistor
-
-variable {E : Type}
-  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-
-/-- Boundary closure: bulk variation cancels boundary anomaly. -/
-theorem boundaryAnomalyCancellation
-    (L : BayesianLoop E) (IST : InfoSpectralTriple E) :
-    AnomalyInflowClosure (E := E) L IST :=
-  anomalyInflowClosure (E := E) L IST
-
-omit [CompleteSpace E] in
-/-- Null vacuum-apex representative lifts to a twistor point. -/
-theorem vacuumApexNull_lifts_to_twistor
-    (Q : QuadraticForm ℝ (DoubledSpace E))
-    (v : UnnormalizedProjectiveState (E := E))
-    (hNull : IsVacuumApexNull (E := E) Q v) :
-    ∃ t : DoubledTwistorSpace (E := E) Q, t = vacuumApexTwistor (E := E) Q v hNull := by
-  exact ⟨vacuumApexTwistor (E := E) Q v hNull, rfl⟩
-
-end BoundaryTwistor
-
-section Package
-
-variable (n : Nat)
-variable {X : Type}
-  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
-
-/--
-Full constructive holographic-emergence package in one theorem:
-time-flow + anomaly-scale + torsion/hysteresis + boundary/twistor closure.
--/
-theorem holographicEmergence_package
-    (Tflow : SinkhornTrajectory n)
-    (CI : ConformalInference X)
-    (hAnom : CI.chiralAnomalyOperator ≠ 0)
-    (Tw : TwistedInference X)
-    (L : BayesianLoop X)
-    (IST : InfoSpectralTriple X)
-    (Q : QuadraticForm ℝ (DoubledSpace X))
-    (v : UnnormalizedProjectiveState (E := X))
-    (hNull : IsVacuumApexNull (E := X) Q v) :
-    EmergentTimeFlow n Tflow
-      ∧ AnomalyScalePhase CI
-      ∧ UpdateOrderPathDependent Tw.dual.nabla
-      ∧ (∃ (M : Coupling 2)
-          (hrow : HasPositiveRowSums 2 M)
-          (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))
-          (hcol : HasPositiveColSums 2 M)
-          (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
-          UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol)
-      ∧ AnomalyInflowClosure (E := X) L IST
-      ∧ (∃ t : DoubledTwistorSpace (E := X) Q, t = vacuumApexTwistor (E := X) Q v hNull) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact emergentTimeFlow_of_sinkhornTrajectory (n := n) Tflow
-  · exact anomalyScalePhase_of_nonzeroAnomaly (CI := CI) hAnom
-  · exact pathDependence_of_twistedInference (T := Tw)
-  · exact exists_gaugeOrderHysteresis_witness
-  · exact boundaryAnomalyCancellation (E := X) L IST
-  · exact vacuumApexNull_lifts_to_twistor (E := X) Q v hNull
-
-end Package
 
 end InfoGeometry.Canonical.HolographicEmergence

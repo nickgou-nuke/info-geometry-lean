@@ -38,23 +38,23 @@ There are **two** fundamental symmetries used in the project, and they define **
 - Krein form: `⟪x₁,y₁⟫ - ⟪x₂,y₂⟫`
 
 2) Neutral Hessian/Bogoliubov model (cross-term):
-- carrier: `NeutralSpace E` (a newtype wrapper over `WithLp 2 (E × E)`)
+- carrier: `NeutralSpace E` (a hardened wrapper over `DoubledSpace E`)
 - symmetry: `J_neut(x,y) = (y, x)`
 - Krein form: `⟪x₁,y₂⟫ + ⟪x₂,y₁⟫`
 
-These are not definitionally equal, and must not share a single `KreinSpace` instance.
-Newtype isolation is required to prevent instance resonance.
+The diagonal and neutral carriers are now type-distinct, with explicit transport maps.
 
 ## Canonical equivalence between models (implemented bridge)
 
-The diagonal and neutral forms are congruent via the 45° rotation:
+The diagonal and neutral charts are related by the 45° rotation:
 
 `P(x,y) := ( (x+y)/√2 , (x-y)/√2 )`.
 
-This is implemented as `NeutralSpace.rotation45KreinEquiv` in `HilbertBridge.lean`,
-as a `KreinEquiv` from the neutral model to the diagonal model preserving `kreinInner`.
-This is the mathematically correct bridge between the Hessian/Bogoliubov pairing and
-the diagonal `(n,n)` Krein model.
+This is implemented as `NeutralSpace.rotation45`,
+`NeutralSpace.rotation45ContinuousLinearEquiv`, and `NeutralSpace.rotation45ToHilbert`
+in `HilbertBridge.lean`.
+At present this bridge is used as a Hilbert/continuous-linear transport surface; a full
+`KreinEquiv` theorem would require additional structure-preservation proofs.
 
 ## Layer 4 status (Clifford modules)
 

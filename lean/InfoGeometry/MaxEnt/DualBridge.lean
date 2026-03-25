@@ -1,4 +1,5 @@
 import InfoGeometry.MaxEnt.Optimality
+import InfoGeometry.PositiveMeasure
 
 open scoped BigOperators
 
@@ -78,42 +79,54 @@ theorem entropy_le_dualObjective_on_constraint
     (q : Fin n → ℝ)
     (hq : q ∈ MaxEntConstraint (n := n) f E) :
     entropy q 1 ≤ dualObjective (n := n) f E lam := by
-  have hKLnonneg :
-      0 ≤ InfoGeometry.klDiv
-        (probDistOfSimplex (n := n) q hq.1)
-        (gibbsDist (n := n) f lam) := by
-    apply InfoGeometry.KL.klDiv_nonneg_of_fullSupport
+  have hterm :
+      ∀ i,
+        -(q i * Real.log (q i))
+          ≤ -(q i * Real.log (gibbs f lam i)) - q i + gibbs f lam i := by
     intro i
-    show 0 < (gibbsDist (n := n) f lam).prob i
-    simpa [gibbsDist] using gibbs_pos (f := f) (lam := lam) i
-  have hKLexpand :
-      InfoGeometry.klDiv
-        (probDistOfSimplex (n := n) q hq.1)
-        (gibbsDist (n := n) f lam)
-        = ∑ i, q i * (Real.log (q i) - Real.log (gibbs f lam i)) := by
-    unfold InfoGeometry.klDiv InfoGeometry.expectation InfoGeometry.logDensity
-    simp [probDistOfSimplex, gibbsDist]
-  have hkl :
-      0 ≤ (∑ i, q i * Real.log (q i)) - (∑ i, q i * Real.log (gibbs f lam i)) := by
-    have htmp := hKLnonneg
-    rw [hKLexpand] at htmp
-    have hsum :
-        ∑ i, q i * (Real.log (q i) - Real.log (gibbs f lam i))
-          = (∑ i, q i * Real.log (q i)) - (∑ i, q i * Real.log (gibbs f lam i)) := by
+    by_cases hqi : q i = 0
+    · have hgi : 0 ≤ gibbs f lam i := gibbs_nonneg f lam i
+      simp [hqi]
+      linarith
+    · have hqi_pos : 0 < q i := lt_of_le_of_ne (hq.1.1 i) (Ne.symm hqi)
+      have hgi_pos : 0 < gibbs f lam i := gibbs_pos f lam i
+      have hdiv :
+          Real.log (q i / gibbs f lam i)
+            = Real.log (q i) - Real.log (gibbs f lam i) :=
+        Real.log_div hqi hgi_pos.ne'
+      have hgkl :
+          0 ≤ q i * Real.log (q i / gibbs f lam i) - q i + gibbs f lam i :=
+        PositiveMeasure.gklTerm_nonneg (x := q i) (y := gibbs f lam i) hqi_pos hgi_pos
+      rw [hdiv] at hgkl
+      linarith
+  have hsum :
+      ∑ i, -(q i * Real.log (q i))
+        ≤ ∑ i, (-(q i * Real.log (gibbs f lam i)) - q i + gibbs f lam i) := by
+    exact Finset.sum_le_sum (fun i _ => hterm i)
+  have hq_le_cross :
+      entropy q 1 ≤ -∑ i, q i * Real.log (gibbs f lam i) := by
+    have hqsum : ∑ i, q i = 1 := hq.1.2
+    have hgsum : ∑ i, gibbs f lam i = 1 := gibbs_sum_one f lam
+    have hq_form : entropy q 1 = ∑ i, -(q i * Real.log (q i)) := by
+      simp [entropy]
+    have hcross_form :
+        ∑ i, (-(q i * Real.log (gibbs f lam i)) - q i + gibbs f lam i)
+          = (-∑ i, q i * Real.log (gibbs f lam i)) - (∑ i, q i) + (∑ i, gibbs f lam i) := by
       calc
-        ∑ i, q i * (Real.log (q i) - Real.log (gibbs f lam i))
-            = ∑ i, (q i * Real.log (q i) - q i * Real.log (gibbs f lam i)) := by
+        ∑ i, (-(q i * Real.log (gibbs f lam i)) - q i + gibbs f lam i)
+            = ∑ i, (-(q i * Real.log (gibbs f lam i)) + (-q i) + gibbs f lam i) := by
                 refine Finset.sum_congr rfl ?_
                 intro i hi
                 ring
-        _ = (∑ i, q i * Real.log (q i)) - (∑ i, q i * Real.log (gibbs f lam i)) := by
-              rw [Finset.sum_sub_distrib]
-    exact hsum ▸ htmp
-  have hq_le_cross :
-      entropy q 1 ≤ -∑ i, q i * Real.log (gibbs f lam i) := by
-    have hq_form : entropy q 1 = -∑ i, q i * Real.log (q i) := by
-      simp [entropy]
-    linarith [hkl, hq_form]
+        _ = (∑ i, -(q i * Real.log (gibbs f lam i))) + (∑ i, -q i) + (∑ i, gibbs f lam i) := by
+              simp [Finset.sum_add_distrib, add_left_comm, add_comm]
+        _ = (-∑ i, q i * Real.log (gibbs f lam i)) - (∑ i, q i) + (∑ i, gibbs f lam i) := by
+              simp [sub_eq_add_neg, add_left_comm, add_comm]
+    have hsum' :
+        entropy q 1
+          ≤ (-∑ i, q i * Real.log (gibbs f lam i)) - (∑ i, q i) + (∑ i, gibbs f lam i) := by
+      simpa [hq_form, hcross_form] using hsum
+    linarith
   calc
     entropy q 1 ≤ -∑ i, q i * Real.log (gibbs f lam i) := hq_le_cross
     _ = dualObjective (n := n) f E lam :=

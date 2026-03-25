@@ -1,72 +1,77 @@
-import InfoGeometry.Canonical.SpectralInference
-import Mathlib.LinearAlgebra.Matrix.Trace
+import InfoGeometry.Canonical.RicciMongeAmpere
 import Mathlib.Analysis.SpecialFunctions.Exp
 
 namespace InfoGeometry.Canonical.HeatKernel
 
+open InfoGeometry.Canonical.RicciMongeAmpere
 open InfoGeometry.Canonical.SpectralInference
 open InfoGeometry.Convex
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [FiniteDimensional ℝ E]
 
-/-- Spectral volume surrogate from the basepoint Fisher metric trace. -/
-noncomputable def spectralVolume (IST : InfoSpectralTriple E) : ℝ :=
-  LinearMap.trace ℝ E (IST.H.metricOp IST.x₀).toLinearMap
+/-- Spectral log-volume proxy from the basepoint Fisher metric Jacobian determinant. -/
+noncomputable def spectralLogVolume (IST : InfoSpectralTriple E) : ℝ :=
+  spectralBasepointLogVolume IST
+
+omit [FiniteDimensional ℝ E] in
+@[simp] lemma spectralLogVolume_eq_spectralBasepointLogVolume (IST : InfoSpectralTriple E) :
+    spectralLogVolume IST = spectralBasepointLogVolume IST := rfl
 
 /--
-The Heat Trace K(t) = Tr(e^{-t D^2}).
-In our InfoSpectralTriple, D^2 = ∇^2ψ (the Fisher Metric).
+Reduced heat-trace proxy `K(t)` in the collapsed log-volume model.
+This is a reduced scalar model, not an operator trace `Tr(exp(-t D^2))`.
 -/
 noncomputable def heatTrace (IST : InfoSpectralTriple E) (t : ℝ) : ℝ :=
-  -- First-order spectral surrogate: e^{-t} weighted spectral volume.
-  Real.exp (-t) * spectralVolume IST
+  Real.exp (-t) * spectralLogVolume IST
 
-/-! ### Seeley-DeWitt Expansion and Curvature -/
+/-! ### Reduced Spectral Coefficients and Curvature Proxies -/
 
 /-- 
-The zeroth Seeley-DeWitt coefficient a₀.
-a₀ = (4πt)^{-d/2} ∫ √g dx.
-Represents the 'Information Volume' (Model Complexity).
+Reduced zeroth spectral coefficient proxy.
+In this collapsed model it is the basepoint spectral log-volume scalar.
 -/
 noncomputable def a0 (IST : InfoSpectralTriple E) : ℝ :=
-  -- Zeroth coefficient of e^{-t} * V is V.
-  spectralVolume IST
+  spectralLogVolume IST
 
 omit [FiniteDimensional ℝ E] in
-@[simp] lemma a0_eq_spectralVolume (IST : InfoSpectralTriple E) :
-    a0 IST = spectralVolume IST := rfl
+@[simp] lemma a0_eq_spectralLogVolume (IST : InfoSpectralTriple E) :
+    a0 IST = spectralLogVolume IST := rfl
 
-/-- 
-The first Seeley-DeWitt coefficient a₁.
-a₁ = (4πt)^{-d/2 + 1} (1/6) ∫ R √g dx.
-Represents the 'Total Scalar Curvature' of the belief space.
-This coefficient is the spectral signature of 'Fisher Tension'.
+/--
+Reduced first spectral coefficient proxy.
+It is defined from the already-landed spinorial scalar-curvature scalar.
 -/
 noncomputable def a1 (IST : InfoSpectralTriple E) : ℝ :=
-  -- First coefficient of e^{-t} * V is -V.
-  - spectralVolume IST
+  (1 / 6 : ℝ) * spinorialScalarCurvature IST
 
 omit [FiniteDimensional ℝ E] in
-@[simp] lemma a1_eq_neg_spectralVolume (IST : InfoSpectralTriple E) :
-    a1 IST = - spectralVolume IST := rfl
+@[simp] lemma a1_eq_neg_spectralLogVolume (IST : InfoSpectralTriple E) :
+    a1 IST = - spectralLogVolume IST := by
+  rw [a1]
+  rw [spinorialScalarCurvature_eq_neg_six_spectralBasepointLogVolume]
+  ring_nf
+  simp [spectralLogVolume]
 
 /--
-Spectral definition of the Total Scalar Curvature R.
-Calculated as the coefficient of the O(t) term in the heat trace expansion.
+Integrated scalar-curvature proxy supplied by the spinorial curvature layer.
 -/
 noncomputable def totalScalarCurvature (IST : InfoSpectralTriple E) : ℝ :=
-  -- From the heat trace: R_total = 6 * a1.
-  6 * a1 IST
+  spinorialScalarCurvature IST
 
 omit [FiniteDimensional ℝ E] in
-@[simp] lemma totalScalarCurvature_eq_neg_six_spectralVolume (IST : InfoSpectralTriple E) :
-    totalScalarCurvature IST = -6 * spectralVolume IST := by
-  simp [totalScalarCurvature]
+@[simp] lemma totalScalarCurvature_eq_spinorialScalarCurvature
+    (IST : InfoSpectralTriple E) :
+    totalScalarCurvature IST = spinorialScalarCurvature IST := rfl
+
+omit [FiniteDimensional ℝ E] in
+@[simp] lemma totalScalarCurvature_eq_neg_six_spectralLogVolume (IST : InfoSpectralTriple E) :
+    totalScalarCurvature IST = -6 * spectralLogVolume IST := by
+  simp [spectralLogVolume, totalScalarCurvature]
 
 /--
-The Einstein-Hilbert Action of the Information Manifold.
-S_EH = ∫ R √g d^nx.
-This action penalizes non-flatness (inconsistent belief updates) in the manifold.
+Reduced Einstein-Hilbert action proxy.
+In this file it is just a naming alias for the integrated scalar-curvature proxy.
 -/
 noncomputable def einsteinHilbertAction (IST : InfoSpectralTriple E) : ℝ :=
   totalScalarCurvature IST
@@ -76,8 +81,8 @@ omit [FiniteDimensional ℝ E] in
     einsteinHilbertAction IST = totalScalarCurvature IST := rfl
 
 omit [FiniteDimensional ℝ E] in
-@[simp] lemma einsteinHilbertAction_eq_neg_six_spectralVolume (IST : InfoSpectralTriple E) :
-    einsteinHilbertAction IST = -6 * spectralVolume IST := by
+@[simp] lemma einsteinHilbertAction_eq_neg_six_spectralLogVolume (IST : InfoSpectralTriple E) :
+    einsteinHilbertAction IST = -6 * spectralLogVolume IST := by
   simp [einsteinHilbertAction]
 
 end InfoGeometry.Canonical.HeatKernel

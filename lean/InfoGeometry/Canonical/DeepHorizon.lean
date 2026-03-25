@@ -33,9 +33,13 @@ export InfoGeometry.Canonical.Cayley (
 
 export InfoGeometry.Canonical.TomitaTakesaki (
   cptAtoms_generate_splitCliffordAlg
+  DiagonalPositiveTimeVector
+  PositiveTimeVector
   modularConjugationJ
   modularSignEpsilon
   modularComplexI
+  modularSignAdditiveModularFlow
+  modularAtomRepresentation
   tomitaRepresentation
 )
 
@@ -46,9 +50,6 @@ export InfoGeometry.Canonical.HolographicEmergence (
   anomalyScalePhase_of_nonzeroAnomaly
   pathDependence_of_twistedInference
   exists_gaugeOrderHysteresis_witness
-  boundaryAnomalyCancellation
-  vacuumApexNull_lifts_to_twistor
-  holographicEmergence_package
 )
 
 end InfoGeometry.Canonical.DeepHorizon

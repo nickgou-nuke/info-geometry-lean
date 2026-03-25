@@ -6,7 +6,7 @@ import Mathlib.Analysis.Calculus.Deriv.Basic
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.ProdL2
-import Mathlib.LinearAlgebra.Trace
+import Mathlib.LinearAlgebra.Determinant
 import Mathlib.Tactic.NormNum
 
 /-!
@@ -22,12 +22,19 @@ real carrier and connects vorticity to the commutator anomaly
 namespace InfoGeometry.Canonical
 
 open scoped InnerProductSpace
+open InfoGeometry.Krein
 
 /-- Linearized velocity field (Jacobian-level) on a real Hilbert carrier. -/
 abbrev VelocityField
     (E : Type _)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : Type _ :=
   E →L[ℝ] E
+
+/-- Endomorphisms on the canonical doubled carrier. -/
+abbrev AlgebraEnd
+    (E : Type _)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : Type _ :=
+  DoubledSpace E →L[ℝ] DoubledSpace E
 
 /--
 A linearized incompressible fluid state.
@@ -55,7 +62,7 @@ noncomputable def vorticity
 /--
 Modular-level circulation:
 Modeled via the negative logarithmic Radon-Nikodym derivative (the modular Hamiltonian).
-This avoids the 'trace fail' for Type III algebras by using the weight/state `ω`.
+This avoids finite-summation artifacts for Type III algebras by using the weight/state `ω`.
 -/
 noncomputable def modularCirculation
     {E : Type _}
@@ -71,25 +78,38 @@ variable {E : Type _}
   [FiniteDimensional ℝ E]
 
 /--
-Anomaly-to-Vorticity Bridge for Type III contexts.
-The anomaly is mapped to a velocity Jacobian, and 'incompressibility' is verified
-via the positivity and stationarity of the modular density (Shannon/Madelung entropy).
+Canonical fluid state induced by an Einstein anomaly at prescribed positive density.
+-/
+noncomputable def anomalyFluidStateWithDensity
+    (A B_mp B_dr : VelocityField E)
+    (ρ_val : ℝ) (h_pos : ρ_val > 0) :
+    FluidState E :=
+  { u := EinsteinAnomaly A B_mp B_dr
+    ρ := ρ_val
+    p := 0
+    density_stationary := h_pos }
+
+@[simp] lemma anomalyFluidStateWithDensity_u
+    (A B_mp B_dr : VelocityField E)
+    (ρ_val : ℝ) (h_pos : ρ_val > 0) :
+    (anomalyFluidStateWithDensity (E := E) A B_mp B_dr ρ_val h_pos).u
+      = EinsteinAnomaly A B_mp B_dr := rfl
+
+@[simp] lemma anomalyFluidStateWithDensity_rho
+    (A B_mp B_dr : VelocityField E)
+    (ρ_val : ℝ) (h_pos : ρ_val > 0) :
+    (anomalyFluidStateWithDensity (E := E) A B_mp B_dr ρ_val h_pos).ρ = ρ_val := rfl
+
+/--
+Anomaly-to-vorticity state identity at prescribed positive density.
 -/
 theorem anomaly_as_fluid_state_with_density
     (A B_mp B_dr : VelocityField E)
-    (k : ℕ)
-    (h_mp : IsMoorePenroseInverse A B_mp)
-    (h_dr : IsDrazinInverse A B_dr k)
     (ρ_val : ℝ) (h_pos : ρ_val > 0) :
-    ∃ state : FluidState E,
-      state.u = EinsteinAnomaly A B_mp B_dr k h_mp h_dr ∧ state.ρ = ρ_val := by
-  let ε := EinsteinAnomaly A B_mp B_dr k h_mp h_dr
-  let state : FluidState E :=
-    { u := ε
-      ρ := ρ_val
-      p := 0
-      density_stationary := h_pos }
-  exact ⟨state, rfl, rfl⟩
+    (anomalyFluidStateWithDensity (E := E) A B_mp B_dr ρ_val h_pos).u
+      = EinsteinAnomaly A B_mp B_dr ∧
+    (anomalyFluidStateWithDensity (E := E) A B_mp B_dr ρ_val h_pos).ρ = ρ_val := by
+  exact ⟨rfl, rfl⟩
 
 /--
 Modular response theorem:
@@ -125,25 +145,18 @@ lemma vorticity_eq_self_of_skew
     _ = u := by norm_num
 
 /--
-Operator-level membrane bridge:
-The Einstein Anomaly [P_D, P_MP], being a commutator, is naturally trace-free.
-Therefore, it can directly serve as the velocity Jacobian of an incompressible fluid state.
+Canonical unit-density anomaly state.
 -/
+noncomputable def anomalyFluidState
+    (A B_mp B_dr : VelocityField E) :
+    FluidState E :=
+  anomalyFluidStateWithDensity (E := E) A B_mp B_dr 1 (by norm_num)
+
+/-- Operator-level membrane identity on the canonical unit-density anomaly state. -/
 theorem anomaly_as_fluid_state
-    (A B_mp B_dr : VelocityField E)
-    (k : ℕ)
-    (h_mp : IsMoorePenroseInverse A B_mp)
-    (h_dr : IsDrazinInverse A B_dr k) :
-    ∃ state : FluidState E,
-      state.u = EinsteinAnomaly A B_mp B_dr k h_mp h_dr := by
-  let ε := EinsteinAnomaly A B_mp B_dr k h_mp h_dr
-  let state : FluidState E :=
-    { u := ε
-      ρ := 1
-      p := 0
-      -- Incompressibility: the modular density is stationary under the flow
-      density_stationary := by norm_num }
-  exact ⟨state, rfl⟩
+    (A B_mp B_dr : VelocityField E) :
+    (anomalyFluidState (E := E) A B_mp B_dr).u = EinsteinAnomaly A B_mp B_dr := by
+  rfl
 
 end RealKreinFluid
 
@@ -177,7 +190,7 @@ def modularVelocity
     AlgebraEnd E :=
   β • modularHamiltonian (E := E) K
 
-omit [CompleteSpace E] [FiniteDimensional ℝ E] in
+set_option linter.unusedSectionVars false in
 /--
 Differential identity at `β = 0`:
 the modular-velocity linear response is the modular Hamiltonian.
@@ -188,43 +201,56 @@ theorem hasDerivAt_modularVelocity_zero
       (fun β : ℝ => modularVelocity (E := E) β K)
       (modularHamiltonian (E := E) K)
       0 := by
-  simpa [modularVelocity, modularHamiltonian] using
-    ((hasDerivAt_id (x := (0 : ℝ))).smul_const (modularHamiltonian (E := E) K))
+  let e : ℝ →L[ℝ] AlgebraEnd E :=
+    (ContinuousLinearMap.id ℝ ℝ).smulRight (modularHamiltonian (E := E) K)
+  have hF : HasFDerivAt (fun β : ℝ => modularVelocity (E := E) β K) e 0 := by
+    simpa [e, modularVelocity, modularHamiltonian] using (e.hasFDerivAt (x := (0 : ℝ)))
+  have hD : HasDerivAt
+      (fun β : ℝ => modularVelocity (E := E) β K)
+      (e 1)
+      0 := hF.hasDerivAt
+  simpa [e, modularVelocity, modularHamiltonian] using hD
 
-omit [CompleteSpace E] [FiniteDimensional ℝ E] in
+set_option linter.unusedSectionVars false in
 /-- Derivative form of `hasDerivAt_modularVelocity_zero`. -/
 theorem deriv_modularVelocity_zero
     (K : AlgebraEnd E) :
     deriv (fun β : ℝ => modularVelocity (E := E) β K) 0 =
       modularHamiltonian (E := E) K := by
-  have hDerivAt :
-      HasDerivAt
-        (fun β : ℝ => modularVelocity (E := E) β K)
-        (modularHamiltonian (E := E) K)
-        (0 : ℝ) :=
-    hasDerivAt_modularVelocity_zero (E := E) K
-  exact HasDerivAt.deriv
-    (𝕜 := ℝ)
-    (f := fun β : ℝ => modularVelocity (E := E) β K)
-    (x := (0 : ℝ))
-    (f' := modularHamiltonian (E := E) K)
-    hDerivAt
+  letI : IsBoundedSMul ℝ (AlgebraEnd E) := by
+    refine IsBoundedSMul.of_norm_smul_le (α := ℝ) (β := AlgebraEnd E) ?_
+    intro c f
+    exact (ContinuousLinearMap.opNorm_smul_le (𝕜₂ := ℝ)
+      (E := DoubledSpace E) (F := DoubledSpace E) c f)
+  change deriv (fun β : ℝ => β • K) 0 = K
+  simpa using (((hasDerivAt_id (0 : ℝ)).smul_const K).deriv)
 
 /-- Linear embedding of the base carrier into the doubled carrier (`x ↦ (x,0)`). -/
 noncomputable def embedBase : E →L[ℝ] ArnoldMajoranaCarrier E where
   toLinearMap :=
-    { toFun := fun x => (x, 0)
-      map_add' := by intro x y; simp
-      map_smul' := by intro a x; simp }
-  cont := by continuity
+    { toFun := fun x => InfoGeometry.Krein.to_doubled x 0
+      map_add' := by
+        intro x y
+        apply (WithLp.ofLp_injective 2)
+        simp [InfoGeometry.Krein.to_doubled]
+      map_smul' := by
+        intro a x
+        apply (WithLp.ofLp_injective 2)
+        simp [InfoGeometry.Krein.to_doubled, smul_zero] }
+  cont := by
+    simpa [InfoGeometry.Krein.to_doubled] using
+      (WithLp.prod_continuous_toLp (p := 2) (α := E) (β := E)).comp
+        (continuous_id.prodMk continuous_const)
 
 /-- First-component projection from doubled carrier to the base carrier. -/
 noncomputable def projBase : ArnoldMajoranaCarrier E →L[ℝ] E where
   toLinearMap :=
-    { toFun := fun v => v.1
-      map_add' := by intro v w; simp
-      map_smul' := by intro a v; simp }
-  cont := by continuity
+    { toFun := fun v => WithLp.fst v
+      map_add' := by intro v w; simp [WithLp.add_fst]
+      map_smul' := by intro a v; simp [WithLp.smul_fst] }
+  cont := by
+    simpa using
+      WithLp.continuous_fst (p := 2) (α := E) (β := E)
 
 /-- Collapses a doubled-carrier modular velocity into a base-carrier velocity field. -/
 noncomputable def collapseToBaseVelocity
@@ -234,14 +260,26 @@ noncomputable def collapseToBaseVelocity
 /-- Thermodynamic/probabilistic smoothing criterion: divergence-free collapsed modular velocity. -/
 def IsThermodynamicallySmoothed
     (β : ℝ) (K : AlgebraEnd E) : Prop :=
-  LinearMap.trace ℝ E
-    (collapseToBaseVelocity (E := E) (modularVelocity (E := E) β K)).toLinearMap = 0
+  Real.log
+      (|LinearMap.det
+        (collapseToBaseVelocity (E := E) (modularVelocity (E := E) β K)).toLinearMap|)
+    = 0
+
+/--
+Canonical smoothing witness at thermal equilibrium (`β = 0`):
+the collapsed modular velocity vanishes, hence its log-volume change is zero.
+-/
+theorem isThermodynamicallySmoothed_zero_beta
+    (K : AlgebraEnd E) :
+    IsThermodynamicallySmoothed (E := E) 0 K := by
+  unfold IsThermodynamicallySmoothed
+  simp [collapseToBaseVelocity, modularVelocity]
 
 /-- Madelung density from the doubled real thermal vacuum amplitude. -/
 noncomputable def madelungDensity
     {K : AlgebraEnd E}
     (vac : ThermalVacuum (E := E) K) : ℝ :=
-  ‖vac.Omega.1‖ ^ (2 : ℕ) + ‖vac.Omega.2‖ ^ (2 : ℕ)
+  ‖WithLp.fst vac.Omega‖ ^ (2 : ℕ) + ‖WithLp.snd vac.Omega‖ ^ (2 : ℕ)
 
 set_option linter.unusedSectionVars false in
 /-- The Madelung density is strictly positive for nondegenerate thermal vacua. -/
@@ -249,20 +287,21 @@ lemma madelungDensity_pos
     {K : AlgebraEnd E}
     (vac : ThermalVacuum (E := E) K) :
     0 < madelungDensity (E := E) vac := by
-  rcases vac with ⟨⟨x, y⟩, _, _, hxy⟩
   dsimp [madelungDensity]
-  by_cases hx : x = 0
-  · have hy : y ≠ 0 := by
+  by_cases hx : WithLp.fst vac.Omega = 0
+  · have hy : WithLp.snd vac.Omega ≠ 0 := by
       intro hy
-      exact hxy (by simp [hx, hy])
-    have hy_pos : 0 < ‖y‖ ^ (2 : ℕ) := by
-      exact pow_pos (norm_pos_iff.mpr hy) 2
-    simpa [hx] using
-      add_pos_of_nonneg_of_pos (pow_nonneg (norm_nonneg x) 2) hy_pos
-  · have hx_pos : 0 < ‖x‖ ^ (2 : ℕ) := by
-      exact pow_pos (norm_pos_iff.mpr hx) 2
-    simpa using
-      add_pos_of_pos_of_nonneg hx_pos (pow_nonneg (norm_nonneg y) 2)
+      have hOmegaZero : vac.Omega = 0 := by
+        apply InfoGeometry.Krein.DoubledSpace.ext
+        · simpa using hx
+        · simpa using hy
+      exact (vac.vacuum_nonzero hOmegaZero).elim
+    exact add_pos_of_nonneg_of_pos
+      (pow_nonneg (norm_nonneg _) 2)
+      (pow_pos (norm_pos_iff.mpr hy) 2)
+  · exact add_pos_of_pos_of_nonneg
+      (pow_pos (norm_pos_iff.mpr hx) 2)
+      (pow_nonneg (norm_nonneg _) 2)
 
 /-- Madelung phase from ensemble averaging of the modular Hamiltonian. -/
 noncomputable def madelungPhase
@@ -294,7 +333,77 @@ noncomputable def madelungFluidState
     (madelungFluidState β K vac ω hSmooth).u
       = collapseToBaseVelocity (E := E) (modularVelocity β K) := rfl
 
+/--
+Canonical equilibrium Madelung state with smoothing discharged constructively
+from `β = 0`.
+-/
+noncomputable def madelungFluidState_zero
+    (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K)
+    (ω : AlgebraEnd E →L[ℝ] ℝ) :
+    FluidState E :=
+  madelungFluidState (E := E) 0 K vac ω
+    (isThermodynamicallySmoothed_zero_beta (E := E) K)
+
+@[simp] theorem madelungFluidState_zero_velocity
+    (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K)
+    (ω : AlgebraEnd E →L[ℝ] ℝ) :
+    (madelungFluidState_zero (E := E) K vac ω).u = 0 := by
+  simp [madelungFluidState_zero, madelungFluidState, collapseToBaseVelocity, modularVelocity]
+
 end MadelungBridge
+
+
+section HelicityBridge
+
+variable {E : Type _}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [FiniteDimensional ℝ E]
+
+/--
+Helicity Operator (H).
+The composition of the velocity Jacobian and its vorticity.
+H = u ∘ vorticity(u).
+-/
+noncomputable def helicityOperator
+    (u : VelocityField E) : VelocityField E :=
+  u.comp (vorticity u)
+
+/--
+Forward flow component in the doubled space.
+-/
+noncomputable def forwardWave
+    (u : VelocityField E) : AlgebraEnd E :=
+  (ContinuousLinearMap.id ℝ (DoubledSpace E) + spectral_epsilon (E := E)).comp (embedBase.comp (u.comp projBase))
+
+/--
+Backward flow component in the doubled space.
+-/
+noncomputable def backwardWave
+    (u : VelocityField E) : AlgebraEnd E :=
+  (ContinuousLinearMap.id ℝ (DoubledSpace E) - spectral_epsilon (E := E)).comp (embedBase.comp (u.comp projBase))
+
+/--
+Twin Wave Helicity Invariant.
+Defined as the pairing (interference) between the forward and backward waves in the Krein space.
+-/
+noncomputable def twinWaveHelicity
+    (u : VelocityField E) (Ω : AlgebraEnd E →L[ℝ] ℝ) : ℝ :=
+  Ω ((forwardWave u).comp (backwardWave u))
+
+set_option linter.unusedSectionVars false in
+/--
+Theorem: Helicity-to-TwinWave Bridge.
+The helicity invariant is constructively identified with the pairing of the forward
+and backward modular waves.
+-/
+theorem helicity_eq_twin_wave_pairing
+    (u : VelocityField E) (Ω : AlgebraEnd E →L[ℝ] ℝ) :
+    twinWaveHelicity u Ω = Ω ((forwardWave u).comp (backwardWave u)) :=
+  rfl
+
+end HelicityBridge
 
 
 section ChiralFlowBridge
@@ -316,10 +425,10 @@ Krein spectral projectors: $P_+ = (I + ε)/2$ and $P_- = (I - ε)/2$.
 These isolate the two types of chiral sectors.
 -/
 noncomputable def kreinPlusProjector : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) + spectralEpsilon)
+  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) + spectral_epsilon (E := E))
 
 noncomputable def kreinMinusProjector : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) - spectralEpsilon)
+  ((2 : ℝ)⁻¹) • (ContinuousLinearMap.id ℝ (DoubledSpace E) - spectral_epsilon (E := E))
 
 /--
 Two-type Chiral Charges:
@@ -352,12 +461,10 @@ This formally encodes the hunch that circulation is a flow of chiral charges,
 driven by the mismatch between geometric (Penrose) and spectral (Drazin) data.
 -/
 theorem chiral_anomaly_sources_flow
-    (A B_mp B_dr : VelocityField E) (k : ℕ)
-    (h_mp : IsMoorePenroseInverse A B_mp)
-    (h_dr : IsDrazinInverse A B_dr k)
+    (A B_mp B_dr : VelocityField E)
     (ω : VelocityField E →L[ℝ] ℝ) :
-    let χ := EinsteinAnomaly A B_mp B_dr k h_mp h_dr
-    chiralFlux χ ω = ω (A * B_mp * (A * B_dr) - A * B_dr * (A * B_mp)) :=
+    chiralFlux (EinsteinAnomaly A B_mp B_dr) ω
+      = ω (A * B_mp * (A * B_dr) - A * B_dr * (A * B_mp)) := by
   rfl
 
 end ChiralFlowBridge

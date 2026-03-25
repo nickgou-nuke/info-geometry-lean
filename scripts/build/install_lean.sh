@@ -53,15 +53,23 @@ if command -v curl >/dev/null 2>&1; then
     export PATH="$HOME/.elan/bin:$PATH"
     if command -v lake >/dev/null 2>&1; then
       echo "[install-lean] installed via elan bootstrap"
+echo "[install-lean] attempting elan bootstrap install..."
+if command -v curl >/dev/null 2>&1; then
+  if curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y; then
+    export PATH="$HOME/.elan/bin:$PATH"
+    if command -v lake >/dev/null 2>&1; then
+      echo "[install-lean] installed via elan"
       lake --version || true
       exit 0
     fi
   else
     echo "[install-lean] elan bootstrap download/install failed"
+    echo "[install-lean] elan bootstrap download failed"
   fi
 fi
 
 echo "[install-lean] unable to install Lean/Lake automatically in this environment."
 echo "[install-lean] this environment is blocking outbound package downloads (HTTP 403 via proxy)."
 echo "[install-lean] workaround: provide a reachable mirror/local file via LEAN_ELAN_INIT_URL."
+echo "[install-lean] Please install elan manually, then ensure '~/.elan/bin' is on PATH."
 exit 127

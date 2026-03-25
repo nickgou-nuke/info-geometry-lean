@@ -15,11 +15,31 @@ script strictCheck (args) do
   }
   child.wait
 
-script graphToBlueprint (args) do
-  -- simple wrapper to run the Python converter from the graph
+script semanticAudit (args) do
   let child ← IO.Process.spawn {
-    cmd := "python",
-    args := #["-m", "scripts", "graph-to-blueprint"] ++ args.toArray,
+    cmd := "python3",
+    args := #["scripts/quality/audit_semantic.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script graphToBlueprint (args) do
+  -- archived compatibility wrapper for the old graph-only blueprint bootstrap path
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["archive/legacy/scripts/graph_to_blueprint_inplace.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script refreshBlueprintTags (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/refresh_blueprint_tags.py"] ++ args.toArray,
     stdin := .inherit,
     stdout := .inherit,
     stderr := .inherit
@@ -48,8 +68,6 @@ lean_lib Docs where
 lean_lib Socratic where
   globs := #[.andSubmodules `Socratic]
 
-@[default_target]
-lean_lib InfoGeometry.GraphExport
 
 @[default_target]
 lean_lib InfoGeometry where
@@ -59,6 +77,13 @@ lean_lib InfoGeometry where
 lean_lib SelfReference where
   globs := #[.andSubmodules `SelfReference]
 
-@[default_target]
 lean_lib scripts where
   globs := #[.submodules `scripts]
+
+lean_exe semanticBlockExport where
+  root := `scripts.DAG.Exploration.SemanticBlockExport
+  supportInterpreter := true
+
+lean_exe semanticBlockServer where
+  root := `scripts.DAG.Exploration.SemanticBlockServer
+  supportInterpreter := true

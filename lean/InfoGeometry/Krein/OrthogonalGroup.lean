@@ -42,9 +42,21 @@ noncomputable instance : Group (HessianOrthogonalGroup E) where
         exact (V.is_isometry (U.equiv u) (U.equiv v)).trans (U.is_isometry u v) }
   one := ⟨ContinuousLinearEquiv.refl ℝ (NeutralSpace E), IsKreinIsometry.id⟩
   inv U := ⟨U.equiv.symm, IsKreinIsometry.inv U.is_isometry⟩
-  mul_assoc U V W := by ext; rfl
-  one_mul U := by ext; rfl
-  mul_one U := by ext; rfl
+  mul_assoc U V W := by
+    apply HessianOrthogonalGroup.ext
+    intro x
+    apply NeutralSpace.ext
+    rfl
+  one_mul U := by
+    apply HessianOrthogonalGroup.ext
+    intro x
+    apply NeutralSpace.ext
+    rfl
+  mul_one U := by
+    apply HessianOrthogonalGroup.ext
+    intro x
+    apply NeutralSpace.ext
+    rfl
   inv_mul_cancel U := by
     apply HessianOrthogonalGroup.ext
     intro x
@@ -55,7 +67,7 @@ instance : Coe (HessianOrthogonalGroup E) (NeutralSpace E ≃L[ℝ] NeutralSpace
 end HessianOrthogonalGroup
 
 /-- Swap involution as an element of the Hessian orthogonal group. -/
-noncomputable def modularJHessianOrthogonal : HessianOrthogonalGroup E :=
-  ⟨neutralJEquiv, IsKreinIsometry.J⟩
+noncomputable def modular_jHessianOrthogonal : HessianOrthogonalGroup E :=
+  ⟨(NeutralSpace.neutralJ (E := E)).toContinuousLinearEquiv, IsKreinIsometry.J⟩
 
 end InfoGeometry.Krein

@@ -17,25 +17,40 @@ variable {E : Type _}
 abbrev DoubledEnd (E : Type _) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
   DoubledSpace E →L[ℝ] DoubledSpace E
 
-/-- Canonical linear isometry from raw doubled coordinates to `WithLp` Hilbert doubled space. -/
+/-- Canonical linear isometry between doubled and Hilbert wrappers. -/
 noncomputable abbrev doubledToHilbert : DoubledSpace E ≃L[ℝ] HilbertDoubled E :=
-  (WithLp.prodContinuousLinearEquiv (p := (2 : ENNReal)) (𝕜 := ℝ) (α := E) (β := E)).symm
+  { toLinearEquiv :=
+      { toFun := fun u => ⟨u⟩
+        invFun := fun u => (u : DoubledSpace E)
+        left_inv := by
+          intro u
+          rfl
+        right_inv := by
+          intro u
+          apply HilbertDoubled.ext
+          rfl
+        map_add' := by
+          intro u v
+          rfl
+        map_smul' := by
+          intro a u
+          rfl }
+    continuous_toFun := by
+      simpa using (continuous_uliftUp : Continuous (ULift.up : DoubledSpace E → HilbertDoubled E))
+    continuous_invFun := by
+      simpa using
+        (continuous_uliftDown : Continuous (ULift.down : HilbertDoubled E → DoubledSpace E)) }
 
 /-- Hilbert adjoint on doubled-space endomorphisms, transported through `HilbertDoubled`. -/
 noncomputable def doubledAdjoint (A : DoubledEnd E) : DoubledEnd E :=
-  let e := doubledToHilbert (E := E)
-  let Ah : HilbertDoubled E →L[ℝ] HilbertDoubled E :=
-    (e : DoubledSpace E →L[ℝ] HilbertDoubled E).comp
-      (A.comp ((e.symm : HilbertDoubled E →L[ℝ] DoubledSpace E)))
-  (e.symm : HilbertDoubled E →L[ℝ] DoubledSpace E).comp
-    ((ContinuousLinearMap.adjoint Ah).comp (e : DoubledSpace E →L[ℝ] HilbertDoubled E))
+  ContinuousLinearMap.adjoint A
 
-/-- Krein adjoint on doubled space, using `J = spectralEpsilon`: `A♯ = J ∘ A† ∘ J`. -/
+/-- Krein adjoint on doubled space, using `J = spectral_epsilon`: `A♯ = J ∘ A† ∘ J`. -/
 noncomputable def doubledKreinAdjoint (A : DoubledEnd E) : DoubledEnd E :=
-  (spectralEpsilon (E := E)).comp ((doubledAdjoint (E := E) A).comp (spectralEpsilon (E := E)))
+  (spectral_epsilon (E := E)).comp ((doubledAdjoint (E := E) A).comp (spectral_epsilon (E := E)))
 
 @[simp] lemma doubledKreinAdjoint_apply (A : DoubledEnd E) (x : DoubledSpace E) :
     doubledKreinAdjoint (E := E) A x =
-      (spectralEpsilon (E := E)) ((doubledAdjoint (E := E) A) ((spectralEpsilon (E := E)) x)) := rfl
+      (spectral_epsilon (E := E)) ((doubledAdjoint (E := E) A) ((spectral_epsilon (E := E)) x)) := rfl
 
 end InfoGeometry.Krein

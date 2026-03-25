@@ -2,6 +2,7 @@ import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.Star.SelfAdjoint
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Analysis.Normed.Ring.Basic
+import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Canonical.Drazin
 
 namespace InfoGeometry.Canonical.MoorePenrose
@@ -19,16 +20,37 @@ The Moore-Penrose inverse `b` of an element `a` satisfies:
 4. `(b * a)* = b * a`  (Left projector is self-adjoint)
 -/
 
-/-- Axioms for the Moore-Penrose inverse of `a`. -/
-structure IsMoorePenroseInverse {R : Type*} [Ring R] [StarRing R] (a b : R) : Prop where
-  aba_eq_a : a * b * a = a
-  bab_eq_b : b * a * b = b
-  ab_star  : star (a * b) = a * b
-  ba_star  : star (b * a) = b * a
+/-- Predicate encoding the Moore-Penrose inverse laws. -/
+def IsMoorePenroseInverse {R : Type*} [Ring R] [StarRing R] (a b : R) : Prop :=
+  a * b * a = a ∧
+  b * a * b = b ∧
+  star (a * b) = a * b ∧
+  star (b * a) = b * a
 
 namespace IsMoorePenroseInverse
 
 variable {R : Type*} [Ring R] [StarRing R] {a b : R}
+
+/-- Constructor for the Moore-Penrose laws predicate. -/
+theorem mk
+    (haba : a * b * a = a)
+    (hbab : b * a * b = b)
+    (habstar : star (a * b) = a * b)
+    (hbastar : star (b * a) = b * a) :
+    IsMoorePenroseInverse a b :=
+  ⟨haba, hbab, habstar, hbastar⟩
+
+/-- Penrose relation `a b a = a`. -/
+theorem aba_eq_a (h : IsMoorePenroseInverse a b) : a * b * a = a := h.1
+
+/-- Penrose relation `b a b = b`. -/
+theorem bab_eq_b (h : IsMoorePenroseInverse a b) : b * a * b = b := h.2.1
+
+/-- Self-adjointness of `a*b`. -/
+theorem ab_star (h : IsMoorePenroseInverse a b) : star (a * b) = a * b := h.2.2.1
+
+/-- Self-adjointness of `b*a`. -/
+theorem ba_star (h : IsMoorePenroseInverse a b) : star (b * a) = b * a := h.2.2.2
 
 /-- The geometric projection onto the range of `a`. -/
 def rightProjector (a b : R) : R := a * b
@@ -70,6 +92,20 @@ end IsMoorePenroseInverse
 
 /-! ### Chiral Anomaly and Scale Generation -/
 
+/-- Spectral projector from Drazin data. -/
+def spectralProjector {R : Type*} [Ring R] (a a_d : R) : R :=
+  IsDrazinInverse.projection a a_d
+
+/-- Metric projector from Moore-Penrose data. -/
+def metricProjector {R : Type*} [Ring R] [StarRing R] (a a_mp : R) : R :=
+  IsMoorePenroseInverse.leftProjector a a_mp
+
+/--
+Projector mismatch `Δ = P_D - P_MP` between spectral and metric sectors.
+-/
+def projectorMismatch {R : Type*} [Ring R] [StarRing R] (a a_d a_mp : R) : R :=
+  spectralProjector a a_d - metricProjector a a_mp
+
 /--
 The Chiral Anomaly Operator (χ).
 Defined as the commutator between the spectral projector (Drazin) 
@@ -80,6 +116,37 @@ def chiralAnomaly {R : Type*} [Ring R] [StarRing R] (a a_d a_mp : R) : R :=
   let P_D := IsDrazinInverse.projection a a_d
   let P_L := IsMoorePenroseInverse.leftProjector a a_mp
   P_D * P_L - P_L * P_D
+
+/--
+Algebraic identity: the anomaly commutator is the mismatch commutator with the
+metric projector.
+-/
+theorem chiralAnomaly_eq_mismatch_commutator_metric
+    {R : Type*} [Ring R] [StarRing R] (a a_d a_mp : R) :
+    chiralAnomaly a a_d a_mp =
+      projectorMismatch a a_d a_mp * metricProjector a a_mp
+        - metricProjector a a_mp * projectorMismatch a a_d a_mp := by
+  unfold chiralAnomaly projectorMismatch spectralProjector metricProjector
+  unfold IsDrazinInverse.projection IsMoorePenroseInverse.leftProjector
+  noncomm_ring
+
+/--
+If the spectral-metric mismatch vanishes, the anomaly vanishes.
+-/
+theorem chiralAnomaly_eq_zero_of_projectorMismatch_eq_zero
+    {R : Type*} [Ring R] [StarRing R] {a a_d a_mp : R}
+    (hΔ : projectorMismatch a a_d a_mp = 0) :
+    chiralAnomaly a a_d a_mp = 0 := by
+  rw [chiralAnomaly_eq_mismatch_commutator_metric]
+  simp [hΔ]
+
+/-- Vanishing mismatch is equivalent to projector equality. -/
+theorem projectorMismatch_eq_zero_iff
+    {R : Type*} [Ring R] [StarRing R] {a a_d a_mp : R} :
+    projectorMismatch a a_d a_mp = 0 ↔
+      spectralProjector a a_d = metricProjector a a_mp := by
+  unfold projectorMismatch
+  exact sub_eq_zero
 
 /--
 The Emergent Scale ε.

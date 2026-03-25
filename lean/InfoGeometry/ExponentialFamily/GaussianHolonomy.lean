@@ -20,10 +20,10 @@ noncomputable def gaussianDiracField (G : GaussianFamily E) : E → (E →L[ℝ]
 /--
 The Gaussian Wilson Holonomy (Discrete).
 Measures the information flux accumulated along a sequence of Gaussian parameter updates.
-Uses the trace of the integrated covariance (Fisher information) updates.
+Uses the integrated covariance (Fisher information) updates.
 -/
 noncomputable def gaussianWilsonLoopDiscrete (G : GaussianFamily E) (γ : List E) : ℂ :=
-  -- Trace of the sum of covariance-weighted updates along the path.
+  -- Sum of covariance-weighted updates along the path.
   -- This represents the geometric phase accumulated in the information fiber.
   exp (I * (γ.map (fun dμ => (inner ℝ dμ (G.sigma dμ) : ℂ))).sum)
 

@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.Fock
+set_option linter.unusedSectionVars false
 
 /-!
 # InfoGeometry.Canonical.Fock
@@ -33,8 +34,9 @@ export InfoGeometry.Quantum (
 )
 
 open InfoGeometry.Quantum
+open InfoGeometry.Krein
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-- Theorem `bayesianUpdate_eq_creationExcitation`. -/
 theorem bayesianUpdate_eq_creationExcitation

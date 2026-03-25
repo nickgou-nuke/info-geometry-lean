@@ -15,7 +15,21 @@ import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.ChiralGravity
 import InfoGeometry.Canonical.ChiralTorsionBridge
 import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Canonical.ConformalAlgebra
+import InfoGeometry.Canonical.WeylAnomalySource
+import InfoGeometry.Canonical.WeylGaugeField
+import InfoGeometry.Canonical.WeylTransport
+import InfoGeometry.Canonical.WeylTransportChiralBridge
 import InfoGeometry.Canonical.WilsonLoop
+import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Canonical.ModularSpinorBridge
+import InfoGeometry.Canonical.Twistor
+import InfoGeometry.Canonical.BerryPhase
+import InfoGeometry.Canonical.Singular
+import InfoGeometry.Canonical.RosettaSourceBridge
+import InfoGeometry.Canonical.RosettaScaleTransport
+import InfoGeometry.Quantum.ModularAnomaly
+import InfoGeometry.KK.KasparovCycle
 
 /-!
 # Research.Rosetta
@@ -69,18 +83,129 @@ export InfoGeometry.Canonical.ConformalUnification.ConformalInference (
   P
   K
   D
+  specialConformal_eq_modularInversion_translation
+  translation_eq_modularInversion_specialConformal
   spectralChiralProjector
   metricChiralProjector
   chiralAnomaly
   chiralAnomalyOperator
   chiralScale
-  ProjectorCommutationClosure
+  chiralScale_eq_projectorObstruction_norm
   chiral_commutation_link
-  chiralAnomaly_eq_zero_iff_projectorCommutation
+  chiralAnomalyOperator_eq_zero_iff_projectors_commute
+  projectors_commute_of_chiralAnomaly_eq_zero
+  chiralAnomaly_eq_zero_of_projectors_commute
+  chiralScale_eq_zero_of_projectors_commute
+  chiralScale_ne_zero_of_projectors_not_commute
+  chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
+  projectors_commute_of_chiralScale_eq_zero
+  projectors_commute_of_kahlerLogDet_unitRelativeVolume
+  anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
+  projectors_commute_of_kahlerLogDet_normalized_fixedpoint
+  einsteinEquation_of_projectorObstruction_source
   IsNormalInference
   IsChiralInference
   NormalInferenceState
   ChiralInferenceState
+)
+
+export InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra (
+  SatisfiesPWeight
+  SatisfiesKWeight
+  SatisfiesMasterRelation
+  SatisfiesFlatWeights
+  ConformalWeightClosure
+  GeneratorCartanDecomposition
+  generatorCartanDecomposition_iff
+  generatorCartanDecomposition_of_parts
+  GradingInvolutive
+  cartanInvolution
+  IsVolumePreservingPart
+  IsWeylDilationPart
+  M_in_volumePreserving_of_cartan
+  D_in_weylDilation_of_cartan
+  cartan_generator_split
+  cartanInvolution_involutive_of_gradingInvolutive
+  cartanInvolution_eq_self_of_volumePreserving_of_gradingInvolutive
+  cartanInvolution_eq_neg_self_of_weylDilation_of_gradingInvolutive
+  volumePreserving_of_cartanInvolution_eq_self_of_gradingInvolutive
+  weylDilation_of_cartanInvolution_eq_neg_self_of_gradingInvolutive
+  cartanInvolution_eq_self_iff_volumePreserving_of_gradingInvolutive
+  cartanInvolution_eq_neg_self_iff_weylDilation_of_gradingInvolutive
+  commutator
+  commutator_volumePreserving_volumePreserving
+  commutator_volumePreserving_weylDilation
+  commutator_weylDilation_weylDilation
+  scale_anomaly_obstructs_weyl_flatness
+)
+
+export InfoGeometry.Canonical (
+  WeylGaugeField
+  WeylGaugeParameter
+  WeylFieldStrength
+  WeylDifferentialOperator
+  WeylTrajectory
+  WeylLineIntegrator
+  WeylHolonomyMap
+  ScaleEquivariantFlow
+)
+
+export InfoGeometry.Canonical.WeylGaugeField (
+  toGeneratedFlow
+  along
+  respond
+  transform
+  transformByPotential
+  covariantDerivative
+  transformSection
+  fieldStrength
+  IsFlat
+  IsGaugeInvariant
+  respond_transform_eq_of_isGaugeInvariant
+  fieldStrength_transformByPotential_eq
+  covariantDerivative_transformSection_eq
+  connectionAlong
+  generatedAlong
+  responseAlong
+  curvatureAlong
+  covariantSectionAlong
+  curvatureAlong_transformByPotential_eq
+  covariantSectionAlong_transform_eq
+  covariantGeneratedFlow
+  respondCovariantFlow
+  respondCovariantFlow_transform_eq
+)
+
+export InfoGeometry.Canonical.WeylTrajectory (
+  along
+)
+
+export InfoGeometry.Canonical.ScaleEquivariantFlow (
+  transportObservable
+  IsCocycle
+  transportObservable_isCocycle
+)
+
+export InfoGeometry.Canonical.WeylLineIntegrator (
+  finiteSumIntegrator
+  finiteSumIntegrator_integrate_eq
+  finiteSumIntegrator_integrateConnection_eq_sum
+  finiteSumIntegrator_holonomy_eq_sum
+  finiteSumIntegrator_integrateCurvature_eq_sum
+  finiteSumIntegrator_integrateCurvature_eq_zero_of_flat
+  integrateConnection
+  integrateCurvature
+  integrateCurvature_transformByPotential_eq
+  holonomy
+  gaugeCompensatedHolonomy
+  gaugeCompensatedHolonomy_eq_base_of_boundary_law
+)
+
+export InfoGeometry.Canonical.WeylTransportBridge (
+  FlatCurvatureChiralScaleBridge
+  holonomy_eq_chiralScale_of_flat
+  finiteSumFlatCurvatureChiralScaleBridge
+  finiteSum_holonomy_eq_chiralScale_of_flat
 )
 
 export InfoGeometry.Canonical.SuperInference (
@@ -93,6 +218,15 @@ export InfoGeometry.Canonical.SuperInference (
   superCharge_boson_eq_zero
   superCharge_fermion_eq_dualMap
   susyHamiltonian_eq_self
+)
+
+export InfoGeometry.Canonical.ModularSpinorBridge (
+  spinorBilinear
+  weakValueNumerator
+  weakValueDenominator
+  weakValue
+  weakValueNumerator_modularConjugate_eq_spinorBilinear
+  weakValue_modularConjugate_eq_spinorBilinear_div_overlap
 )
 
 export InfoGeometry.Canonical.ChiralCliffordBridge (
@@ -121,9 +255,7 @@ export InfoGeometry.Canonical.ChiralTorsionBridge (
   vacuumApexTwistor
   ChiralTorsionChentsovGibbsState
   chentsov_and_gibbs_of_state
-  ChiralTorsionChentsovGibbsBridge
   torsion_nonzero_of_chiral
-  chentsov_and_gibbs_of_bridge
 )
 
 export InfoGeometry.Canonical.AnomalyInflow (
@@ -134,6 +266,15 @@ export InfoGeometry.Canonical.AnomalyInflow (
   AnomalyInflowClosure
   anomalyInflowClosure
   anomaly_inflow_cancellation
+)
+
+export InfoGeometry.Canonical.BerryPhase (
+  berryConnection
+  informationBerryPhase
+  informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex
+  informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank
+  informationBerryPhase_ne_zero_of_loopLength_ne_zero_of_chiralAnomalyIndex_ne_zero
+  berry_phase_vanishes_for_normal
 )
 
 export InfoGeometry.Canonical.ChiralEinsteinBridge (
@@ -171,20 +312,44 @@ export InfoGeometry.Canonical.BogoliubovFockSuper (
   fockSuperBracket
   fockCommutator
   fockAnticommutator
-  CARWitness
-  CARClosure
-  CCRWitness
-  CCRClosure
+  anticommutator_annihilation_self
+  anticommutator_creation_self
+  anticommutator_annihilation_creation
+  commutator_annihilation_self
+  commutator_creation_self
+  commutator_annihilation_creation
   anticommutator_symm
   fockAnticommutator_symm
   commutator_swap
   fockCommutator_swap
   superBracket_bogoliubov_covariance
-  anticommutator_bogoliubov_of_CAR
-  commutator_bogoliubov_of_CCR
+  anticommutator_bogoliubov_projector_model
+  commutator_bogoliubov_projector_model
   einsteinInducedChemicalPotential
   einsteinFockDeformationOperator
   grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
+)
+
+export InfoGeometry.Canonical.TomitaTakesaki (
+  modularCPTSupercharge
+  modularComplexI_eq_dilationOperator
+  modularCPTSupercharge_Q_eq_dilationOperator
+)
+
+export InfoGeometry.Canonical (
+  IsMoorePenroseInverse
+  IsDrazinInverse
+  EinsteinAnomaly
+  exists_regularization_pair_of_isUnit
+  EinsteinAnomaly_eq_zero_of_regularization_pair
+)
+
+export InfoGeometry.Twistor.Incidence (
+  Twistor
+  Incident
+  pointAction
+  twistorMap
+  incident_points_null_separated
 )
 
 export InfoGeometry.Canonical.RedLine (
@@ -209,9 +374,13 @@ export InfoGeometry.Canonical.RedLine (
   relativeVolumeChangeRN
   relativeModularHamiltonian
   relativeTomitaTakesakiOp
+  DiagonalPositiveTimeVector
+  PositiveTimeVector
   modularConjugationJ
   modularSignEpsilon
   modularComplexI
+  modularSignAdditiveModularFlow
+  modularAtomRepresentation
   tomitaRepresentation
 )
 

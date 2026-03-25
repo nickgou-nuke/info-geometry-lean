@@ -36,8 +36,7 @@ set_option maxRecDepth 10000
 
 open scoped InnerProductSpace
 
-/-! ## The KreinSpace Typeclass -/
-
+namespace InfoGeometry.Krein
 /-- A **real Krein space**: a complete real inner product space with a fundamental symmetry `J`.
 
 **Usage**: `variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [KreinSpace H]`
@@ -372,7 +371,7 @@ noncomputable instance (priority := 1000) instKreinSpaceProdL2 :
   J_selfAdj := signFlipMap_selfAdj
 
 /-- Krein inner product on `WithLp 2 (E × E)` equals `⟪u₁,v₁⟫_ℝ - ⟪u₂,v₂⟫_ℝ`. -/
-lemma kreinInner_prodL2 (u v : WithLp 2 (E × E)) :
+lemma krein_inner_prod_l2 (u v : WithLp 2 (E × E)) :
     KreinSpace.kreinInner u v =
     ⟪(WithLp.ofLp u).1, (WithLp.ofLp v).1⟫_ℝ -
     ⟪(WithLp.ofLp u).2, (WithLp.ofLp v).2⟫_ℝ := by
@@ -415,3 +414,6 @@ noncomputable def conjKreinEquiv {H K : Type*}
     (U : KreinEquiv H K) :
     (H →L[ℝ] H) ≃ₐ[ℝ] (K →L[ℝ] K) :=
   ContinuousLinearEquiv.conjContinuousAlgEquiv U.toContinuousLinearEquiv
+
+
+end InfoGeometry.Krein

@@ -21,6 +21,8 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import InfoGeometry.Projective.Dynamics
 import InfoGeometry.Projective.FaithfulKL
+import InfoGeometry.Projective.ConeKL
+import InfoGeometry.Projective.Bridge
 import InfoGeometry.Projective.GaugeQuotient
 import InfoGeometry.Projective.GaugeReduction
 import InfoGeometry.Projective.LogSum
@@ -36,4 +38,6 @@ import InfoGeometry.Projective.Rays
 # InfoGeometry.Canonical.Projective
 
 Canonical projective-layer umbrella (publication surface).
+The zero-null twistor bridge is quarantined and must be imported explicitly from
+`InfoGeometry.Unstable.Quarantine` while it remains proof-vacuous.
 -/

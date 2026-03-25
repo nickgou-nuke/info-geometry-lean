@@ -16,7 +16,7 @@ export InfoGeometry.Jordan (
   normalizedDistortion_det
   logDetBregman
   logDetBregman_eq_burg_form
-  trace_sub_logdet_sub_dim_nonneg_of_posDef
+  logdet_square_nonneg_of_posDef
   logDetBregman_nonneg_of_commute
   logDetBregman_nonneg
   logDetBregman_self

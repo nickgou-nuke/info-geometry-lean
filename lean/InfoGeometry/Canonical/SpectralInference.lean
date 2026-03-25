@@ -1,10 +1,12 @@
 import InfoGeometry.Convex.HessianGeometry
+import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Krein.Metric
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.MoorePenrose
+import InfoGeometry.Canonical.Singular
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.LinearAlgebra.Trace
+import Mathlib.LinearAlgebra.Determinant
 
 namespace InfoGeometry.Canonical.SpectralInference
 
@@ -36,10 +38,17 @@ omit [FiniteDimensional ℝ E] in
   unfold bayesianAction
   simpa using Finset.sum_range_succ (f := fun i => H.divergence (γ i) (γ (i + 1))) N
 
+omit [FiniteDimensional ℝ E] in
+/-- The spectral-chain Bayesian action is nonnegative. -/
+theorem bayesianAction_nonneg (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ) :
+    0 ≤ bayesianAction H γ N := by
+  unfold bayesianAction
+  exact Finset.sum_nonneg (fun i _ => H.divergence_nonneg (γ i) (γ (i + 1)))
+
 /-! ### 2. The Information Spectral Triple -/
 
 /--
-A toy finite-dimensional Spectral Triple (A, H, D).
+A toy finite-dimensional self-adjoint Dirac package.
 Here the Hilbert space is `E`, the algebra is bounded linear operators `E →L[ℝ] E`,
 and the Dirac operator `D` is a self-adjoint operator on `E`.
 -/
@@ -71,41 +80,100 @@ end SpectralTriple
 /-! ### 3. Drazin Regularization and Spectral Action -/
 
 /--
-A regularized Spectral Triple where the Dirac operator comes with its Drazin inverse.
-This allows defining the propagator even for degenerate geometries.
+A witness-level regularized spectral triple.
+The Dirac package is equipped with a chosen Drazin-regularization candidate `DD`,
+but no certification is stored in this compatibility layer.
 -/
 structure RegularizedSpectralTriple (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     extends SpectralTriple E where
   DD : E →L[ℝ] E -- The Drazin Inverse of D
   index : ℕ
-  is_drazin : IsDrazinInverse D DD index
+
+/--
+A proof-carrying regularized spectral triple.
+This refines `RegularizedSpectralTriple` by certifying that `DD` is a Drazin
+inverse of `D` with the stored index.
+-/
+structure CertifiedRegularizedSpectralTriple (E : Type*) [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E]
+    extends SpectralTriple E where
+  DD : E →L[ℝ] E
+  index : ℕ
+  hDrazin : IsDrazinInverse D DD index
 
 namespace RegularizedSpectralTriple
 
 variable (RST : RegularizedSpectralTriple E)
 
 /--
-The Spectral Action Principle: S(D) = Tr(f(D^D / Λ)).
-In our toy model, we compute the trace of the Drazin-regularized Dirac operator.
+Reduced log-det spectral-action model.
+In this finite-dimensional model we use the log-absolute Jacobian determinant of
+the regularized Dirac operator as the scalar spectral-action proxy.
 -/
 noncomputable def spectralAction (Λ : ℝ) : ℝ :=
-  LinearMap.trace ℝ E (ContinuousLinearMap.toLinearMap ((1 / Λ) • RST.DD))
+  Real.log (|LinearMap.det (ContinuousLinearMap.toLinearMap ((1 / Λ) • RST.DD))|)
 
 end RegularizedSpectralTriple
+
+namespace CertifiedRegularizedSpectralTriple
+
+variable (CRST : CertifiedRegularizedSpectralTriple E)
+
+/-- Forgetful map from the certified layer to the witness-level regularized package. -/
+abbrev toRegularizedSpectralTriple : RegularizedSpectralTriple E :=
+  { toSpectralTriple := CRST.toSpectralTriple
+    DD := CRST.DD
+    index := CRST.index }
+
+/-- Certified regularized spectral-action model. -/
+noncomputable def spectralAction (Λ : ℝ) : ℝ :=
+  RegularizedSpectralTriple.spectralAction CRST.toRegularizedSpectralTriple Λ
+
+/-
+The following projector lemmas are purely algebraic and do not use the ambient
+finite-dimensional hypothesis needed by the global constructors.
+-/
+omit [FiniteDimensional ℝ E] in
+/-- The certified Drazin projector is idempotent. -/
+theorem spectralProjector_idempotent :
+    IsDrazinInverse.projection CRST.D CRST.DD * IsDrazinInverse.projection CRST.D CRST.DD
+      = IsDrazinInverse.projection CRST.D CRST.DD := by
+  simpa using IsDrazinInverse.projection_is_idempotent CRST.hDrazin
+
+/-- Global finite-dimensional constructor for the certified regularized layer. -/
+theorem exists_of_spectralTriple (ST : SpectralTriple E) :
+    ∃ CRST : CertifiedRegularizedSpectralTriple E, CRST.toSpectralTriple = ST := by
+  rcases InfoGeometry.Canonical.exists_drazinInverse_global (A := ST.D) with ⟨k, DD, hD⟩
+  refine ⟨{ toSpectralTriple := ST, DD := DD, index := k, hDrazin := hD }, rfl⟩
+
+end CertifiedRegularizedSpectralTriple
 
 /-! ### 4. Chiral Unification -/
 
 /--
-A regularized Spectral Triple where the Dirac operator comes with both its 
-Drazin inverse (spectral) and Moore-Penrose inverse (metric).
-This allows for the emergence of the chiral scale ε.
+A witness-level chiral spectral triple.
+The Dirac package is equipped with chosen Drazin- and Moore-Penrose-style
+regularization candidates, but no certification is stored in this
+compatibility layer.
 -/
 structure ChiralSpectralTriple (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     extends SpectralTriple E where
   DD : E →L[ℝ] E -- Drazin Inverse
   DP : E →L[ℝ] E -- Penrose Inverse
-  is_drazin : IsDrazinInverse D DD 1
-  is_penrose : IsMoorePenroseInverse D DP
+
+/--
+A proof-carrying chiral spectral triple.
+This refines `ChiralSpectralTriple` by certifying the Drazin and Moore-Penrose
+regularizations attached to the base Dirac operator.
+-/
+structure CertifiedChiralSpectralTriple (E : Type*) [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E]
+    extends SpectralTriple E where
+  DD : E →L[ℝ] E
+  DP : E →L[ℝ] E
+  drazinIndex : ℕ
+  hDrazin : IsDrazinInverse D DD drazinIndex
+  hMoorePenrose : IsMoorePenroseInverse D DP
 
 namespace ChiralSpectralTriple
 
@@ -116,14 +184,84 @@ noncomputable def epsilon (CST : ChiralSpectralTriple E) : ℝ :=
   chiralScale CST.D CST.DD CST.DP
 
 /--
-The Anomaly-Shifted Spectral Action.
-S(D) = Tr(f((D^D + ε I) / Λ)).
-The chiral anomaly ε acts as a generated mass/scale term.
+Reduced anomaly-shifted log-det spectral-action model.
+This is the log-volume proxy of the shifted operator `((D^D + ε I) / Λ)`.
 -/
 noncomputable def chiralSpectralAction (Λ : ℝ) : ℝ :=
-  LinearMap.trace ℝ E (ContinuousLinearMap.toLinearMap ((1 / Λ) • (CST.DD + CST.epsilon • 1)))
+  Real.log
+    (|LinearMap.det (ContinuousLinearMap.toLinearMap ((1 / Λ) • (CST.DD + CST.epsilon • 1)))|)
 
 end ChiralSpectralTriple
+
+namespace CertifiedChiralSpectralTriple
+
+variable (CCST : CertifiedChiralSpectralTriple E)
+
+/-- Adapter from the certified chiral spectral surface to the canonical inverse kernel. -/
+abbrev toCertifiedInverseKernel : InfoGeometry.Canonical.CertifiedInverseKernel E :=
+  { toInverseKernel := { A := CCST.D, A_D := CCST.DD, A_MP := CCST.DP }
+    drazinIndex := CCST.drazinIndex
+    hDrazin := CCST.hDrazin
+    hMoorePenrose := CCST.hMoorePenrose }
+
+/-- Forgetful map from the certified layer to the witness-level chiral package. -/
+abbrev toChiralSpectralTriple : ChiralSpectralTriple E :=
+  { toSpectralTriple := CCST.toSpectralTriple
+    DD := CCST.DD
+    DP := CCST.DP }
+
+/-- Certified anomaly scale for the spectral triple. -/
+noncomputable def epsilon : ℝ :=
+  ChiralSpectralTriple.epsilon CCST.toChiralSpectralTriple
+
+/-- Certified anomaly-shifted spectral-action model. -/
+noncomputable def chiralSpectralAction (Λ : ℝ) : ℝ :=
+  ChiralSpectralTriple.chiralSpectralAction CCST.toChiralSpectralTriple Λ
+
+omit [FiniteDimensional ℝ E] in
+/-- The certified Drazin spectral projector is idempotent. -/
+theorem spectralProjector_idempotent :
+    IsDrazinInverse.projection CCST.D CCST.DD * IsDrazinInverse.projection CCST.D CCST.DD
+      = IsDrazinInverse.projection CCST.D CCST.DD := by
+  simpa [CertifiedChiralSpectralTriple.toCertifiedInverseKernel,
+    CertifiedInverseKernel.spectralProjector, CertifiedInverseKernel.toInverseKernel',
+    InverseKernel.spectralProjector] using
+      CCST.toCertifiedInverseKernel.spectralProjector_idempotent
+
+omit [FiniteDimensional ℝ E] in
+/-- The certified Moore-Penrose left projector is idempotent. -/
+theorem metricProjector_idempotent :
+    IsMoorePenroseInverse.leftProjector CCST.D CCST.DP
+      * IsMoorePenroseInverse.leftProjector CCST.D CCST.DP
+      = IsMoorePenroseInverse.leftProjector CCST.D CCST.DP := by
+  simpa [CertifiedChiralSpectralTriple.toCertifiedInverseKernel,
+    CertifiedInverseKernel.metricProjector, CertifiedInverseKernel.toInverseKernel',
+    InverseKernel.metricProjector] using
+      CCST.toCertifiedInverseKernel.metricProjector_idempotent
+
+omit [FiniteDimensional ℝ E] in
+/-- The certified Moore-Penrose left projector is self-adjoint. -/
+theorem metricProjector_star :
+    star (IsMoorePenroseInverse.leftProjector CCST.D CCST.DP)
+      = IsMoorePenroseInverse.leftProjector CCST.D CCST.DP := by
+  simpa [CertifiedChiralSpectralTriple.toCertifiedInverseKernel,
+    CertifiedInverseKernel.metricProjector, CertifiedInverseKernel.toInverseKernel',
+    InverseKernel.metricProjector] using
+      CCST.toCertifiedInverseKernel.metricProjector_star
+
+/-- Global finite-dimensional constructor for the certified chiral layer. -/
+theorem exists_of_spectralTriple (ST : SpectralTriple E) :
+    ∃ CCST : CertifiedChiralSpectralTriple E, CCST.toSpectralTriple = ST := by
+  rcases InfoGeometry.Canonical.exists_drazinInverse_global (A := ST.D) with ⟨k, DD, hD⟩
+  rcases InfoGeometry.Canonical.exists_moorePenroseInverse_global (A := ST.D) with ⟨DP, hMP⟩
+  refine ⟨{ toSpectralTriple := ST
+            DD := DD
+            DP := DP
+            drazinIndex := k
+            hDrazin := hD
+            hMoorePenrose := hMP }, rfl⟩
+
+end CertifiedChiralSpectralTriple
 
 /-! ### 5. Bridging Hessian Geometry -/
 

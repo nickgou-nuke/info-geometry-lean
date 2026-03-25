@@ -1,4 +1,4 @@
-import InfoGeometry.Singular.MoorePenroseAdjoint
+import InfoGeometry.Singular.MoorePenrose
 
 /-!
 # InfoGeometry.Canonical.MoorePenroseAdjoint

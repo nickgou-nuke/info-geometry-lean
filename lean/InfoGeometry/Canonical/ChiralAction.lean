@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.SpectralInference
-import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.LinearAlgebra.Determinant
 
 namespace InfoGeometry.Canonical.ChiralAction
 
@@ -20,14 +20,14 @@ noncomputable def chiralDirac (IST : InfoSpectralTriple E) (CI : ConformalInfere
 
 /--
 The Chiral Information Action.
-S_chiral = Tr(D_χ² / Λ²).
+S_chiral = log |det(D_χ² / Λ²)|.
 This action incorporates both the standard Fisher Metric diffusion and the 
 topological tension induced by the metric-spectral incompatibility.
 -/
 noncomputable def chiralInformationAction (IST : InfoSpectralTriple E) (CI : ConformalInference E) (g Λ : ℝ) : ℝ :=
   let D_chi := chiralDirac IST CI g
-  -- The trace of the squared chiral Dirac operator normalized by the scale Λ
-  (LinearMap.trace ℝ E (D_chi * D_chi).toLinearMap) / (Λ ^ 2)
+  -- Log-absolute Jacobian determinant of the squared chiral Dirac operator.
+  (Real.log (|LinearMap.det (D_chi * D_chi).toLinearMap|)) / (Λ ^ 2)
 
 omit [FiniteDimensional ℝ E] in
 /--
@@ -46,5 +46,22 @@ theorem chiral_action_reduces_for_normal (IST : InfoSpectralTriple E) (CI : Conf
     exact (nnnorm_eq_zero).mp hn
   unfold chiralDirac
   rw [hc, smul_zero, add_zero]
+
+
+/--
+Under unit relative volume, the chiral Dirac perturbation collapses to the
+base Dirac operator.
+-/
+theorem chiralDirac_eq_of_unitRelativeVolume
+    {n : Nat}
+    (IST : InfoSpectralTriple E) (CI : ConformalInference E) (g : ℝ)
+    (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n)
+    (hScaleFromKahler : CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M)
+    (hUnitVolume : InfoGeometry.Canonical.MoE.relativeVolumeChangeRN n M = 1) :
+    chiralDirac IST CI g = IST.D := by
+  have hNormal : CI.IsNormalInference := by
+    exact CI.isNormalInference_of_kahlerLogDet_unitRelativeVolume
+      (M := M) hScaleFromKahler hUnitVolume
+  exact chiral_action_reduces_for_normal IST CI g 0 hNormal
 
 end InfoGeometry.Canonical.ChiralAction

@@ -426,19 +426,19 @@ structure UnnormalizedMeasure (μ₀ : MeasureTheory.Measure Ω) where
   mass_pos : 0 < totalMass
 
 /-- Conceptual ray space of probability states via doubled-space projectivization. -/
-abbrev ProjectiveProbability : Type _ := ProjectiveState (E := E)
+abbrev ProjectiveProbability : Type _ := InfoGeometry.Projective.ProjectiveState (E := E)
 
 /-- Projective divergence on representatives: measure-theoretic KL on AC probabilities. -/
 noncomputable def projectiveDivergence
     {μ₀ : MeasureTheory.Measure Ω}
     (P Q : UnnormalizedMeasure μ₀) : ENNReal :=
-  InfoGeometry.KL.klDiv P.representative.μ Q.representative.μ
+  InfoGeometry.KL.kl_div P.representative.μ Q.representative.μ
 
 lemma projectiveDivergence_eq_kl
     {μ₀ : MeasureTheory.Measure Ω}
     (P Q : UnnormalizedMeasure μ₀) :
     projectiveDivergence P Q
-      = InfoGeometry.KL.klDiv P.representative.μ Q.representative.μ :=
+      = InfoGeometry.KL.kl_div P.representative.μ Q.representative.μ :=
   rfl
 
 lemma projectiveDivergence_eq_of_representative_eq

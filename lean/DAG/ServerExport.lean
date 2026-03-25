@@ -50,6 +50,12 @@ structure TargetInfo where
   range : Lsp.Range
 deriving ToJson, FromJson
 
+/-- Parameters for full semantic block export over the current document. -/
+structure SemanticBlocksParams where
+  /-- If true, include block text in the underlying export. -/
+  withText : Bool := false
+deriving FromJson, ToJson
+
 /-- Conservative “context command” test based on the command text prefix. -/
 def isContextText (txt : String) : Bool :=
   let t := txt.trimAscii
@@ -73,7 +79,12 @@ def exportFromSnaps (doc : FileWorker.EditableDocument) (snaps : Array Snapshot)
   let mut producer : Array Nat := #[]
   let mut isCtx : Array Bool := #[]
   let mut scopeStack : List ScopeFrame := []
-  let mut seen : NameSet := {}
+  let baseSeen : NameSet :=
+    match doc.initSnap.processedResult.get with
+    | some headerState =>
+        headerState.cmdState.env.constants.fold (init := ({} : NameSet)) fun s n _ => s.insert n
+    | none => {}
+  let mut seen : NameSet := baseSeen
   let mut prevEnd : String.Pos.Raw := ⟨0⟩
 
   for i in [:snaps.size] do
@@ -120,10 +131,7 @@ def exportFromSnaps (doc : FileWorker.EditableDocument) (snaps : Array Snapshot)
             (arr, s)
           else
             let s := s.insert n
-            if DAG.isFromMainModule snap.env n then
-              (arr.push n, s)
-            else
-              (arr, s))
+            (arr.push n, s))
         (#[], seen)
     seen := seen'
     let newDecls : Array Name := newDecls0.qsort Name.lt
@@ -133,33 +141,29 @@ def exportFromSnaps (doc : FileWorker.EditableDocument) (snaps : Array Snapshot)
       decls := decls ++ newDecls
       producer := producer ++ Array.replicate newDecls.size blockIdx
 
-    let blockMorphisms ← extractMorphisms snap.infoTree
-
-    let mut docStrings : Array String := #[]
-    let mut typeStrings : Array String := #[]
-    for n in newDecls do
-      let doc ← match ← Lean.findDocString? snap.env n with
-                | some d => pure d
-                | none => pure ""
-      docStrings := docStrings.push doc
-      let tstr ← match snap.env.find? n with
-                 | some ci => pure (toString ci.type)
-                 | none => pure ""
-      typeStrings := typeStrings.push tstr
+    let (primaryDecls, auxDecls) := classifyProducedDecls newDecls
+    let primaryDeps := collectPrimaryDeps snap.env primaryDecls auxDecls
+    let primarySpineTags := collectPrimarySpineTags snap.env primaryDecls
+    let spineTags := summarizeSpineTags primarySpineTags
 
     blocks := blocks.push
       { idx := blockIdx
+        stableId := mkStableBlockId start stop
         startUtf8 := start
         stopUtf8 := stop
         startPos := startPos
         stopPos := stopPos
         text := if withText then txtFull else ""
         scopes := scopeStack.reverse.toArray
-        produces := newDecls
+        primaryProduces := primaryDecls
+        auxProduces := auxDecls
+        primaryDeps := primaryDeps
+        primarySpineTags := primarySpineTags
+        spineTags := spineTags
         affects := #[]
-        morphisms := blockMorphisms
-        docStrings := docStrings
-        typeStrings := typeStrings }
+        morphisms := #[]
+        docStrings := #[]
+        typeStrings := #[] }
 
     isCtx := isCtx.push ctxFlag
 
@@ -186,7 +190,7 @@ def exportFromSnaps (doc : FileWorker.EditableDocument) (snaps : Array Snapshot)
       let blockGraph := buildBlockGraph graph prodMap blocks.size
 
       let hydratedG := DAG.hydrate graph
-      let skelPairs := DAG.extractTheorySkeleton hydratedG 1
+      let skelPairs := DAG.extractTheorySkeletonWithPreferred hydratedG (primaryDeclSet blocks) 1
       let mut skelMap : Array (Name × Nat) := #[]
       for i in [:skelPairs.size] do
         let (n, _, rank) := skelPairs[i]!
@@ -218,70 +222,196 @@ def exportFromSnaps (doc : FileWorker.EditableDocument) (snaps : Array Snapshot)
       }
       return (ex, #[])
 
+private def semanticBlockIndices (blocks : Array Block) : Array Nat :=
+  Id.run do
+    let mut out := #[]
+    for blk in blocks do
+      if !blk.primaryProduces.isEmpty then
+        out := out.push blk.idx
+    out
+
+private def buildSemanticBlockGraph (e : Export) : DAG.Graph Nat :=
+  Id.run do
+    let selected := semanticBlockIndices e.blocks
+    let mut nodeToIdx : Std.HashMap Nat Nat := {}
+    for i in [:selected.size] do
+      nodeToIdx := nodeToIdx.insert selected[i]! i
+
+    let mut forward : Array (Array (Nat × EdgeKind)) := Array.replicate selected.size #[]
+    let mut seen : Std.HashSet (Nat × Nat × EdgeKind) := {}
+    for i in [:selected.size] do
+      let origU := selected[i]!
+      for (origV, k) in e.blockGraph.forward[origU]! do
+        let some j := nodeToIdx.get? origV | continue
+        if !seen.contains (i, j, k) then
+          seen := seen.insert (i, j, k)
+          forward := forward.modify i (·.push (j, k))
+
+    { nodes := selected, nodeToIdx := nodeToIdx, forward := forward }
+
+private def pickBlockRep (comp : Array Nat) : Nat :=
+  comp.foldl (init := comp[0]!) fun best x => min best x
+
+private def semanticBlockSkeleton (h : HydratedGraph Nat) (minVulnerability : Nat := 1) :
+    Array (Nat × Nat × Nat) :=
+  Id.run do
+    let mut out := #[]
+    for si in [:h.sccs.size] do
+      let comp := h.sccs[si]!
+      if comp.isEmpty then
+        continue
+      let origBlock := pickBlockRep (comp.map fun vi => h.toGraph.nodes[vi]!)
+      let (vulPaths, vulSrcs) := vulnerabilityOf h origBlock
+      if vulSrcs >= minVulnerability then
+        out := out.push (origBlock, vulPaths, vulSrcs)
+    out.qsort fun a b =>
+      if a.2.2 == b.2.2 then a.2.1 > b.2.1 else a.2.2 > b.2.2
+
+private def blockJson (blk : Block) : Json :=
+  Json.mkObj
+    [ ("idx", toJson blk.idx)
+    , ("stableId", toJson blk.stableId)
+    , ("startPos", toJson blk.startPos)
+    , ("stopPos", toJson blk.stopPos)
+    , ("primaryProduces", toJson blk.primaryProduces)
+    , ("primaryDeps", toJson blk.primaryDeps)
+    , ("primarySpineTags", toJson blk.primarySpineTags)
+    , ("spineTags", toJson blk.spineTags)
+    , ("affects", toJson blk.affects)
+    ]
+
+private def skeletonEntryJson (blocks : Array Block) (entry : Nat × Nat × Nat) : Json :=
+  let (origIdx, vulPaths, vulSrcs) := entry
+  let blk := blocks[origIdx]!
+  Json.mkObj
+    [ ("idx", toJson blk.idx)
+    , ("stableId", toJson blk.stableId)
+    , ("vulPaths", toJson vulPaths)
+    , ("vulSrcs", toJson vulSrcs)
+    , ("startPos", toJson blk.startPos)
+    , ("stopPos", toJson blk.stopPos)
+    , ("primaryProduces", toJson blk.primaryProduces)
+    , ("primaryDeps", toJson blk.primaryDeps)
+    , ("primarySpineTags", toJson blk.primarySpineTags)
+    , ("spineTags", toJson blk.spineTags)
+    , ("affects", toJson blk.affects)
+    ]
+
+private def edgeKindJson (k : EdgeKind) : Json :=
+  match k with
+  | .type => toJson ("type" : String)
+  | .value => toJson ("value" : String)
+
+private def semanticEdgeJson (blocks : Array Block) (g : DAG.Graph Nat)
+    (srcLocal dstLocal : Nat) (k : EdgeKind) : Json :=
+  let srcOrig := g.nodes[srcLocal]!
+  let dstOrig := g.nodes[dstLocal]!
+  let srcBlk := blocks[srcOrig]!
+  let dstBlk := blocks[dstOrig]!
+  Json.mkObj
+    [ ("src", toJson srcLocal)
+    , ("dst", toJson dstLocal)
+    , ("srcBlockIdx", toJson srcOrig)
+    , ("dstBlockIdx", toJson dstOrig)
+    , ("srcStableId", toJson srcBlk.stableId)
+    , ("dstStableId", toJson dstBlk.stableId)
+    , ("kind", edgeKindJson k)
+    ]
+
+def semanticBlocksPayload (ex : Export) : Json :=
+  let rawPrimaryBlockCount := ex.blocks.foldl (init := 0) fun acc blk =>
+    acc + if blk.primaryProduces.isEmpty then 0 else 1
+  let semanticG := buildSemanticBlockGraph ex
+  let hydrated := hydrate semanticG
+  let skeleton := semanticBlockSkeleton hydrated 1
+  let edgeCount := semanticG.forward.foldl (init := 0) fun acc row => acc + row.size
+  let semanticBlocks := semanticG.nodes.map fun origIdx => blockJson (ex.blocks[origIdx]!)
+  let semanticEdges :=
+    Id.run do
+      let mut out : Array Json := #[]
+      for i in [:semanticG.forward.size] do
+        for (j, k) in semanticG.forward[i]! do
+          out := out.push (semanticEdgeJson ex.blocks semanticG i j k)
+      out
+  Json.mkObj
+    [ ("sourceFile", toJson ex.file)
+    , ("rawBlocks", toJson ex.blocks.size)
+    , ("rawDecls", toJson ex.decls.size)
+    , ("rawPrimaryBlocks", toJson rawPrimaryBlockCount)
+    , ("semanticBlockNodes", toJson semanticG.nodes.size)
+    , ("semanticBlockEdges", toJson edgeCount)
+    , ("semanticSkeletonNodes", toJson skeleton.size)
+    , ("blocks", Json.arr semanticBlocks)
+    , ("edges", Json.arr semanticEdges)
+    , ("skeleton", Json.arr <| skeleton.map (skeletonEntryJson ex.blocks))
+    ]
+
+private def exportCurrentDocFromSnapshots (doc : FileWorker.EditableDocument) (withText : Bool) :
+    RequestM (RequestTask (Export × Array Bool)) := do
+  let t := IO.AsyncList.waitAll doc.cmdSnaps
+  RequestM.mapTaskCostly t fun (snapsList, term?) => do
+    match term? with
+    | some err => throw (RequestError.ofIoError err)
+    | none =>
+        let snaps := snapsList.toArray
+        exportFromSnaps doc snaps withText
+
+@[server_rpc_method]
+def semanticBlocks (params : SemanticBlocksParams) : RequestM (RequestTask Json) := do
+  let doc ← readDoc
+  let exportTask ← exportCurrentDocFromSnapshots doc params.withText
+  RequestM.mapRequestTaskCheap exportTask fun (ex, _) =>
+    pure (semanticBlocksPayload ex)
+
 /-- Server RPC: Discover all sliceable targets in the document. -/
 @[server_rpc_method]
 def getTargets (_pos : Lsp.Position) : RequestM (RequestTask (Array TargetInfo)) := do
   let doc ← readDoc
-  let t := IO.AsyncList.waitAll doc.cmdSnaps
-  RequestM.mapTaskCostly t fun (snapsList, _) => do
-    let (ex, _) ← exportFromSnaps doc snapsList.toArray false
+  let exportTask ← exportCurrentDocFromSnapshots doc false
+  RequestM.mapRequestTaskCheap exportTask fun (ex, _) => do
     let mut out := #[]
-    for i in [:ex.decls.size] do
-      let name := ex.decls[i]!
-      let bIdx := ex.producer[i]!
-      let some block := ex.blocks[bIdx]? | continue
+    for block in ex.blocks do
+      if block.primaryProduces.isEmpty then
+        continue
       let range : Lsp.Range := {
         start := { line := block.startPos.line - 1, character := block.startPos.column },
         «end» := { line := block.stopPos.line - 1, character := block.stopPos.column }
       }
-      out := out.push { name := name, range := range }
+      for name in block.primaryProduces do
+        out := out.push { name := name, range := range }
     return out
 
 /-- Server RPC: compute a slice (block indices) for `params.target` in the currently open document. -/
 @[server_rpc_method]
 def sliceFor (params : SliceParams) : RequestM (RequestTask Json) := do
   let doc ← readDoc
-  let target := params.target
+  let exportTask ← exportCurrentDocFromSnapshots doc params.withText
+  RequestM.mapRequestTaskCheap exportTask fun (ex, isCtx) => do
+    let target := params.target
 
-  -- Stop as soon as the target constant exists in the environment.
-  let pred : Snapshot → Bool := fun s => (s.env.find? target).isSome
-  let t := IO.AsyncList.waitUntil pred doc.cmdSnaps
-  RequestM.mapTaskCostly t fun (snapsList, term?) => do
-    match term? with
-    | some err => throw (RequestError.ofIoError err)
-    | none =>
-      let snaps := snapsList.toArray
-      if snaps.isEmpty then
-        throw (RequestError.invalidParams "no command snapshots available for this document")
+    let base : Array Nat := minimalBlocksFor ex target
+    let mut chosen : Std.HashSet Nat := {}
+    for b in base do
+      chosen := chosen.insert b
 
-      let (ex, isCtx) ← exportFromSnaps doc snaps params.withText
+    if params.withContext && ex.blocks.size > 0 then
+      chosen := chosen.insert 0
 
-      let base : Array Nat := minimalBlocksFor ex target
-      let mut chosen : Std.HashSet Nat := {}
-      for b in base do
-        chosen := chosen.insert b
+    if params.withContext && base.size > 0 then
+      let hi := base.foldl (fun m x => Nat.max m x) 0
+      for i in [:ex.blocks.size] do
+        if i ≤ hi && isCtx[i]! then
+          chosen := chosen.insert i
 
-      -- ensure header/imports (block 0 starts at pos 0 in your exporter)
-      if params.withContext && ex.blocks.size > 0 then
-        chosen := chosen.insert 0
-
-      if params.withContext && base.size > 0 then
-        let hi := base.foldl (fun m x => Nat.max m x) 0
-        for i in [:ex.blocks.size] do
-          if i ≤ hi && isCtx[i]! then
-            chosen := chosen.insert i
-
-      let blocks := chosen.toArray.qsort (· < ·)
-
-      -- Return: blocks + (optionally) texts
-      let payload :=
-        Json.mkObj
-          [ ("file", toJson ex.file)
-          , ("target", toJson target)
-          , ("blocks", toJson blocks)
-          , ("export", toJson ex)
-          ]
-      pure payload
+    let blocks := chosen.toArray.qsort (· < ·)
+    let payload :=
+      Json.mkObj
+        [ ("file", toJson ex.file)
+        , ("target", toJson target)
+        , ("blocks", toJson blocks)
+        , ("export", toJson ex)
+        ]
+    pure payload
 
 /-- Server RPC: render a slice into text. -/
 @[server_rpc_method]

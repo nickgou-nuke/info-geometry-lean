@@ -1,4 +1,5 @@
 import InfoGeometry.KL.Finite
+import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.ChiralAnomaly
 import InfoGeometry.Canonical.HolographicEmergence
 
@@ -8,15 +9,23 @@ import InfoGeometry.Canonical.HolographicEmergence
 Constructive count-first bridge:
 
 - empirical counts induce a normalized probability state
-- the induced probability state can be paired with the existing
-  holographic-emergence theorem package
+- count-induced Sinkhorn trajectories provide a constructive flow
 
-No new axioms are introduced.
+This module defines the mapping from empirical event counts to informational
+dynamics. The bridge uses a regularized empirical substrate: counts are smoothed
+by a pseudocount of +1 per channel. This ensures that the induced rank-one 
+coupling matrix is entrywise positive, allowing the Sinkhorn trajectory to be
+constructed without support-degeneracy branching.
+
+The induced flow is implemented through an explicit outer-product initialization
+(rank-one coupling), serving as a constructive corridor from empirical counts to 
+the emergent time flow.
 -/
 
 namespace InfoGeometry.Canonical.CountSubstrateBridge
 
 open InfoGeometry
+open InfoGeometry.Krein
 open InfoGeometry.KL
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.ChiralAnomaly
@@ -26,85 +35,44 @@ open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.InformationTorsion
 open InfoGeometry.Canonical.AnomalyInflow
 open InfoGeometry.Canonical.TopologicalInvariants
-open InfoGeometry.Canonical.ChiralTorsionBridge
 open InfoGeometry.Canonical.SpectralInference
-open InfoGeometry.Twistor
 
 section CountsToProbability
 
-variable {α : Type} [Fintype α]
+variable {α : Type*} [Fintype α]
 
 /-- Count substrate: empirical event counts. -/
-abbrev CountSubstrate (α : Type) := EmpiricalCounts α
+abbrev CountSubstrate (α : Type*) := EmpiricalCounts α
 
 /-- Nontrivial sampling hypothesis (at least one observed event). -/
-abbrev CountSubstrateNontrivial (N : CountSubstrate α) : Prop :=
-  EmpiricalNontrivial N
+abbrev CountSubstrateNontrivial {α : Type*} [Fintype α] (N : CountSubstrate α) : Prop :=
+  empirical_nontrivial N
 
 /-- Canonical empirical probability state induced by counts. -/
-noncomputable def empiricalProbabilityState
+noncomputable def empiricalProbabilityState {α : Type*} [Fintype α]
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
     ProbabilityDist α :=
-  empiricalProbDist N hN
+  empirical_fin_prob N hN
 
 /-- Theorem `empiricalProbabilityState_spec`. -/
-theorem empiricalProbabilityState_spec
+theorem empiricalProbabilityState_spec {α : Type*} [Fintype α]
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
-    ∀ x : α, empiricalProbabilityState N hN x = empiricalDistribution N x :=
-  fun _ => rfl
+    ∀ x : α, (empiricalProbabilityState N hN x).toReal = empirical_distribution N x := by
+  intro x
+  have htotal_pos : 0 < ∑ y, (N y : ℝ) := by
+    exact_mod_cast hN
+  have hratio_nonneg : 0 ≤ (N x : ℝ) / (∑ y, (N y : ℝ)) := by
+    exact div_nonneg (Nat.cast_nonneg _) htotal_pos.le
+  simp [empiricalProbabilityState, empirical_fin_prob, empirical_distribution,
+    htotal_pos.ne', hratio_nonneg]
 
 /-- Theorem `exists_empiricalProbabilityState`. -/
-theorem exists_empiricalProbabilityState
+private theorem exists_empiricalProbabilityState {α : Type*} [Fintype α]
     (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
-    ∃ P : ProbabilityDist α, ∀ x : α, P x = empiricalDistribution N x :=
-  ⟨empiricalProbabilityState N hN, fun _ => rfl⟩
+    ∃ P : ProbabilityDist α, ∀ x : α, (P x).toReal = empirical_distribution N x :=
+  ⟨empiricalProbabilityState N hN, empiricalProbabilityState_spec N hN⟩
 
 end CountsToProbability
-
-section CountsToHolographic
-
-variable (n : Nat)
-variable {α X : Type}
-  [Fintype α]
-  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
-
-/--
-Count-first holographic package:
-from nontrivial empirical counts we construct an empirical probability state,
-then pair it with the existing constructive holographic-emergence chain.
--/
-theorem countsFirst_holographicEmergence_package
-    (N : CountSubstrate α)
-    (hN : CountSubstrateNontrivial N)
-    (Tflow : SinkhornTrajectory n)
-    (CI : ConformalInference X)
-    (hAnom : CI.chiralAnomalyOperator ≠ 0)
-    (Tw : TwistedInference X)
-    (L : BayesianLoop X)
-    (IST : InfoSpectralTriple X)
-    (Q : QuadraticForm ℝ (DoubledSpace X))
-    (v : UnnormalizedProjectiveState (E := X))
-    (hNull : IsVacuumApexNull (E := X) Q v) :
-    ∃ P : ProbabilityDist α,
-      (∀ x : α, P x = empiricalDistribution N x)
-        ∧ EmergentTimeFlow n Tflow
-        ∧ AnomalyScalePhase CI
-        ∧ UpdateOrderPathDependent Tw.dual.nabla
-        ∧ (∃ (M : Coupling 2)
-            (hrow : HasPositiveRowSums 2 M)
-            (hcolRow : HasPositiveColSums 2 (rowNormalize 2 M hrow))
-            (hcol : HasPositiveColSums 2 M)
-            (hrowCol : HasPositiveRowSums 2 (colNormalize 2 M hcol)),
-            UpdateOrderHysteresis 2 M hrow hcolRow hcol hrowCol)
-        ∧ AnomalyInflowClosure (E := X) L IST
-        ∧ (∃ t : DoubledTwistorSpace (E := X) Q, t = vacuumApexTwistor (E := X) Q v hNull) := by
-  refine ⟨empiricalProbabilityState N hN, ?_, ?_⟩
-  · exact fun _ => rfl
-  · exact holographicEmergence_package (n := n)
-      (Tflow := Tflow) (CI := CI) (hAnom := hAnom) (Tw := Tw)
-      (L := L) (IST := IST) (Q := Q) (v := v) (hNull := hNull)
-
-end CountsToHolographic
 
 section CountInducedFlow
 
@@ -162,26 +130,6 @@ lemma entrywisePositive_hasPositiveColSums
     exact Finset.single_le_sum (fun i _hi => (hM i j).le) (by simp)
   exact lt_of_lt_of_le hdiag hle
 
-/-- Lemma `rowNormalize_entrywisePositive`. -/
-lemma rowNormalize_entrywisePositive
-    {M : SinkhornMatrix n}
-    (hM : EntrywisePositive n M)
-    (hrow : HasPositiveRowSums n M) :
-    EntrywisePositive n (rowNormalize n M hrow) := by
-  intro i j
-  unfold rowNormalize
-  exact div_pos (hM i j) (hrow i)
-
-/-- Lemma `colNormalize_entrywisePositive`. -/
-lemma colNormalize_entrywisePositive
-    {M : SinkhornMatrix n}
-    (hM : EntrywisePositive n M)
-    (hcol : HasPositiveColSums n M) :
-    EntrywisePositive n (colNormalize n M hcol) := by
-  intro i j
-  unfold colNormalize
-  exact div_pos (hM i j) (hcol j)
-
 /-- Matrix together with an entrywise-positivity certificate. -/
 structure PositiveSinkhornState where
   M : SinkhornMatrix n
@@ -197,33 +145,33 @@ noncomputable def countInducedPositiveIterate : Nat → PositiveSinkhornState n
           let hrow : HasPositiveRowSums n Sk.M :=
             entrywisePositive_hasPositiveRowSums (n := n) Sk.pos
           ⟨rowNormalize n Sk.M hrow,
-            rowNormalize_entrywisePositive (n := n) Sk.pos hrow⟩
+            rowNormalize_entrywisePositive Sk.pos hrow⟩
       | .col =>
           let hcol : HasPositiveColSums n Sk.M :=
             entrywisePositive_hasPositiveColSums (n := n) Sk.pos
           ⟨colNormalize n Sk.M hcol,
-            colNormalize_entrywisePositive (n := n) Sk.pos hcol⟩
+            colNormalize_entrywisePositive Sk.pos hcol⟩
+where
+  rowNormalize_entrywisePositive
+      {M : SinkhornMatrix n}
+      (hM : EntrywisePositive n M)
+      (hrow : HasPositiveRowSums n M) :
+      EntrywisePositive n (rowNormalize n M hrow) := by
+    intro i j
+    unfold rowNormalize
+    exact div_pos (hM i j) (hrow i)
+  colNormalize_entrywisePositive
+      {M : SinkhornMatrix n}
+      (hM : EntrywisePositive n M)
+      (hcol : HasPositiveColSums n M) :
+      EntrywisePositive n (colNormalize n M hcol) := by
+    intro i j
+    unfold colNormalize
+    exact div_pos (hM i j) (hcol j)
 
 /-- Matrix trajectory component extracted from the positive iterate state. -/
 noncomputable def countInducedIterate (k : Nat) : SinkhornMatrix n :=
   (countInducedPositiveIterate (n := n) N k).M
-
-/-- Lemma `countInducedIterate_entrywisePositive`. -/
-lemma countInducedIterate_entrywisePositive (k : Nat) :
-    EntrywisePositive n (countInducedIterate (n := n) N k) :=
-  (countInducedPositiveIterate (n := n) N k).pos
-
-/-- Lemma `countInducedCoupling_hasPositiveRowSums`. -/
-lemma countInducedCoupling_hasPositiveRowSums :
-    HasPositiveRowSums n (countInducedCoupling n N) := by
-  exact entrywisePositive_hasPositiveRowSums (n := n)
-    (countInducedCoupling_entrywisePositive (n := n) (N := N))
-
-/-- Lemma `countInducedCoupling_hasPositiveColSums`. -/
-lemma countInducedCoupling_hasPositiveColSums :
-    HasPositiveColSums n (countInducedCoupling n N) := by
-  exact entrywisePositive_hasPositiveColSums (n := n)
-    (countInducedCoupling_entrywisePositive (n := n) (N := N))
 
 /-- Lemma `countInducedIterate_step`. -/
 lemma countInducedIterate_step (k : Nat) :
@@ -256,48 +204,5 @@ theorem emergentTimeFlow_countInducedSinkhornTrajectory
     (countInducedSinkhornTrajectory (n := n) N)
 
 end CountInducedFlow
-
-section CountsToHolographicDerivedFlow
-
-variable (n : Nat)
-variable {X : Type}
-  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
-
-/--
-Count-first holographic package with derived flow:
-the trajectory input is eliminated and replaced by the canonical
-count-induced Sinkhorn iterate trajectory.
--/
-theorem countsFirst_holographicEmergence_of_countInducedTrajectory
-    (N : CountSubstrate (Fin n))
-    (hN : CountSubstrateNontrivial N)
-    (CI : ConformalInference X)
-    (hAnom : CI.chiralAnomalyOperator ≠ 0)
-    (Tw : TwistedInference X)
-    (L : BayesianLoop X)
-    (IST : InfoSpectralTriple X)
-    (Q : QuadraticForm ℝ (DoubledSpace X))
-    (v : UnnormalizedProjectiveState (E := X))
-    (hNull : IsVacuumApexNull (E := X) Q v) :
-    ∃ P : ProbabilityDist (Fin n),
-      (∀ x : Fin n, P x = empiricalDistribution N x)
-        ∧ EmergentTimeFlow n (countInducedSinkhornTrajectory (n := n) N)
-        ∧ AnomalyScalePhase CI
-        ∧ UpdateOrderPathDependent Tw.dual.nabla
-        ∧ (∃ (M : Coupling 2)
-            (hrow2 : HasPositiveRowSums 2 M)
-            (hcolRow2 : HasPositiveColSums 2 (rowNormalize 2 M hrow2))
-            (hcol2 : HasPositiveColSums 2 M)
-            (hrowCol2 : HasPositiveRowSums 2 (colNormalize 2 M hcol2)),
-            UpdateOrderHysteresis 2 M hrow2 hcolRow2 hcol2 hrowCol2)
-        ∧ AnomalyInflowClosure (E := X) L IST
-        ∧ (∃ t : DoubledTwistorSpace (E := X) Q, t = vacuumApexTwistor (E := X) Q v hNull) := by
-  exact countsFirst_holographicEmergence_package (n := n)
-    (N := N) (hN := hN)
-    (Tflow := countInducedSinkhornTrajectory (n := n) N)
-    (CI := CI) (hAnom := hAnom) (Tw := Tw)
-    (L := L) (IST := IST) (Q := Q) (v := v) (hNull := hNull)
-
-end CountsToHolographicDerivedFlow
 
 end InfoGeometry.Canonical.CountSubstrateBridge

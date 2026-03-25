@@ -45,7 +45,7 @@ Lower energy = higher routing probability.
 (In practice, `- dot(W_router, x_i)`).
 -/
 def routerEnergy (x : Tok → V) (i : Tok) (e : ExpertIdx n) : ℝ :=
-  -- Simple geometric surrogate: token magnitude plus expert-dependent offset.
+  -- Simple geometric model: token magnitude plus expert-dependent offset.
   ‖x i‖ + ((e : ℕ) : ℝ)
 
 /-- 

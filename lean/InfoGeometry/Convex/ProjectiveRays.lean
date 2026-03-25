@@ -1,4 +1,4 @@
-import InfoGeometry.Clifford.Cl11
+import InfoGeometry.Krein.DoubledSpace
 import Mathlib.LinearAlgebra.Projectivization.Basic
 
 /-!
@@ -10,9 +10,10 @@ physical states are rays in `DoubledSpace E`, i.e. `ℙ ℝ (DoubledSpace E)`.
 
 namespace InfoGeometry.Convex
 
+open InfoGeometry.Krein
 open scoped LinearAlgebra.Projectivization
 
-variable {E : Type} [AddCommGroup E] [Module ℝ E]
+variable {E : Type*} [AddCommGroup E] [Module ℝ E]
 
 /-- “Physical states” as rays in the doubled space (excluding `0` by construction). -/
 abbrev ProjectiveState : Type _ := ℙ ℝ (DoubledSpace E)

@@ -1,297 +1,685 @@
-
 import Architect
+import InfoGeometry.Basic
 import InfoGeometry.KL.Finite
+import InfoGeometry.MaxEnt.IProjection
 
-open scoped BigOperators
+open scoped BigOperators ENNReal NNReal
 
 namespace InfoGeometry.EntropicInference
 
 /-!
-Finite entropic inference core:
-- `FinProb α`: finite probability vectors with values in `ℝ`
-- `KL (p ‖ q)` with a safe `0 * log (0 / _) = 0` convention
-- Bayes/Jeffrey constructions on finite joint spaces
+# Entropic Inference (Canonical implementation)
+
+This module implements the core identities of entropic inference using the
+canonical `FinProb` (alias for `PMF`) structure from `InfoGeometry.Basic`.
 -/
 
-
-section FiniteProb
-
-variable {α : Type} [Fintype α]
-
-/-- Use the canonical `FinProb` from `InfoGeometry.Basic`. -/
-abbrev FinProb (α : Type*) [Fintype α] := InfoGeometry.FinProb α
-
-/-- Delegate to the canonical `InfoGeometry.normalize` in `Basic.lean`. -/
-noncomputable def normalize
-    {α : Type} [Fintype α]
-    (w : α → ℝ) (hw : ∀ a, 0 ≤ w a) (hZ : 0 < (∑ a, w a)) : FinProb α :=
-  InfoGeometry.normalize (w := w) (hw := hw) (hZ := hZ)
-
-/-- Delegate to the canonical `InfoGeometry.dirac` in `Basic.lean`. -/
-noncomputable def dirac
-    {α : Type} [Fintype α] [DecidableEq α]
-    (a0 : α) : FinProb α :=
-  InfoGeometry.dirac (a0 := a0)
-
-/-- KL term with `0 * log(0 / _) = 0` convention. -/
-noncomputable def klTerm (p q : ℝ) : ℝ :=
-  if p = 0 then 0 else p * Real.log (p / q)
-
-/-- Kullback–Leibler divergence `KL(p ‖ q)` on finite probability vectors. -/
-@[blueprint "def:inference-kl"]
-noncomputable def KL {α : Type} [Fintype α] (p q : FinProb α) : ℝ :=
-  ∑ a, klTerm (p.toFun a) (q.toFun a)
-
-/-- Shannon entropy `H(p)`. -/
-noncomputable def entropy {α : Type} [Fintype α] (p : FinProb α) : ℝ :=
-  InfoGeometry.entropy p.toProbabilityDist
-
-/-- Negative KL as entropy-like update objective. -/
-@[blueprint "def:inference-entropy"]
-noncomputable def Entropy {α : Type} [Fintype α] (p q : FinProb α) : ℝ :=
-  -KL p q
-
-/-- Forwarding wrapper to the canonical converter in `Basic.lean`. -/
-def toProbabilityDist {α : Type} [Fintype α] (p : FinProb α) : InfoGeometry.ProbabilityDist α :=
-  FinProb.toProbabilityDist p
-
-/-- Bridge to the core KL definition when the reference distribution has full support. -/
-lemma KL_eq_klDiv
-    {α : Type} [Fintype α]
-    (p q : FinProb α) (hq : ∀ a, 0 < q.toFun a) :
-    KL p q = InfoGeometry.klDiv (toProbabilityDist p) (toProbabilityDist q) := by
-  classical
-  unfold KL InfoGeometry.klDiv InfoGeometry.expectation InfoGeometry.logDensity
-  refine Finset.sum_congr rfl ?_
-  intro a _ha
-  by_cases hp : p.toFun a = 0
-  · simp [klTerm, hp, toProbabilityDist, FinProb.toProbabilityDist_prob]
-  · rw [klTerm, if_neg hp]
-    have hq_ne : q.toFun a ≠ 0 := (hq a).ne'
-    -- By definition, (toProbabilityDist q).prob a = q.toFun a
-    simp only [toProbabilityDist, FinProb.toProbabilityDist_prob]
-    rw [Real.log_div hp hq_ne]
-
-/-- Gibbs inequality in finite dimension under strict positivity of the reference law. -/
-theorem KL_nonneg
-    {α : Type} [Fintype α]
-    (p q : FinProb α) (hq : ∀ a, 0 < q.toFun a) : 0 ≤ KL p q := by
-  rw [KL_eq_klDiv (p := p) (q := q) hq]
-  exact InfoGeometry.KL.klDiv_nonneg_of_fullSupport
-    (P := toProbabilityDist p)
-    (Q := toProbabilityDist q)
-    (h_support := hq)
-
-variable {α : Type} [Fintype α]
-
-
-/-- Self-divergence vanishes. -/
-lemma KL_self {α : Type} [Fintype α] (p : FinProb α) : KL p p = 0 := by
-  classical
-  unfold KL
-  -- switch to an explicit `Finset.sum` to use `Finset.sum_eq_zero`
-  apply Finset.sum_eq_zero
-  intros a _ha
-  by_cases hp : p.toFun a = 0
-  · simp [klTerm, hp]
-  · have : p.toFun a / p.toFun a = (1 : ℝ) := div_self hp
-    simp [klTerm, hp]
-
-lemma Entropy_le_Entropy_of_eq
-    {α : Type} [Fintype α]
-    (p q : FinProb α) (hq : ∀ a, 0 < q.toFun a) :
-    Entropy p q ≤ Entropy q q := by
-  have hpq : Entropy p q ≤ 0 := neg_nonpos.mpr (KL_nonneg p q hq)
-  have hqq : Entropy q q = 0 := by simp [Entropy, KL_self]
-  exact le_trans hpq (by simp [hqq])
-
-end FiniteProb
-
+/-- Joint distributions on `X × Θ`. -/
+abbrev Joint (X Θ : Type*) [Fintype X] [Fintype Θ] := FinProb (X × Θ)
 
 section BayesJeffreyFinite
 
-variable {X Θ : Type} [Fintype X] [Fintype Θ]
-
-/-- Joint distributions on `X × Θ`. -/
-abbrev Joint := FinProb (X × Θ)
+variable {X Θ : Type*} [Fintype X] [Fintype Θ] [MeasurableSpace X] [MeasurableSpace Θ]
 
 /-- Marginal on `X`. -/
-noncomputable def marginalX (p : FinProb (X × Θ)) : FinProb X := by
-  classical
-  refine {
-    toFun := fun x => Finset.sum Finset.univ (fun θ => p.toFun (x, θ)),
-    nonneg := by
-      intro x
-      apply Finset.sum_nonneg
-      intro θ _
-      exact p.nonneg (x, θ),
-    sum_one := by
-      calc
-        (∑ x : X, ∑ θ : Θ, p.toFun (x, θ)) = ∑ z : X × Θ, p.toFun z := by rw [← Fintype.sum_prod_type']
-        _ = 1 := p.sum_one
-  }
+noncomputable def marginal_x (p : Joint X Θ) : FinProb X :=
+  p.map Prod.fst
 
 /-- Marginal on `Θ`. -/
-noncomputable def marginalΘ (p : FinProb (X × Θ)) : FinProb Θ := by
-  classical
-  refine {
-    toFun := fun θ => Finset.sum Finset.univ (fun x => p.toFun (x, θ)),
-    nonneg := by
-      intro θ
-      apply Finset.sum_nonneg
-      intro x _
-      exact p.nonneg (x, θ),
-    sum_one := by
-      calc
-        (∑ θ : Θ, ∑ x : X, p.toFun (x, θ)) = ∑ x, ∑ θ, p.toFun (x, θ) := by rw [Finset.sum_comm]
-        _ = ∑ z : X × Θ, p.toFun z := by rw [← Fintype.sum_prod_type']
-        _ = 1 := p.sum_one
-  }
+noncomputable def marginal_theta (p : Joint X Θ) : FinProb Θ :=
+  p.map Prod.snd
 
-/-- Conditional `p(θ | x)` by normalizing `θ ↦ p(x, θ)`; requires positive `x`-marginal. -/
-noncomputable def condΘGivenX
-    (p : FinProb (X × Θ)) (x : X)
-    (hx : 0 < (marginalX p).toFun x) : FinProb Θ := by
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+/-- Pointwise formula for the `X`-marginal as a finite fiber sum. -/
+lemma marginal_x_apply_sum (p : Joint X Θ) (x : X) :
+    (marginal_x p) x = ∑ θ : Θ, p (x, θ) := by
   classical
-  let w : Θ → ℝ := fun θ => p.toFun (x, θ)
-  have hw : ∀ θ, 0 ≤ w θ := by intro θ; exact p.nonneg (x, θ)
-  have hZ : 0 < (∑ θ : Θ, w θ) := by
-    simp only [w]
-    convert hx using 1
-  exact normalize w hw hZ
+  rw [marginal_x, PMF.map_apply, tsum_fintype, Fintype.sum_prod_type]
+  simpa using
+    (Finset.sum_eq_single (s := (Finset.univ : Finset X)) (a := x)
+      (f := fun x1 : X => ∑ y : Θ, if x = (x1, y).1 then p (x1, y) else 0)
+      (by
+        intro x1 _hx1 hx1ne
+        apply Finset.sum_eq_zero
+        intro y _hy
+        by_cases hxy : x = x1
+        · exact (hx1ne hxy.symm).elim
+        · simp [hxy])
+      (by
+        intro hxnot
+        simp at hxnot))
 
-/-- `condΘGivenX` projection (pointwise formula). -/
-@[simp] lemma condΘGivenX_toFun (p : FinProb (X × Θ)) (x : X) (hx : 0 < (marginalX p).toFun x)
-    (θ : Θ) : (condΘGivenX p x hx).toFun θ = p.toFun (x, θ) / (marginalX p).toFun x :=
-  by
-    dsimp [condΘGivenX, normalize]
-    -- `normalize` definition gives `toFun := fun a => w a / Z` with `w := fun θ => p.toFun (x, θ)`
-    rfl
+/-- Conditional `p(θ | x)`. -/
+noncomputable def cond_theta_given_x
+    (p : Joint X Θ) (x : X)
+    (hx : x ∈ (marginal_x p).support) : FinProb Θ := by
+  classical
+  refine PMF.ofFintype (fun θ => p (x, θ) * ((marginal_x p x)⁻¹)) ?_
+  have hmx : marginal_x p x = ∑ θ : Θ, p (x, θ) := marginal_x_apply_sum p x
+  have hne : marginal_x p x ≠ 0 := (PMF.mem_support_iff (marginal_x p) x).1 hx
+  have htop : marginal_x p x ≠ ⊤ := (marginal_x p).apply_ne_top x
+  calc
+    ∑ θ : Θ, p (x, θ) * ((marginal_x p x)⁻¹)
+        = (∑ θ : Θ, p (x, θ)) * ((marginal_x p x)⁻¹) := by
+          rw [Finset.sum_mul]
+    _ = (marginal_x p x) * ((marginal_x p x)⁻¹) := by simp [hmx]
+    _ = 1 := by simpa [hne, htop] using ENNReal.mul_inv_cancel hne htop
+
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+/-- Pointwise ratio formula for the finite conditional `p(θ | x)`. -/
+lemma cond_theta_given_x_apply
+    (p : Joint X Θ) (x : X)
+    (hx : x ∈ (marginal_x p).support) (θ : Θ) :
+    cond_theta_given_x p x hx θ = p (x, θ) * ((marginal_x p x)⁻¹) := by
+  simp [cond_theta_given_x]
 
 /-- Assemble a joint distribution from a marginal on `X` and conditionals on `Θ | X`. -/
-noncomputable def assemble (pX : FinProb X) (pΘ_givenX : X → FinProb Θ) : FinProb (X × Θ) := by
+noncomputable def assemble (p_x : FinProb X) (p_theta_given_x : X → FinProb Θ) :
+    Joint X Θ :=
+  p_x.bind (fun x => (p_theta_given_x x).map (fun θ => (x, θ)))
+
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+/-- Pointwise formula for an assembled joint law. -/
+lemma assemble_apply (p_x : FinProb X) (p_theta_given_x : X → FinProb Θ) (x : X) (θ : Θ) :
+    assemble p_x p_theta_given_x (x, θ) = p_x x * p_theta_given_x x θ := by
   classical
-  refine {
-    toFun := fun xt => pX.toFun xt.1 * (pΘ_givenX xt.1).toFun xt.2,
-    nonneg := by
-      intro xt
-      exact mul_nonneg (pX.nonneg xt.1) ((pΘ_givenX xt.1).nonneg xt.2),
-    sum_one := by
-      calc
-        (∑ z : X × Θ, pX.toFun z.1 * (pΘ_givenX z.1).toFun z.2)
-          = ∑ x : X, ∑ θ : Θ, pX.toFun x * (pΘ_givenX x).toFun θ := by rw [← Fintype.sum_prod_type']
-        _ = ∑ x : X, pX.toFun x * (∑ θ : Θ, (pΘ_givenX x).toFun θ) := by
-              congr 1
-              funext x
-              rw [Finset.mul_sum]
-        _ = ∑ x : X, pX.toFun x * 1 := by simp
-        _ = ∑ x : X, pX.toFun x := by simp
-        _ = 1 := pX.sum_one
-  }
+  rw [assemble, PMF.bind_apply, tsum_fintype]
+  have hmap :
+      ∀ a : X,
+        ((p_theta_given_x a).map (fun θ => (a, θ)) (x, θ))
+          = if x = a then p_theta_given_x a θ else 0 := by
+    intro a
+    rw [PMF.map_apply, tsum_fintype]
+    by_cases hxa : x = a
+    · subst hxa
+      simp
+    · simp [hxa]
+  simp [hmap]
 
-/-- `assemble` projection (pointwise formula). -/
-@[simp] lemma assemble_toFun (pX : FinProb X) (pΘ_givenX : X → FinProb Θ) (x : X) (θ : Θ) :
-    (assemble pX pΘ_givenX).toFun (x, θ) = pX.toFun x * (pΘ_givenX x).toFun θ := rfl
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+/-- Marginalizing an assembled joint recovers the original marginal `p_x`. -/
+theorem marginal_x_assemble (p_x : FinProb X) (p_theta_given_x : X → FinProb Θ) :
+    marginal_x (assemble p_x p_theta_given_x) = p_x := by
+  rw [marginal_x, assemble, PMF.map_bind]
+  simp [PMF.map_comp]
 
-/-- Marginalizing an assembled joint recovers the original marginal `pX`. -/
-theorem marginalX_assemble (pX : FinProb X) (pΘ_givenX : X → FinProb Θ) :
-    marginalX (assemble pX pΘ_givenX) = pX := by
-  apply FinProb.ext
-  intro x
-  -- unfold `marginalX`/`assemble` first, then do the algebra explicitly
-  dsimp [marginalX, assemble]
-  rw [← Finset.mul_sum, sum_eq_one, mul_one]
 
-/-- Bayes posterior from factorized prior `q(θ) q(x | θ)` after observing `x0`. -/
-noncomputable def bayesPosterior
-    (qΘ : FinProb Θ) (qX_givenΘ : Θ → FinProb X) (x0 : X)
-    (hZ : 0 < (∑ θ : Θ, qΘ.toFun θ * (qX_givenΘ θ).toFun x0)) : FinProb Θ := by
-  classical
-  let w : Θ → ℝ := fun θ => qΘ.toFun θ * (qX_givenΘ θ).toFun x0
-  have hw : ∀ θ, 0 ≤ w θ := by
-    intro θ
-    exact mul_nonneg (qΘ.nonneg θ) ((qX_givenΘ θ).nonneg x0)
-  exact normalize w hw hZ
 
-variable [DecidableEq X]
+/-- Bayes posterior after observing `x₀`. -/
+noncomputable def bayes_posterior
+    (q_theta : FinProb Θ) (q_x_given_theta : Θ → FinProb X) (x0 : X)
+    (hZ : x0 ∈
+      (marginal_x
+        (q_theta.bind (fun θ => (q_x_given_theta θ).map (fun x => (x, θ))))).support) :
+    FinProb Θ := by
+  let joint : Joint X Θ :=
+    q_theta.bind (fun θ => (q_x_given_theta θ).map (fun x => (x, θ)))
+  exact cond_theta_given_x joint x0 hZ
 
-/-- Bayes joint posterior: `p(x, θ) = δ_{x0}(x) * p(θ)`. -/
-noncomputable def bayesJoint
-    (qΘ : FinProb Θ) (qX_givenΘ : Θ → FinProb X) (x0 : X)
-    (hZ : 0 < (∑ θ : Θ, qΘ.toFun θ * (qX_givenΘ θ).toFun x0)) : FinProb (X × Θ) :=
-  assemble (dirac x0) (fun _x => bayesPosterior qΘ qX_givenΘ x0 hZ)
+/-- Jeffrey joint update: replace `x`-marginal by `p_x`, preserve `q(θ | x)`. -/
+noncomputable def jeffrey_joint
+    (q : Joint X Θ) (p_x : FinProb X)
+    (hq : ∀ x, x ∈ (marginal_x q).support) :
+    Joint X Θ :=
+  assemble p_x (fun x => cond_theta_given_x q x (hq x))
 
-/-- Jeffrey joint update: replace `x`-marginal by `pX`, preserve `q(θ | x)`. -/
-noncomputable def jeffreyJoint
-    (q : FinProb (X × Θ)) (pX : FinProb X)
-    (hx : ∀ x, 0 < (marginalX q).toFun x) : FinProb (X × Θ) :=
-  assemble pX (fun x => condΘGivenX q x (hx x))
-
-/-- Factorized prior joint `q(θ) q(x | θ)`. -/
-noncomputable def factorizedJoint
-    (qΘ : FinProb Θ) (qX_givenΘ : Θ → FinProb X) : FinProb (X × Θ) := by
-  classical
-  refine {
-    toFun := fun xt => qΘ.toFun xt.2 * (qX_givenΘ xt.2).toFun xt.1,
-    nonneg := by
-      intro xt
-      exact mul_nonneg (qΘ.nonneg xt.2) ((qX_givenΘ xt.2).nonneg xt.1),
-    sum_one := by
-      calc
-        (∑ z : X × Θ, qΘ.toFun z.2 * (qX_givenΘ z.2).toFun z.1)
-          = ∑ x : X, ∑ θ : Θ, qΘ.toFun θ * (qX_givenΘ θ).toFun x := by
-            rw [← Fintype.sum_prod_type']
-        _ = ∑ θ : Θ, ∑ x : X, qΘ.toFun θ * (qX_givenΘ θ).toFun x := by rw [Finset.sum_comm]
-        _ = ∑ θ : Θ, qΘ.toFun θ * (∑ x : X, (qX_givenΘ θ).toFun x) := by
-            congr 1
-            funext θ
-            rw [Finset.mul_sum]
-        _ = ∑ θ : Θ, qΘ.toFun θ * 1 := by simp
-        _ = ∑ θ : Θ, qΘ.toFun θ := by simp
-        _ = 1 := qΘ.sum_one
-  }
-
-/-- Mutual information I(X;Θ) as KL(p(x,θ) ‖ p(x)p(θ)). -/
-noncomputable def mutualInformation {X Θ : Type} [Fintype X] [Fintype Θ]
-    (p : FinProb (X × Θ)) : ℝ :=
-  KL p (assemble (marginalX p) (fun _ => marginalΘ p))
-
-/-- Mutual-information decomposition target proposition (finite-support form). -/
-def MutualInformationEqSumKL
-    {X Θ : Type} [Fintype X] [Fintype Θ] (p : FinProb (X × Θ))
-    (hp : ∀ x : X, 0 < (marginalX p).toFun x) : Prop :=
-  mutualInformation p =
-    ∑ x : X, (marginalX p).toFun x * KL (condΘGivenX p x (hp x)) (marginalΘ p)
-
-/-! ME characterization interfaces (finite case). -/
-
-/-- KL chain-rule decomposition on finite products. -/
-def KL_chain_rule
-    (p q : FinProb (X × Θ))
-    (hq : ∀ x : X, 0 < (marginalX q).toFun x)
-    (hp : ∀ x : X, 0 < (marginalX p).toFun x) : Prop :=
-  KL p q
-    =
-    KL (marginalX p) (marginalX q)
-      +
-    (∑ x : X, (marginalX p).toFun x *
-      KL (condΘGivenX p x (hp x)) (condΘGivenX q x (hq x)))
-
-/-- Jeffrey update is ME under fixed `x`-marginal constraint. -/
-def jeffrey_is_ME
-    (q : FinProb (X × Θ)) (pX : FinProb X)
-    (hq : ∀ x : X, 0 < (marginalX q).toFun x) : Prop :=
-  ∀ p : Joint, marginalX p = pX →
-    Entropy p q ≤ Entropy (jeffreyJoint q pX hq) q
-
-/-- Bayes update is ME under hard-data marginal constraint `p(x)=δ_{x0}`. -/
-def bayes_is_ME
-    (qΘ : FinProb Θ) (qX_givenΘ : Θ → FinProb X) (x0 : X)
-    (hZ : 0 < (∑ θ : Θ, qΘ.toFun θ * (qX_givenΘ θ).toFun x0)) : Prop :=
-  ∀ p : Joint, marginalX p = dirac x0 →
-    Entropy p (factorizedJoint qΘ qX_givenΘ)
-      ≤ Entropy (bayesJoint qΘ qX_givenΘ x0 hZ) (factorizedJoint qΘ qX_givenΘ)
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+lemma marginal_x_jeffrey_joint
+    (q : Joint X Θ) (p_x : FinProb X)
+    (hq : ∀ x, x ∈ (marginal_x q).support) :
+    marginal_x (jeffrey_joint q p_x hq) = p_x := by
+  simpa [jeffrey_joint] using marginal_x_assemble p_x (fun x => cond_theta_given_x q x (hq x))
 
 end BayesJeffreyFinite
+
+section Decompositions
+
+variable {X Θ : Type*} [Fintype X] [Fintype Θ] [MeasurableSpace X] [MeasurableSpace Θ]
+
+/-- Kullback–Leibler divergence on joints. -/
+noncomputable def kl (p q : Joint X Θ) : ℝ≥0∞ :=
+  InfoGeometry.KL.kl_div (α := X × Θ)
+    (p.toMeasure : MeasureTheory.Measure (X × Θ))
+    (q.toMeasure : MeasureTheory.Measure (X × Θ))
+
+noncomputable abbrev KL {X Θ : Type*} [Fintype X] [Fintype Θ] [MeasurableSpace X] [MeasurableSpace Θ]
+    (p q : Joint X Θ) : ℝ≥0∞ := kl p q
+
+omit [MeasurableSpace X] [MeasurableSpace Θ] in
+/--
+Full-support transport along a marginal identity.
+This is only a convenience lemma for the finite/full-support formulation.
+-/
+lemma full_support_of_marginal_eq
+    {p : Joint X Θ} {p_x : FinProb X}
+    (hmarg : marginal_x p = p_x)
+    (hp : ∀ x : X, x ∈ (marginal_x p).support) :
+    ∀ x : X, x ∈ p_x.support := by
+  intro x
+  simpa [← hmarg] using hp x
+
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  Strict positivity of all joint atoms implies strict positivity of each `X`-marginal atom.
+  -/
+lemma marginal_x_toReal_pos_of_joint_toReal_pos
+    [Nonempty Θ]
+    (p : Joint X Θ)
+    (hpos : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal) :
+    ∀ x : X, 0 < (marginal_x p x).toReal := by
+  intro x
+  let θ0 : Θ := Classical.choice inferInstance
+  have hterm_pos : 0 < (p (x, θ0)).toReal := hpos x θ0
+  have hterm_le : p (x, θ0) ≤ marginal_x p x := by
+    rw [marginal_x_apply_sum]
+    have hle' : p (x, θ0) ≤ (∑ θ : Θ, p (x, θ)) := by
+      simpa using
+        (Finset.single_le_sum
+          (s := (Finset.univ : Finset Θ))
+          (a := θ0)
+          (f := fun θ : Θ => p (x, θ))
+          (by
+            intro θ _hθ
+            exact zero_le _)
+          (by simp))
+    simpa using hle'
+  have hle_real : (p (x, θ0)).toReal ≤ (marginal_x p x).toReal := by
+    exact ENNReal.toReal_mono ((marginal_x p).apply_ne_top x) hterm_le
+  exact lt_of_lt_of_le hterm_pos hle_real
+
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  Strict positivity of all joint atoms implies full support of the `X`-marginal.
+  -/
+lemma marginal_x_full_support_of_joint_toReal_pos
+    [Nonempty Θ]
+    (p : Joint X Θ)
+    (hpos : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal) :
+    ∀ x : X, x ∈ (marginal_x p).support := by
+  intro x
+  have hmx_pos : 0 < (marginal_x p x).toReal :=
+    marginal_x_toReal_pos_of_joint_toReal_pos p hpos x
+  have hmx_ne_zero_real : (marginal_x p x).toReal ≠ 0 := ne_of_gt hmx_pos
+  have hmx_ne_zero : marginal_x p x ≠ 0 := by
+    intro hzero
+    exact hmx_ne_zero_real (by simp [hzero])
+  exact (PMF.mem_support_iff (marginal_x p) x).2 hmx_ne_zero
+
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  `toReal` ratio formula for finite conditionals under strict positivity.
+  -/
+lemma cond_theta_given_x_toReal_ratio
+    [Nonempty Θ]
+    (p : Joint X Θ)
+    (hpos : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
+    (x : X) (θ : Θ) :
+    (cond_theta_given_x p x (marginal_x_full_support_of_joint_toReal_pos p hpos x) θ).toReal
+      = (p (x, θ)).toReal / (marginal_x p x).toReal := by
+  have hcond :=
+    cond_theta_given_x_apply p x (marginal_x_full_support_of_joint_toReal_pos p hpos x) θ
+  rw [hcond, ENNReal.toReal_mul, ENNReal.toReal_inv, div_eq_mul_inv]
+
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  Factorization of a strictly positive joint into marginal times conditional, in `toReal` form.
+  -/
+lemma joint_toReal_factor_marginal_conditional
+    [Nonempty Θ]
+    (p : Joint X Θ)
+    (hpos : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
+    (x : X) (θ : Θ) :
+    (p (x, θ)).toReal
+      = (marginal_x p x).toReal *
+        (cond_theta_given_x p x (marginal_x_full_support_of_joint_toReal_pos p hpos x) θ).toReal := by
+  have hpx_pos : 0 < (marginal_x p x).toReal :=
+    marginal_x_toReal_pos_of_joint_toReal_pos p hpos x
+  have hpx_ne : (marginal_x p x).toReal ≠ 0 := ne_of_gt hpx_pos
+  have hratio := cond_theta_given_x_toReal_ratio p hpos x θ
+  rw [hratio]
+  field_simp [hpx_ne]
+
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  Pointwise logarithmic split:
+  `log (p(x,θ)/q(x,θ)) = log (p(x)/q(x)) + log (p(θ|x)/q(θ|x))`,
+  for strictly positive finite joints.
+  -/
+lemma pointwise_log_split
+    [Nonempty Θ]
+    (p q : Joint X Θ)
+    (hposp : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
+    (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal)
+    (x : X) (θ : Θ) :
+    Real.log ((p (x, θ)).toReal / (q (x, θ)).toReal)
+      = Real.log ((marginal_x p x).toReal / (marginal_x q x).toReal)
+      + Real.log
+          (((cond_theta_given_x p x (marginal_x_full_support_of_joint_toReal_pos p hposp x) θ).toReal)
+            / ((cond_theta_given_x q x (marginal_x_full_support_of_joint_toReal_pos q hposq x) θ).toReal)) := by
+  have hpxt : (p (x, θ)).toReal
+      = (marginal_x p x).toReal *
+        (cond_theta_given_x p x (marginal_x_full_support_of_joint_toReal_pos p hposp x) θ).toReal :=
+    joint_toReal_factor_marginal_conditional p hposp x θ
+  have hqxt : (q (x, θ)).toReal
+      = (marginal_x q x).toReal *
+        (cond_theta_given_x q x (marginal_x_full_support_of_joint_toReal_pos q hposq x) θ).toReal :=
+    joint_toReal_factor_marginal_conditional q hposq x θ
+  have hmxp_ne : (marginal_x p x).toReal ≠ 0 := by
+    exact ne_of_gt (marginal_x_toReal_pos_of_joint_toReal_pos p hposp x)
+  have hmxq_ne : (marginal_x q x).toReal ≠ 0 := by
+    exact ne_of_gt (marginal_x_toReal_pos_of_joint_toReal_pos q hposq x)
+  have hcp_ne :
+      ((cond_theta_given_x p x (marginal_x_full_support_of_joint_toReal_pos p hposp x) θ).toReal) ≠ 0 := by
+    rw [cond_theta_given_x_toReal_ratio p hposp x θ]
+    exact div_ne_zero (ne_of_gt (hposp x θ)) hmxp_ne
+  have hcq_ne :
+      ((cond_theta_given_x q x (marginal_x_full_support_of_joint_toReal_pos q hposq x) θ).toReal) ≠ 0 := by
+    rw [cond_theta_given_x_toReal_ratio q hposq x θ]
+    exact div_ne_zero (ne_of_gt (hposq x θ)) hmxq_ne
+  rw [hpxt, hqxt]
+  have hdiv :
+      ((marginal_x p x).toReal *
+        (cond_theta_given_x p x (marginal_x_full_support_of_joint_toReal_pos p hposp x) θ).toReal)
+        /
+      (((marginal_x q x).toReal *
+        (cond_theta_given_x q x (marginal_x_full_support_of_joint_toReal_pos q hposq x) θ).toReal))
+      =
+      (((marginal_x p x).toReal / (marginal_x q x).toReal) *
+        (((cond_theta_given_x p x (marginal_x_full_support_of_joint_toReal_pos p hposp x) θ).toReal)
+          / ((cond_theta_given_x q x (marginal_x_full_support_of_joint_toReal_pos q hposq x) θ).toReal))) := by
+    field_simp [hmxq_ne, hcq_ne]
+  rw [hdiv, Real.log_mul (div_ne_zero hmxp_ne hmxq_ne) (div_ne_zero hcp_ne hcq_ne)]
+
+/--
+Constructive finite KL chain rule in `toReal` form, under strict positivity.
+-/
+theorem kl_chain_rule_toReal_strict
+    [DecidableEq X] [DecidableEq Θ]
+    [MeasurableSingletonClass X] [MeasurableSingletonClass Θ]
+    [Nonempty Θ]
+    (p q : Joint X Θ)
+    (hposp : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
+    (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal) :
+    (kl p q).toReal =
+      (InfoGeometry.KL.kl_div (α := X) (marginal_x p).toMeasure (marginal_x q).toMeasure).toReal
+      +
+      (∑ x : X, (marginal_x p x).toReal *
+        (InfoGeometry.KL.kl_div (α := Θ)
+          (cond_theta_given_x p x (marginal_x_full_support_of_joint_toReal_pos p hposp x)).toMeasure
+          (cond_theta_given_x q x (marginal_x_full_support_of_joint_toReal_pos q hposq x)).toMeasure).toReal) := by
+  let hp : ∀ x : X, x ∈ (marginal_x p).support := marginal_x_full_support_of_joint_toReal_pos p hposp
+  let hq : ∀ x : X, x ∈ (marginal_x q).support := marginal_x_full_support_of_joint_toReal_pos q hposq
+  let cp : X → Θ → ℝ := fun x θ => (cond_theta_given_x p x (hp x) θ).toReal
+  let cq : X → Θ → ℝ := fun x θ => (cond_theta_given_x q x (hq x) θ).toReal
+  let pj : X → Θ → ℝ := fun x θ => (p (x, θ)).toReal
+  let logx : X → ℝ := fun x => Real.log ((marginal_x p x).toReal / (marginal_x q x).toReal)
+  let logc : X → Θ → ℝ := fun x θ => Real.log (cp x θ / cq x θ)
+
+  have hQ_joint : ∀ xt : X × Θ, 0 < (q xt).toReal := by
+    intro xt
+    exact hposq xt.1 xt.2
+  have hQ_marg : ∀ x : X, 0 < (marginal_x q x).toReal :=
+    marginal_x_toReal_pos_of_joint_toReal_pos q hposq
+  have hQ_cond : ∀ x : X, ∀ θ : Θ, 0 < (cond_theta_given_x q x (hq x) θ).toReal := by
+    intro x θ
+    rw [cond_theta_given_x_toReal_ratio q hposq x θ]
+    exact div_pos (hposq x θ) (marginal_x_toReal_pos_of_joint_toReal_pos q hposq x)
+
+  have h_joint :
+      (kl p q).toReal = ∑ xt : X × Θ, (p xt).toReal * Real.log ((p xt).toReal / (q xt).toReal) := by
+    simpa [kl, InfoGeometry.KL.kl_div] using
+      (InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio (P := p) (Q := q) hQ_joint)
+  have h_marg :
+      (InfoGeometry.KL.kl_div (α := X) (marginal_x p).toMeasure (marginal_x q).toMeasure).toReal
+        = ∑ x : X, (marginal_x p x).toReal * logx x := by
+    simpa [logx, InfoGeometry.KL.kl_div] using
+      (InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio
+        (P := marginal_x p) (Q := marginal_x q) hQ_marg)
+  have h_cond_each :
+      ∀ x : X,
+        (InfoGeometry.KL.kl_div (α := Θ)
+          (cond_theta_given_x p x (hp x)).toMeasure
+          (cond_theta_given_x q x (hq x)).toMeasure).toReal
+        = ∑ θ : Θ, cp x θ * logc x θ := by
+    intro x
+    simpa [cp, logc, InfoGeometry.KL.kl_div] using
+      (InfoGeometry.MaxEnt.IProjection.toReal_klDiv_eq_sum_log_ratio
+        (P := cond_theta_given_x p x (hp x))
+        (Q := cond_theta_given_x q x (hq x))
+        (hQ_cond x))
+
+  rw [h_joint, h_marg]
+  rw [Fintype.sum_prod_type]
+  have hsplit :
+      ∑ x : X, ∑ θ : Θ, pj x θ * Real.log ((p (x, θ)).toReal / (q (x, θ)).toReal)
+      =
+      ∑ x : X, ∑ θ : Θ, pj x θ * (logx x + logc x θ) := by
+    refine Finset.sum_congr rfl ?_
+    intro x _hx
+    refine Finset.sum_congr rfl ?_
+    intro θ _hθ
+    simp [pj, logx, logc, cp, cq, pointwise_log_split p q hposp hposq x θ]
+  rw [hsplit]
+  have hsplit2 :
+      (∑ x : X, ∑ θ : Θ, pj x θ * (logx x + logc x θ))
+      =
+      (∑ x : X, ∑ θ : Θ, pj x θ * logx x)
+      +
+      (∑ x : X, ∑ θ : Θ, pj x θ * logc x θ) := by
+    simp [mul_add, Finset.sum_add_distrib, add_comm]
+  rw [hsplit2]
+
+  have hfirst :
+      (∑ x : X, ∑ θ : Θ, pj x θ * logx x)
+      = ∑ x : X, (marginal_x p x).toReal * logx x := by
+    refine Finset.sum_congr rfl ?_
+    intro x _hx
+    rw [← Finset.sum_mul]
+    congr 1
+    simp [pj, marginal_x_apply_sum, ENNReal.toReal_sum, PMF.apply_ne_top]
+
+  have hsecond :
+      (∑ x : X, ∑ θ : Θ, pj x θ * logc x θ)
+      = ∑ x : X, (marginal_x p x).toReal * (∑ θ : Θ, cp x θ * logc x θ) := by
+    refine Finset.sum_congr rfl ?_
+    intro x _hx
+    have hfac : ∀ θ : Θ, pj x θ = (marginal_x p x).toReal * cp x θ := by
+      intro θ
+      simp [pj, cp, joint_toReal_factor_marginal_conditional p hposp x θ]
+    calc
+      (∑ θ : Θ, pj x θ * logc x θ)
+          = (∑ θ : Θ, ((marginal_x p x).toReal * cp x θ) * logc x θ) := by
+              refine Finset.sum_congr rfl ?_
+              intro θ _hθ
+              rw [hfac θ]
+      _ = (∑ θ : Θ, (marginal_x p x).toReal * (cp x θ * logc x θ)) := by
+            refine Finset.sum_congr rfl ?_
+            intro θ _hθ
+            ring
+      _ = (marginal_x p x).toReal * (∑ θ : Θ, cp x θ * logc x θ) := by
+            rw [Finset.mul_sum]
+
+  rw [hfirst, hsecond]
+  congr 1
+  refine Finset.sum_congr rfl ?_
+  intro x _hx
+  rw [h_cond_each x]
+
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  Conditionals of an assembled joint recover the input kernel.
+  This is the finite `Θ | X` reconstruction lemma.
+  -/
+lemma cond_theta_given_x_assemble
+    (p_x : FinProb X) (r : X → FinProb Θ)
+    {x : X} (hx : x ∈ p_x.support) :
+    cond_theta_given_x (assemble p_x r) x
+      (by simpa [marginal_x_assemble] using hx) = r x := by
+  ext θ
+  have hx0 : p_x x ≠ 0 := (PMF.mem_support_iff p_x x).1 hx
+  have hxtop : p_x x ≠ ⊤ := p_x.apply_ne_top x
+  have hcancel : p_x x * (p_x x)⁻¹ = 1 := ENNReal.mul_inv_cancel hx0 hxtop
+  calc
+    cond_theta_given_x (assemble p_x r) x (by simpa [marginal_x_assemble] using hx) θ
+        = p_x x * (r x θ * (p_x x)⁻¹) := by
+          simp [cond_theta_given_x_apply, assemble_apply, marginal_x_assemble, mul_comm,
+            mul_left_comm]
+    _ = (p_x x * (p_x x)⁻¹) * r x θ := by ac_rfl
+    _ = r x θ := by simp [hcancel]
+
+  omit [MeasurableSpace X] [MeasurableSpace Θ] in
+  /--
+  Jeffrey update preserves the conditional family `q(θ | x)`.
+  -/
+lemma cond_theta_given_x_jeffrey_joint
+    (q : Joint X Θ) (p_x : FinProb X)
+    (hq : ∀ x : X, x ∈ (marginal_x q).support)
+    {x : X} (hx : x ∈ p_x.support) :
+    cond_theta_given_x (jeffrey_joint q p_x hq) x
+      (by simpa [marginal_x_jeffrey_joint] using hx)
+      =
+    cond_theta_given_x q x (hq x) := by
+  simpa [jeffrey_joint] using
+    (cond_theta_given_x_assemble (p_x := p_x)
+      (r := fun x => cond_theta_given_x q x (hq x)) (x := x) hx)
+
+/--
+Constructive KL-Pythagorean theorem in `toReal` form for strictly positive finite joints.
+
+This version removes explicit `KlChainRule` hypotheses by deriving the chain-rule
+equalities from `kl_chain_rule_toReal_strict`.
+-/
+theorem kl_pythagorean_jeffrey_toReal_strict
+    [DecidableEq X] [DecidableEq Θ]
+    [MeasurableSingletonClass X] [MeasurableSingletonClass Θ]
+    [Nonempty Θ]
+    (p q : Joint X Θ)
+    (p_x : FinProb X)
+    (hposp : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
+    (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal)
+    (hmarg : marginal_x p = p_x) :
+    (kl p q).toReal =
+      (kl p (jeffrey_joint q p_x
+        (marginal_x_full_support_of_joint_toReal_pos q hposq))).toReal
+      +
+      (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+  let hq : ∀ x : X, x ∈ (marginal_x q).support :=
+    marginal_x_full_support_of_joint_toReal_pos q hposq
+  let qStar : Joint X Θ := jeffrey_joint q p_x hq
+
+  have hpos_p_x : ∀ x : X, 0 < (p_x x).toReal := by
+    intro x
+    simpa [hmarg] using (marginal_x_toReal_pos_of_joint_toReal_pos p hposp x)
+
+  have hpos_qStar : ∀ x : X, ∀ θ : Θ, 0 < (qStar (x, θ)).toReal := by
+    intro x θ
+    have hcond_pos :
+        0 <
+          (cond_theta_given_x q x (hq x) θ).toReal := by
+      rw [cond_theta_given_x_toReal_ratio q hposq x θ]
+      exact div_pos (hposq x θ) (marginal_x_toReal_pos_of_joint_toReal_pos q hposq x)
+    have hqStar_apply :
+        qStar (x, θ) = p_x x * cond_theta_given_x q x (hq x) θ := by
+      simpa [qStar, jeffrey_joint] using
+        (assemble_apply p_x (fun x => cond_theta_given_x q x (hq x)) x θ)
+    rw [hqStar_apply, ENNReal.toReal_mul]
+    exact mul_pos (hpos_p_x x) hcond_pos
+
+  have hqStar_support : ∀ x : X, x ∈ (marginal_x qStar).support :=
+    marginal_x_full_support_of_joint_toReal_pos qStar hpos_qStar
+  have hp_support : ∀ x : X, x ∈ (marginal_x p).support :=
+    marginal_x_full_support_of_joint_toReal_pos p hposp
+
+  have hmx_qstar : marginal_x qStar = p_x := by
+    simpa [qStar] using marginal_x_jeffrey_joint (q := q) (p_x := p_x) hq
+
+  have hkl_self_toReal :
+      (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure p_x.toMeasure).toReal = 0 := by
+      simp [InfoGeometry.KL.kl_div]
+
+  have hres :
+      (kl p qStar).toReal =
+        ∑ x : X, (marginal_x p x).toReal *
+          (InfoGeometry.KL.kl_div (α := Θ)
+            (cond_theta_given_x p x (hp_support x)).toMeasure
+            (cond_theta_given_x q x (hq x)).toMeasure).toReal := by
+    have htmp :=
+      kl_chain_rule_toReal_strict
+        (p := p) (q := qStar) (hposp := hposp) (hposq := hpos_qStar)
+    rw [htmp]
+    rw [hmarg, hmx_qstar, hkl_self_toReal, zero_add]
+    refine Finset.sum_congr rfl ?_
+    intro x hx
+    have hxpx : x ∈ p_x.support := by
+      have hne : p_x x ≠ 0 := by
+        exact fun h0 => (ne_of_gt (hpos_p_x x)) (by simp [h0])
+      exact (PMF.mem_support_iff p_x x).2 hne
+    have hcond :
+        cond_theta_given_x qStar x (hqStar_support x) =
+          cond_theta_given_x q x (hq x) := by
+      calc
+        cond_theta_given_x qStar x (hqStar_support x)
+            = cond_theta_given_x qStar x (by simpa [hmx_qstar] using hxpx) := by
+                exact congrArg (fun h : x ∈ (marginal_x qStar).support =>
+                  cond_theta_given_x qStar x h) (Subsingleton.elim _ _)
+        _ = cond_theta_given_x q x (hq x) := by
+            simpa [qStar] using
+              (cond_theta_given_x_jeffrey_joint
+                (q := q) (p_x := p_x) (hq := hq) (x := x) hxpx)
+    rw [hcond]
+
+  have hchain1 :=
+    kl_chain_rule_toReal_strict (p := p) (q := q) (hposp := hposp) (hposq := hposq)
+
+  calc
+    (kl p q).toReal
+        =
+          (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal
+          +
+          (∑ x : X, (marginal_x p x).toReal *
+            (InfoGeometry.KL.kl_div (α := Θ)
+              (cond_theta_given_x p x (hp_support x)).toMeasure
+              (cond_theta_given_x q x (hq x)).toMeasure).toReal) := by
+      simpa [hmarg] using hchain1
+    _ =
+          (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal
+          +
+          (kl p qStar).toReal := by
+      rw [hres]
+    _ =
+          (kl p qStar).toReal
+          +
+          (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+      ring
+    _ =
+          (kl p (jeffrey_joint q p_x
+            (marginal_x_full_support_of_joint_toReal_pos q hposq))).toReal
+          +
+          (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+        simp [qStar]
+
+/--
+If the right argument `Q` has strictly positive atoms (in `toReal`), then
+`KL(P ‖ Q)` is finite (`≠ ⊤`) for finite PMFs.
+-/
+lemma kl_div_ne_top_of_right_toReal_pos
+    {α : Type*} [Fintype α] [DecidableEq α]
+    [MeasurableSpace α] [MeasurableSingletonClass α]
+    (P Q : FinProb α)
+    (hQ : ∀ x : α, 0 < (Q x).toReal) :
+    InfoGeometry.KL.kl_div (α := α) P.toMeasure Q.toMeasure ≠ ⊤ := by
+  change InformationTheory.klDiv P.toMeasure Q.toMeasure ≠ ⊤
+  rw [InformationTheory.klDiv_ne_top_iff]
+  refine ⟨?_, ?_⟩
+  · intro s hQs
+    have hs : MeasurableSet s := (Set.toFinite s).measurableSet
+    have hQs' : Disjoint Q.support s := (Q.toMeasure_apply_eq_zero_iff hs).1 hQs
+    refine (P.toMeasure_apply_eq_zero_iff hs).2 ?_
+    refine Set.disjoint_left.2 ?_
+    intro x _hxP hxS
+    have hxQ : x ∈ Q.support := by
+      refine (Q.mem_support_iff x).2 ?_
+      intro h0
+      have : 0 < (Q x).toReal := hQ x
+      simp [h0] at this
+    exact (Set.disjoint_left.1 hQs' hxQ) hxS
+  · exact
+      (InfoGeometry.MaxEnt.IProjection.integrable_of_fintype
+        (f := MeasureTheory.llr P.toMeasure Q.toMeasure) (μ := P.toMeasure))
+
+/--
+Constructive KL-Pythagorean theorem in `ℝ≥0∞` form for strictly positive finite joints.
+
+This is the `ℝ≥0∞` lift of `kl_pythagorean_jeffrey_toReal_strict`, with
+finiteness discharged constructively from strict positivity.
+-/
+theorem kl_pythagorean_jeffrey_strict
+    [DecidableEq X] [DecidableEq Θ]
+    [MeasurableSingletonClass X] [MeasurableSingletonClass Θ]
+    [Nonempty Θ]
+    (p q : Joint X Θ)
+    (p_x : FinProb X)
+    (hposp : ∀ x : X, ∀ θ : Θ, 0 < (p (x, θ)).toReal)
+    (hposq : ∀ x : X, ∀ θ : Θ, 0 < (q (x, θ)).toReal)
+    (hmarg : marginal_x p = p_x) :
+    kl p q =
+      kl p (jeffrey_joint q p_x
+        (marginal_x_full_support_of_joint_toReal_pos q hposq))
+      +
+      InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure := by
+  let hq : ∀ x : X, x ∈ (marginal_x q).support :=
+    marginal_x_full_support_of_joint_toReal_pos q hposq
+  let qStar : Joint X Θ := jeffrey_joint q p_x hq
+
+  have htoReal :
+      (kl p q).toReal =
+        (kl p qStar).toReal +
+        (InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+    simpa [qStar, hq] using
+      kl_pythagorean_jeffrey_toReal_strict
+        (p := p) (q := q) (p_x := p_x) (hposp := hposp) (hposq := hposq) (hmarg := hmarg)
+
+  have hpos_qStar : ∀ x : X, ∀ θ : Θ, 0 < (qStar (x, θ)).toReal := by
+    intro x θ
+    have hpos_px : 0 < (p_x x).toReal := by
+      simpa [hmarg] using (marginal_x_toReal_pos_of_joint_toReal_pos p hposp x)
+    have hcond_pos :
+        0 < (cond_theta_given_x q x (hq x) θ).toReal := by
+      rw [cond_theta_given_x_toReal_ratio q hposq x θ]
+      exact div_pos (hposq x θ) (marginal_x_toReal_pos_of_joint_toReal_pos q hposq x)
+    have hqStar_apply :
+        qStar (x, θ) = p_x x * cond_theta_given_x q x (hq x) θ := by
+      simpa [qStar, jeffrey_joint] using
+        (assemble_apply p_x (fun x => cond_theta_given_x q x (hq x)) x θ)
+    rw [hqStar_apply, ENNReal.toReal_mul]
+    exact mul_pos hpos_px hcond_pos
+
+  have hq_joint_pos : ∀ xt : X × Θ, 0 < (q xt).toReal := by
+    intro xt
+    exact hposq xt.1 xt.2
+
+  have hqStar_joint_pos : ∀ xt : X × Θ, 0 < (qStar xt).toReal := by
+    intro xt
+    exact hpos_qStar xt.1 xt.2
+
+  have hmxq_pos : ∀ x : X, 0 < (marginal_x q x).toReal :=
+    marginal_x_toReal_pos_of_joint_toReal_pos q hposq
+
+  have hleft_ne_top : kl p q ≠ ⊤ := by
+    simpa [kl] using
+      (kl_div_ne_top_of_right_toReal_pos (P := p) (Q := q) hq_joint_pos)
+
+  have hright1_ne_top : kl p qStar ≠ ⊤ := by
+    simpa [kl] using
+      (kl_div_ne_top_of_right_toReal_pos (P := p) (Q := qStar) hqStar_joint_pos)
+
+  have hright2_ne_top :
+      InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure ≠ ⊤ := by
+    exact kl_div_ne_top_of_right_toReal_pos (P := p_x) (Q := marginal_x q) hmxq_pos
+
+  have hsum_ne_top :
+      kl p qStar +
+        InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure ≠ ⊤ := by
+    exact ENNReal.add_ne_top.2 ⟨hright1_ne_top, hright2_ne_top⟩
+
+  have htoReal_sum :
+      (kl p q).toReal =
+        (kl p qStar +
+          InfoGeometry.KL.kl_div (α := X) p_x.toMeasure (marginal_x q).toMeasure).toReal := by
+    rw [ENNReal.toReal_add hright1_ne_top hright2_ne_top]
+    exact htoReal
+
+  apply (ENNReal.toReal_eq_toReal_iff' hleft_ne_top hsum_ne_top).mp
+  exact htoReal_sum
+
+/-- Mutual information `I(X;Θ)`. -/
+noncomputable def mutual_information (p : Joint X Θ) : ℝ≥0∞ :=
+  kl p (assemble (marginal_x p) (fun _ => marginal_theta p))
+
+/-- Dirac distribution at `x`. -/
+noncomputable def dirac {α : Type*} (x : α) : FinProb α :=
+  PMF.pure x
+
+end Decompositions
 
 end InfoGeometry.EntropicInference

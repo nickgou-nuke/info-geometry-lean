@@ -1,5 +1,6 @@
 import InfoGeometry.MaxEnt.Optimality
 import Mathlib.Data.Nat.Choose.Multinomial
+set_option linter.unnecessarySimpa false
 
 open scoped BigOperators
 
@@ -85,12 +86,12 @@ variable {n : ℕ}
 /-- Prior-weighted Jaynes partition function `Z_q(lam) = ∑ᵢ qᵢ exp(-lam fᵢ)`. -/
 noncomputable def partitionWithPrior
     (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) : ℝ :=
-  ∑ i, q.prob i * Real.exp (-lam * f i)
+  ∑ i, (q i).toReal * Real.exp (-lam * f i)
 
 /-- Prior-weighted Gibbs form `pᵢ(lam) = qᵢ exp(-lam fᵢ) / Z_q(lam)`. -/
 noncomputable def gibbsWithPrior
     (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) : ℝ :=
-  q.prob i * Real.exp (-lam * f i) / partitionWithPrior q f lam
+  (q i).toReal * Real.exp (-lam * f i) / partitionWithPrior q f lam
 
 /-- Prior-weighted Gibbs expectation of the observable `f`. -/
 noncomputable def gibbsExpectationWithPrior
@@ -104,15 +105,35 @@ lemma partitionWithPrior_pos
   unfold partitionWithPrior
   have hnonneg :
       ∀ i ∈ (Finset.univ : Finset (Fin n)),
-        0 ≤ q.prob i * Real.exp (-lam * f i) := by
+        0 ≤ (q i).toReal * Real.exp (-lam * f i) := by
     intro i hi
-    exact mul_nonneg (q.nonneg i) (le_of_lt (Real.exp_pos _))
+    exact mul_nonneg ENNReal.toReal_nonneg (le_of_lt (Real.exp_pos _))
   have hposWitness :
       ∃ i ∈ (Finset.univ : Finset (Fin n)),
-        0 < q.prob i * Real.exp (-lam * f i) := by
-    rcases (InfoGeometry.FinProb.exists_pos q.toFinProb) with ⟨i, hi⟩
+        0 < (q i).toReal * Real.exp (-lam * f i) := by
+    classical
+    have hsum_ennreal :
+        (Finset.univ.sum fun i : Fin n => q i) = (1 : ENNReal) := by
+      simpa [tsum_fintype] using q.tsum_coe
+    have hsum_toReal :
+        (Finset.univ.sum fun i : Fin n => (q i).toReal) = 1 := by
+      have htoReal :
+          (Finset.univ.sum fun i : Fin n => (q i).toReal)
+            = ENNReal.toReal (Finset.univ.sum fun i : Fin n => q i) := by
+        simpa using
+          (ENNReal.toReal_sum (s := (Finset.univ : Finset (Fin n)))
+            (f := fun i => q i) (by
+              intro i hi
+              exact q.apply_ne_top i)).symm
+      simpa [hsum_ennreal] using htoReal
+    have hsum_ne_zero :
+        (Finset.univ.sum fun i : Fin n => (q i).toReal) ≠ 0 := by
+      simpa [hsum_toReal] using (one_ne_zero : (1 : ℝ) ≠ 0)
+    rcases Finset.exists_ne_zero_of_sum_ne_zero hsum_ne_zero with ⟨i, hi, hne⟩
+    have hpos_q : 0 < (q i).toReal :=
+      lt_of_le_of_ne ENNReal.toReal_nonneg (by simpa [eq_comm] using hne)
     refine ⟨i, Finset.mem_univ i, ?_⟩
-    exact mul_pos (by simpa using hi) (Real.exp_pos _)
+    exact mul_pos hpos_q (Real.exp_pos _)
   exact Finset.sum_pos' hnonneg hposWitness
 
 /-- The prior-weighted partition function is nonzero. -/
@@ -127,7 +148,7 @@ lemma gibbsWithPrior_nonneg
     0 ≤ gibbsWithPrior q f lam i := by
   unfold gibbsWithPrior
   exact div_nonneg
-    (mul_nonneg (q.nonneg i) (le_of_lt (Real.exp_pos _)))
+    (mul_nonneg ENNReal.toReal_nonneg (le_of_lt (Real.exp_pos _)))
     (le_of_lt (partitionWithPrior_pos q f lam))
 
 /-- Prior-weighted Gibbs probabilities sum to one. -/
@@ -135,19 +156,19 @@ lemma gibbsWithPrior_sum_one
     (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) :
     ∑ i, gibbsWithPrior q f lam i = 1 := by
   unfold gibbsWithPrior partitionWithPrior
-  have hZne : (∑ j : Fin n, q.prob j * Real.exp (-lam * f j)) ≠ 0 := by
+  have hZne : (∑ j : Fin n, (q j).toReal * Real.exp (-lam * f j)) ≠ 0 := by
     exact (partitionWithPrior_pos q f lam).ne'
   calc
-    ∑ i : Fin n, q.prob i * Real.exp (-lam * f i) /
-        ∑ j : Fin n, q.prob j * Real.exp (-lam * f j)
-      = (∑ i : Fin n, q.prob i * Real.exp (-lam * f i)) /
-          ∑ j : Fin n, q.prob j * Real.exp (-lam * f j) := by
+    ∑ i : Fin n, (q i).toReal * Real.exp (-lam * f i) /
+        ∑ j : Fin n, (q j).toReal * Real.exp (-lam * f j)
+      = (∑ i : Fin n, (q i).toReal * Real.exp (-lam * f i)) /
+          ∑ j : Fin n, (q j).toReal * Real.exp (-lam * f j) := by
           symm
           simpa using
             (Finset.sum_div
               (s := (Finset.univ : Finset (Fin n)))
-              (f := fun i : Fin n => q.prob i * Real.exp (-lam * f i))
-              (a := ∑ j : Fin n, q.prob j * Real.exp (-lam * f j)))
+              (f := fun i : Fin n => (q i).toReal * Real.exp (-lam * f i))
+              (a := ∑ j : Fin n, (q j).toReal * Real.exp (-lam * f j)))
     _ = 1 := by
           exact div_self hZne
 
@@ -160,18 +181,18 @@ noncomputable def logPartitionWithPrior
 lemma gibbsWithPrior_eq_exp_sub_logPartition
     (q : ProbabilityDist (Fin n)) (f : Fin n → ℝ) (lam : ℝ) (i : Fin n) :
     gibbsWithPrior q f lam i =
-      q.prob i * Real.exp (-lam * f i - logPartitionWithPrior q f lam) := by
+      (q i).toReal * Real.exp (-lam * f i - logPartitionWithPrior q f lam) := by
   unfold gibbsWithPrior logPartitionWithPrior
   have hZpos : 0 < partitionWithPrior q f lam := partitionWithPrior_pos q f lam
   calc
-    q.prob i * Real.exp (-lam * f i) / partitionWithPrior q f lam
-        = q.prob i * Real.exp (-lam * f i) /
+    (q i).toReal * Real.exp (-lam * f i) / partitionWithPrior q f lam
+        = (q i).toReal * Real.exp (-lam * f i) /
             Real.exp (Real.log (partitionWithPrior q f lam)) := by
               rw [Real.exp_log hZpos]
-    _ = q.prob i * (Real.exp (-lam * f i) /
+    _ = (q i).toReal * (Real.exp (-lam * f i) /
             Real.exp (Real.log (partitionWithPrior q f lam))) := by
           rw [mul_div_assoc]
-    _ = q.prob i * Real.exp (-lam * f i - Real.log (partitionWithPrior q f lam)) := by
+    _ = (q i).toReal * Real.exp (-lam * f i - Real.log (partitionWithPrior q f lam)) := by
           rw [Real.exp_sub]
 
 /-- Prior-weighted Gibbs point packaged as a feasible MaxEnt point once moments match. -/

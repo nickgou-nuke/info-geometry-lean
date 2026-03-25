@@ -2,12 +2,15 @@
 -- patched: (1) robust MetaM/IO handling
 --          (2) fixed property projections and mappings
 --          (3) standardized full_graph.json output
+--          (4) native structural-topology artifact output
 
 import Lean
 import Lean.Data.Json
 import Lean.DeclarationRange
 import Lean.Util.Path
 import DAG.Basic
+import DAG.Hydrate
+import DAG.StructuralExport
 
 open Lean
 open Lean.Meta
@@ -64,6 +67,15 @@ structure IndexerState where
   types     : Std.HashSet String := {}
 
 abbrev IndexerM := StateRefT IndexerState MetaM
+
+def parseImports (s : String) : Array Import :=
+  let pieces : List String :=
+    (String.splitOn s ",").filter (fun x => x != "")
+  let vals : List Import :=
+    pieces.map fun m =>
+      { module := (String.splitOn m ".").foldl (init := Name.anonymous) fun acc part =>
+          if part.isEmpty then acc else Name.str acc part }
+  vals.toArray
 
 def getKindString (ci : ConstantInfo) : String :=
   match ci with
@@ -183,7 +195,25 @@ def processConstant (name : Name) (ci : ConstantInfo) : IndexerM Unit := do
         }
   catch _ => pure ()
 
-def runIndexer (nsPrefix : String) (outDir : String) (graphOut : String) : MetaM Unit := do
+private def edgeKindOfString? (kind : String) : Option EdgeKind :=
+  if kind == "type" then
+    some EdgeKind.type
+  else if kind == "value" then
+    some EdgeKind.value
+  else
+    none
+
+private def edgeKindRank (kind : EdgeKind) : Nat :=
+  match kind with
+  | .type => 0
+  | .value => 1
+
+private def defaultStructureOutFor (graphOut : String) : String :=
+  let path := System.FilePath.mk graphOut
+  let parent := path.parent.getD "."
+  (parent / "structural-topology.json").toString
+
+def runIndexer (nsPrefix : String) (outDir : String) (graphOut : String) (structureOut : String) : MetaM Unit := do
   let env ← getEnv
   let mut consts := env.constants.toList.map (·.1)
   consts := consts.filter (fun n => (n.toString).startsWith nsPrefix)
@@ -192,9 +222,10 @@ def runIndexer (nsPrefix : String) (outDir : String) (graphOut : String) : MetaM
   let (_, st) ← (consts.forM fun n => do
     if let some ci := env.find? n then
       let s := n.toString
-      if !(s.contains "._" || s.endsWith "match_" || s.endsWith "proof_" || s.endsWith "injEq") then
+      if !(s.contains "._" || s.endsWith "match_" || s.endsWith "proof_" ||
+          s.endsWith "injEq") then
         processConstant n ci
-  ).run {}
+  ).run {} {}
 
   let nodes : Array String := st.decls.map (·.name)
   let nodeSet : Std.HashSet String :=
@@ -224,7 +255,14 @@ def runIndexer (nsPrefix : String) (outDir : String) (graphOut : String) : MetaM
         m := m.insert nodes[i]! i
       return m
 
-  let mut fwd_adj : Array (Array (Nat × String)) :=
+  let mut fwdAdj : Array (Array (Nat × String)) :=
+    Id.run <| do
+      let mut a := #[]
+      for _ in [:nodes.size] do
+        a := a.push #[]
+      return a
+
+  let mut typedAdj : Array (Array (Nat × EdgeKind)) :=
     Id.run <| do
       let mut a := #[]
       for _ in [:nodes.size] do
@@ -233,24 +271,48 @@ def runIndexer (nsPrefix : String) (outDir : String) (graphOut : String) : MetaM
 
   for e in edgesFiltered do
     match nameToIdx.get? e.src, nameToIdx.get? e.dst with
-    | some u, some v => fwd_adj := fwd_adj.modify u (fun adj => adj.push (v, e.kind))
+    | some u, some v =>
+        fwdAdj := fwdAdj.modify u (fun adj => adj.push (v, e.kind))
+        match edgeKindOfString? e.kind with
+        | some kind =>
+            typedAdj := typedAdj.modify u (fun adj => adj.push (v, kind))
+        | none => pure ()
     | _, _ => pure ()
 
-  let fwd_sorted := fwd_adj.map (fun adj => adj.qsort (fun a b => a.1 < b.1 || (a.1 == b.1 && a.2 < b.2)))
-  let graph : FullGraph := { nodes := nodes, forward := fwd_sorted }
+  let fwdSorted :=
+    fwdAdj.map (fun adj => adj.qsort (fun a b => a.1 < b.1 || (a.1 == b.1 && a.2 < b.2)))
+  let typedSorted :=
+    typedAdj.map (fun adj => adj.qsort (fun a b => a.1 < b.1 || (a.1 == b.1 && edgeKindRank a.2 < edgeKindRank b.2)))
+
+  let graph : FullGraph := { nodes := nodes, forward := fwdSorted }
   IO.FS.writeFile (System.FilePath.mk graphOut) (Lean.toJson graph).pretty
 
-  IO.println s!"[Indexer patched] Exported {st.decls.size} atoms to {outDir}/ and wrote {graphOut}"
+  let nativeGraph : Graph String := { nodes := nodes, nodeToIdx := nameToIdx, forward := typedSorted }
+  let hydrated := hydrate nativeGraph
+  let structuralPayload := buildStructuralPayload hydrated
+  liftM <| writeStructuralJsonOutput structuralPayload structureOut
+
+  IO.println s!"[Indexer patched] Exported {st.decls.size} atoms to {outDir}/ and wrote {graphOut} plus {structureOut}"
 
 def indexerMain (args : List String) : IO UInt32 := do
-  let (importMod, nsPrefix, outDir, graphOut) ←
+  let (importModsStr, nsPrefix, outDir, graphOut, structureOut) ←
     match args with
-    | [m, ns, o]      => pure (m, ns, o, "full_graph.json")
-    | [m, ns, o, go]  => pure (m, ns, o, go)
-    | _               => pure ("InfoGeometry.Library", "InfoGeometry", "index", "full_graph.json")
+    | [m, ns, o] =>
+        let graphOut := "artifacts/dag/full_graph.json"
+        pure (m, ns, o, graphOut, defaultStructureOutFor graphOut)
+    | [m, ns, o, go] =>
+        pure (m, ns, o, go, defaultStructureOutFor go)
+    | [m, ns, o, go, so] =>
+        pure (m, ns, o, go, so)
+    | _ =>
+        let graphOut := "artifacts/dag/full_graph.json"
+        pure ("InfoGeometry.All", "InfoGeometry", "artifacts/dag/index", graphOut, defaultStructureOutFor graphOut)
 
-  let env ← importModules #[{ module := importMod.toName }] {} 0
+  let env ← importModules (parseImports importModsStr) {} 0
   let coreContext : Core.Context := { fileName := "<Indexer>", fileMap := default }
 
-  let _ ← ((runIndexer nsPrefix outDir graphOut).run {} {}).toIO coreContext { env := env }
+  let _ ← ((runIndexer nsPrefix outDir graphOut structureOut).run {} {}).toIO coreContext { env := env }
   return 0
+
+def main (args : List String) : IO UInt32 :=
+  indexerMain args

@@ -7,8 +7,7 @@ Authors: ...
 import InfoGeometry.Basic
 import Mathlib.Algebra.BigOperators.Field
 
-namespace InfoGeometry.PositiveMeasure
-end InfoGeometry.PositiveMeasure
+namespace InfoGeometry
 
 
 /-!
@@ -247,3 +246,5 @@ theorem generalizedKL_eq_zero_iff (μ ν : PositiveMeasure α ℝ) :
 end GeneralizedKL
 
 end PositiveMeasure
+
+end InfoGeometry

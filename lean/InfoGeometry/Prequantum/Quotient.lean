@@ -1,4 +1,6 @@
 import InfoGeometry.Prequantum.Connection
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSectionVars false
 
 /-!
 # InfoGeometry.Prequantum.Quotient
@@ -9,22 +11,26 @@ Gauge-orbit quotient structures for projective prequantum bundle points.
 namespace InfoGeometry.Prequantum.Quotient
 end InfoGeometry.Prequantum.Quotient
 
+open InfoGeometry.Projective
+
+namespace InfoGeometry.Prequantum
+
 section KreinClifford
 
-variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 namespace ProjectivePrequantumBundle
 
-@[simp] theorem smul_base (c : Gauge) (P : ProjectivePrequantumBundle (E := E)) :
+@[simp] theorem smul_base (c : PrequantumData.Gauge) (P : ProjectivePrequantumBundle (E := E)) :
     (c • P).base = P.base := rfl
 
-@[simp] theorem smul_data (c : Gauge) (P : ProjectivePrequantumBundle (E := E)) :
+@[simp] theorem smul_data (c : PrequantumData.Gauge) (P : ProjectivePrequantumBundle (E := E)) :
     (c • P).data = c • P.data := rfl
 
 /-- Gauge-orbit relation on projective prequantum bundle points. -/
 def GaugeEquivalent
     (P Q : ProjectivePrequantumBundle (E := E)) : Prop :=
-  ∃ u : Gauge, u • P = Q
+  ∃ u : PrequantumData.Gauge, u • P = Q
 
 lemma gaugeEquivalent_refl (P : ProjectivePrequantumBundle (E := E)) :
     GaugeEquivalent (E := E) P P := by
@@ -59,16 +65,16 @@ def gaugeSetoid : Setoid (ProjectivePrequantumBundle (E := E)) where
 lemma covariantDerivative_constant_on_orbits
     {P Q : ProjectivePrequantumBundle (E := E)}
     (h : GaugeEquivalent (E := E) P Q) :
-    covariantDerivative (E := E) P = covariantDerivative (E := E) Q := by
+    ProjectivePrequantumBundle.covariantDerivative P =
+      ProjectivePrequantumBundle.covariantDerivative Q := by
   rcases h with ⟨u, rfl⟩
-  symm
-  exact covariantDerivative_gauge_invariant (E := E) u P
+  simpa using (ProjectivePrequantumBundle.covariantDerivative_smul (E := E) u P).symm
 
 /-- The gauge-invariant scalar descends to the quotient by gauge orbits. -/
 noncomputable def covariantDerivativeOnQuotient :
     Quotient (gaugeSetoid (E := E)) → ℝ :=
   Quotient.lift
-    (fun P => covariantDerivative (E := E) P)
+    (fun P => ProjectivePrequantumBundle.covariantDerivative P)
     (by
       intro P Q hPQ
       exact covariantDerivative_constant_on_orbits (E := E) hPQ)
@@ -76,11 +82,11 @@ noncomputable def covariantDerivativeOnQuotient :
 @[simp] lemma covariantDerivativeOnQuotient_mk
     (P : ProjectivePrequantumBundle (E := E)) :
     covariantDerivativeOnQuotient (E := E) (Quotient.mk (gaugeSetoid (E := E)) P)
-      = covariantDerivative (E := E) P := rfl
+      = ProjectivePrequantumBundle.covariantDerivative P := rfl
 
 /-- The projective base ray is also gauge-invariant and descends to the quotient. -/
 noncomputable def baseOnQuotient :
-    Quotient (gaugeSetoid (E := E)) → ProjectiveState (E := E) :=
+    Quotient (gaugeSetoid (E := E)) → ProjectiveState E :=
   Quotient.lift
     (fun P => P.base)
     (by
@@ -106,3 +112,5 @@ theorem eq_iff
 end ProjectivePrequantumBundle
 
 end KreinClifford
+
+end InfoGeometry.Prequantum

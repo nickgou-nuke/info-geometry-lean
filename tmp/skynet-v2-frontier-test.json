@@ -1,0 +1,128 @@
+{
+  "seedNames": [
+    "KasparovCycle.analyticalIndex"
+  ],
+  "seedBlocks": [
+    "block:2093-2449"
+  ],
+  "seedStableIds": [
+    "block:2093-2449"
+  ],
+  "walk": "reverse",
+  "moduleCount": 4,
+  "nodeCount": 143,
+  "edgeCount": 753,
+  "crossModuleEdgesAdded": 378,
+  "affectEdgesAdded": 378,
+  "loadedInputs": [
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/KasparovCycle.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/AnalyticalIndex.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/OperatorAlgebraBridge.semantic-block.stdlib.json",
+    "/home/goutev/LEAN4/info-geometry-lean/reports/dag/GrandSynthesis.semantic-block.stdlib.json"
+  ],
+  "frontier": [
+    {
+      "stableId": "block:28698-29941",
+      "rawScore": 0.06600301808261358,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/GrandSynthesis.lean",
+      "primaryProduces": [
+        "InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_modularCliffordTransport_state_hypotheses"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [
+        "primaryDep"
+      ],
+      "seedLinkDetails": [
+        "InfoGeometry.KK.KasparovCycle.analyticalIndex"
+      ],
+      "score": 0.06600301808261358,
+      "scoreAdjustments": [],
+      "moduleName": "file:...home.goutev.LEAN4.info-geometry-lean.lean.InfoGeometry.Canonical.GrandSynthesis",
+      "moduleStatus": null
+    },
+    {
+      "stableId": "block:27638-28698",
+      "rawScore": 0.06304689560228396,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/GrandSynthesis.lean",
+      "primaryProduces": [
+        "InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_conjugacy_state_hypotheses"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [
+        "primaryDep"
+      ],
+      "seedLinkDetails": [
+        "InfoGeometry.KK.KasparovCycle.analyticalIndex"
+      ],
+      "score": 0.06304689560228396,
+      "scoreAdjustments": [],
+      "moduleName": "file:...home.goutev.LEAN4.info-geometry-lean.lean.InfoGeometry.Canonical.GrandSynthesis",
+      "moduleStatus": null
+    },
+    {
+      "stableId": "block:26885-27638",
+      "rawScore": 0.04350832252325422,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/GrandSynthesis.lean",
+      "primaryProduces": [
+        "InfoGeometry.Canonical.GrandSynthesis.kk_analyticalIndex_eq_of_geometricAlgebraicState"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [
+        "primaryDep"
+      ],
+      "seedLinkDetails": [
+        "InfoGeometry.KK.KasparovCycle.analyticalIndex"
+      ],
+      "score": 0.04350832252325422,
+      "scoreAdjustments": [],
+      "moduleName": "file:...home.goutev.LEAN4.info-geometry-lean.lean.InfoGeometry.Canonical.GrandSynthesis",
+      "moduleStatus": null
+    },
+    {
+      "stableId": "block:3117-3498",
+      "rawScore": 0.043428354557759896,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/KK/KasparovCycle.lean",
+      "primaryProduces": [
+        "InfoGeometry.KK.index_bridge_spectral"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [
+        "primaryDep"
+      ],
+      "seedLinkDetails": [
+        "InfoGeometry.KK.KasparovCycle.analyticalIndex"
+      ],
+      "score": 0.043428354557759896,
+      "scoreAdjustments": [],
+      "moduleName": "file:...home.goutev.LEAN4.info-geometry-lean.lean.InfoGeometry.KK.KasparovCycle",
+      "moduleStatus": null
+    },
+    {
+      "stableId": "block:12851-13380",
+      "rawScore": 0.0156887391133961,
+      "sourceFile": "file:///home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/AnalyticalIndex.lean",
+      "primaryProduces": [
+        "InfoGeometry.Canonical.AnalyticalIndex.chiralSliceIsoAlong_of_noZeroEigenCrossing"
+      ],
+      "spineTags": [],
+      "affects": [],
+      "seedLinkKinds": [],
+      "seedLinkDetails": [],
+      "score": 0.0156887391133961,
+      "scoreAdjustments": [],
+      "moduleName": "file:...home.goutev.LEAN4.info-geometry-lean.lean.InfoGeometry.Canonical.AnalyticalIndex",
+      "moduleStatus": null
+    }
+  ],
+  "auditSignals": {
+    "thinnessCount": 0,
+    "vacuityCount": 0,
+    "surrogateCount": 0,
+    "unificationModuleCount": 15
+  },
+  "unresolvedSeedDependencies": []
+}

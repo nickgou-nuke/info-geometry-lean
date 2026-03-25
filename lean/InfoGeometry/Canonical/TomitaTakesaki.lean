@@ -1,8 +1,13 @@
 import InfoGeometry.Canonical.Clifford
+import InfoGeometry.Volume.ConnesCocycle
+import Mathlib.Analysis.Normed.Algebra.Exponential
+set_option linter.unnecessarySimpa false
+set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.Canonical.TomitaTakesaki
 
 open InfoGeometry.Clifford
+open InfoGeometry.Krein
 
 /-!
 # Tomita-Takesaki Modular Atom (Split `Cl(1,1)`)
@@ -10,6 +15,10 @@ open InfoGeometry.Clifford
 This module packages the modular pair (`J`, `ε`) on doubled real space and
 connects it to the exact split Clifford algebra used in routing:
 `SplitCliffordAlg = CliffordAlgebra splitQ11`.
+
+This is an atom-level split-`Cl(1,1)` modular layer, not a full standard-form
+Tomita-Takesaki development with `Δ`, cyclic/separating vectors, or a von
+Neumann algebra action.
 -/
 
 section CliffordAtom
@@ -112,64 +121,379 @@ end CliffordAtom
 
 section ModularRealization
 
-variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+local notation "EndH" => DoubledSpace E →L[ℝ] DoubledSpace E
+
+noncomputable local instance : NormedRing EndH := inferInstance
+noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
+local instance : IsTopologicalRing EndH := inferInstance
+local instance : CompleteSpace EndH := inferInstance
+
+/--
+Conjugation by an involution (`J² = 1`) as a ring endomorphism on doubled-space
+endomorphisms.
+-/
+private noncomputable def involutiveConjugationRingHom
+    (J : EndH)
+    (hJ2 : J * J = (1 : EndH)) :
+    EndH →+* EndH where
+  toFun A := J * A * J
+  map_zero' := by simp
+  map_add' A B := by simp [mul_add, add_mul, mul_assoc]
+  map_one' := by
+    calc
+      J * (1 : EndH) * J = J * J := by simp
+      _ = (1 : EndH) := hJ2
+  map_mul' A B := by
+    calc
+      J * (A * B) * J = J * A * B * J := by simp [mul_assoc]
+      _ = J * A * (J * J) * B * J := by rw [hJ2]; simp [mul_assoc]
+      _ = (J * A * J) * (J * B * J) := by simp [mul_assoc]
+
+/--
+Involutive conjugation transports exponentials:
+`J exp(X) J = exp(J X J)` when `J² = 1`.
+-/
+private theorem involutiveConjugation_exp
+    (J X : EndH)
+    (hJ2 : J * J = (1 : EndH)) :
+    J * NormedSpace.exp X * J = NormedSpace.exp (J * X * J) := by
+  let φ : EndH →+* EndH := involutiveConjugationRingHom (E := E) J hJ2
+  have hφcont : Continuous φ := by
+    simpa [φ, involutiveConjugationRingHom] using
+      ((continuous_const.mul continuous_id).mul continuous_const)
+  simpa [φ] using (NormedSpace.map_exp φ hφcont X)
 
 /--
 Modular conjugation `J` (real-linear model of antilinear conjugation on complex space).
 -/
-abbrev modularConjugationJ : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  modularJ (E := E)
+noncomputable abbrev modularConjugationJ : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  modular_j (E := E)
 
 /-- Modular sign involution `ε = sgn(K)`. -/
-abbrev modularSignEpsilon : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  spectralEpsilon (E := E)
+noncomputable abbrev modularSignEpsilon : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  spectral_epsilon (E := E)
 
 /-- Composite `Jε`, the split-complex structure axis. -/
-abbrev modularComplexI : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  complexI (E := E)
+noncomputable abbrev modularComplexI : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  complex_i (E := E)
+
+/--
+Legacy/Clifford compatibility: the modular complex axis `Jε` coincides with the
+dilation generator extracted from `[J, ε]`.
+-/
+lemma modularComplexI_eq_dilationOperator :
+    modularComplexI (E := E) = dilationOperator (E := E) := by
+  rw [modularComplexI]
+  exact (dilationOperator_eq_complex_i (E := E)).symm
 
 @[simp] lemma modularConjugationJ_sq :
     (modularConjugationJ (E := E)).comp (modularConjugationJ (E := E))
       = ContinuousLinearMap.id ℝ (DoubledSpace E) :=
-  modularJ_involution (E := E)
+  modular_j_involution (E := E)
 
 @[simp] lemma modularSignEpsilon_sq :
     (modularSignEpsilon (E := E)).comp (modularSignEpsilon (E := E))
       = ContinuousLinearMap.id ℝ (DoubledSpace E) :=
-  spectralEpsilon_involution (E := E)
+  spectral_epsilon_involution (E := E)
 
 /-- Lemma `modularConjugationJ_anticommutes_modularSign`. -/
 lemma modularConjugationJ_anticommutes_modularSign :
     (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
       = -((modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E))) :=
-  modularJ_spectralEpsilon_anticommute (E := E)
+  modular_j_spectral_epsilon_anticommute (E := E)
 
 @[simp] lemma modularComplexI_sq :
     (modularComplexI (E := E)).comp (modularComplexI (E := E))
       = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) :=
-  complexI_sq (E := E)
+  complex_i_sq (E := E)
+
+omit [CompleteSpace E] in
+/-- `J` is even for the doubled-space `Z₂` grading. -/
+lemma modularConjugationJ_isEven :
+    isEven (E := E) (modularConjugationJ (E := E)) := by
+  unfold isEven modularConjugationJ
+  rfl
+
+/-- `ε = sgn(K)` is odd for the doubled-space `Z₂` grading. -/
+lemma modularSignEpsilon_isOdd :
+    isOdd (E := E) (modularSignEpsilon (E := E)) := by
+  simpa [modularSignEpsilon] using (spectral_epsilon_isOdd (E := E))
+
+/-- `Jε` is odd for the doubled-space `Z₂` grading. -/
+lemma modularComplexI_isOdd :
+    isOdd (E := E) (modularComplexI (E := E)) := by
+  simpa [modularComplexI] using (complex_i_isOdd (E := E))
 
 /--
-Canonical split-Clifford representation realized by the modular atom on doubled space.
+Odd-odd channel for the modular CPT atom vanishes:
+`Jε + εJ = 0`.
 -/
-noncomputable abbrev tomitaRepresentation :
+lemma modularConjugationJ_anticommutator_modularSignEpsilon :
+    (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
+      + (modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E))
+      = 0 := by
+  have hanti := modularConjugationJ_anticommutes_modularSign (E := E)
+  calc
+    (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
+        + (modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E))
+      = -((modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E)))
+          + (modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E)) := by rw [hanti]
+    _ = 0 := by abel
+
+/--
+Even-odd channel for the modular CPT atom:
+`[J, ε] = 2(Jε)`.
+-/
+lemma modularConjugationJ_commutator_modularSignEpsilon :
+    (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
+      - (modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E))
+      = (2 : ℝ) • ((modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))) := by
+  have hanti := modularConjugationJ_anticommutes_modularSign (E := E)
+  let A := (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
+  have htwo : (2 : ℝ) • A = A + A := by
+    simpa using (two_smul ℝ A)
+  calc
+    (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
+        - (modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E))
+      = A + A := by
+          simp [A, sub_eq_add_neg, hanti]
+    _ = (2 : ℝ) • A := by rw [htwo]
+    _ = (2 : ℝ) • ((modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))) := by
+          simp [A]
+
+/--
+Tomita inversion identity on the modular sign generator:
+\[
+J \exp(\tau\,\varepsilon) J = \exp(-\tau\,\varepsilon).
+\]
+-/
+theorem modularConjugationJ_exp_modularSignEpsilon
+    (τ : ℝ) :
+    (modularConjugationJ (E := E)) *
+        NormedSpace.exp (τ • (modularSignEpsilon (E := E))) *
+        (modularConjugationJ (E := E))
+      = NormedSpace.exp ((-τ) • (modularSignEpsilon (E := E))) := by
+  have hJ2 : (modularConjugationJ (E := E)) * (modularConjugationJ (E := E))
+      = (1 : EndH) := by
+    change (modularConjugationJ (E := E)).comp (modularConjugationJ (E := E))
+      = ContinuousLinearMap.id ℝ (DoubledSpace E)
+    exact modularConjugationJ_sq (E := E)
+  have hAnti :
+      (modularConjugationJ (E := E)) * (modularSignEpsilon (E := E))
+        = -((modularSignEpsilon (E := E)) * (modularConjugationJ (E := E))) := by
+    simpa using (modularConjugationJ_anticommutes_modularSign (E := E))
+  have hConjSign :
+      (modularConjugationJ (E := E)) * (modularSignEpsilon (E := E))
+          * (modularConjugationJ (E := E))
+        = -(modularSignEpsilon (E := E)) := by
+    calc
+      (modularConjugationJ (E := E)) * (modularSignEpsilon (E := E))
+          * (modularConjugationJ (E := E))
+          = (-(modularSignEpsilon (E := E) * modularConjugationJ (E := E)))
+              * modularConjugationJ (E := E) := by
+                rw [hAnti]
+      _ = -((modularSignEpsilon (E := E)) * (modularConjugationJ (E := E) *
+            modularConjugationJ (E := E))) := by
+              simp [mul_assoc]
+      _ = -((modularSignEpsilon (E := E)) * (1 : EndH)) := by
+            rw [hJ2]
+      _ = -(modularSignEpsilon (E := E)) := by simp
+  have hConjScaled :
+      (modularConjugationJ (E := E)) * (τ • (modularSignEpsilon (E := E)))
+          * (modularConjugationJ (E := E))
+        = (-τ) • (modularSignEpsilon (E := E)) := by
+    calc
+      (modularConjugationJ (E := E)) * (τ • (modularSignEpsilon (E := E)))
+          * (modularConjugationJ (E := E))
+          = τ •
+              ((modularConjugationJ (E := E)) * (modularSignEpsilon (E := E))
+                * (modularConjugationJ (E := E))) := by
+              simp [mul_assoc]
+      _ = τ • (-(modularSignEpsilon (E := E))) := by rw [hConjSign]
+      _ = (-τ) • (modularSignEpsilon (E := E)) := by simp [smul_neg, neg_smul]
+  calc
+    (modularConjugationJ (E := E)) *
+        NormedSpace.exp (τ • (modularSignEpsilon (E := E))) *
+        (modularConjugationJ (E := E))
+        = NormedSpace.exp
+            ((modularConjugationJ (E := E)) *
+              (τ • (modularSignEpsilon (E := E))) *
+              (modularConjugationJ (E := E))) := by
+              simpa using involutiveConjugation_exp
+                (E := E)
+                (J := modularConjugationJ (E := E))
+                (X := τ • (modularSignEpsilon (E := E)))
+                hJ2
+    _ = NormedSpace.exp ((-τ) • (modularSignEpsilon (E := E))) := by
+          rw [hConjScaled]
+
+/--
+Concrete additive-time automorphism group generated by the modular sign
+operator `ε` on doubled-space endomorphisms.
+-/
+noncomputable def modularSignAdditiveModularFlow :
+    InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow (H := E) :=
+  InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator
+    (H := E) (modularSignEpsilon (E := E))
+
+@[simp] theorem modularSignAdditiveModularFlow_apply
+    (τ : ℝ) (A : EndH) :
+    modularSignAdditiveModularFlow (E := E) τ A =
+      InfoGeometry.Krein.modular_shift
+        (E := E) (modularSignEpsilon (E := E)) τ A := rfl
+
+/--
+Thermal KMS-like relation for the modular-sign generator, restated directly in
+the additive modular-flow language used by the Tomita carrier.
+-/
+theorem modularSignAdditiveModularFlow_kms_of_satisfies_kms_like
+    (ω : EndH →L[ℝ] ℝ)
+    (β : ℝ)
+    (hKMS :
+      InfoGeometry.Krein.satisfies_kms_like
+        (E := E)
+        (modularSignEpsilon (E := E))
+        ω β) :
+    ∀ A B : EndH,
+      ω (A * modularSignAdditiveModularFlow (E := E) β B) = ω (B * A) := by
+  intro A B
+  simpa [modularSignAdditiveModularFlow_apply] using hKMS A B
+
+/--
+Canonical supergraded package for the modular CPT atom `⟨1, ε, J, Jε⟩`.
+-/
+theorem modularCPT_supergraded_lie_package :
+    isEven (E := E) (modularConjugationJ (E := E)) ∧
+      isOdd (E := E) (modularSignEpsilon (E := E)) ∧
+      isOdd (E := E) (modularComplexI (E := E)) ∧
+      (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
+        + (modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E)) = 0 := by
+  exact ⟨modularConjugationJ_isEven (E := E), modularSignEpsilon_isOdd (E := E),
+    modularComplexI_isOdd (E := E),
+    modularConjugationJ_anticommutator_modularSignEpsilon (E := E)⟩
+
+/-- Canonical modular CPT supercharge, `Q := Jε`. -/
+noncomputable def modularCPTSupercharge : Supercharge (E := E) where
+  Q := modularComplexI (E := E)
+  odd := modularComplexI_isOdd (E := E)
+
+/-- The modular CPT supercharge squares to `-Id`. -/
+lemma modularCPTSupercharge_hamiltonian :
+    superHamiltonian (modularCPTSupercharge (E := E))
+      = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+  simpa [modularCPTSupercharge, modularComplexI] using
+    (complex_iSupercharge_hamiltonian (E := E))
+
+/-- `Q = Jε` maps grade-plus states to grade-minus states. -/
+lemma modularCPTSupercharge_maps_plus_to_minus
+    {v : DoubledSpace E} (hv : inGradePlus (E := E) v) :
+    inGradeMinus (E := E) ((modularCPTSupercharge (E := E)).Q v) := by
+  exact supercharge_maps_plus_to_minus (S := modularCPTSupercharge (E := E)) hv
+
+/-- The modular CPT supercharge agrees with the legacy dilation generator. -/
+lemma modularCPTSupercharge_Q_eq_dilationOperator :
+    (modularCPTSupercharge (E := E)).Q = dilationOperator (E := E) := by
+  change modularComplexI (E := E) = dilationOperator (E := E)
+  exact modularComplexI_eq_dilationOperator (E := E)
+
+/-- `Q = Jε` maps grade-minus states to grade-plus states. -/
+lemma modularCPTSupercharge_maps_minus_to_plus
+    {v : DoubledSpace E} (hv : inGradeMinus (E := E) v) :
+    inGradePlus (E := E) ((modularCPTSupercharge (E := E)).Q v) := by
+  exact supercharge_maps_minus_to_plus (S := modularCPTSupercharge (E := E)) hv
+
+/--
+Canonical positive-time subspace in doubled form:
+vectors with matched components `(x, x)`.
+-/
+def DiagonalPositiveTimeVector (Ω : DoubledSpace E) : Prop :=
+  ∃ x : E, Ω = to_doubled x x
+
+/-- Compatibility alias for the diagonal positive-time subspace. -/
+abbrev PositiveTimeVector (Ω : DoubledSpace E) : Prop :=
+  DiagonalPositiveTimeVector (E := E) Ω
+
+omit [CompleteSpace E] in
+/--
+On the diagonal positive-time subspace, modular conjugation `J` fixes vectors.
+-/
+lemma modularConjugationJ_fixed_of_diagonalPositiveTimeVector
+    (Ω : DoubledSpace E)
+    (hΩ : DiagonalPositiveTimeVector (E := E) Ω) :
+    modularConjugationJ (E := E) Ω = Ω := by
+  rcases hΩ with ⟨x, rfl⟩
+  apply DoubledSpace.ext <;> simp [modularConjugationJ, modular_j]
+
+omit [CompleteSpace E] in
+/-- Compatibility wrapper for `modularConjugationJ_fixed_of_diagonalPositiveTimeVector`. -/
+lemma modularConjugationJ_fixed_of_positiveTimeVector
+    (Ω : DoubledSpace E)
+    (hΩ : PositiveTimeVector (E := E) Ω) :
+    modularConjugationJ (E := E) Ω = Ω :=
+  modularConjugationJ_fixed_of_diagonalPositiveTimeVector (E := E) Ω hΩ
+
+omit [CompleteSpace E] in
+/--
+Reflection quadratic form is nonnegative on the diagonal positive-time subspace.
+-/
+theorem reflectionQuadratic_nonneg_of_diagonalPositiveTimeVector
+    (Ω : DoubledSpace E)
+    (hΩ : DiagonalPositiveTimeVector (E := E) Ω) :
+    0 ≤ inner ℝ ((modularConjugationJ (E := E)) Ω) Ω := by
+  rw [modularConjugationJ_fixed_of_diagonalPositiveTimeVector (E := E) Ω hΩ]
+  exact real_inner_self_nonneg
+
+/--
+Compatibility wrapper for
+`reflectionQuadratic_nonneg_of_diagonalPositiveTimeVector`.
+-/
+theorem reflectionQuadratic_nonneg_of_positiveTimeVector
+    (Ω : DoubledSpace E)
+    (hΩ : PositiveTimeVector (E := E) Ω) :
+    0 ≤ inner ℝ ((modularConjugationJ (E := E)) Ω) Ω :=
+  reflectionQuadratic_nonneg_of_diagonalPositiveTimeVector (E := E) Ω hΩ
+
+/--
+Canonical split-Clifford representation realized by the modular atom on doubled
+space.
+-/
+noncomputable abbrev modularAtomRepresentation :
     RoutingSplitCliffordAlg →ₐ[ℝ] (DoubledSpace E →L[ℝ] DoubledSpace E) :=
   cl11Rep (E := E)
 
+/-- Compatibility alias for the modular atom representation. -/
+noncomputable abbrev tomitaRepresentation :
+    RoutingSplitCliffordAlg →ₐ[ℝ] (DoubledSpace E →L[ℝ] DoubledSpace E) :=
+  modularAtomRepresentation (E := E)
+
+@[simp] lemma modularAtomRepresentation_cptJ :
+    modularAtomRepresentation (E := E) cptJ = modularConjugationJ (E := E) := by
+  simpa [modularAtomRepresentation, cptJ, modularConjugationJ] using
+    (cl11Rep_ι_one_zero (E := E))
+
 @[simp] lemma tomitaRepresentation_cptJ :
     tomitaRepresentation (E := E) cptJ = modularConjugationJ (E := E) := by
-  simpa [tomitaRepresentation, cptJ, modularConjugationJ] using
-    (cl11Rep_ι_one_zero (E := E))
+  simpa [tomitaRepresentation] using modularAtomRepresentation_cptJ (E := E)
+
+@[simp] lemma modularAtomRepresentation_cptJeps :
+    modularAtomRepresentation (E := E) cptJeps = modularComplexI (E := E) := by
+  simpa [modularAtomRepresentation, cptJeps, modularComplexI] using
+    (cl11Rep_ι_zero_one (E := E))
 
 @[simp] lemma tomitaRepresentation_cptJeps :
     tomitaRepresentation (E := E) cptJeps = modularComplexI (E := E) := by
-  simpa [tomitaRepresentation, cptJeps, modularComplexI] using
-    (cl11Rep_ι_zero_one (E := E))
+  simpa [tomitaRepresentation] using modularAtomRepresentation_cptJeps (E := E)
+
+@[simp] lemma modularAtomRepresentation_cptEps :
+    modularAtomRepresentation (E := E) cptEps = modularSignEpsilon (E := E) := by
+  simpa [modularAtomRepresentation, cptEps, cptJ, cptJeps, modularSignEpsilon] using
+    (cl11Rep_pseudoscalar (E := E))
 
 @[simp] lemma tomitaRepresentation_cptEps :
     tomitaRepresentation (E := E) cptEps = modularSignEpsilon (E := E) := by
-  simpa [tomitaRepresentation, cptEps, cptJ, cptJeps, modularSignEpsilon] using
-    (cl11Rep_pseudoscalar (E := E))
+  simpa [tomitaRepresentation] using modularAtomRepresentation_cptEps (E := E)
 
 end ModularRealization
 

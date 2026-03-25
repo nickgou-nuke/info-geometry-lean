@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.ProjectiveRays
+import InfoGeometry.Krein.DoubledSpace
 import Mathlib.LinearAlgebra.Projectivization.Basic
 import Mathlib.LinearAlgebra.QuadraticForm.Basic
 
@@ -12,6 +13,8 @@ open scoped Classical
 open scoped LinearAlgebra.Projectivization
 
 namespace InfoGeometry.Twistor
+
+open InfoGeometry.Krein
 
 variable {K : Type*} {V : Type*}
 variable [Field K] [AddCommGroup V] [Module K V]
@@ -54,7 +57,7 @@ def twistorMk (Q : QuadraticForm K V) (v : V) (hv : v ≠ 0) (hQ : Q v = 0) :
 
 section Doubled
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
 /-- Mathlib-native projective states on doubled space. -/
 abbrev DoubledProjectiveState : Type _ := InfoGeometry.Convex.ProjectiveState (E := E)

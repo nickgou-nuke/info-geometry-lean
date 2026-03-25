@@ -13,7 +13,7 @@ namespace InfoGeometry.Canonical.DualConnections
 
 variable {Θ α : Type*} [Fintype α]
 
-/-- Fiberwise tangent placeholder on a finite probability simplex fiber. -/
+/-- Fiberwise tangent model on a finite probability simplex fiber. -/
 abbrev FiberTangent (α : Type*) := α → ℝ
 
 /-- Covariant 3-tensor surface for coordinate connection coefficients. -/
@@ -28,7 +28,7 @@ def fisherBilinear
     (p : Θ → InfoGeometry.FinProb α)
     (θ : Θ)
     (u v : FiberTangent α) : ℝ :=
-  ∑ a : α, p θ a * (u a * v a)
+  ∑ a : α, (p θ a).toReal * (u a * v a)
 
 /-- Lemma `fisherBilinear_comm`. -/
 lemma fisherBilinear_comm
@@ -48,7 +48,7 @@ lemma fisherBilinear_self_nonneg
   unfold fisherBilinear
   refine Finset.sum_nonneg ?_
   intro a _ha
-  exact mul_nonneg ((p θ).nonneg a) (mul_self_nonneg (u a))
+  exact mul_nonneg ENNReal.toReal_nonneg (mul_self_nonneg (u a))
 
 /--
 Amari-Chentsov cubic tensor in finite coordinates.
@@ -58,7 +58,7 @@ def chentsovTensor
     (p : Θ → InfoGeometry.FinProb α)
     (θ : Θ)
     (u v w : FiberTangent α) : ℝ :=
-  ∑ a : α, p θ a * (u a * v a * w a)
+  ∑ a : α, (p θ a).toReal * (u a * v a * w a)
 
 /-- Lemma `chentsovTensor_swap_left`. -/
 lemma chentsovTensor_swap_left
@@ -147,11 +147,11 @@ def fisherMetric (p : Θ → InfoGeometry.FinProb α) : Prop :=
   ∀ θ : Θ, ∑ a : α, p θ a = 1
 
 /--
-Amari-Chentsov nonnegativity surrogate:
+Amari-Chentsov nonnegativity condition:
 nonnegativity of the quadratic probability moment on each fiber.
 -/
 def amariChentsovTensor (p : Θ → InfoGeometry.FinProb α) : Prop :=
-  ∀ θ : Θ, 0 ≤ ∑ a : α, (p θ a) ^ (2 : ℕ)
+  ∀ θ : Θ, 0 ≤ ∑ a : α, ((p θ a).toReal) ^ (2 : ℕ)
 
 /-- Bundled `α`-connection: reference tensor + deformation law + compatibility witnesses. -/
 structure alphaConnection (p : Θ → InfoGeometry.FinProb α) (αc : ℝ) where
@@ -226,17 +226,19 @@ noncomputable def alphaConnection_of_finProb
     alphaConnection p αc := by
   refine alphaConnection.mkFromReference (p := p) (αc := αc) (Gamma0 := fun _ _ _ _ => 0) ?_ ?_
   · intro θ
-    exact (p θ).sum_one
+    classical
+    simpa [fisherMetric, tsum_fintype] using (p θ).tsum_coe
   · intro θ
     refine Finset.sum_nonneg ?_
     intro a _ha
-    exact sq_nonneg (p θ a)
+    exact sq_nonneg ((p θ a).toReal)
 
 /-- Finite-probability fibers satisfy the Fisher normalization marker. -/
 theorem fisherMetric_of_finProb (p : Θ → InfoGeometry.FinProb α) :
     fisherMetric p := by
   intro θ
-  exact (p θ).sum_one
+  classical
+  simpa [fisherMetric, tsum_fintype] using (p θ).tsum_coe
 
 /-- Finite-probability fibers satisfy the Chentsov quadratic nonnegativity marker. -/
 theorem amariChentsovTensor_of_finProb (p : Θ → InfoGeometry.FinProb α) :
@@ -244,7 +246,7 @@ theorem amariChentsovTensor_of_finProb (p : Θ → InfoGeometry.FinProb α) :
   intro θ
   refine Finset.sum_nonneg ?_
   intro a ha
-  exact sq_nonneg (p θ a)
+  exact sq_nonneg ((p θ a).toReal)
 
 /--
 Compatibility bridge name preserved:

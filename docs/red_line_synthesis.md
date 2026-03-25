@@ -1,45 +1,29 @@
-# Red Line Synthesis
+# RedLine Topic Map
 
-This note summarizes the "Red Thread of Free Energy" formalized in the
-InfoGeometry Lean codebase.
+This note tracks the current root language behind the RedLine corridor.
 
-## Chain Overview
+## Current owner modules
 
-1. Volume deformation:
-   Jacobian or Radon-Nikodym scaling.
-2. Negative logarithm:
-   barrier / modular Hamiltonian potential.
-3. Bregman lift:
-   energy cost induced by the potential.
-4. Partition and log-sum-exp:
-   thermodynamic normalization.
-5. Free energy:
-   `F = -T log Z`, and `F = U - T S`.
-6. Tomita-Takesaki realization:
-   modular structures acting on doubled/Krein carriers.
+The current RedLine stack is:
+- `lean/InfoGeometry/Canonical/ProjectiveStateCore.lean`
+- `lean/InfoGeometry/Canonical/RelativeGeneratorCore.lean`
+- `lean/InfoGeometry/Canonical/PositiveRayCore.lean`
+- `lean/InfoGeometry/Canonical/RelativePotentialCore.lean`
+- `lean/InfoGeometry/Canonical/RelativePotentialScalarBridge.lean`
+- `lean/InfoGeometry/Canonical/RelativePotentialDiscreteBridge.lean`
+- `lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean`
+- `lean/InfoGeometry/Canonical/RedLine.lean`
 
-## Formal Route In Code
+Closely related presentation files include:
+- `lean/InfoGeometry/Canonical/UniversalVolume.lean`
+- `lean/InfoGeometry/Canonical/LogSpineBridge.lean`
+- `lean/InfoGeometry/Canonical/MultiplicativeToAdditiveBridge.lean`
 
-1. `Jordan/LogDet.lean`:
-   `logDetBarrier`, `logDetBregman`.
-2. `Canonical/GrandUnification.lean` and `Canonical/GrandSynthesis.lean`:
-   barrier/Kahler and RN-relative-volume bridges.
-3. `Thermo/FromLogDet.lean`:
-   `energyFromLogDet`, `partitionFromLogDet`, `freeEnergyFromLogDet`.
-4. `ExponentialFamily/Analytic/LogSumExp.lean`:
-   log-sum-exp generating potentials.
-5. `MaxEnt/JaynesRNMaxEnt.lean`:
-   RN derivative and Jaynes variational interfaces.
-6. `Canonical/TomitaTakesaki.lean`:
-   modular conjugation/sign and split-Clifford realization.
+## Current structural reading
 
-## Canonical Entry Points
+The stable spine is now:
+- projective positive or nonnegative state below;
+- relative generator or relative log-density in the middle;
+- scalar, discrete, count, and operator realizations above.
 
-Use canonical facades for publication/audit imports:
-
-- `InfoGeometry.Canonical.RedLine`
-- `InfoGeometry.Canonical.LogDet`
-- `InfoGeometry.Canonical.ThermoFromLogDet`
-- `InfoGeometry.Canonical.LogSumExp`
-- `InfoGeometry.Canonical.JaynesRNMaxEnt`
-
+`RedLine.lean` should be read as the umbrella export of that spine, not as a separate ontology.

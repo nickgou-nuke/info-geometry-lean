@@ -1,4 +1,5 @@
 import InfoGeometry.Singular.CartanWiring
+import InfoGeometry.Singular.MoorePenrose
 import InfoGeometry.Convex.HessianGeometry
 import Mathlib.Tactic
 
@@ -17,10 +18,10 @@ we use the Moore-Penrose generalized inverse:
 $$\tilde{\nabla} f = G^{+} \nabla f$$
 
 We show here that this $G^{+}$ is precisely the Moore-Penrose inverse 
-defined relative to the AdjointLike structure wired via the Cartan involution.
+in the native `StarRing` adjoint framework.
 -/
 
-open InfoGeometry.Singular.MoorePenroseAdjoint
+open InfoGeometry.Singular.MoorePenrose
 open InfoGeometry.Clifford.Decomposition
 open InfoGeometry.Clifford.TowerMatrix
 open Matrix
@@ -30,15 +31,6 @@ namespace InfoGeometry.Singular.NaturalGradient
 variable {n : ℕ} (J1 : Matrix (Fin 2) (Fin 2) ℝ)
 variable (hJ1_sq : J1 * J1 = 1)
 variable (hJ1t : J1ᵀ = J1)
-
-/-- 
-A "Fisher-wired" AdjointLike instance.
-Here we assume the metric J represents the Fisher Information.
--/
-noncomputable def FisherAdjoint : AdjointLike (Mat n) := 
-  InfoGeometry.Singular.CartanWiring.CartanAdjoint J1 hJ1_sq hJ1t
-
-variable [inst_adj : AdjointLike (Mat n)]
 
 /-- 
 Definition of the Natural Gradient using the Geometric Moore-Penrose inverse.

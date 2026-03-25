@@ -1,5 +1,6 @@
 import InfoGeometry.ExponentialFamily.Finite
 import InfoGeometry.Potential.LogPotential
+set_option linter.unusedSectionVars false
 
 /-!
 # KL–Bregman Bridge (Finite Exponential Family)
@@ -12,7 +13,7 @@ namespace InfoGeometry.ExponentialFamily
 
 open scoped BigOperators
 
-variable {α : Type _} [Fintype α]
+variable {α : Type _} [Fintype α] [Nonempty α]
 
 /-- Mean of the sufficient statistic under parameter `θ`. -/
 noncomputable def statMean

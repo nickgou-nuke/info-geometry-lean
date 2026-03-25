@@ -1,8 +1,8 @@
 import InfoGeometry.Basic
 import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
+import Mathlib.Probability.ProbabilityMassFunction.Constructions
 
-
-open scoped BigOperators
+open scoped BigOperators ENNReal
 
 namespace InfoGeometry.Analytic
 
@@ -57,13 +57,31 @@ lemma softmaxProb_sum_one
 noncomputable def softmaxDist
     (w a : ι → ℝ) (hw : ∀ i, 0 < w i) (θ : ℝ) :
     InfoGeometry.StrictProbabilityDist ι :=
-  { prob := softmaxProb w a θ
-    sum_one := softmaxProb_sum_one (w := w) (a := a) hw θ
-    pos := softmaxProb_pos (w := w) (a := a) hw θ }
+  by
+    classical
+    have hnonneg : ∀ i ∈ (Finset.univ : Finset ι), 0 ≤ softmaxProb w a θ i := by
+      intro i hi
+      exact le_of_lt (softmaxProb_pos (w := w) (a := a) hw θ i)
+    have hsum : ∑ i, ENNReal.ofReal (softmaxProb w a θ i) = 1 := by
+      calc
+        ∑ i, ENNReal.ofReal (softmaxProb w a θ i)
+            = ENNReal.ofReal (∑ i, softmaxProb w a θ i) := by
+                simpa using
+                  (ENNReal.ofReal_sum_of_nonneg
+                    (s := (Finset.univ : Finset ι))
+                    (f := fun i => softmaxProb w a θ i)
+                    hnonneg).symm
+        _ = ENNReal.ofReal 1 := by
+              simp [softmaxProb_sum_one (w := w) (a := a) hw θ]
+        _ = 1 := by simp
+    exact InfoGeometry.FinProb.of_fintype (fun i => ENNReal.ofReal (softmaxProb w a θ i)) hsum
 
 @[simp] lemma softmaxDist_prob_eq
     (w a : ι → ℝ) (hw : ∀ i, 0 < w i) (θ : ℝ) (i : ι) :
-    (softmaxDist (w := w) (a := a) hw θ).toProbabilityDist.prob i = softmaxProb w a θ i := rfl
+    ((softmaxDist (w := w) (a := a) hw θ) i).toReal = softmaxProb w a θ i := by
+  have hnonneg : 0 ≤ softmaxProb w a θ i :=
+    le_of_lt (softmaxProb_pos (w := w) (a := a) hw θ i)
+  simp [softmaxDist, InfoGeometry.FinProb.of_fintype, PMF.ofFintype_apply, hnonneg]
 
 /-- Mean `E_p[a]`. -/
 noncomputable def softmaxMean
@@ -87,8 +105,8 @@ lemma softmaxVariance_nonneg
   unfold softmaxVariance InfoGeometry.expectation
   refine Finset.sum_nonneg ?_
   intro i hi
-  have hp : 0 ≤ (softmaxDist (w := w) (a := a) hw θ).prob i :=
-    le_of_lt ((softmaxDist (w := w) (a := a) hw θ).pos i)
+  have hp : 0 ≤ ((softmaxDist (w := w) (a := a) hw θ) i).toReal :=
+    ENNReal.toReal_nonneg
   exact mul_nonneg hp (pow_two_nonneg _)
 
 end Nonempty
@@ -137,7 +155,7 @@ lemma deriv_logSumExp_eq_firstMoment_div_partition
 lemma softmaxMean_eq_logSumExpMean
     (w a : ι → ℝ) (hw : ∀ i, 0 < w i) (θ : ℝ) :
     softmaxMean (w := w) (a := a) hw θ = logSumExpMean w a θ := by
-  unfold softmaxMean InfoGeometry.expectation softmaxDist
+  unfold softmaxMean InfoGeometry.expectation
   simpa [softmaxProb] using (logSumExpMean_eq_weighted_sum (w := w) (a := a) hw θ).symm
 
 /-- `E_p[a] = M₁/Z`. -/
@@ -152,7 +170,7 @@ lemma softmaxMean_eq_firstMoment_div_partition
 lemma softmaxSecondMoment_eq_logSumExpSecondMoment
     (w a : ι → ℝ) (hw : ∀ i, 0 < w i) (θ : ℝ) :
     softmaxSecondMoment (w := w) (a := a) hw θ = logSumExpSecondMoment w a θ := by
-  unfold softmaxSecondMoment InfoGeometry.expectation softmaxDist
+  unfold softmaxSecondMoment InfoGeometry.expectation
   simpa [softmaxProb] using
     (logSumExpSecondMoment_eq_weighted_sum (w := w) (a := a) hw θ).symm
 
@@ -177,7 +195,7 @@ lemma softmaxVariance_eq_secondMoment_sub_mean_sq
     softmaxVariance (w := w) (a := a) hw θ
       = softmaxSecondMoment (w := w) (a := a) hw θ
         - (softmaxMean (w := w) (a := a) hw θ) ^ (2 : ℕ) := by
-  let p : ι → ℝ := (softmaxDist (w := w) (a := a) hw θ).toProbabilityDist.prob
+  let p : ι → ℝ := fun i => ((softmaxDist (w := w) (a := a) hw θ) i).toReal
   unfold softmaxVariance softmaxSecondMoment softmaxMean InfoGeometry.expectation
   change
     ∑ i : ι, p i * (a i - (∑ j : ι, p j * a j)) ^ (2 : ℕ)

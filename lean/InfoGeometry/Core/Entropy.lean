@@ -1,4 +1,5 @@
 import InfoGeometry.Basic
+import InfoGeometry.KL.Finite
 
 /-!
 # Core Entropy
@@ -9,30 +10,46 @@ Core entropy/KL definitions and normalization identities.
 namespace InfoGeometry.Core
 
 open InfoGeometry
+open scoped BigOperators ENNReal
 
-variable {α : Type _} [Fintype α]
+variable {α : Type _}
 
 @[simp] lemma logDensity_def (P : ProbabilityDist α) (x : α) :
-    logDensity P x = Real.log (P.prob x) := rfl
+    logDensity P x = Real.log (P x).toReal := rfl
 
 @[simp] lemma surprisal_def (P : ProbabilityDist α) (x : α) :
     surprisal P x = -logDensity P x := rfl
 
-@[simp] lemma entropy_def (P : ProbabilityDist α) :
-    entropy P = expectation P (surprisal P) := rfl
+section Fintype
 
-@[simp] lemma klDiv_def (P Q : ProbabilityDist α) :
-    klDiv P Q = expectation P (fun x => logDensity P x - logDensity Q x) := rfl
+variable [Fintype α]
+
+@[simp] lemma entropy_def (P : ProbabilityDist α) :
+    InfoGeometry.entropy P = expectation P (surprisal P) := rfl
 
 @[simp] lemma expectation_const (P : ProbabilityDist α) (c : ℝ) :
     expectation P (fun _ => c) = c := by
+  classical
   calc
     expectation P (fun _ => c)
-        = ∑ x, P.prob x * c := rfl
-    _ = (∑ x, P.prob x) * c := by
+        = ∑ x, (P x).toReal * c := rfl
+    _ = (∑ x, (P x).toReal) * c := by
           symm
-          simpa using (Finset.sum_mul (s := Finset.univ) (f := P.prob) (a := c))
-    _ = c := by simp [P.sum_one]
+          simpa using (Finset.sum_mul (s := Finset.univ) (f := fun x => (P x).toReal) (a := c))
+    _ = c := by
+          have hsum_ennreal : (Finset.univ.sum fun x => P x) = (1 : ℝ≥0∞) := by
+            simpa [tsum_fintype] using P.tsum_coe
+          have hsum_toReal : (Finset.univ.sum fun x => (P x).toReal) = 1 := by
+            have htoReal :
+                (Finset.univ.sum fun x => (P x).toReal)
+                  = ENNReal.toReal (Finset.univ.sum fun x => P x) := by
+              simpa using
+                (ENNReal.toReal_sum (s := (Finset.univ)) (f := fun x => P x)
+                  (by
+                    intro x hx
+                    exact P.apply_ne_top x)).symm
+            simpa [hsum_ennreal] using htoReal
+          simp [hsum_toReal]
 
 @[simp] lemma expectation_zero (P : ProbabilityDist α) :
     expectation P (fun _ => (0 : ℝ)) = 0 := by
@@ -41,5 +58,16 @@ variable {α : Type _} [Fintype α]
 @[simp] lemma expectation_one (P : ProbabilityDist α) :
     expectation P (fun _ => (1 : ℝ)) = 1 := by
   simp [expectation_const]
+
+end Fintype
+
+section FintypeMeasurable
+
+variable [MeasurableSpace α]
+
+@[simp] lemma klDiv_def (P Q : ProbabilityDist α) :
+    InfoGeometry.KL.kl_div P.toMeasure Q.toMeasure = InfoGeometry.fin_kl_div P Q := rfl
+
+end FintypeMeasurable
 
 end InfoGeometry.Core

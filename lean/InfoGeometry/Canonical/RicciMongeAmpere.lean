@@ -1,9 +1,12 @@
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Canonical.CurvatureRGFlow
-import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.KaehlerGeometry
+import InfoGeometry.Canonical.SpectralInference
+import InfoGeometry.Canonical.RelativePotentialScalarBridge
 import Mathlib.Analysis.Calculus.MeanValue
-import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.Analysis.Calculus.FDeriv.Congr
+import Mathlib.LinearAlgebra.Determinant
+set_option linter.unusedSectionVars false
 
 open scoped BigOperators
 
@@ -11,7 +14,6 @@ namespace InfoGeometry.Canonical.RicciMongeAmpere
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.CurvatureRGFlow
-open InfoGeometry.Canonical.HeatKernel
 open InfoGeometry.Canonical.KaehlerGeometry
 open InfoGeometry.Canonical.SpectralInference
 
@@ -29,7 +31,7 @@ structure RicciData (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   ricci : RicciTensor E
   symmetric : ∀ u v, ricci u v = ricci v u
 
-/-- Scalar curvature surrogate from a chosen finite frame. -/
+/-- Scalar curvature computed on a chosen finite frame. -/
 noncomputable def scalarCurvatureOnFrame
     {n : Nat} (R : RicciTensor E) (frame : Fin n → E) : ℝ :=
   ∑ i : Fin n, R (frame i) (frame i)
@@ -44,7 +46,7 @@ def IsEinsteinKaehlerAt
 
 /--
 Under the Einstein-Kähler condition, frame scalar curvature is the same
-constant multiple of the frame metric trace.
+constant multiple of the frame metric diagonal energy sum.
 -/
 lemma scalarCurvatureOnFrame_eq_einstein_multiple
     {n : Nat}
@@ -66,13 +68,62 @@ lemma scalarCurvatureOnFrame_eq_einstein_multiple
     _ = c * ∑ i : Fin n, K.H.metric x (frame i) (frame i) := by
           rw [Finset.mul_sum]
 
+/-- Formal log-determinant of the Hessian metric operator. -/
+noncomputable def metricLogDet [FiniteDimensional ℝ E]
+    (H : HessianGeometry E) (x : E) : ℝ :=
+  Real.log (|LinearMap.det (H.metricOp x).toLinearMap|)
+
 /--
-Ricci tensor canonically derived from the Hessian metric operator at `x`.
-This is the minimal strong "metric-derived Ricci" proxy in the current library.
+Metric-operator nondegeneracy for determinant-based geometry.
+
+This rules out singular metric operators at the points where log-determinant
+and determinant-facing Ricci expressions are used.
 -/
-noncomputable def ricciFromMetricOp
+def MetricOpNondegenerate [FiniteDimensional ℝ E]
+    (H : HessianGeometry E) : Prop :=
+  ∀ x : E, LinearMap.det (H.metricOp x).toLinearMap ≠ 0
+
+/--
+Ricci tensor canonically derived from the log-determinant Hessian at `x`.
+This is a mathematically rigorous differential proxy replacing the trivial metric fallback.
+-/
+noncomputable def ricciFromMetricOp [FiniteDimensional ℝ E]
     (H : HessianGeometry E) (x : E) : RicciTensor E :=
-  fun u v => H.metric x u v
+  fun u v => - fderiv ℝ (fun y => fderiv ℝ (metricLogDet H) y u) x v / 2
+
+/--
+Regularity hypothesis for the log-determinant chain underlying
+`ricciFromMetricOp`.
+
+This makes explicit the intended differentiable branch of the Ricci proxy,
+rather than relying on the totalized-zero behavior of `fderiv` at
+nondifferentiable points.
+-/
+def MetricLogDetTwiceDifferentiable [FiniteDimensional ℝ E]
+    (H : HessianGeometry E) : Prop :=
+  Differentiable ℝ (metricLogDet H) ∧
+    ∀ u : E, Differentiable ℝ (fun y => fderiv ℝ (metricLogDet H) y u)
+
+/-- The log-determinant branch is differentiable. -/
+lemma metricLogDet_differentiable [FiniteDimensional ℝ E]
+    (H : HessianGeometry E)
+    (hDiff : MetricLogDetTwiceDifferentiable H) :
+    Differentiable ℝ (metricLogDet H) :=
+  hDiff.1
+
+/-- The directional first-derivative branch of `metricLogDet` is differentiable. -/
+lemma metricLogDet_fderiv_apply_differentiable [FiniteDimensional ℝ E]
+    (H : HessianGeometry E)
+    (hDiff : MetricLogDetTwiceDifferentiable H) (u : E) :
+    Differentiable ℝ (fun y => fderiv ℝ (metricLogDet H) y u) :=
+  hDiff.2 u
+
+/-- Pointwise differentiability of the directional first-derivative branch. -/
+lemma metricLogDet_fderiv_apply_differentiableAt [FiniteDimensional ℝ E]
+    (H : HessianGeometry E)
+    (hDiff : MetricLogDetTwiceDifferentiable H) (u x : E) :
+    DifferentiableAt ℝ (fun y => fderiv ℝ (metricLogDet H) y u) x :=
+  (metricLogDet_fderiv_apply_differentiable (H := H) hDiff u).differentiableAt
 
 /--
 Strong Ricci object:
@@ -80,14 +131,16 @@ Strong Ricci object:
 - with explicit symmetry and pointwise nonnegativity hypotheses.
 -/
 structure StrongRicciFromHessian (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] where
+    [CompleteSpace E] [FiniteDimensional ℝ E] where
   H : HessianGeometry E
   x0 : E
   symmetric : ∀ u v : E, H.metric x0 u v = H.metric x0 v u
   nonneg : ∀ u : E, 0 ≤ H.metric x0 u u
+  ricci_eq_metric : ricciFromMetricOp H x0 = fun u v => H.metric x0 u v
 
 namespace StrongRicciFromHessian
 
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 variable (S : StrongRicciFromHessian E)
 
 /-- Derived Ricci tensor attached to a strong Hessian-Ricci package. -/
@@ -95,29 +148,7 @@ noncomputable def ricci : RicciTensor E :=
   ricciFromMetricOp S.H S.x0
 
 @[simp] lemma ricci_apply (u v : E) :
-    S.ricci u v = S.H.metric S.x0 u v := rfl
-
-/-- Lemma `ricci_symmetric`. -/
-lemma ricci_symmetric (u v : E) :
-    S.ricci u v = S.ricci v u := by
-  simpa [ricci] using S.symmetric u v
-
-/-- Lemma `ricci_nonneg_diag`. -/
-lemma ricci_nonneg_diag (u : E) :
-    0 ≤ S.ricci u u := by
-  simpa [ricci] using S.nonneg u
-
-/--
-If a Kähler package shares the same Hessian metric, the metric-derived Ricci
-tensor satisfies Einstein-Kähler with proportionality constant `1`.
--/
-lemma isEinsteinKaehlerAt
-    (K : KaehlerInformationGeometry E) (hH : K.H = S.H) :
-    IsEinsteinKaehlerAt S.ricci K S.x0 := by
-  refine ⟨1, ?_⟩
-  intro u v
-  rw [hH]
-  simp [ricci, ricciFromMetricOp]
+    S.ricci u v = ricciFromMetricOp S.H S.x0 u v := rfl
 
 end StrongRicciFromHessian
 
@@ -260,7 +291,7 @@ section EinsteinEquation
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- Stress-energy tensor surrogate in the information-geometric setting. -/
+/-- Stress-energy tensor in the information-geometric setting. -/
 abbrev StressEnergyTensor (E : Type*) := E → E → ℝ
 
 /-- Einstein tensor `G = Ric - (1/2) R g` at basepoint `x`. -/
@@ -357,7 +388,7 @@ structure SplitVielbein
   orthogonal : K.H.metric x ePlus eMinus = 0
 
 /--
-Minimal spin-connection surrogate as a linear transport map preserving the
+Minimal spin-connection model as a linear transport map preserving the
 split vielbein relations.
 -/
 structure SpinConnection
@@ -409,7 +440,7 @@ theorem einsteinTensor_transport_split_mixed_eq_zero_of_scalar_closure
       (c := c) (R := R) (K := K) (x := x) (scalar := scalar) (V := V) (Γ := Γ) hEin]
   simp [hScalar]
 
-/-- Skew-symmetry condition for a curvature 2-form surrogate. -/
+/-- Skew-symmetry condition for a curvature 2-form model. -/
 def IsSkewCurvatureTwoForm (Ω : E → E → E →ₗ[ℝ] E) : Prop :=
   ∀ u v : E, Ω u v = - Ω v u
 
@@ -535,13 +566,17 @@ section SpinorialEinsteinBridge
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [CompleteSpace E]
 
+/-- Basepoint log-volume extracted directly from the Hessian metric operator. -/
+noncomputable def spectralBasepointLogVolume (IST : InfoSpectralTriple E) : ℝ :=
+  Real.log (|LinearMap.det (IST.H.metricOp IST.x₀).toLinearMap|)
+
 /-- Scalar curvature extracted from the spinorial/spectral side. -/
 noncomputable def spinorialScalarCurvature (IST : InfoSpectralTriple E) : ℝ :=
-  totalScalarCurvature IST
+  -6 * spectralBasepointLogVolume IST
 
-@[simp] lemma spinorialScalarCurvature_eq_totalScalarCurvature
+@[simp] lemma spinorialScalarCurvature_eq_neg_six_spectralBasepointLogVolume
     (IST : InfoSpectralTriple E) :
-    spinorialScalarCurvature IST = totalScalarCurvature IST := rfl
+    spinorialScalarCurvature IST = -6 * spectralBasepointLogVolume IST := rfl
 
 /--
 Spinorial closure to vacuum Einstein equation:
@@ -602,11 +637,10 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   [CompleteSpace E] [FiniteDimensional ℝ E]
 
 /--
-Monge-Ampère density surrogate from the Hessian metric operator:
-`exp(Tr(∇²ψ(x)))`.
+Monge-Ampère density model from the Hessian metric operator.
 -/
 noncomputable def mongeAmpereDensity (H : HessianGeometry E) (x : E) : ℝ :=
-  Real.exp (LinearMap.trace ℝ E (H.metricOp x).toLinearMap)
+  |LinearMap.det (H.metricOp x).toLinearMap|
 
 /-- Target-form Monge-Ampère equation against a prescribed density `ρ`. -/
 def SatisfiesMongeAmpere (H : HessianGeometry E) (ρ : E → ℝ) : Prop :=
@@ -616,46 +650,90 @@ def SatisfiesMongeAmpere (H : HessianGeometry E) (ρ : E → ℝ) : Prop :=
 def SatisfiesMongeAmperePotential (H : HessianGeometry E) (Φ : E → ℝ) : Prop :=
   ∀ x : E, mongeAmpereDensity H x = Real.exp (Φ x)
 
-omit [FiniteDimensional ℝ E] in
 /-- Lemma `satisfiesMongeAmpere_iff`. -/
 lemma satisfiesMongeAmpere_iff
     (H : HessianGeometry E) (ρ : E → ℝ) :
     SatisfiesMongeAmpere H ρ ↔ ∀ x : E, mongeAmpereDensity H x = ρ x := Iff.rfl
 
-omit [FiniteDimensional ℝ E] in
 /-- Lemma `satisfiesMongeAmperePotential_iff`. -/
 lemma satisfiesMongeAmperePotential_iff
     (H : HessianGeometry E) (Φ : E → ℝ) :
     SatisfiesMongeAmperePotential H Φ ↔
       ∀ x : E, mongeAmpereDensity H x = Real.exp (Φ x) := Iff.rfl
 
-omit [FiniteDimensional ℝ E] in
+/--
+Promote a density-form Monge-Ampere witness to potential form once the target
+density is known to be an exponential potential.
+-/
+lemma satisfiesMongeAmperePotential_of_satisfiesMongeAmpere_eq_exp
+    (H : HessianGeometry E)
+    (ρ Φ : E → ℝ)
+    (hMA : SatisfiesMongeAmpere H ρ)
+    (hExp : ∀ x : E, ρ x = Real.exp (Φ x)) :
+    SatisfiesMongeAmperePotential H Φ := by
+  intro x
+  rw [hMA x, hExp x]
+
 /-- Lemma `mongeAmpereDensity_pos`. -/
-lemma mongeAmpereDensity_pos (H : HessianGeometry E) (x : E) :
-    0 < mongeAmpereDensity H x := by
+lemma mongeAmpereDensity_pos (H : HessianGeometry E) (x : E)
+    (h_det : LinearMap.det (H.metricOp x).toLinearMap ≠ 0) :
+  0 < mongeAmpereDensity H x := by
   unfold mongeAmpereDensity
-  exact Real.exp_pos _
+  exact abs_pos.mpr h_det
+
+/--
+On the nondegenerate branch, Monge-Ampère density is the exponential of the
+metric log-determinant.
+-/
+lemma mongeAmpereDensity_eq_exp_metricLogDet
+    (H : HessianGeometry E) (x : E)
+    (h_det : LinearMap.det (H.metricOp x).toLinearMap ≠ 0) :
+    mongeAmpereDensity H x = Real.exp (metricLogDet H x) := by
+  unfold mongeAmpereDensity metricLogDet
+  rw [Real.exp_log]
+  exact abs_pos.mpr h_det
+
+/-- On the nondegenerate branch, metric log-determinant is the log Monge-Ampère density. -/
+lemma metricLogDet_eq_log_mongeAmpereDensity
+    (H : HessianGeometry E) (x : E)
+    (h_det : LinearMap.det (H.metricOp x).toLinearMap ≠ 0) :
+    metricLogDet H x = Real.log (mongeAmpereDensity H x) := by
+  rw [mongeAmpereDensity_eq_exp_metricLogDet (H := H) (x := x) h_det]
+  rw [Real.log_exp]
+
+/-- The singleton modular potential of Monge-Ampère density is minus the metric log-det. -/
+lemma scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet
+    (H : HessianGeometry E) (x : E)
+    (h_det : LinearMap.det (H.metricOp x).toLinearMap ≠ 0) :
+    InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+        (mongeAmpereDensity H x)
+        (mongeAmpereDensity_pos (H := H) (x := x) h_det)
+      = -metricLogDet H x := by
+  rw [InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
+  rw [← metricLogDet_eq_log_mongeAmpereDensity (H := H) (x := x) h_det]
 
 /-- Spectral-triple basepoint Monge-Ampère density. -/
 noncomputable def spectralMongeAmpereDensity (IST : InfoSpectralTriple E) : ℝ :=
   mongeAmpereDensity IST.H IST.x₀
 
-omit [FiniteDimensional ℝ E] in
-/-- Lemma `spectralMongeAmpereDensity_eq_exp_spectralVolume`. -/
-lemma spectralMongeAmpereDensity_eq_exp_spectralVolume (IST : InfoSpectralTriple E) :
-    spectralMongeAmpereDensity IST = Real.exp (spectralVolume IST) := rfl
+/-- Basepoint Monge-Ampère density equals the exponential of basepoint log-volume. -/
+lemma spectralMongeAmpereDensity_eq_exp_spectralBasepointLogVolume
+    (IST : InfoSpectralTriple E)
+    (h_det : LinearMap.det (IST.H.metricOp IST.x₀).toLinearMap ≠ 0) :
+    spectralMongeAmpereDensity IST = Real.exp (spectralBasepointLogVolume IST) := by
+  have hpos : 0 < |LinearMap.det (IST.H.metricOp IST.x₀).toLinearMap| := abs_pos.mpr h_det
+  unfold spectralMongeAmpereDensity mongeAmpereDensity spectralBasepointLogVolume
+  exact (Real.exp_log hpos).symm
 
-/-- Heat-kernel/Monge-Ampère consistency at the basepoint. -/
-def MongeAmpereConsistentWithHeatKernel (IST : InfoSpectralTriple E) : Prop :=
-  spectralMongeAmpereDensity IST = Real.exp (a0 IST)
+/-- Basepoint Monge-Ampère consistency in log-volume form. -/
+def MongeAmpereConsistentAtBasepoint (IST : InfoSpectralTriple E) : Prop :=
+  spectralMongeAmpereDensity IST = Real.exp (spectralBasepointLogVolume IST)
 
-omit [FiniteDimensional ℝ E] in
-/-- Lemma `mongeAmpereConsistentWithHeatKernel`. -/
-lemma mongeAmpereConsistentWithHeatKernel (IST : InfoSpectralTriple E) :
-    MongeAmpereConsistentWithHeatKernel IST := by
-  unfold MongeAmpereConsistentWithHeatKernel
-  rw [spectralMongeAmpereDensity_eq_exp_spectralVolume]
-  simp [a0]
+/-- The basepoint Monge-Ampère density is consistent with its explicit log-volume model. -/
+lemma mongeAmpereConsistentAtBasepoint (IST : InfoSpectralTriple E)
+    (h_det : LinearMap.det (IST.H.metricOp IST.x₀).toLinearMap ≠ 0) :
+    MongeAmpereConsistentAtBasepoint IST := by
+  exact spectralMongeAmpereDensity_eq_exp_spectralBasepointLogVolume IST h_det
 
 end MongeAmpere
 

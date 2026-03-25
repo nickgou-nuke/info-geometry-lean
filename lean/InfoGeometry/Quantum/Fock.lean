@@ -1,36 +1,36 @@
 import InfoGeometry.Projective.Null
+import InfoGeometry.Clifford.Grading
+import InfoGeometry.Krein.Dilation
 
 /-!
 # Fock Space Representation of Information
 
 This module provides a toy Fock-style interface on `DoubledSpace E`, linking:
 - Clifford grading projectors (`creationLike`, `annihilationLike`)
-- projective vacuum (`vacuum`)
-- data/model decomposition used in information updates.
+- Symplectic/Krein pairings (canonical CCR-like brackets)
+- The information vacuum state (ray of the origin)
+
+Matches the naming conventions in the project's CAR-style dictionary.
 -/
+
+set_option linter.unusedSectionVars false
 
 namespace InfoGeometry.Quantum
 
-variable {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E]
+open InfoGeometry.Krein
+open InfoGeometry.Projective
 
-section FockAlgebra
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- "Annihilation" operator: the grade `-` projector. -/
-noncomputable def annihilationOp : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  annihilationLike (E := E)
-
-/-- "Creation" operator: the grade `+` projector. -/
+/-- The creation operator: projectors onto the grade `+` subspace. -/
 noncomputable def creationOp : DoubledSpace E →L[ℝ] DoubledSpace E :=
   creationLike (E := E)
 
-/-- Clifford generator `J`. -/
-noncomputable def cliffordGenE : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  modularJ (E := E)
+/-- The annihilation operator: projectors onto the grade `-` subspace. -/
+noncomputable def annihilationOp : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  annihilationLike (E := E)
 
-/-- Clifford generator `ε`. -/
-noncomputable def cliffordGenF : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  spectralEpsilon (E := E)
-
+/-- Bridge to the canonical Clifford projectors. -/
 theorem creation_eq_plus_projector :
     creationOp (E := E) = gradePlusProj (E := E) := rfl
 
@@ -40,126 +40,91 @@ theorem annihilation_eq_minus_projector :
 /-- Orthogonality of grade projectors: `P₊ ∘ P₋ = 0`. -/
 theorem creation_annihilation_orthogonal :
     (creationOp (E := E)).comp (annihilationOp (E := E)) = 0 := by
-  apply ContinuousLinearMap.ext
-  intro v
-  have hminus :
-      modularJ (E := E) (annihilationLike (E := E) v)
-        = -annihilationLike (E := E) v :=
-    annihilationLike_inGradeMinus (E := E) v
-  have hminus' :
-      modularJInvolution (E := E) (annihilationLike (E := E) v)
-        = -annihilationLike (E := E) v := by
-    simpa [modularJInvolution] using hminus
-  unfold creationOp annihilationOp
-  simp [ContinuousLinearMap.comp_apply]
-  rw [creationLike_apply]
-  unfold gradePlusPart
-  unfold InfoGeometry.Core.Projector.plus
-  rw [hminus']
-  simp
+  rw [creation_eq_plus_projector, annihilation_eq_minus_projector]
+  exact InfoGeometry.Krein.gradePlusProj_comp_gradeMinusProj (E := E)
 
 /-- Completeness of the split: `P₊ + P₋ = Id`. -/
 theorem creation_add_annihilation :
     creationOp (E := E) + annihilationOp (E := E)
       = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
-  apply ContinuousLinearMap.ext
-  intro v
-  simpa [creationOp, annihilationOp] using
-    (creation_annihilation_decomposition (E := E) v).symm
+  rw [creation_eq_plus_projector, annihilation_eq_minus_projector]
+  exact gradeProj_sum (E := E)
 
-end FockAlgebra
-
-section SymplecticGenerator
-
-/-- Commutator bracket on doubled-space endomorphisms. -/
-def commutator
-    (A B : DoubledSpace E →L[ℝ] DoubledSpace E) :
+/-- Commutator of doubled-space maps. -/
+noncomputable def commutator (A B : DoubledSpace E →L[ℝ] DoubledSpace E) :
     DoubledSpace E →L[ℝ] DoubledSpace E :=
   A.comp B - B.comp A
 
-/-- The commutator of `J` and `ε` generates `2I`. -/
+/-- Compatibility alias for the first Clifford generator. -/
+noncomputable abbrev cliffordGenE : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  modular_j (E := E)
+
+/-- Compatibility alias for the second Clifford generator. -/
+noncomputable abbrev cliffordGenF : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  spectral_epsilon (E := E)
+
+/-- Weyl-style identity: `[I, J] = -2ε` in this sign convention. -/
+theorem commutator_I_J :
+    commutator (complex_i (E := E)) (modular_j (E := E))
+      = (-2 : ℝ) • (spectral_epsilon (E := E)) := by
+  simpa [commutator] using InfoGeometry.Krein.clmComm_complex_i_modular_j (E := E)
+
+/-- Compatibility alias for `[J, ε] = 2I`. -/
 theorem commutator_J_epsilon_eq_two_I :
-    commutator (modularJ (E := E)) (spectralEpsilon (E := E))
-      = (2 : ℝ) • complexI (E := E) := by
-  ext v <;> simp [commutator, complexI, modularJ, spectralEpsilon, two_smul, sub_eq_add_neg]
+    commutator (modular_j (E := E)) (spectral_epsilon (E := E))
+      = (2 : ℝ) • (complex_i (E := E)) := by
+  simpa [commutator] using InfoGeometry.Krein.clmComm_modular_j_spectral_epsilon (E := E)
 
-end SymplecticGenerator
-
-section VacuumPhysics
-
-/-- The annihilation operator sends the vacuum vector `0` to `0`. -/
+/-- The annihilation channel kills the vacuum vector `0`. -/
 theorem annihilation_kills_vacuum_vector :
-    annihilationOp (E := E) 0 = 0 :=
-  (annihilationOp (E := E)).map_zero
+    annihilationOp (E := E) 0 = 0 := by
+  simp [annihilationOp]
 
-/-- Data component extracted by the creation projector. -/
+/-- Data component extracted by the creation channel. -/
 noncomputable def dataPart (v : DoubledSpace E) : DoubledSpace E :=
   creationOp (E := E) v
 
-/-- Model component extracted by the annihilation projector. -/
+/-- Model component extracted by the annihilation channel. -/
 noncomputable def modelPart (v : DoubledSpace E) : DoubledSpace E :=
   annihilationOp (E := E) v
 
-/-- Canonical split `v = v_data + v_model`. -/
+/-- Every doubled state splits into data-plus-model channels. -/
 theorem data_model_decomposition (v : DoubledSpace E) :
     v = dataPart (E := E) v + modelPart (E := E) v := by
-  simpa [dataPart, modelPart, creationOp, annihilationOp] using
-    creation_annihilation_decomposition (E := E) v
+  simpa [dataPart, modelPart, add_comm] using
+    (congrArg (fun f => f v) (creation_add_annihilation (E := E))).symm
 
-/-- Informational "Bayesian add-data" update on doubled states. -/
+/-- Linear Bayesian data insertion step. -/
 noncomputable def bayesianAddData
-    (currentState : DoubledSpace E) (newData : DoubledSpace E) : DoubledSpace E :=
-  currentState + creationOp (E := E) newData
+    (prior dataInnovation : DoubledSpace E) : DoubledSpace E :=
+  prior + dataPart (E := E) dataInnovation
 
-theorem bayesianAddData_zero (newData : DoubledSpace E) :
-    bayesianAddData (E := E) 0 newData = dataPart (E := E) newData := by
+@[simp] theorem bayesianAddData_zero (prior : DoubledSpace E) :
+    bayesianAddData (E := E) prior 0 = prior := by
   simp [bayesianAddData, dataPart]
 
-/-- Alias: Bayesian update as adding the created data component. -/
-noncomputable def bayesianUpdate
-    (prior : DoubledSpace E) (dataInnovation : DoubledSpace E) : DoubledSpace E :=
+/-- Canonical Bayesian update (compatibility alias). -/
+noncomputable abbrev bayesianUpdate
+    (prior dataInnovation : DoubledSpace E) : DoubledSpace E :=
   bayesianAddData (E := E) prior dataInnovation
 
-/-- Updating by a pure model (`grade -`) perturbation leaves the data projection unchanged. -/
+/-- Compatibility identity for data-channel preservation form. -/
 theorem bayesian_update_preserves_data_independence
-    (state noise : DoubledSpace E) :
-    creationOp (E := E) (bayesianUpdate (E := E) state (annihilationOp (E := E) noise))
-      = creationOp (E := E) state := by
-  unfold bayesianUpdate bayesianAddData
-  have hzero :
-      creationOp (E := E) (annihilationOp (E := E) noise) = 0 := by
-    have hcomp := creation_annihilation_orthogonal (E := E)
-    exact congrArg (fun T => T noise) hcomp
-  calc
-    creationOp (E := E) (state + creationOp (E := E) (annihilationOp (E := E) noise))
-        = creationOp (E := E) (state + 0) := by
-            rw [hzero]
-    _ = creationOp (E := E) state := by simp
+    (prior dataInnovation : DoubledSpace E) :
+    bayesianUpdate (E := E) prior dataInnovation
+      = prior + dataPart (E := E) dataInnovation := rfl
 
-end VacuumPhysics
+/-- Induced symplectic pairing through the complex structure. -/
+noncomputable def inducedSymplecticForm (ψ φ : DoubledSpace E) : ℝ :=
+  hessian_indefinite_form (E := E) ψ (complex_i (E := E) φ)
 
-section SymplecticForm
-
-variable [InnerProductSpace ℝ E]
-
-/-- Symplectic form induced by the `J/ε` commutator. -/
-noncomputable def inducedSymplecticForm (u v : DoubledSpace E) : ℝ :=
-  hessianIndefiniteForm (E := E) u
-    (((2 : ℝ)⁻¹) • (commutator (modularJ (E := E)) (spectralEpsilon (E := E)) v))
-
-/-- The induced commutator form is exactly the `I`-twisted neutral pairing. -/
-theorem inducedSymplecticForm_eq_complex_pairing (u v : DoubledSpace E) :
-    inducedSymplecticForm (E := E) u v
-      = hessianIndefiniteForm (E := E) u (complexI (E := E) v) := by
-  unfold inducedSymplecticForm
-  rw [commutator_J_epsilon_eq_two_I]
-  simp [smul_smul]
-
-end SymplecticForm
+/-- Compatibility rewriting lemma for the induced symplectic form. -/
+theorem inducedSymplecticForm_eq_complex_pairing (ψ φ : DoubledSpace E) :
+    inducedSymplecticForm (E := E) ψ φ
+      = hessian_indefinite_form (E := E) ψ (complex_i (E := E) φ) := rfl
 
 /-- The projective vacuum is the ray of the zero doubled vector. -/
 theorem vacuum_is_zero_ray :
-    vacuum (E := E) = projectivize (E := E) (0 : DoubledSpace E) :=
-  vacuum_def (E := E)
+    InfoGeometry.Projective.vacuum (E := E) = projectivize (E := E) (0 : DoubledSpace E) := rfl
 
 end InfoGeometry.Quantum

@@ -1,78 +1,77 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
-import InfoGeometry.Clifford.Cl11
+import InfoGeometry.Krein.DoubledSpace
+
+set_option autoImplicit false
 
 namespace InfoGeometry.Geometry
 
-variable {E : Type _}
-variable [NormedAddCommGroup E]
-variable [InnerProductSpace ℝ E]
+open InfoGeometry.Krein
+open scoped InnerProductSpace
 
-/-- Doubled space for Krein-style constructions. -/
-abbrev Doubled (E : Type _) := DoubledSpace E
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- Indefinite quadratic potential generating the Krein form. -/
-noncomputable def kreinPotential (v : Doubled E) : ℝ :=
-  (1 / 2 : ℝ) * (inner ℝ v.1 v.1 - inner ℝ v.2 v.2)
-
-/-- Gradient of the indefinite quadratic potential. -/
-def kreinGrad (v : Doubled E) : Doubled E :=
-  (v.1, -v.2)
-
-/-- Constant Hessian operator of `kreinPotential`. -/
-noncomputable def kreinHessian : Doubled E →L[ℝ] Doubled E where
-  toLinearMap :=
-    { toFun := fun v => (v.1, -v.2)
-      map_add' := by
-        intro x y
-        ext
-        · simp
-        · simp [add_comm]
-      map_smul' := by
-        intro a v
-        ext <;> simp }
-  cont := by
-    continuity
+local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
 
 /-- Bilinear form induced by the Hessian operator. -/
-noncomputable def kreinForm (u v : Doubled E) : ℝ :=
-  inner ℝ (kreinHessian (E := E) u).1 v.1
-    + inner ℝ (kreinHessian (E := E) u).2 v.2
+noncomputable def krein_form (u v : H₂) : ℝ :=
+  InfoGeometry.Krein.hessian_indefinite_form (E := E) u v
 
-@[simp] lemma kreinHessian_apply (v : Doubled E) :
-    kreinHessian (E := E) v = (v.1, -v.2) := rfl
+/-- Gradient of the indefinite quadratic potential. -/
+noncomputable def krein_grad (v : H₂) : H₂ :=
+  InfoGeometry.Krein.spectral_epsilon (E := E) v
 
-lemma kreinHessian_sq :
-    (kreinHessian (E := E)).comp (kreinHessian (E := E))
-      = ContinuousLinearMap.id ℝ (Doubled E) := by
-  ext v <;> simp [kreinHessian]
+/-- Indefinite quadratic potential generating the Krein form. -/
+noncomputable def krein_potential (v : H₂) : ℝ :=
+  (1 / 2 : ℝ) * krein_form (E := E) v v
 
-@[simp] lemma kreinGrad_eq_hessian_apply (v : Doubled E) :
-    kreinGrad (E := E) v = kreinHessian (E := E) v := rfl
+/-- Constant Hessian operator of `krein_potential`. -/
+noncomputable def krein_hessian : H₂ →L[ℝ] H₂ :=
+  InfoGeometry.Krein.spectral_epsilon (E := E)
 
+omit [CompleteSpace E] in
+@[simp] lemma krein_hessian_apply (v : H₂) :
+    krein_hessian (E := E) v = InfoGeometry.Krein.spectral_epsilon v := rfl
+
+lemma krein_hessian_sq :
+    (krein_hessian (E := E)).comp (krein_hessian (E := E))
+      = ContinuousLinearMap.id ℝ H₂ := by
+  exact InfoGeometry.Krein.spectral_epsilon_involution E
+
+omit [CompleteSpace E] in
+@[simp] lemma krein_grad_eq_hessian_apply (v : H₂) :
+    krein_grad (E := E) v = krein_hessian (E := E) v := rfl
+
+omit [CompleteSpace E] in
 /-- The Krein Hessian operator is the Clifford sign involution `ε`. -/
-lemma kreinHessian_eq_spectralEpsilon :
-    kreinHessian (E := E) = spectralEpsilon (E := E) := by
-  ext v <;> rfl
+lemma krein_hessian_eq_spectral_epsilon :
+    krein_hessian (E := E) = InfoGeometry.Krein.spectral_epsilon (E := E) := rfl
 
 /-- Explicit signature form: `⟪(x₁,x₂),(y₁,y₂)⟫ = ⟪x₁,y₁⟫ - ⟪x₂,y₂⟫`. -/
-lemma kreinForm_explicit (u v : Doubled E) :
-    kreinForm (E := E) u v = inner ℝ u.1 v.1 - inner ℝ u.2 v.2 := by
-  unfold kreinForm kreinHessian
-  simp [sub_eq_add_neg]
+lemma krein_form_explicit (u v : H₂) :
+    krein_form (E := E) u v
+      = inner ℝ (WithLp.fst u) (WithLp.fst v) - inner ℝ (WithLp.snd u) (WithLp.snd v) := by
+  unfold krein_form
+  unfold InfoGeometry.Krein.hessian_indefinite_form
+  unfold KreinSpace.kreinInner
+  change
+    inner ℝ (InfoGeometry.Krein.spectral_epsilon (E := E) u) v
+      = inner ℝ (WithLp.fst u) (WithLp.fst v)
+          - inner ℝ (WithLp.snd u) (WithLp.snd v)
+  simp [InfoGeometry.Krein.spectral_epsilon, sub_eq_add_neg]
 
-lemma kreinForm_symm (u v : Doubled E) :
-    kreinForm (E := E) u v = kreinForm (E := E) v u := by
-  simp [kreinForm_explicit, real_inner_comm]
+lemma krein_form_symm (u v : H₂) :
+    krein_form (E := E) u v = krein_form (E := E) v u := by
+  simp [krein_form_explicit, real_inner_comm]
 
-lemma kreinForm_self (v : Doubled E) :
-    kreinForm (E := E) v v = inner ℝ v.1 v.1 - inner ℝ v.2 v.2 := by
-  simpa using kreinForm_explicit (E := E) v v
+lemma krein_form_self (v : H₂) :
+    krein_form (E := E) v v = inner ℝ (WithLp.fst v) (WithLp.fst v) - inner ℝ (WithLp.snd v) (WithLp.snd v) := by
+  exact krein_form_explicit v v
 
-lemma two_mul_kreinPotential (v : Doubled E) :
-    (2 : ℝ) * kreinPotential (E := E) v = kreinForm (E := E) v v := by
-  rw [kreinForm_self]
-  unfold kreinPotential
+lemma two_mul_krein_potential (v : H₂) :
+    (2 : ℝ) * krein_potential (E := E) v = krein_form (E := E) v v := by
+  unfold krein_potential
   ring
 
 end InfoGeometry.Geometry

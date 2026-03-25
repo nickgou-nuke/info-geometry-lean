@@ -33,11 +33,6 @@ section RnJacobian
 
 variable (n : Nat)
 
-/-- RN relative-volume change is exactly `exp(-K_RN)`. -/
-@[simp] theorem relative_volume_change_rn_eq_exp_neg_kahler
-    (M : SinkhornMatrix n) :
-    relativeVolumeChangeRN n M = Real.exp (-kahlerPotentialRN n M) := rfl
-
 /-- Positivity of the RN relative-volume factor. -/
 theorem relative_volume_change_rn_pos
     (M : SinkhornMatrix n) :
@@ -49,7 +44,7 @@ theorem relative_volume_change_rn_pos
 theorem neg_log_relative_volume_change_rn
     (M : SinkhornMatrix n) :
     -Real.log (relativeVolumeChangeRN n M) = kahlerPotentialRN n M := by
-  rw [relative_volume_change_rn_eq_exp_neg_kahler (n := n) M]
+  unfold relativeVolumeChangeRN
   simp
 
 end RnJacobian
@@ -82,12 +77,6 @@ section JordanBarrier
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- Jordan/KKT barrier potential has the canonical `-log(detJ)` form. -/
-@[simp] theorem jordan_kkt_barrier_eq_neg_log_det
-    (J : JordanKKTData E) (x : E) :
-    J.K x = -Real.log (J.detJ x) := by
-  exact JordanKKTData.K_def (J := J) x
-
 /-- Jordan/KKT Bregman divergence is nonnegative. -/
 theorem jordan_kkt_bregman_nonneg
     (J : JordanKKTData E) (x y : E) :
@@ -100,12 +89,6 @@ section LogDetBarrier
 
 variable {n : ℕ}
 
-/-- Log-det barrier is the negative logarithm of the Jordan determinant. -/
-@[simp] theorem log_det_barrier_eq_neg_log_det'
-    (X : InfoGeometry.Jordan.SPD n) :
-    logDetBarrier X = -Real.log (Matrix.det X.mat) := by
-  exact logDetBarrier_eq_neg_log_det (X := X)
-
 /-- Burg/Bregman energy from the log-det barrier is nonnegative. -/
 theorem burg_energy_nonnegative
     (X Y : InfoGeometry.Jordan.SPD n) :
@@ -117,14 +100,6 @@ end LogDetBarrier
 section ThermoBarrier
 
 variable {n : ℕ} {Ω : Type _} [Fintype Ω]
-
-/-- Log-det free energy keeps the canonical `-ε log Z` form. -/
-@[simp] theorem free_energy_from_log_det_eq_neg_scale_log_partition'
-    (X0 : InfoGeometry.Jordan.SPD n)
-    (X : Ω → InfoGeometry.Jordan.SPD n)
-    (ε : ℝ) :
-    freeEnergyFromLogDet X0 X ε = -ε * Real.log (partitionFromLogDet X0 X ε) := by
-  exact freeEnergyFromLogDet_eq_neg_scale_log_partition (X0 := X0) (X := X) ε
 
 variable [Nonempty Ω]
 
@@ -160,8 +135,29 @@ theorem w_monotone_of_dirac_ricci_entropy_law
     (hLaw : satisfies_dirac_ricci_entropy_law flow IST W) :
     Monotone W := by
   rcases hLaw with ⟨hW, hNorm, hTrack⟩
-  exact W_monotone_of_spinorial_normalized_tracking
-    (E := E) (flow := flow) (IST := IST) (W := W) hDiff hW hNorm hTrack
+  apply monotone_of_deriv_nonneg hDiff
+  intro s
+  rw [deriv_W_eq_abs_spinorial_of_normalized_tracking
+    (E := E) (flow := flow) (IST := IST) (W := W) hW hNorm hTrack s]
+  exact abs_nonneg _
+
+/--
+Jordan barrier push-back monotonicity:
+if spinorial dissipation dominates the fixed Jordan/Bregman barrier level,
+the coupled entropy profile is monotone.
+-/
+theorem w_monotone_of_dirac_ricci_entropy_law_of_jordan_barrier_lower_bound
+    (flow : ScalarRicciFlow E) (IST : InfoSpectralTriple E) (W : ℝ → ℝ)
+    (J : JordanKKTData E) (x y : E)
+    (hDiff : Differentiable ℝ W)
+    (hLaw : satisfies_dirac_ricci_entropy_law flow IST W)
+    (hLower : ∀ s : ℝ, J.DBregman x y ≤ spinorialWDissipation flow IST s) :
+    Monotone W := by
+  rcases hLaw with ⟨hW, _hNorm, _hTrack⟩
+  apply monotone_of_deriv_nonneg hDiff
+  intro s
+  rw [hW s]
+  exact le_trans (jordan_kkt_bregman_nonneg (J := J) x y) (hLower s)
 
 /-- Strict monotonicity when the tracked spinorial scalar curvature is nonzero. -/
 theorem w_strict_mono_of_dirac_ricci_entropy_law
@@ -170,15 +166,18 @@ theorem w_strict_mono_of_dirac_ricci_entropy_law
     (hSpin : spinorialScalarCurvature IST ≠ 0) :
     StrictMono W := by
   rcases hLaw with ⟨hW, hNorm, hTrack⟩
-  exact W_strictMono_of_spinorial_nonzero
-    (E := E) (flow := flow) (IST := IST) (W := W) hW hNorm hTrack hSpin
+  apply strictMono_of_deriv_pos
+  intro s
+  rw [deriv_W_eq_abs_spinorial_of_normalized_tracking
+    (E := E) (flow := flow) (IST := IST) (W := W) hW hNorm hTrack s]
+  exact abs_pos.mpr hSpin
 
 end BottDiracRicci
 
 section BottSplitting
 
 variable {E F : Type*}
-  [NormedAddCommGroup E] [NormedSpace ℝ E]
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- Canonical Cl(1,1) Bott-Dirac square equals the canonical Bott Laplacian. -/
@@ -196,20 +195,29 @@ section EntropyGravity
 
 variable (n : Nat)
 variable {X : Type}
-  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
+  [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X] [FiniteDimensional ℝ X]
 
-/-- RN entropy sourcing plus Monge-Ampere closure yields Ricci-flat vacuum gravity. -/
+/-- RN entropy sourcing plus unit-volume metric bridge yields vacuum gravity. -/
 theorem gravity_from_rn_entropy
     (Kgeo : KaehlerInformationGeometry X)
     (R : RicciTensor X)
     (x : X) (Λ : ℝ)
     (M : SinkhornMatrix n)
     (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
-    (hBridge : MongeAmpereRicciClosure R Kgeo) :
-    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ :=
-  gravity_generated_by_rnEntropy
-    (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
-    (M := M) hSource hBridge
+    (hUnit : relativeVolumeChangeRN n M = 1)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  have hUnitState : UnitRelativeVolumeState Kgeo := by
+    intro x'
+    have hSource' :
+        mongeAmpereDensity Kgeo.H x' = relativeVolumeChangeRN n M := by
+      simpa using hSource x'
+    exact hSource'.trans hUnit
+  refine ⟨?_, ?_⟩
+  · exact isRicciFlat_of_unitRelativeVolume
+      (R := R) (K := Kgeo) (x := x) hUnitState hBridge
+  · exact vacuumEinsteinEquation_of_unitRelativeVolume
+      (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hBridge
 
 end EntropyGravity
 

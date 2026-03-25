@@ -1,10 +1,13 @@
-import InfoGeometry.Clifford.Cl11
+import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Canonical.SpectralInference
 import Mathlib.LinearAlgebra.TensorProduct.Map
+set_option linter.unusedSectionVars false
 
 open scoped TensorProduct
 
 namespace InfoGeometry.Canonical.BottDirac
+
+open InfoGeometry.Krein
 
 section Core
 
@@ -110,16 +113,16 @@ end SpectralBridge
 section Cl11Bridge
 
 variable {E F : Type*}
-  [NormedAddCommGroup E] [NormedSpace ℝ E]
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
 /-- `Cl(1,1)` Dirac seed from modular conjugation. -/
-abbrev cl11DiracSeed : Endomorphism (DoubledSpace E) :=
-  (modularJ (E := E)).toLinearMap
+noncomputable abbrev cl11DiracSeed : Endomorphism (DoubledSpace E) :=
+  (modular_j (E := E)).toLinearMap
 
 /-- `Cl(1,1)` chiral grading from spectral sign involution. -/
-abbrev cl11Grading : Endomorphism (DoubledSpace E) :=
-  (spectralEpsilon (E := E)).toLinearMap
+noncomputable abbrev cl11Grading : Endomorphism (DoubledSpace E) :=
+  (spectral_epsilon (E := E)).toLinearMap
 
 /-- Lemma `cl11_isChiralDirac`. -/
 lemma cl11_isChiralDirac :
@@ -128,7 +131,7 @@ lemma cl11_isChiralDirac :
       cl11DiracSeed (E := E).comp (cl11Grading (E := E))
         = -(cl11Grading (E := E).comp (cl11DiracSeed (E := E))) := by
     simpa [cl11DiracSeed, cl11Grading] using
-      congrArg ContinuousLinearMap.toLinearMap (modularJ_spectralEpsilon_anticommute (E := E))
+      congrArg ContinuousLinearMap.toLinearMap (modular_j_spectral_epsilon_anticommute (E := E))
   calc
     cl11DiracSeed (E := E).comp (cl11Grading (E := E))
         + cl11Grading (E := E).comp (cl11DiracSeed (E := E))
@@ -141,11 +144,11 @@ lemma cl11_isChiralDirac :
 lemma cl11Grading_involutive :
     IsInvolutiveGrading (cl11Grading (E := E)) := by
   simpa [IsInvolutiveGrading, cl11Grading] using
-    congrArg ContinuousLinearMap.toLinearMap (spectralEpsilon_involution (E := E))
+    congrArg ContinuousLinearMap.toLinearMap (spectral_epsilon_involution (E := E))
 
 /--
 Concrete Bott-Dirac splitting for the `Cl(1,1)` pair
-`(modularJ, spectralEpsilon)` on the first tensor factor.
+`(modular_j, spectral_epsilon)` on the first tensor factor.
 -/
 theorem cl11_bottDirac_sq_eq_sum_laplacians
     (Dn : Endomorphism F) :
@@ -169,7 +172,7 @@ theorem cl11_bottDirac_sq_eq_sum_laplacians
 /--
 Canonical `Cl(1,1)` Bott Laplacian operator reused by downstream modules.
 -/
-def cl11BottLaplacian (Dn : Endomorphism F) :
+noncomputable def cl11BottLaplacian (Dn : Endomorphism F) :
     Endomorphism (DoubledSpace E ⊗[ℝ] F) :=
   (TensorProduct.map
     ((cl11DiracSeed (E := E)).comp (cl11DiracSeed (E := E)))
@@ -192,5 +195,70 @@ theorem cl11_bottDirac_sq_eq_cl11BottLaplacian
     (cl11_bottDirac_sq_eq_sum_laplacians (E := E) (F := F) (Dn := Dn))
 
 end Cl11Bridge
+
+section Cl22Bridge
+
+variable {E F : Type*}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
+
+/--
+`Cl(2,2)` Bott-Dirac module:
+first split atom on `DoubledSpace E`, second split atom on `DoubledSpace F`.
+-/
+noncomputable def cl22Dirac :
+    Endomorphism (DoubledSpace E ⊗[ℝ] DoubledSpace F) :=
+  bottDirac
+    (cl11DiracSeed (E := E))
+    (cl11Grading (E := E))
+    (cl11DiracSeed (E := F))
+
+/--
+Canonical Laplacian expression associated to the `Cl(2,2)` Bott-Dirac module.
+-/
+noncomputable def cl22BottLaplacian :
+    Endomorphism (DoubledSpace E ⊗[ℝ] DoubledSpace F) :=
+  (TensorProduct.map
+    ((cl11DiracSeed (E := E)).comp (cl11DiracSeed (E := E)))
+    (LinearMap.id : Endomorphism (DoubledSpace F)))
+    +
+  (TensorProduct.map
+    (LinearMap.id : Endomorphism (DoubledSpace E))
+    ((cl11DiracSeed (E := F)).comp (cl11DiracSeed (E := F)))
+)
+
+/--
+`Cl(2,2)` Bott-square splitting:
+`D₍₂,₂₎² = J_E² ⊗ Id + Id ⊗ J_F²`.
+-/
+theorem cl22_bottDirac_sq_eq_cl22BottLaplacian :
+    (cl22Dirac (E := E) (F := F)).comp (cl22Dirac (E := E) (F := F))
+      = cl22BottLaplacian (E := E) (F := F) := by
+  simpa [cl22Dirac, cl22BottLaplacian] using
+    (cl11_bottDirac_sq_eq_sum_laplacians (E := E) (F := DoubledSpace F)
+      (Dn := cl11DiracSeed (E := F)))
+
+/-- The split `Cl(1,1)` Dirac seed squares to identity. -/
+lemma cl11DiracSeed_involutive :
+    (cl11DiracSeed (E := E)).comp (cl11DiracSeed (E := E))
+      = (LinearMap.id : Endomorphism (DoubledSpace E)) := by
+  simpa [cl11DiracSeed] using
+    congrArg ContinuousLinearMap.toLinearMap (modular_j_involution (E := E))
+
+/--
+Simplified `Cl(2,2)` Bott-square:
+both Laplacian channels reduce to the tensor identity, giving a doubled scale.
+-/
+theorem cl22_bottDirac_sq_eq_two_tensor_id :
+    (cl22Dirac (E := E) (F := F)).comp (cl22Dirac (E := E) (F := F))
+      =
+    (2 : ℝ) •
+      (TensorProduct.map
+        (LinearMap.id : Endomorphism (DoubledSpace E))
+        (LinearMap.id : Endomorphism (DoubledSpace F))) := by
+  rw [cl22_bottDirac_sq_eq_cl22BottLaplacian (E := E) (F := F)]
+  simp [cl22BottLaplacian, cl11DiracSeed_involutive, two_smul]
+
+end Cl22Bridge
 
 end InfoGeometry.Canonical.BottDirac

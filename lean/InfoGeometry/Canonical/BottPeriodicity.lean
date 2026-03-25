@@ -1,9 +1,12 @@
 import InfoGeometry.Canonical.Clifford
 import Mathlib.LinearAlgebra.TensorProduct.Basic
+set_option linter.unnecessarySimpa false
 
 open scoped TensorProduct
 
 namespace InfoGeometry.Canonical.BottPeriodicity
+
+open InfoGeometry.Krein
 
 local notation "Q11" => InfoGeometry.CliffordTower.Q11
 local notation "SplitSpace" => InfoGeometry.CliffordTower.SplitSpace
@@ -13,48 +16,60 @@ local notation "clsplit_succ_equiv" => InfoGeometry.CliffordTower.clsplit_succ_e
 
 section TensorLift
 
-variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
-  [NormedAddCommGroup F] [NormedSpace ℝ F]
+variable {E F : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 /-- Tensor product of two doubled spaces. -/
-abbrev DoubledTensor (E F : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [NormedAddCommGroup F] [NormedSpace ℝ F] :=
+abbrev DoubledTensor (E F : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] :=
   DoubledSpace E ⊗[ℝ] DoubledSpace F
 
 /--
-Lift `modularJ` to the tensor product via `TensorProduct.map`.
+Lift `modular_j` to the tensor product via `TensorProduct.map`.
 -/
 noncomputable def tensorModularJ : DoubledTensor E F →ₗ[ℝ] DoubledTensor E F :=
-  TensorProduct.map (modularJ (E := E)).toLinearMap (modularJ (E := F)).toLinearMap
+  TensorProduct.map (modular_j (E := E)).toLinearMap (modular_j (E := F)).toLinearMap
 
 /--
-Lift `spectralEpsilon` to the tensor product via `TensorProduct.map`.
+Lift `spectral_epsilon` to the tensor product via `TensorProduct.map`.
 -/
 noncomputable def tensorSpectralEpsilon : DoubledTensor E F →ₗ[ℝ] DoubledTensor E F :=
-  TensorProduct.map (spectralEpsilon (E := E)).toLinearMap (spectralEpsilon (E := F)).toLinearMap
+  TensorProduct.map (spectral_epsilon (E := E)).toLinearMap (spectral_epsilon (E := F)).toLinearMap
 
 @[simp] lemma tensorModularJ_tmul (u : DoubledSpace E) (v : DoubledSpace F) :
     tensorModularJ (E := E) (F := F) (u ⊗ₜ[ℝ] v)
-      = modularJ (E := E) u ⊗ₜ[ℝ] modularJ (E := F) v := by
+      = modular_j (E := E) u ⊗ₜ[ℝ] modular_j (E := F) v := by
   simp [tensorModularJ]
 
 @[simp] lemma tensorSpectralEpsilon_tmul (u : DoubledSpace E) (v : DoubledSpace F) :
     tensorSpectralEpsilon (E := E) (F := F) (u ⊗ₜ[ℝ] v)
-      = spectralEpsilon (E := E) u ⊗ₜ[ℝ] spectralEpsilon (E := F) v := by
+      = spectral_epsilon (E := E) u ⊗ₜ[ℝ] spectral_epsilon (E := F) v := by
   simp [tensorSpectralEpsilon]
 
 @[simp] lemma tensorModularJ_comp_tmul (u : DoubledSpace E) (v : DoubledSpace F) :
     ((tensorModularJ (E := E) (F := F)).comp (tensorModularJ (E := E) (F := F)))
       (u ⊗ₜ[ℝ] v)
       = u ⊗ₜ[ℝ] v := by
-  simp [tensorModularJ, LinearMap.comp_apply, modularJ]
+  have hu' : WithLp.toLp (2 : ENNReal) (WithLp.fst u, WithLp.snd u) = u := by
+    change WithLp.toLp (2 : ENNReal) (WithLp.ofLp u) = u
+    exact WithLp.toLp_ofLp (p := (2 : ENNReal)) u
+  have hv' : WithLp.toLp (2 : ENNReal) (WithLp.fst v, WithLp.snd v) = v := by
+    change WithLp.toLp (2 : ENNReal) (WithLp.ofLp v) = v
+    exact WithLp.toLp_ofLp (p := (2 : ENNReal)) v
+  simpa [tensorModularJ, LinearMap.comp_apply, modular_j, hu', hv']
 
 @[simp] lemma tensorSpectralEpsilon_comp_tmul (u : DoubledSpace E) (v : DoubledSpace F) :
     ((tensorSpectralEpsilon (E := E) (F := F)).comp
       (tensorSpectralEpsilon (E := E) (F := F)))
       (u ⊗ₜ[ℝ] v)
       = u ⊗ₜ[ℝ] v := by
-  simp [tensorSpectralEpsilon, LinearMap.comp_apply, spectralEpsilon]
+  have hu' : WithLp.toLp (2 : ENNReal) (WithLp.fst u, WithLp.snd u) = u := by
+    change WithLp.toLp (2 : ENNReal) (WithLp.ofLp u) = u
+    exact WithLp.toLp_ofLp (p := (2 : ENNReal)) u
+  have hv' : WithLp.toLp (2 : ENNReal) (WithLp.fst v, WithLp.snd v) = v := by
+    change WithLp.toLp (2 : ENNReal) (WithLp.ofLp v) = v
+    exact WithLp.toLp_ofLp (p := (2 : ENNReal)) v
+  simpa [tensorSpectralEpsilon, LinearMap.comp_apply, spectral_epsilon, hu', hv']
 
 end TensorLift
 

@@ -1,50 +1,29 @@
-# Determinant Homomorphisms, Tensor Products, and Entropic Splitting
+# Determinant / Log-Volume / Entropy Topic Map
 
-This note records the algebraic route from noncommutative operator composition
-to additive modular-entropy observables.
+This note is a current owner map for the scalar log-volume corridor.
 
-## 1. Determinant as Group-Homomorphic Projection
+## Current owner modules
 
-For finite-dimensional linear dynamics, determinant is the multiplicative scalar
-shadow of operator composition:
+The current determinant and scalar relative-potential packet is split across:
+- `lean/InfoGeometry/Canonical/DeterminantCore.lean`
+- `lean/InfoGeometry/Canonical/Determinant.lean`
+- `lean/InfoGeometry/Canonical/LogDet.lean`
+- `lean/InfoGeometry/Canonical/RelativePotentialScalarBridge.lean`
+- `lean/InfoGeometry/Canonical/RedLine.lean`
+- `lean/InfoGeometry/Canonical/UniversalVolume.lean`
+- `lean/InfoGeometry/Canonical/LogSpineBridge.lean`
+- `lean/InfoGeometry/Canonical/RicciMongeAmpere.lean`
+- `lean/InfoGeometry/Canonical/ZetaDeterminant.lean`
 
-- `det(AB) = det(A) det(B)`.
-- In canonical determinant/Jacobian lemmas, composition in operator space is
-  projected to multiplicative volume transport.
+## Current structural rule
 
-This is the same multiplicative pattern that appears in Radon-Nikodym chain
-composition and cocycle transport laws.
+The canonical scalar story is now:
+- multiplicative relative change;
+- additive log-density or log-volume;
+- negative log as modular or barrier potential.
 
-## 2. Log Deformation and Additive Hamiltonians
+Representation-specific forms such as Jacobian, determinant, Monge-Ampere density, or normalized scalar potential should be attached to this lower corridor, not reintroduced as separate ontologies in capstone files.
 
-Applying `log |det(·)|` converts multiplicative transport into additive charges:
+## Documentation rule
 
-- `log|det(AB)| = log|det(A)| + log|det(B)|`.
-
-So even when microscopic operator updates are noncommutative and order-sensitive,
-the projected scalar entropy/Hamiltonian channel is additive after logarithmic
-deformation.
-
-## 3. Tensor Products and Extensivity
-
-For composite systems (`A ⊗ B`), determinant multiplicativity with dimension
-weights gives:
-
-- `det(A ⊗ B) = det(A)^(dim B) det(B)^(dim A)`.
-- Hence
-  `log|det(A ⊗ B)| = (dim B) log|det(A)| + (dim A) log|det(B)|`.
-
-This is the extensivity law: composite entropic load splits as a weighted sum
-of subsystem contributions.
-
-## 4. Unified Interpretation
-
-The additive modular-Hamiltonian behavior is not ad hoc. It is the logarithmic
-image of determinant homomorphism on noncommutative dynamics:
-
-1. operator composition,
-2. determinant volume projection,
-3. logarithmic additive thermodynamic splitting.
-
-That chain explains why local additive entropy bookkeeping coexists with
-noncommutative microscopic update geometry.
+Treat this note as a topic map only. Exact theorem ownership belongs to the modules above.

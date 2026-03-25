@@ -15,7 +15,9 @@ It provides:
 3. `kreinSign`: Well-defined sign of the indefinite form on the state space.
 -/
 
-variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [KreinSpace H]
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [InfoGeometry.Krein.KreinSpace H]
+
+namespace InfoGeometry.Krein
 
 /-- The **Krein state space** is the projectivization of a Krein space.
 This construction takes nonzero vectors modulo the action of the gauge group `ℝˣ`. -/
@@ -59,3 +61,5 @@ def NullCone (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] [Compl
   {s | kreinSign s = 0}
 
 end KreinStateSpace
+
+end InfoGeometry.Krein

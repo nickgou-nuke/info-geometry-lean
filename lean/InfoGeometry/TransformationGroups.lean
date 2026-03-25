@@ -1,6 +1,7 @@
 import InfoGeometry.Basic
+set_option linter.unnecessarySimpa false
 
-open scoped BigOperators
+open scoped BigOperators ENNReal
 
 namespace InfoGeometry.TransformationGroups
 
@@ -39,27 +40,38 @@ lemma eq_of_invariant_transitive
 lemma uniform_of_all_eq {α : Type*} [Fintype α] [Nonempty α]
     (p : FinProb α)
     (hall : ∀ a b : α, p a = p b) :
-    ∀ a : α, p a = 1 / (Fintype.card α : ℝ) := by
+    ∀ a : α, p a = 1 / (Fintype.card α : ℝ≥0∞) := by
   classical
   let a0 : α := Classical.choice (by infer_instance : Nonempty α)
-  let c : ℝ := p a0
+  let c : ℝ≥0∞ := p a0
   have hc : ∀ a : α, p a = c := by
     intro a
     exact hall a a0
-  have hsum : (∑ a : α, p a) = (Fintype.card α : ℝ) * c := by
+  have hsum : (∑ a : α, p a) = (Fintype.card α : ℝ≥0∞) * c := by
     simp [hc, Finset.sum_const, nsmul_eq_mul]
-  have hcard : (Fintype.card α : ℝ) ≠ 0 := by
+  have hcard : (Fintype.card α : ℝ≥0∞) ≠ 0 := by
     exact_mod_cast Fintype.card_ne_zero
-  have hcval : c = 1 / (Fintype.card α : ℝ) := by
-    have hEq : (Fintype.card α : ℝ) * c = 1 := by
-      simpa [hsum] using p.sum_one
-    have hEq' : c * (Fintype.card α : ℝ) = 1 := by
-      simpa [mul_comm] using hEq
-    exact (eq_div_iff hcard).2 hEq'
+  have hcard_top : (Fintype.card α : ℝ≥0∞) ≠ ∞ := by
+    simpa using (ENNReal.coe_ne_top (r := (Fintype.card α : ℝ≥0)))
+  have hsum_one : (∑ a : α, p a) = 1 := by
+    simpa [tsum_fintype] using (p.tsum_coe : ∑' a, p a = 1)
+  have hcval : c = (Fintype.card α : ℝ≥0∞)⁻¹ := by
+    have hEq : (Fintype.card α : ℝ≥0∞) * c = 1 := by
+      simpa [hsum] using hsum_one
+    have hEq' := congrArg (fun x => (Fintype.card α : ℝ≥0∞)⁻¹ * x) hEq
+    -- normalize the card factor
+    have hcancel : (Fintype.card α : ℝ≥0∞)⁻¹ * (Fintype.card α : ℝ≥0∞) = 1 := by
+      simpa [mul_comm] using (ENNReal.inv_mul_cancel hcard hcard_top)
+    -- finish
+    have hEq'' : (Fintype.card α : ℝ≥0∞)⁻¹ * (Fintype.card α : ℝ≥0∞) * c =
+        (Fintype.card α : ℝ≥0∞)⁻¹ := by
+      simpa [mul_assoc] using hEq'
+    simpa [hcancel] using hEq''
   intro a
   calc
     p a = c := hc a
-    _ = 1 / (Fintype.card α : ℝ) := hcval
+    _ = 1 / (Fintype.card α : ℝ≥0∞) := by
+          simpa [div_eq_mul_inv] using hcval
 
 /-- Indifference theorem: invariant + transitive implies uniform prior. -/
 theorem uniform_of_transformation_group
@@ -67,7 +79,7 @@ theorem uniform_of_transformation_group
     (p : FinProb α)
     (hinv : invariant_under (G := G) p)
     (htrans : is_transitive (G := G) (α := α)) :
-    ∀ a : α, p a = 1 / (Fintype.card α : ℝ) := by
+    ∀ a : α, p a = 1 / (Fintype.card α : ℝ≥0∞) := by
   apply uniform_of_all_eq (α := α) p
   exact eq_of_invariant_transitive (α := α) (G := G) p hinv htrans
 

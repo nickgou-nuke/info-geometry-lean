@@ -1,14 +1,31 @@
 
-
+import InfoGeometry.KL.Measure
 import InfoGeometry.KL.Finite
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 
+/-!
+# InfoGeometry.KL
+
+Canonical KL umbrella:
+- `KL.Measure` gives the measure-theoretic facade `InfoGeometry.KL.kl_div`;
+- `KL.Finite` gives the normalized finite/PMF slice;
+- the primitive cone/projective state geometry lives in the measure/projective
+  foundation and is not redefined here.
+-/
 
 namespace InfoGeometry.KL
 
 
-open scoped BigOperators
+open scoped BigOperators ENNReal
 
+
+/-- Empirical/model density ratio `P(x) / Q(x)`. -/
+noncomputable def densityRatio
+    {α : Type} [Fintype α]
+    (N : InfoGeometry.EmpiricalCounts α)
+    (Q : InfoGeometry.ProbabilityDist α)
+    (x : α) : ℝ :=
+  empirical_distribution N x / (Q x).toReal
 
 /-- Rényi moment functional built from the empirical/model density ratio. -/
 noncomputable def Phi
@@ -16,17 +33,17 @@ noncomputable def Phi
     (N_func : InfoGeometry.EmpiricalCounts α)
     (Q : InfoGeometry.ProbabilityDist α)
     (τ : ℝ) : ℝ :=
-  ∑ x : α, empiricalDistribution N_func x * Real.rpow (densityRatio N_func Q x) τ
+  ∑ x : α, empirical_distribution N_func x * Real.rpow (densityRatio N_func Q x) τ
 
 
 
 /-- `Q` is support-faithful to the empirical distribution:
-`Q(x) > 0` wherever `empiricalDistribution N_func x ≠ 0`. -/
+`Q(x) > 0` wherever `empirical_distribution N_func x ≠ 0`. -/
 def PhiSupportFaithful
     {α : Type} [Fintype α]
     (N_func : InfoGeometry.EmpiricalCounts α)
     (Q : InfoGeometry.ProbabilityDist α) : Prop :=
-  ∀ x, empiricalDistribution N_func x ≠ 0 → 0 < Q.prob x
+  ∀ x, empirical_distribution N_func x ≠ 0 → 0 < Q x
 
 
 

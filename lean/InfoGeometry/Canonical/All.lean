@@ -20,36 +20,34 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import DAG.Basic
 import InfoGeometry.Canonical.Algebra
-import InfoGeometry.Canonical.AnalyticalIndex
+import InfoGeometry.Canonical.ActionDuality
 import InfoGeometry.Canonical.AQFTOperatorInterface
-import InfoGeometry.Canonical.OperatorAlgebraBridge
-import InfoGeometry.Canonical.AnomalyGauge
+import InfoGeometry.Canonical.AnomalyDilationBridge
 import InfoGeometry.Canonical.AnomalyInflow
+import InfoGeometry.Canonical.AnomalyGauge
+import InfoGeometry.Canonical.ArnoldMajoranaNetwork
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit
-import InfoGeometry.Canonical.BeliefAlgebra
-import InfoGeometry.Canonical.BeliefDynamics
 import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.BottPeriodicity
 import InfoGeometry.Canonical.BregmanTriality
-import InfoGeometry.Canonical.CalabiYauBridge
 import InfoGeometry.Canonical.CartanDecomposition
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.ChiralAction
 import InfoGeometry.Canonical.ChiralAnomaly
-import InfoGeometry.Canonical.ChiralCliffordBridge
 import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.ChiralGravity
 import InfoGeometry.Canonical.ChiralRGFlow
-import InfoGeometry.Canonical.ChiralTorsionBridge
 import InfoGeometry.Canonical.Clifford
 import InfoGeometry.Canonical.CliffordBridge
-import InfoGeometry.Canonical.ConformalAlgebra
-import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.ConformalWard
+import InfoGeometry.Canonical.ConnesArakiFramework
+import InfoGeometry.Canonical.CountSubstrateBridge
+import InfoGeometry.Canonical.CurvatureRGFlow
+import InfoGeometry.Canonical.DeepHorizon
 import InfoGeometry.Core
 import InfoGeometry.Core.Derivatives
 import InfoGeometry.Core.DerivativesSmoke
@@ -58,12 +56,18 @@ import InfoGeometry.Core.SymmetricLie
 import InfoGeometry.Core.SymmetricLieGeneric
 import InfoGeometry.Core.SymmetricSpaces
 import InfoGeometry.Core.UnifiedGeometry
-import InfoGeometry.Canonical.CountSubstrateBridge
 import InfoGeometry.Canonical.CurvatureRGFlow
-import InfoGeometry.Canonical.DeepHorizon
-import InfoGeometry.Canonical.DiracRicciBridge
+import InfoGeometry.Canonical.CertifiedInverseKernel
+import InfoGeometry.Canonical.CoarseGraining
 import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Canonical.LogGenerator
+import InfoGeometry.Canonical.GeneratedFlow
+import InfoGeometry.Canonical.WeylGaugeField
+import InfoGeometry.Canonical.WeylTransport
+import InfoGeometry.Canonical.WeylTransportChiralBridge
+import InfoGeometry.Canonical.MultiplicativeToAdditiveBridge
+import InfoGeometry.Canonical.PartitionHierarchy
 import InfoGeometry.Canonical.DualConnections
 import InfoGeometry.Canonical.EmpiricalChecks
 import InfoGeometry.Canonical.Fierz
@@ -73,6 +77,7 @@ import InfoGeometry.Canonical.Foundations
 import InfoGeometry.Canonical.GaugeUnified
 import InfoGeometry.Canonical.GaugeGroups
 import InfoGeometry.Canonical.GaussianHolonomy
+import InfoGeometry.Canonical.GeneralizedKL
 import InfoGeometry.Canonical.Geometry
 import InfoGeometry.Canonical.GrandCanonicalCore
 import InfoGeometry.Canonical.GrandCanonicalExperts
@@ -80,9 +85,10 @@ import InfoGeometry.Canonical.GrandSynthesis
 import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Canonical.GrandUnificationBlueprint
 import InfoGeometry.Canonical.GrandUnificationMetric
+import InfoGeometry.Canonical.GrandSynthesis
 import InfoGeometry.Canonical.HeatKernel
-import InfoGeometry.Canonical.HolographicEmergence
 import InfoGeometry.Canonical.IB
+import InfoGeometry.Canonical.InformationCalculus
 import InfoGeometry.Canonical.InformationNumber
 import InfoGeometry.Canonical.InformationTorsion
 import InfoGeometry.Canonical.KKFoundation
@@ -91,7 +97,6 @@ import InfoGeometry.Canonical.SuperAnomaly
 import InfoGeometry.KL.EntropicInferenceTest
 import InfoGeometry.SLT.ConditionalExpectation
 import InfoGeometry.TransformationGroups
-import InfoGeometry.auto_blueprints
 import InfoGeometry.Canonical.KMSSinkhornBridge
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.JaynesRNMaxEnt
@@ -102,25 +107,40 @@ import InfoGeometry.LLM.MaskedTransformerBlock
 import InfoGeometry.LLM.PositionalEncoding
 import InfoGeometry.LLM.TransformerBlock
 import InfoGeometry.Canonical.LLN
+import InfoGeometry.Canonical.LogSpineBridge
 import InfoGeometry.Canonical.LorentzianRouting
 import InfoGeometry.Canonical.ManifoldDegree
 import InfoGeometry.Canonical.ManifoldHomology
+import InfoGeometry.Canonical.ManifoldDegreeIntegration
+import InfoGeometry.Canonical.MasterSynthesis
 import InfoGeometry.Canonical.MixtureOfExperts
-import InfoGeometry.Canonical.MoorePenrose
-import InfoGeometry.Canonical.LogDet
-import InfoGeometry.Canonical.LogSumExp
+import InfoGeometry.Canonical.ModularSpinorBridge
+import InfoGeometry.Canonical.MultiplicativeToAdditiveBridge
+import InfoGeometry.Canonical.NoetherInference
+import InfoGeometry.Canonical.OperatorAlgebraBridge
+import InfoGeometry.Canonical.PartitionHierarchy
 import InfoGeometry.Canonical.PathIntegral
-import InfoGeometry.Canonical.PerelmanW
 import InfoGeometry.Canonical.Prequantum
 import InfoGeometry.Canonical.Projective
-import InfoGeometry.Canonical.QFTTDFTLaunchpad
+import InfoGeometry.Canonical.MultiplicativeToAdditiveBridge
+import InfoGeometry.Canonical.RobustThermodynamicRegression
+import InfoGeometry.Canonical.Rosetta
 import InfoGeometry.Canonical.Quantum
 import InfoGeometry.Canonical.QuantumInference
+import InfoGeometry.Canonical.QFTTDFTLaunchpad
 import InfoGeometry.Canonical.RGFlow
 import InfoGeometry.Canonical.RicciMongeAmpere
+import InfoGeometry.Canonical.MongeAmpereCramerRao
+import InfoGeometry.Canonical.RealBdG
+import InfoGeometry.Canonical.PositiveRayCore
+import InfoGeometry.Canonical.RelativePotentialCore
+import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
+import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.Canonical.RedLine
-import InfoGeometry.Canonical.Rosetta
 import InfoGeometry.Canonical.SpectralInference
+import InfoGeometry.Canonical.SingularBoundaryCorrection
+import InfoGeometry.Canonical.CalabiYauSingularBridge
+import InfoGeometry.Canonical.SingularTransportSystem
 import InfoGeometry.Canonical.Statistics
 import InfoGeometry.Canonical.SuperInference
 import InfoGeometry.Canonical.SUSYBayes
@@ -131,27 +151,31 @@ import InfoGeometry.Canonical.TopologicalEuler
 import InfoGeometry.Canonical.TopologicalInvariants
 import InfoGeometry.Canonical.Triality
 import InfoGeometry.Canonical.Twistor
-import InfoGeometry.Canonical.WeylInformationGauge
+import InfoGeometry.Canonical.Unification
 import InfoGeometry.Canonical.WilsonLoop
-import InfoGeometry.Canonical.YangMillsBridge
+import InfoGeometry.Canonical.YangMillsFinite
+import InfoGeometry.PositiveMeasure
+import InfoGeometry.Projective.Normalize
+import InfoGeometry.Projective.TwistorBridge
+import InfoGeometry.Quantum.BulkBoundaryIndexBridge
+import InfoGeometry.Quantum.ModularAnomaly
+import InfoGeometry.Volume.RadonNikodym
+import InfoGeometry.Volume.LogPotential
+import InfoGeometry.Volume.Pfaffian
 
 /-!
 # InfoGeometry.Canonical.All
 
-Single canonical umbrella for all publishable InfoGeometry modules.
-This default surface imports the canonical modules directly.
+Single umbrella import for the canonical publication surface.
 
-Documentation:
-- [Cocycle Detailed-Balance Synthesis](docs/cocycle_detailed_balance_synthesis.md)
-- [Determinant Tensor-Entropy Synthesis](docs/determinant_tensor_entropy_synthesis.md)
-- [D4 Crystal Synthesis](docs/d4_crystal_synthesis.md)
-- [Deep Horizon Synthesis](docs/deep_horizon_synthesis.md)
-- [Drazin Conformal Synthesis](docs/drazin_conformal_synthesis.md)
-- [Gravity Gauge Synthesis](docs/gravity_gauge_synthesis.md)
-- [LLM Triality Synthesis](docs/llm_triality_synthesis.md)
-- [Ontology Synthesis](docs/ontology_synthesis.md)
-- [PRL Abstract/Intro Draft](docs/prl_abstract_intro_synthesis.md)
-- [Red Line Synthesis](docs/red_line_synthesis.md)
-- [Testable Physical Predictions](docs/testable_predictions.md)
-- [Witten Synthesis](docs/witten_synthesis.md)
+This file is an import aggregator, not an authoritative description of the
+current theory graph. For current repository state and workflow, prefer:
+- `README.md`
+- `docs/README.md`
+- `lean/DAG/README.md`
+- `tools/README.md`
+
+Conceptual notes under `docs/` are orientation aids only. Exact ownership,
+theorem names, and file boundaries must be checked against the current owner
+modules in `lean/InfoGeometry/Canonical/`.
 -/

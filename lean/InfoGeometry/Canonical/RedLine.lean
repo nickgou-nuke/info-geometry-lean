@@ -9,7 +9,7 @@ import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Canonical.SinkhornFoundation
-import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.KMSSinkhornScalarPotential
 import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.LogSumExp
 import InfoGeometry.Canonical.ThermoFromLogDet

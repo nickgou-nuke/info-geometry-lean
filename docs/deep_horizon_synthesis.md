@@ -1,36 +1,22 @@
-# Deep Horizon Synthesis
+# Deep Horizon Topic Map
 
-This note summarizes the deep-horizon canonical stack now exposed through
-`InfoGeometry.Canonical.DeepHorizon`.
+This is a non-authoritative orientation note.
 
-## Chain Overview
+## Current owner modules
 
-1. Grand-canonical routing:
-   Sinkhorn-balanced router switches decompose into permutation simplices.
-2. Split-Clifford lift:
-   permutation modes carry `Cl(1,1)` semantic labels and modewise Dirac data.
-3. Cayley transport:
-   dual-flat Bregman geometry transports between unbounded and bounded charts
-   with Pythagorean invariance.
-4. Tomita-Takesaki atom:
-   the modular generators `{1, J, ε, Jε}` generate the split Clifford algebra.
-5. Holographic emergence:
-   time-flow monotonicity, anomaly scale phase, torsion/hysteresis, and
-   boundary-to-twistor closure are packaged constructively.
+The current deep-horizon packet is organized around:
+- `lean/InfoGeometry/Canonical/DeepHorizon.lean`
+- `lean/InfoGeometry/Canonical/HolographicEmergence.lean`
+- `lean/InfoGeometry/Canonical/BogoliubovFockSuper.lean`
+- `lean/InfoGeometry/Canonical/CayleyBregmanBridge.lean`
+- `lean/InfoGeometry/Canonical/TomitaTakesaki.lean`
+- `lean/InfoGeometry/Canonical/WeylPathHysteresis.lean`
+- `lean/InfoGeometry/Canonical/WeylAnomalySource.lean`
 
-## Canonical Route In Code
+## Current structural reading
 
-1. `Canonical/GrandCanonicalExperts.lean`:
-   permutation decomposition, split-Clifford mode states, Dirac mode operators.
-2. `Canonical/CayleyBregmanBridge.lean`:
-   Cayley bridge structures and `cayleyPythagoreanInvariance`.
-3. `Canonical/TomitaTakesaki.lean`:
-   modular atom and split `Cl(1,1)` generation theorem.
-4. `Canonical/HolographicEmergence.lean`:
-   consolidated emergence package and twistor-boundary closure lemmas.
-5. `Canonical/DeepHorizon.lean`:
-   publication facade exporting the synthesis interface.
+`DeepHorizon` should be read as an umbrella publication surface over several lower owner files. The underlying mathematics is distributed across modular, transport, routing, and anomaly-source layers. Do not treat this topic as one file or one theorem family.
 
-## Canonical Entry Point
+## Verification path
 
-- `InfoGeometry.Canonical.DeepHorizon`
+For live repo state, inspect the owner files above and their direct consumers rather than older synthesis prose.

@@ -1,66 +1,24 @@
-# D4 Crystal Synthesis: Formalism and Interpretation
+# Triality and Path-Hysteresis Note
 
-This note documents the "algebraic crystallography" thread in three layers.
+This note replaces older speculative "D4 crystal" prose with a code-backed topic map.
 
-## Scope / Non-claims
+## Current owner modules
 
-- This document does not assert an ontological claim about physical reality.
-- It separates: formal Lean statements, optional interpretation, and
-  requirements for physicalization.
+The current triality / routing / hysteresis packet is spread across:
+- `lean/InfoGeometry/Canonical/Triality.lean`
+- `lean/InfoGeometry/Canonical/BregmanTriality.lean`
+- `lean/InfoGeometry/Canonical/Attention.lean`
+- `lean/InfoGeometry/Canonical/AttentionSplit.lean`
+- `lean/InfoGeometry/Canonical/AttentionEuclidean.lean`
+- `lean/InfoGeometry/Canonical/WeylPathHysteresis.lean`
+- `lean/InfoGeometry/Canonical/HolographicEmergence.lean`
 
-## 1. Formal Claims (Lean-verified, auditor-grade)
+## What is actually represented
 
-| Claim | Lean symbol | File | What to check |
-| --- | --- | --- | --- |
-| Triadic interaction core exists | `InfoGeometry.Canonical.Triality.TriadicCore` | `lean/InfoGeometry/Canonical/Triality.lean` | Structure fields `interact`, `route` |
-| Split metric instance is constructed | `InfoGeometry.Canonical.Triality.splitMetricTriadicInstance` | `lean/InfoGeometry/Canonical/Triality.lean` | Definitional equations and `route_norm_compat` |
-| Attention residual decomposition | `InfoGeometry.Canonical.Triality.GeometricAttentionMap.attention_decomposition_residual` | `lean/InfoGeometry/Canonical/Triality.lean` | Assumptions (`h_route`, `weights_sum_one`) and conclusion |
-| Bregman-softmax coupling | `InfoGeometry.Canonical.BregmanTriality.softmaxBregmanAttention` | `lean/InfoGeometry/Canonical/BregmanTriality.lean` | Type of constructed `GeometricAttentionMap` |
-| Update-order hysteresis witness | `InfoGeometry.Canonical.HolographicEmergence.exists_gaugeOrderHysteresis_witness` | `lean/InfoGeometry/Canonical/HolographicEmergence.lean` | Existence statement reducing to `exists_updateOrderHysteresis_n2` |
+- triadic routing and metric-compatible attention live in the triality and attention files;
+- order-sensitive update witnesses now live in `WeylPathHysteresis`, not in the old monolithic `WeylInformationGauge` shell;
+- higher synthesis or interpretation should be treated as consumer-level prose, not as foundational ontology.
 
-Related hysteresis primitives:
-- `InfoGeometry.Canonical.WeylInformationGauge.UpdateOrderHysteresis`
-- `InfoGeometry.Canonical.WeylInformationGauge.exists_updateOrderHysteresis_n2`
+## How to read this topic today
 
-### Audit quickstart
-
-```text
-grep -R "structure TriadicCore" lean/InfoGeometry/Canonical/Triality.lean
-grep -R "attention_decomposition_residual" lean/InfoGeometry/Canonical/Triality.lean
-grep -R "softmaxBregmanAttention" lean/InfoGeometry/Canonical/BregmanTriality.lean
-grep -R "exists_gaugeOrderHysteresis_witness" lean/InfoGeometry/Canonical/HolographicEmergence.lean
-grep -R "exists_updateOrderHysteresis_n2" lean/InfoGeometry/Canonical/WeylInformationGauge.lean
-```
-
-## 2. Physical / Metaphorical Interpretation (optional)
-
-This layer uses physics language to interpret formal structure, without claiming
-that the universe must realize it.
-
-- Triality/QKV-style routing can be viewed as a symmetry-constrained information
-  flow model.
-- Split Clifford carriers can be viewed as rigid normal-form coordinates for
-  transport.
-- Non-commuting update order can be viewed as frustration/path dependence.
-
-The phrase "D4 crystallography" belongs to this interpretation layer.
-
-## 3. Empirical Bridge (what is required to physicalize)
-
-To promote this from formal informational dynamics to a claim about reality,
-an explicit calibration map is needed:
-
-1. Observable map:
-   - define which measured quantities correspond to interaction energy,
-     temperature/inverse temperature, and transport cost.
-2. Measurement protocol:
-   - give procedures that reconstruct the mapped quantities from data.
-3. Falsifiability:
-   - specify which theorem-constrained inequalities/equalities must hold and
-     what observation would violate them.
-
-Consistency note:
-- Hysteresis claims in this document should be tied to the exact witness theorems
-  above (not to unrelated bounds).
-- For current theorem-to-experiment extraction style, see
-  `docs/testable_predictions.md`.
+If you want formal content, start from the owner modules above and ignore older claims that frame the entire packet as a single "crystal" theory. The current repo structure treats it as a combination of routing, transport, and path-dependence layers.

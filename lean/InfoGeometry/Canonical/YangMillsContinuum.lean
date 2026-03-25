@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.KMSSinkhornWeightedTransport
 import InfoGeometry.Volume.ConnesCocycle
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Exponential

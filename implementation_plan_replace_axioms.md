@@ -1,39 +1,15 @@
-# Implementation Plan: Replace Legacy Axiom Facades
+# Historical Migration Note: Replace Legacy Axiom Facades
 
-## Scope
-- Remove legacy `Assumptions/Axioms/Degree` compatibility layers.
-- Replace with canonical modules whose assumptions are explicit in theorem signatures.
-- Keep the default build green under `lake build -R --wfail`.
+This file is retained as historical context only.
 
-## Audit Tool
-- Script: `scripts/audit_surrogates.sh`
-- Purpose: flag keywords such as `placeholder`, `surrogate`, `legacy`, `scaffold`, `tautology`.
-- Usage:
-  - `bash scripts/audit_surrogates.sh`
+## Current status
 
-## Phases
-1. Phase 1: Manifold Degree
-  - Introduce canonical manifold-degree module in finite/discrete settings.
-  - Remove old assumption-backed degree path from default surface.
-2. Phase 2: Determinant/GL-SL Surface
-  - Re-home determinant group interface to canonical namespace.
-  - Eliminate remaining references to old determinant facade names.
-3. Phase 3: Surrogate Hardening
-  - Replace flagged placeholder theorems with explicit contracts or concrete proofs.
-  - Keep interpretation docs separated from proved statements.
-4. Phase 4: Publish Gate
-  - Run full build + strict checks.
-  - Produce a short registry of remaining non-constructive assumptions.
+The active repository policy has moved beyond this plan. The operative enforcement surfaces are now:
+- `lake script run strictCheck`
+- `scripts/quality/audit_constructivity.py`
+- `skills/lean-canonicalization-policy/SKILL.md`
 
-## Status
-- Completed:
-  - Removed `InfoGeometry.Assumptions*`, `InfoGeometry.Axioms`, and `InfoGeometry.Degree`.
-  - Added:
-    - `lean/InfoGeometry/Canonical/ManifoldDegreeCore.lean`
-    - `lean/InfoGeometry/Canonical/ManifoldDegree.lean`
-  - Added:
-    - `lean/InfoGeometry/Canonical/DeterminantCore.lean`
-    - `lean/InfoGeometry/Canonical/Determinant.lean`
-  - Wired canonical imports through `InfoGeometry.Canonical.All` and `InfoGeometry.Canonical.Geometry`.
-- Next:
-  - Phase 3 (surrogate hardening by subsystem).
+## How to treat this file
+
+Use it only as background for earlier migration intent.
+Do not treat it as the current execution plan for the repository.

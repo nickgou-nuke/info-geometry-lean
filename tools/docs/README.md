@@ -1,16 +1,19 @@
 # Docs Tools
 
-This directory contains the maintained documentation orchestrators.
+This directory contains the maintained documentation refresh helpers.
 
-Canonical entrypoints:
-- [generate_auto_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/docs/generate_auto_docs.py)
-- [update_repo_docs.py](/home/goutev/LEAN4/info-geometry-lean/tools/docs/update_repo_docs.py)
+## Maintained entrypoints
+
+- `generate_auto_docs.py`
+- `update_repo_docs.py`
+
+## Purpose
 
 Use this layer for:
-- regenerating `docs/auto/index.md`
-- orchestrating semantic export refreshes
-- refreshing current derived report surfaces from the trusted DAG and frontier inputs
+- regenerating [docs/auto/index.md](/home/goutev/LEAN4/info-geometry-lean/docs/auto/index.md);
+- rebuilding selected derived documentation surfaces from refreshed graph/frontier data;
+- keeping generated doc outputs separate from hand-maintained operational docs.
 
-Top-level `tools/generate_auto_docs.py` and `tools/update_repo_docs.py` remain
-as compatibility wrappers, but this directory is the canonical maintained
-surface.
+## Rule
+
+Do not edit generated docs by hand if a script in this directory owns them.

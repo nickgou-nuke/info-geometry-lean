@@ -166,20 +166,16 @@ import InfoGeometry.Volume.Pfaffian
 /-!
 # InfoGeometry.Canonical.All
 
-Single canonical umbrella for all publishable InfoGeometry modules.
-This default surface imports the canonical modules directly.
+Single umbrella import for the canonical publication surface.
 
-Documentation:
-- [Cocycle Detailed-Balance Synthesis](docs/cocycle_detailed_balance_synthesis.md)
-- [Determinant Tensor-Entropy Synthesis](docs/determinant_tensor_entropy_synthesis.md)
-- [D4 Crystal Synthesis](docs/d4_crystal_synthesis.md)
-- [Deep Horizon Synthesis](docs/deep_horizon_synthesis.md)
-- [Drazin Conformal Synthesis](docs/drazin_conformal_synthesis.md)
-- [Gravity Gauge Synthesis](docs/gravity_gauge_synthesis.md)
-- [LLM Triality Synthesis](docs/llm_triality_synthesis.md)
-- [Ontology Synthesis](docs/ontology_synthesis.md)
-- [PRL Abstract/Intro Draft](docs/prl_abstract_intro_synthesis.md)
-- [Red Line Synthesis](docs/red_line_synthesis.md)
-- [Testable Physical Predictions](docs/testable_predictions.md)
-- [Witten Synthesis](docs/witten_synthesis.md)
+This file is an import aggregator, not an authoritative description of the
+current theory graph. For current repository state and workflow, prefer:
+- `README.md`
+- `docs/README.md`
+- `lean/DAG/README.md`
+- `tools/README.md`
+
+Conceptual notes under `docs/` are orientation aids only. Exact ownership,
+theorem names, and file boundaries must be checked against the current owner
+modules in `lean/InfoGeometry/Canonical/`.
 -/

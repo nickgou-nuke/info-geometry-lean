@@ -1,73 +1,70 @@
 # Module Map
 
-## Domain spine
+This is a compact current ownership map for the repository.
 
-- `lean/InfoGeometry/Canonical/GeneratedFlow.lean`
-  Flow / response spine.
+## Root substrate and relative-potential stack
 
-- `lean/InfoGeometry/Canonical/WeylGaugeField.lean`
-  Local gauge layer.
+- `ProjectiveStateCore`
+- `RelativeGeneratorCore`
+- `PositiveRayCore`
+- `RelativePotentialCore`
+- `RelativePotentialScalarBridge`
+- `RelativePotentialDiscreteBridge`
+- `RelativePotentialCountBridge`
+- `RedLine`
 
-- `lean/InfoGeometry/Canonical/WeylTransport.lean`
-  Large transport/integration layer.
+## KMS and modular operator stack
 
-- `lean/InfoGeometry/KK/KasparovCycle.lean`
-  Bounded KK core.
+- `Thermal`
+- `TomitaTakesaki`
+- `SinkhornKMSCore`
+- `KMSSinkhornSeedState`
+- `KMSSinkhornScalarPotential`
+- `KMSSinkhornWeightedTransport`
 
-- `lean/InfoGeometry/Canonical/AnalyticalIndex.lean`
-  Large analytical-index frontier.
+## Geometry and Monge-Ampere stack
 
-- `lean/InfoGeometry/Canonical/OperatorAlgebraBridge.lean`
-  Vertical bridge into operator-algebraic readiness.
+- `RicciMongeAmpere`
+- `CalabiYauMetricRicci`
+- `CalabiYauRNMongeAmpere`
+- `CalabiYauWBridge`
+- `PerelmanW`
 
-- `lean/InfoGeometry/Canonical/GrandSynthesis.lean`
-  Capstone synthesis layer.
+## Singular, conformal, and anomaly stack
 
-## Current graph picture
+- `Drazin`
+- `MoorePenrose`
+- `SingularBoundaryCorrection`
+- `ConformalAlgebra`
+- `ConformalUnification`
+- `ConnesArakiCore`
+- `ConnesArakiTomita`
+- `WeylAnomalySource`
+- `WeylPathHysteresis`
 
-Trusted semantic block exports already show:
+## AQFT and operator packaging stack
 
-- `KasparovCycle`
-  small but dense KK core
-
-- `CompactOperatorBridge`
-  thin adjunct module
-
-- `Product`
-  thin adjunct module
-
-- `KasparovCompactOperator`
-  thin adjunct module
-
+- `AQFTOperatorSignatures`
+- `AQFTHilbertCompression`
+- `AQFTReadiness`
+- `AQFTOperatorEndpoints`
 - `OperatorAlgebraBridge`
-  small vertical bridge
+
+## IB and count stack
+
+- `SinkhornFoundation`
+- `GrandCanonicalExperts`
+- `IBProjective`
+- `IBGaugeBridge`
+- `IBUpdate`
+- `CountSubstrateBridge`
+
+## Higher consumers
 
 - `AnalyticalIndex`
-  large bridge frontier
-
 - `GrandSynthesis`
-  large capstone synthesis web
-
-## Operational conclusion
-
-If the task is “find the missing KK-to-geometry bridge”, do not spend the first pass inside:
-- `CompactOperatorBridge`
-- `Product`
-- `KasparovCompactOperator`
-
-Start from:
-- `KasparovCycle.analyticalIndex`
-- `Canonical.AnalyticalIndex`
-- `OperatorAlgebraBridge`
-- `GrandSynthesis`
-
-## Tooling map
-
-- `lean/DAG/`
-  graph kernel and analysis engine
-
-- `lean/scripts/DAG/Exploration/`
-  report generators
-
-- `tools/semantic_block_export.py`
-  trusted heavy-file semantic export orchestrator
+- `MasterSynthesis`
+- `Rosetta`
+- `DeepHorizon`
+- `YangMillsFinite`
+- `YangMillsContinuum`

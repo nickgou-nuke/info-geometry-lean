@@ -137,6 +137,16 @@ lemma partitionFunction_nonneg (lam : ι → ℝ) :
   unfold partitionFunction
   exact integral_nonneg (fun x => by positivity)
 
+/-- The Gibbs partition function is strictly positive when the exponential tilt is integrable. -/
+theorem partitionFunction_pos (lam : ι → ℝ)
+    (hInt : PartitionIntegrable (μ₀ := μ₀) (C := C) lam) :
+    0 < partitionFunction (μ₀ := μ₀) (C := C) lam := by
+  simpa [partitionFunction, PartitionIntegrable] using
+    (MeasureTheory.integral_exp_pos
+      (μ := μ₀)
+      (f := potential (C := C) lam)
+      hInt)
+
 /-- Scalar RN-density form for the Gibbs measure (`toReal` version). -/
 theorem rnDeriv_gibbsMeasure_toReal_eq (lam : ι → ℝ) :
     (fun x => ((gibbsMeasure (μ₀ := μ₀) (C := C) lam).rnDeriv μ₀ x).toReal)

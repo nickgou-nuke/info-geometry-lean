@@ -76,4 +76,17 @@ noncomputable def scalarModularPotential (r : ℝ) (hr : 0 < r) : ℝ :=
   rw [scalarModularPotential_eq_neg_log]
   simp [Real.exp_log hr]
 
+/--
+Positive Weyl rescaling changes the scalar modular potential only by an
+additive constant. The rescaling mode `-log c` is the gauge term coming from
+changing the normalization section, not new dynamics.
+-/
+theorem scalarModularPotential_weylRescale_eq_sub_log
+    (c r : ℝ) (hc : 0 < c) (hr : 0 < r) :
+    scalarModularPotential (c * r) (mul_pos hc hr)
+      = scalarModularPotential r hr - Real.log c := by
+  rw [scalarModularPotential_eq_neg_log, scalarModularPotential_eq_neg_log,
+    Real.log_mul hc.ne' hr.ne']
+  ring
+
 end InfoGeometry.Canonical.RelativePotentialScalarBridge

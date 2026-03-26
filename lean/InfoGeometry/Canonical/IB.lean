@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.IBCanonical
 import InfoGeometry.Canonical.IBMeasure
 import InfoGeometry.Canonical.IBGaugeBridge
 import InfoGeometry.Canonical.IBFreeEnergy
+import InfoGeometry.Canonical.IBFrozenModularBridge
 import InfoGeometry.Canonical.IBFunctional
 import InfoGeometry.Canonical.IBIteration
 import InfoGeometry.Canonical.IBPythagorean

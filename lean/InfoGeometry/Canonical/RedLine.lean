@@ -101,7 +101,6 @@ export InfoGeometry.Canonical.RicciMongeAmpere (
   metricLogDet
   mongeAmpereDensity
   mongeAmpereDensity_eq_exp_metricLogDet
-  metricLogDet_eq_log_mongeAmpereDensity
   scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet
 )
 

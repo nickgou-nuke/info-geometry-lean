@@ -101,6 +101,27 @@
       "burn_down_rank": 4
     },
     {
+      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
+      "strength": 18,
+      "out_weight": 7,
+      "in_weight": 11,
+      "decl_count": 14,
+      "dominant_surface": "hypothesis_bridge",
+      "hypothesis_bridge": 1,
+      "package_reprojection": 10,
+      "surrogate_or_vacuous": 3,
+      "hotspot_rank": 8,
+      "replaceable_surface_mass": 33.0,
+      "support_pressure": 29.0,
+      "burn_down_score": 112.24,
+      "dominant_pressure": "package_reprojection",
+      "primary_action": "replace surrogates, then collapse package layer",
+      "surrogate_share": 0.2143,
+      "package_share": 0.7143,
+      "hypothesis_share": 0.0714,
+      "burn_down_rank": 5
+    },
+    {
       "module": "InfoGeometry.Prequantum.Quotient",
       "strength": 28,
       "out_weight": 16,
@@ -119,7 +140,7 @@
       "surrogate_share": 0.0,
       "package_share": 1.0,
       "hypothesis_share": 0.0,
-      "burn_down_rank": 5
+      "burn_down_rank": 6
     },
     {
       "module": "InfoGeometry.Singular.KreinNaturalFlow",
@@ -131,7 +152,7 @@
       "hypothesis_bridge": 0,
       "package_reprojection": 12,
       "surrogate_or_vacuous": 0,
-      "hotspot_rank": 7,
+      "hotspot_rank": 6,
       "replaceable_surface_mass": 24.0,
       "support_pressure": 30.0,
       "burn_down_score": 82.416,
@@ -140,7 +161,7 @@
       "surrogate_share": 0.0,
       "package_share": 1.0,
       "hypothesis_share": 0.0,
-      "burn_down_rank": 6
+      "burn_down_rank": 7
     },
     {
       "module": "InfoGeometry.Canonical.IBProjective",
@@ -152,31 +173,10 @@
       "hypothesis_bridge": 0,
       "package_reprojection": 10,
       "surrogate_or_vacuous": 0,
-      "hotspot_rank": 8,
+      "hotspot_rank": 7,
       "replaceable_surface_mass": 20.0,
       "support_pressure": 31.0,
       "burn_down_score": 69.315,
-      "dominant_pressure": "package_reprojection",
-      "primary_action": "collapse package layer",
-      "surrogate_share": 0.0,
-      "package_share": 1.0,
-      "hypothesis_share": 0.0,
-      "burn_down_rank": 7
-    },
-    {
-      "module": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "strength": 20,
-      "out_weight": 12,
-      "in_weight": 8,
-      "decl_count": 8,
-      "dominant_surface": "package_reprojection",
-      "hypothesis_bridge": 0,
-      "package_reprojection": 8,
-      "surrogate_or_vacuous": 0,
-      "hotspot_rank": 6,
-      "replaceable_surface_mass": 16.0,
-      "support_pressure": 28.0,
-      "burn_down_score": 53.877,
       "dominant_pressure": "package_reprojection",
       "primary_action": "collapse package layer",
       "surrogate_share": 0.0,
@@ -187,228 +187,60 @@
   ],
   "source_nodes": [
     {
-      "name": "InfoGeometry.Krein.DoubledSpace.ext",
-      "module": "InfoGeometry.Krein.DoubledSpace",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 4,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 1,
-      "flow_out_degree": 38,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 14.9555
-    },
-    {
-      "name": "InfoGeometry.Krein.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-      "module": "InfoGeometry.Krein.Thermal",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 4,
-      "closest_sink_distance": 5,
-      "flow_in_degree": 3,
-      "flow_out_degree": 8,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 9.227
-    },
-    {
-      "name": "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-      "module": "InfoGeometry.Canonical.AQFTOperatorEndpoints",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 4,
+      "name": "InfoGeometry.Convex.HessianGeometry.metricOp",
+      "module": "InfoGeometry.Convex.HessianGeometry",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 2,
       "closest_sink_distance": 1,
-      "flow_in_degree": 13,
-      "flow_out_degree": 4,
+      "flow_in_degree": 2,
+      "flow_out_degree": 51,
       "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
+        "InfoGeometry.Canonical.RicciMongeAmpere"
       ],
-      "source_score": 7.017
+      "source_score": 8.3406
     },
     {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_odd_odd",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 5,
-      "flow_out_degree": 7,
+      "name": "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity",
+      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 2,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 2,
+      "flow_out_degree": 25,
       "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
+        "InfoGeometry.Canonical.RicciMongeAmpere"
       ],
-      "source_score": 6.5917
+      "source_score": 6.9917
     },
     {
-      "name": "InfoGeometry.Krein.modular_j_involution",
-      "module": "InfoGeometry.Krein.DoubledSpace",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 5,
-      "flow_in_degree": 4,
-      "flow_out_degree": 7,
+      "name": "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet",
+      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 2,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 2,
+      "flow_out_degree": 23,
       "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
+        "InfoGeometry.Canonical.RicciMongeAmpere"
       ],
-      "source_score": 6.5583
+      "source_score": 6.8378
     },
     {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_even_left",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 7,
-      "flow_out_degree": 6,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 6.1383
-    },
-    {
-      "name": "InfoGeometry.Krein.gradePlusProj_comp_gradeMinusProj",
-      "module": "InfoGeometry.Clifford.Grading",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 6,
-      "flow_out_degree": 5,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 5.7877
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 4,
+      "name": "InfoGeometry.Convex.HessianGeometry.grad",
+      "module": "InfoGeometry.Convex.HessianGeometry",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 2,
       "closest_sink_distance": 2,
-      "flow_in_degree": 10,
-      "flow_out_degree": 2,
+      "flow_in_degree": 1,
+      "flow_out_degree": 12,
       "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
+        "InfoGeometry.Canonical.RicciMongeAmpere"
       ],
-      "source_score": 5.3785
-    },
-    {
-      "name": "InfoGeometry.Krein.gradeMinusProj_comp_gradePlusProj",
-      "module": "InfoGeometry.Clifford.Grading",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 6,
-      "flow_out_degree": 4,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 5.3253
-    },
-    {
-      "name": "InfoGeometry.Canonical.QFTTDFTLaunchpad.rungeGrossStationaryDualState_of_stationaryAtScale",
-      "module": "InfoGeometry.Canonical.QFTTDFTLaunchpad",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 5,
-      "flow_out_degree": 3,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 5.0783
-    },
-    {
-      "name": "InfoGeometry.Cartan.Pminus_idempotent",
-      "module": "InfoGeometry.Cartan.Involution",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 2,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 4.2589
-    },
-    {
-      "name": "InfoGeometry.Cartan.Pplus_idempotent",
-      "module": "InfoGeometry.Cartan.Involution",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 2,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 4.2589
-    },
-    {
-      "name": "InfoGeometry.Krein.gradeMinusProj_idempotent",
-      "module": "InfoGeometry.Clifford.Grading",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 7,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 4.0589
-    },
-    {
-      "name": "InfoGeometry.Krein.gradePlusProj_idempotent",
-      "module": "InfoGeometry.Clifford.Grading",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 7,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 4.0589
-    },
-    {
-      "name": "InfoGeometry.Krein.modular_j_is_cartan",
-      "module": "InfoGeometry.Krein.DoubledSpace",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 3,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 6,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 4.0589
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 4,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 13,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 3.9944
+      "source_score": 5.5614
     },
     {
       "name": "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
@@ -423,267 +255,35 @@
         "InfoGeometry.Canonical.IBProjective"
       ],
       "source_score": 3.7189
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 12,
-      "flow_out_degree": 3,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 3.1189
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_creation",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 11,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 2.5559
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 11,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 1.9806
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_creation_self",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 11,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 1.9806
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.commutator_annihilation_creation",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 11,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 1.9806
-    },
-    {
-      "name": "InfoGeometry.Cartan.Pplus_add_Pminus_eq_id",
-      "module": "InfoGeometry.Cartan.Involution",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 5,
-      "flow_in_degree": 2,
-      "flow_out_degree": 3,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 1.6761
-    },
-    {
-      "name": "InfoGeometry.Quantum.annihilation_eq_minus_projector",
-      "module": "InfoGeometry.Quantum.Fock",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 4,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 1.3863
-    },
-    {
-      "name": "InfoGeometry.Quantum.creation_eq_plus_projector",
-      "module": "InfoGeometry.Quantum.Fock",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 4,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 1.3863
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_smul_left",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 6,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 1.3363
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_smul_right",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 6,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 1.3363
-    },
-    {
-      "name": "InfoGeometry.Quantum.creation_add_annihilation",
-      "module": "InfoGeometry.Quantum.Fock",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 9,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 1.1863
-    },
-    {
-      "name": "InfoGeometry.Krein.gradeProj_sum",
-      "module": "InfoGeometry.Clifford.Grading",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 8,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 1.1863
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 12,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 0.9986
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_add_left",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 6,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 0.9986
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_add_right",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 4,
-      "flow_in_degree": 6,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 0.9986
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_bogoliubov_covariance",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 3,
-      "flow_in_degree": 14,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 0.9363
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.commutator_bogoliubov_projector_model",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 19,
-      "flow_out_degree": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 0.4819
-    },
-    {
-      "name": "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "category": "likely_constructive",
-      "kind": "theorem",
-      "reachable_sinks": 1,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 25,
-      "flow_out_degree": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_score": 0.4696
     }
   ],
   "sink_nodes": [
+    {
+      "name": "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
+      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
+      "category": "surrogate_or_vacuous",
+      "kind": "theorem",
+      "burn_down_rank": 5,
+      "flow_out_degree": 1,
+      "flow_in_degree": 5,
+      "severity": 3
+    },
+    {
+      "name": "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet",
+      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
+      "category": "surrogate_or_vacuous",
+      "kind": "theorem",
+      "burn_down_rank": 5,
+      "flow_out_degree": 2,
+      "flow_in_degree": 4,
+      "severity": 3
+    },
     {
       "name": "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay",
       "module": "InfoGeometry.Canonical.IBProjective",
       "category": "package_reprojection",
       "kind": "theorem",
-      "burn_down_rank": 7,
+      "burn_down_rank": 8,
       "flow_out_degree": 0,
       "flow_in_degree": 5,
       "severity": 2
@@ -693,53 +293,81 @@
       "module": "InfoGeometry.Canonical.IBProjective",
       "category": "package_reprojection",
       "kind": "theorem",
-      "burn_down_rank": 7,
+      "burn_down_rank": 8,
       "flow_out_degree": 4,
       "flow_in_degree": 2,
-      "severity": 2
-    },
-    {
-      "name": "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-      "module": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "category": "package_reprojection",
-      "kind": "theorem",
-      "burn_down_rank": 8,
-      "flow_out_degree": 0,
-      "flow_in_degree": 33,
-      "severity": 2
-    },
-    {
-      "name": "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-      "module": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "category": "package_reprojection",
-      "kind": "theorem",
-      "burn_down_rank": 8,
-      "flow_out_degree": 0,
-      "flow_in_degree": 27,
-      "severity": 2
-    },
-    {
-      "name": "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package",
-      "module": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "category": "package_reprojection",
-      "kind": "theorem",
-      "burn_down_rank": 8,
-      "flow_out_degree": 0,
-      "flow_in_degree": 23,
-      "severity": 2
-    },
-    {
-      "name": "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-      "module": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "category": "package_reprojection",
-      "kind": "theorem",
-      "burn_down_rank": 8,
-      "flow_out_degree": 0,
-      "flow_in_degree": 22,
       "severity": 2
     }
   ],
   "incidence_entries": [
+    {
+      "source": "InfoGeometry.Convex.HessianGeometry.metricOp",
+      "source_module": "InfoGeometry.Convex.HessianGeometry",
+      "source_score": 8.3406,
+      "sink": "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
+      "sink_module": "InfoGeometry.Canonical.RicciMongeAmpere",
+      "sink_category": "surrogate_or_vacuous",
+      "path_nodes": [
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
+      ],
+      "path_modules": [
+        "InfoGeometry.Convex.HessianGeometry",
+        "InfoGeometry.Canonical.RicciMongeAmpere"
+      ],
+      "path_component_ids": [
+        "component:9371197386029975239",
+        "component:14710704479396586006"
+      ],
+      "path_component_representatives": [
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
+      ],
+      "path_length": 1,
+      "motif_signature": [
+        "metricOp",
+        "RN/K\u00e4hler/log-det"
+      ],
+      "motif_signature_text": "metricOp -> RN/K\u00e4hler/log-det",
+      "source_bundle": [
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
+      ],
+      "compression_potential": 4.0
+    },
+    {
+      "source": "InfoGeometry.Convex.HessianGeometry.metricOp",
+      "source_module": "InfoGeometry.Convex.HessianGeometry",
+      "source_score": 8.3406,
+      "sink": "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet",
+      "sink_module": "InfoGeometry.Canonical.RicciMongeAmpere",
+      "sink_category": "surrogate_or_vacuous",
+      "path_nodes": [
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
+      ],
+      "path_modules": [
+        "InfoGeometry.Convex.HessianGeometry",
+        "InfoGeometry.Canonical.RicciMongeAmpere"
+      ],
+      "path_component_ids": [
+        "component:9371197386029975239",
+        "component:17707862431119132448"
+      ],
+      "path_component_representatives": [
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
+      ],
+      "path_length": 1,
+      "motif_signature": [
+        "metricOp",
+        "RN/K\u00e4hler/log-det"
+      ],
+      "motif_signature_text": "metricOp -> RN/K\u00e4hler/log-det",
+      "source_bundle": [
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
+      ],
+      "compression_potential": 4.0
+    },
     {
       "source": "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
       "source_module": "InfoGeometry.Canonical.IBProjective",
@@ -809,372 +437,60 @@
         "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale"
       ],
       "compression_potential": 2.0
-    },
-    {
-      "source": "InfoGeometry.Krein.DoubledSpace.ext",
-      "source_module": "InfoGeometry.Krein.DoubledSpace",
-      "source_score": 14.9555,
-      "sink": "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-      "sink_module": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "sink_category": "package_reprojection",
-      "path_nodes": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "path_modules": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Canonical.BogoliubovFockSuper",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "path_component_ids": [
-        "component:10262190868562801872",
-        "component:6576644083310003992",
-        "component:9748931831289156468",
-        "component:4935916923804850497"
-      ],
-      "path_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "path_length": 3,
-      "motif_signature": [
-        "ext",
-        "anticommutator_bogoliubov_projector_model",
-        "bogoliubov_projector_superalgebra",
-        "cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "motif_signature_text": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-      "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra"
-      ],
-      "compression_potential": 6.0
-    },
-    {
-      "source": "InfoGeometry.Krein.DoubledSpace.ext",
-      "source_module": "InfoGeometry.Krein.DoubledSpace",
-      "source_score": 14.9555,
-      "sink": "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-      "sink_module": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "sink_category": "package_reprojection",
-      "path_nodes": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
-      ],
-      "path_modules": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Canonical.BogoliubovFockSuper",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "path_component_ids": [
-        "component:10262190868562801872",
-        "component:16493071777789832982",
-        "component:7383739032148093810",
-        "component:17949067971391270483"
-      ],
-      "path_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
-      ],
-      "path_length": 3,
-      "motif_signature": [
-        "ext",
-        "anticommutator_annihilation_self",
-        "projectorSuperPair_base",
-        "cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
-      ],
-      "motif_signature_text": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-      "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
-      ],
-      "compression_potential": 6.0
-    },
-    {
-      "source": "InfoGeometry.Krein.DoubledSpace.ext",
-      "source_module": "InfoGeometry.Krein.DoubledSpace",
-      "source_score": 14.9555,
-      "sink": "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package",
-      "sink_module": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "sink_category": "package_reprojection",
-      "path_nodes": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "path_modules": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Canonical.BogoliubovFockSuper",
-        "InfoGeometry.Canonical.AQFTOperatorEndpoints",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "path_component_ids": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144",
-        "component:11564954056352632830"
-      ],
-      "path_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "path_length": 4,
-      "motif_signature": [
-        "ext",
-        "grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "motif_signature_text": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-      "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
-      ],
-      "compression_potential": 8.0
-    },
-    {
-      "source": "InfoGeometry.Krein.DoubledSpace.ext",
-      "source_module": "InfoGeometry.Krein.DoubledSpace",
-      "source_score": 14.9555,
-      "sink": "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-      "sink_module": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "sink_category": "package_reprojection",
-      "path_nodes": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package"
-      ],
-      "path_modules": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Canonical.BogoliubovFockSuper",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "path_component_ids": [
-        "component:10262190868562801872",
-        "component:16493071777789832982",
-        "component:7383739032148093810",
-        "component:6802045638478473310"
-      ],
-      "path_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package"
-      ],
-      "path_length": 3,
-      "motif_signature": [
-        "ext",
-        "anticommutator_annihilation_self",
-        "projectorSuperPair_base",
-        "cstar_completeCStar_kms_fock_projectorSuperPair_base_package"
-      ],
-      "motif_signature_text": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-      "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
-      ],
-      "compression_potential": 6.0
     }
   ],
   "atomic_nodes": [
     {
-      "atomic_id": "bundle:421c663276d8",
+      "atomic_id": "bundle:1ec926d5b8e8",
       "kind": "source_bundle",
       "category": "source_bundle",
       "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
       ],
       "supporting_atomic_decls": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
       ],
       "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
+        "InfoGeometry.Convex.HessianGeometry"
       ],
       "source_categories": {
-        "likely_constructive": 3
+        "neutral_definition": 1
       },
       "source_kinds": {
-        "theorem": 3
+        "def": 1
       },
-      "source_purity_score": 1.0,
-      "scc_id": null,
+      "source_purity_score": 0.0,
+      "scc_id": "component:9371197386029975239",
       "native_component_ids": [
-        "component:10262190868562801872",
-        "component:16493071777789832982",
-        "component:7383739032148093810"
+        "component:9371197386029975239"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
       ],
       "native_root_witness_component_ids": [
-        "component:9763222080385001759",
-        "component:10262190868562801872",
-        "component:4551696937135017436",
-        "component:13756940477192268340",
-        "component:16928171989668125586",
-        "component:10665017546836143188",
-        "component:14443146830249964352",
-        "component:10310425828050578079",
-        "component:4971924923181255811",
-        "component:3487149219409305298",
-        "component:5714728838107731205",
-        "component:16493071777789832982",
-        "component:5762254124380858213",
-        "component:7383739032148093810"
+        "component:5732050393590648956",
+        "component:15203112522654037569",
+        "component:9371197386029975239"
       ],
       "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.even",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.rec",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.casesOn",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.ctorIdx",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign.match_1",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.IsProjectorSuperPair",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
+        "InfoGeometry.Convex.HessianGeometry",
+        "InfoGeometry.Convex.HessianGeometry.grad",
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
       ],
-      "native_strict_dominator_component_ids": [
-        "component:7383739032148093810"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
-      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
       "native_depth_min": 1,
-      "native_depth_max": 10,
+      "native_depth_max": 2,
       "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
+        "InfoGeometry.Canonical.RicciMongeAmpere"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
       ],
       "path_multiplicity": 2,
-      "avg_path_length": 3.0,
-      "motif_signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-      "compression_potential": 12.0
-    },
-    {
-      "atomic_id": "bundle:9d3c3c0fc75d",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
-      ],
-      "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
-      ],
-      "source_categories": {
-        "likely_constructive": 4
-      },
-      "source_kinds": {
-        "theorem": 4
-      },
-      "source_purity_score": 1.0,
-      "scc_id": null,
-      "native_component_ids": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
-      ],
-      "native_root_witness_component_ids": [
-        "component:9763222080385001759",
-        "component:10262190868562801872",
-        "component:10197001537442993641",
-        "component:2575731183186428224",
-        "component:10956577586004742063",
-        "component:15301687380161210763",
-        "component:6720093602261131965",
-        "component:11463101958175366250",
-        "component:9093379702259006338",
-        "component:16534585782605764621",
-        "component:7018145768364567704",
-        "component:9965274629092262251",
-        "component:17487641720430951785",
-        "component:14249180865843861890",
-        "component:982331044006615144"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Krein.modular_j",
-        "InfoGeometry.Krein.gradeMinusProj",
-        "InfoGeometry.Krein.annihilationLike",
-        "InfoGeometry.Quantum.annihilationOp",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubovAnnihilation",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.numberOperator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:9965274629092262251"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 10,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "path_multiplicity": 1,
-      "avg_path_length": 4.0,
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
+      "avg_path_length": 1.0,
+      "motif_signature": "metricOp -> RN/K\u00e4hler/log-det",
       "compression_potential": 8.0
     },
     {
@@ -1225,427 +541,115 @@
       "avg_path_length": 1.5,
       "motif_signature": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay -> scoreProjectiveGauge_eq_of_sameScoreRay",
       "compression_potential": 6.0
-    },
-    {
-      "atomic_id": "bundle:242522d62b7c",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra"
-      ],
-      "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
-      ],
-      "source_categories": {
-        "likely_constructive": 3
-      },
-      "source_kinds": {
-        "theorem": 3
-      },
-      "source_purity_score": 1.0,
-      "scc_id": null,
-      "native_component_ids": [
-        "component:10262190868562801872",
-        "component:6576644083310003992",
-        "component:9748931831289156468"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra"
-      ],
-      "native_root_witness_component_ids": [
-        "component:9763222080385001759",
-        "component:10262190868562801872",
-        "component:4551696937135017436",
-        "component:13756940477192268340",
-        "component:16928171989668125586",
-        "component:10665017546836143188",
-        "component:14443146830249964352",
-        "component:10310425828050578079",
-        "component:4971924923181255811",
-        "component:3487149219409305298",
-        "component:16500246402761895379",
-        "component:6471592574296685022",
-        "component:6576644083310003992",
-        "component:9748931831289156468"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.even",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.rec",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.casesOn",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.ctorIdx",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign.match_1",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_add_left",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_bogoliubov_covariance",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:4935916923804850497"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 11,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "path_multiplicity": 1,
-      "avg_path_length": 3.0,
-      "motif_signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-      "compression_potential": 6.0
     }
   ],
   "hydrated_nodes": [
     {
-      "hydrated_id": "InfoGeometry.Canonical.BogoliubovFockSuper",
+      "hydrated_id": "InfoGeometry.Canonical.RicciMongeAmpere",
       "kind": "module",
       "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
-      ],
-      "minimal_source_bundle": "bundle:421c663276d8",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "path_multiplicity": 4,
-      "path_motif_signatures": [
-        {
-          "signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-          "count": 1
-        }
-      ],
-      "compression_potential": 26.0,
-      "native_component_ids": [
-        "component:16493071777789832982",
-        "component:6576644083310003992",
-        "component:9748931831289156468",
-        "component:9965274629092262251",
-        "component:16534585782605764621",
-        "component:7383739032148093810"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.even",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.rec",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.casesOn",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.ctorIdx",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign.match_1",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_add_left",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_bogoliubov_covariance",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.modular_j",
-        "InfoGeometry.Krein.gradeMinusProj",
-        "InfoGeometry.Krein.annihilationLike",
-        "InfoGeometry.Quantum.annihilationOp",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubovAnnihilation",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.numberOperator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.IsProjectorSuperPair",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:7383739032148093810",
-        "component:4935916923804850497",
-        "component:9965274629092262251"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 11,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 9,
-      "native_corridor_count": 4,
-      "top_root_witness": "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-      "top_native_corridor_component_ids": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144",
-        "component:11564954056352632830"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.OperatorAlgebraBridge",
+      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
       "sink_role": "consumer_sink",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
       ],
-      "minimal_source_bundle": "bundle:421c663276d8",
+      "minimal_source_bundle": "bundle:1ec926d5b8e8",
       "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
+        "InfoGeometry.Canonical.RicciMongeAmpere"
       ],
-      "path_multiplicity": 4,
+      "path_multiplicity": 2,
       "path_motif_signatures": [
         {
-          "signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-          "count": 1
-        }
-      ],
-      "compression_potential": 26.0,
-      "native_component_ids": [
-        "component:6802045638478473310",
-        "component:11564954056352632830",
-        "component:4935916923804850497",
-        "component:17949067971391270483"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.even",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.rec",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.casesOn",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.ctorIdx",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign.match_1",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.IsProjectorSuperPair",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.modular_j",
-        "InfoGeometry.Krein.gradeMinusProj",
-        "InfoGeometry.Krein.annihilationLike",
-        "InfoGeometry.Quantum.annihilationOp",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubovAnnihilation",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.numberOperator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_add_left",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_bogoliubov_covariance",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 12,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 9,
-      "native_corridor_count": 4,
-      "top_root_witness": "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-      "top_native_corridor_component_ids": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144",
-        "component:11564954056352632830"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Krein.DoubledSpace",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Krein.DoubledSpace",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Krein.DoubledSpace.ext"
-      ],
-      "minimal_source_bundle": "bundle:421c663276d8",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "path_multiplicity": 4,
-      "path_motif_signatures": [
-        {
-          "signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-          "count": 1
-        }
-      ],
-      "compression_potential": 26.0,
-      "native_component_ids": [
-        "component:10262190868562801872"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.DoubledSpace.ext"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 1,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 9,
-      "native_corridor_count": 4,
-      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
-      "top_native_corridor_component_ids": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144",
-        "component:11564954056352632830"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Canonical.AQFTOperatorEndpoints",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.AQFTOperatorEndpoints",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
-      ],
-      "minimal_source_bundle": "bundle:9d3c3c0fc75d",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "path_multiplicity": 1,
-      "path_motif_signatures": [
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-          "count": 1
+          "signature": "metricOp -> RN/K\u00e4hler/log-det",
+          "count": 2
         }
       ],
       "compression_potential": 8.0,
       "native_component_ids": [
-        "component:982331044006615144"
+        "component:14710704479396586006",
+        "component:17707862431119132448"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
       ],
       "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.modular_j",
-        "InfoGeometry.Krein.gradeMinusProj",
-        "InfoGeometry.Krein.annihilationLike",
-        "InfoGeometry.Quantum.annihilationOp",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubovAnnihilation",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.numberOperator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
+        "InfoGeometry.Convex.HessianGeometry",
+        "InfoGeometry.Convex.HessianGeometry.grad",
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet",
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
+      ],
+      "native_strict_dominator_component_ids": [
+        "component:10984868151867229072"
+      ],
+      "native_strict_dominator_representatives": [
+        "InfoGeometry.Canonical.RicciMongeAmpere.scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet"
+      ],
+      "native_depth_min": 1,
+      "native_depth_max": 5,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 2,
+      "native_corridor_count": 2,
+      "top_root_witness": "InfoGeometry.Convex.HessianGeometry",
+      "top_native_corridor_component_ids": [
+        "component:9371197386029975239",
+        "component:17707862431119132448"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Convex.HessianGeometry",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Convex.HessianGeometry",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
+      ],
+      "minimal_source_bundle": "bundle:1ec926d5b8e8",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.RicciMongeAmpere"
+      ],
+      "path_multiplicity": 2,
+      "path_motif_signatures": [
+        {
+          "signature": "metricOp -> RN/K\u00e4hler/log-det",
+          "count": 2
+        }
+      ],
+      "compression_potential": 8.0,
+      "native_component_ids": [
+        "component:9371197386029975239"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Convex.HessianGeometry",
+        "InfoGeometry.Convex.HessianGeometry.grad",
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 1,
-      "native_depth_max": 10,
+      "native_depth_max": 2,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 3,
-      "native_corridor_count": 1,
-      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
+      "native_corridor_reuse": 2,
+      "native_corridor_count": 2,
+      "top_root_witness": "InfoGeometry.Convex.HessianGeometry",
       "top_native_corridor_component_ids": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144",
-        "component:11564954056352632830"
+        "component:9371197386029975239",
+        "component:17707862431119132448"
       ],
       "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
       ]
     },
     {
@@ -1715,347 +719,84 @@
   ],
   "incidence_edges": [
     {
-      "atomic_id": "bundle:421c663276d8",
-      "hydrated_id": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:421c663276d8",
-      "motif_signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-      "witness_count": 2,
-      "compression_score": 12.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
-        ],
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:16493071777789832982",
-        "component:7383739032148093810",
-        "component:17949067971391270483"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "hydrated_role": "constructive_source"
-    },
-    {
-      "atomic_id": "bundle:421c663276d8",
-      "hydrated_id": "InfoGeometry.Canonical.OperatorAlgebraBridge",
+      "atomic_id": "bundle:1ec926d5b8e8",
+      "hydrated_id": "InfoGeometry.Canonical.RicciMongeAmpere",
       "role": "supports",
       "projection_kind": "node_support",
       "carrier_role": "sink",
-      "bundle_id": "bundle:421c663276d8",
-      "motif_signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
+      "bundle_id": "bundle:1ec926d5b8e8",
+      "motif_signature": "metricOp -> RN/K\u00e4hler/log-det",
       "witness_count": 2,
-      "compression_score": 12.0,
+      "compression_score": 8.0,
       "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
       ],
       "canonical_witness_paths": [
         [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
+          "InfoGeometry.Convex.HessianGeometry.metricOp",
+          "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
         ],
         [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package"
+          "InfoGeometry.Convex.HessianGeometry.metricOp",
+          "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
         ]
       ],
       "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:16493071777789832982",
-        "component:7383739032148093810",
-        "component:17949067971391270483"
+        "component:9371197386029975239",
+        "component:14710704479396586006"
       ],
       "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
       ],
       "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
+        "InfoGeometry.Canonical.RicciMongeAmpere"
       ],
       "hydrated_role": "consumer_sink"
     },
     {
-      "atomic_id": "bundle:421c663276d8",
-      "hydrated_id": "InfoGeometry.Krein.DoubledSpace",
+      "atomic_id": "bundle:1ec926d5b8e8",
+      "hydrated_id": "InfoGeometry.Convex.HessianGeometry",
       "role": "supports",
       "projection_kind": "node_support",
       "carrier_role": "source",
-      "bundle_id": "bundle:421c663276d8",
-      "motif_signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
+      "bundle_id": "bundle:1ec926d5b8e8",
+      "motif_signature": "metricOp -> RN/K\u00e4hler/log-det",
       "witness_count": 2,
-      "compression_score": 12.0,
+      "compression_score": 8.0,
       "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
       ],
       "canonical_witness_paths": [
         [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
+          "InfoGeometry.Convex.HessianGeometry.metricOp",
+          "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
         ],
         [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package"
+          "InfoGeometry.Convex.HessianGeometry.metricOp",
+          "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
         ]
       ],
       "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:16493071777789832982",
-        "component:7383739032148093810",
-        "component:17949067971391270483"
+        "component:9371197386029975239",
+        "component:14710704479396586006"
       ],
       "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
       ],
       "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "hydrated_role": "constructive_source"
-    },
-    {
-      "atomic_id": "bundle:9d3c3c0fc75d",
-      "hydrated_id": "InfoGeometry.Canonical.AQFTOperatorEndpoints",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:9d3c3c0fc75d",
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-      "witness_count": 1,
-      "compression_score": 8.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144",
-        "component:11564954056352632830"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "hydrated_role": "constructive_source"
-    },
-    {
-      "atomic_id": "bundle:9d3c3c0fc75d",
-      "hydrated_id": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:9d3c3c0fc75d",
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-      "witness_count": 1,
-      "compression_score": 8.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144",
-        "component:11564954056352632830"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "hydrated_role": "constructive_source"
-    },
-    {
-      "atomic_id": "bundle:9d3c3c0fc75d",
-      "hydrated_id": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "sink",
-      "bundle_id": "bundle:9d3c3c0fc75d",
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-      "witness_count": 1,
-      "compression_score": 8.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144",
-        "component:11564954056352632830"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "hydrated_role": "consumer_sink"
-    },
-    {
-      "atomic_id": "bundle:9d3c3c0fc75d",
-      "hydrated_id": "InfoGeometry.Krein.DoubledSpace",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:9d3c3c0fc75d",
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-      "witness_count": 1,
-      "compression_score": 8.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144",
-        "component:11564954056352632830"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
+        "InfoGeometry.Canonical.RicciMongeAmpere"
       ],
       "hydrated_role": "constructive_source"
     },
@@ -2103,188 +844,20 @@
         "InfoGeometry.Canonical.IBProjective"
       ],
       "hydrated_role": "consumer_sink"
-    },
-    {
-      "atomic_id": "bundle:242522d62b7c",
-      "hydrated_id": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:242522d62b7c",
-      "motif_signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-      "witness_count": 1,
-      "compression_score": 6.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:6576644083310003992",
-        "component:9748931831289156468",
-        "component:4935916923804850497"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "hydrated_role": "constructive_source"
-    },
-    {
-      "atomic_id": "bundle:242522d62b7c",
-      "hydrated_id": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "sink",
-      "bundle_id": "bundle:242522d62b7c",
-      "motif_signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-      "witness_count": 1,
-      "compression_score": 6.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:6576644083310003992",
-        "component:9748931831289156468",
-        "component:4935916923804850497"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "hydrated_role": "consumer_sink"
-    },
-    {
-      "atomic_id": "bundle:242522d62b7c",
-      "hydrated_id": "InfoGeometry.Krein.DoubledSpace",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:242522d62b7c",
-      "motif_signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-      "witness_count": 1,
-      "compression_score": 6.0,
-      "canonical_path_example": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:10262190868562801872",
-        "component:6576644083310003992",
-        "component:9748931831289156468",
-        "component:4935916923804850497"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "hydrated_role": "constructive_source"
     }
   ],
   "motif_families": [
     {
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-      "path_count": 1,
+      "motif_signature": "metricOp -> RN/K\u00e4hler/log-det",
+      "path_count": 2,
       "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
+        "InfoGeometry.Canonical.RicciMongeAmpere"
       ],
       "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
+        "InfoGeometry.Convex.HessianGeometry"
       ],
-      "avg_path_length": 4.0,
+      "avg_path_length": 1.0,
       "compression_potential": 8.0
-    },
-    {
-      "motif_signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-      "path_count": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
-      ],
-      "avg_path_length": 3.0,
-      "compression_potential": 6.0
-    },
-    {
-      "motif_signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-      "path_count": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
-      ],
-      "avg_path_length": 3.0,
-      "compression_potential": 6.0
-    },
-    {
-      "motif_signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-      "path_count": 1,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
-      ],
-      "avg_path_length": 3.0,
-      "compression_potential": 6.0
     },
     {
       "motif_signature": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay -> scoreProjectiveGauge_eq_of_sameScoreRay",
@@ -2313,182 +886,56 @@
   ],
   "bundles": [
     {
-      "atomic_id": "bundle:421c663276d8",
+      "atomic_id": "bundle:1ec926d5b8e8",
       "kind": "source_bundle",
       "category": "source_bundle",
       "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
       ],
       "supporting_atomic_decls": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
       ],
       "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
+        "InfoGeometry.Convex.HessianGeometry"
       ],
       "source_categories": {
-        "likely_constructive": 3
+        "neutral_definition": 1
       },
       "source_kinds": {
-        "theorem": 3
+        "def": 1
       },
-      "source_purity_score": 1.0,
-      "scc_id": null,
+      "source_purity_score": 0.0,
+      "scc_id": "component:9371197386029975239",
       "native_component_ids": [
-        "component:10262190868562801872",
-        "component:16493071777789832982",
-        "component:7383739032148093810"
+        "component:9371197386029975239"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
       ],
       "native_root_witness_component_ids": [
-        "component:9763222080385001759",
-        "component:10262190868562801872",
-        "component:4551696937135017436",
-        "component:13756940477192268340",
-        "component:16928171989668125586",
-        "component:10665017546836143188",
-        "component:14443146830249964352",
-        "component:10310425828050578079",
-        "component:4971924923181255811",
-        "component:3487149219409305298",
-        "component:5714728838107731205",
-        "component:16493071777789832982",
-        "component:5762254124380858213",
-        "component:7383739032148093810"
+        "component:5732050393590648956",
+        "component:15203112522654037569",
+        "component:9371197386029975239"
       ],
       "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.even",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.rec",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.casesOn",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.ctorIdx",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign.match_1",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.IsProjectorSuperPair",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
+        "InfoGeometry.Convex.HessianGeometry",
+        "InfoGeometry.Convex.HessianGeometry.grad",
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
       ],
-      "native_strict_dominator_component_ids": [
-        "component:7383739032148093810"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
-      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
       "native_depth_min": 1,
-      "native_depth_max": 10,
+      "native_depth_max": 2,
       "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
+        "InfoGeometry.Canonical.RicciMongeAmpere"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
       ],
       "path_multiplicity": 2,
-      "avg_path_length": 3.0,
-      "motif_signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-      "compression_potential": 12.0
-    },
-    {
-      "atomic_id": "bundle:9d3c3c0fc75d",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
-      ],
-      "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
-      ],
-      "source_categories": {
-        "likely_constructive": 4
-      },
-      "source_kinds": {
-        "theorem": 4
-      },
-      "source_purity_score": 1.0,
-      "scc_id": null,
-      "native_component_ids": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
-      ],
-      "native_root_witness_component_ids": [
-        "component:9763222080385001759",
-        "component:10262190868562801872",
-        "component:10197001537442993641",
-        "component:2575731183186428224",
-        "component:10956577586004742063",
-        "component:15301687380161210763",
-        "component:6720093602261131965",
-        "component:11463101958175366250",
-        "component:9093379702259006338",
-        "component:16534585782605764621",
-        "component:7018145768364567704",
-        "component:9965274629092262251",
-        "component:17487641720430951785",
-        "component:14249180865843861890",
-        "component:982331044006615144"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Krein.modular_j",
-        "InfoGeometry.Krein.gradeMinusProj",
-        "InfoGeometry.Krein.annihilationLike",
-        "InfoGeometry.Quantum.annihilationOp",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubovAnnihilation",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.numberOperator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:9965274629092262251"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 10,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ],
-      "path_multiplicity": 1,
-      "avg_path_length": 4.0,
-      "motif_signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
+      "avg_path_length": 1.0,
+      "motif_signature": "metricOp -> RN/K\u00e4hler/log-det",
       "compression_potential": 8.0
     },
     {
@@ -2539,427 +986,115 @@
       "avg_path_length": 1.5,
       "motif_signature": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay -> scoreProjectiveGauge_eq_of_sameScoreRay",
       "compression_potential": 6.0
-    },
-    {
-      "atomic_id": "bundle:242522d62b7c",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra"
-      ],
-      "source_modules": [
-        "InfoGeometry.Krein.DoubledSpace"
-      ],
-      "source_categories": {
-        "likely_constructive": 3
-      },
-      "source_kinds": {
-        "theorem": 3
-      },
-      "source_purity_score": 1.0,
-      "scc_id": null,
-      "native_component_ids": [
-        "component:10262190868562801872",
-        "component:6576644083310003992",
-        "component:9748931831289156468"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra"
-      ],
-      "native_root_witness_component_ids": [
-        "component:9763222080385001759",
-        "component:10262190868562801872",
-        "component:4551696937135017436",
-        "component:13756940477192268340",
-        "component:16928171989668125586",
-        "component:10665017546836143188",
-        "component:14443146830249964352",
-        "component:10310425828050578079",
-        "component:4971924923181255811",
-        "component:3487149219409305298",
-        "component:16500246402761895379",
-        "component:6471592574296685022",
-        "component:6576644083310003992",
-        "component:9748931831289156468"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.even",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.rec",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.casesOn",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.ctorIdx",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign.match_1",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_add_left",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_bogoliubov_covariance",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:4935916923804850497"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 11,
-      "sink_modules": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-      ],
-      "path_multiplicity": 1,
-      "avg_path_length": 3.0,
-      "motif_signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-      "compression_potential": 6.0
     }
   ],
   "hydrated_modules": [
     {
-      "hydrated_id": "InfoGeometry.Canonical.BogoliubovFockSuper",
+      "hydrated_id": "InfoGeometry.Canonical.RicciMongeAmpere",
       "kind": "module",
       "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
-      ],
-      "minimal_source_bundle": "bundle:421c663276d8",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "path_multiplicity": 4,
-      "path_motif_signatures": [
-        {
-          "signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-          "count": 1
-        }
-      ],
-      "compression_potential": 26.0,
-      "native_component_ids": [
-        "component:16493071777789832982",
-        "component:6576644083310003992",
-        "component:9748931831289156468",
-        "component:9965274629092262251",
-        "component:16534585782605764621",
-        "component:7383739032148093810"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.even",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.rec",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.casesOn",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.ctorIdx",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign.match_1",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_add_left",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_bogoliubov_covariance",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.modular_j",
-        "InfoGeometry.Krein.gradeMinusProj",
-        "InfoGeometry.Krein.annihilationLike",
-        "InfoGeometry.Quantum.annihilationOp",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubovAnnihilation",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.numberOperator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.IsProjectorSuperPair",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:7383739032148093810",
-        "component:4935916923804850497",
-        "component:9965274629092262251"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 11,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 9,
-      "native_corridor_count": 4,
-      "top_root_witness": "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-      "top_native_corridor_component_ids": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144",
-        "component:11564954056352632830"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.OperatorAlgebraBridge",
+      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
       "sink_role": "consumer_sink",
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
       ],
-      "minimal_source_bundle": "bundle:421c663276d8",
+      "minimal_source_bundle": "bundle:1ec926d5b8e8",
       "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
+        "InfoGeometry.Canonical.RicciMongeAmpere"
       ],
-      "path_multiplicity": 4,
+      "path_multiplicity": 2,
       "path_motif_signatures": [
         {
-          "signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-          "count": 1
-        }
-      ],
-      "compression_potential": 26.0,
-      "native_component_ids": [
-        "component:6802045638478473310",
-        "component:11564954056352632830",
-        "component:4935916923804850497",
-        "component:17949067971391270483"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.even",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.rec",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.casesOn",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.ctorIdx",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign.match_1",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.paritySign",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.IsProjectorSuperPair",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.modular_j",
-        "InfoGeometry.Krein.gradeMinusProj",
-        "InfoGeometry.Krein.annihilationLike",
-        "InfoGeometry.Quantum.annihilationOp",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubovAnnihilation",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.numberOperator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_add_left",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_bogoliubov_covariance",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 12,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 9,
-      "native_corridor_count": 4,
-      "top_root_witness": "InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity",
-      "top_native_corridor_component_ids": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144",
-        "component:11564954056352632830"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Krein.DoubledSpace",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Krein.DoubledSpace",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Krein.DoubledSpace.ext"
-      ],
-      "minimal_source_bundle": "bundle:421c663276d8",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "path_multiplicity": 4,
-      "path_motif_signatures": [
-        {
-          "signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-          "count": 1
-        }
-      ],
-      "compression_potential": 26.0,
-      "native_component_ids": [
-        "component:10262190868562801872"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.DoubledSpace.ext"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 1,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 9,
-      "native_corridor_count": 4,
-      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
-      "top_native_corridor_component_ids": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144",
-        "component:11564954056352632830"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Canonical.AQFTOperatorEndpoints",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.AQFTOperatorEndpoints",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
-      ],
-      "minimal_source_bundle": "bundle:9d3c3c0fc75d",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.OperatorAlgebraBridge"
-      ],
-      "path_multiplicity": 1,
-      "path_motif_signatures": [
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-          "count": 1
+          "signature": "metricOp -> RN/K\u00e4hler/log-det",
+          "count": 2
         }
       ],
       "compression_potential": 8.0,
       "native_component_ids": [
-        "component:982331044006615144"
+        "component:14710704479396586006",
+        "component:17707862431119132448"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
       ],
       "native_root_witnesses": [
-        "InfoGeometry.Krein.DoubledSpace",
-        "InfoGeometry.Krein.modular_j",
-        "InfoGeometry.Krein.gradeMinusProj",
-        "InfoGeometry.Krein.annihilationLike",
-        "InfoGeometry.Quantum.annihilationOp",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubovAnnihilation",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.numberOperator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalEulerStep",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockEulerStep",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit"
+        "InfoGeometry.Convex.HessianGeometry",
+        "InfoGeometry.Convex.HessianGeometry.grad",
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet",
+        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
+      ],
+      "native_strict_dominator_component_ids": [
+        "component:10984868151867229072"
+      ],
+      "native_strict_dominator_representatives": [
+        "InfoGeometry.Canonical.RicciMongeAmpere.scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet"
+      ],
+      "native_depth_min": 1,
+      "native_depth_max": 5,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 2,
+      "native_corridor_count": 2,
+      "top_root_witness": "InfoGeometry.Convex.HessianGeometry",
+      "top_native_corridor_component_ids": [
+        "component:9371197386029975239",
+        "component:17707862431119132448"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Convex.HessianGeometry",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Convex.HessianGeometry",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
+      ],
+      "minimal_source_bundle": "bundle:1ec926d5b8e8",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.RicciMongeAmpere"
+      ],
+      "path_multiplicity": 2,
+      "path_motif_signatures": [
+        {
+          "signature": "metricOp -> RN/K\u00e4hler/log-det",
+          "count": 2
+        }
+      ],
+      "compression_potential": 8.0,
+      "native_component_ids": [
+        "component:9371197386029975239"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Convex.HessianGeometry",
+        "InfoGeometry.Convex.HessianGeometry.grad",
+        "InfoGeometry.Convex.HessianGeometry.metricOp"
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 1,
-      "native_depth_max": 10,
+      "native_depth_max": 2,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 3,
-      "native_corridor_count": 1,
-      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
+      "native_corridor_reuse": 2,
+      "native_corridor_count": 2,
+      "top_root_witness": "InfoGeometry.Convex.HessianGeometry",
       "top_native_corridor_component_ids": [
-        "component:10262190868562801872",
-        "component:16534585782605764621",
-        "component:9965274629092262251",
-        "component:982331044006615144",
-        "component:11564954056352632830"
+        "component:9371197386029975239",
+        "component:17707862431119132448"
       ],
       "top_native_corridor_representatives": [
-        "InfoGeometry.Krein.DoubledSpace.ext",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-        "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-        "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
+        "InfoGeometry.Convex.HessianGeometry.metricOp",
+        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
       ]
     },
     {
@@ -3029,144 +1164,28 @@
   ],
   "hydrated_edges": [
     {
-      "source_module": "InfoGeometry.Krein.DoubledSpace",
-      "target_module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "path_count": 4,
-      "compression_potential": 26.0,
-      "direct_projection": true,
-      "hypothesis_packets": [
-        {
-          "signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-          "count": 1
-        }
-      ],
-      "bundle_ids": [
-        "bundle:421c663276d8",
-        "bundle:242522d62b7c",
-        "bundle:9d3c3c0fc75d"
-      ],
-      "atomic_path_examples": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-        ],
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
-        ],
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-        ]
-      ]
-    },
-    {
-      "source_module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "target_module": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "path_count": 3,
-      "compression_potential": 18.0,
-      "direct_projection": true,
-      "hypothesis_packets": [
-        {
-          "signature": "ext -> anticommutator_bogoliubov_projector_model -> bogoliubov_projector_superalgebra -> cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package",
-          "count": 1
-        },
-        {
-          "signature": "ext -> anticommutator_annihilation_self -> projectorSuperPair_base -> cstar_completeCStar_kms_fock_projectorSuperPair_base_package",
-          "count": 1
-        }
-      ],
-      "bundle_ids": [
-        "bundle:421c663276d8",
-        "bundle:242522d62b7c"
-      ],
-      "atomic_path_examples": [
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_projector_model",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_projector_superalgebra",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_bogoliubov_projector_package"
-        ],
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_with_projectorSuperPair_base_package"
-        ],
-        [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.projectorSuperPair_base",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_projectorSuperPair_base_package"
-        ]
-      ]
-    },
-    {
-      "source_module": "InfoGeometry.Canonical.AQFTOperatorEndpoints",
-      "target_module": "InfoGeometry.Canonical.OperatorAlgebraBridge",
-      "path_count": 1,
+      "source_module": "InfoGeometry.Convex.HessianGeometry",
+      "target_module": "InfoGeometry.Canonical.RicciMongeAmpere",
+      "path_count": 2,
       "compression_potential": 8.0,
       "direct_projection": true,
       "hypothesis_packets": [
         {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-          "count": 1
+          "signature": "metricOp -> RN/K\u00e4hler/log-det",
+          "count": 2
         }
       ],
       "bundle_ids": [
-        "bundle:9d3c3c0fc75d"
+        "bundle:1ec926d5b8e8"
       ],
       "atomic_path_examples": [
         [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
-        ]
-      ]
-    },
-    {
-      "source_module": "InfoGeometry.Canonical.BogoliubovFockSuper",
-      "target_module": "InfoGeometry.Canonical.AQFTOperatorEndpoints",
-      "path_count": 1,
-      "compression_potential": 8.0,
-      "direct_projection": true,
-      "hypothesis_packets": [
-        {
-          "signature": "ext -> grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported -> grandCanonicalEulerStep_eq_of_vacuumSplit -> cstar_completeCStar_kms_fock_tdft_launchpad_package",
-          "count": 1
-        }
-      ],
-      "bundle_ids": [
-        "bundle:9d3c3c0fc75d"
-      ],
-      "atomic_path_examples": [
+          "InfoGeometry.Convex.HessianGeometry.metricOp",
+          "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
+        ],
         [
-          "InfoGeometry.Krein.DoubledSpace.ext",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported",
-          "InfoGeometry.Canonical.AQFTOperatorInterface.grandCanonicalEulerStep_eq_of_vacuumSplit",
-          "InfoGeometry.Canonical.OperatorAlgebraBridge.cstar_completeCStar_kms_fock_tdft_launchpad_package"
+          "InfoGeometry.Convex.HessianGeometry.metricOp",
+          "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
         ]
       ]
     }

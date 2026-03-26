@@ -1416,6 +1416,9 @@ attribute [blueprint] InfoGeometry.Canonical.IB.ibBlahutArimotoStepFrozen_descen
 attribute [blueprint] InfoGeometry.Canonical.IB.ibBlahutArimotoStepFrozen_eq_frozenGibbs
 attribute [blueprint] InfoGeometry.Canonical.IB.ibBlahutArimotoStepFrozen_eq_of_score_ray_scale
 attribute [blueprint] InfoGeometry.Canonical.IB.ibBlahutArimotoStepFrozen_eq_prior_of_uniformDistortion
+attribute [blueprint] InfoGeometry.Canonical.IB.ibBlahutArimotoStepFrozen_log_ratio_eq_neg_betaKL_sub_logPartitionFrozen
+attribute [blueprint] InfoGeometry.Canonical.IB.ibBlahutArimotoStepFrozen_scalarModularPotential_eq_betaKL_add_logPartitionFrozen
+attribute [blueprint] InfoGeometry.Canonical.IB.ibBlahutArimotoStepFrozen_scalarModularPotential_sub_logPartitionFrozen_eq_betaKL
 attribute [blueprint] InfoGeometry.Canonical.IB.ibBlahutArimotoStepFrozen_slice_eq_of_score_scale
 attribute [blueprint] InfoGeometry.Canonical.IB.ibBlahutArimotoStepUnnormalized
 attribute [blueprint] InfoGeometry.Canonical.IB.ibBlahutArimotoStepUnnormalized.eq_1
@@ -1727,7 +1730,10 @@ attribute [blueprint] InfoGeometry.Canonical.InverseKernel.spectralProjector
 attribute [blueprint] InfoGeometry.Canonical.IsDrazinInverse
 attribute [blueprint] InfoGeometry.Canonical.IsMoorePenroseInverse
 attribute [blueprint] InfoGeometry.Canonical.IsThermodynamicallySmoothed
+attribute [blueprint] InfoGeometry.Canonical.JaynesRNMaxEnt.neg_log_rnDeriv_gibbsMeasure_toReal_eq_neg_potential_add_logPartition
 attribute [blueprint] InfoGeometry.Canonical.JaynesRNMaxEnt.objectiveKL_def
+attribute [blueprint] InfoGeometry.Canonical.JaynesRNMaxEnt.potential_eq_log_rnDeriv_gibbsMeasure_toReal_add_logPartition
+attribute [blueprint] InfoGeometry.Canonical.JaynesRNMaxEnt.scalarModularPotential_exp_potential_div_partition
 attribute [blueprint] InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd
 attribute [blueprint] InfoGeometry.Canonical.KMSSinkhornBridge.CommutatorOrthogonalOnOmega
 attribute [blueprint] InfoGeometry.Canonical.KMSSinkhornBridge.IBRNPotentialApproxKMSClosure
@@ -2478,7 +2484,9 @@ attribute [blueprint] InfoGeometry.Canonical.RelativePotentialScalarBridge.repre
 attribute [blueprint] InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarLogDensity
 attribute [blueprint] InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarLogDensity_eq_log
 attribute [blueprint] InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+attribute [blueprint] InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential.congr_simp
 attribute [blueprint] InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log
+attribute [blueprint] InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential_weylRescale_eq_sub_log
 attribute [blueprint] InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarPositiveMeasure
 attribute [blueprint] InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarPositiveMeasure.congr_simp
 attribute [blueprint] InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarPositiveMeasure_apply
@@ -2943,6 +2951,7 @@ attribute [blueprint] InfoGeometry.Canonical.Unification.instNormedRingContinuou
 attribute [blueprint] InfoGeometry.Canonical.Unification.instNormedSpaceRealVCl11DoubledCoreFinModel
 attribute [blueprint] InfoGeometry.Canonical.Unification.latticeAvatar_canonicalContinuousCl11Anomaly
 attribute [blueprint] InfoGeometry.Canonical.Unification.scalarToFockLift
+attribute [blueprint] InfoGeometry.Canonical.Unification.scalarToFockLift_add_const_eq_centralGaugeShift
 attribute [blueprint] InfoGeometry.Canonical.VelocityField
 attribute [blueprint] InfoGeometry.Canonical.WeylDifferentialOperator
 attribute [blueprint] InfoGeometry.Canonical.WeylDifferentialOperator.diff
@@ -5265,6 +5274,7 @@ attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.MomentFamily.f
 attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.MomentFamily.measurable_f
 attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.MomentFamily.mk.inj
 attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.PartitionIntegrable
+attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.PartitionIntegrable.eq_1
 attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.Satisfies
 attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.SatisfiesIntegrable
 attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.SatisfiesIntegrable.satisfies
@@ -5278,6 +5288,7 @@ attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.objectiveKL
 attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.partitionFunction
 attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.partitionFunction.eq_1
 attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.partitionFunction_nonneg
+attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.partitionFunction_pos
 attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.potential
 attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.rnDeriv_gibbsMeasure_eq
 attribute [blueprint] InfoGeometry.MaxEnt.JaynesRNMaxEnt.rnDeriv_gibbsMeasure_toReal_eq

@@ -22236,15 +22236,6 @@
 {"dst":"InfoGeometry.Canonical.RicciMongeAmpere.MetricLogDetTwiceDifferentiable","kind":"value","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_differentiable"}
 {"dst":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet","kind":"value","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_differentiable"}
 {"dst":"InfoGeometry.Convex.HessianGeometry","kind":"value","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_differentiable"}
-{"dst":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet","kind":"type","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"}
-{"dst":"InfoGeometry.Convex.HessianGeometry.metricOp","kind":"type","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"}
-{"dst":"InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity","kind":"type","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"}
-{"dst":"InfoGeometry.Convex.HessianGeometry","kind":"type","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"}
-{"dst":"InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet","kind":"value","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"}
-{"dst":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet","kind":"value","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"}
-{"dst":"InfoGeometry.Convex.HessianGeometry.metricOp","kind":"value","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"}
-{"dst":"InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity","kind":"value","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"}
-{"dst":"InfoGeometry.Convex.HessianGeometry","kind":"value","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"}
 {"dst":"InfoGeometry.Canonical.RicciMongeAmpere.MetricLogDetTwiceDifferentiable","kind":"type","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_fderiv_apply_differentiable"}
 {"dst":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet","kind":"type","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_fderiv_apply_differentiable"}
 {"dst":"InfoGeometry.Convex.HessianGeometry","kind":"type","src":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_fderiv_apply_differentiable"}
@@ -22383,7 +22374,6 @@
 {"dst":"InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity","kind":"type","src":"InfoGeometry.Canonical.RicciMongeAmpere.scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet"}
 {"dst":"InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential","kind":"type","src":"InfoGeometry.Canonical.RicciMongeAmpere.scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet"}
 {"dst":"InfoGeometry.Convex.HessianGeometry","kind":"type","src":"InfoGeometry.Canonical.RicciMongeAmpere.scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet"}
-{"dst":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity","kind":"value","src":"InfoGeometry.Canonical.RicciMongeAmpere.scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet"}
 {"dst":"InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_pos","kind":"value","src":"InfoGeometry.Canonical.RicciMongeAmpere.scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet"}
 {"dst":"InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet","kind":"value","src":"InfoGeometry.Canonical.RicciMongeAmpere.scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet"}
 {"dst":"InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log","kind":"value","src":"InfoGeometry.Canonical.RicciMongeAmpere.scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet"}

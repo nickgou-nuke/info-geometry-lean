@@ -2551,7 +2551,6 @@ attribute [blueprint] InfoGeometry.Canonical.RicciMongeAmpere.isEinsteinKaehlerA
 attribute [blueprint] InfoGeometry.Canonical.RicciMongeAmpere.kaehlerRicciEvolution_beta_eq
 attribute [blueprint] InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet
 attribute [blueprint] InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_differentiable
-attribute [blueprint] InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity
 attribute [blueprint] InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_fderiv_apply_differentiable
 attribute [blueprint] InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_fderiv_apply_differentiableAt
 attribute [blueprint] InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereConsistentAtBasepoint

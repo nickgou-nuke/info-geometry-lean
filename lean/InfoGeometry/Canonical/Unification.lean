@@ -107,6 +107,19 @@ noncomputable def scalarToFockLift :
     ext w <;> cases w <;> simp [mul_smul]
 
 /--
+Adding a scalar offset before the Fock lift contributes only a central identity
+term. In the Einstein/fusion reading this is the operator-level gauge mode, not
+new dynamics.
+-/
+theorem scalarToFockLift_add_const_eq_centralGaugeShift
+    (r c : ℝ) :
+    scalarToFockLift (E := E) (r + c)
+      = scalarToFockLift (E := E) r
+        + c • ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E) := by
+  rw [(scalarToFockLift (E := E)).map_add]
+  rfl
+
+/--
 Concrete Rosetta package for scalar source tension.
 
 `source` is the transported Einstein residual/chemical potential scalar;

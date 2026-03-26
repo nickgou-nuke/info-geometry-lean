@@ -100,6 +100,7 @@ import InfoGeometry.TransformationGroups
 import InfoGeometry.Canonical.KMSSinkhornBridge
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.JaynesRNMaxEnt
+import InfoGeometry.Canonical.JaynesRNModularBridge
 import InfoGeometry.Canonical.Krein
 import InfoGeometry.Canonical.KreinLadder
 import InfoGeometry.LLM

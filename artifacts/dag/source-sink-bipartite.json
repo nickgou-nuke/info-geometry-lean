@@ -101,27 +101,6 @@
       "burn_down_rank": 4
     },
     {
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "strength": 18,
-      "out_weight": 7,
-      "in_weight": 11,
-      "decl_count": 14,
-      "dominant_surface": "hypothesis_bridge",
-      "hypothesis_bridge": 1,
-      "package_reprojection": 10,
-      "surrogate_or_vacuous": 3,
-      "hotspot_rank": 8,
-      "replaceable_surface_mass": 33.0,
-      "support_pressure": 29.0,
-      "burn_down_score": 112.24,
-      "dominant_pressure": "package_reprojection",
-      "primary_action": "replace surrogates, then collapse package layer",
-      "surrogate_share": 0.2143,
-      "package_share": 0.7143,
-      "hypothesis_share": 0.0714,
-      "burn_down_rank": 5
-    },
-    {
       "module": "InfoGeometry.Prequantum.Quotient",
       "strength": 28,
       "out_weight": 16,
@@ -140,7 +119,7 @@
       "surrogate_share": 0.0,
       "package_share": 1.0,
       "hypothesis_share": 0.0,
-      "burn_down_rank": 6
+      "burn_down_rank": 5
     },
     {
       "module": "InfoGeometry.Singular.KreinNaturalFlow",
@@ -156,6 +135,27 @@
       "replaceable_surface_mass": 24.0,
       "support_pressure": 30.0,
       "burn_down_score": 82.416,
+      "dominant_pressure": "package_reprojection",
+      "primary_action": "collapse package layer",
+      "surrogate_share": 0.0,
+      "package_share": 1.0,
+      "hypothesis_share": 0.0,
+      "burn_down_rank": 6
+    },
+    {
+      "module": "InfoGeometry.Canonical.ZetaDeterminant",
+      "strength": 18,
+      "out_weight": 10,
+      "in_weight": 8,
+      "decl_count": 11,
+      "dominant_surface": "package_reprojection",
+      "hypothesis_bridge": 0,
+      "package_reprojection": 11,
+      "surrogate_or_vacuous": 0,
+      "hotspot_rank": 8,
+      "replaceable_surface_mass": 22.0,
+      "support_pressure": 26.0,
+      "burn_down_score": 72.508,
       "dominant_pressure": "package_reprojection",
       "primary_action": "collapse package layer",
       "surrogate_share": 0.0,
@@ -187,62 +187,6 @@
   ],
   "source_nodes": [
     {
-      "name": "InfoGeometry.Convex.HessianGeometry.metricOp",
-      "module": "InfoGeometry.Convex.HessianGeometry",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 2,
-      "flow_out_degree": 51,
-      "sink_modules": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "source_score": 8.3406
-    },
-    {
-      "name": "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity",
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 2,
-      "flow_out_degree": 25,
-      "sink_modules": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "source_score": 6.9917
-    },
-    {
-      "name": "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet",
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 1,
-      "flow_in_degree": 2,
-      "flow_out_degree": 23,
-      "sink_modules": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "source_score": 6.8378
-    },
-    {
-      "name": "InfoGeometry.Convex.HessianGeometry.grad",
-      "module": "InfoGeometry.Convex.HessianGeometry",
-      "category": "neutral_definition",
-      "kind": "def",
-      "reachable_sinks": 2,
-      "closest_sink_distance": 2,
-      "flow_in_degree": 1,
-      "flow_out_degree": 12,
-      "sink_modules": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "source_score": 5.5614
-    },
-    {
       "name": "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
       "module": "InfoGeometry.Canonical.IBProjective",
       "category": "likely_constructive",
@@ -258,26 +202,6 @@
     }
   ],
   "sink_nodes": [
-    {
-      "name": "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "category": "surrogate_or_vacuous",
-      "kind": "theorem",
-      "burn_down_rank": 5,
-      "flow_out_degree": 1,
-      "flow_in_degree": 5,
-      "severity": 3
-    },
-    {
-      "name": "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet",
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "category": "surrogate_or_vacuous",
-      "kind": "theorem",
-      "burn_down_rank": 5,
-      "flow_out_degree": 2,
-      "flow_in_degree": 4,
-      "severity": 3
-    },
     {
       "name": "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay",
       "module": "InfoGeometry.Canonical.IBProjective",
@@ -300,74 +224,6 @@
     }
   ],
   "incidence_entries": [
-    {
-      "source": "InfoGeometry.Convex.HessianGeometry.metricOp",
-      "source_module": "InfoGeometry.Convex.HessianGeometry",
-      "source_score": 8.3406,
-      "sink": "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
-      "sink_module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "sink_category": "surrogate_or_vacuous",
-      "path_nodes": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
-      ],
-      "path_modules": [
-        "InfoGeometry.Convex.HessianGeometry",
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "path_component_ids": [
-        "component:9371197386029975239",
-        "component:14710704479396586006"
-      ],
-      "path_component_representatives": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
-      ],
-      "path_length": 1,
-      "motif_signature": [
-        "metricOp",
-        "RN/K\u00e4hler/log-det"
-      ],
-      "motif_signature_text": "metricOp -> RN/K\u00e4hler/log-det",
-      "source_bundle": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "compression_potential": 4.0
-    },
-    {
-      "source": "InfoGeometry.Convex.HessianGeometry.metricOp",
-      "source_module": "InfoGeometry.Convex.HessianGeometry",
-      "source_score": 8.3406,
-      "sink": "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet",
-      "sink_module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "sink_category": "surrogate_or_vacuous",
-      "path_nodes": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ],
-      "path_modules": [
-        "InfoGeometry.Convex.HessianGeometry",
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "path_component_ids": [
-        "component:9371197386029975239",
-        "component:17707862431119132448"
-      ],
-      "path_component_representatives": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ],
-      "path_length": 1,
-      "motif_signature": [
-        "metricOp",
-        "RN/K\u00e4hler/log-det"
-      ],
-      "motif_signature_text": "metricOp -> RN/K\u00e4hler/log-det",
-      "source_bundle": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "compression_potential": 4.0
-    },
     {
       "source": "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
       "source_module": "InfoGeometry.Canonical.IBProjective",
@@ -441,59 +297,6 @@
   ],
   "atomic_nodes": [
     {
-      "atomic_id": "bundle:1ec926d5b8e8",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "source_modules": [
-        "InfoGeometry.Convex.HessianGeometry"
-      ],
-      "source_categories": {
-        "neutral_definition": 1
-      },
-      "source_kinds": {
-        "def": 1
-      },
-      "source_purity_score": 0.0,
-      "scc_id": "component:9371197386029975239",
-      "native_component_ids": [
-        "component:9371197386029975239"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "native_root_witness_component_ids": [
-        "component:5732050393590648956",
-        "component:15203112522654037569",
-        "component:9371197386029975239"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Convex.HessianGeometry",
-        "InfoGeometry.Convex.HessianGeometry.grad",
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ],
-      "path_multiplicity": 2,
-      "avg_path_length": 1.0,
-      "motif_signature": "metricOp -> RN/K\u00e4hler/log-det",
-      "compression_potential": 8.0
-    },
-    {
       "atomic_id": "bundle:e426b4c9b3ea",
       "kind": "source_bundle",
       "category": "source_bundle",
@@ -544,114 +347,6 @@
     }
   ],
   "hydrated_nodes": [
-    {
-      "hydrated_id": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "sink_role": "consumer_sink",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ],
-      "minimal_source_bundle": "bundle:1ec926d5b8e8",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "path_multiplicity": 2,
-      "path_motif_signatures": [
-        {
-          "signature": "metricOp -> RN/K\u00e4hler/log-det",
-          "count": 2
-        }
-      ],
-      "compression_potential": 8.0,
-      "native_component_ids": [
-        "component:14710704479396586006",
-        "component:17707862431119132448"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Convex.HessianGeometry",
-        "InfoGeometry.Convex.HessianGeometry.grad",
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet",
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:10984868151867229072"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 5,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 2,
-      "native_corridor_count": 2,
-      "top_root_witness": "InfoGeometry.Convex.HessianGeometry",
-      "top_native_corridor_component_ids": [
-        "component:9371197386029975239",
-        "component:17707862431119132448"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Convex.HessianGeometry",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Convex.HessianGeometry",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "minimal_source_bundle": "bundle:1ec926d5b8e8",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "path_multiplicity": 2,
-      "path_motif_signatures": [
-        {
-          "signature": "metricOp -> RN/K\u00e4hler/log-det",
-          "count": 2
-        }
-      ],
-      "compression_potential": 8.0,
-      "native_component_ids": [
-        "component:9371197386029975239"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Convex.HessianGeometry",
-        "InfoGeometry.Convex.HessianGeometry.grad",
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 2,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 2,
-      "native_corridor_count": 2,
-      "top_root_witness": "InfoGeometry.Convex.HessianGeometry",
-      "top_native_corridor_component_ids": [
-        "component:9371197386029975239",
-        "component:17707862431119132448"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ]
-    },
     {
       "hydrated_id": "InfoGeometry.Canonical.IBProjective",
       "kind": "module",
@@ -719,88 +414,6 @@
   ],
   "incidence_edges": [
     {
-      "atomic_id": "bundle:1ec926d5b8e8",
-      "hydrated_id": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "sink",
-      "bundle_id": "bundle:1ec926d5b8e8",
-      "motif_signature": "metricOp -> RN/K\u00e4hler/log-det",
-      "witness_count": 2,
-      "compression_score": 8.0,
-      "canonical_path_example": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Convex.HessianGeometry.metricOp",
-          "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
-        ],
-        [
-          "InfoGeometry.Convex.HessianGeometry.metricOp",
-          "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:9371197386029975239",
-        "component:14710704479396586006"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "hydrated_role": "consumer_sink"
-    },
-    {
-      "atomic_id": "bundle:1ec926d5b8e8",
-      "hydrated_id": "InfoGeometry.Convex.HessianGeometry",
-      "role": "supports",
-      "projection_kind": "node_support",
-      "carrier_role": "source",
-      "bundle_id": "bundle:1ec926d5b8e8",
-      "motif_signature": "metricOp -> RN/K\u00e4hler/log-det",
-      "witness_count": 2,
-      "compression_score": 8.0,
-      "canonical_path_example": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
-      ],
-      "canonical_witness_paths": [
-        [
-          "InfoGeometry.Convex.HessianGeometry.metricOp",
-          "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
-        ],
-        [
-          "InfoGeometry.Convex.HessianGeometry.metricOp",
-          "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-        ]
-      ],
-      "native_canonical_component_path_example": [
-        "component:9371197386029975239",
-        "component:14710704479396586006"
-      ],
-      "native_canonical_component_representatives": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ],
-      "sink_modules": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "hydrated_role": "constructive_source"
-    },
-    {
       "atomic_id": "bundle:e426b4c9b3ea",
       "hydrated_id": "InfoGeometry.Canonical.IBProjective",
       "role": "supports",
@@ -848,18 +461,6 @@
   ],
   "motif_families": [
     {
-      "motif_signature": "metricOp -> RN/K\u00e4hler/log-det",
-      "path_count": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "source_modules": [
-        "InfoGeometry.Convex.HessianGeometry"
-      ],
-      "avg_path_length": 1.0,
-      "compression_potential": 8.0
-    },
-    {
       "motif_signature": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay -> scoreProjectiveGauge_eq_of_sameScoreRay",
       "path_count": 1,
       "sink_modules": [
@@ -885,59 +486,6 @@
     }
   ],
   "bundles": [
-    {
-      "atomic_id": "bundle:1ec926d5b8e8",
-      "kind": "source_bundle",
-      "category": "source_bundle",
-      "source_bundle": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "supporting_atomic_decls": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "source_modules": [
-        "InfoGeometry.Convex.HessianGeometry"
-      ],
-      "source_categories": {
-        "neutral_definition": 1
-      },
-      "source_kinds": {
-        "def": 1
-      },
-      "source_purity_score": 0.0,
-      "scc_id": "component:9371197386029975239",
-      "native_component_ids": [
-        "component:9371197386029975239"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "native_root_witness_component_ids": [
-        "component:5732050393590648956",
-        "component:15203112522654037569",
-        "component:9371197386029975239"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Convex.HessianGeometry",
-        "InfoGeometry.Convex.HessianGeometry.grad",
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 2,
-      "sink_modules": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "sink_names": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ],
-      "path_multiplicity": 2,
-      "avg_path_length": 1.0,
-      "motif_signature": "metricOp -> RN/K\u00e4hler/log-det",
-      "compression_potential": 8.0
-    },
     {
       "atomic_id": "bundle:e426b4c9b3ea",
       "kind": "source_bundle",
@@ -989,114 +537,6 @@
     }
   ],
   "hydrated_modules": [
-    {
-      "hydrated_id": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "sink_role": "consumer_sink",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ],
-      "minimal_source_bundle": "bundle:1ec926d5b8e8",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "path_multiplicity": 2,
-      "path_motif_signatures": [
-        {
-          "signature": "metricOp -> RN/K\u00e4hler/log-det",
-          "count": 2
-        }
-      ],
-      "compression_potential": 8.0,
-      "native_component_ids": [
-        "component:14710704479396586006",
-        "component:17707862431119132448"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Convex.HessianGeometry",
-        "InfoGeometry.Convex.HessianGeometry.grad",
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet",
-        "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
-      ],
-      "native_strict_dominator_component_ids": [
-        "component:10984868151867229072"
-      ],
-      "native_strict_dominator_representatives": [
-        "InfoGeometry.Canonical.RicciMongeAmpere.scalarModularPotential_mongeAmpereDensity_eq_neg_metricLogDet"
-      ],
-      "native_depth_min": 1,
-      "native_depth_max": 5,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 2,
-      "native_corridor_count": 2,
-      "top_root_witness": "InfoGeometry.Convex.HessianGeometry",
-      "top_native_corridor_component_ids": [
-        "component:9371197386029975239",
-        "component:17707862431119132448"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ]
-    },
-    {
-      "hydrated_id": "InfoGeometry.Convex.HessianGeometry",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Convex.HessianGeometry",
-      "sink_role": "constructive_source",
-      "supporting_atomic_decls": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "minimal_source_bundle": "bundle:1ec926d5b8e8",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.RicciMongeAmpere"
-      ],
-      "path_multiplicity": 2,
-      "path_motif_signatures": [
-        {
-          "signature": "metricOp -> RN/K\u00e4hler/log-det",
-          "count": 2
-        }
-      ],
-      "compression_potential": 8.0,
-      "native_component_ids": [
-        "component:9371197386029975239"
-      ],
-      "native_component_representatives": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "native_root_witnesses": [
-        "InfoGeometry.Convex.HessianGeometry",
-        "InfoGeometry.Convex.HessianGeometry.grad",
-        "InfoGeometry.Convex.HessianGeometry.metricOp"
-      ],
-      "native_strict_dominator_component_ids": [],
-      "native_strict_dominator_representatives": [],
-      "native_depth_min": 1,
-      "native_depth_max": 2,
-      "native_dominator_pressure": 0,
-      "native_corridor_reuse": 2,
-      "native_corridor_count": 2,
-      "top_root_witness": "InfoGeometry.Convex.HessianGeometry",
-      "top_native_corridor_component_ids": [
-        "component:9371197386029975239",
-        "component:17707862431119132448"
-      ],
-      "top_native_corridor_representatives": [
-        "InfoGeometry.Convex.HessianGeometry.metricOp",
-        "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-      ]
-    },
     {
       "hydrated_id": "InfoGeometry.Canonical.IBProjective",
       "kind": "module",
@@ -1162,32 +602,5 @@
       ]
     }
   ],
-  "hydrated_edges": [
-    {
-      "source_module": "InfoGeometry.Convex.HessianGeometry",
-      "target_module": "InfoGeometry.Canonical.RicciMongeAmpere",
-      "path_count": 2,
-      "compression_potential": 8.0,
-      "direct_projection": true,
-      "hypothesis_packets": [
-        {
-          "signature": "metricOp -> RN/K\u00e4hler/log-det",
-          "count": 2
-        }
-      ],
-      "bundle_ids": [
-        "bundle:1ec926d5b8e8"
-      ],
-      "atomic_path_examples": [
-        [
-          "InfoGeometry.Convex.HessianGeometry.metricOp",
-          "InfoGeometry.Canonical.RicciMongeAmpere.metricLogDet_eq_log_mongeAmpereDensity"
-        ],
-        [
-          "InfoGeometry.Convex.HessianGeometry.metricOp",
-          "InfoGeometry.Canonical.RicciMongeAmpere.mongeAmpereDensity_eq_exp_metricLogDet"
-        ]
-      ]
-    }
-  ]
+  "hydrated_edges": []
 }

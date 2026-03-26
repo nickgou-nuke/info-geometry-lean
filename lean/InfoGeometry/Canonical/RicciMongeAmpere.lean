@@ -694,7 +694,7 @@ lemma mongeAmpereDensity_eq_exp_metricLogDet
   exact abs_pos.mpr h_det
 
 /-- On the nondegenerate branch, metric log-determinant is the log Monge-Ampère density. -/
-lemma metricLogDet_eq_log_mongeAmpereDensity
+private lemma metricLogDet_eq_log_mongeAmpereDensity
     (H : HessianGeometry E) (x : E)
     (h_det : LinearMap.det (H.metricOp x).toLinearMap ≠ 0) :
     metricLogDet H x = Real.log (mongeAmpereDensity H x) := by

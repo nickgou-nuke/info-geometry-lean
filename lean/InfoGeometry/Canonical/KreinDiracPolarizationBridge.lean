@@ -62,7 +62,7 @@ theorem transportDirac_sq_eq_transportMetricOp
   have hsq : IST.D.comp IST.D = IST.H.metricOp IST.x₀ := by
     ext x
     have hx : (IST.D * IST.D) x = (IST.H.metricOp IST.x₀) x := by
-      exact congrArg (fun A : S →L[ℝ] S => A x) IST.dirac_sq_eq_metric
+      exact congrArg (fun A : S →L[ℝ] S => A x) (IST.dirac_sq_eq_metric)
     simpa [ContinuousLinearMap.mul_apply, ContinuousLinearMap.comp_apply] using hx
   calc
     (transportDirac IST T).comp (transportDirac IST T)
@@ -84,6 +84,21 @@ theorem transportDirac_sq_eq_transportMetricOp_of_strictSymmetry
       (transportDirac IST h.toBogoliubovTransform)
       = transportMetricOp IST h.toBogoliubovTransform := by
   exact transportDirac_sq_eq_transportMetricOp (IST := IST) (T := h.toBogoliubovTransform)
+
+/--
+Downstream witness burn-down check: the transport bridge can consume the
+canonical spectral constructor without seeing a hand-supplied square or metric-order
+witness.
+-/
+private theorem transportDirac_sq_eq_transportMetricOp_of_metric
+    [FiniteDimensional ℝ S]
+    (H : InfoGeometry.Convex.HessianGeometry S) (x₀ : S)
+    (T : RealBogoliubovTransform (S := S) M) :
+    (transportDirac (InfoSpectralTriple.ofMetric (E := S) H x₀) T).comp
+      (transportDirac (InfoSpectralTriple.ofMetric (E := S) H x₀) T)
+      = transportMetricOp (InfoSpectralTriple.ofMetric (E := S) H x₀) T := by
+  exact transportDirac_sq_eq_transportMetricOp
+    (IST := InfoSpectralTriple.ofMetric (E := S) H x₀) (T := T)
 
 /--
 Canonical packaged bridge on a fixed carrier:

@@ -2,7 +2,10 @@ import InfoGeometry.Potential.LogPotential
 import InfoGeometry.Canonical.Triality
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Calculus.Deriv.Slope
 import Mathlib.Analysis.Calculus.FDeriv.Basic
+import Mathlib.Analysis.Calculus.FDeriv.Symmetric
+import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.InnerProductSpace.Dual
 import Mathlib.Analysis.Convex.Basic
 import Mathlib.Analysis.Convex.Slope
@@ -126,6 +129,93 @@ This is the constructive witness carried by `HessianGeometry`.
 -/
 theorem divergence_nonneg (x y : E) : 0 ≤ H.divergence x y := by
   simpa [divergence, dualMap] using H.divergence_nonneg_axiom x y
+
+-- theorem-class: derived
+/-- The gradient map is monotone because the two oriented Bregman divergences sum to the
+quadratic monotonicity form. -/
+theorem grad_monotone (x y : E) :
+    0 ≤ inner ℝ (H.grad x - H.grad y) (x - y) := by
+  have hxy : 0 ≤ H.divergence x y := H.divergence_nonneg x y
+  have hyx : 0 ≤ H.divergence y x := H.divergence_nonneg y x
+  have hsum : 0 ≤ H.divergence x y + H.divergence y x := add_nonneg hxy hyx
+  simpa [HessianGeometry.divergence, HessianGeometry.dualMap, sub_eq_add_neg,
+    inner_add_left, inner_sub_left, inner_add_right, inner_sub_right,
+    inner_neg_left, inner_neg_right, add_assoc, add_comm, add_left_comm]
+    using hsum
+
+-- theorem-class: derived
+/-- The Hessian metric operator is symmetric, as it is the second derivative of the potential
+whenever `grad` is differentiable, and otherwise totalizes to zero. -/
+theorem metricOp_isSymmetric (x : E) :
+    (H.metricOp x).toLinearMap.IsSymmetric := by
+  by_cases hx : DifferentiableAt ℝ H.grad x
+  · have hxGrad : HasFDerivAt H.grad (H.metricOp x) x := by
+      simpa [HessianGeometry.metricOp] using hx.hasFDerivAt
+    let f' : E → E →L[ℝ] ℝ := fun y => InnerProductSpace.toDual ℝ E (H.grad y)
+    let f'' : E →L[ℝ] E →L[ℝ] ℝ :=
+      (InnerProductSpace.toDualMap ℝ E).toContinuousLinearMap.comp (H.metricOp x)
+    have hSecond : HasFDerivAt f' f'' x := by
+      simpa [f', f''] using
+        ((InnerProductSpace.toDualMap ℝ E).toContinuousLinearMap.hasFDerivAt.comp x hxGrad)
+    intro u v
+    have hsymm := second_derivative_symmetric
+      (f := H.potential) (f' := f') (f'' := f'')
+      (hf := H.has_gradient) hSecond u v
+    simpa [f'', InnerProductSpace.toDual_apply_apply, real_inner_comm] using hsymm
+  · simp [HessianGeometry.metricOp, fderiv_zero_of_not_differentiableAt hx]
+
+-- theorem-class: derived
+/-- The quadratic form of the Hessian metric operator is nonnegative because the gradient is
+monotone along every affine ray. -/
+theorem metric_quadratic_nonneg (x u : E) :
+    0 ≤ inner ℝ u (H.metricOp x u) := by
+  by_cases hx : DifferentiableAt ℝ H.grad x
+  · let ray : ℝ → E := fun t => x + t • u
+    let probe : ℝ → ℝ := fun t => inner ℝ (H.grad (ray t)) u
+    have hprobe_mono : Monotone probe := by
+      intro s t hst
+      rcases lt_or_eq_of_le hst with hlt | rfl
+      · have hmono := H.grad_monotone (ray t) (ray s)
+        have hray_sub : ray t - ray s = (t - s) • u := by
+          simpa [ray, sub_smul] using add_sub_add_left (t • u) (s • u) x
+        have hscaled :
+            0 ≤ (t - s) * (probe t - probe s) := by
+          have hmono' :
+              0 ≤ inner ℝ (H.grad (ray t) - H.grad (ray s)) ((t - s) • u) := by
+            simpa [hray_sub] using hmono
+          have hprobe_sub :
+              inner ℝ (H.grad (ray t) - H.grad (ray s)) u = probe t - probe s := by
+            simp [probe, sub_eq_add_neg, inner_add_left, inner_neg_left]
+          rw [inner_smul_right, hprobe_sub] at hmono'
+          simpa [mul_assoc, mul_left_comm, mul_comm] using hmono'
+        have hsub : 0 ≤ probe t - probe s :=
+          nonneg_of_mul_nonneg_right (by simpa [mul_comm] using hscaled) (sub_pos.mpr hlt)
+        exact sub_nonneg.mp hsub
+      · rfl
+    have hray : HasDerivAt ray u 0 := by
+      simpa [ray] using (((hasDerivAt_id' (x := (0 : ℝ))).smul_const u).const_add x)
+    have hxGrad : HasFDerivAt H.grad (H.metricOp x) x := by
+      simpa [HessianGeometry.metricOp] using hx.hasFDerivAt
+    have hgrad_ray_f :
+        HasFDerivAt (H.grad ∘ ray)
+          ((H.metricOp x).comp ((1 : ℝ →L[ℝ] ℝ).smulRight u)) 0 := by
+      have hxGrad_at_ray0 : HasFDerivAt H.grad (H.metricOp x) (ray 0) := by
+        simpa [ray] using hxGrad
+      exact HasFDerivAt.comp (x := (0 : ℝ)) (f := ray) hxGrad_at_ray0 hray.hasFDerivAt
+    have hgrad_ray : HasDerivAt (fun t : ℝ => H.grad (ray t)) (H.metricOp x u) 0 := by
+      simpa using hgrad_ray_f.hasDerivAt
+    have hu : HasDerivAt (fun _ : ℝ => u) 0 0 := by
+      simpa using (hasDerivAt_const (x := (0 : ℝ)) u)
+    have hprobe_deriv : HasDerivAt probe (inner ℝ (H.metricOp x u) u) 0 := by
+      simpa [probe, ray] using hgrad_ray.inner (𝕜 := ℝ) hu
+    simpa [real_inner_comm] using hprobe_deriv.nonneg_of_monotone hprobe_mono
+  · simp [HessianGeometry.metricOp, fderiv_zero_of_not_differentiableAt hx]
+
+-- theorem-class: derived
+/-- The diagonal metric coefficient is nonnegative. -/
+theorem metric_nonneg (x u : E) :
+    0 ≤ H.metric x u u := by
+  simpa [HessianGeometry.metric, real_inner_comm] using H.metric_quadratic_nonneg x u
 
 /-- Bayesian Action (accumulated divergence). -/
 noncomputable def bayesianAction (γ : ℕ → E) (N : ℕ) : ℝ :=

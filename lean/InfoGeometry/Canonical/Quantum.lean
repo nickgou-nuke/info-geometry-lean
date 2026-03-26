@@ -23,6 +23,9 @@ import InfoGeometry.Canonical.Fierz
 import InfoGeometry.Canonical.Fock
 import InfoGeometry.Quantum.Hurwitz
 import InfoGeometry.Quantum.HurwitzRGFlow
+import InfoGeometry.Quantum.InvolutionCore
+import InfoGeometry.Quantum.CommutingInvolutionCore
+import InfoGeometry.Quantum.AnticommutingInvolutionCore
 import InfoGeometry.Quantum.RealKCategory
 import InfoGeometry.Quantum.SplitCliffordAtom
 import InfoGeometry.Quantum.RealMajoranaCategory

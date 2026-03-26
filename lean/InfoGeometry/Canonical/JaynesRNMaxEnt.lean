@@ -24,6 +24,7 @@ export InfoGeometry.MaxEnt.JaynesRNMaxEnt (
   aemeasurable_potential
   rnDeriv_gibbsMeasure_eq
   partitionFunction_nonneg
+  partitionFunction_pos
   rnDeriv_gibbsMeasure_toReal_eq
   gibbs
   gibbs_minimizes_kl

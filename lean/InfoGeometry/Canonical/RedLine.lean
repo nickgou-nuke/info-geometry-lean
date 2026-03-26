@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
 import InfoGeometry.Canonical.JaynesRNMaxEnt
+import InfoGeometry.Canonical.JaynesRNModularBridge
+import InfoGeometry.Canonical.IBFrozenModularBridge
 import InfoGeometry.Canonical.LogDet
 import InfoGeometry.Canonical.ProjectiveStateCore
 import InfoGeometry.Canonical.PositiveRayProjectiveBridge
@@ -64,6 +66,19 @@ export InfoGeometry.Canonical.JaynesRNMaxEnt (
   rnDeriv_gibbsMeasure_eq
   rnDeriv_gibbsMeasure_toReal_eq
   GibbsMinimizesKL
+)
+
+export InfoGeometry.Canonical.JaynesRNMaxEnt (
+  partitionFunction_pos
+  scalarModularPotential_exp_potential_div_partition
+  neg_log_rnDeriv_gibbsMeasure_toReal_eq_neg_potential_add_logPartition
+  potential_eq_log_rnDeriv_gibbsMeasure_toReal_add_logPartition
+)
+
+export InfoGeometry.Canonical.IB (
+  ibBlahutArimotoStepFrozen_log_ratio_eq_neg_betaKL_sub_logPartitionFrozen
+  ibBlahutArimotoStepFrozen_scalarModularPotential_eq_betaKL_add_logPartitionFrozen
+  ibBlahutArimotoStepFrozen_scalarModularPotential_sub_logPartitionFrozen_eq_betaKL
 )
 
 export InfoGeometry.Canonical.MoE (
@@ -182,6 +197,7 @@ export InfoGeometry.Canonical.RelativePotentialScalarBridge (
   scalarLogDensity_eq_log
   scalarModularPotential_eq_neg_log
   exp_neg_scalarModularPotential_eq
+  scalarModularPotential_weylRescale_eq_sub_log
 )
 
 export InfoGeometry.Canonical.RelativePotentialDiscreteBridge (

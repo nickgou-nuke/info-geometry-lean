@@ -23,6 +23,8 @@ import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Krein.DoubledAdjoint
 import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Krein.Metric
+import InfoGeometry.Krein.SplitQuadratic
+import InfoGeometry.Krein.SplitQuadraticSheets
 import InfoGeometry.Krein.Thermal
 import InfoGeometry.Krein.CartanDecomposition
 import InfoGeometry.Krein.OrthogonalGroup

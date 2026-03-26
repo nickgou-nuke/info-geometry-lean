@@ -25,6 +25,7 @@ import InfoGeometry.Krein.HilbertBridge
 import InfoGeometry.Krein.Metric
 import InfoGeometry.Krein.SplitQuadratic
 import InfoGeometry.Krein.SplitQuadraticSheets
+import InfoGeometry.Krein.PolarizedSector
 import InfoGeometry.Krein.Thermal
 import InfoGeometry.Krein.CartanDecomposition
 import InfoGeometry.Krein.OrthogonalGroup

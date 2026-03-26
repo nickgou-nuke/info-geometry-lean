@@ -5,6 +5,9 @@ import InfoGeometry.Quantum.Fierz
 import InfoGeometry.Quantum.Fock
 import InfoGeometry.Quantum.Hurwitz
 import InfoGeometry.Quantum.HurwitzRGFlow
+import InfoGeometry.Quantum.InvolutionCore
+import InfoGeometry.Quantum.CommutingInvolutionCore
+import InfoGeometry.Quantum.AnticommutingInvolutionCore
 import InfoGeometry.Quantum.KitaevChain
 import InfoGeometry.Quantum.ModularAnomaly
 import InfoGeometry.Quantum.RealKCategory

@@ -3,6 +3,7 @@ import Mathlib.CategoryTheory.ConcreteCategory.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Krein.Representation
+import InfoGeometry.Quantum.AnticommutingInvolutionCore
 import InfoGeometry.Quantum.RealKCategory
 
 open CategoryTheory
@@ -35,28 +36,25 @@ instance : CoeSort RealMajoranaCore (Type u) := ⟨RealMajoranaCore.V⟩
 
 namespace RealMajoranaCore
 
+/-- Forget the extra Majorana data and retain only the anticommuting involution core. -/
+noncomputable def toAnticommutingInvolutionCore (X : RealMajoranaCore) :
+    InfoGeometry.Quantum.AnticommutingInvolutionCore :=
+  { V := X
+    J := X.J
+    eps := X.eps
+    J_sq := X.J_sq
+    eps_sq := X.eps_sq
+    J_eps_anticomm := X.J_eps_anticomm }
+
 /-- Internal square-minus-one axis derived from `(J, eps)`. -/
 noncomputable def K (X : RealMajoranaCore) : X →ₗ[ℝ] X :=
-  X.J.comp X.eps
+  X.toAnticommutingInvolutionCore.K
 
 /-- The derived axis squares to `-Id`. -/
 lemma K_sq (X : RealMajoranaCore) :
     X.K.comp X.K = -((LinearMap.id : X →ₗ[ℝ] X)) := by
-  have hswap : X.eps.comp X.J = -(X.J.comp X.eps) := by
-    have hneg : -(X.J.comp X.eps) = X.eps.comp X.J := by
-      simpa using congrArg Neg.neg X.J_eps_anticomm
-    simpa [eq_comm] using hneg
-  unfold K
-  calc
-    (X.J.comp X.eps).comp (X.J.comp X.eps)
-        = X.J.comp ((X.eps.comp X.J).comp X.eps) := by
-            simp [LinearMap.comp_assoc]
-    _ = X.J.comp ((-(X.J.comp X.eps)).comp X.eps) := by rw [hswap]
-    _ = -((X.J.comp X.J).comp (X.eps.comp X.eps)) := by
-          ext x
-          simp [LinearMap.comp_assoc]
-    _ = -((LinearMap.id : X →ₗ[ℝ] X)) := by
-          simp [X.J_sq, X.eps_sq]
+  simpa [K, toAnticommutingInvolutionCore] using
+    (InfoGeometry.Quantum.AnticommutingInvolutionCore.K_sq X.toAnticommutingInvolutionCore)
 
 /-- Morphisms preserve all primitive operators `(J, eps, Pi)`. -/
 @[ext] structure Hom (X Y : RealMajoranaCore) where

@@ -31,6 +31,7 @@ import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit
 import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Canonical.BogoliubovPolarizationBridge
 import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.BottPeriodicity
 import InfoGeometry.Canonical.BregmanTriality

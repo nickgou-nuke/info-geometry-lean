@@ -504,7 +504,6 @@ attribute [blueprint] InfoGeometry.Canonical.BottPeriodicity.twistedGeneratorPat
 attribute [blueprint] InfoGeometry.Canonical.BottPeriodicity.twistedGeneratorPattern.eq_1
 attribute [blueprint] InfoGeometry.Canonical.BottPeriodicity.twistedGeneratorPattern_apply
 attribute [blueprint] InfoGeometry.Canonical.BregmanTriality.softmaxBregmanAttention
-attribute [blueprint] InfoGeometry.Canonical.CalabiYauBridge.CalabiYauRicciState
 attribute [blueprint] InfoGeometry.Canonical.CalabiYauBridge.CalabiYauSpinorialState
 attribute [blueprint] InfoGeometry.Canonical.CalabiYauBridge.HasConstantMongeAmpereDensity
 attribute [blueprint] InfoGeometry.Canonical.CalabiYauBridge.IsAdSLikeEinsteinAt
@@ -735,7 +734,6 @@ attribute [blueprint] InfoGeometry.Canonical.CocycleGeneratedFlow.mk.inj
 attribute [blueprint] InfoGeometry.Canonical.CocycleGeneratedFlow.transport
 attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra
 attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.CI
-attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.ConformalWeightClosure
 attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D
 attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_def
 attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_eq_CI_D
@@ -793,7 +791,6 @@ attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.CertifiedConfo
 attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.toCertifiedInverseKernel
 attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.toConformalInference
 attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.ConformalInference
-attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.ConformalInference.ChiralInferenceState
 attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.ConformalInference.D
 attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.ConformalInference.D.eq_1
 attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.ConformalInference.IsChiralInference
@@ -802,7 +799,6 @@ attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.ConformalInfer
 attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.ConformalInference.IsNormalInference.eq_1
 attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.ConformalInference.K
 attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.ConformalInference.K.eq_1
-attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.ConformalInference.NormalInferenceState
 attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.ConformalInference.P
 attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.ConformalInference.P.eq_1
 attribute [blueprint] InfoGeometry.Canonical.ConformalUnification.ConformalInference.P_D
@@ -878,7 +874,6 @@ attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.arakiRelativeE
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.arakiRelativeEntropyDrop.eq_1
 attribute [blueprint] InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
 attribute [blueprint] InfoGeometry.Canonical.CountSubstrateBridge.CountSubstrate
-attribute [blueprint] InfoGeometry.Canonical.CountSubstrateBridge.CountSubstrateNontrivial
 attribute [blueprint] InfoGeometry.Canonical.CountSubstrateBridge.EntrywisePositive
 attribute [blueprint] InfoGeometry.Canonical.CountSubstrateBridge.PositiveSinkhornState
 attribute [blueprint] InfoGeometry.Canonical.CountSubstrateBridge.PositiveSinkhornState.M
@@ -1184,7 +1179,6 @@ attribute [blueprint] InfoGeometry.Canonical.GeometricResponse.fromLogGenerator_
 attribute [blueprint] InfoGeometry.Canonical.GeometricResponse.mk.inj
 attribute [blueprint] InfoGeometry.Canonical.GeometricResponse.responseOf
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.AlgebraicEquilibriumCl11
-attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.GeometricEquilibrium
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.LichnerowiczBalancedCl11
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.SinkhornEntropyMonotoneRN
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.ThermodynamicEquilibrium
@@ -1257,7 +1251,6 @@ attribute [blueprint] InfoGeometry.Canonical.HeatKernel.totalScalarCurvature
 attribute [blueprint] InfoGeometry.Canonical.HeatKernel.totalScalarCurvature.eq_1
 attribute [blueprint] InfoGeometry.Canonical.HeatKernel.totalScalarCurvature_eq_neg_six_spectralLogVolume
 attribute [blueprint] InfoGeometry.Canonical.HeatKernel.totalScalarCurvature_eq_spinorialScalarCurvature
-attribute [blueprint] InfoGeometry.Canonical.HolographicEmergence.AnomalyScalePhase
 attribute [blueprint] InfoGeometry.Canonical.HolographicEmergence.EmergentTimeFlow
 attribute [blueprint] InfoGeometry.Canonical.HolographicEmergence.anomalyScalePhase_of_nonzeroAnomaly
 attribute [blueprint] InfoGeometry.Canonical.HolographicEmergence.emergentTimeFlow_of_sinkhornTrajectory

@@ -61,17 +61,13 @@ section Geometric
 
 variable {X : Type*}
 
-/-- Geometric equilibrium is the Ricci RG fixed-point condition. -/
-abbrev GeometricEquilibrium (flow : RicciFlow X) : Prop :=
-  IsRicciFixedPoint flow
-
 /--
 At geometric equilibrium, every Ricci component is scale-invariant.
 -/
 theorem ricci_component_constant_of_geometricEquilibrium
     (flow : RicciFlow X) (u v : X)
     (hDiff : Differentiable ℝ (fun s => flow s u v))
-    (hGeo : GeometricEquilibrium flow) :
+    (hGeo : IsRicciFixedPoint flow) :
     ∃ c : ℝ, ∀ s, flow s u v = c := by
   exact ricci_component_invariant_at_fixed_point
     (flow := flow) (u := u) (v := v) hDiff (fun s => hGeo s u v)

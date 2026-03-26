@@ -69,10 +69,6 @@ def SatisfiesMasterRelation (η : ℝ) : Prop :=
 def SatisfiesFlatWeights : Prop :=
   CBA.SatisfiesPWeight ∧ CBA.SatisfiesKWeight
 
-/-- Canonical naming alias for flat conformal weight closure. -/
-abbrev ConformalWeightClosure : Prop :=
-  CBA.SatisfiesFlatWeights
-
 /-- Lie commutator on endomorphisms. -/
 noncomputable def commutator (X Y : E →L[ℝ] E) : E →L[ℝ] E :=
   X * Y - Y * X
@@ -86,13 +82,13 @@ do not satisfy the standard flat relations.
 A 'Scale Anomaly' constant emerges, proportional to ε.
 -/
 theorem scale_anomaly_emergence
-    : CBA.CI.chiralScale > 0 → ¬ CBA.ConformalWeightClosure := by
+    : CBA.CI.chiralScale > 0 → ¬ CBA.SatisfiesFlatWeights := by
   simpa [SatisfiesFlatWeights, SatisfiesPWeight, SatisfiesKWeight] using CBA.anomaly_breaks_weights
 
 omit [FiniteDimensional ℝ E] in
 /-- Theorem `scale_anomaly_breaks_weight_closure`. -/
 theorem scale_anomaly_breaks_weight_closure
-    : CBA.CI.chiralScale > 0 → ¬ CBA.ConformalWeightClosure :=
+    : CBA.CI.chiralScale > 0 → ¬ CBA.SatisfiesFlatWeights :=
   CBA.scale_anomaly_emergence
 
 /--
@@ -371,7 +367,7 @@ theorem commutator_weylDilation_weylDilation
 
 /-- Positive anomaly scale obstructs flat conformal-weight closure. -/
 theorem scale_anomaly_obstructs_weyl_flatness :
-    CBA.CI.chiralScale > 0 → ¬ CBA.ConformalWeightClosure := by
+    CBA.CI.chiralScale > 0 → ¬ CBA.SatisfiesFlatWeights := by
   exact CBA.scale_anomaly_breaks_weight_closure
 
 end ConformalBeliefAlgebra

@@ -45,7 +45,6 @@ export InfoGeometry.Canonical.TomitaTakesaki (
 
 export InfoGeometry.Canonical.HolographicEmergence (
   EmergentTimeFlow
-  AnomalyScalePhase
   emergentTimeFlow_of_sinkhornTrajectory
   anomalyScalePhase_of_nonzeroAnomaly
   pathDependence_of_twistedInference

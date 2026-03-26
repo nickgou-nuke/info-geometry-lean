@@ -12,19 +12,15 @@ variable {α : Type*} [Fintype α]
 /-- Count substrate: empirical event counts. -/
 abbrev CountSubstrate (α : Type*) := EmpiricalCounts α
 
-/-- Nontrivial sampling hypothesis (at least one observed event). -/
-abbrev CountSubstrateNontrivial {α : Type*} [Fintype α] (N : CountSubstrate α) : Prop :=
-  empirical_nontrivial N
-
 /-- Canonical empirical probability state induced by counts. -/
 noncomputable def empiricalProbabilityState {α : Type*} [Fintype α]
-    (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
+    (N : CountSubstrate α) (hN : empirical_nontrivial N) :
     ProbabilityDist α :=
   empirical_fin_prob N hN
 
 /-- Pointwise specification of the empirical probability state. -/
 theorem empiricalProbabilityState_spec {α : Type*} [Fintype α]
-    (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
+    (N : CountSubstrate α) (hN : empirical_nontrivial N) :
     ∀ x : α, (empiricalProbabilityState N hN x).toReal = empirical_distribution N x := by
   intro x
   have htotal_pos : 0 < ∑ y, (N y : ℝ) := by
@@ -36,7 +32,7 @@ theorem empiricalProbabilityState_spec {α : Type*} [Fintype α]
 
 /-- Packaging witness for the empirical probability state. -/
 private theorem exists_empiricalProbabilityState {α : Type*} [Fintype α]
-    (N : CountSubstrate α) (hN : CountSubstrateNontrivial N) :
+    (N : CountSubstrate α) (hN : empirical_nontrivial N) :
     ∃ P : ProbabilityDist α, ∀ x : α, (P x).toReal = empirical_distribution N x :=
   ⟨empiricalProbabilityState N hN, empiricalProbabilityState_spec N hN⟩
 

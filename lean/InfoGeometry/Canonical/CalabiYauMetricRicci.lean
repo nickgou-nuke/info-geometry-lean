@@ -35,10 +35,6 @@ def UnitRelativeVolumeState (K : KaehlerInformationGeometry E) : Prop :=
 def IsRicciFlat (R : RicciTensor E) : Prop :=
   ∀ u v : E, R u v = 0
 
-/-- Constructive Calabi-Yau geometric state (non-bridge form). -/
-abbrev CalabiYauRicciState (R : RicciTensor E) : Prop :=
-  IsRicciFlat R
-
 /--
 Constructive closure state for the Monge-Ampere-to-Ricci layer:
 constant Monge-Ampere density together with an explicit Ricci-flat witness.

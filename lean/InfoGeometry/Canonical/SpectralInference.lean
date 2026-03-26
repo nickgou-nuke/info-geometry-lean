@@ -1,4 +1,5 @@
 import InfoGeometry.Convex.HessianGeometry
+import InfoGeometry.Canonical.DiracMetricCompatibility
 import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Krein.Metric
 import InfoGeometry.Canonical.Drazin
@@ -266,27 +267,60 @@ end CertifiedChiralSpectralTriple
 /-! ### 5. Bridging Hessian Geometry -/
 
 /--
-To link Information Geometry to Noncommutative Geometry, we identify the square 
+To link Information Geometry to Noncommutative Geometry, we identify the square
 of the Dirac operator with the Hessian metric operator: D² = ∇²ψ.
 -/
 structure InfoSpectralTriple (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     extends SpectralTriple E where
   H : HessianGeometry E
   x₀ : E
-  dirac_sq_eq_metric : D * D = H.metricOp x₀
+  compatibility : DiracMetricCompatibility D H x₀
 
 namespace InfoSpectralTriple
 
 variable (IST : InfoSpectralTriple E)
 
+/-- Constructor from a lower spectral-root compatibility witness. -/
+def ofCompatibility
+    (ST : SpectralTriple E)
+    (H : HessianGeometry E)
+    (x₀ : E)
+    (compatibility : DiracMetricCompatibility ST.D H x₀) :
+    InfoSpectralTriple E :=
+  { toSpectralTriple := ST
+    H := H
+    x₀ := x₀
+    compatibility := compatibility }
+
+/--
+Constructor from the canonical symmetric nonnegative quadratic form carried by the Hessian metric
+operator at the basepoint. The Dirac operator is chosen canonically as the positive square root of
+that metric operator, so the square compatibility is derived rather than supplied.
+-/
+noncomputable def ofMetric
+    (H : HessianGeometry E)
+    (x₀ : E) :
+    InfoSpectralTriple E :=
+  ofCompatibility
+    { D := DiracMetricCompatibility.canonicalDiracOfMetric (E := E) H x₀
+      is_self_adjoint :=
+          (DiracMetricCompatibility.canonicalDiracOfMetric_isPositive (E := E) H x₀
+            (H.metricOp_isSymmetric x₀) (fun u => H.metric_quadratic_nonneg x₀ u)).isSelfAdjoint }
+    H x₀
+    (DiracMetricCompatibility.ofMetric (E := E) H x₀)
+
+omit [FiniteDimensional ℝ E] in
+-- theorem-class: bridge
+/-- The Dirac square is identified with the Hessian metric operator at the basepoint. -/
+theorem dirac_sq_eq_metric :
+    IST.D * IST.D = IST.H.metricOp IST.x₀ :=
+  IST.compatibility.dirac_sq_eq_metric
+
 omit [FiniteDimensional ℝ E] in
 /-- The metric at the basepoint is recovered by applying the Dirac operator twice. -/
 lemma inner_dirac_sq (u v : E) :
     inner ℝ u (IST.D (IST.D v)) = IST.H.metric IST.x₀ u v := by
-  have h_sq : IST.D * IST.D = IST.H.metricOp IST.x₀ := IST.dirac_sq_eq_metric
-  have h_eval : (IST.D * IST.D) v = IST.D (IST.D v) := rfl
-  rw [← h_eval, h_sq]
-  rfl
+  exact IST.compatibility.inner_dirac_sq u v
 
 end InfoSpectralTriple
 

@@ -97,7 +97,7 @@ theorem cl11_bottDirac_sq_eq_metricOp_form
       (spectralDiracLinear IST).comp (spectralDiracLinear IST) = IST.H.metricOp IST.x₀ := by
     ext v
     have hv : (IST.D * IST.D) v = (IST.H.metricOp IST.x₀) v := by
-      exact congrArg (fun T : F →L[ℝ] F => T v) IST.dirac_sq_eq_metric
+      exact congrArg (fun T : F →L[ℝ] F => T v) (IST.dirac_sq_eq_metric)
     simpa [spectralDiracLinear, LinearMap.comp_apply] using hv
   calc
     (bottDirac (cl11DiracSeed (E := A)) (cl11Grading (E := A)) (spectralDiracLinear IST)).comp

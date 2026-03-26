@@ -289,13 +289,6 @@ theorem isChiralInference_iff_epsilon_pos :
     IsChiralInference (CI := CI) ↔ 0 < CI.epsilon := by
   simp [IsChiralInference, chiralScale]
 
-/-- Canonical alias for the normal (non-chiral) information state. -/
-abbrev NormalInferenceState : Prop := IsNormalInference (CI := CI)
-
-/-- Canonical alias for the chiral information state. -/
-abbrev ChiralInferenceState : Prop := IsChiralInference (CI := CI)
-
-
 /--
 Zero anomaly follows from the normalized Kähler/log-det flow assumptions used
 to derive projector commutation.
@@ -346,14 +339,14 @@ theorem unitOfAction_eq_chiralScale :
 
 /-- In the normal phase, the unit of action vanishes. -/
 theorem unitOfAction_eq_zero_of_normalInference
-    (hNormal : NormalInferenceState (CI := CI)) :
+    (hNormal : IsNormalInference (CI := CI)) :
     CI.unitOfAction = 0 := by
   rw [CI.unitOfAction_eq_chiralScale]
   exact hNormal
 
 /-- In the chiral phase, the unit of action is strictly positive. -/
 theorem unitOfAction_pos_of_chiralInference
-    (hChiral : ChiralInferenceState (CI := CI)) :
+    (hChiral : IsChiralInference (CI := CI)) :
     0 < CI.unitOfAction := by
   rw [CI.unitOfAction_eq_chiralScale]
   exact hChiral

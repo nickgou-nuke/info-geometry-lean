@@ -106,8 +106,6 @@ export InfoGeometry.Canonical.ConformalUnification.ConformalInference (
   einsteinEquation_of_projectorObstruction_source
   IsNormalInference
   IsChiralInference
-  NormalInferenceState
-  ChiralInferenceState
 )
 
 export InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra (
@@ -115,7 +113,6 @@ export InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra (
   SatisfiesKWeight
   SatisfiesMasterRelation
   SatisfiesFlatWeights
-  ConformalWeightClosure
   GeneratorCartanDecomposition
   generatorCartanDecomposition_iff
   generatorCartanDecomposition_of_parts

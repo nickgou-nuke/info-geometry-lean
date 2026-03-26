@@ -33,10 +33,10 @@ Nonzero chiral-anomaly operator implies positive chiral scale (`IsChiralInferenc
 theorem chiralInferenceState_of_nonzero_anomaly
     (CI : ConformalInference E)
     (hAnom : CI.chiralAnomalyOperator ≠ 0) :
-    CI.ChiralInferenceState := by
+    CI.IsChiralInference := by
   have hAnom' : CI.chiralAnomaly ≠ 0 := by
     simpa [ConformalInference.chiralAnomalyOperator] using hAnom
-  unfold ConformalInference.ChiralInferenceState ConformalInference.IsChiralInference
+  unfold ConformalInference.IsChiralInference
     ConformalInference.chiralScale ConformalInference.epsilon
   exact (NNReal.coe_pos).2 ((nnnorm_pos).2 hAnom')
 
@@ -54,7 +54,7 @@ private theorem dilationAnomaly_sources_transportedEinsteinResidual
     (hSource :
       transportedEinsteinResidual (R := R) (K := K) (x := x)
         (scalar := scalar) (Λ := Λ) V Γ = CI.chiralScale)
-    (hChiral : CI.ChiralInferenceState) :
+    (hChiral : CI.IsChiralInference) :
     transportedEinsteinResidual (R := R) (K := K) (x := x)
       (scalar := scalar) (Λ := Λ) V Γ ≠ 0 := by
   have hμ_ne :

@@ -50,15 +50,11 @@ section AnomalyScale
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- Anomaly-generated scale phase state (chiral branch). -/
-abbrev AnomalyScalePhase (CI : ConformalInference E) : Prop :=
-  CI.ChiralInferenceState
-
 /-- Theorem `anomalyScalePhase_of_nonzeroAnomaly`. -/
 theorem anomalyScalePhase_of_nonzeroAnomaly
     (CI : ConformalInference E)
     (hAnom : CI.chiralAnomalyOperator ≠ 0) :
-    AnomalyScalePhase CI :=
+    CI.IsChiralInference :=
   chiralInferenceState_of_nonzero_anomaly (CI := CI) hAnom
 
 end AnomalyScale

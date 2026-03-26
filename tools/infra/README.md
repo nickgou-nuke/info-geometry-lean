@@ -23,13 +23,19 @@ This directory contains the maintained infrastructure entrypoints for graph refr
 Authoritative graph inputs live under [artifacts/dag](/home/goutev/LEAN4/info-geometry-lean/artifacts/dag):
 - `full_graph.json`
 - `index/decls.jsonl`
+- `index/edges.jsonl`
 - `structural-topology.json`
 - `source-sink-bipartite.json`
 
 Derived readable outputs live under `reports/dag/`.
 
-The proposition-surface no-regression baseline for the policy linter lives at
+The canonical policy debt baseline for the linter lives at
 `tools/infra/canonical_policy_baseline.json`.
+It records both:
+- current proposition-valued surfaces
+- current suspect theorem surfaces
+
+New entries in either class are forbidden unless the baseline is intentionally updated after audit.
 
 ## Maintained refresh order
 
@@ -55,6 +61,22 @@ Run these sequentially. `semantic_quotient` and `source_sink_compression` both d
 
 - Do not start concurrent umbrella builds; use `run_locked_lake_build.py`.
 - Do not read `reports/dag/*` as current until the whole sequence has run.
-- Do not update `canonical_policy_baseline.json` casually; new proposition-valued wrapper surfaces require an explicit policy decision.
+- Do not update `canonical_policy_baseline.json` casually; new proposition surfaces or new suspect theorem surfaces require an explicit policy decision.
 - Do not hand-edit `artifacts/dag/*` or derived reports.
 - Use direct file analysis before acting on any hotspot report.
+
+## What `canonical_policy_lint.py` now enforces
+
+It is not only an anti-wrapper check.
+It hard-fails when refreshed artifacts show any of the following regressions:
+- active carriers, structural hotspots, semantic hotspots, or monochrome shells reopening
+- new proposition-valued public wrapper surfaces
+- new public theorem surface in canonical files without a valid `-- theorem-class: ...` tag
+- new suspect public theorem surfaces in canonical files
+
+A theorem surface is treated as suspect when it matches one or more of these failure modes:
+- theorem-surface category `surrogate_or_vacuous`, `package_reprojection`, or `hypothesis_bridge`
+- definitional/trivial proof shape such as `rfl`, `Iff.rfl`, one-step `simp`/`simpa`, or direct rename after unfold
+- alias-like public theorem surface with no downstream theorem dependents
+
+This makes the policy bite: theoremification debt is explicit, baseline-tracked, and CI-visible.

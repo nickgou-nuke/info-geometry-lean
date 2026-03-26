@@ -32,6 +32,11 @@ import InfoGeometry.Canonical.AttentionSplit
 import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.BogoliubovPolarizationBridge
+import InfoGeometry.Canonical.KreinDiracPolarizationBridge
+import InfoGeometry.Canonical.KreinDiracSpectralLift
+import InfoGeometry.Canonical.SplitCliffordThermalBridge
+import InfoGeometry.Canonical.KreinDiracWeightFunctionalLift
+import InfoGeometry.Canonical.OperatorialInformationLift
 import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.BottPeriodicity
 import InfoGeometry.Canonical.BregmanTriality

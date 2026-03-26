@@ -1,0 +1,945 @@
+{
+  "version": 1,
+  "notes": [
+    "Baseline of existing proposition-valued def/abbrev/structure surfaces.",
+    "The canonical policy linter rejects new entries not recorded here.",
+    "Removing existing entries is allowed; adding new ones requires an intentional baseline update."
+  ],
+  "allowed_prop_surfaces": [
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/AQFTOperatorSignatures.lean",
+      "name": "IsCStarReady"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/AQFTOperatorSignatures.lean",
+      "name": "IsCompleteCStarReady"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/CalabiYauMetricRicci.lean",
+      "name": "CalabiYauRicciState"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/ConformalAlgebra.lean",
+      "name": "ConformalWeightClosure"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/ConformalAnomalySource.lean",
+      "name": "ChiralInferenceState"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/ConformalAnomalySource.lean",
+      "name": "NormalInferenceState"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/CountProbabilityState.lean",
+      "name": "CountSubstrateNontrivial"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/GrandSynthesisThermo.lean",
+      "name": "GeometricEquilibrium"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/HolographicEmergence.lean",
+      "name": "AnomalyScalePhase"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/OperatorAlgebraReadiness.lean",
+      "name": "IsCStarLayer"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/OperatorAlgebraReadiness.lean",
+      "name": "IsCompleteCStarLayer"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/Singular.lean",
+      "name": "IsDrazinInverse"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/Singular.lean",
+      "name": "IsMoorePenroseInverse"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/SingularTransportSystem.lean",
+      "name": "boundaryGenerator_skew_adjoints_to_krein_isometry"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Canonical/TomitaTakesaki.lean",
+      "name": "PositiveTimeVector"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Core/GrandCanonical.lean",
+      "name": "Spinodal"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Krein/DoubledSpace.lean",
+      "name": "cl11_algebra"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Krein/Prelude.lean",
+      "name": "isComplexStructureOp"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Prequantum/Scaling.lean",
+      "name": "GaugeEquivalent"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Singular/DrazinAdjoint.lean",
+      "name": "IsDrazinInverse"
+    },
+    {
+      "kind": "abbrev",
+      "file": "lean/InfoGeometry/Singular/MoorePenroseAdjoint.lean",
+      "name": "IsMoorePenroseInverse"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Architecture/SpinFactor.lean",
+      "name": "SpinFactorDomain"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/AnalyticalIndexCore.lean",
+      "name": "ChiralSliceIsoAlong"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/AnalyticalIndexCore.lean",
+      "name": "Cl11BottLaplacianZero"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/AnalyticalIndexCore.lean",
+      "name": "IndexInvariantAlong"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/AnomalyInflow.lean",
+      "name": "AnomalyInflowClosure"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/BekensteinBound.lean",
+      "name": "TopologicalBekensteinBound"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/BogoliubovFockSuper.lean",
+      "name": "IsCARPair"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/BogoliubovFockSuper.lean",
+      "name": "IsProjectorSuperPair"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/BottDirac.lean",
+      "name": "IsChiralDirac"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/BottDirac.lean",
+      "name": "IsInvolutiveGrading"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/CalabiYauMetricRicci.lean",
+      "name": "HasConstantMongeAmpereDensity"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/CalabiYauMetricRicci.lean",
+      "name": "IsRicciFlat"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/CalabiYauMetricRicci.lean",
+      "name": "UnitRelativeVolumeState"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/CalabiYauWBridge.lean",
+      "name": "CalabiYauSpinorialState"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/CartanDecomposition.lean",
+      "name": "IsCompact"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/CartanDecomposition.lean",
+      "name": "IsNonCompact"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ChiralCliffordBridge.lean",
+      "name": "IsCompactBeliefUpdate"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ChiralCliffordBridge.lean",
+      "name": "IsNonCompactBeliefUpdate"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ChiralRGFlow.lean",
+      "name": "IsAsymptoticallyFree"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ChiralRGFlow.lean",
+      "name": "IsInfraredConfined"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ConformalAlgebra.lean",
+      "name": "GeneratorCartanDecomposition"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ConformalAlgebra.lean",
+      "name": "GradingInvolutive"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ConformalAlgebra.lean",
+      "name": "IsVolumePreservingPart"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ConformalAlgebra.lean",
+      "name": "IsWeylDilationPart"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ConformalAlgebra.lean",
+      "name": "SatisfiesFlatWeights"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ConformalAlgebra.lean",
+      "name": "SatisfiesKWeight"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ConformalAlgebra.lean",
+      "name": "SatisfiesMasterRelation"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ConformalAlgebra.lean",
+      "name": "SatisfiesPWeight"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ConformalAnomalySource.lean",
+      "name": "IsChiralInference"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ConformalAnomalySource.lean",
+      "name": "IsNormalInference"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/CountPositiveCoupling.lean",
+      "name": "EntrywisePositive"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/Drazin.lean",
+      "name": "IsDrazinInverse"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/DualConnectionsCore.lean",
+      "name": "amariChentsovTensor"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/DualConnectionsCore.lean",
+      "name": "fisherMetric"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/GrandSynthesisBott.lean",
+      "name": "AlgebraicEquilibriumCl11"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/GrandSynthesisBott.lean",
+      "name": "LichnerowiczBalancedCl11"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/GrandSynthesisThermo.lean",
+      "name": "SinkhornEntropyMonotoneRN"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/GrandUnification.lean",
+      "name": "IsBregmanOrthogonal"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/GrandUnification.lean",
+      "name": "IsBregmanProjection"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/GrandUnificationBlueprint.lean",
+      "name": "UnificationComplete"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/GrandUnificationMetric.lean",
+      "name": "MetricPositive"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/HolographicEmergence.lean",
+      "name": "EmergentTimeFlow"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/IBProjective.lean",
+      "name": "SameScoreRay"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/InformationTorsion.lean",
+      "name": "IsTorsionFree"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ManifoldHomologyCore.lean",
+      "name": "IsRegularValue"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/MasterSynthesis.lean",
+      "name": "IsRigidVolumeForm"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/MasterSynthesis.lean",
+      "name": "SatisfiesExclusionConnection"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/ModularSpinorBridge.lean",
+      "name": "FierzIdentity"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/MongeAmpereCramerRao.lean",
+      "name": "IncompressibleMongeAmpere"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/MongeAmpereCramerRao.lean",
+      "name": "LiouvilleMongeAmpere"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/MoorePenrose.lean",
+      "name": "IsMoorePenroseInverse"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/RGFlow.lean",
+      "name": "FlowInvariantAtScale"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/RGFlow.lean",
+      "name": "IsStationaryAtScale"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/RealBdG.lean",
+      "name": "KAntilinear"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/RealBdG.lean",
+      "name": "KLinear"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/RicciMongeAmpere.lean",
+      "name": "IsRicciFixedPoint"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/RicciMongeAmpere.lean",
+      "name": "IsSkewCurvatureTwoForm"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/RicciMongeAmpere.lean",
+      "name": "MongeAmpereConsistentAtBasepoint"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/RicciMongeAmpere.lean",
+      "name": "SatisfiesMongeAmpere"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/RicciMongeAmpere.lean",
+      "name": "SatisfiesMongeAmperePotential"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/RobustThermodynamicRegression.lean",
+      "name": "IsResolvable"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/SinkhornFoundation.lean",
+      "name": "HasMarginals"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/SinkhornFoundation.lean",
+      "name": "HasPositiveColSums"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/SinkhornFoundation.lean",
+      "name": "HasPositiveRowSums"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/SinkhornFoundation.lean",
+      "name": "IsBistochasticSwitch"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/SinkhornFoundation.lean",
+      "name": "SinkhornStep"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/SuperAnomaly.lean",
+      "name": "IsParity"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/SuperUnified.lean",
+      "name": "IsBosonic"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/SuperUnified.lean",
+      "name": "IsFermionic"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/TomitaTakesaki.lean",
+      "name": "DiagonalPositiveTimeVector"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/TopologicalEuler.lean",
+      "name": "HasInformationHoles"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/WeylGaugeField.lean",
+      "name": "IsFlat"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/WeylGaugeField.lean",
+      "name": "IsGaugeInvariant"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/WeylPathHysteresis.lean",
+      "name": "UpdateOrderPathDependent"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/WeylTransport.lean",
+      "name": "IsCocycle"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/YangMillsFiniteBridge.lean",
+      "name": "hasExistenceLayer"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/YangMillsFiniteBridge.lean",
+      "name": "hasGaugeRank"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Canonical/YangMillsFiniteBridge.lean",
+      "name": "hasStrictMassGap"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Cartan/Involution.lean",
+      "name": "IsCartanInvolution"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Causal/Cones.lean",
+      "name": "IsOnBoundary"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Clifford/Grading.lean",
+      "name": "inGradeMinus"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Clifford/Grading.lean",
+      "name": "inGradePlus"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Clifford/Grading.lean",
+      "name": "isEven"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Clifford/Grading.lean",
+      "name": "isOdd"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Clifford/Hestenes.lean",
+      "name": "IsSignedVolume"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Clifford/Soldering.lean",
+      "name": "Incident"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Clifford/SplitQ11.lean",
+      "name": "IsLightlike"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Clifford/SplitQ11.lean",
+      "name": "IsSpacelike"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Clifford/SplitQ11.lean",
+      "name": "IsTimelike"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Convex/Legendre.lean",
+      "name": "StrictConvex"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Convex/Legendre.lean",
+      "name": "StrictMonotoneGrad"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Core/SymmetricLieGeneric.lean",
+      "name": "IsotropyIrreducible"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Fenchel.lean",
+      "name": "IsFenchelUpperBound"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Fenchel.lean",
+      "name": "IsGradientDual"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Fenchel.lean",
+      "name": "IsKernelClosed"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Fenchel.lean",
+      "name": "IsLegendreConjugate"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/GrandCanonical/Core.lean",
+      "name": "Spinodal"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/KL/Finite.lean",
+      "name": "empirical_nontrivial"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/Clifford.lean",
+      "name": "IsEven"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/Clifford.lean",
+      "name": "IsOdd"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/DoubledSpace.lean",
+      "name": "cl11_relations"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/DoubledSpace.lean",
+      "name": "is_krein_skew_adjoint"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/KreinSpace.lean",
+      "name": "IsKreinIsometry"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/KreinSpace.lean",
+      "name": "IsKreinSelfAdjoint"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/KreinSpace.lean",
+      "name": "IsKreinSkewAdjoint"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/Metric.lean",
+      "name": "IsInfinitesimalIsometry"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/Modular.lean",
+      "name": "IsKreinPositive"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/Modular.lean",
+      "name": "IsKreinSelfAdjoint"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/Modular.lean",
+      "name": "IsKreinSkewAdjoint"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/Modular.lean",
+      "name": "IsKreinUnitary"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/Modular.lean",
+      "name": "IsStrictKreinPositive"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Krein/Prelude.lean",
+      "name": "isComplexStructureOp"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/LLM/TransformerBlock.lean",
+      "name": "IsIdentityMap"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/MaxEnt/Core.lean",
+      "name": "IntegrableUnder"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/MaxEnt/Core.lean",
+      "name": "Satisfies"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/MaxEnt/Core.lean",
+      "name": "SatisfiesIntegrable"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/MaxEnt/Finite.lean",
+      "name": "FullSupportPrior"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/MaxEnt/Jaynes.lean",
+      "name": "EntropyBand"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/MaxEnt/Jaynes.lean",
+      "name": "Normalized"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/MaxEnt/Jaynes.lean",
+      "name": "PointwiseNonneg"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/MaxEnt/JaynesInfoStatMech.lean",
+      "name": "IsFeasible"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/MaxEnt/JaynesInfoStatMech.lean",
+      "name": "ThermodynamicRegime"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/MaxEnt/JaynesRNMaxEnt.lean",
+      "name": "PartitionIntegrable"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Measure/Projective.lean",
+      "name": "AEAddConst"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Measure/Projective.lean",
+      "name": "SameRay"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/MeasureProjective.lean",
+      "name": "AEAddConst"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Prequantum/Scaling.lean",
+      "name": "GaugeEquivalent"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Projective/Null.lean",
+      "name": "IsGradeNullRay"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Projective/Null.lean",
+      "name": "IsMetricNull"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Projective/Null.lean",
+      "name": "IsNullRay"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Projective/PhysicalKinematics.lean",
+      "name": "GaugeInvariant"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Projective/Projective.lean",
+      "name": "SameRay"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Projective/Rays.lean",
+      "name": "same_ray"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/BulkBoundary.lean",
+      "name": "HasSurfaceZeroMode"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/BulkBoundary.lean",
+      "name": "HasZeroMode"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/Fierz.lean",
+      "name": "IsMajoranaBelief"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/Hurwitz.lean",
+      "name": "IsHurwitzUnit"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/HurwitzRGFlow.lean",
+      "name": "InvariantAtScale"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/KitaevChain.lean",
+      "name": "HasDefect"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/KitaevChain.lean",
+      "name": "IsCritical"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/KitaevChain.lean",
+      "name": "IsDefect"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/KitaevChain.lean",
+      "name": "IsGapped"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/ModularAnomaly.lean",
+      "name": "IsAnomalyFree"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/ModularAnomaly.lean",
+      "name": "IsBogoliubov"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "name": "KAntilinear"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "name": "KLinear"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "name": "MajoranaCARWitness"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "name": "PiEven"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "name": "PiOdd"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "name": "mixesPolarization"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/RealMajorana.lean",
+      "name": "preservesPolarization"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Quantum/RealMajoranaCategory.lean",
+      "name": "CARWitness"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Singular/Drazin.lean",
+      "name": "IsDrazinInverse"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Singular/Drazin.lean",
+      "name": "IsNormal"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Singular/DrazinAdjoint.lean",
+      "name": "IsNormal"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Singular/MoorePenrose.lean",
+      "name": "IsMoorePenroseInverse"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Singular/NormalAnomaly.lean",
+      "name": "IsEP"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Thermal/FiniteMatrix.lean",
+      "name": "SatisfiesDiagonalKMS"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Thermo/FiniteMatrix.lean",
+      "name": "SatisfiesKMSLike"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Thermo/FiniteMatrix.lean",
+      "name": "SatisfiesKMSLikeOn"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/TransformationGroups.lean",
+      "name": "is_transitive"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/TransformationGroups.lean",
+      "name": "location_invariant"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/TransformationGroups.lean",
+      "name": "scale_invariant"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Twistor/Incidence.lean",
+      "name": "Incident"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Volume/DeterminantBundle.lean",
+      "name": "HasConformalWeight"
+    },
+    {
+      "kind": "def",
+      "file": "lean/InfoGeometry/Volume/Pfaffian.lean",
+      "name": "IsSkewSymmetric"
+    }
+  ]
+}

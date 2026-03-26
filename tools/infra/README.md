@@ -16,6 +16,7 @@ This directory contains the maintained infrastructure entrypoints for graph refr
 - `generate_semantic_quotient.py`
 - `generate_projection_coloring.py`
 - `select_openclaw_target.py`
+- `canonical_policy_lint.py`
 
 ## Authoritative inputs and outputs
 
@@ -26,6 +27,9 @@ Authoritative graph inputs live under [artifacts/dag](/home/goutev/LEAN4/info-ge
 - `source-sink-bipartite.json`
 
 Derived readable outputs live under `reports/dag/`.
+
+The proposition-surface no-regression baseline for the policy linter lives at
+`tools/infra/canonical_policy_baseline.json`.
 
 ## Maintained refresh order
 
@@ -42,6 +46,7 @@ python3 tools/infra/generate_structural_fibers.py
 python3 tools/infra/generate_semantic_quotient.py
 python3 tools/infra/generate_projection_coloring.py
 python3 tools/infra/select_openclaw_target.py
+python3 tools/infra/canonical_policy_lint.py
 ```
 
 Run these sequentially. `semantic_quotient` and `source_sink_compression` both depend on a fresh theorem-surface index.
@@ -50,5 +55,6 @@ Run these sequentially. `semantic_quotient` and `source_sink_compression` both d
 
 - Do not start concurrent umbrella builds; use `run_locked_lake_build.py`.
 - Do not read `reports/dag/*` as current until the whole sequence has run.
+- Do not update `canonical_policy_baseline.json` casually; new proposition-valued wrapper surfaces require an explicit policy decision.
 - Do not hand-edit `artifacts/dag/*` or derived reports.
 - Use direct file analysis before acting on any hotspot report.

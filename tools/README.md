@@ -1,26 +1,31 @@
 # Tooling Overview
 
-The supported Python-side tooling is split into three maintained surfaces:
+The tooling surface is now split between:
+- Lean-native enforcement under `lean/InfoGeometry/Meta/` and `lean/InfoGeometry/Audit.lean`
+- exported graph and reporting helpers under `lean/DAG/` and `tools/`
+
+The maintained tooling surface is split into three directories:
 - [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md)
 - [tools/frontier/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/frontier/README.md)
 - [tools/docs/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/docs/README.md)
 
-Top-level `tools/*.py` files exist mainly as compatibility wrappers or convenience entrypoints. The maintained workflow should be read from the three subdirectory READMEs above.
+Top-level `tools/*.py` wrappers are convenience entrypoints. The maintained workflows are the subdirectory scripts and READMEs.
 
-## Current split
+## Current Split
 
 ### `tools/infra`
-Maintained graph refresh, DAG reports, theorem-surface classification, semantic quotient, projection coloring, and build locking.
+Graph refresh, causal and theorem-surface reports, representation-depth summaries, and locked build orchestration.
 
 ### `tools/frontier`
-Maintained semantic-block export and frontier exploration for heavy modules.
+Semantic block export and heavy-file frontier workflows.
 
 ### `tools/docs`
-Maintained doc refresh helpers for generated documentation surfaces.
+Documentation refresh helpers for generated doc surfaces.
 
-## Current rule
+## Trust Order
 
-If documentation about the tooling disagrees, trust:
-1. the scripts under `tools/infra/`, `tools/frontier/`, and `tools/docs`;
-2. then the corresponding READMEs;
-3. only then any older top-level wrapper doc.
+If documentation about tooling disagrees, trust:
+1. Lean source under `lean/InfoGeometry/Meta/` and [Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
+2. the scripts under `tools/infra/`, `tools/frontier/`, and `tools/docs/`
+3. the corresponding READMEs
+4. older wrapper prose

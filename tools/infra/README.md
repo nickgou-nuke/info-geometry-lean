@@ -1,9 +1,13 @@
 # Infra Tools
 
-This directory contains the maintained infrastructure entrypoints for graph refresh, theorem-surface analysis, and build orchestration.
+This directory contains the maintained DAG, reporting, and build orchestration entrypoints.
+The source of architectural truth is no longer purely Python-side: the native grammar lives in:
+- [Architecture.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Meta/Architecture.lean)
+- [Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
 
-## Canonical entrypoints
+## Canonical Entrypoints
 
+Main DAG refresh and report path:
 - `refresh_decl_graph.py`
 - `refresh_blueprint_tags.py`
 - `run_locked_lake_build.py`
@@ -18,28 +22,25 @@ This directory contains the maintained infrastructure entrypoints for graph refr
 - `select_openclaw_target.py`
 - `canonical_policy_lint.py`
 
-## Authoritative inputs and outputs
+Stable spine supplements:
+- `check_representation_depth.py`
+- `generate_representation_depth_graph.py`
 
-Authoritative graph inputs live under [artifacts/dag](/home/goutev/LEAN4/info-geometry-lean/artifacts/dag):
+## Authoritative Inputs
+
+Public authoritative DAG inputs live under [artifacts/dag](/home/goutev/LEAN4/info-geometry-lean/artifacts/dag):
 - `full_graph.json`
 - `index/decls.jsonl`
 - `index/edges.jsonl`
 - `structural-topology.json`
 - `source-sink-bipartite.json`
 
-Derived readable outputs live under `reports/dag/`.
+Derived readable outputs live under [reports/dag](/home/goutev/LEAN4/info-geometry-lean/reports/dag).
 
-The canonical policy debt baseline for the linter lives at
-`tools/infra/canonical_policy_baseline.json`.
-It records both:
-- current proposition-valued surfaces
-- current suspect theorem surfaces
-
-New entries in either class are forbidden unless the baseline is intentionally updated after audit.
-
-## Maintained refresh order
+## Maintained Refresh Order
 
 ```bash
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.Audit
 python3 tools/infra/refresh_decl_graph.py
 python3 tools/infra/refresh_blueprint_tags.py
 python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags
@@ -55,28 +56,27 @@ python3 tools/infra/select_openclaw_target.py
 python3 tools/infra/canonical_policy_lint.py
 ```
 
-Run these sequentially. `semantic_quotient` and `source_sink_compression` both depend on a fresh theorem-surface index.
+Supplemental stable-spine reports:
 
-## Operational rules
+```bash
+python3 tools/infra/check_representation_depth.py
+python3 tools/infra/generate_representation_depth_graph.py
+```
 
-- Do not start concurrent umbrella builds; use `run_locked_lake_build.py`.
-- Do not read `reports/dag/*` as current until the whole sequence has run.
-- Do not update `canonical_policy_baseline.json` casually; new proposition surfaces or new suspect theorem surfaces require an explicit policy decision.
-- Do not hand-edit `artifacts/dag/*` or derived reports.
-- Use direct file analysis before acting on any hotspot report.
+Run the native audit before trusting the representation-depth reports. Run the main sequence sequentially. Do not trust `reports/dag/*` as current until the main sequence has finished.
 
-## What `canonical_policy_lint.py` now enforces
+## Operational Rules
 
-It is not only an anti-wrapper check.
-It hard-fails when refreshed artifacts show any of the following regressions:
-- active carriers, structural hotspots, semantic hotspots, or monochrome shells reopening
-- new proposition-valued public wrapper surfaces
-- new public theorem surface in canonical files without a valid `-- theorem-class: ...` tag
-- new suspect public theorem surfaces in canonical files
+- use `run_locked_lake_build.py` for umbrella builds
+- do not run concurrent umbrella builds
+- do not hand-edit `artifacts/dag/*`
+- read code before acting on hotspot heuristics
+- use the representation-depth reports as rendered summaries of the Lean-native grammar, not as the grammar itself
 
-A theorem surface is treated as suspect when it matches one or more of these failure modes:
-- theorem-surface category `surrogate_or_vacuous`, `package_reprojection`, or `hypothesis_bridge`
-- definitional/trivial proof shape such as `rfl`, `Iff.rfl`, one-step `simp`/`simpa`, or direct rename after unfold
-- alias-like public theorem surface with no downstream theorem dependents
+## Policy Surface
 
-This makes the policy bite: theoremification debt is explicit, baseline-tracked, and CI-visible.
+`canonical_policy_lint.py` enforces repository policy around:
+- proposition-valued wrapper surfaces
+- theorem-class tagging in canonical files
+- suspect theorem burden in stable canonical owners
+- reopening of structural hotspot and shell debt tracked by the refreshed artifacts

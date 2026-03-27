@@ -146,6 +146,8 @@ import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Canonical.RelativePotentialCountBridge
+import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
+import InfoGeometry.Canonical.DiagonalMetricModularBridge
 import InfoGeometry.Canonical.RedLine
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.SingularBoundaryCorrection

@@ -1,5 +1,4 @@
 import InfoGeometry.Basic
-import InfoGeometry.Canonical.RedLine
 import InfoGeometry.Canonical.ZetaDeterminant
 import InfoGeometry.Thermal.FiniteMatrix
 
@@ -21,7 +20,6 @@ The spine identifies the following as one canonical object:
 namespace InfoGeometry.Canonical.LogSpine
 
 open InfoGeometry
-open InfoGeometry.Canonical.RedLine
 open InfoGeometry.Jordan
 open InfoGeometry.Thermal
 

@@ -1,19 +1,26 @@
 # Vacuity Index
 
-This file explains the repository's vacuity audit rather than storing a stale timestamped snapshot.
+Generated: `2026-03-27 04:25:55`
 
-## What vacuity means here
+This report tracks alias-driven and definitional-identity surfaces that can make a bridge look mathematically deeper than it currently is.
 
-Vacuity includes:
-- alias transport presented as theorem progress;
-- definitional repackaging under louder names;
-- theorem surfaces whose only effect is unpacking an existing assumption package.
+## Status
+- vacuity gate: **PASS**
+- interpretation: `FAIL` means at least one high-priority alias/identity transport surface still sits on the active theory path
 
-## Current signals
+## Counts
+- total tracked findings: **0**
+- high-priority carrier/identity findings: **0**
+- medium-priority explicit marker findings: **0**
+- low-priority findings: **0**
 
-Use these together:
-- `tools/infra/generate_theorem_surface_index.py`
-- `tools/infra/generate_semantic_quotient.py`
-- direct file analysis under the canonicalization policy skill
+## Aggressive Replacement Queue
+- none
 
-A passing vacuity audit means the tracked vacuity patterns were not detected on the checked surface. It does not replace semantic review of file ownership.
+## Findings
+- none
+
+## Policy
+- absence of `sorry` is not enough if a bridge is true only by aliasing or identity transport
+- carrier aliases on bridge boundaries count as real mathematical debt, even when Lean accepts them
+- replacement priority is: carrier aliases -> identity transports -> explicit alias-model compatibility layers

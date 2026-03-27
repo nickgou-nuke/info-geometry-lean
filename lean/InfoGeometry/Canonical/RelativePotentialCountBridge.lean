@@ -36,11 +36,6 @@ noncomputable def relativeCountDensity
     (counts ref : RelativeCounts n) : Fin n → ℝ :=
   fun i => counts i / ref i
 
-/-- The relative-count RN lift is definitional in this finite model. -/
-lemma relativeCountDensity_eq_rn_lift
-    (counts ref : RelativeCounts n) :
-    relativeCountDensity n counts ref = (fun i => counts i / ref i) := rfl
-
 /-- Pointwise logarithm of the raw relative count ratio. -/
 noncomputable def relativeCountLogDensity
     (counts ref : RelativeCounts n) : Fin n → ℝ :=

@@ -2,6 +2,7 @@ import InfoGeometry.Convex.Bregman
 import InfoGeometry.Convex.Duality
 import InfoGeometry.Convex.Euclidean
 import InfoGeometry.Convex.FenchelConjugate
+import InfoGeometry.Convex.LogSumExp
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Convex.Legendre
 import InfoGeometry.Convex.ProjectiveRays

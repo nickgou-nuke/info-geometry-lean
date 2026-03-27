@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.YangMillsContinuum
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
+import InfoGeometry.Meta.Architecture
 
 /-!
 # InfoGeometry.Canonical.InformationPartitionCore
@@ -35,6 +36,7 @@ noncomputable def informationPartitionFunction
   ω (NormedSpace.exp (τ • K))
 
 /-- Log-partition `log Z(τ)`. -/
+@[rep_depth operator]
 noncomputable def logInformationPartitionFunction
     (ω : EndH E →L[ℝ] ℝ) (K : EndH E) (τ : ℝ) : ℝ :=
   Real.log (informationPartitionFunction ω K τ)

@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.PositiveRayCore
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Meta.Architecture
 
 /-!
 # InfoGeometry.Canonical.RelativePotentialCore
@@ -200,7 +201,8 @@ noncomputable def relativeModularPotential
     (μ := gaugeSection (α := α) q)
     (ν := gaugeSection (α := α) q0) a
 
-@[simp] theorem relativeModularPotential_eq_logDensity_base_sub_logDensity
+@[rep_depth projective, simp]
+theorem relativeModularPotential_eq_logDensity_base_sub_logDensity
     (q q0 : PositiveRay α) (a : α) :
     relativeModularPotential q q0 a =
       InfoGeometry.Canonical.PositiveRayCore.logDensity (α := α) q0 a

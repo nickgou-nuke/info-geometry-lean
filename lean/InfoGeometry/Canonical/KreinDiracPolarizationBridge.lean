@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.BogoliubovPolarizationBridge
 import InfoGeometry.Canonical.SpectralInference
+import InfoGeometry.Meta.Architecture
 
 /-!
 # Krein Dirac Polarization Bridge
@@ -56,6 +57,7 @@ noncomputable def transportMetricOp
   transportEnd T (IST.H.metricOp IST.x₀)
 
 /-- Bogoliubov conjugation preserves the Dirac-square witness on the same carrier. -/
+@[rep_depth transport]
 theorem transportDirac_sq_eq_transportMetricOp
     (IST : InfoSpectralTriple S) (T : RealBogoliubovTransform (S := S) M) :
     (transportDirac IST T).comp (transportDirac IST T) = transportMetricOp IST T := by

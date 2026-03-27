@@ -30,6 +30,7 @@ import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit
 import InfoGeometry.Canonical.AttentionPolarizedSplit
+import InfoGeometry.Canonical.AttentionPolarizedGibbsBridge
 import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.BogoliubovPolarizationBridge

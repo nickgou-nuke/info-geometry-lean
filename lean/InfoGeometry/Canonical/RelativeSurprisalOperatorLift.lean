@@ -2,6 +2,7 @@ import InfoGeometry.Basic
 import InfoGeometry.Canonical.InformationPartitionCore
 import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.MaxEnt.JaynesInfoStatMech
+import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators
 
@@ -210,6 +211,7 @@ theorem relativeLogDensityOperator_eq_logDensityOperator_sub
     ring
 
 /-- The first-quantized relative modular potential is the base-to-state log-density difference. -/
+@[rep_depth operator]
 theorem relativeModularPotentialOperator_eq_logDensity_base_sub
     (q q0 : InfoGeometry.Canonical.PositiveRayCore.PositiveRay (Fin n)) :
     relativeModularPotentialOperator (n := n) q q0 =

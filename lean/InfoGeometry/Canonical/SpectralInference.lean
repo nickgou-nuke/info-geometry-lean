@@ -1,5 +1,6 @@
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Canonical.DiracMetricCompatibility
+import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Krein.Metric
 import InfoGeometry.Canonical.Drazin
@@ -312,6 +313,7 @@ noncomputable def ofMetric
 omit [FiniteDimensional ℝ E] in
 -- theorem-class: bridge
 /-- The Dirac square is identified with the Hessian metric operator at the basepoint. -/
+@[rep_depth krein]
 theorem dirac_sq_eq_metric :
     IST.D * IST.D = IST.H.metricOp IST.x₀ :=
   IST.compatibility.dirac_sq_eq_metric

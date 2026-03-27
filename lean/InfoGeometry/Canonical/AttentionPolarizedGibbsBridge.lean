@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.AttentionPolarizedSplit
 import InfoGeometry.Canonical.GrandCanonicalCore
+import InfoGeometry.Meta.Architecture
 
 /-!
 # Polarized Split Attention as a Gibbs State
@@ -73,7 +74,8 @@ normalizing sum of exponentiated polarized attention logits.
 Positive-sheet split attention weights are exactly the Gibbs weights of the
 polarized split energy observable.
 -/
-@[simp] theorem gibbsWeight_polarizedPlusParams_eq_polarizedPlusAttentionWeights
+@[rep_depth thermo, simp]
+theorem gibbsWeight_polarizedPlusParams_eq_polarizedPlusAttentionWeights
     [Fact (0 < n)] [AddCommMonoid V] [Module ℝ V]
     (q : E) (ctx : ContextWindow n E V) (β : ℝ) (i : Fin n) :
     gibbsWeight (polarizedPlusParams (E := E) (V := V) q ctx) β i

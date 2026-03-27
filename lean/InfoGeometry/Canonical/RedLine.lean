@@ -190,9 +190,6 @@ export InfoGeometry.Canonical.RelativePotentialScalarBridge (
   scalarPositiveMeasure
   scalarLogDensity
   scalarModularPotential
-  representativeRelativeDensity_scalar
-  representativeRelativeLogDensity_scalar
-  representativeModularPotential_scalar
   scalarLogDensity_eq_log
   scalarModularPotential_eq_neg_log
   exp_neg_scalarModularPotential_eq
@@ -210,7 +207,6 @@ export InfoGeometry.Canonical.RelativePotentialDiscreteBridge (
 export InfoGeometry.Canonical.RelativePotentialCountBridge (
   RelativeCounts
   relativeCountDensity
-  relativeCountDensity_eq_rn_lift
   relativeCountLogDensity
   relativeLogDensityMean
   relativeModularHamiltonian

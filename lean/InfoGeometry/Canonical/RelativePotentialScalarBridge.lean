@@ -23,27 +23,6 @@ def scalarPositiveMeasure (r : ℝ) (hr : 0 < r) : InfoGeometry.PositiveMeasure 
     (r : ℝ) (hr : 0 < r) :
     scalarPositiveMeasure r hr () = r := rfl
 
-@[simp] theorem representativeRelativeDensity_scalar
-    (r s : ℝ) (hr : 0 < r) (hs : 0 < s) :
-    representativeRelativeDensity
-        (scalarPositiveMeasure r hr)
-        (scalarPositiveMeasure s hs) ()
-      = r / s := rfl
-
-@[simp] theorem representativeRelativeLogDensity_scalar
-    (r s : ℝ) (hr : 0 < r) (hs : 0 < s) :
-    representativeRelativeLogDensity
-        (scalarPositiveMeasure r hr)
-        (scalarPositiveMeasure s hs) ()
-      = Real.log (r / s) := rfl
-
-@[simp] theorem representativeModularPotential_scalar
-    (r s : ℝ) (hr : 0 < r) (hs : 0 < s) :
-    representativeModularPotential
-        (scalarPositiveMeasure r hr)
-        (scalarPositiveMeasure s hs) ()
-      = -Real.log (r / s) := rfl
-
 /-- Log-density of a scalar relative to the unit reference. -/
 noncomputable def scalarLogDensity (r : ℝ) (hr : 0 < r) : ℝ :=
   representativeRelativeLogDensity
@@ -67,7 +46,8 @@ noncomputable def scalarModularPotential (r : ℝ) (hr : 0 < r) : ℝ :=
     (r : ℝ) (hr : 0 < r) :
     scalarModularPotential r hr = -Real.log r := by
   unfold scalarModularPotential
-  rw [representativeModularPotential_scalar]
+  rw [representativeModularPotential_eq_neg_representativeRelativeLogDensity]
+  rw [representativeRelativeLogDensity_eq_log_sub_log]
   simp
 
 @[simp] theorem exp_neg_scalarModularPotential_eq

@@ -1,9 +1,8 @@
-import InfoGeometry.Prequantum.Connection
-import InfoGeometry.Prequantum.Quotient
 import InfoGeometry.Prequantum.Scaling
 
 /-!
 # InfoGeometry.Prequantum.All
 
-Umbrella module for the prequantum bundles and scaling geometry layer.
+Stable umbrella module for the prequantum bundles and scaling geometry layer.
+Scalarized connection/quotient facades remain quarantined and must be imported explicitly.
 -/

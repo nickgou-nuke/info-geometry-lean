@@ -68,7 +68,7 @@ theorem rosetta_source_tension_synthesis
       (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ),
     einsteinInducedChemicalPotential_lift_eq_einsteinFockDeformationOperator
       (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ),
-    modularAnomalyGenerator_eq_commutator_of_transport_source
+    InfoGeometry.Quantum.ModularAnomaly.Cl11Shadow.modularAnomalyGenerator_eq_concrete_commutator_shadow
       (M := M) (epsCLM := epsCLM) (hSigmaMap := hSigmaMap) (U := U)
   ⟩
 

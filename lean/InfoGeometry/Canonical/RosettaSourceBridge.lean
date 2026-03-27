@@ -96,21 +96,6 @@ identity deformation operator.
   rfl
 
 /--
-Modular presentation: under the concrete shadow realization, the modular anomaly
-is the commutator presentation of the transported source tension.
--/
-theorem modularAnomalyGenerator_eq_commutator_of_transport_source
-    (M : TopologicalMajoranaShadow Xc)
-    (epsCLM : Xc →L[ℝ] Xc)
-    (hSigmaMap : ∀ t : ℝ, (M.sigma t : Xc →L[ℝ] Xc) = Cl11Shadow.sigmaMap epsCLM t)
-    (U : Xc ≃L[ℝ] Xc) :
-    M.modularAnomalyGenerator U =
-      (U.symm : Xc →L[ℝ] Xc).comp
-        (epsCLM.comp (U : Xc →L[ℝ] Xc) - (U : Xc →L[ℝ] Xc).comp epsCLM) := by
-  exact InfoGeometry.Quantum.ModularAnomaly.Cl11Shadow.modularAnomalyGenerator_eq_concrete_commutator_shadow
-    (M := M) (epsCLM := epsCLM) (hSigmaMap := hSigmaMap) (U := U)
-
-/--
 Facade theorem packaging the three checked presentations of the same source
 surface: scalar transport, chemical-potential lift, and modular commutator
 shadow.
@@ -166,7 +151,7 @@ private theorem rosetta_source_tension_three_presentations
       (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)
   · exact einsteinInducedChemicalPotential_lift_eq_einsteinFockDeformationOperator
       (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ)
-  · exact modularAnomalyGenerator_eq_commutator_of_transport_source
+  · exact InfoGeometry.Quantum.ModularAnomaly.Cl11Shadow.modularAnomalyGenerator_eq_concrete_commutator_shadow
       (M := M) (epsCLM := epsCLM) (hSigmaMap := hSigmaMap) (U := U)
 
 /--

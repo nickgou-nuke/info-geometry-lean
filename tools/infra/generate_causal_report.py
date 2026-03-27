@@ -23,6 +23,7 @@ DEFAULT_DECLS = str(default_decl_metadata_file().relative_to(repo_root()))
 DEFAULT_THINNESS_INDEX = "BRIDGE_THINNESS_INDEX.md"
 DEFAULT_VACUITY_INDEX = "VACUITY_INDEX.md"
 DEFAULT_SURROGATE_INDEX = "SURROGATE_INDEX.md"
+DEFAULT_QUARANTINE_MANIFEST = "scripts/quality/quarantine_manifest.txt"
 DEFAULT_OUT = "reports/dag/true-root-order.md"
 DEFAULT_JSON_OUT = "reports/dag/true-root-order.json"
 
@@ -68,8 +69,23 @@ COVERAGE_EXCLUDE_PREFIXES = (
 )
 
 
-def is_coverage_excluded(rel_path: str) -> bool:
-    return any(rel_path.startswith(prefix) for prefix in COVERAGE_EXCLUDE_PREFIXES)
+def load_quarantine_manifest_files(path: Path) -> set[str]:
+    out: set[str] = set()
+    if not path.exists():
+        return out
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        module = line.split("|", 1)[0].strip()
+        if not module:
+            continue
+        out.add(f"lean/{module.replace('.', '/')}.lean")
+    return out
+
+
+def is_coverage_excluded(rel_path: str, excluded_files: set[str]) -> bool:
+    return rel_path in excluded_files or any(rel_path.startswith(prefix) for prefix in COVERAGE_EXCLUDE_PREFIXES)
 
 
 def parse_args() -> argparse.Namespace:
@@ -84,6 +100,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--thinness-index", default=DEFAULT_THINNESS_INDEX)
     parser.add_argument("--vacuity-index", default=DEFAULT_VACUITY_INDEX)
     parser.add_argument("--surrogate-index", default=DEFAULT_SURROGATE_INDEX)
+    parser.add_argument("--quarantine-manifest", default=DEFAULT_QUARANTINE_MANIFEST)
     parser.add_argument("--out", default=DEFAULT_OUT, help="Markdown report path to write.")
     parser.add_argument("--json-out", default=DEFAULT_JSON_OUT, help="JSON report path to write.")
     parser.add_argument("--top-per-layer", type=int, default=12)
@@ -278,18 +295,19 @@ def compute_graph_coverage(
     decl_meta: dict[str, dict[str, Any]],
     findings_by_index: dict[str, list[dict[str, Any]]],
     file_debt: dict[str, float],
+    coverage_excluded_files: set[str],
 ) -> dict[str, Any]:
     covered_decl_files = sorted(
         {
             str(meta.get("file", "")).strip()
             for meta in decl_meta.values()
-            if str(meta.get("file", "")).strip() and not is_coverage_excluded(str(meta.get("file", "")).strip())
+            if str(meta.get("file", "")).strip() and not is_coverage_excluded(str(meta.get("file", "")).strip(), coverage_excluded_files)
         }
     )
     covered_decl_file_set = set(covered_decl_files)
     all_repo_files = collect_repo_lean_files(root)
-    excluded_repo_files = sorted(path for path in all_repo_files if is_coverage_excluded(path))
-    repo_files = [path for path in all_repo_files if not is_coverage_excluded(path)]
+    excluded_repo_files = sorted(path for path in all_repo_files if is_coverage_excluded(path, coverage_excluded_files))
+    repo_files = [path for path in all_repo_files if not is_coverage_excluded(path, coverage_excluded_files)]
 
     decl_bearing_files: list[str] = []
     import_only_files: list[str] = []
@@ -305,7 +323,7 @@ def compute_graph_coverage(
     for index_name, findings in findings_by_index.items():
         for finding in findings:
             file_name = str(finding.get("file", "")).strip()
-            if not file_name or file_name in covered_decl_file_set or is_coverage_excluded(file_name):
+            if not file_name or file_name in covered_decl_file_set or is_coverage_excluded(file_name, coverage_excluded_files):
                 continue
             entry = uncovered_debt_by_file.setdefault(
                 file_name,
@@ -548,6 +566,7 @@ def build_report_payload(
     top_capstones: int,
     top_roots: int,
     top_modules: int,
+    coverage_excluded_files: set[str],
 ) -> dict[str, Any]:
     roots = sorted(int(node) for node in causal_g.nodes() if causal_g.in_degree(node) == 0)
     capstones = sorted(int(node) for node in causal_g.nodes() if causal_g.out_degree(node) == 0)
@@ -695,6 +714,7 @@ def build_report_payload(
         decl_meta=decl_meta,
         findings_by_index=findings_by_index,
         file_debt=file_debt,
+        coverage_excluded_files=coverage_excluded_files,
     )
 
     payload = {
@@ -933,6 +953,7 @@ def main() -> int:
     thinness_path = normalize_user_path(args.thinness_index, root)
     vacuity_path = normalize_user_path(args.vacuity_index, root)
     surrogate_path = normalize_user_path(args.surrogate_index, root)
+    quarantine_manifest_path = normalize_user_path(args.quarantine_manifest, root)
     out_path = normalize_user_path(args.out, root)
     json_out_path = normalize_user_path(args.json_out, root)
 
@@ -948,6 +969,8 @@ def main() -> int:
         vacuity_path,
         surrogate_path,
     )
+
+    coverage_excluded_files = load_quarantine_manifest_files(quarantine_manifest_path)
 
     dep_g = build_dependency_graph(graph_path)
     components, _comp_of, dep_comp_g = scc_condensation(dep_g)
@@ -970,6 +993,7 @@ def main() -> int:
         top_capstones=args.top_capstones,
         top_roots=args.top_roots,
         top_modules=args.top_modules,
+        coverage_excluded_files=coverage_excluded_files,
     )
 
     out_path.parent.mkdir(parents=True, exist_ok=True)

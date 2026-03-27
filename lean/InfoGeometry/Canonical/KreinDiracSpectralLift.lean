@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.InformationCalculus
+import InfoGeometry.Canonical.InformationPartitionCore
 import InfoGeometry.Canonical.KreinDiracPolarizationBridge
 
 /-!

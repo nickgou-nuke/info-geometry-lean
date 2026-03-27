@@ -1,5 +1,5 @@
 import InfoGeometry.Basic
-import InfoGeometry.Canonical.InformationCalculus
+import InfoGeometry.Canonical.InformationPartitionCore
 import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.MaxEnt.JaynesInfoStatMech
 

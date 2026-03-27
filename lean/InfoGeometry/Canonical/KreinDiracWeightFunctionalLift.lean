@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SplitCliffordThermalBridge
+import InfoGeometry.Canonical.InformationPartitionCore
 
 /-!
 # Krein Dirac Weight Functional Lift

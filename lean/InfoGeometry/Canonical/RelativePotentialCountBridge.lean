@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Canonical.SinkhornKMSCore
+import InfoGeometry.Meta.Architecture
 
 /-!
 # InfoGeometry.Canonical.RelativePotentialCountBridge
@@ -37,6 +38,7 @@ noncomputable def relativeCountDensity
   fun i => counts i / ref i
 
 /-- Pointwise logarithm of the raw relative count ratio. -/
+@[rep_depth count]
 noncomputable def relativeCountLogDensity
     (counts ref : RelativeCounts n) : Fin n → ℝ :=
   fun i => Real.log (relativeCountDensity n counts ref i)

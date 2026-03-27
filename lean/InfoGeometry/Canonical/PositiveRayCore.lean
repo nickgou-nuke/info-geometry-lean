@@ -1,5 +1,6 @@
 import InfoGeometry.Projective.Normalize
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import InfoGeometry.Meta.Architecture
 
 /-!
 # InfoGeometry.Canonical.PositiveRayCore
@@ -70,6 +71,7 @@ noncomputable def gaugeSection : PositiveRay α → InfoGeometry.PositiveMeasure
     (InfoGeometry.Projective.Normalize.Z_normalizeOnProj (α := α) q)
 
 /-- Logarithmic density of the canonical gauge representative. -/
+@[rep_depth projective]
 noncomputable def logDensity (q : PositiveRay α) : α → ℝ :=
   fun a => Real.log (gaugeSection (α := α) q a)
 

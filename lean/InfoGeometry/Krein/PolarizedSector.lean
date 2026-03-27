@@ -1,5 +1,6 @@
 import InfoGeometry.Krein.SplitQuadraticSheets
 import InfoGeometry.Clifford.Grading
+import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
@@ -123,6 +124,7 @@ theorem projectedMinus_divergence_nonpos (q k : H2) :
     (spectralMinusProj_mem_minusSheet (E := E) k)
 
 /-- On the positive spectral sector, the interaction reduces to the Euclidean calibrated form. -/
+@[rep_depth krein]
 theorem neg_polarizedDivergence_eq_plusSheet_interaction (q k : H2) :
     -polarizedDivergence (E := E) q k
       = inner ℝ (WithLp.fst q) (WithLp.fst k)

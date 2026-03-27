@@ -1,5 +1,6 @@
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib.Analysis.InnerProductSpace.Calculus
+import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
@@ -98,6 +99,7 @@ private theorem kreinInner_sub_sq (x y : H₂) :
   ring_nf
 
 /-- The split/Krein divergence is the signed half Krein norm-square. -/
+@[rep_depth krein]
 theorem divergence_eq_half_signed_krein_sq (x y : H₂) :
     divergence (E := E) x y
       = (1 / 2 : ℝ) * KreinSpace.kreinInner (H := H₂) (x - y) (x - y) := by

@@ -3,6 +3,7 @@ import InfoGeometry.Convex.LogSumExp
 import InfoGeometry.Krein.PolarizedSector
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Tactic.Ring
+import InfoGeometry.Meta.Architecture
 
 /-!
 # Polarized Split Attention
@@ -49,6 +50,7 @@ private noncomputable def dotProductSoftmaxWeights
   softmax (n := Fin n) (dotProductLogits (E := E) (V := V) q ctx β)
 
 /-- Positive-sheet split attention weights. -/
+@[rep_depth thermo]
 noncomputable def polarizedPlusAttentionWeights
     (q : E) (ctx : ContextWindow n E V) (β : ℝ) : Fin n → ℝ :=
   softmax (n := Fin n) (polarizedPlusLogits (E := E) (V := V) q ctx β)

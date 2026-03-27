@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Quantum.RealMajorana
+import InfoGeometry.Meta.Architecture
 
 /-!
 # Bogoliubov Polarization Bridge
@@ -71,6 +72,7 @@ Canonical packaged bridge for the doubled thermal reading:
 Bogoliubov transport carries one polarization to another, and the target
 polarization induces the projector-super ladder pair used by the Fock layer.
 -/
+@[rep_depth transport]
 theorem bogoliubovPolarizationBridge_of_strictSymmetry
     {X Y : PolarizedMajorana (S := DoubledSpace E) M} (h : X ⟶ Y) :
     (h.toBogoliubovTransform).transportP X.polarization = Y.polarization.P ∧

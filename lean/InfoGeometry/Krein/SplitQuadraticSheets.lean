@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.SplitQuadratic
+import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
@@ -144,6 +145,7 @@ theorem potential_minusPoint_eq_neg_half_norm_sq (ξ : E) :
   ring
 
 /-- On the positive split sheet, the signed Krein divergence becomes Euclidean. -/
+@[rep_depth krein]
 theorem divergence_plusPoint_eq_half_sqdist (x y : E) :
     SplitQuadratic.divergence (E := E) (plusPoint (E := E) x) (plusPoint (E := E) y)
       = (1 / 2 : ℝ) * inner ℝ (x - y) (x - y) := by

@@ -2707,14 +2707,6 @@ attribute [blueprint] InfoGeometry.Canonical.Rosetta.weylScaleTransportScalarSha
 attribute [blueprint] InfoGeometry.Canonical.Rosetta.weylScaleTransportScalarShadow_self_eq_zero_of_jordanBregman
 attribute [blueprint] InfoGeometry.Canonical.Rosetta.weylScaleTransportShadow
 attribute [blueprint] InfoGeometry.Canonical.Rosetta.weylScaleTransportShadow_apply
-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.bayesian_inference_as_creation
-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.data_model_split_is_projector_split
-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.einstein_inducedChemicalPotential_eq_transportedResidual
-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.fierz_power_conservation
-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.grandCanonical_eq_hamiltonian_of_vacuumTransported
-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.majorana_belief_iff_zero_uncertainty
-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.super_even_even_eq_commutator
-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.super_odd_odd_eq_anticommutator
 attribute [blueprint] InfoGeometry.Canonical.ScaleEquivariantFlow
 attribute [blueprint] InfoGeometry.Canonical.ScaleEquivariantFlow.IsCocycle
 attribute [blueprint] InfoGeometry.Canonical.ScaleEquivariantFlow.flowOf

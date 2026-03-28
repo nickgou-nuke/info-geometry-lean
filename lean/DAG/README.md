@@ -2,6 +2,7 @@
 
 `lean/DAG/` is the Lean-side graph export layer for this repository.
 It is not the sole owner of architectural grammar anymore; depth legality now starts in:
+- [lawful-flow-glossary.md](../../docs/lawful-flow-glossary.md) for constitutive boundary/defect tag semantics
 - [Architecture.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Meta/Architecture.lean)
 - [Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
 

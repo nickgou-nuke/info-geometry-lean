@@ -85,19 +85,27 @@ def transitivelyUsedConstants (env : Environment) (root : Name) : NameSet := Id.
           frontier := frontier.insert dep
   return used
 
-/-- Architecture violations detected for a non-capstone declaration. -/
+/-- Direct constants used by a declaration body or proof term. -/
+def directlyUsedConstants (env : Environment) (root : Name) : NameSet := Id.run do
+  let mut used : NameSet := {}
+  if let some info := env.find? root then
+    for (dep, _) in DAG.edgesFromConstantInfo info do
+      used := used.insert dep
+  return used
+
+/-- Architecture violations detected from direct tagged dependencies. -/
 def taggedDependencyViolations
-    (env : Environment) (declName : Name) (depth : RepDepth) : Array MessageData := Id.run do
+    (env : Environment) (declName : Name) (depth : RepDepth) (allowComposite : Bool) : Array MessageData := Id.run do
   let mut out := #[]
-  let deps := transitivelyUsedConstants env declName
+  let deps := directlyUsedConstants env declName
   for dep in deps do
     if let some depDepth := repDepth? env dep then
       let d := depth.toNat
       let d' := depDepth.toNat
       if d' > d then
-        out := out.push m!"REGRESSION: {declName} (L{d}) depends on {dep} (L{d'})."
-      else if d' + 1 < d then
-        out := out.push m!"WORMHOLE: {declName} (L{d}) reaches {dep} (L{d'})."
+        out := out.push m!"REGRESSION: {declName} (L{d}) directly depends on {dep} (L{d'})."
+      else if !allowComposite && d' + 1 < d then
+        out := out.push m!"WORMHOLE: {declName} (L{d}) directly depends on {dep} (L{d'})."
   out
 
 /-- Lean-native architecture audit for the tagged stable spine. -/
@@ -127,8 +135,8 @@ def checkArchitectureTopology : CoreM Unit := do
         errors := errors.push m!"INVALID CAPSTONE: {declName} is tagged `@[capstone]` but missing from the environment."
 
   for (declName, depth) in taggedDecls do
-    if !(capstoneAttr.hasTag env declName) then
-      errors := errors ++ taggedDependencyViolations env declName depth
+    let allowComposite := capstoneAttr.hasTag env declName
+    errors := errors ++ taggedDependencyViolations env declName depth allowComposite
 
   if errors.isEmpty then
     logInfo m!"Architecture Audit PASS: {taggedDecls.size} tagged declarations obey the stable depth grammar."

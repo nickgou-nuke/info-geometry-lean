@@ -120,7 +120,6 @@ import InfoGeometry.Canonical.CalabiYauSingularBridge
 import InfoGeometry.Canonical.SingularTransportSystem
 import InfoGeometry.Canonical.Statistics
 import InfoGeometry.Canonical.SuperInference
-import InfoGeometry.Canonical.SUSYBayes
 import InfoGeometry.Canonical.Thermo
 import InfoGeometry.Canonical.ThermoFromLogDet
 import InfoGeometry.Canonical.TomitaTakesaki

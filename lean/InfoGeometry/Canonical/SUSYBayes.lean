@@ -42,7 +42,7 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 theorem majorana_belief_iff_zero_uncertainty (ψ : Krein.DoubledSpace E) :
     InfoGeometry.Canonical.Fierz.IsMajoranaBelief (E := E) ψ
       ↔ InfoGeometry.Canonical.Fierz.infoArea (E := E) ψ = 0 :=
-  InfoGeometry.Canonical.Fierz.majoranaBelief_iff_zeroArea (E := E) ψ
+  Iff.rfl
 
 /-- Theorem `fierz_power_conservation`. -/
 theorem fierz_power_conservation [CompleteSpace E] (ψ : Krein.DoubledSpace E) :

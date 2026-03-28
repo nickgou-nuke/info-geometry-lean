@@ -1,0 +1,34 @@
+# module | reason
+InfoGeometry.Canonical.AQFTOperatorInterface | downgraded to a preparation layer, but still only packages readiness certificates beside compression/interpretation surrogates
+InfoGeometry.Canonical.AnomalyDilationBridge | bridge theorem layer depends on quarantined conformal synthesis and cannot yet live on the stable surface
+InfoGeometry.Canonical.BeliefDynamics | finite scaffold hardcodes identity transport and metric replacement semantics
+InfoGeometry.Canonical.BerryPhase | canonical bridge remains on the vacuity quarantine surface
+InfoGeometry.Canonical.CalabiYauBridge | closure state stores the Ricci-flat/constant-density witness it later reprojects
+InfoGeometry.Canonical.ChiralAction | canonical bridge remains on the vacuity quarantine surface
+InfoGeometry.Canonical.ChiralCliffordBridge | torsion/chiral bridge packages caller-supplied witnesses into theorem-shaped interfaces
+InfoGeometry.Canonical.ChiralTorsionBridge | theorem surface projects stored torsion/chiral witnesses instead of deriving them
+InfoGeometry.Canonical.ConformalWard | Ward identity is baked into the definition of the variation
+InfoGeometry.Canonical.ConnesArakiFramework | theorem surface is a packaged readback over stored Casini/bridge witnesses rather than independent derivation
+InfoGeometry.Canonical.CountSubstrateBridge | count-first bridge re-exports the quarantined holographic package
+InfoGeometry.Canonical.DeepHorizon | facade re-exports quarantined holographic-emergence claims
+InfoGeometry.Canonical.DiracRicciBridge | bridge uses constant/zero trajectory surrogates in its canonical API
+InfoGeometry.Canonical.GrandSynthesis | capstone package depends on quarantined vacuous bridge modules
+InfoGeometry.Canonical.GrandUnificationBlueprint | grand-unification identity is promoted from tautological anomaly cancellation
+InfoGeometry.Canonical.HolographicEmergence | vacuum-apex twistor closure is driven by a zero quadratic form surrogate
+InfoGeometry.Canonical.InformationCalculus | continuum interface is built on the scalar/identity Yang-Mills scaffold
+InfoGeometry.Canonical.MasterSynthesis | synthesis theorem repackages supplied witnesses and degenerate path choices
+InfoGeometry.Canonical.OperatorAlgebraBridge | bridge now packages AQFT readiness honestly, but still offers no genuine operator-algebra transport
+InfoGeometry.Canonical.PerelmanW | canonical bridge remains on the vacuity quarantine surface
+InfoGeometry.Canonical.RedLine | red-line synthesis remains on the vacuity quarantine surface
+InfoGeometry.Canonical.Rosetta | rosetta facade remains on the vacuity quarantine surface
+InfoGeometry.Canonical.SUSYBayes | canonical SUSY/Bayesian facade is theorem-shaped packaging over lower Fock/Fierz/Bogoliubov statements with no unique constructive load
+InfoGeometry.Canonical.WeylInformationGauge | canonical gauge synthesis depends on quarantined bridge statements
+InfoGeometry.Canonical.YangMillsFinite | finite Yang-Mills bridge stores obligations as fields and reprojects them
+InfoGeometry.Canonical.YangMillsBridge | canonical Yang-Mills bridge remains on the vacuity quarantine surface
+InfoGeometry.Prequantum.Connection | scalarized covariant-derivative interface is mostly readback from stored prequantum bundle data plus universal Weyl scaling packaging
+InfoGeometry.Prequantum.Quotient | quotient layer is a thin descent wrapper over the quarantined scalarized connection interface
+InfoGeometry.Projective.TwistorBridge | twistor bridge is discharged by `zeroNullQuadraticForm := 0` and a scaled-zero anomaly form
+InfoGeometry.Unstable.YangMillsBridge | bridge stores QFT obligations and later projects them out
+
+InfoGeometry.Canonical.ChiralTorsionRelativeVolume | imports quarantined BeliefDynamics and still sits on the review-surface facade path
+InfoGeometry.Canonical.CountEmergentFlow | imports quarantined HolographicEmergence and still sits on the review-surface facade path

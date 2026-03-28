@@ -22,16 +22,6 @@ noncomputable def informationBerryPhase (L : BayesianLoop E) (CST : ChiralSpectr
 noncomputable def anomalyFlux (L : BayesianLoop E) (CST : ChiralSpectralTriple E) : ℝ :=
   (L.N : ℝ) * chiralAnomalyIndex CST
 
-/-- Loop-holonomy identity: Berry phase equals anomaly flux. -/
-theorem berryPhase_eq_anomaly_flux
-    (L : BayesianLoop E) (CST : ChiralSpectralTriple E) :
-    informationBerryPhase L CST = anomalyFlux L CST := rfl
-
-/-- Exact decomposition of the Berry phase into loop length and anomaly index. -/
-theorem informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex
-    (L : BayesianLoop E) (CST : ChiralSpectralTriple E) :
-    informationBerryPhase L CST = (L.N : ℝ) * chiralAnomalyIndex CST := rfl
-
 /-- Expanded form: Berry phase equals loop length times `ε` times spectral projector rank. -/
 theorem informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank
     (L : BayesianLoop E) (CST : ChiralSpectralTriple E) :

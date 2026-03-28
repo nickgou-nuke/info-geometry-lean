@@ -122,11 +122,6 @@ lemma modularK_comp_KConjugate (A : EndH (E := E)) :
     _ = -(A.comp (modularK (E := E))) := by
           simp
 
-/-- Canonical split sum identity. -/
-theorem kSplit_sum (A : EndH (E := E)) :
-    KLinearPart (E := E) A + KAntilinearPart (E := E) A = A :=
-  KLinearPart_add_KAntilinearPart (E := E) A
-
 /-- The `K`-linear split component commutes with `K`. -/
 theorem kSplit_linear (A : EndH (E := E)) :
     KLinear (E := E) (KLinearPart (E := E) A) := by
@@ -176,11 +171,6 @@ theorem kSplit_antilinear (A : EndH (E := E)) :
             exact congrArg (fun T => (1 / 2 : ℝ) • T) hCore
     _ = -((1 / 2 : ℝ) • ((modularK (E := E)).comp (A + KConjugate (E := E) A))) := by
           simp
-
-/-- Exact algebraic split identity. -/
-theorem bdg_split_identity (A : EndH (E := E)) :
-    A = KLinearPart (E := E) A + KAntilinearPart (E := E) A := by
-  simpa using (KLinearPart_add_KAntilinearPart (E := E) A).symm
 
 /--
 Real BdG datum with internal complex axis `K = J ∘ ε` and symmetry package.

@@ -74,8 +74,4 @@ def UnificationComplete : Prop :=
     (L : BayesianLoop E) (IST : InfoSpectralTriple E),
     AnomalyInflowClosure L IST
 
-/-- The Grand Unification Identity holds: anomaly inflow cancels for all architectures. -/
-theorem unification_complete : UnificationComplete :=
-  fun _E _ _ _ _ L IST => anomalyInflowClosure L IST
-
 end InfoGeometry.Canonical.GrandUnificationBlueprint

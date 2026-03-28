@@ -364,12 +364,10 @@ attribute [blueprint] InfoGeometry.Canonical.BeliefAlgebra.BeliefSystem.non_comm
 attribute [blueprint] InfoGeometry.Canonical.BerryPhase.anomalyFlux
 attribute [blueprint] InfoGeometry.Canonical.BerryPhase.anomalyFlux.eq_1
 attribute [blueprint] InfoGeometry.Canonical.BerryPhase.berryConnection
-attribute [blueprint] InfoGeometry.Canonical.BerryPhase.berryPhase_eq_anomaly_flux
 attribute [blueprint] InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero
 attribute [blueprint] InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal
 attribute [blueprint] InfoGeometry.Canonical.BerryPhase.informationBerryPhase
 attribute [blueprint] InfoGeometry.Canonical.BerryPhase.informationBerryPhase.eq_1
-attribute [blueprint] InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex
 attribute [blueprint] InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank
 attribute [blueprint] InfoGeometry.Canonical.BerryPhase.informationBerryPhase_ne_zero_of_loopLength_ne_zero_of_chiralAnomalyIndex_ne_zero
 attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.BogoliubovMixingParams
@@ -1106,7 +1104,6 @@ attribute [blueprint] InfoGeometry.Canonical.FUSION.freeEnergy
 attribute [blueprint] InfoGeometry.Canonical.FUSION.gibbsWeights
 attribute [blueprint] InfoGeometry.Canonical.FUSION.partitionFunction
 attribute [blueprint] InfoGeometry.Canonical.FUSION.phase_transition_catastrophe
-attribute [blueprint] InfoGeometry.Canonical.Fierz.majoranaBelief_iff_zeroArea
 attribute [blueprint] InfoGeometry.Canonical.FiniteCoarseGraining
 attribute [blueprint] InfoGeometry.Canonical.FiniteCoarseGraining.fiberWeight
 attribute [blueprint] InfoGeometry.Canonical.FiniteCoarseGraining.fiberWeight.congr_simp
@@ -1702,7 +1699,6 @@ attribute [blueprint] InfoGeometry.Canonical.InformationCalculus.ModularRadonNik
 attribute [blueprint] InfoGeometry.Canonical.InformationCalculus.ModularRadonNikodymData.logInformationPartitionFunction.eq_1
 attribute [blueprint] InfoGeometry.Canonical.InformationNumber.informationNumber
 attribute [blueprint] InfoGeometry.Canonical.InformationNumber.informationNumber.eq_1
-attribute [blueprint] InfoGeometry.Canonical.InformationNumber.informationNumber_eq_dim
 attribute [blueprint] InfoGeometry.Canonical.InformationTorsion.Connection
 attribute [blueprint] InfoGeometry.Canonical.InformationTorsion.DualConnections
 attribute [blueprint] InfoGeometry.Canonical.InformationTorsion.DualConnections.mk.inj
@@ -2447,13 +2443,11 @@ attribute [blueprint] InfoGeometry.Canonical.RealBdG.RealBdGDatum.chiral
 attribute [blueprint] InfoGeometry.Canonical.RealBdG.RealBdGDatum.mk.inj
 attribute [blueprint] InfoGeometry.Canonical.RealBdG.RealBdGDatum.particleHole
 attribute [blueprint] InfoGeometry.Canonical.RealBdG.RealBdGDatum.timeReversal
-attribute [blueprint] InfoGeometry.Canonical.RealBdG.bdg_split_identity
 attribute [blueprint] InfoGeometry.Canonical.RealBdG.complexAction
 attribute [blueprint] InfoGeometry.Canonical.RealBdG.complexAction.eq_1
 attribute [blueprint] InfoGeometry.Canonical.RealBdG.complexI_action_eq_modularK
 attribute [blueprint] InfoGeometry.Canonical.RealBdG.kSplit_antilinear
 attribute [blueprint] InfoGeometry.Canonical.RealBdG.kSplit_linear
-attribute [blueprint] InfoGeometry.Canonical.RealBdG.kSplit_sum
 attribute [blueprint] InfoGeometry.Canonical.RealBdG.modularK
 attribute [blueprint] InfoGeometry.Canonical.RealBdG.modularK_apply_modularK
 attribute [blueprint] InfoGeometry.Canonical.RealBdG.modularK_comp_KConjugate
@@ -6874,7 +6868,6 @@ attribute [blueprint] InfoGeometry.SuperUnified.bracket_boson_boson_is_bosonic
 attribute [blueprint] InfoGeometry.SuperUnified.bracket_boson_fermion_is_fermionic
 attribute [blueprint] InfoGeometry.SuperUnified.bracket_fermion_fermion_is_bosonic
 attribute [blueprint] InfoGeometry.SuperUnified.clifford_decomposition
-attribute [blueprint] InfoGeometry.SuperUnified.epsilon_is_fermionic
 attribute [blueprint] InfoGeometry.SuperUnified.hamiltonian_is_bosonic
 attribute [blueprint] InfoGeometry.SuperUnified.jordanProduct
 attribute [blueprint] InfoGeometry.SuperUnified.jordanProduct.eq_1

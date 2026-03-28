@@ -108,11 +108,6 @@ def IsBosonic (J : End E) (A : End E) : Prop :=
 def IsFermionic (J : End E) (A : End E) : Prop :=
   J.comp A = -(A.comp J)
 
-/-- `epsilon` is fermionic by anticommutation. -/
-theorem epsilon_is_fermionic (S : SuperKaehlerStructure (E := E)) :
-    IsFermionic S.J S.epsilon :=
-  S.anticomm
-
 /-- Square of a fermion is bosonic. -/
 theorem hamiltonian_is_bosonic (S : SuperKaehlerStructure (E := E)) :
     IsBosonic S.J (S.epsilon.comp S.epsilon) := by

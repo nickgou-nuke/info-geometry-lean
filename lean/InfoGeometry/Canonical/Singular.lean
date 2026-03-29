@@ -42,14 +42,6 @@ def EinsteinAnomaly (a b_mp b_dr : R) : R :=
   P_MP * P_D - P_D * P_MP
 
 /--
-Theorem: Singularity Regularization
-Degenerate manifolds in the Einstein Universe are stabilized by the generalized inverse.
--/
-theorem RegularizationStability (a b_mp : R) (h_mp : IsMoorePenroseInverse a b_mp) :
-  a * b_mp * a = a :=
-  h_mp.aba_eq_a
-
-/--
 Theorem: Chiral/Einstein Anomaly Skew-Adjointness
 The anomaly, defined as the commutator between the Geometric and Spectral projectors,
 is strictly skew-adjoint when both projectors are self-adjoint.

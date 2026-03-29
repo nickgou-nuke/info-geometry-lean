@@ -54,7 +54,6 @@ namespace InfoGeometry.Canonical.Rosetta
 export InfoGeometry.Canonical.GrandUnification (
   JordanKKTData
   IsJordanKKTGeometry
-  geometry_divergence_eq_jordan_bregman
 )
 
 export InfoGeometry.Canonical.Cayley (
@@ -186,10 +185,6 @@ export InfoGeometry.Canonical.ScaleEquivariantFlow (
 
 export InfoGeometry.Canonical.WeylLineIntegrator (
   finiteSumIntegrator
-  finiteSumIntegrator_integrate_eq
-  finiteSumIntegrator_integrateConnection_eq_sum
-  finiteSumIntegrator_holonomy_eq_sum
-  finiteSumIntegrator_integrateCurvature_eq_sum
   finiteSumIntegrator_integrateCurvature_eq_zero_of_flat
   integrateConnection
   integrateCurvature

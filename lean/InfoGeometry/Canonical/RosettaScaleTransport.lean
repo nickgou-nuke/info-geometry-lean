@@ -37,17 +37,6 @@ noncomputable def weylScaleTransportShadow
   fun s => realize <|
     InfoGeometry.Canonical.ScaleEquivariantFlow.transportObservable Ξ phaseOf (path 0) (path s)
 
-/-- Pointwise expansion of `weylScaleTransportShadow`. -/
-@[simp] theorem weylScaleTransportShadow_apply
-    (Ξ : InfoGeometry.Canonical.ScaleEquivariantFlow I F A)
-    (phaseOf : A → P)
-    (realize : P → InfoGeometry.Canonical.BottDirac.Endomorphism H)
-    (path : ℝ → I)
-    (s : ℝ) :
-    weylScaleTransportShadow (H := H) Ξ phaseOf realize path s =
-      realize (InfoGeometry.Canonical.ScaleEquivariantFlow.transportObservable Ξ phaseOf (path 0) (path s)) := by
-  rfl
-
 /--
 If a Weyl scale-transport shadow acts injectively on the carrier and transports
 both chiral slices to the baseline through the Clifford label action, then it
@@ -183,16 +172,6 @@ noncomputable def weylScaleTransportScalarShadow
     I → I → ℝ :=
   fun i j => scalarOf (InfoGeometry.Canonical.ScaleEquivariantFlow.transportObservable Ξ phaseOf i j)
 
-/-- Pointwise expansion of `weylScaleTransportScalarShadow`. -/
-@[simp] theorem weylScaleTransportScalarShadow_apply
-    (Ξ : InfoGeometry.Canonical.ScaleEquivariantFlow I F A)
-    (phaseOf : A → P)
-    (scalarOf : P → ℝ)
-    (i j : I) :
-    weylScaleTransportScalarShadow Ξ phaseOf scalarOf i j =
-      scalarOf (InfoGeometry.Canonical.ScaleEquivariantFlow.transportObservable Ξ phaseOf i j) := by
-  rfl
-
 /--
 If a Weyl scale-transport scalar shadow agrees with the dual-flat divergence,
 then any Jordan/KKT realization of that divergence reads the same shadow as the
@@ -214,8 +193,7 @@ theorem weylScaleTransportScalarShadow_eq_jordanBregman_of_isJordanKKTGeometry
         J.DBregman x y := by
   intro x y
   rw [hShadowDiv x y]
-  exact InfoGeometry.Canonical.GrandUnification.geometry_divergence_eq_jordan_bregman
-    (J := J) (S := S) hJG x y
+  exact hJG x y
 
 /--
 Conversely, if the same Weyl scale-transport shadow reads both the dual-flat
@@ -239,71 +217,6 @@ theorem isJordanKKTGeometry_of_weylScaleTransportShadow
   intro x y
   rw [← hShadowDiv x y, hShadowJ x y]
 
-/-- Transported scalar shadow vanishes on the diagonal in the Jordan/KKT lane. -/
-@[simp] theorem weylScaleTransportScalarShadow_self_eq_zero_of_jordanBregman
-    (Ξ : InfoGeometry.Canonical.ScaleEquivariantFlow I F A)
-    (phaseOf : A → P)
-    (scalarOf : P → ℝ)
-    (indexOf : E → I)
-    (J : InfoGeometry.Canonical.GrandUnification.JordanKKTData E)
-    (hShadowJ : ∀ x y : E,
-      weylScaleTransportScalarShadow Ξ phaseOf scalarOf (indexOf x) (indexOf y) =
-        J.DBregman x y)
-    (x : E) :
-    weylScaleTransportScalarShadow Ξ phaseOf scalarOf (indexOf x) (indexOf x) = 0 := by
-  rw [hShadowJ x x]
-  exact J.DBregman_self x
-
-/-- Transported scalar shadow is nonnegative in the Jordan/KKT lane. -/
-theorem weylScaleTransportScalarShadow_nonneg_of_jordanBregman
-    (Ξ : InfoGeometry.Canonical.ScaleEquivariantFlow I F A)
-    (phaseOf : A → P)
-    (scalarOf : P → ℝ)
-    (indexOf : E → I)
-    (J : InfoGeometry.Canonical.GrandUnification.JordanKKTData E)
-    (hShadowJ : ∀ x y : E,
-      weylScaleTransportScalarShadow Ξ phaseOf scalarOf (indexOf x) (indexOf y) =
-        J.DBregman x y)
-    (x y : E) :
-    0 ≤ weylScaleTransportScalarShadow Ξ phaseOf scalarOf (indexOf x) (indexOf y) := by
-  rw [hShadowJ x y]
-  exact J.DBregman_nonneg x y
-
-/-- Transported scalar shadow detects equality in the Jordan/KKT lane. -/
-theorem weylScaleTransportScalarShadow_eq_zero_iff_of_jordanBregman
-    (Ξ : InfoGeometry.Canonical.ScaleEquivariantFlow I F A)
-    (phaseOf : A → P)
-    (scalarOf : P → ℝ)
-    (indexOf : E → I)
-    (J : InfoGeometry.Canonical.GrandUnification.JordanKKTData E)
-    (hShadowJ : ∀ x y : E,
-      weylScaleTransportScalarShadow Ξ phaseOf scalarOf (indexOf x) (indexOf y) =
-        J.DBregman x y)
-    (x y : E) :
-    weylScaleTransportScalarShadow Ξ phaseOf scalarOf (indexOf x) (indexOf y) = 0 ↔ x = y := by
-  rw [hShadowJ x y]
-  exact J.DBregman_eq_zero_iff x y
-
-/--
-The generalized Pythagorean law transports from Jordan/KKT geometry to the
-Weyl scale shadow once the shadow reads the Jordan Bregman divergence.
--/
-theorem weylScaleTransportScalarShadow_generalized_pythagorean_of_jordanBregman
-    (Ξ : InfoGeometry.Canonical.ScaleEquivariantFlow I F A)
-    (phaseOf : A → P)
-    (scalarOf : P → ℝ)
-    (indexOf : E → I)
-    (J : InfoGeometry.Canonical.GrandUnification.JordanKKTData E)
-    (hShadowJ : ∀ x y : E,
-      weylScaleTransportScalarShadow Ξ phaseOf scalarOf (indexOf x) (indexOf y) =
-        J.DBregman x y)
-    (x y z : E)
-    (hOrth : J.IsBregmanOrthogonal x y z) :
-    weylScaleTransportScalarShadow Ξ phaseOf scalarOf (indexOf x) (indexOf y)
-      + weylScaleTransportScalarShadow Ξ phaseOf scalarOf (indexOf y) (indexOf z)
-      = weylScaleTransportScalarShadow Ξ phaseOf scalarOf (indexOf x) (indexOf z) := by
-  rw [hShadowJ x y, hShadowJ y z, hShadowJ x z]
-  exact J.generalized_pythagorean_theorem x y z hOrth
 
 end WeylScaleJordanRosetta
 

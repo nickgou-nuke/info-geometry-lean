@@ -22,8 +22,4 @@ export InfoGeometry.Jordan (
   logDetBregman_self
 )
 
-@[simp] theorem logDetBarrier_eq_neg_log_det
-    {n : ℕ} (X : InfoGeometry.Jordan.SPD n) :
-    logDetBarrier X = -Real.log (Matrix.det X.mat) := rfl
-
 end InfoGeometry.Canonical.LogDet

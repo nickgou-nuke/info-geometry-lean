@@ -38,11 +38,6 @@ noncomputable def partitionFromLogDet
     (X0 : SPD n) (X : Ω → SPD n) (ε : ℝ) : ℝ :=
   Z (energyFromLogDet (X0 := X0) X) ε
 
-@[simp] lemma partitionFromLogDet_def
-    (X0 : SPD n) (X : Ω → SPD n) (ε : ℝ) :
-    partitionFromLogDet (X0 := X0) X ε
-      = Z (energyFromLogDet (X0 := X0) X) ε := rfl
-
 section ProbabilisticLemmas
 
 variable [Nonempty Ω]

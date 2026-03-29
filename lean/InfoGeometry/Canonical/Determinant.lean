@@ -1,13 +1,12 @@
 import InfoGeometry.Canonical.DeterminantCore
 import InfoGeometry.Canonical.LogGenerator
-import InfoGeometry.Canonical.ZetaDeterminant
 import InfoGeometry.Volume.Base
 import InfoGeometry.Volume.LogPotential
 
 /-!
 # InfoGeometry.Canonical.Determinant
 
-Canonical determinant/group surface.
+Canonical determinant/group surface for linear equivalences.
 -/
 
 namespace InfoGeometry.Canonical.Determinant

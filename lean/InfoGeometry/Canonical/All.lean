@@ -128,7 +128,6 @@ import InfoGeometry.Canonical.TopologicalInvariants
 import InfoGeometry.Canonical.Triality
 import InfoGeometry.Canonical.Twistor
 import InfoGeometry.Canonical.Unification
-import InfoGeometry.Canonical.WilsonLoop
 import InfoGeometry.PositiveMeasure
 import InfoGeometry.Quantum.BulkBoundaryIndexBridge
 import InfoGeometry.Quantum.ModularAnomaly

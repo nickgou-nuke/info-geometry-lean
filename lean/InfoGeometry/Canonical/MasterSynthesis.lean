@@ -9,6 +9,7 @@ import InfoGeometry.Canonical.CalabiYauBridge
 import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Canonical.UniversalVolume
 import InfoGeometry.Canonical.Determinant
+import InfoGeometry.Canonical.ZetaDeterminant
 import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Canonical.BekensteinBound
 import InfoGeometry.Canonical.TomitaTakesaki

@@ -6,8 +6,10 @@ import InfoGeometry.Canonical.QuantumInference
 /-!
 # InfoGeometry.Canonical.WilsonLoop
 
-Canonical bridge surface for information Wilson loops, path integrals, and
-belief-update noncommutativity.
+Canonical façade/API surface for information Wilson loops, path integrals,
+and belief-update noncommutativity. This file re-exports a curated user-facing
+surface and provides canonical `[simp]` unfolding lemmas; it does not add new
+bridge theorems of its own.
 -/
 
 namespace InfoGeometry.Canonical.WilsonLoop
@@ -46,7 +48,6 @@ export InfoGeometry.Canonical.GaussianHolonomy (
 
 open InfoGeometry.Canonical.QuantumInference
 open InfoGeometry.Canonical.PathIntegral
-open InfoGeometry.Canonical.SpectralInference
 open InfoGeometry.Convex
 open scoped BigOperators
 
@@ -63,7 +64,8 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
     (H : HessianGeometry E) (Dε : DiracField (ℝ → E) n) (γ : ℝ → E) (N : ℕ) (T : ℝ) :
     chiralPathWeight H Dε γ N T
       = continuousWilsonLoop Dε γ
-        * Complex.exp ((- (bayesianAction H (fun i => γ ((i : ℝ) / (N : ℝ))) N) : ℝ) / T) := rfl
+        * Complex.exp ((- (InfoGeometry.Canonical.SpectralInference.bayesianAction H
+            (fun i => γ ((i : ℝ) / (N : ℝ))) N) : ℝ) / T) := rfl
 
 @[simp] theorem expectedHolonomy_eq_partition_ratio
     (H : HessianGeometry E) (Dε : DiracField (ℝ → E) n)
@@ -71,7 +73,8 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
     expectedHolonomy H Dε paths N T
       = (∑ γ ∈ paths,
           continuousWilsonLoop Dε γ
-            * Complex.exp ((- (bayesianAction H (fun i => γ ((i : ℝ) / (N : ℝ))) N) : ℝ) / T))
+            * Complex.exp ((- (InfoGeometry.Canonical.SpectralInference.bayesianAction H
+                (fun i => γ ((i : ℝ) / (N : ℝ))) N) : ℝ) / T))
           / chiralPathIntegral H Dε paths N T := rfl
 
 end InfoGeometry.Canonical.WilsonLoop

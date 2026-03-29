@@ -310,6 +310,14 @@ noncomputable def ofMetric
     H x₀
     (DiracMetricCompatibility.ofMetric (E := E) H x₀)
 
+-- theorem-class: derived
+/-- A positive Dirac operator compatible with the metric is forced to be the canonical positive root. -/
+theorem dirac_eq_canonicalDiracOfMetric_of_isPositive
+    (hPos : IST.D.IsPositive) :
+    IST.D = DiracMetricCompatibility.canonicalDiracOfMetric (E := E) IST.H IST.x₀ := by
+  exact DiracMetricCompatibility.eq_canonicalDiracOfMetric_of_isPositive
+    (E := E) IST.compatibility hPos
+
 omit [FiniteDimensional ℝ E] in
 -- theorem-class: bridge
 /-- The Dirac square is identified with the Hessian metric operator at the basepoint. -/

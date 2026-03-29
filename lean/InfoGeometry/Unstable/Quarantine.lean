@@ -20,6 +20,7 @@ import InfoGeometry.Canonical.InformationCalculus
 import InfoGeometry.Canonical.MasterSynthesis
 import InfoGeometry.Canonical.OperatorAlgebraBridge
 import InfoGeometry.Canonical.PerelmanW
+import InfoGeometry.Canonical.PositiveRayProjectiveBridge
 import InfoGeometry.Canonical.RedLine
 import InfoGeometry.Canonical.Rosetta
 import InfoGeometry.Canonical.SUSYBayes

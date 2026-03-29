@@ -72,7 +72,7 @@ variable [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 open scoped InfoGeometry.Canonical.Determinant
 
 /-- Pauli-exclusion style nilpotency witness for an algebra endomorphism. -/
-def SatisfiesExclusionConnection (Q : AlgebraEnd E) : Prop :=
+private def SatisfiesExclusionConnection (Q : AlgebraEnd E) : Prop :=
   Q * Q = 0
 
 omit [FiniteDimensional ℝ E] in
@@ -125,14 +125,14 @@ private theorem anomalyExclusion_package_of_kahlerLogDet_unitRelativeVolume
 Rigidity of the Information Volume Form (Incompressibility).
 The relative volume measure (Radon-Nikodym derivative) is locked to 1.
 -/
-def IsRigidVolumeForm {n : Nat} (M : SinkhornMatrix n) : Prop :=
+private def IsRigidVolumeForm {n : Nat} (M : SinkhornMatrix n) : Prop :=
   relativeVolumeChangeRN n M = 1
 
 /--
 Helicity Invariant (h).
 The ensemble average of the helicity operator (u ∘ vorticity(u)) under probe ω.
 -/
-noncomputable def helicityInvariant
+private noncomputable def helicityInvariant
     (u : VelocityField E) (ω : VelocityField E →L[ℝ] ℝ) : ℝ :=
   ω (helicityOperator u)
 
@@ -140,7 +140,7 @@ noncomputable def helicityInvariant
 Twin Wave Helicity Invariant (Ω).
 Interference pairing between forward and backward waves in the Krein space.
 -/
-noncomputable def twinWaveHelicity
+private noncomputable def twinWaveHelicity
     (u : VelocityField E) (Ω : AlgebraEnd E →L[ℝ] ℝ) : ℝ :=
   InfoGeometry.Canonical.twinWaveHelicity u Ω
 

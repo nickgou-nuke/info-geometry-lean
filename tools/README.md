@@ -4,6 +4,10 @@ The tooling surface is now split between:
 - Lean-native enforcement under `lean/InfoGeometry/Meta/` and `lean/InfoGeometry/Audit.lean`
 - exported graph and reporting helpers under `lean/DAG/` and `tools/`
 
+The tooling exists to make the repository recoverable when local context is gone.
+It is the maintained memory and audit surface for a theory that is distributed across many representation files.
+Its purpose is to recover owner order, transport structure, coherence pressure, and wrapper burden quickly enough that direct code reading can start in the right place.
+
 The maintained tooling surface is split into three directories:
 - [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md)
 - [tools/frontier/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/frontier/README.md)
@@ -14,7 +18,7 @@ Top-level `tools/*.py` wrappers are convenience entrypoints. The maintained work
 ## Current Split
 
 ### `tools/infra`
-Graph refresh, causal and theorem-surface reports, representation-depth summaries, and locked build orchestration.
+Graph refresh, causal and theorem-surface reports, representation-depth summaries, process-flow reports, and locked build orchestration.
 
 ### `tools/frontier`
 Semantic block export and heavy-file frontier workflows.
@@ -29,3 +33,6 @@ If documentation about tooling disagrees, trust:
 2. the scripts under `tools/infra/`, `tools/frontier/`, and `tools/docs/`
 3. the corresponding READMEs
 4. older wrapper prose
+
+Tooling should summarize the theory's morphisms and debt.
+It should not invent ontology that is absent from the code.

@@ -9,6 +9,9 @@ Use this skill for theorem ownership, file splitting, wrapper elimination, bridg
 
 If the task is repo-wide, also read `/home/goutev/LEAN4/info-geometry-lean/skills/info-geometry-repo/SKILL.md`.
 
+Canonicalization in this repo is morphism-first, not flattening-first.
+The goal is to keep the public owner surface honest while preserving valid mathematics across noncanonical and exploratory surfaces.
+
 ## Core Classification
 
 Every stable file should be classified as one of:
@@ -26,6 +29,8 @@ Every public declaration should be classified as one of:
 - capstone consumer theorem
 
 If a file mixes several roles, split by ownership instead of keeping a mixed facade.
+Do not erase a mathematically meaningful noncanonical presentation just because it is not yet stable.
+Quarantine, demote, or rebuild it honestly.
 
 ## Adjacency Rule
 
@@ -43,6 +48,7 @@ The first enforcement layer is Lean-native:
 
 If a file introduces new ontology and skips a layer, it is debt.
 Multi-layer files are only acceptable as coherence files or capstones.
+The point of cleanup is to make adjacent transports explicit, not to deny that the theory has several legitimate representation levels.
 
 ## Mandatory Theorem Burden
 
@@ -52,6 +58,7 @@ A new public theorem in a canonical owner file is forbidden unless it survives a
 3. non-definitional test: it is not `rfl`, `Iff.rfl`, a one-step `simp`/`simpa`, or unfold-and-rename
 
 If it fails, keep it private, local, or as interpretation vocabulary.
+If the underlying idea is mathematically meaningful but unfinished, move it to a noncanonical or quarantine surface instead of pretending it is canonical proof.
 
 Every new public theorem in a canonical owner file should carry a `-- theorem-class: ...` tag immediately above it.
 
@@ -76,6 +83,11 @@ Every new public theorem in a canonical owner file should carry a `-- theorem-cl
 7. build the new owners and the obvious consumers
 8. only after code is stable, run the DAG pipeline
 
+When context is weak, re-read:
+- `/home/goutev/LEAN4/info-geometry-lean/docs/OperationalIntent.md`
+- `/home/goutev/LEAN4/info-geometry-lean/docs/Theory.md`
+- the specific owner files that actually carry the morphisms
+
 ## Graph Use
 
 Use graph tooling as a second pass only.
@@ -84,3 +96,4 @@ Use graph tooling as a second pass only.
 - `projection-coloring` is heuristic and can collapse after major cleanup
 - `representation-depth-audit` should agree with the native Lean audit
 - `representation-depth-graph` is a rendered presentation map, not the primary law
+- `process-flow` artifacts are useful when deciding whether a declaration is real transport, local wrapper noise, or unresolved coherence pressure

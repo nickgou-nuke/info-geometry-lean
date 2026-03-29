@@ -6,6 +6,7 @@
 - a graph and reporting toolchain under `lean/DAG/` and `tools/infra/`
 
 The repo is best read as one theory with several presentations, not as many unrelated theories.
+The main mathematical burden is not only in the objects at each layer, but in the morphisms that move between those layers and prove that adjacent presentations agree.
 The current stable spine is organized by representation depth:
 - `L0` Count: raw relative counts and positive-measure representatives
 - `L1` Projective/Gauge: positive rays, normalization, relative log-potentials
@@ -22,16 +23,38 @@ That grammar is now enforced in two places:
 - natively in [Architecture.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Meta/Architecture.lean) and [Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
 - as rendered reports in [reports/dag](/home/goutev/LEAN4/info-geometry-lean/reports/dag)
 
+## Repository Intention
+
+The repo should be read as one transport theory over several symmetric, projective, operator, Krein, and thermodynamic presentations.
+`canonical` does not mean "the only true mathematics".
+It means "the stable public owner surface".
+Valid mathematics outside that surface should be developed, quarantined, or promoted honestly, not discarded because it is noncanonical.
+
+The practical goal of formalization here is to make the morphisms explicit and checkable:
+- owner files define the natural presentation-level objects
+- translator files move one adjacent step in the representation ladder
+- coherence files prove that two adjacent composites agree
+- capstone files summarize lower mathematics without pretending to be foundational proof owners
+
+The DAG and Python tooling exist to preserve this intention when local context is lost:
+- they externalize dependency memory
+- they surface owner/translator/coherence/capstone pressure
+- they expose residual comparison debt and wrapper burden
+- they do not legislate mathematical truth or replace code reading
+
+The short operational summary lives in [docs/OperationalIntent.md](/home/goutev/LEAN4/info-geometry-lean/docs/OperationalIntent.md).
+
 ## Read First
 
 1. [Installation.md](/home/goutev/LEAN4/info-geometry-lean/Installation.md)
 2. [NEWCOMER_PATH.md](/home/goutev/LEAN4/info-geometry-lean/NEWCOMER_PATH.md)
 3. [docs/README.md](/home/goutev/LEAN4/info-geometry-lean/docs/README.md)
-4. [docs/Theory.md](/home/goutev/LEAN4/info-geometry-lean/docs/Theory.md)
-5. [lean/InfoGeometry/Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
-6. [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
-7. [tools/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/README.md)
-8. [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md)
+4. [docs/OperationalIntent.md](/home/goutev/LEAN4/info-geometry-lean/docs/OperationalIntent.md)
+5. [docs/Theory.md](/home/goutev/LEAN4/info-geometry-lean/docs/Theory.md)
+6. [lean/InfoGeometry/Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
+7. [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
+8. [tools/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/README.md)
+9. [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md)
 
 If you are operating as an agent inside this repo, also use:
 - [skills/info-geometry-repo/SKILL.md](/home/goutev/LEAN4/info-geometry-lean/skills/info-geometry-repo/SKILL.md)
@@ -83,6 +106,7 @@ python3 tools/infra/generate_representation_depth_graph.py
 ## Documentation Policy
 
 - `README.md`, `lean/DAG/README.md`, `tools/README.md`, and `tools/infra/README.md` are operational docs.
+- [docs/OperationalIntent.md](/home/goutev/LEAN4/info-geometry-lean/docs/OperationalIntent.md) states why the repo, DAG, and infra tooling are maintained the way they are.
 - [docs/Theory.md](/home/goutev/LEAN4/info-geometry-lean/docs/Theory.md) is the conceptual map of the stable spine.
 - [Architecture.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Meta/Architecture.lean) and [Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean) are the native grammar and enforcement layer.
 - `reports/` and `artifacts/dag/` are generated or regenerated surfaces.

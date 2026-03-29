@@ -1697,8 +1697,10 @@ attribute [blueprint] InfoGeometry.Canonical.InformationCalculus.ModularRadonNik
 attribute [blueprint] InfoGeometry.Canonical.InformationCalculus.ModularRadonNikodymData.instNormedSpaceRealEndH
 attribute [blueprint] InfoGeometry.Canonical.InformationCalculus.ModularRadonNikodymData.logInformationPartitionFunction
 attribute [blueprint] InfoGeometry.Canonical.InformationCalculus.ModularRadonNikodymData.logInformationPartitionFunction.eq_1
-attribute [blueprint] InfoGeometry.Canonical.InformationNumber.informationNumber
-attribute [blueprint] InfoGeometry.Canonical.InformationNumber.informationNumber.eq_1
+attribute [blueprint] InfoGeometry.Canonical.InformationNumber.informationNumber_nonneg
+attribute [blueprint] InfoGeometry.Canonical.InformationNumber.informationNumber_le_ambientDim
+attribute [blueprint] InfoGeometry.Canonical.InformationNumber.exists_natCast_eq_informationNumber
+attribute [blueprint] InfoGeometry.Canonical.InformationNumber.informationNumber_eq_ambientDim_of_surjectiveProjection
 attribute [blueprint] InfoGeometry.Canonical.InformationTorsion.Connection
 attribute [blueprint] InfoGeometry.Canonical.InformationTorsion.DualConnections
 attribute [blueprint] InfoGeometry.Canonical.InformationTorsion.DualConnections.mk.inj
@@ -2214,11 +2216,7 @@ attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.abs_squeezingL
 attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.abs_squeezingLogShear_le_of_topologicalBekensteinBound
 attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.cramerRaoMetric
 attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.cramerRaoMetricOp
-attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.cramerRaoMetric_eq_inner_cramerRaoMetricOp
-attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.liouvilleMongeAmpere_iff
 attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.logAbsDet_cramerRaoMetric_eq_zero_of_incompressible
-attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.log_mongeAmpereDensity_eq_logAbsDet_cramerRaoMetric
-attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.mongeAmpereDensity_eq_absDet_cramerRaoMetric_of_nondegenerate
 attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.squeezingEigenMinus
 attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.squeezingEigenPlus
 attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.squeezingEigen_product_eq_one
@@ -2464,7 +2462,6 @@ attribute [blueprint] InfoGeometry.Canonical.ReducedVolumeKind.ofNat_ctorIdx
 attribute [blueprint] InfoGeometry.Canonical.ReducedVolumeKind.pdet.elim
 attribute [blueprint] InfoGeometry.Canonical.ReducedVolumeKind.pfaffian.elim
 attribute [blueprint] InfoGeometry.Canonical.ReducedVolumeKind.toCtorIdx
-attribute [blueprint] InfoGeometry.Canonical.RegularizationStability
 attribute [blueprint] InfoGeometry.Canonical.RelativePotentialCore.gaugeSection_eq_relativeDensity_mul_gaugeSection
 attribute [blueprint] InfoGeometry.Canonical.RelativePotentialCore.relativeDensity
 attribute [blueprint] InfoGeometry.Canonical.RelativePotentialCore.relativeDensity_cocycle

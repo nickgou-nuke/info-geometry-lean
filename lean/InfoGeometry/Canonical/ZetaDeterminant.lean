@@ -150,24 +150,11 @@ noncomputable abbrev zetaLogDetBarrier (X : InfoGeometry.Jordan.SPD n) : ℝ :=
     (X : InfoGeometry.Jordan.SPD n) :
     zetaLogDetBarrier X = InfoGeometry.Jordan.logDetBarrier X := rfl
 
-@[simp] theorem zetaLogDetBarrier_eq_neg_log_det
-    (X : InfoGeometry.Jordan.SPD n) :
-    zetaLogDetBarrier X = -Real.log (Matrix.det X.mat) := by
-  exact InfoGeometry.Canonical.LogDet.logDetBarrier_eq_neg_log_det (X := X)
-
 /-- Thermodynamic zeta-energy alias induced by the Burg/log-det geometry. -/
 noncomputable abbrev zetaEnergyFromLogDet
     {Ω : Type _} [Fintype Ω]
     (X0 : InfoGeometry.Jordan.SPD n) (X : Ω → InfoGeometry.Jordan.SPD n) : Ω → ℝ :=
   InfoGeometry.Thermo.energyFromLogDet (X0 := X0) X
-
-@[simp] theorem zetaEnergyFromLogDet_apply
-    {Ω : Type _} [Fintype Ω]
-    (X0 : InfoGeometry.Jordan.SPD n)
-    (X : Ω → InfoGeometry.Jordan.SPD n)
-    (ω : Ω) :
-    zetaEnergyFromLogDet (X0 := X0) X ω = InfoGeometry.Jordan.logDetBregman (X ω) X0 :=
-  rfl
 
 end SPDReal
 

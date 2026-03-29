@@ -928,7 +928,7 @@ attribute [blueprint] InfoGeometry.Canonical.Determinant.SpectralZetaLogDetData.
 attribute [blueprint] InfoGeometry.Canonical.Determinant.capstone_logAbsVolume_add_from_zeta
 attribute [blueprint] InfoGeometry.Canonical.Determinant.detHom
 attribute [blueprint] InfoGeometry.Canonical.Determinant.jac_det_comp
-attribute [blueprint] InfoGeometry.Canonical.Determinant.jacobian_functoriality
+attribute [blueprint] InfoGeometry.Canonical.Determinant.logAbsDet_mul
 attribute [blueprint] InfoGeometry.Canonical.Determinant.linearEquivExactBridge
 attribute [blueprint] InfoGeometry.Canonical.Determinant.linearEquivLogGenerator
 attribute [blueprint] InfoGeometry.Canonical.Determinant.linearEquivLogGenerator_eq_logAbsVolume
@@ -3117,9 +3117,6 @@ attribute [blueprint] InfoGeometry.Canonical.WeylTransportBridge.finiteSumFlatCu
 attribute [blueprint] InfoGeometry.Canonical.WeylTransportBridge.finiteSum_holonomy_eq_chiralScale_of_flat
 attribute [blueprint] InfoGeometry.Canonical.WeylTransportBridge.holonomy_eq_chiralScale_of_flat
 attribute [blueprint] InfoGeometry.Canonical.WeylTransportBridge.holonomy_eq_zero_of_flat_of_unitRelativeVolume
-attribute [blueprint] InfoGeometry.Canonical.WilsonLoop.chiralPathWeight_eq_holonomy_mul_gibbs
-attribute [blueprint] InfoGeometry.Canonical.WilsonLoop.expectedHolonomy_eq_partition_ratio
-attribute [blueprint] InfoGeometry.Canonical.WilsonLoop.wilsonLoopDiscrete_eq_det
 attribute [blueprint] InfoGeometry.Canonical.YangMillsContinuum.EndH
 attribute [blueprint] InfoGeometry.Canonical.YangMillsContinuum.IBSampledFlow
 attribute [blueprint] InfoGeometry.Canonical.YangMillsContinuum.IBSampledFlow.mk.inj

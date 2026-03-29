@@ -22,6 +22,7 @@ InfoGeometry.Canonical.PerelmanW | canonical bridge remains on the vacuity quara
 InfoGeometry.Canonical.RedLine | red-line synthesis remains on the vacuity quarantine surface
 InfoGeometry.Canonical.Rosetta | rosetta facade remains on the vacuity quarantine surface
 InfoGeometry.Canonical.SUSYBayes | canonical SUSY/Bayesian facade is theorem-shaped packaging over lower Fock/Fierz/Bogoliubov statements with no unique constructive load
+InfoGeometry.Canonical.WilsonLoop | canonical Wilson-loop surface is only a facade/API layer with definitional wrapper theorems and no unique constructive load
 InfoGeometry.Canonical.WeylInformationGauge | canonical gauge synthesis depends on quarantined bridge statements
 InfoGeometry.Canonical.YangMillsFinite | finite Yang-Mills bridge stores obligations as fields and reprojects them
 InfoGeometry.Canonical.YangMillsBridge | canonical Yang-Mills bridge remains on the vacuity quarantine surface

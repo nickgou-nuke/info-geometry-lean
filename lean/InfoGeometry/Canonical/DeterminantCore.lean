@@ -57,11 +57,25 @@ theorem jac_det_comp (R : Type u) (V : Type v)
   change detHom R V (f * g) = detHom R V f * detHom R V g
   exact (detHom R V).map_mul f g
 
-/-- Named alias for multiplicative functoriality of the Jacobian determinant. -/
-theorem jacobian_functoriality (R : Type u) (V : Type v)
-    [CommRing R] [Fintype V] [DecidableEq V]
-    (f g : «GL» R V) :
-    jacDet R V (f * g) = jacDet R V f * jacDet R V g :=
-  jac_det_comp R V f g
+/-- Log absolute determinant is additive on linear automorphisms. -/
+theorem logAbsDet_mul (V : Type v)
+    [Fintype V] [DecidableEq V]
+    (f g : «GL» ℝ V) :
+    logAbsDet V (f * g) = logAbsDet V f + logAbsDet V g := by
+  have hf0 : ((detHom ℝ V f : ℝˣ) : ℝ) ≠ 0 := Units.ne_zero _
+  have hg0 : ((detHom ℝ V g : ℝˣ) : ℝ) ≠ 0 := Units.ne_zero _
+  calc
+    logAbsDet V (f * g)
+        = Real.log (|((detHom ℝ V (f * g) : ℝˣ) : ℝ)|) := rfl
+    _ = Real.log (|(((detHom ℝ V f : ℝˣ) : ℝ) * (((detHom ℝ V g : ℝˣ) : ℝ)))|) := by
+          rw [(detHom ℝ V).map_mul]
+          rfl
+    _ = Real.log (|((detHom ℝ V f : ℝˣ) : ℝ)| * |((detHom ℝ V g : ℝˣ) : ℝ)|) := by
+          rw [abs_mul]
+    _ = Real.log (|((detHom ℝ V f : ℝˣ) : ℝ)|)
+        + Real.log (|((detHom ℝ V g : ℝˣ) : ℝ)|) := by
+          exact Real.log_mul (abs_ne_zero.mpr hf0) (abs_ne_zero.mpr hg0)
+    _ = logAbsDet V f + logAbsDet V g := by
+          rfl
 
 end InfoGeometry.Canonical.Determinant

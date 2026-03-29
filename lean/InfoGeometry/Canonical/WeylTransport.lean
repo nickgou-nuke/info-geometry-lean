@@ -42,10 +42,6 @@ variable {I X : Type*}
 def along (γ : WeylTrajectory I X) : I → X :=
   γ.point
 
-/-- Pointwise expansion of `WeylTrajectory.along`. -/
-@[simp] theorem along_apply (γ : WeylTrajectory I X) (i : I) :
-    γ.along i = γ.point i := by
-  rfl
 
 end WeylTrajectory
 
@@ -256,14 +252,6 @@ def transportObservable [Group P] (Ξ : ScaleEquivariantFlow I F A) (phaseOf : A
     I → I → P :=
   fun i j => (phaseOf (Ξ.scaleOf i))⁻¹ * phaseOf (Ξ.scaleOf j)
 
-/-- Pointwise expansion of `transportObservable`. -/
-@[simp] theorem transportObservable_apply [Group P]
-    (Ξ : ScaleEquivariantFlow I F A)
-    (phaseOf : A → P)
-    (i j : I) :
-    transportObservable Ξ phaseOf i j =
-      (phaseOf (Ξ.scaleOf i))⁻¹ * phaseOf (Ξ.scaleOf j) := by
-  rfl
 
 /-- Abstract cocycle law for a two-point transport observable. -/
 def IsCocycle [Monoid P] (T : I → I → P) : Prop :=
@@ -299,10 +287,6 @@ indices.
 def finiteSumIntegrator : WeylLineIntegrator I A A where
   integrate f := ∑ i : I, f i
 
-/-- Pointwise expansion of `finiteSumIntegrator`. -/
-@[simp] theorem finiteSumIntegrator_integrate_eq (f : I → A) :
-    (finiteSumIntegrator (I := I) (A := A)).integrate f = ∑ i : I, f i := by
-  rfl
 
 end Finite
 
@@ -313,26 +297,12 @@ def integrateConnection
     (γ : WeylTrajectory I X) : S :=
   Λ.integrate (B.connectionAlong γ)
 
-/-- Pointwise expansion of `integrateConnection`. -/
-@[simp] theorem integrateConnection_eq
-    (Λ : WeylLineIntegrator I A S)
-    (B : WeylGaugeField X A)
-    (γ : WeylTrajectory I X) :
-    Λ.integrateConnection B γ = Λ.integrate (B.connectionAlong γ) := by
-  rfl
 
 section FiniteConnection
 
 variable [Fintype I]
 variable [AddCommMonoid A]
 
-/-- Finite-trajectory connection integration is the explicit finite sum. -/
-@[simp] theorem finiteSumIntegrator_integrateConnection_eq_sum
-    (B : WeylGaugeField X A)
-    (γ : WeylTrajectory I X) :
-    (finiteSumIntegrator (I := I) (A := A)).integrateConnection B γ =
-      ∑ i : I, B.connectionAlong γ i := by
-  rfl
 
 end FiniteConnection
 
@@ -363,14 +333,6 @@ section FiniteCurvature
 
 variable [Fintype I]
 
-/-- Finite-trajectory curvature integration is the explicit finite sum. -/
-@[simp] theorem finiteSumIntegrator_integrateCurvature_eq_sum
-    (Δ : WeylDifferentialOperator K X A)
-    (B : WeylGaugeField X A)
-    (γ : WeylTrajectory I X) :
-    (finiteSumIntegrator (I := I) (A := A)).integrateCurvature Δ B γ =
-      ∑ i : I, B.curvatureAlong Δ γ i := by
-  rfl
 
 /--
 Flat local curvature collapses finite integrated curvature to zero.
@@ -384,7 +346,7 @@ theorem finiteSumIntegrator_integrateCurvature_eq_zero_of_flat
     (γ : WeylTrajectory I X)
     (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B) :
     (finiteSumIntegrator (I := I) (A := A)).integrateCurvature Δ B γ = 0 := by
-  rw [finiteSumIntegrator_integrateCurvature_eq_sum (Δ := Δ) (B := B) (γ := γ)]
+  change ∑ i : I, B.curvatureAlong Δ γ i = 0
   exact Finset.sum_eq_zero fun i _ => by
     change (B.fieldStrength Δ).strengthOf (γ.point i) = 0
     exact hFlat (γ.point i)
@@ -401,28 +363,12 @@ def holonomy
     (γ : WeylTrajectory I X) : P :=
   H.toHolonomy (Λ.integrateConnection B γ)
 
-/-- Pointwise expansion of `holonomy`. -/
-@[simp] theorem holonomy_eq
-    (Λ : WeylLineIntegrator I A S)
-    (H : WeylHolonomyMap S P)
-    (B : WeylGaugeField X A)
-    (γ : WeylTrajectory I X) :
-    Λ.holonomy H B γ = H.toHolonomy (Λ.integrateConnection B γ) := by
-  rfl
 
 section FiniteHolonomy
 
 variable [Fintype I]
 variable [AddCommMonoid A]
 
-/-- Finite-trajectory holonomy is computed from the summed connection pullback. -/
-@[simp] theorem finiteSumIntegrator_holonomy_eq_sum
-    (H : WeylHolonomyMap A P)
-    (B : WeylGaugeField X A)
-    (γ : WeylTrajectory I X) :
-    (finiteSumIntegrator (I := I) (A := A)).holonomy H B γ =
-      H.toHolonomy (∑ i : I, B.connectionAlong γ i) := by
-  rfl
 
 end FiniteHolonomy
 
@@ -449,20 +395,6 @@ def gaugeCompensatedHolonomy
     Λ.holonomy H B γ *
     endpointScale (γ.point iEnd)
 
-omit [AddCommGroup A] in
-/-- Pointwise expansion of `gaugeCompensatedHolonomy`. -/
-@[simp] theorem gaugeCompensatedHolonomy_eq
-    (Λ : WeylLineIntegrator I A S)
-    (H : WeylHolonomyMap S P)
-    (endpointScale : X → P)
-    (B : WeylGaugeField X A)
-    (γ : WeylTrajectory I X)
-    (iStart iEnd : I) :
-    Λ.gaugeCompensatedHolonomy H endpointScale B γ iStart iEnd =
-      (endpointScale (γ.point iStart))⁻¹ *
-        Λ.holonomy H B γ *
-        endpointScale (γ.point iEnd) := by
-  rfl
 
 /--
 Gauge-covariant transport theorem.

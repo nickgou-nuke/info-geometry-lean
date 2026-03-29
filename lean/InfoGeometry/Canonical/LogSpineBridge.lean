@@ -24,13 +24,6 @@ open InfoGeometry.Jordan
 open InfoGeometry.Thermal
 
 /--
-Spine Identification 1:
-The RN potential is definitionally the negative log-density.
--/
-theorem rn_potential_eq_neg_log_density (p : FinProb α) (x : α) :
-    log_density p x = Real.log (p x).toReal := rfl
-
-/--
 Spine Identification 2:
 The Jordan log-det barrier is exactly the zeta-regularized log-determinant.
 -/
@@ -39,15 +32,6 @@ theorem jordan_logdet_eq_zeta_determinant
     logDetBarrier X = InfoGeometry.Canonical.Determinant.zetaLogDetBarrier X := by
   simpa using
     (InfoGeometry.Canonical.Determinant.zetaLogDetBarrier_eq_logDetBarrier (X := X)).symm
-
-/--
-Spine Identification 3:
-The Modular Hamiltonian (energy levels) induces the log-partition function.
--/
-theorem modular_hamiltonian_to_log_partition
-    (n : Nat) (H : Hamiltonian n) (β : ℝ) :
-    let Z := H.partition β
-    Real.log Z = Real.log (∑ i, Real.exp (-β * H.energy i)) := rfl
 
 /--
 Spine Identification 4:
@@ -63,12 +47,6 @@ theorem kahler_spine_entropy_identity
   intro x _
   rw [mul_neg]
 
-/--
-The Full Spine:
-Free energy acts as the unified generating functional for the entire spine.
--/
-noncomputable def freeEnergySpine (n : Nat) (H : Hamiltonian n) (β : ℝ) : ℝ :=
-  - (1 / β) * Real.log (H.partition β)
 
 end LogSpine
 

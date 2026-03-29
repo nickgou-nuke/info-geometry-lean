@@ -33,32 +33,12 @@ section RnJacobian
 
 variable (n : Nat)
 
-/-- Positivity of the RN relative-volume factor. -/
-theorem relative_volume_change_rn_pos
-    (M : SinkhornMatrix n) :
-    0 < relativeVolumeChangeRN n M := by
-  unfold relativeVolumeChangeRN
-  exact Real.exp_pos _
-
-/-- Negative log of RN relative volume recovers the RN Kähler potential. -/
-theorem neg_log_relative_volume_change_rn
-    (M : SinkhornMatrix n) :
-    -Real.log (relativeVolumeChangeRN n M) = kahlerPotentialRN n M := by
-  unfold relativeVolumeChangeRN
-  simp
-
 end RnJacobian
 
 section DeterminantChain
 
 variable {E : Type*}
   [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDimensional ℝ E]
-
-/-- Jacobian determinant multiplicativity under composition. -/
-theorem jac_det_clm_comp
-    (L₁ L₂ : E →L[ℝ] E) :
-    jacDetCLM (L₁.comp L₂) = jacDetCLM L₁ * jacDetCLM L₂ :=
-  jacDetCLM_comp L₁ L₂
 
 /-- Negative log-absolute Jacobian is additive under composition. -/
 theorem neg_log_abs_jac_det_clm_comp
@@ -77,23 +57,11 @@ section JordanBarrier
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- Jordan/KKT Bregman divergence is nonnegative. -/
-theorem jordan_kkt_bregman_nonneg
-    (J : JordanKKTData E) (x y : E) :
-    0 ≤ J.DBregman x y :=
-  J.DBregman_nonneg x y
-
 end JordanBarrier
 
 section LogDetBarrier
 
 variable {n : ℕ}
-
-/-- Burg/Bregman energy from the log-det barrier is nonnegative. -/
-theorem burg_energy_nonnegative
-    (X Y : InfoGeometry.Jordan.SPD n) :
-    0 ≤ logDetBregman X Y :=
-  logDetBregman_nonneg X Y
 
 end LogDetBarrier
 
@@ -102,14 +70,6 @@ section ThermoBarrier
 variable {n : ℕ} {Ω : Type _} [Fintype Ω]
 
 variable [Nonempty Ω]
-
-/-- Positivity of the partition function induced by Burg energy. -/
-theorem partition_from_log_det_pos
-    (X0 : InfoGeometry.Jordan.SPD n)
-    (X : Ω → InfoGeometry.Jordan.SPD n)
-    (ε : ℝ) :
-    0 < partitionFromLogDet X0 X ε :=
-  partitionFromLogDet_pos' (X0 := X0) (X := X) ε
 
 end ThermoBarrier
 
@@ -157,7 +117,7 @@ theorem w_monotone_of_dirac_ricci_entropy_law_of_jordan_barrier_lower_bound
   apply monotone_of_deriv_nonneg hDiff
   intro s
   rw [hW s]
-  exact le_trans (jordan_kkt_bregman_nonneg (J := J) x y) (hLower s)
+  exact le_trans (J.DBregman_nonneg x y) (hLower s)
 
 /-- Strict monotonicity when the tracked spinorial scalar curvature is nonzero. -/
 theorem w_strict_mono_of_dirac_ricci_entropy_law
@@ -179,15 +139,6 @@ section BottSplitting
 variable {E F : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
-
-/-- Canonical Cl(1,1) Bott-Dirac square equals the canonical Bott Laplacian. -/
-theorem cl11_bott_square_eq_laplacian
-    (Dn : Endomorphism F) :
-    (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn).comp
-      (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn)
-      = cl11BottLaplacian (E := E) Dn := by
-  simpa using
-    cl11_bottDirac_sq_eq_cl11BottLaplacian (E := E) (F := F) (Dn := Dn)
 
 end BottSplitting
 

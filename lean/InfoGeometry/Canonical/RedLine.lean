@@ -28,12 +28,10 @@ partition/log-sum-exp -> free energy, with RN/Jaynes and modular lifts.
 
 namespace InfoGeometry.Canonical.RedLine
 
-open InfoGeometry.Canonical.MoE
 
 export InfoGeometry.Canonical.LogDet (
   logDetBarrier
   logDetBregman
-  logDetBarrier_eq_neg_log_det
 )
 
 export InfoGeometry.Volume.LogPotential (
@@ -233,15 +231,5 @@ export InfoGeometry.Canonical.TomitaTakesaki (
   tomitaRepresentation
 )
 
-@[simp] theorem redline_energy_is_burg
-    {n : ℕ} {Ω : Type _} [Fintype Ω]
-    (X0 : InfoGeometry.Jordan.SPD n) (X : Ω → InfoGeometry.Jordan.SPD n) (ω : Ω) :
-    energyFromLogDet X0 X ω = logDetBregman (X ω) X0 := rfl
-
-@[simp] theorem redline_freeEnergy_is_neg_log_partition
-    {n : ℕ} {Ω : Type _} [Fintype Ω] [Nonempty Ω]
-    (X0 : InfoGeometry.Jordan.SPD n) (X : Ω → InfoGeometry.Jordan.SPD n) (ε : ℝ) :
-    freeEnergyFromLogDet X0 X ε = -ε * Real.log (partitionFromLogDet X0 X ε) := by
-  exact freeEnergyFromLogDet_eq_neg_scale_log_partition (X0 := X0) (X := X) ε
 
 end InfoGeometry.Canonical.RedLine

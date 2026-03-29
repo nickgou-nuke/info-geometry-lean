@@ -263,6 +263,35 @@ omit [Nonempty (Fin n)] in
   unfold diagonalAverage diagonalMass firstQuantize diagMatrix
   simp
 
+omit [Nonempty (Fin n)] in
+theorem diagonalAverage_add (A B : FinMat n) :
+    diagonalAverage (n := n) (A + B)
+      = diagonalAverage (n := n) A + diagonalAverage (n := n) B := by
+  unfold diagonalAverage diagonalMass
+  simp [Finset.sum_add_distrib, mul_add]
+
+omit [Nonempty (Fin n)] in
+theorem diagonalAverage_smul (c : ℝ) (A : FinMat n) :
+    diagonalAverage (n := n) (c • A) = c * diagonalAverage (n := n) A := by
+  unfold diagonalAverage diagonalMass
+  simp [Finset.mul_sum]
+  ring_nf
+
+@[simp] theorem diagonalAverage_one :
+    diagonalAverage (n := n) (1 : FinMat n) = 1 := by
+  have hconst :
+      firstQuantize (n := n) (fun _ => (1 : ℝ)) = (1 : FinMat n) := by
+    simpa using (firstQuantize_const_eq_smul_one (n := n) (c := (1 : ℝ)))
+  rw [← hconst, diagonalAverage_firstQuantize]
+  have hnonempty : 0 < n := by
+    simpa using (Fintype.card_pos_iff.mpr ‹Nonempty (Fin n)›)
+  have hnz : (n : ℝ) ≠ 0 := by
+    exact_mod_cast (Nat.ne_of_gt hnonempty)
+  have hsum : (∑ i : Fin n, (1 : ℝ)) = n := by
+    simp
+  rw [hsum]
+  field_simp [hnz]
+
 /-- Count-ray relative modular potential lifts to a diagonal operator plus a scalar gauge shift. -/
 theorem relativeModularPotentialOperator_countRay_eq_raw_add_massShift
     (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
@@ -272,13 +301,9 @@ theorem relativeModularPotentialOperator_countRay_eq_raw_add_massShift
         (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
         (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
       = relativeCountModularPotentialOperator (n := n) counts ref
-        + Real.log
-            (InfoGeometry.Canonical.RelativePotentialCountBridge.countMass counts hcounts /
-              InfoGeometry.Canonical.RelativePotentialCountBridge.countMass ref href) •
+        + (-InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts ref hcounts href) •
             (1 : FinMat n) := by
-  let c : ℝ := Real.log
-    (InfoGeometry.Canonical.RelativePotentialCountBridge.countMass counts hcounts /
-      InfoGeometry.Canonical.RelativePotentialCountBridge.countMass ref href)
+  let c : ℝ := -InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts ref hcounts href
   have hfun :
       (fun i =>
         InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential (α := Fin n)
@@ -288,10 +313,31 @@ theorem relativeModularPotentialOperator_countRay_eq_raw_add_massShift
             -InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountLogDensity n counts ref i + c) := by
     funext i
     dsimp [c]
-    rw [InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_add_massShift]
+    rw [InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift]
+    rw [InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift_eq_log_massRatio]
+    ring_nf
   rw [relativeModularPotentialOperator, hfun]
   rw [firstQuantize_add, firstQuantize_const_eq_smul_one]
   rfl
+
+/-- Raw count modular-potential operators compose additively along the count cocycle. -/
+theorem relativeCountModularPotentialOperator_cocycle
+    (counts ref base : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hbase : ∀ i : Fin n, 0 < base i) :
+    relativeCountModularPotentialOperator (n := n) counts base
+      = relativeCountModularPotentialOperator (n := n) counts ref
+        + relativeCountModularPotentialOperator (n := n) ref base := by
+  ext i j
+  by_cases hij : i = j
+  · subst hij
+    simp [relativeCountModularPotentialOperator, firstQuantize, diagMatrix]
+    rw [InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountLogDensity_cocycle
+      (n := n) (counts := counts) (ref := ref) (base := base)
+      (hcounts := hcounts) (href := href) (hbase := hbase) (i := i)]
+    ring
+  · simp [relativeCountModularPotentialOperator, firstQuantize, diagMatrix, hij]
 
 /-- The scalar relative modular Hamiltonian is the diagonal average of the lifted raw modular potential. -/
 theorem relativeModularHamiltonian_eq_diagonalAverage_rawLift
@@ -304,6 +350,122 @@ theorem relativeModularHamiltonian_eq_diagonalAverage_rawLift
   unfold diagonalAverage diagonalMass
   simp [relativeCountModularPotentialOperator, firstQuantize, diagMatrix,
     InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountLogDensity]
+
+/--
+The diagonal average of the count-ray modular-potential lift is the raw relative
+modular Hamiltonian plus the global count-mass shift.
+-/
+theorem diagonalAverage_relativeModularPotentialOperator_countRay
+    (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    diagonalAverage (n := n)
+        (relativeModularPotentialOperator (n := n)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href))
+      = InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularHamiltonian n
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts ref)
+        - InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts ref hcounts href := by
+  rw [relativeModularPotentialOperator_countRay_eq_raw_add_massShift]
+  rw [diagonalAverage_add, diagonalAverage_smul, diagonalAverage_one]
+  rw [← relativeModularHamiltonian_eq_diagonalAverage_rawLift (n := n) (counts := counts) (ref := ref)]
+  ring
+
+/-- Count-ray modular-potential operators compose additively along the projective cocycle. -/
+theorem relativeModularPotentialOperator_countRay_cocycle
+    (counts ref base : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hbase : ∀ i : Fin n, 0 < base i) :
+    relativeModularPotentialOperator (n := n)
+        (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+        (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase)
+      = relativeModularPotentialOperator (n := n)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+        + relativeModularPotentialOperator (n := n)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase) := by
+  ext i j
+  by_cases hij : i = j
+  · subst hij
+    change relativeModularPotentialOperator (n := n)
+        (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+        (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase) i i
+      = relativeModularPotentialOperator (n := n)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href) i i
+        + relativeModularPotentialOperator (n := n)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase) i i
+    rw [relativeModularPotentialOperator_diag]
+    rw [relativeModularPotentialOperator_diag]
+    rw [relativeModularPotentialOperator_diag]
+    exact InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential_cocycle
+      (α := Fin n)
+      (q := InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+      (q0 := InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+      (q1 := InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase)
+      (a := i)
+  · change relativeModularPotentialOperator (n := n)
+        (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+        (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase) i j
+      = relativeModularPotentialOperator (n := n)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href) i j
+        + relativeModularPotentialOperator (n := n)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase) i j
+    rw [relativeModularPotentialOperator, firstQuantize_apply_offdiag (hij := hij)]
+    rw [relativeModularPotentialOperator, firstQuantize_apply_offdiag (hij := hij)]
+    rw [relativeModularPotentialOperator, firstQuantize_apply_offdiag (hij := hij)]
+    ring
+
+/-- Diagonal averages of count-ray modular-potential operators inherit the additive cocycle law. -/
+theorem diagonalAverage_relativeModularPotentialOperator_countRay_cocycle
+    (counts ref base : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hbase : ∀ i : Fin n, 0 < base i) :
+    diagonalAverage (n := n)
+        (relativeModularPotentialOperator (n := n)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase))
+      = diagonalAverage (n := n)
+          (relativeModularPotentialOperator (n := n)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href))
+        + diagonalAverage (n := n)
+          (relativeModularPotentialOperator (n := n)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase)) := by
+  rw [relativeModularPotentialOperator_countRay_cocycle]
+  rw [diagonalAverage_add]
+
+/-- Scalar modular Hamiltonians corrected by the normalization cocycle compose additively. -/
+theorem relativeModularHamiltonian_sub_countMassShift_cocycle
+    (counts ref base : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hbase : ∀ i : Fin n, 0 < base i) :
+    InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularHamiltonian n
+        (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts base)
+      - InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts base hcounts hbase
+      = (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularHamiltonian n
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts ref)
+          - InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts ref hcounts href)
+        + (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularHamiltonian n
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n ref base)
+          - InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift ref base href hbase) := by
+  rw [← diagonalAverage_relativeModularPotentialOperator_countRay
+      (n := n) (counts := counts) (ref := base) (hcounts := hcounts) (href := hbase)]
+  rw [← diagonalAverage_relativeModularPotentialOperator_countRay
+      (n := n) (counts := counts) (ref := ref) (hcounts := hcounts) (href := href)]
+  rw [← diagonalAverage_relativeModularPotentialOperator_countRay
+      (n := n) (counts := ref) (ref := base) (hcounts := href) (href := hbase)]
+  exact diagonalAverage_relativeModularPotentialOperator_countRay_cocycle
+    (n := n) (counts := counts) (ref := ref) (base := base)
+    (hcounts := hcounts) (href := href) (hbase := hbase)
 
 /-- The Tomita-Takesaki-style operator is the averaged relative surprisal times `Id`. -/
 theorem relativeTomitaTakesakiOp_eq_diagonalAverage_rawLift_smul_id

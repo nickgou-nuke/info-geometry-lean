@@ -84,6 +84,21 @@ lemma relativeLogDensityMean_mul
     exact Real.log_mul (hρ i) (hσ i)
   rw [hsum, Finset.sum_add_distrib, mul_add]
 
+@[simp] theorem relativeCountLogDensity_cocycle
+    (counts ref base : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hbase : ∀ i : Fin n, 0 < base i)
+    (i : Fin n) :
+    relativeCountLogDensity n counts base i
+      = relativeCountLogDensity n counts ref i
+        + relativeCountLogDensity n ref base i := by
+  unfold relativeCountLogDensity relativeCountDensity
+  rw [Real.log_div ((hcounts i).ne') ((hbase i).ne')]
+  rw [Real.log_div ((hcounts i).ne') ((href i).ne')]
+  rw [Real.log_div ((href i).ne') ((hbase i).ne')]
+  ring
+
 end Counts
 
 section PositiveCounts
@@ -117,6 +132,58 @@ lemma countMass_ne_zero
     countMass counts hcounts ≠ 0 :=
   (countMass_pos counts hcounts).ne'
 
+/-- Global additive mass shift induced by normalizing positive count representatives. -/
+noncomputable def countMassShift
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) : ℝ :=
+  representativeMassShift
+    (positiveMeasureOfCounts counts hcounts)
+    (positiveMeasureOfCounts ref href)
+
+omit [Nonempty (Fin n)] in
+@[simp] theorem countMassShift_eq_log_massRatio
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    countMassShift counts ref hcounts href
+      = Real.log (countMass ref href / countMass counts hcounts) := rfl
+
+@[simp] theorem countMassShift_self
+    (counts : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i) :
+    countMassShift counts counts hcounts hcounts = 0 := by
+  simpa only [countMassShift] using
+    (representativeMassShift_self
+      (α := Fin n)
+      (μ := positiveMeasureOfCounts counts hcounts))
+
+@[simp] theorem countMassShift_symm
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    countMassShift ref counts href hcounts = -countMassShift counts ref hcounts href := by
+  simpa only [countMassShift] using
+    (representativeMassShift_symm
+      (α := Fin n)
+      (μ := positiveMeasureOfCounts counts hcounts)
+      (ν := positiveMeasureOfCounts ref href))
+
+@[simp] theorem countMassShift_cocycle
+    (counts ref base : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hbase : ∀ i : Fin n, 0 < base i) :
+    countMassShift counts base hcounts hbase
+      = countMassShift counts ref hcounts href
+        + countMassShift ref base href hbase := by
+  simpa only [countMassShift] using
+    (representativeMassShift_cocycle
+      (α := Fin n)
+      (μ := positiveMeasureOfCounts counts hcounts)
+      (ν := positiveMeasureOfCounts ref href)
+      (ξ := positiveMeasureOfCounts base hbase))
+
 /-- Projective positive state carried by a positive count profile. -/
 noncomputable def countRay
     (counts : RelativeCounts n)
@@ -141,14 +208,13 @@ noncomputable def countRay
     relativeDensity (α := Fin n) (countRay counts hcounts) (countRay ref href) i
       = (countMass ref href / countMass counts hcounts)
           * relativeCountDensity n counts ref i := by
-  unfold relativeDensity representativeRelativeDensity relativeCountDensity
-  rw [gaugeSection_countRay_apply (counts := counts) (hcounts := hcounts) (i := i)]
-  rw [gaugeSection_countRay_apply (counts := ref) (hcounts := href) (i := i)]
-  have hzc : countMass counts hcounts ≠ 0 := countMass_ne_zero counts hcounts
-  have hzr : countMass ref href ≠ 0 := countMass_ne_zero ref href
-  have hci : counts i ≠ 0 := (hcounts i).ne'
-  have hri : ref i ≠ 0 := (href i).ne'
-  field_simp [hzc, hzr, hci, hri]
+  simpa only [countRay, countMass, positiveMeasureOfCounts, relativeCountDensity]
+    using
+      (relativeDensity_mk_eq_massRatio_mul_representativeRelativeDensity
+        (α := Fin n)
+        (μ := positiveMeasureOfCounts counts hcounts)
+        (ν := positiveMeasureOfCounts ref href)
+        (a := i))
 
 @[simp] theorem relativeLogDensity_countRay_eq_relativeCountLogDensity_add_massShift
     (counts ref : RelativeCounts n)
@@ -157,44 +223,40 @@ noncomputable def countRay
     (i : Fin n) :
     relativeLogDensity (α := Fin n) (countRay counts hcounts) (countRay ref href) i
       = relativeCountLogDensity n counts ref i
-        + Real.log (countMass ref href / countMass counts hcounts) := by
-  rw [relativeLogDensity_eq_logDensity_sub_logDensity]
-  unfold InfoGeometry.Canonical.PositiveRayCore.logDensity relativeCountLogDensity relativeCountDensity
-  rw [gaugeSection_countRay_apply (counts := counts) (hcounts := hcounts) (i := i)]
-  rw [gaugeSection_countRay_apply (counts := ref) (hcounts := href) (i := i)]
-  have hzc : countMass counts hcounts ≠ 0 := countMass_ne_zero counts hcounts
-  have hzr : countMass ref href ≠ 0 := countMass_ne_zero ref href
-  rw [Real.log_div ((hcounts i).ne') hzc]
-  rw [Real.log_div ((href i).ne') hzr]
-  rw [Real.log_div ((hcounts i).ne') ((href i).ne')]
-  rw [Real.log_div hzr hzc]
-  ring_nf
+        + countMassShift counts ref hcounts href := by
+  rw [countMassShift_eq_log_massRatio]
+  simpa only [countRay, countMass, positiveMeasureOfCounts,
+    relativeCountLogDensity, relativeCountDensity]
+    using
+      (relativeLogDensity_mk_eq_representativeRelativeLogDensity_add_massShift
+        (α := Fin n)
+        (μ := positiveMeasureOfCounts counts hcounts)
+        (ν := positiveMeasureOfCounts ref href)
+        (a := i))
 
-@[simp] theorem relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_add_massShift
+@[simp] theorem relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift
     (counts ref : RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i)
     (href : ∀ i : Fin n, 0 < ref i)
     (i : Fin n) :
     relativeModularPotential (α := Fin n) (countRay counts hcounts) (countRay ref href) i
       = -relativeCountLogDensity n counts ref i
-        + Real.log (countMass counts hcounts / countMass ref href) := by
-  rw [relativeModularPotential_eq_logDensity_base_sub_logDensity]
-  unfold InfoGeometry.Canonical.PositiveRayCore.logDensity relativeCountLogDensity relativeCountDensity
-  rw [gaugeSection_countRay_apply (counts := ref) (hcounts := href) (i := i)]
-  rw [gaugeSection_countRay_apply (counts := counts) (hcounts := hcounts) (i := i)]
-  have hzc : countMass counts hcounts ≠ 0 := countMass_ne_zero counts hcounts
-  have hzr : countMass ref href ≠ 0 := countMass_ne_zero ref href
-  rw [Real.log_div ((href i).ne') hzr]
-  rw [Real.log_div ((hcounts i).ne') hzc]
-  rw [Real.log_div ((hcounts i).ne') ((href i).ne')]
-  rw [Real.log_div hzc hzr]
-  ring_nf
+        - countMassShift counts ref hcounts href := by
+  rw [countMassShift_eq_log_massRatio]
+  simpa only [countRay, countMass, positiveMeasureOfCounts,
+    relativeCountLogDensity, relativeCountDensity]
+    using
+      (relativeModularPotential_mk_eq_representativeModularPotential_sub_massShift
+        (α := Fin n)
+        (μ := positiveMeasureOfCounts counts hcounts)
+        (ν := positiveMeasureOfCounts ref href)
+        (a := i))
 
 /--
 The projective logarithmic generator on positive count rays is exactly the raw
 count-side modular potential together with the expected global mass-shift.
 -/
-@[simp] theorem projectiveLogGenerator_countRay_eq_neg_relativeCountLogDensity_add_massShift
+@[simp] theorem projectiveLogGenerator_countRay_eq_neg_relativeCountLogDensity_sub_massShift
     (counts ref : RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i)
     (href : ∀ i : Fin n, 0 < ref i)
@@ -205,10 +267,10 @@ count-side modular potential together with the expected global mass-shift.
         (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
           (α := Fin n) (countRay counts hcounts)) i
       = -relativeCountLogDensity n counts ref i
-        + Real.log (countMass counts hcounts / countMass ref href) := by
+        - countMassShift counts ref hcounts href := by
   rw [InfoGeometry.Canonical.RelativePotentialDiscreteBridge.projectiveLogGenerator_eq_relativeModularPotential
     (α := Fin n) (q := countRay counts hcounts) (q0 := countRay ref href) (a := i)]
-  exact relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_add_massShift
+  exact relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift
     (n := n) (counts := counts) (ref := ref) (hcounts := hcounts) (href := href) (i := i)
 
 end PositiveCounts

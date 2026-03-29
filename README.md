@@ -19,6 +19,22 @@ A public bridge file is healthy only if it is either:
 - an adjacent translator between neighboring depths
 - a coherence file proving two adjacent composites agree
 
+## Current Anchor Corridor
+
+The current clean seed-to-operator corridor is:
+- `PositiveMeasure.lean`
+- `Projective/Normalize.lean`
+- `Canonical/PositiveRayCore.lean`
+- `Canonical/RelativePotentialCore.lean`
+- `Canonical/RelativePotentialCountBridge.lean`
+- `Canonical/RelativeSurprisalOperatorLift.lean`
+
+This corridor now carries real owner mathematics all the way upward:
+- `representativeMassShift` owns the normalization cocycle at the representative level
+- `countMassShift` specializes that cocycle to raw positive counts
+- `relativeCountModularPotentialOperator_cocycle` lifts the raw count cocycle to diagonal operators
+- `relativeModularHamiltonian_sub_countMassShift_cocycle` shows the averaged operator branch consumes the same owned cocycle
+
 That grammar is now enforced in two places:
 - natively in [Architecture.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Meta/Architecture.lean) and [Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
 - as rendered reports in [reports/dag](/home/goutev/LEAN4/info-geometry-lean/reports/dag)

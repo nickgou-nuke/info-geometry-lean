@@ -20,6 +20,18 @@ It is the enforced morphisms between them:
 - coherence theorems proving that rival adjacent composites agree
 - capstones that summarize lower content without pretending to be foundational owners
 
+## Current Proven Corridor
+
+The current clean example of that policy is the representative-to-operator relative-potential chain:
+- [PositiveMeasure.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/PositiveMeasure.lean) owns positive representatives and normalization mass
+- [Normalize.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Projective/Normalize.lean) performs the quotient-level gauge descent
+- [PositiveRayCore.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/PositiveRayCore.lean) owns the canonical unary ray language
+- [RelativePotentialCore.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RelativePotentialCore.lean) now owns `representativeMassShift` and its cocycle
+- [RelativePotentialCountBridge.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean) specializes that cocycle to `countMassShift`
+- [RelativeSurprisalOperatorLift.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean) lifts it to the operator and averaged modular-Hamiltonian branch
+
+The corridor endpoint is now explicit: `relativeModularHamiltonian_sub_countMassShift_cocycle` proves that the operator branch consumes the owned normalization cocycle rather than recomputing local log-mass algebra.
+
 ## What Canonical Means
 
 `canonical` means the stable public owner surface.

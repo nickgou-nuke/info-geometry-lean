@@ -14,6 +14,17 @@ Its purpose is to:
 
 It is not here to replace source reading or to legislate mathematical truth from Python alone.
 
+## Current Anchor Corridor
+
+The current benchmark corridor for the infra layer is:
+- `PositiveMeasure -> Projective.Normalize -> PositiveRayCore -> RelativePotentialCore -> RelativePotentialCountBridge -> RelativeSurprisalOperatorLift`
+
+The infra reports should make four facts recoverable about that corridor:
+- the root is representative/count ownership, not a high bridge facade
+- normalization debt is owned first as `representativeMassShift`
+- the count specialization consumes that ownership as `countMassShift`
+- the operator branch ends in `relativeModularHamiltonian_sub_countMassShift_cocycle`, so the cocycle survives averaging instead of being recomputed heuristically
+
 ## Canonical Entrypoints
 
 Main DAG refresh and report path:

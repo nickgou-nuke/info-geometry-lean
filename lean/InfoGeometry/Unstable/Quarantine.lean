@@ -23,6 +23,7 @@ import InfoGeometry.Canonical.PerelmanW
 import InfoGeometry.Canonical.RedLine
 import InfoGeometry.Canonical.Rosetta
 import InfoGeometry.Canonical.SUSYBayes
+import InfoGeometry.Canonical.WilsonLoop
 import InfoGeometry.Canonical.WeylInformationGauge
 import InfoGeometry.Canonical.YangMillsFinite
 import InfoGeometry.Canonical.YangMillsBridge

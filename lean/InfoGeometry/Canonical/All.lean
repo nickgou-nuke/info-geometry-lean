@@ -142,6 +142,7 @@ import InfoGeometry.Canonical.AQFTOperatorSignatures
 import InfoGeometry.Canonical.AQFTReadiness
 import InfoGeometry.Canonical.BerryConnection
 import InfoGeometry.Canonical.BerryHolonomy
+import InfoGeometry.Canonical.BeliefAlgebra
 import InfoGeometry.Canonical.CalabiYauRNMongeAmpere
 import InfoGeometry.Canonical.CalabiYauWBridge
 import InfoGeometry.Canonical.ChiralTorsionGeneralizedKL

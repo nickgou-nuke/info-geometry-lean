@@ -178,6 +178,121 @@ noncomputable def relativeModularPotential
     (q q0 : PositiveRay α) : α → ℝ :=
   representativeModularPotential (gaugeSection (α := α) q) (gaugeSection (α := α) q0)
 
+/-- Global additive gauge shift induced by canonical normalization of representatives. -/
+noncomputable def representativeMassShift
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) : ℝ :=
+  Real.log
+    (InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) ν /
+      InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ)
+
+@[simp] theorem representativeMassShift_self
+    (μ : InfoGeometry.PositiveMeasure α ℝ) :
+    representativeMassShift μ μ = 0 := by
+  unfold representativeMassShift
+  rw [div_self (InfoGeometry.PositiveMeasure.Z_ne_zero μ), Real.log_one]
+
+@[simp] theorem representativeMassShift_symm
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
+    representativeMassShift ν μ = -representativeMassShift μ ν := by
+  unfold representativeMassShift
+  have hZμ : InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ ≠ 0 :=
+    InfoGeometry.PositiveMeasure.Z_ne_zero μ
+  have hZν : InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) ν ≠ 0 :=
+    InfoGeometry.PositiveMeasure.Z_ne_zero ν
+  rw [Real.log_div hZμ hZν]
+  rw [Real.log_div hZν hZμ]
+  ring
+
+@[simp] theorem representativeMassShift_cocycle
+    (μ ν ξ : InfoGeometry.PositiveMeasure α ℝ) :
+    representativeMassShift μ ξ = representativeMassShift μ ν + representativeMassShift ν ξ := by
+  unfold representativeMassShift
+  have hZμ : InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ ≠ 0 :=
+    InfoGeometry.PositiveMeasure.Z_ne_zero μ
+  have hZν : InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) ν ≠ 0 :=
+    InfoGeometry.PositiveMeasure.Z_ne_zero ν
+  have hZξ : InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) ξ ≠ 0 :=
+    InfoGeometry.PositiveMeasure.Z_ne_zero ξ
+  rw [Real.log_div hZξ hZμ]
+  rw [Real.log_div hZν hZμ]
+  rw [Real.log_div hZξ hZν]
+  ring
+
+/--
+For concrete positive representatives, the projective relative density is the
+representative relative density corrected by the global mass ratio coming from
+canonical normalization.
+-/
+@[simp] theorem relativeDensity_mk_eq_massRatio_mul_representativeRelativeDensity
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) (a : α) :
+    relativeDensity (Quotient.mk _ μ) (Quotient.mk _ ν) a
+      = (InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) ν /
+          InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ)
+          * representativeRelativeDensity μ ν a := by
+  unfold relativeDensity representativeRelativeDensity
+  rw [gaugeSection_mk, gaugeSection_mk]
+  rw [InfoGeometry.PositiveMeasure.normalize_apply, InfoGeometry.PositiveMeasure.normalize_apply]
+  have hZμ : InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ ≠ 0 :=
+    InfoGeometry.PositiveMeasure.Z_ne_zero μ
+  have hZν : InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) ν ≠ 0 :=
+    InfoGeometry.PositiveMeasure.Z_ne_zero ν
+  have hμ : μ a ≠ 0 := (μ.pos a).ne'
+  have hν : ν a ≠ 0 := (ν.pos a).ne'
+  field_simp [hZμ, hZν, hμ, hν]
+
+/--
+For concrete positive representatives, the projective relative log-density is
+the representative relative log-density shifted by the logarithm of the global
+mass ratio induced by canonical normalization.
+-/
+@[simp] theorem relativeLogDensity_mk_eq_representativeRelativeLogDensity_add_massShift
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) (a : α) :
+    relativeLogDensity (Quotient.mk _ μ) (Quotient.mk _ ν) a
+      = representativeRelativeLogDensity μ ν a
+        + representativeMassShift μ ν := by
+  unfold relativeLogDensity representativeRelativeLogDensity representativeRelativeDensity
+  rw [gaugeSection_mk, gaugeSection_mk]
+  rw [InfoGeometry.PositiveMeasure.normalize_apply, InfoGeometry.PositiveMeasure.normalize_apply]
+  have hZμ : InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ ≠ 0 :=
+    InfoGeometry.PositiveMeasure.Z_ne_zero μ
+  have hZν : InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) ν ≠ 0 :=
+    InfoGeometry.PositiveMeasure.Z_ne_zero ν
+  have hμ : μ a ≠ 0 := (μ.pos a).ne'
+  have hν : ν a ≠ 0 := (ν.pos a).ne'
+  have hsplit :
+      μ a / InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ /
+          (ν a / InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) ν)
+        = (InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) ν /
+            InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ)
+            * (μ a / ν a) := by
+    field_simp [hZμ, hZν, hμ, hν]
+  rw [hsplit]
+  rw [Real.log_mul
+    (show (InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) ν /
+        InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ) ≠ 0 by
+      exact div_ne_zero hZν hZμ)
+    (show μ a / ν a ≠ 0 by exact div_ne_zero hμ hν)]
+  rw [show representativeMassShift μ ν =
+      Real.log
+        (InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) ν /
+          InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) μ) by rfl]
+  ring
+
+/--
+For concrete positive representatives, the projective modular potential is the
+representative modular potential shifted by the logarithm of the inverse global
+mass ratio induced by canonical normalization.
+-/
+@[simp] theorem relativeModularPotential_mk_eq_representativeModularPotential_sub_massShift
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) (a : α) :
+    relativeModularPotential (Quotient.mk _ μ) (Quotient.mk _ ν) a
+      = representativeModularPotential μ ν a - representativeMassShift μ ν := by
+  change -relativeLogDensity (Quotient.mk _ μ) (Quotient.mk _ ν) a
+      = representativeModularPotential μ ν a - representativeMassShift μ ν
+  rw [relativeLogDensity_mk_eq_representativeRelativeLogDensity_add_massShift]
+  rw [representativeModularPotential_eq_neg_representativeRelativeLogDensity]
+  ring
+
 @[simp] theorem relativeLogDensity_eq_logDensity_sub_logDensity
     (q q0 : PositiveRay α) (a : α) :
     relativeLogDensity q q0 a =

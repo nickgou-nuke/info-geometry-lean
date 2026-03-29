@@ -60,6 +60,19 @@ If graph-derived surfaces disagree, trust:
 4. `artifacts/dag/source-sink-bipartite.json`
 5. `reports/dag/*`
 
+## Current Anchor Corridor
+
+The current long chain that should remain visible in the declaration DAG and the causal reports is:
+- `PositiveMeasure -> Projective.Normalize -> PositiveRayCore -> RelativePotentialCore -> RelativePotentialCountBridge -> RelativeSurprisalOperatorLift`
+
+The important point is not only depth. It is that the chain now contains a real owned cocycle at each adjacent rise:
+- representative normalization cocycle
+- count specialization cocycle
+- raw operator cocycle
+- averaged modular-Hamiltonian cocycle
+
+The DAG layer should preserve that owner corridor and distinguish it from thinner reprojection tails above it.
+
 ## Intended Use
 
 Use the DAG subsystem for:

@@ -15,6 +15,13 @@ The maintained tooling surface is split into three directories:
 
 Top-level `tools/*.py` wrappers are convenience entrypoints. The maintained workflows are the subdirectory scripts and READMEs.
 
+## Current Anchor Query
+
+When local context is gone, the first theorem-growth corridor the tooling should help recover is:
+- `PositiveMeasure -> Projective.Normalize -> PositiveRayCore -> RelativePotentialCore -> RelativePotentialCountBridge -> RelativeSurprisalOperatorLift`
+
+That corridor is now a validated example of the intended workflow: use the tools to recover the rooted owner order, then read the owner files and grow the theory upward from the seed rather than backward from facade surfaces.
+
 ## Current Split
 
 ### `tools/infra`

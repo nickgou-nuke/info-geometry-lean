@@ -23,10 +23,6 @@ noncomputable abbrev cramerRaoMetric
     (H : HessianGeometry E) (x : E) (u v : E) : ℝ :=
   H.metric x u v
 
-@[simp] theorem cramerRaoMetric_eq_inner_cramerRaoMetricOp
-    (H : HessianGeometry E) (x : E) (u v : E) :
-    cramerRaoMetric H x u v = inner ℝ u (cramerRaoMetricOp H x v) := rfl
-
 end CramerRaoMetric
 
 section MongeAmpereBridge
@@ -42,41 +38,14 @@ def IncompressibleMongeAmpere (H : HessianGeometry E) : Prop :=
 def LiouvilleMongeAmpere (H : HessianGeometry E) (Φ : E → ℝ) : Prop :=
   SatisfiesMongeAmperePotential H (fun x => 2 * Φ x)
 
-@[simp] theorem liouvilleMongeAmpere_iff
-    (H : HessianGeometry E) (Φ : E → ℝ) :
-    LiouvilleMongeAmpere H Φ ↔
-      ∀ x : E, mongeAmpereDensity H x = Real.exp (2 * Φ x) := Iff.rfl
-
-/-- Log Monge-Ampere density equals log absolute determinant of the Cramer-Rao metric operator. -/
-lemma log_mongeAmpereDensity_eq_logAbsDet_cramerRaoMetric
-    (H : HessianGeometry E) (x : E) :
-    Real.log (mongeAmpereDensity H x)
-      = Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) := by
-  unfold mongeAmpereDensity cramerRaoMetricOp
-  rfl
-
-/-- Under nondegeneracy, Monge-Ampere density is absolute determinant of the Cramer-Rao metric. -/
-lemma mongeAmpereDensity_eq_absDet_cramerRaoMetric_of_nondegenerate
-    (H : HessianGeometry E) (x : E)
-    (_hdet : LinearMap.det (cramerRaoMetricOp H x).toLinearMap ≠ 0) :
-    mongeAmpereDensity H x = |LinearMap.det (cramerRaoMetricOp H x).toLinearMap| := by
-  unfold mongeAmpereDensity cramerRaoMetricOp
-  rfl
-
 /-- Incompressible Monge-Ampere plus nondegeneracy implies unit Cramer-Rao determinant magnitude. -/
 theorem absDet_cramerRaoMetric_eq_one_of_incompressible
     (H : HessianGeometry E)
     (hIncomp : IncompressibleMongeAmpere H)
     (x : E)
-    (hdet : LinearMap.det (cramerRaoMetricOp H x).toLinearMap ≠ 0) :
+    (_hdet : LinearMap.det (cramerRaoMetricOp H x).toLinearMap ≠ 0) :
     |LinearMap.det (cramerRaoMetricOp H x).toLinearMap| = 1 := by
-  calc
-    |LinearMap.det (cramerRaoMetricOp H x).toLinearMap|
-      = mongeAmpereDensity H x := by
-          symm
-          exact mongeAmpereDensity_eq_absDet_cramerRaoMetric_of_nondegenerate
-            (H := H) (x := x) hdet
-    _ = 1 := hIncomp x
+  simpa [IncompressibleMongeAmpere, mongeAmpereDensity, cramerRaoMetricOp] using hIncomp x
 
 /-- Incompressible Monge-Ampere implies zero log-volume mode of the Cramer-Rao metric. -/
 theorem logAbsDet_cramerRaoMetric_eq_zero_of_incompressible
@@ -84,10 +53,9 @@ theorem logAbsDet_cramerRaoMetric_eq_zero_of_incompressible
     (hIncomp : IncompressibleMongeAmpere H)
     (x : E) :
     Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) = 0 := by
-  have hUnit : mongeAmpereDensity H x = 1 := hIncomp x
-  have hLog : Real.log (mongeAmpereDensity H x) = 0 := by
-    simpa using congrArg Real.log hUnit
-  exact (log_mongeAmpereDensity_eq_logAbsDet_cramerRaoMetric (H := H) (x := x)).symm.trans hLog
+  have hUnit : |LinearMap.det (cramerRaoMetricOp H x).toLinearMap| = 1 := by
+    simpa [IncompressibleMongeAmpere, mongeAmpereDensity, cramerRaoMetricOp] using hIncomp x
+  rw [hUnit, Real.log_one]
 
 end MongeAmpereBridge
 

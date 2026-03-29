@@ -5,7 +5,6 @@ import InfoGeometry.Canonical.JaynesRNModularBridge
 import InfoGeometry.Canonical.IBFrozenModularBridge
 import InfoGeometry.Canonical.LogDet
 import InfoGeometry.Canonical.ProjectiveStateCore
-import InfoGeometry.Canonical.PositiveRayProjectiveBridge
 import InfoGeometry.Canonical.RelativeGeneratorCore
 import InfoGeometry.Canonical.PositiveRayCore
 import InfoGeometry.Canonical.RelativePotentialCore
@@ -137,13 +136,6 @@ export InfoGeometry.Canonical.RelativeGeneratorCore (
   logPotential_smul_right_ae
   logGenerator_self
   logGeneratorClass_invariant
-)
-
-export InfoGeometry.Canonical.PositiveRayProjectiveBridge (
-  positiveRayToProjectiveState
-  positiveRayToProjectiveState_normalize_eq
-  positiveRay_logGenerator_eq_relativeModularPotential_ae
-  positiveRay_logGenerator_eq_relativeModularPotential
 )
 
 export InfoGeometry.Canonical.PositiveRayCore (

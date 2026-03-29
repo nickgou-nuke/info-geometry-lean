@@ -19,6 +19,7 @@ InfoGeometry.Canonical.InformationCalculus | continuum interface is built on the
 InfoGeometry.Canonical.MasterSynthesis | synthesis theorem repackages supplied witnesses and degenerate path choices
 InfoGeometry.Canonical.OperatorAlgebraBridge | bridge now packages AQFT readiness honestly, but still offers no genuine operator-algebra transport
 InfoGeometry.Canonical.PerelmanW | canonical bridge remains on the vacuity quarantine surface
+InfoGeometry.Canonical.PositiveRayProjectiveBridge | canonical positive-ray/projective layer is only a namespace lift over RelativePotentialDiscreteBridge with no unique constructive load
 InfoGeometry.Canonical.RedLine | red-line synthesis remains on the vacuity quarantine surface
 InfoGeometry.Canonical.Rosetta | rosetta facade remains on the vacuity quarantine surface
 InfoGeometry.Canonical.SUSYBayes | canonical SUSY/Bayesian facade is theorem-shaped packaging over lower Fock/Fierz/Bogoliubov statements with no unique constructive load

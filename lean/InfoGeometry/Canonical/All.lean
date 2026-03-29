@@ -159,7 +159,6 @@ import InfoGeometry.Canonical.OperatorAlgebraAQFTPackage
 import InfoGeometry.Canonical.OperatorAlgebraKKBridge
 import InfoGeometry.Canonical.OperatorAlgebraModularAtom
 import InfoGeometry.Canonical.OperatorAlgebraReadiness
-import InfoGeometry.Canonical.PositiveRayProjectiveBridge
 import InfoGeometry.Canonical.RosettaScaleTransport
 import InfoGeometry.Canonical.WeylPathHysteresis
 import InfoGeometry.Canonical.YangMillsFiniteBridge

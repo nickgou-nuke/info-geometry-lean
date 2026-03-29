@@ -118,7 +118,7 @@ variable {E : Type*}
 Log-volume identity for Monge-Ampere density:
 on the nondegenerate branch, `log ρ = log |det(∇²ψ)|`.
 -/
-lemma log_mongeAmpereDensity_eq_logAbsDet_metricOp
+private lemma log_mongeAmpereDensity_eq_logAbsDet_metricOp
     [FiniteDimensional ℝ E]
     (H : InfoGeometry.Convex.HessianGeometry E) (x : E)
     (hdet : LinearMap.det (H.metricOp x).toLinearMap ≠ 0) :
@@ -146,7 +146,7 @@ Determinant-model bridge:
 if a matrix determinant models the Monge-Ampere density, then its log-absolute
 determinant equals the Hessian metric-op log-absolute determinant.
 -/
-lemma logAbsDet_metricModel_eq_logAbsDet_metricOp
+private lemma logAbsDet_metricModel_eq_logAbsDet_metricOp
     [FiniteDimensional ℝ E]
     (H : InfoGeometry.Convex.HessianGeometry E) (x : E) (A : Matrix m m ℝ)
     (h_det : LinearMap.det (H.metricOp x).toLinearMap ≠ 0)

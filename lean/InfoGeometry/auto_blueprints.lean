@@ -1205,10 +1205,8 @@ attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.jacDetCLM_comp
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.logAbsDetMatrix
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.logAbsDetMatrix_kronecker
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.logAbsDetMatrix_mul
-attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.logAbsDet_metricModel_eq_logAbsDet_metricOp
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.logAbsJacDetCLM
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.logAbsJacDetCLM_comp
-attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.log_mongeAmpereDensity_eq_logAbsDet_metricOp
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.log_spectralMongeAmpereDensity_eq_basepointLogVolume
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.regularRadialTransportCloses_of_boundaryGenerator_eq_zero
 attribute [blueprint] InfoGeometry.Canonical.GrandSynthesis.ricci_component_constant_of_geometricEquilibrium

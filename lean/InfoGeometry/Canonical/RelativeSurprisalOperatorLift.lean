@@ -344,14 +344,14 @@ theorem relativeCountModularPotentialOperator_cocycle
     ring
   · simp [relativeCountModularPotentialOperator, firstQuantize, diagMatrix, hij]
 
-/-- The scalar relative modular Hamiltonian is the diagonal average of the lifted raw modular potential. -/
+/-- The averaged modular Hamiltonian is the diagonal average of the lifted raw modular potential. -/
 theorem relativeModularHamiltonian_eq_diagonalAverage_rawLift
     (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n) :
-    InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularHamiltonian n
+    InfoGeometry.Canonical.RelativePotentialCountBridge.averagedModularHamiltonian n
         (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts ref)
       = diagonalAverage (n := n) (relativeCountModularPotentialOperator (n := n) counts ref) := by
-  unfold InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularHamiltonian
-  unfold InfoGeometry.Canonical.RelativePotentialCountBridge.relativeLogDensityMean
+  unfold InfoGeometry.Canonical.RelativePotentialCountBridge.averagedModularHamiltonian
+  unfold InfoGeometry.Canonical.RelativePotentialCountBridge.meanLogDeltaProfile
   unfold diagonalAverage diagonalMass
   simp [relativeCountModularPotentialOperator, firstQuantize, diagMatrix,
     InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountLogDensity]
@@ -368,7 +368,7 @@ theorem diagonalAverage_relativeModularPotentialOperator_countRay
         (relativeModularPotentialOperator (n := n)
           (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
           (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href))
-      = InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularHamiltonian n
+      = InfoGeometry.Canonical.RelativePotentialCountBridge.averagedModularHamiltonian n
           (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts ref)
         - InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts ref hcounts href := by
   rw [relativeModularPotentialOperator_countRay_eq_raw_add_massShift]
@@ -447,19 +447,19 @@ theorem diagonalAverage_relativeModularPotentialOperator_countRay_cocycle
   rw [relativeModularPotentialOperator_countRay_cocycle]
   rw [diagonalAverage_add]
 
-/-- Scalar modular Hamiltonians corrected by the normalization cocycle compose additively. -/
+/-- Averaged modular Hamiltonians corrected by the normalization cocycle compose additively. -/
 theorem relativeModularHamiltonian_sub_countMassShift_cocycle
     (counts ref base : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i)
     (href : ∀ i : Fin n, 0 < ref i)
     (hbase : ∀ i : Fin n, 0 < base i) :
-    InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularHamiltonian n
+    InfoGeometry.Canonical.RelativePotentialCountBridge.averagedModularHamiltonian n
         (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts base)
       - InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts base hcounts hbase
-      = (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularHamiltonian n
+      = (InfoGeometry.Canonical.RelativePotentialCountBridge.averagedModularHamiltonian n
             (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts ref)
           - InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts ref hcounts href)
-        + (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularHamiltonian n
+        + (InfoGeometry.Canonical.RelativePotentialCountBridge.averagedModularHamiltonian n
             (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n ref base)
           - InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift ref base href hbase) := by
   rw [← diagonalAverage_relativeModularPotentialOperator_countRay
@@ -472,14 +472,14 @@ theorem relativeModularHamiltonian_sub_countMassShift_cocycle
     (n := n) (counts := counts) (ref := ref) (base := base)
     (hcounts := hcounts) (href := href) (hbase := hbase)
 
-/-- The Tomita-Takesaki-style operator is the averaged relative surprisal times `Id`. -/
+/-- The averaged Tomita-Takesaki-style operator is the diagonal average of the raw lift times `Id`. -/
 theorem relativeTomitaTakesakiOp_eq_diagonalAverage_rawLift_smul_id
     (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n) :
-    InfoGeometry.Canonical.RelativePotentialCountBridge.relativeTomitaTakesakiOp n
+    InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp n
         (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts ref)
       = diagonalAverage (n := n) (relativeCountModularPotentialOperator (n := n) counts ref) •
           ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace (RouterAmplitude n)) := by
-  unfold InfoGeometry.Canonical.RelativePotentialCountBridge.relativeTomitaTakesakiOp
+  unfold InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp
   exact congrArg
     (fun c : ℝ => c • ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace (RouterAmplitude n)))
     (relativeModularHamiltonian_eq_diagonalAverage_rawLift (n := n)
@@ -499,18 +499,18 @@ noncomputable local instance : NormedSpace ℝ EndRA := inferInstance
 local instance : IsTopologicalRing EndRA := inferInstance
 local instance : CompleteSpace EndRA := inferInstance
 
-/-- First-order spectral/Taylor law for the lifted relative Tomita-Takesaki operator. -/
+/-- First-order spectral/Taylor law for the lifted averaged Tomita-Takesaki operator. -/
 theorem hasDerivAt_informationPartitionFunction_zero_relativeTomitaTakesakiOp
     (ω : EndRA →L[ℝ] ℝ) (ρ : Fin n → ℝ) :
     HasDerivAt
       (fun τ : ℝ =>
         informationPartitionFunction ω
-          (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeTomitaTakesakiOp n ρ) τ)
-      (ω (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeTomitaTakesakiOp n ρ)) 0 :=
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp n ρ) τ)
+      (ω (InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp n ρ)) 0 :=
   hasDerivAt_informationPartitionFunction_zero
-    (ω := ω) (K := InfoGeometry.Canonical.RelativePotentialCountBridge.relativeTomitaTakesakiOp n ρ)
+    (ω := ω) (K := InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp n ρ)
 
-/-- Normalized log-partition Taylor law for the lifted relative Tomita-Takesaki operator. -/
+/-- Normalized log-partition Taylor law for the lifted averaged Tomita-Takesaki operator. -/
 theorem hasDerivAt_logInformationPartitionFunction_zero_relativeTomitaTakesakiOp_of_normalized
     (ω : EndRA →L[ℝ] ℝ)
     (hω1 : ω (1 : EndRA) = 1)
@@ -518,10 +518,10 @@ theorem hasDerivAt_logInformationPartitionFunction_zero_relativeTomitaTakesakiOp
     HasDerivAt
       (fun τ : ℝ =>
         logInformationPartitionFunction ω
-          (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeTomitaTakesakiOp n ρ) τ)
-      (ω (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeTomitaTakesakiOp n ρ)) 0 :=
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp n ρ) τ)
+      (ω (InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp n ρ)) 0 :=
   hasDerivAt_logInformationPartitionFunction_zero_of_normalized
-    (ω := ω) (K := InfoGeometry.Canonical.RelativePotentialCountBridge.relativeTomitaTakesakiOp n ρ) hω1
+    (ω := ω) (K := InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp n ρ) hω1
 
 /-- Count-side specialization of the normalized spectral/Taylor law. -/
 theorem hasDerivAt_logInformationPartitionFunction_zero_relativeCountLift_of_normalized
@@ -531,9 +531,9 @@ theorem hasDerivAt_logInformationPartitionFunction_zero_relativeCountLift_of_nor
     HasDerivAt
       (fun τ : ℝ =>
         logInformationPartitionFunction ω
-          (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeTomitaTakesakiOp n
+          (InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp n
             (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts ref)) τ)
-      (ω (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeTomitaTakesakiOp n
+      (ω (InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp n
         (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts ref))) 0 :=
   hasDerivAt_logInformationPartitionFunction_zero_relativeTomitaTakesakiOp_of_normalized
     (ω := ω) (hω1 := hω1)

@@ -21,11 +21,25 @@ noncomputable def splitB11 : (ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ) →ₗ[ℝ] �
 
 @[simp] lemma splitB11_apply (x y : ℝ × ℝ) : splitB11 x y = x.1 * y.1 - x.2 * y.2 := rfl
 lemma splitB11_expand (q k : ℝ × ℝ) : splitB11 q k = q.1 * k.1 - q.2 * k.2 := rfl
+
+@[simp] lemma splitB11_symm (x y : ℝ × ℝ) : splitB11 x y = splitB11 y x := by
+  simp [splitB11_apply, mul_comm]
+
 lemma splitQ11_eq_splitB11_diag (x : ℝ × ℝ) : splitQ11 x = splitB11 x x := by simp
 
 @[simp] theorem splitQ11_add (x y : ℝ × ℝ) :
     splitQ11 (x + y) = splitQ11 x + splitQ11 y + 2 * splitB11 x y := by
   simp only [splitQ11_apply, splitB11_apply, Prod.fst_add, Prod.snd_add]
+  ring
+
+theorem splitQ11_sub (x y : ℝ × ℝ) :
+    splitQ11 (x - y) = splitQ11 x + splitQ11 y - 2 * splitB11 x y := by
+  simp only [splitQ11_apply, splitB11_apply, Prod.fst_sub, Prod.snd_sub]
+  ring
+
+theorem splitB11_eq_half_polarization (x y : ℝ × ℝ) :
+    splitB11 x y = (splitQ11 (x + y) - splitQ11 x - splitQ11 y) / 2 := by
+  rw [splitQ11_add]
   ring
 
 def IsTimelike (v : ℝ × ℝ) : Prop := 0 < splitQ11 v

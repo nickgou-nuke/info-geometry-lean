@@ -2,6 +2,8 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Krein.SplitQuadratic
+import InfoGeometry.Clifford.SplitQ11
 
 set_option autoImplicit false
 
@@ -48,6 +50,19 @@ omit [CompleteSpace E] in
 lemma krein_hessian_eq_spectral_epsilon :
     krein_hessian (E := E) = InfoGeometry.Krein.spectral_epsilon (E := E) := rfl
 
+/-- The geometric Krein gradient is differentiable with constant derivative `ε`. -/
+lemma hasFDerivAt_krein_grad (u : H₂) :
+    HasFDerivAt (fun x : H₂ => krein_grad (E := E) x) (krein_hessian (E := E)) u := by
+  simpa [krein_grad, krein_hessian] using
+    (InfoGeometry.Krein.SplitQuadratic.hasFDerivAt_grad (E := E) u)
+
+/-- The indefinite quadratic Krein potential differentiates to the Krein gradient. -/
+lemma hasFDerivAt_krein_potential (u : H₂) :
+    HasFDerivAt (krein_potential (E := E))
+      (InnerProductSpace.toDual ℝ H₂ (krein_grad (E := E) u)) u := by
+  simpa [krein_potential, krein_grad, krein_form, InfoGeometry.Krein.hessian_indefinite_form] using
+    (InfoGeometry.Krein.SplitQuadratic.hasFDerivAt_potential (E := E) u)
+
 /-- Explicit signature form: `⟪(x₁,x₂),(y₁,y₂)⟫ = ⟪x₁,y₁⟫ - ⟪x₂,y₂⟫`. -/
 lemma krein_form_explicit (u v : H₂) :
     krein_form (E := E) u v
@@ -73,5 +88,33 @@ lemma two_mul_krein_potential (v : H₂) :
     (2 : ℝ) * krein_potential (E := E) v = krein_form (E := E) v v := by
   unfold krein_potential
   ring
+
+section RealSplit
+
+@[simp] lemma krein_form_to_doubled_real
+    (x ξ y η : ℝ) :
+    krein_form (E := ℝ)
+        (InfoGeometry.Krein.to_doubled x ξ)
+        (InfoGeometry.Krein.to_doubled y η)
+      = InfoGeometry.Clifford.splitB11 (x, ξ) (y, η) := by
+  rw [krein_form_explicit]
+  simp [InfoGeometry.Clifford.splitB11_apply, InfoGeometry.Krein.to_doubled]
+  ring
+
+@[simp] lemma krein_form_self_to_doubled_real
+    (x ξ : ℝ) :
+    krein_form (E := ℝ)
+        (InfoGeometry.Krein.to_doubled x ξ)
+        (InfoGeometry.Krein.to_doubled x ξ)
+      = InfoGeometry.Clifford.splitQ11 (x, ξ) := by
+  simpa using (krein_form_to_doubled_real x ξ x ξ)
+
+@[simp] lemma krein_potential_to_doubled_real
+    (x ξ : ℝ) :
+    krein_potential (E := ℝ) (InfoGeometry.Krein.to_doubled x ξ)
+      = (1 / 2 : ℝ) * InfoGeometry.Clifford.splitQ11 (x, ξ) := by
+  simp [krein_potential]
+
+end RealSplit
 
 end InfoGeometry.Geometry

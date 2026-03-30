@@ -100,9 +100,10 @@ noncomputable def modularShiftAlgEquiv
             rw [← h_inv]
       _ = InfoGeometry.Krein.modular_shift (E := H) K t A *
             InfoGeometry.Krein.modular_shift (E := H) K t B := by
-            simp [InfoGeometry.Krein.modular_shift, mul_assoc]
+            simp [InfoGeometry.Krein.modular_shift, InfoGeometry.Krein.krein_modular_shift, mul_assoc]
   map_add' A B := by
-    simp [InfoGeometry.Krein.modular_shift, mul_add, add_mul, mul_assoc]
+    unfold InfoGeometry.Krein.modular_shift InfoGeometry.Krein.krein_modular_shift
+    simp [mul_add, add_mul, mul_assoc]
   commutes' r := by
     have h_inv :
         NormedSpace.exp (t • K) * NormedSpace.exp ((-t) • K) =

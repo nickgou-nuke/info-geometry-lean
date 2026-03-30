@@ -127,7 +127,8 @@ theorem hasDerivAt_modularShift_zero_eq_commutator
           ((NormedSpace.exp (0 • K) * A) * (-K)))
         0 := by
     simpa [mul_assoc] using (hExpL.mul_const A).mul hExpR
-  simpa [commutator, modularShift, InfoGeometry.Krein.modular_shift, sub_eq_add_neg, mul_assoc] using hProd
+  simpa [commutator, modularShift, InfoGeometry.Krein.modular_shift,
+    InfoGeometry.Krein.krein_modular_shift, sub_eq_add_neg, mul_assoc] using hProd
 
 /-- Scalar derivative corollary of `hasDerivAt_modularShift_zero_eq_commutator`. -/
 theorem deriv_modularShift_zero_eq_commutator

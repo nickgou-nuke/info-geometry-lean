@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Clifford
+import InfoGeometry.Quantum.RealSplitClifford
 import Mathlib.LinearAlgebra.TensorProduct.Basic
 set_option linter.unnecessarySimpa false
 
@@ -7,6 +8,7 @@ open scoped TensorProduct
 namespace InfoGeometry.Canonical.BottPeriodicity
 
 open InfoGeometry.Krein
+open InfoGeometry.Quantum
 
 local notation "Q11" => InfoGeometry.CliffordTower.Q11
 local notation "SplitSpace" => InfoGeometry.CliffordTower.SplitSpace
@@ -134,6 +136,56 @@ noncomputable abbrev bott_step_periodicity (n : ℕ) :
   bottStepEquiv n
 
 end BottStep
+
+section FirstBottSeed
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+@[simp] theorem bottGeneratorInjection_zero_left :
+    bottGeneratorInjection 0 ((1, 0), (0 : SplitSpace 0))
+      = (CliffordAlgebra.ι Q11 (1, 0)) ᵍ⊗ₜ (1 : CliffordAlgebra (Qsplit 0)) := by
+  rw [bottGeneratorInjection_apply]
+  have hzero : CliffordAlgebra.ι (Qsplit 0) (0 : SplitSpace 0) = 0 := by
+    simpa using (LinearMap.map_zero (CliffordAlgebra.ι (Qsplit 0)))
+  rw [hzero]
+  simp
+
+@[simp] theorem bottGeneratorInjection_zero_right :
+    bottGeneratorInjection 0 ((0, 1), (0 : SplitSpace 0))
+      = (CliffordAlgebra.ι Q11 (0, 1)) ᵍ⊗ₜ (1 : CliffordAlgebra (Qsplit 0)) := by
+  rw [bottGeneratorInjection_apply]
+  have hzero : CliffordAlgebra.ι (Qsplit 0) (0 : SplitSpace 0) = 0 := by
+    simpa using (LinearMap.map_zero (CliffordAlgebra.ι (Qsplit 0)))
+  rw [hzero]
+  simp
+
+/--
+The packaged doubled-space split action is the concrete `Q11` seed consumed by the
+first Bott step on the left generator.
+-/
+theorem firstBottStep_consumes_doubledSpaceCl11Action_J :
+    (doubledSpaceCl11Action (E := E)).J
+      = InfoGeometry.Krein.cl11Rep (E := E) (CliffordAlgebra.ι Q11 (1, 0)) ∧
+    bottGeneratorInjection 0 ((1, 0), (0 : SplitSpace 0))
+      = (CliffordAlgebra.ι Q11 (1, 0)) ᵍ⊗ₜ (1 : CliffordAlgebra (Qsplit 0)) := by
+  constructor
+  · simpa using (doubledSpaceCl11Action_J_eq_cl11Rep_leftGenerator (E := E))
+  · exact bottGeneratorInjection_zero_left
+
+/--
+The packaged doubled-space split action is the concrete `Q11` seed consumed by the
+first Bott step on the right generator.
+-/
+theorem firstBottStep_consumes_doubledSpaceCl11Action_K :
+    (doubledSpaceCl11Action (E := E)).K
+      = InfoGeometry.Krein.cl11Rep (E := E) (CliffordAlgebra.ι Q11 (0, 1)) ∧
+    bottGeneratorInjection 0 ((0, 1), (0 : SplitSpace 0))
+      = (CliffordAlgebra.ι Q11 (0, 1)) ᵍ⊗ₜ (1 : CliffordAlgebra (Qsplit 0)) := by
+  constructor
+  · simpa using (doubledSpaceCl11Action_K_eq_cl11Rep_rightGenerator (E := E))
+  · exact bottGeneratorInjection_zero_right
+
+end FirstBottSeed
 
 section CompanionInjection
 

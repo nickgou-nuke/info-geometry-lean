@@ -7,7 +7,7 @@ import InfoGeometry.Math.Convexity
 # Diagonal Metric Modular Bridge
 
 Thin bridge identifying the diagonal Hessian metric operator with the already
-owned scalar modular Hamiltonian lift on the doubled carrier.
+owned averaged modular Hamiltonian lift on the doubled carrier.
 
 This file does not add new modular or spectral ontology. It only packages the
 currently proved lower surfaces:
@@ -18,7 +18,7 @@ currently proved lower surfaces:
 
 The key point is the narrow diagonal specialization:
 
-`H.metricOp x₀ = (relative surprisal scalar) • Id`,
+`H.metricOp x₀ = (averaged relative surprisal scalar) • Id`,
 
 so that the spectral square can be rewritten to the modular Hamiltonian without
 using a capstone wrapper.
@@ -39,24 +39,27 @@ variable {n : ℕ} [Nonempty (Fin n)]
 
 local notation "H₂" => InfoGeometry.Krein.DoubledSpace (InfoGeometry.Canonical.KMSSinkhornBridge.RouterAmplitude n)
 
-/-- Continuum modular data induced by the finite relative-count modular Hamiltonian. -/
+/-- Continuum modular data induced by the finite averaged relative-count modular Hamiltonian. -/
 noncomputable def countModularData
     (counts ref : RelativeCounts n) :
     ModularRadonNikodymData (InfoGeometry.Canonical.KMSSinkhornBridge.RouterAmplitude n) where
   rnDerivative :=
-    Real.exp (-(relativeModularHamiltonian n (relativeCountDensity n counts ref)))
+    Real.exp (-(averagedModularHamiltonian n (relativeCountDensity n counts ref)))
   rnDerivative_pos := Real.exp_pos _
 
 /--
 The modular Hamiltonian attached to `countModularData` is exactly the existing
-relative Tomita-Takesaki lift on the doubled router carrier.
+averaged Tomita-Takesaki lift on the doubled router carrier.
 -/
 @[simp] theorem countModularData_modularHamiltonian_eq_relativeTomitaTakesakiOp
     (counts ref : RelativeCounts n) :
     (countModularData counts ref).modularHamiltonian =
-      relativeTomitaTakesakiOp n (relativeCountDensity n counts ref) := by
+      averagedTomitaTakesakiOp n (relativeCountDensity n counts ref) := by
   rw [InfoGeometry.Canonical.YangMillsContinuum.ModularRadonNikodymData.modularHamiltonian_eq_neg_log_rn]
-  simp [countModularData, InfoGeometry.Canonical.RelativePotentialCountBridge.relativeTomitaTakesakiOp,
+  simp [countModularData,
+    InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp,
+    InfoGeometry.Canonical.RelativePotentialCountBridge.averagedModularHamiltonian,
+    InfoGeometry.Canonical.RelativePotentialCountBridge.meanLogDeltaProfile,
     InfoGeometry.Canonical.YangMillsContinuum.idEndH]
 
 /--
@@ -72,14 +75,14 @@ def IsDiagonalRelativeCountMetricSlice
 
 /--
 On the diagonal relative-count slice, the Hessian metric operator is exactly
-the finite relative Tomita-Takesaki lift.
+the finite averaged Tomita-Takesaki lift.
 -/
 theorem metricOp_eq_relativeTomitaTakesakiOp_of_isDiagonalRelativeCountMetricSlice
     {H : HessianGeometry H₂} {x₀ : H₂}
     {counts ref : RelativeCounts n}
     (hDiag : IsDiagonalRelativeCountMetricSlice (n := n) H x₀ counts ref) :
     H.metricOp x₀ =
-      relativeTomitaTakesakiOp n (relativeCountDensity n counts ref) := by
+      averagedTomitaTakesakiOp n (relativeCountDensity n counts ref) := by
   rw [hDiag]
   exact (relativeTomitaTakesakiOp_eq_diagonalAverage_rawLift_smul_id
     (n := n) (counts := counts) (ref := ref)).symm
@@ -95,7 +98,7 @@ theorem metricOp_eq_countModularHamiltonian_of_isDiagonalRelativeCountMetricSlic
     H.metricOp x₀ =
       (countModularData counts ref).modularHamiltonian := by
   calc
-    H.metricOp x₀ = relativeTomitaTakesakiOp n (relativeCountDensity n counts ref) :=
+    H.metricOp x₀ = averagedTomitaTakesakiOp n (relativeCountDensity n counts ref) :=
       metricOp_eq_relativeTomitaTakesakiOp_of_isDiagonalRelativeCountMetricSlice
         (n := n) hDiag
     _ = (countModularData counts ref).modularHamiltonian := by
@@ -105,7 +108,7 @@ theorem metricOp_eq_countModularHamiltonian_of_isDiagonalRelativeCountMetricSlic
 /-- Scalar diagonal weight carried by the raw count-side modular Hamiltonian. -/
 noncomputable def countDiagonalScalar
     (counts ref : RelativeCounts n) : ℝ :=
-  relativeModularHamiltonian n (relativeCountDensity n counts ref)
+  averagedModularHamiltonian n (relativeCountDensity n counts ref)
 
 /--
 Count-side arithmetic-mean criterion ensuring that the diagonal scalar lies on
@@ -154,7 +157,7 @@ theorem countDiagonalScalar_nonneg_of_relativeCountDensity_sum_le_card
       (hx_pos := hρ_pos)
   have hrhs :
       (∑ i : Fin n, (n : ℝ)⁻¹ * -Real.log (ρ i)) = countDiagonalScalar (n := n) counts ref := by
-    unfold countDiagonalScalar relativeModularHamiltonian relativeLogDensityMean ρ
+    unfold countDiagonalScalar averagedModularHamiltonian meanLogDeltaProfile ρ
     rw [Finset.mul_sum, ← Finset.sum_neg_distrib]
     ring
   have hbound_sum :
@@ -203,21 +206,21 @@ theorem countDiagonalHessianGeometry_isDiagonalRelativeCountMetricSlice
       (countDiagonalHessianGeometry (n := n) counts ref hNonneg) x₀ counts ref := by
   unfold IsDiagonalRelativeCountMetricSlice countDiagonalHessianGeometry countDiagonalScalar
   rw [InfoGeometry.Convex.Euclidean.scaledHessianGeometry_metricOp_eq_smul_id
-    (E := H₂) (c := relativeModularHamiltonian n (relativeCountDensity n counts ref))
+    (E := H₂) (c := averagedModularHamiltonian n (relativeCountDensity n counts ref))
     (hc := hNonneg) (x := x₀)]
   rw [relativeModularHamiltonian_eq_diagonalAverage_rawLift (n := n) (counts := counts) (ref := ref)]
 
 -- theorem-class: bridge
 /--
 The concrete count-driven diagonal Hessian geometry identifies its metric
-operator with the raw relative Tomita-Takesaki lift.
+operator with the raw averaged Tomita-Takesaki lift.
 -/
 theorem countDiagonalHessianGeometry_metricOp_eq_relativeTomitaTakesakiOp
     (counts ref : RelativeCounts n)
     (hNonneg : 0 ≤ countDiagonalScalar (n := n) counts ref)
     (x₀ : H₂) :
     (countDiagonalHessianGeometry (n := n) counts ref hNonneg).metricOp x₀ =
-      relativeTomitaTakesakiOp n (relativeCountDensity n counts ref) := by
+      averagedTomitaTakesakiOp n (relativeCountDensity n counts ref) := by
   rw [metricOp_eq_relativeTomitaTakesakiOp_of_isDiagonalRelativeCountMetricSlice
     (n := n)
     (H := countDiagonalHessianGeometry (n := n) counts ref hNonneg)
@@ -240,7 +243,7 @@ theorem countDiagonalHessianGeometry_metricOp_eq_countModularHamiltonian
       (countModularData counts ref).modularHamiltonian := by
   calc
     (countDiagonalHessianGeometry (n := n) counts ref hNonneg).metricOp x₀
-        = relativeTomitaTakesakiOp n (relativeCountDensity n counts ref) :=
+        = averagedTomitaTakesakiOp n (relativeCountDensity n counts ref) :=
           countDiagonalHessianGeometry_metricOp_eq_relativeTomitaTakesakiOp
             (n := n) counts ref hNonneg x₀
     _ = (countModularData counts ref).modularHamiltonian := by
@@ -249,7 +252,7 @@ theorem countDiagonalHessianGeometry_metricOp_eq_countModularHamiltonian
 
 /--
 The arithmetic-mean criterion produces a concrete diagonal Hessian geometry whose
-metric operator is the raw relative Tomita-Takesaki lift.
+metric operator is the raw averaged Tomita-Takesaki lift.
 -/
 theorem countDiagonalHessianGeometryOfRelativeCountDensitySumBound_metricOp_eq_relativeTomitaTakesakiOp
     (counts ref : RelativeCounts n)
@@ -259,7 +262,7 @@ theorem countDiagonalHessianGeometryOfRelativeCountDensitySumBound_metricOp_eq_r
     (x₀ : H₂) :
     (countDiagonalHessianGeometryOfRelativeCountDensitySumBound
         (n := n) counts ref hcounts href hsum).metricOp x₀ =
-      relativeTomitaTakesakiOp n (relativeCountDensity n counts ref) := by
+      averagedTomitaTakesakiOp n (relativeCountDensity n counts ref) := by
   simpa [countDiagonalHessianGeometryOfRelativeCountDensitySumBound, countDiagonalHessianGeometry] using
     countDiagonalHessianGeometry_metricOp_eq_relativeTomitaTakesakiOp
       (n := n)
@@ -300,10 +303,10 @@ theorem dirac_sq_eq_relativeTomitaTakesakiOp_of_isDiagonalRelativeCountMetricSli
     (compat : DiracMetricCompatibility (E := H₂) D H x₀)
     (hDiag : IsDiagonalRelativeCountMetricSlice (n := n) H x₀ counts ref) :
     D * D =
-      relativeTomitaTakesakiOp n (relativeCountDensity n counts ref) := by
+      averagedTomitaTakesakiOp n (relativeCountDensity n counts ref) := by
   calc
     D * D = H.metricOp x₀ := compat.dirac_sq_eq_metric
-    _ = relativeTomitaTakesakiOp n (relativeCountDensity n counts ref) :=
+    _ = averagedTomitaTakesakiOp n (relativeCountDensity n counts ref) :=
       metricOp_eq_relativeTomitaTakesakiOp_of_isDiagonalRelativeCountMetricSlice
         (n := n) hDiag
 
@@ -327,7 +330,7 @@ theorem dirac_sq_eq_countModularHamiltonian_of_isDiagonalRelativeCountMetricSlic
 
 /--
 Pointwise form of the diagonal specialization:
-the Dirac square acts by scalar multiplication with the relative modular
+the Dirac square acts by scalar multiplication with the averaged modular
 Hamiltonian on the diagonal slice.
 -/
 theorem dirac_sq_apply_eq_relativeModularHamiltonian_smul_of_isDiagonalRelativeCountMetricSlice
@@ -337,10 +340,10 @@ theorem dirac_sq_apply_eq_relativeModularHamiltonian_smul_of_isDiagonalRelativeC
     (hDiag : IsDiagonalRelativeCountMetricSlice (n := n) H x₀ counts ref)
     (v : H₂) :
     D (D v) =
-      relativeModularHamiltonian n (relativeCountDensity n counts ref) • v := by
+      averagedModularHamiltonian n (relativeCountDensity n counts ref) • v := by
   have hv :
       (D * D) v =
-        (relativeTomitaTakesakiOp n (relativeCountDensity n counts ref)) v := by
+        (averagedTomitaTakesakiOp n (relativeCountDensity n counts ref)) v := by
     exact congrArg
       (fun A : H₂ →L[ℝ] H₂ => A v)
       (dirac_sq_eq_relativeTomitaTakesakiOp_of_isDiagonalRelativeCountMetricSlice
@@ -367,7 +370,7 @@ theorem spectral_dirac_sq_eq_countModularHamiltonian_of_isDiagonalRelativeCountM
 /--
 Info-spectral-triple pointwise corollary of the diagonal bridge:
 on the diagonal relative-count slice, the spectral Dirac square acts by the
-relative modular Hamiltonian scalar.
+averaged modular Hamiltonian scalar.
 -/
 theorem spectral_dirac_sq_apply_eq_relativeModularHamiltonian_smul_of_isDiagonalRelativeCountMetricSlice
     (IST : InfoSpectralTriple H₂)
@@ -375,7 +378,7 @@ theorem spectral_dirac_sq_apply_eq_relativeModularHamiltonian_smul_of_isDiagonal
     (hDiag : IsDiagonalRelativeCountMetricSlice (n := n) IST.H IST.x₀ counts ref)
     (v : H₂) :
     IST.D (IST.D v) =
-      relativeModularHamiltonian n (relativeCountDensity n counts ref) • v :=
+      averagedModularHamiltonian n (relativeCountDensity n counts ref) • v :=
   dirac_sq_apply_eq_relativeModularHamiltonian_smul_of_isDiagonalRelativeCountMetricSlice
     (n := n) IST.compatibility hDiag v
 

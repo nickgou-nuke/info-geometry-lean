@@ -209,6 +209,13 @@ lemma modularConjugationJ_anticommutes_modularSign :
       = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) :=
   complex_i_sq (E := E)
 
+/-- `J` anticommutes with the internal phase axis `Jε`. -/
+lemma modularConjugationJ_anticommutes_modularComplexI :
+    (modularConjugationJ (E := E)).comp (modularComplexI (E := E))
+      = -((modularComplexI (E := E)).comp (modularConjugationJ (E := E))) := by
+  simpa [modularConjugationJ, modularComplexI] using
+    (InfoGeometry.Krein.modular_j_complex_i_anticommute (E := E))
+
 omit [CompleteSpace E] in
 /-- `J` is even for the doubled-space `Z₂` grading. -/
 lemma modularConjugationJ_isEven :
@@ -328,6 +335,90 @@ theorem modularConjugationJ_exp_modularSignEpsilon
                 hJ2
     _ = NormedSpace.exp ((-τ) • (modularSignEpsilon (E := E))) := by
           rw [hConjScaled]
+
+/-- Tomita inversion identity on the internal phase axis `Jε`. -/
+theorem modularConjugationJ_exp_modularComplexI
+    (τ : ℝ) :
+    (modularConjugationJ (E := E)) *
+        NormedSpace.exp (τ • (modularComplexI (E := E))) *
+        (modularConjugationJ (E := E))
+      = NormedSpace.exp ((-τ) • (modularComplexI (E := E))) := by
+  have hJ2 : (modularConjugationJ (E := E)) * (modularConjugationJ (E := E))
+      = (1 : EndH) := by
+    change (modularConjugationJ (E := E)).comp (modularConjugationJ (E := E))
+      = ContinuousLinearMap.id ℝ (DoubledSpace E)
+    exact modularConjugationJ_sq (E := E)
+  have hAnti :
+      (modularConjugationJ (E := E)) * (modularComplexI (E := E))
+        = -((modularComplexI (E := E)) * (modularConjugationJ (E := E))) := by
+    simpa using (modularConjugationJ_anticommutes_modularComplexI (E := E))
+  have hConjAxis :
+      (modularConjugationJ (E := E)) * (modularComplexI (E := E))
+          * (modularConjugationJ (E := E))
+        = -(modularComplexI (E := E)) := by
+    calc
+      (modularConjugationJ (E := E)) * (modularComplexI (E := E))
+          * (modularConjugationJ (E := E))
+          = (-(modularComplexI (E := E) * modularConjugationJ (E := E)))
+              * modularConjugationJ (E := E) := by
+                rw [hAnti]
+      _ = -((modularComplexI (E := E)) * (modularConjugationJ (E := E) *
+            modularConjugationJ (E := E))) := by
+              simp [mul_assoc]
+      _ = -((modularComplexI (E := E)) * (1 : EndH)) := by
+            rw [hJ2]
+      _ = -(modularComplexI (E := E)) := by simp
+  have hConjScaled :
+      (modularConjugationJ (E := E)) * (τ • (modularComplexI (E := E)))
+          * (modularConjugationJ (E := E))
+        = (-τ) • (modularComplexI (E := E)) := by
+    calc
+      (modularConjugationJ (E := E)) * (τ • (modularComplexI (E := E)))
+          * (modularConjugationJ (E := E))
+          = τ •
+              ((modularConjugationJ (E := E)) * (modularComplexI (E := E))
+                * (modularConjugationJ (E := E))) := by
+              simp [mul_assoc]
+      _ = τ • (-(modularComplexI (E := E))) := by rw [hConjAxis]
+      _ = (-τ) • (modularComplexI (E := E)) := by simp [smul_neg, neg_smul]
+  calc
+    (modularConjugationJ (E := E)) *
+        NormedSpace.exp (τ • (modularComplexI (E := E))) *
+        (modularConjugationJ (E := E))
+        = NormedSpace.exp
+            ((modularConjugationJ (E := E)) *
+              (τ • (modularComplexI (E := E))) *
+              (modularConjugationJ (E := E))) := by
+              simpa using involutiveConjugation_exp
+                (E := E)
+                (J := modularConjugationJ (E := E))
+                (X := τ • (modularComplexI (E := E)))
+                hJ2
+    _ = NormedSpace.exp ((-τ) • (modularComplexI (E := E))) := by
+          rw [hConjScaled]
+
+/-- Right-intertwining form of Tomita inversion on the internal phase axis `Jε`. -/
+theorem modularConjugationJ_exp_modularComplexI_right
+    (τ : ℝ) :
+    (modularConjugationJ (E := E)) * NormedSpace.exp (τ • (modularComplexI (E := E)))
+      = NormedSpace.exp ((-τ) • (modularComplexI (E := E))) * (modularConjugationJ (E := E)) := by
+  have hJ2 : (modularConjugationJ (E := E)) * (modularConjugationJ (E := E))
+      = (1 : EndH) := by
+    change (modularConjugationJ (E := E)).comp (modularConjugationJ (E := E))
+      = ContinuousLinearMap.id ℝ (DoubledSpace E)
+    exact modularConjugationJ_sq (E := E)
+  calc
+    (modularConjugationJ (E := E)) * NormedSpace.exp (τ • (modularComplexI (E := E)))
+        = ((modularConjugationJ (E := E)) * NormedSpace.exp (τ • (modularComplexI (E := E)))) * (1 : EndH) := by
+            simp
+    _ = ((modularConjugationJ (E := E)) * NormedSpace.exp (τ • (modularComplexI (E := E)))) *
+          ((modularConjugationJ (E := E)) * (modularConjugationJ (E := E))) := by
+            rw [hJ2]
+    _ = ((modularConjugationJ (E := E)) * NormedSpace.exp (τ • (modularComplexI (E := E))) *
+          (modularConjugationJ (E := E))) * (modularConjugationJ (E := E)) := by
+            simp [mul_assoc]
+    _ = NormedSpace.exp ((-τ) • (modularComplexI (E := E))) * (modularConjugationJ (E := E)) := by
+          rw [modularConjugationJ_exp_modularComplexI (E := E) τ]
 
 /--
 Concrete additive-time automorphism group generated by the modular sign

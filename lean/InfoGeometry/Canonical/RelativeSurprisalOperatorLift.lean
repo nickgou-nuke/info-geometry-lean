@@ -485,6 +485,20 @@ theorem relativeTomitaTakesakiOp_eq_diagonalAverage_rawLift_smul_id
     (relativeModularHamiltonian_eq_diagonalAverage_rawLift (n := n)
       (counts := counts) (ref := ref))
 
+/-- The averaged Krein-native Tomita-Takesaki operator is the diagonal average of the raw lift times `ε`. -/
+theorem relativeKreinTomitaTakesakiOp_eq_diagonalAverage_rawLift_smul_eps
+    (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n) :
+    InfoGeometry.Canonical.RelativePotentialCountBridge.averagedKreinTomitaTakesakiOp n
+        (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts ref)
+      = diagonalAverage (n := n) (relativeCountModularPotentialOperator (n := n) counts ref) •
+          InfoGeometry.Krein.spectral_epsilon (E := RouterAmplitude n) := by
+  unfold InfoGeometry.Canonical.RelativePotentialCountBridge.averagedKreinTomitaTakesakiOp
+  rw [InfoGeometry.Canonical.RelativePotentialCountBridge.doubledAtomEpsilonOp_eq_spectralEpsilon (n := n)]
+  exact congrArg
+    (fun c : ℝ => c • InfoGeometry.Krein.spectral_epsilon (E := RouterAmplitude n))
+    (relativeModularHamiltonian_eq_diagonalAverage_rawLift (n := n)
+      (counts := counts) (ref := ref))
+
 end CountLift
 
 section SpectralTaylor

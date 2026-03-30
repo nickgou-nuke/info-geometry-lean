@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
+import InfoGeometry.Canonical.RelativePotentialScalarBridge
 import InfoGeometry.Canonical.SinkhornKMSCore
 import InfoGeometry.Meta.Architecture
 
@@ -43,6 +44,64 @@ noncomputable def relativeCountLogDensity
     (counts ref : RelativeCounts n) : Fin n → ℝ :=
   fun i => Real.log (relativeCountDensity n counts ref i)
 
+/-- Raw count-side modular potential profile. -/
+@[rep_depth count]
+noncomputable def relativeCountModularProfile
+    (counts ref : RelativeCounts n) : Fin n → ℝ :=
+  fun i => -relativeCountLogDensity n counts ref i
+
+/-- Raw count ratio as the commutative relative modular profile `Δ`. -/
+noncomputable def rawCountDelta
+    (counts ref : RelativeCounts n) : Fin n → ℝ :=
+  relativeCountDensity n counts ref
+
+/-- Raw logarithmic modular profile `log Δ`. -/
+noncomputable def rawCountLogDelta
+    (counts ref : RelativeCounts n) : Fin n → ℝ :=
+  relativeCountLogDensity n counts ref
+
+/-- Raw Hamiltonian modular profile `-log Δ`. -/
+noncomputable def rawCountHamiltonianProfile
+    (counts ref : RelativeCounts n) : Fin n → ℝ :=
+  relativeCountModularProfile n counts ref
+
+@[simp] theorem rawCountDelta_eq_relativeCountDensity
+    (counts ref : RelativeCounts n) :
+    rawCountDelta n counts ref = relativeCountDensity n counts ref := rfl
+
+@[simp] theorem rawCountLogDelta_eq_relativeCountLogDensity
+    (counts ref : RelativeCounts n) :
+    rawCountLogDelta n counts ref = relativeCountLogDensity n counts ref := rfl
+
+@[simp] theorem rawCountHamiltonianProfile_eq_relativeCountModularProfile
+    (counts ref : RelativeCounts n) :
+    rawCountHamiltonianProfile n counts ref = relativeCountModularProfile n counts ref := rfl
+
+@[simp] theorem rawCountLogDelta_eq_log_rawCountDelta
+    (counts ref : RelativeCounts n) (i : Fin n) :
+    rawCountLogDelta n counts ref i = Real.log (rawCountDelta n counts ref i) := rfl
+
+@[simp] theorem rawCountHamiltonianProfile_eq_neg_log_rawCountDelta
+    (counts ref : RelativeCounts n) (i : Fin n) :
+    rawCountHamiltonianProfile n counts ref i = -Real.log (rawCountDelta n counts ref i) := rfl
+
+@[simp] theorem relativeCountLogDensity_eq_log_relativeCountDensity
+    (counts ref : RelativeCounts n) (i : Fin n) :
+    relativeCountLogDensity n counts ref i =
+      Real.log (relativeCountDensity n counts ref i) := rfl
+
+@[simp] theorem relativeCountModularProfile_eq_neg_relativeCountLogDensity
+    (counts ref : RelativeCounts n) (i : Fin n) :
+    relativeCountModularProfile n counts ref i =
+      -relativeCountLogDensity n counts ref i := rfl
+
+@[simp] theorem relativeCountModularProfile_eq_neg_log_relativeCountDensity
+    (counts ref : RelativeCounts n) (i : Fin n) :
+    relativeCountModularProfile n counts ref i =
+      -Real.log (relativeCountDensity n counts ref i) := by
+  rw [relativeCountModularProfile_eq_neg_relativeCountLogDensity]
+  rw [relativeCountLogDensity_eq_log_relativeCountDensity]
+
 /-- Mean log-relative density (finite-sample modular log-density). -/
 noncomputable def relativeLogDensityMean (ρ : Fin n → ℝ) : ℝ :=
   (n : ℝ)⁻¹ * ∑ i : Fin n, Real.log (ρ i)
@@ -83,6 +142,16 @@ lemma relativeLogDensityMean_mul
     intro i hi
     exact Real.log_mul (hρ i) (hσ i)
   rw [hsum, Finset.sum_add_distrib, mul_add]
+
+theorem rawCountDelta_cocycle
+    (counts ref base : RelativeCounts n)
+    (href : ∀ i : Fin n, ref i ≠ 0)
+    (hbase : ∀ i : Fin n, base i ≠ 0)
+    (i : Fin n) :
+    rawCountDelta n counts base i
+      = rawCountDelta n counts ref i * rawCountDelta n ref base i := by
+  unfold rawCountDelta relativeCountDensity
+  field_simp [href i, hbase i]
 
 @[simp] theorem relativeCountLogDensity_cocycle
     (counts ref base : RelativeCounts n)
@@ -184,6 +253,65 @@ omit [Nonempty (Fin n)] in
       (ν := positiveMeasureOfCounts ref href)
       (ξ := positiveMeasureOfCounts base hbase))
 
+omit [Nonempty (Fin n)] in
+@[simp] theorem representativeRelativeDensity_positiveMeasureOfCounts_eq_relativeCountDensity
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    representativeRelativeDensity
+        (positiveMeasureOfCounts counts hcounts)
+        (positiveMeasureOfCounts ref href) i
+      = relativeCountDensity n counts ref i := by
+  rfl
+
+omit [Nonempty (Fin n)] in
+@[simp] theorem representativeRelativeLogDensity_positiveMeasureOfCounts_eq_relativeCountLogDensity
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    representativeRelativeLogDensity
+        (positiveMeasureOfCounts counts hcounts)
+        (positiveMeasureOfCounts ref href) i
+      = relativeCountLogDensity n counts ref i := by
+  rfl
+
+omit [Nonempty (Fin n)] in
+@[simp] theorem representativeModularPotential_positiveMeasureOfCounts_eq_relativeCountModularProfile
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    representativeModularPotential
+        (positiveMeasureOfCounts counts hcounts)
+        (positiveMeasureOfCounts ref href) i
+      = relativeCountModularProfile n counts ref i := by
+  rfl
+
+omit [Nonempty (Fin n)] in
+@[simp] theorem relativeCountDensity_eq_exp_relativeCountLogDensity
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    relativeCountDensity n counts ref i = Real.exp (relativeCountLogDensity n counts ref i) := by
+  rw [relativeCountLogDensity_eq_log_relativeCountDensity]
+  exact (Real.exp_log (div_pos (hcounts i) (href i))).symm
+
+omit [Nonempty (Fin n)] in
+@[simp] theorem relativeCountDensity_eq_exp_neg_relativeCountModularProfile
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    relativeCountDensity n counts ref i = Real.exp (-(relativeCountModularProfile n counts ref i)) := by
+  rw [relativeCountModularProfile_eq_neg_relativeCountLogDensity]
+  simpa using
+    (relativeCountDensity_eq_exp_relativeCountLogDensity
+      (n := n) (counts := counts) (ref := ref)
+      (hcounts := hcounts) (href := href) (i := i))
+
 /-- Projective positive state carried by a positive count profile. -/
 noncomputable def countRay
     (counts : RelativeCounts n)
@@ -196,9 +324,8 @@ noncomputable def countRay
     (i : Fin n) :
     gaugeSection (α := Fin n) (countRay counts hcounts) i
       = counts i / countMass counts hcounts := by
-  simpa [countRay, countMass, positiveMeasureOfCounts] using
-    congrArg (fun f => f i)
-      (gaugeSection_mk (α := Fin n) (μ := positiveMeasureOfCounts counts hcounts))
+  rw [countRay, gaugeSection_mk, InfoGeometry.PositiveMeasure.normalize_apply]
+  simp [countMass, positiveMeasureOfCounts]
 
 @[simp] theorem relativeDensity_countRay_eq_massRatio_mul_relativeCountDensity
     (counts ref : RelativeCounts n)
@@ -251,6 +378,347 @@ noncomputable def countRay
         (μ := positiveMeasureOfCounts counts hcounts)
         (ν := positiveMeasureOfCounts ref href)
         (a := i))
+
+/-- Multiplicative relative volume change induced by count normalization. -/
+noncomputable def countRelativeVolumeChange
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) : ℝ :=
+  countMass counts hcounts / countMass ref href
+
+lemma countRelativeVolumeChange_pos
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    0 < countRelativeVolumeChange counts ref hcounts href := by
+  exact div_pos (countMass_pos counts hcounts) (countMass_pos ref href)
+
+omit [Nonempty (Fin n)] in
+@[simp] theorem countMassShift_eq_neg_log_countRelativeVolumeChange
+    [Nonempty (Fin n)]
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    countMassShift counts ref hcounts href =
+      -Real.log (countRelativeVolumeChange counts ref hcounts href) := by
+  rw [countMassShift_eq_log_massRatio]
+  calc
+    Real.log (countMass ref href / countMass counts hcounts)
+      = Real.log ((countRelativeVolumeChange counts ref hcounts href)⁻¹) := by
+          unfold countRelativeVolumeChange
+          field_simp [countMass_ne_zero counts hcounts, countMass_ne_zero ref href]
+    _ = -Real.log (countRelativeVolumeChange counts ref hcounts href) := by
+          rw [Real.log_inv]
+
+@[simp] theorem countMassShift_eq_scalarModularPotential_relativeVolumeChange
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    countMassShift counts ref hcounts href =
+      InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+        (countRelativeVolumeChange counts ref hcounts href)
+        (countRelativeVolumeChange_pos counts ref hcounts href) := by
+  rw [InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential_eq_neg_log]
+  exact countMassShift_eq_neg_log_countRelativeVolumeChange counts ref hcounts href
+
+@[simp] theorem exp_neg_countMassShift_eq_countRelativeVolumeChange
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    Real.exp (-(countMassShift counts ref hcounts href)) =
+      countRelativeVolumeChange counts ref hcounts href := by
+  rw [countMassShift_eq_scalarModularPotential_relativeVolumeChange]
+  exact InfoGeometry.Canonical.RelativePotentialScalarBridge.exp_neg_scalarModularPotential_eq
+    (countRelativeVolumeChange counts ref hcounts href)
+    (countRelativeVolumeChange_pos counts ref hcounts href)
+
+@[simp] theorem relativeDensity_countRay_eq_relativeCountDensity_div_countRelativeVolumeChange
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    relativeDensity (α := Fin n) (countRay counts hcounts) (countRay ref href) i
+      = relativeCountDensity n counts ref i /
+          countRelativeVolumeChange counts ref hcounts href := by
+  have hratio :
+      countMass ref href / countMass counts hcounts
+        = (countRelativeVolumeChange counts ref hcounts href)⁻¹ := by
+    unfold countRelativeVolumeChange
+    field_simp [countMass_ne_zero counts hcounts, countMass_ne_zero ref href]
+  rw [relativeDensity_countRay_eq_massRatio_mul_relativeCountDensity]
+  rw [hratio]
+  rw [div_eq_mul_inv]
+  ring
+
+@[simp] theorem relativeLogDensity_countRay_eq_relativeCountLogDensity_sub_log_countRelativeVolumeChange
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    relativeLogDensity (α := Fin n) (countRay counts hcounts) (countRay ref href) i
+      = relativeCountLogDensity n counts ref i
+        - Real.log (countRelativeVolumeChange counts ref hcounts href) := by
+  rw [relativeLogDensity_countRay_eq_relativeCountLogDensity_add_massShift]
+  rw [countMassShift_eq_neg_log_countRelativeVolumeChange]
+  ring
+
+/-- Canonical projective count-side commutative relative modular operator profile. -/
+noncomputable def projectiveCountDelta
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) : Fin n → ℝ :=
+  fun i =>
+    relativeDensity (α := Fin n)
+      (countRay counts hcounts) (countRay ref href) i
+
+/-- Canonical projective logarithmic modular profile `log Δ̂`. -/
+noncomputable def projectiveCountLogDelta
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) : Fin n → ℝ :=
+  fun i =>
+    relativeLogDensity (α := Fin n)
+      (countRay counts hcounts) (countRay ref href) i
+
+/-- Canonical projective count-side modular potential profile. -/
+noncomputable def projectiveCountModularProfile
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) : Fin n → ℝ :=
+  fun i =>
+    relativeModularPotential (α := Fin n)
+      (countRay counts hcounts) (countRay ref href) i
+
+/-- Canonical projective Hamiltonian modular profile `-log Δ̂`. -/
+noncomputable def projectiveCountHamiltonianProfile
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) : Fin n → ℝ :=
+  projectiveCountModularProfile counts ref hcounts href
+
+@[simp] theorem projectiveCountLogDelta_eq_relativeLogDensity_countRay
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    projectiveCountLogDelta counts ref hcounts href
+      = fun i => relativeLogDensity (α := Fin n) (countRay counts hcounts) (countRay ref href) i := rfl
+
+@[simp] theorem projectiveCountHamiltonianProfile_eq_projectiveCountModularProfile
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    projectiveCountHamiltonianProfile counts ref hcounts href
+      = projectiveCountModularProfile counts ref hcounts href := rfl
+
+@[simp] theorem projectiveCountModularProfile_eq_neg_relativeLogDensity_countRay
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    projectiveCountModularProfile counts ref hcounts href i =
+      -relativeLogDensity (α := Fin n) (countRay counts hcounts) (countRay ref href) i := by
+  rw [projectiveCountModularProfile]
+  exact relativeModularPotential_eq_neg_relativeLogDensity
+    (q := countRay counts hcounts) (q0 := countRay ref href) (a := i)
+
+@[simp] theorem projectiveCountDelta_eq_massRatio_mul_rawCountDelta
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    projectiveCountDelta counts ref hcounts href i
+      = (countMass ref href / countMass counts hcounts)
+          * rawCountDelta n counts ref i := by
+  rw [projectiveCountDelta, rawCountDelta]
+  exact relativeDensity_countRay_eq_massRatio_mul_relativeCountDensity
+    (n := n) (counts := counts) (ref := ref)
+    (hcounts := hcounts) (href := href) (i := i)
+
+@[simp] theorem projectiveCountDelta_eq_raw_div_countRelativeVolumeChange
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    projectiveCountDelta counts ref hcounts href i
+      = rawCountDelta n counts ref i /
+          countRelativeVolumeChange counts ref hcounts href := by
+  rw [projectiveCountDelta]
+  exact relativeDensity_countRay_eq_relativeCountDensity_div_countRelativeVolumeChange
+    (n := n) (counts := counts) (ref := ref) (hcounts := hcounts) (href := href) (i := i)
+
+@[simp] theorem projectiveCountLogDelta_eq_rawCountLogDelta_add_massShift
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    projectiveCountLogDelta counts ref hcounts href i
+      = rawCountLogDelta n counts ref i + countMassShift counts ref hcounts href := by
+  rw [projectiveCountLogDelta, rawCountLogDelta]
+  exact relativeLogDensity_countRay_eq_relativeCountLogDensity_add_massShift
+    (n := n) (counts := counts) (ref := ref)
+    (hcounts := hcounts) (href := href) (i := i)
+
+@[simp] theorem projectiveCountModularProfile_eq_neg_log_projectiveCountDelta
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    projectiveCountModularProfile counts ref hcounts href i
+      = -Real.log (projectiveCountDelta counts ref hcounts href i) := by
+  rw [projectiveCountModularProfile_eq_neg_relativeLogDensity_countRay]
+  rw [projectiveCountDelta]
+  rw [relativeDensity_eq_exp_relativeLogDensity]
+  rw [Real.log_exp]
+
+@[simp] theorem projectiveCountDelta_eq_exp_neg_projectiveCountModularProfile
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    projectiveCountDelta counts ref hcounts href i
+      = Real.exp (-(projectiveCountModularProfile counts ref hcounts href i)) := by
+  rw [projectiveCountDelta]
+  rw [projectiveCountModularProfile_eq_neg_relativeLogDensity_countRay]
+  rw [neg_neg]
+  exact relativeDensity_eq_exp_relativeLogDensity
+    (q := countRay counts hcounts)
+    (q0 := countRay ref href)
+    (a := i)
+
+@[simp] theorem projectiveCountHamiltonianProfile_eq_rawCountHamiltonianProfile_sub_massShift
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    projectiveCountHamiltonianProfile counts ref hcounts href i
+      = rawCountHamiltonianProfile n counts ref i
+        - countMassShift counts ref hcounts href := by
+  rw [projectiveCountHamiltonianProfile, rawCountHamiltonianProfile]
+  exact relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift
+    (n := n) (counts := counts) (ref := ref)
+    (hcounts := hcounts) (href := href) (i := i)
+
+theorem projectiveCountModularProfile_eq_raw_sub_massShift
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    projectiveCountModularProfile counts ref hcounts href i
+      = relativeCountModularProfile n counts ref i
+        - countMassShift counts ref hcounts href := by
+  rw [projectiveCountModularProfile, relativeCountModularProfile]
+  exact relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift
+    (n := n) (counts := counts) (ref := ref)
+    (hcounts := hcounts) (href := href) (i := i)
+
+@[simp] theorem projectiveCountModularProfile_eq_raw_sub_scalarModularPotential_relativeVolumeChange
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    projectiveCountModularProfile counts ref hcounts href i
+      = relativeCountModularProfile n counts ref i
+        - InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+            (countRelativeVolumeChange counts ref hcounts href)
+            (countRelativeVolumeChange_pos counts ref hcounts href) := by
+  calc
+    projectiveCountModularProfile counts ref hcounts href i
+      = relativeCountModularProfile n counts ref i - countMassShift counts ref hcounts href := by
+          exact projectiveCountModularProfile_eq_raw_sub_massShift
+            (n := n) (counts := counts) (ref := ref)
+            (hcounts := hcounts) (href := href) (i := i)
+    _ = relativeCountModularProfile n counts ref i
+          - InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+              (countRelativeVolumeChange counts ref hcounts href)
+              (countRelativeVolumeChange_pos counts ref hcounts href) := by
+          rw [countMassShift_eq_scalarModularPotential_relativeVolumeChange]
+
+@[simp] theorem relativeModularPotential_countRay_eq_relativeCountModularProfile_sub_scalarModularPotential_relativeVolumeChange
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    relativeModularPotential (α := Fin n) (countRay counts hcounts) (countRay ref href) i
+      = relativeCountModularProfile n counts ref i
+        - InfoGeometry.Canonical.RelativePotentialScalarBridge.scalarModularPotential
+            (countRelativeVolumeChange counts ref hcounts href)
+            (countRelativeVolumeChange_pos counts ref hcounts href) := by
+  rw [relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift]
+  rw [countMassShift_eq_scalarModularPotential_relativeVolumeChange]
+  rw [relativeCountModularProfile]
+
+@[simp] theorem projectiveCountDelta_self
+    (counts : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (i : Fin n) :
+    projectiveCountDelta counts counts hcounts hcounts i = 1 := by
+  rw [projectiveCountDelta]
+  exact relativeDensity_self (q := countRay counts hcounts) (a := i)
+
+@[simp] theorem projectiveCountLogDelta_self
+    (counts : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (i : Fin n) :
+    projectiveCountLogDelta counts counts hcounts hcounts i = 0 := by
+  rw [projectiveCountLogDelta]
+  exact relativeLogDensity_self (q := countRay counts hcounts) (a := i)
+
+@[simp] theorem projectiveCountHamiltonianProfile_self
+    (counts : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (i : Fin n) :
+    projectiveCountHamiltonianProfile counts counts hcounts hcounts i = 0 := by
+  rw [projectiveCountHamiltonianProfile]
+  exact relativeModularPotential_self (q := countRay counts hcounts) (a := i)
+
+theorem projectiveCountDelta_cocycle
+    (counts ref base : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hbase : ∀ i : Fin n, 0 < base i)
+    (i : Fin n) :
+    projectiveCountDelta counts base hcounts hbase i
+      = projectiveCountDelta counts ref hcounts href i
+          * projectiveCountDelta ref base href hbase i := by
+  rw [projectiveCountDelta, projectiveCountDelta, projectiveCountDelta]
+  exact relativeDensity_cocycle
+    (q := countRay counts hcounts)
+    (q0 := countRay ref href)
+    (q1 := countRay base hbase)
+    (a := i)
+
+theorem projectiveCountLogDelta_cocycle
+    (counts ref base : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hbase : ∀ i : Fin n, 0 < base i)
+    (i : Fin n) :
+    projectiveCountLogDelta counts base hcounts hbase i
+      = projectiveCountLogDelta counts ref hcounts href i
+        + projectiveCountLogDelta ref base href hbase i := by
+  rw [projectiveCountLogDelta, projectiveCountLogDelta, projectiveCountLogDelta]
+  exact relativeLogDensity_cocycle
+    (q := countRay counts hcounts)
+    (q0 := countRay ref href)
+    (q1 := countRay base hbase)
+    (a := i)
+
+theorem projectiveCountHamiltonianProfile_cocycle
+    (counts ref base : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hbase : ∀ i : Fin n, 0 < base i)
+    (i : Fin n) :
+    projectiveCountHamiltonianProfile counts base hcounts hbase i
+      = projectiveCountHamiltonianProfile counts ref hcounts href i
+        + projectiveCountHamiltonianProfile ref base href hbase i := by
+  rw [projectiveCountHamiltonianProfile, projectiveCountHamiltonianProfile,
+    projectiveCountHamiltonianProfile]
+  exact relativeModularPotential_cocycle
+    (q := countRay counts hcounts)
+    (q0 := countRay ref href)
+    (q1 := countRay base hbase)
+    (a := i)
 
 /--
 The projective logarithmic generator on positive count rays is exactly the raw

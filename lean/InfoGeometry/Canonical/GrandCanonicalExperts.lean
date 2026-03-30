@@ -166,10 +166,6 @@ def superSign : CliffordLabel → CliffordLabel → ℝ
 @[simp] lemma superSign_minus_minus :
     superSign CliffordLabel.minus CliffordLabel.minus = -1 := rfl
 
-/-- Lemma `splitB11_symm`. -/
-lemma splitB11_symm (u v : ℝ × ℝ) : splitB11 u v = splitB11 v u := by
-  simp [splitB11_apply, mul_comm]
-
 /--
 Super-bracket induced by the split bilinear form and Clifford grading labels.
 

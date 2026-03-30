@@ -314,8 +314,7 @@ theorem relativeModularPotentialOperator_countRay_eq_raw_add_massShift
     funext i
     dsimp [c]
     rw [InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift]
-    rw [InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift_eq_log_massRatio]
-    ring_nf
+    simp [sub_eq_add_neg]
   rw [relativeModularPotentialOperator, hfun]
   rw [firstQuantize_add, firstQuantize_const_eq_smul_one]
   rfl
@@ -333,6 +332,12 @@ theorem relativeCountModularPotentialOperator_cocycle
   by_cases hij : i = j
   · subst hij
     simp [relativeCountModularPotentialOperator, firstQuantize, diagMatrix]
+    rw [← InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountLogDensity_eq_log_relativeCountDensity
+      (n := n) (counts := counts) (ref := base) (i := i)]
+    rw [← InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountLogDensity_eq_log_relativeCountDensity
+      (n := n) (counts := counts) (ref := ref) (i := i)]
+    rw [← InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountLogDensity_eq_log_relativeCountDensity
+      (n := n) (counts := ref) (ref := base) (i := i)]
     rw [InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountLogDensity_cocycle
       (n := n) (counts := counts) (ref := ref) (base := base)
       (hcounts := hcounts) (href := href) (hbase := hbase) (i := i)]

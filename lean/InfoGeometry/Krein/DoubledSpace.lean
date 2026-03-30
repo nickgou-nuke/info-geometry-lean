@@ -110,12 +110,27 @@ omit [CompleteSpace E] in
     modular_j u = WithLp.toLp (2 : ENNReal) (WithLp.snd u, WithLp.fst u) := rfl
 
 omit [CompleteSpace E] in
+@[simp] lemma modular_j_to_doubled (x ξ : E) :
+    modular_j (to_doubled x ξ : DoubledSpace E) = to_doubled ξ x := by
+  apply DoubledSpace.ext <;> simp [modular_j]
+
+omit [CompleteSpace E] in
 @[simp] lemma spectral_epsilon_apply (u : DoubledSpace E) :
     spectral_epsilon u = WithLp.toLp (2 : ENNReal) (WithLp.fst u, -WithLp.snd u) := rfl
 
 omit [CompleteSpace E] in
+@[simp] lemma spectral_epsilon_to_doubled (x ξ : E) :
+    spectral_epsilon (to_doubled x ξ : DoubledSpace E) = to_doubled x (-ξ) := by
+  apply DoubledSpace.ext <;> simp [spectral_epsilon]
+
+omit [CompleteSpace E] in
 @[simp] lemma complex_i_apply (u : DoubledSpace E) :
     complex_i u = WithLp.toLp (2 : ENNReal) (-WithLp.snd u, WithLp.fst u) := by
+  apply DoubledSpace.ext <;> simp [complex_i]
+
+omit [CompleteSpace E] in
+@[simp] lemma complex_i_to_doubled (x ξ : E) :
+    complex_i (to_doubled x ξ : DoubledSpace E) = to_doubled (-ξ) x := by
   apply DoubledSpace.ext <;> simp [complex_i]
 
 lemma modular_j_involution (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :

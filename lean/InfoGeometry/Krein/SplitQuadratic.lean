@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Krein.Representation
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import InfoGeometry.Meta.Architecture
 
@@ -32,6 +33,22 @@ omit [CompleteSpace E] in
 omit [CompleteSpace E] in
 @[simp] theorem metricOp_eq_spectral_epsilon (u : H₂) :
     metricOp (E := E) u = spectral_epsilon (E := E) := rfl
+
+/-- The indefinite metric operator is exactly the split pseudoscalar action on doubled space. -/
+theorem metricOp_eq_cl11Rep_pseudoscalar (u : H₂) :
+    metricOp (E := E) u
+      = InfoGeometry.Krein.cl11Rep (E := E)
+          (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0)
+            * CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) := by
+  simpa [metricOp] using (InfoGeometry.Krein.cl11Rep_pseudoscalar (E := E)).symm
+
+/-- The indefinite split quadratic gradient is the split pseudoscalar action applied to the state. -/
+@[simp] theorem grad_eq_cl11Rep_pseudoscalar_apply (u : H₂) :
+    grad (E := E) u
+      = InfoGeometry.Krein.cl11Rep (E := E)
+          (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0)
+            * CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) u := by
+  rw [grad, ←InfoGeometry.Krein.cl11Rep_pseudoscalar (E := E)]
 
 /-- The doubled-space fundamental symmetry is Hilbert-self-adjoint. -/
 lemma spectral_epsilon_selfAdj (u v : H₂) :

@@ -1,4 +1,6 @@
 import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Krein.Representation
 
 open scoped InnerProductSpace
 
@@ -62,5 +64,54 @@ theorem K_sq (X : RealSplitCl11Action H) :
     _ = (-(ContinuousLinearMap.id ℝ H)) x := by simp
 
 end RealSplitCl11Action
+
+section DoubledSpaceSeed
+
+open InfoGeometry.Krein
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/-- The canonical doubled-space modular seed packaged as a real split `Cl(1,1)` action. -/
+noncomputable def doubledSpaceCl11Action :
+    RealSplitCl11Action (InfoGeometry.Krein.DoubledSpace E) where
+  eps := InfoGeometry.Krein.spectral_epsilon (E := E)
+  J := InfoGeometry.Krein.modular_j (E := E)
+  eps_sq := InfoGeometry.Krein.spectral_epsilon_involution (E := E)
+  J_sq := InfoGeometry.Krein.modular_j_involution (E := E)
+  J_eps_anti := InfoGeometry.Krein.modular_j_spectral_epsilon_anticommute (E := E)
+
+@[simp] theorem doubledSpaceCl11Action_eps :
+    (doubledSpaceCl11Action (E := E)).eps = InfoGeometry.Krein.spectral_epsilon (E := E) := rfl
+
+@[simp] theorem doubledSpaceCl11Action_J :
+    (doubledSpaceCl11Action (E := E)).J = InfoGeometry.Krein.modular_j (E := E) := rfl
+
+@[simp] theorem doubledSpaceCl11Action_K :
+    (doubledSpaceCl11Action (E := E)).K = InfoGeometry.Krein.complex_i (E := E) := rfl
+
+/-- The left split Clifford generator on doubled space is the modular involution `J`. -/
+@[simp] theorem doubledSpaceCl11Action_J_eq_cl11Rep_leftGenerator :
+    (doubledSpaceCl11Action (E := E)).J
+      = InfoGeometry.Krein.cl11Rep (E := E)
+          (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0)) := by
+  simpa [doubledSpaceCl11Action] using (InfoGeometry.Krein.cl11Rep_ι_one_zero (E := E)).symm
+
+/-- The right split Clifford generator on doubled space is the derived axis `K = J ∘ ε`. -/
+@[simp] theorem doubledSpaceCl11Action_K_eq_cl11Rep_rightGenerator :
+    (doubledSpaceCl11Action (E := E)).K
+      = InfoGeometry.Krein.cl11Rep (E := E)
+          (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) := by
+  simpa [RealSplitCl11Action.K, doubledSpaceCl11Action] using
+    (InfoGeometry.Krein.cl11Rep_ι_zero_one (E := E)).symm
+
+/-- The split pseudoscalar on doubled space is the fundamental symmetry `ε`. -/
+@[simp] theorem doubledSpaceCl11Action_eps_eq_cl11Rep_pseudoscalar :
+    (doubledSpaceCl11Action (E := E)).eps
+      = InfoGeometry.Krein.cl11Rep (E := E)
+          (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0)
+            * CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) := by
+  simpa [doubledSpaceCl11Action] using (InfoGeometry.Krein.cl11Rep_pseudoscalar (E := E)).symm
+
+end DoubledSpaceSeed
 
 end InfoGeometry.Quantum

@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Quantum.RealSplitClifford
 import InfoGeometry.Canonical.SpectralInference
 import Mathlib.LinearAlgebra.TensorProduct.Map
 set_option linter.unusedSectionVars false
@@ -8,6 +9,7 @@ open scoped TensorProduct
 namespace InfoGeometry.Canonical.BottDirac
 
 open InfoGeometry.Krein
+open InfoGeometry.Quantum
 
 section Core
 
@@ -116,22 +118,26 @@ variable {E F : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
-/-- `Cl(1,1)` Dirac seed from modular conjugation. -/
+/-- Packaged doubled-space split `Cl(1,1)` seed used by the Bott branch. -/
+noncomputable abbrev cl11Action : RealSplitCl11Action (DoubledSpace E) :=
+  doubledSpaceCl11Action (E := E)
+
+/-- `Cl(1,1)` Dirac seed from the packaged doubled-space split action. -/
 noncomputable abbrev cl11DiracSeed : Endomorphism (DoubledSpace E) :=
-  (modular_j (E := E)).toLinearMap
+  (cl11Action (E := E)).J.toLinearMap
 
-/-- `Cl(1,1)` chiral grading from spectral sign involution. -/
+/-- `Cl(1,1)` chiral grading from the packaged doubled-space split action. -/
 noncomputable abbrev cl11Grading : Endomorphism (DoubledSpace E) :=
-  (spectral_epsilon (E := E)).toLinearMap
+  (cl11Action (E := E)).eps.toLinearMap
 
-/-- Lemma `cl11_isChiralDirac`. -/
+/-- The packaged doubled-space split action satisfies the Bott chiral relation. -/
 lemma cl11_isChiralDirac :
     IsChiralDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) := by
   have hAnti :
       cl11DiracSeed (E := E).comp (cl11Grading (E := E))
         = -(cl11Grading (E := E).comp (cl11DiracSeed (E := E))) := by
-    simpa [cl11DiracSeed, cl11Grading] using
-      congrArg ContinuousLinearMap.toLinearMap (modular_j_spectral_epsilon_anticommute (E := E))
+    simpa [cl11DiracSeed, cl11Grading, cl11Action] using
+      congrArg ContinuousLinearMap.toLinearMap ((cl11Action (E := E)).J_eps_anti)
   calc
     cl11DiracSeed (E := E).comp (cl11Grading (E := E))
         + cl11Grading (E := E).comp (cl11DiracSeed (E := E))
@@ -140,11 +146,11 @@ lemma cl11_isChiralDirac :
             rw [hAnti]
     _ = 0 := by simp
 
-/-- Lemma `cl11Grading_involutive`. -/
+/-- The packaged doubled-space split action satisfies the Bott grading involution. -/
 lemma cl11Grading_involutive :
     IsInvolutiveGrading (cl11Grading (E := E)) := by
-  simpa [IsInvolutiveGrading, cl11Grading] using
-    congrArg ContinuousLinearMap.toLinearMap (spectral_epsilon_involution (E := E))
+  simpa [IsInvolutiveGrading, cl11Grading, cl11Action] using
+    congrArg ContinuousLinearMap.toLinearMap ((cl11Action (E := E)).eps_sq)
 
 /--
 Concrete Bott-Dirac splitting for the `Cl(1,1)` pair

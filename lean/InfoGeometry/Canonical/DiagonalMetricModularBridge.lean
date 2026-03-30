@@ -1,5 +1,7 @@
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 import InfoGeometry.Canonical.SpectralInference
+import InfoGeometry.Convex.Euclidean
+import InfoGeometry.Math.Convexity
 
 /-!
 # Diagonal Metric Modular Bridge
@@ -99,6 +101,193 @@ theorem metricOp_eq_countModularHamiltonian_of_isDiagonalRelativeCountMetricSlic
     _ = (countModularData counts ref).modularHamiltonian := by
       symm
       exact countModularData_modularHamiltonian_eq_relativeTomitaTakesakiOp counts ref
+
+/-- Scalar diagonal weight carried by the raw count-side modular Hamiltonian. -/
+noncomputable def countDiagonalScalar
+    (counts ref : RelativeCounts n) : ℝ :=
+  relativeModularHamiltonian n (relativeCountDensity n counts ref)
+
+/--
+Count-side arithmetic-mean criterion ensuring that the diagonal scalar lies on
+the positive Hessian side rather than the signed/Krein side.
+-/
+theorem countDiagonalScalar_nonneg_of_relativeCountDensity_sum_le_card
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hsum : ∑ i : Fin n, relativeCountDensity n counts ref i ≤ (n : ℝ)) :
+    0 ≤ countDiagonalScalar (n := n) counts ref := by
+  let ρ : Fin n → ℝ := relativeCountDensity n counts ref
+  have hcard_pos : 0 < n := by
+    simpa using (Fintype.card_pos_iff.mpr ‹Nonempty (Fin n)›)
+  have hn_pos : 0 < (n : ℝ) := by
+    exact_mod_cast hcard_pos
+  have hn_nonneg : 0 ≤ (n : ℝ)⁻¹ := by positivity
+  have hweight_pos : 0 < (n : ℝ)⁻¹ := by positivity
+  have hρ_pos : ∀ i : Fin n, 0 < ρ i := by
+    intro i
+    dsimp [ρ, relativeCountDensity]
+    exact div_pos (hcounts i) (href i)
+  have hw_sum : (∑ i : Fin n, (n : ℝ)⁻¹) = 1 := by
+    simp [hcard_pos.ne']
+  have havg_pos : 0 < ∑ i : Fin n, (n : ℝ)⁻¹ * ρ i := by
+    refine Finset.sum_pos ?_ Finset.univ_nonempty
+    intro i hi
+    exact mul_pos hweight_pos (hρ_pos i)
+  have havg_le_one : (∑ i : Fin n, (n : ℝ)⁻¹ * ρ i) ≤ 1 := by
+    calc
+      ∑ i : Fin n, (n : ℝ)⁻¹ * ρ i = (n : ℝ)⁻¹ * ∑ i : Fin n, ρ i := by
+        rw [Finset.mul_sum]
+      _ ≤ (n : ℝ)⁻¹ * (n : ℝ) := by
+        exact mul_le_mul_of_nonneg_left hsum hn_nonneg
+      _ = 1 := by
+        field_simp [show (n : ℝ) ≠ 0 by exact_mod_cast (Nat.ne_of_gt hcard_pos)]
+  have hlog_le_zero : Real.log (∑ i : Fin n, (n : ℝ)⁻¹ * ρ i) ≤ 0 := by
+    exact Real.log_nonpos havg_pos.le havg_le_one
+  have hneglog_nonneg : 0 ≤ -Real.log (∑ i : Fin n, (n : ℝ)⁻¹ * ρ i) := by
+    linarith
+  have hjensen := InfoGeometry.Math.Convexity.neg_log_jensen_sum
+      (w := fun _ : Fin n => (n : ℝ)⁻¹)
+      (hw_nonneg := fun _ => hn_nonneg)
+      (hw_sum := hw_sum)
+      (x := ρ)
+      (hx_pos := hρ_pos)
+  have hrhs :
+      (∑ i : Fin n, (n : ℝ)⁻¹ * -Real.log (ρ i)) = countDiagonalScalar (n := n) counts ref := by
+    unfold countDiagonalScalar relativeModularHamiltonian relativeLogDensityMean ρ
+    rw [Finset.mul_sum, ← Finset.sum_neg_distrib]
+    ring
+  have hbound_sum :
+      -Real.log (∑ i : Fin n, (n : ℝ)⁻¹ * ρ i) ≤ ∑ i : Fin n, (n : ℝ)⁻¹ * -Real.log (ρ i) := by
+    simpa using hjensen
+  have hbound : -Real.log (∑ i : Fin n, (n : ℝ)⁻¹ * ρ i) ≤ countDiagonalScalar (n := n) counts ref := by
+    rw [← hrhs]
+    exact hbound_sum
+  exact le_trans hneglog_nonneg hbound
+
+/--
+Concrete doubled-carrier Hessian geometry obtained directly from the count-side
+arithmetic-mean bound.
+-/
+noncomputable def countDiagonalHessianGeometryOfRelativeCountDensitySumBound
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hsum : ∑ i : Fin n, relativeCountDensity n counts ref i ≤ (n : ℝ)) : HessianGeometry H₂ :=
+  InfoGeometry.Convex.Euclidean.scaledHessianGeometry
+    (E := H₂)
+    (countDiagonalScalar (n := n) counts ref)
+    (countDiagonalScalar_nonneg_of_relativeCountDensity_sum_le_card
+      (n := n) counts ref hcounts href hsum)
+
+/--
+Concrete doubled-carrier Hessian geometry whose metric operator is the count-side
+modular Hamiltonian scalar times the identity.
+-/
+noncomputable def countDiagonalHessianGeometry
+    (counts ref : RelativeCounts n)
+    (hNonneg : 0 ≤ countDiagonalScalar (n := n) counts ref) : HessianGeometry H₂ :=
+  InfoGeometry.Convex.Euclidean.scaledHessianGeometry
+    (E := H₂) (countDiagonalScalar (n := n) counts ref) hNonneg
+
+-- theorem-class: bridge
+/--
+The concrete count-driven diagonal Hessian geometry realizes the diagonal raw
+count operator slice without any extra metric witness.
+-/
+theorem countDiagonalHessianGeometry_isDiagonalRelativeCountMetricSlice
+    (counts ref : RelativeCounts n)
+    (hNonneg : 0 ≤ countDiagonalScalar (n := n) counts ref)
+    (x₀ : H₂) :
+    IsDiagonalRelativeCountMetricSlice (n := n)
+      (countDiagonalHessianGeometry (n := n) counts ref hNonneg) x₀ counts ref := by
+  unfold IsDiagonalRelativeCountMetricSlice countDiagonalHessianGeometry countDiagonalScalar
+  rw [InfoGeometry.Convex.Euclidean.scaledHessianGeometry_metricOp_eq_smul_id
+    (E := H₂) (c := relativeModularHamiltonian n (relativeCountDensity n counts ref))
+    (hc := hNonneg) (x := x₀)]
+  rw [relativeModularHamiltonian_eq_diagonalAverage_rawLift (n := n) (counts := counts) (ref := ref)]
+
+-- theorem-class: bridge
+/--
+The concrete count-driven diagonal Hessian geometry identifies its metric
+operator with the raw relative Tomita-Takesaki lift.
+-/
+theorem countDiagonalHessianGeometry_metricOp_eq_relativeTomitaTakesakiOp
+    (counts ref : RelativeCounts n)
+    (hNonneg : 0 ≤ countDiagonalScalar (n := n) counts ref)
+    (x₀ : H₂) :
+    (countDiagonalHessianGeometry (n := n) counts ref hNonneg).metricOp x₀ =
+      relativeTomitaTakesakiOp n (relativeCountDensity n counts ref) := by
+  rw [metricOp_eq_relativeTomitaTakesakiOp_of_isDiagonalRelativeCountMetricSlice
+    (n := n)
+    (H := countDiagonalHessianGeometry (n := n) counts ref hNonneg)
+    (x₀ := x₀)
+    (counts := counts)
+    (ref := ref)]
+  exact countDiagonalHessianGeometry_isDiagonalRelativeCountMetricSlice
+    (n := n) counts ref hNonneg x₀
+
+-- theorem-class: bridge
+/--
+The same concrete diagonal Hessian geometry identifies its metric operator with
+induced continuum modular Hamiltonian.
+-/
+theorem countDiagonalHessianGeometry_metricOp_eq_countModularHamiltonian
+    (counts ref : RelativeCounts n)
+    (hNonneg : 0 ≤ countDiagonalScalar (n := n) counts ref)
+    (x₀ : H₂) :
+    (countDiagonalHessianGeometry (n := n) counts ref hNonneg).metricOp x₀ =
+      (countModularData counts ref).modularHamiltonian := by
+  calc
+    (countDiagonalHessianGeometry (n := n) counts ref hNonneg).metricOp x₀
+        = relativeTomitaTakesakiOp n (relativeCountDensity n counts ref) :=
+          countDiagonalHessianGeometry_metricOp_eq_relativeTomitaTakesakiOp
+            (n := n) counts ref hNonneg x₀
+    _ = (countModularData counts ref).modularHamiltonian := by
+      symm
+      exact countModularData_modularHamiltonian_eq_relativeTomitaTakesakiOp counts ref
+
+/--
+The arithmetic-mean criterion produces a concrete diagonal Hessian geometry whose
+metric operator is the raw relative Tomita-Takesaki lift.
+-/
+theorem countDiagonalHessianGeometryOfRelativeCountDensitySumBound_metricOp_eq_relativeTomitaTakesakiOp
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hsum : ∑ i : Fin n, relativeCountDensity n counts ref i ≤ (n : ℝ))
+    (x₀ : H₂) :
+    (countDiagonalHessianGeometryOfRelativeCountDensitySumBound
+        (n := n) counts ref hcounts href hsum).metricOp x₀ =
+      relativeTomitaTakesakiOp n (relativeCountDensity n counts ref) := by
+  simpa [countDiagonalHessianGeometryOfRelativeCountDensitySumBound, countDiagonalHessianGeometry] using
+    countDiagonalHessianGeometry_metricOp_eq_relativeTomitaTakesakiOp
+      (n := n)
+      counts ref
+      (countDiagonalScalar_nonneg_of_relativeCountDensity_sum_le_card
+        (n := n) counts ref hcounts href hsum)
+      x₀
+
+/--
+The arithmetic-mean criterion produces a concrete diagonal Hessian geometry whose
+metric operator is the induced continuum modular Hamiltonian.
+-/
+theorem countDiagonalHessianGeometryOfRelativeCountDensitySumBound_metricOp_eq_countModularHamiltonian
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hsum : ∑ i : Fin n, relativeCountDensity n counts ref i ≤ (n : ℝ))
+    (x₀ : H₂) :
+    (countDiagonalHessianGeometryOfRelativeCountDensitySumBound
+        (n := n) counts ref hcounts href hsum).metricOp x₀ =
+      (countModularData counts ref).modularHamiltonian := by
+  simpa [countDiagonalHessianGeometryOfRelativeCountDensitySumBound, countDiagonalHessianGeometry] using
+    countDiagonalHessianGeometry_metricOp_eq_countModularHamiltonian
+      (n := n)
+      counts ref
+      (countDiagonalScalar_nonneg_of_relativeCountDensity_sum_le_card
+        (n := n) counts ref hcounts href hsum)
+      x₀
 
 /--
 Spectral-root specialization:

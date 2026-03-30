@@ -2092,7 +2092,7 @@ attribute [blueprint] InfoGeometry.Canonical.MoE.sinkhornTwoStep_eq_schroedinger
 attribute [blueprint] InfoGeometry.Canonical.MoE.sinkhornTwoStep_eq_twoSidedGauge
 attribute [blueprint] InfoGeometry.Canonical.MoE.sinkhornTwoStep_eq_weylGauge
 attribute [blueprint] InfoGeometry.Canonical.MoE.splitB11_splitBasis_orthogonal
-attribute [blueprint] InfoGeometry.Canonical.MoE.splitB11_symm
+attribute [blueprint] InfoGeometry.Clifford.splitB11_symm
 attribute [blueprint] InfoGeometry.Canonical.MoE.splitBasisMinus
 attribute [blueprint] InfoGeometry.Canonical.MoE.splitBasisMinus.eq_1
 attribute [blueprint] InfoGeometry.Canonical.MoE.splitBasisPlus

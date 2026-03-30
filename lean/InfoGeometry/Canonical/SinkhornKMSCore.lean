@@ -34,29 +34,54 @@ abbrev SatisfiesKMSLike
 section RouterHamiltonian
 
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [KreinSpace H]
 variable (n : Nat) [Nonempty (Fin n)]
 
-/-- Router-amplitude space over experts. -/
+/-- Finite-coordinate specialization of the expert router carrier. -/
 abbrev RouterAmplitude := EuclideanSpace ℝ (Fin n)
+
+/-- Endomorphisms of a genuine Krein carrier. -/
+abbrev KreinAlgebraEnd
+    (H : Type*)
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] [KreinSpace H] : Type _ :=
+  H →L[ℝ] H
 
 /-- Mean router energy over experts for a fixed token index. -/
 noncomputable def routerMeanEnergy (x : Fin n → V) (i : Fin n) : ℝ :=
   (n : ℝ)⁻¹ * ∑ e : Fin n, routerEnergy n x i e
 
 /--
-Modular Hamiltonian induced by router logits/energies:
-a scalar (mean-energy) generator on the doubled router-amplitude space.
+Krein-rooted scalar modular generator driven by router energy on an actual
+indefinite carrier `H`.
 -/
-noncomputable def routerModularHamiltonian (x : Fin n → V) (i : Fin n) :
-    AlgebraEnd (RouterAmplitude n) :=
-  routerMeanEnergy n x i •
-    ContinuousLinearMap.id ℝ (DoubledSpace (RouterAmplitude n))
+noncomputable def kreinRouterModularHamiltonian (x : Fin n → V) (i : Fin n) :
+    KreinAlgebraEnd H :=
+  routerMeanEnergy n x i • ContinuousLinearMap.id ℝ H
 
-omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
+@[simp] lemma kreinRouterModularHamiltonian_apply
+    (x : Fin n → V) (i : Fin n) (v : H) :
+    kreinRouterModularHamiltonian (H := H) n x i v = routerMeanEnergy n x i • v := by
+  simp [kreinRouterModularHamiltonian]
+
+/-- The Krein-rooted scalar router modular generator is Krein-self-adjoint. -/
+lemma kreinRouterModularHamiltonian_isKreinSelfAdjoint
+    (x : Fin n → V) (i : Fin n) :
+    KreinSpace.IsKreinSelfAdjoint (H := H) (kreinRouterModularHamiltonian (H := H) n x i) := by
+  simp [kreinRouterModularHamiltonian, KreinSpace.IsKreinSelfAdjoint]
+
+/--
+Compatibility specialization of the Krein-rooted generator to the doubled
+finite-coordinate carrier used by the older count/router lane.
+-/
+noncomputable abbrev routerModularHamiltonian (x : Fin n → V) (i : Fin n) :
+    AlgebraEnd (RouterAmplitude n) :=
+  kreinRouterModularHamiltonian (H := DoubledSpace (RouterAmplitude n)) n x i
+
 @[simp] lemma routerModularHamiltonian_apply
     (x : Fin n → V) (i : Fin n) (v : DoubledSpace (RouterAmplitude n)) :
     routerModularHamiltonian n x i v = routerMeanEnergy n x i • v := by
-  simp [routerModularHamiltonian]
+  simpa [routerModularHamiltonian] using
+    (kreinRouterModularHamiltonian_apply (n := n) (x := x) (i := i) (v := v))
 
 end RouterHamiltonian
 

@@ -58,6 +58,7 @@ import InfoGeometry.Canonical.WeylGaugeField
 import InfoGeometry.Canonical.WeylTransport
 import InfoGeometry.Canonical.WeylTransportChiralBridge
 import InfoGeometry.Canonical.MultiplicativeToAdditiveBridge
+import InfoGeometry.Canonical.VolumeDeformationPrinciple
 import InfoGeometry.Canonical.PartitionHierarchy
 import InfoGeometry.Canonical.DualConnections
 import InfoGeometry.Canonical.EmpiricalChecks
@@ -85,6 +86,10 @@ import InfoGeometry.KL.EntropicInferenceTest
 import InfoGeometry.SLT.ConditionalExpectation
 import InfoGeometry.TransformationGroups
 import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.KreinDoubledAtom
+import InfoGeometry.Canonical.KLinearRepresentation
+import InfoGeometry.Canonical.PolarizedMadelungBridge
+import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.JaynesRNModularBridge
@@ -168,6 +173,7 @@ import InfoGeometry.Canonical.YangMillsFiniteQFT
 -- Stable depth ladder for the count/projective/operator/Krein/transport/attention spine.
 -- L0: count / relative-volume substrate
 import InfoGeometry.Canonical.RelativePotentialCountBridge
+import InfoGeometry.Canonical.ModularVolumeDeformationBridge
 
 -- L1: projective / gauge / scalar modular-potential layer
 import InfoGeometry.Canonical.PositiveRayCore

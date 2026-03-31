@@ -90,6 +90,8 @@ import InfoGeometry.Canonical.KreinDoubledAtom
 import InfoGeometry.Canonical.KLinearRepresentation
 import InfoGeometry.Canonical.PolarizedMadelungBridge
 import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Canonical.BogoliubovClosedForms
+import InfoGeometry.Canonical.BogoliubovProjectorTransport
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.JaynesRNModularBridge

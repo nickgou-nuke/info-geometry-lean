@@ -107,7 +107,7 @@ section RealSplit
         (InfoGeometry.Krein.to_doubled x ξ)
         (InfoGeometry.Krein.to_doubled x ξ)
       = InfoGeometry.Clifford.splitQ11 (x, ξ) := by
-  simpa using (krein_form_to_doubled_real x ξ x ξ)
+  exact krein_form_to_doubled_real x ξ x ξ
 
 @[simp] lemma krein_potential_to_doubled_real
     (x ξ : ℝ) :

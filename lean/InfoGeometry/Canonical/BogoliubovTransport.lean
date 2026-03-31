@@ -60,6 +60,7 @@ noncomputable def phaseLinearPart (A : EndH) : EndH :=
 noncomputable def phaseAntilinearPart (A : EndH) : EndH :=
   (1 / 2 : ℝ) • (A + phaseConjugate (E := E) A)
 
+omit [CompleteSpace E] in
 @[simp] theorem phaseLinearPart_add_phaseAntilinearPart
     (A : EndH) :
     phaseLinearPart (E := E) A + phaseAntilinearPart (E := E) A = A := by
@@ -81,6 +82,7 @@ noncomputable def phaseAntilinearPart (A : EndH) : EndH :=
     _ = A := by
           simp
 
+omit [CompleteSpace E] in
 lemma phaseConjugate_comp_phaseAxis
     (A : EndH) :
     (phaseConjugate (E := E) A).comp Kop = -((modularComplexI (E := E)).comp A) := by
@@ -95,6 +97,7 @@ lemma phaseConjugate_comp_phaseAxis
     _ = -((modularComplexI (E := E)) (A x)) := by
           apply DoubledSpace.ext <;> simp [TomitaTakesaki.modularComplexI]
 
+omit [CompleteSpace E] in
 lemma phaseAxis_comp_phaseConjugate
     (A : EndH) :
     (modularComplexI (E := E)).comp (phaseConjugate (E := E) A) = -(A.comp Kop) := by
@@ -105,11 +108,13 @@ lemma phaseAxis_comp_phaseConjugate
   unfold phaseConjugate
   simpa [ContinuousLinearMap.comp_apply] using hK2Ax
 
+omit [CompleteSpace E] in
 lemma neg_phaseConjugate_comp_phaseAxis
     (A : EndH) :
     -((phaseConjugate (E := E) A).comp Kop) = (modularComplexI (E := E)).comp A := by
   simpa using congrArg Neg.neg (phaseConjugate_comp_phaseAxis (E := E) A)
 
+omit [CompleteSpace E] in
 lemma neg_phaseAxis_comp_phaseConjugate
     (A : EndH) :
     -((modularComplexI (E := E)).comp (phaseConjugate (E := E) A)) = A.comp Kop := by
@@ -175,6 +180,7 @@ noncomputable def phaseAxisTransport
     (ψ : H₂) (H : EndH) : ℝ :=
   kreinExpectation (E := E) ψ (phaseAxisForce (E := E) H)
 
+omit [CompleteSpace E] in
 theorem transportCommutator_split_generator
     (H A : EndH) :
     transportCommutator (E := E) H A
@@ -196,6 +202,7 @@ theorem transportCommutator_split_generator
           + transportCommutator (E := E) (phaseAntilinearPart (E := E) H) A := by
             simpa using h_add_left (phaseLinearPart (E := E) H) (phaseAntilinearPart (E := E) H) A
 
+omit [CompleteSpace E] in
 theorem phaseAxisForce_eq_zero_of_IsPhaseLinear
     (H : EndH) (hH : IsPhaseLinear (E := E) H) :
     phaseAxisForce (E := E) H = 0 := by
@@ -203,6 +210,7 @@ theorem phaseAxisForce_eq_zero_of_IsPhaseLinear
   rw [hH]
   abel
 
+omit [CompleteSpace E] in
 theorem phaseAxisForce_eq_two_smul_comp_of_IsPhaseAntilinear
     (H : EndH) (hH : IsPhaseAntilinear (E := E) H) :
     phaseAxisForce (E := E) H = (2 : ℝ) • (H.comp Kop) := by
@@ -289,14 +297,17 @@ noncomputable def epsilonBoost (t : ℝ) : EndH :=
 noncomputable def KRotation (t : ℝ) : EndH :=
   NormedSpace.exp (t • modularComplexI (E := E))
 
+omit [CompleteSpace E] in
 @[simp] theorem JBoost_zero :
     JBoost (E := E) 0 = (1 : EndH) := by
   simp [JBoost]
 
+omit [CompleteSpace E] in
 @[simp] theorem epsilonBoost_zero :
     epsilonBoost (E := E) 0 = (1 : EndH) := by
   simp [epsilonBoost]
 
+omit [CompleteSpace E] in
 @[simp] theorem KRotation_zero :
     KRotation (E := E) 0 = (1 : EndH) := by
   simp [KRotation]

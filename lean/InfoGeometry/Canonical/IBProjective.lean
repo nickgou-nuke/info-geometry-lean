@@ -234,7 +234,7 @@ noncomputable def toProjectiveState (s : ScoreSlice (T := T)) : ProjectiveState 
 
 @[simp] theorem normalize_toProjectiveState (s : ScoreSlice (T := T)) :
     normalize (toProjectiveState s) = pmfToProbMeasure s.gaugeSection := by
-  simpa [toProjectiveState]
+  simp [toProjectiveState]
 
 /-- A projective IB score ray viewed in the widened nonnegative projective substrate. -/
 noncomputable def projectiveState : ScoreRay (T := T) → ProjectiveState T :=

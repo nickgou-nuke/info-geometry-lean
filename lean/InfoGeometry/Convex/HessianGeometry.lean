@@ -177,7 +177,9 @@ theorem metric_quadratic_nonneg (x u : E) :
       rcases lt_or_eq_of_le hst with hlt | rfl
       · have hmono := H.grad_monotone (ray t) (ray s)
         have hray_sub : ray t - ray s = (t - s) • u := by
-          simpa [ray, sub_smul] using add_sub_add_left (t • u) (s • u) x
+          dsimp [ray]
+          rw [add_sub_add_left_eq_sub]
+          exact (sub_smul t s u).symm
         have hscaled :
             0 ≤ (t - s) * (probe t - probe s) := by
           have hmono' :

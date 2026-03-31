@@ -33,6 +33,7 @@ DECL_RE = re.compile(
 NAMESPACE_RE = re.compile(r"^\s*namespace\s+(?P<name>[A-Za-z_][A-Za-z0-9_'.]*)\b")
 END_RE = re.compile(r"^\s*end\b")
 ATTR_RE = re.compile(r"^\s*attribute\s+\[blueprint(?:\s+\"[^\"]*\")?\]\s+(?P<rest>.+)$")
+IMPORT_RE = re.compile(r"^\s*import\s+(?P<name>[A-Za-z_][A-Za-z0-9_'.]*)\b")
 
 DEFAULT_ALLOW_KINDS = {"theorem", "def", "opaque", "axiom", "inductive"}
 DEFAULT_SKIP_KINDS = {"constructor", "recursor", "quotient"}
@@ -144,6 +145,32 @@ def module_to_path(module: str) -> Path | None:
     if not module or module == "<unknown>":
         return None
     return Path("lean") / Path(*module.split(".")).with_suffix(".lean")
+
+
+def collect_import_closure(root: Path, import_root: str) -> set[str]:
+    closure: set[str] = set()
+    pending = [import_root]
+
+    while pending:
+        module = pending.pop()
+        if module in closure:
+            continue
+        closure.add(module)
+        rel_path = module_to_path(module)
+        if rel_path is None:
+            continue
+        path = root / rel_path
+        if not path.exists():
+            continue
+        for raw in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            m = IMPORT_RE.match(raw)
+            if not m:
+                continue
+            imported = m.group("name")
+            if imported not in closure:
+                pending.append(imported)
+
+    return closure
 
 
 def collect_explicit_blueprints(root: Path, selected: list[dict[str, str]]) -> set[str]:
@@ -273,6 +300,7 @@ def main() -> int:
     facade_path = normalize_user_path(args.facade, root)
 
     rows = load_decl_rows(decls_path)
+    import_closure = collect_import_closure(root, args.import_root)
     allow_kinds = {item.strip() for item in args.allow_kinds.split(",") if item.strip()}
     skip_kinds = {item.strip() for item in args.skip_kinds.split(",") if item.strip()}
 
@@ -284,6 +312,9 @@ def main() -> int:
         module = row.get("module", "")
         if args.ns and not prefix_match(name, args.ns):
             stats["skip_ns"] += 1
+            continue
+        if module and module not in import_closure:
+            stats["skip_outside_import_root"] += 1
             continue
         if module == "InfoGeometry.BlueprintTags":
             stats["skip_facade_module"] += 1

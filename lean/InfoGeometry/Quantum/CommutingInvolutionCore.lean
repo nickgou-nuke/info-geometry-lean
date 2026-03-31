@@ -47,33 +47,33 @@ lemma je_sq (X : CommutingInvolutionCore) :
   ext x
   change X.J (X.eps (X.J (X.eps x))) = x
   rw [X.je_comm_apply]
-  simp [LinearMap.comp_apply, X.J_sq, X.eps_sq]
+  simp
 
 lemma j_comp_je (X : CommutingInvolutionCore) :
     X.J.comp X.je = X.eps := by
   ext x
   change X.J (X.J (X.eps x)) = X.eps x
-  simp [LinearMap.comp_apply, X.J_sq]
+  simp
 
 lemma je_comp_j (X : CommutingInvolutionCore) :
     X.je.comp X.J = X.eps := by
   ext x
   change X.J (X.eps (X.J x)) = X.eps x
   rw [X.je_comm_apply]
-  simp [LinearMap.comp_apply, X.J_sq]
+  simp
 
 lemma eps_comp_je (X : CommutingInvolutionCore) :
     X.eps.comp X.je = X.J := by
   ext x
   change X.eps (X.J (X.eps x)) = X.J x
   rw [X.je_comm_apply]
-  simp [LinearMap.comp_apply, X.eps_sq]
+  simp
 
 lemma je_comp_eps (X : CommutingInvolutionCore) :
     X.je.comp X.eps = X.J := by
   ext x
   change X.J (X.eps (X.eps x)) = X.J x
-  simp [LinearMap.comp_apply, X.eps_sq]
+  simp
 
 /-- The four canonical corners `{1, J, ε, Jε}` are closed under the expected actions. -/
 theorem commuting_involution_four_corners (X : CommutingInvolutionCore) :

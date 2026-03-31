@@ -13,6 +13,9 @@ namespace DAG
 /--
   Optimized Categorical Shape Search.
   Instead of O(N^4) nested loops, we use Hash Joins for O(N^2) or better.
+
+  **DEPRECATED**: This module uses WL hashing for commutativity checks.
+  Prefer `DAG.ExactMorphism` which uses exact `isDefEq` verification.
 -/
 
 structure MorphismInfo where
@@ -74,8 +77,8 @@ private def mkHeuristicMorphismInfo? (declName : Name) (e : Expr) : Option Morph
     mkCanonicalMorphismInfo? declName e
 
 structure MorphismHarvest where
-  canonical     : Array MorphismInfo
-  heuristicOnly : Array MorphismInfo
+  tagged        : Array MorphismInfo
+  heuristicName : Array MorphismInfo
   deriving Repr
 
 def getAllMorphismsWithDiagnostics (env : Environment) (ns? : Option Name := none) :
@@ -98,16 +101,26 @@ def getAllMorphismsWithDiagnostics (env : Environment) (ns? : Option Name := non
           heuristicOnly := heuristicOnly.push info
       | none =>
           pure ()
-  return { canonical := canonical, heuristicOnly := heuristicOnly }
+  return { tagged := canonical, heuristicName := heuristicOnly }
 
+/--
+Get all morphisms. Prefer `DAG.harvestExactMorphisms` from `ExactMorphism.lean`
+for kernel-trusted extraction.
+-/
 def getAllMorphisms (env : Environment) (ns? : Option Name := none) (strict : Bool := true) :
     IO (Array MorphismInfo) := do
   let harvest ← getAllMorphismsWithDiagnostics env ns?
   if strict then
-    return harvest.canonical
+    return harvest.tagged
   else
-    return harvest.canonical ++ harvest.heuristicOnly
+    return harvest.tagged ++ harvest.heuristicName
 
+/--
+**DEPRECATED**: Uses WL structural hashing for commutativity, which can produce
+false positives (hash collisions) and false negatives (syntactic variations).
+Prefer `DAG.findCommutativeSquaresExact` from `ExactMorphism.lean` which uses
+exact `isDefEq` kernel verification.
+-/
 def findCommutativeSquares (env : Environment) (ns? : Option Name := none) (strict : Bool := true) :
     IO (Array (MorphismInfo × MorphismInfo × MorphismInfo × MorphismInfo)) := do
   let morphs ← getAllMorphisms env ns? (strict := strict)

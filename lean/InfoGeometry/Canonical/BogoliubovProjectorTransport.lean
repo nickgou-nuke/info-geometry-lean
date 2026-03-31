@@ -33,8 +33,7 @@ theorem eps_comp_spectralMinusProj :
   intro x
   apply DoubledSpace.ext <;>
     simp [spectralMinusProj, TomitaTakesaki.modularSignEpsilon, spectral_epsilon_apply,
-      sub_eq_add_neg, smul_add, smul_neg] <;>
-    abel
+      sub_eq_add_neg, smul_add, smul_neg]
 
 theorem spectralPlusProj_comp_eps :
     (spectralPlusProj (E := E)).comp (modularSignEpsilon (E := E))
@@ -51,9 +50,9 @@ theorem spectralMinusProj_comp_eps :
   intro x
   apply DoubledSpace.ext <;>
     simp [spectralMinusProj, TomitaTakesaki.modularSignEpsilon, spectral_epsilon_apply,
-      sub_eq_add_neg, smul_add, smul_neg] <;>
-    abel
+      sub_eq_add_neg, smul_add, smul_neg]
 
+omit [CompleteSpace E] in
 theorem spectralPlusProj_comp_J :
     (spectralPlusProj (E := E)).comp (modularConjugationJ (E := E))
       = (modularConjugationJ (E := E)).comp (spectralMinusProj (E := E)) := by
@@ -61,9 +60,9 @@ theorem spectralPlusProj_comp_J :
   intro x
   apply DoubledSpace.ext <;>
     simp [spectralPlusProj, spectralMinusProj, TomitaTakesaki.modularConjugationJ,
-      spectral_epsilon_apply, sub_eq_add_neg, smul_add, smul_neg] <;>
-    abel
+      spectral_epsilon_apply, sub_eq_add_neg, smul_add, smul_neg]
 
+omit [CompleteSpace E] in
 theorem spectralMinusProj_comp_J :
     (spectralMinusProj (E := E)).comp (modularConjugationJ (E := E))
       = (modularConjugationJ (E := E)).comp (spectralPlusProj (E := E)) := by
@@ -71,9 +70,9 @@ theorem spectralMinusProj_comp_J :
   intro x
   apply DoubledSpace.ext <;>
     simp [spectralPlusProj, spectralMinusProj, TomitaTakesaki.modularConjugationJ,
-      spectral_epsilon_apply, sub_eq_add_neg, smul_add, smul_neg] <;>
-    abel
+      spectral_epsilon_apply, sub_eq_add_neg, smul_add, smul_neg]
 
+omit [CompleteSpace E] in
 theorem spectralPlusProj_comp_K :
     (spectralPlusProj (E := E)).comp (modularComplexI (E := E))
       = (modularComplexI (E := E)).comp (spectralMinusProj (E := E)) := by
@@ -81,9 +80,9 @@ theorem spectralPlusProj_comp_K :
   intro x
   apply DoubledSpace.ext <;>
     simp [spectralPlusProj, spectralMinusProj, TomitaTakesaki.modularComplexI,
-      spectral_epsilon_apply, sub_eq_add_neg, smul_add, smul_neg] <;>
-    abel
+      spectral_epsilon_apply, sub_eq_add_neg, smul_add, smul_neg]
 
+omit [CompleteSpace E] in
 theorem spectralMinusProj_comp_K :
     (spectralMinusProj (E := E)).comp (modularComplexI (E := E))
       = (modularComplexI (E := E)).comp (spectralPlusProj (E := E)) := by
@@ -91,8 +90,7 @@ theorem spectralMinusProj_comp_K :
   intro x
   apply DoubledSpace.ext <;>
     simp [spectralPlusProj, spectralMinusProj, TomitaTakesaki.modularComplexI,
-      spectral_epsilon_apply, sub_eq_add_neg, smul_add, smul_neg] <;>
-    abel
+      spectral_epsilon_apply, sub_eq_add_neg, smul_add, smul_neg]
 
 /-- Positive projector block of the `ε`-boost transport matrix. -/
 theorem spectralPlusProj_comp_epsilonBoost
@@ -203,6 +201,7 @@ theorem epsilonBoost_preserves_minusSheet
   rw [mem_minusSheet_iff_fst_eq_zero]
   simp [minusPoint, epsilonBoost_apply, TomitaTakesaki.modularSignEpsilon]
 
+omit [CompleteSpace E] in
 theorem modularConjugationJ_maps_plusSheet_to_minusSheet
     {u : H₂} (hu : u ∈ plusSheet (E := E)) :
     modularConjugationJ (E := E) u ∈ minusSheet (E := E) := by
@@ -210,6 +209,7 @@ theorem modularConjugationJ_maps_plusSheet_to_minusSheet
   rw [mem_minusSheet_iff_fst_eq_zero]
   simp [plusPoint, TomitaTakesaki.modularConjugationJ]
 
+omit [CompleteSpace E] in
 theorem modularConjugationJ_maps_minusSheet_to_plusSheet
     {u : H₂} (hu : u ∈ minusSheet (E := E)) :
     modularConjugationJ (E := E) u ∈ plusSheet (E := E) := by
@@ -217,6 +217,7 @@ theorem modularConjugationJ_maps_minusSheet_to_plusSheet
   rw [mem_plusSheet_iff_snd_eq_zero]
   simp [minusPoint, TomitaTakesaki.modularConjugationJ]
 
+omit [CompleteSpace E] in
 theorem modularComplexI_maps_plusSheet_to_minusSheet
     {u : H₂} (hu : u ∈ plusSheet (E := E)) :
     modularComplexI (E := E) u ∈ minusSheet (E := E) := by
@@ -224,6 +225,7 @@ theorem modularComplexI_maps_plusSheet_to_minusSheet
   rw [mem_minusSheet_iff_fst_eq_zero]
   simp [plusPoint, TomitaTakesaki.modularComplexI]
 
+omit [CompleteSpace E] in
 theorem modularComplexI_maps_minusSheet_to_plusSheet
     {u : H₂} (hu : u ∈ minusSheet (E := E)) :
     modularComplexI (E := E) u ∈ plusSheet (E := E) := by

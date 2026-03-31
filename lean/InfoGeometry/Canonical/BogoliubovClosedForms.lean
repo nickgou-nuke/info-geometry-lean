@@ -22,6 +22,7 @@ noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 local instance : IsTopologicalRing EndH := inferInstance
 local instance : CompleteSpace EndH := inferInstance
 
+omit [CompleteSpace E] in
 private lemma smul_pow_even_of_sq_eq_one
     (G : EndH) (hSq : G * G = (1 : EndH)) (t : ℝ) :
     ∀ n : ℕ, (t • G) ^ (2 * n) = (t ^ (2 * n)) • (1 : EndH)
@@ -41,6 +42,7 @@ private lemma smul_pow_even_of_sq_eq_one
               rw [← pow_add]
               simp [show 2 * (n + 1) = 2 * n + 2 by omega]
 
+omit [CompleteSpace E] in
 private lemma smul_pow_odd_of_sq_eq_one
     (G : EndH) (hSq : G * G = (1 : EndH)) (t : ℝ) (n : ℕ) :
     (t • G) ^ (2 * n + 1) = (t ^ (2 * n + 1)) • G := by
@@ -54,6 +56,7 @@ private lemma smul_pow_odd_of_sq_eq_one
           rw [smul_mul_assoc, one_mul, smul_smul]
           simp [pow_succ]
 
+omit [CompleteSpace E] in
 private lemma smul_pow_even_of_sq_eq_neg_one
     (G : EndH) (hSq : G * G = -(1 : EndH)) (t : ℝ) :
     ∀ n : ℕ, (t • G) ^ (2 * n) = (((-1 : ℝ) ^ n) * t ^ (2 * n)) • (1 : EndH)
@@ -67,7 +70,7 @@ private lemma smul_pow_even_of_sq_eq_neg_one
           _ = (t ^ 2) • (-(1 : EndH)) := by
                 simp [hSq, pow_two]
           _ = (((-1 : ℝ) * t ^ 2)) • (1 : EndH) := by
-                simp [smul_smul, mul_comm, mul_left_comm, mul_assoc]
+                simp [mul_comm]
       calc
         (t • G) ^ (2 * (n + 1))
             = (t • G) ^ (2 * n) * (t • G) ^ 2 := by
@@ -89,13 +92,14 @@ private lemma smul_pow_even_of_sq_eq_neg_one
                             ring
                     _ = (-1 : ℝ) ^ (n + 1) * t ^ (2 * n + 2) := by
                           have hs : ((-1 : ℝ) ^ n) * (-1 : ℝ) = (-1 : ℝ) ^ (n + 1) := by
-                            simpa [pow_succ]
+                            simp [pow_succ]
                           have ht : t ^ (2 * n) * t ^ 2 = t ^ (2 * n + 2) := by
                             simpa using (pow_add t (2 * n) 2).symm
                           rw [hs, ht]
                     _ = (-1 : ℝ) ^ (n + 1) * t ^ (2 * (n + 1)) := by
                           congr 2)
 
+omit [CompleteSpace E] in
 private lemma smul_pow_odd_of_sq_eq_neg_one
     (G : EndH) (hSq : G * G = -(1 : EndH)) (t : ℝ) (n : ℕ) :
     (t • G) ^ (2 * n + 1) = (((-1 : ℝ) ^ n) * t ^ (2 * n + 1)) • G := by
@@ -123,11 +127,11 @@ theorem exp_eq_cosh_add_sinh_of_sq_eq_one
     refine HasSum.even_add_odd ?_ ?_
     · convert (Real.hasSum_cosh t).smul_const (1 : EndH) using 1
       ext n x <;> rw [smul_pow_even_of_sq_eq_one G hSq t n] <;>
-        simp [div_eq_mul_inv, smul_smul, mul_comm, mul_left_comm, mul_assoc]
+        simp [div_eq_mul_inv, smul_smul, mul_comm]
     · convert (Real.hasSum_sinh t).smul_const G using 1
       ext n x <;> rw [smul_pow_odd_of_sq_eq_one G hSq t n] <;>
-        simp [div_eq_mul_inv, smul_smul, mul_comm, mul_left_comm, mul_assoc]
-  simpa using hsum.tsum_eq
+        simp [div_eq_mul_inv, smul_smul, mul_comm]
+  exact hsum.tsum_eq
 
 /-- Closed form for the exponential of a square-minus-one operator on the doubled carrier. -/
 theorem exp_eq_cos_add_sin_of_sq_eq_neg_one
@@ -141,29 +145,29 @@ theorem exp_eq_cos_add_sin_of_sq_eq_neg_one
     refine HasSum.even_add_odd ?_ ?_
     · convert (Real.hasSum_cos t).smul_const (1 : EndH) using 1
       ext n x <;> rw [smul_pow_even_of_sq_eq_neg_one G hSq t n] <;>
-        simp [div_eq_mul_inv, smul_smul, mul_comm, mul_left_comm, mul_assoc]
+        simp [div_eq_mul_inv, smul_smul, mul_comm, mul_left_comm]
     · convert (Real.hasSum_sin t).smul_const G using 1
       ext n x <;> rw [smul_pow_odd_of_sq_eq_neg_one G hSq t n] <;>
-        simp [div_eq_mul_inv, smul_smul, mul_comm, mul_left_comm, mul_assoc]
-  simpa using hsum.tsum_eq
+        simp [div_eq_mul_inv, smul_smul, mul_comm, mul_left_comm]
+  exact hsum.tsum_eq
 
 private lemma modularConjugationJ_sq_mul :
     (modularConjugationJ (E := E) : EndH) * modularConjugationJ (E := E) = (1 : EndH) := by
   change (modularConjugationJ (E := E)).comp (modularConjugationJ (E := E))
       = ContinuousLinearMap.id ℝ H₂
-  simpa using modularConjugationJ_sq (E := E)
+  exact modularConjugationJ_sq (E := E)
 
 private lemma modularSignEpsilon_sq_mul :
     (modularSignEpsilon (E := E) : EndH) * modularSignEpsilon (E := E) = (1 : EndH) := by
   change (modularSignEpsilon (E := E)).comp (modularSignEpsilon (E := E))
       = ContinuousLinearMap.id ℝ H₂
-  simpa using modularSignEpsilon_sq (E := E)
+  exact modularSignEpsilon_sq (E := E)
 
 private lemma modularComplexI_sq_mul :
     (Kop : EndH) * Kop = -(1 : EndH) := by
   change (modularComplexI (E := E)).comp (modularComplexI (E := E))
       = -(ContinuousLinearMap.id ℝ H₂)
-  simpa using modularComplexI_sq (E := E)
+  exact modularComplexI_sq (E := E)
 
 theorem JBoost_eq_cosh_add_sinh_J
     (t : ℝ) :

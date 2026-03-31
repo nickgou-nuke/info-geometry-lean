@@ -669,7 +669,7 @@ noncomputable def cliffordConcreteCreation : FockEnd E :=
     apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
   have hhalf (z : E) : ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • z) = z := by
     have hscalar : (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) = 1 := by norm_num
-    simpa [hscalar]
+    simp [hscalar]
   rw [← hw]
   calc
     (cliffordConcreteAnnihilation (E := E)).toLinearMap
@@ -681,7 +681,7 @@ noncomputable def cliffordConcreteCreation : FockEnd E :=
                 (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
                   (E := E) ((1 / 2 : ℝ)) ((1 / 2 : ℝ)) (WithLp.fst w) (WithLp.snd w))
     _ = InfoGeometry.Krein.to_doubled (0 : E) (WithLp.fst w) := by
-          simpa [hhalf]
+          simp [hhalf]
     _ = (InfoGeometry.Quantum.RealMajoranaCategory.ladderOfRealization
           (InfoGeometry.Quantum.RealMajoranaCategory.cl11CanonicalPolarizedMajorana (E := E))
           (InfoGeometry.Quantum.RealMajoranaCategory.cl11SplitCliffordDatum E)
@@ -705,7 +705,7 @@ noncomputable def cliffordConcreteCreation : FockEnd E :=
     apply InfoGeometry.Krein.DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
   have hhalf (z : E) : ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • z) = z := by
     have hscalar : (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) = 1 := by norm_num
-    simpa [hscalar]
+    simp [hscalar]
   rw [← hw]
   calc
     (cliffordConcreteCreation (E := E)).toLinearMap
@@ -717,7 +717,7 @@ noncomputable def cliffordConcreteCreation : FockEnd E :=
                 (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
                   (E := E) ((1 / 2 : ℝ)) (-(1 / 2 : ℝ)) (WithLp.fst w) (WithLp.snd w))
     _ = InfoGeometry.Krein.to_doubled (WithLp.snd w) (0 : E) := by
-          simpa [hhalf]
+          simp [hhalf]
     _ = (InfoGeometry.Quantum.RealMajoranaCategory.ladderOfRealization
           (InfoGeometry.Quantum.RealMajoranaCategory.cl11CanonicalPolarizedMajorana (E := E))
           (InfoGeometry.Quantum.RealMajoranaCategory.cl11SplitCliffordDatum E)
@@ -734,7 +734,7 @@ noncomputable def cliffordConcreteCreation : FockEnd E :=
       = InfoGeometry.Krein.to_doubled (0 : E) x := by
   have hhalf (z : E) : ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • z) = z := by
     have hscalar : (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) = 1 := by norm_num
-    simpa [hscalar]
+    simp [hscalar]
   calc
     cliffordConcreteAnnihilation (E := E) (InfoGeometry.Krein.to_doubled x y)
         = InfoGeometry.Krein.to_doubled (0 : E) ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • x) := by
@@ -744,14 +744,14 @@ noncomputable def cliffordConcreteCreation : FockEnd E :=
                 (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
                   (E := E) ((1 / 2 : ℝ)) ((1 / 2 : ℝ)) x y)
     _ = InfoGeometry.Krein.to_doubled (0 : E) x := by
-          simpa [hhalf]
+          simp [hhalf]
 
 @[simp] lemma cliffordConcreteCreation_apply_to_doubled (x y : E) :
     cliffordConcreteCreation (E := E) (InfoGeometry.Krein.to_doubled x y)
       = InfoGeometry.Krein.to_doubled y (0 : E) := by
   have hhalf (z : E) : ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • z) = z := by
     have hscalar : (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) = 1 := by norm_num
-    simpa [hscalar]
+    simp [hscalar]
   calc
     cliffordConcreteCreation (E := E) (InfoGeometry.Krein.to_doubled x y)
         = InfoGeometry.Krein.to_doubled ((((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • y) (0 : E) := by
@@ -761,7 +761,7 @@ noncomputable def cliffordConcreteCreation : FockEnd E :=
                 (InfoGeometry.Krein.cl11RepLin_apply_to_doubled
                   (E := E) ((1 / 2 : ℝ)) (-(1 / 2 : ℝ)) x y)
     _ = InfoGeometry.Krein.to_doubled y (0 : E) := by
-          simpa [hhalf]
+          simp [hhalf]
 
 /--
 The concrete split-`Cl(1,1)` null-mode ladder pair is a genuine CAR pair in the

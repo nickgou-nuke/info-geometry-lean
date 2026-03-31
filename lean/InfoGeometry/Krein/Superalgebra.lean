@@ -21,6 +21,7 @@ noncomputable def comm (A B : EndH H) : EndH H := A * B - B * A
 /-- Ordinary anticommutator `{A,B} = AB + BA`. -/
 noncomputable def anticomm (A B : EndH H) : EndH H := A * B + B * A
 
+omit [CompleteSpace H] [KreinSpace H] [KreinGradedModule H] in
 /-- Ordinary commutator `⁅A, B⁆` in `LieAlgebra`. -/
 lemma comm_eq_lie (A B : EndH H) : comm A B = ⁅A, B⁆ := rfl
 

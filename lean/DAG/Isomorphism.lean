@@ -8,6 +8,11 @@ namespace DAG
 
 /--
   The Weisfeiler-Lehman (WL) Isomorphism Engine.
+
+  **Note**: For commutativity checking, prefer `DAG.ExactMorphism`
+  which uses exact `isDefEq` kernel verification. WL hashing remains
+  useful for structural similarity detection where exact equality
+  is not the question.
 -/
 
 def computeInitialLabel (node : GraphNode) (blindConstants : Bool) : UInt64 :=
@@ -40,6 +45,13 @@ def wlRound (nodes : Array GraphNode) (edges : Array GraphEdge) (labels : Array 
 
   return newLabels
 
+/--
+Compute a WL structural hash of an expression.
+
+**Note**: For commutativity / equality checking, prefer `isDefEq`
+from `DAG.ExactMorphism`. This hash is an approximation subject to
+collisions and is best used for similarity clustering, not exact proofs.
+-/
 def computeStructuralHash (e : Expr) (k : Nat := 5) (blindConstants : Bool := false) : UInt64 := Id.run do
   let g := disassembleExpr e
   let mut labels := g.nodes.map (fun n => computeInitialLabel n blindConstants)
@@ -49,6 +61,12 @@ def computeStructuralHash (e : Expr) (k : Nat := 5) (blindConstants : Bool := fa
 
   return labels[0]?.getD 0
 
+/--
+Compare two declarations for structural symmetry using WL hashing.
+
+**Note**: For exact equality, prefer `Lean.Meta.isDefEq` via
+`DAG.ExactMorphism.checkCommutativityExact`.
+-/
 def compareSymmetry (env : Environment) (n1 n2 : Name) : IO Unit := do
   let ci1 := env.find? n1
   let ci2 := env.find? n2

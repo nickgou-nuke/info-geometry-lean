@@ -163,7 +163,10 @@ def quadraticDualFlat : DualFlatStructure ℝ where
 theorem quadraticPotential_deriv (x : ℝ) :
     deriv quadraticPotential x = 2 * x := by
   unfold quadraticPotential
-  simpa [two_mul] using (deriv_pow_field (x := x) (n := 2))
+  calc
+    deriv (fun y : ℝ => y ^ 2) x = (2 : ℝ) * x ^ (2 - 1) := by
+      exact deriv_pow_field (x := x) (n := 2)
+    _ = 2 * x := by simp
 
 theorem quadraticDualFlat_nabla (x : ℝ) :
     nabla quadraticDualFlat x = 2 * x := by

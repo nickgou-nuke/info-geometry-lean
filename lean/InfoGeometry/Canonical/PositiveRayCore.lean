@@ -44,15 +44,12 @@ noncomputable def ofConeInteriorStateSpace :
 @[simp] theorem toConeInteriorStateSpace_ofConeInteriorStateSpace
     (s : PositiveOrthantRaySpace α) :
     toConeInteriorStateSpace (α := α) (ofConeInteriorStateSpace (α := α) s) = s := by
-  simpa [toConeInteriorStateSpace, ofConeInteriorStateSpace] using
-    InfoGeometry.Projective.coneInteriorStateSpaceToProjectiveClass_apply (α := α) s
+  simp [toConeInteriorStateSpace, ofConeInteriorStateSpace]
 
 @[simp] theorem ofConeInteriorStateSpace_toConeInteriorStateSpace
     (q : PositiveRay α) :
     ofConeInteriorStateSpace (α := α) (toConeInteriorStateSpace (α := α) q) = q := by
-  simpa [toConeInteriorStateSpace, ofConeInteriorStateSpace] using
-    InfoGeometry.Projective.coneInteriorStateSpaceToProjectiveClass_projectiveClass
-      (α := α) q
+  simp [toConeInteriorStateSpace, ofConeInteriorStateSpace]
 
 /-- Canonical simplex gauge section of a positive ray. -/
 noncomputable def gaugeSection : PositiveRay α → InfoGeometry.PositiveMeasure α ℝ :=
@@ -61,8 +58,7 @@ noncomputable def gaugeSection : PositiveRay α → InfoGeometry.PositiveMeasure
 @[simp] theorem gaugeSection_mk (μ : InfoGeometry.PositiveMeasure α ℝ) :
     gaugeSection (α := α) (Quotient.mk _ μ) =
       InfoGeometry.PositiveMeasure.normalize (α := α) (R := ℝ) μ := by
-  simpa [gaugeSection] using
-    (InfoGeometry.Projective.Normalize.normalizeOnProj_mk (α := α) μ)
+  simp [gaugeSection]
 
 /-- The canonical gauge representative has unit total mass. -/
 @[simp] theorem Z_gaugeSection (q : PositiveRay α) :

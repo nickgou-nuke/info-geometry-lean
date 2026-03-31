@@ -10,12 +10,25 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.infra.representation_depth_io import (
+        DEFAULT_DEPTH_INDEX,
+        DEFAULT_LEAN_TAGS,
+        build_depth_sources,
+        interval_label,
+        load_json,
+    )
     from tools.pathing import normalize_user_path, repo_root
 else:
+    from tools.infra.representation_depth_io import (
+        DEFAULT_DEPTH_INDEX,
+        DEFAULT_LEAN_TAGS,
+        build_depth_sources,
+        interval_label,
+        load_json,
+    )
     from tools.pathing import normalize_user_path, repo_root
 
 
-DEFAULT_DEPTH_INDEX = "reports/dag/representation-depth-index.json"
 DEFAULT_AUDIT = "reports/dag/representation-depth-audit.json"
 DEFAULT_JSON_OUT = "reports/dag/representation-depth-graph.json"
 DEFAULT_MD_OUT = "reports/dag/representation-depth-graph.md"
@@ -24,30 +37,23 @@ DEFAULT_MD_OUT = "reports/dag/representation-depth-graph.md"
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(
         description=(
-            "Render the manual representation-depth index as a bicategorical graph "
-            "with layers, primitive translators, coherence files, and forbidden skips."
+            "Render the representation-depth spine as a bicategorical graph using Lean-exported depths "
+            "plus the manual role index."
         )
     )
     ap.add_argument("--depth-index", default=DEFAULT_DEPTH_INDEX)
+    ap.add_argument("--lean-tags", default=DEFAULT_LEAN_TAGS)
     ap.add_argument("--audit", default=DEFAULT_AUDIT)
     ap.add_argument("--json-out", default=DEFAULT_JSON_OUT)
     ap.add_argument("--md-out", default=DEFAULT_MD_OUT)
     return ap.parse_args()
 
 
-def load_json(path: Path) -> dict[str, Any]:
-    raw = json.loads(path.read_text(encoding="utf-8"))
-    return raw if isinstance(raw, dict) else {}
-
-
-def interval_label(src: int, dst: int) -> str:
-    return f"{src}→{dst}"
-
-
-def build_payload(depth_index: dict[str, Any], audit: dict[str, Any]) -> dict[str, Any]:
-    layers = [row for row in depth_index.get("layers", []) if isinstance(row, dict)]
-    files = [row for row in depth_index.get("files", []) if isinstance(row, dict)]
-    review_surface = [row for row in depth_index.get("review_surface", []) if isinstance(row, dict)]
+def build_payload(depth_payload: dict[str, Any], audit: dict[str, Any], files_by_rel: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    layers = [row for row in depth_payload.get("layers", []) if isinstance(row, dict)]
+    review_surface = [row for row in depth_payload.get("review_surface", []) if isinstance(row, dict)]
+    files = [dict(row) for _, row in sorted(files_by_rel.items())]
+    source_meta = dict(depth_payload.get("source_meta", {}))
 
     max_depth = max((int(layer.get("depth", 0)) for layer in layers), default=0)
     layer_map = {int(layer.get("depth", 0)): dict(layer) for layer in layers}
@@ -56,7 +62,6 @@ def build_payload(depth_index: dict[str, Any], audit: dict[str, Any]) -> dict[st
     coherence_by_depth: dict[int, list[dict[str, Any]]] = defaultdict(list)
     capstones_by_depth: dict[int, list[dict[str, Any]]] = defaultdict(list)
     translators_by_step: dict[tuple[int, int], list[dict[str, Any]]] = defaultdict(list)
-    files_by_interval: dict[str, list[dict[str, Any]]] = defaultdict(list)
 
     for row in files:
         src = int(row.get("source_depth", 0))
@@ -69,8 +74,10 @@ def build_payload(depth_index: dict[str, Any], audit: dict[str, Any]) -> dict[st
             "target_depth": dst,
             "interval": interval_label(src, dst),
             "notes": str(row.get("notes", "")),
+            "declared_by": str(row.get("declared_by", "")),
+            "tagged_decl_count": int(row.get("tagged_decl_count", 0)),
+            "capstone_count": int(row.get("capstone_count", 0)),
         }
-        files_by_interval[info["interval"]].append(info)
         if kind == "owner":
             owners_by_depth[src].append(info)
         elif kind == "coherence":
@@ -97,13 +104,7 @@ def build_payload(depth_index: dict[str, Any], audit: dict[str, Any]) -> dict[st
     forbidden_skips = []
     for src in range(max_depth + 1):
         for dst in range(src + 2, max_depth + 1):
-            forbidden_skips.append(
-                {
-                    "from_depth": src,
-                    "to_depth": dst,
-                    "label": f"L{src}→L{dst}",
-                }
-            )
+            forbidden_skips.append({"from_depth": src, "to_depth": dst, "label": f"L{src}→L{dst}"})
 
     observed_dependency_bands = []
     observed_forward_bands = []
@@ -148,13 +149,16 @@ def build_payload(depth_index: dict[str, Any], audit: dict[str, Any]) -> dict[st
         )
 
     role_counts: dict[str, int] = defaultdict(int)
+    provenance_counts: dict[str, int] = defaultdict(int)
     for row in files:
         role_counts[str(row.get("kind", "unknown"))] += 1
+        provenance_counts[str(row.get("declared_by", "unknown"))] += 1
 
     return {
         "status": audit.get("status", "UNKNOWN"),
-        "intent": depth_index.get("intent", ""),
-        "rules": depth_index.get("rules", {}),
+        "intent": depth_payload.get("intent", ""),
+        "rules": depth_payload.get("rules", {}),
+        "source_meta": source_meta,
         "layers": layer_objects,
         "primitive_steps": primitive_steps,
         "forbidden_skips": forbidden_skips,
@@ -162,27 +166,38 @@ def build_payload(depth_index: dict[str, Any], audit: dict[str, Any]) -> dict[st
         "observed_forward_bands": observed_forward_bands,
         "inventory": {
             "role_counts": dict(sorted(role_counts.items())),
+            "provenance_counts": dict(sorted(provenance_counts.items())),
             "interval_counts": dict(sorted((audit.get("inventory", {}) or {}).get("interval_counts", {}).items())),
             "indexed_files": int((audit.get("counts", {}) or {}).get("indexed_files", len(files))),
             "tracked_edges": int((audit.get("counts", {}) or {}).get("tracked_edges", 0)),
+            "lean_tagged_files": int((audit.get("counts", {}) or {}).get("lean_tagged_files", 0)),
+            "lean_tagged_declarations": int((audit.get("counts", {}) or {}).get("lean_tagged_declarations", 0)),
         },
         "review_surface": review_surface,
     }
 
 
 def render_md(payload: dict[str, Any]) -> str:
-    lines: list[str] = []
     inv = payload.get("inventory", {})
+    source_meta = payload.get("source_meta", {})
 
+    lines: list[str] = []
     lines.append("# Representation Depth Graph")
     lines.append("")
-    lines.append("This report renders the stable representation-depth index as a bicategorical dictionary of presentations.")
+    lines.append("This report renders the stable representation-depth spine as a bicategorical dictionary of presentations.")
     lines.append("")
     lines.append("## Status")
     lines.append(f"- source audit status: **{payload.get('status', 'UNKNOWN')}**")
-    lines.append(f"- indexed files: `{inv.get('indexed_files', 0)}`")
+    lines.append(f"- merged indexed files: `{inv.get('indexed_files', 0)}`")
     lines.append(f"- tracked direct edges: `{inv.get('tracked_edges', 0)}`")
+    lines.append(f"- Lean-tagged files: `{inv.get('lean_tagged_files', 0)}`")
+    lines.append(f"- Lean-tagged declarations: `{inv.get('lean_tagged_declarations', 0)}`")
     lines.append(f"- role counts: `{inv.get('role_counts', {})}`")
+    lines.append("")
+    lines.append("## Sources")
+    lines.append(f"- manual role index: `{source_meta.get('manual_index_path', '')}`")
+    lines.append(f"- Lean depth export: `{source_meta.get('lean_tags_path', '')}`")
+    lines.append(f"- provenance counts: `{inv.get('provenance_counts', {})}`")
     lines.append("")
     lines.append("## Interpretation")
     lines.append("- objects: representation layers `L0 … Ln`")
@@ -219,53 +234,57 @@ def render_md(payload: dict[str, Any]) -> str:
         lines.append(f"### L{row.get('from_depth')} → L{row.get('to_depth')}")
         translators = row.get("translators", [])
         if translators:
-            for tr in translators:
-                lines.append(f"- `{tr.get('file')}`")
+            for item in translators:
+                lines.append(f"- `{item.get('file')}`")
         else:
             lines.append("- missing")
         lines.append("")
 
     lines.append("## Forbidden Skips")
-    for row in payload.get("forbidden_skips", []):
-        lines.append(f"- `{row.get('label')}`")
-    lines.append("")
-
-    lines.append("## Observed Direct Dependency Bands")
-    lines.append("| Consumer interval | Dependency interval | Status | File edges | Decl edges |")
-    lines.append("| --- | --- | --- | ---: | ---: |")
-    for row in payload.get("observed_dependency_bands", []):
-        lines.append(
-            f"| `{row.get('consumer_interval')}` | `{row.get('dependency_interval')}` | `{row.get('status')}` | {row.get('file_edges', 0)} | {row.get('decl_edges', 0)} |"
-        )
-    lines.append("")
-
-    lines.append("## Review Surface")
-    review = payload.get("review_surface", [])
-    if review:
-        for row in review:
-            lines.append(f"- `{row.get('file')}` | {row.get('reason', '')}")
+    labels = [str(row.get("label", "")) for row in payload.get("forbidden_skips", [])]
+    if labels:
+        lines.append("- " + ", ".join(f"`{label}`" for label in labels))
     else:
         lines.append("- none")
     lines.append("")
 
-    lines.append("## Notes")
-    lines.append("- this graph is driven by the manual representation-depth index, not by hotspot clustering")
-    lines.append("- it complements `representation-depth-audit`, which checks direct edge legality")
-    lines.append("- it is the right substrate for a future depth-aware coloring / projector pass")
+    lines.append("## Observed Dependency Bands")
+    bands = payload.get("observed_dependency_bands", [])
+    if bands:
+        lines.append("| Consumer interval | Dependency interval | Status | File edges | Decl edges |")
+        lines.append("| --- | --- | --- | ---: | ---: |")
+        for row in bands:
+            lines.append(
+                f"| `{row.get('consumer_interval')}` | `{row.get('dependency_interval')}` | `{row.get('status')}` | "
+                f"{row.get('file_edges', 0)} | {row.get('decl_edges', 0)} |"
+            )
+    else:
+        lines.append("- none")
+    lines.append("")
+
+    lines.append("## Review Surface")
+    review_surface = payload.get("review_surface", [])
+    if review_surface:
+        for row in review_surface:
+            lines.append(f"- `{row.get('file', '')}`: {row.get('reason', '')}")
+    else:
+        lines.append("- none")
     return "\n".join(lines) + "\n"
 
 
 def main() -> int:
     args = parse_args()
     root = repo_root()
+
     depth_path = normalize_user_path(args.depth_index, root / DEFAULT_DEPTH_INDEX)
+    lean_tags_path = normalize_user_path(args.lean_tags, root / DEFAULT_LEAN_TAGS)
     audit_path = normalize_user_path(args.audit, root / DEFAULT_AUDIT)
     json_out = normalize_user_path(args.json_out, root / DEFAULT_JSON_OUT)
     md_out = normalize_user_path(args.md_out, root / DEFAULT_MD_OUT)
 
-    depth_index = load_json(depth_path)
+    files_by_rel, depth_payload = build_depth_sources(depth_path, lean_tags_path, root)
     audit = load_json(audit_path)
-    payload = build_payload(depth_index, audit)
+    payload = build_payload(depth_payload, audit, files_by_rel)
 
     json_out.parent.mkdir(parents=True, exist_ok=True)
     md_out.parent.mkdir(parents=True, exist_ok=True)

@@ -39,10 +39,17 @@ structure LiftSeed where
   rawRhs : String
   normLhs : String
   normRhs : String
+  /-- **Deprecated**: WL hash equality on raw sides. Use `isExact` instead. -/
   rawHashEq : Bool
+  /-- **Deprecated**: WL hash equality on normalized sides. Use `isExact` instead. -/
   normHashEq : Bool
+  /-- Exact `isDefEq` kernel verdict on normalized sides. This is the authoritative signal. -/
   normDefEq : Bool
   normalizationError? : Option String := none
+  deriving Inhabited
+
+/-- Authoritative exactness: the kernel-certified `isDefEq` verdict. -/
+def LiftSeed.isExact (s : LiftSeed) : Bool := s.normDefEq
 
 private def ppExprString (e : Expr) : MetaM String := do
   pure (← ppExpr e).pretty

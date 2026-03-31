@@ -1,6 +1,6 @@
 # Vacuity Index
 
-Generated: `2026-03-27 04:25:55`
+Generated: `2026-03-31 18:54:26`
 
 This report tracks alias-driven and definitional-identity surfaces that can make a bridge look mathematically deeper than it currently is.
 

@@ -92,6 +92,7 @@ import InfoGeometry.Canonical.PolarizedMadelungBridge
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.BogoliubovProjectorTransport
+import InfoGeometry.Canonical.BogoliubovProjectorFlux
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.JaynesRNModularBridge
@@ -120,7 +121,12 @@ import InfoGeometry.Canonical.QFTTDFTLaunchpad
 import InfoGeometry.Canonical.RGFlow
 import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.MongeAmpereCramerRao
+import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
+import InfoGeometry.Canonical.RestrictedSheetContinuous
+import InfoGeometry.Canonical.RestrictedVolumeCharacter
+import InfoGeometry.Canonical.WeylGaugeOperatorLift
 import InfoGeometry.Canonical.RealBdG
+import InfoGeometry.Canonical.RealBdGSheetBridge
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.SingularBoundaryCorrection
 import InfoGeometry.Canonical.CalabiYauSingularBridge

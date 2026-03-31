@@ -163,8 +163,7 @@ noncomputable abbrev regularizedPositiveMeasure
     {α : Type*} [Fintype α] [Nonempty α]
     (count : α → ℕ) (ε : ℝ) (hε : 0 < ε) (x : α) :
     regularizedPositiveMeasure count ε hε x = (count x : ℝ) + ε := by
-  simpa [regularizedPositiveMeasure] using
-    (StatisticalMechanics.regularizedPositiveMeasure_apply count ε hε x)
+  exact StatisticalMechanics.regularizedPositiveMeasure_apply count ε hε x
 
 lemma regTotalCount_pos
     {α : Type*} [Fintype α] [Nonempty α]
@@ -181,8 +180,7 @@ noncomputable abbrev regularizedPMF
     {α : Type*} [Fintype α] [Nonempty α]
     (count : α → ℕ) (ε : ℝ) (hε : 0 < ε) (x : α) :
     regularizedPMF count ε hε x = ((count x : ℝ) + ε) / regTotalCount count ε := by
-  simpa [regularizedPMF, regTotalCount] using
-    (StatisticalMechanics.regularizedPMF_eq count ε hε x)
+  exact StatisticalMechanics.regularizedPMF_eq count ε hε x
 
 lemma regularizedPMF_strictly_pos
     {α : Type*} [Fintype α] [Nonempty α]

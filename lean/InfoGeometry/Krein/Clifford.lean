@@ -277,7 +277,7 @@ noncomputable instance instKreinGradedModuleHilbertDoubled :
               =
             ⟪(WithLp.toLp 2 ((HilbertDoubled.ofLp (E := E) u).1, -(HilbertDoubled.ofLp (E := E) u).2) : DoubledSpace E),
               (v : DoubledSpace E)⟫_ℝ
-          simp [WithLp.prod_inner_apply, sub_eq_add_neg]
+          simp [WithLp.prod_inner_apply]
 
 @[simp] lemma J_apply_coords (u : HilbertDoubled E) :
     (KreinSpace.J (H := HilbertDoubled E)) u =
@@ -376,7 +376,7 @@ lemma cl11RepLinHilbert_apply_pair (a b : ℝ) (x y : E) :
     (show a • (WithLp.toLp 2 (x, -y) : DoubledSpace E) + b • (WithLp.toLp 2 (-y, x) : DoubledSpace E)
         = (WithLp.toLp 2 (a • x + -(b • y), b • x + -(a • y)) : DoubledSpace E) by
       rw [← WithLp.toLp_smul, ← WithLp.toLp_smul, ← WithLp.toLp_add]
-      simp [Prod.smul_mk, sub_eq_add_neg, add_comm, add_left_comm, add_assoc])
+      simp [Prod.smul_mk, add_comm])
 
 lemma cl11RepLinHilbert_sq (v : ℝ × ℝ) :
     (cl11RepLinHilbert (E := E) v) * (cl11RepLinHilbert (E := E) v)

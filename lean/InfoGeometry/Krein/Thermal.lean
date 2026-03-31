@@ -30,6 +30,7 @@ omit [CompleteSpace H] in
     krein_modular_shift K 0 B = B := by
   simp [krein_modular_shift]
 
+omit [KreinSpace H] in
 /-- Additive-time law for Krein-rooted modular conjugation. -/
 lemma krein_modular_shift_add
     (K : EndK) (s t : ℝ) (B : EndK) :
@@ -115,7 +116,7 @@ omit [CompleteSpace E] in
 @[simp] lemma modular_shift_zero
     (K : EndH) (B : EndH) :
     modular_shift K 0 B = B := by
-  simpa [modular_shift] using krein_modular_shift_zero (H := H₂) K B
+  exact krein_modular_shift_zero (H := H₂) K B
 
 /-- Compatibility specialization of the additive-time modular-shift law to `DoubledSpace E`. -/
 lemma modular_shift_add

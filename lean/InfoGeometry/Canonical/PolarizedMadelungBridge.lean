@@ -61,11 +61,13 @@ theorem sheet_decomposition (S : PolarizedDoubledAmplitude (E := E)) :
     S.ψplus + S.ψminus = S.ψ := by
   simpa [ψplus, ψminus] using spectralProj_decomposition (E := E) S.ψ
 
+omit [CompleteSpace E] in
 /-- The positive spectral component lands in the positive sheet. -/
 theorem ψplus_mem_plusSheet (S : PolarizedDoubledAmplitude (E := E)) :
     S.ψplus ∈ plusSheet (E := E) := by
   simpa [ψplus] using spectralPlusProj_mem_plusSheet (E := E) S.ψ
 
+omit [CompleteSpace E] in
 /-- The negative spectral component lands in the negative sheet. -/
 theorem ψminus_mem_minusSheet (S : PolarizedDoubledAmplitude (E := E)) :
     S.ψminus ∈ minusSheet (E := E) := by
@@ -84,6 +86,8 @@ noncomputable def phaseOrbit
     (S : PolarizedDoubledAmplitude (E := E)) (θ : ℝ) : H₂ :=
   (NormedSpace.exp (θ • modularComplexI (E := E))) S.ψ
 
+omit [CompleteSpace E] in
+omit [CompleteSpace E] in
 @[simp] theorem phaseOrbit_zero
     (S : PolarizedDoubledAmplitude (E := E)) :
     S.phaseOrbit 0 = S.ψ := by
@@ -119,12 +123,14 @@ theorem kreinExpectation_smul_id
   rw [ContinuousLinearMap.smul_apply, ContinuousLinearMap.id_apply]
   rw [KreinSpace.kreinInner_smul_right]
 
+omit [InnerProductSpace ℝ E] [CompleteSpace E] in
 /-- Hilbert norm square of a positive-sheet point. -/
 @[simp] theorem norm_sq_plusPoint (x : E) :
     ‖plusPoint (E := E) x‖ ^ (2 : ℕ) = ‖x‖ ^ (2 : ℕ) := by
   rw [plusPoint, WithLp.prod_norm_sq_eq_of_L2]
   simp
 
+omit [InnerProductSpace ℝ E] [CompleteSpace E] in
 /-- Hilbert norm square of a negative-sheet point. -/
 @[simp] theorem norm_sq_minusPoint (ξ : E) :
     ‖minusPoint (E := E) ξ‖ ^ (2 : ℕ) = ‖ξ‖ ^ (2 : ℕ) := by
@@ -173,7 +179,7 @@ theorem kreinExpectation_smul_id_of_mem_plusSheet
     kreinExpectation (E := E) S.ψ (H • ContinuousLinearMap.id ℝ H₂) = H := by
   rw [InfoGeometry.Canonical.PolarizedMadelungBridge.kreinExpectation_smul_id_of_mem_plusSheet
     (E := E) S.ψ hψ H]
-  simpa [S.h_norm]
+  simp [S.h_norm]
 
 /-- A Hilbert-normalized negative-sheet amplitude collapses exactly to the signed scalar coefficient. -/
 theorem kreinExpectation_smul_id_of_mem_minusSheet
@@ -182,7 +188,7 @@ theorem kreinExpectation_smul_id_of_mem_minusSheet
     kreinExpectation (E := E) S.ψ (H • ContinuousLinearMap.id ℝ H₂) = -H := by
   rw [InfoGeometry.Canonical.PolarizedMadelungBridge.kreinExpectation_smul_id_of_mem_minusSheet
     (E := E) S.ψ hψ H]
-  simpa [S.h_norm]
+  simp [S.h_norm]
 
 end PolarizedDoubledAmplitude
 

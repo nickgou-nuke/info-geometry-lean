@@ -10,6 +10,14 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.infra.representation_depth_io import (
+        DEFAULT_DEPTH_INDEX,
+        DEFAULT_LEAN_TAGS,
+        build_depth_sources,
+        interval_label,
+        rel_repo_path,
+        load_json,
+    )
     from tools.pathing import (
         default_decl_graph_file,
         default_decl_metadata_file,
@@ -17,6 +25,14 @@ if __package__ in (None, ""):
         repo_root,
     )
 else:
+    from tools.infra.representation_depth_io import (
+        DEFAULT_DEPTH_INDEX,
+        DEFAULT_LEAN_TAGS,
+        build_depth_sources,
+        interval_label,
+        rel_repo_path,
+        load_json,
+    )
     from tools.pathing import (
         default_decl_graph_file,
         default_decl_metadata_file,
@@ -24,8 +40,6 @@ else:
         repo_root,
     )
 
-
-DEFAULT_DEPTH_INDEX = "reports/dag/representation-depth-index.json"
 DEFAULT_JSON_OUT = "reports/dag/representation-depth-audit.json"
 DEFAULT_MD_OUT = "reports/dag/representation-depth-audit.md"
 
@@ -34,12 +48,13 @@ def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(
         description=(
             "Audit the stable representation spine for direct file-to-file depth skips "
-            "using the authoritative declaration DAG and a manual depth index."
+            "using the authoritative declaration DAG plus Lean-exported rep-depth metadata."
         )
     )
     ap.add_argument("--graph", default=str(default_decl_graph_file().relative_to(repo_root())))
     ap.add_argument("--decls", default=str(default_decl_metadata_file().relative_to(repo_root())))
     ap.add_argument("--depth-index", default=DEFAULT_DEPTH_INDEX)
+    ap.add_argument("--lean-tags", default=DEFAULT_LEAN_TAGS)
     ap.add_argument("--json-out", default=DEFAULT_JSON_OUT)
     ap.add_argument("--md-out", default=DEFAULT_MD_OUT)
     ap.add_argument(
@@ -49,11 +64,6 @@ def parse_args() -> argparse.Namespace:
         help="Maximum number of wormhole/regression edges to render in the markdown summary.",
     )
     return ap.parse_args()
-
-
-def load_json(path: Path) -> dict[str, Any]:
-    raw = json.loads(path.read_text(encoding="utf-8"))
-    return raw if isinstance(raw, dict) else {}
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -69,17 +79,6 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
     return out
 
 
-def rel_repo_path(path: str, root: Path) -> str:
-    p = Path(path)
-    try:
-        return str(p.resolve().relative_to(root.resolve()))
-    except Exception:
-        try:
-            return str((root / p).resolve().relative_to(root.resolve()))
-        except Exception:
-            return str(path)
-
-
 def normalize_decls(rows: list[dict[str, Any]], root: Path) -> dict[str, dict[str, Any]]:
     out: dict[str, dict[str, Any]] = {}
     for row in rows:
@@ -90,25 +89,6 @@ def normalize_decls(rows: list[dict[str, Any]], root: Path) -> dict[str, dict[st
         copied["file_rel"] = rel_repo_path(str(row.get("file", "")), root)
         out[name] = copied
     return out
-
-
-def load_depth_index(path: Path) -> tuple[dict[str, dict[str, Any]], dict[str, Any]]:
-    payload = load_json(path)
-    files_by_rel: dict[str, dict[str, Any]] = {}
-    for row in payload.get("files", []):
-        if not isinstance(row, dict):
-            continue
-        rel = str(row.get("file", ""))
-        if not rel:
-            continue
-        files_by_rel[rel] = {
-            "file": rel,
-            "kind": str(row.get("kind", "")),
-            "source_depth": int(row.get("source_depth", 0)),
-            "target_depth": int(row.get("target_depth", 0)),
-            "notes": str(row.get("notes", "")),
-        }
-    return files_by_rel, payload
 
 
 def classify_edge(src_info: dict[str, Any], dst_info: dict[str, Any]) -> tuple[str, int]:
@@ -122,10 +102,6 @@ def classify_edge(src_info: dict[str, Any], dst_info: dict[str, Any]) -> tuple[s
     if src_low > dst_high + 1:
         return "wormhole", src_low - dst_high
     return "healthy", 0
-
-
-def interval_label(info: dict[str, Any]) -> str:
-    return f"{int(info['source_depth'])}→{int(info['target_depth'])}"
 
 
 def aggregate_edges(
@@ -257,6 +233,7 @@ def summarize(depth_payload: dict[str, Any], aggregated: dict[str, Any], depth_f
     kind_counts: dict[str, int] = defaultdict(int)
     interval_counts: dict[str, int] = defaultdict(int)
     depth_counts: dict[str, int] = defaultdict(int)
+    declared_by_counts: dict[str, int] = defaultdict(int)
     file_rows: list[dict[str, Any]] = []
     for rel, info in sorted(depth_files.items()):
         interval = interval_label(info)
@@ -264,6 +241,7 @@ def summarize(depth_payload: dict[str, Any], aggregated: dict[str, Any], depth_f
         kind_counts[kind] += 1
         interval_counts[interval] += 1
         depth_counts[f"L{int(info['source_depth'])}"] += 1
+        declared_by_counts[str(info.get("declared_by", "unknown"))] += 1
         file_rows.append(
             {
                 "file": rel,
@@ -272,6 +250,9 @@ def summarize(depth_payload: dict[str, Any], aggregated: dict[str, Any], depth_f
                 "target_depth": int(info["target_depth"]),
                 "interval": interval,
                 "notes": str(info.get("notes", "")),
+                "declared_by": str(info.get("declared_by", "")),
+                "tagged_decl_count": int(info.get("tagged_decl_count", 0)),
+                "capstone_count": int(info.get("capstone_count", 0)),
             }
         )
 
@@ -297,6 +278,7 @@ def summarize(depth_payload: dict[str, Any], aggregated: dict[str, Any], depth_f
 
     indexed_files = len(depth_files)
     tracked_files_seen = aggregated.get("tracked_files_seen", [])
+    source_meta = dict(depth_payload.get("source_meta", {}))
 
     return {
         "status": "PASS" if not wormholes and not regressions else "FAIL",
@@ -304,6 +286,7 @@ def summarize(depth_payload: dict[str, Any], aggregated: dict[str, Any], depth_f
             "layers": depth_payload.get("layers", []),
             "rules": depth_payload.get("rules", {}),
             "review_surface": depth_payload.get("review_surface", []),
+            "source_meta": source_meta,
         },
         "counts": {
             "indexed_files": indexed_files,
@@ -314,11 +297,14 @@ def summarize(depth_payload: dict[str, Any], aggregated: dict[str, Any], depth_f
             "regressions": len(regressions),
             "offender_files": len(offenders),
             "skipped_decl_metadata": aggregated.get("skipped_decl_metadata", 0),
+            "lean_tagged_files": int(source_meta.get("lean_tagged_files", 0)),
+            "lean_tagged_declarations": int(source_meta.get("lean_tagged_declarations", 0)),
         },
         "inventory": {
             "kind_counts": dict(sorted(kind_counts.items())),
             "interval_counts": dict(sorted(interval_counts.items())),
             "depth_counts": dict(sorted(depth_counts.items())),
+            "declared_by_counts": dict(sorted(declared_by_counts.items())),
             "files": file_rows,
         },
         "transitions": transitions,
@@ -331,12 +317,13 @@ def summarize(depth_payload: dict[str, Any], aggregated: dict[str, Any], depth_f
 def render_md(payload: dict[str, Any], top: int) -> str:
     counts = payload.get("counts", {})
     inventory = payload.get("inventory", {})
+    source_meta = (payload.get("source", {}) or {}).get("source_meta", {})
     lines: list[str] = []
     lines.append("# Representation Depth Audit")
     lines.append("")
     lines.append(
         "Direct file-to-file dependency audit over the authoritative declaration DAG, "
-        "scored against the manual representation-depth index."
+        "scored against Lean-exported representation-depth tags with the manual index retained for file roles and notes."
     )
     lines.append("")
     lines.append("## Status")
@@ -345,8 +332,15 @@ def render_md(payload: dict[str, Any], top: int) -> str:
     lines.append("- depth semantics: each tracked file is an interval `[source_depth, target_depth]`")
     lines.append("- rule: a direct dependency may stay within the same interval or touch the immediately previous layer only")
     lines.append("")
+    lines.append("## Sources")
+    lines.append(f"- manual role index: `{source_meta.get('manual_index_path', '')}`")
+    lines.append(f"- Lean depth export: `{source_meta.get('lean_tags_path', '')}`")
+    lines.append(f"- manual indexed files: `{source_meta.get('manual_index_files', 0)}`")
+    lines.append(f"- Lean-tagged files: `{source_meta.get('lean_tagged_files', 0)}`")
+    lines.append(f"- Lean-tagged declarations: `{source_meta.get('lean_tagged_declarations', 0)}`")
+    lines.append("")
     lines.append("## Counts")
-    lines.append(f"- indexed files in manual depth map: **{counts.get('indexed_files', 0)}**")
+    lines.append(f"- merged indexed files: **{counts.get('indexed_files', 0)}**")
     lines.append(f"- indexed files seen in authoritative graph: **{counts.get('tracked_files_seen_in_graph', 0)}**")
     lines.append(f"- tracked file edges: **{counts.get('tracked_edges', 0)}**")
     lines.append(f"- healthy direct edges: **{counts.get('healthy_edges', 0)}**")
@@ -361,6 +355,9 @@ def render_md(payload: dict[str, Any], top: int) -> str:
     lines.append("### Intervals")
     for interval, count in inventory.get("interval_counts", {}).items():
         lines.append(f"- `{interval}`: `{count}`")
+    lines.append("### Provenance")
+    for key, count in inventory.get("declared_by_counts", {}).items():
+        lines.append(f"- `{key}`: `{count}`")
     lines.append("")
     lines.append("## Observed Direct Transition Bands")
     transitions = payload.get("transitions", [])
@@ -417,8 +414,9 @@ def render_md(payload: dict[str, Any], top: int) -> str:
         lines.append("- none")
     lines.append("")
     lines.append("## Notes")
-    lines.append("- this report only scores files present in the manual depth index")
-    lines.append("- unknown files are ignored rather than guessed")
+    lines.append("- Lean-exported tagged depths are the primary interval source where available")
+    lines.append("- the manual index remains the source of file role (`owner`, `translator`, `coherence`) and review notes")
+    lines.append("- untagged files may still be tracked through the manual index until their owner families are migrated")
     lines.append("- capstone files should be modeled as consumers/composites, not primitive translators")
     return "\n".join(lines) + "\n"
 
@@ -430,12 +428,13 @@ def main() -> int:
     graph_path = normalize_user_path(args.graph, default_decl_graph_file())
     decls_path = normalize_user_path(args.decls, default_decl_metadata_file())
     depth_path = normalize_user_path(args.depth_index, root / DEFAULT_DEPTH_INDEX)
+    lean_tags_path = normalize_user_path(args.lean_tags, root / DEFAULT_LEAN_TAGS)
     json_out = normalize_user_path(args.json_out, root / DEFAULT_JSON_OUT)
     md_out = normalize_user_path(args.md_out, root / DEFAULT_MD_OUT)
 
     graph = load_json(graph_path)
     decls = normalize_decls(load_jsonl(decls_path), root)
-    depth_files, depth_payload = load_depth_index(depth_path)
+    depth_files, depth_payload = build_depth_sources(depth_path, lean_tags_path, root)
     aggregated = aggregate_edges(graph, decls, depth_files)
     summary = summarize(depth_payload, aggregated, depth_files)
 

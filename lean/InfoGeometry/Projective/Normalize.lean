@@ -76,8 +76,7 @@ noncomputable abbrev normalizeOnProj : InfoGeometry.PositiveMeasure.Proj (α := 
 
 @[simp] lemma normalizeOnProj_mk (μ : InfoGeometry.PositiveMeasure α ℝ) :
     normalizeOnProj (α := α) (Quotient.mk _ μ) = PositiveMeasure.normalize (α := α) (R := ℝ) μ := by
-  simpa [normalizeOnProj] using
-    (InfoGeometry.Projective.Normalize.normalizeOnProj_mk (α := α) μ)
+  simp [normalizeOnProj]
 
 @[simp] lemma Z_normalizeOnProj (q : InfoGeometry.PositiveMeasure.Proj (α := α)) :
     PositiveMeasure.Z (α := α) (R := ℝ) (normalizeOnProj (α := α) q) = 1 := by

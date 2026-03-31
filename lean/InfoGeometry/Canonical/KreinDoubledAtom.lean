@@ -41,19 +41,19 @@ noncomputable def kOp : X →ₗ[ℝ] X := X.K
 
 @[simp] theorem j_sq :
     (jOp X).comp (jOp X) = oneOp X := by
-  simpa [jOp, oneOp] using InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.J_sq X
+  exact InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.J_sq X
 
 @[simp] theorem eps_sq :
     (epsOp X).comp (epsOp X) = oneOp X := by
-  simpa [epsOp, oneOp] using InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.eps_sq X
+  exact InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.eps_sq X
 
 @[simp] theorem pi_sq :
     (piOp X).comp (piOp X) = oneOp X := by
-  simpa [piOp, oneOp] using InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.Pi_sq X
+  exact InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.Pi_sq X
 
 @[simp] theorem j_eps_anticomm :
     (jOp X).comp (epsOp X) = -((epsOp X).comp (jOp X)) := by
-  simpa [jOp, epsOp] using InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.J_eps_anticomm X
+  exact InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.J_eps_anticomm X
 
 @[simp] theorem k_eq_j_comp_eps :
     kOp X = (jOp X).comp (epsOp X) := by
@@ -61,7 +61,7 @@ noncomputable def kOp : X →ₗ[ℝ] X := X.K
 
 @[simp] theorem k_sq :
     (kOp X).comp (kOp X) = -(oneOp X) := by
-  simpa [kOp, oneOp] using InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.K_sq X
+  exact InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.K_sq X
 
 end Core
 
@@ -79,23 +79,23 @@ noncomputable def kOp : X →ₗ[ℝ] X := InfoGeometry.Quantum.SplitCliffordAto
 
 @[simp] theorem j_sq :
     (jOp X).comp (jOp X) = oneOp X := by
-  simpa [jOp, oneOp] using InfoGeometry.Quantum.SplitCliffordAtom.Atom.j_sq X
+  exact InfoGeometry.Quantum.SplitCliffordAtom.Atom.j_sq X
 
 @[simp] theorem eps_sq :
     (epsOp X).comp (epsOp X) = oneOp X := by
-  simpa [epsOp, oneOp] using InfoGeometry.Quantum.SplitCliffordAtom.Atom.eps_sq X
+  exact InfoGeometry.Quantum.SplitCliffordAtom.Atom.eps_sq X
 
 @[simp] theorem j_eps_anticomm :
     (jOp X).comp (epsOp X) = -((epsOp X).comp (jOp X)) := by
-  simpa [jOp, epsOp] using InfoGeometry.Quantum.SplitCliffordAtom.Atom.j_eps_anticomm X
+  exact InfoGeometry.Quantum.SplitCliffordAtom.Atom.j_eps_anticomm X
 
 @[simp] theorem k_eq_j_comp_eps :
     kOp X = (jOp X).comp (epsOp X) := by
-  simpa [kOp, jOp, epsOp] using InfoGeometry.Quantum.SplitCliffordAtom.Atom.k_eq_j_comp_eps X
+  exact InfoGeometry.Quantum.SplitCliffordAtom.Atom.k_eq_j_comp_eps X
 
 @[simp] theorem k_sq :
     (kOp X).comp (kOp X) = -(oneOp X) := by
-  simpa [kOp, oneOp] using InfoGeometry.Quantum.SplitCliffordAtom.Atom.k_sq X
+  exact InfoGeometry.Quantum.SplitCliffordAtom.Atom.k_sq X
 
 end Atom
 
@@ -117,11 +117,11 @@ noncomputable def K (X : KreinDoubledAtom) : X →ₗ[ℝ] X :=
 
 @[simp] theorem K_eq_J_comp_eps (X : KreinDoubledAtom) :
     X.K = X.J.comp X.eps := by
-  simpa [K] using (InfoGeometry.Quantum.AnticommutingInvolutionCore.K_def X)
+  exact InfoGeometry.Quantum.AnticommutingInvolutionCore.K_def X
 
 lemma eps_comp_J (X : KreinDoubledAtom) :
     X.eps.comp X.J = -(X.J.comp X.eps) := by
-  simpa using (InfoGeometry.Quantum.AnticommutingInvolutionCore.eps_comp_J X)
+  exact InfoGeometry.Quantum.AnticommutingInvolutionCore.eps_comp_J X
 
 /-- Foundational emergent-phase theorem: `K² = -Id`. -/
 @[simp] theorem K_sq_eq_neg_id (X : KreinDoubledAtom) :

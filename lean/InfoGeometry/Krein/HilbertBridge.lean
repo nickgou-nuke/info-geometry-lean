@@ -86,7 +86,7 @@ noncomputable instance : KreinSpace (HilbertDoubled E) where
         simp
       norm_map' := by
         intro u
-        simpa using (KreinSpace.J (H := DoubledSpace E)).norm_map (u : DoubledSpace E) }
+        exact (KreinSpace.J (H := DoubledSpace E)).norm_map (u : DoubledSpace E) }
   J_invol := by
     intro u
     apply ULift.ext
@@ -230,7 +230,7 @@ noncomputable instance : KreinSpace (NeutralSpace E) where
         simp
       norm_map' := by
         intro u
-        simpa using (KreinSpace.J (H := DoubledSpace E)).norm_map (u : DoubledSpace E) }
+        exact (KreinSpace.J (H := DoubledSpace E)).norm_map (u : DoubledSpace E) }
   J_invol := by
     intro u
     apply ULift.ext

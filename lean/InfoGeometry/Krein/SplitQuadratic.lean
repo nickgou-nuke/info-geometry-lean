@@ -50,11 +50,13 @@ theorem metricOp_eq_cl11Rep_pseudoscalar (u : H₂) :
             * CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) u := by
   rw [grad, ←InfoGeometry.Krein.cl11Rep_pseudoscalar (E := E)]
 
+omit [CompleteSpace E] in
 /-- The doubled-space fundamental symmetry is Hilbert-self-adjoint. -/
 lemma spectral_epsilon_selfAdj (u v : H₂) :
     inner ℝ (spectral_epsilon (E := E) u) v = inner ℝ u (spectral_epsilon (E := E) v) := by
   simp [spectral_epsilon, WithLp.prod_inner_apply]
 
+omit [CompleteSpace E] in
 lemma hasFDerivAt_grad (u : H₂) :
     HasFDerivAt (fun x : H₂ => grad (E := E) x) (metricOp (E := E) u) u := by
   simpa [grad, metricOp] using (spectral_epsilon (E := E)).hasFDerivAt

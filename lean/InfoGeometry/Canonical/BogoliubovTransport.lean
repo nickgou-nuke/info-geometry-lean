@@ -120,6 +120,7 @@ lemma neg_phaseAxis_comp_phaseConjugate
     -((modularComplexI (E := E)).comp (phaseConjugate (E := E) A)) = A.comp Kop := by
   simpa using congrArg Neg.neg (phaseAxis_comp_phaseConjugate (E := E) A)
 
+omit [CompleteSpace E] in
 theorem phaseLinearPart_isPhaseLinear
     (A : EndH) :
     IsPhaseLinear (E := E) (phaseLinearPart (E := E) A) := by
@@ -141,6 +142,7 @@ theorem phaseLinearPart_isPhaseLinear
     _ = (modularComplexI (E := E)).comp (A - phaseConjugate (E := E) A) := by
           simp [ContinuousLinearMap.comp_sub]
 
+omit [CompleteSpace E] in
 theorem phaseAntilinearPart_isPhaseAntilinear
     (A : EndH) :
     IsPhaseAntilinear (E := E) (phaseAntilinearPart (E := E) A) := by
@@ -222,12 +224,14 @@ theorem phaseAxisForce_eq_two_smul_comp_of_IsPhaseAntilinear
   intro x
   apply DoubledSpace.ext <;> simp [phaseAxisForce, transportCommutator, hKH, two_smul]
 
+omit [CompleteSpace E] in
 theorem phaseAxisForce_of_phaseLinearPart_eq_zero
     (H : EndH) :
     phaseAxisForce (E := E) (phaseLinearPart (E := E) H) = 0 := by
   exact phaseAxisForce_eq_zero_of_IsPhaseLinear
     (E := E) (phaseLinearPart (E := E) H) (phaseLinearPart_isPhaseLinear (E := E) H)
 
+omit [CompleteSpace E] in
 theorem phaseAxisForce_of_phaseAntilinearPart_eq_two_smul
     (H : EndH) :
     phaseAxisForce (E := E) (phaseAntilinearPart (E := E) H)
@@ -235,6 +239,7 @@ theorem phaseAxisForce_of_phaseAntilinearPart_eq_two_smul
   exact phaseAxisForce_eq_two_smul_comp_of_IsPhaseAntilinear
     (E := E) (phaseAntilinearPart (E := E) H) (phaseAntilinearPart_isPhaseAntilinear (E := E) H)
 
+omit [CompleteSpace E] in
 /--
 The transport of the internal phase axis is sourced entirely by the
 phase-antilinear part of the generator.
@@ -353,6 +358,119 @@ theorem KRotation_add (s t : ℝ) :
           NormedSpace.exp (t • modularComplexI (E := E)) := by
           rw [NormedSpace.exp_add_of_commute hComm]
     _ = KRotation (E := E) s * KRotation (E := E) t := rfl
+
+/-- Modular transport generator `A := hMod ∘ Kop`. -/
+noncomputable def modularTransportGenerator (hMod : EndH) : EndH :=
+  hMod.comp Kop
+
+/-- Modular transport flow `U(t) := exp(t • A)`. -/
+noncomputable def modularTransportFlow (hMod : EndH) (t : ℝ) : EndH :=
+  NormedSpace.exp (t • modularTransportGenerator hMod)
+
+omit [CompleteSpace E] in
+/-- The modular transport flow at t=0 is the identity. -/
+@[simp] theorem modularTransportFlow_zero (hMod : EndH) :
+    modularTransportFlow hMod 0 = 1 := by
+  unfold modularTransportFlow
+  simp
+
+/-- The modular transport flow satisfies the group additive law. -/
+theorem modularTransportFlow_add (hMod : EndH) (s t : ℝ) :
+    modularTransportFlow hMod (s + t) =
+      modularTransportFlow hMod s * modularTransportFlow hMod t := by
+  set A := modularTransportGenerator hMod with hA
+  have hComm : Commute (s • A) (t • A) := by
+    exact ((Commute.refl A).smul_left s).smul_right t
+  unfold modularTransportFlow
+  rw [add_smul, NormedSpace.exp_add_of_commute hComm]
+
+/-- Center the modular generator by its Krein expectation in the state `ψ`. -/
+noncomputable def centeredModularGenerator
+    (ψ : H₂) (hMod : EndH) : EndH :=
+  hMod - (kreinExpectation (E := E) ψ hMod) • (1 : EndH)
+
+/-- Exact centered quadratic transport observable attached to `hMod` in the state `ψ`. -/
+noncomputable def modularVariance
+    (ψ : H₂) (hMod : EndH) : ℝ :=
+  kreinExpectation (E := E) ψ
+    ((centeredModularGenerator (E := E) ψ hMod) *
+      (centeredModularGenerator (E := E) ψ hMod))
+
+@[simp] theorem kreinExpectation_add
+    (ψ : H₂) (A B : EndH) :
+    kreinExpectation (E := E) ψ (A + B)
+      = kreinExpectation (E := E) ψ A + kreinExpectation (E := E) ψ B := by
+  simp [kreinExpectation, KreinSpace.kreinInner_def, inner_add_right]
+
+@[simp] theorem kreinExpectation_neg
+    (ψ : H₂) (A : EndH) :
+    kreinExpectation (E := E) ψ (-A)
+      = - kreinExpectation (E := E) ψ A := by
+  simp [kreinExpectation, KreinSpace.kreinInner_def, inner_neg_right]
+
+@[simp] theorem kreinExpectation_sub
+    (ψ : H₂) (A B : EndH) :
+    kreinExpectation (E := E) ψ (A - B)
+      = kreinExpectation (E := E) ψ A - kreinExpectation (E := E) ψ B := by
+  simp [sub_eq_add_neg, kreinExpectation_add, kreinExpectation_neg]
+
+@[simp] theorem kreinExpectation_smul
+    (ψ : H₂) (c : ℝ) (A : EndH) :
+    kreinExpectation (E := E) ψ (c • A)
+      = c * kreinExpectation (E := E) ψ A := by
+  simp [kreinExpectation, KreinSpace.kreinInner_def, inner_smul_right]
+
+@[simp] theorem kreinExpectation_one
+    (ψ : H₂) :
+    kreinExpectation (E := E) ψ (1 : EndH)
+      = KreinSpace.kreinInner (H := H₂) ψ ψ := by
+  unfold kreinExpectation
+  simp
+
+/--
+Exact centered-second-moment expansion of the modular generator.
+
+No normalization is assumed here. The normalized variance formula is a corollary
+obtained by imposing `kreinExpectation ψ 1 = 1`.
+-/
+theorem modularVariance_expand
+    (ψ : H₂) (hMod : EndH) :
+    modularVariance (E := E) ψ hMod
+      = kreinExpectation (E := E) ψ (hMod * hMod)
+        - 2 * (kreinExpectation (E := E) ψ hMod) ^ 2
+        + (kreinExpectation (E := E) ψ hMod)^2
+            * kreinExpectation (E := E) ψ (1 : EndH) := by
+  let μ : ℝ := kreinExpectation (E := E) ψ hMod
+  let ν : ℝ := kreinExpectation (E := E) ψ (1 : EndH)
+  have h_expand :
+      (centeredModularGenerator (E := E) ψ hMod) *
+          (centeredModularGenerator (E := E) ψ hMod)
+        = hMod * hMod
+          - μ • hMod
+          - μ • hMod
+          + (μ ^ 2) • (1 : EndH) := by
+    unfold centeredModularGenerator
+    rw [sub_mul, mul_sub, mul_sub]
+    simp [pow_two, smul_smul]
+    abel
+  rw [modularVariance, h_expand]
+  simp [μ, pow_two]
+  ring
+
+/--
+Normalized modular variance formula.
+
+This is the exact `E[H^2] - E[H]^2` identity once the state is normalized by
+`kreinExpectation ψ 1 = 1`.
+-/
+theorem modularVariance_of_normalized
+    (ψ : H₂) (hMod : EndH)
+    (hψ : kreinExpectation (E := E) ψ (1 : EndH) = 1) :
+    modularVariance (E := E) ψ hMod
+      = kreinExpectation (E := E) ψ (hMod * hMod)
+        - (kreinExpectation (E := E) ψ hMod)^2 := by
+  rw [modularVariance_expand (E := E) ψ hMod, hψ]
+  ring
 
 end Basic
 

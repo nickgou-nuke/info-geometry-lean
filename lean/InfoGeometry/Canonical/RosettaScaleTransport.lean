@@ -37,6 +37,7 @@ noncomputable def weylScaleTransportShadow
   fun s => realize <|
     InfoGeometry.Canonical.ScaleEquivariantFlow.transportObservable Ξ phaseOf (path 0) (path s)
 
+omit [CompleteSpace H] in
 /--
 If a Weyl scale-transport shadow acts injectively on the carrier and transports
 both chiral slices to the baseline through the Clifford label action, then it
@@ -69,6 +70,7 @@ private theorem weylScaleTransportShadow_to_modularCliffordTransport
       clAct unit := by
   exact ⟨hUnit, hShadowInj, hPlusMap, hMinusMap⟩
 
+omit [CompleteSpace H] in
 /--
 Weyl scale transport yields analytical-index invariance once its endomorphism
 shadow satisfies the modular/Clifford slice-transport requirements.

@@ -58,11 +58,13 @@ noncomputable def kreinRouterModularHamiltonian (x : Fin n → V) (i : Fin n) :
     KreinAlgebraEnd H :=
   routerMeanEnergy n x i • ContinuousLinearMap.id ℝ H
 
+omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
 @[simp] lemma kreinRouterModularHamiltonian_apply
     (x : Fin n → V) (i : Fin n) (v : H) :
     kreinRouterModularHamiltonian (H := H) n x i v = routerMeanEnergy n x i • v := by
   simp [kreinRouterModularHamiltonian]
 
+omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
 /-- The Krein-rooted scalar router modular generator is Krein-self-adjoint. -/
 lemma kreinRouterModularHamiltonian_isKreinSelfAdjoint
     (x : Fin n → V) (i : Fin n) :
@@ -77,11 +79,12 @@ noncomputable abbrev routerModularHamiltonian (x : Fin n → V) (i : Fin n) :
     AlgebraEnd (RouterAmplitude n) :=
   kreinRouterModularHamiltonian (H := DoubledSpace (RouterAmplitude n)) n x i
 
+omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
 @[simp] lemma routerModularHamiltonian_apply
     (x : Fin n → V) (i : Fin n) (v : DoubledSpace (RouterAmplitude n)) :
     routerModularHamiltonian n x i v = routerMeanEnergy n x i • v := by
-  simpa [routerModularHamiltonian] using
-    (kreinRouterModularHamiltonian_apply (n := n) (x := x) (i := i) (v := v))
+  exact kreinRouterModularHamiltonian_apply (H := DoubledSpace (RouterAmplitude n))
+    (n := n) (x := x) (i := i) (v := v)
 
 end RouterHamiltonian
 

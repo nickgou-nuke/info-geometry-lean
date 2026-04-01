@@ -43,12 +43,14 @@ def MongeAmpereRicciState
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) : Prop :=
   HasConstantMongeAmpereDensity K.H ∧ IsRicciFlat R
 
+omit [FiniteDimensional ℝ E] in
 /-- Lemma `hasConstantMongeAmpereDensity_iff`. -/
 private lemma hasConstantMongeAmpereDensity_iff
     (H : HessianGeometry E) :
     HasConstantMongeAmpereDensity H
       ↔ ∃ ρ0 : ℝ, ∀ x : E, mongeAmpereDensity H x = ρ0 := Iff.rfl
 
+omit [FiniteDimensional ℝ E] in
 /-- Lemma `hasConstantMongeAmpereDensity_of_satisfiesMongeAmpere_const`. -/
 private lemma hasConstantMongeAmpereDensity_of_satisfiesMongeAmpere_const
     (H : HessianGeometry E) (ρ0 : ℝ)
@@ -56,6 +58,7 @@ private lemma hasConstantMongeAmpereDensity_of_satisfiesMongeAmpere_const
     HasConstantMongeAmpereDensity H := by
   exact ⟨ρ0, hMA⟩
 
+omit [FiniteDimensional ℝ E] in
 /-- Lemma `satisfiesMongeAmpere_const_of_hasConstantMongeAmpereDensity`. -/
 private lemma satisfiesMongeAmpere_const_of_hasConstantMongeAmpereDensity
     (H : HessianGeometry E)
@@ -75,6 +78,7 @@ private lemma ricciTensor_eq_of_isRicciFlat
   funext u v
   rw [h₁ u v, h₂ u v]
 
+omit [FiniteDimensional ℝ E] in
 /-- Lemma `isEinsteinKaehlerAtWith_zero_of_isRicciFlat`. -/
 private lemma isEinsteinKaehlerAtWith_zero_of_isRicciFlat
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
@@ -84,6 +88,7 @@ private lemma isEinsteinKaehlerAtWith_zero_of_isRicciFlat
   rw [hFlat u v]
   ring
 
+omit [FiniteDimensional ℝ E] in
 /--
 Metric-side reverse bridge on the zero branch:
 `Ric = 0 · g` implies Ricci-flatness.
@@ -291,6 +296,7 @@ def IsAdSLikeEinsteinAt
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E) : Prop :=
   ∃ Λ : ℝ, 0 < Λ ∧ IsEinsteinKaehlerAtWith (-Λ) R K x
 
+omit [FiniteDimensional ℝ E] in
 /--
 Any Einstein-Kähler branch with negative coefficient is AdS-like.
 -/
@@ -306,6 +312,7 @@ private theorem isAdSLikeEinsteinAt_of_negative_einstein
     R u v = c * K.H.metric x u v := hEin u v
     _ = (-(-c)) * K.H.metric x u v := by ring
 
+omit [FiniteDimensional ℝ E] in
 /--
 AdS-like Einstein branch yields a vacuum Einstein equation with zero scalar
 closure in this normalization.
@@ -320,6 +327,7 @@ private theorem vacuumEinsteinEquation_zeroScalar_of_isAdSLikeEinsteinAt
     (c := -Λ) (R := R) (K := K) (x := x) (scalar := 0) (Λ := Λ)
     hEin (by ring)
 
+omit [FiniteDimensional ℝ E] in
 /-- Projection: a `MongeAmpereRicciState` carries the constant-density witness. -/
 private theorem hasConstantMongeAmpereDensity_of_mongeAmpereRicciState
     (R : RicciTensor E) (K : KaehlerInformationGeometry E)
@@ -327,6 +335,7 @@ private theorem hasConstantMongeAmpereDensity_of_mongeAmpereRicciState
     HasConstantMongeAmpereDensity K.H :=
   hState.1
 
+omit [FiniteDimensional ℝ E] in
 /-- Projection: a `MongeAmpereRicciState` carries Ricci-flatness. -/
 private theorem isRicciFlat_of_mongeAmpereRicciState
     (R : RicciTensor E) (K : KaehlerInformationGeometry E)
@@ -334,6 +343,7 @@ private theorem isRicciFlat_of_mongeAmpereRicciState
     IsRicciFlat R :=
   hState.2
 
+omit [FiniteDimensional ℝ E] in
 /--
 Constructive state packaging:
 constant Monge-Ampere density and explicit Ricci-flatness form the closure state.
@@ -345,6 +355,7 @@ private theorem mongeAmpereRicciState_mk
     MongeAmpereRicciState R K := by
   exact ⟨hConst, hFlat⟩
 
+omit [FiniteDimensional ℝ E] in
 /--
 Uniqueness under constructive closure states:
 if two Ricci tensors are both Ricci-flat under the same geometry scaffold, they coincide.
@@ -357,6 +368,7 @@ private theorem ricciTensor_unique_of_mongeAmpereRicciState
   funext u v
   rw [hState₁.2 u v, hState₂.2 u v]
 
+omit [FiniteDimensional ℝ E] in
 /--
 Constructive vacuum Einstein closure from an explicit Ricci-flat witness
 (non-bridge form).
@@ -372,6 +384,7 @@ private theorem vacuumEinsteinEquation_of_isRicciFlat
     (c := 0) (R := R) (K := K) (x := x) (scalar := 2 * Λ) (Λ := Λ)
     hEin0 (by ring)
 
+omit [FiniteDimensional ℝ E] in
 /--
 Constructive Ricci-flat derivation from unit relative-volume state via the
 metric RN bridge.
@@ -386,6 +399,7 @@ theorem isRicciFlat_of_unitRelativeVolume
     R u v = (0 : ℝ) * K.H.metric x u v := hBridge.unitVolume_to_einstein_zero hUnit u v
     _ = 0 := by ring
 
+omit [FiniteDimensional ℝ E] in
 /--
 Constructive vacuum Einstein closure from unit relative-volume state
 and a metric RN bridge.
@@ -401,6 +415,7 @@ theorem vacuumEinsteinEquation_of_unitRelativeVolume
   rw [isRicciFlat_of_unitRelativeVolume (R := R) (K := K) (x := x) hUnit hBridge u v]
   ring
 
+omit [FiniteDimensional ℝ E] in
 /--
 Constructive closure theorem in explicit state form:
 from the `IsRicciFlat` portion of the state, we obtain the vacuum Einstein equation.

@@ -30,8 +30,7 @@ The Jordan log-det barrier is exactly the zeta-regularized log-determinant.
 theorem jordan_logdet_eq_zeta_determinant
     (n : Nat) (X : SPD n) :
     logDetBarrier X = InfoGeometry.Canonical.Determinant.zetaLogDetBarrier X := by
-  simpa using
-    (InfoGeometry.Canonical.Determinant.zetaLogDetBarrier_eq_logDetBarrier (X := X)).symm
+  exact (InfoGeometry.Canonical.Determinant.zetaLogDetBarrier_eq_logDetBarrier (X := X)).symm
 
 /--
 Spine Identification 4:

@@ -33,6 +33,7 @@ variable [MeasurableSpace α] [MeasurableSingletonClass α] [Countable α]
 noncomputable abbrev positiveRayToProjectiveState (q : PositiveRay α) : ProjectiveState α :=
   toProjectiveState (α := α) q
 
+omit [Countable α] in
 @[simp] theorem positiveRayToProjectiveState_normalize_eq
     (q : PositiveRay α) :
     normalize (positiveRayToProjectiveState (α := α) q)

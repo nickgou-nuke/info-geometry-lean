@@ -1,0 +1,636 @@
+diff --git a/lean/InfoGeometry/Canonical/BerryHolonomy.lean b/lean/InfoGeometry/Canonical/BerryHolonomy.lean
+index deba9de..da5d895 100644
+--- a/lean/InfoGeometry/Canonical/BerryHolonomy.lean
++++ b/lean/InfoGeometry/Canonical/BerryHolonomy.lean
+@@ -22,16 +22,6 @@ noncomputable def informationBerryPhase (L : BayesianLoop E) (CST : ChiralSpectr
+ noncomputable def anomalyFlux (L : BayesianLoop E) (CST : ChiralSpectralTriple E) : ℝ :=
+   (L.N : ℝ) * chiralAnomalyIndex CST
+ 
+-/-- Loop-holonomy identity: Berry phase equals anomaly flux. -/
+-theorem berryPhase_eq_anomaly_flux
+-    (L : BayesianLoop E) (CST : ChiralSpectralTriple E) :
+-    informationBerryPhase L CST = anomalyFlux L CST := rfl
+-
+-/-- Exact decomposition of the Berry phase into loop length and anomaly index. -/
+-theorem informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex
+-    (L : BayesianLoop E) (CST : ChiralSpectralTriple E) :
+-    informationBerryPhase L CST = (L.N : ℝ) * chiralAnomalyIndex CST := rfl
+-
+ /-- Expanded form: Berry phase equals loop length times `ε` times spectral projector rank. -/
+ theorem informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank
+     (L : BayesianLoop E) (CST : ChiralSpectralTriple E) :
+diff --git a/lean/InfoGeometry/Canonical/ConformalAlgebra.lean b/lean/InfoGeometry/Canonical/ConformalAlgebra.lean
+index 2673d1f..0b525fa 100644
+--- a/lean/InfoGeometry/Canonical/ConformalAlgebra.lean
++++ b/lean/InfoGeometry/Canonical/ConformalAlgebra.lean
+@@ -37,10 +37,6 @@ namespace ConformalBeliefAlgebra
+ 
+ variable (CBA : ConformalBeliefAlgebra E)
+ 
+-/-- The dilation field is canonically inherited from the underlying conformal inference. -/
+-theorem D_eq_CI_D : CBA.D = CBA.CI.D :=
+-  CBA.D_def
+-
+ /-! ### 1. Fundamental Commutation Relations -/
+ 
+ /--
+@@ -85,12 +81,6 @@ theorem scale_anomaly_emergence
+     : CBA.CI.chiralScale > 0 → ¬ CBA.SatisfiesFlatWeights := by
+   simpa [SatisfiesFlatWeights, SatisfiesPWeight, SatisfiesKWeight] using CBA.anomaly_breaks_weights
+ 
+-omit [FiniteDimensional ℝ E] in
+-/-- Theorem `scale_anomaly_breaks_weight_closure`. -/
+-theorem scale_anomaly_breaks_weight_closure
+-    : CBA.CI.chiralScale > 0 → ¬ CBA.SatisfiesFlatWeights :=
+-  CBA.scale_anomaly_emergence
+-
+ /--
+ The Chiral Cartan Splitting of the Conformal Algebra.
+ Maps the generators to the 𝔨 ⊕ 𝔭 sectors.
+@@ -368,7 +358,7 @@ theorem commutator_weylDilation_weylDilation
+ /-- Positive anomaly scale obstructs flat conformal-weight closure. -/
+ theorem scale_anomaly_obstructs_weyl_flatness :
+     CBA.CI.chiralScale > 0 → ¬ CBA.SatisfiesFlatWeights := by
+-  exact CBA.scale_anomaly_breaks_weight_closure
++  exact CBA.scale_anomaly_emergence
+ 
+ end ConformalBeliefAlgebra
+ 
+diff --git a/lean/InfoGeometry/Canonical/DiracMetricCompatibility.lean b/lean/InfoGeometry/Canonical/DiracMetricCompatibility.lean
+index 113c4fd..8468be1 100644
+--- a/lean/InfoGeometry/Canonical/DiracMetricCompatibility.lean
++++ b/lean/InfoGeometry/Canonical/DiracMetricCompatibility.lean
+@@ -1,4 +1,5 @@
+ import InfoGeometry.Convex.HessianGeometry
++import InfoGeometry.Meta.Architecture
+ import Mathlib.Analysis.InnerProductSpace.Adjoint
+ import Mathlib.Analysis.InnerProductSpace.Positive
+ import Mathlib.Analysis.Matrix.Order
+@@ -113,6 +114,7 @@ theorem canonicalDiracOfMetric_isPositive
+ Canonical compatibility witness produced from the symmetric nonnegative quadratic form carried by
+ `H.metricOp x₀`.
+ -/
++@[rep_depth krein]
+ noncomputable def ofMetric
+     (H : HessianGeometry E) (x₀ : E) :
+     DiracMetricCompatibility (E := E)
+diff --git a/lean/InfoGeometry/Canonical/Drazin.lean b/lean/InfoGeometry/Canonical/Drazin.lean
+index 1213b38..44cc4e3 100644
+--- a/lean/InfoGeometry/Canonical/Drazin.lean
++++ b/lean/InfoGeometry/Canonical/Drazin.lean
+@@ -20,15 +20,6 @@ theorem mk
+     IsDrazinInverse a b k :=
+   ⟨hcomm, hidempotent, hpower⟩
+ 
+-/-- Commutation law for a Drazin inverse witness. -/
+-theorem comm (h : IsDrazinInverse a b k) : a * b = b * a := h.1
+-
+-/-- Idempotent law for a Drazin inverse witness. -/
+-theorem idempotent (h : IsDrazinInverse a b k) : b * a * b = b := h.2.1
+-
+-/-- Power law for a Drazin inverse witness. -/
+-theorem power (h : IsDrazinInverse a b k) : a^(k + 1) * b = a^k := h.2.2
+-
+ /-- Definition `projection`. -/
+ def projection (a b : R) : R := a * b
+ 
+@@ -39,7 +30,7 @@ def complementaryProjection (a b : R) : R := 1 - projection a b
+ theorem projection_is_idempotent (h : IsDrazinInverse a b k) :
+     (projection a b) * (projection a b) = projection a b := by
+   unfold projection
+-  rw [mul_assoc, ← mul_assoc b a b, h.idempotent]
++  rw [mul_assoc, ← mul_assoc b a b, h.2.1]
+ 
+ /-- The complementary Drazin projector is idempotent. -/
+ theorem complementaryProjection_is_idempotent (h : IsDrazinInverse a b k) :
+@@ -77,7 +68,7 @@ theorem projection_comm (h : IsDrazinInverse a b k) :
+     (projection a b) * b = b * (projection a b) := by
+   unfold projection
+   calc
+-    (a * b) * b = (b * a) * b := by rw [h.comm]
++    (a * b) * b = (b * a) * b := by rw [h.1]
+     _ = b * (a * b) := by rw [mul_assoc]
+ 
+ /-- Theorem `power_le`. -/
+@@ -89,7 +80,7 @@ theorem power_le (h : IsDrazinInverse a b k) {m : ℕ} (hm : k ≤ m) :
+       simp [Nat.add_assoc, Nat.add_left_comm]
+     _ = (a^t * a^(k + 1)) * b := by rw [pow_add]
+     _ = a^t * (a^(k + 1) * b) := by rw [mul_assoc]
+-    _ = a^t * a^k := by rw [h.power]
++    _ = a^t * a^k := by rw [h.2.2]
+     _ = a^(t + k) := by rw [← pow_add]
+     _ = a^(k + t) := by simp [Nat.add_comm]
+ 
+@@ -98,13 +89,13 @@ lemma inverse_eq_pow_mul_pow (h : IsDrazinInverse a b k) (n : ℕ) :
+     b = b^(n + 1) * a^n := by
+   have hba : Commute b a := by
+     show b * a = a * b
+-    exact h.comm.symm
++    exact h.1.symm
+   have hbase : b * b * a = b := by
+     calc
+       b * b * a = b * (b * a) := by rw [mul_assoc]
+-      _ = b * (a * b) := by rw [h.comm.symm]
++      _ = b * (a * b) := by rw [h.1.symm]
+       _ = (b * a) * b := by rw [← mul_assoc]
+-      _ = b := h.idempotent
++      _ = b := h.2.1
+   have hpow : ∀ n : ℕ, b^(n + 1) * a^n = b := by
+     intro n
+     induction n with
+@@ -133,7 +124,7 @@ theorem nilpotent_comm_self (h : IsDrazinInverse a b k) :
+     unfold core
+     calc
+       a * (a * a * b) = a * a * (a * b) := by simp [mul_assoc]
+-      _ = a * a * (b * a) := by rw [h.comm]
++      _ = a * a * (b * a) := by rw [h.1]
+       _ = (a * a * b) * a := by simp [mul_assoc]
+   unfold nilpotent
+   calc
+diff --git a/lean/InfoGeometry/Canonical/Fierz.lean b/lean/InfoGeometry/Canonical/Fierz.lean
+index 6c52749..3c20dc6 100644
+--- a/lean/InfoGeometry/Canonical/Fierz.lean
++++ b/lean/InfoGeometry/Canonical/Fierz.lean
+@@ -21,8 +21,4 @@ export InfoGeometry.Quantum.Fierz (
+ open InfoGeometry.Quantum.Fierz
+ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+ 
+-/-- Theorem `majoranaBelief_iff_zeroArea`. -/
+-theorem majoranaBelief_iff_zeroArea (ψ : Krein.DoubledSpace E) :
+-    IsMajoranaBelief (E := E) ψ ↔ infoArea (E := E) ψ = 0 := Iff.rfl
+-
+ end InfoGeometry.Canonical.Fierz
+diff --git a/lean/InfoGeometry/Canonical/GrandUnificationBlueprint.lean b/lean/InfoGeometry/Canonical/GrandUnificationBlueprint.lean
+index 63e8bff..2f8b272 100644
+--- a/lean/InfoGeometry/Canonical/GrandUnificationBlueprint.lean
++++ b/lean/InfoGeometry/Canonical/GrandUnificationBlueprint.lean
+@@ -74,8 +74,4 @@ def UnificationComplete : Prop :=
+     (L : BayesianLoop E) (IST : InfoSpectralTriple E),
+     AnomalyInflowClosure L IST
+ 
+-/-- The Grand Unification Identity holds: anomaly inflow cancels for all architectures. -/
+-theorem unification_complete : UnificationComplete :=
+-  fun _E _ _ _ _ L IST => anomalyInflowClosure L IST
+-
+ end InfoGeometry.Canonical.GrandUnificationBlueprint
+diff --git a/lean/InfoGeometry/Canonical/InformationNumber.lean b/lean/InfoGeometry/Canonical/InformationNumber.lean
+index 4b4ccf9..3acfdd2 100644
+--- a/lean/InfoGeometry/Canonical/InformationNumber.lean
++++ b/lean/InfoGeometry/Canonical/InformationNumber.lean
+@@ -19,14 +19,4 @@ effective (non-singular) parameters.
+ noncomputable def informationNumber (a a_d : E →L[ℝ] E) (_h : IsDrazinInverse a a_d 1) : ℝ :=
+   (Module.finrank ℝ (LinearMap.range (IsDrazinInverse.projection a a_d).toLinearMap) : ℝ)
+ 
+-/--
+-Theorem: The Information Number recovers the dimension of the core subspace.
+-N = dim(Im(P)).
+-This rigorously identifies the 'Particle Number' of a learning system 
+-with its geometric rank.
+--/
+-theorem informationNumber_eq_dim (a a_d : E →L[ℝ] E) (h : IsDrazinInverse a a_d 1) :
+-    informationNumber a a_d h = Module.finrank ℝ (LinearMap.range (IsDrazinInverse.projection a a_d).toLinearMap) := by
+-  simp [informationNumber]
+-
+ end InfoGeometry.Canonical.InformationNumber
+diff --git a/lean/InfoGeometry/Canonical/KreinDiracPolarizationBridge.lean b/lean/InfoGeometry/Canonical/KreinDiracPolarizationBridge.lean
+index 04f4b97..6163fbe 100644
+--- a/lean/InfoGeometry/Canonical/KreinDiracPolarizationBridge.lean
++++ b/lean/InfoGeometry/Canonical/KreinDiracPolarizationBridge.lean
+@@ -54,17 +54,17 @@ noncomputable def transportDirac
+ noncomputable def transportMetricOp
+     (IST : InfoSpectralTriple S) (T : RealBogoliubovTransform (S := S) M) :
+     S →L[ℝ] S :=
+-  transportEnd T (IST.H.metricOp IST.x₀)
++  transportEnd T IST.metricWitness
+ 
+ /-- Bogoliubov conjugation preserves the Dirac-square witness on the same carrier. -/
+ @[rep_depth transport]
+ theorem transportDirac_sq_eq_transportMetricOp
+     (IST : InfoSpectralTriple S) (T : RealBogoliubovTransform (S := S) M) :
+     (transportDirac IST T).comp (transportDirac IST T) = transportMetricOp IST T := by
+-  have hsq : IST.D.comp IST.D = IST.H.metricOp IST.x₀ := by
++  have hsq : IST.D.comp IST.D = IST.metricWitness := by
+     ext x
+-    have hx : (IST.D * IST.D) x = (IST.H.metricOp IST.x₀) x := by
+-      exact congrArg (fun A : S →L[ℝ] S => A x) (IST.dirac_sq_eq_metric)
++    have hx : (IST.D * IST.D) x = IST.metricWitness x := by
++      exact congrArg (fun A : S →L[ℝ] S => A x) (IST.dirac_sq_eq_metricWitness)
+     simpa [ContinuousLinearMap.mul_apply, ContinuousLinearMap.comp_apply] using hx
+   calc
+     (transportDirac IST T).comp (transportDirac IST T)
+@@ -74,7 +74,7 @@ theorem transportDirac_sq_eq_transportMetricOp
+           rw [T.left_inv]
+     _ = T.B.comp ((IST.D.comp IST.D).comp T.Binv) := by
+           simp [ContinuousLinearMap.comp_assoc]
+-    _ = T.B.comp ((IST.H.metricOp IST.x₀).comp T.Binv) := by
++    _ = T.B.comp (IST.metricWitness.comp T.Binv) := by
+           rw [hsq]
+     _ = transportMetricOp IST T := rfl
+ 
+diff --git a/lean/InfoGeometry/Canonical/MoorePenrose.lean b/lean/InfoGeometry/Canonical/MoorePenrose.lean
+index 0260bc6..831b87d 100644
+--- a/lean/InfoGeometry/Canonical/MoorePenrose.lean
++++ b/lean/InfoGeometry/Canonical/MoorePenrose.lean
+@@ -40,18 +40,6 @@ theorem mk
+     IsMoorePenroseInverse a b :=
+   ⟨haba, hbab, habstar, hbastar⟩
+ 
+-/-- Penrose relation `a b a = a`. -/
+-theorem aba_eq_a (h : IsMoorePenroseInverse a b) : a * b * a = a := h.1
+-
+-/-- Penrose relation `b a b = b`. -/
+-theorem bab_eq_b (h : IsMoorePenroseInverse a b) : b * a * b = b := h.2.1
+-
+-/-- Self-adjointness of `a*b`. -/
+-theorem ab_star (h : IsMoorePenroseInverse a b) : star (a * b) = a * b := h.2.2.1
+-
+-/-- Self-adjointness of `b*a`. -/
+-theorem ba_star (h : IsMoorePenroseInverse a b) : star (b * a) = b * a := h.2.2.2
+-
+ /-- The geometric projection onto the range of `a`. -/
+ def rightProjector (a b : R) : R := a * b
+ 
+@@ -66,12 +54,12 @@ theorem rightProjector_idempotent :
+   unfold rightProjector
+   calc
+     (a * b) * (a * b) = (a * b * a) * b := by simp [mul_assoc]
+-    _ = a * b := by rw [h.aba_eq_a]
++    _ = a * b := by rw [h.1]
+ 
+ /-- Theorem: The range projection is self-adjoint (P* = P). -/
+ theorem rightProjector_star (h : IsMoorePenroseInverse a b) :
+     star (rightProjector a b) = rightProjector a b :=
+-  h.ab_star
++  h.2.2.1
+ 
+ /-- Theorem: The co-range projection is idempotent (P² = P). -/
+ theorem leftProjector_idempotent :
+@@ -81,12 +69,12 @@ theorem leftProjector_idempotent :
+   unfold leftProjector
+   calc
+     (b * a) * (b * a) = (b * a * b) * a := by simp [mul_assoc]
+-    _ = b * a := by rw [h.bab_eq_b]
++    _ = b * a := by rw [h.2.1]
+ 
+ /-- Theorem: The co-range projection is self-adjoint (P* = P). -/
+ theorem leftProjector_star (h : IsMoorePenroseInverse a b) :
+     star (leftProjector a b) = leftProjector a b :=
+-  h.ba_star
++  h.2.2.2
+ 
+ end IsMoorePenroseInverse
+ 
+diff --git a/lean/InfoGeometry/Canonical/RealBdG.lean b/lean/InfoGeometry/Canonical/RealBdG.lean
+index 82d5277..5b5b42e 100644
+--- a/lean/InfoGeometry/Canonical/RealBdG.lean
++++ b/lean/InfoGeometry/Canonical/RealBdG.lean
+@@ -122,11 +122,6 @@ lemma modularK_comp_KConjugate (A : EndH (E := E)) :
+     _ = -(A.comp (modularK (E := E))) := by
+           simp
+ 
+-/-- Canonical split sum identity. -/
+-theorem kSplit_sum (A : EndH (E := E)) :
+-    KLinearPart (E := E) A + KAntilinearPart (E := E) A = A :=
+-  KLinearPart_add_KAntilinearPart (E := E) A
+-
+ /-- The `K`-linear split component commutes with `K`. -/
+ theorem kSplit_linear (A : EndH (E := E)) :
+     KLinear (E := E) (KLinearPart (E := E) A) := by
+@@ -177,11 +172,6 @@ theorem kSplit_antilinear (A : EndH (E := E)) :
+     _ = -((1 / 2 : ℝ) • ((modularK (E := E)).comp (A + KConjugate (E := E) A))) := by
+           simp
+ 
+-/-- Exact algebraic split identity. -/
+-theorem bdg_split_identity (A : EndH (E := E)) :
+-    A = KLinearPart (E := E) A + KAntilinearPart (E := E) A := by
+-  simpa using (KLinearPart_add_KAntilinearPart (E := E) A).symm
+-
+ /--
+ Real BdG datum with internal complex axis `K = J ∘ ε` and symmetry package.
+ -/
+diff --git a/lean/InfoGeometry/Canonical/Rosetta.lean b/lean/InfoGeometry/Canonical/Rosetta.lean
+index 14e6eda..5bd4795 100644
+--- a/lean/InfoGeometry/Canonical/Rosetta.lean
++++ b/lean/InfoGeometry/Canonical/Rosetta.lean
+@@ -269,7 +269,6 @@ export InfoGeometry.Canonical.AnomalyInflow (
+ export InfoGeometry.Canonical.BerryPhase (
+   berryConnection
+   informationBerryPhase
+-  informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex
+   informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank
+   informationBerryPhase_ne_zero_of_loopLength_ne_zero_of_chiralAnomalyIndex_ne_zero
+   berry_phase_vanishes_for_normal
+diff --git a/lean/InfoGeometry/Canonical/SUSYBayes.lean b/lean/InfoGeometry/Canonical/SUSYBayes.lean
+index cc3e105..7c8cb1e 100644
+--- a/lean/InfoGeometry/Canonical/SUSYBayes.lean
++++ b/lean/InfoGeometry/Canonical/SUSYBayes.lean
+@@ -19,61 +19,18 @@ section BayesianFock
+ 
+ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+ 
+-/-- Theorem `bayesian_inference_as_creation`. -/
+-theorem bayesian_inference_as_creation
+-    (prior dataInnovation : Krein.DoubledSpace E) :
+-    InfoGeometry.Canonical.Fock.bayesianUpdate (E := E) prior dataInnovation
+-      = prior + InfoGeometry.Canonical.Fock.creationOp (E := E) dataInnovation :=
+-  InfoGeometry.Canonical.Fock.bayesianUpdate_eq_creationExcitation (E := E) prior dataInnovation
+-
+-/-- Theorem `data_model_split_is_projector_split`. -/
+-theorem data_model_split_is_projector_split (v : Krein.DoubledSpace E) :
+-    v = InfoGeometry.Canonical.Fock.dataPart (E := E) v
+-      + InfoGeometry.Canonical.Fock.modelPart (E := E) v :=
+-  InfoGeometry.Canonical.Fock.data_model_decomposition (E := E) v
+-
+ end BayesianFock
+ 
+ section MajoranaFierz
+ 
+ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+ 
+-/-- Theorem `majorana_belief_iff_zero_uncertainty`. -/
+-theorem majorana_belief_iff_zero_uncertainty (ψ : Krein.DoubledSpace E) :
+-    InfoGeometry.Canonical.Fierz.IsMajoranaBelief (E := E) ψ
+-      ↔ InfoGeometry.Canonical.Fierz.infoArea (E := E) ψ = 0 :=
+-  InfoGeometry.Canonical.Fierz.majoranaBelief_iff_zeroArea (E := E) ψ
+-
+-/-- Theorem `fierz_power_conservation`. -/
+-theorem fierz_power_conservation [CompleteSpace E] (ψ : Krein.DoubledSpace E) :
+-    (InfoGeometry.Canonical.Fierz.infoHilbert (E := E) ψ) ^ 2
+-      = (InfoGeometry.Canonical.Fierz.infoScalar (E := E) ψ) ^ 2
+-        + (InfoGeometry.Canonical.Fierz.infoSymplectic (E := E) ψ) ^ 2
+-        + 4 * InfoGeometry.Canonical.Fierz.infoArea (E := E) ψ :=
+-  InfoGeometry.Canonical.Fierz.information_fierz_identity (E := E) ψ
+-
+ end MajoranaFierz
+ 
+ section SuperBracket
+ 
+ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+ 
+-/-- Theorem `super_even_even_eq_commutator`. -/
+-theorem super_even_even_eq_commutator
+-    (A B : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E) :
+-    InfoGeometry.Canonical.BogoliubovFockSuper.fockSuperBracket (E := E)
+-        InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.even
+-        InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.even A B
+-      = InfoGeometry.Canonical.BogoliubovFockSuper.fockCommutator (E := E) A B := rfl
+-
+-/-- Theorem `super_odd_odd_eq_anticommutator`. -/
+-theorem super_odd_odd_eq_anticommutator
+-    (A B : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E) :
+-    InfoGeometry.Canonical.BogoliubovFockSuper.fockSuperBracket (E := E)
+-        InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.odd
+-        InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity.odd A B
+-      = InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator (E := E) A B := rfl
+-
+ end SuperBracket
+ 
+ section EinsteinChemicalPotential
+@@ -84,27 +41,6 @@ variable (K : KaehlerInformationGeometry E) (x : E)
+ variable (scalar Λ : ℝ)
+ variable (V : SplitVielbein K x) (Γ : SpinConnection K x V)
+ 
+-/-- Theorem `einstein_inducedChemicalPotential_eq_transportedResidual`. -/
+-theorem einstein_inducedChemicalPotential_eq_transportedResidual :
+-    InfoGeometry.Canonical.BogoliubovFockSuper.einsteinInducedChemicalPotential
+-      (E := E) R K x scalar Λ V Γ
+-      =
+-    transportedEinsteinResidual (R := R) (K := K) (x := x)
+-      (scalar := scalar) (Λ := Λ) V Γ := rfl
+-
+-/-- Theorem `grandCanonical_eq_hamiltonian_of_vacuumTransported`. -/
+-theorem grandCanonical_eq_hamiltonian_of_vacuumTransported
+-    (B : InfoGeometry.Canonical.BogoliubovFockSuper.BogoliubovMixingParams)
+-    (H : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E)
+-    (hVacSplit : VacuumEinsteinOnTransportedSplit R K x scalar Λ V Γ) :
+-    InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator (E := E) B H
+-      (InfoGeometry.Canonical.BogoliubovFockSuper.einsteinInducedChemicalPotential
+-        (E := E) R K x scalar Λ V Γ) = H := by
+-  simpa using
+-    InfoGeometry.Canonical.BogoliubovFockSuper.grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
+-      (E := E) (B := B) (H := H) (R := R) (K := K) (x := x)
+-      (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit
+-
+ end EinsteinChemicalPotential
+ 
+ end InfoGeometry.Canonical.SUSYBayes
+diff --git a/lean/InfoGeometry/Canonical/Singular.lean b/lean/InfoGeometry/Canonical/Singular.lean
+index 37f5ca2..e9f91a1 100644
+--- a/lean/InfoGeometry/Canonical/Singular.lean
++++ b/lean/InfoGeometry/Canonical/Singular.lean
+@@ -41,14 +41,6 @@ def EinsteinAnomaly (a b_mp b_dr : R) : R :=
+   let P_D  := a * b_dr
+   P_MP * P_D - P_D * P_MP
+ 
+-/--
+-Theorem: Singularity Regularization
+-Degenerate manifolds in the Einstein Universe are stabilized by the generalized inverse.
+--/
+-theorem RegularizationStability (a b_mp : R) (h_mp : IsMoorePenroseInverse a b_mp) :
+-  a * b_mp * a = a :=
+-  h_mp.aba_eq_a
+-
+ /--
+ Theorem: Chiral/Einstein Anomaly Skew-Adjointness
+ The anomaly, defined as the commutator between the Geometric and Spectral projectors,
+@@ -61,7 +53,7 @@ theorem einsteinAnomaly_skew_adjoint (a b_mp b_dr : R) (k : ℕ)
+     star (EinsteinAnomaly a b_mp b_dr) =
+       - (EinsteinAnomaly a b_mp b_dr) := by
+   unfold EinsteinAnomaly
+-  simp only [star_sub, star_mul, h_mp.ab_star, h_dr_star]
++  simp only [star_sub, star_mul, h_mp.2.2.1, h_dr_star]
+   rw [neg_sub]
+ 
+ /-!
+diff --git a/lean/InfoGeometry/Canonical/SpectralInference.lean b/lean/InfoGeometry/Canonical/SpectralInference.lean
+index b15da34..3c1e62c 100644
+--- a/lean/InfoGeometry/Canonical/SpectralInference.lean
++++ b/lean/InfoGeometry/Canonical/SpectralInference.lean
+@@ -310,6 +310,13 @@ noncomputable def ofMetric
+     H x₀
+     (DiracMetricCompatibility.ofMetric (E := E) H x₀)
+ 
++omit [FiniteDimensional ℝ E] in
++-- theorem-class: owner
++/-- The spectral package exposes the basepoint metric witness as an internal endomorphism. -/
++@[rep_depth krein]
++noncomputable def metricWitness : E →L[ℝ] E :=
++  IST.H.metricOp IST.x₀
++
+ omit [FiniteDimensional ℝ E] in
+ -- theorem-class: bridge
+ /-- The Dirac square is identified with the Hessian metric operator at the basepoint. -/
+@@ -318,6 +325,14 @@ theorem dirac_sq_eq_metric :
+     IST.D * IST.D = IST.H.metricOp IST.x₀ :=
+   IST.compatibility.dirac_sq_eq_metric
+ 
++omit [FiniteDimensional ℝ E] in
++-- theorem-class: bridge
++/-- The Dirac square is identified with the internal spectral metric witness. -/
++@[rep_depth krein]
++theorem dirac_sq_eq_metricWitness :
++    IST.D * IST.D = IST.metricWitness := by
++  simpa [InfoSpectralTriple.metricWitness] using IST.dirac_sq_eq_metric
++
+ omit [FiniteDimensional ℝ E] in
+ /-- The metric at the basepoint is recovered by applying the Dirac operator twice. -/
+ lemma inner_dirac_sq (u v : E) :
+diff --git a/lean/InfoGeometry/Canonical/SuperUnified.lean b/lean/InfoGeometry/Canonical/SuperUnified.lean
+index 3596302..de00fab 100644
+--- a/lean/InfoGeometry/Canonical/SuperUnified.lean
++++ b/lean/InfoGeometry/Canonical/SuperUnified.lean
+@@ -108,11 +108,6 @@ def IsBosonic (J : End E) (A : End E) : Prop :=
+ def IsFermionic (J : End E) (A : End E) : Prop :=
+   J.comp A = -(A.comp J)
+ 
+-/-- `epsilon` is fermionic by anticommutation. -/
+-theorem epsilon_is_fermionic (S : SuperKaehlerStructure (E := E)) :
+-    IsFermionic S.J S.epsilon :=
+-  S.anticomm
+-
+ /-- Square of a fermion is bosonic. -/
+ theorem hamiltonian_is_bosonic (S : SuperKaehlerStructure (E := E)) :
+     IsBosonic S.J (S.epsilon.comp S.epsilon) := by
+diff --git a/lean/InfoGeometry/Convex/HessianGeometry.lean b/lean/InfoGeometry/Convex/HessianGeometry.lean
+index 27f65b6..475ae89 100644
+--- a/lean/InfoGeometry/Convex/HessianGeometry.lean
++++ b/lean/InfoGeometry/Convex/HessianGeometry.lean
+@@ -1,5 +1,6 @@
+ import InfoGeometry.Potential.LogPotential
+ import InfoGeometry.Canonical.Triality
++import InfoGeometry.Meta.Architecture
+ import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+ import Mathlib.Analysis.Calculus.Deriv.Basic
+ import Mathlib.Analysis.Calculus.Deriv.Slope
+@@ -109,6 +110,7 @@ noncomputable def dualMap (x : E) : E := H.grad x
+ @[simp] theorem dualMap_def (x : E) : H.dualMap x = H.grad x := rfl
+ 
+ /-- Hessian metric operator, as totalized Fréchet derivative of `grad`. -/
++@[rep_depth operator]
+ noncomputable def metricOp (x : E) : E →L[ℝ] E :=
+   fderiv ℝ H.grad x
+ 
+diff --git a/lean/InfoGeometry/auto_blueprints.lean b/lean/InfoGeometry/auto_blueprints.lean
+index ebb66be..34e9bfb 100644
+--- a/lean/InfoGeometry/auto_blueprints.lean
++++ b/lean/InfoGeometry/auto_blueprints.lean
+@@ -364,12 +364,10 @@ attribute [blueprint] InfoGeometry.Canonical.BeliefAlgebra.BeliefSystem.non_comm
+ attribute [blueprint] InfoGeometry.Canonical.BerryPhase.anomalyFlux
+ attribute [blueprint] InfoGeometry.Canonical.BerryPhase.anomalyFlux.eq_1
+ attribute [blueprint] InfoGeometry.Canonical.BerryPhase.berryConnection
+-attribute [blueprint] InfoGeometry.Canonical.BerryPhase.berryPhase_eq_anomaly_flux
+ attribute [blueprint] InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero
+ attribute [blueprint] InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal
+ attribute [blueprint] InfoGeometry.Canonical.BerryPhase.informationBerryPhase
+ attribute [blueprint] InfoGeometry.Canonical.BerryPhase.informationBerryPhase.eq_1
+-attribute [blueprint] InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex
+ attribute [blueprint] InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank
+ attribute [blueprint] InfoGeometry.Canonical.BerryPhase.informationBerryPhase_ne_zero_of_loopLength_ne_zero_of_chiralAnomalyIndex_ne_zero
+ attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.BogoliubovMixingParams
+@@ -752,7 +750,6 @@ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlg
+ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.CI
+ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D
+ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_def
+-attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_eq_CI_D
+ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.D_in_weylDilation_of_cartan
+ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.GeneratorCartanDecomposition
+ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.GradingInvolutive
+@@ -786,7 +783,6 @@ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlg
+ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.generatorCartanDecomposition_iff
+ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.generatorCartanDecomposition_of_parts
+ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.mk.inj
+-attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.scale_anomaly_breaks_weight_closure
+ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.scale_anomaly_emergence
+ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.scale_anomaly_obstructs_weyl_flatness
+ attribute [blueprint] InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.volumePreserving_of_cartanInvolution_eq_self_of_gradingInvolutive
+@@ -995,18 +991,15 @@ attribute [blueprint] InfoGeometry.Canonical.DiracMetricCompatibility.dirac_sq_e
+ attribute [blueprint] InfoGeometry.Canonical.DiracMetricCompatibility.inner_dirac_sq
+ attribute [blueprint] InfoGeometry.Canonical.DiracMetricCompatibility.ofMetric
+ attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse
+-attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.comm
+ attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection
+ attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_is_idempotent
+ attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_projection
+ attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.core
+ attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.fitting_decomposition
+-attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.idempotent
+ attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.inverse_eq_pow_mul_pow
+ attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk
+ attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.nilpotent
+ attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.nilpotent_comm_self
+-attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.power
+ attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.power_le
+ attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection
+ attribute [blueprint] InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_add_complementaryProjection
+@@ -1106,7 +1099,6 @@ attribute [blueprint] InfoGeometry.Canonical.FUSION.freeEnergy
+ attribute [blueprint] InfoGeometry.Canonical.FUSION.gibbsWeights
+ attribute [blueprint] InfoGeometry.Canonical.FUSION.partitionFunction
+ attribute [blueprint] InfoGeometry.Canonical.FUSION.phase_transition_catastrophe
+-attribute [blueprint] InfoGeometry.Canonical.Fierz.majoranaBelief_iff_zeroArea
+ attribute [blueprint] InfoGeometry.Canonical.FiniteCoarseGraining
+ attribute [blueprint] InfoGeometry.Canonical.FiniteCoarseGraining.fiberWeight
+ attribute [blueprint] InfoGeometry.Canonical.FiniteCoarseGraining.fiberWeight.congr_simp
+@@ -1702,7 +1694,6 @@ attribute [blueprint] InfoGeometry.Canonical.InformationCalculus.ModularRadonNik
+ attribute [blueprint] InfoGeometry.Canonical.InformationCalculus.ModularRadonNikodymData.logInformationPartitionFunction.eq_1
+ attribute [blueprint] InfoGeometry.Canonical.InformationNumber.informationNumber
+ attribute [blueprint] InfoGeometry.Canonical.InformationNumber.informationNumber.eq_1
+-attribute [blueprint] InfoGeometry.Canonical.InformationNumber.informationNumber_eq_dim
+ attribute [blueprint] InfoGeometry.Canonical.InformationTorsion.Connection
+ attribute [blueprint] InfoGeometry.Canonical.InformationTorsion.DualConnections
+ attribute [blueprint] InfoGeometry.Canonical.InformationTorsion.DualConnections.mk.inj
+@@ -2229,10 +2220,6 @@ attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.squeezingEigen
+ attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.squeezingLogShear
+ attribute [blueprint] InfoGeometry.Canonical.MongeAmpereCramerRao.squeezingLogShear_eq_four_mul
+ attribute [blueprint] InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse
+-attribute [blueprint] InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.ab_star
+-attribute [blueprint] InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.aba_eq_a
+-attribute [blueprint] InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.ba_star
+-attribute [blueprint] InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.bab_eq_b
+ attribute [blueprint] InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector
+ attribute [blueprint] InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector.eq_1
+ attribute [blueprint] InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector_idempotent
+@@ -2447,13 +2434,11 @@ attribute [blueprint] InfoGeometry.Canonical.RealBdG.RealBdGDatum.chiral
+ attribute [blueprint] InfoGeometry.Canonical.RealBdG.RealBdGDatum.mk.inj
+ attribute [blueprint] InfoGeometry.Canonical.RealBdG.RealBdGDatum.particleHole
+ attribute [blueprint] InfoGeometry.Canonical.RealBdG.RealBdGDatum.timeReversal
+-attribute [blueprint] InfoGeometry.Canonical.RealBdG.bdg_split_identity
+ attribute [blueprint] InfoGeometry.Canonical.RealBdG.complexAction
+ attribute [blueprint] InfoGeometry.Canonical.RealBdG.complexAction.eq_1
+ attribute [blueprint] InfoGeometry.Canonical.RealBdG.complexI_action_eq_modularK
+ attribute [blueprint] InfoGeometry.Canonical.RealBdG.kSplit_antilinear
+ attribute [blueprint] InfoGeometry.Canonical.RealBdG.kSplit_linear
+-attribute [blueprint] InfoGeometry.Canonical.RealBdG.kSplit_sum
+ attribute [blueprint] InfoGeometry.Canonical.RealBdG.modularK
+ attribute [blueprint] InfoGeometry.Canonical.RealBdG.modularK_apply_modularK
+ attribute [blueprint] InfoGeometry.Canonical.RealBdG.modularK_comp_KConjugate
+@@ -2470,7 +2455,6 @@ attribute [blueprint] InfoGeometry.Canonical.ReducedVolumeKind.ofNat_ctorIdx
+ attribute [blueprint] InfoGeometry.Canonical.ReducedVolumeKind.pdet.elim
+ attribute [blueprint] InfoGeometry.Canonical.ReducedVolumeKind.pfaffian.elim
+ attribute [blueprint] InfoGeometry.Canonical.ReducedVolumeKind.toCtorIdx
+-attribute [blueprint] InfoGeometry.Canonical.RegularizationStability
+ attribute [blueprint] InfoGeometry.Canonical.RelativePotentialCore.gaugeSection_eq_relativeDensity_mul_gaugeSection
+ attribute [blueprint] InfoGeometry.Canonical.RelativePotentialCore.relativeDensity
+ attribute [blueprint] InfoGeometry.Canonical.RelativePotentialCore.relativeDensity_cocycle
+@@ -2713,14 +2697,6 @@ attribute [blueprint] InfoGeometry.Canonical.Rosetta.weylScaleTransportScalarSha
+ attribute [blueprint] InfoGeometry.Canonical.Rosetta.weylScaleTransportScalarShadow_self_eq_zero_of_jordanBregman
+ attribute [blueprint] InfoGeometry.Canonical.Rosetta.weylScaleTransportShadow
+ attribute [blueprint] InfoGeometry.Canonical.Rosetta.weylScaleTransportShadow_apply
+-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.bayesian_inference_as_creation
+-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.data_model_split_is_projector_split
+-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.einstein_inducedChemicalPotential_eq_transportedResidual
+-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.fierz_power_conservation
+-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.grandCanonical_eq_hamiltonian_of_vacuumTransported
+-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.majorana_belief_iff_zero_uncertainty
+-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.super_even_even_eq_commutator
+-attribute [blueprint] InfoGeometry.Canonical.SUSYBayes.super_odd_odd_eq_anticommutator
+ attribute [blueprint] InfoGeometry.Canonical.ScaleEquivariantFlow
+ attribute [blueprint] InfoGeometry.Canonical.ScaleEquivariantFlow.IsCocycle
+ attribute [blueprint] InfoGeometry.Canonical.ScaleEquivariantFlow.flowOf
+@@ -6874,7 +6850,6 @@ attribute [blueprint] InfoGeometry.SuperUnified.bracket_boson_boson_is_bosonic
+ attribute [blueprint] InfoGeometry.SuperUnified.bracket_boson_fermion_is_fermionic
+ attribute [blueprint] InfoGeometry.SuperUnified.bracket_fermion_fermion_is_bosonic
+ attribute [blueprint] InfoGeometry.SuperUnified.clifford_decomposition
+-attribute [blueprint] InfoGeometry.SuperUnified.epsilon_is_fermionic
+ attribute [blueprint] InfoGeometry.SuperUnified.hamiltonian_is_bosonic
+ attribute [blueprint] InfoGeometry.SuperUnified.jordanProduct
+ attribute [blueprint] InfoGeometry.SuperUnified.jordanProduct.eq_1

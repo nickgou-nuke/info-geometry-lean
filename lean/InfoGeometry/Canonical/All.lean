@@ -144,6 +144,11 @@ import InfoGeometry.Canonical.Unification
 import InfoGeometry.PositiveMeasure
 import InfoGeometry.Quantum.BulkBoundaryIndexBridge
 import InfoGeometry.Quantum.ModularAnomaly
+import InfoGeometry.Quantum.TriadicTransportCore
+import InfoGeometry.Quantum.TriadicTransportProjective
+import InfoGeometry.Quantum.TriadicTransportBarycenter
+import InfoGeometry.Quantum.TriadicTransportModular
+import InfoGeometry.Quantum.TriadicBogoliubovBridge
 import InfoGeometry.Volume.RadonNikodym
 import InfoGeometry.Volume.LogPotential
 import InfoGeometry.Volume.Pfaffian

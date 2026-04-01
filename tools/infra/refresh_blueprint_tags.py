@@ -300,6 +300,7 @@ def main() -> int:
     facade_path = normalize_user_path(args.facade, root)
 
     rows = load_decl_rows(decls_path)
+    rows_by_name = {row["name"]: row for row in rows}
     import_closure = collect_import_closure(root, args.import_root)
     allow_kinds = {item.strip() for item in args.allow_kinds.split(",") if item.strip()}
     skip_kinds = {item.strip() for item in args.skip_kinds.split(",") if item.strip()}
@@ -328,6 +329,14 @@ def main() -> int:
         if not args.keep_generated and is_generated_or_unstable_name(name):
             stats["skip_generated"] += 1
             continue
+        if m := re.search(r"\.eq_(\d+)$", name):
+            base_name = name[: m.start()]
+            base_row = rows_by_name.get(base_name)
+            if base_row is not None:
+                base_module = str(base_row.get("module", "")).strip()
+                if base_module and base_module not in import_closure:
+                    stats["skip_eqn_base_outside_import_root"] += 1
+                    continue
         selected.append({"name": name, "kind": kind, "module": module})
         stats["selected_raw"] += 1
 

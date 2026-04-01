@@ -207,6 +207,7 @@ private theorem vacuumEinsteinEquation_of_rnEntropySource
   exact vacuumEinsteinEquation_of_unitRelativeVolume
     (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hBridge
 
+omit [FiniteDimensional ℝ X] in
 /--
 Capstone entropy-to-gravity statement:
 if RN/Kahler entropy sources Monge-Ampere density and unit relative-volume closure

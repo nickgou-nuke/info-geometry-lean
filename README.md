@@ -64,13 +64,14 @@ The short operational summary lives in [docs/OperationalIntent.md](/home/goutev/
 
 1. [Installation.md](/home/goutev/LEAN4/info-geometry-lean/Installation.md)
 2. [NEWCOMER_PATH.md](/home/goutev/LEAN4/info-geometry-lean/NEWCOMER_PATH.md)
-3. [docs/README.md](/home/goutev/LEAN4/info-geometry-lean/docs/README.md)
-4. [docs/OperationalIntent.md](/home/goutev/LEAN4/info-geometry-lean/docs/OperationalIntent.md)
-5. [docs/Theory.md](/home/goutev/LEAN4/info-geometry-lean/docs/Theory.md)
-6. [lean/InfoGeometry/Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
-7. [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
-8. [tools/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/README.md)
-9. [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md)
+3. [FORMALIZATION_PROTOCOL.md](/home/goutev/LEAN4/info-geometry-lean/FORMALIZATION_PROTOCOL.md)
+4. [docs/README.md](/home/goutev/LEAN4/info-geometry-lean/docs/README.md)
+5. [docs/OperationalIntent.md](/home/goutev/LEAN4/info-geometry-lean/docs/OperationalIntent.md)
+6. [docs/Theory.md](/home/goutev/LEAN4/info-geometry-lean/docs/Theory.md)
+7. [lean/InfoGeometry/Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
+8. [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
+9. [tools/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/README.md)
+10. [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md)
 
 If you are operating as an agent inside this repo, also use:
 - [skills/info-geometry-repo/SKILL.md](/home/goutev/LEAN4/info-geometry-lean/skills/info-geometry-repo/SKILL.md)

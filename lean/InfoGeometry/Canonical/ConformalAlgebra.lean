@@ -1,5 +1,5 @@
 import InfoGeometry.Canonical.ConformalUnification
-import InfoGeometry.Canonical.ChiralCliffordBridge
+import InfoGeometry.Canonical.ChiralCartanCore
 import Mathlib.Tactic.NoncommRing
 
 set_option linter.unnecessarySimpa false
@@ -10,7 +10,7 @@ set_option linter.unnecessarySeqFocus false
 namespace InfoGeometry.Canonical.ConformalAlgebra
 
 open InfoGeometry.Canonical.ConformalUnification
-open InfoGeometry.Canonical.ChiralCliffordBridge
+open InfoGeometry.Canonical.ChiralCartanCore
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 

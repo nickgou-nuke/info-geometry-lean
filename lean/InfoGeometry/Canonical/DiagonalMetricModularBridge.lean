@@ -236,6 +236,7 @@ theorem countDiagonalHessianGeometry_metricOp_eq_relativeTomitaTakesakiOp
     (n := n) counts ref hNonneg x₀
 
 -- theorem-class: bridge
+omit [Nonempty (Fin n)] in
 /--
 The same concrete diagonal Hessian geometry identifies its metric operator with
 induced continuum modular Hamiltonian.
@@ -316,6 +317,7 @@ theorem dirac_sq_eq_relativeTomitaTakesakiOp_of_isDiagonalRelativeCountMetricSli
       metricOp_eq_relativeTomitaTakesakiOp_of_isDiagonalRelativeCountMetricSlice
         (n := n) hDiag
 
+omit [Nonempty (Fin n)] in
 /--
 Spectral-root specialization:
 if the metric operator lies on the diagonal relative-count slice, then the
@@ -334,6 +336,7 @@ theorem dirac_sq_eq_countModularHamiltonian_of_isDiagonalRelativeCountMetricSlic
       metricOp_eq_countModularHamiltonian_of_isDiagonalRelativeCountMetricSlice
         (n := n) hDiag
 
+omit [Nonempty (Fin n)] in
 /--
 Pointwise form of the diagonal specialization:
 the Dirac square acts by scalar multiplication with the averaged modular
@@ -359,6 +362,7 @@ theorem dirac_sq_apply_eq_relativeModularHamiltonian_smul_of_isDiagonalRelativeC
 
 section SpectralTriple
 
+omit [Nonempty (Fin n)] in
 /--
 Info-spectral-triple corollary of the diagonal bridge:
 on the diagonal relative-count slice, the spectral Dirac square is the
@@ -373,6 +377,7 @@ theorem spectral_dirac_sq_eq_countModularHamiltonian_of_isDiagonalRelativeCountM
   dirac_sq_eq_countModularHamiltonian_of_isDiagonalRelativeCountMetricSlice
     (n := n) IST.compatibility hDiag
 
+omit [Nonempty (Fin n)] in
 /--
 Info-spectral-triple pointwise corollary of the diagonal bridge:
 on the diagonal relative-count slice, the spectral Dirac square acts by the

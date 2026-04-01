@@ -50,6 +50,7 @@ omit [CompleteSpace E] in
 lemma krein_hessian_eq_spectral_epsilon :
     krein_hessian (E := E) = InfoGeometry.Krein.spectral_epsilon (E := E) := rfl
 
+omit [CompleteSpace E] in
 /-- The geometric Krein gradient is differentiable with constant derivative `ε`. -/
 lemma hasFDerivAt_krein_grad (u : H₂) :
     HasFDerivAt (fun x : H₂ => krein_grad (E := E) x) (krein_hessian (E := E)) u := by

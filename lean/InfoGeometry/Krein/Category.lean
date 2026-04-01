@@ -2,11 +2,11 @@ import Mathlib.CategoryTheory.Category.Basic
 import InfoGeometry.Krein.KreinSpace
 
 /-!
-# Category of Real Krein Spaces
+# Category of Bundled Real Krein Spaces
 
 This module defines the categorical structure for real Krein spaces:
-- `Krein`: A bundled object containing the carrier Hilbert space and its fundamental symmetry.
-- `Category Krein`: Morphisms are continuous linear maps preserving the Krein inner product.
+- `RealKreinSpace`: A bundled object containing the carrier Hilbert space and its fundamental symmetry.
+- `Category RealKreinSpace`: Morphisms are continuous linear maps preserving the Krein inner product.
 -/
 
 open CategoryTheory
@@ -15,21 +15,21 @@ open scoped InnerProductSpace
 namespace InfoGeometry.Krein
 
 /-- Bundled object for the category of real Krein spaces. -/
-structure Krein where
+structure RealKreinSpace where
   H : Type*
   [instN : NormedAddCommGroup H]
   [instI : InnerProductSpace ℝ H]
   [instC : CompleteSpace H]
   [instK : KreinSpace H]
 
-attribute [instance] Krein.instN Krein.instI Krein.instC Krein.instK
+attribute [instance] RealKreinSpace.instN RealKreinSpace.instI RealKreinSpace.instC RealKreinSpace.instK
 
-namespace Krein
+namespace RealKreinSpace
 
 /-- Morphisms in the category of Krein spaces. -/
-noncomputable def Hom (X Y : Krein) := KreinHom X.H Y.H
+noncomputable def Hom (X Y : RealKreinSpace) := KreinHom X.H Y.H
 
-noncomputable instance : Category Krein where
+noncomputable instance : Category RealKreinSpace where
   Hom X Y := Hom X Y
   id X :=
     { hom := ContinuousLinearMap.id ℝ X.H
@@ -39,6 +39,6 @@ noncomputable instance : Category Krein where
       isometric := fun u v => by
         rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.comp_apply, g.isometric, f.isometric] }
 
-end Krein
+end RealKreinSpace
 
 end InfoGeometry.Krein

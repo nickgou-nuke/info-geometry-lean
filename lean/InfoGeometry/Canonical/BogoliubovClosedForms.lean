@@ -115,6 +115,7 @@ private lemma smul_pow_odd_of_sq_eq_neg_one
           rw [pow_succ]
           ring
 
+omit [CompleteSpace E] in
 /-- Closed form for the exponential of an involution on the doubled carrier. -/
 theorem exp_eq_cosh_add_sinh_of_sq_eq_one
     {G : EndH} (hSq : G * G = (1 : EndH)) (t : ℝ) :
@@ -133,6 +134,7 @@ theorem exp_eq_cosh_add_sinh_of_sq_eq_one
         simp [div_eq_mul_inv, smul_smul, mul_comm]
   exact hsum.tsum_eq
 
+omit [CompleteSpace E] in
 /-- Closed form for the exponential of a square-minus-one operator on the doubled carrier. -/
 theorem exp_eq_cos_add_sin_of_sq_eq_neg_one
     {G : EndH} (hSq : G * G = -(1 : EndH)) (t : ℝ) :

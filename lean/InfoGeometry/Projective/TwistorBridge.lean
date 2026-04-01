@@ -44,7 +44,9 @@ noncomputable def projectiveClassToTwistor
       have hcv0 : c • v ≠ 0 := smul_ne_zero (ne_of_gt hc) hv0
       have hscaled :
           positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ₁) = c • v := by
-        simpa [v] using positiveMeasureToEuclidean_scale (α := α) c hc μ₁
+        change positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ₁) =
+          c • positiveMeasureToEuclidean (α := α) μ₁
+        exact positiveMeasureToEuclidean_scale (α := α) c hc μ₁
       have hmkScaled :
           Projectivization.mk ℝ
               (positiveMeasureToEuclidean (α := α) (PositiveMeasure.scale c hc μ₁))

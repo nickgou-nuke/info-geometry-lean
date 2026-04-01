@@ -26,6 +26,7 @@ def MongeAmpereSpinorialClosure
 def CalabiYauSpinorialState (IST : InfoSpectralTriple E) : Prop :=
   spinorialScalarCurvature IST = 0
 
+omit [FiniteDimensional ℝ E] in
 /-- Constructor for the spinorial closure state. -/
 private theorem mongeAmpereSpinorialClosure_mk
     (IST : InfoSpectralTriple E)
@@ -34,6 +35,7 @@ private theorem mongeAmpereSpinorialClosure_mk
     MongeAmpereSpinorialClosure IST := by
   exact ⟨hConst, hSpin0⟩
 
+omit [FiniteDimensional ℝ E] in
 /-- Extract spinorial vanishing from the constructive spinorial closure state. -/
 private theorem spinorialScalarCurvature_eq_zero_of_mongeAmpereSpinorialClosure
     (IST : InfoSpectralTriple E)
@@ -41,6 +43,7 @@ private theorem spinorialScalarCurvature_eq_zero_of_mongeAmpereSpinorialClosure
     CalabiYauSpinorialState IST :=
   hCY.2
 
+omit [FiniteDimensional ℝ E] in
 /--
 Connection to the `W`-flow layer:
 under normalized spinorial tracking, the explicit spinorial vanishing
@@ -68,6 +71,7 @@ private theorem W_constant_of_spinorialClosureState
         simp
   simpa using is_const_of_deriv_eq_zero (f := W) hDiff hDerivZero s 0
 
+omit [FiniteDimensional ℝ E] in
 /--
 Constructive `W`-constancy closure from an explicit zero-spinorial witness
 (non-bridge form).

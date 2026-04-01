@@ -25,6 +25,7 @@ def RNEntropySourcesMongeAmpere
     (M : SinkhornMatrix n) : Prop :=
   SatisfiesMongeAmpere Kgeo.H (fun _ => relativeVolumeChangeRN n M)
 
+omit [FiniteDimensional ℝ E] in
 /--
 Constant-density witness extracted from RN-entropy Monge-Ampere sourcing.
 -/
@@ -36,6 +37,7 @@ private theorem hasConstantMongeAmpereDensity_of_rnEntropySource
     HasConstantMongeAmpereDensity Kgeo.H := by
   exact ⟨relativeVolumeChangeRN n M, hSource⟩
 
+omit [FiniteDimensional ℝ E] in
 /--
 RN entropy sourcing can be read in potential form: the Monge-Ampere density is
 the exponential of the negative RN/Kähler potential.
@@ -49,6 +51,7 @@ theorem rnEntropySourcesMongeAmperePotential
   intro x
   rw [hSource x, relativeVolumeChangeRN]
 
+omit [FiniteDimensional ℝ E] in
 /--
 Pointwise log form of RN entropy sourcing: the logarithmic Monge-Ampere density
 is exactly the negative RN/Kähler potential.
@@ -63,6 +66,7 @@ theorem log_mongeAmpereDensity_eq_neg_kahlerPotentialRN_of_rnEntropySource
   rw [hSource x, relativeVolumeChangeRN]
   simp
 
+omit [FiniteDimensional ℝ E] in
 /--
 Equivalent pointwise form: the RN/Kähler potential is minus the logarithmic
 Monge-Ampere density under RN entropy sourcing.
@@ -80,6 +84,7 @@ private theorem kahlerPotentialRN_eq_neg_log_mongeAmpereDensity_of_rnEntropySour
       rw [log_mongeAmpereDensity_eq_neg_kahlerPotentialRN_of_rnEntropySource
         (n := n) (Kgeo := Kgeo) (M := M) hSource x]
 
+omit [FiniteDimensional ℝ E] in
 /--
 If the Kähler logarithmic potential `logF` matches the negative RN/Kähler
 potential, then RN entropy sourcing upgrades directly to a `logF`-driven
@@ -100,6 +105,7 @@ theorem rnEntropySourcesMongeAmperePotential_of_logF_eq_neg_kahlerPotentialRN
     _ = Real.exp (Kgeo.logF x) := by
       rw [hLogF x]
 
+omit [FiniteDimensional ℝ E] in
 /--
 Pointwise logarithmic Monge-Ampere closure along the same bridge: when `logF`
 coincides with the negative RN/Kähler potential, the logarithmic Monge-Ampere

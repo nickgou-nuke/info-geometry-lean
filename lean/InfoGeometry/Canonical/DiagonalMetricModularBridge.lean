@@ -47,6 +47,7 @@ noncomputable def countModularData
     Real.exp (-(averagedModularHamiltonian n (relativeCountDensity n counts ref)))
   rnDerivative_pos := Real.exp_pos _
 
+omit [Nonempty (Fin n)] in
 /--
 The modular Hamiltonian attached to `countModularData` is exactly the existing
 averaged Tomita-Takesaki lift on the doubled router carrier.
@@ -73,6 +74,7 @@ def IsDiagonalRelativeCountMetricSlice
     diagonalAverage (n := n) (relativeCountModularPotentialOperator (n := n) counts ref) •
       ContinuousLinearMap.id ℝ H₂
 
+omit [Nonempty (Fin n)] in
 /--
 On the diagonal relative-count slice, the Hessian metric operator is exactly
 the finite averaged Tomita-Takesaki lift.
@@ -159,7 +161,7 @@ theorem countDiagonalScalar_nonneg_of_relativeCountDensity_sum_le_card
       (∑ i : Fin n, (n : ℝ)⁻¹ * -Real.log (ρ i)) = countDiagonalScalar (n := n) counts ref := by
     unfold countDiagonalScalar averagedModularHamiltonian meanLogDeltaProfile ρ
     rw [Finset.mul_sum, ← Finset.sum_neg_distrib]
-    ring
+    ring_nf
   have hbound_sum :
       -Real.log (∑ i : Fin n, (n : ℝ)⁻¹ * ρ i) ≤ ∑ i : Fin n, (n : ℝ)⁻¹ * -Real.log (ρ i) := by
     simpa using hjensen
@@ -194,6 +196,7 @@ noncomputable def countDiagonalHessianGeometry
     (E := H₂) (countDiagonalScalar (n := n) counts ref) hNonneg
 
 -- theorem-class: bridge
+omit [Nonempty (Fin n)] in
 /--
 The concrete count-driven diagonal Hessian geometry realizes the diagonal raw
 count operator slice without any extra metric witness.

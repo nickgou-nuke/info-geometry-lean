@@ -114,6 +114,7 @@ section SpectralVolumeForm
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 
+omit [FiniteDimensional ℝ E] in
 /--
 Log-volume identity for Monge-Ampere density:
 on the nondegenerate branch, `log ρ = log |det(∇²ψ)|`.
@@ -141,6 +142,7 @@ lemma log_spectralMongeAmpereDensity_eq_basepointLogVolume
 
 variable {m : Type*} [Fintype m] [DecidableEq m]
 
+omit [FiniteDimensional ℝ E] in
 /--
 Determinant-model bridge:
 if a matrix determinant models the Monge-Ampere density, then its log-absolute
@@ -184,6 +186,7 @@ variable {X : Type}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X]
   [FiniteDimensional ℝ X]
 
+omit [FiniteDimensional ℝ X] in
 /--
 Entropy-sourced geometric gravity statement:
 RN/Kahler-potential sourcing plus unit relative-volume closure and a metric RN

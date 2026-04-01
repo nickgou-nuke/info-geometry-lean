@@ -89,6 +89,7 @@ theorem metricOp_eq_relativeTomitaTakesakiOp_of_isDiagonalRelativeCountMetricSli
   exact (relativeTomitaTakesakiOp_eq_diagonalAverage_rawLift_smul_id
     (n := n) (counts := counts) (ref := ref)).symm
 
+omit [Nonempty (Fin n)] in
 /--
 On the diagonal relative-count slice, the Hessian metric operator is exactly
 the continuum modular Hamiltonian induced by the same scalar relative surprisal.
@@ -214,6 +215,7 @@ theorem countDiagonalHessianGeometry_isDiagonalRelativeCountMetricSlice
   rw [relativeModularHamiltonian_eq_diagonalAverage_rawLift (n := n) (counts := counts) (ref := ref)]
 
 -- theorem-class: bridge
+omit [Nonempty (Fin n)] in
 /--
 The concrete count-driven diagonal Hessian geometry identifies its metric
 operator with the raw averaged Tomita-Takesaki lift.
@@ -295,6 +297,7 @@ theorem countDiagonalHessianGeometryOfRelativeCountDensitySumBound_metricOp_eq_c
         (n := n) counts ref hcounts href hsum)
       x₀
 
+omit [Nonempty (Fin n)] in
 /--
 Spectral-root specialization:
 if the metric operator lies on the diagonal relative-count slice, then the

@@ -78,7 +78,7 @@ theorem expert_apply_mem_transportWeylPlus_of_commutes_transportJ
   rw [T.mem_transportWeylPlus_iff] at hv ⊢
   calc
     T.transportJ (f v) = f (T.transportJ v) := hcomm v
-    _ = f v := by simpa [hv]
+    _ = f v := by simp [hv]
 
 omit [FiniteDimensional ℝ E] in
 /--
@@ -141,7 +141,7 @@ theorem expert_apply_mem_transportWeylMinus_of_commutes_transportJ_and_odd
   rw [T.mem_transportWeylMinus_iff] at hv ⊢
   calc
     T.transportJ (f v) = f (T.transportJ v) := hcomm v
-    _ = f (-v) := by simpa [hv]
+    _ = f (-v) := by simp [hv]
     _ = -(f v) := hodd v
 
 omit [FiniteDimensional ℝ E] in
@@ -163,7 +163,7 @@ theorem expert_apply_mem_transportWeylMinus_of_clm_commutes_transportJ
     have hw := congrArg (fun F => F w) hcomm
     simpa [ContinuousLinearMap.comp_apply] using hw
   · intro w
-    simpa using A.map_neg w
+    exact A.map_neg w
   · exact hv
 
 /--
@@ -308,9 +308,10 @@ theorem arnoldNetwork_preserves_transportWeylMinus_of_linearExperts_commute_tran
     simpa [ContinuousLinearMap.comp_apply] using hv
   · intro e v
     rw [happly e (-v), happly e v]
-    simpa using (A e).map_neg v
+    exact (A e).map_neg v
   · exact hx
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 /--
 A linear expert that commutes with an operator preserves its kernel.
 -/

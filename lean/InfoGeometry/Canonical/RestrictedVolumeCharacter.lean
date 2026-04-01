@@ -41,6 +41,7 @@ noncomputable def dualSheetPairLift
   (plusPointL (E := E)).comp (Aplus.comp (fst_L (E := E))) +
     (minusPointL (E := E)).comp (Aminus.comp (snd_L (E := E)))
 
+omit [CompleteSpace E] in
 @[simp] theorem dualSheetPairLift_apply_to_doubled
     (Aplus Aminus : E →L[ℝ] E) (x xi : E) :
     dualSheetPairLift (E := E) Aplus Aminus (to_doubled x xi : H₂)
@@ -49,11 +50,13 @@ noncomputable def dualSheetPairLift
     simp [dualSheetPairLift, plusPointL, minusPointL, plusPoint, minusPoint, to_doubled,
       ContinuousLinearMap.comp_apply]
 
+omit [CompleteSpace E] in
 @[simp] theorem dualSheetLift_eq_dualSheetPairLift_same
     (A : E →L[ℝ] E) :
     dualSheetLift (E := E) A = dualSheetPairLift (E := E) A A := by
   rfl
 
+omit [CompleteSpace E] in
 @[simp] theorem plusBlockMap_dualSheetPairLift
     (Aplus Aminus : E →L[ℝ] E) :
     plusBlockMap (E := E) (dualSheetPairLift (E := E) Aplus Aminus) = Aplus := by
@@ -61,6 +64,7 @@ noncomputable def dualSheetPairLift
   simp [plusBlockMap, dualSheetPairLift, plusPointL, minusPointL, plusPoint, minusPoint,
     ContinuousLinearMap.comp_apply]
 
+omit [CompleteSpace E] in
 @[simp] theorem minusBlockMap_dualSheetPairLift
     (Aplus Aminus : E →L[ℝ] E) :
     minusBlockMap (E := E) (dualSheetPairLift (E := E) Aplus Aminus) = Aminus := by
@@ -68,6 +72,7 @@ noncomputable def dualSheetPairLift
   simp [minusBlockMap, dualSheetPairLift, plusPointL, minusPointL, plusPoint, minusPoint,
     ContinuousLinearMap.comp_apply]
 
+omit [CompleteSpace E] in
 @[simp] theorem plusToMinusBlockMap_dualSheetPairLift
     (Aplus Aminus : E →L[ℝ] E) :
     plusToMinusBlockMap (E := E) (dualSheetPairLift (E := E) Aplus Aminus) = 0 := by
@@ -75,6 +80,7 @@ noncomputable def dualSheetPairLift
   simp [plusToMinusBlockMap, dualSheetPairLift, plusPointL, minusPointL, plusPoint, minusPoint,
     ContinuousLinearMap.comp_apply]
 
+omit [CompleteSpace E] in
 @[simp] theorem minusToPlusBlockMap_dualSheetPairLift
     (Aplus Aminus : E →L[ℝ] E) :
     minusToPlusBlockMap (E := E) (dualSheetPairLift (E := E) Aplus Aminus) = 0 := by
@@ -82,6 +88,7 @@ noncomputable def dualSheetPairLift
   simp [minusToPlusBlockMap, dualSheetPairLift, plusPointL, minusPointL, plusPoint, minusPoint,
     ContinuousLinearMap.comp_apply]
 
+omit [CompleteSpace E] in
 theorem spectralPlusProj_comp_dualSheetPairLift
     (Aplus Aminus : E →L[ℝ] E) :
     (spectralPlusProj (E := E)).comp (dualSheetPairLift (E := E) Aplus Aminus)
@@ -89,6 +96,7 @@ theorem spectralPlusProj_comp_dualSheetPairLift
   unfold dualSheetPairLift
   doubled_ext
 
+omit [CompleteSpace E] in
 theorem spectralMinusProj_comp_dualSheetPairLift
     (Aplus Aminus : E →L[ℝ] E) :
     (spectralMinusProj (E := E)).comp (dualSheetPairLift (E := E) Aplus Aminus)
@@ -96,6 +104,7 @@ theorem spectralMinusProj_comp_dualSheetPairLift
   unfold dualSheetPairLift
   doubled_ext
 
+omit [CompleteSpace E] in
 @[simp] theorem plusProjectorFlux_dualSheetPairLift
     (Aplus Aminus : E →L[ℝ] E) :
     plusProjectorFlux (E := E) (dualSheetPairLift (E := E) Aplus Aminus) = 0 := by
@@ -103,6 +112,7 @@ theorem spectralMinusProj_comp_dualSheetPairLift
   rw [spectralPlusProj_comp_dualSheetPairLift]
   simp
 
+omit [CompleteSpace E] in
 @[simp] theorem minusProjectorFlux_dualSheetPairLift
     (Aplus Aminus : E →L[ℝ] E) :
     minusProjectorFlux (E := E) (dualSheetPairLift (E := E) Aplus Aminus) = 0 := by
@@ -117,15 +127,17 @@ noncomputable def dualSheetDiagonalScalarOp
     (rhoPlus • (ContinuousLinearMap.id ℝ E))
     (rhoMinus • (ContinuousLinearMap.id ℝ E))
 
+omit [CompleteSpace E] in
 @[simp] theorem dualSheetDiagonalScalarOp_apply_to_doubled
     (rhoPlus rhoMinus : ℝ) (x xi : E) :
     dualSheetDiagonalScalarOp (E := E) rhoPlus rhoMinus (to_doubled x xi : H₂)
       = to_doubled (rhoPlus • x) (rhoMinus • xi) := by
-  simpa [dualSheetDiagonalScalarOp] using
-    dualSheetPairLift_apply_to_doubled (E := E)
-      (rhoPlus • (ContinuousLinearMap.id ℝ E))
-      (rhoMinus • (ContinuousLinearMap.id ℝ E)) x xi
+  rw [dualSheetDiagonalScalarOp]
+  exact dualSheetPairLift_apply_to_doubled (E := E)
+    (rhoPlus • (ContinuousLinearMap.id ℝ E))
+    (rhoMinus • (ContinuousLinearMap.id ℝ E)) x xi
 
+omit [CompleteSpace E] in
 @[simp] theorem dualSheetDiagonalScalarOp_eq_smul_proj_add
     (rhoPlus rhoMinus : ℝ) :
     dualSheetDiagonalScalarOp (E := E) rhoPlus rhoMinus
@@ -133,66 +145,76 @@ noncomputable def dualSheetDiagonalScalarOp
   unfold dualSheetDiagonalScalarOp dualSheetPairLift
   doubled_ext
 
+omit [CompleteSpace E] in
 @[simp] theorem plusBlockMap_dualSheetDiagonalScalarOp
     (rhoPlus rhoMinus : ℝ) :
     plusBlockMap (E := E) (dualSheetDiagonalScalarOp (E := E) rhoPlus rhoMinus)
       = rhoPlus • (ContinuousLinearMap.id ℝ E) := by
-  simpa [dualSheetDiagonalScalarOp] using
-    plusBlockMap_dualSheetPairLift (E := E)
-      (rhoPlus • (ContinuousLinearMap.id ℝ E))
-      (rhoMinus • (ContinuousLinearMap.id ℝ E))
+  rw [dualSheetDiagonalScalarOp]
+  exact plusBlockMap_dualSheetPairLift (E := E)
+    (rhoPlus • (ContinuousLinearMap.id ℝ E))
+    (rhoMinus • (ContinuousLinearMap.id ℝ E))
 
+omit [CompleteSpace E] in
 @[simp] theorem minusBlockMap_dualSheetDiagonalScalarOp
     (rhoPlus rhoMinus : ℝ) :
     minusBlockMap (E := E) (dualSheetDiagonalScalarOp (E := E) rhoPlus rhoMinus)
       = rhoMinus • (ContinuousLinearMap.id ℝ E) := by
-  simpa [dualSheetDiagonalScalarOp] using
-    minusBlockMap_dualSheetPairLift (E := E)
-      (rhoPlus • (ContinuousLinearMap.id ℝ E))
-      (rhoMinus • (ContinuousLinearMap.id ℝ E))
+  rw [dualSheetDiagonalScalarOp]
+  exact minusBlockMap_dualSheetPairLift (E := E)
+    (rhoPlus • (ContinuousLinearMap.id ℝ E))
+    (rhoMinus • (ContinuousLinearMap.id ℝ E))
 
+omit [CompleteSpace E] in
 @[simp] theorem plusToMinusBlockMap_dualSheetDiagonalScalarOp
     (rhoPlus rhoMinus : ℝ) :
     plusToMinusBlockMap (E := E) (dualSheetDiagonalScalarOp (E := E) rhoPlus rhoMinus) = 0 := by
-  simpa [dualSheetDiagonalScalarOp] using
-    plusToMinusBlockMap_dualSheetPairLift (E := E)
-      (rhoPlus • (ContinuousLinearMap.id ℝ E))
-      (rhoMinus • (ContinuousLinearMap.id ℝ E))
+  rw [dualSheetDiagonalScalarOp]
+  exact plusToMinusBlockMap_dualSheetPairLift (E := E)
+    (rhoPlus • (ContinuousLinearMap.id ℝ E))
+    (rhoMinus • (ContinuousLinearMap.id ℝ E))
 
+omit [CompleteSpace E] in
 @[simp] theorem minusToPlusBlockMap_dualSheetDiagonalScalarOp
     (rhoPlus rhoMinus : ℝ) :
     minusToPlusBlockMap (E := E) (dualSheetDiagonalScalarOp (E := E) rhoPlus rhoMinus) = 0 := by
-  simpa [dualSheetDiagonalScalarOp] using
-    minusToPlusBlockMap_dualSheetPairLift (E := E)
-      (rhoPlus • (ContinuousLinearMap.id ℝ E))
-      (rhoMinus • (ContinuousLinearMap.id ℝ E))
+  rw [dualSheetDiagonalScalarOp]
+  exact minusToPlusBlockMap_dualSheetPairLift (E := E)
+    (rhoPlus • (ContinuousLinearMap.id ℝ E))
+    (rhoMinus • (ContinuousLinearMap.id ℝ E))
 
+omit [CompleteSpace E] in
 @[simp] theorem plusProjectorFlux_dualSheetDiagonalScalarOp
     (rhoPlus rhoMinus : ℝ) :
     plusProjectorFlux (E := E) (dualSheetDiagonalScalarOp (E := E) rhoPlus rhoMinus) = 0 := by
-  simpa [dualSheetDiagonalScalarOp] using
-    plusProjectorFlux_dualSheetPairLift (E := E)
-      (rhoPlus • (ContinuousLinearMap.id ℝ E))
-      (rhoMinus • (ContinuousLinearMap.id ℝ E))
+  rw [dualSheetDiagonalScalarOp]
+  exact plusProjectorFlux_dualSheetPairLift (E := E)
+    (rhoPlus • (ContinuousLinearMap.id ℝ E))
+    (rhoMinus • (ContinuousLinearMap.id ℝ E))
 
+omit [CompleteSpace E] in
 @[simp] theorem minusProjectorFlux_dualSheetDiagonalScalarOp
     (rhoPlus rhoMinus : ℝ) :
     minusProjectorFlux (E := E) (dualSheetDiagonalScalarOp (E := E) rhoPlus rhoMinus) = 0 := by
-  simpa [dualSheetDiagonalScalarOp] using
-    minusProjectorFlux_dualSheetPairLift (E := E)
-      (rhoPlus • (ContinuousLinearMap.id ℝ E))
-      (rhoMinus • (ContinuousLinearMap.id ℝ E))
+  rw [dualSheetDiagonalScalarOp]
+  exact minusProjectorFlux_dualSheetPairLift (E := E)
+    (rhoPlus • (ContinuousLinearMap.id ℝ E))
+    (rhoMinus • (ContinuousLinearMap.id ℝ E))
 
+omit [CompleteSpace E] in
 @[simp] theorem dualSheetDiagonalScalarOp_same
     (rho : ℝ) :
     dualSheetDiagonalScalarOp (E := E) rho rho = rho • (ContinuousLinearMap.id ℝ H₂) := by
   unfold dualSheetDiagonalScalarOp dualSheetPairLift
   doubled_ext
 
+omit [CompleteSpace E] in
 @[simp] theorem dualSheetDiagonalScalarOp_one_one :
     dualSheetDiagonalScalarOp (E := E) 1 1 = ContinuousLinearMap.id ℝ H₂ := by
-  simpa using dualSheetDiagonalScalarOp_same (E := E) (rho := 1)
+  rw [dualSheetDiagonalScalarOp_same (E := E) (rho := 1)]
+  simp
 
+omit [CompleteSpace E] in
 @[simp] theorem dualSheetDiagonalScalarOp_one_neg_one :
     dualSheetDiagonalScalarOp (E := E) 1 (-1) = modularSignEpsilon (E := E) := by
   unfold dualSheetDiagonalScalarOp dualSheetPairLift
@@ -228,6 +250,7 @@ noncomputable def chiralDilationPart
   unfold commonWeylScale relativeSheetScale
   ring
 
+omit [CompleteSpace E] in
 theorem dualSheetDiagonalScalarOp_eq_isotropicWeylPart_add_chiralDilationPart
     (rhoPlus rhoMinus : ℝ) :
     dualSheetDiagonalScalarOp (E := E) rhoPlus rhoMinus
@@ -253,16 +276,14 @@ theorem dualSheetDiagonalScalarOp_eq_isotropicWeylPart_add_chiralDilationPart
 @[simp] theorem commonWeylScale_exp_pair
     (t : ℝ) :
     commonWeylScale (Real.exp t) (Real.exp (-t)) = Real.cosh t := by
-  rw [show Real.exp t = Real.cosh t + Real.sinh t by simpa using (Real.cosh_add_sinh t).symm]
-  rw [show Real.exp (-t) = Real.cosh t - Real.sinh t by simpa using (Real.cosh_sub_sinh t).symm]
+  rw [(Real.cosh_add_sinh t).symm, (Real.cosh_sub_sinh t).symm]
   unfold commonWeylScale
   ring
 
 @[simp] theorem relativeSheetScale_exp_pair
     (t : ℝ) :
     relativeSheetScale (Real.exp t) (Real.exp (-t)) = Real.sinh t := by
-  rw [show Real.exp t = Real.cosh t + Real.sinh t by simpa using (Real.cosh_add_sinh t).symm]
-  rw [show Real.exp (-t) = Real.cosh t - Real.sinh t by simpa using (Real.cosh_sub_sinh t).symm]
+  rw [(Real.cosh_add_sinh t).symm, (Real.cosh_sub_sinh t).symm]
   unfold relativeSheetScale
   ring
 
@@ -275,8 +296,9 @@ theorem dualSheetDiagonalScalarOp_exp_pair_eq_epsilonBoost
   change commonWeylScale (Real.exp t) (Real.exp (-t)) • (ContinuousLinearMap.id ℝ H₂) +
       relativeSheetScale (Real.exp t) (Real.exp (-t)) • modularSignEpsilon (E := E) =
     Real.cosh t • (ContinuousLinearMap.id ℝ H₂) + Real.sinh t • modularSignEpsilon (E := E)
-  simp [isotropicWeylPart, chiralDilationPart]
+  simp
 
+omit [CompleteSpace E] in
 theorem dualSheetDiagonalScalarOp_weylGaugeRescale
     (sigma rhoPlus rhoMinus : ℝ) :
     dualSheetDiagonalScalarOp (E := E) (sigma * rhoPlus) (sigma * rhoMinus)
@@ -368,11 +390,13 @@ noncomputable def splitWeylCharacter (g : RestrictedSheetEquiv E) : ℝ × ℝ :
 noncomputable def restrictedVolumeCharacter (g : RestrictedSheetEquiv E) : ℝˣ :=
   VolumeHom g.plus * (VolumeHom g.minus)⁻¹
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem restrictedVolumeCharacter_one :
     restrictedVolumeCharacter (1 : RestrictedSheetEquiv E) = 1 := by
   change VolumeHom (LinearEquiv.refl ℝ E) * (VolumeHom (LinearEquiv.refl ℝ E))⁻¹ = 1
   simp [VolumeHom]
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem restrictedVolumeCharacter_mul (g₁ g₂ : RestrictedSheetEquiv E) :
     restrictedVolumeCharacter (g₁ * g₂) =
       restrictedVolumeCharacter g₁ * restrictedVolumeCharacter g₂ := by
@@ -391,13 +415,14 @@ noncomputable def restrictedVolumeCharacterHom : RestrictedSheetEquiv E →* ℝ
   map_one' := restrictedVolumeCharacter_one
   map_mul' := restrictedVolumeCharacter_mul
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem restrictedVolumeCharacter_inv (g : RestrictedSheetEquiv E) :
     restrictedVolumeCharacter g⁻¹ = (restrictedVolumeCharacter g)⁻¹ := by
   cases g with
   | mk plus minus =>
       change VolumeHom plus.symm * (VolumeHom minus.symm)⁻¹ =
           (VolumeHom plus * (VolumeHom minus)⁻¹)⁻¹
-      simp [VolumeHom, mul_assoc, mul_left_comm, mul_comm]
+      simp [VolumeHom, mul_comm]
 
 /-- Positive scalar shadow of the gauge-invariant sheet ratio. -/
 noncomputable def restrictedVolumeScale (g : RestrictedSheetEquiv E) : ℝ :=
@@ -415,21 +440,26 @@ def IsRelativeVolumePreserving (g : RestrictedSheetEquiv E) : Prop :=
 def IsWeylGaugeBalanced (g : RestrictedSheetEquiv E) : Prop :=
   g.plus = g.minus
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem volumeScale_pos (f : E ≃ₗ[ℝ] E) : 0 < volumeScale f := by
   unfold volumeScale
   exact abs_pos.mpr (Units.ne_zero _)
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem volumeScale_trans (f g : E ≃ₗ[ℝ] E) :
     volumeScale (f.trans g) = volumeScale g * volumeScale f := by
   unfold volumeScale VolumeHom
   simp [LinearEquiv.det_trans, abs_mul, mul_comm]
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem splitWeylCharacter_fst (g : RestrictedSheetEquiv E) :
     (splitWeylCharacter g).1 = plusSheetVolumeScale g := rfl
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem splitWeylCharacter_snd (g : RestrictedSheetEquiv E) :
     (splitWeylCharacter g).2 = minusSheetVolumeScale g := rfl
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem restrictedVolumeCharacter_weylGaugeRescale
     (w : E ≃ₗ[ℝ] E) (g : RestrictedSheetEquiv E) :
     restrictedVolumeCharacter (weylGaugeRescale w g) = restrictedVolumeCharacter g := by
@@ -438,28 +468,32 @@ def IsWeylGaugeBalanced (g : RestrictedSheetEquiv E) : Prop :=
   simp [LinearEquiv.det_trans]
   group
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem restrictedVolumeCharacter_weylGaugeRescaleByScalar
     (sigma : ℝ) (hsigma : sigma ≠ 0) (g : RestrictedSheetEquiv E) :
     restrictedVolumeCharacter (weylGaugeRescaleByScalar sigma hsigma g)
       = restrictedVolumeCharacter g := by
-  simpa [weylGaugeRescaleByScalar] using
-    restrictedVolumeCharacter_weylGaugeRescale
-      (LinearEquiv.smulOfNeZero (K := ℝ) (M := E) sigma hsigma) g
+  rw [weylGaugeRescaleByScalar]
+  exact restrictedVolumeCharacter_weylGaugeRescale
+    (LinearEquiv.smulOfNeZero (K := ℝ) (M := E) sigma hsigma) g
 
+omit [FiniteDimensional ℝ E] in
 theorem restrictedVolumeScale_eq_abs_character
     (g : RestrictedSheetEquiv E) :
     restrictedVolumeScale g = |((restrictedVolumeCharacter g : ℝˣ) : ℝ)| := by
   cases g
   unfold restrictedVolumeScale restrictedVolumeCharacter plusSheetVolumeScale minusSheetVolumeScale
   unfold volumeScale VolumeHom
-  simp [div_eq_mul_inv, abs_mul, abs_inv, mul_comm]
+  simp [div_eq_mul_inv, abs_mul, abs_inv]
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem restrictedVolumeScale_weylGaugeRescale
     (w : E ≃ₗ[ℝ] E) (g : RestrictedSheetEquiv E) :
     restrictedVolumeScale (weylGaugeRescale w g) = restrictedVolumeScale g := by
   rw [restrictedVolumeScale_eq_abs_character, restrictedVolumeScale_eq_abs_character,
     restrictedVolumeCharacter_weylGaugeRescale]
 
+omit [FiniteDimensional ℝ E] in
 theorem restrictedVolumeCharacter_eq_one_of_weylGaugeBalanced
     {g : RestrictedSheetEquiv E}
     (hBal : IsWeylGaugeBalanced g) :

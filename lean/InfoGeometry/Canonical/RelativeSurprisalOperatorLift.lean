@@ -132,6 +132,7 @@ omit [Nonempty (Fin n)] in
   unfold diagonalExpectation firstQuantize diagMatrix
   simp
 
+omit [Nonempty (Fin n)] in
 /-- Shannon entropy is the expectation of the first-quantized surprisal operator. -/
 theorem entropy_eq_diagonalExpectation_surprisalOperator
     (p : InfoGeometry.FinProb (Fin n)) :
@@ -319,6 +320,7 @@ theorem relativeModularPotentialOperator_countRay_eq_raw_add_massShift
   rw [firstQuantize_add, firstQuantize_const_eq_smul_one]
   rfl
 
+omit [Nonempty (Fin n)] in
 /-- Raw count modular-potential operators compose additively along the count cocycle. -/
 theorem relativeCountModularPotentialOperator_cocycle
     (counts ref base : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
@@ -344,6 +346,7 @@ theorem relativeCountModularPotentialOperator_cocycle
     ring
   · simp [relativeCountModularPotentialOperator, firstQuantize, diagMatrix, hij]
 
+omit [Nonempty (Fin n)] in
 /-- The averaged modular Hamiltonian is the diagonal average of the lifted raw modular potential. -/
 theorem relativeModularHamiltonian_eq_diagonalAverage_rawLift
     (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n) :
@@ -472,6 +475,7 @@ theorem relativeModularHamiltonian_sub_countMassShift_cocycle
     (n := n) (counts := counts) (ref := ref) (base := base)
     (hcounts := hcounts) (href := href) (hbase := hbase)
 
+omit [Nonempty (Fin n)] in
 /-- The averaged Tomita-Takesaki-style operator is the diagonal average of the raw lift times `Id`. -/
 theorem relativeTomitaTakesakiOp_eq_diagonalAverage_rawLift_smul_id
     (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n) :
@@ -485,6 +489,7 @@ theorem relativeTomitaTakesakiOp_eq_diagonalAverage_rawLift_smul_id
     (relativeModularHamiltonian_eq_diagonalAverage_rawLift (n := n)
       (counts := counts) (ref := ref))
 
+omit [Nonempty (Fin n)] in
 /-- The averaged Krein-native Tomita-Takesaki operator is the diagonal average of the raw lift times `ε`. -/
 theorem relativeKreinTomitaTakesakiOp_eq_diagonalAverage_rawLift_smul_eps
     (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n) :
@@ -513,6 +518,7 @@ noncomputable local instance : NormedSpace ℝ EndRA := inferInstance
 local instance : IsTopologicalRing EndRA := inferInstance
 local instance : CompleteSpace EndRA := inferInstance
 
+omit [Nonempty (Fin n)] in
 /-- First-order spectral/Taylor law for the lifted averaged Tomita-Takesaki operator. -/
 theorem hasDerivAt_informationPartitionFunction_zero_relativeTomitaTakesakiOp
     (ω : EndRA →L[ℝ] ℝ) (ρ : Fin n → ℝ) :
@@ -524,6 +530,7 @@ theorem hasDerivAt_informationPartitionFunction_zero_relativeTomitaTakesakiOp
   hasDerivAt_informationPartitionFunction_zero
     (ω := ω) (K := InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp n ρ)
 
+omit [Nonempty (Fin n)] in
 /-- Normalized log-partition Taylor law for the lifted averaged Tomita-Takesaki operator. -/
 theorem hasDerivAt_logInformationPartitionFunction_zero_relativeTomitaTakesakiOp_of_normalized
     (ω : EndRA →L[ℝ] ℝ)
@@ -537,6 +544,7 @@ theorem hasDerivAt_logInformationPartitionFunction_zero_relativeTomitaTakesakiOp
   hasDerivAt_logInformationPartitionFunction_zero_of_normalized
     (ω := ω) (K := InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp n ρ) hω1
 
+omit [Nonempty (Fin n)] in
 /-- Count-side specialization of the normalized spectral/Taylor law. -/
 theorem hasDerivAt_logInformationPartitionFunction_zero_relativeCountLift_of_normalized
     (ω : EndRA →L[ℝ] ℝ)

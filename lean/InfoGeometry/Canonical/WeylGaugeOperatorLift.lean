@@ -56,26 +56,32 @@ def toRestrictedSheetEquiv (g : LiftedSheetAut (E := E)) : RestrictedSheetEquiv 
 noncomputable def liftedOperator (g : LiftedSheetAut (E := E)) : EndH :=
   dualSheetPairLift (E := E) g.plus.toContinuousLinearMap g.minus.toContinuousLinearMap
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem plusBlockMap_liftedOperator (g : LiftedSheetAut (E := E)) :
     plusBlockMap (E := E) (liftedOperator g) = g.plus.toContinuousLinearMap := by
   simp [liftedOperator]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem minusBlockMap_liftedOperator (g : LiftedSheetAut (E := E)) :
     minusBlockMap (E := E) (liftedOperator g) = g.minus.toContinuousLinearMap := by
   simp [liftedOperator]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem plusToMinusBlockMap_liftedOperator (g : LiftedSheetAut (E := E)) :
     plusToMinusBlockMap (E := E) (liftedOperator g) = 0 := by
   simp [liftedOperator]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem minusToPlusBlockMap_liftedOperator (g : LiftedSheetAut (E := E)) :
     minusToPlusBlockMap (E := E) (liftedOperator g) = 0 := by
   simp [liftedOperator]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem plusProjectorFlux_liftedOperator (g : LiftedSheetAut (E := E)) :
     plusProjectorFlux (E := E) (liftedOperator g) = 0 := by
   simp [liftedOperator]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem minusProjectorFlux_liftedOperator (g : LiftedSheetAut (E := E)) :
     minusProjectorFlux (E := E) (liftedOperator g) = 0 := by
   simp [liftedOperator]
@@ -85,6 +91,7 @@ def mulTransport (g h : LiftedSheetAut (E := E)) : LiftedSheetAut (E := E) where
   plus := h.plus.trans g.plus
   minus := h.minus.trans g.minus
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 theorem liftedOperator_mulTransport (g h : LiftedSheetAut (E := E)) :
     liftedOperator (mulTransport g h) = (liftedOperator g).comp (liftedOperator h) := by
   apply ContinuousLinearMap.ext
@@ -127,12 +134,14 @@ noncomputable def logarithmicGenerator (g : LiftedSheetAut (E := E)) : EndH :=
   commonLogCoordinate g • (ContinuousLinearMap.id ℝ H₂)
     + relativeLogCoordinate g • modularSignEpsilon (E := E)
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem relativeVolumeScale_eq_abs_character (g : LiftedSheetAut (E := E)) :
     relativeVolumeScale g = |((determinantCharacter g : ℝˣ) : ℝ)| := by
   unfold relativeVolumeScale determinantCharacter
   simpa using RestrictedSheetEquiv.restrictedVolumeScale_eq_abs_character
     (E := E) (toRestrictedSheetEquiv g)
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem determinantCharacter_gaugeRescale
     (w : E ≃L[ℝ] E) (g : LiftedSheetAut (E := E)) :
     determinantCharacter { plus := w.trans g.plus, minus := w.trans g.minus } = determinantCharacter g := by
@@ -141,12 +150,14 @@ noncomputable def logarithmicGenerator (g : LiftedSheetAut (E := E)) : EndH :=
   simp [LinearEquiv.det_trans]
   group
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem relativeVolumeScale_gaugeRescale
     (w : E ≃L[ℝ] E) (g : LiftedSheetAut (E := E)) :
     relativeVolumeScale { plus := w.trans g.plus, minus := w.trans g.minus } = relativeVolumeScale g := by
   rw [relativeVolumeScale_eq_abs_character, relativeVolumeScale_eq_abs_character,
     determinantCharacter_gaugeRescale]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem determinantCharacter_mulTransport (g h : LiftedSheetAut (E := E)) :
     determinantCharacter (mulTransport g h) = determinantCharacter g * determinantCharacter h := by
   cases g
@@ -154,6 +165,7 @@ noncomputable def logarithmicGenerator (g : LiftedSheetAut (E := E)) : EndH :=
   unfold determinantCharacter mulTransport toRestrictedSheetEquiv RestrictedSheetEquiv.restrictedVolumeCharacter VolumeHom
   simp [LinearEquiv.det_trans, mul_assoc, mul_left_comm, mul_comm]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 theorem relativeVolumeScale_pos (g : LiftedSheetAut (E := E)) :
     0 < relativeVolumeScale g := by
   unfold relativeVolumeScale toRestrictedSheetEquiv RestrictedSheetEquiv.restrictedVolumeScale
@@ -162,12 +174,14 @@ theorem relativeVolumeScale_pos (g : LiftedSheetAut (E := E)) :
     (RestrictedSheetEquiv.volumeScale_pos (f := g.plus.toLinearEquiv))
     (RestrictedSheetEquiv.volumeScale_pos (f := g.minus.toLinearEquiv))
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem relativeVolumeScale_mulTransport (g h : LiftedSheetAut (E := E)) :
     relativeVolumeScale (mulTransport g h) = relativeVolumeScale g * relativeVolumeScale h := by
   rw [relativeVolumeScale_eq_abs_character, relativeVolumeScale_eq_abs_character,
     relativeVolumeScale_eq_abs_character, determinantCharacter_mulTransport]
   simp [abs_mul]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 theorem logRelativeVolumePotential_mulTransport (g h : LiftedSheetAut (E := E)) :
     logRelativeVolumePotential (mulTransport g h)
       = logRelativeVolumePotential g + logRelativeVolumePotential h := by
@@ -175,6 +189,7 @@ theorem logRelativeVolumePotential_mulTransport (g h : LiftedSheetAut (E := E)) 
   rw [relativeVolumeScale_mulTransport]
   exact Real.log_mul (ne_of_gt (relativeVolumeScale_pos g)) (ne_of_gt (relativeVolumeScale_pos h))
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 theorem logRelativeVolumePotential_eq_logPlus_minus_logMinus
     (g : LiftedSheetAut (E := E)) :
     logRelativeVolumePotential g = logPlusVolume g - logMinusVolume g := by
@@ -185,6 +200,7 @@ theorem logRelativeVolumePotential_eq_logPlus_minus_logMinus
     (ne_of_gt (RestrictedSheetEquiv.volumeScale_pos (f := g.plus.toLinearEquiv)))
     (ne_of_gt (RestrictedSheetEquiv.volumeScale_pos (f := g.minus.toLinearEquiv)))
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 theorem logRelativeVolumePotential_eq_two_mul_relativeLogCoordinate
     (g : LiftedSheetAut (E := E)) :
     logRelativeVolumePotential g = (2 : ℝ) * relativeLogCoordinate g := by
@@ -200,6 +216,7 @@ def IsGaugeBalanced (g : LiftedSheetAut (E := E)) : Prop :=
 def IsRelativeVolumePreserving (g : LiftedSheetAut (E := E)) : Prop :=
   determinantCharacter g = 1
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 theorem determinantCharacter_eq_one_of_isGaugeBalanced
     {g : LiftedSheetAut (E := E)}
     (hBal : IsGaugeBalanced g) :
@@ -224,6 +241,7 @@ noncomputable def isotropicGaugeTransport (s : ℝ) : LiftedSheetAut (E := E) :=
 noncomputable def relativeDilationTransport (t : ℝ) : LiftedSheetAut (E := E) :=
   referenceTransport t (-t)
 
+omit [CompleteSpace E] in
 @[simp] theorem liftedOperator_referenceTransport (a b : ℝ) :
     liftedOperator (referenceTransport a b)
       = dualSheetDiagonalScalarOp (E := E) (Real.exp a) (Real.exp b) := by
@@ -237,6 +255,7 @@ noncomputable def relativeDilationTransport (t : ℝ) : LiftedSheetAut (E := E) 
       dualSheetPairLift, plusPointL, minusPointL, plusPoint, minusPoint, to_doubled,
       ContinuousLinearMap.comp_apply, LinearEquiv.smulOfNeZero_apply]
 
+omit [CompleteSpace E] in
 @[simp] theorem liftedOperator_isotropicGaugeTransport (s : ℝ) :
     liftedOperator (isotropicGaugeTransport s)
       = Real.exp s • (ContinuousLinearMap.id ℝ H₂) := by

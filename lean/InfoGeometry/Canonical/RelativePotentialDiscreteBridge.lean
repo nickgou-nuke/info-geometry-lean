@@ -47,12 +47,14 @@ noncomputable def gaugeSectionFinProb (q : PositiveRay α) : InfoGeometry.FinPro
       · intro a ha
         exact le_of_lt ((gaugeSection (α := α) q).pos a))
 
+omit [MeasurableSpace α] [MeasurableSingletonClass α] [Countable α] in
 theorem gaugeSectionFinProb_apply
     (q : PositiveRay α) (a : α) :
     gaugeSectionFinProb (α := α) q a
       = ENNReal.ofReal (gaugeSection (α := α) q a) := by
   rfl
 
+omit [MeasurableSpace α] [MeasurableSingletonClass α] [Countable α] in
 theorem gaugeSectionFinProb_apply_toReal
     (q : PositiveRay α) (a : α) :
     ((gaugeSectionFinProb (α := α) q a).toReal)
@@ -60,6 +62,7 @@ theorem gaugeSectionFinProb_apply_toReal
   rw [gaugeSectionFinProb_apply]
   exact ENNReal.toReal_ofReal (le_of_lt ((gaugeSection (α := α) q).pos a))
 
+omit [MeasurableSpace α] [MeasurableSingletonClass α] [Countable α] in
 theorem gaugeSectionFinProb_apply_ne_zero
     (q : PositiveRay α) (a : α) :
     gaugeSectionFinProb (α := α) q a ≠ 0 := by
@@ -73,12 +76,14 @@ noncomputable def toProjectiveState
     (q : PositiveRay α) : ProjectiveState α :=
   pmfToProjectiveState (gaugeSectionFinProb (α := α) q)
 
+omit [Countable α] in
 theorem normalize_toProjectiveState
     (q : PositiveRay α) :
     ProjectiveState.normalize (toProjectiveState (α := α) q)
       = pmfToProbMeasure (gaugeSectionFinProb (α := α) q) := by
   exact normalize_pmfToProjectiveState (gaugeSectionFinProb (α := α) q)
 
+omit [Countable α] in
 /-- The canonical discrete gauge slices are mutually absolutely continuous. -/
 theorem gaugeSectionFinProb_absolutelyContinuous
     (q q0 : PositiveRay α) :

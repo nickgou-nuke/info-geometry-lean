@@ -117,6 +117,7 @@ variable (n : Nat)
 variable {X : Type}
   [NormedAddCommGroup X] [InnerProductSpace ℝ X] [CompleteSpace X] [FiniteDimensional ℝ X]
 
+omit [FiniteDimensional ℝ X] in
 /-- RN entropy sourcing plus unit-volume metric bridge yields vacuum gravity. -/
 theorem gravity_from_rn_entropy
     (Kgeo : KaehlerInformationGeometry X)

@@ -48,6 +48,7 @@ noncomputable def dualSheetChiralLift (A : E →L[ℝ] E) : EndH :=
 noncomputable abbrev chiralImbalanceLift (g : RestrictedSheetContinuousEquiv E) : EndH :=
   dualSheetChiralLift (E := E) (chiralImbalanceMap (E := E) g)
 
+omit [CompleteSpace E] in
 @[simp] theorem dualSheetChiralLift_apply_to_doubled
     (A : E →L[ℝ] E) (x xi : E) :
     dualSheetChiralLift (E := E) A (to_doubled x xi : H₂) = to_doubled (A x) (-A xi) := by
@@ -55,24 +56,28 @@ noncomputable abbrev chiralImbalanceLift (g : RestrictedSheetContinuousEquiv E) 
   · simp [dualSheetChiralLift, plusPointL, minusPointL, to_doubled]
   · simp [dualSheetChiralLift, plusPointL, minusPointL, to_doubled]
 
+omit [CompleteSpace E] in
 @[simp] theorem plusBlockMap_dualSheetChiralLift
     (A : E →L[ℝ] E) :
     plusBlockMap (E := E) (dualSheetChiralLift (E := E) A) = A := by
   ext x
   simp [plusBlockMap, dualSheetChiralLift]
 
+omit [CompleteSpace E] in
 @[simp] theorem minusBlockMap_dualSheetChiralLift
     (A : E →L[ℝ] E) :
     minusBlockMap (E := E) (dualSheetChiralLift (E := E) A) = -A := by
   ext x
   simp [minusBlockMap, dualSheetChiralLift]
 
+omit [CompleteSpace E] in
 @[simp] theorem plusToMinusBlockMap_dualSheetChiralLift
     (A : E →L[ℝ] E) :
     plusToMinusBlockMap (E := E) (dualSheetChiralLift (E := E) A) = 0 := by
   ext x
   simp [plusToMinusBlockMap, dualSheetChiralLift]
 
+omit [CompleteSpace E] in
 @[simp] theorem minusToPlusBlockMap_dualSheetChiralLift
     (A : E →L[ℝ] E) :
     minusToPlusBlockMap (E := E) (dualSheetChiralLift (E := E) A) = 0 := by

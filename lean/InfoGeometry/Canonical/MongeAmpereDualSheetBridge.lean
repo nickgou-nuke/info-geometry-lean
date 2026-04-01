@@ -59,9 +59,11 @@ noncomputable def minusPointL : E →L[ℝ] H₂ where
         ((continuous_const : Continuous fun _ : E => (0 : E)).prodMk
           (continuous_id : Continuous fun x : E => x))
 
+omit [CompleteSpace E] in
 @[simp] theorem plusPointL_apply (x : E) :
     plusPointL (E := E) x = plusPoint (E := E) x := rfl
 
+omit [CompleteSpace E] in
 @[simp] theorem minusPointL_apply (x : E) :
     minusPointL (E := E) x = minusPoint (E := E) x := rfl
 
@@ -70,6 +72,7 @@ noncomputable def dualSheetLift (A : E →L[ℝ] E) : EndH :=
   (plusPointL (E := E)).comp (A.comp (fst_L (E := E))) +
     (minusPointL (E := E)).comp (A.comp (snd_L (E := E)))
 
+omit [CompleteSpace E] in
 @[simp] theorem dualSheetLift_apply_to_doubled
     (A : E →L[ℝ] E) (x ξ : E) :
     dualSheetLift (E := E) A (to_doubled x ξ : H₂) = to_doubled (A x) (A ξ) := by
@@ -77,22 +80,30 @@ noncomputable def dualSheetLift (A : E →L[ℝ] E) : EndH :=
     simp [dualSheetLift, plusPointL, minusPointL, plusPoint, minusPoint, to_doubled,
       ContinuousLinearMap.comp_apply]
 
+omit [CompleteSpace E] in
 @[simp] theorem dualSheetLift_apply_plusPoint
     (A : E →L[ℝ] E) (x : E) :
     dualSheetLift (E := E) A (plusPoint (E := E) x) = plusPoint (E := E) (A x) := by
-  simpa [plusPoint, to_doubled] using dualSheetLift_apply_to_doubled (E := E) A x 0
+  apply DoubledSpace.ext <;>
+    simp [dualSheetLift, plusPointL, minusPointL, plusPoint, minusPoint, to_doubled,
+      ContinuousLinearMap.comp_apply]
 
+omit [CompleteSpace E] in
 @[simp] theorem dualSheetLift_apply_minusPoint
     (A : E →L[ℝ] E) (ξ : E) :
     dualSheetLift (E := E) A (minusPoint (E := E) ξ) = minusPoint (E := E) (A ξ) := by
-  simpa [minusPoint, to_doubled] using dualSheetLift_apply_to_doubled (E := E) A 0 ξ
+  apply DoubledSpace.ext <;>
+    simp [dualSheetLift, plusPointL, minusPointL, plusPoint, minusPoint, to_doubled,
+      ContinuousLinearMap.comp_apply]
 
+omit [CompleteSpace E] in
 @[simp] theorem fst_dualSheetLift
     (A : E →L[ℝ] E) (u : H₂) :
     WithLp.fst (dualSheetLift (E := E) A u) = A (WithLp.fst u) := by
   simp [dualSheetLift, plusPointL, minusPointL, plusPoint, minusPoint, to_doubled,
     ContinuousLinearMap.comp_apply]
 
+omit [CompleteSpace E] in
 @[simp] theorem snd_dualSheetLift
     (A : E →L[ℝ] E) (u : H₂) :
     WithLp.snd (dualSheetLift (E := E) A u) = A (WithLp.snd u) := by
@@ -115,30 +126,35 @@ noncomputable def plusToMinusBlockMap (T : EndH) : E →L[ℝ] E :=
 noncomputable def minusToPlusBlockMap (T : EndH) : E →L[ℝ] E :=
   (fst_L (E := E)).comp (T.comp (minusPointL (E := E)))
 
+omit [CompleteSpace E] in
 @[simp] theorem plusBlockMap_dualSheetLift
     (A : E →L[ℝ] E) :
     plusBlockMap (E := E) (dualSheetLift (E := E) A) = A := by
   ext x
   simp [plusBlockMap]
 
+omit [CompleteSpace E] in
 @[simp] theorem minusBlockMap_dualSheetLift
     (A : E →L[ℝ] E) :
     minusBlockMap (E := E) (dualSheetLift (E := E) A) = A := by
   ext x
   simp [minusBlockMap]
 
+omit [CompleteSpace E] in
 @[simp] theorem plusToMinusBlockMap_dualSheetLift
     (A : E →L[ℝ] E) :
     plusToMinusBlockMap (E := E) (dualSheetLift (E := E) A) = 0 := by
   ext x
   simp [plusToMinusBlockMap]
 
+omit [CompleteSpace E] in
 @[simp] theorem minusToPlusBlockMap_dualSheetLift
     (A : E →L[ℝ] E) :
     minusToPlusBlockMap (E := E) (dualSheetLift (E := E) A) = 0 := by
   ext x
   simp [minusToPlusBlockMap]
 
+omit [CompleteSpace E] in
 theorem spectralPlusProj_comp_dualSheetLift
     (A : E →L[ℝ] E) :
     (spectralPlusProj (E := E)).comp (dualSheetLift (E := E) A)
@@ -148,6 +164,7 @@ theorem spectralPlusProj_comp_dualSheetLift
   apply DoubledSpace.ext <;>
     simp [ContinuousLinearMap.comp_apply, spectralPlusProj_apply_eq_plusPoint]
 
+omit [CompleteSpace E] in
 theorem spectralMinusProj_comp_dualSheetLift
     (A : E →L[ℝ] E) :
     (spectralMinusProj (E := E)).comp (dualSheetLift (E := E) A)
@@ -157,6 +174,7 @@ theorem spectralMinusProj_comp_dualSheetLift
   apply DoubledSpace.ext <;>
     simp [ContinuousLinearMap.comp_apply, spectralMinusProj_apply_eq_minusPoint]
 
+omit [CompleteSpace E] in
 @[simp] theorem plusProjectorFlux_dualSheetLift
     (A : E →L[ℝ] E) :
     plusProjectorFlux (E := E) (dualSheetLift (E := E) A) = 0 := by
@@ -164,6 +182,7 @@ theorem spectralMinusProj_comp_dualSheetLift
   rw [spectralPlusProj_comp_dualSheetLift]
   simp
 
+omit [CompleteSpace E] in
 @[simp] theorem minusProjectorFlux_dualSheetLift
     (A : E →L[ℝ] E) :
     minusProjectorFlux (E := E) (dualSheetLift (E := E) A) = 0 := by
@@ -203,48 +222,57 @@ def DualSheetMongeAmpereConsistentAtBasepoint
   spectralMongeAmpereDensityOperator (E := E) IST
     = Real.exp (spectralBasepointLogVolume IST) • (1 : EndH)
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem plusBlockMap_dualSheetMetricOp
     (H : HessianGeometry E) (x : E) :
     plusBlockMap (E := E) (dualSheetMetricOp (E := E) H x) = H.metricOp x := by
-  simpa [dualSheetMetricOp]
+  simp [dualSheetMetricOp]
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem minusBlockMap_dualSheetMetricOp
     (H : HessianGeometry E) (x : E) :
     minusBlockMap (E := E) (dualSheetMetricOp (E := E) H x) = H.metricOp x := by
-  simpa [dualSheetMetricOp]
+  simp [dualSheetMetricOp]
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem plusToMinusBlockMap_dualSheetMetricOp
     (H : HessianGeometry E) (x : E) :
     plusToMinusBlockMap (E := E) (dualSheetMetricOp (E := E) H x) = 0 := by
-  simpa [dualSheetMetricOp]
+  simp [dualSheetMetricOp]
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem minusToPlusBlockMap_dualSheetMetricOp
     (H : HessianGeometry E) (x : E) :
     minusToPlusBlockMap (E := E) (dualSheetMetricOp (E := E) H x) = 0 := by
-  simpa [dualSheetMetricOp]
+  simp [dualSheetMetricOp]
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem plusProjectorFlux_dualSheetMetricOp
     (H : HessianGeometry E) (x : E) :
     plusProjectorFlux (E := E) (dualSheetMetricOp (E := E) H x) = 0 := by
-  simpa [dualSheetMetricOp]
+  simp [dualSheetMetricOp]
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem minusProjectorFlux_dualSheetMetricOp
     (H : HessianGeometry E) (x : E) :
     minusProjectorFlux (E := E) (dualSheetMetricOp (E := E) H x) = 0 := by
-  simpa [dualSheetMetricOp]
+  simp [dualSheetMetricOp]
 
+omit [FiniteDimensional ℝ E] in
 theorem mongeAmpereDensityOperator_eq_smul_id_of_satisfiesMongeAmpere
     (H : HessianGeometry E) (ρ : E → ℝ)
     (hMA : SatisfiesMongeAmpere H ρ) (x : E) :
     mongeAmpereDensityOperator (E := E) H x = ρ x • (1 : EndH) := by
   simp [mongeAmpereDensityOperator, hMA x]
 
+omit [FiniteDimensional ℝ E] in
 theorem mongeAmpereDensityOperator_eq_exp_smul_id_of_satisfiesMongeAmperePotential
     (H : HessianGeometry E) (Φ : E → ℝ)
     (hMA : SatisfiesMongeAmperePotential H Φ) (x : E) :
     mongeAmpereDensityOperator (E := E) H x = Real.exp (Φ x) • (1 : EndH) := by
   simp [mongeAmpereDensityOperator, hMA x]
 
+omit [FiniteDimensional ℝ E] in
 theorem mongeAmpereDensityOperator_eq_id_of_incompressible
     (H : HessianGeometry E)
     (hIncomp : IncompressibleMongeAmpere H) (x : E) :
@@ -295,6 +323,7 @@ noncomputable abbrev cramerRaoDualSheetMetricOp
 noncomputable def squeezingTransport (t : ℝ) : EndH :=
   epsilonBoost (E := E) (2 * t)
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem plusBlockMap_squeezingTransport
     (t : ℝ) :
     plusBlockMap (E := E) (squeezingTransport (E := E) t)
@@ -313,6 +342,7 @@ noncomputable def squeezingTransport (t : ℝ) : EndH :=
     _ = (squeezingEigenPlus t • (1 : E →L[ℝ] E)) x := by
           simp [squeezingEigenPlus]
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem minusBlockMap_squeezingTransport
     (t : ℝ) :
     minusBlockMap (E := E) (squeezingTransport (E := E) t)
@@ -332,6 +362,7 @@ noncomputable def squeezingTransport (t : ℝ) : EndH :=
     _ = (squeezingEigenMinus t • (1 : E →L[ℝ] E)) x := by
           simp [squeezingEigenMinus]
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem plusToMinusBlockMap_squeezingTransport
     (t : ℝ) :
     plusToMinusBlockMap (E := E) (squeezingTransport (E := E) t) = 0 := by
@@ -339,6 +370,7 @@ noncomputable def squeezingTransport (t : ℝ) : EndH :=
   simp [plusToMinusBlockMap, squeezingTransport, epsilonBoost_apply,
     plusPoint, TomitaTakesaki.modularSignEpsilon, to_doubled]
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem minusToPlusBlockMap_squeezingTransport
     (t : ℝ) :
     minusToPlusBlockMap (E := E) (squeezingTransport (E := E) t) = 0 := by
@@ -346,15 +378,17 @@ noncomputable def squeezingTransport (t : ℝ) : EndH :=
   simp [minusToPlusBlockMap, squeezingTransport, epsilonBoost_apply,
     minusPoint, TomitaTakesaki.modularSignEpsilon, to_doubled]
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem plusProjectorFlux_squeezingTransport
     (t : ℝ) :
     plusProjectorFlux (E := E) (squeezingTransport (E := E) t) = 0 := by
-  simpa [squeezingTransport] using plusProjectorFlux_epsilonBoost (E := E) (2 * t)
+  exact by simpa [squeezingTransport] using plusProjectorFlux_epsilonBoost (E := E) (2 * t)
 
+omit [FiniteDimensional ℝ E] in
 @[simp] theorem minusProjectorFlux_squeezingTransport
     (t : ℝ) :
     minusProjectorFlux (E := E) (squeezingTransport (E := E) t) = 0 := by
-  simpa [squeezingTransport] using minusProjectorFlux_epsilonBoost (E := E) (2 * t)
+  exact by simpa [squeezingTransport] using minusProjectorFlux_epsilonBoost (E := E) (2 * t)
 
 end CramerRao
 
@@ -372,6 +406,7 @@ noncomputable def rnEntropyDualSheetSourceOp
     (n : Nat) (M : SinkhornMatrix n) : EndH :=
   relativeVolumeChangeRN n M • (1 : EndH)
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem plusBlockMap_rnEntropyDualSheetSourceOp
     (n : Nat) (M : SinkhornMatrix n) :
     plusBlockMap (E := E) (rnEntropyDualSheetSourceOp (E := E) n M)
@@ -379,6 +414,7 @@ noncomputable def rnEntropyDualSheetSourceOp
   ext x
   simp [plusBlockMap, rnEntropyDualSheetSourceOp]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem minusBlockMap_rnEntropyDualSheetSourceOp
     (n : Nat) (M : SinkhornMatrix n) :
     minusBlockMap (E := E) (rnEntropyDualSheetSourceOp (E := E) n M)
@@ -386,18 +422,21 @@ noncomputable def rnEntropyDualSheetSourceOp
   ext x
   simp [minusBlockMap, rnEntropyDualSheetSourceOp]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem plusToMinusBlockMap_rnEntropyDualSheetSourceOp
     (n : Nat) (M : SinkhornMatrix n) :
     plusToMinusBlockMap (E := E) (rnEntropyDualSheetSourceOp (E := E) n M) = 0 := by
   ext x
   simp [plusToMinusBlockMap, rnEntropyDualSheetSourceOp]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem minusToPlusBlockMap_rnEntropyDualSheetSourceOp
     (n : Nat) (M : SinkhornMatrix n) :
     minusToPlusBlockMap (E := E) (rnEntropyDualSheetSourceOp (E := E) n M) = 0 := by
   ext x
   simp [minusToPlusBlockMap, rnEntropyDualSheetSourceOp]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem plusProjectorFlux_rnEntropyDualSheetSourceOp
     (n : Nat) (M : SinkhornMatrix n) :
     plusProjectorFlux (E := E) (rnEntropyDualSheetSourceOp (E := E) n M) = 0 := by
@@ -412,6 +451,7 @@ noncomputable def rnEntropyDualSheetSourceOp
   rw [hcomp, hid]
   simp
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem minusProjectorFlux_rnEntropyDualSheetSourceOp
     (n : Nat) (M : SinkhornMatrix n) :
     minusProjectorFlux (E := E) (rnEntropyDualSheetSourceOp (E := E) n M) = 0 := by
@@ -426,6 +466,7 @@ noncomputable def rnEntropyDualSheetSourceOp
   rw [hcomp, hid]
   simp
 
+omit [FiniteDimensional ℝ E] in
 theorem mongeAmpereDensityOperator_eq_rnEntropyDualSheetSourceOp_of_rnEntropySource
     (n : Nat)
     (Kgeo : KaehlerInformationGeometry E)
@@ -436,6 +477,7 @@ theorem mongeAmpereDensityOperator_eq_rnEntropyDualSheetSourceOp_of_rnEntropySou
       = rnEntropyDualSheetSourceOp (E := E) n M := by
   simp [mongeAmpereDensityOperator, rnEntropyDualSheetSourceOp, hSource x]
 
+omit [FiniteDimensional ℝ E] in
 theorem mongeAmpereDensityOperator_eq_exp_neg_kahlerPotentialRN_smul_id_of_rnEntropySource
     (n : Nat)
     (Kgeo : KaehlerInformationGeometry E)

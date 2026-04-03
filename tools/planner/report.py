@@ -6,6 +6,7 @@ import json
 from typing import Any, cast
 
 from .common import DIAG_PROVENANCE_WEIGHT, HEAD_SOURCE_WEIGHT, JsonObj, VIOLATION_LEVEL_WEIGHT
+from .policy import planner_policy_snapshot
 
 
 def make_markdown_report(report: JsonObj) -> str:
@@ -176,6 +177,11 @@ def make_markdown_report(report: JsonObj) -> str:
     lines.append("- headSourceWeight: " + json.dumps(HEAD_SOURCE_WEIGHT, sort_keys=True))
     lines.append("- diagnosticProvenanceWeight: " + json.dumps(DIAG_PROVENANCE_WEIGHT, sort_keys=True))
     lines.append("- violationLevelWeight: " + json.dumps(VIOLATION_LEVEL_WEIGHT, sort_keys=True))
+    lines.append("")
+
+    lines.append("## Planner Policy")
+    lines.append("")
+    lines.append("- " + json.dumps(planner_policy_snapshot(), sort_keys=True))
     lines.append("")
 
     return "\n".join(lines)

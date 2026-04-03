@@ -22,7 +22,7 @@ from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, cast
+from typing import Any, Iterable, cast
 from urllib.parse import unquote, urlparse
 
 if __package__ in (None, ""):
@@ -33,6 +33,58 @@ else:
 
 
 JsonObj = dict[str, Any]
+
+
+DECL_NAME_EXACT_KEYS = ("declName",)
+
+DECL_NAME_REQUEST_KEYS = (
+    "requestedDecl",
+    "name",
+    "declarationName",
+    "declaration",
+    "theoremName",
+)
+
+DECL_NAME_KEYS = DECL_NAME_EXACT_KEYS + DECL_NAME_REQUEST_KEYS
+
+DECL_NAME_CONTAINERS = (
+    "request",
+    "requestMeta",
+    "params",
+    "input",
+    "meta",
+    "payload",
+)
+
+DECL_LOCATION_FILE_KEYS = (
+    "file",
+    "sourceFile",
+    "path",
+    "uri",
+    "documentUri",
+    "sourceUri",
+)
+
+DECL_LOCATION_MODULE_KEYS = (
+    "module",
+    "declModule",
+    "moduleName",
+)
+
+DECL_LOCATION_LINE_KEYS = (
+    "line",
+    "posLine",
+    "startLine",
+    "targetLine",
+)
+
+DECL_MATCH_RELIABILITY = {
+    "exactDecl": 1.00,
+    "requestField": 0.90,
+    "locationFallback": 0.70,
+    "fingerprintFallback": 0.52,
+    "unmatched": 0.0,
+}
 
 
 HEAD_SOURCE_WEIGHT = {
@@ -110,6 +162,508 @@ def parse_uri_or_path(value: str | None, root: Path) -> str | None:
     if path.is_absolute():
         return relpath_or_self(path, root)
     return str(path)
+
+
+def coerce_int(value: Any) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    if isinstance(value, str):
+        s = value.strip()
+        if s.lstrip("-").isdigit():
+            try:
+                return int(s)
+            except ValueError:
+                return None
+    return None
+
+
+def arity_shape(value: int | None) -> str:
+    if value is None:
+        return "arity:?"
+    if value <= 0:
+        return "arity:0"
+    if value == 1:
+        return "arity:1"
+    return "arity:2+"
+
+
+def binder_shape(value: int | None) -> str:
+    if value is None:
+        return "binder:?"
+    if value <= 0:
+        return "binder:0"
+    if value == 1:
+        return "binder:1"
+    return "binder:2+"
+
+
+def is_valid_decl_name(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    s = value.strip()
+    if not s:
+        return False
+    if s.startswith("file://"):
+        return False
+    if "/" in s or s.endswith(".lean"):
+        return False
+    if s.lower() in {"null", "none", "true", "false"}:
+        return False
+    return True
+
+
+def _find_first_key_value(node: Any, key: str) -> Any:
+    if isinstance(node, dict):
+        node_dict = cast(JsonObj, node)
+        if key in node_dict:
+            return node_dict.get(key)
+        for child in node_dict.values():
+            found = _find_first_key_value(child, key)
+            if found is not None:
+                return found
+    elif isinstance(node, list):
+        for child in cast(list[Any], node):
+            found = _find_first_key_value(child, key)
+            if found is not None:
+                return found
+    return None
+
+
+def extract_decl_field(payload: JsonObj) -> tuple[str | None, str]:
+    for key in DECL_NAME_KEYS:
+        value = _find_first_key_value(payload, key)
+        if is_valid_decl_name(value):
+            decl = str(value).strip()
+            if key in DECL_NAME_EXACT_KEYS:
+                return decl, "exactDecl"
+            return decl, "requestField"
+    return None, "unmatched"
+
+
+def extract_decl_name(payload: JsonObj) -> str | None:
+    decl, _ = extract_decl_field(payload)
+    return decl
+
+
+def extract_location_hints(
+    payload: JsonObj,
+    *,
+    source_file: str | None,
+    root: Path,
+) -> tuple[str | None, str | None, int | None]:
+    file_hint: str | None = None
+    for key in DECL_LOCATION_FILE_KEYS:
+        raw = _find_first_key_value(payload, key)
+        if isinstance(raw, str) and raw:
+            parsed = parse_uri_or_path(raw, root)
+            if parsed:
+                file_hint = parsed
+                break
+    if not file_hint:
+        file_hint = source_file
+
+    module_hint: str | None = None
+    for key in DECL_LOCATION_MODULE_KEYS:
+        raw = _find_first_key_value(payload, key)
+        if isinstance(raw, str) and raw:
+            module_hint = raw.strip()
+            break
+
+    line_hint: int | None = None
+    for key in DECL_LOCATION_LINE_KEYS:
+        raw = _find_first_key_value(payload, key)
+        parsed = coerce_int(raw)
+        if parsed is not None:
+            line_hint = parsed
+            break
+    if line_hint is None:
+        position_any = _find_first_key_value(payload, "position")
+        if isinstance(position_any, dict):
+            line_hint = coerce_int(cast(JsonObj, position_any).get("line"))
+
+    return file_hint, module_hint, line_hint
+
+
+def normalize_expr_record(
+    record: Any,
+    *,
+    fallback_head: Any,
+    fallback_source: Any,
+    fallback_fingerprint: Any,
+) -> JsonObj:
+    semantic_head = fallback_head if isinstance(fallback_head, str) and fallback_head else None
+    head_source = fallback_source if isinstance(fallback_source, str) and fallback_source else "unavailable"
+    fingerprint_v1 = (
+        fallback_fingerprint if isinstance(fallback_fingerprint, str) and fallback_fingerprint else None
+    )
+    expr_kind: str | None = None
+    app_arity: int | None = None
+    binder_depth: int | None = None
+    arg_heads: list[str] = []
+
+    if isinstance(record, dict):
+        rec = cast(JsonObj, record)
+        sem_any = rec.get("semanticHead")
+        src_any = rec.get("fingerprintSource")
+        fp_any = rec.get("fingerprintV1")
+        kind_any = rec.get("exprKind")
+        if isinstance(sem_any, str) and sem_any:
+            semantic_head = sem_any
+        if isinstance(src_any, str) and src_any:
+            head_source = src_any
+        if isinstance(fp_any, str) and fp_any:
+            fingerprint_v1 = fp_any
+        if isinstance(kind_any, str) and kind_any:
+            expr_kind = kind_any
+        app_arity = coerce_int(rec.get("appArity"))
+        binder_depth = coerce_int(rec.get("binderDepth"))
+        arg_head_any = rec.get("argHeadFingerprints")
+        if isinstance(arg_head_any, list):
+            for item in arg_head_any:
+                if isinstance(item, str) and item:
+                    arg_heads.append(item)
+
+    if expr_kind is None:
+        if head_source == "exprSemantic":
+            expr_kind = "unknown"
+        else:
+            expr_kind = None
+
+    return {
+        "semanticHead": semantic_head,
+        "headSource": head_source,
+        "fingerprintV1": fingerprint_v1,
+        "exprKind": expr_kind,
+        "appArity": app_arity,
+        "binderDepth": binder_depth,
+        "arityShape": arity_shape(app_arity),
+        "binderShape": binder_shape(binder_depth),
+        "argHeadFingerprints": arg_heads,
+    }
+
+
+def make_cluster_key(
+    *,
+    fingerprint_v1: str | None,
+    semantic_head: str | None,
+    expr_kind: str | None,
+    arity_shape_value: str | None,
+    binder_shape_value: str | None,
+) -> str:
+    fp = fingerprint_v1 or "none"
+    head = semantic_head or "none"
+    kind = expr_kind or "none"
+    ar = arity_shape_value or "arity:?"
+    bd = binder_shape_value or "binder:?"
+    return f"fp:{fp}|head:{head}|kind:{kind}|{ar}|{bd}"
+
+
+def _dedup_preserve_order(items: Iterable[str]) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for item in items:
+        if item in seen:
+            continue
+        seen.add(item)
+        out.append(item)
+    return out
+
+
+def build_decl_match_context(
+    theorem_entries: list[JsonObj],
+    decls: dict[str, JsonObj],
+    root: Path,
+) -> dict[str, Any]:
+    theorem_names: set[str] = set()
+    theorem_meta: dict[str, JsonObj] = {}
+    by_file_module_line: dict[tuple[str, str, int], list[str]] = defaultdict(list)
+    by_file_line: dict[tuple[str, int], list[str]] = defaultdict(list)
+    by_file_module: dict[tuple[str, str], list[str]] = defaultdict(list)
+
+    for row in theorem_entries:
+        if row.get("kind") != "theorem":
+            continue
+        name_any = row.get("name")
+        if not isinstance(name_any, str) or not name_any:
+            continue
+        name = name_any
+        theorem_names.add(name)
+
+        file_any = row.get("file")
+        file_rel = parse_uri_or_path(file_any, root) if isinstance(file_any, str) else None
+        module_any = row.get("module")
+        module = module_any.strip() if isinstance(module_any, str) and module_any.strip() else None
+
+        line_any = row.get("line")
+        line = coerce_int(line_any)
+        if line is None:
+            decl_row = decls.get(name)
+            if isinstance(decl_row, dict):
+                line = coerce_int(decl_row.get("line"))
+                if not file_rel:
+                    decl_file_any = decl_row.get("file")
+                    if isinstance(decl_file_any, str):
+                        file_rel = parse_uri_or_path(decl_file_any, root)
+                if not module:
+                    decl_module_any = decl_row.get("module")
+                    if isinstance(decl_module_any, str) and decl_module_any.strip():
+                        module = decl_module_any.strip()
+
+        theorem_meta[name] = {"file": file_rel, "module": module, "line": line}
+
+        if isinstance(file_rel, str) and isinstance(module, str):
+            by_file_module[(file_rel, module)].append(name)
+            if isinstance(line, int) and line >= 0:
+                by_file_module_line[(file_rel, module, line)].append(name)
+        if isinstance(file_rel, str) and isinstance(line, int) and line >= 0:
+            by_file_line[(file_rel, line)].append(name)
+
+    cluster_to_decl: dict[str, Counter[str]] = defaultdict(Counter)
+    return {
+        "theoremNames": theorem_names,
+        "theoremMeta": theorem_meta,
+        "byFileModuleLine": by_file_module_line,
+        "byFileLine": by_file_line,
+        "byFileModule": by_file_module,
+        "clusterToDecl": cluster_to_decl,
+    }
+
+
+def _unique_decl(candidates: Iterable[str]) -> str | None:
+    uniq = _dedup_preserve_order(candidates)
+    if len(uniq) == 1:
+        return uniq[0]
+    return None
+
+
+def _line_candidates(line_hint: int | None) -> list[int]:
+    if line_hint is None:
+        return []
+    out: list[int] = []
+    if line_hint >= 0:
+        out.append(line_hint)
+        out.append(line_hint + 1)
+    seen: set[int] = set()
+    deduped: list[int] = []
+    for value in out:
+        if value in seen:
+            continue
+        seen.add(value)
+        deduped.append(value)
+    return deduped
+
+
+def _resolve_decl_by_location(
+    *,
+    file_hint: str | None,
+    module_hint: str | None,
+    line_hint: int | None,
+    match_ctx: dict[str, Any],
+) -> str | None:
+    if not isinstance(file_hint, str) or not file_hint:
+        return None
+
+    by_file_module_line = cast(dict[tuple[str, str, int], list[str]], match_ctx.get("byFileModuleLine", {}))
+    by_file_line = cast(dict[tuple[str, int], list[str]], match_ctx.get("byFileLine", {}))
+    by_file_module = cast(dict[tuple[str, str], list[str]], match_ctx.get("byFileModule", {}))
+
+    if isinstance(module_hint, str) and module_hint and line_hint is not None:
+        for line in _line_candidates(line_hint):
+            exact = _unique_decl(by_file_module_line.get((file_hint, module_hint, line), []))
+            if exact:
+                return exact
+
+    if line_hint is not None:
+        for line in _line_candidates(line_hint):
+            by_line = _unique_decl(by_file_line.get((file_hint, line), []))
+            if by_line:
+                return by_line
+
+    if isinstance(module_hint, str) and module_hint:
+        by_mod = _unique_decl(by_file_module.get((file_hint, module_hint), []))
+        if by_mod:
+            return by_mod
+
+    return None
+
+
+def _payload_cluster_keys(payload: JsonObj) -> list[str]:
+    out: list[str] = []
+
+    def add_cluster(*, head: Any, head_source: Any, head_fingerprint: Any, expr_record: Any) -> None:
+        norm = normalize_expr_record(
+            expr_record,
+            fallback_head=head,
+            fallback_source=head_source,
+            fallback_fingerprint=head_fingerprint,
+        )
+        cluster = make_cluster_key(
+            fingerprint_v1=cast(str | None, norm.get("fingerprintV1")),
+            semantic_head=cast(str | None, norm.get("semanticHead")),
+            expr_kind=cast(str | None, norm.get("exprKind")),
+            arity_shape_value=cast(str | None, norm.get("arityShape")),
+            binder_shape_value=cast(str | None, norm.get("binderShape")),
+        )
+        out.append(cluster)
+
+    add_cluster(
+        head=payload.get("theoremTypeHead"),
+        head_source=payload.get("theoremTypeHeadSource", "unavailable"),
+        head_fingerprint=payload.get("theoremTypeHeadFingerprint"),
+        expr_record=payload.get("theoremTypeExprFingerprint"),
+    )
+
+    goals_any = payload.get("goals")
+    if isinstance(goals_any, list):
+        for goal_any in goals_any:
+            if not isinstance(goal_any, dict):
+                continue
+            goal = cast(JsonObj, goal_any)
+            add_cluster(
+                head=goal.get("targetHead"),
+                head_source=goal.get("targetHeadSource", "unavailable"),
+                head_fingerprint=goal.get("targetHeadFingerprint"),
+                expr_record=goal.get("targetExprFingerprint"),
+            )
+            locals_any = goal.get("locals")
+            if not isinstance(locals_any, list):
+                continue
+            for local_any in locals_any:
+                if not isinstance(local_any, dict):
+                    continue
+                local = cast(JsonObj, local_any)
+                add_cluster(
+                    head=local.get("typeHead"),
+                    head_source=local.get("typeHeadSource", "unavailable"),
+                    head_fingerprint=local.get("typeHeadFingerprint"),
+                    expr_record=local.get("typeExprFingerprint"),
+                )
+
+    return _dedup_preserve_order(out)
+
+
+def _resolve_decl_by_fingerprint(
+    payload: JsonObj,
+    *,
+    file_hint: str | None,
+    module_hint: str | None,
+    match_ctx: dict[str, Any],
+) -> str | None:
+    cluster_to_decl = cast(dict[str, Counter[str]], match_ctx.get("clusterToDecl", {}))
+    theorem_meta = cast(dict[str, JsonObj], match_ctx.get("theoremMeta", {}))
+    if not cluster_to_decl:
+        return None
+
+    aggregate: Counter[str] = Counter()
+    for cluster in _payload_cluster_keys(payload):
+        counts = cluster_to_decl.get(cluster)
+        if not counts:
+            continue
+        for decl_name, count in counts.items():
+            meta = theorem_meta.get(decl_name, {})
+            if isinstance(file_hint, str) and file_hint:
+                meta_file = meta.get("file")
+                if isinstance(meta_file, str) and meta_file and meta_file != file_hint:
+                    continue
+            if isinstance(module_hint, str) and module_hint:
+                meta_module = meta.get("module")
+                if isinstance(meta_module, str) and meta_module and meta_module != module_hint:
+                    continue
+            aggregate[decl_name] += int(count)
+
+    if not aggregate:
+        return None
+    return aggregate.most_common(1)[0][0]
+
+
+def resolve_decl_match(
+    payload: JsonObj,
+    *,
+    source_file: str | None,
+    root: Path,
+    match_ctx: dict[str, Any],
+) -> tuple[str | None, str, float]:
+    theorem_names = cast(set[str], match_ctx.get("theoremNames", set()))
+
+    explicit_decl, explicit_prov = extract_decl_field(payload)
+    if isinstance(explicit_decl, str) and explicit_decl:
+        if not theorem_names or explicit_decl in theorem_names:
+            rel = DECL_MATCH_RELIABILITY.get(explicit_prov, DECL_MATCH_RELIABILITY["requestField"])
+            return explicit_decl, explicit_prov, rel
+
+    file_hint, module_hint, line_hint = extract_location_hints(payload, source_file=source_file, root=root)
+    by_location = _resolve_decl_by_location(
+        file_hint=file_hint,
+        module_hint=module_hint,
+        line_hint=line_hint,
+        match_ctx=match_ctx,
+    )
+    if isinstance(by_location, str) and by_location:
+        return by_location, "locationFallback", DECL_MATCH_RELIABILITY["locationFallback"]
+
+    by_fingerprint = _resolve_decl_by_fingerprint(
+        payload,
+        file_hint=file_hint,
+        module_hint=module_hint,
+        match_ctx=match_ctx,
+    )
+    if isinstance(by_fingerprint, str) and by_fingerprint:
+        return by_fingerprint, "fingerprintFallback", DECL_MATCH_RELIABILITY["fingerprintFallback"]
+
+    return None, "unmatched", DECL_MATCH_RELIABILITY["unmatched"]
+
+
+def seed_decl_match_context(match_ctx: dict[str, Any], observations: list[JsonObj]) -> None:
+    cluster_to_decl = cast(dict[str, Counter[str]], match_ctx.get("clusterToDecl", {}))
+    if not cluster_to_decl:
+        return
+    for obs in observations:
+        decl_any = obs.get("declName")
+        if not isinstance(decl_any, str) or not decl_any:
+            continue
+        prov_any = obs.get("declMatchProvenance")
+        prov = prov_any if isinstance(prov_any, str) else "unmatched"
+        if prov == "unmatched":
+            continue
+        cluster_key = make_cluster_key(
+            fingerprint_v1=obs.get("fingerprintV1") if isinstance(obs.get("fingerprintV1"), str) else None,
+            semantic_head=obs.get("semanticHead") if isinstance(obs.get("semanticHead"), str) else None,
+            expr_kind=obs.get("exprKind") if isinstance(obs.get("exprKind"), str) else None,
+            arity_shape_value=obs.get("arityShape") if isinstance(obs.get("arityShape"), str) else None,
+            binder_shape_value=obs.get("binderShape") if isinstance(obs.get("binderShape"), str) else None,
+        )
+        cluster_to_decl[cluster_key][decl_any] += 1
+
+
+def top_counts(counter: Counter[str], limit: int = 8) -> list[list[str | int]]:
+    return [[k, int(v)] for k, v in counter.most_common(limit)]
+
+
+def keys_from_counts(value: Any, *, limit: int = 8) -> set[str]:
+    out: set[str] = set()
+    if isinstance(value, list):
+        for row in value[:limit]:
+            if isinstance(row, (list, tuple)) and row:
+                key = row[0]
+                if isinstance(key, str) and key:
+                    out.add(key)
+    return out
+
+
+def jaccard_overlap(lhs: Iterable[str], rhs: Iterable[str]) -> float:
+    left = set(lhs)
+    right = set(rhs)
+    if not left or not right:
+        return 0.0
+    inter = left & right
+    union = left | right
+    if not union:
+        return 0.0
+    return len(inter) / len(union)
 
 
 def load_json(path: Path) -> Any:
@@ -298,10 +852,22 @@ def observe_bridge_payload(
     payload: JsonObj,
     payload_path: Path,
     root: Path,
+    match_ctx: dict[str, Any] | None = None,
 ) -> list[JsonObj]:
     response_meta = payload.get("responseMeta", {})
     session = response_meta.get("sessionId", {}).get("value")
     source_file = parse_uri_or_path(session, root)
+    if match_ctx is not None:
+        decl_name, decl_match_provenance, decl_match_reliability = resolve_decl_match(
+            payload,
+            source_file=source_file,
+            root=root,
+            match_ctx=match_ctx,
+        )
+    else:
+        decl_name, prov = extract_decl_field(payload)
+        decl_match_provenance = prov
+        decl_match_reliability = DECL_MATCH_RELIABILITY.get(prov, DECL_MATCH_RELIABILITY["unmatched"])
 
     diag_provs: list[str] = []
     for diag_any in payload.get("diagnostics", []):
@@ -311,58 +877,169 @@ def observe_bridge_payload(
             if isinstance(prov, str):
                 diag_provs.append(prov)
 
+    base_diag_weight = diag_weight(diag_provs)
+
+    def make_observation(
+        *,
+        surface: str,
+        head: Any,
+        head_source: Any,
+        head_fingerprint: Any,
+        expr_record: Any,
+    ) -> JsonObj:
+        norm = normalize_expr_record(
+            expr_record,
+            fallback_head=head,
+            fallback_source=head_source,
+            fallback_fingerprint=head_fingerprint,
+        )
+        s_weight = source_weight(cast(str | None, norm.get("headSource")))
+        obs_conf = clamp01(0.7 * s_weight + 0.3 * base_diag_weight)
+        return {
+            "payloadFile": relpath_or_self(payload_path, root),
+            "sourceFile": source_file,
+            "declName": decl_name,
+            "declMatchProvenance": decl_match_provenance,
+            "declMatchReliability": round(decl_match_reliability, 4),
+            "surface": surface,
+            "head": norm.get("semanticHead"),
+            "headSource": norm.get("headSource"),
+            "fingerprint": norm.get("fingerprintV1"),
+            "semanticHead": norm.get("semanticHead"),
+            "fingerprintV1": norm.get("fingerprintV1"),
+            "exprKind": norm.get("exprKind"),
+            "appArity": norm.get("appArity"),
+            "binderDepth": norm.get("binderDepth"),
+            "arityShape": norm.get("arityShape"),
+            "binderShape": norm.get("binderShape"),
+            "argHeadFingerprints": norm.get("argHeadFingerprints", []),
+            "observationConfidence": round(obs_conf, 4),
+            "diagnosticProvenance": list(diag_provs),
+        }
+
     out: list[JsonObj] = []
     for goal_any in payload.get("goals", []):
         if not isinstance(goal_any, dict):
             continue
         goal = cast(JsonObj, goal_any)
         out.append(
-            {
-                "payloadFile": relpath_or_self(payload_path, root),
-                "sourceFile": source_file,
-                "surface": "target",
-                "head": goal.get("targetHead"),
-                "headSource": goal.get("targetHeadSource", "unavailable"),
-                "fingerprint": goal.get("targetHeadFingerprint"),
-                "diagnosticProvenance": diag_provs,
-            }
+            make_observation(
+                surface="target",
+                head=goal.get("targetHead"),
+                head_source=goal.get("targetHeadSource", "unavailable"),
+                head_fingerprint=goal.get("targetHeadFingerprint"),
+                expr_record=goal.get("targetExprFingerprint"),
+            )
         )
         for local_any in goal.get("locals", []):
             if not isinstance(local_any, dict):
                 continue
             local = cast(JsonObj, local_any)
             out.append(
-                {
-                    "payloadFile": relpath_or_self(payload_path, root),
-                    "sourceFile": source_file,
-                    "surface": "local",
-                    "head": local.get("typeHead"),
-                    "headSource": local.get("typeHeadSource", "unavailable"),
-                    "fingerprint": local.get("typeHeadFingerprint"),
-                    "diagnosticProvenance": diag_provs,
-                }
+                make_observation(
+                    surface="local",
+                    head=local.get("typeHead"),
+                    head_source=local.get("typeHeadSource", "unavailable"),
+                    head_fingerprint=local.get("typeHeadFingerprint"),
+                    expr_record=local.get("typeExprFingerprint"),
+                )
             )
+
+    has_validate_decl_shape = any(
+        key in payload
+        for key in (
+            "theoremType",
+            "theoremTypeHead",
+            "theoremTypeHeadSource",
+            "theoremTypeHeadFingerprint",
+            "theoremTypeExprFingerprint",
+        )
+    )
+    if has_validate_decl_shape:
+        out.append(
+            make_observation(
+                surface="theoremType",
+                head=payload.get("theoremTypeHead"),
+                head_source=payload.get("theoremTypeHeadSource", "unavailable"),
+                head_fingerprint=payload.get("theoremTypeHeadFingerprint"),
+                expr_record=payload.get("theoremTypeExprFingerprint"),
+            )
+        )
+
+    if match_ctx is not None:
+        seed_decl_match_context(match_ctx, out)
+
     return out
 
 
-def normalize_bridge_observations(observations: list[JsonObj]) -> tuple[JsonObj, dict[str, JsonObj]]:
+def normalize_bridge_observations(
+    observations: list[JsonObj],
+) -> tuple[JsonObj, dict[str, JsonObj], dict[str, JsonObj]]:
     semantic_groups: dict[tuple[str, str], JsonObj] = {}
     fingerprint_groups: dict[tuple[str, str], JsonObj] = {}
+    shape_groups: dict[tuple[str, str, str, str, str], JsonObj] = {}
     file_signals: dict[str, JsonObj] = defaultdict(
-        lambda: {"semanticCount": 0, "fingerprintCount": 0, "confSamples": []}
+        lambda: {
+            "semanticCount": 0,
+            "fingerprintCount": 0,
+            "confSamples": [],
+            "fingerprintCounts": Counter(),
+            "semanticHeadCounts": Counter(),
+            "exprKindCounts": Counter(),
+            "arityShapeCounts": Counter(),
+            "binderShapeCounts": Counter(),
+            "clusterKeyCounts": Counter(),
+        }
+    )
+    decl_signals: dict[str, JsonObj] = defaultdict(
+        lambda: {
+            "semanticCount": 0,
+            "fingerprintCount": 0,
+            "confSamples": [],
+            "mappingReliabilitySamples": [],
+            "fingerprintCounts": Counter(),
+            "semanticHeadCounts": Counter(),
+            "exprKindCounts": Counter(),
+            "arityShapeCounts": Counter(),
+            "binderShapeCounts": Counter(),
+            "clusterKeyCounts": Counter(),
+            "matchProvenanceCounts": Counter(),
+            "sourceFiles": set(),
+            "surfaceCounts": Counter(),
+        }
     )
 
     for obs in observations:
         surface = str(obs.get("surface") or "unknown")
-        head = obs.get("head")
+        head = obs.get("semanticHead") or obs.get("head")
         source = str(obs.get("headSource") or "unavailable")
-        fingerprint = obs.get("fingerprint")
+        fingerprint = obs.get("fingerprintV1") or obs.get("fingerprint")
+        expr_kind_any = obs.get("exprKind")
+        expr_kind = expr_kind_any if isinstance(expr_kind_any, str) and expr_kind_any else "unknown"
+        arity_shape_any = obs.get("arityShape")
+        arity_shape_value = arity_shape_any if isinstance(arity_shape_any, str) and arity_shape_any else "arity:?"
+        binder_shape_any = obs.get("binderShape")
+        binder_shape_value = (
+            binder_shape_any if isinstance(binder_shape_any, str) and binder_shape_any else "binder:?"
+        )
         source_file = obs.get("sourceFile")
+        decl_name = obs.get("declName")
         diag_provs = [str(p) for p in obs.get("diagnosticProvenance", [])]
+        cluster_key = make_cluster_key(
+            fingerprint_v1=fingerprint if isinstance(fingerprint, str) else None,
+            semantic_head=head if isinstance(head, str) else None,
+            expr_kind=expr_kind,
+            arity_shape_value=arity_shape_value,
+            binder_shape_value=binder_shape_value,
+        )
 
-        s_weight = source_weight(source)
-        d_weight = diag_weight(diag_provs)
-        obs_conf = clamp01(0.7 * s_weight + 0.3 * d_weight)
+        conf_any = obs.get("observationConfidence")
+        if isinstance(conf_any, (int, float)):
+            obs_conf = clamp01(float(conf_any))
+        else:
+            s_weight = source_weight(source)
+            d_weight = diag_weight(diag_provs)
+            obs_conf = clamp01(0.7 * s_weight + 0.3 * d_weight)
 
         if source_file:
             fstats = file_signals[source_file]
@@ -371,6 +1048,52 @@ def normalize_bridge_observations(observations: list[JsonObj]) -> tuple[JsonObj,
                 fstats["semanticCount"] += 1
             if source == "exprSemantic" and fingerprint:
                 fstats["fingerprintCount"] += 1
+            if source == "exprSemantic" and isinstance(head, str) and head:
+                cast(Counter[str], fstats["semanticHeadCounts"])[head] += 1
+            if source == "exprSemantic" and isinstance(fingerprint, str) and fingerprint:
+                cast(Counter[str], fstats["fingerprintCounts"])[fingerprint] += 1
+            if source == "exprSemantic" and expr_kind:
+                cast(Counter[str], fstats["exprKindCounts"])[expr_kind] += 1
+            if source == "exprSemantic" and arity_shape_value:
+                cast(Counter[str], fstats["arityShapeCounts"])[arity_shape_value] += 1
+            if source == "exprSemantic" and binder_shape_value:
+                cast(Counter[str], fstats["binderShapeCounts"])[binder_shape_value] += 1
+            if source == "exprSemantic":
+                cast(Counter[str], fstats["clusterKeyCounts"])[cluster_key] += 1
+
+        if isinstance(decl_name, str) and decl_name:
+            dstats = decl_signals[decl_name]
+            decl_match_prov_any = obs.get("declMatchProvenance")
+            decl_match_prov = decl_match_prov_any if isinstance(decl_match_prov_any, str) else "unmatched"
+            decl_rel_any = obs.get("declMatchReliability")
+            if isinstance(decl_rel_any, (int, float)):
+                decl_rel = clamp01(float(decl_rel_any))
+            else:
+                decl_rel = DECL_MATCH_RELIABILITY.get(decl_match_prov, DECL_MATCH_RELIABILITY["unmatched"])
+            effective_conf = clamp01(obs_conf * max(0.2, decl_rel))
+
+            dstats["confSamples"].append(effective_conf)
+            dstats["mappingReliabilitySamples"].append(decl_rel)
+            cast(Counter[str], dstats["matchProvenanceCounts"])[decl_match_prov] += 1
+            cast(Counter[str], dstats["surfaceCounts"])[surface] += 1
+            if source_file:
+                cast(set[str], dstats["sourceFiles"]).add(source_file)
+            if source == "exprSemantic" and head:
+                dstats["semanticCount"] += 1
+            if source == "exprSemantic" and fingerprint:
+                dstats["fingerprintCount"] += 1
+            if source == "exprSemantic" and isinstance(head, str) and head:
+                cast(Counter[str], dstats["semanticHeadCounts"])[head] += 1
+            if source == "exprSemantic" and isinstance(fingerprint, str) and fingerprint:
+                cast(Counter[str], dstats["fingerprintCounts"])[fingerprint] += 1
+            if source == "exprSemantic" and expr_kind:
+                cast(Counter[str], dstats["exprKindCounts"])[expr_kind] += 1
+            if source == "exprSemantic" and arity_shape_value:
+                cast(Counter[str], dstats["arityShapeCounts"])[arity_shape_value] += 1
+            if source == "exprSemantic" and binder_shape_value:
+                cast(Counter[str], dstats["binderShapeCounts"])[binder_shape_value] += 1
+            if source == "exprSemantic":
+                cast(Counter[str], dstats["clusterKeyCounts"])[cluster_key] += 1
 
         if source == "exprSemantic" and isinstance(head, str) and head:
             gkey = (surface, head)
@@ -417,6 +1140,41 @@ def normalize_bridge_observations(observations: list[JsonObj]) -> tuple[JsonObj,
             for prov in diag_provs:
                 group2["diagProvenance"][prov] += 1
             group2["confSamples"].append(obs_conf)
+
+        if source == "exprSemantic":
+            shape_key = (
+                str(fingerprint or "none"),
+                str(head or "none"),
+                expr_kind,
+                arity_shape_value,
+                binder_shape_value,
+            )
+            shape_group = shape_groups.setdefault(
+                shape_key,
+                {
+                    "fingerprintV1": shape_key[0],
+                    "semanticHead": shape_key[1],
+                    "exprKind": shape_key[2],
+                    "arityShape": shape_key[3],
+                    "binderShape": shape_key[4],
+                    "clusterKey": cluster_key,
+                    "count": 0,
+                    "files": set(),
+                    "decls": set(),
+                    "diagProvenance": Counter(),
+                    "confSamples": [],
+                    "surfaceCounts": Counter(),
+                },
+            )
+            shape_group["count"] += 1
+            if isinstance(source_file, str) and source_file:
+                shape_group["files"].add(source_file)
+            if isinstance(decl_name, str) and decl_name:
+                shape_group["decls"].add(decl_name)
+            for prov in diag_provs:
+                shape_group["diagProvenance"][prov] += 1
+            shape_group["confSamples"].append(obs_conf)
+            shape_group["surfaceCounts"][surface] += 1
 
     semantic_out: list[JsonObj] = []
     for group in semantic_groups.values():
@@ -478,8 +1236,52 @@ def normalize_bridge_observations(observations: list[JsonObj]) -> tuple[JsonObj,
             }
         )
 
+    shape_out: list[JsonObj] = []
+    for group in shape_groups.values():
+        diag_hist = dict(group["diagProvenance"])
+        avg_diag = safe_mean(
+            [DIAG_PROVENANCE_WEIGHT.get(k, DIAG_PROVENANCE_WEIGHT["fallback"]) for k in group["diagProvenance"]],
+            default=DIAG_PROVENANCE_WEIGHT["fallback"],
+        )
+        shape_out.append(
+            {
+                "clusterKey": group["clusterKey"],
+                "fingerprintV1": group["fingerprintV1"],
+                "semanticHead": group["semanticHead"],
+                "exprKind": group["exprKind"],
+                "arityShape": group["arityShape"],
+                "binderShape": group["binderShape"],
+                "count": group["count"],
+                "files": sorted(group["files"]),
+                "declarations": sorted(group["decls"]),
+                "surfaceCounts": dict(group["surfaceCounts"]),
+                "groupConfidence": round(safe_mean(group["confSamples"], default=0.0), 4),
+                "confidenceProvenance": [
+                    {
+                        "signal": "headSource",
+                        "weight": HEAD_SOURCE_WEIGHT["exprSemantic"],
+                        "evidence": "exprSemantic",
+                    },
+                    {
+                        "signal": "diagnosticProvenance",
+                        "weight": round(avg_diag, 4),
+                        "evidence": json.dumps(diag_hist, sort_keys=True),
+                    },
+                ],
+            }
+        )
+
     semantic_out.sort(key=lambda x: (-x["count"], -x["groupConfidence"], x["surface"], x["head"]))
     fingerprint_out.sort(key=lambda x: (-x["count"], -x["groupConfidence"], x["surface"], x["fingerprint"]))
+    shape_out.sort(
+        key=lambda x: (
+            -x["count"],
+            -x["groupConfidence"],
+            str(x.get("exprKind") or ""),
+            str(x.get("semanticHead") or ""),
+            str(x.get("fingerprintV1") or ""),
+        )
+    )
 
     file_signal_out: dict[str, JsonObj] = {}
     for fpath, stats in file_signals.items():
@@ -487,16 +1289,49 @@ def normalize_bridge_observations(observations: list[JsonObj]) -> tuple[JsonObj,
             "semanticCount": stats["semanticCount"],
             "fingerprintCount": stats["fingerprintCount"],
             "avgConfidence": round(safe_mean(stats["confSamples"], default=0.0), 4),
+            "fingerprintCounts": top_counts(cast(Counter[str], stats["fingerprintCounts"])),
+            "semanticHeadCounts": top_counts(cast(Counter[str], stats["semanticHeadCounts"])),
+            "exprKindCounts": top_counts(cast(Counter[str], stats["exprKindCounts"])),
+            "arityShapeCounts": top_counts(cast(Counter[str], stats["arityShapeCounts"])),
+            "binderShapeCounts": top_counts(cast(Counter[str], stats["binderShapeCounts"])),
+            "clusterKeys": top_counts(cast(Counter[str], stats["clusterKeyCounts"])),
+        }
+
+    decl_signal_out: dict[str, JsonObj] = {}
+    for decl, stats in decl_signals.items():
+        decl_signal_out[decl] = {
+            "semanticCount": stats["semanticCount"],
+            "fingerprintCount": stats["fingerprintCount"],
+            "avgConfidence": round(safe_mean(stats["confSamples"], default=0.0), 4),
+            "avgMappingReliability": round(safe_mean(stats["mappingReliabilitySamples"], default=0.0), 4),
+            "fingerprintCounts": top_counts(cast(Counter[str], stats["fingerprintCounts"])),
+            "semanticHeadCounts": top_counts(cast(Counter[str], stats["semanticHeadCounts"])),
+            "exprKindCounts": top_counts(cast(Counter[str], stats["exprKindCounts"])),
+            "arityShapeCounts": top_counts(cast(Counter[str], stats["arityShapeCounts"])),
+            "binderShapeCounts": top_counts(cast(Counter[str], stats["binderShapeCounts"])),
+            "clusterKeys": top_counts(cast(Counter[str], stats["clusterKeyCounts"])),
+            "matchProvenanceCounts": dict(cast(Counter[str], stats["matchProvenanceCounts"])),
+            "sourceFiles": sorted(cast(set[str], stats["sourceFiles"])),
+            "surfaceCounts": dict(cast(Counter[str], stats["surfaceCounts"])),
         }
 
     summary: JsonObj = {
         "payloadObservationCount": len(observations),
         "semanticHeadGroupCount": len(semantic_out),
         "fingerprintGroupCount": len(fingerprint_out),
+        "shapeClusterGroupCount": len(shape_out),
+        "declarationSignalCount": len(decl_signal_out),
+        "declarationMatchProvenance": dict(
+            Counter(
+                str(obs.get("declMatchProvenance") or "unmatched")
+                for obs in observations
+            )
+        ),
         "semanticHeadGroups": semantic_out,
         "fingerprintGroups": fingerprint_out,
+        "shapeClusters": shape_out,
     }
-    return summary, file_signal_out
+    return summary, file_signal_out, decl_signal_out
 
 
 def file_domain(file_path: str | None) -> str | None:
@@ -514,6 +1349,7 @@ def rank_vacuity_candidates(
     file_region: dict[str, str],
     hole_counts: dict[str, int],
     bridge_file_signals: dict[str, JsonObj],
+    bridge_decl_signals: dict[str, JsonObj],
     top_k: int,
 ) -> list[JsonObj]:
     ranked: list[RankedEntry] = []
@@ -581,33 +1417,102 @@ def rank_vacuity_candidates(
                     )
                 )
 
-            bridge = bridge_file_signals.get(file_path)
-            if bridge:
-                sem_count = int(bridge.get("semanticCount", 0))
-                fp_count = int(bridge.get("fingerprintCount", 0))
-                bridge_conf = float(bridge.get("avgConfidence", 0.0))
-                if sem_count > 0:
-                    sem_boost = 0.11 * min(1.0, sem_count / 3.0)
-                    signals.append(
-                        Signal(
-                            "bridge.semantic-head-overlap",
-                            sem_boost,
-                            clamp01(bridge_conf),
-                            f"semantic observations in file: {sem_count}",
-                        )
+        semantic_profile: JsonObj | None = None
+        profile_scope = "none"
+        profile_mapping = "none"
+        profile_mapping_reliability = 0.0
+
+        decl_signal = bridge_decl_signals.get(name)
+        if isinstance(decl_signal, dict):
+            semantic_profile = dict(decl_signal)
+            profile_scope = "declaration"
+            match_counts_any = decl_signal.get("matchProvenanceCounts")
+            if isinstance(match_counts_any, dict) and match_counts_any:
+                match_counts = {
+                    str(k): int(v)
+                    for k, v in match_counts_any.items()
+                    if isinstance(v, (int, float))
+                }
+                if match_counts:
+                    top_match = max(match_counts.items(), key=lambda item: item[1])[0]
+                    profile_mapping = top_match
+                else:
+                    profile_mapping = "declaration"
+            else:
+                profile_mapping = "declaration"
+            profile_mapping_reliability = clamp01(float(decl_signal.get("avgMappingReliability", 0.0)))
+            if profile_mapping_reliability <= 0.0:
+                profile_mapping_reliability = 0.70
+        elif isinstance(file_path, str):
+            file_signal = bridge_file_signals.get(file_path)
+            if isinstance(file_signal, dict):
+                semantic_profile = dict(file_signal)
+                profile_scope = "file"
+                profile_mapping = "file-fallback"
+                profile_mapping_reliability = 0.62
+
+        if semantic_profile is not None:
+            sem_count = int(semantic_profile.get("semanticCount", 0))
+            fp_count = int(semantic_profile.get("fingerprintCount", 0))
+            bridge_conf = clamp01(float(semantic_profile.get("avgConfidence", 0.0)))
+            scoped_conf = clamp01(bridge_conf * profile_mapping_reliability)
+            sem_scale = 0.13 if profile_scope == "declaration" else 0.09
+            fp_scale = 0.08 if profile_scope == "declaration" else 0.05
+            if sem_count > 0:
+                sem_boost = sem_scale * min(1.0, sem_count / 3.0)
+                signals.append(
+                    Signal(
+                        f"bridge.{profile_scope}.semantic-shape",
+                        sem_boost,
+                        scoped_conf,
+                        f"{profile_mapping}: semantic observations={sem_count}",
                     )
-                if fp_count > 0:
-                    fp_boost = 0.06 * min(1.0, fp_count / 3.0)
-                    signals.append(
-                        Signal(
-                            "bridge.fingerprint-overlap",
-                            fp_boost,
-                            clamp01(bridge_conf),
-                            f"fingerprint observations in file: {fp_count}",
-                        )
+                )
+            if fp_count > 0:
+                fp_boost = fp_scale * min(1.0, fp_count / 3.0)
+                signals.append(
+                    Signal(
+                        f"bridge.{profile_scope}.fingerprint-shape",
+                        fp_boost,
+                        scoped_conf,
+                        f"{profile_mapping}: fingerprint observations={fp_count}",
                     )
+                )
+
+        cluster_counts = semantic_profile.get("clusterKeys") if semantic_profile else None
+        cluster_key = None
+        if isinstance(cluster_counts, list) and cluster_counts:
+            first = cluster_counts[0]
+            if isinstance(first, (list, tuple)) and first and isinstance(first[0], str):
+                cluster_key = first[0]
+        if not cluster_key:
+            cluster_key = make_cluster_key(
+                fingerprint_v1=None,
+                semantic_head=name,
+                expr_kind="unknown",
+                arity_shape_value="arity:?",
+                binder_shape_value="binder:?",
+            )
 
         score, confidence, provenance = summarize_signals(signals)
+        semantic_profile_summary: JsonObj | None = None
+        if semantic_profile is not None:
+            semantic_profile_summary = {
+                "scope": profile_scope,
+                "mapping": profile_mapping,
+                "mappingReliability": round(profile_mapping_reliability, 4),
+                "semanticCount": int(semantic_profile.get("semanticCount", 0)),
+                "fingerprintCount": int(semantic_profile.get("fingerprintCount", 0)),
+                "avgConfidence": round(float(semantic_profile.get("avgConfidence", 0.0)), 4),
+                "avgMappingReliability": round(float(semantic_profile.get("avgMappingReliability", 0.0)), 4),
+                "semanticHeadCounts": semantic_profile.get("semanticHeadCounts", []),
+                "fingerprintCounts": semantic_profile.get("fingerprintCounts", []),
+                "exprKindCounts": semantic_profile.get("exprKindCounts", []),
+                "arityShapeCounts": semantic_profile.get("arityShapeCounts", []),
+                "binderShapeCounts": semantic_profile.get("binderShapeCounts", []),
+                "clusterKeys": semantic_profile.get("clusterKeys", []),
+                "matchProvenanceCounts": semantic_profile.get("matchProvenanceCounts", {}),
+            }
         payload: JsonObj = {
             "name": name,
             "file": file_path,
@@ -615,6 +1520,8 @@ def rank_vacuity_candidates(
             "region": region,
             "tags": sorted(tags),
             "violations": violations,
+            "semanticClusterKey": cluster_key,
+            "semanticProfile": semantic_profile_summary,
             "score": round(score, 4),
             "confidence": round(confidence, 4),
             "confidenceProvenance": provenance,
@@ -674,8 +1581,10 @@ def rank_owner_candidates(
         signals = agg_signals[owner_file]
         final_score, confidence, provenance = summarize_signals(signals)
         owner = owner_by_file[owner_file]
+        owner_region = file_region.get(owner_file, "unknown")
         payload: JsonObj = {
             "ownerFile": owner_file,
+            "region": owner_region,
             "sourceDepth": owner.get("source_depth"),
             "targetDepth": owner.get("target_depth"),
             "notes": owner.get("notes", ""),
@@ -685,6 +1594,269 @@ def rank_owner_candidates(
             "confidenceProvenance": provenance,
         }
         ranked.append(RankedEntry(key=owner_file, score=final_score, confidence=confidence, payload=payload))
+
+    ranked.sort(key=lambda x: (-x.score, -x.confidence, x.key))
+    out: list[JsonObj] = []
+    for i, entry in enumerate(ranked[:top_k], start=1):
+        row = dict(entry.payload)
+        row["rank"] = i
+        out.append(row)
+    return out
+
+
+def rank_declaration_plans(
+    vacuity_candidates: list[JsonObj],
+    owner_candidates: list[JsonObj],
+    replacement_candidates: list[JsonObj],
+    bridge_decl_signals: dict[str, JsonObj],
+    top_k: int,
+) -> list[JsonObj]:
+    owner_by_file: dict[str, JsonObj] = {
+        str(row.get("ownerFile")): row
+        for row in owner_candidates
+        if isinstance(row.get("ownerFile"), str)
+    }
+    replacements = [row for row in replacement_candidates if isinstance(row, dict)]
+
+    ranked: list[RankedEntry] = []
+
+    for cand in vacuity_candidates:
+        cand_name = cand.get("name")
+        if not isinstance(cand_name, str) or not cand_name:
+            continue
+
+        cand_file = cand.get("file") if isinstance(cand.get("file"), str) else None
+        cand_region = cand.get("region") if isinstance(cand.get("region"), str) else "unknown"
+        cand_score = clamp01(float(cand.get("score", 0.0)))
+        cand_conf = clamp01(float(cand.get("confidence", 0.0)))
+        cand_profile_any = cand.get("semanticProfile")
+        cand_profile = cast(JsonObj, cand_profile_any) if isinstance(cand_profile_any, dict) else {}
+
+        plan_signals: list[Signal] = [
+            Signal(
+                "candidate.vacuity-prior",
+                0.32 * cand_score,
+                max(0.45, cand_conf),
+                f"candidate score={cand_score:.4f}",
+            )
+        ]
+
+        owner_best: JsonObj | None = None
+        owner_best_score = 0.0
+        owner_best_conf = 0.0
+        owner_best_prov: list[JsonObj] = []
+        for owner in owner_by_file.values():
+            owner_file = owner.get("ownerFile")
+            if not isinstance(owner_file, str):
+                continue
+            owner_region = owner.get("region") if isinstance(owner.get("region"), str) else "unknown"
+            owner_support_any = owner.get("supportingVacuityCandidates")
+            owner_support = (
+                set(owner_support_any)
+                if isinstance(owner_support_any, list)
+                else set()
+            )
+
+            owner_signals: list[Signal] = []
+            if cand_file and cand_file == owner_file:
+                owner_signals.append(
+                    Signal(
+                        "owner.same-file",
+                        0.28 * cand_score,
+                        0.95,
+                        f"candidate file matches owner file: {owner_file}",
+                    )
+                )
+            if cand_region != "unknown" and cand_region == owner_region:
+                owner_signals.append(
+                    Signal(
+                        "owner.same-region",
+                        0.14 * cand_score,
+                        0.78,
+                        f"candidate region matches owner region: {cand_region}",
+                    )
+                )
+            if cand_name in owner_support:
+                owner_signals.append(
+                    Signal(
+                        "owner.support-link",
+                        0.22 * cand_score,
+                        0.86,
+                        f"owner already supported by candidate {cand_name}",
+                    )
+                )
+
+            if not owner_signals:
+                continue
+            local_score, local_conf, local_prov = summarize_signals(owner_signals)
+            if local_score > owner_best_score or (
+                abs(local_score - owner_best_score) < 1e-9 and local_conf > owner_best_conf
+            ):
+                owner_best = owner
+                owner_best_score = local_score
+                owner_best_conf = local_conf
+                owner_best_prov = local_prov
+
+        if owner_best is not None:
+            owner_file = cast(str, owner_best.get("ownerFile"))
+            plan_signals.append(
+                Signal(
+                    "owner.best-corridor",
+                    0.24 * owner_best_score,
+                    owner_best_conf,
+                    f"selected owner={owner_file}",
+                )
+            )
+
+        cand_clusters = keys_from_counts(cand_profile.get("clusterKeys"))
+        cand_heads = keys_from_counts(cand_profile.get("semanticHeadCounts"))
+        cand_fps = keys_from_counts(cand_profile.get("fingerprintCounts"))
+
+        corridor_rows: list[JsonObj] = []
+        for repl in replacements:
+            repl_decl = repl.get("replacementDecl")
+            if not isinstance(repl_decl, str) or not repl_decl:
+                continue
+            repl_support_any = repl.get("supportingVacuityCandidates")
+            repl_support = set(repl_support_any) if isinstance(repl_support_any, list) else set()
+            repl_region = repl.get("region") if isinstance(repl.get("region"), str) else "unknown"
+            owner_corridor_any = repl.get("ownerCorridor")
+            owner_corridor = set(owner_corridor_any) if isinstance(owner_corridor_any, list) else set()
+
+            repl_signals: list[Signal] = []
+            if cand_name in repl_support:
+                repl_signals.append(
+                    Signal(
+                        "replacement.support-link",
+                        0.30 * cand_score,
+                        0.90,
+                        f"replacement already supported by candidate {cand_name}",
+                    )
+                )
+            if cand_region != "unknown" and cand_region == repl_region:
+                repl_signals.append(
+                    Signal(
+                        "replacement.same-region",
+                        0.10 * cand_score,
+                        0.74,
+                        f"replacement region matches candidate region: {cand_region}",
+                    )
+                )
+            if owner_best is not None:
+                owner_file = cast(str, owner_best.get("ownerFile"))
+                if owner_file in owner_corridor:
+                    repl_signals.append(
+                        Signal(
+                            "replacement.owner-corridor",
+                            0.16 * cand_score,
+                            0.84,
+                            f"replacement corridor includes selected owner {owner_file}",
+                        )
+                    )
+
+            repl_decl_profile = bridge_decl_signals.get(repl_decl)
+            if isinstance(repl_decl_profile, dict):
+                repl_clusters = keys_from_counts(repl_decl_profile.get("clusterKeys"))
+                repl_heads = keys_from_counts(repl_decl_profile.get("semanticHeadCounts"))
+                repl_fps = keys_from_counts(repl_decl_profile.get("fingerprintCounts"))
+                cluster_overlap = jaccard_overlap(cand_clusters, repl_clusters)
+                head_overlap = jaccard_overlap(cand_heads, repl_heads)
+                fp_overlap = jaccard_overlap(cand_fps, repl_fps)
+                overlap = 0.5 * cluster_overlap + 0.3 * head_overlap + 0.2 * fp_overlap
+                if overlap > 0.0:
+                    repl_signals.append(
+                        Signal(
+                            "replacement.decl-shape-overlap",
+                            0.18 * cand_score * overlap,
+                            0.80,
+                            (
+                                "bridge declaration overlap "
+                                f"(cluster={cluster_overlap:.3f}, head={head_overlap:.3f}, fp={fp_overlap:.3f})"
+                            ),
+                        )
+                    )
+
+            repl_prior_score = clamp01(float(repl.get("score", 0.0)))
+            repl_prior_conf = clamp01(float(repl.get("confidence", 0.0)))
+            if repl_prior_score > 0.0:
+                repl_signals.append(
+                    Signal(
+                        "replacement.rank-prior",
+                        0.14 * repl_prior_score,
+                        max(0.40, repl_prior_conf),
+                        f"replacement ranking prior={repl_prior_score:.4f}",
+                    )
+                )
+
+            if not repl_signals:
+                continue
+            repl_score, repl_conf, repl_prov = summarize_signals(repl_signals)
+            if repl_score <= 0.0:
+                continue
+            corridor_rows.append(
+                {
+                    "replacementDecl": repl_decl,
+                    "region": repl_region,
+                    "score": round(repl_score, 4),
+                    "confidence": round(repl_conf, 4),
+                    "confidenceProvenance": repl_prov,
+                }
+            )
+
+        corridor_rows.sort(
+            key=lambda row: (
+                -float(row.get("score", 0.0)),
+                -float(row.get("confidence", 0.0)),
+                str(row.get("replacementDecl", "")),
+            )
+        )
+        probable_corridor = corridor_rows[:3]
+
+        if probable_corridor:
+            best_repl = probable_corridor[0]
+            plan_signals.append(
+                Signal(
+                    "replacement.best-corridor",
+                    0.24 * clamp01(float(best_repl.get("score", 0.0))),
+                    clamp01(float(best_repl.get("confidence", 0.0))),
+                    f"selected replacement={best_repl.get('replacementDecl')}",
+                )
+            )
+            if len(probable_corridor) > 1:
+                plan_signals.append(
+                    Signal(
+                        "replacement.alternatives",
+                        min(0.06, 0.02 * (len(probable_corridor) - 1)),
+                        0.62,
+                        f"alternative corridor count={len(probable_corridor)}",
+                    )
+                )
+
+        score, confidence, provenance = summarize_signals(plan_signals)
+
+        owner_payload: JsonObj | None = None
+        if owner_best is not None:
+            owner_payload = {
+                "ownerFile": owner_best.get("ownerFile"),
+                "region": owner_best.get("region"),
+                "score": round(owner_best_score, 4),
+                "confidence": round(owner_best_conf, 4),
+                "confidenceProvenance": owner_best_prov,
+            }
+
+        payload: JsonObj = {
+            "candidate": cand_name,
+            "candidateFile": cand_file,
+            "candidateRegion": cand_region,
+            "candidateScore": round(cand_score, 4),
+            "candidateConfidence": round(cand_conf, 4),
+            "probable_owner": owner_payload,
+            "probable_replacement_corridor": probable_corridor,
+            "score": round(score, 4),
+            "confidence": round(confidence, 4),
+            "confidenceProvenance": provenance,
+        }
+        ranked.append(RankedEntry(key=cand_name, score=score, confidence=confidence, payload=payload))
 
     ranked.sort(key=lambda x: (-x.score, -x.confidence, x.key))
     out: list[JsonObj] = []
@@ -879,6 +2051,37 @@ def make_markdown_report(report: JsonObj) -> str:
         [("rank", "rank"), ("replacementDecl", "replacementDecl"), ("score", "score"), ("confidence", "confidence")],
     )
 
+    lines.append("## Ranked Declaration Plans")
+    lines.append("")
+    lines.append("| rank | candidate | probable_owner | probable_replacement | score | confidence |")
+    lines.append("|---:|---|---|---|---:|---:|")
+    for row in report.get("rankedDeclarationPlans", [])[:20]:
+        owner_any = row.get("probable_owner")
+        owner_file = owner_any.get("ownerFile") if isinstance(owner_any, dict) else ""
+        corridor_any = row.get("probable_replacement_corridor")
+        repl = ""
+        if isinstance(corridor_any, list) and corridor_any:
+            first = corridor_any[0]
+            if isinstance(first, dict):
+                repl = str(first.get("replacementDecl", ""))
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    str(row.get("rank", "")),
+                    str(row.get("candidate", "")),
+                    str(owner_file),
+                    repl,
+                    str(row.get("score", "")),
+                    str(row.get("confidence", "")),
+                ]
+            )
+            + " |"
+        )
+    if not report.get("rankedDeclarationPlans"):
+        lines.append("| - | - | - | - | - | - |")
+    lines.append("")
+
     lines.append("## Confidence Provenance Weights")
     lines.append("")
     lines.append("- headSourceWeight: " + json.dumps(HEAD_SOURCE_WEIGHT, sort_keys=True))
@@ -983,6 +2186,8 @@ def main() -> None:
     if proof_holes_path.exists():
         hole_counts = load_proof_hole_counts(proof_holes_path)
 
+    decl_match_ctx = build_decl_match_context(theorem_entries, decls, root)
+
     bridge_json_paths = collect_bridge_json_paths(args.bridge_input, root)
     bridge_payload_count = 0
     observations: list[JsonObj] = []
@@ -994,9 +2199,9 @@ def main() -> None:
         payloads = extract_bridge_payload_objects(parsed)
         bridge_payload_count += len(payloads)
         for payload in payloads:
-            observations.extend(observe_bridge_payload(payload, p, root))
+            observations.extend(observe_bridge_payload(payload, p, root, decl_match_ctx))
 
-    normalization, bridge_file_signals = normalize_bridge_observations(observations)
+    normalization, bridge_file_signals, bridge_decl_signals = normalize_bridge_observations(observations)
 
     theorem_by_name = {
         str(row.get("name")): row for row in theorem_entries if isinstance(row, dict) and row.get("name")
@@ -1008,6 +2213,7 @@ def main() -> None:
         file_region=file_region,
         hole_counts=hole_counts,
         bridge_file_signals=bridge_file_signals,
+        bridge_decl_signals=bridge_decl_signals,
         top_k=args.top_k,
     )
 
@@ -1025,6 +2231,14 @@ def main() -> None:
         theorem_by_name=theorem_by_name,
         file_region=file_region,
         owner_candidates=owner_candidates,
+        top_k=args.top_k,
+    )
+
+    declaration_plans = rank_declaration_plans(
+        vacuity_candidates=vacuity_candidates,
+        owner_candidates=owner_candidates,
+        replacement_candidates=replacement_candidates,
+        bridge_decl_signals=bridge_decl_signals,
         top_k=args.top_k,
     )
 
@@ -1051,11 +2265,13 @@ def main() -> None:
             "ownerEntries": len(owner_entries),
             "bridgePayloadFiles": len(bridge_json_paths),
             "bridgePayloadObjects": bridge_payload_count,
+            "bridgeDeclarationSignalCount": len(bridge_decl_signals),
         },
         "normalization": normalization,
         "rankedVacuityCandidates": vacuity_candidates,
         "rankedOwnerCandidates": owner_candidates,
         "rankedReplacementCandidates": replacement_candidates,
+        "rankedDeclarationPlans": declaration_plans,
         "confidenceWeights": {
             "headSource": HEAD_SOURCE_WEIGHT,
             "diagnosticProvenance": DIAG_PROVENANCE_WEIGHT,
@@ -1078,6 +2294,7 @@ def main() -> None:
         f"vacuity={len(vacuity_candidates)}, "
         f"owners={len(owner_candidates)}, "
         f"replacements={len(replacement_candidates)}, "
+        f"declaration_plans={len(declaration_plans)}, "
         f"bridge_payloads={bridge_payload_count}"
     )
 

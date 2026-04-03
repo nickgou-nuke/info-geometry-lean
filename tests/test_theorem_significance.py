@@ -1,4 +1,6 @@
+import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -14,13 +16,16 @@ def _decl(
     *,
     file: str,
     kind: str = "theorem",
+    module: str | None = None,
+    line: int = 0,
     attrs: list[str] | None = None,
 ) -> sig.DeclInfo:
     return sig.DeclInfo(
         name=name,
         kind=kind,
         file=file,
-        module=None,
+        module=module,
+        line=line,
         attrs=[] if attrs is None else attrs,
     )
 
@@ -322,6 +327,93 @@ class TheoremSignificanceTests(unittest.TestCase):
         self.assertGreater(bridge_entry.bridge_semantic_evidence_count, 0)
         self.assertGreater(bridge_entry.bridge_fingerprint_match_count, 0)
         self.assertTrue(any(f["signal"] == "bridge.semantic-expr-evidence" for f in bridge_entry.vacuity_suspicion_factors))
+
+    def test_score_all_prefers_declaration_bridge_evidence_over_file_level(self):
+        shared_file = "lean/InfoGeometry/Canonical/Shared.lean"
+        decls = {
+            "A": _decl(name="A", file=shared_file),
+            "B": _decl(name="B", file=shared_file),
+            "Target": _decl(name="Target", file="lean/InfoGeometry/Canonical/Target.lean"),
+        }
+        forward = {
+            "A": [("Target", "value")],
+            "B": [("Target", "value")],
+        }
+        reverse = {"Target": [("A", "value"), ("B", "value")]}
+
+        scored = sig.score_all(
+            decls,
+            forward,
+            reverse,
+            sig.BRIDGE_HINTS_DEFAULT,
+            sig.STRICT_PATHS_DEFAULT,
+            REPO_ROOT,
+            bridge_evidence_by_decl={
+                "A": sig.BridgeEvidence(
+                    semantic_expr_count=4,
+                    fingerprint_match_count=2,
+                    provenance_counts=sig.Counter({"leanTag": 2}),
+                )
+            },
+            bridge_evidence_by_file={
+                shared_file: sig.BridgeEvidence(
+                    semantic_expr_count=1,
+                    fingerprint_match_count=1,
+                    provenance_counts=sig.Counter({"bridgeRule": 1}),
+                )
+            },
+        )
+
+        a = next(s for s in scored if s.name == "A")
+        b = next(s for s in scored if s.name == "B")
+
+        self.assertEqual(a.bridge_semantic_evidence_count, 4)
+        self.assertEqual(a.bridge_fingerprint_match_count, 2)
+        self.assertEqual(b.bridge_semantic_evidence_count, 1)
+        self.assertEqual(b.bridge_fingerprint_match_count, 1)
+
+    def test_bridge_evidence_index_maps_payload_by_declaration_location(self):
+        shared_file = "lean/InfoGeometry/Canonical/Shared.lean"
+        module = "InfoGeometry.Canonical.Shared"
+        source_uri = (REPO_ROOT / shared_file).resolve().as_uri()
+        decls = {
+            "A": _decl(name="A", file=shared_file, module=module, line=100),
+            "B": _decl(name="B", file=shared_file, module=module, line=220),
+        }
+
+        payload = {
+            "responseMeta": {"sessionId": {"value": source_uri}},
+            "request": {
+                "file": source_uri,
+                "module": module,
+                "line": 150,
+            },
+            "diagnostics": [{"classificationProvenance": "leanTag"}],
+            "goals": [
+                {
+                    "targetExprFingerprint": {
+                        "fingerprintSource": "exprSemantic",
+                        "fingerprintV1": "shape/v1/head:const:eq",
+                    },
+                    "locals": [],
+                }
+            ],
+            "theoremTypeExprFingerprint": {
+                "fingerprintSource": "exprSemantic",
+                "fingerprintV1": "shape/v1/head:const:eq",
+            },
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            payload_path = Path(tmpdir) / "bridge-payload.json"
+            payload_path.write_text(json.dumps(payload), encoding="utf-8")
+            by_decl, by_file = sig.load_bridge_evidence_index([payload_path], REPO_ROOT, decls)
+
+        self.assertIn("A", by_decl)
+        self.assertNotIn("B", by_decl)
+        self.assertIn(shared_file, by_file)
+        self.assertGreater(by_decl["A"].semantic_expr_count, 0)
+        self.assertGreater(by_decl["A"].fingerprint_match_count, 0)
 
 
 if __name__ == "__main__":

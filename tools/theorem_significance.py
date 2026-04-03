@@ -34,6 +34,7 @@ import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any, Iterable, cast
 from urllib.parse import unquote, urlparse
 
 if __package__ in (None, ""):
@@ -48,6 +49,43 @@ from vacuity_policy_config import (
     is_bridge_file,
     is_strict_file,
 )
+
+
+DECL_NAME_EXACT_KEYS = ("declName",)
+
+DECL_NAME_REQUEST_KEYS = (
+    "requestedDecl",
+    "name",
+    "declarationName",
+    "declaration",
+    "theoremName",
+)
+
+DECL_NAME_KEYS = DECL_NAME_EXACT_KEYS + DECL_NAME_REQUEST_KEYS
+
+DECL_LOCATION_FILE_KEYS = (
+    "file",
+    "sourceFile",
+    "path",
+    "uri",
+    "documentUri",
+    "sourceUri",
+)
+
+DECL_LOCATION_MODULE_KEYS = (
+    "module",
+    "declModule",
+    "moduleName",
+)
+
+DECL_LOCATION_LINE_KEYS = (
+    "line",
+    "posLine",
+    "startLine",
+    "targetLine",
+)
+
+DECL_LOCATION_RANGE_MAX_DELTA = 120
 
 # ─── data model ───────────────────────────────────────────────
 
@@ -483,6 +521,295 @@ def parse_uri_or_path(value: str | None, root: Path) -> str | None:
     return str(path)
 
 
+def _coerce_int(value: Any) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    if isinstance(value, str):
+        s = value.strip()
+        if s.lstrip("-").isdigit():
+            try:
+                return int(s)
+            except ValueError:
+                return None
+    return None
+
+
+def _dedup_preserve_order(items: Iterable[str]) -> list[str]:
+    out: list[str] = []
+    seen: set[str] = set()
+    for item in items:
+        if item in seen:
+            continue
+        seen.add(item)
+        out.append(item)
+    return out
+
+
+def _find_first_key_value(node: Any, key: str) -> Any:
+    if isinstance(node, dict):
+        node_dict = cast(dict[str, Any], node)
+        if key in node_dict:
+            return node_dict.get(key)
+        for child in node_dict.values():
+            found = _find_first_key_value(child, key)
+            if found is not None:
+                return found
+    elif isinstance(node, list):
+        for child in node:
+            found = _find_first_key_value(child, key)
+            if found is not None:
+                return found
+    return None
+
+
+def _is_valid_decl_name(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    s = value.strip()
+    if not s:
+        return False
+    if s.startswith("file://"):
+        return False
+    if "/" in s or s.endswith(".lean"):
+        return False
+    if s.lower() in {"null", "none", "true", "false"}:
+        return False
+    return True
+
+
+def _extract_decl_field(payload: dict[str, Any]) -> tuple[str | None, str]:
+    for key in DECL_NAME_KEYS:
+        value = _find_first_key_value(payload, key)
+        if _is_valid_decl_name(value):
+            decl = str(value).strip()
+            if key in DECL_NAME_EXACT_KEYS:
+                return decl, "exactDecl"
+            return decl, "requestField"
+    return None, "unmatched"
+
+
+def _extract_location_hints(
+    payload: dict[str, Any],
+    *,
+    source_file: str | None,
+    root: Path,
+) -> tuple[str | None, str | None, int | None]:
+    file_hint: str | None = None
+    for key in DECL_LOCATION_FILE_KEYS:
+        raw = _find_first_key_value(payload, key)
+        if isinstance(raw, str) and raw:
+            parsed = parse_uri_or_path(raw, root)
+            if parsed:
+                file_hint = parsed
+                break
+    if not file_hint:
+        file_hint = source_file
+
+    module_hint: str | None = None
+    for key in DECL_LOCATION_MODULE_KEYS:
+        raw = _find_first_key_value(payload, key)
+        if isinstance(raw, str) and raw.strip():
+            module_hint = raw.strip()
+            break
+
+    line_hint: int | None = None
+    for key in DECL_LOCATION_LINE_KEYS:
+        raw = _find_first_key_value(payload, key)
+        parsed = _coerce_int(raw)
+        if parsed is not None:
+            line_hint = parsed
+            break
+    if line_hint is None:
+        position_any = _find_first_key_value(payload, "position")
+        if isinstance(position_any, dict):
+            line_hint = _coerce_int(position_any.get("line"))
+
+    return file_hint, module_hint, line_hint
+
+
+def _build_decl_match_context(decls: dict[str, DeclInfo], root: Path) -> dict[str, Any]:
+    theorem_names: set[str] = set()
+    theorem_meta: dict[str, dict[str, Any]] = {}
+    by_file_module_line: dict[tuple[str, str, int], list[str]] = defaultdict(list)
+    by_file_line: dict[tuple[str, int], list[str]] = defaultdict(list)
+    by_file_module: dict[tuple[str, str], list[str]] = defaultdict(list)
+    by_file_module_ordered: dict[tuple[str, str], list[tuple[int, str]]] = defaultdict(list)
+    by_file_ordered: dict[str, list[tuple[int, str]]] = defaultdict(list)
+
+    for name, decl in decls.items():
+        if decl.kind != "theorem":
+            continue
+        theorem_names.add(name)
+        file_rel = relative_path(decl.file, root)
+        module = decl.module.strip() if isinstance(decl.module, str) and decl.module.strip() else None
+        line = _coerce_int(decl.line)
+        theorem_meta[name] = {"file": file_rel, "module": module, "line": line}
+
+        if isinstance(file_rel, str) and isinstance(module, str):
+            by_file_module[(file_rel, module)].append(name)
+            if isinstance(line, int) and line >= 0:
+                by_file_module_line[(file_rel, module, line)].append(name)
+                by_file_module_ordered[(file_rel, module)].append((line, name))
+        if isinstance(file_rel, str) and isinstance(line, int) and line >= 0:
+            by_file_line[(file_rel, line)].append(name)
+            by_file_ordered[file_rel].append((line, name))
+
+    for ordered in by_file_module_ordered.values():
+        ordered.sort(key=lambda item: (item[0], item[1]))
+    for ordered in by_file_ordered.values():
+        ordered.sort(key=lambda item: (item[0], item[1]))
+
+    return {
+        "theoremNames": theorem_names,
+        "theoremMeta": theorem_meta,
+        "byFileModuleLine": by_file_module_line,
+        "byFileLine": by_file_line,
+        "byFileModule": by_file_module,
+        "byFileModuleOrdered": by_file_module_ordered,
+        "byFileOrdered": by_file_ordered,
+        "clusterToDecl": defaultdict(Counter),
+    }
+
+
+def _unique_decl(candidates: Iterable[str]) -> str | None:
+    uniq = _dedup_preserve_order(candidates)
+    if len(uniq) == 1:
+        return uniq[0]
+    return None
+
+
+def _line_candidates(line_hint: int | None) -> list[int]:
+    if line_hint is None:
+        return []
+    out: list[int] = []
+    if line_hint >= 0:
+        out.append(line_hint)
+        out.append(line_hint + 1)
+    if line_hint > 0:
+        out.append(line_hint - 1)
+    seen: set[int] = set()
+    deduped: list[int] = []
+    for value in out:
+        if value in seen:
+            continue
+        seen.add(value)
+        deduped.append(value)
+    return deduped
+
+
+def _resolve_nearest_decl_from_ordered(
+    ordered: list[tuple[int, str]],
+    line_hint: int,
+    *,
+    max_delta: int,
+) -> str | None:
+    if not ordered:
+        return None
+
+    by_line: dict[int, set[str]] = defaultdict(set)
+    lines: list[int] = []
+    seen_lines: set[int] = set()
+    for line, decl in ordered:
+        by_line[line].add(decl)
+        if line not in seen_lines:
+            seen_lines.add(line)
+            lines.append(line)
+
+    lines.sort()
+    if not lines:
+        return None
+
+    best_decl: str | None = None
+    best_dist: int | None = None
+
+    for probe_line in _line_candidates(line_hint):
+        nearest_line = lines[0]
+        for value in lines:
+            if value <= probe_line:
+                nearest_line = value
+            else:
+                break
+
+        names = sorted(by_line.get(nearest_line, set()))
+        if len(names) != 1:
+            continue
+
+        dist = abs(nearest_line - probe_line)
+        if best_dist is None or dist < best_dist:
+            best_dist = dist
+            best_decl = names[0]
+
+    if best_decl is None or best_dist is None:
+        return None
+    if best_dist > max_delta:
+        return None
+    return best_decl
+
+
+def _resolve_decl_by_location(
+    *,
+    file_hint: str | None,
+    module_hint: str | None,
+    line_hint: int | None,
+    match_ctx: dict[str, Any],
+) -> str | None:
+    if not isinstance(file_hint, str) or not file_hint:
+        return None
+
+    by_file_module_line = cast(
+        dict[tuple[str, str, int], list[str]],
+        match_ctx.get("byFileModuleLine", {}),
+    )
+    by_file_line = cast(dict[tuple[str, int], list[str]], match_ctx.get("byFileLine", {}))
+    by_file_module = cast(dict[tuple[str, str], list[str]], match_ctx.get("byFileModule", {}))
+    by_file_module_ordered = cast(
+        dict[tuple[str, str], list[tuple[int, str]]],
+        match_ctx.get("byFileModuleOrdered", {}),
+    )
+    by_file_ordered = cast(dict[str, list[tuple[int, str]]], match_ctx.get("byFileOrdered", {}))
+
+    if isinstance(module_hint, str) and module_hint and line_hint is not None:
+        for line in _line_candidates(line_hint):
+            exact = _unique_decl(by_file_module_line.get((file_hint, module_hint, line), []))
+            if exact:
+                return exact
+
+    if line_hint is not None:
+        for line in _line_candidates(line_hint):
+            by_line = _unique_decl(by_file_line.get((file_hint, line), []))
+            if by_line:
+                return by_line
+
+    if line_hint is not None and isinstance(module_hint, str) and module_hint:
+        nearest_mod = _resolve_nearest_decl_from_ordered(
+            by_file_module_ordered.get((file_hint, module_hint), []),
+            line_hint,
+            max_delta=DECL_LOCATION_RANGE_MAX_DELTA,
+        )
+        if nearest_mod:
+            return nearest_mod
+
+    if line_hint is not None:
+        nearest_file = _resolve_nearest_decl_from_ordered(
+            by_file_ordered.get(file_hint, []),
+            line_hint,
+            max_delta=DECL_LOCATION_RANGE_MAX_DELTA,
+        )
+        if nearest_file:
+            return nearest_file
+
+    if isinstance(module_hint, str) and module_hint:
+        by_mod = _unique_decl(by_file_module.get((file_hint, module_hint), []))
+        if by_mod:
+            return by_mod
+
+    return None
+
+
 def collect_bridge_json_paths(raw_inputs: list[str], root: Path) -> list[Path]:
     paths: list[Path] = []
     seen: set[Path] = set()
@@ -545,13 +872,189 @@ def _collect_fingerprint_from_record(record: object) -> tuple[str | None, str | 
     )
 
 
-def load_bridge_evidence(paths: list[Path], root: Path) -> dict[str, BridgeEvidence]:
+def _payload_fingerprints(payload: dict[str, Any]) -> list[str]:
+    out: list[str] = []
+
+    goals_any = payload.get("goals")
+    if isinstance(goals_any, list):
+        for goal_any in goals_any:
+            if not isinstance(goal_any, dict):
+                continue
+            goal = cast(dict[str, Any], goal_any)
+            _, fp = _collect_fingerprint_from_record(goal.get("targetExprFingerprint"))
+            if isinstance(fp, str):
+                out.append(fp)
+            locals_any = goal.get("locals")
+            if not isinstance(locals_any, list):
+                continue
+            for local_any in locals_any:
+                if not isinstance(local_any, dict):
+                    continue
+                local = cast(dict[str, Any], local_any)
+                _, fp = _collect_fingerprint_from_record(local.get("typeExprFingerprint"))
+                if isinstance(fp, str):
+                    out.append(fp)
+
+    _, fp = _collect_fingerprint_from_record(payload.get("theoremTypeExprFingerprint"))
+    if isinstance(fp, str):
+        out.append(fp)
+    return _dedup_preserve_order(out)
+
+
+def _resolve_decl_by_fingerprint(
+    payload: dict[str, Any],
+    *,
+    file_hint: str | None,
+    module_hint: str | None,
+    match_ctx: dict[str, Any],
+) -> str | None:
+    cluster_to_decl = cast(dict[str, Counter[str]], match_ctx.get("clusterToDecl", {}))
+    theorem_meta = cast(dict[str, dict[str, Any]], match_ctx.get("theoremMeta", {}))
+    if not cluster_to_decl:
+        return None
+
+    aggregate: Counter[str] = Counter()
+    for fp in _payload_fingerprints(payload):
+        counts = cluster_to_decl.get(fp)
+        if not counts:
+            continue
+        for decl_name, count in counts.items():
+            meta = theorem_meta.get(decl_name, {})
+            if isinstance(file_hint, str) and file_hint:
+                meta_file = meta.get("file")
+                if isinstance(meta_file, str) and meta_file and meta_file != file_hint:
+                    continue
+            if isinstance(module_hint, str) and module_hint:
+                meta_module = meta.get("module")
+                if isinstance(meta_module, str) and meta_module and meta_module != module_hint:
+                    continue
+            aggregate[decl_name] += int(count)
+
+    if not aggregate:
+        return None
+    return aggregate.most_common(1)[0][0]
+
+
+def _resolve_decl_match(
+    payload: dict[str, Any],
+    *,
+    source_file: str | None,
+    root: Path,
+    match_ctx: dict[str, Any],
+) -> tuple[str | None, str]:
+    theorem_names = cast(set[str], match_ctx.get("theoremNames", set()))
+
+    explicit_decl, explicit_prov = _extract_decl_field(payload)
+    if isinstance(explicit_decl, str) and explicit_decl:
+        if not theorem_names or explicit_decl in theorem_names:
+            return explicit_decl, explicit_prov
+
+    file_hint, module_hint, line_hint = _extract_location_hints(payload, source_file=source_file, root=root)
+    by_location = _resolve_decl_by_location(
+        file_hint=file_hint,
+        module_hint=module_hint,
+        line_hint=line_hint,
+        match_ctx=match_ctx,
+    )
+    if isinstance(by_location, str) and by_location:
+        return by_location, "locationFallback"
+
+    by_fingerprint = _resolve_decl_by_fingerprint(
+        payload,
+        file_hint=file_hint,
+        module_hint=module_hint,
+        match_ctx=match_ctx,
+    )
+    if isinstance(by_fingerprint, str) and by_fingerprint:
+        return by_fingerprint, "fingerprintFallback"
+
+    return None, "unmatched"
+
+
+def _seed_decl_match_context(match_ctx: dict[str, Any], payload: dict[str, Any], decl_name: str) -> None:
+    cluster_to_decl = cast(dict[str, Counter[str]], match_ctx.get("clusterToDecl", {}))
+    if not cluster_to_decl:
+        return
+    for fp in _payload_fingerprints(payload):
+        cluster_to_decl[fp][decl_name] += 1
+
+
+def _payload_bridge_counts(payload: dict[str, Any]) -> tuple[int, int, list[str]]:
+    semantic_expr_count = 0
+    fp_counter: Counter[str] = Counter()
+    diag_provs: list[str] = []
+
+    diagnostics_any = payload.get("diagnostics")
+    if isinstance(diagnostics_any, list):
+        for diag_any in diagnostics_any:
+            if not isinstance(diag_any, dict):
+                continue
+            diag = cast(dict[str, Any], diag_any)
+            prov = diag.get("classificationProvenance")
+            if isinstance(prov, str):
+                diag_provs.append(prov)
+
+    goals_any = payload.get("goals")
+    if isinstance(goals_any, list):
+        for goal_any in goals_any:
+            if not isinstance(goal_any, dict):
+                continue
+            goal = cast(dict[str, Any], goal_any)
+
+            source, fp = _collect_fingerprint_from_record(goal.get("targetExprFingerprint"))
+            if source == "exprSemantic":
+                semantic_expr_count += 1
+            if fp is not None:
+                fp_counter[fp] += 1
+
+            locals_any = goal.get("locals")
+            if not isinstance(locals_any, list):
+                continue
+            for local_any in locals_any:
+                if not isinstance(local_any, dict):
+                    continue
+                local = cast(dict[str, Any], local_any)
+                source, fp = _collect_fingerprint_from_record(local.get("typeExprFingerprint"))
+                if source == "exprSemantic":
+                    semantic_expr_count += 1
+                if fp is not None:
+                    fp_counter[fp] += 1
+
+    source, fp = _collect_fingerprint_from_record(payload.get("theoremTypeExprFingerprint"))
+    if source == "exprSemantic":
+        semantic_expr_count += 1
+    if fp is not None:
+        fp_counter[fp] += 1
+
+    fingerprint_match_count = sum(count - 1 for count in fp_counter.values() if count > 1)
+    return semantic_expr_count, fingerprint_match_count, diag_provs
+
+
+def load_bridge_evidence_index(
+    paths: list[Path],
+    root: Path,
+    decls: dict[str, DeclInfo] | None = None,
+) -> tuple[dict[str, BridgeEvidence], dict[str, BridgeEvidence]]:
+    by_decl: dict[str, BridgeEvidence] = {}
     by_file: dict[str, BridgeEvidence] = {}
 
-    def get_or_create(path: str) -> BridgeEvidence:
+    match_ctx = _build_decl_match_context(decls, root) if decls is not None else None
+
+    def get_or_create_decl(name: str) -> BridgeEvidence:
+        if name not in by_decl:
+            by_decl[name] = BridgeEvidence()
+        return by_decl[name]
+
+    def get_or_create_file(path: str) -> BridgeEvidence:
         if path not in by_file:
             by_file[path] = BridgeEvidence()
         return by_file[path]
+
+    def merge_into(evidence: BridgeEvidence, sem_count: int, fp_count: int, diag_provs: list[str]) -> None:
+        evidence.semantic_expr_count += sem_count
+        evidence.fingerprint_match_count += fp_count
+        for prov in diag_provs:
+            evidence.provenance_counts[prov] += 1
 
     for path in paths:
         try:
@@ -559,55 +1062,46 @@ def load_bridge_evidence(paths: list[Path], root: Path) -> dict[str, BridgeEvide
         except Exception:
             continue
         payloads = extract_bridge_payload_objects(parsed)
-        for payload in payloads:
+        for payload_any in payloads:
+            if not isinstance(payload_any, dict):
+                continue
+            payload = cast(dict[str, Any], payload_any)
             response_meta = payload.get("responseMeta", {})
-            session_id = response_meta.get("sessionId", {}).get("value")
+            if not isinstance(response_meta, dict):
+                continue
+            session_obj = response_meta.get("sessionId", {})
+            if not isinstance(session_obj, dict):
+                continue
+            session_id = session_obj.get("value")
             source_file = parse_uri_or_path(session_id, root)
             if source_file is None:
                 continue
 
-            evidence = get_or_create(source_file)
+            sem_count, fp_count, diag_provs = _payload_bridge_counts(payload)
+            merge_into(get_or_create_file(source_file), sem_count, fp_count, diag_provs)
 
-            diag_provs: list[str] = []
-            for diag in payload.get("diagnostics", []):
-                if isinstance(diag, dict):
-                    prov = diag.get("classificationProvenance")
-                    if isinstance(prov, str):
-                        diag_provs.append(prov)
+            if match_ctx is None:
+                continue
 
-            for prov in diag_provs:
-                evidence.provenance_counts[prov] += 1
+            decl_name, _ = _resolve_decl_match(
+                payload,
+                source_file=source_file,
+                root=root,
+                match_ctx=match_ctx,
+            )
+            if isinstance(decl_name, str) and decl_name:
+                merge_into(get_or_create_decl(decl_name), sem_count, fp_count, diag_provs)
+                _seed_decl_match_context(match_ctx, payload, decl_name)
 
-            fp_counter: Counter[str] = Counter()
+    return by_decl, by_file
 
-            for goal in payload.get("goals", []):
-                if not isinstance(goal, dict):
-                    continue
 
-                source, fp = _collect_fingerprint_from_record(goal.get("targetExprFingerprint"))
-                if source == "exprSemantic":
-                    evidence.semantic_expr_count += 1
-                if fp is not None:
-                    fp_counter[fp] += 1
-
-                for local in goal.get("locals", []):
-                    if not isinstance(local, dict):
-                        continue
-                    source, fp = _collect_fingerprint_from_record(local.get("typeExprFingerprint"))
-                    if source == "exprSemantic":
-                        evidence.semantic_expr_count += 1
-                    if fp is not None:
-                        fp_counter[fp] += 1
-
-            # validateDecl payload shape
-            source, fp = _collect_fingerprint_from_record(payload.get("theoremTypeExprFingerprint"))
-            if source == "exprSemantic":
-                evidence.semantic_expr_count += 1
-            if fp is not None:
-                fp_counter[fp] += 1
-
-            evidence.fingerprint_match_count += sum(count - 1 for count in fp_counter.values() if count > 1)
-
+def load_bridge_evidence(
+    paths: list[Path],
+    root: Path,
+    decls: dict[str, DeclInfo] | None = None,
+) -> dict[str, BridgeEvidence]:
+    _, by_file = load_bridge_evidence_index(paths, root, decls=decls)
     return by_file
 
 
@@ -865,6 +1359,7 @@ def score_all(
     bridge_hints: list[str],
     strict_paths: list[str],
     root: Path,
+    bridge_evidence_by_decl: dict[str, BridgeEvidence] | None = None,
     bridge_evidence_by_file: dict[str, BridgeEvidence] | None = None,
 ) -> list[ScoredDecl]:
     results: list[ScoredDecl] = []
@@ -899,7 +1394,9 @@ def score_all(
             violations = compute_violations(info, tags, rel_file, bridge_hints, strict_paths)
 
         bridge_evidence = None
-        if bridge_evidence_by_file is not None and rel_file is not None:
+        if bridge_evidence_by_decl is not None:
+            bridge_evidence = bridge_evidence_by_decl.get(name)
+        if bridge_evidence is None and bridge_evidence_by_file is not None and rel_file is not None:
             bridge_evidence = bridge_evidence_by_file.get(rel_file)
 
         suspicion_score, suspicion_confidence, suspicion_factors = compute_vacuity_suspicion(
@@ -1092,11 +1589,17 @@ def main() -> None:
     n_edges = sum(len(v) for v in forward.values())
     print(f"  {n_edges} edges loaded")
 
+    bridge_evidence_by_decl: dict[str, BridgeEvidence] = {}
     bridge_evidence_by_file: dict[str, BridgeEvidence] = {}
     bridge_input_paths = collect_bridge_json_paths(args.bridge_input, root)
     if bridge_input_paths:
         print(f"Loading bridge evidence from {len(bridge_input_paths)} input path(s) ...")
-        bridge_evidence_by_file = load_bridge_evidence(bridge_input_paths, root)
+        bridge_evidence_by_decl, bridge_evidence_by_file = load_bridge_evidence_index(
+            bridge_input_paths,
+            root,
+            decls,
+        )
+        print(f"  {len(bridge_evidence_by_decl)} declaration-level bridge evidence records")
         print(f"  {len(bridge_evidence_by_file)} file-level bridge evidence records")
 
     print("Scoring theorems ...")
@@ -1107,6 +1610,7 @@ def main() -> None:
         args.bridge_hints,
         args.strict_paths,
         root,
+        bridge_evidence_by_decl=bridge_evidence_by_decl,
         bridge_evidence_by_file=bridge_evidence_by_file,
     )
     print(f"  {len(scored)} theorems scored")

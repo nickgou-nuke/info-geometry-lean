@@ -27,6 +27,8 @@ docs/auto/**
 !docs/*_synthesis.md
 !docs/testable_predictions.md
 !docs/keyword_index.md
+!docs/lean_compiler_service.md
+!docs/typed_lean_compiler_bridge.md
 docbuild/
 publication/
 

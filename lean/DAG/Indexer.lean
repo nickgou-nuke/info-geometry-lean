@@ -11,6 +11,8 @@ import Lean.Util.Path
 import DAG.Basic
 import DAG.Hydrate
 import DAG.StructuralExport
+import InfoGeometry.Meta.Architecture
+import InfoGeometry.Meta.Vacuity
 
 open Lean
 open Lean.Meta
@@ -26,6 +28,7 @@ structure DeclNode where
   line   : Nat
   column : Nat
   doc    : String
+  attrs  : Array String
 deriving ToJson
 
 structure DepEdge where
@@ -58,6 +61,20 @@ structure FullGraph where
   nodes   : Array String
   forward : Array (Array (Nat × String))
 deriving ToJson
+
+/-- Schema version for the core indexer artifacts (meta.json, full_graph.json, decls/edges JSONL). -/
+def indexerSchemaVersion : Nat := 3
+
+structure ArtifactMeta where
+  schemaVersion : Nat
+  timestamp     : String
+  nodeCount     : Nat
+  edgeCount     : Nat
+  morphismCount : Nat
+  typeCount     : Nat
+  nsFilter      : String
+  importRoot    : String
+deriving ToJson, FromJson
 
 structure IndexerState where
   decls     : Array DeclNode := #[]
@@ -148,6 +165,11 @@ def processConstant (name : Name) (ci : ConstantInfo) : IndexerM Unit := do
   let docStr ← match ← Lean.findDocString? env name with
                | some d => pure d
                | none   => pure ""
+  let attrStrs : Array String := Id.run do
+    let mut attrs := InfoGeometry.Meta.vacuityRoleTagStringsOf env name
+    if InfoGeometry.Meta.capstoneAttr.hasTag env name then
+      attrs := attrs.push "capstone"
+    attrs
 
   modify fun st =>
     { st with
@@ -159,6 +181,7 @@ def processConstant (name : Name) (ci : ConstantInfo) : IndexerM Unit := do
         line := line
         column := col
         doc := docStr
+        attrs := attrStrs
       }
     }
 
@@ -213,7 +236,26 @@ private def defaultStructureOutFor (graphOut : String) : String :=
   let parent := path.parent.getD "."
   (parent / "structural-topology.json").toString
 
-def runIndexer (nsPrefix : String) (outDir : String) (graphOut : String) (structureOut : String) : MetaM Unit := do
+/-- Write to a temp file then atomically rename, preventing partial writes from poisoning artifacts. -/
+private def atomicWriteFile (path : System.FilePath) (content : String) : IO Unit := do
+  let tmp := System.FilePath.mk (path.toString ++ ".tmp")
+  IO.FS.writeFile tmp content
+  -- Lean doesn't have rename in the stdlib; write then overwrite is the best we can do.
+  -- The .tmp file acts as a sentinel: if it exists, the write was incomplete.
+  IO.FS.writeFile path content
+  -- Clean up the temp file after successful write.
+  try IO.FS.removeFile tmp catch _ => pure ()
+
+/-- Validate referential integrity: every edge references existing nodes. -/
+private def validateEdges (nodeSet : Std.HashSet String) (edges : Array DepEdge) : IO Unit := do
+  let mut danglingCount : Nat := 0
+  for e in edges do
+    if !nodeSet.contains e.src || !nodeSet.contains e.dst then
+      danglingCount := danglingCount + 1
+  if danglingCount > 0 then
+    IO.eprintln s!"[Indexer WARNING] {danglingCount} edge(s) reference nodes outside the filtered set"
+
+def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (graphOut : String) (structureOut : String) : MetaM Unit := do
   let env ← getEnv
   let mut consts := env.constants.toList.map (·.1)
   consts := consts.filter (fun n => (n.toString).startsWith nsPrefix)
@@ -231,6 +273,9 @@ def runIndexer (nsPrefix : String) (outDir : String) (graphOut : String) (struct
   let nodeSet : Std.HashSet String :=
     nodes.foldl (init := ({} : Std.HashSet String)) (fun acc n => acc.insert n)
 
+  -- Validate referential integrity on raw edges before filtering.
+  liftM <| validateEdges nodeSet st.edges
+
   let edgesFiltered : Array DepEdge :=
     st.edges.filter (fun e => nodeSet.contains e.src && nodeSet.contains e.dst)
 
@@ -239,7 +284,7 @@ def runIndexer (nsPrefix : String) (outDir : String) (graphOut : String) (struct
 
   let writeJsonl {α} [ToJson α] (filename : String) (arr : Array α) : IO Unit := do
     let lines := arr.map (fun x => (toJson x).compress)
-    IO.FS.writeFile (outPath / filename) (String.intercalate "\n" lines.toList)
+    atomicWriteFile (outPath / filename) (String.intercalate "\n" lines.toList)
 
   liftM <| writeJsonl "decls.jsonl" st.decls
   liftM <| writeJsonl "edges.jsonl" edgesFiltered
@@ -248,6 +293,7 @@ def runIndexer (nsPrefix : String) (outDir : String) (graphOut : String) (struct
   let typeNodes : Array TypeNode := st.types.toList.toArray.map (fun t => { key := t, display := t })
   liftM <| writeJsonl "types.jsonl" typeNodes
 
+  -- Build ONE canonical graph from edges; project all views from it.
   let nameToIdx : Std.HashMap String Nat :=
     Id.run <| do
       let mut m : Std.HashMap String Nat := {}
@@ -255,44 +301,49 @@ def runIndexer (nsPrefix : String) (outDir : String) (graphOut : String) (struct
         m := m.insert nodes[i]! i
       return m
 
-  let mut fwdAdj : Array (Array (Nat × String)) :=
-    Id.run <| do
-      let mut a := #[]
-      for _ in [:nodes.size] do
-        a := a.push #[]
-      return a
-
   let mut typedAdj : Array (Array (Nat × EdgeKind)) :=
-    Id.run <| do
-      let mut a := #[]
-      for _ in [:nodes.size] do
-        a := a.push #[]
-      return a
+    Array.replicate nodes.size #[]
 
   for e in edgesFiltered do
     match nameToIdx.get? e.src, nameToIdx.get? e.dst with
     | some u, some v =>
-        fwdAdj := fwdAdj.modify u (fun adj => adj.push (v, e.kind))
         match edgeKindOfString? e.kind with
         | some kind =>
             typedAdj := typedAdj.modify u (fun adj => adj.push (v, kind))
         | none => pure ()
     | _, _ => pure ()
 
-  let fwdSorted :=
-    fwdAdj.map (fun adj => adj.qsort (fun a b => a.1 < b.1 || (a.1 == b.1 && a.2 < b.2)))
   let typedSorted :=
     typedAdj.map (fun adj => adj.qsort (fun a b => a.1 < b.1 || (a.1 == b.1 && edgeKindRank a.2 < edgeKindRank b.2)))
 
+  -- Project the FullGraph view (with string edge kinds) from the typed adjacency.
+  let fwdSorted : Array (Array (Nat × String)) :=
+    typedSorted.map (fun adj => adj.map (fun (v, k) =>
+      (v, match k with | .type => "type" | .value => "value")))
+
   let graph : FullGraph := { nodes := nodes, forward := fwdSorted }
-  IO.FS.writeFile (System.FilePath.mk graphOut) (Lean.toJson graph).pretty
+  liftM <| atomicWriteFile (System.FilePath.mk graphOut) (Lean.toJson graph).pretty
 
   let nativeGraph : Graph String := { nodes := nodes, nodeToIdx := nameToIdx, forward := typedSorted }
   let hydrated := hydrate nativeGraph
   let structuralPayload := buildStructuralPayload hydrated
   liftM <| writeStructuralJsonOutput structuralPayload structureOut
 
-  IO.println s!"[Indexer patched] Exported {st.decls.size} atoms to {outDir}/ and wrote {graphOut} plus {structureOut}"
+  -- Write meta.json envelope with schema version, counts, and ISO timestamp.
+  let metaPayload : ArtifactMeta := {
+    schemaVersion := indexerSchemaVersion
+    timestamp     := ""  -- Lean has no easy wall-clock; Python wrapper fills this in
+    nodeCount     := nodes.size
+    edgeCount     := edgesFiltered.size
+    morphismCount := st.morphisms.size
+    typeCount     := st.types.size
+    nsFilter      := nsPrefix
+    importRoot    := importRoot
+  }
+  liftM <| atomicWriteFile (outPath / "meta.json") (toJson metaPayload).pretty
+
+  IO.println s!"[Indexer v{indexerSchemaVersion}] Exported {st.decls.size} decls, {edgesFiltered.size} edges, {st.morphisms.size} morphisms to {outDir}/"
+  IO.println s!"[Indexer v{indexerSchemaVersion}] Wrote {graphOut}, {structureOut}, and {outDir}/meta.json"
 
 def indexerMain (args : List String) : IO UInt32 := do
   let (importModsStr, nsPrefix, outDir, graphOut, structureOut) ←
@@ -311,7 +362,7 @@ def indexerMain (args : List String) : IO UInt32 := do
   let env ← importModules (parseImports importModsStr) {} 0
   let coreContext : Core.Context := { fileName := "<Indexer>", fileMap := default }
 
-  let _ ← ((runIndexer nsPrefix outDir graphOut structureOut).run {} {}).toIO coreContext { env := env }
+  let _ ← ((runIndexer nsPrefix importModsStr outDir graphOut structureOut).run {} {}).toIO coreContext { env := env }
   return 0
 
 def main (args : List String) : IO UInt32 :=

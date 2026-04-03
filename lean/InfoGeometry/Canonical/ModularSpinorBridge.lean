@@ -20,6 +20,14 @@ It bridges:
    with the flow of the modular operator `Δ`.
 3. **Observables as Spinor Bilinears**: Expectation values computed via the
    modular conjugation `J`.
+
+## Sorry-Equivalence Status
+
+**Classification: sorry-equivalent (dead-endpoint)**
+All declarations in this file have zero external value-edge consumers in the
+DAG. Names are re-exported by `Rosetta.lean` but no downstream module
+references them at the declaration level. Replacing every proof body with
+`sorry` would not break any external build. See `reports/dag/sorry-equivalence.md`.
 -/
 
 namespace InfoGeometry.Canonical.ModularSpinorBridge

@@ -116,7 +116,11 @@ private def dominatorIndices (h : HydratedGraph String) (si : Nat) : Array Nat :
         out := out.push i
     out
 
-private def depthMaxCore (h : HydratedGraph String) : Array (Option Nat) × Array (Option Nat) :=
+-- Use Analysis.depthMaxCore (generic) instead of a local copy.
+-- The private helper here delegates to the public generic version via depthMaxFromRoots
+-- plus a local predecessor-tracking pass.
+
+private def depthMaxWithPred (h : HydratedGraph String) : Array (Option Nat) × Array (Option Nat) :=
   Id.run do
     let n := h.dag.size
     let roots := rootSet h
@@ -155,27 +159,6 @@ private def canonicalRootWitnessComponents (pred : Array (Option Nat)) (target :
 private def natSetOf (xs : Array Nat) : Std.HashSet Nat :=
   xs.foldl (init := ({} : Std.HashSet Nat)) (fun acc x => acc.insert x)
 
-private def componentPathCountsUpwardStructural
-  (preds : Array (Array Nat))
-  (orderFromRoots : Array Nat)
-  (src : Nat)
-  : Array Nat :=
-  Id.run do
-    let n := preds.size
-    let mut counts := arrayReplicate n 0
-    counts := counts.set! src 1
-
-    for ti in [:orderFromRoots.size] do
-      let u := orderFromRoots[ti]!
-      let cu := counts[u]!
-      if cu != 0 then
-        for ei in [:preds[u]!.size] do
-          let v := preds[u]![ei]!
-          let old := counts[v]!
-          counts := counts.set! v (old + cu)
-
-    counts
-
 private def buildPayload (h : HydratedGraph String) : StructuralPayload :=
   Id.run do
     let roots := rootSet h
@@ -184,14 +167,14 @@ private def buildPayload (h : HydratedGraph String) : StructuralPayload :=
     let capSetHash := natSetOf caps
     let dMin := depthMinFromRoots h
     let dSpread := depthSpreadFromRoots h
-    let (dMax, pred) := depthMaxCore h
+    let (dMax, pred) := depthMaxWithPred h
     let layersRaw := topologicalLayersFromRoots h
     let deepestRaw := deepestRootChains h
     let orderFromRoots := h.topo.reverse
     let rootPathCountsByRoot : Array (Nat × Array Nat) := Id.run do
       let mut out := #[]
       for r in roots do
-        out := out.push (r, componentPathCountsUpwardStructural h.preds orderFromRoots r)
+        out := out.push (r, componentPathCountsUpward h.preds orderFromRoots r)
       pure out
 
     let memberLists : Array (Array String) := Id.run do

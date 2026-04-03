@@ -18,7 +18,9 @@ This repository supports guarded self-analysis. It does not authorize uncontroll
 - no hotspot-driven deletion of valid math;
 - no graph-only refactor without file analysis;
 - no large concurrent builds;
-- no trusting generated reports until they have been refreshed.
+- no trusting generated reports until they have been refreshed;
+- check `artifacts/dag/index/meta.json` (`schemaVersion` ≥ 2, recent `timestamp`) before trusting any DAG artifact;
+- use `--force` on `refresh_decl_graph.py` when olean-hash skip is suspect.
 
 ## Current enforcing surfaces
 
@@ -26,4 +28,6 @@ This repository supports guarded self-analysis. It does not authorize uncontroll
 - `scripts/quality/audit_constructivity.py`
 - `tools/infra/generate_semantic_quotient.py`
 - `tools/infra/generate_projection_coloring.py`
-- [skills/lean-canonicalization-policy/SKILL.md](/home/goutev/LEAN4/info-geometry-lean/skills/lean-canonicalization-policy/SKILL.md)
+- `tools/infra/refresh_decl_graph.py` (incremental; `--force` to override olean-hash skip)
+- `artifacts/dag/index/meta.json` — artifact freshness and schema gate
+- [skills/lean-canonicalization-policy/SKILL.md](skills/lean-canonicalization-policy/SKILL.md)

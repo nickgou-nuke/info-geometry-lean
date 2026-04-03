@@ -110,52 +110,11 @@ section FisherKilling
 variable [Invertible (2 : ℝ)]
 variable [Module.Free ℝ (Op E)] [Module.Finite ℝ (Op E)]
 
-/--
-Constructive Fisher-Killing proportionality from an explicit global scaling relation.
-This matches the actual API of `SymmetricLieAlgebra`.
+/-!
+Schur-type proportionality on `S.𝔭` is not owned in this file.
+Until a constructive proportionality theorem is proved in the symmetric-Lie owner
+layer, the Fisher/Killing corridor here starts from explicit base relations.
 -/
-theorem fisher_metric_eq_killing_form_of_scaled_relation
-    (S : SymmetricLieAlgebra ℝ (Op E))
-    (X0 Y0 : Op E)
-    (v0 : DSpace E)
-    (hB0 : S.B (S.P_minus X0) (S.P_minus Y0) ≠ 0)
-    (hH0 : hessian_indefinite_form (E := E) (X0 v0) (Y0 v0) ≠ 0)
-    (hScaled :
-      ∀ (X Y : Op E) (v : DSpace E),
-        hessian_indefinite_form (E := E) (X v) (Y v) *
-          S.B (S.P_minus X0) (S.P_minus Y0)
-            =
-        hessian_indefinite_form (E := E) (X0 v0) (Y0 v0) *
-          S.B (S.P_minus X) (S.P_minus Y)) :
-    ∃ c : ℝ, c ≠ 0 ∧
-      ∀ (X Y : Op E) (v : DSpace E),
-        hessian_indefinite_form (E := E) (X v) (Y v) =
-          c * S.B (S.P_minus X) (S.P_minus Y) := by
-  let B0 : ℝ := S.B (S.P_minus X0) (S.P_minus Y0)
-  let H0 : ℝ := hessian_indefinite_form (E := E) (X0 v0) (Y0 v0)
-  have hB0' : B0 ≠ 0 := by simpa [B0] using hB0
-  have hH0' : H0 ≠ 0 := by simpa [H0] using hH0
-  refine ⟨H0 / B0, div_ne_zero hH0' hB0', ?_⟩
-  intro X Y v
-  let Bxy : ℝ := S.B (S.P_minus X) (S.P_minus Y)
-  have hscaled :
-      hessian_indefinite_form (E := E) (X v) (Y v) * B0 = H0 * Bxy := by
-    simpa [B0, H0, Bxy] using hScaled X Y v
-  have hdiv :
-      (hessian_indefinite_form (E := E) (X v) (Y v) * B0) / B0 =
-        (H0 * Bxy) / B0 := by
-    exact congrArg (fun z => z / B0) hscaled
-  have hmain :
-      hessian_indefinite_form (E := E) (X v) (Y v) = (H0 * Bxy) / B0 := by
-    calc
-      hessian_indefinite_form (E := E) (X v) (Y v)
-          = (hessian_indefinite_form (E := E) (X v) (Y v) * B0) / B0 := by
-              field_simp [hB0']
-      _ = (H0 * Bxy) / B0 := hdiv
-  calc
-    hessian_indefinite_form (E := E) (X v) (Y v) = (H0 * Bxy) / B0 := hmain
-    _ = (H0 / B0) * Bxy := by ring
-    _ = (H0 / B0) * S.B (S.P_minus X) (S.P_minus Y) := by rfl
 
 /--
 Basepoint Fisher/Killing proportionality transports along any

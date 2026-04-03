@@ -10,6 +10,95 @@ The DAG subsystem exists because this repository is one theory spread across man
 Its job is to externalize memory about ownership, adjacency, transport, and coherence so that context can be recovered after local state is lost.
 It is an audit layer for morphisms, not an alternate source of mathematical truth.
 
+## Why This Is Not Just Metadata
+
+The exported declaration graph is not merely bookkeeping around the Lean codebase.
+It is a finite, explicit object induced by kernel-checked declarations and their dependency structure.
+
+That makes higher-level analysis legitimate on the graph representation itself:
+- homological summaries such as cycles and Betti-style structure
+- spectral summaries such as Laplacians and gap-like bottlenecks
+- categorical and exactness-oriented views over recognized morphism structure
+- causal and process-flow summaries over roots, shells, defects, and transport corridors
+
+This is useful because the graph can expose global structural facts that ordinary file-by-file reading cannot surface by itself.
+It remains subordinate to Lean source:
+- Lean source and the native audit decide what is true
+- graph invariants help reveal how the checked theory is organized, stressed, and routed
+
+## File Inventory
+
+### Core Graph Construction
+
+| File | Purpose |
+|------|---------|
+| `Basic.lean` | `EdgeKind` enum, `Graph α`, `HydratedGraph α` types; `buildGraphFromEnv()` extracts declarations and edges from the Lean environment; `collectExprConsts()` recursively finds constants in expressions |
+| `SCC.lean` | Tarjan's algorithm for strongly connected component decomposition |
+| `Hydrate.lean` | Chains Tarjan → SCC-to-DAG → topological sort → dominator computation into `HydratedGraph` |
+| `Topo.lean` | BFS in-degree topological sort on the compressed SCC DAG |
+| `Dominators.lean` | Bitset-based dominator computation for impact and vulnerability analysis |
+| `Util.lean` | Shared helpers (array operations, name utilities) |
+
+### Analysis
+
+| File | Purpose |
+|------|---------|
+| `Analysis.lean` | `pathCountFrom`, `distanceMap`, `influenceFrom`, `vulnerabilityOf`, `rootSet`, `capstoneSet` |
+| `Impact.lean` | Forward/reverse BFS reachability lifted from SCC level back to declaration level |
+| `Betti.lean` | Betti-number / homological rank computations on the graph |
+| `TwoComplex.lean` | 2-complex (cell complex) structure over the DAG |
+
+### Export Pipelines
+
+| File | Output | Description |
+|------|--------|-------------|
+| `Indexer.lean` | `full_graph.json`, `decls.jsonl`, `edges.jsonl`, `morphisms.jsonl`, `types.jsonl`, `structural-topology.json` | Main export pipeline; `DeclNode`, `DepEdge`, `Morphism`, `TypeNode` records; recognizes morphisms (Hom/Equiv/Iso/Map patterns) |
+| `SkeletonExport.lean` | `skeleton.json` | Vulnerability-ranked theorem skeleton (`SkeletonRow`: name, vulSrcs, vulPaths) |
+| `StructuralExport.lean` | `structural-topology.json` | SCC-level metadata: depth spread, dominators, root witnesses, layer membership |
+| `ProcessFlowExport.lean` | `process-flow/*.jsonl` | Rich v4 schema: 9 dependency roles, boundary/locality/polarity/defect classifications, `DerivationalRole` |
+| `BlockExport.lean` | block-level JSON | File slicing: `Block` (text span, produced decls, deps, spine tags, tactics, docstrings) with `ScopeFrame` nesting |
+| `RepresentationDepthExport.lean` | `representation-depth-tags.json` | Lean-enforced depth grammar tags projected onto the declaration DAG |
+| `RootOrderExport.lean` | root-order JSON | True root ordering for causal reports |
+| `ExportDecls.lean` | declaration metadata | Lightweight declaration export |
+| `ExportForwardGraph.lean` | forward adjacency JSON | Forward edge-list graph export |
+| `ServerExport.lean` | server-compatible JSON | Export format for external server consumption |
+| `JsonInstances.lean` | — | `ToJson`/`FromJson` instances for `Graph`, `HydratedGraph`, `EdgeKind`, `Name` |
+
+### Search Infrastructure
+
+| File | Purpose |
+|------|---------|
+| `SearchCore.lean` | Basic substring search (case-insensitive/case-sensitive), name collection |
+| `Search.lean` | Query tokenization (camelCase, underscore, hyphen splitting), token-weighted ranking |
+| `SearchRank.lean` | Single/multi-query search with preview caps |
+| `FinalSearch.lean` | Multi-query batch environment search |
+| `QueryEngine.lean` | Structured query evaluation and filtering over graph metadata |
+
+### Algebraic / Categorical Extensions
+
+| File | Purpose |
+|------|---------|
+| `CategoryBridge.lean` | Maps declarations to `CategoryTheory.Quiver`; verifies morphism composition in `MetaM` |
+| `Functor.lean` | Functorial structure between graph layers |
+| `ExactMorphism.lean` | Exact-sequence detection in morphism chains |
+| `Isomorphism.lean` | Iso detection and equivalence tracking |
+| `LiftNaturality.lean` | Naturality verification for lifted morphisms |
+| `KernelExtract.lean` | Kernel/cokernel extraction from exact sequences |
+| `SubgraphMatch.lean` | Subgraph pattern matching |
+| `FindFinrank.lean` | Finite-rank detection |
+| `Disassembler.lean` | Expression-level disassembly for edge extraction |
+| `GlobalDisassembler.lean` | Environment-wide disassembly pass |
+| `SemanticServerRpc.lean` | RPC interface for semantic graph queries |
+
+### Tests
+
+| File | Purpose |
+|------|---------|
+| `SearchCoreTests.lean` | Unit tests for search infrastructure |
+| `CategoryBridgeTest.lean` | Integration tests for category bridge |
+| `ExactMorphismTest.lean` | Tests for exact morphism detection |
+| `IntegrationTest.lean` | End-to-end DAG pipeline tests |
+
 ## Graph Layers
 
 Keep these graph views distinct:
@@ -32,6 +121,8 @@ which runs the Lean-side indexer and writes:
 - `artifacts/dag/full_graph.json`
 - `artifacts/dag/index/decls.jsonl`
 - `artifacts/dag/index/edges.jsonl`
+- `artifacts/dag/index/morphisms.jsonl`
+- `artifacts/dag/index/types.jsonl`
 - `artifacts/dag/structural-topology.json`
 
 Downstream Python tooling then derives source-sink, causal, theorem-surface, semantic quotient, and representation-depth reports.
@@ -50,6 +141,39 @@ This layer is for:
 - bounded ancestry/path candidates
 - localized defect evidence
 - derived comparison and cocycle reports downstream
+
+The process-flow export writes:
+- `artifacts/dag/process-flow/flow-edges.jsonl`
+- `artifacts/dag/process-flow/process-events.jsonl`
+- `artifacts/dag/process-flow/flow-cocycles.jsonl`
+- `artifacts/dag/process-flow/comparison-candidates.jsonl`
+- `artifacts/dag/process-flow/lawful-path-candidates.jsonl`
+- `artifacts/dag/process-flow/defects.jsonl`
+
+## Processing Pipeline
+
+```
+Lean Environment
+    │
+    ▼  buildGraphFromEnv()
+  Graph α  (nodes + forward adjacency)
+    │
+    ▼  Tarjan SCC  (SCC.lean)
+  Component arrays
+    │
+    ▼  hydrate()  (Hydrate.lean)
+  HydratedGraph α  (SCC DAG + topo order + dominators + predecessors)
+    │
+    ├─▶ Analysis.lean  (path counts, distance, influence, vulnerability)
+    ├─▶ Impact.lean    (forward/reverse reachability)
+    ├─▶ Indexer.lean   (DeclNode / DepEdge / Morphism / TypeNode → JSON)
+    ├─▶ StructuralExport.lean  (SCC-level topology → JSON)
+    ├─▶ SkeletonExport.lean    (vulnerability skeleton → JSON)
+    └─▶ ProcessFlowExport.lean (transport evidence → JSONL)
+         │
+         ▼  (consumed by Python)
+    tools/infra/*.py  →  reports/dag/*
+```
 
 ## Trust Order
 

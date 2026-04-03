@@ -66,42 +66,6 @@ noncomputable def rawCountHamiltonianProfile
     (counts ref : RelativeCounts n) : Fin n → ℝ :=
   relativeCountModularProfile n counts ref
 
-@[simp] theorem rawCountDelta_eq_relativeCountDensity
-    (counts ref : RelativeCounts n) :
-    rawCountDelta n counts ref = relativeCountDensity n counts ref := rfl
-
-@[simp] theorem rawCountLogDelta_eq_relativeCountLogDensity
-    (counts ref : RelativeCounts n) :
-    rawCountLogDelta n counts ref = relativeCountLogDensity n counts ref := rfl
-
-@[simp] theorem rawCountHamiltonianProfile_eq_relativeCountModularProfile
-    (counts ref : RelativeCounts n) :
-    rawCountHamiltonianProfile n counts ref = relativeCountModularProfile n counts ref := rfl
-
-@[simp] theorem rawCountLogDelta_eq_log_rawCountDelta
-    (counts ref : RelativeCounts n) (i : Fin n) :
-    rawCountLogDelta n counts ref i = Real.log (rawCountDelta n counts ref i) := rfl
-
-@[simp] theorem rawCountHamiltonianProfile_eq_neg_log_rawCountDelta
-    (counts ref : RelativeCounts n) (i : Fin n) :
-    rawCountHamiltonianProfile n counts ref i = -Real.log (rawCountDelta n counts ref i) := rfl
-
-@[simp] theorem relativeCountLogDensity_eq_log_relativeCountDensity
-    (counts ref : RelativeCounts n) (i : Fin n) :
-    relativeCountLogDensity n counts ref i =
-      Real.log (relativeCountDensity n counts ref i) := rfl
-
-@[simp] theorem relativeCountModularProfile_eq_neg_relativeCountLogDensity
-    (counts ref : RelativeCounts n) (i : Fin n) :
-    relativeCountModularProfile n counts ref i =
-      -relativeCountLogDensity n counts ref i := rfl
-
-@[simp] theorem relativeCountModularProfile_eq_neg_log_relativeCountDensity
-    (counts ref : RelativeCounts n) (i : Fin n) :
-    relativeCountModularProfile n counts ref i =
-      -Real.log (relativeCountDensity n counts ref i) := by
-  rw [relativeCountModularProfile_eq_neg_relativeCountLogDensity]
-  rw [relativeCountLogDensity_eq_log_relativeCountDensity]
 
 /--
 Mean logarithmic modular profile of a finite commutative `Δ` profile.
@@ -186,8 +150,7 @@ noncomputable def averagedRawCountHamiltonian
           refine congrArg ((n : ℝ)⁻¹ * ·) ?_
           refine Finset.sum_congr rfl ?_
           intro i hi
-          exact rawCountHamiltonianProfile_eq_neg_log_rawCountDelta
-            (n := n) (counts := counts) (ref := ref) i
+          rfl
 
 /-- Averaged Krein-native Tomita-Takesaki operator attached to the raw count-side `Δ` profile. -/
 noncomputable def averagedRawCountKreinTomitaTakesakiOp
@@ -263,16 +226,6 @@ lemma meanLogDeltaProfile_mul
     exact Real.log_mul (hρ i) (hσ i)
   rw [hsum, Finset.sum_add_distrib, mul_add]
 
-/-- Compatibility alias for `meanLogDeltaProfile_mul`. -/
-lemma relativeLogDensityMean_mul
-    (ρ σ : Fin n → ℝ)
-    (hρ : ∀ i : Fin n, ρ i ≠ 0)
-    (hσ : ∀ i : Fin n, σ i ≠ 0) :
-    relativeLogDensityMean n (fun i => ρ i * σ i)
-      = relativeLogDensityMean n ρ + relativeLogDensityMean n σ := by
-  simpa [relativeLogDensityMean] using
-    meanLogDeltaProfile_mul (n := n) (ρ := ρ) (σ := σ) hρ hσ
-
 theorem rawCountDelta_cocycle
     (counts ref base : RelativeCounts n)
     (href : ∀ i : Fin n, ref i ≠ 0)
@@ -332,6 +285,7 @@ lemma countMass_ne_zero
   (countMass_pos counts hcounts).ne'
 
 /-- Global additive mass shift induced by normalizing positive count representatives. -/
+@[rep_depth projective]
 noncomputable def countMassShift
     (counts ref : RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i)
@@ -339,14 +293,6 @@ noncomputable def countMassShift
   representativeMassShift
     (positiveMeasureOfCounts counts hcounts)
     (positiveMeasureOfCounts ref href)
-
-omit [Nonempty (Fin n)] in
-@[simp] theorem countMassShift_eq_log_massRatio
-    (counts ref : RelativeCounts n)
-    (hcounts : ∀ i : Fin n, 0 < counts i)
-    (href : ∀ i : Fin n, 0 < ref i) :
-    countMassShift counts ref hcounts href
-      = Real.log (countMass ref href / countMass counts hcounts) := rfl
 
 @[simp] theorem countMassShift_self
     (counts : RelativeCounts n)
@@ -368,7 +314,7 @@ omit [Nonempty (Fin n)] in
       (μ := positiveMeasureOfCounts counts hcounts)
       (ν := positiveMeasureOfCounts ref href))
 
-@[simp] theorem countMassShift_cocycle
+@[simp, rep_depth projective] theorem countMassShift_cocycle
     (counts ref base : RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i)
     (href : ∀ i : Fin n, 0 < ref i)
@@ -426,8 +372,8 @@ omit [Nonempty (Fin n)] in
     (href : ∀ i : Fin n, 0 < ref i)
     (i : Fin n) :
     relativeCountDensity n counts ref i = Real.exp (relativeCountLogDensity n counts ref i) := by
-  rw [relativeCountLogDensity_eq_log_relativeCountDensity]
-  exact (Real.exp_log (div_pos (hcounts i) (href i))).symm
+  simpa [relativeCountLogDensity] using
+    (Real.exp_log (div_pos (hcounts i) (href i))).symm
 
 omit [Nonempty (Fin n)] in
 @[simp] theorem relativeCountDensity_eq_exp_neg_relativeCountModularProfile
@@ -436,8 +382,7 @@ omit [Nonempty (Fin n)] in
     (href : ∀ i : Fin n, 0 < ref i)
     (i : Fin n) :
     relativeCountDensity n counts ref i = Real.exp (-(relativeCountModularProfile n counts ref i)) := by
-  rw [relativeCountModularProfile_eq_neg_relativeCountLogDensity]
-  simpa using
+  simpa [relativeCountModularProfile, relativeCountLogDensity] using
     (relativeCountDensity_eq_exp_relativeCountLogDensity
       (n := n) (counts := counts) (ref := ref)
       (hcounts := hcounts) (href := href) (i := i))
@@ -481,8 +426,8 @@ noncomputable def countRay
     relativeLogDensity (α := Fin n) (countRay counts hcounts) (countRay ref href) i
       = relativeCountLogDensity n counts ref i
         + countMassShift counts ref hcounts href := by
-  rw [countMassShift_eq_log_massRatio]
-  simpa only [countRay, countMass, positiveMeasureOfCounts,
+  unfold countMassShift representativeMassShift
+  simpa only [countRay, positiveMeasureOfCounts,
     relativeCountLogDensity, relativeCountDensity]
     using
       (relativeLogDensity_mk_eq_representativeRelativeLogDensity_add_massShift
@@ -499,8 +444,8 @@ noncomputable def countRay
     relativeModularPotential (α := Fin n) (countRay counts hcounts) (countRay ref href) i
       = -relativeCountLogDensity n counts ref i
         - countMassShift counts ref hcounts href := by
-  rw [countMassShift_eq_log_massRatio]
-  simpa only [countRay, countMass, positiveMeasureOfCounts,
+  unfold countMassShift representativeMassShift
+  simpa only [countRay, positiveMeasureOfCounts,
     relativeCountLogDensity, relativeCountDensity]
     using
       (relativeModularPotential_mk_eq_representativeModularPotential_sub_massShift
@@ -531,11 +476,11 @@ omit [Nonempty (Fin n)] in
     (href : ∀ i : Fin n, 0 < ref i) :
     countMassShift counts ref hcounts href =
       -Real.log (countRelativeVolumeChange counts ref hcounts href) := by
-  rw [countMassShift_eq_log_massRatio]
+  unfold countMassShift representativeMassShift
   calc
-    Real.log (countMass ref href / countMass counts hcounts)
+    Real.log ((positiveMeasureOfCounts ref href).Z / (positiveMeasureOfCounts counts hcounts).Z)
       = Real.log ((countRelativeVolumeChange counts ref hcounts href)⁻¹) := by
-          unfold countRelativeVolumeChange
+          unfold countRelativeVolumeChange countMass
           field_simp [countMass_ne_zero counts hcounts, countMass_ne_zero ref href]
     _ = -Real.log (countRelativeVolumeChange counts ref hcounts href) := by
           rw [Real.log_inv]
@@ -632,13 +577,6 @@ noncomputable def projectiveCountHamiltonianProfile
     (href : ∀ i : Fin n, 0 < ref i) :
     projectiveCountLogDelta counts ref hcounts href
       = fun i => relativeLogDensity (α := Fin n) (countRay counts hcounts) (countRay ref href) i := rfl
-
-@[simp] theorem projectiveCountHamiltonianProfile_eq_projectiveCountModularProfile
-    (counts ref : RelativeCounts n)
-    (hcounts : ∀ i : Fin n, 0 < counts i)
-    (href : ∀ i : Fin n, 0 < ref i) :
-    projectiveCountHamiltonianProfile counts ref hcounts href
-      = projectiveCountModularProfile counts ref hcounts href := rfl
 
 @[simp] theorem projectiveCountModularProfile_eq_neg_relativeLogDensity_countRay
     (counts ref : RelativeCounts n)
@@ -752,7 +690,9 @@ noncomputable def averagedProjectiveCountHamiltonian
           refine congrArg ((n : ℝ)⁻¹ * ·) ?_
           refine Finset.sum_congr rfl ?_
           intro i hi
-          rw [projectiveCountHamiltonianProfile_eq_projectiveCountModularProfile]
+          change
+            -Real.log (projectiveCountDelta counts ref hcounts href i) =
+              projectiveCountModularProfile counts ref hcounts href i
           exact projectiveCountModularProfile_eq_neg_log_projectiveCountDelta
             (counts := counts) (ref := ref) (hcounts := hcounts) (href := href) i
 

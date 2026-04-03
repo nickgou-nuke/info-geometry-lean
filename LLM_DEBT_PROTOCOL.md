@@ -29,5 +29,8 @@ Use:
 - `tools/infra/generate_theorem_surface_index.py`
 - `tools/infra/generate_semantic_quotient.py`
 - `tools/infra/generate_projection_coloring.py`
+- `tools/infra/refresh_decl_graph.py` (incremental DAG refresh; use `--force` to bypass olean-hash skip)
+- `artifacts/dag/index/meta.json` — verify freshness (`schemaVersion` ≥ 2, recent `timestamp`) before trusting any derived report
 
 Always do direct file analysis first.
+Check `meta.json` before relying on any DAG artifact for debt triage.

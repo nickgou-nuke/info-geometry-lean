@@ -5,20 +5,28 @@ This is the shortest reliable entry path into the repository.
 ## Step 1: understand the repo split
 
 Read:
-1. [README.md](/home/goutev/LEAN4/info-geometry-lean/README.md)
-2. [Installation.md](/home/goutev/LEAN4/info-geometry-lean/Installation.md)
-3. [docs/README.md](/home/goutev/LEAN4/info-geometry-lean/docs/README.md)
+1. [README.md](README.md)
+2. [docs/ModuleMap.md](docs/ModuleMap.md)
+3. [Installation.md](Installation.md)
+4. [docs/README.md](docs/README.md)
 
 The repository is both:
 - a Lean theorem library;
 - a graph/audit toolchain for that library.
 
+Before opening broad umbrella files, keep these roles straight:
+- `lean/InfoGeometry.lean`: published library entrypoint
+- `lean/InfoGeometry/Library.lean`: stable, linted canonical publication surface
+- `lean/InfoGeometry/Canonical/All.lean`: stable canonical umbrella
+- `lean/InfoGeometry/All.lean`: full project umbrella
+- `lean/InfoGeometry/Audit.lean`: architecture audit entrypoint
+
 ## Step 2: learn the maintained entrypoints
 
 Read:
-1. [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
-2. [tools/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/README.md)
-3. [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md)
+1. [lean/DAG/README.md](lean/DAG/README.md)
+2. [tools/README.md](tools/README.md)
+3. [tools/infra/README.md](tools/infra/README.md)
 
 ## Step 3: build something small
 
@@ -40,7 +48,17 @@ Do not start with:
 - conceptual notes under `docs/` as sources of live repo state
 - stale generated counts embedded in old markdown files
 
+The spine taxonomy is a semantic type (`count`, `projective`, `operator`, `krein`,
+`transport`, `thermo`), not the old numeric L0–L5 system. If you see L0–L5 labels in
+any doc, the semantic names from `Architecture.lean` are authoritative.
+
 These are useful later, but not as the first source of truth.
+
+If you want one concrete file chain before exploring a subtree, follow the
+anchor corridor from [docs/ModuleMap.md](docs/ModuleMap.md):
+`PositiveMeasure.lean -> Projective/Normalize.lean -> Canonical/PositiveRayCore.lean ->
+Canonical/RelativePotentialCore.lean -> Canonical/RelativePotentialCountBridge.lean ->
+Canonical/RelativeSurprisalOperatorLift.lean`.
 
 ## Step 5: when editing code
 
@@ -54,7 +72,7 @@ Use this order:
 ## Step 6: when using agents
 
 Start with:
-- [skills/info-geometry-repo/SKILL.md](/home/goutev/LEAN4/info-geometry-lean/skills/info-geometry-repo/SKILL.md)
-- [skills/lean-canonicalization-policy/SKILL.md](/home/goutev/LEAN4/info-geometry-lean/skills/lean-canonicalization-policy/SKILL.md)
+- [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)
+- [skills/lean-canonicalization-policy/SKILL.md](skills/lean-canonicalization-policy/SKILL.md)
 
 The second skill encodes the current canonicalization discipline: split by ownership, keep public surfaces honest, and treat graph reports as second-pass guidance rather than first-pass truth.

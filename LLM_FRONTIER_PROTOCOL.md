@@ -29,4 +29,4 @@ Do not treat generated prompt packets or candidate lists as proofs.
 ## Policy link
 
 For structural discipline while acting on a frontier packet, also use:
-- [skills/lean-canonicalization-policy/SKILL.md](/home/goutev/LEAN4/info-geometry-lean/skills/lean-canonicalization-policy/SKILL.md)
+- [skills/lean-canonicalization-policy/SKILL.md](skills/lean-canonicalization-policy/SKILL.md)

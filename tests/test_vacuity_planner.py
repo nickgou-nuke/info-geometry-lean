@@ -473,6 +473,93 @@ class VacuityPlannerTests(unittest.TestCase):
         self.assertIsInstance(repl_rows, list)
         self.assertEqual(repl_rows[0].get("replacementDecl"), "InfoGeometry.R")
 
+    def test_rank_admissibility_prechecks_blocks_kind_mismatch(self):
+        declaration_plans: list[JsonObj] = [
+            {
+                "rank": 1,
+                "candidate": "InfoGeometry.Candidate",
+                "candidateFile": "lean/InfoGeometry/Canonical/Candidate.lean",
+                "candidateRegion": "canonical",
+                "score": 0.62,
+                "confidence": 0.73,
+                "probable_replacement_corridor": [
+                    {
+                        "replacementDecl": "InfoGeometry.HelperDef",
+                        "region": "canonical",
+                        "score": 0.55,
+                        "confidence": 0.69,
+                    }
+                ],
+            }
+        ]
+        decls: dict[str, JsonObj] = {
+            "InfoGeometry.Candidate": {"name": "InfoGeometry.Candidate", "kind": "theorem"},
+            "InfoGeometry.HelperDef": {"name": "InfoGeometry.HelperDef", "kind": "def"},
+        }
+
+        rows = planner.rank_admissibility_prechecks(
+            declaration_plans=declaration_plans,
+            decls=decls,
+            bridge_decl_signals={},
+            top_k=10,
+        )
+
+        self.assertEqual(len(rows), 1)
+        row = rows[0]
+        self.assertEqual(row.get("precheckStatus"), "blocked")
+        self.assertIn("replacement is not theorem-like", row.get("hardFailures", []))
+
+    def test_rank_admissibility_prechecks_marks_provisional_with_shape_overlap(self):
+        declaration_plans: list[JsonObj] = [
+            {
+                "rank": 1,
+                "candidate": "InfoGeometry.Candidate",
+                "candidateFile": "lean/InfoGeometry/Canonical/Candidate.lean",
+                "candidateRegion": "canonical",
+                "score": 0.72,
+                "confidence": 0.78,
+                "probable_replacement_corridor": [
+                    {
+                        "replacementDecl": "InfoGeometry.Target",
+                        "region": "canonical",
+                        "score": 0.66,
+                        "confidence": 0.77,
+                    }
+                ],
+            }
+        ]
+        decls: dict[str, JsonObj] = {
+            "InfoGeometry.Candidate": {"name": "InfoGeometry.Candidate", "kind": "theorem"},
+            "InfoGeometry.Target": {"name": "InfoGeometry.Target", "kind": "theorem"},
+        }
+        cluster = "fp:shape/v1/head:const:eq|head:Eq|kind:app|arity:2+|binder:0"
+        bridge_decl_signals: dict[str, JsonObj] = {
+            "InfoGeometry.Candidate": {
+                "clusterKeys": [[cluster, 2]],
+                "semanticHeadCounts": [["Eq", 2]],
+                "fingerprintCounts": [["shape/v1/head:const:eq", 2]],
+            },
+            "InfoGeometry.Target": {
+                "clusterKeys": [[cluster, 1]],
+                "semanticHeadCounts": [["Eq", 1]],
+                "fingerprintCounts": [["shape/v1/head:const:eq", 1]],
+            },
+        }
+
+        rows = planner.rank_admissibility_prechecks(
+            declaration_plans=declaration_plans,
+            decls=decls,
+            bridge_decl_signals=bridge_decl_signals,
+            top_k=10,
+        )
+
+        self.assertEqual(len(rows), 1)
+        row = rows[0]
+        self.assertEqual(row.get("precheckStatus"), "provisionally-admissible")
+        self.assertEqual(row.get("hardFailures"), [])
+        self.assertEqual(row.get("softWarnings"), [])
+        self.assertGreater(float(row.get("shapeOverlap", 0.0)), 0.5)
+
 
 if __name__ == "__main__":
     unittest.main()

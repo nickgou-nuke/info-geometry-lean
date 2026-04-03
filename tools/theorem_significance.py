@@ -65,8 +65,29 @@ class GraphStats:
     reverse_value: int = 0  # how many declarations reference this in value (proof) position
     forward_type: int = 0   # how many declarations this references in type position
     forward_value: int = 0  # how many declarations this references in value position
+    reverse_public_fan_in: int = 0      # distinct reverse users with type-edge dependency
+    reverse_proof_only_reuse: int = 0   # distinct reverse users with value-only dependency
     is_sink: bool = False   # no forward value edges
-    depth: int = 0          # longest reverse chain (computed lazily)
+    depth: int = 0          # longest reverse-chain length in condensation DAG
+    transitive_reverse_reach: int = 0   # number of transitive reverse dependents
+    descendant_mass: int = 0            # number of transitive forward dependencies
+    scc_size: int = 1                   # strongly connected component size
+    scc_role: str = "acyclic"          # SCC role: acyclic/self-cycle/cycle-*
+
+
+@dataclass
+class ReverseUseProfile:
+    public_fan_in: int = 0
+    proof_only_reuse: int = 0
+
+
+@dataclass
+class StructuralProfile:
+    depth: int = 0
+    transitive_reverse_reach: int = 0
+    descendant_mass: int = 0
+    scc_size: int = 1
+    scc_role: str = "acyclic"
 
 @dataclass
 class ProofShapeInfo:
@@ -113,7 +134,14 @@ class ScoredDecl:
             "reverse_value": self.graph.reverse_value,
             "forward_type": self.graph.forward_type,
             "forward_value": self.graph.forward_value,
+            "reverse_public_fan_in": self.graph.reverse_public_fan_in,
+            "reverse_proof_only_reuse": self.graph.reverse_proof_only_reuse,
             "is_sink": self.graph.is_sink,
+            "depth": self.graph.depth,
+            "transitive_reverse_reach": self.graph.transitive_reverse_reach,
+            "descendant_mass": self.graph.descendant_mass,
+            "scc_size": self.graph.scc_size,
+            "scc_role": self.graph.scc_role,
             "n_forward_value": self.proof.n_forward_value,
             "n_forward_theorem": self.proof.n_forward_theorem,
             "tags": self.tags,
@@ -282,6 +310,8 @@ def build_graph_stats(
     name: str,
     forward: dict[str, list[tuple[str, str]]],
     reverse: dict[str, list[tuple[str, str]]],
+    reverse_use: ReverseUseProfile | None = None,
+    structural: StructuralProfile | None = None,
 ) -> GraphStats:
     fwd = forward.get(name, [])
     rev = reverse.get(name, [])
@@ -297,7 +327,202 @@ def build_graph_stats(
         elif kind == "value":
             gs.forward_value += 1
     gs.is_sink = gs.forward_value == 0
+    if reverse_use is not None:
+        gs.reverse_public_fan_in = reverse_use.public_fan_in
+        gs.reverse_proof_only_reuse = reverse_use.proof_only_reuse
+    if structural is not None:
+        gs.depth = structural.depth
+        gs.transitive_reverse_reach = structural.transitive_reverse_reach
+        gs.descendant_mass = structural.descendant_mass
+        gs.scc_size = structural.scc_size
+        gs.scc_role = structural.scc_role
     return gs
+
+
+def build_reverse_use_profiles(
+    reverse: dict[str, list[tuple[str, str]]],
+) -> dict[str, ReverseUseProfile]:
+    profiles: dict[str, ReverseUseProfile] = {}
+    for dst, incoming in reverse.items():
+        kinds_by_src: dict[str, set[str]] = defaultdict(set)
+        for src, kind in incoming:
+            kinds_by_src[src].add(kind)
+        public_fan_in = 0
+        proof_only_reuse = 0
+        for kinds in kinds_by_src.values():
+            if "type" in kinds:
+                public_fan_in += 1
+            elif "value" in kinds:
+                proof_only_reuse += 1
+        profiles[dst] = ReverseUseProfile(
+            public_fan_in=public_fan_in,
+            proof_only_reuse=proof_only_reuse,
+        )
+    return profiles
+
+
+def _all_nodes(
+    decls: dict[str, DeclInfo],
+    forward: dict[str, list[tuple[str, str]]],
+    reverse: dict[str, list[tuple[str, str]]],
+) -> set[str]:
+    nodes: set[str] = set(decls.keys())
+    for src, outs in forward.items():
+        nodes.add(src)
+        for dst, _ in outs:
+            nodes.add(dst)
+    for dst, ins in reverse.items():
+        nodes.add(dst)
+        for src, _ in ins:
+            nodes.add(src)
+    return nodes
+
+
+def build_structural_profiles(
+    decls: dict[str, DeclInfo],
+    forward: dict[str, list[tuple[str, str]]],
+    reverse: dict[str, list[tuple[str, str]]],
+) -> dict[str, StructuralProfile]:
+    nodes = sorted(_all_nodes(decls, forward, reverse))
+    adj: dict[str, set[str]] = {n: set() for n in nodes}
+    self_loop_nodes: set[str] = set()
+
+    for src, outs in forward.items():
+        if src not in adj:
+            adj[src] = set()
+        for dst, _ in outs:
+            adj[src].add(dst)
+            if src == dst:
+                self_loop_nodes.add(src)
+
+    # Tarjan SCC decomposition
+    index = 0
+    index_of: dict[str, int] = {}
+    lowlink: dict[str, int] = {}
+    stack: list[str] = []
+    on_stack: set[str] = set()
+    sccs: list[list[str]] = []
+
+    def strongconnect(v: str) -> None:
+        nonlocal index
+        index_of[v] = index
+        lowlink[v] = index
+        index += 1
+        stack.append(v)
+        on_stack.add(v)
+
+        for w in adj.get(v, set()):
+            if w not in index_of:
+                strongconnect(w)
+                lowlink[v] = min(lowlink[v], lowlink[w])
+            elif w in on_stack:
+                lowlink[v] = min(lowlink[v], index_of[w])
+
+        if lowlink[v] == index_of[v]:
+            component: list[str] = []
+            while True:
+                w = stack.pop()
+                on_stack.remove(w)
+                component.append(w)
+                if w == v:
+                    break
+            sccs.append(component)
+
+    for node in nodes:
+        if node not in index_of:
+            strongconnect(node)
+
+    node_to_scc: dict[str, int] = {}
+    scc_sizes: list[int] = []
+    for sid, members in enumerate(sccs):
+        scc_sizes.append(len(members))
+        for member in members:
+            node_to_scc[member] = sid
+
+    scc_out: dict[int, set[int]] = {sid: set() for sid in range(len(sccs))}
+    scc_in: dict[int, set[int]] = {sid: set() for sid in range(len(sccs))}
+
+    for src, outs in forward.items():
+        src_sid = node_to_scc.get(src)
+        if src_sid is None:
+            continue
+        for dst, _ in outs:
+            dst_sid = node_to_scc.get(dst)
+            if dst_sid is None or src_sid == dst_sid:
+                continue
+            scc_out[src_sid].add(dst_sid)
+            scc_in[dst_sid].add(src_sid)
+
+    # Longest path depth over SCC DAG (forward direction); this equals reverse-chain depth.
+    indeg: dict[int, int] = {sid: len(scc_in[sid]) for sid in scc_in}
+    queue: list[int] = [sid for sid, d in indeg.items() if d == 0]
+    topo: list[int] = []
+    while queue:
+        sid = queue.pop()
+        topo.append(sid)
+        for nxt in scc_out[sid]:
+            indeg[nxt] -= 1
+            if indeg[nxt] == 0:
+                queue.append(nxt)
+
+    scc_depth: dict[int, int] = {sid: 0 for sid in range(len(sccs))}
+    for sid in topo:
+        for nxt in scc_out[sid]:
+            scc_depth[nxt] = max(scc_depth[nxt], scc_depth[sid] + 1)
+
+    # Reachability masses per SCC (cached BFS on condensation graph).
+    reverse_reach_cache: dict[int, int] = {}
+    descendant_mass_cache: dict[int, int] = {}
+
+    def reachable_mass(start_sid: int, graph: dict[int, set[int]]) -> int:
+        seen: set[int] = set()
+        stack2: list[int] = list(graph[start_sid])
+        while stack2:
+            cur = stack2.pop()
+            if cur in seen:
+                continue
+            seen.add(cur)
+            for nxt in graph[cur]:
+                if nxt not in seen:
+                    stack2.append(nxt)
+        return sum(scc_sizes[sid] for sid in seen)
+
+    profiles: dict[str, StructuralProfile] = {}
+    for name in decls:
+        sid = node_to_scc.get(name)
+        if sid is None:
+            profiles[name] = StructuralProfile()
+            continue
+
+        if sid not in reverse_reach_cache:
+            reverse_reach_cache[sid] = reachable_mass(sid, scc_in)
+        if sid not in descendant_mass_cache:
+            descendant_mass_cache[sid] = reachable_mass(sid, scc_out)
+
+        scc_size = scc_sizes[sid]
+        if scc_size == 1:
+            role = "self-cycle" if name in self_loop_nodes else "acyclic"
+        else:
+            indegree = len(scc_in[sid])
+            outdegree = len(scc_out[sid])
+            if indegree == 0 and outdegree == 0:
+                role = "cycle-island"
+            elif indegree == 0:
+                role = "cycle-source"
+            elif outdegree == 0:
+                role = "cycle-sink"
+            else:
+                role = "cycle-core"
+
+        profiles[name] = StructuralProfile(
+            depth=scc_depth[sid],
+            transitive_reverse_reach=reverse_reach_cache[sid],
+            descendant_mass=descendant_mass_cache[sid],
+            scc_size=scc_size,
+            scc_role=role,
+        )
+
+    return profiles
 
 
 def build_proof_shape(
@@ -335,11 +560,20 @@ def score_all(
     root: Path,
 ) -> list[ScoredDecl]:
     results: list[ScoredDecl] = []
+    reverse_use_profiles = build_reverse_use_profiles(reverse)
+    structural_profiles = build_structural_profiles(decls, forward, reverse)
+
     for name, info in sorted(decls.items()):
         # Only score theorems
         if info.kind != "theorem":
             continue
-        graph = build_graph_stats(name, forward, reverse)
+        graph = build_graph_stats(
+            name,
+            forward,
+            reverse,
+            reverse_use=reverse_use_profiles.get(name),
+            structural=structural_profiles.get(name),
+        )
         proof = build_proof_shape(name, forward, decls)
         rel_file = relative_path(info.file, root)
         tags = classify_tags(info, graph, proof)
@@ -412,6 +646,32 @@ def generate_md_report(scored: list[ScoredDecl]) -> str:
     lines.append("|-----------|-------|")
     for code, count in viol_counts.most_common():
         lines.append(f"| `{code}` | {count} |")
+    lines.append("")
+
+    # Structural metrics snapshot
+    lines.append("## Structural Metrics (top 20 by transitive reverse reach)\n")
+    lines.append("| Theorem | Reverse Reach | Descendant Mass | Depth | SCC Role | Public Fan-In | Proof-Only Reuse |")
+    lines.append("|---------|--------------:|----------------:|------:|----------|---------------:|-----------------:|")
+    ranked_structural = sorted(
+        scored,
+        key=lambda s: (
+            -s.graph.transitive_reverse_reach,
+            -s.graph.descendant_mass,
+            -s.graph.depth,
+            s.name,
+        ),
+    )
+    for s in ranked_structural[:20]:
+        lines.append(
+            "| "
+            f"`{s.name}` | "
+            f"{s.graph.transitive_reverse_reach} | "
+            f"{s.graph.descendant_mass} | "
+            f"{s.graph.depth} | "
+            f"`{s.graph.scc_role}` | "
+            f"{s.graph.reverse_public_fan_in} | "
+            f"{s.graph.reverse_proof_only_reuse} |"
+        )
     lines.append("")
 
     # Errors (bridge/canonical files)

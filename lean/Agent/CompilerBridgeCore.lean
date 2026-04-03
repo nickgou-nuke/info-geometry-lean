@@ -188,8 +188,117 @@ private def exprHeadMetaOfText (text : String) : Option String × ExprHeadSource
   | some head => (some head, .textHeuristic)
   | none => (none, .unavailable)
 
+private structure HeadMeta where
+  head : Option String := none
+  source : ExprHeadSource := .unavailable
+  fingerprint : Option String := none
+deriving Inhabited
+
+private def mkHeadMetaOfText (text : String) : HeadMeta :=
+  let (head, source) := exprHeadMetaOfText text
+  { head := head, source := source, fingerprint := none }
+
 def headMetaOfText (text : String) : Option String × ExprHeadSource :=
   exprHeadMetaOfText text
+
+private def headTokenOfExpr? : Expr → Option String
+  | .sort .zero => some "Prop"
+  | .sort _ => some "Sort"
+  | .forallE .. => some "∀"
+  | .lam .. => some "fun"
+  | .letE .. => some "let"
+  | .const n _ => some (toString n.eraseMacroScopes)
+  | .fvar id => some (toString id.name)
+  | .mvar id => some (toString id.name)
+  | .proj s _ _ => some (toString s.eraseMacroScopes)
+  | .mdata _ b => headTokenOfExpr? b
+  | .app f _ => headTokenOfExpr? f
+  | _ => none
+
+private def headFingerprintSeedOfExpr? : Expr → Option String
+  | .sort .zero => some "head:sort:prop"
+  | .sort _ => some "head:sort"
+  | .forallE .. => some "head:forall"
+  | .lam .. => some "head:lambda"
+  | .letE .. => some "head:let"
+  | .const n _ => some s!"head:const:{n.eraseMacroScopes}"
+  | .fvar _ => some "head:fvar"
+  | .mvar _ => some "head:mvar"
+  | .proj s i _ => some s!"head:proj:{s.eraseMacroScopes}:{i}"
+  | .mdata _ b => headFingerprintSeedOfExpr? b
+  | .app f _ => headFingerprintSeedOfExpr? f
+  | _ => none
+
+private def headFingerprintOfExpr? (e : Expr) : Option String :=
+  headFingerprintSeedOfExpr? e |>.map (fun fp => s!"shape/v1/{fp}")
+
+def headMetaOfExpr (e : Expr) : Option String × ExprHeadSource :=
+  match headTokenOfExpr? e with
+  | some head => (some head, .exprSemantic)
+  | none => (none, .unavailable)
+
+private partial def headTokenOfExprInContext? : Expr → MetaM (Option String)
+  | .sort .zero => pure (some "Prop")
+  | .sort _ => pure (some "Sort")
+  | .forallE .. => pure (some "∀")
+  | .lam .. => pure (some "fun")
+  | .letE .. => pure (some "let")
+  | .const n _ => pure (some (toString n.eraseMacroScopes))
+  | .fvar id =>
+      return some (toString (← id.getDecl).userName)
+  | .mvar id => pure (some (toString id.name))
+  | .proj s _ _ => pure (some (toString s.eraseMacroScopes))
+  | .mdata _ b => headTokenOfExprInContext? b
+  | .app f _ => headTokenOfExprInContext? f
+  | _ => pure none
+
+private def mkHeadMetaOfExprInContext (e : Expr) : MetaM HeadMeta := do
+  let head? ← headTokenOfExprInContext? e
+  match head? with
+  | some head =>
+      return {
+        head := some head
+        source := .exprSemantic
+        fingerprint := headFingerprintOfExpr? e
+      }
+  | none =>
+      return {
+        head := none
+        source := .unavailable
+        fingerprint := none
+      }
+
+private def mkHeadMetaOfExpr (e : Expr) : HeadMeta :=
+  let (head, source) := headMetaOfExpr e
+  match head with
+  | some _ => { head := head, source := source, fingerprint := headFingerprintOfExpr? e }
+  | none => { head := none, source := .unavailable, fingerprint := none }
+
+private def semanticTargetHeadMeta? (goal : Widget.InteractiveGoal) : IO (Option HeadMeta) := do
+  try
+    let headMeta ← goal.ctx.val.runMetaM (default : LocalContext) do
+      goal.mvarId.withContext do
+        let targetExpr ← Lean.instantiateMVars (← goal.mvarId.getType)
+        mkHeadMetaOfExprInContext targetExpr
+    return some headMeta
+  catch _ =>
+    return none
+
+private def semanticLocalHeadMetaMap (goal : Widget.InteractiveGoal) : IO (Std.HashMap String HeadMeta) := do
+  try
+    goal.ctx.val.runMetaM (default : LocalContext) do
+      goal.mvarId.withContext do
+        let mut semantic : Std.HashMap String HeadMeta := {}
+        for bundle in goal.hyps do
+          let count := min bundle.names.size bundle.fvarIds.size
+          for i in [:count] do
+            let fvarId := bundle.fvarIds[i]!
+            let typeExpr ← Lean.instantiateMVars (← fvarId.getType)
+            let headMeta ← mkHeadMetaOfExprInContext typeExpr
+            semantic := semantic.insert (toString fvarId.name) headMeta
+        return semantic
+  catch _ =>
+    return {}
 
 private def readInteractiveDiagnostics (doc : FileWorker.EditableDocument) :
     IO (Array Widget.InteractiveDiagnostic) :=
@@ -261,21 +370,31 @@ private def binderKindOfBundle (bundle : Widget.InteractiveHypothesisBundle) : S
   else
     "default"
 
-private def expandHypBundle (bundle : Widget.InteractiveHypothesisBundle) :
+private def expandHypBundle (bundle : Widget.InteractiveHypothesisBundle)
+    (semantic : Std.HashMap String HeadMeta) :
     Array LocalDeclView :=
   Id.run do
     let mut locals := #[]
     let count := min bundle.names.size bundle.fvarIds.size
     for i in [:count] do
       let localType := bundle.type.stripTags
-      let (typeHead, typeHeadSource) := exprHeadMetaOfText localType
+      let fvarId := toString bundle.fvarIds[i]!.name
+      let fallbackMeta := mkHeadMetaOfText localType
+      let selectedMeta :=
+        match semantic.get? fvarId with
+        | some semanticMeta =>
+            match semanticMeta.head with
+            | some _ => semanticMeta
+            | none => fallbackMeta
+        | none => fallbackMeta
       locals := locals.push {
-        fvarId := toString bundle.fvarIds[i]!.name
+        fvarId := fvarId
         userName := bundle.names[i]!
         binderKind := binderKindOfBundle bundle
         type := localType
-        typeHead := typeHead
-        typeHeadSource := typeHeadSource
+        typeHead := selectedMeta.head
+        typeHeadSource := selectedMeta.source
+        typeHeadFingerprint := selectedMeta.fingerprint
         value := bundle.val?.map (·.stripTags)
         isLet := bundle.val?.isSome
         isInstance := bundle.isInstance?.getD false
@@ -283,20 +402,31 @@ private def expandHypBundle (bundle : Widget.InteractiveHypothesisBundle) :
       }
     return locals
 
-private def goalViewOf (responseMeta : ResponseMeta) (goal : Widget.InteractiveGoal) : GoalView :=
+private def goalViewOf (responseMeta : ResponseMeta) (goal : Widget.InteractiveGoal) :
+    RequestM GoalView := do
   let target := goal.type.stripTags
-  let (targetHead, targetHeadSource) := exprHeadMetaOfText target
-  {
+  let fallbackTargetMeta := mkHeadMetaOfText target
+  let semanticTarget? ← semanticTargetHeadMeta? goal
+  let targetMeta :=
+    match semanticTarget? with
+    | some semanticTarget =>
+        match semanticTarget.head with
+        | some _ => semanticTarget
+        | none => fallbackTargetMeta
+    | none => fallbackTargetMeta
+  let semanticLocalMeta ← semanticLocalHeadMetaMap goal
+  return {
     goalId := {
       sessionId := responseMeta.sessionId
       revision := responseMeta.revision
       value := toString goal.mvarId.name
     }
     pretty := toString goal.pretty
-    locals := goal.hyps.foldl (fun acc hyp => acc ++ expandHypBundle hyp) #[]
+    locals := goal.hyps.foldl (fun acc hyp => acc ++ expandHypBundle hyp semanticLocalMeta) #[]
     target := target
-    targetHead := targetHead
-    targetHeadSource := targetHeadSource
+    targetHead := targetMeta.head
+    targetHeadSource := targetMeta.source
+    targetHeadFingerprint := targetMeta.fingerprint
   }
 
 def proofStateTaskAt (doc : FileWorker.EditableDocument) (posLine posCharacter : Nat) :
@@ -309,7 +439,10 @@ def proofStateTaskAt (doc : FileWorker.EditableDocument) (posLine posCharacter :
   RequestM.mapRequestTaskCheap goalTask fun goals? => do
     let responseMeta ← responseMetaOfDoc doc
     let diagnostics ← docDiagnostics doc
-    let goals := goals?.map (fun gs => gs.goals.map (goalViewOf responseMeta)) |>.getD #[]
+    let goals ←
+      match goals? with
+      | some gs => gs.goals.mapM (goalViewOf responseMeta)
+      | none => pure #[]
     return {
       responseMeta := responseMeta
       diagnostics := diagnostics

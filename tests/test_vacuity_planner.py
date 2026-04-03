@@ -11,6 +11,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 
 from tools.planner.matching import resolve_decl_match, seed_decl_match_context
+from tools.planner.policy import cluster_rank_weight, planner_policy_snapshot, precheck_status_priority
 
 
 def _load_planner_module() -> ModuleType:
@@ -29,6 +30,23 @@ JsonObj = dict[str, Any]
 
 
 class VacuityPlannerTests(unittest.TestCase):
+    def test_planner_policy_snapshot_is_explicit(self):
+        snapshot = planner_policy_snapshot()
+
+        self.assertEqual(snapshot.get("version"), "v1")
+        self.assertEqual(snapshot.get("corridorParticipationDecayModel"), "harmonic")
+        self.assertEqual(snapshot.get("replacementClusterParticipationLimit"), 3)
+        self.assertEqual(snapshot.get("admissibilityReplacementWindow"), 3)
+
+    def test_planner_policy_helpers_preserve_current_calibration(self):
+        self.assertEqual(cluster_rank_weight(1), 1.0)
+        self.assertEqual(cluster_rank_weight(2), 0.5)
+        self.assertAlmostEqual(cluster_rank_weight(3), 1.0 / 3.0, places=6)
+        self.assertEqual(precheck_status_priority("blocked"), 0)
+        self.assertEqual(precheck_status_priority("needs-review"), 1)
+        self.assertEqual(precheck_status_priority("provisionally-admissible"), 2)
+        self.assertEqual(precheck_status_priority("unknown"), -1)
+
     def _bridge_payload(
         self,
         *,

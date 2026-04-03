@@ -48,6 +48,7 @@ if __package__ in (None, ""):
         normalize_bridge_observations,
         observe_bridge_payload,
     )
+    from planner.policy import planner_policy_snapshot
     from planner.ranking import (
         rank_declaration_plans,
         rank_fingerprint_corridors,
@@ -80,6 +81,7 @@ else:
         normalize_bridge_observations,
         observe_bridge_payload,
     )
+    from tools.planner.policy import planner_policy_snapshot
     from tools.planner.ranking import (
         rank_declaration_plans,
         rank_fingerprint_corridors,
@@ -292,6 +294,7 @@ def main() -> None:
             "diagnosticProvenance": DIAG_PROVENANCE_WEIGHT,
             "violationLevel": VIOLATION_LEVEL_WEIGHT,
         },
+        "plannerPolicy": planner_policy_snapshot(),
     }
 
     out_json_path.parent.mkdir(parents=True, exist_ok=True)

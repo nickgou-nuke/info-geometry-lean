@@ -16,6 +16,7 @@ Boundary:
 from __future__ import annotations
 
 import argparse
+from bisect import bisect_left
 import json
 import sys
 from collections import Counter, defaultdict
@@ -220,37 +221,62 @@ def is_valid_decl_name(value: Any) -> bool:
     return True
 
 
-def _find_first_key_value(node: Any, key: str) -> Any:
-    if isinstance(node, dict):
-        node_dict = cast(JsonObj, node)
-        if key in node_dict:
-            return node_dict.get(key)
-        for child in node_dict.values():
-            found = _find_first_key_value(child, key)
-            if found is not None:
-                return found
-    elif isinstance(node, list):
-        for child in cast(list[Any], node):
-            found = _find_first_key_value(child, key)
-            if found is not None:
-                return found
+def _iter_decl_container_nodes(payload: JsonObj) -> Iterable[JsonObj]:
+    """Yield top-level payload plus explicitly allowed request/meta container dicts.
+
+    This avoids matching arbitrary nested keys like `name`, `file`, or `line`
+    from unrelated substructures.
+    """
+    yield payload
+
+    seen: set[int] = {id(payload)}
+    queue: list[Any] = []
+    for key in DECL_NAME_CONTAINERS:
+        child = payload.get(key)
+        if isinstance(child, (dict, list)):
+            queue.append(child)
+
+    while queue:
+        node = queue.pop(0)
+        node_id = id(node)
+        if node_id in seen:
+            continue
+        seen.add(node_id)
+
+        if isinstance(node, dict):
+            node_dict = cast(JsonObj, node)
+            yield node_dict
+            for key in DECL_NAME_CONTAINERS:
+                child = node_dict.get(key)
+                if isinstance(child, (dict, list)):
+                    queue.append(child)
+        elif isinstance(node, list):
+            for item in cast(list[Any], node):
+                if isinstance(item, dict) and id(item) not in seen:
+                    queue.append(item)
+
+
+def _find_decl_context_value(payload: JsonObj, keys: Iterable[str]) -> Any:
+    for key in keys:
+        if key in payload:
+            return payload.get(key)
+
+    for node in _iter_decl_container_nodes(payload):
+        for key in keys:
+            if key in node:
+                return node.get(key)
     return None
 
 
 def extract_decl_field(payload: JsonObj) -> tuple[str | None, str]:
     for key in DECL_NAME_KEYS:
-        value = _find_first_key_value(payload, key)
+        value = _find_decl_context_value(payload, (key,))
         if is_valid_decl_name(value):
             decl = str(value).strip()
             if key in DECL_NAME_EXACT_KEYS:
                 return decl, "exactDecl"
             return decl, "requestField"
     return None, "unmatched"
-
-
-def extract_decl_name(payload: JsonObj) -> str | None:
-    decl, _ = extract_decl_field(payload)
-    return decl
 
 
 def extract_location_hints(
@@ -261,7 +287,7 @@ def extract_location_hints(
 ) -> tuple[str | None, str | None, int | None]:
     file_hint: str | None = None
     for key in DECL_LOCATION_FILE_KEYS:
-        raw = _find_first_key_value(payload, key)
+        raw = _find_decl_context_value(payload, (key,))
         if isinstance(raw, str) and raw:
             parsed = parse_uri_or_path(raw, root)
             if parsed:
@@ -272,20 +298,20 @@ def extract_location_hints(
 
     module_hint: str | None = None
     for key in DECL_LOCATION_MODULE_KEYS:
-        raw = _find_first_key_value(payload, key)
+        raw = _find_decl_context_value(payload, (key,))
         if isinstance(raw, str) and raw:
             module_hint = raw.strip()
             break
 
     line_hint: int | None = None
     for key in DECL_LOCATION_LINE_KEYS:
-        raw = _find_first_key_value(payload, key)
+        raw = _find_decl_context_value(payload, (key,))
         parsed = coerce_int(raw)
         if parsed is not None:
             line_hint = parsed
             break
     if line_hint is None:
-        position_any = _find_first_key_value(payload, "position")
+        position_any = _find_decl_context_value(payload, ("position",))
         if isinstance(position_any, dict):
             line_hint = coerce_int(cast(JsonObj, position_any).get("line"))
 
@@ -496,28 +522,35 @@ def _resolve_nearest_decl_from_ordered(
     if not lines:
         return None
 
-    best_decl: str | None = None
-    best_dist: int | None = None
+    best: tuple[int, int, str] | None = None
 
     for probe_line in _line_candidates(line_hint):
-        nearest_line = lines[0]
-        for value in lines:
-            if value <= probe_line:
-                nearest_line = value
-            else:
-                break
+        pos = bisect_left(lines, probe_line)
+        candidate_lines: list[int] = []
+        if pos > 0:
+            candidate_lines.append(lines[pos - 1])
+        if pos < len(lines):
+            candidate_lines.append(lines[pos])
 
-        names = sorted(by_line.get(nearest_line, set()))
-        if len(names) != 1:
-            continue
+        seen_candidate_lines: set[int] = set()
+        for resolved_line in candidate_lines:
+            if resolved_line in seen_candidate_lines:
+                continue
+            seen_candidate_lines.add(resolved_line)
 
-        dist = abs(nearest_line - probe_line)
-        if best_dist is None or dist < best_dist:
-            best_dist = dist
-            best_decl = names[0]
+            names = sorted(by_line.get(resolved_line, set()))
+            if len(names) != 1:
+                continue
 
-    if best_decl is None or best_dist is None:
+            dist = abs(resolved_line - probe_line)
+            candidate = (dist, resolved_line, names[0])
+            if best is None or candidate < best:
+                best = candidate
+
+    if best is None:
         return None
+
+    best_dist, _, best_decl = best
     if best_dist > max_delta:
         return None
     return best_decl
@@ -707,17 +740,30 @@ def resolve_decl_match(
 
 
 def seed_decl_match_context(match_ctx: dict[str, Any], observations: list[JsonObj]) -> None:
-    cluster_to_decl = cast(dict[str, Counter[str]], match_ctx.get("clusterToDecl", {}))
-    if not cluster_to_decl:
+    cluster_to_decl_any = match_ctx.get("clusterToDecl")
+    if not isinstance(cluster_to_decl_any, dict):
         return
+    cluster_to_decl = cast(dict[str, Counter[str]], cluster_to_decl_any)
     for obs in observations:
         decl_any = obs.get("declName")
         if not isinstance(decl_any, str) or not decl_any:
             continue
         prov_any = obs.get("declMatchProvenance")
         prov = prov_any if isinstance(prov_any, str) else "unmatched"
-        if prov == "unmatched":
+        if prov not in {"exactDecl", "requestField", "locationFallback"}:
             continue
+
+        rel_any = obs.get("declMatchReliability")
+        if isinstance(rel_any, (int, float)):
+            rel = clamp01(float(rel_any))
+        else:
+            rel = DECL_MATCH_RELIABILITY.get(prov, DECL_MATCH_RELIABILITY["unmatched"])
+
+        # Seed only from reliable matches. In particular, never seed from
+        # fingerprintFallback to avoid self-reinforcing error cascades.
+        if prov == "locationFallback" and rel < DECL_MATCH_RELIABILITY["locationFallback"]:
+            continue
+
         cluster_key = make_cluster_key(
             fingerprint_v1=obs.get("fingerprintV1") if isinstance(obs.get("fingerprintV1"), str) else None,
             semantic_head=obs.get("semanticHead") if isinstance(obs.get("semanticHead"), str) else None,

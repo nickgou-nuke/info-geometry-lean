@@ -254,6 +254,124 @@ class VacuityPlannerTests(unittest.TestCase):
         self.assertEqual(provenance, "locationFallback")
         self.assertLess(float(reliability), 1.0)
 
+    def test_location_fallback_prefers_true_nearest_declaration(self):
+        theorem_entries: list[JsonObj] = [
+            {
+                "kind": "theorem",
+                "name": "InfoGeometry.Canonical.A",
+                "file": "lean/InfoGeometry/Canonical/A.lean",
+                "module": "InfoGeometry.Canonical.A",
+                "line": 100,
+            },
+            {
+                "kind": "theorem",
+                "name": "InfoGeometry.Canonical.B",
+                "file": "lean/InfoGeometry/Canonical/A.lean",
+                "module": "InfoGeometry.Canonical.A",
+                "line": 220,
+            },
+        ]
+        decls: dict[str, JsonObj] = {
+            "InfoGeometry.Canonical.A": {
+                "name": "InfoGeometry.Canonical.A",
+                "kind": "theorem",
+                "file": str((REPO_ROOT / "lean/InfoGeometry/Canonical/A.lean").resolve()),
+                "module": "InfoGeometry.Canonical.A",
+                "line": 100,
+            },
+            "InfoGeometry.Canonical.B": {
+                "name": "InfoGeometry.Canonical.B",
+                "kind": "theorem",
+                "file": str((REPO_ROOT / "lean/InfoGeometry/Canonical/A.lean").resolve()),
+                "module": "InfoGeometry.Canonical.A",
+                "line": 220,
+            },
+        }
+        ctx = planner.build_decl_match_context(theorem_entries, decls, REPO_ROOT)
+
+        payload = self._bridge_payload(
+            source_file_rel="lean/InfoGeometry/Canonical/A.lean",
+            decl_name=None,
+            module="InfoGeometry.Canonical.A",
+            line=190,
+            fingerprint="shape/v1/head:const:eq",
+            head="Eq",
+        )
+
+        decl_name, provenance, _ = planner.resolve_decl_match(
+            payload,
+            source_file="lean/InfoGeometry/Canonical/A.lean",
+            root=REPO_ROOT,
+            match_ctx=ctx,
+        )
+
+        self.assertEqual(decl_name, "InfoGeometry.Canonical.B")
+        self.assertEqual(provenance, "locationFallback")
+
+    def test_decl_extraction_ignores_unrelated_nested_name_file_line(self):
+        theorem_entries: list[JsonObj] = [
+            {
+                "kind": "theorem",
+                "name": "InfoGeometry.Canonical.A",
+                "file": "lean/InfoGeometry/Canonical/A.lean",
+                "module": "InfoGeometry.Canonical.A",
+                "line": 100,
+            },
+            {
+                "kind": "theorem",
+                "name": "InfoGeometry.Canonical.B",
+                "file": "lean/InfoGeometry/Canonical/A.lean",
+                "module": "InfoGeometry.Canonical.A",
+                "line": 220,
+            },
+        ]
+        decls: dict[str, JsonObj] = {
+            "InfoGeometry.Canonical.A": {
+                "name": "InfoGeometry.Canonical.A",
+                "kind": "theorem",
+                "file": str((REPO_ROOT / "lean/InfoGeometry/Canonical/A.lean").resolve()),
+                "module": "InfoGeometry.Canonical.A",
+                "line": 100,
+            },
+            "InfoGeometry.Canonical.B": {
+                "name": "InfoGeometry.Canonical.B",
+                "kind": "theorem",
+                "file": str((REPO_ROOT / "lean/InfoGeometry/Canonical/A.lean").resolve()),
+                "module": "InfoGeometry.Canonical.A",
+                "line": 220,
+            },
+        }
+        ctx = planner.build_decl_match_context(theorem_entries, decls, REPO_ROOT)
+
+        payload = self._bridge_payload(
+            source_file_rel="lean/InfoGeometry/Canonical/A.lean",
+            decl_name="InfoGeometry.Canonical.A",
+            module="InfoGeometry.Canonical.A",
+            line=100,
+            fingerprint="shape/v1/head:const:eq",
+            head="Eq",
+        )
+        payload["goals"] = [
+            {
+                "name": "InfoGeometry.Canonical.B",
+                "file": (REPO_ROOT / "lean/InfoGeometry/Canonical/A.lean").resolve().as_uri(),
+                "line": 220,
+                "targetHead": "Eq",
+                "targetHeadSource": "exprSemantic",
+                "targetHeadFingerprint": "shape/v1/head:const:eq",
+            }
+        ]
+
+        decl_name, provenance, _ = planner.resolve_decl_match(
+            payload,
+            source_file="lean/InfoGeometry/Canonical/A.lean",
+            root=REPO_ROOT,
+            match_ctx=ctx,
+        )
+
+        self.assertEqual(decl_name, "InfoGeometry.Canonical.A")
+        self.assertEqual(provenance, "exactDecl")
+
     def test_normalization_builds_declaration_signal_index(self):
         observations: list[JsonObj] = [
             {
@@ -472,6 +590,38 @@ class VacuityPlannerTests(unittest.TestCase):
         repl_rows = row.get("replacementCandidates")
         self.assertIsInstance(repl_rows, list)
         self.assertEqual(repl_rows[0].get("replacementDecl"), "InfoGeometry.R")
+
+    def test_seed_decl_match_context_skips_fingerprint_fallback(self):
+        ctx = {"clusterToDecl": planner.defaultdict(planner.Counter)}
+        observations: list[JsonObj] = [
+            {
+                "declName": "InfoGeometry.Canonical.A",
+                "declMatchProvenance": "fingerprintFallback",
+                "declMatchReliability": 0.52,
+                "fingerprintV1": "shape/v1/head:const:eq",
+                "semanticHead": "Eq",
+                "exprKind": "const",
+                "arityShape": "arity:0",
+                "binderShape": "binder:0",
+            },
+            {
+                "declName": "InfoGeometry.Canonical.B",
+                "declMatchProvenance": "exactDecl",
+                "declMatchReliability": 1.0,
+                "fingerprintV1": "shape/v1/head:const:eq",
+                "semanticHead": "Eq",
+                "exprKind": "const",
+                "arityShape": "arity:0",
+                "binderShape": "binder:0",
+            },
+        ]
+
+        planner.seed_decl_match_context(ctx, observations)
+        cluster_to_decl = ctx["clusterToDecl"]
+        self.assertEqual(len(cluster_to_decl), 1)
+        only_counter = next(iter(cluster_to_decl.values()))
+        self.assertNotIn("InfoGeometry.Canonical.A", only_counter)
+        self.assertEqual(int(only_counter.get("InfoGeometry.Canonical.B", 0)), 1)
 
     def test_rank_admissibility_prechecks_blocks_kind_mismatch(self):
         declaration_plans: list[JsonObj] = [

@@ -118,6 +118,12 @@ VACUITY_TAGS = {
 
 THEOREM_LIKE_KINDS = {"theorem", "lemma"}
 
+# Declaration kinds included when building bridge match context.
+DECL_MATCH_CONTEXT_KINDS = {"theorem", "lemma", "def", "abbrev"}
+
+# Replacement candidates can participate in multiple top cluster buckets.
+REPLACEMENT_CLUSTER_PARTICIPATION_LIMIT = 3
+
 
 @dataclass
 class Signal:
@@ -408,13 +414,8 @@ def build_decl_match_context(
     decls: dict[str, JsonObj],
     root: Path,
 ) -> dict[str, Any]:
-    theorem_names: set[str] = set()
-    theorem_meta: dict[str, JsonObj] = {}
-    by_file_module_line: dict[tuple[str, str, int], list[str]] = defaultdict(list)
-    by_file_line: dict[tuple[str, int], list[str]] = defaultdict(list)
-    by_file_module: dict[tuple[str, str], list[str]] = defaultdict(list)
-    by_file_module_ordered: dict[tuple[str, str], list[tuple[int, str]]] = defaultdict(list)
-    by_file_ordered: dict[str, list[tuple[int, str]]] = defaultdict(list)
+    match_ctx = build_decl_match_context_from_decls(decls, root)
+    indexed_names = cast(set[str], match_ctx.get("declNames", set()))
 
     for row in theorem_entries:
         if row.get("kind") != "theorem":
@@ -423,47 +424,55 @@ def build_decl_match_context(
         if not isinstance(name_any, str) or not name_any:
             continue
         name = name_any
-        theorem_names.add(name)
+        if name in indexed_names:
+            continue
 
         file_any = row.get("file")
         file_rel = parse_uri_or_path(file_any, root) if isinstance(file_any, str) else None
         module_any = row.get("module")
         module = module_any.strip() if isinstance(module_any, str) and module_any.strip() else None
+        line = coerce_int(row.get("line"))
 
-        line_any = row.get("line")
-        line = coerce_int(line_any)
-        if line is None:
-            decl_row = decls.get(name)
-            if isinstance(decl_row, dict):
+        # Backfill missing theorem metadata from decl index when available.
+        decl_row = decls.get(name)
+        if isinstance(decl_row, dict):
+            if line is None:
                 line = coerce_int(decl_row.get("line"))
-                if not file_rel:
-                    decl_file_any = decl_row.get("file")
-                    if isinstance(decl_file_any, str):
-                        file_rel = parse_uri_or_path(decl_file_any, root)
-                if not module:
-                    decl_module_any = decl_row.get("module")
-                    if isinstance(decl_module_any, str) and decl_module_any.strip():
-                        module = decl_module_any.strip()
+            if not file_rel:
+                decl_file_any = decl_row.get("file")
+                if isinstance(decl_file_any, str):
+                    file_rel = parse_uri_or_path(decl_file_any, root)
+            if not module:
+                decl_module_any = decl_row.get("module")
+                if isinstance(decl_module_any, str) and decl_module_any.strip():
+                    module = decl_module_any.strip()
 
-        theorem_meta[name] = {"file": file_rel, "module": module, "line": line}
+        _index_decl_match_context_entry(
+            match_ctx,
+            name=name,
+            file_rel=file_rel,
+            module=module,
+            line=line,
+        )
 
-        if isinstance(file_rel, str) and isinstance(module, str):
-            by_file_module[(file_rel, module)].append(name)
-            if isinstance(line, int) and line >= 0:
-                by_file_module_line[(file_rel, module, line)].append(name)
-                by_file_module_ordered[(file_rel, module)].append((line, name))
-        if isinstance(file_rel, str) and isinstance(line, int) and line >= 0:
-            by_file_line[(file_rel, line)].append(name)
-            by_file_ordered[file_rel].append((line, name))
+    _finalize_decl_match_context(match_ctx)
+    return match_ctx
 
-    for ordered in by_file_module_ordered.values():
-        ordered.sort(key=lambda item: (item[0], item[1]))
-    for ordered in by_file_ordered.values():
-        ordered.sort(key=lambda item: (item[0], item[1]))
+
+def _new_decl_match_context() -> dict[str, Any]:
+    theorem_names: set[str] = set()
+    theorem_meta: dict[str, JsonObj] = {}
+    by_file_module_line: dict[tuple[str, str, int], list[str]] = defaultdict(list)
+    by_file_line: dict[tuple[str, int], list[str]] = defaultdict(list)
+    by_file_module: dict[tuple[str, str], list[str]] = defaultdict(list)
+    by_file_module_ordered: dict[tuple[str, str], list[tuple[int, str]]] = defaultdict(list)
+    by_file_ordered: dict[str, list[tuple[int, str]]] = defaultdict(list)
 
     cluster_to_decl: dict[str, Counter[str]] = defaultdict(Counter)
     return {
+        # Keep theoremNames for backward compatibility with existing callsites.
         "theoremNames": theorem_names,
+        "declNames": theorem_names,
         "theoremMeta": theorem_meta,
         "byFileModuleLine": by_file_module_line,
         "byFileLine": by_file_line,
@@ -472,6 +481,93 @@ def build_decl_match_context(
         "byFileOrdered": by_file_ordered,
         "clusterToDecl": cluster_to_decl,
     }
+
+
+def _index_decl_match_context_entry(
+    match_ctx: dict[str, Any],
+    *,
+    name: str,
+    file_rel: str | None,
+    module: str | None,
+    line: int | None,
+) -> None:
+    decl_names = cast(set[str], match_ctx.get("declNames", set()))
+    theorem_meta = cast(dict[str, JsonObj], match_ctx.get("theoremMeta", {}))
+    by_file_module_line = cast(dict[tuple[str, str, int], list[str]], match_ctx.get("byFileModuleLine", {}))
+    by_file_line = cast(dict[tuple[str, int], list[str]], match_ctx.get("byFileLine", {}))
+    by_file_module = cast(dict[tuple[str, str], list[str]], match_ctx.get("byFileModule", {}))
+    by_file_module_ordered = cast(
+        dict[tuple[str, str], list[tuple[int, str]]],
+        match_ctx.get("byFileModuleOrdered", {}),
+    )
+    by_file_ordered = cast(dict[str, list[tuple[int, str]]], match_ctx.get("byFileOrdered", {}))
+
+    decl_names.add(name)
+    theorem_meta[name] = {"file": file_rel, "module": module, "line": line}
+
+    if isinstance(file_rel, str) and isinstance(module, str):
+        by_file_module[(file_rel, module)].append(name)
+        if isinstance(line, int) and line >= 0:
+            by_file_module_line[(file_rel, module, line)].append(name)
+            by_file_module_ordered[(file_rel, module)].append((line, name))
+    if isinstance(file_rel, str) and isinstance(line, int) and line >= 0:
+        by_file_line[(file_rel, line)].append(name)
+        by_file_ordered[file_rel].append((line, name))
+
+
+def _finalize_decl_match_context(match_ctx: dict[str, Any]) -> None:
+    by_file_module_ordered = cast(
+        dict[tuple[str, str], list[tuple[int, str]]],
+        match_ctx.get("byFileModuleOrdered", {}),
+    )
+    by_file_ordered = cast(dict[str, list[tuple[int, str]]], match_ctx.get("byFileOrdered", {}))
+
+    for ordered in by_file_module_ordered.values():
+        ordered.sort(key=lambda item: (item[0], item[1]))
+    for ordered in by_file_ordered.values():
+        ordered.sort(key=lambda item: (item[0], item[1]))
+
+
+def build_decl_match_context_from_decls(
+    decls: dict[str, JsonObj],
+    root: Path,
+) -> dict[str, Any]:
+    match_ctx = _new_decl_match_context()
+
+    for decl_key, row in decls.items():
+        if not isinstance(row, dict):
+            continue
+        kind_any = row.get("kind")
+        kind = kind_any.strip() if isinstance(kind_any, str) else None
+        if not kind or kind not in DECL_MATCH_CONTEXT_KINDS:
+            continue
+
+        name_any = row.get("name")
+        if isinstance(name_any, str) and name_any:
+            name = name_any
+        elif isinstance(decl_key, str) and decl_key:
+            name = decl_key
+        else:
+            continue
+        if not is_valid_decl_name(name):
+            continue
+
+        file_any = row.get("file")
+        file_rel = parse_uri_or_path(file_any, root) if isinstance(file_any, str) else None
+        module_any = row.get("module")
+        module = module_any.strip() if isinstance(module_any, str) and module_any.strip() else None
+        line = coerce_int(row.get("line"))
+
+        _index_decl_match_context_entry(
+            match_ctx,
+            name=name,
+            file_rel=file_rel,
+            module=module,
+            line=line,
+        )
+
+    _finalize_decl_match_context(match_ctx)
+    return match_ctx
 
 
 def _unique_decl(candidates: Iterable[str]) -> str | None:
@@ -709,11 +805,11 @@ def resolve_decl_match(
     root: Path,
     match_ctx: dict[str, Any],
 ) -> tuple[str | None, str, float]:
-    theorem_names = cast(set[str], match_ctx.get("theoremNames", set()))
+    decl_names = cast(set[str], match_ctx.get("declNames", match_ctx.get("theoremNames", set())))
 
     explicit_decl, explicit_prov = extract_decl_field(payload)
     if isinstance(explicit_decl, str) and explicit_decl:
-        if not theorem_names or explicit_decl in theorem_names:
+        if not decl_names or explicit_decl in decl_names:
             rel = DECL_MATCH_RELIABILITY.get(explicit_prov, DECL_MATCH_RELIABILITY["requestField"])
             return explicit_decl, explicit_prov, rel
 
@@ -797,6 +893,19 @@ def first_count_key(value: Any) -> str | None:
                 if isinstance(key, str) and key:
                     return key
     return None
+
+
+def top_count_keys(value: Any, *, limit: int = 3) -> list[str]:
+    out: list[str] = []
+    if isinstance(value, list):
+        for row in value:
+            if len(out) >= limit:
+                break
+            if isinstance(row, (list, tuple)) and row:
+                key = row[0]
+                if isinstance(key, str) and key and key not in out:
+                    out.append(key)
+    return out
 
 
 def jaccard_overlap(lhs: Iterable[str], rhs: Iterable[str]) -> float:
@@ -2066,25 +2175,31 @@ def rank_fingerprint_corridors(
         profile = bridge_decl_signals.get(repl_decl)
         if not isinstance(profile, dict):
             continue
-        cluster_key = first_count_key(profile.get("clusterKeys"))
-        if not isinstance(cluster_key, str) or not cluster_key:
+        cluster_keys = top_count_keys(
+            profile.get("clusterKeys"),
+            limit=REPLACEMENT_CLUSTER_PARTICIPATION_LIMIT,
+        )
+        if not cluster_keys:
             continue
-        bucket = ensure_bucket(cluster_key)
         score = clamp01(float(repl.get("score", 0.0)))
         confidence = clamp01(float(repl.get("confidence", 0.0)))
         region_any = repl.get("region")
         region = region_any if isinstance(region_any, str) else "unknown"
-        cast(list[JsonObj], bucket["replacementCandidates"]).append(
-            {
-                "replacementDecl": repl_decl,
-                "score": round(score, 4),
-                "confidence": round(confidence, 4),
-                "region": region,
-            }
-        )
-        cast(list[float], bucket["scoreSamples"]).append(score)
-        cast(list[float], bucket["confidenceSamples"]).append(confidence)
-        cast(Counter[str], bucket["regionCounts"])[region] += 1
+
+        for cluster_rank, cluster_key in enumerate(cluster_keys, start=1):
+            bucket = ensure_bucket(cluster_key)
+            cast(list[JsonObj], bucket["replacementCandidates"]).append(
+                {
+                    "replacementDecl": repl_decl,
+                    "score": round(score, 4),
+                    "confidence": round(confidence, 4),
+                    "region": region,
+                    "clusterRank": cluster_rank,
+                }
+            )
+            cast(list[float], bucket["scoreSamples"]).append(score)
+            cast(list[float], bucket["confidenceSamples"]).append(confidence)
+            cast(Counter[str], bucket["regionCounts"])[region] += 1
 
     ranked: list[RankedEntry] = []
     for cluster_key, bucket in buckets.items():

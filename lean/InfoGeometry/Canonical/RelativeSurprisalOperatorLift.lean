@@ -315,13 +315,14 @@ theorem relativeModularPotentialOperator_countRay_eq_raw_add_massShift
     funext i
     dsimp [c]
     rw [InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift]
-    simp [sub_eq_add_neg]
+    ring
   rw [relativeModularPotentialOperator, hfun]
   rw [firstQuantize_add, firstQuantize_const_eq_smul_one]
   rfl
 
 omit [Nonempty (Fin n)] in
 /-- Raw count modular-potential operators compose additively along the count cocycle. -/
+@[rep_depth operator]
 theorem relativeCountModularPotentialOperator_cocycle
     (counts ref base : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i)
@@ -330,21 +331,97 @@ theorem relativeCountModularPotentialOperator_cocycle
     relativeCountModularPotentialOperator (n := n) counts base
       = relativeCountModularPotentialOperator (n := n) counts ref
         + relativeCountModularPotentialOperator (n := n) ref base := by
-  ext i j
-  by_cases hij : i = j
-  · subst hij
-    simp [relativeCountModularPotentialOperator, firstQuantize, diagMatrix]
-    rw [← InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountLogDensity_eq_log_relativeCountDensity
-      (n := n) (counts := counts) (ref := base) (i := i)]
-    rw [← InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountLogDensity_eq_log_relativeCountDensity
-      (n := n) (counts := counts) (ref := ref) (i := i)]
-    rw [← InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountLogDensity_eq_log_relativeCountDensity
-      (n := n) (counts := ref) (ref := base) (i := i)]
-    rw [InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountLogDensity_cocycle
-      (n := n) (counts := counts) (ref := ref) (base := base)
-      (hcounts := hcounts) (href := href) (hbase := hbase) (i := i)]
-    ring
-  · simp [relativeCountModularPotentialOperator, firstQuantize, diagMatrix, hij]
+  by_cases hfin : Nonempty (Fin n)
+  · letI : Nonempty (Fin n) := hfin
+    let shift_cb : FinMat n :=
+      (-InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts base hcounts hbase) •
+        (1 : FinMat n)
+    let shift_cr : FinMat n :=
+      (-InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts ref hcounts href) •
+        (1 : FinMat n)
+    let shift_rb : FinMat n :=
+      (-InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift ref base href hbase) •
+        (1 : FinMat n)
+    have hproj :
+        relativeModularPotentialOperator (n := n)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase)
+          = relativeModularPotentialOperator (n := n)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+            + relativeModularPotentialOperator (n := n)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase) := by
+      ext i j
+      by_cases hij : i = j
+      · subst hij
+        change relativeModularPotentialOperator (n := n)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase) i i
+          = relativeModularPotentialOperator (n := n)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href) i i
+            + relativeModularPotentialOperator (n := n)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase) i i
+        rw [relativeModularPotentialOperator_diag]
+        rw [relativeModularPotentialOperator_diag]
+        rw [relativeModularPotentialOperator_diag]
+        exact InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential_cocycle
+          (α := Fin n)
+          (q := InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+          (q0 := InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+          (q1 := InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase)
+          (a := i)
+      · change relativeModularPotentialOperator (n := n)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase) i j
+          = relativeModularPotentialOperator (n := n)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href) i j
+            + relativeModularPotentialOperator (n := n)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay base hbase) i j
+        rw [relativeModularPotentialOperator, firstQuantize_apply_offdiag (hij := hij)]
+        rw [relativeModularPotentialOperator, firstQuantize_apply_offdiag (hij := hij)]
+        rw [relativeModularPotentialOperator, firstQuantize_apply_offdiag (hij := hij)]
+        ring
+    rw [relativeModularPotentialOperator_countRay_eq_raw_add_massShift
+        (n := n) (counts := counts) (ref := base) (hcounts := hcounts) (href := hbase)] at hproj
+    rw [relativeModularPotentialOperator_countRay_eq_raw_add_massShift
+        (n := n) (counts := counts) (ref := ref) (hcounts := hcounts) (href := href)] at hproj
+    rw [relativeModularPotentialOperator_countRay_eq_raw_add_massShift
+        (n := n) (counts := ref) (ref := base) (hcounts := href) (href := hbase)] at hproj
+    have hshift : shift_cr + shift_rb = shift_cb := by
+      dsimp [shift_cr, shift_rb, shift_cb]
+      rw [← add_smul]
+      congr 1
+      rw [InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift_cocycle
+        (counts := counts) (ref := ref) (base := base)
+        (hcounts := hcounts) (href := href) (hbase := hbase)]
+      ring
+    have hproj' :
+        relativeCountModularPotentialOperator (n := n) counts base + shift_cb =
+          (relativeCountModularPotentialOperator (n := n) counts ref
+            + relativeCountModularPotentialOperator (n := n) ref base) + shift_cb := by
+      calc
+        relativeCountModularPotentialOperator (n := n) counts base + shift_cb
+            = relativeCountModularPotentialOperator (n := n) counts ref + shift_cr
+                + (relativeCountModularPotentialOperator (n := n) ref base + shift_rb) := by
+                  have hproj0 := hproj
+                  change relativeCountModularPotentialOperator (n := n) counts base + shift_cb =
+                    relativeCountModularPotentialOperator (n := n) counts ref + shift_cr
+                      + (relativeCountModularPotentialOperator (n := n) ref base + shift_rb)
+                  exact hproj0
+        _ = (relativeCountModularPotentialOperator (n := n) counts ref
+              + relativeCountModularPotentialOperator (n := n) ref base) + (shift_cr + shift_rb) := by
+              abel_nf
+        _ = (relativeCountModularPotentialOperator (n := n) counts ref
+              + relativeCountModularPotentialOperator (n := n) ref base) + shift_cb := by
+              rw [hshift]
+    exact add_right_cancel hproj'
+  · ext i j
+    exact False.elim (hfin ⟨i⟩)
 
 omit [Nonempty (Fin n)] in
 /-- The averaged modular Hamiltonian is the diagonal average of the lifted raw modular potential. -/
@@ -451,6 +528,7 @@ theorem diagonalAverage_relativeModularPotentialOperator_countRay_cocycle
   rw [diagonalAverage_add]
 
 /-- Averaged modular Hamiltonians corrected by the normalization cocycle compose additively. -/
+@[rep_depth projective]
 theorem relativeModularHamiltonian_sub_countMassShift_cocycle
     (counts ref base : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i)

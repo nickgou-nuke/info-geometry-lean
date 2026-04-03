@@ -7,17 +7,41 @@
 
 The repo is best read as one theory with several presentations, not as many unrelated theories.
 The main mathematical burden is not only in the objects at each layer, but in the morphisms that move between those layers and prove that adjacent presentations agree.
-The current stable spine is organized by representation depth:
-- `L0` Count: raw relative counts and positive-measure representatives
-- `L1` Projective/Gauge: positive rays, normalization, relative log-potentials
-- `L2` Operator: diagonal operator lift, partition and log-partition calculus
-- `L3` Krein/Clifford: split quadratic geometry, polarized sheets, Dirac compatibility
-- `L4` Transport: Bogoliubov and transported spectral/thermal structure
-- `L5` Thermodynamic/Attention: Gibbs, Sinkhorn, softmax, and attention surfaces
+The current stable spine is organized by semantic representation depth,
+defined as an inductive type `RepDepth` in `Architecture.lean` and enforced
+at build time via `#audit_architecture` in `Audit.lean`:
+
+| Attribute value | Presentation | Formerly |
+|-----------------|-------------|----------|
+| `count` | Raw relative counts and positive-measure representatives | L0 |
+| `projective` | Positive rays, normalization, relative log-potentials | L1 |
+| `operator` | Diagonal operator lift, partition and log-partition calculus | L2 |
+| `krein` | Split quadratic geometry, polarized sheets, Dirac compatibility | L3 |
+| `transport` | Bogoliubov and transported spectral/thermal structure | L4 |
+| `thermo` | Gibbs, Sinkhorn, softmax, and attention surfaces | L5 |
+
+Declarations participate in the spine via `@[rep_depth <level>]`.
+The adjacency rule: a non-capstone declaration at depth `d` may only depend on
+declarations at depth `d` or `d − 1`. Capstones (`@[capstone]`) are exempt.
 
 A public bridge file is healthy only if it is either:
 - an adjacent translator between neighboring depths
 - a coherence file proving two adjacent composites agree
+
+## Entry Surfaces
+
+The repo has a few umbrella files with different roles:
+
+| File | Role |
+|------|------|
+| `lean/InfoGeometry.lean` | published library entrypoint |
+| `lean/InfoGeometry/Library.lean` | stable, linted canonical publication surface |
+| `lean/InfoGeometry/Canonical/All.lean` | stable canonical umbrella |
+| `lean/InfoGeometry/All.lean` | full project umbrella, including noncanonical and bedrock layers |
+| `lean/InfoGeometry/Audit.lean` | Lean-native architecture audit entrypoint |
+
+For a quick navigation map of the major subtrees and the anchor corridor, see
+[docs/ModuleMap.md](docs/ModuleMap.md).
 
 ## Current Anchor Corridor
 
@@ -36,8 +60,13 @@ This corridor now carries real owner mathematics all the way upward:
 - `relativeModularHamiltonian_sub_countMassShift_cocycle` shows the averaged operator branch consumes the same owned cocycle
 
 That grammar is now enforced in two places:
-- natively in [Architecture.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Meta/Architecture.lean) and [Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
-- as rendered reports in [reports/dag](/home/goutev/LEAN4/info-geometry-lean/reports/dag)
+- natively in [Architecture.lean](lean/InfoGeometry/Meta/Architecture.lean) and [Audit.lean](lean/InfoGeometry/Audit.lean) (the `RepDepth` inductive, `@[rep_depth]` attributes, `@[capstone]` exemptions, and `#audit_architecture`)
+- as rendered reports in [reports/dag](reports/dag)
+
+Additionally, a three-layer vacuity enforcement system is available:
+- Layer A: [Lint/Vacuity.lean](lean/InfoGeometry/Lint/Vacuity.lean) — declaration-local proof-shape and statement-shape checks with `@[infrastructure]`, `@[terminal]`, `@[expository]` role tags
+- Layer B: [tools/theorem_significance.py](tools/theorem_significance.py) — graph-level significance scoring (V0–V4 violation classes)
+- Layer C: [tools/check_vacuity_policy.py](tools/check_vacuity_policy.py) — CI gate combining both layers
 
 ## Repository Intention
 
@@ -58,39 +87,40 @@ The DAG and Python tooling exist to preserve this intention when local context i
 - they expose residual comparison debt and wrapper burden
 - they do not legislate mathematical truth or replace code reading
 
-The short operational summary lives in [docs/OperationalIntent.md](/home/goutev/LEAN4/info-geometry-lean/docs/OperationalIntent.md).
+The short operational summary lives in [docs/OperationalIntent.md](docs/OperationalIntent.md).
 
 ## Read First
 
-1. [Installation.md](/home/goutev/LEAN4/info-geometry-lean/Installation.md)
-2. [NEWCOMER_PATH.md](/home/goutev/LEAN4/info-geometry-lean/NEWCOMER_PATH.md)
-3. [FORMALIZATION_PROTOCOL.md](/home/goutev/LEAN4/info-geometry-lean/FORMALIZATION_PROTOCOL.md)
-4. [docs/README.md](/home/goutev/LEAN4/info-geometry-lean/docs/README.md)
-5. [docs/OperationalIntent.md](/home/goutev/LEAN4/info-geometry-lean/docs/OperationalIntent.md)
-6. [docs/Theory.md](/home/goutev/LEAN4/info-geometry-lean/docs/Theory.md)
-7. [lean/InfoGeometry/Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
-8. [lean/DAG/README.md](/home/goutev/LEAN4/info-geometry-lean/lean/DAG/README.md)
-9. [tools/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/README.md)
-10. [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md)
+1. [Installation.md](Installation.md)
+2. [NEWCOMER_PATH.md](NEWCOMER_PATH.md)
+3. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md)
+4. [docs/README.md](docs/README.md)
+5. [docs/ModuleMap.md](docs/ModuleMap.md)
+6. [docs/OperationalIntent.md](docs/OperationalIntent.md)
+7. [docs/Theory.md](docs/Theory.md)
+8. [lean/InfoGeometry/Audit.lean](lean/InfoGeometry/Audit.lean)
+9. [lean/DAG/README.md](lean/DAG/README.md)
+10. [tools/README.md](tools/README.md)
+11. [tools/infra/README.md](tools/infra/README.md)
 
 If you are operating as an agent inside this repo, also use:
-- [skills/info-geometry-repo/SKILL.md](/home/goutev/LEAN4/info-geometry-lean/skills/info-geometry-repo/SKILL.md)
-- [skills/lean-canonicalization-policy/SKILL.md](/home/goutev/LEAN4/info-geometry-lean/skills/lean-canonicalization-policy/SKILL.md)
+- [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)
+- [skills/lean-canonicalization-policy/SKILL.md](skills/lean-canonicalization-policy/SKILL.md)
 
 ## Authoritative Surfaces
 
 Trust current repo state in this order:
 1. Lean source under `lean/InfoGeometry/`, especially `lean/InfoGeometry/Meta/`
-2. the native audit entrypoint [Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
-3. atomic DAG artifacts under [artifacts/dag](/home/goutev/LEAN4/info-geometry-lean/artifacts/dag)
-4. derived readable reports under [reports/dag](/home/goutev/LEAN4/info-geometry-lean/reports/dag)
-5. conceptual notes under [docs/](/home/goutev/LEAN4/info-geometry-lean/docs)
+2. the native audit entrypoint [Audit.lean](lean/InfoGeometry/Audit.lean)
+3. atomic DAG artifacts under [artifacts/dag](artifacts/dag)
+4. derived readable reports under [reports/dag](reports/dag)
+5. conceptual notes under [docs/](docs)
 
 The most useful live reports are:
-- [true-root-order.md](/home/goutev/LEAN4/info-geometry-lean/reports/dag/true-root-order.md)
-- [representation-depth-audit.md](/home/goutev/LEAN4/info-geometry-lean/reports/dag/representation-depth-audit.md)
-- [representation-depth-graph.md](/home/goutev/LEAN4/info-geometry-lean/reports/dag/representation-depth-graph.md)
-- [theorem-surface-index.md](/home/goutev/LEAN4/info-geometry-lean/reports/dag/theorem-surface-index.md)
+- [true-root-order.md](reports/dag/true-root-order.md)
+- [representation-depth-audit.md](reports/dag/representation-depth-audit.md)
+- [representation-depth-graph.md](reports/dag/representation-depth-graph.md)
+- [theorem-surface-index.md](reports/dag/theorem-surface-index.md)
 
 ## Build
 
@@ -110,7 +140,7 @@ lake script run strictCheck
 
 ## Maintained DAG Pipeline
 
-The maintained pipeline is documented in [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md).
+The maintained pipeline is documented in [tools/infra/README.md](tools/infra/README.md).
 Run the Lean-native audit before treating the representation-depth Python views as authoritative.
 
 After the main refresh sequence, the stable spine can be checked directly with:
@@ -123,9 +153,9 @@ python3 tools/infra/generate_representation_depth_graph.py
 ## Documentation Policy
 
 - `README.md`, `lean/DAG/README.md`, `tools/README.md`, and `tools/infra/README.md` are operational docs.
-- [docs/OperationalIntent.md](/home/goutev/LEAN4/info-geometry-lean/docs/OperationalIntent.md) states why the repo, DAG, and infra tooling are maintained the way they are.
-- [docs/Theory.md](/home/goutev/LEAN4/info-geometry-lean/docs/Theory.md) is the conceptual map of the stable spine.
-- [Architecture.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Meta/Architecture.lean) and [Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean) are the native grammar and enforcement layer.
+- [docs/OperationalIntent.md](docs/OperationalIntent.md) states why the repo, DAG, and infra tooling are maintained the way they are.
+- [docs/Theory.md](docs/Theory.md) is the conceptual map of the stable spine.
+- [Architecture.lean](lean/InfoGeometry/Meta/Architecture.lean) and [Audit.lean](lean/InfoGeometry/Audit.lean) are the native grammar and enforcement layer.
 - `reports/` and `artifacts/dag/` are generated or regenerated surfaces.
 - Python reports visualize and summarize the enforced structure; they do not define it.
 - Stale prose loses to code and regenerated artifacts.

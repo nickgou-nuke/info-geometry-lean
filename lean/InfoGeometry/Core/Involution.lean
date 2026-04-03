@@ -1,5 +1,6 @@
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Tactic
+import InfoGeometry.Meta.Vacuity
 
 /-!
 # Core Involution
@@ -416,5 +417,42 @@ lemma cartanMinus_neg_fixed
   simpa [cartanMinus] using (Projector.minus_neg_fixed (θ := θ.1) v)
 
 end Linear
+
+attribute [infrastructure]
+  instPreservesLinearOfPreservesLie
+  instPreservesLieBracketOfPreservesLie
+  InvolutiveAutomorphism.ext_iff
+  InvolutiveAutomorphism.map_add
+  InvolutiveAutomorphism.map_smul
+  InvolutiveAutomorphism.map_neg
+  InvolutiveAutomorphism.map_sub
+  InvolutiveAutomorphism.map_lie
+  InvolutiveAutomorphism.map_mul
+  InvolutiveAutomorphism.map_one
+  InvolutiveAutomorphism.map_inv
+  InvolutiveAutomorphism.map_div
+  LinearInvolutiveAutomorphism.involutive
+  LinearInvolutiveAutomorphism.map_add
+  LinearInvolutiveAutomorphism.map_smul
+  LinearInvolutiveAutomorphism.map_neg
+  LinearInvolutiveAutomorphism.map_sub
+  MulInvolutiveAutomorphism.involutive
+  MulInvolutiveAutomorphism.map_mul
+  MulInvolutiveAutomorphism.map_one
+  MulInvolutiveAutomorphism.map_inv
+  MulInvolutiveAutomorphism.map_div
+
+attribute [expository]
+  Projector.plus_add
+  Projector.minus_add
+  Projector.plus_smul
+  Projector.minus_smul
+  Projector.plus_idempotent
+  Projector.minus_idempotent
+  Projector.plus_minus
+  Projector.minus_plus
+  cartan_decomposition
+  cartanPlus_fixed
+  cartanMinus_neg_fixed
 
 end InfoGeometry.Core

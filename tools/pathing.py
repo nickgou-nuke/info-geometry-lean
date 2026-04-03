@@ -56,6 +56,10 @@ def default_decl_index_dir() -> Path:
     return default_decl_artifact_root() / "index"
 
 
+def default_decl_meta_file() -> Path:
+    return default_decl_index_dir() / "meta.json"
+
+
 def default_decl_metadata_file() -> Path:
     return default_decl_index_dir() / "decls.jsonl"
 

@@ -11,9 +11,10 @@ Use this skill when the task is not just to inspect the DAG, but to reduce theor
 
 Read these first:
 
-1. `/home/goutev/LEAN4/info-geometry-lean/skills/info-geometry-repo/SKILL.md`
-2. `/home/goutev/LEAN4/info-geometry-lean/reports/dag/openclaw-targets.md`
-3. `/home/goutev/LEAN4/info-geometry-lean/reports/dag/structural-hotspots.md`
+1. `skills/info-geometry-repo/SKILL.md`
+2. `reports/dag/openclaw-targets.md`
+3. `reports/dag/structural-hotspots.md`
+4. `reports/dag/replacement-frontier.md` (ranked by replacement feasibility, cross-references depth and vacuity)
 
 Then read only the exact frontier/module files you need.
 
@@ -76,11 +77,12 @@ Avoid:
 ## Current Structural Policy
 
 Use the current trust order:
-1. `artifacts/dag/full_graph.json`
-2. `artifacts/dag/structural-topology.json`
-3. `artifacts/dag/source-sink-bipartite.json`
-4. `reports/dag/structural-hotspots.md`
-5. `reports/dag/openclaw-targets.md`
+1. `artifacts/dag/index/meta.json` (verify `schemaVersion` ≥ 2 and timestamp is recent)
+2. `artifacts/dag/full_graph.json`
+3. `artifacts/dag/structural-topology.json`
+4. `artifacts/dag/source-sink-bipartite.json`
+5. `reports/dag/structural-hotspots.md`
+6. `reports/dag/openclaw-targets.md`
 
 OpenClaw is now a thin selector:
 - uncovered graph debt first
@@ -116,6 +118,11 @@ python3 tools/infra/run_locked_lake_build.py <Module.Name>
 Regeneration:
 
 ```bash
+# Refresh the DAG (incremental; skips if oleans unchanged)
+python3 tools/infra/refresh_decl_graph.py
+# Use --force to bypass the incremental skip
+python3 tools/infra/refresh_decl_graph.py --force
+
 python3 tools/infra/generate_source_sink_compression.py
 
 python3 tools/infra/check_bipartite_bleed.py
@@ -129,6 +136,8 @@ python3 tools/infra/select_openclaw_target.py \
   --structural-hotspots reports/dag/structural-hotspots.json \
   --json-out reports/dag/openclaw-targets.json \
   --md-out reports/dag/openclaw-targets.md
+
+python3 tools/infra/generate_replacement_frontier.py
 ```
 
 ## Acceptance Test

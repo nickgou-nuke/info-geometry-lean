@@ -47,7 +47,7 @@
       "hypothesis_bridge": 2,
       "package_reprojection": 8,
       "surrogate_or_vacuous": 11,
-      "hotspot_rank": 3,
+      "hotspot_rank": 5,
       "replaceable_surface_mass": 62.0,
       "support_pressure": 36.0,
       "burn_down_score": 223.877,
@@ -57,6 +57,27 @@
       "package_share": 0.381,
       "hypothesis_share": 0.0952,
       "burn_down_rank": 2
+    },
+    {
+      "module": "InfoGeometry.Canonical.SpectralInference",
+      "strength": 34,
+      "out_weight": 10,
+      "in_weight": 24,
+      "decl_count": 24,
+      "dominant_surface": "hypothesis_bridge",
+      "hypothesis_bridge": 1,
+      "package_reprojection": 23,
+      "surrogate_or_vacuous": 0,
+      "hotspot_rank": 3,
+      "replaceable_surface_mass": 47.0,
+      "support_pressure": 58.0,
+      "burn_down_score": 191.644,
+      "dominant_pressure": "package_reprojection",
+      "primary_action": "construct witnesses behind packaged hypotheses",
+      "surrogate_share": 0.0,
+      "package_share": 0.9583,
+      "hypothesis_share": 0.0417,
+      "burn_down_rank": 3
     },
     {
       "module": "InfoGeometry.Quantum.RealMajoranaCategory",
@@ -77,91 +98,28 @@
       "surrogate_share": 0.0,
       "package_share": 1.0,
       "hypothesis_share": 0.0,
-      "burn_down_rank": 3
-    },
-    {
-      "module": "InfoGeometry.Canonical.SpectralInference",
-      "strength": 22,
-      "out_weight": 10,
-      "in_weight": 12,
-      "decl_count": 24,
-      "dominant_surface": "hypothesis_bridge",
-      "hypothesis_bridge": 1,
-      "package_reprojection": 23,
-      "surrogate_or_vacuous": 0,
-      "hotspot_rank": 4,
-      "replaceable_surface_mass": 47.0,
-      "support_pressure": 34.0,
-      "burn_down_score": 167.101,
-      "dominant_pressure": "package_reprojection",
-      "primary_action": "construct witnesses behind packaged hypotheses",
-      "surrogate_share": 0.0,
-      "package_share": 0.9583,
-      "hypothesis_share": 0.0417,
       "burn_down_rank": 4
     },
     {
-      "module": "InfoGeometry.Singular.KreinNaturalFlow",
-      "strength": 20,
-      "out_weight": 10,
-      "in_weight": 10,
-      "decl_count": 12,
-      "dominant_surface": "package_reprojection",
-      "hypothesis_bridge": 0,
-      "package_reprojection": 12,
-      "surrogate_or_vacuous": 0,
-      "hotspot_rank": 6,
-      "replaceable_surface_mass": 24.0,
-      "support_pressure": 30.0,
-      "burn_down_score": 82.416,
-      "dominant_pressure": "package_reprojection",
-      "primary_action": "collapse package layer",
-      "surrogate_share": 0.0,
-      "package_share": 1.0,
-      "hypothesis_share": 0.0,
-      "burn_down_rank": 5
-    },
-    {
-      "module": "InfoGeometry.Canonical.ZetaDeterminant",
-      "strength": 18,
-      "out_weight": 10,
+      "module": "InfoGeometry.Canonical.BerryPhase",
+      "strength": 28,
+      "out_weight": 20,
       "in_weight": 8,
       "decl_count": 11,
-      "dominant_surface": "package_reprojection",
+      "dominant_surface": "surrogate_or_vacuous",
       "hypothesis_bridge": 0,
-      "package_reprojection": 11,
-      "surrogate_or_vacuous": 0,
-      "hotspot_rank": 8,
-      "replaceable_surface_mass": 22.0,
-      "support_pressure": 26.0,
-      "burn_down_score": 72.508,
-      "dominant_pressure": "package_reprojection",
-      "primary_action": "collapse package layer",
-      "surrogate_share": 0.0,
-      "package_share": 1.0,
+      "package_reprojection": 0,
+      "surrogate_or_vacuous": 11,
+      "hotspot_rank": 4,
+      "replaceable_surface_mass": 44.0,
+      "support_pressure": 36.0,
+      "burn_down_score": 158.88,
+      "dominant_pressure": "surrogate_or_vacuous",
+      "primary_action": "direct constructive replacement",
+      "surrogate_share": 1.0,
+      "package_share": 0.0,
       "hypothesis_share": 0.0,
-      "burn_down_rank": 6
-    },
-    {
-      "module": "InfoGeometry.Canonical.IBProjective",
-      "strength": 19,
-      "out_weight": 7,
-      "in_weight": 12,
-      "decl_count": 10,
-      "dominant_surface": "package_reprojection",
-      "hypothesis_bridge": 0,
-      "package_reprojection": 10,
-      "surrogate_or_vacuous": 0,
-      "hotspot_rank": 7,
-      "replaceable_surface_mass": 20.0,
-      "support_pressure": 31.0,
-      "burn_down_score": 69.315,
-      "dominant_pressure": "package_reprojection",
-      "primary_action": "collapse package layer",
-      "surrogate_share": 0.0,
-      "package_share": 1.0,
-      "hypothesis_share": 0.0,
-      "burn_down_rank": 7
+      "burn_down_rank": 5
     },
     {
       "module": "InfoGeometry.Quantum.InvolutionCore",
@@ -173,10 +131,52 @@
       "hypothesis_bridge": 0,
       "package_reprojection": 9,
       "surrogate_or_vacuous": 0,
-      "hotspot_rank": 5,
+      "hotspot_rank": 7,
       "replaceable_surface_mass": 18.0,
       "support_pressure": 33.0,
       "burn_down_score": 63.474,
+      "dominant_pressure": "package_reprojection",
+      "primary_action": "collapse package layer",
+      "surrogate_share": 0.0,
+      "package_share": 1.0,
+      "hypothesis_share": 0.0,
+      "burn_down_rank": 6
+    },
+    {
+      "module": "InfoGeometry.Quantum.TriadicTransportBarycenter",
+      "strength": 20,
+      "out_weight": 10,
+      "in_weight": 10,
+      "decl_count": 8,
+      "dominant_surface": "package_reprojection",
+      "hypothesis_bridge": 0,
+      "package_reprojection": 8,
+      "surrogate_or_vacuous": 0,
+      "hotspot_rank": 8,
+      "replaceable_surface_mass": 16.0,
+      "support_pressure": 30.0,
+      "burn_down_score": 54.944,
+      "dominant_pressure": "package_reprojection",
+      "primary_action": "collapse package layer",
+      "surrogate_share": 0.0,
+      "package_share": 1.0,
+      "hypothesis_share": 0.0,
+      "burn_down_rank": 7
+    },
+    {
+      "module": "InfoGeometry.Canonical.BottDirac",
+      "strength": 23,
+      "out_weight": 12,
+      "in_weight": 11,
+      "decl_count": 6,
+      "dominant_surface": "package_reprojection",
+      "hypothesis_bridge": 0,
+      "package_reprojection": 6,
+      "surrogate_or_vacuous": 0,
+      "hotspot_rank": 6,
+      "replaceable_surface_mass": 12.0,
+      "support_pressure": 34.0,
+      "burn_down_score": 42.664,
       "dominant_pressure": "package_reprojection",
       "primary_action": "collapse package layer",
       "surrogate_share": 0.0,
@@ -187,127 +187,662 @@
   ],
   "source_nodes": [
     {
-      "name": "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-      "module": "InfoGeometry.Canonical.IBProjective",
+      "name": "InfoGeometry.Krein.instL2Complete",
+      "module": "InfoGeometry.Krein.KreinSpace",
+      "category": "likely_constructive",
+      "kind": "theorem",
+      "reachable_sinks": 3,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 0,
+      "flow_out_degree": 170,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "source_score": 15.9425
+    },
+    {
+      "name": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+      "module": "InfoGeometry.Canonical.Drazin",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 4,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 0,
+      "flow_out_degree": 29,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "source_score": 14.2359
+    },
+    {
+      "name": "InfoGeometry.Krein.DoubledSpace.ext",
+      "module": "InfoGeometry.Krein.DoubledSpace",
+      "category": "likely_constructive",
+      "kind": "theorem",
+      "reachable_sinks": 3,
+      "closest_sink_distance": 4,
+      "flow_in_degree": 1,
+      "flow_out_degree": 100,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "source_score": 14.0249
+    },
+    {
+      "name": "InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector",
+      "module": "InfoGeometry.Canonical.MoorePenrose",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 4,
+      "closest_sink_distance": 4,
+      "flow_in_degree": 0,
+      "flow_out_degree": 17,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "source_score": 11.9778
+    },
+    {
+      "name": "InfoGeometry.Canonical.TopologicalInvariants.BayesianLoop.N",
+      "module": "InfoGeometry.Canonical.TopologicalInvariants",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 4,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 1,
+      "flow_out_degree": 13,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "source_score": 11.2822
+    },
+    {
+      "name": "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+      "module": "InfoGeometry.Canonical.TopologicalInvariants",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 4,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 6,
+      "flow_out_degree": 9,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "source_score": 9.7916
+    },
+    {
+      "name": "InfoGeometry.Canonical.SpectralInference.ChiralSpectralTriple.epsilon",
+      "module": "InfoGeometry.Canonical.SpectralInference",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 4,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 6,
+      "flow_out_degree": 8,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "source_score": 9.4103
+    },
+    {
+      "name": "InfoGeometry.Canonical.MoorePenrose.chiralScale",
+      "module": "InfoGeometry.Canonical.MoorePenrose",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 4,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 1,
+      "flow_out_degree": 4,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "source_score": 7.617
+    },
+    {
+      "name": "InfoGeometry.Krein.modular_j_involution",
+      "module": "InfoGeometry.Krein.DoubledSpace",
+      "category": "likely_constructive",
+      "kind": "theorem",
+      "reachable_sinks": 3,
+      "closest_sink_distance": 3,
+      "flow_in_degree": 4,
+      "flow_out_degree": 9,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "source_score": 7.2437
+    },
+    {
+      "name": "InfoGeometry.Krein.spectral_epsilon_involution",
+      "module": "InfoGeometry.Krein.DoubledSpace",
+      "category": "likely_constructive",
+      "kind": "theorem",
+      "reachable_sinks": 3,
+      "closest_sink_distance": 3,
+      "flow_in_degree": 4,
+      "flow_out_degree": 8,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "source_score": 6.9578
+    },
+    {
+      "name": "InfoGeometry.Canonical.SpectralInference.ChiralSpectralTriple.DP",
+      "module": "InfoGeometry.Canonical.SpectralInference",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 4,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 1,
+      "flow_out_degree": 3,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "source_score": 6.8878
+    },
+    {
+      "name": "InfoGeometry.Canonical.MoorePenrose.chiralAnomaly",
+      "module": "InfoGeometry.Canonical.MoorePenrose",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 4,
+      "closest_sink_distance": 3,
+      "flow_in_degree": 2,
+      "flow_out_degree": 3,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "source_score": 6.5878
+    },
+    {
+      "name": "InfoGeometry.Krein.modular_j_spectral_epsilon_anticommute",
+      "module": "InfoGeometry.Krein.DoubledSpace",
+      "category": "likely_constructive",
+      "kind": "theorem",
+      "reachable_sinks": 3,
+      "closest_sink_distance": 3,
+      "flow_in_degree": 5,
+      "flow_out_degree": 6,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "source_score": 6.2383
+    },
+    {
+      "name": "InfoGeometry.Canonical.MoorePenrose.epsilon",
+      "module": "InfoGeometry.Canonical.MoorePenrose",
+      "category": "neutral_definition",
+      "kind": "def",
+      "reachable_sinks": 4,
+      "closest_sink_distance": 2,
+      "flow_in_degree": 1,
+      "flow_out_degree": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "source_score": 4.6778
+    },
+    {
+      "name": "InfoGeometry.Quantum.RealSplitCl11Action.eps_sq",
+      "module": "InfoGeometry.Quantum.RealSplitClifford",
       "category": "likely_constructive",
       "kind": "theorem",
       "reachable_sinks": 2,
       "closest_sink_distance": 1,
-      "flow_in_degree": 0,
-      "flow_out_degree": 3,
+      "flow_in_degree": 2,
+      "flow_out_degree": 2,
       "sink_modules": [
-        "InfoGeometry.Canonical.IBProjective"
+        "InfoGeometry.Canonical.BottDirac"
       ],
-      "source_score": 3.7189
+      "source_score": 3.1726
+    },
+    {
+      "name": "InfoGeometry.Quantum.RealSplitCl11Action.J_eps_anti",
+      "module": "InfoGeometry.Quantum.RealSplitClifford",
+      "category": "likely_constructive",
+      "kind": "theorem",
+      "reachable_sinks": 2,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 3,
+      "flow_out_degree": 2,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "source_score": 3.1226
+    },
+    {
+      "name": "InfoGeometry.Canonical.BottDirac.bottDirac_sq_eq_sum_laplacians",
+      "module": "InfoGeometry.Canonical.BottDirac",
+      "category": "likely_constructive",
+      "kind": "theorem",
+      "reachable_sinks": 1,
+      "closest_sink_distance": 1,
+      "flow_in_degree": 5,
+      "flow_out_degree": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "source_score": 1.3486
+    },
+    {
+      "name": "InfoGeometry.Canonical.BottDirac.bottDirac_sq_eq_sum_laplacians_tmul",
+      "module": "InfoGeometry.Canonical.BottDirac",
+      "category": "likely_constructive",
+      "kind": "theorem",
+      "reachable_sinks": 1,
+      "closest_sink_distance": 2,
+      "flow_in_degree": 4,
+      "flow_out_degree": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "source_score": 1.2319
     }
   ],
   "sink_nodes": [
     {
-      "name": "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay",
-      "module": "InfoGeometry.Canonical.IBProjective",
-      "category": "package_reprojection",
+      "name": "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal",
+      "module": "InfoGeometry.Canonical.BerryPhase",
+      "category": "surrogate_or_vacuous",
       "kind": "theorem",
-      "burn_down_rank": 7,
+      "burn_down_rank": 5,
+      "flow_out_degree": 0,
+      "flow_in_degree": 12,
+      "severity": 3
+    },
+    {
+      "name": "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank",
+      "module": "InfoGeometry.Canonical.BerryPhase",
+      "category": "surrogate_or_vacuous",
+      "kind": "theorem",
+      "burn_down_rank": 5,
+      "flow_out_degree": 0,
+      "flow_in_degree": 9,
+      "severity": 3
+    },
+    {
+      "name": "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+      "module": "InfoGeometry.Canonical.BerryPhase",
+      "category": "surrogate_or_vacuous",
+      "kind": "theorem",
+      "burn_down_rank": 5,
+      "flow_out_degree": 0,
+      "flow_in_degree": 6,
+      "severity": 3
+    },
+    {
+      "name": "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+      "module": "InfoGeometry.Canonical.BerryPhase",
+      "category": "surrogate_or_vacuous",
+      "kind": "theorem",
+      "burn_down_rank": 5,
       "flow_out_degree": 0,
       "flow_in_degree": 5,
+      "severity": 3
+    },
+    {
+      "name": "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac",
+      "module": "InfoGeometry.Canonical.BottDirac",
+      "category": "package_reprojection",
+      "kind": "theorem",
+      "burn_down_rank": 8,
+      "flow_out_degree": 1,
+      "flow_in_degree": 11,
       "severity": 2
     },
     {
-      "name": "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-      "module": "InfoGeometry.Canonical.IBProjective",
+      "name": "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive",
+      "module": "InfoGeometry.Canonical.BottDirac",
       "category": "package_reprojection",
       "kind": "theorem",
-      "burn_down_rank": 7,
-      "flow_out_degree": 4,
-      "flow_in_degree": 2,
+      "burn_down_rank": 8,
+      "flow_out_degree": 1,
+      "flow_in_degree": 9,
+      "severity": 2
+    },
+    {
+      "name": "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians",
+      "module": "InfoGeometry.Canonical.BottDirac",
+      "category": "package_reprojection",
+      "kind": "theorem",
+      "burn_down_rank": 8,
+      "flow_out_degree": 3,
+      "flow_in_degree": 9,
       "severity": 2
     }
   ],
   "incidence_entries": [
     {
-      "source": "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-      "source_module": "InfoGeometry.Canonical.IBProjective",
-      "source_score": 3.7189,
-      "sink": "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay",
-      "sink_module": "InfoGeometry.Canonical.IBProjective",
-      "sink_category": "package_reprojection",
+      "source": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+      "source_module": "InfoGeometry.Canonical.Drazin",
+      "source_score": 14.2359,
+      "sink": "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal",
+      "sink_module": "InfoGeometry.Canonical.BerryPhase",
+      "sink_category": "surrogate_or_vacuous",
       "path_nodes": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal"
       ],
       "path_modules": [
-        "InfoGeometry.Canonical.IBProjective"
+        "InfoGeometry.Canonical.Drazin",
+        "InfoGeometry.Canonical.BerryPhase"
       ],
       "path_component_ids": [
-        "component:1604802879508874125",
-        "component:15595133688103510337",
-        "component:2652680561442851308"
+        "component:18434174865111360469",
+        "component:15680418292161437159"
       ],
       "path_component_representatives": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal"
       ],
-      "path_length": 2,
+      "path_length": 1,
       "motif_signature": [
-        "pmf_normalize_eq_of_scale",
-        "pmf_normalize_eq_of_sameScoreRay",
-        "scoreProjectiveGauge_eq_of_sameScoreRay"
+        "projection",
+        "berry_phase_vanishes_for_normal"
       ],
-      "motif_signature_text": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay -> scoreProjectiveGauge_eq_of_sameScoreRay",
+      "motif_signature_text": "projection -> berry_phase_vanishes_for_normal",
       "source_bundle": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
       ],
       "compression_potential": 4.0
     },
     {
-      "source": "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-      "source_module": "InfoGeometry.Canonical.IBProjective",
-      "source_score": 3.7189,
-      "sink": "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-      "sink_module": "InfoGeometry.Canonical.IBProjective",
-      "sink_category": "package_reprojection",
+      "source": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+      "source_module": "InfoGeometry.Canonical.Drazin",
+      "source_score": 14.2359,
+      "sink": "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank",
+      "sink_module": "InfoGeometry.Canonical.BerryPhase",
+      "sink_category": "surrogate_or_vacuous",
       "path_nodes": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
       ],
       "path_modules": [
-        "InfoGeometry.Canonical.IBProjective"
+        "InfoGeometry.Canonical.Drazin",
+        "InfoGeometry.Canonical.BerryPhase"
       ],
       "path_component_ids": [
-        "component:1604802879508874125",
-        "component:15595133688103510337"
+        "component:18434174865111360469",
+        "component:18135046861293869631"
       ],
       "path_component_representatives": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
       ],
       "path_length": 1,
       "motif_signature": [
-        "pmf_normalize_eq_of_scale",
-        "pmf_normalize_eq_of_sameScoreRay"
+        "projection",
+        "informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
       ],
-      "motif_signature_text": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay",
+      "motif_signature_text": "projection -> informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank",
       "source_bundle": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
+      ],
+      "compression_potential": 4.0
+    },
+    {
+      "source": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+      "source_module": "InfoGeometry.Canonical.Drazin",
+      "source_score": 14.2359,
+      "sink": "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+      "sink_module": "InfoGeometry.Canonical.BerryPhase",
+      "sink_category": "surrogate_or_vacuous",
+      "path_nodes": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero"
+      ],
+      "path_modules": [
+        "InfoGeometry.Canonical.Drazin",
+        "InfoGeometry.Canonical.TopologicalInvariants",
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "path_component_ids": [
+        "component:18434174865111360469",
+        "component:9828784175940718480",
+        "component:16937674872237706933"
+      ],
+      "path_component_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero"
+      ],
+      "path_length": 2,
+      "motif_signature": [
+        "projection",
+        "chiralAnomalyIndex",
+        "berryPhase_ne_zero_of_anomaly_flux_ne_zero"
+      ],
+      "motif_signature_text": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+      "source_bundle": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
+      ],
+      "compression_potential": 8.0
+    },
+    {
+      "source": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+      "source_module": "InfoGeometry.Canonical.Drazin",
+      "source_score": 14.2359,
+      "sink": "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+      "sink_module": "InfoGeometry.Canonical.BerryPhase",
+      "sink_category": "surrogate_or_vacuous",
+      "path_nodes": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+      ],
+      "path_modules": [
+        "InfoGeometry.Canonical.Drazin",
+        "InfoGeometry.Canonical.TopologicalInvariants",
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "path_component_ids": [
+        "component:18434174865111360469",
+        "component:9828784175940718480",
+        "component:5275076599555427362"
+      ],
+      "path_component_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+      ],
+      "path_length": 2,
+      "motif_signature": [
+        "projection",
+        "chiralAnomalyIndex",
+        "informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+      ],
+      "motif_signature_text": "projection -> chiralAnomalyIndex -> informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+      "source_bundle": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
+      ],
+      "compression_potential": 8.0
+    },
+    {
+      "source": "InfoGeometry.Krein.instL2Complete",
+      "source_module": "InfoGeometry.Krein.KreinSpace",
+      "source_score": 15.9425,
+      "sink": "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac",
+      "sink_module": "InfoGeometry.Canonical.BottDirac",
+      "sink_category": "package_reprojection",
+      "path_nodes": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "path_modules": [
+        "InfoGeometry.Krein.KreinSpace",
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "path_component_ids": [
+        "component:11179718433832194184",
+        "component:2928223219475638192"
+      ],
+      "path_component_representatives": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "path_length": 1,
+      "motif_signature": [
+        "instL2Complete",
+        "Dirac collapse"
+      ],
+      "motif_signature_text": "instL2Complete -> Dirac collapse",
+      "source_bundle": [
+        "InfoGeometry.Krein.instL2Complete"
       ],
       "compression_potential": 2.0
+    },
+    {
+      "source": "InfoGeometry.Krein.instL2Complete",
+      "source_module": "InfoGeometry.Krein.KreinSpace",
+      "source_score": 15.9425,
+      "sink": "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive",
+      "sink_module": "InfoGeometry.Canonical.BottDirac",
+      "sink_category": "package_reprojection",
+      "path_nodes": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive"
+      ],
+      "path_modules": [
+        "InfoGeometry.Krein.KreinSpace",
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "path_component_ids": [
+        "component:11179718433832194184",
+        "component:10920971003956115245"
+      ],
+      "path_component_representatives": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive"
+      ],
+      "path_length": 1,
+      "motif_signature": [
+        "instL2Complete",
+        "cl11Grading_involutive"
+      ],
+      "motif_signature_text": "instL2Complete -> cl11Grading_involutive",
+      "source_bundle": [
+        "InfoGeometry.Krein.instL2Complete"
+      ],
+      "compression_potential": 2.0
+    },
+    {
+      "source": "InfoGeometry.Krein.instL2Complete",
+      "source_module": "InfoGeometry.Krein.KreinSpace",
+      "source_score": 15.9425,
+      "sink": "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians",
+      "sink_module": "InfoGeometry.Canonical.BottDirac",
+      "sink_category": "package_reprojection",
+      "path_nodes": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians"
+      ],
+      "path_modules": [
+        "InfoGeometry.Krein.KreinSpace",
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "path_component_ids": [
+        "component:11179718433832194184",
+        "component:10079489289963542738",
+        "component:1353779019169282955"
+      ],
+      "path_component_representatives": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians"
+      ],
+      "path_length": 2,
+      "motif_signature": [
+        "instL2Complete",
+        "cl11DiracSeed",
+        "cl11_bottDirac_sq_eq_sum_laplacians"
+      ],
+      "motif_signature_text": "instL2Complete -> cl11DiracSeed -> cl11_bottDirac_sq_eq_sum_laplacians",
+      "source_bundle": [
+        "InfoGeometry.Krein.instL2Complete"
+      ],
+      "compression_potential": 4.0
     }
   ],
   "atomic_nodes": [
     {
-      "atomic_id": "bundle:e426b4c9b3ea",
+      "atomic_id": "bundle:a6aeeb2f41a2",
       "kind": "source_bundle",
       "category": "source_bundle",
       "source_bundle": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
       ],
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
       ],
       "source_modules": [
-        "InfoGeometry.Canonical.IBProjective"
+        "InfoGeometry.Canonical.Drazin"
+      ],
+      "source_categories": {
+        "neutral_definition": 2
+      },
+      "source_kinds": {
+        "def": 2
+      },
+      "source_purity_score": 0.0,
+      "scc_id": null,
+      "native_component_ids": [
+        "component:18434174865111360469",
+        "component:9828784175940718480"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
+      ],
+      "native_root_witness_component_ids": [
+        "component:18434174865111360469",
+        "component:15598605524130012567",
+        "component:16214264081616296237",
+        "component:8549032735419108587",
+        "component:2110294370453123786",
+        "component:9828784175940718480"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.MoorePenrose.chiralAnomaly",
+        "InfoGeometry.Canonical.MoorePenrose.epsilon",
+        "InfoGeometry.Canonical.MoorePenrose.chiralScale",
+        "InfoGeometry.Canonical.SpectralInference.ChiralSpectralTriple.epsilon",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 5,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+      ],
+      "path_multiplicity": 2,
+      "avg_path_length": 2.0,
+      "motif_signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+      "compression_potential": 16.0
+    },
+    {
+      "atomic_id": "bundle:abbbb4a36d13",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Krein.instL2Complete"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Krein.instL2Complete"
+      ],
+      "source_modules": [
+        "InfoGeometry.Krein.KreinSpace"
       ],
       "source_categories": {
         "likely_constructive": 1
@@ -316,170 +851,813 @@
         "theorem": 1
       },
       "source_purity_score": 1.0,
-      "scc_id": "component:1604802879508874125",
+      "scc_id": "component:11179718433832194184",
       "native_component_ids": [
-        "component:1604802879508874125"
+        "component:11179718433832194184"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale"
+        "InfoGeometry.Krein.instL2Complete"
       ],
       "native_root_witness_component_ids": [
-        "component:1604802879508874125"
+        "component:11179718433832194184"
       ],
       "native_root_witnesses": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale"
+        "InfoGeometry.Krein.instL2Complete"
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 0,
       "native_depth_max": 0,
       "sink_modules": [
-        "InfoGeometry.Canonical.IBProjective"
+        "InfoGeometry.Canonical.BottDirac"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
       ],
-      "path_multiplicity": 2,
-      "avg_path_length": 1.5,
-      "motif_signature": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay -> scoreProjectiveGauge_eq_of_sameScoreRay",
-      "compression_potential": 6.0
-    }
-  ],
-  "hydrated_nodes": [
+      "path_multiplicity": 3,
+      "avg_path_length": 1.333,
+      "motif_signature": "instL2Complete -> Dirac collapse",
+      "compression_potential": 8.0
+    },
     {
-      "hydrated_id": "InfoGeometry.Canonical.IBProjective",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.IBProjective",
-      "sink_role": "consumer_sink",
+      "atomic_id": "bundle:c29ef334dfed",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
+      ],
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
       ],
-      "minimal_source_bundle": "bundle:e426b4c9b3ea",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.IBProjective"
+      "source_modules": [
+        "InfoGeometry.Canonical.Drazin"
       ],
-      "path_multiplicity": 2,
-      "path_motif_signatures": [
-        {
-          "signature": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay -> scoreProjectiveGauge_eq_of_sameScoreRay",
-          "count": 1
-        },
-        {
-          "signature": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay",
-          "count": 1
-        }
-      ],
-      "compression_potential": 6.0,
+      "source_categories": {
+        "neutral_definition": 1
+      },
+      "source_kinds": {
+        "def": 1
+      },
+      "source_purity_score": 0.0,
+      "scc_id": "component:18434174865111360469",
       "native_component_ids": [
-        "component:15595133688103510337",
-        "component:1604802879508874125",
-        "component:2652680561442851308"
+        "component:18434174865111360469"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
+      ],
+      "native_root_witness_component_ids": [
+        "component:18434174865111360469"
       ],
       "native_root_witnesses": [
-        "InfoGeometry.Canonical.IB.SameScoreRay",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.FinProb",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 0,
-      "native_depth_max": 2,
+      "native_depth_max": 0,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
+      ],
+      "path_multiplicity": 2,
+      "avg_path_length": 1.0,
+      "motif_signature": "projection -> berry_phase_vanishes_for_normal",
+      "compression_potential": 8.0
+    }
+  ],
+  "hydrated_nodes": [
+    {
+      "hydrated_id": "InfoGeometry.Canonical.BerryPhase",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.BerryPhase",
+      "sink_role": "consumer_sink",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
+      ],
+      "minimal_source_bundle": "bundle:c29ef334dfed",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "path_multiplicity": 4,
+      "path_motif_signatures": [
+        {
+          "signature": "projection -> berry_phase_vanishes_for_normal",
+          "count": 1
+        },
+        {
+          "signature": "projection -> informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank",
+          "count": 1
+        },
+        {
+          "signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+          "count": 1
+        }
+      ],
+      "compression_potential": 24.0,
+      "native_component_ids": [
+        "component:16937674872237706933",
+        "component:15680418292161437159",
+        "component:5275076599555427362",
+        "component:18135046861293869631"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.MoorePenrose.chiralAnomaly",
+        "InfoGeometry.Canonical.MoorePenrose.epsilon",
+        "InfoGeometry.Canonical.MoorePenrose.chiralScale",
+        "InfoGeometry.Canonical.SpectralInference.ChiralSpectralTriple.epsilon",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.anomalyFlux",
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase",
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 7,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 0,
-      "native_corridor_count": 2,
-      "top_root_witness": "InfoGeometry.Canonical.IB.SameScoreRay",
+      "native_corridor_reuse": 6,
+      "native_corridor_count": 4,
+      "top_root_witness": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
       "top_native_corridor_component_ids": [
-        "component:1604802879508874125",
-        "component:15595133688103510337",
-        "component:2652680561442851308"
+        "component:18434174865111360469",
+        "component:9828784175940718480",
+        "component:5275076599555427362"
       ],
       "top_native_corridor_representatives": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Canonical.Drazin",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.Drazin",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
+      ],
+      "minimal_source_bundle": "bundle:c29ef334dfed",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "path_multiplicity": 4,
+      "path_motif_signatures": [
+        {
+          "signature": "projection -> berry_phase_vanishes_for_normal",
+          "count": 1
+        },
+        {
+          "signature": "projection -> informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank",
+          "count": 1
+        },
+        {
+          "signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+          "count": 1
+        }
+      ],
+      "compression_potential": 24.0,
+      "native_component_ids": [
+        "component:18434174865111360469"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 0,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 6,
+      "native_corridor_count": 4,
+      "top_root_witness": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+      "top_native_corridor_component_ids": [
+        "component:18434174865111360469",
+        "component:9828784175940718480",
+        "component:5275076599555427362"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Canonical.TopologicalInvariants",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.TopologicalInvariants",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
+      ],
+      "minimal_source_bundle": "bundle:a6aeeb2f41a2",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "path_multiplicity": 2,
+      "path_motif_signatures": [
+        {
+          "signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+          "count": 1
+        },
+        {
+          "signature": "projection -> chiralAnomalyIndex -> informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+          "count": 1
+        }
+      ],
+      "compression_potential": 16.0,
+      "native_component_ids": [
+        "component:9828784175940718480"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.MoorePenrose.chiralAnomaly",
+        "InfoGeometry.Canonical.MoorePenrose.epsilon",
+        "InfoGeometry.Canonical.MoorePenrose.chiralScale",
+        "InfoGeometry.Canonical.SpectralInference.ChiralSpectralTriple.epsilon",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 5,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 4,
+      "native_corridor_count": 2,
+      "top_root_witness": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+      "top_native_corridor_component_ids": [
+        "component:18434174865111360469",
+        "component:9828784175940718480",
+        "component:5275076599555427362"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Canonical.BottDirac",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.BottDirac",
+      "sink_role": "consumer_sink",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+        "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "minimal_source_bundle": "bundle:abbbb4a36d13",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "path_multiplicity": 3,
+      "path_motif_signatures": [
+        {
+          "signature": "instL2Complete -> Dirac collapse",
+          "count": 1
+        },
+        {
+          "signature": "instL2Complete -> cl11Grading_involutive",
+          "count": 1
+        },
+        {
+          "signature": "instL2Complete -> cl11DiracSeed -> cl11_bottDirac_sq_eq_sum_laplacians",
+          "count": 1
+        }
+      ],
+      "compression_potential": 8.0,
+      "native_component_ids": [
+        "component:10079489289963542738",
+        "component:10920971003956115245",
+        "component:1353779019169282955",
+        "component:2928223219475638192"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+        "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.modular_j",
+        "InfoGeometry.Krein.modular_j_involution",
+        "InfoGeometry.Quantum.doubledSpaceCl11Action",
+        "InfoGeometry.Canonical.BottDirac.cl11Action",
+        "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+        "InfoGeometry.Canonical.BottDirac.cl11Grading",
+        "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "native_strict_dominator_component_ids": [
+        "component:1353779019169282955"
+      ],
+      "native_strict_dominator_representatives": [
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians"
+      ],
+      "native_depth_min": 1,
+      "native_depth_max": 7,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 3,
+      "native_corridor_count": 3,
+      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
+      "top_native_corridor_component_ids": [
+        "component:11179718433832194184",
+        "component:10079489289963542738",
+        "component:1353779019169282955"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Krein.KreinSpace",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Krein.KreinSpace",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Krein.instL2Complete"
+      ],
+      "minimal_source_bundle": "bundle:abbbb4a36d13",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "path_multiplicity": 3,
+      "path_motif_signatures": [
+        {
+          "signature": "instL2Complete -> Dirac collapse",
+          "count": 1
+        },
+        {
+          "signature": "instL2Complete -> cl11Grading_involutive",
+          "count": 1
+        },
+        {
+          "signature": "instL2Complete -> cl11DiracSeed -> cl11_bottDirac_sq_eq_sum_laplacians",
+          "count": 1
+        }
+      ],
+      "compression_potential": 8.0,
+      "native_component_ids": [
+        "component:11179718433832194184"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Krein.instL2Complete"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Krein.instL2Complete"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 0,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 3,
+      "native_corridor_count": 3,
+      "top_root_witness": "InfoGeometry.Krein.instL2Complete",
+      "top_native_corridor_component_ids": [
+        "component:11179718433832194184",
+        "component:10079489289963542738",
+        "component:1353779019169282955"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians"
       ]
     }
   ],
   "incidence_edges": [
     {
-      "atomic_id": "bundle:e426b4c9b3ea",
-      "hydrated_id": "InfoGeometry.Canonical.IBProjective",
+      "atomic_id": "bundle:a6aeeb2f41a2",
+      "hydrated_id": "InfoGeometry.Canonical.BerryPhase",
       "role": "supports",
       "projection_kind": "node_support",
       "carrier_role": "sink",
-      "bundle_id": "bundle:e426b4c9b3ea",
-      "motif_signature": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay -> scoreProjectiveGauge_eq_of_sameScoreRay",
+      "bundle_id": "bundle:a6aeeb2f41a2",
+      "motif_signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
       "witness_count": 2,
-      "compression_score": 6.0,
+      "compression_score": 16.0,
       "canonical_path_example": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero"
       ],
       "canonical_witness_paths": [
         [
-          "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-          "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-          "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+          "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero"
         ],
         [
-          "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-          "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay"
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+          "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
         ]
       ],
       "native_canonical_component_path_example": [
-        "component:1604802879508874125",
-        "component:15595133688103510337",
-        "component:2652680561442851308"
+        "component:18434174865111360469",
+        "component:9828784175940718480",
+        "component:16937674872237706933"
       ],
       "native_canonical_component_representatives": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
       ],
       "sink_modules": [
-        "InfoGeometry.Canonical.IBProjective"
+        "InfoGeometry.Canonical.BerryPhase"
       ],
       "hydrated_role": "consumer_sink"
+    },
+    {
+      "atomic_id": "bundle:a6aeeb2f41a2",
+      "hydrated_id": "InfoGeometry.Canonical.Drazin",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "source",
+      "bundle_id": "bundle:a6aeeb2f41a2",
+      "motif_signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+      "witness_count": 2,
+      "compression_score": 16.0,
+      "canonical_path_example": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+          "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero"
+        ],
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+          "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:18434174865111360469",
+        "component:9828784175940718480",
+        "component:16937674872237706933"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "hydrated_role": "constructive_source"
+    },
+    {
+      "atomic_id": "bundle:a6aeeb2f41a2",
+      "hydrated_id": "InfoGeometry.Canonical.TopologicalInvariants",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "source",
+      "bundle_id": "bundle:a6aeeb2f41a2",
+      "motif_signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+      "witness_count": 2,
+      "compression_score": 16.0,
+      "canonical_path_example": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+          "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero"
+        ],
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+          "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:18434174865111360469",
+        "component:9828784175940718480",
+        "component:16937674872237706933"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "hydrated_role": "constructive_source"
+    },
+    {
+      "atomic_id": "bundle:abbbb4a36d13",
+      "hydrated_id": "InfoGeometry.Canonical.BottDirac",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "sink",
+      "bundle_id": "bundle:abbbb4a36d13",
+      "motif_signature": "instL2Complete -> Dirac collapse",
+      "witness_count": 3,
+      "compression_score": 8.0,
+      "canonical_path_example": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Krein.instL2Complete",
+          "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+        ],
+        [
+          "InfoGeometry.Krein.instL2Complete",
+          "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive"
+        ],
+        [
+          "InfoGeometry.Krein.instL2Complete",
+          "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+          "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:11179718433832194184",
+        "component:2928223219475638192"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "hydrated_role": "consumer_sink"
+    },
+    {
+      "atomic_id": "bundle:abbbb4a36d13",
+      "hydrated_id": "InfoGeometry.Krein.KreinSpace",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "source",
+      "bundle_id": "bundle:abbbb4a36d13",
+      "motif_signature": "instL2Complete -> Dirac collapse",
+      "witness_count": 3,
+      "compression_score": 8.0,
+      "canonical_path_example": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Krein.instL2Complete",
+          "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+        ],
+        [
+          "InfoGeometry.Krein.instL2Complete",
+          "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive"
+        ],
+        [
+          "InfoGeometry.Krein.instL2Complete",
+          "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+          "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:11179718433832194184",
+        "component:2928223219475638192"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "hydrated_role": "constructive_source"
+    },
+    {
+      "atomic_id": "bundle:c29ef334dfed",
+      "hydrated_id": "InfoGeometry.Canonical.BerryPhase",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "sink",
+      "bundle_id": "bundle:c29ef334dfed",
+      "motif_signature": "projection -> berry_phase_vanishes_for_normal",
+      "witness_count": 2,
+      "compression_score": 8.0,
+      "canonical_path_example": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal"
+        ],
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:18434174865111360469",
+        "component:15680418292161437159"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "hydrated_role": "consumer_sink"
+    },
+    {
+      "atomic_id": "bundle:c29ef334dfed",
+      "hydrated_id": "InfoGeometry.Canonical.Drazin",
+      "role": "supports",
+      "projection_kind": "node_support",
+      "carrier_role": "source",
+      "bundle_id": "bundle:c29ef334dfed",
+      "motif_signature": "projection -> berry_phase_vanishes_for_normal",
+      "witness_count": 2,
+      "compression_score": 8.0,
+      "canonical_path_example": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal"
+      ],
+      "canonical_witness_paths": [
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal"
+        ],
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
+        ]
+      ],
+      "native_canonical_component_path_example": [
+        "component:18434174865111360469",
+        "component:15680418292161437159"
+      ],
+      "native_canonical_component_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
+      ],
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "hydrated_role": "constructive_source"
     }
   ],
   "motif_families": [
     {
-      "motif_signature": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay -> scoreProjectiveGauge_eq_of_sameScoreRay",
+      "motif_signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
       "path_count": 1,
       "sink_modules": [
-        "InfoGeometry.Canonical.IBProjective"
+        "InfoGeometry.Canonical.BerryPhase"
       ],
       "source_modules": [
-        "InfoGeometry.Canonical.IBProjective"
+        "InfoGeometry.Canonical.Drazin"
+      ],
+      "avg_path_length": 2.0,
+      "compression_potential": 8.0
+    },
+    {
+      "motif_signature": "projection -> chiralAnomalyIndex -> informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+      "path_count": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.Drazin"
+      ],
+      "avg_path_length": 2.0,
+      "compression_potential": 8.0
+    },
+    {
+      "motif_signature": "instL2Complete -> cl11DiracSeed -> cl11_bottDirac_sq_eq_sum_laplacians",
+      "path_count": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "source_modules": [
+        "InfoGeometry.Krein.KreinSpace"
       ],
       "avg_path_length": 2.0,
       "compression_potential": 4.0
     },
     {
-      "motif_signature": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay",
+      "motif_signature": "projection -> berry_phase_vanishes_for_normal",
       "path_count": 1,
       "sink_modules": [
-        "InfoGeometry.Canonical.IBProjective"
+        "InfoGeometry.Canonical.BerryPhase"
       ],
       "source_modules": [
-        "InfoGeometry.Canonical.IBProjective"
+        "InfoGeometry.Canonical.Drazin"
+      ],
+      "avg_path_length": 1.0,
+      "compression_potential": 4.0
+    },
+    {
+      "motif_signature": "projection -> informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank",
+      "path_count": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "source_modules": [
+        "InfoGeometry.Canonical.Drazin"
+      ],
+      "avg_path_length": 1.0,
+      "compression_potential": 4.0
+    },
+    {
+      "motif_signature": "instL2Complete -> Dirac collapse",
+      "path_count": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "source_modules": [
+        "InfoGeometry.Krein.KreinSpace"
+      ],
+      "avg_path_length": 1.0,
+      "compression_potential": 2.0
+    },
+    {
+      "motif_signature": "instL2Complete -> cl11Grading_involutive",
+      "path_count": 1,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "source_modules": [
+        "InfoGeometry.Krein.KreinSpace"
       ],
       "avg_path_length": 1.0,
       "compression_potential": 2.0
@@ -487,17 +1665,80 @@
   ],
   "bundles": [
     {
-      "atomic_id": "bundle:e426b4c9b3ea",
+      "atomic_id": "bundle:a6aeeb2f41a2",
       "kind": "source_bundle",
       "category": "source_bundle",
       "source_bundle": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
       ],
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
       ],
       "source_modules": [
-        "InfoGeometry.Canonical.IBProjective"
+        "InfoGeometry.Canonical.Drazin"
+      ],
+      "source_categories": {
+        "neutral_definition": 2
+      },
+      "source_kinds": {
+        "def": 2
+      },
+      "source_purity_score": 0.0,
+      "scc_id": null,
+      "native_component_ids": [
+        "component:18434174865111360469",
+        "component:9828784175940718480"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
+      ],
+      "native_root_witness_component_ids": [
+        "component:18434174865111360469",
+        "component:15598605524130012567",
+        "component:16214264081616296237",
+        "component:8549032735419108587",
+        "component:2110294370453123786",
+        "component:9828784175940718480"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.MoorePenrose.chiralAnomaly",
+        "InfoGeometry.Canonical.MoorePenrose.epsilon",
+        "InfoGeometry.Canonical.MoorePenrose.chiralScale",
+        "InfoGeometry.Canonical.SpectralInference.ChiralSpectralTriple.epsilon",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 5,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+      ],
+      "path_multiplicity": 2,
+      "avg_path_length": 2.0,
+      "motif_signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+      "compression_potential": 16.0
+    },
+    {
+      "atomic_id": "bundle:abbbb4a36d13",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Krein.instL2Complete"
+      ],
+      "supporting_atomic_decls": [
+        "InfoGeometry.Krein.instL2Complete"
+      ],
+      "source_modules": [
+        "InfoGeometry.Krein.KreinSpace"
       ],
       "source_categories": {
         "likely_constructive": 1
@@ -506,101 +1747,549 @@
         "theorem": 1
       },
       "source_purity_score": 1.0,
-      "scc_id": "component:1604802879508874125",
+      "scc_id": "component:11179718433832194184",
       "native_component_ids": [
-        "component:1604802879508874125"
+        "component:11179718433832194184"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale"
+        "InfoGeometry.Krein.instL2Complete"
       ],
       "native_root_witness_component_ids": [
-        "component:1604802879508874125"
+        "component:11179718433832194184"
       ],
       "native_root_witnesses": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale"
+        "InfoGeometry.Krein.instL2Complete"
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 0,
       "native_depth_max": 0,
       "sink_modules": [
-        "InfoGeometry.Canonical.IBProjective"
+        "InfoGeometry.Canonical.BottDirac"
       ],
       "sink_names": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
       ],
-      "path_multiplicity": 2,
-      "avg_path_length": 1.5,
-      "motif_signature": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay -> scoreProjectiveGauge_eq_of_sameScoreRay",
-      "compression_potential": 6.0
-    }
-  ],
-  "hydrated_modules": [
+      "path_multiplicity": 3,
+      "avg_path_length": 1.333,
+      "motif_signature": "instL2Complete -> Dirac collapse",
+      "compression_potential": 8.0
+    },
     {
-      "hydrated_id": "InfoGeometry.Canonical.IBProjective",
-      "kind": "module",
-      "carrier_type": "module",
-      "module": "InfoGeometry.Canonical.IBProjective",
-      "sink_role": "consumer_sink",
+      "atomic_id": "bundle:c29ef334dfed",
+      "kind": "source_bundle",
+      "category": "source_bundle",
+      "source_bundle": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
+      ],
       "supporting_atomic_decls": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
       ],
-      "minimal_source_bundle": "bundle:e426b4c9b3ea",
-      "canonical_downstream_sink_family": [
-        "InfoGeometry.Canonical.IBProjective"
+      "source_modules": [
+        "InfoGeometry.Canonical.Drazin"
       ],
-      "path_multiplicity": 2,
-      "path_motif_signatures": [
-        {
-          "signature": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay -> scoreProjectiveGauge_eq_of_sameScoreRay",
-          "count": 1
-        },
-        {
-          "signature": "pmf_normalize_eq_of_scale -> pmf_normalize_eq_of_sameScoreRay",
-          "count": 1
-        }
-      ],
-      "compression_potential": 6.0,
+      "source_categories": {
+        "neutral_definition": 1
+      },
+      "source_kinds": {
+        "def": 1
+      },
+      "source_purity_score": 0.0,
+      "scc_id": "component:18434174865111360469",
       "native_component_ids": [
-        "component:15595133688103510337",
-        "component:1604802879508874125",
-        "component:2652680561442851308"
+        "component:18434174865111360469"
       ],
       "native_component_representatives": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
+      ],
+      "native_root_witness_component_ids": [
+        "component:18434174865111360469"
       ],
       "native_root_witnesses": [
-        "InfoGeometry.Canonical.IB.SameScoreRay",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.FinProb",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
       ],
       "native_strict_dominator_component_ids": [],
       "native_strict_dominator_representatives": [],
       "native_depth_min": 0,
-      "native_depth_max": 2,
+      "native_depth_max": 0,
+      "sink_modules": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "sink_names": [
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
+      ],
+      "path_multiplicity": 2,
+      "avg_path_length": 1.0,
+      "motif_signature": "projection -> berry_phase_vanishes_for_normal",
+      "compression_potential": 8.0
+    }
+  ],
+  "hydrated_modules": [
+    {
+      "hydrated_id": "InfoGeometry.Canonical.BerryPhase",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.BerryPhase",
+      "sink_role": "consumer_sink",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
+      ],
+      "minimal_source_bundle": "bundle:c29ef334dfed",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "path_multiplicity": 4,
+      "path_motif_signatures": [
+        {
+          "signature": "projection -> berry_phase_vanishes_for_normal",
+          "count": 1
+        },
+        {
+          "signature": "projection -> informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank",
+          "count": 1
+        },
+        {
+          "signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+          "count": 1
+        }
+      ],
+      "compression_potential": 24.0,
+      "native_component_ids": [
+        "component:16937674872237706933",
+        "component:15680418292161437159",
+        "component:5275076599555427362",
+        "component:18135046861293869631"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.MoorePenrose.chiralAnomaly",
+        "InfoGeometry.Canonical.MoorePenrose.epsilon",
+        "InfoGeometry.Canonical.MoorePenrose.chiralScale",
+        "InfoGeometry.Canonical.SpectralInference.ChiralSpectralTriple.epsilon",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.anomalyFlux",
+        "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase",
+        "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 7,
       "native_dominator_pressure": 0,
-      "native_corridor_reuse": 0,
-      "native_corridor_count": 2,
-      "top_root_witness": "InfoGeometry.Canonical.IB.SameScoreRay",
+      "native_corridor_reuse": 6,
+      "native_corridor_count": 4,
+      "top_root_witness": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
       "top_native_corridor_component_ids": [
-        "component:1604802879508874125",
-        "component:15595133688103510337",
-        "component:2652680561442851308"
+        "component:18434174865111360469",
+        "component:9828784175940718480",
+        "component:5275076599555427362"
       ],
       "top_native_corridor_representatives": [
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_scale",
-        "InfoGeometry.Canonical.IB.pmf_normalize_eq_of_sameScoreRay",
-        "InfoGeometry.Canonical.IB.scoreProjectiveGauge_eq_of_sameScoreRay"
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Canonical.Drazin",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.Drazin",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
+      ],
+      "minimal_source_bundle": "bundle:c29ef334dfed",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "path_multiplicity": 4,
+      "path_motif_signatures": [
+        {
+          "signature": "projection -> berry_phase_vanishes_for_normal",
+          "count": 1
+        },
+        {
+          "signature": "projection -> informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank",
+          "count": 1
+        },
+        {
+          "signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+          "count": 1
+        }
+      ],
+      "compression_potential": 24.0,
+      "native_component_ids": [
+        "component:18434174865111360469"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 0,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 6,
+      "native_corridor_count": 4,
+      "top_root_witness": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+      "top_native_corridor_component_ids": [
+        "component:18434174865111360469",
+        "component:9828784175940718480",
+        "component:5275076599555427362"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Canonical.TopologicalInvariants",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.TopologicalInvariants",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
+      ],
+      "minimal_source_bundle": "bundle:a6aeeb2f41a2",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.BerryPhase"
+      ],
+      "path_multiplicity": 2,
+      "path_motif_signatures": [
+        {
+          "signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+          "count": 1
+        },
+        {
+          "signature": "projection -> chiralAnomalyIndex -> informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+          "count": 1
+        }
+      ],
+      "compression_potential": 16.0,
+      "native_component_ids": [
+        "component:9828784175940718480"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.MoorePenrose.chiralAnomaly",
+        "InfoGeometry.Canonical.MoorePenrose.epsilon",
+        "InfoGeometry.Canonical.MoorePenrose.chiralScale",
+        "InfoGeometry.Canonical.SpectralInference.ChiralSpectralTriple.epsilon",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 1,
+      "native_depth_max": 5,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 4,
+      "native_corridor_count": 2,
+      "top_root_witness": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+      "top_native_corridor_component_ids": [
+        "component:18434174865111360469",
+        "component:9828784175940718480",
+        "component:5275076599555427362"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+        "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+        "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Canonical.BottDirac",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Canonical.BottDirac",
+      "sink_role": "consumer_sink",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+        "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "minimal_source_bundle": "bundle:abbbb4a36d13",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "path_multiplicity": 3,
+      "path_motif_signatures": [
+        {
+          "signature": "instL2Complete -> Dirac collapse",
+          "count": 1
+        },
+        {
+          "signature": "instL2Complete -> cl11Grading_involutive",
+          "count": 1
+        },
+        {
+          "signature": "instL2Complete -> cl11DiracSeed -> cl11_bottDirac_sq_eq_sum_laplacians",
+          "count": 1
+        }
+      ],
+      "compression_potential": 8.0,
+      "native_component_ids": [
+        "component:10079489289963542738",
+        "component:10920971003956115245",
+        "component:1353779019169282955",
+        "component:2928223219475638192"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+        "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Krein.DoubledSpace",
+        "InfoGeometry.Krein.modular_j",
+        "InfoGeometry.Krein.modular_j_involution",
+        "InfoGeometry.Quantum.doubledSpaceCl11Action",
+        "InfoGeometry.Canonical.BottDirac.cl11Action",
+        "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+        "InfoGeometry.Canonical.BottDirac.cl11Grading",
+        "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians",
+        "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+      ],
+      "native_strict_dominator_component_ids": [
+        "component:1353779019169282955"
+      ],
+      "native_strict_dominator_representatives": [
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians"
+      ],
+      "native_depth_min": 1,
+      "native_depth_max": 7,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 3,
+      "native_corridor_count": 3,
+      "top_root_witness": "InfoGeometry.Krein.DoubledSpace",
+      "top_native_corridor_component_ids": [
+        "component:11179718433832194184",
+        "component:10079489289963542738",
+        "component:1353779019169282955"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians"
+      ]
+    },
+    {
+      "hydrated_id": "InfoGeometry.Krein.KreinSpace",
+      "kind": "module",
+      "carrier_type": "module",
+      "module": "InfoGeometry.Krein.KreinSpace",
+      "sink_role": "constructive_source",
+      "supporting_atomic_decls": [
+        "InfoGeometry.Krein.instL2Complete"
+      ],
+      "minimal_source_bundle": "bundle:abbbb4a36d13",
+      "canonical_downstream_sink_family": [
+        "InfoGeometry.Canonical.BottDirac"
+      ],
+      "path_multiplicity": 3,
+      "path_motif_signatures": [
+        {
+          "signature": "instL2Complete -> Dirac collapse",
+          "count": 1
+        },
+        {
+          "signature": "instL2Complete -> cl11Grading_involutive",
+          "count": 1
+        },
+        {
+          "signature": "instL2Complete -> cl11DiracSeed -> cl11_bottDirac_sq_eq_sum_laplacians",
+          "count": 1
+        }
+      ],
+      "compression_potential": 8.0,
+      "native_component_ids": [
+        "component:11179718433832194184"
+      ],
+      "native_component_representatives": [
+        "InfoGeometry.Krein.instL2Complete"
+      ],
+      "native_root_witnesses": [
+        "InfoGeometry.Krein.instL2Complete"
+      ],
+      "native_strict_dominator_component_ids": [],
+      "native_strict_dominator_representatives": [],
+      "native_depth_min": 0,
+      "native_depth_max": 0,
+      "native_dominator_pressure": 0,
+      "native_corridor_reuse": 3,
+      "native_corridor_count": 3,
+      "top_root_witness": "InfoGeometry.Krein.instL2Complete",
+      "top_native_corridor_component_ids": [
+        "component:11179718433832194184",
+        "component:10079489289963542738",
+        "component:1353779019169282955"
+      ],
+      "top_native_corridor_representatives": [
+        "InfoGeometry.Krein.instL2Complete",
+        "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+        "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians"
       ]
     }
   ],
-  "hydrated_edges": []
+  "hydrated_edges": [
+    {
+      "source_module": "InfoGeometry.Canonical.Drazin",
+      "target_module": "InfoGeometry.Canonical.TopologicalInvariants",
+      "path_count": 2,
+      "compression_potential": 16.0,
+      "direct_projection": true,
+      "hypothesis_packets": [
+        {
+          "signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+          "count": 1
+        },
+        {
+          "signature": "projection -> chiralAnomalyIndex -> informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+          "count": 1
+        }
+      ],
+      "bundle_ids": [
+        "bundle:a6aeeb2f41a2"
+      ],
+      "atomic_path_examples": [
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+          "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero"
+        ],
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+          "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+        ]
+      ]
+    },
+    {
+      "source_module": "InfoGeometry.Canonical.TopologicalInvariants",
+      "target_module": "InfoGeometry.Canonical.BerryPhase",
+      "path_count": 2,
+      "compression_potential": 16.0,
+      "direct_projection": true,
+      "hypothesis_packets": [
+        {
+          "signature": "projection -> chiralAnomalyIndex -> berryPhase_ne_zero_of_anomaly_flux_ne_zero",
+          "count": 1
+        },
+        {
+          "signature": "projection -> chiralAnomalyIndex -> informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex",
+          "count": 1
+        }
+      ],
+      "bundle_ids": [
+        "bundle:a6aeeb2f41a2"
+      ],
+      "atomic_path_examples": [
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+          "InfoGeometry.Canonical.BerryPhase.berryPhase_ne_zero_of_anomaly_flux_ne_zero"
+        ],
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.TopologicalInvariants.chiralAnomalyIndex",
+          "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_chiralAnomalyIndex"
+        ]
+      ]
+    },
+    {
+      "source_module": "InfoGeometry.Krein.KreinSpace",
+      "target_module": "InfoGeometry.Canonical.BottDirac",
+      "path_count": 3,
+      "compression_potential": 8.0,
+      "direct_projection": true,
+      "hypothesis_packets": [
+        {
+          "signature": "instL2Complete -> Dirac collapse",
+          "count": 1
+        },
+        {
+          "signature": "instL2Complete -> cl11Grading_involutive",
+          "count": 1
+        },
+        {
+          "signature": "instL2Complete -> cl11DiracSeed -> cl11_bottDirac_sq_eq_sum_laplacians",
+          "count": 1
+        }
+      ],
+      "bundle_ids": [
+        "bundle:abbbb4a36d13"
+      ],
+      "atomic_path_examples": [
+        [
+          "InfoGeometry.Krein.instL2Complete",
+          "InfoGeometry.Canonical.BottDirac.cl11_isChiralDirac"
+        ],
+        [
+          "InfoGeometry.Krein.instL2Complete",
+          "InfoGeometry.Canonical.BottDirac.cl11Grading_involutive"
+        ],
+        [
+          "InfoGeometry.Krein.instL2Complete",
+          "InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+          "InfoGeometry.Canonical.BottDirac.cl11_bottDirac_sq_eq_sum_laplacians"
+        ]
+      ]
+    },
+    {
+      "source_module": "InfoGeometry.Canonical.Drazin",
+      "target_module": "InfoGeometry.Canonical.BerryPhase",
+      "path_count": 2,
+      "compression_potential": 8.0,
+      "direct_projection": true,
+      "hypothesis_packets": [
+        {
+          "signature": "projection -> berry_phase_vanishes_for_normal",
+          "count": 1
+        },
+        {
+          "signature": "projection -> informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank",
+          "count": 1
+        }
+      ],
+      "bundle_ids": [
+        "bundle:c29ef334dfed"
+      ],
+      "atomic_path_examples": [
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.BerryPhase.berry_phase_vanishes_for_normal"
+        ],
+        [
+          "InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection",
+          "InfoGeometry.Canonical.BerryPhase.informationBerryPhase_eq_loopLength_mul_epsilon_mul_rank"
+        ]
+      ]
+    }
+  ]
 }

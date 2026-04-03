@@ -1,0 +1,11 @@
+{
+  "typeCount": 402,
+  "timestamp": "2026-04-03T03:57:20.303859+00:00",
+  "schemaVersion": 3,
+  "nsFilter": "InfoGeometry",
+  "nodeCount": 10193,
+  "morphismCount": 628,
+  "importRoot": "InfoGeometry.All",
+  "edgeCount": 69800,
+  "oleanHash": "d65f070edba70e2c1d4d04e35f503edd496e48ba6e68ceefb408d59f3d67162d"
+}

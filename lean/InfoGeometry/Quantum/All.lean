@@ -10,12 +10,14 @@ import InfoGeometry.Quantum.CommutingInvolutionCore
 import InfoGeometry.Quantum.AnticommutingInvolutionCore
 import InfoGeometry.Quantum.KitaevChain
 import InfoGeometry.Quantum.ModularAnomaly
+import InfoGeometry.Quantum.ProjectiveRayBridge
 import InfoGeometry.Quantum.RealKCategory
 import InfoGeometry.Quantum.RealMajorana
 import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Quantum.RealSplitClifford
 import InfoGeometry.Quantum.RosettaSynthesis
 import InfoGeometry.Quantum.SplitCliffordAtom
+import InfoGeometry.Quantum.TriadicBogoliubovBridge
 import InfoGeometry.Quantum.ZeroPointEnergy
 
 /-!

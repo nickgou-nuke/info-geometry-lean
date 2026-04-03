@@ -47,22 +47,6 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable (R : AnomalyRosettaStone (E := E))
 
 /--
-Grand commuting-diagram equivalence: geometric -> thermodynamic -> modular.
--/
-theorem rosetta_stone_equivalence :
-    (R.liftToFock R.einsteinAnomaly = R.fockDeformation) ∧
-      (R.embedToMajorana R.fockDeformation = R.modularGenerator) := by
-  exact ⟨R.h_geo_thermo, R.h_thermo_alg⟩
-
-/--
-Corollary: direct geometric-to-modular transport through the same dictionary.
--/
-theorem geometric_tension_eq_modular_anomaly :
-    R.embedToMajorana (R.liftToFock R.einsteinAnomaly) = R.modularGenerator := by
-  rw [R.h_geo_thermo]
-  exact R.h_thermo_alg
-
-/--
 Composed geometric-to-modular transport map.
 This is the categorical composition of the dictionary arrows.
 -/
@@ -71,15 +55,6 @@ noncomputable def geometricToMajorana
     (A : E →L[ℝ] E) :
   InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E :=
   R.embedToMajorana (R.liftToFock A)
-
-/--
-Direct commuting-diagram statement through the composed transport map.
--/
-theorem geometric_source_eq_modular :
-    geometricToMajorana R R.einsteinAnomaly = R.modularGenerator := by
-  unfold geometricToMajorana
-  rw [R.h_geo_thermo]
-  exact R.h_thermo_alg
 
 end AnomalyRosettaStone
 
@@ -145,11 +120,6 @@ variable (S : ScalarAnomalyRosettaStone (E := E))
 noncomputable def scalarToMajorana :
   ℝ →ₗ[ℝ] (InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E) :=
   LinearMap.comp S.embedToMajorana scalarToFockLift
-
-/-- Source scalar transported directly to the modular generator. -/
-theorem scalar_source_eq_modular :
-  ScalarAnomalyRosettaStone.scalarToMajorana (S := S) S.source = S.modularGenerator := by
-  simp [scalarToMajorana, S.h_source_fock, S.h_fock_mod]
 
 end ScalarAnomalyRosettaStone
 

@@ -227,6 +227,10 @@ def IsotropyIrreducible (S : SymmetricLieAlgebra R L) : Prop :=
   ∀ (V : Submodule R S.𝔭), (∀ (x : S.𝔨), ∀ (v : S.𝔭), v ∈ V → S.ad_k_on_p x v ∈ V) →
     V = ⊥ ∨ V = ⊤
 
+/-- A bilinear form on 𝔭 is 𝔨-invariant if it is invariant under the adjoint action of 𝔨. -/
+def IsKInvariant (S : SymmetricLieAlgebra R L) (Φ : LinearMap.BilinForm R S.𝔭) : Prop :=
+  ∀ (x : S.𝔨) (v w : S.𝔭), Φ (S.ad_k_on_p x v) w + Φ v (S.ad_k_on_p x w) = 0
+
 /-!
 Schur-type proportionality on `𝔭` is deferred at this layer.
 -/

@@ -92,18 +92,9 @@ namespace WeylGaugeField
 
 variable {W X A R : Type*}
 
-/-- Forget a Weyl gauge field to the common generated-flow interface. -/
-def toGeneratedFlow (B : WeylGaugeField X A) : GeneratedFlow X A where
-  flowOf := B.gaugeOf
-
-/-- Pointwise expansion of `toGeneratedFlow`. -/
-@[simp] theorem toGeneratedFlow_flowOf (B : WeylGaugeField X A) :
-    B.toGeneratedFlow.flowOf = B.gaugeOf := by
-  rfl
-
 /-- Pull a Weyl gauge field along a logarithmic generator. -/
 def along (B : WeylGaugeField X A) (L : LogGenerator W X) : W → A :=
-  GeneratedFlow.along B.toGeneratedFlow L
+  fun w => B.gaugeOf (L.logGen w)
 
 /-- Pointwise expansion of `WeylGaugeField.along`. -/
 @[simp] theorem along_apply (B : WeylGaugeField X A) (L : LogGenerator W X) (w : W) :
@@ -113,7 +104,7 @@ def along (B : WeylGaugeField X A) (L : LogGenerator W X) : W → A :=
 /-- Read a geometric response through a Weyl gauge field. -/
 def respond (B : WeylGaugeField X A) (resp : GeometricResponse A R) (L : LogGenerator W X) :
     W → R :=
-  resp.fromLogGenerator B.toGeneratedFlow L
+  fun w => resp.responseOf (B.gaugeOf (L.logGen w))
 
 /-- Pointwise expansion of `WeylGaugeField.respond`. -/
 @[simp] theorem respond_apply
@@ -291,7 +282,6 @@ theorem covariantDerivative_transformSection_eq
 
 end Curvature
 
-attribute [spine_morphism, spine_functor, spine_functor_constructor] WeylGaugeField.toGeneratedFlow
 attribute [spine_functor, spine_functor_lift] WeylGaugeField.along
 attribute [spine_functor, spine_functor_responder] WeylGaugeField.respond
 attribute [spine_functor, spine_functor_lift] WeylGaugeField.covariantDerivative

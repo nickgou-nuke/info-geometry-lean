@@ -1,24 +1,24 @@
 # Surrogate Index
 
-Generated: `2026-03-31 18:54:30`
+Generated: `2026-04-01 21:12:48`
 
 This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and named contract interfaces so surrogate debt can be replaced aggressively with real proofs.
 
 ## Hard Gate
-- `scripts/audit_surrogates.sh`: **FAIL**
+- `scripts/audit_surrogates.sh`: **PASS**
 - last gate output:
-  - `[surrogate-audit] checking canonical surface for forbidden Canonical tactic usage`
-  - `[surrogate-audit] checking stable surface for exact nonconstructive patterns`
   - `Constructivity audit (stable surface)`
-  - `quarantine-manifest: lean/InfoGeometry/Canonical/ChiralTorsionRelativeVolume.lean:1: missing from InfoGeometry.Unstable.Quarantine (imports quarantined BeliefDynamics and still sits on the review-surface facade path)`
-  - `quarantine-manifest: lean/InfoGeometry/Canonical/CountEmergentFlow.lean:1: missing from InfoGeometry.Unstable.Quarantine (imports quarantined HolographicEmergence and still sits on the review-surface facade path)`
-  - `[surrogate-audit] exact nonconstructive patterns detected in stable modules`
+  - `No exact constructivity violations found.`
+  - `[surrogate-audit] checking stable surface for uninstantiated bridge assumptions and vacuous bridge debt`
+  - `[generate-vacuity-index] wrote VACUITY_INDEX.md`
+  - `[generate-vacuity-index] findings=0 gate=PASS`
+  - `[surrogate-audit] OK`
 
 ## Counts
-- total tracked findings: **2**
+- total tracked findings: **0**
 - proof holes: **0**
 - explicit axiom declarations: **0**
-- quarantine manifest drift findings: **2**
+- quarantine manifest drift findings: **0**
 - vacuous `trivial` theorems: **0**
 - constant `Prop := True/False` surfaces: **0**
 - universal `∀ _, True` fields: **0**
@@ -28,13 +28,11 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
 - named contract declarations (`Axioms/Hypotheses/Assumptions`): **0**
 - contract constructors (`to...Assumptions`, `..._of_concrete`, `..._of_finiteSupport`): **0**
 - stable surrogate/placeholder markers: **0**
-- canonical findings: **2**
+- canonical findings: **0**
 - other stable findings: **0**
 - unstable/archive findings: **0**
 
 ## Aggressive Replacement Queue
-- `critical` `quarantine_manifest` <unscoped> at `lean/InfoGeometry/Canonical/ChiralTorsionRelativeVolume.lean:1`
-- `critical` `quarantine_manifest` <unscoped> at `lean/InfoGeometry/Canonical/CountEmergentFlow.lean:1`
 
 ## Explicit Proof Holes
 
@@ -46,8 +44,7 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
 
 ## Quarantine Manifest Drift
 
-- `lean/InfoGeometry/Canonical/ChiralTorsionRelativeVolume.lean:1` `unknown <unscoped>` [critical]
-- `lean/InfoGeometry/Canonical/CountEmergentFlow.lean:1` `unknown <unscoped>` [critical]
+- none
 
 ## Vacuous `trivial` Theorems
 

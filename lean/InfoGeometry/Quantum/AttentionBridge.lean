@@ -71,6 +71,7 @@ theorem attention_source_transports_to_modular
         (attentionSourceTension core attn q)
         = (ScalarAnomalyRosettaStone.scalarToMajorana (E := E) (S := S)) S.source := by
             simp [h_source]
-    _ = S.modularGenerator := S.scalar_source_eq_modular
+    _ = S.modularGenerator := by
+            simp [ScalarAnomalyRosettaStone.scalarToMajorana, S.h_source_fock, S.h_fock_mod]
 
 end InfoGeometry.Quantum.AttentionBridge

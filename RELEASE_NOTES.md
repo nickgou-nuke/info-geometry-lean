@@ -30,4 +30,4 @@ There is no separate public alpha packaging workflow documented here at the mome
 Until one exists, the authoritative state of the project is:
 - the current `main` branch;
 - the current `lakefile.lean` and `lean-toolchain` pins;
-- the current maintained docs listed in [README.md](/home/goutev/LEAN4/info-geometry-lean/README.md).
+- the current maintained docs listed in [README.md](README.md).

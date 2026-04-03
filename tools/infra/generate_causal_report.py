@@ -61,11 +61,16 @@ def is_noise_label(name: str) -> bool:
 
 
 DECLARATION_SURFACE_RE = re.compile(
-    r"(?m)^[ \t]*(?:@[^\n]*\n[ \t]*)*(?:(?:protected|private|noncomputable|unsafe|partial|scoped)\s+)*(?:theorem|lemma|def|abbrev|inductive|structure|class|instance|axiom|opaque|syntax|macro_rules|macro|elab|declare_syntax_cat|notation|infixl|infixr|infix|prefix|postfix|mixfix)\b"
+    r"(?m)^[ \t]*(?:@[^\n]*(?:\n[ \t]*|[ \t]+))*(?:(?:protected|private|noncomputable|unsafe|partial|scoped)\s+)*(?:theorem|lemma|def|abbrev|inductive|structure|class|instance|axiom|opaque|syntax|macro_rules|macro|elab|declare_syntax_cat|notation|infixl|infixr|infix|prefix|postfix|mixfix)\b"
 )
 
 COVERAGE_EXCLUDE_PREFIXES = (
     "lean/InfoGeometry/Unstable/",
+    "lean/InfoGeometry/Lint/",
+)
+
+COVERAGE_EXCLUDE_SUFFIXES = (
+    "Test.lean",
 )
 
 
@@ -85,7 +90,11 @@ def load_quarantine_manifest_files(path: Path) -> set[str]:
 
 
 def is_coverage_excluded(rel_path: str, excluded_files: set[str]) -> bool:
-    return rel_path in excluded_files or any(rel_path.startswith(prefix) for prefix in COVERAGE_EXCLUDE_PREFIXES)
+    return (
+        rel_path in excluded_files
+        or any(rel_path.startswith(prefix) for prefix in COVERAGE_EXCLUDE_PREFIXES)
+        or any(rel_path.endswith(suffix) for suffix in COVERAGE_EXCLUDE_SUFFIXES)
+    )
 
 
 def parse_args() -> argparse.Namespace:

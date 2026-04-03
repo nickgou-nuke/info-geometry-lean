@@ -7,7 +7,7 @@ description: Use when editing canonical Lean files in this repository and you ne
 
 Use this skill for theorem ownership, file splitting, wrapper elimination, bridge hygiene, and graph-guided refactors in this repository.
 
-If the task is repo-wide, also read `/home/goutev/LEAN4/info-geometry-lean/skills/info-geometry-repo/SKILL.md`.
+If the task is repo-wide, also read `skills/info-geometry-repo/SKILL.md`.
 
 Canonicalization in this repo is morphism-first, not flattening-first.
 The goal is to keep the public owner surface honest while preserving valid mathematics across noncanonical and exploratory surfaces.
@@ -34,13 +34,14 @@ Quarantine, demote, or rebuild it honestly.
 
 ## Adjacency Rule
 
-The stable spine is depth-indexed.
+The stable spine uses the native `RepDepth` semantic taxonomy (defined as an inductive
+type in `Architecture.lean`). Tags are `@[rep_depth <level>]`.
 Primitive translators should only move one adjacent step:
-- Count → Projective/Gauge
-- Projective/Gauge → Operator
-- Operator → Krein/Clifford
-- Krein/Clifford → Transport
-- Transport → Thermodynamic/Attention
+- `count` → `projective`
+- `projective` → `operator`
+- `operator` → `krein`
+- `krein` → `transport`
+- `transport` → `thermo`
 
 The first enforcement layer is Lean-native:
 - `lean/InfoGeometry/Meta/Architecture.lean`
@@ -84,16 +85,20 @@ Every new public theorem in a canonical owner file should carry a `-- theorem-cl
 8. only after code is stable, run the DAG pipeline
 
 When context is weak, re-read:
-- `/home/goutev/LEAN4/info-geometry-lean/docs/OperationalIntent.md`
-- `/home/goutev/LEAN4/info-geometry-lean/docs/Theory.md`
+- `docs/OperationalIntent.md`
+- `docs/Theory.md`
 - the specific owner files that actually carry the morphisms
 
 ## Graph Use
 
 Use graph tooling as a second pass only.
+Before consulting any DAG artifact, verify `artifacts/dag/index/meta.json` timestamp is recent and `schemaVersion` ≥ 2.
+Edge integrity is now enforced at export time via `validateEdges` — if artifacts exist, referential integrity holds.
+
 - `theorem-surface-index` finds public theorem burden
 - `semantic-quotient` separates shell from trunk
 - `projection-coloring` is heuristic and can collapse after major cleanup
 - `representation-depth-audit` should agree with the native Lean audit
 - `representation-depth-graph` is a rendered presentation map, not the primary law
 - `process-flow` artifacts are useful when deciding whether a declaration is real transport, local wrapper noise, or unresolved coherence pressure
+- `meta.json` confirms artifact freshness, schema version, and build provenance (oleanHash)

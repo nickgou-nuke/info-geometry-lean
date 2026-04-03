@@ -1,4 +1,5 @@
 import InfoGeometry.Core.UnifiedGeometry
+import InfoGeometry.Meta.Vacuity
 
 /-!
 # Symmetric Lie Algebra Core
@@ -59,6 +60,11 @@ structure OddLocalModel (L : Type _)
   tripleSystem : LieTripleSystem odd
   convex : Convex ℝ (odd : Set L)
   pathConnected : IsPathConnected (odd : Set L)
+
+attribute [infrastructure]
+  LieTripleSystem.skew₁
+  LieTripleSystem.jacobi_like
+  CartanLieAlgebra.killing_nondegenerate
 
 namespace SymmetricLieAlgebra
 
@@ -727,6 +733,43 @@ structure CartanSignature (S : SymmetricLieAlgebra L) where
     ∀ x, x ∈ S.oddSubmodule → 0 ≤ S.cartanForm x x
   nonpos_on_even :
     ∀ x, x ∈ S.evenLieSubalgebra → S.cartanForm x x ≤ 0
+
+attribute [infrastructure]
+  CartanSignature.nonneg_on_odd
+  CartanSignature.nonpos_on_even
+
+attribute [infrastructure]
+  instPreservesLinear
+  instPreservesLieBracket
+  instPreservesLie
+  involutive
+  mem_even_iff
+  plusPart_of_mem_even
+  minusPart_of_mem_even
+  plusPart_of_mem_odd
+  minusPart_of_mem_odd
+  cartan_left_inverse
+  oddTriple_jacobi
+
+attribute [expository]
+  segment_subset_even
+  segment_subset_odd
+  add_smul_sub_mem_even
+  add_smul_sub_mem_odd
+  decomposition
+  cartan_decomposition
+  odd_isConnected
+  odd_isPathConnected
+  even_isConnected
+  even_isPathConnected
+  oddLocalModel_odd
+  oddLocalModel_tripleSystem
+  oddLocalModel_convex
+  oddLocalModel_pathConnected
+  cartanForm_def
+
+attribute [terminal]
+  cartan_direct_sum
 
 end KillingForm
 

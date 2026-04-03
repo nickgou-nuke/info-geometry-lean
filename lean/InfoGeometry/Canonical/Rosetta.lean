@@ -25,7 +25,7 @@ import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.ModularSpinorBridge
 import InfoGeometry.Canonical.Twistor
 import InfoGeometry.Canonical.BerryConnection
-import InfoGeometry.Canonical.BerryHolonomy
+import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.Singular
 import InfoGeometry.Canonical.RosettaSourceBridge
 import InfoGeometry.Canonical.RosettaScaleTransport
@@ -148,7 +148,6 @@ export InfoGeometry.Canonical (
 )
 
 export InfoGeometry.Canonical.WeylGaugeField (
-  toGeneratedFlow
   along
   respond
   transform

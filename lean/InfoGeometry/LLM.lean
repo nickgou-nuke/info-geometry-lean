@@ -1,6 +1,5 @@
 import InfoGeometry.LLM.TransformerBlock
 import InfoGeometry.LLM.MaskedTransformerBlock
-import InfoGeometry.LLM.PositionalEncoding
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit
@@ -18,5 +17,4 @@ Unified entrypoint for LLM-oriented formalization layers:
 - geometric multi-head attention and output projection
 - canonical transformer-block scaffold (attention + residual + normalization + MLP)
 - causal-mask transformer interface
-- positional encoding abstraction with run-composition lemmas
 -/

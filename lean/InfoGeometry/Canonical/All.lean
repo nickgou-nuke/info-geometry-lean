@@ -100,9 +100,9 @@ import InfoGeometry.Canonical.Krein
 import InfoGeometry.Canonical.KreinLadder
 import InfoGeometry.LLM
 import InfoGeometry.LLM.MaskedTransformerBlock
-import InfoGeometry.LLM.PositionalEncoding
 import InfoGeometry.LLM.TransformerBlock
 import InfoGeometry.Canonical.LLN
+import InfoGeometry.Canonical.LogSumExp
 import InfoGeometry.Canonical.LogSpineBridge
 import InfoGeometry.Canonical.LorentzianRouting
 import InfoGeometry.Canonical.ManifoldDegree
@@ -149,6 +149,7 @@ import InfoGeometry.Quantum.TriadicTransportProjective
 import InfoGeometry.Quantum.TriadicTransportBarycenter
 import InfoGeometry.Quantum.TriadicTransportModular
 import InfoGeometry.Quantum.TriadicBogoliubovBridge
+import InfoGeometry.Quantum.TriadicWeylBridge
 import InfoGeometry.Volume.RadonNikodym
 import InfoGeometry.Volume.LogPotential
 import InfoGeometry.Volume.Pfaffian
@@ -159,8 +160,9 @@ import InfoGeometry.Canonical.AQFTOperatorEndpoints
 import InfoGeometry.Canonical.AQFTOperatorSignatures
 import InfoGeometry.Canonical.AQFTReadiness
 import InfoGeometry.Canonical.BerryConnection
-import InfoGeometry.Canonical.BerryHolonomy
+import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.BeliefAlgebra
+import InfoGeometry.Canonical.CartanBerezinianCore
 import InfoGeometry.Canonical.CalabiYauRNMongeAmpere
 import InfoGeometry.Canonical.CalabiYauWBridge
 import InfoGeometry.Canonical.ChiralTorsionGeneralizedKL
@@ -170,6 +172,7 @@ import InfoGeometry.Canonical.ConnesArakiCore
 import InfoGeometry.Canonical.ConnesArakiTomita
 import InfoGeometry.Canonical.CountPositiveCoupling
 import InfoGeometry.Canonical.CountProbabilityState
+import InfoGeometry.Canonical.CountSinkhornFlow
 import InfoGeometry.Canonical.GrandSynthesisBott
 import InfoGeometry.Canonical.GrandSynthesisGeometry
 import InfoGeometry.Canonical.GrandSynthesisSingular

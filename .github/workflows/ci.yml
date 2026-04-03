@@ -34,6 +34,184 @@ jobs:
       - name: Baseline build
         run: lake build
 
+      - name: Build compiler bridge server
+        run: lake build Agent compilerBridgeServer
+
+      - name: Run compiler bridge regression tests
+        run: python3 -m unittest tests.test_compiler_bridge_rpc
+
+      - name: Emit compiler bridge smoke summary
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import tempfile
+          import traceback
+          from pathlib import Path
+
+          artifact_dir = Path(".artifacts") / "ci" / "compiler_bridge_smoke"
+          artifact_dir.mkdir(parents=True, exist_ok=True)
+          status = {"ok": True}
+
+          lines = [
+            "## Compiler Bridge Smoke Summary",
+            "",
+            "| Endpoint | ok | Key fields | Diagnostic codes |",
+            "|---|---|---|---|",
+          ]
+
+          def diag_codes(result):
+            diags = result.get("diagnostics", [])
+            out = []
+            for d in diags:
+              if isinstance(d, dict):
+                code = d.get("code")
+                if isinstance(code, str):
+                  out.append(code)
+            return out
+
+          try:
+            from tools.frontier import compiler_bridge_client as bridge_client
+
+            with tempfile.TemporaryDirectory() as td:
+              td_path = Path(td)
+
+              clean_file = td_path / "bridge_clean_ci.lean"
+              clean_file.write_text(
+                "\n".join([
+                  "theorem bridge_ok (p : Prop) (hp : p) : p := by",
+                  "  exact hp",
+                  "",
+                ]),
+                encoding="utf-8",
+              )
+
+              sorry_file = td_path / "bridge_sorry_ci.lean"
+              sorry_file.write_text(
+                "\n".join([
+                  "theorem bridge_sorry (p : Prop) : p := by",
+                  "  sorry",
+                  "",
+                ]),
+                encoding="utf-8",
+              )
+
+              common = {
+                "timeout_s": 120.0,
+                "server_mode": "custom",
+                "inject_rpc_import_flag": False,
+                "wait_for_diagnostics": True,
+              }
+
+              env_result = bridge_client.call_bridge_method(
+                input_path=clean_file,
+                line=0,
+                character=0,
+                rpc_method="getEnvFingerprint",
+                decl_name=None,
+                **common,
+              )
+              env_version = env_result.get("responseMeta", {}).get("version", {})
+              env_toolchain = env_result.get("responseMeta", {}).get("env", {}).get("leanToolchain", "")
+              lines.append(
+                "| getEnvFingerprint | "
+                f"{env_result.get('ok')} | "
+                f"version={env_version.get('protocol')}/{env_version.get('schema')}, toolchain={env_toolchain} | "
+                f"{diag_codes(env_result)} |"
+              )
+
+              check_result = bridge_client.call_bridge_method(
+                input_path=clean_file,
+                line=1,
+                character=2,
+                rpc_method="checkSnippet",
+                decl_name=None,
+                **common,
+              )
+              lines.append(
+                "| checkSnippet (clean) | "
+                f"{check_result.get('ok')} | "
+                f"goalCount={check_result.get('goalCount')} | "
+                f"{diag_codes(check_result)} |"
+              )
+
+              validate_ok = bridge_client.call_bridge_method(
+                input_path=clean_file,
+                line=0,
+                character=0,
+                rpc_method="validateDecl",
+                decl_name="bridge_ok",
+                **common,
+              )
+              lines.append(
+                "| validateDecl (clean) | "
+                f"{validate_ok.get('ok')} | "
+                f"declFound={validate_ok.get('declFound')}, hasSorry={validate_ok.get('hasSorry')} | "
+                f"{diag_codes(validate_ok)} |"
+              )
+
+              validate_sorry = bridge_client.call_bridge_method(
+                input_path=sorry_file,
+                line=0,
+                character=0,
+                rpc_method="validateDecl",
+                decl_name="bridge_sorry",
+                **common,
+              )
+              lines.append(
+                "| validateDecl (sorry) | "
+                f"{validate_sorry.get('ok')} | "
+                f"declFound={validate_sorry.get('declFound')}, hasSorry={validate_sorry.get('hasSorry')} | "
+                f"{diag_codes(validate_sorry)} |"
+              )
+
+              endpoint_results = {
+                "getEnvFingerprint": env_result,
+                "checkSnippet": check_result,
+                "validateDecl_clean": validate_ok,
+                "validateDecl_sorry": validate_sorry,
+              }
+              for name, result in endpoint_results.items():
+                (artifact_dir / f"{name}.json").write_text(
+                  json.dumps(result, indent=2, ensure_ascii=False) + "\n",
+                  encoding="utf-8",
+                )
+          except Exception as exc:
+            status["ok"] = False
+            status["error"] = f"{type(exc).__name__}: {exc}"
+            status["traceback"] = traceback.format_exc().rstrip()
+            lines.append("")
+            lines.append(f"Smoke summary failed: {type(exc).__name__}: {exc}")
+            lines.append("")
+            lines.append("```")
+            lines.append(traceback.format_exc().rstrip())
+            lines.append("```")
+
+          payload = "\n".join(lines) + "\n"
+          print(payload)
+
+          (artifact_dir / "summary.md").write_text(payload, encoding="utf-8")
+          (artifact_dir / "status.json").write_text(
+            json.dumps(status, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+          )
+
+          summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary_path:
+            with open(summary_path, "a", encoding="utf-8") as f:
+              f.write(payload)
+          PY
+
+      - name: Upload compiler bridge smoke artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiler-bridge-smoke-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .artifacts/ci/compiler_bridge_smoke
+          retention-days: 7
+          if-no-files-found: warn
+
       - name: Refresh maintained canonical graph artifacts
         run: |
           python3 tools/infra/refresh_decl_graph.py

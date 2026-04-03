@@ -4,49 +4,44 @@ import DAG.Util
 
 namespace DAG
 
-/-- Component-level path counts on condensed SCC DAG. -/
-private def componentPathCounts
+/-- Component-level path counts along an adjacency array in a given traversal order.
+    Unified implementation for both forward (dag + topo) and reverse (preds + reverse-topo) directions. -/
+def componentPathCountsAlong
+  (adj : Array (Array Nat))
+  (order : Array Nat)
+  (src : Nat)
+  : Array Nat :=
+  Id.run do
+    let n := adj.size
+    let mut counts := arrayReplicate n 0
+    counts := counts.set! src 1
+
+    for ti in [:order.size] do
+      let u := order[ti]!
+      let cu := counts[u]!
+      if cu != 0 then
+        for ei in [:adj[u]!.size] do
+          let v := adj[u]![ei]!
+          let old := counts[v]!
+          counts := counts.set! v (old + cu)
+
+    counts
+
+/-- Component-level path counts on condensed SCC DAG (forward direction). -/
+def componentPathCounts
   (dag : Array (Array Nat))
   (topo : Array Nat)
   (src : Nat)
   : Array Nat :=
-  Id.run do
-    let n := dag.size
-    let mut counts := arrayReplicate n 0
-    counts := counts.set! src 1
+  componentPathCountsAlong dag topo src
 
-    for ti in [:topo.size] do
-      let u := topo[ti]!
-      let cu := counts[u]!
-      if cu != 0 then
-        for ei in [:dag[u]!.size] do
-          let v := dag[u]![ei]!
-          let old := counts[v]!
-          counts := counts.set! v (old + cu)
-
-    counts
-
-/-- Component-level path counts on the reversed condensed SCC DAG. -/
-private def componentPathCountsUpward
+/-- Component-level path counts on the reversed condensed SCC DAG (upward direction). -/
+def componentPathCountsUpward
   (preds : Array (Array Nat))
   (orderFromRoots : Array Nat)
   (src : Nat)
   : Array Nat :=
-  Id.run do
-    let n := preds.size
-    let mut counts := arrayReplicate n 0
-    counts := counts.set! src 1
-
-    for ti in [:orderFromRoots.size] do
-      let u := orderFromRoots[ti]!
-      let cu := counts[u]!
-      if cu != 0 then
-        for ei in [:preds[u]!.size] do
-          let v := preds[u]![ei]!
-          let old := counts[v]!
-          counts := counts.set! v (old + cu)
-
-    counts
+  componentPathCountsAlong preds orderFromRoots src
 
 /-- Path counts lifted back to original nodes. -/
 def pathCountFrom

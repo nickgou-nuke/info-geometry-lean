@@ -2,7 +2,7 @@
 
 This repository uses:
 - Lean toolchain: `leanprover/lean4:v4.28.0`
-- Lake package management via [lakefile.lean](/home/goutev/LEAN4/info-geometry-lean/lakefile.lean)
+- Lake package management via [lakefile.lean](lakefile.lean)
 - optional repo-local Python environment under `.venv`
 
 ## Prerequisites
@@ -73,7 +73,7 @@ python3 tools/infra/generate_theorem_surface_index.py
 python3 tools/infra/generate_source_sink_compression.py
 ```
 
-Continue with the rest of the maintained sequence from [README.md](/home/goutev/LEAN4/info-geometry-lean/README.md) or [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md).
+Continue with the rest of the maintained sequence from [README.md](README.md) or [tools/infra/README.md](tools/infra/README.md).
 
 ## Notes
 

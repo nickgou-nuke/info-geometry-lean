@@ -90,4 +90,7 @@ if [[ $naming_status -ne 0 || $docstring_status -ne 0 || $style_status -ne 0 ]];
   exit 1
 fi
 
+echo "[strict-check] running compiler bridge RPC regression tests"
+python3 -m unittest tests.test_compiler_bridge_rpc
+
 echo "[strict-check] all quality audits passed"

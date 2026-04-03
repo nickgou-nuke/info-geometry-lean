@@ -44,15 +44,6 @@ structure FlatDualConnections (E : Type*) [NormedAddCommGroup E] [InnerProductSp
   torsion_free_nabla : IsTorsionFree dual.nabla
   torsion_free_nablaStar : IsTorsionFree dual.nablaStar
 
-omit [FiniteDimensional ℝ E] in
-/--
-A bridge form for torsion-freeness in the dually-flat setting.
-This theorem packages explicit torsion-free hypotheses for both dual connections.
--/
-theorem hessian_is_torsion_free (_H : HessianGeometry E) (D : FlatDualConnections E) :
-    informationTorsion D.dual.nabla = 0 ∧ informationTorsion D.dual.nablaStar = 0 :=
-  ⟨D.torsion_free_nabla, D.torsion_free_nablaStar⟩
-
 /--
 A Twisted Information System where the update rule has torsion.
 This occurs when the dually-flat structure is broken, leading to path-dependent

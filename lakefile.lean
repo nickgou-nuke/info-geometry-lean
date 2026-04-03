@@ -61,6 +61,10 @@ lean_lib DAG where
   globs := #[.andSubmodules `DAG]
 
 @[default_target]
+lean_lib Agent where
+  globs := #[.andSubmodules `Agent]
+
+@[default_target]
 lean_lib Docs where
   globs := #[.andSubmodules `Docs]
 
@@ -86,4 +90,8 @@ lean_exe semanticBlockExport where
 
 lean_exe semanticBlockServer where
   root := `scripts.DAG.Exploration.SemanticBlockServer
+  supportInterpreter := true
+
+lean_exe compilerBridgeServer where
+  root := `scripts.DAG.Exploration.CompilerBridgeServer
   supportInterpreter := true

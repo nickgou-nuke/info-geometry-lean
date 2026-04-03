@@ -19,6 +19,91 @@
 2. **Referee** (Session A or B)
 3. **Distillation** (Session B or C)
 4. **Lean Formalizer** (Session D - FRESH)
+5. **Structural Verification** (Post-formalization)
+
+---
+
+## DAG-Aware Discipline
+
+The formalization pipeline interacts with the DAG infrastructure at two points:
+
+### Pre-formalization (Distillation → Lean Formalizer handoff)
+- Run `python3 tools/infra/refresh_decl_graph.py` to ensure artifacts are current.
+  The `--force` flag skips the olean content-hash check; omit it to use incremental skip.
+- Check `artifacts/dag/index/meta.json` for `schemaVersion` and `timestamp` to confirm freshness.
+- Use `artifacts/dag/index/decls.jsonl` to verify that REPO-CHECK items actually exist.
+- Use `artifacts/dag/index/edges.jsonl` to verify dependency assumptions in the handoff.
+- Use `artifacts/dag/structural-topology.json` to confirm the target's layer placement.
+
+### Post-formalization (Structural Verification)
+- Rebuild: `python3 tools/infra/run_locked_lake_build.py <Target.Module>`
+- Re-run `python3 tools/infra/refresh_decl_graph.py`
+- Verify the new declaration appears in `decls.jsonl` with the correct kind and module.
+- Verify edge integrity: `meta.json` edge count should reflect the new edges.
+- Run `python3 tools/infra/check_representation_depth.py` to confirm depth legality.
+- Run `python3 tools/infra/canonical_policy_lint.py` to confirm policy compliance.
+- If the declaration is tagged `@[rep_depth <level>]`, run `lake build InfoGeometry.Audit`
+  to confirm the native adjacency grammar passes.
+- Run `python3 tools/theorem_significance.py` and `python3 tools/check_vacuity_policy.py`
+  to check the new declaration is not dead, wrapper-inflated, or vacuous.
+
+---
+
+## Rooted Node Cleanup Protocol
+
+The unit of cleanup is a **declaration node**, not a file and not a surface.
+A cleanup problem is organized around a chosen **local root node** `r` in the
+causal DAG.
+
+### Definitions
+- **Local root node**: the distinguished declaration currently being normalized.
+- **Backward causal cone** of `r`: all declarations reachable by iterating
+  dependency edges outward from `r`.
+- **Shell `S₁`**: the direct dependencies of `r`.
+- **Shell `Sₖ₊₁`**: the direct dependencies of `Sₖ` not already assigned to an
+  earlier shell.
+- **Paired nodes**: nodes in the same shell that represent the same transport or
+  comparison role across adjacent presentations.
+
+### Rooted Order Rule
+- Never choose the next rewrite target from the highest vacuous leaf alone.
+- Choose a local root node `r`.
+- Compute its backward causal cone.
+- Rewrite the cone shell-by-shell starting from `S₁`.
+- Do not touch `S₂` until `S₁` is clean and rebuilt.
+- After each shell, rebuild and refresh the DAG artifacts before continuing.
+
+### Pairing Rule
+Within a shell, prefer rewriting paired nodes together when they play matched
+roles, for example:
+- raw/count ↔ projective
+- scalar/profile ↔ operator/Krein
+- plus/minus
+- common/relative
+
+A shell is not clean until its matched transport pairs have been normalized
+together.
+
+### Deletion Rule
+A node may be deleted only if all of its outgoing uses can be factored through
+retained lower owner nodes.
+
+So:
+- no node is deleted merely because it is vacuous in isolation
+- owner theorems with no consumers are not automatic deletion targets
+- theorem-shaped projections and wrapper nodes are deletion candidates only after
+  their lower support shell is already clean
+
+### Artifact Discipline
+For rooted cleanup, use the causal reports in this order:
+1. `reports/dag/true-root-order.md` or `.json` to find the earliest debt-bearing
+   nodes in the branch
+2. `artifacts/dag/full_graph.json` to extract the local backward cone
+3. `reports/dag/replacement-frontier.md` only after the lower shells are known
+   clean
+
+The replacement frontier is a symptom map, not the rewrite order.
+The rewrite order is determined by the rooted causal shells.
 
 ---
 
@@ -194,6 +279,9 @@ REPO-CHECK
 - R1: suspected local theorem / file / namespace / custom notation
 - R2: suspected local structure field / abbreviation / notation layer
 - R3: suspected umbrella import or renamed theorem
+- R4: verify against `artifacts/dag/index/decls.jsonl` for name existence and kind
+- R5: verify against `artifacts/dag/index/edges.jsonl` for dependency correctness
+- R6: verify against `artifacts/dag/structural-topology.json` for layer placement
 
 HARD DOWNGRADE RULE
 - Any statement depending on an unverified canonical choice must be rewritten as either:
@@ -238,6 +326,9 @@ STATE-FIRST CHECK
 - Are all typeclass arguments explicit enough to prevent inference drift?
 - Does the statement rely on any unresolved OPEN GAP?
 - Does the statement rely on any unverified canonical choice?
+- DAG PRE-FLIGHT: Is `artifacts/dag/index/meta.json` current (check `timestamp` and `schemaVersion`)?
+- DAG PRE-FLIGHT: Do all REPO-CHECK symbols appear in `decls.jsonl`?
+- DAG PRE-FLIGHT: Does the target's representation depth match its intended layer in `structural-topology.json`?
 
 PRE-PROOF AUDIT
 - Symbol check
@@ -304,3 +395,34 @@ Style:
 - Canonicality must never be inferred from convenience.
 - The proof phase must never repair the statement phase.
 - The Lean Formalizer may not import semantic intent from Discovery or Referee except insofar as it appears in the distilled handoff.
+
+---
+
+## PROMPT 5 — STRUCTURAL VERIFICATION
+
+After formalization, verify the new code integrates correctly with the repository's structural surfaces.
+
+Inputs:
+- The formalized Lean module(s)
+- The target statement(s) from the handoff
+
+Steps:
+1. Build the touched modules: `python3 tools/infra/run_locked_lake_build.py <Module.Name>`
+2. Refresh DAG artifacts: `python3 tools/infra/refresh_decl_graph.py`
+3. Verify the new declaration appears in `artifacts/dag/index/decls.jsonl` with the expected kind.
+4. Verify `artifacts/dag/index/meta.json` counts are consistent (no dangling edges).
+5. Run `python3 tools/infra/check_representation_depth.py` and confirm the new theorem is at its intended layer.
+6. Run `python3 tools/infra/canonical_policy_lint.py` and confirm no new policy violations.
+7. If the formalization introduces a new bridge or translator, verify it appears in `artifacts/dag/index/morphisms.jsonl`.
+8. If owner or depth placement is wrong, emit a PLACEMENT REPAIR NOTE.
+9. If policy lint fails, emit a POLICY REPAIR NOTE.
+
+Required output:
+BUILD STATUS
+META.JSON VERIFICATION
+DEPTH CHECK
+POLICY LINT
+or
+PLACEMENT REPAIR NOTE
+or
+POLICY REPAIR NOTE

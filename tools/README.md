@@ -15,6 +15,15 @@ The maintained tooling surface is split into three directories:
 
 Top-level `tools/*.py` wrappers are convenience entrypoints. The maintained workflows are the subdirectory scripts and READMEs.
 
+### Top-level Wrappers
+
+| File | Purpose |
+|------|---------|
+| `pathing.py` | Canonical path resolution for DAG artifacts (`default_decl_graph_file()` → `artifacts/dag/full_graph.json`, `default_decl_index_dir()` → `artifacts/dag/index/`); falls back to `.build/` for incremental builds |
+| `graph.py` | Legacy compatibility shim routing old consumers to `archive/legacy/scripts/graph.py` |
+
+All infra scripts use `pathing.py` to resolve artifact locations.
+
 ## Current Anchor Query
 
 When local context is gone, the first theorem-growth corridor the tooling should help recover is:
@@ -25,13 +34,21 @@ That corridor is now a validated example of the intended workflow: use the tools
 ## Current Split
 
 ### `tools/infra`
-Graph refresh, causal and theorem-surface reports, representation-depth summaries, process-flow reports, and locked build orchestration.
+Graph refresh, causal and theorem-surface reports, representation-depth summaries, process-flow reports, visualization (SVG/GraphML), and locked build orchestration.
 
 ### `tools/frontier`
 Semantic block export and heavy-file frontier workflows.
 
 ### `tools/docs`
 Documentation refresh helpers for generated doc surfaces.
+
+## Integration with Lean DAG
+
+Python never touches Lean internals directly. The integration is:
+1. `tools/infra/refresh_decl_graph.py` invokes `lake env lean --run lean/DAG/Indexer.lean` via subprocess
+2. The Lean indexer writes canonical JSON artifacts to `artifacts/dag/`
+3. Downstream Python scripts consume those artifacts for reports, visualization, and linting
+4. `tools/pathing.py` provides the single source of truth for artifact paths with fallback semantics
 
 ## Trust Order
 

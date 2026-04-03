@@ -1,8 +1,10 @@
 # RN / Gauge Canopy
 
 This document is the maintained map for the projective / relative-potential / gauge spine.
+These files sit at `@[rep_depth count]` and `@[rep_depth projective]` in the semantic taxonomy
+(see `lean/InfoGeometry/Meta/Architecture.lean`).
 
-## Wide substrate
+## Wide substrate (`count` depth)
 
 The wide nonnegative projective layer currently lives in:
 - `MeasureProjective`
@@ -11,7 +13,7 @@ The wide nonnegative projective layer currently lives in:
 
 This is the layer where zeros and AE/support-hypothesis semantics are allowed.
 
-## Strict-positive slice
+## Strict-positive slice (`projective` depth)
 
 The strict-positive pointwise layer currently lives in:
 - `PositiveRayCore`
@@ -20,7 +22,7 @@ The strict-positive pointwise layer currently lives in:
 
 This is where pointwise `log` and modular-potential formulas are total.
 
-## Representation bridges
+## Representation bridges (`count` → `projective` → `operator`)
 
 Current representation layers include:
 - `RelativePotentialDiscreteBridge`

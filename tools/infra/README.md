@@ -2,8 +2,8 @@
 
 This directory contains the maintained DAG, reporting, and build orchestration entrypoints.
 The source of architectural truth is no longer purely Python-side: the native grammar lives in:
-- [Architecture.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Meta/Architecture.lean)
-- [Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
+- [Architecture.lean](../../lean/InfoGeometry/Meta/Architecture.lean)
+- [Audit.lean](../../lean/InfoGeometry/Audit.lean)
 
 The infra layer exists to preserve memory and turn a large formal repository back into an auditable working surface after context has been lost.
 Its purpose is to:
@@ -36,15 +36,22 @@ Main DAG refresh and report path:
 - `generate_causal_report.py`
 - `check_bipartite_bleed.py`
 - `generate_structural_dedup.py`
+- `generate_structural_dictionary.py`
 - `generate_structural_fibers.py`
 - `generate_semantic_quotient.py`
 - `generate_projection_coloring.py`
 - `select_openclaw_target.py`
 - `canonical_policy_lint.py`
+- `generate_replacement_frontier.py`
+- `classify_missing_all.py`
 
 Stable spine supplements:
 - `check_representation_depth.py`
 - `generate_representation_depth_graph.py`
+
+Visualization and I/O:
+- `plot_decl_graph.py`
+- `representation_depth_io.py`
 
 Process-flow supplements:
 - `lean/DAG/ProcessFlowExport.lean`
@@ -62,6 +69,7 @@ Use the infra tools by role, not as one undifferentiated report pile:
 - theorem-surface and canonical burden
   - `generate_theorem_surface_index.py`
   - `canonical_policy_lint.py`
+  - `generate_replacement_frontier.py` (cross-references surface index, DAG, depth tags, and vacuity scores to rank replacement candidates)
 - causal/ownership shape
   - `generate_source_sink_compression.py`
   - `generate_causal_report.py`
@@ -70,23 +78,37 @@ Use the infra tools by role, not as one undifferentiated report pile:
   - `generate_structural_fibers.py`
   - `generate_semantic_quotient.py`
   - `generate_projection_coloring.py`
+- apex-local obstruction diagnostics
+  - `causal_cone_spectrum.py` (SCC-condensed causal cones, shells, binding witnesses, masses)
+  - `apex_defect_profile.py` (structured obstruction dossiers per apex)
+  - `graph_hodge_spectrum.py` (global spectral/Hodge report on undirected shadow)
 - representation-depth grammar
   - `check_representation_depth.py`
   - `generate_representation_depth_graph.py`
+  - `representation_depth_io.py` (shared I/O: loads depth indices, Lean tags JSON, interval labels)
+- visualization
+  - `plot_decl_graph.py` (NetworkX GraphML, SVG, burndown charts; frontier category coloring)
+- classification and structural
+  - `classify_missing_all.py`
+  - `generate_structural_dictionary.py`
 - process-flow and coherence pressure
   - `lean/DAG/ProcessFlowExport.lean`
   - `generate_process_flow_report.py`
 
 ## Authoritative Inputs
 
-Public authoritative DAG inputs live under [artifacts/dag](/home/goutev/LEAN4/info-geometry-lean/artifacts/dag):
+Public authoritative DAG inputs live under [artifacts/dag](../../artifacts/dag):
 - `full_graph.json`
 - `index/decls.jsonl`
 - `index/edges.jsonl`
+- `index/morphisms.jsonl`
+- `index/types.jsonl`
 - `structural-topology.json`
 - `source-sink-bipartite.json`
+- `representation-depth-tags.json`
+- `process-flow/` (flow-edges, process-events, flow-cocycles, comparison-candidates, lawful-path-candidates, defects)
 
-Derived readable outputs live under [reports/dag](/home/goutev/LEAN4/info-geometry-lean/reports/dag).
+Derived readable outputs live under [reports/dag](../../reports/dag).
 
 ## Maintained Refresh Order
 
@@ -105,6 +127,11 @@ python3 tools/infra/generate_semantic_quotient.py
 python3 tools/infra/generate_projection_coloring.py
 python3 tools/infra/select_openclaw_target.py
 python3 tools/infra/canonical_policy_lint.py
+python3 tools/infra/generate_replacement_frontier.py
+python3 tools/theorem_significance.py
+python3 tools/infra/causal_cone_spectrum.py
+python3 tools/infra/apex_defect_profile.py
+python3 tools/infra/graph_hodge_spectrum.py
 ```
 
 Supplemental stable-spine reports:

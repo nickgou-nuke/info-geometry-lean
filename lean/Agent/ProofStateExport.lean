@@ -92,6 +92,8 @@ private def unsupportedValidateDecl (responseMeta : ResponseMeta) (err : Compile
     diagnostics := #[err]
     declFound := false
     theoremType := ""
+    theoremTypeHead := none
+    theoremTypeHeadSource := .unavailable
     hasSorry := false
   }
 
@@ -110,6 +112,7 @@ def validateDecl (params : ValidateDeclParams) : RequestM (RequestTask ValidateD
           match declInfo? with
           | some declInfo => ppExprAtSnapshot snap declInfo.type
           | none => pure ""
+        let (theoremTypeHead, theoremTypeHeadSource) := headMetaOfText theoremType
         let hasSorry := declInfo?.map constantHasSorry |>.getD false
         if declInfo?.isNone then
           diagnostics := diagnostics.push (declarationNotFoundError params.declName)
@@ -122,6 +125,8 @@ def validateDecl (params : ValidateDeclParams) : RequestM (RequestTask ValidateD
           diagnostics := diagnostics
           declFound := declFound
           theoremType := theoremType
+          theoremTypeHead := theoremTypeHead
+          theoremTypeHeadSource := theoremTypeHeadSource
           hasSorry := hasSorry
         }
 

@@ -55,6 +55,18 @@ inductive ErrorPhase where
   | protocol
 deriving Inhabited, BEq, FromJson, ToJson
 
+inductive ErrorClassificationProvenance where
+  | leanTag
+  | messagePattern
+  | bridgeRule
+  | fallback
+deriving Inhabited, BEq, FromJson, ToJson
+
+inductive ExprHeadSource where
+  | textHeuristic
+  | unavailable
+deriving Inhabited, BEq, FromJson, ToJson
+
 inductive CompilerErrorCode where
   | parseError
   | elaborationError
@@ -76,6 +88,7 @@ structure CompilerError where
   phase : ErrorPhase
   severity : Severity
   message : String
+  classificationProvenance : ErrorClassificationProvenance := .fallback
   file : Option String := none
   /-- 0-based LSP line if available. -/
   line : Option Nat := none
@@ -88,6 +101,8 @@ structure LocalDeclView where
   userName : String
   binderKind : String := "default"
   type : String
+  typeHead : Option String := none
+  typeHeadSource : ExprHeadSource := .unavailable
   value : Option String := none
   isLet : Bool := false
   isInstance : Bool := false
@@ -100,6 +115,7 @@ structure GoalView where
   locals : Array LocalDeclView
   target : String
   targetHead : Option String := none
+  targetHeadSource : ExprHeadSource := .unavailable
 deriving Inhabited, BEq, FromJson, ToJson
 
 structure GetProofStateParams where
@@ -150,6 +166,8 @@ structure ValidateDeclResult where
   diagnostics : Array CompilerError := #[]
   declFound : Bool := false
   theoremType : String := ""
+  theoremTypeHead : Option String := none
+  theoremTypeHeadSource : ExprHeadSource := .unavailable
   hasSorry : Bool := false
 deriving Inhabited, BEq, FromJson, ToJson
 

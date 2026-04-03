@@ -104,6 +104,18 @@ class CompilerBridgeRpcTests(unittest.TestCase):
         self.assertEqual(result["goalCount"], len(result["goals"]))
         self.assertGreaterEqual(result["goalCount"], 1)
 
+        first_goal = result["goals"][0]
+        self.assertIn("targetHead", first_goal)
+        self.assertIn("targetHeadSource", first_goal)
+        self.assertEqual(first_goal["targetHead"], "p")
+        self.assertEqual(first_goal["targetHeadSource"], "textHeuristic")
+
+        first_local = first_goal["locals"][0]
+        self.assertIn("typeHead", first_local)
+        self.assertIn("typeHeadSource", first_local)
+        self.assertEqual(first_local["typeHead"], "Prop")
+        self.assertEqual(first_local["typeHeadSource"], "textHeuristic")
+
     def test_validate_decl_happy_path(self):
         result = self._call(
             self.clean_file,
@@ -114,6 +126,8 @@ class CompilerBridgeRpcTests(unittest.TestCase):
         self.assertTrue(result["declFound"])
         self.assertFalse(result["hasSorry"])
         self.assertTrue(result["theoremType"])
+        self.assertEqual(result["theoremTypeHead"], "∀")
+        self.assertEqual(result["theoremTypeHeadSource"], "textHeuristic")
 
     def test_validate_decl_detects_sorry(self):
         result = self._call(
@@ -144,6 +158,7 @@ class CompilerBridgeRpcTests(unittest.TestCase):
         self.assertEqual(len(diagnostics), 1)
         self.assertEqual(diagnostics[0].get("code"), "unsupportedProtocolVersion")
         self.assertEqual(diagnostics[0].get("phase"), "protocol")
+        self.assertEqual(diagnostics[0].get("classificationProvenance"), "bridgeRule")
 
 
 if __name__ == "__main__":

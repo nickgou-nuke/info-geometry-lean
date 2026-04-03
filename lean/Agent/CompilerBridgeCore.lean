@@ -130,6 +130,7 @@ def mkCompilerError
     (phase : ErrorPhase)
     (severity : Severity)
     (message : String)
+    (classificationProvenance : ErrorClassificationProvenance := .bridgeRule)
     (file : Option String := none)
     (line : Option Nat := none)
     (column : Option Nat := none) : CompilerError :=
@@ -138,6 +139,7 @@ def mkCompilerError
     phase := phase
     severity := severity
     message := message
+    classificationProvenance := classificationProvenance
     file := file
     line := line
     column := column
@@ -164,6 +166,31 @@ def severityOfDiagnostic (severity? : Option Lsp.DiagnosticSeverity) : Severity 
   | some .hint => .info
   | none => .error
 
+private def isHeadNoise (c : Char) : Bool :=
+  c == ' ' || c == '\n' || c == '\t' || c == '(' || c == '{' || c == '['
+
+private def isHeadBoundary (c : Char) : Bool :=
+  c == ' ' || c == '\n' || c == '\t' || c == ',' || c == ':' ||
+  c == ')' || c == ']' || c == '}' || c == '=' || c == ';'
+
+private def headTokenOfText? (text : String) : Option String :=
+  let normalized := (text.replace "\n" " ").trimAscii.toString
+  if normalized.isEmpty then
+    none
+  else
+    let chars := normalized.toList.dropWhile isHeadNoise
+    let headChars := chars.takeWhile (fun c => !isHeadBoundary c)
+    let token := String.ofList headChars
+    if token.isEmpty then none else some token
+
+private def exprHeadMetaOfText (text : String) : Option String × ExprHeadSource :=
+  match headTokenOfText? text with
+  | some head => (some head, .textHeuristic)
+  | none => (none, .unavailable)
+
+def headMetaOfText (text : String) : Option String × ExprHeadSource :=
+  exprHeadMetaOfText text
+
 private def readInteractiveDiagnostics (doc : FileWorker.EditableDocument) :
     IO (Array Widget.InteractiveDiagnostic) :=
   doc.diagnosticsRef.get
@@ -171,32 +198,36 @@ private def readInteractiveDiagnostics (doc : FileWorker.EditableDocument) :
 private def toPlainDiagnostic (diag : Widget.InteractiveDiagnostic) : Lsp.Diagnostic :=
   Widget.InteractiveDiagnostic.toDiagnostic diag
 
-private def classifyDiagnostic (diag : Lsp.Diagnostic) : ErrorPhase × CompilerErrorCode :=
+private def classifyDiagnostic (diag : Lsp.Diagnostic) :
+    ErrorPhase × CompilerErrorCode × ErrorClassificationProvenance :=
   let msg := diag.message.toLower
   let leanTags := diag.leanTags?.getD #[]
-  if leanTags.contains .unsolvedGoals || msg.contains "unsolved goals" then
-    (.proofState, .unsolvedGoals)
+  if leanTags.contains .unsolvedGoals then
+    (.proofState, .unsolvedGoals, .leanTag)
+  else if msg.contains "unsolved goals" then
+    (.proofState, .unsolvedGoals, .messagePattern)
   else if msg.contains "failed to synthesize" || msg.contains "typeclass instance problem is stuck" then
-    (.elaboration, .typeclassSearchFailed)
+    (.elaboration, .typeclassSearchFailed, .messagePattern)
   else if msg.contains "unknown constant" || msg.contains "unknown identifier" then
-    (.elaboration, .unknownConstant)
+    (.elaboration, .unknownConstant, .messagePattern)
   else if msg.contains "unexpected token" || msg.contains "expected token" || msg.contains "invalid syntax" then
-    (.parse, .parseError)
+    (.parse, .parseError, .messagePattern)
   else if msg.contains "timeout" then
-    (.elaboration, .timeout)
+    (.elaboration, .timeout, .messagePattern)
   else
-    (.elaboration, .elaborationError)
+    (.elaboration, .elaborationError, .fallback)
 
 def compilerErrorOfDiagnostic (uri : Lsp.DocumentUri) (diag : Widget.InteractiveDiagnostic) :
     CompilerError :=
   let plain := toPlainDiagnostic diag
-  let (phase, code) := classifyDiagnostic plain
+  let (phase, code, classificationProvenance) := classifyDiagnostic plain
   let range := plain.fullRange?.getD plain.range
   {
     code := code
     phase := phase
     severity := severityOfDiagnostic plain.severity?
     message := plain.message
+    classificationProvenance := classificationProvenance
     file := some (toString uri)
     line := some range.start.line
     column := some range.start.character
@@ -236,11 +267,15 @@ private def expandHypBundle (bundle : Widget.InteractiveHypothesisBundle) :
     let mut locals := #[]
     let count := min bundle.names.size bundle.fvarIds.size
     for i in [:count] do
+      let localType := bundle.type.stripTags
+      let (typeHead, typeHeadSource) := exprHeadMetaOfText localType
       locals := locals.push {
         fvarId := toString bundle.fvarIds[i]!.name
         userName := bundle.names[i]!
         binderKind := binderKindOfBundle bundle
-        type := bundle.type.stripTags
+        type := localType
+        typeHead := typeHead
+        typeHeadSource := typeHeadSource
         value := bundle.val?.map (·.stripTags)
         isLet := bundle.val?.isSome
         isInstance := bundle.isInstance?.getD false
@@ -249,6 +284,8 @@ private def expandHypBundle (bundle : Widget.InteractiveHypothesisBundle) :
     return locals
 
 private def goalViewOf (responseMeta : ResponseMeta) (goal : Widget.InteractiveGoal) : GoalView :=
+  let target := goal.type.stripTags
+  let (targetHead, targetHeadSource) := exprHeadMetaOfText target
   {
     goalId := {
       sessionId := responseMeta.sessionId
@@ -257,8 +294,9 @@ private def goalViewOf (responseMeta : ResponseMeta) (goal : Widget.InteractiveG
     }
     pretty := toString goal.pretty
     locals := goal.hyps.foldl (fun acc hyp => acc ++ expandHypBundle hyp) #[]
-    target := goal.type.stripTags
-    targetHead := none
+    target := target
+    targetHead := targetHead
+    targetHeadSource := targetHeadSource
   }
 
 def proofStateTaskAt (doc : FileWorker.EditableDocument) (posLine posCharacter : Nat) :

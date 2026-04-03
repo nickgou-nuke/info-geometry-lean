@@ -1,0 +1,66 @@
+{
+  "diagnostics": [],
+  "goalCount": 1,
+  "goals": [
+    {
+      "goalId": {
+        "revision": 1,
+        "sessionId": {
+          "value": "file:///home/goutev/LEAN4/info-geometry-lean/tmp/vacuity_planner_bridge_demo.lean"
+        },
+        "value": "_uniq.10"
+      },
+      "locals": [
+        {
+          "binderKind": "default",
+          "fvarId": "_uniq.8",
+          "isImplementationDetail": false,
+          "isInstance": false,
+          "isLet": false,
+          "type": "Prop",
+          "typeHead": "Prop",
+          "typeHeadFingerprint": "shape/v1/head:sort:prop",
+          "typeHeadSource": "exprSemantic",
+          "userName": "p",
+          "value": null
+        },
+        {
+          "binderKind": "default",
+          "fvarId": "_uniq.9",
+          "isImplementationDetail": false,
+          "isInstance": false,
+          "isLet": false,
+          "type": "p",
+          "typeHead": "p",
+          "typeHeadFingerprint": "shape/v1/head:fvar",
+          "typeHeadSource": "exprSemantic",
+          "userName": "hp",
+          "value": null
+        }
+      ],
+      "pretty": "p : Prop\nhp : p\n⊢ p",
+      "target": "p",
+      "targetHead": "p",
+      "targetHeadFingerprint": "shape/v1/head:fvar",
+      "targetHeadSource": "exprSemantic"
+    }
+  ],
+  "ok": true,
+  "responseMeta": {
+    "env": {
+      "artifactSchema": 3,
+      "importRoot": "InfoGeometry.All",
+      "leanToolchain": "leanprover/lean4:v4.28.0",
+      "namespaceHint": "InfoGeometry",
+      "oleanHash": "d65f070edba70e2c1d4d04e35f503edd496e48ba6e68ceefb408d59f3d67162d"
+    },
+    "revision": 1,
+    "sessionId": {
+      "value": "file:///home/goutev/LEAN4/info-geometry-lean/tmp/vacuity_planner_bridge_demo.lean"
+    },
+    "version": {
+      "protocol": "ig.compiler/v1",
+      "schema": 1
+    }
+  }
+}

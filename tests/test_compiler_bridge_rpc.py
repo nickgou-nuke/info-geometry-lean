@@ -107,14 +107,18 @@ class CompilerBridgeRpcTests(unittest.TestCase):
         first_goal = result["goals"][0]
         self.assertIn("targetHead", first_goal)
         self.assertIn("targetHeadSource", first_goal)
+        self.assertIn("targetHeadFingerprint", first_goal)
         self.assertEqual(first_goal["targetHead"], "p")
-        self.assertEqual(first_goal["targetHeadSource"], "textHeuristic")
+        self.assertEqual(first_goal["targetHeadSource"], "exprSemantic")
+        self.assertEqual(first_goal["targetHeadFingerprint"], "shape/v1/head:fvar")
 
         first_local = first_goal["locals"][0]
         self.assertIn("typeHead", first_local)
         self.assertIn("typeHeadSource", first_local)
+        self.assertIn("typeHeadFingerprint", first_local)
         self.assertEqual(first_local["typeHead"], "Prop")
-        self.assertEqual(first_local["typeHeadSource"], "textHeuristic")
+        self.assertEqual(first_local["typeHeadSource"], "exprSemantic")
+        self.assertEqual(first_local["typeHeadFingerprint"], "shape/v1/head:sort:prop")
 
     def test_validate_decl_happy_path(self):
         result = self._call(
@@ -127,7 +131,7 @@ class CompilerBridgeRpcTests(unittest.TestCase):
         self.assertFalse(result["hasSorry"])
         self.assertTrue(result["theoremType"])
         self.assertEqual(result["theoremTypeHead"], "∀")
-        self.assertEqual(result["theoremTypeHeadSource"], "textHeuristic")
+        self.assertEqual(result["theoremTypeHeadSource"], "exprSemantic")
 
     def test_validate_decl_detects_sorry(self):
         result = self._call(

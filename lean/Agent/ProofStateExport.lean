@@ -112,7 +112,14 @@ def validateDecl (params : ValidateDeclParams) : RequestM (RequestTask ValidateD
           match declInfo? with
           | some declInfo => ppExprAtSnapshot snap declInfo.type
           | none => pure ""
-        let (theoremTypeHead, theoremTypeHeadSource) := headMetaOfText theoremType
+        let (theoremTypeHead, theoremTypeHeadSource) :=
+          match declInfo? with
+          | some declInfo =>
+              let (semanticHead, semanticSource) := headMetaOfExpr declInfo.type
+              match semanticHead with
+              | some _ => (semanticHead, semanticSource)
+              | none => headMetaOfText theoremType
+          | none => (none, .unavailable)
         let hasSorry := declInfo?.map constantHasSorry |>.getD false
         if declInfo?.isNone then
           diagnostics := diagnostics.push (declarationNotFoundError params.declName)

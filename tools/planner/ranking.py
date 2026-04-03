@@ -12,7 +12,6 @@ else:
 
 from .common import (
     JsonObj,
-    REPLACEMENT_CLUSTER_PARTICIPATION_LIMIT,
     RankedEntry,
     Signal,
     VACUITY_TAGS,
@@ -28,12 +27,7 @@ from .common import (
     summarize_signals,
     top_count_keys,
 )
-
-
-def _cluster_rank_weight(cluster_rank: int) -> float:
-    if cluster_rank <= 0:
-        return 1.0
-    return 1.0 / float(cluster_rank)
+from .policy import REPLACEMENT_CLUSTER_PARTICIPATION_LIMIT, cluster_rank_weight
 
 
 def rank_vacuity_candidates(
@@ -620,7 +614,7 @@ def rank_fingerprint_corridors(
         region = region_any if isinstance(region_any, str) else "unknown"
 
         for cluster_rank, cluster_key in enumerate(cluster_keys, start=1):
-            cluster_weight = _cluster_rank_weight(cluster_rank)
+            cluster_weight = cluster_rank_weight(cluster_rank)
             bucket = ensure_bucket(cluster_key)
             cast(list[JsonObj], bucket["replacementCandidates"]).append(
                 {

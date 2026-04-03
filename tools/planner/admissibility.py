@@ -12,15 +12,7 @@ from .common import (
     jaccard_overlap,
     keys_from_counts,
 )
-
-
-ADMISSIBILITY_REPLACEMENT_WINDOW = 3
-
-_PRECHECK_STATUS_PRIORITY = {
-    "blocked": 0,
-    "needs-review": 1,
-    "provisionally-admissible": 2,
-}
+from .policy import ADMISSIBILITY_REPLACEMENT_WINDOW, precheck_status_priority
 
 
 def _admissibility_overlap(
@@ -259,7 +251,7 @@ def rank_admissibility_prechecks(
         selected = max(
             evaluations,
             key=lambda row: (
-                _PRECHECK_STATUS_PRIORITY.get(str(row.get("precheckStatus")), -1),
+                precheck_status_priority(cast(str | None, row.get("precheckStatus"))),
                 float(row.get("score", 0.0)),
                 float(row.get("confidence", 0.0)),
                 -int(row.get("replacementCorridorRank", 0)),

@@ -199,6 +199,61 @@ class VacuityPlannerTests(unittest.TestCase):
             1,
         )
 
+    def test_location_fallback_uses_nearest_declaration_window(self):
+        theorem_entries: list[JsonObj] = [
+            {
+                "kind": "theorem",
+                "name": "InfoGeometry.Canonical.A",
+                "file": "lean/InfoGeometry/Canonical/A.lean",
+                "module": "InfoGeometry.Canonical.A",
+                "line": 100,
+            },
+            {
+                "kind": "theorem",
+                "name": "InfoGeometry.Canonical.B",
+                "file": "lean/InfoGeometry/Canonical/A.lean",
+                "module": "InfoGeometry.Canonical.A",
+                "line": 220,
+            },
+        ]
+        decls: dict[str, JsonObj] = {
+            "InfoGeometry.Canonical.A": {
+                "name": "InfoGeometry.Canonical.A",
+                "kind": "theorem",
+                "file": str((REPO_ROOT / "lean/InfoGeometry/Canonical/A.lean").resolve()),
+                "module": "InfoGeometry.Canonical.A",
+                "line": 100,
+            },
+            "InfoGeometry.Canonical.B": {
+                "name": "InfoGeometry.Canonical.B",
+                "kind": "theorem",
+                "file": str((REPO_ROOT / "lean/InfoGeometry/Canonical/A.lean").resolve()),
+                "module": "InfoGeometry.Canonical.A",
+                "line": 220,
+            },
+        }
+        ctx = planner.build_decl_match_context(theorem_entries, decls, REPO_ROOT)
+
+        payload = self._bridge_payload(
+            source_file_rel="lean/InfoGeometry/Canonical/A.lean",
+            decl_name=None,
+            module="InfoGeometry.Canonical.A",
+            line=150,
+            fingerprint="shape/v1/head:const:eq",
+            head="Eq",
+        )
+        source_file = "lean/InfoGeometry/Canonical/A.lean"
+        decl_name, provenance, reliability = planner.resolve_decl_match(
+            payload,
+            source_file=source_file,
+            root=REPO_ROOT,
+            match_ctx=ctx,
+        )
+
+        self.assertEqual(decl_name, "InfoGeometry.Canonical.A")
+        self.assertEqual(provenance, "locationFallback")
+        self.assertLess(float(reliability), 1.0)
+
     def test_normalization_builds_declaration_signal_index(self):
         observations: list[JsonObj] = [
             {
@@ -366,6 +421,57 @@ class VacuityPlannerTests(unittest.TestCase):
         self.assertGreater(len(corridor), 0)
         first = corridor[0]
         self.assertEqual(first.get("replacementDecl"), "InfoGeometry.Target")
+
+    def test_rank_fingerprint_corridors_groups_vacuity_and_replacements(self):
+        cluster_key = "fp:shape/v1/head:const:eq|head:Eq|kind:app|arity:2+|binder:0"
+        vacuity_candidates: list[JsonObj] = [
+            {
+                "name": "InfoGeometry.A",
+                "semanticClusterKey": cluster_key,
+                "score": 0.88,
+                "confidence": 0.79,
+                "region": "canonical",
+            },
+            {
+                "name": "InfoGeometry.B",
+                "semanticClusterKey": cluster_key,
+                "score": 0.81,
+                "confidence": 0.74,
+                "region": "canonical",
+            },
+        ]
+        replacement_candidates: list[JsonObj] = [
+            {
+                "replacementDecl": "InfoGeometry.R",
+                "score": 0.77,
+                "confidence": 0.72,
+                "region": "canonical",
+            }
+        ]
+        bridge_decl_signals: dict[str, JsonObj] = {
+            "InfoGeometry.R": {
+                "clusterKeys": [[cluster_key, 3]],
+            }
+        }
+
+        corridors = planner.rank_fingerprint_corridors(
+            vacuity_candidates=vacuity_candidates,
+            replacement_candidates=replacement_candidates,
+            bridge_decl_signals=bridge_decl_signals,
+            top_k=10,
+        )
+
+        self.assertEqual(len(corridors), 1)
+        row = corridors[0]
+        self.assertEqual(row.get("clusterKey"), cluster_key)
+        self.assertEqual(row.get("vacuityCount"), 2)
+        self.assertEqual(row.get("replacementCount"), 1)
+        vac_rows = row.get("vacuityCandidates")
+        self.assertIsInstance(vac_rows, list)
+        self.assertEqual(vac_rows[0].get("name"), "InfoGeometry.A")
+        repl_rows = row.get("replacementCandidates")
+        self.assertIsInstance(repl_rows, list)
+        self.assertEqual(repl_rows[0].get("replacementDecl"), "InfoGeometry.R")
 
 
 if __name__ == "__main__":

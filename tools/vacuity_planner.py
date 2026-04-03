@@ -86,6 +86,8 @@ DECL_MATCH_RELIABILITY = {
     "unmatched": 0.0,
 }
 
+DECL_LOCATION_RANGE_MAX_DELTA = 120
+
 
 HEAD_SOURCE_WEIGHT = {
     "exprSemantic": 1.00,
@@ -383,6 +385,8 @@ def build_decl_match_context(
     by_file_module_line: dict[tuple[str, str, int], list[str]] = defaultdict(list)
     by_file_line: dict[tuple[str, int], list[str]] = defaultdict(list)
     by_file_module: dict[tuple[str, str], list[str]] = defaultdict(list)
+    by_file_module_ordered: dict[tuple[str, str], list[tuple[int, str]]] = defaultdict(list)
+    by_file_ordered: dict[str, list[tuple[int, str]]] = defaultdict(list)
 
     for row in theorem_entries:
         if row.get("kind") != "theorem":
@@ -419,8 +423,15 @@ def build_decl_match_context(
             by_file_module[(file_rel, module)].append(name)
             if isinstance(line, int) and line >= 0:
                 by_file_module_line[(file_rel, module, line)].append(name)
+                by_file_module_ordered[(file_rel, module)].append((line, name))
         if isinstance(file_rel, str) and isinstance(line, int) and line >= 0:
             by_file_line[(file_rel, line)].append(name)
+            by_file_ordered[file_rel].append((line, name))
+
+    for ordered in by_file_module_ordered.values():
+        ordered.sort(key=lambda item: (item[0], item[1]))
+    for ordered in by_file_ordered.values():
+        ordered.sort(key=lambda item: (item[0], item[1]))
 
     cluster_to_decl: dict[str, Counter[str]] = defaultdict(Counter)
     return {
@@ -429,6 +440,8 @@ def build_decl_match_context(
         "byFileModuleLine": by_file_module_line,
         "byFileLine": by_file_line,
         "byFileModule": by_file_module,
+        "byFileModuleOrdered": by_file_module_ordered,
+        "byFileOrdered": by_file_ordered,
         "clusterToDecl": cluster_to_decl,
     }
 
@@ -447,6 +460,8 @@ def _line_candidates(line_hint: int | None) -> list[int]:
     if line_hint >= 0:
         out.append(line_hint)
         out.append(line_hint + 1)
+    if line_hint > 0:
+        out.append(line_hint - 1)
     seen: set[int] = set()
     deduped: list[int] = []
     for value in out:
@@ -455,6 +470,55 @@ def _line_candidates(line_hint: int | None) -> list[int]:
         seen.add(value)
         deduped.append(value)
     return deduped
+
+
+def _resolve_nearest_decl_from_ordered(
+    ordered: list[tuple[int, str]],
+    line_hint: int,
+    *,
+    max_delta: int,
+) -> str | None:
+    if not ordered:
+        return None
+
+    by_line: dict[int, set[str]] = defaultdict(set)
+    lines: list[int] = []
+    seen_lines: set[int] = set()
+    for line, decl in ordered:
+        by_line[line].add(decl)
+        if line not in seen_lines:
+            seen_lines.add(line)
+            lines.append(line)
+
+    lines.sort()
+    if not lines:
+        return None
+
+    best_decl: str | None = None
+    best_dist: int | None = None
+
+    for probe_line in _line_candidates(line_hint):
+        nearest_line = lines[0]
+        for value in lines:
+            if value <= probe_line:
+                nearest_line = value
+            else:
+                break
+
+        names = sorted(by_line.get(nearest_line, set()))
+        if len(names) != 1:
+            continue
+
+        dist = abs(nearest_line - probe_line)
+        if best_dist is None or dist < best_dist:
+            best_dist = dist
+            best_decl = names[0]
+
+    if best_decl is None or best_dist is None:
+        return None
+    if best_dist > max_delta:
+        return None
+    return best_decl
 
 
 def _resolve_decl_by_location(
@@ -470,6 +534,11 @@ def _resolve_decl_by_location(
     by_file_module_line = cast(dict[tuple[str, str, int], list[str]], match_ctx.get("byFileModuleLine", {}))
     by_file_line = cast(dict[tuple[str, int], list[str]], match_ctx.get("byFileLine", {}))
     by_file_module = cast(dict[tuple[str, str], list[str]], match_ctx.get("byFileModule", {}))
+    by_file_module_ordered = cast(
+        dict[tuple[str, str], list[tuple[int, str]]],
+        match_ctx.get("byFileModuleOrdered", {}),
+    )
+    by_file_ordered = cast(dict[str, list[tuple[int, str]]], match_ctx.get("byFileOrdered", {}))
 
     if isinstance(module_hint, str) and module_hint and line_hint is not None:
         for line in _line_candidates(line_hint):
@@ -482,6 +551,24 @@ def _resolve_decl_by_location(
             by_line = _unique_decl(by_file_line.get((file_hint, line), []))
             if by_line:
                 return by_line
+
+    if line_hint is not None and isinstance(module_hint, str) and module_hint:
+        nearest_mod = _resolve_nearest_decl_from_ordered(
+            by_file_module_ordered.get((file_hint, module_hint), []),
+            line_hint,
+            max_delta=DECL_LOCATION_RANGE_MAX_DELTA,
+        )
+        if nearest_mod:
+            return nearest_mod
+
+    if line_hint is not None:
+        nearest_file = _resolve_nearest_decl_from_ordered(
+            by_file_ordered.get(file_hint, []),
+            line_hint,
+            max_delta=DECL_LOCATION_RANGE_MAX_DELTA,
+        )
+        if nearest_file:
+            return nearest_file
 
     if isinstance(module_hint, str) and module_hint:
         by_mod = _unique_decl(by_file_module.get((file_hint, module_hint), []))
@@ -652,6 +739,16 @@ def keys_from_counts(value: Any, *, limit: int = 8) -> set[str]:
                 if isinstance(key, str) and key:
                     out.add(key)
     return out
+
+
+def first_count_key(value: Any) -> str | None:
+    if isinstance(value, list):
+        for row in value:
+            if isinstance(row, (list, tuple)) and row:
+                key = row[0]
+                if isinstance(key, str) and key:
+                    return key
+    return None
 
 
 def jaccard_overlap(lhs: Iterable[str], rhs: Iterable[str]) -> float:
@@ -1867,6 +1964,139 @@ def rank_declaration_plans(
     return out
 
 
+def rank_fingerprint_corridors(
+    vacuity_candidates: list[JsonObj],
+    replacement_candidates: list[JsonObj],
+    bridge_decl_signals: dict[str, JsonObj],
+    top_k: int,
+) -> list[JsonObj]:
+    buckets: dict[str, JsonObj] = {}
+
+    def ensure_bucket(cluster_key: str) -> JsonObj:
+        bucket = buckets.get(cluster_key)
+        if isinstance(bucket, dict):
+            return bucket
+        bucket = {
+            "clusterKey": cluster_key,
+            "vacuityCandidates": [],
+            "replacementCandidates": [],
+            "scoreSamples": [],
+            "confidenceSamples": [],
+            "regionCounts": Counter(),
+        }
+        buckets[cluster_key] = bucket
+        return bucket
+
+    for cand in vacuity_candidates:
+        cluster_any = cand.get("semanticClusterKey")
+        if not isinstance(cluster_any, str) or not cluster_any:
+            continue
+        bucket = ensure_bucket(cluster_any)
+        name = cand.get("name")
+        if not isinstance(name, str) or not name:
+            continue
+        score = clamp01(float(cand.get("score", 0.0)))
+        confidence = clamp01(float(cand.get("confidence", 0.0)))
+        region = cand.get("region") if isinstance(cand.get("region"), str) else "unknown"
+        cast(list[JsonObj], bucket["vacuityCandidates"]).append(
+            {
+                "name": name,
+                "score": round(score, 4),
+                "confidence": round(confidence, 4),
+                "region": region,
+            }
+        )
+        cast(list[float], bucket["scoreSamples"]).append(score)
+        cast(list[float], bucket["confidenceSamples"]).append(confidence)
+        cast(Counter[str], bucket["regionCounts"])[region] += 1
+
+    for repl in replacement_candidates:
+        repl_decl = repl.get("replacementDecl")
+        if not isinstance(repl_decl, str) or not repl_decl:
+            continue
+        profile = bridge_decl_signals.get(repl_decl)
+        if not isinstance(profile, dict):
+            continue
+        cluster_key = first_count_key(profile.get("clusterKeys"))
+        if not isinstance(cluster_key, str) or not cluster_key:
+            continue
+        bucket = ensure_bucket(cluster_key)
+        score = clamp01(float(repl.get("score", 0.0)))
+        confidence = clamp01(float(repl.get("confidence", 0.0)))
+        region = repl.get("region") if isinstance(repl.get("region"), str) else "unknown"
+        cast(list[JsonObj], bucket["replacementCandidates"]).append(
+            {
+                "replacementDecl": repl_decl,
+                "score": round(score, 4),
+                "confidence": round(confidence, 4),
+                "region": region,
+            }
+        )
+        cast(list[float], bucket["scoreSamples"]).append(score)
+        cast(list[float], bucket["confidenceSamples"]).append(confidence)
+        cast(Counter[str], bucket["regionCounts"])[region] += 1
+
+    ranked: list[RankedEntry] = []
+    for cluster_key, bucket in buckets.items():
+        vac_rows = cast(list[JsonObj], bucket["vacuityCandidates"])
+        repl_rows = cast(list[JsonObj], bucket["replacementCandidates"])
+        vac_rows.sort(key=lambda row: (-float(row.get("score", 0.0)), str(row.get("name", ""))))
+        repl_rows.sort(
+            key=lambda row: (-float(row.get("score", 0.0)), str(row.get("replacementDecl", "")))
+        )
+
+        vac_count = len(vac_rows)
+        repl_count = len(repl_rows)
+        if vac_count == 0 and repl_count == 0:
+            continue
+
+        coverage = min(1.0, vac_count / 3.0)
+        corridor_depth = min(1.0, repl_count / 3.0)
+        signal_strength = safe_mean(cast(list[float], bucket["scoreSamples"]), default=0.0)
+        score = clamp01(0.42 * coverage + 0.28 * corridor_depth + 0.30 * signal_strength)
+        confidence = clamp01(safe_mean(cast(list[float], bucket["confidenceSamples"]), default=0.0))
+
+        payload: JsonObj = {
+            "clusterKey": cluster_key,
+            "vacuityCount": vac_count,
+            "replacementCount": repl_count,
+            "vacuityCandidates": vac_rows[:5],
+            "replacementCandidates": repl_rows[:5],
+            "regions": dict(cast(Counter[str], bucket["regionCounts"])),
+            "score": round(score, 4),
+            "confidence": round(confidence, 4),
+            "confidenceProvenance": [
+                {
+                    "signal": "corridor.vacuity-coverage",
+                    "contribution": round(0.42 * coverage, 4),
+                    "reliability": 0.82,
+                    "evidence": f"vacuity candidates={vac_count}",
+                },
+                {
+                    "signal": "corridor.replacement-depth",
+                    "contribution": round(0.28 * corridor_depth, 4),
+                    "reliability": 0.80,
+                    "evidence": f"replacement candidates={repl_count}",
+                },
+                {
+                    "signal": "corridor.signal-strength",
+                    "contribution": round(0.30 * signal_strength, 4),
+                    "reliability": 0.78,
+                    "evidence": f"mean candidate score={signal_strength:.4f}",
+                },
+            ],
+        }
+        ranked.append(RankedEntry(key=cluster_key, score=score, confidence=confidence, payload=payload))
+
+    ranked.sort(key=lambda x: (-x.score, -x.confidence, x.key))
+    out: list[JsonObj] = []
+    for i, entry in enumerate(ranked[:top_k], start=1):
+        row = dict(entry.payload)
+        row["rank"] = i
+        out.append(row)
+    return out
+
+
 def rank_replacement_candidates(
     vacuity_candidates: list[JsonObj],
     forward_edges: dict[str, list[tuple[str, str]]],
@@ -2051,6 +2281,29 @@ def make_markdown_report(report: JsonObj) -> str:
         [("rank", "rank"), ("replacementDecl", "replacementDecl"), ("score", "score"), ("confidence", "confidence")],
     )
 
+    lines.append("## Ranked Fingerprint Corridors")
+    lines.append("")
+    lines.append("| rank | clusterKey | vacuityCount | replacementCount | score | confidence |")
+    lines.append("|---:|---|---:|---:|---:|---:|")
+    for row in report.get("rankedFingerprintCorridors", [])[:20]:
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    str(row.get("rank", "")),
+                    str(row.get("clusterKey", "")),
+                    str(row.get("vacuityCount", 0)),
+                    str(row.get("replacementCount", 0)),
+                    str(row.get("score", "")),
+                    str(row.get("confidence", "")),
+                ]
+            )
+            + " |"
+        )
+    if not report.get("rankedFingerprintCorridors"):
+        lines.append("| - | - | 0 | 0 | 0.0 | 0.0 |")
+    lines.append("")
+
     lines.append("## Ranked Declaration Plans")
     lines.append("")
     lines.append("| rank | candidate | probable_owner | probable_replacement | score | confidence |")
@@ -2234,6 +2487,13 @@ def main() -> None:
         top_k=args.top_k,
     )
 
+    fingerprint_corridors = rank_fingerprint_corridors(
+        vacuity_candidates=vacuity_candidates,
+        replacement_candidates=replacement_candidates,
+        bridge_decl_signals=bridge_decl_signals,
+        top_k=args.top_k,
+    )
+
     declaration_plans = rank_declaration_plans(
         vacuity_candidates=vacuity_candidates,
         owner_candidates=owner_candidates,
@@ -2271,6 +2531,7 @@ def main() -> None:
         "rankedVacuityCandidates": vacuity_candidates,
         "rankedOwnerCandidates": owner_candidates,
         "rankedReplacementCandidates": replacement_candidates,
+        "rankedFingerprintCorridors": fingerprint_corridors,
         "rankedDeclarationPlans": declaration_plans,
         "confidenceWeights": {
             "headSource": HEAD_SOURCE_WEIGHT,
@@ -2294,6 +2555,7 @@ def main() -> None:
         f"vacuity={len(vacuity_candidates)}, "
         f"owners={len(owner_candidates)}, "
         f"replacements={len(replacement_candidates)}, "
+        f"corridors={len(fingerprint_corridors)}, "
         f"declaration_plans={len(declaration_plans)}, "
         f"bridge_payloads={bridge_payload_count}"
     )

@@ -1,12 +1,16 @@
 import importlib.util
 import sys
 import unittest
+from collections import Counter, defaultdict
 from pathlib import Path
 from types import ModuleType
 from typing import Any, cast
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO_ROOT))
+
+from tools.planner.matching import resolve_decl_match, seed_decl_match_context
 
 
 def _load_planner_module() -> ModuleType:
@@ -18,7 +22,6 @@ def _load_planner_module() -> ModuleType:
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
-
 
 planner = _load_planner_module()
 
@@ -243,7 +246,7 @@ class VacuityPlannerTests(unittest.TestCase):
             head="Eq",
         )
         source_file = "lean/InfoGeometry/Canonical/A.lean"
-        decl_name, provenance, reliability = planner.resolve_decl_match(
+        decl_name, provenance, reliability = resolve_decl_match(
             payload,
             source_file=source_file,
             root=REPO_ROOT,
@@ -298,7 +301,7 @@ class VacuityPlannerTests(unittest.TestCase):
             head="Eq",
         )
 
-        decl_name, provenance, _ = planner.resolve_decl_match(
+        decl_name, provenance, _ = resolve_decl_match(
             payload,
             source_file="lean/InfoGeometry/Canonical/A.lean",
             root=REPO_ROOT,
@@ -362,7 +365,7 @@ class VacuityPlannerTests(unittest.TestCase):
             }
         ]
 
-        decl_name, provenance, _ = planner.resolve_decl_match(
+        decl_name, provenance, _ = resolve_decl_match(
             payload,
             source_file="lean/InfoGeometry/Canonical/A.lean",
             root=REPO_ROOT,
@@ -626,6 +629,10 @@ class VacuityPlannerTests(unittest.TestCase):
         }
 
         ctx = planner.build_decl_match_context(theorem_entries, decls, REPO_ROOT)
+        self.assertIn("declMeta", ctx)
+        self.assertIn("declNames", ctx)
+        self.assertNotIn("theoremMeta", ctx)
+        self.assertNotIn("theoremNames", ctx)
 
         payload_explicit = self._bridge_payload(
             source_file_rel="lean/InfoGeometry/Canonical/A.lean",
@@ -644,7 +651,7 @@ class VacuityPlannerTests(unittest.TestCase):
             head="Eq",
         )
 
-        explicit_name, explicit_prov, explicit_rel = planner.resolve_decl_match(
+        explicit_name, explicit_prov, explicit_rel = resolve_decl_match(
             payload_explicit,
             source_file="lean/InfoGeometry/Canonical/A.lean",
             root=REPO_ROOT,
@@ -654,7 +661,7 @@ class VacuityPlannerTests(unittest.TestCase):
         self.assertEqual(explicit_prov, "exactDecl")
         self.assertEqual(float(explicit_rel), 1.0)
 
-        location_name, location_prov, _ = planner.resolve_decl_match(
+        location_name, location_prov, _ = resolve_decl_match(
             payload_location,
             source_file="lean/InfoGeometry/Canonical/A.lean",
             root=REPO_ROOT,
@@ -733,8 +740,42 @@ class VacuityPlannerTests(unittest.TestCase):
                 any(r.get("replacementDecl") == "InfoGeometry.R" for r in repl_rows)
             )
 
+    def test_rank_fingerprint_corridors_decay_secondary_cluster_participation(self):
+        cluster_a = "fp:shape/a|head:Eq|kind:app|arity:2+|binder:0"
+        cluster_b = "fp:shape/b|head:Eq|kind:app|arity:2+|binder:0"
+        cluster_c = "fp:shape/c|head:Eq|kind:app|arity:2+|binder:0"
+
+        corridors = planner.rank_fingerprint_corridors(
+            vacuity_candidates=[],
+            replacement_candidates=[
+                {
+                    "replacementDecl": "InfoGeometry.R",
+                    "score": 0.90,
+                    "confidence": 0.75,
+                    "region": "canonical",
+                }
+            ],
+            bridge_decl_signals={
+                "InfoGeometry.R": {
+                    "clusterKeys": [
+                        [cluster_a, 9],
+                        [cluster_b, 7],
+                        [cluster_c, 5],
+                    ]
+                }
+            },
+            top_k=10,
+        )
+
+        by_key = {str(row.get("clusterKey")): row for row in corridors}
+        self.assertGreater(float(by_key[cluster_a].get("score", 0.0)), float(by_key[cluster_b].get("score", 0.0)))
+        self.assertGreater(float(by_key[cluster_b].get("score", 0.0)), float(by_key[cluster_c].get("score", 0.0)))
+        self.assertEqual(float(by_key[cluster_a].get("replacementParticipationWeight", 0.0)), 1.0)
+        self.assertEqual(float(by_key[cluster_b].get("replacementParticipationWeight", 0.0)), 0.5)
+        self.assertAlmostEqual(float(by_key[cluster_c].get("replacementParticipationWeight", 0.0)), 1.0 / 3.0, places=4)
+
     def test_seed_decl_match_context_skips_fingerprint_fallback(self):
-        ctx = {"clusterToDecl": planner.defaultdict(planner.Counter)}
+        ctx = {"clusterToDecl": defaultdict(Counter)}
         observations: list[JsonObj] = [
             {
                 "declName": "InfoGeometry.Canonical.A",
@@ -758,7 +799,7 @@ class VacuityPlannerTests(unittest.TestCase):
             },
         ]
 
-        planner.seed_decl_match_context(ctx, observations)
+        seed_decl_match_context(ctx, observations)
         cluster_to_decl = ctx["clusterToDecl"]
         self.assertEqual(len(cluster_to_decl), 1)
         only_counter = next(iter(cluster_to_decl.values()))
@@ -851,6 +892,68 @@ class VacuityPlannerTests(unittest.TestCase):
         self.assertEqual(row.get("hardFailures"), [])
         self.assertEqual(row.get("softWarnings"), [])
         self.assertGreater(float(row.get("shapeOverlap", 0.0)), 0.5)
+
+    def test_rank_admissibility_prechecks_uses_top_n_replacement_fallback(self):
+        cluster = "fp:shape/v1/head:const:eq|head:Eq|kind:app|arity:2+|binder:0"
+        declaration_plans: list[JsonObj] = [
+            {
+                "rank": 1,
+                "candidate": "InfoGeometry.Candidate",
+                "candidateFile": "lean/InfoGeometry/Canonical/Candidate.lean",
+                "candidateRegion": "canonical",
+                "score": 0.72,
+                "confidence": 0.78,
+                "probable_replacement_corridor": [
+                    {
+                        "replacementDecl": "InfoGeometry.HelperDef",
+                        "region": "canonical",
+                        "score": 0.80,
+                        "confidence": 0.79,
+                    },
+                    {
+                        "replacementDecl": "InfoGeometry.Target",
+                        "region": "canonical",
+                        "score": 0.68,
+                        "confidence": 0.77,
+                    },
+                ],
+            }
+        ]
+        decls: dict[str, JsonObj] = {
+            "InfoGeometry.Candidate": {"name": "InfoGeometry.Candidate", "kind": "theorem"},
+            "InfoGeometry.HelperDef": {"name": "InfoGeometry.HelperDef", "kind": "def"},
+            "InfoGeometry.Target": {"name": "InfoGeometry.Target", "kind": "theorem"},
+        }
+        bridge_decl_signals: dict[str, JsonObj] = {
+            "InfoGeometry.Candidate": {
+                "clusterKeys": [[cluster, 2]],
+                "semanticHeadCounts": [["Eq", 2]],
+                "fingerprintCounts": [["shape/v1/head:const:eq", 2]],
+            },
+            "InfoGeometry.Target": {
+                "clusterKeys": [[cluster, 1]],
+                "semanticHeadCounts": [["Eq", 1]],
+                "fingerprintCounts": [["shape/v1/head:const:eq", 1]],
+            },
+        }
+
+        rows = planner.rank_admissibility_prechecks(
+            declaration_plans=declaration_plans,
+            decls=decls,
+            bridge_decl_signals=bridge_decl_signals,
+            top_k=10,
+        )
+
+        self.assertEqual(len(rows), 1)
+        row = rows[0]
+        self.assertEqual(row.get("replacementDecl"), "InfoGeometry.Target")
+        self.assertEqual(row.get("replacementCorridorRank"), 2)
+        self.assertEqual(row.get("precheckStatus"), "provisionally-admissible")
+        considered_any = row.get("replacementCandidatesConsidered")
+        self.assertIsInstance(considered_any, list)
+        considered = cast(list[JsonObj], considered_any)
+        self.assertEqual(considered[0].get("precheckStatus"), "blocked")
+        self.assertEqual(considered[1].get("precheckStatus"), "provisionally-admissible")
 
 
 if __name__ == "__main__":

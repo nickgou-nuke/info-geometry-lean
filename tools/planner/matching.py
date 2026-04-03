@@ -131,9 +131,8 @@ def _new_decl_match_context() -> dict[str, Any]:
     by_file_ordered: dict[str, list[tuple[int, str]]] = defaultdict(list)
     cluster_to_decl: dict[str, Counter[str]] = defaultdict(Counter)
     return {
-        "theoremNames": decl_names,
         "declNames": decl_names,
-        "theoremMeta": decl_meta,
+        "declMeta": decl_meta,
         "byFileModuleLine": by_file_module_line,
         "byFileLine": by_file_line,
         "byFileModule": by_file_module,
@@ -152,7 +151,7 @@ def _index_decl_match_context_entry(
     line: int | None,
 ) -> None:
     decl_names = cast(set[str], match_ctx.get("declNames", set()))
-    decl_meta = cast(dict[str, JsonObj], match_ctx.get("theoremMeta", {}))
+    decl_meta = cast(dict[str, JsonObj], match_ctx.get("declMeta", match_ctx.get("theoremMeta", {})))
     by_file_module_line = cast(dict[tuple[str, str, int], list[str]], match_ctx.get("byFileModuleLine", {}))
     by_file_line = cast(dict[tuple[str, int], list[str]], match_ctx.get("byFileLine", {}))
     by_file_module = cast(dict[tuple[str, str], list[str]], match_ctx.get("byFileModule", {}))
@@ -481,7 +480,7 @@ def _resolve_decl_by_fingerprint(
     match_ctx: dict[str, Any],
 ) -> str | None:
     cluster_to_decl = cast(dict[str, Counter[str]], match_ctx.get("clusterToDecl", {}))
-    decl_meta = cast(dict[str, JsonObj], match_ctx.get("theoremMeta", {}))
+    decl_meta = cast(dict[str, JsonObj], match_ctx.get("declMeta", match_ctx.get("theoremMeta", {})))
     if not cluster_to_decl:
         return None
 

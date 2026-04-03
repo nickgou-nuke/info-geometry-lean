@@ -169,6 +169,54 @@ class TheoremSignificanceTests(unittest.TestCase):
         self.assertIn("role-exempt", terminal.tags)
         self.assertEqual(terminal.violations, [])
 
+    def test_structural_metrics_capture_transitive_and_scc_signals(self):
+        decls = {
+            "A": _decl(name="A", file="lean/InfoGeometry/Canonical/A.lean"),
+            "B": _decl(name="B", file="lean/InfoGeometry/Canonical/B.lean"),
+            "C": _decl(name="C", file="lean/InfoGeometry/Canonical/C.lean"),
+            "T": _decl(name="T", file="lean/InfoGeometry/Canonical/T.lean"),
+            "D": _decl(name="D", file="lean/InfoGeometry/Canonical/D.lean"),
+            "E": _decl(name="E", file="lean/InfoGeometry/Canonical/E.lean"),
+        }
+
+        # C -> B -> A (value), T -> A (type), and a cycle D <-> E.
+        forward = {
+            "B": [("A", "value")],
+            "C": [("B", "value")],
+            "T": [("A", "type")],
+            "D": [("E", "value")],
+            "E": [("D", "value")],
+        }
+        reverse = {
+            "A": [("B", "value"), ("T", "type")],
+            "B": [("C", "value")],
+            "D": [("E", "value")],
+            "E": [("D", "value")],
+        }
+
+        scored = sig.score_all(
+            decls,
+            forward,
+            reverse,
+            sig.BRIDGE_HINTS_DEFAULT,
+            sig.STRICT_PATHS_DEFAULT,
+            REPO_ROOT,
+        )
+
+        a = next(s for s in scored if s.name == "A")
+        c = next(s for s in scored if s.name == "C")
+        d = next(s for s in scored if s.name == "D")
+
+        self.assertEqual(a.graph.transitive_reverse_reach, 3)  # B, C, T
+        self.assertEqual(a.graph.reverse_public_fan_in, 1)     # T
+        self.assertEqual(a.graph.reverse_proof_only_reuse, 1)  # B
+        self.assertEqual(a.graph.depth, 2)                     # C -> B -> A
+
+        self.assertEqual(c.graph.descendant_mass, 2)           # B, A
+
+        self.assertEqual(d.graph.scc_size, 2)
+        self.assertEqual(d.graph.scc_role, "cycle-island")
+
 
 if __name__ == "__main__":
     unittest.main()

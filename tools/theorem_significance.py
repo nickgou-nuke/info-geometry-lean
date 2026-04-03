@@ -45,6 +45,7 @@ from vacuity_policy_config import (
     STRICT_PATHS_DEFAULT,
     expected_violation_level,
     is_bridge_file,
+    is_strict_file,
 )
 
 # ─── data model ───────────────────────────────────────────────
@@ -122,6 +123,9 @@ class ScoredDecl:
     proof: ProofShapeInfo
     tags: list[str] = field(default_factory=list)
     violations: list[tuple[str, str]] = field(default_factory=list)  # (level, code)
+    vacuity_suspicion_score: float = 0.0
+    vacuity_suspicion_confidence: float = 0.0
+    vacuity_suspicion_factors: list[dict[str, str | float]] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {
@@ -146,6 +150,11 @@ class ScoredDecl:
             "n_forward_theorem": self.proof.n_forward_theorem,
             "tags": self.tags,
             "violations": [{"level": v[0], "code": v[1]} for v in self.violations],
+            "vacuity_suspicion": {
+                "score": round(self.vacuity_suspicion_score, 4),
+                "confidence": round(self.vacuity_suspicion_confidence, 4),
+                "factors": self.vacuity_suspicion_factors,
+            },
         }
 
 
@@ -262,6 +271,108 @@ def compute_violations(
             out.append((level, "V4/bridge-infrastructure-promoted"))
 
     return out
+
+
+def _clamp01(value: float) -> float:
+    if value < 0.0:
+        return 0.0
+    if value > 1.0:
+        return 1.0
+    return value
+
+
+def compute_vacuity_suspicion(
+    decl: DeclInfo,
+    graph: GraphStats,
+    proof: ProofShapeInfo,
+    tags: list[str],
+    file_path: str | None,
+    bridge_hints: list[str],
+    strict_paths: list[str],
+) -> tuple[float, float, list[dict[str, str | float]]]:
+    """Compute an explainable structural vacuity suspicion ranking signal.
+
+    This is telemetry/ranking output only. It does not affect violation severity.
+    """
+    factors: list[tuple[str, float, float, str]] = []
+
+    def add(signal: str, contribution: float, reliability: float, rationale: str) -> None:
+        factors.append((signal, contribution, reliability, rationale))
+
+    # Shape signals.
+    if proof.is_exact_forward:
+        add("shape.exact-forward", 0.33, 0.90, "single theorem value dependency")
+    if proof.is_rfl_like:
+        add("shape.rfl-like", 0.24, 0.86, "zero value dependencies")
+
+    # Structural footprint signals.
+    if graph.descendant_mass == 0:
+        add("structure.low-descendant-mass", 0.18, 0.80, "descendant_mass = 0")
+    elif graph.descendant_mass <= 2:
+        add("structure.low-descendant-mass", 0.12, 0.75, f"descendant_mass = {graph.descendant_mass}")
+    elif graph.descendant_mass <= 5:
+        add("structure.low-descendant-mass", 0.06, 0.70, f"descendant_mass = {graph.descendant_mass}")
+
+    if graph.reverse_public_fan_in == 0:
+        add("structure.low-public-fan-in", 0.14, 0.82, "reverse_public_fan_in = 0")
+    elif graph.reverse_public_fan_in == 1:
+        add("structure.low-public-fan-in", 0.07, 0.76, "reverse_public_fan_in = 1")
+
+    if graph.reverse_proof_only_reuse >= 3:
+        add(
+            "structure.proof-only-reuse",
+            0.16,
+            0.80,
+            f"reverse_proof_only_reuse = {graph.reverse_proof_only_reuse}",
+        )
+    elif graph.reverse_proof_only_reuse == 2:
+        add("structure.proof-only-reuse", 0.11, 0.75, "reverse_proof_only_reuse = 2")
+    elif graph.reverse_proof_only_reuse == 1:
+        add("structure.proof-only-reuse", 0.05, 0.68, "reverse_proof_only_reuse = 1")
+
+    if graph.depth <= 1:
+        add("structure.shallow-depth", 0.08, 0.66, f"depth = {graph.depth}")
+    elif graph.depth >= 4:
+        add("structure.deep-embedding", -0.08, 0.70, f"depth = {graph.depth}")
+
+    if graph.scc_size > 1:
+        add("structure.scc-cycle", -0.10, 0.78, f"scc_size = {graph.scc_size}, role = {graph.scc_role}")
+    elif graph.scc_role == "acyclic":
+        add("structure.acyclic", 0.03, 0.62, "acyclic declaration")
+
+    # Context signals.
+    if is_bridge_file(file_path, bridge_hints):
+        add("context.bridge-file", 0.08, 0.72, "bridge hint matched file stem")
+    if is_strict_file(file_path, strict_paths):
+        add("context.strict-file", 0.04, 0.68, "strict path policy applies")
+
+    # Exemption suppression (ranking only; violations remain independently computed).
+    if "auto-generated" in tags:
+        add("policy.auto-generated-exempt", -0.95, 0.95, "generated theorem exemption")
+    if "role-exempt" in tags:
+        add("policy.role-exempt", -0.90, 0.95, "attribute-based exemption")
+
+    raw_score = sum(contribution for _, contribution, _, _ in factors)
+    score = _clamp01(raw_score)
+
+    denom = sum(abs(contribution) for _, contribution, _, _ in factors)
+    confidence = 0.0
+    if denom > 0:
+        weighted = sum(abs(contribution) * reliability for _, contribution, reliability, _ in factors)
+        confidence = _clamp01(weighted / denom)
+
+    factors_sorted = sorted(factors, key=lambda item: abs(item[1]), reverse=True)
+    factor_dicts: list[dict[str, str | float]] = [
+        {
+            "signal": signal,
+            "contribution": round(contribution, 4),
+            "reliability": round(reliability, 4),
+            "rationale": rationale,
+        }
+        for signal, contribution, reliability, rationale in factors_sorted
+    ]
+
+    return score, confidence, factor_dicts
 
 
 # ─── data loading ─────────────────────────────────────────────
@@ -583,12 +694,23 @@ def score_all(
         # Auto-generated theorems (eliminators, injection lemmas, etc.)
         # are tagged but exempt from violations — they are not authored proofs.
         if _is_generated(name):
-            tags.append("auto-generated")
+            tags = sorted(set(tags + ["auto-generated"]))
             violations = []
         elif exempt_attrs:
             violations = []
         else:
             violations = compute_violations(info, tags, rel_file, bridge_hints, strict_paths)
+
+        suspicion_score, suspicion_confidence, suspicion_factors = compute_vacuity_suspicion(
+            info,
+            graph,
+            proof,
+            tags,
+            rel_file,
+            bridge_hints,
+            strict_paths,
+        )
+
         results.append(ScoredDecl(
             name=name,
             kind=info.kind,
@@ -599,6 +721,9 @@ def score_all(
             proof=proof,
             tags=tags,
             violations=violations,
+            vacuity_suspicion_score=suspicion_score,
+            vacuity_suspicion_confidence=suspicion_confidence,
+            vacuity_suspicion_factors=suspicion_factors,
         ))
     return results
 
@@ -646,6 +771,31 @@ def generate_md_report(scored: list[ScoredDecl]) -> str:
     lines.append("|-----------|-------|")
     for code, count in viol_counts.most_common():
         lines.append(f"| `{code}` | {count} |")
+    lines.append("")
+
+    # Derived ranking from structural + proof-shape evidence.
+    lines.append("## Top Vacuity Suspicion (derived ranking)\n")
+    lines.append("| Rank | Theorem | Suspicion | Confidence | Key Factors |")
+    lines.append("|------|---------|----------:|-----------:|-------------|")
+    ranked_suspicion = sorted(
+        scored,
+        key=lambda s: (
+            -s.vacuity_suspicion_score,
+            -s.vacuity_suspicion_confidence,
+            s.name,
+        ),
+    )
+    for idx, s in enumerate(ranked_suspicion[:20], start=1):
+        top_factors = [
+            str(factor["signal"])
+            for factor in s.vacuity_suspicion_factors
+            if float(factor["contribution"]) > 0
+        ][:3]
+        key_factors = ", ".join(f"`{signal}`" for signal in top_factors) if top_factors else "(none)"
+        lines.append(
+            f"| {idx} | `{s.name}` | {s.vacuity_suspicion_score:.4f} | "
+            f"{s.vacuity_suspicion_confidence:.4f} | {key_factors} |"
+        )
     lines.append("")
 
     # Structural metrics snapshot

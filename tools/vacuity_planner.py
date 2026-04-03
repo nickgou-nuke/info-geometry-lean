@@ -19,7 +19,6 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import cast
@@ -42,7 +41,7 @@ if __package__ in (None, ""):
         relpath_or_self,
         resolve_existing,
     )
-    from planner.matching import build_decl_match_context, resolve_decl_match, seed_decl_match_context
+    from planner.matching import build_decl_match_context
     from planner.normalization import (
         collect_bridge_json_paths,
         extract_bridge_payload_objects,
@@ -74,7 +73,7 @@ else:
         relpath_or_self,
         resolve_existing,
     )
-    from tools.planner.matching import build_decl_match_context, resolve_decl_match, seed_decl_match_context
+    from tools.planner.matching import build_decl_match_context
     from tools.planner.normalization import (
         collect_bridge_json_paths,
         extract_bridge_payload_objects,

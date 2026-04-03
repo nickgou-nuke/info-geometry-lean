@@ -30,6 +30,12 @@ from .common import (
 )
 
 
+def _cluster_rank_weight(cluster_rank: int) -> float:
+    if cluster_rank <= 0:
+        return 1.0
+    return 1.0 / float(cluster_rank)
+
+
 def rank_vacuity_candidates(
     theorem_entries: list[JsonObj],
     module_region: dict[str, str],
@@ -565,6 +571,7 @@ def rank_fingerprint_corridors(
             "replacementCandidates": [],
             "scoreSamples": [],
             "confidenceSamples": [],
+            "replacementParticipationWeight": 0.0,
             "regionCounts": Counter(),
         }
         buckets[cluster_key] = bucket
@@ -613,6 +620,7 @@ def rank_fingerprint_corridors(
         region = region_any if isinstance(region_any, str) else "unknown"
 
         for cluster_rank, cluster_key in enumerate(cluster_keys, start=1):
+            cluster_weight = _cluster_rank_weight(cluster_rank)
             bucket = ensure_bucket(cluster_key)
             cast(list[JsonObj], bucket["replacementCandidates"]).append(
                 {
@@ -621,10 +629,14 @@ def rank_fingerprint_corridors(
                     "confidence": round(confidence, 4),
                     "region": region,
                     "clusterRank": cluster_rank,
+                    "clusterWeight": round(cluster_weight, 4),
+                    "effectiveScore": round(score * cluster_weight, 4),
+                    "effectiveConfidence": round(confidence * cluster_weight, 4),
                 }
             )
-            cast(list[float], bucket["scoreSamples"]).append(score)
-            cast(list[float], bucket["confidenceSamples"]).append(confidence)
+            cast(list[float], bucket["scoreSamples"]).append(score * cluster_weight)
+            cast(list[float], bucket["confidenceSamples"]).append(confidence * cluster_weight)
+            bucket["replacementParticipationWeight"] = float(bucket.get("replacementParticipationWeight", 0.0)) + cluster_weight
             cast(Counter[str], bucket["regionCounts"])[region] += 1
 
     ranked: list[RankedEntry] = []
@@ -632,7 +644,13 @@ def rank_fingerprint_corridors(
         vac_rows = cast(list[JsonObj], bucket["vacuityCandidates"])
         repl_rows = cast(list[JsonObj], bucket["replacementCandidates"])
         vac_rows.sort(key=lambda row: (-float(row.get("score", 0.0)), str(row.get("name", ""))))
-        repl_rows.sort(key=lambda row: (-float(row.get("score", 0.0)), str(row.get("replacementDecl", ""))))
+        repl_rows.sort(
+            key=lambda row: (
+                -float(row.get("effectiveScore", row.get("score", 0.0))),
+                -float(row.get("effectiveConfidence", row.get("confidence", 0.0))),
+                str(row.get("replacementDecl", "")),
+            )
+        )
 
         vac_count = len(vac_rows)
         repl_count = len(repl_rows)
@@ -640,7 +658,8 @@ def rank_fingerprint_corridors(
             continue
 
         coverage = min(1.0, vac_count / 3.0)
-        corridor_depth = min(1.0, repl_count / 3.0)
+        replacement_weight = float(bucket.get("replacementParticipationWeight", 0.0))
+        corridor_depth = min(1.0, replacement_weight / 3.0)
         signal_strength = safe_mean(cast(list[float], bucket["scoreSamples"]), default=0.0)
         score = clamp01(0.42 * coverage + 0.28 * corridor_depth + 0.30 * signal_strength)
         confidence = clamp01(safe_mean(cast(list[float], bucket["confidenceSamples"]), default=0.0))
@@ -649,6 +668,7 @@ def rank_fingerprint_corridors(
             "clusterKey": cluster_key,
             "vacuityCount": vac_count,
             "replacementCount": repl_count,
+            "replacementParticipationWeight": round(replacement_weight, 4),
             "vacuityCandidates": vac_rows[:5],
             "replacementCandidates": repl_rows[:5],
             "regions": dict(cast(Counter[str], bucket["regionCounts"])),
@@ -665,7 +685,10 @@ def rank_fingerprint_corridors(
                     "signal": "corridor.replacement-depth",
                     "contribution": round(0.28 * corridor_depth, 4),
                     "reliability": 0.80,
-                    "evidence": f"replacement candidates={repl_count}",
+                    "evidence": (
+                        f"replacement candidates={repl_count}, "
+                        f"weighted participation={replacement_weight:.4f}"
+                    ),
                 },
                 {
                     "signal": "corridor.signal-strength",

@@ -63,6 +63,7 @@ inductive ErrorClassificationProvenance where
 deriving Inhabited, BEq, FromJson, ToJson
 
 inductive ExprHeadSource where
+  | exprSemantic
   | textHeuristic
   | unavailable
 deriving Inhabited, BEq, FromJson, ToJson
@@ -103,6 +104,7 @@ structure LocalDeclView where
   type : String
   typeHead : Option String := none
   typeHeadSource : ExprHeadSource := .unavailable
+  typeHeadFingerprint : Option String := none
   value : Option String := none
   isLet : Bool := false
   isInstance : Bool := false
@@ -116,6 +118,7 @@ structure GoalView where
   target : String
   targetHead : Option String := none
   targetHeadSource : ExprHeadSource := .unavailable
+  targetHeadFingerprint : Option String := none
 deriving Inhabited, BEq, FromJson, ToJson
 
 structure GetProofStateParams where

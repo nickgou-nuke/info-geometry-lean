@@ -34,6 +34,7 @@ import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
+from urllib.parse import unquote, urlparse
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -90,6 +91,29 @@ class StructuralProfile:
     scc_size: int = 1
     scc_role: str = "acyclic"
 
+
+@dataclass
+class BridgeEvidence:
+    semantic_expr_count: int = 0
+    fingerprint_match_count: int = 0
+    provenance_counts: Counter[str] = field(default_factory=Counter)
+
+    @property
+    def confidence(self) -> float:
+        weights = {
+            "leanTag": 1.00,
+            "messagePattern": 0.75,
+            "bridgeRule": 0.60,
+            "fallback": 0.40,
+        }
+        total = sum(self.provenance_counts.values())
+        if total <= 0:
+            return 0.40
+        weighted = 0.0
+        for key, count in self.provenance_counts.items():
+            weighted += weights.get(key, 0.40) * count
+        return weighted / total
+
 @dataclass
 class ProofShapeInfo:
     """Proof-shape classification inferred from the edge graph (no Lean elaboration)."""
@@ -126,6 +150,10 @@ class ScoredDecl:
     vacuity_suspicion_score: float = 0.0
     vacuity_suspicion_confidence: float = 0.0
     vacuity_suspicion_factors: list[dict[str, str | float]] = field(default_factory=list)
+    bridge_semantic_evidence_count: int = 0
+    bridge_fingerprint_match_count: int = 0
+    bridge_evidence_confidence: float = 0.0
+    bridge_evidence_provenance: dict[str, int] = field(default_factory=dict)
 
     def to_dict(self) -> dict:
         return {
@@ -154,6 +182,12 @@ class ScoredDecl:
                 "score": round(self.vacuity_suspicion_score, 4),
                 "confidence": round(self.vacuity_suspicion_confidence, 4),
                 "factors": self.vacuity_suspicion_factors,
+            },
+            "bridge_evidence": {
+                "semanticExprCount": self.bridge_semantic_evidence_count,
+                "fingerprintMatchCount": self.bridge_fingerprint_match_count,
+                "confidence": round(self.bridge_evidence_confidence, 4),
+                "provenanceCounts": self.bridge_evidence_provenance,
             },
         }
 
@@ -289,6 +323,7 @@ def compute_vacuity_suspicion(
     file_path: str | None,
     bridge_hints: list[str],
     strict_paths: list[str],
+    bridge_evidence: BridgeEvidence | None = None,
 ) -> tuple[float, float, list[dict[str, str | float]]]:
     """Compute an explainable structural vacuity suspicion ranking signal.
 
@@ -345,6 +380,26 @@ def compute_vacuity_suspicion(
         add("context.bridge-file", 0.08, 0.72, "bridge hint matched file stem")
     if is_strict_file(file_path, strict_paths):
         add("context.strict-file", 0.04, 0.68, "strict path policy applies")
+
+    # Bridge semantic evidence channel (optional).
+    if bridge_evidence is not None:
+        bridge_conf = max(0.45, bridge_evidence.confidence)
+        if bridge_evidence.semantic_expr_count > 0:
+            sem_boost = min(0.12, 0.03 * bridge_evidence.semantic_expr_count)
+            add(
+                "bridge.semantic-expr-evidence",
+                sem_boost,
+                bridge_conf,
+                f"exprSemantic fingerprints observed = {bridge_evidence.semantic_expr_count}",
+            )
+        if bridge_evidence.fingerprint_match_count > 0:
+            fp_boost = min(0.10, 0.04 * bridge_evidence.fingerprint_match_count)
+            add(
+                "bridge.fingerprint-match",
+                fp_boost,
+                bridge_conf,
+                f"cross-surface fingerprint matches = {bridge_evidence.fingerprint_match_count}",
+            )
 
     # Exemption suppression (ranking only; violations remain independently computed).
     if "auto-generated" in tags:
@@ -413,6 +468,147 @@ def load_edges(path: Path) -> tuple[
             forward[src].append((dst, kind))
             reverse[dst].append((src, kind))
     return dict(forward), dict(reverse)
+
+
+def parse_uri_or_path(value: str | None, root: Path) -> str | None:
+    if value is None:
+        return None
+    if value.startswith("file://"):
+        parsed = urlparse(value)
+        fs_path = Path(unquote(parsed.path))
+        return relative_path(str(fs_path), root)
+    path = Path(value)
+    if path.is_absolute():
+        return relative_path(str(path), root)
+    return str(path)
+
+
+def collect_bridge_json_paths(raw_inputs: list[str], root: Path) -> list[Path]:
+    paths: list[Path] = []
+    seen: set[Path] = set()
+
+    def add(path: Path) -> None:
+        resolved = path.resolve()
+        if resolved in seen:
+            return
+        seen.add(resolved)
+        paths.append(resolved)
+
+    for item in raw_inputs:
+        if any(ch in item for ch in "*?[]"):
+            for match in sorted(root.glob(item)):
+                if match.is_dir():
+                    for child in sorted(match.rglob("*.json")):
+                        add(child)
+                elif match.is_file() and match.suffix == ".json":
+                    add(match)
+            continue
+
+        path = Path(item)
+        if not path.is_absolute():
+            path = root / path
+        if path.is_dir():
+            for child in sorted(path.rglob("*.json")):
+                add(child)
+        elif path.is_file() and path.suffix == ".json":
+            add(path)
+
+    return paths
+
+
+def extract_bridge_payload_objects(data: object) -> list[dict]:
+    found: list[dict] = []
+
+    def visit(node: object) -> None:
+        if isinstance(node, dict):
+            if isinstance(node.get("goals"), list) and isinstance(node.get("diagnostics", []), list):
+                found.append(node)
+            for key in ("result", "payload", "data", "entries", "responses"):
+                if key in node:
+                    visit(node[key])
+        elif isinstance(node, list):
+            for item in node:
+                visit(item)
+
+    visit(data)
+    return found
+
+
+def _collect_fingerprint_from_record(record: object) -> tuple[str | None, str | None]:
+    if not isinstance(record, dict):
+        return None, None
+    source = record.get("fingerprintSource")
+    fp = record.get("fingerprintV1")
+    return (
+        source if isinstance(source, str) else None,
+        fp if isinstance(fp, str) and fp else None,
+    )
+
+
+def load_bridge_evidence(paths: list[Path], root: Path) -> dict[str, BridgeEvidence]:
+    by_file: dict[str, BridgeEvidence] = {}
+
+    def get_or_create(path: str) -> BridgeEvidence:
+        if path not in by_file:
+            by_file[path] = BridgeEvidence()
+        return by_file[path]
+
+    for path in paths:
+        try:
+            parsed = json.loads(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        payloads = extract_bridge_payload_objects(parsed)
+        for payload in payloads:
+            response_meta = payload.get("responseMeta", {})
+            session_id = response_meta.get("sessionId", {}).get("value")
+            source_file = parse_uri_or_path(session_id, root)
+            if source_file is None:
+                continue
+
+            evidence = get_or_create(source_file)
+
+            diag_provs: list[str] = []
+            for diag in payload.get("diagnostics", []):
+                if isinstance(diag, dict):
+                    prov = diag.get("classificationProvenance")
+                    if isinstance(prov, str):
+                        diag_provs.append(prov)
+
+            for prov in diag_provs:
+                evidence.provenance_counts[prov] += 1
+
+            fp_counter: Counter[str] = Counter()
+
+            for goal in payload.get("goals", []):
+                if not isinstance(goal, dict):
+                    continue
+
+                source, fp = _collect_fingerprint_from_record(goal.get("targetExprFingerprint"))
+                if source == "exprSemantic":
+                    evidence.semantic_expr_count += 1
+                if fp is not None:
+                    fp_counter[fp] += 1
+
+                for local in goal.get("locals", []):
+                    if not isinstance(local, dict):
+                        continue
+                    source, fp = _collect_fingerprint_from_record(local.get("typeExprFingerprint"))
+                    if source == "exprSemantic":
+                        evidence.semantic_expr_count += 1
+                    if fp is not None:
+                        fp_counter[fp] += 1
+
+            # validateDecl payload shape
+            source, fp = _collect_fingerprint_from_record(payload.get("theoremTypeExprFingerprint"))
+            if source == "exprSemantic":
+                evidence.semantic_expr_count += 1
+            if fp is not None:
+                fp_counter[fp] += 1
+
+            evidence.fingerprint_match_count += sum(count - 1 for count in fp_counter.values() if count > 1)
+
+    return by_file
 
 
 # ─── scoring pipeline ─────────────────────────────────────────
@@ -669,6 +865,7 @@ def score_all(
     bridge_hints: list[str],
     strict_paths: list[str],
     root: Path,
+    bridge_evidence_by_file: dict[str, BridgeEvidence] | None = None,
 ) -> list[ScoredDecl]:
     results: list[ScoredDecl] = []
     reverse_use_profiles = build_reverse_use_profiles(reverse)
@@ -701,6 +898,10 @@ def score_all(
         else:
             violations = compute_violations(info, tags, rel_file, bridge_hints, strict_paths)
 
+        bridge_evidence = None
+        if bridge_evidence_by_file is not None and rel_file is not None:
+            bridge_evidence = bridge_evidence_by_file.get(rel_file)
+
         suspicion_score, suspicion_confidence, suspicion_factors = compute_vacuity_suspicion(
             info,
             graph,
@@ -709,6 +910,7 @@ def score_all(
             rel_file,
             bridge_hints,
             strict_paths,
+            bridge_evidence,
         )
 
         results.append(ScoredDecl(
@@ -724,6 +926,10 @@ def score_all(
             vacuity_suspicion_score=suspicion_score,
             vacuity_suspicion_confidence=suspicion_confidence,
             vacuity_suspicion_factors=suspicion_factors,
+            bridge_semantic_evidence_count=bridge_evidence.semantic_expr_count if bridge_evidence else 0,
+            bridge_fingerprint_match_count=bridge_evidence.fingerprint_match_count if bridge_evidence else 0,
+            bridge_evidence_confidence=bridge_evidence.confidence if bridge_evidence else 0.0,
+            bridge_evidence_provenance=dict(bridge_evidence.provenance_counts) if bridge_evidence else {},
         ))
     return results
 
@@ -867,6 +1073,12 @@ def main() -> None:
     parser.add_argument("--edges", type=Path, default=root / "artifacts" / "dag" / "index" / "edges.jsonl")
     parser.add_argument("--out", type=Path, default=root / "reports" / "theorem-significance.json")
     parser.add_argument("--md", type=Path, default=root / "reports" / "theorem-significance.md")
+    parser.add_argument(
+        "--bridge-input",
+        action="append",
+        default=[],
+        help="Optional bridge payload JSON file/dir/glob (repeatable)",
+    )
     parser.add_argument("--strict-paths", nargs="*", default=STRICT_PATHS_DEFAULT)
     parser.add_argument("--bridge-hints", nargs="*", default=BRIDGE_HINTS_DEFAULT)
     args = parser.parse_args()
@@ -880,8 +1092,23 @@ def main() -> None:
     n_edges = sum(len(v) for v in forward.values())
     print(f"  {n_edges} edges loaded")
 
+    bridge_evidence_by_file: dict[str, BridgeEvidence] = {}
+    bridge_input_paths = collect_bridge_json_paths(args.bridge_input, root)
+    if bridge_input_paths:
+        print(f"Loading bridge evidence from {len(bridge_input_paths)} input path(s) ...")
+        bridge_evidence_by_file = load_bridge_evidence(bridge_input_paths, root)
+        print(f"  {len(bridge_evidence_by_file)} file-level bridge evidence records")
+
     print("Scoring theorems ...")
-    scored = score_all(decls, forward, reverse, args.bridge_hints, args.strict_paths, root)
+    scored = score_all(
+        decls,
+        forward,
+        reverse,
+        args.bridge_hints,
+        args.strict_paths,
+        root,
+        bridge_evidence_by_file=bridge_evidence_by_file,
+    )
     print(f"  {len(scored)} theorems scored")
 
     n_violations = sum(1 for s in scored if s.violations)

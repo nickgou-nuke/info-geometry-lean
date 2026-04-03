@@ -3,7 +3,7 @@ import sys
 import unittest
 from pathlib import Path
 from types import ModuleType
-from typing import Any
+from typing import Any, cast
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -590,6 +590,148 @@ class VacuityPlannerTests(unittest.TestCase):
         repl_rows = row.get("replacementCandidates")
         self.assertIsInstance(repl_rows, list)
         self.assertEqual(repl_rows[0].get("replacementDecl"), "InfoGeometry.R")
+
+    def test_decl_match_context_from_decls_includes_non_theorem_kinds(self):
+        theorem_entries: list[JsonObj] = [
+            {
+                "kind": "theorem",
+                "name": "InfoGeometry.Canonical.A",
+                "file": "lean/InfoGeometry/Canonical/A.lean",
+                "module": "InfoGeometry.Canonical.A",
+                "line": 10,
+            }
+        ]
+        decls: dict[str, JsonObj] = {
+            "InfoGeometry.Canonical.A": {
+                "name": "InfoGeometry.Canonical.A",
+                "kind": "theorem",
+                "file": str((REPO_ROOT / "lean/InfoGeometry/Canonical/A.lean").resolve()),
+                "module": "InfoGeometry.Canonical.A",
+                "line": 10,
+            },
+            "InfoGeometry.Canonical.Helper": {
+                "name": "InfoGeometry.Canonical.Helper",
+                "kind": "def",
+                "file": str((REPO_ROOT / "lean/InfoGeometry/Canonical/A.lean").resolve()),
+                "module": "InfoGeometry.Canonical.A",
+                "line": 36,
+            },
+            "InfoGeometry.Canonical.Shortcut": {
+                "name": "InfoGeometry.Canonical.Shortcut",
+                "kind": "abbrev",
+                "file": str((REPO_ROOT / "lean/InfoGeometry/Canonical/A.lean").resolve()),
+                "module": "InfoGeometry.Canonical.A",
+                "line": 42,
+            },
+        }
+
+        ctx = planner.build_decl_match_context(theorem_entries, decls, REPO_ROOT)
+
+        payload_explicit = self._bridge_payload(
+            source_file_rel="lean/InfoGeometry/Canonical/A.lean",
+            decl_name="InfoGeometry.Canonical.Helper",
+            module="InfoGeometry.Canonical.A",
+            line=36,
+            fingerprint="shape/v1/head:const:eq",
+            head="Eq",
+        )
+        payload_location = self._bridge_payload(
+            source_file_rel="lean/InfoGeometry/Canonical/A.lean",
+            decl_name=None,
+            module="InfoGeometry.Canonical.A",
+            line=35,
+            fingerprint="shape/v1/head:const:eq",
+            head="Eq",
+        )
+
+        explicit_name, explicit_prov, explicit_rel = planner.resolve_decl_match(
+            payload_explicit,
+            source_file="lean/InfoGeometry/Canonical/A.lean",
+            root=REPO_ROOT,
+            match_ctx=ctx,
+        )
+        self.assertEqual(explicit_name, "InfoGeometry.Canonical.Helper")
+        self.assertEqual(explicit_prov, "exactDecl")
+        self.assertEqual(float(explicit_rel), 1.0)
+
+        location_name, location_prov, _ = planner.resolve_decl_match(
+            payload_location,
+            source_file="lean/InfoGeometry/Canonical/A.lean",
+            root=REPO_ROOT,
+            match_ctx=ctx,
+        )
+        self.assertEqual(location_name, "InfoGeometry.Canonical.Helper")
+        self.assertEqual(location_prov, "locationFallback")
+
+    def test_rank_fingerprint_corridors_multi_cluster_replacement_membership(self):
+        cluster_a = "fp:shape/a|head:Eq|kind:app|arity:2+|binder:0"
+        cluster_b = "fp:shape/b|head:And|kind:app|arity:2+|binder:0"
+        cluster_c = "fp:shape/c|head:Or|kind:app|arity:2+|binder:0"
+        vacuity_candidates: list[JsonObj] = [
+            {
+                "name": "InfoGeometry.A",
+                "semanticClusterKey": cluster_a,
+                "score": 0.88,
+                "confidence": 0.79,
+                "region": "canonical",
+            },
+            {
+                "name": "InfoGeometry.B",
+                "semanticClusterKey": cluster_b,
+                "score": 0.81,
+                "confidence": 0.74,
+                "region": "canonical",
+            },
+        ]
+        replacement_candidates: list[JsonObj] = [
+            {
+                "replacementDecl": "InfoGeometry.R",
+                "score": 0.77,
+                "confidence": 0.72,
+                "region": "canonical",
+            }
+        ]
+        bridge_decl_signals: dict[str, JsonObj] = {
+            "InfoGeometry.R": {
+                "clusterKeys": [
+                    [cluster_a, 7],
+                    [cluster_b, 5],
+                    [cluster_c, 3],
+                ],
+            }
+        }
+
+        corridors = planner.rank_fingerprint_corridors(
+            vacuity_candidates=vacuity_candidates,
+            replacement_candidates=replacement_candidates,
+            bridge_decl_signals=bridge_decl_signals,
+            top_k=10,
+        )
+
+        by_key: dict[str, JsonObj] = {}
+        for row_any in corridors:
+            if not isinstance(row_any, dict):
+                continue
+            row = cast(JsonObj, row_any)
+            cluster_any = row.get("clusterKey")
+            if isinstance(cluster_any, str) and cluster_any:
+                by_key[cluster_any] = row
+        self.assertIn(cluster_a, by_key)
+        self.assertIn(cluster_b, by_key)
+        self.assertIn(cluster_c, by_key)
+
+        for cluster in (cluster_a, cluster_b, cluster_c):
+            repl_rows_any = by_key[cluster].get("replacementCandidates")
+            self.assertIsInstance(repl_rows_any, list)
+            if not isinstance(repl_rows_any, list):
+                continue
+            repl_rows: list[JsonObj] = []
+            for item_any in cast(list[Any], repl_rows_any):
+                if isinstance(item_any, dict):
+                    repl_rows.append(cast(JsonObj, item_any))
+            self.assertTrue(
+                any(r.get("replacementDecl") == "InfoGeometry.R" for r in repl_rows)
+            )
 
     def test_seed_decl_match_context_skips_fingerprint_fallback(self):
         ctx = {"clusterToDecl": planner.defaultdict(planner.Counter)}

@@ -94,6 +94,8 @@ private def unsupportedValidateDecl (responseMeta : ResponseMeta) (err : Compile
     theoremType := ""
     theoremTypeHead := none
     theoremTypeHeadSource := .unavailable
+    theoremTypeHeadFingerprint := none
+    theoremTypeExprFingerprint := none
     hasSorry := false
   }
 
@@ -112,14 +114,24 @@ def validateDecl (params : ValidateDeclParams) : RequestM (RequestTask ValidateD
           match declInfo? with
           | some declInfo => ppExprAtSnapshot snap declInfo.type
           | none => pure ""
-        let (theoremTypeHead, theoremTypeHeadSource) :=
+        let (theoremTypeHead, theoremTypeHeadSource, theoremTypeHeadFingerprint, theoremTypeExprFingerprint) :=
           match declInfo? with
           | some declInfo =>
+              let semanticExprFingerprint := exprFingerprintOfExpr declInfo.type
+              let semanticHeadFingerprint := headFingerprintOfExpr declInfo.type
               let (semanticHead, semanticSource) := headMetaOfExpr declInfo.type
               match semanticHead with
-              | some _ => (semanticHead, semanticSource)
-              | none => headMetaOfText theoremType
-          | none => (none, .unavailable)
+              | some _ =>
+                  (
+                    semanticHead,
+                    semanticSource,
+                    semanticHeadFingerprint,
+                    some semanticExprFingerprint
+                  )
+              | none =>
+                  let (textHead, textSource) := headMetaOfText theoremType
+                  (textHead, textSource, none, exprFingerprintOfText theoremType)
+          | none => (none, .unavailable, none, none)
         let hasSorry := declInfo?.map constantHasSorry |>.getD false
         if declInfo?.isNone then
           diagnostics := diagnostics.push (declarationNotFoundError params.declName)
@@ -134,6 +146,8 @@ def validateDecl (params : ValidateDeclParams) : RequestM (RequestTask ValidateD
           theoremType := theoremType
           theoremTypeHead := theoremTypeHead
           theoremTypeHeadSource := theoremTypeHeadSource
+          theoremTypeHeadFingerprint := theoremTypeHeadFingerprint
+          theoremTypeExprFingerprint := theoremTypeExprFingerprint
           hasSorry := hasSorry
         }
 

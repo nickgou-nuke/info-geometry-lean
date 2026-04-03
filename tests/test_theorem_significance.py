@@ -217,6 +217,72 @@ class TheoremSignificanceTests(unittest.TestCase):
         self.assertEqual(d.graph.scc_size, 2)
         self.assertEqual(d.graph.scc_role, "cycle-island")
 
+    def test_vacuity_suspicion_prefers_shallow_exact_wrapper(self):
+        decls = {
+            "Wrapper": _decl(name="Wrapper", file="lean/InfoGeometry/Canonical/WrapperBridge.lean"),
+            "Target": _decl(name="Target", file="lean/InfoGeometry/Canonical/Target.lean"),
+            "Rich": _decl(name="Rich", file="lean/InfoGeometry/Canonical/Rich.lean"),
+            "Consumer1": _decl(name="Consumer1", file="lean/InfoGeometry/Canonical/C1.lean"),
+            "Consumer2": _decl(name="Consumer2", file="lean/InfoGeometry/Canonical/C2.lean"),
+            "Consumer3": _decl(name="Consumer3", file="lean/InfoGeometry/Canonical/C3.lean"),
+            "Leaf": _decl(name="Leaf", file="lean/InfoGeometry/Canonical/Leaf.lean"),
+        }
+        forward = {
+            "Wrapper": [("Target", "value")],
+            "Rich": [("Leaf", "value")],
+            "Consumer1": [("Rich", "type")],
+            "Consumer2": [("Rich", "type")],
+            "Consumer3": [("Rich", "type")],
+        }
+        reverse = {
+            "Target": [("Wrapper", "value")],
+            "Rich": [("Consumer1", "type"), ("Consumer2", "type"), ("Consumer3", "type")],
+            "Leaf": [("Rich", "value")],
+        }
+
+        scored = sig.score_all(
+            decls,
+            forward,
+            reverse,
+            sig.BRIDGE_HINTS_DEFAULT,
+            sig.STRICT_PATHS_DEFAULT,
+            REPO_ROOT,
+        )
+
+        wrapper = next(s for s in scored if s.name == "Wrapper")
+        rich = next(s for s in scored if s.name == "Rich")
+
+        self.assertGreater(wrapper.vacuity_suspicion_score, rich.vacuity_suspicion_score)
+        self.assertGreater(wrapper.vacuity_suspicion_confidence, 0.0)
+        self.assertTrue(any(f["signal"] == "shape.exact-forward" for f in wrapper.vacuity_suspicion_factors))
+
+    def test_vacuity_suspicion_is_suppressed_for_exemptions(self):
+        decls = {
+            "Auto.rec": _decl(name="Auto.rec", file="lean/InfoGeometry/Canonical/Auto.lean"),
+            "TerminalThm": _decl(
+                name="TerminalThm",
+                file="lean/InfoGeometry/Canonical/Terminal.lean",
+                attrs=["terminal"],
+            ),
+        }
+
+        scored = sig.score_all(
+            decls,
+            {},
+            {},
+            sig.BRIDGE_HINTS_DEFAULT,
+            sig.STRICT_PATHS_DEFAULT,
+            REPO_ROOT,
+        )
+
+        auto = next(s for s in scored if s.name == "Auto.rec")
+        terminal = next(s for s in scored if s.name == "TerminalThm")
+
+        self.assertLessEqual(auto.vacuity_suspicion_score, 0.1)
+        self.assertLessEqual(terminal.vacuity_suspicion_score, 0.1)
+        self.assertTrue(any(f["signal"] == "policy.auto-generated-exempt" for f in auto.vacuity_suspicion_factors))
+        self.assertTrue(any(f["signal"] == "policy.role-exempt" for f in terminal.vacuity_suspicion_factors))
+
 
 if __name__ == "__main__":
     unittest.main()

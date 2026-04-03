@@ -68,6 +68,16 @@ inductive ExprHeadSource where
   | unavailable
 deriving Inhabited, BEq, FromJson, ToJson
 
+structure ExprFingerprintView where
+  exprKind : String := "unknown"
+  semanticHead : Option String := none
+  binderDepth : Nat := 0
+  appArity : Nat := 0
+  argHeadFingerprints : Array String := #[]
+  fingerprintV1 : Option String := none
+  fingerprintSource : ExprHeadSource := .unavailable
+deriving Inhabited, BEq, FromJson, ToJson
+
 inductive CompilerErrorCode where
   | parseError
   | elaborationError
@@ -105,6 +115,7 @@ structure LocalDeclView where
   typeHead : Option String := none
   typeHeadSource : ExprHeadSource := .unavailable
   typeHeadFingerprint : Option String := none
+  typeExprFingerprint : Option ExprFingerprintView := none
   value : Option String := none
   isLet : Bool := false
   isInstance : Bool := false
@@ -119,6 +130,7 @@ structure GoalView where
   targetHead : Option String := none
   targetHeadSource : ExprHeadSource := .unavailable
   targetHeadFingerprint : Option String := none
+  targetExprFingerprint : Option ExprFingerprintView := none
 deriving Inhabited, BEq, FromJson, ToJson
 
 structure GetProofStateParams where
@@ -171,6 +183,8 @@ structure ValidateDeclResult where
   theoremType : String := ""
   theoremTypeHead : Option String := none
   theoremTypeHeadSource : ExprHeadSource := .unavailable
+  theoremTypeHeadFingerprint : Option String := none
+  theoremTypeExprFingerprint : Option ExprFingerprintView := none
   hasSorry : Bool := false
 deriving Inhabited, BEq, FromJson, ToJson
 

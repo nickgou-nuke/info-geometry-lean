@@ -283,6 +283,46 @@ class TheoremSignificanceTests(unittest.TestCase):
         self.assertTrue(any(f["signal"] == "policy.auto-generated-exempt" for f in auto.vacuity_suspicion_factors))
         self.assertTrue(any(f["signal"] == "policy.role-exempt" for f in terminal.vacuity_suspicion_factors))
 
+    def test_bridge_evidence_channel_influences_suspicion_ranking(self):
+        decls = {
+            "BridgeCand": _decl(name="BridgeCand", file="lean/InfoGeometry/Canonical/BridgeCand.lean"),
+            "Target": _decl(name="Target", file="lean/InfoGeometry/Canonical/Target.lean"),
+        }
+        forward = {"BridgeCand": [("Target", "value")]}
+        reverse = {"Target": [("BridgeCand", "value")]}
+
+        baseline = sig.score_all(
+            decls,
+            forward,
+            reverse,
+            sig.BRIDGE_HINTS_DEFAULT,
+            sig.STRICT_PATHS_DEFAULT,
+            REPO_ROOT,
+        )
+        baseline_entry = next(s for s in baseline if s.name == "BridgeCand")
+
+        with_bridge = sig.score_all(
+            decls,
+            forward,
+            reverse,
+            sig.BRIDGE_HINTS_DEFAULT,
+            sig.STRICT_PATHS_DEFAULT,
+            REPO_ROOT,
+            bridge_evidence_by_file={
+                "lean/InfoGeometry/Canonical/BridgeCand.lean": sig.BridgeEvidence(
+                    semantic_expr_count=3,
+                    fingerprint_match_count=2,
+                    provenance_counts=sig.Counter({"leanTag": 2, "bridgeRule": 1}),
+                )
+            },
+        )
+        bridge_entry = next(s for s in with_bridge if s.name == "BridgeCand")
+
+        self.assertGreater(bridge_entry.vacuity_suspicion_score, baseline_entry.vacuity_suspicion_score)
+        self.assertGreater(bridge_entry.bridge_semantic_evidence_count, 0)
+        self.assertGreater(bridge_entry.bridge_fingerprint_match_count, 0)
+        self.assertTrue(any(f["signal"] == "bridge.semantic-expr-evidence" for f in bridge_entry.vacuity_suspicion_factors))
+
 
 if __name__ == "__main__":
     unittest.main()

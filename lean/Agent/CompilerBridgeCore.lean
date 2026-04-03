@@ -188,15 +188,84 @@ private def exprHeadMetaOfText (text : String) : Option String × ExprHeadSource
   | some head => (some head, .textHeuristic)
   | none => (none, .unavailable)
 
+private def exprKindOfTextHead (head : String) : String :=
+  if head == "∀" then
+    "forallE"
+  else if head == "fun" then
+    "lam"
+  else if head == "let" then
+    "letE"
+  else if head == "Sort" || head == "Prop" then
+    "sort"
+  else
+    "unknown"
+
+private partial def exprKindOfExpr : Expr → String
+  | .mdata _ b => exprKindOfExpr b
+  | .forallE .. => "forallE"
+  | .lam .. => "lam"
+  | .letE .. => "letE"
+  | .app .. => "app"
+  | .const .. => "const"
+  | .fvar .. => "fvar"
+  | .mvar .. => "mvar"
+  | .sort .. => "sort"
+  | .lit .. => "lit"
+  | .proj .. => "proj"
+  | _ => "other"
+
+private partial def binderDepthOfExpr : Expr → Nat
+  | .mdata _ b => binderDepthOfExpr b
+  | .forallE _ _ body _ => binderDepthOfExpr body + 1
+  | .lam _ _ body _ => binderDepthOfExpr body + 1
+  | .letE _ _ _ body _ => binderDepthOfExpr body + 1
+  | _ => 0
+
+private partial def unfoldAppCore (e : Expr) (args : List Expr) : Expr × List Expr :=
+  match e with
+  | .mdata _ b => unfoldAppCore b args
+  | .app f a => unfoldAppCore f (a :: args)
+  | _ => (e, args)
+
+private def unfoldApp (e : Expr) : Expr × Array Expr :=
+  let (fn, args) := unfoldAppCore e []
+  (fn, args.toArray)
+
+private def appArityOfExpr (e : Expr) : Nat :=
+  (unfoldApp e).2.size
+
 private structure HeadMeta where
   head : Option String := none
   source : ExprHeadSource := .unavailable
   fingerprint : Option String := none
+  exprFingerprint : Option ExprFingerprintView := none
 deriving Inhabited
 
 private def mkHeadMetaOfText (text : String) : HeadMeta :=
   let (head, source) := exprHeadMetaOfText text
-  { head := head, source := source, fingerprint := none }
+  let exprFingerprint :=
+    match headTokenOfText? text with
+    | none =>
+        none
+    | some textHead =>
+        let exprKind := exprKindOfTextHead textHead
+        let argHeadFingerprints : Array String := #[]
+        let fp := s!"expr/v1/k={exprKind};h={textHead};b=0;a=0;args="
+        some {
+          exprKind := exprKind
+          semanticHead := some textHead
+          binderDepth := 0
+          appArity := 0
+          argHeadFingerprints := argHeadFingerprints
+          fingerprintV1 := some fp
+          fingerprintSource := .textHeuristic
+        }
+  {
+    head := head
+    source := source
+    fingerprint := none
+    exprFingerprint := exprFingerprint
+  }
 
 def headMetaOfText (text : String) : Option String × ExprHeadSource :=
   exprHeadMetaOfText text
@@ -208,7 +277,7 @@ private def headTokenOfExpr? : Expr → Option String
   | .lam .. => some "fun"
   | .letE .. => some "let"
   | .const n _ => some (toString n.eraseMacroScopes)
-  | .fvar id => some (toString id.name)
+  | .fvar _ => some "fvar"
   | .mvar id => some (toString id.name)
   | .proj s _ _ => some (toString s.eraseMacroScopes)
   | .mdata _ b => headTokenOfExpr? b
@@ -232,10 +301,82 @@ private def headFingerprintSeedOfExpr? : Expr → Option String
 private def headFingerprintOfExpr? (e : Expr) : Option String :=
   headFingerprintSeedOfExpr? e |>.map (fun fp => s!"shape/v1/{fp}")
 
+private def argHeadFingerprintsOfExpr (e : Expr) : Array String :=
+  let args := (unfoldApp e).2
+  (args.toList.take 2).foldl
+    (fun acc arg =>
+      match headFingerprintOfExpr? arg with
+      | some fp => acc.push fp
+      | none => acc)
+    #[]
+
+private def mkFingerprintV1
+    (exprKind : String)
+    (semanticHead : Option String)
+    (binderDepth : Nat)
+    (appArity : Nat)
+    (argHeadFingerprints : Array String) : String :=
+  let headPart := semanticHead.getD "_"
+  let argsPart := String.intercalate "," argHeadFingerprints.toList
+  s!"expr/v1/k={exprKind};h={headPart};b={binderDepth};a={appArity};args={argsPart}"
+
+private def mkExprFingerprintOfText (text : String) : Option ExprFingerprintView :=
+  match headTokenOfText? text with
+  | none =>
+      none
+  | some head =>
+      let exprKind := exprKindOfTextHead head
+      let argHeadFingerprints : Array String := #[]
+      let fp := mkFingerprintV1 exprKind (some head) 0 0 argHeadFingerprints
+      some {
+        exprKind := exprKind
+        semanticHead := some head
+        binderDepth := 0
+        appArity := 0
+        argHeadFingerprints := argHeadFingerprints
+        fingerprintV1 := some fp
+        fingerprintSource := .textHeuristic
+      }
+
+private def mkExprFingerprintOfExpr (e : Expr) : ExprFingerprintView :=
+  let exprKind := exprKindOfExpr e
+  let semanticHead := headTokenOfExpr? e
+  let binderDepth := binderDepthOfExpr e
+  let appArity := appArityOfExpr e
+  let argHeadFingerprints := argHeadFingerprintsOfExpr e
+  let source :=
+    if exprKind == "other" && semanticHead.isNone then
+      ExprHeadSource.unavailable
+    else
+      ExprHeadSource.exprSemantic
+  let fingerprintV1 :=
+    if source == .unavailable then
+      none
+    else
+      some (mkFingerprintV1 exprKind semanticHead binderDepth appArity argHeadFingerprints)
+  {
+    exprKind := exprKind
+    semanticHead := semanticHead
+    binderDepth := binderDepth
+    appArity := appArity
+    argHeadFingerprints := argHeadFingerprints
+    fingerprintV1 := fingerprintV1
+    fingerprintSource := source
+  }
+
+def exprFingerprintOfText (text : String) : Option ExprFingerprintView :=
+  mkExprFingerprintOfText text
+
+def headFingerprintOfExpr (e : Expr) : Option String :=
+  headFingerprintOfExpr? e
+
 def headMetaOfExpr (e : Expr) : Option String × ExprHeadSource :=
   match headTokenOfExpr? e with
   | some head => (some head, .exprSemantic)
   | none => (none, .unavailable)
+
+def exprFingerprintOfExpr (e : Expr) : ExprFingerprintView :=
+  mkExprFingerprintOfExpr e
 
 private partial def headTokenOfExprInContext? : Expr → MetaM (Option String)
   | .sort .zero => pure (some "Prop")
@@ -252,7 +393,48 @@ private partial def headTokenOfExprInContext? : Expr → MetaM (Option String)
   | .app f _ => headTokenOfExprInContext? f
   | _ => pure none
 
+private def exprKindOfExprInContext (e : Expr) : MetaM String := do
+  let baseKind := exprKindOfExpr e
+  if baseKind != "app" then
+    return baseKind
+  let fn := (unfoldApp e).1
+  match fn with
+  | .const fnName _ =>
+      let env ← getEnv
+      match env.getProjectionFnInfo? fnName with
+      | some _ => return "proj"
+      | none => return baseKind
+  | _ =>
+      return baseKind
+
+private def mkExprFingerprintOfExprInContext (e : Expr) : MetaM ExprFingerprintView := do
+  let exprKind ← exprKindOfExprInContext e
+  let semanticHead ← headTokenOfExprInContext? e
+  let binderDepth := binderDepthOfExpr e
+  let appArity := appArityOfExpr e
+  let argHeadFingerprints := argHeadFingerprintsOfExpr e
+  let source :=
+    if exprKind == "other" && semanticHead.isNone then
+      ExprHeadSource.unavailable
+    else
+      ExprHeadSource.exprSemantic
+  let fingerprintV1 :=
+    if source == .unavailable then
+      none
+    else
+      some (mkFingerprintV1 exprKind semanticHead binderDepth appArity argHeadFingerprints)
+  return {
+    exprKind := exprKind
+    semanticHead := semanticHead
+    binderDepth := binderDepth
+    appArity := appArity
+    argHeadFingerprints := argHeadFingerprints
+    fingerprintV1 := fingerprintV1
+    fingerprintSource := source
+  }
+
 private def mkHeadMetaOfExprInContext (e : Expr) : MetaM HeadMeta := do
+  let exprFingerprint ← mkExprFingerprintOfExprInContext e
   let head? ← headTokenOfExprInContext? e
   match head? with
   | some head =>
@@ -260,19 +442,34 @@ private def mkHeadMetaOfExprInContext (e : Expr) : MetaM HeadMeta := do
         head := some head
         source := .exprSemantic
         fingerprint := headFingerprintOfExpr? e
+        exprFingerprint := some exprFingerprint
       }
   | none =>
       return {
         head := none
         source := .unavailable
         fingerprint := none
+        exprFingerprint := some exprFingerprint
       }
 
 private def mkHeadMetaOfExpr (e : Expr) : HeadMeta :=
+  let exprFingerprint := mkExprFingerprintOfExpr e
   let (head, source) := headMetaOfExpr e
   match head with
-  | some _ => { head := head, source := source, fingerprint := headFingerprintOfExpr? e }
-  | none => { head := none, source := .unavailable, fingerprint := none }
+  | some _ =>
+      {
+        head := head
+        source := source
+        fingerprint := headFingerprintOfExpr? e
+        exprFingerprint := some exprFingerprint
+      }
+  | none =>
+      {
+        head := none
+        source := .unavailable
+        fingerprint := none
+        exprFingerprint := some exprFingerprint
+      }
 
 private def semanticTargetHeadMeta? (goal : Widget.InteractiveGoal) : IO (Option HeadMeta) := do
   try
@@ -395,6 +592,7 @@ private def expandHypBundle (bundle : Widget.InteractiveHypothesisBundle)
         typeHead := selectedMeta.head
         typeHeadSource := selectedMeta.source
         typeHeadFingerprint := selectedMeta.fingerprint
+        typeExprFingerprint := selectedMeta.exprFingerprint
         value := bundle.val?.map (·.stripTags)
         isLet := bundle.val?.isSome
         isInstance := bundle.isInstance?.getD false
@@ -427,6 +625,7 @@ private def goalViewOf (responseMeta : ResponseMeta) (goal : Widget.InteractiveG
     targetHead := targetMeta.head
     targetHeadSource := targetMeta.source
     targetHeadFingerprint := targetMeta.fingerprint
+    targetExprFingerprint := targetMeta.exprFingerprint
   }
 
 def proofStateTaskAt (doc : FileWorker.EditableDocument) (posLine posCharacter : Nat) :

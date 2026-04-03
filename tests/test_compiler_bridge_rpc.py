@@ -42,6 +42,24 @@ class CompilerBridgeRpcTests(unittest.TestCase):
             encoding="utf-8",
         )
 
+        cls.shape_file = cls.tmp_dir / "bridge_shapes.lean"
+        cls.shape_file.write_text(
+            "\n".join(
+                [
+                    "structure ProjCarrier where",
+                    "  p : Prop",
+                    "",
+                    "theorem bridge_proj_target (x : ProjCarrier) (hx : x.p) : x.p := by",
+                    "  exact hx",
+                    "",
+                    "theorem bridge_app_target (p : Prop) (hp : p) : id p := by",
+                    "  exact hp",
+                    "",
+                ]
+            ),
+            encoding="utf-8",
+        )
+
     @classmethod
     def tearDownClass(cls):
         cls._tmp.cleanup()
@@ -111,6 +129,13 @@ class CompilerBridgeRpcTests(unittest.TestCase):
         self.assertEqual(first_goal["targetHead"], "p")
         self.assertEqual(first_goal["targetHeadSource"], "exprSemantic")
         self.assertEqual(first_goal["targetHeadFingerprint"], "shape/v1/head:fvar")
+        self.assertIn("targetExprFingerprint", first_goal)
+        target_fp = first_goal["targetExprFingerprint"]
+        self.assertEqual(target_fp["exprKind"], "fvar")
+        self.assertEqual(target_fp["semanticHead"], "p")
+        self.assertFalse(target_fp["semanticHead"].startswith("_uniq."))
+        self.assertEqual(target_fp["fingerprintSource"], "exprSemantic")
+        self.assertTrue(target_fp["fingerprintV1"]) 
 
         first_local = first_goal["locals"][0]
         self.assertIn("typeHead", first_local)
@@ -119,6 +144,39 @@ class CompilerBridgeRpcTests(unittest.TestCase):
         self.assertEqual(first_local["typeHead"], "Prop")
         self.assertEqual(first_local["typeHeadSource"], "exprSemantic")
         self.assertEqual(first_local["typeHeadFingerprint"], "shape/v1/head:sort:prop")
+        self.assertIn("typeExprFingerprint", first_local)
+        local_fp = first_local["typeExprFingerprint"]
+        self.assertEqual(local_fp["exprKind"], "sort")
+        self.assertEqual(local_fp["semanticHead"], "Prop")
+        self.assertEqual(local_fp["fingerprintSource"], "exprSemantic")
+
+    def test_check_snippet_projection_and_app_fingerprints(self):
+        proj_result = self._call(
+            self.shape_file,
+            "checkSnippet",
+            line=4,
+            character=2,
+        )
+        self.assertTrue(proj_result["ok"])
+        proj_goal = proj_result["goals"][0]
+        proj_fp = proj_goal["targetExprFingerprint"]
+        self.assertEqual(proj_fp["exprKind"], "proj")
+        self.assertEqual(proj_fp["fingerprintSource"], "exprSemantic")
+        self.assertTrue(proj_fp["fingerprintV1"])
+
+        app_result = self._call(
+            self.shape_file,
+            "checkSnippet",
+            line=7,
+            character=2,
+        )
+        self.assertTrue(app_result["ok"])
+        app_goal = app_result["goals"][0]
+        app_fp = app_goal["targetExprFingerprint"]
+        self.assertEqual(app_fp["exprKind"], "app")
+        self.assertEqual(app_fp["fingerprintSource"], "exprSemantic")
+        self.assertGreaterEqual(app_fp["appArity"], 1)
+        self.assertTrue(app_fp["fingerprintV1"])
 
     def test_validate_decl_happy_path(self):
         result = self._call(
@@ -132,6 +190,13 @@ class CompilerBridgeRpcTests(unittest.TestCase):
         self.assertTrue(result["theoremType"])
         self.assertEqual(result["theoremTypeHead"], "∀")
         self.assertEqual(result["theoremTypeHeadSource"], "exprSemantic")
+        self.assertEqual(result["theoremTypeHeadFingerprint"], "shape/v1/head:forall")
+        self.assertIn("theoremTypeExprFingerprint", result)
+        thm_fp = result["theoremTypeExprFingerprint"]
+        self.assertEqual(thm_fp["exprKind"], "forallE")
+        self.assertEqual(thm_fp["fingerprintSource"], "exprSemantic")
+        self.assertGreaterEqual(thm_fp["binderDepth"], 1)
+        self.assertTrue(thm_fp["fingerprintV1"])
 
     def test_validate_decl_detects_sorry(self):
         result = self._call(

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Theorem Significance Scorer — Layer B of the vacuity enforcement system.
+"""Heuristic theorem vacuity triage — Layer B of the vacuity enforcement system.
 
 Reads the DAG-exported declaration and edge JSONs and produces a per-theorem
-significance classification.  Combined with the Lean-side linter (Layer A,
+rule-based vacuity classification. Combined with the Lean-side linter (Layer A,
 ``Vacuity.lean``) and the CI policy gate (Layer C, ``check_vacuity_policy.py``),
 this gives a three-layer vacuity enforcement system.
 
 Violation classes produced:
 
-  V0  syntactic vacuity — forwarding proof on low-load statement
+  V0  syntactic vacuity — rfl-like proof screen
   V1  public wrapper inflation — proof forwards to single prior theorem
   V2  dead public theorem — zero reverse edges, no capstone annotation
   V3  statement redundancy — (placeholder, not yet computed)
@@ -24,7 +24,7 @@ Usage::
         [--strict-paths PREFIX ...] \\
         [--bridge-hints WORD ...]
 
-Output:  JSON array of scored declarations and a Markdown summary report.
+Output:  JSON array of classified declarations and a Markdown summary report.
 """
 from __future__ import annotations
 
@@ -65,12 +65,19 @@ class GraphStats:
 class ProofShapeInfo:
     """Proof-shape classification inferred from the edge graph (no Lean elaboration)."""
     forward_value_targets: list[str] = field(default_factory=list)
+    forward_theorem_targets: list[str] = field(default_factory=list)
     n_forward_value: int = 0
     n_forward_theorem: int = 0
 
     @property
     def is_exact_forward(self) -> bool:
-        return self.n_forward_theorem == 1
+        return self.n_forward_value == 1 and self.n_forward_theorem == 1
+
+    @property
+    def exact_forward_target(self) -> str | None:
+        if not self.is_exact_forward or len(self.forward_theorem_targets) != 1:
+            return None
+        return self.forward_theorem_targets[0]
 
     @property
     def is_rfl_like(self) -> bool:
@@ -109,7 +116,7 @@ class ScoredDecl:
 
 # ─── classification engine ────────────────────────────────────
 
-BRIDGE_HINTS_DEFAULT = ["Bridge", "Core", "Canonical"]
+BRIDGE_HINTS_DEFAULT = ["Bridge", "Lift", "Rosetta"]
 STRICT_PATHS_DEFAULT = [
     "lean/InfoGeometry/Canonical/",
     "lean/InfoGeometry/Quantum/",
@@ -177,6 +184,18 @@ def classify_tags(decl: DeclInfo, graph: GraphStats, proof: ProofShapeInfo) -> l
     return sorted(set(tags))
 
 
+def is_bridge_file(file_path: str | None, bridge_hints: list[str]) -> bool:
+    """Return True when the declaration lives in an explicitly bridge-like file.
+
+    Bridge hints are matched against the file stem only, not directory names,
+    to avoid classifying all `Canonical/` or `Core/` files as bridge surfaces.
+    """
+    if file_path is None:
+        return False
+    stem = Path(file_path).stem
+    return any(hint and hint in stem for hint in bridge_hints)
+
+
 def compute_violations(
     decl: DeclInfo,
     tags: list[str],
@@ -189,7 +208,7 @@ def compute_violations(
     if file_path is None:
         return out
 
-    is_bridge = any(h in file_path for h in bridge_hints)
+    is_bridge = is_bridge_file(file_path, bridge_hints)
     is_strict = any(file_path.startswith(p) for p in strict_paths)
 
     # V0: syntactic vacuity (rfl-like proof)
@@ -292,6 +311,7 @@ def build_proof_shape(
     theorem_targets = [t for t in value_targets if t in decls and decls[t].kind == "theorem"]
     return ProofShapeInfo(
         forward_value_targets=value_targets,
+        forward_theorem_targets=theorem_targets,
         n_forward_value=len(value_targets),
         n_forward_theorem=len(theorem_targets),
     )
@@ -357,7 +377,7 @@ def generate_json_report(scored: list[ScoredDecl]) -> list[dict]:
 
 def generate_md_report(scored: list[ScoredDecl]) -> str:
     lines: list[str] = []
-    lines.append("# Theorem Significance Report\n")
+    lines.append("# Theorem Vacuity Triage Report\n")
 
     # Summary stats
     total = len(scored)
@@ -407,8 +427,8 @@ def generate_md_report(scored: list[ScoredDecl]) -> str:
             for s in by_file[fpath]:
                 vcodes = ", ".join(f"`{v[1]}`" for v in s.violations if v[0] == "error")
                 lines.append(f"- **`{s.name}`** — {vcodes}")
-                if s.proof.is_exact_forward and s.proof.forward_value_targets:
-                    lines.append(f"  - Forwards to: `{s.proof.forward_value_targets[0]}`")
+                if s.proof.exact_forward_target is not None:
+                    lines.append(f"  - Forwards to: `{s.proof.exact_forward_target}`")
                 lines.append(f"  - Tags: {', '.join(f'`{t}`' for t in s.tags)}")
             lines.append("")
 
@@ -432,7 +452,7 @@ def generate_md_report(scored: list[ScoredDecl]) -> str:
 
 def main() -> None:
     root = repo_root()
-    parser = argparse.ArgumentParser(description="Theorem significance scorer")
+    parser = argparse.ArgumentParser(description="Heuristic theorem vacuity triage")
     parser.add_argument("--decls", type=Path, default=root / "artifacts" / "dag" / "index" / "decls.jsonl")
     parser.add_argument("--edges", type=Path, default=root / "artifacts" / "dag" / "index" / "edges.jsonl")
     parser.add_argument("--out", type=Path, default=root / "reports" / "theorem-significance.json")

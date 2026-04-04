@@ -174,6 +174,108 @@ class TheoremSignificanceTests(unittest.TestCase):
         self.assertIn("role-exempt", terminal.tags)
         self.assertEqual(terminal.violations, [])
 
+    def test_certified_transport_theorem_is_flagged_as_certification_wash(self):
+        decls = {
+            "certifiedFoo_eq_foo": _decl(
+                name="certifiedFoo_eq_foo",
+                file="lean/InfoGeometry/Canonical/Foo.lean",
+            ),
+            "Consumer": _decl(
+                name="Consumer",
+                file="lean/InfoGeometry/Canonical/Consumer.lean",
+            ),
+        }
+        reverse = {
+            "certifiedFoo_eq_foo": [("Consumer", "type")],
+        }
+
+        scored = sig.score_all(
+            decls,
+            {},
+            reverse,
+            sig.BRIDGE_HINTS_DEFAULT,
+            sig.STRICT_PATHS_DEFAULT,
+            REPO_ROOT,
+        )
+        entry = next(s for s in scored if s.name == "certifiedFoo_eq_foo")
+
+        self.assertIn("certification-transport", entry.tags)
+        self.assertIn("certification-wash-candidate", entry.tags)
+        self.assertIn(("error", "V5/certification-wash"), entry.violations)
+
+    def test_certified_def_alias_to_uncertified_twin_is_scored_and_flagged(self):
+        decls = {
+            "certifiedFoo": _decl(
+                name="certifiedFoo",
+                file="lean/InfoGeometry/Canonical/Foo.lean",
+                kind="def",
+            ),
+            "foo": _decl(
+                name="foo",
+                file="lean/InfoGeometry/Canonical/Foo.lean",
+                kind="def",
+            ),
+        }
+        forward = {
+            "certifiedFoo": [("foo", "value")],
+        }
+        reverse = {
+            "foo": [("certifiedFoo", "value")],
+        }
+
+        scored = sig.score_all(
+            decls,
+            forward,
+            reverse,
+            sig.BRIDGE_HINTS_DEFAULT,
+            sig.STRICT_PATHS_DEFAULT,
+            REPO_ROOT,
+        )
+        entry = next(s for s in scored if s.name == "certifiedFoo")
+
+        self.assertEqual(entry.kind, "def")
+        self.assertIn("certified-surface", entry.tags)
+        self.assertIn("certification-wash-candidate", entry.tags)
+        self.assertIn(("error", "V5/certification-wash"), entry.violations)
+
+    def test_certified_forward_to_certified_target_does_not_trip_certification_wash(self):
+        decls = {
+            "certifiedFoo_idempotent": _decl(
+                name="certifiedFoo_idempotent",
+                file="lean/InfoGeometry/Canonical/Foo.lean",
+            ),
+            "CertifiedKernel.foo_idempotent": _decl(
+                name="CertifiedKernel.foo_idempotent",
+                file="lean/InfoGeometry/Canonical/CertifiedKernel.lean",
+            ),
+            "Consumer": _decl(
+                name="Consumer",
+                file="lean/InfoGeometry/Canonical/Consumer.lean",
+            ),
+        }
+        forward = {
+            "certifiedFoo_idempotent": [("CertifiedKernel.foo_idempotent", "value")],
+        }
+        reverse = {
+            "certifiedFoo_idempotent": [("Consumer", "type")],
+            "CertifiedKernel.foo_idempotent": [("certifiedFoo_idempotent", "value")],
+        }
+
+        scored = sig.score_all(
+            decls,
+            forward,
+            reverse,
+            sig.BRIDGE_HINTS_DEFAULT,
+            sig.STRICT_PATHS_DEFAULT,
+            REPO_ROOT,
+        )
+        entry = next(s for s in scored if s.name == "certifiedFoo_idempotent")
+
+        self.assertIn("certified-surface", entry.tags)
+        self.assertNotIn("certification-wash-candidate", entry.tags)
+        codes = {code for _, code in entry.violations}
+        self.assertNotIn("V5/certification-wash", codes)
+
     def test_structural_metrics_capture_transitive_and_scc_signals(self):
         decls = {
             "A": _decl(name="A", file="lean/InfoGeometry/Canonical/A.lean"),

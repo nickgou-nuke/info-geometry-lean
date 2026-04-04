@@ -66,7 +66,7 @@ noncomputable def betaFunction (flow : InformationFlow E) (scale : ℝ) (x : E) 
 /--
 Stationarity at scale `scale0`.
 Both the potential path and the dual-map path have derivative zero at `scale0`
-in the honest `HasDerivAt` sense.
+in the `HasDerivAt` sense.
 -/
 def IsStationaryAtScale (flow : InformationFlow E) (scale0 : ℝ) : Prop :=
   (∀ x, HasDerivAt (fun t => (flow t).potential x) 0 scale0) ∧

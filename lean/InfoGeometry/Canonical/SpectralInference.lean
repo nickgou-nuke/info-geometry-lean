@@ -206,6 +206,19 @@ abbrev toCertifiedInverseKernel : InfoGeometry.Canonical.CertifiedInverseKernel 
     hDrazin := CCST.hDrazin
     hMoorePenrose := CCST.hMoorePenrose }
 
+/-- Certified Drazin spectral projector on the chiral surface. -/
+abbrev spectralProjector : E →L[ℝ] E :=
+  (toCertifiedInverseKernel CCST).spectralProjector
+
+/-- Certified Moore-Penrose left projector on the chiral surface. -/
+abbrev metricProjector : E →L[ℝ] E :=
+  (toCertifiedInverseKernel CCST).metricProjector
+
+/-- Certified chiral-anomaly commutator on the chiral surface. -/
+noncomputable abbrev chiralAnomalyOperator : E →L[ℝ] E :=
+  spectralProjector CCST * metricProjector CCST
+    - metricProjector CCST * spectralProjector CCST
+
 /-- Forgetful map from the certified layer to the witness-level chiral package. -/
 abbrev toChiralSpectralTriple : ChiralSpectralTriple E :=
   { toSpectralTriple := CCST.toSpectralTriple
@@ -250,6 +263,40 @@ theorem metricProjector_star :
     CertifiedInverseKernel.metricProjector, CertifiedInverseKernel.toInverseKernel',
     InverseKernel.metricProjector] using
       CCST.toCertifiedInverseKernel.metricProjector_star
+
+omit [FiniteDimensional ℝ E] in
+/-- The certified chiral anomaly vanishes exactly when the certified projectors commute. -/
+theorem chiralAnomalyOperator_eq_zero_iff_projectors_commute :
+    chiralAnomalyOperator CCST = 0 ↔
+      spectralProjector CCST * metricProjector CCST
+        = metricProjector CCST * spectralProjector CCST := by
+  simp [chiralAnomalyOperator, sub_eq_zero]
+
+omit [FiniteDimensional ℝ E] in
+/-- Commuting certified projectors force vanishing certified anomaly scale. -/
+theorem epsilon_eq_zero_of_projectors_commute
+    (hComm :
+      spectralProjector CCST * metricProjector CCST
+        = metricProjector CCST * spectralProjector CCST) :
+    epsilon CCST = 0 := by
+  have hCommRaw :
+      IsDrazinInverse.projection CCST.D CCST.DD
+          * IsMoorePenroseInverse.leftProjector CCST.D CCST.DP
+        = IsMoorePenroseInverse.leftProjector CCST.D CCST.DP
+            * IsDrazinInverse.projection CCST.D CCST.DD := by
+    simpa [spectralProjector, metricProjector,
+      CertifiedChiralSpectralTriple.toCertifiedInverseKernel,
+      CertifiedInverseKernel.spectralProjector, CertifiedInverseKernel.metricProjector,
+      CertifiedInverseKernel.toInverseKernel', InverseKernel.spectralProjector,
+      InverseKernel.metricProjector] using hComm
+  have hChi :
+      InfoGeometry.Canonical.MoorePenrose.chiralAnomaly CCST.D CCST.DD CCST.DP = 0 := by
+    unfold InfoGeometry.Canonical.MoorePenrose.chiralAnomaly
+    exact sub_eq_zero.mpr hCommRaw
+  rw [CertifiedChiralSpectralTriple.epsilon, ChiralSpectralTriple.epsilon,
+    InfoGeometry.Canonical.MoorePenrose.chiralScale,
+    InfoGeometry.Canonical.MoorePenrose.epsilon]
+  simpa [hChi]
 
 /-- Global finite-dimensional constructor for the certified chiral layer. -/
 theorem exists_of_spectralTriple (ST : SpectralTriple E) :

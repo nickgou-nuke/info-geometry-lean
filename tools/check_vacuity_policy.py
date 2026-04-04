@@ -95,7 +95,7 @@ def check_policy(
                     )
 
     if verbose:
-        print(f"Vacuity policy gate: {len(entries)} theorems checked")
+        print(f"Vacuity policy gate: {len(entries)} declarations checked")
         print(f"  Warnings: {len(warnings)}")
         print(f"  Errors:   {len(errors)}")
         if errors:

@@ -118,20 +118,25 @@ variable {E F : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [NormedAddCommGroup F] [NormedSpace ℝ F]
 
-/-- Packaged doubled-space split `Cl(1,1)` seed used by the Bott branch. -/
-noncomputable abbrev cl11Action : RealSplitCl11Action (DoubledSpace E) :=
+/-- Packaged doubled-space split `Cl(1,1)` seed used internally by the Bott branch. -/
+private noncomputable abbrev cl11Action : RealSplitCl11Action (DoubledSpace E) :=
   doubledSpaceCl11Action (E := E)
 
 /-- `Cl(1,1)` Dirac seed from the packaged doubled-space split action. -/
-noncomputable abbrev cl11DiracSeed : Endomorphism (DoubledSpace E) :=
+private noncomputable abbrev cl11DiracSeed : Endomorphism (DoubledSpace E) :=
   (cl11Action (E := E)).J.toLinearMap
 
 /-- `Cl(1,1)` chiral grading from the packaged doubled-space split action. -/
-noncomputable abbrev cl11Grading : Endomorphism (DoubledSpace E) :=
+private noncomputable abbrev cl11Grading : Endomorphism (DoubledSpace E) :=
   (cl11Action (E := E)).eps.toLinearMap
 
+/-- Canonical `Cl(1,1)` Bott-Dirac operator reused by downstream modules. -/
+noncomputable def cl11BottDirac (Dn : Endomorphism F) :
+    Endomorphism (DoubledSpace E ⊗[ℝ] F) :=
+  bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn
+
 /-- The packaged doubled-space split action satisfies the Bott chiral relation. -/
-lemma cl11_isChiralDirac :
+private lemma cl11_isChiralDirac :
     IsChiralDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) := by
   have hAnti :
       cl11DiracSeed (E := E).comp (cl11Grading (E := E))
@@ -147,7 +152,7 @@ lemma cl11_isChiralDirac :
     _ = 0 := by simp
 
 /-- The packaged doubled-space split action satisfies the Bott grading involution. -/
-lemma cl11Grading_involutive :
+private lemma cl11Grading_involutive :
     IsInvolutiveGrading (cl11Grading (E := E)) := by
   simpa [IsInvolutiveGrading, cl11Grading, cl11Action] using
     congrArg ContinuousLinearMap.toLinearMap ((cl11Action (E := E)).eps_sq)
@@ -156,10 +161,10 @@ lemma cl11Grading_involutive :
 Concrete Bott-Dirac splitting for the `Cl(1,1)` pair
 `(modular_j, spectral_epsilon)` on the first tensor factor.
 -/
-theorem cl11_bottDirac_sq_eq_sum_laplacians
+private theorem cl11_bottDirac_sq_eq_sum_laplacians
     (Dn : Endomorphism F) :
-    (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn).comp
-      (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn)
+    (cl11BottDirac (E := E) Dn).comp
+      (cl11BottDirac (E := E) Dn)
       =
     (TensorProduct.map
       ((cl11DiracSeed (E := E)).comp (cl11DiracSeed (E := E)))
@@ -194,10 +199,10 @@ Rewriting form of the split Bott-Dirac square into the canonical
 -/
 theorem cl11_bottDirac_sq_eq_cl11BottLaplacian
     (Dn : Endomorphism F) :
-    (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn).comp
-      (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn)
+    (cl11BottDirac (E := E) Dn).comp
+      (cl11BottDirac (E := E) Dn)
       = cl11BottLaplacian (E := E) Dn := by
-  simpa [cl11BottLaplacian] using
+  simpa [cl11BottDirac, cl11BottLaplacian] using
     (cl11_bottDirac_sq_eq_sum_laplacians (E := E) (F := F) (Dn := Dn))
 
 end Cl11Bridge
@@ -245,7 +250,7 @@ theorem cl22_bottDirac_sq_eq_cl22BottLaplacian :
       (Dn := cl11DiracSeed (E := F)))
 
 /-- The split `Cl(1,1)` Dirac seed squares to identity. -/
-lemma cl11DiracSeed_involutive :
+private lemma cl11DiracSeed_involutive :
     (cl11DiracSeed (E := E)).comp (cl11DiracSeed (E := E))
       = (LinearMap.id : Endomorphism (DoubledSpace E)) := by
   simpa [cl11DiracSeed] using

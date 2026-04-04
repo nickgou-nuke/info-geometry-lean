@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.AnalyticalIndexCore
 import InfoGeometry.Canonical.KMSSinkhornBridge
 import InfoGeometry.Canonical.RicciMongeAmpere
+import InfoGeometry.Meta.Architecture
 
 set_option linter.unnecessarySimpa false
 
@@ -29,6 +30,7 @@ Coupled invariant package:
 thermodynamic Sinkhorn control, scalar-Ricci fixed-point collapse, and
 analytical index invariance along a Dirac/grading family.
 -/
+@[rep_depth thermo, capstone]
 def SinkhornRicciIndexInvariant
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
@@ -43,7 +45,8 @@ def SinkhornRicciIndexInvariant
 Canonical constructor for the coupled invariant package from its three proved
 components.
 -/
-theorem sinkhornRicciIndexInvariant_of_components
+@[rep_depth thermo, capstone]
+theorem SinkhornRicciIndexInvariant.mk_components
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
@@ -56,10 +59,11 @@ theorem sinkhornRicciIndexInvariant_of_components
   exact ⟨hSinkhorn, hRicciZero, hIndex⟩
 
 /--
-Derived constructor using modular-flow / Clifford-bundle transport hypotheses
+Derived constructor using modular-flow / Clifford-bundle transport conditions
 for the chiral slices.
 -/
-theorem sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
+@[rep_depth thermo, capstone]
+theorem SinkhornRicciIndexInvariant.of_modularCliffordTransport
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
@@ -72,7 +76,7 @@ theorem sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
     (hTrans :
       ChiralSliceModularCliffordTransportAlong (D := D) (Γ := Γ) σ clAct unit) :
     SinkhornRicciIndexInvariant n T flow D Γ := by
-  refine sinkhornRicciIndexInvariant_of_components
+  refine SinkhornRicciIndexInvariant.mk_components
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
     ?_ ?_ ?_
   · intro k label
@@ -83,10 +87,11 @@ theorem sinkhornRicciIndexInvariant_of_modularCliffordTransport_state_hypotheses
       (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans
 
 /--
-Primitive-hypothesis form of the coupled Sinkhorn/Ricci/index invariant:
+Primitive-condition form of the coupled Sinkhorn/Ricci/index invariant:
 modular/Clifford transport is supplied as explicit component equalities.
 -/
-theorem sinkhornRicciIndexInvariant_of_modularCliffordTransport_components_state_hypotheses
+@[rep_depth thermo, capstone]
+theorem SinkhornRicciIndexInvariant.of_modularCliffordTransport_components
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
@@ -105,7 +110,7 @@ theorem sinkhornRicciIndexInvariant_of_modularCliffordTransport_components_state
       (chiralKernelSliceMinus (D s) (Γ s)).map ((clAct ℓ).comp (σ s))
         = chiralKernelSliceMinus (D 0) (Γ 0)) :
     SinkhornRicciIndexInvariant n T flow D Γ := by
-  refine sinkhornRicciIndexInvariant_of_components
+  refine SinkhornRicciIndexInvariant.mk_components
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
     ?_ ?_ ?_
   · intro k label
@@ -117,10 +122,11 @@ theorem sinkhornRicciIndexInvariant_of_modularCliffordTransport_components_state
       hUnit hσInj hPlusMap hMinusMap
 
 /--
-Derived constructor using primitive flow-conjugacy hypotheses:
+Derived constructor using primitive flow-conjugacy conditions:
 the Dirac/grading family is transported to baseline by linear equivalences.
 -/
-theorem sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses
+@[rep_depth thermo, capstone]
+theorem SinkhornRicciIndexInvariant.of_conjugacy
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
     (D Γ : ℝ → Endomorphism V)
@@ -129,7 +135,7 @@ theorem sinkhornRicciIndexInvariant_of_conjugacy_state_hypotheses
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
     (hConj : ChiralConjugacyAlong D Γ eFlow) :
     SinkhornRicciIndexInvariant n T flow D Γ := by
-  refine sinkhornRicciIndexInvariant_of_components
+  refine SinkhornRicciIndexInvariant.mk_components
     (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
     ?_ ?_ ?_
   · intro k label

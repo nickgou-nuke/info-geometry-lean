@@ -49,8 +49,8 @@ If the Cl(1,1)-Bott Laplacian is zero, then the squared Bott-Dirac operator is z
 private theorem cl11_bottDirac_sq_eq_zero_of_algebraicEquilibrium
     (Dn : Endomorphism F)
     (hAlg : AlgebraicEquilibriumCl11 (E := E) Dn) :
-    (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn).comp
-      (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn) = 0 := by
+    (cl11BottDirac (E := E) Dn).comp
+      (cl11BottDirac (E := E) Dn) = 0 := by
   exact (cl11_bottDirac_sq_eq_cl11BottLaplacian (E := E) (F := F) (Dn := Dn)).trans hAlg
 
 /--
@@ -60,11 +60,11 @@ private theorem cl11_bottDirac_sq_apply_eq_zero_of_algebraicEquilibrium
     (Dn : Endomorphism F)
     (hAlg : AlgebraicEquilibriumCl11 (E := E) Dn)
     (ψ : DoubledSpace E ⊗[ℝ] F) :
-    ((bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn).comp
-      (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn)) ψ = 0 := by
+    ((cl11BottDirac (E := E) Dn).comp
+      (cl11BottDirac (E := E) Dn)) ψ = 0 := by
   have hSq :
-      (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn).comp
-        (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn) = 0 :=
+      (cl11BottDirac (E := E) Dn).comp
+        (cl11BottDirac (E := E) Dn) = 0 :=
     cl11_bottDirac_sq_eq_zero_of_algebraicEquilibrium (E := E) (Dn := Dn) hAlg
   simp [hSq]
 
@@ -81,13 +81,13 @@ Lichnerowicz-style bridge in the current framework:
 for `InfoSpectralTriple`, `D²` rewrites to the Hessian metric operator, and therefore
 the split Bott-Dirac square rewrites to the corresponding metric-op Laplacian form.
 -/
-theorem cl11_bottDirac_sq_eq_metricOp_form
+private theorem cl11BottLaplacian_eq_metricOp_form
     (IST : InfoSpectralTriple F) :
-    (bottDirac (cl11DiracSeed (E := A)) (cl11Grading (E := A)) (spectralDiracLinear IST)).comp
-      (bottDirac (cl11DiracSeed (E := A)) (cl11Grading (E := A)) (spectralDiracLinear IST))
+    cl11BottLaplacian (E := A) (spectralDiracLinear IST)
       =
     (TensorProduct.map
-      ((cl11DiracSeed (E := A)).comp (cl11DiracSeed (E := A)))
+      ((InfoGeometry.Quantum.doubledSpaceCl11Action (E := A)).J.toLinearMap.comp
+        (InfoGeometry.Quantum.doubledSpaceCl11Action (E := A)).J.toLinearMap)
       (LinearMap.id : Endomorphism F))
       +
     (TensorProduct.map
@@ -100,22 +100,21 @@ theorem cl11_bottDirac_sq_eq_metricOp_form
       exact congrArg (fun T : F →L[ℝ] F => T v) (IST.dirac_sq_eq_metric)
     simpa [spectralDiracLinear, LinearMap.comp_apply] using hv
   calc
-    (bottDirac (cl11DiracSeed (E := A)) (cl11Grading (E := A)) (spectralDiracLinear IST)).comp
-        (bottDirac (cl11DiracSeed (E := A)) (cl11Grading (E := A)) (spectralDiracLinear IST))
+    cl11BottLaplacian (E := A) (spectralDiracLinear IST)
       =
         (TensorProduct.map
-          ((cl11DiracSeed (E := A)).comp (cl11DiracSeed (E := A)))
+          ((InfoGeometry.Quantum.doubledSpaceCl11Action (E := A)).J.toLinearMap.comp
+            (InfoGeometry.Quantum.doubledSpaceCl11Action (E := A)).J.toLinearMap)
           (LinearMap.id : Endomorphism F))
           +
         (TensorProduct.map
           (LinearMap.id : Endomorphism (DoubledSpace A))
           ((spectralDiracLinear IST).comp (spectralDiracLinear IST))) := by
-            simpa using
-              (cl11_bottDirac_sq_eq_sum_laplacians
-                (E := A) (F := F) (Dn := spectralDiracLinear IST))
+            rfl
     _ =
         (TensorProduct.map
-          ((cl11DiracSeed (E := A)).comp (cl11DiracSeed (E := A)))
+          ((InfoGeometry.Quantum.doubledSpaceCl11Action (E := A)).J.toLinearMap.comp
+            (InfoGeometry.Quantum.doubledSpaceCl11Action (E := A)).J.toLinearMap)
           (LinearMap.id : Endomorphism F))
           +
         (TensorProduct.map
@@ -127,13 +126,7 @@ theorem cl11_bottDirac_sq_eq_metricOp_form
 Metric-op closure condition for the split Bott Laplacian in the Lichnerowicz form.
 -/
 def LichnerowiczBalancedCl11 (IST : InfoSpectralTriple F) : Prop :=
-  (TensorProduct.map
-    ((cl11DiracSeed (E := A)).comp (cl11DiracSeed (E := A)))
-    (LinearMap.id : Endomorphism F))
-    +
-  (TensorProduct.map
-    (LinearMap.id : Endomorphism (DoubledSpace A))
-    (IST.H.metricOp IST.x₀)) = 0
+  cl11BottLaplacian (E := A) (spectralDiracLinear IST) = 0
 
 /--
 If the Lichnerowicz-balanced metric-op closure holds, the split Bott-Dirac square vanishes.
@@ -141,10 +134,10 @@ If the Lichnerowicz-balanced metric-op closure holds, the split Bott-Dirac squar
 theorem cl11_bottDirac_sq_eq_zero_of_lichnerowiczBalanced
     (IST : InfoSpectralTriple F)
     (hBal : LichnerowiczBalancedCl11 (A := A) IST) :
-    (bottDirac (cl11DiracSeed (E := A)) (cl11Grading (E := A)) (spectralDiracLinear IST)).comp
-      (bottDirac (cl11DiracSeed (E := A)) (cl11Grading (E := A)) (spectralDiracLinear IST)) = 0 := by
-  rw [cl11_bottDirac_sq_eq_metricOp_form (A := A) IST]
-  exact hBal
+    (cl11BottDirac (E := A) (spectralDiracLinear IST)).comp
+      (cl11BottDirac (E := A) (spectralDiracLinear IST)) = 0 := by
+  exact (cl11_bottDirac_sq_eq_cl11BottLaplacian
+    (E := A) (F := F) (Dn := spectralDiracLinear IST)).trans hBal
 
 end LichnerowiczBridge
 

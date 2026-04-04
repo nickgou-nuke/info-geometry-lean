@@ -5,6 +5,9 @@ The source of architectural truth is no longer purely Python-side: the native gr
 - [Architecture.lean](../../lean/InfoGeometry/Meta/Architecture.lean)
 - [Audit.lean](../../lean/InfoGeometry/Audit.lean)
 
+For maintained-vs-compatibility status across the whole tooling tree, see
+[docs/RepositoryMemoryMap.md](../../docs/RepositoryMemoryMap.md).
+
 The infra layer exists to preserve memory and turn a large formal repository back into an auditable working surface after context has been lost.
 Its purpose is to:
 - externalize dependency and ownership state from Lean into stable artifacts
@@ -167,3 +170,6 @@ Run the native audit before trusting the representation-depth reports. Run the m
 - theorem-class tagging in canonical files
 - suspect theorem burden in stable canonical owners
 - reopening of structural hotspot and shell debt tracked by the refreshed artifacts
+
+It is a source-level policy pass. Generated or internal declarations without a
+valid source line are not part of its public-theorem scan.

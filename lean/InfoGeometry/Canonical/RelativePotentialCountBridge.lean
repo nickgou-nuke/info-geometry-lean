@@ -461,13 +461,12 @@ noncomputable def countRelativeVolumeChange
     (href : ∀ i : Fin n, 0 < ref i) : ℝ :=
   countMass counts hcounts / countMass ref href
 
-lemma countRelativeVolumeChange_pos
+private lemma countRelativeVolumeChange_pos
     (counts ref : RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i)
     (href : ∀ i : Fin n, 0 < ref i) :
     0 < countRelativeVolumeChange counts ref hcounts href := by
   exact div_pos (countMass_pos counts hcounts) (countMass_pos ref href)
-
 omit [Nonempty (Fin n)] in
 @[simp] theorem countMassShift_eq_neg_log_countRelativeVolumeChange
     [Nonempty (Fin n)]

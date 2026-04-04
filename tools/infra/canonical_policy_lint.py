@@ -172,13 +172,24 @@ def theorem_block(lines: list[str], start_line: int, next_decl_line: int | None)
     return '\n'.join(lines[start:end])
 
 
+def has_valid_source_line(lines: list[str], line: int) -> bool:
+    return line > 0 and line <= len(lines)
+
+
 def theorem_is_private(lines: list[str], line: int) -> bool:
+    if not has_valid_source_line(lines, line):
+        return False
     text = lines[line - 1].lstrip()
     return text.startswith('private theorem') or text.startswith('private lemma')
 
 
 def theorem_class_tag(lines: list[str], line: int) -> str | None:
+    if not has_valid_source_line(lines, line):
+        return None
+    # Scan backward from the line before the theorem, up to 5 lines up
     for idx in range(line - 2, max(-1, line - 7), -1):
+        if idx < 0 or idx >= len(lines):
+            continue
         text = lines[idx].strip()
         if not text:
             continue
@@ -268,6 +279,8 @@ def scan_public_theorems() -> list[PublicTheorem]:
             continue
         path = ROOT / file
         lines = read_file_lines(path, file_cache)
+        if not has_valid_source_line(lines, line):
+            continue
         if theorem_is_private(lines, line):
             continue
 

@@ -1046,7 +1046,20 @@ def build_incidence_graph(
 
 def plot_incidence_graph(graph: nx.DiGraph, out_path: Path) -> None:
     if graph.number_of_nodes() == 0:
-        raise SystemExit("source-sink incidence graph is empty")
+        fig, ax = plt.subplots(figsize=(8, 2.5))
+        ax.axis("off")
+        ax.text(
+            0.5,
+            0.5,
+            "No source-sink incidence under current frontier filters.",
+            ha="center",
+            va="center",
+            fontsize=12,
+        )
+        fig.tight_layout()
+        fig.savefig(out_path, format="svg")
+        plt.close(fig)
+        return
 
     layer_nodes: dict[int, list[str]] = defaultdict(list)
     for node, data in graph.nodes(data=True):

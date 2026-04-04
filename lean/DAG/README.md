@@ -3,8 +3,11 @@
 `lean/DAG/` is the Lean-side graph export layer for this repository.
 It is not the sole owner of architectural grammar anymore; depth legality now starts in:
 - [lawful-flow-glossary.md](../../docs/lawful-flow-glossary.md) for constitutive boundary/defect tag semantics
-- [Architecture.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Meta/Architecture.lean)
-- [Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
+- [Architecture.lean](../InfoGeometry/Meta/Architecture.lean)
+- [Audit.lean](../InfoGeometry/Audit.lean)
+
+For the current repo-wide status of operational docs, generated artifacts, and
+compatibility wrappers, see [docs/RepositoryMemoryMap.md](../../docs/RepositoryMemoryMap.md).
 
 The DAG subsystem exists because this repository is one theory spread across many representation surfaces.
 Its job is to externalize memory about ownership, adjacency, transport, and coherence so that context can be recovered after local state is lost.

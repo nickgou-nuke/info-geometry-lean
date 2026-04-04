@@ -24,6 +24,9 @@ docs/**
 !docs/auto/
 docs/auto/**
 !docs/auto/index.md
+!docs/README.md
+!docs/ModuleMap.md
+!docs/RepositoryMemoryMap.md
 !docs/*_synthesis.md
 !docs/testable_predictions.md
 !docs/keyword_index.md

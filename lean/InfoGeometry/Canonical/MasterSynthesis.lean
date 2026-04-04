@@ -226,8 +226,8 @@ private theorem bits_to_gravity_to_fluid_capstone
     -- 4. Thermal Time identity holds (Connes-Rovelli)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
     -- 5. Lichnerowicz-balanced split Bott-Dirac square vanishes (Stability)
-      ∧ (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) (spectralDiracLinear IST)).comp
-          (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) (spectralDiracLinear IST)) = 0
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
     -- 6. Helicity Invariant matches the Twin Wave pairing (Topological Protection)
       ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ), helicityInvariant A ω = twinWaveHelicity A Ω)
     -- 7. Pauli Exclusion Principle has a constructive witness (Fermionic Liquidity)
@@ -300,8 +300,8 @@ private theorem squeezingLogShear_bound_of_capstone_conjunction
             (anomalyStressEnergyAt Kgeo x CI.chiralScale)
         ∧ (∃ state : FluidState E, state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1)
         ∧ Mod.ConnesRovelliThermalTimeIdentity
-        ∧ (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) (spectralDiracLinear IST)).comp
-            (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) (spectralDiracLinear IST)) = 0
+        ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+            (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
         ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
             helicityInvariant A ω = twinWaveHelicity A Ω)
         ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
@@ -408,8 +408,8 @@ private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
           (anomalyStressEnergyAt Kgeo x CI.chiralScale)
       ∧ (∃ state : FluidState E, state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
-      ∧ (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) (spectralDiracLinear IST)).comp
-          (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) (spectralDiracLinear IST)) = 0
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
       ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
           helicityInvariant A ω = twinWaveHelicity A Ω)
       ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
@@ -475,8 +475,8 @@ private theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
           (anomalyStressEnergyAt Kgeo x CI.chiralScale)
       ∧ (∃ state : FluidState E, state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
-      ∧ (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) (spectralDiracLinear IST)).comp
-          (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) (spectralDiracLinear IST)) = 0
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
       ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
           helicityInvariant A ω = twinWaveHelicity A Ω)
       ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)

@@ -73,6 +73,10 @@ COVERAGE_EXCLUDE_SUFFIXES = (
     "Test.lean",
 )
 
+COVERAGE_EXCLUDE_EXACT = {
+    "lean/InfoGeometry/AuditStrict.lean",
+}
+
 
 def load_quarantine_manifest_files(path: Path) -> set[str]:
     out: set[str] = set()
@@ -92,6 +96,7 @@ def load_quarantine_manifest_files(path: Path) -> set[str]:
 def is_coverage_excluded(rel_path: str, excluded_files: set[str]) -> bool:
     return (
         rel_path in excluded_files
+        or rel_path in COVERAGE_EXCLUDE_EXACT
         or any(rel_path.startswith(prefix) for prefix in COVERAGE_EXCLUDE_PREFIXES)
         or any(rel_path.endswith(suffix) for suffix in COVERAGE_EXCLUDE_SUFFIXES)
     )

@@ -896,14 +896,14 @@ grading structure.
 -/
 noncomputable def cl11GlobalGrading (Γn : Endomorphism F) :
     Endomorphism (DoubledSpace E ⊗[ℝ] F) :=
-  globalGrading (cl11Grading (E := E)) Γn
+  globalGrading ((InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)).eps.toLinearMap) Γn
 
 /-- `Cl(1,1)` specialization of the formal Bott analytical index. -/
 noncomputable def cl11BottAnalyticalIndex
     [FiniteDimensional ℝ (DoubledSpace E ⊗[ℝ] F)]
     (Dn Γn : Endomorphism F) : ℤ :=
   analyticalIndex
-    (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn)
+    (cl11BottDirac (E := E) Dn)
     (cl11GlobalGrading (E := E) Γn)
 
 end Bott
@@ -922,8 +922,8 @@ def Cl11BottLaplacianZero (Dn : Endomorphism F) : Prop :=
 theorem cl11_bottDirac_sq_eq_zero_of_laplacian_zero
     (Dn : Endomorphism F)
     (hZero : Cl11BottLaplacianZero (E := E) Dn) :
-    (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn).comp
-      (bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn) = 0 := by
+    (cl11BottDirac (E := E) Dn).comp
+      (cl11BottDirac (E := E) Dn) = 0 := by
   exact (cl11_bottDirac_sq_eq_cl11BottLaplacian (E := E) (F := F) (Dn := Dn)).trans hZero
 
 end Laplacian

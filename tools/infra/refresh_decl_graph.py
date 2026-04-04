@@ -99,7 +99,7 @@ def _olean_content_hash(root: Path) -> str:
 # Expected indexer schema version.  Must match indexerSchemaVersion in
 # lean/DAG/Indexer.lean.  If the Lean side bumps the version, artifacts
 # produced by an older indexer are stale and must be regenerated.
-EXPECTED_SCHEMA_VERSION = 2
+EXPECTED_SCHEMA_VERSION = 3
 
 
 def _should_skip(meta_path: Path, current_hash: str,

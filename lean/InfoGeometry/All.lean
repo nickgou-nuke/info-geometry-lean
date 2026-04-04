@@ -28,6 +28,9 @@ import InfoGeometry.Generated
 import InfoGeometry.KL
 import InfoGeometry.LLM
 import InfoGeometry.Library
+import InfoGeometry.Meta.Admission
+import InfoGeometry.Meta.RegionPolicy
+import InfoGeometry.Meta.Trust
 import InfoGeometry.OptimalTransport
 import InfoGeometry.PositiveMeasure
 import InfoGeometry.Potential

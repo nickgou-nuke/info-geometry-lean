@@ -101,11 +101,12 @@ theorem isRicciFlat_and_logDivergence_eq_singularComplement_of_unitRelativeVolum
       B.system.logDivergence =
         B.system.projectiveTerm + B.system.nilpotentTerm
           + B.system.anomalyTerm + B.system.gradedTerm := by
+  have hdet : MetricOpNondegenerate B.geometry.H := hM.2.1
   refine ⟨?_, ?_⟩
   · exact isRicciFlat_of_unitRelativeVolume_metricDerived
       (R := R) (K := B.geometry) (x := B.point) hUnit hM
   · exact B.logDivergence_eq_singularComplement_of_unitRelativeVolume
-      hUnit hM.metricOpNondegenerate
+      hUnit hdet
 
 /--
 If the regular radial branch dies and the boundary obstruction also vanishes,
@@ -120,12 +121,13 @@ theorem isRicciFlat_and_logDivergence_eq_projective_nilpotent_graded_of_unitRela
     IsRicciFlat R ∧
       B.system.logDivergence =
         B.system.projectiveTerm + B.system.nilpotentTerm + B.system.gradedTerm := by
+  have hdet : MetricOpNondegenerate B.geometry.H := hM.2.1
   refine ⟨?_, ?_⟩
   · exact isRicciFlat_of_unitRelativeVolume_metricDerived
       (R := R) (K := B.geometry) (x := B.point) hUnit hM
   · exact
       B.logDivergence_eq_projective_nilpotent_graded_of_unitRelativeVolume_of_boundaryScale_eq_zero
-        hUnit hM.metricOpNondegenerate hBoundary
+        hUnit hdet hBoundary
 
 /--
 Metric-derived vacuum Einstein closure plus transport reduction to the pure
@@ -140,11 +142,12 @@ theorem vacuumEinsteinEquation_and_logDivergence_eq_singularComplement_of_unitRe
       B.system.logDivergence =
         B.system.projectiveTerm + B.system.nilpotentTerm
           + B.system.anomalyTerm + B.system.gradedTerm := by
+  have hdet : MetricOpNondegenerate B.geometry.H := hM.2.1
   refine ⟨?_, ?_⟩
   · exact vacuumEinsteinEquation_of_unitRelativeVolume_metricDerived
       (R := R) (K := B.geometry) (x := B.point) (Λ := Λ) hUnit hM
   · exact B.logDivergence_eq_singularComplement_of_unitRelativeVolume
-      hUnit hM.metricOpNondegenerate
+      hUnit hdet
 
 /--
 If both the regular radial branch and the boundary anomaly branch vanish, the
@@ -161,12 +164,13 @@ theorem vacuumEinsteinEquation_and_logDivergence_eq_projective_nilpotent_graded_
     VacuumEinsteinEquationAt R B.geometry B.point (2 * Λ) Λ ∧
       B.system.logDivergence =
         B.system.projectiveTerm + B.system.nilpotentTerm + B.system.gradedTerm := by
+  have hdet : MetricOpNondegenerate B.geometry.H := hM.2.1
   refine ⟨?_, ?_⟩
   · exact vacuumEinsteinEquation_of_unitRelativeVolume_metricDerived
       (R := R) (K := B.geometry) (x := B.point) (Λ := Λ) hUnit hM
   · exact
       B.logDivergence_eq_projective_nilpotent_graded_of_unitRelativeVolume_of_boundaryScale_eq_zero
-        hUnit hM.metricOpNondegenerate hBoundary
+        hUnit hdet hBoundary
 
 end CalabiYauSingularTransportBridge
 

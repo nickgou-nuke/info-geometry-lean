@@ -106,26 +106,21 @@ Bridge package from unit RN-relative-volume state to the Einstein zero branch.
 This isolates the geometric/model-specific implication
 `ρ ≡ 1  ⇒  Ric = 0 · g` as explicit data rather than assuming Ricci-flatness.
 -/
-structure MetricRNRicciBridge
-    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E) : Prop where
-  unitVolume_to_einstein_zero :
-    UnitRelativeVolumeState K → IsEinsteinKaehlerAtWith 0 R K x
+def MetricRNRicciBridge
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E) : Prop :=
+  UnitRelativeVolumeState K → IsEinsteinKaehlerAtWith 0 R K x
 
 /--
 Metric-derived RN bridge:
 `R` is explicitly identified with the metric-derived Ricci tensor, and unit
 relative volume forces that metric-derived tensor to vanish.
 -/
-structure MetricDerivedRNRicciBridge
-    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E) : Prop where
-  ricci_eq_metricDerived :
-    R = ricciFromMetricOp K.H x
-  metricOpNondegenerate :
-    MetricOpNondegenerate K.H
-  metricLogDetTwiceDifferentiable :
-    MetricLogDetTwiceDifferentiable K.H
-  unitVolume_metricDerived_zero :
-    UnitRelativeVolumeState K → ∀ u v : E, ricciFromMetricOp K.H x u v = 0
+def MetricDerivedRNRicciBridge
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E) : Prop :=
+  R = ricciFromMetricOp K.H x ∧
+    MetricOpNondegenerate K.H ∧
+    MetricLogDetTwiceDifferentiable K.H ∧
+    (UnitRelativeVolumeState K → ∀ u v : E, ricciFromMetricOp K.H x u v = 0)
 
 /-- Unit relative volume forces the metric log-determinant to vanish pointwise. -/
 lemma metricLogDet_eq_zero_of_unitRelativeVolume
@@ -151,7 +146,7 @@ lemma metricLogDet_eq_zero_of_unitRelativeVolume
   rw [habs_eq_one, Real.log_one]
 
 /-- The first derivative of the metric log-determinant vanishes on the unit-volume branch. -/
-lemma fderiv_metricLogDet_eq_zero_of_unitRelativeVolume
+private lemma fderiv_metricLogDet_eq_zero_of_unitRelativeVolume
     (K : KaehlerInformationGeometry E)
     (hUnit : UnitRelativeVolumeState K)
     (hdet : MetricOpNondegenerate K.H)
@@ -181,7 +176,7 @@ lemma fderiv_metricLogDet_eq_zero_of_unitRelativeVolume
   exact hZeroHas.unique hConstHas
 
 /-- The metric-derived Ricci tensor vanishes once the log-determinant chain collapses. -/
-lemma ricciFromMetricOp_eq_zero_of_unitRelativeVolume
+private lemma ricciFromMetricOp_eq_zero_of_unitRelativeVolume
     (K : KaehlerInformationGeometry E) (x : E)
     (hUnit : UnitRelativeVolumeState K)
     (hdet : MetricOpNondegenerate K.H)
@@ -227,34 +222,16 @@ Constructive instantiation of the metric-derived bridge via true
 differential log-det calculus. This leverages the formal definition
 of Ricci as the log-det Hessian, proving it vanishes when volume is constant.
 -/
-lemma MetricDerivedRNRicciBridge.ofUnitRelativeVolume_fderiv
+private theorem metricDerivedRNRicciBridge_ofUnitRelativeVolume_fderiv
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
     (hEq : R = ricciFromMetricOp K.H x)
     (hDiff : MetricLogDetTwiceDifferentiable K.H)
     (hdet : MetricOpNondegenerate K.H) :
-    MetricDerivedRNRicciBridge R K x where
-  ricci_eq_metricDerived := hEq
-  metricOpNondegenerate := hdet
-  metricLogDetTwiceDifferentiable := hDiff
-  unitVolume_metricDerived_zero := by
-    intro hUnit
-    exact ricciFromMetricOp_eq_zero_of_unitRelativeVolume
-      (K := K) (x := x) hUnit hdet hDiff
-
-/--
-Every metric-derived RN bridge induces the abstract metric-to-Ricci bridge.
--/
-private theorem metricRNRicciBridge_of_metricDerived
-    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
-    (hM : MetricDerivedRNRicciBridge R K x) :
-    MetricRNRicciBridge R K x := by
-  refine ⟨?_⟩
-  intro hUnit u v
-  calc
-    R u v = ricciFromMetricOp K.H x u v := by
-      simpa [hM.ricci_eq_metricDerived]
-    _ = 0 := hM.unitVolume_metricDerived_zero hUnit u v
-    _ = (0 : ℝ) * K.H.metric x u v := by ring
+    MetricDerivedRNRicciBridge R K x := by
+  refine ⟨hEq, hdet, hDiff, ?_⟩
+  intro hUnit
+  exact ricciFromMetricOp_eq_zero_of_unitRelativeVolume
+    (K := K) (x := x) hUnit hdet hDiff
 
 /--
 Constructive Ricci-flat derivation from unit relative volume via the
@@ -265,13 +242,14 @@ theorem isRicciFlat_of_unitRelativeVolume_metricDerived
     (hUnit : UnitRelativeVolumeState K)
     (hM : MetricDerivedRNRicciBridge R K x) :
     IsRicciFlat R := by
+  rcases hM with ⟨hEq, _, _, hZero⟩
   intro u v
   have hRicciEq : R u v = ricciFromMetricOp K.H x u v := by
-    have := congrFun (congrFun hM.ricci_eq_metricDerived u) v
+    have := congrFun (congrFun hEq u) v
     simpa using this
   calc
     R u v = ricciFromMetricOp K.H x u v := hRicciEq
-    _ = 0 := hM.unitVolume_metricDerived_zero hUnit u v
+    _ = 0 := hZero hUnit u v
 
 /--
 Constructive vacuum Einstein closure from unit relative volume via the
@@ -396,7 +374,7 @@ theorem isRicciFlat_of_unitRelativeVolume
     IsRicciFlat R := by
   intro u v
   calc
-    R u v = (0 : ℝ) * K.H.metric x u v := hBridge.unitVolume_to_einstein_zero hUnit u v
+    R u v = (0 : ℝ) * K.H.metric x u v := hBridge hUnit u v
     _ = 0 := by ring
 
 omit [FiniteDimensional ℝ E] in

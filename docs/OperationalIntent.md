@@ -45,7 +45,7 @@ It does not mean the only valid mathematics in the repository.
 
 Valid but unfinished mathematics should be:
 - developed on noncanonical or exploratory surfaces
-- quarantined honestly when it is not yet stable
+- quarantined explicitly when it is not yet stable
 - promoted when the owner-level proofs become real
 
 What should be removed are theorem-shaped wrappers and facade surfaces that do not carry mathematical load.
@@ -62,10 +62,16 @@ They serve four jobs:
 
 Recent improvements:
 - **Unified graph construction**: a single typed adjacency map is built once; `full_graph.json` is projected from it
-- **Artifact metadata**: `artifacts/dag/index/meta.json` records `schemaVersion` (≥ 2), ISO timestamp, node/edge/morphism/type counts, and `oleanHash`
+- **Artifact metadata**: `artifacts/dag/index/meta.json` records `schemaVersion` (3), ISO timestamp, node/edge/morphism/type counts, and `oleanHash`
 - **Edge validation**: `validateEdges` enforces referential integrity at export time
 - **Atomic writes**: `atomicWriteFile` prevents partial artifact corruption
 - **Incremental refresh**: `refresh_decl_graph.py` skips when the olean content hash matches the previous run; use `--force` to override
+
+Current Purification Status:
+- The **Calabi-Yau bridge corridor** has been successfully thinned and is no longer a primary shell-pressure blocker.
+- The current shell-heavy primary target is **`InfoGeometry.Canonical.BerryPhase`**.
+- The current retained constructive knot after shell contraction is **`InfoGeometry.Canonical.TopologicalInvariants`**.
+- Those two reports should be read together rather than collapsed into one hotspot label.
 
 They do **not**:
 - define mathematical truth
@@ -106,14 +112,15 @@ This is why `true-root-order`, the replacement frontier, and the process-flow ar
 The trusted order is:
 1. Lean source
 2. Lean-native audit
-3. `artifacts/dag/index/meta.json` — schema gate and freshness check (`schemaVersion` ≥ 2, recent `timestamp`)
+3. `artifacts/dag/index/meta.json` — schema gate and freshness check (`schemaVersion = 3`, recent `timestamp`)
 4. atomic DAG artifacts (`full_graph.json`, `index/*.jsonl`, `structural-topology.json`)
 5. derived Python reports
 6. prose
 
 The DAG layer is maintained because raw code reading alone does not scale once the theory spreads across many representation surfaces.
-The Python layer is maintained because regenerated reports are the fastest way to recover context, localize debt, and choose the next honest file to inspect.
+The Python layer is maintained because regenerated reports are the fastest way to recover context, localize debt, and choose the next relevant file to inspect.
 Before trusting any artifact, check `meta.json` for timestamp and schema version.
+Use `openclaw-targets.md` for the live shell-heavy target and `semantic-quotient.md` for the retained constructive knot.
 
 ## Process-Flow Layer
 

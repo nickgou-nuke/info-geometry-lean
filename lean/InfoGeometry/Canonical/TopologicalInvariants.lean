@@ -83,49 +83,6 @@ theorem chiralAnomalyIndex_eq_zero_of_projectors_commute
     simpa [hChi]
   simp [chiralAnomalyIndex, hEps]
 
-/--
-Certified topological index derived from geometric chirality.
-
-This is the proof-carrying refinement of `chiralAnomalyIndex`: the same scalar
-index is computed from a certified chiral spectral triple, so the spectral
-projector rank is read from the canonical certified inverse kernel rather than
-from a witness-only package.
--/
-noncomputable def certifiedChiralAnomalyIndex (CCST : CertifiedChiralSpectralTriple E) : ℝ :=
-  CCST.epsilon *
-    (Module.finrank ℝ
-      (LinearMap.range CCST.toCertifiedInverseKernel.spectralProjector.toLinearMap) : ℝ)
-
-/--
-The certified chiral anomaly index agrees with the witness-level index after
-forgetting certification.
--/
-theorem certifiedChiralAnomalyIndex_eq_chiralAnomalyIndex
-    (CCST : CertifiedChiralSpectralTriple E) :
-    certifiedChiralAnomalyIndex CCST = chiralAnomalyIndex CCST.toChiralSpectralTriple := by
-  simp [certifiedChiralAnomalyIndex, chiralAnomalyIndex,
-    CertifiedChiralSpectralTriple.epsilon,
-    CertifiedChiralSpectralTriple.toCertifiedInverseKernel,
-    CertifiedInverseKernel.spectralProjector,
-    CertifiedInverseKernel.toInverseKernel',
-    InverseKernel.spectralProjector]
-
-/--
-If the certified spectral and metric projectors commute, the certified chiral
-anomaly index vanishes exactly.
--/
-theorem certifiedChiralAnomalyIndex_eq_zero_of_projectors_commute
-    (CCST : CertifiedChiralSpectralTriple E)
-    (hComm :
-      CertifiedChiralSpectralTriple.spectralProjector CCST
-        * CertifiedChiralSpectralTriple.metricProjector CCST
-        = CertifiedChiralSpectralTriple.metricProjector CCST
-            * CertifiedChiralSpectralTriple.spectralProjector CCST) :
-    certifiedChiralAnomalyIndex CCST = 0 := by
-  have hEps : CertifiedChiralSpectralTriple.epsilon CCST = 0 :=
-    CertifiedChiralSpectralTriple.epsilon_eq_zero_of_projectors_commute CCST hComm
-  simp [certifiedChiralAnomalyIndex, hEps]
-
 end ChiralIndex
 
 end InfoGeometry.Canonical.TopologicalInvariants

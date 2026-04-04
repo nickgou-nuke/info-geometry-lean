@@ -8,14 +8,25 @@ The tooling exists to make the repository recoverable when local context is gone
 It is the maintained memory and audit surface for a theory that is distributed across many representation files.
 Its purpose is to recover owner order, transport structure, coherence pressure, and wrapper burden quickly enough that direct code reading can start in the right place.
 
-The maintained tooling surface is split into three directories:
-- [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/README.md)
-- [tools/frontier/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/frontier/README.md)
-- [tools/docs/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/docs/README.md)
+The maintained tooling surface is split into three directories and one planner package:
+- [tools/infra/README.md](infra/README.md)
+- [tools/frontier/README.md](frontier/README.md)
+- [tools/docs/README.md](docs/README.md)
+- `tools/planner/`
 
-Top-level `tools/*.py` wrappers are convenience entrypoints. The maintained workflows are the subdirectory scripts and READMEs.
+The maintained top-level standalone modules are:
+- `pathing.py`
+- `build_lock.py`
+- `theorem_significance.py`
+- `check_vacuity_policy.py`
+- `vacuity_planner.py`
+- `vacuity_policy_config.py`
 
-### Top-level Wrappers
+Many other top-level `tools/*.py` files are compatibility wrappers that forward
+to maintained subdirectory entrypoints. The current status map lives in
+[docs/RepositoryMemoryMap.md](../docs/RepositoryMemoryMap.md).
+
+### Top-level Support And Compatibility Modules
 
 | File | Purpose |
 |------|---------|
@@ -53,7 +64,7 @@ Python never touches Lean internals directly. The integration is:
 ## Trust Order
 
 If documentation about tooling disagrees, trust:
-1. Lean source under `lean/InfoGeometry/Meta/` and [Audit.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Audit.lean)
+1. Lean source under `lean/InfoGeometry/Meta/` and [Audit.lean](../lean/InfoGeometry/Audit.lean)
 2. the scripts under `tools/infra/`, `tools/frontier/`, and `tools/docs/`
 3. the corresponding READMEs
 4. older wrapper prose

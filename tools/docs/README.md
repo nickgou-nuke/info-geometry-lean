@@ -10,7 +10,7 @@ This directory contains the maintained documentation refresh helpers.
 ## Purpose
 
 Use this layer for:
-- regenerating [docs/auto/index.md](/home/goutev/LEAN4/info-geometry-lean/docs/auto/index.md);
+- regenerating [docs/auto/index.md](../../docs/auto/index.md);
 - rebuilding selected derived documentation surfaces from refreshed graph/frontier data;
 - keeping generated doc outputs separate from hand-maintained operational docs.
 

@@ -77,7 +77,7 @@ Additionally, a vacuity enforcement system classifies declarations by graph role
 
 The repo contains ~330 complete theorems (zero `sorry`). Approximately 85% are
 definitional unfolding or single-step algebra. The remaining ~50 theorems carry
-genuine mathematical content. This section inventories the substance honestly.
+genuine mathematical content. This section inventories the substantive layer explicitly.
 
 ### Anchor corridor (count → projective → operator)
 

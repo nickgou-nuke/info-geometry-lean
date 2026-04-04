@@ -78,7 +78,8 @@ theorem projective_modularPotential_eq_raw_sub_scalarModularPotential_relativeVo
       = relativeCountModularProfile n counts ref i
         - scalarModularPotential
             (countRelativeVolumeChange counts ref hcounts href)
-            (countRelativeVolumeChange_pos counts ref hcounts href) := by
+            (by
+              exact div_pos (countMass_pos counts hcounts) (countMass_pos ref href)) := by
   exact
     relativeModularPotential_countRay_eq_relativeCountModularProfile_sub_scalarModularPotential_relativeVolumeChange
       (n := n) (counts := counts) (ref := ref)

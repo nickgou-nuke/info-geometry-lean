@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BottDirac
+import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.ChiralAnomaly
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Algebra.Module.Submodule.Ker
@@ -862,6 +863,125 @@ theorem indexInvariantAlong_of_modularCliffordTransport_components
     (hTrans := ⟨hUnit, hσInj, hPlusMap, hMinusMap⟩)
 
 end Core
+
+section Cartan
+
+open InfoGeometry.Canonical.BogoliubovTransport
+
+variable {E : Type*}
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/--
+Exact doubled-space linear equivalence carried by the local Cartan exponential
+`KRotation t = exp(tK)`.
+-/
+noncomputable def KRotationLE (t : ℝ) : DoubledSpace E ≃ₗ[ℝ] DoubledSpace E :=
+  LinearEquiv.ofLinear
+    (KRotation (E := E) t).toLinearMap
+    (KRotation (E := E) (-t)).toLinearMap
+    (by
+      apply LinearMap.ext
+      intro x
+      change KRotation (E := E) t (KRotation (E := E) (-t) x) = x
+      have hInv :
+          KRotation (E := E) t * KRotation (E := E) (-t)
+            = (1 : DoubledSpace E →L[ℝ] DoubledSpace E) := by
+        simpa using (KRotation_add (E := E) t (-t)).symm
+      exact congrArg (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x) hInv)
+    (by
+      apply LinearMap.ext
+      intro x
+      change KRotation (E := E) (-t) (KRotation (E := E) t x) = x
+      have hInv :
+          KRotation (E := E) (-t) * KRotation (E := E) t
+            = (1 : DoubledSpace E →L[ℝ] DoubledSpace E) := by
+        simpa using (KRotation_add (E := E) (-t) t).symm
+      exact congrArg (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x) hInv)
+
+@[simp] lemma KRotationLE_apply (t : ℝ) (x : DoubledSpace E) :
+    KRotationLE (E := E) t x = KRotation (E := E) t x := rfl
+
+@[simp] lemma KRotationLE_symm_apply (t : ℝ) (x : DoubledSpace E) :
+    (KRotationLE (E := E) t).symm x = KRotation (E := E) (-t) x := rfl
+
+/--
+Exact Cartan exponential transport of an endomorphism:
+`A(t) = exp(-tK) A exp(tK)`.
+-/
+noncomputable def cartanConjugate
+    (A : Endomorphism (DoubledSpace E)) (t : ℝ) :
+    Endomorphism (DoubledSpace E) :=
+  (KRotationLE (E := E) t).symm.toLinearMap.comp
+    (A.comp (KRotationLE (E := E) t).toLinearMap)
+
+/--
+The exact Cartan exponential transport `A(t) = exp(-tK) A exp(tK)` is
+conjugate to the baseline seed by `exp(tK)`.
+-/
+theorem cartanConjugate_comp_KRotationLE
+    (A : Endomorphism (DoubledSpace E)) (t : ℝ) :
+    A.comp (KRotationLE (E := E) t).toLinearMap =
+      (KRotationLE (E := E) t).toLinearMap.comp (cartanConjugate (E := E) A t) := by
+  apply LinearMap.ext
+  intro x
+  change A ((KRotationLE (E := E) t) x) =
+    (KRotationLE (E := E) t) ((KRotationLE (E := E) t).symm (A ((KRotationLE (E := E) t) x)))
+  exact ((KRotationLE (E := E) t).apply_symm_apply (A ((KRotationLE (E := E) t) x))).symm
+
+@[simp] theorem cartanConjugate_zero
+    (A : Endomorphism (DoubledSpace E)) :
+    cartanConjugate (E := E) A 0 = A := by
+  apply LinearMap.ext
+  intro x
+  simp [cartanConjugate]
+
+/--
+Exact Cartan exponential transport furnishes a chiral conjugacy family on the
+doubled carrier. The only local coordinate is the exponential time parameter.
+-/
+theorem chiralConjugacyAlong_of_cartanConjugate
+    [FiniteDimensional ℝ (DoubledSpace E)]
+    (D0 Γ0 : Endomorphism (DoubledSpace E)) :
+    ChiralConjugacyAlong
+      (fun t => cartanConjugate (E := E) D0 t)
+      (fun t => cartanConjugate (E := E) Γ0 t)
+      (fun t => KRotationLE (E := E) t) := by
+  constructor
+  · intro t
+    simpa using cartanConjugate_comp_KRotationLE (E := E) D0 t
+  · intro t
+    simpa using cartanConjugate_comp_KRotationLE (E := E) Γ0 t
+
+/--
+Analytical-index invariance along the exact local Cartan exponential corridor.
+-/
+theorem indexInvariantAlong_of_cartanConjugate
+    [FiniteDimensional ℝ (DoubledSpace E)]
+    (D0 Γ0 : Endomorphism (DoubledSpace E)) :
+    IndexInvariantAlong
+      (fun t => cartanConjugate (E := E) D0 t)
+      (fun t => cartanConjugate (E := E) Γ0 t) := by
+  exact indexInvariantAlong_of_conjugacy
+    (D := fun t => cartanConjugate (E := E) D0 t)
+    (Γ := fun t => cartanConjugate (E := E) Γ0 t)
+    (eFlow := fun t => KRotationLE (E := E) t)
+    (hConj := chiralConjugacyAlong_of_cartanConjugate (E := E) D0 Γ0)
+
+/--
+Pointwise analytical-index invariance along exact Cartan exponential transport.
+-/
+theorem analyticalIndex_eq_zero_time_of_cartanConjugate
+    [FiniteDimensional ℝ (DoubledSpace E)]
+    (D0 Γ0 : Endomorphism (DoubledSpace E))
+    (t : ℝ) :
+    analyticalIndex
+      (cartanConjugate (E := E) D0 t)
+      (cartanConjugate (E := E) Γ0 t)
+      =
+    analyticalIndex D0 Γ0 := by
+  simpa using indexInvariantAlong_of_cartanConjugate (E := E) D0 Γ0 t
+
+end Cartan
 
 section Bott
 

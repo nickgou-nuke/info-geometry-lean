@@ -1,5 +1,7 @@
 import InfoGeometry.Canonical.TomitaTakesaki
+import Mathlib.Analysis.Normed.Algebra.Exponential
 import Mathlib.Tactic.Abel
+import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.Basic
 
 /-!
@@ -21,6 +23,7 @@ namespace InfoGeometry.Canonical.BogoliubovTransport
 
 open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Krein
+open scoped InnerProductSpace
 
 section Basic
 
@@ -397,6 +400,144 @@ theorem modularTransportFlow_add (hMod : EndH) (s t : ℝ) :
     exact ((Commute.refl A).smul_left s).smul_right t
   unfold modularTransportFlow
   rw [add_smul, NormedSpace.exp_add_of_commute hComm]
+
+/--
+If the transport seed is self-adjoint and phase-linear relative to the local
+Cartan involution, then the true flow generator `hMod ∘ K` is skew-adjoint on
+the positive doubled-space Hilbert metric.
+-/
+theorem modularTransportGenerator_mem_skewAdjoint_of_isSelfAdjoint_of_IsPhaseLinear
+    (hMod : EndH)
+    (hSelf : IsSelfAdjoint hMod)
+    (hPhase : IsPhaseLinear (E := E) hMod) :
+    modularTransportGenerator (E := E) hMod ∈ skewAdjoint EndH := by
+  have hPhaseEq :
+      hMod.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp hMod := by
+    simpa [IsPhaseLinear] using hPhase
+  rw [skewAdjoint.mem_iff, ContinuousLinearMap.star_eq_adjoint]
+  apply ContinuousLinearMap.ext
+  intro u
+  refine ext_inner_left ℝ fun v => ?_
+  rw [ContinuousLinearMap.adjoint_inner_right]
+  have hPhaseEval :
+      (modularComplexI (E := E)) (hMod u)
+        =
+      hMod ((modularComplexI (E := E)) u) := by
+    simpa [ContinuousLinearMap.comp_apply] using
+      (congrArg (fun T : EndH => T u) hPhaseEq).symm
+  calc inner ℝ (modularTransportGenerator (E := E) hMod v) u
+      = inner ℝ (hMod ((modularComplexI (E := E)) v)) u := by
+          rfl
+    _ = inner ℝ ((modularComplexI (E := E)) v) (hMod u) := by
+          rw [← ContinuousLinearMap.adjoint_inner_left, IsSelfAdjoint.adjoint_eq hSelf]
+    _ = -inner ℝ v ((modularComplexI (E := E)) (hMod u)) := by
+          simpa using (modularComplexI_inner_skew (E := E) v (hMod u))
+    _ = -inner ℝ v (hMod ((modularComplexI (E := E)) u)) := by
+          rw [hPhaseEval]
+    _ = -inner ℝ v (modularTransportGenerator (E := E) hMod u) := by
+          rfl
+    _ = inner ℝ v (-(modularTransportGenerator (E := E) hMod u)) := by
+          simp
+
+/--
+The true Cartan transport generator commutes with the local phase axis whenever
+the seed is phase-linear.
+-/
+theorem modularComplexI_commutes_modularTransportGenerator_of_IsPhaseLinear
+    (hMod : EndH)
+    (hPhase : IsPhaseLinear (E := E) hMod) :
+    Commute (modularComplexI (E := E)) (modularTransportGenerator (E := E) hMod) := by
+  have hPhaseEq :
+      hMod.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp hMod := by
+    simpa [IsPhaseLinear] using hPhase
+  change
+    (modularComplexI (E := E)).comp (hMod.comp (modularComplexI (E := E)))
+      =
+    (hMod.comp (modularComplexI (E := E))).comp (modularComplexI (E := E))
+  calc
+    (modularComplexI (E := E)).comp (hMod.comp (modularComplexI (E := E)))
+      = ((modularComplexI (E := E)).comp hMod).comp (modularComplexI (E := E)) := by
+          simp [ContinuousLinearMap.comp_assoc]
+    _ = (hMod.comp (modularComplexI (E := E))).comp (modularComplexI (E := E)) := by
+          rw [← hPhaseEq]
+
+/--
+If the transport seed is self-adjoint and phase-linear, the corresponding exact
+modular flow preserves the positive doubled-space Hilbert inner product.
+-/
+theorem modularTransportFlow_preserves_inner_of_isSelfAdjoint_of_IsPhaseLinear
+    (hMod : EndH)
+    (hSelf : IsSelfAdjoint hMod)
+    (hPhase : IsPhaseLinear (E := E) hMod)
+    (t : ℝ) (u v : H₂) :
+    inner ℝ (modularTransportFlow (E := E) hMod t u)
+      (modularTransportFlow (E := E) hMod t v)
+      =
+    inner ℝ u v := by
+  have hGenSkew :
+      modularTransportGenerator (E := E) hMod ∈ skewAdjoint EndH :=
+    modularTransportGenerator_mem_skewAdjoint_of_isSelfAdjoint_of_IsPhaseLinear
+      (E := E) hMod hSelf hPhase
+  have hSkew :
+      t • modularTransportGenerator (E := E) hMod ∈ skewAdjoint EndH := by
+    have hGenStar :
+        star (modularTransportGenerator (E := E) hMod)
+          =
+        -(modularTransportGenerator (E := E) hMod) := by
+      simpa [ContinuousLinearMap.star_eq_adjoint] using hGenSkew
+    rw [skewAdjoint.mem_iff]
+    calc
+      star (t • modularTransportGenerator (E := E) hMod)
+        = t • star (modularTransportGenerator (E := E) hMod) := by
+            simp
+      _ = t • (-(modularTransportGenerator (E := E) hMod)) := by rw [hGenStar]
+      _ = -(t • modularTransportGenerator (E := E) hMod) := by
+            simp
+  have hUnitary :
+      modularTransportFlow (E := E) hMod t ∈ unitary EndH := by
+    simpa [modularTransportFlow] using NormedSpace.exp_mem_unitary_of_mem_skewAdjoint hSkew
+  simpa using ContinuousLinearMap.inner_map_map_of_mem_unitary hUnitary u v
+
+theorem modularComplexI_comp_modularTransportFlow_eq_modularTransportFlow_comp_modularComplexI_of_IsPhaseLinear
+    (hMod : EndH)
+    (hPhase : IsPhaseLinear (E := E) hMod)
+    (t : ℝ) :
+    (modularComplexI (E := E)).comp (modularTransportFlow (E := E) hMod t)
+      =
+    (modularTransportFlow (E := E) hMod t).comp (modularComplexI (E := E)) := by
+  have hComm :
+      Commute (modularComplexI (E := E)) (modularTransportFlow (E := E) hMod t) := by
+    simpa [modularTransportFlow] using
+      ((modularComplexI_commutes_modularTransportGenerator_of_IsPhaseLinear
+        (E := E) hMod hPhase).smul_right t).exp_right
+  apply ContinuousLinearMap.ext
+  intro x
+  exact congrArg (fun f : EndH => f x) hComm.eq
+
+omit [CompleteSpace E] in
+/--
+If the modular transport generator lies exactly on the local Cartan phase axis,
+then the full modular transport flow is the corresponding exact phase rotation.
+-/
+theorem modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
+    (hMod : EndH) (σ t : ℝ)
+    (hGen :
+      modularTransportGenerator (E := E) hMod
+        =
+      σ • modularComplexI (E := E)) :
+    modularTransportFlow (E := E) hMod t = KRotation (E := E) (t * σ) := by
+  unfold modularTransportFlow KRotation
+  rw [hGen]
+  congr 1
+  calc
+    t • (σ • modularComplexI (E := E))
+      = (t * σ) • modularComplexI (E := E) := by
+          rw [smul_smul]
+    _ = (t * σ) • modularComplexI (E := E) := rfl
 
 /-- Center the modular generator by its Krein expectation in the state `ψ`. -/
 noncomputable def centeredModularGenerator

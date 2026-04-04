@@ -73,7 +73,7 @@ Additionally, a three-layer vacuity enforcement system is available:
 The repo should be read as one transport theory over several symmetric, projective, operator, Krein, and thermodynamic presentations.
 `canonical` does not mean "the only true mathematics".
 It means "the stable public owner surface".
-Valid mathematics outside that surface should be developed, quarantined, or promoted honestly, not discarded because it is noncanonical.
+Valid mathematics outside that surface should be developed, quarantined, or promoted explicitly, not discarded because it is noncanonical.
 
 The practical goal of formalization here is to make the morphisms explicit and checkable:
 - owner files define the natural presentation-level objects
@@ -93,8 +93,8 @@ The short operational summary lives in [docs/OperationalIntent.md](docs/Operatio
 
 1. [Installation.md](Installation.md)
 2. [NEWCOMER_PATH.md](NEWCOMER_PATH.md)
-3. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md)
-4. [docs/README.md](docs/README.md)
+3. [docs/README.md](docs/README.md)
+4. [docs/RepositoryMemoryMap.md](docs/RepositoryMemoryMap.md)
 5. [docs/ModuleMap.md](docs/ModuleMap.md)
 6. [docs/OperationalIntent.md](docs/OperationalIntent.md)
 7. [docs/Theory.md](docs/Theory.md)
@@ -102,6 +102,7 @@ The short operational summary lives in [docs/OperationalIntent.md](docs/Operatio
 9. [lean/DAG/README.md](lean/DAG/README.md)
 10. [tools/README.md](tools/README.md)
 11. [tools/infra/README.md](tools/infra/README.md)
+12. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
 
 If you are operating as an agent inside this repo, also use:
 - [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)
@@ -153,6 +154,7 @@ python3 tools/infra/generate_representation_depth_graph.py
 ## Documentation Policy
 
 - `README.md`, `lean/DAG/README.md`, `tools/README.md`, and `tools/infra/README.md` are operational docs.
+- [docs/RepositoryMemoryMap.md](docs/RepositoryMemoryMap.md) classifies which docs and tools are current, generated, compatibility-only, or reference memory.
 - [docs/OperationalIntent.md](docs/OperationalIntent.md) states why the repo, DAG, and infra tooling are maintained the way they are.
 - [docs/Theory.md](docs/Theory.md) is the conceptual map of the stable spine.
 - [Architecture.lean](lean/InfoGeometry/Meta/Architecture.lean) and [Audit.lean](lean/InfoGeometry/Audit.lean) are the native grammar and enforcement layer.

@@ -34,6 +34,9 @@ NAMESPACE_RE = re.compile(r"^\s*namespace\s+(?P<name>[A-Za-z_][A-Za-z0-9_'.]*)\b
 END_RE = re.compile(r"^\s*end\b")
 ATTR_RE = re.compile(r"^\s*attribute\s+\[blueprint(?:\s+\"[^\"]*\")?\]\s+(?P<rest>.+)$")
 IMPORT_RE = re.compile(r"^\s*import\s+(?P<name>[A-Za-z_][A-Za-z0-9_'.]*)\b")
+PRIVATE_DECL_RE = re.compile(
+    r"^\s*(?:(?:noncomputable|unsafe|partial)\s+)*(?:private|protected)\s+"
+)
 
 DEFAULT_ALLOW_KINDS = {"theorem", "def", "opaque", "axiom", "inductive"}
 DEFAULT_SKIP_KINDS = {"constructor", "recursor", "quotient"}
@@ -109,6 +112,7 @@ def load_decl_rows(path: Path) -> list[dict[str, Any]]:
                 "kind": str(obj.get("kind", "")).strip(),
                 "module": str(obj.get("module", "")).strip(),
                 "file": str(obj.get("file", "")).strip(),
+                "line": int(obj.get("line", 0) or 0),
             }
         )
     return out
@@ -171,6 +175,43 @@ def collect_import_closure(root: Path, import_root: str) -> set[str]:
                 pending.append(imported)
 
     return closure
+
+
+def read_file_lines(path: Path, cache: dict[Path, list[str]]) -> list[str]:
+    if path not in cache:
+        cache[path] = path.read_text(encoding="utf-8", errors="ignore").splitlines()
+    return cache[path]
+
+
+def locate_source_decl(lines: list[str], line: int, window: int = 5) -> tuple[int, str, str] | None:
+    if not lines or line < 1:
+        return None
+    start = max(line - 1, 0)
+    end = min(len(lines), start + window)
+    for idx in range(start, end):
+        raw = lines[idx]
+        match = DECL_RE.match(raw)
+        if match:
+            return (idx + 1, match.group("name"), raw.lstrip())
+    return None
+
+
+def source_decl_is_blueprint_addressable(
+    path: Path,
+    line: int,
+    full_name: str,
+    cache: dict[Path, list[str]],
+) -> bool:
+    if not path.exists():
+        return False
+    lines = read_file_lines(path, cache)
+    located = locate_source_decl(lines, line)
+    if located is None:
+        return False
+    _, short_name, raw = located
+    if PRIVATE_DECL_RE.match(raw):
+        return False
+    return full_name == short_name or full_name.endswith("." + short_name)
 
 
 def collect_explicit_blueprints(root: Path, selected: list[dict[str, str]]) -> set[str]:
@@ -307,10 +348,12 @@ def main() -> int:
 
     stats = Counter()
     selected: list[dict[str, str]] = []
+    file_cache: dict[Path, list[str]] = {}
     for row in rows:
         name = row["name"]
         kind = row.get("kind", "")
         module = row.get("module", "")
+        file = row.get("file", "")
         if args.ns and not prefix_match(name, args.ns):
             stats["skip_ns"] += 1
             continue
@@ -329,6 +372,11 @@ def main() -> int:
         if not args.keep_generated and is_generated_or_unstable_name(name):
             stats["skip_generated"] += 1
             continue
+        if isinstance(file, str) and file:
+            source_path = Path(file)
+            if not source_decl_is_blueprint_addressable(source_path, int(row.get("line", 0) or 0), name, file_cache):
+                stats["skip_unaddressable_source_decl"] += 1
+                continue
         if m := re.search(r"\.eq_(\d+)$", name):
             base_name = name[: m.start()]
             base_row = rows_by_name.get(base_name)

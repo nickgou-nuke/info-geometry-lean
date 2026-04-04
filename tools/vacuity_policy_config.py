@@ -66,4 +66,6 @@ def expected_violation_level(
         return "error" if (is_bridge or is_strict) else "warning"
     if code == "V4/bridge-infrastructure-promoted":
         return "warning" if is_bridge else None
+    if code == "V5/certification-wash":
+        return "error" if (is_bridge or is_strict) else "warning"
     return None

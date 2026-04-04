@@ -11,7 +11,7 @@ open InfoGeometry.Canonical.IBPythagorean
 variable {X T : Type*} [MeasurableSpace X] [MeasurableSpace T] [Nonempty T]
 
 /--
-Analytic obligations for one honest BA descent step:
+Analytic obligations for one explicit BA descent step:
 encoder descent at fixed `q_n`, then marginal descent at fixed encoder.
 -/
 structure IBDescentWitness

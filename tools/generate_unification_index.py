@@ -92,7 +92,7 @@ MODULES = [
     ModuleEntry(
         module="InfoGeometry.Canonical.GrandSynthesis",
         status="mixed_capstone_surface",
-        note="Contains honest determinant/Jacobian lemmas and real bridge theorems, but also capstone packaging/orchestration layers.",
+        note="Contains exact determinant/Jacobian lemmas and real bridge theorems, but also capstone packaging/orchestration layers.",
     ),
     ModuleEntry(
         module="InfoGeometry.Quantum.RealMajorana",

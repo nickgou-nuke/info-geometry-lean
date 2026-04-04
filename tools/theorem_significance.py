@@ -13,8 +13,10 @@ Violation classes produced:
   V2  dead public theorem — zero reverse edges, no capstone annotation
   V3  statement redundancy — (placeholder, not yet computed)
   V4  bridge infrastructure promoted — infrastructure in bridge file
-  V5  unjustified canonicality — (requires NLP, placeholder)
-  V6  quotient fraud — (requires semantic analysis, placeholder)
+  V5  certification wash — certified naming surface that only transports or aliases
+      an uncertified twin without proof-bearing lift
+  V6  unjustified canonicality — (requires NLP, placeholder)
+  V7  quotient fraud — (requires semantic analysis, placeholder)
 
 Usage::
 
@@ -174,6 +176,16 @@ class ProofShapeInfo:
     def is_rfl_like(self) -> bool:
         return self.n_forward_value == 0
 
+    @property
+    def is_single_value_forward(self) -> bool:
+        return self.n_forward_value == 1
+
+    @property
+    def single_value_target(self) -> str | None:
+        if not self.is_single_value_forward or len(self.forward_value_targets) != 1:
+            return None
+        return self.forward_value_targets[0]
+
 @dataclass
 class ScoredDecl:
     name: str
@@ -256,6 +268,41 @@ def _is_generated(name: str) -> bool:
     return any(f in name for f in _GENERATED_FRAGMENTS)
 
 
+def _name_leaf(name: str) -> str:
+    return name.rsplit(".", 1)[-1]
+
+
+def _contains_certified_marker(name: str) -> bool:
+    return "certified" in name.casefold()
+
+
+def _erase_certified_marker(name: str) -> str:
+    return name.casefold().replace("certified", "")
+
+
+def _is_certified_transport_name(name: str) -> bool:
+    leaf = _name_leaf(name)
+    if "_eq_" in leaf:
+        lhs, rhs = leaf.split("_eq_", 1)
+    elif "_iff_" in leaf:
+        lhs, rhs = leaf.split("_iff_", 1)
+    else:
+        return False
+    lhs_cf = lhs.casefold()
+    rhs_cf = rhs.casefold()
+    if "certified" not in lhs_cf or "certified" in rhs_cf:
+        return False
+    return lhs_cf.replace("certified", "") == rhs_cf
+
+
+def _is_certified_surface_decl(decl: DeclInfo) -> bool:
+    if decl.kind == "theorem":
+        return _contains_certified_marker(decl.name)
+    if decl.kind in {"def", "abbrev"}:
+        return _contains_certified_marker(decl.name)
+    return False
+
+
 def classify_tags(decl: DeclInfo, graph: GraphStats, proof: ProofShapeInfo) -> list[str]:
     """Assign semantic tags based on graph role and proof shape."""
     tags: list[str] = []
@@ -288,6 +335,30 @@ def classify_tags(decl: DeclInfo, graph: GraphStats, proof: ProofShapeInfo) -> l
     if graph.reverse_type + graph.reverse_value >= 10:
         tags.append("high-fan-in")
 
+    if _contains_certified_marker(decl.name):
+        tags.append("certified-surface")
+        if _is_certified_transport_name(decl.name):
+            tags.append("certification-transport")
+
+        target = proof.single_value_target
+        twin_forward = (
+            target is not None
+            and not _contains_certified_marker(target)
+            and _erase_certified_marker(decl.name) == _erase_certified_marker(target)
+        )
+        transport_named = (
+            _is_certified_transport_name(decl.name)
+            and graph.reverse_public_fan_in <= 1
+            and graph.reverse_proof_only_reuse <= 1
+        )
+        certified_rfl = (
+            proof.is_rfl_like
+            and graph.reverse_public_fan_in <= 1
+            and graph.reverse_proof_only_reuse <= 1
+        )
+        if twin_forward or transport_named or certified_rfl:
+            tags.append("certification-wash-candidate")
+
     return sorted(set(tags))
 
 
@@ -305,42 +376,52 @@ def compute_violations(
 
     is_bridge = is_bridge_file(file_path, bridge_hints)
 
-    # V0: syntactic vacuity (rfl-like proof)
-    if "rfl-like" in tags:
-        level = expected_violation_level(
-            "V0/syntactic-vacuity", file_path, strict_paths, bridge_hints
-        )
-        if level is None:
-            level = "warning"
-        out.append((level, "V0/syntactic-vacuity"))
-
-    # V1: public wrapper inflation (exact forwarding proof)
-    if "wrapper-candidate" in tags:
-        level = expected_violation_level(
-            "V1/public-wrapper-inflation", file_path, strict_paths, bridge_hints
-        )
-        if level is None:
-            level = "warning"
-        out.append((level, "V1/public-wrapper-inflation"))
-
-    # V2: dead public theorem
-    if "dead-candidate" in tags:
-        level = expected_violation_level(
-            "V2/dead-public-theorem", file_path, strict_paths, bridge_hints
-        )
-        if level is None:
-            level = "warning"
-        out.append((level, "V2/dead-public-theorem"))
-
-    # V4: bridge infrastructure promoted (rfl-like or wrapper in bridge file)
-    if is_bridge and ("rfl-like" in tags or "wrapper-candidate" in tags):
-        if "dead-candidate" not in tags:  # don't double-count with V2
+    if decl.kind == "theorem":
+        # V0: syntactic vacuity (rfl-like proof)
+        if "rfl-like" in tags:
             level = expected_violation_level(
-                "V4/bridge-infrastructure-promoted", file_path, strict_paths, bridge_hints
+                "V0/syntactic-vacuity", file_path, strict_paths, bridge_hints
             )
             if level is None:
                 level = "warning"
-            out.append((level, "V4/bridge-infrastructure-promoted"))
+            out.append((level, "V0/syntactic-vacuity"))
+
+        # V1: public wrapper inflation (exact forwarding proof)
+        if "wrapper-candidate" in tags:
+            level = expected_violation_level(
+                "V1/public-wrapper-inflation", file_path, strict_paths, bridge_hints
+            )
+            if level is None:
+                level = "warning"
+            out.append((level, "V1/public-wrapper-inflation"))
+
+        # V2: dead public theorem
+        if "dead-candidate" in tags:
+            level = expected_violation_level(
+                "V2/dead-public-theorem", file_path, strict_paths, bridge_hints
+            )
+            if level is None:
+                level = "warning"
+            out.append((level, "V2/dead-public-theorem"))
+
+        # V4: bridge infrastructure promoted (rfl-like or wrapper in bridge file)
+        if is_bridge and ("rfl-like" in tags or "wrapper-candidate" in tags):
+            if "dead-candidate" not in tags:  # don't double-count with V2
+                level = expected_violation_level(
+                    "V4/bridge-infrastructure-promoted", file_path, strict_paths, bridge_hints
+                )
+                if level is None:
+                    level = "warning"
+                out.append((level, "V4/bridge-infrastructure-promoted"))
+
+    # V5: certified naming surface that only aliases/transports uncertified content
+    if "certification-wash-candidate" in tags:
+        level = expected_violation_level(
+            "V5/certification-wash", file_path, strict_paths, bridge_hints
+        )
+        if level is None:
+            level = "warning"
+        out.append((level, "V5/certification-wash"))
 
     return out
 
@@ -377,6 +458,13 @@ def compute_vacuity_suspicion(
         add("shape.exact-forward", 0.33, 0.90, "single theorem value dependency")
     if proof.is_rfl_like:
         add("shape.rfl-like", 0.24, 0.86, "zero value dependencies")
+    if "certification-wash-candidate" in tags:
+        add(
+            "semantic.certification-wash",
+            0.29,
+            0.90,
+            "certified naming surface only aliases/transports uncertified content",
+        )
 
     # Structural footprint signals.
     if graph.descendant_mass == 0:
@@ -1367,8 +1455,7 @@ def score_all(
     structural_profiles = build_structural_profiles(decls, forward, reverse)
 
     for name, info in sorted(decls.items()):
-        # Only score theorems
-        if info.kind != "theorem":
+        if info.kind != "theorem" and not _is_certified_surface_decl(info):
             continue
         graph = build_graph_stats(
             name,
@@ -1439,7 +1526,7 @@ def generate_json_report(scored: list[ScoredDecl]) -> list[dict]:
 
 def generate_md_report(scored: list[ScoredDecl]) -> str:
     lines: list[str] = []
-    lines.append("# Theorem Vacuity Triage Report\n")
+    lines.append("# Declaration Vacuity Triage Report\n")
 
     # Summary stats
     total = len(scored)
@@ -1448,7 +1535,7 @@ def generate_md_report(scored: list[ScoredDecl]) -> str:
     n_warnings = sum(1 for s in scored if any(v[0] == "warning" for v in s.violations) and not any(v[0] == "error" for v in s.violations))
     n_clean = total - n_violations
 
-    lines.append(f"**Theorems scored:** {total}  ")
+    lines.append(f"**Declarations scored:** {total}  ")
     lines.append(f"**With violations:** {n_violations} ({n_errors} error, {n_warnings} warning-only)  ")
     lines.append(f"**Clean:** {n_clean}  \n")
 
@@ -1478,7 +1565,7 @@ def generate_md_report(scored: list[ScoredDecl]) -> str:
 
     # Derived ranking from structural + proof-shape evidence.
     lines.append("## Top Vacuity Suspicion (derived ranking)\n")
-    lines.append("| Rank | Theorem | Suspicion | Confidence | Key Factors |")
+    lines.append("| Rank | Declaration | Suspicion | Confidence | Key Factors |")
     lines.append("|------|---------|----------:|-----------:|-------------|")
     ranked_suspicion = sorted(
         scored,
@@ -1503,7 +1590,7 @@ def generate_md_report(scored: list[ScoredDecl]) -> str:
 
     # Structural metrics snapshot
     lines.append("## Structural Metrics (top 20 by transitive reverse reach)\n")
-    lines.append("| Theorem | Reverse Reach | Descendant Mass | Depth | SCC Role | Public Fan-In | Proof-Only Reuse |")
+    lines.append("| Declaration | Reverse Reach | Descendant Mass | Depth | SCC Role | Public Fan-In | Proof-Only Reuse |")
     lines.append("|---------|--------------:|----------------:|------:|----------|---------------:|-----------------:|")
     ranked_structural = sorted(
         scored,
@@ -1602,7 +1689,7 @@ def main() -> None:
         print(f"  {len(bridge_evidence_by_decl)} declaration-level bridge evidence records")
         print(f"  {len(bridge_evidence_by_file)} file-level bridge evidence records")
 
-    print("Scoring theorems ...")
+    print("Scoring declarations ...")
     scored = score_all(
         decls,
         forward,
@@ -1613,7 +1700,7 @@ def main() -> None:
         bridge_evidence_by_decl=bridge_evidence_by_decl,
         bridge_evidence_by_file=bridge_evidence_by_file,
     )
-    print(f"  {len(scored)} theorems scored")
+    print(f"  {len(scored)} declarations scored")
 
     n_violations = sum(1 for s in scored if s.violations)
     n_errors = sum(1 for s in scored if any(v[0] == "error" for v in s.violations))

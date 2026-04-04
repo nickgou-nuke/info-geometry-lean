@@ -32,6 +32,9 @@ It deliberately does **not** perform graph-level analysis. That belongs in
   statement adds no new mathematical content. Warns; errors in bridge/canonical files
   (enforced at CI layer).
 
+- **V5 (certification wash)**: certified naming surface only aliases or transports
+  an uncertified twin. Warns unless explicitly role-tagged.
+
 ## Attributes
 
 | Attribute        | Meaning                                  |
@@ -51,7 +54,7 @@ namespace InfoGeometry.Lint
 -- § Proof-shape analysis
 -- ============================================================
 
-/-- Classification of a theorem's proof term shape. -/
+/-- Classification of a declaration value/proof term shape. -/
 inductive ProofShape where
   | exactConst (target : Name)
   | exactApp (head : Name) (nargs : Nat)
@@ -61,10 +64,28 @@ inductive ProofShape where
   | other
   deriving Repr, Inhabited
 
-/-- Classify the proof term of a theorem declaration. -/
+/-- Classify the value/proof term of a theorem or definition declaration. -/
 def classifyProofShape (env : Environment) (declName : Name) : ProofShape :=
   match env.find? declName with
   | some (.thmInfo info) =>
+      let v := info.value
+      if v.isConst then
+        .exactConst v.constName!
+      else if v.isAppOfArity ``Eq.refl 2 then
+        .rfl
+      else if v.isAppOfArity ``rfl 2 then
+        .rfl
+      else if v.isApp then
+        let f := v.getAppFn
+        if f.isConst then
+          .exactApp f.constName! v.getAppNumArgs
+        else
+          .other
+      else if v.isLambda then
+        .lambda
+      else
+        .other
+  | some (.defnInfo info) =>
       let v := info.value
       if v.isConst then
         .exactConst v.constName!
@@ -91,6 +112,12 @@ def ProofShape.isForwarding : ProofShape → Bool
   | .rfl => true
   | .trivial => true
   | _ => false
+
+/-- Extract the single head target of a forwarding declaration shape, if present. -/
+def ProofShape.forwardTarget? : ProofShape → Option Name
+  | .exactConst target => some target
+  | .exactApp head _ => some head
+  | _ => none
 
 -- ============================================================
 -- § Statement-shape analysis
@@ -143,13 +170,58 @@ def hasRoleTag (env : Environment) (declName : Name) : Bool :=
 def isExempt (env : Environment) (declName : Name) : Bool :=
   hasRoleTag env declName || capstoneAttr.hasTag env declName
 
+/-- Case-insensitive test for `certified` anywhere in a declaration name. -/
+def containsCertifiedMarker (declName : Name) : Bool :=
+  (toString declName).toLower.contains "certified"
+
+/-- Lower-cased final dotted component of a declaration name. -/
+def declNameLeaf (declName : Name) : String :=
+  match (toString declName).toLower.splitOn "." |>.reverse with
+  | leaf :: _ => leaf
+  | [] => (toString declName).toLower
+
+/-- Lower-cased declaration name with every `certified` marker erased. -/
+def eraseCertifiedMarker (declName : Name) : String :=
+  (toString declName).toLower.replace "certified" ""
+
+/-- Lower-cased final dotted component with every `certified` marker erased. -/
+def eraseCertifiedMarkerLeaf (declName : Name) : String :=
+  (declNameLeaf declName).replace "certified" ""
+
+/-- Detect names of the form `certifiedFoo_eq_foo` or `certifiedFoo_iff_foo`. -/
+def isCertifiedTransportName (declName : Name) : Bool :=
+  let nameStr := declNameLeaf declName
+  let parts :=
+    if nameStr.contains "_eq_" then
+      nameStr.splitOn "_eq_"
+    else if nameStr.contains "_iff_" then
+      nameStr.splitOn "_iff_"
+    else
+      []
+  match parts with
+  | [lhs, rhs] =>
+      lhs.contains "certified" &&
+        !rhs.contains "certified" &&
+        lhs.replace "certified" "" = rhs
+  | _ => false
+
+/-- Detect forwarding from a certified surface directly to an uncertified twin. -/
+def isCertifiedTwinForward (declName : Name) (pshape : ProofShape) : Bool :=
+  match pshape.forwardTarget? with
+  | some target =>
+      containsCertifiedMarker declName &&
+        !containsCertifiedMarker target &&
+        eraseCertifiedMarkerLeaf declName = eraseCertifiedMarkerLeaf target
+  | none => false
+
 /-- Lint a single declaration for vacuity issues. Returns warning messages. -/
 def lintDecl (env : Environment) (declName : Name) : Array MessageData := Id.run do
   let mut msgs : Array MessageData := #[]
 
-  -- Only lint theorems
+  -- Only lint theorems and definitions.
   match env.find? declName with
   | some (.thmInfo _) => pure ()
+  | some (.defnInfo _) => pure ()
   | _ => return msgs
 
   -- Skip internal/auxiliary names
@@ -158,7 +230,10 @@ def lintDecl (env : Environment) (declName : Name) : Array MessageData := Id.run
 
   let exempt := isExempt env declName
   let pshape := classifyProofShape env declName
-  let sshape := classifyStatementShape env declName
+  let sshape :=
+    match env.find? declName with
+    | some (.thmInfo _) => classifyStatementShape env declName
+    | _ => .other
 
   -- V0: syntactically trivial proof on a low-load statement
   if !exempt && pshape.isForwarding then
@@ -178,9 +253,21 @@ def lintDecl (env : Environment) (declName : Name) : Array MessageData := Id.run
     match pshape with
     | .exactConst target =>
         msgs := msgs.push
-          m!"[V1/wrapper-inflation] {declName}: proof forwards entirely to `{target}`. \
+          m!"[V1/public-wrapper-inflation] {declName}: proof forwards entirely to `{target}`. \
              Mark @[infrastructure], @[expository], or prove non-trivially."
     | _ => pure ()
+
+  -- V5: certified naming surface only transports or aliases an uncertified twin
+  if !exempt && (isCertifiedTransportName declName || isCertifiedTwinForward declName pshape) then
+    match pshape.forwardTarget? with
+    | some target =>
+        msgs := msgs.push
+          m!"[V5/certification-wash] {declName}: certified surface forwards to uncertified twin `{target}`. \
+             Mark @[infrastructure]/@[expository] or add proof-bearing certified content."
+    | none =>
+        msgs := msgs.push
+          m!"[V5/certification-wash] {declName}: certified transport surface only forgets certification in its public API. \
+             Mark @[infrastructure]/@[expository] or add proof-bearing certified content."
 
   return msgs
 
@@ -222,5 +309,22 @@ def elabVacuityLintFile : CommandElab := fun _stx => do
         countsRef.modify fun (c, w) => (c + 1, w)
   let (count, warnCount) ← countsRef.get
   logInfo m!"Vacuity lint (file) checked {count} declarations, found {warnCount} warnings."
+
+/-- `#lint_vacuity_decl Foo.bar` — run vacuity checks on a single declaration. -/
+syntax (name := vacuityLintDeclCmd) "#lint_vacuity_decl " ident : command
+
+@[command_elab vacuityLintDeclCmd]
+def elabVacuityLintDecl : CommandElab := fun stx => do
+  let env ← getEnv
+  let declName := stx[1].getId.eraseMacroScopes
+  if env.find? declName |>.isNone then
+    logError m!"Unknown declaration `{declName}`."
+    return
+  let msgs := lintDecl env declName
+  if msgs.isEmpty then
+    logInfo m!"Vacuity lint: {declName} has no warnings."
+  else
+    for msg in msgs do
+      logWarning msg
 
 end InfoGeometry.Lint

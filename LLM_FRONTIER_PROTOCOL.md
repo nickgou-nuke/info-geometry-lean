@@ -5,7 +5,7 @@ Frontier work in this repository is proposal generation, not proof production.
 ## Role split
 
 - creative lane: propose bridge statements, local decompositions, or new lower owners;
-- critical lane: reject weak proposals, shrink claims, and isolate the smallest honest theorem surface;
+- critical lane: reject weak proposals, shrink claims, and isolate the smallest load-bearing theorem surface;
 - Lean lane: decide what is true.
 
 ## What counts as a good frontier proposal

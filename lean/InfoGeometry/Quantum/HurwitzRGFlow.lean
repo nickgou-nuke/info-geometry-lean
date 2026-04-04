@@ -22,7 +22,7 @@ variable {E : Type*}
 /--
 Abstract 24-chart shell action on an RG carrier.
 
-This is the honest boundary between the discrete Hurwitz shell and the analytic
+This is the explicit boundary between the discrete Hurwitz shell and the analytic
 RG flow layer: the shell contributes a finite indexed family of linear actions,
 with one distinguished neutral chart acting by the identity.
 -/

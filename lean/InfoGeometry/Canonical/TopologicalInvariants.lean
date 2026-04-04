@@ -60,6 +60,72 @@ noncomputable def chiralAnomalyIndex (CST : ChiralSpectralTriple E) : ℝ :=
     (Module.finrank ℝ
       (LinearMap.range (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection CST.D CST.DD).toLinearMap) : ℝ)
 
+/--
+If the witness-level spectral and metric projectors commute, the chiral anomaly
+index vanishes exactly.
+-/
+theorem chiralAnomalyIndex_eq_zero_of_projectors_commute
+    (CST : ChiralSpectralTriple E)
+    (hComm :
+      InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection CST.D CST.DD
+          * InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector CST.D CST.DP
+        = InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector CST.D CST.DP
+          * InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection CST.D CST.DD) :
+    chiralAnomalyIndex CST = 0 := by
+  have hChi :
+      InfoGeometry.Canonical.MoorePenrose.chiralAnomaly CST.D CST.DD CST.DP = 0 := by
+    unfold InfoGeometry.Canonical.MoorePenrose.chiralAnomaly
+    exact sub_eq_zero.mpr hComm
+  have hEps : CST.epsilon = 0 := by
+    rw [ChiralSpectralTriple.epsilon,
+      InfoGeometry.Canonical.MoorePenrose.chiralScale,
+      InfoGeometry.Canonical.MoorePenrose.epsilon]
+    simpa [hChi]
+  simp [chiralAnomalyIndex, hEps]
+
+/--
+Certified topological index derived from geometric chirality.
+
+This is the proof-carrying refinement of `chiralAnomalyIndex`: the same scalar
+index is computed from a certified chiral spectral triple, so the spectral
+projector rank is read from the canonical certified inverse kernel rather than
+from a witness-only package.
+-/
+noncomputable def certifiedChiralAnomalyIndex (CCST : CertifiedChiralSpectralTriple E) : ℝ :=
+  CCST.epsilon *
+    (Module.finrank ℝ
+      (LinearMap.range CCST.toCertifiedInverseKernel.spectralProjector.toLinearMap) : ℝ)
+
+/--
+The certified chiral anomaly index agrees with the witness-level index after
+forgetting certification.
+-/
+theorem certifiedChiralAnomalyIndex_eq_chiralAnomalyIndex
+    (CCST : CertifiedChiralSpectralTriple E) :
+    certifiedChiralAnomalyIndex CCST = chiralAnomalyIndex CCST.toChiralSpectralTriple := by
+  simp [certifiedChiralAnomalyIndex, chiralAnomalyIndex,
+    CertifiedChiralSpectralTriple.epsilon,
+    CertifiedChiralSpectralTriple.toCertifiedInverseKernel,
+    CertifiedInverseKernel.spectralProjector,
+    CertifiedInverseKernel.toInverseKernel',
+    InverseKernel.spectralProjector]
+
+/--
+If the certified spectral and metric projectors commute, the certified chiral
+anomaly index vanishes exactly.
+-/
+theorem certifiedChiralAnomalyIndex_eq_zero_of_projectors_commute
+    (CCST : CertifiedChiralSpectralTriple E)
+    (hComm :
+      CertifiedChiralSpectralTriple.spectralProjector CCST
+        * CertifiedChiralSpectralTriple.metricProjector CCST
+        = CertifiedChiralSpectralTriple.metricProjector CCST
+            * CertifiedChiralSpectralTriple.spectralProjector CCST) :
+    certifiedChiralAnomalyIndex CCST = 0 := by
+  have hEps : CertifiedChiralSpectralTriple.epsilon CCST = 0 :=
+    CertifiedChiralSpectralTriple.epsilon_eq_zero_of_projectors_commute CCST hComm
+  simp [certifiedChiralAnomalyIndex, hEps]
+
 end ChiralIndex
 
 end InfoGeometry.Canonical.TopologicalInvariants

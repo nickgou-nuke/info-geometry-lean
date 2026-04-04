@@ -10,7 +10,7 @@ Use this skill for theorem ownership, file splitting, wrapper elimination, bridg
 If the task is repo-wide, also read `skills/info-geometry-repo/SKILL.md`.
 
 Canonicalization in this repo is morphism-first, not flattening-first.
-The goal is to keep the public owner surface honest while preserving valid mathematics across noncanonical and exploratory surfaces.
+The goal is to keep the public owner surface non-vacuous while preserving valid mathematics across noncanonical and exploratory surfaces.
 
 ## Core Classification
 
@@ -30,7 +30,7 @@ Every public declaration should be classified as one of:
 
 If a file mixes several roles, split by ownership instead of keeping a mixed facade.
 Do not erase a mathematically meaningful noncanonical presentation just because it is not yet stable.
-Quarantine, demote, or rebuild it honestly.
+Quarantine, demote, or rebuild it explicitly.
 
 ## Adjacency Rule
 

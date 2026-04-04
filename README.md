@@ -64,8 +64,8 @@ That grammar is now enforced in two places:
 - as rendered reports in [reports/dag](reports/dag)
 
 Additionally, a three-layer vacuity enforcement system is available:
-- Layer A: [Lint/Vacuity.lean](lean/InfoGeometry/Lint/Vacuity.lean) — declaration-local proof-shape and statement-shape checks with `@[infrastructure]`, `@[terminal]`, `@[expository]` role tags
-- Layer B: [tools/theorem_significance.py](tools/theorem_significance.py) — graph-level significance scoring (V0–V4 violation classes)
+- Layer A: [Lint/Vacuity.lean](lean/InfoGeometry/Lint/Vacuity.lean) — declaration-local proof/value-shape and statement-shape checks, including certified alias/transport warnings, with `@[infrastructure]`, `@[terminal]`, `@[expository]` role tags
+- Layer B: [tools/theorem_significance.py](tools/theorem_significance.py) — graph-level significance scoring, including certification-wash detection on certified alias/transport surfaces
 - Layer C: [tools/check_vacuity_policy.py](tools/check_vacuity_policy.py) — CI gate combining both layers
 
 ## Repository Intention

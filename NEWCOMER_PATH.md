@@ -75,4 +75,4 @@ Start with:
 - [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)
 - [skills/lean-canonicalization-policy/SKILL.md](skills/lean-canonicalization-policy/SKILL.md)
 
-The second skill encodes the current canonicalization discipline: split by ownership, keep public surfaces honest, and treat graph reports as second-pass guidance rather than first-pass truth.
+The second skill encodes the current canonicalization discipline: split by ownership, keep public surfaces non-vacuous, and treat graph reports as second-pass guidance rather than first-pass truth.

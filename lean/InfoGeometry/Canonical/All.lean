@@ -164,7 +164,6 @@ import InfoGeometry.Canonical.AQFTOperatorEndpoints
 import InfoGeometry.Canonical.AQFTOperatorSignatures
 import InfoGeometry.Canonical.AQFTReadiness
 import InfoGeometry.Canonical.BerryConnection
-import InfoGeometry.Canonical.BerryPhase
 import InfoGeometry.Canonical.BeliefAlgebra
 import InfoGeometry.Canonical.CartanBerezinianCore
 import InfoGeometry.Canonical.CalabiYauRNMongeAmpere

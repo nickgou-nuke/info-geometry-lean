@@ -1,4 +1,5 @@
 import Lean
+import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.StrictDef
 import InfoGeometry.Meta.Trust
 
@@ -10,12 +11,18 @@ inductive DeclRole where
   | owner
   | constructor
   | bridge
+  | translator
+  | coherence
+  | capstone
   deriving Repr, Inhabited, DecidableEq, BEq
 
 def DeclRole.asString : DeclRole → String
   | .owner => "owner"
   | .constructor => "constructor"
   | .bridge => "bridge"
+  | .translator => "translator"
+  | .coherence => "coherence"
+  | .capstone => "capstone"
 
 instance : ToJson DeclRole where
   toJson role := Json.str role.asString
@@ -61,6 +68,9 @@ private def declKindLabel : DeclRole → String
   | .owner => "theorem"
   | .constructor => "definition"
   | .bridge => "bridge"
+  | .translator => "translator"
+  | .coherence => "coherence"
+  | .capstone => "capstone"
 
 private def lowerShapeToSoftEvidence (role : DeclRole) (shape : ProofShapeReport) : SoftEvidence :=
   match role, shape.thinSurface? with
@@ -70,19 +80,30 @@ private def lowerShapeToSoftEvidence (role : DeclRole) (shape : ProofShapeReport
       { vacuityHints := [s!"constructor_thin_surface:{thin.asString}"] }
   | .bridge, some thin =>
       { graphRoleHints := [s!"bridge_thin_surface:{thin.asString}"] }
+  | .translator, some thin =>
+      { graphRoleHints := [s!"translator_thin_surface:{thin.asString}"] }
+  | .coherence, some thin =>
+      { vacuityHints := [s!"coherence_thin_surface:{thin.asString}"] }
+  | .capstone, some thin =>
+      { graphRoleHints := [s!"capstone_thin_surface:{thin.asString}"] }
   | _, none =>
       {}
 
 private def extraBlockingReasons
+    (env : Environment)
     (declName : Name)
     (role : DeclRole)
     (region : AdmissionRegion)
     (shape : ProofShapeReport) : Array AdmissionReason := Id.run do
   let mut reasons : Array AdmissionReason := #[]
-  if region == .protectedRegion && role == .bridge then
+  if region == .protectedRegion && (role == .bridge || role == .translator) then
     reasons := reasons.push <|
       mkAdmissionReason declName "policy.protected_bridge_role" "error"
-        "bridge declarations are not admissible in protected regions."
+        "bridge and translator declarations are not admissible in protected regions."
+  if region == .protectedRegion && role == .capstone && (repDepth? env declName).isNone then
+    reasons := reasons.push <|
+      mkAdmissionReason declName "policy.protected_capstone_missing_rep_depth" "error"
+        "capstone declarations in protected regions must carry explicit `@[rep_depth ...]` metadata."
   if region == .protectedRegion then
     match shape.thinSurface? with
     | some thin =>
@@ -110,6 +131,19 @@ private def commitByRole
         commitStrictTheorem declName data
       else
         commitStrictDef declName data
+  | .translator =>
+      if ← liftTermElabM <| isProp data.typeExpr then
+        commitStrictTheorem declName data
+      else
+        commitStrictDef declName data
+  | .coherence =>
+      commitStrictTheorem declName data
+  | .capstone =>
+      commitStrictTheorem declName data
+
+private def attachCapstoneTag (declName : Name) : CommandElabM Unit := do
+  let stx ← `(attribute [capstone] $(mkIdent declName))
+  elabCommand stx
 
 def processStrictDecl
     (declNameId : Ident)
@@ -121,15 +155,18 @@ def processStrictDecl
   validateStrictDeclSyntax declKind declName typeStx valStx
   let data ← elabStrictDecl declKind declName typeStx valStx
   commitByRole declName role data
+  if role == .capstone then
+    attachCapstoneTag declName
 
   let policy := defaultPolicySnapshot
   let region := regionOfDecl policy declName
   let hard ← liftCoreM <| collectHardEvidence policy declName
+  let env ← getEnv
   let shape := analyzeProofShape data.typeExpr data.valueExpr
   let soft := lowerShapeToSoftEvidence role shape
   let (baseDecision, baseReasons) := evaluateAdmission policy hard soft
   let adjustedDecision := adjustDecisionForRegion region baseDecision
-  let extraReasons := extraBlockingReasons declName role region shape
+  let extraReasons := extraBlockingReasons env declName role region shape
   let reasons := baseReasons ++ extraReasons
   let decision :=
     if extraReasons.isEmpty then adjustedDecision else .blocked
@@ -166,5 +203,14 @@ elab "strict_def " id:ident " : " type:term " := " val:term : command => do
 
 elab "strict_bridge " id:ident " : " type:term " := " val:term : command => do
   processStrictDecl id type.raw val.raw DeclRole.bridge
+
+elab "strict_translator " id:ident " : " type:term " := " val:term : command => do
+  processStrictDecl id type.raw val.raw DeclRole.translator
+
+elab "strict_coherence " id:ident " : " type:term " := " val:term : command => do
+  processStrictDecl id type.raw val.raw DeclRole.coherence
+
+elab "strict_capstone " id:ident " : " type:term " := " val:term : command => do
+  processStrictDecl id type.raw val.raw DeclRole.capstone
 
 end InfoGeometry.Meta.StrictSurface

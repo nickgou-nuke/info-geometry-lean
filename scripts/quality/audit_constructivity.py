@@ -143,13 +143,19 @@ def line_of(text: str, offset: int) -> int:
     return text.count("\n", 0, offset) + 1
 
 
-def strip_comments(text: str) -> str:
+def strip_comments(
+    text: str,
+    *,
+    strip_strings: bool = False,
+    strip_quoted_identifiers: bool = False,
+) -> str:
     out: list[str] = []
     i = 0
     n = len(text)
     block_depth = 0
     in_line = False
     in_string = False
+    in_quoted_identifier = False
     while i < n:
         ch = text[i]
         nxt = text[i + 1] if i + 1 < n else ""
@@ -182,8 +188,23 @@ def strip_comments(text: str) -> str:
             i += 1
             continue
 
+        if in_quoted_identifier:
+            if ch == "\n":
+                out.append("\n")
+            else:
+                out.append(" ")
+            if ch == "»":
+                in_quoted_identifier = False
+            i += 1
+            continue
+
         if in_string:
-            out.append(ch)
+            if ch == "\n":
+                out.append("\n")
+            elif strip_strings:
+                out.append(" ")
+            else:
+                out.append(ch)
             if ch == '"' and (i == 0 or text[i - 1] != "\\"):
                 in_string = False
             i += 1
@@ -191,7 +212,12 @@ def strip_comments(text: str) -> str:
 
         if ch == '"':
             in_string = True
-            out.append(ch)
+            out.append(" " if strip_strings else ch)
+            i += 1
+            continue
+        if ch == "«" and strip_quoted_identifiers:
+            in_quoted_identifier = True
+            out.append(" ")
             i += 1
             continue
         if ch == "-" and nxt == "-":
@@ -238,11 +264,12 @@ def scan_manifest_consistency() -> list[Finding]:
 def scan_file(path: Path, *, include_review: bool = False) -> list[Finding]:
     text = path.read_text()
     scan_text = strip_comments(text)
+    proof_hole_text = strip_comments(text, strip_strings=True, strip_quoted_identifiers=True)
     rpath = rel(path)
     findings: list[Finding] = []
 
-    for match in PROOF_HOLE_RE.finditer(scan_text):
-        findings.append(Finding("proof-hole", rpath, line_of(scan_text, match.start()), match.group(0)))
+    for match in PROOF_HOLE_RE.finditer(proof_hole_text):
+        findings.append(Finding("proof-hole", rpath, line_of(proof_hole_text, match.start()), match.group(0)))
     for match in AXIOM_RE.finditer(scan_text):
         findings.append(Finding("axiom", rpath, line_of(scan_text, match.start()), "axiom declaration"))
     for match in TRUE_PROP_RE.finditer(scan_text):

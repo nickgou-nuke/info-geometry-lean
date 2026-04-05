@@ -135,7 +135,7 @@ noncomputable def gammaTail (n : ℕ) (xs : Carrier n) : Alg (n + 1) :=
     (n : ℕ) :
     gammaHeadNullPlus n * gammaHeadNullMinus n
       + gammaHeadNullMinus n * gammaHeadNullPlus n = 1 := by
-  simpa [add_comm] using gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap n
+  simpa only [add_comm] using gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap n
 
 @[rep_depth operator, simp] theorem gammaHeadNullMinus_mul_gammaTail_add_swap
     (n : ℕ) (xs : Carrier n) :

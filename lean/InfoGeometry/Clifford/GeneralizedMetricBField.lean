@@ -27,7 +27,7 @@ open InfoGeometry.Cartan
 
 noncomputable section
 
-local instance : Invertible (2 : ℝ) :=
+local instance generalizedMetricBFieldInvertibleTwoReal : Invertible (2 : ℝ) :=
   invertibleOfNonzero (by norm_num)
 
 /-- Algebraic generalized-metric seed over the split `Cl(n,n)` carrier. -/

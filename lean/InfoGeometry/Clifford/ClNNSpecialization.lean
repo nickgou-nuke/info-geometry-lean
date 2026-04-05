@@ -90,11 +90,11 @@ noncomputable def rankOneEquiv : Carrier 1 ≃ₗ[ℝ] (ℝ × ℝ) :=
     Quad 1 (headNullPlus 0) = 0 := by
   simpa [rankOne_headNullPlus] using headNullPlus_isotropic 0
 
-@[rep_depth operator, simp] theorem gamma_rankOne_headNullMinus_sq :
+@[rep_depth krein, simp] theorem gamma_rankOne_headNullMinus_sq :
     gammaHeadNullMinus 0 * gammaHeadNullMinus 0 = 0 := by
   exact gammaHeadNullMinus_sq 0
 
-@[rep_depth operator, simp] theorem gamma_rankOne_headNullPlus_sq :
+@[rep_depth krein, simp] theorem gamma_rankOne_headNullPlus_sq :
     gammaHeadNullPlus 0 * gammaHeadNullPlus 0 = 0 := by
   exact gammaHeadNullPlus_sq 0
 

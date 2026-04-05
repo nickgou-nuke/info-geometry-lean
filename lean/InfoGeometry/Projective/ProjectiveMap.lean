@@ -152,6 +152,29 @@ lemma projectiveMap_comp
   rw [projectiveMap, Quotient.map_mk]
   rfl
 
+/-- Nonzero scalar rescaling of a linear map does not change its descended projective map. -/
+lemma projectiveMap_smul_gauge
+    (u : Gauge)
+    (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    projectiveMap (E := E) ((u : ℝ) • A) = projectiveMap (E := E) A := by
+  ext q
+  refine Quotient.inductionOn q ?_
+  intro v
+  rw [projectiveMap, Quotient.map_mk, projectiveMap, Quotient.map_mk]
+  change projectivize (E := E) (u • A v) = projectivize (E := E) (A v)
+  exact projectivize_smul (E := E) u (A v)
+
+/-- Negating a linear map does not change its descended projective dynamics. -/
+lemma projectiveMap_neg
+    (A : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    projectiveMap (E := E) (-A) = projectiveMap (E := E) A := by
+  ext q
+  refine Quotient.inductionOn q ?_
+  intro v
+  rw [projectiveMap, Quotient.map_mk, projectiveMap, Quotient.map_mk]
+  change projectivize (E := E) (-A v) = projectivize (E := E) (A v)
+  simpa using (projectivize_smul (E := E) (-1 : Gauge) (A v))
+
 lemma projectiveMapEven_id
     (hId : isEven (ContinuousLinearMap.id ℝ (DoubledSpace E))) :
     projectiveMapEven (ContinuousLinearMap.id ℝ (DoubledSpace E)) hId = id := by

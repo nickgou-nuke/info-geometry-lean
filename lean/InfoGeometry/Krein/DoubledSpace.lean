@@ -148,6 +148,40 @@ lemma modular_j_spectral_epsilon_anticommute (E : Type*) [NormedAddCommGroup E] 
   apply ContinuousLinearMap.ext; intro u
   apply DoubledSpace.ext <;> simp [modular_j_apply, spectral_epsilon_apply]
 
+/-- Exact product identity `J I = ε` for the doubled-space split generators. -/
+lemma modular_j_comp_complex_i (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    (modular_j (E := E)).comp (complex_i (E := E)) = spectral_epsilon := by
+  unfold complex_i
+  rw [← ContinuousLinearMap.comp_assoc, modular_j_involution, ContinuousLinearMap.id_comp]
+
+/-- Exact product identity `I J = -ε` for the doubled-space split generators. -/
+lemma complex_i_comp_modular_j (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    (complex_i (E := E)).comp (modular_j (E := E)) = -spectral_epsilon := by
+  apply ContinuousLinearMap.ext
+  intro u
+  apply DoubledSpace.ext <;> simp [complex_i, modular_j, spectral_epsilon]
+
+/-- Exact product identity `I ε = J` for the doubled-space split generators. -/
+lemma complex_i_comp_spectral_epsilon (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    (complex_i (E := E)).comp spectral_epsilon = modular_j := by
+  apply ContinuousLinearMap.ext
+  intro u
+  apply DoubledSpace.ext <;> simp [complex_i, modular_j, spectral_epsilon]
+
+/-- Exact product identity `ε I = -J` for the doubled-space split generators. -/
+lemma spectral_epsilon_comp_complex_i (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    spectral_epsilon.comp (complex_i (E := E)) = -modular_j := by
+  apply ContinuousLinearMap.ext
+  intro u
+  apply DoubledSpace.ext <;> simp [complex_i, modular_j, spectral_epsilon]
+
+/-- Exact product identity `ε J = -I` for the doubled-space split generators. -/
+lemma spectral_epsilon_comp_modular_j (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    spectral_epsilon.comp (modular_j (E := E)) = -(complex_i (E := E)) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  apply DoubledSpace.ext <;> simp [complex_i, modular_j, spectral_epsilon]
+
 lemma complex_i_sq (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     (complex_i (E := E)).comp complex_i = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
   apply ContinuousLinearMap.ext; intro u

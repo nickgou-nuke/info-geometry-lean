@@ -92,6 +92,22 @@ theorem bottDirac_sq_eq_sum_laplacians
   ext u v
   exact bottDirac_sq_eq_sum_laplacians_tmul D1 Γ1 Dn hChiral hGrading u v
 
+/--
+Conjugacy on the base space lifts exactly to the Bott-Dirac operator on the product.
+-/
+theorem bottDirac_comp_tensor_eq_tensor_comp_bottDirac
+    (D1 Γ1 : Endomorphism E) (Dn Dn' e : Endomorphism F)
+    (hConj : Dn.comp e = e.comp Dn') :
+    (bottDirac D1 Γ1 Dn).comp (TensorProduct.map (LinearMap.id : Endomorphism E) e)
+      =
+    (TensorProduct.map (LinearMap.id : Endomorphism E) e).comp (bottDirac D1 Γ1 Dn') := by
+  ext u v
+  simp [bottDirac, TensorProduct.map_tmul, LinearMap.comp_apply, LinearMap.add_apply]
+  have h_eval : Dn (e v) = e (Dn' v) := by
+    have h := congrArg (fun T : Endomorphism F => T v) hConj
+    simpa [LinearMap.comp_apply] using h
+  rw [h_eval]
+
 end Core
 
 section SpectralBridge
@@ -134,6 +150,20 @@ private noncomputable abbrev cl11Grading : Endomorphism (DoubledSpace E) :=
 noncomputable def cl11BottDirac (Dn : Endomorphism F) :
     Endomorphism (DoubledSpace E ⊗[ℝ] F) :=
   bottDirac (cl11DiracSeed (E := E)) (cl11Grading (E := E)) Dn
+
+/-- Pointwise action formula for the canonical `Cl(1,1)` Bott-Dirac operator. -/
+theorem cl11BottDirac_apply_tmul
+    (Dn : Endomorphism F) (u : DoubledSpace E) (v : F) :
+    cl11BottDirac (E := E) Dn (u ⊗ₜ[ℝ] v)
+      = modular_j (E := E) u ⊗ₜ[ℝ] v + spectral_epsilon (E := E) u ⊗ₜ[ℝ] Dn v := by
+  simp [cl11BottDirac, bottDirac, cl11DiracSeed, cl11Grading, cl11Action, TensorProduct.map_tmul]
+
+/-- The split `Cl(1,1)` Dirac seed squares to identity. -/
+theorem cl11DiracSeed_sq_eq_id :
+    (cl11DiracSeed (E := E)).comp (cl11DiracSeed (E := E))
+      = (LinearMap.id : Endomorphism (DoubledSpace E)) := by
+  simpa [cl11DiracSeed] using
+    congrArg ContinuousLinearMap.toLinearMap (modular_j_involution (E := E))
 
 /-- The packaged doubled-space split action satisfies the Bott chiral relation. -/
 private lemma cl11_isChiralDirac :
@@ -205,6 +235,91 @@ theorem cl11_bottDirac_sq_eq_cl11BottLaplacian
   simpa [cl11BottDirac, cl11BottLaplacian] using
     (cl11_bottDirac_sq_eq_sum_laplacians (E := E) (F := F) (Dn := Dn))
 
+/--
+Explicit `Cl(1,1)` Bott Laplacian formula:
+the first tensor channel is the identity, while the second channel carries the
+square of the input Dirac operator.
+-/
+theorem cl11BottLaplacian_eq_tensor_id_add_tensor_dirac_sq
+    (Dn : Endomorphism F) :
+    cl11BottLaplacian (E := E) Dn =
+      (TensorProduct.map
+        (LinearMap.id : Endomorphism (DoubledSpace E))
+        (LinearMap.id : Endomorphism F))
+        +
+      (TensorProduct.map
+        (LinearMap.id : Endomorphism (DoubledSpace E))
+        (Dn.comp Dn)) := by
+  simp [cl11BottLaplacian, cl11DiracSeed_sq_eq_id]
+
+/--
+Explicit `Cl(1,1)` Bott-square formula:
+`D_bott² = Id ⊗ Id + Id ⊗ Dₙ²`.
+-/
+theorem cl11_bottDirac_sq_eq_tensor_id_add_tensor_dirac_sq
+    (Dn : Endomorphism F) :
+    (cl11BottDirac (E := E) Dn).comp
+      (cl11BottDirac (E := E) Dn)
+      =
+    (TensorProduct.map
+      (LinearMap.id : Endomorphism (DoubledSpace E))
+      (LinearMap.id : Endomorphism F))
+      +
+    (TensorProduct.map
+      (LinearMap.id : Endomorphism (DoubledSpace E))
+      (Dn.comp Dn)) := by
+  rw [cl11_bottDirac_sq_eq_cl11BottLaplacian]
+  exact cl11BottLaplacian_eq_tensor_id_add_tensor_dirac_sq
+    (E := E) (F := F) (Dn := Dn)
+
+/-- Pointwise `Cl(1,1)` Bott-square formula on pure tensors. -/
+theorem cl11_bottDirac_sq_apply_tmul
+    (Dn : Endomorphism F)
+    (u : DoubledSpace E) (v : F) :
+    ((cl11BottDirac (E := E) Dn).comp
+      (cl11BottDirac (E := E) Dn)) (u ⊗ₜ[ℝ] v)
+      = u ⊗ₜ[ℝ] v + u ⊗ₜ[ℝ] Dn (Dn v) := by
+  rw [cl11_bottDirac_sq_eq_tensor_id_add_tensor_dirac_sq (E := E) (F := F) (Dn := Dn)]
+  simp [LinearMap.comp_apply, TensorProduct.map_tmul]
+
+/--
+Conjugacy of the base operator lifts exactly to the `Cl(1,1)` Bott-Dirac module.
+-/
+theorem cl11BottDirac_comp_tensor_eq_tensor_comp_cl11BottDirac
+    (Dn Dn' e : Endomorphism F)
+    (hConj : Dn.comp e = e.comp Dn') :
+    (cl11BottDirac (E := E) Dn).comp (TensorProduct.map (LinearMap.id : Endomorphism (DoubledSpace E)) e)
+      =
+    (TensorProduct.map (LinearMap.id : Endomorphism (DoubledSpace E)) e).comp (cl11BottDirac (E := E) Dn') := by
+  exact bottDirac_comp_tensor_eq_tensor_comp_bottDirac _ _ _ _ _ hConj
+
+/--
+The lifted projective involution `J` on the doubled-space factor transports the
+canonical `Cl(1,1)` Bott-Dirac operator to the sign-twisted second-factor
+Dirac input.
+-/
+theorem cl11BottDirac_comp_tensor_modular_j_eq_tensor_comp_cl11BottDirac_neg
+    (Dn Dn' e : Endomorphism F)
+    (hConj : Dn.comp e = e.comp Dn') :
+    (cl11BottDirac (E := E) Dn).comp
+      (TensorProduct.map (modular_jLE E).toLinearMap e)
+      =
+    (TensorProduct.map (modular_jLE E).toLinearMap e).comp
+      (cl11BottDirac (E := E) (-Dn')) := by
+  ext u v
+  have hEval : Dn (e v) = e (Dn' v) := by
+    have h := congrArg (fun T : Endomorphism F => T v) hConj
+    simpa [LinearMap.comp_apply] using h
+  simp [LinearMap.comp_apply, TensorProduct.map_tmul, cl11BottDirac_apply_tmul,
+    modular_jLE, hEval]
+  have hSign :
+      WithLp.toLp (2 : ENNReal) (WithLp.snd u, -WithLp.fst u)
+        =
+      -WithLp.toLp (2 : ENNReal) (-WithLp.snd u, WithLp.fst u) := by
+    apply DoubledSpace.ext <;> simp
+  rw [hSign]
+  simp [TensorProduct.neg_tmul, TensorProduct.tmul_neg]
+
 end Cl11Bridge
 
 section Cl22Bridge
@@ -249,13 +364,6 @@ theorem cl22_bottDirac_sq_eq_cl22BottLaplacian :
     (cl11_bottDirac_sq_eq_sum_laplacians (E := E) (F := DoubledSpace F)
       (Dn := cl11DiracSeed (E := F)))
 
-/-- The split `Cl(1,1)` Dirac seed squares to identity. -/
-private lemma cl11DiracSeed_involutive :
-    (cl11DiracSeed (E := E)).comp (cl11DiracSeed (E := E))
-      = (LinearMap.id : Endomorphism (DoubledSpace E)) := by
-  simpa [cl11DiracSeed] using
-    congrArg ContinuousLinearMap.toLinearMap (modular_j_involution (E := E))
-
 /--
 Simplified `Cl(2,2)` Bott-square:
 both Laplacian channels reduce to the tensor identity, giving a doubled scale.
@@ -268,7 +376,7 @@ theorem cl22_bottDirac_sq_eq_two_tensor_id :
         (LinearMap.id : Endomorphism (DoubledSpace E))
         (LinearMap.id : Endomorphism (DoubledSpace F))) := by
   rw [cl22_bottDirac_sq_eq_cl22BottLaplacian (E := E) (F := F)]
-  simp [cl22BottLaplacian, cl11DiracSeed_involutive, two_smul]
+  simp [cl22BottLaplacian, cl11DiracSeed_sq_eq_id, two_smul]
 
 end Cl22Bridge
 

@@ -148,6 +148,24 @@ theorem projectors_commute_of_chiralScale_eq_zero
   exact CI.projectors_commute_of_chiralAnomaly_eq_zero hAnomZero
 
 /--
+If the Drazin spectral projector commutes with the Moore-Penrose right
+projector and the scalar chiral source vanishes, then the spectral projector
+commutes with the conformal dilation generator.
+-/
+theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_chiralScale_eq_zero
+    (hRight :
+      CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D)
+    (hScaleZero : CI.chiralScale = 0) :
+    CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  have hNormAnom : ‖CI.chiralAnomalyOperator‖₊ = 0 := by
+    simpa [chiralScale, epsilon, chiralAnomalyOperator] using hScaleZero
+  have hAnomZero : CI.chiralAnomalyOperator = 0 :=
+    (nnnorm_eq_zero).1 hNormAnom
+  exact
+    CI.spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_chiralAnomaly_eq_zero
+      hRight hAnomZero
+
+/--
 Projector commutation directly from the Kähler/log-det layer:
 matching `χ` to the RN Kähler potential and unit relative volume force
 `χ = 0`, hence vanishing projector obstruction.

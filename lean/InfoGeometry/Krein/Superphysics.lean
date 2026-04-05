@@ -99,14 +99,7 @@ lemma epsilonSupercharge_hamiltonian :
 noncomputable def complex_i_isOdd :
     isOdd (complex_i (E := E)) := by
   simp only [isOdd]
-  have hleft : modular_j.comp (complex_i (E := E)) = spectral_epsilon := by
-    unfold complex_i
-    rw [← ContinuousLinearMap.comp_assoc, modular_j_involution, ContinuousLinearMap.id_comp]
-  have hright : (complex_i (E := E)).comp modular_j = -spectral_epsilon := by
-    unfold complex_i
-    rw [modular_j_spectral_epsilon_anticommute]
-    simp [ContinuousLinearMap.comp_assoc, modular_j_involution]
-  rw [hleft, hright]
+  rw [modular_j_comp_complex_i (E := E), complex_i_comp_modular_j (E := E)]
   simp
 
 noncomputable def complex_iSupercharge : Supercharge (E := E) where

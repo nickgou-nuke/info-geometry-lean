@@ -1018,6 +1018,75 @@ noncomputable def cl11GlobalGrading (Γn : Endomorphism F) :
     Endomorphism (DoubledSpace E ⊗[ℝ] F) :=
   globalGrading ((InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)).eps.toLinearMap) Γn
 
+/-- Pointwise action formula for the lifted `Cl(1,1)` global grading. -/
+theorem cl11GlobalGrading_apply_tmul
+    (Γn : Endomorphism F) (u : DoubledSpace E) (v : F) :
+    cl11GlobalGrading (E := E) Γn (u ⊗ₜ[ℝ] v)
+      = spectral_epsilon (E := E) u ⊗ₜ[ℝ] Γn v := by
+  simp [cl11GlobalGrading, globalGrading, TensorProduct.map_tmul]
+
+/--
+Exact lifted chiral law for the `Cl(1,1)` Bott root:
+if the second-factor Dirac/grading pair anticommutes, then the lifted
+`cl11BottDirac` anticommutes with the lifted global grading.
+-/
+theorem cl11BottDirac_comp_cl11GlobalGrading_add_cl11GlobalGrading_comp_cl11BottDirac
+    (Dn Γn : Endomorphism F)
+    (hAnti : IsChiralDirac (E := F) Dn Γn) :
+    (cl11BottDirac (E := E) Dn).comp (cl11GlobalGrading (E := E) Γn)
+      + (cl11GlobalGrading (E := E) Γn).comp (cl11BottDirac (E := E) Dn)
+      = 0 := by
+  ext u v
+  have hAntiEval : Dn (Γn v) + Γn (Dn v) = 0 := by
+    have h := congrArg (fun T : Endomorphism F => T v) hAnti
+    simpa [IsChiralDirac, LinearMap.comp_apply, LinearMap.add_apply] using h
+  simp [LinearMap.comp_apply, LinearMap.add_apply, cl11BottDirac_apply_tmul,
+    cl11GlobalGrading_apply_tmul]
+  have hCrossVec :
+      WithLp.toLp (2 : ENNReal) (-WithLp.snd u, WithLp.fst u)
+        =
+      -WithLp.toLp (2 : ENNReal) (WithLp.snd u, -WithLp.fst u) := by
+    apply DoubledSpace.ext <;> simp
+  have hCross :
+      WithLp.toLp (2 : ENNReal) (WithLp.snd u, -WithLp.fst u) ⊗ₜ[ℝ] Γn v
+        +
+      WithLp.toLp (2 : ENNReal) (-WithLp.snd u, WithLp.fst u) ⊗ₜ[ℝ] Γn v
+        = 0 := by
+    rw [hCrossVec]
+    simp [TensorProduct.neg_tmul]
+  have hCross' :
+      WithLp.toLp (2 : ENNReal) (-WithLp.snd u, WithLp.fst u) ⊗ₜ[ℝ] Γn v
+        +
+      WithLp.toLp (2 : ENNReal) (WithLp.snd u, -WithLp.fst u) ⊗ₜ[ℝ] Γn v
+        = 0 := by
+    simpa [add_comm] using hCross
+  have hMain :
+      WithLp.toLp (2 : ENNReal) (WithLp.fst u, WithLp.snd u) ⊗ₜ[ℝ] Dn (Γn v)
+        +
+      WithLp.toLp (2 : ENNReal) (WithLp.fst u, WithLp.snd u) ⊗ₜ[ℝ] Γn (Dn v)
+        = 0 := by
+    rw [← TensorProduct.tmul_add]
+    simp [hAntiEval]
+  calc
+    WithLp.toLp (2 : ENNReal) (-WithLp.snd u, WithLp.fst u) ⊗ₜ[ℝ] Γn v
+        +
+      WithLp.toLp (2 : ENNReal) (WithLp.fst u, WithLp.snd u) ⊗ₜ[ℝ] Dn (Γn v)
+        +
+      (WithLp.toLp (2 : ENNReal) (WithLp.snd u, -WithLp.fst u) ⊗ₜ[ℝ] Γn v
+        +
+      WithLp.toLp (2 : ENNReal) (WithLp.fst u, WithLp.snd u) ⊗ₜ[ℝ] Γn (Dn v))
+        =
+      (WithLp.toLp (2 : ENNReal) (-WithLp.snd u, WithLp.fst u) ⊗ₜ[ℝ] Γn v
+        +
+      WithLp.toLp (2 : ENNReal) (WithLp.snd u, -WithLp.fst u) ⊗ₜ[ℝ] Γn v)
+        +
+      (WithLp.toLp (2 : ENNReal) (WithLp.fst u, WithLp.snd u) ⊗ₜ[ℝ] Dn (Γn v)
+        +
+      WithLp.toLp (2 : ENNReal) (WithLp.fst u, WithLp.snd u) ⊗ₜ[ℝ] Γn (Dn v)) := by
+          ac_rfl
+    _ = 0 + 0 := by rw [hCross', hMain]
+    _ = 0 := by simp
+
 /-- `Cl(1,1)` specialization of the formal Bott analytical index. -/
 noncomputable def cl11BottAnalyticalIndex
     [FiniteDimensional ℝ (DoubledSpace E ⊗[ℝ] F)]
@@ -1025,6 +1094,176 @@ noncomputable def cl11BottAnalyticalIndex
   analyticalIndex
     (cl11BottDirac (E := E) Dn)
     (cl11GlobalGrading (E := E) Γn)
+
+/--
+Exact conjugacy law for the lifted `Cl(1,1)` global grading:
+conjugacy of the second-factor grading is preserved by the Bott tensor lift.
+-/
+theorem cl11GlobalGrading_comp_tensor_eq_tensor_comp_cl11GlobalGrading
+    (Γ0 Γs e : Endomorphism F)
+    (hConj : Γ0.comp e = e.comp Γs) :
+    (cl11GlobalGrading (E := E) Γ0).comp
+      (TensorProduct.map (LinearMap.id : Endomorphism (DoubledSpace E)) e)
+      =
+    (TensorProduct.map (LinearMap.id : Endomorphism (DoubledSpace E)) e).comp
+      (cl11GlobalGrading (E := E) Γs) := by
+  ext u v
+  simp [cl11GlobalGrading, globalGrading, TensorProduct.map_tmul, LinearMap.comp_apply]
+  have hEval : Γ0 (e v) = e (Γs v) := by
+    have h := congrArg (fun T : Endomorphism F => T v) hConj
+    simpa [LinearMap.comp_apply] using h
+  rw [hEval]
+
+/--
+The lifted projective involution `J` on the doubled-space factor transports the
+lifted global grading to the sign-twisted second-factor grading.
+-/
+theorem cl11GlobalGrading_comp_tensor_modular_j_eq_tensor_comp_cl11GlobalGrading_neg
+    (Γ0 Γs e : Endomorphism F)
+    (hConj : Γ0.comp e = e.comp Γs) :
+    (cl11GlobalGrading (E := E) Γ0).comp
+      (TensorProduct.map (modular_jLE E).toLinearMap e)
+      =
+    (TensorProduct.map (modular_jLE E).toLinearMap e).comp
+      (cl11GlobalGrading (E := E) (-Γs)) := by
+  ext u v
+  have hEval : Γ0 (e v) = e (Γs v) := by
+    have h := congrArg (fun T : Endomorphism F => T v) hConj
+    simpa [LinearMap.comp_apply] using h
+  have hSign :
+      WithLp.toLp (2 : ENNReal) (WithLp.snd u, -WithLp.fst u)
+        =
+      -WithLp.toLp (2 : ENNReal) (-WithLp.snd u, WithLp.fst u) := by
+    apply DoubledSpace.ext <;> simp
+  simp [LinearMap.comp_apply, TensorProduct.map_tmul, cl11GlobalGrading_apply_tmul,
+    modular_jLE, hEval]
+  rw [hSign]
+  simp [TensorProduct.neg_tmul, TensorProduct.tmul_neg]
+
+/--
+Functorial `Cl(1,1)` lift of chiral conjugacy:
+conjugacy of the second-factor Dirac/grading family induces conjugacy of the
+lifted Bott-Dirac/global-grading family.
+-/
+theorem chiralConjugacyAlong_cl11Bott
+    [FiniteDimensional ℝ F]
+    [FiniteDimensional ℝ (DoubledSpace E ⊗[ℝ] F)]
+    (Dn Γn : ℝ → Endomorphism F)
+    (eFlow : ℝ → F ≃ₗ[ℝ] F)
+    (hConj : ChiralConjugacyAlong Dn Γn eFlow) :
+    ChiralConjugacyAlong
+      (fun s => cl11BottDirac (E := E) (Dn s))
+      (fun s => cl11GlobalGrading (E := E) (Γn s))
+      (fun s => TensorProduct.congr (LinearEquiv.refl ℝ (DoubledSpace E)) (eFlow s)) := by
+  constructor
+  · intro s
+    have hTensor :
+        (TensorProduct.congr (LinearEquiv.refl ℝ (DoubledSpace E)) (eFlow s)).toLinearMap =
+          TensorProduct.map (LinearMap.id : Endomorphism (DoubledSpace E)) (eFlow s).toLinearMap := by
+      ext u v
+      simp [TensorProduct.congr, LinearEquiv.refl]
+    rw [hTensor]
+    exact cl11BottDirac_comp_tensor_eq_tensor_comp_cl11BottDirac
+      (E := E) (Dn 0) (Dn s) (eFlow s).toLinearMap (hConj.1 s)
+  · intro s
+    have hTensor :
+        (TensorProduct.congr (LinearEquiv.refl ℝ (DoubledSpace E)) (eFlow s)).toLinearMap =
+          TensorProduct.map (LinearMap.id : Endomorphism (DoubledSpace E)) (eFlow s).toLinearMap := by
+      ext u v
+      simp [TensorProduct.congr, LinearEquiv.refl]
+    rw [hTensor]
+    exact cl11GlobalGrading_comp_tensor_eq_tensor_comp_cl11GlobalGrading
+      (E := E) (Γ0 := Γn 0) (Γs := Γn s) (e := (eFlow s).toLinearMap) (hConj := hConj.2 s)
+
+/--
+Analytical-index invariance for the `Cl(1,1)` Bott lift:
+base-space chiral conjugacy is enough to keep the lifted Bott analytical index
+fixed along the full family.
+-/
+theorem cl11BottIndexInvariantAlong_of_conjugacy
+    [FiniteDimensional ℝ F]
+    [FiniteDimensional ℝ (DoubledSpace E ⊗[ℝ] F)]
+    (Dn Γn : ℝ → Endomorphism F)
+    (eFlow : ℝ → F ≃ₗ[ℝ] F)
+    (hConj : ChiralConjugacyAlong Dn Γn eFlow) :
+    IndexInvariantAlong
+      (fun s => cl11BottDirac (E := E) (Dn s))
+      (fun s => cl11GlobalGrading (E := E) (Γn s)) := by
+  exact indexInvariantAlong_of_conjugacy
+    (D := fun s => cl11BottDirac (E := E) (Dn s))
+    (Γ := fun s => cl11GlobalGrading (E := E) (Γn s))
+    (eFlow := fun s => TensorProduct.congr (LinearEquiv.refl ℝ (DoubledSpace E)) (eFlow s))
+    (hConj := chiralConjugacyAlong_cl11Bott
+      (E := E) (F := F) (Dn := Dn) (Γn := Γn) (eFlow := eFlow) hConj)
+
+/--
+The projective involution `J` on doubled-space rays lifts to an exact Bott
+conjugacy jump from `(D, Γ)` to `(-D, -Γ)` on the `Cl(1,1)` tensor module.
+-/
+theorem chiralConjugacyAlong_cl11BottJump_of_projectiveJ
+    [FiniteDimensional ℝ F]
+    [FiniteDimensional ℝ (DoubledSpace E ⊗[ℝ] F)]
+    (Dn Γn : Endomorphism F) :
+    ChiralConjugacyAlong
+      (fun s => if s = 0 then cl11BottDirac (E := E) Dn else cl11BottDirac (E := E) (-Dn))
+      (fun s => if s = 0 then cl11GlobalGrading (E := E) Γn else cl11GlobalGrading (E := E) (-Γn))
+      (fun s =>
+        if s = 0 then LinearEquiv.refl ℝ (DoubledSpace E ⊗[ℝ] F)
+        else TensorProduct.congr (modular_jLE E) (LinearEquiv.refl ℝ F)) := by
+  constructor
+  · intro s
+    by_cases hs : s = 0
+    · simp [hs]
+    · simpa [hs] using
+        (InfoGeometry.Canonical.BottDirac.cl11BottDirac_comp_tensor_modular_j_eq_tensor_comp_cl11BottDirac_neg
+          (E := E) (Dn := Dn) (Dn' := Dn) (e := LinearMap.id)
+          (by ext x; simp))
+  · intro s
+    by_cases hs : s = 0
+    · simp [hs]
+    · simpa [hs] using
+        (cl11GlobalGrading_comp_tensor_modular_j_eq_tensor_comp_cl11GlobalGrading_neg
+          (E := E) (Γ0 := Γn) (Γs := Γn) (e := LinearMap.id)
+          (by ext x; simp))
+
+/--
+Exact `J`-transport on the Bott root preserves the analytical index under the
+sign-twist `(D, Γ) ↦ (-D, -Γ)`.
+-/
+theorem cl11BottAnalyticalIndex_eq_neg_of_projectiveJ
+    [FiniteDimensional ℝ F]
+    [FiniteDimensional ℝ (DoubledSpace E ⊗[ℝ] F)]
+    (Dn Γn : Endomorphism F) :
+    cl11BottAnalyticalIndex (E := E) Dn Γn
+      =
+    cl11BottAnalyticalIndex (E := E) (-Dn) (-Γn) := by
+  have hInv := indexInvariantAlong_of_conjugacy
+    (D := fun s => if s = 0 then cl11BottDirac (E := E) Dn else cl11BottDirac (E := E) (-Dn))
+    (Γ := fun s => if s = 0 then cl11GlobalGrading (E := E) Γn else cl11GlobalGrading (E := E) (-Γn))
+    (eFlow := fun s =>
+      if s = 0 then LinearEquiv.refl ℝ (DoubledSpace E ⊗[ℝ] F)
+      else TensorProduct.congr (modular_jLE E) (LinearEquiv.refl ℝ F))
+    (hConj := chiralConjugacyAlong_cl11BottJump_of_projectiveJ
+      (E := E) (F := F) (Dn := Dn) (Γn := Γn))
+  have h1 : (1 : ℝ) ≠ 0 := by norm_num
+  simpa [cl11BottAnalyticalIndex, h1] using (hInv 1).symm
+
+/--
+Pointwise `Cl(1,1)` Bott analytical-index invariance:
+base-space chiral conjugacy identifies each lifted Bott index with the
+baseline index at `0`.
+-/
+theorem cl11BottAnalyticalIndex_eq_zero_time_of_conjugacy
+    [FiniteDimensional ℝ F]
+    [FiniteDimensional ℝ (DoubledSpace E ⊗[ℝ] F)]
+    (Dn Γn : ℝ → Endomorphism F)
+    (eFlow : ℝ → F ≃ₗ[ℝ] F)
+    (hConj : ChiralConjugacyAlong Dn Γn eFlow)
+    (s : ℝ) :
+    cl11BottAnalyticalIndex (E := E) (Dn s) (Γn s) =
+      cl11BottAnalyticalIndex (E := E) (Dn 0) (Γn 0) := by
+  exact cl11BottIndexInvariantAlong_of_conjugacy
+    (E := E) (F := F) (Dn := Dn) (Γn := Γn) (eFlow := eFlow) hConj s
 
 end Bott
 
@@ -1045,6 +1284,29 @@ theorem cl11_bottDirac_sq_eq_zero_of_laplacian_zero
     (cl11BottDirac (E := E) Dn).comp
       (cl11BottDirac (E := E) Dn) = 0 := by
   exact (cl11_bottDirac_sq_eq_cl11BottLaplacian (E := E) (F := F) (Dn := Dn)).trans hZero
+
+/--
+Explicit `Cl(1,1)` Bott-square vanishing criterion:
+if the second-factor Dirac operator squares to `-Id`, then the split Bott-Dirac
+operator is nilpotent of order two.
+-/
+theorem cl11_bottDirac_sq_eq_zero_of_dirac_sq_eq_neg_id
+    (Dn : Endomorphism F)
+    (hDnSq : Dn.comp Dn = -(LinearMap.id : Endomorphism F)) :
+    (cl11BottDirac (E := E) Dn).comp
+      (cl11BottDirac (E := E) Dn) = 0 := by
+  rw [cl11_bottDirac_sq_eq_tensor_id_add_tensor_dirac_sq (E := E) (F := F) (Dn := Dn)]
+  rw [hDnSq]
+  have hTensorNegId :
+      TensorProduct.map
+          (LinearMap.id : Endomorphism (DoubledSpace E))
+          (-(LinearMap.id : Endomorphism F))
+        =
+      -(LinearMap.id : Endomorphism (DoubledSpace E ⊗[ℝ] F)) := by
+    ext u v
+    simp [TensorProduct.map_tmul, TensorProduct.tmul_neg]
+  rw [hTensorNegId]
+  simp
 
 end Laplacian
 

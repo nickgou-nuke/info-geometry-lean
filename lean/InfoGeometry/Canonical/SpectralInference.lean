@@ -296,7 +296,7 @@ theorem epsilon_eq_zero_of_projectors_commute
   rw [CertifiedChiralSpectralTriple.epsilon, ChiralSpectralTriple.epsilon,
     InfoGeometry.Canonical.MoorePenrose.chiralScale,
     InfoGeometry.Canonical.MoorePenrose.epsilon]
-  simpa [hChi]
+  simp [hChi]
 
 /-- Global finite-dimensional constructor for the certified chiral layer. -/
 theorem exists_of_spectralTriple (ST : SpectralTriple E) :

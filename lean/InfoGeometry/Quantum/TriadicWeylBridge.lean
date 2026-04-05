@@ -56,6 +56,7 @@ private theorem apply_to_doubled_eq_of_isWeylCompatible
     apply_minusPoint_eq_of_isWeylCompatible (E := E) hH ξ]
   apply DoubledSpace.ext <;> simp [plusPoint, minusPoint, to_doubled]
 
+omit [CompleteSpace E] in
 /-- Structural form: Weyl compatibility is exactly commutation with the doubled-sheet sign
 involution `ε`. -/
 @[rep_depth operator]
@@ -119,6 +120,7 @@ theorem isWeylCompatible_iff_comp_spectralEpsilon
         (smul_eq_zero.mp htwo).resolve_left (by norm_num)
       simpa [minusToPlusBlockMap, minusPointL, ContinuousLinearMap.comp_apply] using hzero
 
+omit [CompleteSpace E] in
 @[simp] theorem plusProjectorFlux_eq_zero_of_isWeylCompatible
     {H : EndH} (hH : IsWeylCompatible (E := E) H) :
     plusProjectorFlux (E := E) H = 0 := by
@@ -130,6 +132,7 @@ theorem isWeylCompatible_iff_comp_spectralEpsilon
   simp [plusProjectorFlux, spectralPlusProj_apply_to_doubled,
     apply_to_doubled_eq_of_isWeylCompatible (E := E) hH, plusPoint, to_doubled]
 
+omit [CompleteSpace E] in
 @[simp] theorem minusProjectorFlux_eq_zero_of_isWeylCompatible
     {H : EndH} (hH : IsWeylCompatible (E := E) H) :
     minusProjectorFlux (E := E) H = 0 := by
@@ -141,6 +144,7 @@ theorem isWeylCompatible_iff_comp_spectralEpsilon
   simp [minusProjectorFlux, spectralMinusProj_apply_to_doubled,
     apply_to_doubled_eq_of_isWeylCompatible (E := E) hH, minusPoint, to_doubled]
 
+omit [CompleteSpace E] in
 theorem isWeylCompatible_of_plusProjectorFlux_eq_zero
     {H : EndH} (hflux : plusProjectorFlux (E := E) H = 0) :
     IsWeylCompatible (E := E) H := by
@@ -169,6 +173,7 @@ theorem isWeylCompatible_of_plusProjectorFlux_eq_zero
       exact hfst'
     simpa [minusToPlusBlockMap, minusPointL, ContinuousLinearMap.comp_apply] using hfst
 
+omit [CompleteSpace E] in
 theorem isWeylCompatible_of_minusProjectorFlux_eq_zero
     {H : EndH} (hflux : minusProjectorFlux (E := E) H = 0) :
     IsWeylCompatible (E := E) H := by
@@ -197,6 +202,7 @@ theorem isWeylCompatible_of_minusProjectorFlux_eq_zero
       simpa using neg_eq_iff_add_eq_zero.mp hfst
     simpa [minusToPlusBlockMap, minusPointL, ContinuousLinearMap.comp_apply] using hzero
 
+omit [CompleteSpace E] in
 theorem isWeylCompatible_iff_plusProjectorFlux_eq_zero
     (H : EndH) :
     IsWeylCompatible (E := E) H ↔ plusProjectorFlux (E := E) H = 0 := by
@@ -204,6 +210,7 @@ theorem isWeylCompatible_iff_plusProjectorFlux_eq_zero
   · exact plusProjectorFlux_eq_zero_of_isWeylCompatible (E := E)
   · exact isWeylCompatible_of_plusProjectorFlux_eq_zero (E := E)
 
+omit [CompleteSpace E] in
 theorem isWeylCompatible_iff_minusProjectorFlux_eq_zero
     (H : EndH) :
     IsWeylCompatible (E := E) H ↔ minusProjectorFlux (E := E) H = 0 := by
@@ -211,6 +218,7 @@ theorem isWeylCompatible_iff_minusProjectorFlux_eq_zero
   · exact minusProjectorFlux_eq_zero_of_isWeylCompatible (E := E)
   · exact isWeylCompatible_of_minusProjectorFlux_eq_zero (E := E)
 
+omit [CompleteSpace E] in
 theorem isWeylCompatible_iff_commutes_spectralPlusProj
     (H : EndH) :
     IsWeylCompatible (E := E) H ↔
@@ -219,6 +227,7 @@ theorem isWeylCompatible_iff_commutes_spectralPlusProj
   unfold plusProjectorFlux
   exact sub_eq_zero
 
+omit [CompleteSpace E] in
 theorem isWeylCompatible_iff_commutes_spectralMinusProj
     (H : EndH) :
     IsWeylCompatible (E := E) H ↔
@@ -308,6 +317,7 @@ section FiniteDimensional
 
 variable [FiniteDimensional ℝ E]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 /-- Under Weyl compatibility and scalar diagonal block hypotheses, an operator is exactly the
 common-plus-relative `ε` form. -/
 @[rep_depth operator]
@@ -351,6 +361,7 @@ theorem eq_common_relative_form_of_scalarBlocks
             + ((α - β) / 2) • (spectral_epsilon (E := E))) (to_doubled (WithLp.fst u) (WithLp.snd u))) := by
               simp [ContinuousLinearMap.add_apply, spectral_epsilon_apply, to_doubled, add_smul, neg_smul]
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 /-- Exact logarithmic Weyl identification under explicit scalar block hypotheses. -/
 @[rep_depth operator]
 theorem eq_logarithmicGenerator_of_scalarSheetBlocks

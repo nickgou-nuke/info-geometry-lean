@@ -12,7 +12,10 @@ This file is deliberately algebraic:
 
 - the carrier is `E × Module.Dual ℝ E`,
 - the canonical neutral bilinear form is built from evaluation pairing,
-- the associated quadratic form is the off-diagonal neutral form,
+- the associated quadratic form is the off-diagonal neutral form in the
+  repository's doubled normalization,
+- an unscaled companion quadratic form records the exact evaluation surface
+  `q (x, ξ) = ξ x`,
 - the Clifford algebra is defined over that quadratic form.
 
 No doubled/Krein realization is imported here.
@@ -43,6 +46,12 @@ noncomputable def canonicalNeutralBilin : LinearMap.BilinForm ℝ (PhaseSpaceCar
 noncomputable def canonicalNeutralForm : QuadraticForm ℝ (PhaseSpaceCarrier E) :=
   (canonicalNeutralBilin (E := E)).toQuadraticMap
 
+/-- Unscaled neutral quadratic form on `E × E*`, normalized so that
+`q (x, ξ) = ξ x`. -/
+@[rep_depth krein]
+noncomputable def canonicalNeutralFormUnscaled : QuadraticForm ℝ (PhaseSpaceCarrier E) :=
+  (1 / 2 : ℝ) • canonicalNeutralForm (E := E)
+
 @[rep_depth krein, simp] theorem canonicalNeutralBilin_apply
     (X Y : PhaseSpaceCarrier E) :
     canonicalNeutralBilin (E := E) X Y = X.2 Y.1 + Y.2 X.1 := by
@@ -57,6 +66,17 @@ noncomputable def canonicalNeutralForm : QuadraticForm ℝ (PhaseSpaceCarrier E)
   simp [canonicalNeutralForm, canonicalNeutralBilin]
   ring
 
+@[rep_depth krein, simp] theorem canonicalNeutralFormUnscaled_apply
+    (X : PhaseSpaceCarrier E) :
+    canonicalNeutralFormUnscaled (E := E) X = X.2 X.1 := by
+  rcases X with ⟨x, ξ⟩
+  simp [canonicalNeutralFormUnscaled, canonicalNeutralForm_apply]
+
+@[rep_depth krein] theorem canonicalNeutralForm_eq_two_smul_canonicalNeutralFormUnscaled :
+    canonicalNeutralForm (E := E) = (2 : ℝ) • canonicalNeutralFormUnscaled (E := E) := by
+  ext X
+  simp [canonicalNeutralFormUnscaled]
+
 @[rep_depth krein, simp] theorem canonicalNeutralForm_fst_zero
     (ξ : Module.Dual ℝ E) :
     canonicalNeutralForm (E := E) (0, ξ) = 0 := by
@@ -66,6 +86,16 @@ noncomputable def canonicalNeutralForm : QuadraticForm ℝ (PhaseSpaceCarrier E)
     (x : E) :
     canonicalNeutralForm (E := E) (x, 0) = 0 := by
   simp [canonicalNeutralForm_apply]
+
+@[rep_depth krein, simp] theorem canonicalNeutralFormUnscaled_fst_zero
+    (ξ : Module.Dual ℝ E) :
+    canonicalNeutralFormUnscaled (E := E) (0, ξ) = 0 := by
+  simp [canonicalNeutralFormUnscaled_apply]
+
+@[rep_depth krein, simp] theorem canonicalNeutralFormUnscaled_snd_zero
+    (x : E) :
+    canonicalNeutralFormUnscaled (E := E) (x, 0) = 0 := by
+  simp [canonicalNeutralFormUnscaled_apply]
 
 /-- Clifford algebra over the canonical neutral phase-space form. -/
 @[rep_depth operator]

@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.KKTCore
 import InfoGeometry.Canonical.GeneralizedMetricCore
+import InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -19,6 +20,7 @@ namespace InfoGeometry.Canonical.KKTGeneralizedMetricBridge
 
 open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Canonical.GeneralizedMetricCore
+open InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge
 open InfoGeometry.Quantum
 open InfoGeometry.Krein
 
@@ -76,6 +78,85 @@ local notation "EndH" => H2 →L[ℝ] H2
         + minusProjector (doubledSpaceCl11Action (E := H)) * A
           * minusProjector (doubledSpaceCl11Action (E := H)) := by
   rfl
+
+@[rep_depth krein] theorem toDoubledCopyRho_comp_phasePlusProjector_eq_canonical_plusProjector
+    (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H) :
+    (toDoubledCopyRho (E := H) ρ).comp (phasePlusProjector (E := H))
+      = (plusProjector (doubledSpaceCl11Action (E := H))).toLinearMap.comp
+          (toDoubledCopyRho (E := H) ρ) := by
+  calc
+    (toDoubledCopyRho (E := H) ρ).comp (phasePlusProjector (E := H))
+        = (spectralPlusProj (E := H)).toLinearMap.comp (toDoubledCopyRho (E := H) ρ) := by
+            simpa using
+              (InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.toDoubledCopyRho_comp_phasePlusProjector
+                (E := H) ρ)
+    _ = (plusProjector (doubledSpaceCl11Action (E := H))).toLinearMap.comp
+          (toDoubledCopyRho (E := H) ρ) := by
+        rw [canonical_plusProjector_eq_generalizedMetric_plusProjector,
+          tomitaGeneralizedMetricSeed_plusProjector_eq_spectralPlusProj]
+
+@[rep_depth krein] theorem toDoubledCopyRho_comp_phaseMinusProjector_eq_canonical_minusProjector
+    (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H) :
+    (toDoubledCopyRho (E := H) ρ).comp (phaseMinusProjector (E := H))
+      = (minusProjector (doubledSpaceCl11Action (E := H))).toLinearMap.comp
+          (toDoubledCopyRho (E := H) ρ) := by
+  calc
+    (toDoubledCopyRho (E := H) ρ).comp (phaseMinusProjector (E := H))
+        = (spectralMinusProj (E := H)).toLinearMap.comp (toDoubledCopyRho (E := H) ρ) := by
+            simpa using
+              (InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.toDoubledCopyRho_comp_phaseMinusProjector
+                (E := H) ρ)
+    _ = (minusProjector (doubledSpaceCl11Action (E := H))).toLinearMap.comp
+          (toDoubledCopyRho (E := H) ρ) := by
+        rw [canonical_minusProjector_eq_generalizedMetric_minusProjector,
+          tomitaGeneralizedMetricSeed_minusProjector_eq_spectralMinusProj]
+
+@[rep_depth krein] theorem toDoubledCopyRho_comp_phasePlusProjector_eq_generalizedMetric_plusProjector
+    (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H) :
+    (toDoubledCopyRho (E := H) ρ).comp (phasePlusProjector (E := H))
+      = (GeneralizedMetricSeed.plusProjector
+          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)).toLinearMap.comp
+          (toDoubledCopyRho (E := H) ρ) := by
+  calc
+    (toDoubledCopyRho (E := H) ρ).comp (phasePlusProjector (E := H))
+        = (plusProjector (doubledSpaceCl11Action (E := H))).toLinearMap.comp
+            (toDoubledCopyRho (E := H) ρ) := by
+            exact toDoubledCopyRho_comp_phasePlusProjector_eq_canonical_plusProjector ρ
+    _ = (GeneralizedMetricSeed.plusProjector
+          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)).toLinearMap.comp
+          (toDoubledCopyRho (E := H) ρ) := by
+        rw [canonical_plusProjector_eq_generalizedMetric_plusProjector]
+
+@[rep_depth krein] theorem toDoubledCopyRho_comp_phaseMinusProjector_eq_generalizedMetric_minusProjector
+    (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H) :
+    (toDoubledCopyRho (E := H) ρ).comp (phaseMinusProjector (E := H))
+      = (GeneralizedMetricSeed.minusProjector
+          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)).toLinearMap.comp
+          (toDoubledCopyRho (E := H) ρ) := by
+  calc
+    (toDoubledCopyRho (E := H) ρ).comp (phaseMinusProjector (E := H))
+        = (minusProjector (doubledSpaceCl11Action (E := H))).toLinearMap.comp
+            (toDoubledCopyRho (E := H) ρ) := by
+            exact toDoubledCopyRho_comp_phaseMinusProjector_eq_canonical_minusProjector ρ
+    _ = (GeneralizedMetricSeed.minusProjector
+          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)).toLinearMap.comp
+          (toDoubledCopyRho (E := H) ρ) := by
+        rw [canonical_minusProjector_eq_generalizedMetric_minusProjector]
+
+@[rep_depth krein] theorem toDoubledCopyRho_comp_phaseRotation_eq_dilationOperator
+    (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H) :
+    (toDoubledCopyRho (E := H) ρ).comp (phaseRotation (E := H) ρ)
+      = (dilationOperator (E := H)).toLinearMap.comp (toDoubledCopyRho (E := H) ρ) := by
+  calc
+    (toDoubledCopyRho (E := H) ρ).comp (phaseRotation (E := H) ρ)
+        = (modularRotation (E := H)).toLinearMap.comp (toDoubledCopyRho (E := H) ρ) := by
+            simpa using
+              (InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.toDoubledCopyRho_comp_phaseRotation
+                (E := H) ρ)
+    _ = (dilationOperator (E := H)).toLinearMap.comp (toDoubledCopyRho (E := H) ρ) := by
+        rw [show modularRotation (E := H) = InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := H) by
+              rfl]
+        rw [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_dilationOperator]
 
 end Core
 

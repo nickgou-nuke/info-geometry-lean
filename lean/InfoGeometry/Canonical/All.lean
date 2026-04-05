@@ -52,6 +52,9 @@ import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Canonical.CoarseGraining
 import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Canonical.InverseKernelAlgebra
+import InfoGeometry.Canonical.InverseKernelCartanCore
+import InfoGeometry.Canonical.InverseKernelNormalForm
 import InfoGeometry.Canonical.LogGenerator
 import InfoGeometry.Canonical.GeneratedFlow
 import InfoGeometry.Canonical.WeylGaugeField
@@ -62,6 +65,7 @@ import InfoGeometry.Canonical.VolumeDeformationPrinciple
 import InfoGeometry.Canonical.PartitionHierarchy
 import InfoGeometry.Canonical.DualConnections
 import InfoGeometry.Canonical.EmpiricalChecks
+import InfoGeometry.Canonical.EPAndGroupInverse
 import InfoGeometry.Canonical.Fierz
 import InfoGeometry.Canonical.FormalScaffold
 import InfoGeometry.Canonical.Fock

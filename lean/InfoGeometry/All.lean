@@ -30,6 +30,8 @@ import InfoGeometry.LLM
 import InfoGeometry.Library
 import InfoGeometry.Meta.Admission
 import InfoGeometry.Meta.RegionPolicy
+import InfoGeometry.Meta.StrictDef
+import InfoGeometry.Meta.StrictSurface
 import InfoGeometry.Meta.Trust
 import InfoGeometry.OptimalTransport
 import InfoGeometry.PositiveMeasure

@@ -86,9 +86,13 @@ class StrictDefTests(unittest.TestCase):
         self.assertEqual(payload["expectedType"], "1 = 1")
         self.assertTrue(payload["hasExprMVar"])
         self.assertFalse(payload["hasSorry"])
+        self.assertIn("curvature", payload)
+        self.assertIn("targetWeight", payload["curvature"])
         self.assertEqual(len(payload["holes"]), 1)
         self.assertEqual(payload["holes"][0]["expectedType"], "1 = 1")
         self.assertEqual(payload["holes"][0]["localContext"], [])
+        self.assertIn("curvature", payload["holes"][0])
+        self.assertIn("missingConstCount", payload["holes"][0]["curvature"])
 
     def test_strict_def_type_mismatch_emits_raw_boundary_json(self):
         proc = _run_snippet(
@@ -112,6 +116,8 @@ class StrictDefTests(unittest.TestCase):
         self.assertFalse(payload["hasSorry"])
         self.assertTrue(payload["hasExprMVar"])
         self.assertGreaterEqual(len(payload["holes"]), 1)
+        self.assertIn("curvature", payload)
+        self.assertIn("bestSharedConstCount", payload["curvature"])
 
     def test_strict_theorem_blocks_thin_wrapper_in_protected_region(self):
         proc = _run_snippet(

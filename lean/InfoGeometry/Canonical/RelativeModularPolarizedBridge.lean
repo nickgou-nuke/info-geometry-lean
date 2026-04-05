@@ -22,49 +22,10 @@ namespace InfoGeometry.Canonical.RelativeModularPolarizedBridge
 open InfoGeometry.Canonical.StandardFormCore
 open InfoGeometry.Canonical.RelativeModularCore
 open InfoGeometry.Canonical.RelativeModularProjectiveBridge
-open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Krein
 open InfoGeometry.Krein.PolarizedSector
 open InfoGeometry.Krein.SplitQuadraticSheets
 open MeasureTheory
-
-section Projectors
-
-variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-
-local notation "H2" => InfoGeometry.Krein.DoubledSpace H
-local notation "EndH" => H2 →L[ℝ] H2
-
-/-- The `+1` projector associated to the seed grading operator. -/
-@[rep_depth krein]
-noncomputable def StandardFormSeed.plusProjector (S : StandardFormSeed H) : EndH :=
-  (⅟ (2 : ℝ)) • ((ContinuousLinearMap.id ℝ H2) + S.ε)
-
-/-- The `-1` projector associated to the seed grading operator. -/
-@[rep_depth krein]
-noncomputable def StandardFormSeed.minusProjector (S : StandardFormSeed H) : EndH :=
-  (⅟ (2 : ℝ)) • ((ContinuousLinearMap.id ℝ H2) - S.ε)
-
-@[rep_depth krein, simp] theorem tomitaAtomSeed_eps_eq_spectral_epsilon :
-    (tomitaAtomSeed (H := H)).ε = spectral_epsilon (E := H) := rfl
-
-@[rep_depth krein, simp] theorem tomitaAtomSeed_plusProjector_eq_spectralPlusProj :
-    StandardFormSeed.plusProjector (tomitaAtomSeed (H := H)) = spectralPlusProj (E := H) := by
-  ext u <;> simp [StandardFormSeed.plusProjector, spectralPlusProj]
-
-@[rep_depth krein, simp] theorem tomitaAtomSeed_minusProjector_eq_spectralMinusProj :
-    StandardFormSeed.minusProjector (tomitaAtomSeed (H := H)) = spectralMinusProj (E := H) := by
-  ext u <;> simp [StandardFormSeed.minusProjector, spectralMinusProj]
-
-theorem tomitaAtomSeed_plusProjector_mem_plusSheet (u : H2) :
-    StandardFormSeed.plusProjector (tomitaAtomSeed (H := H)) u ∈ plusSheet (E := H) := by
-  simpa using spectralPlusProj_mem_plusSheet (E := H) u
-
-theorem tomitaAtomSeed_minusProjector_mem_minusSheet (u : H2) :
-    StandardFormSeed.minusProjector (tomitaAtomSeed (H := H)) u ∈ minusSheet (E := H) := by
-  simpa using spectralMinusProj_mem_minusSheet (E := H) u
-
-end Projectors
 
 section PolarizedRestriction
 

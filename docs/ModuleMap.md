@@ -115,6 +115,108 @@ Umbrella status:
   [`Library.lean`](../lean/InfoGeometry/Library.lean)
 - the whole corridor is therefore frontier-only pending further stabilization
 
+## Generalized Metric Frontier Corridor
+
+This is the doubled/Krein generalized-metric corridor. It stays adjacent to the
+existing polarized relative-modular corridor instead of jumping directly to
+recomposition or canopy.
+
+Current direct import chain:
+
+`GeneralizedMetricCore -> GeneralizedMetricPolarizedBridge`
+
+Existing owner substrate consumed by this corridor:
+
+- [`TomitaTakesaki.lean`](../lean/InfoGeometry/Canonical/TomitaTakesaki.lean)
+  supplies the current doubled-space modular atom `(J, ε, Jε)`.
+- [`PolarizedSector.lean`](../lean/InfoGeometry/Krein/PolarizedSector.lean)
+  supplies the actual spectral plus/minus split on the doubled carrier.
+- [`RelativeModularPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean)
+  supplies the polarized relative-modular carrier package that the translator
+  fixes under the canonical generalized-metric projectors.
+
+| File | Corridor position | File role | Dominant `@[rep_depth ...]` surface | Immediate upstream corridor inputs | Immediate downstream corridor consumers | Umbrella status |
+|------|-------------------|-----------|-------------------------------------|------------------------------------|-----------------------------------------|-----------------|
+| [`GeneralizedMetricCore.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricCore.lean) | root | owner | `krein` | [`TomitaTakesaki.lean`](../lean/InfoGeometry/Canonical/TomitaTakesaki.lean), [`PolarizedSector.lean`](../lean/InfoGeometry/Krein/PolarizedSector.lean), [`Cartan/Involution.lean`](../lean/InfoGeometry/Cartan/Involution.lean) | [`GeneralizedMetricPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricPolarizedBridge.lean) | frontier-only |
+| [`GeneralizedMetricPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricPolarizedBridge.lean) | branch | translator | `krein` | [`GeneralizedMetricCore.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricCore.lean), [`RelativeModularPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean) | none in the current corridor | frontier-only |
+
+Mechanical notes:
+- `GeneralizedMetricCore` is a root owner because it introduces the
+  generalized-metric seed `(η, S, η ∘ S)`, the induced plus/minus projectors,
+  and the canonical specialization to the repo's `(J, ε, Jε)` doubled atom.
+- `GeneralizedMetricPolarizedBridge` is a translator because it adds no new
+  generalized-metric ontology; it proves that the canonical generalized-metric
+  projectors act as exact fixpoint operators on the polarized lifts already
+  owned by the relative-modular bridge.
+
+Current status for capstones / wrappers / public facades on this corridor:
+- capstone files: none
+- wrapper files: none
+- public facade files: none
+
+Umbrella status:
+- none of these files are currently imported by
+  [`Canonical/All.lean`](../lean/InfoGeometry/Canonical/All.lean),
+  [`All.lean`](../lean/InfoGeometry/All.lean),
+  [`InfoGeometry.lean`](../lean/InfoGeometry.lean), or
+  [`Library.lean`](../lean/InfoGeometry/Library.lean)
+- the whole corridor is therefore frontier-only pending further stabilization
+
+## Drazin / EP Frontier Corridor
+
+This is the operator-side generalized-inverse corridor. It is also intentionally
+outside the publication umbrellas and should be read as a compact owner map for
+partial invertibility, core/nilpotent splitting, descriptor flow, and EP defect
+algebra.
+
+Current direct import chain:
+
+`DrazinCoreFlow -> DrazinDescriptorSystems`
+
+Parallel defect branch:
+
+`DrazinCoreFlow -> EPDefectAlgebra`
+
+Existing owner substrate consumed by this corridor:
+
+- [`CertifiedInverseKernel.lean`](../lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean)
+  supplies the proof-carrying Drazin and Moore-Penrose witnesses.
+- [`InverseKernelAlgebra.lean`](../lean/InfoGeometry/Canonical/InverseKernelAlgebra.lean)
+  supplies the spectral/range/domain projector algebra and the dilation-gap
+  identities.
+- [`EPAndGroupInverse.lean`](../lean/InfoGeometry/Canonical/EPAndGroupInverse.lean)
+  supplies the repo-native EP criterion and the group-inverse specialization.
+
+| File | Corridor position | File role | Dominant `@[rep_depth ...]` surface | Immediate upstream corridor inputs | Immediate downstream corridor consumers | Umbrella status |
+|------|-------------------|-----------|-------------------------------------|------------------------------------|-----------------------------------------|-----------------|
+| [`DrazinCoreFlow.lean`](../lean/InfoGeometry/Canonical/DrazinCoreFlow.lean) | root | owner | `operator` | [`CertifiedInverseKernel.lean`](../lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean), [`InverseKernelAlgebra.lean`](../lean/InfoGeometry/Canonical/InverseKernelAlgebra.lean), [`Drazin.lean`](../lean/InfoGeometry/Canonical/Drazin.lean) | [`DrazinDescriptorSystems.lean`](../lean/InfoGeometry/Canonical/DrazinDescriptorSystems.lean), [`EPDefectAlgebra.lean`](../lean/InfoGeometry/Canonical/EPDefectAlgebra.lean) | frontier-only |
+| [`DrazinDescriptorSystems.lean`](../lean/InfoGeometry/Canonical/DrazinDescriptorSystems.lean) | branch | translator | `transport` | [`DrazinCoreFlow.lean`](../lean/InfoGeometry/Canonical/DrazinCoreFlow.lean) | none in the current corridor | frontier-only |
+| [`EPDefectAlgebra.lean`](../lean/InfoGeometry/Canonical/EPDefectAlgebra.lean) | branch | translator | `operator` | [`DrazinCoreFlow.lean`](../lean/InfoGeometry/Canonical/DrazinCoreFlow.lean), [`EPAndGroupInverse.lean`](../lean/InfoGeometry/Canonical/EPAndGroupInverse.lean) | none in the current corridor | frontier-only |
+
+Mechanical notes:
+- `DrazinCoreFlow` is a root owner because it introduces the actual
+  `drazinCoreProj` / `nilpotentProj` split, the `corePart` / `nilpotentPart`
+  decomposition, and the exact zero-product and nilpotent-power laws.
+- `DrazinDescriptorSystems` is a translator because it does not change the
+  operator ontology; it transports the core/nilpotent split into exponential
+  descriptor-style flow factorization.
+- `EPDefectAlgebra` is a translator because it packages existing Moore-Penrose,
+  dilation-gap, anomaly, and EP identities into a sharper operator-defect
+  surface without introducing a new representation depth.
+
+Current status for capstones / wrappers / public facades on this corridor:
+- capstone files: none
+- wrapper files: none
+- public facade files: none
+
+Umbrella status:
+- none of these files are currently imported by
+  [`Canonical/All.lean`](../lean/InfoGeometry/Canonical/All.lean),
+  [`All.lean`](../lean/InfoGeometry/All.lean),
+  [`InfoGeometry.lean`](../lean/InfoGeometry.lean), or
+  [`Library.lean`](../lean/InfoGeometry/Library.lean)
+- the whole corridor is therefore frontier-only pending further stabilization
+
 ## Read Paths By Task
 
 - Stable publication surface:

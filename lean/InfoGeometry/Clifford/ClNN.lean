@@ -98,31 +98,31 @@ noncomputable def headNullPlus (n : ℕ) : Carrier (n + 1) :=
   rw [QuadraticMap.polar, hsum, headNullMinus_isotropic, headNullPlus_isotropic]
   simp [quad_headPair]
 
-@[rep_depth operator]
+@[rep_depth krein]
 noncomputable def gammaHeadNullMinus (n : ℕ) : Alg (n + 1) :=
   CliffordAlgebra.ι (Quad (n + 1)) (headNullMinus n)
 
-@[rep_depth operator]
+@[rep_depth krein]
 noncomputable def gammaHeadNullPlus (n : ℕ) : Alg (n + 1) :=
   CliffordAlgebra.ι (Quad (n + 1)) (headNullPlus n)
 
-@[rep_depth operator]
+@[rep_depth krein]
 noncomputable def gammaTail (n : ℕ) (xs : Carrier n) : Alg (n + 1) :=
   CliffordAlgebra.ι (Quad (n + 1)) (tailLift n xs)
 
-@[rep_depth operator, simp] theorem gammaHeadNullMinus_sq
+@[rep_depth krein, simp] theorem gammaHeadNullMinus_sq
     (n : ℕ) :
     gammaHeadNullMinus n * gammaHeadNullMinus n = 0 := by
   rw [gammaHeadNullMinus, CliffordAlgebra.ι_sq_scalar]
   simp [headNullMinus_isotropic]
 
-@[rep_depth operator, simp] theorem gammaHeadNullPlus_sq
+@[rep_depth krein, simp] theorem gammaHeadNullPlus_sq
     (n : ℕ) :
     gammaHeadNullPlus n * gammaHeadNullPlus n = 0 := by
   rw [gammaHeadNullPlus, CliffordAlgebra.ι_sq_scalar]
   simp [headNullPlus_isotropic]
 
-@[rep_depth operator, simp] theorem gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap
+@[rep_depth krein, simp] theorem gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap
     (n : ℕ) :
     gammaHeadNullMinus n * gammaHeadNullPlus n
       + gammaHeadNullPlus n * gammaHeadNullMinus n = 1 := by
@@ -131,13 +131,13 @@ noncomputable def gammaTail (n : ℕ) (xs : Carrier n) : Alg (n + 1) :=
       (Q := Quad (n + 1)) (headNullMinus n) (headNullPlus n)
   simpa [gammaHeadNullMinus, gammaHeadNullPlus, polar_headNullMinus_headNullPlus] using h
 
-@[rep_depth operator, simp] theorem gammaHeadNullPlus_mul_gammaHeadNullMinus_add_swap
+@[rep_depth krein, simp] theorem gammaHeadNullPlus_mul_gammaHeadNullMinus_add_swap
     (n : ℕ) :
     gammaHeadNullPlus n * gammaHeadNullMinus n
       + gammaHeadNullMinus n * gammaHeadNullPlus n = 1 := by
   simpa only [add_comm] using gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap n
 
-@[rep_depth operator, simp] theorem gammaHeadNullMinus_mul_gammaTail_add_swap
+@[rep_depth krein, simp] theorem gammaHeadNullMinus_mul_gammaTail_add_swap
     (n : ℕ) (xs : Carrier n) :
     gammaHeadNullMinus n * gammaTail n xs
       + gammaTail n xs * gammaHeadNullMinus n = 0 := by
@@ -145,7 +145,7 @@ noncomputable def gammaTail (n : ℕ) (xs : Carrier n) : Alg (n + 1) :=
     (CliffordAlgebra.ι_mul_ι_add_swap
       (Q := Quad (n + 1)) (headNullMinus n) (tailLift n xs))
 
-@[rep_depth operator, simp] theorem gammaHeadNullPlus_mul_gammaTail_add_swap
+@[rep_depth krein, simp] theorem gammaHeadNullPlus_mul_gammaTail_add_swap
     (n : ℕ) (xs : Carrier n) :
     gammaHeadNullPlus n * gammaTail n xs
       + gammaTail n xs * gammaHeadNullPlus n = 0 := by

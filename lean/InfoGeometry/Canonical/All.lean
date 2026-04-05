@@ -38,6 +38,7 @@ import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.ChiralGravity
 import InfoGeometry.Canonical.ChiralRGFlow
 import InfoGeometry.Canonical.Clifford
+import InfoGeometry.Canonical.ClNNBottBridge
 import InfoGeometry.Canonical.CliffordBridge
 import InfoGeometry.Canonical.CurvatureRGFlow
 import InfoGeometry.Core
@@ -52,6 +53,8 @@ import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Canonical.CoarseGraining
 import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Canonical.DrazinCoreFlow
+import InfoGeometry.Canonical.DrazinDescriptorSystems
 import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.InverseKernelCartanCore
 import InfoGeometry.Canonical.InverseKernelNormalForm
@@ -66,6 +69,7 @@ import InfoGeometry.Canonical.PartitionHierarchy
 import InfoGeometry.Canonical.DualConnections
 import InfoGeometry.Canonical.EmpiricalChecks
 import InfoGeometry.Canonical.EPAndGroupInverse
+import InfoGeometry.Canonical.EPDefectAlgebra
 import InfoGeometry.Canonical.Fierz
 import InfoGeometry.Canonical.FormalScaffold
 import InfoGeometry.Canonical.Fock
@@ -74,6 +78,9 @@ import InfoGeometry.Canonical.GaugeUnified
 import InfoGeometry.Canonical.GaugeGroups
 import InfoGeometry.Canonical.GaussianHolonomy
 import InfoGeometry.Canonical.GeneralizedKL
+import InfoGeometry.Canonical.GeneralizedMetricCore
+import InfoGeometry.Canonical.GeneralizedMetricPolarizedBridge
+import InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge
 import InfoGeometry.Canonical.Geometry
 import InfoGeometry.Canonical.GrandCanonicalCore
 import InfoGeometry.Canonical.GrandCanonicalExperts
@@ -83,6 +90,9 @@ import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.IB
 import InfoGeometry.Canonical.InformationNumber
 import InfoGeometry.Canonical.InformationTorsion
+import InfoGeometry.Canonical.KKTCore
+import InfoGeometry.Canonical.KKTGeneralizedInverseBridge
+import InfoGeometry.Canonical.KKTGeneralizedMetricBridge
 import InfoGeometry.Canonical.KKFoundation
 import InfoGeometry.Canonical.SpinConnection
 import InfoGeometry.Canonical.SuperAnomaly
@@ -118,6 +128,10 @@ import InfoGeometry.Canonical.NoetherInference
 import InfoGeometry.Canonical.PathIntegral
 import InfoGeometry.Canonical.Prequantum
 import InfoGeometry.Canonical.Projective
+import InfoGeometry.Canonical.RelativeModularCore
+import InfoGeometry.Canonical.RelativeModularPolarizedBridge
+import InfoGeometry.Canonical.RelativeModularProjectiveBridge
+import InfoGeometry.Canonical.RelativeModularRecomposition
 import InfoGeometry.Canonical.RobustThermodynamicRegression
 import InfoGeometry.Canonical.Quantum
 import InfoGeometry.Canonical.QuantumInference
@@ -132,6 +146,7 @@ import InfoGeometry.Canonical.WeylGaugeOperatorLift
 import InfoGeometry.Canonical.RealBdG
 import InfoGeometry.Canonical.RealBdGSheetBridge
 import InfoGeometry.Canonical.SpectralInference
+import InfoGeometry.Canonical.StandardFormCore
 import InfoGeometry.Canonical.SingularBoundaryCorrection
 import InfoGeometry.Canonical.CalabiYauSingularBridge
 import InfoGeometry.Canonical.SingularTransportSystem

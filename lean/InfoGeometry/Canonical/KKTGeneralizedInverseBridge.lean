@@ -32,7 +32,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 
 local notation "EndH" => E →L[ℝ] E
 
-@[rep_depth operator] theorem mpInverseCommutator_isGZero
+@[rep_depth krein] theorem mpInverseCommutator_isGZero
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
     (CIK : CertifiedInverseKernel E)
     (hA : IsGOne X CIK.A)
@@ -41,7 +41,7 @@ local notation "EndH" => E →L[ℝ] E
   change IsGZero X (commutator CIK.A CIK.A_MP)
   exact commutator_isGZero_of_isGOne_of_isGNegOne (X := X) hA hAMP
 
-@[rep_depth operator] theorem mpRightProj_isGZero
+@[rep_depth krein] theorem mpRightProj_isGZero
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
     (CIK : CertifiedInverseKernel E)
     (hA : IsGOne X CIK.A)
@@ -51,7 +51,7 @@ local notation "EndH" => E →L[ℝ] E
   rw [← hA, ← hAMP]
   exact gOnePart_mul_gNegOnePart_isGZero (X := X) CIK.A CIK.A_MP
 
-@[rep_depth operator] theorem mpLeftProj_isGZero
+@[rep_depth krein] theorem mpLeftProj_isGZero
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
     (CIK : CertifiedInverseKernel E)
     (hA : IsGOne X CIK.A)
@@ -61,7 +61,7 @@ local notation "EndH" => E →L[ℝ] E
   rw [← hAMP, ← hA]
   exact gNegOnePart_mul_gOnePart_isGZero (X := X) CIK.A_MP CIK.A
 
-@[rep_depth operator] theorem mpChiralGap_isGZero
+@[rep_depth krein] theorem mpChiralGap_isGZero
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
     (CIK : CertifiedInverseKernel E)
     (hA : IsGOne X CIK.A)
@@ -72,7 +72,7 @@ local notation "EndH" => E →L[ℝ] E
     (mpRightProj_isGZero (X := X) (CIK := CIK) hA hAMP)
     (mpLeftProj_isGZero (X := X) (CIK := CIK) hA hAMP)
 
-@[rep_depth operator] theorem dilationGap_isGZero
+@[rep_depth krein] theorem dilationGap_isGZero
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
     (CIK : CertifiedInverseKernel E)
     (hA : IsGOne X CIK.A)
@@ -82,7 +82,7 @@ local notation "EndH" => E →L[ℝ] E
   exact isGZero_smul (X := X) ((2 : ℝ)⁻¹)
     (mpChiralGap_isGZero (X := X) (CIK := CIK) hA hAMP)
 
-@[rep_depth operator] theorem drazinCoreProj_isGZero
+@[rep_depth krein] theorem drazinCoreProj_isGZero
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
     (CIK : CertifiedInverseKernel E)
     (hA : IsGOne X CIK.A)

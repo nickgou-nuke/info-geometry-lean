@@ -1,9 +1,11 @@
+import InfoGeometry.KK.ClNNFredholmBridge
 import InfoGeometry.KK.CompactOperatorBridge
 import InfoGeometry.KK.Examples
 import InfoGeometry.KK.KasparovCompactOperator
 import InfoGeometry.KK.KasparovCycle
 import InfoGeometry.KK.NonVacuousIndex
 import InfoGeometry.KK.Product
+import InfoGeometry.KK.RealSplitKKTBridge
 import InfoGeometry.KK.RealSplitKreinBoundedTransform
 import InfoGeometry.KK.RealSplitKreinCompactOperator
 import InfoGeometry.KK.RealSplitKreinKasparovCycle

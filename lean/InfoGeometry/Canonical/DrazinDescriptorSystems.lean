@@ -19,56 +19,65 @@ namespace InfoGeometry.Canonical
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 local notation "EndH" => E →L[ℝ] E
-noncomputable local instance : NormedRing EndH := inferInstance
-noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
-noncomputable local instance : NormedAlgebra ℚ EndH :=
+noncomputable local instance drazinDescriptorSystemsNormedRingEndH : NormedRing EndH :=
+  inferInstance
+noncomputable local instance drazinDescriptorSystemsNormedAlgebraRealEndH :
+    NormedAlgebra ℝ EndH :=
+  inferInstance
+noncomputable local instance drazinDescriptorSystemsNormedAlgebraRatEndH :
+    NormedAlgebra ℚ EndH :=
   NormedAlgebra.restrictScalars ℚ ℝ EndH
-local instance : IsTopologicalRing EndH := inferInstance
-local instance : SMulCommClass ℝ EndH EndH := inferInstance
-local instance : IsScalarTower ℝ EndH EndH := inferInstance
+local instance drazinDescriptorSystemsIsTopologicalRingEndH : IsTopologicalRing EndH :=
+  inferInstance
+local instance drazinDescriptorSystemsSMulCommClassRealEndHEndH :
+    SMulCommClass ℝ EndH EndH :=
+  inferInstance
+local instance drazinDescriptorSystemsIsScalarTowerRealEndHEndH :
+    IsScalarTower ℝ EndH EndH :=
+  inferInstance
 
 namespace CertifiedInverseKernel
 
 variable (CIK : CertifiedInverseKernel E)
 
 /-- Ambient scalar generator attached to the certified inverse kernel. -/
-@[rep_depth transport]
+@[rep_depth operator]
 noncomputable def ambientGenerator (t : ℝ) : EndH :=
   t • CIK.A
 
 /-- Drazin-core scalar generator. -/
-@[rep_depth transport]
+@[rep_depth operator]
 noncomputable def coreGenerator (t : ℝ) : EndH :=
   t • CIK.corePart
 
 /-- Complementary nilpotent scalar generator. -/
-@[rep_depth transport]
+@[rep_depth operator]
 noncomputable def nilpotentGenerator (t : ℝ) : EndH :=
   t • CIK.nilpotentPart
 
 /-- Ambient exponential flow. -/
-@[rep_depth transport]
+@[rep_depth operator]
 noncomputable def ambientFlow (t : ℝ) : EndH :=
   NormedSpace.exp (CIK.ambientGenerator t)
 
 /-- Exponential flow of the Drazin-core generator. -/
-@[rep_depth transport]
+@[rep_depth operator]
 noncomputable def coreFlow (t : ℝ) : EndH :=
   NormedSpace.exp (CIK.coreGenerator t)
 
 /-- Exponential flow of the complementary nilpotent generator. -/
-@[rep_depth transport]
+@[rep_depth operator]
 noncomputable def nilpotentFlow (t : ℝ) : EndH :=
   NormedSpace.exp (CIK.nilpotentGenerator t)
 
-@[rep_depth transport, simp] theorem ambientGenerator_eq_coreGenerator_add_nilpotentGenerator
+@[rep_depth operator, simp] theorem ambientGenerator_eq_coreGenerator_add_nilpotentGenerator
     (t : ℝ) :
     CIK.ambientGenerator t = CIK.coreGenerator t + CIK.nilpotentGenerator t := by
   unfold CertifiedInverseKernel.ambientGenerator
   unfold CertifiedInverseKernel.coreGenerator CertifiedInverseKernel.nilpotentGenerator
   rw [CIK.A_eq_corePart_add_nilpotentPart, smul_add]
 
-@[rep_depth transport] theorem coreGenerator_commute_nilpotentGenerator
+@[rep_depth operator] theorem coreGenerator_commute_nilpotentGenerator
     (t : ℝ) :
     Commute (CIK.coreGenerator t) (CIK.nilpotentGenerator t) := by
   unfold CertifiedInverseKernel.coreGenerator CertifiedInverseKernel.nilpotentGenerator
@@ -82,20 +91,20 @@ noncomputable def nilpotentFlow (t : ℝ) : EndH :=
     _ = (t • CIK.nilpotentPart) * (t • CIK.corePart) := by
           simp [smul_smul, mul_assoc]
 
-@[rep_depth transport] theorem coreFlow_commute_nilpotentFlow
+@[rep_depth operator] theorem coreFlow_commute_nilpotentFlow
     (t : ℝ) :
     Commute (CIK.coreFlow t) (CIK.nilpotentFlow t) := by
   unfold CertifiedInverseKernel.coreFlow CertifiedInverseKernel.nilpotentFlow
   exact (CIK.coreGenerator_commute_nilpotentGenerator t).exp
 
-@[rep_depth transport, simp] theorem ambientFlow_eq_coreFlow_mul_nilpotentFlow
+@[rep_depth operator, simp] theorem ambientFlow_eq_coreFlow_mul_nilpotentFlow
     (t : ℝ) :
     CIK.ambientFlow t = CIK.coreFlow t * CIK.nilpotentFlow t := by
   unfold CertifiedInverseKernel.ambientFlow
   rw [CIK.ambientGenerator_eq_coreGenerator_add_nilpotentGenerator]
   exact NormedSpace.exp_add_of_commute (CIK.coreGenerator_commute_nilpotentGenerator t)
 
-@[rep_depth transport, simp] theorem ambientFlow_eq_nilpotentFlow_mul_coreFlow
+@[rep_depth operator, simp] theorem ambientFlow_eq_nilpotentFlow_mul_coreFlow
     (t : ℝ) :
     CIK.ambientFlow t = CIK.nilpotentFlow t * CIK.coreFlow t := by
   unfold CertifiedInverseKernel.ambientFlow

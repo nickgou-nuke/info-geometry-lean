@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Volume.ConnesCocycle
+import InfoGeometry.Krein.PolarizedSector
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -24,6 +25,9 @@ open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Canonical.RelativePotentialCore
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Volume.ConnesCocycle
+open InfoGeometry.Krein
+open InfoGeometry.Krein.PolarizedSector
+open InfoGeometry.Krein.SplitQuadraticSheets
 
 section OperatorCarrier
 
@@ -60,6 +64,16 @@ structure StandardFormSeed
     -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace H))
   J_phase_anticommute : J.comp phaseAxis = -(phaseAxis.comp J)
 
+/-- The `+1` projector associated to the seed grading operator. -/
+@[rep_depth krein]
+noncomputable def StandardFormSeed.plusProjector (S : StandardFormSeed H) : EndH :=
+  (⅟ (2 : ℝ)) • ((ContinuousLinearMap.id ℝ H2) + S.ε)
+
+/-- The `-1` projector associated to the seed grading operator. -/
+@[rep_depth krein]
+noncomputable def StandardFormSeed.minusProjector (S : StandardFormSeed H) : EndH :=
+  (⅟ (2 : ℝ)) • ((ContinuousLinearMap.id ℝ H2) - S.ε)
+
 /-- The current modular atom packaged as a standard-form seed. -/
 @[rep_depth krein]
 noncomputable def tomitaAtomSeed : StandardFormSeed H where
@@ -79,6 +93,80 @@ noncomputable def tomitaAtomSeed : StandardFormSeed H where
 @[rep_depth krein, simp] theorem tomitaAtomSeed_phaseAxis_eq_dilationOperator :
     (tomitaAtomSeed (H := H)).phaseAxis = InfoGeometry.Krein.dilationOperator (E := H) :=
   modularComplexI_eq_dilationOperator (E := H)
+
+@[rep_depth krein, simp] theorem tomitaAtomSeed_eps_eq_spectral_epsilon :
+    (tomitaAtomSeed (H := H)).ε = spectral_epsilon (E := H) := rfl
+
+@[rep_depth krein, simp] theorem tomitaAtomSeed_phaseAxis_eq_J_comp_eps :
+    (tomitaAtomSeed (H := H)).phaseAxis =
+      (tomitaAtomSeed (H := H)).J.comp (tomitaAtomSeed (H := H)).ε := by
+  rfl
+
+@[rep_depth krein, simp] theorem tomitaAtomSeed_J_comp_phaseAxis_eq_eps :
+    (tomitaAtomSeed (H := H)).J.comp (tomitaAtomSeed (H := H)).phaseAxis
+      = (tomitaAtomSeed (H := H)).ε := by
+  change (modularConjugationJ (E := H)).comp (modularComplexI (E := H))
+      = modularSignEpsilon (E := H)
+  simpa using (InfoGeometry.Krein.modular_j_comp_complex_i (E := H))
+
+@[rep_depth krein, simp] theorem tomitaAtomSeed_phaseAxis_comp_J_eq_neg_eps :
+    (tomitaAtomSeed (H := H)).phaseAxis.comp (tomitaAtomSeed (H := H)).J
+      = -((tomitaAtomSeed (H := H)).ε) := by
+  change (modularComplexI (E := H)).comp (modularConjugationJ (E := H))
+      = -(modularSignEpsilon (E := H))
+  simpa using (InfoGeometry.Krein.complex_i_comp_modular_j (E := H))
+
+@[rep_depth krein, simp] theorem tomitaAtomSeed_phaseAxis_comp_eps_eq_J :
+    (tomitaAtomSeed (H := H)).phaseAxis.comp (tomitaAtomSeed (H := H)).ε
+      = (tomitaAtomSeed (H := H)).J := by
+  change (modularComplexI (E := H)).comp (modularSignEpsilon (E := H))
+      = modularConjugationJ (E := H)
+  simpa using (InfoGeometry.Krein.complex_i_comp_spectral_epsilon (E := H))
+
+@[rep_depth krein, simp] theorem tomitaAtomSeed_eps_comp_phaseAxis_eq_neg_J :
+    (tomitaAtomSeed (H := H)).ε.comp (tomitaAtomSeed (H := H)).phaseAxis
+      = -((tomitaAtomSeed (H := H)).J) := by
+  change (modularSignEpsilon (E := H)).comp (modularComplexI (E := H))
+      = -(modularConjugationJ (E := H))
+  simpa using (InfoGeometry.Krein.spectral_epsilon_comp_complex_i (E := H))
+
+@[rep_depth krein, simp] theorem tomitaAtomSeed_eps_comp_J_eq_neg_phaseAxis :
+    (tomitaAtomSeed (H := H)).ε.comp (tomitaAtomSeed (H := H)).J
+      = -((tomitaAtomSeed (H := H)).phaseAxis) := by
+  change (modularSignEpsilon (E := H)).comp (modularConjugationJ (E := H))
+      = -(modularComplexI (E := H))
+  simpa using (InfoGeometry.Krein.spectral_epsilon_comp_modular_j (E := H))
+
+@[rep_depth krein, simp] theorem tomitaAtomSeed_plusProjector_eq_spectralPlusProj :
+    StandardFormSeed.plusProjector (tomitaAtomSeed (H := H)) = spectralPlusProj (E := H) := rfl
+
+@[rep_depth krein, simp] theorem tomitaAtomSeed_minusProjector_eq_spectralMinusProj :
+    StandardFormSeed.minusProjector (tomitaAtomSeed (H := H)) = spectralMinusProj (E := H) := rfl
+
+@[rep_depth krein] theorem tomitaAtomSeed_plusProjector_mem_plusSheet (u : H2) :
+    StandardFormSeed.plusProjector (tomitaAtomSeed (H := H)) u ∈ plusSheet (E := H) := by
+  simpa using spectralPlusProj_mem_plusSheet (E := H) u
+
+@[rep_depth krein] theorem tomitaAtomSeed_minusProjector_mem_minusSheet (u : H2) :
+    StandardFormSeed.minusProjector (tomitaAtomSeed (H := H)) u ∈ minusSheet (E := H) := by
+  simpa using spectralMinusProj_mem_minusSheet (E := H) u
+
+@[rep_depth krein] theorem VectorState.expectation_id
+    (ω : VectorState H) :
+    ω.expectation (ContinuousLinearMap.id ℝ H2) = ⟪ω.vector, ω.vector⟫_ℝ := by
+  simp [VectorState.expectation]
+
+@[rep_depth krein] theorem VectorState.expectation_neg_id
+    (ω : VectorState H) :
+    ω.expectation (-(ContinuousLinearMap.id ℝ H2)) = -⟪ω.vector, ω.vector⟫_ℝ := by
+  simp [VectorState.expectation]
+
+@[rep_depth krein] theorem tomitaAtomSeed_phaseAxis_sq_expectation
+    (ω : VectorState H) :
+    ω.expectation ((tomitaAtomSeed (H := H)).phaseAxis.comp (tomitaAtomSeed (H := H)).phaseAxis)
+      = -⟪ω.vector, ω.vector⟫_ℝ := by
+  rw [(tomitaAtomSeed (H := H)).phase_sq]
+  simpa using (VectorState.expectation_neg_id (H := H) ω)
 
 /--
 Generator-based carrier for a future standard-form layer.

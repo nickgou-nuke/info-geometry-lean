@@ -60,6 +60,7 @@ noncomputable def chiralAnomalyIndex (CST : ChiralSpectralTriple E) : ℝ :=
     (Module.finrank ℝ
       (LinearMap.range (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection CST.D CST.DD).toLinearMap) : ℝ)
 
+omit [FiniteDimensional ℝ E] in
 /--
 If the witness-level spectral and metric projectors commute, the chiral anomaly
 index vanishes exactly.
@@ -80,7 +81,7 @@ theorem chiralAnomalyIndex_eq_zero_of_projectors_commute
     rw [ChiralSpectralTriple.epsilon,
       InfoGeometry.Canonical.MoorePenrose.chiralScale,
       InfoGeometry.Canonical.MoorePenrose.epsilon]
-    simpa [hChi]
+    simp [hChi]
   simp [chiralAnomalyIndex, hEps]
 
 end ChiralIndex

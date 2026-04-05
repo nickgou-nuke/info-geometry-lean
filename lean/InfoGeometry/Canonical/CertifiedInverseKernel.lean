@@ -579,7 +579,7 @@ theorem spectralProjector_commutator_spectralAdjointFlow_dilationGap_eq_half_sub
         (T.spectralAdjointFlow T.GammaS t CIK.rightChiralAnomaly
           - T.spectralAdjointFlow T.GammaS t CIK.chiralAnomaly) := by
     unfold CartanDecomposition.InformationCartanTriple.spectralAdjointFlow
-    simp [sub_eq_add_neg, add_mul, mul_add, smul_mul_assoc, mul_smul_comm, mul_assoc]
+    simp [sub_eq_add_neg, add_mul, mul_add, mul_assoc]
   calc
     CIK.spectralProjector * T.spectralAdjointFlow T.GammaS t CIK.dilationGap
         - T.spectralAdjointFlow T.GammaS t CIK.dilationGap * CIK.spectralProjector
@@ -622,7 +622,7 @@ theorem spectralProjector_commutator_spectralAdjointFlow_dilationGap_eq_mul_spec
       ((CIK.rightChiralAnomaly - CIK.chiralAnomaly) * T.spectralGradingFlow (-(2 * t))) := by
           rw [CIK.rightChiralAnomaly_spectralAdjointFlow_eq_mul_spectralGradingFlow_neg_two,
             CIK.chiralAnomaly_spectralAdjointFlow_eq_mul_spectralGradingFlow_neg_two]
-          simp [sub_eq_add_neg, add_mul, mul_add, smul_mul_assoc, mul_smul_comm, mul_assoc, T]
+          simp [sub_eq_add_neg, add_mul, T]
     _ =
     (CIK.spectralProjector * CIK.dilationGap - CIK.dilationGap * CIK.spectralProjector) *
       T.spectralGradingFlow (-(2 * t)) := by

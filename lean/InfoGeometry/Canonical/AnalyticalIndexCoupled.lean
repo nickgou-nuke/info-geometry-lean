@@ -5,6 +5,8 @@ import InfoGeometry.Meta.Architecture
 
 set_option linter.unnecessarySimpa false
 
+open scoped TensorProduct
+
 namespace InfoGeometry.Canonical.AnalyticalIndex
 
 open InfoGeometry.Canonical.BottDirac
@@ -30,7 +32,7 @@ Coupled invariant package:
 thermodynamic Sinkhorn control, scalar-Ricci fixed-point collapse, and
 analytical index invariance along a Dirac/grading family.
 -/
-@[rep_depth thermo, capstone]
+@[rep_depth thermo]
 def SinkhornRicciIndexInvariant
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
@@ -122,28 +124,45 @@ theorem SinkhornRicciIndexInvariant.of_modularCliffordTransport_components
       hUnit hσInj hPlusMap hMinusMap
 
 /--
-Derived constructor using primitive flow-conjugacy conditions:
-the Dirac/grading family is transported to baseline by linear equivalences.
+Derived constructor for the `Cl(1,1)` Bott lift using primitive flow-conjugacy
+conditions on the base space.
+
+This is a load-bearing synthesis theorem that lifts base-space conjugacy
+to the product-space coupled invariant.
 -/
 @[rep_depth thermo, capstone]
-theorem SinkhornRicciIndexInvariant.of_conjugacy
+theorem SinkhornRicciIndexInvariant.of_cl11BottConjugacy
+    {A F : Type*}
+    [NormedAddCommGroup A] [InnerProductSpace ℝ A] [CompleteSpace A] [FiniteDimensional ℝ A]
+    [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] [FiniteDimensional ℝ F]
+    [FiniteDimensional ℝ (TensorProduct ℝ (InfoGeometry.Krein.DoubledSpace A) F)]
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)
-    (D Γ : ℝ → Endomorphism V)
-    (eFlow : ℝ → V ≃ₗ[ℝ] V)
+    (Dn Γn : ℝ → Endomorphism F)
+    (eFlow : ℝ → F ≃ₗ[ℝ] F)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := X) flow)
     (hFixed : ∀ s : ℝ, scalarRicciBetaFunction (E := X) flow s = 0)
-    (hConj : ChiralConjugacyAlong D Γ eFlow) :
-    SinkhornRicciIndexInvariant n T flow D Γ := by
+    (hConj : ChiralConjugacyAlong Dn Γn eFlow) :
+    SinkhornRicciIndexInvariant (V := (TensorProduct ℝ (InfoGeometry.Krein.DoubledSpace A) F)) n T flow
+      (fun s => cl11BottDirac (E := A) (Dn s))
+      (fun s => cl11GlobalGrading (E := A) (Γn s)) := by
   refine SinkhornRicciIndexInvariant.mk_components
-    (n := n) (T := T) (flow := flow) (D := D) (Γ := Γ)
+    (n := n)
+    (V := (TensorProduct ℝ (InfoGeometry.Krein.DoubledSpace A) F))
+    (T := T)
+    (flow := flow)
+    (D := fun s => cl11BottDirac (E := A) (Dn s))
+    (Γ := fun s => cl11GlobalGrading (E := A) (Γn s))
     ?_ ?_ ?_
   · intro k label
     exact sinkhorn_dynamics_step_control (n := n) T k label
   · exact normalizedKaehlerRicci_fixedpoint_eq_zero
       (E := X) flow hNorm hFixed
   · exact indexInvariantAlong_of_conjugacy
-      (D := D) (Γ := Γ) (eFlow := eFlow) hConj
+      (D := fun s => cl11BottDirac (E := A) (Dn s))
+      (Γ := fun s => cl11GlobalGrading (E := A) (Γn s))
+      (eFlow := fun s => TensorProduct.congr (LinearEquiv.refl ℝ (InfoGeometry.Krein.DoubledSpace A)) (eFlow s))
+      (chiralConjugacyAlong_cl11Bott (E := A) (F := F) Dn Γn eFlow hConj)
 
 end CoupledInvariant
 

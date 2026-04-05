@@ -1,4 +1,5 @@
 import InfoGeometry.Quantum.GeometricTensor
+import InfoGeometry.Quantum.GeometricTensorTransport
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.BogoliubovProjectorTransport
 
@@ -82,5 +83,129 @@ theorem qgt_metric_eq_secondMoment_minus_square
       = kreinExpectation (E := E) ψ (hMod * hMod)
         - (kreinExpectation (E := E) ψ hMod)^2 := by
   rw [hQ, modularVariance_of_normalized (E := E) ψ hMod hψ]
+
+/--
+The only phase coordinate carried by an operatorial QGT seed on the local
+Cartan branch is the exponential parameter of `KRotation = exp(tK)`.
+-/
+theorem qgtOfOperator_KRotation_metric_and_berry_invariant
+    (A : EndH)
+    (hA : IsSelfAdjoint A)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A)
+    (t : ℝ) :
+    let Q := GeometricQuantumTensor.qgtOfOperator (E := E) A hA hComm
+    (∀ u v : H₂,
+      Q.metric (KRotation (E := E) t u) (KRotation (E := E) t v) = Q.metric u v)
+      ∧
+    (∀ u v : H₂,
+      Q.berry (KRotation (E := E) t u) (KRotation (E := E) t v) = Q.berry u v) := by
+  simpa using
+    GeometricQuantumTensor.qgtOfOperator_KRotation_invariant
+      (E := E) (A := A) hA hComm t
+
+/--
+The Krein-side operatorial QGT is invariant under the same exact local phase
+coordinate `t` on the Cartan-odd / phase-antilinear branch.
+-/
+theorem kreinQgtOfOperator_KRotation_metric_and_berry_invariant
+    (A : EndH)
+    (hA : KreinSpace.IsKreinSelfAdjoint (H := H₂) A)
+    (hAnti : IsPhaseAntilinear (E := E) A)
+    (t : ℝ) :
+    let Q := GeometricQuantumTensor.kreinQgtOfOperator (E := E) A hA hAnti
+    (∀ u v : H₂,
+      Q.metric (KRotation (E := E) t u) (KRotation (E := E) t v) = Q.metric u v)
+      ∧
+    (∀ u v : H₂,
+      Q.berry (KRotation (E := E) t u) (KRotation (E := E) t v) = Q.berry u v) := by
+  simpa using
+    GeometricQuantumTensor.kreinQgtOfOperator_KRotation_invariant
+      (E := E) (A := A) hA hAnti t
+
+/--
+If the modular transport seed is phase-linear/self-adjoint and the operatorial
+seed commutes with the true Cartan generator `hMod ∘ K`, the full operatorial
+QGT is preserved along the corresponding exact modular transport flow.
+-/
+theorem qgtOfOperator_modularTransportFlow_metric_and_berry_invariant_of_commute_generator
+    (A hMod : EndH)
+    (hA : IsSelfAdjoint A)
+    (hACommK :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A)
+    (hSelf : IsSelfAdjoint hMod)
+    (hPhase : IsPhaseLinear (E := E) hMod)
+    (hCommGen : Commute A (modularTransportGenerator (E := E) hMod))
+    (t : ℝ) :
+    let Q := GeometricQuantumTensor.qgtOfOperator (E := E) A hA hACommK
+    (∀ u v : H₂,
+      Q.metric (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v) = Q.metric u v)
+      ∧
+    (∀ u v : H₂,
+      Q.berry (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v) = Q.berry u v) := by
+  simpa using
+    GeometricQuantumTensor.qgtOfOperator_modularTransportFlow_invariant_of_commute_generator
+      (E := E) (A := A) (hMod := hMod) hA hACommK hSelf hPhase hCommGen t
+
+/--
+If the modular transport generator is exactly a local Cartan phase-axis
+generator, the Hilbert-side operatorial QGT is preserved along the exact
+modular transport flow.
+-/
+theorem qgtOfOperator_modularTransportFlow_metric_and_berry_invariant_of_generator_eq_smul_phaseAxis
+    (A hMod : EndH)
+    (hA : IsSelfAdjoint A)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A)
+    (σ t : ℝ)
+    (hGen :
+      modularTransportGenerator (E := E) hMod
+        =
+      σ • modularComplexI (E := E)) :
+    let Q := GeometricQuantumTensor.qgtOfOperator (E := E) A hA hComm
+    (∀ u v : H₂,
+      Q.metric (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v) = Q.metric u v)
+      ∧
+    (∀ u v : H₂,
+      Q.berry (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v) = Q.berry u v) := by
+  simpa using
+    GeometricQuantumTensor.qgtOfOperator_modularTransportFlow_invariant_of_generator_eq_smul_phaseAxis
+      (E := E) (A := A) (hMod := hMod) hA hComm σ t hGen
+
+/--
+If the modular transport generator is exactly a local Cartan phase-axis
+generator, the Krein-side operatorial QGT is preserved along the exact modular
+transport flow.
+-/
+theorem kreinQgtOfOperator_modularTransportFlow_metric_and_berry_invariant_of_generator_eq_smul_phaseAxis
+    (A hMod : EndH)
+    (hA : KreinSpace.IsKreinSelfAdjoint (H := H₂) A)
+    (hAnti : IsPhaseAntilinear (E := E) A)
+    (σ t : ℝ)
+    (hGen :
+      modularTransportGenerator (E := E) hMod
+        =
+      σ • modularComplexI (E := E)) :
+    let Q := GeometricQuantumTensor.kreinQgtOfOperator (E := E) A hA hAnti
+    (∀ u v : H₂,
+      Q.metric (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v) = Q.metric u v)
+      ∧
+    (∀ u v : H₂,
+      Q.berry (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v) = Q.berry u v) := by
+  simpa using
+    GeometricQuantumTensor.kreinQgtOfOperator_modularTransportFlow_invariant_of_generator_eq_smul_phaseAxis
+      (E := E) (A := A) (hMod := hMod) hA hAnti σ t hGen
 
 end InfoGeometry.Quantum.Test

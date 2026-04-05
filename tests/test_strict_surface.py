@@ -98,6 +98,43 @@ class StrictSurfaceTests(unittest.TestCase):
         self.assertEqual(payload["region"], "bridge")
         self.assertEqual(payload["decision"], "not_promotable")
 
+    def test_strict_translator_is_not_promotable_in_bridge_region(self):
+        proc = _run_snippet(
+            """
+            namespace InfoGeometry.LLM.StrictSurface
+
+            strict_translator translatorId : Nat → Nat := fun x => x
+
+            end InfoGeometry.LLM.StrictSurface
+            """
+        )
+        output = _combined_output(proc)
+        self.assertEqual(proc.returncode, 0, msg=output)
+        payload = _extract_prefixed_json(output, "[strict-admission-json] ")
+        self.assertEqual(payload["declKind"], "translator")
+        self.assertEqual(payload["role"], "translator")
+        self.assertEqual(payload["region"], "bridge")
+        self.assertEqual(payload["decision"], "not_promotable")
+
+    def test_strict_coherence_marks_wrapper_as_needs_review(self):
+        proc = _run_snippet(
+            """
+            namespace Scratch.StrictSurface
+
+            strict_coherence coherenceCarrier : True := True.intro
+
+            end Scratch.StrictSurface
+            """
+        )
+        output = _combined_output(proc)
+        self.assertEqual(proc.returncode, 0, msg=output)
+        payload = _extract_prefixed_json(output, "[strict-admission-json] ")
+        self.assertEqual(payload["declKind"], "coherence")
+        self.assertEqual(payload["role"], "coherence")
+        self.assertEqual(payload["region"], "ordinary")
+        self.assertEqual(payload["decision"], "needs_review")
+        self.assertEqual(payload["thinSurface"], "wrapper")
+
     def test_strict_theorem_blocks_protected_region_without_metadata(self):
         proc = _run_snippet(
             """
@@ -115,6 +152,25 @@ class StrictSurfaceTests(unittest.TestCase):
         self.assertEqual(payload["region"], "protected")
         self.assertEqual(payload["decision"], "blocked")
         self.assertIn("rep_depth", payload["hard"]["missingRequiredAttrs"])
+
+    def test_strict_capstone_blocks_protected_region_without_rep_depth(self):
+        proc = _run_snippet(
+            """
+            namespace InfoGeometry.Meta.StrictSurface
+
+            strict_capstone protectedCapstone : 1 = 1 := rfl
+
+            end InfoGeometry.Meta.StrictSurface
+            """
+        )
+        output = _combined_output(proc)
+        self.assertNotEqual(proc.returncode, 0, msg=output)
+        payload = _extract_prefixed_json(output, "[strict-admission-json] ")
+        self.assertEqual(payload["declKind"], "capstone")
+        self.assertEqual(payload["role"], "capstone")
+        self.assertEqual(payload["region"], "protected")
+        self.assertEqual(payload["decision"], "blocked")
+        self.assertIn("policy.protected_capstone_missing_rep_depth", payload["blockers"])
 
 
 if __name__ == "__main__":

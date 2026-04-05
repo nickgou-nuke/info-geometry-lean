@@ -63,6 +63,58 @@ This corridor is the repo in miniature:
 - keep gauge and coherence corrections explicit
 - avoid skip-level facade files when an adjacent bridge is the real mathematical object
 
+## Relative Modular Frontier Corridor
+
+This is the current standalone modular frontier. It is intentionally outside the
+publication umbrellas and should be read as a mechanical corridor map, not as a
+new canopy.
+
+Current direct import chain:
+
+`StandardFormCore -> RelativeModularCore -> RelativeModularProjectiveBridge -> RelativeModularPolarizedBridge -> RelativeModularRecomposition`
+
+Additional side attachment:
+
+- [`RelativeModularPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean)
+  also imports [`PolarizedSector.lean`](../lean/InfoGeometry/Krein/PolarizedSector.lean)
+  to realize the plus/minus sector split on the doubled carrier.
+
+| File | Corridor position | File role | Dominant `@[rep_depth ...]` surface | Immediate upstream corridor inputs | Immediate downstream corridor consumers | Umbrella status |
+|------|-------------------|-----------|-------------------------------------|------------------------------------|-----------------------------------------|-----------------|
+| [`StandardFormCore.lean`](../lean/InfoGeometry/Canonical/StandardFormCore.lean) | root | owner | mixed `krein` / `operator` / `projective` | current modular atom in [`TomitaTakesaki.lean`](../lean/InfoGeometry/Canonical/TomitaTakesaki.lean), projective relative-potential layer | [`RelativeModularCore.lean`](../lean/InfoGeometry/Canonical/RelativeModularCore.lean) | frontier-only |
+| [`RelativeModularCore.lean`](../lean/InfoGeometry/Canonical/RelativeModularCore.lean) | root | owner | `projective` | [`StandardFormCore.lean`](../lean/InfoGeometry/Canonical/StandardFormCore.lean) | [`RelativeModularProjectiveBridge.lean`](../lean/InfoGeometry/Canonical/RelativeModularProjectiveBridge.lean), [`RelativeModularPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean) | frontier-only |
+| [`RelativeModularProjectiveBridge.lean`](../lean/InfoGeometry/Canonical/RelativeModularProjectiveBridge.lean) | branch | translator | `projective` | [`RelativeModularCore.lean`](../lean/InfoGeometry/Canonical/RelativeModularCore.lean) | [`RelativeModularPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean) | frontier-only |
+| [`RelativeModularPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean) | branch | translator | mixed `krein` projector identification plus `projective` sector lift | [`RelativeModularProjectiveBridge.lean`](../lean/InfoGeometry/Canonical/RelativeModularProjectiveBridge.lean), [`PolarizedSector.lean`](../lean/InfoGeometry/Krein/PolarizedSector.lean) | [`RelativeModularRecomposition.lean`](../lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean) | frontier-only |
+| [`RelativeModularRecomposition.lean`](../lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean) | leaf | owner | `projective` | [`RelativeModularPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean) | none in the current corridor | frontier-only |
+
+Mechanical notes:
+- `StandardFormCore` is a root owner because it introduces `VectorState`,
+  `StandardFormSeed`, `StandardFormCarrier`, and `RelativeModularBridge`.
+- `RelativeModularCore` is a root owner because it introduces
+  `RelativeStatePair` and `RestrictedRelativeModularData`.
+- `RelativeModularProjectiveBridge` is a translator because it adds no new
+  modular ontology; it transports restricted data into the
+  projective/discrete/count surfaces.
+- `RelativeModularPolarizedBridge` is a translator because it identifies the
+  seed grading with the spectral grading and realizes restricted data on the
+  polarized sheets.
+- `RelativeModularRecomposition` is a leaf in the corridor graph, but it is not
+  a capstone facade. It is a frontier owner file for recomposition and
+  coupling-defect laws.
+
+Current status for capstones / wrappers / public facades on this corridor:
+- capstone files: none
+- wrapper files: none
+- public facade files: none
+
+Umbrella status:
+- none of these files are currently imported by
+  [`Canonical/All.lean`](../lean/InfoGeometry/Canonical/All.lean),
+  [`All.lean`](../lean/InfoGeometry/All.lean),
+  [`InfoGeometry.lean`](../lean/InfoGeometry.lean), or
+  [`Library.lean`](../lean/InfoGeometry/Library.lean)
+- the whole corridor is therefore frontier-only pending further stabilization
+
 ## Read Paths By Task
 
 - Stable publication surface:

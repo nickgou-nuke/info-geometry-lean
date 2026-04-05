@@ -123,7 +123,7 @@ recomposition or canopy.
 
 Current direct import chain:
 
-`GeneralizedMetricCore -> GeneralizedMetricPolarizedBridge`
+`GeneralizedMetricCore -> GeneralizedMetricPolarizedBridge -> GeneralizedMetricRecompositionBridge`
 
 Existing owner substrate consumed by this corridor:
 
@@ -138,7 +138,8 @@ Existing owner substrate consumed by this corridor:
 | File | Corridor position | File role | Dominant `@[rep_depth ...]` surface | Immediate upstream corridor inputs | Immediate downstream corridor consumers | Umbrella status |
 |------|-------------------|-----------|-------------------------------------|------------------------------------|-----------------------------------------|-----------------|
 | [`GeneralizedMetricCore.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricCore.lean) | root | owner | `krein` | [`TomitaTakesaki.lean`](../lean/InfoGeometry/Canonical/TomitaTakesaki.lean), [`PolarizedSector.lean`](../lean/InfoGeometry/Krein/PolarizedSector.lean), [`Cartan/Involution.lean`](../lean/InfoGeometry/Cartan/Involution.lean) | [`GeneralizedMetricPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricPolarizedBridge.lean) | frontier-only |
-| [`GeneralizedMetricPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricPolarizedBridge.lean) | branch | translator | `krein` | [`GeneralizedMetricCore.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricCore.lean), [`RelativeModularPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean) | none in the current corridor | frontier-only |
+| [`GeneralizedMetricPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricPolarizedBridge.lean) | branch | translator | `krein` | [`GeneralizedMetricCore.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricCore.lean), [`RelativeModularPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean) | [`GeneralizedMetricRecompositionBridge.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricRecompositionBridge.lean) | frontier-only |
+| [`GeneralizedMetricRecompositionBridge.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricRecompositionBridge.lean) | branch | translator | mixed `krein` transport plus `projective` shadow | [`GeneralizedMetricPolarizedBridge.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricPolarizedBridge.lean), [`RelativeModularRecomposition.lean`](../lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean) | none in the current corridor | frontier-only |
 
 Mechanical notes:
 - `GeneralizedMetricCore` is a root owner because it introduces the
@@ -148,6 +149,124 @@ Mechanical notes:
   generalized-metric ontology; it proves that the canonical generalized-metric
   projectors act as exact fixpoint operators on the polarized lifts already
   owned by the relative-modular bridge.
+- `GeneralizedMetricRecompositionBridge` is a translator because it does not
+  redefine recomposition; it proves that the generalized-metric transport has a
+  disciplined projective shadow in the existing coupling-defect package.
+
+Current status for capstones / wrappers / public facades on this corridor:
+- capstone files: none
+- wrapper files: none
+- public facade files: none
+
+Umbrella status:
+- none of these files are currently imported by
+  [`Canonical/All.lean`](../lean/InfoGeometry/Canonical/All.lean),
+  [`All.lean`](../lean/InfoGeometry/All.lean),
+  [`InfoGeometry.lean`](../lean/InfoGeometry.lean), or
+  [`Library.lean`](../lean/InfoGeometry/Library.lean)
+- the whole corridor is therefore frontier-only pending further stabilization
+
+## Cl(n,n) Frontier Corridor
+
+This is the split Clifford owner corridor rooted directly in the recursive
+`Qsplit` / `Clsplit` tower. It is the current non-thin owner step for
+`Cl(n,n)`-style geometry, Bott factorization, and the first-step Fredholm seed.
+
+Current direct import chain:
+
+`ClNN -> ClNNBottBridge`
+
+Parallel Fredholm seed attachment:
+
+`RealSplitClifford -> ClNNFredholmBridge`
+
+Existing owner substrate consumed by this corridor:
+
+- [`Clifford/Tower.lean`](../lean/InfoGeometry/Clifford/Tower.lean)
+  supplies `SplitSpace`, `Qsplit`, `Clsplit`, and the one-step product
+  equivalence.
+- [`BottPeriodicity.lean`](../lean/InfoGeometry/Canonical/BottPeriodicity.lean)
+  supplies the canonical Bott-step tensor factorization.
+- [`RealSplitClifford.lean`](../lean/InfoGeometry/Quantum/RealSplitClifford.lean)
+  supplies the doubled-space split `Cl(1,1)` action.
+- [`RealSplitKreinKasparovCycle.lean`](../lean/InfoGeometry/KK/RealSplitKreinKasparovCycle.lean)
+  supplies the current bounded real split-Krein Fredholm/Kasparov seed.
+
+| File | Corridor position | File role | Dominant `@[rep_depth ...]` surface | Immediate upstream corridor inputs | Immediate downstream corridor consumers | Umbrella status |
+|------|-------------------|-----------|-------------------------------------|------------------------------------|-----------------------------------------|-----------------|
+| [`ClNN.lean`](../lean/InfoGeometry/Clifford/ClNN.lean) | root | owner | mixed `krein` carrier plus `operator` Clifford relations | [`Clifford/Tower.lean`](../lean/InfoGeometry/Clifford/Tower.lean) | [`ClNNBottBridge.lean`](../lean/InfoGeometry/Canonical/ClNNBottBridge.lean) | frontier-only |
+| [`ClNNBottBridge.lean`](../lean/InfoGeometry/Canonical/ClNNBottBridge.lean) | branch | translator | `operator` | [`ClNN.lean`](../lean/InfoGeometry/Clifford/ClNN.lean), [`BottPeriodicity.lean`](../lean/InfoGeometry/Canonical/BottPeriodicity.lean) | none in the current corridor | frontier-only |
+| [`ClNNFredholmBridge.lean`](../lean/InfoGeometry/KK/ClNNFredholmBridge.lean) | branch | translator | mixed `operator` / `kk` | [`RealSplitClifford.lean`](../lean/InfoGeometry/Quantum/RealSplitClifford.lean), [`RealSplitKreinKasparovCycle.lean`](../lean/InfoGeometry/KK/RealSplitKreinKasparovCycle.lean) | none in the current corridor | frontier-only |
+
+Mechanical notes:
+- `ClNN` is a root owner because it introduces the recursive head/tail split,
+  normalized null head modes, exact null-generator Clifford relations, and the
+  orthogonality of the head seeds against the recursive tail.
+- `ClNNBottBridge` is a translator because it does not redefine Clifford data;
+  it proves exactly how the head and tail generators factor through the current
+  Bott-step tensor decomposition.
+- `ClNNFredholmBridge` is a translator because it does not redefine KK data; it
+  records that the current bounded split-Krein Fredholm seed consumes the first
+  split Clifford step through the canonical doubled-space `Cl(1,1)` action.
+
+Current status for capstones / wrappers / public facades on this corridor:
+- capstone files: none
+- wrapper files: none
+- public facade files: none
+
+Umbrella status:
+- none of these files are currently imported by
+  [`Canonical/All.lean`](../lean/InfoGeometry/Canonical/All.lean),
+  [`All.lean`](../lean/InfoGeometry/All.lean),
+  [`InfoGeometry.lean`](../lean/InfoGeometry.lean), or
+  [`Library.lean`](../lean/InfoGeometry/Library.lean)
+- the whole corridor is therefore frontier-only pending further stabilization
+
+## KKT Frontier Corridor
+
+This is the operator/Krein/KK middle corridor linking the split Clifford seed to
+the generalized-inverse and generalized-metric surfaces without collapsing them
+into one skip-level ontology.
+
+Current direct import chain:
+
+`KKTCore -> KKTGeneralizedInverseBridge`
+
+Parallel adjacent bridges:
+
+`KKTCore -> KKTGeneralizedMetricBridge`
+
+`KKTCore -> RealSplitKKTBridge`
+
+Existing owner substrate consumed by this corridor:
+
+- [`RealSplitClifford.lean`](../lean/InfoGeometry/Quantum/RealSplitClifford.lean)
+  supplies the split `Cl(1,1)` carrier action.
+- [`EPDefectAlgebra.lean`](../lean/InfoGeometry/Canonical/EPDefectAlgebra.lean)
+  supplies the Moore-Penrose / Drazin projector-defect algebra.
+- [`GeneralizedMetricCore.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricCore.lean)
+  supplies the doubled generalized-metric seed.
+- [`RealSplitKreinKasparovCycle.lean`](../lean/InfoGeometry/KK/RealSplitKreinKasparovCycle.lean)
+  supplies the Clifford/Fredholm/KK side carrier.
+
+| File | Corridor position | File role | Dominant `@[rep_depth ...]` surface | Immediate upstream corridor inputs | Immediate downstream corridor consumers | Umbrella status |
+|------|-------------------|-----------|-------------------------------------|------------------------------------|-----------------------------------------|-----------------|
+| [`KKTCore.lean`](../lean/InfoGeometry/Canonical/KKTCore.lean) | root | owner | `operator` | [`RealSplitClifford.lean`](../lean/InfoGeometry/Quantum/RealSplitClifford.lean), [`Cartan/Involution.lean`](../lean/InfoGeometry/Cartan/Involution.lean) | [`KKTGeneralizedInverseBridge.lean`](../lean/InfoGeometry/Canonical/KKTGeneralizedInverseBridge.lean), [`KKTGeneralizedMetricBridge.lean`](../lean/InfoGeometry/Canonical/KKTGeneralizedMetricBridge.lean), [`RealSplitKKTBridge.lean`](../lean/InfoGeometry/KK/RealSplitKKTBridge.lean) | frontier-only |
+| [`KKTGeneralizedInverseBridge.lean`](../lean/InfoGeometry/Canonical/KKTGeneralizedInverseBridge.lean) | branch | translator | `operator` | [`KKTCore.lean`](../lean/InfoGeometry/Canonical/KKTCore.lean), [`EPDefectAlgebra.lean`](../lean/InfoGeometry/Canonical/EPDefectAlgebra.lean) | none in the current corridor | frontier-only |
+| [`KKTGeneralizedMetricBridge.lean`](../lean/InfoGeometry/Canonical/KKTGeneralizedMetricBridge.lean) | branch | translator | `krein` | [`KKTCore.lean`](../lean/InfoGeometry/Canonical/KKTCore.lean), [`GeneralizedMetricCore.lean`](../lean/InfoGeometry/Canonical/GeneralizedMetricCore.lean) | none in the current corridor | frontier-only |
+| [`RealSplitKKTBridge.lean`](../lean/InfoGeometry/KK/RealSplitKKTBridge.lean) | branch | translator | mixed `operator` / `krein` / `kk` | [`KKTCore.lean`](../lean/InfoGeometry/Canonical/KKTCore.lean), [`RealSplitKreinKasparovCycle.lean`](../lean/InfoGeometry/KK/RealSplitKreinKasparovCycle.lean) | none in the current corridor | frontier-only |
+
+Mechanical notes:
+- `KKTCore` is a root owner because it introduces the actual `g₁ / g₀ / g₋₁`
+  split operators and proves the basic closure law `[g₁, g₋₁] ⊆ g₀`.
+- `KKTGeneralizedInverseBridge` is a translator because it transports the
+  already-owned Moore-Penrose / Drazin defect algebra into KKT grade-zero
+  statements.
+- `KKTGeneralizedMetricBridge` is a translator because it aligns the KKT split
+  with the doubled generalized-metric seed without adding a new carrier.
+- `RealSplitKKTBridge` is a translator because it connects the KKT grading to
+  the Clifford/Fredholm/KK carrier under an explicit grading compatibility
+  hypothesis.
 
 Current status for capstones / wrappers / public facades on this corridor:
 - capstone files: none

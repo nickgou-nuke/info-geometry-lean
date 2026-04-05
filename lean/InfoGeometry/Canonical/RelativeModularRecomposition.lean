@@ -83,6 +83,19 @@ def PolarizedRecompositionData.couplingPotentialDefect
     (R : PolarizedRecompositionData H α βplus βminus) :
     R.couplingPotentialDefect = -R.couplingLogDefect := rfl
 
+/-- Sectorwise exactness means both polarized shift defects vanish individually. -/
+@[rep_depth projective]
+def PolarizedRecompositionData.sectorwiseExact
+    (R : PolarizedRecompositionData H α βplus βminus) : Prop :=
+  R.polarized.plus.data.sourceLogShift = R.polarized.plus.data.targetLogShift ∧
+    R.polarized.minus.data.sourceLogShift = R.polarized.minus.data.targetLogShift
+
+/-- Global vanishing coupling for the recomposed logarithmic defect. -/
+@[rep_depth projective]
+def PolarizedRecompositionData.vanishingCoupling
+    (R : PolarizedRecompositionData H α βplus βminus) : Prop :=
+  R.couplingLogDefect = 0
+
 /-- Whole recomposed logarithmic density from the plus/minus local sectors. -/
 @[rep_depth projective]
 noncomputable def PolarizedRecompositionData.recomposedLogDensity
@@ -130,6 +143,21 @@ noncomputable def PolarizedRecompositionData.recomposedCommonCarrierModularPoten
     (R : PolarizedRecompositionData H α βplus βminus) (bplus : βplus) (bminus : βminus) : ℝ :=
   R.carrier.projectiveModularPotential (R.polarized.plus.data.embed bplus)
     + R.carrier.projectiveModularPotential (R.polarized.minus.data.embed bminus)
+
+/-- Global exactness of logarithmic recomposition through the common carrier. -/
+@[rep_depth projective]
+def PolarizedRecompositionData.exactLogRecomposition
+    (R : PolarizedRecompositionData H α βplus βminus) : Prop :=
+  ∀ bplus : βplus, ∀ bminus : βminus,
+    R.recomposedLogDensity bplus bminus = R.recomposedCommonCarrierLogDensity bplus bminus
+
+/-- Global exactness of modular-potential recomposition through the common carrier. -/
+@[rep_depth projective]
+def PolarizedRecompositionData.exactPotentialRecomposition
+    (R : PolarizedRecompositionData H α βplus βminus) : Prop :=
+  ∀ bplus : βplus, ∀ bminus : βminus,
+    R.recomposedModularPotential bplus bminus
+      = R.recomposedCommonCarrierModularPotential bplus bminus
 
 @[rep_depth projective, simp] theorem
     PolarizedRecompositionData.recomposedAmbientLogDensity_eq_commonCarrier
@@ -232,6 +260,25 @@ noncomputable def PolarizedRecompositionData.recomposedCommonCarrierModularPoten
       (a := bminus)]
   ring
 
+/-- Vanishing coupling is equivalent to exact logarithmic recomposition through the common carrier. -/
+@[rep_depth projective] theorem
+    PolarizedRecompositionData.vanishingCoupling_iff_exactLogRecomposition
+    (R : PolarizedRecompositionData H α βplus βminus) :
+    R.vanishingCoupling ↔ R.exactLogRecomposition := by
+  constructor
+  · intro hcoupling bplus bminus
+    rw [PolarizedRecompositionData.recomposedLogDensity_eq_commonCarrier_add_coupling]
+    rw [hcoupling]
+    ring
+  · intro hexact
+    classical
+    let bplus0 : βplus := Classical.choice ‹Nonempty βplus›
+    let bminus0 : βminus := Classical.choice ‹Nonempty βminus›
+    have h0 := hexact bplus0 bminus0
+    rw [PolarizedRecompositionData.recomposedLogDensity_eq_commonCarrier_add_coupling] at h0
+    have h1 := congrArg (fun x => x - R.recomposedCommonCarrierLogDensity bplus0 bminus0) h0
+    simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using h1
+
 /-- Vanishing global coupling forces exact recomposition through the common carrier. -/
 @[rep_depth projective, simp] theorem
     PolarizedRecompositionData.recomposedLogDensity_eq_commonCarrier_of_vanishingCoupling
@@ -254,11 +301,53 @@ noncomputable def PolarizedRecompositionData.recomposedCommonCarrierModularPoten
   rw [hcoupling]
   ring
 
+/-- Vanishing coupling is equivalent to exact modular-potential recomposition through the common carrier. -/
+@[rep_depth projective] theorem
+    PolarizedRecompositionData.vanishingCoupling_iff_exactPotentialRecomposition
+    (R : PolarizedRecompositionData H α βplus βminus) :
+    R.vanishingCoupling ↔ R.exactPotentialRecomposition := by
+  constructor
+  · intro hcoupling bplus bminus
+    exact PolarizedRecompositionData.recomposedModularPotential_eq_commonCarrier_of_vanishingCoupling
+      (R := R) (hcoupling := hcoupling) (bplus := bplus) (bminus := bminus)
+  · intro hexact
+    classical
+    let bplus0 : βplus := Classical.choice ‹Nonempty βplus›
+    let bminus0 : βminus := Classical.choice ‹Nonempty βminus›
+    have h0 := hexact bplus0 bminus0
+    rw [PolarizedRecompositionData.recomposedModularPotential_eq_commonCarrier_add_coupling] at h0
+    have h1 := congrArg (fun x => x - R.recomposedCommonCarrierModularPotential bplus0 bminus0) h0
+    have hpot : R.couplingPotentialDefect = 0 := by
+      simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using h1
+    rw [PolarizedRecompositionData.couplingPotentialDefect_eq_neg_couplingLogDefect] at hpot
+    simpa using hpot
+
+/-- Logarithmic and modular-potential exact recomposition are equivalent. -/
+@[rep_depth projective] theorem
+    PolarizedRecompositionData.exactLogRecomposition_iff_exactPotentialRecomposition
+    (R : PolarizedRecompositionData H α βplus βminus) :
+    R.exactLogRecomposition ↔ R.exactPotentialRecomposition := by
+  constructor
+  · intro hexact
+    have hcoupling :
+        R.vanishingCoupling := by
+      exact (PolarizedRecompositionData.vanishingCoupling_iff_exactLogRecomposition
+        (R := R)).mpr hexact
+    exact (PolarizedRecompositionData.vanishingCoupling_iff_exactPotentialRecomposition
+      (R := R)).mp hcoupling
+  · intro hexact
+    have hcoupling :
+        R.vanishingCoupling := by
+      exact (PolarizedRecompositionData.vanishingCoupling_iff_exactPotentialRecomposition
+        (R := R)).mpr hexact
+    exact (PolarizedRecompositionData.vanishingCoupling_iff_exactLogRecomposition
+      (R := R)).mp hcoupling
+
 /--
 Stronger sectorwise exactness implies vanishing global coupling. The converse is
 not asserted here: global cancellation may hide nontrivial sector defects.
 -/
-theorem PolarizedRecompositionData.couplingLogDefect_eq_zero_of_sectorwiseExact
+@[rep_depth projective] theorem PolarizedRecompositionData.couplingLogDefect_eq_zero_of_sectorwiseExact
     (R : PolarizedRecompositionData H α βplus βminus)
     (hplus : R.polarized.plus.data.sourceLogShift = R.polarized.plus.data.targetLogShift)
     (hminus : R.polarized.minus.data.sourceLogShift = R.polarized.minus.data.targetLogShift) :
@@ -268,6 +357,27 @@ theorem PolarizedRecompositionData.couplingLogDefect_eq_zero_of_sectorwiseExact
   unfold PolarizedRecompositionData.minusLogDefect
   rw [hplus, hminus]
   ring
+
+/-- Sectorwise exactness implies vanishing global coupling. -/
+@[rep_depth projective] theorem
+    PolarizedRecompositionData.vanishingCoupling_of_sectorwiseExact
+    (R : PolarizedRecompositionData H α βplus βminus)
+    (hexact : R.sectorwiseExact) :
+    R.vanishingCoupling := by
+  rcases hexact with ⟨hplus, hminus⟩
+  exact PolarizedRecompositionData.couplingLogDefect_eq_zero_of_sectorwiseExact
+    (R := R) (hplus := hplus) (hminus := hminus)
+
+/-- Sectorwise exactness implies exact logarithmic recomposition through the common carrier. -/
+@[rep_depth projective] theorem
+    PolarizedRecompositionData.exactLogRecomposition_of_sectorwiseExact
+    (R : PolarizedRecompositionData H α βplus βminus)
+    (hexact : R.sectorwiseExact) :
+    R.exactLogRecomposition := by
+  exact (PolarizedRecompositionData.vanishingCoupling_iff_exactLogRecomposition
+    (R := R)).mp <|
+      PolarizedRecompositionData.vanishingCoupling_of_sectorwiseExact
+        (R := R) (hexact := hexact)
 
 /-- Sectorwise exactness implies exact recomposition of logarithmic density through the common carrier. -/
 @[rep_depth projective, simp] theorem
@@ -281,6 +391,17 @@ theorem PolarizedRecompositionData.couplingLogDefect_eq_zero_of_sectorwiseExact
     (R := R)
     (hcoupling := R.couplingLogDefect_eq_zero_of_sectorwiseExact hplus hminus)
     (bplus := bplus) (bminus := bminus)
+
+/-- Sectorwise exactness implies exact modular-potential recomposition through the common carrier. -/
+@[rep_depth projective] theorem
+    PolarizedRecompositionData.exactPotentialRecomposition_of_sectorwiseExact
+    (R : PolarizedRecompositionData H α βplus βminus)
+    (hexact : R.sectorwiseExact) :
+    R.exactPotentialRecomposition := by
+  exact (PolarizedRecompositionData.vanishingCoupling_iff_exactPotentialRecomposition
+    (R := R)).mp <|
+      PolarizedRecompositionData.vanishingCoupling_of_sectorwiseExact
+        (R := R) (hexact := hexact)
 
 /-- Sectorwise exactness implies exact modular-potential recomposition through the common carrier. -/
 @[rep_depth projective, simp] theorem

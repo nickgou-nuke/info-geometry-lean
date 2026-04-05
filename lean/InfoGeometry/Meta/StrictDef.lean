@@ -1,5 +1,6 @@
 import Lean
 import Lean.Util.Sorry
+import InfoGeometry.Meta.CurvatureTelemetry
 import InfoGeometry.Meta.ProofShape
 import InfoGeometry.Meta.RegionPolicy
 
@@ -39,6 +40,7 @@ private def holeTelemetryJson (mvarId : MVarId) : TermElabM Json := mvarId.withC
   let expectedType ← instantiateMVars (← mvarId.getType)
   let expectedTypeStr ← ppExprString expectedType
   let lctx ← getLCtx
+  let curvature ← extractCurvatureStats expectedType lctx
   let mut locals : Array Json := #[]
   for localDecl in lctx do
     if !localDecl.isImplementationDetail then
@@ -52,6 +54,7 @@ private def holeTelemetryJson (mvarId : MVarId) : TermElabM Json := mvarId.withC
     [ ("holeId", Json.str (toString mvarId.name))
     , ("expectedType", Json.str expectedTypeStr)
     , ("localContext", Json.arr locals)
+    , ("curvature", toJson curvature)
     ]
 
 private def collectPendingMVars (exprs : Array Expr) : TermElabM (Array MVarId) := do
@@ -102,6 +105,7 @@ private def probeRawBoundary?
     let valueExpr ← Term.withoutErrToSorry <| Term.elabTerm valueStx none false
     let valueExpr ← instantiateMVars valueExpr
     let inferredType ← instantiateMVars (← inferType valueExpr)
+    let curvature ← extractCurvatureStats typeExpr (← getLCtx)
     let isCompatible? ← observing? <| isDefEq inferredType typeExpr
     let isCompatible := isCompatible?.getD false
     if isCompatible then
@@ -116,6 +120,7 @@ private def probeRawBoundary?
       (typeExpr.hasLevelMVar || valueExpr.hasLevelMVar)
       (typeExpr.hasSorry || valueExpr.hasSorry)
       (inferredTypeStr? := some inferredTypeStr)
+      [("curvature", toJson curvature)]
 
 private def strictTelemetryJson
     (declKind : String)
@@ -127,6 +132,7 @@ private def strictTelemetryJson
   let typeStr ← ppExprString typeExpr
   let valueStr ← ppExprString valueExpr
   let holes ← pending.mapM holeTelemetryJson
+  let curvature ← extractCurvatureStats typeExpr (← getLCtx)
   let inferredTypeField ←
     match inferredType? with
     | some inferredType =>
@@ -138,6 +144,7 @@ private def strictTelemetryJson
     (typeExpr.hasLevelMVar || valueExpr.hasLevelMVar)
     (typeExpr.hasSorry || valueExpr.hasSorry)
     inferredTypeField
+    [("curvature", toJson curvature)]
 
 private def throwStrictTelemetry
     (declKind : String)

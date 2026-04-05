@@ -2,6 +2,8 @@ import InfoGeometry.Canonical.BogoliubovTransport
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Series
 import Mathlib.Tactic
 
+open scoped InnerProductSpace
+
 namespace InfoGeometry.Canonical.BogoliubovClosedForms
 
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -210,6 +212,79 @@ theorem KRotation_eq_cos_add_sin_K
     KRotation (E := E) t ψ = (Real.cos t) • ψ + (Real.sin t) • (modularComplexI (E := E) ψ) := by
   rw [KRotation_eq_cos_add_sin_K (E := E) t]
   simp
+
+/--
+Phase-linear operators commute with the exact exponential phase propagator.
+The only local coordinate on this transport branch is the exponential time
+parameter `t`.
+-/
+theorem comp_KRotation_eq_KRotation_comp_of_IsPhaseLinear
+    (A : EndH)
+    (hA : IsPhaseLinear (E := E) A)
+    (t : ℝ) :
+    A.comp (KRotation (E := E) t) = (KRotation (E := E) t).comp A := by
+  apply ContinuousLinearMap.ext
+  intro x
+  have hA_eval : A (modularComplexI (E := E) x) = modularComplexI (E := E) (A x) := by
+    have h := congrArg (fun T : EndH => T x) hA
+    simpa [IsPhaseLinear, ContinuousLinearMap.comp_apply] using h
+  have hA_eval' :
+      A (WithLp.toLp (2 : ENNReal) (-WithLp.snd x, WithLp.fst x))
+        =
+      WithLp.toLp (2 : ENNReal) (-WithLp.snd (A x), WithLp.fst (A x)) := by
+    simpa [modularComplexI] using hA_eval
+  simp [ContinuousLinearMap.comp_apply, KRotation_apply, map_add, map_smul, hA_eval']
+
+/--
+Phase-antilinear operators intertwine the exact exponential phase propagator
+with sign-reversed time.
+-/
+theorem comp_KRotation_eq_KRotation_neg_comp_of_IsPhaseAntilinear
+    (A : EndH)
+    (hA : IsPhaseAntilinear (E := E) A)
+    (t : ℝ) :
+    A.comp (KRotation (E := E) t) = (KRotation (E := E) (-t)).comp A := by
+  apply ContinuousLinearMap.ext
+  intro x
+  have hA_eval :
+      A (modularComplexI (E := E) x) = -((modularComplexI (E := E)) (A x)) := by
+    have h := congrArg (fun T : EndH => T x) hA
+    simpa [IsPhaseAntilinear, ContinuousLinearMap.comp_apply] using h
+  have hA_eval' :
+      A (WithLp.toLp (2 : ENNReal) (-WithLp.snd x, WithLp.fst x))
+        =
+      -WithLp.toLp (2 : ENNReal) (-WithLp.snd (A x), WithLp.fst (A x)) := by
+    simpa [modularComplexI] using hA_eval
+  simp [ContinuousLinearMap.comp_apply, KRotation_apply, map_add, map_smul,
+    Real.cos_neg, Real.sin_neg, neg_smul, hA_eval']
+
+/--
+The mixed left/right phase propagator pairing collapses exactly to the identity
+for the doubled Krein form.
+-/
+theorem kreinInner_KRotation_neg_left_KRotation_right
+    (t : ℝ) (u v : H₂) :
+    KreinSpace.kreinInner (H := H₂)
+        (KRotation (E := E) (-t) u)
+        (KRotation (E := E) t v)
+      =
+    KreinSpace.kreinInner (H := H₂) u v := by
+  rw [KRotation_apply, KRotation_apply, Real.cos_neg, Real.sin_neg, neg_smul]
+  repeat rw [KreinSpace.kreinInner_add_left, KreinSpace.kreinInner_add_right]
+  repeat rw [KreinSpace.kreinInner_smul_left, KreinSpace.kreinInner_smul_right]
+  rw [show -(Real.sin t • modularComplexI (E := E) u) = (-Real.sin t) • modularComplexI (E := E) u by simp]
+  rw [KreinSpace.kreinInner_smul_left, KreinSpace.kreinInner_add_right]
+  repeat rw [KreinSpace.kreinInner_smul_right]
+  rw [TomitaTakesaki.modularComplexI_kreinInner_swap (E := E) u v]
+  rw [TomitaTakesaki.modularComplexI_kreinInner_comp (E := E) u v]
+  ring_nf
+  have hcossin : Real.cos t ^ 2 + Real.sin t ^ 2 = 1 := by
+    nlinarith [Real.sin_sq_add_cos_sq t]
+  let g : ℝ := KreinSpace.kreinInner (H := H₂) u v
+  change Real.cos t ^ 2 * g + g * Real.sin t ^ 2 = g
+  calc
+    Real.cos t ^ 2 * g + g * Real.sin t ^ 2 = g * (Real.cos t ^ 2 + Real.sin t ^ 2) := by ring
+    _ = g := by rw [hcossin]; ring
 
 theorem epsilon_comp_epsilonBoost
     (t : ℝ) :

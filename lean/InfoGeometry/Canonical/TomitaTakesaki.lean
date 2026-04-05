@@ -1,6 +1,9 @@
 import InfoGeometry.Canonical.Clifford
 import InfoGeometry.Volume.ConnesCocycle
 import Mathlib.Analysis.Normed.Algebra.Exponential
+
+open scoped InnerProductSpace
+
 set_option linter.unnecessarySimpa false
 set_option linter.unusedSectionVars false
 
@@ -232,6 +235,75 @@ lemma modularSignEpsilon_isOdd :
 lemma modularComplexI_isOdd :
     isOdd (E := E) (modularComplexI (E := E)) := by
   simpa [modularComplexI] using (complex_i_isOdd (E := E))
+
+/-- The modular complex axis `K = Jε` is symmetric for the doubled Krein pairing. -/
+lemma modularComplexI_kreinInner_swap
+    (u v : DoubledSpace E) :
+    KreinSpace.kreinInner (H := DoubledSpace E)
+        ((modularComplexI (E := E)) u) v
+      =
+    KreinSpace.kreinInner (H := DoubledSpace E)
+        u ((modularComplexI (E := E)) v) := by
+  repeat rw [krein_inner_prod_l2]
+  repeat rw [WithLp.ofLp_fst, WithLp.ofLp_snd]
+  simp [modularComplexI, sub_eq_add_neg, real_inner_comm]
+  abel
+
+/-- The modular complex axis squares to `-1` inside the doubled Krein pairing. -/
+lemma modularComplexI_kreinInner_comp
+    (u v : DoubledSpace E) :
+    KreinSpace.kreinInner (H := DoubledSpace E)
+        ((modularComplexI (E := E)) u)
+        ((modularComplexI (E := E)) v)
+      =
+    -KreinSpace.kreinInner (H := DoubledSpace E) u v := by
+  have hK2 :
+      (modularComplexI (E := E)) ((modularComplexI (E := E)) v) = -v := by
+    apply DoubledSpace.ext <;> simp [modularComplexI]
+  calc
+    KreinSpace.kreinInner (H := DoubledSpace E)
+        ((modularComplexI (E := E)) u)
+        ((modularComplexI (E := E)) v)
+      =
+    KreinSpace.kreinInner (H := DoubledSpace E)
+        u ((modularComplexI (E := E)) ((modularComplexI (E := E)) v)) := by
+          rw [modularComplexI_kreinInner_swap]
+    _ = KreinSpace.kreinInner (H := DoubledSpace E) u (-v) := by rw [hK2]
+    _ = -KreinSpace.kreinInner (H := DoubledSpace E) u v := by
+          simpa [neg_one_mul] using
+            (KreinSpace.kreinInner_smul_right
+              (H := DoubledSpace E) (-1) u v)
+
+/--
+On the positive doubled-space Hilbert metric, the modular complex axis `K = Jε`
+is skew:
+`\langle Ku, v \rangle = - \langle u, Kv \rangle`.
+-/
+lemma modularComplexI_inner_skew
+    (u v : DoubledSpace E) :
+    ⟪modularComplexI (E := E) u, v⟫_ℝ
+      =
+    -⟪u, modularComplexI (E := E) v⟫_ℝ := by
+  repeat rw [WithLp.prod_inner_apply]
+  repeat rw [WithLp.ofLp_fst, WithLp.ofLp_snd]
+  simp [modularComplexI, real_inner_comm]
+
+/-- On the positive doubled-space Hilbert metric, `K = Jε` preserves the inner product. -/
+lemma modularComplexI_inner_comp
+    (u v : DoubledSpace E) :
+    ⟪modularComplexI (E := E) u, modularComplexI (E := E) v⟫_ℝ
+      =
+    ⟪u, v⟫_ℝ := by
+  have hK2 :
+      (modularComplexI (E := E)) ((modularComplexI (E := E)) v) = -v := by
+    apply DoubledSpace.ext <;> simp [modularComplexI]
+  calc
+    ⟪modularComplexI (E := E) u, modularComplexI (E := E) v⟫_ℝ
+        =
+      -⟪u, (modularComplexI (E := E)) ((modularComplexI (E := E)) v)⟫_ℝ := by
+          rw [modularComplexI_inner_skew]
+    _ = -⟪u, -v⟫_ℝ := by rw [hK2]
+    _ = ⟪u, v⟫_ℝ := by simp
 
 /--
 Odd-odd channel for the modular CPT atom vanishes:

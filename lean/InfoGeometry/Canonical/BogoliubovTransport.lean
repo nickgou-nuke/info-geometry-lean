@@ -433,7 +433,7 @@ theorem modularTransportGenerator_mem_skewAdjoint_of_isSelfAdjoint_of_IsPhaseLin
     _ = inner ℝ ((modularComplexI (E := E)) v) (hMod u) := by
           rw [← ContinuousLinearMap.adjoint_inner_left, IsSelfAdjoint.adjoint_eq hSelf]
     _ = -inner ℝ v ((modularComplexI (E := E)) (hMod u)) := by
-          simpa using (modularComplexI_inner_skew (E := E) v (hMod u))
+          exact modularComplexI_inner_skew (E := E) v (hMod u)
     _ = -inner ℝ v (hMod ((modularComplexI (E := E)) u)) := by
           rw [hPhaseEval]
     _ = -inner ℝ v (modularTransportGenerator (E := E) hMod u) := by
@@ -441,6 +441,7 @@ theorem modularTransportGenerator_mem_skewAdjoint_of_isSelfAdjoint_of_IsPhaseLin
     _ = inner ℝ v (-(modularTransportGenerator (E := E) hMod u)) := by
           simp
 
+omit [CompleteSpace E] in
 /--
 The true Cartan transport generator commutes with the local phase axis whenever
 the seed is phase-linear.
@@ -502,6 +503,7 @@ theorem modularTransportFlow_preserves_inner_of_isSelfAdjoint_of_IsPhaseLinear
     simpa [modularTransportFlow] using NormedSpace.exp_mem_unitary_of_mem_skewAdjoint hSkew
   simpa using ContinuousLinearMap.inner_map_map_of_mem_unitary hUnitary u v
 
+omit [CompleteSpace E] in
 theorem modularComplexI_comp_modularTransportFlow_eq_modularTransportFlow_comp_modularComplexI_of_IsPhaseLinear
     (hMod : EndH)
     (hPhase : IsPhaseLinear (E := E) hMod)

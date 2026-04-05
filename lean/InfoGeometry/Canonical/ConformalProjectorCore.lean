@@ -272,6 +272,38 @@ theorem spectralProjector_commutator_dilation_eq_neg_half_einstein_plus_chiral :
     IsMoorePenroseInverse.rightProjector, sub_eq_add_neg, add_assoc, add_left_comm,
     add_comm, smul_add, smul_neg]
 
+/--
+If the Drazin spectral projector commutes with the Moore-Penrose right
+projector, then its commutator with the conformal dilation generator is exactly
+minus one half of the left-projector chiral anomaly.
+-/
+theorem spectralProjector_commutator_dilation_eq_neg_half_anomaly_of_rightProjector_commute
+    (hRight :
+      CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D) :
+    CI.P_D * CI.D - CI.D * CI.P_D =
+      -((2 : ℝ)⁻¹) • CI.chiralAnomalyOperator := by
+  rw [CI.spectralProjector_commutator_dilation_eq_half_sub_anomaly]
+  have hRightComm :
+      CI.P_D * IsMoorePenroseInverse.rightProjector CI.A CI.A_MP
+        - IsMoorePenroseInverse.rightProjector CI.A CI.A_MP * CI.P_D = 0 := by
+    rw [sub_eq_zero]
+    simpa [P_MP_right] using hRight
+  rw [hRightComm]
+  simp [sub_eq_add_neg, chiralAnomalyOperator, smul_sub, smul_neg]
+
+/--
+If the Drazin spectral projector commutes with the Moore-Penrose right
+projector and the chiral anomaly vanishes, then it commutes with the conformal
+dilation generator.
+-/
+theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_chiralAnomaly_eq_zero
+    (hRight :
+      CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D)
+    (hχ : CI.chiralAnomalyOperator = 0) :
+    CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  rw [CI.spectralProjector_commutator_dilation_eq_neg_half_anomaly_of_rightProjector_commute hRight]
+  simp [hχ]
+
 /-! ### 3. Unification Theorems -/
 
 omit [FiniteDimensional ℝ E] in

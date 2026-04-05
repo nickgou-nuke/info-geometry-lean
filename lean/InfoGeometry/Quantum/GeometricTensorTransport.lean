@@ -1,0 +1,419 @@
+import InfoGeometry.Quantum.GeometricTensorOperatorLift
+import InfoGeometry.Canonical.BogoliubovClosedForms
+
+open scoped InnerProductSpace
+
+namespace InfoGeometry.Quantum
+
+open InfoGeometry.Krein
+open InfoGeometry.Canonical.TomitaTakesaki
+open InfoGeometry.Canonical.BogoliubovTransport
+open InfoGeometry.Canonical.BogoliubovClosedForms
+
+namespace GeometricQuantumTensor
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+local notation "H₂" => DoubledSpace E
+local notation "EndH" => H₂ →L[ℝ] H₂
+
+noncomputable local instance : NormedRing EndH := inferInstance
+noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
+local instance : IsTopologicalRing EndH := inferInstance
+local instance : CompleteSpace EndH := inferInstance
+
+/--
+The exact local Cartan propagator `KRotation = exp(tK)` preserves the positive
+doubled-space Hilbert metric.
+-/
+theorem KRotation_preserves_inner
+    (t : ℝ) (u v : H₂) :
+    ⟪KRotation (E := E) t u, KRotation (E := E) t v⟫_ℝ = ⟪u, v⟫_ℝ := by
+  rw [KRotation_apply (E := E), KRotation_apply (E := E)]
+  repeat rw [inner_add_left, inner_add_right]
+  repeat rw [real_inner_smul_left, real_inner_smul_right]
+  rw [inner_add_right]
+  repeat rw [real_inner_smul_left, real_inner_smul_right]
+  rw [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_inner_skew (E := E) u v]
+  rw [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_inner_comp (E := E) u v]
+  ring_nf
+  have hcossin : Real.cos t ^ 2 + Real.sin t ^ 2 = 1 := by
+    nlinarith [Real.sin_sq_add_cos_sq t]
+  let g : ℝ := ⟪u, v⟫_ℝ
+  change Real.cos t ^ 2 * g + g * Real.sin t ^ 2 = g
+  calc
+    Real.cos t ^ 2 * g + g * Real.sin t ^ 2 = g * (Real.cos t ^ 2 + Real.sin t ^ 2) := by ring
+    _ = g := by rw [hcossin]; ring
+
+/--
+The operatorial metric seed carried by a Cartan-even operator commuting with
+`K` is invariant under the exact phase propagator `exp(tK)`.
+-/
+theorem metricOfOperator_KRotation_eq_of_commute
+    (A : EndH)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A)
+    (t : ℝ) :
+    ∀ u v : H₂,
+      metricOfOperator A
+          (KRotation (E := E) t u)
+          (KRotation (E := E) t v)
+        =
+      metricOfOperator A u v := by
+  intro u v
+  have hIntertwine :
+      A.comp (KRotation (E := E) t) = (KRotation (E := E) t).comp A :=
+    comp_KRotation_eq_KRotation_comp_of_IsPhaseLinear
+      (E := E) (A := A) hComm t
+  have hEval : A (KRotation (E := E) t u) = KRotation (E := E) t (A u) := by
+    simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hIntertwine
+  rw [metricOfOperator_apply, hEval, metricOfOperator_apply]
+  exact KRotation_preserves_inner (E := E) t (A u) v
+
+/--
+The operatorial QGT built from a self-adjoint Cartan-even seed is preserved by
+the exact phase propagator `KRotation = exp(tK)`.
+-/
+theorem qgtOfOperator_KRotation_invariant
+    (A : EndH)
+    (hA : IsSelfAdjoint A)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A)
+    (t : ℝ) :
+    let Q := qgtOfOperator (E := E) A hA hComm
+    (∀ u v : H₂,
+      Q.metric (KRotation (E := E) t u) (KRotation (E := E) t v) = Q.metric u v)
+      ∧
+    (∀ u v : H₂,
+      Q.berry (KRotation (E := E) t u) (KRotation (E := E) t v) = Q.berry u v) := by
+  intro Q
+  refine ⟨?_, ?_⟩
+  · intro u v
+    exact metricOfOperator_KRotation_eq_of_commute
+      (E := E) (A := A) hComm t u v
+  · intro u v
+    have hMetric :
+        ∀ x y : H₂,
+          Q.metric (KRotation (E := E) t x) (KRotation (E := E) t y) = Q.metric x y :=
+      metricOfOperator_KRotation_eq_of_commute
+        (E := E) (A := A) hComm t
+    have hKComm :
+        (modularComplexI (E := E)).comp (KRotation (E := E) t)
+          =
+        (KRotation (E := E) t).comp (modularComplexI (E := E)) := by
+      exact comp_KRotation_eq_KRotation_comp_of_IsPhaseLinear
+        (E := E)
+        (A := modularComplexI (E := E))
+        (by simp [IsPhaseLinear])
+        t
+    have hKu :
+        modularComplexI (E := E) (KRotation (E := E) t u)
+          =
+        KRotation (E := E) t (modularComplexI (E := E) u) := by
+      simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hKComm
+    calc
+      Q.berry (KRotation (E := E) t u) (KRotation (E := E) t v)
+        =
+      Q.metric ((modularComplexI (E := E)) (KRotation (E := E) t u)) (KRotation (E := E) t v) := by
+            exact Q.compat _ _
+      _ =
+      Q.metric ((KRotation (E := E) t) ((modularComplexI (E := E)) u)) (KRotation (E := E) t v) := by
+            rw [hKu]
+      _ = Q.metric ((modularComplexI (E := E)) u) v := hMetric _ _
+      _ = Q.berry u v := (Q.compat u v).symm
+
+/--
+The operatorial metric seed is preserved along the exact modular transport flow
+whenever the transported operator commutes with the true Cartan generator
+`hMod ∘ K` and the seed `hMod` is phase-linear/self-adjoint.
+-/
+theorem metricOfOperator_modularTransportFlow_eq_of_commute_generator
+    (A hMod : EndH)
+    (hSelf : IsSelfAdjoint hMod)
+    (hPhase : IsPhaseLinear (E := E) hMod)
+    (hCommGen : Commute A (modularTransportGenerator (E := E) hMod))
+    (t : ℝ) :
+    ∀ u v : H₂,
+      metricOfOperator A
+          (modularTransportFlow (E := E) hMod t u)
+          (modularTransportFlow (E := E) hMod t v)
+        =
+      metricOfOperator A u v := by
+  intro u v
+  have hIntertwine :
+      A.comp (modularTransportFlow (E := E) hMod t)
+        =
+      (modularTransportFlow (E := E) hMod t).comp A := by
+    have hCommScaled :
+        Commute A (t • modularTransportGenerator (E := E) hMod) := by
+      change
+        A.comp (t • modularTransportGenerator (E := E) hMod)
+          =
+        (t • modularTransportGenerator (E := E) hMod).comp A
+      simpa [ContinuousLinearMap.comp_smul, ContinuousLinearMap.smul_comp] using
+        congrArg (fun T : EndH => t • T) hCommGen.eq
+    exact (show Commute A (modularTransportFlow (E := E) hMod t) from
+      by simpa [modularTransportFlow] using hCommScaled.exp_right).eq
+  have hEval :
+      A (modularTransportFlow (E := E) hMod t u)
+        =
+      modularTransportFlow (E := E) hMod t (A u) := by
+    simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hIntertwine
+  rw [metricOfOperator_apply, hEval, metricOfOperator_apply]
+  exact modularTransportFlow_preserves_inner_of_isSelfAdjoint_of_IsPhaseLinear
+    (E := E) hMod hSelf hPhase t (A u) v
+
+/--
+The operatorial QGT is preserved along the exact modular transport flow in the
+full Cartan-even commuting sector.
+-/
+theorem qgtOfOperator_modularTransportFlow_invariant_of_commute_generator
+    (A hMod : EndH)
+    (hA : IsSelfAdjoint A)
+    (hACommK :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A)
+    (hSelf : IsSelfAdjoint hMod)
+    (hPhase : IsPhaseLinear (E := E) hMod)
+    (hCommGen : Commute A (modularTransportGenerator (E := E) hMod))
+    (t : ℝ) :
+    let Q := qgtOfOperator (E := E) A hA hACommK
+    (∀ u v : H₂,
+      Q.metric (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v) = Q.metric u v)
+      ∧
+    (∀ u v : H₂,
+      Q.berry (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v) = Q.berry u v) := by
+  intro Q
+  refine ⟨?_, ?_⟩
+  · intro u v
+    exact metricOfOperator_modularTransportFlow_eq_of_commute_generator
+      (E := E) (A := A) (hMod := hMod) hSelf hPhase hCommGen t u v
+  · intro u v
+    have hMetric :
+        ∀ x y : H₂,
+          Q.metric (modularTransportFlow (E := E) hMod t x)
+            (modularTransportFlow (E := E) hMod t y) = Q.metric x y :=
+      metricOfOperator_modularTransportFlow_eq_of_commute_generator
+        (E := E) (A := A) (hMod := hMod) hSelf hPhase hCommGen t
+    have hKComm :
+        (modularComplexI (E := E)).comp (modularTransportFlow (E := E) hMod t)
+          =
+        (modularTransportFlow (E := E) hMod t).comp (modularComplexI (E := E)) := by
+      exact modularComplexI_comp_modularTransportFlow_eq_modularTransportFlow_comp_modularComplexI_of_IsPhaseLinear
+        (E := E) hMod hPhase t
+    have hKu :
+        modularComplexI (E := E) (modularTransportFlow (E := E) hMod t u)
+          =
+        modularTransportFlow (E := E) hMod t (modularComplexI (E := E) u) := by
+      simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hKComm
+    calc
+      Q.berry (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v)
+        =
+      Q.metric ((modularComplexI (E := E)) (modularTransportFlow (E := E) hMod t u))
+        (modularTransportFlow (E := E) hMod t v) := by
+            exact Q.compat _ _
+      _ =
+      Q.metric (modularTransportFlow (E := E) hMod t ((modularComplexI (E := E)) u))
+        (modularTransportFlow (E := E) hMod t v) := by
+            rw [hKu]
+      _ = Q.metric ((modularComplexI (E := E)) u) v := hMetric _ _
+      _ = Q.berry u v := (Q.compat u v).symm
+
+/--
+If the modular transport generator lies on the local Cartan phase axis, then
+the Hilbert-side operator metric is preserved along the corresponding exact
+modular transport flow.
+-/
+theorem metricOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phaseAxis
+    (A hMod : EndH)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A)
+    (σ t : ℝ)
+    (hGen :
+      modularTransportGenerator (E := E) hMod
+        =
+      σ • modularComplexI (E := E)) :
+    ∀ u v : H₂,
+      metricOfOperator A
+          (modularTransportFlow (E := E) hMod t u)
+          (modularTransportFlow (E := E) hMod t v)
+        =
+      metricOfOperator A u v := by
+  intro u v
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
+      (E := E) hMod σ t hGen]
+  exact metricOfOperator_KRotation_eq_of_commute
+    (E := E) (A := A) hComm (t * σ) u v
+
+/--
+If the modular transport generator lies on the local Cartan phase axis, then
+the Hilbert-side operatorial QGT is preserved along the corresponding exact
+modular transport flow.
+-/
+theorem qgtOfOperator_modularTransportFlow_invariant_of_generator_eq_smul_phaseAxis
+    (A hMod : EndH)
+    (hA : IsSelfAdjoint A)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A)
+    (σ t : ℝ)
+    (hGen :
+      modularTransportGenerator (E := E) hMod
+        =
+      σ • modularComplexI (E := E)) :
+    let Q := qgtOfOperator (E := E) A hA hComm
+    (∀ u v : H₂,
+      Q.metric (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v) = Q.metric u v)
+      ∧
+    (∀ u v : H₂,
+      Q.berry (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v) = Q.berry u v) := by
+  intro Q
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
+      (E := E) hMod σ t hGen]
+  simpa using qgtOfOperator_KRotation_invariant
+    (E := E) (A := A) hA hComm (t * σ)
+
+/--
+The operatorial Krein metric seed carried by a Cartan-odd / phase-antilinear
+operator is invariant under the exact phase propagator `exp(tK)`.
+-/
+theorem kreinMetricOfOperator_KRotation_eq_of_IsPhaseAntilinear
+    (A : EndH)
+    (hAnti : IsPhaseAntilinear (E := E) A)
+    (t : ℝ) :
+    ∀ u v : H₂,
+      kreinMetricOfOperator A
+          (KRotation (E := E) t u)
+          (KRotation (E := E) t v)
+        =
+      kreinMetricOfOperator A u v := by
+  intro u v
+  have hIntertwine :
+      A.comp (KRotation (E := E) t) = (KRotation (E := E) (-t)).comp A :=
+    comp_KRotation_eq_KRotation_neg_comp_of_IsPhaseAntilinear
+      (E := E) (A := A) hAnti t
+  have hEval : A (KRotation (E := E) t u) = KRotation (E := E) (-t) (A u) := by
+    simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hIntertwine
+  rw [kreinMetricOfOperator_apply, hEval, kreinMetricOfOperator_apply]
+  exact kreinInner_KRotation_neg_left_KRotation_right (E := E) t (A u) v
+
+/--
+The operatorial Krein QGT built from a Krein-self-adjoint Cartan-odd seed is
+preserved by the exact phase propagator `KRotation = exp(tK)`.
+-/
+theorem kreinQgtOfOperator_KRotation_invariant
+    (A : EndH)
+    (hA : KreinSpace.IsKreinSelfAdjoint (H := H₂) A)
+    (hAnti : IsPhaseAntilinear (E := E) A)
+    (t : ℝ) :
+    let Q := kreinQgtOfOperator (E := E) A hA hAnti
+    (∀ u v : H₂,
+      Q.metric (KRotation (E := E) t u) (KRotation (E := E) t v) = Q.metric u v)
+      ∧
+    (∀ u v : H₂,
+      Q.berry (KRotation (E := E) t u) (KRotation (E := E) t v) = Q.berry u v) := by
+  intro Q
+  refine ⟨?_, ?_⟩
+  · intro u v
+    exact kreinMetricOfOperator_KRotation_eq_of_IsPhaseAntilinear
+      (E := E) (A := A) hAnti t u v
+  · intro u v
+    have hMetric :
+        ∀ x y : H₂,
+          Q.metric (KRotation (E := E) t x) (KRotation (E := E) t y) = Q.metric x y :=
+      kreinMetricOfOperator_KRotation_eq_of_IsPhaseAntilinear
+        (E := E) (A := A) hAnti t
+    have hKComm :
+        (modularComplexI (E := E)).comp (KRotation (E := E) t)
+          =
+        (KRotation (E := E) t).comp (modularComplexI (E := E)) := by
+      exact comp_KRotation_eq_KRotation_comp_of_IsPhaseLinear
+        (E := E)
+        (A := modularComplexI (E := E))
+        (by simp [IsPhaseLinear])
+        t
+    have hKu :
+        modularComplexI (E := E) (KRotation (E := E) t u)
+          =
+        KRotation (E := E) t (modularComplexI (E := E) u) := by
+      simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hKComm
+    calc
+      Q.berry (KRotation (E := E) t u) (KRotation (E := E) t v)
+        =
+      Q.metric ((modularComplexI (E := E)) (KRotation (E := E) t u)) (KRotation (E := E) t v) := by
+            exact Q.compat _ _
+      _ =
+      Q.metric ((KRotation (E := E) t) ((modularComplexI (E := E)) u)) (KRotation (E := E) t v) := by
+            rw [hKu]
+      _ = Q.metric ((modularComplexI (E := E)) u) v := hMetric _ _
+      _ = Q.berry u v := (Q.compat u v).symm
+
+/--
+If the modular transport generator lies on the local Cartan phase axis, then
+the Krein-side operator metric is preserved along the corresponding exact
+modular transport flow.
+-/
+theorem kreinMetricOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phaseAxis
+    (A hMod : EndH)
+    (hAnti : IsPhaseAntilinear (E := E) A)
+    (σ t : ℝ)
+    (hGen :
+      modularTransportGenerator (E := E) hMod
+        =
+      σ • modularComplexI (E := E)) :
+    ∀ u v : H₂,
+      kreinMetricOfOperator A
+          (modularTransportFlow (E := E) hMod t u)
+          (modularTransportFlow (E := E) hMod t v)
+        =
+      kreinMetricOfOperator A u v := by
+  intro u v
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
+      (E := E) hMod σ t hGen]
+  exact kreinMetricOfOperator_KRotation_eq_of_IsPhaseAntilinear
+    (E := E) (A := A) hAnti (t * σ) u v
+
+/--
+If the modular transport generator lies on the local Cartan phase axis, then
+the Krein-side operatorial QGT is preserved along the corresponding exact
+modular transport flow.
+-/
+theorem kreinQgtOfOperator_modularTransportFlow_invariant_of_generator_eq_smul_phaseAxis
+    (A hMod : EndH)
+    (hA : KreinSpace.IsKreinSelfAdjoint (H := H₂) A)
+    (hAnti : IsPhaseAntilinear (E := E) A)
+    (σ t : ℝ)
+    (hGen :
+      modularTransportGenerator (E := E) hMod
+        =
+      σ • modularComplexI (E := E)) :
+    let Q := kreinQgtOfOperator (E := E) A hA hAnti
+    (∀ u v : H₂,
+      Q.metric (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v) = Q.metric u v)
+      ∧
+    (∀ u v : H₂,
+      Q.berry (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v) = Q.berry u v) := by
+  intro Q
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
+      (E := E) hMod σ t hGen]
+  simpa using kreinQgtOfOperator_KRotation_invariant
+    (E := E) (A := A) hA hAnti (t * σ)
+
+end GeometricQuantumTensor
+
+end InfoGeometry.Quantum

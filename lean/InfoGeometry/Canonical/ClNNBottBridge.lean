@@ -22,7 +22,7 @@ open InfoGeometry.Clifford.ClNN
 open InfoGeometry.Canonical.BottPeriodicity
 open InfoGeometry.CliffordTower
 
-@[rep_depth operator] theorem bottStep_headPair
+@[rep_depth krein] theorem bottStep_headPair
     (n : ℕ) (x : ℝ × ℝ) :
     bottStepEquiv n (CliffordAlgebra.ι (Quad (n + 1)) (headPair n x))
       = (CliffordAlgebra.ι InfoGeometry.CliffordTower.Q11 x) ᵍ⊗ₜ
@@ -36,7 +36,7 @@ open InfoGeometry.CliffordTower
   rw [hzero]
   simp
 
-@[rep_depth operator] theorem bottStep_tailLift
+@[rep_depth krein] theorem bottStep_tailLift
     (n : ℕ) (xs : Carrier n) :
     bottStepEquiv n (CliffordAlgebra.ι (Quad (n + 1)) (tailLift n xs))
       = (1 : CliffordAlgebra InfoGeometry.CliffordTower.Q11) ᵍ⊗ₜ
@@ -50,7 +50,7 @@ open InfoGeometry.CliffordTower
   rw [hzero]
   simp
 
-@[rep_depth operator] theorem bottStep_headNullMinus
+@[rep_depth krein] theorem bottStep_headNullMinus
     (n : ℕ) :
     bottStepEquiv n (gammaHeadNullMinus n)
       = (CliffordAlgebra.ι InfoGeometry.CliffordTower.Q11 ((1 / 2 : ℝ), (1 / 2 : ℝ)))
@@ -58,7 +58,7 @@ open InfoGeometry.CliffordTower
   simpa [gammaHeadNullMinus, headNullMinus, headPair] using
     bottStep_headPair n ((1 / 2 : ℝ), (1 / 2 : ℝ))
 
-@[rep_depth operator] theorem bottStep_headNullPlus
+@[rep_depth krein] theorem bottStep_headNullPlus
     (n : ℕ) :
     bottStepEquiv n (gammaHeadNullPlus n)
       = (CliffordAlgebra.ι InfoGeometry.CliffordTower.Q11 ((1 / 2 : ℝ), (-(1 / 2 : ℝ))))

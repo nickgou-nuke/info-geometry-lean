@@ -22,6 +22,8 @@ def _run_snippet(body: str) -> subprocess.CompletedProcess[str]:
                 open InfoGeometry.Canonical.RelativeModularRecomposition
                 open InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge
                 open InfoGeometry.Canonical
+                open InfoGeometry.Canonical.ConformalUnification
+                open InfoGeometry.Canonical.ChiralCartanCore
                 open InfoGeometry.Clifford.NeutralPhaseSpaceCore
                 open InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge
                 open InfoGeometry.Quantum
@@ -104,6 +106,36 @@ class PhaseSpaceCausalFlowBridgeTests(unittest.TestCase):
               correctedOwner_mpChiralGap_isGZero (H := H) (CIK := CIK) hA hAMP
 
             end KKTDefects
+
+            section TrunkOutputs
+
+            variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+            variable [FiniteDimensional ℝ H]
+            variable {α βplus βminus : Type*}
+            variable [Fintype α] [Nonempty α]
+            variable [Fintype βplus] [Nonempty βplus]
+            variable [Fintype βminus] [Nonempty βminus]
+            variable (CIK : InfoGeometry.Canonical.CertifiedInverseKernel (DoubledSpace H))
+            variable (CCI : CertifiedConformalInference (DoubledSpace H))
+            variable (hA : IsGOne (doubledSpaceCl11Action (E := H)) CIK.A)
+            variable (hAMP : IsGNegOne (doubledSpaceCl11Action (E := H)) CIK.A_MP)
+            variable (hAD : IsGNegOne (doubledSpaceCl11Action (E := H)) CIK.A_D)
+            variable (hA' : IsGOne (doubledSpaceCl11Action (E := H)) CCI.A)
+            variable (hAMP' : IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_MP)
+            variable (R : PolarizedRecompositionData H α βplus βminus)
+
+            example :
+                IsGZero (doubledSpaceCl11Action (E := H)) CIK.mpChiralGap
+                  ∧ IsGZero (doubledSpaceCl11Action (E := H)) CIK.dilationGap
+                  ∧ IsGZero (doubledSpaceCl11Action (E := H)) CIK.drazinCoreProj
+                  ∧ IsGZero (doubledSpaceCl11Action (E := H))
+                      (chiralGrading CCI.toConformalInference)
+                  ∧ R.couplingLogDefect
+                      = PolarizedRecompositionData.generalizedMetricTwistShadow R :=
+              correctedOwner_trunk_outputs (H := H) (CIK := CIK) (CCI := CCI)
+                hA hAMP hAD hA' hAMP' R
+
+            end TrunkOutputs
 
             end Scratch.PhaseSpaceCausalFlowBridge
             """

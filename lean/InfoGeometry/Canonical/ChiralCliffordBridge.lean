@@ -85,6 +85,7 @@ theorem cartan_collapse_of_normal (CI : ConformalInference E) (h_norm : CI.IsNor
   exact (nnnorm_eq_zero).mp hn
 
 
+omit [FiniteDimensional ℝ E] in
 /--
 Unit relative volume collapses the Cartan anomaly through the normality bridge.
 -/

@@ -26,7 +26,7 @@ namespace InfoGeometry.Clifford.NeutralPhaseSpaceCore
 universe u
 
 /-- Generic neutral phase-space carrier `E × E*`. -/
-@[rep_depth krein]
+@[rep_depth operator]
 abbrev PhaseSpaceCarrier (E : Type u) [AddCommGroup E] [Module ℝ E] : Type u :=
   E × Module.Dual ℝ E
 
@@ -35,14 +35,14 @@ section Core
 variable {E : Type*} [AddCommGroup E] [Module ℝ E]
 
 /-- Symmetric evaluation bilinear form on `E × E*`. -/
-@[rep_depth krein]
+@[rep_depth operator]
 noncomputable def canonicalNeutralBilin : LinearMap.BilinForm ℝ (PhaseSpaceCarrier E) :=
   LinearMap.compl₁₂ (LinearMap.dualProd ℝ E)
     (LinearEquiv.prodComm ℝ E (Module.Dual ℝ E)).toLinearMap
     (LinearEquiv.prodComm ℝ E (Module.Dual ℝ E)).toLinearMap
 
 /-- Canonical neutral quadratic form on `E × E*`. -/
-@[rep_depth krein]
+@[rep_depth operator]
 noncomputable def canonicalNeutralForm : QuadraticForm ℝ (PhaseSpaceCarrier E) :=
   (canonicalNeutralBilin (E := E)).toQuadraticMap
 

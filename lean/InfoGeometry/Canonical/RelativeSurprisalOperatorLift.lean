@@ -1,5 +1,6 @@
 import InfoGeometry.Basic
 import InfoGeometry.Canonical.InformationPartitionCore
+import InfoGeometry.Canonical.RelativeModularOperator
 import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.MaxEnt.JaynesInfoStatMech
 import InfoGeometry.Meta.Architecture
@@ -19,6 +20,8 @@ packages existing owner surfaces already present in the repo:
 - pointwise surprisal and entropy on the normalized slice,
 - relative modular potential / relative surprisal on positive rays and count
   rays,
+- the canonical finite relative modular operator owner on projective state
+  pairs,
 - the scalar mean relative modular Hamiltonian and its Tomita-Takesaki-style
   operator lift,
 - the existing partition/log-partition derivative theorems specialized to that
@@ -28,6 +31,7 @@ packages existing owner surfaces already present in the repo:
 namespace InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 
 open InfoGeometry.Canonical.KMSSinkhornBridge
+open InfoGeometry.Canonical.RelativeModularOperator
 open InfoGeometry.Canonical.YangMillsContinuum
 open InfoGeometry.Canonical.InformationCalculus.ModularRadonNikodymData
 open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
@@ -235,6 +239,62 @@ theorem relativeModularPotentialOperator_eq_logDensity_base_sub
     rw [hq0, hq]
     ring
 
+/-- The canonical finite relative modular operator is the first quantization of the projective relative density. -/
+@[rep_depth operator]
+theorem relativeModularOperator_eq_firstQuantize_relativeDensity
+    (q q0 : InfoGeometry.Canonical.PositiveRayCore.PositiveRay (Fin n)) :
+    relativeModularOperator (n := n) q q0 =
+      firstQuantize (n := n)
+        (fun i =>
+          InfoGeometry.Canonical.RelativePotentialCore.relativeDensity (α := Fin n) q q0 i) := by
+  rfl
+
+/-- The diagonal of the relative log-density lift is the logarithmic readout of the modular operator owner. -/
+@[simp] theorem relativeLogDensityOperator_diag_eq_log_relativeModularOperator_diag
+    (q q0 : InfoGeometry.Canonical.PositiveRayCore.PositiveRay (Fin n)) (i : Fin n) :
+    relativeLogDensityOperator (n := n) q q0 i i =
+      Real.log (relativeModularOperator (n := n) q q0 i i) := by
+  rw [relativeLogDensityOperator_diag]
+  exact relativeLogDensity_eq_log_relativeModularOperator_diag (n := n) q q0 i
+
+/-- The diagonal of the relative modular-potential lift is the negative logarithmic readout of the modular operator owner. -/
+@[simp] theorem relativeModularPotentialOperator_diag_eq_neg_log_relativeModularOperator_diag
+    (q q0 : InfoGeometry.Canonical.PositiveRayCore.PositiveRay (Fin n)) (i : Fin n) :
+    relativeModularPotentialOperator (n := n) q q0 i i =
+      -Real.log (relativeModularOperator (n := n) q q0 i i) := by
+  rw [relativeModularPotentialOperator_diag]
+  exact relativeModularPotential_eq_neg_log_relativeModularOperator_diag (n := n) q q0 i
+
+/-- The relative log-density lift is the first quantization of the logarithmic readout of `Δ`. -/
+@[rep_depth operator]
+theorem relativeLogDensityOperator_eq_firstQuantize_log_relativeModularOperator_diag
+    (q q0 : InfoGeometry.Canonical.PositiveRayCore.PositiveRay (Fin n)) :
+    relativeLogDensityOperator (n := n) q q0 =
+      firstQuantize (n := n)
+        (fun i => Real.log (relativeModularOperator (n := n) q q0 i i)) := by
+  ext i j
+  by_cases hij : i = j
+  · subst hij
+    rw [relativeLogDensityOperator_diag, firstQuantize_apply_diag]
+    exact relativeLogDensity_eq_log_relativeModularOperator_diag (n := n) q q0 i
+  · rw [relativeLogDensityOperator, firstQuantize_apply_offdiag (hij := hij)]
+    rw [firstQuantize_apply_offdiag (n := n) (hij := hij)]
+
+/-- The modular-potential lift is the first quantization of the Hamiltonian readout `-log Δ`. -/
+@[rep_depth operator]
+theorem relativeModularPotentialOperator_eq_firstQuantize_neg_log_relativeModularOperator_diag
+    (q q0 : InfoGeometry.Canonical.PositiveRayCore.PositiveRay (Fin n)) :
+    relativeModularPotentialOperator (n := n) q q0 =
+      firstQuantize (n := n)
+        (fun i => -Real.log (relativeModularOperator (n := n) q q0 i i)) := by
+  ext i j
+  by_cases hij : i = j
+  · subst hij
+    rw [relativeModularPotentialOperator_diag, firstQuantize_apply_diag]
+    exact relativeModularPotential_eq_neg_log_relativeModularOperator_diag (n := n) q q0 i
+  · rw [relativeModularPotentialOperator, firstQuantize_apply_offdiag (hij := hij)]
+    rw [firstQuantize_apply_offdiag (n := n) (hij := hij)]
+
 end PositiveRay
 
 section CountLift
@@ -257,12 +317,31 @@ noncomputable def relativeCountModularPotentialOperator
 noncomputable def diagonalAverage (A : FinMat n) : ℝ :=
   (n : ℝ)⁻¹ * diagonalMass A
 
+/-- Scalar Hamiltonian readout of a finite diagonal modular operator via `-log Δ` on the diagonal. -/
+noncomputable def modularHamiltonianReadout (A : FinMat n) : ℝ :=
+  (n : ℝ)⁻¹ * ∑ i, -Real.log (A i i)
+
 omit [Nonempty (Fin n)] in
 @[simp] theorem diagonalAverage_firstQuantize
     (a : DiagObservable n) :
     diagonalAverage (n := n) (firstQuantize (n := n) a) = (n : ℝ)⁻¹ * ∑ i, a i := by
   unfold diagonalAverage diagonalMass firstQuantize diagMatrix
   simp
+
+@[simp] theorem modularHamiltonianReadout_relativeModularOperator
+    (q q0 : InfoGeometry.Canonical.PositiveRayCore.PositiveRay (Fin n)) :
+    modularHamiltonianReadout (n := n) (relativeModularOperator (n := n) q q0)
+      = diagonalAverage (n := n) (relativeModularPotentialOperator (n := n) q q0) := by
+  rw [relativeModularPotentialOperator_eq_firstQuantize_neg_log_relativeModularOperator_diag]
+  unfold modularHamiltonianReadout
+  rw [diagonalAverage_firstQuantize]
+
+theorem diagonalAverage_relativeModularPotentialOperator_eq_modularHamiltonianReadout
+    (q q0 : InfoGeometry.Canonical.PositiveRayCore.PositiveRay (Fin n)) :
+    diagonalAverage (n := n) (relativeModularPotentialOperator (n := n) q q0)
+      = modularHamiltonianReadout (n := n) (relativeModularOperator (n := n) q q0) := by
+  symm
+  exact modularHamiltonianReadout_relativeModularOperator (n := n) q q0
 
 omit [Nonempty (Fin n)] in
 theorem diagonalAverage_add (A B : FinMat n) :
@@ -456,6 +535,41 @@ theorem diagonalAverage_relativeModularPotentialOperator_countRay
   rw [← relativeModularHamiltonian_eq_diagonalAverage_rawLift (n := n) (counts := counts) (ref := ref)]
   ring
 
+/-- The corrected averaged modular Hamiltonian is the scalar readout of the canonical projective `Δ`. -/
+theorem relativeModularHamiltonian_sub_countMassShift_eq_modularHamiltonianReadout_relativeModularOperator_countRay
+    (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    InfoGeometry.Canonical.RelativePotentialCountBridge.averagedModularHamiltonian n
+        (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts ref)
+      - InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts ref hcounts href
+      = modularHamiltonianReadout (n := n)
+          (relativeModularOperator (n := n)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)) := by
+  rw [← diagonalAverage_relativeModularPotentialOperator_countRay
+      (n := n) (counts := counts) (ref := ref) (hcounts := hcounts) (href := href)]
+  exact diagonalAverage_relativeModularPotentialOperator_eq_modularHamiltonianReadout
+    (q := InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+    (q0 := InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+
+/-- The raw averaged modular Hamiltonian is the projective `Δ`-readout plus the normalization shift. -/
+theorem relativeModularHamiltonian_eq_modularHamiltonianReadout_relativeModularOperator_countRay_add_countMassShift
+    (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    InfoGeometry.Canonical.RelativePotentialCountBridge.averagedModularHamiltonian n
+        (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts ref)
+      = modularHamiltonianReadout (n := n)
+          (relativeModularOperator (n := n)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+            (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href))
+        + InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts ref hcounts href := by
+  have hreadout :=
+    relativeModularHamiltonian_sub_countMassShift_eq_modularHamiltonianReadout_relativeModularOperator_countRay
+      (n := n) (counts := counts) (ref := ref) (hcounts := hcounts) (href := href)
+  linarith
+
 /-- Count-ray modular-potential operators compose additively along the projective cocycle. -/
 theorem relativeModularPotentialOperator_countRay_cocycle
     (counts ref base : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
@@ -567,6 +681,23 @@ theorem relativeTomitaTakesakiOp_eq_diagonalAverage_rawLift_smul_id
     (relativeModularHamiltonian_eq_diagonalAverage_rawLift (n := n)
       (counts := counts) (ref := ref))
 
+theorem relativeTomitaTakesakiOp_eq_modularHamiltonianReadout_relativeModularOperator_countRay_add_countMassShift_smul_id
+    (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    InfoGeometry.Canonical.RelativePotentialCountBridge.averagedTomitaTakesakiOp n
+        (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts ref)
+      = (modularHamiltonianReadout (n := n)
+            (relativeModularOperator (n := n)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href))
+          + InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts ref hcounts href) •
+          ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace (RouterAmplitude n)) := by
+  exact congrArg
+    (fun c : ℝ => c • ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace (RouterAmplitude n)))
+    (relativeModularHamiltonian_eq_modularHamiltonianReadout_relativeModularOperator_countRay_add_countMassShift
+      (n := n) (counts := counts) (ref := ref) (hcounts := hcounts) (href := href))
+
 omit [Nonempty (Fin n)] in
 /-- The averaged Krein-native Tomita-Takesaki operator is the diagonal average of the raw lift times `ε`. -/
 theorem relativeKreinTomitaTakesakiOp_eq_diagonalAverage_rawLift_smul_eps
@@ -581,6 +712,25 @@ theorem relativeKreinTomitaTakesakiOp_eq_diagonalAverage_rawLift_smul_eps
     (fun c : ℝ => c • InfoGeometry.Krein.spectral_epsilon (E := RouterAmplitude n))
     (relativeModularHamiltonian_eq_diagonalAverage_rawLift (n := n)
       (counts := counts) (ref := ref))
+
+theorem relativeKreinTomitaTakesakiOp_eq_modularHamiltonianReadout_relativeModularOperator_countRay_add_countMassShift_smul_eps
+    (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    InfoGeometry.Canonical.RelativePotentialCountBridge.averagedKreinTomitaTakesakiOp n
+        (InfoGeometry.Canonical.RelativePotentialCountBridge.relativeCountDensity n counts ref)
+      = (modularHamiltonianReadout (n := n)
+            (relativeModularOperator (n := n)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+              (InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href))
+          + InfoGeometry.Canonical.RelativePotentialCountBridge.countMassShift counts ref hcounts href) •
+          InfoGeometry.Krein.spectral_epsilon (E := RouterAmplitude n) := by
+  unfold InfoGeometry.Canonical.RelativePotentialCountBridge.averagedKreinTomitaTakesakiOp
+  rw [InfoGeometry.Canonical.RelativePotentialCountBridge.doubledAtomEpsilonOp_eq_spectralEpsilon (n := n)]
+  exact congrArg
+    (fun c : ℝ => c • InfoGeometry.Krein.spectral_epsilon (E := RouterAmplitude n))
+    (relativeModularHamiltonian_eq_modularHamiltonianReadout_relativeModularOperator_countRay_add_countMassShift
+      (n := n) (counts := counts) (ref := ref) (hcounts := hcounts) (href := href))
 
 end CountLift
 

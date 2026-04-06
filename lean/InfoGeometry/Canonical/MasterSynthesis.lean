@@ -88,6 +88,7 @@ private theorem anomalyExclusion_witness :
   simpa [Q, InfoGeometry.Clifford.splitQ11_apply] using
     (InfoGeometry.Krein.cl11RepLin_sq (E := E) ((1 / 2 : ℝ), (1 / 2 : ℝ)))
 
+omit [FiniteDimensional ℝ E] in
 /--
 Anomaly-exclusion package:
 vanishing projector obstruction yields commutation closure, while exclusion is
@@ -102,6 +103,7 @@ private theorem anomalyExclusion_package_of_chiralAnomaly_eq_zero
   refine ⟨CI.projectors_commute_of_chiralAnomaly_eq_zero hAnom, ?_⟩
   exact anomalyExclusion_witness (E := E)
 
+omit [FiniteDimensional ℝ E] in
 /--
 Kähler/log-det anomaly-exclusion package:
 if the anomaly scale is identified with the RN Kähler potential and unit

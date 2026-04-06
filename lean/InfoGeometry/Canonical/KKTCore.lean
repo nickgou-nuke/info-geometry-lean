@@ -131,6 +131,19 @@ theorem RealSplitCl11Action.eps_is_cartan (X : RealSplitCl11Action H) :
     _ = (⅟ (2 : ℝ)) • (u + X.eps u) := by rw [hs]; abel_nf
     _ = plusProjector X u := by simp [plusProjector, add_comm]
 
+@[rep_depth krein] theorem plusProjector_mul_eps
+    (X : RealSplitCl11Action H) :
+    plusProjector X * X.eps = plusProjector X := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hs : X.eps (X.eps u) = u := X.eps_sq_apply u
+  calc
+    plusProjector X (X.eps u)
+        = (⅟ (2 : ℝ)) • (X.eps u + X.eps (X.eps u)) := by
+            simp [plusProjector]
+    _ = (⅟ (2 : ℝ)) • (u + X.eps u) := by rw [hs]; abel_nf
+    _ = plusProjector X u := by simp [plusProjector, add_comm]
+
 @[rep_depth krein] theorem eps_mul_minusProjector
     (X : RealSplitCl11Action H) :
     X.eps * minusProjector X = -minusProjector X := by
@@ -139,6 +152,20 @@ theorem RealSplitCl11Action.eps_is_cartan (X : RealSplitCl11Action H) :
   have hs : X.eps (X.eps u) = u := X.eps_sq_apply u
   calc
     X.eps (minusProjector X u)
+        = (⅟ (2 : ℝ)) • (X.eps u - X.eps (X.eps u)) := by
+            simp [minusProjector]
+    _ = (⅟ (2 : ℝ)) • (X.eps u - u) := by rw [hs]
+    _ = -minusProjector X u := by
+          simp [minusProjector, sub_eq_add_neg]
+
+@[rep_depth krein] theorem minusProjector_mul_eps
+    (X : RealSplitCl11Action H) :
+    minusProjector X * X.eps = -minusProjector X := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hs : X.eps (X.eps u) = u := X.eps_sq_apply u
+  calc
+    minusProjector X (X.eps u)
         = (⅟ (2 : ℝ)) • (X.eps u - X.eps (X.eps u)) := by
             simp [minusProjector]
     _ = (⅟ (2 : ℝ)) • (X.eps u - u) := by rw [hs]
@@ -218,6 +245,77 @@ theorem RealSplitCl11Action.eps_is_cartan (X : RealSplitCl11Action H) :
     _ = gZeroPart X A + gOnePart X A + gNegOnePart X A := by
           simp [gZeroPart, gOnePart, gNegOnePart, Pp, Pm, mul_add, add_mul,
             add_assoc, add_left_comm, add_comm]
+
+@[rep_depth krein] theorem gOnePart_gZeroPart_eq_zero
+    (X : RealSplitCl11Action H) (A : EndH) :
+    gOnePart X (gZeroPart X A) = 0 := by
+  unfold gOnePart gZeroPart
+  calc
+    plusProjector X *
+        (plusProjector X * A * plusProjector X
+          + minusProjector X * A * minusProjector X) *
+        minusProjector X
+        =
+          plusProjector X * plusProjector X * A * plusProjector X * minusProjector X
+            + plusProjector X * minusProjector X * A * minusProjector X * minusProjector X := by
+              simp [mul_add, add_mul, mul_assoc]
+    _ = 0 := by
+          simp [plusProjector_mul_minusProjector, mul_assoc]
+
+@[rep_depth krein] theorem gNegOnePart_gZeroPart_eq_zero
+    (X : RealSplitCl11Action H) (A : EndH) :
+    gNegOnePart X (gZeroPart X A) = 0 := by
+  unfold gNegOnePart gZeroPart
+  calc
+    minusProjector X *
+        (plusProjector X * A * plusProjector X
+          + minusProjector X * A * minusProjector X) *
+        plusProjector X
+        =
+          minusProjector X * plusProjector X * A * plusProjector X * plusProjector X
+            + minusProjector X * minusProjector X * A * minusProjector X * plusProjector X := by
+              simp [mul_add, add_mul, mul_assoc]
+    _ = 0 := by
+          simp [minusProjector_mul_plusProjector, mul_assoc]
+
+@[rep_depth krein] theorem gOnePart_eq_zero_of_isGZero
+    (X : RealSplitCl11Action H) {A : EndH}
+    (hA : IsGZero X A) :
+    gOnePart X A = 0 := by
+  unfold IsGZero at hA
+  simpa [hA] using gOnePart_gZeroPart_eq_zero (X := X) (A := A)
+
+@[rep_depth krein] theorem gNegOnePart_eq_zero_of_isGZero
+    (X : RealSplitCl11Action H) {A : EndH}
+    (hA : IsGZero X A) :
+    gNegOnePart X A = 0 := by
+  unfold IsGZero at hA
+  simpa [hA] using gNegOnePart_gZeroPart_eq_zero (X := X) (A := A)
+
+@[rep_depth krein] theorem eq_gZeroPart_of_isGZero
+    (X : RealSplitCl11Action H) {A : EndH}
+    (hA : IsGZero X A) :
+    A = gZeroPart X A := by
+  exact hA.symm
+
+@[rep_depth krein] theorem eq_diagonal_blocks_of_isGZero
+    (X : RealSplitCl11Action H) {A : EndH}
+    (hA : IsGZero X A) :
+    A = plusProjector X * A * plusProjector X
+      + minusProjector X * A * minusProjector X := by
+  simpa [gZeroPart] using eq_gZeroPart_of_isGZero (X := X) (A := A) hA
+
+@[rep_depth krein] theorem plusProjector_mul_mul_minusProjector_eq_zero_of_isGZero
+    (X : RealSplitCl11Action H) {A : EndH}
+    (hA : IsGZero X A) :
+    plusProjector X * A * minusProjector X = 0 := by
+  simpa [gOnePart, mul_assoc] using gOnePart_eq_zero_of_isGZero (X := X) (A := A) hA
+
+@[rep_depth krein] theorem minusProjector_mul_mul_plusProjector_eq_zero_of_isGZero
+    (X : RealSplitCl11Action H) {A : EndH}
+    (hA : IsGZero X A) :
+    minusProjector X * A * plusProjector X = 0 := by
+  simpa [gNegOnePart, mul_assoc] using gNegOnePart_eq_zero_of_isGZero (X := X) (A := A) hA
 
 @[rep_depth krein] theorem gOnePart_mul_gOnePart_eq_zero
     (X : RealSplitCl11Action H) (A B : EndH) :
@@ -481,6 +579,33 @@ theorem RealSplitCl11Action.eps_is_cartan (X : RealSplitCl11Action H) :
     IsGZero X (commutator A B) := by
   rw [← hA, ← hB]
   exact commutator_gOne_gNegOne_isGZero (X := X) A B
+
+@[rep_depth krein] theorem eps_mul_eq_neg_mul_eps_of_isGOne
+    (X : RealSplitCl11Action H) {A : EndH}
+    (hA : IsGOne X A) :
+    X.eps * A = -(A * X.eps) := by
+  rw [← hA]
+  unfold gOnePart
+  calc
+    X.eps * (plusProjector X * A * minusProjector X)
+        = (X.eps * plusProjector X) * A * minusProjector X := by simp [mul_assoc]
+    _ = plusProjector X * A * minusProjector X := by rw [eps_mul_plusProjector]
+    _ = -((plusProjector X * A * minusProjector X) * X.eps) := by
+          simp [mul_assoc, minusProjector_mul_eps]
+
+@[rep_depth krein] theorem eps_mul_eq_neg_mul_eps_of_isGNegOne
+    (X : RealSplitCl11Action H) {A : EndH}
+    (hA : IsGNegOne X A) :
+    X.eps * A = -(A * X.eps) := by
+  rw [← hA]
+  unfold gNegOnePart
+  calc
+    X.eps * (minusProjector X * A * plusProjector X)
+        = (X.eps * minusProjector X) * A * plusProjector X := by simp [mul_assoc]
+    _ = ((-minusProjector X) * A) * plusProjector X := by rw [eps_mul_minusProjector]
+    _ = -(minusProjector X * A * plusProjector X) := by simp [mul_assoc]
+    _ = -((minusProjector X * A * plusProjector X) * X.eps) := by
+          simp [mul_assoc, plusProjector_mul_eps]
 
 end Core
 

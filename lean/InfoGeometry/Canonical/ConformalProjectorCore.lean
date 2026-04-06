@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.SpectralInference
+import InfoGeometry.Canonical.KKTCore
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Tactic.NoncommRing
 set_option linter.unusedSimpArgs false
@@ -15,6 +16,7 @@ namespace InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.Canonical.SpectralInference
+open InfoGeometry.Canonical.KKTCore
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 
@@ -195,6 +197,132 @@ noncomputable def chiralAnomaly : E →L[ℝ] E :=
 
 /-- Canonical naming alias for the chiral-anomaly operator. -/
 noncomputable abbrev chiralAnomalyOperator : E →L[ℝ] E := CI.chiralAnomaly
+
+/--
+KKT operator bridge: if `A`, `A_MP`, and `A_D` occupy the expected `g₁/g₋₁`
+wings for a split-`Cl(1,1)` action, then the projector-obstruction operator
+lies in grade zero.
+-/
+@[rep_depth krein] theorem chiralAnomalyOperator_isGZero_of_kkt_wings
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (hA : IsGOne X CI.A)
+    (hAMP : IsGNegOne X CI.A_MP)
+    (hAD : IsGNegOne X CI.A_D) :
+    IsGZero X CI.chiralAnomalyOperator := by
+  have hAanti :
+      X.eps * CI.A = -(CI.A * X.eps) :=
+    eps_mul_eq_neg_mul_eps_of_isGOne (X := X) (A := CI.A) hA
+  have hAMPanti :
+      X.eps * CI.A_MP = -(CI.A_MP * X.eps) :=
+    eps_mul_eq_neg_mul_eps_of_isGNegOne (X := X) (A := CI.A_MP) hAMP
+  have hADanti :
+      X.eps * CI.A_D = -(CI.A_D * X.eps) :=
+    eps_mul_eq_neg_mul_eps_of_isGNegOne (X := X) (A := CI.A_D) hAD
+  have hPDcomm :
+      X.eps * CI.P_D = CI.P_D * X.eps := by
+    unfold P_D IsDrazinInverse.projection
+    calc
+      X.eps * (CI.A * CI.A_D)
+          = (X.eps * CI.A) * CI.A_D := by simp [mul_assoc]
+      _ = (-(CI.A * X.eps)) * CI.A_D := by rw [hAanti]
+      _ = -(CI.A * (X.eps * CI.A_D)) := by simp [mul_assoc]
+      _ = -(CI.A * (-(CI.A_D * X.eps))) := by rw [hADanti]
+      _ = CI.A * (CI.A_D * X.eps) := by simp
+      _ = (CI.A * CI.A_D) * X.eps := by simp [mul_assoc]
+  have hPMPcomm :
+      X.eps * CI.P_MP = CI.P_MP * X.eps := by
+    unfold P_MP IsMoorePenroseInverse.leftProjector
+    calc
+      X.eps * (CI.A_MP * CI.A)
+          = (X.eps * CI.A_MP) * CI.A := by simp [mul_assoc]
+      _ = (-(CI.A_MP * X.eps)) * CI.A := by rw [hAMPanti]
+      _ = -(CI.A_MP * (X.eps * CI.A)) := by simp [mul_assoc]
+      _ = -(CI.A_MP * (-(CI.A * X.eps))) := by rw [hAanti]
+      _ = CI.A_MP * (CI.A * X.eps) := by simp
+      _ = (CI.A_MP * CI.A) * X.eps := by simp [mul_assoc]
+  have hObsComm :
+      X.eps * CI.chiralAnomalyOperator = CI.chiralAnomalyOperator * X.eps := by
+    unfold chiralAnomalyOperator chiralAnomaly
+    apply ContinuousLinearMap.ext
+    intro u
+    have hPDu : X.eps (CI.P_D u) = CI.P_D (X.eps u) := by
+      simpa using congrArg (fun F : E →L[ℝ] E => F u) hPDcomm
+    have hPMPu : X.eps (CI.P_MP u) = CI.P_MP (X.eps u) := by
+      simpa using congrArg (fun F : E →L[ℝ] E => F u) hPMPcomm
+    have hPDPMPu : X.eps (CI.P_D (CI.P_MP u)) = CI.P_D (CI.P_MP (X.eps u)) := by
+      have h := congrArg (fun F : E →L[ℝ] E => F (CI.P_MP u)) hPDcomm
+      simpa [hPMPu] using h
+    have hPMPPDu : X.eps (CI.P_MP (CI.P_D u)) = CI.P_MP (CI.P_D (X.eps u)) := by
+      have h := congrArg (fun F : E →L[ℝ] E => F (CI.P_D u)) hPMPcomm
+      simpa [hPDu] using h
+    calc
+      X.eps (CI.P_D (CI.P_MP u) - CI.P_MP (CI.P_D u))
+          = X.eps (CI.P_D (CI.P_MP u)) - X.eps (CI.P_MP (CI.P_D u)) := by
+              simp
+      _ = CI.P_D (CI.P_MP (X.eps u)) - CI.P_MP (CI.P_D (X.eps u)) := by
+            rw [hPDPMPu, hPMPPDu]
+      _ = (CI.P_D * CI.P_MP - CI.P_MP * CI.P_D) (X.eps u) := by
+            simp [sub_eq_add_neg, mul_assoc]
+      _ = ((CI.P_D * CI.P_MP - CI.P_MP * CI.P_D) * X.eps) u := by
+            simp [mul_assoc]
+  exact isGZero_of_eps_commute (X := X) hObsComm
+
+@[rep_depth krein] theorem chiralAnomalyOperator_gOnePart_eq_zero_of_kkt_wings
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (hA : IsGOne X CI.A)
+    (hAMP : IsGNegOne X CI.A_MP)
+    (hAD : IsGNegOne X CI.A_D) :
+    gOnePart X CI.chiralAnomalyOperator = 0 := by
+  exact gOnePart_eq_zero_of_isGZero (X := X)
+    (A := CI.chiralAnomalyOperator)
+    (CI.chiralAnomalyOperator_isGZero_of_kkt_wings
+      (X := X) hA hAMP hAD)
+
+@[rep_depth krein] theorem chiralAnomalyOperator_gNegOnePart_eq_zero_of_kkt_wings
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (hA : IsGOne X CI.A)
+    (hAMP : IsGNegOne X CI.A_MP)
+    (hAD : IsGNegOne X CI.A_D) :
+    gNegOnePart X CI.chiralAnomalyOperator = 0 := by
+  exact gNegOnePart_eq_zero_of_isGZero (X := X)
+    (A := CI.chiralAnomalyOperator)
+    (CI.chiralAnomalyOperator_isGZero_of_kkt_wings
+      (X := X) hA hAMP hAD)
+
+@[rep_depth krein] theorem chiralAnomalyOperator_eq_diagonal_blocks_of_kkt_wings
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (hA : IsGOne X CI.A)
+    (hAMP : IsGNegOne X CI.A_MP)
+    (hAD : IsGNegOne X CI.A_D) :
+    CI.chiralAnomalyOperator
+      = plusProjector X * CI.chiralAnomalyOperator * plusProjector X
+        + minusProjector X * CI.chiralAnomalyOperator * minusProjector X := by
+  exact InfoGeometry.Canonical.KKTCore.eq_diagonal_blocks_of_isGZero (X := X)
+    (A := CI.chiralAnomalyOperator)
+    (CI.chiralAnomalyOperator_isGZero_of_kkt_wings
+      (X := X) hA hAMP hAD)
+
+@[rep_depth krein] theorem chiralAnomalyOperator_plusProjector_mul_mul_minusProjector_eq_zero_of_kkt_wings
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (hA : IsGOne X CI.A)
+    (hAMP : IsGNegOne X CI.A_MP)
+    (hAD : IsGNegOne X CI.A_D) :
+    plusProjector X * CI.chiralAnomalyOperator * minusProjector X = 0 := by
+  exact plusProjector_mul_mul_minusProjector_eq_zero_of_isGZero (X := X)
+    (A := CI.chiralAnomalyOperator)
+    (CI.chiralAnomalyOperator_isGZero_of_kkt_wings
+      (X := X) hA hAMP hAD)
+
+@[rep_depth krein] theorem chiralAnomalyOperator_minusProjector_mul_mul_plusProjector_eq_zero_of_kkt_wings
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (hA : IsGOne X CI.A)
+    (hAMP : IsGNegOne X CI.A_MP)
+    (hAD : IsGNegOne X CI.A_D) :
+    minusProjector X * CI.chiralAnomalyOperator * plusProjector X = 0 := by
+  exact minusProjector_mul_mul_plusProjector_eq_zero_of_isGZero (X := X)
+    (A := CI.chiralAnomalyOperator)
+    (CI.chiralAnomalyOperator_isGZero_of_kkt_wings
+      (X := X) hA hAMP hAD)
 
 /--
 Right-projector chiral anomaly.

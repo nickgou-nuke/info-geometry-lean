@@ -73,6 +73,51 @@ chirality `-1` projector. -/
   rw [hpol]
   rfl
 
+/-- Under a Riesz compatibility law for the metric datum, the untwisted owner
+generalized metric realizes as the ambient Hilbert inner product on the doubled
+carrier. -/
+@[rep_depth krein] theorem ofMetric_generalizedMetricForm_eq_doubledInner
+    (metric : MetricDatum E)
+    (hmetric : ∀ x y : E, metric.gFlat x y = ⟪x, y⟫_ℝ)
+    (X Y : PhaseSpaceCarrier E) :
+    (ofMetric metric).generalizedMetricForm X Y
+      = ⟪toDoubledCopyRho metric.gFlat X, toDoubledCopyRho metric.gFlat Y⟫_ℝ := by
+  rcases X with ⟨x, φ⟩
+  rcases Y with ⟨y, ψ⟩
+  have hdual :
+      φ (metric.gFlat.symm ψ)
+        = ⟪metric.gFlat.symm φ, metric.gFlat.symm ψ⟫_ℝ := by
+    calc
+      φ (metric.gFlat.symm ψ)
+          = metric.gFlat (metric.gFlat.symm φ) (metric.gFlat.symm ψ) := by
+              simp
+      _ = ⟪metric.gFlat.symm φ, metric.gFlat.symm ψ⟫_ℝ := hmetric _ _
+  rw [GeneralizedMetricDatum.generalizedMetricForm_ofMetric_apply]
+  simp [toDoubledCopyRho_apply, WithLp.prod_inner_apply, hmetric x y, hdual]
+
+/-- The doubled chirality difference recovers the chirality involution `J`. -/
+@[rep_depth krein] theorem chiralityDifference_eq_modular_j :
+    ((gradePlusProj (E := E) - gradeMinusProj (E := E)).toLinearMap)
+      = (modular_j (E := E)).toLinearMap := by
+  apply LinearMap.ext
+  intro v
+  apply DoubledSpace.ext <;>
+    simp [gradePlusProj, gradeMinusProj, modular_j_apply, sub_eq_add_neg,
+      add_left_comm, add_comm, smul_add]
+  all_goals
+    rw [← add_smul]
+    norm_num
+
+/-- The untwisted owner involution `S = P₊ - P₋` realizes as the doubled
+chirality difference `gradePlusProj - gradeMinusProj`. -/
+@[rep_depth krein] theorem toDoubledCopyRho_comp_ofMetric_polarization_eq_chiralityDifference
+    (metric : MetricDatum E) :
+    (toDoubledCopyRho metric.gFlat).comp ((ofMetric metric).polarization)
+      = ((gradePlusProj (E := E) - gradeMinusProj (E := E)).toLinearMap).comp
+          (toDoubledCopyRho metric.gFlat) := by
+  rw [chiralityDifference_eq_modular_j]
+  exact toDoubledCopyRho_comp_ofMetricPolarization (E := E) metric
+
 section RealizedFixpoints
 
 variable [CompleteSpace E]

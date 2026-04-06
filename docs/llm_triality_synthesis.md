@@ -1,8 +1,12 @@
 # LLM / Triality Topic Map
 
-This note records the current owner files for the routing and triality packet.
+This note records the current routing and triality packet.
 
-## Current owner modules
+It is a topic map, not a synthesis theorem.
+
+## Current files
+
+The current lane is still centered on:
 
 - `lean/InfoGeometry/Canonical/Triality.lean`
 - `lean/InfoGeometry/Canonical/BregmanTriality.lean`
@@ -11,14 +15,21 @@ This note records the current owner files for the routing and triality packet.
 - `lean/InfoGeometry/Canonical/AttentionEuclidean.lean`
 - `lean/InfoGeometry/LLM/TransformerBlock.lean`
 - `lean/InfoGeometry/LLM/MaskedTransformerBlock.lean`
-- `lean/InfoGeometry/LLM/PositionalEncoding.lean`
 - `lean/InfoGeometry/Canonical/BottPeriodicity.lean`
 
 ## Current structural reading
 
-The repo treats this lane as a combination of:
-- geometric attention and routing structures;
-- LLM-facing representation modules;
-- Clifford or Bott-periodic consumers.
+This lane should currently be read as a separate topic family:
 
-It should not be summarized as one monolithic synthesis theorem.
+- triality and routing geometry;
+- attention-related representations;
+- LLM-facing module structure; and
+- some Clifford/Bott-adjacent consumers.
+
+It is not part of the current main closure burden around corrected phase space,
+KKT/conformal, recomposition, and Weyl.
+
+## Use rule
+
+Read this note only as a pointer to the topic family. For live theorem claims,
+inspect the files directly.

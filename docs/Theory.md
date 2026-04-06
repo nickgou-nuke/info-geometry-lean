@@ -1,205 +1,192 @@
 # One Theory, Many Presentations
 
-This repository is best read as a stratified tower of presentations of one underlying theory.
-The important mathematical content is not only in the objects at each layer, but in the coherence theorems proving that different adjacent translation paths agree.
-Those adjacent morphisms are the main formal target.
-The repository should not be flattened into one facade surface; it should make the representation changes explicit and check that they commute.
+This repository should be read as one theory with several simultaneous
+presentations. The mathematical burden is on the adjacent morphisms:
 
-The representation grammar is now partially enforced natively inside Lean:
-- [Architecture.lean](lean/InfoGeometry/Meta/Architecture.lean) defines depth metadata and the dependency-span audit
-- [Audit.lean](lean/InfoGeometry/Audit.lean) is the CI entrypoint
+- define the natural owner at each layer
+- move upward by explicit translators
+- prove coherence where two adjacent routes meet
+- resist facade files that skip the real branch structure
 
-Python reports remain useful, but they are downstream views over a grammar that Lean itself now checks.
+The point is not to make every branch sound the same.
+It is to make the branch junctions exact.
 
-## Representation Depth
+## Representation Grammar
 
-The spine uses a native **semantic taxonomy** (`RepDepth` inductive in `Architecture.lean`),
-enforced by `@[rep_depth <level>]` attributes and the `#audit_architecture` command.
-The old numeric `L0`–`L5` labels are secondary; the primary grammar is semantic.
+The active grammar is the semantic `RepDepth` taxonomy in
+[Architecture.lean](../lean/InfoGeometry/Meta/Architecture.lean),
+checked by [Audit.lean](../lean/InfoGeometry/Audit.lean).
 
-| `@[rep_depth ...]` | Presentation | Typical owners |
-|---------------------|-------------|----------------|
-| `count` | Count / relative-volume data | `RelativePotentialCountBridge` |
-| `projective` | Projective / gauge / relative potential | `PositiveRayCore`, `RelativePotentialCore`, `RedLine` |
-| `operator` | Operator / modular lift | `InformationPartitionCore`, `RelativeSurprisalOperatorLift` |
-| `krein` | Krein / Clifford geometry | `SplitQuadratic`, `SplitQuadraticSheets`, `PolarizedSector` |
-| `transport` | Transport / Bogoliubov frame change | `KreinDiracSpectralLift`, `SplitCliffordThermalBridge` |
-| `thermo` | Thermodynamic / attention surfaces | `AttentionPolarizedSplit`, `AttentionPolarizedGibbsBridge`, `AttentionPolarizedSinkhornBridge` |
+| Depth | Meaning |
+|---|---|
+| `count` | counts, positive representatives, raw mass data |
+| `projective` | positive rays, gauge sections, relative potentials |
+| `operator` | operator lifts, projector and inverse-kernel algebra |
+| `krein` | split quadratic, doubled, Clifford, phase-space geometry |
+| `transport` | Bogoliubov, Weyl, and causal transport |
+| `thermo` | Gibbs, Sinkhorn, attention, thermal packaging |
 
-**Adjacency rule**: a non-`@[capstone]` declaration at depth `d` may only depend on
-tagged declarations at depth `d` or `d − 1`. Capstones (`@[capstone]`) may span
-multiple layers but must also carry a `@[rep_depth]` tag.
+The structural rule is simple:
 
-## Current Anchor Corridor
+- non-capstone declarations should move only one depth step at a time
+- capstones may span further, but they are consumers, not roots
 
-The deepest currently stabilized count-to-operator corridor is:
-- [PositiveMeasure.lean](lean/InfoGeometry/PositiveMeasure.lean)
-- [Normalize.lean](lean/InfoGeometry/Projective/Normalize.lean)
-- [PositiveRayCore.lean](lean/InfoGeometry/Canonical/PositiveRayCore.lean)
-- [RelativePotentialCore.lean](lean/InfoGeometry/Canonical/RelativePotentialCore.lean)
-- [RelativePotentialCountBridge.lean](lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean)
-- [RelativeSurprisalOperatorLift.lean](lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean)
+## Current Semantic Roots
 
-Its new owner/cocycle seam is:
-- `representativeMassShift` and `representativeMassShift_cocycle` at the representative level
-- `countMassShift` and `countMassShift_cocycle` at the count specialization level
-- `relativeCountModularPotentialOperator_cocycle` at the raw diagonal-operator level
-- `relativeModularHamiltonian_sub_countMassShift_cocycle` at the averaged operator level
+The most important current roots are:
 
-This is the current benchmark for what a nonvacuous adjacent corridor should look like in the repository.
+Count/projective roots:
 
-## File Roles
+- [PositiveMeasure.lean](../lean/InfoGeometry/PositiveMeasure.lean)
+- [Normalize.lean](../lean/InfoGeometry/Projective/Normalize.lean)
+- [PositiveRayCore.lean](../lean/InfoGeometry/Canonical/PositiveRayCore.lean)
+- [RelativePotentialCore.lean](../lean/InfoGeometry/Canonical/RelativePotentialCore.lean)
 
-Every stable file should be read as one of four roles:
-- owner: defines the lowest natural surface for a presentation
-- translator: moves one adjacent depth step
-- coherence: proves that two adjacent composites agree
-- capstone: consumes lower layers without defining new skip-level ontology
+Corrected phase-space roots:
 
-This role split is not just documentation style.
-It is the repo's way of preserving one theory across several symmetric, operator, Krein, transport, and thermodynamic realizations without pretending they are the same file-level object.
+- [NeutralPhaseSpaceCore.lean](../lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean)
+- [NeutralPhaseSpaceDoubledBridge.lean](../lean/InfoGeometry/Clifford/NeutralPhaseSpaceDoubledBridge.lean)
+- [PhaseSpaceGeneralizedMetric.lean](../lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean)
 
-The anti-facade rule is simple:
-- a valid bridge file is either an adjacent translator or a real coherence file
-- direct skip-level ontology is debt
+Operator/KKT roots:
 
-In Lean-native terms, the current adjacency rules are:
-- a tagged non-capstone declaration at depth `d` may only reach tagged declarations at depth `d` or `d − 1`
-- a theorem that spans further must be explicitly tagged `@[capstone]` and carry a `@[rep_depth]` tag
-- the `#audit_architecture` command in `Audit.lean` enforces this at build time
+- [KKTCore.lean](../lean/InfoGeometry/Canonical/KKTCore.lean)
+- [EPDefectAlgebra.lean](../lean/InfoGeometry/Canonical/EPDefectAlgebra.lean)
 
-Additionally, a vacuity enforcement system classifies declarations by graph role:
-- `@[infrastructure]`, `@[terminal]`, `@[expository]` — role tags checked by `Lint/Vacuity.lean`
-- `tools/theorem_significance.py` — graph-level V0–V4 violations
-- `tools/check_vacuity_policy.py` — CI gate
+Tomita/Bogoliubov roots:
 
-## What Is Actually Proved
+- [TomitaTakesaki.lean](../lean/InfoGeometry/Canonical/TomitaTakesaki.lean)
+- [BogoliubovTransport.lean](../lean/InfoGeometry/Canonical/BogoliubovTransport.lean)
 
-The repo contains ~330 complete theorems (zero `sorry`). Approximately 85% are
-definitional unfolding or single-step algebra. The remaining ~50 theorems carry
-genuine mathematical content. This section inventories the substantive layer explicitly.
+## Current Strongest Trunks
 
-### Anchor corridor (count → projective → operator)
+### 1. Count -> projective -> operator
 
-The corridor is a **coordinatization layer**: it tracks how normalization and
-projectivization introduce a gauge shift, and proves the shift is a 1-cocycle.
+This remains the cleanest lower-to-upper corridor:
 
-Non-trivial results:
-- `relativeLogDensity_mk_eq_representativeRelativeLogDensity_add_massShift`
-  ([RelativePotentialCore](lean/InfoGeometry/Canonical/RelativePotentialCore.lean)):
-  projective relative log-density = representative log-density + `log(Z ν / Z μ)`.
-  The cocycle appears as a constant additive shift.
-- `representativeMassShift_cocycle` / `countMassShift_cocycle`:
-  the shift satisfies the Thompson 1-cocycle law.
-- `relativeModularHamiltonian_sub_countMassShift_cocycle`
-  ([RelativeSurprisalOperatorLift](lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean)):
-  the mass-shift-corrected modular Hamiltonian preserves rigid cocycle structure
-  through the operator lift. This is the corridor's non-obvious theorem.
+- [PositiveMeasure.lean](../lean/InfoGeometry/PositiveMeasure.lean)
+- [Normalize.lean](../lean/InfoGeometry/Projective/Normalize.lean)
+- [PositiveRayCore.lean](../lean/InfoGeometry/Canonical/PositiveRayCore.lean)
+- [RelativePotentialCore.lean](../lean/InfoGeometry/Canonical/RelativePotentialCore.lean)
+- [RelativePotentialCountBridge.lean](../lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean)
+- [RelativeSurprisalOperatorLift.lean](../lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean)
 
-Proof methods: `field_simp`, `ring`. No hypotheses beyond positivity and full
-support. No converse (recovering lower-layer data from the operator presentation)
-is proved. No obstruction or classification.
+This corridor is important because it already has real owner mathematics and a
+real cocycle story, not just packaging.
 
-### Krein / split-quadratic layer
+### 2. Corrected phase-space generalized metric
 
-First layer with proper functional analysis:
-- `hasFDerivAt_potential` ([SplitQuadratic](lean/InfoGeometry/Krein/SplitQuadratic.lean)):
-  Fréchet derivative of the indefinite quadratic potential, using `fderivInnerCLM`.
-- `divergence_plusPoint_eq_half_sqdist` / `divergence_minusPoint_eq_neg_half_sqdist`
-  ([SplitQuadraticSheets](lean/InfoGeometry/Krein/SplitQuadraticSheets.lean)):
-  on the +1 eigensheet, signed Krein divergence collapses to Euclidean distance;
-  on −1 it flips sign. Proves **opposite curvature** on opposite spectral sheets.
-- `polarizedDivergence_nonneg` / `divergence_nonpos_of_mem_minusSheet`:
-  sheet-wise convexity/concavity from eigenspace membership.
+This trunk is now real, not aspirational:
 
-### Transport / Bogoliubov layer
+- [NeutralPhaseSpaceCore.lean](../lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean)
+- [NeutralPhaseSpaceDoubledBridge.lean](../lean/InfoGeometry/Clifford/NeutralPhaseSpaceDoubledBridge.lean)
+- [PhaseSpaceGeneralizedMetric.lean](../lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean)
+- [PhaseSpaceGeneralizedMetricChiralityBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceGeneralizedMetricChiralityBridge.lean)
 
-Operator-algebraic results using Mathlib Banach-space calculus:
-- `phaseAxisForce_eq_from_phaseAntilinearPart`
-  ([BogoliubovTransport](lean/InfoGeometry/Canonical/BogoliubovTransport.lean)):
-  all phase-axis transport comes from antilinear components only.
-- `JBoost_add` / `epsilonBoost_add` / `KRotation_add`:
-  additive time law for exponential flows via `NormedSpace.exp_add_of_commute`.
-- `JBoost_comp_spectralPlusProj(t)`
-  ([BogoliubovProjectorFlux](lean/InfoGeometry/Canonical/BogoliubovProjectorFlux.lean)):
-  hyperbolic rotation mixes spectral sheets — off-diagonal coupling as
-  `sinh(t) · (P₋ ∘ J)`. Encodes Shale–Stinespring condition at operator level.
-- `transportDirac_sq_eq_transportMetricOp`
-  ([KreinDiracPolarizationBridge](lean/InfoGeometry/Canonical/KreinDiracPolarizationBridge.lean)):
-  `(T·D·T⁻¹)² = T·g·T⁻¹` — Dirac-square law preserved under Bogoliubov conjugation.
-- `transportObservable_isCocycle`
-  ([WeylTransport](lean/InfoGeometry/Canonical/WeylTransport.lean)):
-  two-point transport observable satisfies multiplicative cocycle law.
+What is already closed here:
 
-### Attention / thermo layer
+- the owner carrier `E × E*`
+- the neutral pairing
+- the generalized-metric involution and projector algebra
+- the `B`-twisted realized doubled polarization and realized doubled projectors
 
-- `gibbsWeight_polarizedPlusParams_eq_polarizedPlusAttentionWeights`
-  ([AttentionPolarizedGibbsBridge](lean/InfoGeometry/Canonical/AttentionPolarizedGibbsBridge.lean)):
-  Gibbs weight of polarized-split energy **equals** transformer attention weights.
-  Formally proves attention is the canonical ensemble of a split-quadratic energy.
-- `polarizedPlusAttentionWeights_eq_euclideanGibbsWeights_of_constantKeyNorm`:
-  under fixed key norm, attention reduces to Euclidean Gibbs.
+This is currently the main geometric trunk of the repo.
 
-### Finite-dimensional generalized inverses
+### 3. Polarized and recomposition branch
 
-- [Singular.lean](lean/InfoGeometry/Canonical/Singular.lean) contains constructive
-  Drazin and Moore–Penrose existence for finite-dimensional real Hilbert endomorphisms.
+The corrected owner now reaches the existing polarized and recomposition surfaces:
 
-### Weyl / BdG corridor
+- [PhaseSpacePolarizedBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpacePolarizedBridge.lean)
+- [PhaseSpaceRecompositionBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceRecompositionBridge.lean)
 
-- [TriadicWeylBridge](lean/InfoGeometry/Quantum/TriadicWeylBridge.lean) proves Weyl
-  compatibility ↔ commutation with sheet sign operator ↔ vanishing projector fluxes.
-- [RealBdG](lean/InfoGeometry/Canonical/RealBdG.lean) /
-  [RealBdGSheetBridge](lean/InfoGeometry/Canonical/RealBdGSheetBridge.lean) decompose
-  lifted operators into K-linear and K-antilinear sectors.
+Current state:
 
-## What Is Not Yet Proved
+- owner-side lifts are real
+- owner-side transport is real
+- realized generalized-metric projector factorization is now explicit
+- the final tomita identification still appears as an explicit hypothesis in the strongest corollaries
 
-The following are **absent** from the current codebase. Any agent or document
-claiming otherwise is wrong:
+So this branch is structurally right, but not fully self-generated yet.
 
-- **Converse / recovery**: no theorem recovers lower-layer data from upper-layer
-  data. The corridor is one-directional (count → operator). Injectivity of the
-  first-quantization map is not stated.
-- **Obstruction theory**: no rigid obstruction, no classification of when a lift
-  fails, no cohomological computation from the cocycles.
-- **Uniqueness / rigidity**: no theorem asserts the cocycle or the lift is unique
-  among possible bridges.
-- **Spectral analysis**: eigenvalue analysis, spectral gaps, spectral rigidity
-  are absent.
-- **Infinite-dimensional extension**: all results are finite-dimensional.
-- **Physical interpretation**: no theorem connects the formalism to a physical
-  prediction. The attention–Gibbs bridge is structural, not empirical.
-- **Riemannian geometry**: no metric, curvature tensor, geodesic, or Fisher
-  information metric appears in the proved theorems.
+### 4. KKT / inverse-kernel / conformal branch
 
-The nucleus theorem that would validate the corridor as a theory (rather than
-a coordinatization) is approximately:
+The corrected owner also reaches:
 
-> For finite positive count data, the projective relative potential determines
-> a diagonal relative surprisal operator uniquely up to the normalization cocycle,
-> and this lift is functorial under allowed adjacent translations.
+- [KKTGeneralizedInverseBridge.lean](../lean/InfoGeometry/Canonical/KKTGeneralizedInverseBridge.lean)
+- [PhaseSpaceConformalKKTBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceConformalKKTBridge.lean)
+- [PhaseSpaceCausalFlowBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceCausalFlowBridge.lean)
 
-The forward direction exists; uniqueness, converse, and functoriality are open.
+This gives a genuine causal path from owner-side chirality data to grade-zero
+inverse-kernel outputs and conformal packaging.
 
-## What Remains Open
+### 5. Weyl branch
 
-The remaining work falls into three categories:
+The Weyl branch is now adjacent to the causal trunk:
 
-**Proof gaps** (mathematical substance):
-- converse/recovery theorems for the count-to-operator lift
-- functoriality of the cocycle-corrected modular Hamiltonian
-- obstruction classification: when does a Bogoliubov transport fail to preserve
-  the Dirac-square law?
-- spectral consequences of the partition-function derivative
-- Sinkhorn transport convergence and contraction bounds
+- [ConformalAnomalySource.lean](../lean/InfoGeometry/Canonical/ConformalAnomalySource.lean)
+- [PhaseSpaceWeylCausalBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceWeylCausalBridge.lean)
+- [WeylTransport.lean](../lean/InfoGeometry/Canonical/WeylTransport.lean)
+- [WeylTransportChiralBridge.lean](../lean/InfoGeometry/Canonical/WeylTransportChiralBridge.lean)
 
-**Packaging debt** (structural):
-- theorem-shaped projections and Rosetta wrappers in some bridge files
-- review-surface files still leaning on quarantined ontology
-- declarations that are unconsumed owners vs. disposable packaging (the
-  `generate_replacement_frontier.py` report distinguishes these)
+But it is not fully topologically closed yet. The missing theorem is still:
 
-**Infrastructure debt**:
-- visualization: replacing hotspot-based coloring with depth-aware projector
-- off-diagonal Bogoliubov group not yet on the stable path with implementability restriction
+trunk data -> projector obstruction operator -> obstruction norm / `chiralScale` -> Weyl holonomy
+
+Right now the branch is closer than before, but not yet fully generated by the trunk.
+
+## Important Compatibility Scaffolds
+
+The repo still contains valid but non-root presentation scaffolds, especially:
+
+- [ClNN.lean](../lean/InfoGeometry/Clifford/ClNN.lean)
+- [ClNNSpecialization.lean](../lean/InfoGeometry/Clifford/ClNNSpecialization.lean)
+- [GeneralizedMetricBField.lean](../lean/InfoGeometry/Clifford/GeneralizedMetricBField.lean)
+- [GeneralizedMetricPolarizedBridge.lean](../lean/InfoGeometry/Canonical/GeneralizedMetricPolarizedBridge.lean)
+
+These should be kept as compatibility infrastructure until their role is fully
+absorbed or strictly reclassified. They are not the semantic root of the
+corrected phase-space lane.
+
+## What Is Already Proved
+
+The following structural facts are already real in the codebase:
+
+- the count/projective/operator corridor is a genuine adjacent cocycle corridor
+- the corrected phase-space owner exists
+- the owner-side generalized-metric algebra is closed
+- the corrected owner reaches doubled chirality
+- the corrected owner reaches polarized and recomposition transport
+- the corrected owner reaches the KKT/conformal branch
+
+This means the repo is already beyond “interesting analogies.”
+It now contains real transport architecture.
+
+## What Is Still Missing
+
+The main missing pieces are not more themes. They are closure theorems:
+
+1. derive the realized-projector to tomita-projector identification internally
+2. derive projector obstruction from trunk-compatible operator data
+3. close the Weyl branch by that operator theorem
+4. attach the count/projective seed line to the corrected phase-space line at the polarized junction
+5. add one twisted finite-dimensional end-to-end example through the full branch point
+
+Until then, the repo has a strong trunk and several genuine leaves, but not a
+fully fused forest.
+
+## Near Extensions
+
+The nearest extensions already supported by current code are:
+
+- deeper Tomita / Bogoliubov / modular-flow coherence
+- stronger conformal / Weyl obstruction theorems
+- finite-dimensional twisted examples
+
+The following are still farther out:
+
+- KK / Atiyah-Singer index anomalies, because the current KK bridge is still thin
+- BRST/BV, because the necessary cohomological owner surface is not yet present
+- Navier–Stokes style analytic crowns, because the dissipative PDE trunk is not present
+
+So the repo is presently strongest as a geometric-operator transport theory with
+phase-space, KKT, conformal, recomposition, and modular branches.

@@ -1,66 +1,93 @@
 # Documentation Map
 
-This directory is a map, not the kernel of truth for live repo state.
+This directory is mixed:
 
-## Documentation Classes
+- a small set of hand-maintained operational docs
+- a larger set of conceptual, synthesis, backlog, and reference-memory notes
+- one generated doc surface under `docs/auto/`
 
-### Operational docs
-Use these for current structure and workflow:
+Lean source is still the truth surface. These docs exist to help orientation, not to override code.
+
+## What Is Current
+
+Use these first when you want the current repo state:
+
 - [README.md](../README.md)
 - [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
-- [Installation.md](../Installation.md)
-- [NEWCOMER_PATH.md](../NEWCOMER_PATH.md)
-- [ModuleMap.md](ModuleMap.md)
 - [OperationalIntent.md](OperationalIntent.md)
+- [Theory.md](Theory.md)
+- [ModuleMap.md](ModuleMap.md)
 - [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
 - [lean/InfoGeometry/Meta/Architecture.lean](../lean/InfoGeometry/Meta/Architecture.lean)
 - [lean/DAG/README.md](../lean/DAG/README.md)
 - [tools/README.md](../tools/README.md)
 - [tools/infra/README.md](../tools/infra/README.md)
 
-### Conceptual docs
-These explain the stable mathematical picture and owner order:
-- [Theory.md](Theory.md)
-- [causal_apex_binding.md](causal_apex_binding.md)
-- other markdown files in `docs/`
+These are the maintained hand-written entry surfaces.
 
-Conceptual docs should explain the codebase, not override it.
-OperationalIntent is the short statement of why the repo and its tooling are structured this way.
+## What Is Generated
 
-### Reference memory docs
-These remain useful, but they are not the first operational authority:
-- [FORMALIZATION_PROTOCOL.md](../FORMALIZATION_PROTOCOL.md)
-- [LLM_FRONTIER_PROTOCOL.md](../LLM_FRONTIER_PROTOCOL.md)
-- [LLM_DEBT_PROTOCOL.md](../LLM_DEBT_PROTOCOL.md)
-- [SELF_OPTIMIZATION_PROTOCOL.md](../SELF_OPTIMIZATION_PROTOCOL.md)
+Only the following doc surface under `docs/` is script-owned:
 
-If a document is not linked from this page or [RepositoryMemoryMap.md](RepositoryMemoryMap.md),
-re-audit it against current code before using it as live policy.
-
-### Generated docs and reports
-These are derived surfaces:
 - [docs/auto/index.md](auto/index.md)
-- [reports/dag/](../reports/dag)
-- [artifacts/dag/](../artifacts/dag)
 
-Generated surfaces should be refreshed, not hand-curated.
+Its owning scripts are:
+
+- [tools/docs/generate_auto_docs.py](../tools/docs/generate_auto_docs.py)
+- [tools/docs/update_repo_docs.py](../tools/docs/update_repo_docs.py)
+
+Related generated artifacts also live under:
+
+- [reports/dag/](../reports/dag/)
+- [artifacts/dag/](../artifacts/dag/)
+
+Do not hand-edit generated surfaces unless the generator itself is being repaired.
+
+## What Is Reference Memory
+
+Everything else in `docs/` should be treated as reference memory unless this page
+or [RepositoryMemoryMap.md](RepositoryMemoryMap.md) explicitly promotes it.
+
+That includes:
+
+- synthesis notes such as `*_synthesis.md`
+- diagnostics and backlog notes such as `analytic_closure_backlog.md` and `apex_*.md`
+- niche conceptual overlays such as `causal_apex_binding.md`
+- glossaries and indexes such as `keyword_index.md` and `lawful-flow-glossary.md`
+
+These files can still be useful, but they must be re-audited against Lean source
+before being used as live policy.
 
 ## Recommended Read Path
 
+For current repo structure:
+
 1. [README.md](../README.md)
 2. [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
-3. [ModuleMap.md](ModuleMap.md)
-4. [OperationalIntent.md](OperationalIntent.md)
-5. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
-6. [Theory.md](Theory.md)
-7. the current anchor corridor:
-   [PositiveMeasure.lean](../lean/InfoGeometry/PositiveMeasure.lean),
-   [Normalize.lean](../lean/InfoGeometry/Projective/Normalize.lean),
-   [PositiveRayCore.lean](../lean/InfoGeometry/Canonical/PositiveRayCore.lean),
-   [RelativePotentialCore.lean](../lean/InfoGeometry/Canonical/RelativePotentialCore.lean),
-   [RelativePotentialCountBridge.lean](../lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean),
-   [RelativeSurprisalOperatorLift.lean](../lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean)
-8. [lean/DAG/README.md](../lean/DAG/README.md)
-9. [tools/infra/README.md](../tools/infra/README.md)
-10. [causal_apex_binding.md](causal_apex_binding.md) for the condensed-DAG apex/binding overlay proposal
-11. live reports under [reports/dag/](../reports/dag)
+3. [OperationalIntent.md](OperationalIntent.md)
+4. [Theory.md](Theory.md)
+5. [ModuleMap.md](ModuleMap.md)
+6. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
+7. [tools/infra/README.md](../tools/infra/README.md)
+
+For the current count/projective/operator trunk:
+
+1. [PositiveMeasure.lean](../lean/InfoGeometry/PositiveMeasure.lean)
+2. [Normalize.lean](../lean/InfoGeometry/Projective/Normalize.lean)
+3. [PositiveRayCore.lean](../lean/InfoGeometry/Canonical/PositiveRayCore.lean)
+4. [RelativePotentialCore.lean](../lean/InfoGeometry/Canonical/RelativePotentialCore.lean)
+5. [RelativePotentialCountBridge.lean](../lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean)
+6. [RelativeSurprisalOperatorLift.lean](../lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean)
+
+For the corrected phase-space/generalized-metric trunk:
+
+1. [NeutralPhaseSpaceCore.lean](../lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean)
+2. [NeutralPhaseSpaceDoubledBridge.lean](../lean/InfoGeometry/Clifford/NeutralPhaseSpaceDoubledBridge.lean)
+3. [PhaseSpaceGeneralizedMetric.lean](../lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean)
+4. [PhaseSpaceGeneralizedMetricChiralityBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceGeneralizedMetricChiralityBridge.lean)
+5. [PhaseSpacePolarizedBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpacePolarizedBridge.lean)
+6. [PhaseSpaceRecompositionBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceRecompositionBridge.lean)
+
+## Rule
+
+If a doc and Lean source disagree, trust Lean source.

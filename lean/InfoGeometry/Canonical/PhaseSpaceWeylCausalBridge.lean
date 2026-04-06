@@ -69,6 +69,34 @@ certified conformal inference. -/
       (B := B)
       hFlat
 
+/-- Leaf bundle for Weyl transport generated from conformal chiral scale. -/
+@[rep_depth krein] structure WeylLeafOutputs
+    (CCI : CertifiedConformalInference E)
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X) where
+  lineIntegrator : WeylLineIntegrator I A A
+  holonomyMap : WeylHolonomyMap A ℝ
+  holonomy_eq_chiralScale :
+    ∀ B : WeylGaugeField X A,
+      WeylGaugeField.IsFlat (Δ := Δ) B →
+      lineIntegrator.holonomy holonomyMap B γ = CCI.toConformalInference.chiralScale
+
+@[rep_depth krein] def WeylLeafOutputs.ofFlatBridge
+    (CCI : CertifiedConformalInference E)
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureChiralScaleBridge
+        (CI := CCI.toConformalInference) (Δ := Δ) (γ := γ)) :
+    WeylLeafOutputs (CCI := CCI) (Δ := Δ) (γ := γ) := by
+  refine
+    { lineIntegrator := bridge.lineIntegrator
+      holonomyMap := bridge.holonomyMap
+      holonomy_eq_chiralScale := ?_ }
+  intro B hFlat
+  exact holonomy_eq_chiralScale_of_flat_from_conformal
+    (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+
 end WeylLeaf
 
 section WeylLeafThin

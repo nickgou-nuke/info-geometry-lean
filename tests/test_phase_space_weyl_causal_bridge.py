@@ -21,6 +21,8 @@ def _run_snippet(body: str) -> subprocess.CompletedProcess[str]:
                 open InfoGeometry.Canonical.WeylTransportBridge
                 open InfoGeometry.Canonical.ConformalUnification
                 open InfoGeometry.Canonical
+                open InfoGeometry.Canonical.RelativeModularRecomposition
+                open InfoGeometry.Krein
 
                 {body}
                 """
@@ -63,8 +65,16 @@ class PhaseSpaceWeylCausalBridgeTests(unittest.TestCase):
             variable [AddCommGroup A] [Module ℝ A]
             variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
             variable [FiniteDimensional ℝ E]
+            variable [Nontrivial E]
+            variable {α βplus βminus : Type*}
+            variable [Fintype α] [Nonempty α]
+            variable [Fintype βplus] [Nonempty βplus]
+            variable [Fintype βminus] [Nonempty βminus]
 
-            variable (CCI : CertifiedConformalInference E)
+            variable (CCI : CertifiedConformalInference (DoubledSpace E))
+            variable (R : PolarizedRecompositionData E α βplus βminus)
+            variable (leaf : InfoGeometry.Canonical.PhaseSpaceCausalFlowBridge.LeafOutputs
+              E α βplus βminus CCI R)
             variable (Δ : WeylDifferentialOperator ℝ X A)
             variable (γ : WeylTrajectory I X)
             variable (bridge :
@@ -81,9 +91,14 @@ class PhaseSpaceWeylCausalBridgeTests(unittest.TestCase):
 
             example :
                 bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
-                  = CCI.toConformalInference.chiralScale :=
-              holonomy_eq_chiralScale_of_flat_from_leaf
-                (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+                  =
+                    ‖CCI.toConformalInference.spectralChiralProjector
+                        * CCI.toConformalInference.metricChiralProjector
+                        - CCI.toConformalInference.metricChiralProjector
+                            * CCI.toConformalInference.spectralChiralProjector‖₊ :=
+              holonomy_eq_projectorObstruction_norm_of_flat_from_leaf
+                (CCI := CCI) (R := R) (leaf := leaf) (Δ := Δ) (γ := γ)
+                (bridge := bridge) (B := B) hFlat
 
             example :
                 WeylLeafOutputs (CCI := CCI) (Δ := Δ) (γ := γ) :=

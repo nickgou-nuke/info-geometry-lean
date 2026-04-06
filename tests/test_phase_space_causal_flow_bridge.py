@@ -21,6 +21,7 @@ def _run_snippet(body: str) -> subprocess.CompletedProcess[str]:
                 open InfoGeometry.Canonical.PhaseSpaceCausalFlowBridge
                 open InfoGeometry.Canonical.RelativeModularRecomposition
                 open InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge
+                open InfoGeometry.Canonical
                 open InfoGeometry.Clifford.NeutralPhaseSpaceCore
                 open InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge
                 open InfoGeometry.Quantum
@@ -90,6 +91,19 @@ class PhaseSpaceCausalFlowBridgeTests(unittest.TestCase):
                 (phaseTransport_descends_to_generalizedMetricTwistShadow (H := H) (R := R))
 
             end Leaves
+
+            section KKTDefects
+
+            variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+            variable (CIK : InfoGeometry.Canonical.CertifiedInverseKernel (DoubledSpace H))
+            variable (hA : IsGOne (doubledSpaceCl11Action (E := H)) CIK.A)
+            variable (hAMP : IsGNegOne (doubledSpaceCl11Action (E := H)) CIK.A_MP)
+
+            example :
+                IsGZero (doubledSpaceCl11Action (E := H)) CIK.mpChiralGap :=
+              correctedOwner_mpChiralGap_isGZero (H := H) (CIK := CIK) hA hAMP
+
+            end KKTDefects
 
             end Scratch.PhaseSpaceCausalFlowBridge
             """

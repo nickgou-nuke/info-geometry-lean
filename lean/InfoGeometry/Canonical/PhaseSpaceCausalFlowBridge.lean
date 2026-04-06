@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.ConformalProjectorCore
 import InfoGeometry.Canonical.ChiralCartanCore
 import InfoGeometry.Canonical.RelativeModularRecomposition
 import InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge
+import InfoGeometry.Canonical.KKTGeneralizedInverseBridge
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -28,6 +29,7 @@ open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.ChiralCartanCore
 open InfoGeometry.Canonical.RelativeModularRecomposition
 open InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge
+open InfoGeometry.Canonical.KKTGeneralizedInverseBridge
 open InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge
 open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Quantum
@@ -50,6 +52,42 @@ operator on the doubled split-`Cl(1,1)` carrier. -/
     (H := H) ρ
 
 end OwnerToKKT
+
+section KKTDefects
+
+variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+
+/-- The Moore-Penrose chiral gap lands in grade zero on the canonical doubled
+carrier under the explicit KKT wing hypotheses. -/
+@[rep_depth krein] theorem correctedOwner_mpChiralGap_isGZero
+    (CIK : CertifiedInverseKernel (DoubledSpace H))
+    (hA : IsGOne (doubledSpaceCl11Action (E := H)) CIK.A)
+    (hAMP : IsGNegOne (doubledSpaceCl11Action (E := H)) CIK.A_MP) :
+    IsGZero (doubledSpaceCl11Action (E := H)) CIK.mpChiralGap :=
+  KKTGeneralizedInverseBridge.mpChiralGap_isGZero
+    (X := doubledSpaceCl11Action (E := H)) (CIK := CIK) hA hAMP
+
+/-- The certified dilation gap lands in grade zero on the canonical doubled
+carrier under the explicit KKT wing hypotheses. -/
+@[rep_depth krein] theorem correctedOwner_dilationGap_isGZero
+    (CIK : CertifiedInverseKernel (DoubledSpace H))
+    (hA : IsGOne (doubledSpaceCl11Action (E := H)) CIK.A)
+    (hAMP : IsGNegOne (doubledSpaceCl11Action (E := H)) CIK.A_MP) :
+    IsGZero (doubledSpaceCl11Action (E := H)) CIK.dilationGap :=
+  KKTGeneralizedInverseBridge.dilationGap_isGZero
+    (X := doubledSpaceCl11Action (E := H)) (CIK := CIK) hA hAMP
+
+/-- The certified Drazin core projector lands in grade zero on the canonical
+doubled carrier under the explicit KKT wing hypotheses. -/
+@[rep_depth krein] theorem correctedOwner_drazinCoreProj_isGZero
+    (CIK : CertifiedInverseKernel (DoubledSpace H))
+    (hA : IsGOne (doubledSpaceCl11Action (E := H)) CIK.A)
+    (hAD : IsGNegOne (doubledSpaceCl11Action (E := H)) CIK.A_D) :
+    IsGZero (doubledSpaceCl11Action (E := H)) CIK.drazinCoreProj :=
+  KKTGeneralizedInverseBridge.drazinCoreProj_isGZero
+    (X := doubledSpaceCl11Action (E := H)) (CIK := CIK) hA hAD
+
+end KKTDefects
 
 section CausalLeaves
 

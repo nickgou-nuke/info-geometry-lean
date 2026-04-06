@@ -218,6 +218,7 @@ import InfoGeometry.Projective.Normalize
 
 -- L2: diagonal operator lift and partition calculus
 import InfoGeometry.Canonical.InformationPartitionCore
+import InfoGeometry.Canonical.RelativeModularOperator
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 
 -- L3: spectral / metric coherence on the doubled carrier

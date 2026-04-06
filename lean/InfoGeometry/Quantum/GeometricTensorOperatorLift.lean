@@ -180,6 +180,62 @@ theorem metricOfOperator_modularSignEpsilon_comp_eq_kreinMetricOfOperator
           simpa using inner_modularSignEpsilon_apply_eq_kreinInner (E := E) u v
 
 /--
+Modular-centered operator seed whose diagonal metric readout is the modular
+variance.
+
+This is the `ε`-transported square of the centered modular generator, so it
+lands on the Hilbert-side operator lift while preserving the Krein variance
+content on the state slice.
+-/
+noncomputable def modularVarianceSeed
+    (ψ : H₂) (hMod : EndH) : EndH :=
+  (modularSignEpsilon (E := E)).comp
+    ((centeredModularGenerator (E := E) ψ hMod)
+      * (centeredModularGenerator (E := E) ψ hMod))
+
+/-- The modular-variance seed has exactly the modular variance on the diagonal metric slice. -/
+theorem metricOfOperator_modularVarianceSeed_diag_eq_modularVariance
+    (ψ : H₂) (hMod : EndH) :
+    metricOfOperator (E := E) (modularVarianceSeed (E := E) ψ hMod) ψ ψ
+      = modularVariance (E := E) ψ hMod := by
+  let B : EndH :=
+    (centeredModularGenerator (E := E) ψ hMod)
+      * (centeredModularGenerator (E := E) ψ hMod)
+  calc
+    metricOfOperator (E := E) (modularVarianceSeed (E := E) ψ hMod) ψ ψ
+        = ⟪(modularSignEpsilon (E := E)) (B ψ), ψ⟫_ℝ := by
+            simp [metricOfOperator_apply, modularVarianceSeed, B, ContinuousLinearMap.comp_apply]
+    _ = KreinSpace.kreinInner (H := H₂) (B ψ) ψ := by
+          simpa using inner_modularSignEpsilon_apply_eq_kreinInner (E := E) (B ψ) ψ
+    _ = KreinSpace.kreinInner (H := H₂) ψ (B ψ) := by
+          simpa using (KreinSpace.kreinInner_symm (H := H₂) (B ψ) ψ)
+    _ = modularVariance (E := E) ψ hMod := by
+          simp [modularVariance, kreinExpectation, B]
+
+/-- Main owner predicate: the QGT metric on a chosen state slice realizes modular variance. -/
+def QGTRealizesModularVariance
+    (Q : GeometricQuantumTensor E) (ψ : H₂) (hMod : EndH) : Prop :=
+  Q.metric ψ ψ = modularVariance (E := E) ψ hMod
+
+/--
+Owner theorem: once the modular-variance seed is admitted by the Hilbert-side
+QGT lift (`selfAdjoint` + Cartan-even commutation), the lifted QGT metric
+realizes modular variance on the chosen state slice.
+-/
+theorem qgtOfOperator_modularVarianceSeed_realizes_modularVariance
+    (ψ : H₂) (hMod : EndH)
+    (hA : IsSelfAdjoint (modularVarianceSeed (E := E) ψ hMod))
+    (hComm :
+      (modularVarianceSeed (E := E) ψ hMod).comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp (modularVarianceSeed (E := E) ψ hMod)) :
+    QGTRealizesModularVariance (E := E)
+      (qgtOfOperator (E := E) (modularVarianceSeed (E := E) ψ hMod) hA hComm)
+      ψ hMod := by
+  exact metricOfOperator_modularVarianceSeed_diag_eq_modularVariance
+    (E := E) ψ hMod
+
+/--
 Transport by the doubled fundamental symmetry `ε` sends a Krein-self-adjoint
 seed to a Hilbert-self-adjoint seed.
 -/

@@ -75,6 +75,10 @@ class PhaseSpaceWeylCausalBridgeTests(unittest.TestCase):
             variable (R : PolarizedRecompositionData E α βplus βminus)
             variable (leaf : InfoGeometry.Canonical.PhaseSpaceCausalFlowBridge.LeafOutputs
               E α βplus βminus CCI R)
+            variable (CIK : InfoGeometry.Canonical.CertifiedInverseKernel (DoubledSpace E))
+            variable (trunk :
+              InfoGeometry.Canonical.PhaseSpaceCausalFlowBridge.TrunkOutputs
+                E α βplus βminus CIK CCI R)
             variable (Δ : WeylDifferentialOperator ℝ X A)
             variable (γ : WeylTrajectory I X)
             variable (bridge :
@@ -99,6 +103,17 @@ class PhaseSpaceWeylCausalBridgeTests(unittest.TestCase):
               holonomy_eq_projectorObstruction_norm_of_flat_from_leaf
                 (CCI := CCI) (R := R) (leaf := leaf) (Δ := Δ) (γ := γ)
                 (bridge := bridge) (B := B) hFlat
+
+            example :
+                bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+                  =
+                    ‖CCI.toConformalInference.spectralChiralProjector
+                        * CCI.toConformalInference.metricChiralProjector
+                        - CCI.toConformalInference.metricChiralProjector
+                            * CCI.toConformalInference.spectralChiralProjector‖₊ :=
+              holonomy_eq_projectorObstruction_norm_of_flat_from_trunk
+                (CIK := CIK) (CCI := CCI) (R := R) (trunk := trunk)
+                (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
 
             example :
                 WeylLeafOutputs (CCI := CCI) (Δ := Δ) (γ := γ) :=

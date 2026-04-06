@@ -140,6 +140,12 @@ class PhaseSpaceCausalFlowBridgeTests(unittest.TestCase):
               correctedOwner_trunk_outputs_struct (H := H) (CIK := CIK) (CCI := CCI)
                 hA hAMP hAD hA' hAMP' R
 
+            example :
+                IsGZero (doubledSpaceCl11Action (E := H)) CIK.drazinCoreProj :=
+              TrunkOutputs.drazinCoreProj_isGZero' (H := H) (CIK := CIK) (CCI := CCI) (R := R)
+                (correctedOwner_trunk_outputs_struct (H := H) (CIK := CIK) (CCI := CCI)
+                  hA hAMP hAD hA' hAMP' R)
+
             end TrunkOutputs
 
             end Scratch.PhaseSpaceCausalFlowBridge

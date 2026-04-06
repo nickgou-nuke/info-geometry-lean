@@ -78,6 +78,10 @@ class PhaseSpaceWeylCausalBridgeTests(unittest.TestCase):
               holonomy_eq_chiralScale_of_flat_from_conformal
                 (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
 
+            example :
+                WeylLeafOutputs (CCI := CCI) (Δ := Δ) (γ := γ) :=
+              WeylLeafOutputs.ofFlatBridge (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge)
+
             end WeylLeaf
 
             end Scratch.PhaseSpaceWeylCausalBridge

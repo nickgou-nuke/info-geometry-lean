@@ -18,6 +18,13 @@ This file stays intentionally modest:
   split quadratic polar form.
 
 No projective/recomposition interpretation is imposed here.
+
+Authority note:
+
+- this file remains a split-tower compatibility surface over `ClNN`,
+- it is not the corrected phase-space generalized-metric owner,
+- the corrected owner-side generalized-metric package lives in
+  `PhaseSpaceGeneralizedMetric`.
 -/
 
 namespace InfoGeometry.Clifford.GeneralizedMetricBField

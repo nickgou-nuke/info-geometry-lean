@@ -14,6 +14,13 @@ This file keeps the burden local:
 - head generators go to the `Cl(1,1)` tensor factor,
 - tail generators go to the recursive `Cl(n,n)` tensor factor,
 - normalized null head modes inherit that factorization exactly.
+
+Authority note:
+
+- this bridge is downstream of the split-tower owner `ClNN`,
+- it does not upgrade the split tower into the corrected phase-space owner,
+- the corrected phase-space lane is governed separately by
+  `NeutralPhaseSpaceCore` and its adjacent bridge files.
 -/
 
 namespace InfoGeometry.Canonical.ClNNBottBridge

@@ -143,15 +143,18 @@ variable {I X A E : Type*}
 variable [Fintype I]
 variable [AddCommGroup A] [Module ℝ A]
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
+variable [Nontrivial E]
 variable {α βplus βminus : Type*} [Fintype α] [Nonempty α]
 variable [Fintype βplus] [Nonempty βplus]
 variable [Fintype βminus] [Nonempty βminus]
 
-/-- Weyl holonomy collapses to the conformal chiral scale once the leaf bundle
-is present; the scale is recorded as the projector-obstruction norm in
-`ConformalAnomalySource`. -/
-@[rep_depth krein] theorem holonomy_eq_chiralScale_of_flat_from_leaf
-    (CCI : CertifiedConformalInference E)
+ /-- Weyl holonomy collapses to the projector-obstruction norm once the leaf
+ bundle is present; this uses the anomaly-source identity. -/
+@[rep_depth krein] theorem holonomy_eq_projectorObstruction_norm_of_flat_from_leaf
+    (CCI : CertifiedConformalInference (DoubledSpace E))
+    (R : PolarizedRecompositionData E α βplus βminus)
+    (leaf : InfoGeometry.Canonical.PhaseSpaceCausalFlowBridge.LeafOutputs
+      E α βplus βminus CCI R)
     (Δ : WeylDifferentialOperator ℝ X A)
     (γ : WeylTrajectory I X)
     (bridge :
@@ -160,12 +163,21 @@ is present; the scale is recorded as the projector-obstruction norm in
     (B : WeylGaugeField X A)
     (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B) :
     bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
-      = CCI.toConformalInference.chiralScale := by
-  have _ := ConformalInference.chiralScale_eq_projectorObstruction_norm
-    (CI := CCI.toConformalInference)
-  simpa using
+      =
+        ‖CCI.toConformalInference.spectralChiralProjector
+            * CCI.toConformalInference.metricChiralProjector
+            - CCI.toConformalInference.metricChiralProjector
+                * CCI.toConformalInference.spectralChiralProjector‖₊ := by
+  have _ : Nontrivial (DoubledSpace E →L[ℝ] DoubledSpace E) := by
+    infer_instance
+  have _ := leaf.chiralGrading_isGZero
+  have hScale :=
+    ConformalInference.chiralScale_eq_projectorObstruction_norm
+      (CI := CCI.toConformalInference)
+  have hHol :=
     holonomy_eq_chiralScale_of_flat_from_conformal
       (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+  simpa [hScale] using hHol
 
 end WeylLeafFromTrunk
 

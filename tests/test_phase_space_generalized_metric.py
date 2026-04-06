@@ -16,6 +16,7 @@ def _run_snippet(body: str) -> subprocess.CompletedProcess[str]:
                 f"""\
                 import InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric
                 import InfoGeometry.Clifford.NeutralPhaseSpaceRankOne
+                import InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge
 
                 open scoped InnerProductSpace
                 open InfoGeometry.Clifford.NeutralPhaseSpaceCore
@@ -23,6 +24,7 @@ def _run_snippet(body: str) -> subprocess.CompletedProcess[str]:
                 open InfoGeometry.Clifford.NeutralPhaseSpaceRankOne
                 open InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric
                 open InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric.GeneralizedMetricDatum
+                open InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge
                 open InfoGeometry.Krein
 
                 {body}
@@ -82,9 +84,9 @@ class PhaseSpaceGeneralizedMetricTests(unittest.TestCase):
                 (realMetric.gFlat.symm (dualRealEquiv.symm 3), realMetric.gFlat 1)
                   = (3, dualRealEquiv.symm 1)
               refine Prod.ext ?_ ?_
-              · simpa [realMetric] using
-                  (LinearEquiv.apply_symm_apply dualRealEquiv (3 : ℝ))
-              · rfl
+              · have happly := LinearEquiv.apply_symm_apply dualRealEquiv (3 : ℝ)
+                simpa [realMetric] using happly
+              · simp [realMetric]
 
             example :
                 toDoubledCopyRho realMetric.gFlat
@@ -99,6 +101,34 @@ class PhaseSpaceGeneralizedMetricTests(unittest.TestCase):
                     F (1, dualRealEquiv.symm 3))
                   (toDoubledCopyRho_comp_ofMetricPolarization (E := ℝ) realMetric)
               simpa [LinearMap.comp_apply] using h
+
+            example :
+                toDoubledCopyRho realMetric.gFlat
+                    ((GeneralizedMetricDatum.ofMetric realMetric).polarization
+                      (1, dualRealEquiv.symm 3))
+                  =
+                ((gradePlusProj (E := ℝ) - gradeMinusProj (E := ℝ)).toLinearMap)
+                    (toDoubledCopyRho realMetric.gFlat (1, dualRealEquiv.symm 3)) := by
+              have h :=
+                congrArg
+                  (fun F : PhaseSpaceCarrier ℝ →ₗ[ℝ] DoubledSpace ℝ =>
+                    F (1, dualRealEquiv.symm 3))
+                  (toDoubledCopyRho_comp_ofMetric_polarization_eq_chiralityDifference
+                    (E := ℝ) realMetric)
+              simpa [LinearMap.comp_apply] using h
+
+            example :
+                (GeneralizedMetricDatum.ofMetric realMetric).generalizedMetricForm
+                    (1, dualRealEquiv.symm 3) (2, dualRealEquiv.symm 5)
+                  =
+                ⟪toDoubledCopyRho realMetric.gFlat (1, dualRealEquiv.symm 3),
+                  toDoubledCopyRho realMetric.gFlat (2, dualRealEquiv.symm 5)⟫_ℝ := by
+              apply ofMetric_generalizedMetricForm_eq_doubledInner
+                (metric := realMetric)
+                (X := (1, dualRealEquiv.symm 3))
+                (Y := (2, dualRealEquiv.symm 5))
+              intro x y
+              simp [realMetric, dualRealEquiv, dualRealProjection, dualRealSection, mul_comm]
 
             end Scratch.PhaseSpaceGeneralizedMetric
             """

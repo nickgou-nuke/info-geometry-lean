@@ -62,6 +62,7 @@ class PhaseSpaceWeylCausalBridgeTests(unittest.TestCase):
             variable {I X A E : Type*} [Fintype I]
             variable [AddCommGroup A] [Module ℝ A]
             variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+            variable [FiniteDimensional ℝ E]
 
             variable (CCI : CertifiedConformalInference E)
             variable (Δ : WeylDifferentialOperator ℝ X A)
@@ -76,6 +77,12 @@ class PhaseSpaceWeylCausalBridgeTests(unittest.TestCase):
                 bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
                   = CCI.toConformalInference.chiralScale :=
               holonomy_eq_chiralScale_of_flat_from_conformal
+                (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+
+            example :
+                bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+                  = CCI.toConformalInference.chiralScale :=
+              holonomy_eq_chiralScale_of_flat_from_leaf
                 (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
 
             example :

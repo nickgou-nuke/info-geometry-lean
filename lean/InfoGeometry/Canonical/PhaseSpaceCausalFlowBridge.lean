@@ -184,6 +184,52 @@ same upstream KKT-generated trunk. -/
       couplingLogDefect_eq_shadow :=
         phaseTransport_descends_to_generalizedMetricTwistShadow (H := H) (R := R) }
 
+omit [FiniteDimensional ℝ H] in
+@[rep_depth krein] theorem TrunkOutputs.mpChiralGap_isGZero'
+    (CIK : CertifiedInverseKernel (DoubledSpace H))
+    (CCI : CertifiedConformalInference (DoubledSpace H))
+    (R : PolarizedRecompositionData H α βplus βminus)
+    (T : TrunkOutputs H α βplus βminus CIK CCI R) :
+    IsGZero (doubledSpaceCl11Action (E := H)) CIK.mpChiralGap :=
+  T.mpChiralGap_isGZero
+
+omit [FiniteDimensional ℝ H] in
+@[rep_depth krein] theorem TrunkOutputs.dilationGap_isGZero'
+    (CIK : CertifiedInverseKernel (DoubledSpace H))
+    (CCI : CertifiedConformalInference (DoubledSpace H))
+    (R : PolarizedRecompositionData H α βplus βminus)
+    (T : TrunkOutputs H α βplus βminus CIK CCI R) :
+    IsGZero (doubledSpaceCl11Action (E := H)) CIK.dilationGap :=
+  T.dilationGap_isGZero
+
+omit [FiniteDimensional ℝ H] in
+@[rep_depth krein] theorem TrunkOutputs.drazinCoreProj_isGZero'
+    (CIK : CertifiedInverseKernel (DoubledSpace H))
+    (CCI : CertifiedConformalInference (DoubledSpace H))
+    (R : PolarizedRecompositionData H α βplus βminus)
+    (T : TrunkOutputs H α βplus βminus CIK CCI R) :
+    IsGZero (doubledSpaceCl11Action (E := H)) CIK.drazinCoreProj :=
+  T.drazinCoreProj_isGZero
+
+omit [FiniteDimensional ℝ H] in
+@[rep_depth krein] theorem TrunkOutputs.chiralGrading_isGZero'
+    (CIK : CertifiedInverseKernel (DoubledSpace H))
+    (CCI : CertifiedConformalInference (DoubledSpace H))
+    (R : PolarizedRecompositionData H α βplus βminus)
+    (T : TrunkOutputs H α βplus βminus CIK CCI R) :
+    IsGZero (doubledSpaceCl11Action (E := H))
+        (chiralGrading CCI.toConformalInference) :=
+  T.chiralGrading_isGZero
+
+omit [FiniteDimensional ℝ H] in
+@[rep_depth projective, simp] theorem TrunkOutputs.couplingLogDefect_eq_shadow'
+    (CIK : CertifiedInverseKernel (DoubledSpace H))
+    (CCI : CertifiedConformalInference (DoubledSpace H))
+    (R : PolarizedRecompositionData H α βplus βminus)
+    (T : TrunkOutputs H α βplus βminus CIK CCI R) :
+    R.couplingLogDefect = PolarizedRecompositionData.generalizedMetricTwistShadow R :=
+  T.couplingLogDefect_eq_shadow
+
 @[rep_depth krein] theorem correctedOwner_trunk_outputs
     (CIK : CertifiedInverseKernel (DoubledSpace H))
     (CCI : CertifiedConformalInference (DoubledSpace H))

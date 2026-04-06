@@ -341,4 +341,28 @@ theorem minusPhaseTransportLift_realizes_through_doubled_corridor :
   exact PolarizedRecompositionData.minusPhaseTransportLift_realizes_as_minusMetricTransportLift
     (R := recompositionData) (ρ := dualRealEquiv.symm) (b := 0)
 
+theorem plusPhaseTransportLift_realizes_fixed_by_tomita_minusProjector :
+    InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed.minusProjector
+        (InfoGeometry.Canonical.GeneralizedMetricCore.tomitaGeneralizedMetricSeed :
+          InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed ExampleH)
+        (toDoubledCopyRho (E := ExampleH) dualRealEquiv.symm
+          (PolarizedRecompositionData.plusPhaseTransportLift recompositionData dualRealEquiv.symm 0))
+      =
+        toDoubledCopyRho (E := ExampleH) dualRealEquiv.symm
+          (PolarizedRecompositionData.plusPhaseTransportLift recompositionData dualRealEquiv.symm 0) := by
+  exact PolarizedRecompositionData.plusPhaseTransportLift_realize_fixed_by_generalizedMetric_minusProjector
+    (R := recompositionData) (ρ := dualRealEquiv.symm) (b := 0)
+
+theorem minusPhaseTransportLift_realizes_fixed_by_tomita_plusProjector :
+    InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed.plusProjector
+        (InfoGeometry.Canonical.GeneralizedMetricCore.tomitaGeneralizedMetricSeed :
+          InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed ExampleH)
+        (toDoubledCopyRho (E := ExampleH) dualRealEquiv.symm
+          (PolarizedRecompositionData.minusPhaseTransportLift recompositionData dualRealEquiv.symm 0))
+      =
+        toDoubledCopyRho (E := ExampleH) dualRealEquiv.symm
+          (PolarizedRecompositionData.minusPhaseTransportLift recompositionData dualRealEquiv.symm 0) := by
+  exact PolarizedRecompositionData.minusPhaseTransportLift_realize_fixed_by_generalizedMetric_plusProjector
+    (R := recompositionData) (ρ := dualRealEquiv.symm) (b := 0)
+
 end

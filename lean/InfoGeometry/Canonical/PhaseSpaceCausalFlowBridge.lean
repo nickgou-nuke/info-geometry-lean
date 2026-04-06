@@ -140,6 +140,18 @@ variable {βminus : Type*} [Fintype βminus] [Nonempty βminus]
     (CIK : CertifiedInverseKernel (DoubledSpace H))
     (CCI : CertifiedConformalInference (DoubledSpace H))
     (R : PolarizedRecompositionData H α βplus βminus) where
+  CIK_A_isGOne :
+    IsGOne (doubledSpaceCl11Action (E := H)) CIK.A
+  CIK_AMP_isGNegOne :
+    IsGNegOne (doubledSpaceCl11Action (E := H)) CIK.A_MP
+  CIK_AD_isGNegOne :
+    IsGNegOne (doubledSpaceCl11Action (E := H)) CIK.A_D
+  CCI_A_isGOne :
+    IsGOne (doubledSpaceCl11Action (E := H)) CCI.A
+  CCI_AMP_isGNegOne :
+    IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_MP
+  CCI_AD_isGNegOne :
+    IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_D
   mpChiralGap_isGZero :
     IsGZero (doubledSpaceCl11Action (E := H)) CIK.mpChiralGap
   dilationGap_isGZero :
@@ -174,10 +186,17 @@ same upstream KKT-generated trunk. -/
     (hAD : IsGNegOne (doubledSpaceCl11Action (E := H)) CIK.A_D)
     (hA' : IsGOne (doubledSpaceCl11Action (E := H)) CCI.A)
     (hAMP' : IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_MP)
+    (hAD' : IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_D)
     (R : PolarizedRecompositionData H α βplus βminus) :
     TrunkOutputs H α βplus βminus CIK CCI R := by
   refine
-    { mpChiralGap_isGZero := correctedOwner_mpChiralGap_isGZero (CIK := CIK) hA hAMP
+    { CIK_A_isGOne := hA
+      CIK_AMP_isGNegOne := hAMP
+      CIK_AD_isGNegOne := hAD
+      CCI_A_isGOne := hA'
+      CCI_AMP_isGNegOne := hAMP'
+      CCI_AD_isGNegOne := hAD'
+      mpChiralGap_isGZero := correctedOwner_mpChiralGap_isGZero (CIK := CIK) hA hAMP
       dilationGap_isGZero := correctedOwner_dilationGap_isGZero (CIK := CIK) hA hAMP
       drazinCoreProj_isGZero := correctedOwner_drazinCoreProj_isGZero (CIK := CIK) hA hAD
       chiralGrading_isGZero := correctedOwner_chiralGrading_isGZero (CCI := CCI) hA' hAMP'
@@ -238,6 +257,12 @@ omit [FiniteDimensional ℝ H] in
     (βminus : Type*) [Fintype βminus] [Nonempty βminus]
     (CCI : CertifiedConformalInference (DoubledSpace H))
     (R : PolarizedRecompositionData H α βplus βminus) where
+  CCI_A_isGOne :
+    IsGOne (doubledSpaceCl11Action (E := H)) CCI.A
+  CCI_AMP_isGNegOne :
+    IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_MP
+  CCI_AD_isGNegOne :
+    IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_D
   chiralGrading_isGZero :
     IsGZero (doubledSpaceCl11Action (E := H))
       (chiralGrading CCI.toConformalInference)
@@ -252,7 +277,10 @@ omit [FiniteDimensional ℝ H] in
     (T : TrunkOutputs H α βplus βminus CIK CCI R) :
     LeafOutputs H α βplus βminus CCI R := by
   refine
-    { chiralGrading_isGZero := T.chiralGrading_isGZero
+    { CCI_A_isGOne := T.CCI_A_isGOne
+      CCI_AMP_isGNegOne := T.CCI_AMP_isGNegOne
+      CCI_AD_isGNegOne := T.CCI_AD_isGNegOne
+      chiralGrading_isGZero := T.chiralGrading_isGZero
       couplingLogDefect_eq_shadow := T.couplingLogDefect_eq_shadow }
 
 @[rep_depth krein] theorem correctedOwner_trunk_outputs

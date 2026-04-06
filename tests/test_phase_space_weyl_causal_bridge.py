@@ -82,42 +82,212 @@ class PhaseSpaceWeylCausalBridgeTests(unittest.TestCase):
             variable (Δ : WeylDifferentialOperator ℝ X A)
             variable (γ : WeylTrajectory I X)
             variable (bridge :
-              FlatCurvatureChiralScaleBridge
+              FlatCurvatureProjectorObstructionBridge
                 (CI := CCI.toConformalInference) (Δ := Δ) (γ := γ))
             variable (B : WeylGaugeField X A)
             variable (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B)
-
-            example :
-                bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
-                  = CCI.toConformalInference.chiralScale :=
-              holonomy_eq_chiralScale_of_flat_from_conformal
-                (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
-
-            example :
-                bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
-                  =
-                    ‖CCI.toConformalInference.spectralChiralProjector
-                        * CCI.toConformalInference.metricChiralProjector
-                        - CCI.toConformalInference.metricChiralProjector
-                            * CCI.toConformalInference.spectralChiralProjector‖₊ :=
-              holonomy_eq_projectorObstruction_norm_of_flat_from_leaf
-                (CCI := CCI) (R := R) (leaf := leaf) (Δ := Δ) (γ := γ)
-                (bridge := bridge) (B := B) hFlat
-
-            example :
-                bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
-                  =
-                    ‖CCI.toConformalInference.spectralChiralProjector
-                        * CCI.toConformalInference.metricChiralProjector
-                        - CCI.toConformalInference.metricChiralProjector
-                            * CCI.toConformalInference.spectralChiralProjector‖₊ :=
-              holonomy_eq_projectorObstruction_norm_of_flat_from_trunk
-                (CIK := CIK) (CCI := CCI) (R := R) (trunk := trunk)
-                (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+            variable (hA :
+              InfoGeometry.Canonical.KKTCore.IsGOne
+                (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) CCI.A)
+            variable (hAMP :
+              InfoGeometry.Canonical.KKTCore.IsGNegOne
+                (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) CCI.A_MP)
+            variable (hAD :
+              InfoGeometry.Canonical.KKTCore.IsGNegOne
+                (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) CCI.A_D)
+            variable (hNonComm :
+              CCI.toConformalInference.P_D.comp CCI.toConformalInference.P_MP
+                ≠ CCI.toConformalInference.P_MP.comp CCI.toConformalInference.P_D)
 
             example :
                 WeylLeafOutputs (CCI := CCI) (Δ := Δ) (γ := γ) :=
-              WeylLeafOutputs.ofFlatBridge (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge)
+              WeylLeafOutputs.ofFlatBridge
+                (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge)
+
+            example :
+                CCI.toConformalInference.projectorObstruction
+                  =
+                    CCI.toConformalInference.spectralChiralProjector
+                      * CCI.toConformalInference.metricChiralProjector
+                      - CCI.toConformalInference.metricChiralProjector
+                          * CCI.toConformalInference.spectralChiralProjector := by
+              exact
+                ConformalInference.projectorObstruction_eq_commutator
+                  (CI := CCI.toConformalInference)
+
+            example :
+                InfoGeometry.Canonical.KKTCore.IsGZero
+                  (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                  CCI.toConformalInference.projectorObstruction := by
+              exact
+                ConformalInference.projectorObstruction_isGZero_of_kkt_wings
+                  (CI := CCI.toConformalInference)
+                  (X := InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                  hA hAMP hAD
+
+            example
+                (hObsG0 :
+                  InfoGeometry.Canonical.KKTCore.IsGZero
+                    (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                    CCI.toConformalInference.projectorObstruction) :
+                let X0 : InfoGeometry.Quantum.RealSplitCl11Action (DoubledSpace E) :=
+                  InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)
+                bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+                  = ‖InfoGeometry.Canonical.KKTCore.gZeroPart X0
+                      CCI.toConformalInference.projectorObstruction‖₊ := by
+              simpa using
+                holonomy_eq_gZeroPart_projectorObstruction_nnnorm_of_flat_of_projectorObstruction_isGZero
+                  (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat hObsG0
+
+            example :
+                InfoGeometry.Canonical.KKTCore.gOnePart
+                    (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                    CCI.toConformalInference.projectorObstruction = 0 := by
+              exact
+                ConformalInference.projectorObstruction_gOnePart_eq_zero_of_kkt_wings
+                  (CI := CCI.toConformalInference)
+                  (X := InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                  hA hAMP hAD
+
+            example :
+                InfoGeometry.Canonical.KKTCore.gNegOnePart
+                    (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                    CCI.toConformalInference.projectorObstruction = 0 := by
+              exact
+                ConformalInference.projectorObstruction_gNegOnePart_eq_zero_of_kkt_wings
+                  (CI := CCI.toConformalInference)
+                  (X := InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                  hA hAMP hAD
+
+            example :
+                CCI.toConformalInference.projectorObstruction
+                  =
+                    InfoGeometry.Canonical.KKTCore.plusProjector
+                        (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction
+                      * InfoGeometry.Canonical.KKTCore.plusProjector
+                          (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                    + InfoGeometry.Canonical.KKTCore.minusProjector
+                        (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction
+                      * InfoGeometry.Canonical.KKTCore.minusProjector
+                          (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) := by
+              exact
+                ConformalInference.projectorObstruction_eq_diagonal_blocks_of_kkt_wings
+                  (CI := CCI.toConformalInference)
+                  (X := InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                  hA hAMP hAD
+
+            example :
+                CCI.toConformalInference.projectorObstruction
+                  =
+                    InfoGeometry.Canonical.KKTCore.plusProjector
+                        (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction
+                      * InfoGeometry.Canonical.KKTCore.plusProjector
+                          (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                    + InfoGeometry.Canonical.KKTCore.minusProjector
+                        (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction
+                      * InfoGeometry.Canonical.KKTCore.minusProjector
+                          (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                  ∧
+                  InfoGeometry.Canonical.KKTCore.plusProjector
+                    (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction *
+                    InfoGeometry.Canonical.KKTCore.minusProjector
+                      (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) = 0
+                  ∧
+                  InfoGeometry.Canonical.KKTCore.minusProjector
+                    (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction *
+                    InfoGeometry.Canonical.KKTCore.plusProjector
+                      (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) = 0
+                  ∧
+                  bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+                    = ‖CCI.toConformalInference.projectorObstruction‖₊ := by
+              exact
+                leaf_projectorObstruction_diagonal_blocks_and_holonomy_eq_projectorObstruction_nnnorm_of_flat
+                  (CCI := CCI) (R := R) (leaf := leaf)
+                  (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+
+            example :
+                CCI.toConformalInference.projectorObstruction
+                  =
+                    InfoGeometry.Canonical.KKTCore.plusProjector
+                        (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction
+                      * InfoGeometry.Canonical.KKTCore.plusProjector
+                          (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                    + InfoGeometry.Canonical.KKTCore.minusProjector
+                        (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction
+                      * InfoGeometry.Canonical.KKTCore.minusProjector
+                          (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                  ∧
+                  InfoGeometry.Canonical.KKTCore.plusProjector
+                    (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction *
+                    InfoGeometry.Canonical.KKTCore.minusProjector
+                      (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) = 0
+                  ∧
+                  InfoGeometry.Canonical.KKTCore.minusProjector
+                    (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction *
+                    InfoGeometry.Canonical.KKTCore.plusProjector
+                      (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) = 0
+                  ∧
+                  bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+                    = ‖CCI.toConformalInference.projectorObstruction‖₊ := by
+              exact
+                trunk_projectorObstruction_diagonal_blocks_and_holonomy_eq_projectorObstruction_nnnorm_of_flat
+                  (CIK := CIK) (CCI := CCI) (R := R) (trunk := trunk)
+                  (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+
+            example :
+                CCI.toConformalInference.projectorObstruction
+                  =
+                    InfoGeometry.Canonical.KKTCore.plusProjector
+                        (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction
+                      * InfoGeometry.Canonical.KKTCore.plusProjector
+                          (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                    + InfoGeometry.Canonical.KKTCore.minusProjector
+                        (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction
+                      * InfoGeometry.Canonical.KKTCore.minusProjector
+                          (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                  ∧
+                  InfoGeometry.Canonical.KKTCore.plusProjector
+                    (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction *
+                    InfoGeometry.Canonical.KKTCore.minusProjector
+                      (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) = 0
+                  ∧
+                  InfoGeometry.Canonical.KKTCore.minusProjector
+                    (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+                      * CCI.toConformalInference.projectorObstruction *
+                    InfoGeometry.Canonical.KKTCore.plusProjector
+                      (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) = 0
+                  ∧
+                  bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+                    = ‖CCI.toConformalInference.projectorObstruction‖₊ := by
+              exact
+                kkt_wings_projectorObstruction_diagonal_blocks_and_holonomy_eq_projectorObstruction_nnnorm_of_flat
+                  (CCI := CCI) hA hAMP hAD
+                  (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+
+            example :
+                bridge.lineIntegrator.holonomy bridge.holonomyMap B γ ≠ 0 := by
+              exact
+                holonomy_ne_zero_of_flat_from_conformal_of_noncommute
+                  (CCI := CCI)
+                  (Δ := Δ)
+                  (γ := γ)
+                  (bridge := bridge)
+                  (B := B)
+                  hFlat
+                  hNonComm
 
             end WeylLeaf
 

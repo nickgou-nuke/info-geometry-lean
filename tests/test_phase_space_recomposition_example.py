@@ -96,6 +96,32 @@ class PhaseSpaceRecompositionExampleTests(unittest.TestCase):
                       recompositionData 0 := by
               exact minusPhaseTransportLift_realizes_through_doubled_corridor
 
+            example :
+                InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed.minusProjector
+                    (InfoGeometry.Canonical.GeneralizedMetricCore.tomitaGeneralizedMetricSeed :
+                      InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed ExampleH)
+                    (toDoubledCopyRho (E := ExampleH) dualRealEquiv.symm
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift
+                        recompositionData dualRealEquiv.symm 0))
+                  =
+                    toDoubledCopyRho (E := ExampleH) dualRealEquiv.symm
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift
+                        recompositionData dualRealEquiv.symm 0) := by
+              exact plusPhaseTransportLift_realizes_fixed_by_tomita_minusProjector
+
+            example :
+                InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed.plusProjector
+                    (InfoGeometry.Canonical.GeneralizedMetricCore.tomitaGeneralizedMetricSeed :
+                      InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed ExampleH)
+                    (toDoubledCopyRho (E := ExampleH) dualRealEquiv.symm
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
+                        recompositionData dualRealEquiv.symm 0))
+                  =
+                    toDoubledCopyRho (E := ExampleH) dualRealEquiv.symm
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
+                        recompositionData dualRealEquiv.symm 0) := by
+              exact minusPhaseTransportLift_realizes_fixed_by_tomita_plusProjector
+
             end Scratch.PhaseSpaceRecompositionExample
             """
         )

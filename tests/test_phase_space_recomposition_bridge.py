@@ -53,6 +53,7 @@ class PhaseSpaceRecompositionBridgeTests(unittest.TestCase):
             variable {α : Type*} [Fintype α] [Nonempty α]
             variable {βplus : Type*} [Fintype βplus] [Nonempty βplus]
             variable {βminus : Type*} [Fintype βminus] [Nonempty βminus]
+            variable (G : InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric.GeneralizedMetricDatum H)
             variable (R : PolarizedRecompositionData H α βplus βminus)
             variable (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H)
             variable (bplus : βplus) (bminus : βminus)
@@ -87,6 +88,64 @@ class PhaseSpaceRecompositionBridgeTests(unittest.TestCase):
                   (R := R) (ρ := ρ) (b := bplus)
 
             example :
+                InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed.minusProjector
+                    (InfoGeometry.Canonical.GeneralizedMetricCore.tomitaGeneralizedMetricSeed :
+                      InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed H)
+                    (toDoubledCopyRho (E := H) ρ
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift
+                        R ρ bplus))
+                  =
+                    toDoubledCopyRho (E := H) ρ
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift
+                        R ρ bplus) := by
+              exact
+                InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift_realize_fixed_by_generalizedMetric_minusProjector
+                  (R := R) (ρ := ρ) (b := bplus)
+
+            example
+                (hfix :
+                  G.minusProjector
+                    (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift
+                      R ρ bplus)
+                  =
+                    InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift
+                      R ρ bplus) :
+                (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedMinusProjector
+                    (G := G) ρ : Module.End ℝ (InfoGeometry.Krein.DoubledSpace H))
+                    (toDoubledCopyRho (E := H) ρ
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift
+                        R ρ bplus))
+                  =
+                    toDoubledCopyRho (E := H) ρ
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift
+                        R ρ bplus) := by
+              exact
+                InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift_realize_fixed_by_realizedMinusProjector
+                  (G := G) (R := R) (ρ := ρ) (b := bplus) hfix
+
+            example
+                (hfix :
+                  G.minusProjector
+                    (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift
+                      R ρ bplus)
+                  =
+                    InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift
+                      R ρ bplus) :
+                InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed.minusProjector
+                    (InfoGeometry.Canonical.GeneralizedMetricCore.tomitaGeneralizedMetricSeed :
+                      InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed H)
+                    (toDoubledCopyRho (E := H) ρ
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift
+                        R ρ bplus))
+                  =
+                    toDoubledCopyRho (E := H) ρ
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift
+                        R ρ bplus) := by
+            exact
+                InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift_realize_fixed_by_generalizedMetric_minusProjector_of_realizedIdentification
+                  (G := G) (R := R) (ρ := ρ) (b := bplus) hfix
+
+            example :
                 phasePlusProjector (E := H)
                     (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
                       R ρ bminus)
@@ -96,6 +155,64 @@ class PhaseSpaceRecompositionBridgeTests(unittest.TestCase):
               exact
                 InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift_fixed_by_phasePlusProjector
                   (R := R) (ρ := ρ) (b := bminus)
+
+            example :
+                InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed.plusProjector
+                    (InfoGeometry.Canonical.GeneralizedMetricCore.tomitaGeneralizedMetricSeed :
+                      InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed H)
+                    (toDoubledCopyRho (E := H) ρ
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
+                        R ρ bminus))
+                  =
+                    toDoubledCopyRho (E := H) ρ
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
+                        R ρ bminus) := by
+              exact
+                InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift_realize_fixed_by_generalizedMetric_plusProjector
+                  (R := R) (ρ := ρ) (b := bminus)
+
+            example
+                (hfix :
+                  G.plusProjector
+                    (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
+                      R ρ bminus)
+                  =
+                    InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
+                      R ρ bminus) :
+                (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedPlusProjector
+                    (G := G) ρ : Module.End ℝ (InfoGeometry.Krein.DoubledSpace H))
+                    (toDoubledCopyRho (E := H) ρ
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
+                        R ρ bminus))
+                  =
+                    toDoubledCopyRho (E := H) ρ
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
+                        R ρ bminus) := by
+              exact
+                InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift_realize_fixed_by_realizedPlusProjector
+                  (G := G) (R := R) (ρ := ρ) (b := bminus) hfix
+
+            example
+                (hfix :
+                  G.plusProjector
+                    (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
+                      R ρ bminus)
+                  =
+                    InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
+                      R ρ bminus) :
+                InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed.plusProjector
+                    (InfoGeometry.Canonical.GeneralizedMetricCore.tomitaGeneralizedMetricSeed :
+                      InfoGeometry.Canonical.GeneralizedMetricCore.GeneralizedMetricSeed H)
+                    (toDoubledCopyRho (E := H) ρ
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
+                        R ρ bminus))
+                  =
+                    toDoubledCopyRho (E := H) ρ
+                      (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
+                        R ρ bminus) := by
+              exact
+                InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift_realize_fixed_by_generalizedMetric_plusProjector_of_realizedIdentification
+                  (G := G) (R := R) (ρ := ρ) (b := bminus) hfix
 
             example :
                 toDoubledCopyRho (E := H) ρ

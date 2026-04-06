@@ -135,6 +135,11 @@ class PhaseSpaceCausalFlowBridgeTests(unittest.TestCase):
               correctedOwner_trunk_outputs (H := H) (CIK := CIK) (CCI := CCI)
                 hA hAMP hAD hA' hAMP' R
 
+            example :
+                TrunkOutputs H α βplus βminus CIK CCI R :=
+              correctedOwner_trunk_outputs_struct (H := H) (CIK := CIK) (CCI := CCI)
+                hA hAMP hAD hA' hAMP' R
+
             end TrunkOutputs
 
             end Scratch.PhaseSpaceCausalFlowBridge

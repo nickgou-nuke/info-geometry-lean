@@ -307,6 +307,16 @@ omit [CompleteSpace E] in
     (phaseRotationEquiv (E := E) ρ).toLinearMap = phaseRotation (E := E) ρ := by
   rfl
 
+omit [CompleteSpace E] in
+@[rep_depth krein] theorem phaseJEquiv_phaseEpsilonEquiv_anticommute
+    (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    (phaseJEquiv (E := E) ρ).toLinearMap.comp
+        (phaseEpsilonEquiv (E := E)).toLinearMap
+      = -((phaseEpsilonEquiv (E := E)).toLinearMap.comp
+          (phaseJEquiv (E := E) ρ).toLinearMap) := by
+  ext X <;> simp [phaseJEquiv_toLinearMap, phaseEpsilonEquiv_toLinearMap,
+    phaseJ, phaseEpsilon, LinearMap.comp_apply]
+
 /-- The `+1` projector attached to the phase-space sign involution. -/
 @[rep_depth krein]
 noncomputable def phasePlusProjector :

@@ -218,6 +218,95 @@ noncomputable def phaseRotation (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
     Module.End ℝ (PhaseSpaceCarrier E) :=
   (phaseJ ρ).comp (phaseEpsilon (E := E))
 
+/-! ### Automorphism seed layer
+
+We expose the primitive phase-space symmetries as `LinearEquiv` first, and only
+then pass to `Module.End` aliases for operator-level corridors.
+-/
+
+/-- Phase-space swap involution as a linear equivalence. -/
+@[rep_depth krein]
+noncomputable def phaseJEquiv (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    PhaseSpaceCarrier E ≃ₗ[ℝ] PhaseSpaceCarrier E where
+  toFun := fun X => (ρ.symm X.2, ρ X.1)
+  invFun := fun X => (ρ.symm X.2, ρ X.1)
+  left_inv := by
+    intro X
+    rcases X with ⟨x, φ⟩
+    simp
+  right_inv := by
+    intro X
+    rcases X with ⟨x, φ⟩
+    simp
+  map_add' := by
+    intro X Y
+    refine Prod.ext ?_ ?_
+    · simp
+    · simp
+  map_smul' := by
+    intro r X
+    refine Prod.ext ?_ ?_
+    · simp
+    · simp
+
+/-- Phase-space sign involution as a linear equivalence. -/
+@[rep_depth krein]
+noncomputable def phaseEpsilonEquiv :
+    PhaseSpaceCarrier E ≃ₗ[ℝ] PhaseSpaceCarrier E where
+  toFun := fun X => (X.1, -X.2)
+  invFun := fun X => (X.1, -X.2)
+  left_inv := by
+    intro X
+    rcases X with ⟨x, φ⟩
+    simp
+  right_inv := by
+    intro X
+    rcases X with ⟨x, φ⟩
+    simp
+  map_add' := by
+    intro X Y
+    refine Prod.ext ?_ ?_
+    · simp
+    · simp [add_comm]
+  map_smul' := by
+    intro r X
+    refine Prod.ext ?_ ?_
+    · simp
+    · simp
+
+/-- Hestenes rotation as a linear equivalence. -/
+@[rep_depth krein]
+noncomputable def phaseRotationEquiv (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    PhaseSpaceCarrier E ≃ₗ[ℝ] PhaseSpaceCarrier E :=
+  (phaseEpsilonEquiv (E := E)).trans (phaseJEquiv (E := E) ρ)
+
+omit [CompleteSpace E] in
+@[rep_depth krein] theorem phaseJEquiv_sq (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    (phaseJEquiv (E := E) ρ).trans (phaseJEquiv (E := E) ρ)
+      = LinearEquiv.refl ℝ (PhaseSpaceCarrier E) := by
+  ext X <;> simp [phaseJEquiv]
+
+omit [CompleteSpace E] in
+@[rep_depth krein] theorem phaseEpsilonEquiv_sq :
+    (phaseEpsilonEquiv (E := E)).trans (phaseEpsilonEquiv (E := E))
+      = LinearEquiv.refl ℝ (PhaseSpaceCarrier E) := by
+  ext X <;> simp [phaseEpsilonEquiv]
+
+omit [CompleteSpace E] in
+@[rep_depth krein, simp] theorem phaseJEquiv_toLinearMap
+    (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    (phaseJEquiv (E := E) ρ).toLinearMap = phaseJ (E := E) ρ := rfl
+
+omit [CompleteSpace E] in
+@[rep_depth krein, simp] theorem phaseEpsilonEquiv_toLinearMap :
+    (phaseEpsilonEquiv (E := E)).toLinearMap = phaseEpsilon (E := E) := rfl
+
+omit [CompleteSpace E] in
+@[rep_depth krein, simp] theorem phaseRotationEquiv_toLinearMap
+    (ρ : E ≃ₗ[ℝ] Module.Dual ℝ E) :
+    (phaseRotationEquiv (E := E) ρ).toLinearMap = phaseRotation (E := E) ρ := by
+  rfl
+
 /-- The `+1` projector attached to the phase-space sign involution. -/
 @[rep_depth krein]
 noncomputable def phasePlusProjector :

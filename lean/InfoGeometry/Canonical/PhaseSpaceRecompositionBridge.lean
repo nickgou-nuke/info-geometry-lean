@@ -17,8 +17,10 @@ This file stays narrow:
 - polarized owner lifts are transported on phase space,
 - and the doubled realization identifies those transported lifts with the
   maintained recomposition transport lifts already defined on the doubled side.
+- at `rep_depth projective`, one coherence theorem records that the owner-side
+  phase transport descends to the maintained recomposition log-shadow surface.
 
-No projective shadow or coupling-defect statements are introduced here.
+No new defect language is introduced here beyond that exact identification.
 -/
 
 namespace InfoGeometry.Canonical.PhaseSpaceRecompositionBridge
@@ -234,6 +236,13 @@ noncomputable def PolarizedRecompositionData.minusPhaseTransportLift
   rw [PolarizedRecompositionData.minusPhaseTransportLift_realizes_as_minusMetricTransportLift
     (R := R) (ρ := ρ) (b := b)]
   exact PolarizedRecompositionData.minusMetricTransportLift_mem_plusSheet (R := R) (b := b)
+
+/-- Coherence theorem: the owner-side phase transport descends to the maintained
+logarithmic recomposition shadow. -/
+@[rep_depth projective, simp] theorem
+    PolarizedRecompositionData.phaseTransport_descends_to_generalizedMetricTwistShadow
+    (R : PolarizedRecompositionData H α βplus βminus) :
+    R.couplingLogDefect = PolarizedRecompositionData.generalizedMetricTwistShadow R := rfl
 
 end Core
 

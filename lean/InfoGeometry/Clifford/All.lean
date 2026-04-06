@@ -23,4 +23,12 @@ import InfoGeometry.Clifford.TowerMatrix
 # InfoGeometry.Clifford.All
 
 Umbrella module for the Clifford algebra layer.
+
+Authority note:
+
+- `ClNN` and its downstream split-tower files own the recursive split
+  `Cl(n,n)` presentation,
+- `NeutralPhaseSpaceCore` and its downstream bridge files own the corrected
+  neutral phase-space lane on `E × E*`,
+- both lanes are imported here, but they should not be read as competing roots.
 -/

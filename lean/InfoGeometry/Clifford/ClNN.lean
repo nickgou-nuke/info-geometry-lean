@@ -15,6 +15,16 @@ This file packages the existing split tower as a real owner layer:
 - normalized lightlike head modes,
 - exact Clifford relations for those head null generators,
 - orthogonality of the head null seeds against the recursive tail.
+
+Authority note:
+
+- this file owns the recursive split-tower presentation already present in the
+  repository,
+- it does **not** own the corrected neutral phase-space ontology on `E × E*`,
+- that corrected owner lives in `NeutralPhaseSpaceCore`,
+- so downstream files should treat `ClNN` as the split-tower root and
+  `NeutralPhaseSpaceCore` as the semantic root of the corrected phase-space
+  lane.
 -/
 
 namespace InfoGeometry.Clifford.ClNN

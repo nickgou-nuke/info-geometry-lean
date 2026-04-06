@@ -14,6 +14,12 @@ This file is deliberately narrow:
 - show the generic quadratic form reduces to `splitQ11`,
 - show the normalized rank-one null modes reduce to the existing split-null
   seed vectors.
+
+Authority note:
+
+- this is a specialization of the split-tower owner from `ClNN`,
+- it is not the corrected neutral phase-space rank-one anchor,
+- the corrected owner-side rank-one bridge lives in `NeutralPhaseSpaceRankOne`.
 -/
 
 namespace InfoGeometry.Clifford.ClNNSpecialization

@@ -92,7 +92,6 @@ end KKTDefects
 section CausalLeaves
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-variable [FiniteDimensional ℝ H]
 
 /-- The conformal chiral grading leaf is generated in grade zero once the KKT
 wing hypotheses hold on the canonical doubled carrier. -/
@@ -126,7 +125,6 @@ end RecompositionLeaf
 section CausalUnification
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-variable [FiniteDimensional ℝ H]
 variable {α : Type*} [Fintype α] [Nonempty α]
 variable {βplus : Type*} [Fintype βplus] [Nonempty βplus]
 variable {βminus : Type*} [Fintype βminus] [Nonempty βminus]
@@ -203,7 +201,6 @@ same upstream KKT-generated trunk. -/
       couplingLogDefect_eq_shadow :=
         phaseTransport_descends_to_generalizedMetricTwistShadow (H := H) (R := R) }
 
-omit [FiniteDimensional ℝ H] in
 @[rep_depth krein] theorem TrunkOutputs.mpChiralGap_isGZero'
     (CIK : CertifiedInverseKernel (DoubledSpace H))
     (CCI : CertifiedConformalInference (DoubledSpace H))
@@ -212,7 +209,6 @@ omit [FiniteDimensional ℝ H] in
     IsGZero (doubledSpaceCl11Action (E := H)) CIK.mpChiralGap :=
   T.mpChiralGap_isGZero
 
-omit [FiniteDimensional ℝ H] in
 @[rep_depth krein] theorem TrunkOutputs.dilationGap_isGZero'
     (CIK : CertifiedInverseKernel (DoubledSpace H))
     (CCI : CertifiedConformalInference (DoubledSpace H))
@@ -221,7 +217,6 @@ omit [FiniteDimensional ℝ H] in
     IsGZero (doubledSpaceCl11Action (E := H)) CIK.dilationGap :=
   T.dilationGap_isGZero
 
-omit [FiniteDimensional ℝ H] in
 @[rep_depth krein] theorem TrunkOutputs.drazinCoreProj_isGZero'
     (CIK : CertifiedInverseKernel (DoubledSpace H))
     (CCI : CertifiedConformalInference (DoubledSpace H))
@@ -230,7 +225,6 @@ omit [FiniteDimensional ℝ H] in
     IsGZero (doubledSpaceCl11Action (E := H)) CIK.drazinCoreProj :=
   T.drazinCoreProj_isGZero
 
-omit [FiniteDimensional ℝ H] in
 @[rep_depth krein] theorem TrunkOutputs.chiralGrading_isGZero'
     (CIK : CertifiedInverseKernel (DoubledSpace H))
     (CCI : CertifiedConformalInference (DoubledSpace H))
@@ -240,7 +234,6 @@ omit [FiniteDimensional ℝ H] in
         (chiralGrading CCI.toConformalInference) :=
   T.chiralGrading_isGZero
 
-omit [FiniteDimensional ℝ H] in
 @[rep_depth projective, simp] theorem TrunkOutputs.couplingLogDefect_eq_shadow'
     (CIK : CertifiedInverseKernel (DoubledSpace H))
     (CCI : CertifiedConformalInference (DoubledSpace H))
@@ -269,7 +262,6 @@ omit [FiniteDimensional ℝ H] in
   couplingLogDefect_eq_shadow :
     R.couplingLogDefect = PolarizedRecompositionData.generalizedMetricTwistShadow R
 
-omit [FiniteDimensional ℝ H] in
 @[rep_depth krein] theorem TrunkOutputs.toLeafOutputs
     (CIK : CertifiedInverseKernel (DoubledSpace H))
     (CCI : CertifiedConformalInference (DoubledSpace H))

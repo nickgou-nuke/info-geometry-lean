@@ -72,7 +72,6 @@ section KKTToConformal
 
 variable {E : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable [FiniteDimensional ℝ E]
 
 local notation "EndE" => E →L[ℝ] E
 
@@ -85,8 +84,6 @@ exactly the certified inverse-kernel dilation gap. -/
   rfl
 
 section
-
-set_option linter.unusedSectionVars false
 
 /-- The conformal chiral grading is exactly twice the certified inverse-kernel
 dilation gap. -/
@@ -163,7 +160,6 @@ section CorrectedOwnerEndpoint
 
 variable {H : Type*}
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-variable [FiniteDimensional ℝ H]
 
 /-- On the canonical doubled carrier induced from the corrected owner lane, the
 conformal chiral grading is grade zero as soon as the explicit KKT wing

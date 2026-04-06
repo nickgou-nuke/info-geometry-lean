@@ -48,6 +48,7 @@ theorem chiral_action_reduces_for_normal (IST : InfoSpectralTriple E) (CI : Conf
   rw [hc, smul_zero, add_zero]
 
 
+omit [FiniteDimensional ℝ E] in
 /--
 Under unit relative volume, the chiral Dirac perturbation collapses to the
 base Dirac operator.

@@ -220,13 +220,12 @@ section WeylLeafFromTrunk
 
 variable {I X A E : Type*}
 variable [AddCommGroup A] [Module ℝ A]
-variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable [Nontrivial E]
 variable {α βplus βminus : Type*} [Fintype α] [Nonempty α]
 variable [Fintype βplus] [Nonempty βplus]
 variable [Fintype βminus] [Nonempty βminus]
 
-omit [FiniteDimensional ℝ E] in
 /-- Weyl holonomy collapses to the projector-obstruction norm directly from the
 conformal inference lane; this is the norm-first anomaly-source identity. -/
 @[rep_depth krein] theorem holonomy_eq_projectorObstruction_norm_of_flat_from_conformal
@@ -257,7 +256,6 @@ conformal inference lane; this is the norm-first anomaly-source identity. -/
       (CI := CCI.toConformalInference)
   simpa [hObs] using hHol
 
-omit [FiniteDimensional ℝ E] in
 /-- General-case Weyl bridge through the explicit obstruction operator alias:
 no vanishing assumption is used. -/
 @[rep_depth krein] theorem holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal_doubled
@@ -450,7 +448,6 @@ obstruction operator into grade zero on the doubled split-`Cl(1,1)` carrier. -/
       (X := InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
       hA hAMP hAD
 
-omit [FiniteDimensional ℝ E] in
 /-- Weyl holonomy from an operator-level driver: if the projector-obstruction
 operator is known to be grade zero, holonomy is exactly the norm of its
 `g₀` lift. -/
@@ -496,7 +493,6 @@ operator is known to be grade zero, holonomy is exactly the norm of its
     _ = ‖InfoGeometry.Canonical.KKTCore.gZeroPart X0
           CCI.toConformalInference.projectorObstruction‖₊ := hNormEq
 
-omit [FiniteDimensional ℝ E] in
 /-- Weyl holonomy from an operator-level driver: if the projector-obstruction
 operator is grade zero, the `g₀`-lift identity collapses to the obstruction
 operator norm. -/

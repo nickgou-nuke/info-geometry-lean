@@ -8,7 +8,7 @@ open InfoGeometry.Canonical.ChiralEinsteinBridge
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.RicciMongeAmpere
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 namespace ConformalInference
 
@@ -19,8 +19,6 @@ noncomputable abbrev projectorObstruction : E →L[ℝ] E :=
   CI.chiralAnomalyOperator
 
 section
-
-omit [FiniteDimensional ℝ E]
 
 /-- Exact operator identity for the projector obstruction. -/
 theorem projectorObstruction_eq_commutator :
@@ -112,8 +110,6 @@ noncomputable abbrev chiralScale : ℝ := CI.epsilon
 
 section
 
-omit [FiniteDimensional ℝ E]
-
 /--
 Exact obstruction identity: the anomaly source scale is the norm of the
 projector commutator.
@@ -165,8 +161,6 @@ theorem chiralScale_eq_zero_of_projectors_commute
 
 section
 
-omit [FiniteDimensional ℝ E]
-
 /-- Non-commuting projectors force nonzero anomaly source scale. -/
 theorem chiralScale_ne_zero_of_projectors_not_commute
     (hCommNe :
@@ -217,8 +211,6 @@ private theorem projectors_commute_of_anomalyDriven_normalized_fixedpoint
 
 section
 
-omit [FiniteDimensional ℝ E]
-
 private theorem anomalyDrivenScalarRicciFlow_of_normalized_and_chiralScale_zero
     (flow : ScalarRicciFlow E)
     (hNorm : SatisfiesNormalizedKaehlerRicciFlow (E := E) flow)
@@ -232,8 +224,6 @@ private theorem anomalyDrivenScalarRicciFlow_of_normalized_and_chiralScale_zero
 
 end
 section
-
-omit [FiniteDimensional ℝ E]
 
 /--
 Normality (`ε = 0`) from the Kähler/log-det layer:
@@ -364,8 +354,6 @@ theorem logDetBarrier_selfConcordance_mechanics_of_kahlerLogDet_unitRelativeVolu
 
 section
 
-omit [FiniteDimensional ℝ E]
-
 /--
 Canonical anomaly-flow derivation from the Kähler/log-det layer.
 
@@ -417,8 +405,6 @@ theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint
 
 section
 
-omit [FiniteDimensional ℝ E]
-
 theorem einsteinEquation_of_projectorObstruction_source
     (c : ℝ) (R : RicciTensor E)
     (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
@@ -459,8 +445,6 @@ def IsChiralInference : Prop := 0 < CI.chiralScale
 
 -- Legacy alias: normal inference stated via `epsilon = 0`.
 section
-
-omit [FiniteDimensional ℝ E]
 
 /-- Theorem `isNormalInference_iff_epsilon_eq_zero`. -/
 theorem isNormalInference_iff_epsilon_eq_zero :
@@ -514,8 +498,6 @@ noncomputable def unitOfAction : ℝ :=
 
 section
 
-omit [FiniteDimensional ℝ E]
-
 /-- The structure-constant operator is exactly the chiral-anomaly operator. -/
 theorem actionStructureConstantOp_eq_chiralAnomalyOperator :
     CI.actionStructureConstantOp = CI.chiralAnomalyOperator := by
@@ -526,8 +508,6 @@ end
 
 section
 
-omit [FiniteDimensional ℝ E]
-
 /-- The scalar unit of action coincides with the chiral anomaly scale. -/
 theorem unitOfAction_eq_chiralScale :
     CI.unitOfAction = CI.chiralScale := by
@@ -536,8 +516,6 @@ theorem unitOfAction_eq_chiralScale :
 end
 
 section
-
-omit [FiniteDimensional ℝ E]
 
 /-- In the normal phase, the unit of action vanishes. -/
 theorem unitOfAction_eq_zero_of_normalInference
@@ -557,8 +535,6 @@ end
 
 section
 
-omit [FiniteDimensional ℝ E]
-
 theorem unitOfAction_pos_of_noncommute
     (hAnom : CI.P_D.comp CI.P_MP ≠ CI.P_MP.comp CI.P_D) :
     0 < CI.unitOfAction := by
@@ -570,8 +546,6 @@ end
 
 
 section
-
-omit [FiniteDimensional ℝ E]
 
 /--
 Constructive bridge from the RN/Kahler/log-det lane into the normal phase.

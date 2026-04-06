@@ -230,6 +230,31 @@ omit [FiniteDimensional ℝ H] in
     R.couplingLogDefect = PolarizedRecompositionData.generalizedMetricTwistShadow R :=
   T.couplingLogDefect_eq_shadow
 
+/-- Leaf bundle: conformal + recomposition outputs extracted from a trunk. -/
+@[rep_depth krein] structure LeafOutputs
+    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    (α : Type*) [Fintype α] [Nonempty α]
+    (βplus : Type*) [Fintype βplus] [Nonempty βplus]
+    (βminus : Type*) [Fintype βminus] [Nonempty βminus]
+    (CCI : CertifiedConformalInference (DoubledSpace H))
+    (R : PolarizedRecompositionData H α βplus βminus) where
+  chiralGrading_isGZero :
+    IsGZero (doubledSpaceCl11Action (E := H))
+      (chiralGrading CCI.toConformalInference)
+  couplingLogDefect_eq_shadow :
+    R.couplingLogDefect = PolarizedRecompositionData.generalizedMetricTwistShadow R
+
+omit [FiniteDimensional ℝ H] in
+@[rep_depth krein] theorem TrunkOutputs.toLeafOutputs
+    (CIK : CertifiedInverseKernel (DoubledSpace H))
+    (CCI : CertifiedConformalInference (DoubledSpace H))
+    (R : PolarizedRecompositionData H α βplus βminus)
+    (T : TrunkOutputs H α βplus βminus CIK CCI R) :
+    LeafOutputs H α βplus βminus CCI R := by
+  refine
+    { chiralGrading_isGZero := T.chiralGrading_isGZero
+      couplingLogDefect_eq_shadow := T.couplingLogDefect_eq_shadow }
+
 @[rep_depth krein] theorem correctedOwner_trunk_outputs
     (CIK : CertifiedInverseKernel (DoubledSpace H))
     (CCI : CertifiedConformalInference (DoubledSpace H))

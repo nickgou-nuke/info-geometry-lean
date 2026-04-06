@@ -1,25 +1,52 @@
 # Drazin / Conformal / Anomaly Topic Map
 
-This is a current owner map for the singular and conformal operator packet.
+This note maps the current singular-operator and conformal/anomaly corridor.
 
-## Current owner modules
+It is not a theorem certificate and it should not be read as a substitute for
+the source.
 
-The packet is currently organized around:
-- `lean/InfoGeometry/Canonical/Drazin.lean`
-- `lean/InfoGeometry/Canonical/MoorePenrose.lean`
-- `lean/InfoGeometry/Canonical/SingularBoundaryCorrection.lean`
-- `lean/InfoGeometry/Canonical/ConformalAlgebra.lean`
-- `lean/InfoGeometry/Canonical/ConformalUnification.lean`
-- `lean/InfoGeometry/Canonical/AnomalyGauge.lean`
-- `lean/InfoGeometry/Canonical/AnomalyDilationBridge.lean`
+## Current live packet
 
-## Current structural reading
+The current active packet is best read through:
 
-The repo no longer supports reading this packet through a single grand synthesis document. The live structure is:
-- inverse and projector language at the singular layer;
-- conformal and anomaly-source closure in the conformal layer;
-- higher consumers elsewhere.
+- `lean/InfoGeometry/Canonical/KKTCore.lean`
+- `lean/InfoGeometry/Canonical/EPDefectAlgebra.lean`
+- `lean/InfoGeometry/Canonical/KKTGeneralizedInverseBridge.lean`
+- `lean/InfoGeometry/Canonical/ConformalProjectorCore.lean`
+- `lean/InfoGeometry/Canonical/ChiralCartanCore.lean`
+- `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean`
+- `lean/InfoGeometry/Canonical/PhaseSpaceConformalKKTBridge.lean`
+- `lean/InfoGeometry/Canonical/PhaseSpaceWeylCausalBridge.lean`
 
-## Caution
+This is the current load-bearing corridor from generalized inverse data to
+conformal and anomaly outputs.
 
-This note does not certify any physical interpretation. It only points to the current formal owners.
+## Reading of older singular files
+
+Older singular / inverse files still matter, but they are no longer the
+cleanest reading path for the active corridor by themselves.
+
+The operative reading is now:
+
+- KKT grading supplies the structural split;
+- `EPDefectAlgebra` packages the defect operators;
+- `KKTGeneralizedInverseBridge` places those defect objects in grade-zero;
+- `ConformalProjectorCore`, `ChiralCartanCore`, and
+  `ConformalAnomalySource` package the conformal/anomaly leaf;
+- the corrected phase-space trunk now feeds this corridor through
+  `PhaseSpaceConformalKKTBridge`.
+
+## Current open gap
+
+The remaining open step is not another scalar identity. It is:
+
+- deriving the projector obstruction operator from trunk-compatible grading
+  data, and
+- only then routing Weyl holonomy through that theorem.
+
+Until that exists, the conformal/Weyl weld is improved but not final.
+
+## Use rule
+
+Use this note as a map of the current packet only. Inspect the Lean files for
+actual statements and exact ownership.

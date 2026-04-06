@@ -1,33 +1,37 @@
 # Keyword Index
 
-This index is intentionally conservative. It names current owner modules without claiming that any one file exhausts a topic.
+This index is intentionally conservative.
 
-| Keyword | Current owner modules |
+It lists current high-confidence files for major topics without claiming that a
+single file exhausts the topic.
+
+## Current keywords
+
+| Keyword | Current high-confidence files |
 | --- | --- |
-| Analytical index | `lean/InfoGeometry/Canonical/AnalyticalIndex.lean`, `lean/InfoGeometry/Canonical/OperatorAlgebraBridge.lean`, `lean/InfoGeometry/Canonical/GrandSynthesis.lean` |
-| AQFT operator interface | `lean/InfoGeometry/Canonical/AQFTOperatorSignatures.lean`, `lean/InfoGeometry/Canonical/AQFTHilbertCompression.lean`, `lean/InfoGeometry/Canonical/AQFTReadiness.lean`, `lean/InfoGeometry/Canonical/AQFTOperatorEndpoints.lean` |
-| Calabi-Yau geometry | `lean/InfoGeometry/Canonical/CalabiYauMetricRicci.lean`, `lean/InfoGeometry/Canonical/CalabiYauRNMongeAmpere.lean`, `lean/InfoGeometry/Canonical/CalabiYauWBridge.lean` |
-| Chiral anomaly | `lean/InfoGeometry/Canonical/ChiralAnomaly.lean`, `lean/InfoGeometry/Canonical/AnomalyGauge.lean`, `lean/InfoGeometry/Canonical/WeylAnomalySource.lean` |
-| Conformal algebra | `lean/InfoGeometry/Canonical/ConformalAlgebra.lean`, `lean/InfoGeometry/Canonical/ConformalUnification.lean` |
-| Connes / Araki | `lean/InfoGeometry/Canonical/ConnesArakiCore.lean`, `lean/InfoGeometry/Canonical/ConnesArakiTomita.lean` |
-| Count substrate | `lean/InfoGeometry/Canonical/CountSubstrateBridge.lean`, `lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean` |
-| Drazin / Moore-Penrose | `lean/InfoGeometry/Canonical/Drazin.lean`, `lean/InfoGeometry/Canonical/MoorePenrose.lean`, `lean/InfoGeometry/Canonical/SingularBoundaryCorrection.lean` |
-| Holographic emergence | `lean/InfoGeometry/Canonical/HolographicEmergence.lean`, `lean/InfoGeometry/Canonical/DeepHorizon.lean` |
-| Information bottleneck | `lean/InfoGeometry/Canonical/IBProjective.lean`, `lean/InfoGeometry/Canonical/IBGaugeBridge.lean`, `lean/InfoGeometry/Canonical/IBUpdate.lean`, `lean/InfoGeometry/Canonical/IB.lean` |
-| KMS / Sinkhorn | `lean/InfoGeometry/Canonical/SinkhornKMSCore.lean`, `lean/InfoGeometry/Canonical/KMSSinkhornSeedState.lean`, `lean/InfoGeometry/Canonical/KMSSinkhornScalarPotential.lean`, `lean/InfoGeometry/Canonical/KMSSinkhornWeightedTransport.lean` |
-| Krein / doubled space | `lean/InfoGeometry/Krein/DoubledSpace.lean`, `lean/InfoGeometry/Krein/KreinSpace.lean`, `lean/InfoGeometry/Krein/Thermal.lean` |
-| Monge-Ampere | `lean/InfoGeometry/Canonical/RicciMongeAmpere.lean`, `lean/InfoGeometry/Canonical/CalabiYauRNMongeAmpere.lean`, `lean/InfoGeometry/Canonical/MongeAmpereCramerRao.lean` |
-| Perelman W | `lean/InfoGeometry/Canonical/PerelmanW.lean` |
-| Projective state / positive ray | `lean/InfoGeometry/Canonical/ProjectiveStateCore.lean`, `lean/InfoGeometry/Canonical/PositiveRayCore.lean`, `lean/InfoGeometry/Canonical/PositiveRayProjectiveBridge.lean` |
-| RedLine / relative potential | `lean/InfoGeometry/Canonical/RelativeGeneratorCore.lean`, `lean/InfoGeometry/Canonical/RelativePotentialCore.lean`, `lean/InfoGeometry/Canonical/RelativePotentialScalarBridge.lean`, `lean/InfoGeometry/Canonical/RelativePotentialDiscreteBridge.lean`, `lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean`, `lean/InfoGeometry/Canonical/RedLine.lean` |
-| Ricci / geometry trunk | `lean/InfoGeometry/Canonical/RicciMongeAmpere.lean`, `lean/InfoGeometry/Canonical/DiracRicciBridge.lean`, `lean/InfoGeometry/Canonical/PerelmanW.lean` |
-| Singular boundary correction | `lean/InfoGeometry/Canonical/SingularBoundaryCorrection.lean`, `lean/InfoGeometry/Canonical/SingularTransportSystem.lean` |
-| Spin factor / zero-point | `lean/InfoGeometry/Architecture/SpinFactor.lean`, `lean/InfoGeometry/Convex/SpinFactorHessian.lean`, `lean/InfoGeometry/Quantum/ZeroPointEnergy.lean` |
-| Tomita-Takesaki | `lean/InfoGeometry/Canonical/TomitaTakesaki.lean`, `lean/InfoGeometry/Volume/ConnesCocycle.lean`, `lean/InfoGeometry/Krein/Thermal.lean` |
-| Triality / attention | `lean/InfoGeometry/Canonical/Triality.lean`, `lean/InfoGeometry/Canonical/BregmanTriality.lean`, `lean/InfoGeometry/Canonical/Attention*.lean`, `lean/InfoGeometry/LLM/*.lean` |
-| Weyl path dependence | `lean/InfoGeometry/Canonical/WeylPathHysteresis.lean`, `lean/InfoGeometry/Canonical/WeylAnomalySource.lean`, `lean/InfoGeometry/Canonical/WeylTransport.lean` |
-| Yang-Mills | `lean/InfoGeometry/Canonical/YangMillsBridge.lean`, `lean/InfoGeometry/Canonical/YangMillsFinite.lean`, `lean/InfoGeometry/Canonical/YangMillsContinuum.lean` |
+| Positive measure / normalization | `lean/InfoGeometry/PositiveMeasure.lean`, `lean/InfoGeometry/Projective/Normalize.lean`, `lean/InfoGeometry/Measure/Normalized.lean` |
+| Positive ray / projective state | `lean/InfoGeometry/Canonical/PositiveRayCore.lean`, `lean/InfoGeometry/Canonical/ProjectiveStateCore.lean`, `lean/InfoGeometry/Canonical/PositiveRayProjectiveBridge.lean` |
+| Relative potential / count bridge | `lean/InfoGeometry/Canonical/RelativePotentialCore.lean`, `lean/InfoGeometry/Canonical/RelativePotentialScalarBridge.lean`, `lean/InfoGeometry/Canonical/RelativePotentialDiscreteBridge.lean`, `lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean`, `lean/InfoGeometry/Canonical/RedLine.lean` |
+| Relative modular / polarized projective lane | `lean/InfoGeometry/Canonical/RelativeModularProjectiveBridge.lean`, `lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean`, `lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean` |
+| Krein / doubled space | `lean/InfoGeometry/Krein/KreinSpace.lean`, `lean/InfoGeometry/Krein/DoubledSpace.lean`, `lean/InfoGeometry/Krein/DoubledSpaceMatrix.lean` |
+| Corrected neutral phase space | `lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean`, `lean/InfoGeometry/Clifford/NeutralPhaseSpaceDoubledBridge.lean` |
+| Phase-space generalized metric | `lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean`, `lean/InfoGeometry/Canonical/PhaseSpaceGeneralizedMetricChiralityBridge.lean` |
+| Polarization / recomposition | `lean/InfoGeometry/Canonical/PhaseSpacePolarizedBridge.lean`, `lean/InfoGeometry/Canonical/PhaseSpaceRecompositionBridge.lean`, `lean/InfoGeometry/Canonical/GeneralizedMetricPolarizedBridge.lean` |
+| KKT grading / generalized inverse | `lean/InfoGeometry/Canonical/KKTCore.lean`, `lean/InfoGeometry/Canonical/EPDefectAlgebra.lean`, `lean/InfoGeometry/Canonical/KKTGeneralizedInverseBridge.lean` |
+| Conformal projector / anomaly | `lean/InfoGeometry/Canonical/ConformalProjectorCore.lean`, `lean/InfoGeometry/Canonical/ChiralCartanCore.lean`, `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean`, `lean/InfoGeometry/Canonical/PhaseSpaceConformalKKTBridge.lean` |
+| Weyl gauge / transport | `lean/InfoGeometry/Canonical/WeylGaugeField.lean`, `lean/InfoGeometry/Canonical/WeylTransport.lean`, `lean/InfoGeometry/Canonical/WeylTransportChiralBridge.lean`, `lean/InfoGeometry/Canonical/PhaseSpaceWeylCausalBridge.lean` |
+| Tomita / Bogoliubov / Connes-Araki | `lean/InfoGeometry/Canonical/TomitaTakesaki.lean`, `lean/InfoGeometry/Canonical/BogoliubovTransport.lean`, `lean/InfoGeometry/Canonical/ConnesArakiTomita.lean` |
+| Determinant / scalar log corridor | `lean/InfoGeometry/Canonical/DeterminantCore.lean`, `lean/InfoGeometry/Canonical/Determinant.lean`, `lean/InfoGeometry/Canonical/ZetaDeterminant.lean` |
+| Operatorial scalar lifts | `lean/InfoGeometry/Canonical/OperatorialInformationLift.lean`, `lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean` |
+| KK / Fredholm frontier | `lean/InfoGeometry/KK/ClNNFredholmBridge.lean` |
+| Compatibility split-tower lane | `lean/InfoGeometry/Clifford/ClNN.lean`, `lean/InfoGeometry/Clifford/ClNNSpecialization.lean`, `lean/InfoGeometry/Canonical/ClNNBottBridge.lean`, `lean/InfoGeometry/Clifford/GeneralizedMetricBField.lean` |
 
 ## Use rule
 
-This index is a starting point only. For current ownership after refactors, read the owner files and their module docstrings.
+This index is only a starting point.
+
+For current ownership after refactors:
+
+1. read the owner and bridge module docstrings;
+2. check `docs/ModuleMap.md` and `docs/unification_map.md`; and
+3. verify with source, not with this table alone.

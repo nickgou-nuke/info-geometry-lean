@@ -1,29 +1,48 @@
-# RedLine Topic Map
+# Red Line Topic Map
 
-This note tracks the current root language behind the RedLine corridor.
+This note tracks the current relative-potential and projective/count spine.
 
-## Current owner modules
+It is a map of the present corridor, not a proof summary.
 
-The current RedLine stack is:
-- `lean/InfoGeometry/Canonical/ProjectiveStateCore.lean`
-- `lean/InfoGeometry/Canonical/RelativeGeneratorCore.lean`
+## Current live spine
+
+The current high-confidence stack is:
+
 - `lean/InfoGeometry/Canonical/PositiveRayCore.lean`
 - `lean/InfoGeometry/Canonical/RelativePotentialCore.lean`
 - `lean/InfoGeometry/Canonical/RelativePotentialScalarBridge.lean`
 - `lean/InfoGeometry/Canonical/RelativePotentialDiscreteBridge.lean`
 - `lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean`
-- `lean/InfoGeometry/Canonical/RedLine.lean`
+- `lean/InfoGeometry/Canonical/RelativeModularProjectiveBridge.lean`
+- `lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean`
+- `lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean`
 
-Closely related presentation files include:
-- `lean/InfoGeometry/Canonical/UniversalVolume.lean`
-- `lean/InfoGeometry/Canonical/LogSpineBridge.lean`
-- `lean/InfoGeometry/Canonical/MultiplicativeToAdditiveBridge.lean`
+`RedLine.lean` should be read as an umbrella or compatibility surface around
+that spine, not as a separate semantic root.
 
 ## Current structural reading
 
-The stable spine is now:
-- projective positive or nonnegative state below;
-- relative generator or relative log-density in the middle;
-- scalar, discrete, count, and operator realizations above.
+The stable reading is now:
 
-`RedLine.lean` should be read as the umbrella export of that spine, not as a separate ontology.
+- positive/projective state below;
+- relative potential and relative density in the middle;
+- scalar, discrete, count, projective, polarized, and operator presentations
+  above.
+
+This corridor is real and already reaches operator packaging.
+
+## Current unification burden
+
+The missing closure is not inside the red-line corridor itself. It is at the
+junction:
+
+- the count/projective lane still needs an explicit theorem-level meeting with
+  the corrected phase-space generalized-metric trunk at the common polarized
+  carrier.
+
+That is the current high-value extension for this spine.
+
+## Use rule
+
+If you need exact ownership or theorem names, inspect the files above rather
+than reading older umbrella prose.

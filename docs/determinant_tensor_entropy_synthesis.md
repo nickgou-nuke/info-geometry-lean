@@ -1,29 +1,42 @@
 # Determinant / Log-Volume / Entropy Topic Map
 
-This note is a current owner map for the scalar log-volume corridor.
+This note tracks the scalar determinant and log-volume corridor.
 
-## Current owner modules
+It is a topic map, not a proof summary.
 
-The current determinant and scalar relative-potential packet is split across:
+## Current high-confidence files
+
+The current scalar corridor is best read through:
+
 - `lean/InfoGeometry/Canonical/DeterminantCore.lean`
 - `lean/InfoGeometry/Canonical/Determinant.lean`
 - `lean/InfoGeometry/Canonical/LogDet.lean`
+- `lean/InfoGeometry/Jordan/LogDet.lean`
 - `lean/InfoGeometry/Canonical/RelativePotentialScalarBridge.lean`
-- `lean/InfoGeometry/Canonical/RedLine.lean`
 - `lean/InfoGeometry/Canonical/UniversalVolume.lean`
 - `lean/InfoGeometry/Canonical/LogSpineBridge.lean`
-- `lean/InfoGeometry/Canonical/RicciMongeAmpere.lean`
 - `lean/InfoGeometry/Canonical/ZetaDeterminant.lean`
+- `lean/InfoGeometry/Thermo/FromLogDet.lean`
+- `lean/InfoGeometry/Canonical/ThermoFromLogDet.lean`
 
-## Current structural rule
+## Current reading
 
-The canonical scalar story is now:
-- multiplicative relative change;
-- additive log-density or log-volume;
-- negative log as modular or barrier potential.
+The stable scalar story is:
 
-Representation-specific forms such as Jacobian, determinant, Monge-Ampere density, or normalized scalar potential should be attached to this lower corridor, not reintroduced as separate ontologies in capstone files.
+- multiplicative change;
+- additive log or log-volume;
+- scalar potential or thermodynamic interpretation as downstream packaging.
 
-## Documentation rule
+This should be read as a scalar corridor. It is not yet the missing
+support-log owner layer described in
+`docs/operator_log_corridor_doctrine.md`.
 
-Treat this note as a topic map only. Exact theorem ownership belongs to the modules above.
+## Current caution
+
+Do not treat this scalar corridor as if it already provides a native
+operator-log owner. That remains a future packet.
+
+## Use rule
+
+Treat this note as a topic map only. Exact ownership belongs to the source
+modules above.

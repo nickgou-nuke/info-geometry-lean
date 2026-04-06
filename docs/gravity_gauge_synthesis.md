@@ -1,28 +1,52 @@
 # Gravity / Gauge Topic Map
 
-This is a current owner map, not a live proof summary.
+This note is a topic map, not a proof summary.
 
-## Current owner modules
+Its purpose is to state where the current gauge-like and geometry-like material
+actually lives after the corrected phase-space trunk became the active semantic
+center.
 
-Geometry, gauge, and anomaly-source material is currently distributed across:
-- `lean/InfoGeometry/Canonical/BogoliubovFockSuper.lean`
-- `lean/InfoGeometry/Canonical/ChiralEinsteinBridge.lean`
-- `lean/InfoGeometry/Canonical/RicciMongeAmpere.lean`
-- `lean/InfoGeometry/Canonical/CalabiYauMetricRicci.lean`
-- `lean/InfoGeometry/Canonical/CalabiYauRNMongeAmpere.lean`
-- `lean/InfoGeometry/Canonical/CalabiYauWBridge.lean`
+## Current live gauge-side corridor
+
+The nearest live gauge/anomaly corridor is now:
+
+- `lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean`
+- `lean/InfoGeometry/Canonical/PhaseSpaceGeneralizedMetricChiralityBridge.lean`
+- `lean/InfoGeometry/Canonical/PhaseSpaceConformalKKTBridge.lean`
+- `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean`
 - `lean/InfoGeometry/Canonical/WeylGaugeField.lean`
-- `lean/InfoGeometry/Canonical/WeylPathHysteresis.lean`
-- `lean/InfoGeometry/Canonical/WeylAnomalySource.lean`
+- `lean/InfoGeometry/Canonical/WeylTransport.lean`
+- `lean/InfoGeometry/Canonical/WeylTransportChiralBridge.lean`
+- `lean/InfoGeometry/Canonical/PhaseSpaceWeylCausalBridge.lean`
 
-## Structural reading
+This is the branch where generalized metric, chirality, KKT grading, conformal
+obstruction, and Weyl transport currently meet.
 
-The old monolithic `WeylInformationGauge` and `CalabiYauBridge` stories have been split by ownership. Read the current packet as:
-- lower metric and Monge-Ampere geometry;
-- Weyl/path-dependence transport;
-- anomaly-source forcing;
-- higher consumers that re-export or use those lower layers.
+## Current geometry-side reading
 
-## Verification rule
+The repository still contains broader geometry trunks, but they are not the
+current semantic center of the closure work. They should be read as adjacent
+families, not as the active source of the gauge/anomaly corridor.
 
-For actual theorems, inspect the owner files. Do not infer live theorem names or current file boundaries from older synthesis prose.
+So the current reading is:
+
+- corrected phase-space generalized metric is the live geometric owner for the
+  chirality/conformal/Weyl corridor;
+- Weyl and anomaly are the nearest gauge-like leaves of that trunk;
+- broader Ricci / Monge-Ampere / Calabi-Yau geometry remains a separate
+  extension family unless an explicit bridge proves otherwise.
+
+## Current open gap
+
+The remaining honest gap is still operator-level:
+
+- the Weyl branch is attached to conformal obstruction,
+- but the repo still needs the full operator theorem deriving that obstruction
+  from trunk-compatible grading data.
+
+Until that theorem exists, gravity/gauge synthesis remains partial.
+
+## Use rule
+
+Use this file only as a reading guide. For actual theorems, inspect the owner
+and bridge files directly.

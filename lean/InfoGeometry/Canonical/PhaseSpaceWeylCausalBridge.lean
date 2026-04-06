@@ -179,6 +179,33 @@ variable [Fintype βminus] [Nonempty βminus]
       (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
   simpa [hScale] using hHol
 
+@[rep_depth krein] theorem holonomy_eq_projectorObstruction_norm_of_flat_from_trunk
+    (CIK : CertifiedInverseKernel (DoubledSpace E))
+    (CCI : CertifiedConformalInference (DoubledSpace E))
+    (R : PolarizedRecompositionData E α βplus βminus)
+    (trunk :
+      InfoGeometry.Canonical.PhaseSpaceCausalFlowBridge.TrunkOutputs
+        E α βplus βminus CIK CCI R)
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureChiralScaleBridge
+        (CI := CCI.toConformalInference) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B) :
+    bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+      =
+        ‖CCI.toConformalInference.spectralChiralProjector
+            * CCI.toConformalInference.metricChiralProjector
+            - CCI.toConformalInference.metricChiralProjector
+                * CCI.toConformalInference.spectralChiralProjector‖₊ := by
+  have leaf :=
+    InfoGeometry.Canonical.PhaseSpaceCausalFlowBridge.TrunkOutputs.toLeafOutputs
+      (CIK := CIK) (CCI := CCI) (R := R) trunk
+  exact holonomy_eq_projectorObstruction_norm_of_flat_from_leaf
+    (CCI := CCI) (R := R) (leaf := leaf)
+    (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+
 end WeylLeafFromTrunk
 
 end InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge

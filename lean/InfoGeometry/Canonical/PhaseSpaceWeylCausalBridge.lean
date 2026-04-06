@@ -1,5 +1,7 @@
 import InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
+import InfoGeometry.Canonical.PhaseSpaceCausalFlowBridge
 import InfoGeometry.Canonical.WeylTransportChiralBridge
+import InfoGeometry.Canonical.ConformalAnomalySource
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -19,9 +21,13 @@ This file is intentionally thin:
 
 namespace InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge
 
+open InfoGeometry.Canonical
 open InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
+open InfoGeometry.Canonical.PhaseSpaceCausalFlowBridge
 open InfoGeometry.Canonical.WeylTransportBridge
 open InfoGeometry.Canonical.ConformalUnification
+open InfoGeometry.Canonical.RelativeModularRecomposition
+open InfoGeometry.Canonical.ConformalUnification.ConformalInference
 open InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge
 open InfoGeometry.Krein
 
@@ -97,6 +103,7 @@ certified conformal inference. -/
   exact holonomy_eq_chiralScale_of_flat_from_conformal
     (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
 
+
 end WeylLeaf
 
 section WeylLeafThin
@@ -129,5 +136,37 @@ dimensional assumptions in callers. -/
       hFlat
 
 end WeylLeafThin
+
+section WeylLeafFromTrunk
+
+variable {I X A E : Type*}
+variable [Fintype I]
+variable [AddCommGroup A] [Module ℝ A]
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
+variable {α βplus βminus : Type*} [Fintype α] [Nonempty α]
+variable [Fintype βplus] [Nonempty βplus]
+variable [Fintype βminus] [Nonempty βminus]
+
+/-- Weyl holonomy collapses to the conformal chiral scale once the leaf bundle
+is present; the scale is recorded as the projector-obstruction norm in
+`ConformalAnomalySource`. -/
+@[rep_depth krein] theorem holonomy_eq_chiralScale_of_flat_from_leaf
+    (CCI : CertifiedConformalInference E)
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureChiralScaleBridge
+        (CI := CCI.toConformalInference) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B) :
+    bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+      = CCI.toConformalInference.chiralScale := by
+  have _ := ConformalInference.chiralScale_eq_projectorObstruction_norm
+    (CI := CCI.toConformalInference)
+  simpa using
+    holonomy_eq_chiralScale_of_flat_from_conformal
+      (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+
+end WeylLeafFromTrunk
 
 end InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge

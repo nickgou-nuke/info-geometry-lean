@@ -2,21 +2,33 @@
 
 This is a non-authoritative orientation note.
 
-## Current owner modules
+It records where the current deep-horizon or holographic-adjacent topic family
+actually lives.
 
-The current deep-horizon packet is organized around:
+## Current files
+
+The current packet is organized around:
+
 - `lean/InfoGeometry/Canonical/DeepHorizon.lean`
 - `lean/InfoGeometry/Canonical/HolographicEmergence.lean`
 - `lean/InfoGeometry/Canonical/BogoliubovFockSuper.lean`
 - `lean/InfoGeometry/Canonical/CayleyBregmanBridge.lean`
 - `lean/InfoGeometry/Canonical/TomitaTakesaki.lean`
 - `lean/InfoGeometry/Canonical/WeylPathHysteresis.lean`
-- `lean/InfoGeometry/Canonical/WeylAnomalySource.lean`
 
-## Current structural reading
+## Current reading
 
-`DeepHorizon` should be read as an umbrella publication surface over several lower owner files. The underlying mathematics is distributed across modular, transport, routing, and anomaly-source layers. Do not treat this topic as one file or one theorem family.
+This family should be read as a higher-level topic cluster drawing from:
 
-## Verification path
+- modular and Bogoliubov material;
+- routing/Bregman transport;
+- Weyl/path-dependent structure;
+- higher conceptual packaging.
 
-For live repo state, inspect the owner files above and their direct consumers rather than older synthesis prose.
+It is not part of the current main closure burden around the corrected
+phase-space trunk.
+
+## Use rule
+
+Treat this note as an orientation pointer only. For current statements, inspect
+the files directly.

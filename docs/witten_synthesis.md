@@ -1,15 +1,29 @@
 # Witten / Heat-Kernel Topic Map
 
-This note records the current owner files for the supersymmetric and heat-kernel packet.
+This note tracks the supersymmetric, spectral, and heat-kernel topic family.
 
-## Current owner modules
+It is a topic map, not a theorem certificate.
+
+## Current files
 
 - `lean/InfoGeometry/Canonical/SuperInference.lean`
 - `lean/InfoGeometry/Canonical/HeatKernel.lean`
-- `lean/InfoGeometry/Canonical/AnalyticalIndex.lean`
 - `lean/InfoGeometry/Canonical/SpectralInference.lean`
 - `lean/InfoGeometry/Canonical/TopologicalInvariants.lean`
+- `lean/InfoGeometry/Canonical/AnalyticalIndexCore.lean`
+- `lean/InfoGeometry/Canonical/AnalyticalIndex.lean`
+- `lean/InfoGeometry/Canonical/AnalyticalIndexCoupled.lean`
+- `lean/InfoGeometry/Canonical/AnalyticalIndexCapstone.lean`
 
-## Structural reading
+## Current reading
 
-Treat this packet as a collection of spectral, supersymmetric, and index-facing owner files. Older prose that packages it as one synthesis chain is not authoritative for current theorem names or file boundaries.
+This packet should be read as a separate spectral/index family. It is not the
+current shortest closure path from the corrected phase-space owner lane.
+
+The active KK/index frontier for the main trunk is still thinner and is
+described in `docs/kk_analyticalindex_bridge_candidates.md`.
+
+## Use rule
+
+Older synthesis prose should not be used for exact theorem names or current file
+boundaries. Inspect the source directly.

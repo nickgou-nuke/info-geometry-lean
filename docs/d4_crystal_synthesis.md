@@ -1,10 +1,14 @@
-# Triality and Path-Hysteresis Note
+# Triality And Path-Hysteresis Topic Map
 
-This note replaces older speculative "D4 crystal" prose with a code-backed topic map.
+This is a topic map for the triality, routing, and path-hysteresis family.
 
-## Current owner modules
+It is not a synthesis theorem and it is not part of the current main closure
+burden around the corrected phase-space trunk.
 
-The current triality / routing / hysteresis packet is spread across:
+## Current files
+
+The current packet is best read through:
+
 - `lean/InfoGeometry/Canonical/Triality.lean`
 - `lean/InfoGeometry/Canonical/BregmanTriality.lean`
 - `lean/InfoGeometry/Canonical/Attention.lean`
@@ -13,12 +17,24 @@ The current triality / routing / hysteresis packet is spread across:
 - `lean/InfoGeometry/Canonical/WeylPathHysteresis.lean`
 - `lean/InfoGeometry/Canonical/HolographicEmergence.lean`
 
-## What is actually represented
+## Current reading
 
-- triadic routing and metric-compatible attention live in the triality and attention files;
-- order-sensitive update witnesses now live in `WeylPathHysteresis`, not in the old monolithic `WeylInformationGauge` shell;
-- higher synthesis or interpretation should be treated as consumer-level prose, not as foundational ontology.
+The current code-backed reading is:
 
-## How to read this topic today
+- triality and routing geometry live in the triality and attention files;
+- order-sensitive or path-dependent update structure lives in
+  `WeylPathHysteresis`;
+- broader interpretation remains downstream consumer prose unless an explicit
+  bridge theorem proves more.
 
-If you want formal content, start from the owner modules above and ignore older claims that frame the entire packet as a single "crystal" theory. The current repo structure treats it as a combination of routing, transport, and path-dependence layers.
+## Relation to the main trunk
+
+This topic family is adjacent to the main trunk, but not currently one of the
+live closure junctions. It should therefore be read as a separate topic packet,
+not as a hidden semantic root for the corrected phase-space, recomposition, or
+KKT/conformal corridors.
+
+## Use rule
+
+If you want formal content, start from the files above and ignore older
+high-level “crystal” language.

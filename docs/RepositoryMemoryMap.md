@@ -1,69 +1,110 @@
 # Repository Memory Map
 
-This page classifies which documentation and tooling surfaces are current,
-which are generated, and which remain in the repository as reference memory.
+This file classifies which documentation and tooling surfaces are current,
+which are generated, and which remain as reference memory.
 
-Keep old memory in git. Do not silently treat every surviving file as equally
-current.
+Do not treat every surviving markdown file as equally current.
 
 ## Trust Order
 
 When surfaces disagree, trust them in this order:
 
-1. Lean source under `lean/InfoGeometry/`, especially `Meta/`, `Lint/`, and `Audit.lean`
-2. `artifacts/dag/index/meta.json` and the atomic DAG artifacts under `artifacts/dag/`
-3. derived reports under `reports/dag/`
-4. operational docs and maintained tooling READMEs
-5. reference protocols, backlogs, and historical notes
+1. Lean source under `lean/InfoGeometry/`
+2. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean) and [lean/InfoGeometry/Meta/Architecture.lean](../lean/InfoGeometry/Meta/Architecture.lean)
+3. [artifacts/dag/index/meta.json](../artifacts/dag/index/meta.json) and the atomic DAG artifacts under `artifacts/dag/`
+4. derived reports under `reports/dag/`
+5. hand-maintained operational docs
+6. reference protocols, backlog notes, and synthesis docs
 
 ## Documentation Status
 
 ### Operational authority
 
-These are the current hand-maintained entry surfaces:
+These are the maintained hand-written entry surfaces for current repo state:
 
 - [README.md](../README.md)
 - [docs/README.md](README.md)
-- [docs/ModuleMap.md](ModuleMap.md)
+- [docs/RepositoryMemoryMap.md](RepositoryMemoryMap.md)
 - [docs/OperationalIntent.md](OperationalIntent.md)
+- [docs/Theory.md](Theory.md)
+- [docs/ModuleMap.md](ModuleMap.md)
 - [Installation.md](../Installation.md)
 - [NEWCOMER_PATH.md](../NEWCOMER_PATH.md)
 - [lean/DAG/README.md](../lean/DAG/README.md)
 - [tools/README.md](../tools/README.md)
 - [tools/infra/README.md](../tools/infra/README.md)
 
+### Generated surfaces
+
+These are regenerated outputs and should not be hand-curated:
+
+- [docs/auto/](auto/)
+- [artifacts/dag/](../artifacts/dag/)
+- [reports/dag/](../reports/dag/)
+
+Within `docs/`, the only script-owned generated file is:
+
+- [docs/auto/index.md](auto/index.md)
+
+Its owning scripts are:
+
+- [tools/docs/generate_auto_docs.py](../tools/docs/generate_auto_docs.py)
+- [tools/docs/update_repo_docs.py](../tools/docs/update_repo_docs.py)
+
 ### Reference protocols
 
-These stay in the repo as working memory, but they are not the primary
-operational authority for current repo state:
+These remain useful as workflow memory, but they are not the first authority for
+current repo state:
 
 - [FORMALIZATION_PROTOCOL.md](../FORMALIZATION_PROTOCOL.md)
 - [LLM_FRONTIER_PROTOCOL.md](../LLM_FRONTIER_PROTOCOL.md)
 - [LLM_DEBT_PROTOCOL.md](../LLM_DEBT_PROTOCOL.md)
 - [SELF_OPTIMIZATION_PROTOCOL.md](../SELF_OPTIMIZATION_PROTOCOL.md)
 
-### Historical or index-style notes
+### Reference memory under `docs/`
 
-These preserve earlier classifications, canopies, or backlog views. Use them as
-reference memory and re-audit them against code before treating them as live
-policy:
+The following current files under `docs/` are reference memory, not primary
+operational authority:
 
-- [BRIDGE_THINNESS_INDEX.md](../BRIDGE_THINNESS_INDEX.md)
-- [SURROGATE_INDEX.md](../SURROGATE_INDEX.md)
-- [UNIFICATION_INDEX.md](../UNIFICATION_INDEX.md)
-- [VACUITY_INDEX.md](../VACUITY_INDEX.md)
-- [THEORY_CANOPY.md](../THEORY_CANOPY.md)
-- [THEORY_CANOPY_RN_GAUGE.md](../THEORY_CANOPY_RN_GAUGE.md)
-- [UNIVERSAL_VOLUME_STACK.md](../UNIVERSAL_VOLUME_STACK.md)
-- [RELEASE_NOTES.md](../RELEASE_NOTES.md)
+Backlog and diagnostics:
 
-### Generated surfaces
+- [analytic_closure_backlog.md](analytic_closure_backlog.md)
+- [apex_defect_diagnosis.md](apex_defect_diagnosis.md)
+- [apex_hodge_dirac_diagnostics.md](apex_hodge_dirac_diagnostics.md)
 
-Do not hand-curate these unless the owning generator is being repaired:
+Conceptual overlays and formal-side notes:
 
-- [docs/auto/](auto/)
-- [artifacts/dag/](../artifacts/dag/)
-- [reports/dag/](../reports/dag/)
+- [causal_apex_binding.md](causal_apex_binding.md)
+- [causal_cone_formal_definitions.md](causal_cone_formal_definitions.md)
+- [lawful-flow-glossary.md](lawful-flow-glossary.md)
+- [lean_compiler_service.md](lean_compiler_service.md)
+- [typed_lean_compiler_bridge.md](typed_lean_compiler_bridge.md)
+- [legacy_intake.md](legacy_intake.md)
+
+Synthesis and speculative route notes:
+
+- [cocycle_detailed_balance_synthesis.md](cocycle_detailed_balance_synthesis.md)
+- [d4_crystal_synthesis.md](d4_crystal_synthesis.md)
+- [deep_horizon_synthesis.md](deep_horizon_synthesis.md)
+- [determinant_tensor_entropy_synthesis.md](determinant_tensor_entropy_synthesis.md)
+- [drazin_conformal_synthesis.md](drazin_conformal_synthesis.md)
+- [gravity_gauge_synthesis.md](gravity_gauge_synthesis.md)
+- [kk_analyticalindex_bridge_candidates.md](kk_analyticalindex_bridge_candidates.md)
+- [llm_triality_synthesis.md](llm_triality_synthesis.md)
+- [ontology_synthesis.md](ontology_synthesis.md)
+- [operator_log_corridor_doctrine.md](operator_log_corridor_doctrine.md)
+- [prl_abstract_intro_synthesis.md](prl_abstract_intro_synthesis.md)
+- [red_line_synthesis.md](red_line_synthesis.md)
+- [testable_predictions.md](testable_predictions.md)
+- [unification_map.md](unification_map.md)
+- [witten_synthesis.md](witten_synthesis.md)
+
+Walkthroughs and indexes:
+
+- [keyword_index.md](keyword_index.md)
+- [spinfactor_zero_point_walkthrough.md](spinfactor_zero_point_walkthrough.md)
+
+Use these as working memory. Re-audit them against source before treating them as live policy.
 
 ## Tooling Status
 
@@ -76,9 +117,9 @@ These directories own the current scripted workflows:
 - [tools/docs/](../tools/docs/)
 - [tools/planner/](../tools/planner/)
 
-### Maintained top-level standalone modules
+### Maintained top-level standalone tools
 
-These are not wrappers; they are live top-level modules:
+These are live top-level modules, not wrappers:
 
 - [tools/pathing.py](../tools/pathing.py)
 - [tools/build_lock.py](../tools/build_lock.py)
@@ -89,33 +130,29 @@ These are not wrappers; they are live top-level modules:
 
 ### Compatibility wrappers
 
-Many top-level `tools/*.py` files are intentionally thin wrappers that forward
-to maintained subdirectory entrypoints. Examples include:
+Many top-level `tools/*.py` files forward to maintained subdirectory entrypoints.
+Prefer editing the maintained target, not the wrapper, unless the CLI contract
+itself is changing.
+
+Examples:
 
 - `tools/refresh_decl_graph.py` -> `tools/infra/refresh_decl_graph.py`
 - `tools/generate_causal_report.py` -> `tools/infra/generate_causal_report.py`
 - `tools/generate_source_sink_compression.py` -> `tools/infra/generate_source_sink_compression.py`
-- `tools/select_openclaw_target.py` -> `tools/infra/select_openclaw_target.py`
 - `tools/semantic_block_export.py` -> `tools/frontier/semantic_block_export.py`
 - `tools/skynet_v2.py` -> `tools/frontier/skynet_v2.py`
 - `tools/generate_auto_docs.py` -> `tools/docs/generate_auto_docs.py`
 - `tools/update_repo_docs.py` -> `tools/docs/update_repo_docs.py`
 
-Prefer editing the maintained target, not the wrapper, unless the CLI contract
-itself is changing.
+### Non-authoritative caches
 
-### Non-authoritative generated caches
-
-These are build/runtime byproducts, not maintained repo memory:
+These are byproducts, not maintained memory:
 
 - `tools/__pycache__/`
 
 ## Maintenance Rules
 
-- When adding a new operational doc, update this file and the nearest README
-  surface that points to it.
-- When retiring a doc or script, reclassify it here before moving or archiving
-  it.
+- When promoting a doc to operational authority, link it from this file and [docs/README.md](README.md).
+- When a doc becomes stale but still useful, demote it here rather than deleting it blindly.
 - Keep generated outputs generated and hand-maintained docs hand-maintained.
-- If a file is not linked from this map or a primary README, treat it as
-  reference memory until it is explicitly promoted.
+- If a file is not linked from this map or [docs/README.md](README.md), treat it as reference memory until explicitly promoted.

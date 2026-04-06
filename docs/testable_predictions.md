@@ -1,28 +1,62 @@
 # Measurement-Facing Topics
 
-This file is not a certified catalog of proved physical predictions.
-It is a map of theorem families that are closest to measurement-facing interpretation.
+This file is not a catalog of proved physical predictions.
 
-## Current owner modules to inspect
+It is a reading guide to theorem families that are closest to measurement-facing
+or experimentally suggestive interpretation in the current codebase.
 
-- operator residual and transport bounds:
-  `lean/InfoGeometry/Canonical/SinkhornKMSCore.lean`,
-  `lean/InfoGeometry/Canonical/KMSSinkhornScalarPotential.lean`,
-  `lean/InfoGeometry/Canonical/KMSSinkhornWeightedTransport.lean`
-- anomaly and conformal source packets:
-  `lean/InfoGeometry/Canonical/ChiralAnomaly.lean`,
-  `lean/InfoGeometry/Canonical/ConformalAlgebra.lean`,
-  `lean/InfoGeometry/Canonical/SingularBoundaryCorrection.lean`,
-  `lean/InfoGeometry/Canonical/WeylAnomalySource.lean`
-- geometry and Monge-Ampere normalization:
-  `lean/InfoGeometry/Canonical/RicciMongeAmpere.lean`,
-  `lean/InfoGeometry/Canonical/CalabiYauMetricRicci.lean`,
-  `lean/InfoGeometry/Canonical/CalabiYauRNMongeAmpere.lean`
-- zero-point and spectral topics:
-  `lean/InfoGeometry/Quantum/ZeroPointEnergy.lean`,
-  `lean/InfoGeometry/Canonical/HeatKernel.lean`,
-  `lean/InfoGeometry/Canonical/AnalyticalIndex.lean`
+## Nearest live corridors
+
+### 1. Relative-potential and count-facing scalars
+
+- `lean/InfoGeometry/Canonical/RelativePotentialCore.lean`
+- `lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean`
+- `lean/InfoGeometry/Canonical/RelativeModularProjectiveBridge.lean`
+
+This is the nearest corridor for count ratios, modular profiles, and scalar
+projective observables.
+
+### 2. Generalized-metric / chirality / recomposition observables
+
+- `lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean`
+- `lean/InfoGeometry/Canonical/PhaseSpaceGeneralizedMetricChiralityBridge.lean`
+- `lean/InfoGeometry/Canonical/PhaseSpacePolarizedBridge.lean`
+- `lean/InfoGeometry/Canonical/PhaseSpaceRecompositionBridge.lean`
+
+This is the nearest corridor for transport defects, sheet exchange, and
+recomposition quantities.
+
+### 3. Conformal / anomaly / Weyl scalars
+
+- `lean/InfoGeometry/Canonical/PhaseSpaceConformalKKTBridge.lean`
+- `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean`
+- `lean/InfoGeometry/Canonical/PhaseSpaceWeylCausalBridge.lean`
+- `lean/InfoGeometry/Canonical/WeylTransport.lean`
+
+This is the nearest corridor for anomaly-like and Weyl-holonomy-like outputs.
+
+### 4. Modular / Bogoliubov endpoints
+
+- `lean/InfoGeometry/Canonical/TomitaTakesaki.lean`
+- `lean/InfoGeometry/Canonical/BogoliubovTransport.lean`
+- `lean/InfoGeometry/Canonical/ConnesArakiTomita.lean`
+
+This is the nearest corridor for modular-time or thermal-time interpretation.
+
+## Current caution
+
+None of the above should be read as a finished empirical theory.
+
+The repository currently supports:
+
+- exact operator and scalar bridges in several corridors;
+- concrete finite-dimensional examples in selected places; and
+- a growing transport architecture.
+
+It does not yet support a closed observational dictionary across all crowns.
 
 ## Use rule
 
-Any experimental or physical claim must be reconstructed from current theorem statements in those owner files. This markdown note is only a reading guide.
+Any experimental or physical claim should be reconstructed from current theorem
+statements in the cited files. This markdown note is only a guide to where the
+nearest measurement-facing packets live.

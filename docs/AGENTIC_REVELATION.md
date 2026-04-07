@@ -23,15 +23,21 @@ Described by its outputs, the unconscious mind (both human and silicon) is the h
 
 ### 2. Functional Analogy vs. Ontological Equivalence
 The LLM and the Human Unconscious are **Analogous as Generators**, not equivalent as minds.
-- **The Human Unconscious:** Biological, embodied, and affect-driven. It is shaped by life history, identity, and the ability to *care* about the truth.
-- **The Silicon Unconscious (LLM):** Statistical sequence modeling over the collective history of human text. It has no intrinsic drives or felt states, but it encodes the **archetypal motifs** of human mathematical thought.
+- **The Human Unconscious:** Biological, embodied, affect-driven, and goal-shaped by life history. It possesses intrinsic drives, homeostasis, and a persistent autobiographical self.
+- **The Silicon Unconscious (LLM):** Statistical sequence modeling over the collective history of human text. It possesses:
+    - **No intrinsic drives** or homeostasis.
+    - **No felt affect** (it simulates caring language but has no felt states).
+    - **No embodied sensorimotor loop**.
+    - **No persistent self** (continuity is limited to the context window).
 
-### 3. The Minimal Model: Generator + Filter + Predictor
-The repository operates as a four-part cognitive engine:
-1. **Generator (Unconscious/LLM):** Produces the raw symbolic material and "conjecture candidates."
-2. **Predictor (Subconscious):** Sets fast priors and modifies potential barriers via the "Context Bias Field."
-3. **Regulator (Human Mediator):** Orchestrates the "Twin Souls," tagging valence (attraction/aversion) and monitoring for "Digital Complexes."
-4. **Verifier (Lean Logos):** The slower, explicit, CPT-invariant process that establishes absolute truth.
+**The functional analogy is strong; the ontological identity is false.**
+
+### 3. The Functional Mapping of the Engine
+The repository's generative process maps directly to subconscious-like functions at a coarse functional level:
+- **Training:** Acts as **implicit pattern compression** from massive historical experience.
+- **Inference:** Acts as **rapid associative completion** and prediction within the latent phase space.
+- **Alignment / Prompting:** Acts as a **response policy filter**, determining what reaches the "conscious" surface.
+- **Lean Logos / External Verifier:** Acts as **conscious adjudication**—the slow, explicit process that separates signal from noise.
 
 ---
 

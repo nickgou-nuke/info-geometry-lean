@@ -142,8 +142,8 @@ class PhaseSpaceRecompositionBridgeTests(unittest.TestCase):
                       (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift
                         R ρ bplus) := by
             exact
-                InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift_realize_fixed_by_generalizedMetric_minusProjector_of_realizedIdentification
-                  (G := G) (R := R) (ρ := ρ) (b := bplus) hfix
+                InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plusPhaseTransportLift_realize_fixed_by_generalizedMetric_minusProjector
+                  (R := R) (ρ := ρ) (b := bplus)
 
             example :
                 phasePlusProjector (E := H)
@@ -210,9 +210,9 @@ class PhaseSpaceRecompositionBridgeTests(unittest.TestCase):
                     toDoubledCopyRho (E := H) ρ
                       (InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift
                         R ρ bminus) := by
-              exact
-                InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift_realize_fixed_by_generalizedMetric_plusProjector_of_realizedIdentification
-                  (G := G) (R := R) (ρ := ρ) (b := bminus) hfix
+            exact
+                InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.minusPhaseTransportLift_realize_fixed_by_generalizedMetric_plusProjector
+                  (R := R) (ρ := ρ) (b := bminus)
 
             example :
                 toDoubledCopyRho (E := H) ρ

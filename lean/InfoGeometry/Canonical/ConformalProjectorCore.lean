@@ -50,8 +50,7 @@ that the Drazin spectral projector is self-adjoint.
 structure StarCertifiedConformalInference (E : Type*) [NormedAddCommGroup E]
     [InnerProductSpace ℝ E] [CompleteSpace E] extends CertifiedConformalInference E where
   spectralProjector_star :
-    star (toCertifiedConformalInference.A * toCertifiedConformalInference.A_D)
-      = toCertifiedConformalInference.A * toCertifiedConformalInference.A_D
+    star (A * A_D) = A * A_D
 
 namespace CertifiedConformalInference
 

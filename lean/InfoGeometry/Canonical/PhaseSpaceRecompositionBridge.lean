@@ -253,24 +253,6 @@ noncomputable def PolarizedRecompositionData.minusPhaseTransportLift
     simpa [LinearMap.comp_apply] using htransport
   simpa [hfix] using htransport'.symm
 
-@[rep_depth krein, simp] theorem
-    PolarizedRecompositionData.plusPhaseTransportLift_realize_fixed_by_generalizedMetric_minusProjector_of_realizedIdentification
-    (G : InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric.GeneralizedMetricDatum H)
-    (R : PolarizedRecompositionData H α βplus βminus)
-    (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H) (b : βplus)
-    (hfix : G.minusProjector (PolarizedRecompositionData.plusPhaseTransportLift R ρ b)
-      = PolarizedRecompositionData.plusPhaseTransportLift R ρ b) :
-    GeneralizedMetricSeed.minusProjector
-        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-        (toDoubledCopyRho (E := H) ρ
-          (PolarizedRecompositionData.plusPhaseTransportLift R ρ b))
-      =
-        toDoubledCopyRho (E := H) ρ
-          (PolarizedRecompositionData.plusPhaseTransportLift R ρ b) := by
-  let _ := hfix
-  simpa using
-    PolarizedRecompositionData.plusPhaseTransportLift_realize_fixed_by_generalizedMetric_minusProjector
-      (R := R) (ρ := ρ) (b := b)
 
 @[rep_depth krein, simp] theorem
     PolarizedRecompositionData.minusPhaseTransportLift_fixed_by_phasePlusProjector
@@ -394,25 +376,6 @@ noncomputable def PolarizedRecompositionData.minusPhaseTransportLift
           (PolarizedRecompositionData.minusPhaseTransportLift R ρ b)) := by
     simpa [LinearMap.comp_apply] using htransport
   simpa [hfix] using htransport'.symm
-
-@[rep_depth krein, simp] theorem
-    PolarizedRecompositionData.minusPhaseTransportLift_realize_fixed_by_generalizedMetric_plusProjector_of_realizedIdentification
-    (G : InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric.GeneralizedMetricDatum H)
-    (R : PolarizedRecompositionData H α βplus βminus)
-    (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H) (b : βminus)
-    (hfix : G.plusProjector (PolarizedRecompositionData.minusPhaseTransportLift R ρ b)
-      = PolarizedRecompositionData.minusPhaseTransportLift R ρ b) :
-    GeneralizedMetricSeed.plusProjector
-        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-        (toDoubledCopyRho (E := H) ρ
-          (PolarizedRecompositionData.minusPhaseTransportLift R ρ b))
-      =
-        toDoubledCopyRho (E := H) ρ
-          (PolarizedRecompositionData.minusPhaseTransportLift R ρ b) := by
-  let _ := hfix
-  simpa using
-    PolarizedRecompositionData.minusPhaseTransportLift_realize_fixed_by_generalizedMetric_plusProjector
-      (R := R) (ρ := ρ) (b := b)
 
 @[rep_depth krein] theorem
     PolarizedRecompositionData.plusPhaseTransportLift_realizes_to_minusSheet

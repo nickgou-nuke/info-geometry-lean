@@ -1,15 +1,19 @@
 # One Theory, Many Presentations
 
 This repository should be read as one theory with several simultaneous
-presentations. The mathematical burden is on the adjacent morphisms:
+presentations. The mathematical burden is on the adjacent morphisms.
 
-- define the natural owner at each layer
-- move upward by explicit translators
-- prove coherence where two adjacent routes meet
-- resist facade files that skip the real branch structure
+## Foundational Axiom: Goutev’s Principle
 
-The point is not to make every branch sound the same.
-It is to make the branch junctions exact.
+The repository is built on **Goutev’s Principle of Absolute Relativity of 
+Measurement**:
+
+> No measurement has standalone physical meaning. Every measurement is 
+> intrinsically relational. Physical content is invariant under common 
+> rescaling of compared magnitudes. 
+
+**Measurement is projective; observables are relational invariants.**
+See [Goutevs_Principle.md](Goutevs_Principle.md) for the formal manifesto.
 
 ## Representation Grammar
 

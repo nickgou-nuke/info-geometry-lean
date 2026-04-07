@@ -1,6 +1,10 @@
 # InfoGeometry in Lean 4
 
-`info-geometry-lean` is a Lean 4 repository with three maintained surfaces:
+`info-geometry-lean` is a Lean 4 repository built on **Goutev’s Principle of 
+Absolute Relativity of Measurement**: measurement is projective; observables 
+are relational invariants.
+
+The repo has three maintained surfaces:
 - a theorem library under `lean/InfoGeometry/`
 - a Lean-native architecture kernel under `lean/InfoGeometry/Meta/` and `lean/InfoGeometry/Audit.lean`
 - a graph and reporting toolchain under `lean/DAG/` and `tools/infra/`

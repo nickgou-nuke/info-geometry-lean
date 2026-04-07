@@ -11,6 +11,10 @@ Low-level root language for positive projective states in the finite orthant mod
 - canonical normalization gauge section
 - logarithmic density and modular potential
 
+This file is a direct realization of **Goutev's Principle (Absolute Relativity of 
+Measurement)**: measurement is projective; observables are relational invariants.
+The base ontology here is not the absolute count, but the ray class.
+
 This is the projective positive-state spine underneath normalized counts,
 relative densities, RN/Jacobian volume factors, and modular lifts.
 -/

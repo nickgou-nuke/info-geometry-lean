@@ -1,6 +1,7 @@
 import InfoGeometry.Quantum.GeometricTensor
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Canonical.EinsteinAnomalyOperator
 import InfoGeometry.Krein.SplitQuadratic
 
 open scoped InnerProductSpace
@@ -10,6 +11,7 @@ namespace InfoGeometry.Quantum
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Canonical.BogoliubovTransport
+open InfoGeometry.Canonical.ConformalUnification
 
 namespace GeometricQuantumTensor
 
@@ -17,6 +19,11 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
+
+noncomputable local instance : NormedRing EndH := inferInstance
+noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
+local instance : IsTopologicalRing EndH := inferInstance
+local instance : CompleteSpace EndH := inferInstance
 
 /--
 Positive Cartan-side lift of a doubled-carrier operator to a bilinear form.
@@ -42,6 +49,359 @@ omit [CompleteSpace E] in
 @[simp] theorem metricOfOperator_apply
     (A : EndH) (u v : H₂) :
     metricOfOperator A u v = ⟪A u, v⟫_ℝ := rfl
+
+omit [CompleteSpace E] in
+@[simp] theorem metricOfOperator_zero :
+    metricOfOperator (E := E) (0 : EndH) = 0 := by
+  ext u v
+  simp [metricOfOperator_apply]
+
+omit [CompleteSpace E] in
+@[simp] theorem metricOfOperator_add
+    (A B : EndH) :
+    metricOfOperator (E := E) (A + B)
+      = metricOfOperator (E := E) A + metricOfOperator (E := E) B := by
+  ext u v
+  simp [metricOfOperator_apply, inner_add_left]
+
+/--
+Infinitesimal transport law for the operatorial metric seed under exponential
+conjugation: the derivative at `t = 0` is the metric readout of the commutator.
+-/
+theorem hasDerivAt_metricOfOperator_expTransport_at_zero
+    (X A : EndH) (u v : H₂) :
+    HasDerivAt
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport (A := EndH) X A t) u v)
+      (metricOfOperator (transportCommutator (E := E) X A) u v)
+      0 := by
+  let ω : EndH →L[ℝ] ℝ :=
+    (innerSL ℝ v).comp (ContinuousLinearMap.apply ℝ H₂ u)
+  have hω : HasDerivAt (fun _ : ℝ => ω) (0 : EndH →L[ℝ] ℝ) 0 := by
+    simpa using (hasDerivAt_const (x := (0 : ℝ)) (c := ω))
+  have hExp :
+      HasDerivAt
+        (fun t : ℝ => InfoGeometry.Canonical.expTransport (A := EndH) X A t)
+        ⁅X, A⁆
+        0 := by
+    simpa using
+      (InfoGeometry.Canonical.hasDerivAt_expTransport_at_zero (A := EndH) X A)
+  have hApply :
+      HasDerivAt
+        (fun t : ℝ =>
+          (fun _ : ℝ => ω) t
+            (InfoGeometry.Canonical.expTransport (A := EndH) X A t))
+        ((0 : EndH →L[ℝ] ℝ)
+          (InfoGeometry.Canonical.expTransport (A := EndH) X A 0) + ω ⁅X, A⁆)
+        0 :=
+    hω.clm_apply hExp
+  have hωEval :
+      ω ⁅X, A⁆ = metricOfOperator (transportCommutator (E := E) X A) u v := by
+    rw [← lieBracket_eq_transportCommutator (E := E) X A]
+    simp [ω, metricOfOperator_apply, real_inner_comm]
+  have hMain :
+      HasDerivAt
+        (fun t : ℝ =>
+          metricOfOperator
+            (InfoGeometry.Canonical.expTransport (A := EndH) X A t) u v)
+        (ω ⁅X, A⁆)
+        0 := by
+    simpa [ω, metricOfOperator_apply, real_inner_comm] using hApply
+  exact hωEval ▸ hMain
+
+/--
+Derivative form of `hasDerivAt_metricOfOperator_expTransport_at_zero`.
+-/
+theorem deriv_metricOfOperator_expTransport_at_zero
+    (X A : EndH) (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport (A := EndH) X A t) u v)
+      0
+      =
+    metricOfOperator (transportCommutator (E := E) X A) u v := by
+  exact (hasDerivAt_metricOfOperator_expTransport_at_zero (E := E) X A u v).deriv
+
+/--
+Infinitesimal modular-conjugation transport law for the QGT operatorial metric
+seed: derivative at `t = 0` equals the metric readout of the true modular
+transport commutator.
+-/
+theorem deriv_metricOfOperator_modularTransport_conjugation_at_zero
+    (hMod A : EndH) (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (modularTransportGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    metricOfOperator
+      (transportCommutator (E := E) (modularTransportGenerator (E := E) hMod) A)
+      u v := by
+  simpa using
+    deriv_metricOfOperator_expTransport_at_zero
+      (E := E) (X := modularTransportGenerator (E := E) hMod) (A := A) u v
+
+/--
+Modular-derivation form of infinitesimal metric-seed transport at `t = 0`.
+-/
+theorem deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularDeriv
+    (hMod A : EndH) (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (modularTransportGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    metricOfOperator (modularDeriv (E := E) hMod A) u v := by
+  simpa [modularDeriv] using
+    deriv_metricOfOperator_modularTransport_conjugation_at_zero (E := E) hMod A u v
+
+/--
+Relative-modular form: infinitesimal QGT metric-seed transport equals the metric
+readout of the relative-modular derivation.
+-/
+theorem deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_relativeModularDeriv
+    (hMod A : EndH) (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    metricOfOperator (relativeModularDeriv (E := E) hMod A) u v := by
+  simpa [relativeModularKGenerator, relativeModularDeriv] using
+    deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularDeriv
+      (E := E) hMod A u v
+
+/--
+The infinitesimal metric-seed transport splits into volume-preserving
+(gauge/phase-linear) and dissipative (scaling/phase-antilinear) channels.
+-/
+theorem deriv_metricOfOperator_modularTransport_conjugation_at_zero_split
+    (hMod A : EndH) (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (modularTransportGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    metricOfOperator
+      (modularGaugeDeriv (E := E) hMod A)
+      u v
+      +
+    metricOfOperator
+      (modularScaleDeriv (E := E) hMod A)
+      u v := by
+  rw [deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularDeriv
+      (E := E) hMod A u v]
+  rw [modularDeriv_split (E := E) hMod A]
+  rw [metricOfOperator_add]
+  simp
+
+/--
+Relative-modular form of the infinitesimal split:
+gauge channel plus source channel.
+-/
+theorem deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularGaugeDeriv_add_metricOf_relativeModularSourceDeriv
+    (hMod A : EndH) (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    metricOfOperator
+      (modularGaugeDeriv (E := E) hMod A)
+      u v
+      +
+    metricOfOperator
+      (relativeModularSourceDeriv (E := E) hMod A)
+      u v := by
+  simpa [relativeModularKGenerator, relativeModularSourceDeriv] using
+    deriv_metricOfOperator_modularTransport_conjugation_at_zero_split
+      (E := E) hMod A u v
+
+/--
+If the transported operator commutes with the gauge sector of the modular
+generator, the infinitesimal metric-seed transport is purely scaling.
+-/
+theorem deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularScaleDeriv_of_commute_gaugePart
+    (hMod A : EndH)
+    (hCommGauge : Commute A (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (modularTransportGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    metricOfOperator (modularScaleDeriv (E := E) hMod A) u v := by
+  rw [deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularDeriv
+      (E := E) hMod A u v]
+  rw [modularDeriv_eq_modularScaleDeriv_of_commute_gaugePart (E := E) hMod A hCommGauge]
+
+/--
+Relative-modular source-channel form:
+if gauge commutes, the infinitesimal QGT metric-seed transport is purely source.
+-/
+theorem deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_relativeModularSourceDeriv_of_commute_gaugePart
+    (hMod A : EndH)
+    (hCommGauge : Commute A (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    metricOfOperator (relativeModularSourceDeriv (E := E) hMod A) u v := by
+  simpa [relativeModularKGenerator, relativeModularSourceDeriv] using
+    deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularScaleDeriv_of_commute_gaugePart
+      (E := E) hMod A hCommGauge u v
+
+/--
+For the certified doubled Einstein anomaly operator, gauge-sector commutation
+forces the infinitesimal QGT transport entirely into the relative-modular
+source channel.
+-/
+theorem deriv_metricOfOperator_liftedEinsteinAnomalyOperator_relativeModularTransport_at_zero_eq_metricOf_relativeModularSourceDeriv_of_commute_gaugePart
+    (CCI : CertifiedConformalInference E)
+    (hMod : EndH)
+    (hCommGauge :
+      Commute CCI.liftedEinsteinAnomalyOperator
+        (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            CCI.liftedEinsteinAnomalyOperator
+            t)
+          u v)
+      0
+      =
+    metricOfOperator
+      (relativeModularSourceDeriv (E := E) hMod CCI.liftedEinsteinAnomalyOperator)
+      u v := by
+  exact
+    deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_relativeModularSourceDeriv_of_commute_gaugePart
+      (E := E) hMod CCI.liftedEinsteinAnomalyOperator hCommGauge u v
+
+/--
+If the transported operator commutes with the scaling sector of the modular
+generator, the infinitesimal metric-seed transport is purely gauge.
+-/
+theorem deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularGaugeDeriv_of_commute_scalePart
+    (hMod A : EndH)
+    (hCommScale : Commute A (modularGeneratorScalePart (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (modularTransportGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    metricOfOperator (modularGaugeDeriv (E := E) hMod A) u v := by
+  rw [deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularDeriv
+      (E := E) hMod A u v]
+  rw [modularDeriv_eq_modularGaugeDeriv_of_commute_scalePart (E := E) hMod A hCommScale]
+
+/--
+If the transported operator commutes with the true modular transport generator,
+the infinitesimal metric-seed transport vanishes at `t = 0`.
+-/
+theorem deriv_metricOfOperator_modularTransport_conjugation_at_zero_of_commute
+    (hMod A : EndH)
+    (hComm : Commute A (modularTransportGenerator (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (modularTransportGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    0 := by
+  rw [deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularDeriv
+      (E := E) hMod A u v]
+  rw [modularDeriv_eq_zero_of_commute_generator (E := E) hMod A hComm]
+  rw [metricOfOperator_zero]
+  rfl
+
+/--
+Relative-modular commuting-sector stationarity:
+if `A` commutes with the relative-modular `K`-generator, the infinitesimal QGT
+metric-seed transport vanishes.
+-/
+theorem deriv_metricOfOperator_modularTransport_conjugation_at_zero_of_commute_relativeModularKGenerator
+    (hMod A : EndH)
+    (hComm : Commute A (relativeModularKGenerator (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    0 := by
+  simpa [relativeModularKGenerator] using
+    deriv_metricOfOperator_modularTransport_conjugation_at_zero_of_commute
+      (E := E) hMod A hComm u v
+
 
 /-- A Hilbert-self-adjoint seed induces a symmetric metric on the doubled carrier. -/
 theorem metricOfOperator_isSymm_of_selfAdjoint

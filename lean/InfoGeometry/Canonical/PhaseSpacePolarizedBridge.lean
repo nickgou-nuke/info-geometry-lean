@@ -195,36 +195,10 @@ noncomputable def MinusRestrictedRelativeModularData.phaseLift
       = PlusRestrictedRelativeModularData.phaseLift R ρ b) :
     GeneralizedMetricSeed.plusProjector
         (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) (R.lift b) = R.lift b := by
-  have hreal :
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedPlusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H)) (R.lift b) = R.lift b := by
-    exact PlusRestrictedRelativeModularData.realize_phaseLift_fixed_by_realizedPlusProjector
-      (G := G) (R := R) (ρ := ρ) (b := b) hfix
-  have htomita :
-      GeneralizedMetricSeed.plusProjector
-          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) (R.lift b) = R.lift b := by
-    exact PlusRestrictedRelativeModularData.realize_phaseLift_fixed_by_generalizedMetric_plusProjector
+  let _ := hfix
+  simpa using
+    PlusRestrictedRelativeModularData.realize_phaseLift_fixed_by_generalizedMetric_plusProjector
       (R := R) (ρ := ρ) (b := b)
-  have hidentify :
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedPlusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H)) (R.lift b)
-        = GeneralizedMetricSeed.plusProjector
-            (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) (R.lift b) := by
-    calc
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedPlusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H)) (R.lift b)
-          = R.lift b := hreal
-      _ = GeneralizedMetricSeed.plusProjector
-          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) (R.lift b) := by
-            simpa using htomita.symm
-  calc
-    GeneralizedMetricSeed.plusProjector
-        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) (R.lift b)
-        =
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedPlusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H)) (R.lift b) := by
-          simpa using hidentify.symm
-    _ = R.lift b := hreal
 @[rep_depth krein, simp] theorem MinusRestrictedRelativeModularData.phaseLift_fixed_by_phaseMinusProjector
     (R : MinusRestrictedRelativeModularData H α betaMinus)
     (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H) (b : betaMinus) :
@@ -341,36 +315,10 @@ noncomputable def MinusRestrictedRelativeModularData.phaseLift
       = MinusRestrictedRelativeModularData.phaseLift R ρ b) :
     GeneralizedMetricSeed.minusProjector
         (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) (R.lift b) = R.lift b := by
-  have hreal :
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedMinusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H)) (R.lift b) = R.lift b := by
-    exact MinusRestrictedRelativeModularData.realize_phaseLift_fixed_by_realizedMinusProjector
-      (G := G) (R := R) (ρ := ρ) (b := b) hfix
-  have htomita :
-      GeneralizedMetricSeed.minusProjector
-          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) (R.lift b) = R.lift b := by
-    exact MinusRestrictedRelativeModularData.realize_phaseLift_fixed_by_generalizedMetric_minusProjector
+  let _ := hfix
+  simpa using
+    MinusRestrictedRelativeModularData.realize_phaseLift_fixed_by_generalizedMetric_minusProjector
       (R := R) (ρ := ρ) (b := b)
-  have hidentify :
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedMinusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H)) (R.lift b)
-        = GeneralizedMetricSeed.minusProjector
-            (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) (R.lift b) := by
-    calc
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedMinusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H)) (R.lift b)
-          = R.lift b := hreal
-      _ = GeneralizedMetricSeed.minusProjector
-          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) (R.lift b) := by
-            simpa using htomita.symm
-  calc
-    GeneralizedMetricSeed.minusProjector
-        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) (R.lift b)
-        =
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedMinusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H)) (R.lift b) := by
-          simpa using hidentify.symm
-    _ = R.lift b := hreal
 
 @[rep_depth krein, simp] theorem PolarizedRelativeModularPair.plus_realize_phaseLift
     (R : PolarizedRelativeModularPair H α betaPlus betaMinus)

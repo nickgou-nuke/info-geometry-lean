@@ -380,6 +380,16 @@ noncomputable def plusPart (S : SymmetricLieAlgebra L) (x : L) : L :=
 noncomputable def minusPart (S : SymmetricLieAlgebra L) (x : L) : L :=
   Projector.minus S.θ x
 
+/-- Compatibility bridge: `P_plus` is exactly `plusPart`. -/
+@[simp] lemma P_plus_eq_plusPart (S : SymmetricLieAlgebra L) (x : L) :
+    S.P_plus x = S.plusPart x := by
+  simp [P_plus, plusPart, Projector.plus]
+
+/-- Compatibility bridge: `P_minus` is exactly `minusPart`. -/
+@[simp] lemma P_minus_eq_minusPart (S : SymmetricLieAlgebra L) (x : L) :
+    S.P_minus x = S.minusPart x := by
+  simp [P_minus, minusPart, Projector.minus]
+
 lemma plusPart_add (S : SymmetricLieAlgebra L) (x y : L) :
     S.plusPart (x + y) = S.plusPart x + S.plusPart y := by
   simp [plusPart, Projector.plus, smul_add, add_assoc, add_left_comm]

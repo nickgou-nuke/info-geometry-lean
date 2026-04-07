@@ -229,6 +229,43 @@ theorem metricProjector_star :
     InverseKernel.metricProjector] using
     IsMoorePenroseInverse.leftProjector_star CIK.hMoorePenrose
 
+/-- The certified Drazin spectral projector is self-adjoint if both `A` and `A_D` are. -/
+theorem spectralProjector_star_of_selfAdjoint
+    (hA : star CIK.A = CIK.A)
+    (hAD : star CIK.A_D = CIK.A_D) :
+    star CIK.spectralProjector = CIK.spectralProjector := by
+  unfold CertifiedInverseKernel.spectralProjector
+  unfold CertifiedInverseKernel.toInverseKernel'
+  unfold InverseKernel.spectralProjector
+  unfold IsDrazinInverse.projection
+  calc
+    star (CIK.A * CIK.A_D) = star CIK.A_D * star CIK.A := by simp
+    _ = CIK.A_D * CIK.A := by simp [hA, hAD]
+    _ = CIK.A * CIK.A_D := by simpa using CIK.hDrazin.comm.symm
+
+/-- The certified Drazin spectral projector is self-adjoint if both `A` and `A_D` are. -/
+theorem spectralProjector_isSelfAdjoint_of_selfAdjoint
+    (hA : star CIK.A = CIK.A)
+    (hAD : star CIK.A_D = CIK.A_D) :
+    IsSelfAdjoint CIK.spectralProjector := by
+  rw [ContinuousLinearMap.isSelfAdjoint_iff']
+  rw [← ContinuousLinearMap.star_eq_adjoint]
+  exact CIK.spectralProjector_star_of_selfAdjoint hA hAD
+
+/-- The certified Drazin spectral projector is self-adjoint if `A` and `A_D` are. -/
+theorem spectralProjector_star_of_isSelfAdjoint
+    (hA : IsSelfAdjoint CIK.A)
+    (hAD : IsSelfAdjoint CIK.A_D) :
+    star CIK.spectralProjector = CIK.spectralProjector := by
+  exact CIK.spectralProjector_star_of_selfAdjoint hA.star_eq hAD.star_eq
+
+/-- The certified Drazin spectral projector is self-adjoint if `A` and `A_D` are. -/
+theorem spectralProjector_isSelfAdjoint_of_isSelfAdjoint
+    (hA : IsSelfAdjoint CIK.A)
+    (hAD : IsSelfAdjoint CIK.A_D) :
+    IsSelfAdjoint CIK.spectralProjector := by
+  exact CIK.spectralProjector_isSelfAdjoint_of_selfAdjoint hA.star_eq hAD.star_eq
+
 /-- Certified mismatch commutator identity. -/
 theorem chiralAnomaly_eq_mismatch_commutator_metric :
     CIK.chiralAnomaly =

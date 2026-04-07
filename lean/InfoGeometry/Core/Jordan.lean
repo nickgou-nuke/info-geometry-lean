@@ -12,6 +12,37 @@ namespace InfoGeometry.Core
 abbrev JordanAlgebra := InfoGeometry.Jordan.JordanAlgebra
 abbrev SPD := InfoGeometry.Jordan.SPD
 
+section JordanAlgebra
+
+open scoped InfoGeometryJordan
+
+variable {V : Type _} [AddCommGroup V] [Module ℝ V] [JordanAlgebra V]
+
+@[simp] lemma jordan_prod_comm (x y : V) : x ⊙ y = y ⊙ x :=
+  InfoGeometry.Jordan.jordanProd_comm x y
+
+@[simp] lemma jordan_prod_add_left (x y z : V) :
+    (x + y) ⊙ z = x ⊙ z + y ⊙ z :=
+  InfoGeometry.Jordan.jordanProd_add_left x y z
+
+@[simp] lemma jordan_prod_add_right (x y z : V) :
+    x ⊙ (y + z) = x ⊙ y + x ⊙ z :=
+  InfoGeometry.Jordan.jordanProd_add_right x y z
+
+@[simp] lemma jordan_prod_smul_left (a : ℝ) (x y : V) :
+    (a • x) ⊙ y = a • (x ⊙ y) :=
+  InfoGeometry.Jordan.jordanProd_smul_left a x y
+
+@[simp] lemma jordan_prod_smul_right (a : ℝ) (x y : V) :
+    x ⊙ (a • y) = a • (x ⊙ y) :=
+  InfoGeometry.Jordan.jordanProd_smul_right a x y
+
+lemma jordan_prod_identity (x y : V) :
+    (x ⊙ x) ⊙ (x ⊙ y) = x ⊙ ((x ⊙ x) ⊙ y) :=
+  InfoGeometry.Jordan.jordanProd_identity x y
+
+end JordanAlgebra
+
 section SPD
 
 open InfoGeometry.Jordan

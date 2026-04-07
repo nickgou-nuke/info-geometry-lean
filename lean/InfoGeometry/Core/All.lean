@@ -8,6 +8,7 @@ import InfoGeometry.Core.Jordan
 import InfoGeometry.Core.ProjectiveSimplex
 import InfoGeometry.Core.SymmetricLie
 import InfoGeometry.Core.SymmetricLieGeneric
+import InfoGeometry.Core.SymmetricLieSpaces
 import InfoGeometry.Core.SymmetricSpaces
 import InfoGeometry.Core.UnifiedGeometry
 

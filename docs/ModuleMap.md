@@ -93,8 +93,9 @@ Read:
 
 Current state:
 
-- the branch is adjacent to the conformal trunk
-- the final trunk-to-obstruction-to-Weyl theorem is still missing
+- the branch now has an explicit operator package (`SourceSpineAndWeylEndpoint`) carrying dilation source, obstruction grade/block structure, and holonomy endpoint
+- the primary theorem package is now in-source and no longer just scalar prose
+- the next step is reducing explicit commutation/identification hypotheses where possible
 
 ### If you want the Tomita / modular transport branch
 
@@ -159,9 +160,9 @@ Those are useful later. They are not the first proof surface.
 The next real gaps are:
 
 1. derive the realized-projector to maintained tomita-projector identification
-2. derive projector obstruction from trunk-compatible operator data
-3. close the Weyl branch by that operator theorem
-4. attach the count/projective trunk to the corrected phase-space trunk at the polarized junction
-5. add one twisted end-to-end finite-dimensional example
+2. strengthen the source-driven Weyl package by removing explicit commutation/identification hypotheses where possible
+3. attach the count/projective trunk to the corrected phase-space trunk at the polarized junction
+4. add one twisted end-to-end finite-dimensional example
+5. tighten operator anomaly to modular source/sink closure as a first-class bridge lane
 
 This is the current practical roadmap encoded by the codebase.

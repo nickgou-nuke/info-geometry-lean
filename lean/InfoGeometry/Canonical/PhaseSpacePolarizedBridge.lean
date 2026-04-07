@@ -321,6 +321,83 @@ noncomputable def MinusRestrictedRelativeModularData.phaseLift
       = MinusRestrictedRelativeModularData.phaseLift R.minus ρ b := by
   simpa using MinusRestrictedRelativeModularData.phaseLift_fixed_by_phaseMinusProjector R.minus ρ b
 
+section CountJunction
+
+variable {nPlus : Nat} [Nonempty (Fin nPlus)]
+variable {nMinus : Nat} [Nonempty (Fin nMinus)]
+variable [MeasurableSpace (Fin nPlus)] [MeasurableSingletonClass (Fin nPlus)] [Countable (Fin nPlus)]
+variable [MeasurableSpace (Fin nMinus)] [MeasurableSingletonClass (Fin nMinus)] [Countable (Fin nMinus)]
+
+/-- Junction closure (`+` wing): the same polarized count index carries both the
+phase-space fixed-point statement and the projective-count Hamiltonian identity. -/
+@[rep_depth krein, capstone] theorem
+    PlusRestrictedRelativeModularData.phaseSpace_projectiveCount_junction_of_countRays
+    (R : PlusRestrictedRelativeModularData H α (Fin nPlus))
+    (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H)
+    (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts nPlus)
+    (hcounts : ∀ i : Fin nPlus, 0 < counts i)
+    (href : ∀ i : Fin nPlus, 0 < ref i)
+    (hsource : R.data.localSource =
+      InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+    (htarget : R.data.localTarget =
+      InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+    (i : Fin nPlus) :
+    GeneralizedMetricSeed.plusProjector
+        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
+        (R.lift i) = R.lift i
+      ∧
+    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin nPlus) R.data.localTarget)
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin nPlus) R.data.localSource) i
+      = InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountHamiltonianProfile
+          counts ref hcounts href i := by
+  refine ⟨?_, ?_⟩
+  · exact PlusRestrictedRelativeModularData.realize_phaseLift_fixed_by_generalizedMetric_plusProjector
+      (R := R) (ρ := ρ) (b := i)
+  · exact
+      PlusRestrictedRelativeModularData.local_projectiveLogGenerator_eq_projectiveCountHamiltonianProfile_of_countRays
+        (R := R) (counts := counts) (ref := ref)
+        (hcounts := hcounts) (href := href)
+        (hsource := hsource) (htarget := htarget) i
+
+/-- Junction closure (`-` wing): the same polarized count index carries both the
+phase-space fixed-point statement and the projective-count Hamiltonian identity. -/
+@[rep_depth krein, capstone] theorem
+    MinusRestrictedRelativeModularData.phaseSpace_projectiveCount_junction_of_countRays
+    (R : MinusRestrictedRelativeModularData H α (Fin nMinus))
+    (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H)
+    (counts ref : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts nMinus)
+    (hcounts : ∀ i : Fin nMinus, 0 < counts i)
+    (href : ∀ i : Fin nMinus, 0 < ref i)
+    (hsource : R.data.localSource =
+      InfoGeometry.Canonical.RelativePotentialCountBridge.countRay counts hcounts)
+    (htarget : R.data.localTarget =
+      InfoGeometry.Canonical.RelativePotentialCountBridge.countRay ref href)
+    (i : Fin nMinus) :
+    GeneralizedMetricSeed.minusProjector
+        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
+        (R.lift i) = R.lift i
+      ∧
+    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin nMinus) R.data.localTarget)
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin nMinus) R.data.localSource) i
+      = InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountHamiltonianProfile
+          counts ref hcounts href i := by
+  refine ⟨?_, ?_⟩
+  · exact MinusRestrictedRelativeModularData.realize_phaseLift_fixed_by_generalizedMetric_minusProjector
+      (R := R) (ρ := ρ) (b := i)
+  · exact
+      MinusRestrictedRelativeModularData.local_projectiveLogGenerator_eq_projectiveCountHamiltonianProfile_of_countRays
+        (R := R) (counts := counts) (ref := ref)
+        (hcounts := hcounts) (href := href)
+        (hsource := hsource) (htarget := htarget) i
+
+end CountJunction
+
 end Core
 
 end InfoGeometry.Canonical.PhaseSpacePolarizedBridge

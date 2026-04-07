@@ -66,12 +66,13 @@ The corrected owner now reaches the maintained polarized/recomposition lane:
 
 - [PhaseSpacePolarizedBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpacePolarizedBridge.lean)
 - [PhaseSpaceRecompositionBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceRecompositionBridge.lean)
+- [RelativeModularSingularization.lean](../lean/InfoGeometry/Canonical/RelativeModularSingularization.lean)
 
 Current status:
 
 - owner-side lifts and transports are real
 - realized generalized-metric projector factorization now exists at the junction
-- the strongest tomita-facing fixation statements still use explicit identification hypotheses where the final derivation theorem is missing
+- boundary singularization is now explicitly handled via generalized inverses
 
 ### KKT, inverse-kernel, and conformal corridor
 
@@ -85,65 +86,17 @@ The corrected owner also now feeds the KKT/conformal side:
 
 This is now a real causal trunk from phase-space owner data to conformal and recomposition leaves.
 
-### Weyl branch
+### Weyl and Quantum Geometric Tensor branch
 
-The Weyl branch is partially welded:
+The Weyl branch is now welded to the operator spine:
 
 - [ConformalAnomalySource.lean](../lean/InfoGeometry/Canonical/ConformalAnomalySource.lean)
-- [WeylGaugeField.lean](../lean/InfoGeometry/Canonical/WeylGaugeField.lean)
-- [WeylTransport.lean](../lean/InfoGeometry/Canonical/WeylTransport.lean)
-- [WeylTransportChiralBridge.lean](../lean/InfoGeometry/Canonical/WeylTransportChiralBridge.lean)
-- [PhaseSpaceWeylCausalBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceWeylCausalBridge.lean)
+- [EinsteinAnomalyOperator.lean](../lean/InfoGeometry/Canonical/EinsteinAnomalyOperator.lean)
+- [GeometricTensorOperatorLift.lean](../lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean)
+- [TransportLieDerivative.lean](../lean/InfoGeometry/Canonical/TransportLieDerivative.lean)
 
-The current gap here is not naming. The operator-level shape now exists; the
-remaining pressure is making that weld hypothesis-lean and trunk-internal.
+Current status:
 
-Current status update:
-
-- an explicit source-driven package now exists in `PhaseSpaceWeylCausalBridge`
-  (`SourceSpineAndWeylEndpoint`)
-- this package carries obstruction grade-zero and diagonal/off-diagonal block
-  structure together with terminal holonomy-as-obstruction-norm
-- the remaining closure pressure is hypothesis compression, not missing branch shape
-
-## Compatibility Scaffolds
-
-Some important files remain useful but are not the semantic root of the updated theory:
-
-- [ClNN.lean](../lean/InfoGeometry/Clifford/ClNN.lean)
-- [ClNNSpecialization.lean](../lean/InfoGeometry/Clifford/ClNNSpecialization.lean)
-- [GeneralizedMetricBField.lean](../lean/InfoGeometry/Clifford/GeneralizedMetricBField.lean)
-- [GeneralizedMetricPolarizedBridge.lean](../lean/InfoGeometry/Canonical/GeneralizedMetricPolarizedBridge.lean)
-
-These are compatibility or presentation scaffolds, not the corrected owner root.
-
-## What The Tooling Is For
-
-The DAG and infra layers exist to preserve operational memory and expose graph-level pressure:
-
-1. externalize dependency memory from Lean into stable artifacts
-2. show owner / translator / coherence / capstone pressure
-3. expose vacuity, wrapper growth, and skip-level drift
-4. help choose the next file without replacing direct code reading
-
-They do not define truth. Lean source does.
-
-## Immediate Engineering Standard
-
-The next theorem step should always satisfy all of these:
-
-- it materially consumes its hypotheses
-- it shortens the distance between a seed owner and a crown leaf
-- it removes an explicit identification hypothesis if possible
-- it does not introduce a new alias-only surface
-
-## Default Read Order
-
-When context is missing, rebuild it in this order:
-
-1. [README.md](../README.md)
-2. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
-3. [docs/Theory.md](Theory.md)
-4. [lean/DAG/README.md](../lean/DAG/README.md)
-5. [tools/infra/README.md](../tools/infra/README.md)
-6. the specific owner and bridge files for the task
+- Einstein anomalies are lifted to the doubled carrier
+- the Quantum Geometric Tensor (QGT) is derived from operator transport laws
+- infinitesimal transport is formalized via Lie derivatives of exponential conjugation

@@ -410,6 +410,21 @@ theorem spectralProjector_commutator_dilation_eq_neg_half_projectorObstruction_o
       hRight
 
 /--
+Structured operator-first dilation/anomaly bridge:
+under Moore-Penrose projector agreement and left-metric commutation, the
+dilation commutator is exactly minus one half of the projector-obstruction
+operator.
+-/
+theorem spectralProjector_commutator_dilation_eq_neg_half_projectorObstruction_of_projectorAgreement_of_metricProjector_commute
+    (hProj : CI.P_MP_right = CI.P_MP)
+    (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
+    CI.P_D * CI.D - CI.D * CI.P_D
+      = -((2 : ℝ)⁻¹) • CI.projectorObstruction := by
+  simpa [projectorObstruction] using
+    CI.spectralProjector_commutator_dilation_eq_neg_half_anomaly_of_projectorAgreement_of_metricProjector_commute
+      hProj hLeft
+
+/--
 The bounded squashed obstruction inherits grade-zero structure from the
 unsquashed obstruction under the same KKT wing hypotheses.
 -/

@@ -250,6 +250,18 @@ def toStarCertifiedConformalInference
   toCertifiedConformalInference := CCI
   spectralProjector_star := CCI.spectralProjector_star_of_isSelfAdjoint hA hAD
 
+/--
+Package constructor: if left/right Moore-Penrose projectors agree, the
+certified conformal surface upgrades to projector-agreement-certified form.
+-/
+def toProjectorAgreementCertifiedConformalInference
+    (hProj :
+      IsMoorePenroseInverse.rightProjector CCI.A CCI.A_MP =
+        IsMoorePenroseInverse.leftProjector CCI.A CCI.A_MP) :
+    ProjectorAgreementCertifiedConformalInference E where
+  toCertifiedConformalInference := CCI
+  projectorAgreement := hProj
+
 end CertifiedConformalInference
 
 namespace StarCertifiedConformalInference

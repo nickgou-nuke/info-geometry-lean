@@ -15,6 +15,8 @@ Relativity of Measurement**:
 
 - [Goutevs_Principle.md](Goutevs_Principle.md) — The formal manifesto.
 - [Theory.md](Theory.md) — How the principle maps to the repo presentations.
+- [Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md) — The project's roadmap and trajectory.
+- [SEMANTIC_POTENTIAL.md](SEMANTIC_POTENTIAL.md) — The "Scorpio & Virgo" multi-agent generative engine.
 
 ## What Is Current
 

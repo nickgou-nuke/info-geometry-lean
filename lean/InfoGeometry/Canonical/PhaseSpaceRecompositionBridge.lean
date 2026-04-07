@@ -525,6 +525,93 @@ junction. -/
       (hminusSource := hminusSource) (hminusTarget := hminusTarget)
       (iPlus := iPlus) (iMinus := iMinus)
 
+/--
+Capstone weld package: count/projective Hamiltonian identities and phase-space
+fixed-point statements on both polarized wings, together with the recomposition
+log-shadow identification.
+-/
+@[rep_depth projective, capstone] theorem
+    PolarizedRecompositionData.phaseSpace_projectiveCount_weld_identifies_twistShadow_of_countRays
+    (R : PolarizedRecompositionData H α (Fin nPlus) (Fin nMinus))
+    (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H)
+    [MeasurableSpace (Fin nPlus)] [MeasurableSingletonClass (Fin nPlus)] [Countable (Fin nPlus)]
+    [MeasurableSpace (Fin nMinus)] [MeasurableSingletonClass (Fin nMinus)] [Countable (Fin nMinus)]
+    (countsPlus refPlus : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts nPlus)
+    (hcountsPlus : ∀ i : Fin nPlus, 0 < countsPlus i)
+    (hrefPlus : ∀ i : Fin nPlus, 0 < refPlus i)
+    (hplusSource : R.polarized.plus.data.localSource =
+      InfoGeometry.Canonical.RelativePotentialCountBridge.countRay countsPlus hcountsPlus)
+    (hplusTarget : R.polarized.plus.data.localTarget =
+      InfoGeometry.Canonical.RelativePotentialCountBridge.countRay refPlus hrefPlus)
+    (countsMinus refMinus : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts nMinus)
+    (hcountsMinus : ∀ i : Fin nMinus, 0 < countsMinus i)
+    (hrefMinus : ∀ i : Fin nMinus, 0 < refMinus i)
+    (hminusSource : R.polarized.minus.data.localSource =
+      InfoGeometry.Canonical.RelativePotentialCountBridge.countRay countsMinus hcountsMinus)
+    (hminusTarget : R.polarized.minus.data.localTarget =
+      InfoGeometry.Canonical.RelativePotentialCountBridge.countRay refMinus hrefMinus)
+    (iPlus : Fin nPlus) (iMinus : Fin nMinus) :
+    GeneralizedMetricSeed.plusProjector
+        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
+        (R.polarized.plus.lift iPlus) = R.polarized.plus.lift iPlus
+      ∧
+    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin nPlus) R.polarized.plus.data.localTarget)
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin nPlus) R.polarized.plus.data.localSource) iPlus
+      = InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountHamiltonianProfile
+          countsPlus refPlus hcountsPlus hrefPlus iPlus
+      ∧
+    GeneralizedMetricSeed.minusProjector
+        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
+        (R.polarized.minus.lift iMinus) = R.polarized.minus.lift iMinus
+      ∧
+    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin nMinus) R.polarized.minus.data.localTarget)
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin nMinus) R.polarized.minus.data.localSource) iMinus
+      = InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountHamiltonianProfile
+          countsMinus refMinus hcountsMinus hrefMinus iMinus
+      ∧
+    R.couplingLogDefect = PolarizedRecompositionData.generalizedMetricTwistShadow R := by
+  have hweld :
+      GeneralizedMetricSeed.plusProjector
+          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
+          (R.polarized.plus.lift iPlus) = R.polarized.plus.lift iPlus
+        ∧
+      InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
+          (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+            (α := Fin nPlus) R.polarized.plus.data.localTarget)
+          (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+            (α := Fin nPlus) R.polarized.plus.data.localSource) iPlus
+        = InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountHamiltonianProfile
+            countsPlus refPlus hcountsPlus hrefPlus iPlus
+        ∧
+      GeneralizedMetricSeed.minusProjector
+          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
+          (R.polarized.minus.lift iMinus) = R.polarized.minus.lift iMinus
+        ∧
+      InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
+          (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+            (α := Fin nMinus) R.polarized.minus.data.localTarget)
+          (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+            (α := Fin nMinus) R.polarized.minus.data.localSource) iMinus
+        = InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountHamiltonianProfile
+            countsMinus refMinus hcountsMinus hrefMinus iMinus :=
+    PolarizedRecompositionData.phaseSpace_projectiveCount_weld_of_countRays
+      (R := R) (ρ := ρ)
+      (countsPlus := countsPlus) (refPlus := refPlus)
+      (hcountsPlus := hcountsPlus) (hrefPlus := hrefPlus)
+      (hplusSource := hplusSource) (hplusTarget := hplusTarget)
+      (countsMinus := countsMinus) (refMinus := refMinus)
+      (hcountsMinus := hcountsMinus) (hrefMinus := hrefMinus)
+      (hminusSource := hminusSource) (hminusTarget := hminusTarget)
+      (iPlus := iPlus) (iMinus := iMinus)
+  refine ⟨hweld.1, hweld.2.1, hweld.2.2.1, hweld.2.2.2, ?_⟩
+  rfl
+
 end CountJunction
 
 /-- Coherence theorem: the owner-side phase transport descends to the maintained

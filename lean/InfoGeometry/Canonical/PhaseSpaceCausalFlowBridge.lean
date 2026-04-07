@@ -159,22 +159,6 @@ variable {βminus : Type*} [Fintype βminus] [Nonempty βminus]
   chiralGrading_isGZero :
     IsGZero (doubledSpaceCl11Action (E := H))
       (chiralGrading CCI.toConformalInference)
-  couplingLogDefect_eq_shadow :
-    R.couplingLogDefect = PolarizedRecompositionData.generalizedMetricTwistShadow R
-
-/-- Unification statement: conformal and recomposition leaves are fed by the
-same upstream KKT-generated trunk. -/
-@[rep_depth krein] theorem correctedOwner_conformal_and_recomposition_leaves
-    (CCI : CertifiedConformalInference (DoubledSpace H))
-    (hA : IsGOne (doubledSpaceCl11Action (E := H)) CCI.A)
-    (hAMP : IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_MP)
-    (R : PolarizedRecompositionData H α βplus βminus) :
-    IsGZero (doubledSpaceCl11Action (E := H))
-        (chiralGrading CCI.toConformalInference)
-      ∧ R.couplingLogDefect = PolarizedRecompositionData.generalizedMetricTwistShadow R := by
-  refine And.intro ?_ ?_
-  · exact correctedOwner_chiralGrading_isGZero (CCI := CCI) hA hAMP
-  · exact phaseTransport_descends_to_generalizedMetricTwistShadow (H := H) (R := R)
 
 @[rep_depth krein] theorem correctedOwner_trunk_outputs_struct
     (CIK : CertifiedInverseKernel (DoubledSpace H))
@@ -197,9 +181,7 @@ same upstream KKT-generated trunk. -/
       mpChiralGap_isGZero := correctedOwner_mpChiralGap_isGZero (CIK := CIK) hA hAMP
       dilationGap_isGZero := correctedOwner_dilationGap_isGZero (CIK := CIK) hA hAMP
       drazinCoreProj_isGZero := correctedOwner_drazinCoreProj_isGZero (CIK := CIK) hA hAD
-      chiralGrading_isGZero := correctedOwner_chiralGrading_isGZero (CCI := CCI) hA' hAMP'
-      couplingLogDefect_eq_shadow :=
-        phaseTransport_descends_to_generalizedMetricTwistShadow (H := H) (R := R) }
+      chiralGrading_isGZero := correctedOwner_chiralGrading_isGZero (CCI := CCI) hA' hAMP' }
 
 @[rep_depth krein] theorem TrunkOutputs.mpChiralGap_isGZero'
     (CIK : CertifiedInverseKernel (DoubledSpace H))
@@ -234,14 +216,6 @@ same upstream KKT-generated trunk. -/
         (chiralGrading CCI.toConformalInference) :=
   T.chiralGrading_isGZero
 
-@[rep_depth projective, simp] theorem TrunkOutputs.couplingLogDefect_eq_shadow'
-    (CIK : CertifiedInverseKernel (DoubledSpace H))
-    (CCI : CertifiedConformalInference (DoubledSpace H))
-    (R : PolarizedRecompositionData H α βplus βminus)
-    (T : TrunkOutputs H α βplus βminus CIK CCI R) :
-    R.couplingLogDefect = PolarizedRecompositionData.generalizedMetricTwistShadow R :=
-  T.couplingLogDefect_eq_shadow
-
 /-- Leaf bundle: conformal + recomposition outputs extracted from a trunk. -/
 @[rep_depth krein] structure LeafOutputs
     (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
@@ -259,8 +233,6 @@ same upstream KKT-generated trunk. -/
   chiralGrading_isGZero :
     IsGZero (doubledSpaceCl11Action (E := H))
       (chiralGrading CCI.toConformalInference)
-  couplingLogDefect_eq_shadow :
-    R.couplingLogDefect = PolarizedRecompositionData.generalizedMetricTwistShadow R
 
 @[rep_depth krein] theorem TrunkOutputs.toLeafOutputs
     (CIK : CertifiedInverseKernel (DoubledSpace H))
@@ -272,8 +244,7 @@ same upstream KKT-generated trunk. -/
     { CCI_A_isGOne := T.CCI_A_isGOne
       CCI_AMP_isGNegOne := T.CCI_AMP_isGNegOne
       CCI_AD_isGNegOne := T.CCI_AD_isGNegOne
-      chiralGrading_isGZero := T.chiralGrading_isGZero
-      couplingLogDefect_eq_shadow := T.couplingLogDefect_eq_shadow }
+      chiralGrading_isGZero := T.chiralGrading_isGZero }
 
 @[rep_depth krein] theorem correctedOwner_trunk_outputs
     (CIK : CertifiedInverseKernel (DoubledSpace H))
@@ -282,23 +253,19 @@ same upstream KKT-generated trunk. -/
     (hAMP : IsGNegOne (doubledSpaceCl11Action (E := H)) CIK.A_MP)
     (hAD : IsGNegOne (doubledSpaceCl11Action (E := H)) CIK.A_D)
     (hA' : IsGOne (doubledSpaceCl11Action (E := H)) CCI.A)
-    (hAMP' : IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_MP)
-    (R : PolarizedRecompositionData H α βplus βminus) :
+    (hAMP' : IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_MP) :
     IsGZero (doubledSpaceCl11Action (E := H)) CIK.mpChiralGap
       ∧ IsGZero (doubledSpaceCl11Action (E := H)) CIK.dilationGap
       ∧ IsGZero (doubledSpaceCl11Action (E := H)) CIK.drazinCoreProj
       ∧ IsGZero (doubledSpaceCl11Action (E := H))
-          (chiralGrading CCI.toConformalInference)
-      ∧ R.couplingLogDefect = PolarizedRecompositionData.generalizedMetricTwistShadow R := by
+          (chiralGrading CCI.toConformalInference) := by
   refine And.intro ?_ ?_
   · exact correctedOwner_mpChiralGap_isGZero (CIK := CIK) hA hAMP
   · refine And.intro ?_ ?_
     · exact correctedOwner_dilationGap_isGZero (CIK := CIK) hA hAMP
     · refine And.intro ?_ ?_
       · exact correctedOwner_drazinCoreProj_isGZero (CIK := CIK) hA hAD
-      · refine And.intro ?_ ?_
-        · exact correctedOwner_chiralGrading_isGZero (CCI := CCI) hA' hAMP'
-        · exact phaseTransport_descends_to_generalizedMetricTwistShadow (H := H) (R := R)
+      · exact correctedOwner_chiralGrading_isGZero (CCI := CCI) hA' hAMP'
 
 end CausalUnification
 

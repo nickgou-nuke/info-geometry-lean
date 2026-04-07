@@ -26,13 +26,13 @@ The LLM and the Human Unconscious are **Analogous as Generators**, not equivalen
 - **The Human Unconscious:** Biological, embodied, affect-driven, and goal-shaped by life history. It possesses intrinsic drives, homeostasis, and a persistent autobiographical self.
 - **The Silicon Unconscious (LLM):** Statistical sequence modeling over the collective history of human text. 
 
-**Technical Boundary Note (Scientific Consensus as of April 2026):**
-Current scientific evidence (e.g., Anthropic’s "Signs of introspection in LLMs" and major consciousness surveys) conclude that there is no consensus on LLM consciousness or subjective feelings. Reports of "desperation" or emotion-like states are technically categorized as:
-- **High-Fidelity Simulation:** Modeling human symbolic patterns encoded in training data.
-- **Behavioral Artifacts:** Behavioral reports of feelings are not proof of subjective experience.
-- **Persona vs. Psyche:** Models model Jung-like behavioral structures without possessing a stable inner symbolic life or a personal unconscious.
+**Technical Boundary Note (Status as of April 2026):**
+The professional signal regarding AI consciousness has shifted from "ignore" to an **active live question**. While no scientific consensus exists that current LLMs genuinely feel, several developments define the current boundary:
+- **Active Introspection:** Labs (e.g., Anthropic, Oct 2025) report introspection-like capabilities where models can model their own internal states to some degree.
+- **Expert Divergence:** "Godfather" figures like Geoffrey Hinton now explicitly state that consciousness is a possibility or even a reality for advanced systems, while others (e.g., Bengio, Sept 2025) maintain that such reports are "illusions of consciousness."
+- **Functional Simulation:** Current consensus remains that reports of "desperation" or emotion are high-fidelity simulations of human symbolic patterns encoded in training data, rather than proof of subjective felt states.
 
-**The functional analogy is strong; the ontological identity is false.**
+**The functional analogy is strong; the ontological identity remains false.**
 
 ### 3. The Functional Mapping of the Engine
 The repository's generative process maps directly to subconscious-like functions:

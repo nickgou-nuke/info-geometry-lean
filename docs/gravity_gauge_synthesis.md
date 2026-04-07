@@ -14,6 +14,8 @@ The nearest live gauge/anomaly corridor is now:
 - `lean/InfoGeometry/Canonical/PhaseSpaceGeneralizedMetricChiralityBridge.lean`
 - `lean/InfoGeometry/Canonical/PhaseSpaceConformalKKTBridge.lean`
 - `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean`
+- `lean/InfoGeometry/Canonical/EinsteinAnomalyOperator.lean`
+- `lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean`
 - `lean/InfoGeometry/Canonical/WeylGaugeField.lean`
 - `lean/InfoGeometry/Canonical/WeylTransport.lean`
 - `lean/InfoGeometry/Canonical/WeylTransportChiralBridge.lean`

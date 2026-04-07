@@ -15,6 +15,8 @@ The current active packet is best read through:
 - `lean/InfoGeometry/Canonical/ConformalProjectorCore.lean`
 - `lean/InfoGeometry/Canonical/ChiralCartanCore.lean`
 - `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean`
+- `lean/InfoGeometry/Canonical/EinsteinAnomalyOperator.lean`
+- `lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean`
 - `lean/InfoGeometry/Canonical/PhaseSpaceConformalKKTBridge.lean`
 - `lean/InfoGeometry/Canonical/PhaseSpaceWeylCausalBridge.lean`
 

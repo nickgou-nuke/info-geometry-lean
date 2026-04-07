@@ -356,6 +356,42 @@ conjugation. -/
       CCI.bogoliubovConjugate_liftedEinsteinAnomalyOperator_eq_self_of_commute_generator
         hMod t hComm
 
+/-- Gauge/scale-resolved Weyl/operator corollary:
+flat Weyl holonomy is still the obstruction endpoint, while gauge-sector
+commutation forces the infinitesimal Bogoliubov transport of the lifted
+Einstein anomaly into the source channel. -/
+@[rep_depth krein] theorem
+    holonomy_eq_projectorObstruction_nnnorm_and_deriv_bogoliubovConjugate_liftedEinsteinAnomalyOperator_at_zero_eq_relativeModularSourceDeriv_of_flat_of_commute_gaugePart
+    (CCI : CertifiedConformalInference (DoubledSpace E))
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureProjectorObstructionBridge
+        (CI := CCI.toConformalInference) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B)
+    (hMod : DoubledSpace (DoubledSpace E) →L[ℝ] DoubledSpace (DoubledSpace E))
+    (hCommGauge :
+      Commute CCI.liftedEinsteinAnomalyOperator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorGaugePart
+          (E := DoubledSpace E) hMod)) :
+    bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+        = ‖CCI.toConformalInference.projectorObstruction‖₊
+      ∧
+      deriv
+        (fun t => CCI.bogoliubovConjugate_liftedEinsteinAnomalyOperator hMod t)
+        0
+          =
+        InfoGeometry.Canonical.BogoliubovTransport.relativeModularSourceDeriv
+          (E := DoubledSpace E) hMod CCI.liftedEinsteinAnomalyOperator := by
+  refine ⟨?_, ?_⟩
+  · exact
+      holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal_doubled
+        (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+  · exact
+      CCI.deriv_bogoliubovConjugate_liftedEinsteinAnomalyOperator_at_zero_eq_relativeModularSourceDeriv_of_commute_gaugePart
+        hMod hCommGauge
+
 /-- Nonvanishing variant of the direct Weyl/operator corollary:
 in the commuting-generator regime, nonzero Einstein anomaly is frame-invariant
 under Bogoliubov conjugation while Weyl holonomy remains on the obstruction

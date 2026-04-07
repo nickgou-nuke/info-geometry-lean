@@ -48,15 +48,18 @@ Corrected phase-space roots:
 - [NeutralPhaseSpaceDoubledBridge.lean](../lean/InfoGeometry/Clifford/NeutralPhaseSpaceDoubledBridge.lean)
 - [PhaseSpaceGeneralizedMetric.lean](../lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean)
 
-Operator/KKT roots:
+Operator/KKT/Quantum roots:
 
 - [KKTCore.lean](../lean/InfoGeometry/Canonical/KKTCore.lean)
-- [EPDefectAlgebra.lean](../lean/InfoGeometry/Canonical/EPDefectAlgebra.lean)
+- [EinsteinAnomalyOperator.lean](../lean/InfoGeometry/Canonical/EinsteinAnomalyOperator.lean)
+- [GeometricTensorOperatorLift.lean](../lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean)
+- [BulkBoundary.lean](../lean/InfoGeometry/Quantum/BulkBoundary.lean)
 
-Tomita/Bogoliubov roots:
+Tomita/Bogoliubov/Transport roots:
 
 - [TomitaTakesaki.lean](../lean/InfoGeometry/Canonical/TomitaTakesaki.lean)
 - [BogoliubovTransport.lean](../lean/InfoGeometry/Canonical/BogoliubovTransport.lean)
+- [TransportLieDerivative.lean](../lean/InfoGeometry/Canonical/TransportLieDerivative.lean)
 
 ## Current Strongest Trunks
 
@@ -71,9 +74,6 @@ This remains the cleanest lower-to-upper corridor:
 - [RelativePotentialCountBridge.lean](../lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean)
 - [RelativeSurprisalOperatorLift.lean](../lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean)
 
-This corridor is important because it already has real owner mathematics and a
-real cocycle story, not just packaging.
-
 ### 2. Corrected phase-space generalized metric
 
 This trunk is now real, not aspirational:
@@ -83,121 +83,16 @@ This trunk is now real, not aspirational:
 - [PhaseSpaceGeneralizedMetric.lean](../lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean)
 - [PhaseSpaceGeneralizedMetricChiralityBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceGeneralizedMetricChiralityBridge.lean)
 
-What is already closed here:
+### 3. Transport and Quantum Geometric Tensor
 
-- the owner carrier `E × E*`
-- the neutral pairing
-- the generalized-metric involution and projector algebra
-- the `B`-twisted realized doubled polarization and realized doubled projectors
+This is the current active frontier trunk:
 
-This is currently the main geometric trunk of the repo.
-
-### 3. Polarized and recomposition branch
-
-The corrected owner now reaches the existing polarized and recomposition surfaces:
-
-- [PhaseSpacePolarizedBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpacePolarizedBridge.lean)
-- [PhaseSpaceRecompositionBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceRecompositionBridge.lean)
-
-Current state:
-
-- owner-side lifts are real
-- owner-side transport is real
-- realized generalized-metric projector factorization is now explicit
-- the final tomita identification still appears as an explicit hypothesis in the strongest corollaries
-
-So this branch is structurally right, but not fully self-generated yet.
-
-### 4. KKT / inverse-kernel / conformal branch
-
-The corrected owner also reaches:
-
-- [KKTGeneralizedInverseBridge.lean](../lean/InfoGeometry/Canonical/KKTGeneralizedInverseBridge.lean)
-- [PhaseSpaceConformalKKTBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceConformalKKTBridge.lean)
-- [PhaseSpaceCausalFlowBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceCausalFlowBridge.lean)
-
-This gives a genuine causal path from owner-side chirality data to grade-zero
-inverse-kernel outputs and conformal packaging.
-
-### 5. Weyl branch
-
-The Weyl branch is now adjacent to the causal trunk:
-
-- [ConformalAnomalySource.lean](../lean/InfoGeometry/Canonical/ConformalAnomalySource.lean)
-- [PhaseSpaceWeylCausalBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceWeylCausalBridge.lean)
+- [GeometricTensorOperatorLift.lean](../lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean)
+- [EinsteinAnomalyOperator.lean](../lean/InfoGeometry/Canonical/EinsteinAnomalyOperator.lean)
+- [TransportLieDerivative.lean](../lean/InfoGeometry/Canonical/TransportLieDerivative.lean)
 - [WeylTransport.lean](../lean/InfoGeometry/Canonical/WeylTransport.lean)
-- [WeylTransportChiralBridge.lean](../lean/InfoGeometry/Canonical/WeylTransportChiralBridge.lean)
 
-The branch now has the operator weld:
-
-trunk data -> projector obstruction operator -> obstruction norm / `chiralScale` -> Weyl holonomy
-
-Right now the remaining work is not branch existence, but tightening hypotheses
-inside that source-driven package.
-
-Status update:
-
-- the source-driven operator package is now explicit in
-  `PhaseSpaceWeylCausalBridge` (`SourceSpineAndWeylEndpoint`)
-- operator-grade block structure and holonomy endpoint are packaged together
-- the next burden is reducing explicit commutation/identification hypotheses
-  inside that package
-
-## Important Compatibility Scaffolds
-
-The repo still contains valid but non-root presentation scaffolds, especially:
-
-- [ClNN.lean](../lean/InfoGeometry/Clifford/ClNN.lean)
-- [ClNNSpecialization.lean](../lean/InfoGeometry/Clifford/ClNNSpecialization.lean)
-- [GeneralizedMetricBField.lean](../lean/InfoGeometry/Clifford/GeneralizedMetricBField.lean)
-- [GeneralizedMetricPolarizedBridge.lean](../lean/InfoGeometry/Canonical/GeneralizedMetricPolarizedBridge.lean)
-
-These should be kept as compatibility infrastructure until their role is fully
-absorbed or strictly reclassified. They are not the semantic root of the
-corrected phase-space lane.
-
-## What Is Already Proved
-
-The following structural facts are already real in the codebase:
-
-- the count/projective/operator corridor is a genuine adjacent cocycle corridor
-- the corrected phase-space owner exists
-- the owner-side generalized-metric algebra is closed
-- the corrected owner reaches doubled chirality
-- the corrected owner reaches polarized and recomposition transport
-- the corrected owner reaches the KKT/conformal branch
-
-This means the repo is already beyond “interesting analogies.”
-It now contains real transport architecture.
-
-## What Is Still Missing
-
-The main missing pieces are not more themes. They are closure theorems:
-
-1. derive the realized-projector to tomita-projector identification internally
-2. compress the now-explicit source-driven Weyl package by removing avoidable
-   commutation/identification hypotheses
-3. attach the count/projective seed line to the corrected phase-space line at the polarized junction
-4. add one twisted finite-dimensional end-to-end example through the full branch point
-5. make the operator anomaly to modular source/sink channel closure explicit as
-   a maintained bridge
-
-Until then, the repo has a strong trunk and several genuine leaves, but not a
-fully fused forest.
-
-## Near Extensions
-
-The nearest extensions already supported by current code are:
-
-- deeper Tomita / Bogoliubov / modular-flow coherence
-- stronger conformal / Weyl obstruction theorems
-- finite-dimensional twisted examples
-
-The following are still farther out:
-
-- KK / Atiyah-Singer index anomalies, because the current KK bridge is still thin
-- BRST/BV, because the necessary cohomological owner surface is not yet present
-- Navier–Stokes style analytic crowns, because the dissipative PDE trunk is not present
-
-So the repo is presently strongest as a geometric-operator transport theory with
-phase-space, KKT, conformal, recomposition, and modular branches.
+What is already closed here:
+- the metric readout of operator transport commutators
+- the lift of the Einstein anomaly to the doubled carrier
+- the infinitesimal Lie derivative law for exponential conjugation

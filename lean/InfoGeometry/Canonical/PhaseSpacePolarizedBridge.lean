@@ -186,19 +186,6 @@ noncomputable def MinusRestrictedRelativeModularData.phaseLift
     simpa [hfix] using htransport'.symm
   simpa [PlusRestrictedRelativeModularData.realize_phaseLift (R := R) (ρ := ρ) (b := b)] using hreal
 
-@[rep_depth krein, simp] theorem
-    PlusRestrictedRelativeModularData.realize_phaseLift_fixed_by_generalizedMetric_plusProjector_of_realizedIdentification
-    (G : InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric.GeneralizedMetricDatum H)
-    (R : PlusRestrictedRelativeModularData H α betaPlus)
-    (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H) (b : betaPlus)
-    (hfix : G.plusProjector (PlusRestrictedRelativeModularData.phaseLift R ρ b)
-      = PlusRestrictedRelativeModularData.phaseLift R ρ b) :
-    GeneralizedMetricSeed.plusProjector
-        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) (R.lift b) = R.lift b := by
-  let _ := hfix
-  simpa using
-    PlusRestrictedRelativeModularData.realize_phaseLift_fixed_by_generalizedMetric_plusProjector
-      (R := R) (ρ := ρ) (b := b)
 @[rep_depth krein, simp] theorem MinusRestrictedRelativeModularData.phaseLift_fixed_by_phaseMinusProjector
     (R : MinusRestrictedRelativeModularData H α betaMinus)
     (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H) (b : betaMinus) :
@@ -305,20 +292,6 @@ noncomputable def MinusRestrictedRelativeModularData.phaseLift
       simpa [LinearMap.comp_apply] using htransport
     simpa [hfix] using htransport'.symm
   simpa [MinusRestrictedRelativeModularData.realize_phaseLift (R := R) (ρ := ρ) (b := b)] using hreal
-
-@[rep_depth krein, simp] theorem
-    MinusRestrictedRelativeModularData.realize_phaseLift_fixed_by_generalizedMetric_minusProjector_of_realizedIdentification
-    (G : InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric.GeneralizedMetricDatum H)
-    (R : MinusRestrictedRelativeModularData H α betaMinus)
-    (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H) (b : betaMinus)
-    (hfix : G.minusProjector (MinusRestrictedRelativeModularData.phaseLift R ρ b)
-      = MinusRestrictedRelativeModularData.phaseLift R ρ b) :
-    GeneralizedMetricSeed.minusProjector
-        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H) (R.lift b) = R.lift b := by
-  let _ := hfix
-  simpa using
-    MinusRestrictedRelativeModularData.realize_phaseLift_fixed_by_generalizedMetric_minusProjector
-      (R := R) (ρ := ρ) (b := b)
 
 @[rep_depth krein, simp] theorem PolarizedRelativeModularPair.plus_realize_phaseLift
     (R : PolarizedRelativeModularPair H α betaPlus betaMinus)

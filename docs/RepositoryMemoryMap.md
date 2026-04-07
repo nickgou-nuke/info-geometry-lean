@@ -87,6 +87,7 @@ Conceptual overlays and formal-side notes:
 
 Synthesis and speculative route notes:
 
+- [welding_theorem_synthesis.md](welding_theorem_synthesis.md)
 - [cocycle_detailed_balance_synthesis.md](cocycle_detailed_balance_synthesis.md)
 - [d4_crystal_synthesis.md](d4_crystal_synthesis.md)
 - [deep_horizon_synthesis.md](deep_horizon_synthesis.md)
@@ -101,6 +102,7 @@ Synthesis and speculative route notes:
 - [red_line_synthesis.md](red_line_synthesis.md)
 - [testable_predictions.md](testable_predictions.md)
 - [unification_map.md](unification_map.md)
+- [welding_theorem_synthesis.md](welding_theorem_synthesis.md)
 - [witten_synthesis.md](witten_synthesis.md)
 
 Walkthroughs and indexes:

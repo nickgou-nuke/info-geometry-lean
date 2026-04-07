@@ -60,7 +60,7 @@ or [RepositoryMemoryMap.md](RepositoryMemoryMap.md) explicitly promotes it.
 
 That includes:
 
-- synthesis notes such as `*_synthesis.md`
+- synthesis notes such as `welding_theorem_synthesis.md`, `*_synthesis.md`
 - diagnostics and backlog notes such as `analytic_closure_backlog.md` and `apex_*.md`
 - niche conceptual overlays such as `causal_apex_binding.md`
 - glossaries and indexes such as `keyword_index.md` and `lawful-flow-glossary.md`

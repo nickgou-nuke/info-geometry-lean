@@ -9,6 +9,7 @@ open InfoGeometry.Krein
 open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.BogoliubovClosedForms
+open InfoGeometry.Canonical.ConformalUnification
 
 namespace GeometricQuantumTensor
 
@@ -44,6 +45,80 @@ theorem KRotation_preserves_inner
   calc
     Real.cos t ^ 2 * g + g * Real.sin t ^ 2 = g * (Real.cos t ^ 2 + Real.sin t ^ 2) := by ring
     _ = g := by rw [hcossin]; ring
+
+/--
+Infinitesimal modular-conjugation transport law for the operatorial QGT metric
+seed in the commuting sector: the derivative at `t = 0` vanishes.
+-/
+theorem metricOfOperator_modularTransport_infinitesimal_stationary_of_commute_generator
+    (A hMod : EndH)
+    (hCommGen : Commute A (modularTransportGenerator (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (modularTransportGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    0 := by
+  exact
+    deriv_metricOfOperator_modularTransport_conjugation_at_zero_of_commute
+      (E := E) hMod A hCommGen u v
+
+/--
+If the transported operator commutes with the gauge sector of the modular
+generator, the infinitesimal QGT metric transport is entirely carried by the
+scaling channel.
+-/
+theorem metricOfOperator_modularTransport_infinitesimal_eq_scale_channel_of_commute_gaugePart
+    (A hMod : EndH)
+    (hCommGauge : Commute A (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (modularTransportGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    metricOfOperator (modularScaleDeriv (E := E) hMod A) u v := by
+  exact
+    deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularScaleDeriv_of_commute_gaugePart
+      (E := E) hMod A hCommGauge u v
+
+/--
+If the transported operator commutes with the scaling sector of the modular
+generator, the infinitesimal QGT metric transport is entirely carried by the
+gauge channel.
+-/
+theorem metricOfOperator_modularTransport_infinitesimal_eq_gauge_channel_of_commute_scalePart
+    (A hMod : EndH)
+    (hCommScale : Commute A (modularGeneratorScalePart (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (modularTransportGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    metricOfOperator (modularGaugeDeriv (E := E) hMod A) u v := by
+  exact
+    deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularGaugeDeriv_of_commute_scalePart
+      (E := E) hMod A hCommScale u v
 
 /--
 The operatorial metric seed carried by a Cartan-even operator commuting with
@@ -166,6 +241,31 @@ theorem metricOfOperator_modularTransportFlow_eq_of_commute_generator
   rw [metricOfOperator_apply, hEval, metricOfOperator_apply]
   exact modularTransportFlow_preserves_inner_of_isSelfAdjoint_of_IsPhaseLinear
     (E := E) hMod hSelf hPhase t (A u) v
+
+/--
+Exact modular-flow transport of the certified lifted Einstein anomaly operator.
+
+If the lifted Einstein anomaly commutes with the true modular transport
+generator, then its operatorial metric seed is preserved along the full flow.
+-/
+theorem metricOfOperator_liftedEinsteinAnomalyOperator_modularTransportFlow_eq_of_commute_generator
+    (CCI : CertifiedConformalInference E)
+    (hMod : EndH)
+    (hSelf : IsSelfAdjoint hMod)
+    (hPhase : IsPhaseLinear (E := E) hMod)
+    (hCommGen :
+      Commute CCI.liftedEinsteinAnomalyOperator
+        (modularTransportGenerator (E := E) hMod))
+    (t : ℝ) :
+    ∀ u v : H₂,
+      metricOfOperator CCI.liftedEinsteinAnomalyOperator
+          (modularTransportFlow (E := E) hMod t u)
+          (modularTransportFlow (E := E) hMod t v)
+        =
+      metricOfOperator CCI.liftedEinsteinAnomalyOperator u v := by
+  exact metricOfOperator_modularTransportFlow_eq_of_commute_generator
+    (E := E) (A := CCI.liftedEinsteinAnomalyOperator) (hMod := hMod)
+    hSelf hPhase hCommGen t
 
 /--
 The operatorial QGT is preserved along the exact modular transport flow in the

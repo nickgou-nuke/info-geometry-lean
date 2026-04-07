@@ -34,6 +34,23 @@ grade-zero/block form.
     minusProjector X * CI.projectorObstruction * plusProjector X = 0
 
 /--
+Operator-owner package for the bounded squashed obstruction readout:
+the operator remains grade-zero and block-diagonal in the same KKT split.
+-/
+@[rep_depth krein] structure SquashedObstructionOperatorOwner
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E) : Prop where
+  squashedObstruction_isGZero :
+    IsGZero X CI.squashedProjectorObstruction
+  squashedObstruction_diagonal_blocks :
+    CI.squashedProjectorObstruction
+      = plusProjector X * CI.squashedProjectorObstruction * plusProjector X
+        + minusProjector X * CI.squashedProjectorObstruction * minusProjector X
+  squashedObstruction_plusProjector_mul_mul_minusProjector_eq_zero :
+    plusProjector X * CI.squashedProjectorObstruction * minusProjector X = 0
+  squashedObstruction_minusProjector_mul_mul_plusProjector_eq_zero :
+    minusProjector X * CI.squashedProjectorObstruction * plusProjector X = 0
+
+/--
 Canonical operator-owner constructor:
 explicit KKT wing witnesses force the obstruction into the grade-zero diagonal
 block form, without any vanishing assumption.
@@ -52,6 +69,25 @@ block form, without any vanishing assumption.
   · exact CI.projectorObstruction_plusProjector_mul_mul_minusProjector_eq_zero_of_kkt_wings
       (X := X) hA hAMP hAD
   · exact CI.projectorObstruction_minusProjector_mul_mul_plusProjector_eq_zero_of_kkt_wings
+      (X := X) hA hAMP hAD
+
+/--
+Canonical operator-owner constructor for the bounded squashed obstruction.
+-/
+@[rep_depth krein] theorem squashedObstructionOperatorOwner_of_kkt_wings
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (hA : IsGOne X CI.A)
+    (hAMP : IsGNegOne X CI.A_MP)
+    (hAD : IsGNegOne X CI.A_D) :
+    SquashedObstructionOperatorOwner (CI := CI) X := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact CI.squashedProjectorObstruction_isGZero_of_kkt_wings
+      (X := X) hA hAMP hAD
+  · exact CI.squashedProjectorObstruction_eq_diagonal_blocks_of_kkt_wings
+      (X := X) hA hAMP hAD
+  · exact CI.squashedProjectorObstruction_plusProjector_mul_mul_minusProjector_eq_zero_of_kkt_wings
+      (X := X) hA hAMP hAD
+  · exact CI.squashedProjectorObstruction_minusProjector_mul_mul_plusProjector_eq_zero_of_kkt_wings
       (X := X) hA hAMP hAD
 
 /--

@@ -95,6 +95,7 @@ import InfoGeometry.Canonical.KKTGeneralizedInverseBridge
 import InfoGeometry.Canonical.KKTGeneralizedMetricBridge
 import InfoGeometry.Canonical.KKFoundation
 import InfoGeometry.Canonical.SpinConnection
+import InfoGeometry.Canonical.TransportLieDerivative
 import InfoGeometry.Canonical.SuperAnomaly
 import InfoGeometry.KL.EntropicInferenceTest
 import InfoGeometry.SLT.ConditionalExpectation
@@ -162,6 +163,7 @@ import InfoGeometry.Canonical.Twistor
 import InfoGeometry.Canonical.Unification
 import InfoGeometry.PositiveMeasure
 import InfoGeometry.Quantum.BulkBoundaryIndexBridge
+import InfoGeometry.Canonical.BulkBoundaryRegularizationBridge
 import InfoGeometry.Quantum.ModularAnomaly
 import InfoGeometry.Quantum.TriadicTransportCore
 import InfoGeometry.Quantum.TriadicTransportProjective
@@ -219,10 +221,12 @@ import InfoGeometry.Projective.Normalize
 -- L2: diagonal operator lift and partition calculus
 import InfoGeometry.Canonical.InformationPartitionCore
 import InfoGeometry.Canonical.RelativeModularOperator
+import InfoGeometry.Canonical.RelativeModularSingularization
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 
 -- L3: spectral / metric coherence on the doubled carrier
 import InfoGeometry.Canonical.DiagonalMetricModularBridge
+import InfoGeometry.Canonical.RelativeModularBerezinianBridge
 import InfoGeometry.Canonical.KreinDiracPolarizationBridge
 
 -- L4: transported/Bogoliubov presentation

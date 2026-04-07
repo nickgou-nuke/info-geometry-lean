@@ -1,4 +1,5 @@
 import InfoGeometry.GrandCanonical.Core
+import InfoGeometry.GrandCanonical.ResponseMatrix
 
 /-!
 # Core Grand Canonical
@@ -15,7 +16,7 @@ section FiniteModel
 
 open InfoGeometry.GrandCanonical
 
-variable {α : Type _} [Fintype α] [Nonempty α]
+variable {α : Type*} [Fintype α] [Nonempty α]
 
 noncomputable abbrev partition (params : GrandCanonicalParams α) (β : ℝ) : ℝ :=
   InfoGeometry.GrandCanonical.partition params β
@@ -75,7 +76,7 @@ section FiniteGrandCanonicalModel
 
 open InfoGeometry.GrandCanonical
 
-variable {α : Type _} [Fintype α] [Nonempty α]
+variable {α : Type*} [Fintype α] [Nonempty α]
 
 noncomputable abbrev shiftedEnergy
     (params : GrandCanonicalTwoParam α) (μ : ℝ) (x : α) : ℝ :=
@@ -122,5 +123,86 @@ lemma gc2_potential_deriv_mu_eq_beta_meanNumber
   potentialGC_deriv_mu_eq_beta_meanNumber params β μ
 
 end FiniteGrandCanonicalModel
+
+namespace GrandCanonical.TwoParam
+
+open InfoGeometry.GrandCanonical
+
+variable {α : Type*} [Fintype α] [Nonempty α]
+
+noncomputable abbrev betaResponse
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  InfoGeometry.GrandCanonical.betaResponse params β μ
+
+noncomputable abbrev muResponse
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  InfoGeometry.GrandCanonical.muResponse params β μ
+
+noncomputable abbrev betaHessian
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  InfoGeometry.GrandCanonical.betaHessian params β μ
+
+noncomputable abbrev muHessian
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  InfoGeometry.GrandCanonical.muHessian params β μ
+
+noncomputable abbrev betaMuHessian
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  InfoGeometry.GrandCanonical.betaMuHessian params β μ
+
+noncomputable abbrev muBetaHessian
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  InfoGeometry.GrandCanonical.muBetaHessian params β μ
+
+abbrev ResponseMatrix2 :=
+  InfoGeometry.GrandCanonical.ResponseMatrix2
+
+noncomputable abbrev responseMatrix
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ResponseMatrix2 :=
+  InfoGeometry.GrandCanonical.responseMatrix params β μ
+
+abbrev Spinodal2D
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : Prop :=
+  InfoGeometry.GrandCanonical.Spinodal2D params β μ
+
+abbrev ResponseSymmetric (M : ResponseMatrix2) : Prop :=
+  InfoGeometry.GrandCanonical.ResponseMatrix2.Symmetric M
+
+abbrev ResponsePositiveSemidefinite (M : ResponseMatrix2) : Prop :=
+  InfoGeometry.GrandCanonical.ResponseMatrix2.PositiveSemidefinite M
+
+lemma gc2_betaResponse_eq_neg_meanShift
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    betaResponse params β μ = -meanShift params β μ :=
+  InfoGeometry.GrandCanonical.betaResponse_eq_neg_meanShift params β μ
+
+lemma gc2_muResponse_eq_beta_meanNumber
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    muResponse params β μ = β * meanNumber params β μ :=
+  InfoGeometry.GrandCanonical.muResponse_eq_beta_meanNumber params β μ
+
+omit [Nonempty α] in
+lemma gc2_responseMatrix_symmetric
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ)
+    (hMixed : betaMuHessian params β μ = muBetaHessian params β μ) :
+    ResponseSymmetric (responseMatrix params β μ) :=
+  InfoGeometry.GrandCanonical.responseMatrix_symmetric params β μ hMixed
+
+omit [Nonempty α] in
+lemma gc2_responseMatrix_positiveSemidefinite
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ)
+    (hββ : 0 ≤ betaHessian params β μ)
+    (hμμ : 0 ≤ muHessian params β μ)
+    (hdet : 0 ≤ (responseMatrix params β μ).det) :
+    ResponsePositiveSemidefinite (responseMatrix params β μ) :=
+  InfoGeometry.GrandCanonical.responseMatrix_positiveSemidefinite params β μ hββ hμμ hdet
+
+omit [Nonempty α] in
+lemma gc2_spinodal2D_iff_det_eq_zero
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    Spinodal2D params β μ ↔ (responseMatrix params β μ).det = 0 :=
+  InfoGeometry.GrandCanonical.spinodal2D_iff_det_eq_zero params β μ
+
+end GrandCanonical.TwoParam
 
 end InfoGeometry.Core

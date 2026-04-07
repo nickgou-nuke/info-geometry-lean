@@ -12,21 +12,21 @@ Cartan, Clifford, and Krein layers.
 namespace InfoGeometry.Core
 
 /-- A bare involutive endomorphism on `M`. -/
-structure InvolutiveAutomorphism (M : Type _) where
+structure InvolutiveAutomorphism (M : Type*) where
   toFun : M → M
   involutive : Function.Involutive toFun
 
 attribute [simp] InvolutiveAutomorphism.involutive
 
 /-- Compatibility alias emphasizing this is an involutive self-map. -/
-abbrev Involution (M : Type _) := InvolutiveAutomorphism M
+abbrev Involution (M : Type*) := InvolutiveAutomorphism M
 
-instance {M : Type _} :
+instance {M : Type*} :
     CoeFun (InvolutiveAutomorphism M) (fun _ => M → M) where
   coe θ := θ.toFun
 
 @[ext] theorem InvolutiveAutomorphism.ext
-    {M : Type _} {θ ψ : InvolutiveAutomorphism M}
+    {M : Type*} {θ ψ : InvolutiveAutomorphism M}
     (h : ∀ x, θ x = ψ x) : θ = ψ := by
   cases θ with
   | mk θto θinv =>
@@ -40,7 +40,7 @@ instance {M : Type _} :
 
 /-- Linear structure preservation for an involution. -/
 class PreservesLinear
-    (V : Type _) [AddCommGroup V] [Module ℝ V]
+    (V : Type*) [AddCommGroup V] [Module ℝ V]
     (θ : InvolutiveAutomorphism V) : Prop where
   map_add : ∀ x y, θ (x + y) = θ x + θ y
   map_smul : ∀ (a : ℝ) x, θ (a • x) = a • θ x
@@ -50,7 +50,7 @@ attribute [simp] PreservesLinear.map_smul
 
 /-- Multiplicative structure preservation for an involution. -/
 class PreservesMul
-    (G : Type _) [Group G]
+    (G : Type*) [Group G]
     (θ : InvolutiveAutomorphism G) : Prop where
   map_mul : ∀ x y, θ (x * y) = θ x * θ y
   map_one : θ 1 = 1
@@ -60,22 +60,22 @@ attribute [simp] PreservesMul.map_one
 
 /-- Lie bracket preservation for an involution. -/
 class PreservesLieBracket
-    (L : Type _) [LieRing L] [LieAlgebra ℝ L]
+    (L : Type*) [LieRing L] [LieAlgebra ℝ L]
     (θ : InvolutiveAutomorphism L) : Prop where
   map_lie : ∀ x y, θ ⁅x, y⁆ = ⁅θ x, θ y⁆
 
 /-- Bundled Lie compatibility: linear + bracket preservation. -/
 class PreservesLie
-    (L : Type _) [LieRing L] [LieAlgebra ℝ L]
+    (L : Type*) [LieRing L] [LieAlgebra ℝ L]
     (θ : InvolutiveAutomorphism L)
     extends PreservesLinear L θ, PreservesLieBracket L θ
 
-instance (L : Type _) [LieRing L] [LieAlgebra ℝ L]
+instance (L : Type*) [LieRing L] [LieAlgebra ℝ L]
     (θ : InvolutiveAutomorphism L) [PreservesLie L θ] :
     PreservesLinear L θ :=
   PreservesLie.toPreservesLinear
 
-instance (L : Type _) [LieRing L] [LieAlgebra ℝ L]
+instance (L : Type*) [LieRing L] [LieAlgebra ℝ L]
     (θ : InvolutiveAutomorphism L) [PreservesLie L θ] :
     PreservesLieBracket L θ :=
   PreservesLie.toPreservesLieBracket
@@ -84,7 +84,7 @@ namespace InvolutiveAutomorphism
 
 section LinearDerived
 
-variable {V : Type _} [AddCommGroup V] [Module ℝ V]
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 variable (θ : InvolutiveAutomorphism V) [PreservesLinear V θ]
 
 lemma map_add (x y : V) :
@@ -109,7 +109,7 @@ end LinearDerived
 
 section LieDerived
 
-variable {L : Type _} [LieRing L] [LieAlgebra ℝ L]
+variable {L : Type*} [LieRing L] [LieAlgebra ℝ L]
 variable (θ : InvolutiveAutomorphism L) [PreservesLieBracket L θ]
 
 lemma map_lie (x y : L) :
@@ -120,7 +120,7 @@ end LieDerived
 
 section MulDerived
 
-variable {G : Type _} [Group G]
+variable {G : Type*} [Group G]
 variable (θ : InvolutiveAutomorphism G) [PreservesMul G θ]
 
 lemma map_mul (x y : G) :
@@ -150,19 +150,19 @@ end InvolutiveAutomorphism
 
 /-- Backward-compatible linear involution package as a subtype. -/
 abbrev LinearInvolutiveAutomorphism
-    (V : Type _) [AddCommGroup V] [Module ℝ V] :=
+    (V : Type*) [AddCommGroup V] [Module ℝ V] :=
   { θ : InvolutiveAutomorphism V // PreservesLinear V θ }
 
 /-- Backward-compatible multiplicative involution package as a subtype. -/
 abbrev MulInvolutiveAutomorphism
-    (G : Type _) [Group G] :=
+    (G : Type*) [Group G] :=
   { θ : InvolutiveAutomorphism G // PreservesMul G θ }
 
-instance {V : Type _} [AddCommGroup V] [Module ℝ V] :
+instance {V : Type*} [AddCommGroup V] [Module ℝ V] :
     CoeFun (LinearInvolutiveAutomorphism V) (fun _ => V → V) where
   coe θ := θ.1
 
-instance {G : Type _} [Group G] :
+instance {G : Type*} [Group G] :
     CoeFun (MulInvolutiveAutomorphism G) (fun _ => G → G) where
   coe θ := θ.1
 
@@ -170,7 +170,7 @@ namespace LinearInvolutiveAutomorphism
 
 section
 
-variable {V : Type _} [AddCommGroup V] [Module ℝ V]
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 variable (θ : LinearInvolutiveAutomorphism V)
 
 instance instPreservesLinear :
@@ -204,7 +204,7 @@ namespace MulInvolutiveAutomorphism
 
 section
 
-variable {G : Type _} [Group G]
+variable {G : Type*} [Group G]
 variable (θ : MulInvolutiveAutomorphism G)
 
 instance instPreservesMul :
@@ -236,7 +236,7 @@ end MulInvolutiveAutomorphism
 
 namespace Projector
 
-variable {V : Type _} [AddCommGroup V] [Module ℝ V]
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 variable (θ : InvolutiveAutomorphism V)
 
 /-- +1 projector `(Id + θ)/2`. -/
@@ -384,7 +384,7 @@ end Projector
 
 section Linear
 
-variable {V : Type _} [AddCommGroup V] [Module ℝ V]
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
 /-- Backward-compatible alias for `Projector.plus`. -/
 noncomputable def cartanPlus

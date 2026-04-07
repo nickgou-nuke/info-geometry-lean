@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.KKTCore
+import InfoGeometry.Canonical.AnomalyGauge
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Tactic.NoncommRing
 set_option linter.unusedSimpArgs false
@@ -15,6 +16,7 @@ open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.Canonical.SpectralInference
 open InfoGeometry.Canonical.KKTCore
+open InfoGeometry.Canonical.AnomalyGauge
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
@@ -60,6 +62,26 @@ abbrev mpRangeProjector : E →L[ℝ] E :=
 /-- The certified Moore-Penrose domain projector. -/
 abbrev metricProjector : E →L[ℝ] E := CCI.toCertifiedInverseKernel.metricProjector
 
+/-- Certified left-projector anomaly commutator. -/
+def chiralAnomaly : E →L[ℝ] E :=
+  CCI.spectralProjector * CCI.metricProjector - CCI.metricProjector * CCI.spectralProjector
+
+/-- Certified operator alias for the canonical left-projector anomaly. -/
+abbrev chiralAnomalyOperator : E →L[ℝ] E := CCI.chiralAnomaly
+
+/-- Explicit certified left-projector anomaly alias. -/
+abbrev leftChiralAnomaly : E →L[ℝ] E := CCI.chiralAnomaly
+
+/-- Explicit certified left-projector anomaly operator alias. -/
+abbrev leftChiralAnomalyOperator : E →L[ℝ] E := CCI.leftChiralAnomaly
+
+/-- Certified right-projector anomaly commutator. -/
+def rightChiralAnomaly : E →L[ℝ] E :=
+  CCI.spectralProjector * CCI.mpRangeProjector - CCI.mpRangeProjector * CCI.spectralProjector
+
+/-- Certified operator alias for the right-projector anomaly. -/
+abbrev rightChiralAnomalyOperator : E →L[ℝ] E := CCI.rightChiralAnomaly
+
 /-- The certified Drazin spectral projector is idempotent. -/
 theorem spectralProjector_idempotent :
     CCI.spectralProjector * CCI.spectralProjector = CCI.spectralProjector := by
@@ -89,6 +111,76 @@ theorem mpRangeProjector_star :
     star CCI.mpRangeProjector = CCI.mpRangeProjector := by
   simpa [CertifiedConformalInference.mpRangeProjector] using
     CCI.toCertifiedInverseKernel.mpRangeProjector_star
+
+/-- The certified Drazin spectral projector is self-adjoint if `A` and `A_D` are. -/
+theorem spectralProjector_star_of_isSelfAdjoint
+    (hA : IsSelfAdjoint CCI.A)
+    (hAD : IsSelfAdjoint CCI.A_D) :
+    star CCI.spectralProjector = CCI.spectralProjector := by
+  simpa [CertifiedConformalInference.spectralProjector] using
+    CCI.toCertifiedInverseKernel.spectralProjector_star_of_isSelfAdjoint hA hAD
+
+/-- The certified Drazin spectral projector is self-adjoint if `A` and `A_D` are. -/
+theorem spectralProjector_isSelfAdjoint_of_isSelfAdjoint
+    (hA : IsSelfAdjoint CCI.A)
+    (hAD : IsSelfAdjoint CCI.A_D) :
+    IsSelfAdjoint CCI.spectralProjector := by
+  simpa [CertifiedConformalInference.spectralProjector] using
+    CCI.toCertifiedInverseKernel.spectralProjector_isSelfAdjoint_of_isSelfAdjoint hA hAD
+
+/-- The certified left anomaly commutator is skew-adjoint if `A` and `A_D` are. -/
+theorem leftAnomalyCommutator_star_eq_neg_of_isSelfAdjoint
+    (hA : IsSelfAdjoint CCI.A)
+    (hAD : IsSelfAdjoint CCI.A_D) :
+    star (CCI.spectralProjector * CCI.metricProjector
+        - CCI.metricProjector * CCI.spectralProjector) =
+      -(CCI.spectralProjector * CCI.metricProjector
+        - CCI.metricProjector * CCI.spectralProjector) := by
+  exact commutator_is_skew_adjoint CCI.spectralProjector CCI.metricProjector
+    (CCI.spectralProjector_star_of_isSelfAdjoint hA hAD)
+    CCI.metricProjector_star
+
+/-- The certified right anomaly commutator is skew-adjoint if `A` and `A_D` are. -/
+theorem rightAnomalyCommutator_star_eq_neg_of_isSelfAdjoint
+    (hA : IsSelfAdjoint CCI.A)
+    (hAD : IsSelfAdjoint CCI.A_D) :
+    star (CCI.spectralProjector * CCI.mpRangeProjector
+        - CCI.mpRangeProjector * CCI.spectralProjector) =
+      -(CCI.spectralProjector * CCI.mpRangeProjector
+        - CCI.mpRangeProjector * CCI.spectralProjector) := by
+  exact commutator_is_skew_adjoint CCI.spectralProjector CCI.mpRangeProjector
+    (CCI.spectralProjector_star_of_isSelfAdjoint hA hAD)
+    CCI.mpRangeProjector_star
+
+/--
+The canonical left-projector anomaly operator is skew-adjoint on the certified
+conformal surface once `A` and `A_D` are self-adjoint.
+-/
+theorem chiralAnomalyOperator_star_eq_neg_of_isSelfAdjoint
+    (hA : IsSelfAdjoint CCI.A)
+    (hAD : IsSelfAdjoint CCI.A_D) :
+    star CCI.chiralAnomalyOperator = -CCI.chiralAnomalyOperator := by
+  simpa [CertifiedConformalInference.chiralAnomalyOperator,
+    CertifiedConformalInference.chiralAnomaly] using
+      CCI.leftAnomalyCommutator_star_eq_neg_of_isSelfAdjoint hA hAD
+
+/-- Explicit left-projector alias for certified skew-adjointness of `χ_L`. -/
+theorem leftChiralAnomalyOperator_star_eq_neg_of_isSelfAdjoint
+    (hA : IsSelfAdjoint CCI.A)
+    (hAD : IsSelfAdjoint CCI.A_D) :
+    star CCI.leftChiralAnomalyOperator = -CCI.leftChiralAnomalyOperator := by
+  simpa [CertifiedConformalInference.leftChiralAnomalyOperator,
+    CertifiedConformalInference.leftChiralAnomaly] using
+    CCI.chiralAnomalyOperator_star_eq_neg_of_isSelfAdjoint hA hAD
+
+/-- The certified right-projector anomaly operator is skew-adjoint if `A` and `A_D` are. -/
+theorem rightChiralAnomalyOperator_star_eq_neg_of_isSelfAdjoint
+    (hA : IsSelfAdjoint CCI.A)
+    (hAD : IsSelfAdjoint CCI.A_D) :
+    star CCI.rightChiralAnomalyOperator = -CCI.rightChiralAnomalyOperator := by
+  simpa [CertifiedConformalInference.rightChiralAnomalyOperator,
+    CertifiedConformalInference.rightChiralAnomaly] using
+      CCI.rightAnomalyCommutator_star_eq_neg_of_isSelfAdjoint hA hAD
 
 end CertifiedConformalInference
 

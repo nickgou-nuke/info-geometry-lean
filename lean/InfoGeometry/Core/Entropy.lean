@@ -12,7 +12,7 @@ namespace InfoGeometry.Core
 open InfoGeometry
 open scoped BigOperators ENNReal
 
-variable {α : Type _}
+variable {α : Type*}
 
 @[simp] lemma logDensity_def (P : ProbabilityDist α) (x : α) :
     logDensity P x = Real.log (P x).toReal := rfl
@@ -61,13 +61,33 @@ variable [Fintype α]
 
 end Fintype
 
-section FintypeMeasurable
+section Measurable
 
 variable [MeasurableSpace α]
 
 @[simp] lemma klDiv_def (P Q : ProbabilityDist α) :
     InfoGeometry.KL.kl_div P.toMeasure Q.toMeasure = InfoGeometry.fin_kl_div P Q := rfl
 
-end FintypeMeasurable
+@[simp] lemma klDiv_self (P : ProbabilityDist α) :
+    InfoGeometry.KL.kl_div P.toMeasure P.toMeasure = 0 :=
+  InfoGeometry.KL.klDiv_self P.toMeasure
+
+lemma klDiv_eq_zero_iff_toMeasure_eq
+    (P Q : ProbabilityDist α) :
+    InfoGeometry.KL.kl_div P.toMeasure Q.toMeasure = 0 ↔ P.toMeasure = Q.toMeasure := by
+  simpa using (InfoGeometry.KL.klDiv_eq_zero_iff (μ := P.toMeasure) (ν := Q.toMeasure))
+
+@[simp] lemma fin_kl_div_self (P : ProbabilityDist α) :
+    InfoGeometry.fin_kl_div P P = 0 := by
+  rw [← klDiv_def]
+  exact klDiv_self (P := P)
+
+lemma fin_kl_div_eq_zero_iff_toMeasure_eq
+    (P Q : ProbabilityDist α) :
+    InfoGeometry.fin_kl_div P Q = 0 ↔ P.toMeasure = Q.toMeasure := by
+  rw [← klDiv_def]
+  exact klDiv_eq_zero_iff_toMeasure_eq (P := P) (Q := Q)
+
+end Measurable
 
 end InfoGeometry.Core

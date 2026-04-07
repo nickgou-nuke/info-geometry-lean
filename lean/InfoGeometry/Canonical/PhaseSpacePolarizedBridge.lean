@@ -396,6 +396,80 @@ phase-space fixed-point statement and the projective-count Hamiltonian identity.
         (hcounts := hcounts) (href := href)
         (hsource := hsource) (htarget := htarget) i
 
+/--
+Count/phase-space weld on the shared polarized carrier:
+for a single polarized pair, the plus/minus phase-space fixed-point statements
+and the plus/minus count/projective Hamiltonian identities are discharged
+simultaneously.
+-/
+@[rep_depth krein, capstone] theorem
+    PolarizedRelativeModularPair.phaseSpace_projectiveCount_weld_of_countRays
+    (R : PolarizedRelativeModularPair H α (Fin nPlus) (Fin nMinus))
+    (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H)
+    (countsPlus refPlus : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts nPlus)
+    (hcountsPlus : ∀ i : Fin nPlus, 0 < countsPlus i)
+    (hrefPlus : ∀ i : Fin nPlus, 0 < refPlus i)
+    (hplusSource : R.plus.data.localSource =
+      InfoGeometry.Canonical.RelativePotentialCountBridge.countRay countsPlus hcountsPlus)
+    (hplusTarget : R.plus.data.localTarget =
+      InfoGeometry.Canonical.RelativePotentialCountBridge.countRay refPlus hrefPlus)
+    (countsMinus refMinus : InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts nMinus)
+    (hcountsMinus : ∀ i : Fin nMinus, 0 < countsMinus i)
+    (hrefMinus : ∀ i : Fin nMinus, 0 < refMinus i)
+    (hminusSource : R.minus.data.localSource =
+      InfoGeometry.Canonical.RelativePotentialCountBridge.countRay countsMinus hcountsMinus)
+    (hminusTarget : R.minus.data.localTarget =
+      InfoGeometry.Canonical.RelativePotentialCountBridge.countRay refMinus hrefMinus)
+    (iPlus : Fin nPlus) (iMinus : Fin nMinus) :
+    GeneralizedMetricSeed.plusProjector
+        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
+        (R.plus.lift iPlus) = R.plus.lift iPlus
+      ∧
+    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin nPlus) R.plus.data.localTarget)
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin nPlus) R.plus.data.localSource) iPlus
+      = InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountHamiltonianProfile
+          countsPlus refPlus hcountsPlus hrefPlus iPlus
+      ∧
+    GeneralizedMetricSeed.minusProjector
+        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
+        (R.minus.lift iMinus) = R.minus.lift iMinus
+      ∧
+    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin nMinus) R.minus.data.localTarget)
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin nMinus) R.minus.data.localSource) iMinus
+      = InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountHamiltonianProfile
+          countsMinus refMinus hcountsMinus hrefMinus iMinus := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact
+      (PlusRestrictedRelativeModularData.phaseSpace_projectiveCount_junction_of_countRays
+        (R := R.plus) (ρ := ρ)
+        (counts := countsPlus) (ref := refPlus)
+        (hcounts := hcountsPlus) (href := hrefPlus)
+        (hsource := hplusSource) (htarget := hplusTarget) (i := iPlus)).1
+  · exact
+      (PlusRestrictedRelativeModularData.phaseSpace_projectiveCount_junction_of_countRays
+        (R := R.plus) (ρ := ρ)
+        (counts := countsPlus) (ref := refPlus)
+        (hcounts := hcountsPlus) (href := hrefPlus)
+        (hsource := hplusSource) (htarget := hplusTarget) (i := iPlus)).2
+  · exact
+      (MinusRestrictedRelativeModularData.phaseSpace_projectiveCount_junction_of_countRays
+        (R := R.minus) (ρ := ρ)
+        (counts := countsMinus) (ref := refMinus)
+        (hcounts := hcountsMinus) (href := hrefMinus)
+        (hsource := hminusSource) (htarget := hminusTarget) (i := iMinus)).1
+  · exact
+      (MinusRestrictedRelativeModularData.phaseSpace_projectiveCount_junction_of_countRays
+        (R := R.minus) (ρ := ρ)
+        (counts := countsMinus) (ref := refMinus)
+        (hcounts := hcountsMinus) (href := hrefMinus)
+        (hsource := hminusSource) (htarget := hminusTarget) (i := iMinus)).2
+
 end CountJunction
 
 end Core

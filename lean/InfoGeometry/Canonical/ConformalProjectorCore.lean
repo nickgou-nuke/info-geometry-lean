@@ -41,6 +41,18 @@ structure CertifiedConformalInference (E : Type*) [NormedAddCommGroup E]
   hDrazin : IsDrazinInverse A A_D drazinIndex
   hMoorePenrose : IsMoorePenroseInverse A A_MP
 
+/--
+Star-certified conformal inference package.
+
+This strengthens `CertifiedConformalInference` with an explicit certification
+that the Drazin spectral projector is self-adjoint.
+-/
+structure StarCertifiedConformalInference (E : Type*) [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E] extends CertifiedConformalInference E where
+  spectralProjector_star :
+    star (toCertifiedConformalInference.A * toCertifiedConformalInference.A_D)
+      = toCertifiedConformalInference.A * toCertifiedConformalInference.A_D
+
 namespace CertifiedConformalInference
 
 variable (CCI : CertifiedConformalInference E)
@@ -183,6 +195,127 @@ theorem rightChiralAnomalyOperator_star_eq_neg_of_isSelfAdjoint
       CCI.rightAnomalyCommutator_star_eq_neg_of_isSelfAdjoint hA hAD
 
 end CertifiedConformalInference
+
+namespace CertifiedConformalInference
+
+variable (CCI : CertifiedConformalInference E)
+
+/--
+Package constructor: if `A` and `A_D` are self-adjoint, the certified conformal
+surface upgrades to the star-certified surface with explicit `star P_D = P_D`.
+-/
+def toStarCertifiedConformalInference
+    (hA : IsSelfAdjoint CCI.A)
+    (hAD : IsSelfAdjoint CCI.A_D) :
+    StarCertifiedConformalInference E where
+  toCertifiedConformalInference := CCI
+  spectralProjector_star := CCI.spectralProjector_star_of_isSelfAdjoint hA hAD
+
+end CertifiedConformalInference
+
+namespace StarCertifiedConformalInference
+
+variable (SCI : StarCertifiedConformalInference E)
+
+/-- Adapter from star-certified conformal data to certified inverse-kernel data. -/
+abbrev toCertifiedInverseKernel : InfoGeometry.Canonical.CertifiedInverseKernel E :=
+  SCI.toCertifiedConformalInference.toCertifiedInverseKernel
+
+/-- The star-certified Drazin spectral projector. -/
+abbrev spectralProjector : E →L[ℝ] E := SCI.toCertifiedConformalInference.spectralProjector
+
+/-- The star-certified Moore-Penrose range projector. -/
+abbrev mpRangeProjector : E →L[ℝ] E := SCI.toCertifiedConformalInference.mpRangeProjector
+
+/-- The star-certified Moore-Penrose domain projector. -/
+abbrev metricProjector : E →L[ℝ] E := SCI.toCertifiedConformalInference.metricProjector
+
+/-- Star-certified left-projector anomaly commutator. -/
+abbrev chiralAnomaly : E →L[ℝ] E := SCI.toCertifiedConformalInference.chiralAnomaly
+
+/-- Star-certified operator alias for the canonical left anomaly commutator. -/
+abbrev chiralAnomalyOperator : E →L[ℝ] E := SCI.toCertifiedConformalInference.chiralAnomalyOperator
+
+/-- Explicit star-certified left anomaly alias. -/
+abbrev leftChiralAnomaly : E →L[ℝ] E := SCI.toCertifiedConformalInference.leftChiralAnomaly
+
+/-- Explicit star-certified left anomaly operator alias. -/
+abbrev leftChiralAnomalyOperator : E →L[ℝ] E := SCI.toCertifiedConformalInference.leftChiralAnomalyOperator
+
+/-- Star-certified right-projector anomaly commutator. -/
+abbrev rightChiralAnomaly : E →L[ℝ] E := SCI.toCertifiedConformalInference.rightChiralAnomaly
+
+/-- Star-certified operator alias for the right anomaly commutator. -/
+abbrev rightChiralAnomalyOperator : E →L[ℝ] E := SCI.toCertifiedConformalInference.rightChiralAnomalyOperator
+
+/-- The star-certified Moore-Penrose domain projector is self-adjoint. -/
+theorem metricProjector_star :
+    star SCI.metricProjector = SCI.metricProjector := by
+  simpa [StarCertifiedConformalInference.metricProjector] using
+    SCI.toCertifiedConformalInference.metricProjector_star
+
+/-- The star-certified Drazin spectral projector is self-adjoint. -/
+theorem spectralProjector_star_eq :
+    star SCI.spectralProjector = SCI.spectralProjector := by
+  simpa [StarCertifiedConformalInference.spectralProjector,
+    CertifiedConformalInference.spectralProjector,
+    CertifiedConformalInference.toCertifiedInverseKernel,
+    CertifiedInverseKernel.spectralProjector, CertifiedInverseKernel.toInverseKernel',
+    InverseKernel.spectralProjector, IsDrazinInverse.projection] using
+      SCI.spectralProjector_star
+
+/-- The star-certified Moore-Penrose range projector is self-adjoint. -/
+theorem mpRangeProjector_star :
+    star SCI.mpRangeProjector = SCI.mpRangeProjector := by
+  simpa [StarCertifiedConformalInference.mpRangeProjector] using
+    SCI.toCertifiedConformalInference.mpRangeProjector_star
+
+/-- The star-certified left anomaly commutator is skew-adjoint. -/
+theorem leftAnomalyCommutator_star_eq_neg :
+    star (SCI.spectralProjector * SCI.metricProjector
+        - SCI.metricProjector * SCI.spectralProjector) =
+      -(SCI.spectralProjector * SCI.metricProjector
+        - SCI.metricProjector * SCI.spectralProjector) := by
+  exact commutator_is_skew_adjoint SCI.spectralProjector SCI.metricProjector
+    (SCI.spectralProjector_star_eq)
+    SCI.metricProjector_star
+
+/-- The star-certified right anomaly commutator is skew-adjoint. -/
+theorem rightAnomalyCommutator_star_eq_neg :
+    star (SCI.spectralProjector * SCI.mpRangeProjector
+        - SCI.mpRangeProjector * SCI.spectralProjector) =
+      -(SCI.spectralProjector * SCI.mpRangeProjector
+        - SCI.mpRangeProjector * SCI.spectralProjector) := by
+  exact commutator_is_skew_adjoint SCI.spectralProjector SCI.mpRangeProjector
+    (SCI.spectralProjector_star_eq)
+    SCI.mpRangeProjector_star
+
+/-- The canonical star-certified left anomaly operator is skew-adjoint. -/
+theorem chiralAnomalyOperator_star_eq_neg :
+    star SCI.chiralAnomalyOperator = -SCI.chiralAnomalyOperator := by
+  simpa [StarCertifiedConformalInference.chiralAnomalyOperator,
+    StarCertifiedConformalInference.chiralAnomaly,
+    CertifiedConformalInference.chiralAnomalyOperator,
+    CertifiedConformalInference.chiralAnomaly] using
+      SCI.leftAnomalyCommutator_star_eq_neg
+
+/-- Explicit left-projector alias for star-certified skew-adjointness of `χ_L`. -/
+theorem leftChiralAnomalyOperator_star_eq_neg :
+    star SCI.leftChiralAnomalyOperator = -SCI.leftChiralAnomalyOperator := by
+  simpa [StarCertifiedConformalInference.leftChiralAnomalyOperator,
+    StarCertifiedConformalInference.leftChiralAnomaly] using
+      SCI.chiralAnomalyOperator_star_eq_neg
+
+/-- The star-certified right anomaly operator is skew-adjoint. -/
+theorem rightChiralAnomalyOperator_star_eq_neg :
+    star SCI.rightChiralAnomalyOperator = -SCI.rightChiralAnomalyOperator := by
+  simpa [StarCertifiedConformalInference.rightChiralAnomalyOperator,
+    StarCertifiedConformalInference.rightChiralAnomaly,
+    CertifiedConformalInference.rightChiralAnomalyOperator,
+    CertifiedConformalInference.rightChiralAnomaly] using
+      SCI.rightAnomalyCommutator_star_eq_neg
+
+end StarCertifiedConformalInference
 
 namespace ConformalInference
 

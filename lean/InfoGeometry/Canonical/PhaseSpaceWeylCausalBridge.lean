@@ -293,6 +293,30 @@ commutator is exactly minus one half of the projector obstruction. -/
     ConformalInference.spectralProjector_commutator_dilation_eq_neg_half_projectorObstruction_of_rightProjector_commute
       (CI := CCI.toConformalInference) hRight
 
+omit [Nontrivial E] in
+/-- Dilation/anomaly driver from the conformal operator lane:
+under Moore-Penrose projector agreement and left-metric commutation, the
+spectral-projector/dilation commutator is exactly minus one half of the
+projector obstruction. -/
+@[rep_depth krein] theorem
+    spectralProjector_commutator_dilation_eq_neg_half_projectorObstruction_from_conformal_of_projectorAgreement_of_metricProjector_commute
+    (CCI : CertifiedConformalInference (DoubledSpace E))
+    (hProj :
+      InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector CCI.A CCI.A_MP =
+        InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector CCI.A CCI.A_MP)
+    (hLeft :
+      CCI.toConformalInference.P_D * CCI.toConformalInference.P_MP
+        = CCI.toConformalInference.P_MP * CCI.toConformalInference.P_D) :
+    CCI.toConformalInference.P_D * CCI.toConformalInference.D
+        - CCI.toConformalInference.D * CCI.toConformalInference.P_D
+      = -((2 : ℝ)⁻¹) • CCI.toConformalInference.projectorObstruction := by
+  have hProj' :
+      CCI.toConformalInference.P_MP_right = CCI.toConformalInference.P_MP := by
+    simpa [ConformalInference.P_MP_right, ConformalInference.P_MP] using hProj
+  simpa using
+    ConformalInference.spectralProjector_commutator_dilation_eq_neg_half_projectorObstruction_of_projectorAgreement_of_metricProjector_commute
+      (CI := CCI.toConformalInference) hProj' hLeft
+
 /-- Full operator-to-Weyl package under right-projector commutation:
 the dilation commutator is sourced by projector obstruction, and flat Weyl
 transport lands on the obstruction norm. -/
@@ -319,6 +343,39 @@ transport lands on the obstruction norm. -/
   · exact
       spectralProjector_commutator_dilation_eq_neg_half_projectorObstruction_from_conformal
         (CCI := CCI) hRight
+  · exact
+      holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal_doubled
+        (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+
+/-- Full operator-to-Weyl package under structured projector hypotheses:
+projector agreement plus left-metric commutation derive the dilation source,
+and flat Weyl transport lands on the obstruction norm. -/
+@[rep_depth krein] theorem
+    projectorAgreement_metricProjector_commute_dilation_driver_and_holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal
+    (CCI : CertifiedConformalInference (DoubledSpace E))
+    (hProj :
+      InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector CCI.A CCI.A_MP =
+        InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector CCI.A CCI.A_MP)
+    (hLeft :
+      CCI.toConformalInference.P_D * CCI.toConformalInference.P_MP
+        = CCI.toConformalInference.P_MP * CCI.toConformalInference.P_D)
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureProjectorObstructionBridge
+        (CI := CCI.toConformalInference) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B) :
+    (CCI.toConformalInference.P_D * CCI.toConformalInference.D
+        - CCI.toConformalInference.D * CCI.toConformalInference.P_D
+      = -((2 : ℝ)⁻¹) • CCI.toConformalInference.projectorObstruction)
+      ∧
+      bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+        = ‖CCI.toConformalInference.projectorObstruction‖₊ := by
+  refine ⟨?_, ?_⟩
+  · exact
+      spectralProjector_commutator_dilation_eq_neg_half_projectorObstruction_from_conformal_of_projectorAgreement_of_metricProjector_commute
+        (CCI := CCI) hProj hLeft
   · exact
       holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal_doubled
         (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
@@ -644,6 +701,42 @@ terminal norm endpoint. -/
       obstruction_plusProjector_mul_mul_minusProjector_eq_zero := hPlusOff
       obstruction_minusProjector_mul_mul_plusProjector_eq_zero := hMinusOff
       holonomy_eq_projectorObstruction_nnnorm := hHol }
+
+@[rep_depth krein] theorem
+    kkt_wings_projectorAgreement_metricProjector_commute_dilation_source_diagonal_blocks_and_holonomy_eq_projectorObstruction_nnnorm_of_flat
+    (CCI : CertifiedConformalInference (DoubledSpace E))
+    (hProj :
+      InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector CCI.A CCI.A_MP =
+        InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector CCI.A CCI.A_MP)
+    (hLeft :
+      CCI.toConformalInference.P_D * CCI.toConformalInference.P_MP
+        = CCI.toConformalInference.P_MP * CCI.toConformalInference.P_D)
+    (hA : IsGOne (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) CCI.A)
+    (hAMP : IsGNegOne (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) CCI.A_MP)
+    (hAD : IsGNegOne (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) CCI.A_D)
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureProjectorObstructionBridge
+        (CI := CCI.toConformalInference) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B) :
+    SourceSpineAndWeylEndpoint
+      (CCI := CCI)
+      (X0 := InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+      (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) := by
+  have hProj' :
+      CCI.toConformalInference.P_MP_right = CCI.toConformalInference.P_MP := by
+    simpa [ConformalInference.P_MP_right, ConformalInference.P_MP] using hProj
+  have hRight :
+      CCI.toConformalInference.P_D * CCI.toConformalInference.P_MP_right
+        = CCI.toConformalInference.P_MP_right * CCI.toConformalInference.P_D := by
+    exact
+      CCI.toConformalInference.rightProjector_commute_of_projectorAgreement_of_metricProjector_commute
+        hProj' hLeft
+  exact
+    kkt_wings_dilation_source_diagonal_blocks_and_holonomy_eq_projectorObstruction_nnnorm_of_flat
+      (CCI := CCI) hRight hA hAMP hAD (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
 
 /-- Operator-level KKT bridge: explicit `g₁/g₋₁` wing data force the projector
 obstruction operator into grade zero on the doubled split-`Cl(1,1)` carrier. -/

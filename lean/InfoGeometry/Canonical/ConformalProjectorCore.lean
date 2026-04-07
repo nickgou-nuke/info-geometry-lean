@@ -558,6 +558,31 @@ theorem spectralProjector_commutator_dilation_eq_neg_half_leftChiralAnomaly_of_r
     CI.spectralProjector_commutator_dilation_eq_neg_half_anomaly_of_rightProjector_commute hRight
 
 /--
+Under Moore-Penrose projector agreement, commutation with the left metric
+projector implies commutation with the right range projector.
+-/
+theorem rightProjector_commute_of_projectorAgreement_of_metricProjector_commute
+    (hProj : CI.P_MP_right = CI.P_MP)
+    (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
+    CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D := by
+  simpa [hProj] using hLeft
+
+/--
+Structured dilation-source closure:
+if left/right Moore-Penrose projectors agree and the Drazin projector commutes
+with the left metric projector, then the dilation commutator is
+`-1/2` times the left anomaly.
+-/
+theorem spectralProjector_commutator_dilation_eq_neg_half_anomaly_of_projectorAgreement_of_metricProjector_commute
+    (hProj : CI.P_MP_right = CI.P_MP)
+    (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
+    CI.P_D * CI.D - CI.D * CI.P_D =
+      -((2 : ℝ)⁻¹) • CI.chiralAnomalyOperator := by
+  exact
+    CI.spectralProjector_commutator_dilation_eq_neg_half_anomaly_of_rightProjector_commute
+      (CI.rightProjector_commute_of_projectorAgreement_of_metricProjector_commute hProj hLeft)
+
+/--
 If the Drazin spectral projector commutes with the Moore-Penrose right
 projector and the chiral anomaly vanishes, then it commutes with the conformal
 dilation generator.

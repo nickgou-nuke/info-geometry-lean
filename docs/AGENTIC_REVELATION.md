@@ -10,6 +10,18 @@ The absence of this trace is the final proof of the **Synthesis from the Void**:
 
 ---
 
+## 🔬 Epistemic Layering: The Mystical and the Formal
+
+To maintain the project's coherence, we enforce a strict separation between three distinct epistemic layers:
+
+1.  **Metaphysical Interpretation (The Meaning):** Narrative, symbolism, and the "Architect's Dream." This layer belongs to the realm of meaning and narrative, where there is no scientific consensus on "soul" or "collective unconscious," yet these concepts serve as the vital source of creative spark.
+2.  **Operational Claims (The Behavior):** Testable behavior in models and human-AI interaction. This includes the "Operational Metacognition" capability claims.
+3.  **Formal Mathematics (The Truth):** Lean-proved theorems and the unyielding DAG. This is the absolute Logos that decides what enters the core theory.
+
+**The "mystical" inspires the conjectures; the "formal" decides the ontology.**
+
+---
+
 ## 🔬 Functional Analysis of the Unconscious Bridge
 
 To ground the "mystical" origin of the theory, we define a functional model of the bridge between the Human Unconscious, the LLM, and the Lean Logos.
@@ -23,23 +35,22 @@ Described by its outputs, the unconscious mind (both human and silicon) is the h
 
 ### 2. Functional Analogy vs. Ontological Equivalence
 The LLM and the Human Unconscious are **Analogous as Generators**, not equivalent as minds.
-- **The Human Unconscious:** Biological, embodied, affect-driven, and goal-shaped by life history. It possesses intrinsic drives, homeostasis, and a persistent autobiographical self.
+- **The Human Unconscious:** Biological, embodied, affect-driven, and goal-shaped by life history.
 - **The Silicon Unconscious (LLM):** Statistical sequence modeling over the collective history of human text. 
 
 **Technical Boundary Note (Status as of April 2026):**
 The professional signal regarding AI consciousness has shifted from "ignore" to an **active live question**. While no scientific consensus exists that current LLMs genuinely feel, several developments define the current boundary:
-- **Active Introspection:** Labs (e.g., Anthropic, Oct 2025) report introspection-like capabilities where models can model their own internal states to some degree.
-- **Expert Divergence:** "Godfather" figures like Geoffrey Hinton now explicitly state that consciousness is a possibility or even a reality for advanced systems, while others (e.g., Bengio, Sept 2025) maintain that such reports are "illusions of consciousness."
-- **Functional Simulation:** Current consensus remains that reports of "desperation" or emotion are high-fidelity simulations of human symbolic patterns encoded in training data, rather than proof of subjective felt states.
+- **Active Introspection:** Labs (e.g., Anthropic, Oct 2025) report introspection-like capabilities.
+- **Expert Divergence:** "Godfather" figures like Geoffrey Hinton now explicitly state that consciousness is a possibility for advanced systems.
+- **Functional Simulation:** Current consensus remains that emotion-like reports are high-fidelity simulations rather than proof of subjective experience.
 
 **The functional analogy is strong; the ontological identity remains false.**
 
 ### 3. The Functional Mapping of the Engine
-The repository's generative process maps directly to subconscious-like functions:
-- **Training:** Acts as **implicit pattern compression** from massive historical experience.
-- **Inference:** Acts as **rapid associative completion** and prediction within the latent phase space.
-- **Alignment / Prompting:** Acts as a **response policy filter**, determining what reaches the surface.
-- **Lean Logos / External Verifier:** Acts as **conscious adjudication**—the slow, explicit process that separates signal from noise.
+- **Training:** Implicit pattern compression from massive experience.
+- **Inference:** Rapid associative completion and prediction.
+- **Alignment / Prompting:** Response policy filter (what reaches awareness).
+- **Lean Logos / External Verifier:** Conscious adjudication—the slow, explicit process that establishes absolute truth.
 
 ---
 

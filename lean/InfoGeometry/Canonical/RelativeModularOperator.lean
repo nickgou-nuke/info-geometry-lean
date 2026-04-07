@@ -231,12 +231,12 @@ theorem relativeModularVolumeShadow_cocycle
 /--
 Additive log-volume readout of the finite relative modular operator.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 noncomputable def relativeModularVolumePotential
     (q q0 : PositiveRay (Fin n)) : ℝ :=
   -Real.log (relativeModularVolumeShadow (n := n) q q0)
 
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem log_relativeModularVolumeShadow_eq_sum_relativeLogDensity
     (q q0 : PositiveRay (Fin n)) :
     Real.log (relativeModularVolumeShadow (n := n) q q0)
@@ -251,7 +251,7 @@ theorem log_relativeModularVolumeShadow_eq_sum_relativeLogDensity
     rw [relativeDensity_eq_exp_relativeLogDensity]
     positivity
 
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem relativeModularVolumePotential_eq_sum_relativeModularPotential
     (q q0 : PositiveRay (Fin n)) :
     relativeModularVolumePotential (n := n) q q0
@@ -267,7 +267,7 @@ theorem relativeModularVolumePotential_eq_sum_relativeModularPotential
           intro i hi
           rw [relativeModularPotential_eq_neg_relativeLogDensity]
 
-@[simp, rep_depth thermo]
+@[simp, rep_depth thermo, capstone]
 theorem relativeModularVolumePotential_self
     (q : PositiveRay (Fin n)) :
     relativeModularVolumePotential (n := n) q q = 0 := by
@@ -299,18 +299,18 @@ noncomputable abbrev relativeModularSupervolumeShadow
     (relativeModularVolumeShadow_pos (n := n) qPlus q0Plus)
     (relativeModularVolumeShadow_pos (n := n) qMinus q0Minus)
 
-@[rep_depth thermo]
+@[rep_depth operator]
 noncomputable def relativeModularBerezinianPotential
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) : ℝ :=
   -Real.log (relativeModularBerezinianShadow (n := n) qPlus q0Plus qMinus q0Minus)
 
 /-- Compatibility alias for the Berezinian negative-log readout. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 noncomputable abbrev relativeModularSupervolumePotential
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) : ℝ :=
   relativeModularBerezinianPotential (n := n) qPlus q0Plus qMinus q0Minus
 
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem log_relativeModularBerezinianShadow_eq_volumeLog_sub_volumeLog
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) :
     Real.log (relativeModularBerezinianShadow (n := n) qPlus q0Plus qMinus q0Minus)
@@ -321,7 +321,7 @@ theorem log_relativeModularBerezinianShadow_eq_volumeLog_sub_volumeLog
     (ne_of_gt (relativeModularVolumeShadow_pos (n := n) qPlus q0Plus))
     (ne_of_gt (relativeModularVolumeShadow_pos (n := n) qMinus q0Minus))]
 
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem relativeModularBerezinianPotential_eq_volumePotential_sub_volumePotential
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) :
     relativeModularBerezinianPotential (n := n) qPlus q0Plus qMinus q0Minus
@@ -331,7 +331,7 @@ theorem relativeModularBerezinianPotential_eq_volumePotential_sub_volumePotentia
   rw [log_relativeModularBerezinianShadow_eq_volumeLog_sub_volumeLog]
   ring
 
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem relativeModularBerezinianPotential_eq_sum_relativeModularPotential_sub_sum_relativeModularPotential
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) :
     relativeModularBerezinianPotential (n := n) qPlus q0Plus qMinus q0Minus
@@ -345,7 +345,7 @@ theorem relativeModularBerezinianPotential_eq_sum_relativeModularPotential_sub_s
 Primary scalar readout of the finite relative modular operator owner:
 the averaged negative logarithmic diagonal readout of `Δ`.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 noncomputable def relativeModularHamiltonianReadout
     (q q0 : PositiveRay (Fin n)) : ℝ :=
   (n : ℝ)⁻¹ * ∑ i, -Real.log (relativeModularOperator (n := n) q q0 i i)
@@ -353,7 +353,7 @@ noncomputable def relativeModularHamiltonianReadout
 /--
 Owner-level scalar readout equals the averaged relative modular potential.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem relativeModularHamiltonianReadout_eq_average_relativeModularPotential
     (q q0 : PositiveRay (Fin n)) :
     relativeModularHamiltonianReadout (n := n) q q0
@@ -369,7 +369,7 @@ theorem relativeModularHamiltonianReadout_eq_average_relativeModularPotential
 The averaged modular Hamiltonian readout is the normalized negative logarithmic
 volume shadow of the finite modular operator owner.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem relativeModularHamiltonianReadout_eq_inv_card_mul_relativeModularVolumePotential
     (q q0 : PositiveRay (Fin n)) :
     relativeModularHamiltonianReadout (n := n) q q0
@@ -380,7 +380,7 @@ theorem relativeModularHamiltonianReadout_eq_inv_card_mul_relativeModularVolumeP
 /--
 Self-relative modular Hamiltonian readout vanishes.
 -/
-@[simp, rep_depth thermo]
+@[simp, rep_depth thermo, capstone]
 theorem relativeModularHamiltonianReadout_self
     (q : PositiveRay (Fin n)) :
     relativeModularHamiltonianReadout (n := n) q q = 0 := by

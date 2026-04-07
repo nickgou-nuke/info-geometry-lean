@@ -298,6 +298,28 @@ class PhaseSpaceRecompositionBridgeTests(unittest.TestCase):
                   (iPlus := iPlus) (iMinus := iMinus)
               trivial
 
+            example
+                (hplusSource : R.polarized.plus.data.localSource =
+                  InfoGeometry.Canonical.RelativePotentialCountBridge.countRay countsPlus hcountsPlus)
+                (hplusTarget : R.polarized.plus.data.localTarget =
+                  InfoGeometry.Canonical.RelativePotentialCountBridge.countRay refPlus hrefPlus)
+                (hminusSource : R.polarized.minus.data.localSource =
+                  InfoGeometry.Canonical.RelativePotentialCountBridge.countRay countsMinus hcountsMinus)
+                (hminusTarget : R.polarized.minus.data.localTarget =
+                  InfoGeometry.Canonical.RelativePotentialCountBridge.countRay refMinus hrefMinus) :
+                True := by
+              have _ :=
+                InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.phaseSpace_projectiveCount_weld_identifies_twistShadow_of_countRays
+                  (R := R) (ρ := ρ)
+                  (countsPlus := countsPlus) (refPlus := refPlus)
+                  (hcountsPlus := hcountsPlus) (hrefPlus := hrefPlus)
+                  (hplusSource := hplusSource) (hplusTarget := hplusTarget)
+                  (countsMinus := countsMinus) (refMinus := refMinus)
+                  (hcountsMinus := hcountsMinus) (hrefMinus := hrefMinus)
+                  (hminusSource := hminusSource) (hminusTarget := hminusTarget)
+                  (iPlus := iPlus) (iMinus := iMinus)
+              trivial
+
             end CountJunction
 
             end Scratch.PhaseSpaceRecompositionBridge

@@ -26,6 +26,7 @@ These are the maintained hand-written entry surfaces for current repo state:
 - [docs/README.md](README.md)
 - [docs/RepositoryMemoryMap.md](RepositoryMemoryMap.md)
 - [docs/Goutevs_Principle.md](Goutevs_Principle.md)
+- [docs/Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md)
 - [docs/OperationalIntent.md](OperationalIntent.md)
 - [docs/Theory.md](Theory.md)
 - [docs/ModuleMap.md](ModuleMap.md)

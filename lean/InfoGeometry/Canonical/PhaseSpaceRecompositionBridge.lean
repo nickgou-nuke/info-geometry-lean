@@ -530,7 +530,7 @@ Capstone weld package: count/projective Hamiltonian identities and phase-space
 fixed-point statements on both polarized wings, together with the recomposition
 log-shadow identification.
 -/
-@[rep_depth projective, capstone] theorem
+@[rep_depth krein, capstone] theorem
     PolarizedRecompositionData.phaseSpace_projectiveCount_weld_identifies_twistShadow_of_countRays
     (R : PolarizedRecompositionData H α (Fin nPlus) (Fin nMinus))
     (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H)

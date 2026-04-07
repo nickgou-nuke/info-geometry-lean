@@ -8,6 +8,14 @@ This directory is mixed:
 
 Lean source is still the truth surface. These docs exist to help orientation, not to override code.
 
+## Foundational Theory
+
+The repository's core theoretical axiom is **Goutev’s Principle of Absolute 
+Relativity of Measurement**:
+
+- [Goutevs_Principle.md](Goutevs_Principle.md) — The formal manifesto.
+- [Theory.md](Theory.md) — How the principle maps to the repo presentations.
+
 ## What Is Current
 
 Use these first when you want the current repo state:

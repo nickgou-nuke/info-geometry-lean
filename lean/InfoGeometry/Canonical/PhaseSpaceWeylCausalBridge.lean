@@ -402,11 +402,19 @@ input certified surface. -/
       ∧
       bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
         = ‖PCCI.toConformalInference.projectorObstruction‖₊ := by
+  have hProj' :
+      PCCI.toConformalInference.P_MP_right = PCCI.toConformalInference.P_MP := by
+    simpa [ConformalInference.P_MP_right, ConformalInference.P_MP] using PCCI.projectorAgreement
+  have hRight :
+      PCCI.toConformalInference.P_D * PCCI.toConformalInference.P_MP_right
+        = PCCI.toConformalInference.P_MP_right * PCCI.toConformalInference.P_D := by
+    exact
+      PCCI.toConformalInference.rightProjector_commute_of_projectorAgreement_of_metricProjector_commute
+        hProj' hLeft
   exact
-    projectorAgreement_metricProjector_commute_dilation_driver_and_holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal
+    rightProjector_commute_dilation_driver_and_holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal
       (CCI := PCCI.toCertifiedConformalInference)
-      (hProj := PCCI.projectorAgreement)
-      hLeft
+      hRight
       (Δ := Δ)
       (γ := γ)
       (bridge := bridge)
@@ -860,11 +868,19 @@ source spine package. -/
       (CCI := PCCI.toCertifiedConformalInference)
       (X0 := InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
       (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) := by
+  have hProj' :
+      PCCI.toConformalInference.P_MP_right = PCCI.toConformalInference.P_MP := by
+    simpa [ConformalInference.P_MP_right, ConformalInference.P_MP] using PCCI.projectorAgreement
+  have hRight :
+      PCCI.toConformalInference.P_D * PCCI.toConformalInference.P_MP_right
+        = PCCI.toConformalInference.P_MP_right * PCCI.toConformalInference.P_D := by
+    exact
+      PCCI.toConformalInference.rightProjector_commute_of_projectorAgreement_of_metricProjector_commute
+        hProj' hLeft
   exact
-    kkt_wings_sourceSpineAndWeylEndpoint_of_flat
+    kkt_wings_dilation_source_diagonal_blocks_and_holonomy_eq_projectorObstruction_nnnorm_of_flat
       (CCI := PCCI.toCertifiedConformalInference)
-      (hProj := PCCI.projectorAgreement)
-      hLeft
+      hRight
       hA hAMP hAD
       (Δ := Δ)
       (γ := γ)
@@ -939,10 +955,13 @@ witness (dilation source + grade-zero obstruction + flat-holonomy endpoint). -/
       ∧
       bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
         = ‖PCCI.toConformalInference.projectorObstruction‖₊ := by
-  exact
-    finiteDimensional_end_to_end_witness_of_projectorAgreement_metricProjector_commute
-      (CCI := PCCI.toCertifiedConformalInference)
-      (hProj := PCCI.projectorAgreement)
+  let pkg :
+      SourceSpineAndWeylEndpoint
+        (CCI := PCCI.toCertifiedConformalInference)
+        (X0 := InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+        (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) :=
+    kkt_wings_sourceSpineAndWeylEndpoint_of_flat_of_projectorAgreementCertified
+      (PCCI := PCCI)
       hLeft
       hA hAMP hAD
       (Δ := Δ)
@@ -950,6 +969,7 @@ witness (dilation source + grade-zero obstruction + flat-holonomy endpoint). -/
       (bridge := bridge)
       (B := B)
       hFlat
+  exact ⟨pkg.dilation_source, pkg.obstruction_isGZero, pkg.holonomy_eq_projectorObstruction_nnnorm⟩
 
 /-- Operator-level KKT bridge: explicit `g₁/g₋₁` wing data force the projector
 obstruction operator into grade zero on the doubled split-`Cl(1,1)` carrier. -/

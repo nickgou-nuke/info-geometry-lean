@@ -52,6 +52,18 @@ structure StarCertifiedConformalInference (E : Type*) [NormedAddCommGroup E]
   spectralProjector_star :
     star (A * A_D) = A * A_D
 
+/--
+Projector-agreement-certified conformal inference package.
+
+This strengthens `CertifiedConformalInference` with an explicit certification
+that the Moore-Penrose right and left projectors coincide.
+-/
+structure ProjectorAgreementCertifiedConformalInference (E : Type*) [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E] extends CertifiedConformalInference E where
+  projectorAgreement :
+    IsMoorePenroseInverse.rightProjector A A_MP =
+      IsMoorePenroseInverse.leftProjector A A_MP
+
 namespace CertifiedConformalInference
 
 variable (CCI : CertifiedConformalInference E)
@@ -194,6 +206,34 @@ theorem rightChiralAnomalyOperator_star_eq_neg_of_isSelfAdjoint
       CCI.rightAnomalyCommutator_star_eq_neg_of_isSelfAdjoint hA hAD
 
 end CertifiedConformalInference
+
+namespace ProjectorAgreementCertifiedConformalInference
+
+variable (PCCI : ProjectorAgreementCertifiedConformalInference E)
+
+/-- The explicit right/left Moore-Penrose projector agreement witness. -/
+theorem rightProjector_eq_leftProjector :
+    IsMoorePenroseInverse.rightProjector PCCI.A PCCI.A_MP =
+      IsMoorePenroseInverse.leftProjector PCCI.A PCCI.A_MP :=
+  PCCI.projectorAgreement
+
+/-- Certified-kernel form of projector agreement. -/
+theorem mpRangeProjector_eq_metricProjector :
+    PCCI.toCertifiedConformalInference.mpRangeProjector
+      = PCCI.toCertifiedConformalInference.metricProjector := by
+  simpa [CertifiedConformalInference.mpRangeProjector, CertifiedConformalInference.metricProjector]
+    using PCCI.rightProjector_eq_leftProjector
+
+/-- Under projector-agreement certification, the right and left certified
+anomaly conventions coincide. -/
+theorem rightChiralAnomaly_eq_chiralAnomaly :
+    PCCI.toCertifiedConformalInference.rightChiralAnomaly
+      = PCCI.toCertifiedConformalInference.chiralAnomaly := by
+  exact
+    PCCI.toCertifiedConformalInference.rightChiralAnomaly_eq_chiralAnomaly_of_projectorAgreement
+      (PCCI.mpRangeProjector_eq_metricProjector)
+
+end ProjectorAgreementCertifiedConformalInference
 
 namespace CertifiedConformalInference
 

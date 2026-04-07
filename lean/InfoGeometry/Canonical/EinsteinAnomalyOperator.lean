@@ -74,6 +74,7 @@ omit [CompleteSpace E] in
   apply DoubledSpace.ext <;>
     simp [dualSheetLift, plusPointL, minusPointL, ContinuousLinearMap.comp_apply]
 
+omit [CompleteSpace E] in
 /-- Diagonal lift is faithful: it vanishes exactly when the base operator vanishes. -/
 theorem dualSheetLift_eq_zero_iff (A : E →L[ℝ] E) :
     dualSheetLift (E := E) A = 0 ↔ A = 0 := by
@@ -82,14 +83,14 @@ theorem dualSheetLift_eq_zero_iff (A : E →L[ℝ] E) :
     have hPlus :
         plusBlockMap (E := E) (dualSheetLift (E := E) A)
           = plusBlockMap (E := E) (0 : EndH) := by
-      simpa [hLift]
+      simp [hLift]
     simpa using hPlus
   · intro hA
     subst hA
     apply ContinuousLinearMap.ext
     intro u
     apply DoubledSpace.ext <;>
-      simp [dualSheetLift, plusPointL, minusPointL, ContinuousLinearMap.comp_apply]
+      simp [dualSheetLift, plusPointL, minusPointL]
 
 /-- Lifted left anomaly vanishes exactly when the base left anomaly vanishes. -/
 theorem liftedLeftChiralAnomalyOperator_eq_zero_iff :
@@ -524,6 +525,25 @@ theorem deriv_bogoliubovConjugate_liftedEinsteinAnomalyOperator_at_zero_eq_relat
   simpa [bogoliubovConjugate_liftedEinsteinAnomalyOperator, relativeModularDeriv] using
     deriv_modularTransport_conjugation_at_zero
       (E := E) hMod CCI.liftedEinsteinAnomalyOperator
+
+/--
+If the gauge sector commutes with the lifted singular Einstein anomaly, its
+infinitesimal Bogoliubov transport is carried entirely by the source channel.
+-/
+theorem deriv_bogoliubovConjugate_liftedEinsteinAnomalyOperator_at_zero_eq_relativeModularSourceDeriv_of_commute_gaugePart
+    (hMod : EndH)
+    (hCommGauge :
+      Commute CCI.liftedEinsteinAnomalyOperator
+        (modularGeneratorGaugePart (E := E) hMod)) :
+    deriv
+      (fun t => CCI.bogoliubovConjugate_liftedEinsteinAnomalyOperator hMod t)
+      0
+      =
+    relativeModularSourceDeriv (E := E) hMod CCI.liftedEinsteinAnomalyOperator := by
+  rw [deriv_bogoliubovConjugate_liftedEinsteinAnomalyOperator_at_zero_eq_relativeModularDeriv
+    (CCI := CCI) hMod]
+  exact CCI.liftedEinsteinAnomalyOperator_relativeModularDeriv_eq_relativeModularSourceDeriv_of_commute_gaugePart
+    hMod hCommGauge
 
 /--
 If the lifted singular Einstein anomaly commutes with the full relative-modular

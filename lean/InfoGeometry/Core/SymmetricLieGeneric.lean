@@ -171,6 +171,54 @@ theorem cartan_decomposition (x : L) :
     _ = x := by
           simp [smul_smul]
 
+theorem P_plus_comp_P_plus_linear :
+    S.P_plus.comp S.P_plus = S.P_plus := by
+  ext x
+  simpa using S.P_plus_idempotent x
+
+theorem P_minus_comp_P_minus_linear :
+    S.P_minus.comp S.P_minus = S.P_minus := by
+  ext x
+  simpa using S.P_minus_idempotent x
+
+theorem P_plus_comp_P_minus_linear :
+    S.P_plus.comp S.P_minus = 0 := by
+  ext x
+  exact S.P_plus_comp_P_minus x
+
+theorem P_minus_comp_P_plus_linear :
+    S.P_minus.comp S.P_plus = 0 := by
+  ext x
+  exact S.P_minus_comp_P_plus x
+
+theorem P_plus_add_P_minus :
+    S.P_plus + S.P_minus = (LinearMap.id : L →ₗ[R] L) := by
+  ext x
+  simpa [LinearMap.add_apply] using (S.cartan_decomposition x).symm
+
+theorem disjoint_𝔨_𝔭 :
+    Disjoint S.𝔨 S.𝔭 := by
+  refine Submodule.disjoint_def.2 ?_
+  intro x hxk hxp
+  have hx_plus : S.P_plus x = x := S.P_plus_eq_self_of_mem_𝔨 hxk
+  have hx_zero : S.P_plus x = 0 := S.P_plus_eq_zero_of_mem_𝔭 hxp
+  calc
+    x = S.P_plus x := hx_plus.symm
+    _ = 0 := hx_zero
+
+theorem sup_𝔨_𝔭_eq_top :
+    S.𝔨 ⊔ S.𝔭 = ⊤ := by
+  refine Submodule.eq_top_iff'.2 ?_
+  intro x
+  refine Submodule.mem_sup.2 ?_
+  refine ⟨S.P_plus x, S.P_plus_mem_𝔨 x, S.P_minus x, S.P_minus_mem_𝔭 x, ?_⟩
+  simpa using (S.cartan_decomposition x).symm
+
+theorem isCompl_𝔨_𝔭 :
+    IsCompl S.𝔨 S.𝔭 :=
+  ⟨S.disjoint_𝔨_𝔭, by
+    simpa [codisjoint_iff] using S.sup_𝔨_𝔭_eq_top⟩
+
 end Half
 
 /-!
@@ -253,9 +301,8 @@ namespace SymmetricLieAlgebra
 
 variable (S : SymmetricLieAlgebra R L)
 
-noncomputable abbrev B : LinearMap.BilinForm R L := by
-  let _ := S
-  exact killingForm R L
+noncomputable abbrev B (_S : SymmetricLieAlgebra R L) : LinearMap.BilinForm R L :=
+  killingForm R L
 
 omit [Module.Free R L] [Module.Finite R L] in
 theorem killing_invariant (x y : L) :
@@ -273,16 +320,20 @@ theorem killing_orthogonal {k p : L} (hk : k ∈ S.𝔨) (hp : p ∈ S.𝔭) :
   have hp' : S.θ p = -p := (S.mem_𝔭_iff p).1 hp
 
   have hinv : S.B (S.θ k) (S.θ p) = S.B k p := S.killing_invariant k p
-  have h1 : S.B k (-p) = S.B k p := by simpa [hk', hp'] using hinv
+  have h1 : S.B k (-p) = S.B k p := by
+    simpa [hk', hp'] using hinv
 
-  have hEq : S.B k p = -S.B k p := by
+  have hEq : -(S.B k p) = S.B k p := by
     calc
-      S.B k p = S.B k (-p) := by simpa using h1.symm
-      _ = -S.B k p := by
-            simp
+      -(S.B k p) = S.B k (-p) := by
+        simp [map_neg]
+      _ = S.B k p := h1
+
+  have hx : S.B k p = -S.B k p := by
+    simpa using hEq.symm
 
   have hsum : S.B k p + S.B k p = 0 :=
-    (eq_neg_iff_add_eq_zero).1 hEq
+    (eq_neg_iff_add_eq_zero).1 hx
 
   have hmul : (2 : R) * S.B k p = 0 := by
     calc
@@ -323,9 +374,31 @@ structure CartanLieAlgebra (R : Type u) (L : Type v)
 
 variable (S : SymmetricLieAlgebra R L)
 
-/-- Cartan form: `B_θ(x,y) = -B(x, θ y)`. -/
-noncomputable def cartanForm (x y : L) : R :=
-  -(killingForm R L) x (S.θ y)
+/-- Cartan form as a bilinear form object: `B_θ(x,y) = -B(x, θ y)`. -/
+noncomputable def cartanForm : LinearMap.BilinForm R L :=
+  LinearMap.mk₂ R
+    (fun x y => -(killingForm R L x (S.θ y)))
+    (by
+      intro x₁ x₂ y
+      simp [map_add, add_comm])
+    (by
+      intro a x y
+      simp [map_smul])
+    (by
+      intro x y₁ y₂
+      simp [map_add, add_comm])
+    (by
+      intro a x y
+      simp [map_smul])
+
+/-- Compatibility scalar-evaluation alias for the Cartan form. -/
+noncomputable abbrev cartanFormScalar (x y : L) : R :=
+  S.cartanForm x y
+
+omit [Module.Free R L] [Module.Finite R L] in
+@[simp] lemma cartanForm_apply (x y : L) :
+    S.cartanForm x y = -(killingForm R L x (S.θ y)) :=
+  rfl
 
 end SymmetricLieAlgebra
 

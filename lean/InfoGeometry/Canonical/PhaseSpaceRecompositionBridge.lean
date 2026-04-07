@@ -267,62 +267,10 @@ noncomputable def PolarizedRecompositionData.minusPhaseTransportLift
       =
         toDoubledCopyRho (E := H) ρ
           (PolarizedRecompositionData.plusPhaseTransportLift R ρ b) := by
-  have hreal :
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedMinusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H))
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.plusPhaseTransportLift R ρ b))
-        =
-      toDoubledCopyRho (E := H) ρ
-          (PolarizedRecompositionData.plusPhaseTransportLift R ρ b) := by
-    exact PolarizedRecompositionData.plusPhaseTransportLift_realize_fixed_by_realizedMinusProjector
-      (G := G) (R := R) (ρ := ρ) (b := b) hfix
-  have htomita :
-      GeneralizedMetricSeed.minusProjector
-          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.plusPhaseTransportLift R ρ b))
-        =
-      toDoubledCopyRho (E := H) ρ
-          (PolarizedRecompositionData.plusPhaseTransportLift R ρ b) := by
-    exact PolarizedRecompositionData.plusPhaseTransportLift_realize_fixed_by_generalizedMetric_minusProjector
+  let _ := hfix
+  simpa using
+    PolarizedRecompositionData.plusPhaseTransportLift_realize_fixed_by_generalizedMetric_minusProjector
       (R := R) (ρ := ρ) (b := b)
-  have hidentify :
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedMinusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H))
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.plusPhaseTransportLift R ρ b))
-        =
-      GeneralizedMetricSeed.minusProjector
-          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.plusPhaseTransportLift R ρ b)) := by
-    calc
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedMinusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H))
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.plusPhaseTransportLift R ρ b))
-          = toDoubledCopyRho (E := H) ρ
-              (PolarizedRecompositionData.plusPhaseTransportLift R ρ b) := hreal
-      _ = GeneralizedMetricSeed.minusProjector
-          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.plusPhaseTransportLift R ρ b)) := by
-            simpa using htomita.symm
-  calc
-    GeneralizedMetricSeed.minusProjector
-        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-        (toDoubledCopyRho (E := H) ρ
-          (PolarizedRecompositionData.plusPhaseTransportLift R ρ b))
-        =
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedMinusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H))
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.plusPhaseTransportLift R ρ b)) := by
-          simpa using hidentify.symm
-    _ =
-      toDoubledCopyRho (E := H) ρ
-        (PolarizedRecompositionData.plusPhaseTransportLift R ρ b) := hreal
 
 @[rep_depth krein, simp] theorem
     PolarizedRecompositionData.minusPhaseTransportLift_fixed_by_phasePlusProjector
@@ -461,62 +409,10 @@ noncomputable def PolarizedRecompositionData.minusPhaseTransportLift
       =
         toDoubledCopyRho (E := H) ρ
           (PolarizedRecompositionData.minusPhaseTransportLift R ρ b) := by
-  have hreal :
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedPlusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H))
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.minusPhaseTransportLift R ρ b))
-        =
-      toDoubledCopyRho (E := H) ρ
-          (PolarizedRecompositionData.minusPhaseTransportLift R ρ b) := by
-    exact PolarizedRecompositionData.minusPhaseTransportLift_realize_fixed_by_realizedPlusProjector
-      (G := G) (R := R) (ρ := ρ) (b := b) hfix
-  have htomita :
-      GeneralizedMetricSeed.plusProjector
-          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.minusPhaseTransportLift R ρ b))
-        =
-      toDoubledCopyRho (E := H) ρ
-          (PolarizedRecompositionData.minusPhaseTransportLift R ρ b) := by
-    exact PolarizedRecompositionData.minusPhaseTransportLift_realize_fixed_by_generalizedMetric_plusProjector
+  let _ := hfix
+  simpa using
+    PolarizedRecompositionData.minusPhaseTransportLift_realize_fixed_by_generalizedMetric_plusProjector
       (R := R) (ρ := ρ) (b := b)
-  have hidentify :
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedPlusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H))
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.minusPhaseTransportLift R ρ b))
-        =
-      GeneralizedMetricSeed.plusProjector
-          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.minusPhaseTransportLift R ρ b)) := by
-    calc
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedPlusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H))
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.minusPhaseTransportLift R ρ b))
-          = toDoubledCopyRho (E := H) ρ
-              (PolarizedRecompositionData.minusPhaseTransportLift R ρ b) := hreal
-      _ = GeneralizedMetricSeed.plusProjector
-          (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.minusPhaseTransportLift R ρ b)) := by
-            simpa using htomita.symm
-  calc
-    GeneralizedMetricSeed.plusProjector
-        (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-        (toDoubledCopyRho (E := H) ρ
-          (PolarizedRecompositionData.minusPhaseTransportLift R ρ b))
-        =
-      (InfoGeometry.Canonical.PhaseSpaceGeneralizedMetricChiralityBridge.realizedPlusProjector
-        (G := G) ρ : Module.End ℝ (DoubledSpace H))
-          (toDoubledCopyRho (E := H) ρ
-            (PolarizedRecompositionData.minusPhaseTransportLift R ρ b)) := by
-          simpa using hidentify.symm
-    _ =
-      toDoubledCopyRho (E := H) ρ
-        (PolarizedRecompositionData.minusPhaseTransportLift R ρ b) := hreal
 
 @[rep_depth krein] theorem
     PolarizedRecompositionData.plusPhaseTransportLift_realizes_to_minusSheet

@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
 import InfoGeometry.Canonical.PhaseSpaceCausalFlowBridge
 import InfoGeometry.Canonical.WeylTransportChiralBridge
+import InfoGeometry.Canonical.EinsteinAnomalyOperator
 import InfoGeometry.Canonical.ConformalAnomalySource
 import InfoGeometry.Meta.Architecture
 
@@ -321,6 +322,182 @@ transport lands on the obstruction norm. -/
   · exact
       holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal_doubled
         (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+
+/-- Direct Weyl/operator corollary:
+flat Weyl holonomy is the projector-obstruction endpoint, while a commuting
+relative-modular generator fixes the lifted Einstein anomaly under Bogoliubov
+conjugation. -/
+@[rep_depth krein] theorem
+    holonomy_eq_projectorObstruction_nnnorm_and_bogoliubovConjugate_liftedEinsteinAnomalyOperator_eq_self_of_flat_of_commute_generator
+    (CCI : CertifiedConformalInference (DoubledSpace E))
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureProjectorObstructionBridge
+        (CI := CCI.toConformalInference) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B)
+    (hMod : DoubledSpace (DoubledSpace E) →L[ℝ] DoubledSpace (DoubledSpace E))
+    (t : ℝ)
+    (hComm :
+      Commute CCI.liftedEinsteinAnomalyOperator
+        (InfoGeometry.Canonical.BogoliubovTransport.relativeModularKGenerator
+          (E := DoubledSpace E) hMod)) :
+    bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+        = ‖CCI.toConformalInference.projectorObstruction‖₊
+      ∧
+      CCI.bogoliubovConjugate_liftedEinsteinAnomalyOperator hMod t
+        = CCI.liftedEinsteinAnomalyOperator := by
+  refine ⟨?_, ?_⟩
+  · exact
+      holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal_doubled
+        (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+  · exact
+      CCI.bogoliubovConjugate_liftedEinsteinAnomalyOperator_eq_self_of_commute_generator
+        hMod t hComm
+
+/-- Nonvanishing variant of the direct Weyl/operator corollary:
+in the commuting-generator regime, nonzero Einstein anomaly is frame-invariant
+under Bogoliubov conjugation while Weyl holonomy remains on the obstruction
+endpoint. -/
+@[rep_depth krein] theorem
+    holonomy_eq_projectorObstruction_nnnorm_and_bogoliubovConjugate_liftedEinsteinAnomalyOperator_ne_zero_iff_of_flat_of_commute_generator
+    (CCI : CertifiedConformalInference (DoubledSpace E))
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureProjectorObstructionBridge
+        (CI := CCI.toConformalInference) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B)
+    (hMod : DoubledSpace (DoubledSpace E) →L[ℝ] DoubledSpace (DoubledSpace E))
+    (t : ℝ)
+    (hComm :
+      Commute CCI.liftedEinsteinAnomalyOperator
+        (InfoGeometry.Canonical.BogoliubovTransport.relativeModularKGenerator
+          (E := DoubledSpace E) hMod)) :
+    bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+        = ‖CCI.toConformalInference.projectorObstruction‖₊
+      ∧
+      (CCI.bogoliubovConjugate_liftedEinsteinAnomalyOperator hMod t ≠ 0
+        ↔ CCI.liftedEinsteinAnomalyOperator ≠ 0) := by
+  refine ⟨?_, ?_⟩
+  · exact
+      holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal_doubled
+        (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
+  · exact
+      CCI.bogoliubovConjugate_liftedEinsteinAnomalyOperator_ne_zero_iff_of_commute_generator
+        hMod t hComm
+
+/-- Nontrivial-frame obstruction theorem:
+noncommuting spectral/metric projectors force nonzero flat Weyl holonomy, and
+if the lifted Einstein anomaly is nonzero then any commuting relative-modular
+Bogoliubov frame keeps it nonzero. -/
+@[rep_depth krein] theorem
+    holonomy_ne_zero_and_bogoliubovConjugate_liftedEinsteinAnomalyOperator_ne_zero_of_flat_of_noncommute_of_commute_generator
+    (CCI : CertifiedConformalInference (DoubledSpace E))
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureProjectorObstructionBridge
+        (CI := CCI.toConformalInference) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B)
+    (hNonComm :
+      CCI.toConformalInference.P_D.comp CCI.toConformalInference.P_MP
+        ≠ CCI.toConformalInference.P_MP.comp CCI.toConformalInference.P_D)
+    (hMod : DoubledSpace (DoubledSpace E) →L[ℝ] DoubledSpace (DoubledSpace E))
+    (t : ℝ)
+    (hComm :
+      Commute CCI.liftedEinsteinAnomalyOperator
+        (InfoGeometry.Canonical.BogoliubovTransport.relativeModularKGenerator
+          (E := DoubledSpace E) hMod))
+    (hEinNe : CCI.liftedEinsteinAnomalyOperator ≠ 0) :
+    bridge.lineIntegrator.holonomy bridge.holonomyMap B γ ≠ 0
+      ∧
+      CCI.bogoliubovConjugate_liftedEinsteinAnomalyOperator hMod t ≠ 0 := by
+  have _ : Nontrivial E := inferInstance
+  refine ⟨?_, ?_⟩
+  · exact
+      WeylTransportBridge.holonomy_ne_zero_of_flat_of_noncommute
+        (CI := CCI.toConformalInference)
+        (Δ := Δ)
+        (γ := γ)
+        (bridge := bridge)
+        (B := B)
+        hFlat
+        hNonComm
+  · exact
+      (CCI.bogoliubovConjugate_liftedEinsteinAnomalyOperator_ne_zero_iff_of_commute_generator
+        hMod t hComm).2 hEinNe
+
+/-- Strong nontrivial-frame obstruction theorem (no separate Einstein-nonzero
+hypothesis):
+noncommuting spectral/metric projectors force nonzero flat Weyl holonomy; when
+left/right Moore-Penrose projectors agree, that same noncommutativity forces
+nonzero lifted Einstein anomaly, and any commuting relative-modular Bogoliubov
+frame keeps it nonzero. -/
+@[rep_depth krein] theorem
+    holonomy_ne_zero_and_bogoliubovConjugate_liftedEinsteinAnomalyOperator_ne_zero_of_flat_of_noncommute_of_projectorAgreement_of_commute_generator
+    (CCI : CertifiedConformalInference (DoubledSpace E))
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureProjectorObstructionBridge
+        (CI := CCI.toConformalInference) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B)
+    (hNonComm :
+      CCI.toConformalInference.P_D.comp CCI.toConformalInference.P_MP
+        ≠ CCI.toConformalInference.P_MP.comp CCI.toConformalInference.P_D)
+    (hProj :
+      InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector CCI.A CCI.A_MP =
+        InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector CCI.A CCI.A_MP)
+    (hMod : DoubledSpace (DoubledSpace E) →L[ℝ] DoubledSpace (DoubledSpace E))
+    (t : ℝ)
+    (hComm :
+      Commute CCI.liftedEinsteinAnomalyOperator
+        (InfoGeometry.Canonical.BogoliubovTransport.relativeModularKGenerator
+          (E := DoubledSpace E) hMod)) :
+    bridge.lineIntegrator.holonomy bridge.holonomyMap B γ ≠ 0
+      ∧
+      CCI.bogoliubovConjugate_liftedEinsteinAnomalyOperator hMod t ≠ 0 := by
+  have _ : Nontrivial E := inferInstance
+  have hLeftNeBase : CCI.toConformalInference.leftChiralAnomalyOperator ≠ 0 := by
+    intro hLeftZero
+    have hCommEq :
+        CCI.toConformalInference.spectralChiralProjector
+            * CCI.toConformalInference.metricChiralProjector
+          =
+        CCI.toConformalInference.metricChiralProjector
+            * CCI.toConformalInference.spectralChiralProjector :=
+      (CCI.toConformalInference.leftChiralAnomalyOperator_eq_zero_iff_projectors_commute).1 hLeftZero
+    exact hNonComm (by
+      simpa [ConformalInference.spectralChiralProjector,
+        ConformalInference.metricChiralProjector] using hCommEq)
+  have hLeftNeLift : CCI.liftedLeftChiralAnomalyOperator ≠ 0 := by
+    exact
+      (InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.liftedLeftChiralAnomalyOperator_ne_zero_iff
+        (CCI := CCI)).2 hLeftNeBase
+  have hEinEq :
+      CCI.liftedEinsteinAnomalyOperator = -CCI.liftedLeftChiralAnomalyOperator :=
+    CCI.liftedEinsteinAnomalyOperator_eq_neg_liftedLeftChiralAnomalyOperator_of_projectorAgreement hProj
+  have hEinNe : CCI.liftedEinsteinAnomalyOperator ≠ 0 := by
+    rw [hEinEq]
+    simpa using hLeftNeLift
+  exact
+    holonomy_ne_zero_and_bogoliubovConjugate_liftedEinsteinAnomalyOperator_ne_zero_of_flat_of_noncommute_of_commute_generator
+      (CCI := CCI)
+      (Δ := Δ)
+      (γ := γ)
+      (bridge := bridge)
+      (B := B)
+      hFlat
+      hNonComm
+      (hMod := hMod)
+      (t := t)
+      (hComm := hComm)
+      hEinNe
 
 /-- Authoritative source-driven Weyl package:
 right-projector commutation gives the dilation-source identity, KKT wings force

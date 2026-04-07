@@ -95,9 +95,16 @@ The Weyl branch is partially welded:
 - [WeylTransportChiralBridge.lean](../lean/InfoGeometry/Canonical/WeylTransportChiralBridge.lean)
 - [PhaseSpaceWeylCausalBridge.lean](../lean/InfoGeometry/Canonical/PhaseSpaceWeylCausalBridge.lean)
 
-The current gap here is not naming. It is a missing operator-level theorem from
-trunk data to projector obstruction, then to conformal anomaly source, then to
-Weyl holonomy.
+The current gap here is not naming. The operator-level shape now exists; the
+remaining pressure is making that weld hypothesis-lean and trunk-internal.
+
+Current status update:
+
+- an explicit source-driven package now exists in `PhaseSpaceWeylCausalBridge`
+  (`SourceSpineAndWeylEndpoint`)
+- this package carries obstruction grade-zero and diagonal/off-diagonal block
+  structure together with terminal holonomy-as-obstruction-norm
+- the remaining closure pressure is hypothesis compression, not missing branch shape
 
 ## Compatibility Scaffolds
 

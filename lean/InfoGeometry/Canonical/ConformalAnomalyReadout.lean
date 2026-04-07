@@ -16,12 +16,16 @@ These are representation maps from the noncommutative obstruction operator into
 scalar image lanes (`‖·‖₊` and derived scalars), not independent sources.
 -/
 @[rep_depth thermo] structure ObstructionScalarReadout : Prop where
-  projectorObstruction_nnnorm_eq_chiralScale :
-    ‖CI.projectorObstruction‖₊ = CI.chiralScale
-  chiralScale_eq_projectorObstruction_nnnorm :
-    CI.chiralScale = ‖CI.projectorObstruction‖₊
-  unitOfAction_eq_chiralScale :
-    CI.unitOfAction = CI.chiralScale
+  projectorObstruction_nnnorm_eq_obstructionScale :
+    ‖CI.projectorObstruction‖₊ = CI.obstructionScale
+  obstructionScale_eq_projectorObstruction_nnnorm :
+    CI.obstructionScale = ‖CI.projectorObstruction‖₊
+  chiralScale_eq_obstructionScale :
+    CI.chiralScale = CI.obstructionScale
+  epsilon_eq_obstructionScale :
+    CI.epsilon = CI.obstructionScale
+  unitOfAction_eq_obstructionScale :
+    CI.unitOfAction = CI.obstructionScale
   unitOfAction_eq_projectorObstruction_nnnorm :
     CI.unitOfAction = ‖CI.projectorObstruction‖₊
 
@@ -30,13 +34,15 @@ section
 /-- Canonical scalar readout map from the obstruction operator layer. -/
 @[rep_depth thermo] theorem obstructionScalarReadout :
     ObstructionScalarReadout (CI := CI) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact CI.projectorObstruction_nnnorm_eq_chiralScale
-  · exact CI.chiralScale_eq_projectorObstruction_nnnorm
-  · exact CI.unitOfAction_eq_chiralScale
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact CI.projectorObstruction_nnnorm_eq_obstructionScale
+  · exact CI.obstructionScale_eq_projectorObstruction_nnnorm
+  · exact CI.chiralScale_eq_obstructionScale
+  · exact CI.epsilon_eq_obstructionScale
+  · exact CI.unitOfAction_eq_obstructionScale
   · calc
-      CI.unitOfAction = CI.chiralScale := CI.unitOfAction_eq_chiralScale
-      _ = ‖CI.projectorObstruction‖₊ := CI.chiralScale_eq_projectorObstruction_nnnorm
+      CI.unitOfAction = CI.obstructionScale := CI.unitOfAction_eq_obstructionScale
+      _ = ‖CI.projectorObstruction‖₊ := CI.obstructionScale_eq_projectorObstruction_nnnorm
 
 end
 

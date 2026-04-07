@@ -621,17 +621,13 @@ theorem exists_network_fixed_transportWeylPlus_nonzero_ker_of_experts_fix_of_sim
             ((InfoGeometry.Quantum.BulkBoundary.globalChainOperatorFromOpenChain
               (S := ArnoldMajoranaCarrier E) localOp chain).comp T.Binv)) ψplus = 0
         ∧ ψplus ≠ 0 := by
-  have hPair0 :
-      InfoGeometry.Quantum.BulkBoundary.BoundaryLocalizedZeroModePair
-        (M := M) (P0 := M.chiralityPolarization) localOp chain :=
-    hSimple.boundaryPair_of_negativePhase hNeg
-  rcases InfoGeometry.Quantum.BulkBoundary.weylZeroModePair_under_bogoliubov_of_preservesChiralityPolarization
-      (M := M) (T := T) (hpres := hpres) (localOp := localOp) (chain := chain) hPair0 with
-    ⟨ψplus, ψminus, hψplusNe, hψminusNe, hPlus, hMinus, hKerPlus, hKerMinus⟩
-  refine ⟨ψplus, ?_, hPlus, hKerPlus, hψplusNe⟩
+  let hWeyl :=
+    InfoGeometry.Quantum.BulkBoundary.weylZeroModeWitnessUnderBogoliubov_of_negativePhase_of_simplifiedBoundaryModel
+      (M := M) (T := T) (hpres := hpres) (localOp := localOp) (chain := chain) hNeg hSimple
+  refine ⟨hWeyl.psiPlus, ?_, hWeyl.psiPlus_mem_weyl, hWeyl.psiPlus_zeroMode, hWeyl.psiPlus_ne_zero⟩
   exact arnoldNetworkOutput_eq_of_experts_fix
-    (n := n) (net := net) (β := β) (x := fun _ : Unit => ψplus) (i := ())
-    (hfix := fun e => hfix e ψplus hPlus hKerPlus)
+    (n := n) (net := net) (β := β) (x := fun _ : Unit => hWeyl.psiPlus) (i := ())
+    (hfix := fun e => hfix e hWeyl.psiPlus hWeyl.psiPlus_mem_weyl hWeyl.psiPlus_zeroMode)
 
 /--
 Turn a simplified-boundary-model negative phase into a concrete fixed nonzero
@@ -666,16 +662,12 @@ theorem exists_network_fixed_transportWeylMinus_nonzero_ker_of_experts_fix_of_si
             ((InfoGeometry.Quantum.BulkBoundary.globalChainOperatorFromOpenChain
               (S := ArnoldMajoranaCarrier E) localOp chain).comp T.Binv)) ψminus = 0
         ∧ ψminus ≠ 0 := by
-  have hPair0 :
-      InfoGeometry.Quantum.BulkBoundary.BoundaryLocalizedZeroModePair
-        (M := M) (P0 := M.chiralityPolarization) localOp chain :=
-    hSimple.boundaryPair_of_negativePhase hNeg
-  rcases InfoGeometry.Quantum.BulkBoundary.weylZeroModePair_under_bogoliubov_of_preservesChiralityPolarization
-      (M := M) (T := T) (hpres := hpres) (localOp := localOp) (chain := chain) hPair0 with
-    ⟨ψplus, ψminus, hψplusNe, hψminusNe, hPlus, hMinus, hKerPlus, hKerMinus⟩
-  refine ⟨ψminus, ?_, hMinus, hKerMinus, hψminusNe⟩
+  let hWeyl :=
+    InfoGeometry.Quantum.BulkBoundary.weylZeroModeWitnessUnderBogoliubov_of_negativePhase_of_simplifiedBoundaryModel
+      (M := M) (T := T) (hpres := hpres) (localOp := localOp) (chain := chain) hNeg hSimple
+  refine ⟨hWeyl.psiMinus, ?_, hWeyl.psiMinus_mem_weyl, hWeyl.psiMinus_zeroMode, hWeyl.psiMinus_ne_zero⟩
   exact arnoldNetworkOutput_eq_of_experts_fix
-    (n := n) (net := net) (β := β) (x := fun _ : Unit => ψminus) (i := ())
-    (hfix := fun e => hfix e ψminus hMinus hKerMinus)
+    (n := n) (net := net) (β := β) (x := fun _ : Unit => hWeyl.psiMinus) (i := ())
+    (hfix := fun e => hfix e hWeyl.psiMinus hWeyl.psiMinus_mem_weyl hWeyl.psiMinus_zeroMode)
 
 end InfoGeometry.Canonical.MoE

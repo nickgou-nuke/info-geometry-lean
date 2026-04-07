@@ -12,8 +12,10 @@ This file separates three levels cleanly:
 - ray-level relative quantities via the canonical gauge section
 - the modular potential as the negative relative log-density
 
-The base ontology remains projective; logarithmic generators live affine-ly
-and shift by constants under representative rescaling.
+In accordance with **Goutev's Principle (Absolute Relativity of Measurement)**,
+the base ontology remains projective; absolute magnitudes are not physically 
+primitive. The primary observables here are relational invariants: ratios, 
+relative densities, and logarithmic contrasts (potentials).
 -/
 
 namespace InfoGeometry.Canonical.RelativePotentialCore

@@ -91,3 +91,17 @@ For the corrected phase-space/generalized-metric trunk:
 ## Rule
 
 If a doc and Lean source disagree, trust Lean source.
+
+## Consistency Pass (2026-04-07)
+
+Repository-wide checks were run across all files under `docs/`:
+
+- markdown links resolve;
+- referenced Lean file paths resolve; and
+- stale path references were corrected where needed.
+
+Files updated in this pass:
+
+- `docs/red_line_synthesis.md`
+- `docs/lean_compiler_service.md`
+- `docs/keyword_index.md`

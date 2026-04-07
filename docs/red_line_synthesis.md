@@ -17,7 +17,7 @@ The current high-confidence stack is:
 - `lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean`
 - `lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean`
 
-`RedLine.lean` should be read as an umbrella or compatibility surface around
+`lean/InfoGeometry/Canonical/RedLine.lean` should be read as an umbrella or compatibility surface around
 that spine, not as a separate semantic root.
 
 ## Current structural reading

@@ -58,11 +58,13 @@ patterns rather than creating a second process model.
 
 Suggested module family:
 
-- `lean/Agent/Protocol.lean`
-- `lean/Agent/ExprCodec.lean`
-- `lean/Agent/ProofStateExport.lean`
-- `lean/Agent/ElabTraceExport.lean`
-- `lean/Agent/ProofServerRpc.lean`
+- `InfoGeometry.Agent.Protocol` (proposed)
+- `InfoGeometry.Agent.ExprCodec` (proposed)
+- `InfoGeometry.Agent.ProofStateExport` (proposed)
+- `InfoGeometry.Agent.ElabTraceExport` (proposed)
+- `InfoGeometry.Agent.ProofServerRpc` (proposed)
+
+These are target module names, not current files in the repository tree.
 
 Minimal capability set:
 

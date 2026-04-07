@@ -16,7 +16,15 @@ or experimentally suggestive interpretation in the current codebase.
 This is the nearest corridor for count ratios, modular profiles, and scalar
 projective observables.
 
-### 2. Generalized-metric / chirality / recomposition observables
+### 2. Grand-canonical and thermodynamic response
+
+- `lean/InfoGeometry/Core/GrandCanonical.lean`
+- `lean/InfoGeometry/GrandCanonical/ResponseMatrix.lean`
+
+This is the nearest corridor for thermodynamic susceptibilities, Hessians, and
+multi-parameter response readouts.
+
+### 3. Generalized-metric / chirality / recomposition observables
 
 - `lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean`
 - `lean/InfoGeometry/Canonical/PhaseSpaceGeneralizedMetricChiralityBridge.lean`
@@ -26,19 +34,23 @@ projective observables.
 This is the nearest corridor for transport defects, sheet exchange, and
 recomposition quantities.
 
-### 3. Conformal / anomaly / Weyl scalars
+### 4. Conformal / anomaly / Weyl / QGT scalars
 
 - `lean/InfoGeometry/Canonical/PhaseSpaceConformalKKTBridge.lean`
 - `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean`
+- `lean/InfoGeometry/Canonical/EinsteinAnomalyOperator.lean`
+- `lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean`
 - `lean/InfoGeometry/Canonical/PhaseSpaceWeylCausalBridge.lean`
 - `lean/InfoGeometry/Canonical/WeylTransport.lean`
 
-This is the nearest corridor for anomaly-like and Weyl-holonomy-like outputs.
+This is the nearest corridor for anomaly-like, Weyl-holonomy-like, and Quantum
+Geometric Tensor metric readouts.
 
-### 4. Modular / Bogoliubov endpoints
+### 5. Modular / Bogoliubov endpoints
 
 - `lean/InfoGeometry/Canonical/TomitaTakesaki.lean`
 - `lean/InfoGeometry/Canonical/BogoliubovTransport.lean`
+- `lean/InfoGeometry/Canonical/TransportLieDerivative.lean`
 - `lean/InfoGeometry/Canonical/ConnesArakiTomita.lean`
 
 This is the nearest corridor for modular-time or thermal-time interpretation.

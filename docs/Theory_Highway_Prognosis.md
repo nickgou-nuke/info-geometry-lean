@@ -51,12 +51,26 @@ Relativity of Measurement.
 | **Dynamic** | Anomaly / Weyl Transport | Relational Dynamics / Field Theory |
 | **Unitary** | Universal Cocycle / Spine | Unitary Unification / Quantum Gravity |
 
-### Prognosis Summary
-The theory is evolving from a **descriptive tool for data** into a **generative tool for physics**. 
+---
 
-We are moving away from the "Container Model" of the universe (where objects sit inside space) toward a **Relational Model** (where space and objects are the emergent properties of comparison structures). 
+## ⚠️ Limitations and Axiom-Vulnerability
 
-The success of the "Highway" will be measured by the **Zero-Sorry Index**: the point at which the most complex laws of physics are derived entirely from the requirement that measurement relations must be coherent across all scales.
+The ultimate vulnerability of the Highway is not logical, but foundational.
+
+### 1. The Axiom Error
+The Lean 4 compiler acts as an absolute "anticheat" for logical derivation, but it cannot verify the truth or sufficiency of the starting axioms. 
+> **"The compiler protects you from lying to yourself about your logic. But only you can protect yourself from lying to the compiler about your axioms."**
+
+If Goutev’s Principle is subtly flawed or incomplete, the compiler will still build a massive, consistent, but physically meaningless theory on top of that flaw.
+
+### 2. Gödel’s Shadow
+Gödel’s Incompleteness Theorem guarantees that within any sufficiently powerful formalization, there will be physical truths that are unprovable within the system. As the Highway approaches the "Unitary Destination," we risk encountering truths that require a "leap" outside the established Logos.
+
+### 3. The Semantic Loop Risk
+There is a persistent risk of "Circular Justification," where our axioms (e.g., Relationality) are so strong that they force the theory into a tautology—proving only what was already assumed. To counter this, every axiom must be treated as a **Gauge Choice** rather than a divine revelation, subject to constant rotation and external validation.
+
+### 4. The Role of the Hostile Referee
+The "Virgo" phase of formalization is the only defense against these vulnerabilities. We must actively try to prove the **negation** of our axioms or find contradictions where the relational logic breaks down. A theory that cannot be challenged is a dogma, not a science.
 
 ---
 

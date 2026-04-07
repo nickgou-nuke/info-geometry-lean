@@ -328,6 +328,37 @@ theorem deriv_metricOfOperator_liftedEinsteinAnomalyOperator_relativeModularTran
       (E := E) hMod CCI.liftedEinsteinAnomalyOperator hCommGauge u v
 
 /--
+Star-certified carrier form of the source-channel theorem:
+for the lifted Einstein anomaly operator coming from a star-certified conformal
+package, gauge-sector commutation forces infinitesimal QGT transport entirely
+into the relative-modular source channel.
+-/
+theorem deriv_metricOfOperator_starCertified_liftedEinsteinAnomalyOperator_relativeModularTransport_at_zero_eq_metricOf_relativeModularSourceDeriv_of_commute_gaugePart
+    (SCI : StarCertifiedConformalInference E)
+    (hMod : EndH)
+    (hCommGauge :
+      Commute SCI.liftedEinsteinAnomalyOperator
+        (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            SCI.liftedEinsteinAnomalyOperator
+            t)
+          u v)
+      0
+      =
+    metricOfOperator
+      (relativeModularSourceDeriv (E := E) hMod SCI.liftedEinsteinAnomalyOperator)
+      u v := by
+  simpa [StarCertifiedConformalInference.liftedEinsteinAnomalyOperator] using
+    deriv_metricOfOperator_liftedEinsteinAnomalyOperator_relativeModularTransport_at_zero_eq_metricOf_relativeModularSourceDeriv_of_commute_gaugePart
+      (E := E) SCI.toCertifiedConformalInference hMod hCommGauge u v
+
+/--
 If the transported operator commutes with the scaling sector of the modular
 generator, the infinitesimal metric-seed transport is purely gauge.
 -/

@@ -442,12 +442,12 @@ noncomputable def relativeModularPseudoVolumeShadow
   rw [relativeModularVolumeShadow_eq_prod_relativeDensity]
 
 /-- Negative logarithmic pseudo-volume readout on the surviving support. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 noncomputable def relativeModularPseudoVolumePotential
     (s : Finset (Fin n)) (q q0 : PositiveRay (Fin n)) : ℝ :=
   -Real.log (relativeModularPseudoVolumeShadow (n := n) s q q0)
 
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem log_relativeModularPseudoVolumeShadow_eq_sum_relativeLogDensity
     (s : Finset (Fin n)) (q q0 : PositiveRay (Fin n)) :
     Real.log (relativeModularPseudoVolumeShadow (n := n) s q q0)
@@ -461,7 +461,7 @@ theorem log_relativeModularPseudoVolumeShadow_eq_sum_relativeLogDensity
     rw [relativeDensity_eq_exp_relativeLogDensity]
     positivity
 
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem relativeModularPseudoVolumePotential_eq_sum_relativeModularPotential
     (s : Finset (Fin n)) (q q0 : PositiveRay (Fin n)) :
     relativeModularPseudoVolumePotential (n := n) s q q0
@@ -511,7 +511,7 @@ noncomputable abbrev relativeModularPseudoSupervolumeShadow
     (relativeModularPseudoVolumeShadow_pos (n := n) sMinus qMinus q0Minus)
 
 /-- Negative logarithmic pseudo-Berezinian readout. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 noncomputable def relativeModularPseudoBerezinianPotential
     (sPlus sMinus : Finset (Fin n))
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) : ℝ :=
@@ -519,13 +519,13 @@ noncomputable def relativeModularPseudoBerezinianPotential
     (relativeModularPseudoBerezinianShadow (n := n) sPlus sMinus qPlus q0Plus qMinus q0Minus)
 
 /-- Compatibility alias for the pseudo-supervolume negative-log readout. -/
-@[rep_depth thermo]
+@[rep_depth operator]
 noncomputable abbrev relativeModularPseudoSupervolumePotential
     (sPlus sMinus : Finset (Fin n))
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) : ℝ :=
   relativeModularPseudoBerezinianPotential (n := n) sPlus sMinus qPlus q0Plus qMinus q0Minus
 
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem log_relativeModularPseudoBerezinianShadow_eq_volumeLog_sub_volumeLog
     (sPlus sMinus : Finset (Fin n))
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) :
@@ -538,7 +538,7 @@ theorem log_relativeModularPseudoBerezinianShadow_eq_volumeLog_sub_volumeLog
     (ne_of_gt (relativeModularPseudoVolumeShadow_pos (n := n) sPlus qPlus q0Plus))
     (ne_of_gt (relativeModularPseudoVolumeShadow_pos (n := n) sMinus qMinus q0Minus))]
 
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem relativeModularPseudoBerezinianPotential_eq_volumePotential_sub_volumePotential
     (sPlus sMinus : Finset (Fin n))
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) :
@@ -549,7 +549,7 @@ theorem relativeModularPseudoBerezinianPotential_eq_volumePotential_sub_volumePo
   rw [log_relativeModularPseudoBerezinianShadow_eq_volumeLog_sub_volumeLog]
   ring
 
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem relativeModularPseudoBerezinianPotential_eq_sum_relativeModularPotential_sub_sum_relativeModularPotential
     (sPlus sMinus : Finset (Fin n))
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) :

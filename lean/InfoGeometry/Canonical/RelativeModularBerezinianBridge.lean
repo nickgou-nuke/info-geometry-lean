@@ -85,7 +85,7 @@ theorem relativeModularRestrictedSheetEquiv_character_coe_eq_berezinianShadow
 The restricted-volume scalar on the doubled-sheet side is exactly the
 Berezinian-style supervolume shadow of the modular operator owner.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem relativeModularRestrictedSheetEquiv_restrictedVolumeScale_eq_berezinianShadow
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) :
     RestrictedSheetEquiv.restrictedVolumeScale (E := Efin)
@@ -99,7 +99,7 @@ theorem relativeModularRestrictedSheetEquiv_restrictedVolumeScale_eq_berezinianS
 The negative logarithmic restricted-volume readout is exactly the modular
 supervolume potential.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem neg_log_relativeModularRestrictedSheetEquiv_restrictedVolumeScale_eq_supervolumePotential
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) :
     -Real.log

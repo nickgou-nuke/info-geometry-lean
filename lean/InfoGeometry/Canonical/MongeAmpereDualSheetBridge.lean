@@ -110,6 +110,54 @@ omit [CompleteSpace E] in
   simp [dualSheetLift, plusPointL, minusPointL, plusPoint, minusPoint, to_doubled,
     ContinuousLinearMap.comp_apply]
 
+theorem plusPointL_eq_adjoint_fstL :
+    plusPointL (E := E) = ContinuousLinearMap.adjoint (fst_L (E := E)) := by
+  refine (ContinuousLinearMap.eq_adjoint_iff
+    (A := plusPointL (E := E))
+    (B := fst_L (E := E))).2 ?_
+  intro x y
+  simp [plusPointL, plusPoint, to_doubled]
+
+@[simp] theorem plusPointL_adjoint :
+    ContinuousLinearMap.adjoint (plusPointL (E := E)) = fst_L (E := E) := by
+  have h := congrArg ContinuousLinearMap.adjoint (plusPointL_eq_adjoint_fstL (E := E))
+  simpa [ContinuousLinearMap.adjoint_adjoint] using h
+
+@[simp] theorem fst_L_adjoint :
+    ContinuousLinearMap.adjoint (fst_L (E := E)) = plusPointL (E := E) := by
+  simp [plusPointL_eq_adjoint_fstL (E := E)]
+
+theorem minusPointL_eq_adjoint_sndL :
+    minusPointL (E := E) = ContinuousLinearMap.adjoint (snd_L (E := E)) := by
+  refine (ContinuousLinearMap.eq_adjoint_iff
+    (A := minusPointL (E := E))
+    (B := snd_L (E := E))).2 ?_
+  intro x y
+  simp [minusPointL, minusPoint, to_doubled]
+
+@[simp] theorem minusPointL_adjoint :
+    ContinuousLinearMap.adjoint (minusPointL (E := E)) = snd_L (E := E) := by
+  have h := congrArg ContinuousLinearMap.adjoint (minusPointL_eq_adjoint_sndL (E := E))
+  simpa [ContinuousLinearMap.adjoint_adjoint] using h
+
+@[simp] theorem snd_L_adjoint :
+    ContinuousLinearMap.adjoint (snd_L (E := E)) = minusPointL (E := E) := by
+  simp [minusPointL_eq_adjoint_sndL (E := E)]
+
+@[simp] theorem dualSheetLift_star (A : E →L[ℝ] E) :
+    star (dualSheetLift (E := E) A) = dualSheetLift (E := E) (star A) := by
+  unfold dualSheetLift
+  simp [ContinuousLinearMap.star_eq_adjoint, ContinuousLinearMap.adjoint_comp,
+    ContinuousLinearMap.comp_assoc]
+
+omit [CompleteSpace E] in
+@[simp] theorem dualSheetLift_neg (A : E →L[ℝ] E) :
+    dualSheetLift (E := E) (-A) = -dualSheetLift (E := E) A := by
+  apply ContinuousLinearMap.ext
+  intro u
+  apply DoubledSpace.ext <;>
+    simp [dualSheetLift, plusPointL, minusPointL, ContinuousLinearMap.comp_apply]
+
 /-- Positive-to-positive block extracted on the base carrier `E`. -/
 noncomputable def plusBlockMap (T : EndH) : E →L[ℝ] E :=
   (fst_L (E := E)).comp (T.comp (plusPointL (E := E)))

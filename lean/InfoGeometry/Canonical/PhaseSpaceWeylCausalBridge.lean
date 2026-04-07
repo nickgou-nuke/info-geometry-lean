@@ -380,6 +380,39 @@ and flat Weyl transport lands on the obstruction norm. -/
       holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal_doubled
         (CCI := CCI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
 
+/-- Certified-projector-agreement route:
+the same dilation/holonomy package with projector agreement carried by the
+input certified surface. -/
+@[rep_depth krein] theorem
+    projectorAgreementCertified_metricProjector_commute_dilation_driver_and_holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal
+    (PCCI : ProjectorAgreementCertifiedConformalInference (DoubledSpace E))
+    (hLeft :
+      PCCI.toConformalInference.P_D * PCCI.toConformalInference.P_MP
+        = PCCI.toConformalInference.P_MP * PCCI.toConformalInference.P_D)
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureProjectorObstructionBridge
+        (CI := PCCI.toConformalInference) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B) :
+    (PCCI.toConformalInference.P_D * PCCI.toConformalInference.D
+        - PCCI.toConformalInference.D * PCCI.toConformalInference.P_D
+      = -((2 : ℝ)⁻¹) • PCCI.toConformalInference.projectorObstruction)
+      ∧
+      bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+        = ‖PCCI.toConformalInference.projectorObstruction‖₊ := by
+  exact
+    projectorAgreement_metricProjector_commute_dilation_driver_and_holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal
+      (CCI := PCCI.toCertifiedConformalInference)
+      (hProj := PCCI.projectorAgreement)
+      hLeft
+      (Δ := Δ)
+      (γ := γ)
+      (bridge := bridge)
+      (B := B)
+      hFlat
+
 /-- Direct Weyl/operator corollary:
 flat Weyl holonomy is the projector-obstruction endpoint, while a commuting
 relative-modular generator fixes the lifted Einstein anomaly under Bogoliubov
@@ -592,6 +625,44 @@ frame keeps it nonzero. -/
       (hComm := hComm)
       hEinNe
 
+/-- Certified-projector-agreement variant of the strong nontrivial-frame
+obstruction theorem. -/
+@[rep_depth krein] theorem
+    holonomy_ne_zero_and_bogoliubovConjugate_liftedEinsteinAnomalyOperator_ne_zero_of_flat_of_noncommute_of_projectorAgreementCertified_of_commute_generator
+    (PCCI : ProjectorAgreementCertifiedConformalInference (DoubledSpace E))
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureProjectorObstructionBridge
+        (CI := PCCI.toConformalInference) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B)
+    (hNonComm :
+      PCCI.toConformalInference.P_D.comp PCCI.toConformalInference.P_MP
+        ≠ PCCI.toConformalInference.P_MP.comp PCCI.toConformalInference.P_D)
+    (hMod : DoubledSpace (DoubledSpace E) →L[ℝ] DoubledSpace (DoubledSpace E))
+    (t : ℝ)
+    (hComm :
+      Commute PCCI.liftedEinsteinAnomalyOperator
+        (InfoGeometry.Canonical.BogoliubovTransport.relativeModularKGenerator
+          (E := DoubledSpace E) hMod)) :
+    bridge.lineIntegrator.holonomy bridge.holonomyMap B γ ≠ 0
+      ∧
+      PCCI.bogoliubovConjugate_liftedEinsteinAnomalyOperator hMod t ≠ 0 := by
+  exact
+    holonomy_ne_zero_and_bogoliubovConjugate_liftedEinsteinAnomalyOperator_ne_zero_of_flat_of_noncommute_of_projectorAgreement_of_commute_generator
+      (CCI := PCCI.toCertifiedConformalInference)
+      (Δ := Δ)
+      (γ := γ)
+      (bridge := bridge)
+      (B := B)
+      hFlat
+      hNonComm
+      (hProj := PCCI.projectorAgreement)
+      (hMod := hMod)
+      (t := t)
+      (hComm := hComm)
+
 /-- Authoritative source-driven Weyl package:
 the primary route uses projector agreement plus left-metric commutation for the
 dilation-source identity; KKT wings force projector-obstruction block
@@ -767,6 +838,40 @@ hypotheses (projector agreement + left-metric commutation). -/
     kkt_wings_projectorAgreement_metricProjector_commute_dilation_source_diagonal_blocks_and_holonomy_eq_projectorObstruction_nnnorm_of_flat
       (CCI := CCI) hProj hLeft hA hAMP hAD (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
 
+/-- Certified-projector-agreement constructor for the primary KKT-to-Weyl
+source spine package. -/
+@[rep_depth krein] theorem
+    kkt_wings_sourceSpineAndWeylEndpoint_of_flat_of_projectorAgreementCertified
+    (PCCI : ProjectorAgreementCertifiedConformalInference (DoubledSpace E))
+    (hLeft :
+      PCCI.toConformalInference.P_D * PCCI.toConformalInference.P_MP
+        = PCCI.toConformalInference.P_MP * PCCI.toConformalInference.P_D)
+    (hA : IsGOne (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) PCCI.A)
+    (hAMP : IsGNegOne (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) PCCI.A_MP)
+    (hAD : IsGNegOne (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) PCCI.A_D)
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureProjectorObstructionBridge
+        (CI := PCCI.toConformalInference) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B) :
+    SourceSpineAndWeylEndpoint
+      (CCI := PCCI.toCertifiedConformalInference)
+      (X0 := InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+      (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) := by
+  exact
+    kkt_wings_sourceSpineAndWeylEndpoint_of_flat
+      (CCI := PCCI.toCertifiedConformalInference)
+      (hProj := PCCI.projectorAgreement)
+      hLeft
+      hA hAMP hAD
+      (Δ := Δ)
+      (γ := γ)
+      (bridge := bridge)
+      (B := B)
+      hFlat
+
 /-- Finite-dimensional end-to-end witness along the primary structured route:
 dilation source, grade-zero obstruction, and flat-holonomy endpoint hold
 simultaneously. -/
@@ -806,6 +911,45 @@ simultaneously. -/
     kkt_wings_sourceSpineAndWeylEndpoint_of_flat
       (CCI := CCI) hProj hLeft hA hAMP hAD (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
   exact ⟨pkg.dilation_source, pkg.obstruction_isGZero, pkg.holonomy_eq_projectorObstruction_nnnorm⟩
+
+/-- Certified-projector-agreement route to the finite-dimensional end-to-end
+witness (dilation source + grade-zero obstruction + flat-holonomy endpoint). -/
+@[rep_depth krein] theorem
+    finiteDimensional_end_to_end_witness_of_projectorAgreementCertified_metricProjector_commute
+    (PCCI : ProjectorAgreementCertifiedConformalInference (DoubledSpace E))
+    (hLeft :
+      PCCI.toConformalInference.P_D * PCCI.toConformalInference.P_MP
+        = PCCI.toConformalInference.P_MP * PCCI.toConformalInference.P_D)
+    (hA : IsGOne (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) PCCI.A)
+    (hAMP : IsGNegOne (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) PCCI.A_MP)
+    (hAD : IsGNegOne (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) PCCI.A_D)
+    (Δ : WeylDifferentialOperator ℝ X A)
+    (γ : WeylTrajectory I X)
+    (bridge :
+      FlatCurvatureProjectorObstructionBridge
+        (CI := PCCI.toConformalInference) (Δ := Δ) (γ := γ))
+    (B : WeylGaugeField X A)
+    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B) :
+    (PCCI.toConformalInference.P_D * PCCI.toConformalInference.D
+        - PCCI.toConformalInference.D * PCCI.toConformalInference.P_D
+      = -((2 : ℝ)⁻¹) • PCCI.toConformalInference.projectorObstruction)
+      ∧
+      IsGZero (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+        PCCI.toConformalInference.projectorObstruction
+      ∧
+      bridge.lineIntegrator.holonomy bridge.holonomyMap B γ
+        = ‖PCCI.toConformalInference.projectorObstruction‖₊ := by
+  exact
+    finiteDimensional_end_to_end_witness_of_projectorAgreement_metricProjector_commute
+      (CCI := PCCI.toCertifiedConformalInference)
+      (hProj := PCCI.projectorAgreement)
+      hLeft
+      hA hAMP hAD
+      (Δ := Δ)
+      (γ := γ)
+      (bridge := bridge)
+      (B := B)
+      hFlat
 
 /-- Operator-level KKT bridge: explicit `g₁/g₋₁` wing data force the projector
 obstruction operator into grade zero on the doubled split-`Cl(1,1)` carrier. -/

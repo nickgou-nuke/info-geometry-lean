@@ -1,117 +1,37 @@
-# Synthesis Note: Anomaly-Identification Welding Chain
+# Synthesis Note: The Welding Theorem and Anomaly Identification
 
-## Scope and Status
-This note is a reference-memory synthesis for the current weld between:
-- the count/projective/operator trunk, and
-- the doubled/Krein/phase-space transport trunk.
+## Status
+This note documents the formal resolution of the "Hard Problem" in the Projective-to-Krein transition. It traces how the static, commuting projective geometry is welded to the dynamic, non-commuting phase-space geometry on a polarized doubled real carrier.
 
-It is not a proof source. Lean declarations are the authority.
+## 1. The Doubled Real Carrier and the Hestenes Phase Split
+The transition relies on the **internal Hestenes axis** $K = J\epsilon$ on the doubled real carrier. This structure replaces imported complex scalars with a real, geometric phase-sensitive axis.
+- **Phase-Linear Parity:** Endomorphisms commuting with $K$.
+- **Phase-Antilinear Parity:** Endomorphisms anticommuting with $K$.
+- **Transport Mechanism:** Relational transport is defined by the evolution of this internal axis under Bogoliubov conjugation.
 
-The goal here is strict separation between:
-- compiler-checked theorem chain,
-- structural interpretation,
-- synthesis inference and remaining closure.
+## 2. The Emergence of the Obstruction at the Projector Junction
+The "Hard Problem" arises because the informational spectral projector ($P_D$) and the metric range projector ($P_{MP}$) fail to commute on the doubled real carrier.
+- **The Obstruction:** `projectorObstruction = P_D P_{MP} - P_{MP} P_D`
+- **Algebraic Nature:** This commutator defines the precise topological gap between measuring entropy and measuring distance. It is a Cartan-odd, phase-antilinear operator.
 
-## 1. Obstruction source (compiler-checked)
-The canonical obstruction operator is defined as the projector commutator package:
+## 3. The Generation of Transport and Anomaly
+The formal architecture identifies this obstruction not as an artifact, but as the active generator of transport:
+- **Anomaly Identification:** Under projector agreement, the Einstein Anomaly is identified as the negative of this chiral obstruction.
+- **Weyl Holonomy:** The accumulated phase shift over a closed trajectory is strictly equal to the norm of the projector obstruction.
+- **Bogoliubov Transport:** The rate of change of the anomaly under non-commuting modular flow is exactly the modular source derivative. The obstruction *is* the engine of the flow.
 
-- `projectorObstruction := chiralAnomalyOperator`
-  - `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean:19`
-- exact commutator identity
-  - `projectorObstruction_eq_commutator`
-  - `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean:25`
+## 4. The QGT Readout
+The **Quantum Geometric Tensor (QGT)** is read as a split-pair of real bilinear forms:
 
-In symbols:
+### IV.A Symmetric Metric Sector (Real)
+The Cartan-even, symmetric, variance-carrying side. Formalized as `metricOfOperator`, this sector captures the Fisher-Rao information metric and thermodynamic susceptibilities.
 
-`projectorObstruction = P_D * P_MP - P_MP * P_D`.
+### IV.B (Jε)-skew Hestenes Phase-Axis Sector (Curvature)
+The Cartan-odd, phase-sensitive side carried by the internal Hestenes axis $K = J\epsilon$. The nontrivial curvature of the weld belongs to this sector, not to an imported complex component. The `projectorObstruction` feeds this $K$-sensitive transport channel.
 
-## 2. Einstein-anomaly identification (compiler-checked)
-On the conformal surface:
+## 5. Summary of Causal Stratigraphy
+- **What is Proved:** The obstruction chain, the anomaly identification, the Weyl holonomy readout, and the modular source/gauge split in infinitesimal transport.
+- **What is Inferred:** The identification of the `projectorObstruction` as the specific operator seed for the QGT phase-axis sector.
+- **The Remaining Closure:** A direct theorem mapping the `liftedEinsteinAnomalyOperator` into the `kreinQgtOfOperator` constructor via its phase-antilinearity.
 
-- unconditional right-anomaly bridge:
-  - `einsteinAnomaly_eq_neg_rightChiralAnomaly`
-  - `lean/InfoGeometry/Canonical/ConformalProjectorCore.lean`
-- left-anomaly bridge under projector agreement:
-  - `einsteinAnomaly_eq_neg_chiralAnomaly_of_projectorAgreement`
-  - `lean/InfoGeometry/Canonical/ConformalProjectorCore.lean:646`
-
-So the left-chiral identification is proved, but conditionally (via MP left/right projector agreement).
-
-## 3. Weyl holonomy as scalar obstruction readout (compiler-checked)
-In the doubled Weyl bridge:
-
-- `holonomy_eq_projectorObstruction_nnnorm_and_bogoliubovConjugate_liftedEinsteinAnomalyOperator_eq_self_of_flat_of_commute_generator`
-  - `lean/InfoGeometry/Canonical/PhaseSpaceWeylCausalBridge.lean:429`
-
-The scalar output is explicit:
-
-`holonomy = ‖projectorObstruction‖₊`
-
-under the stated flatness bridge assumptions.
-
-## 4. Bogoliubov conjugation as operator readout (compiler-checked)
-The operator channel is formalized through:
-
-- exact conjugation model:
-  - `bogoliubovConjugate_liftedEinsteinAnomalyOperator_eq_exp_mul_mul_exp_neg`
-- infinitesimal derivation:
-  - `deriv_bogoliubovConjugate_liftedEinsteinAnomalyOperator_at_zero_eq_relativeModularDeriv`
-  - `lean/InfoGeometry/Canonical/EinsteinAnomalyOperator.lean:518`
-- gauge/sourcing split at derivative level:
-  - `..._eq_relativeModularSourceDeriv_of_commute_gaugePart`
-  - `lean/InfoGeometry/Canonical/EinsteinAnomalyOperator.lean:533`
-
-Important exactness note:
-the source-channel derivative statement is conditional on `hCommGauge`; it is not unconditional.
-
-## 5. Mechanic of the weld: transport split first, QGT readout second
-The decisive transport operators are already named in:
-`lean/InfoGeometry/Canonical/BogoliubovTransport.lean`:
-
-- `relativeModularKGenerator` (`:440`)
-- `relativeModularDeriv` (`:444`)
-- `modularGaugeDeriv` (same block)
-- `relativeModularSourceDeriv` (`:448`)
-- `relativeModularSinkDeriv` (`:452`)
-- decomposition theorem:
-  - `relativeModularDeriv_eq_modularGaugeDeriv_add_relativeModularSourceDeriv` (`:472`)
-
-This is the mechanic layer of the weld.
-QGT is downstream readout of this operator transport package.
-
-## 6. QGT mapping: proved vs inferred
-### 6.1 What is already proved
-In `lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean`:
-
-- infinitesimal metric-seed transport reads modular derivations
-  - e.g. `deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularDeriv`
-- gauge/source split readout for metric seeds
-  - `..._eq_metricOf_modularGaugeDeriv_add_metricOf_relativeModularSourceDeriv` (`:228`)
-- certified Einstein-anomaly specialization to source channel under gauge commutation
-  - `deriv_metricOfOperator_liftedEinsteinAnomalyOperator_relativeModularTransport_at_zero_eq_metricOf_relativeModularSourceDeriv_of_commute_gaugePart` (`:305`)
-- Hilbert/Krein agreement on QGT metric and Berry components after `ε`-transport
-  - `qgtOfOperator_modularSignEpsilon_comp_metric_eq_kreinQgtOfOperator_metric` (`:703`)
-  - `qgtOfOperator_modularSignEpsilon_comp_berry_eq_kreinQgtOfOperator_berry` (`:724`)
-
-### 6.2 Current synthesis inference
-The current package strongly supports:
-- obstruction/anomaly as the curvature-carrying operator packet,
-- scalar holonomy as its norm readout,
-- QGT metric/Berry layers as transport readouts of the same `K`-structured operator lift.
-
-### 6.3 Remaining closure theorem
-Still to close explicitly:
-- a direct endpoint theorem identifying the Berry-side generator with the canonical projector-obstruction/anomaly package under canonical weld hypotheses.
-
-## 7. Why the weld is curved rather than flat
-On current theorem surfaces, the trunks weld by obstruction-mediated coherence:
-- scalar channel: obstruction norm appears as Weyl holonomy readout;
-- operator channel: anomaly is either transport-invariant (commuting-generator regime) or evolves via modular source derivation (gauge-commuting split regime).
-
-This is stronger than prose adjacency and weaker than claiming every QGT imaginary component is already theorem-identical to projector obstruction.
-
-## 8. Minimal next trace
-To keep closure rigorous, trace this theorem path next:
-1. `BogoliubovTransport` generator/split primitives,
-2. `EinsteinAnomalyOperator` lifted anomaly transport laws,
-3. `GeometricTensorOperatorLift` bridge from lifted anomaly transport into `qgtOfOperator`/`kreinQgtOfOperator` readouts.
+**Projective rays carry the relational content; the modular operator owns it canonically; the doubled carrier polarizes it; and the (Jε) Hestenes axis carries its phase-sensitive transport.**

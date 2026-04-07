@@ -30,6 +30,8 @@ These top-level files have different roles:
 | Tomita / Bogoliubov / Weyl | modular and transport branches | [TomitaTakesaki.lean](../lean/InfoGeometry/Canonical/TomitaTakesaki.lean) |
 | Quantum Geometric Tensor (QGT) / Anomaly | metric readout and operator transport | [GeometricTensorOperatorLift.lean](../lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean) |
 | Bulk-Boundary / Majorana / Kitaev | boundary regularization and zero-mode pairs | [BulkBoundary.lean](../lean/InfoGeometry/Quantum/BulkBoundary.lean) |
+| concrete realization / finite model | explicit finite-dimensional recomposition performance | [PhaseSpaceRecompositionExample.lean](../lean/InfoGeometry/Canonical/PhaseSpaceRecompositionExample.lean) |
+| interpretation dictionary | symbol-to-physics naming map for reading proofs | [ThermodynamicDictionary.lean](../lean/InfoGeometry/Interpretation/ThermodynamicDictionary.lean) |
 | DAG / infra / docs tooling | graph export, reports, and refresh workflow | [lean/DAG/README.md](../lean/DAG/README.md) |
 
 ## Read By Task
@@ -123,6 +125,18 @@ Current state:
 - boundary regularization via generalized inverses (Drazin/Moore-Penrose) is real
 - Weyl boundary zero-mode pairs are explicitly identified for Kitaev chains
 
+### If you want concrete onboarding and interpretation
+
+Read:
+
+1. [PhaseSpaceRecompositionExample.lean](../lean/InfoGeometry/Canonical/PhaseSpaceRecompositionExample.lean)
+2. [ThermodynamicDictionary.lean](../lean/InfoGeometry/Interpretation/ThermodynamicDictionary.lean)
+
+Role split:
+
+- `PhaseSpaceRecompositionExample.lean` is the concrete finite-dimensional realization.
+- `ThermodynamicDictionary.lean` is the interpretation glossary, not a replacement for proof source.
+
 ## Current Structural Picture
 
 ### Semantic roots
@@ -145,6 +159,16 @@ Treat these as useful but non-root:
 - [RelativeModularBerezinianBridge.lean](../lean/InfoGeometry/Canonical/RelativeModularBerezinianBridge.lean)
 - [MajoranaKitaevSpinorBridge.lean](../lean/InfoGeometry/Canonical/MajoranaKitaevSpinorBridge.lean)
 - [GeneralizedMetricPolarizedBridge.lean](../lean/InfoGeometry/Canonical/GeneralizedMetricPolarizedBridge.lean)
+
+### Destination Outposts (Not Trunk Imports)
+
+These files are forward contracts. Keep them visible, but do not treat them as
+current trunk authority:
+
+- [SingularUnitaryBridge.lean](../lean/InfoGeometry/Unstable/SingularUnitaryBridge.lean)
+- [YangMillsBridge.lean](../lean/InfoGeometry/Unstable/YangMillsBridge.lean)
+- [AQFTOperatorInterface.lean](../lean/InfoGeometry/Canonical/AQFTOperatorInterface.lean)
+- [ArnoldMajoranaNetwork.lean](../lean/InfoGeometry/Canonical/ArnoldMajoranaNetwork.lean)
 
 ## What To Ignore At First
 

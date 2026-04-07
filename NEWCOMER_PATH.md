@@ -28,7 +28,17 @@ Read:
 2. [tools/README.md](tools/README.md)
 3. [tools/infra/README.md](tools/infra/README.md)
 
-## Step 3: build something small
+## Step 3: add one concrete realization and one interpretation key
+
+Read:
+1. [lean/InfoGeometry/Canonical/PhaseSpaceRecompositionExample.lean](lean/InfoGeometry/Canonical/PhaseSpaceRecompositionExample.lean)
+2. [lean/InfoGeometry/Interpretation/ThermodynamicDictionary.lean](lean/InfoGeometry/Interpretation/ThermodynamicDictionary.lean)
+
+Use these as onboarding aids:
+- `PhaseSpaceRecompositionExample.lean` is the concrete finite-dimensional performance surface.
+- `ThermodynamicDictionary.lean` maps formal symbols to physical meaning and naming conventions.
+
+## Step 4: build something small
 
 ```bash
 python3 tools/infra/run_locked_lake_build.py InfoGeometry.Canonical.All
@@ -40,7 +50,7 @@ If that works, build:
 python3 tools/infra/run_locked_lake_build.py InfoGeometry.All
 ```
 
-## Step 4: know what to ignore at first
+## Step 5: know what to ignore at first
 
 Do not start with:
 - `reports/`
@@ -60,7 +70,7 @@ anchor corridor from [docs/ModuleMap.md](docs/ModuleMap.md):
 Canonical/RelativePotentialCore.lean -> Canonical/RelativePotentialCountBridge.lean ->
 Canonical/RelativeSurprisalOperatorLift.lean`.
 
-## Step 5: when editing code
+## Step 6: when editing code
 
 Use this order:
 1. direct file analysis;
@@ -69,7 +79,7 @@ Use this order:
 4. only then use graph reports;
 5. only after code is stable, rerun the maintained DAG pipeline.
 
-## Step 6: when using agents
+## Step 7: when using agents
 
 Start with:
 - [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)

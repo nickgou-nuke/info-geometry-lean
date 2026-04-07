@@ -104,6 +104,22 @@ projector-obstruction operator.
     CI.spectralProjector_commutator_dilation_eq_neg_half_projectorObstruction_of_rightProjector_commute
       hRight
 
+/--
+Structured dilation-source identity on the operator layer:
+if left/right Moore-Penrose projectors agree and the Drazin projector commutes
+with the left metric projector, the dilation commutator is `-1/2` times the
+projector-obstruction operator.
+-/
+@[rep_depth krein] theorem
+    dilationSource_eq_neg_half_projectorObstruction_of_projectorAgreement_of_metricProjector_commute
+    (hProj : CI.P_MP_right = CI.P_MP)
+    (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
+    CI.P_D * CI.D - CI.D * CI.P_D
+      = -((2 : ℝ)⁻¹) • CI.projectorObstruction := by
+  exact
+    CI.spectralProjector_commutator_dilation_eq_neg_half_projectorObstruction_of_projectorAgreement_of_metricProjector_commute
+      hProj hLeft
+
 end ConformalInference
 
 end InfoGeometry.Canonical.ConformalUnification

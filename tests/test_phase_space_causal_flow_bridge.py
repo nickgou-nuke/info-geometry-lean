@@ -122,6 +122,7 @@ class PhaseSpaceCausalFlowBridgeTests(unittest.TestCase):
             variable (hAD : IsGNegOne (doubledSpaceCl11Action (E := H)) CIK.A_D)
             variable (hA' : IsGOne (doubledSpaceCl11Action (E := H)) CCI.A)
             variable (hAMP' : IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_MP)
+            variable (hAD' : IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_D)
             variable (R : PolarizedRecompositionData H α βplus βminus)
 
             example :
@@ -138,13 +139,13 @@ class PhaseSpaceCausalFlowBridgeTests(unittest.TestCase):
             example :
                 TrunkOutputs H α βplus βminus CIK CCI R :=
               correctedOwner_trunk_outputs_struct (H := H) (CIK := CIK) (CCI := CCI)
-                hA hAMP hAD hA' hAMP' R
+                hA hAMP hAD hA' hAMP' hAD' R
 
             example :
                 IsGZero (doubledSpaceCl11Action (E := H)) CIK.drazinCoreProj :=
               TrunkOutputs.drazinCoreProj_isGZero' (H := H) (CIK := CIK) (CCI := CCI) (R := R)
                 (correctedOwner_trunk_outputs_struct (H := H) (CIK := CIK) (CCI := CCI)
-                  hA hAMP hAD hA' hAMP' R)
+                  hA hAMP hAD hA' hAMP' hAD' R)
 
             end TrunkOutputs
 

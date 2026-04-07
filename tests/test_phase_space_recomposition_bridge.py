@@ -241,6 +241,65 @@ class PhaseSpaceRecompositionBridgeTests(unittest.TestCase):
 
             end
 
+            section CountJunction
+
+            variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+            variable {α : Type*} [Fintype α] [Nonempty α]
+            variable {nPlus : Nat} [Nonempty (Fin nPlus)]
+            variable {nMinus : Nat} [Nonempty (Fin nMinus)]
+            variable [MeasurableSpace (Fin nPlus)] [MeasurableSingletonClass (Fin nPlus)]
+            variable [Countable (Fin nPlus)]
+            variable [MeasurableSpace (Fin nMinus)] [MeasurableSingletonClass (Fin nMinus)]
+            variable [Countable (Fin nMinus)]
+            variable (R : PolarizedRecompositionData H α (Fin nPlus) (Fin nMinus))
+            variable (ρ : H ≃ₗ[ℝ] Module.Dual ℝ H)
+            variable (countsPlus refPlus :
+              InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts nPlus)
+            variable (hcountsPlus : ∀ i : Fin nPlus, 0 < countsPlus i)
+            variable (hrefPlus : ∀ i : Fin nPlus, 0 < refPlus i)
+            variable (countsMinus refMinus :
+              InfoGeometry.Canonical.RelativePotentialCountBridge.RelativeCounts nMinus)
+            variable (hcountsMinus : ∀ i : Fin nMinus, 0 < countsMinus i)
+            variable (hrefMinus : ∀ i : Fin nMinus, 0 < refMinus i)
+            variable (iPlus : Fin nPlus) (iMinus : Fin nMinus)
+
+            example
+                (hplusSource : R.polarized.plus.data.localSource =
+                  InfoGeometry.Canonical.RelativePotentialCountBridge.countRay countsPlus hcountsPlus)
+                (hplusTarget : R.polarized.plus.data.localTarget =
+                  InfoGeometry.Canonical.RelativePotentialCountBridge.countRay refPlus hrefPlus) :
+                True := by
+              have _ :=
+                InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.plus_phaseSpace_projectiveCount_junction_of_countRays
+                  (R := R) (ρ := ρ) (counts := countsPlus) (ref := refPlus)
+                  (hcounts := hcountsPlus) (href := hrefPlus)
+                  (hsource := hplusSource) (htarget := hplusTarget) (i := iPlus)
+              trivial
+
+            example
+                (hplusSource : R.polarized.plus.data.localSource =
+                  InfoGeometry.Canonical.RelativePotentialCountBridge.countRay countsPlus hcountsPlus)
+                (hplusTarget : R.polarized.plus.data.localTarget =
+                  InfoGeometry.Canonical.RelativePotentialCountBridge.countRay refPlus hrefPlus)
+                (hminusSource : R.polarized.minus.data.localSource =
+                  InfoGeometry.Canonical.RelativePotentialCountBridge.countRay countsMinus hcountsMinus)
+                (hminusTarget : R.polarized.minus.data.localTarget =
+                  InfoGeometry.Canonical.RelativePotentialCountBridge.countRay refMinus hrefMinus) :
+                True := by
+              have _ :=
+                InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.phaseSpace_projectiveCount_weld_of_countRays
+                  (R := R) (ρ := ρ)
+                  (countsPlus := countsPlus) (refPlus := refPlus)
+                  (hcountsPlus := hcountsPlus) (hrefPlus := hrefPlus)
+                  (hplusSource := hplusSource) (hplusTarget := hplusTarget)
+                  (countsMinus := countsMinus) (refMinus := refMinus)
+                  (hcountsMinus := hcountsMinus) (hrefMinus := hrefMinus)
+                  (hminusSource := hminusSource) (hminusTarget := hminusTarget)
+                  (iPlus := iPlus) (iMinus := iMinus)
+              trivial
+
+            end CountJunction
+
             end Scratch.PhaseSpaceRecompositionBridge
             """
         )

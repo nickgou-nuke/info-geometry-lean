@@ -89,6 +89,11 @@ Conceptual overlays and formal-side notes:
 Synthesis and speculative route notes:
 
 - [welding_theorem_synthesis.md](welding_theorem_synthesis.md)
+- [bogoliubov_hestenes_synthesis.md](bogoliubov_hestenes_synthesis.md)
+- [majorana_web_gravity_synthesis.md](majorana_web_gravity_synthesis.md)
+- [informational_supergravity_synthesis.md](informational_supergravity_synthesis.md)
+- [gravity_of_information_doctrine.md](gravity_of_information_doctrine.md)
+- [spinor_modular_bridge_vision.md](spinor_modular_bridge_vision.md)
 - [cocycle_detailed_balance_synthesis.md](cocycle_detailed_balance_synthesis.md)
 - [d4_crystal_synthesis.md](d4_crystal_synthesis.md)
 - [deep_horizon_synthesis.md](deep_horizon_synthesis.md)

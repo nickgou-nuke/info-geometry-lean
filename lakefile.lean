@@ -95,3 +95,7 @@ lean_exe semanticBlockServer where
 lean_exe compilerBridgeServer where
   root := `scripts.DAG.Exploration.CompilerBridgeServer
   supportInterpreter := true
+
+lean_exe dagIndexer where
+  root := `DAG.Indexer
+  supportInterpreter := true

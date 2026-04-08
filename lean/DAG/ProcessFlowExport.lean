@@ -22,7 +22,7 @@ inductive DependencyRole
   | ornament
   | remoteSupport
   | unknown
-  deriving Repr, BEq, Inhabited, ToJson
+  deriving Repr, BEq, Inhabited, ToJson, Hashable
 
 inductive BoundaryClass
   | internal
@@ -31,26 +31,26 @@ inductive BoundaryClass
   | capstone
   | mixed
   | unclear
-  deriving Repr, BEq, Inhabited, ToJson
+  deriving Repr, BEq, Inhabited, ToJson, Hashable
 
 inductive LocalityClass
   | local
   | adjacent
   | remote
   | mixed
-  deriving Repr, BEq, Inhabited, ToJson
+  deriving Repr, BEq, Inhabited, ToJson, Hashable
 
 inductive NormalizationClass
   | definitional
   | propositional
   | structural
-  deriving Repr, BEq, Inhabited, ToJson
+  deriving Repr, BEq, Inhabited, ToJson, Hashable
 
 inductive CanonicalityClass
   | stableSpine
   | capstone
   | derived
-  deriving Repr, BEq, Inhabited, ToJson
+  deriving Repr, BEq, Inhabited, ToJson, Hashable
 
 inductive PolarityClass
   | neutral
@@ -59,14 +59,14 @@ inductive PolarityClass
   | remote
   | mixed
   | regressive
-  deriving Repr, BEq, Inhabited, ToJson
+  deriving Repr, BEq, Inhabited, ToJson, Hashable
 
 inductive DerivationalRole
   | vertical
   | primitiveTranslator
   | capstoneCoherence
   | violation
-  deriving Repr, BEq, Inhabited, ToJson
+  deriving Repr, BEq, Inhabited, ToJson, Hashable
 
 inductive DefectKind
   | remoteAttachment
@@ -78,18 +78,18 @@ inductive DefectKind
   | typeOnlySupport
   | boundaryBypass
   | unclearPolarity
-  deriving Repr, BEq, Inhabited, ToJson
+  deriving Repr, BEq, Inhabited, ToJson, Hashable
 
 inductive FlowProvenanceKind
   | directObserved
   | boundedComposite
-  deriving Repr, BEq, Inhabited, ToJson
+  deriving Repr, BEq, Inhabited, ToJson, Hashable
 
 inductive EdgeUse
   | typeOnly
   | valueOnly
   | both
-  deriving Repr, BEq, Inhabited, ToJson
+  deriving Repr, BEq, Inhabited, ToJson, Hashable
 
 structure FeatureBundle where
   layer : String
@@ -194,6 +194,20 @@ structure DefectRow where
   dst : Name
   defect : Defect
   deriving Repr, Inhabited, ToJson
+
+structure DeclFlowSummary where
+  depth : RepDepth
+  kind : String
+  capstone : Bool
+  directEvidence : Array DirectEdgeEvidence
+  feature : FeatureBundle
+  deriving Inhabited
+
+structure ComparisonGroupKey where
+  role : DerivationalRole
+  layerNat : Nat
+  boundaryClass : BoundaryClass
+  deriving Repr, BEq, Inhabited, Hashable
 
 private def dottedName (s : String) : Name :=
   (s.splitOn ".").foldl (init := Name.anonymous) fun acc part =>
@@ -374,13 +388,6 @@ private def directEdgeEvidenceOf (env : Environment) (declName : Name) : Array D
         out := next
   return out.qsort fun a b => toString a.dst < toString b.dst
 
-private def closureTaggedDependencies (env : Environment) (declName : Name) : Array Name := Id.run do
-  let mut out := #[]
-  for dep in transitivelyUsedConstants env declName do
-    if dep != declName && (repDepth? env dep).isSome then
-      out := out.push dep
-  return uniqueNames out
-
 private def featureBundleOf
     (depth : RepDepth)
     (kind : String)
@@ -395,6 +402,26 @@ private def featureBundleOf
     canonicality := canonicalityClassOf capstone
     polarity := polarityClassOf targetDepthNat directDepDepthNats
   }
+
+private def declFlowSummaryMap (env : Environment) : Std.HashMap Name DeclFlowSummary := Id.run do
+  let mut out : Std.HashMap Name DeclFlowSummary := {}
+  for (declName, ci) in env.constants do
+    match repDepth? env declName with
+    | none => pure ()
+    | some depth =>
+        let kind := kindString ci
+        let capstone := capstoneAttr.hasTag env declName
+        let directEvidence := directEdgeEvidenceOf env declName
+        let directDepDepthNats := uniqueNats <| directEvidence.filterMap (·.dstDepthNat?)
+        let feature := featureBundleOf depth kind capstone depth.toNat directDepDepthNats
+        out := out.insert declName {
+          depth := depth
+          kind := kind
+          capstone := capstone
+          directEvidence := directEvidence
+          feature := feature
+        }
+  return out
 
 private def edgePolarityOf
     (srcFeature dstFeature : FeatureBundle)
@@ -508,22 +535,26 @@ private def depKindString (env : Environment) (dep : Name) : String :=
 
 private def buildFlowEdgesForDecl
     (env : Environment)
+    (summaries : Std.HashMap Name DeclFlowSummary)
     (declName : Name)
-    (depth : RepDepth)
-    (kind : String)
-    (capstone : Bool)
-    (directEvidence : Array DirectEdgeEvidence) : Array FlowEdge :=
-  let directDepDepthNats := uniqueNats <| directEvidence.filterMap (·.dstDepthNat?)
-  let srcFeature := featureBundleOf depth kind capstone depth.toNat directDepDepthNats
+    (summary : DeclFlowSummary) : Array FlowEdge :=
+  let depth := summary.depth
+  let capstone := summary.capstone
+  let directEvidence := summary.directEvidence
+  let srcFeature := summary.feature
   directEvidence.map fun ev =>
     let dep := ev.dst
     let edgeUse := ev.edgeUse
     let edgeKind := dominantEdgeKindOf edgeUse
     let depDepthNat := ev.dstDepthNat?.getD depth.toNat
-    let depDepth := RepDepth.ofNat depDepthNat
-    let depEdges := directEdgeEvidenceOf env dep
-    let depFeature := featureBundleOf depDepth (depKindString env dep) (capstoneAttr.hasTag env dep)
-      depDepth.toNat (uniqueNats <| depEdges.filterMap (·.dstDepthNat?))
+    let depFeature :=
+      match summaries.get? dep with
+      | some depSummary => depSummary.feature
+      | none =>
+          let depDepth := RepDepth.ofNat depDepthNat
+          let depEdges := directEdgeEvidenceOf env dep
+          featureBundleOf depDepth (depKindString env dep) (capstoneAttr.hasTag env dep)
+            depDepth.toNat (uniqueNats <| depEdges.filterMap (·.dstDepthNat?))
     let inferredRole := dependencyRoleOf depth.toNat depDepthNat edgeUse
     let inferredBoundary := edgeBoundaryOf capstone srcFeature depFeature inferredRole
     let inferredPolarity := edgePolarityOf srcFeature depFeature inferredRole
@@ -542,15 +573,12 @@ private def buildFlowEdgesForDecl
       defectTags := defectTagsForEdge capstone srcFeature depFeature inferredRole inferredBoundary inferredPolarity
     }
 
-private def flowEdgesRaw (env : Environment) : Array FlowEdge :=
-  env.constants.fold (init := #[]) fun acc declName ci =>
-    match repDepth? env declName with
+private def flowEdgesRaw (env : Environment) (summaries : Std.HashMap Name DeclFlowSummary) : Array FlowEdge :=
+  env.constants.fold (init := #[]) fun acc declName _ =>
+    match summaries.get? declName with
     | none => acc
-    | some depth =>
-        let kind := kindString ci
-        let capstone := capstoneAttr.hasTag env declName
-        let directEvidence := directEdgeEvidenceOf env declName
-        acc ++ buildFlowEdgesForDecl env declName depth kind capstone directEvidence
+    | some summary =>
+        acc ++ buildFlowEdgesForDecl env summaries declName summary
 
 private def flowEdgesFor (flowEdges : Array FlowEdge) (src : Name) : Array FlowEdge :=
   (flowEdges.filter fun edge => edge.src == src).qsort fun a b => toString a.dst < toString b.dst
@@ -577,18 +605,48 @@ private def supportCandidatesOf (edges : Array FlowEdge) : Array Name :=
   uniqueNames <| edges.foldl (init := #[]) fun acc edge =>
     if edge.inferredRole == .head || edge.inferredRole == .transportArg then acc else acc.push edge.dst
 
-private def processEventsBase (env : Environment) (flowEdges : Array FlowEdge) : Array ProcessEvent :=
-  env.constants.fold (init := #[]) fun acc declName ci =>
-    match repDepth? env declName with
+private def adjacencyOfEdges (edges : Array FlowEdge) : Std.HashMap Name (Array Name) :=
+  edges.foldl (init := {}) fun acc edge =>
+    let current := acc.getD edge.src #[]
+    acc.insert edge.src (uniqueNames (current.push edge.dst))
+
+private def closureTaggedDependenciesOfAdj
+    (adj : Std.HashMap Name (Array Name))
+    (declName : Name) : Array Name := Id.run do
+  let mut seen : NameSet := {}
+  let mut out := #[]
+  let mut queue : Array Name := adj.getD declName #[]
+  let mut front : Nat := 0
+  for dep in queue do
+    if dep != declName && !seen.contains dep then
+      seen := seen.insert dep
+      out := out.push dep
+  while front < queue.size do
+    let u := queue[front]!
+    front := front + 1
+    for v in adj.getD u #[] do
+      if v != declName && !seen.contains v then
+        seen := seen.insert v
+        out := out.push v
+        queue := queue.push v
+  return uniqueNames out
+
+private def processEventsBase
+    (env : Environment)
+    (summaries : Std.HashMap Name DeclFlowSummary)
+    (flowEdges : Array FlowEdge) : Array ProcessEvent :=
+  let adj := adjacencyOfEdges flowEdges
+  env.constants.fold (init := #[]) fun acc declName _ =>
+    match summaries.get? declName with
     | none => acc
-    | some depth =>
-        let kind := kindString ci
-        let capstone := capstoneAttr.hasTag env declName
-        let directEvidence := directEdgeEvidenceOf env declName
+    | some summary =>
+        let depth := summary.depth
+        let capstone := summary.capstone
+        let directEvidence := summary.directEvidence
         let directDepDepthNats := uniqueNats <| directEvidence.filterMap (·.dstDepthNat?)
         let role := derivationalRoleOf capstone depth.toNat directDepDepthNats
         let boundaryClass := boundaryClassOf role (localityClassOf depth.toNat directDepDepthNats)
-        let featureOut := featureBundleOf depth kind capstone depth.toNat directDepDepthNats
+        let featureOut := summary.feature
         let edges := flowEdgesFor flowEdges declName
         let novelty :=
           (if role == .primitiveTranslator then 2 else if role == .capstoneCoherence then 1 else 0) +
@@ -602,13 +660,13 @@ private def processEventsBase (env : Environment) (flowEdges : Array FlowEdge) :
         acc.push {
           node := declName
           module := moduleNameFor env declName
-          kind := kind
+          kind := summary.kind
           role := role
           boundaryClass := boundaryClass
           directDeps := uniqueNames (edges.map (·.dst))
           directValueDeps := directNamesByKind edges .value
           directTypeDeps := directNamesByKind edges .type
-          closureDeps := closureTaggedDependencies env declName
+          closureDeps := closureTaggedDependenciesOfAdj adj declName
           featureInputs := edges.map (fun edge => { dep := edge.dst, feature := edge.dstFeature })
           featureIn := uniqueFeatures (edges.map (·.dstFeature))
           featureOut := #[featureOut]
@@ -618,21 +676,35 @@ private def processEventsBase (env : Environment) (flowEdges : Array FlowEdge) :
           novelty := novelty
         }
 
+private def comparisonGroups (events : Array ProcessEvent) :
+    Std.HashMap ComparisonGroupKey (Array Name) :=
+  events.foldl (init := {}) fun acc ev =>
+    match ev.featureOut[0]? with
+    | none => acc
+    | some outFeature =>
+        let key : ComparisonGroupKey := {
+          role := ev.role
+          layerNat := outFeature.layerNat
+          boundaryClass := ev.boundaryClass
+        }
+        let current := acc.getD key #[]
+        acc.insert key (current.push ev.node)
+
 private def addComparisonCandidates (events : Array ProcessEvent) : Array ProcessEvent := Id.run do
+  let groups := comparisonGroups events
   let mut out := #[]
   for ev in events do
-    let role := ev.role
-    let some outFeature := ev.featureOut[0]? | out := out.push ev; continue
-    let candidates := events.foldl (init := #[]) fun acc other =>
-      if other.node == ev.node then acc
-      else
-        match other.featureOut[0]? with
-        | some otherOut =>
-            if other.role == role && otherOut.layerNat == outFeature.layerNat && other.boundaryClass == ev.boundaryClass then
-              acc.push other.node
-            else acc
-        | none => acc
-    out := out.push { ev with comparisonCandidates := uniqueNames candidates }
+    let candidates :=
+      match ev.featureOut[0]? with
+      | none => #[]
+      | some outFeature =>
+          let key : ComparisonGroupKey := {
+            role := ev.role
+            layerNat := outFeature.layerNat
+            boundaryClass := ev.boundaryClass
+          }
+          uniqueNames <| (groups.getD key #[]).filter fun other => other != ev.node
+    out := out.push { ev with comparisonCandidates := candidates }
   return out.qsort fun a b => toString a.node < toString b.node
 
 private def edgeKey (src dst : Name) : String :=
@@ -640,44 +712,6 @@ private def edgeKey (src dst : Name) : String :=
 
 private def flowEdgeMap (edges : Array FlowEdge) : Std.HashMap String FlowEdge :=
   edges.foldl (init := {}) fun acc edge => acc.insert (edgeKey edge.src edge.dst) edge
-
-private def adjacencyOfEdges (edges : Array FlowEdge) : Std.HashMap Name (Array Name) :=
-  edges.foldl (init := {}) fun acc edge =>
-    let current := acc.getD edge.src #[]
-    acc.insert edge.src (uniqueNames (current.push edge.dst))
-
-private def predecessorMap
-    (adj : Std.HashMap Name (Array Name))
-    (src : Name) : Std.HashMap Name Name := Id.run do
-  let mut pred : Std.HashMap Name Name := {}
-  let mut seen : NameSet := {}
-  let mut queue : Array Name := #[src]
-  let mut front : Nat := 0
-  seen := seen.insert src
-  while front < queue.size do
-    let u := queue[front]!
-    front := front + 1
-    for v in adj.getD u #[] do
-      if !seen.contains v then
-        seen := seen.insert v
-        pred := pred.insert v u
-        queue := queue.push v
-  return pred
-
-private def reconstructPath (pred : Std.HashMap Name Name) (src dst : Name) : Option (Array Name) := Id.run do
-  if src == dst then
-    return some #[src]
-  if !(pred.contains dst) then
-    return none
-  let mut rev : Array Name := #[dst]
-  let mut cur := dst
-  while cur != src do
-    match pred.get? cur with
-    | none => return none
-    | some p =>
-        rev := rev.push p
-        cur := p
-  return some rev.reverse
 
 private def defectOfTag (tag : DefectKind) (stepIdx : Nat) (witness : Name) : Defect :=
   {
@@ -709,52 +743,91 @@ private def pathStepOf (edge : FlowEdge) : PathStep :=
     featureOut := edge.dstFeature
   }
 
+private def sharedComparisonCandidatesOf (srcEv dstEv : ProcessEvent) : Array Name :=
+  uniqueNames <| srcEv.comparisonCandidates.filter fun n => dstEv.comparisonCandidates.contains n
+
+private def appendDirectPathCandidates
+    (srcEv : ProcessEvent)
+    (directDsts : Array Name)
+    (eventMap : Std.HashMap Name ProcessEvent)
+    (edgeMap : Std.HashMap String FlowEdge)
+    (seen : NameSet)
+    (out : Array LawfulPathCandidate) : NameSet × Array LawfulPathCandidate := Id.run do
+  let mut seen' := seen
+  let mut out' := out
+  for dst in directDsts do
+    if seen'.contains dst then
+      continue
+    match eventMap.get? dst, edgeMap.get? (edgeKey srcEv.node dst) with
+    | some dstEv, some edge =>
+        let shared := sharedComparisonCandidatesOf srcEv dstEv
+        let edgeDefectCost := edge.defectTags.foldl (init := 0) fun n tag => n + defectSeverity tag
+        out' := out'.push {
+          src := srcEv.node
+          dst := dstEv.node
+          steps := #[pathStepOf edge]
+          totalDefectCost := edgeDefectCost
+          defects := #[]
+          sharedComparisonCandidates := shared
+        }
+        seen' := seen'.insert dst
+    | _, _ => pure ()
+  return (seen', out')
+
+private def appendTwoStepPathCandidates
+    (srcEv : ProcessEvent)
+    (adj : Std.HashMap Name (Array Name))
+    (eventMap : Std.HashMap Name ProcessEvent)
+    (edgeMap : Std.HashMap String FlowEdge)
+    (seen : NameSet)
+    (out : Array LawfulPathCandidate) : NameSet × Array LawfulPathCandidate := Id.run do
+  let mut seen' := seen
+  let mut out' := out
+  let directDsts := adj.getD srcEv.node #[]
+  for mid in directDsts do
+    let some edge₁ := edgeMap.get? (edgeKey srcEv.node mid) | continue
+    for dst in adj.getD mid #[] do
+      if dst == srcEv.node || seen'.contains dst then
+        continue
+      match eventMap.get? dst, edgeMap.get? (edgeKey mid dst) with
+      | some dstEv, some edge₂ =>
+          let shared := sharedComparisonCandidatesOf srcEv dstEv
+          let pathLocalDefects :=
+            if shared.isEmpty then
+              #[unresolvedComparisonDefect dstEv.node 1]
+            else
+              #[]
+          let edgeDefectCost :=
+            edge₁.defectTags.foldl (init := 0) fun n tag => n + defectSeverity tag
+              +
+            edge₂.defectTags.foldl (init := 0) fun n tag => n + defectSeverity tag
+          let pathLocalDefectCost := pathLocalDefects.foldl (init := 0) fun n d => n + d.cost
+          out' := out'.push {
+            src := srcEv.node
+            dst := dstEv.node
+            steps := #[pathStepOf edge₁, pathStepOf edge₂]
+            totalDefectCost := edgeDefectCost + pathLocalDefectCost
+            defects := pathLocalDefects
+            sharedComparisonCandidates := shared
+          }
+          seen' := seen'.insert dst
+      | _, _ => pure ()
+  return (seen', out')
+
 -- Bounded ancestry path candidates: declaration -> direct/transitive dependency chain.
 private def lawfulPathsRaw (events : Array ProcessEvent) (edges : Array FlowEdge) : Array LawfulPathCandidate := Id.run do
   let adj := adjacencyOfEdges edges
   let edgeMap := flowEdgeMap edges
+  let eventMap : Std.HashMap Name ProcessEvent :=
+    events.foldl (init := {}) fun acc ev => acc.insert ev.node ev
   let mut out := #[]
   for srcEv in events do
-    let pred := predecessorMap adj srcEv.node
-    for dstEv in events do
-      if dstEv.node == srcEv.node then
-        continue
-      match reconstructPath pred srcEv.node dstEv.node with
-      | none => pure ()
-      | some nodes =>
-          if nodes.size < 2 || nodes.size > 3 then
-            continue
-          let mut steps := #[]
-          let mut edgeDefects := #[]
-          let mut ok := true
-          for i in [:nodes.size - 1] do
-            let u := nodes[i]!
-            let v := nodes[i + 1]!
-            match edgeMap.get? (edgeKey u v) with
-            | none => ok := false
-            | some edge =>
-                steps := steps.push (pathStepOf edge)
-                for tag in edge.defectTags do
-                  edgeDefects := edgeDefects.push (defectOfTag tag i edge.dst)
-          if ok then
-            let sharedComparisonCandidates :=
-              uniqueNames (srcEv.comparisonCandidates.filter fun n => dstEv.comparisonCandidates.contains n)
-            let pathLocalDefects :=
-              if nodes.size > 2 && sharedComparisonCandidates.isEmpty then
-                #[unresolvedComparisonDefect dstEv.node (nodes.size - 2)]
-              else
-                #[]
-            let edgeDefectCost := edgeDefects.foldl (init := 0) fun n d => n + d.cost
-            let pathLocalDefectCost := pathLocalDefects.foldl (init := 0) fun n d => n + d.cost
-            let totalCost := edgeDefectCost + pathLocalDefectCost
-            out := out.push {
-              src := srcEv.node
-              dst := dstEv.node
-              steps := steps
-              totalDefectCost := totalCost
-              defects := pathLocalDefects
-              sharedComparisonCandidates := sharedComparisonCandidates
-            }
+    let directDsts := adj.getD srcEv.node #[]
+    let (seenDirect, outAfterDirect) :=
+      appendDirectPathCandidates srcEv directDsts eventMap edgeMap {} out
+    let (_, outAfterTwoStep) :=
+      appendTwoStepPathCandidates srcEv adj eventMap edgeMap seenDirect outAfterDirect
+    out := outAfterTwoStep
   return out.qsort fun a b =>
     if toString a.src == toString b.src then toString a.dst < toString b.dst else toString a.src < toString b.src
 
@@ -792,12 +865,20 @@ private def runExport (importModsStr outDirStr : String) : IO UInt32 := do
   let importMods := importModsStr.splitOn "," |>.map dottedName
   let imports : Array Import := importMods.foldl (init := #[]) fun acc m =>
     acc.push { module := m }
+  IO.println s!"[ProcessFlowExport] starting import modules={importModsStr}"
   let env ← importModules imports {} 0
-  let flowEdges := (flowEdgesRaw env).qsort fun a b =>
+  IO.println s!"[ProcessFlowExport] imported modules={importModsStr}"
+  let summaries := declFlowSummaryMap env
+  IO.println s!"[ProcessFlowExport] summaries={summaries.size}"
+  let flowEdges := (flowEdgesRaw env summaries).qsort fun a b =>
     if toString a.src == toString b.src then toString a.dst < toString b.dst else toString a.src < toString b.src
-  let events := addComparisonCandidates (processEventsBase env flowEdges)
+  IO.println s!"[ProcessFlowExport] flowEdges={flowEdges.size}"
+  let events := addComparisonCandidates (processEventsBase env summaries flowEdges)
+  IO.println s!"[ProcessFlowExport] events={events.size}"
   let paths := lawfulPathsRaw events flowEdges
+  IO.println s!"[ProcessFlowExport] paths={paths.size}"
   let defects := edgeDefectRowsOf flowEdges ++ pathDefectRowsOf paths
+  IO.println s!"[ProcessFlowExport] defects={defects.size}"
   let outDir := System.FilePath.mk outDirStr
   writeJsonl (outDir / "flow-edges.jsonl") flowEdges
   writeJsonl (outDir / "process-events.jsonl") events

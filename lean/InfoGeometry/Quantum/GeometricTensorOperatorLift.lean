@@ -2,6 +2,7 @@ import InfoGeometry.Quantum.GeometricTensor
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.EinsteinAnomalyOperator
+import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Krein.SplitQuadratic
 
 open scoped InnerProductSpace
@@ -64,6 +65,124 @@ omit [CompleteSpace E] in
   ext u v
   simp [metricOfOperator_apply, inner_add_left]
 
+omit [CompleteSpace E] in
+@[simp] theorem metricOfOperator_neg
+    (A : EndH) :
+    metricOfOperator (E := E) (-A)
+      = -metricOfOperator (E := E) A := by
+  ext u v
+  simp [metricOfOperator_apply]
+
+/--
+Operatorial Berry 2-form seed on doubled space, induced from the operatorial
+metric seed via the local phase axis `K = Jε`.
+-/
+noncomputable def berryOfOperator (A : EndH) : LinearMap.BilinForm ℝ H₂ :=
+  (metricOfOperator A).compLeft (modularComplexI (E := E)).toLinearMap
+
+/--
+Explicit split-`Cl(1,1)` Berry 2-form seed:
+the phase axis is written as `J ∘ ε` on doubled real space.
+-/
+noncomputable def berryTwoFormJEpsOfOperator (A : EndH) : LinearMap.BilinForm ℝ H₂ :=
+  (metricOfOperator A).compLeft
+    (((modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))).toLinearMap)
+
+omit [CompleteSpace E] in
+@[simp] theorem berryTwoFormJEpsOfOperator_apply
+    (A : EndH) (u v : H₂) :
+    berryTwoFormJEpsOfOperator (E := E) A u v
+      =
+    metricOfOperator A
+      (((modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))) u) v := rfl
+
+omit [CompleteSpace E] in
+@[simp] theorem berryTwoFormJEpsOfOperator_eq_berryOfOperator
+    (A : EndH) :
+    berryTwoFormJEpsOfOperator (E := E) A = berryOfOperator (E := E) A := by
+  ext u v
+  simp [berryTwoFormJEpsOfOperator, berryOfOperator, modularComplexI,
+    modularConjugationJ, modularSignEpsilon]
+
+omit [CompleteSpace E] in
+@[simp] theorem berryTwoFormJEpsOfOperator_apply_eq_berryOfOperator
+    (A : EndH) (u v : H₂) :
+    berryTwoFormJEpsOfOperator (E := E) A u v
+      =
+    berryOfOperator (E := E) A u v := by
+  rw [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E) A]
+
+omit [CompleteSpace E] in
+@[simp] theorem berryTwoFormJEpsOfOperator_neg
+    (A : EndH) :
+    berryTwoFormJEpsOfOperator (E := E) (-A)
+      =
+    -berryTwoFormJEpsOfOperator (E := E) A := by
+  ext u v
+  change
+    metricOfOperator (-A)
+        (((modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))) u) v
+      =
+    -metricOfOperator A
+        (((modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))) u) v
+  simp [metricOfOperator_apply]
+
+omit [CompleteSpace E] in
+@[simp] theorem berryOfOperator_apply
+    (A : EndH) (u v : H₂) :
+    berryOfOperator (E := E) A u v
+      =
+    metricOfOperator A (modularComplexI (E := E) u) v := rfl
+
+omit [CompleteSpace E] in
+@[simp] theorem berryOfOperator_add
+    (A B : EndH) :
+    berryOfOperator (E := E) (A + B)
+      =
+    berryOfOperator (E := E) A + berryOfOperator (E := E) B := by
+  ext u v
+  simp [berryOfOperator_apply, metricOfOperator_add]
+
+/--
+For a phase-linear doubled-carrier operator `A`, the Hestenes-twisted Berry
+seed of `K ∘ A` is exactly minus the untwisted operator metric seed of `A`.
+-/
+theorem berryOfOperator_modularComplexI_comp_eq_neg_metricOfOperator_of_IsPhaseLinear
+    (A : EndH)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A) :
+    berryOfOperator (E := E) ((modularComplexI (E := E)).comp A)
+      =
+    -metricOfOperator (E := E) A := by
+  ext u v
+  have hCommEval :
+      A ((modularComplexI (E := E)) u)
+        =
+      (modularComplexI (E := E)) (A u) := by
+    simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hComm
+  have hK2 :
+      (modularComplexI (E := E)) ((modularComplexI (E := E)) (A u))
+        =
+      -(A u) := by
+    change
+      (((modularComplexI (E := E)).comp (modularComplexI (E := E))) (A u))
+        =
+      (-(ContinuousLinearMap.id ℝ H₂)) (A u)
+    rw [modularComplexI_sq (E := E)]
+  calc
+    berryOfOperator (E := E) ((modularComplexI (E := E)).comp A) u v
+        = ⟪((modularComplexI (E := E)).comp A) ((modularComplexI (E := E)) u), v⟫_ℝ := by
+            rw [berryOfOperator_apply, metricOfOperator_apply]
+    _ = ⟪(modularComplexI (E := E)) (A ((modularComplexI (E := E)) u)), v⟫_ℝ := by
+          rfl
+    _ = ⟪(modularComplexI (E := E)) ((modularComplexI (E := E)) (A u)), v⟫_ℝ := by
+          rw [hCommEval]
+    _ = ⟪-(A u), v⟫_ℝ := by rw [hK2]
+    _ = (-metricOfOperator (E := E) A) u v := by
+          simp [metricOfOperator_apply]
+
 /--
 Infinitesimal transport law for the operatorial metric seed under exponential
 conjugation: the derivative at `t = 0` is the metric readout of the commutator.
@@ -123,6 +242,107 @@ theorem deriv_metricOfOperator_expTransport_at_zero
       =
     metricOfOperator (transportCommutator (E := E) X A) u v := by
   exact (hasDerivAt_metricOfOperator_expTransport_at_zero (E := E) X A u v).deriv
+
+/--
+Global transport law for the operatorial metric seed under exponential
+conjugation at arbitrary `t`.
+-/
+theorem hasDerivAt_metricOfOperator_expTransport
+    (X A : EndH) (u v : H₂) (t : ℝ) :
+    HasDerivAt
+      (fun s =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport (A := EndH) X A s) u v)
+      (metricOfOperator
+        (InfoGeometry.Canonical.expTransport
+          (A := EndH)
+          X
+          (transportCommutator (E := E) X A)
+          t) u v)
+      t := by
+  let ω : EndH →L[ℝ] ℝ :=
+    (innerSL ℝ v).comp (ContinuousLinearMap.apply ℝ H₂ u)
+  have hω : HasDerivAt (fun _ : ℝ => ω) (0 : EndH →L[ℝ] ℝ) t := by
+    simpa using (hasDerivAt_const (x := t) (c := ω))
+  have hExp :
+      HasDerivAt
+        (fun s : ℝ => InfoGeometry.Canonical.expTransport (A := EndH) X A s)
+        (InfoGeometry.Canonical.expTransport (A := EndH) X ⁅X, A⁆ t)
+        t := by
+    simpa using
+      (InfoGeometry.Canonical.hasDerivAt_expTransport (A := EndH) X A t)
+  have hApply :
+      HasDerivAt
+        (fun s : ℝ =>
+          (fun _ : ℝ => ω) s
+            (InfoGeometry.Canonical.expTransport (A := EndH) X A s))
+        ((0 : EndH →L[ℝ] ℝ)
+          (InfoGeometry.Canonical.expTransport (A := EndH) X A t)
+            + ω (InfoGeometry.Canonical.expTransport (A := EndH) X ⁅X, A⁆ t))
+        t :=
+    hω.clm_apply hExp
+  have hωEval :
+      ω (InfoGeometry.Canonical.expTransport (A := EndH) X ⁅X, A⁆ t)
+        =
+      metricOfOperator
+        (InfoGeometry.Canonical.expTransport
+          (A := EndH)
+          X
+          (transportCommutator (E := E) X A)
+          t) u v := by
+    rw [← lieBracket_eq_transportCommutator (E := E) X A]
+    simp [ω, metricOfOperator_apply, real_inner_comm]
+  have hMain :
+      HasDerivAt
+        (fun s : ℝ =>
+          metricOfOperator
+            (InfoGeometry.Canonical.expTransport (A := EndH) X A s) u v)
+        (ω (InfoGeometry.Canonical.expTransport (A := EndH) X ⁅X, A⁆ t))
+        t := by
+    simpa [ω, metricOfOperator_apply, real_inner_comm] using hApply
+  exact hωEval ▸ hMain
+
+/--
+Derivative form of `hasDerivAt_metricOfOperator_expTransport` at arbitrary `t`.
+-/
+theorem deriv_metricOfOperator_expTransport
+    (X A : EndH) (u v : H₂) (t : ℝ) :
+    deriv
+      (fun s =>
+        metricOfOperator
+          (InfoGeometry.Canonical.expTransport (A := EndH) X A s) u v)
+      t
+      =
+    metricOfOperator
+      (InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        X
+        (transportCommutator (E := E) X A)
+        t) u v := by
+  exact (hasDerivAt_metricOfOperator_expTransport (E := E) X A u v t).deriv
+
+/--
+Global Berry transport law under exponential conjugation at arbitrary `t`.
+-/
+theorem deriv_berryOfOperator_expTransport
+    (X A : EndH) (u v : H₂) (t : ℝ) :
+    deriv
+      (fun s =>
+        berryOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport (A := EndH) X A s) u v)
+      t
+      =
+    berryOfOperator
+      (E := E)
+      (InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        X
+        (transportCommutator (E := E) X A)
+        t) u v := by
+  simpa [berryOfOperator] using
+    deriv_metricOfOperator_expTransport
+      (E := E) X A (modularComplexI (E := E) u) v t
 
 /--
 Infinitesimal modular-conjugation transport law for the QGT operatorial metric
@@ -298,6 +518,436 @@ theorem deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_
       (E := E) hMod A hCommGauge u v
 
 /--
+Berry-form relative-modular transport law:
+the infinitesimal transport derivative is the Berry readout of the
+relative-modular derivation.
+-/
+theorem deriv_berryOfOperator_modularTransport_conjugation_at_zero_eq_berryOf_relativeModularDeriv
+    (hMod A : EndH) (u v : H₂) :
+    deriv
+      (fun t =>
+        berryOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    berryOfOperator (E := E) (relativeModularDeriv (E := E) hMod A) u v := by
+  simpa [berryOfOperator] using
+    deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_relativeModularDeriv
+      (E := E) hMod A (modularComplexI (E := E) u) v
+
+/--
+Split-`Cl(1,1)` (`J ∘ ε`) form of the infinitesimal Berry transport law:
+the derivative equals the Berry readout of the relative-modular derivation.
+-/
+theorem deriv_berryTwoFormJEpsOfOperator_modularTransport_conjugation_at_zero_eq_berryTwoFormJEpsOf_relativeModularDeriv
+    (hMod A : EndH) (u v : H₂) :
+    deriv
+      (fun t =>
+        berryTwoFormJEpsOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    berryTwoFormJEpsOfOperator (E := E) (relativeModularDeriv (E := E) hMod A) u v := by
+  rw [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E) (A := relativeModularDeriv (E := E) hMod A)]
+  conv_lhs =>
+    arg 1
+    intro t
+    rw [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E)
+      (A := InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        A
+        t)]
+  exact deriv_berryOfOperator_modularTransport_conjugation_at_zero_eq_berryOf_relativeModularDeriv
+    (E := E) hMod A u v
+
+/--
+Global relative-modular Berry transport law at arbitrary `t`:
+the derivative equals the Berry readout of the exponentially transported
+relative-modular derivation seed.
+-/
+theorem deriv_berryOfOperator_modularTransport_conjugation_eq_berryOfOperator_expTransport_relativeModularDeriv
+    (hMod A : EndH) (u v : H₂) (t : ℝ) :
+    deriv
+      (fun s =>
+        berryOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            s)
+          u v)
+      t
+      =
+    berryOfOperator
+      (E := E)
+      (InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        (relativeModularDeriv (E := E) hMod A)
+        t) u v := by
+  simpa [relativeModularDeriv, modularDeriv, relativeModularKGenerator] using
+    deriv_berryOfOperator_expTransport
+      (E := E)
+      (X := relativeModularKGenerator (E := E) hMod)
+      (A := A)
+      u v t
+
+/--
+Split-`Cl(1,1)` (`J ∘ ε`) form of the global relative-modular Berry transport
+law at arbitrary `t`.
+-/
+theorem deriv_berryTwoFormJEpsOfOperator_modularTransport_conjugation_eq_berryTwoFormJEpsOf_expTransport_relativeModularDeriv
+    (hMod A : EndH) (u v : H₂) (t : ℝ) :
+    deriv
+      (fun s =>
+        berryTwoFormJEpsOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            s)
+          u v)
+      t
+      =
+    berryTwoFormJEpsOfOperator
+      (E := E)
+      (InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        (relativeModularDeriv (E := E) hMod A)
+        t) u v := by
+  rw [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E)
+    (A := InfoGeometry.Canonical.expTransport
+      (A := EndH)
+      (relativeModularKGenerator (E := E) hMod)
+      (relativeModularDeriv (E := E) hMod A)
+      t)]
+  conv_lhs =>
+    arg 1
+    intro s
+    rw [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E)
+      (A := InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        A
+        s)]
+  exact deriv_berryOfOperator_modularTransport_conjugation_eq_berryOfOperator_expTransport_relativeModularDeriv
+    (E := E) hMod A u v t
+
+/--
+Global Berry transport split at arbitrary `t`:
+the noncommuting channel decomposes into gauge and source seeds under
+exponential transport.
+-/
+theorem deriv_berryOfOperator_modularTransport_conjugation_eq_berryOfOperator_expTransport_modularGaugeDeriv_add_berryOfOperator_expTransport_relativeModularSourceDeriv
+    (hMod A : EndH) (u v : H₂) (t : ℝ) :
+    deriv
+      (fun s =>
+        berryOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            s)
+          u v)
+      t
+      =
+    berryOfOperator
+      (E := E)
+      (InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        (modularGaugeDeriv (E := E) hMod A)
+        t) u v
+      +
+    berryOfOperator
+      (E := E)
+      (InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        (relativeModularSourceDeriv (E := E) hMod A)
+        t) u v := by
+  rw [deriv_berryOfOperator_modularTransport_conjugation_eq_berryOfOperator_expTransport_relativeModularDeriv
+    (E := E) hMod A u v t]
+  rw [relativeModularDeriv_eq_modularGaugeDeriv_add_relativeModularSourceDeriv
+    (E := E) hMod A]
+  rw [InfoGeometry.Canonical.expTransport_add_seed (A := EndH)
+    (X := relativeModularKGenerator (E := E) hMod)
+    (A₁ := modularGaugeDeriv (E := E) hMod A)
+    (A₂ := relativeModularSourceDeriv (E := E) hMod A)]
+  rw [berryOfOperator_add]
+  simp [LinearMap.add_apply]
+
+/--
+Global gauge-commuting Berry-source law at arbitrary `t`:
+if the gauge part commutes with the seed, the transported noncommuting channel
+is purely source-driven.
+-/
+theorem deriv_berryOfOperator_modularTransport_conjugation_eq_berryOfOperator_expTransport_relativeModularSourceDeriv_of_commute_gaugePart
+    (hMod A : EndH)
+    (hCommGauge : Commute A (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) (t : ℝ) :
+    deriv
+      (fun s =>
+        berryOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            s)
+          u v)
+      t
+      =
+    berryOfOperator
+      (E := E)
+      (InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        (relativeModularSourceDeriv (E := E) hMod A)
+        t) u v := by
+  rw [deriv_berryOfOperator_modularTransport_conjugation_eq_berryOfOperator_expTransport_relativeModularDeriv
+    (E := E) hMod A u v t]
+  rw [relativeModularDeriv_eq_relativeModularSourceDeriv_of_commute_gaugePart
+    (E := E) hMod A hCommGauge]
+
+/--
+Split-`Cl(1,1)` (`J ∘ ε`) form of the global gauge-commuting source-channel law
+at arbitrary `t`.
+-/
+theorem deriv_berryTwoFormJEpsOfOperator_modularTransport_conjugation_eq_berryTwoFormJEpsOf_expTransport_relativeModularSourceDeriv_of_commute_gaugePart
+    (hMod A : EndH)
+    (hCommGauge : Commute A (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) (t : ℝ) :
+    deriv
+      (fun s =>
+        berryTwoFormJEpsOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            s)
+          u v)
+      t
+      =
+    berryTwoFormJEpsOfOperator
+      (E := E)
+      (InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        (relativeModularSourceDeriv (E := E) hMod A)
+        t) u v := by
+  rw [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E)
+    (A := InfoGeometry.Canonical.expTransport
+      (A := EndH)
+      (relativeModularKGenerator (E := E) hMod)
+      (relativeModularSourceDeriv (E := E) hMod A)
+      t)]
+  conv_lhs =>
+    arg 1
+    intro s
+    rw [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E)
+      (A := InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        A
+        s)]
+  exact
+    deriv_berryOfOperator_modularTransport_conjugation_eq_berryOfOperator_expTransport_relativeModularSourceDeriv_of_commute_gaugePart
+      (E := E) hMod A hCommGauge u v t
+
+/--
+Berry-form relative-modular split law:
+infinitesimal transport decomposes into gauge and source channels.
+-/
+theorem deriv_berryOfOperator_modularTransport_conjugation_at_zero_eq_berryOf_modularGaugeDeriv_add_berryOf_relativeModularSourceDeriv
+    (hMod A : EndH) (u v : H₂) :
+    deriv
+      (fun t =>
+        berryOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    berryOfOperator (E := E) (modularGaugeDeriv (E := E) hMod A) u v
+      +
+    berryOfOperator (E := E) (relativeModularSourceDeriv (E := E) hMod A) u v := by
+  simpa [berryOfOperator] using
+    deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularGaugeDeriv_add_metricOf_relativeModularSourceDeriv
+      (E := E) hMod A (modularComplexI (E := E) u) v
+
+/--
+Gauge-commuting Berry-source law:
+if the transported operator commutes with the gauge channel, infinitesimal
+Berry transport is purely source-driven.
+-/
+theorem deriv_berryOfOperator_modularTransport_conjugation_at_zero_eq_berryOf_relativeModularSourceDeriv_of_commute_gaugePart
+    (hMod A : EndH)
+    (hCommGauge : Commute A (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        berryOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    berryOfOperator (E := E) (relativeModularSourceDeriv (E := E) hMod A) u v := by
+  simpa [berryOfOperator] using
+    deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_relativeModularSourceDeriv_of_commute_gaugePart
+      (E := E) hMod A hCommGauge (modularComplexI (E := E) u) v
+
+/--
+Split-`Cl(1,1)` (`J ∘ ε`) source-channel law:
+if the gauge part commutes, infinitesimal Berry transport is purely
+relative-modular source transport.
+-/
+theorem deriv_berryTwoFormJEpsOfOperator_modularTransport_conjugation_at_zero_eq_berryTwoFormJEpsOf_relativeModularSourceDeriv_of_commute_gaugePart
+    (hMod A : EndH)
+    (hCommGauge : Commute A (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        berryTwoFormJEpsOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            A
+            t)
+          u v)
+      0
+      =
+    berryTwoFormJEpsOfOperator (E := E)
+      (relativeModularSourceDeriv (E := E) hMod A) u v := by
+  rw [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E)
+    (A := relativeModularSourceDeriv (E := E) hMod A)]
+  conv_lhs =>
+    arg 1
+    intro t
+    rw [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E)
+      (A := InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        A
+        t)]
+  exact
+    deriv_berryOfOperator_modularTransport_conjugation_at_zero_eq_berryOf_relativeModularSourceDeriv_of_commute_gaugePart
+      (E := E) hMod A hCommGauge u v
+
+/--
+Canonical obstruction-seed specialization of the split-`Cl(1,1)` source law:
+for the certified projector obstruction operator, gauge-sector commutation
+forces infinitesimal `Jε`-Berry transport into the relative-modular source
+channel.
+-/
+theorem deriv_berryTwoFormJEpsOfOperator_projectorObstructionOperator_relativeModularTransport_at_zero_eq_berryTwoFormJEpsOf_relativeModularSourceDeriv_of_commute_gaugePart
+    (CCI : CertifiedConformalInference E)
+    (hMod : EndH)
+    (hCommGauge :
+      Commute CCI.liftedProjectorObstructionOperator
+        (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        berryTwoFormJEpsOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            CCI.liftedProjectorObstructionOperator
+            t)
+          u v)
+      0
+      =
+    berryTwoFormJEpsOfOperator
+      (E := E)
+      (relativeModularSourceDeriv (E := E) hMod CCI.liftedProjectorObstructionOperator)
+      u v := by
+  exact
+    deriv_berryTwoFormJEpsOfOperator_modularTransport_conjugation_at_zero_eq_berryTwoFormJEpsOf_relativeModularSourceDeriv_of_commute_gaugePart
+      (E := E) hMod CCI.liftedProjectorObstructionOperator hCommGauge u v
+
+/--
+Global canonical obstruction-seed specialization at arbitrary `t`:
+under gauge-sector commutation, the transported `Jε`-Berry channel is the
+exponentially transported relative-modular source seed.
+-/
+theorem deriv_berryTwoFormJEpsOfOperator_projectorObstructionOperator_relativeModularTransport_eq_berryTwoFormJEpsOf_expTransport_relativeModularSourceDeriv_of_commute_gaugePart
+    (CCI : CertifiedConformalInference E)
+    (hMod : EndH)
+    (hCommGauge :
+      Commute CCI.liftedProjectorObstructionOperator
+        (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) (t : ℝ) :
+    deriv
+      (fun s =>
+        berryTwoFormJEpsOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            CCI.liftedProjectorObstructionOperator
+            s)
+          u v)
+      t
+      =
+    berryTwoFormJEpsOfOperator
+      (E := E)
+      (InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        (relativeModularSourceDeriv (E := E) hMod CCI.liftedProjectorObstructionOperator)
+        t) u v := by
+  exact
+    deriv_berryTwoFormJEpsOfOperator_modularTransport_conjugation_eq_berryTwoFormJEpsOf_expTransport_relativeModularSourceDeriv_of_commute_gaugePart
+      (E := E) hMod CCI.liftedProjectorObstructionOperator hCommGauge u v t
+
+/--
+Direct weld closure at the `Jε` Berry-seed level:
+under projector agreement, the lifted Einstein-anomaly seed is exactly the
+negative of the lifted canonical projector-obstruction seed.
+-/
+theorem berryTwoFormJEpsOfOperator_liftedEinsteinAnomalyOperator_eq_neg_liftedProjectorObstructionOperator_of_projectorAgreement
+    (CCI : CertifiedConformalInference E)
+    (hProj :
+      InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector CCI.A CCI.A_MP =
+        InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector CCI.A CCI.A_MP) :
+    berryTwoFormJEpsOfOperator (E := E) CCI.liftedEinsteinAnomalyOperator
+      =
+    -berryTwoFormJEpsOfOperator (E := E) CCI.liftedProjectorObstructionOperator := by
+  rw [CCI.liftedEinsteinAnomalyOperator_eq_neg_liftedProjectorObstructionOperator_of_projectorAgreement hProj]
+  simpa using
+    (berryTwoFormJEpsOfOperator_neg (E := E) CCI.liftedProjectorObstructionOperator)
+
+/--
 For the certified doubled Einstein anomaly operator, gauge-sector commutation
 forces the infinitesimal QGT transport entirely into the relative-modular
 source channel.
@@ -326,6 +976,150 @@ theorem deriv_metricOfOperator_liftedEinsteinAnomalyOperator_relativeModularTran
   exact
     deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_relativeModularSourceDeriv_of_commute_gaugePart
       (E := E) hMod CCI.liftedEinsteinAnomalyOperator hCommGauge u v
+
+/--
+Berry-form specialization of the lifted Einstein-anomaly source law:
+under gauge-sector commutation, infinitesimal Berry transport is entirely
+carried by the relative-modular source channel.
+-/
+theorem deriv_berryOfOperator_liftedEinsteinAnomalyOperator_relativeModularTransport_at_zero_eq_berryOf_relativeModularSourceDeriv_of_commute_gaugePart
+    (CCI : CertifiedConformalInference E)
+    (hMod : EndH)
+    (hCommGauge :
+      Commute CCI.liftedEinsteinAnomalyOperator
+        (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        berryOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            CCI.liftedEinsteinAnomalyOperator
+            t)
+          u v)
+      0
+      =
+    berryOfOperator
+      (E := E)
+      (relativeModularSourceDeriv (E := E) hMod CCI.liftedEinsteinAnomalyOperator)
+      u v := by
+  simpa [berryOfOperator] using
+    deriv_metricOfOperator_liftedEinsteinAnomalyOperator_relativeModularTransport_at_zero_eq_metricOf_relativeModularSourceDeriv_of_commute_gaugePart
+      (E := E) CCI hMod hCommGauge (modularComplexI (E := E) u) v
+
+/--
+Split-`Cl(1,1)` (`J ∘ ε`) specialization of the lifted Einstein-anomaly source
+law: under gauge-sector commutation, infinitesimal `Jε`-Berry transport is
+entirely carried by the relative-modular source channel.
+-/
+theorem deriv_berryTwoFormJEpsOfOperator_liftedEinsteinAnomalyOperator_relativeModularTransport_at_zero_eq_berryTwoFormJEpsOf_relativeModularSourceDeriv_of_commute_gaugePart
+    (CCI : CertifiedConformalInference E)
+    (hMod : EndH)
+    (hCommGauge :
+      Commute CCI.liftedEinsteinAnomalyOperator
+        (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        berryTwoFormJEpsOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            CCI.liftedEinsteinAnomalyOperator
+            t)
+          u v)
+      0
+      =
+    berryTwoFormJEpsOfOperator
+      (E := E)
+      (relativeModularSourceDeriv (E := E) hMod CCI.liftedEinsteinAnomalyOperator)
+      u v := by
+  rw [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E)
+    (A := relativeModularSourceDeriv (E := E) hMod CCI.liftedEinsteinAnomalyOperator)]
+  conv_lhs =>
+    arg 1
+    intro t
+    rw [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E)
+      (A := InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        CCI.liftedEinsteinAnomalyOperator
+        t)]
+  exact
+    deriv_berryOfOperator_liftedEinsteinAnomalyOperator_relativeModularTransport_at_zero_eq_berryOf_relativeModularSourceDeriv_of_commute_gaugePart
+      (E := E) CCI hMod hCommGauge u v
+
+/--
+Global Berry-form specialization of the lifted Einstein-anomaly source law:
+under gauge-sector commutation, transport at arbitrary `t` is carried by the
+exponentially transported relative-modular source seed.
+-/
+theorem deriv_berryOfOperator_liftedEinsteinAnomalyOperator_relativeModularTransport_eq_berryOfOperator_expTransport_relativeModularSourceDeriv_of_commute_gaugePart
+    (CCI : CertifiedConformalInference E)
+    (hMod : EndH)
+    (hCommGauge :
+      Commute CCI.liftedEinsteinAnomalyOperator
+        (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) (t : ℝ) :
+    deriv
+      (fun s =>
+        berryOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            CCI.liftedEinsteinAnomalyOperator
+            s)
+          u v)
+      t
+      =
+    berryOfOperator
+      (E := E)
+      (InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        (relativeModularSourceDeriv (E := E) hMod CCI.liftedEinsteinAnomalyOperator)
+        t) u v := by
+  exact
+    deriv_berryOfOperator_modularTransport_conjugation_eq_berryOfOperator_expTransport_relativeModularSourceDeriv_of_commute_gaugePart
+      (E := E) hMod CCI.liftedEinsteinAnomalyOperator hCommGauge u v t
+
+/--
+Split-`Cl(1,1)` (`J ∘ ε`) global specialization of the lifted Einstein-anomaly
+source law at arbitrary `t`.
+-/
+theorem deriv_berryTwoFormJEpsOfOperator_liftedEinsteinAnomalyOperator_relativeModularTransport_eq_berryTwoFormJEpsOf_expTransport_relativeModularSourceDeriv_of_commute_gaugePart
+    (CCI : CertifiedConformalInference E)
+    (hMod : EndH)
+    (hCommGauge :
+      Commute CCI.liftedEinsteinAnomalyOperator
+        (modularGeneratorGaugePart (E := E) hMod))
+    (u v : H₂) (t : ℝ) :
+    deriv
+      (fun s =>
+        berryTwoFormJEpsOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            (relativeModularKGenerator (E := E) hMod)
+            CCI.liftedEinsteinAnomalyOperator
+            s)
+          u v)
+      t
+      =
+    berryTwoFormJEpsOfOperator
+      (E := E)
+      (InfoGeometry.Canonical.expTransport
+        (A := EndH)
+        (relativeModularKGenerator (E := E) hMod)
+        (relativeModularSourceDeriv (E := E) hMod CCI.liftedEinsteinAnomalyOperator)
+        t) u v := by
+  exact
+    deriv_berryTwoFormJEpsOfOperator_modularTransport_conjugation_eq_berryTwoFormJEpsOf_expTransport_relativeModularSourceDeriv_of_commute_gaugePart
+      (E := E) hMod CCI.liftedEinsteinAnomalyOperator hCommGauge u v t
 
 /--
 Star-certified carrier form of the source-channel theorem:
@@ -469,6 +1263,66 @@ theorem metricOfOperator_K_skew_of_commutesWithK
   exact modularComplexI_inner_skew (E := E) (A u) v
 
 /--
+On the positive doubled-space Hilbert metric, the local Cartan axis `K = Jε`
+is skew-adjoint.
+-/
+theorem modularComplexI_star_eq_neg :
+    star (modularComplexI (E := E)) = -(modularComplexI (E := E)) := by
+  rw [ContinuousLinearMap.star_eq_adjoint]
+  apply ContinuousLinearMap.ext
+  intro u
+  apply ext_inner_left ℝ
+  intro v
+  rw [ContinuousLinearMap.adjoint_inner_right]
+  simpa using (modularComplexI_inner_skew (E := E) v u)
+
+/--
+If `A` is skew-adjoint and commutes with `K = Jε`, then the rotated seed
+`K ∘ A` is Hilbert-self-adjoint.
+-/
+theorem isSelfAdjoint_modularComplexI_comp_of_star_eq_neg_of_commutesWithK
+    (A : EndH)
+    (hStar : star A = -A)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A) :
+    IsSelfAdjoint ((modularComplexI (E := E)).comp A) := by
+  have hCommMul :
+      A * modularComplexI (E := E) = modularComplexI (E := E) * A := by
+    simpa using hComm
+  change star ((modularComplexI (E := E)) * A) = (modularComplexI (E := E)) * A
+  calc
+    star ((modularComplexI (E := E)) * A)
+        = star A * star (modularComplexI (E := E)) := by
+            rw [star_mul]
+    _ = (-A) * (-(modularComplexI (E := E))) := by
+          simp [hStar, modularComplexI_star_eq_neg (E := E)]
+    _ = A * modularComplexI (E := E) := by
+          simp
+    _ = modularComplexI (E := E) * A := hCommMul
+
+/--
+If `A` commutes with `K = Jε`, then the rotated seed `K ∘ A` also commutes
+with `K`.
+-/
+theorem isPhaseLinear_modularComplexI_comp_of_IsPhaseLinear
+    (A : EndH)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A) :
+    IsPhaseLinear (E := E) ((modularComplexI (E := E)).comp A) := by
+  unfold IsPhaseLinear at *
+  calc
+    ((modularComplexI (E := E)).comp A).comp (modularComplexI (E := E))
+        = (modularComplexI (E := E)).comp (A.comp (modularComplexI (E := E))) := by
+            simp [ContinuousLinearMap.comp_assoc]
+    _ = (modularComplexI (E := E)).comp ((modularComplexI (E := E)).comp A) := by
+          rw [hComm]
+    _ = (modularComplexI (E := E)).comp ((modularComplexI (E := E)).comp A) := rfl
+
+/--
 Operatorial lift of the doubled real QGT from a Hilbert-self-adjoint operator
 commuting with the local Cartan phase axis `K = Jε`.
 -/
@@ -483,6 +1337,171 @@ noncomputable def qgtOfOperator
     (metricOfOperator A)
     (metricOfOperator_isSymm_of_selfAdjoint (A := A) hA)
     (metricOfOperator_K_skew_of_commutesWithK (E := E) (A := A) hComm)
+
+@[simp] theorem berryOfOperator_eq_qgtOfOperator_berry
+    (A : EndH)
+    (hA : IsSelfAdjoint A)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A) :
+    berryOfOperator (E := E) A
+      =
+    (qgtOfOperator (E := E) A hA hComm).berry := by
+  simp [berryOfOperator, qgtOfOperator, GeometricQuantumTensor.ofMajorana]
+
+/--
+General doubled-carrier QGT constructor from a skew-adjoint, phase-linear seed:
+rotate by the Cartan axis `K = Jε` to obtain a Hilbert-self-adjoint,
+phase-linear operator, then apply `qgtOfOperator`.
+-/
+noncomputable def qgtOfSkewPhaseLinearOperator
+    (A : EndH)
+    (hSkew : star A = -A)
+    (hPhase : IsPhaseLinear (E := E) A) : QGT E :=
+  qgtOfOperator
+    (E := E)
+    ((modularComplexI (E := E)).comp A)
+    (isSelfAdjoint_modularComplexI_comp_of_star_eq_neg_of_commutesWithK
+      (E := E) (A := A) hSkew hPhase)
+    (isPhaseLinear_modularComplexI_comp_of_IsPhaseLinear
+      (E := E) (A := A) hPhase)
+
+/--
+Berry sector readout for the general skew/phase-linear doubled-carrier QGT
+constructor.
+-/
+@[simp] theorem qgtOfSkewPhaseLinearOperator_berry_eq_berryOfOperator
+    (A : EndH)
+    (hSkew : star A = -A)
+    (hPhase : IsPhaseLinear (E := E) A) :
+    (qgtOfSkewPhaseLinearOperator (E := E) A hSkew hPhase).berry
+      =
+    berryOfOperator (E := E) ((modularComplexI (E := E)).comp A) := by
+  symm
+  exact berryOfOperator_eq_qgtOfOperator_berry
+    (E := E)
+    ((modularComplexI (E := E)).comp A)
+    (isSelfAdjoint_modularComplexI_comp_of_star_eq_neg_of_commutesWithK
+      (E := E) (A := A) hSkew hPhase)
+    (isPhaseLinear_modularComplexI_comp_of_IsPhaseLinear
+      (E := E) (A := A) hPhase)
+
+/--
+For a skew-adjoint, phase-linear seed `A`, the Berry sector of the induced QGT
+is exactly minus the operator metric seed of `A`.
+-/
+@[simp] theorem qgtOfSkewPhaseLinearOperator_berry_eq_neg_metricOfOperator
+    (A : EndH)
+    (hSkew : star A = -A)
+    (hPhase : IsPhaseLinear (E := E) A) :
+    (qgtOfSkewPhaseLinearOperator (E := E) A hSkew hPhase).berry
+      =
+    -metricOfOperator (E := E) A := by
+  rw [qgtOfSkewPhaseLinearOperator_berry_eq_berryOfOperator
+    (E := E) (A := A) hSkew hPhase]
+  exact berryOfOperator_modularComplexI_comp_eq_neg_metricOfOperator_of_IsPhaseLinear
+    (E := E) (A := A) hPhase
+
+section StarCertifiedEinsteinAnomalyQGT
+
+/--
+The `K`-rotated lifted Einstein anomaly is Hilbert-self-adjoint on the
+star-certified conformal surface.
+-/
+theorem isSelfAdjoint_modularComplexI_comp_liftedEinsteinAnomalyOperator
+    (SCI : StarCertifiedConformalInference E) :
+    IsSelfAdjoint ((modularComplexI (E := E)).comp SCI.liftedEinsteinAnomalyOperator) := by
+  exact isSelfAdjoint_modularComplexI_comp_of_star_eq_neg_of_commutesWithK
+    (E := E) (A := SCI.liftedEinsteinAnomalyOperator)
+    SCI.liftedEinsteinAnomalyOperator_star_eq_neg
+    SCI.liftedEinsteinAnomalyOperator_isPhaseLinear
+
+/--
+The `K`-rotated lifted Einstein anomaly remains phase-linear on the doubled
+carrier.
+-/
+theorem isPhaseLinear_modularComplexI_comp_liftedEinsteinAnomalyOperator
+    (SCI : StarCertifiedConformalInference E) :
+    IsPhaseLinear (E := E)
+      ((modularComplexI (E := E)).comp SCI.liftedEinsteinAnomalyOperator) := by
+  exact isPhaseLinear_modularComplexI_comp_of_IsPhaseLinear
+    (E := E) (A := SCI.liftedEinsteinAnomalyOperator)
+    SCI.liftedEinsteinAnomalyOperator_isPhaseLinear
+
+/--
+Canonical QGT package generated by the `K`-rotated star-certified lifted Einstein
+anomaly operator.
+-/
+noncomputable def starCertifiedEinsteinAnomalyQGT
+    (SCI : StarCertifiedConformalInference E) : QGT E :=
+  qgtOfSkewPhaseLinearOperator
+    (E := E)
+    SCI.liftedEinsteinAnomalyOperator
+    SCI.liftedEinsteinAnomalyOperator_star_eq_neg
+    SCI.liftedEinsteinAnomalyOperator_isPhaseLinear
+
+/--
+Berry sector readout of the canonical star-certified Einstein-anomaly QGT.
+-/
+@[simp] theorem starCertifiedEinsteinAnomalyQGT_berry_eq_berryOfOperator
+    (SCI : StarCertifiedConformalInference E) :
+    (starCertifiedEinsteinAnomalyQGT (E := E) SCI).berry
+      =
+    berryOfOperator
+      (E := E)
+      ((modularComplexI (E := E)).comp SCI.liftedEinsteinAnomalyOperator) := by
+  symm
+  exact qgtOfSkewPhaseLinearOperator_berry_eq_berryOfOperator
+    (E := E)
+    SCI.liftedEinsteinAnomalyOperator
+    SCI.liftedEinsteinAnomalyOperator_star_eq_neg
+    SCI.liftedEinsteinAnomalyOperator_isPhaseLinear
+
+/--
+Hestenes/QGT weld closure on the star-certified conformal surface:
+under projector agreement, the Berry sector of the `K`-twisted lifted Einstein
+anomaly QGT is exactly the metric readout of the lifted projector obstruction.
+-/
+theorem starCertifiedEinsteinAnomalyQGT_berry_eq_metricOfOperator_liftedProjectorObstructionOperator_of_projectorAgreement
+    (SCI : StarCertifiedConformalInference E)
+    (hProj :
+      InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector SCI.A SCI.A_MP =
+        InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector SCI.A SCI.A_MP) :
+    (starCertifiedEinsteinAnomalyQGT (E := E) SCI).berry
+      =
+    metricOfOperator (E := E)
+      SCI.toCertifiedConformalInference.liftedProjectorObstructionOperator := by
+  let CCI := SCI.toCertifiedConformalInference
+  have hBerry :
+      (starCertifiedEinsteinAnomalyQGT (E := E) SCI).berry
+        =
+      -metricOfOperator (E := E) SCI.liftedEinsteinAnomalyOperator := by
+    simpa [starCertifiedEinsteinAnomalyQGT] using
+      (qgtOfSkewPhaseLinearOperator_berry_eq_neg_metricOfOperator
+        (E := E)
+        (A := SCI.liftedEinsteinAnomalyOperator)
+        SCI.liftedEinsteinAnomalyOperator_star_eq_neg
+        SCI.liftedEinsteinAnomalyOperator_isPhaseLinear)
+  have hEin :
+      SCI.liftedEinsteinAnomalyOperator
+        =
+      -SCI.toCertifiedConformalInference.liftedProjectorObstructionOperator := by
+    simpa [StarCertifiedConformalInference.liftedEinsteinAnomalyOperator] using
+      CCI.liftedEinsteinAnomalyOperator_eq_neg_liftedProjectorObstructionOperator_of_projectorAgreement hProj
+  calc
+    (starCertifiedEinsteinAnomalyQGT (E := E) SCI).berry
+        = -metricOfOperator (E := E) SCI.liftedEinsteinAnomalyOperator := hBerry
+    _ = -metricOfOperator (E := E)
+          (-SCI.toCertifiedConformalInference.liftedProjectorObstructionOperator) := by
+            rw [hEin]
+    _ = metricOfOperator (E := E)
+          SCI.toCertifiedConformalInference.liftedProjectorObstructionOperator := by
+            rw [metricOfOperator_neg]
+            ext u v
+            simp
+
+end StarCertifiedEinsteinAnomalyQGT
 
 /--
 Krein-side lift of a doubled-carrier operator to a bilinear form.

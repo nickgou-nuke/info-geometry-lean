@@ -5,7 +5,6 @@ import argparse
 import json
 import sys
 from collections import Counter, defaultdict
-from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, cast
 
@@ -177,6 +176,24 @@ def event_feature_out_bundles(ev: JsonDict) -> list[JsonDict]:
     return []
 
 
+def build_event_target_index(events: list[JsonDict]) -> dict[tuple[str, str], list[JsonDict]]:
+    buckets: dict[tuple[str, str], list[JsonDict]] = defaultdict(list)
+    seen: dict[tuple[str, str], set[str]] = defaultdict(set)
+    for ev in events:
+        typed_ev = dict(ev)
+        node = str(ev.get("node", ""))
+        boundary = str(ev.get("boundaryClass", ""))
+        typed_ev["_closureSet"] = {str(x) for x in ev.get("closureDeps", [])}
+        for bundle in event_feature_out_bundles(ev):
+            key = (boundary, feature_key(bundle))
+            if node and node in seen[key]:
+                continue
+            if node:
+                seen[key].add(node)
+            buckets[key].append(typed_ev)
+    return buckets
+
+
 def is_duplicate_path_defect_row(row: JsonDict) -> bool:
     if str(row.get("locus", "")) != "path":
         return False
@@ -232,7 +249,12 @@ def validate_exporter_contract(
 
 
 def sequence_similarity(a: list[str], b: list[str]) -> float:
-    return float(SequenceMatcher(a=tuple(a), b=tuple(b)).ratio())
+    if not a and not b:
+        return 1.0
+    if not a or not b:
+        return 0.0
+    matches = sum(1 for x, y in zip(a, b) if x == y)
+    return (2.0 * matches) / (len(a) + len(b))
 
 
 
@@ -355,6 +377,10 @@ def build_path_summaries(
                 "targetBoundary": target_boundary,
                 "supportCore": sorted(support_core),
                 "headCore": sorted(head_core),
+                "_supportCoreSet": set(support_core),
+                "_headCoreSet": set(head_core),
+                "_roleSignatureTuple": tuple(role_signature),
+                "_boundarySignatureTuple": tuple(boundary_signature),
                 "effectivePathResidualDebt": path_residual_debt,  # deprecated compatibility alias; equals exportedPathResidualDebt
                 "unresolvedPairCount": 0,
                 "coherentPairCount": 0,
@@ -382,9 +408,9 @@ def witness_match_detail(
     if not any(feature_key(bundle) == target_feature_key for bundle in feature_out):
         return None
 
-    closure = set(str(x) for x in ev.get("closureDeps", []))
-    support_union = set(path_a.get("supportCore", [])) | set(path_b.get("supportCore", []))
-    head_union = set(path_a.get("headCore", [])) | set(path_b.get("headCore", []))
+    closure = cast(set[str], ev.get("_closureSet", set()))
+    support_union = cast(set[str], path_a.get("_supportCoreSet", set())) | cast(set[str], path_b.get("_supportCoreSet", set()))
+    head_union = cast(set[str], path_a.get("_headCoreSet", set())) | cast(set[str], path_b.get("_headCoreSet", set()))
     source_union = {str(path_a.get("src", "")), str(path_b.get("src", ""))} - {""}
 
     score = 0
@@ -421,7 +447,7 @@ def witness_match_detail(
 def find_comparison_witnesses(
     path_a: JsonDict,
     path_b: JsonDict,
-    events: list[JsonDict],
+    events_by_target: dict[tuple[str, str], list[JsonDict]],
 ) -> list[JsonDict]:
     matches_by_node: dict[str, JsonDict] = {}
     excluded = {
@@ -433,8 +459,9 @@ def find_comparison_witnesses(
 
     target_feature_key = str(path_a.get("targetFeatureKey", ""))
     target_boundary = str(path_a.get("targetBoundary", ""))
+    target_events = events_by_target.get((target_boundary, target_feature_key), [])
 
-    for ev in events:
+    for ev in target_events:
         node = str(ev.get("node", ""))
         if node in excluded:
             continue
@@ -462,18 +489,56 @@ def build_comparison_candidates(
     path_summaries: list[JsonDict],
     events: list[JsonDict],
 ) -> tuple[list[JsonDict], list[JsonDict]]:
+    events_by_target = build_event_target_index(events)
+    paths_by_src: dict[str, list[JsonDict]] = defaultdict(list)
+    paths_by_dst: dict[str, list[JsonDict]] = defaultdict(list)
+    shared_candidates_by_path_id: dict[int, set[str]] = {}
+    for path in path_summaries:
+        paths_by_src[str(path["src"])].append(path)
+        paths_by_dst[str(path["dst"])].append(path)
+        shared_candidates_by_path_id[int(path["pathId"])] = {
+            str(name)
+            for name in cast(list[Any], path.get("sharedComparisonCandidates", []))
+            if str(name)
+        }
+
     rows: list[JsonDict] = []
-    for i, path_a in enumerate(path_summaries):
-        for path_b in path_summaries[i + 1 :]:
+    seen_pairs: set[tuple[int, int]] = set()
+    for path_a in path_summaries:
+        path_a_id = int(path_a["pathId"])
+        candidate_paths_by_id: dict[int, JsonDict] = {}
+        candidate_srcs = shared_candidates_by_path_id[path_a_id]
+        for src in sorted(candidate_srcs):
+            for path_b in paths_by_src.get(src, []):
+                candidate_paths_by_id[int(path_b["pathId"])] = path_b
+        same_dst_paths = paths_by_dst.get(str(path_a["dst"]), [])
+        if len(same_dst_paths) <= 64:
+            for path_b in same_dst_paths:
+                candidate_paths_by_id[int(path_b["pathId"])] = path_b
+
+        for path_b_id, path_b in sorted(candidate_paths_by_id.items()):
+            path_b_id = int(path_b["pathId"])
+            if path_b_id <= path_a_id:
+                continue
+            pair_key = (path_a_id, path_b_id)
+            if pair_key in seen_pairs:
+                continue
+            seen_pairs.add(pair_key)
             same_dst = str(path_a["dst"]) == str(path_b["dst"])
             same_feature_target = str(path_a["targetFeatureKey"]) == str(path_b["targetFeatureKey"])
             same_boundary = str(path_a["targetBoundary"]) == str(path_b["targetBoundary"])
             if not (same_dst or (same_feature_target and same_boundary)):
                 continue
-            role_match = sequence_similarity(list(path_a["roleSignature"]), list(path_b["roleSignature"]))
-            boundary_match = sequence_similarity(list(path_a["boundarySignature"]), list(path_b["boundarySignature"]))
+            reciprocal_candidate = str(path_a["src"]) in shared_candidates_by_path_id[path_b_id]
+            if not same_dst and not reciprocal_candidate:
+                continue
+            role_match = sequence_similarity(list(path_a["_roleSignatureTuple"]), list(path_b["_roleSignatureTuple"]))
+            boundary_match = sequence_similarity(list(path_a["_boundarySignatureTuple"]), list(path_b["_boundarySignatureTuple"]))
             grade_match = sequence_similarity(list(path_a["grades"]), list(path_b["grades"]))
-            support_divergence = jaccard_distance(set(path_a["supportCore"]), set(path_b["supportCore"]))
+            support_divergence = jaccard_distance(
+                cast(set[str], path_a["_supportCoreSet"]),
+                cast(set[str], path_b["_supportCoreSet"]),
+            )
             distinct_profile = (
                 path_a["supportCore"] != path_b["supportCore"]
                 or path_a["roleSignature"] != path_b["roleSignature"]
@@ -487,9 +552,16 @@ def build_comparison_candidates(
                 evidence_class = "parallel_transport"
             else:
                 evidence_class = "overlap_only"
-            witness_matches = find_comparison_witnesses(path_a, path_b, events) if evidence_class != "overlap_only" else []
+            should_search_witnesses = same_dst or evidence_class == "coherence_candidate"
+            witness_matches = (
+                find_comparison_witnesses(path_a, path_b, events_by_target)
+                if should_search_witnesses
+                else []
+            )
             witness_nodes = [row["node"] for row in witness_matches]
             if evidence_class == "overlap_only":
+                comparison_status = "merely_similar"
+            elif not should_search_witnesses:
                 comparison_status = "merely_similar"
             elif witness_nodes:
                 comparison_status = "parallel_coherent"
@@ -722,6 +794,9 @@ def markdown_table(headers: list[str], rows: list[list[Any]]) -> str:
         out.append("| " + " | ".join(str(x) for x in row) + " |")
     return "\n".join(out)
 
+
+def strip_internal_fields(row: JsonDict) -> JsonDict:
+    return {key: value for key, value in row.items() if not str(key).startswith("_")}
 
 
 def build_markdown(
@@ -964,6 +1039,11 @@ def main() -> int:
     events = load_jsonl(input_dir / "process-events.jsonl")
     paths = load_jsonl(input_dir / "lawful-path-candidates.jsonl")
     defects = load_jsonl(input_dir / "defects.jsonl")
+    print(
+        f"[generate_process_flow_report] loaded edges={len(flow_edges)} events={len(events)} "
+        f"paths={len(paths)} defects={len(defects)}",
+        flush=True,
+    )
 
     if not flow_edges and not events:
         raise SystemExit(f"no process-flow artifacts found under {input_dir}")
@@ -976,12 +1056,19 @@ def main() -> int:
 
     cocycles, cocycles_by_pair = build_cocycles(flow_edges)
     write_jsonl(cocycles_out, cocycles)
+    print(f"[generate_process_flow_report] cocycles={len(cocycles)}", flush=True)
     path_summaries = build_path_summaries(paths, cocycles_by_pair, events)
+    print(f"[generate_process_flow_report] path_summaries={len(path_summaries)}", flush=True)
     comparison_candidates, path_summaries = build_comparison_candidates(path_summaries, events)
+    print(f"[generate_process_flow_report] comparisons={len(comparison_candidates)}", flush=True)
     validate_derived_state(path_summaries, comparison_candidates)
     write_jsonl(comparisons_out, comparison_candidates)
     node_stress = build_node_stress(events, cocycles, path_summaries, defects)
     module_stress = build_module_stress(node_stress)
+    print(
+        f"[generate_process_flow_report] node_stress={len(node_stress)} module_stress={len(module_stress)}",
+        flush=True,
+    )
 
     defects_by_kind_counter: Counter[str] = Counter()
     for row in defects:
@@ -1033,6 +1120,7 @@ def main() -> int:
     )[: args.top]
     top_nodes = node_stress[: args.top]
     top_modules = module_stress[: args.top]
+    public_stressed_paths = [strip_internal_fields(row) for row in stressed_paths]
 
     summary = build_summary(
         root,
@@ -1052,7 +1140,7 @@ def main() -> int:
         "topStressedModules": top_modules,
         "topAnomalousEdges": anomalous_edges,
         "bestLowDefectBridges": best_bridges,
-        "topPathCandidates": stressed_paths,
+        "topPathCandidates": public_stressed_paths,
         "topComparisonCandidates": unresolved_comparisons,
     }
     write_json(json_out, payload)

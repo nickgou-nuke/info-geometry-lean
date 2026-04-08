@@ -123,10 +123,12 @@ import InfoGeometry.Canonical.LorentzianRouting
 import InfoGeometry.Canonical.ManifoldDegree
 import InfoGeometry.Canonical.ManifoldHomology
 import InfoGeometry.Canonical.ManifoldDegreeIntegration
+import InfoGeometry.Canonical.MajoranaKitaevSpinorBridge
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.ModularSpinorBridge
 import InfoGeometry.Canonical.NoetherInference
 import InfoGeometry.Canonical.PathIntegral
+import InfoGeometry.Canonical.PhaseSpaceRecompositionExample
 import InfoGeometry.Canonical.Prequantum
 import InfoGeometry.Canonical.Projective
 import InfoGeometry.Canonical.RelativeModularCore

@@ -231,7 +231,7 @@ theorem liftedEinsteinAnomalyOperator_eq_neg_liftedLeftChiralAnomalyOperator_of_
         (InfoGeometry.Canonical.EinsteinAnomaly CCI.A CCI.A_MP CCI.A_D) := rfl
     _ = dualSheetLift (E := E) (-CCI.toConformalInference.leftChiralAnomalyOperator) := hLift
     _ = -(dualSheetLift (E := E) CCI.toConformalInference.leftChiralAnomalyOperator) := by
-          simpa using (dualSheetLift_neg (E := E) CCI.toConformalInference.leftChiralAnomalyOperator)
+          exact dualSheetLift_neg (E := E) CCI.toConformalInference.leftChiralAnomalyOperator
     _ = -CCI.liftedLeftChiralAnomalyOperator := rfl
 
 /--
@@ -814,14 +814,18 @@ theorem liftedRightChiralAnomalyOperator_star_eq_neg :
     star SCI.liftedRightChiralAnomalyOperator
         =
       dualSheetLift (E := E) (star SCI.rightChiralAnomalyOperator) := by
-          simpa [StarCertifiedConformalInference.liftedRightChiralAnomalyOperator,
-            CertifiedConformalInference.liftedRightChiralAnomalyOperator]
-            using (dualSheetLift_star (E := E) SCI.rightChiralAnomalyOperator)
+          change
+            star (dualSheetLift (E := E) SCI.rightChiralAnomalyOperator)
+              =
+            dualSheetLift (E := E) (star SCI.rightChiralAnomalyOperator)
+          exact dualSheetLift_star (E := E) SCI.rightChiralAnomalyOperator
     _ = dualSheetLift (E := E) (-SCI.rightChiralAnomalyOperator) := hLift
     _ = -SCI.liftedRightChiralAnomalyOperator := by
-          simpa [StarCertifiedConformalInference.liftedRightChiralAnomalyOperator,
-            CertifiedConformalInference.liftedRightChiralAnomalyOperator]
-            using (dualSheetLift_neg (E := E) SCI.rightChiralAnomalyOperator)
+          change
+            dualSheetLift (E := E) (-SCI.rightChiralAnomalyOperator)
+              =
+            -(dualSheetLift (E := E) SCI.rightChiralAnomalyOperator)
+          exact dualSheetLift_neg (E := E) SCI.rightChiralAnomalyOperator
 
 /--
 The lifted singular Einstein anomaly operator is skew-adjoint on the doubled

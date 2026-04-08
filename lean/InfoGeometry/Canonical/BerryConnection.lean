@@ -194,20 +194,17 @@ noncomputable def KRotation
 @[simp] theorem JBoost_zero
     (S : SuperHestenesKaehlerDatum (E := E)) :
     S.JBoost 0 = (1 : EndH) := by
-  simpa [JBoost] using
-    (InfoGeometry.Canonical.BogoliubovTransport.JBoost_zero (E := E))
+  simp [JBoost]
 
 @[simp] theorem epsilonBoost_zero
     (S : SuperHestenesKaehlerDatum (E := E)) :
     S.epsilonBoost 0 = (1 : EndH) := by
-  simpa [epsilonBoost] using
-    (InfoGeometry.Canonical.BogoliubovTransport.epsilonBoost_zero (E := E))
+  simp [epsilonBoost]
 
 @[simp] theorem KRotation_zero
     (S : SuperHestenesKaehlerDatum (E := E)) :
     S.KRotation 0 = (1 : EndH) := by
-  simpa [KRotation] using
-    (InfoGeometry.Canonical.BogoliubovTransport.KRotation_zero (E := E))
+  simp [KRotation]
 
 theorem JBoost_add
     (S : SuperHestenesKaehlerDatum (E := E))

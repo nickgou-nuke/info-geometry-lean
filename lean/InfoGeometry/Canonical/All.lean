@@ -20,6 +20,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import DAG.Basic
 import InfoGeometry.Canonical.Algebra
+import InfoGeometry.Canonical.AlgebraicStationarity
 import InfoGeometry.Canonical.ActionDuality
 import InfoGeometry.Canonical.AnomalyInflow
 import InfoGeometry.Canonical.AnomalyGauge
@@ -126,12 +127,16 @@ import InfoGeometry.Canonical.ManifoldDegreeIntegration
 import InfoGeometry.Canonical.MajoranaKitaevSpinorBridge
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.ModularSpinorBridge
+import InfoGeometry.Canonical.ModularTwoStateCorrelation
+import InfoGeometry.Canonical.OnsagerCasimirJ
 import InfoGeometry.Canonical.NoetherInference
+import InfoGeometry.Canonical.OnsagerReciprocity
 import InfoGeometry.Canonical.PathIntegral
 import InfoGeometry.Canonical.PhaseSpaceRecompositionExample
 import InfoGeometry.Canonical.Prequantum
 import InfoGeometry.Canonical.Projective
 import InfoGeometry.Canonical.RelativeModularCore
+import InfoGeometry.Canonical.RelativeModularPotential
 import InfoGeometry.Canonical.RelativeModularPolarizedBridge
 import InfoGeometry.Canonical.RelativeModularProjectiveBridge
 import InfoGeometry.Canonical.RelativeModularRecomposition

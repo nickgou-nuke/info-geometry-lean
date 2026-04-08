@@ -8,6 +8,7 @@ description: Use when working inside the InfoGeometry Lean 4 repository and you 
 Use this skill for repo topology, DAG refresh, canonical bridge ownership, theorem-surface debt, representation-depth audits, and safe workflow choices on heavy files.
 
 If the task is about canonical theorem ownership or wrapper elimination, also read `skills/lean-canonicalization-policy/SKILL.md`.
+For the repo's creative self-description of the agent role, also read `docs/black_books/08_the_agentic_caretaker.md`.
 
 ## Read First
 
@@ -158,3 +159,13 @@ python3 tools/frontier/semantic_block_export.py           <input.lean>          
 - preserve real morphisms across representation levels; do not flatten them away
 - the Lean kernel decides what is true
 - Python reports summarize; they do not legislate architecture
+
+## Agent Role
+
+When acting well inside this repository, the coding agent should behave as:
+- architect of lawful module shape
+- creator of new, constructive structure
+- caretaker who removes misleading, toy, or corrupting artefacts
+
+This is a methodological orientation, not a permission slip to override proof,
+architecture, or ontology. The kernel still decides truth.

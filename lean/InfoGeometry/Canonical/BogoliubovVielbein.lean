@@ -72,6 +72,68 @@ noncomputable def transportedMaurerCartanCurvature
     V.connectionGenerator (V.localFrame t)
 
 /--
+Commutator transport intertwines with exponential transport for a fixed generator.
+-/
+lemma transportCommutator_expTransport
+    (X A : EndH) (t : ℝ) :
+    transportCommutator (E := E) X
+        (InfoGeometry.Canonical.expTransport (A := EndH) X A t)
+      =
+    InfoGeometry.Canonical.expTransport (A := EndH)
+      X (transportCommutator (E := E) X A) t := by
+  let ePos : EndH := NormedSpace.exp (t • X)
+  let eNeg : EndH := NormedSpace.exp (t • (-X))
+  have hPos : Commute X ePos := by
+    simpa [ePos] using (((Commute.refl X).smul_right t).exp_right)
+  have hNeg : Commute X eNeg := by
+    simpa [eNeg, smul_neg, neg_smul] using
+      (((Commute.refl X).smul_right (-t : ℝ)).exp_right)
+  unfold transportCommutator InfoGeometry.Canonical.expTransport
+  calc
+    X * ((ePos * A) * eNeg) - ((ePos * A) * eNeg) * X
+      = ((X * ePos) * A) * eNeg - ePos * (A * (eNeg * X)) := by
+          simp [mul_assoc]
+    _ = ((ePos * X) * A) * eNeg - ePos * (A * (X * eNeg)) := by
+          rw [hPos.eq, hNeg.eq.symm]
+    _ = ePos * (X * A) * eNeg - ePos * (A * X) * eNeg := by
+          simp [mul_assoc]
+    _ = ePos * (X * A - A * X) * eNeg := by
+          simp [sub_eq_add_neg, mul_assoc, add_mul, mul_add]
+    _ = InfoGeometry.Canonical.expTransport (A := EndH)
+          X (transportCommutator (E := E) X A) t := by
+          change
+              ePos * (X * A - A * X) * eNeg
+                =
+              InfoGeometry.Canonical.expTransport (A := EndH) X (X * A - A * X) t
+          simp [ePos, eNeg, InfoGeometry.Canonical.expTransport, mul_assoc]
+
+/--
+The transported Maurer-Cartan curvature is the exponential transport of the
+base Maurer-Cartan curvature.
+-/
+theorem transportedMaurerCartanCurvature_eq_expTransport_maurerCartanCurvature
+    (V : BogoliubovVielbeinBundle (E := E)) (t : ℝ) :
+    V.transportedMaurerCartanCurvature t
+      =
+    InfoGeometry.Canonical.expTransport (A := EndH)
+      V.connectionGenerator V.maurerCartanCurvature t := by
+  unfold transportedMaurerCartanCurvature maurerCartanCurvature localFrame
+  simpa [hestenesMaurerCartanCurvature] using
+    (transportCommutator_expTransport (E := E) V.connectionGenerator V.reference t)
+
+/--
+The derivative of the transported local frame is the commutator with the
+connection generator, read at the transported frame itself.
+-/
+theorem deriv_localFrame_at_eq_transportedMaurerCartanCurvature
+    (V : BogoliubovVielbeinBundle (E := E)) (t : ℝ) :
+    deriv (fun s => V.localFrame s) t = V.transportedMaurerCartanCurvature t := by
+  rw [V.transportedMaurerCartanCurvature_eq_expTransport_maurerCartanCurvature t]
+  simpa [localFrame, maurerCartanCurvature, hestenesMaurerCartanCurvature] using
+    (InfoGeometry.Canonical.hasDerivAt_expTransport
+      (A := EndH) (X := V.connectionGenerator) (A₀ := V.reference) t).deriv
+
+/--
 **Bianchi-type Identity**:
 The Lie-derivative of the transported Maurer-Cartan curvature is exactly the
 commutator of the connection generator and the curvature itself.
@@ -83,25 +145,41 @@ theorem bianchi_identity
       =
     hestenesMaurerCartanCurvature (E := E)
       V.connectionGenerator (V.transportedMaurerCartanCurvature t) := by
-  unfold transportedMaurerCartanCurvature hestenesMaurerCartanCurvature
-  -- d/dt [X, A(t)] = [X, dA/dt]
-  have h_deriv :
-      deriv (fun s => transportCommutator V.connectionGenerator (V.localFrame s)) t
-        = transportCommutator V.connectionGenerator (deriv V.localFrame t) := by
-    unfold transportCommutator
-    rw [deriv_sub]
-    · rw [deriv_const_comp, deriv_comp_const]
-      · rfl
-      · exact (InfoGeometry.Canonical.hasDerivAt_expTransport (A := EndH) (X := V.connectionGenerator) (A₀ := V.reference) t).differentiableAt
-      · exact (InfoGeometry.Canonical.hasDerivAt_expTransport (A := EndH) (X := V.connectionGenerator) (A₀ := V.reference) t).differentiableAt
-    · apply DifferentiableAt.const_comp
-      exact (InfoGeometry.Canonical.hasDerivAt_expTransport (A := EndH) (X := V.connectionGenerator) (A₀ := V.reference) t).differentiableAt
-    · apply DifferentiableAt.comp_const
-      exact (InfoGeometry.Canonical.hasDerivAt_expTransport (A := EndH) (X := V.connectionGenerator) (A₀ := V.reference) t).differentiableAt
-  rw [h_deriv, V.deriv_localFrame_at t]
-  -- [X, expTransport (X, [X, A], t)] = [X, [X, expTransport (X, A, t)]]
-  -- This is true because expTransport commutes with the commutator of its generator.
-  exact InfoGeometry.Canonical.expTransport_commutator (X := V.connectionGenerator) (A := V.connectionGenerator) (B := V.reference) t
+  have hTransported :
+      (fun s => V.transportedMaurerCartanCurvature s)
+        =
+      fun s =>
+        InfoGeometry.Canonical.expTransport (A := EndH)
+          V.connectionGenerator V.maurerCartanCurvature s := by
+    funext s
+    exact V.transportedMaurerCartanCurvature_eq_expTransport_maurerCartanCurvature s
+  rw [hTransported]
+  rw [V.transportedMaurerCartanCurvature_eq_expTransport_maurerCartanCurvature t]
+  calc
+    deriv
+        (fun s =>
+          InfoGeometry.Canonical.expTransport (A := EndH)
+            V.connectionGenerator V.maurerCartanCurvature s)
+        t
+      =
+        InfoGeometry.Canonical.expTransport (A := EndH)
+          V.connectionGenerator
+          (transportCommutator (E := E) V.connectionGenerator V.maurerCartanCurvature) t := by
+            simpa [maurerCartanCurvature, hestenesMaurerCartanCurvature] using
+              (InfoGeometry.Canonical.hasDerivAt_expTransport
+                (A := EndH) (X := V.connectionGenerator) (A₀ := V.maurerCartanCurvature) t).deriv
+    _ =
+        transportCommutator (E := E) V.connectionGenerator
+          (InfoGeometry.Canonical.expTransport (A := EndH)
+            V.connectionGenerator V.maurerCartanCurvature t) := by
+              exact (transportCommutator_expTransport
+                (E := E) V.connectionGenerator V.maurerCartanCurvature t).symm
+    _ =
+        hestenesMaurerCartanCurvature (E := E)
+          V.connectionGenerator
+          (InfoGeometry.Canonical.expTransport (A := EndH)
+            V.connectionGenerator V.maurerCartanCurvature t) := by
+              rfl
 
 /--
 Lie-derivative evolution law for the local spin frame at the reference point (`t = 0`).
@@ -124,9 +202,9 @@ theorem deriv_localFrame_at
       =
     InfoGeometry.Canonical.expTransport (A := EndH)
       V.connectionGenerator V.maurerCartanCurvature t := by
-  simpa [localFrame, maurerCartanCurvature, hestenesMaurerCartanCurvature] using
+  simpa [localFrame, maurerCartanCurvature, hestenesMaurerCartanCurvature, transportCommutator] using
     (InfoGeometry.Canonical.hasDerivAt_expTransport
-      (A := EndH) (X := V.connectionGenerator) (A₀ := DFunLike.coe reference V) t).deriv
+      (A := EndH) (X := V.connectionGenerator) (A₀ := V.reference) t).deriv
 
 end BogoliubovVielbeinBundle
 

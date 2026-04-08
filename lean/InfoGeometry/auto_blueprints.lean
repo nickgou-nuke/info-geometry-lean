@@ -3651,8 +3651,6 @@ attribute [blueprint] InfoGeometry.Jordan.normalizedDistortion
 attribute [blueprint] InfoGeometry.Jordan.normalizedDistortion_det
 attribute [blueprint] InfoGeometry.Jordan.normalizedDistortion_det_pos
 attribute [blueprint] InfoGeometry.KK.EndH
-attribute [blueprint] InfoGeometry.KK.FinModelE
-attribute [blueprint] InfoGeometry.KK.FinModelH
 attribute [blueprint] InfoGeometry.KK.IsCompactEnd
 attribute [blueprint] InfoGeometry.KK.KasparovCycle.analyticalIndex
 attribute [blueprint] InfoGeometry.KK.KasparovProductData
@@ -3714,8 +3712,6 @@ attribute [blueprint] InfoGeometry.KK.superComm_eps_isCompactOperator
 attribute [blueprint] InfoGeometry.KK.superComm_isCompactEnd_of_left_compact
 attribute [blueprint] InfoGeometry.KK.superComm_isCompactOperator_of_even_rep
 attribute [blueprint] InfoGeometry.KK.superComm_pi_isCompactOperator
-attribute [blueprint] InfoGeometry.KK.trivialKasparovCycle
-attribute [blueprint] InfoGeometry.KK.trivialKasparovProductData
 attribute [blueprint] InfoGeometry.KL.EntropicInferenceTest.State
 attribute [blueprint] InfoGeometry.KL.EntropicInferenceTest.X_test
 attribute [blueprint] InfoGeometry.KL.EntropicInferenceTest.hq_support_of_strict_pos

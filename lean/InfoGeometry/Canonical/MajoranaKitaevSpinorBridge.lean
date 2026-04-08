@@ -51,7 +51,7 @@ structure WeylBoundarySpinorPair
 Unified package: Weyl boundary spinors together with a nonidentity Moore-Penrose
 and Drazin regularization package for the same chain operator.
 -/
-@[rep_depth operator]
+@[rep_depth krein]
 structure MajoranaKitaevSpinorRegularizationPackage
     (M : RealMajoranaDatum (S := S))
     (Q : S →L[ℝ] S) where
@@ -137,7 +137,7 @@ Canonical unification package for the stable Majorana/Kitaev/Weyl corridor:
 topological phase data yields Weyl boundary spinors and a nonidentity
 generalized-inverse package for the same global chain operator.
 -/
-@[rep_depth operator]
+@[rep_depth krein]
 noncomputable def majoranaKitaevSpinorRegularizationPackage_of_simplifiedBoundaryModel
     (M : RealMajoranaDatum (S := S))
     (localOp : KitaevCell → S →L[ℝ] S)

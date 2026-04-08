@@ -1,4 +1,6 @@
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Canonical.StateDependentTransport
+import InfoGeometry.Quantum.GeometricTensorOperatorLift
 import InfoGeometry.Krein.SplitQuadraticSheets
 import InfoGeometry.Krein.PolarizedSector
 
@@ -227,5 +229,80 @@ theorem kreinExpectation_minusPoint
     kreinInner_minusPoint (E := E) ξ (WithLp.snd (A (minusPoint (E := E) ξ)))
 
 end Sheets
+
+section Operatorial
+
+variable {E : Type*}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+local notation "H₂" => DoubledSpace E
+local notation "EndH" => H₂ →L[ℝ] H₂
+
+open InfoGeometry.Canonical.StateDependentTransport
+
+/--
+State-dependent generator field on the doubled carrier.
+This keeps the generator operatorial and avoids scalar diagonal proxies.
+-/
+structure StateGeneratorField where
+  generator : H₂ → EndH
+
+namespace StateGeneratorField
+
+noncomputable def toStateModularDatum
+    (G : StateGeneratorField (E := E)) : StateModularDatum E :=
+  { modularSeed := G.generator }
+
+noncomputable def stateInducedDerivation
+    (G : StateGeneratorField (E := E)) (ψ : H₂) (A : EndH) : EndH :=
+  stateInducedDynamics (E := E) (toStateModularDatum (E := E) G) ψ A
+
+noncomputable def stateGaugeDerivation
+    (G : StateGeneratorField (E := E)) (ψ : H₂) (A : EndH) : EndH :=
+  stateGaugeDynamics (E := E) (toStateModularDatum (E := E) G) ψ A
+
+noncomputable def stateSourceDerivation
+    (G : StateGeneratorField (E := E)) (ψ : H₂) (A : EndH) : EndH :=
+  stateSourceDynamics (E := E) (toStateModularDatum (E := E) G) ψ A
+
+noncomputable def stateMetricReadout
+    (G : StateGeneratorField (E := E)) (ψ : H₂) (A : EndH) :
+    LinearMap.BilinForm ℝ H₂ :=
+  stateQGTMetricReadout (E := E) (toStateModularDatum (E := E) G) ψ A
+
+noncomputable def statePhaseReadout
+    (G : StateGeneratorField (E := E)) (ψ : H₂) (A : EndH) :
+    LinearMap.BilinForm ℝ H₂ :=
+  stateQGTPhaseReadout (E := E) (toStateModularDatum (E := E) G) ψ A
+
+noncomputable def stateQGTReadout
+    (G : StateGeneratorField (E := E)) (ψ : H₂) (A : EndH) :
+    StateQGTReadout E :=
+  InfoGeometry.Canonical.StateDependentTransport.stateQGTReadout (E := E)
+    (toStateModularDatum (E := E) G) ψ A
+
+theorem statePhaseReadout_eq_metric_comp_K
+    (G : StateGeneratorField (E := E)) (ψ : H₂) (A : EndH) :
+    statePhaseReadout (E := E) G ψ A
+      =
+    (stateMetricReadout (E := E) G ψ A).compLeft
+      (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
+  rw [statePhaseReadout, stateMetricReadout]
+  simp
+
+theorem stateInducedDerivation_eq_gauge_add_source
+    (G : StateGeneratorField (E := E)) (ψ : H₂) (A : EndH) :
+    stateInducedDerivation (E := E) G ψ A
+      =
+    stateGaugeDerivation (E := E) G ψ A
+      +
+    stateSourceDerivation (E := E) G ψ A := by
+  simpa [stateInducedDerivation, stateGaugeDerivation, stateSourceDerivation] using
+    (stateInducedDynamics_eq_gauge_add_source (E := E)
+      (toStateModularDatum (E := E) G) ψ A)
+
+end StateGeneratorField
+
+end Operatorial
 
 end InfoGeometry.Canonical.PolarizedMadelungBridge

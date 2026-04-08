@@ -14,7 +14,7 @@ open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.Canonical.SpectralInference
 open scoped InnerProductSpace
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   [FiniteDimensional ℝ E]
 
 local notation "H₂" => DoubledSpace E

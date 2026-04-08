@@ -1,42 +1,33 @@
-import InfoGeometry.KK.RealSplitKreinKasparovCycle
-import InfoGeometry.Canonical.AnalyticalIndex
+import InfoGeometry.KK.DiracFredholmIndex
+import InfoGeometry.Canonical.AnalyticalIndexCore
+import InfoGeometry.Meta.Architecture
 import Mathlib.Algebra.Lie.OfAssociative
 
 open scoped InnerProductSpace
+
+/-!
+# InfoGeometry.KK.KasparovCycle
+
+Repo-internal legacy compatibility surface for the bounded KK presentation.
+
+The primitive owner is the real split-Krein Dirac/Fredholm module carried by
+`RealSplitKreinKasparovCycle` and developed directly in
+`DiracFredholmModule`/`DiracFredholmIndex`. This file keeps the old
+`KasparovCycle` names only as an explicitly isolated representation layer for
+remaining in-repo consumers.
+
+- `@[rep_depth krein]` declarations are local bounded compatibility owners.
+- `@[rep_depth transport]` declarations are transport/invariance wrappers that
+  compare the local KK presentation with canonical analytical-index families.
+-/
 
 namespace InfoGeometry.KK
 
 open InfoGeometry.Krein
 
-open InfoGeometry.Canonical.AnalyticalIndex
-
-/--
-Compatibility bounded Kasparov-cycle interface over a graded Krein module.
-
-This is a forgetful compatibility layer relative to the richer primitive real
-split-Krein cycle surface. It keeps only the bounded odd phase and the algebra
-compactness axioms needed by the current KK facade.
--/
-structure KasparovCycle
-    (A B H : Type*)
-    [NormedRing A] [NormedRing B]
-    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    [KreinSpace H] [KreinGradedModule H] where
-  /-- Left representation of `A`. -/
-  π : A →ₐ[ℝ] EndH H
-  /-- Secondary representation of `B` (right-action refinement can be layered later). -/
-  ρ : B →ₐ[ℝ] EndH H
-  /-- Bounded odd phase / Fredholm operator. -/
-  F : EndH H
-  /-- Oddness with respect to the grading involution. -/
-  F_odd : KreinGradedModule.IsOdd (H := H) F
-  /-- Krein skew-adjointness of `F` (corresponds to Hilbert self-adjointness for odd operators). -/
-  F_skewAdj : KreinSpace.IsKreinSkewAdjoint (H := H) F
-  /-- `F² - 1` is compact. -/
-  F_sq_one_compact : IsCompactEnd H (F * F - (1 : EndH H))
-  /-- Graded commutator condition (even algebra reps => ordinary commutator). -/
-  comm_compact : ∀ a : A, IsCompactEnd H (F * (π a) - (π a) * F)
+/-- Legacy bounded KK label for the primitive real split-Krein carrier. -/
+@[rep_depth krein]
+abbrev KasparovCycle := RealSplitKreinKasparovCycle
 
 namespace RealSplitKreinKasparovCycle
 
@@ -46,21 +37,99 @@ variable [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 variable [KreinSpace H] [KreinGradedModule H]
 
-/-- Forget the split-`Cl(1,1)` data and keep the bounded KK compatibility surface. -/
-noncomputable def toKasparovCycle
+/-- Forget only the canonical naming bridge and retain the legacy KK label. -/
+@[rep_depth krein]
+abbrev toKasparovCycle
+    (X : RealSplitKreinKasparovCycle A B H) : KasparovCycle A B H :=
+  X
+
+/--
+Finite-dimensional analytical index of the primitive bounded real split-Krein
+Dirac/Fredholm module.
+-/
+@[rep_depth krein]
+noncomputable def finiteAnalyticalIndex
+    [FiniteDimensional ℝ H]
+    (X : RealSplitKreinKasparovCycle A B H) : ℤ :=
+  X.analyticalIndex (X.chiralFredholmSurfaceOfFiniteAmbient)
+
+/--
+The legacy finite-dimensional KK index agrees with the canonical finite model.
+-/
+@[rep_depth transport, simp] theorem finiteAnalyticalIndex_eq_canonical
+    [FiniteDimensional ℝ H]
     (X : RealSplitKreinKasparovCycle A B H) :
-    KasparovCycle A B H where
-  π := X.π
-  ρ := X.ρ
-  F := X.F
-  F_odd := X.F_odd
-  F_skewAdj := X.F_skewAdj
-  F_sq_one_compact := X.F_sq_one_compact
-  comm_compact := X.comm_compact
+    X.finiteAnalyticalIndex =
+      InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
+        X.F.toLinearMap
+        (KreinGradedModule.gradeCLM (H := H)).toLinearMap := by
+  have hPlus :
+      InfoGeometry.Canonical.AnalyticalIndex.chiralKernelSlicePlus
+          X.F.toLinearMap
+          (KreinGradedModule.gradeCLM (H := H)).toLinearMap
+        =
+      RealSplitKreinKasparovCycle.chiralKernelSlicePlus X := by
+    simp [InfoGeometry.Canonical.AnalyticalIndex.chiralKernelSlicePlus,
+      InfoGeometry.Canonical.AnalyticalIndex.chiralProjectorPlus,
+      RealSplitKreinKasparovCycle.chiralKernelSlicePlus,
+      RealSplitKreinKasparovCycle.diracOperator,
+      RealSplitKreinKasparovCycle.chiralProjectorPlus,
+      KreinGradedModule.gradeProjPlus, one_div]
+  have hMinus :
+      InfoGeometry.Canonical.AnalyticalIndex.chiralKernelSliceMinus
+          X.F.toLinearMap
+          (KreinGradedModule.gradeCLM (H := H)).toLinearMap
+        =
+      RealSplitKreinKasparovCycle.chiralKernelSliceMinus X := by
+    simp [InfoGeometry.Canonical.AnalyticalIndex.chiralKernelSliceMinus,
+      InfoGeometry.Canonical.AnalyticalIndex.chiralProjectorMinus,
+      RealSplitKreinKasparovCycle.chiralKernelSliceMinus,
+      RealSplitKreinKasparovCycle.diracOperator,
+      RealSplitKreinKasparovCycle.chiralProjectorMinus,
+      KreinGradedModule.gradeProjMinus, one_div]
+  unfold RealSplitKreinKasparovCycle.finiteAnalyticalIndex
+  rw [RealSplitKreinKasparovCycle.analyticalIndex_eq_finrank_chiralKernelDifference (X := X)]
+  unfold InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
+  rw [hPlus, hMinus]
 
 end RealSplitKreinKasparovCycle
 
-section
+namespace KasparovCycle
+
+variable {A B H : Type*}
+variable [NormedRing A] [NormedRing B]
+variable [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+variable [KreinSpace H] [KreinGradedModule H]
+
+/-- Legacy compatibility name for the positive chiral defect sector. -/
+@[rep_depth krein]
+noncomputable abbrev chiralKernelSlicePlus
+    (X : KasparovCycle A B H) : Submodule ℝ H :=
+  RealSplitKreinKasparovCycle.chiralKernelSlicePlus X
+
+/-- Legacy compatibility name for the negative chiral defect sector. -/
+@[rep_depth krein]
+noncomputable abbrev chiralKernelSliceMinus
+    (X : KasparovCycle A B H) : Submodule ℝ H :=
+  RealSplitKreinKasparovCycle.chiralKernelSliceMinus X
+
+/-- Legacy finite-dimensional KK analytical index, implemented by the primitive owner. -/
+@[rep_depth krein]
+noncomputable abbrev analyticalIndex
+    [FiniteDimensional ℝ H]
+    (X : KasparovCycle A B H) : ℤ :=
+  X.finiteAnalyticalIndex
+
+@[rep_depth krein, simp] theorem analyticalIndex_eq_finiteAnalyticalIndex
+    [FiniteDimensional ℝ H]
+    (X : KasparovCycle A B H) :
+    X.analyticalIndex = X.finiteAnalyticalIndex := rfl
+
+end KasparovCycle
+
+section LocalCompatibility
+
 variable {A B H : Type*}
 variable [NormedRing A] [NormedRing B]
 variable [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
@@ -68,37 +137,24 @@ variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 variable [KreinSpace H] [KreinGradedModule H]
 variable (X : KasparovCycle A B H)
 
-/--
-The analytical index of a finite-dimensional Kasparov cycle.
-The odd operator F acts as the Dirac operator for the index calculation.
--/
-noncomputable def KasparovCycle.analyticalIndex [FiniteDimensional ℝ H] : ℤ :=
-  InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
-    X.F.toLinearMap
-    (KreinGradedModule.gradeCLM (H := H)).toLinearMap
-
 /-- Lemma `comm_compact_lie`. -/
+@[rep_depth krein]
 lemma comm_compact_lie (a : A) : IsCompactEnd H ⁅X.F, X.π a⁆ := by
   simpa [Ring.lie_def] using X.comm_compact a
 
 /-- Lemma `superComm_compact_of_even_rep`. -/
+@[rep_depth krein]
 lemma superComm_compact_of_even_rep
-    (hπ_even : ∀ a : A, KreinGradedModule.IsEven (H := H) (X.π a))
+    (_hπ_even : ∀ a : A, KreinGradedModule.IsEven (H := H) (X.π a))
     (a : A) :
     IsCompactEnd H (KreinGradedModule.superComm (H := H) X.F (X.π a)) := by
-  have hsuper :
-      KreinGradedModule.superComm (H := H) X.F (X.π a)
-        = KreinGradedModule.comm (H := H) X.F (X.π a) :=
-    KreinGradedModule.superComm_odd_even (H := H) X.F_odd (hπ_even a)
-  rw [hsuper]
-  simpa [KreinGradedModule.comm] using X.comm_compact a
+  exact X.superComm_pi_compact a
 
 /--
 NON-VACUOUS SPECTRAL BRIDGE:
-If `F² = 1`, the analytical index is constructively zero.
-This replaces the thin invariance statement with a direct derivation from 
-the operator identity.
+If `F² = 1`, the finite-dimensional analytical index is constructively zero.
 -/
+@[rep_depth krein]
 theorem index_bridge_spectral_zero [FiniteDimensional ℝ H]
     (hF : X.F * X.F = 1) :
     X.analyticalIndex = 0 := by
@@ -113,23 +169,25 @@ theorem index_bridge_spectral_zero [FiniteDimensional ℝ H]
       _ = X.F (X.F y) := by exact congrArg X.F hxy
       _ = y := hSq y
   have hSlicePlus :
-      chiralKernelSlicePlus X.F.toLinearMap (KreinGradedModule.gradeCLM (H := H)).toLinearMap = ⊥ := by
-    unfold chiralKernelSlicePlus
+      RealSplitKreinKasparovCycle.chiralKernelSlicePlus X = ⊥ := by
+    unfold RealSplitKreinKasparovCycle.chiralKernelSlicePlus
     rw [hKer]
     simp
   have hSliceMinus :
-      chiralKernelSliceMinus X.F.toLinearMap (KreinGradedModule.gradeCLM (H := H)).toLinearMap = ⊥ := by
-    unfold chiralKernelSliceMinus
+      RealSplitKreinKasparovCycle.chiralKernelSliceMinus X = ⊥ := by
+    unfold RealSplitKreinKasparovCycle.chiralKernelSliceMinus
     rw [hKer]
     simp
-  unfold KasparovCycle.analyticalIndex analyticalIndex
+  unfold KasparovCycle.analyticalIndex RealSplitKreinKasparovCycle.finiteAnalyticalIndex
+  rw [RealSplitKreinKasparovCycle.analyticalIndex_eq_finrank_chiralKernelDifference (X := X)]
   rw [hSlicePlus, hSliceMinus]
   simp
 
 /--
-The constant Dirac/grading family determined by a spectral Kasparov phase
-has invariant (zero) analytical index.
+The constant Dirac/grading family determined by a spectral bounded primitive
+phase has invariant analytical index.
 -/
+@[rep_depth transport]
 theorem index_bridge_spectral [FiniteDimensional ℝ H] :
     InfoGeometry.Canonical.AnalyticalIndex.IndexInvariantAlong
       (fun _ : ℝ => X.F.toLinearMap)
@@ -138,11 +196,10 @@ theorem index_bridge_spectral [FiniteDimensional ℝ H] :
   simp
 
 /--
-REFINED SPECTRAL INDEX BRIDGE:
-For a spectral Kasparov phase (F² = 1), the constant Dirac/grading family
-has zero analytical index at every point, derived from the constructive
-spectral bridge.
+For a spectral primitive bounded phase (`F² = 1`), the constant Dirac/grading
+family has zero analytical index at every point.
 -/
+@[rep_depth transport]
 theorem index_bridge_spectral_zero_family [FiniteDimensional ℝ H]
     (hF : X.F * X.F = 1) :
     ∀ s : ℝ,
@@ -151,13 +208,25 @@ theorem index_bridge_spectral_zero_family [FiniteDimensional ℝ H]
         ((fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap) s)
         = 0 := by
   intro s
-  simp only
-  exact index_bridge_spectral_zero X hF
+  calc
+    InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
+        ((fun _ : ℝ => X.F.toLinearMap) s)
+        ((fun _ : ℝ => (KreinGradedModule.gradeCLM (H := H)).toLinearMap) s)
+      =
+        InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex
+          X.F.toLinearMap
+          (KreinGradedModule.gradeCLM (H := H)).toLinearMap := by
+            simp
+    _ = X.analyticalIndex := by
+          simpa [KasparovCycle.analyticalIndex] using
+            (RealSplitKreinKasparovCycle.finiteAnalyticalIndex_eq_canonical (X := X)).symm
+    _ = 0 := index_bridge_spectral_zero X hF
 
 /--
 Frontier materialization (candidate 1):
-the spectral bridge yields explicit zero-index transport from the Kasparov seed.
+the spectral bridge yields explicit zero-index transport from the primitive seed.
 -/
+@[rep_depth transport]
 theorem auto_index_bridge_spectral_from_seed_1 [FiniteDimensional ℝ H]
     (hF : X.F * X.F = 1) :
     ∀ s : ℝ,
@@ -169,9 +238,11 @@ theorem auto_index_bridge_spectral_from_seed_1 [FiniteDimensional ℝ H]
   exact index_bridge_spectral_zero_family X hF s
 
 /--
-Transport the KK analytical index through any path whose analytical index is
-already known to be invariant and whose baseline agrees with the Kasparov data.
+Transport the primitive finite-dimensional analytical index through any path
+whose analytical index is already known to be invariant and whose baseline
+agrees with the bounded Dirac/Fredholm data.
 -/
+@[rep_depth transport]
 theorem analyticalIndex_eq_of_indexInvariantAlong [FiniteDimensional ℝ H]
     (D Γ : ℝ → InfoGeometry.Canonical.BottDirac.Endomorphism H)
     (hD0 : D 0 = X.F.toLinearMap)
@@ -190,11 +261,13 @@ theorem analyticalIndex_eq_of_indexInvariantAlong [FiniteDimensional ℝ H]
           (KreinGradedModule.gradeCLM (H := H)).toLinearMap := by
           rw [hD0, hΓ0]
     _ = X.analyticalIndex := by
-          rfl
+          simpa [KasparovCycle.analyticalIndex] using
+            (RealSplitKreinKasparovCycle.finiteAnalyticalIndex_eq_canonical (X := X)).symm
 
 /--
-Conjugacy-specialized transport of the KK analytical index.
+Conjugacy-specialized transport of the primitive bounded analytical index.
 -/
+@[rep_depth transport]
 theorem analyticalIndex_eq_of_conjugacy [FiniteDimensional ℝ H]
     (D Γ : ℝ → InfoGeometry.Canonical.BottDirac.Endomorphism H)
     (eFlow : ℝ → H ≃ₗ[ℝ] H)
@@ -214,8 +287,10 @@ theorem analyticalIndex_eq_of_conjugacy [FiniteDimensional ℝ H]
       (D := D) (Γ := Γ) (eFlow := eFlow) hConj)
 
 /--
-Modular/Clifford-transport specialization of the KK analytical index bridge.
+Modular/Clifford-transport specialization of the primitive bounded analytical
+index bridge.
 -/
+@[rep_depth transport]
 theorem analyticalIndex_eq_of_modularCliffordTransport [FiniteDimensional ℝ H]
     (D Γ : ℝ → InfoGeometry.Canonical.BottDirac.Endomorphism H)
     {ι : Type*}
@@ -239,6 +314,6 @@ theorem analyticalIndex_eq_of_modularCliffordTransport [FiniteDimensional ℝ H]
     (InfoGeometry.Canonical.AnalyticalIndex.indexInvariantAlong_of_modularCliffordTransport
       (D := D) (Γ := Γ) (σ := σ) (clAct := clAct) (unit := unit) hTrans)
 
-end
+end LocalCompatibility
 
 end InfoGeometry.KK

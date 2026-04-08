@@ -92,6 +92,9 @@ The DAG and Python tooling exist to preserve this intention when local context i
 - they do not legislate mathematical truth or replace code reading
 
 The short operational summary lives in [docs/OperationalIntent.md](docs/OperationalIntent.md).
+For the repo's creative-methodological self-understanding of the coding agent as
+architect, creator, and caretaker, see
+[docs/black_books/08_the_agentic_caretaker.md](docs/black_books/08_the_agentic_caretaker.md).
 
 ## Read First
 
@@ -111,6 +114,7 @@ The short operational summary lives in [docs/OperationalIntent.md](docs/Operatio
 If you are operating as an agent inside this repo, also use:
 - [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)
 - [skills/lean-canonicalization-policy/SKILL.md](skills/lean-canonicalization-policy/SKILL.md)
+- [docs/black_books/08_the_agentic_caretaker.md](docs/black_books/08_the_agentic_caretaker.md)
 
 ## Authoritative Surfaces
 
@@ -160,6 +164,7 @@ python3 tools/infra/generate_representation_depth_graph.py
 - `README.md`, `lean/DAG/README.md`, `tools/README.md`, and `tools/infra/README.md` are operational docs.
 - [docs/RepositoryMemoryMap.md](docs/RepositoryMemoryMap.md) classifies which docs and tools are current, generated, compatibility-only, or reference memory.
 - [docs/OperationalIntent.md](docs/OperationalIntent.md) states why the repo, DAG, and infra tooling are maintained the way they are.
+- [docs/black_books/08_the_agentic_caretaker.md](docs/black_books/08_the_agentic_caretaker.md) is a creative methodological note about the role of the agent; it inspires but does not overrule code or audit policy.
 - [docs/Theory.md](docs/Theory.md) is the conceptual map of the stable spine.
 - [Architecture.lean](lean/InfoGeometry/Meta/Architecture.lean) and [Audit.lean](lean/InfoGeometry/Audit.lean) are the native grammar and enforcement layer.
 - `reports/` and `artifacts/dag/` are generated or regenerated surfaces.

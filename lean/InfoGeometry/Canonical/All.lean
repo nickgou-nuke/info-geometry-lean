@@ -203,6 +203,7 @@ import InfoGeometry.Canonical.OperatorAlgebraAQFTPackage
 import InfoGeometry.Canonical.OperatorAlgebraKKBridge
 import InfoGeometry.Canonical.OperatorAlgebraModularAtom
 import InfoGeometry.Canonical.OperatorAlgebraReadiness
+import InfoGeometry.Canonical.RelationalInformationCore
 import InfoGeometry.Canonical.ResponseWeylAnomalyBridge
 import InfoGeometry.Canonical.RosettaScaleTransport
 import InfoGeometry.Canonical.WeylPathHysteresis

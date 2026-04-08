@@ -21,6 +21,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import InfoGeometry.Twistor.NullProjective
 import InfoGeometry.Twistor.Incidence
+import InfoGeometry.Canonical.TwistorOperatorialIncidence
 
 /-!
 # InfoGeometry.Canonical.Twistor

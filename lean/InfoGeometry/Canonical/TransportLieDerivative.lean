@@ -4,6 +4,7 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Exponential
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Tactic.Abel
+import Mathlib.Tactic.NoncommRing
 
 open scoped InnerProductSpace Topology
 
@@ -74,20 +75,68 @@ lemma hasDerivAt_expTransport_at_zero
     simp
   exact hderiv ▸ hmain
 
+/-- Generic `HasDerivAt` commutator transport law for exponential conjugation at any `t`. -/
+lemma hasDerivAt_expTransport
+    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    (X A₀ : A) (t : ℝ) :
+    HasDerivAt (fun s => expTransport X A₀ s) (expTransport X ⁅X, A₀⁆ t) t := by
+  let f : ℝ → A := fun s => NormedSpace.exp (s • X) * A₀
+  let g : ℝ → A := fun s => NormedSpace.exp (s • (-X))
+  have hfExp : HasDerivAt (fun s : ℝ => NormedSpace.exp (s • X))
+      (NormedSpace.exp (t • X) * X) t := by
+    simpa using (hasDerivAt_exp_smul_const X t)
+  have hgExp : HasDerivAt (fun s : ℝ => NormedSpace.exp (s • (-X)))
+      ((-X) * NormedSpace.exp (t • (-X))) t := by
+    simpa using (hasDerivAt_exp_smul_const' (-X) t)
+  have hf : HasDerivAt f (((NormedSpace.exp (t • X) * X) * A₀)) t := by
+    simpa [f] using hfExp.mul_const A₀
+  have hg : HasDerivAt g ((-X) * NormedSpace.exp (t • (-X))) t := by
+    simpa [g] using hgExp
+  have hfg : HasDerivAt (fun s => f s * g s)
+      ((((NormedSpace.exp (t • X) * X) * A₀) * g t)
+        + f t * ((-X) * NormedSpace.exp (t • (-X)))) t := by
+    exact hf.mul hg
+  have hmain : HasDerivAt (fun s => expTransport X A₀ s)
+      ((((NormedSpace.exp (t • X) * X) * A₀) * g t)
+        + f t * ((-X) * NormedSpace.exp (t • (-X)))) t := by
+    simpa only [f, g, expTransport] using hfg
+  have hderiv :
+      ((((NormedSpace.exp (t • X) * X) * A₀) * g t)
+        + f t * ((-X) * NormedSpace.exp (t • (-X))))
+        = expTransport X ⁅X, A₀⁆ t := by
+    unfold f g expTransport
+    rw [Ring.lie_def, sub_eq_add_neg]
+    simp [mul_assoc, left_distrib, right_distrib]
+  exact hderiv ▸ hmain
+
+/-- Generic derivative form of exponential conjugation at any `t`. -/
+theorem deriv_expTransport
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    (X A₀ : A) (t : ℝ) :
+    deriv (fun s => expTransport X A₀ s) t = expTransport X ⁅X, A₀⁆ t := by
+  exact (hasDerivAt_expTransport X A₀ t).deriv
+
 /-- Generic derivative form of exponential conjugation at `t = 0`. -/
 theorem deriv_expTransport_at_zero
-    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A] [CompleteSpace A]
     (X A₀ : A) :
     deriv (fun t => expTransport X A₀ t) 0 = ⁅X, A₀⁆ := by
   exact (hasDerivAt_expTransport_at_zero X A₀).deriv
 
 /-- If the generator commutes with the seed operator, the infinitesimal transport vanishes. -/
 theorem deriv_expTransport_at_zero_eq_zero_of_commute
-    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A] [CompleteSpace A]
     (X A₀ : A) (hComm : Commute X A₀) :
     deriv (fun t => expTransport X A₀ t) 0 = 0 := by
   rw [deriv_expTransport_at_zero]
   simp [Ring.lie_def, hComm.eq]
+
+@[simp] theorem expTransport_add_seed
+    {A : Type*} [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    (X A₁ A₂ : A) (t : ℝ) :
+    expTransport X (A₁ + A₂) t = expTransport X A₁ t + expTransport X A₂ t := by
+  unfold expTransport
+  simp [mul_assoc, mul_add, add_mul]
 
 /-- Explicit finite exponential conjugation transport on `EndN`. -/
 noncomputable def expTransportEnd (X A : EndN) (t : ℝ) : EndN :=

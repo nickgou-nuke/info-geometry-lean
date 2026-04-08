@@ -359,6 +359,7 @@ def indexerMain (args : List String) : IO UInt32 := do
         let graphOut := "artifacts/dag/full_graph.json"
         pure ("InfoGeometry.All", "InfoGeometry", "artifacts/dag/index", graphOut, defaultStructureOutFor graphOut)
 
+  initSearchPath (← findSysroot)
   let env ← importModules (parseImports importModsStr) {} 0
   let coreContext : Core.Context := { fileName := "<Indexer>", fileMap := default }
 

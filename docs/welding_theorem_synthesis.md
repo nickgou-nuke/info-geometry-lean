@@ -23,13 +23,21 @@ The formal architecture identifies this obstruction not as an artifact, but as t
 ## 4. The QGT Readout
 The **Quantum Geometric Tensor (QGT)** is read as a split-pair of real bilinear forms:
 
+The weld is read not as a real-versus-imaginary split, but as a symmetric metric
+sector together with a $(J\epsilon)$-skew Hestenes phase-axis sector on the
+doubled real carrier.
+
 ### IV.A Symmetric Metric Sector (Real)
 The Cartan-even, symmetric, variance-carrying side. Formalized as `metricOfOperator`, this sector captures the Fisher-Rao information metric and thermodynamic susceptibilities.
 
 ### IV.B (Jε)-skew Hestenes Phase-Axis Sector (Curvature)
 The Cartan-odd, phase-sensitive side carried by the internal Hestenes axis $K = J\epsilon$. The nontrivial curvature of the weld belongs to this sector, not to an imported complex component. The `projectorObstruction` feeds this $K$-sensitive transport channel.
 
-## 5. Summary of Causal Stratigraphy
+The projector obstruction feeds the $(J\epsilon)$-sensitive transport channel, so
+the nontrivial curvature of the weld belongs to the Hestenes phase-axis sector,
+not to an imported complex-imaginary component.
+
+## 5. What Is Proved, Inferred, and Open
 - **What is Proved:** The obstruction chain, the anomaly identification, the Weyl holonomy readout, and the modular source/gauge split in infinitesimal transport.
 - **What is Inferred:** The identification of the `projectorObstruction` as the specific operator seed for the QGT phase-axis sector.
 - **The Remaining Closure:** A direct theorem mapping the `liftedEinsteinAnomalyOperator` into the `kreinQgtOfOperator` constructor via its phase-antilinearity.

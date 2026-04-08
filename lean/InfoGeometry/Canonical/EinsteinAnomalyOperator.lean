@@ -32,6 +32,13 @@ noncomputable def liftedChiralAnomalyOperator : EndH :=
 noncomputable abbrev liftedLeftChiralAnomalyOperator : EndH :=
   CCI.liftedChiralAnomalyOperator
 
+/--
+Canonical lifted projector-obstruction operator on the doubled carrier.
+This is the certified owner alias used by transport/QGT closures.
+-/
+noncomputable abbrev liftedProjectorObstructionOperator : EndH :=
+  CCI.liftedLeftChiralAnomalyOperator
+
 /-- The certified right-projector anomaly operator lifted to the doubled carrier. -/
 noncomputable def liftedRightChiralAnomalyOperator : EndH :=
   dualSheetLift (E := E) CCI.rightChiralAnomalyOperator
@@ -50,7 +57,9 @@ noncomputable def liftedEinsteinAnomalyOperator : EndH :=
     (x ξ : E) :
     CCI.liftedChiralAnomalyOperator (to_doubled x ξ : H₂) =
       to_doubled (CCI.chiralAnomalyOperator x) (CCI.chiralAnomalyOperator ξ) := by
-  simp [liftedChiralAnomalyOperator]
+  change dualSheetLift (E := E) CCI.chiralAnomalyOperator (to_doubled x ξ : H₂) =
+      to_doubled (CCI.chiralAnomalyOperator x) (CCI.chiralAnomalyOperator ξ)
+  exact dualSheetLift_apply_to_doubled (E := E) (A := CCI.chiralAnomalyOperator) x ξ
 
 @[simp] theorem liftedRightChiralAnomalyOperator_apply_to_doubled
     (x ξ : E) :
@@ -65,6 +74,32 @@ noncomputable def liftedEinsteinAnomalyOperator : EndH :=
         ((InfoGeometry.Canonical.EinsteinAnomaly CCI.A CCI.A_MP CCI.A_D) x)
         ((InfoGeometry.Canonical.EinsteinAnomaly CCI.A CCI.A_MP CCI.A_D) ξ) := by
   simp [liftedEinsteinAnomalyOperator]
+
+omit [CompleteSpace E] in
+/--
+Every diagonal dual-sheet lift commutes with the doubled-space phase axis
+`K = Jε`; hence it is phase-linear.
+-/
+theorem dualSheetLift_isPhaseLinear
+    (A : E →L[ℝ] E) :
+    IsPhaseLinear (E := E) (dualSheetLift (E := E) A) := by
+  unfold IsPhaseLinear
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : (to_doubled (WithLp.fst u) (WithLp.snd u) : H₂) = u := by
+    apply DoubledSpace.ext <;> simp [to_doubled]
+  rw [← hu]
+  apply DoubledSpace.ext <;>
+    simp [ContinuousLinearMap.comp_apply]
+
+/--
+The lifted singular Einstein anomaly is phase-linear on doubled space.
+-/
+theorem liftedEinsteinAnomalyOperator_isPhaseLinear :
+    IsPhaseLinear (E := E) CCI.liftedEinsteinAnomalyOperator := by
+  simpa [liftedEinsteinAnomalyOperator] using
+    dualSheetLift_isPhaseLinear
+      (E := E) (A := InfoGeometry.Canonical.EinsteinAnomaly CCI.A CCI.A_MP CCI.A_D)
 
 omit [CompleteSpace E] in
 @[simp] theorem dualSheetLift_neg (A : E →L[ℝ] E) :
@@ -97,8 +132,9 @@ theorem liftedLeftChiralAnomalyOperator_eq_zero_iff :
     CCI.liftedLeftChiralAnomalyOperator = 0
       ↔
     CCI.leftChiralAnomalyOperator = 0 := by
-  simpa [liftedLeftChiralAnomalyOperator, liftedChiralAnomalyOperator] using
-    (dualSheetLift_eq_zero_iff (E := E) CCI.leftChiralAnomalyOperator)
+  change dualSheetLift (E := E) CCI.leftChiralAnomalyOperator = 0
+      ↔ CCI.leftChiralAnomalyOperator = 0
+  exact dualSheetLift_eq_zero_iff (E := E) CCI.leftChiralAnomalyOperator
 
 /-- Lifted right anomaly vanishes exactly when the base right anomaly vanishes. -/
 theorem liftedRightChiralAnomalyOperator_eq_zero_iff :
@@ -122,7 +158,7 @@ theorem liftedLeftChiralAnomalyOperator_ne_zero_iff :
     CCI.liftedLeftChiralAnomalyOperator ≠ 0
       ↔
     CCI.leftChiralAnomalyOperator ≠ 0 := by
-  simpa using not_congr (CCI.liftedLeftChiralAnomalyOperator_eq_zero_iff)
+  exact not_congr (CCI.liftedLeftChiralAnomalyOperator_eq_zero_iff)
 
 /-- Lifted right anomaly is nonzero exactly when the base right anomaly is nonzero. -/
 theorem liftedRightChiralAnomalyOperator_ne_zero_iff :
@@ -140,11 +176,13 @@ theorem liftedEinsteinAnomalyOperator_ne_zero_iff :
 
 @[simp] theorem plusProjectorFlux_liftedChiralAnomalyOperator :
     plusProjectorFlux CCI.liftedChiralAnomalyOperator = 0 := by
-  simp [liftedChiralAnomalyOperator]
+  simpa only [liftedChiralAnomalyOperator] using
+    (plusProjectorFlux_dualSheetLift (E := E) (A := CCI.chiralAnomalyOperator))
 
 @[simp] theorem minusProjectorFlux_liftedChiralAnomalyOperator :
     minusProjectorFlux CCI.liftedChiralAnomalyOperator = 0 := by
-  simp [liftedChiralAnomalyOperator]
+  simpa only [liftedChiralAnomalyOperator] using
+    (minusProjectorFlux_dualSheetLift (E := E) (A := CCI.chiralAnomalyOperator))
 
 @[simp] theorem plusProjectorFlux_liftedEinsteinAnomalyOperator :
     plusProjectorFlux CCI.liftedEinsteinAnomalyOperator = 0 := by
@@ -186,8 +224,27 @@ theorem liftedEinsteinAnomalyOperator_eq_neg_liftedLeftChiralAnomalyOperator_of_
     exact congrArg (fun T : E →L[ℝ] E => dualSheetLift (E := E) T)
       (CCI.toConformalInference.singularEinsteinAnomaly_eq_neg_leftChiralAnomaly_of_projectorAgreement
         hProj)
-  simpa [liftedEinsteinAnomalyOperator, liftedLeftChiralAnomalyOperator,
-    liftedChiralAnomalyOperator] using hLift
+  calc
+    CCI.liftedEinsteinAnomalyOperator
+        =
+      dualSheetLift (E := E)
+        (InfoGeometry.Canonical.EinsteinAnomaly CCI.A CCI.A_MP CCI.A_D) := rfl
+    _ = dualSheetLift (E := E) (-CCI.toConformalInference.leftChiralAnomalyOperator) := hLift
+    _ = -(dualSheetLift (E := E) CCI.toConformalInference.leftChiralAnomalyOperator) := by
+          simpa using (dualSheetLift_neg (E := E) CCI.toConformalInference.leftChiralAnomalyOperator)
+    _ = -CCI.liftedLeftChiralAnomalyOperator := rfl
+
+/--
+Projector-agreement closure in canonical naming:
+the lifted Einstein anomaly is the negative of the lifted projector obstruction.
+-/
+theorem liftedEinsteinAnomalyOperator_eq_neg_liftedProjectorObstructionOperator_of_projectorAgreement
+    (hProj :
+      IsMoorePenroseInverse.rightProjector CCI.A CCI.A_MP =
+        IsMoorePenroseInverse.leftProjector CCI.A CCI.A_MP) :
+    CCI.liftedEinsteinAnomalyOperator = -CCI.liftedProjectorObstructionOperator := by
+  simpa [liftedProjectorObstructionOperator] using
+    CCI.liftedEinsteinAnomalyOperator_eq_neg_liftedLeftChiralAnomalyOperator_of_projectorAgreement hProj
 
 /--
 The lifted singular Einstein anomaly splits into gauge and source derivation
@@ -699,6 +756,15 @@ theorem liftedEinsteinAnomalyOperator_eq_neg_liftedRightChiralAnomalyOperator :
       SCI.toCertifiedConformalInference.liftedEinsteinAnomalyOperator_eq_neg_liftedRightChiralAnomalyOperator
 
 /--
+On the star-certified conformal surface, the lifted singular Einstein anomaly
+commutes with the doubled-space phase axis `K = Jε`.
+-/
+theorem liftedEinsteinAnomalyOperator_isPhaseLinear :
+    IsPhaseLinear (E := E) SCI.liftedEinsteinAnomalyOperator := by
+  simpa [StarCertifiedConformalInference.liftedEinsteinAnomalyOperator] using
+    SCI.toCertifiedConformalInference.liftedEinsteinAnomalyOperator_isPhaseLinear
+
+/--
 The lifted left-projector anomaly operator is skew-adjoint on the doubled
 carrier under star-certified conformal data.
 -/
@@ -712,20 +778,23 @@ theorem liftedLeftChiralAnomalyOperator_star_eq_neg :
         =
       dualSheetLift (E := E) (-SCI.leftChiralAnomalyOperator) :=
     congrArg (fun T : E →L[ℝ] E => dualSheetLift (E := E) T) hBase
+  have hStarLift :
+      star (dualSheetLift (E := E) SCI.leftChiralAnomalyOperator)
+        =
+      dualSheetLift (E := E) (star SCI.leftChiralAnomalyOperator) :=
+    dualSheetLift_star (E := E) SCI.leftChiralAnomalyOperator
+  have hNegLift :
+      dualSheetLift (E := E) (-SCI.leftChiralAnomalyOperator)
+        =
+      -(dualSheetLift (E := E) SCI.leftChiralAnomalyOperator) := by
+    exact dualSheetLift_neg (E := E) SCI.leftChiralAnomalyOperator
   calc
     star SCI.liftedLeftChiralAnomalyOperator
-        =
-      dualSheetLift (E := E) (star SCI.leftChiralAnomalyOperator) := by
-          simpa [StarCertifiedConformalInference.liftedLeftChiralAnomalyOperator,
-            CertifiedConformalInference.liftedLeftChiralAnomalyOperator,
-            CertifiedConformalInference.liftedChiralAnomalyOperator]
-            using (dualSheetLift_star (E := E) SCI.leftChiralAnomalyOperator)
+        = star (dualSheetLift (E := E) SCI.leftChiralAnomalyOperator) := rfl
+    _ = dualSheetLift (E := E) (star SCI.leftChiralAnomalyOperator) := hStarLift
     _ = dualSheetLift (E := E) (-SCI.leftChiralAnomalyOperator) := hLift
-    _ = -SCI.liftedLeftChiralAnomalyOperator := by
-          simpa [StarCertifiedConformalInference.liftedLeftChiralAnomalyOperator,
-            CertifiedConformalInference.liftedLeftChiralAnomalyOperator,
-            CertifiedConformalInference.liftedChiralAnomalyOperator]
-            using (dualSheetLift_neg (E := E) SCI.leftChiralAnomalyOperator)
+    _ = -(dualSheetLift (E := E) SCI.leftChiralAnomalyOperator) := hNegLift
+    _ = -SCI.liftedLeftChiralAnomalyOperator := rfl
 
 /--
 The lifted right-projector anomaly operator is skew-adjoint on the doubled

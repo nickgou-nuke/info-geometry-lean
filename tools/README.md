@@ -56,7 +56,7 @@ Documentation refresh helpers for generated doc surfaces.
 ## Integration with Lean DAG
 
 Python never touches Lean internals directly. The integration is:
-1. `tools/infra/refresh_decl_graph.py` invokes `lake env lean --run lean/DAG/Indexer.lean` via subprocess
+1. `tools/infra/refresh_decl_graph.py` prebuilds with `run_locked_lake_build.py` and invokes `lake env dagIndexer` (fallback: `lake env lean --run ...`)
 2. The Lean indexer writes canonical JSON artifacts to `artifacts/dag/`
 3. Downstream Python scripts consume those artifacts for reports, visualization, and linting
 4. `tools/pathing.py` provides the single source of truth for artifact paths with fallback semantics

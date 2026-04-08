@@ -68,6 +68,20 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Skip the olean content-hash check and always re-run the indexer.",
     )
+    parser.add_argument(
+        "--skip-prebuild",
+        action="store_true",
+        help="Skip the locked prebuild step and run the indexer directly.",
+    )
+    parser.add_argument(
+        "--run-mode",
+        choices=["exe", "run"],
+        default="exe",
+        help=(
+            "Indexer invocation mode: `exe` uses the compiled lake executable "
+            "(default, incremental-friendly); `run` uses `lake env lean --run`."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -123,6 +137,28 @@ def _should_skip(meta_path: Path, current_hash: str,
         return False
 
 
+def _run_locked_prebuild(root: Path, import_root: str) -> bool:
+    cmd = [
+        sys.executable,
+        "tools/infra/run_locked_lake_build.py",
+        "--wait-for-build-lock",
+        "DAG.Indexer",
+        import_root,
+    ]
+    print(f"[refresh-decl-graph] prebuilding with lock: {' '.join(cmd)}", flush=True)
+    try:
+        subprocess.run(cmd, cwd=root, check=True)
+        return True
+    except subprocess.CalledProcessError as exc:
+        print(
+            "[refresh-decl-graph] prebuild failed; continuing with direct indexer run "
+            f"(exit={exc.returncode})",
+            file=sys.stderr,
+            flush=True,
+        )
+        return False
+
+
 def main() -> int:
     args = parse_args()
     root = repo_root()
@@ -144,18 +180,33 @@ def main() -> int:
     graph_out.parent.mkdir(parents=True, exist_ok=True)
     structure_out.parent.mkdir(parents=True, exist_ok=True)
 
-    cmd = [
-        "lake",
-        "env",
-        "lean",
-        "--run",
-        "lean/DAG/Indexer.lean",
-        args.import_root,
-        args.namespace,
-        str(index_dir),
-        str(graph_out),
-        str(structure_out),
-    ]
+    if not args.skip_prebuild:
+        _run_locked_prebuild(root, args.import_root)
+
+    if args.run_mode == "exe":
+        cmd = [
+            "lake",
+            "env",
+            "dagIndexer",
+            args.import_root,
+            args.namespace,
+            str(index_dir),
+            str(graph_out),
+            str(structure_out),
+        ]
+    else:
+        cmd = [
+            "lake",
+            "env",
+            "lean",
+            "--run",
+            "lean/DAG/Indexer.lean",
+            args.import_root,
+            args.namespace,
+            str(index_dir),
+            str(graph_out),
+            str(structure_out),
+        ]
     print(f"[refresh-decl-graph] running: {' '.join(cmd)}", flush=True)
     subprocess.run(cmd, cwd=root, check=True)
 

@@ -14,6 +14,10 @@ The repository's core theoretical axiom is **Goutev’s Principle of Absolute
 Relativity of Measurement**:
 
 - [Goutevs_Principle.md](Goutevs_Principle.md) — The formal manifesto.
+- [LIBER_NOVUS_MATH.md](LIBER_NOVUS_MATH.md) — The "Red Book": Analytical Psychology methodology for mathematical development.
+- [WORKBENCH.md](WORKBENCH.md) — The practical playbook for Socratic/Alchemical discovery.
+- [black_books/](black_books/) — The "Black Books": Raw intuitive exploration (Scorpio). Includes the Thermodynamics of Joy, Sisyphian Perseverance, Eureka Tunneling, and the Gravitational Well.
+- [black_books/08_the_agentic_caretaker.md](black_books/08_the_agentic_caretaker.md) — The essay naming the repo agent as architect, creator, and caretaker under the law of the kernel.
 - [Theory.md](Theory.md) — How the principle maps to the repo presentations.
 - [Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md) — The project's roadmap and trajectory.
 - [SEMANTIC_POTENTIAL.md](SEMANTIC_POTENTIAL.md) — The "Scorpio & Virgo" multi-agent generative engine.

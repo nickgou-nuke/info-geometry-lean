@@ -630,6 +630,15 @@ noncomputable def starCertifiedEinsteinAnomalyStatePhaseReadout
     LinearMap.BilinForm ℝ H₂ :=
   (starCertifiedEinsteinAnomalyQGT (E := E) SCI).berry
 
+/--
+State-dependent phase readout attached to the welded obstruction axis.
+This is inherited from the star-certified anomaly readout on the same surface.
+-/
+noncomputable def weldedProjectorObstructionStatePhaseReadout
+    (SCI : StarCertifiedConformalInference E) (ψ : H₂) :
+    LinearMap.BilinForm ℝ H₂ :=
+  starCertifiedEinsteinAnomalyStatePhaseReadout (E := E) SCI ψ
+
 theorem starCertifiedEinsteinAnomalyStatePhaseReadout_eq_projectorObstructionMetric_of_projectorAgreement
     (SCI : StarCertifiedConformalInference E) (ψ : H₂)
     (hProj :
@@ -642,6 +651,19 @@ theorem starCertifiedEinsteinAnomalyStatePhaseReadout_eq_projectorObstructionMet
   simpa [starCertifiedEinsteinAnomalyStatePhaseReadout] using
     (starCertifiedEinsteinAnomalyAxis_phaseReadout_eq_projectorObstructionMetric_of_projectorAgreement
       (E := E) SCI hProj)
+
+theorem weldedProjectorObstructionStatePhaseReadout_eq_projectorObstructionMetric_of_projectorAgreement
+    (SCI : StarCertifiedConformalInference E) (ψ : H₂)
+    (hProj :
+      InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector SCI.A SCI.A_MP =
+        InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector SCI.A SCI.A_MP) :
+    weldedProjectorObstructionStatePhaseReadout (E := E) SCI ψ
+      =
+    metricOfOperator (E := E)
+      SCI.toCertifiedConformalInference.liftedProjectorObstructionOperator := by
+  simpa [weldedProjectorObstructionStatePhaseReadout] using
+    (starCertifiedEinsteinAnomalyStatePhaseReadout_eq_projectorObstructionMetric_of_projectorAgreement
+      (E := E) SCI ψ hProj)
 
 /--
 Local split identity for the constant projector-obstruction state datum:

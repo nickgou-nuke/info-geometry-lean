@@ -156,7 +156,7 @@ noncomputable def rankOneIsometry :
     rw [hξ]
     ring
 
-@[rep_depth operator]
+@[rep_depth krein]
 noncomputable def rankOneCliffordEquiv :
     NeutralPhaseClifford ℝ ≃ₐ[ℝ] CliffordAlgebra InfoGeometry.Clifford.splitQ11 :=
   CliffordAlgebra.equivOfIsometry rankOneIsometry

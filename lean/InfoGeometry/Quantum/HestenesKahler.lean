@@ -6,6 +6,7 @@ import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.BerryConnection
 import InfoGeometry.Canonical.StateDependentTransport
+import InfoGeometry.Canonical.PolarizedMadelungBridge
 import InfoGeometry.Canonical.EinsteinAnomalyOperator
 import InfoGeometry.Canonical.TwistorOperatorialIncidence
 
@@ -37,6 +38,7 @@ open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Quantum.RealMajorana
 open InfoGeometry.Quantum.GeometricQuantumTensor
 open InfoGeometry.Canonical.StateDependentTransport
+open InfoGeometry.Canonical.PolarizedMadelungBridge
 
 variable {E : Type}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -638,6 +640,24 @@ noncomputable def weldedProjectorObstructionStatePhaseReadout
     (SCI : StarCertifiedConformalInference E) (ψ : H₂) :
     LinearMap.BilinForm ℝ H₂ :=
   starCertifiedEinsteinAnomalyStatePhaseReadout (E := E) SCI ψ
+
+noncomputable def weldedProjectorObstructionStateGeneratorField
+    (SCI : StarCertifiedConformalInference E) :
+    InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField (E := E) :=
+  InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.mk
+    (generator := fun _ => SCI.liftedEinsteinAnomalyOperator)
+
+/--
+State-dependent phase readout of the welded obstruction axis, expressed through
+the operatorial state-generator field.
+-/
+noncomputable def weldedProjectorObstructionStatePhaseReadout_fromGenerator
+    (SCI : StarCertifiedConformalInference E) (ψ : H₂) :
+    LinearMap.BilinForm ℝ H₂ :=
+  InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.statePhaseReadout
+    (weldedProjectorObstructionStateGeneratorField SCI)
+    ψ
+    (weldedProjectorObstructionAxis (E := E) SCI.toCertifiedConformalInference).op
 
 theorem starCertifiedEinsteinAnomalyStatePhaseReadout_eq_projectorObstructionMetric_of_projectorAgreement
     (SCI : StarCertifiedConformalInference E) (ψ : H₂)

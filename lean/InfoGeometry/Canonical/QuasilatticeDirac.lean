@@ -53,9 +53,25 @@ theorem deriv_quasilatticeDirac
     V.connectionGenerator * (quasilatticeDirac V D t)
       - (quasilatticeDirac V D t) * V.connectionGenerator := by
   unfold quasilatticeDirac
-  simpa using
-    (InfoGeometry.Canonical.hasDerivAt_expTransport
-      (A := EndH) (X := V.connectionGenerator) (A₀ := D) t).deriv
+  calc
+    deriv (fun s => InfoGeometry.Canonical.expTransport (A := EndH) V.connectionGenerator D s) t
+      =
+        InfoGeometry.Canonical.expTransport (A := EndH)
+          V.connectionGenerator
+          (InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+            (E := E) V.connectionGenerator D) t := by
+            simpa using
+              (InfoGeometry.Canonical.hasDerivAt_expTransport
+                (A := EndH) (X := V.connectionGenerator) (A₀ := D) t).deriv
+    _ =
+        InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+          (E := E) V.connectionGenerator
+          (InfoGeometry.Canonical.expTransport (A := EndH) V.connectionGenerator D t) := by
+            exact (InfoGeometry.Canonical.BogoliubovVielbein.BogoliubovVielbeinBundle.transportCommutator_expTransport
+              (E := E) V.connectionGenerator D t).symm
+    _ = V.connectionGenerator * (quasilatticeDirac V D t)
+          - (quasilatticeDirac V D t) * V.connectionGenerator := by
+            rfl
 
 /--
 **Curvature-Dirac Coupling**:
@@ -70,22 +86,27 @@ theorem deriv2_quasilatticeDirac_at_zero
       =
     V.connectionGenerator * (V.connectionGenerator * D - D * V.connectionGenerator)
       - (V.connectionGenerator * D - D * V.connectionGenerator) * V.connectionGenerator := by
-  let f := fun t => quasilatticeDirac V D t
-  have h1 : deriv f = fun t => V.connectionGenerator * (f t) - (f t) * V.connectionGenerator := by
-    ext t
-    exact deriv_quasilatticeDirac V D t
-  rw [h1]
-  have h_diff : DifferentiableAt ℝ f 0 :=
-    (InfoGeometry.Canonical.hasDerivAt_expTransport (A := EndH) (X := V.connectionGenerator) (A₀ := D) 0).differentiableAt
-  rw [deriv_sub]
-  · rw [deriv_const_mul, deriv_mul_const]
-    · unfold f
-      simp [quasilatticeDirac, InfoGeometry.Canonical.deriv_expTransport_at_zero]
-    · exact h_diff
-    · exact h_diff
-  · apply DifferentiableAt.const_mul
-    exact h_diff
-  · apply DifferentiableAt.mul_const
-    exact h_diff
+  let X : EndH := V.connectionGenerator
+  let δD : EndH := InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+    (E := E) X D
+  have hDeriv :
+      (fun t => deriv (fun s => quasilatticeDirac V D s) t)
+        =
+      fun t => InfoGeometry.Canonical.expTransport (A := EndH) X δD t := by
+    funext t
+    simpa [X, δD, quasilatticeDirac] using
+      (InfoGeometry.Canonical.hasDerivAt_expTransport
+        (A := EndH) (X := X) (A₀ := D) t).deriv
+  have hSecond :
+      deriv (fun t => InfoGeometry.Canonical.expTransport (A := EndH) X δD t) 0
+        =
+      X * δD - δD * X := by
+    simpa [Ring.lie_def, sub_eq_add_neg] using
+      (InfoGeometry.Canonical.deriv_expTransport_at_zero
+        (A := EndH) (X := X) (A₀ := δD))
+  dsimp
+  rw [hDeriv]
+  simpa [X, δD, InfoGeometry.Canonical.BogoliubovTransport.transportCommutator]
+    using hSecond
 
 end InfoGeometry.Canonical.QuasilatticeDirac

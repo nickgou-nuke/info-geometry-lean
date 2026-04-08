@@ -156,6 +156,7 @@ Run the native audit before trusting the representation-depth reports. Run the m
 ## Operational Rules
 
 - use `run_locked_lake_build.py` for umbrella builds
+- `refresh_decl_graph.py` now prebuilds `DAG.Indexer` + import root with lock and runs `lake env dagIndexer` by default
 - do not run concurrent umbrella builds
 - do not hand-edit `artifacts/dag/*`
 - read code before acting on hotspot heuristics

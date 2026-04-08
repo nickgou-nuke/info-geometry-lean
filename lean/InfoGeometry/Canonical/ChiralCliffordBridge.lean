@@ -79,10 +79,15 @@ collapses because Γ and P_D coincide or commute.
 -/
 theorem cartan_collapse_of_normal (CI : ConformalInference E) (h_norm : CI.IsNormalInference) :
     CI.chiralAnomaly = 0 := by
-  have he : CI.chiralScale = 0 := h_norm
-  have hn : nnnorm CI.chiralAnomaly = 0 := by
-    simpa [ConformalInference.chiralScale, ConformalInference.epsilon] using he
-  exact (nnnorm_eq_zero).mp hn
+  have hActionZero : CI.unitOfAction = 0 :=
+    CI.unitOfAction_eq_zero_of_normalInference h_norm
+  have hNormZero : ‖CI.actionStructureConstantOp‖ = 0 := by
+    simpa [ConformalInference.unitOfAction] using hActionZero
+  have hActionOpZero : CI.actionStructureConstantOp = 0 :=
+    norm_eq_zero.mp hNormZero
+  have hAnomZero : CI.chiralAnomalyOperator = 0 := by
+    simpa [CI.actionStructureConstantOp_eq_chiralAnomalyOperator] using hActionOpZero
+  simpa [ConformalInference.chiralAnomalyOperator] using hAnomZero
 
 
 omit [FiniteDimensional ℝ E] in

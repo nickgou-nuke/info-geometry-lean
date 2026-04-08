@@ -98,6 +98,20 @@ abbrev leftChiralAnomaly : E →L[ℝ] E := CCI.chiralAnomaly
 /-- Explicit certified left-projector anomaly operator alias. -/
 abbrev leftChiralAnomalyOperator : E →L[ℝ] E := CCI.leftChiralAnomaly
 
+/--
+Canonical certified obstruction operator alias.
+
+This is the operator-first obstruction surface used in downstream transport/QGT
+bridges.
+-/
+abbrev projectorObstructionOperator : E →L[ℝ] E := CCI.leftChiralAnomalyOperator
+
+@[simp] theorem projectorObstructionOperator_eq_leftChiralAnomalyOperator :
+    CCI.projectorObstructionOperator = CCI.leftChiralAnomalyOperator := rfl
+
+@[simp] theorem projectorObstructionOperator_eq_chiralAnomalyOperator :
+    CCI.projectorObstructionOperator = CCI.chiralAnomalyOperator := rfl
+
 /-- Certified right-projector anomaly commutator. -/
 def rightChiralAnomaly : E →L[ℝ] E :=
   CCI.spectralProjector * CCI.mpRangeProjector - CCI.mpRangeProjector * CCI.spectralProjector
@@ -192,9 +206,7 @@ theorem leftChiralAnomalyOperator_star_eq_neg_of_isSelfAdjoint
     (hA : IsSelfAdjoint CCI.A)
     (hAD : IsSelfAdjoint CCI.A_D) :
     star CCI.leftChiralAnomalyOperator = -CCI.leftChiralAnomalyOperator := by
-  simpa [CertifiedConformalInference.leftChiralAnomalyOperator,
-    CertifiedConformalInference.leftChiralAnomaly] using
-    CCI.chiralAnomalyOperator_star_eq_neg_of_isSelfAdjoint hA hAD
+  exact CCI.chiralAnomalyOperator_star_eq_neg_of_isSelfAdjoint hA hAD
 
 /-- The certified right-projector anomaly operator is skew-adjoint if `A` and `A_D` are. -/
 theorem rightChiralAnomalyOperator_star_eq_neg_of_isSelfAdjoint
@@ -353,9 +365,7 @@ theorem chiralAnomalyOperator_star_eq_neg :
 /-- Explicit left-projector alias for star-certified skew-adjointness of `χ_L`. -/
 theorem leftChiralAnomalyOperator_star_eq_neg :
     star SCI.leftChiralAnomalyOperator = -SCI.leftChiralAnomalyOperator := by
-  simpa [StarCertifiedConformalInference.leftChiralAnomalyOperator,
-    StarCertifiedConformalInference.leftChiralAnomaly] using
-      SCI.chiralAnomalyOperator_star_eq_neg
+  exact SCI.chiralAnomalyOperator_star_eq_neg
 
 /-- The star-certified right anomaly operator is skew-adjoint. -/
 theorem rightChiralAnomalyOperator_star_eq_neg :

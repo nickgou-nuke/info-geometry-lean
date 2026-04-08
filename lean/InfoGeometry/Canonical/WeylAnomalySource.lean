@@ -34,11 +34,10 @@ theorem chiralInferenceState_of_nonzero_anomaly
     (CI : ConformalInference E)
     (hAnom : CI.chiralAnomalyOperator ≠ 0) :
     CI.IsChiralInference := by
-  have hAnom' : CI.chiralAnomaly ≠ 0 := by
-    simpa [ConformalInference.chiralAnomalyOperator] using hAnom
   unfold ConformalInference.IsChiralInference
-    ConformalInference.chiralScale ConformalInference.epsilon
-  exact (NNReal.coe_pos).2 ((nnnorm_pos).2 hAnom')
+  rw [CI.chiralScale_eq_projectorObstruction_nnnorm]
+  simpa [ConformalInference.projectorObstruction] using
+    (NNReal.coe_pos).2 ((nnnorm_pos).2 hAnom)
 
 /--
 Dilation/anomaly sourcing statement:

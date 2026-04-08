@@ -148,6 +148,82 @@ theorem metricOfOperator_KRotation_eq_of_commute
   exact KRotation_preserves_inner (E := E) t (A u) v
 
 /--
+The operatorial Berry 2-form seed is preserved by the exact phase propagator
+`KRotation = exp(tK)` whenever the seed commutes with `K = Jε`.
+-/
+theorem berryOfOperator_KRotation_eq_of_commute
+    (A : EndH)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A)
+    (t : ℝ) :
+    ∀ u v : H₂,
+      berryOfOperator (E := E) A
+          (KRotation (E := E) t u)
+          (KRotation (E := E) t v)
+        =
+      berryOfOperator (E := E) A u v := by
+  intro u v
+  have hKComm :
+      (modularComplexI (E := E)).comp (KRotation (E := E) t)
+        =
+      (KRotation (E := E) t).comp (modularComplexI (E := E)) := by
+    exact comp_KRotation_eq_KRotation_comp_of_IsPhaseLinear
+      (E := E)
+      (A := modularComplexI (E := E))
+      (by simp [IsPhaseLinear])
+      t
+  have hKu :
+      modularComplexI (E := E) (KRotation (E := E) t u)
+        =
+      KRotation (E := E) t (modularComplexI (E := E) u) := by
+    simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hKComm
+  calc
+    berryOfOperator (E := E) A
+        (KRotation (E := E) t u)
+        (KRotation (E := E) t v)
+      =
+    metricOfOperator (E := E) A
+      (modularComplexI (E := E) (KRotation (E := E) t u))
+      (KRotation (E := E) t v) := by
+          simpa using
+            (berryOfOperator_apply (E := E) A
+              (KRotation (E := E) t u)
+              (KRotation (E := E) t v))
+    _ =
+    metricOfOperator (E := E) A
+      (KRotation (E := E) t (modularComplexI (E := E) u))
+      (KRotation (E := E) t v) := by
+          rw [hKu]
+    _ = metricOfOperator (E := E) A (modularComplexI (E := E) u) v := by
+          exact metricOfOperator_KRotation_eq_of_commute
+            (E := E) (A := A) hComm t (modularComplexI (E := E) u) v
+    _ = berryOfOperator (E := E) A u v := by
+          exact (berryOfOperator_apply (E := E) A u v).symm
+
+/--
+Split-`Cl(1,1)` (`J ∘ ε`) form of the phase-propagation invariance theorem for
+the operatorial Berry 2-form.
+-/
+theorem berryTwoFormJEpsOfOperator_KRotation_eq_of_commute
+    (A : EndH)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A)
+    (t : ℝ) :
+    ∀ u v : H₂,
+      berryTwoFormJEpsOfOperator (E := E) A
+          (KRotation (E := E) t u)
+          (KRotation (E := E) t v)
+        =
+      berryTwoFormJEpsOfOperator (E := E) A u v := by
+  intro u v
+  simpa [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E) A] using
+    berryOfOperator_KRotation_eq_of_commute (E := E) (A := A) hComm t u v
+
+/--
 The operatorial QGT built from a self-adjoint Cartan-even seed is preserved by
 the exact phase propagator `KRotation = exp(tK)`.
 -/
@@ -241,6 +317,78 @@ theorem metricOfOperator_modularTransportFlow_eq_of_commute_generator
   rw [metricOfOperator_apply, hEval, metricOfOperator_apply]
   exact modularTransportFlow_preserves_inner_of_isSelfAdjoint_of_IsPhaseLinear
     (E := E) hMod hSelf hPhase t (A u) v
+
+/--
+Exact modular-flow transport of the operatorial Berry 2-form seed.
+
+If `A` commutes with the true modular transport generator `hMod ∘ K`, then the
+Berry seed is preserved along the full exponential Bogoliubov flow.
+-/
+theorem berryOfOperator_modularTransportFlow_eq_of_commute_generator
+    (A hMod : EndH)
+    (hSelf : IsSelfAdjoint hMod)
+    (hPhase : IsPhaseLinear (E := E) hMod)
+    (hCommGen : Commute A (modularTransportGenerator (E := E) hMod))
+    (t : ℝ) :
+    ∀ u v : H₂,
+      berryOfOperator (E := E) A
+          (modularTransportFlow (E := E) hMod t u)
+          (modularTransportFlow (E := E) hMod t v)
+        =
+      berryOfOperator (E := E) A u v := by
+  intro u v
+  have hKComm :
+      (modularComplexI (E := E)).comp (modularTransportFlow (E := E) hMod t)
+        =
+      (modularTransportFlow (E := E) hMod t).comp (modularComplexI (E := E)) := by
+    exact modularComplexI_comp_modularTransportFlow_eq_modularTransportFlow_comp_modularComplexI_of_IsPhaseLinear
+      (E := E) hMod hPhase t
+  have hKu :
+      modularComplexI (E := E) (modularTransportFlow (E := E) hMod t u)
+        =
+      modularTransportFlow (E := E) hMod t (modularComplexI (E := E) u) := by
+    simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hKComm
+  calc
+    berryOfOperator (E := E) A
+        (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v)
+      =
+    metricOfOperator (E := E) A
+      (modularComplexI (E := E) (modularTransportFlow (E := E) hMod t u))
+      (modularTransportFlow (E := E) hMod t v) := by
+          simp [berryOfOperator_apply]
+    _ =
+    metricOfOperator (E := E) A
+      (modularTransportFlow (E := E) hMod t (modularComplexI (E := E) u))
+      (modularTransportFlow (E := E) hMod t v) := by
+          rw [hKu]
+    _ = metricOfOperator (E := E) A (modularComplexI (E := E) u) v := by
+          exact metricOfOperator_modularTransportFlow_eq_of_commute_generator
+            (E := E) (A := A) (hMod := hMod) hSelf hPhase hCommGen t
+            (modularComplexI (E := E) u) v
+    _ = berryOfOperator (E := E) A u v := by
+          simp [berryOfOperator_apply]
+
+/--
+Split-`Cl(1,1)` (`J ∘ ε`) form of exact modular-flow Berry transport:
+preservation along the exponential Bogoliubov flow in the commuting sector.
+-/
+theorem berryTwoFormJEpsOfOperator_modularTransportFlow_eq_of_commute_generator
+    (A hMod : EndH)
+    (hSelf : IsSelfAdjoint hMod)
+    (hPhase : IsPhaseLinear (E := E) hMod)
+    (hCommGen : Commute A (modularTransportGenerator (E := E) hMod))
+    (t : ℝ) :
+    ∀ u v : H₂,
+      berryTwoFormJEpsOfOperator (E := E) A
+          (modularTransportFlow (E := E) hMod t u)
+          (modularTransportFlow (E := E) hMod t v)
+        =
+      berryTwoFormJEpsOfOperator (E := E) A u v := by
+  intro u v
+  simpa [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E) A] using
+    berryOfOperator_modularTransportFlow_eq_of_commute_generator
+      (E := E) (A := A) (hMod := hMod) hSelf hPhase hCommGen t u v
 
 /--
 Exact modular-flow transport of the certified lifted Einstein anomaly operator.
@@ -354,6 +502,59 @@ theorem metricOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phaseAxis
       (E := E) hMod σ t hGen]
   exact metricOfOperator_KRotation_eq_of_commute
     (E := E) (A := A) hComm (t * σ) u v
+
+/--
+If the modular transport generator lies on the local phase axis, then the
+operatorial Berry seed is preserved along the exact modular transport flow.
+-/
+theorem berryOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phaseAxis
+    (A hMod : EndH)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A)
+    (σ t : ℝ)
+    (hGen :
+      modularTransportGenerator (E := E) hMod
+        =
+      σ • modularComplexI (E := E)) :
+    ∀ u v : H₂,
+      berryOfOperator (E := E) A
+          (modularTransportFlow (E := E) hMod t u)
+          (modularTransportFlow (E := E) hMod t v)
+        =
+      berryOfOperator (E := E) A u v := by
+  intro u v
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
+      (E := E) hMod σ t hGen]
+  exact berryOfOperator_KRotation_eq_of_commute
+    (E := E) (A := A) hComm (t * σ) u v
+
+/--
+Split-`Cl(1,1)` (`J ∘ ε`) form of the phase-axis modular-flow invariance theorem
+for the operatorial Berry seed.
+-/
+theorem berryTwoFormJEpsOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phaseAxis
+    (A hMod : EndH)
+    (hComm :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A)
+    (σ t : ℝ)
+    (hGen :
+      modularTransportGenerator (E := E) hMod
+        =
+      σ • modularComplexI (E := E)) :
+    ∀ u v : H₂,
+      berryTwoFormJEpsOfOperator (E := E) A
+          (modularTransportFlow (E := E) hMod t u)
+          (modularTransportFlow (E := E) hMod t v)
+        =
+      berryTwoFormJEpsOfOperator (E := E) A u v := by
+  intro u v
+  simpa [berryTwoFormJEpsOfOperator_eq_berryOfOperator (E := E) A] using
+    berryOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phaseAxis
+      (E := E) (A := A) (hMod := hMod) hComm σ t hGen u v
 
 /--
 If the modular transport generator lies on the local Cartan phase axis, then

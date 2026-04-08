@@ -591,9 +591,9 @@ noncomputable def starCertifiedEinsteinAnomalyStateDatum
     (stateQGTMetricReadout (E := E)
         (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
       (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
-  simpa using
-    (stateQGTPhaseReadout_eq_metric_comp_modularComplexI (E := E)
-      (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A)
+  exact
+    stateQGTPhaseReadout_eq_metric_comp_modularComplexI (E := E)
+      (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
 
 @[simp] theorem starCertifiedEinsteinAnomalyStateMetricReadout_eq_hestenesMetricTwoForm
     (SCI : StarCertifiedConformalInference E) (ψ : H₂) (A : EndH) :
@@ -619,9 +619,9 @@ noncomputable def starCertifiedEinsteinAnomalyStateDatum
     (stateQGTMetricReadout (E := E)
         (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A).compLeft
       (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
-  simpa using
-    (stateQGTPhaseReadout_eq_metric_comp_modularComplexI (E := E)
-      (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A)
+  exact
+    stateQGTPhaseReadout_eq_metric_comp_modularComplexI (E := E)
+      (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A
 
 /--
 State-indexed phase readout for the star-certified anomaly QGT.

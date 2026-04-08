@@ -1,0 +1,200 @@
+import InfoGeometry.Canonical.RelationalInformationCore
+import Mathlib.Tactic.Ring
+
+open scoped InnerProductSpace
+
+/-!
+# InfoGeometry.Canonical.RelativeModularPotential
+
+Operatorial root functional for relative modular response on the doubled
+carrier.
+
+This file stays inside the noncommutative operatorial lane. It does not use a
+background spacetime, coordinate derivatives, or diagonal toy operators.
+
+The primitive data are:
+
+- a state-dependent modular generator package,
+- a continuous linear probe on the doubled observable algebra,
+- the induced relative modular potential on doubled states,
+- and its first response channels given by modular derivations.
+
+The two-state comparison surface and the induced relational datum are derived
+constructively from those owners.
+-/
+
+namespace InfoGeometry.Canonical.RelativeModularPotential
+
+open InfoGeometry.Canonical.RelationalInformationCore
+open InfoGeometry.Canonical.StateDependentTransport
+open InfoGeometry.Krein
+
+section Core
+
+variable {E : Type*}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+local notation "H₂" => DoubledSpace E
+local notation "EndH" => H₂ →L[ℝ] H₂
+
+/-- Primitive operatorial datum for the relative modular potential. -/
+@[rep_depth krein]
+structure PotentialDatum where
+  modularData : StateModularDatum E
+  probe : EndH →L[ℝ] ℝ
+
+/-- The statewise relative modular generator read by the potential datum. -/
+@[rep_depth transport]
+noncomputable def generator
+    (P : PotentialDatum (E := E)) (ψ : H₂) : EndH :=
+  stateRelativeModularGenerator (E := E) P.modularData ψ
+
+/-- The primitive relative modular potential `Φ` at a doubled state. -/
+@[rep_depth transport]
+noncomputable def value
+    (P : PotentialDatum (E := E)) (ψ : H₂) : ℝ :=
+  P.probe (generator (E := E) P ψ)
+
+/-- The modular derivation channel evaluated by the same probe. -/
+@[rep_depth transport]
+noncomputable def firstVariation
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH) : ℝ :=
+  P.probe (stateInducedDynamics (E := E) P.modularData ψ A)
+
+/-- Gauge-preserving branch of the probed relative modular response. -/
+@[rep_depth transport]
+noncomputable def gaugeVariation
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH) : ℝ :=
+  P.probe (stateGaugeDynamics (E := E) P.modularData ψ A)
+
+/-- Source/dilation branch of the probed relative modular response. -/
+@[rep_depth transport]
+noncomputable def sourceVariation
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH) : ℝ :=
+  P.probe (stateSourceDynamics (E := E) P.modularData ψ A)
+
+/-- Two-state relative modular potential gap. -/
+@[rep_depth transport]
+noncomputable def twoStateGap
+    (P : PotentialDatum (E := E)) (reference comparison : H₂) : ℝ :=
+  value (E := E) P comparison - value (E := E) P reference
+
+/-- Metric readout of the comparison-state induced dynamics. -/
+@[rep_depth transport]
+noncomputable def comparisonMetricReadout
+    (P : PotentialDatum (E := E)) (comparison : H₂) (A : EndH) :
+    LinearMap.BilinForm ℝ H₂ :=
+  stateQGTMetricReadout (E := E) P.modularData comparison A
+
+/-- Phase readout of the comparison-state induced dynamics. -/
+@[rep_depth transport]
+noncomputable def comparisonPhaseReadout
+    (P : PotentialDatum (E := E)) (comparison : H₂) (A : EndH) :
+    LinearMap.BilinForm ℝ H₂ :=
+  stateQGTPhaseReadout (E := E) P.modularData comparison A
+
+/-- Channel bilinear form induced by evaluation on a fixed doubled state. -/
+@[rep_depth krein]
+noncomputable def channelCorrelationAtState
+    (ψ : H₂) : LinearMap.BilinForm ℝ (PerturbationChannel E) :=
+  LinearMap.mk₂ ℝ
+    (fun X Y => ⟪X ψ, Y ψ⟫_ℝ)
+    (by
+      intro X₁ X₂ Y
+      simp [inner_add_left])
+    (by
+      intro c X Y
+      simp [real_inner_smul_left]
+      ring)
+    (by
+      intro X Y₁ Y₂
+      simp [inner_add_right])
+    (by
+      intro c X Y
+      simp [real_inner_smul_right]
+      ring)
+
+/-- Construct the abstract relational datum from the primitive potential datum. -/
+@[rep_depth transport]
+noncomputable def toRelationalInformationDatum
+    (P : PotentialDatum (E := E)) (reference comparison : H₂) :
+    RelationalInformationDatum (E := E) where
+  referenceState := reference
+  comparisonState := comparison
+  modularData := P.modularData
+  informationFunctional := value (E := E) P
+  firstVariation := firstVariation (E := E) P
+  secondVariation := fun ψ => channelCorrelationAtState (E := E) ψ
+
+@[rep_depth transport, simp] theorem generator_eq
+    (P : PotentialDatum (E := E)) (ψ : H₂) :
+    generator (E := E) P ψ = stateRelativeModularGenerator (E := E) P.modularData ψ := rfl
+
+@[rep_depth transport, simp] theorem value_eq_probe_generator
+    (P : PotentialDatum (E := E)) (ψ : H₂) :
+    value (E := E) P ψ = P.probe (generator (E := E) P ψ) := rfl
+
+@[rep_depth transport]
+theorem firstVariation_eq_gauge_add_source
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH) :
+    firstVariation (E := E) P ψ A
+      =
+    gaugeVariation (E := E) P ψ A + sourceVariation (E := E) P ψ A := by
+  unfold firstVariation gaugeVariation sourceVariation
+  rw [stateInducedDynamics_eq_gauge_add_source (E := E) P.modularData ψ A]
+  simp
+
+@[rep_depth transport, simp] theorem comparisonPhaseReadout_eq_metric_comp_modularComplexI
+    (P : PotentialDatum (E := E)) (comparison : H₂) (A : EndH) :
+    comparisonPhaseReadout (E := E) P comparison A
+      =
+    (comparisonMetricReadout (E := E) P comparison A).compLeft
+      (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
+  exact stateQGTPhaseReadout_eq_metric_comp_modularComplexI
+    (E := E) P.modularData comparison A
+
+@[rep_depth krein, simp] theorem channelCorrelationAtState_apply
+    (ψ : H₂) (X Y : PerturbationChannel E) :
+    channelCorrelationAtState (E := E) ψ X Y = ⟪X ψ, Y ψ⟫_ℝ := rfl
+
+@[rep_depth transport, simp] theorem toRelationalInformationDatum_informationFunctional
+    (P : PotentialDatum (E := E)) (reference comparison ψ : H₂) :
+    (toRelationalInformationDatum (E := E) P reference comparison).informationFunctional ψ
+      =
+    value (E := E) P ψ := rfl
+
+@[rep_depth transport, simp] theorem toRelationalInformationDatum_firstVariation
+    (P : PotentialDatum (E := E)) (reference comparison ψ : H₂) (A : EndH) :
+    (toRelationalInformationDatum (E := E) P reference comparison).firstVariation ψ A
+      =
+    firstVariation (E := E) P ψ A := rfl
+
+@[rep_depth transport, simp] theorem toRelationalInformationDatum_functionalShift
+    (P : PotentialDatum (E := E)) (reference comparison : H₂) :
+    functionalShift (toRelationalInformationDatum (E := E) P reference comparison)
+      =
+    twoStateGap (E := E) P reference comparison := by
+  rfl
+
+@[rep_depth krein, simp] theorem toRelationalInformationDatum_comparisonGeneratorMetric_apply
+    (P : PotentialDatum (E := E)) (reference comparison : H₂)
+    (X Y : PerturbationChannel E) :
+    comparisonGeneratorMetric
+        (toRelationalInformationDatum (E := E) P reference comparison) X Y
+      =
+    ⟪X comparison, Y comparison⟫_ℝ := by
+  rfl
+
+@[rep_depth krein, simp] theorem toRelationalInformationDatum_comparisonGeneratorPhase_apply
+    (P : PotentialDatum (E := E)) (reference comparison : H₂)
+    (X Y : PerturbationChannel E) :
+    comparisonGeneratorPhase
+        (toRelationalInformationDatum (E := E) P reference comparison) X Y
+      =
+    ⟪(X.comp (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E))) comparison,
+      Y comparison⟫_ℝ := by
+  rfl
+
+end Core
+
+end InfoGeometry.Canonical.RelativeModularPotential

@@ -218,8 +218,7 @@ theorem index_bridge_spectral_zero_family [FiniteDimensional ℝ H]
           (KreinGradedModule.gradeCLM (H := H)).toLinearMap := by
             simp
     _ = X.analyticalIndex := by
-          simpa [KasparovCycle.analyticalIndex] using
-            (RealSplitKreinKasparovCycle.finiteAnalyticalIndex_eq_canonical (X := X)).symm
+          simp [KasparovCycle.analyticalIndex]
     _ = 0 := index_bridge_spectral_zero X hF
 
 /--
@@ -261,8 +260,7 @@ theorem analyticalIndex_eq_of_indexInvariantAlong [FiniteDimensional ℝ H]
           (KreinGradedModule.gradeCLM (H := H)).toLinearMap := by
           rw [hD0, hΓ0]
     _ = X.analyticalIndex := by
-          simpa [KasparovCycle.analyticalIndex] using
-            (RealSplitKreinKasparovCycle.finiteAnalyticalIndex_eq_canonical (X := X)).symm
+          simp [KasparovCycle.analyticalIndex]
 
 /--
 Conjugacy-specialized transport of the primitive bounded analytical index.

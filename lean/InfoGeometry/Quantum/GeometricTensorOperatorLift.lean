@@ -1274,7 +1274,12 @@ theorem modularComplexI_star_eq_neg :
   apply ext_inner_left ℝ
   intro v
   rw [ContinuousLinearMap.adjoint_inner_right]
-  simpa using (modularComplexI_inner_skew (E := E) v u)
+  change
+    ⟪modularComplexI (E := E) v, u⟫_ℝ
+      =
+    ⟪v, -(modularComplexI (E := E) u)⟫_ℝ
+  rw [inner_neg_right]
+  exact modularComplexI_inner_skew (E := E) v u
 
 /--
 If `A` is skew-adjoint and commutes with `K = Jε`, then the rotated seed
@@ -1302,6 +1307,10 @@ theorem isSelfAdjoint_modularComplexI_comp_of_star_eq_neg_of_commutesWithK
           simp
     _ = modularComplexI (E := E) * A := hCommMul
 
+section
+
+omit [CompleteSpace E]
+
 /--
 If `A` commutes with `K = Jε`, then the rotated seed `K ∘ A` also commutes
 with `K`.
@@ -1321,6 +1330,8 @@ theorem isPhaseLinear_modularComplexI_comp_of_IsPhaseLinear
     _ = (modularComplexI (E := E)).comp ((modularComplexI (E := E)).comp A) := by
           rw [hComm]
     _ = (modularComplexI (E := E)).comp ((modularComplexI (E := E)).comp A) := rfl
+
+end
 
 /--
 Operatorial lift of the doubled real QGT from a Hilbert-self-adjoint operator

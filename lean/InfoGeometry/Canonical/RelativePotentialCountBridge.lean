@@ -402,6 +402,18 @@ noncomputable def countRay
   rw [countRay, gaugeSection_mk, InfoGeometry.PositiveMeasure.normalize_apply]
   simp [countMass, positiveMeasureOfCounts]
 
+@[rep_depth projective, simp]
+theorem gaugeSectionFinProb_countRay_apply_toReal
+    (counts : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (i : Fin n) :
+    ((InfoGeometry.Canonical.RelativePotentialDiscreteBridge.gaugeSectionFinProb
+        (α := Fin n) (countRay counts hcounts) i).toReal)
+      =
+    counts i / countMass counts hcounts := by
+  rw [InfoGeometry.Canonical.RelativePotentialDiscreteBridge.gaugeSectionFinProb_apply_toReal]
+  exact gaugeSection_countRay_apply (n := n) (counts := counts) (hcounts := hcounts) (i := i)
+
 @[simp] theorem relativeDensity_countRay_eq_massRatio_mul_relativeCountDensity
     (counts ref : RelativeCounts n)
     (hcounts : ∀ i : Fin n, 0 < counts i)
@@ -569,6 +581,18 @@ noncomputable def projectiveCountHamiltonianProfile
     (hcounts : ∀ i : Fin n, 0 < counts i)
     (href : ∀ i : Fin n, 0 < ref i) : Fin n → ℝ :=
   projectiveCountModularProfile counts ref hcounts href
+
+@[rep_depth projective, simp]
+theorem projectiveCountHamiltonianProfile_eq_relativeModularPotential_countRay
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    projectiveCountHamiltonianProfile counts ref hcounts href i
+      =
+    relativeModularPotential (α := Fin n)
+      (countRay counts hcounts) (countRay ref href) i := by
+  rfl
 
 @[simp] theorem projectiveCountLogDelta_eq_relativeLogDensity_countRay
     (counts ref : RelativeCounts n)
@@ -881,6 +905,24 @@ count-side modular potential together with the expected global mass-shift.
     (α := Fin n) (q := countRay counts hcounts) (q0 := countRay ref href) (a := i)]
   exact relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift
     (n := n) (counts := counts) (ref := ref) (hcounts := hcounts) (href := href) (i := i)
+
+@[rep_depth projective, simp]
+theorem projectiveLogGenerator_countRay_eq_projectiveCountHamiltonianProfile
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (i : Fin n) :
+    InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin n) (countRay ref href))
+        (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState
+          (α := Fin n) (countRay counts hcounts)) i
+      =
+    projectiveCountHamiltonianProfile counts ref hcounts href i := by
+  rw [projectiveCountHamiltonianProfile_eq_relativeModularPotential_countRay]
+  exact
+    InfoGeometry.Canonical.RelativePotentialDiscreteBridge.projectiveLogGenerator_eq_relativeModularPotential
+      (α := Fin n) (q := countRay counts hcounts) (q0 := countRay ref href) (a := i)
 
 end PositiveCounts
 

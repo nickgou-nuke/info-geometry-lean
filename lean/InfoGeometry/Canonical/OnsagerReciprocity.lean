@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.RelativeModularPotential
 import InfoGeometry.Canonical.RelationalInformationDynamics
 import InfoGeometry.Canonical.MajoranaKreinCartanSplit
+import InfoGeometry.Canonical.BohmMadelungOperatorialBridge
 open scoped InnerProductSpace
 
 /-!
@@ -24,6 +25,7 @@ This file stays in the noncommutative operatorial lane. It formalizes:
 namespace InfoGeometry.Canonical.OnsagerReciprocity
 
 open InfoGeometry.Canonical.BogoliubovTransport
+open InfoGeometry.Canonical.BohmMadelungOperatorialBridge
 open InfoGeometry.Canonical.MajoranaKreinCartanSplit
 open InfoGeometry.Canonical.RelationalInformationCore
 open InfoGeometry.Canonical.RelationalInformationDynamics
@@ -369,6 +371,44 @@ theorem toRelationalInformationDatum_comparisonMetricPhaseReadout_pair_eq_phaseL
       congrArg (fun B : LinearMap.BilinForm ℝ H₂ => B u v)
         (toRelationalInformationDatum_comparisonPhaseReadout_eq_berryOf_phaseLinearPart_add_berryOf_phaseAntilinearPart
           (E := E) P reference comparison A)
+
+@[rep_depth transport]
+theorem toRelationalInformationDatum_comparisonMetricPhaseReadout_pair_eq_bohmMadelung_constantStateGeneratorField_pair
+    (P : PotentialDatum (E := E)) (reference comparison : H₂) (A : EndH) (u v : H₂) :
+    ( InfoGeometry.Canonical.RelationalInformationCore.comparisonMetricReadout
+        (toRelationalInformationDatum (E := E) P reference comparison) A u v
+    , InfoGeometry.Canonical.RelationalInformationCore.comparisonPhaseReadout
+        (toRelationalInformationDatum (E := E) P reference comparison) A u v )
+      =
+    ( (InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.stateQGTReadout (E := E)
+          (constantStateGeneratorField (E := E) (P.modularData.modularSeed comparison))
+          comparison A).metric u v
+    , (InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.stateQGTReadout (E := E)
+          (constantStateGeneratorField (E := E) (P.modularData.modularSeed comparison))
+          comparison A).phase u v ) := by
+  symm
+  simpa using
+    congrArg (fun Q : LinearMap.BilinForm ℝ H₂ × LinearMap.BilinForm ℝ H₂ => (Q.1 u v, Q.2 u v))
+      (potentialDatum_constantStateGeneratorField_stateQGTReadout_pair_eq_comparisonReadout_pair
+        P comparison A)
+
+@[rep_depth transport]
+theorem toRelationalInformationDatum_bohmMadelung_stationary_iff_isPotentialKillingOperator
+    (P : PotentialDatum (E := E)) (reference comparison : H₂) (A : EndH) :
+    ( (InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.stateQGTReadout (E := E)
+          (constantStateGeneratorField (E := E) (P.modularData.modularSeed comparison))
+          comparison A).metric
+    , (InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.stateQGTReadout (E := E)
+          (constantStateGeneratorField (E := E) (P.modularData.modularSeed comparison))
+          comparison A).phase )
+      =
+    (0, 0)
+      ↔
+    InfoGeometry.Canonical.ThermodynamicGenerator.IsPotentialKillingOperator
+      (E := E) P comparison A := by
+  exact
+    potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_iff_isPotentialKillingOperator
+      P comparison A
 
 end Core
 

@@ -61,35 +61,45 @@ local instance : CompleteSpace EndH := inferInstance
 def constantStateModularDatum (hMod : EndH) : StateModularDatum E where
   modularSeed := fun _ => hMod
 
+/-- The primitive modular seed at state `ψ`, before the `K`-transport lift. -/
+noncomputable def stateModularSeed
+    (M : StateModularDatum E) (ψ : H₂) : EndH :=
+  M.modularSeed ψ
+
+/-- The derived transport generator at state `ψ`. -/
+noncomputable def stateTransportGenerator
+    (M : StateModularDatum E) (ψ : H₂) : EndH :=
+  relativeModularKGenerator (E := E) (stateModularSeed (E := E) M ψ)
+
 /-- The derived relative modular generator at state `ψ`. -/
 noncomputable def stateRelativeModularGenerator
     (M : StateModularDatum E) (ψ : H₂) : EndH :=
-  relativeModularKGenerator (E := E) (M.modularSeed ψ)
+  stateTransportGenerator (E := E) M ψ
 
 /-- The phase-linear gauge part of the state-dependent relative modular generator. -/
 noncomputable def stateGaugeGenerator
     (M : StateModularDatum E) (ψ : H₂) : EndH :=
-  modularGeneratorGaugePart (E := E) (M.modularSeed ψ)
+  modularGeneratorGaugePart (E := E) (stateModularSeed (E := E) M ψ)
 
 /-- The phase-antilinear source/dilation part of the state-dependent generator. -/
 noncomputable def stateSourceGenerator
     (M : StateModularDatum E) (ψ : H₂) : EndH :=
-  modularGeneratorScalePart (E := E) (M.modularSeed ψ)
+  modularGeneratorScalePart (E := E) (stateModularSeed (E := E) M ψ)
 
 /-- The induced derivation on observables at state `ψ`. -/
 noncomputable def stateInducedDynamics
     (M : StateModularDatum E) (ψ : H₂) (A : EndH) : EndH :=
-  relativeModularDeriv (E := E) (M.modularSeed ψ) A
+  relativeModularDeriv (E := E) (stateModularSeed (E := E) M ψ) A
 
 /-- Gauge-channel part of the state-induced dynamics. -/
 noncomputable def stateGaugeDynamics
     (M : StateModularDatum E) (ψ : H₂) (A : EndH) : EndH :=
-  modularGaugeDeriv (E := E) (M.modularSeed ψ) A
+  modularGaugeDeriv (E := E) (stateModularSeed (E := E) M ψ) A
 
 /-- Source/dilation-channel part of the state-induced dynamics. -/
 noncomputable def stateSourceDynamics
     (M : StateModularDatum E) (ψ : H₂) (A : EndH) : EndH :=
-  relativeModularSourceDeriv (E := E) (M.modularSeed ψ) A
+  relativeModularSourceDeriv (E := E) (stateModularSeed (E := E) M ψ) A
 
 /-- Operatorial modular transport of the observable seed along the state generator. -/
 noncomputable def stateTransportedOperator
@@ -147,6 +157,16 @@ noncomputable def pairedStateSourceDynamics
 @[simp] theorem constantStateModularDatum_apply
     (hMod : EndH) (ψ : H₂) :
     (constantStateModularDatum (E := E) hMod).modularSeed ψ = hMod := rfl
+
+@[simp] theorem stateModularSeed_eq
+    (M : StateModularDatum E) (ψ : H₂) :
+    stateModularSeed (E := E) M ψ = M.modularSeed ψ := rfl
+
+@[simp] theorem stateTransportGenerator_eq_relativeModularKGenerator
+    (M : StateModularDatum E) (ψ : H₂) :
+    stateTransportGenerator (E := E) M ψ
+      =
+    relativeModularKGenerator (E := E) (stateModularSeed (E := E) M ψ) := rfl
 
 @[simp] theorem stateRelativeModularGenerator_constant
     (hMod : EndH) (ψ : H₂) :

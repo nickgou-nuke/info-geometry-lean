@@ -17,6 +17,8 @@ Here we only identify the two presentations.
 namespace InfoGeometry.Quantum.SplitTrialityFockBridge
 
 open InfoGeometry.Krein
+open InfoGeometry.Quantum
+open InfoGeometry.Quantum.RealMajoranaCategory
 open InfoGeometry.Canonical.BogoliubovFockSuper
 
 open scoped InnerProductSpace
@@ -25,29 +27,23 @@ variable {E : Type}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 local notation "H₂" => DoubledSpace E
-local notation "Xc" => cl11DoubledCore E
+local notation "Xc" => InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E
 
 /-- The triality left-spinor channel is the concrete CAR annihilation map. -/
 theorem vectorToLeftSpinor_eq_cliffordConcreteAnnihilation_toLinearMap :
-    (vectorToLeftSpinor (E := E) : Xc →ₗ[ℝ] Xc)
+    (InfoGeometry.Quantum.vectorToLeftSpinor (E := E) : Xc →ₗ[ℝ] Xc)
       =
     (cliffordConcreteAnnihilation (E := E)).toLinearMap := by
-  ext v
-  have hv : (to_doubled (WithLp.fst v) (WithLp.snd v) : H₂) = v := by
-    apply DoubledSpace.ext <;> simp [to_doubled]
-  rw [← hv]
-  simp [vectorToLeftSpinor_apply_to_doubled, cliffordConcreteAnnihilation_apply_to_doubled]
+  rw [cliffordConcreteAnnihilation_toLinearMap]
+  rfl
 
 /-- The triality right-spinor channel is the concrete CAR creation map. -/
 theorem vectorToRightSpinor_eq_cliffordConcreteCreation_toLinearMap :
-    (vectorToRightSpinor (E := E) : Xc →ₗ[ℝ] Xc)
+    (InfoGeometry.Quantum.vectorToRightSpinor (E := E) : Xc →ₗ[ℝ] Xc)
       =
     (cliffordConcreteCreation (E := E)).toLinearMap := by
-  ext v
-  have hv : (to_doubled (WithLp.fst v) (WithLp.snd v) : H₂) = v := by
-    apply DoubledSpace.ext <;> simp [to_doubled]
-  rw [← hv]
-  simp [vectorToRightSpinor_apply_to_doubled, cliffordConcreteCreation_apply_to_doubled]
+  rw [cliffordConcreteCreation_toLinearMap]
+  rfl
 
 /--
 The even anticommutator seed carried by the triality kernel is exactly the
@@ -55,21 +51,18 @@ concrete CAR anticommutator on the continuous Fock surface.
 -/
 theorem triality_anticommutator_eq_cliffordConcrete_anticommutator :
     InfoGeometry.Quantum.RealMajoranaCategory.anticommutator
-        (vectorToLeftSpinor (E := E))
-        (vectorToRightSpinor (E := E))
+        (InfoGeometry.Quantum.vectorToLeftSpinor (E := E))
+        (InfoGeometry.Quantum.vectorToRightSpinor (E := E))
       =
     (fockAnticommutator (E := E)
       (cliffordConcreteAnnihilation (E := E))
       (cliffordConcreteCreation (E := E))).toLinearMap := by
-  rw [vectorToLeftSpinor_eq_cliffordConcreteAnnihilation_toLinearMap,
-    vectorToRightSpinor_eq_cliffordConcreteCreation_toLinearMap]
-  have hOddOdd := congrArg ContinuousLinearMap.toLinearMap
-    (superBracket_odd_odd (E := E)
-      (cliffordConcreteAnnihilation (E := E))
-      (cliffordConcreteCreation (E := E)))
-  simpa [fockAnticommutator,
-    InfoGeometry.Quantum.RealMajoranaCategory.anticommutator,
-    Module.End.mul_eq_comp] using hOddOdd.symm
+  rw [InfoGeometry.Quantum.RealMajoranaCategory.anticommutator, fockAnticommutator]
+  unfold InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator
+  rw [superBracket_odd_odd]
+  simp [vectorToLeftSpinor_eq_cliffordConcreteAnnihilation_toLinearMap,
+    vectorToRightSpinor_eq_cliffordConcreteCreation_toLinearMap,
+    Module.End.mul_eq_comp, add_comm]
 
 /--
 The canonical triality supercharge square lands on the already-owned concrete
@@ -87,8 +80,8 @@ theorem trialitySupercharge_square_eq_cliffordConcrete_anticommutator :
         (canonicalSplitTrialityKernel (E := E)).trialitySupercharge
         =
       InfoGeometry.Quantum.RealMajoranaCategory.anticommutator
-        (vectorToLeftSpinor (E := E))
-        (vectorToRightSpinor (E := E)) := by
+        (InfoGeometry.Quantum.vectorToLeftSpinor (E := E))
+        (InfoGeometry.Quantum.vectorToRightSpinor (E := E)) := by
           exact SplitTrialityKernel.trialitySupercharge_sq_eq_anticommutator
             (canonicalSplitTrialityKernel (E := E))
     _ = (fockAnticommutator (E := E)

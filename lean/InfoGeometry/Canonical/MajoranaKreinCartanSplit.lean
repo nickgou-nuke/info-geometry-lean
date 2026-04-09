@@ -45,19 +45,19 @@ local instance : CompleteSpace EndH := inferInstance
 @[rep_depth projective, simp]
 theorem projectiveDynamics_J_eq_projectiveMap_tomitaAtomSeed_J :
     InfoGeometry.ProjectiveDynamics.J (E := E) =
-      InfoGeometry.Projective.projectiveMap (E := E) ((tomitaAtomSeed (H := E)).J) := by
+      InfoGeometry.Projective.projectiveMap (E := E) (InfoGeometry.Krein.modular_j (E := E)) := by
   rfl
 
 @[rep_depth projective, simp]
 theorem projectiveDynamics_epsilon_eq_projectiveMap_tomitaAtomSeed_eps :
     InfoGeometry.ProjectiveDynamics.epsilon (E := E) =
-      InfoGeometry.Projective.projectiveMap (E := E) ((tomitaAtomSeed (H := E)).ε) := by
+      InfoGeometry.Projective.projectiveMap (E := E) (InfoGeometry.Krein.spectral_epsilon (E := E)) := by
   rfl
 
 @[rep_depth projective, simp]
 theorem projectiveDynamics_I_eq_projectiveMap_tomitaAtomSeed_phaseAxis :
     InfoGeometry.ProjectiveDynamics.I (E := E) =
-      InfoGeometry.Projective.projectiveMap (E := E) ((tomitaAtomSeed (H := E)).phaseAxis) := by
+      InfoGeometry.Projective.projectiveMap (E := E) (InfoGeometry.Krein.complex_i (E := E)) := by
   rfl
 
 @[rep_depth projective]

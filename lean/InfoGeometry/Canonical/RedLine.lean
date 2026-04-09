@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativePotentialCountBridge
+import InfoGeometry.Canonical.BohmMadelungOperatorialBridge
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.JaynesRNModularBridge
@@ -206,10 +207,13 @@ export InfoGeometry.Canonical.RelativePotentialCountBridge (
   countMass
   countRay
   gaugeSection_countRay_apply
+  gaugeSectionFinProb_countRay_apply_toReal
   relativeDensity_countRay_eq_massRatio_mul_relativeCountDensity
   relativeLogDensity_countRay_eq_relativeCountLogDensity_add_massShift
   relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift
+  projectiveCountHamiltonianProfile_eq_relativeModularPotential_countRay
   projectiveLogGenerator_countRay_eq_neg_relativeCountLogDensity_sub_massShift
+  projectiveLogGenerator_countRay_eq_projectiveCountHamiltonianProfile
 )
 
 export InfoGeometry.Canonical.TomitaTakesaki (
@@ -221,6 +225,17 @@ export InfoGeometry.Canonical.TomitaTakesaki (
   modularSignAdditiveModularFlow
   modularAtomRepresentation
   tomitaRepresentation
+)
+
+export InfoGeometry.Canonical.BohmMadelungOperatorialBridge (
+  polarizedDoubledAmplitude_phaseOrbit_eq_dilationOrbit
+  stateGeneratorField_phaseReadout_eq_metric_comp_K
+  stateGeneratorField_inducedDerivation_eq_gauge_add_source
+  constantStateGeneratorField_stateInducedDerivation_eq_phaseLinear_add_phaseAntilinear_transport
+  constantStateGeneratorField_stateQGTReadout_pair_eq_phaseLinearAntilinear_transport_pair
+  potentialDatum_constantStateGeneratorField_stateQGTReadout_pair_eq_comparisonReadout_pair
+  potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_iff_isPotentialKillingOperator
+  potentialDatum_constantStateGeneratorField_kSplitReadout_stationary_iff_isPotentialKillingOperator
 )
 
 

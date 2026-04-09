@@ -73,6 +73,15 @@ omit [CompleteSpace E] in
   ext u v
   simp [metricOfOperator_apply]
 
+omit [CompleteSpace E] in
+@[simp] theorem metricOfOperator_smul
+    (c : ℝ) (A : EndH) :
+    metricOfOperator (E := E) (c • A)
+      = c • metricOfOperator (E := E) A := by
+  ext u v
+  simp [metricOfOperator_apply, real_inner_smul_left, smul_eq_mul]
+  ring
+
 /--
 Operatorial Berry 2-form seed on doubled space, induced from the operatorial
 metric seed via the local phase axis `K = Jε`.
@@ -142,6 +151,15 @@ omit [CompleteSpace E] in
     berryOfOperator (E := E) A + berryOfOperator (E := E) B := by
   ext u v
   simp [berryOfOperator_apply, metricOfOperator_add]
+
+omit [CompleteSpace E] in
+@[simp] theorem berryOfOperator_smul
+    (c : ℝ) (A : EndH) :
+    berryOfOperator (E := E) (c • A)
+      =
+    c • berryOfOperator (E := E) A := by
+  ext u v
+  simp [berryOfOperator_apply, metricOfOperator_smul, smul_eq_mul]
 
 /--
 For a phase-linear doubled-carrier operator `A`, the Hestenes-twisted Berry

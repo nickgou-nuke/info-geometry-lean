@@ -573,9 +573,15 @@ def apply_theorem_hole_to_def_fix(quarantine_text: str, theorem_name: str | None
     m = pat.search(quarantine_text)
     if not m:
         return quarantine_text, False
+    sig_prefix = m.group(1)
+    result_colon = sig_prefix.rfind(":")
+    if result_colon == -1:
+        return quarantine_text, False
     replacement = (
         f"def {theorem_name}"
-        + m.group(1).replace(":", " :=", 1)
+        + sig_prefix[:result_colon]
+        + " :="
+        + sig_prefix[result_colon + 1 :]
         + "\n  InfoGeometry.KK.index_bridge_spectral (X := X) hF"
     )
     fixed = quarantine_text[: m.start()] + replacement + quarantine_text[m.end() :]

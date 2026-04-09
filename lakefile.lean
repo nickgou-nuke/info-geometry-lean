@@ -1,5 +1,5 @@
 import Lake
-open Lake DSL
+open Lake DSL System
 
 package infogeometry where
   srcDir := "lean"
@@ -18,7 +18,7 @@ script strictCheck (args) do
 script semanticAudit (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",
-    args := #["scripts/quality/audit_semantic.py"] ++ args.toArray,
+    args := #["tools/quality/audit_semantic.py"] ++ args.toArray,
     stdin := .inherit,
     stdout := .inherit,
     stderr := .inherit
@@ -45,6 +45,78 @@ script refreshBlueprintTags (args) do
     stderr := .inherit
   }
   child.wait
+
+script dagStatus (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/dag_status.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script dagRefresh (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/dag_refresh.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script dagReports (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/dag_reports.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script dagDoctor (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/dag_doctor.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+input_file dagToolchainConfigFile where
+  path := "dag-toolchain.json"
+  text := true
+
+input_file dagRefreshWrapperFile where
+  path := "tools/infra/dag_refresh.py"
+  text := true
+
+input_file dagManifestWrapperFile where
+  path := "tools/infra/dag_manifest.py"
+  text := true
+
+input_file dagConfigFile where
+  path := "tools/infra/dag_config.py"
+  text := true
+
+input_file dagArtifactsFile where
+  path := "tools/infra/artifacts.py"
+  text := true
+
+input_file dagBuildFile where
+  path := "tools/infra/build.py"
+  text := true
+
+input_file dagRefreshCoreFile where
+  path := "tools/infra/refresh_decl_graph.py"
+  text := true
+
+input_file dagPathingFile where
+  path := "tools/pathing.py"
+  text := true
 
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4.git"
@@ -99,3 +171,74 @@ lean_exe compilerBridgeServer where
 lean_exe dagIndexer where
   root := `DAG.Indexer
   supportInterpreter := true
+
+/--
+Experimental authoritative DAG facet. It intentionally reuses the managed
+Python refresh path and skips its internal prebuild because Lake already tracks
+the built `dagIndexer` executable and the umbrella import-root olean below.
+-/
+package_facet dagMeta (pkg : Package) : FilePath := do
+  let configAndWrapperInputs := Job.collectArray <| #[
+    ← dagToolchainConfigFile.fetch,
+    ← dagRefreshWrapperFile.fetch,
+    ← dagConfigFile.fetch,
+    ← dagArtifactsFile.fetch,
+    ← dagBuildFile.fetch,
+    ← dagRefreshCoreFile.fetch,
+    ← dagPathingFile.fetch
+  ]
+  let dagIndexerExe ← dagIndexer.fetch
+  let some importRootMod := pkg.findModule? "InfoGeometry.All".toName
+    | error "dagMeta facet expects InfoGeometry.All to be a buildable local module"
+  let importRootOlean ← fetch <| importRootMod.facet `olean
+  let metaPath := pkg.dir / "artifacts" / "dag" / "index" / "meta.json"
+  configAndWrapperInputs.bindM (sync := true) fun _ =>
+  dagIndexerExe.bindM (sync := true) fun _ =>
+  importRootOlean.mapM (sync := true) fun _ => do
+    buildFileUnlessUpToDate' metaPath (text := true) do
+      proc {
+        cmd := "python3"
+        args := #[
+          "tools/infra/dag_refresh.py",
+          "--config", "dag-toolchain.json",
+          "--skip-prebuild"
+        ]
+        cwd := some pkg.dir
+      } (quiet := true)
+    return metaPath
+
+/--
+Experimental manifest-style DAG facet. It tracks one small stamp file that
+summarizes the current authoritative refresh state instead of pretending Lake
+independently owns each large DAG artifact.
+-/
+package_facet dagArtifactsManifest (pkg : Package) : FilePath := do
+  let configAndWrapperInputs := Job.collectArray <| #[
+    ← dagToolchainConfigFile.fetch,
+    ← dagManifestWrapperFile.fetch,
+    ← dagRefreshWrapperFile.fetch,
+    ← dagConfigFile.fetch,
+    ← dagArtifactsFile.fetch,
+    ← dagBuildFile.fetch,
+    ← dagRefreshCoreFile.fetch,
+    ← dagPathingFile.fetch
+  ]
+  let dagIndexerExe ← dagIndexer.fetch
+  let some importRootMod := pkg.findModule? "InfoGeometry.All".toName
+    | error "dagArtifactsManifest facet expects InfoGeometry.All to be a buildable local module"
+  let importRootOlean ← fetch <| importRootMod.facet `olean
+  let manifestPath := pkg.dir / "artifacts" / "dag" / "index" / "manifest.json"
+  configAndWrapperInputs.bindM (sync := true) fun _ =>
+  dagIndexerExe.bindM (sync := true) fun _ =>
+  importRootOlean.mapM (sync := true) fun _ => do
+    buildFileUnlessUpToDate' manifestPath (text := true) do
+      proc {
+        cmd := "python3"
+        args := #[
+          "tools/infra/dag_manifest.py",
+          "--config", "dag-toolchain.json",
+          "--skip-prebuild"
+        ]
+        cwd := some pkg.dir
+      } (quiet := true)
+    return manifestPath

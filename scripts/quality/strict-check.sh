@@ -64,7 +64,7 @@ echo "[strict-check] enforcing quarantine boundary"
 bash scripts/enforce_quarantine_imports.sh
 
 echo "[strict-check] running constructivity audit on stable surface"
-python3 scripts/quality/audit_constructivity.py --mode stable
+python3 tools/quality/audit_constructivity.py --mode stable
 
 echo "[strict-check] running surrogate dependency audit"
 scripts/audit_surrogates.sh
@@ -89,13 +89,13 @@ run_advisory_audit() {
 
 echo "[strict-check] running naming convention audit (advisory)"
 set +e
-run_advisory_audit naming python3 scripts/quality/audit_naming.py lean/InfoGeometry/Canonical
+run_advisory_audit naming python3 tools/quality/audit_naming.py lean/InfoGeometry/Canonical
 naming_status=$?
 echo "[strict-check] running docstring audit (advisory)"
-run_advisory_audit docstrings python3 scripts/quality/audit_docstrings.py lean/InfoGeometry/Canonical
+run_advisory_audit docstrings python3 tools/quality/audit_docstrings.py lean/InfoGeometry/Canonical
 docstring_status=$?
 echo "[strict-check] running style audit (advisory)"
-run_advisory_audit style python3 scripts/quality/audit_style.py lean/InfoGeometry/Canonical
+run_advisory_audit style python3 tools/quality/audit_style.py lean/InfoGeometry/Canonical
 style_status=$?
 set -e
 

@@ -8,8 +8,8 @@ Status:
 - declaration-level causal-order inputs live under `artifacts/dag/`; readable frontier/causal reports and NetworkX exports live under `reports/dag/`
 
 ## Repository Scale
-- Lean files under `lean/`: **468**
-- Lean LOC under `lean/`: **81,417**
+- Lean files under `lean/`: **694**
+- Lean LOC under `lean/`: **131,888**
 
 ## Trusted Semantic Exports
 | Module | Semantic nodes | Semantic edges | Skeleton nodes | Top hubs |
@@ -25,9 +25,9 @@ Status:
 - direct hard dependency detected: `InfoGeometry.KK.KasparovCycle.analyticalIndex -> InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
 
 ## Skynet v2 Frontier
-- graph nodes: **1500**
-- graph edges: **12458**
-- cross-module edges: **6704**
+- graph nodes: **1611**
+- graph edges: **13402**
+- cross-module edges: **7090**
 - seed blocks: **1**
 
 ### Local Bridge Kernel (`--walk both`)
@@ -36,7 +36,6 @@ Status:
 - `InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
 - `InfoGeometry.KK.index_bridge_spectral`
 - `KreinGradedModule.gradeCLM`
-- `InfoGeometry.Quantum.RealMajorana.KPolarization.PolarizationSplit`
 
 ### Downstream Consumer Frontier (`--walk reverse`)
 - `InfoGeometry.KK.index_bridge_spectral`
@@ -52,19 +51,19 @@ Status:
 
 ## Frontier Burn-Down
 - weighted clean-up order for the current top frontier hotspot modules
-- `InfoGeometry.Canonical.AQFTOperatorInterface`
-- `InfoGeometry.Canonical.GrandSynthesis`
-- `InfoGeometry.Canonical.CalabiYauBridge`
-- `InfoGeometry.Canonical.YangMillsFinite`
-- `InfoGeometry.Canonical.CountSubstrateBridge`
+- `InfoGeometry.Core.SymmetricLie`
+- `InfoGeometry.Meta.ProofShape`
+- `InfoGeometry.Meta.Admission`
+- `InfoGeometry.Meta.RegionPolicy`
+- `InfoGeometry.Canonical.SingularBoundaryCorrection`
 
 ## Source-Sink Compression
 - public bipartite incidence artifact between the atomic declaration DAG and the hydrated module graph
 - exposes canonical source bundles, repeated path motifs, and module-level compression carriers
-- hydrated carrier `InfoGeometry.Canonical.RicciMongeAmpere`
-- hydrated carrier `InfoGeometry.Canonical.PerelmanW`
-- hydrated carrier `InfoGeometry.Canonical.KMSSinkhornBridge`
-- hydrated carrier `InfoGeometry.Krein.Thermal`
+- hydrated carrier `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge`
+- hydrated carrier `InfoGeometry.Quantum.BulkBoundary`
+- hydrated carrier `InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge`
+- hydrated carrier `InfoGeometry.Krein.KreinSpace`
 
 ## Current Reading Order
 1. `README.md`
@@ -78,8 +77,7 @@ Status:
 - Trusted declaration graph inputs for causal-order analysis live under `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`.
 - Native Lean structural analysis now lives under `artifacts/dag/structural-topology.json` with stable condensation ids, membership, dominators, and canonical root-witness paths.
 - Public DAG artifacts now include `artifacts/dag/source-sink-bipartite.json` alongside `artifacts/dag/full_graph.json`, `artifacts/dag/index/decls.jsonl`, and `artifacts/dag/structural-topology.json`; readable projections live under `reports/dag/`, including `source-sink-compression.md`, `structural-anti-bleed.md`, `structural-dedup.md`, `structural-fibers.md`, and `source-sink-incidence.{graphml,svg}`.
-- Treat causal-order rankings as provisional until `reports/dag/true-root-order.md` shows no coverage warning; the public `artifacts/dag/` graph may still be partial if `InfoGeometry.All` omits declaration-bearing branches.
-- Use `reports/dag/missing-all-classification.md` to classify the remaining declaration-bearing files outside `InfoGeometry.All` into direct imports, branch-façade expansions, namespace fixes, and noncanonical exclusions.
+- Declaration-graph coverage is currently closed: `InfoGeometry.All` covers `487` / `487` declaration-bearing files.
 - Generated semantic exports and derived frontier/causal JSONs under `reports/dag/` are intentionally untracked.
 - Historical crosswalk/intake documents may still exist, but this page reflects the current trusted bridge workflow.
 

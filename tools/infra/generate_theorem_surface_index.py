@@ -12,8 +12,10 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.quality.common import QUARANTINE_MANIFEST_PATH
     from tools.pathing import default_decl_metadata_file, repo_root
 else:
+    from tools.quality.common import QUARANTINE_MANIFEST_PATH
     from tools.pathing import default_decl_metadata_file, repo_root
 
 
@@ -21,7 +23,7 @@ DEFAULT_DECLS = str(default_decl_metadata_file().relative_to(repo_root()))
 DEFAULT_THINNESS_INDEX = "BRIDGE_THINNESS_INDEX.md"
 DEFAULT_VACUITY_INDEX = "VACUITY_INDEX.md"
 DEFAULT_SURROGATE_INDEX = "SURROGATE_INDEX.md"
-DEFAULT_QUARANTINE_MANIFEST = "scripts/quality/quarantine_manifest.txt"
+DEFAULT_QUARANTINE_MANIFEST = str(QUARANTINE_MANIFEST_PATH.relative_to(repo_root()))
 DEFAULT_MD_OUT = "reports/dag/theorem-surface-index.md"
 DEFAULT_JSON_OUT = "reports/dag/theorem-surface-index.json"
 

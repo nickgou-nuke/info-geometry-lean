@@ -15,9 +15,7 @@ if __package__ in (None, ""):
     import sys
 
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from tools.pathing import repo_root
-else:
-    from tools.pathing import repo_root
+from tools.pathing import normalize_user_path, repo_root
 
 
 @dataclass(frozen=True)
@@ -52,15 +50,6 @@ QUEUE_RE = re.compile(
     r"^- `(?P<priority>[^`]+)` `(?P<category>[^`]+)` `(?P<name>[^`]+)` at "
     r"`(?P<file>[^`:]+)(?::(?P<line>\d+))?`$"
 )
-
-
-def normalize_user_path(path: str | None, default: Path) -> Path:
-    if not path:
-        return default
-    p = Path(path)
-    if p.is_absolute():
-        return p
-    return (Path.cwd() / p).resolve()
 
 
 def semantic_json_paths(inputs: list[str]) -> list[Path]:

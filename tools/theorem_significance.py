@@ -40,10 +40,10 @@ from typing import Any, Iterable, cast
 from urllib.parse import unquote, urlparse
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from pathing import repo_root
-from vacuity_policy_config import (
+from tools.pathing import repo_root
+from tools.vacuity_policy_config import (
     BRIDGE_HINTS_DEFAULT,
     EXEMPT_ATTRS,
     STRICT_PATHS_DEFAULT,

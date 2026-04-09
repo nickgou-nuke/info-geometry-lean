@@ -20,30 +20,50 @@ from collections import defaultdict
 from pathlib import Path
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parents[0]))
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-from pathing import repo_root
-from causal_cone_spectrum import (
-    load_structure,
-    load_depth_tags,
-    load_decl_index,
-    verify_edge_pair_consistency,
-    verify_edge_semantics,
-    past_cone_bfs,
-    forward_cone_bfs,
-    shell_decomposition,
-    role_overlay,
-    find_binding_witnesses,
-    find_boundary_nodes,
-    declaration_mass,
-    binding_mass,
-    precompute_signatures,
-    precompute_own_parities,
-    select_apexes,
-    SigCache,
-    OwnParityCache,
-)
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.infra.causal_cone_spectrum import (
+        OwnParityCache,
+        SigCache,
+        binding_mass,
+        declaration_mass,
+        find_binding_witnesses,
+        find_boundary_nodes,
+        forward_cone_bfs,
+        load_decl_index,
+        load_depth_tags,
+        load_structure,
+        past_cone_bfs,
+        precompute_own_parities,
+        precompute_signatures,
+        role_overlay,
+        select_apexes,
+        shell_decomposition,
+        verify_edge_pair_consistency,
+        verify_edge_semantics,
+    )
+    from tools.pathing import repo_root
+else:
+    from tools.infra.causal_cone_spectrum import (
+        OwnParityCache,
+        SigCache,
+        binding_mass,
+        declaration_mass,
+        find_binding_witnesses,
+        find_boundary_nodes,
+        forward_cone_bfs,
+        load_decl_index,
+        load_depth_tags,
+        load_structure,
+        past_cone_bfs,
+        precompute_own_parities,
+        precompute_signatures,
+        role_overlay,
+        select_apexes,
+        shell_decomposition,
+        verify_edge_pair_consistency,
+        verify_edge_semantics,
+    )
+    from tools.pathing import repo_root
 
 DEFAULT_STRUCTURE = "artifacts/dag/structural-topology.json"
 DEFAULT_DEPTH_TAGS = "artifacts/dag/representation-depth-tags.json"

@@ -19,41 +19,41 @@ import networkx as nx
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from tools.infra.plot_decl_graph import (
+    from tools.infra.decl_graph import (
         FRONTIER_CATEGORIES,
         build_declaration_graph,
         build_module_graph,
         burn_down_rows,
         filter_declaration_graph_by_surface,
-        load_decl_meta,
+        load_decl_graph_bundle,
         load_surface_categories,
         module_strength_rows,
-        normalize_user_path,
     )
     from tools.pathing import (
         default_decl_graph_file,
         default_decl_metadata_file,
         default_decl_structure_file,
         default_source_sink_bipartite_file,
+        normalize_user_path,
         repo_root,
     )
 else:
-    from tools.infra.plot_decl_graph import (
+    from tools.infra.decl_graph import (
         FRONTIER_CATEGORIES,
         build_declaration_graph,
         build_module_graph,
         burn_down_rows,
         filter_declaration_graph_by_surface,
-        load_decl_meta,
+        load_decl_graph_bundle,
         load_surface_categories,
         module_strength_rows,
-        normalize_user_path,
     )
     from tools.pathing import (
         default_decl_graph_file,
         default_decl_metadata_file,
         default_decl_structure_file,
         default_source_sink_bipartite_file,
+        normalize_user_path,
         repo_root,
     )
 
@@ -1237,14 +1237,19 @@ def main() -> int:
     graphml_out = normalize_user_path(args.graphml_out, root)
     svg_out = normalize_user_path(args.svg_out, root)
 
-    decl_meta = load_decl_meta(decls_path, root)
     native_structure = load_native_structure(structure_path)
     native_lookup = build_native_lookup(native_structure)
-    surface_categories = load_surface_categories(surface_index_path, decl_meta)
-    decl_graph = build_declaration_graph(graph_path, decl_meta, surface_categories)
+    graph_bundle = load_decl_graph_bundle(
+        root=root,
+        graph_path=graph_path,
+        decls_path=decls_path,
+        surface_index_path=surface_index_path,
+        frontier_categories=FRONTIER_CATEGORIES,
+    )
+    decl_graph = graph_bundle["decl_graph"]
     flow_graph = decl_graph.reverse(copy=True)
-    frontier_decl_graph = filter_declaration_graph_by_surface(decl_graph, FRONTIER_CATEGORIES)
-    frontier_module_graph = build_module_graph(frontier_decl_graph)
+    frontier_decl_graph = graph_bundle["frontier_decl_graph"]
+    frontier_module_graph = graph_bundle["frontier_module_graph"]
     hotspot_rows = select_hotspot_modules(frontier_module_graph, args.hotspot_module_count)
     sink_rows = select_sink_rows(
         decl_graph,

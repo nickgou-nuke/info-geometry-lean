@@ -30,10 +30,10 @@ import sys
 from pathlib import Path
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from pathing import repo_root
-from vacuity_policy_config import (
+from tools.pathing import repo_root
+from tools.vacuity_policy_config import (
     BRIDGE_HINTS_DEFAULT,
     STRICT_PATHS_DEFAULT,
     expected_violation_level,

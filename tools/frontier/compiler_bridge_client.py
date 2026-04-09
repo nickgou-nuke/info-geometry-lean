@@ -10,21 +10,14 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from tools.build_lock import acquire_build_lock
-    from tools.pathing import repo_root
-    from tools.frontier.semantic_block_export import (
-        JsonRpcError,
-        LspClient,
-        inject_rpc_import,
-    )
-else:
-    from tools.build_lock import acquire_build_lock
-    from tools.pathing import repo_root
-    from tools.frontier.semantic_block_export import (
-        JsonRpcError,
-        LspClient,
-        inject_rpc_import,
-    )
+
+from tools.build_lock import acquire_build_lock
+from tools.pathing import repo_root
+from tools.frontier.semantic_block_export import (
+    JsonRpcError,
+    LspClient,
+    inject_rpc_import,
+)
 
 
 RPC_IMPORT = "import Agent.ProofServerRpc\n"

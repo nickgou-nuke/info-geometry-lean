@@ -311,23 +311,10 @@ def main() -> int:
         run(["python3", "tools/generate_vacuity_index.py"], cwd=root)
         run(["python3", "tools/generate_bridge_thinness_index.py"], cwd=root)
         if not args.skip_decl_refresh:
-            run(["python3", "tools/infra/refresh_decl_graph.py"], cwd=root)
-        run(
-            [
-                "python3",
-                "tools/infra/generate_causal_report.py",
-                "--allow-partial-coverage",
-                "--out",
-                "reports/dag/true-root-order.md",
-                "--json-out",
-                "reports/dag/true-root-order.json",
-            ],
-            cwd=root,
-        )
+            run(["lake", "script", "run", "dagRefresh"], cwd=root)
+        run(["lake", "script", "run", "dagReports"], cwd=root)
         run(["python3", "tools/infra/classify_missing_all.py"], cwd=root)
-        run(["python3", "tools/infra/generate_theorem_surface_index.py"], cwd=root)
         run(["python3", "tools/infra/plot_decl_graph.py"], cwd=root)
-        run(["python3", "tools/infra/generate_source_sink_compression.py"], cwd=root)
         run(["python3", "tools/infra/check_bipartite_bleed.py"], cwd=root)
         run(["python3", "tools/infra/generate_structural_dedup.py"], cwd=root)
         run(["python3", "tools/infra/generate_structural_fibers.py"], cwd=root)

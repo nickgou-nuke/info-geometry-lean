@@ -6,10 +6,11 @@
 - mutationSurface: False
 - automaticReplacement: False
 - proofRepair: False
+- strictAdmissibilityPrecheck: scaffold-only
 
 ## Input Coverage
 
-- theoremSignificanceEntries: 5055
+- theoremSignificanceEntries: 7462
 - declarationCount: 8295
 - edgeCount: 53644
 - ownerEntries: 7
@@ -38,65 +39,66 @@
 
 | rank | declaration | score | confidence |
 |---|---|---|---|
-| 1 | InfoGeometry.Krein.HilbertDoubled.ext_iff | 1.0 | 0.8544 |
-| 2 | InfoGeometry.Krein.NeutralSpace.ext_iff | 1.0 | 0.8544 |
-| 3 | InfoGeometry.Canonical.AQFTOperatorInterface.ibWeightedKMSClosure_of_jointKernel_commutator | 0.93 | 0.8495 |
-| 4 | InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex_eq_of_chiralParts_eq | 0.93 | 0.8495 |
-| 5 | InfoGeometry.Canonical.AnalyticalIndex.chiralSliceIsoAlong_of_noZeroEigenCrossing_path | 0.93 | 0.8495 |
-| 6 | InfoGeometry.Canonical.AnalyticalIndex.cl11_bottDirac_sq_eq_zero_of_laplacian_zero | 0.93 | 0.8495 |
-| 7 | InfoGeometry.Canonical.AnalyticalIndex.indexInvariantAlong_of_noZeroEigenCrossing_path | 0.93 | 0.8495 |
-| 8 | InfoGeometry.Canonical.Attention.euclideanAttentionWeights_sum_one | 0.93 | 0.8495 |
-| 9 | InfoGeometry.Canonical.Attention.exists_perm_decomposition_of_bistochastic_polarizedPlusAttention | 0.93 | 0.8495 |
-| 10 | InfoGeometry.Canonical.Attention.lorentzianAttentionWeights_sum_one | 0.93 | 0.8495 |
-| 11 | InfoGeometry.Canonical.Attention.polarizedPlusAttentionHead_eq_euclideanAttentionHead_of_constantKeyNorm | 0.93 | 0.8495 |
-| 12 | InfoGeometry.Canonical.Attention.polarizedPlusAttentionHead_eq_gibbsExpectation | 0.93 | 0.8495 |
-| 13 | InfoGeometry.Canonical.Attention.polarizedPlusAttentionWeights_eq_euclideanGibbsWeights_of_constantKeyNorm | 0.93 | 0.8495 |
-| 14 | InfoGeometry.Canonical.Attention.polarizedPlusParams_energy_eq_neg_dot_plus_half_norms | 0.93 | 0.8495 |
-| 15 | InfoGeometry.Canonical.BekensteinBound.relEnt_drop_nonneg_of_casiniIncrementBridge | 0.93 | 0.8495 |
-| 16 | InfoGeometry.Canonical.BekensteinBound.topologicalBekensteinBound_of_connesCocycle | 0.93 | 0.8495 |
-| 17 | InfoGeometry.Canonical.BekensteinBound.topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift | 0.93 | 0.8495 |
-| 18 | InfoGeometry.Canonical.BeliefAlgebra.BeliefSystem.non_commutative_updates | 0.93 | 0.8495 |
-| 19 | InfoGeometry.Canonical.BogoliubovClosedForms.JBoost_apply | 0.93 | 0.8495 |
-| 20 | InfoGeometry.Canonical.BogoliubovClosedForms.instCompleteSpaceContinuousLinearMapRealIdDoubledSpace | 0.93 | 0.8495 |
+| 1 | InfoGeometry.Canonical.CliffordBridge.splitBilinear_eq_gaugeBilinear | 0.93 | 0.8495 |
+| 2 | InfoGeometry.Canonical.CliffordBridge.splitQuadratic_eq_gaugeQuadratic | 0.93 | 0.8495 |
+| 3 | InfoGeometry.Canonical.Determinant.capstone_logAbsVolume_add_from_zeta | 0.93 | 0.8495 |
+| 4 | InfoGeometry.Canonical.IBFinitePythagorean.finiteWeightedKL_bind_marginal_decomposition_fullSupport | 0.93 | 0.8495 |
+| 5 | InfoGeometry.Canonical.MajoranaKreinCartanSplit.projectiveDynamics_tomitaAtomSeed_J_comp_eps | 0.93 | 0.8495 |
 
 ## Ranked Owner Candidates
 
 | rank | ownerFile | score | confidence |
 |---|---|---|---|
-| 1 | lean/InfoGeometry/Canonical/InformationPartitionCore.lean | 1.0 | 0.72 |
-| 2 | lean/InfoGeometry/Canonical/PositiveRayCore.lean | 1.0 | 0.72 |
-| 3 | lean/InfoGeometry/Canonical/RelativePotentialCore.lean | 1.0 | 0.72 |
-| 4 | lean/InfoGeometry/Krein/PolarizedSector.lean | 0.4 | 0.72 |
-| 5 | lean/InfoGeometry/Krein/SplitQuadratic.lean | 0.4 | 0.72 |
-| 6 | lean/InfoGeometry/Krein/SplitQuadraticSheets.lean | 0.4 | 0.72 |
+| 1 | lean/InfoGeometry/Canonical/InformationPartitionCore.lean | 0.93 | 0.72 |
+| 2 | lean/InfoGeometry/Canonical/PositiveRayCore.lean | 0.93 | 0.72 |
+| 3 | lean/InfoGeometry/Canonical/RelativePotentialCore.lean | 0.93 | 0.72 |
 
 ## Ranked Replacement Candidates
 
 | rank | replacementDecl | score | confidence |
 |---|---|---|---|
-| 1 | InfoGeometry.Krein.cl11RepLin | 1.0 | 0.84 |
-| 2 | InfoGeometry.Krein.cl11RepLin_apply_to_doubled | 1.0 | 0.84 |
-| 3 | InfoGeometry.Quantum.RealMajoranaCategory.SplitCliffordDatum.Mode | 1.0 | 0.8267 |
-| 4 | InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore | 1.0 | 0.8267 |
-| 5 | InfoGeometry.Quantum.RealMajoranaCategory.cl11SplitCliffordDatum | 1.0 | 0.8267 |
-| 6 | InfoGeometry.Canonical.Attention.attentionWeights | 1.0 | 0.8262 |
-| 7 | InfoGeometry.Canonical.BogoliubovFockSuper.superBracket | 1.0 | 0.8262 |
-| 8 | InfoGeometry.Canonical.BogoliubovFockSuper.superBracket_even_left | 1.0 | 0.8262 |
-| 9 | InfoGeometry.Canonical.Attention.attentionWeights_sum_one | 1.0 | 0.8232 |
-| 10 | InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator | 1.0 | 0.8031 |
-| 11 | InfoGeometry.Canonical.BottDirac.Endomorphism | 1.0 | 0.8011 |
-| 12 | InfoGeometry.Canonical.AnalyticalIndex.ChiralNoZeroEigenCrossingNear | 1.0 | 0.8011 |
-| 13 | InfoGeometry.Krein.to_doubled | 1.0 | 0.8011 |
-| 14 | InfoGeometry.Quantum.annihilationOp | 1.0 | 0.8011 |
-| 15 | InfoGeometry.Quantum.creationOp | 1.0 | 0.8011 |
-| 16 | InfoGeometry.Krein.DoubledSpace | 1.0 | 0.7963 |
-| 17 | InfoGeometry.Canonical.RicciMongeAmpere.RicciTensor | 1.0 | 0.7948 |
-| 18 | InfoGeometry.Krein.HilbertDoubled | 1.0 | 0.7892 |
-| 19 | InfoGeometry.Krein.HilbertDoubled.val | 1.0 | 0.7892 |
-| 20 | InfoGeometry.Krein.NeutralSpace | 1.0 | 0.7892 |
+| 1 | InfoGeometry.Canonical.CliffordBridge.B_agrees_with_Gauge_bilinear | 0.5673 | 0.8262 |
+| 2 | InfoGeometry.Canonical.CliffordBridge.q_agrees_with_Gauge_quad | 0.5673 | 0.8262 |
+| 3 | InfoGeometry.Canonical.Determinant.zetaRegularizedLogVolume_add | 0.558 | 0.8267 |
+| 4 | InfoGeometry.Canonical.IBFinitePythagorean.finiteWeightedKL_bind_marginal_decomposition | 0.558 | 0.8267 |
+| 5 | InfoGeometry.Canonical.Gauge.bilinear | 0.3813 | 0.7341 |
+
+## Ranked Fingerprint Corridors
+
+| rank | clusterKey | vacuityCount | replacementCount | score | confidence |
+|---:|---|---:|---:|---:|---:|
+| 1 | fp:none|head:InfoGeometry.Canonical.CliffordBridge.splitBilinear_eq_gaugeBilinear|kind:unknown|arity:?|binder:? | 1 | 0 | 0.419 | 0.8495 |
+| 2 | fp:none|head:InfoGeometry.Canonical.CliffordBridge.splitQuadratic_eq_gaugeQuadratic|kind:unknown|arity:?|binder:? | 1 | 0 | 0.419 | 0.8495 |
+| 3 | fp:none|head:InfoGeometry.Canonical.Determinant.capstone_logAbsVolume_add_from_zeta|kind:unknown|arity:?|binder:? | 1 | 0 | 0.419 | 0.8495 |
+| 4 | fp:none|head:InfoGeometry.Canonical.IBFinitePythagorean.finiteWeightedKL_bind_marginal_decomposition_fullSupport|kind:unknown|arity:?|binder:? | 1 | 0 | 0.419 | 0.8495 |
+| 5 | fp:none|head:InfoGeometry.Canonical.MajoranaKreinCartanSplit.projectiveDynamics_tomitaAtomSeed_J_comp_eps|kind:unknown|arity:?|binder:? | 1 | 0 | 0.419 | 0.8495 |
+
+## Ranked Declaration Plans
+
+| rank | candidate | probable_owner | probable_replacement | score | confidence |
+|---:|---|---|---|---:|---:|
+| 1 | InfoGeometry.Canonical.Determinant.capstone_logAbsVolume_add_from_zeta | lean/InfoGeometry/Canonical/InformationPartitionCore.lean | InfoGeometry.Canonical.Determinant.zetaRegularizedLogVolume_add | 0.5081 | 0.8376 |
+| 2 | InfoGeometry.Canonical.IBFinitePythagorean.finiteWeightedKL_bind_marginal_decomposition_fullSupport | lean/InfoGeometry/Canonical/InformationPartitionCore.lean | InfoGeometry.Canonical.IBFinitePythagorean.finiteWeightedKL_bind_marginal_decomposition | 0.5081 | 0.8376 |
+| 3 | InfoGeometry.Canonical.CliffordBridge.splitBilinear_eq_gaugeBilinear | lean/InfoGeometry/Canonical/InformationPartitionCore.lean | InfoGeometry.Canonical.CliffordBridge.B_agrees_with_Gauge_bilinear | 0.495 | 0.833 |
+| 4 | InfoGeometry.Canonical.CliffordBridge.splitQuadratic_eq_gaugeQuadratic | lean/InfoGeometry/Canonical/InformationPartitionCore.lean | InfoGeometry.Canonical.CliffordBridge.q_agrees_with_Gauge_quad | 0.495 | 0.833 |
+| 5 | InfoGeometry.Canonical.MajoranaKreinCartanSplit.projectiveDynamics_tomitaAtomSeed_J_comp_eps | lean/InfoGeometry/Canonical/InformationPartitionCore.lean | InfoGeometry.Canonical.Determinant.zetaRegularizedLogVolume_add | 0.4412 | 0.8281 |
+
+## Strict Admissibility Pre-checks
+
+| rank | candidate | replacementDecl | status | score | confidence |
+|---:|---|---|---|---:|---:|
+| 1 | InfoGeometry.Canonical.Determinant.capstone_logAbsVolume_add_from_zeta | InfoGeometry.Canonical.Determinant.zetaRegularizedLogVolume_add | needs-review | 0.2795 | 0.5863 |
+| 2 | InfoGeometry.Canonical.IBFinitePythagorean.finiteWeightedKL_bind_marginal_decomposition_fullSupport | InfoGeometry.Canonical.IBFinitePythagorean.finiteWeightedKL_bind_marginal_decomposition | needs-review | 0.2795 | 0.5863 |
+| 3 | InfoGeometry.Canonical.CliffordBridge.splitBilinear_eq_gaugeBilinear | InfoGeometry.Canonical.CliffordBridge.B_agrees_with_Gauge_bilinear | needs-review | 0.2722 | 0.5831 |
+| 4 | InfoGeometry.Canonical.CliffordBridge.splitQuadratic_eq_gaugeQuadratic | InfoGeometry.Canonical.CliffordBridge.q_agrees_with_Gauge_quad | needs-review | 0.2722 | 0.5831 |
+| 5 | InfoGeometry.Canonical.MajoranaKreinCartanSplit.projectiveDynamics_tomitaAtomSeed_J_comp_eps | InfoGeometry.Canonical.Determinant.zetaRegularizedLogVolume_add | blocked | 0.0882 | 0.2898 |
 
 ## Confidence Provenance Weights
 
 - headSourceWeight: {"exprSemantic": 1.0, "textHeuristic": 0.55, "unavailable": 0.2}
 - diagnosticProvenanceWeight: {"bridgeRule": 0.6, "fallback": 0.4, "leanTag": 1.0, "messagePattern": 0.75}
 - violationLevelWeight: {"error": 1.0, "info": 0.45, "warning": 0.7}
+
+## Planner Policy
+
+- {"admissibilityReplacementWindow": 3, "corridorParticipationDecayModel": "harmonic", "precheckStatusPriority": {"blocked": 0, "needs-review": 1, "provisionally-admissible": 2}, "replacementClusterParticipationLimit": 3, "version": "v1"}

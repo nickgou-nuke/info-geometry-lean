@@ -1,0 +1,3 @@
+{"event": "run_started", "run_id": "20260409T204124Z", "ts": "2026-04-09T20:41:24.631023+00:00"}
+{"branch": "auto-opt/dry-cycle-20260409T204124Z", "event": "worktree_setup_started", "ts": "2026-04-09T20:41:24.634638+00:00", "worktree": "/tmp/info-geometry-autoopt-test/20260409T204124Z"}
+{"event": "worktree_setup_failed", "returncode": 255, "ts": "2026-04-09T20:41:24.651177+00:00"}

@@ -62,6 +62,29 @@ structure FullGraph where
   forward : Array (Array (Nat × String))
 deriving ToJson
 
+structure LeakageCountRow where
+  label : String
+  count : Nat
+deriving ToJson, Inhabited
+
+structure EdgeLeakageReport where
+  schemaVersion : Nat
+  nsFilter : String
+  totalEdges : Nat
+  keptEdges : Nat
+  droppedEdges : Nat
+  srcOutsideFilteredSet : Nat
+  dstOutsideModuleEdges : Nat
+  dstInsideModuleGeneratedEdges : Nat
+  dstInsideModuleStableEdges : Nat
+  dstUnknownEdges : Nat
+  topExternalModules : Array LeakageCountRow
+  topInternalModules : Array LeakageCountRow
+  topExternalTargets : Array LeakageCountRow
+  topInternalTargets : Array LeakageCountRow
+  topUnknownTargets : Array LeakageCountRow
+deriving ToJson
+
 /-- Schema version for the core indexer artifacts (meta.json, full_graph.json, decls/edges JSONL). -/
 def indexerSchemaVersion : Nat := 3
 
@@ -150,6 +173,9 @@ def addEdge (src dst kind : String) : IndexerM Unit := do
         edgeSet := s.edgeSet.insert k
       }
 
+private def shouldIndexDeclString (s : String) : Bool :=
+  !(s.contains "._" || s.endsWith "match_" || s.endsWith "proof_" || s.endsWith "injEq")
+
 def processConstant (name : Name) (ci : ConstantInfo) : IndexerM Unit := do
   let env ← getEnv
   let nameStr := name.toString
@@ -236,6 +262,14 @@ private def defaultStructureOutFor (graphOut : String) : String :=
   let parent := path.parent.getD "."
   (parent / "structural-topology.json").toString
 
+private def logTiming (label : String) (elapsedMs : Nat) : IO Unit := do
+  IO.println s!"[Indexer timing] {label}: {elapsedMs} ms"
+
+private def checkpoint (label : String) (startMs : Nat) : MetaM Nat := do
+  let now ← liftM IO.monoMsNow
+  liftM <| logTiming label (now - startMs)
+  pure now
+
 /-- Write to a temp file then atomically rename, preventing partial writes from poisoning artifacts. -/
 private def atomicWriteFile (path : System.FilePath) (content : String) : IO Unit := do
   let tmp := System.FilePath.mk (path.toString ++ ".tmp")
@@ -246,16 +280,94 @@ private def atomicWriteFile (path : System.FilePath) (content : String) : IO Uni
   -- Clean up the temp file after successful write.
   try IO.FS.removeFile tmp catch _ => pure ()
 
-/-- Validate referential integrity: every edge references existing nodes. -/
-private def validateEdges (nodeSet : Std.HashSet String) (edges : Array DepEdge) : IO Unit := do
-  let mut danglingCount : Nat := 0
-  for e in edges do
-    if !nodeSet.contains e.src || !nodeSet.contains e.dst then
-      danglingCount := danglingCount + 1
-  if danglingCount > 0 then
-    IO.eprintln s!"[Indexer WARNING] {danglingCount} edge(s) reference nodes outside the filtered set"
+private def bumpCount (counts : Std.HashMap String Nat) (label : String) : Std.HashMap String Nat :=
+  let old := counts.getD label 0
+  counts.insert label (old + 1)
+
+private def topCountRows (counts : Std.HashMap String Nat) (limit : Nat := 10) : Array LeakageCountRow :=
+  Id.run do
+    let rows :=
+      counts.toList.toArray.map (fun (label, count) => { label := label, count := count })
+    let sorted := rows.qsort (fun a b =>
+      if a.count == b.count then a.label < b.label else a.count > b.count)
+    let mut out : Array LeakageCountRow := #[]
+    let stop := Nat.min limit sorted.size
+    for i in [:stop] do
+      out := out.push sorted[i]!
+    out
+
+private def parseName (s : String) : Name :=
+  (String.splitOn s ".").foldl (init := Name.anonymous) fun acc part =>
+    if part.isEmpty then acc else Name.str acc part
+
+/-- Classify edges dropped by the namespace-filtered node set. -/
+private def classifyEdgeLeakage
+  (env : Environment)
+  (nsPrefix : String)
+  (nodeSet : Std.HashSet String)
+  (edges : Array DepEdge)
+  : EdgeLeakageReport :=
+  Id.run do
+    let mut droppedEdges := 0
+    let mut srcOutsideFilteredSet := 0
+    let mut dstOutsideModuleEdges := 0
+    let mut dstInsideModuleGeneratedEdges := 0
+    let mut dstInsideModuleStableEdges := 0
+    let mut dstUnknownEdges := 0
+
+    let mut externalModules : Std.HashMap String Nat := {}
+    let mut internalModules : Std.HashMap String Nat := {}
+    let mut externalTargets : Std.HashMap String Nat := {}
+    let mut internalTargets : Std.HashMap String Nat := {}
+    let mut unknownTargets : Std.HashMap String Nat := {}
+
+    for e in edges do
+      let srcMissing := !nodeSet.contains e.src
+      let dstMissing := !nodeSet.contains e.dst
+      if srcMissing || dstMissing then
+        droppedEdges := droppedEdges + 1
+        if srcMissing then
+          srcOutsideFilteredSet := srcOutsideFilteredSet + 1
+        if dstMissing then
+          let dstName := parseName e.dst
+          match env.find? dstName with
+          | some _ =>
+              let modName := getModuleName env dstName |>.toString
+              if modName.startsWith nsPrefix then
+                internalModules := bumpCount internalModules modName
+                internalTargets := bumpCount internalTargets e.dst
+                if shouldIndexDeclString e.dst then
+                  dstInsideModuleStableEdges := dstInsideModuleStableEdges + 1
+                else
+                  dstInsideModuleGeneratedEdges := dstInsideModuleGeneratedEdges + 1
+              else
+                dstOutsideModuleEdges := dstOutsideModuleEdges + 1
+                externalModules := bumpCount externalModules modName
+                externalTargets := bumpCount externalTargets e.dst
+          | none =>
+              dstUnknownEdges := dstUnknownEdges + 1
+              unknownTargets := bumpCount unknownTargets e.dst
+
+    {
+      schemaVersion := 1
+      nsFilter := nsPrefix
+      totalEdges := edges.size
+      keptEdges := edges.size - droppedEdges
+      droppedEdges := droppedEdges
+      srcOutsideFilteredSet := srcOutsideFilteredSet
+      dstOutsideModuleEdges := dstOutsideModuleEdges
+      dstInsideModuleGeneratedEdges := dstInsideModuleGeneratedEdges
+      dstInsideModuleStableEdges := dstInsideModuleStableEdges
+      dstUnknownEdges := dstUnknownEdges
+      topExternalModules := topCountRows externalModules
+      topInternalModules := topCountRows internalModules
+      topExternalTargets := topCountRows externalTargets
+      topInternalTargets := topCountRows internalTargets
+      topUnknownTargets := topCountRows unknownTargets
+    }
 
 def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (graphOut : String) (structureOut : String) : MetaM Unit := do
+  let runStart ← liftM IO.monoMsNow
   let env ← getEnv
   let mut consts := env.constants.toList.map (·.1)
   consts := consts.filter (fun n => (n.toString).startsWith nsPrefix)
@@ -264,23 +376,28 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
   let (_, st) ← (consts.forM fun n => do
     if let some ci := env.find? n then
       let s := n.toString
-      if !(s.contains "._" || s.endsWith "match_" || s.endsWith "proof_" ||
-          s.endsWith "injEq") then
+      if shouldIndexDeclString s then
         processConstant n ci
   ).run {} {}
+  let mut stageStart ← checkpoint s!"collect/process constants ({st.decls.size} decls, {st.edges.size} raw edges, {st.morphisms.size} morphisms)" runStart
 
   let nodes : Array String := st.decls.map (·.name)
   let nodeSet : Std.HashSet String :=
     nodes.foldl (init := ({} : Std.HashSet String)) (fun acc n => acc.insert n)
 
-  -- Validate referential integrity on raw edges before filtering.
-  liftM <| validateEdges nodeSet st.edges
+  let leakage := classifyEdgeLeakage env nsPrefix nodeSet st.edges
 
   let edgesFiltered : Array DepEdge :=
     st.edges.filter (fun e => nodeSet.contains e.src && nodeSet.contains e.dst)
+  stageStart ← checkpoint s!"classify/filter edges ({edgesFiltered.size} kept / {st.edges.size} raw)" stageStart
 
   let outPath := System.FilePath.mk outDir
   IO.FS.createDirAll outPath
+
+  if leakage.droppedEdges > 0 then
+    IO.eprintln s!"[Indexer WARNING] {leakage.droppedEdges} edge(s) reference nodes outside the filtered set"
+    IO.eprintln s!"[Indexer WARNING] leakage breakdown: external={leakage.dstOutsideModuleEdges} internalGenerated={leakage.dstInsideModuleGeneratedEdges} internalStable={leakage.dstInsideModuleStableEdges} unknown={leakage.dstUnknownEdges}"
+  liftM <| atomicWriteFile (outPath / "edge-leakage.json") (toJson leakage).pretty
 
   let writeJsonl {α} [ToJson α] (filename : String) (arr : Array α) : IO Unit := do
     let lines := arr.map (fun x => (toJson x).compress)
@@ -292,6 +409,7 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
 
   let typeNodes : Array TypeNode := st.types.toList.toArray.map (fun t => { key := t, display := t })
   liftM <| writeJsonl "types.jsonl" typeNodes
+  stageStart ← checkpoint "write index jsonl artifacts" stageStart
 
   -- Build ONE canonical graph from edges; project all views from it.
   let nameToIdx : Std.HashMap String Nat :=
@@ -312,9 +430,11 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
             typedAdj := typedAdj.modify u (fun adj => adj.push (v, kind))
         | none => pure ()
     | _, _ => pure ()
+  stageStart ← checkpoint "build typed adjacency" stageStart
 
   let typedSorted :=
     typedAdj.map (fun adj => adj.qsort (fun a b => a.1 < b.1 || (a.1 == b.1 && edgeKindRank a.2 < edgeKindRank b.2)))
+  stageStart ← checkpoint "sort typed adjacency" stageStart
 
   -- Project the FullGraph view (with string edge kinds) from the typed adjacency.
   let fwdSorted : Array (Array (Nat × String)) :=
@@ -323,11 +443,15 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
 
   let graph : FullGraph := { nodes := nodes, forward := fwdSorted }
   liftM <| atomicWriteFile (System.FilePath.mk graphOut) (Lean.toJson graph).pretty
+  stageStart ← checkpoint "write full_graph.json" stageStart
 
   let nativeGraph : Graph String := { nodes := nodes, nodeToIdx := nameToIdx, forward := typedSorted }
   let hydrated := hydrate nativeGraph
+  stageStart ← checkpoint "hydrate graph (SCC + DAG + dominators)" stageStart
   let structuralPayload := buildStructuralPayload hydrated
+  stageStart ← checkpoint "build structural payload" stageStart
   liftM <| writeStructuralJsonOutput structuralPayload structureOut
+  stageStart ← checkpoint "write structural-topology.json" stageStart
 
   -- Write meta.json envelope with schema version, counts, and ISO timestamp.
   let metaPayload : ArtifactMeta := {
@@ -341,11 +465,15 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
     importRoot    := importRoot
   }
   liftM <| atomicWriteFile (outPath / "meta.json") (toJson metaPayload).pretty
+  let _ ← checkpoint "write meta.json" stageStart
+  let runStop ← liftM IO.monoMsNow
+  liftM <| logTiming "total runIndexer" (runStop - runStart)
 
   IO.println s!"[Indexer v{indexerSchemaVersion}] Exported {st.decls.size} decls, {edgesFiltered.size} edges, {st.morphisms.size} morphisms to {outDir}/"
   IO.println s!"[Indexer v{indexerSchemaVersion}] Wrote {graphOut}, {structureOut}, and {outDir}/meta.json"
 
 def indexerMain (args : List String) : IO UInt32 := do
+  let importStart ← IO.monoMsNow
   let (importModsStr, nsPrefix, outDir, graphOut, structureOut) ←
     match args with
     | [m, ns, o] =>
@@ -361,6 +489,8 @@ def indexerMain (args : List String) : IO UInt32 := do
 
   initSearchPath (← findSysroot)
   let env ← importModules (parseImports importModsStr) {} 0
+  let importStop ← IO.monoMsNow
+  logTiming s!"importModules ({importModsStr})" (importStop - importStart)
   let coreContext : Core.Context := { fileName := "<Indexer>", fileMap := default }
 
   let _ ← ((runIndexer nsPrefix importModsStr outDir graphOut structureOut).run {} {}).toIO coreContext { env := env }

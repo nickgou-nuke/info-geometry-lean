@@ -14,7 +14,7 @@ The maintained tooling surface is split into three directories and one planner p
 - [tools/docs/README.md](docs/README.md)
 - `tools/planner/`
 
-The maintained top-level standalone modules are:
+The core maintained top-level support modules are:
 - `pathing.py`
 - `build_lock.py`
 - `theorem_significance.py`
@@ -23,7 +23,8 @@ The maintained top-level standalone modules are:
 - `vacuity_policy_config.py`
 
 Many other top-level `tools/*.py` files are compatibility wrappers that forward
-to maintained subdirectory entrypoints. The current status map lives in
+to maintained subdirectory entrypoints, and some remain standalone report or
+workflow drivers used by higher-level refresh scripts. The current status map lives in
 [docs/RepositoryMemoryMap.md](../docs/RepositoryMemoryMap.md).
 
 ### Top-level Support And Compatibility Modules
@@ -33,7 +34,9 @@ to maintained subdirectory entrypoints. The current status map lives in
 | `pathing.py` | Canonical path resolution for DAG artifacts (`default_decl_graph_file()` → `artifacts/dag/full_graph.json`, `default_decl_index_dir()` → `artifacts/dag/index/`); falls back to `.build/` for incremental builds |
 | `graph.py` | Legacy compatibility shim routing old consumers to `archive/legacy/scripts/graph.py` |
 
-All infra scripts use `pathing.py` to resolve artifact locations.
+`pathing.py` is the canonical helper for repo and artifact path resolution.
+Most infra scripts use it directly; a few policy/build scripts still resolve
+repo-root-relative paths inline.
 
 ## Current Anchor Query
 
@@ -59,7 +62,7 @@ Python never touches Lean internals directly. The integration is:
 1. `tools/infra/refresh_decl_graph.py` prebuilds with `run_locked_lake_build.py` and invokes `lake env dagIndexer` (fallback: `lake env lean --run ...`)
 2. The Lean indexer writes canonical JSON artifacts to `artifacts/dag/`
 3. Downstream Python scripts consume those artifacts for reports, visualization, and linting
-4. `tools/pathing.py` provides the single source of truth for artifact paths with fallback semantics
+4. `tools/pathing.py` provides the canonical shared helpers for artifact paths with fallback semantics
 
 ## Trust Order
 

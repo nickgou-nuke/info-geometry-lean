@@ -10,9 +10,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-from pathing import repo_root
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.pathing import repo_root
+else:
+    from tools.pathing import repo_root
 
 DEFAULT_META = "artifacts/dag/index/meta.json"
 DEFAULT_SURFACE_INDEX = "reports/dag/theorem-surface-index.json"

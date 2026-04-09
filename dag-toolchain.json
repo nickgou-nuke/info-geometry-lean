@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 2,
+  "build": {
+    "buildTarget": "InfoGeometry.All",
+    "importRoot": "InfoGeometry.All",
+    "namespaceFilter": "InfoGeometry",
+    "runMode": "exe"
+  },
+  "authoritativeArtifacts": {
+    "indexDir": "artifacts/dag/index",
+    "graphOut": "artifacts/dag/full_graph.json",
+    "structureOut": "artifacts/dag/structural-topology.json"
+  },
+  "derivedReports": {
+    "coverageReportJson": "reports/dag/true-root-order.json",
+    "reportSequence": [
+      [
+        "tools/infra/generate_theorem_surface_index.py"
+      ],
+      [
+        "tools/infra/generate_source_sink_compression.py"
+      ],
+      [
+        "tools/infra/generate_causal_report.py",
+        "--out",
+        "reports/dag/true-root-order.md",
+        "--json-out",
+        "reports/dag/true-root-order.json"
+      ]
+    ]
+  },
+  "policies": {
+    "coverage": {
+      "requireFullCoverage": true,
+      "maxMissingDeclFiles": 0
+    },
+    "leakage": {
+      "reportSidecar": "artifacts/dag/index/edge-leakage.json",
+      "warnOnly": true
+    }
+  }
+}

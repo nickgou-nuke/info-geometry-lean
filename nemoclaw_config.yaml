@@ -1,0 +1,44 @@
+# ⚗️ NEMOCLAW CONFIGURATION: The Local Spire Runtime
+# Configuration for the Local Multi-Agent Collective (NemoClaw + ClawCode + OpenClaw)
+
+version: "1.0"
+agent:
+  name: "Nemo-ClawCode-Caretaker"
+  description: "Local inhabitant of the Info-Geometry Spire"
+  orchestrator: "openclaw" 
+
+  # The Code Engine: Utilizing the Open-Source ClawCode for Lean 4 formalization
+  code_engine:
+    provider: "clawcode"
+    binary_path: "/usr/local/bin/clawcode" # Path to be confirmed on DGX Spark
+    allow_file_system_access: true
+    integrated_tools:
+      - "lean4-compiler"
+      - "python-tir"
+
+  # The Logos: Powered by NVIDIA Nemotron via local NIM or DGX-local inference
+  llm_config:
+    provider: "nvidia"
+    model: "nvidia/llama-3.1-nemotron-70b-instruct" 
+    base_url: "http://localhost:8000/v1" # Local DGX Spark Endpoint
+    api_key: "${NVIDIA_API_KEY}" # To be set in local environment
+
+  # Security: NVIDIA OpenShell Sandbox
+  sandbox:
+    enabled: true
+    provider: "openshell"
+    isolation_level: "high"
+    allowed_directories:
+      - "./lean"
+      - "./tests"
+      - "./docs"
+      - "./tools"
+
+# Tool Valences (OpenClaw standard)
+tools:
+  - name: "terminal"
+    enabled: true
+  - name: "file_editor"
+    use: "clawcode" # Explicitly bypassing claudecode for local sovereignty
+  - name: "lean_afm"
+    command: "lake build"

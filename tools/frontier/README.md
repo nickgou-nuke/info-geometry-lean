@@ -19,4 +19,5 @@ Use this layer for:
 
 For heavy files, prefer the external semantic export path instead of trying to infer structure from the raw declaration graph alone.
 
-Outputs from this lane are generated under `reports/dag/`.
+Outputs from this lane usually land under `reports/dag/`, but individual
+entrypoints may also write to explicit caller-supplied paths.

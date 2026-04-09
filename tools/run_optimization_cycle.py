@@ -14,9 +14,9 @@ from pathlib import Path
 from typing import Any
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from build_lock import acquire_build_lock
-    from pathing import repo_root
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    from tools.build_lock import acquire_build_lock
+    from tools.pathing import repo_root
 else:
     from tools.build_lock import acquire_build_lock
     from tools.pathing import repo_root
@@ -234,6 +234,12 @@ def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def load_text(path: Path) -> str:
+    if not path.exists():
+        return ""
+    return path.read_text(encoding="utf-8")
+
+
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(
         description=(
@@ -431,7 +437,7 @@ def parse_bridge_candidates(packet_path: Path) -> list[CandidateSketch]:
     text = packet_path.read_text(encoding="utf-8")
     matches = list(re.finditer(r"^## Candidate (\d+)\s*$", text, flags=re.M))
     if not matches:
-        raise SystemExit(f"candidate packet contains no `## Candidate N` sections: {packet_path}")
+        return []
     candidates: list[CandidateSketch] = []
     for i, match in enumerate(matches):
         start = match.end()
@@ -551,6 +557,31 @@ def parse_bridge_candidates(packet_path: Path) -> list[CandidateSketch]:
             )
         )
     return candidates
+
+
+def placeholder_candidate_for_frontier(chosen: dict[str, Any], packet_path: Path) -> CandidateSketch:
+    produces = [str(x) for x in chosen.get("primaryProduces", [])]
+    stable_id = str(chosen.get("stableId", "")).strip()
+    source_file = str(chosen.get("sourceFile", "")).strip()
+    name = produces[0] if produces else (stable_id or "unnamed_frontier_target")
+    why_bits = [
+        "No reviewed candidate sketch is currently present in the checked-in candidate packet.",
+        f"Packet: {packet_path}",
+    ]
+    if source_file:
+        why_bits.append(f"Frontier source file: {source_file}")
+    return CandidateSketch(
+        ordinal=0,
+        name=name,
+        signature_sketch="-- placeholder only: no reviewed candidate sketch available",
+        why=" ".join(why_bits),
+        proof_ingredients=[],
+        risk="unreviewed",
+        review_verdict="missing-packet-candidates",
+        review_reason="candidate packet is present but contains no concrete `## Candidate N` sections",
+        quarantine_recommendation="no",
+        materialization_sketch=None,
+    )
 
 
 def select_candidate(candidates: list[CandidateSketch], candidate_index: int) -> CandidateSketch:
@@ -914,7 +945,10 @@ def main() -> int:
     if not candidate_packet_path.exists():
         raise SystemExit(f"missing candidate packet markdown: {candidate_packet_path}")
     candidates = parse_bridge_candidates(candidate_packet_path)
-    candidate = select_candidate(candidates, args.candidate_index)
+    if candidates:
+        candidate = select_candidate(candidates, args.candidate_index)
+    else:
+        candidate = placeholder_candidate_for_frontier(chosen, candidate_packet_path)
 
     if args.failure_correction_command is None:
         args.failure_correction_command = (
@@ -1004,6 +1038,7 @@ def main() -> int:
             stderr_path=run_dir / "git-worktree-add.stderr.log",
         )
         if worktree_cmd.returncode != 0:
+            worktree_error = load_text(Path(worktree_cmd.stderr_path)).strip()
             append_trace(run_dir, "worktree_setup_failed", returncode=worktree_cmd.returncode)
             write_runtime_state(run_dir, "failed", reason="worktree_failed", returncode=worktree_cmd.returncode)
             write_manifest(
@@ -1019,8 +1054,15 @@ def main() -> int:
                     "freshWorktree": bool(args.fresh_worktree),
                     "frontierJson": str(frontier_path),
                     "worktreeCommand": asdict(worktree_cmd),
+                    "worktreeError": worktree_error,
                 },
             )
+            if worktree_error:
+                print(
+                    "[run-optimization-cycle] worktree setup failed:\n"
+                    f"{worktree_error}",
+                    file=sys.stderr,
+                )
             return worktree_cmd.returncode
 
     try:

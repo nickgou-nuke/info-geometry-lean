@@ -39,9 +39,10 @@ from scipy.sparse.csgraph import connected_components
 from scipy.sparse.linalg import LinearOperator, cg, eigsh
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-from pathing import repo_root
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.pathing import repo_root
+else:
+    from tools.pathing import repo_root
 
 DEFAULT_META = "artifacts/dag/index/meta.json"
 DEFAULT_GRAPH = "artifacts/dag/full_graph.json"

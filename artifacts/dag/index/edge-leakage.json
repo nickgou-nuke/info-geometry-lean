@@ -1,0 +1,99 @@
+{"totalEdges": 835939,
+ "topUnknownTargets":
+ [{"label":
+   "_private.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.0.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.realCopyRhoEquiv._proof_1",
+   "count": 37},
+  {"label":
+   "_private.InfoGeometry.Canonical.IBUpdate.0.InfoGeometry.Canonical.IB.baScore_slice_ne_top",
+   "count": 27},
+  {"label":
+   "_private.InfoGeometry.Canonical.IBUpdate.0.InfoGeometry.Canonical.IB.baScore_slice_ne_zero",
+   "count": 23},
+  {"label":
+   "_private.InfoGeometry.Canonical.BottDirac.0.InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
+   "count": 14},
+  {"label":
+   "_private.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.0.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.realCopyRhoEquiv._proof_6",
+   "count": 10},
+  {"label":
+   "_private.InfoGeometry.Canonical.RelativePotentialCountBridge.0.InfoGeometry.Canonical.RelativePotentialCountBridge.countRelativeVolumeChange_pos",
+   "count": 7},
+  {"label":
+   "_private.InfoGeometry.Krein.Clifford.0.InfoGeometry.Krein.cl11RepNeutral",
+   "count": 6},
+  {"label":
+   "_private.InfoGeometry.Canonical.BottDirac.0.InfoGeometry.Canonical.BottDirac.cl11Grading",
+   "count": 5},
+  {"label":
+   "_private.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.0.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.doubledCopyEquiv._proof_1",
+   "count": 5},
+  {"label":
+   "_private.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.0.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.doubledCopyEquiv._proof_2",
+   "count": 5}],
+ "topInternalTargets":
+ [{"label": "InfoGeometry.Krein.DoubledSpace._proof_1", "count": 5634},
+  {"label":
+   "InfoGeometry.Canonical.WeylTransportBridge.FlatCurvatureProjectorObstructionBridge._proof_1",
+   "count": 74},
+  {"label": "InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear._proof_1",
+   "count": 57},
+  {"label":
+   "InfoGeometry.Canonical.BogoliubovTransport.IsPhaseAntilinear._proof_1",
+   "count": 53},
+  {"label": "InfoGeometry.Canonical.InverseKernel.spectralProjector._proof_1",
+   "count": 34},
+  {"label":
+   "InfoGeometry.Canonical.MongeAmpereDualSheetBridge.dualSheetLift._proof_2",
+   "count": 34},
+  {"label":
+   "InfoGeometry.Clifford.PhaseSpaceGeneralizedMetric.MetricDatum.gSharp._proof_1",
+   "count": 33},
+  {"label": "InfoGeometry.Quantum.RealMajorana.anticommutator._proof_2",
+   "count": 33},
+  {"label":
+   "InfoGeometry.Canonical.ThermodynamicGenerator.operatorialGibbsWeight._proof_1",
+   "count": 32},
+  {"label": "InfoGeometry.Krein.jordanProd._proof_1", "count": 32}],
+ "topInternalModules":
+ [{"label": "InfoGeometry.Krein.DoubledSpace", "count": 5705},
+  {"label": "InfoGeometry.Canonical.MongeAmpereDualSheetBridge", "count": 164},
+  {"label": "InfoGeometry.Clifford.Grading", "count": 162},
+  {"label": "InfoGeometry.Canonical.BogoliubovTransport", "count": 159},
+  {"label": "InfoGeometry.Quantum.RealMajorana", "count": 155},
+  {"label": "InfoGeometry.Quantum.RealMajoranaCategory", "count": 147},
+  {"label": "InfoGeometry.Canonical.RelationalInformationDynamics",
+   "count": 144},
+  {"label": "InfoGeometry.Canonical.ThermodynamicGenerator", "count": 134},
+  {"label": "InfoGeometry.Canonical.BogoliubovFockSuper", "count": 111},
+  {"label": "InfoGeometry.Krein.KreinSpace", "count": 108}],
+ "topExternalTargets":
+ [{"label": "Real", "count": 21542},
+  {"label": "NormedAddCommGroup.toSeminormedAddCommGroup", "count": 14340},
+  {"label": "NormedAddCommGroup", "count": 14070},
+  {"label": "Real.instRCLike", "count": 14044},
+  {"label": "PseudoMetricSpace.toUniformSpace", "count": 13810},
+  {"label": "InnerProductSpace", "count": 13424},
+  {"label": "SeminormedAddCommGroup.toPseudoMetricSpace", "count": 13269},
+  {"label": "Eq", "count": 12610},
+  {"label": "OfNat.ofNat", "count": 11562},
+  {"label": "Real.semiring", "count": 11243}],
+ "topExternalModules":
+ [{"label": "Init.Prelude", "count": 101631},
+  {"label": "Mathlib.Analysis.Normed.Group.Defs", "count": 74518},
+  {"label": "Mathlib.Data.Real.Basic", "count": 66879},
+  {"label": "Mathlib.Algebra.Group.Defs", "count": 48461},
+  {"label": "Mathlib.Algebra.Ring.Defs", "count": 39605},
+  {"label": "Mathlib.Analysis.InnerProductSpace.Defs", "count": 23793},
+  {"label": "Mathlib.Topology.Algebra.Module.LinearMap", "count": 20886},
+  {"label": "Mathlib.Data.Nat.Cast.Defs", "count": 19995},
+  {"label": "Mathlib.Topology.MetricSpace.Pseudo.Defs", "count": 16626},
+  {"label": "Mathlib.Data.ENNReal.Basic", "count": 16066}],
+ "srcOutsideFilteredSet": 0,
+ "schemaVersion": 1,
+ "nsFilter": "InfoGeometry",
+ "keptEdges": 109644,
+ "dstUnknownEdges": 356,
+ "dstOutsideModuleEdges": 714483,
+ "dstInsideModuleStableEdges": 154,
+ "dstInsideModuleGeneratedEdges": 11302,
+ "droppedEdges": 726295}

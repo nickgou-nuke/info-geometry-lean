@@ -22,6 +22,7 @@ import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Quantum.RealSplitClifford
 import InfoGeometry.Quantum.RosettaSynthesis
 import InfoGeometry.Quantum.QuantumGeometryProjectorBridge
+import InfoGeometry.Quantum.SplitTrialityFockBridge
 import InfoGeometry.Quantum.SplitTrialityKernel
 import InfoGeometry.Quantum.SplitCliffordAtom
 import InfoGeometry.Quantum.SuperchargeMultiplet

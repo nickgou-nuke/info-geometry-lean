@@ -36,9 +36,10 @@ from pathlib import Path
 from typing import Any, TypeAlias
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-from pathing import repo_root
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.pathing import repo_root
+else:
+    from tools.pathing import repo_root
 
 
 DEFAULT_STRUCTURE = "artifacts/dag/structural-topology.json"

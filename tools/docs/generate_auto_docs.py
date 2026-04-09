@@ -10,9 +10,8 @@ if __package__ in (None, ""):
     import sys
 
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from tools.pathing import default_source_sink_bipartite_file, repo_root
-else:
-    from tools.pathing import default_source_sink_bipartite_file, repo_root
+
+from tools.pathing import default_source_sink_bipartite_file, repo_root
 
 
 @dataclass
@@ -158,6 +157,7 @@ def render_index(
     source_sink_compression: dict[str, Any],
     seed_block: str,
     seed_deps: list[str],
+    coverage: dict[str, Any] | None,
 ) -> str:
     lines: list[str] = []
     lines.append("# InfoGeometry Auto Status")
@@ -233,8 +233,19 @@ def render_index(
     lines.append("- Trusted declaration graph inputs for causal-order analysis live under `artifacts/dag/full_graph.json` and `artifacts/dag/index/decls.jsonl`.")
     lines.append("- Native Lean structural analysis now lives under `artifacts/dag/structural-topology.json` with stable condensation ids, membership, dominators, and canonical root-witness paths.")
     lines.append("- Public DAG artifacts now include `artifacts/dag/source-sink-bipartite.json` alongside `artifacts/dag/full_graph.json`, `artifacts/dag/index/decls.jsonl`, and `artifacts/dag/structural-topology.json`; readable projections live under `reports/dag/`, including `source-sink-compression.md`, `structural-anti-bleed.md`, `structural-dedup.md`, `structural-fibers.md`, and `source-sink-incidence.{graphml,svg}`.")
-    lines.append("- Treat causal-order rankings as provisional until `reports/dag/true-root-order.md` shows no coverage warning; the public `artifacts/dag/` graph may still be partial if `InfoGeometry.All` omits declaration-bearing branches.")
-    lines.append("- Use `reports/dag/missing-all-classification.md` to classify the remaining declaration-bearing files outside `InfoGeometry.All` into direct imports, branch-façade expansions, namespace fixes, and noncanonical exclusions.")
+    if coverage is None:
+        lines.append("- Coverage status is unavailable because `reports/dag/true-root-order.json` is missing.")
+    elif bool(coverage.get("is_partial", True)):
+        missing_count = int(coverage.get("missing_decl_files_count", 0))
+        lines.append(
+            f"- Causal-order rankings remain provisional: declaration-graph coverage is still partial with `{missing_count}` declaration-bearing file(s) outside the authoritative export root."
+        )
+        lines.append("- Use `reports/dag/missing-all-classification.md` to classify the remaining declaration-bearing files outside `InfoGeometry.All` into direct imports, branch-façade expansions, namespace fixes, and noncanonical exclusions.")
+    else:
+        repo_decl_files = int(coverage.get("repo_decl_files", 0))
+        lines.append(
+            f"- Declaration-graph coverage is currently closed: `InfoGeometry.All` covers `{repo_decl_files}` / `{repo_decl_files}` declaration-bearing files."
+        )
     lines.append("- Generated semantic exports and derived frontier/causal JSONs under `reports/dag/` are intentionally untracked.")
     lines.append("- Historical crosswalk/intake documents may still exist, but this page reflects the current trusted bridge workflow.")
     lines.append("")
@@ -257,6 +268,7 @@ def main() -> int:
     reverse_frontier_path = reports / "skynet-v2-frontier-reverse.json"
     frontier_burndown_path = reports / "frontier-burndown.json"
     source_sink_compression_path = default_source_sink_bipartite_file()
+    true_root_order_path = reports / "true-root-order.json"
 
     missing = [
         str(p.relative_to(root))
@@ -272,6 +284,7 @@ def main() -> int:
     reverse_frontier = load_json(reverse_frontier_path)
     frontier_burndown = load_json(frontier_burndown_path)
     source_sink_compression = load_json(source_sink_compression_path)
+    true_root_order = load_json(true_root_order_path) if true_root_order_path.exists() else {}
     seed_block, seed_deps = seed_bridge_summary(module_files[0])
 
     out = render_index(
@@ -284,6 +297,7 @@ def main() -> int:
         source_sink_compression=source_sink_compression,
         seed_block=seed_block,
         seed_deps=seed_deps,
+        coverage=true_root_order.get("coverage") if isinstance(true_root_order, dict) else None,
     )
     out_path = docs_auto / "index.md"
     out_path.write_text(out, encoding="utf-8")

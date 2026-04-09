@@ -1,5 +1,7 @@
 # InfoGeometry in Lean 4
 
+> 🧭 **New to the Spire?** Read the [**Pioneer’s Log**](PIONEERS_LOG.md) and the [**Alchemical Protocol**](ALCHEMICAL_PROTOCOL.md) for a narrative guide to the landscape, the chemistry of the logos, and the vision of this repository.
+
 `info-geometry-lean` is a Lean 4 repository built on **Goutev’s Principle of 
 Absolute Relativity of Measurement**: measurement is projective; observables 
 are relational invariants.
@@ -46,6 +48,33 @@ The repo has a few umbrella files with different roles:
 
 For a quick navigation map of the major subtrees and the anchor corridor, see
 [docs/ModuleMap.md](docs/ModuleMap.md).
+
+## Rosetta Surface
+
+If you are arriving from standard complex/Kähler formulations of quantum
+mechanics, the maintained translation surface is now:
+
+- [lean/InfoGeometry/Canonical/QuantumLieAlgebroidRosetta.lean](lean/InfoGeometry/Canonical/QuantumLieAlgebroidRosetta.lean)
+
+It is a thin Rosetta bridge for
+[arXiv:2105.01513, *Quantum Systems as Lie Algebroids*](https://arxiv.org/pdf/2105.01513),
+not a second foundation. The purpose is to show how the paper's familiar
+complex/projective vocabulary appears on the repo's doubled real
+Krein/Majorana carrier.
+
+| Paper language | Repo-native language |
+|----------------|----------------------|
+| external complex unit `i` | internal phase axis `K = Jε` on the doubled carrier |
+| projective/Kähler state surface | relational `reference/comparison` state data on the doubled carrier |
+| Kähler metric | `comparisonMetricReadout` |
+| symplectic / Berry form | `comparisonPhaseReadout` |
+| Lie-algebroid anchor | `comparisonInducedDynamics` |
+| Schrödinger current | `firstVariation = probe ∘ stateInducedDynamics` |
+
+The repo's claim is stronger than the paper's surface: the standard complex
+story is treated here as the projective shadow of an internal real operatorial
+presentation built from doubled Krein sheets, Majorana polarization, and the
+phase axis `K = Jε`.
 
 ## Current Anchor Corridor
 

@@ -848,6 +848,51 @@ lemma einsteinFockDeformation_eq_zero_of_vacuumTransported
   intro v
   apply InfoGeometry.Krein.DoubledSpace.ext <;> simp
 
+/--
+If the Bogoliubov odd-odd bracket coefficient matches the transported Einstein
+chemical-potential proxy, then the Bogoliubov supercharge pair closes exactly
+onto the existing even Einstein/Fock deformation seed.
+-/
+theorem anticommutator_bogoliubov_eq_einsteinFockDeformation_of_coeff_eq_inducedChemicalPotential
+    (B : HyperbolicMixingParams)
+    (R : RicciTensor E)
+    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein K x) (Γ : SpinConnection K x V)
+    (hCoeff :
+      B.u * (B.v * 2) = inducedChemicalPotential R K x scalar Λ V Γ) :
+    anticommutator (E := E)
+        (bogoliubovAnnihilation (E := E) B)
+        (bogoliubovCreation (E := E) B)
+      =
+    einsteinFockDeformation R K x scalar Λ V Γ := by
+  rw [anticommutator_bogoliubov_projector_model]
+  simp [einsteinFockDeformation, hCoeff]
+
+/--
+Under the same coefficient match, transported Einstein vacuum forces the
+Bogoliubov odd-odd bracket to vanish.
+-/
+theorem anticommutator_bogoliubov_eq_zero_of_coeff_eq_inducedChemicalPotential_of_vacuumTransported
+    (B : HyperbolicMixingParams)
+    (R : RicciTensor E)
+    (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein K x) (Γ : SpinConnection K x V)
+    (hCoeff :
+      B.u * (B.v * 2) = inducedChemicalPotential R K x scalar Λ V Γ)
+    (hVacSplit : VacuumEinsteinOnTransportedSplit R K x scalar Λ V Γ) :
+    anticommutator (E := E)
+        (bogoliubovAnnihilation (E := E) B)
+        (bogoliubovCreation (E := E) B)
+      = 0 := by
+  rw [anticommutator_bogoliubov_eq_einsteinFockDeformation_of_coeff_eq_inducedChemicalPotential
+    (E := E) (B := B) (R := R) (K := K) (x := x)
+    (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hCoeff]
+  exact einsteinFockDeformation_eq_zero_of_vacuumTransported
+    (E := E) (R := R) (K := K) (x := x) (scalar := scalar) (Λ := Λ)
+    (V := V) (Γ := Γ) hVacSplit
+
 /-- Lemma `grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported`. -/
 lemma grandCanonicalGenerator_eq_hamiltonian_of_vacuumTransported
     (B : HyperbolicMixingParams) (H : FockEnd E)

@@ -1,10 +1,12 @@
 import InfoGeometry.Canonical.CalabiYauMetricRicci
+import InfoGeometry.Canonical.MongeAmpereCramerRao
 
 namespace InfoGeometry.Canonical.CalabiYauBridge
 
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.KaehlerGeometry
 open InfoGeometry.Canonical.RicciMongeAmpere
+open InfoGeometry.Canonical.MongeAmpereCramerRao
 open InfoGeometry.Canonical.PerelmanW
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.SpectralInference
@@ -24,6 +26,73 @@ def RNEntropySourcesMongeAmpere
     (Kgeo : KaehlerInformationGeometry E)
     (M : SinkhornMatrix n) : Prop :=
   SatisfiesMongeAmpere Kgeo.H (fun _ => relativeVolumeChangeRN n M)
+
+/--
+Unit relative-volume closure extracted from RN-sourced Monge-Ampere density.
+-/
+theorem unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (hUnit : relativeVolumeChangeRN n M = 1) :
+    UnitRelativeVolumeState Kgeo := by
+  intro x
+  simpa [RNEntropySourcesMongeAmpere, hUnit] using hSource x
+
+/--
+RN entropy sourcing plus unit relative-volume closure yields the incompressible
+Monge-Ampere regime used by the Cramer-Rao bridge.
+-/
+theorem incompressibleMongeAmpere_of_rnEntropySource_of_unitRelativeVolume
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (hUnit : relativeVolumeChangeRN n M = 1) :
+    IncompressibleMongeAmpere Kgeo.H := by
+  exact unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
+    (n := n) (Kgeo := Kgeo) (M := M) hSource hUnit
+
+/--
+Direct Cramer-Rao determinant closure from the RN entropy source and unit
+relative-volume hypothesis.
+-/
+theorem absDet_cramerRaoMetric_eq_one_of_rnEntropySource_of_unitRelativeVolume
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (hUnit : relativeVolumeChangeRN n M = 1)
+    (x : E)
+    (hdet : LinearMap.det (cramerRaoMetricOp Kgeo.H x).toLinearMap ≠ 0) :
+    |LinearMap.det (cramerRaoMetricOp Kgeo.H x).toLinearMap| = 1 := by
+  exact MongeAmpereCramerRao.absDet_cramerRaoMetric_eq_one_of_incompressible
+    (H := Kgeo.H)
+    (hIncomp :=
+      incompressibleMongeAmpere_of_rnEntropySource_of_unitRelativeVolume
+        (n := n) (Kgeo := Kgeo) (M := M) hSource hUnit)
+    (x := x)
+    hdet
+
+/--
+Direct logarithmic Cramer-Rao closure from the RN entropy source and unit
+relative-volume hypothesis.
+-/
+theorem logAbsDet_cramerRaoMetric_eq_zero_of_rnEntropySource_of_unitRelativeVolume
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (hUnit : relativeVolumeChangeRN n M = 1)
+    (x : E) :
+    Real.log (|LinearMap.det (cramerRaoMetricOp Kgeo.H x).toLinearMap|) = 0 := by
+  exact MongeAmpereCramerRao.logAbsDet_cramerRaoMetric_eq_zero_of_incompressible
+    (H := Kgeo.H)
+    (hIncomp :=
+      incompressibleMongeAmpere_of_rnEntropySource_of_unitRelativeVolume
+        (n := n) (Kgeo := Kgeo) (M := M) hSource hUnit)
+    (x := x)
 
 omit [FiniteDimensional ℝ E] in
 /--

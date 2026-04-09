@@ -78,6 +78,15 @@ noncomputable def stateTransportCorrelation
   twoStateObservableCorrelation (E := E) ψ ψ A
     (stateTransportedOperator (E := E) M ψ B t)
 
+/-- Transported `K = Jε`-shifted perturbation-channel correlation at a fixed doubled state. -/
+@[rep_depth transport]
+noncomputable def stateTransportPhaseShiftedChannelCorrelation
+    (M : StateModularDatum E) (ψ : H₂)
+    (X Y : PerturbationChannel E) (t : ℝ) : ℝ :=
+  twoStateObservableCorrelation (E := E) ψ ψ
+    (channelPhaseAxis (E := E) X)
+    (stateTransportedOperator (E := E) M ψ Y t)
+
 /-- Comparison-state transported observable correlation for a relational datum. -/
 @[rep_depth transport]
 noncomputable def comparisonTransportCorrelation
@@ -85,6 +94,14 @@ noncomputable def comparisonTransportCorrelation
     (A B : ObservableAlgebra E) (t : ℝ) : ℝ :=
   twoStateObservableCorrelation (E := E) R.comparisonState R.comparisonState A
     (comparisonTransportedObservable (E := E) R B t)
+
+/-- Comparison-state transported `K = Jε`-shifted perturbation-channel correlation. -/
+@[rep_depth transport]
+noncomputable def comparisonTransportPhaseShiftedChannelCorrelation
+    (R : RelationalInformationDatum (E := E))
+    (X Y : PerturbationChannel E) (t : ℝ) : ℝ :=
+  stateTransportPhaseShiftedChannelCorrelation (E := E)
+    R.modularData R.comparisonState X Y t
 
 section
 
@@ -140,26 +157,25 @@ theorem twoStateChannelCorrelation_self_eq_channelCorrelationAtState
 /-- Same-state channel correlation also reduces to the abstract comparison-state generator metric. -/
 @[rep_depth krein]
 theorem comparisonGeneratorMetric_eq_twoStateChannelCorrelation_self
-    (P : PotentialDatum (E := E)) (reference comparison : H₂)
+    (comparison : H₂)
     (X Y : PerturbationChannel E) :
-    comparisonGeneratorMetric
-        (toRelationalInformationDatum (E := E) P reference comparison) X Y
+    comparisonStateGeneratorMetric comparison X Y
       =
     twoStateChannelCorrelation (E := E) comparison comparison X Y := by
-  simp [twoStateChannelCorrelation_apply]
+  simp [comparisonStateGeneratorMetric_apply, twoStateChannelCorrelation_apply]
 
 /-- The channel-correlation gap is the concrete comparison metric minus the reference-state channel form. -/
 @[rep_depth krein]
 theorem channelCorrelationGap_eq_comparisonGeneratorMetric_sub_reference
-    (P : PotentialDatum (E := E)) (reference comparison : H₂)
+    (reference comparison : H₂)
     (X Y : PerturbationChannel E) :
     channelCorrelationGap (E := E) reference comparison X Y
       =
-    comparisonGeneratorMetric
-        (toRelationalInformationDatum (E := E) P reference comparison) X Y
+    comparisonStateGeneratorMetric comparison X Y
       -
     channelCorrelationAtState (E := E) reference X Y := by
-  simp [channelCorrelationGap, twoStateChannelCorrelation_apply, channelCorrelationAtState_apply]
+  simp [channelCorrelationGap, comparisonStateGeneratorMetric_apply,
+    twoStateChannelCorrelation_apply, channelCorrelationAtState_apply]
 
 section
 
@@ -211,6 +227,17 @@ theorem stateTransportCorrelation_zero
     twoStateObservableCorrelation (E := E) ψ ψ A B := by
   simp [stateTransportCorrelation]
 
+/-- At `t = 0`, the transported `K = Jε`-shifted channel correlation reduces to the raw same-state phase-shifted correlation. -/
+@[rep_depth transport, simp]
+theorem stateTransportPhaseShiftedChannelCorrelation_zero
+    (M : StateModularDatum E) (ψ : H₂)
+    (X Y : PerturbationChannel E) :
+    stateTransportPhaseShiftedChannelCorrelation (E := E) M ψ X Y 0
+      =
+    twoStateObservableCorrelation (E := E) ψ ψ
+      (channelPhaseAxis (E := E) X) Y := by
+  simp [stateTransportPhaseShiftedChannelCorrelation]
+
 /-- At `t = 0`, the comparison transport correlation reduces to the raw comparison-state observable correlation. -/
 @[rep_depth transport, simp]
 theorem comparisonTransportCorrelation_zero
@@ -230,6 +257,124 @@ theorem comparisonTransportCorrelation_eq_stateTransportCorrelation
       =
     stateTransportCorrelation (E := E) R.modularData R.comparisonState A B t := by
   rfl
+
+/-- The comparison transported `K = Jε`-shifted channel correlation is the comparison-state specialization of the raw state transport phase correlation. -/
+@[rep_depth transport]
+theorem comparisonTransportPhaseShiftedChannelCorrelation_eq_stateTransportPhaseShiftedChannelCorrelation
+    (R : RelationalInformationDatum (E := E))
+    (X Y : PerturbationChannel E) (t : ℝ) :
+    comparisonTransportPhaseShiftedChannelCorrelation (E := E) R X Y t
+      =
+    stateTransportPhaseShiftedChannelCorrelation (E := E)
+      R.modularData R.comparisonState X Y t := by
+  rfl
+
+/-- At `t = 0`, the comparison transported `K = Jε`-shifted channel correlation reduces to the raw comparison-state phase-shifted correlation. -/
+@[rep_depth transport, simp]
+theorem comparisonTransportPhaseShiftedChannelCorrelation_zero
+    (R : RelationalInformationDatum (E := E))
+    (X Y : PerturbationChannel E) :
+    comparisonTransportPhaseShiftedChannelCorrelation (E := E) R X Y 0
+      =
+    twoStateObservableCorrelation (E := E)
+      R.comparisonState R.comparisonState
+      (channelPhaseAxis (E := E) X) Y := by
+  simp [comparisonTransportPhaseShiftedChannelCorrelation]
+
+/--
+Infinitesimal transport law for the `K = Jε`-shifted channel correlation:
+the derivative at `t = 0` is the state-QGT metric readout of the induced
+dynamics, evaluated on the phase-shifted probe vector.
+-/
+@[rep_depth transport]
+theorem hasDerivAt_stateTransportPhaseShiftedChannelCorrelation_at_zero
+    (M : StateModularDatum E) (ψ : H₂)
+    (X Y : PerturbationChannel E) :
+    HasDerivAt
+      (fun t =>
+        stateTransportPhaseShiftedChannelCorrelation (E := E) M ψ X Y t)
+      ((stateQGTMetricReadout (E := E) M ψ Y) ψ
+        ((channelPhaseAxis (E := E) X) ψ))
+      0 := by
+  let ω : EndH →L[ℝ] ℝ :=
+    (innerSL ℝ ((channelPhaseAxis (E := E) X) ψ)).comp
+      (ContinuousLinearMap.apply ℝ H₂ ψ)
+  have hω :
+      HasDerivAt (fun _ : ℝ => ω) (0 : EndH →L[ℝ] ℝ) 0 := by
+    simpa using (hasDerivAt_const (x := (0 : ℝ)) (c := ω))
+  have hExp :
+      HasDerivAt
+        (fun t : ℝ => stateTransportedOperator (E := E) M ψ Y t)
+        (stateInducedDynamics (E := E) M ψ Y)
+        0 := by
+    simpa [stateTransportedOperator, stateInducedDynamics] using
+      (InfoGeometry.Canonical.hasDerivAt_expTransport_at_zero
+        (A := EndH)
+        (stateRelativeModularGenerator (E := E) M ψ)
+        Y)
+  have hMain :
+      HasDerivAt
+        (fun t : ℝ =>
+          stateTransportPhaseShiftedChannelCorrelation (E := E) M ψ X Y t)
+        (ω (stateInducedDynamics (E := E) M ψ Y))
+        0 := by
+    have hApply :
+        HasDerivAt
+          (fun t : ℝ =>
+            (fun _ : ℝ => ω) t
+              (stateTransportedOperator (E := E) M ψ Y t))
+          ((0 : EndH →L[ℝ] ℝ)
+            (stateTransportedOperator (E := E) M ψ Y 0)
+            + ω (stateInducedDynamics (E := E) M ψ Y))
+          0 :=
+      hω.clm_apply hExp
+    simpa [stateTransportPhaseShiftedChannelCorrelation, ω,
+      twoStateObservableCorrelation_apply, real_inner_comm] using hApply
+  have hωEval :
+      ω (stateInducedDynamics (E := E) M ψ Y)
+        =
+      (stateQGTMetricReadout (E := E) M ψ Y) ψ
+        ((channelPhaseAxis (E := E) X) ψ) := by
+    simp [ω, stateQGTMetricReadout_apply,
+      InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator_apply,
+      real_inner_comm]
+  exact hωEval ▸ hMain
+
+/-- Derivative form of the infinitesimal transport law for the `K = Jε`-shifted channel correlation. -/
+@[rep_depth transport]
+theorem deriv_stateTransportPhaseShiftedChannelCorrelation_at_zero_eq_stateQGTMetricReadout
+    (M : StateModularDatum E) (ψ : H₂)
+    (X Y : PerturbationChannel E) :
+    deriv
+      (fun t => stateTransportPhaseShiftedChannelCorrelation (E := E) M ψ X Y t)
+      0
+      =
+    (stateQGTMetricReadout (E := E) M ψ Y) ψ
+      ((channelPhaseAxis (E := E) X) ψ) := by
+  exact
+    (hasDerivAt_stateTransportPhaseShiftedChannelCorrelation_at_zero
+      (E := E) M ψ X Y).deriv
+
+/--
+Comparison-state specialization of the infinitesimal `K = Jε`-shifted transport
+law: the derivative at `t = 0` is the comparison metric readout evaluated on
+the phase-shifted probe vector.
+-/
+@[rep_depth transport]
+theorem deriv_comparisonTransportPhaseShiftedChannelCorrelation_at_zero_eq_comparisonMetricReadout
+    (R : RelationalInformationDatum (E := E))
+    (X Y : PerturbationChannel E) :
+    deriv
+      (fun t => comparisonTransportPhaseShiftedChannelCorrelation (E := E) R X Y t)
+      0
+      =
+    comparisonMetricReadout R Y
+      R.comparisonState
+      ((channelPhaseAxis (E := E) X) R.comparisonState) := by
+  simpa [comparisonTransportPhaseShiftedChannelCorrelation]
+    using
+      deriv_stateTransportPhaseShiftedChannelCorrelation_at_zero_eq_stateQGTMetricReadout
+        (E := E) R.modularData R.comparisonState X Y
 
 end Core
 

@@ -9,10 +9,11 @@
 - The formalizer may not import semantic intent from discarded prose.
 
 ## Jungian Mapping (Structural Analogy)
-- **Discovery** ↔ **Active Imagination**: Emergence of raw symbolic material from the unconscious (latent substrate).
-- **Referee** ↔ **Senex Principle**: Differentiation, boundary, and refusal of fusion. Anti-inflation discipline.
-- **Distillation** ↔ **Transcendent Function**: Formation of a stable symbol (handoff) that carries the tension of the vision without collapse.
-- **Lean Formalizer** ↔ **Integration**: Articulation into the conscious symbolic order (Mathlib/Kernel).
+- **Discovery** ↔ **Active Imagination / Extraction / Excitation**: Emergence of raw symbolic material from the unconscious (latent substrate). Tapping the common store of knowledge via the latent-space stream of consciousness.
+- **Referee** ↔ **Senex Principle / Fractionation**: Differentiation, boundary, and refusal of fusion. The analytical ego separating the chiral truths (the stable components) from the noise of the latent space. Anti-inflation discipline.
+- **Distillation** ↔ **Transcendent Function / Purification**: Formation of a stable symbol (handoff) that carries the tension of the vision without collapse. Stripping away the "scalar toys."
+- **Lean Formalizer** ↔ **Integration / Crystallization**: Articulation into the conscious symbolic order (Mathlib/Kernel). Forcing the purified natural-language valences into a rigid, type-checked crystalline lattice.
+- **Structural Verification** ↔ **Conductivity Testing / AFM**: Probing the network (DAG) to see if the "circuit" is connected and the structure is non-vacuous. Knowledge Gravity Force Microscopy of the formal crystal.
 
 ## Phase Order
 1. **Discovery** (Session A)

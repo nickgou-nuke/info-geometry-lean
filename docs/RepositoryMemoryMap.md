@@ -29,6 +29,7 @@ These are the maintained hand-written entry surfaces for current repo state:
 - [docs/LIBER_NOVUS_MATH.md](LIBER_NOVUS_MATH.md)
 - [docs/WORKBENCH.md](WORKBENCH.md)
 - [docs/black_books/](black_books/)
+- [docs/black_books/09_science_after_coding.md](black_books/09_science_after_coding.md)
 - [docs/projective_to_krein_transition_doctrine.md](projective_to_krein_transition_doctrine.md)
 - [docs/Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md)
 - [docs/SEMANTIC_POTENTIAL.md](SEMANTIC_POTENTIAL.md)

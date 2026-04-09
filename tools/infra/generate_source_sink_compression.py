@@ -5,11 +5,17 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+_MPLCONFIGDIR = _REPO_ROOT / ".artifacts" / "matplotlib"
+_MPLCONFIGDIR.mkdir(parents=True, exist_ok=True)
+os.environ.setdefault("MPLCONFIGDIR", str(_MPLCONFIGDIR))
 
 import matplotlib
 
@@ -18,7 +24,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    sys.path.insert(0, str(_REPO_ROOT))
     from tools.infra.decl_graph import (
         FRONTIER_CATEGORIES,
         build_declaration_graph,

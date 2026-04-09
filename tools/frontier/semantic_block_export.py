@@ -17,6 +17,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.build_lock import acquire_build_lock
+from tools.infra.build import ensure_built_executable
 from tools.pathing import repo_root
 
 
@@ -218,12 +219,10 @@ def server_command(
 ) -> tuple[list[str], dict[str, str] | None]:
     if mode == "stdlib":
         return ["lake", "env", "lean", "--server"], None
-    built = repo / ".lake" / "build" / "bin" / "semanticBlockServer"
-    if built.exists():
-        env = os.environ.copy()
-        env["LEAN_WORKER_PATH"] = str(built)
-        return ["lake", "env", str(built)], env
-    return ["lake", "exe", "semanticBlockServer"], None
+    built = ensure_built_executable(repo, "semanticBlockServer")
+    env = os.environ.copy()
+    env["LEAN_WORKER_PATH"] = str(built)
+    return ["lake", "env", str(built)], env
 
 
 def log_stage(message: str) -> None:

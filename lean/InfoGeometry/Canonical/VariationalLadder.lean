@@ -57,7 +57,7 @@ Level 2: Metric (Symmetric δ²Φ) - The Weight.
 Level 3: Vortex (Antisymmetric δ²Φ) - The Curvature.
 -/
 @[rep_depth transport]
-structure VariationalLadder (R : RelationalInformationDatum (E := E)) where
+structure Ladder (R : RelationalInformationDatum (E := E)) where
   current : PerturbationChannel E → ℝ := informationalCurrent R
   fisher : LinearMap.BilinForm ℝ (PerturbationChannel E) := fisherPart R
   vortex : LinearMap.BilinForm ℝ (PerturbationChannel E) := vortexPart R

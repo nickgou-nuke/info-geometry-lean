@@ -190,6 +190,24 @@ noncomputable def comparisonPhaseReadout
     LinearMap.BilinForm ℝ H₂ :=
   stateQGTPhaseReadout (E := E) R.modularData R.comparisonState A
 
+/-- The comparison-state metric readout is the operatorial metric of the comparison dynamics. -/
+@[rep_depth transport, simp] theorem comparisonMetricReadout_apply
+    (R : RelationalInformationDatum (E := E))
+    (A : ObservableAlgebra E) (u v : H₂) :
+    comparisonMetricReadout R A u v
+      =
+    InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+      (E := E) (comparisonInducedDynamics R A) u v := rfl
+
+/-- The comparison-state phase readout is the operatorial Berry form of the comparison dynamics. -/
+@[rep_depth transport, simp] theorem comparisonPhaseReadout_apply
+    (R : RelationalInformationDatum (E := E))
+    (A : ObservableAlgebra E) (u v : H₂) :
+    comparisonPhaseReadout R A u v
+      =
+    InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+      (E := E) (comparisonInducedDynamics R A) u v := rfl
+
 /-- The comparison-state induced dynamics splits into gauge and source channels. -/
 @[rep_depth transport]
 theorem comparisonInducedDynamics_eq_gauge_add_source

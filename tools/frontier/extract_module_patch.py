@@ -4,10 +4,16 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+_MPLCONFIGDIR = _REPO_ROOT / ".artifacts" / "matplotlib"
+_MPLCONFIGDIR.mkdir(parents=True, exist_ok=True)
+os.environ.setdefault("MPLCONFIGDIR", str(_MPLCONFIGDIR))
 
 import matplotlib
 matplotlib.use("Agg")
@@ -15,7 +21,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    sys.path.insert(0, str(_REPO_ROOT))
     from tools.pathing import default_decl_graph_file, default_decl_metadata_file, normalize_user_path, repo_root
 else:
     from tools.pathing import default_decl_graph_file, default_decl_metadata_file, normalize_user_path, repo_root

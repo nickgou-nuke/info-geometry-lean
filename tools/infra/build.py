@@ -57,6 +57,21 @@ def run_locked_lake_build(targets: Sequence[str], *, wait_for_lock: bool = False
         print(f"[locked-lake-build] released {lock.lock_path}", flush=True)
 
 
+def ensure_built_executable(root: Path, target: str) -> Path:
+    """Ensure a Lake executable target exists under `.lake/build/bin`."""
+    built = root / ".lake" / "build" / "bin" / target
+    if built.exists():
+        return built
+    rc = run_locked_lake_build([target], wait_for_lock=True)
+    if rc != 0:
+        raise RuntimeError(f"failed to build required executable target: {target}")
+    if not built.exists():
+        raise RuntimeError(
+            f"expected built executable {built} after successful build of {target}"
+        )
+    return built
+
+
 def build_indexer_command(
     root: Path,
     import_root: str,

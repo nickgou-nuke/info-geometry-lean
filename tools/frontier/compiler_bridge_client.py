@@ -13,6 +13,7 @@ if __package__ in (None, ""):
 
 from tools.build_lock import acquire_build_lock
 from tools.pathing import repo_root
+from tools.infra.build import ensure_built_executable
 from tools.frontier.semantic_block_export import (
     JsonRpcError,
     LspClient,
@@ -29,14 +30,15 @@ def log_stage(message: str) -> None:
 
 
 def server_command(repo: Path, mode: str) -> tuple[list[str], dict[str, str] | None]:
+    built = ensure_built_executable(repo, "compilerBridgeServer")
+    env = os.environ.copy()
+    env["LEAN_WORKER_PATH"] = str(built)
     if mode == "stdlib":
-        return ["lake", "env", "lean", "--server"], None
-    built = repo / ".lake" / "build" / "bin" / "compilerBridgeServer"
-    if built.exists():
-        env = os.environ.copy()
-        env["LEAN_WORKER_PATH"] = str(built)
-        return ["lake", "env", str(built)], env
-    return ["lake", "exe", "compilerBridgeServer"], None
+        log_stage(
+            "stdlib server mode does not expose IG.Compiler RPC methods; "
+            "using compilerBridgeServer instead"
+        )
+    return ["lake", "env", str(built)], env
 
 
 def normalize_result(result: Any, line_delta: int) -> Any:
@@ -112,8 +114,9 @@ def call_bridge_method(
 ) -> dict[str, Any]:
     repo = repo_root()
     cmd, env = server_command(repo, server_mode)
-    effective_inject_rpc_import = inject_rpc_import_flag or server_mode == "stdlib"
-    if server_mode == "stdlib" and not inject_rpc_import_flag:
+    actual_stdlib_server = cmd[:3] == ["lake", "env", "lean"]
+    effective_inject_rpc_import = inject_rpc_import_flag or actual_stdlib_server
+    if actual_stdlib_server and not inject_rpc_import_flag:
         log_stage("auto-enable RPC shim import for stdlib server mode")
     abs_input = input_path.resolve()
     uri = abs_input.as_uri()
@@ -237,7 +240,12 @@ def parse_args() -> argparse.Namespace:
         "--server-mode",
         choices=("custom", "stdlib"),
         default="custom",
-        help="Use the dedicated compiler bridge server or stdlib `lean --server`",
+        help=(
+            "Use the dedicated compiler bridge server (default). "
+            "`stdlib` is accepted for compatibility but is routed through "
+            "the dedicated server because Lean stdlib server mode does not "
+            "expose IG.Compiler RPC methods."
+        ),
     )
     parser.add_argument(
         "--inject-rpc-import",

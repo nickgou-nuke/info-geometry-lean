@@ -57,10 +57,12 @@ class CandidateSketch:
 
 @dataclass
 class HydrationResult:
-    copied_packages: bool
-    copied_build: bool
-    package_copy: CommandResult | None
-    build_copy: CommandResult | None
+    packages_ready: bool
+    build_ready: bool
+    packages_mode: str | None
+    build_mode: str | None
+    package_action: CommandResult | None
+    build_action: CommandResult | None
 
 
 @dataclass
@@ -140,45 +142,77 @@ def release_worktree_lock(lock_path: Path | None) -> None:
         pass
 
 
+def hydrate_symlink(src: Path, dst: Path, root: Path, stdout_path: Path, stderr_path: Path) -> CommandResult:
+    if dst.is_symlink():
+        try:
+            if dst.resolve() == src.resolve():
+                return CommandResult(
+                    argv=["ln", "-s", str(src), str(dst)],
+                    returncode=0,
+                    stdout_path=str(stdout_path),
+                    stderr_path=str(stderr_path),
+                )
+        except OSError:
+            pass
+        dst.unlink()
+    elif dst.exists():
+        if dst.is_dir() and not any(dst.iterdir()):
+            dst.rmdir()
+        else:
+            raise SystemExit(f"refusing to replace non-empty hydration destination: {dst}")
+    return run_capture(
+        ["ln", "-s", str(src), str(dst)],
+        cwd=root,
+        stdout_path=stdout_path,
+        stderr_path=stderr_path,
+    )
+
+
 def hydrate_worktree_from_local_lake(root: Path, worktree_path: Path, run_dir: Path) -> HydrationResult:
     src_lake = root / ".lake"
     dst_lake = worktree_path / ".lake"
     dst_lake.mkdir(parents=True, exist_ok=True)
 
-    package_copy: CommandResult | None = None
-    build_copy: CommandResult | None = None
+    package_action: CommandResult | None = None
+    build_action: CommandResult | None = None
 
     src_packages = src_lake / "packages"
     dst_packages = dst_lake / "packages"
-    copied_packages = False
+    packages_ready = False
+    packages_mode: str | None = None
     if src_packages.exists():
-        dst_packages.mkdir(parents=True, exist_ok=True)
-        package_copy = run_capture(
-            ["cp", "-a", "-n", f"{src_packages}/.", str(dst_packages)],
-            cwd=root,
+        package_action = hydrate_symlink(
+            src_packages,
+            dst_packages,
+            root,
             stdout_path=run_dir / "hydrate-packages.stdout.log",
             stderr_path=run_dir / "hydrate-packages.stderr.log",
         )
-        copied_packages = package_copy.returncode == 0
+        packages_ready = package_action.returncode == 0
+        packages_mode = "symlink" if packages_ready else "failed"
 
     src_build = src_lake / "build"
     dst_build = dst_lake / "build"
-    copied_build = False
+    build_ready = False
+    build_mode: str | None = None
     if src_build.exists():
-        dst_build.mkdir(parents=True, exist_ok=True)
-        build_copy = run_capture(
-            ["cp", "-a", "-n", f"{src_build}/.", str(dst_build)],
-            cwd=root,
+        build_action = hydrate_symlink(
+            src_build,
+            dst_build,
+            root,
             stdout_path=run_dir / "hydrate-build.stdout.log",
             stderr_path=run_dir / "hydrate-build.stderr.log",
         )
-        copied_build = build_copy.returncode == 0
+        build_ready = build_action.returncode == 0
+        build_mode = "symlink" if build_ready else "failed"
 
     return HydrationResult(
-        copied_packages=copied_packages,
-        copied_build=copied_build,
-        package_copy=package_copy,
-        build_copy=build_copy,
+        packages_ready=packages_ready,
+        build_ready=build_ready,
+        packages_mode=packages_mode,
+        build_mode=build_mode,
+        package_action=package_action,
+        build_action=build_action,
     )
 
 
@@ -775,8 +809,10 @@ def write_summary(path: Path, payload: dict[str, Any]) -> None:
     lines += [
         "",
         "## Hydration",
-        f"- copied packages: `{hydration.get('copiedPackages', False)}`",
-        f"- copied build cache: `{hydration.get('copiedBuild', False)}`",
+        f"- packages ready: `{hydration.get('packagesReady', False)}`",
+        f"- packages mode: `{hydration.get('packagesMode', '')}`",
+        f"- build cache ready: `{hydration.get('buildReady', False)}`",
+        f"- build cache mode: `{hydration.get('buildMode', '')}`",
         "",
         "## Targeted build",
         f"- run status: `{payload.get('status', 'unknown')}`",
@@ -1096,8 +1132,10 @@ def main() -> int:
         append_trace(
             run_dir,
             "hydration_completed",
-            copied_packages=hydration.copied_packages,
-            copied_build=hydration.copied_build,
+            packages_ready=hydration.packages_ready,
+            build_ready=hydration.build_ready,
+            packages_mode=hydration.packages_mode,
+            build_mode=hydration.build_mode,
         )
 
         top_names: list[str] = []
@@ -1276,10 +1314,14 @@ def main() -> int:
             "buildLock": str(build_lock.lock_path),
             "worktreeCommand": asdict(worktree_cmd) if worktree_cmd is not None else None,
             "hydration": {
-                "copiedPackages": hydration.copied_packages,
-                "copiedBuild": hydration.copied_build,
-                "packageCopy": asdict(hydration.package_copy) if hydration.package_copy else None,
-                "buildCopy": asdict(hydration.build_copy) if hydration.build_copy else None,
+                "packagesReady": hydration.packages_ready,
+                "buildReady": hydration.build_ready,
+                "packagesMode": hydration.packages_mode,
+                "buildMode": hydration.build_mode,
+                "packageAction": asdict(hydration.package_action) if hydration.package_action else None,
+                "buildAction": asdict(hydration.build_action) if hydration.build_action else None,
+                "copiedPackages": hydration.packages_mode == "copy",
+                "copiedBuild": hydration.build_mode == "copy",
             },
             "proofAttemptCommandTemplate": args.proof_attempt_command,
             "proofAttemptRetries": max(args.proof_attempt_retries, 0),

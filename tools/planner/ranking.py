@@ -5,10 +5,7 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from typing import Any, cast
 
-if __package__ in (None, "", "planner"):
-    from pathing import repo_root
-else:
-    from tools.pathing import repo_root
+from tools.pathing import repo_root
 
 from .common import (
     JsonObj,
@@ -712,6 +709,7 @@ def rank_replacement_candidates(
     owner_candidates: list[JsonObj],
     top_k: int,
 ) -> list[JsonObj]:
+    root = repo_root()
     owner_by_region: dict[str, list[str]] = defaultdict(list)
     for owner in owner_candidates:
         owner_file = owner.get("ownerFile")
@@ -741,7 +739,7 @@ def rank_replacement_candidates(
             if dst_kind not in {"theorem", "def", "lemma", "abbrev"}:
                 continue
 
-            dst_file = parse_uri_or_path(decl.get("file"), repo_root())
+            dst_file = parse_uri_or_path(decl.get("file"), root)
             dst_region = file_region.get(dst_file or "", "unknown")
 
             signals: list[Signal] = []
@@ -788,7 +786,7 @@ def rank_replacement_candidates(
     ranked: list[RankedEntry] = []
     for dst in agg_score:
         decl = decls[dst]
-        dst_file = parse_uri_or_path(decl.get("file"), repo_root())
+        dst_file = parse_uri_or_path(decl.get("file"), root)
         dst_region = file_region.get(dst_file or "", "unknown")
         score_clamped, confidence, provenance = summarize_signals(agg_signals[dst])
         payload: JsonObj = {

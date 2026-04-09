@@ -28,6 +28,24 @@ The infra reports should make four facts recoverable about that corridor:
 - the count specialization consumes that ownership as `countMassShift`
 - the operator branch ends in `relativeModularHamiltonian_sub_countMassShift_cocycle`, so the cocycle survives averaging instead of being recomputed heuristically
 
+## Managed Operator Surface
+
+Checked-in DAG policy now lives in [dag-toolchain.json](../../dag-toolchain.json).
+The preferred operator entrypoints are:
+- `lake script run dagStatus`
+- `lake script run dagRefresh`
+- `lake script run dagReports`
+- `lake script run dagDoctor`
+
+These are thin wrappers over the current Python corridor. `dagReports` also sets a repo-local Matplotlib cache under `.artifacts/matplotlib` so managed report runs do not depend on a writable home-directory config path. The underlying script lane remains maintained, but the pinned config and authoritative status surface now live above it.
+
+The first authoritative Lake facet experiment is also available:
+- `lake build :dagMeta`
+- `lake build :dagArtifactsManifest`
+
+It currently delegates to the same managed refresh lane underneath and exists to validate stronger dependency semantics on `artifacts/dag/index/meta.json` without changing the user-facing operator path.
+The manifest-style facet writes `artifacts/dag/index/manifest.json`, which is a single small stamp for the whole authoritative refresh set (`meta.json`, `full_graph.json`, `structural-topology.json`) plus coverage/leakage sidecar state.
+
 ## Canonical Entrypoints
 
 Main DAG refresh and report path:
@@ -104,12 +122,13 @@ Public authoritative DAG inputs live under [artifacts/dag](../../artifacts/dag):
 - `full_graph.json`
 - `index/decls.jsonl`
 - `index/edges.jsonl`
+- `index/edge-leakage.json`
 - `index/morphisms.jsonl`
 - `index/types.jsonl`
 - `structural-topology.json`
 - `source-sink-bipartite.json`
 - `representation-depth-tags.json`
-- `process-flow/` (flow-edges, process-events, flow-cocycles, comparison-candidates, lawful-path-candidates, defects)
+- `process-flow/` — Lean-authoritative exports: `flow-edges`, `process-events`, `lawful-path-candidates`, `defects`; Python-derived supplements: `flow-cocycles`, `comparison-candidates`
 
 Derived readable outputs live under [reports/dag](../../reports/dag).
 
@@ -128,10 +147,10 @@ python3 tools/infra/generate_structural_dedup.py
 python3 tools/infra/generate_structural_fibers.py
 python3 tools/infra/generate_semantic_quotient.py
 python3 tools/infra/generate_projection_coloring.py
+python3 tools/theorem_significance.py
 python3 tools/infra/select_openclaw_target.py
 python3 tools/infra/canonical_policy_lint.py
 python3 tools/infra/generate_replacement_frontier.py
-python3 tools/theorem_significance.py
 python3 tools/infra/causal_cone_spectrum.py
 python3 tools/infra/apex_defect_profile.py
 python3 tools/infra/graph_hodge_spectrum.py
@@ -151,12 +170,17 @@ lake env lean --run lean/DAG/ProcessFlowExport.lean InfoGeometry.Audit artifacts
 python3 tools/infra/generate_process_flow_report.py
 ```
 
+The Lean export writes the constitutive process-flow lane
+(`flow-edges`, `process-events`, `lawful-path-candidates`, `defects`).
+The Python step derives `flow-cocycles`, `comparison-candidates`, and the
+readable report surfaces from those authoritative inputs.
+
 Run the native audit before trusting the representation-depth reports. Run the main sequence sequentially. Do not trust `reports/dag/*` as current until the main sequence has finished.
 
 ## Operational Rules
 
 - use `run_locked_lake_build.py` for umbrella builds
-- `refresh_decl_graph.py` now prebuilds `DAG.Indexer` + import root with lock and runs `lake env dagIndexer` by default
+- `refresh_decl_graph.py` now prebuilds `dagIndexer` for `--run-mode exe` and `DAG.Indexer` for `--run-mode run`, together with the import root, under the build lock
 - do not run concurrent umbrella builds
 - do not hand-edit `artifacts/dag/*`
 - read code before acting on hotspot heuristics

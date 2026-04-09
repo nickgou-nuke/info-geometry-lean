@@ -1,0 +1,26 @@
+{
+  "branchName": "auto-opt/dry-cycle-20260409T204226Z",
+  "freshWorktree": true,
+  "frontierJson": "/home/goutev/LEAN4/info-geometry-lean/reports/dag/skynet-v2-frontier-reverse.json",
+  "gitHead": "e2e39dee301a87c1ba7f26cf74144ef88157536b",
+  "reuseWorktree": null,
+  "runId": "20260409T204226Z",
+  "status": "worktree_failed",
+  "worktreeCommand": {
+    "argv": [
+      "git",
+      "worktree",
+      "add",
+      "-b",
+      "auto-opt/dry-cycle-20260409T204226Z",
+      "/tmp/info-geometry-autoopt-test/20260409T204226Z",
+      "HEAD"
+    ],
+    "returncode": 255,
+    "stderr_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260409T204226Z/git-worktree-add.stderr.log",
+    "stdout_path": "/home/goutev/LEAN4/info-geometry-lean/reports/optimization-runs/20260409T204226Z/git-worktree-add.stdout.log"
+  },
+  "worktreeError": "fatal: cannot lock ref 'refs/heads/auto-opt/dry-cycle-20260409T204226Z': Unable to create '/home/goutev/LEAN4/info-geometry-lean/.git/refs/heads/auto-opt/dry-cycle-20260409T204226Z.lock': Read-only file system",
+  "worktreeMode": "created-fresh",
+  "worktreePath": "/tmp/info-geometry-autoopt-test/20260409T204226Z"
+}

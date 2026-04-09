@@ -24,72 +24,40 @@ from pathlib import Path
 from typing import cast
 
 if __package__ in (None, ""):
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from pathing import normalize_user_path, repo_root
-    from planner.admissibility import rank_admissibility_prechecks
-    from planner.common import (
-        DIAG_PROVENANCE_WEIGHT,
-        HEAD_SOURCE_WEIGHT,
-        VIOLATION_LEVEL_WEIGHT,
-        JsonObj,
-        load_decl_index,
-        load_edges,
-        load_json,
-        load_module_regions,
-        load_owner_index,
-        load_proof_hole_counts,
-        relpath_or_self,
-        resolve_existing,
-    )
-    from planner.matching import build_decl_match_context
-    from planner.normalization import (
-        collect_bridge_json_paths,
-        extract_bridge_payload_objects,
-        normalize_bridge_observations,
-        observe_bridge_payload,
-    )
-    from planner.policy import planner_policy_snapshot
-    from planner.ranking import (
-        rank_declaration_plans,
-        rank_fingerprint_corridors,
-        rank_owner_candidates,
-        rank_replacement_candidates,
-        rank_vacuity_candidates,
-    )
-    from planner.report import make_markdown_report
-else:
-    from tools.pathing import normalize_user_path, repo_root
-    from tools.planner.admissibility import rank_admissibility_prechecks
-    from tools.planner.common import (
-        DIAG_PROVENANCE_WEIGHT,
-        HEAD_SOURCE_WEIGHT,
-        VIOLATION_LEVEL_WEIGHT,
-        JsonObj,
-        load_decl_index,
-        load_edges,
-        load_json,
-        load_module_regions,
-        load_owner_index,
-        load_proof_hole_counts,
-        relpath_or_self,
-        resolve_existing,
-    )
-    from tools.planner.matching import build_decl_match_context
-    from tools.planner.normalization import (
-        collect_bridge_json_paths,
-        extract_bridge_payload_objects,
-        normalize_bridge_observations,
-        observe_bridge_payload,
-    )
-    from tools.planner.policy import planner_policy_snapshot
-    from tools.planner.ranking import (
-        rank_declaration_plans,
-        rank_fingerprint_corridors,
-        rank_owner_candidates,
-        rank_replacement_candidates,
-        rank_vacuity_candidates,
-    )
-    from tools.planner.report import make_markdown_report
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from tools.pathing import normalize_user_path, repo_root
+from tools.planner.admissibility import rank_admissibility_prechecks
+from tools.planner.common import (
+    DIAG_PROVENANCE_WEIGHT,
+    HEAD_SOURCE_WEIGHT,
+    VIOLATION_LEVEL_WEIGHT,
+    JsonObj,
+    load_decl_index,
+    load_edges,
+    load_json,
+    load_module_regions,
+    load_owner_index,
+    load_proof_hole_counts,
+    relpath_or_self,
+    resolve_existing,
+)
+from tools.planner.matching import build_decl_match_context
+from tools.planner.normalization import (
+    collect_bridge_json_paths,
+    extract_bridge_payload_objects,
+    normalize_bridge_observations,
+    observe_bridge_payload,
+)
+from tools.planner.policy import planner_policy_snapshot
+from tools.planner.ranking import (
+    rank_declaration_plans,
+    rank_fingerprint_corridors,
+    rank_owner_candidates,
+    rank_replacement_candidates,
+    rank_vacuity_candidates,
+)
+from tools.planner.report import make_markdown_report
 
 
 def parse_args() -> argparse.Namespace:

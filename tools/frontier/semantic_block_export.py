@@ -15,11 +15,9 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from tools.build_lock import acquire_build_lock
-    from tools.pathing import repo_root
-else:
-    from tools.build_lock import acquire_build_lock
-    from tools.pathing import repo_root
+
+from tools.build_lock import acquire_build_lock
+from tools.pathing import repo_root
 
 
 class JsonRpcError(RuntimeError):

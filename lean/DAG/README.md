@@ -58,7 +58,7 @@ It remains subordinate to Lean source:
 | `Indexer.lean` | `full_graph.json`, `decls.jsonl`, `edges.jsonl`, `morphisms.jsonl`, `types.jsonl`, `structural-topology.json` | Main export pipeline; `DeclNode`, `DepEdge`, `Morphism`, `TypeNode` records; recognizes morphisms (Hom/Equiv/Iso/Map patterns) |
 | `SkeletonExport.lean` | `skeleton.json` | Vulnerability-ranked theorem skeleton (`SkeletonRow`: name, vulSrcs, vulPaths) |
 | `StructuralExport.lean` | `structural-topology.json` | SCC-level metadata: depth spread, dominators, root witnesses, layer membership |
-| `ProcessFlowExport.lean` | `process-flow/*.jsonl` | Rich v4 schema: 9 dependency roles, boundary/locality/polarity/defect classifications, `DerivationalRole` |
+| `ProcessFlowExport.lean` | `process-flow/*.jsonl` | Rich v4 schema: 8 dependency roles, boundary/locality/polarity/defect classifications, `DerivationalRole`; writes the constitutive process-flow export consumed by downstream Python derivations |
 | `BlockExport.lean` | block-level JSON | File slicing: `Block` (text span, produced decls, deps, spine tags, tactics, docstrings) with `ScopeFrame` nesting |
 | `RepresentationDepthExport.lean` | `representation-depth-tags.json` | Lean-enforced depth grammar tags projected onto the declaration DAG |
 | `RootOrderExport.lean` | root-order JSON | True root ordering for causal reports |
@@ -148,10 +148,12 @@ This layer is for:
 The process-flow export writes:
 - `artifacts/dag/process-flow/flow-edges.jsonl`
 - `artifacts/dag/process-flow/process-events.jsonl`
-- `artifacts/dag/process-flow/flow-cocycles.jsonl`
-- `artifacts/dag/process-flow/comparison-candidates.jsonl`
 - `artifacts/dag/process-flow/lawful-path-candidates.jsonl`
 - `artifacts/dag/process-flow/defects.jsonl`
+
+The downstream Python report step then derives:
+- `artifacts/dag/process-flow/flow-cocycles.jsonl`
+- `artifacts/dag/process-flow/comparison-candidates.jsonl`
 
 ## Processing Pipeline
 

@@ -42,7 +42,7 @@ def constKind? (ci : ConstantInfo) : Option String :=
   | .quotInfo _ => none
 
 def nameSetToSortedStrings (s : NameSet) : List String :=
-  let names := s.fold (init := #[]) fun acc n => acc.push n.toString
+  let names := (s.toList.map Name.toString).toArray
   (names.qsort (· < ·)).toList
 
 partial def collectConstAxioms (env : Environment) (c : Name) : StateM CacheState NameSet := do
@@ -55,7 +55,7 @@ partial def collectConstAxioms (env : Environment) (c : Name) : StateM CacheStat
   let axioms ←
     match env.find? c with
     | some ci => do
-        let depNames := ci.getUsedConstantsAsSet.fold (init := #[]) fun acc dep => acc.push dep
+        let depNames := ci.getUsedConstantsAsSet.toList
         let mut acc : NameSet := {}
         for dep in depNames do
           let depAxioms ← collectConstAxioms env dep
@@ -73,23 +73,28 @@ partial def collectConstAxioms (env : Environment) (c : Name) : StateM CacheStat
         memo := st.memo.insert c axioms }
   pure axioms
 
-def shouldIncludeName (prefixes : Array String) (s : String) : Bool :=
-  prefixes.isEmpty || prefixes.any fun prefix => s.startsWith prefix
+def shouldIncludeModule (allowedModules : Std.HashSet String) (moduleName : String) : Bool :=
+  allowedModules.isEmpty || allowedModules.contains moduleName
 
 def main (args : List String) : IO UInt32 := do
   Lean.initSearchPath (← Lean.findSysroot)
   let env ← Lean.importModules #[{ module := `InfoGeometry }, { module := `SelfReference }] {}
   let modules := env.header.moduleNames
-  let prefixes := args.toArray
+  let allowedModules : Std.HashSet String :=
+    args.foldl (fun acc moduleName => acc.insert moduleName) {}
   let names :=
-    env.constants.fold (init := #[]) fun acc name _ =>
-      let s := name.toString
-      if (s.startsWith "InfoGeometry" || s.startsWith "SelfReference") &&
-          !isGeneratedName name &&
-          shouldIncludeName prefixes s then
-        acc.push name
-      else
-        acc
+    env.constants.fold (init := #[]) (fun acc name _ =>
+      match env.getModuleIdxFor? name with
+      | some modIdx =>
+          let moduleName := (modules[modIdx.toNat]!).toString
+          if (moduleName.startsWith "InfoGeometry" || moduleName.startsWith "SelfReference") &&
+              !isGeneratedName name &&
+              shouldIncludeModule allowedModules moduleName then
+            acc.push name
+          else
+            acc
+      | none =>
+          acc)
   let names := names.qsort Name.lt
   for name in names do
     match env.find? name, env.getModuleIdxFor? name with
@@ -97,9 +102,12 @@ def main (args : List String) : IO UInt32 := do
         match constKind? ci with
         | some kind =>
             let (axioms, _) := (collectConstAxioms env name).run {}
-            let axioms := nameSetToSortedStrings axioms
-            let moduleName := (modules[modIdx.toNat]!).toString
-            IO.println s!"{moduleName}\t{kind}\t{name}\t{String.intercalate ";" axioms}"
+            if !axioms.isEmpty then
+              let axioms := nameSetToSortedStrings axioms
+              let moduleName := (modules[modIdx.toNat]!).toString
+              IO.println s!"{moduleName}\t{kind}\t{name}\t{String.intercalate ";" axioms}"
+            else
+              pure ()
         | none =>
             pure ()
     | _, _ =>

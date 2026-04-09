@@ -10,6 +10,7 @@ __pycache__/
 # Project-specific Build/Analysis Artifacts
 .build/
 .artifacts/
+dag-toolchain.local.json
 
 # Generated aggregation artifacts
 lean/all_lean_files.txt
@@ -45,6 +46,8 @@ reports/theory-dag-*/declarations.json
 reports/dag/
 reports/lift-naturality-diagnostics.md
 reports/naturality-promoter.md
+artifacts/dag/structural-topology.json
+artifacts/dag/process-flow/comparison-candidates.jsonl
 
 # Accidental vendor payloads
 interspec_src/

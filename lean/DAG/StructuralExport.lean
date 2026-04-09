@@ -309,10 +309,70 @@ private def buildPayload (h : HydratedGraph String) : StructuralPayload :=
 def buildStructuralPayload (h : HydratedGraph String) : StructuralPayload :=
   buildPayload h
 
+/--
+Stream the structural artifact field-by-field instead of materializing one large
+top-level `Json` value; the full repo payload is large enough to overflow the
+runtime stack when serialized in one shot.
+-/
+private def writeJsonField
+  (h : IO.FS.Handle)
+  (needsComma : Bool)
+  (key : String)
+  (value : Json)
+  : IO Bool := do
+  if needsComma then
+    h.putStr ","
+  h.putStr (Json.str key).compress
+  h.putStr ":"
+  h.putStr value.compress
+  pure true
+
+private def writeJsonArrayField
+  {α : Type}
+  [ToJson α]
+  (h : IO.FS.Handle)
+  (needsComma : Bool)
+  (key : String)
+  (xs : Array α)
+  : IO Bool := do
+  if needsComma then
+    h.putStr ","
+  h.putStr (Json.str key).compress
+  h.putStr ":["
+  let mut first := true
+  for x in xs do
+    if first then
+      first := false
+    else
+      h.putStr ","
+    h.putStr (toJson x).compress
+  h.putStr "]"
+  pure true
+
 def writeStructuralJsonOutput (payload : StructuralPayload) (outPath : String) : IO Unit := do
   let path := System.FilePath.mk outPath
   if let some p := path.parent then
     IO.FS.createDirAll p
-  IO.FS.writeFile path (toJson payload).pretty
+  let h ← IO.FS.Handle.mk path IO.FS.Mode.write
+  h.putStr "{"
+  let mut needsComma := false
+  needsComma ← writeJsonField h needsComma "schemaVersion" (toJson payload.schemaVersion)
+  needsComma ← writeJsonField h needsComma "orientation" (toJson payload.orientation)
+  needsComma ← writeJsonField h needsComma "nodeCount" (toJson payload.nodeCount)
+  needsComma ← writeJsonField h needsComma "componentCount" (toJson payload.componentCount)
+  needsComma ← writeJsonField h needsComma "rootCount" (toJson payload.rootCount)
+  needsComma ← writeJsonField h needsComma "capstoneCount" (toJson payload.capstoneCount)
+  needsComma ← writeJsonField h needsComma "layerCount" (toJson payload.layerCount)
+  needsComma ← writeJsonField h needsComma "maxDepth" (toJson payload.maxDepth)
+  needsComma ← writeJsonArrayField h needsComma "roots" payload.roots
+  needsComma ← writeJsonArrayField h needsComma "rootComponentIds" payload.rootComponentIds
+  needsComma ← writeJsonArrayField h needsComma "capstones" payload.capstones
+  needsComma ← writeJsonArrayField h needsComma "capstoneComponentIds" payload.capstoneComponentIds
+  needsComma ← writeJsonArrayField h needsComma "layers" payload.layers
+  needsComma ← writeJsonArrayField h needsComma "deepestChains" payload.deepestChains
+  needsComma ← writeJsonArrayField h needsComma "components" payload.components
+  needsComma ← writeJsonArrayField h needsComma "componentEdges" payload.componentEdges
+  let _ ← writeJsonArrayField h needsComma "membership" payload.membership
+  h.putStr "}"
 
 end DAG

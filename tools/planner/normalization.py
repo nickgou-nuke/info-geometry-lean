@@ -7,10 +7,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, cast
 
-if __package__ in (None, "", "planner"):
-    from pathing import normalize_user_path
-else:
-    from tools.pathing import normalize_user_path
+from tools.pathing import normalize_user_path
 
 from .common import (
     DECL_MATCH_RELIABILITY,

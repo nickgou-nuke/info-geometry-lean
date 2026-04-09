@@ -29,6 +29,7 @@ import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit
 import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Canonical.BoundaryProjector
 import InfoGeometry.Canonical.BottDirac
 import InfoGeometry.Canonical.BottPeriodicity
 import InfoGeometry.Canonical.BregmanTriality
@@ -97,6 +98,7 @@ import InfoGeometry.Canonical.KKTGeneralizedInverseBridge
 import InfoGeometry.Canonical.KKTGeneralizedMetricBridge
 import InfoGeometry.Canonical.KKFoundation
 import InfoGeometry.Canonical.SuperchargeTransportBridge
+import InfoGeometry.Canonical.SuperJordanLie
 import InfoGeometry.Canonical.VortexAnomalyLink
 import InfoGeometry.Canonical.SpinConnection
 import InfoGeometry.Canonical.TransportLieDerivative
@@ -131,6 +133,7 @@ import InfoGeometry.Canonical.ManifoldDegreeIntegration
 import InfoGeometry.Canonical.MajoranaKitaevSpinorBridge
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.ModularSpinorBridge
+import InfoGeometry.Canonical.SpinorModularBridge
 import InfoGeometry.Canonical.ModularTwoStateCorrelation
 import InfoGeometry.Canonical.CorrelationSymmetrization
 import InfoGeometry.Canonical.CorrelationAntisymmetrization

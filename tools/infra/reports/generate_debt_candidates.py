@@ -9,9 +9,9 @@ from pathlib import Path
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
-    from tools.infra.reports.common import normalize_user_path
+    from tools.infra.reports.common import normalize_user_path, repo_root
 else:
-    from tools.infra.reports.common import normalize_user_path
+    from tools.infra.reports.common import normalize_user_path, repo_root
 
 
 DEFAULT_SURROGATE_INDEX = "SURROGATE_INDEX.md"

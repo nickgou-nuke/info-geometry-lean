@@ -44,6 +44,7 @@ publication/
 docs-map/declarations*.json
 reports/theory-dag-*/declarations.json
 reports/dag/
+reports/optimization-runs/
 reports/lift-naturality-diagnostics.md
 reports/naturality-promoter.md
 artifacts/dag/structural-topology.json

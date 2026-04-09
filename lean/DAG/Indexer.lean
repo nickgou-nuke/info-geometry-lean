@@ -105,6 +105,12 @@ structure IndexerState where
   edgeSet   : Std.HashSet EdgeKey := {}
   morphisms : Array Morphism := #[]
   types     : Std.HashSet String := {}
+  moduleFiles : Std.HashMap Name String := {}
+
+private structure PendingConstant where
+  name : Name
+  nameStr : String
+  ci : ConstantInfo
 
 abbrev IndexerM := StateRefT IndexerState MetaM
 
@@ -133,8 +139,7 @@ def getModuleName (env : Environment) (n : Name) : Name :=
   | some midx => env.header.moduleNames[midx.toNat]!
   | none      => env.mainModule
 
-def moduleToLeanFile (mod : Name) : MetaM String := do
-  let sp ← Lean.getSrcSearchPath
+def moduleToLeanFile (sp : SearchPath) (mod : Name) : MetaM String := do
   let fp? : Option System.FilePath ← Lean.findLean sp mod
   match fp? with
   | some fp => pure fp.toString
@@ -176,12 +181,18 @@ def addEdge (src dst kind : String) : IndexerM Unit := do
 private def shouldIndexDeclString (s : String) : Bool :=
   !(s.contains "._" || s.endsWith "match_" || s.endsWith "proof_" || s.endsWith "injEq")
 
-def processConstant (name : Name) (ci : ConstantInfo) : IndexerM Unit := do
-  let env ← getEnv
-  let nameStr := name.toString
+private def moduleToLeanFileCached (sp : SearchPath) (mod : Name) : IndexerM String := do
+  let st ← get
+  match st.moduleFiles.get? mod with
+  | some fileStr => pure fileStr
+  | none =>
+      let fileStr ← liftM <| moduleToLeanFile sp mod
+      modify fun s => { s with moduleFiles := s.moduleFiles.insert mod fileStr }
+      pure fileStr
 
+def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr : String) (ci : ConstantInfo) : IndexerM Unit := do
   let modName := getModuleName env name
-  let fileStr ← moduleToLeanFile modName
+  let fileStr ← moduleToLeanFileCached sp modName
 
   let (line, col) ←
     match (← findDeclarationRanges? name) with
@@ -262,12 +273,16 @@ private def defaultStructureOutFor (graphOut : String) : String :=
   let parent := path.parent.getD "."
   (parent / "structural-topology.json").toString
 
-private def logTiming (label : String) (elapsedMs : Nat) : IO Unit := do
-  IO.println s!"[Indexer timing] {label}: {elapsedMs} ms"
+private def logTiming (logPath : System.FilePath) (label : String) (elapsedMs : Nat) : IO Unit := do
+  let line := s!"[Indexer timing] {label}: {elapsedMs} ms"
+  IO.println line
+  IO.FS.withFile logPath IO.FS.Mode.append fun h => do
+    h.putStrLn line
+    h.flush
 
-private def checkpoint (label : String) (startMs : Nat) : MetaM Nat := do
+private def checkpoint (logPath : System.FilePath) (label : String) (startMs : Nat) : MetaM Nat := do
   let now ← liftM IO.monoMsNow
-  liftM <| logTiming label (now - startMs)
+  liftM <| logTiming logPath label (now - startMs)
   pure now
 
 /-- Write to a temp file then atomically rename, preventing partial writes from poisoning artifacts. -/
@@ -300,14 +315,48 @@ private def parseName (s : String) : Name :=
   (String.splitOn s ".").foldl (init := Name.anonymous) fun acc part =>
     if part.isEmpty then acc else Name.str acc part
 
-/-- Classify edges dropped by the namespace-filtered node set. -/
-private def classifyEdgeLeakage
+private inductive DroppedDstClass where
+  | external (moduleName : String)
+  | internalGenerated (moduleName : String)
+  | internalStable (moduleName : String)
+  | unknown
+
+private structure EdgeFilterResult where
+  keptEdges : Array DepEdge
+  leakage : EdgeLeakageReport
+
+private def classifyDroppedDst
+  (env : Environment)
+  (nsPrefix : String)
+  (dst : String)
+  : DroppedDstClass :=
+  let dstName := parseName dst
+  match env.find? dstName with
+  | some _ =>
+      let modName := getModuleName env dstName |>.toString
+      if modName.startsWith nsPrefix then
+        if shouldIndexDeclString dst then
+          .internalStable modName
+        else
+          .internalGenerated modName
+      else
+        .external modName
+  | none =>
+      .unknown
+
+/--
+Filter kept edges and classify dropped edges in one pass.
+The destination classification is cached per missing target so repeated
+cross-namespace/generated edges do not repeatedly parse names or query the env.
+-/
+private def filterEdgesAndClassifyLeakage
   (env : Environment)
   (nsPrefix : String)
   (nodeSet : Std.HashSet String)
   (edges : Array DepEdge)
-  : EdgeLeakageReport :=
+  : EdgeFilterResult :=
   Id.run do
+    let mut keptEdges : Array DepEdge := #[]
     let mut droppedEdges := 0
     let mut srcOutsideFilteredSet := 0
     let mut dstOutsideModuleEdges := 0
@@ -320,79 +369,90 @@ private def classifyEdgeLeakage
     let mut externalTargets : Std.HashMap String Nat := {}
     let mut internalTargets : Std.HashMap String Nat := {}
     let mut unknownTargets : Std.HashMap String Nat := {}
+    let mut dstCache : Std.HashMap String DroppedDstClass := {}
 
     for e in edges do
-      let srcMissing := !nodeSet.contains e.src
-      let dstMissing := !nodeSet.contains e.dst
-      if srcMissing || dstMissing then
+      let srcPresent := nodeSet.contains e.src
+      let dstPresent := nodeSet.contains e.dst
+      if srcPresent && dstPresent then
+        keptEdges := keptEdges.push e
+      else
         droppedEdges := droppedEdges + 1
-        if srcMissing then
+        if !srcPresent then
           srcOutsideFilteredSet := srcOutsideFilteredSet + 1
-        if dstMissing then
-          let dstName := parseName e.dst
-          match env.find? dstName with
-          | some _ =>
-              let modName := getModuleName env dstName |>.toString
-              if modName.startsWith nsPrefix then
-                internalModules := bumpCount internalModules modName
-                internalTargets := bumpCount internalTargets e.dst
-                if shouldIndexDeclString e.dst then
-                  dstInsideModuleStableEdges := dstInsideModuleStableEdges + 1
-                else
-                  dstInsideModuleGeneratedEdges := dstInsideModuleGeneratedEdges + 1
-              else
-                dstOutsideModuleEdges := dstOutsideModuleEdges + 1
-                externalModules := bumpCount externalModules modName
-                externalTargets := bumpCount externalTargets e.dst
-          | none =>
+        if !dstPresent then
+          let (dstClass, nextCache) :=
+            match dstCache.get? e.dst with
+            | some dstClass => (dstClass, dstCache)
+            | none =>
+                let dstClass := classifyDroppedDst env nsPrefix e.dst
+                (dstClass, dstCache.insert e.dst dstClass)
+          dstCache := nextCache
+          match dstClass with
+          | .external modName =>
+              dstOutsideModuleEdges := dstOutsideModuleEdges + 1
+              externalModules := bumpCount externalModules modName
+              externalTargets := bumpCount externalTargets e.dst
+          | .internalGenerated modName =>
+              dstInsideModuleGeneratedEdges := dstInsideModuleGeneratedEdges + 1
+              internalModules := bumpCount internalModules modName
+              internalTargets := bumpCount internalTargets e.dst
+          | .internalStable modName =>
+              dstInsideModuleStableEdges := dstInsideModuleStableEdges + 1
+              internalModules := bumpCount internalModules modName
+              internalTargets := bumpCount internalTargets e.dst
+          | .unknown =>
               dstUnknownEdges := dstUnknownEdges + 1
               unknownTargets := bumpCount unknownTargets e.dst
 
     {
-      schemaVersion := 1
-      nsFilter := nsPrefix
-      totalEdges := edges.size
-      keptEdges := edges.size - droppedEdges
-      droppedEdges := droppedEdges
-      srcOutsideFilteredSet := srcOutsideFilteredSet
-      dstOutsideModuleEdges := dstOutsideModuleEdges
-      dstInsideModuleGeneratedEdges := dstInsideModuleGeneratedEdges
-      dstInsideModuleStableEdges := dstInsideModuleStableEdges
-      dstUnknownEdges := dstUnknownEdges
-      topExternalModules := topCountRows externalModules
-      topInternalModules := topCountRows internalModules
-      topExternalTargets := topCountRows externalTargets
-      topInternalTargets := topCountRows internalTargets
-      topUnknownTargets := topCountRows unknownTargets
+      keptEdges := keptEdges
+      leakage := {
+        schemaVersion := 1
+        nsFilter := nsPrefix
+        totalEdges := edges.size
+        keptEdges := keptEdges.size
+        droppedEdges := droppedEdges
+        srcOutsideFilteredSet := srcOutsideFilteredSet
+        dstOutsideModuleEdges := dstOutsideModuleEdges
+        dstInsideModuleGeneratedEdges := dstInsideModuleGeneratedEdges
+        dstInsideModuleStableEdges := dstInsideModuleStableEdges
+        dstUnknownEdges := dstUnknownEdges
+        topExternalModules := topCountRows externalModules
+        topInternalModules := topCountRows internalModules
+        topExternalTargets := topCountRows externalTargets
+        topInternalTargets := topCountRows internalTargets
+        topUnknownTargets := topCountRows unknownTargets
+      }
     }
 
-def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (graphOut : String) (structureOut : String) : MetaM Unit := do
+def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (graphOut : String) (structureOut : String) (timingLog : System.FilePath) : MetaM Unit := do
   let runStart ← liftM IO.monoMsNow
   let env ← getEnv
-  let mut consts := env.constants.toList.map (·.1)
-  consts := consts.filter (fun n => (n.toString).startsWith nsPrefix)
-  consts := consts.toArray.qsort (fun a b => a.toString < b.toString) |>.toList
+  let srcSearchPath ← liftM Lean.getSrcSearchPath
+  let outPath := System.FilePath.mk outDir
+  liftM <| IO.FS.createDirAll outPath
+  let consts : Array PendingConstant := Id.run do
+    let mut out : Array PendingConstant := #[]
+    for (name, ci) in env.constants.toList do
+      let nameStr := name.toString
+      if nameStr.startsWith nsPrefix && shouldIndexDeclString nameStr then
+        out := out.push { name := name, nameStr := nameStr, ci := ci }
+    pure (out.qsort (fun a b => a.nameStr < b.nameStr))
 
-  let (_, st) ← (consts.forM fun n => do
-    if let some ci := env.find? n then
-      let s := n.toString
-      if shouldIndexDeclString s then
-        processConstant n ci
+  let (_, st) ← (consts.forM fun (entry : PendingConstant) => do
+    processConstant env srcSearchPath entry.name entry.nameStr entry.ci
   ).run {} {}
-  let mut stageStart ← checkpoint s!"collect/process constants ({st.decls.size} decls, {st.edges.size} raw edges, {st.morphisms.size} morphisms)" runStart
+  let mut stageStart ← checkpoint timingLog s!"collect/process constants ({st.decls.size} decls, {st.edges.size} raw edges, {st.morphisms.size} morphisms)" runStart
 
   let nodes : Array String := st.decls.map (·.name)
   let nodeSet : Std.HashSet String :=
     nodes.foldl (init := ({} : Std.HashSet String)) (fun acc n => acc.insert n)
 
-  let leakage := classifyEdgeLeakage env nsPrefix nodeSet st.edges
-
-  let edgesFiltered : Array DepEdge :=
-    st.edges.filter (fun e => nodeSet.contains e.src && nodeSet.contains e.dst)
-  stageStart ← checkpoint s!"classify/filter edges ({edgesFiltered.size} kept / {st.edges.size} raw)" stageStart
-
-  let outPath := System.FilePath.mk outDir
-  IO.FS.createDirAll outPath
+  let edgeFilter := filterEdgesAndClassifyLeakage env nsPrefix nodeSet st.edges
+  let leakage := edgeFilter.leakage
+  let edgesFiltered := edgeFilter.keptEdges
+  stageStart ← checkpoint timingLog s!"classify/filter edges ({edgesFiltered.size} kept / {st.edges.size} raw)" stageStart
 
   if leakage.droppedEdges > 0 then
     IO.eprintln s!"[Indexer WARNING] {leakage.droppedEdges} edge(s) reference nodes outside the filtered set"
@@ -409,7 +469,7 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
 
   let typeNodes : Array TypeNode := st.types.toList.toArray.map (fun t => { key := t, display := t })
   liftM <| writeJsonl "types.jsonl" typeNodes
-  stageStart ← checkpoint "write index jsonl artifacts" stageStart
+  stageStart ← checkpoint timingLog "write index jsonl artifacts" stageStart
 
   -- Build ONE canonical graph from edges; project all views from it.
   let nameToIdx : Std.HashMap String Nat :=
@@ -430,11 +490,11 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
             typedAdj := typedAdj.modify u (fun adj => adj.push (v, kind))
         | none => pure ()
     | _, _ => pure ()
-  stageStart ← checkpoint "build typed adjacency" stageStart
+  stageStart ← checkpoint timingLog "build typed adjacency" stageStart
 
   let typedSorted :=
     typedAdj.map (fun adj => adj.qsort (fun a b => a.1 < b.1 || (a.1 == b.1 && edgeKindRank a.2 < edgeKindRank b.2)))
-  stageStart ← checkpoint "sort typed adjacency" stageStart
+  stageStart ← checkpoint timingLog "sort typed adjacency" stageStart
 
   -- Project the FullGraph view (with string edge kinds) from the typed adjacency.
   let fwdSorted : Array (Array (Nat × String)) :=
@@ -443,15 +503,15 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
 
   let graph : FullGraph := { nodes := nodes, forward := fwdSorted }
   liftM <| atomicWriteFile (System.FilePath.mk graphOut) (Lean.toJson graph).pretty
-  stageStart ← checkpoint "write full_graph.json" stageStart
+  stageStart ← checkpoint timingLog "write full_graph.json" stageStart
 
   let nativeGraph : Graph String := { nodes := nodes, nodeToIdx := nameToIdx, forward := typedSorted }
   let hydrated := hydrate nativeGraph
-  stageStart ← checkpoint "hydrate graph (SCC + DAG + dominators)" stageStart
+  stageStart ← checkpoint timingLog "hydrate graph (SCC + DAG + dominators)" stageStart
   let structuralPayload := buildStructuralPayload hydrated
-  stageStart ← checkpoint "build structural payload" stageStart
+  stageStart ← checkpoint timingLog "build structural payload" stageStart
   liftM <| writeStructuralJsonOutput structuralPayload structureOut
-  stageStart ← checkpoint "write structural-topology.json" stageStart
+  stageStart ← checkpoint timingLog "write structural-topology.json" stageStart
 
   -- Write meta.json envelope with schema version, counts, and ISO timestamp.
   let metaPayload : ArtifactMeta := {
@@ -465,9 +525,9 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
     importRoot    := importRoot
   }
   liftM <| atomicWriteFile (outPath / "meta.json") (toJson metaPayload).pretty
-  let _ ← checkpoint "write meta.json" stageStart
+  let _ ← checkpoint timingLog "write meta.json" stageStart
   let runStop ← liftM IO.monoMsNow
-  liftM <| logTiming "total runIndexer" (runStop - runStart)
+  liftM <| logTiming timingLog "total runIndexer" (runStop - runStart)
 
   IO.println s!"[Indexer v{indexerSchemaVersion}] Exported {st.decls.size} decls, {edgesFiltered.size} edges, {st.morphisms.size} morphisms to {outDir}/"
   IO.println s!"[Indexer v{indexerSchemaVersion}] Wrote {graphOut}, {structureOut}, and {outDir}/meta.json"
@@ -487,13 +547,16 @@ def indexerMain (args : List String) : IO UInt32 := do
         let graphOut := "artifacts/dag/full_graph.json"
         pure ("InfoGeometry.All", "InfoGeometry", "artifacts/dag/index", graphOut, defaultStructureOutFor graphOut)
 
+  let timingLog := System.FilePath.mk outDir / "indexer-timing.log"
+  IO.FS.createDirAll timingLog.parent.get!
+  try IO.FS.removeFile timingLog catch _ => pure ()
   initSearchPath (← findSysroot)
   let env ← importModules (parseImports importModsStr) {} 0
   let importStop ← IO.monoMsNow
-  logTiming s!"importModules ({importModsStr})" (importStop - importStart)
+  logTiming timingLog s!"importModules ({importModsStr})" (importStop - importStart)
   let coreContext : Core.Context := { fileName := "<Indexer>", fileMap := default }
 
-  let _ ← ((runIndexer nsPrefix importModsStr outDir graphOut structureOut).run {} {}).toIO coreContext { env := env }
+  let _ ← ((runIndexer nsPrefix importModsStr outDir graphOut structureOut timingLog).run {} {}).toIO coreContext { env := env }
   return 0
 
 def main (args : List String) : IO UInt32 :=

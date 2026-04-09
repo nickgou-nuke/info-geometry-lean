@@ -7,9 +7,9 @@ from pathlib import Path
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
-    from tools.infra.reports.common import read_text, write_text
+    from tools.infra.reports.common import read_text, repo_root, write_text
 else:
-    from tools.infra.reports.common import read_text, write_text
+    from tools.infra.reports.common import read_text, repo_root, write_text
 
 
 DEFAULT_DEBT_PACKET = "skills/info-geometry-repo/references/debt-candidates.md"

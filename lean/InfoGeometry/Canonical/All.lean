@@ -141,6 +141,7 @@ import InfoGeometry.Canonical.CoordinateFreeSecondVariation
 import InfoGeometry.Canonical.OnsagerCasimirJ
 import InfoGeometry.Canonical.NoetherInference
 import InfoGeometry.Canonical.ModularHessian
+import InfoGeometry.Canonical.FisherVolumeBridge
 import InfoGeometry.Canonical.PhaseVolumeDynamics
 import InfoGeometry.Canonical.VariationalLadder
 import InfoGeometry.Canonical.TopologicalResidue

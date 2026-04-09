@@ -25,6 +25,40 @@ open InfoGeometry.Canonical.StateDependentTransport
 open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Krein
 
+section LightweightTheorems
+
+variable {E : Type}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+
+local notation "H₂" => DoubledSpace E
+
+/-- `J` preserves the positive doubled-space Hilbert inner product. -/
+@[rep_depth krein]
+theorem modularConjugationJ_preserves_inner
+    (u v : H₂) :
+    ⟪modularConjugationJ (E := E) u, modularConjugationJ (E := E) v⟫_ℝ = ⟪u, v⟫_ℝ := by
+  repeat rw [WithLp.prod_inner_apply]
+  repeat rw [WithLp.ofLp_fst, WithLp.ofLp_snd]
+  simp [modular_j, add_comm]
+
+/-- `K = Jε` anticommutes with `J` on the right as well as on the left. -/
+@[rep_depth krein]
+theorem modularComplexI_comp_modularConjugationJ
+    :
+    (modularComplexI (E := E)).comp (modularConjugationJ (E := E))
+      =
+    -((modularConjugationJ (E := E)).comp (modularComplexI (E := E))) := by
+  have h := InfoGeometry.Krein.modular_j_complex_i_anticommute (E := E)
+  calc
+    (modularComplexI (E := E)).comp (modularConjugationJ (E := E))
+        =
+      -(-((modularComplexI (E := E)).comp (modularConjugationJ (E := E)))) := by
+          simp
+    _ = -((modularConjugationJ (E := E)).comp (modularComplexI (E := E))) := by
+          rw [← h]
+
+end LightweightTheorems
+
 section Core
 
 variable {E : Type}
@@ -72,31 +106,6 @@ omit [CompleteSpace E] in
     apply DoubledSpace.ext <;> simp
   simpa [JConjugate, ContinuousLinearMap.comp_assoc] using hu
 
-/-- `J` preserves the positive doubled-space Hilbert inner product. -/
-@[rep_depth krein]
-theorem modularConjugationJ_preserves_inner
-    (u v : H₂) :
-    ⟪modularConjugationJ (E := E) u, modularConjugationJ (E := E) v⟫_ℝ = ⟪u, v⟫_ℝ := by
-  repeat rw [WithLp.prod_inner_apply]
-  repeat rw [WithLp.ofLp_fst, WithLp.ofLp_snd]
-  simp [modular_j, add_comm]
-
-/-- `K = Jε` anticommutes with `J` on the right as well as on the left. -/
-@[rep_depth krein]
-theorem modularComplexI_comp_modularConjugationJ
-    :
-    (modularComplexI (E := E)).comp (modularConjugationJ (E := E))
-      =
-    -((modularConjugationJ (E := E)).comp (modularComplexI (E := E))) := by
-  have h := InfoGeometry.Krein.modular_j_complex_i_anticommute (E := E)
-  calc
-    (modularComplexI (E := E)).comp (modularConjugationJ (E := E))
-        =
-      -(-((modularComplexI (E := E)).comp (modularConjugationJ (E := E)))) := by
-          simp
-    _ = -((modularConjugationJ (E := E)).comp (modularComplexI (E := E))) := by
-          rw [← h]
-
 /-- `J` turns `K`-phase twisting into its negative after conjugation. -/
 @[rep_depth krein]
 theorem JConjugate_channelPhaseAxis_eq_neg_channelPhaseAxis_JConjugate
@@ -131,6 +140,7 @@ theorem JConjugate_channelPhaseAxis_eq_neg_channelPhaseAxis_JConjugate
     _ = -(channelPhaseAxis (E := E) (JConjugate (E := E) X) u) := by
         simp [channelPhaseAxis_apply]
 
+omit [CompleteSpace E] in
 /-- Two-state observable correlations are `J`-covariant under channel conjugation. -/
 @[rep_depth krein]
 theorem twoStateObservableCorrelation_J_conjugate

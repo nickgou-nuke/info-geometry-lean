@@ -40,6 +40,12 @@ noncomputable def quasilatticeDirac
   InfoGeometry.Canonical.expTransport (A := EndH)
     V.connectionGenerator D t
 
+@[simp] theorem quasilatticeDirac_zero
+    (V : BogoliubovVielbeinBundle (E := E))
+    (D : EndH) :
+    quasilatticeDirac V D 0 = D := by
+  simp [quasilatticeDirac, InfoGeometry.Canonical.expTransport]
+
 /--
 **Vielbein Covariance Law**:
 The Lie-derivative of the quasilattice Dirac operator is the commutator of the
@@ -72,6 +78,84 @@ theorem deriv_quasilatticeDirac
     _ = V.connectionGenerator * (quasilatticeDirac V D t)
           - (quasilatticeDirac V D t) * V.connectionGenerator := by
             rfl
+
+/--
+The infinitesimal Dirac transport splits into the phase-linear and
+phase-antilinear commutator channels of the connection generator.
+-/
+theorem deriv_quasilatticeDirac_eq_phaseLinear_add_phaseAntilinear
+    (V : BogoliubovVielbeinBundle (E := E))
+    (D : EndH) (t : ℝ) :
+    deriv (fun s => quasilatticeDirac V D s) t
+      =
+    InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+        (E := E)
+        (InfoGeometry.Canonical.BogoliubovTransport.phaseLinearPart
+          (E := E) V.connectionGenerator)
+        (quasilatticeDirac V D t)
+      +
+    InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+        (E := E)
+        (InfoGeometry.Canonical.BogoliubovTransport.phaseAntilinearPart
+          (E := E) V.connectionGenerator)
+        (quasilatticeDirac V D t) := by
+  rw [deriv_quasilatticeDirac]
+  simpa using
+    (InfoGeometry.Canonical.BogoliubovTransport.transportCommutator_split_generator
+      (E := E) V.connectionGenerator (quasilatticeDirac V D t))
+
+/--
+If the transported Dirac operator commutes with the phase-linear part of the
+connection generator, its infinitesimal transport is carried purely by the
+phase-antilinear source channel.
+-/
+theorem deriv_quasilatticeDirac_eq_phaseAntilinear_of_commute_phaseLinearPart
+    (V : BogoliubovVielbeinBundle (E := E))
+    (D : EndH) (t : ℝ)
+    (hComm :
+      Commute (quasilatticeDirac V D t)
+        (InfoGeometry.Canonical.BogoliubovTransport.phaseLinearPart
+          (E := E) V.connectionGenerator)) :
+    deriv (fun s => quasilatticeDirac V D s) t
+      =
+    InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+      (E := E)
+      (InfoGeometry.Canonical.BogoliubovTransport.phaseAntilinearPart
+        (E := E) V.connectionGenerator)
+      (quasilatticeDirac V D t) := by
+  rw [deriv_quasilatticeDirac_eq_phaseLinear_add_phaseAntilinear V D t]
+  have hZero :
+      InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+          (E := E)
+          (InfoGeometry.Canonical.BogoliubovTransport.phaseLinearPart
+            (E := E) V.connectionGenerator)
+          (quasilatticeDirac V D t)
+        = 0 := by
+    unfold InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+    exact sub_eq_zero.mpr hComm.eq.symm
+  simp [hZero]
+
+/--
+At the reference point, gauge-commuting Dirac seeds evolve purely through the
+phase-antilinear source channel of the connection generator.
+-/
+theorem deriv_quasilatticeDirac_at_zero_eq_phaseAntilinear_of_commute_phaseLinearPart
+    (V : BogoliubovVielbeinBundle (E := E))
+    (D : EndH)
+    (hComm :
+      Commute D
+        (InfoGeometry.Canonical.BogoliubovTransport.phaseLinearPart
+          (E := E) V.connectionGenerator)) :
+    deriv (fun s => quasilatticeDirac V D s) 0
+      =
+    InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+      (E := E)
+      (InfoGeometry.Canonical.BogoliubovTransport.phaseAntilinearPart
+        (E := E) V.connectionGenerator) D := by
+  rw [deriv_quasilatticeDirac_eq_phaseAntilinear_of_commute_phaseLinearPart
+    V D 0]
+  · simp
+  · simpa [quasilatticeDirac_zero] using hComm
 
 /--
 **Curvature-Dirac Coupling**:

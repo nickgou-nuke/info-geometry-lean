@@ -93,6 +93,22 @@ noncomputable def comparisonPhaseReadout
     LinearMap.BilinForm ℝ H₂ :=
   stateQGTPhaseReadout (E := E) P.modularData comparison A
 
+/-- The comparison-state metric readout is the operatorial metric of the induced dynamics. -/
+@[rep_depth transport, simp] theorem comparisonMetricReadout_apply
+    (P : PotentialDatum (E := E)) (comparison : H₂) (A : EndH) (u v : H₂) :
+    comparisonMetricReadout (E := E) P comparison A u v
+      =
+    InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+      (E := E) (stateInducedDynamics (E := E) P.modularData comparison A) u v := rfl
+
+/-- The comparison-state phase readout is the operatorial Berry form of the induced dynamics. -/
+@[rep_depth transport, simp] theorem comparisonPhaseReadout_apply
+    (P : PotentialDatum (E := E)) (comparison : H₂) (A : EndH) (u v : H₂) :
+    comparisonPhaseReadout (E := E) P comparison A u v
+      =
+    InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+      (E := E) (stateInducedDynamics (E := E) P.modularData comparison A) u v := rfl
+
 /-- Channel bilinear form induced by evaluation on a fixed doubled state. -/
 @[rep_depth krein]
 noncomputable def channelCorrelationAtState
@@ -113,6 +129,18 @@ noncomputable def channelCorrelationAtState
       intro c X Y
       simp [real_inner_smul_right]
       ring)
+
+/-- Primitive comparison-state channel metric induced directly by evaluation on that state. -/
+@[rep_depth krein]
+noncomputable def comparisonStateGeneratorMetric
+    (comparison : H₂) : LinearMap.BilinForm ℝ (PerturbationChannel E) :=
+  channelCorrelationAtState (E := E) comparison
+
+/-- Primitive `(Jε)`-phase form on perturbation channels at the comparison state. -/
+@[rep_depth krein]
+noncomputable def comparisonStateGeneratorPhase
+    (comparison : H₂) : LinearMap.BilinForm ℝ (PerturbationChannel E) :=
+  (comparisonStateGeneratorMetric (E := E) comparison).compLeft channelPhaseAxis
 
 /-- Construct the abstract relational datum from the primitive potential datum. -/
 @[rep_depth transport]
@@ -157,6 +185,19 @@ theorem firstVariation_eq_gauge_add_source
     (ψ : H₂) (X Y : PerturbationChannel E) :
     channelCorrelationAtState (E := E) ψ X Y = ⟪X ψ, Y ψ⟫_ℝ := rfl
 
+@[rep_depth krein, simp] theorem comparisonStateGeneratorMetric_apply
+    (comparison : H₂) (X Y : PerturbationChannel E) :
+    comparisonStateGeneratorMetric (E := E) comparison X Y
+      =
+    ⟪X comparison, Y comparison⟫_ℝ := rfl
+
+@[rep_depth krein, simp] theorem comparisonStateGeneratorPhase_apply
+    (comparison : H₂) (X Y : PerturbationChannel E) :
+    comparisonStateGeneratorPhase (E := E) comparison X Y
+      =
+    ⟪(X.comp (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E))) comparison,
+      Y comparison⟫_ℝ := rfl
+
 @[rep_depth transport, simp] theorem toRelationalInformationDatum_informationFunctional
     (P : PotentialDatum (E := E)) (reference comparison ψ : H₂) :
     (toRelationalInformationDatum (E := E) P reference comparison).informationFunctional ψ
@@ -176,7 +217,7 @@ theorem firstVariation_eq_gauge_add_source
     twoStateGap (E := E) P reference comparison := by
   rfl
 
-@[rep_depth krein, simp] theorem toRelationalInformationDatum_comparisonGeneratorMetric_apply
+@[rep_depth transport, simp] theorem toRelationalInformationDatum_comparisonGeneratorMetric_apply
     (P : PotentialDatum (E := E)) (reference comparison : H₂)
     (X Y : PerturbationChannel E) :
     comparisonGeneratorMetric
@@ -185,7 +226,7 @@ theorem firstVariation_eq_gauge_add_source
     ⟪X comparison, Y comparison⟫_ℝ := by
   rfl
 
-@[rep_depth krein, simp] theorem toRelationalInformationDatum_comparisonGeneratorPhase_apply
+@[rep_depth transport, simp] theorem toRelationalInformationDatum_comparisonGeneratorPhase_apply
     (P : PotentialDatum (E := E)) (reference comparison : H₂)
     (X Y : PerturbationChannel E) :
     comparisonGeneratorPhase

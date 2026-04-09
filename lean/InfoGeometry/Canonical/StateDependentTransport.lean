@@ -182,6 +182,62 @@ noncomputable def pairedStateSourceDynamics
       (E := E) (stateInducedDynamics (E := E) M ψ A) u v
 
 /--
+For a constant modular datum, the bundled `StateQGTReadout` is exactly the
+operatorial metric/phase readout of the full relative-modular derivative.
+-/
+@[rep_depth transport, simp]
+theorem stateQGTReadout_constant_apply_eq_metricPhase_relativeModularDeriv
+    (hMod A : EndH) (ψ u v : H₂) :
+    ( (stateQGTReadout (E := E)
+          (constantStateModularDatum (E := E) hMod)
+          ψ
+          A).metric u v
+    , (stateQGTReadout (E := E)
+          (constantStateModularDatum (E := E) hMod)
+          ψ
+          A).phase u v )
+      =
+    ( InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E) (relativeModularDeriv (E := E) hMod A) u v
+    , InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E) (relativeModularDeriv (E := E) hMod A) u v ) := by
+  rfl
+
+/--
+If the full state-induced dynamics vanishes, then the bundled operatorial
+metric/phase readout vanishes.
+-/
+@[rep_depth transport]
+theorem stateQGTReadout_pair_eq_zero_of_stateInducedDynamics_eq_zero
+    (M : StateModularDatum E) (ψ : H₂) (A : EndH)
+    (hDyn : stateInducedDynamics (E := E) M ψ A = 0) :
+    ( ((stateQGTReadout (E := E) M ψ A).metric)
+    , ((stateQGTReadout (E := E) M ψ A).phase) )
+      =
+    (0, 0) := by
+  apply Prod.ext
+  · ext u v
+    simp [stateQGTReadout, stateQGTMetricReadout_apply, hDyn]
+  · ext u v
+    simp [stateQGTReadout, stateQGTPhaseReadout_apply, stateQGTMetricReadout_apply, hDyn]
+
+/--
+Constant-datum specialization of the vanishing QGT readout criterion.
+-/
+@[rep_depth transport]
+theorem stateQGTReadout_constant_pair_eq_zero_of_relativeModularDeriv_eq_zero
+    (hMod A : EndH) (ψ : H₂)
+    (hDeriv : relativeModularDeriv (E := E) hMod A = 0) :
+    ( ((stateQGTReadout (E := E)
+          (constantStateModularDatum (E := E) hMod) ψ A).metric)
+    , ((stateQGTReadout (E := E)
+          (constantStateModularDatum (E := E) hMod) ψ A).phase) )
+      =
+    (0, 0) := by
+  apply stateQGTReadout_pair_eq_zero_of_stateInducedDynamics_eq_zero
+  simpa using hDeriv
+
+/--
 Local operatorial split:
 the state-induced dynamics is exactly the sum of its gauge and source channels.
 -/

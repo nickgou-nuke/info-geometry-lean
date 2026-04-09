@@ -9,7 +9,7 @@ Status:
 
 ## Repository Scale
 - Lean files under `lean/`: **694**
-- Lean LOC under `lean/`: **131,888**
+- Lean LOC under `lean/`: **131,938**
 
 ## Trusted Semantic Exports
 | Module | Semantic nodes | Semantic edges | Skeleton nodes | Top hubs |
@@ -34,8 +34,6 @@ Status:
 - `InfoGeometry.KK.KasparovCycle`
 - `KreinGradedModule`
 - `InfoGeometry.Canonical.AnalyticalIndex.analyticalIndex`
-- `InfoGeometry.KK.index_bridge_spectral`
-- `KreinGradedModule.gradeCLM`
 
 ### Downstream Consumer Frontier (`--walk reverse`)
 - `InfoGeometry.KK.index_bridge_spectral`
@@ -55,7 +53,7 @@ Status:
 - `InfoGeometry.Meta.ProofShape`
 - `InfoGeometry.Meta.Admission`
 - `InfoGeometry.Meta.RegionPolicy`
-- `InfoGeometry.Canonical.SingularBoundaryCorrection`
+- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge`
 
 ## Source-Sink Compression
 - public bipartite incidence artifact between the atomic declaration DAG and the hydrated module graph

@@ -326,6 +326,50 @@ theorem toRelationalInformationDatum_comparisonPhaseReadout_eq_berryOf_phaseLine
   exact comparisonPhaseReadout_eq_berryOf_phaseLinearPart_add_berryOf_phaseAntilinearPart
     (E := E) (toRelationalInformationDatum (E := E) P reference comparison) A
 
+@[rep_depth transport]
+theorem toRelationalInformationDatum_comparisonMetricPhaseReadout_pair_eq_phaseLinearAntilinear_operator_pair
+    (P : PotentialDatum (E := E)) (reference comparison : H₂) (A : EndH) (u v : H₂) :
+    ( InfoGeometry.Canonical.RelationalInformationCore.comparisonMetricReadout
+        (toRelationalInformationDatum (E := E) P reference comparison) A u v
+    , InfoGeometry.Canonical.RelationalInformationCore.comparisonPhaseReadout
+        (toRelationalInformationDatum (E := E) P reference comparison) A u v )
+      =
+    ( InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseLinearPart (E := E)
+            (comparisonTransportGenerator
+              (toRelationalInformationDatum (E := E) P reference comparison))) A) u v
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseAntilinearPart (E := E)
+            (comparisonTransportGenerator
+              (toRelationalInformationDatum (E := E) P reference comparison))) A) u v
+    , InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseLinearPart (E := E)
+            (comparisonTransportGenerator
+              (toRelationalInformationDatum (E := E) P reference comparison))) A) u v
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseAntilinearPart (E := E)
+            (comparisonTransportGenerator
+              (toRelationalInformationDatum (E := E) P reference comparison))) A) u v ) := by
+  apply Prod.ext
+  · simpa using
+      congrArg (fun B : LinearMap.BilinForm ℝ H₂ => B u v)
+        (toRelationalInformationDatum_comparisonMetricReadout_eq_metricOf_phaseLinearPart_add_metricOf_phaseAntilinearPart
+          (E := E) P reference comparison A)
+  · simpa using
+      congrArg (fun B : LinearMap.BilinForm ℝ H₂ => B u v)
+        (toRelationalInformationDatum_comparisonPhaseReadout_eq_berryOf_phaseLinearPart_add_berryOf_phaseAntilinearPart
+          (E := E) P reference comparison A)
+
 end Core
 
 end InfoGeometry.Canonical.OnsagerReciprocity

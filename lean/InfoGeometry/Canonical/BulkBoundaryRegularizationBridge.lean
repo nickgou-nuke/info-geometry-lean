@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.Singular
+import InfoGeometry.KK.KasparovCycle
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Quantum.BulkBoundary
+import InfoGeometry.Quantum.BulkBoundaryIndexBridge
 
 /-!
 # Bulk-Boundary Regularization Bridge
@@ -23,6 +25,7 @@ namespace InfoGeometry.Canonical.BulkBoundaryRegularizationBridge
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.Drazin
 open InfoGeometry.Canonical.MoorePenrose
+open InfoGeometry.KK
 open InfoGeometry.Quantum.BulkBoundary
 open InfoGeometry.Quantum.KitaevChain
 open InfoGeometry.Quantum.RealMajorana
@@ -240,6 +243,62 @@ theorem exists_zeroMode_and_nontrivial_regularization_pair_of_dim_mismatch
       pkg.reg.rightProjector_ne_one,
       pkg.reg.leftProjector_ne_one,
       pkg.reg.drazinProjection_ne_one⟩
+
+section IndexResidue
+
+variable {A B : Type*}
+variable [NormedRing A] [NormedRing B]
+variable [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+variable [InfoGeometry.Krein.KreinSpace S]
+variable [InfoGeometry.Krein.KreinGradedModule S]
+
+/--
+If a bounded KK phase has nonzero analytical index and the chosen Majorana
+polarization is explicitly identified with its chiral kernel slices, then the
+polarization has plus/minus dimension mismatch.
+-/
+@[rep_depth krein]
+theorem dim_mismatch_of_nonzero_analyticalIndex_of_identifiedPolarization
+    (X : KasparovCycle A B S)
+    (M : RealMajoranaDatum (S := S))
+    (P0 : KPolarization (S := S) M)
+    (hplus : P0.plus = KasparovCycle.chiralKernelSlicePlus X)
+    (hminus : P0.minus = KasparovCycle.chiralKernelSliceMinus X)
+    (hNonzero : X.analyticalIndex ≠ 0) :
+    Module.finrank ℝ P0.plus ≠ Module.finrank ℝ P0.minus := by
+  have hdimKK :
+      Module.finrank ℝ (KasparovCycle.chiralKernelSlicePlus X) ≠
+        Module.finrank ℝ (KasparovCycle.chiralKernelSliceMinus X) :=
+    auto_bulk_boundary_correspondence_concrete_from_seed_4 X hNonzero
+  intro hdim
+  apply hdimKK
+  rw [← hplus, ← hminus]
+  exact hdim
+
+/--
+Nonzero analytical index upgrades to the full zero-mode plus nontrivial
+regularization package for the bounded KK phase, provided the operatorial
+polarization is explicitly identified with the chiral kernel slices.
+-/
+@[rep_depth krein]
+noncomputable def zeroModeRegularizationPackage_of_nonzero_analyticalIndex_of_identifiedPolarization
+    (X : KasparovCycle A B S)
+    (M : RealMajoranaDatum (S := S))
+    (P0 : KPolarization (S := S) M)
+    (hplus : P0.plus = KasparovCycle.chiralKernelSlicePlus X)
+    (hminus : P0.minus = KasparovCycle.chiralKernelSliceMinus X)
+    (hodd : PolarizationOdd (M := M) P0 X.F)
+    (hNonzero : X.analyticalIndex ≠ 0) :
+    ZeroModeRegularizationPackage (S := S) X.F := by
+  have hdim :
+      Module.finrank ℝ P0.plus ≠ Module.finrank ℝ P0.minus :=
+    dim_mismatch_of_nonzero_analyticalIndex_of_identifiedPolarization
+      (X := X) (M := M) P0 hplus hminus hNonzero
+  simpa using
+    zeroModeRegularizationPackage_of_dim_mismatch
+      (S := S) (M := M) P0 X.F hodd hdim
+
+end IndexResidue
 
 /--
 Turnkey existential regularization package for the concrete open-chain operator

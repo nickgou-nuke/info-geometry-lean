@@ -51,11 +51,17 @@ local instance : CompleteSpace EndH := inferInstance
 @[rep_depth transport]
 noncomputable def souriauTemperatureVector
     (P : PotentialDatum (E := E)) (ψ : H₂) : EndH :=
-  generator (E := E) P ψ
+  InfoGeometry.Canonical.RelativeModularPotential.transportGenerator (E := E) P ψ
 
 @[rep_depth transport, simp] theorem souriauTemperatureVector_eq_generator
     (P : PotentialDatum (E := E)) (ψ : H₂) :
     souriauTemperatureVector (E := E) P ψ = generator (E := E) P ψ := rfl
+
+@[rep_depth transport, simp] theorem souriauTemperatureVector_eq_transportGenerator
+    (P : PotentialDatum (E := E)) (ψ : H₂) :
+    souriauTemperatureVector (E := E) P ψ
+      =
+    InfoGeometry.Canonical.RelativeModularPotential.transportGenerator (E := E) P ψ := rfl
 
 @[rep_depth transport, simp] theorem souriauTemperatureVector_eq_stateRelativeModularGenerator
     (P : PotentialDatum (E := E)) (ψ : H₂) :
@@ -360,19 +366,19 @@ local instance : IsTopologicalRing EndH := inferInstance
 local instance : CompleteSpace EndH := inferInstance
 
 /-- Grand-canonical deformation of a doubled-space operator seed. -/
-@[rep_depth thermo]
+@[rep_depth krein]
 noncomputable def operatorialGrandCanonicalGenerator
     (B : HyperbolicMixingParams) (H : EndH) (μ : ℝ) : EndH :=
   grandCanonicalFockGenerator (E := E) B H μ
 
 /-- Unnormalized grand-canonical operator weight on the doubled carrier. -/
-@[rep_depth thermo]
+@[rep_depth krein]
 noncomputable def operatorialGrandCanonicalWeight
     (B : HyperbolicMixingParams) (H : EndH) (μ τ : ℝ) : EndH :=
   NormedSpace.exp (τ • operatorialGrandCanonicalGenerator (E := E) B H μ)
 
 /-- Massieu/log-partition potential of the operatorial grand-canonical ensemble. -/
-@[rep_depth thermo]
+@[rep_depth krein]
 noncomputable def operatorialGrandCanonicalMassieuPotential
     (ω : EndH →L[ℝ] ℝ)
     (B : HyperbolicMixingParams) (H : EndH) (μ : ℝ) : ℝ → ℝ :=
@@ -380,14 +386,14 @@ noncomputable def operatorialGrandCanonicalMassieuPotential
     (operatorialGrandCanonicalGenerator (E := E) B H μ)
 
 /-- Primitive infinitesimal expectation of the operatorial grand-canonical generator. -/
-@[rep_depth thermo]
+@[rep_depth krein]
 noncomputable def operatorialGrandCanonicalMassieuExpectation
     (ω : EndH →L[ℝ] ℝ)
     (B : HyperbolicMixingParams) (H : EndH) (μ : ℝ) : ℝ :=
   operatorMassieuExpectation ω
     (operatorialGrandCanonicalGenerator (E := E) B H μ)
 
-@[rep_depth thermo, simp]
+@[rep_depth krein, simp]
 theorem apply_operatorialGrandCanonicalWeight_eq_informationPartitionFunction
     (ω : EndH →L[ℝ] ℝ)
     (B : HyperbolicMixingParams) (H : EndH) (μ τ : ℝ) :
@@ -397,14 +403,14 @@ theorem apply_operatorialGrandCanonicalWeight_eq_informationPartitionFunction
       (operatorialGrandCanonicalGenerator (E := E) B H μ) τ := by
   rfl
 
-@[rep_depth thermo]
+@[rep_depth krein]
 theorem operatorialGrandCanonicalGenerator_eq_observable_of_zeroChemicalPotential
     (B : HyperbolicMixingParams) (H : EndH) :
     operatorialGrandCanonicalGenerator (E := E) B H 0 = H := by
   change H - 0 • bogoliubovNumberOperator (E := E) B = H
   simp
 
-@[rep_depth thermo]
+@[rep_depth krein]
 theorem operatorialGrandCanonicalMassieuPotential_normalizedInfinitesimalLaw
     (ω : EndH →L[ℝ] ℝ)
     (hω1 : ω (1 : EndH) = 1)
@@ -419,7 +425,7 @@ theorem operatorialGrandCanonicalMassieuPotential_normalizedInfinitesimalLaw
       (A := operatorialGrandCanonicalGenerator (E := E) B H μ) hω1
 
 /-- Grand-canonical thermodynamic deformation of the state-relative modular generator. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def stateRelativeGrandCanonicalGenerator
     (P : PotentialDatum (E := E)) (ψ : H₂)
     (B : HyperbolicMixingParams) (μ : ℝ) : EndH :=
@@ -427,7 +433,7 @@ noncomputable def stateRelativeGrandCanonicalGenerator
     (generator (E := E) P ψ) μ
 
 /-- Grand-canonical Massieu potential of the state-relative modular generator. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def stateRelativeGrandCanonicalMassieuPotential
     (ω : EndH →L[ℝ] ℝ)
     (P : PotentialDatum (E := E)) (ψ : H₂)
@@ -436,7 +442,7 @@ noncomputable def stateRelativeGrandCanonicalMassieuPotential
     (generator (E := E) P ψ) μ
 
 /-- Primitive grand-canonical expectation of the state-relative modular generator. -/
-@[rep_depth thermo]
+@[rep_depth transport]
 noncomputable def stateRelativeGrandCanonicalMassieuExpectation
     (ω : EndH →L[ℝ] ℝ)
     (P : PotentialDatum (E := E)) (ψ : H₂)
@@ -444,7 +450,7 @@ noncomputable def stateRelativeGrandCanonicalMassieuExpectation
   operatorialGrandCanonicalMassieuExpectation ω B
     (generator (E := E) P ψ) μ
 
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem stateRelativeGrandCanonicalGenerator_eq_generator_of_zeroChemicalPotential
     (P : PotentialDatum (E := E)) (ψ : H₂)
     (B : HyperbolicMixingParams) :
@@ -453,7 +459,7 @@ theorem stateRelativeGrandCanonicalGenerator_eq_generator_of_zeroChemicalPotenti
     operatorialGrandCanonicalGenerator_eq_observable_of_zeroChemicalPotential
       (E := E) (B := B) (H := generator (E := E) P ψ)
 
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem stateRelativeGrandCanonicalMassieuExpectation_eq_value_of_zeroChemicalPotential
     (P : PotentialDatum (E := E)) (ψ : H₂)
     (B : HyperbolicMixingParams) :
@@ -469,7 +475,7 @@ theorem stateRelativeGrandCanonicalMassieuExpectation_eq_value_of_zeroChemicalPo
       (operatorialGrandCanonicalGenerator_eq_observable_of_zeroChemicalPotential
         (E := E) (B := B) (H := generator (E := E) P ψ))
 
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem stateRelativeGrandCanonicalMassieuPotential_normalizedInfinitesimalLaw_of_zeroChemicalPotential
     (P : PotentialDatum (E := E)) (ψ : H₂)
     (B : HyperbolicMixingParams)
@@ -485,7 +491,7 @@ theorem stateRelativeGrandCanonicalMassieuPotential_normalizedInfinitesimalLaw_o
   · exact (stateRelativeGrandCanonicalMassieuExpectation_eq_value_of_zeroChemicalPotential
       (E := E) (P := P) (ψ := ψ) (B := B)).symm
 
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem stateRelativeGrandCanonicalGenerator_eq_generator_of_vacuumTransported
     (P : PotentialDatum (E := E)) (ψ : H₂)
     (B : HyperbolicMixingParams)
@@ -505,7 +511,7 @@ theorem stateRelativeGrandCanonicalGenerator_eq_generator_of_vacuumTransported
       (R := R) (K := K) (x := x)
       (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit
 
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem stateRelativeGrandCanonicalMassieuExpectation_eq_value_of_vacuumTransported
     (P : PotentialDatum (E := E)) (ψ : H₂)
     (B : HyperbolicMixingParams)
@@ -532,7 +538,7 @@ theorem stateRelativeGrandCanonicalMassieuExpectation_eq_value_of_vacuumTranspor
         (R := R) (K := K) (x := x)
         (scalar := scalar) (Λ := Λ) (V := V) (Γ := Γ) hVacSplit)
 
-@[rep_depth thermo]
+@[rep_depth transport]
 theorem stateRelativeGrandCanonicalMassieuPotential_normalizedInfinitesimalLaw_of_vacuumTransported
     (P : PotentialDatum (E := E)) (ψ : H₂)
     (B : HyperbolicMixingParams)
@@ -574,42 +580,42 @@ local instance : IsTopologicalRing EndH := inferInstance
 local instance : CompleteSpace EndH := inferInstance
 
 /-- Massieu potential of the lifted chiral anomaly operator. -/
-@[rep_depth thermo]
+@[rep_depth krein]
 noncomputable def liftedChiralAnomalyMassieuPotential
     (CCI : CertifiedConformalInference E) (ω : EndH →L[ℝ] ℝ) : ℝ → ℝ :=
   operatorMassieuPotential (E := E) ω CCI.liftedChiralAnomalyOperator
 
 /-- Primitive infinitesimal expectation of the lifted chiral anomaly operator. -/
-@[rep_depth thermo]
+@[rep_depth krein]
 noncomputable def liftedChiralAnomalyMassieuExpectation
     (CCI : CertifiedConformalInference E) (ω : EndH →L[ℝ] ℝ) : ℝ :=
   operatorMassieuExpectation ω CCI.liftedChiralAnomalyOperator
 
 /-- Massieu potential of the lifted projector-obstruction operator. -/
-@[rep_depth thermo]
+@[rep_depth krein]
 noncomputable def liftedProjectorObstructionMassieuPotential
     (CCI : CertifiedConformalInference E) (ω : EndH →L[ℝ] ℝ) : ℝ → ℝ :=
   operatorMassieuPotential (E := E) ω CCI.liftedProjectorObstructionOperator
 
 /-- Primitive infinitesimal expectation of the lifted projector-obstruction operator. -/
-@[rep_depth thermo]
+@[rep_depth krein]
 noncomputable def liftedProjectorObstructionMassieuExpectation
     (CCI : CertifiedConformalInference E) (ω : EndH →L[ℝ] ℝ) : ℝ :=
   operatorMassieuExpectation ω CCI.liftedProjectorObstructionOperator
 
 /-- Massieu potential of the lifted Einstein anomaly operator. -/
-@[rep_depth thermo]
+@[rep_depth krein]
 noncomputable def liftedEinsteinAnomalyMassieuPotential
     (CCI : CertifiedConformalInference E) (ω : EndH →L[ℝ] ℝ) : ℝ → ℝ :=
   operatorMassieuPotential (E := E) ω CCI.liftedEinsteinAnomalyOperator
 
 /-- Primitive infinitesimal expectation of the lifted Einstein anomaly operator. -/
-@[rep_depth thermo]
+@[rep_depth krein]
 noncomputable def liftedEinsteinAnomalyMassieuExpectation
     (CCI : CertifiedConformalInference E) (ω : EndH →L[ℝ] ℝ) : ℝ :=
   operatorMassieuExpectation ω CCI.liftedEinsteinAnomalyOperator
 
-@[rep_depth thermo]
+@[rep_depth krein]
 theorem liftedChiralAnomalyMassieuPotential_normalizedInfinitesimalLaw
     (CCI : CertifiedConformalInference E)
     (ω : EndH →L[ℝ] ℝ)
@@ -622,7 +628,7 @@ theorem liftedChiralAnomalyMassieuPotential_normalizedInfinitesimalLaw
     operatorMassieuPotential_normalizedInfinitesimalLaw
       (E := E) (ω := ω) (A := CCI.liftedChiralAnomalyOperator) hω1
 
-@[rep_depth thermo]
+@[rep_depth krein]
 theorem liftedProjectorObstructionMassieuPotential_normalizedInfinitesimalLaw
     (CCI : CertifiedConformalInference E)
     (ω : EndH →L[ℝ] ℝ)
@@ -635,7 +641,7 @@ theorem liftedProjectorObstructionMassieuPotential_normalizedInfinitesimalLaw
     operatorMassieuPotential_normalizedInfinitesimalLaw
       (E := E) (ω := ω) (A := CCI.liftedProjectorObstructionOperator) hω1
 
-@[rep_depth thermo]
+@[rep_depth krein]
 theorem liftedEinsteinAnomalyMassieuPotential_normalizedInfinitesimalLaw
     (CCI : CertifiedConformalInference E)
     (ω : EndH →L[ℝ] ℝ)
@@ -648,7 +654,7 @@ theorem liftedEinsteinAnomalyMassieuPotential_normalizedInfinitesimalLaw
     operatorMassieuPotential_normalizedInfinitesimalLaw
       (E := E) (ω := ω) (A := CCI.liftedEinsteinAnomalyOperator) hω1
 
-@[rep_depth thermo]
+@[rep_depth krein]
 theorem liftedEinsteinAnomalyMassieuExpectation_eq_neg_liftedProjectorObstructionMassieuExpectation_of_projectorAgreement
     (CCI : CertifiedConformalInference E)
     (ω : EndH →L[ℝ] ℝ)
@@ -663,7 +669,7 @@ theorem liftedEinsteinAnomalyMassieuExpectation_eq_neg_liftedProjectorObstructio
     hProj]
   simp [operatorMassieuExpectation]
 
-@[rep_depth thermo]
+@[rep_depth krein]
 theorem liftedEinsteinAnomalyMassieuPotential_normalizedInfinitesimalLaw_of_projectorAgreement
     (CCI : CertifiedConformalInference E)
     (ω : EndH →L[ℝ] ℝ)

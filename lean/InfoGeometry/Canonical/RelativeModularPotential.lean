@@ -43,11 +43,23 @@ structure PotentialDatum where
   modularData : StateModularDatum E
   probe : EndH →L[ℝ] ℝ
 
+/-- The primitive modular seed at state `ψ` used by the potential datum. -/
+@[rep_depth transport]
+noncomputable def modularSeed
+    (P : PotentialDatum (E := E)) (ψ : H₂) : EndH :=
+  stateModularSeed (E := E) P.modularData ψ
+
+/-- The derived transport generator read by the potential datum at state `ψ`. -/
+@[rep_depth transport]
+noncomputable def transportGenerator
+    (P : PotentialDatum (E := E)) (ψ : H₂) : EndH :=
+  stateTransportGenerator (E := E) P.modularData ψ
+
 /-- The statewise relative modular generator read by the potential datum. -/
 @[rep_depth transport]
 noncomputable def generator
     (P : PotentialDatum (E := E)) (ψ : H₂) : EndH :=
-  stateRelativeModularGenerator (E := E) P.modularData ψ
+  transportGenerator (E := E) P ψ
 
 /-- The primitive relative modular potential `Φ` at a doubled state. -/
 @[rep_depth transport]
@@ -157,6 +169,16 @@ noncomputable def toRelationalInformationDatum
 @[rep_depth transport, simp] theorem generator_eq
     (P : PotentialDatum (E := E)) (ψ : H₂) :
     generator (E := E) P ψ = stateRelativeModularGenerator (E := E) P.modularData ψ := rfl
+
+@[rep_depth transport, simp] theorem modularSeed_eq
+    (P : PotentialDatum (E := E)) (ψ : H₂) :
+    modularSeed (E := E) P ψ = P.modularData.modularSeed ψ := rfl
+
+@[rep_depth transport, simp] theorem transportGenerator_eq
+    (P : PotentialDatum (E := E)) (ψ : H₂) :
+    transportGenerator (E := E) P ψ
+      =
+    stateRelativeModularGenerator (E := E) P.modularData ψ := rfl
 
 @[rep_depth transport, simp] theorem value_eq_probe_generator
     (P : PotentialDatum (E := E)) (ψ : H₂) :

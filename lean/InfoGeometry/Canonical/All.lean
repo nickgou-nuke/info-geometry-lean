@@ -108,6 +108,7 @@ import InfoGeometry.Canonical.KMSSinkhornBridge
 import InfoGeometry.Canonical.KreinDoubledAtom
 import InfoGeometry.Canonical.KLinearRepresentation
 import InfoGeometry.Canonical.PolarizedMadelungBridge
+import InfoGeometry.Canonical.BohmMadelungOperatorialBridge
 import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.BogoliubovProjectorTransport
@@ -136,6 +137,10 @@ import InfoGeometry.Canonical.CorrelationAntisymmetrization
 import InfoGeometry.Canonical.CoordinateFreeSecondVariation
 import InfoGeometry.Canonical.OnsagerCasimirJ
 import InfoGeometry.Canonical.NoetherInference
+import InfoGeometry.Canonical.ModularHessian
+import InfoGeometry.Canonical.PhaseVolumeDynamics
+import InfoGeometry.Canonical.VariationalLadder
+import InfoGeometry.Canonical.TopologicalResidue
 import InfoGeometry.Canonical.OnsagerReciprocity
 import InfoGeometry.Canonical.OperatorialCramerRao
 import InfoGeometry.Canonical.OperatorialUncertainty
@@ -145,6 +150,13 @@ import InfoGeometry.Canonical.Prequantum
 import InfoGeometry.Canonical.Projective
 import InfoGeometry.Canonical.RelativeModularCore
 import InfoGeometry.Canonical.RelativeModularPotential
+import InfoGeometry.Canonical.QuantumLieAlgebroidRosetta
+import InfoGeometry.Canonical.CanonicalGaugeBridge
+import InfoGeometry.Canonical.ReferenceSectorGaugeBridge
+import InfoGeometry.Canonical.VortexReferenceGaugeBridge
+import InfoGeometry.Canonical.WeightedWeylNormalizationBridge
+import InfoGeometry.Canonical.SouriauPlanckVector
+import InfoGeometry.Canonical.ThermodynamicAction
 import InfoGeometry.Canonical.ThermodynamicGenerator
 import InfoGeometry.Canonical.MajoranaKreinCartanSplit
 import InfoGeometry.Canonical.RelativeModularPolarizedBridge

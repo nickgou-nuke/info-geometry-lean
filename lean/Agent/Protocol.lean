@@ -198,6 +198,21 @@ structure ValidateDeclParams where
   prettyPrintValue : Bool := false
 deriving Inhabited, BEq, FromJson, ToJson
 
+structure GetDeclValueParams where
+  version : BridgeVersion := bridgeVersion
+  declName : String
+  posLine : Option Nat := none
+  posCharacter : Nat := 0
+deriving Inhabited, BEq, FromJson, ToJson
+
+structure GetDeclValueResult where
+  ok : Bool
+  responseMeta : ResponseMeta
+  diagnostics : Array CompilerError := #[]
+  declFound : Bool := false
+  declarationValue : String := ""
+deriving Inhabited, BEq, FromJson, ToJson
+
 structure ValidateDeclResult where
   ok : Bool
   responseMeta : ResponseMeta

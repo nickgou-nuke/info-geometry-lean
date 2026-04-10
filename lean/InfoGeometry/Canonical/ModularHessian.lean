@@ -1,15 +1,16 @@
 import InfoGeometry.Canonical.RelationalInformationCore
 import InfoGeometry.Canonical.ThermodynamicAction
+import InfoGeometry.Meta.Vacuity
 
 open scoped InnerProductSpace
 
 /-!
 # InfoGeometry.Canonical.ModularHessian
 
-Thin modular-Hessian aliases on the relational datum surface.
+Expository modular-Hessian aliases on the relational datum surface.
 
 This file keeps the older naming surface, but the owned mathematical content is
-now explicit:
+already elsewhere:
 
 - the modular Hessian is the comparison-state second variation;
 - its Fisher side is the comparison-state metric form; and
@@ -61,29 +62,11 @@ def IsReferenceGaugeFixed
     (R : RelationalInformationDatum (E := E)) : Prop :=
   operatorialKLDivergence (E := E) R = 0
 
-@[rep_depth transport, simp] theorem modularHessian_eq_comparisonGeneratorMetric
-    (R : RelationalInformationDatum (E := E)) :
-    modularHessian (E := E) R = comparisonGeneratorMetric R := rfl
-
-@[rep_depth transport, simp] theorem fisherPart_eq_comparisonGeneratorMetric
-    (R : RelationalInformationDatum (E := E)) :
-    fisherPart (E := E) R = comparisonGeneratorMetric R := rfl
-
-@[rep_depth transport, simp] theorem vortexPart_eq_comparisonGeneratorPhase
-    (R : RelationalInformationDatum (E := E)) :
-    vortexPart (E := E) R = comparisonGeneratorPhase R := rfl
-
-/--
-The thermodynamic Fisher metric is exactly the modular Hessian read as a
-bilinear form.
--/
-@[rep_depth transport]
-theorem fisher_metric_eq_symmetric_hessian
-    (R : RelationalInformationDatum (E := E)) :
-    fisherInformationMetric (E := E) R
-      =
-    fun X Y => modularHessian (E := E) R X Y := by
-  rfl
+attribute [expository]
+  modularHessian
+  fisherPart
+  vortexPart
+  IsReferenceGaugeFixed
 
 end Core
 

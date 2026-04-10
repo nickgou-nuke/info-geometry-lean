@@ -660,6 +660,14 @@ def finalSnapshotTask (doc : FileWorker.EditableDocument) :
         | some snap => pure snap
         | none => throw <| RequestError.ofIoError <| IO.userError "No command snapshots available"
 
+def snapshotTaskAt (doc : FileWorker.EditableDocument) (posLine posCharacter : Nat) :
+    RequestM (RequestTask Snapshots.Snapshot) := do
+  let pos : Lsp.Position := { line := posLine, character := posCharacter }
+  let utf8Pos := doc.meta.text.lspPosToUtf8Pos pos
+  withWaitFindSnap doc (fun snap => snap.endPos >= utf8Pos)
+    (notFoundX := throw ⟨.invalidParams, s!"no snapshot found at {pos}"⟩)
+    (x := fun snap => pure snap)
+
 def ppExprAtSnapshot (snap : Snapshots.Snapshot) (e : Expr) : RequestM String := do
   RequestM.runTermElabM snap do
     pure <| toString (← PrettyPrinter.ppExpr e)

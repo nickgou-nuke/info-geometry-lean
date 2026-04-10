@@ -13,6 +13,11 @@ builtin_initialize
     IG.Compiler.GetProofStateResult
     IG.Compiler.getProofState
   registerBuiltinRpcProcedure
+    `IG.Compiler.getGoalTargets
+    IG.Compiler.GetGoalTargetsParams
+    IG.Compiler.GetGoalTargetsResult
+    IG.Compiler.getGoalTargets
+  registerBuiltinRpcProcedure
     `IG.Compiler.checkSnippet
     IG.Compiler.CheckSnippetParams
     IG.Compiler.CheckSnippetResult

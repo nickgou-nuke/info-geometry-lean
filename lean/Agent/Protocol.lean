@@ -133,6 +133,11 @@ structure GoalView where
   targetExprFingerprint : Option ExprFingerprintView := none
 deriving Inhabited, BEq, FromJson, ToJson
 
+structure GoalTargetView where
+  goalId : GoalId
+  target : String
+deriving Inhabited, BEq, FromJson, ToJson
+
 structure GetProofStateParams where
   version : BridgeVersion := bridgeVersion
   posLine : Nat := 0
@@ -144,6 +149,20 @@ structure GetProofStateResult where
   responseMeta : ResponseMeta
   diagnostics : Array CompilerError := #[]
   goals : Array GoalView := #[]
+deriving Inhabited, BEq, FromJson, ToJson
+
+structure GetGoalTargetsParams where
+  version : BridgeVersion := bridgeVersion
+  posLine : Nat := 0
+  posCharacter : Nat := 0
+deriving Inhabited, BEq, FromJson, ToJson
+
+structure GetGoalTargetsResult where
+  ok : Bool
+  responseMeta : ResponseMeta
+  diagnostics : Array CompilerError := #[]
+  goals : Array GoalTargetView := #[]
+  goalCount : Nat := 0
 deriving Inhabited, BEq, FromJson, ToJson
 
 structure GetEnvFingerprintParams where
@@ -173,6 +192,10 @@ deriving Inhabited, BEq, FromJson, ToJson
 structure ValidateDeclParams where
   version : BridgeVersion := bridgeVersion
   declName : String
+  posLine : Option Nat := none
+  posCharacter : Nat := 0
+  prettyPrintType : Bool := false
+  prettyPrintValue : Bool := false
 deriving Inhabited, BEq, FromJson, ToJson
 
 structure ValidateDeclResult where
@@ -185,6 +208,7 @@ structure ValidateDeclResult where
   theoremTypeHeadSource : ExprHeadSource := .unavailable
   theoremTypeHeadFingerprint : Option String := none
   theoremTypeExprFingerprint : Option ExprFingerprintView := none
+  declarationValue : String := ""
   hasSorry : Bool := false
 deriving Inhabited, BEq, FromJson, ToJson
 

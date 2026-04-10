@@ -281,16 +281,15 @@ def normalize_payload(payload: Any, byte_delta: int, line_delta: int) -> Any:
     return out
 
 
-def export_semantic_blocks(
+def fetch_semantic_blocks(
     input_path: Path,
-    output_path: Path,
     timeout_s: float,
     transcript_path: Path | None,
     stderr_path: Path | None,
     server_mode: str,
     inject_rpc_import_flag: bool,
     wait_for_diagnostics: bool,
-) -> None:
+) -> dict[str, Any]:
     repo = repo_root()
     cmd, env = server_command(repo, server_mode)
     effective_inject_rpc_import = inject_rpc_import_flag or server_mode == "stdlib"
@@ -397,18 +396,40 @@ def export_semantic_blocks(
             else:
                 raise
         result = normalize_payload(result, byte_delta, line_delta)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_text(
-            json.dumps(result, indent=2, ensure_ascii=False) + "\n",
-            encoding="utf-8",
-        )
-        log_stage(f"wrote {output_path}")
         log_stage("shutdown")
         client.request("shutdown", {}, timeout_s=timeout_s)
         client.notify("exit", {})
+        return result
     finally:
         client.close()
         build_lock.release()
+
+
+def export_semantic_blocks(
+    input_path: Path,
+    output_path: Path,
+    timeout_s: float,
+    transcript_path: Path | None,
+    stderr_path: Path | None,
+    server_mode: str,
+    inject_rpc_import_flag: bool,
+    wait_for_diagnostics: bool,
+) -> None:
+    result = fetch_semantic_blocks(
+        input_path=input_path,
+        timeout_s=timeout_s,
+        transcript_path=transcript_path,
+        stderr_path=stderr_path,
+        server_mode=server_mode,
+        inject_rpc_import_flag=inject_rpc_import_flag,
+        wait_for_diagnostics=wait_for_diagnostics,
+    )
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(result, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    log_stage(f"wrote {output_path}")
 
 
 def parse_args() -> argparse.Namespace:

@@ -28,6 +28,7 @@ import InfoGeometry.Canonical.ArnoldMajoranaNetwork
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit
+import InfoGeometry.Canonical.AssociativeSuperBracket
 import InfoGeometry.Canonical.BogoliubovFockSuper
 import InfoGeometry.Canonical.BoundaryProjector
 import InfoGeometry.Canonical.BottDirac
@@ -41,6 +42,14 @@ import InfoGeometry.Canonical.ChiralGravity
 import InfoGeometry.Canonical.ChiralRGFlow
 import InfoGeometry.Canonical.Clifford
 import InfoGeometry.Canonical.ClNNBottBridge
+import InfoGeometry.Canonical.SplitCliffordHeadLift
+import InfoGeometry.Canonical.SplitCliffordHeadEquivariance
+import InfoGeometry.Canonical.ProjectorEquivariance
+import InfoGeometry.Canonical.DilatedGapEquivariance
+import InfoGeometry.Canonical.SplitCliffordHeadPhaseFlip
+import InfoGeometry.Canonical.SplitCliffordHeadProjectors
+import InfoGeometry.Canonical.SplitCliffordHeadSuperBracket
+import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.CliffordBridge
 import InfoGeometry.Canonical.CurvatureRGFlow
 import InfoGeometry.Core
@@ -97,7 +106,11 @@ import InfoGeometry.Canonical.KKTCore
 import InfoGeometry.Canonical.KKTGeneralizedInverseBridge
 import InfoGeometry.Canonical.KKTGeneralizedMetricBridge
 import InfoGeometry.Canonical.KKFoundation
+import InfoGeometry.Canonical.SuperchargeGapBridge
+import InfoGeometry.Canonical.SuperchargeRoleBridge
 import InfoGeometry.Canonical.SuperchargeTransportBridge
+import InfoGeometry.Canonical.SuperchargeCARCCRBridge
+import InfoGeometry.Canonical.SuperchargeGapHessianBridge
 import InfoGeometry.Canonical.SuperJordanLie
 import InfoGeometry.Canonical.VortexAnomalyLink
 import InfoGeometry.Canonical.SpinConnection
@@ -146,6 +159,7 @@ import InfoGeometry.Canonical.PhaseVolumeDynamics
 import InfoGeometry.Canonical.VariationalLadder
 import InfoGeometry.Canonical.TopologicalResidue
 import InfoGeometry.Canonical.OnsagerReciprocity
+import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.Canonical.OperatorialCramerRao
 import InfoGeometry.Canonical.OperatorialUncertainty
 import InfoGeometry.Canonical.PathIntegral
@@ -192,6 +206,7 @@ import InfoGeometry.Canonical.ThermoFromLogDet
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.TopologicalEuler
 import InfoGeometry.Canonical.TopologicalInvariants
+import InfoGeometry.Canonical.TopologicalInvariantInvariance
 import InfoGeometry.Canonical.Triality
 import InfoGeometry.Canonical.Twistor
 import InfoGeometry.Canonical.Unification

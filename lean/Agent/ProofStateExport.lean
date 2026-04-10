@@ -148,6 +148,48 @@ private def unsupportedValidateDecl (responseMeta : ResponseMeta) (err : Compile
     hasSorry := false
   }
 
+private def unsupportedGetDeclValue (responseMeta : ResponseMeta) (err : CompilerError) :
+    GetDeclValueResult :=
+  {
+    ok := false
+    responseMeta := responseMeta
+    diagnostics := #[err]
+    declFound := false
+    declarationValue := ""
+  }
+
+def getDeclValue (params : GetDeclValueParams) : RequestM (RequestTask GetDeclValueResult) := do
+  let doc ← readDoc
+  let responseMeta ← responseMetaOfDoc doc
+  match validateVersion params.version responseMeta with
+  | some err =>
+      RequestM.pureTask <| pure (unsupportedGetDeclValue responseMeta err)
+  | none =>
+      let snapTask ←
+        match params.posLine with
+        | some posLine => snapshotTaskAt doc posLine params.posCharacter
+        | none => finalSnapshotTask doc
+      RequestM.mapRequestTaskCheap snapTask fun snap => do
+        let mut diagnostics ← docDiagnostics doc
+        let declInfo? := findDeclInfo? snap.env params.declName
+        let declarationValue ←
+          match declInfo? with
+          | some declInfo =>
+              match declInfo.value? (allowOpaque := true) with
+              | some value => ppExprAtSnapshot snap value
+              | none => pure ""
+          | none => pure ""
+        if declInfo?.isNone then
+          diagnostics := diagnostics.push (declarationNotFoundError params.declName)
+        let declFound := declInfo?.isSome
+        return {
+          ok := declFound && diagnosticsOk diagnostics
+          responseMeta := responseMeta
+          diagnostics := diagnostics
+          declFound := declFound
+          declarationValue := declarationValue
+        }
+
 def validateDecl (params : ValidateDeclParams) : RequestM (RequestTask ValidateDeclResult) := do
   let doc ← readDoc
   let responseMeta ← responseMetaOfDoc doc

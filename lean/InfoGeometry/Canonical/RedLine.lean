@@ -21,9 +21,30 @@ import InfoGeometry.Volume.LogPotential
 /-!
 # InfoGeometry.Canonical.RedLine
 
-Canonical bridge surface for the "Red Line":
+EN: Canonical bridge surface for the Red Line corridor:
 log-volume deformation -> convex/barrier potential -> Burg/Bregman energy ->
 partition/log-sum-exp -> free energy, with RN/Jaynes and modular lifts.
+
+BG: Канонична мостова повърхност за коридора на Red Line:
+деформация на лог-обем -> бариерен/изпъкнал потенциал -> Burg/Bregman енергия ->
+partition/log-sum-exp -> свободна енергия с RN/Jaynes и модуларни повдигания.
+
+Redline: This file is the curated owner-facing export spine for the local
+count/projective/modular corridor.
+
+Mathlib: Upstream mathlib provides the assembler substrate for many imported
+owners and bridge proofs; this file keeps the repo-native semantic surface.
+
+Comparison: Bilingual consistency is closed by explicit bridge exports from the
+imported modules (repo-native statements and mathlib-native realizations are
+not treated as interchangeable without named bridge theorems).
+
+Upstairs: Ambient linear/Krein/projective carrier structure remains in the
+imported owner modules; this export surface does not claim additional descent.
+
+References:
+- Mathlib projectivization and measure/RN APIs used in imported owners.
+- `docs/projective_mathlib_canonicalization_plan.md` for owner/translator law.
 -/
 
 namespace InfoGeometry.Canonical.RedLine

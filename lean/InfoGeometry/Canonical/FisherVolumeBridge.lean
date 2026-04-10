@@ -44,8 +44,7 @@ theorem action_hessian_eq_fisher
     fisherInformationMetric (E := E) R
       =
     fun X Y => modularHessian (E := E) R X Y := by
-  -- Invokes the proof from ModularHessian.lean
-  simpa using fisher_metric_eq_symmetric_hessian (E := E) R
+  rfl
 
 /--
 The induced relational datum satisfies the operatorial Robertson-Schrödinger

@@ -28,6 +28,11 @@ builtin_initialize
     IG.Compiler.ValidateDeclResult
     IG.Compiler.validateDecl
   registerBuiltinRpcProcedure
+    `IG.Compiler.getDeclValue
+    IG.Compiler.GetDeclValueParams
+    IG.Compiler.GetDeclValueResult
+    IG.Compiler.getDeclValue
+  registerBuiltinRpcProcedure
     `IG.Compiler.getEnvFingerprint
     IG.Compiler.GetEnvFingerprintParams
     IG.Compiler.GetEnvFingerprintResult

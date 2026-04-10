@@ -57,6 +57,10 @@ For one-shot terminal use, prefer `proof_print.py` through
 `lake script run proofPrint ...`. It prints just the useful string instead of a
 full JSON packet and defaults to the cheapest maintained query (`getGoalTargets`).
 
+`proof_session.py` also supports prewarming. Pass `--prewarm-method ...` and
+related `--prewarm-*` flags to run one bridge query before the session emits its
+`ready` event.
+
 The persistent session now also supports virtual buffer edits:
 - `{"id": 1, "method": "didChange", "text": "...", "waitForDiagnostics": false}`
 - `{"id": 2, "method": "reloadFromDisk", "waitForDiagnostics": false}`

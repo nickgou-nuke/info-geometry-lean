@@ -11,6 +11,11 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.frontier.compiler_bridge_client import call_bridge_method
+from tools.frontier.proof_runtime import (
+    PROOF_PRINT_MODE_CHOICES,
+    call_spec_for_print_mode,
+    extract_print_text,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -23,7 +28,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("input", help="Path to the .lean source file")
     parser.add_argument(
         "--mode",
-        choices=("goal-target", "proof-state", "decl-value"),
+        choices=PROOF_PRINT_MODE_CHOICES,
         default="goal-target",
         help=(
             "`goal-target` prints the first goal target (fastest), "
@@ -64,17 +69,10 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     started = time.perf_counter()
-    if args.mode == "decl-value":
-        if not args.decl_name:
-            raise SystemExit("--decl-name is required for --mode decl-value")
-        method = "validateDecl"
-        pretty_print_value = True
-    elif args.mode == "proof-state":
-        method = "getProofState"
-        pretty_print_value = False
-    else:
-        method = "getGoalTargets"
-        pretty_print_value = False
+    try:
+        call_spec = call_spec_for_print_mode(args.mode, args.decl_name)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
 
     result = call_bridge_method(
         input_path=Path(args.input),
@@ -84,10 +82,10 @@ def main() -> int:
         server_mode=args.server_mode,
         inject_rpc_import_flag=False,
         wait_for_diagnostics=not args.skip_wait_for_diagnostics,
-        rpc_method=method,
-        decl_name=args.decl_name,
-        pretty_print_type=False,
-        pretty_print_value=pretty_print_value,
+        rpc_method=call_spec.method,
+        decl_name=call_spec.decl_name,
+        pretty_print_type=call_spec.pretty_print_type,
+        pretty_print_value=call_spec.pretty_print_value,
     )
     elapsed_ms = round((time.perf_counter() - started) * 1000)
 
@@ -96,19 +94,13 @@ def main() -> int:
         out_path.parent.mkdir(parents=True, exist_ok=True)
         out_path.write_text(json.dumps(result, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    if args.mode == "decl-value":
-        text = result.get("declarationValue", "")
-    elif args.mode == "proof-state":
-        goals = result.get("goals", [])
-        text = goals[0]["pretty"] if goals else ""
-    else:
-        goals = result.get("goals", [])
-        text = goals[0]["target"] if goals else ""
-
-    if not isinstance(text, str):
-        text = ""
+    text = extract_print_text(result, args.mode)
     sys.stdout.write(text.rstrip() + "\n")
-    print(f"[proof-print] method={method} elapsedMs={elapsed_ms}", file=sys.stderr, flush=True)
+    print(
+        f"[proof-print] method={call_spec.method} elapsedMs={elapsed_ms}",
+        file=sys.stderr,
+        flush=True,
+    )
     return 0
 
 

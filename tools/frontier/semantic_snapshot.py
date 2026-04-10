@@ -28,6 +28,7 @@ from tools.frontier.compiler_bridge_client import (
     call_bridge_method,
     resolve_bridge_position,
 )
+from tools.frontier.proof_runtime import BRIDGE_METHOD_CHOICES
 
 
 SEMANTIC_RPC_IMPORT = "import DAG.SemanticServerRpc\n"
@@ -636,7 +637,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--bridge-method",
-        choices=("none", "getGoalTargets", "getProofState", "checkSnippet", "validateDecl", "getEnvFingerprint"),
+        choices=("none", *BRIDGE_METHOD_CHOICES),
         default="none",
         help="Optional extra bridge method to include in the snapshot packet.",
     )

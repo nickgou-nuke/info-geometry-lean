@@ -11,9 +11,27 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from tools.infra.artifacts import load_decl_index_meta, load_json_dict
     from tools.infra.dag_config import load_dag_toolchain_config, repo_display_path
+    from tools.infra.timings import (
+        format_elapsed_ms,
+        load_indexer_timing,
+        load_report_timing,
+        report_timing_json_path,
+        timing_matches_meta,
+        top_timing_rows,
+    )
+    from tools.pathing import repo_root
 else:
     from tools.infra.artifacts import load_decl_index_meta, load_json_dict
     from tools.infra.dag_config import load_dag_toolchain_config, repo_display_path
+    from tools.infra.timings import (
+        format_elapsed_ms,
+        load_indexer_timing,
+        load_report_timing,
+        report_timing_json_path,
+        timing_matches_meta,
+        top_timing_rows,
+    )
+    from tools.pathing import repo_root
 
 
 def parse_args() -> argparse.Namespace:
@@ -85,12 +103,28 @@ def top_label(rows: Any) -> str:
     return f"{label} ({count})"
 
 
+def timing_summary(rows: list[dict[str, Any]]) -> str:
+    if not rows:
+        return "-"
+    parts: list[str] = []
+    for row in rows:
+        label = row.get("label", row.get("command", "-"))
+        if isinstance(label, list):
+            label = " ".join(str(part) for part in label)
+        parts.append(f"{label} ({format_elapsed_ms(row.get('elapsed_ms'))})")
+    return "; ".join(parts)
+
+
 def main() -> int:
     args = parse_args()
+    root = repo_root()
     config = load_dag_toolchain_config(args.config)
 
     meta_path = config.authoritative_artifacts.index_dir / "meta.json"
     meta = load_decl_index_meta(meta_path) or {}
+    indexer_timing = load_indexer_timing(config.authoritative_artifacts.index_dir)
+    report_timing_path = report_timing_json_path(root)
+    report_timing = load_report_timing(report_timing_path)
     coverage_report = (
         load_json_dict(config.derived_reports.coverage_report_json)
         if config.derived_reports.coverage_report_json.exists()
@@ -165,6 +199,34 @@ def main() -> int:
     )
     print(f"top external module: {top_label(leakage_report.get('topExternalModules'))}")
     print(f"top internal module: {top_label(leakage_report.get('topInternalModules'))}")
+    print()
+    print("Timings")
+    if indexer_timing:
+        match_indexer = timing_matches_meta(indexer_timing, meta)
+        if match_indexer is True:
+            indexer_sync = "in sync"
+        elif match_indexer is False:
+            indexer_sync = "stale"
+        else:
+            indexer_sync = "unknown"
+        print(f"index refresh total: {format_elapsed_ms(indexer_timing.get('total_ms'))} ({indexer_sync})")
+        print(f"slow index stages: {timing_summary(top_timing_rows(indexer_timing))}")
+    else:
+        print("index refresh total: missing")
+        print("slow index stages: -")
+    if report_timing:
+        match_report = timing_matches_meta(report_timing, meta)
+        if match_report is True:
+            report_sync = "in sync"
+        elif match_report is False:
+            report_sync = "stale"
+        else:
+            report_sync = "unknown"
+        print(f"report run total: {format_elapsed_ms(report_timing.get('total_ms'))} ({report_sync})")
+        print(f"slow report steps: {timing_summary(top_timing_rows(report_timing))}")
+    else:
+        print("report run total: missing")
+        print("slow report steps: -")
     return 0
 
 

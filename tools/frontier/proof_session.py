@@ -12,17 +12,12 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.frontier.compiler_bridge_client import CompilerBridgeSession
-
-
-ALLOWED_METHODS = {
-    "getGoalTargets",
-    "getProofState",
-    "checkSnippet",
-    "validateDecl",
-    "getEnvFingerprint",
-    "didChange",
-    "reloadFromDisk",
-}
+from tools.frontier.proof_runtime import (
+    BRIDGE_METHOD_CHOICES,
+    SESSION_METHOD_CHOICES,
+    build_prewarm_request,
+    summarize_bridge_response,
+)
 
 
 def emit(payload: dict[str, Any]) -> None:
@@ -70,7 +65,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--prewarm-method",
-        choices=("getGoalTargets", "getProofState", "checkSnippet", "validateDecl", "getEnvFingerprint"),
+        choices=BRIDGE_METHOD_CHOICES,
         default=None,
         help="Optional bridge method to run before emitting the ready event.",
     )
@@ -171,58 +166,6 @@ def handle_request(
         },
         "result": result,
     }
-
-
-def build_prewarm_request(args: argparse.Namespace) -> dict[str, Any] | None:
-    if (
-        args.prewarm_method is None
-        and args.prewarm_decl_name is None
-        and args.prewarm_line is None
-    ):
-        return None
-    method = args.prewarm_method
-    if method is None:
-        method = "validateDecl" if args.prewarm_decl_name else "getProofState"
-    return {
-        "id": "prewarm",
-        "method": method,
-        "declName": args.prewarm_decl_name,
-        "line": args.prewarm_line,
-        "character": args.prewarm_character,
-        "prettyPrintType": args.prewarm_pretty_print_type,
-        "prettyPrintValue": args.prewarm_pretty_print_value,
-    }
-
-
-def summarize_prewarm_response(response: dict[str, Any]) -> dict[str, Any]:
-    summary = {
-        "id": response.get("id"),
-        "ok": response.get("ok"),
-        "method": response.get("method"),
-        "line": response.get("line"),
-        "character": response.get("character"),
-        "version": response.get("version"),
-        "timingsMs": response.get("timingsMs"),
-    }
-    if response.get("ok") is False:
-        summary["error"] = response.get("error")
-        return summary
-    result = response.get("result")
-    if not isinstance(result, dict):
-        return summary
-    if "declFound" in result:
-        summary["declFound"] = result.get("declFound")
-    if "hasSorry" in result:
-        summary["hasSorry"] = result.get("hasSorry")
-    declaration_value = result.get("declarationValue")
-    if isinstance(declaration_value, str):
-        summary["declarationValueLength"] = len(declaration_value)
-    goals = result.get("goals")
-    if isinstance(goals, list):
-        summary["goalCount"] = len(goals)
-    return summary
-
-
 def main() -> int:
     args = parse_args()
     session = CompilerBridgeSession(
@@ -241,7 +184,14 @@ def main() -> int:
             "input": str(Path(args.input).resolve()),
             "serverMode": args.server_mode,
         }
-        prewarm_req = build_prewarm_request(args)
+        prewarm_req = build_prewarm_request(
+            method=args.prewarm_method,
+            decl_name=args.prewarm_decl_name,
+            line=args.prewarm_line,
+            character=args.prewarm_character,
+            pretty_print_type=args.prewarm_pretty_print_type,
+            pretty_print_value=args.prewarm_pretty_print_value,
+        )
         if prewarm_req is not None:
             try:
                 prewarm_result = handle_request(session, prewarm_req, req_id="prewarm")
@@ -254,7 +204,7 @@ def main() -> int:
                     },
                 }
             else:
-                ready_payload["prewarm"] = summarize_prewarm_response(prewarm_result)
+                ready_payload["prewarm"] = summarize_bridge_response(prewarm_result)
         emit(
             ready_payload
         )
@@ -272,7 +222,7 @@ def main() -> int:
             if method in ("close", "exit"):
                 emit({"id": req_id, "ok": True, "event": "closing"})
                 break
-            if method not in ALLOWED_METHODS:
+            if method not in SESSION_METHOD_CHOICES:
                 emit(request_error(req_id, f"unsupported method: {method}"))
                 continue
             try:

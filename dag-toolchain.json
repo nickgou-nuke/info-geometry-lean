@@ -18,6 +18,13 @@
         "tools/infra/generate_theorem_surface_index.py"
       ],
       [
+        "tools/infra/reports/generate_bilingual_spine_report.py",
+        "--out",
+        "reports/dag/bilingual-spine-report.md",
+        "--json-out",
+        "reports/dag/bilingual-spine-report.json"
+      ],
+      [
         "tools/infra/generate_source_sink_compression.py"
       ],
       [
@@ -26,6 +33,18 @@
         "reports/dag/true-root-order.md",
         "--json-out",
         "reports/dag/true-root-order.json"
+      ],
+      [
+        "tools/theorem_significance.py"
+      ],
+      [
+        "tools/infra/generate_sorry_equivalence.py"
+      ],
+      [
+        "tools/infra/plot_decl_graph.py"
+      ],
+      [
+        "tools/infra/generate_replacement_frontier.py"
       ]
     ]
   },

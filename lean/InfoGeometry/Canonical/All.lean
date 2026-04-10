@@ -109,8 +109,10 @@ import InfoGeometry.Canonical.KKFoundation
 import InfoGeometry.Canonical.SuperchargeGapBridge
 import InfoGeometry.Canonical.SuperchargeRoleBridge
 import InfoGeometry.Canonical.SuperchargeTransportBridge
+
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.SuperchargeGapHessianBridge
+import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
 import InfoGeometry.Canonical.SuperJordanLie
 import InfoGeometry.Canonical.VortexAnomalyLink
 import InfoGeometry.Canonical.SpinConnection

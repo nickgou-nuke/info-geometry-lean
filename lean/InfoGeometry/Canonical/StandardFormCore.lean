@@ -94,8 +94,16 @@ noncomputable def tomitaAtomSeed : StandardFormSeed H where
     (tomitaAtomSeed (H := H)).phaseAxis = InfoGeometry.Krein.dilationOperator (E := H) :=
   modularComplexI_eq_dilationOperator (E := H)
 
+@[rep_depth krein, simp] theorem tomitaAtomSeed_J_eq_modular_j :
+    (tomitaAtomSeed (H := H)).J = modular_j (E := H) := rfl
+
 @[rep_depth krein, simp] theorem tomitaAtomSeed_eps_eq_spectral_epsilon :
     (tomitaAtomSeed (H := H)).ε = spectral_epsilon (E := H) := rfl
+
+@[rep_depth krein, simp] theorem tomitaAtomSeed_phaseAxis_eq_complex_i :
+    (tomitaAtomSeed (H := H)).phaseAxis = complex_i (E := H) := by
+  change modularComplexI (E := H) = complex_i (E := H)
+  exact InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := H)
 
 @[rep_depth krein, simp] theorem tomitaAtomSeed_phaseAxis_eq_J_comp_eps :
     (tomitaAtomSeed (H := H)).phaseAxis =

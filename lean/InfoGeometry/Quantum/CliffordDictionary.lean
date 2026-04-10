@@ -59,6 +59,18 @@ noncomputable def canonical : Cl11Dictionary E where
     rfl
   K_sq := modularComplexI_sq (E := E)
 
+@[simp] theorem canonical_eps_eq_spectral_epsilon :
+    (canonical (E := E)).ε = spectral_epsilon (E := E) := by
+  rfl
+
+@[simp] theorem canonical_J_eq_modular_j :
+    (canonical (E := E)).J = modular_j (E := E) := by
+  rfl
+
+@[simp] theorem canonical_K_eq_complex_i :
+    (canonical (E := E)).K = complex_i (E := E) := by
+  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+
 section SpinorObservables
 
 /-- 
@@ -80,6 +92,18 @@ noncomputable def chiralityObservable (ψ : H₂) : ℝ :=
 /-- **Phase Channel**: The complex phase channel $\langle \psi, K \psi \rangle_{K}$. -/
 noncomputable def phaseObservable (ψ : H₂) : ℝ :=
   operatorObservable ψ ψ (modularComplexI (E := E))
+
+@[simp] theorem chiralityObservable_eq_operatorObservable_spectral_epsilon
+    (ψ : H₂) :
+    chiralityObservable (E := E) ψ =
+      operatorObservable (E := E) ψ ψ (spectral_epsilon (E := E)) := by
+  rfl
+
+@[simp] theorem phaseObservable_eq_operatorObservable_complex_i
+    (ψ : H₂) :
+    phaseObservable (E := E) ψ =
+      operatorObservable (E := E) ψ ψ (complex_i (E := E)) := by
+  simpa [phaseObservable, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
 
 /-- 
 **Spinor Normalization**:

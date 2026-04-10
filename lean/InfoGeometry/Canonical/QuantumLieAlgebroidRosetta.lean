@@ -33,6 +33,11 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 noncomputable def internalPhaseAxis : H₂ →L[ℝ] H₂ :=
   InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)
 
+@[rep_depth krein, simp] theorem internalPhaseAxis_eq_complex_i :
+    internalPhaseAxis (E := E) = InfoGeometry.Krein.complex_i (E := E) := by
+  simpa [internalPhaseAxis] using
+    (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E))
+
 /--
 Paper complex unit `i` corresponds to the repo's internal real-Majorana phase
 axis `K = Jε` on the doubled carrier.
@@ -40,8 +45,8 @@ axis `K = Jε` on the doubled carrier.
 @[rep_depth krein, simp] theorem paper_complexUnit_eq_internalPhaseAxis :
     (internalPhaseAxis (E := E)).toLinearMap =
       (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E).K := by
-  rw [internalPhaseAxis]
-  exact modularComplexI_toLinearMap_eq_realMajoranaKAxis (E := E)
+  simpa [internalPhaseAxis_eq_complex_i] using
+    complex_i_toLinearMap_eq_realMajoranaKAxis (E := E)
 
 /--
 On perturbation channels, the paper's complex multiplication by `i` is realized
@@ -131,6 +136,16 @@ internal phase axis `K = Jε`, not by an external scalar `i`.
     (comparisonMetricReadout R A).compLeft (internalPhaseAxis (E := E)).toLinearMap := by
   rw [RelationalInformationCore.comparisonPhaseReadout_eq_metric_comp_modularComplexI]
   rfl
+
+@[rep_depth transport, simp] theorem paper_phaseReadout_eq_metric_comp_complex_i
+    (R : RelationalInformationDatum (E := E))
+    (A : ObservableAlgebra E) :
+    comparisonPhaseReadout R A
+      =
+    (comparisonMetricReadout R A).compLeft
+      (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
+  simpa [internalPhaseAxis_eq_complex_i] using
+    paper_phaseReadout_eq_metric_comp_internalPhaseAxis (E := E) R A
 
 /--
 When a relational datum is induced from a primitive potential datum, the paper's

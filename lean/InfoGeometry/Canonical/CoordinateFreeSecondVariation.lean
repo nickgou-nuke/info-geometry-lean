@@ -78,6 +78,17 @@ theorem modularCurvatureOperator_eq_metricPart_phaseAxis
     operatorInformationMetricPart (E := E) Kop Kop D := by
   simp [modularCurvatureOperator, operatorInformationHessian_eq_metricPart_self]
 
+@[rep_depth transport, simp]
+theorem modularCurvatureOperator_eq_metricPart_complex_i
+    (D : EndH) :
+    modularCurvatureOperator (E := E) D
+      =
+    operatorInformationMetricPart (E := E)
+      (InfoGeometry.Krein.complex_i (E := E))
+      (InfoGeometry.Krein.complex_i (E := E)) D := by
+  rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+  exact modularCurvatureOperator_eq_metricPart_phaseAxis (E := E) D
+
 /--
 The primitive comparison-state metric/phase pair is exactly the same-state
 symmetric / `K`-shifted two-channel correlation pair.

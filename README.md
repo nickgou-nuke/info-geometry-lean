@@ -9,7 +9,7 @@ are relational invariants.
 The repo has three maintained surfaces:
 - a theorem library under `lean/InfoGeometry/`
 - a Lean-native architecture kernel under `lean/InfoGeometry/Meta/` and `lean/InfoGeometry/Audit.lean`
-- a graph and reporting toolchain under `lean/DAG/` and `tools/infra/`
+- a tooling layer under `lean/DAG/`, `tools/infra/`, and `tools/frontier/`
 
 The repo is best read as one theory with several presentations, not as many unrelated theories.
 The main mathematical burden is not only in the objects at each layer, but in the morphisms that move between those layers and prove that adjacent presentations agree.
@@ -114,6 +114,24 @@ The practical goal of formalization here is to make the morphisms explicit and c
 - coherence files prove that two adjacent composites agree
 - capstone files summarize lower mathematics without pretending to be foundational proof owners
 
+If two equally good implementations are intentionally kept, the repository
+policy is:
+- one canonical owner/default API surface
+- one explicit alternative surface
+- one Lean bridge theorem or bridge module
+- downstream imports route through the owner or the bridge, not both directly
+
+The maintained policy surface for this bilingual rule is
+[docs/BILINGUAL_SPINE_POLICY.md](docs/BILINGUAL_SPINE_POLICY.md).
+The maintained Rosetta inventory and refactor plan for the split `Cl(1,1)`
+packet and its tensor/projective/operatorial realizations is
+[docs/cl11_rosetta_refactor_plan.md](docs/cl11_rosetta_refactor_plan.md).
+The exhaustive packet-level replica allocation is
+[docs/cl11_replica_inventory.md](docs/cl11_replica_inventory.md).
+The content-level operator collision map, built from full-codebase search rather
+than filenames, is
+[docs/cl11_content_collision_map.md](docs/cl11_content_collision_map.md).
+
 The DAG and Python tooling exist to preserve this intention when local context is lost:
 - they externalize dependency memory
 - they surface owner/translator/coherence/capstone pressure
@@ -121,6 +139,10 @@ The DAG and Python tooling exist to preserve this intention when local context i
 - they do not legislate mathematical truth or replace code reading
 
 The short operational summary lives in [docs/OperationalIntent.md](docs/OperationalIntent.md).
+The exact tool operator runbook lives in
+[docs/ToolingMethodology.md](docs/ToolingMethodology.md).
+The bilingual-owner policy surface lives in
+[docs/BILINGUAL_SPINE_POLICY.md](docs/BILINGUAL_SPINE_POLICY.md).
 For the repo's creative-methodological self-understanding of the coding agent as
 architect, creator, and caretaker, see
 [docs/black_books/08_the_agentic_caretaker.md](docs/black_books/08_the_agentic_caretaker.md).
@@ -133,12 +155,17 @@ architect, creator, and caretaker, see
 4. [docs/RepositoryMemoryMap.md](docs/RepositoryMemoryMap.md)
 5. [docs/ModuleMap.md](docs/ModuleMap.md)
 6. [docs/OperationalIntent.md](docs/OperationalIntent.md)
-7. [docs/Theory.md](docs/Theory.md)
-8. [lean/InfoGeometry/Audit.lean](lean/InfoGeometry/Audit.lean)
-9. [lean/DAG/README.md](lean/DAG/README.md)
-10. [tools/README.md](tools/README.md)
-11. [tools/infra/README.md](tools/infra/README.md)
-12. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
+7. [docs/ToolingMethodology.md](docs/ToolingMethodology.md)
+8. [docs/BILINGUAL_SPINE_POLICY.md](docs/BILINGUAL_SPINE_POLICY.md)
+9. [docs/cl11_rosetta_refactor_plan.md](docs/cl11_rosetta_refactor_plan.md)
+10. [docs/cl11_content_collision_map.md](docs/cl11_content_collision_map.md)
+11. [docs/Theory.md](docs/Theory.md)
+12. [lean/InfoGeometry/Audit.lean](lean/InfoGeometry/Audit.lean)
+13. [lean/DAG/README.md](lean/DAG/README.md)
+14. [tools/README.md](tools/README.md)
+15. [tools/infra/README.md](tools/infra/README.md)
+16. [tools/frontier/README.md](tools/frontier/README.md)
+17. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
 
 If you are operating as an agent inside this repo, also use:
 - [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)
@@ -179,6 +206,8 @@ lake script run strictCheck
 ## Maintained DAG Pipeline
 
 The maintained pipeline is documented in [tools/infra/README.md](tools/infra/README.md).
+The exact step-by-step operator methodology is documented in
+[docs/ToolingMethodology.md](docs/ToolingMethodology.md).
 Run the Lean-native audit before treating the representation-depth Python views as authoritative.
 
 After the main refresh sequence, the stable spine can be checked directly with:
@@ -191,6 +220,7 @@ python3 tools/infra/generate_representation_depth_graph.py
 ## Documentation Policy
 
 - `README.md`, `lean/DAG/README.md`, `tools/README.md`, and `tools/infra/README.md` are operational docs.
+- `tools/frontier/README.md` is the maintained operator guide for server-backed semantic snapshots and proof-print tooling.
 - [docs/RepositoryMemoryMap.md](docs/RepositoryMemoryMap.md) classifies which docs and tools are current, generated, compatibility-only, or reference memory.
 - [docs/OperationalIntent.md](docs/OperationalIntent.md) states why the repo, DAG, and infra tooling are maintained the way they are.
 - [docs/black_books/08_the_agentic_caretaker.md](docs/black_books/08_the_agentic_caretaker.md) is a creative methodological note about the role of the agent; it inspires but does not overrule code or audit policy.

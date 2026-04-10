@@ -1,4 +1,5 @@
 import Mathlib
+import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators
 
@@ -155,6 +156,18 @@ theorem mixture_gauge_reduction
     _ = (routerPartition n β x i)⁻¹ •
         ∑ e : Fin n, unnormalizedWeights n β x i e • (layer.experts e).apply (x i) := by
           rw [← Finset.smul_sum]
+
+attribute [rep_depth operator]
+  ExpertIdx
+  routerEnergy
+  routerPartition
+  routerPartition_pos
+  unnormalizedWeights
+  normalizedWeights
+  normalizedWeights_sum_one
+  unnormalizedMixture
+  normalizedMixture
+  mixture_gauge_reduction
 
 end Mixture
 

@@ -85,6 +85,38 @@ noncomputable def canonicalVortexPair : VortexPair (E := E) where
   source_comp_J := spectralPlusProj_comp_J (E := E)
   sink_comp_J := spectralMinusProj_comp_J (E := E)
 
+@[rep_depth krein]
+theorem canonicalVortexPair_source_comm_spectral_epsilon :
+    (canonicalVortexPair (E := E)).source.comp (spectral_epsilon (E := E))
+      =
+    (spectral_epsilon (E := E)).comp (canonicalVortexPair (E := E)).source := by
+  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+    (canonicalVortexPair (E := E)).source_comm_eps
+
+@[rep_depth krein]
+theorem canonicalVortexPair_sink_comm_spectral_epsilon :
+    (canonicalVortexPair (E := E)).sink.comp (spectral_epsilon (E := E))
+      =
+    (spectral_epsilon (E := E)).comp (canonicalVortexPair (E := E)).sink := by
+  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+    (canonicalVortexPair (E := E)).sink_comm_eps
+
+@[rep_depth krein]
+theorem canonicalVortexPair_source_comp_modular_j :
+    (canonicalVortexPair (E := E)).source.comp (modular_j (E := E))
+      =
+    (modular_j (E := E)).comp (canonicalVortexPair (E := E)).sink := by
+  simpa [TomitaTakesaki.modularConjugationJ_eq_modular_j] using
+    (canonicalVortexPair (E := E)).source_comp_J
+
+@[rep_depth krein]
+theorem canonicalVortexPair_sink_comp_modular_j :
+    (canonicalVortexPair (E := E)).sink.comp (modular_j (E := E))
+      =
+    (modular_j (E := E)).comp (canonicalVortexPair (E := E)).source := by
+  simpa [TomitaTakesaki.modularConjugationJ_eq_modular_j] using
+    (canonicalVortexPair (E := E)).sink_comp_J
+
 /-- Projected nilpotency predicate: the supercharge becomes cohomological only after projection. -/
 @[rep_depth krein]
 def ProjectedNilpotentOn (Q P : EndX) : Prop :=

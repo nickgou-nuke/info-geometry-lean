@@ -35,17 +35,16 @@ def IsAnomalyFree
 
 /--
 Theorem: The Stability of the Spire.
-An anomaly-free Spire preserves its Witten Index under transport.
+An anomaly-free Spire identifies central charge with Witten residue.
 -/
 @[rep_depth transport]
 theorem stability_of_balanced_spire
     [FiniteDimensional ℝ E]
     {n : Nat} (R : RicciTensor E) (frame : Fin n → E) (M : SuperchargeMultiplet (E := E)) :
     IsAnomalyFree R frame M →
-    -- The Central Charge acts as the topological protection
-    True := by
-  intro _
-  trivial
+    centralCharge (E := E) R frame = wittenIndexResidue (E := E) M := by
+  intro h
+  exact h
 
 /--
 If the residue lane is known to vanish, anomaly-freeness is exactly the

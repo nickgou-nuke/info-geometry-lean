@@ -104,6 +104,9 @@ noncomputable def ambientCarrier : StandardFormCarrier ExampleH where
   referenceState := ⟨plusPoint (E := ExampleH) 1⟩
   modularFlow_eq_generator := rfl
 
+@[simp] theorem ambientCarrier_Delta_eq_spectral_epsilon :
+    ambientCarrier.Delta = spectral_epsilon (E := ExampleH) := rfl
+
 noncomputable def trivialCocycle : ℝ → AlgebraEnd ExampleH := fun _ => 1
 
 noncomputable def trivialScalarBridge :

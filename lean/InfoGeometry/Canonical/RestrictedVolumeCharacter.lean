@@ -220,6 +220,12 @@ omit [CompleteSpace E] in
   unfold dualSheetDiagonalScalarOp dualSheetPairLift
   doubled_ext
 
+omit [CompleteSpace E] in
+@[simp] theorem dualSheetDiagonalScalarOp_one_neg_one_eq_spectral_epsilon :
+    dualSheetDiagonalScalarOp (E := E) 1 (-1) = spectral_epsilon (E := E) := by
+  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+    dualSheetDiagonalScalarOp_one_neg_one (E := E)
+
 /-- Common Weyl scale shared by both sheets. -/
 noncomputable def commonWeylScale (rhoPlus rhoMinus : ℝ) : ℝ :=
   (rhoPlus + rhoMinus) / 2
@@ -237,6 +243,17 @@ noncomputable def isotropicWeylPart
 noncomputable def chiralDilationPart
     (rhoPlus rhoMinus : ℝ) : EndH :=
   relativeSheetScale rhoPlus rhoMinus • (modularSignEpsilon (E := E))
+
+noncomputable def chiralDilationPartCore
+    (rhoPlus rhoMinus : ℝ) : EndH :=
+  relativeSheetScale rhoPlus rhoMinus • (spectral_epsilon (E := E))
+
+omit [CompleteSpace E] in
+@[simp] theorem chiralDilationPart_eq_core
+    (rhoPlus rhoMinus : ℝ) :
+    chiralDilationPart (E := E) rhoPlus rhoMinus
+      = chiralDilationPartCore (E := E) rhoPlus rhoMinus := by
+  simp [chiralDilationPart, chiralDilationPartCore]
 
 @[simp] theorem commonWeylScale_add_relativeSheetScale
     (rhoPlus rhoMinus : ℝ) :
@@ -297,6 +314,20 @@ theorem dualSheetDiagonalScalarOp_exp_pair_eq_epsilonBoost
       relativeSheetScale (Real.exp t) (Real.exp (-t)) • modularSignEpsilon (E := E) =
     Real.cosh t • (ContinuousLinearMap.id ℝ H₂) + Real.sinh t • modularSignEpsilon (E := E)
   simp
+
+theorem dualSheetDiagonalScalarOp_exp_pair_eq_epsilonBoost_core
+    (t : ℝ) :
+    dualSheetDiagonalScalarOp (E := E) (Real.exp t) (Real.exp (-t))
+      = Real.cosh t • (ContinuousLinearMap.id ℝ H₂)
+        + Real.sinh t • spectral_epsilon (E := E) := by
+  rw [dualSheetDiagonalScalarOp_exp_pair_eq_epsilonBoost (E := E) t]
+  rw [epsilonBoost_eq_cosh_add_sinh_eps]
+  change Real.cosh t • (ContinuousLinearMap.id ℝ H₂)
+      + Real.sinh t • modularSignEpsilon (E := E)
+    =
+    Real.cosh t • (ContinuousLinearMap.id ℝ H₂)
+      + Real.sinh t • spectral_epsilon (E := E)
+  simp [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon]
 
 omit [CompleteSpace E] in
 theorem dualSheetDiagonalScalarOp_weylGaugeRescale

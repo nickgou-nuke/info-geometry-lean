@@ -131,6 +131,11 @@ noncomputable def densityWeightPhaseAxis : EndH :=
 @[rep_depth krein, simp] theorem densityWeightPhaseAxis_eq_modularComplexI :
     densityWeightPhaseAxis = modularComplexI (E := E) := rfl
 
+@[rep_depth krein, simp] theorem densityWeightPhaseAxis_eq_complex_i :
+    densityWeightPhaseAxis = complex_i (E := E) := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    densityWeightPhaseAxis_eq_modularComplexI (E := E)
+
 @[rep_depth krein, simp] theorem densityWeightPhaseAxis_eq_dilationOperator :
     densityWeightPhaseAxis = dilationOperator (E := E) := by
   exact modularComplexI_eq_dilationOperator (E := E)

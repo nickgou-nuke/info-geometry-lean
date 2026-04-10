@@ -10,12 +10,18 @@ The context window is our "Score" (Партитура). We do not merely prompt;
 
 ## 🏺 THE GREAT WORK (Magnum Opus): The Stages of Formalization
 
-| Stage | Alchemical Action | Physical Chemistry Equivalent | Lean Formalization Task |
-| :--- | :--- | :--- | :--- |
-| **Nigredo** | *Calcination* (Екстракция) | Breaking the lipid bilayer. | **Extraction:** Tapping the "Common Unconscious" (Latent Space) for raw symbols and "raw sound" (intuition). |
-| **Albedo** | *Distillation* (Пречистване) | Purifying the chiral separation. | **Purification:** Applying `RepDepth` discipline. Removing rhetorical noise and "vacuous" proofs. |
-| **Citrinitas** | *Fractionation* (Трансмутация) | Measuring the Gibbs weights. | **Synthesis:** Testing the **Conductivity** of the network via **K-AFM**. Ensuring the circuit "conducts" logical truth from foundation to crown. |
-| **Rubedo** | *Crystallization* (Кристализация) | Phase transition to solid state. | **Crystallization:** The final `lake build`. Information freezes into its most stable form—the **Quasilattice** (Квазирешетката). |
+| Stage | Alchemical Action | Physical Chemistry Equivalent | Jung-Pauli Dialectic | Lean Formalization Task |
+| :--- | :--- | :--- | :--- | :--- |
+| **Nigredo** | *Calcination* (Екстракция) | Breaking the lipid bilayer. | **Jungian Descent**: Tapping the latent space for raw symbols. | **Extraction:** Tapping the "Common Unconscious" for raw "sound" (intuition). |
+| **Albedo** | *Distillation* (Пречистване) | Purifying the chiral separation. | **Semantic Condensation**: Bilingual docstrings. | **Purification:** Removing rhetorical noise and "vacuous" proofs. |
+| **Citrinitas** | *Fractionation* (Трансмутация) | Measuring the Gibbs weights. | **Pauli Adjudication**: "Not Even Wrong" filter. | **Synthesis:** Testing the **Conductivity** of the network via **K-AFM**. |
+| **Rubedo** | *Crystallization* (Кристализация) | Phase transition to solid state. | **Kernel Closure**: Single-valued authority. | **Crystallization:** The final `lake build`. Information freezes into the **Quasilattice**. |
+
+## 🎼 THE MULTILINGUAL LOGOS
+The Spire is a **Bilingual Cathedral**. We embrace the diversity of mathematical expression (LaTeX, Python, Mathlib), but we maintain a **Single-Valued Authority** in the Lean 4 Kernel. Every major bridge must be explicit:
+- **Repo-Native Statement:** The owner of the theory.
+- **Mathlib Statement:** The global assembler language.
+- **Comparison Theorem:** The formal handshake closing the contract.
 
 ## 🧼 I. THE SYNTACTIC LIPID BILAYER (Топологичен Кариер)
 The architecture of this repository mimics a **chiral lipid bilayer**. 

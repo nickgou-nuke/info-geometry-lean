@@ -66,6 +66,78 @@ def isTheoremInfo : ConstantInfo → Bool
   | .thmInfo _ => true
   | _ => false
 
+/-- True iff the constant info describes a theorem or a definition. -/
+def isDefOrTheoremInfo : ConstantInfo → Bool
+  | .thmInfo _ => true
+  | .defnInfo _ => true
+  | _ => false
+
+/-- Final dotted component of a declaration name. -/
+def declNameLeaf (declName : Name) : String :=
+  match (toString declName).splitOn "." |>.reverse with
+  | leaf :: _ => leaf
+  | [] => toString declName
+
+/-- Heuristic generated/infrastructure leaf names to exclude from coverage auditing. -/
+def isGeneratedLeafName (leaf : String) : Bool :=
+  leaf.startsWith "inst" ||
+    leaf.startsWith "_proof_" ||
+    leaf.startsWith "_match_" ||
+    leaf.startsWith "proof_" ||
+    leaf.startsWith "match_" ||
+    leaf.startsWith "eq_" ||
+    leaf == "mk" ||
+    leaf == "rec" ||
+    leaf == "recOn" ||
+    leaf == "casesOn" ||
+    leaf == "noConfusion" ||
+    leaf == "noConfusionType" ||
+    leaf == "brecOn" ||
+    leaf == "below" ||
+    leaf == "ibelow" ||
+    leaf == "sizeOf_spec" ||
+    leaf == "injEq" ||
+    leaf == "inj" ||
+    leaf == "ctorIdx"
+
+/-- Name-fragment markers for generated/auxiliary declarations. -/
+def hasGeneratedNameFragment (s : String) : Bool :=
+  s.contains "._private." ||
+    s.contains ".proof_" ||
+    s.contains "._proof_" ||
+    s.contains ".match_" ||
+    s.contains "._match_" ||
+    s.contains ".equations._eqn_" ||
+    s.contains ".sizeOf_spec" ||
+    s.contains ".congr_simp" ||
+    s.contains ".ctorElim" ||
+    s.contains ".ctorElimType" ||
+    s.contains ".toCtorIdx" ||
+    s.contains ".ofNat" ||
+    s.contains ".ofNat_ctorIdx" ||
+    s.contains ".repr" ||
+    s.contains ".elim"
+
+/--
+True iff a declaration should be covered by the strict rep-depth coverage audit.
+
+Scope:
+- canonical namespace only;
+- public def/theorem surfaces;
+- excludes generated/private internals and instance scaffolding.
+-/
+def isRepDepthCoverageTarget (env : Environment) (declName : Name) (info : ConstantInfo) : Bool :=
+  let s := toString declName
+  let leaf := declNameLeaf declName
+  isDefOrTheoremInfo info &&
+    s.startsWith "InfoGeometry.Canonical." &&
+    !declName.isInternal &&
+    !declName.hasMacroScopes &&
+    !hasGeneratedNameFragment s &&
+    !isGeneratedLeafName leaf &&
+    !(env.isProjectionFn declName) &&
+    !(env.isConstructor declName)
+
 /-- Transitive closure of constants used by a declaration body or proof term. -/
 def transitivelyUsedConstants (env : Environment) (root : Name) : NameSet := Id.run do
   let mut used : NameSet := {}
@@ -145,8 +217,37 @@ def checkArchitectureTopology : CoreM Unit := do
       logError err
     throwError "Architecture Audit FAILED with {errors.size} violation(s)."
 
+/--
+Strict rep-depth coverage audit for canonical declaration owners.
+
+This check complements `#audit_architecture`: it reports missing `@[rep_depth ...]`
+on canonical public theorem/definition declarations instead of only checking
+adjacency among already-tagged declarations.
+-/
+def checkRepDepthCoverage : CoreM Unit := do
+  let env ← getEnv
+  let (total, covered, missing) :=
+    env.constants.fold (init := (0, 0, (#[] : Array Name))) fun (total, covered, missing) declName info =>
+      if isRepDepthCoverageTarget env declName info then
+        match repDepth? env declName with
+        | some _ => (total + 1, covered + 1, missing)
+        | none => (total + 1, covered, missing.push declName)
+      else
+        (total, covered, missing)
+  if missing.isEmpty then
+    logInfo m!"Rep-Depth Coverage PASS: {covered}/{total} canonical def/theorem declarations are tagged."
+  else
+    for declName in missing do
+      logError m!"MISSING REP-DEPTH: {declName}"
+    throwError
+      "Rep-Depth Coverage FAILED: {missing.size} missing tag(s) out of {total} canonical def/theorem declaration(s)."
+
 /-- Command entrypoint for the Lean-native architecture audit. -/
 elab "#audit_architecture" : command => do
   Command.liftCoreM checkArchitectureTopology
+
+/-- Command entrypoint for strict canonical rep-depth coverage auditing. -/
+elab "#audit_rep_depth_coverage" : command => do
+  Command.liftCoreM checkRepDepthCoverage
 
 end InfoGeometry.Meta

@@ -27,6 +27,7 @@ def RNEntropySourcesMongeAmpere
     (M : SinkhornMatrix n) : Prop :=
   SatisfiesMongeAmpere Kgeo.H (fun _ => relativeVolumeChangeRN n M)
 
+omit [FiniteDimensional ℝ E] in
 /--
 Unit relative-volume closure extracted from RN-sourced Monge-Ampere density.
 -/
@@ -40,6 +41,7 @@ theorem unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
   intro x
   simpa [RNEntropySourcesMongeAmpere, hUnit] using hSource x
 
+omit [FiniteDimensional ℝ E] in
 /--
 RN entropy sourcing plus unit relative-volume closure yields the incompressible
 Monge-Ampere regime used by the Cramer-Rao bridge.
@@ -54,6 +56,7 @@ theorem incompressibleMongeAmpere_of_rnEntropySource_of_unitRelativeVolume
   exact unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
     (n := n) (Kgeo := Kgeo) (M := M) hSource hUnit
 
+omit [FiniteDimensional ℝ E] in
 /--
 Direct Cramer-Rao determinant closure from the RN entropy source and unit
 relative-volume hypothesis.
@@ -75,6 +78,7 @@ theorem absDet_cramerRaoMetric_eq_one_of_rnEntropySource_of_unitRelativeVolume
     (x := x)
     hdet
 
+omit [FiniteDimensional ℝ E] in
 /--
 Direct logarithmic Cramer-Rao closure from the RN entropy source and unit
 relative-volume hypothesis.

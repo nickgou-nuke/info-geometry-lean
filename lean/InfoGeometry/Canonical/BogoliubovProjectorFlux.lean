@@ -83,7 +83,14 @@ theorem JBoost_comp_spectralPlusProj
   have hcomp1 : (1 : EndH).comp P₊ = P₊ := by
     change (ContinuousLinearMap.id ℝ H₂).comp P₊ = P₊
     exact ContinuousLinearMap.id_comp P₊
-  rw [hcomp1, ← spectralMinusProj_comp_J (E := E)]
+  rw [hcomp1, ← spectralMinusProj_comp_modular_j (E := E)]
+
+theorem JBoost_comp_spectralPlusProj_modular_j
+    (t : ℝ) :
+    (JBoost (E := E) t).comp P₊
+      = Real.cosh t • P₊ + Real.sinh t • (P₋.comp (modular_j (E := E))) := by
+  simpa [TomitaTakesaki.modularConjugationJ_eq_modular_j] using
+    JBoost_comp_spectralPlusProj (E := E) t
 
 /-- Right-composition action of the `J`-boost on the negative projector block. -/
 theorem JBoost_comp_spectralMinusProj
@@ -95,7 +102,14 @@ theorem JBoost_comp_spectralMinusProj
   have hcomp1 : (1 : EndH).comp P₋ = P₋ := by
     change (ContinuousLinearMap.id ℝ H₂).comp P₋ = P₋
     exact ContinuousLinearMap.id_comp P₋
-  rw [hcomp1, ← spectralPlusProj_comp_J (E := E)]
+  rw [hcomp1, ← spectralPlusProj_comp_modular_j (E := E)]
+
+theorem JBoost_comp_spectralMinusProj_modular_j
+    (t : ℝ) :
+    (JBoost (E := E) t).comp P₋
+      = Real.cosh t • P₋ + Real.sinh t • (P₊.comp (modular_j (E := E))) := by
+  simpa [TomitaTakesaki.modularConjugationJ_eq_modular_j] using
+    JBoost_comp_spectralMinusProj (E := E) t
 
 /-- Right-composition action of the `K`-rotation on the positive projector block. -/
 theorem KRotation_comp_spectralPlusProj
@@ -107,7 +121,14 @@ theorem KRotation_comp_spectralPlusProj
   have hcomp1 : (1 : EndH).comp P₊ = P₊ := by
     change (ContinuousLinearMap.id ℝ H₂).comp P₊ = P₊
     exact ContinuousLinearMap.id_comp P₊
-  rw [hcomp1, ← spectralMinusProj_comp_K (E := E)]
+  rw [hcomp1, ← spectralMinusProj_comp_complex_i (E := E)]
+
+theorem KRotation_comp_spectralPlusProj_complex_i
+    (t : ℝ) :
+    (KRotation (E := E) t).comp P₊
+      = Real.cos t • P₊ + Real.sin t • (P₋.comp (complex_i (E := E))) := by
+  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+    KRotation_comp_spectralPlusProj (E := E) t
 
 /-- Right-composition action of the `K`-rotation on the negative projector block. -/
 theorem KRotation_comp_spectralMinusProj
@@ -119,7 +140,14 @@ theorem KRotation_comp_spectralMinusProj
   have hcomp1 : (1 : EndH).comp P₋ = P₋ := by
     change (ContinuousLinearMap.id ℝ H₂).comp P₋ = P₋
     exact ContinuousLinearMap.id_comp P₋
-  rw [hcomp1, ← spectralPlusProj_comp_K (E := E)]
+  rw [hcomp1, ← spectralPlusProj_comp_complex_i (E := E)]
+
+theorem KRotation_comp_spectralMinusProj_complex_i
+    (t : ℝ) :
+    (KRotation (E := E) t).comp P₋
+      = Real.cos t • P₋ + Real.sin t • (P₊.comp (complex_i (E := E))) := by
+  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+    KRotation_comp_spectralMinusProj (E := E) t
 
 @[simp] theorem transportedPlusProjector_epsilonBoost
     (t : ℝ) :
@@ -139,11 +167,23 @@ theorem KRotation_comp_spectralMinusProj
       = Real.cosh t • P₊ + Real.sinh t • ((modularConjugationJ (E := E)).comp P₋) := by
   simpa [transportedPlusProjector] using spectralPlusProj_comp_JBoost (E := E) t
 
+@[simp] theorem transportedPlusProjector_JBoost_modular_j
+    (t : ℝ) :
+    transportedPlusProjector (E := E) (JBoost (E := E) t)
+      = Real.cosh t • P₊ + Real.sinh t • ((modular_j (E := E)).comp P₋) := by
+  rw [transportedPlusProjector_JBoost (E := E) t]
+
 @[simp] theorem transportedMinusProjector_JBoost
     (t : ℝ) :
     transportedMinusProjector (E := E) (JBoost (E := E) t)
       = Real.cosh t • P₋ + Real.sinh t • ((modularConjugationJ (E := E)).comp P₊) := by
   simpa [transportedMinusProjector] using spectralMinusProj_comp_JBoost (E := E) t
+
+@[simp] theorem transportedMinusProjector_JBoost_modular_j
+    (t : ℝ) :
+    transportedMinusProjector (E := E) (JBoost (E := E) t)
+      = Real.cosh t • P₋ + Real.sinh t • ((modular_j (E := E)).comp P₊) := by
+  rw [transportedMinusProjector_JBoost (E := E) t]
 
 @[simp] theorem transportedPlusProjector_KRotation
     (t : ℝ) :
@@ -151,11 +191,23 @@ theorem KRotation_comp_spectralMinusProj
       = Real.cos t • P₊ + Real.sin t • ((modularComplexI (E := E)).comp P₋) := by
   simpa [transportedPlusProjector] using spectralPlusProj_comp_KRotation (E := E) t
 
+@[simp] theorem transportedPlusProjector_KRotation_complex_i
+    (t : ℝ) :
+    transportedPlusProjector (E := E) (KRotation (E := E) t)
+      = Real.cos t • P₊ + Real.sin t • ((complex_i (E := E)).comp P₋) := by
+  rw [transportedPlusProjector_KRotation (E := E) t]
+
 @[simp] theorem transportedMinusProjector_KRotation
     (t : ℝ) :
     transportedMinusProjector (E := E) (KRotation (E := E) t)
       = Real.cos t • P₋ + Real.sin t • ((modularComplexI (E := E)).comp P₊) := by
   simpa [transportedMinusProjector] using spectralMinusProj_comp_KRotation (E := E) t
+
+@[simp] theorem transportedMinusProjector_KRotation_complex_i
+    (t : ℝ) :
+    transportedMinusProjector (E := E) (KRotation (E := E) t)
+      = Real.cos t • P₋ + Real.sin t • ((complex_i (E := E)).comp P₊) := by
+  rw [transportedMinusProjector_KRotation (E := E) t]
 
 /-- The positive projector flux vanishes for the grading-diagonal `ε`-boost. -/
 theorem plusProjectorFlux_epsilonBoost
@@ -189,6 +241,13 @@ theorem plusProjectorFlux_JBoost
     _ = Real.sinh t • (((modularConjugationJ (E := E)).comp P₋) - (P₋.comp (modularConjugationJ (E := E)))) := by
           rw [smul_sub]
 
+theorem plusProjectorFlux_JBoost_modular_j
+    (t : ℝ) :
+    plusProjectorFlux (E := E) (JBoost (E := E) t)
+      = Real.sinh t • (((modular_j (E := E)).comp P₋) - (P₋.comp (modular_j (E := E)))) := by
+  simpa [TomitaTakesaki.modularConjugationJ_eq_modular_j] using
+    plusProjectorFlux_JBoost (E := E) t
+
 /-- The negative projector flux of the `J`-boost is the hyperbolic off-diagonal block. -/
 theorem minusProjectorFlux_JBoost
     (t : ℝ) :
@@ -203,6 +262,13 @@ theorem minusProjectorFlux_JBoost
           abel
     _ = Real.sinh t • (((modularConjugationJ (E := E)).comp P₊) - (P₊.comp (modularConjugationJ (E := E)))) := by
           rw [smul_sub]
+
+theorem minusProjectorFlux_JBoost_modular_j
+    (t : ℝ) :
+    minusProjectorFlux (E := E) (JBoost (E := E) t)
+      = Real.sinh t • (((modular_j (E := E)).comp P₊) - (P₊.comp (modular_j (E := E)))) := by
+  simpa [TomitaTakesaki.modularConjugationJ_eq_modular_j] using
+    minusProjectorFlux_JBoost (E := E) t
 
 /-- The positive projector flux of the `K`-rotation is the oscillatory off-diagonal block. -/
 theorem plusProjectorFlux_KRotation
@@ -219,6 +285,13 @@ theorem plusProjectorFlux_KRotation
     _ = Real.sin t • (((modularComplexI (E := E)).comp P₋) - (P₋.comp (modularComplexI (E := E)))) := by
           rw [smul_sub]
 
+theorem plusProjectorFlux_KRotation_complex_i
+    (t : ℝ) :
+    plusProjectorFlux (E := E) (KRotation (E := E) t)
+      = Real.sin t • (((complex_i (E := E)).comp P₋) - (P₋.comp (complex_i (E := E)))) := by
+  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+    plusProjectorFlux_KRotation (E := E) t
+
 /-- The negative projector flux of the `K`-rotation is the oscillatory off-diagonal block. -/
 theorem minusProjectorFlux_KRotation
     (t : ℝ) :
@@ -233,6 +306,13 @@ theorem minusProjectorFlux_KRotation
           abel
     _ = Real.sin t • (((modularComplexI (E := E)).comp P₊) - (P₊.comp (modularComplexI (E := E)))) := by
           rw [smul_sub]
+
+theorem minusProjectorFlux_KRotation_complex_i
+    (t : ℝ) :
+    minusProjectorFlux (E := E) (KRotation (E := E) t)
+      = Real.sin t • (((complex_i (E := E)).comp P₊) - (P₊.comp (complex_i (E := E)))) := by
+  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+    minusProjectorFlux_KRotation (E := E) t
 
 end Basic
 

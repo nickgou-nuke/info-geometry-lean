@@ -56,6 +56,13 @@ def g (Q : QGT E) : LinearMap.BilinForm ℝ (DoubledSpace E) := Q.metric
 /-- Accessor for the antisymmetric Berry component. -/
 def Ω (Q : QGT E) : LinearMap.BilinForm ℝ (DoubledSpace E) := Q.berry
 
+/-- Owner-name form of the Kähler compatibility law. -/
+@[simp] theorem compat_complex_i
+    (Q : QGT E) (u v : DoubledSpace E) :
+    Q.berry u v = Q.metric (complex_i (E := E) u) v := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    Q.compat u v
+
 /--
 **ofMajorana**:
 Constructor from a symmetric metric satisfying the $K$-skew relation
@@ -81,6 +88,17 @@ noncomputable def ofMajorana
   compat := by
     intro u v
     simp
+
+/-- Owner-name form of the induced Berry/metric compatibility for `ofMajorana`. -/
+@[simp] theorem ofMajorana_compat_complex_i
+    (metric : LinearMap.BilinForm ℝ (DoubledSpace E))
+    (h_symm : metric.IsSymm)
+    (h_skew : ∀ u v, metric (modularComplexI u) v = -metric u (modularComplexI v))
+    (u v : DoubledSpace E) :
+    (GeometricQuantumTensor.ofMajorana metric h_symm h_skew).berry u v =
+      (GeometricQuantumTensor.ofMajorana metric h_symm h_skew).metric (complex_i (E := E) u) v := by
+  simpa using
+    (GeometricQuantumTensor.ofMajorana metric h_symm h_skew).compat_complex_i u v
 
 end GeometricQuantumTensor
 

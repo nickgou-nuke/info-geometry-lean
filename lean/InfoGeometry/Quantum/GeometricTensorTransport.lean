@@ -1,5 +1,6 @@
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
 import InfoGeometry.Canonical.BogoliubovClosedForms
+import InfoGeometry.Canonical.TomitaTakesaki
 
 open scoped InnerProductSpace
 
@@ -45,6 +46,11 @@ theorem KRotation_preserves_inner
   calc
     Real.cos t ^ 2 * g + g * Real.sin t ^ 2 = g * (Real.cos t ^ 2 + Real.sin t ^ 2) := by ring
     _ = g := by rw [hcossin]; ring
+
+theorem KRotation_preserves_inner_complex_i
+    (t : ℝ) (u v : H₂) :
+    ⟪KRotation (E := E) t u, KRotation (E := E) t v⟫_ℝ = ⟪u, v⟫_ℝ := by
+  exact KRotation_preserves_inner (E := E) t u v
 
 /--
 Infinitesimal modular-conjugation transport law for the operatorial QGT metric
@@ -338,15 +344,16 @@ theorem berryOfOperator_modularTransportFlow_eq_of_commute_generator
       berryOfOperator (E := E) A u v := by
   intro u v
   have hKComm :
-      (modularComplexI (E := E)).comp (modularTransportFlow (E := E) hMod t)
+      (complex_i (E := E)).comp (modularTransportFlow (E := E) hMod t)
         =
-      (modularTransportFlow (E := E) hMod t).comp (modularComplexI (E := E)) := by
-    exact modularComplexI_comp_modularTransportFlow_eq_modularTransportFlow_comp_modularComplexI_of_IsPhaseLinear
-      (E := E) hMod hPhase t
+      (modularTransportFlow (E := E) hMod t).comp (complex_i (E := E)) := by
+    exact
+      complex_i_comp_modularTransportFlow_eq_modularTransportFlow_comp_complex_i_of_IsPhaseLinear
+        (E := E) hMod hPhase t
   have hKu :
-      modularComplexI (E := E) (modularTransportFlow (E := E) hMod t u)
+      complex_i (E := E) (modularTransportFlow (E := E) hMod t u)
         =
-      modularTransportFlow (E := E) hMod t (modularComplexI (E := E) u) := by
+      modularTransportFlow (E := E) hMod t (complex_i (E := E) u) := by
     simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hKComm
   calc
     berryOfOperator (E := E) A
@@ -354,20 +361,22 @@ theorem berryOfOperator_modularTransportFlow_eq_of_commute_generator
         (modularTransportFlow (E := E) hMod t v)
       =
     metricOfOperator (E := E) A
-      (modularComplexI (E := E) (modularTransportFlow (E := E) hMod t u))
+      (complex_i (E := E) (modularTransportFlow (E := E) hMod t u))
       (modularTransportFlow (E := E) hMod t v) := by
-          simp [berryOfOperator_apply]
+          simp [berryOfOperator_apply,
+            InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
     _ =
     metricOfOperator (E := E) A
-      (modularTransportFlow (E := E) hMod t (modularComplexI (E := E) u))
+      (modularTransportFlow (E := E) hMod t (complex_i (E := E) u))
       (modularTransportFlow (E := E) hMod t v) := by
           rw [hKu]
     _ = metricOfOperator (E := E) A (modularComplexI (E := E) u) v := by
           exact metricOfOperator_modularTransportFlow_eq_of_commute_generator
             (E := E) (A := A) (hMod := hMod) hSelf hPhase hCommGen t
-            (modularComplexI (E := E) u) v
+            (complex_i (E := E) u) v
     _ = berryOfOperator (E := E) A u v := by
-          simp [berryOfOperator_apply]
+          simp [berryOfOperator_apply,
+            InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
 
 /--
 Split-`Cl(1,1)` (`J ∘ ε`) form of exact modular-flow Berry transport:
@@ -451,29 +460,32 @@ theorem qgtOfOperator_modularTransportFlow_invariant_of_commute_generator
       metricOfOperator_modularTransportFlow_eq_of_commute_generator
         (E := E) (A := A) (hMod := hMod) hSelf hPhase hCommGen t
     have hKComm :
-        (modularComplexI (E := E)).comp (modularTransportFlow (E := E) hMod t)
+        (complex_i (E := E)).comp (modularTransportFlow (E := E) hMod t)
           =
-        (modularTransportFlow (E := E) hMod t).comp (modularComplexI (E := E)) := by
-      exact modularComplexI_comp_modularTransportFlow_eq_modularTransportFlow_comp_modularComplexI_of_IsPhaseLinear
+        (modularTransportFlow (E := E) hMod t).comp (complex_i (E := E)) := by
+      exact complex_i_comp_modularTransportFlow_eq_modularTransportFlow_comp_complex_i_of_IsPhaseLinear
         (E := E) hMod hPhase t
     have hKu :
-        modularComplexI (E := E) (modularTransportFlow (E := E) hMod t u)
+        complex_i (E := E) (modularTransportFlow (E := E) hMod t u)
           =
-        modularTransportFlow (E := E) hMod t (modularComplexI (E := E) u) := by
+        modularTransportFlow (E := E) hMod t (complex_i (E := E) u) := by
       simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hKComm
     calc
       Q.berry (modularTransportFlow (E := E) hMod t u)
         (modularTransportFlow (E := E) hMod t v)
         =
-      Q.metric ((modularComplexI (E := E)) (modularTransportFlow (E := E) hMod t u))
+      Q.metric ((complex_i (E := E)) (modularTransportFlow (E := E) hMod t u))
         (modularTransportFlow (E := E) hMod t v) := by
-            exact Q.compat _ _
+            simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+              Q.compat _ _
       _ =
-      Q.metric (modularTransportFlow (E := E) hMod t ((modularComplexI (E := E)) u))
+      Q.metric (modularTransportFlow (E := E) hMod t ((complex_i (E := E)) u))
         (modularTransportFlow (E := E) hMod t v) := by
             rw [hKu]
-      _ = Q.metric ((modularComplexI (E := E)) u) v := hMetric _ _
-      _ = Q.berry u v := (Q.compat u v).symm
+      _ = Q.metric ((complex_i (E := E)) u) v := hMetric _ _
+      _ = Q.berry u v := by
+            simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+              (Q.compat u v).symm
 
 /--
 If the modular transport generator lies on the local Cartan phase axis, then
@@ -498,8 +510,11 @@ theorem metricOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phaseAxis
         =
       metricOfOperator A u v := by
   intro u v
-  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
-      (E := E) hMod σ t hGen]
+  have hGenCore :
+      modularTransportGenerator (E := E) hMod = σ • complex_i (E := E) := by
+    simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using hGen
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_complex_i
+      (E := E) hMod σ t hGenCore]
   exact metricOfOperator_KRotation_eq_of_commute
     (E := E) (A := A) hComm (t * σ) u v
 
@@ -525,8 +540,11 @@ theorem berryOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phaseAxis
         =
       berryOfOperator (E := E) A u v := by
   intro u v
-  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
-      (E := E) hMod σ t hGen]
+  have hGenCore :
+      modularTransportGenerator (E := E) hMod = σ • complex_i (E := E) := by
+    simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using hGen
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_complex_i
+      (E := E) hMod σ t hGenCore]
   exact berryOfOperator_KRotation_eq_of_commute
     (E := E) (A := A) hComm (t * σ) u v
 
@@ -582,8 +600,11 @@ theorem qgtOfOperator_modularTransportFlow_invariant_of_generator_eq_smul_phaseA
       Q.berry (modularTransportFlow (E := E) hMod t u)
         (modularTransportFlow (E := E) hMod t v) = Q.berry u v) := by
   intro Q
-  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
-      (E := E) hMod σ t hGen]
+  have hGenCore :
+      modularTransportGenerator (E := E) hMod = σ • complex_i (E := E) := by
+    simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using hGen
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_complex_i
+      (E := E) hMod σ t hGenCore]
   simpa using qgtOfOperator_KRotation_invariant
     (E := E) (A := A) hA hComm (t * σ)
 
@@ -682,8 +703,11 @@ theorem kreinMetricOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phase
         =
       kreinMetricOfOperator A u v := by
   intro u v
-  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
-      (E := E) hMod σ t hGen]
+  have hGenCore :
+      modularTransportGenerator (E := E) hMod = σ • complex_i (E := E) := by
+    simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using hGen
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_complex_i
+      (E := E) hMod σ t hGenCore]
   exact kreinMetricOfOperator_KRotation_eq_of_IsPhaseAntilinear
     (E := E) (A := A) hAnti (t * σ) u v
 
@@ -710,8 +734,11 @@ theorem kreinQgtOfOperator_modularTransportFlow_invariant_of_generator_eq_smul_p
       Q.berry (modularTransportFlow (E := E) hMod t u)
         (modularTransportFlow (E := E) hMod t v) = Q.berry u v) := by
   intro Q
-  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
-      (E := E) hMod σ t hGen]
+  have hGenCore :
+      modularTransportGenerator (E := E) hMod = σ • complex_i (E := E) := by
+    simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using hGen
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_complex_i
+      (E := E) hMod σ t hGenCore]
   simpa using kreinQgtOfOperator_KRotation_invariant
     (E := E) (A := A) hA hAnti (t * σ)
 

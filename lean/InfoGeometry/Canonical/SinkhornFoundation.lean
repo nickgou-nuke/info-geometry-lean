@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.GrandCanonicalCore
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
+import InfoGeometry.Meta.Architecture
 import Mathlib.Analysis.Convex.Birkhoff
 
 open scoped BigOperators
@@ -816,6 +817,107 @@ lemma schroedingerBridgeStep_radonNikodymBarrier_monotone
     (hstep : SinkhornStep n phase M M') :
     phaseRNBarrierAfter n phase M' ≤ phaseRNBarrierBefore n phase M :=
   sinkhornStep_radonNikodymBarrier_monotone (n := n) hstep
+
+attribute [rep_depth operator]
+  CostMatrix
+  Coupling
+  Marginal
+  HasMarginals
+  HasPositiveRowSums
+  HasPositiveColSums
+  SinkhornMatrix
+  IsBistochasticSwitch
+  switchMatrix
+  switchMatrix_apply
+  switchMatrix_row_sum_one
+  switchMatrix_mem_rowStochastic
+  switchMatrix_mem_doublyStochastic
+  SinkhornCertificate.ofBistochastic
+  gc_partition_eq_routerPartition
+  gc_gibbsWeight_eq_normalizedWeights
+  routerParams
+  transportCost
+  rowSum
+  colSum
+  leftWeylScale
+  rightWeylScale
+  sinkhornScaledCoupling
+  sinkhornScaledCoupling_def
+  rowNormalize
+  colNormalize
+  rowNormalize_eq_leftDiagonalGauge
+  colNormalize_eq_rightDiagonalGauge
+  rowNormalize_has_unit_rowMarginal
+  colNormalize_has_unit_colMarginal
+  rowSum_rowNormalize
+  colSum_colNormalize
+  relativeVolumeChangeRN
+  relativeVolumeChangeRN_eq_exp_logJacobian
+  kahlerPotentialRN
+  kahlerPotentialRN_eq_neg_logJacobian
+  kahlerPotentialRN_eq_scalarModularPotential_relativeVolumeChangeRN
+  rowRadonNikodymGenerator
+  colRadonNikodymGenerator
+  rowRNBarrier
+  colRNBarrier
+  rowRNBarrier_nonneg
+  colRNBarrier_nonneg
+  rowRNBarrier_rowNormalize_eq_zero
+  colRNBarrier_colNormalize_eq_zero
+  phaseRNBarrierBefore
+  phaseRNBarrierAfter
+  phaseRNBarrierBefore_nonneg
+  sinkhornStep_phaseRNBarrierAfter_eq_zero
+  sinkhornStep_phaseRNBarrier_monotone
+  rn_barrier_row_step_eq_zero
+  rowLyapunov
+  colLyapunov
+  rowLyapunov_nonneg
+  colLyapunov_nonneg
+  rowLyapunov_rowNormalize_eq_zero
+  colLyapunov_colNormalize_eq_zero
+  phaseAt
+  phaseLyapunovBefore
+  phaseLyapunovAfter
+  phaseLyapunovBefore_nonneg
+  sinkhornStep_phaseLyapunovAfter_eq_zero
+  sinkhornStep_phaseLyapunov_monotone
+  trajectoryRNBarrier
+  trajectoryRNBarrierNext
+  trajectoryRNBarrierNext_eq_zero
+  trajectoryRNBarrier_monotone
+  trajectoryLyapunov
+  trajectoryLyapunovNext
+  trajectoryLyapunovNext_eq_zero
+  trajectoryLyapunov_monotone
+  negativeEntropy
+  entropicKernel
+  entropicOptimalTransportObjective
+  regularizedOTObjective
+  bayesianLikelihoodKernel
+  bayesianPosteriorCoupling
+  schroedingerBridgeKernel
+  schroedingerBridgeCoupling
+  bayesianFreeEnergyObjective
+  bayesianFreeEnergyObjective_eq_regularizedOTObjective
+  schroedingerBridgeObjective
+  entropicOptimalTransportObjective_eq_transport_plus_entropy
+  SinkhornStep
+  sinkhornTwoStep_eq_twoSidedGauge
+  sinkhornTwoStep_eq_weylGauge
+  sinkhornTwoStep_eq_bayesianPosteriorGauge
+  sinkhornTwoStep_eq_schroedingerBridgeGauge
+  exists_perm_decomposition_of_bistochastic
+  exists_perm_decomposition_of_sinkhornBalanced
+  normalizedWeights_nonneg
+  sinkhornStep_regularizedObjective_monotone
+  sinkhornStep_entropicOT_monotone
+  sinkhornStep_bayesianFreeEnergy_monotone
+  sinkhornStep_radonNikodymBarrier_monotone
+  schroedingerBridgeStep_monotone
+  schroedingerBridgeStep_radonNikodymBarrier_monotone
+  rowBarrierPotential
+  colBarrierPotential
 
 end EntropicOTBridge
 

@@ -614,3 +614,14 @@ algebra distinctions.**
 - `WeylGaugeOperatorLift`
   - root-name logarithmic-generator companion:
     `logarithmicGenerator_eq_common_plus_relative_spectral_epsilon`
+- `ModularAnomaly`
+  - root-name companions now expose the modular-shadow packet through:
+    `canonicalCl11Generator_eq_spectral_epsilon`,
+    `expFlow_modular_j_eq_sigmaMap`,
+    `latticeAvatar_modular_j`,
+    `latticeAvatar_sigmaMap_modular_j`,
+    `latticeAvatar_exp_modular_j`
+- `Rosetta`, `DeepHorizon`, `RedLine`
+  - residual legacy-name mentions are now paired with explicit root-name exports:
+    `modular_j`, `spectral_epsilon`, `complex_i`
+  - these are intentional bilingual reference surfaces, not owner-layer duplicates

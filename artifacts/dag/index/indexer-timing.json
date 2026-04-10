@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "artifactTimestamp": "2026-04-10T07:59:16.569350+00:00",
+  "oleanHash": "797d0a7d6d7ba9983aeafd85957ea8bb9b8f471c05b371b07bac8e37ddbf6417",
+  "artifactSchemaVersion": 3,
+  "recordedAt": "2026-04-10T07:59:16.569916+00:00",
+  "sourceLog": "indexer-timing.log",
+  "importModules_ms": 5934,
+  "stageCount": 10,
+  "stages": [
+    {
+      "label": "collect/process constants (14406 decls, 860505 raw edges, 892 morphisms)",
+      "elapsed_ms": 38659
+    },
+    {
+      "label": "classify/filter edges (112777 kept / 860505 raw)",
+      "elapsed_ms": 3689
+    },
+    {
+      "label": "write index jsonl artifacts",
+      "elapsed_ms": 406
+    },
+    {
+      "label": "build typed adjacency",
+      "elapsed_ms": 56
+    },
+    {
+      "label": "sort typed adjacency",
+      "elapsed_ms": 0
+    },
+    {
+      "label": "write full_graph.json",
+      "elapsed_ms": 331
+    },
+    {
+      "label": "hydrate graph (SCC + DAG + dominators)",
+      "elapsed_ms": 0
+    },
+    {
+      "label": "build structural payload",
+      "elapsed_ms": 0
+    },
+    {
+      "label": "write structural-topology.json",
+      "elapsed_ms": 2685
+    },
+    {
+      "label": "write meta.json",
+      "elapsed_ms": 0
+    }
+  ],
+  "total_ms": 45826
+}

@@ -20,6 +20,7 @@ from tools.frontier.semantic_block_export import (
     LspClient,
     inject_rpc_import,
 )
+from tools.frontier.proof_runtime import BRIDGE_METHOD_CHOICES
 
 
 RPC_IMPORT = "import Agent.ProofServerRpc\n"
@@ -84,7 +85,7 @@ def resolve_bridge_position(
     character: int,
     decl_name: str | None,
 ) -> tuple[int | None, int]:
-    if line is not None or rpc_method != "validateDecl" or not decl_name:
+    if line is not None or rpc_method not in ("validateDecl", "getDeclValue") or not decl_name:
         return line, character
     inferred = infer_decl_position_in_text(source_text, decl_name)
     if inferred is None:
@@ -153,6 +154,20 @@ def build_rpc_invocation(
             params["posCharacter"] = character
         return (
             "IG.Compiler.validateDecl",
+            params,
+        )
+    if rpc_method == "getDeclValue":
+        if not decl_name:
+            raise ValueError("--decl-name is required for --rpc-method getDeclValue")
+        params: dict[str, Any] = {
+            "version": BRIDGE_VERSION,
+            "declName": decl_name,
+        }
+        if line is not None:
+            params["posLine"] = max(0, line + line_delta)
+            params["posCharacter"] = character
+        return (
+            "IG.Compiler.getDeclValue",
             params,
         )
     raise ValueError(f"Unsupported rpc method: {rpc_method}")
@@ -452,7 +467,7 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help=(
             "0-based line. Required for getProofState/checkSnippet; optional for "
-            "validateDecl, where it is auto-inferred when possible."
+            "validateDecl/getDeclValue, where it is auto-inferred when possible."
         ),
     )
     parser.add_argument("--character", type=int, default=0, help="0-based character")
@@ -489,13 +504,13 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--rpc-method",
-        choices=("getGoalTargets", "getProofState", "checkSnippet", "validateDecl", "getEnvFingerprint"),
+        choices=BRIDGE_METHOD_CHOICES,
         default="getProofState",
         help="Bridge method to invoke (default: getProofState)",
     )
     parser.add_argument(
         "--decl-name",
-        help="Declaration name for validateDecl (for example, `My.Namespace.thmName`)",
+        help="Declaration name for validateDecl/getDeclValue (for example, `My.Namespace.thmName`)",
     )
     parser.add_argument(
         "--pretty-print-type",

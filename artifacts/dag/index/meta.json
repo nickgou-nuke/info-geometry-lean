@@ -1,11 +1,11 @@
 {
-  "typeCount": 543,
-  "timestamp": "2026-04-09T21:35:54.440270+00:00",
+  "typeCount": 546,
+  "timestamp": "2026-04-10T07:59:16.569350+00:00",
   "schemaVersion": 3,
   "nsFilter": "InfoGeometry",
-  "nodeCount": 14182,
-  "morphismCount": 883,
+  "nodeCount": 14406,
+  "morphismCount": 892,
   "importRoot": "InfoGeometry.All",
-  "edgeCount": 109700,
-  "oleanHash": "c63706978a332a7ed87dfc35d8f8bfec270ec65c26405684e3898787a3c44175"
+  "edgeCount": 112777,
+  "oleanHash": "797d0a7d6d7ba9983aeafd85957ea8bb9b8f471c05b371b07bac8e37ddbf6417"
 }

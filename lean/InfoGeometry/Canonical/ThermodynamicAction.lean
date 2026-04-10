@@ -1,14 +1,15 @@
 import InfoGeometry.Canonical.RelationalInformationCore
 import InfoGeometry.Canonical.ThermodynamicGenerator
+import InfoGeometry.Meta.Vacuity
 
 open scoped InnerProductSpace
 
 /-!
 # InfoGeometry.Canonical.ThermodynamicAction
 
-Thin thermodynamic-action aliases on the relational datum surface.
+Expository thermodynamic-action aliases on the relational datum surface.
 
-This file does not introduce a new thermodynamic ontology. It only records the
+This file does not introduce a new thermodynamic owner layer. It only records
 already-owned identifications:
 
 - the operatorial KL/action surface is the relational functional shift;
@@ -37,10 +38,6 @@ noncomputable def operatorialKLDivergence
     (R : RelationalInformationDatum (E := E)) : ℝ :=
   functionalShift R
 
-@[rep_depth transport, simp] theorem operatorialKLDivergence_eq_functionalShift
-    (R : RelationalInformationDatum (E := E)) :
-    operatorialKLDivergence (E := E) R = functionalShift R := rfl
-
 /--
 The Fisher metric surface on a relational datum.
 
@@ -52,12 +49,9 @@ noncomputable def fisherInformationMetric
     (X Y : PerturbationChannel E) : ℝ :=
   comparisonGeneratorMetric R X Y
 
-@[rep_depth transport, simp] theorem fisherInformationMetric_eq_comparisonGeneratorMetric
-    (R : RelationalInformationDatum (E := E))
-    (X Y : PerturbationChannel E) :
-    fisherInformationMetric (E := E) R X Y
-      =
-    comparisonGeneratorMetric R X Y := rfl
+attribute [expository]
+  operatorialKLDivergence
+  fisherInformationMetric
 
 end Core
 

@@ -76,6 +76,16 @@ script refreshBlueprintTags (args) do
   }
   child.wait
 
+script bilingualSpineReport (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/reports/generate_bilingual_spine_report.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script dagStatus (args) do
   let child ← IO.Process.spawn {
     cmd := "python3",

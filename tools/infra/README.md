@@ -36,8 +36,16 @@ The preferred operator entrypoints are:
 - `lake script run dagRefresh`
 - `lake script run dagReports`
 - `lake script run dagDoctor`
+- `lake script run bilingualSpineReport`
 
 These are thin wrappers over the current Python corridor. `dagReports` also sets a repo-local Matplotlib cache under `.artifacts/matplotlib` so managed report runs do not depend on a writable home-directory config path. The underlying script lane remains maintained, but the pinned config and authoritative status surface now live above it.
+The current managed report sequence keeps the theorem-surface index, bilingual RedLine spine report, source-sink compression, causal coverage report, theorem-significance report, sorry-equivalence report, NetworkX graph exports, and replacement-frontier outputs in sync with the authoritative DAG artifacts.
+`bilingualSpineReport` can also emit per-module docstring stubs with reference seeds via `--stub-out-dir reports/dag/bilingual-docstring-stubs`.
+The managed lane also records timing sidecars for the last authoritative refresh (`artifacts/dag/index/indexer-timing.json`) and the last managed report run (`artifacts/dag/report-timing.json`), which `dagStatus` and `dagDoctor` surface as operator-facing performance summaries.
+
+For the exact operator runbook, including when to use the managed lane, the raw
+repair lane, the depth-tag lane, and the process-flow lane, see
+[docs/ToolingMethodology.md](../../docs/ToolingMethodology.md).
 
 The first authoritative Lake facet experiment is also available:
 - `lake build :dagMeta`
@@ -51,7 +59,9 @@ The manifest-style facet writes `artifacts/dag/index/manifest.json`, which is a 
 Main DAG refresh and report path:
 - `refresh_decl_graph.py`
 - `refresh_blueprint_tags.py`
+- `reports/generate_bilingual_spine_report.py`
 - `run_locked_lake_build.py`
+- `build_changed_lean.py`
 - `generate_theorem_surface_index.py`
 - `generate_source_sink_compression.py`
 - `generate_causal_report.py`
@@ -84,6 +94,7 @@ Use the infra tools by role, not as one undifferentiated report pile:
 
 - build/orchestration
   - `run_locked_lake_build.py`
+  - `build_changed_lean.py` (incremental owner-module builds from git-changed Lean files; avoids umbrella rebuild loops by default)
 - declaration graph refresh
   - `refresh_decl_graph.py`
   - `refresh_blueprint_tags.py`
@@ -133,6 +144,27 @@ Public authoritative DAG inputs live under [artifacts/dag](../../artifacts/dag):
 Derived readable outputs live under [reports/dag](../../reports/dag).
 
 ## Maintained Refresh Order
+
+For normal use, prefer the managed exact sequence from
+[docs/ToolingMethodology.md](../../docs/ToolingMethodology.md):
+
+```bash
+lake script run dagStatus
+lake script run dagRefresh
+lake script run dagReports
+lake script run dagDoctor
+```
+
+For active theorem/refactor work, prefer incremental owner builds between managed runs:
+
+```bash
+python3 tools/infra/build_changed_lean.py --dry-run
+python3 tools/infra/build_changed_lean.py
+```
+
+This intentionally skips umbrella modules like `*.All` unless `--allow-umbrella` is passed.
+
+Use the raw order below only when narrowing or repairing a tool failure.
 
 ```bash
 python3 tools/infra/run_locked_lake_build.py InfoGeometry.Audit

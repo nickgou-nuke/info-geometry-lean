@@ -2,6 +2,10 @@
 
 This directory contains the maintained semantic-block and frontier-discovery tooling.
 
+For the exact operator methodology, including when to use `semanticSnapshot`,
+`proofPrint`, and `proofSession`, see
+[docs/ToolingMethodology.md](../../docs/ToolingMethodology.md).
+
 ## Maintained entrypoints
 
 - `semantic_block_export.py`
@@ -53,20 +57,25 @@ For repeated queries on the same file, use `proof_session.py` through
 first query pays the file elaboration cost and the following queries run on a
 warm server state.
 
-For one-shot terminal use, prefer `proof_print.py` through
-`lake script run proofPrint ...`. It prints just the useful string instead of a
-full JSON packet and defaults to the cheapest maintained query (`getGoalTargets`).
+If you already know the target declaration or cursor location, prewarm the
+session before `ready`:
+- `lake script run proofSession <file> --prewarm-decl-name <fqdn> --prewarm-pretty-print-value`
+- `lake script run proofSession <file> --prewarm-method getProofState --prewarm-line <n> --prewarm-character <c>`
 
-`proof_session.py` also supports prewarming. Pass `--prewarm-method ...` and
-related `--prewarm-*` flags to run one bridge query before the session emits its
-`ready` event.
+The `ready` event includes a compact `prewarm` summary with timing and basic
+status, but not the full proof payload.
+
+For the fastest maintained cold one-shot proof-term printout, use
+`proof_print.py` through `lake script run proofPrint ...`. It goes straight
+through `getDeclValue` and prints the declaration value
+instead of a larger snapshot packet.
 
 The persistent session now also supports virtual buffer edits:
 - `{"id": 1, "method": "didChange", "text": "...", "waitForDiagnostics": false}`
 - `{"id": 2, "method": "reloadFromDisk", "waitForDiagnostics": false}`
 
 For proof-term printout on the warm path, send:
-- `{"id": 3, "method": "validateDecl", "declName": "...", "prettyPrintValue": true}`
+- `{"id": 3, "method": "getDeclValue", "declName": "..."}`
 
 This is the closest maintained operator surface to the “show me the compiled/elaborated view”
 experience provided by the Lean VS Code plugin.

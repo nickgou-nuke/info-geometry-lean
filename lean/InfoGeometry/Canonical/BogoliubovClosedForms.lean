@@ -180,12 +180,26 @@ theorem JBoost_eq_cosh_add_sinh_J
   unfold JBoost
   exact exp_eq_cosh_add_sinh_of_sq_eq_one (E := E) modularConjugationJ_sq_mul t
 
+theorem JBoost_eq_cosh_add_sinh_modular_j
+    (t : ℝ) :
+    JBoost (E := E) t
+      = Real.cosh t • (1 : EndH) + Real.sinh t • modular_j (E := E) := by
+  simpa [TomitaTakesaki.modularConjugationJ_eq_modular_j] using
+    JBoost_eq_cosh_add_sinh_J (E := E) t
+
 theorem epsilonBoost_eq_cosh_add_sinh_eps
     (t : ℝ) :
     epsilonBoost (E := E) t
       = Real.cosh t • (1 : EndH) + Real.sinh t • modularSignEpsilon (E := E) := by
   unfold epsilonBoost
   exact exp_eq_cosh_add_sinh_of_sq_eq_one (E := E) modularSignEpsilon_sq_mul t
+
+theorem epsilonBoost_eq_cosh_add_sinh_spectral_epsilon
+    (t : ℝ) :
+    epsilonBoost (E := E) t
+      = Real.cosh t • (1 : EndH) + Real.sinh t • spectral_epsilon (E := E) := by
+  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+    epsilonBoost_eq_cosh_add_sinh_eps (E := E) t
 
 theorem KRotation_eq_cos_add_sin_K
     (t : ℝ) :
@@ -194,11 +208,23 @@ theorem KRotation_eq_cos_add_sin_K
   unfold KRotation
   exact exp_eq_cos_add_sin_of_sq_eq_neg_one (E := E) modularComplexI_sq_mul t
 
+theorem KRotation_eq_cos_add_sin_complex_i
+    (t : ℝ) :
+    KRotation (E := E) t
+      = Real.cos t • (1 : EndH) + Real.sin t • complex_i (E := E) := by
+  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+    KRotation_eq_cos_add_sin_K (E := E) t
+
 @[simp] theorem JBoost_apply
     (t : ℝ) (ψ : H₂) :
     JBoost (E := E) t ψ = (Real.cosh t) • ψ + (Real.sinh t) • (modularConjugationJ (E := E) ψ) := by
   rw [JBoost_eq_cosh_add_sinh_J (E := E) t]
   simp
+
+@[simp] theorem JBoost_apply_modular_j
+    (t : ℝ) (ψ : H₂) :
+    JBoost (E := E) t ψ = (Real.cosh t) • ψ + (Real.sinh t) • (modular_j (E := E) ψ) := by
+  rw [JBoost_apply (E := E) t ψ]
 
 @[simp] theorem epsilonBoost_apply
     (t : ℝ) (ψ : H₂) :
@@ -207,11 +233,22 @@ theorem KRotation_eq_cos_add_sin_K
   rw [epsilonBoost_eq_cosh_add_sinh_eps (E := E) t]
   simp
 
+@[simp] theorem epsilonBoost_apply_spectral_epsilon
+    (t : ℝ) (ψ : H₂) :
+    epsilonBoost (E := E) t ψ =
+      (Real.cosh t) • ψ + (Real.sinh t) • (spectral_epsilon (E := E) ψ) := by
+  rw [epsilonBoost_apply (E := E) t ψ]
+
 @[simp] theorem KRotation_apply
     (t : ℝ) (ψ : H₂) :
     KRotation (E := E) t ψ = (Real.cos t) • ψ + (Real.sin t) • (modularComplexI (E := E) ψ) := by
   rw [KRotation_eq_cos_add_sin_K (E := E) t]
   simp
+
+@[simp] theorem KRotation_apply_complex_i
+    (t : ℝ) (ψ : H₂) :
+    KRotation (E := E) t ψ = (Real.cos t) • ψ + (Real.sin t) • (complex_i (E := E) ψ) := by
+  rw [KRotation_apply (E := E) t ψ]
 
 /--
 Phase-linear operators commute with the exact exponential phase propagator.
@@ -295,6 +332,13 @@ theorem epsilon_comp_epsilonBoost
   intro x
   apply DoubledSpace.ext <;> simp [TomitaTakesaki.modularSignEpsilon]
 
+theorem spectral_epsilon_comp_epsilonBoost
+    (t : ℝ) :
+    (spectral_epsilon (E := E)).comp (epsilonBoost (E := E) t)
+      = (epsilonBoost (E := E) t).comp (spectral_epsilon (E := E)) := by
+  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+    epsilon_comp_epsilonBoost (E := E) t
+
 theorem epsilon_comp_JBoost
     (t : ℝ) :
     (modularSignEpsilon (E := E)).comp (JBoost (E := E) t)
@@ -306,6 +350,13 @@ theorem epsilon_comp_JBoost
     simp [TomitaTakesaki.modularSignEpsilon, TomitaTakesaki.modularConjugationJ,
       Real.cosh_neg, Real.sinh_neg]
 
+theorem spectral_epsilon_comp_JBoost
+    (t : ℝ) :
+    (spectral_epsilon (E := E)).comp (JBoost (E := E) t)
+      = (JBoost (E := E) (-t)).comp (spectral_epsilon (E := E)) := by
+  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+    epsilon_comp_JBoost (E := E) t
+
 theorem epsilon_comp_KRotation
     (t : ℝ) :
     (modularSignEpsilon (E := E)).comp (KRotation (E := E) t)
@@ -316,6 +367,13 @@ theorem epsilon_comp_KRotation
   apply DoubledSpace.ext <;>
     simp [TomitaTakesaki.modularSignEpsilon, TomitaTakesaki.modularComplexI,
       Real.cos_neg, Real.sin_neg]
+
+theorem spectral_epsilon_comp_KRotation
+    (t : ℝ) :
+    (spectral_epsilon (E := E)).comp (KRotation (E := E) t)
+      = (KRotation (E := E) (-t)).comp (spectral_epsilon (E := E)) := by
+  simpa [TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+    epsilon_comp_KRotation (E := E) t
 
 
 

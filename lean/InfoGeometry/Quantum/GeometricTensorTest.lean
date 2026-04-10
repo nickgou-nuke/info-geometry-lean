@@ -42,6 +42,21 @@ theorem ofMajorana_compat
   exact Q.compat u v
 
 /--
+**ofMajorana compatibility, owner-name form**:
+Verified that the induced Berry form Ω matches the metric precomposed with
+the root owner phase axis `complex_i`.
+-/
+theorem ofMajorana_compat_complex_i
+    (metric : LinearMap.BilinForm ℝ H₂)
+    (h_symm : metric.IsSymm)
+    (h_skew : ∀ u v, metric (modularComplexI u) v = -metric u (modularComplexI v)) :
+    let Q := GeometricQuantumTensor.ofMajorana metric h_symm h_skew
+    ∀ u v, Q.berry u v = Q.metric (complex_i (E := E) u) v := by
+  intro Q u v
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    Q.compat u v
+
+/--
 **Berry Alternation**:
 Verified that the generated Berry form is indeed alternating.
 -/

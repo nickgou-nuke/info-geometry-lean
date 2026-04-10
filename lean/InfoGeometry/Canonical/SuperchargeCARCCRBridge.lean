@@ -35,14 +35,27 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 @[rep_depth krein]
 noncomputable abbrev paritySuperchargeOp : FockEndomorphism E := modular_j (E := E)
 
+@[rep_depth krein, simp] theorem paritySuperchargeOp_eq_modular_j :
+    paritySuperchargeOp (E := E) = modular_j (E := E) := rfl
+
 /-- Canonical modular supercharge operator on the doubled Krein carrier. -/
 @[rep_depth krein]
 noncomputable abbrev modularSuperchargeOp : FockEndomorphism E := spectral_epsilon (E := E)
+
+@[rep_depth krein, simp] theorem modularSuperchargeOp_eq_spectral_epsilon :
+    modularSuperchargeOp (E := E) = spectral_epsilon (E := E) := rfl
 
 /-- Canonical CPT supercharge operator `Q = Jε = K` on the doubled Krein carrier. -/
 @[rep_depth krein]
 noncomputable abbrev cptSuperchargeOp : FockEndomorphism E :=
   (modularCPTSupercharge (E := E)).Q
+
+@[rep_depth krein, simp] theorem cptSuperchargeOp_eq_complex_i :
+    cptSuperchargeOp (E := E) = complex_i (E := E) := by
+  calc
+    cptSuperchargeOp (E := E) = dilationOperator (E := E) := by
+      simpa [cptSuperchargeOp] using modularCPTSupercharge_Q_eq_dilationOperator (E := E)
+    _ = complex_i (E := E) := dilationOperator_eq_complex_i (E := E)
 
 /-- The odd-odd (CAR) channel on the supergraded Fock lane. -/
 @[rep_depth krein]
@@ -76,11 +89,6 @@ theorem parity_modular_supercharge_ccr_eq_two_cpt :
     (paritySuperchargeOp (E := E)).comp (modularSuperchargeOp (E := E))
       - (modularSuperchargeOp (E := E)).comp (paritySuperchargeOp (E := E))
       = (2 : ℝ) • cptSuperchargeOp (E := E) := by
-  have hQ : (modularCPTSupercharge (E := E)).Q = complex_i (E := E) := by
-    calc
-      (modularCPTSupercharge (E := E)).Q = dilationOperator (E := E) := by
-        simpa using modularCPTSupercharge_Q_eq_dilationOperator (E := E)
-      _ = complex_i (E := E) := dilationOperator_eq_complex_i (E := E)
   calc
     (paritySuperchargeOp (E := E)).comp (modularSuperchargeOp (E := E))
         - (modularSuperchargeOp (E := E)).comp (paritySuperchargeOp (E := E))
@@ -88,18 +96,20 @@ theorem parity_modular_supercharge_ccr_eq_two_cpt :
           simpa [paritySuperchargeOp, modularSuperchargeOp] using
             clmComm_modular_j_spectral_epsilon (E := E)
     _ = (2 : ℝ) • cptSuperchargeOp (E := E) := by
-          simpa [cptSuperchargeOp] using congrArg (fun T => (2 : ℝ) • T) hQ.symm
+          rw [cptSuperchargeOp_eq_complex_i]
 
 /-- The derived CPT supercharge agrees with the canonical dilation generator. -/
 @[rep_depth krein, simp] theorem cptSuperchargeOp_eq_dilationOperator :
     cptSuperchargeOp (E := E) = dilationOperator (E := E) := by
-  simpa [cptSuperchargeOp] using modularCPTSupercharge_Q_eq_dilationOperator (E := E)
+  exact modularCPTSupercharge_Q_eq_dilationOperator (E := E)
 
 /-- The CPT supercharge squares to `-Id` on the doubled carrier. -/
 @[rep_depth krein, simp] theorem cptSuperchargeOp_sq :
     (cptSuperchargeOp (E := E)).comp (cptSuperchargeOp (E := E))
       = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-  simpa [cptSuperchargeOp] using modularCPTSupercharge_hamiltonian (E := E)
+  change ((modularCPTSupercharge (E := E)).Q).comp ((modularCPTSupercharge (E := E)).Q)
+      = -(ContinuousLinearMap.id ℝ (DoubledSpace E))
+  exact modularCPTSupercharge_hamiltonian (E := E)
 
 /-- The CPT supercharge sends the positive chiral sector to the negative one. -/
 @[rep_depth krein]

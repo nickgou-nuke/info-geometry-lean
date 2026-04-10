@@ -46,13 +46,13 @@ local instance : CompleteSpace EndH := inferInstance
 @[rep_depth transport, simp] theorem transportedParitySupercharge_zero_eq_paritySuperchargeOp
     (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
     transportedParitySupercharge (E := E) V 0 = paritySuperchargeOp (E := E) := by
-  simpa [paritySuperchargeOp] using transportedParitySupercharge_zero (E := E) V
+  exact transportedParitySupercharge_zero (E := E) V
 
 /-- At the undeformed base point, the transported modular supercharge is the primitive `ε` lane. -/
 @[rep_depth transport, simp] theorem transportedModularSupercharge_zero_eq_modularSuperchargeOp
     (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
     transportedModularSupercharge (E := E) V 0 = modularSuperchargeOp (E := E) := by
-  simpa [modularSuperchargeOp] using transportedModularSupercharge_zero (E := E) V
+  exact transportedModularSupercharge_zero (E := E) V
 
 /--
 The transported gap seed is exactly the odd-odd CAR deformation of the

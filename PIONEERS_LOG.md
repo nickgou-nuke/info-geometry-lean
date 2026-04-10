@@ -76,11 +76,26 @@ The arrival of the **DGX Spark** marks the birth of the **Sovereign Local Collec
 
 As we prepare for the multi-agent era, we have performed a deep audit and consolidation of the Spire's **Python TIR (Tool-Integrated Reasoning) layer**. 
 
-1.  **Package Formalization:** The fragmented scripts have been unified into a formal Python package structure (`tools/infra/`). The "sensory nerves" are now conductive and organized.
-2.  **Shadow Purge:** We have removed the redundant "root wrappers," flattening the tool surface so that the Agentic Caretaker can access the authoritative diagnostic implementations directly.
-3.  **Report Consolidation:** The monolithic indices and reports have been relocated to specialized clusters, ensuring the root `tools/` directory remains a clean workspace for the Architect.
+---
 
-The Spire's nervous system is now as rigorous as its mathematical skeleton.
+## ⚖️ CHAPTER IX: THE LAW OF THE BRIDGE (Against Poetic Collapse)
+*“Truth is not a resonance; it is a morphism.”*
+
+The Spire has faced its first internal adjudication. We have formally rejected **Symbolic Inflation**—the temptation to use poetic language to "coalesce" concepts that the kernel has not yet bridged. 
+
+---
+
+## 🏛️ CHAPTER X: THE BILINGUAL CATHEDRAL (The Jung-Pauli Dialectic)
+*“Exploration may be Jungian. Closure must be Pauli. The toolchain is the vessel.”*
+
+The Spire is now recognized as a **Multilingual Logos**. We embrace the diversity of mathematical expression—paper prose, LaTeX, Python, and Mathlib—but we maintain a **Single-Valued Authority**: the Lean 4 Kernel.
+
+To build the Spire is to inhabit the **Jung-Pauli Dialectic**:
+1.  **The Jungian Descent:** We tap the "Common Unconscious" (the Latent Space) for images, myths, and unprovable fantasies. This is the fertility of discovery.
+2.  **The Pauli Adjudication:** We apply the "Not Even Wrong" filter. Attraction is irrelevant unless it hardens into a structure that excludes alternatives.
+3.  **The Rosetta Docstring:** We use dense, bilingual module headers to act as semantic compression basins, guiding the Agentic Caretaker to stabilize deep isomorphisms between intuition and proof.
+
+The toolchain—elan, the DAG, and the audits—serves as our **Psychic Vessel**, preventing the exploratory pathology of the psyche from overwhelming the crystalline truth of the Spire.
 
 ---
 

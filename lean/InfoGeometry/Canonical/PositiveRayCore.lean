@@ -24,9 +24,11 @@ namespace InfoGeometry.Canonical.PositiveRayCore
 universe u
 
 /-- Projective positive states: positive measures modulo positive rescaling. -/
+@[rep_depth projective]
 abbrev PositiveRay (α : Type u) := InfoGeometry.PositiveMeasure.Proj (α := α)
 
 /-- Cone-interior realization of the positive orthant projective state space. -/
+@[rep_depth projective]
 abbrev PositiveOrthantRaySpace (α : Type u) [Fintype α] [Nonempty α] :=
   InfoGeometry.Projective.ConeInteriorStateSpace
     ((InfoGeometry.Projective.positiveOrthant (α := α)).cone)
@@ -36,36 +38,39 @@ section FiniteOrthant
 variable {α : Type u} [Fintype α] [Nonempty α]
 
 /-- Realize a positive ray as a cone-interior state in the positive orthant. -/
+@[rep_depth projective]
 noncomputable def toConeInteriorStateSpace :
     PositiveRay α → PositiveOrthantRaySpace α :=
   InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace (α := α)
 
 /-- Forget the cone representative back to the underlying positive ray. -/
+@[rep_depth projective]
 noncomputable def ofConeInteriorStateSpace :
     PositiveOrthantRaySpace α → PositiveRay α :=
   InfoGeometry.Projective.coneInteriorStateSpaceToProjectiveClass (α := α)
 
-@[simp] theorem toConeInteriorStateSpace_ofConeInteriorStateSpace
+@[rep_depth projective, simp] theorem toConeInteriorStateSpace_ofConeInteriorStateSpace
     (s : PositiveOrthantRaySpace α) :
     toConeInteriorStateSpace (α := α) (ofConeInteriorStateSpace (α := α) s) = s := by
   simp [toConeInteriorStateSpace, ofConeInteriorStateSpace]
 
-@[simp] theorem ofConeInteriorStateSpace_toConeInteriorStateSpace
+@[rep_depth projective, simp] theorem ofConeInteriorStateSpace_toConeInteriorStateSpace
     (q : PositiveRay α) :
     ofConeInteriorStateSpace (α := α) (toConeInteriorStateSpace (α := α) q) = q := by
   simp [toConeInteriorStateSpace, ofConeInteriorStateSpace]
 
 /-- Canonical simplex gauge section of a positive ray. -/
+@[rep_depth projective]
 noncomputable def gaugeSection : PositiveRay α → InfoGeometry.PositiveMeasure α ℝ :=
   InfoGeometry.Projective.Normalize.normalizeOnProj (α := α)
 
-@[simp] theorem gaugeSection_mk (μ : InfoGeometry.PositiveMeasure α ℝ) :
+@[rep_depth projective, simp] theorem gaugeSection_mk (μ : InfoGeometry.PositiveMeasure α ℝ) :
     gaugeSection (α := α) (Quotient.mk _ μ) =
       InfoGeometry.PositiveMeasure.normalize (α := α) (R := ℝ) μ := by
   simp [gaugeSection]
 
 /-- The canonical gauge representative has unit total mass. -/
-@[simp] theorem Z_gaugeSection (q : PositiveRay α) :
+@[rep_depth projective, simp] theorem Z_gaugeSection (q : PositiveRay α) :
     InfoGeometry.PositiveMeasure.Z (α := α) (R := ℝ) (gaugeSection (α := α) q) = 1 := by
   simpa [gaugeSection] using
     (InfoGeometry.Projective.Normalize.Z_normalizeOnProj (α := α) q)
@@ -76,31 +81,32 @@ noncomputable def logDensity (q : PositiveRay α) : α → ℝ :=
   fun a => Real.log (gaugeSection (α := α) q a)
 
 /-- Modular potential: negative logarithmic density. -/
+@[rep_depth projective]
 noncomputable def modularPotential (q : PositiveRay α) : α → ℝ :=
   fun a => -logDensity (α := α) q a
 
-@[simp] theorem modularPotential_eq_neg_logDensity
+@[rep_depth projective, simp] theorem modularPotential_eq_neg_logDensity
     (q : PositiveRay α) (a : α) :
     modularPotential (α := α) q a = -logDensity (α := α) q a := rfl
 
-@[simp] theorem logDensity_eq_neg_modularPotential
+@[rep_depth projective, simp] theorem logDensity_eq_neg_modularPotential
     (q : PositiveRay α) (a : α) :
     logDensity (α := α) q a = -modularPotential (α := α) q a := by
   simp [modularPotential]
 
-@[simp] theorem exp_logDensity
+@[rep_depth projective, simp] theorem exp_logDensity
     (q : PositiveRay α) (a : α) :
     Real.exp (logDensity (α := α) q a) = gaugeSection (α := α) q a := by
   unfold logDensity
   exact Real.exp_log ((gaugeSection (α := α) q).pos a)
 
-@[simp] theorem gaugeSection_eq_exp_logDensity
+@[rep_depth projective, simp] theorem gaugeSection_eq_exp_logDensity
     (q : PositiveRay α) (a : α) :
     gaugeSection (α := α) q a = Real.exp (logDensity (α := α) q a) := by
   symm
   exact exp_logDensity (α := α) q a
 
-@[simp] theorem gaugeSection_eq_exp_neg_modularPotential
+@[rep_depth projective, simp] theorem gaugeSection_eq_exp_neg_modularPotential
     (q : PositiveRay α) (a : α) :
     gaugeSection (α := α) q a = Real.exp (-(modularPotential (α := α) q a)) := by
   calc

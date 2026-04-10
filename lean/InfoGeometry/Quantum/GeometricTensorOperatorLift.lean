@@ -1280,6 +1280,25 @@ theorem metricOfOperator_K_skew_of_commutesWithK
   rw [metricOfOperator_apply, metricOfOperator_apply, hCommEval]
   exact modularComplexI_inner_skew (E := E) (A u) v
 
+theorem metricOfOperator_complex_i_skew_of_commutesWith_complex_i
+    (A : EndH)
+    (hComm :
+      A.comp (InfoGeometry.Krein.complex_i (E := E))
+        =
+      (InfoGeometry.Krein.complex_i (E := E)).comp A) :
+    ∀ u v,
+      metricOfOperator A (InfoGeometry.Krein.complex_i (E := E) u) v
+        =
+      -metricOfOperator A u (InfoGeometry.Krein.complex_i (E := E) v) := by
+  intro u v
+  have hComm' :
+      A.comp (modularComplexI (E := E))
+        =
+      (modularComplexI (E := E)).comp A := by
+    simpa [modularComplexI_eq_complex_i] using hComm
+  simpa [modularComplexI_eq_complex_i] using
+    metricOfOperator_K_skew_of_commutesWithK (E := E) (A := A) hComm' u v
+
 /--
 On the positive doubled-space Hilbert metric, the local Cartan axis `K = Jε`
 is skew-adjoint.
@@ -1298,6 +1317,12 @@ theorem modularComplexI_star_eq_neg :
     ⟪v, -(modularComplexI (E := E) u)⟫_ℝ
   rw [inner_neg_right]
   exact modularComplexI_inner_skew (E := E) v u
+
+theorem complex_i_star_eq_neg :
+    star (InfoGeometry.Krein.complex_i (E := E))
+      =
+    -(InfoGeometry.Krein.complex_i (E := E)) := by
+  simpa [modularComplexI_eq_complex_i] using modularComplexI_star_eq_neg (E := E)
 
 /--
 If `A` is skew-adjoint and commutes with `K = Jε`, then the rotated seed

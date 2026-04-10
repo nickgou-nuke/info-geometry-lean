@@ -17,6 +17,12 @@ noncomputable def chiralityOperator : DoubledSpace E →L[ℝ] DoubledSpace E :=
 noncomputable def complexStructureOperator : DoubledSpace E →L[ℝ] DoubledSpace E :=
   complex_i (E := E)
 
+@[simp] lemma chiralityOperator_eq_modular_j :
+    chiralityOperator (E := E) = modular_j (E := E) := rfl
+
+@[simp] lemma complexStructureOperator_eq_complex_i :
+    complexStructureOperator (E := E) = complex_i (E := E) := rfl
+
 /-- Endomorphism-level notion of an internal complex structure (`I^2 = -Id`). -/
 def isComplexStructureOp (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
   A.comp A = -(ContinuousLinearMap.id ℝ (DoubledSpace E))
@@ -37,6 +43,12 @@ noncomputable def chiralityProjPlus : DoubledSpace E →L[ℝ] DoubledSpace E :=
 /-- Real chirality projector `(Id - J)/2`, where `J^2 = Id`. -/
 noncomputable def chiralityProjMinus : DoubledSpace E →L[ℝ] DoubledSpace E :=
   gradeMinusProj (E := E)
+
+@[simp] lemma chiralityProjPlus_eq_gradePlusProj :
+    chiralityProjPlus (E := E) = gradePlusProj (E := E) := rfl
+
+@[simp] lemma chiralityProjMinus_eq_gradeMinusProj :
+    chiralityProjMinus (E := E) = gradeMinusProj (E := E) := rfl
 
 @[simp] lemma chiralityProjPlus_apply (v : DoubledSpace E) :
     chiralityProjPlus (E := E) v
@@ -169,6 +181,14 @@ noncomputable abbrev chiralityOperator : DoubledSpace E →L[ℝ] DoubledSpace E
 noncomputable abbrev complexStructureOperator : DoubledSpace E →L[ℝ] DoubledSpace E :=
   _root_.complexStructureOperator (E := E)
 
+@[simp] theorem chiralityOperator_eq_modular_j :
+    chiralityOperator (E := E) = modular_j (E := E) := by
+  exact _root_.chiralityOperator_eq_modular_j (E := E)
+
+@[simp] theorem complexStructureOperator_eq_complex_i :
+    complexStructureOperator (E := E) = complex_i (E := E) := by
+  exact _root_.complexStructureOperator_eq_complex_i (E := E)
+
 abbrev isComplexStructureOp (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
   _root_.isComplexStructureOp (E := E) A
 
@@ -186,6 +206,14 @@ noncomputable abbrev chiralityProjPlus : DoubledSpace E →L[ℝ] DoubledSpace E
 
 noncomputable abbrev chiralityProjMinus : DoubledSpace E →L[ℝ] DoubledSpace E :=
   _root_.chiralityProjMinus (E := E)
+
+@[simp] theorem chiralityProjPlus_eq_gradePlusProj :
+    chiralityProjPlus (E := E) = gradePlusProj (E := E) := by
+  exact _root_.chiralityProjPlus_eq_gradePlusProj (E := E)
+
+@[simp] theorem chiralityProjMinus_eq_gradeMinusProj :
+    chiralityProjMinus (E := E) = gradeMinusProj (E := E) := by
+  exact _root_.chiralityProjMinus_eq_gradeMinusProj (E := E)
 
 abbrev VacuumChoice
     (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=

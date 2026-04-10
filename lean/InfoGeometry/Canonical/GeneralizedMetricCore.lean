@@ -422,10 +422,21 @@ noncomputable def tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H where
   eta_polarization_anticommute := modularConjugationJ_anticommutes_modularSign (E := H)
   metric_eq_eta_comp_polarization := rfl
 
+@[rep_depth krein, simp] theorem tomitaGeneralizedMetricSeed_eta_eq_modular_j :
+    (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H).eta = modular_j (E := H) := rfl
+
+@[rep_depth krein, simp] theorem tomitaGeneralizedMetricSeed_polarization_eq_spectral_epsilon :
+    (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H).polarization = spectral_epsilon (E := H) := rfl
+
 @[rep_depth krein, simp] theorem tomitaGeneralizedMetricSeed_metricOperator_eq_dilationOperator :
     (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H).metricOperator = dilationOperator (E := H) := by
   change modularComplexI (E := H) = dilationOperator (E := H)
   exact modularComplexI_eq_dilationOperator (E := H)
+
+@[rep_depth krein, simp] theorem tomitaGeneralizedMetricSeed_metricOperator_eq_complex_i :
+    (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H).metricOperator = complex_i (E := H) := by
+  change modularComplexI (E := H) = complex_i (E := H)
+  exact InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := H)
 
 @[rep_depth krein, simp] theorem tomitaGeneralizedMetricSeed_plusProjector_eq_spectralPlusProj :
     GeneralizedMetricSeed.plusProjector (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)

@@ -387,6 +387,44 @@ theorem relativeModularPotential_eq_logDensity_base_sub_logDensity
     (ν := gaugeSection (α := α) q0)
     (ξ := gaugeSection (α := α) q1) a
 
+attribute [rep_depth projective]
+  representativeRelativeDensity
+  representativeRelativeLogDensity
+  representativeModularPotential
+  representativeRelativeLogDensity_eq_log_sub_log
+  representativeRelativeDensity_eq_exp_representativeRelativeLogDensity
+  representativeModularPotential_eq_neg_representativeRelativeLogDensity
+  representativeRelativeDensity_scale_left
+  representativeRelativeDensity_scale_right
+  representativeRelativeLogDensity_scale_left
+  representativeRelativeLogDensity_scale_right
+  representativeRelativeLogDensity_scale_scale
+  representativeModularPotential_scale_left
+  representativeModularPotential_scale_right
+  representativeRelativeLogDensity_cocycle
+  representativeRelativeDensity_cocycle
+  representativeModularPotential_cocycle
+  relativeDensity
+  relativeLogDensity
+  relativeModularPotential
+  representativeMassShift
+  representativeMassShift_self
+  representativeMassShift_symm
+  representativeMassShift_cocycle
+  relativeDensity_mk_eq_massRatio_mul_representativeRelativeDensity
+  relativeLogDensity_mk_eq_representativeRelativeLogDensity_add_massShift
+  relativeModularPotential_mk_eq_representativeModularPotential_sub_massShift
+  relativeLogDensity_eq_logDensity_sub_logDensity
+  relativeDensity_eq_exp_relativeLogDensity
+  relativeModularPotential_eq_neg_relativeLogDensity
+  gaugeSection_eq_relativeDensity_mul_gaugeSection
+  relativeDensity_self
+  relativeLogDensity_self
+  relativeModularPotential_self
+  relativeLogDensity_cocycle
+  relativeDensity_cocycle
+  relativeModularPotential_cocycle
+
 end Rays
 
 end InfoGeometry.Canonical.RelativePotentialCore

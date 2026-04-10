@@ -75,7 +75,7 @@ theorem informationalZeroMode_iff_eq_zero
       _ = M.modular.Q 0 := by simpa [InformationalZeroMode] using congrArg M.modular.Q hZero
       _ = 0 := by simp
   · intro hψ
-    simpa [InformationalZeroMode, hψ]
+    simp [InformationalZeroMode, hψ]
 
 /--
 Topological memory collapses to the zero vector on the canonical doubled
@@ -92,7 +92,7 @@ theorem isTopologicalMemory_iff_eq_zero
   · intro hψ
     constructor
     · exact (informationalZeroMode_iff_eq_zero (E := E) M ψ).mpr hψ
-    · simpa [hψ]
+    · simp [hψ]
 
 /--
 Topological residue/Witten index induced by the modular supercharge on the

@@ -157,6 +157,18 @@ noncomputable abbrev ofDoubledContinuousLinearEquiv : DoubledSpace E ≃L[ℝ] H
 noncomputable abbrev toDoubledContinuousLinearEquiv : HilbertDoubled E ≃L[ℝ] DoubledSpace E :=
   (toDoubledLIE (E := E)).toContinuousLinearEquiv
 
+@[simp] lemma ofDoubledLIE_apply (u : DoubledSpace E) :
+    ofDoubledLIE (E := E) u = ⟨u⟩ := rfl
+
+@[simp] lemma toDoubledLIE_apply (u : HilbertDoubled E) :
+    toDoubledLIE (E := E) u = (u : DoubledSpace E) := rfl
+
+@[simp] lemma ofDoubledContinuousLinearEquiv_apply (u : DoubledSpace E) :
+    ofDoubledContinuousLinearEquiv (E := E) u = ⟨u⟩ := rfl
+
+@[simp] lemma toDoubledContinuousLinearEquiv_apply (u : HilbertDoubled E) :
+    toDoubledContinuousLinearEquiv (E := E) u = (u : DoubledSpace E) := rfl
+
 end HilbertDoubled
 
 /--
@@ -273,6 +285,9 @@ lemma snd_val (u : NeutralSpace E) : WithLp.snd u.val = u.ofLp.2 := rfl
 noncomputable abbrev neutralJ (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     NeutralSpace E ≃ₗᵢ[ℝ] NeutralSpace E :=
   KreinSpace.J (H := NeutralSpace E)
+
+@[simp] lemma neutralJ_eq_J :
+    neutralJ (E := E) = KreinSpace.J (H := NeutralSpace E) := rfl
 
 private lemma one_div_sqrt_two_sq : ((1 / Real.sqrt 2 : ℝ) ^ 2) = (1 / 2 : ℝ) := by
   have hs0 : (Real.sqrt 2 : ℝ) ≠ 0 := by positivity
@@ -459,6 +474,14 @@ noncomputable abbrev rotation45ToHilbertContinuousLinearEquiv
     (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     NeutralSpace E ≃L[ℝ] HilbertDoubled E :=
   (rotation45ToHilbert (E := E)).toContinuousLinearEquiv
+
+@[simp] lemma rotation45ToHilbert_apply (u : NeutralSpace E) :
+    rotation45ToHilbert (E := E) u =
+      HilbertDoubled.ofDoubledLIE (E := E) (rotation45Isometry (E := E) u) := rfl
+
+@[simp] lemma rotation45ToHilbertContinuousLinearEquiv_apply (u : NeutralSpace E) :
+    rotation45ToHilbertContinuousLinearEquiv (E := E) u =
+      HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E) (rotation45Isometry (E := E) u) := rfl
 
 @[simp] lemma rotation45_symm_toLp_pair
     (x ξ : E) :

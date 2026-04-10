@@ -103,6 +103,13 @@ theorem phaseOrbit_eq_dilationOrbit
   unfold phaseOrbit
   rw [modularComplexI_eq_dilationOperator]
 
+/-- The phase orbit is exactly the orbit of the owner phase axis `complex_i`. -/
+theorem phaseOrbit_eq_complex_iOrbit
+    (S : PolarizedDoubledAmplitude (E := E)) (θ : ℝ) :
+    S.phaseOrbit θ = (NormedSpace.exp (θ • complex_i (E := E))) S.ψ := by
+  unfold phaseOrbit
+  rw [modularComplexI_eq_complex_i]
+
 /-- Modular conjugation reverses the `Jε` phase orbit. -/
 theorem modularConjugationJ_phaseOrbit_eq_reverse
     (S : PolarizedDoubledAmplitude (E := E)) (θ : ℝ) :
@@ -113,6 +120,15 @@ theorem modularConjugationJ_phaseOrbit_eq_reverse
   simpa [ContinuousLinearMap.mul_apply] using
     congrArg (fun A : H₂ →L[ℝ] H₂ => A S.ψ)
       (modularConjugationJ_exp_modularComplexI_right (E := E) θ)
+
+/-- The owner involution `modular_j` reverses the owner phase-axis orbit. -/
+theorem modular_j_phaseOrbit_eq_reverse_complex_i
+    (S : PolarizedDoubledAmplitude (E := E)) (θ : ℝ) :
+    modular_j (E := E) (S.phaseOrbit θ)
+      = (NormedSpace.exp ((-θ) • complex_i (E := E)))
+          ((modular_j (E := E)) S.ψ) := by
+  simpa [modularConjugationJ_eq_modular_j, modularComplexI_eq_complex_i] using
+    modularConjugationJ_phaseOrbit_eq_reverse (E := E) S θ
 
 end PolarizedDoubledAmplitude
 
@@ -289,6 +305,15 @@ theorem statePhaseReadout_eq_metric_comp_K
       (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
   rw [statePhaseReadout, stateMetricReadout]
   simp
+
+theorem statePhaseReadout_eq_metric_comp_complex_i
+    (G : StateGeneratorField (E := E)) (ψ : H₂) (A : EndH) :
+    statePhaseReadout (E := E) G ψ A
+      =
+    (stateMetricReadout (E := E) G ψ A).compLeft
+      (complex_i (E := E)).toLinearMap := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    statePhaseReadout_eq_metric_comp_K (E := E) G ψ A
 
 theorem stateInducedDerivation_eq_gauge_add_source
     (G : StateGeneratorField (E := E)) (ψ : H₂) (A : EndH) :

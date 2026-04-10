@@ -57,6 +57,15 @@ theorem modularComplexI_comp_modularConjugationJ
     _ = -((modularConjugationJ (E := E)).comp (modularComplexI (E := E))) := by
           rw [← h]
 
+@[rep_depth krein]
+theorem complex_i_comp_modularConjugationJ
+    :
+    (InfoGeometry.Krein.complex_i (E := E)).comp (modularConjugationJ (E := E))
+      =
+    -((modularConjugationJ (E := E)).comp (InfoGeometry.Krein.complex_i (E := E))) := by
+  simpa [modularComplexI_eq_complex_i] using
+    modularComplexI_comp_modularConjugationJ (E := E)
+
 end LightweightTheorems
 
 section Core

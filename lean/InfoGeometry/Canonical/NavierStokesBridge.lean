@@ -8,6 +8,7 @@ import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.LinearAlgebra.Determinant
 import Mathlib.Tactic.NormNum
+import InfoGeometry.Meta.Architecture
 
 /-!
 # Navier-Stokes Bridge
@@ -58,6 +59,24 @@ noncomputable def vorticity
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (u : VelocityField E) : VelocityField E :=
   (2 : ℝ)⁻¹ • (u - ContinuousLinearMap.adjoint u)
+
+/--
+The vorticity extraction is always skew-adjoint on the ambient Hilbert metric.
+-/
+theorem adjoint_vorticity_eq_neg
+    {E : Type _}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (u : VelocityField E) :
+    ContinuousLinearMap.adjoint (vorticity u) = -vorticity u := by
+  unfold vorticity
+  calc
+    ContinuousLinearMap.adjoint ((2 : ℝ)⁻¹ • (u - ContinuousLinearMap.adjoint u))
+        = (2 : ℝ)⁻¹ • (ContinuousLinearMap.adjoint u - u) := by
+            simp
+    _ = -((2 : ℝ)⁻¹ • (u - ContinuousLinearMap.adjoint u)) := by
+          simp [sub_eq_add_neg, add_comm]
+    _ = -vorticity u := by
+          rfl
 
 /--
 Modular-level circulation:
@@ -145,6 +164,25 @@ lemma vorticity_eq_self_of_skew
     _ = u := by norm_num
 
 /--
+Linearized momentum residual for the vorticity closure condition `ω(u) = u`.
+-/
+noncomputable def momentumResidual
+    (u : VelocityField E) : VelocityField E :=
+  vorticity u - u
+
+omit [FiniteDimensional ℝ E] in
+/--
+The linearized momentum residual vanishes for skew-adjoint flows.
+-/
+lemma momentumResidual_eq_zero_of_skew
+    {u : VelocityField E}
+    (hSkew : ContinuousLinearMap.adjoint u = -u) :
+    momentumResidual u = 0 := by
+  unfold momentumResidual
+  rw [vorticity_eq_self_of_skew (E := E) hSkew]
+  simp
+
+/--
 Canonical unit-density anomaly state.
 -/
 noncomputable def anomalyFluidState
@@ -157,6 +195,18 @@ theorem anomaly_as_fluid_state
     (A B_mp B_dr : VelocityField E) :
     (anomalyFluidState (E := E) A B_mp B_dr).u = EinsteinAnomaly A B_mp B_dr := by
   rfl
+
+omit [FiniteDimensional ℝ E] in
+/--
+If the anomaly lane is skew-adjoint, its linearized momentum residual vanishes.
+-/
+theorem anomalyMomentumResidual_eq_zero_of_skew
+    (A B_mp B_dr : VelocityField E)
+    (hSkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr) :
+    momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
+  exact momentumResidual_eq_zero_of_skew (E := E) hSkew
 
 end RealKreinFluid
 
@@ -468,5 +518,52 @@ theorem chiral_anomaly_sources_flow
   rfl
 
 end ChiralFlowBridge
+
+attribute [rep_depth operator]
+  VelocityField
+  AlgebraEnd
+  vorticity
+  adjoint_vorticity_eq_neg
+  modularCirculation
+  anomalyFluidStateWithDensity
+  anomalyFluidStateWithDensity_u
+  anomalyFluidStateWithDensity_rho
+  anomaly_as_fluid_state_with_density
+  modular_circulation_response
+  vorticity_eq_self_of_skew
+  momentumResidual
+  momentumResidual_eq_zero_of_skew
+  anomalyFluidState
+  anomaly_as_fluid_state
+  anomalyMomentumResidual_eq_zero_of_skew
+  ArnoldMajoranaCarrier
+  modularHamiltonian
+  freeEnergyHessianRegularizer
+  grandCanonicalEnsembleAverage
+  modularVelocity
+  hasDerivAt_modularVelocity_zero
+  deriv_modularVelocity_zero
+  embedBase
+  projBase
+  collapseToBaseVelocity
+  madelungDensity
+  madelungDensity_pos
+  madelungPhase
+  madelungFluidState
+  madelungFluidState_velocity
+  madelungFluidState_zero
+  madelungFluidState_zero_velocity
+  forwardWave
+  backwardWave
+  twinWaveHelicity
+  helicityOperator
+  helicity_eq_twin_wave_pairing
+  kreinPlusProjector
+  kreinMinusProjector
+  netChiralCharge
+  chiralFlux
+  IsThermodynamicallySmoothed
+  isThermodynamicallySmoothed_zero_beta
+  chiral_anomaly_sources_flow
 
 end InfoGeometry.Canonical

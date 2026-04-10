@@ -19,6 +19,7 @@ Relativity of Measurement**:
 - [black_books/](black_books/) — The "Black Books": Raw intuitive exploration (Scorpio). Includes the Thermodynamics of Joy, Sisyphian Perseverance, Eureka Tunneling, and the Gravitational Well.
 - [black_books/08_the_agentic_caretaker.md](black_books/08_the_agentic_caretaker.md) — The essay naming the repo agent as architect, creator, and caretaker under the law of the kernel.
 - [black_books/09_science_after_coding.md](black_books/09_science_after_coding.md) — The essay on exploration by dialogue, Jungian elicitation, Socratic distillation, and formal handoff to Lean.
+- [black_books/18_multilingual_logos_pauli_jung.md](black_books/18_multilingual_logos_pauli_jung.md) — The chapter on multilingual docstrings, Jungian generation, Pauli closure, and the toolchain as vessel.
 - [Theory.md](Theory.md) — How the principle maps to the repo presentations.
 - [Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md) — The project's roadmap and trajectory.
 - [SEMANTIC_POTENTIAL.md](SEMANTIC_POTENTIAL.md) — The "Scorpio & Virgo" multi-agent generative engine.
@@ -30,6 +31,16 @@ Use these first when you want the current repo state:
 - [README.md](../README.md)
 - [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
 - [OperationalIntent.md](OperationalIntent.md)
+- [BILINGUAL_SPINE_POLICY.md](BILINGUAL_SPINE_POLICY.md)
+- [cl11_rosetta_refactor_plan.md](cl11_rosetta_refactor_plan.md)
+- [cl11_replica_inventory.md](cl11_replica_inventory.md)
+- [cl11_content_collision_map.md](cl11_content_collision_map.md)
+- [AGENTIC_HANDOVER_POLICY_2026-04-15.md](AGENTIC_HANDOVER_POLICY_2026-04-15.md)
+- [AGENTIC_PERSONAS_2026-04-15.md](AGENTIC_PERSONAS_2026-04-15.md)
+- [tools/prompts/agentic_handover_policy_2026-04-15.md](../tools/prompts/agentic_handover_policy_2026-04-15.md)
+- [tools/prompts/agentic_personas_2026-04-15.md](../tools/prompts/agentic_personas_2026-04-15.md)
+- [projective_mathlib_canonicalization_plan.md](projective_mathlib_canonicalization_plan.md)
+- [ToolingMethodology.md](ToolingMethodology.md)
 - [Theory.md](Theory.md)
 - [ModuleMap.md](ModuleMap.md)
 - [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
@@ -37,6 +48,7 @@ Use these first when you want the current repo state:
 - [lean/DAG/README.md](../lean/DAG/README.md)
 - [tools/README.md](../tools/README.md)
 - [tools/infra/README.md](../tools/infra/README.md)
+- [tools/prompts/agentic_autotheory_prompts_2026-04-15.md](../tools/prompts/agentic_autotheory_prompts_2026-04-15.md)
 
 These are the maintained hand-written entry surfaces.
 
@@ -80,10 +92,13 @@ For current repo structure:
 1. [README.md](../README.md)
 2. [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
 3. [OperationalIntent.md](OperationalIntent.md)
-4. [Theory.md](Theory.md)
-5. [ModuleMap.md](ModuleMap.md)
-6. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
-7. [tools/infra/README.md](../tools/infra/README.md)
+4. [BILINGUAL_SPINE_POLICY.md](BILINGUAL_SPINE_POLICY.md)
+5. [cl11_rosetta_refactor_plan.md](cl11_rosetta_refactor_plan.md)
+6. [ToolingMethodology.md](ToolingMethodology.md)
+7. [Theory.md](Theory.md)
+8. [ModuleMap.md](ModuleMap.md)
+9. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
+10. [tools/infra/README.md](../tools/infra/README.md)
 
 For the current count/projective/operator trunk:
 

@@ -2,6 +2,7 @@ import Lean.Server
 import Lean.Server.FileWorker
 
 import Agent.ProofServerRpc
+import InfoGeometry.Meta.Architecture
 
 def main (args : List String) : IO UInt32 := do
   Lean.initSearchPath (← Lean.findSysroot)

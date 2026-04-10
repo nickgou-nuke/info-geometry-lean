@@ -25,6 +25,36 @@ script semanticAudit (args) do
   }
   child.wait
 
+script semanticSnapshot (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/frontier/semantic_snapshot.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script proofSession (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/frontier/proof_session.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script proofPrint (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/frontier/proof_print.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 script graphToBlueprint (args) do
   -- archived compatibility wrapper for the old graph-only blueprint bootstrap path
   let child ← IO.Process.spawn {
@@ -166,6 +196,10 @@ lean_exe semanticBlockServer where
 
 lean_exe compilerBridgeServer where
   root := `scripts.DAG.Exploration.CompilerBridgeServer
+  supportInterpreter := true
+
+lean_exe semanticSnapshotServer where
+  root := `scripts.DAG.Exploration.SemanticSnapshotServer
   supportInterpreter := true
 
 lean_exe dagIndexer where

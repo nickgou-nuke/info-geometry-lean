@@ -11,6 +11,7 @@ if __package__ in (None, ""):
     from tools.infra.artifacts import (
         normalize_repo_output,
         should_skip_decl_refresh,
+        load_decl_index_meta,
         stamp_decl_index_meta,
     )
     from tools.infra.build import (
@@ -18,6 +19,7 @@ if __package__ in (None, ""):
         compute_olean_content_hash,
         run_locked_prebuild,
     )
+    from tools.infra.timings import write_indexer_timing_sidecar
     from tools.pathing import (
         default_decl_graph_file,
         default_decl_index_dir,
@@ -28,6 +30,7 @@ else:
     from tools.infra.artifacts import (
         normalize_repo_output,
         should_skip_decl_refresh,
+        load_decl_index_meta,
         stamp_decl_index_meta,
     )
     from tools.infra.build import (
@@ -35,6 +38,7 @@ else:
         compute_olean_content_hash,
         run_locked_prebuild,
     )
+    from tools.infra.timings import write_indexer_timing_sidecar
     from tools.pathing import (
         default_decl_graph_file,
         default_decl_index_dir,
@@ -152,10 +156,18 @@ def main() -> int:
     print(f"[refresh-decl-graph] running: {' '.join(cmd)}", flush=True)
     subprocess.run(cmd, cwd=root, check=True)
 
+    # Recompute after prebuild/indexer execution so the stamped hash reflects
+    # the build products that actually produced the refreshed artifacts.
+    current_hash = compute_olean_content_hash(root)
+
     # Backfill the ISO timestamp that the Lean indexer cannot produce.
     # Also store the olean content hash for incremental skip on next run.
     if stamp_decl_index_meta(meta_path, olean_hash=current_hash) is not None:
         print(f"[refresh-decl-graph] stamped {meta_path}", flush=True)
+    meta = load_decl_index_meta(meta_path)
+    timing_sidecar = write_indexer_timing_sidecar(index_dir, meta)
+    if timing_sidecar is not None:
+        print(f"[refresh-decl-graph] wrote {timing_sidecar}", flush=True)
 
     print(f"[refresh-decl-graph] wrote {graph_out}", flush=True)
     print(f"[refresh-decl-graph] wrote {structure_out}", flush=True)

@@ -34,3 +34,10 @@ InfoGeometry.Unstable.YangMillsBridge | bridge stores QFT obligations and later 
 
 InfoGeometry.Canonical.ChiralTorsionRelativeVolume | imports quarantined BeliefDynamics and still sits on the review-surface facade path
 InfoGeometry.Canonical.CountEmergentFlow | imports quarantined HolographicEmergence and still sits on the review-surface facade path
+InfoGeometry.Canonical.CentralChargeAnomaly | raw intake module not yet stabilized for authoritative umbrella inclusion
+InfoGeometry.Canonical.ProjectiveAlgebraComparison | raw intake module not yet stabilized for authoritative umbrella inclusion
+InfoGeometry.Canonical.ProjectiveSectorDecomposition | raw intake module not yet stabilized for authoritative umbrella inclusion
+InfoGeometry.Canonical.ProjectiveSplitQ11Realization | raw intake module not yet stabilized for authoritative umbrella inclusion
+InfoGeometry.Canonical.RealBdGDIIIAtom | raw DIII bridge under active stabilization; keep out of the authoritative umbrella until the symmetry package compiles from existing owners
+InfoGeometry.Canonical.SuperchargeRoleMapAlt | explicit alternative role-map surface preserved under the dual-implementation policy; canonical owner remains SuperchargeRoleBridge
+InfoGeometry.Physics.DIIISymmetryAtom | raw intake module not yet stabilized for authoritative umbrella inclusion

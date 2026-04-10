@@ -248,6 +248,12 @@ export InfoGeometry.Canonical.TomitaTakesaki (
   tomitaRepresentation
 )
 
+export InfoGeometry.Krein (
+  modular_j
+  spectral_epsilon
+  complex_i
+)
+
 export InfoGeometry.Canonical.BohmMadelungOperatorialBridge (
   polarizedDoubledAmplitude_phaseOrbit_eq_dilationOrbit
   stateGeneratorField_phaseReadout_eq_metric_comp_K

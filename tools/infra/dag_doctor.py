@@ -16,12 +16,26 @@ if __package__ in (None, ""):
     from tools.infra.artifacts import EXPECTED_INDEXER_SCHEMA_VERSION, load_decl_index_meta, load_json_dict
     from tools.infra.build import compute_olean_content_hash
     from tools.infra.dag_config import load_dag_toolchain_config, repo_display_path
+    from tools.infra.timings import (
+        load_indexer_timing,
+        load_report_timing,
+        report_timing_json_path,
+        timing_matches_meta,
+        top_timing_rows,
+    )
     from tools.pathing import repo_root
 else:
     from tools.build_lock import DEFAULT_BUILD_LOCK_PATH, read_lock_metadata
     from tools.infra.artifacts import EXPECTED_INDEXER_SCHEMA_VERSION, load_decl_index_meta, load_json_dict
     from tools.infra.build import compute_olean_content_hash
     from tools.infra.dag_config import load_dag_toolchain_config, repo_display_path
+    from tools.infra.timings import (
+        load_indexer_timing,
+        load_report_timing,
+        report_timing_json_path,
+        timing_matches_meta,
+        top_timing_rows,
+    )
     from tools.pathing import repo_root
 
 
@@ -208,6 +222,25 @@ def main() -> int:
         else:
             add(results, "warn", "olean hash", "missing current or stored olean hash")
 
+    indexer_timing = load_indexer_timing(config.authoritative_artifacts.index_dir)
+    if not indexer_timing:
+        add(results, "warn", "indexer timing", "missing structured or parsable indexer timing")
+    else:
+        total_ms = indexer_timing.get("total_ms")
+        slow_rows = top_timing_rows(indexer_timing, limit=1)
+        slow_label = slow_rows[0]["label"] if slow_rows else "-"
+        slow_ms = slow_rows[0]["elapsed_ms"] if slow_rows else None
+        match_indexer = timing_matches_meta(indexer_timing, meta)
+        if match_indexer is False:
+            add(results, "warn", "indexer timing", "timing sidecar is stale relative to authoritative artifacts")
+        else:
+            add(
+                results,
+                "ok",
+                "indexer timing",
+                f"total={total_ms}ms, slowest={slow_label} ({slow_ms}ms)",
+            )
+
     coverage_path = config.derived_reports.coverage_report_json
     if not coverage_path.exists():
         add(results, "warn", "coverage report", f"missing {repo_display_path(coverage_path, root)}")
@@ -281,6 +314,25 @@ def main() -> int:
             )
         else:
             add(results, "warn", "leakage sidecar", "present but missing expected breakdown fields")
+
+    report_timing = load_report_timing(report_timing_json_path(root))
+    if not report_timing:
+        add(results, "warn", "report timing", "missing report-timing.json")
+    else:
+        total_ms = report_timing.get("total_ms")
+        slow_rows = top_timing_rows(report_timing, limit=1)
+        slow_label = slow_rows[0]["label"] if slow_rows else "-"
+        slow_ms = slow_rows[0]["elapsed_ms"] if slow_rows else None
+        match_report = timing_matches_meta(report_timing, meta)
+        if match_report is False:
+            add(results, "warn", "report timing", "report timing is stale relative to authoritative artifacts")
+        else:
+            add(
+                results,
+                "ok",
+                "report timing",
+                f"total={total_ms}ms, slowest={slow_label} ({slow_ms}ms)",
+            )
 
     lock_meta = read_lock_metadata(DEFAULT_BUILD_LOCK_PATH)
     if not lock_meta:

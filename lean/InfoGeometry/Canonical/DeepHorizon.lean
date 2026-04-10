@@ -43,6 +43,12 @@ export InfoGeometry.Canonical.TomitaTakesaki (
   tomitaRepresentation
 )
 
+export InfoGeometry.Krein (
+  modular_j
+  spectral_epsilon
+  complex_i
+)
+
 export InfoGeometry.Canonical.HolographicEmergence (
   EmergentTimeFlow
   emergentTimeFlow_of_sinkhornTrajectory

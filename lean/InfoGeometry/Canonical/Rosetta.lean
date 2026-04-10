@@ -376,6 +376,12 @@ export InfoGeometry.Canonical.RedLine (
   tomitaRepresentation
 )
 
+export InfoGeometry.Krein (
+  modular_j
+  spectral_epsilon
+  complex_i
+)
+
 export InfoGeometry.Canonical.WilsonLoop (
   DiracField
   diracReg

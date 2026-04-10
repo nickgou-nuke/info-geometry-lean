@@ -29,6 +29,14 @@ The design rule is:
 - coherence files prove adjacent composites agree
 - capstones summarize lower content without pretending to be roots
 
+The maintained tooling layer now has two operator surfaces:
+
+- DAG refresh and reporting under [lean/DAG](../lean/DAG) and [tools/infra](../tools/infra)
+- server-backed semantic and proof-state inspection under [tools/frontier](../tools/frontier)
+
+The first is authoritative memory for whole-repo structure. The second is the
+interactive elaboration surface closest to the Lean editor infoview.
+
 ## Current Live Trunks
 
 ### Count -> projective -> operator

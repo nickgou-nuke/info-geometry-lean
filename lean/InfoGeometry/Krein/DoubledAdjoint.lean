@@ -41,6 +41,12 @@ noncomputable abbrev doubledToHilbert : DoubledSpace E ≃L[ℝ] HilbertDoubled 
       simpa using
         (continuous_uliftDown : Continuous (ULift.down : HilbertDoubled E → DoubledSpace E)) }
 
+@[simp] theorem doubledToHilbert_eq_ofDoubledContinuousLinearEquiv :
+    doubledToHilbert (E := E) = HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E) := rfl
+
+@[simp] theorem doubledToHilbert_apply (u : DoubledSpace E) :
+    doubledToHilbert (E := E) u = HilbertDoubled.ofDoubledContinuousLinearEquiv (E := E) u := rfl
+
 /-- Hilbert adjoint on doubled-space endomorphisms, transported through `HilbertDoubled`. -/
 noncomputable def doubledAdjoint (A : DoubledEnd E) : DoubledEnd E :=
   ContinuousLinearMap.adjoint A

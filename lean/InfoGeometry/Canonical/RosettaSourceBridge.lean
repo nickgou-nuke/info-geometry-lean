@@ -47,6 +47,15 @@ In the concrete real-Majorana doubled model, the legacy modular axis
   rfl
 
 /--
+Owner-name form of the same real-Majorana phase-axis bridge.
+-/
+@[simp] theorem complex_i_toLinearMap_eq_realMajoranaKAxis :
+    (InfoGeometry.Krein.complex_i (E := E)).toLinearMap =
+      (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E).K := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    modularComplexI_toLinearMap_eq_realMajoranaKAxis (E := E)
+
+/--
 Scalar bridge: the conformal source tension is presented as the transported
 Einstein residual under the explicit Ricci transport interface.
 -/

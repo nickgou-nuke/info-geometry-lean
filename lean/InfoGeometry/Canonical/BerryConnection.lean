@@ -59,6 +59,12 @@ structure SuperHestenesKaehlerDatum where
 
 namespace SuperHestenesKaehlerDatum
 
+@[simp] theorem K_eq_complex_i
+    (S : SuperHestenesKaehlerDatum (E := E)) :
+    S.K = InfoGeometry.Krein.complex_i (E := E) := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    S.K_eq_modularComplexI
+
 /-- Recover the QGT owner surface from the explicit Hestenes-Kaehler datum. -/
 noncomputable def toQGT
     (S : SuperHestenesKaehlerDatum (E := E)) : QGT E where
@@ -69,6 +75,12 @@ noncomputable def toQGT
   compat := by
     intro u v
     simpa [S.K_eq_modularComplexI] using S.compat u v
+
+@[simp] theorem toQGT_compat_complex_i
+    (S : SuperHestenesKaehlerDatum (E := E)) (u v : H₂) :
+    S.toQGT.berry u v = S.toQGT.metric (InfoGeometry.Krein.complex_i (E := E) u) v := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    S.toQGT.compat u v
 
 /-- Canonical constructor from the maintained real doubled QGT owner surface. -/
 noncomputable def ofQGT
@@ -88,6 +100,13 @@ noncomputable def ofQGT
   K_eq_J_comp_epsilon := rfl
   K_eq_modularComplexI := rfl
   K_sq_neg := InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_sq (E := E)
+
+@[simp] theorem ofQGT_K_eq_complex_i
+    (Q : QGT E) :
+    (ofQGT (E := E) Q).K = InfoGeometry.Krein.complex_i (E := E) := by
+  change InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E) =
+      InfoGeometry.Krein.complex_i (E := E)
+  exact InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)
 
 @[simp] theorem toQGT_metric
     (S : SuperHestenesKaehlerDatum (E := E)) :

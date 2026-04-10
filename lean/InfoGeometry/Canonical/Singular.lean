@@ -10,6 +10,7 @@ import InfoGeometry.Canonical.Clifford
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Singular.Drazin
+import InfoGeometry.Meta.Architecture
 
 /-!
 # Einstein Universe: Singular Regularization
@@ -463,5 +464,23 @@ theorem exists_moorePenroseInverse_global
         simpa [ContinuousLinearMap.mul_def, hBA]
 
   exact ⟨B, ⟨haba, hbab, habstar, hbastar⟩⟩
+
+attribute [rep_depth operator]
+  IsMoorePenroseInverse
+  IsDrazinInverse
+  EinsteinAnomaly
+  einsteinAnomaly_skew_adjoint
+  exists_moorePenroseInverse_of_isUnit
+  exists_drazinInverse_of_isUnit
+  exists_moorePenroseInverse_of_selfAdjoint_idempotent
+  exists_drazinInverse_of_idempotent
+  exists_regularization_pair_of_selfAdjoint_idempotent
+  exists_regularization_pair_of_isUnit
+  EinsteinAnomaly_eq_zero_of_regularization_pair
+  EinsteinAnomaly_eq_zero_of_selfAdjoint_idempotent
+  exists_moorePenroseInverse_endomorphism_of_isUnit
+  exists_drazinInverse_endomorphism_of_isUnit
+  exists_drazinInverse_global
+  exists_moorePenroseInverse_global
 
 end InfoGeometry.Canonical

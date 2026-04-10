@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RelativePotentialCore
+import InfoGeometry.Meta.Architecture
 
 /-!
 # InfoGeometry.Canonical.RelativePotentialScalarBridge
@@ -68,5 +69,15 @@ theorem scalarModularPotential_weylRescale_eq_sub_log
   rw [scalarModularPotential_eq_neg_log, scalarModularPotential_eq_neg_log,
     Real.log_mul hc.ne' hr.ne']
   ring
+
+attribute [rep_depth projective]
+  scalarPositiveMeasure
+  scalarPositiveMeasure_apply
+  scalarLogDensity
+  scalarModularPotential
+  scalarLogDensity_eq_log
+  scalarModularPotential_eq_neg_log
+  exp_neg_scalarModularPotential_eq
+  scalarModularPotential_weylRescale_eq_sub_log
 
 end InfoGeometry.Canonical.RelativePotentialScalarBridge

@@ -86,6 +86,17 @@ theorem metric_to_phase_readout_bridge
   exact comparisonPhaseReadout_eq_metric_comp_modularComplexI
     (E := E) P comparison A
 
+theorem metric_to_phase_readout_bridge_comp_complex_i
+    (P : PotentialDatum (E := E))
+    (comparison : H₂)
+    (A : EndH) :
+    comparisonPhaseReadout (E := E) P comparison A
+      =
+    (comparisonMetricReadout (E := E) P comparison A).compLeft
+      (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
+  exact comparisonPhaseReadout_eq_metric_comp_complex_i
+    (E := E) P comparison A
+
 /--
 Dynamic rotation is exactly the preservation of the modular Hessian under the
 phase-volume axis.

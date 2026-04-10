@@ -129,6 +129,15 @@ noncomputable def stateQGTPhaseReadout
       (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
   rfl
 
+@[simp] theorem stateQGTPhaseReadout_eq_metric_comp_complex_i
+    (M : StateModularDatum E) (ψ : H₂) (A : EndH) :
+    stateQGTPhaseReadout (E := E) M ψ A
+      =
+    (stateQGTMetricReadout (E := E) M ψ A).compLeft
+      (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
+  rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+  exact stateQGTPhaseReadout_eq_metric_comp_modularComplexI (E := E) M ψ A
+
 /-- Bundle the metric and `(Jε)`-phase readouts into one owner surface. -/
 noncomputable def stateQGTReadout
     (M : StateModularDatum E) (ψ : H₂) (A : EndH) :
@@ -239,7 +248,7 @@ theorem stateQGTReadout_pair_eq_zero_of_stateInducedDynamics_eq_zero
   · ext u v
     simp [stateQGTReadout, stateQGTMetricReadout_apply, hDyn]
   · ext u v
-    simp [stateQGTReadout, stateQGTPhaseReadout_apply, stateQGTMetricReadout_apply, hDyn]
+    simp [stateQGTReadout, stateQGTMetricReadout_apply, hDyn]
 
 /--
 Constant-datum specialization of the vanishing QGT readout criterion.

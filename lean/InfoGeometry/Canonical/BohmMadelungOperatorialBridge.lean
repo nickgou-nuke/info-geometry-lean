@@ -64,6 +64,16 @@ theorem stateGeneratorField_phaseReadout_eq_metric_comp_K
   StateGeneratorField.statePhaseReadout_eq_metric_comp_K (E := E) G ψ A
 
 @[rep_depth transport]
+theorem stateGeneratorField_phaseReadout_eq_metric_comp_complex_i
+    (G : StateGeneratorField (E := E)) (ψ : H₂) (A : EndH) :
+    StateGeneratorField.statePhaseReadout (E := E) G ψ A
+      =
+    (StateGeneratorField.stateMetricReadout (E := E) G ψ A).compLeft
+      (InfoGeometry.Krein.complex_i (E := E)) := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    stateGeneratorField_phaseReadout_eq_metric_comp_K (E := E) G ψ A
+
+@[rep_depth transport]
 theorem stateGeneratorField_inducedDerivation_eq_gauge_add_source
     (G : StateGeneratorField (E := E)) (ψ : H₂) (A : EndH) :
     StateGeneratorField.stateInducedDerivation (E := E) G ψ A

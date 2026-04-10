@@ -86,6 +86,33 @@ noncomputable def analyticalIndex [FiniteDimensional ℝ V] (D Γ : Endomorphism
   (Module.finrank ℝ (chiralKernelSlicePlus D Γ) : ℤ) -
     (Module.finrank ℝ (chiralKernelSliceMinus D Γ) : ℤ)
 
+/--
+Negating the grading swaps the chiral sectors and flips the analytical index.
+-/
+lemma chiralProjectorPlus_neg (Γ : Endomorphism V) :
+    chiralProjectorPlus (-Γ) = chiralProjectorMinus Γ := by
+  ext v
+  simp [chiralProjectorPlus, chiralProjectorMinus, sub_eq_add_neg, add_assoc, add_comm, add_left_comm]
+
+/--
+Negating the grading swaps the chiral sectors (`P₋(-Γ) = P₊(Γ)`).
+-/
+lemma chiralProjectorMinus_neg (Γ : Endomorphism V) :
+    chiralProjectorMinus (-Γ) = chiralProjectorPlus Γ := by
+  ext v
+  simp [chiralProjectorPlus, chiralProjectorMinus, sub_eq_add_neg, add_assoc, add_comm, add_left_comm]
+
+/--
+Negating the grading swaps the chiral sectors and flips the analytical index.
+-/
+lemma analyticalIndex_neg_grading_eq_neg
+    [FiniteDimensional ℝ V]
+    (D Γ : Endomorphism V) :
+    analyticalIndex D (-Γ) = -analyticalIndex D Γ := by
+  unfold analyticalIndex chiralKernelSlicePlus chiralKernelSliceMinus
+  rw [chiralProjectorPlus_neg, chiralProjectorMinus_neg]
+  ring_nf
+
 /-- Formal chiral-splitting identity: `D⁺ + D⁻ = D`. -/
 lemma chiralPartPlus_add_chiralPartMinus (D Γ : Endomorphism V) :
     chiralPartPlus D Γ + chiralPartMinus D Γ = D := by

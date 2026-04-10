@@ -217,33 +217,36 @@ theorem comparisonGeneratorPhase_swap_neg_of_IsPhaseLinear
       =
     -comparisonStateGeneratorPhase comparison Y X := by
   have hXeval :
-      (X.comp (modularComplexI (E := E))) comparison
+      (X.comp (InfoGeometry.Krein.complex_i (E := E))) comparison
         =
-      modularComplexI (E := E) (X comparison) := by
-    simpa [IsPhaseLinear, ContinuousLinearMap.comp_apply] using
+      InfoGeometry.Krein.complex_i (E := E) (X comparison) := by
+    simpa [IsPhaseLinear, ContinuousLinearMap.comp_apply,
+      InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
       congrArg (fun T : EndH => T comparison) hX
   have hYeval :
-      (Y.comp (modularComplexI (E := E))) comparison
+      (Y.comp (InfoGeometry.Krein.complex_i (E := E))) comparison
         =
-      modularComplexI (E := E) (Y comparison) := by
-    simpa [IsPhaseLinear, ContinuousLinearMap.comp_apply] using
+      InfoGeometry.Krein.complex_i (E := E) (Y comparison) := by
+    simpa [IsPhaseLinear, ContinuousLinearMap.comp_apply,
+      InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
       congrArg (fun T : EndH => T comparison) hY
   calc
     comparisonStateGeneratorPhase comparison X Y
         =
-      ⟪(X.comp (modularComplexI (E := E))) comparison, Y comparison⟫_ℝ := by
-          simp [comparisonStateGeneratorPhase_apply]
-    _ = ⟪modularComplexI (E := E) (X comparison), Y comparison⟫_ℝ := by
+      ⟪(X.comp (InfoGeometry.Krein.complex_i (E := E))) comparison, Y comparison⟫_ℝ := by
+          simp
+    _ = ⟪InfoGeometry.Krein.complex_i (E := E) (X comparison), Y comparison⟫_ℝ := by
           rw [hXeval]
-    _ = -⟪X comparison, modularComplexI (E := E) (Y comparison)⟫_ℝ := by
-          rw [modularComplexI_inner_skew (E := E) (X comparison) (Y comparison)]
-    _ = -⟪X comparison, (Y.comp (modularComplexI (E := E))) comparison⟫_ℝ := by
+    _ = -⟪X comparison, InfoGeometry.Krein.complex_i (E := E) (Y comparison)⟫_ℝ := by
+          rw [InfoGeometry.Canonical.TomitaTakesaki.complex_i_inner_skew
+            (E := E) (X comparison) (Y comparison)]
+    _ = -⟪X comparison, (Y.comp (InfoGeometry.Krein.complex_i (E := E))) comparison⟫_ℝ := by
           rw [← hYeval]
-    _ = -⟪(Y.comp (modularComplexI (E := E))) comparison, X comparison⟫_ℝ := by
+    _ = -⟪(Y.comp (InfoGeometry.Krein.complex_i (E := E))) comparison, X comparison⟫_ℝ := by
           rw [real_inner_comm]
     _ =
       -comparisonStateGeneratorPhase comparison Y X := by
-          simp [comparisonStateGeneratorPhase_apply]
+          simp
 
 /-! ## `K`-split bridge for the reciprocity consumer -/
 
@@ -406,6 +409,7 @@ theorem toRelationalInformationDatum_bohmMadelung_stationary_iff_isPotentialKill
       ↔
     InfoGeometry.Canonical.ThermodynamicGenerator.IsPotentialKillingOperator
       (E := E) P comparison A := by
+  let _ := reference
   exact
     potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_iff_isPotentialKillingOperator
       P comparison A

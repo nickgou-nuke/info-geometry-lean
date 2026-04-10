@@ -53,6 +53,18 @@ def finiteOsterwalderSchraderLayer
   0 ≤ inner ℝ ((modularConjugationJ (E := E)) Ω) Ω ∧
     modularConjugationJ (E := E) Ω = Ω
 
+/-- Owner-name form of the same finite OS-like reflection layer. -/
+def finiteOsterwalderSchraderLayerRoot
+    (Ω : InfoGeometry.Krein.DoubledSpace E) : Prop :=
+  0 ≤ inner ℝ ((InfoGeometry.Krein.modular_j (E := E)) Ω) Ω ∧
+    InfoGeometry.Krein.modular_j (E := E) Ω = Ω
+
+@[simp] theorem finiteOsterwalderSchraderLayerRoot_iff
+    (Ω : InfoGeometry.Krein.DoubledSpace E) :
+    finiteOsterwalderSchraderLayerRoot (E := E) Ω ↔
+      finiteOsterwalderSchraderLayer (E := E) Ω := by
+  simp [finiteOsterwalderSchraderLayerRoot, finiteOsterwalderSchraderLayer]
+
 /-- Constructive finite OS-like witness from positive-time geometry. -/
 theorem finiteOsterwalderSchraderLayer_of_positiveTimeVector
     (Ω : InfoGeometry.Krein.DoubledSpace E)
@@ -61,6 +73,13 @@ theorem finiteOsterwalderSchraderLayer_of_positiveTimeVector
   refine ⟨?_, ?_⟩
   · simpa using reflectionQuadratic_nonneg_of_positiveTimeVector (E := E) Ω hΩ
   · exact modularConjugationJ_fixed_of_positiveTimeVector (E := E) Ω hΩ
+
+/-- Root-name witness from positive-time geometry. -/
+theorem finiteOsterwalderSchraderLayerRoot_of_positiveTimeVector
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hΩ : PositiveTimeVector Ω) :
+    finiteOsterwalderSchraderLayerRoot (E := E) Ω := by
+  simpa using finiteOsterwalderSchraderLayer_of_positiveTimeVector (E := E) Ω hΩ
 
 /-- Finite Wightman-like marker from nonzero KMS-like expectation seed. -/
 def finiteWightmanReconstructionLayer

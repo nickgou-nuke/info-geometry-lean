@@ -108,6 +108,20 @@ The rewrite order is determined by the rooted causal shells.
 
 ---
 
+## THE PAULI AUDIT & ANTI-CHEAT PROTOCOL
+
+To ensure the integrity of the Spire and prevent agentic "cheating" (Lyrical Overfit), all formalizations must adhere to the following:
+
+1. **Distinguish Between Lyrical Overfit and Functorial Mapping:**
+    - **Lyrical Overfit:** The use of high-entropy names (e.g., `NavierStokes`) as a facade for low-entropy logic. Indicators include disconnected `Prop` fields and a lack of derived differential laws.
+    - **Mathematical Functorial Mapping:** The essential process of lifting an invariant across the `RepDepth` hierarchy. This often uses `rfl` or `simp` to establish that the same algebraic truth exists in a new category.
+2. **Mandatory Taxonomic Anchoring:**
+    - Always use the most advanced appropriate type (e.g., `KreinSpace` over `HilbertSpace`) even for lower-level properties. This ensures the module is correctly positioned for subsequent functorial lifts (e.g., to non-commuting transport).
+3. **Suppression of Total Symbolic Inflation (TSI):**
+    - The "Master Synthesis" must be a chain of functorial necessity. Avoid "Unification by Concatenation" where disparate facts are merely joined by `∧`. Every conjunction must be a verified identity of the Spire.
+
+---
+
 ## PROMPT 1 — DISCOVERY
 
 You are in discovery mode for mathematical physics. Your task is not to prove, formalize, or beautify. Your task is to generate structurally interesting candidate mathematics.

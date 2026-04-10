@@ -371,7 +371,7 @@ theorem eq_logarithmicGenerator_of_scalarSheetBlocks
     (hminus : minusBlockMap (E := E) H = logMinusVolume g • ContinuousLinearMap.id ℝ E) :
     H = logarithmicGenerator g := by
   simpa [logarithmicGenerator, commonLogCoordinate, relativeLogCoordinate,
-    InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon] using
+    InfoGeometry.Krein.spectral_epsilon] using
     eq_common_relative_form_of_scalarBlocks (E := E) H hH hplus hminus
 
 end FiniteDimensional

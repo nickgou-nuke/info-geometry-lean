@@ -40,6 +40,14 @@ lemma modularK_eq_modularComplexI :
   unfold modularK modularComplexI modularConjugationJ modularSignEpsilon
   rfl
 
+@[simp] lemma modularK_eq_modular_j_comp_spectral_epsilon :
+    modularK (E := E) = (modular_j (E := E)).comp (spectral_epsilon (E := E)) := by
+  rfl
+
+@[simp] lemma modularK_eq_complex_i :
+    modularK (E := E) = complex_i (E := E) := by
+  simpa using modularK_eq_modularComplexI (E := E)
+
 /-- Core identity: `K² = -Id`. -/
 @[simp] lemma modularK_sq :
     (modularK (E := E)).comp (modularK (E := E))

@@ -241,6 +241,14 @@ noncomputable def hilbertSwapCLM : HilbertDoubled E →L[ℝ] HilbertDoubled E :
       HilbertDoubled.toLp (E := E) ((HilbertDoubled.ofLp (E := E) u).2, (HilbertDoubled.ofLp (E := E) u).1) := by
   simp [hilbertSwapCLM, hilbertSwapLIE_apply, hilbertSwapMap_apply]
 
+@[simp] lemma toDoubled_hilbertSwapCLM_apply (u : HilbertDoubled E) :
+    HilbertDoubled.toDoubledContinuousLinearEquiv (E := E) (hilbertSwapCLM (E := E) u) =
+      modular_j (E := E) (HilbertDoubled.toDoubledContinuousLinearEquiv (E := E) u) := by
+  change ((hilbertSwapCLM (E := E) u : HilbertDoubled E) : DoubledSpace E) =
+    modular_j (E := E) ((u : HilbertDoubled E) : DoubledSpace E)
+  apply DoubledSpace.ext <;>
+    simp [hilbertSwapCLM_apply, modular_j_apply, HilbertDoubled.toLp, HilbertDoubled.ofLp]
+
 lemma hilbertSwap_selfAdj_clm (u v : HilbertDoubled E) :
     ⟪hilbertSwapCLM (E := E) u, v⟫_ℝ = ⟪u, hilbertSwapCLM (E := E) v⟫_ℝ := by
   simpa [hilbertSwapCLM, hilbertSwapLIE_apply] using hilbertSwap_selfAdj (E := E) u v
@@ -284,6 +292,14 @@ noncomputable instance instKreinGradedModuleHilbertDoubled :
       HilbertDoubled.toLp (E := E) ((HilbertDoubled.ofLp (E := E) u).1, -(HilbertDoubled.ofLp (E := E) u).2) := by
   simpa [KreinSpace.jCLM_apply] using (jCLM_apply_coords (E := E) u)
 
+@[simp] lemma toDoubled_jCLM_apply (u : HilbertDoubled E) :
+    HilbertDoubled.toDoubledContinuousLinearEquiv (E := E) (KreinSpace.jCLM (H := HilbertDoubled E) u) =
+      spectral_epsilon (E := E) (HilbertDoubled.toDoubledContinuousLinearEquiv (E := E) u) := by
+  change ((KreinSpace.jCLM (H := HilbertDoubled E) u : HilbertDoubled E) : DoubledSpace E) =
+    spectral_epsilon (E := E) ((u : HilbertDoubled E) : DoubledSpace E)
+  apply DoubledSpace.ext <;>
+    simp [spectral_epsilon_apply, HilbertDoubled.toLp, HilbertDoubled.ofLp]
+
 /-- Canonical `I = Γ ∘ J` on the diagonal model (`I^2 = -Id`). -/
 noncomputable def hilbertComplexI : HilbertDoubled E →L[ℝ] HilbertDoubled E :=
   (hilbertSwapCLM (E := E)).comp (KreinSpace.jCLM (H := HilbertDoubled E))
@@ -292,6 +308,14 @@ noncomputable def hilbertComplexI : HilbertDoubled E →L[ℝ] HilbertDoubled E 
     hilbertComplexI (E := E) u =
       HilbertDoubled.toLp (E := E) (-(HilbertDoubled.ofLp (E := E) u).2, (HilbertDoubled.ofLp (E := E) u).1) := by
   simp [hilbertComplexI]
+
+@[simp] lemma toDoubled_hilbertComplexI_apply (u : HilbertDoubled E) :
+    HilbertDoubled.toDoubledContinuousLinearEquiv (E := E) (hilbertComplexI (E := E) u) =
+      complex_i (E := E) (HilbertDoubled.toDoubledContinuousLinearEquiv (E := E) u) := by
+  change ((hilbertComplexI (E := E) u : HilbertDoubled E) : DoubledSpace E) =
+    complex_i (E := E) ((u : HilbertDoubled E) : DoubledSpace E)
+  apply DoubledSpace.ext <;>
+    simp [hilbertComplexI_apply, complex_i_apply, HilbertDoubled.toLp, HilbertDoubled.ofLp]
 
 lemma hilbertSwap_comp_jCLM :
     (hilbertSwapCLM (E := E)).comp (KreinSpace.jCLM (H := HilbertDoubled E))
@@ -458,7 +482,9 @@ noncomputable instance instKreinGradedModuleNeutral :
     calc
       ⟪neutralGradeLIE (E := E) u, v⟫_ℝ
           = ⟪R (neutralGradeLIE (E := E) u), R v⟫_ℝ := by
-              simp [R]
+              simpa [R] using
+                (LinearIsometryEquiv.inner_map_map
+                  R (neutralGradeLIE (E := E) u) v).symm
       _ = ⟪hilbertSwapLIE (E := E) (R u), R v⟫_ℝ := by
             simp [neutralGradeLIE, R]
       _ = ⟪R u, hilbertSwapLIE (E := E) (R v)⟫_ℝ := by
@@ -466,7 +492,9 @@ noncomputable instance instKreinGradedModuleNeutral :
       _ = ⟪R u, R (neutralGradeLIE (E := E) v)⟫_ℝ := by
             simp [neutralGradeLIE, R]
       _ = ⟪u, neutralGradeLIE (E := E) v⟫_ℝ := by
-            simp [R]
+            simpa [R] using
+              (LinearIsometryEquiv.inner_map_map
+                R u (neutralGradeLIE (E := E) v))
 
 /-- Conjugation by the 45-degree bridge on endomorphisms. -/
 private noncomputable def rot45Conj :

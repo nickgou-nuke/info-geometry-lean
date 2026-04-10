@@ -68,7 +68,10 @@ theorem inner_sq_add_modularComplexI_inner_sq_le
         ⟪x, modularComplexI (E := E) x⟫_ℝ
           =
         -⟪x, modularComplexI (E := E) x⟫_ℝ := by
-      simpa [real_inner_comm] using hSkew
+      calc
+        ⟪x, modularComplexI (E := E) x⟫_ℝ
+            = ⟪modularComplexI (E := E) x, x⟫_ℝ := by rw [real_inner_comm]
+        _ = -⟪x, modularComplexI (E := E) x⟫_ℝ := hSkew
     have hEqNeg : ⟪x, kx⟫_ℝ = -⟪x, kx⟫_ℝ := by
       simpa [kx] using hEqNegBase
     have hZeroSum : ⟪x, kx⟫_ℝ + ⟪x, kx⟫_ℝ = 0 := by
@@ -115,6 +118,15 @@ theorem inner_sq_add_modularComplexI_inner_sq_le
   rw [hLhs] at hScaled
   simpa [kx, mul_assoc, mul_left_comm, mul_comm] using hScaled
 
+@[rep_depth krein]
+theorem inner_sq_add_complex_i_inner_sq_le
+    (x y : H₂) :
+    (⟪x, y⟫_ℝ) ^ 2 + (⟪InfoGeometry.Krein.complex_i (E := E) x, y⟫_ℝ) ^ 2
+      ≤
+    ‖x‖ ^ 2 * ‖y‖ ^ 2 := by
+  simpa [modularComplexI_eq_complex_i] using
+    inner_sq_add_modularComplexI_inner_sq_le (E := E) x y
+
 /-- The comparison-state phase form is the metric with a left `K = Jε` channel twist. -/
 @[rep_depth krein, simp]
 theorem comparisonStateGeneratorMetric_channelPhaseAxis_left_eq_phase
@@ -142,8 +154,9 @@ theorem comparisonStateGeneratorMetric_channelPhaseAxis_self_eq_self_of_IsPhaseL
   have hEval :
       (channelPhaseAxis (E := E) X) comparison
         =
-      modularComplexI (E := E) (X comparison) := by
-    simpa [channelPhaseAxis_apply, IsPhaseLinear, ContinuousLinearMap.comp_apply] using
+      InfoGeometry.Krein.complex_i (E := E) (X comparison) := by
+    simpa [channelPhaseAxis_apply, IsPhaseLinear,
+      ContinuousLinearMap.comp_apply, modularComplexI_eq_complex_i] using
       congrArg (fun T : EndH => T comparison) hX
   calc
     comparisonStateGeneratorMetric (E := E) comparison
@@ -152,10 +165,10 @@ theorem comparisonStateGeneratorMetric_channelPhaseAxis_self_eq_self_of_IsPhaseL
       ‖(channelPhaseAxis (E := E) X) comparison‖ ^ 2 := by
           exact comparisonStateGeneratorMetric_self_eq_norm_sq
             (E := E) comparison (channelPhaseAxis (E := E) X)
-    _ = ‖modularComplexI (E := E) (X comparison)‖ ^ 2 := by rw [hEval]
+    _ = ‖InfoGeometry.Krein.complex_i (E := E) (X comparison)‖ ^ 2 := by rw [hEval]
     _ = ‖X comparison‖ ^ 2 := by
           rw [← real_inner_self_eq_norm_sq, ← real_inner_self_eq_norm_sq]
-          exact modularComplexI_inner_comp (E := E) (X comparison) (X comparison)
+          exact complex_i_inner_comp (E := E) (X comparison) (X comparison)
     _ = comparisonStateGeneratorMetric (E := E) comparison X X := by
           symm
           exact comparisonStateGeneratorMetric_self_eq_norm_sq (E := E) comparison X
@@ -212,17 +225,18 @@ theorem comparisonStateGeneratorMetric_sq_add_phase_sq_le_of_IsPhaseLinear
   have hEval :
       (channelPhaseAxis (E := E) X) comparison
         =
-      modularComplexI (E := E) (X comparison) := by
-    simpa [channelPhaseAxis_apply, IsPhaseLinear, ContinuousLinearMap.comp_apply] using
+      InfoGeometry.Krein.complex_i (E := E) (X comparison) := by
+    simpa [channelPhaseAxis_apply, IsPhaseLinear,
+      ContinuousLinearMap.comp_apply, modularComplexI_eq_complex_i] using
       congrArg (fun T : EndH => T comparison) hX
   have hPhaseEval :
       comparisonStateGeneratorPhase (E := E) comparison X Y
         =
-      ⟪modularComplexI (E := E) (X comparison), Y comparison⟫_ℝ := by
+      ⟪InfoGeometry.Krein.complex_i (E := E) (X comparison), Y comparison⟫_ℝ := by
     rw [← comparisonStateGeneratorMetric_channelPhaseAxis_left_eq_phase]
     rw [comparisonStateGeneratorMetric_apply, hEval]
   have hVec :=
-    inner_sq_add_modularComplexI_inner_sq_le (E := E) (X comparison) (Y comparison)
+    inner_sq_add_complex_i_inner_sq_le (E := E) (X comparison) (Y comparison)
   calc
     (comparisonStateGeneratorMetric (E := E) comparison X Y) ^ 2
         +
@@ -230,7 +244,7 @@ theorem comparisonStateGeneratorMetric_sq_add_phase_sq_le_of_IsPhaseLinear
       =
     (⟪X comparison, Y comparison⟫_ℝ) ^ 2
         +
-      (⟪modularComplexI (E := E) (X comparison), Y comparison⟫_ℝ) ^ 2 := by
+      (⟪InfoGeometry.Krein.complex_i (E := E) (X comparison), Y comparison⟫_ℝ) ^ 2 := by
           rw [comparisonStateGeneratorMetric_apply, hPhaseEval]
     _ ≤ ‖X comparison‖ ^ 2 * ‖Y comparison‖ ^ 2 := hVec
     _ = comparisonStateGeneratorMetric (E := E) comparison X X

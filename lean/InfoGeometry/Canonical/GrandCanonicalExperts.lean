@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Canonical.Clifford
+import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators
 
@@ -419,6 +420,70 @@ theorem exists_modewiseClifford_rep_of_bistochastic
   exact ⟨w, hw_nonneg, hw_sum, hw_matrix, weightedModeCliffordState_split S w⟩
 
 end FromBistochastic
+
+attribute [rep_depth operator]
+  PermMode
+  PermutationMode
+  ModeMass
+  ModeDiracMassProfile
+  SplitCliffordAlg
+  ModewiseSplitRep
+  splitBasisPlus
+  splitBasisMinus
+  cliffordBasis
+  cliffordBasis_plus
+  cliffordBasis_minus
+  splitQ11_splitBasisPlus
+  splitQ11_splitBasisMinus
+  splitB11_splitBasis_orthogonal
+  superSign
+  superSign_plus_left
+  superSign_plus_right
+  superSign_minus_minus
+  splitSuperBracket
+  splitSuperBracket_plus_left
+  splitSuperBracket_plus_right
+  splitSuperBracket_minus_minus
+  labelGenerator
+  labelGenerator_sq
+  labelGenerator_sq_plus
+  labelGenerator_sq_minus
+  modeSuperSign
+  modeSplitSuperBracket
+  modeDiracOperator
+  diracAction
+  diracAction_add_right
+  diracAction_def
+  diracEulerStep
+  diracEulerStep_zero
+  modeDiracAction_respects_grading
+  canonicalModewiseRep
+  weightedModeCliffordState
+  weightedModeCliffordStatePlus
+  weightedModeCliffordStateMinus
+  weightedModeCliffordState_split
+  cliffordModeContribution
+  modewiseCliffordState
+  modewiseCliffordStateEven
+  modewiseCliffordStateOdd
+  modewiseCliffordState_split
+  plusMass
+  minusMass
+  plusMass_nonneg
+  minusMass_nonneg
+  plusMass_add_minusMass_eq_sum
+  cliffordSemanticState
+  cliffordSemanticState_fst_eq_plusMass
+  cliffordSemanticState_snd_eq_minusMass
+  cliffordSemanticState_coord_sum_eq_weight_sum
+  permutationCliffordSemanticState
+  parity
+  parity_plus
+  parity_minus
+  modeWeightEntropy
+  parityEntropy
+  exists_clifford_labeled_state_of_bistochastic
+  exists_modewiseClifford_rep_of_bistochastic
 
 end CliffordLabel
 

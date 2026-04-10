@@ -174,13 +174,22 @@ Modular conjugation `J` (real-linear model of antilinear conjugation on complex 
 noncomputable abbrev modularConjugationJ : DoubledSpace E →L[ℝ] DoubledSpace E :=
   modular_j (E := E)
 
+@[simp] lemma modularConjugationJ_eq_modular_j :
+    modularConjugationJ (E := E) = modular_j (E := E) := rfl
+
 /-- Modular sign involution `ε = sgn(K)`. -/
 noncomputable abbrev modularSignEpsilon : DoubledSpace E →L[ℝ] DoubledSpace E :=
   spectral_epsilon (E := E)
 
+@[simp] lemma modularSignEpsilon_eq_spectral_epsilon :
+    modularSignEpsilon (E := E) = spectral_epsilon (E := E) := rfl
+
 /-- Composite `Jε`, the split-complex structure axis. -/
 noncomputable abbrev modularComplexI : DoubledSpace E →L[ℝ] DoubledSpace E :=
   complex_i (E := E)
+
+@[simp] lemma modularComplexI_eq_complex_i :
+    modularComplexI (E := E) = complex_i (E := E) := rfl
 
 /--
 Legacy/Clifford compatibility: the modular complex axis `Jε` coincides with the
@@ -288,6 +297,13 @@ lemma modularComplexI_inner_skew
   repeat rw [WithLp.ofLp_fst, WithLp.ofLp_snd]
   simp [modularComplexI, real_inner_comm]
 
+lemma complex_i_inner_skew
+    (u v : DoubledSpace E) :
+    ⟪InfoGeometry.Krein.complex_i (E := E) u, v⟫_ℝ
+      =
+    -⟪u, InfoGeometry.Krein.complex_i (E := E) v⟫_ℝ := by
+  simpa [modularComplexI] using modularComplexI_inner_skew (E := E) u v
+
 /-- On the positive doubled-space Hilbert metric, `K = Jε` preserves the inner product. -/
 lemma modularComplexI_inner_comp
     (u v : DoubledSpace E) :
@@ -304,6 +320,13 @@ lemma modularComplexI_inner_comp
           rw [modularComplexI_inner_skew]
     _ = -⟪u, -v⟫_ℝ := by rw [hK2]
     _ = ⟪u, v⟫_ℝ := by simp
+
+lemma complex_i_inner_comp
+    (u v : DoubledSpace E) :
+    ⟪InfoGeometry.Krein.complex_i (E := E) u, InfoGeometry.Krein.complex_i (E := E) v⟫_ℝ
+      =
+    ⟪u, v⟫_ℝ := by
+  simpa [modularComplexI] using modularComplexI_inner_comp (E := E) u v
 
 /--
 Odd-odd channel for the modular CPT atom vanishes:

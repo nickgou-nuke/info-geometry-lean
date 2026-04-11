@@ -20,6 +20,9 @@ Relativity of Measurement**:
 - [black_books/08_the_agentic_caretaker.md](black_books/08_the_agentic_caretaker.md) — The essay naming the repo agent as architect, creator, and caretaker under the law of the kernel.
 - [black_books/09_science_after_coding.md](black_books/09_science_after_coding.md) — The essay on exploration by dialogue, Jungian elicitation, Socratic distillation, and formal handoff to Lean.
 - [black_books/18_multilingual_logos_pauli_jung.md](black_books/18_multilingual_logos_pauli_jung.md) — The chapter on multilingual docstrings, Jungian generation, Pauli closure, and the toolchain as vessel.
+- [black_books/24_the_operatorial_condensation.md](black_books/24_the_operatorial_condensation.md) — The phase-transition chapter where operatorial closure supersedes manifold-first narration.
+- [black_books/25_the_vindication_of_weyl.md](black_books/25_the_vindication_of_weyl.md) — The ray-first reformulation tying gauge/curvature/anomaly to compiled closure lanes.
+- [black_books/26_the_dog_chasing_its_tail.md](black_books/26_the_dog_chasing_its_tail.md) — The mass-as-coupling and localized-vortex witness chapter on the DIII lane.
 - [Theory.md](Theory.md) — How the principle maps to the repo presentations.
 - [Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md) — The project's roadmap and trajectory.
 - [SEMANTIC_POTENTIAL.md](SEMANTIC_POTENTIAL.md) — The "Scorpio & Virgo" multi-agent generative engine.

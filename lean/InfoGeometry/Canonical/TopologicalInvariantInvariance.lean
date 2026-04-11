@@ -323,6 +323,66 @@ theorem operatorialCentralChargeParity_ne_zero_boundaryScale_ne_zero_of_identifi
       hBoundaryOnZeroModes hCentral
 
 /--
+Parity/KKT/source-sink package under identified transported polarization:
+nonzero central-charge parity yields
+
+1. nonzero singular boundary scale,
+2. transported chiral-kernel mismatch,
+3. KKT odd split of the same Dirac phase,
+4. grade-zero odd-odd commutator on that split.
+-/
+@[rep_depth transport]
+theorem operatorialCentralChargeParity_ne_zero_boundaryScale_and_kkt_package_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0)
+    (hGrade : KreinGradedModule.gradeCLM (H := H₂) = X.cl11.eps) :
+    S.boundaryScale ≠ 0
+      ∧
+    InfoGeometry.Canonical.ChiralDefectIndexBridge.TransportedChiralKernelDimMismatch
+      (A := A) (B := B) (E := E)
+      V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      ∧
+    X.F =
+      InfoGeometry.Canonical.KKTCore.gOnePart X.cl11 X.F
+      + InfoGeometry.Canonical.KKTCore.gNegOnePart X.cl11 X.F
+      ∧
+    InfoGeometry.Canonical.KKTCore.IsGZero X.cl11
+      (InfoGeometry.Canonical.KKTCore.commutator
+        (InfoGeometry.Canonical.KKTCore.gOnePart X.cl11 X.F)
+        (InfoGeometry.Canonical.KKTCore.gNegOnePart X.cl11 X.F)) := by
+  have hBoundary :
+      S.boundaryScale ≠ 0 :=
+    operatorialCentralChargeParity_ne_zero_boundaryScale_ne_zero_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hBoundaryOnZeroModes hParity
+  have hCentral :
+      operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 :=
+    operatorialCentralCharge_ne_zero_of_operatorialCentralChargeParity_ne_zero
+      (A := A) (B := B) (E := E) X hX hParity
+  rcases centralCharge_nonzero_forces_dimMismatch_and_kkt_odd_split
+      (A := A) (B := B) (E := E) V X hX hEven t hCentral hGrade with
+    ⟨hMismatch, hSplit, hCommutatorZero⟩
+  exact ⟨hBoundary, hMismatch, hSplit, hCommutatorZero⟩
+
+/--
 Kernel-separation parity variant:
 nonzero `Z₂` central-charge shadow implies nonzero singular boundary scale under
 identified transported polarization and kernel-separation.

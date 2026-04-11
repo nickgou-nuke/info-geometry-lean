@@ -345,15 +345,48 @@ theorem canonicalDIIIProxy_transport_parity_kkt_closure
       X.F = gOnePart X.cl11 X.F + gNegOnePart X.cl11 X.F
       ∧
       IsGZero X.cl11 (commutator (gOnePart X.cl11 X.F) (gNegOnePart X.cl11 X.F)) := by
-  refine ⟨canonicalDIIIProxy_laws (E := E), canonicalDIIIProxy_concreteCARPair, ?_, ?_, ?_⟩
-  · exact transportedChiralKernelDimMismatch_of_operatorialCentralChargeParity_ne_zero
-      (A := A) (B := B) (E := E) V X hX hEven t hParity
-  · exact
-      (dirac_kkt_odd_split_and_commutator_isGZero_of_gradeCLM_eq_eps
-        (A := A) (B := B) (E := E) X hGrade).1
-  · exact
-      (dirac_kkt_odd_split_and_commutator_isGZero_of_gradeCLM_eq_eps
-        (A := A) (B := B) (E := E) X hGrade).2
+  rcases cpt_gap_hessian_parity_kkt_closure
+      (A := A) (B := B) (E := E) V X hX hEven t hParity hGrade with
+    ⟨_, hMismatch, hSplit, hCommZero⟩
+  exact ⟨canonicalDIIIProxy_laws (E := E), canonicalDIIIProxy_concreteCARPair,
+    hMismatch, hSplit, hCommZero⟩
+
+/--
+Root-name parity-lifted DIII/KKT closure on a transport slice.
+-/
+@[rep_depth transport]
+theorem canonicalDIIIProxy_transport_root_parity_kkt_closure
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0)
+    (hGrade : KreinGradedModule.gradeCLM (H := H₂) = X.cl11.eps) :
+    (let P := canonicalDIIIProxy (E := E);
+      P.T = complex_i (E := E)
+        ∧ P.C = modular_j (E := E)
+        ∧ P.S = -(spectral_epsilon (E := E))
+        ∧ P.T.comp P.T = -(ContinuousLinearMap.id ℝ H₂)
+        ∧ P.C.comp P.C = ContinuousLinearMap.id ℝ H₂
+        ∧ P.T.comp P.C = -(spectral_epsilon (E := E))
+        ∧ P.C.comp P.T = spectral_epsilon (E := E))
+      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
+          (concreteCARAnnihilation (E := E))
+          (concreteCARCreation (E := E))
+      ∧
+      TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E)
+        V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      ∧
+      X.F = gOnePart X.cl11 X.F + gNegOnePart X.cl11 X.F
+      ∧
+      IsGZero X.cl11 (commutator (gOnePart X.cl11 X.F) (gNegOnePart X.cl11 X.F)) := by
+  rcases root_gap_hessian_parity_kkt_closure
+      (A := A) (B := B) (E := E) V X hX hEven t hParity hGrade with
+    ⟨_, hMismatch, hSplit, hCommZero⟩
+  exact ⟨canonicalDIIIProxy_root_laws (E := E), canonicalDIIIProxy_concreteCARPair,
+    hMismatch, hSplit, hCommZero⟩
 
 end Closure
 

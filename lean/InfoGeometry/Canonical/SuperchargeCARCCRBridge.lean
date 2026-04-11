@@ -112,6 +112,16 @@ theorem parity_modular_supercharge_ccr_eq_two_cpt :
     _ = (2 : ℝ) • cptSuperchargeOp (E := E) := by
           rw [cptSuperchargeOp_eq_complex_i]
 
+/-- Bracket form of the primitive even-even closure `[J, ε] = 2Q`. -/
+@[rep_depth krein]
+theorem parity_modular_supercharge_ccrBracket_eq_two_cpt :
+    CCRBracket (E := E)
+        (paritySuperchargeOp (E := E))
+        (modularSuperchargeOp (E := E))
+      = (2 : ℝ) • cptSuperchargeOp (E := E) := by
+  simpa [CCRBracket, fockCommutator, superBracket_even_left] using
+    (parity_modular_supercharge_ccr_eq_two_cpt (E := E))
+
 /-- Root-name form of the primitive even-even commutator closure. -/
 @[rep_depth krein]
 theorem modular_j_spectral_epsilon_ccr_eq_two_complex_i :
@@ -203,6 +213,28 @@ theorem concrete_car_pair :
   simpa [concreteCARAnnihilation, concreteCARCreation] using
     (cliffordConcreteIsCARPair (E := E))
 
+/-- Concrete split-null ladders are nilpotent in the odd-odd CAR channel. -/
+@[rep_depth krein]
+theorem concrete_car_nilpotency :
+    CARBracket (E := E)
+        (concreteCARAnnihilation (E := E))
+        (concreteCARAnnihilation (E := E))
+      = 0
+      ∧ CARBracket (E := E)
+          (concreteCARCreation (E := E))
+          (concreteCARCreation (E := E))
+        = 0 := by
+  rcases concrete_car_pair (E := E) with ⟨hminus, hplus, _⟩
+  refine ⟨?_, ?_⟩
+  · change fockAnticommutator (E := E)
+      (concreteCARAnnihilation (E := E))
+      (concreteCARAnnihilation (E := E)) = 0
+    exact hminus
+  · change fockAnticommutator (E := E)
+      (concreteCARCreation (E := E))
+      (concreteCARCreation (E := E)) = 0
+    exact hplus
+
 /-- Concrete mixed CAR identity `{u_-, u_+} = 1`. -/
 @[rep_depth krein]
 theorem concrete_car_minus_plus :
@@ -216,6 +248,42 @@ theorem concrete_car_minus_plus :
       (concreteCARCreation (E := E))
     = ContinuousLinearMap.id ℝ (DoubledSpace E)
   exact hmp
+
+/--
+Single-surface oscillator closure package on the canonical doubled carrier:
+odd-odd primitive closure, even-even primitive closure, CPT square law,
+and concrete split-null CAR nilpotency/mixed identity.
+-/
+@[rep_depth transport]
+theorem harmonic_oscillator_spine :
+    CARBracket (E := E)
+        (paritySuperchargeOp (E := E))
+        (modularSuperchargeOp (E := E))
+      = 0
+      ∧ CCRBracket (E := E)
+          (paritySuperchargeOp (E := E))
+          (modularSuperchargeOp (E := E))
+        = (2 : ℝ) • cptSuperchargeOp (E := E)
+      ∧ (cptSuperchargeOp (E := E)).comp (cptSuperchargeOp (E := E))
+          = -(ContinuousLinearMap.id ℝ (DoubledSpace E))
+      ∧ CARBracket (E := E)
+          (concreteCARAnnihilation (E := E))
+          (concreteCARAnnihilation (E := E))
+        = 0
+      ∧ CARBracket (E := E)
+          (concreteCARCreation (E := E))
+          (concreteCARCreation (E := E))
+        = 0
+      ∧ CARBracket (E := E)
+          (concreteCARAnnihilation (E := E))
+          (concreteCARCreation (E := E))
+        = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  rcases concrete_car_nilpotency (E := E) with ⟨hminusNil, hplusNil⟩
+  refine ⟨parity_modular_supercharge_car_zero (E := E), ?_⟩
+  refine ⟨parity_modular_supercharge_ccrBracket_eq_two_cpt (E := E), ?_⟩
+  refine ⟨cptSuperchargeOp_sq (E := E), ?_⟩
+  refine ⟨hminusNil, ?_⟩
+  exact ⟨hplusNil, concrete_car_minus_plus (E := E)⟩
 
 end Core
 

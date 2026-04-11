@@ -119,6 +119,7 @@ import InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge
 import InfoGeometry.Canonical.ChiralHodgeIndexBridge
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.BoundaryChiralIndexBridge
+import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.SuperJordanLie
 import InfoGeometry.Canonical.VortexAnomalyLink
 import InfoGeometry.Canonical.SpinConnection
@@ -138,6 +139,7 @@ import InfoGeometry.Canonical.BogoliubovProjectorTransport
 import InfoGeometry.Canonical.BogoliubovProjectorFlux
 import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Canonical.OperatorLightconeCoordinates
+import InfoGeometry.Canonical.OperatorSpacetimeObservables
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.JaynesRNModularBridge

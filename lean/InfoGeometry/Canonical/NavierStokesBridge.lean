@@ -224,6 +224,44 @@ theorem anomalyMomentumResidual_eq_zero_of_skew
     momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
   exact momentumResidual_eq_zero_of_skew (E := E) hSkew
 
+/--
+Regularization-driven momentum closure:
+if `B_mp` is Moore-Penrose for `A`, `B_dr` is Drazin for `A`, and the Drazin
+spectral projector is self-adjoint, then the Einstein-anomaly lane has zero
+linearized momentum residual.
+-/
+theorem anomalyMomentumResidual_eq_zero_of_regularization
+    (A B_mp B_dr : VelocityField E)
+    (k : ℕ)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr : IsDrazinInverse A B_dr k)
+    (h_dr_star : star (A * B_dr) = A * B_dr) :
+    momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
+  have hSkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr := by
+    simpa using
+      (einsteinAnomaly_skew_adjoint (a := A) (b_mp := B_mp) (b_dr := B_dr)
+        (k := k) h_mp h_dr h_dr_star)
+  exact anomalyMomentumResidual_eq_zero_of_skew (E := E) A B_mp B_dr hSkew
+
+/--
+State-level regularization-driven momentum closure on the canonical unit-density
+anomaly fluid state.
+-/
+theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization
+    (A B_mp B_dr : VelocityField E)
+    (k : ℕ)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr : IsDrazinInverse A B_dr k)
+    (h_dr_star : star (A * B_dr) = A * B_dr) :
+    momentumResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
+  have hResidual :
+      momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 :=
+    anomalyMomentumResidual_eq_zero_of_regularization
+      (E := E) A B_mp B_dr k h_mp h_dr h_dr_star
+  simpa [anomaly_as_fluid_state (E := E) A B_mp B_dr] using hResidual
+
 end RealKreinFluid
 
 section MadelungBridge

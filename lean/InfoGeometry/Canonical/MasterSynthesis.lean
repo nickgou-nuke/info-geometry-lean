@@ -195,6 +195,46 @@ private theorem bridge_fluid_helicity
     exact ⟨⟨state, hState.1, hState.2, hResidual⟩, ⟨ω, Ω, hHelicity⟩⟩
 
 /--
+Regularization-sourced anomaly skewness on the fluid lane.
+-/
+private theorem anomalySkew_of_regularization
+    (A B_mp B_dr : VelocityField E)
+    (k : ℕ)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr : IsDrazinInverse A B_dr k)
+    (h_dr_star : star (A * B_dr) = A * B_dr) :
+    ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+      = -EinsteinAnomaly A B_mp B_dr := by
+  simpa using
+    (einsteinAnomaly_skew_adjoint (a := A) (b_mp := B_mp) (b_dr := B_dr)
+      (k := k) h_mp h_dr h_dr_star)
+
+/--
+Fluid/helicity bridge with skewness sourced from the regularization lane.
+-/
+private theorem bridge_fluid_helicity_of_regularization
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (k : ℕ)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr : IsDrazinInverse A B_dr k)
+    (h_dr_star : star (A * B_dr) = A * B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω) :
+    (∃ state : FluidState E,
+      state.u = EinsteinAnomaly A B_mp B_dr
+        ∧ state.ρ = 1
+        ∧ momentumResidual (E := E) state.u = 0) ∧
+    (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
+      helicityInvariant A ω' = twinWaveHelicity A Ω') := by
+  have hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr :=
+    anomalySkew_of_regularization (A := A) (B_mp := B_mp) (B_dr := B_dr)
+      (k := k) h_mp h_dr h_dr_star
+  exact bridge_fluid_helicity A B_mp B_dr ω Ω hAnomalySkew hHelicity
+
+/--
 Master capstone composition:
 
 - information-theoretic zero-point lower bound (Cramer-Rao),

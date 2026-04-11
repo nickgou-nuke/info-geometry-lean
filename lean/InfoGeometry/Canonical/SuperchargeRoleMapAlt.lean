@@ -75,13 +75,29 @@ noncomputable def curvatureChannelAlt
 @[rep_depth transport, simp] theorem primitiveOddSuperchargeJAlt_eq_paritySuperchargeOp :
     primitiveOddSuperchargeJAlt (E := E) = paritySuperchargeOp (E := E) := rfl
 
+/-- Alternative mirror-lane name compared directly to the root owner packet. -/
+@[rep_depth transport, simp] theorem primitiveOddSuperchargeJAlt_eq_modular_j :
+    primitiveOddSuperchargeJAlt (E := E) = modular_j (E := E) := by
+  rw [primitiveOddSuperchargeJAlt_eq_paritySuperchargeOp (E := E)]
+
 /-- The alternative orientation-lane name is definitionally the canonical modular supercharge. -/
 @[rep_depth transport, simp] theorem primitiveOddSuperchargeEpsilonAlt_eq_modularSuperchargeOp :
     primitiveOddSuperchargeEpsilonAlt (E := E) = modularSuperchargeOp (E := E) := rfl
 
+/-- Alternative orientation-lane name compared directly to the root owner packet. -/
+@[rep_depth transport, simp] theorem primitiveOddSuperchargeEpsilonAlt_eq_spectral_epsilon :
+    primitiveOddSuperchargeEpsilonAlt (E := E) = spectral_epsilon (E := E) := by
+  rw [primitiveOddSuperchargeEpsilonAlt_eq_modularSuperchargeOp (E := E)]
+
 /-- The alternative coupling-lane name is definitionally the canonical CPT supercharge. -/
 @[rep_depth transport, simp] theorem derivedCouplingSuperchargeKAlt_eq_cptSuperchargeOp :
     derivedCouplingSuperchargeKAlt (E := E) = cptSuperchargeOp (E := E) := rfl
+
+/-- Alternative coupling-lane name compared directly to the root phase axis. -/
+@[rep_depth transport, simp] theorem derivedCouplingSuperchargeKAlt_eq_complex_i :
+    derivedCouplingSuperchargeKAlt (E := E) = complex_i (E := E) := by
+  rw [derivedCouplingSuperchargeKAlt_eq_cptSuperchargeOp (E := E)]
+  exact cptSuperchargeOp_eq_complex_i (E := E)
 
 /-- The alternative creation-ladder name is definitionally the canonical concrete CAR creator. -/
 @[rep_depth transport, simp] theorem carLadderPlusAlt_eq_concreteCARCreation :

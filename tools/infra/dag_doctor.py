@@ -100,6 +100,50 @@ def add(results: list[CheckResult], level: str, label: str, detail: str) -> None
     results.append(CheckResult(level=level, label=label, detail=detail))
 
 
+def has_result(results: list[CheckResult], label: str, *, levels: set[str] | None = None) -> bool:
+    for result in results:
+        if result.label != label:
+            continue
+        if levels is None or result.level in levels:
+            return True
+    return False
+
+
+def suggestion_lines(results: list[CheckResult]) -> list[str]:
+    lines: list[str] = []
+    if has_result(results, "authoritative artifacts", levels={"fail"}) or has_result(
+        results, "meta", levels={"fail"}
+    ) or has_result(results, "meta schema", levels={"fail"}) or has_result(
+        results, "meta importRoot", levels={"fail"}
+    ) or has_result(results, "meta namespace", levels={"fail"}) or has_result(
+        results, "olean hash", levels={"warn"}
+    ):
+        lines.append("lake script run dagRefresh")
+    if has_result(results, "coverage report", levels={"warn", "fail"}) or has_result(
+        results, "coverage policy", levels={"warn", "fail"}
+    ) or has_result(results, "coverage freshness", levels={"warn", "fail"}) or has_result(
+        results, "leakage sidecar", levels={"warn", "fail"}
+    ) or has_result(results, "report timing", levels={"warn", "fail"}):
+        lines.append("lake script run dagReports")
+    if has_result(results, "build lock", levels={"warn"}):
+        lines.append("lake script run dagStatus")
+    if any(result.level in {"warn", "fail"} for result in results):
+        lines.append("lake script run dagAll")
+    if has_result(results, "lake", levels={"fail"}) or has_result(results, "python3", levels={"fail"}) or has_result(
+        results, "tmp", levels={"fail"}
+    ):
+        lines.append("Fix the local environment first; rerun: lake script run dagDoctor")
+
+    seen: set[str] = set()
+    unique: list[str] = []
+    for line in lines:
+        if line in seen:
+            continue
+        seen.add(line)
+        unique.append(line)
+    return unique
+
+
 def process_exists(pid: int) -> bool:
     try:
         os.kill(pid, 0)
@@ -385,6 +429,12 @@ def main() -> int:
     ok_count = sum(1 for result in results if result.level == "ok")
     print()
     print(f"Summary: ok={ok_count} warn={warn_count} fail={fail_count}")
+    next_steps = suggestion_lines(results)
+    if next_steps:
+        print()
+        print("Next commands:")
+        for i, step in enumerate(next_steps, start=1):
+            print(f"{i}. {step}")
     return 1 if fail_count else 0
 
 

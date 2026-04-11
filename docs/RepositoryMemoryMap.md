@@ -35,6 +35,8 @@ These are the maintained hand-written entry surfaces for current repo state:
 - [docs/SEMANTIC_POTENTIAL.md](SEMANTIC_POTENTIAL.md)
 - [docs/AGENTIC_REVELATION.md](AGENTIC_REVELATION.md)
 - [docs/OperationalIntent.md](OperationalIntent.md)
+- [docs/OperatorQuickstart.md](OperatorQuickstart.md)
+- [docs/DAGTroubleshooting.md](DAGTroubleshooting.md)
 - [docs/Theory.md](Theory.md)
 - [docs/ModuleMap.md](ModuleMap.md)
 - [Installation.md](../Installation.md)

@@ -126,6 +126,26 @@ script dagDoctor (args) do
   }
   child.wait
 
+script dagAll (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/dag_all.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script changedVerify (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/infra/changed_verify.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 input_file dagToolchainConfigFile where
   path := "dag-toolchain.json"
   text := true

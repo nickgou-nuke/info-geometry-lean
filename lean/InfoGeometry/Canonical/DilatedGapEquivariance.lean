@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.ProjectorEquivariance
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.SuperchargeGapBridge
+import InfoGeometry.Canonical.AnalyticalIndexCore
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -59,7 +60,7 @@ section ProjectorMismatch
 variable {R : Type*} [Ring R] [StarRing R]
 
 /-- Drazin/Moore-Penrose projector obstruction residual. -/
-@[rep_depth transport]
+@[rep_depth operator]
 def projectorObstruction
     (a a_d a_mp : R) : R :=
   projectorMismatch a a_d a_mp
@@ -67,7 +68,7 @@ def projectorObstruction
 /--
 Vanishing projector obstruction implies vanishing chiral anomaly.
 -/
-@[rep_depth transport]
+@[rep_depth operator]
 theorem chiralAnomaly_eq_zero_of_projectorObstruction_eq_zero
     {a a_d a_mp : R}
     (hObs : projectorObstruction a a_d a_mp = 0) :

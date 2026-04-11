@@ -36,6 +36,8 @@ The preferred operator entrypoints are:
 - `lake script run dagRefresh`
 - `lake script run dagReports`
 - `lake script run dagDoctor`
+- `lake script run dagAll`
+- `lake script run changedVerify`
 - `lake script run bilingualSpineReport`
 
 These are thin wrappers over the current Python corridor. `dagReports` also sets a repo-local Matplotlib cache under `.artifacts/matplotlib` so managed report runs do not depend on a writable home-directory config path. The underlying script lane remains maintained, but the pinned config and authoritative status surface now live above it.
@@ -46,6 +48,9 @@ The managed lane also records timing sidecars for the last authoritative refresh
 For the exact operator runbook, including when to use the managed lane, the raw
 repair lane, the depth-tag lane, and the process-flow lane, see
 [docs/ToolingMethodology.md](../../docs/ToolingMethodology.md).
+For the compressed operator surface, see
+[docs/OperatorQuickstart.md](../../docs/OperatorQuickstart.md) and
+[docs/DAGTroubleshooting.md](../../docs/DAGTroubleshooting.md).
 
 The first authoritative Lake facet experiment is also available:
 - `lake build :dagMeta`
@@ -149,6 +154,12 @@ For normal use, prefer the managed exact sequence from
 [docs/ToolingMethodology.md](../../docs/ToolingMethodology.md):
 
 ```bash
+lake script run dagAll
+```
+
+Expanded managed sequence:
+
+```bash
 lake script run dagStatus
 lake script run dagRefresh
 lake script run dagReports
@@ -158,8 +169,8 @@ lake script run dagDoctor
 For active theorem/refactor work, prefer incremental owner builds between managed runs:
 
 ```bash
-python3 tools/infra/build_changed_lean.py --dry-run
-python3 tools/infra/build_changed_lean.py
+lake script run changedVerify --dry-run
+lake script run changedVerify
 ```
 
 This intentionally skips umbrella modules like `*.All` unless `--allow-umbrella` is passed.

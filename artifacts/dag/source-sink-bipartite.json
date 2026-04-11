@@ -194,11 +194,11 @@
       "reachable_sinks": 4,
       "closest_sink_distance": 1,
       "flow_in_degree": 0,
-      "flow_out_degree": 368,
+      "flow_out_degree": 386,
       "sink_modules": [
         "InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge"
       ],
-      "source_score": 24.154
+      "source_score": 24.344
     },
     {
       "name": "InfoGeometry.Krein.DoubledSpace.ext",
@@ -208,11 +208,11 @@
       "reachable_sinks": 4,
       "closest_sink_distance": 3,
       "flow_in_degree": 1,
-      "flow_out_degree": 147,
+      "flow_out_degree": 150,
       "sink_modules": [
         "InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge"
       ],
-      "source_score": 20.2158
+      "source_score": 20.2955
     },
     {
       "name": "InfoGeometry.Krein.spectral_epsilon_involution",
@@ -1461,7 +1461,7 @@
     {
       "source": "InfoGeometry.Krein.instL2Complete",
       "source_module": "InfoGeometry.Krein.KreinSpace",
-      "source_score": 24.154,
+      "source_score": 24.344,
       "sink": "InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge.trunk_projectorObstruction_diagonal_blocks_and_holonomy_eq_projectorObstruction_nnnorm_of_flat",
       "sink_module": "InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge",
       "sink_category": "package_reprojection",
@@ -1495,7 +1495,7 @@
     {
       "source": "InfoGeometry.Krein.instL2Complete",
       "source_module": "InfoGeometry.Krein.KreinSpace",
-      "source_score": 24.154,
+      "source_score": 24.344,
       "sink": "InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge.trunk_projectorObstruction_offDiagonal_vanish_and_holonomy_eq_projectorObstruction_nnnorm_of_flat",
       "sink_module": "InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge",
       "sink_category": "package_reprojection",
@@ -1529,7 +1529,7 @@
     {
       "source": "InfoGeometry.Krein.instL2Complete",
       "source_module": "InfoGeometry.Krein.KreinSpace",
-      "source_score": 24.154,
+      "source_score": 24.344,
       "sink": "InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge.leaf_projectorObstruction_diagonal_blocks_and_holonomy_eq_projectorObstruction_nnnorm_of_flat",
       "sink_module": "InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge",
       "sink_category": "package_reprojection",
@@ -1563,7 +1563,7 @@
     {
       "source": "InfoGeometry.Krein.instL2Complete",
       "source_module": "InfoGeometry.Krein.KreinSpace",
-      "source_score": 24.154,
+      "source_score": 24.344,
       "sink": "InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge.leaf_projectorObstruction_offDiagonal_vanish_and_holonomy_eq_projectorObstruction_nnnorm_of_flat",
       "sink_module": "InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge",
       "sink_category": "package_reprojection",

@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.SuperchargeTransportBridge
 import InfoGeometry.Canonical.BogoliubovProjectorFlux
+import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.SpinorModularBridge
 import InfoGeometry.Quantum.SplitTrialityKernel
 import Mathlib.Tactic.Abel
@@ -29,6 +30,7 @@ open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Canonical.BogoliubovProjectorTransport
 open InfoGeometry.Canonical.BogoliubovProjectorFlux
 open InfoGeometry.Canonical.OperatorialCentralCharge
+open InfoGeometry.Canonical.CentralChargeKKTParityBridge
 open InfoGeometry.Canonical.QuasilatticeDirac
 open InfoGeometry.Canonical.SpinorModularBridge
 open InfoGeometry.KK
@@ -539,6 +541,46 @@ theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero
   exact ⟨v, hvDangling, hSourcev, hSinkv⟩
 
 /--
+Parity-lifted source-side localized bridge:
+nonzero `Z₂` central-charge parity implies nonzero central charge, hence the
+same localized source/sink seed existence.
+-/
+@[rep_depth transport]
+theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralChargeParity_ne_zero_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : RealMajoranaDatum (S := H₂))
+    (P0 : KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      PolarizationOdd (M := M) P0 (quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0)
+    (hSource : S.boundaryGenerator = sourceVortexSeed (E := E) V) :
+    ∃ v : H₂,
+      IsDanglingZeroMode S v ∧
+        sourceVortexSeed (E := E) V v ≠ 0 ∧
+        sinkVortexSeed (E := E) V v ≠ 0 := by
+  have hCentral :
+      operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 :=
+    operatorialCentralCharge_ne_zero_of_operatorialCentralChargeParity_ne_zero
+      (A := A) (B := B) (E := E) X hX hParity
+  exact
+    exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hBoundaryOnZeroModes hCentral hSource
+
+/--
 Sink-side version of the same bridge when the singular boundary generator is
 identified with the canonical sink seed.
 -/
@@ -588,6 +630,46 @@ theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero
   exact ⟨v, hvDangling, hSourcev, hSinkv⟩
 
 /--
+Parity-lifted sink-side localized bridge:
+nonzero `Z₂` central-charge parity implies nonzero central charge, hence the
+same localized source/sink seed existence.
+-/
+@[rep_depth transport]
+theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralChargeParity_ne_zero_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : RealMajoranaDatum (S := H₂))
+    (P0 : KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      PolarizationOdd (M := M) P0 (quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0)
+    (hSink : S.boundaryGenerator = sinkVortexSeed (E := E) V) :
+    ∃ v : H₂,
+      IsDanglingZeroMode S v ∧
+        sourceVortexSeed (E := E) V v ≠ 0 ∧
+        sinkVortexSeed (E := E) V v ≠ 0 := by
+  have hCentral :
+      operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 :=
+    operatorialCentralCharge_ne_zero_of_operatorialCentralChargeParity_ne_zero
+      (A := A) (B := B) (E := E) X hX hParity
+  exact
+    exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hBoundaryOnZeroModes hCentral hSink
+
+/--
 Source-side kernel-separation variant of the localized source/sink seed bridge.
 -/
 @[rep_depth transport]
@@ -627,6 +709,43 @@ theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero
       hBoundaryOnZeroModes hCentral hSource
 
 /--
+Parity-lifted source-side kernel-separation bridge.
+-/
+@[rep_depth transport]
+theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralChargeParity_ne_zero_of_kernelSeparation_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : RealMajoranaDatum (S := H₂))
+    (P0 : KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      PolarizationOdd (M := M) P0 (quasilatticeDirac V X.F t))
+    (hSep :
+      (S.kernel.A.toLinearMap.ker ⊓ LinearMap.ker S.boundaryGenerator.toLinearMap)
+        = (⊥ : Submodule ℝ H₂))
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0)
+    (hSource : S.boundaryGenerator = sourceVortexSeed (E := E) V) :
+    ∃ v : H₂,
+      IsDanglingZeroMode S v ∧
+        sourceVortexSeed (E := E) V v ≠ 0 ∧
+        sinkVortexSeed (E := E) V v ≠ 0 := by
+  have hCentral :
+      operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 :=
+    operatorialCentralCharge_ne_zero_of_operatorialCentralChargeParity_ne_zero
+      (A := A) (B := B) (E := E) X hX hParity
+  exact
+    exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_kernelSeparation_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hSep hCentral hSource
+
+/--
 Sink-side kernel-separation variant of the localized source/sink seed bridge.
 -/
 @[rep_depth transport]
@@ -664,6 +783,43 @@ theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero
     exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization
       (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
       hBoundaryOnZeroModes hCentral hSink
+
+/--
+Parity-lifted sink-side kernel-separation bridge.
+-/
+@[rep_depth transport]
+theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralChargeParity_ne_zero_of_kernelSeparation_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : RealMajoranaDatum (S := H₂))
+    (P0 : KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      PolarizationOdd (M := M) P0 (quasilatticeDirac V X.F t))
+    (hSep :
+      (S.kernel.A.toLinearMap.ker ⊓ LinearMap.ker S.boundaryGenerator.toLinearMap)
+        = (⊥ : Submodule ℝ H₂))
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0)
+    (hSink : S.boundaryGenerator = sinkVortexSeed (E := E) V) :
+    ∃ v : H₂,
+      IsDanglingZeroMode S v ∧
+        sourceVortexSeed (E := E) V v ≠ 0 ∧
+        sinkVortexSeed (E := E) V v ≠ 0 := by
+  have hCentral :
+      operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 :=
+    operatorialCentralCharge_ne_zero_of_operatorialCentralChargeParity_ne_zero
+      (A := A) (B := B) (E := E) X hX hParity
+  exact
+    exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_kernelSeparation_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hSep hCentral hSink
 
 end BoundaryLocalization
 

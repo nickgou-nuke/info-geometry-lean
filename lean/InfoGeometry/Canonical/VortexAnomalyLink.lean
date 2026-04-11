@@ -408,6 +408,233 @@ theorem sourceSinkAnticommutator_sub_eq_anticommutator_spectral_epsilon
           (S := H₂) V.connectionGenerator (spectral_epsilon (E := E)) := rfl
 
 /--
+Commutator inversion (source channel):
+the grading-axis commutator is exactly twice the source vortex seed.
+-/
+@[simp, rep_depth transport]
+theorem transportCommutator_spectral_epsilon_eq_two_smul_sourceVortexSeed
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E))
+      = (2 : ℝ) • sourceVortexSeed (E := E) V := by
+  let src : EndH := sourceVortexSeed (E := E) V
+  let snk : EndH := sinkVortexSeed (E := E) V
+  have hsum : src + snk = 0 := by
+    simpa [src, snk] using sourceVortexSeed_add_sinkVortexSeed_eq_zero (E := E) V
+  have hsink : snk = -src := by
+    exact eq_neg_of_add_eq_zero_left (by simpa [add_comm] using hsum)
+  calc
+    transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E))
+      = src - snk := by
+          simpa [src, snk] using
+            (sourceVortexSeed_sub_sinkVortexSeed_eq_transportCommutator_spectral_epsilon
+              (E := E) V).symm
+    _ = src + src := by
+          simp [sub_eq_add_neg, hsink]
+    _ = (2 : ℝ) • src := by
+          simpa [two_smul]
+    _ = (2 : ℝ) • sourceVortexSeed (E := E) V := rfl
+
+/--
+Commutator inversion (sink channel):
+the grading-axis commutator is exactly minus twice the sink vortex seed.
+-/
+@[simp, rep_depth transport]
+theorem transportCommutator_spectral_epsilon_eq_neg_two_smul_sinkVortexSeed
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E))
+      = (-(2 : ℝ)) • sinkVortexSeed (E := E) V := by
+  calc
+    transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E))
+      = (2 : ℝ) • sourceVortexSeed (E := E) V := by
+          simpa using
+            transportCommutator_spectral_epsilon_eq_two_smul_sourceVortexSeed (E := E) V
+    _ = (2 : ℝ) • (-(sinkVortexSeed (E := E) V)) := by
+          rw [sourceVortexSeed_eq_neg_sinkVortexSeed (E := E) V]
+    _ = (-(2 : ℝ)) • sinkVortexSeed (E := E) V := by
+          simp [smul_neg]
+
+/--
+Source channel reconstruction:
+the source vortex seed is half the grading-axis commutator.
+-/
+@[simp, rep_depth transport]
+theorem sourceVortexSeed_eq_half_transportCommutator_spectral_epsilon
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    sourceVortexSeed (E := E) V
+      = (2⁻¹ : ℝ) •
+          transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E)) := by
+  have hhalf_two : (2⁻¹ : ℝ) * (2 : ℝ) = (1 : ℝ) := by norm_num
+  calc
+    sourceVortexSeed (E := E) V
+      = (2⁻¹ : ℝ) • ((2 : ℝ) • sourceVortexSeed (E := E) V) := by
+          simpa [smul_smul, hhalf_two]
+    _ = (2⁻¹ : ℝ) •
+          transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E)) := by
+          rw [transportCommutator_spectral_epsilon_eq_two_smul_sourceVortexSeed (E := E) V]
+
+/--
+Sink channel reconstruction:
+the sink vortex seed is minus half the grading-axis commutator.
+-/
+@[simp, rep_depth transport]
+theorem sinkVortexSeed_eq_neg_half_transportCommutator_spectral_epsilon
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    sinkVortexSeed (E := E) V
+      = (-(2⁻¹ : ℝ)) •
+          transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E)) := by
+  have hsink :
+      sinkVortexSeed (E := E) V = -(sourceVortexSeed (E := E) V) := by
+    exact eq_neg_of_add_eq_zero_left
+      (by simpa [add_comm] using sourceVortexSeed_add_sinkVortexSeed_eq_zero (E := E) V)
+  calc
+    sinkVortexSeed (E := E) V
+      = -(sourceVortexSeed (E := E) V) := hsink
+    _ = -((2⁻¹ : ℝ) •
+          transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E))) := by
+          rw [sourceVortexSeed_eq_half_transportCommutator_spectral_epsilon (E := E) V]
+    _ = (-(2⁻¹ : ℝ)) •
+          transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E)) := by
+          simp [neg_smul]
+
+/--
+Nonvanishing source-channel defect is equivalent to nonvanishing grading-axis
+commutator.
+-/
+@[rep_depth transport]
+theorem sourceVortexSeed_ne_zero_iff_transportCommutator_spectral_epsilon_ne_zero
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    sourceVortexSeed (E := E) V ≠ 0
+      ↔ transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E)) ≠ 0 := by
+  constructor
+  · intro hSource hCommZero
+    apply hSource
+    rw [sourceVortexSeed_eq_half_transportCommutator_spectral_epsilon (E := E) V]
+    simp [hCommZero]
+  · intro hComm hSourceZero
+    apply hComm
+    rw [transportCommutator_spectral_epsilon_eq_two_smul_sourceVortexSeed (E := E) V]
+    simp [hSourceZero]
+
+/--
+Nonvanishing sink-channel defect is equivalent to nonvanishing grading-axis
+commutator.
+-/
+@[rep_depth transport]
+theorem sinkVortexSeed_ne_zero_iff_transportCommutator_spectral_epsilon_ne_zero
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    sinkVortexSeed (E := E) V ≠ 0
+      ↔ transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E)) ≠ 0 := by
+  constructor
+  · intro hSink hCommZero
+    apply hSink
+    rw [sinkVortexSeed_eq_neg_half_transportCommutator_spectral_epsilon (E := E) V]
+    simp [hCommZero]
+  · intro hComm hSinkZero
+    apply hComm
+    rw [transportCommutator_spectral_epsilon_eq_neg_two_smul_sinkVortexSeed (E := E) V]
+    simp [hSinkZero]
+
+/--
+Anticommutator inversion (source channel):
+the source anticommutator channel is `H + (1/2){H, ε}`.
+-/
+@[simp, rep_depth transport]
+theorem sourceAnticommutator_eq_connectionGenerator_add_half_anticommutator_spectral_epsilon
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    InfoGeometry.Quantum.RealMajorana.anticommutator
+        (S := H₂)
+        V.connectionGenerator (canonicalVortexPair (E := E)).source
+      =
+    V.connectionGenerator
+      + (2⁻¹ : ℝ) •
+          InfoGeometry.Quantum.RealMajorana.anticommutator
+            (S := H₂)
+            V.connectionGenerator (spectral_epsilon (E := E)) := by
+  let Aplus : EndH :=
+    InfoGeometry.Quantum.RealMajorana.anticommutator
+      (S := H₂) V.connectionGenerator (canonicalVortexPair (E := E)).source
+  let Aminus : EndH :=
+    InfoGeometry.Quantum.RealMajorana.anticommutator
+      (S := H₂) V.connectionGenerator (canonicalVortexPair (E := E)).sink
+  let Aeps : EndH :=
+    InfoGeometry.Quantum.RealMajorana.anticommutator
+      (S := H₂) V.connectionGenerator (spectral_epsilon (E := E))
+  have hSum : Aplus + Aminus = (2 : ℝ) • V.connectionGenerator := by
+    simpa [Aplus, Aminus] using
+      sourceSinkAnticommutator_sum_eq_two_smul_connectionGenerator (E := E) V
+  have hSub : Aplus - Aminus = Aeps := by
+    simpa [Aplus, Aminus, Aeps] using
+      sourceSinkAnticommutator_sub_eq_anticommutator_spectral_epsilon (E := E) V
+  calc
+    Aplus = (2⁻¹ : ℝ) • (Aplus + Aplus) := by
+      calc
+        Aplus = (1 : ℝ) • Aplus := by simp
+        _ = ((2⁻¹ : ℝ) * (2 : ℝ)) • Aplus := by norm_num
+        _ = (2⁻¹ : ℝ) • ((2 : ℝ) • Aplus) := by simp [smul_smul]
+        _ = (2⁻¹ : ℝ) • (Aplus + Aplus) := by simp [two_smul]
+    _ = (2⁻¹ : ℝ) • ((Aplus + Aminus) + (Aplus - Aminus)) := by
+      abel
+    _ = (2⁻¹ : ℝ) • ((2 : ℝ) • V.connectionGenerator + Aeps) := by
+      rw [hSum, hSub]
+    _ = V.connectionGenerator + (2⁻¹ : ℝ) • Aeps := by
+      simp [smul_add, smul_smul]
+    _ = V.connectionGenerator
+          + (2⁻¹ : ℝ) •
+              InfoGeometry.Quantum.RealMajorana.anticommutator
+                (S := H₂) V.connectionGenerator (spectral_epsilon (E := E)) := by
+          rfl
+
+/--
+Anticommutator inversion (sink channel):
+the sink anticommutator channel is `H - (1/2){H, ε}`.
+-/
+@[simp, rep_depth transport]
+theorem sinkAnticommutator_eq_connectionGenerator_sub_half_anticommutator_spectral_epsilon
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    InfoGeometry.Quantum.RealMajorana.anticommutator
+        (S := H₂)
+        V.connectionGenerator (canonicalVortexPair (E := E)).sink
+      =
+    V.connectionGenerator
+      - (2⁻¹ : ℝ) •
+          InfoGeometry.Quantum.RealMajorana.anticommutator
+            (S := H₂)
+            V.connectionGenerator (spectral_epsilon (E := E)) := by
+  let Aplus : EndH :=
+    InfoGeometry.Quantum.RealMajorana.anticommutator
+      (S := H₂) V.connectionGenerator (canonicalVortexPair (E := E)).source
+  let Aminus : EndH :=
+    InfoGeometry.Quantum.RealMajorana.anticommutator
+      (S := H₂) V.connectionGenerator (canonicalVortexPair (E := E)).sink
+  let Aeps : EndH :=
+    InfoGeometry.Quantum.RealMajorana.anticommutator
+      (S := H₂) V.connectionGenerator (spectral_epsilon (E := E))
+  have hSum : Aplus + Aminus = (2 : ℝ) • V.connectionGenerator := by
+    simpa [Aplus, Aminus] using
+      sourceSinkAnticommutator_sum_eq_two_smul_connectionGenerator (E := E) V
+  have hSub : Aplus - Aminus = Aeps := by
+    simpa [Aplus, Aminus, Aeps] using
+      sourceSinkAnticommutator_sub_eq_anticommutator_spectral_epsilon (E := E) V
+  calc
+    Aminus = (2⁻¹ : ℝ) • (Aminus + Aminus) := by
+      calc
+        Aminus = (1 : ℝ) • Aminus := by simp
+        _ = ((2⁻¹ : ℝ) * (2 : ℝ)) • Aminus := by norm_num
+        _ = (2⁻¹ : ℝ) • ((2 : ℝ) • Aminus) := by simp [smul_smul]
+        _ = (2⁻¹ : ℝ) • (Aminus + Aminus) := by simp [two_smul]
+    _ = (2⁻¹ : ℝ) • ((Aplus + Aminus) - (Aplus - Aminus)) := by
+      abel
+    _ = (2⁻¹ : ℝ) • ((2 : ℝ) • V.connectionGenerator - Aeps) := by
+      rw [hSum, hSub]
+    _ = V.connectionGenerator - (2⁻¹ : ℝ) • Aeps := by
+      simp [smul_sub, smul_smul]
+    _ = V.connectionGenerator
+          - (2⁻¹ : ℝ) •
+              InfoGeometry.Quantum.RealMajorana.anticommutator
+                (S := H₂) V.connectionGenerator (spectral_epsilon (E := E)) := by
+          rfl
+
+/--
 If the connection generator commutes with `J`, the source defect seed is
 carried to the sink defect seed by the `J`-mirror.
 -/

@@ -208,6 +208,7 @@ import InfoGeometry.Canonical.QuantumGeometryDualSheetBridge
 import InfoGeometry.Canonical.RestrictedSheetContinuous
 import InfoGeometry.Canonical.RestrictedVolumeCharacter
 import InfoGeometry.Canonical.WeylGaugeOperatorLift
+import InfoGeometry.Canonical.WeylKKTAnomalyIdentity
 import InfoGeometry.Canonical.RealBdG
 import InfoGeometry.Canonical.RealBdGDIIIAtom
 import InfoGeometry.Canonical.RealBdGSheetBridge

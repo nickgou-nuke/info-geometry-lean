@@ -386,7 +386,8 @@ theorem berryOfOperator_self_eq_comparisonStateGeneratorPhase_id
       =
     comparisonStateGeneratorPhase (E := E) comparison
       A (ContinuousLinearMap.id ℝ H₂) := by
-  simp [berryOfOperator, metricOfOperator_apply, comparisonStateGeneratorPhase_apply]
+  simp [berryOfOperator, metricOfOperator_apply,
+    comparisonStateGeneratorPhase_apply_eq_comp_complex_i]
 
 /--
 Same-state specialization of the transported operator pair:

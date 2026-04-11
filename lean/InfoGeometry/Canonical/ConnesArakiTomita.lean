@@ -81,6 +81,30 @@ theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
   exact InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow_kms_of_satisfies_kms_like
     (E := H) (ω := ω) (β := β) hKMS
 
+/--
+Owner-name form of the Tomita-specialized Bekenstein/KMS endpoint: the KMS
+assumption is stated directly on the root modular-sign operator `spectral_epsilon`.
+-/
+theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData_root
+    (D : TomitaConnesArakiData (H := H) u T)
+    (ω : AlgebraEnd H →L[ℝ] ℝ)
+    (β : ℝ)
+    (hKMS :
+      InfoGeometry.Krein.satisfies_kms_like
+        (E := H)
+        (InfoGeometry.Krein.spectral_epsilon (E := H))
+        ω β) :
+    TopologicalBekensteinBound n T
+      ∧ ∀ A B : AlgebraEnd H,
+          ω
+              (A *
+                InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+                  (E := H) β B)
+            = ω (B * A) := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+    (topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
+      (H := H) (u := u) (T := T) D ω β hKMS)
+
 end TomitaSpecialization
 
 end InfoGeometry.Canonical.ConnesArakiFramework

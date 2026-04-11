@@ -141,7 +141,7 @@ theorem comparisonStateGeneratorPhase_eq_phaseShiftedTwoStateChannelCorrelation_
     comparisonStateGeneratorPhase (E := E) comparison X Y
       =
     phaseShiftedTwoStateChannelCorrelation (E := E) comparison comparison X Y := by
-  simp [phaseShiftedTwoStateChannelCorrelation, comparisonStateGeneratorPhase_apply,
+  simp [phaseShiftedTwoStateChannelCorrelation, comparisonStateGeneratorPhase_apply_eq_comp_complex_i,
     twoStateChannelCorrelation_apply, channelPhaseAxis_apply, ContinuousLinearMap.comp_apply]
 
 /--

@@ -143,6 +143,26 @@ theorem canonicalDIIIProxy_laws :
   · exact (canonicalDIIIProxy (E := E)).TC_eq_S
   · exact (canonicalDIIIProxy (E := E)).CT_eq_neg_S
 
+/-- Root-name packaged symmetry laws for the canonical DIII proxy. -/
+@[rep_depth transport]
+theorem canonicalDIIIProxy_root_laws :
+    let P := canonicalDIIIProxy (E := E)
+    P.T = complex_i (E := E)
+      ∧ P.C = modular_j (E := E)
+      ∧ P.S = -(spectral_epsilon (E := E))
+      ∧ P.T.comp P.T = -(ContinuousLinearMap.id ℝ H₂)
+      ∧ P.C.comp P.C = ContinuousLinearMap.id ℝ H₂
+      ∧ P.T.comp P.C = -(spectral_epsilon (E := E))
+      ∧ P.C.comp P.T = spectral_epsilon (E := E) := by
+  refine ⟨canonicalDIIIProxy_T_eq_complex_i (E := E), canonicalDIIIProxy_C_eq_modular_j (E := E),
+    canonicalDIIIProxy_S_eq_neg_spectral_epsilon (E := E), ?_, ?_, ?_, ?_⟩
+  · exact (canonicalDIIIProxy (E := E)).T_sq
+  · exact (canonicalDIIIProxy (E := E)).C_sq
+  · simpa [canonicalDIIIProxy_S_eq_neg_spectral_epsilon (E := E)] using
+      (canonicalDIIIProxy (E := E)).TC_eq_S
+  · simpa [canonicalDIIIProxy_S_eq_neg_spectral_epsilon (E := E)] using
+      (canonicalDIIIProxy (E := E)).CT_eq_neg_S
+
 /-- The canonical time-reversal proxy swaps positive chiral vectors to negative ones. -/
 @[rep_depth transport]
 theorem canonicalDIIIProxy_T_maps_plus_to_minus
@@ -247,6 +267,44 @@ theorem canonicalDIIIProxy_transport_closure
             ≠ 0)) := by
   refine ⟨canonicalDIIIProxy_laws (E := E), canonicalDIIIProxy_concreteCARPair, ?_⟩
   exact cpt_gap_hessian_centralCharge_closure
+    (A := A) (B := B) (E := E) V X hX hEven t
+
+/--
+Root-name form of the canonical DIII atom closure on a transport slice.
+-/
+@[rep_depth transport]
+theorem canonicalDIIIProxy_transport_root_closure
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ) :
+    (let P := canonicalDIIIProxy (E := E);
+      P.T = complex_i (E := E)
+        ∧ P.C = modular_j (E := E)
+        ∧ P.S = -(spectral_epsilon (E := E))
+        ∧ P.T.comp P.T = -(ContinuousLinearMap.id ℝ H₂)
+        ∧ P.C.comp P.C = ContinuousLinearMap.id ℝ H₂
+        ∧ P.T.comp P.C = -(spectral_epsilon (E := E))
+        ∧ P.C.comp P.T = spectral_epsilon (E := E))
+      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
+          (concreteCARAnnihilation (E := E))
+          (concreteCARCreation (E := E))
+      ∧ (rootGapHessianClosure (E := E) V
+          ∧
+        (quasilatticeAnalyticalIndex V X t
+            (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+          =
+        InfoGeometry.Canonical.OperatorialCentralCharge.operatorialCentralCharge
+          (A := A) (B := B) (E := E) X hX)
+          ∧
+        (InfoGeometry.Canonical.OperatorialCentralCharge.operatorialCentralCharge
+            (A := A) (B := B) (E := E) X hX ≠ 0 →
+          quasilatticeAnalyticalIndex V X t
+              (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+            ≠ 0)) := by
+  refine ⟨canonicalDIIIProxy_root_laws (E := E), canonicalDIIIProxy_concreteCARPair, ?_⟩
+  exact root_gap_hessian_centralCharge_closure
     (A := A) (B := B) (E := E) V X hX hEven t
 
 end Closure

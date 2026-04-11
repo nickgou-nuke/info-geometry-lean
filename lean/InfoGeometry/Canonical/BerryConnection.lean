@@ -129,10 +129,24 @@ noncomputable def ofQGT
     (ofQGT (E := E) Q).J =
       InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ (E := E) := rfl
 
+@[simp] theorem ofQGT_J_eq_modular_j
+    (Q : QGT E) :
+    (ofQGT (E := E) Q).J =
+      InfoGeometry.Krein.modular_j (E := E) := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_eq_modular_j] using
+    (ofQGT_J (E := E) Q)
+
 @[simp] theorem ofQGT_epsilon
     (Q : QGT E) :
     (ofQGT (E := E) Q).epsilon =
       InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon (E := E) := rfl
+
+@[simp] theorem ofQGT_epsilon_eq_spectral_epsilon
+    (Q : QGT E) :
+    (ofQGT (E := E) Q).epsilon =
+      InfoGeometry.Krein.spectral_epsilon (E := E) := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+    (ofQGT_epsilon (E := E) Q)
 
 @[simp] theorem ofQGT_K
     (Q : QGT E) :
@@ -285,6 +299,15 @@ noncomputable def hestenesBerryTwoForm
       (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E) u) v := by
   rfl
 
+@[simp] theorem hestenesBerryTwoForm_apply_complex_i
+    (hMod A : EndH) (u v : H₂) :
+    hestenesBerryTwoForm hMod A u v
+      =
+    hestenesMetricTwoForm hMod A
+      (InfoGeometry.Krein.complex_i (E := E) u) v := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    hestenesBerryTwoForm_apply (E := E) hMod A u v
+
 /--
 Operator Maurer-Cartan curvature bracket on doubled real space.
 -/
@@ -350,6 +373,27 @@ theorem deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_phaseAxisRes
       (A := InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E))
       u v
 
+theorem deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_phaseAxisResponse_complex_i
+    (X : EndH) (u v : H₂) :
+    deriv
+      (fun t =>
+        GeometricQuantumTensor.berryOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            X
+            (InfoGeometry.Krein.complex_i (E := E))
+            t)
+          u v)
+      0
+      =
+    GeometricQuantumTensor.berryOfOperator
+      (E := E)
+      (phaseAxisResponse (E := E) X) u v := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_phaseAxisResponse
+      (E := E) (X := X) u v
+
 /--
 Source-channel specialization of the infinitesimal phase-axis Berry transport
 law for phase-antilinear generators.
@@ -376,6 +420,29 @@ theorem deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_two_smul_com
   rw [deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_phaseAxisResponse
     (E := E) (X := X) u v]
   rw [phaseAxisResponse_antilinear_source (E := E) X hX]
+
+theorem deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_two_smul_comp_complex_i_of_IsPhaseAntilinear
+    (X : EndH)
+    (hX : IsPhaseAntilinear (E := E) X)
+    (u v : H₂) :
+    deriv
+      (fun t =>
+        GeometricQuantumTensor.berryOfOperator
+          (E := E)
+          (InfoGeometry.Canonical.expTransport
+            (A := EndH)
+            X
+            (InfoGeometry.Krein.complex_i (E := E))
+            t)
+          u v)
+      0
+      =
+    GeometricQuantumTensor.berryOfOperator
+      (E := E)
+      ((2 : ℝ) • (X.comp (InfoGeometry.Krein.complex_i (E := E)))) u v := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_two_smul_comp_modularComplexI_of_IsPhaseAntilinear
+      (E := E) X hX u v
 
 /--
 Global noncommuting Berry-flow equation (arbitrary `t`):

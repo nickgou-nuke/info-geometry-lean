@@ -172,18 +172,19 @@ theorem berryOfOperator_KRotation_eq_of_commute
       berryOfOperator (E := E) A u v := by
   intro u v
   have hKComm :
-      (modularComplexI (E := E)).comp (KRotation (E := E) t)
+      (InfoGeometry.Krein.complex_i (E := E)).comp (KRotation (E := E) t)
         =
-      (KRotation (E := E) t).comp (modularComplexI (E := E)) := by
-    exact comp_KRotation_eq_KRotation_comp_of_IsPhaseLinear
+      (KRotation (E := E) t).comp (InfoGeometry.Krein.complex_i (E := E)) := by
+    simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+      (comp_KRotation_eq_KRotation_comp_of_IsPhaseLinear
       (E := E)
       (A := modularComplexI (E := E))
       (by simp [IsPhaseLinear])
-      t
+      t)
   have hKu :
-      modularComplexI (E := E) (KRotation (E := E) t u)
+      InfoGeometry.Krein.complex_i (E := E) (KRotation (E := E) t u)
         =
-      KRotation (E := E) t (modularComplexI (E := E) u) := by
+      KRotation (E := E) t (InfoGeometry.Krein.complex_i (E := E) u) := by
     simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hKComm
   calc
     berryOfOperator (E := E) A
@@ -191,22 +192,22 @@ theorem berryOfOperator_KRotation_eq_of_commute
         (KRotation (E := E) t v)
       =
     metricOfOperator (E := E) A
-      (modularComplexI (E := E) (KRotation (E := E) t u))
+      (InfoGeometry.Krein.complex_i (E := E) (KRotation (E := E) t u))
       (KRotation (E := E) t v) := by
           simpa using
-            (berryOfOperator_apply (E := E) A
+            (berryOfOperator_apply_complex_i (E := E) A
               (KRotation (E := E) t u)
               (KRotation (E := E) t v))
     _ =
     metricOfOperator (E := E) A
-      (KRotation (E := E) t (modularComplexI (E := E) u))
+      (KRotation (E := E) t (InfoGeometry.Krein.complex_i (E := E) u))
       (KRotation (E := E) t v) := by
           rw [hKu]
-    _ = metricOfOperator (E := E) A (modularComplexI (E := E) u) v := by
+    _ = metricOfOperator (E := E) A (InfoGeometry.Krein.complex_i (E := E) u) v := by
           exact metricOfOperator_KRotation_eq_of_commute
-            (E := E) (A := A) hComm t (modularComplexI (E := E) u) v
+            (E := E) (A := A) hComm t (InfoGeometry.Krein.complex_i (E := E) u) v
     _ = berryOfOperator (E := E) A u v := by
-          exact (berryOfOperator_apply (E := E) A u v).symm
+          exact (berryOfOperator_apply_complex_i (E := E) A u v).symm
 
 /--
 Split-`Cl(1,1)` (`J ∘ ε`) form of the phase-propagation invariance theorem for

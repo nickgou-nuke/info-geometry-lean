@@ -2,6 +2,7 @@ import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.Canonical.ProjectorEquivariance
 import InfoGeometry.Canonical.TopologicalResidue
+import InfoGeometry.Canonical.VortexReferenceGaugeBridge
 import InfoGeometry.Quantum.SuperchargeMultiplet
 import InfoGeometry.KK.QuasilatticeIndexInvariance
 import InfoGeometry.Meta.Architecture
@@ -113,9 +114,18 @@ section KK
 open InfoGeometry.KK
 open InfoGeometry.KK.RealSplitKreinKasparovCycle
 open InfoGeometry.Canonical.BogoliubovVielbein
+open InfoGeometry.Canonical.QuasilatticeDirac
+open InfoGeometry.Canonical.RelationalInformationCore
+open InfoGeometry.Canonical.RelativeModularPotential
+open InfoGeometry.Canonical.ModularTwoStateCorrelation
+open InfoGeometry.Canonical.VortexAnomalyLink
+open InfoGeometry.Canonical.SpinorModularBridge
 open InfoGeometry.Canonical.OperatorialCentralCharge
 open InfoGeometry.Canonical.ProjectorEquivariance
+open InfoGeometry.Canonical.VortexReferenceGaugeBridge
 open InfoGeometry.Krein
+open InfoGeometry.Quantum.BulkBoundary
+open InfoGeometry.Quantum.RealMajorana
 
 variable {A B E : Type}
 variable [NormedRing A] [NormedRing B]
@@ -191,6 +201,268 @@ theorem transportedIndex_fixedFrameConvention_map
       (A := A) (B := B) (E := E) V X hX hEven t
   · simpa using (ProjectorEquivariance.plusProjectorAfterPhaseFlip_eq_minusProjector (E := E))
   · simpa using (ProjectorEquivariance.minusProjectorAfterPhaseFlip_eq_plusProjector (E := E))
+
+section BoundaryReadout
+
+variable [FiniteDimensional ℝ E]
+
+/--
+Topological-to-boundary package (source side): if the transported analytical
+index is nonzero, then under source boundary identification we obtain both a
+localized source/sink seed witness and source-seed derivative readout
+anchor-invariance.
+-/
+@[rep_depth transport]
+theorem quasilatticeAnalyticalIndex_ne_zero_sourceBoundaryReadout_package
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hIndexNonzero :
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) ≠ 0)
+    (hSource : S.boundaryGenerator = sourceVortexSeed (E := E) V)
+    (P : PotentialDatum (E := E))
+    (reference₀ reference₁ comparison : H₂)
+    (Xch : PerturbationChannel E)
+    (hDeg :
+      ∀ ψ χ : H₂, sourceProj (E := E) ψ = ψ → sourceProj (E := E) χ = χ →
+        value (E := E) P ψ = value (E := E) P χ)
+    (h₀ : sourceProj (E := E) reference₀ = reference₀)
+    (h₁ : sourceProj (E := E) reference₁ = reference₁) :
+    ∃ v : H₂,
+      IsDanglingZeroMode S v ∧
+      sourceVortexSeed (E := E) V v ≠ 0 ∧
+      sinkVortexSeed (E := E) V v ≠ 0 ∧
+      deriv
+        (fun s =>
+          comparisonTransportPhaseShiftedChannelCorrelation (E := E)
+            (toRelationalInformationDatum (E := E) P reference₀ comparison)
+            Xch (sourceVortexSeed (E := E) V) s)
+        0
+        =
+      deriv
+        (fun s =>
+          comparisonTransportPhaseShiftedChannelCorrelation (E := E)
+            (toRelationalInformationDatum (E := E) P reference₁ comparison)
+            Xch (sourceVortexSeed (E := E) V) s)
+        0 := by
+  have hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 := by
+    intro hZero
+    apply hIndexNonzero
+    rw [quasilatticeAnalyticalIndex_eq_operatorialCentralCharge
+      (A := A) (B := B) (E := E) V X hX hEven t]
+    exact hZero
+  exact
+    exists_sourceSinkSeedLocalizedVortex_and_deriv_sourceVortexSeed_eq_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hBoundaryOnZeroModes hCentral hSource P reference₀ reference₁ comparison Xch hDeg h₀ h₁
+
+/--
+Topological-to-boundary package (sink side): if the transported analytical
+index is nonzero, then under sink boundary identification we obtain both a
+localized source/sink seed witness and sink-seed derivative readout
+anchor-invariance.
+-/
+@[rep_depth transport]
+theorem quasilatticeAnalyticalIndex_ne_zero_sinkBoundaryReadout_package
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hIndexNonzero :
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) ≠ 0)
+    (hSink : S.boundaryGenerator = sinkVortexSeed (E := E) V)
+    (P : PotentialDatum (E := E))
+    (reference₀ reference₁ comparison : H₂)
+    (Xch : PerturbationChannel E)
+    (hDeg :
+      ∀ ψ χ : H₂, sinkProj (E := E) ψ = ψ → sinkProj (E := E) χ = χ →
+        value (E := E) P ψ = value (E := E) P χ)
+    (h₀ : sinkProj (E := E) reference₀ = reference₀)
+    (h₁ : sinkProj (E := E) reference₁ = reference₁) :
+    ∃ v : H₂,
+      IsDanglingZeroMode S v ∧
+      sourceVortexSeed (E := E) V v ≠ 0 ∧
+      sinkVortexSeed (E := E) V v ≠ 0 ∧
+      deriv
+        (fun s =>
+          comparisonTransportPhaseShiftedChannelCorrelation (E := E)
+            (toRelationalInformationDatum (E := E) P reference₀ comparison)
+            Xch (sinkVortexSeed (E := E) V) s)
+        0
+        =
+      deriv
+        (fun s =>
+          comparisonTransportPhaseShiftedChannelCorrelation (E := E)
+            (toRelationalInformationDatum (E := E) P reference₁ comparison)
+            Xch (sinkVortexSeed (E := E) V) s)
+        0 := by
+  have hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 := by
+    intro hZero
+    apply hIndexNonzero
+    rw [quasilatticeAnalyticalIndex_eq_operatorialCentralCharge
+      (A := A) (B := B) (E := E) V X hX hEven t]
+    exact hZero
+  exact
+    exists_sourceSinkSeedLocalizedVortex_and_deriv_sinkVortexSeed_eq_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hBoundaryOnZeroModes hCentral hSink P reference₀ reference₁ comparison Xch hDeg h₀ h₁
+
+/--
+Kernel-separation source-side variant of the topological-to-boundary package.
+-/
+@[rep_depth transport]
+theorem quasilatticeAnalyticalIndex_ne_zero_sourceBoundaryReadout_package_of_kernelSeparation
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (quasilatticeDirac V X.F t))
+    (hSep :
+      (S.kernel.A.toLinearMap.ker ⊓ LinearMap.ker S.boundaryGenerator.toLinearMap)
+        = (⊥ : Submodule ℝ H₂))
+    (hIndexNonzero :
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) ≠ 0)
+    (hSource : S.boundaryGenerator = sourceVortexSeed (E := E) V)
+    (P : PotentialDatum (E := E))
+    (reference₀ reference₁ comparison : H₂)
+    (Xch : PerturbationChannel E)
+    (hDeg :
+      ∀ ψ χ : H₂, sourceProj (E := E) ψ = ψ → sourceProj (E := E) χ = χ →
+        value (E := E) P ψ = value (E := E) P χ)
+    (h₀ : sourceProj (E := E) reference₀ = reference₀)
+    (h₁ : sourceProj (E := E) reference₁ = reference₁) :
+    ∃ v : H₂,
+      IsDanglingZeroMode S v ∧
+      sourceVortexSeed (E := E) V v ≠ 0 ∧
+      sinkVortexSeed (E := E) V v ≠ 0 ∧
+      deriv
+        (fun s =>
+          comparisonTransportPhaseShiftedChannelCorrelation (E := E)
+            (toRelationalInformationDatum (E := E) P reference₀ comparison)
+            Xch (sourceVortexSeed (E := E) V) s)
+        0
+        =
+      deriv
+        (fun s =>
+          comparisonTransportPhaseShiftedChannelCorrelation (E := E)
+            (toRelationalInformationDatum (E := E) P reference₁ comparison)
+            Xch (sourceVortexSeed (E := E) V) s)
+        0 := by
+  have hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 := by
+    intro hZero
+    apply hIndexNonzero
+    rw [quasilatticeAnalyticalIndex_eq_operatorialCentralCharge
+      (A := A) (B := B) (E := E) V X hX hEven t]
+    exact hZero
+  exact
+    exists_sourceSinkSeedLocalizedVortex_and_deriv_sourceVortexSeed_eq_of_operatorialCentralCharge_ne_zero_of_kernelSeparation_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hSep hCentral hSource P reference₀ reference₁ comparison Xch hDeg h₀ h₁
+
+/--
+Kernel-separation sink-side variant of the topological-to-boundary package.
+-/
+@[rep_depth transport]
+theorem quasilatticeAnalyticalIndex_ne_zero_sinkBoundaryReadout_package_of_kernelSeparation
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (quasilatticeDirac V X.F t))
+    (hSep :
+      (S.kernel.A.toLinearMap.ker ⊓ LinearMap.ker S.boundaryGenerator.toLinearMap)
+        = (⊥ : Submodule ℝ H₂))
+    (hIndexNonzero :
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) ≠ 0)
+    (hSink : S.boundaryGenerator = sinkVortexSeed (E := E) V)
+    (P : PotentialDatum (E := E))
+    (reference₀ reference₁ comparison : H₂)
+    (Xch : PerturbationChannel E)
+    (hDeg :
+      ∀ ψ χ : H₂, sinkProj (E := E) ψ = ψ → sinkProj (E := E) χ = χ →
+        value (E := E) P ψ = value (E := E) P χ)
+    (h₀ : sinkProj (E := E) reference₀ = reference₀)
+    (h₁ : sinkProj (E := E) reference₁ = reference₁) :
+    ∃ v : H₂,
+      IsDanglingZeroMode S v ∧
+      sourceVortexSeed (E := E) V v ≠ 0 ∧
+      sinkVortexSeed (E := E) V v ≠ 0 ∧
+      deriv
+        (fun s =>
+          comparisonTransportPhaseShiftedChannelCorrelation (E := E)
+            (toRelationalInformationDatum (E := E) P reference₀ comparison)
+            Xch (sinkVortexSeed (E := E) V) s)
+        0
+        =
+      deriv
+        (fun s =>
+          comparisonTransportPhaseShiftedChannelCorrelation (E := E)
+            (toRelationalInformationDatum (E := E) P reference₁ comparison)
+            Xch (sinkVortexSeed (E := E) V) s)
+        0 := by
+  have hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 := by
+    intro hZero
+    apply hIndexNonzero
+    rw [quasilatticeAnalyticalIndex_eq_operatorialCentralCharge
+      (A := A) (B := B) (E := E) V X hX hEven t]
+    exact hZero
+  exact
+    exists_sourceSinkSeedLocalizedVortex_and_deriv_sinkVortexSeed_eq_of_operatorialCentralCharge_ne_zero_of_kernelSeparation_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hSep hCentral hSink P reference₀ reference₁ comparison Xch hDeg h₀ h₁
+
+end BoundaryReadout
 
 end KK
 

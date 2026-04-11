@@ -1,6 +1,26 @@
+---
+
+# The Spire Architecture
+
+> “It all starts with a stream of consciousness.”
+
+This repository is a living experiment in radical transparency. Here, the context of discovery is not hidden—it is celebrated, archived, and cross-referenced with every formal proof. The black books, chat logs, and associative streams are as essential as the Lean 4 code itself.
+
+**Contributors are invited to:**
+- Begin with wild, poetic, or chaotic streams in the black books or Issues.
+- Use the AI Caretaker and LLMs as semantic sieves and amplifiers.
+- Only then, crystallize your insights into Lean 4 code, always linking back to your creative lineage.
+
+See docs/black_books/meta_methodology_jungian_llm.md for the full manifesto and technical rationale.
+
+---
+
 # InfoGeometry in Lean 4
 
 > 🧭 **New to the Spire?** Read the [**Pioneer’s Log**](PIONEERS_LOG.md) and the [**Alchemical Protocol**](ALCHEMICAL_PROTOCOL.md) for a narrative guide to the landscape, the chemistry of the logos, and the vision of this repository.
+
+For method-level literature grounding, use the maintained
+[BIBLIOGRAPHY.md](BIBLIOGRAPHY.md).
 
 `info-geometry-lean` is a Lean 4 repository built on **Goutev’s Principle of 
 Absolute Relativity of Measurement**: measurement is projective; observables 
@@ -172,6 +192,7 @@ architect, creator, and caretaker, see
 17. [tools/infra/README.md](tools/infra/README.md)
 18. [tools/frontier/README.md](tools/frontier/README.md)
 19. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
+20. [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)
 
 If you are operating as an agent inside this repo, also use:
 - [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)

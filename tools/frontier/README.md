@@ -12,6 +12,7 @@ For the exact operator methodology, including when to use `semanticSnapshot`,
 - `semantic_snapshot.py`
 - `proof_session.py`
 - `proof_print.py`
+- `socratic_cycle.py`
 - `skynet_v2.py`
 - `extract_module_patch.py`
 
@@ -22,6 +23,7 @@ Use this layer for:
 - server-backed elaboration snapshots that feel closer to the VS Code infoview;
 - frontier exploration around a chosen seed theorem or module;
 - extraction of prompt-ready local context for focused agent work.
+- natural-language-first Socratic cycle packet scaffolding before Lean encoding.
 
 ## Current rule
 
@@ -79,3 +81,30 @@ For proof-term printout on the warm path, send:
 
 This is the closest maintained operator surface to the “show me the compiled/elaborated view”
 experience provided by the Lean VS Code plugin.
+
+## Natural-Language Socratic Cycle
+
+Use `socratic_cycle.py` to scaffold a full packet for:
+
+1. Jungian generation,
+2. repeated Socratic regeneration,
+3. Pauli admission partition,
+4. translator pass,
+5. Lean batch handoff.
+
+Example:
+
+```bash
+python3 tools/frontier/socratic_cycle.py \
+  "DIII phase-flip anomaly to index bridge" \
+  --out reports/frontier/socratic \
+  --loops 3 \
+  --lane InfoGeometry.Canonical \
+  --owner-hint lean/InfoGeometry/Canonical/ProjectorEquivariance.lean \
+  --owner-hint lean/InfoGeometry/Canonical/OperatorialCentralCharge.lean
+```
+
+Manual templates for team use:
+
+- `tools/frontier/templates/socratic_cycle_packet.md`
+- `tools/frontier/templates/pauli_admission_report.md`

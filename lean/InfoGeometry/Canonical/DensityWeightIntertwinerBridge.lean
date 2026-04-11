@@ -128,13 +128,17 @@ the internal axis `K = Jε`.
 noncomputable def densityWeightPhaseAxis : EndH :=
   modularComplexI (E := E)
 
+omit [CompleteSpace E] in
+@[rep_depth krein, simp] theorem densityWeightPhaseAxis_eq_complex_i :
+    densityWeightPhaseAxis = complex_i (E := E) := by
+  simp [densityWeightPhaseAxis]
+
+omit [CompleteSpace E] in
 @[rep_depth krein, simp] theorem densityWeightPhaseAxis_eq_modularComplexI :
     densityWeightPhaseAxis = modularComplexI (E := E) := rfl
 
-@[rep_depth krein, simp] theorem densityWeightPhaseAxis_eq_complex_i :
-    densityWeightPhaseAxis = complex_i (E := E) := by
-  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
-    densityWeightPhaseAxis_eq_modularComplexI (E := E)
+attribute [deprecated densityWeightPhaseAxis_eq_complex_i (since := "2026-04-11")]
+  densityWeightPhaseAxis_eq_modularComplexI
 
 @[rep_depth krein, simp] theorem densityWeightPhaseAxis_eq_dilationOperator :
     densityWeightPhaseAxis = dilationOperator (E := E) := by

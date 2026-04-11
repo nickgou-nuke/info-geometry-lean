@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.SuperchargeTransportBridge
 import InfoGeometry.Canonical.BogoliubovProjectorFlux
+import InfoGeometry.Canonical.SpinorModularBridge
 import InfoGeometry.Quantum.SplitTrialityKernel
 import Mathlib.Tactic.Abel
 
@@ -27,8 +28,15 @@ open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Canonical.BogoliubovProjectorTransport
 open InfoGeometry.Canonical.BogoliubovProjectorFlux
+open InfoGeometry.Canonical.OperatorialCentralCharge
+open InfoGeometry.Canonical.QuasilatticeDirac
+open InfoGeometry.Canonical.SpinorModularBridge
+open InfoGeometry.KK
+open InfoGeometry.KK.RealSplitKreinKasparovCycle
 open InfoGeometry.Quantum
 open InfoGeometry.Quantum.RealMajoranaCategory
+open InfoGeometry.Quantum.BulkBoundary
+open InfoGeometry.Quantum.RealMajorana
 
 section Core
 
@@ -223,25 +231,179 @@ theorem sinkVortexSeed_eq_neg_minusProjectorFlux
 theorem sourceVortexSeed_add_sinkVortexSeed_eq_zero
     (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
     sourceVortexSeed (E := E) V + sinkVortexSeed (E := E) V = 0 := by
+  let H : EndH := V.connectionGenerator
+  let Pplus : EndH := (canonicalVortexPair (E := E)).source
+  let Pminus : EndH := (canonicalVortexPair (E := E)).sink
   calc
     sourceVortexSeed (E := E) V + sinkVortexSeed (E := E) V
-        =
-      transportCommutator (E := E) V.connectionGenerator
-        ((canonicalVortexPair (E := E)).source + (canonicalVortexPair (E := E)).sink) := by
-          apply ContinuousLinearMap.ext
-          intro x
-          apply DoubledSpace.ext
-          · simp [sourceVortexSeed, sinkVortexSeed, transportCommutator, canonicalVortexPair,
-              ContinuousLinearMap.comp_add, ContinuousLinearMap.add_comp, sub_eq_add_neg]
-            abel_nf
-          · simp [sourceVortexSeed, sinkVortexSeed, transportCommutator, canonicalVortexPair,
-              ContinuousLinearMap.comp_add, ContinuousLinearMap.add_comp, sub_eq_add_neg]
-            abel_nf
-    _ = transportCommutator (E := E) V.connectionGenerator (ContinuousLinearMap.id ℝ H₂) := by
+        = transportCommutator (E := E) H (Pplus + Pminus) := by
+            simp [sourceVortexSeed, sinkVortexSeed, transportCommutator, H, Pplus, Pminus,
+              ContinuousLinearMap.comp_add, ContinuousLinearMap.add_comp, sub_eq_add_neg,
+              add_assoc, add_left_comm, add_comm]
+    _ = transportCommutator (E := E) H (ContinuousLinearMap.id ℝ H₂) := by
           rw [(canonicalVortexPair (E := E)).sum_id]
     _ = 0 := by
           unfold transportCommutator
           simp
+
+/-- Equivalent commutator closure form: the source seed is the negative sink seed. -/
+@[simp, rep_depth transport]
+theorem sourceVortexSeed_eq_neg_sinkVortexSeed
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    sourceVortexSeed (E := E) V = -(sinkVortexSeed (E := E) V) := by
+  have hsum : sourceVortexSeed (E := E) V + sinkVortexSeed (E := E) V = 0 :=
+    sourceVortexSeed_add_sinkVortexSeed_eq_zero (E := E) V
+  exact eq_neg_of_add_eq_zero_left hsum
+
+/--
+Commutator/anticommutator closure on the canonical source/sink split:
+the source and sink anticommutator channels add to `2H`.
+-/
+@[simp, rep_depth transport]
+theorem sourceSinkAnticommutator_sum_eq_two_smul_connectionGenerator
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    InfoGeometry.Quantum.RealMajorana.anticommutator
+        (S := H₂)
+        V.connectionGenerator (canonicalVortexPair (E := E)).source
+      +
+      InfoGeometry.Quantum.RealMajorana.anticommutator
+        (S := H₂)
+        V.connectionGenerator (canonicalVortexPair (E := E)).sink
+      =
+    (2 : ℝ) • V.connectionGenerator := by
+  let H : EndH := V.connectionGenerator
+  let Pplus : EndH := (canonicalVortexPair (E := E)).source
+  let Pminus : EndH := (canonicalVortexPair (E := E)).sink
+  calc
+    InfoGeometry.Quantum.RealMajorana.anticommutator (S := H₂) H Pplus
+        +
+        InfoGeometry.Quantum.RealMajorana.anticommutator (S := H₂) H Pminus
+      =
+        InfoGeometry.Quantum.RealMajorana.anticommutator (S := H₂) H (Pplus + Pminus) := by
+          simp [InfoGeometry.Quantum.RealMajorana.anticommutator, H, Pplus, Pminus,
+            ContinuousLinearMap.comp_add, ContinuousLinearMap.add_comp,
+            add_left_comm, add_comm]
+    _ =
+        InfoGeometry.Quantum.RealMajorana.anticommutator
+          (S := H₂) H (ContinuousLinearMap.id ℝ H₂) := by
+            rw [(canonicalVortexPair (E := E)).sum_id]
+    _ = H.comp (ContinuousLinearMap.id ℝ H₂) + (ContinuousLinearMap.id ℝ H₂).comp H := by
+          rfl
+    _ = H + H := by simp
+    _ = (2 : ℝ) • H := by simpa [two_smul]
+    _ = (2 : ℝ) • V.connectionGenerator := rfl
+
+/-- Canonical source-minus-sink projector identity `P₊ - P₋ = ε`. -/
+@[simp, rep_depth krein]
+theorem canonicalVortexPair_source_sub_sink_eq_spectral_epsilon :
+    (canonicalVortexPair (E := E)).source - (canonicalVortexPair (E := E)).sink
+      = spectral_epsilon (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro x
+  apply DoubledSpace.ext
+  · calc
+      (WithLp.fst
+          (((canonicalVortexPair (E := E)).source - (canonicalVortexPair (E := E)).sink) x))
+          = (2⁻¹ : ℝ) • WithLp.fst x + (2⁻¹ : ℝ) • WithLp.fst x := by
+              simp [canonicalVortexPair, spectralPlusProj, spectralMinusProj,
+                sub_eq_add_neg, smul_add, smul_neg]
+      _ = ((2⁻¹ : ℝ) + (2⁻¹ : ℝ)) • WithLp.fst x := by
+            simpa [add_smul] using (add_smul (2⁻¹ : ℝ) (2⁻¹ : ℝ) (WithLp.fst x)).symm
+      _ = (1 : ℝ) • WithLp.fst x := by norm_num
+      _ = WithLp.fst ((spectral_epsilon (E := E)) x) := by
+            simp [spectral_epsilon_apply]
+  · calc
+      (WithLp.snd
+          (((canonicalVortexPair (E := E)).source - (canonicalVortexPair (E := E)).sink) x))
+          = -((2⁻¹ : ℝ) • WithLp.snd x) + -((2⁻¹ : ℝ) • WithLp.snd x) := by
+              simp [canonicalVortexPair, spectralPlusProj, spectralMinusProj,
+                sub_eq_add_neg, smul_add, smul_neg]
+      _ = -(((2⁻¹ : ℝ) • WithLp.snd x) + ((2⁻¹ : ℝ) • WithLp.snd x)) := by abel
+      _ = -(((2⁻¹ : ℝ) + (2⁻¹ : ℝ)) • WithLp.snd x) := by
+            simp [add_smul]
+      _ = -((1 : ℝ) • WithLp.snd x) := by norm_num
+      _ = WithLp.snd ((spectral_epsilon (E := E)) x) := by
+            simp [spectral_epsilon_apply]
+
+/--
+Commutator closure identity:
+the source-minus-sink defect split is exactly the transport commutator against
+the grading axis `ε`.
+-/
+@[simp, rep_depth transport]
+theorem sourceVortexSeed_sub_sinkVortexSeed_eq_transportCommutator_spectral_epsilon
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    sourceVortexSeed (E := E) V - sinkVortexSeed (E := E) V
+      = transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E)) := by
+  let H : EndH := V.connectionGenerator
+  let Pplus : EndH := (canonicalVortexPair (E := E)).source
+  let Pminus : EndH := (canonicalVortexPair (E := E)).sink
+  have h_sub_right (A B : EndH) :
+      transportCommutator (E := E) H (A - B)
+        = transportCommutator (E := E) H A - transportCommutator (E := E) H B := by
+    apply ContinuousLinearMap.ext
+    intro x
+    simp [transportCommutator, sub_eq_add_neg]
+    abel
+  calc
+    sourceVortexSeed (E := E) V - sinkVortexSeed (E := E) V
+      = transportCommutator (E := E) H Pplus - transportCommutator (E := E) H Pminus := by
+          rfl
+    _ = transportCommutator (E := E) H (Pplus - Pminus) := by
+          rw [h_sub_right]
+    _ = transportCommutator (E := E) H (spectral_epsilon (E := E)) := by
+          rw [canonicalVortexPair_source_sub_sink_eq_spectral_epsilon (E := E)]
+    _ = transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E)) := rfl
+
+/--
+Anticommutator closure identity:
+the source-minus-sink anticommutator split is exactly the anticommutator
+against the grading axis `ε`.
+-/
+@[simp, rep_depth transport]
+theorem sourceSinkAnticommutator_sub_eq_anticommutator_spectral_epsilon
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    InfoGeometry.Quantum.RealMajorana.anticommutator
+        (S := H₂)
+        V.connectionGenerator (canonicalVortexPair (E := E)).source
+      -
+      InfoGeometry.Quantum.RealMajorana.anticommutator
+        (S := H₂)
+        V.connectionGenerator (canonicalVortexPair (E := E)).sink
+      =
+    InfoGeometry.Quantum.RealMajorana.anticommutator
+      (S := H₂)
+      V.connectionGenerator (spectral_epsilon (E := E)) := by
+  let H : EndH := V.connectionGenerator
+  let Pplus : EndH := (canonicalVortexPair (E := E)).source
+  let Pminus : EndH := (canonicalVortexPair (E := E)).sink
+  have h_sub_right (A B : EndH) :
+      InfoGeometry.Quantum.RealMajorana.anticommutator
+          (S := H₂) H (A - B)
+        =
+      InfoGeometry.Quantum.RealMajorana.anticommutator
+          (S := H₂) H A
+        -
+      InfoGeometry.Quantum.RealMajorana.anticommutator
+          (S := H₂) H B := by
+    apply ContinuousLinearMap.ext
+    intro x
+    simp [InfoGeometry.Quantum.RealMajorana.anticommutator, sub_eq_add_neg]
+    abel
+  calc
+    InfoGeometry.Quantum.RealMajorana.anticommutator (S := H₂) H Pplus
+        -
+        InfoGeometry.Quantum.RealMajorana.anticommutator (S := H₂) H Pminus
+      =
+        InfoGeometry.Quantum.RealMajorana.anticommutator (S := H₂) H (Pplus - Pminus) := by
+          rw [h_sub_right]
+    _ =
+        InfoGeometry.Quantum.RealMajorana.anticommutator
+          (S := H₂) H (spectral_epsilon (E := E)) := by
+            rw [canonicalVortexPair_source_sub_sink_eq_spectral_epsilon (E := E)]
+    _ =
+        InfoGeometry.Quantum.RealMajorana.anticommutator
+          (S := H₂) V.connectionGenerator (spectral_epsilon (E := E)) := rfl
 
 /--
 If the connection generator commutes with `J`, the source defect seed is
@@ -316,6 +478,194 @@ theorem sinkVortexSeed_comp_J_eq_J_comp_sourceVortexSeed_of_commute_modularJ
           simp [sub_eq_add_neg, ContinuousLinearMap.comp_add, ContinuousLinearMap.comp_neg]
     _ = J.comp (sourceVortexSeed (E := E) V) := by
           rfl
+
+section BoundaryLocalization
+
+variable {A B : Type}
+variable [NormedRing A] [NormedRing B]
+variable [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+variable [FiniteDimensional ℝ E]
+variable [FiniteDimensional ℝ (DoubledSpace E)]
+variable [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)]
+
+/--
+If the singular boundary generator is identified with the canonical source seed,
+then nonzero transported central charge forces that source seed to act
+nontrivially on a localized boundary-vortex witness.
+-/
+@[rep_depth transport]
+theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : RealMajoranaDatum (S := H₂))
+    (P0 : KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      PolarizationOdd (M := M) P0 (quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0)
+    (hSource : S.boundaryGenerator = sourceVortexSeed (E := E) V) :
+    ∃ v : H₂,
+      IsDanglingZeroMode S v ∧
+        sourceVortexSeed (E := E) V v ≠ 0 ∧
+        sinkVortexSeed (E := E) V v ≠ 0 := by
+  rcases
+      exists_danglingZeroMode_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
+        (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+        hBoundaryOnZeroModes hCentral with
+    ⟨v, hvDangling⟩
+  have hSourcev : sourceVortexSeed (E := E) V v ≠ 0 := by
+    simpa [hSource] using hvDangling.2
+  have hSumv :
+      sourceVortexSeed (E := E) V v + sinkVortexSeed (E := E) V v = 0 := by
+    simpa [ContinuousLinearMap.add_apply] using
+      congrArg (fun T : EndH => T v) (sourceVortexSeed_add_sinkVortexSeed_eq_zero (E := E) V)
+  have hSinkv : sinkVortexSeed (E := E) V v ≠ 0 := by
+    intro hZero
+    have hSumv' := hSumv
+    rw [hZero] at hSumv'
+    have hSourceZero : sourceVortexSeed (E := E) V v = 0 := by
+      simpa using hSumv'
+    exact hSourcev hSourceZero
+  exact ⟨v, hvDangling, hSourcev, hSinkv⟩
+
+/--
+Sink-side version of the same bridge when the singular boundary generator is
+identified with the canonical sink seed.
+-/
+@[rep_depth transport]
+theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : RealMajoranaDatum (S := H₂))
+    (P0 : KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      PolarizationOdd (M := M) P0 (quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0)
+    (hSink : S.boundaryGenerator = sinkVortexSeed (E := E) V) :
+    ∃ v : H₂,
+      IsDanglingZeroMode S v ∧
+        sourceVortexSeed (E := E) V v ≠ 0 ∧
+        sinkVortexSeed (E := E) V v ≠ 0 := by
+  rcases
+      exists_danglingZeroMode_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
+        (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+        hBoundaryOnZeroModes hCentral with
+    ⟨v, hvDangling⟩
+  have hSinkv : sinkVortexSeed (E := E) V v ≠ 0 := by
+    simpa [hSink] using hvDangling.2
+  have hSumv :
+      sourceVortexSeed (E := E) V v + sinkVortexSeed (E := E) V v = 0 := by
+    simpa [ContinuousLinearMap.add_apply] using
+      congrArg (fun T : EndH => T v) (sourceVortexSeed_add_sinkVortexSeed_eq_zero (E := E) V)
+  have hSourcev : sourceVortexSeed (E := E) V v ≠ 0 := by
+    intro hZero
+    have hSumv' := hSumv
+    rw [hZero] at hSumv'
+    have hSinkZero : sinkVortexSeed (E := E) V v = 0 := by
+      simpa using hSumv'
+    exact hSinkv hSinkZero
+  exact ⟨v, hvDangling, hSourcev, hSinkv⟩
+
+/--
+Source-side kernel-separation variant of the localized source/sink seed bridge.
+-/
+@[rep_depth transport]
+theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_kernelSeparation_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : RealMajoranaDatum (S := H₂))
+    (P0 : KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      PolarizationOdd (M := M) P0 (quasilatticeDirac V X.F t))
+    (hSep :
+      (S.kernel.A.toLinearMap.ker ⊓ LinearMap.ker S.boundaryGenerator.toLinearMap)
+        = (⊥ : Submodule ℝ H₂))
+    (hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0)
+    (hSource : S.boundaryGenerator = sourceVortexSeed (E := E) V) :
+    ∃ v : H₂,
+      IsDanglingZeroMode S v ∧
+        sourceVortexSeed (E := E) V v ≠ 0 ∧
+        sinkVortexSeed (E := E) V v ≠ 0 := by
+  have hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0 := by
+    intro v hv hvne
+    have hvA : S.kernel.A v = 0 := by simpa [hA] using hv
+    exact boundary_active_on_nonzero_kernel_of_kernel_separation (S := S) hSep v hvA hvne
+  exact
+    exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hBoundaryOnZeroModes hCentral hSource
+
+/--
+Sink-side kernel-separation variant of the localized source/sink seed bridge.
+-/
+@[rep_depth transport]
+theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_kernelSeparation_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : RealMajoranaDatum (S := H₂))
+    (P0 : KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      PolarizationOdd (M := M) P0 (quasilatticeDirac V X.F t))
+    (hSep :
+      (S.kernel.A.toLinearMap.ker ⊓ LinearMap.ker S.boundaryGenerator.toLinearMap)
+        = (⊥ : Submodule ℝ H₂))
+    (hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0)
+    (hSink : S.boundaryGenerator = sinkVortexSeed (E := E) V) :
+    ∃ v : H₂,
+      IsDanglingZeroMode S v ∧
+        sourceVortexSeed (E := E) V v ≠ 0 ∧
+        sinkVortexSeed (E := E) V v ≠ 0 := by
+  have hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0 := by
+    intro v hv hvne
+    have hvA : S.kernel.A v = 0 := by simpa [hA] using hv
+    exact boundary_active_on_nonzero_kernel_of_kernel_separation (S := S) hSep v hvA hvne
+  exact
+    exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hBoundaryOnZeroModes hCentral hSink
+
+end BoundaryLocalization
 
 end Core
 

@@ -50,10 +50,10 @@ theorem inner_sq_add_modularComplexI_inner_sq_le
     ‖x‖ ^ 2 * ‖y‖ ^ 2 := by
   by_cases hx : x = 0
   · simp [hx]
-  let kx : H₂ := modularComplexI (E := E) x
+  let kx : H₂ := complex_i (E := E) x
   have hKnormSq : ‖kx‖ ^ 2 = ‖x‖ ^ 2 := by
     rw [← real_inner_self_eq_norm_sq, ← real_inner_self_eq_norm_sq]
-    simpa [kx] using modularComplexI_inner_comp (E := E) x x
+    simpa [kx] using complex_i_inner_comp (E := E) x x
   have hKnorm : ‖kx‖ = ‖x‖ := by
     exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp hKnormSq
   have hNormNe : ‖x‖ ≠ 0 := by
@@ -63,15 +63,15 @@ theorem inner_sq_add_modularComplexI_inner_sq_le
       simpa [hKnorm] using hNormNe
     exact norm_ne_zero_iff.mp hKnormNe
   have hOrth : ⟪x, kx⟫_ℝ = 0 := by
-    have hSkew := modularComplexI_inner_skew (E := E) x x
+    have hSkew := complex_i_inner_skew (E := E) x x
     have hEqNegBase :
-        ⟪x, modularComplexI (E := E) x⟫_ℝ
+        ⟪x, complex_i (E := E) x⟫_ℝ
           =
-        -⟪x, modularComplexI (E := E) x⟫_ℝ := by
+        -⟪x, complex_i (E := E) x⟫_ℝ := by
       calc
-        ⟪x, modularComplexI (E := E) x⟫_ℝ
-            = ⟪modularComplexI (E := E) x, x⟫_ℝ := by rw [real_inner_comm]
-        _ = -⟪x, modularComplexI (E := E) x⟫_ℝ := hSkew
+        ⟪x, complex_i (E := E) x⟫_ℝ
+            = ⟪complex_i (E := E) x, x⟫_ℝ := by rw [real_inner_comm]
+        _ = -⟪x, complex_i (E := E) x⟫_ℝ := hSkew
     have hEqNeg : ⟪x, kx⟫_ℝ = -⟪x, kx⟫_ℝ := by
       simpa [kx] using hEqNegBase
     have hZeroSum : ⟪x, kx⟫_ℝ + ⟪x, kx⟫_ℝ = 0 := by
@@ -116,7 +116,8 @@ theorem inner_sq_add_modularComplexI_inner_sq_le
     rw [Real.norm_eq_abs, Real.norm_eq_abs, sq_abs, sq_abs, hKnorm]
     field_simp [pow_two, hNormNe]
   rw [hLhs] at hScaled
-  simpa [kx, mul_assoc, mul_left_comm, mul_comm] using hScaled
+  simpa [kx, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i,
+    mul_assoc, mul_left_comm, mul_comm] using hScaled
 
 @[rep_depth krein]
 theorem inner_sq_add_complex_i_inner_sq_le
@@ -135,7 +136,7 @@ theorem comparisonStateGeneratorMetric_channelPhaseAxis_left_eq_phase
     comparisonStateGeneratorMetric (E := E) comparison (channelPhaseAxis (E := E) X) Y
       =
     comparisonStateGeneratorPhase (E := E) comparison X Y := by
-  simp [comparisonStateGeneratorMetric_apply, comparisonStateGeneratorPhase_apply,
+  simp [comparisonStateGeneratorMetric_apply, comparisonStateGeneratorPhase_apply_eq_comp_complex_i,
     channelPhaseAxis_apply, ContinuousLinearMap.comp_apply]
 
 /--
@@ -386,7 +387,7 @@ theorem toRelationalInformationDatum_comparisonGeneratorPhase_sq_le_of_IsPhaseLi
     comparisonGeneratorMetric
         (toRelationalInformationDatum (E := E) P reference comparison) Y Y := by
   simpa [RelativeModularPotential.toRelationalInformationDatum_comparisonGeneratorMetric_apply,
-    RelativeModularPotential.toRelationalInformationDatum_comparisonGeneratorPhase_apply] using
+    RelativeModularPotential.toRelationalInformationDatum_comparisonGeneratorPhase_apply_eq_comp_complex_i] using
     comparisonStateGeneratorPhase_sq_le_of_IsPhaseLinear
       (E := E) comparison X Y hX
 
@@ -411,7 +412,7 @@ theorem toRelationalInformationDatum_comparisonGeneratorMetric_sq_add_phase_sq_l
     comparisonGeneratorMetric
         (toRelationalInformationDatum (E := E) P reference comparison) Y Y := by
   simpa [RelativeModularPotential.toRelationalInformationDatum_comparisonGeneratorMetric_apply,
-    RelativeModularPotential.toRelationalInformationDatum_comparisonGeneratorPhase_apply] using
+    RelativeModularPotential.toRelationalInformationDatum_comparisonGeneratorPhase_apply_eq_comp_complex_i] using
     comparisonStateGeneratorMetric_sq_add_phase_sq_le_of_IsPhaseLinear
       (E := E) comparison X Y hX
 
@@ -437,7 +438,7 @@ theorem toRelationalInformationDatum_inv_comparisonGeneratorMetric_self_le_of_un
     comparisonGeneratorMetric
         (toRelationalInformationDatum (E := E) P reference comparison) X X := by
   simpa [RelativeModularPotential.toRelationalInformationDatum_comparisonGeneratorMetric_apply,
-    RelativeModularPotential.toRelationalInformationDatum_comparisonGeneratorPhase_apply] using
+    RelativeModularPotential.toRelationalInformationDatum_comparisonGeneratorPhase_apply_eq_comp_complex_i] using
     inv_comparisonStateGeneratorMetric_self_le_of_unit_phase_response_of_IsPhaseLinear
       (E := E) comparison X Y hX hUnit hY
 

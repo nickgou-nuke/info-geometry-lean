@@ -76,6 +76,26 @@ supergraded `⟨1, ε, J, Jε⟩` package before any tensor expansion.
     (InfoGeometry.Canonical.TomitaTakesaki.modularCPT_supergraded_lie_package (E := E))
 
 /--
+Owner-name form of the doubled split `Cl(1,1)` supergraded package on the root
+`(modular_j, spectral_epsilon, complex_i)` packet.
+-/
+@[rep_depth krein] theorem doubledHeadAtom_supergradedLiePackage_root :
+    InfoGeometry.Krein.isEven (E := E)
+        (InfoGeometry.Krein.modular_j (E := E)) ∧
+      InfoGeometry.Krein.isOdd (E := E)
+        (InfoGeometry.Krein.spectral_epsilon (E := E)) ∧
+      InfoGeometry.Krein.isOdd (E := E)
+        (InfoGeometry.Krein.complex_i (E := E)) ∧
+      (InfoGeometry.Krein.modular_j (E := E)).comp
+          (InfoGeometry.Krein.spectral_epsilon (E := E))
+        + (InfoGeometry.Krein.spectral_epsilon (E := E)).comp
+            (InfoGeometry.Krein.modular_j (E := E)) = 0 := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_eq_modular_j,
+    InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon,
+    InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    (doubledHeadAtom_supergradedLiePackage (E := E))
+
+/--
 The canonical doubled-space `J`-generator is exactly the left generator consumed
 by the first Bott step.
 -/

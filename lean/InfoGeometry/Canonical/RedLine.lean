@@ -256,6 +256,7 @@ export InfoGeometry.Krein (
 
 export InfoGeometry.Canonical.BohmMadelungOperatorialBridge (
   polarizedDoubledAmplitude_phaseOrbit_eq_dilationOrbit
+  stateGeneratorField_phaseReadout_eq_metric_comp_complex_i
   stateGeneratorField_phaseReadout_eq_metric_comp_K
   stateGeneratorField_inducedDerivation_eq_gauge_add_source
   constantStateGeneratorField_stateInducedDerivation_eq_phaseLinear_add_phaseAntilinear_transport

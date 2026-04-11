@@ -156,6 +156,12 @@ lemma spectralProj_sum :
   simp only [spectralPlusProj, spectralMinusProj, Pplus, Pminus, ContinuousLinearMap.add_apply] at h ⊢
   exact h
 
+/-- Canonical Krein-facing alias for spectral projector completeness: `P₊ + P₋ = I`. -/
+@[simp] lemma krein_projector_completeness :
+    spectralPlusProj (E := E) + spectralMinusProj (E := E)
+      = ContinuousLinearMap.id ℝ (DoubledSpace E) :=
+  spectralProj_sum (E := E)
+
 /-! ### Clifford Relations -/
 
 lemma spectral_epsilon_isOdd : isOdd (E := E) (spectral_epsilon (E := E)) := by
@@ -176,8 +182,14 @@ lemma creation_annihilation_decomposition (v : DoubledSpace E) :
 
 lemma spectral_decomposition (v : DoubledSpace E) :
     v = spectralPlusProj (E := E) v + spectralMinusProj (E := E) v := by
-  have h := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E => T v) (spectralProj_sum (E := E))
-  simpa [ContinuousLinearMap.add_apply, ContinuousLinearMap.id_apply] using h.symm
+  rw [← ContinuousLinearMap.add_apply]
+  rw [spectralProj_sum (E := E)]
+  rfl
+
+/-- Canonical Krein-facing alias for pointwise spectral decomposition. -/
+lemma krein_projector_decomposition (v : DoubledSpace E) :
+    v = spectralPlusProj (E := E) v + spectralMinusProj (E := E) v :=
+  spectral_decomposition (E := E) v
 
 end KreinClifford
 
@@ -197,7 +209,9 @@ export InfoGeometry.Krein
    gradeProj_sum
    spectralPlusProj_idempotent spectralMinusProj_idempotent
    spectralProj_sum
+   krein_projector_completeness
    creationLike annihilationLike
    creation_annihilation_decomposition
    spectral_decomposition
+   krein_projector_decomposition
    spectral_epsilon_isOdd)

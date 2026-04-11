@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OperatorialCentralCharge
+import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.SuperchargeGapHessianBridge
 import InfoGeometry.Meta.Architecture
 
@@ -27,6 +28,9 @@ open InfoGeometry.Canonical.SuperchargeCARCCRBridge
 open InfoGeometry.Canonical.SuperchargeGapHessianBridge
 open InfoGeometry.Canonical.SuperchargeGapBridge
 open InfoGeometry.Canonical.OperatorialCentralCharge
+open InfoGeometry.Canonical.CentralChargeKKTParityBridge
+open InfoGeometry.Canonical.ChiralDefectIndexBridge
+open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Canonical.SuperchargeTransportBridge
 open InfoGeometry.Canonical.RelationalInformationDynamics
 open InfoGeometry.Canonical.BogoliubovTransport
@@ -171,6 +175,46 @@ theorem cpt_gap_hessian_centralCharge_closure
       (A := A) (B := B) (E := E) V X hX hEven hCentral t
 
 /--
+Parity/KKT extension of the CPT-supercharge closure:
+
+1. keeps the existing transported CPT gap/Hessian closure package,
+2. upgrades nonzero `Z₂` central-charge parity to transported chiral mismatch,
+3. and carries the same Dirac carrier through the KKT odd split with
+   grade-zero odd-odd commutator once `gradeCLM = eps`.
+-/
+@[rep_depth transport]
+theorem cpt_gap_hessian_parity_kkt_closure
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0)
+    (hGrade : KreinGradedModule.gradeCLM (H := H₂) = X.cl11.eps) :
+    cptGapHessianClosure (E := E) V
+      ∧
+    TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E)
+      V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      ∧
+    X.F = gOnePart X.cl11 X.F + gNegOnePart X.cl11 X.F
+      ∧
+    IsGZero X.cl11 (commutator (gOnePart X.cl11 X.F) (gNegOnePart X.cl11 X.F)) := by
+  rcases cpt_gap_hessian_centralCharge_closure
+      (A := A) (B := B) (E := E) V X hX hEven t with ⟨hGap, _, _⟩
+  have hMismatch :
+      TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E)
+        V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) :=
+    transportedChiralKernelDimMismatch_of_operatorialCentralChargeParity_ne_zero
+      (A := A) (B := B) (E := E) V X hX hEven t hParity
+  have hKKT :
+      X.F = gOnePart X.cl11 X.F + gNegOnePart X.cl11 X.F
+        ∧ IsGZero X.cl11 (commutator (gOnePart X.cl11 X.F) (gNegOnePart X.cl11 X.F)) :=
+    dirac_kkt_odd_split_and_commutator_isGZero_of_gradeCLM_eq_eps
+      (A := A) (B := B) (E := E) X hGrade
+  exact ⟨hGap, hMismatch, hKKT.1, hKKT.2⟩
+
+/--
 Extended closure package:
 the concrete oscillator/CAR spine, transported gap/Hessian closure, and
 transported central-charge/index closure are carried on the same lane.
@@ -246,6 +290,33 @@ theorem root_gap_hessian_centralCharge_closure
   rcases cpt_gap_hessian_centralCharge_closure
       (A := A) (B := B) (E := E) V X hX hEven t with ⟨hGap, hIdx, hNz⟩
   refine ⟨?_, hIdx, hNz⟩
+  exact (rootGapHessianClosure_iff_cptGapHessianClosure (E := E) V).2 hGap
+
+/--
+Root-name parity/KKT extension of the transported supercharge closure.
+-/
+@[rep_depth transport]
+theorem root_gap_hessian_parity_kkt_closure
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0)
+    (hGrade : KreinGradedModule.gradeCLM (H := H₂) = X.cl11.eps) :
+    rootGapHessianClosure (E := E) V
+      ∧
+    TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E)
+      V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      ∧
+    X.F = gOnePart X.cl11 X.F + gNegOnePart X.cl11 X.F
+      ∧
+    IsGZero X.cl11 (commutator (gOnePart X.cl11 X.F) (gNegOnePart X.cl11 X.F)) := by
+  rcases cpt_gap_hessian_parity_kkt_closure
+      (A := A) (B := B) (E := E) V X hX hEven t hParity hGrade with
+    ⟨hGap, hMismatch, hSplit, hCommZero⟩
+  refine ⟨?_, hMismatch, hSplit, hCommZero⟩
   exact (rootGapHessianClosure_iff_cptGapHessianClosure (E := E) V).2 hGap
 
 /--

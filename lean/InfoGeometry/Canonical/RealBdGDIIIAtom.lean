@@ -539,7 +539,8 @@ theorem canonicalDIIIProxy_transport_root_parity_boundaryGenerator_kkt_headSuper
       hCAR, hJK⟩
   have hBoundaryGen : S.boundaryGenerator ≠ 0 :=
     (boundaryScale_ne_zero_iff_boundaryGenerator_ne_zero (S := S)).mp hBoundaryScale
-  exact ⟨hProxy, hCARPair, hBoundaryGen, hMismatch, hSplit, hCommZero, hNullMinusSq,
+  exact ⟨hProxy, hCARPair,
+    hBoundaryGen, hMismatch, hSplit, hCommZero, hNullMinusSq,
     hNullPlusSq, hCAR, hJK⟩
 
 end Closure

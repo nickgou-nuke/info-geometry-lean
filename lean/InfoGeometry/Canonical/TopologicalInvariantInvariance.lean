@@ -689,6 +689,106 @@ theorem quasilatticeAnalyticalIndex_ne_zero_sinkBoundaryReadout_package
       hBoundaryOnZeroModes hCentral hSink P reference₀ reference₁ comparison Xch hDeg h₀ h₁
 
 /--
+Source-identified commutator readout:
+if the transported analytical index is nonzero and the boundary generator is
+identified with the source seed, then the grading-axis transport commutator is
+nonzero.
+-/
+@[rep_depth transport]
+theorem quasilatticeAnalyticalIndex_ne_zero_transportCommutator_spectral_epsilon_ne_zero_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hIndexNonzero :
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) ≠ 0)
+    (hSource : S.boundaryGenerator = sourceVortexSeed (E := E) V) :
+    InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+      V.connectionGenerator (spectral_epsilon (E := E)) ≠ 0 := by
+  have hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 := by
+    intro hZero
+    apply hIndexNonzero
+    rw [quasilatticeAnalyticalIndex_eq_operatorialCentralCharge
+      (A := A) (B := B) (E := E) V X hX hEven t]
+    exact hZero
+  rcases
+      exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization
+        (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+        hBoundaryOnZeroModes hCentral hSource with
+    ⟨v, _, hSourcev, _⟩
+  have hSourceSeedNonzero : sourceVortexSeed (E := E) V ≠ 0 := by
+    intro hZero
+    exact hSourcev (by simp [hZero])
+  exact
+    (sourceVortexSeed_ne_zero_iff_transportCommutator_spectral_epsilon_ne_zero V).1
+      hSourceSeedNonzero
+
+/--
+Sink-identified commutator readout:
+if the transported analytical index is nonzero and the boundary generator is
+identified with the sink seed, then the grading-axis transport commutator is
+nonzero.
+-/
+@[rep_depth transport]
+theorem quasilatticeAnalyticalIndex_ne_zero_transportCommutator_spectral_epsilon_ne_zero_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hIndexNonzero :
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) ≠ 0)
+    (hSink : S.boundaryGenerator = sinkVortexSeed (E := E) V) :
+    InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+      V.connectionGenerator (spectral_epsilon (E := E)) ≠ 0 := by
+  have hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 := by
+    intro hZero
+    apply hIndexNonzero
+    rw [quasilatticeAnalyticalIndex_eq_operatorialCentralCharge
+      (A := A) (B := B) (E := E) V X hX hEven t]
+    exact hZero
+  rcases
+      exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization
+        (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+        hBoundaryOnZeroModes hCentral hSink with
+    ⟨v, _, _, hSinkv⟩
+  have hSinkSeedNonzero : sinkVortexSeed (E := E) V ≠ 0 := by
+    intro hZero
+    exact hSinkv (by simp [hZero])
+  exact
+    (sinkVortexSeed_ne_zero_iff_transportCommutator_spectral_epsilon_ne_zero V).1
+      hSinkSeedNonzero
+
+/--
 Kernel-separation source-side variant of the topological-to-boundary package.
 -/
 @[rep_depth transport]

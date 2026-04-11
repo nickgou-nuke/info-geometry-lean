@@ -207,6 +207,84 @@ section BoundaryReadout
 variable [FiniteDimensional ℝ E]
 
 /--
+Topological-to-singular scalar obstruction bridge:
+if the transported analytical index is nonzero, then the singular boundary
+scale is nonzero under identified transported polarization.
+-/
+@[rep_depth transport]
+theorem quasilatticeAnalyticalIndex_ne_zero_boundaryScale_ne_zero_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hIndexNonzero :
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) ≠ 0) :
+    S.boundaryScale ≠ 0 := by
+  have hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 := by
+    intro hZero
+    apply hIndexNonzero
+    rw [quasilatticeAnalyticalIndex_eq_operatorialCentralCharge
+      (A := A) (B := B) (E := E) V X hX hEven t]
+    exact hZero
+  exact
+    boundaryScale_ne_zero_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hBoundaryOnZeroModes hCentral
+
+/--
+Kernel-separation variant of the topological-to-singular scalar obstruction
+bridge.
+-/
+@[rep_depth transport]
+theorem quasilatticeAnalyticalIndex_ne_zero_boundaryScale_ne_zero_of_kernelSeparation_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (quasilatticeDirac V X.F t))
+    (hSep :
+      (S.kernel.A.toLinearMap.ker ⊓ LinearMap.ker S.boundaryGenerator.toLinearMap)
+        = (⊥ : Submodule ℝ H₂))
+    (hIndexNonzero :
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) ≠ 0) :
+    S.boundaryScale ≠ 0 := by
+  have hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 := by
+    intro hZero
+    apply hIndexNonzero
+    rw [quasilatticeAnalyticalIndex_eq_operatorialCentralCharge
+      (A := A) (B := B) (E := E) V X hX hEven t]
+    exact hZero
+  exact
+    boundaryScale_ne_zero_of_operatorialCentralCharge_ne_zero_of_kernelSeparation_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hSep hCentral
+
+/--
 Topological-to-boundary package (source side): if the transported analytical
 index is nonzero, then under source boundary identification we obtain both a
 localized source/sink seed witness and source-seed derivative readout

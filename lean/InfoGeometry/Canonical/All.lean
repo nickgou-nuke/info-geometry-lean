@@ -119,6 +119,7 @@ import InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge
 import InfoGeometry.Canonical.ChiralHodgeIndexBridge
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.BoundaryChiralIndexBridge
+import InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv
 import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.SuperJordanLie
 import InfoGeometry.Canonical.VortexAnomalyLink

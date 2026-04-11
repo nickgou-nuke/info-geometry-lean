@@ -196,6 +196,22 @@ theorem anomaly_as_fluid_state
     (anomalyFluidState (E := E) A B_mp B_dr).u = EinsteinAnomaly A B_mp B_dr := by
   rfl
 
+/--
+State-level momentum closure for the canonical anomaly fluid:
+if the Einstein anomaly lane is skew-adjoint, the induced canonical fluid state
+has zero linearized momentum residual.
+-/
+theorem anomalyFluidState_momentumResidual_eq_zero_of_skew
+    (A B_mp B_dr : VelocityField E)
+    (hSkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr) :
+    momentumResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
+  have hResidual :
+      momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 :=
+    momentumResidual_eq_zero_of_skew (E := E) hSkew
+  simpa [anomaly_as_fluid_state (E := E) A B_mp B_dr] using hResidual
+
 omit [FiniteDimensional ℝ E] in
 /--
 If the anomaly lane is skew-adjoint, its linearized momentum residual vanishes.

@@ -508,20 +508,6 @@ theorem constructiveRelationalDatum_firstVariation_comparison
 
 /-- The comparison-state phase form of the realized datum is the channel metric twisted by `K = Jε`. -/
 @[rep_depth krein, simp]
-theorem constructiveRelationalDatum_comparisonGeneratorPhase_apply
-    (reference comparison : H₂)
-    (M : StateModularDatum E)
-    (ω : EndH →L[ℝ] ℝ)
-    (X Y : PerturbationChannel E) :
-    comparisonGeneratorPhase
-        (constructiveRelationalDatum (E := E) reference comparison M ω) X Y
-      =
-    ⟪(X.comp (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E))) comparison,
-      Y comparison⟫_ℝ := by
-  simp [comparisonGeneratorPhase, comparisonGeneratorMetric,
-    constructiveRelationalDatum, channelMetricAtState, channelPhaseAxis]
-
-@[rep_depth krein, simp]
 theorem constructiveRelationalDatum_comparisonGeneratorPhase_apply_eq_comp_complex_i
     (reference comparison : H₂)
     (M : StateModularDatum E)
@@ -532,9 +518,23 @@ theorem constructiveRelationalDatum_comparisonGeneratorPhase_apply_eq_comp_compl
       =
     ⟪(X.comp (InfoGeometry.Krein.complex_i (E := E))) comparison,
       Y comparison⟫_ℝ := by
-  rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
-  exact constructiveRelationalDatum_comparisonGeneratorPhase_apply
-    (E := E) reference comparison M ω X Y
+  simp [comparisonGeneratorPhase, comparisonGeneratorMetric,
+    constructiveRelationalDatum, channelMetricAtState, channelPhaseAxis]
+
+@[rep_depth krein, simp]
+theorem constructiveRelationalDatum_comparisonGeneratorPhase_apply
+    (reference comparison : H₂)
+    (M : StateModularDatum E)
+    (ω : EndH →L[ℝ] ℝ)
+    (X Y : PerturbationChannel E) :
+    comparisonGeneratorPhase
+        (constructiveRelationalDatum (E := E) reference comparison M ω) X Y
+      =
+    ⟪(X.comp (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E))) comparison,
+      Y comparison⟫_ℝ := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    (constructiveRelationalDatum_comparisonGeneratorPhase_apply_eq_comp_complex_i
+      (E := E) reference comparison M ω X Y)
 
 end Core
 
@@ -558,15 +558,6 @@ theorem operatorInformationMetricPart_swap
 
 /-- The phase readout is the metric readout twisted by the concrete phase axis `K = Jε`. -/
 @[rep_depth transport, simp]
-theorem operatorInformationPhaseReadout_eq_metric_comp_modularComplexI
-    (X A : EndH) :
-    operatorInformationPhaseReadout (E := E) X A
-      =
-    (operatorInformationMetricReadout (E := E) X A).compLeft
-      (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
-  rfl
-
-@[rep_depth transport, simp]
 theorem operatorInformationPhaseReadout_eq_metric_comp_complex_i
     [CompleteSpace E]
     (X A : EndH) :
@@ -574,9 +565,17 @@ theorem operatorInformationPhaseReadout_eq_metric_comp_complex_i
       =
     (operatorInformationMetricReadout (E := E) X A).compLeft
       (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
-  rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
-  exact operatorInformationPhaseReadout_eq_metric_comp_modularComplexI
-    (E := E) X A
+  ext u v
+  simp [operatorInformationPhaseReadout, operatorInformationMetricReadout]
+
+@[rep_depth transport, simp]
+theorem operatorInformationPhaseReadout_eq_metric_comp_modularComplexI
+    (X A : EndH) :
+    operatorInformationPhaseReadout (E := E) X A
+      =
+    (operatorInformationMetricReadout (E := E) X A).compLeft
+      (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
+  rfl
 
 end LightweightTheorems
 

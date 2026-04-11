@@ -114,6 +114,11 @@ import InfoGeometry.Canonical.SuperchargeTransportBridge
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.SuperchargeGapHessianBridge
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
+import InfoGeometry.Canonical.ChiralHodgeDecomposition
+import InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge
+import InfoGeometry.Canonical.ChiralHodgeIndexBridge
+import InfoGeometry.Canonical.ChiralDefectIndexBridge
+import InfoGeometry.Canonical.BoundaryChiralIndexBridge
 import InfoGeometry.Canonical.SuperJordanLie
 import InfoGeometry.Canonical.VortexAnomalyLink
 import InfoGeometry.Canonical.SpinConnection

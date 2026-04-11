@@ -1,4 +1,6 @@
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
+import InfoGeometry.Canonical.OperatorialCentralCharge
+import InfoGeometry.Canonical.ProjectorEquivariance
 import InfoGeometry.Canonical.TopologicalResidue
 import InfoGeometry.Quantum.SuperchargeMultiplet
 import InfoGeometry.KK.QuasilatticeIndexInvariance
@@ -81,11 +83,38 @@ theorem canonical_wittenIndexResidue_eq_zero :
 
 end DoubledCarrier
 
+section FixedVsTransportedConventions
+
+open InfoGeometry.Canonical.ProjectorEquivariance
+
+variable {E : Type 0}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/--
+Fixed-frame convention map:
+the canonical phase flip on the grading involution swaps the two chiral
+projectors.
+-/
+@[rep_depth transport]
+theorem fixedGrading_phaseFlip_projectorSwap :
+    ProjectorEquivariance.plusProjectorAfterPhaseFlip (E := E)
+      =
+    ProjectorEquivariance.minusProjector (E := E)
+      ∧
+    ProjectorEquivariance.minusProjectorAfterPhaseFlip (E := E)
+      =
+    ProjectorEquivariance.plusProjector (E := E) := by
+  simpa using (ProjectorEquivariance.fixedGrading_projectorSwap (E := E))
+
+end FixedVsTransportedConventions
+
 section KK
 
 open InfoGeometry.KK
 open InfoGeometry.KK.RealSplitKreinKasparovCycle
 open InfoGeometry.Canonical.BogoliubovVielbein
+open InfoGeometry.Canonical.OperatorialCentralCharge
+open InfoGeometry.Canonical.ProjectorEquivariance
 open InfoGeometry.Krein
 
 variable {A B E : Type}
@@ -113,6 +142,55 @@ theorem quasilatticeAnalyticalIndex_transport_invariant
     quasilatticeAnalyticalIndex V X t
         (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) := by
   simpa using quasilatticeAnalyticalIndex_eq (E := E) V X hX hEven s t
+
+/--
+Scalar-shadow readout on the root lane:
+the transported quasilattice analytical index is exactly the operatorial
+central charge.
+-/
+@[rep_depth transport]
+theorem quasilatticeAnalyticalIndex_eq_operatorialCentralCharge
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ) :
+    quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      =
+    operatorialCentralCharge (A := A) (B := B) (E := E) X hX := by
+  exact operatorialCentralCharge_eq_transport_slice
+    (A := A) (B := B) (E := E) V X hX hEven t
+
+/--
+Two-frame convention packet at one time slice:
+- transported-frame index equals the operatorial central charge;
+- fixed-frame phase flip swaps `P+` and `P-`.
+-/
+@[rep_depth transport]
+theorem transportedIndex_fixedFrameConvention_map
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ) :
+    quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      =
+    operatorialCentralCharge (A := A) (B := B) (E := E) X hX
+      ∧
+    ProjectorEquivariance.plusProjectorAfterPhaseFlip (E := E)
+      =
+    ProjectorEquivariance.minusProjector (E := E)
+      ∧
+    ProjectorEquivariance.minusProjectorAfterPhaseFlip (E := E)
+      =
+    ProjectorEquivariance.plusProjector (E := E) := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact quasilatticeAnalyticalIndex_eq_operatorialCentralCharge
+      (A := A) (B := B) (E := E) V X hX hEven t
+  · simpa using (ProjectorEquivariance.plusProjectorAfterPhaseFlip_eq_minusProjector (E := E))
+  · simpa using (ProjectorEquivariance.minusProjectorAfterPhaseFlip_eq_plusProjector (E := E))
 
 end KK
 

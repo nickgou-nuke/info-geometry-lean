@@ -621,6 +621,89 @@ theorem canonicalDIIIProxy_transport_root_parity_vorticity_kkt_headSuperBracket_
   exact ⟨hProxy, hCARPair, hVort, hMismatch, hSplit, hCommZero, hNullMinusSq,
     hNullPlusSq, hCAR, hJK⟩
 
+/--
+Root-name parity/vortex-witness/KKT/head-superbracket closure on a transport
+slice.
+
+This strengthens the vorticity-facing closure by exporting a localized boundary
+vortex witness directly:
+`∃ v, IsDanglingZeroMode S v ∧ coriolisVorticity S v ≠ 0`.
+-/
+@[rep_depth transport]
+theorem canonicalDIIIProxy_transport_root_parity_vortexWitness_kkt_headSuperBracket_closure
+    [FiniteDimensional ℝ E]
+    (n : ℕ)
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0)
+    (hGrade : KreinGradedModule.gradeCLM (H := H₂) = X.cl11.eps) :
+    (let P := canonicalDIIIProxy (E := E);
+      P.T = complex_i (E := E)
+        ∧ P.C = modular_j (E := E)
+        ∧ P.S = -(spectral_epsilon (E := E))
+        ∧ P.T.comp P.T = -(ContinuousLinearMap.id ℝ H₂)
+        ∧ P.C.comp P.C = ContinuousLinearMap.id ℝ H₂
+        ∧ P.T.comp P.C = -(spectral_epsilon (E := E))
+        ∧ P.C.comp P.T = spectral_epsilon (E := E))
+      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
+          (concreteCARAnnihilation (E := E))
+          (concreteCARCreation (E := E))
+      ∧ (∃ v : H₂,
+            InfoGeometry.Canonical.SpinorModularBridge.IsDanglingZeroMode S v
+              ∧ InfoGeometry.Canonical.SpinorModularBridge.coriolisVorticity S v ≠ 0)
+      ∧ InfoGeometry.Canonical.ChiralDefectIndexBridge.TransportedChiralKernelDimMismatch
+          (A := A) (B := B) (E := E)
+          V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      ∧ X.F =
+          InfoGeometry.Canonical.KKTCore.gOnePart X.cl11 X.F
+          + InfoGeometry.Canonical.KKTCore.gNegOnePart X.cl11 X.F
+      ∧ InfoGeometry.Canonical.KKTCore.IsGZero X.cl11
+          (InfoGeometry.Canonical.KKTCore.commutator
+            (InfoGeometry.Canonical.KKTCore.gOnePart X.cl11 X.F)
+            (InfoGeometry.Canonical.KKTCore.gNegOnePart X.cl11 X.F))
+      ∧ InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullMinus n
+          * InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullMinus n = 0
+      ∧ InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullPlus n
+          * InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullPlus n = 0
+      ∧ InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headAnticommutator
+          (InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullMinus n)
+          (InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullPlus n) = 1
+      ∧ InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headCommutator
+          (InfoGeometry.Canonical.SplitCliffordHeadLift.headJTensor n)
+          (InfoGeometry.Canonical.SplitCliffordHeadLift.headKTensor n)
+          = (2 : ℝ) • InfoGeometry.Canonical.SplitCliffordHeadLift.headEpsTensor n := by
+  rcases
+      canonicalDIIIProxy_transport_root_parity_vorticity_kkt_headSuperBracket_closure
+        (A := A) (B := B) (E := E) n V X hX hEven t M P0 S hA hplus hminus hodd
+        hBoundaryOnZeroModes hParity hGrade with
+    ⟨hProxy, hCARPair, _, hMismatch, hSplit, hCommZero, hNullMinusSq, hNullPlusSq, hCAR, hJK⟩
+  have hWitness :
+      ∃ v : H₂,
+          InfoGeometry.Canonical.SpinorModularBridge.IsDanglingZeroMode S v
+            ∧ InfoGeometry.Canonical.SpinorModularBridge.coriolisVorticity S v ≠ 0 :=
+    operatorialCentralChargeParity_ne_zero_exists_localizedBoundaryVortex_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hBoundaryOnZeroModes hParity
+  exact ⟨hProxy, hCARPair, hWitness, hMismatch, hSplit, hCommZero, hNullMinusSq,
+    hNullPlusSq, hCAR, hJK⟩
+
 end Closure
 
 end InfoGeometry.Canonical.RealBdGDIIIAtom

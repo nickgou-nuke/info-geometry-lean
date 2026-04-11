@@ -142,6 +142,60 @@ theorem transported_gapSeed_hessian_curvature_cpt_package
   · exact parity_modular_supercharge_ccr_eq_two_cpt (E := E)
 
 /--
+Extended CPT-lane package:
+the concrete oscillator/CAR spine and the transported gap/Hessian/curvature
+closure live on the same doubled-carrier owner surface.
+-/
+@[rep_depth transport]
+theorem transported_gapSeed_hessian_curvature_with_oscillator_spine
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    (CARBracket (E := E)
+        (paritySuperchargeOp (E := E))
+        (modularSuperchargeOp (E := E))
+      = 0
+      ∧ CCRBracket (E := E)
+          (paritySuperchargeOp (E := E))
+          (modularSuperchargeOp (E := E))
+        = (2 : ℝ) • cptSuperchargeOp (E := E)
+      ∧ (cptSuperchargeOp (E := E)).comp (cptSuperchargeOp (E := E))
+          = -(ContinuousLinearMap.id ℝ (DoubledSpace E))
+      ∧ CARBracket (E := E)
+          (concreteCARAnnihilation (E := E))
+          (concreteCARAnnihilation (E := E))
+        = 0
+      ∧ CARBracket (E := E)
+          (concreteCARCreation (E := E))
+          (concreteCARCreation (E := E))
+        = 0
+      ∧ CARBracket (E := E)
+          (concreteCARAnnihilation (E := E))
+          (concreteCARCreation (E := E))
+        = ContinuousLinearMap.id ℝ (DoubledSpace E))
+      ∧
+    ((paritySuperchargeOp (E := E)).comp (modularSuperchargeOp (E := E))
+        - (modularSuperchargeOp (E := E)).comp (paritySuperchargeOp (E := E))
+        = (2 : ℝ) • cptSuperchargeOp (E := E))
+      ∧
+    (transportedParityModularGapSeed (E := E) V
+        =
+      CARBracket (E := E)
+        (transportCommutator (E := E) V.connectionGenerator (paritySuperchargeOp (E := E)))
+        (modularSuperchargeOp (E := E)))
+      ∧
+    (let X := V.connectionGenerator;
+      deriv (fun t => deriv (fun s => transportedParitySupercharge (E := E) V s) t) 0
+        =
+      operatorInformationHessian (E := E) X (paritySuperchargeOp (E := E)))
+      ∧
+    (let X := V.connectionGenerator;
+      deriv (fun t => deriv (fun s => transportedParitySupercharge (E := E) V s) t) 0
+        =
+      operatorInformationMetricPart (E := E) X X (paritySuperchargeOp (E := E))
+        + ((2 : ℝ)⁻¹) • operatorInformationCurvaturePart (E := E) X X (paritySuperchargeOp (E := E))) := by
+  exact ⟨harmonic_oscillator_spine (E := E),
+    transported_gapSeed_hessian_curvature_cpt_package (E := E) V⟩
+
+/--
 Root-name form of the transported gap/Hessian/curvature closure package on the
 same doubled carrier.
 -/
@@ -179,6 +233,23 @@ theorem transported_gapSeed_hessian_curvature_root_package
   · simpa using
       deriv2_transportedParitySupercharge_at_zero_eq_metricPart_add_half_curvaturePart_of_modular_j
         (E := E) V
+
+/--
+Explicit root-name Lichnerowicz statement on the transported parity-supercharge
+lane: the second transport derivative is the repo-native Laplace term
+`operatorInformationMetricPart` plus half the curvature correction.
+-/
+@[rep_depth transport]
+theorem root_supercharge_lichnerowicz_closure
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    let X := V.connectionGenerator;
+      deriv (fun t => deriv (fun s => transportedParitySupercharge (E := E) V s) t) 0
+        =
+      operatorInformationMetricPart (E := E) X X (modular_j (E := E))
+        + ((2 : ℝ)⁻¹) • operatorInformationCurvaturePart (E := E) X X (modular_j (E := E)) := by
+  simpa using
+    deriv2_transportedParitySupercharge_at_zero_eq_metricPart_add_half_curvaturePart_of_modular_j
+      (E := E) V
 
 end Core
 

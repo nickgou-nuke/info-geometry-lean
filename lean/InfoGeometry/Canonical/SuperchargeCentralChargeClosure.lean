@@ -171,6 +171,57 @@ theorem cpt_gap_hessian_centralCharge_closure
       (A := A) (B := B) (E := E) V X hX hEven hCentral t
 
 /--
+Extended closure package:
+the concrete oscillator/CAR spine, transported gap/Hessian closure, and
+transported central-charge/index closure are carried on the same lane.
+-/
+@[rep_depth transport]
+theorem cpt_gap_hessian_centralCharge_with_oscillator_spine
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ) :
+    (CARBracket (E := E)
+        (paritySuperchargeOp (E := E))
+        (modularSuperchargeOp (E := E))
+      = 0
+      ∧ CCRBracket (E := E)
+          (paritySuperchargeOp (E := E))
+          (modularSuperchargeOp (E := E))
+        = (2 : ℝ) • cptSuperchargeOp (E := E)
+      ∧ (cptSuperchargeOp (E := E)).comp (cptSuperchargeOp (E := E))
+          = -(ContinuousLinearMap.id ℝ (DoubledSpace E))
+      ∧ CARBracket (E := E)
+          (concreteCARAnnihilation (E := E))
+          (concreteCARAnnihilation (E := E))
+        = 0
+      ∧ CARBracket (E := E)
+          (concreteCARCreation (E := E))
+          (concreteCARCreation (E := E))
+        = 0
+      ∧ CARBracket (E := E)
+          (concreteCARAnnihilation (E := E))
+          (concreteCARCreation (E := E))
+        = ContinuousLinearMap.id ℝ (DoubledSpace E))
+      ∧
+    cptGapHessianClosure (E := E) V
+      ∧
+    (quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      =
+    operatorialCentralCharge (A := A) (B := B) (E := E) X hX)
+      ∧
+    (operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 →
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+        ≠ 0) := by
+  rcases cpt_gap_hessian_centralCharge_closure
+      (A := A) (B := B) (E := E) V X hX hEven t with
+    ⟨hGap, hIdx, hNz⟩
+  exact ⟨harmonic_oscillator_spine (E := E), hGap, hIdx, hNz⟩
+
+/--
 Root-name form of the full supercharge/gap/Hessian/central-charge closure
 package.
 -/
@@ -196,6 +247,43 @@ theorem root_gap_hessian_centralCharge_closure
       (A := A) (B := B) (E := E) V X hX hEven t with ⟨hGap, hIdx, hNz⟩
   refine ⟨?_, hIdx, hNz⟩
   exact (rootGapHessianClosure_iff_cptGapHessianClosure (E := E) V).2 hGap
+
+/--
+Root-name Lichnerowicz/charge closure on the transported supercharge lane:
+
+1. the second transported parity-supercharge variation is the repo-native
+   Laplace term `operatorInformationMetricPart` plus half the curvature
+   correction,
+2. the transported analytical index equals the operatorial central charge,
+3. nonzero operatorial central charge forces nonvanishing transported index.
+-/
+@[rep_depth transport]
+theorem root_supercharge_lichnerowicz_centralCharge_closure
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ) :
+    (let X := V.connectionGenerator;
+      deriv (fun t => deriv (fun s => transportedParitySupercharge (E := E) V s) t) 0
+        =
+      operatorInformationMetricPart (E := E) X X (modular_j (E := E))
+        + ((2 : ℝ)⁻¹) • operatorInformationCurvaturePart (E := E) X X
+            (modular_j (E := E)))
+      ∧
+    (quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      =
+    operatorialCentralCharge (A := A) (B := B) (E := E) X hX)
+      ∧
+    (operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 →
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+        ≠ 0) := by
+  rcases root_gap_hessian_centralCharge_closure
+      (A := A) (B := B) (E := E) V X hX hEven t with ⟨hRoot, hIdx, hNz⟩
+  rcases hRoot with ⟨_, _, _, hLich⟩
+  exact ⟨hLich, hIdx, hNz⟩
 
 end Core
 

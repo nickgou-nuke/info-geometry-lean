@@ -194,24 +194,25 @@ theorem firstVariation_eq_gauge_add_source
   rw [stateInducedDynamics_eq_gauge_add_source (E := E) P.modularData ψ A]
   simp
 
-@[rep_depth transport, simp] theorem comparisonPhaseReadout_eq_metric_comp_modularComplexI
-    (P : PotentialDatum (E := E)) (comparison : H₂) (A : EndH) :
-    comparisonPhaseReadout (E := E) P comparison A
-      =
-    (comparisonMetricReadout (E := E) P comparison A).compLeft
-      (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
-  exact stateQGTPhaseReadout_eq_metric_comp_modularComplexI
-    (E := E) P.modularData comparison A
-
 @[rep_depth transport, simp] theorem comparisonPhaseReadout_eq_metric_comp_complex_i
     (P : PotentialDatum (E := E)) (comparison : H₂) (A : EndH) :
     comparisonPhaseReadout (E := E) P comparison A
       =
     (comparisonMetricReadout (E := E) P comparison A).compLeft
       (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
-  rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
-  exact comparisonPhaseReadout_eq_metric_comp_modularComplexI
-    (E := E) P comparison A
+  simpa [comparisonPhaseReadout, comparisonMetricReadout] using
+    (stateQGTPhaseReadout_eq_metric_comp_complex_i
+      (E := E) P.modularData comparison A)
+
+@[rep_depth transport, simp] theorem comparisonPhaseReadout_eq_metric_comp_modularComplexI
+    (P : PotentialDatum (E := E)) (comparison : H₂) (A : EndH) :
+    comparisonPhaseReadout (E := E) P comparison A
+      =
+    (comparisonMetricReadout (E := E) P comparison A).compLeft
+      (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
+  simpa [comparisonPhaseReadout, comparisonMetricReadout] using
+    (stateQGTPhaseReadout_eq_metric_comp_modularComplexI
+      (E := E) P.modularData comparison A)
 
 @[rep_depth krein, simp] theorem channelCorrelationAtState_apply
     (ψ : H₂) (X Y : PerturbationChannel E) :
@@ -223,22 +224,24 @@ theorem firstVariation_eq_gauge_add_source
       =
     ⟪X comparison, Y comparison⟫_ℝ := rfl
 
-@[rep_depth krein, simp] theorem comparisonStateGeneratorPhase_apply
-    (comparison : H₂) (X Y : PerturbationChannel E) :
-    comparisonStateGeneratorPhase (E := E) comparison X Y
-      =
-    ⟪(X.comp (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E))) comparison,
-      Y comparison⟫_ℝ := by
-  simp [comparisonStateGeneratorPhase, comparisonStateGeneratorMetric, channelPhaseAxis_apply]
-
 @[rep_depth krein, simp] theorem comparisonStateGeneratorPhase_apply_eq_comp_complex_i
     (comparison : H₂) (X Y : PerturbationChannel E) :
     comparisonStateGeneratorPhase (E := E) comparison X Y
       =
     ⟪(X.comp (InfoGeometry.Krein.complex_i (E := E))) comparison,
       Y comparison⟫_ℝ := by
-  rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
-  exact comparisonStateGeneratorPhase_apply (E := E) comparison X Y
+  simp [comparisonStateGeneratorPhase, comparisonStateGeneratorMetric,
+    channelPhaseAxis]
+
+@[rep_depth krein, simp] theorem comparisonStateGeneratorPhase_apply
+    (comparison : H₂) (X Y : PerturbationChannel E) :
+    comparisonStateGeneratorPhase (E := E) comparison X Y
+      =
+    ⟪(X.comp (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E))) comparison,
+      Y comparison⟫_ℝ := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    (comparisonStateGeneratorPhase_apply_eq_comp_complex_i
+      (E := E) comparison X Y)
 
 @[rep_depth transport, simp] theorem toRelationalInformationDatum_informationFunctional
     (P : PotentialDatum (E := E)) (reference comparison ψ : H₂) :
@@ -289,9 +292,18 @@ theorem firstVariation_eq_gauge_add_source
       =
     ⟪(X.comp (InfoGeometry.Krein.complex_i (E := E))) comparison,
       Y comparison⟫_ℝ := by
-  rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
-  exact toRelationalInformationDatum_comparisonGeneratorPhase_apply
-    (E := E) P reference comparison X Y
+  rw [comparisonGeneratorPhase_apply]
+  rw [toRelationalInformationDatum_comparisonGeneratorMetric_apply
+    (E := E) P reference comparison (channelPhaseAxis (E := E) X) Y]
+  simp [channelPhaseAxis_apply,
+    InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+
+attribute [deprecated comparisonStateGeneratorPhase_apply_eq_comp_complex_i (since := "2026-04-11")]
+  comparisonStateGeneratorPhase_apply
+
+attribute [deprecated toRelationalInformationDatum_comparisonGeneratorPhase_apply_eq_comp_complex_i
+  (since := "2026-04-11")]
+  toRelationalInformationDatum_comparisonGeneratorPhase_apply
 
 end Core
 

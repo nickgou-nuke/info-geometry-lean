@@ -83,8 +83,9 @@ theorem metric_to_phase_readout_bridge
       =
     (comparisonMetricReadout (E := E) P comparison A).compLeft
       (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
-  exact comparisonPhaseReadout_eq_metric_comp_modularComplexI
-    (E := E) P comparison A
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    (RelativeModularPotential.comparisonPhaseReadout_eq_metric_comp_complex_i
+      (E := E) P comparison A)
 
 theorem metric_to_phase_readout_bridge_comp_complex_i
     (P : PotentialDatum (E := E))
@@ -94,8 +95,11 @@ theorem metric_to_phase_readout_bridge_comp_complex_i
       =
     (comparisonMetricReadout (E := E) P comparison A).compLeft
       (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
-  exact comparisonPhaseReadout_eq_metric_comp_complex_i
+  exact RelativeModularPotential.comparisonPhaseReadout_eq_metric_comp_complex_i
     (E := E) P comparison A
+
+attribute [deprecated metric_to_phase_readout_bridge_comp_complex_i (since := "2026-04-11")]
+  metric_to_phase_readout_bridge
 
 /--
 Dynamic rotation is exactly the preservation of the modular Hessian under the

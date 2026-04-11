@@ -169,8 +169,14 @@ private theorem bridge_fluid_helicity
     (A B_mp B_dr : VelocityField E)
     (ω : VelocityField E →L[ℝ] ℝ)
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω) :
-    (∃ state : FluidState E, state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1) ∧
+    (∃ state : FluidState E,
+      state.u = EinsteinAnomaly A B_mp B_dr
+        ∧ state.ρ = 1
+        ∧ momentumResidual (E := E) state.u = 0) ∧
     (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
       helicityInvariant A ω' = twinWaveHelicity A Ω') :=
   by
@@ -178,8 +184,15 @@ private theorem bridge_fluid_helicity
       anomalyFluidStateWithDensity (E := E) A B_mp B_dr 1 (by norm_num)
     have hState :
         state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1 := by
-      constructor <;> rfl
-    exact ⟨⟨state, hState.1, hState.2⟩, ⟨ω, Ω, hHelicity⟩⟩
+      simpa [state] using anomaly_as_fluid_state_with_density
+        (E := E) A B_mp B_dr 1 (by norm_num : (1 : ℝ) > 0)
+    have hResidual :
+        momentumResidual (E := E) state.u = 0 := by
+      have hResidualEin :
+          momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 :=
+        anomalyMomentumResidual_eq_zero_of_skew (E := E) A B_mp B_dr hAnomalySkew
+      simpa [hState.1] using hResidualEin
+    exact ⟨⟨state, hState.1, hState.2, hResidual⟩, ⟨ω, Ω, hHelicity⟩⟩
 
 /--
 Master capstone composition:
@@ -210,6 +223,9 @@ private theorem bits_to_gravity_to_fluid_capstone
     (A B_mp B_dr : VelocityField E)
     (ω : VelocityField E →L[ℝ] ℝ)
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
     (IST : InfoSpectralTriple F)
@@ -224,7 +240,10 @@ private theorem bits_to_gravity_to_fluid_capstone
       ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
           (anomalyStressEnergyAt Kgeo x CI.chiralScale)
     -- 3. The Anomaly induces a Fluid State (Incompressible)
-      ∧ (∃ state : FluidState E, state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
     -- 4. Thermal Time identity holds (Connes-Rovelli)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
     -- 5. Lichnerowicz-balanced split Bott-Dirac square vanishes (Stability)
@@ -246,7 +265,7 @@ private theorem bits_to_gravity_to_fluid_capstone
       ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
           Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
   let hZPE := bridge_zpe_gravity S hRankPos CI c R Kgeo x Λ κ hEin
-  let hFH := bridge_fluid_helicity A B_mp B_dr ω Ω hHelicity
+  let hFH := bridge_fluid_helicity A B_mp B_dr ω Ω hAnomalySkew hHelicity
   refine ⟨hZPE.1, hZPE.2, hFH.1, Mod.connesRovelliThermalTimeIdentity,
           cl11_bottDirac_sq_eq_zero_of_lichnerowiczBalanced (A := E) IST hBal,
       hFH.2, ?_, capstone_logAbsVolume_add_from_zeta,
@@ -300,7 +319,10 @@ private theorem squeezingLogShear_bound_of_capstone_conjunction
       0 < S.variance_limit
         ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
             (anomalyStressEnergyAt Kgeo x CI.chiralScale)
-        ∧ (∃ state : FluidState E, state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1)
+        ∧ (∃ state : FluidState E,
+            state.u = EinsteinAnomaly A B_mp B_dr
+              ∧ state.ρ = 1
+              ∧ momentumResidual (E := E) state.u = 0)
         ∧ Mod.ConnesRovelliThermalTimeIdentity
         ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
             (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -340,6 +362,9 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone
     (A B_mp B_dr : VelocityField E)
     (ω : VelocityField E →L[ℝ] ℝ)
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
     (IST : InfoSpectralTriple F)
@@ -358,6 +383,7 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone
       (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
       (hEin := hEin)
       (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+      (hAnomalySkew := hAnomalySkew)
       (hHelicity := hHelicity)
       (Mod := Mod) (IST := IST) (hBal := hBal)
       (n := n) (Tflow := Tflow) (γ := γ) (N := N)
@@ -388,6 +414,9 @@ private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
     (A B_mp B_dr : VelocityField E)
     (ω : VelocityField E →L[ℝ] ℝ)
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
     (IST : InfoSpectralTriple F)
@@ -408,7 +437,10 @@ private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
     0 < S.variance_limit
       ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
           (anomalyStressEnergyAt Kgeo x CI.chiralScale)
-      ∧ (∃ state : FluidState E, state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
       ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
           (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -426,6 +458,7 @@ private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
       (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
       (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
       (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+      (hAnomalySkew := hAnomalySkew)
       (hHelicity := hHelicity)
       (Mod := Mod) (IST := IST) (hBal := hBal) (n := n) (Tflow := Tflow)
       (γ := γ) (N := N) with
@@ -451,6 +484,9 @@ private theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
     (A B_mp B_dr : VelocityField E)
     (ω : VelocityField E →L[ℝ] ℝ)
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
     (IST : InfoSpectralTriple F)
@@ -475,7 +511,10 @@ private theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
     0 < S.variance_limit
       ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
           (anomalyStressEnergyAt Kgeo x CI.chiralScale)
-      ∧ (∃ state : FluidState E, state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
       ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
           (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -493,6 +532,7 @@ private theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
     (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
     (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
     (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+    (hAnomalySkew := hAnomalySkew)
     (hHelicity := hHelicity)
     (Mod := Mod) (IST := IST) (hBal := hBal) (n := n) (Tflow := Tflow)
     (γ := γ) (N := N)

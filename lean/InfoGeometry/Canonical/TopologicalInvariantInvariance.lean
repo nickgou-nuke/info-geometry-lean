@@ -2,6 +2,7 @@ import InfoGeometry.Clifford.SplitQ11PhaseFlip
 import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.Canonical.ProjectorEquivariance
+import InfoGeometry.Canonical.SplitCliffordHeadSuperBracket
 import InfoGeometry.Canonical.TopologicalResidue
 import InfoGeometry.Canonical.VortexReferenceGaugeBridge
 import InfoGeometry.Quantum.SuperchargeMultiplet
@@ -381,6 +382,74 @@ theorem operatorialCentralChargeParity_ne_zero_boundaryScale_and_kkt_package_of_
       (A := A) (B := B) (E := E) V X hX hEven t hCentral hGrade with
     ⟨hMismatch, hSplit, hCommutatorZero⟩
   exact ⟨hBoundary, hMismatch, hSplit, hCommutatorZero⟩
+
+/--
+Parity/KKT/head-superbracket package under identified transported polarization:
+it extends the parity-to-boundary/KKT packet by adjoining the head split
+`Cl(1,1)` null-mode CAR package and head `J/K` commutator closure.
+-/
+@[rep_depth transport]
+theorem operatorialCentralChargeParity_ne_zero_boundaryScale_kkt_and_headSuperBracket_package_of_identifiedTransportedPolarization
+    (n : ℕ)
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0)
+    (hGrade : KreinGradedModule.gradeCLM (H := H₂) = X.cl11.eps) :
+    S.boundaryScale ≠ 0
+      ∧
+    InfoGeometry.Canonical.ChiralDefectIndexBridge.TransportedChiralKernelDimMismatch
+      (A := A) (B := B) (E := E)
+      V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      ∧
+    X.F =
+      InfoGeometry.Canonical.KKTCore.gOnePart X.cl11 X.F
+      + InfoGeometry.Canonical.KKTCore.gNegOnePart X.cl11 X.F
+      ∧
+    InfoGeometry.Canonical.KKTCore.IsGZero X.cl11
+      (InfoGeometry.Canonical.KKTCore.commutator
+        (InfoGeometry.Canonical.KKTCore.gOnePart X.cl11 X.F)
+        (InfoGeometry.Canonical.KKTCore.gNegOnePart X.cl11 X.F))
+      ∧
+    InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullMinus n
+      * InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullMinus n = 0
+      ∧
+    InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullPlus n
+      * InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullPlus n = 0
+      ∧
+    InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headAnticommutator
+      (InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullMinus n)
+      (InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullPlus n) = 1
+      ∧
+    InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headCommutator
+      (InfoGeometry.Canonical.SplitCliffordHeadLift.headJTensor n)
+      (InfoGeometry.Canonical.SplitCliffordHeadLift.headKTensor n)
+      = (2 : ℝ) • InfoGeometry.Canonical.SplitCliffordHeadLift.headEpsTensor n := by
+  rcases
+      operatorialCentralChargeParity_ne_zero_boundaryScale_and_kkt_package_of_identifiedTransportedPolarization
+        (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+        hBoundaryOnZeroModes hParity hGrade with
+    ⟨hBoundary, hMismatch, hSplit, hCommutatorZero⟩
+  rcases InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.head_null_car_algebra n with
+    ⟨hNullMinusSq, hNullPlusSq, hCAR⟩
+  exact ⟨hBoundary, hMismatch, hSplit, hCommutatorZero, hNullMinusSq, hNullPlusSq,
+    hCAR, InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.head_jk_commutator n⟩
 
 /--
 Kernel-separation parity variant:

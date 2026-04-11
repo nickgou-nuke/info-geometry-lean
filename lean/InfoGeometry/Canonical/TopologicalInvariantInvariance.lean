@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.SplitQ11PhaseFlip
+import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.Canonical.ProjectorEquivariance
 import InfoGeometry.Canonical.TopologicalResidue
@@ -120,6 +121,7 @@ open InfoGeometry.Canonical.RelativeModularPotential
 open InfoGeometry.Canonical.ModularTwoStateCorrelation
 open InfoGeometry.Canonical.VortexAnomalyLink
 open InfoGeometry.Canonical.SpinorModularBridge
+open InfoGeometry.Canonical.CentralChargeKKTParityBridge
 open InfoGeometry.Canonical.OperatorialCentralCharge
 open InfoGeometry.Canonical.ProjectorEquivariance
 open InfoGeometry.Canonical.VortexReferenceGaugeBridge
@@ -279,6 +281,77 @@ theorem quasilatticeAnalyticalIndex_ne_zero_boundaryScale_ne_zero_of_kernelSepar
     rw [quasilatticeAnalyticalIndex_eq_operatorialCentralCharge
       (A := A) (B := B) (E := E) V X hX hEven t]
     exact hZero
+  exact
+    boundaryScale_ne_zero_of_operatorialCentralCharge_ne_zero_of_kernelSeparation_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hSep hCentral
+
+/--
+Parity-to-singular scalar obstruction bridge:
+if the `Z₂` shadow of the operatorial central charge is nonzero, then the
+singular boundary scale is nonzero under identified transported polarization.
+-/
+@[rep_depth transport]
+theorem operatorialCentralChargeParity_ne_zero_boundaryScale_ne_zero_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0) :
+    S.boundaryScale ≠ 0 := by
+  have hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 :=
+    operatorialCentralCharge_ne_zero_of_operatorialCentralChargeParity_ne_zero
+      (A := A) (B := B) (E := E) X hX hParity
+  exact
+    boundaryScale_ne_zero_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
+      hBoundaryOnZeroModes hCentral
+
+/--
+Kernel-separation parity variant:
+nonzero `Z₂` central-charge shadow implies nonzero singular boundary scale under
+identified transported polarization and kernel-separation.
+-/
+@[rep_depth transport]
+theorem operatorialCentralChargeParity_ne_zero_boundaryScale_ne_zero_of_kernelSeparation_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (quasilatticeDirac V X.F t))
+    (hSep :
+      (S.kernel.A.toLinearMap.ker ⊓ LinearMap.ker S.boundaryGenerator.toLinearMap)
+        = (⊥ : Submodule ℝ H₂))
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0) :
+    S.boundaryScale ≠ 0 := by
+  have hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 :=
+    operatorialCentralCharge_ne_zero_of_operatorialCentralChargeParity_ne_zero
+      (A := A) (B := B) (E := E) X hX hParity
   exact
     boundaryScale_ne_zero_of_operatorialCentralCharge_ne_zero_of_kernelSeparation_of_identifiedTransportedPolarization
       (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd

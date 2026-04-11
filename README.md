@@ -170,6 +170,10 @@ The bilingual-owner policy surface lives in
 For the repo's creative-methodological self-understanding of the coding agent as
 architect, creator, and caretaker, see
 [docs/black_books/08_the_agentic_caretaker.md](docs/black_books/08_the_agentic_caretaker.md).
+For the latest condensation sequence on the operatorial DIII lane, see
+[docs/black_books/24_the_operatorial_condensation.md](docs/black_books/24_the_operatorial_condensation.md),
+[docs/black_books/25_the_vindication_of_weyl.md](docs/black_books/25_the_vindication_of_weyl.md), and
+[docs/black_books/26_the_dog_chasing_its_tail.md](docs/black_books/26_the_dog_chasing_its_tail.md).
 
 ## Read First
 

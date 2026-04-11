@@ -116,7 +116,6 @@ Allocation:
 - `lean/InfoGeometry/Canonical/ProjectorEquivariance.lean`
 - `lean/InfoGeometry/Canonical/OperatorialCentralCharge.lean`
 - `lean/InfoGeometry/Canonical/SuperchargeCentralChargeClosure.lean`
-- `lean/InfoGeometry/Canonical/SuperchargeRoleMapAlt.lean`
 
 Allocation:
 
@@ -127,7 +126,6 @@ Allocation:
 - coherence
 - owner
 - closure/coherence
-- alternative, quarantined
 
 ### BdG / DIII lane
 
@@ -140,8 +138,8 @@ Allocation:
 
 - owner
 - translator
-- raw duplicate, quarantined
-- raw duplicate under stabilization, quarantined
+- translator/coherence
+- owner/coherence
 
 ## High-Value Semantic Neighbors
 
@@ -180,15 +178,15 @@ They are searched to prevent omission, not to justify flattening.
 
 The search surfaced these live refactor risks:
 
-1. `RealBdGDIIIAtom.lean` is an unfinished duplicate and must stay out of the
-   authoritative umbrella until it compiles.
-2. `SuperchargeRoleMapAlt.lean` is a lawful alternative and must not be removed
-   before all consumers route through the canonical bridge.
+1. `Physics/DIIISymmetryAtom.lean` must remain a pure translator over
+   `RealBdGDIIIAtom.lean` and must not re-introduce a parallel DIII ontology.
+2. Canonical DIII and supercharge lanes should stay owner-first:
+   downstream modules route through owner or explicit bridge surfaces only.
 3. `ProjectiveSplitQ11Realization.lean` and `ProjectiveSectorDecomposition.lean`
    are real coherence files, not decorative wrappers; they should be stabilized
    before any projective deduplication.
-4. `CentralChargeAnomaly.lean` uses overlapping vocabulary but is not yet the
-   canonical owner of the central-charge lane.
+4. `CentralChargeAnomaly.lean` has been upgraded to an operatorial transport
+   bridge and should stay aligned with `OperatorialCentralCharge` as owner.
 
 ## Refactor Use
 

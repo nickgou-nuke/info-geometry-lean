@@ -168,12 +168,16 @@ import InfoGeometry.Canonical.VariationalLadder
 import InfoGeometry.Canonical.TopologicalResidue
 import InfoGeometry.Canonical.OnsagerReciprocity
 import InfoGeometry.Canonical.OperatorialCentralCharge
+import InfoGeometry.Canonical.CentralChargeAnomaly
 import InfoGeometry.Canonical.OperatorialCramerRao
 import InfoGeometry.Canonical.OperatorialUncertainty
 import InfoGeometry.Canonical.PathIntegral
 import InfoGeometry.Canonical.PhaseSpaceRecompositionExample
 import InfoGeometry.Canonical.Prequantum
 import InfoGeometry.Canonical.Projective
+import InfoGeometry.Canonical.ProjectiveSplitQ11Realization
+import InfoGeometry.Canonical.ProjectiveSectorDecomposition
+import InfoGeometry.Canonical.ProjectiveAlgebraComparison
 import InfoGeometry.Canonical.RelativeModularCore
 import InfoGeometry.Canonical.RelativeModularPotential
 import InfoGeometry.Canonical.QuantumLieAlgebroidRosetta
@@ -201,6 +205,7 @@ import InfoGeometry.Canonical.RestrictedSheetContinuous
 import InfoGeometry.Canonical.RestrictedVolumeCharacter
 import InfoGeometry.Canonical.WeylGaugeOperatorLift
 import InfoGeometry.Canonical.RealBdG
+import InfoGeometry.Canonical.RealBdGDIIIAtom
 import InfoGeometry.Canonical.RealBdGSheetBridge
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.StandardFormCore

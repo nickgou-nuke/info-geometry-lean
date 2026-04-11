@@ -134,12 +134,10 @@ Files:
 - `lean/InfoGeometry/Canonical/ProjectorEquivariance.lean`
 - `lean/InfoGeometry/Canonical/OperatorialCentralCharge.lean`
 - `lean/InfoGeometry/Canonical/SuperchargeCentralChargeClosure.lean`
-- `lean/InfoGeometry/Canonical/SuperchargeRoleMapAlt.lean`
 
 Status:
 
 - canonical owner lane is stable
-- explicit alternative role-map surface remains quarantined by policy
 
 This lane owns:
 
@@ -193,7 +191,6 @@ The same packet should be read with this owner order:
 The public thin renaming surfaces that may remain are:
 
 - `SplitCliffordHeadProjectors`
-- explicit `Alt` files such as `SuperchargeRoleMapAlt`
 
 But those are not owners.
 
@@ -261,9 +258,9 @@ This lane therefore also follows:
 
 ### Stage 0. Preserve the stable umbrella
 
-- Keep `RealBdGDIIIAtom.lean` out of `Canonical/All.lean` until it compiles.
-- Keep `Physics/DIIISymmetryAtom.lean` and `SuperchargeRoleMapAlt.lean` quarantined.
-- Do not widen the authoritative umbrella while the DIII lane is unstable.
+- Keep canonical imports owner-driven and avoid duplicate ontologies.
+- Keep `Physics/DIIISymmetryAtom.lean` as a translator over `RealBdGDIIIAtom`.
+- Do not widen the authoritative umbrella without a successful canonical build.
 
 ### Stage 1. Freeze the Rosetta map
 
@@ -316,6 +313,34 @@ This lane therefore also follows:
 - Demote purely rhetorical or duplicative surfaces to docs or quarantine rather
   than keeping them as competing pseudo-owners.
 - Keep explicit alternative files only when they serve the dual-implementation law.
+
+Current evidence-based frontier:
+
+- `metric_to_phase_readout_bridge` has now been demoted to a deprecated
+  bilingual alias of `metric_to_phase_readout_bridge_comp_complex_i`.
+  Repo search showed no external Lean consumers beyond its defining file.
+- `constructiveRelationalDatum_comparisonGeneratorPhase_apply` is not a
+  demotion candidate yet.
+  It still has blueprint/export significance and a paired root companion.
+- `comparisonPhaseReadout_eq_metric_comp_modularComplexI` should remain a
+  bilingual export for now.
+  The live downstream consumer has been rerouted to the root companion, but the
+  old-name theorem still serves the stable bilingual API.
+- `densityWeightPhaseAxis_eq_modularComplexI` has now been demoted to a
+  deprecated bilingual alias of `densityWeightPhaseAxis_eq_complex_i`.
+  Repo search showed no external Lean consumers beyond its defining file.
+- `comparisonStateGeneratorPhase_apply` has now been demoted to a deprecated
+  bilingual alias of `comparisonStateGeneratorPhase_apply_eq_comp_complex_i`.
+  Exact-name repo search showed no external Lean consumers beyond its defining
+  file.
+- `toRelationalInformationDatum_comparisonGeneratorPhase_apply` has now been
+  demoted to a deprecated bilingual alias of
+  `toRelationalInformationDatum_comparisonGeneratorPhase_apply_eq_comp_complex_i`.
+  Exact-name repo search showed no live consumers outside its defining file.
+- `berryTwoFormJEpsOfOperator_eq_berryOfOperator` is not a wrapper-removal
+  candidate.
+  The transport/operator lane still depends on it as a genuine translator
+  between the split `Jε` presentation and the root Berry seed.
 
 ## Acceptance Gates
 

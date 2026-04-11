@@ -71,6 +71,51 @@ def cptGapHessianClosure
       + ((2 : ℝ)⁻¹) • operatorInformationCurvaturePart (E := E) X X
           (paritySuperchargeOp (E := E)))
 
+/-- Root-name form of the same transported gap/Hessian closure proposition. -/
+@[rep_depth transport]
+def rootGapHessianClosure
+    (V : BogoliubovVielbeinBundle (E := E)) : Prop :=
+  ((modular_j (E := E)).comp (spectral_epsilon (E := E))
+      - (spectral_epsilon (E := E)).comp (modular_j (E := E))
+      = (2 : ℝ) • complex_i (E := E))
+    ∧
+  (transportedParityModularGapSeed (E := E) V
+      =
+    CARBracket (E := E)
+      (transportCommutator (E := E) V.connectionGenerator (modular_j (E := E)))
+      (spectral_epsilon (E := E)))
+    ∧
+  (let X := V.connectionGenerator;
+    deriv (fun t => deriv (fun s => transportedParitySupercharge (E := E) V s) t) 0
+      =
+    operatorInformationHessian (E := E) X (modular_j (E := E)))
+    ∧
+  (let X := V.connectionGenerator;
+    deriv (fun t => deriv (fun s => transportedParitySupercharge (E := E) V s) t) 0
+      =
+    operatorInformationMetricPart (E := E) X X (modular_j (E := E))
+      + ((2 : ℝ)⁻¹) • operatorInformationCurvaturePart (E := E) X X
+          (modular_j (E := E)))
+
+/-- The root-name and bilingual CPT-name closure propositions are equivalent. -/
+@[rep_depth transport]
+theorem rootGapHessianClosure_iff_cptGapHessianClosure
+    (V : BogoliubovVielbeinBundle (E := E)) :
+    rootGapHessianClosure (E := E) V ↔ cptGapHessianClosure (E := E) V := by
+  constructor <;> intro h
+  · rcases h with ⟨hCCR, hGap, hHess, hSplit⟩
+    refine ⟨?_, ?_, ?_, ?_⟩
+    · simpa [cptSuperchargeOp_eq_complex_i] using hCCR
+    · simpa using hGap
+    · simpa using hHess
+    · simpa using hSplit
+  · rcases h with ⟨hCCR, hGap, hHess, hSplit⟩
+    refine ⟨?_, ?_, ?_, ?_⟩
+    · simpa [cptSuperchargeOp_eq_complex_i] using hCCR
+    · simpa using hGap
+    · simpa using hHess
+    · simpa using hSplit
+
 /--
 On every Bogoliubov transport slice, the operatorial KK index is exactly the
 operatorial central charge.
@@ -124,6 +169,33 @@ theorem cpt_gap_hessian_centralCharge_closure
   · intro hCentral
     exact quasilatticeSlice_ne_zero_of_operatorialCentralCharge_ne_zero
       (A := A) (B := B) (E := E) V X hX hEven hCentral t
+
+/--
+Root-name form of the full supercharge/gap/Hessian/central-charge closure
+package.
+-/
+@[rep_depth transport]
+theorem root_gap_hessian_centralCharge_closure
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ) :
+    rootGapHessianClosure (E := E) V
+      ∧
+    (quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      =
+    operatorialCentralCharge (A := A) (B := B) (E := E) X hX)
+      ∧
+    (operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 →
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+        ≠ 0) := by
+  rcases cpt_gap_hessian_centralCharge_closure
+      (A := A) (B := B) (E := E) V X hX hEven t with ⟨hGap, hIdx, hNz⟩
+  refine ⟨?_, hIdx, hNz⟩
+  exact (rootGapHessianClosure_iff_cptGapHessianClosure (E := E) V).2 hGap
 
 end Core
 

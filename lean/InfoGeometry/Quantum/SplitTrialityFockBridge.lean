@@ -57,12 +57,19 @@ theorem triality_anticommutator_eq_cliffordConcrete_anticommutator :
     (fockAnticommutator (E := E)
       (cliffordConcreteAnnihilation (E := E))
       (cliffordConcreteCreation (E := E))).toLinearMap := by
-  rw [InfoGeometry.Quantum.RealMajoranaCategory.anticommutator, fockAnticommutator]
-  unfold InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator
-  rw [superBracket_odd_odd]
+  rw [InfoGeometry.Quantum.RealMajoranaCategory.anticommutator]
+  change
+    (InfoGeometry.Quantum.vectorToLeftSpinor (E := E)).comp
+        (InfoGeometry.Quantum.vectorToRightSpinor (E := E))
+      + (InfoGeometry.Quantum.vectorToRightSpinor (E := E)).comp
+          (InfoGeometry.Quantum.vectorToLeftSpinor (E := E))
+      =
+    ((fockSuperBracket (E := E) SuperParity.odd SuperParity.odd
+        (cliffordConcreteAnnihilation (E := E))
+        (cliffordConcreteCreation (E := E))).toLinearMap)
+  rw [fockSuperBracket, superBracket_odd_odd]
   simp [vectorToLeftSpinor_eq_cliffordConcreteAnnihilation_toLinearMap,
-    vectorToRightSpinor_eq_cliffordConcreteCreation_toLinearMap,
-    Module.End.mul_eq_comp, add_comm]
+    vectorToRightSpinor_eq_cliffordConcreteCreation_toLinearMap, add_comm]
 
 /--
 The canonical triality supercharge square lands on the already-owned concrete

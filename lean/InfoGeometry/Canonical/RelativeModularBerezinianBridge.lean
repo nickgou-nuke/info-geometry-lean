@@ -38,7 +38,7 @@ private theorem relativeModularOperator_det_isUnit
     ne_of_gt (relativeModularVolumeShadow_pos (n := n) q q0)
 
 /-- Finite modular operator realized as a genuine sheet automorphism. -/
-@[rep_depth krein]
+@[rep_depth operator]
 noncomputable def relativeModularSheetEquiv
     (q q0 : PositiveRay (Fin n)) : Efin ≃ₗ[ℝ] Efin :=
   Matrix.toLinearEquiv (Pi.basisFun ℝ (Fin n))
@@ -64,7 +64,7 @@ theorem relativeModularSheetEquiv_det_coe_eq_volumeShadow
   rfl
 
 /-- The doubled-sheet restricted character carried by plus/minus modular operators. -/
-@[rep_depth krein]
+@[rep_depth operator]
 noncomputable def relativeModularRestrictedSheetEquiv
     (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) :
     RestrictedSheetEquiv Efin where

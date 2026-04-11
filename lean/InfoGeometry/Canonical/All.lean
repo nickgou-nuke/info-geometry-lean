@@ -49,6 +49,7 @@ import InfoGeometry.Canonical.DilatedGapEquivariance
 import InfoGeometry.Canonical.SplitCliffordHeadPhaseFlip
 import InfoGeometry.Canonical.SplitCliffordHeadProjectors
 import InfoGeometry.Canonical.SplitCliffordHeadSuperBracket
+import InfoGeometry.Canonical.HyperbolicRotor
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.CliffordBridge
 import InfoGeometry.Canonical.CurvatureRGFlow

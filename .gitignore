@@ -29,6 +29,8 @@ docs/auto/**
 !docs/README.md
 !docs/ModuleMap.md
 !docs/RepositoryMemoryMap.md
+!docs/OperatorQuickstart.md
+!docs/DAGTroubleshooting.md
 !docs/LIBER_NOVUS_MATH.md
 !docs/black_books/
 !docs/black_books/**

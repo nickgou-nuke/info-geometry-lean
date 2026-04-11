@@ -295,7 +295,6 @@ attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphis
 attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.HyperbolicMixingParams.ofAngle
 attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.IsProjectorSuperPair
 attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.SuperParity
-attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator
 attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_creation
 attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_annihilation_self
 attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.anticommutator_bogoliubov_eq_zero_of_coeff_eq_inducedChemicalPotential_of_vacuumTransported
@@ -314,7 +313,6 @@ attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.bogoliubov_proj
 attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteAnnihilation
 attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteCreation
 attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteIsCARPair
-attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.commutator
 attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.commutator_annihilation_creation
 attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.commutator_annihilation_self
 attribute [blueprint] InfoGeometry.Canonical.BogoliubovFockSuper.commutator_bogoliubov_projector_model

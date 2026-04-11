@@ -80,6 +80,16 @@ theorem rapidityMinusCoordinate_eq_exp_neg_mul_lightconeMinus (ψ : H₂) (η : 
       = Real.exp (-η) * lightconeMinusCoordinate (E := E) ψ := by
   simp [rapidityMinusCoordinate, lightconeMinusCoordinate]
 
+/-- Rapidity-evolved time-like channel from boosted light-cone coordinates. -/
+@[rep_depth transport]
+noncomputable def rapidityTimeCoordinate (ψ : H₂) (η : ℝ) : ℝ :=
+  (1 / 2 : ℝ) * (rapidityPlusCoordinate (E := E) ψ η + rapidityMinusCoordinate (E := E) ψ η)
+
+/-- Rapidity-evolved space-like channel from boosted light-cone coordinates. -/
+@[rep_depth transport]
+noncomputable def rapiditySpaceCoordinate (ψ : H₂) (η : ℝ) : ℝ :=
+  (1 / 2 : ℝ) * (rapidityPlusCoordinate (E := E) ψ η - rapidityMinusCoordinate (E := E) ψ η)
+
 /-- Time-like expectation channel from light-cone coordinates: `t = (x⁺ + x⁻)/2`. -/
 @[rep_depth transport]
 noncomputable def timeCoordinate (ψ : H₂) : ℝ :=
@@ -105,6 +115,58 @@ theorem lightconeMinus_eq_time_sub_space (ψ : H₂) :
       = timeCoordinate (E := E) ψ - spaceCoordinate (E := E) ψ := by
   unfold timeCoordinate spaceCoordinate
   ring
+
+private lemma rapidity_time_linearization
+    (η xplus xminus : ℝ) :
+    (1 / 2 : ℝ) * (Real.exp η * xplus + Real.exp (-η) * xminus)
+      =
+    Real.cosh η * ((1 / 2 : ℝ) * (xplus + xminus))
+      + Real.sinh η * ((1 / 2 : ℝ) * (xplus - xminus)) := by
+  rw [← Real.cosh_add_sinh η, ← Real.cosh_sub_sinh η]
+  ring
+
+private lemma rapidity_space_linearization
+    (η xplus xminus : ℝ) :
+    (1 / 2 : ℝ) * (Real.exp η * xplus - Real.exp (-η) * xminus)
+      =
+    Real.sinh η * ((1 / 2 : ℝ) * (xplus + xminus))
+      + Real.cosh η * ((1 / 2 : ℝ) * (xplus - xminus)) := by
+  rw [← Real.cosh_add_sinh η, ← Real.cosh_sub_sinh η]
+  ring
+
+/--
+Rapidity transport of derived expectation coordinates:
+`t(η) = cosh(η) t + sinh(η) x`.
+-/
+@[rep_depth transport]
+theorem rapidityTimeCoordinate_eq_cosh_time_add_sinh_space (ψ : H₂) (η : ℝ) :
+    rapidityTimeCoordinate (E := E) ψ η
+      =
+    Real.cosh η * timeCoordinate (E := E) ψ
+      + Real.sinh η * spaceCoordinate (E := E) ψ := by
+  rw [rapidityTimeCoordinate, timeCoordinate, spaceCoordinate]
+  rw [rapidityPlusCoordinate_eq_exp_mul_lightconePlus (E := E) ψ η]
+  rw [rapidityMinusCoordinate_eq_exp_neg_mul_lightconeMinus (E := E) ψ η]
+  exact rapidity_time_linearization η
+    (lightconePlusCoordinate (E := E) ψ)
+    (lightconeMinusCoordinate (E := E) ψ)
+
+/--
+Rapidity transport of derived expectation coordinates:
+`x(η) = sinh(η) t + cosh(η) x`.
+-/
+@[rep_depth transport]
+theorem rapiditySpaceCoordinate_eq_sinh_time_add_cosh_space (ψ : H₂) (η : ℝ) :
+    rapiditySpaceCoordinate (E := E) ψ η
+      =
+    Real.sinh η * timeCoordinate (E := E) ψ
+      + Real.cosh η * spaceCoordinate (E := E) ψ := by
+  rw [rapiditySpaceCoordinate, timeCoordinate, spaceCoordinate]
+  rw [rapidityPlusCoordinate_eq_exp_mul_lightconePlus (E := E) ψ η]
+  rw [rapidityMinusCoordinate_eq_exp_neg_mul_lightconeMinus (E := E) ψ η]
+  exact rapidity_space_linearization η
+    (lightconePlusCoordinate (E := E) ψ)
+    (lightconeMinusCoordinate (E := E) ψ)
 
 end Core
 

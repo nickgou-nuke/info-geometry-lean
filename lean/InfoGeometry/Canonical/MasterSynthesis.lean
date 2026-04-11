@@ -321,6 +321,70 @@ private theorem bits_to_gravity_to_fluid_capstone
     exact ⟨Kgeo.H, γ, N, InfoGeometry.Canonical.SpectralInference.bayesianAction_nonneg Kgeo.H γ N⟩
 
 /--
+Regularization-sourced capstone wrapper:
+derive the anomaly skewness from Moore-Penrose/Drazin data and reuse the
+primary capstone composition.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_of_regularization
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (k : ℕ)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr : IsDrazinInverse A B_dr k)
+    (h_dr_star : star (A * B_dr) = A * B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (IST : InfoSpectralTriple F)
+    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ) :
+    0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+      ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+  have hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr :=
+    anomalySkew_of_regularization (A := A) (B_mp := B_mp) (B_dr := B_dr)
+      (k := k) h_mp h_dr h_dr_star
+  exact bits_to_gravity_to_fluid_capstone
+    (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
+    (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
+    (hEin := hEin)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+    (hAnomalySkew := hAnomalySkew) (hHelicity := hHelicity)
+    (Mod := Mod) (IST := IST) (hBal := hBal)
+    (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+
+/--
 Capstone-facing squeezing bound:
 if the capstone supplies the Bekenstein barrier clause and `|t|` is budgeted by
 that barrier at step `k`, then logarithmic squeezing shear is bounded by
@@ -424,6 +488,58 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone
       (hEin := hEin)
       (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
       (hAnomalySkew := hAnomalySkew)
+      (hHelicity := hHelicity)
+      (Mod := Mod) (IST := IST) (hBal := hBal)
+      (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+  exact squeezingLogShear_bound_of_capstone_conjunction
+    (S := S) (CI := CI) (c := c)
+    (R := R) (Kgeo := Kgeo) (x := x)
+    (Λ := Λ) (κ := κ)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr)
+    (Mod := Mod) (IST := IST)
+    (n := n) (Tflow := Tflow)
+    hCapstone j t hTime
+
+/--
+Regularization-sourced squeezing corollary:
+derives anomaly skewness from MP/Drazin data before invoking the capstone.
+-/
+private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_regularization
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (k0 : ℕ)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr : IsDrazinInverse A B_dr k0)
+    (h_dr_star : star (A * B_dr) = A * B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (IST : InfoSpectralTriple F)
+    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
+    (j : Nat)
+    (t : ℝ)
+    (hTime : |t| ≤ trajectoryRNBarrier n Tflow j) :
+    |squeezingLogShear t| ≤ 4 * trajectoryRNBarrier n Tflow j := by
+  have hCapstone :=
+    bits_to_gravity_to_fluid_capstone_of_regularization
+      (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
+      (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
+      (hEin := hEin)
+      (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+      (k := k0) (h_mp := h_mp) (h_dr := h_dr) (h_dr_star := h_dr_star)
       (hHelicity := hHelicity)
       (Mod := Mod) (IST := IST) (hBal := hBal)
       (n := n) (Tflow := Tflow) (γ := γ) (N := N)

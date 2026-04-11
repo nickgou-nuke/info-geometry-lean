@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Clifford.Grading
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -17,6 +18,7 @@ open InfoGeometry.Krein
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 local notation "H₂" => DoubledSpace E
+local notation "IdH" => ContinuousLinearMap.id ℝ H₂
 
 /-- The Hestenes split phase axis `I = J ∘ ε`. -/
 noncomputable def HestenesI : H₂ →L[ℝ] H₂ :=
@@ -40,18 +42,82 @@ noncomputable def uPlus : H₂ →L[ℝ] H₂ :=
 noncomputable def uMinus : H₂ →L[ℝ] H₂ :=
   ((2 : ℝ)⁻¹) • (modular_j (E := E) - spectral_epsilon (E := E))
 
+/-- Fixed-grading positive spectral projector `P+ = (Id + ε)/2`. -/
+@[rep_depth krein]
+noncomputable def plusProjector : H₂ →L[ℝ] H₂ :=
+  (⅟ (2 : ℝ)) • (IdH + spectral_epsilon (E := E))
+
+/-- Fixed-grading negative spectral projector `P- = (Id - ε)/2`. -/
+@[rep_depth krein]
+noncomputable def minusProjector : H₂ →L[ℝ] H₂ :=
+  (⅟ (2 : ℝ)) • (IdH - spectral_epsilon (E := E))
+
+/-- Fixed-grading phase-flip action on the grading involution (`ε ↦ -ε`). -/
+@[rep_depth transport]
+noncomputable def fixedGradingPhaseFlipEpsilon : H₂ →L[ℝ] H₂ :=
+  -(spectral_epsilon (E := E))
+
+/-- Positive projector in the fixed frame after the phase-flip action on `ε`. -/
+@[rep_depth transport]
+noncomputable def plusProjectorAfterPhaseFlip : H₂ →L[ℝ] H₂ :=
+  (⅟ (2 : ℝ)) • (IdH + fixedGradingPhaseFlipEpsilon (E := E))
+
+/-- Negative projector in the fixed frame after the phase-flip action on `ε`. -/
+@[rep_depth transport]
+noncomputable def minusProjectorAfterPhaseFlip : H₂ →L[ℝ] H₂ :=
+  (⅟ (2 : ℝ)) • (IdH - fixedGradingPhaseFlipEpsilon (E := E))
+
+@[rep_depth krein, simp] theorem plusProjector_eq_spectralPlusProj :
+    plusProjector (E := E) = spectralPlusProj (E := E) := by
+  rfl
+
+@[rep_depth krein, simp] theorem minusProjector_eq_spectralMinusProj :
+    minusProjector (E := E) = spectralMinusProj (E := E) := by
+  rfl
+
+/-- Fixed-grading phase-flip swaps `P+` with `P-`. -/
+@[rep_depth transport]
+theorem plusProjectorAfterPhaseFlip_eq_minusProjector :
+    plusProjectorAfterPhaseFlip (E := E) = minusProjector (E := E) := by
+  unfold plusProjectorAfterPhaseFlip minusProjector fixedGradingPhaseFlipEpsilon
+  simp [sub_eq_add_neg]
+
+/-- Fixed-grading phase-flip swaps `P-` with `P+`. -/
+@[rep_depth transport]
+theorem minusProjectorAfterPhaseFlip_eq_plusProjector :
+    minusProjectorAfterPhaseFlip (E := E) = plusProjector (E := E) := by
+  unfold minusProjectorAfterPhaseFlip plusProjector fixedGradingPhaseFlipEpsilon
+  simp [sub_eq_add_neg]
+
+/--
+Fixed-grading sector-swap packet for the phase flip:
+`ε ↦ -ε` implies `P+ ↔ P-`.
+-/
+@[rep_depth transport]
+theorem fixedGrading_projectorSwap :
+    plusProjectorAfterPhaseFlip (E := E) = minusProjector (E := E)
+      ∧ minusProjectorAfterPhaseFlip (E := E) = plusProjector (E := E) := by
+  exact ⟨plusProjectorAfterPhaseFlip_eq_minusProjector (E := E),
+    minusProjectorAfterPhaseFlip_eq_plusProjector (E := E)⟩
+
 /-- Tautological equivariance identity on the `u_+` transport shell. -/
 @[rep_depth transport]
 theorem coordinate_equivariance (θ : ℝ) :
     ((chiralBoost (E := E) θ).comp (uPlus (E := E))).comp (chiralBoost (E := E) (-θ))
       =
-    ((chiralBoost (E := E) θ).comp (uPlus (E := E))).comp (chiralBoost (E := E) (-θ)) := by
-  rfl
+    (chiralBoost (E := E) θ).comp ((uPlus (E := E)).comp (chiralBoost (E := E) (-θ))) := by
+  simp [ContinuousLinearMap.comp_assoc]
 
-/-- Placeholder invariant channel currently used as a transport gate. -/
+/--
+Fixed-frame phase-flip keeps the two-projector resolution of the identity:
+`P₊' + P₋' = Id`.
+-/
 @[rep_depth transport]
-theorem witten_index_boost_invariant (_θ : ℝ) : True := by
-  trivial
+theorem phaseFlip_projectorResolution :
+    plusProjectorAfterPhaseFlip (E := E) + minusProjectorAfterPhaseFlip (E := E) = IdH := by
+  rw [plusProjectorAfterPhaseFlip_eq_minusProjector (E := E),
+    minusProjectorAfterPhaseFlip_eq_plusProjector (E := E)]
+  rw [plusProjector_eq_spectralPlusProj (E := E), minusProjector_eq_spectralMinusProj (E := E)]
+  simpa [add_comm] using (spectralProj_sum (E := E))
 
 end InfoGeometry.Canonical.ProjectorEquivariance
-

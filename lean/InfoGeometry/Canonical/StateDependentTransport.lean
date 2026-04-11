@@ -121,6 +121,15 @@ noncomputable def stateQGTPhaseReadout
   InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
     (E := E) (stateInducedDynamics (E := E) M ψ A)
 
+@[simp] theorem stateQGTPhaseReadout_eq_metric_comp_complex_i
+    (M : StateModularDatum E) (ψ : H₂) (A : EndH) :
+    stateQGTPhaseReadout (E := E) M ψ A
+      =
+    (stateQGTMetricReadout (E := E) M ψ A).compLeft
+      (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
+  ext u v
+  simp [stateQGTPhaseReadout, stateQGTMetricReadout]
+
 @[simp] theorem stateQGTPhaseReadout_eq_metric_comp_modularComplexI
     (M : StateModularDatum E) (ψ : H₂) (A : EndH) :
     stateQGTPhaseReadout (E := E) M ψ A
@@ -128,15 +137,6 @@ noncomputable def stateQGTPhaseReadout
     (stateQGTMetricReadout (E := E) M ψ A).compLeft
       (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
   rfl
-
-@[simp] theorem stateQGTPhaseReadout_eq_metric_comp_complex_i
-    (M : StateModularDatum E) (ψ : H₂) (A : EndH) :
-    stateQGTPhaseReadout (E := E) M ψ A
-      =
-    (stateQGTMetricReadout (E := E) M ψ A).compLeft
-      (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
-  rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
-  exact stateQGTPhaseReadout_eq_metric_comp_modularComplexI (E := E) M ψ A
 
 /-- Bundle the metric and `(Jε)`-phase readouts into one owner surface. -/
 noncomputable def stateQGTReadout

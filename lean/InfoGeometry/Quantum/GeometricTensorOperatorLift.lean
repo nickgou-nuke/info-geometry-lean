@@ -105,6 +105,17 @@ omit [CompleteSpace E] in
     metricOfOperator A
       (((modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))) u) v := rfl
 
+/-- Root-name form of the explicit split-`Cl(1,1)` Berry 2-form seed. -/
+@[simp] theorem berryTwoFormJEpsOfOperator_apply_root
+    (A : EndH) (u v : H₂) :
+    berryTwoFormJEpsOfOperator (E := E) A u v
+      =
+    metricOfOperator A
+      (((InfoGeometry.Krein.modular_j (E := E)).comp
+          (InfoGeometry.Krein.spectral_epsilon (E := E))) u) v := by
+  simpa [modularConjugationJ_eq_modular_j, modularSignEpsilon_eq_spectral_epsilon] using
+    (berryTwoFormJEpsOfOperator_apply (E := E) A u v)
+
 omit [CompleteSpace E] in
 @[simp] theorem berryTwoFormJEpsOfOperator_eq_berryOfOperator
     (A : EndH) :
@@ -142,6 +153,15 @@ omit [CompleteSpace E] in
     berryOfOperator (E := E) A u v
       =
     metricOfOperator A (modularComplexI (E := E) u) v := rfl
+
+/-- Root-name form of the operatorial Berry readout. -/
+@[simp] theorem berryOfOperator_apply_complex_i
+    (A : EndH) (u v : H₂) :
+    berryOfOperator (E := E) A u v
+      =
+    metricOfOperator A (InfoGeometry.Krein.complex_i (E := E) u) v := by
+  simpa [modularComplexI_eq_complex_i] using
+    (berryOfOperator_apply (E := E) A u v)
 
 omit [CompleteSpace E] in
 @[simp] theorem berryOfOperator_add
@@ -1621,6 +1641,15 @@ theorem metricOfOperator_modularSignEpsilon_comp_eq_kreinMetricOfOperator
   rw [metricOfOperator_apply, kreinMetricOfOperator_apply, krein_inner_prod_l2]
   simp [modularSignEpsilon, spectral_epsilon, WithLp.prod_inner_apply, sub_eq_add_neg]
 
+/-- Root-name form of the Hilbert/Krein operator metric transport by `spectral_epsilon`. -/
+theorem metricOfOperator_spectral_epsilon_comp_eq_kreinMetricOfOperator
+    (A : EndH) :
+    metricOfOperator ((InfoGeometry.Krein.spectral_epsilon (E := E)).comp A)
+      =
+    kreinMetricOfOperator A := by
+  simpa [modularSignEpsilon_eq_spectral_epsilon] using
+    (metricOfOperator_modularSignEpsilon_comp_eq_kreinMetricOfOperator (E := E) A)
+
 @[simp] theorem inner_modularSignEpsilon_apply_eq_kreinInner
     (u v : H₂) :
     ⟪(modularSignEpsilon (E := E)) u, v⟫_ℝ
@@ -1628,6 +1657,15 @@ theorem metricOfOperator_modularSignEpsilon_comp_eq_kreinMetricOfOperator
     KreinSpace.kreinInner (H := H₂) u v := by
   rw [krein_inner_prod_l2]
   simp [modularSignEpsilon, spectral_epsilon, WithLp.prod_inner_apply, sub_eq_add_neg]
+
+/-- Root-name form of the left `spectral_epsilon` Krein-inner readout. -/
+@[simp] theorem inner_spectral_epsilon_apply_eq_kreinInner
+    (u v : H₂) :
+    ⟪(InfoGeometry.Krein.spectral_epsilon (E := E)) u, v⟫_ℝ
+      =
+    KreinSpace.kreinInner (H := H₂) u v := by
+  simpa [modularSignEpsilon_eq_spectral_epsilon] using
+    (inner_modularSignEpsilon_apply_eq_kreinInner (E := E) u v)
 
 @[simp] theorem inner_apply_modularSignEpsilon_eq_kreinInner
     (u v : H₂) :
@@ -1643,6 +1681,15 @@ theorem metricOfOperator_modularSignEpsilon_comp_eq_kreinMetricOfOperator
     _ = KreinSpace.kreinInner (H := H₂) u v := by
           simpa using inner_modularSignEpsilon_apply_eq_kreinInner (E := E) u v
 
+/-- Root-name form of the right `spectral_epsilon` Krein-inner readout. -/
+@[simp] theorem inner_apply_spectral_epsilon_eq_kreinInner
+    (u v : H₂) :
+    ⟪u, (InfoGeometry.Krein.spectral_epsilon (E := E)) v⟫_ℝ
+      =
+    KreinSpace.kreinInner (H := H₂) u v := by
+  simpa [modularSignEpsilon_eq_spectral_epsilon] using
+    (inner_apply_modularSignEpsilon_eq_kreinInner (E := E) u v)
+
 /--
 Modular-centered operator seed whose diagonal metric readout is the modular
 variance.
@@ -1656,6 +1703,16 @@ noncomputable def modularVarianceSeed
   (modularSignEpsilon (E := E)).comp
     ((centeredModularGenerator (E := E) ψ hMod)
       * (centeredModularGenerator (E := E) ψ hMod))
+
+/-- Root-name form of the modular-variance seed. -/
+theorem modularVarianceSeed_eq_spectral_epsilon_comp
+    (ψ : H₂) (hMod : EndH) :
+    modularVarianceSeed (E := E) ψ hMod
+      =
+    (InfoGeometry.Krein.spectral_epsilon (E := E)).comp
+      ((centeredModularGenerator (E := E) ψ hMod)
+        * (centeredModularGenerator (E := E) ψ hMod)) := by
+  simp [modularVarianceSeed, modularSignEpsilon_eq_spectral_epsilon]
 
 /-- The modular-variance seed has exactly the modular variance on the diagonal metric slice. -/
 theorem metricOfOperator_modularVarianceSeed_diag_eq_modularVariance
@@ -1720,6 +1777,14 @@ theorem isSelfAdjoint_modularSignEpsilon_comp_of_kreinSelfAdjoint
           simpa [ContinuousLinearMap.comp_apply] using
             (inner_apply_modularSignEpsilon_eq_kreinInner (E := E) u (A v)).symm
 
+/-- Root-name form of Hilbert self-adjointness after `spectral_epsilon` transport. -/
+theorem isSelfAdjoint_spectral_epsilon_comp_of_kreinSelfAdjoint
+    (A : EndH)
+    (hA : KreinSpace.IsKreinSelfAdjoint (H := H₂) A) :
+    IsSelfAdjoint ((InfoGeometry.Krein.spectral_epsilon (E := E)).comp A) := by
+  simpa [modularSignEpsilon_eq_spectral_epsilon] using
+    (isSelfAdjoint_modularSignEpsilon_comp_of_kreinSelfAdjoint (E := E) (A := A) hA)
+
 /--
 Transport by the doubled fundamental symmetry `ε` sends the Cartan-odd /
 phase-antilinear branch to the phase-linear branch.
@@ -1756,6 +1821,15 @@ theorem isPhaseLinear_modularSignEpsilon_comp_of_IsPhaseAntilinear
     _ = (modularComplexI (E := E)).comp ((modularSignEpsilon (E := E)).comp A) := by
           simp [ContinuousLinearMap.comp_assoc]
 
+/-- Root-name form of phase-linearity after `spectral_epsilon` transport. -/
+theorem isPhaseLinear_spectral_epsilon_comp_of_IsPhaseAntilinear
+    (A : EndH)
+    (hAnti : IsPhaseAntilinear (E := E) A) :
+    IsPhaseLinear (E := E) ((InfoGeometry.Krein.spectral_epsilon (E := E)).comp A) := by
+  simpa [modularSignEpsilon_eq_spectral_epsilon] using
+    (isPhaseLinear_modularSignEpsilon_comp_of_IsPhaseAntilinear
+      (E := E) (A := A) hAnti)
+
 /--
 Operatorial lift of the doubled real QGT from a Krein-self-adjoint operator in
 the Cartan-odd / phase-antilinear branch of the local `K`-involution.
@@ -1790,6 +1864,24 @@ theorem qgtOfOperator_modularSignEpsilon_comp_metric_eq_kreinQgtOfOperator_metri
     GeometricQuantumTensor.ofMajorana,
     metricOfOperator_modularSignEpsilon_comp_eq_kreinMetricOfOperator]
 
+/-- Root-name form of the Hilbert/Krein QGT metric agreement after `spectral_epsilon` transport. -/
+theorem qgtOfOperator_spectral_epsilon_comp_metric_eq_kreinQgtOfOperator_metric
+    (A : EndH)
+    (hA : KreinSpace.IsKreinSelfAdjoint (H := H₂) A)
+    (hAnti : IsPhaseAntilinear (E := E) A) :
+    (qgtOfOperator
+        (E := E)
+        ((InfoGeometry.Krein.spectral_epsilon (E := E)).comp A)
+        (isSelfAdjoint_spectral_epsilon_comp_of_kreinSelfAdjoint
+          (E := E) (A := A) hA)
+        (isPhaseLinear_spectral_epsilon_comp_of_IsPhaseAntilinear
+          (E := E) (A := A) hAnti)).metric
+      =
+    (kreinQgtOfOperator (E := E) A hA hAnti).metric := by
+  simpa [modularSignEpsilon_eq_spectral_epsilon] using
+    (qgtOfOperator_modularSignEpsilon_comp_metric_eq_kreinQgtOfOperator_metric
+      (E := E) (A := A) hA hAnti)
+
 /--
 The Hilbert-side and Krein-side QGT lifts agree on the Berry form after
 transport by the doubled fundamental symmetry `ε`.
@@ -1810,6 +1902,24 @@ theorem qgtOfOperator_modularSignEpsilon_comp_berry_eq_kreinQgtOfOperator_berry
   simp [qgtOfOperator, kreinQgtOfOperator,
     GeometricQuantumTensor.ofMajorana,
     metricOfOperator_modularSignEpsilon_comp_eq_kreinMetricOfOperator]
+
+/-- Root-name form of the Hilbert/Krein QGT Berry agreement after `spectral_epsilon` transport. -/
+theorem qgtOfOperator_spectral_epsilon_comp_berry_eq_kreinQgtOfOperator_berry
+    (A : EndH)
+    (hA : KreinSpace.IsKreinSelfAdjoint (H := H₂) A)
+    (hAnti : IsPhaseAntilinear (E := E) A) :
+    (qgtOfOperator
+        (E := E)
+        ((InfoGeometry.Krein.spectral_epsilon (E := E)).comp A)
+        (isSelfAdjoint_spectral_epsilon_comp_of_kreinSelfAdjoint
+          (E := E) (A := A) hA)
+        (isPhaseLinear_spectral_epsilon_comp_of_IsPhaseAntilinear
+          (E := E) (A := A) hAnti)).berry
+      =
+    (kreinQgtOfOperator (E := E) A hA hAnti).berry := by
+  simpa [modularSignEpsilon_eq_spectral_epsilon] using
+    (qgtOfOperator_modularSignEpsilon_comp_berry_eq_kreinQgtOfOperator_berry
+      (E := E) (A := A) hA hAnti)
 
 end GeometricQuantumTensor
 

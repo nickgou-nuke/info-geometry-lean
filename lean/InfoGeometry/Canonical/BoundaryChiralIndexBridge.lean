@@ -105,6 +105,62 @@ noncomputable def zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_z
       (S := H₂) (M := M) P0
       (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) hodd hdim
 
+/--
+Under the same identification and oddness hypotheses, nonzero operatorial
+central charge forces a genuine zero mode of the transported Dirac operator.
+-/
+@[rep_depth transport]
+theorem transportedHasZeroMode_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : RealMajoranaDatum (S := H₂))
+    (P0 : KPolarization (S := H₂) M)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      PolarizationOdd (M := M) P0
+        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t))
+    (hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0) :
+    HasZeroMode (S := H₂)
+      (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t) := by
+  let pkg :=
+    zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 hplus hminus hodd hCentral
+  unfold HasZeroMode
+  refine ((InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t).toLinearMap.ker).ne_bot_iff.mpr ?_
+  refine ⟨pkg.v, ?_, pkg.v_ne_zero⟩
+  simpa [LinearMap.mem_ker] using pkg.v_zeroMode
+
+/--
+Witness form of the transported zero-mode consequence.
+-/
+@[rep_depth transport]
+theorem transportedZeroModeWitness_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : RealMajoranaDatum (S := H₂))
+    (P0 : KPolarization (S := H₂) M)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      PolarizationOdd (M := M) P0
+        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t))
+    (hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0) :
+    ∃ v : H₂,
+      v ∈ (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t).toLinearMap.ker
+        ∧ v ≠ 0 := by
+  let pkg :=
+    zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E) V X hX hEven t M P0 hplus hminus hodd hCentral
+  refine ⟨pkg.v, ?_, pkg.v_ne_zero⟩
+  simpa [LinearMap.mem_ker] using pkg.v_zeroMode
+
 end Core
 
 end InfoGeometry.Canonical.BoundaryChiralIndexBridge

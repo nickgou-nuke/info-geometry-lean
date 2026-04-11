@@ -136,6 +136,7 @@ import InfoGeometry.Canonical.BogoliubovTransport
 import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.BogoliubovProjectorTransport
 import InfoGeometry.Canonical.BogoliubovProjectorFlux
+import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.JaynesRNMaxEnt
 import InfoGeometry.Canonical.JaynesRNModularBridge

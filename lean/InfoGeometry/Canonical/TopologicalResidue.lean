@@ -108,6 +108,21 @@ noncomputable def wittenIndexResidue
     (modular_j (E := E)).toLinearMap
 
 /--
+Root analytical-index presentation of the topological residue on the doubled
+carrier.
+-/
+@[rep_depth transport]
+theorem wittenIndexResidue_eq_analyticalIndex_modular_j
+    [FiniteDimensional ℝ E]
+    (M : SuperchargeMultiplet (E := E)) :
+    wittenIndexResidue (E := E) M
+      =
+    analyticalIndex
+      M.modular.Q.toLinearMap
+      (modular_j (E := E)).toLinearMap := by
+  rfl
+
+/--
 The modular supercharge carries zero analytical residue because it is an
 involution.
 -/
@@ -149,6 +164,16 @@ theorem wittenIndexResidue_eq_zero
   unfold wittenIndexResidue analyticalIndex
   rw [hPlus, hMinus]
   simp
+
+/--
+Canonical doubled-carrier specialization of the root residue vanishing law.
+-/
+@[rep_depth transport]
+theorem canonicalSuperchargeMultiplet_wittenIndexResidue_eq_zero
+    [FiniteDimensional ℝ E] :
+    wittenIndexResidue (E := E) (canonicalSuperchargeMultiplet.inst (E := E)) = 0 := by
+  simpa using
+    (wittenIndexResidue_eq_zero (E := E) (canonicalSuperchargeMultiplet.inst (E := E)))
 
 attribute [expository] InformationalZeroMode IsTopologicalMemory
 

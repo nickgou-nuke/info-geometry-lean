@@ -134,8 +134,9 @@ internal phase axis `K = Jε`, not by an external scalar `i`.
     comparisonPhaseReadout R A
       =
     (comparisonMetricReadout R A).compLeft (internalPhaseAxis (E := E)).toLinearMap := by
-  rw [RelationalInformationCore.comparisonPhaseReadout_eq_metric_comp_modularComplexI]
-  rfl
+  simpa [internalPhaseAxis_eq_complex_i] using
+    (RelationalInformationCore.comparisonPhaseReadout_eq_metric_comp_complex_i
+      (E := E) R A)
 
 @[rep_depth transport, simp] theorem paper_phaseReadout_eq_metric_comp_complex_i
     (R : RelationalInformationDatum (E := E))

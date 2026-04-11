@@ -175,20 +175,38 @@ theorem ray_eq_of_smul_representative
       = D.ray := by
   simpa [ray] using projectivize'_smul (E := E) a ha D.representative
 
-/-- The stored Majorana phase axis coincides with the canonical doubled-space `K = Jε`. -/
-theorem K_eq_modularComplexI
-    (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)) :
-    D.K = modularComplexI (E := E) := by
-  unfold ProjectivePolarizedBigradedBogoliubovDatum.K RealMajoranaDatum.K
-  rw [D.J_eq_modularConjugationJ, D.eps_eq_modularSignEpsilon]
-  rfl
-
 /-- The stored Majorana phase axis also coincides with the root owner `complex_i`. -/
 theorem K_eq_complex_i
     (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)) :
     D.K = complex_i (E := E) := by
+  calc
+    D.K = modularComplexI (E := E) := by
+      unfold ProjectivePolarizedBigradedBogoliubovDatum.K RealMajoranaDatum.K
+      rw [D.J_eq_modularConjugationJ, D.eps_eq_modularSignEpsilon]
+      rfl
+    _ = complex_i (E := E) := by
+      simpa using (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E))
+
+/-- The stored Majorana phase axis coincides with the canonical doubled-space `K = Jε`. -/
+theorem K_eq_modularComplexI
+    (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)) :
+    D.K = modularComplexI (E := E) := by
   simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
-    D.K_eq_modularComplexI
+    D.K_eq_complex_i
+
+/-- The stored Majorana mixing axis coincides with the root owner `modular_j`. -/
+theorem J_eq_modular_j
+    (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)) :
+    D.J = modular_j (E := E) := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_eq_modular_j] using
+    D.J_eq_modularConjugationJ
+
+/-- The stored Majorana signature axis coincides with the root owner `spectral_epsilon`. -/
+theorem eps_eq_spectral_epsilon
+    (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)) :
+    D.eps = spectral_epsilon (E := E) := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
+    D.eps_eq_modularSignEpsilon
 
 /-- The QGT carried by the datum is compatible with the stored Hestenes axis. -/
 theorem compat
@@ -196,6 +214,13 @@ theorem compat
     (u v : H₂) :
     D.qgt.berry u v = D.qgt.metric (D.K u) v := by
   simpa [D.K_eq_modularComplexI] using D.qgt.compat u v
+
+/-- Root-owner form of the stored Hestenes/QGT compatibility law. -/
+theorem compat_complex_i
+    (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E))
+    (u v : H₂) :
+    D.qgt.berry u v = D.qgt.metric (complex_i (E := E) u) v := by
+  simpa [D.K_eq_complex_i] using D.compat u v
 
 /-- The phase axis swaps the `+` polarization sector into the `-` sector. -/
 theorem K_maps_plus_to_minus
@@ -375,6 +400,12 @@ lemma comp_modularComplexI_isPhaseAntilinear
     _ = -((modularComplexI (E := E)).comp
             (A.comp (modularComplexI (E := E)))) := by
           simp [ContinuousLinearMap.comp_assoc]
+
+lemma comp_complex_i_isPhaseAntilinear
+    (A : EndH) (hA : IsPhaseAntilinear (E := E) A) :
+    IsPhaseAntilinear (E := E) (A.comp (complex_i (E := E))) := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    comp_modularComplexI_isPhaseAntilinear (E := E) A hA
 
 lemma phaseAxisForce_phase_odd
     (H : EndH) :
@@ -590,18 +621,6 @@ noncomputable def starCertifiedEinsteinAnomalyStateDatum
     InfoGeometry.Canonical.BerryPhase.hestenesBerryTwoForm (E := E)
       CCI.liftedProjectorObstructionOperator A := rfl
 
-@[simp] theorem certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_K
-    (CCI : CertifiedConformalInference E) (ψ : H₂) (A : EndH) :
-    stateQGTPhaseReadout (E := E)
-        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
-      =
-    (stateQGTMetricReadout (E := E)
-        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
-      (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
-  exact
-    stateQGTPhaseReadout_eq_metric_comp_modularComplexI (E := E)
-      (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
-
 @[simp] theorem certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_complex_i
     (CCI : CertifiedConformalInference E) (ψ : H₂) (A : EndH) :
     stateQGTPhaseReadout (E := E)
@@ -611,8 +630,25 @@ noncomputable def starCertifiedEinsteinAnomalyStateDatum
         (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
       (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
   simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
-    certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_K
-      (E := E) CCI ψ A
+    (stateQGTPhaseReadout_eq_metric_comp_modularComplexI (E := E)
+      (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A)
+
+@[simp] theorem certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_K
+    (CCI : CertifiedConformalInference E) (ψ : H₂) (A : EndH) :
+    stateQGTPhaseReadout (E := E)
+        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+      =
+    (stateQGTMetricReadout (E := E)
+        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
+      (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    (certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_complex_i
+      (E := E) CCI ψ A)
+
+attribute
+  [deprecated certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_complex_i
+    (since := "2026-04-11")]
+  certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_K
 
 @[simp] theorem starCertifiedEinsteinAnomalyStateMetricReadout_eq_hestenesMetricTwoForm
     (SCI : StarCertifiedConformalInference E) (ψ : H₂) (A : EndH) :
@@ -630,18 +666,6 @@ noncomputable def starCertifiedEinsteinAnomalyStateDatum
     InfoGeometry.Canonical.BerryPhase.hestenesBerryTwoForm (E := E)
       SCI.liftedEinsteinAnomalyOperator A := rfl
 
-@[simp] theorem starCertifiedEinsteinAnomalyStatePhaseReadout_eq_metric_comp_K
-    (SCI : StarCertifiedConformalInference E) (ψ : H₂) (A : EndH) :
-    stateQGTPhaseReadout (E := E)
-        (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A
-      =
-    (stateQGTMetricReadout (E := E)
-        (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A).compLeft
-      (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
-  exact
-    stateQGTPhaseReadout_eq_metric_comp_modularComplexI (E := E)
-      (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A
-
 @[simp] theorem starCertifiedEinsteinAnomalyStatePhaseReadout_eq_metric_comp_complex_i
     (SCI : StarCertifiedConformalInference E) (ψ : H₂) (A : EndH) :
     stateQGTPhaseReadout (E := E)
@@ -651,8 +675,25 @@ noncomputable def starCertifiedEinsteinAnomalyStateDatum
         (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A).compLeft
       (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
   simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
-    starCertifiedEinsteinAnomalyStatePhaseReadout_eq_metric_comp_K
-      (E := E) SCI ψ A
+    (stateQGTPhaseReadout_eq_metric_comp_modularComplexI (E := E)
+      (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A)
+
+@[simp] theorem starCertifiedEinsteinAnomalyStatePhaseReadout_eq_metric_comp_K
+    (SCI : StarCertifiedConformalInference E) (ψ : H₂) (A : EndH) :
+    stateQGTPhaseReadout (E := E)
+        (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A
+      =
+    (stateQGTMetricReadout (E := E)
+        (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A).compLeft
+      (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
+  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
+    (starCertifiedEinsteinAnomalyStatePhaseReadout_eq_metric_comp_complex_i
+      (E := E) SCI ψ A)
+
+attribute
+  [deprecated starCertifiedEinsteinAnomalyStatePhaseReadout_eq_metric_comp_complex_i
+    (since := "2026-04-11")]
+  starCertifiedEinsteinAnomalyStatePhaseReadout_eq_metric_comp_K
 
 /--
 State-indexed phase readout for the star-certified anomaly QGT.

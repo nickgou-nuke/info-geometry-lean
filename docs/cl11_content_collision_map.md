@@ -350,16 +350,34 @@ Stable owner companions now exist in:
 - `lean/InfoGeometry/Quantum/GeometricTensorTransport.lean`
   - `KRotation_preserves_inner_complex_i`
 - `lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean`
+  - `berryTwoFormJEpsOfOperator_apply_root`
+  - `berryOfOperator_apply_complex_i`
   - `metricOfOperator_complex_i_skew_of_commutesWith_complex_i`
+  - `metricOfOperator_spectral_epsilon_comp_eq_kreinMetricOfOperator`
+  - `inner_spectral_epsilon_apply_eq_kreinInner`
+  - `inner_apply_spectral_epsilon_eq_kreinInner`
+  - `modularVarianceSeed_eq_spectral_epsilon_comp`
+  - `isSelfAdjoint_spectral_epsilon_comp_of_kreinSelfAdjoint`
+  - `isPhaseLinear_spectral_epsilon_comp_of_IsPhaseAntilinear`
+  - `qgtOfOperator_spectral_epsilon_comp_metric_eq_kreinQgtOfOperator_metric`
+  - `qgtOfOperator_spectral_epsilon_comp_berry_eq_kreinQgtOfOperator_berry`
   - `complex_i_star_eq_neg`
+- `lean/InfoGeometry/Canonical/SplitCliffordTensorBridge.lean`
+  - `doubledHeadAtom_supergradedLiePackage_root`
+- `lean/InfoGeometry/Canonical/ConnesArakiTomita.lean`
+  - `topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData_root`
 - `lean/InfoGeometry/Canonical/OnsagerCasimirJ.lean`
   - `complex_i_comp_modularConjugationJ`
 - `lean/InfoGeometry/Canonical/CoordinateFreeSecondVariation.lean`
   - `modularCurvatureOperator_eq_metricPart_complex_i`
 - `lean/InfoGeometry/Canonical/BohmMadelungOperatorialBridge.lean`
   - `stateGeneratorField_phaseReadout_eq_metric_comp_complex_i`
+  - retained bilingual export:
+    `stateGeneratorField_phaseReadout_eq_metric_comp_K`
 - `lean/InfoGeometry/Canonical/FisherVolumeBridge.lean`
   - `metric_to_phase_readout_bridge_comp_complex_i`
+  - deprecated bilingual alias:
+    `metric_to_phase_readout_bridge`
 
 Supporting wrapper reroute now landed in:
 
@@ -367,6 +385,9 @@ Supporting wrapper reroute now landed in:
   - local proof bodies for comparison-generator phase wrappers now route through
     the existing core phase-axis surface instead of re-proving the phase packet
     ad hoc
+  - deprecated bilingual aliases:
+    `comparisonStateGeneratorPhase_apply`
+    `toRelationalInformationDatum_comparisonGeneratorPhase_apply`
 - `lean/InfoGeometry/Canonical/OnsagerReciprocity.lean`
   - the alternating phase-sector proof is being rerouted to the root
     `complex_i` packet through explicit bridge names
@@ -475,14 +496,30 @@ algebra distinctions.**
     and
     `modularTransportFlow_eq_KRotation_of_generator_eq_smul_complex_i`
 - `GeometricTensorOperatorLift`
+  - `berryTwoFormJEpsOfOperator_apply_root`
+  - `berryOfOperator_apply_complex_i`
+  - `metricOfOperator_spectral_epsilon_comp_eq_kreinMetricOfOperator`
+  - `inner_spectral_epsilon_apply_eq_kreinInner`
+  - `inner_apply_spectral_epsilon_eq_kreinInner`
+  - `modularVarianceSeed_eq_spectral_epsilon_comp`
+  - `isSelfAdjoint_spectral_epsilon_comp_of_kreinSelfAdjoint`
+  - `isPhaseLinear_spectral_epsilon_comp_of_IsPhaseAntilinear`
+  - `qgtOfOperator_spectral_epsilon_comp_metric_eq_kreinQgtOfOperator_metric`
+  - `qgtOfOperator_spectral_epsilon_comp_berry_eq_kreinQgtOfOperator_berry`
   - `metricOfOperator_complex_i_skew_of_commutesWith_complex_i`
   - `complex_i_star_eq_neg`
+- `SplitCliffordTensorBridge`
+  - `doubledHeadAtom_supergradedLiePackage_root`
+- `ConnesArakiTomita`
+  - `topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData_root`
 - `OnsagerCasimirJ`
   - `complex_i_comp_modularConjugationJ`
 - `CoordinateFreeSecondVariation`
   - `modularCurvatureOperator_eq_metricPart_complex_i`
 - `BohmMadelungOperatorialBridge`
   - `stateGeneratorField_phaseReadout_eq_metric_comp_complex_i`
+  - retained bilingual export:
+    `stateGeneratorField_phaseReadout_eq_metric_comp_K`
 - `FisherVolumeBridge`
   - `metric_to_phase_readout_bridge_comp_complex_i`
 - `BogoliubovProjectorTransport`
@@ -555,6 +592,9 @@ algebra distinctions.**
     `K_eq_complex_i`,
     `certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_complex_i`,
     `starCertifiedEinsteinAnomalyStatePhaseReadout_eq_metric_comp_complex_i`
+  - deprecated bilingual aliases:
+    `certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_K`,
+    `starCertifiedEinsteinAnomalyStatePhaseReadout_eq_metric_comp_K`
 - `CliffordDictionary`
   - remains the legacy-semantics dictionary surface
   - canonical root-name companions now identify the same local packet via:
@@ -593,14 +633,27 @@ algebra distinctions.**
 - `DensityWeightIntertwinerBridge`
   - root-name companion:
     `densityWeightPhaseAxis_eq_complex_i`
+  - deprecated bilingual alias:
+    `densityWeightPhaseAxis_eq_modularComplexI`
 - `BerryConnection`
   - Hestenes/Kaehler bridge now exposes the root owner packet through:
     `SuperHestenesKaehlerDatum.K_eq_complex_i`,
     `SuperHestenesKaehlerDatum.toQGT_compat_complex_i`,
-    `SuperHestenesKaehlerDatum.ofQGT_K_eq_complex_i`
+    `SuperHestenesKaehlerDatum.ofQGT_J_eq_modular_j`,
+    `SuperHestenesKaehlerDatum.ofQGT_epsilon_eq_spectral_epsilon`,
+    `SuperHestenesKaehlerDatum.ofQGT_K_eq_complex_i`,
+    `hestenesBerryTwoForm_apply_complex_i`,
+    `deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_phaseAxisResponse_complex_i`,
+    `deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_two_smul_comp_complex_i_of_IsPhaseAntilinear`
 - `RealBdG`
   - root-name companion for the real BdG phase packet:
     `modularK_eq_modular_j_comp_spectral_epsilon`
+- `Quantum/HestenesKahler`
+  - projective/Hestenes packet now exposes the same root owner surface through:
+    `J_eq_modular_j`,
+    `eps_eq_spectral_epsilon`,
+    `compat_complex_i`,
+    `comp_complex_i_isPhaseAntilinear`
 - `RealBdGDIIIAtom`
   - canonical DIII proxy now exposes the root owner packet through:
     `cptSuperchargeOp_eq_modularK_root`,
@@ -608,6 +661,14 @@ algebra distinctions.**
     `canonicalDIIIProxy_T_eq_modularK`,
     `canonicalDIIIProxy_T_eq_complex_i`,
     `canonicalDIIIProxy_C_eq_modular_j`
+  - root-name packaged DIII laws and closure:
+    `canonicalDIIIProxy_root_laws`,
+    `canonicalDIIIProxy_transport_root_closure`
+- `Physics/DIIISymmetryAtom`
+  - raw DIII translator now exposes the same root packet through:
+    `cl11DIIIPackage_T_eq_complex_i`,
+    `cl11DIIIPackage_C_eq_modular_j`,
+    `cl11DIIIPackage_root_laws`
 - `OperatorAlgebraModularAtom`
   - root-name split-`Cl(1,1)` witness:
     `modular_atom_is_cl11_root`
@@ -645,11 +706,18 @@ algebra distinctions.**
     `rootGapHessianClosure`,
     `rootGapHessianClosure_iff_cptGapHessianClosure`,
     `root_gap_hessian_centralCharge_closure`
-- `SuperchargeRoleMapAlt`
-  - explicit alternative-to-root comparisons:
-    `primitiveOddSuperchargeJAlt_eq_modular_j`,
-    `primitiveOddSuperchargeEpsilonAlt_eq_spectral_epsilon`,
-    `derivedCouplingSuperchargeKAlt_eq_complex_i`
+- `TopologicalInvariantInvariance`
+  - scalar-shadow readout now exposes the root packet through:
+    `quasilatticeAnalyticalIndex_eq_operatorialCentralCharge`
+- `TopologicalResidue`
+  - root analytical-index presentation of the residue lane:
+    `wittenIndexResidue_eq_analyticalIndex_modular_j`,
+    `canonicalSuperchargeMultiplet_wittenIndexResidue_eq_zero`
+- `CentralChargeAnomaly`
+  - upgraded to operatorial transport bridge over KK/Fredholm owners:
+    `centralCharge_eq_transport_slice`,
+    `isAnomalyFree_iff_transportSlice_eq_wittenIndexResidue`,
+    `transportSlice_ne_zero_of_centralCharge_ne_zero`
 - `Rosetta`, `DeepHorizon`, `RedLine`
   - residual legacy-name mentions are now paired with explicit root-name exports:
     `modular_j`, `spectral_epsilon`, `complex_i`

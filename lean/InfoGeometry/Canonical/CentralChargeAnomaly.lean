@@ -1,63 +1,141 @@
-import InfoGeometry.Canonical.RicciMongeAmpere
-import InfoGeometry.Canonical.InformationalLichnerowicz
+import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.Canonical.TopologicalResidue
-import InfoGeometry.Quantum.SuperchargeMultiplet
+import InfoGeometry.KK.QuasilatticeIndexInvariance
+import InfoGeometry.Meta.Architecture
+
+open scoped InnerProductSpace
+
+/-!
+# InfoGeometry.Canonical.CentralChargeAnomaly
+
+Operatorial anomaly surface for the canonical doubled-carrier lane.
+
+This file is transport/operatorial by construction:
+- the central charge is the KK/Fredholm owner (`operatorialCentralCharge`);
+- anomaly-freeness compares that operatorial central charge with the
+  topological residue (`wittenIndexResidue`);
+- transport slices are related to anomaly-freeness through the existing
+  quasilattice index-invariance lane.
+-/
 
 namespace InfoGeometry.Canonical.CentralChargeAnomaly
 
-open InfoGeometry.Canonical.RicciMongeAmpere
-open InfoGeometry.Canonical.InformationalLichnerowicz
+open InfoGeometry.Canonical.OperatorialCentralCharge
 open InfoGeometry.Canonical.TopologicalResidue
+open InfoGeometry.KK
+open InfoGeometry.KK.RealSplitKreinKasparovCycle
+open InfoGeometry.Canonical.BogoliubovVielbein
 open InfoGeometry.Quantum
+open InfoGeometry.Krein
 
-variable {E : Type 0} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {A B E : Type}
+variable [NormedRing A] [NormedRing B]
+variable [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)]
 
-/-- 
-The Informational Central Charge (c).
-It is the Ricci Scalar of the relational manifold, representing the 
-'Weight of the Logos'.
--/
-@[rep_depth transport]
-noncomputable def centralCharge 
-    {n : Nat} (R : RicciTensor E) (frame : Fin n → E) : ℝ :=
-  scalarCurvatureOnFrame R frame
+local notation "H₂" => DoubledSpace E
 
 /--
-The Anomaly Condition:
-The Spire is 'Balanced' when the Central Charge matches the 
-Topological Residue (Witten Index).
+Operatorial central charge on the real split-Krein Fredholm owner.
+-/
+@[rep_depth krein]
+noncomputable def centralCharge
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) : ℤ :=
+  operatorialCentralCharge (A := A) (B := B) (E := E) X hX
+
+/--
+Transport slice readout equals the operatorial central charge.
+-/
+@[rep_depth transport]
+theorem centralCharge_eq_transport_slice
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ) :
+    quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      =
+    centralCharge (A := A) (B := B) (E := E) X hX := by
+  simpa [centralCharge] using
+    operatorialCentralCharge_eq_transport_slice
+      (A := A) (B := B) (E := E) V X hX hEven t
+
+/--
+Anomaly-freeness on the canonical lane: operatorial central charge matches the
+topological residue readout.
 -/
 @[rep_depth transport]
 def IsAnomalyFree
     [FiniteDimensional ℝ E]
-    {n : Nat} (R : RicciTensor E) (frame : Fin n → E) (M : SuperchargeMultiplet (E := E)) : Prop :=
-  centralCharge R frame = wittenIndexResidue M
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (M : SuperchargeMultiplet (E := E)) : Prop :=
+  centralCharge (A := A) (B := B) (E := E) X hX =
+    wittenIndexResidue (E := E) M
 
 /--
-Theorem: The Stability of the Spire.
-An anomaly-free Spire identifies central charge with Witten residue.
+Transport slice form of anomaly-freeness.
 -/
 @[rep_depth transport]
-theorem stability_of_balanced_spire
+theorem isAnomalyFree_iff_transportSlice_eq_wittenIndexResidue
     [FiniteDimensional ℝ E]
-    {n : Nat} (R : RicciTensor E) (frame : Fin n → E) (M : SuperchargeMultiplet (E := E)) :
-    IsAnomalyFree R frame M →
-    centralCharge (E := E) R frame = wittenIndexResidue (E := E) M := by
-  intro h
-  exact h
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : SuperchargeMultiplet (E := E)) :
+    IsAnomalyFree (A := A) (B := B) (E := E) X hX M
+      ↔
+    quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      =
+    wittenIndexResidue (E := E) M := by
+  constructor
+  · intro h
+    calc
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+        = centralCharge (A := A) (B := B) (E := E) X hX :=
+            centralCharge_eq_transport_slice (A := A) (B := B) (E := E) V X hX hEven t
+      _ = wittenIndexResidue (E := E) M := h
+  · intro h
+    calc
+      centralCharge (A := A) (B := B) (E := E) X hX
+        =
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) := by
+            symm
+            exact centralCharge_eq_transport_slice (A := A) (B := B) (E := E) V X hX hEven t
+      _ = wittenIndexResidue (E := E) M := h
 
 /--
-If the residue lane is known to vanish, anomaly-freeness is exactly the
-statement that the central charge vanishes.
+Canonical doubled-carrier specialization:
+anomaly-freeness is equivalent to vanishing transported quasilattice slice.
 -/
 @[rep_depth transport]
-theorem isAnomalyFree_iff_centralCharge_eq_zero_of_wittenIndexResidue_eq_zero
+theorem isAnomalyFree_iff_transportSlice_eq_zero_of_canonicalMultiplet
     [FiniteDimensional ℝ E]
-    {n : Nat} (R : RicciTensor E) (frame : Fin n → E)
-    (M : SuperchargeMultiplet (E := E))
-    (hResidue : wittenIndexResidue (E := E) M = 0) :
-    IsAnomalyFree (E := E) R frame M ↔ centralCharge (E := E) R frame = 0 := by
-  unfold IsAnomalyFree
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ) :
+    IsAnomalyFree (A := A) (B := B) (E := E) X hX
+        (canonicalSuperchargeMultiplet.inst (E := E))
+      ↔
+    quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      = 0 := by
+  rw [isAnomalyFree_iff_transportSlice_eq_wittenIndexResidue
+        (A := A) (B := B) (E := E) V X hX hEven t
+        (canonicalSuperchargeMultiplet.inst (E := E))]
+  have hResidue :
+      wittenIndexResidue (E := E) (canonicalSuperchargeMultiplet.inst (E := E)) = 0 := by
+    simpa using canonicalSuperchargeMultiplet_wittenIndexResidue_eq_zero (E := E)
   constructor
   · intro h
     simpa [hResidue] using h
@@ -65,19 +143,45 @@ theorem isAnomalyFree_iff_centralCharge_eq_zero_of_wittenIndexResidue_eq_zero
     simpa [hResidue] using h
 
 /--
-Canonical doubled-carrier specialization: for the canonical supercharge
-multiplet (finite-dimensional case), anomaly-freeness is equivalent to
-`centralCharge = 0`.
+Canonical doubled-carrier specialization:
+anomaly-freeness is equivalent to vanishing operatorial central charge.
 -/
 @[rep_depth transport]
 theorem isAnomalyFree_iff_centralCharge_eq_zero_of_canonicalMultiplet
     [FiniteDimensional ℝ E]
-    {n : Nat} (R : RicciTensor E) (frame : Fin n → E) :
-    IsAnomalyFree (E := E) R frame (canonicalSuperchargeMultiplet.inst (E := E))
-      ↔ centralCharge (E := E) R frame = 0 := by
-  refine isAnomalyFree_iff_centralCharge_eq_zero_of_wittenIndexResidue_eq_zero
-    (E := E) R frame (canonicalSuperchargeMultiplet.inst (E := E)) ?_
-  simpa using
-    (wittenIndexResidue_eq_zero (E := E) (canonicalSuperchargeMultiplet.inst (E := E)))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) :
+    IsAnomalyFree (A := A) (B := B) (E := E) X hX
+        (canonicalSuperchargeMultiplet.inst (E := E))
+      ↔
+    centralCharge (A := A) (B := B) (E := E) X hX = 0 := by
+  unfold IsAnomalyFree
+  have hResidue :
+      wittenIndexResidue (E := E) (canonicalSuperchargeMultiplet.inst (E := E)) = 0 := by
+    simpa using canonicalSuperchargeMultiplet_wittenIndexResidue_eq_zero (E := E)
+  constructor
+  · intro h
+    simpa [hResidue] using h
+  · intro h
+    simpa [hResidue] using h
+
+/--
+Nonzero operatorial central charge forces nonzero transported index on every
+quasilattice slice.
+-/
+@[rep_depth transport]
+theorem transportSlice_ne_zero_of_centralCharge_ne_zero
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (hCentral : centralCharge (A := A) (B := B) (E := E) X hX ≠ 0)
+    (t : ℝ) :
+    quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      ≠ 0 := by
+  simpa [centralCharge] using
+    quasilatticeSlice_ne_zero_of_operatorialCentralCharge_ne_zero
+      (A := A) (B := B) (E := E) V X hX hEven hCentral t
 
 end InfoGeometry.Canonical.CentralChargeAnomaly

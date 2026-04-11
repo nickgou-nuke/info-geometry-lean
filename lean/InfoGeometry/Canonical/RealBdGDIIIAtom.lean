@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.RealBdG
 import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
+import InfoGeometry.Canonical.TopologicalInvariantInvariance
 import InfoGeometry.Canonical.AnalyticalIndexCore
 import InfoGeometry.Meta.Architecture
 
@@ -36,6 +37,7 @@ open InfoGeometry.Canonical.RealBdG
 open InfoGeometry.Canonical.CentralChargeKKTParityBridge
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
 open InfoGeometry.Canonical.SuperchargeCentralChargeClosure
+open InfoGeometry.Canonical.TopologicalInvariantInvariance
 open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.KK
 open InfoGeometry.KK.RealSplitKreinKasparovCycle
@@ -387,6 +389,78 @@ theorem canonicalDIIIProxy_transport_root_parity_kkt_closure
     ⟨_, hMismatch, hSplit, hCommZero⟩
   exact ⟨canonicalDIIIProxy_root_laws (E := E), canonicalDIIIProxy_concreteCARPair,
     hMismatch, hSplit, hCommZero⟩
+
+/--
+Root-name parity/boundary/KKT/head-superbracket closure on a transport slice.
+
+This is the single DIII-facing entry point that reuses the topological package
+layer instead of duplicating parity-to-boundary and KKT/head algebra arguments.
+-/
+@[rep_depth transport]
+theorem canonicalDIIIProxy_transport_root_parity_boundary_kkt_headSuperBracket_closure
+    [FiniteDimensional ℝ E]
+    (n : ℕ)
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0)
+    (hGrade : KreinGradedModule.gradeCLM (H := H₂) = X.cl11.eps) :
+    (let P := canonicalDIIIProxy (E := E);
+      P.T = complex_i (E := E)
+        ∧ P.C = modular_j (E := E)
+        ∧ P.S = -(spectral_epsilon (E := E))
+        ∧ P.T.comp P.T = -(ContinuousLinearMap.id ℝ H₂)
+        ∧ P.C.comp P.C = ContinuousLinearMap.id ℝ H₂
+        ∧ P.T.comp P.C = -(spectral_epsilon (E := E))
+        ∧ P.C.comp P.T = spectral_epsilon (E := E))
+      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
+          (concreteCARAnnihilation (E := E))
+          (concreteCARCreation (E := E))
+      ∧ S.boundaryScale ≠ 0
+      ∧ InfoGeometry.Canonical.ChiralDefectIndexBridge.TransportedChiralKernelDimMismatch
+          (A := A) (B := B) (E := E)
+          V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      ∧ X.F =
+          InfoGeometry.Canonical.KKTCore.gOnePart X.cl11 X.F
+          + InfoGeometry.Canonical.KKTCore.gNegOnePart X.cl11 X.F
+      ∧ InfoGeometry.Canonical.KKTCore.IsGZero X.cl11
+          (InfoGeometry.Canonical.KKTCore.commutator
+            (InfoGeometry.Canonical.KKTCore.gOnePart X.cl11 X.F)
+            (InfoGeometry.Canonical.KKTCore.gNegOnePart X.cl11 X.F))
+      ∧ InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullMinus n
+          * InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullMinus n = 0
+      ∧ InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullPlus n
+          * InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullPlus n = 0
+      ∧ InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headAnticommutator
+          (InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullMinus n)
+          (InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headNullPlus n) = 1
+      ∧ InfoGeometry.Canonical.SplitCliffordHeadSuperBracket.headCommutator
+          (InfoGeometry.Canonical.SplitCliffordHeadLift.headJTensor n)
+          (InfoGeometry.Canonical.SplitCliffordHeadLift.headKTensor n)
+          = (2 : ℝ) • InfoGeometry.Canonical.SplitCliffordHeadLift.headEpsTensor n := by
+  rcases
+      operatorialCentralChargeParity_ne_zero_boundaryScale_kkt_and_headSuperBracket_package_of_identifiedTransportedPolarization
+        (A := A) (B := B) (E := E) n V X hX hEven t M P0 S hA hplus hminus hodd
+        hBoundaryOnZeroModes hParity hGrade with
+    ⟨hBoundary, hMismatch, hSplit, hCommZero, hNullMinusSq, hNullPlusSq, hCAR, hJK⟩
+  exact ⟨canonicalDIIIProxy_root_laws (E := E), canonicalDIIIProxy_concreteCARPair,
+    hBoundary, hMismatch, hSplit, hCommZero, hNullMinusSq, hNullPlusSq, hCAR, hJK⟩
 
 end Closure
 

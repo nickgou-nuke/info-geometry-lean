@@ -13,6 +13,18 @@ It is an operator runbook, not a conceptual note.
 - do not trust `reports/dag/*` as current until the managed refresh and report sequence has finished
 - do not hand-edit `artifacts/dag/*` or generated `reports/dag/*`
 
+## Fast Entry Surface
+
+Use the compressed wrappers first:
+
+```bash
+lake script run changedVerify
+lake script run dagAll
+lake script run dagDoctor
+```
+
+Use the longer managed or raw sequences only when the compressed lane is not enough.
+
 ## Choose The Lane
 
 Use the tooling by question:
@@ -57,6 +69,14 @@ python3 tools/infra/run_locked_lake_build.py InfoGeometry.Audit
 ## Method 2: Managed DAG Refresh
 
 Use this for the normal maintained whole-repo structural lane.
+
+Shortest path:
+
+```bash
+lake script run dagAll
+```
+
+Expanded path:
 
 1. Inspect current state.
 
@@ -238,10 +258,13 @@ Summary: ok=17 warn=0 fail=0
 For most tool work, do not improvise. Use exactly this:
 
 ```bash
-lake script run dagStatus
-lake script run dagRefresh
-lake script run dagReports
-lake script run dagDoctor
+lake script run dagAll
+```
+
+For most changed Lean work, use exactly this:
+
+```bash
+lake script run changedVerify
 ```
 
 For proof-state work on one file, do not improvise. Use exactly this:

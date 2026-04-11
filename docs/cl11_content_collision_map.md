@@ -621,6 +621,35 @@ algebra distinctions.**
     `latticeAvatar_modular_j`,
     `latticeAvatar_sigmaMap_modular_j`,
     `latticeAvatar_exp_modular_j`
+- `SuperchargeCARCCRBridge`
+  - root-name companions now expose the same supercharge carrier packet through:
+    `cptSuperchargeOp_eq_modular_j_comp_spectral_epsilon`,
+    `modular_j_spectral_epsilon_car_zero`,
+    `modular_j_spectral_epsilon_ccr_eq_two_complex_i`,
+    `complex_i_sq`,
+    `complex_i_maps_plus_to_minus`,
+    `complex_i_maps_minus_to_plus`
+- `SuperchargeRoleBridge`
+  - root-name transport companions now expose the same role packet through:
+    `transportedParitySupercharge_zero_eq_modular_j`,
+    `transportedModularSupercharge_zero_eq_spectral_epsilon`,
+    `transportedParityModularGapSeed_eq_car_root`,
+    `transportedParityModularGapSeed_eq_phaseAntilinearCAR_root_of_commute_phaseLinearPart`,
+    `deriv2_transportedParitySupercharge_at_zero_eq_operatorInformationHessian_of_modular_j`,
+    `deriv2_transportedParitySupercharge_at_zero_eq_metricPart_add_half_curvaturePart_of_modular_j`
+- `SuperchargeGapHessianBridge`
+  - root-name closure package:
+    `transported_gapSeed_hessian_curvature_root_package`
+- `SuperchargeCentralChargeClosure`
+  - root-name transport/central-charge closure surface:
+    `rootGapHessianClosure`,
+    `rootGapHessianClosure_iff_cptGapHessianClosure`,
+    `root_gap_hessian_centralCharge_closure`
+- `SuperchargeRoleMapAlt`
+  - explicit alternative-to-root comparisons:
+    `primitiveOddSuperchargeJAlt_eq_modular_j`,
+    `primitiveOddSuperchargeEpsilonAlt_eq_spectral_epsilon`,
+    `derivedCouplingSuperchargeKAlt_eq_complex_i`
 - `Rosetta`, `DeepHorizon`, `RedLine`
   - residual legacy-name mentions are now paired with explicit root-name exports:
     `modular_j`, `spectral_epsilon`, `complex_i`

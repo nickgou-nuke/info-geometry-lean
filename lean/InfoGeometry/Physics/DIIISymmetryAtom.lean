@@ -1,5 +1,6 @@
 import InfoGeometry.Quantum.RealSplitClifford
 import InfoGeometry.Krein.Superphysics
+import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
 
@@ -48,7 +49,7 @@ In the informational Spire, these are derived from the spectral involutions.
 noncomputable def cl11DIIIPackage : ClassDIIISymmetry H₂ where
   T := complex_i (E := E) -- T acting as the phase-volume axis K
   C := modular_j (E := E)  -- C acting as the modular mirror J
-  T_sq := modularComplexI_sq (E := E)
+  T_sq := complex_i_sq (E := E)
   C_sq := modular_j_involution (E := E)
   TC_anticommute := by
     -- K and J anti-commute in the Cl(1,1) algebra

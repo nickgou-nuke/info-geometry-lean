@@ -57,6 +57,14 @@ noncomputable abbrev cptSuperchargeOp : FockEndomorphism E :=
       simpa [cptSuperchargeOp] using modularCPTSupercharge_Q_eq_dilationOperator (E := E)
     _ = complex_i (E := E) := dilationOperator_eq_complex_i (E := E)
 
+/-- The derived CPT supercharge is exactly the root split axis `J ∘ ε`. -/
+@[rep_depth krein, simp] theorem cptSuperchargeOp_eq_modular_j_comp_spectral_epsilon :
+    cptSuperchargeOp (E := E) = (modular_j (E := E)).comp (spectral_epsilon (E := E)) := by
+  calc
+    cptSuperchargeOp (E := E) = complex_i (E := E) := cptSuperchargeOp_eq_complex_i (E := E)
+    _ = (modular_j (E := E)).comp (spectral_epsilon (E := E)) := by
+      rfl
+
 /-- The odd-odd (CAR) channel on the supergraded Fock lane. -/
 @[rep_depth krein]
 noncomputable abbrev CARBracket
@@ -80,6 +88,12 @@ theorem parity_modular_supercharge_car_zero :
     (InfoGeometry.Canonical.SuperchargeTransportBridge.parity_modular_anticommutator_eq_zero
       (E := E))
 
+/-- Root-name form of the primitive odd-odd vanishing CAR channel. -/
+@[rep_depth krein]
+theorem modular_j_spectral_epsilon_car_zero :
+    CARBracket (E := E) (modular_j (E := E)) (spectral_epsilon (E := E)) = 0 := by
+  simpa using parity_modular_supercharge_car_zero (E := E)
+
 /--
 The primitive `J/ε` commutator is exactly `2Q`, where `Q` is the canonical
 Tomita CPT supercharge.
@@ -98,6 +112,14 @@ theorem parity_modular_supercharge_ccr_eq_two_cpt :
     _ = (2 : ℝ) • cptSuperchargeOp (E := E) := by
           rw [cptSuperchargeOp_eq_complex_i]
 
+/-- Root-name form of the primitive even-even commutator closure. -/
+@[rep_depth krein]
+theorem modular_j_spectral_epsilon_ccr_eq_two_complex_i :
+    (modular_j (E := E)).comp (spectral_epsilon (E := E))
+        - (spectral_epsilon (E := E)).comp (modular_j (E := E))
+      = (2 : ℝ) • complex_i (E := E) := by
+  simpa [cptSuperchargeOp_eq_complex_i] using parity_modular_supercharge_ccr_eq_two_cpt (E := E)
+
 /-- The derived CPT supercharge agrees with the canonical dilation generator. -/
 @[rep_depth krein, simp] theorem cptSuperchargeOp_eq_dilationOperator :
     cptSuperchargeOp (E := E) = dilationOperator (E := E) := by
@@ -111,6 +133,13 @@ theorem parity_modular_supercharge_ccr_eq_two_cpt :
       = -(ContinuousLinearMap.id ℝ (DoubledSpace E))
   exact modularCPTSupercharge_hamiltonian (E := E)
 
+/-- Root-name square law for the split phase axis. -/
+@[rep_depth krein, simp] theorem complex_i_sq :
+    (complex_i (E := E)).comp (complex_i (E := E))
+      = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+  rw [← cptSuperchargeOp_eq_complex_i]
+  exact cptSuperchargeOp_sq (E := E)
+
 /-- The CPT supercharge sends the positive chiral sector to the negative one. -/
 @[rep_depth krein]
 theorem cptSuperchargeOp_maps_plus_to_minus
@@ -119,6 +148,13 @@ theorem cptSuperchargeOp_maps_plus_to_minus
   change inGradeMinus (E := E) (((modularCPTSupercharge (E := E)).Q) v)
   exact modularCPTSupercharge_maps_plus_to_minus (E := E) hv
 
+/-- Root-name sector flip for the split phase axis. -/
+@[rep_depth krein]
+theorem complex_i_maps_plus_to_minus
+    {v : DoubledSpace E} (hv : inGradePlus (E := E) v) :
+    inGradeMinus (E := E) (complex_i (E := E) v) := by
+  simpa [cptSuperchargeOp_eq_complex_i] using cptSuperchargeOp_maps_plus_to_minus (E := E) hv
+
 /-- The CPT supercharge sends the negative chiral sector to the positive one. -/
 @[rep_depth krein]
 theorem cptSuperchargeOp_maps_minus_to_plus
@@ -126,6 +162,13 @@ theorem cptSuperchargeOp_maps_minus_to_plus
     inGradePlus (E := E) (cptSuperchargeOp (E := E) v) := by
   change inGradePlus (E := E) (((modularCPTSupercharge (E := E)).Q) v)
   exact modularCPTSupercharge_maps_minus_to_plus (E := E) hv
+
+/-- Root-name sector flip for the split phase axis. -/
+@[rep_depth krein]
+theorem complex_i_maps_minus_to_plus
+    {v : DoubledSpace E} (hv : inGradeMinus (E := E) v) :
+    inGradePlus (E := E) (complex_i (E := E) v) := by
+  simpa [cptSuperchargeOp_eq_complex_i] using cptSuperchargeOp_maps_minus_to_plus (E := E) hv
 
 /-- CAR channel is symmetric. -/
 @[rep_depth krein, simp] theorem carBracket_swap

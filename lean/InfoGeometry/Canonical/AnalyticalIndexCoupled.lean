@@ -32,7 +32,7 @@ Coupled invariant package:
 thermodynamic Sinkhorn control, scalar-Ricci fixed-point collapse, and
 analytical index invariance along a Dirac/grading family.
 -/
-@[rep_depth thermo]
+@[rep_depth operator]
 def SinkhornRicciIndexInvariant
     (T : DoublyStochasticSinkhornTrajectory n)
     (flow : ScalarRicciFlow X)

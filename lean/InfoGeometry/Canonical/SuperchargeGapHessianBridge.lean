@@ -141,6 +141,45 @@ theorem transported_gapSeed_hessian_curvature_cpt_package
   refine ⟨?_, hGap, hHess, hSplit⟩
   · exact parity_modular_supercharge_ccr_eq_two_cpt (E := E)
 
+/--
+Root-name form of the transported gap/Hessian/curvature closure package on the
+same doubled carrier.
+-/
+@[rep_depth transport]
+theorem transported_gapSeed_hessian_curvature_root_package
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)) :
+    ((modular_j (E := E)).comp (spectral_epsilon (E := E))
+        - (spectral_epsilon (E := E)).comp (modular_j (E := E))
+        = (2 : ℝ) • complex_i (E := E))
+      ∧
+    (transportedParityModularGapSeed (E := E) V
+        =
+      CARBracket (E := E)
+        (transportCommutator (E := E) V.connectionGenerator (modular_j (E := E)))
+        (spectral_epsilon (E := E)))
+      ∧
+    (let X := V.connectionGenerator;
+      deriv (fun t => deriv (fun s => transportedParitySupercharge (E := E) V s) t) 0
+        =
+      operatorInformationHessian (E := E) X (modular_j (E := E)))
+      ∧
+    (let X := V.connectionGenerator;
+      deriv (fun t => deriv (fun s => transportedParitySupercharge (E := E) V s) t) 0
+        =
+      operatorInformationMetricPart (E := E) X X (modular_j (E := E))
+        + ((2 : ℝ)⁻¹) • operatorInformationCurvaturePart (E := E) X X (modular_j (E := E))) := by
+  rcases transported_gapSeed_hessian_curvature_cpt_package (E := E) V with
+    ⟨hCCR, hGap, hHess, hSplit⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simpa [cptSuperchargeOp_eq_complex_i] using hCCR
+  · simpa using transportedParityModularGapSeed_eq_car_root (E := E) V
+  · simpa using
+      deriv2_transportedParitySupercharge_at_zero_eq_operatorInformationHessian_of_modular_j
+        (E := E) V
+  · simpa using
+      deriv2_transportedParitySupercharge_at_zero_eq_metricPart_add_half_curvaturePart_of_modular_j
+        (E := E) V
+
 end Core
 
 end InfoGeometry.Canonical.SuperchargeGapHessianBridge

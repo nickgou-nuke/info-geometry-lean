@@ -139,6 +139,10 @@ The DAG and Python tooling exist to preserve this intention when local context i
 - they do not legislate mathematical truth or replace code reading
 
 The short operational summary lives in [docs/OperationalIntent.md](docs/OperationalIntent.md).
+The compressed operator runbook lives in
+[docs/OperatorQuickstart.md](docs/OperatorQuickstart.md).
+The short DAG repair surface lives in
+[docs/DAGTroubleshooting.md](docs/DAGTroubleshooting.md).
 The exact tool operator runbook lives in
 [docs/ToolingMethodology.md](docs/ToolingMethodology.md).
 The bilingual-owner policy surface lives in
@@ -155,17 +159,19 @@ architect, creator, and caretaker, see
 4. [docs/RepositoryMemoryMap.md](docs/RepositoryMemoryMap.md)
 5. [docs/ModuleMap.md](docs/ModuleMap.md)
 6. [docs/OperationalIntent.md](docs/OperationalIntent.md)
-7. [docs/ToolingMethodology.md](docs/ToolingMethodology.md)
-8. [docs/BILINGUAL_SPINE_POLICY.md](docs/BILINGUAL_SPINE_POLICY.md)
-9. [docs/cl11_rosetta_refactor_plan.md](docs/cl11_rosetta_refactor_plan.md)
-10. [docs/cl11_content_collision_map.md](docs/cl11_content_collision_map.md)
-11. [docs/Theory.md](docs/Theory.md)
-12. [lean/InfoGeometry/Audit.lean](lean/InfoGeometry/Audit.lean)
-13. [lean/DAG/README.md](lean/DAG/README.md)
-14. [tools/README.md](tools/README.md)
-15. [tools/infra/README.md](tools/infra/README.md)
-16. [tools/frontier/README.md](tools/frontier/README.md)
-17. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
+7. [docs/OperatorQuickstart.md](docs/OperatorQuickstart.md)
+8. [docs/DAGTroubleshooting.md](docs/DAGTroubleshooting.md)
+9. [docs/ToolingMethodology.md](docs/ToolingMethodology.md)
+10. [docs/BILINGUAL_SPINE_POLICY.md](docs/BILINGUAL_SPINE_POLICY.md)
+11. [docs/cl11_rosetta_refactor_plan.md](docs/cl11_rosetta_refactor_plan.md)
+12. [docs/cl11_content_collision_map.md](docs/cl11_content_collision_map.md)
+13. [docs/Theory.md](docs/Theory.md)
+14. [lean/InfoGeometry/Audit.lean](lean/InfoGeometry/Audit.lean)
+15. [lean/DAG/README.md](lean/DAG/README.md)
+16. [tools/README.md](tools/README.md)
+17. [tools/infra/README.md](tools/infra/README.md)
+18. [tools/frontier/README.md](tools/frontier/README.md)
+19. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
 
 If you are operating as an agent inside this repo, also use:
 - [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)
@@ -201,6 +207,8 @@ For the normal repo check surface:
 
 ```bash
 lake script run strictCheck
+lake script run dagAll
+lake script run changedVerify
 ```
 
 ## Maintained DAG Pipeline

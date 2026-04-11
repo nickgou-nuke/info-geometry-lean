@@ -145,24 +145,14 @@ projector-obstruction stationarity on the same observable.
 theorem starCertifiedEinsteinAnomalyStationary_iff_projectorObstructionStationary_of_projectorAgreement
     (SCI : StarCertifiedConformalInference E)
     (ω : EndH →L[ℝ] ℝ) (A : EndH)
-    (hProj :
-      InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector SCI.A SCI.A_MP =
-        InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.leftProjector SCI.A SCI.A_MP) :
+    (hEq :
+      SCI.liftedEinsteinAnomalyOperator
+        =
+      -SCI.toCertifiedConformalInference.liftedProjectorObstructionOperator) :
     IsStationaryAlong (E := E) ω SCI.liftedEinsteinAnomalyOperator A
       ↔
     IsStationaryAlong (E := E) ω
       SCI.toCertifiedConformalInference.liftedProjectorObstructionOperator A := by
-  have hEq :
-      SCI.liftedEinsteinAnomalyOperator
-        =
-      -SCI.toCertifiedConformalInference.liftedProjectorObstructionOperator := by
-    let CCI : CertifiedConformalInference E := SCI.toCertifiedConformalInference
-    have hBase :
-        CCI.liftedEinsteinAnomalyOperator = -CCI.liftedProjectorObstructionOperator := by
-      simpa using
-        CCI.liftedEinsteinAnomalyOperator_eq_neg_liftedProjectorObstructionOperator_of_projectorAgreement
-          hProj
-    simpa [CCI, StarCertifiedConformalInference.liftedEinsteinAnomalyOperator] using hBase
   constructor
   · intro hStat
     unfold IsStationaryAlong at hStat ⊢

@@ -27,6 +27,21 @@ to maintained subdirectory entrypoints, and some remain standalone report or
 workflow drivers used by higher-level refresh scripts. The current status map lives in
 [docs/RepositoryMemoryMap.md](../docs/RepositoryMemoryMap.md).
 
+## Compressed Operator Surface
+
+For normal operator use, start with:
+
+```bash
+lake script run changedVerify
+lake script run dagAll
+lake script run dagDoctor
+```
+
+Short procedural docs:
+
+- [docs/OperatorQuickstart.md](../docs/OperatorQuickstart.md)
+- [docs/DAGTroubleshooting.md](../docs/DAGTroubleshooting.md)
+
 ### Top-level Support And Compatibility Modules
 
 | File | Purpose |

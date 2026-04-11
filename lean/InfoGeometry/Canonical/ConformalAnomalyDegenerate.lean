@@ -16,7 +16,7 @@ Normal-phase (degenerate) package:
 projector commutation collapses the operator source to zero and therefore all
 readout scalars to zero.
 -/
-@[rep_depth thermo] structure NormalPhaseDegeneratePackage : Prop where
+@[rep_depth operator] structure NormalPhaseDegeneratePackage : Prop where
   projectors_commute :
     Commute CI.spectralChiralProjector CI.metricChiralProjector
   projectorObstruction_eq_zero :
@@ -27,7 +27,7 @@ readout scalars to zero.
     CI.IsNormalInference
 
 /-- Degenerate package from explicit projector commutation. -/
-@[rep_depth thermo] theorem normalPhaseDegeneratePackage_of_projectors_commute
+@[rep_depth operator] theorem normalPhaseDegeneratePackage_of_projectors_commute
     (hComm : Commute CI.spectralChiralProjector CI.metricChiralProjector) :
     NormalPhaseDegeneratePackage (CI := CI) := by
   have hObsZero : CI.projectorObstruction = 0 :=
@@ -40,7 +40,7 @@ readout scalars to zero.
 /--
 Degenerate package from the RN/Kähler/log-det unit-relative-volume assumptions.
 -/
-@[rep_depth thermo] theorem normalPhaseDegeneratePackage_of_kahlerLogDet_unitRelativeVolume
+@[rep_depth operator] theorem normalPhaseDegeneratePackage_of_kahlerLogDet_unitRelativeVolume
     {n : Nat}
     (M : SinkhornMatrix n)
     (hScaleFromKahler : CI.chiralScale = kahlerPotentialRN n M)

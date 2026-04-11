@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.ProjectorEquivariance
 import InfoGeometry.Canonical.RealBdG
+import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
 import InfoGeometry.Canonical.AnalyticalIndexCore
@@ -28,8 +29,11 @@ owner-respecting canonical closure surface.
 namespace InfoGeometry.Canonical.RealBdGDIIIAtom
 
 open InfoGeometry.Canonical.AnalyticalIndex
+open InfoGeometry.Canonical.ChiralDefectIndexBridge
+open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Canonical.ProjectorEquivariance
 open InfoGeometry.Canonical.RealBdG
+open InfoGeometry.Canonical.CentralChargeKKTParityBridge
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
 open InfoGeometry.Canonical.SuperchargeCentralChargeClosure
 open InfoGeometry.Canonical.TomitaTakesaki
@@ -306,6 +310,50 @@ theorem canonicalDIIIProxy_transport_root_closure
   refine ⟨canonicalDIIIProxy_root_laws (E := E), canonicalDIIIProxy_concreteCARPair, ?_⟩
   exact root_gap_hessian_centralCharge_closure
     (A := A) (B := B) (E := E) V X hX hEven t
+
+/--
+Parity-lifted DIII/KKT closure on a transport slice:
+
+1. canonical DIII proxy symmetry laws,
+2. concrete split-`Cl(1,1)` CAR pair,
+3. nonzero `Z₂` central-charge parity forces transported chiral mismatch,
+4. and the same Dirac carrier admits the KKT odd split with grade-zero
+   odd-odd commutator once `gradeCLM = eps`.
+-/
+@[rep_depth transport]
+theorem canonicalDIIIProxy_transport_parity_kkt_closure
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0)
+    (hGrade : KreinGradedModule.gradeCLM (H := H₂) = X.cl11.eps) :
+    (let P := canonicalDIIIProxy (E := E);
+      P.T.comp P.T = -(ContinuousLinearMap.id ℝ H₂)
+        ∧ P.C.comp P.C = ContinuousLinearMap.id ℝ H₂
+        ∧ P.T.comp P.C = P.S
+        ∧ P.C.comp P.T = -P.S)
+      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
+          (concreteCARAnnihilation (E := E))
+          (concreteCARCreation (E := E))
+      ∧
+      TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E)
+        V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      ∧
+      X.F = gOnePart X.cl11 X.F + gNegOnePart X.cl11 X.F
+      ∧
+      IsGZero X.cl11 (commutator (gOnePart X.cl11 X.F) (gNegOnePart X.cl11 X.F)) := by
+  refine ⟨canonicalDIIIProxy_laws (E := E), canonicalDIIIProxy_concreteCARPair, ?_, ?_, ?_⟩
+  · exact transportedChiralKernelDimMismatch_of_operatorialCentralChargeParity_ne_zero
+      (A := A) (B := B) (E := E) V X hX hEven t hParity
+  · exact
+      (dirac_kkt_odd_split_and_commutator_isGZero_of_gradeCLM_eq_eps
+        (A := A) (B := B) (E := E) X hGrade).1
+  · exact
+      (dirac_kkt_odd_split_and_commutator_isGZero_of_gradeCLM_eq_eps
+        (A := A) (B := B) (E := E) X hGrade).2
 
 end Closure
 

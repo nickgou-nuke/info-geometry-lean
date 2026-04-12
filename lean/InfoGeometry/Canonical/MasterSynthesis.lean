@@ -294,11 +294,17 @@ private theorem bridge_fluid_helicity_of_regularization_of_finiteDimensional
               ∧ momentumResidual (E := E) state.u = 0) ∧
           (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
             helicityInvariant A ω' = twinWaveHelicity A Ω'))) := by
-  rcases InfoGeometry.Canonical.anomalySkew_of_regularization_of_finiteDimensional
-      (E := E) A B_mp h_mp with ⟨k, B_dr, h_dr, hSkew_of_star⟩
-  refine ⟨k, B_dr, h_dr, ?_⟩
+  refine ⟨
+    DrazinInfiniteCore.canonicalDrazinIndex_endCLM (E := E) A,
+    DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A,
+    DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A,
+    ?_
+  ⟩
   intro h_dr_star
-  exact bridge_fluid_helicity A B_mp B_dr ω Ω (hSkew_of_star h_dr_star) hHelicity
+  exact bridge_fluid_helicity
+    A B_mp (DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A) ω Ω
+    (anomalySkew_of_regularization_canonical_drazin (E := E) A B_mp h_mp h_dr_star)
+    hHelicity
 
 omit [FiniteDimensional ℝ E] in
 /--

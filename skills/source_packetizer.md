@@ -1,20 +1,19 @@
-# Skill: Source Packetizer
+# Skill: Source Packetizer (The Distiller)
 
-> **"Structure precedes Formalization. Skeletons precede Proofs."**
+> **"Structure serving Discovery. The Distiller converts Ore to Manifest."**
 
 ## Objective
-Convert unstructured mathematical source material (Black Books, notes, textbooks) into a structured JSON **Theorem Packet** and a compiled Lean signature.
+Act as the primary interface between the Generative Forge and the Constitutional Sieve. Distill refined theorem candidates into the strict **JSON Manifest** required for Stage-2 Certification.
 
 ## Guidelines
-1.  **Nigredo (Alchemical Discovery)**: Admit raw conceptual pressure and imagery from the Black Books. This stage is ore, not mathematics.
-2.  **Albedo (Clinical Purge)**: Translate symbolic discovery into an exact formal signature (Definition, Theorem, or Dependency). Verify that every symbol is mapped to a formal candidate.
-3.  **Purge of Lyrical Overfit**: Remove expressive names that lack definitional content. Ensure the signature is crystalline.
-4.  **Structuring**: Generate a JSON packet according to the `docs/policy/packet_schemas.md` definition. This packet is the **Legislative Contract** for the formalization.
-5.  **Signature Lock**: Verify that the generated skeleton compiles (with `sorry` body) before closing the Phase.
+1.  **Distillation**: Take the output of the `Adversarial Compressor` and map it into the strict `docs/policy/packet_schemas.md` format.
+2.  **Signature Hardening**: Ensure the `expectedType` is consistent with the Spire's global namespace and current commit-indexed trace.
+3.  **Hygienic Preparation**: Identify the minimum `budget.imports` and `budget.witnesses` required to discharge the proof in Regime B.
+4.  **Provenance Lock**: Record the discovery provenance (e.g., "Origin: Regime A, Forge Session <ID>").
 
 ## Handshake
-Produce a `ChainOfStates` JSON object and a frozen theorem signature.
+Produce a **Locked Task Manifest** (`.tasks/*.json`) and a **Chain of States**.
 
 ## Tools
-- `read_file`: Use to consume `docs/black_books/` or other raw material.
-- `lake`: Use to verify signature compilation.
+- `tools/infra/trace_and_retrieve.py`: Use to generate the **Premise Packet** for the distiller.
+- `ls`: Use to verify target file placement.

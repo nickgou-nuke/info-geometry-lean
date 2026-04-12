@@ -1,22 +1,20 @@
 # Skill: Source Packetizer
 
-> **"Structure precedes Formalization."**
+> **"Structure precedes Formalization. Skeletons precede Proofs."**
 
 ## Objective
-Convert unstructured mathematical source material (PDFs, notes, textbooks) into a structured JSON **Theorem Packet**.
+Convert unstructured mathematical source material (Black Books, notes, textbooks) into a structured JSON **Theorem Packet** and a compiled Lean signature.
 
 ## Guidelines
-1.  **Extraction**: Read the provided source material and extract the core assertion, assumptions, and proof-sketch.
-2.  **Structuring**: Generate a JSON packet according to the `docs/policy/packet_schemas.md` definition. This packet is the **Legislative Contract** for the formalization. The Proposer acts as the **Packet Producer**, while the Formalizer acts as the **Packet Consumer**.
-3.  **Provenance Integrity**: Ensure every packet contains a link back to the exact source (e.g., "Ref: [Book Title], Section 4.2").
-4.  **Goal Isolation**: Separate the Informal Goal (English/LaTeX) from the Informal Sketch. Do not attempt to formalize the Lean signature in this stage.
-5.  **Packet Consumption**: Treat the `PremisePacket` as the **Absolute Fact Substrate**. Hallucinating premises outside this packet is a violation of the Soul.
-6.  **Gap Identification**: If a state-transition feels too large, create an intermediate helper lemma (`have` or `suffices`) to bridge the gap.
-7.  **Tactic-State Interaction**: Use the `terminal` to run `lake build` after each state-transition to verify the goal state.
+1.  **Nigredo (Alchemical Discovery)**: Admit raw conceptual pressure and imagery from the Black Books. This stage is ore, not mathematics.
+2.  **Albedo (Clinical Purge)**: Translate symbolic discovery into an exact formal signature (Definition, Theorem, or Dependency). Verify that every symbol is mapped to a formal candidate.
+3.  **Purge of Lyrical Overfit**: Remove expressive names that lack definitional content. Ensure the signature is crystalline.
+4.  **Structuring**: Generate a JSON packet according to the `docs/policy/packet_schemas.md` definition. This packet is the **Legislative Contract** for the formalization.
+5.  **Signature Lock**: Verify that the generated skeleton compiles (with `sorry` body) before closing the Phase.
 
 ## Handshake
-Produce a `ChainOfStates` JSON object.
+Produce a `ChainOfStates` JSON object and a frozen theorem signature.
 
 ## Tools
 - `read_file`: Use to consume `docs/black_books/` or other raw material.
-- `cat`: Use to combine notes.
+- `lake`: Use to verify signature compilation.

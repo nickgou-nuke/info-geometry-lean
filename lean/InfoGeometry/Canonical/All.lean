@@ -303,6 +303,7 @@ import InfoGeometry.Canonical.InformationPartitionCore
 import InfoGeometry.Canonical.RelativeModularOperator
 import InfoGeometry.Canonical.RelativeModularSingularization
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
+import InfoGeometry.Canonical.ModularWeldBridge
 
 -- L3: spectral / metric coherence on the doubled carrier
 import InfoGeometry.Canonical.DiagonalMetricModularBridge

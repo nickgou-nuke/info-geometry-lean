@@ -1,0 +1,1 @@
+{"timestamp": "2026-04-12T00:00:00", "pattern_id": "involution_sq", "motif": "apply ContinuousLinearMap.ext; intro x; exact clm_ext_apply h_sq x", "reviewed_by": "PauliAuditor"}

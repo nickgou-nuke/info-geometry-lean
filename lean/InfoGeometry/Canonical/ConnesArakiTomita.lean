@@ -139,6 +139,36 @@ theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
     (topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
       (H := H) (u := u) (T := T) D ω β hKMS)
 
+/--
+Unit-cocycle specialization of the Tomita endpoint:
+the cocycle lane is fixed to the welded flow-unit cocycle witness.
+-/
+theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaUnitConnesArakiData
+    (D : TomitaUnitConnesArakiData (H := H) T)
+    (ω : AlgebraEnd H →L[ℝ] ℝ)
+    (β : ℝ)
+    (hKMS :
+      InfoGeometry.Krein.satisfies_kms_like
+        (E := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon (E := H))
+        ω β) :
+    TopologicalBekensteinBound n T
+      ∧ ∀ A B : AlgebraEnd H,
+          ω
+              (A *
+                InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow
+                  (E := H) β B)
+            = ω (B * A) := by
+  exact topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
+    (H := H)
+    (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (T := T)
+    D
+    ω
+    β
+    hKMS
+
 end TomitaSpecialization
 
 end InfoGeometry.Canonical.ConnesArakiFramework

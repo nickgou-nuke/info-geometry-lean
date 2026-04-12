@@ -48,9 +48,17 @@ def setup_sandbox(sandbox_path, constitution_path):
     with open(config_path, "w") as f:
         yaml.dump(config_content, f)
 
-    # Inject the Constitution as a Skill
+    # Inject the Agentic Soul Skills
     skills_dir = sandbox_path / "skills"
     skills_dir.mkdir()
+    
+    # Copy all skills from the repo-native skills dir
+    repo_skills_dir = Path("skills")
+    if repo_skills_dir.exists():
+        for skill_file in repo_skills_dir.glob("*.md"):
+            shutil.copy(skill_file, skills_dir / skill_file.name)
+    
+    # Also inject the main Constitution as a skill
     shutil.copy(constitution_path, skills_dir / "lean-formalizer.md")
 
 def check_backends():
@@ -112,19 +120,31 @@ def main():
     # 1. Proposer Stage (Synthesis)
     print(f"--- [PHASE 1] Proposer Dispatch (Qwen3-32B) ---")
     propose_prompt = (
+        f"Activate 'reference_preserver'. "
         f"Analyze the theorem '{task['theoremName']}' in '{task['targetFile']}'. "
         f"Proposed Signature: {task['expectedType']}. "
-        f"Identify the optimal witness-elimination strategy using '{task['budget']['witnesses']}'. "
-        f"Draft the proof strategy but DO NOT emit the final Lean code yet."
+        f"METHODOLOGY: Chain of States. Decompose the proof into a sequence of formal intermediate states. "
+        f"Identify the optimal witness-elimination strategy."
     )
     exec_subagent(sandbox_path, "proposer", propose_prompt)
 
-    # 2. Formalizer Stage (Tactic Generation)
-    print(f"--- [PHASE 2] Formalizer Dispatch (DeepSeek-Prover-V2) ---")
+    # 2. Retrieval Stage (Premise Extraction)
+    print(f"--- [PHASE 2] Premise Retrieval ---")
+    retrieval_prompt = (
+        f"Activate 'premise_retriever'. "
+        f"Use 'python3 tools/infra/trace_and_retrieve.py' to find relevant bedrock for the States in Phase 1. "
+        f"Extract at least 3 premises for the Formalizer."
+    )
+    exec_subagent(sandbox_path, "proposer", retrieval_prompt) # Proposer also handles retrieval strategy
+
+    # 3. Formalizer Stage (Tactic Generation)
+    print(f"--- [PHASE 3] Formalizer Dispatch (DeepSeek-Prover-V2) ---")
     formalize_prompt = (
-        f"Apply the strategy from Phase 1 to close the goal for theorem '{task['theoremName']}'. "
+        f"Activate 'state_chain_formalizer'. "
+        f"Apply the retrieved premises to close the 'Chain of States' from Phase 1. "
+        f"Target Theorem: '{task['theoremName']}'. "
         f"Constraints: No signature mutation, no new axioms. "
-        f"Run 'lake build' and distill the result into a crystalline proof term."
+        f"Run 'lake build' to verify each state transition."
     )
     exec_subagent(sandbox_path, "formalizer", formalize_prompt)
 

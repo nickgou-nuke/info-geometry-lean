@@ -1,11 +1,18 @@
 {
-  "name": "ascentAtZero_of_isDrazinInverse",
-  "file": "lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean",
-  "statement_hash": "LOCKED_HASH_PLACEHOLDER",
-  "type": "IsDrazinInverse T TD k → AscentAtZero T k",
-  "dependency_budget": [
-    "Mathlib.LinearAlgebra.Basic",
-    "InfoGeometry.Canonical.Drazin"
-  ],
-  "allowed_helpers": "InfoGeometry.Canonical.Drazin.IsDrazinInverse"
+  "taskId": "drazin_core_ascent_bridge_v1",
+  "targetFile": "lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean",
+  "theoremName": "exists_drazinInverse_of_finiteAscentDescent",
+  "expectedType": "(h : HasFiniteAscentDescentAtZero T) : ∃ k' TD', Drazin.IsDrazinInverse T TD' k'",
+  "statementHash": "a70196b39f8a07557cf66487811bf0af0032a9fa6df69eb7e7fc6dba8f5e9eaa",
+  "baselineRef": "HEAD~1",
+  "budget": {
+    "imports": ["InfoGeometry.Canonical.Drazin"],
+    "allowedHelpers": ["InfoGeometry.Canonical.Drazin.IsDrazinInverse"]
+  },
+  "constraints": [
+    "No statement mutation",
+    "No new axioms",
+    "No import creep",
+    "No unauthorized classical"
+  ]
 }

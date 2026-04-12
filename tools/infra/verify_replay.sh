@@ -2,42 +2,61 @@
 # Spire Replay Verifier (Rubedo Gate 3)
 # Usage: ./verify_replay.sh <theorem_file> <manifest_json>
 
-TARGET_FILE=$1
-MANIFEST=$2
+set -euo pipefail
 
-if [ -z "$TARGET_FILE" ] || [ -z "$MANIFEST" ]; then
+if [ "$#" -ne 2 ]; then
     echo "Usage: ./verify_replay.sh <target_file> <manifest_json>"
     exit 1
 fi
 
-echo "--- [REPLAY] Verification Gate: $TARGET_FILE ---"
+TARGET_FILE="$1"
+MANIFEST="$2"
+REPO_ROOT="$(git rev-parse --show-toplevel)"
 
-# 1. Integrity Check: Ensure no 'sorry' or 'axiom' in the target
-if grep -q "sorry" "$TARGET_FILE"; then
-    echo "REPLAY FAILURE: Found 'sorry' in the target file."
-    exit 1
+if [[ "$TARGET_FILE" = /* ]]; then
+    if [[ "$TARGET_FILE" != "$REPO_ROOT/"* ]]; then
+        echo "REPLAY FAILURE: target file must be inside repo root."
+        exit 1
+    fi
+    TARGET_FILE="${TARGET_FILE#"$REPO_ROOT"/}"
 fi
 
-if grep -q "axiom" "$TARGET_FILE"; then
-    echo "REPLAY FAILURE: Found forbidden 'axiom' declaration."
-    exit 1
+if [[ "$MANIFEST" = /* ]]; then
+    if [[ "$MANIFEST" != "$REPO_ROOT/"* ]]; then
+        echo "REPLAY FAILURE: manifest must be inside repo root."
+        exit 1
+    fi
+    MANIFEST="${MANIFEST#"$REPO_ROOT"/}"
 fi
 
-# 2. Build Check
-echo "--- [REPLAY] Phase 1: Build Verification ---"
+TMPDIR="$(mktemp -d)"
+REPLAY_REPO="$TMPDIR/replay_repo"
+trap 'rm -rf "$TMPDIR"' EXIT
+
+echo "--- [REPLAY] Fresh checkout gate for $TARGET_FILE ---"
+git clone --quiet --depth 1 "file://$REPO_ROOT" "$REPLAY_REPO"
+cd "$REPLAY_REPO"
+
+# Seed Lake dependencies from local cache to keep replay offline-capable.
+if [ -d "$REPO_ROOT/.lake/packages" ]; then
+    mkdir -p .lake
+    cp -a "$REPO_ROOT/.lake/packages" .lake/
+fi
+
+grep -q "\bsorry\b" "$TARGET_FILE" && {
+    echo "REPLAY FAILURE: Found 'sorry' in $TARGET_FILE."
+    exit 1
+}
+
+grep -q "\baxiom\b" "$TARGET_FILE" && {
+    echo "REPLAY FAILURE: Found 'axiom' in $TARGET_FILE."
+    exit 1
+}
+
+echo "--- [REPLAY] Phase 1: Build verification ---"
 lake build
-if [ $? -ne 0 ]; then
-    echo "REPLAY FAILURE: Lake build failed."
-    exit 1
-fi
 
-# 3. Semantic Stability Check
-echo "--- [REPLAY] Phase 2: Semantic Audit ---"
+echo "--- [REPLAY] Phase 2: Semantic audit ---"
 python3 tools/infra/semantic_audit.py --task "$MANIFEST"
-if [ $? -ne 0 ]; then
-    echo "REPLAY FAILURE: Semantic audit drift detected."
-    exit 1
-fi
 
-echo "--- [REPLAY] SUCCESS: Theorem has achieved Rubedo-closure. ---"
-exit 0
+echo "--- [REPLAY] SUCCESS: isolated replay passed. ---"

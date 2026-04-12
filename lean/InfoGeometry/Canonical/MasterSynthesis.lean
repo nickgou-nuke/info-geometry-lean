@@ -16,6 +16,7 @@ import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Canonical.BekensteinBound
 import InfoGeometry.Canonical.KMSCocycleGeneratorBridge
 import InfoGeometry.Canonical.DrazinInfiniteCore
+import InfoGeometry.Canonical.DrazinWitnessElimination
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.RealBdGDIIIAtom
 import InfoGeometry.Clifford.Hestenes
@@ -295,15 +296,15 @@ private theorem bridge_fluid_helicity_of_regularization_of_finiteDimensional
           (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
             helicityInvariant A ω' = twinWaveHelicity A Ω'))) := by
   refine ⟨
-    DrazinInfiniteCore.canonicalDrazinIndex_endCLM (E := E) A,
-    DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A,
-    DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A,
+    DrazinWitnessElimination.drazinIndex (E := E) A,
+    DrazinWitnessElimination.drazinInverse (E := E) A,
+    DrazinWitnessElimination.isDrazinInverse_drazinInverse (E := E) A,
     ?_
   ⟩
   intro h_dr_star
   exact bridge_fluid_helicity
-    A B_mp (DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A) ω Ω
-    (anomalySkew_of_regularization_canonical_drazin (E := E) A B_mp h_mp h_dr_star)
+    A B_mp (DrazinWitnessElimination.drazinInverse (E := E) A) ω Ω
+    (anomalySkew_of_regularization_auto (E := E) A B_mp h_mp h_dr_star)
     hHelicity
 
 omit [FiniteDimensional ℝ E] in

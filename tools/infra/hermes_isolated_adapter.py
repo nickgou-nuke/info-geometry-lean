@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
+import hashlib
+import json
 import os
 import shutil
 import subprocess
-import json
 import sys
-import yaml
 from pathlib import Path
 
-import hashlib
+import yaml
 """
 # Hardened Isolated Hermes Adapter (Agentic Soul Edition)
 Orchestrates the sandboxed execution of Lean 4 proof tasks using 
 asymmetric Proposer/Formalizer models on DGX Spark.
 Enforces hash-gated doctrine and commit-indexed tracing.
 """
+
+
+def run_checked(cmd, **kwargs):
+    print(f"RUN: {' '.join(map(str, cmd))}")
+    return subprocess.run(cmd, check=True, **kwargs)
+
 
 def get_directory_hash(directory_path):
     """Calculates a persistent hash of the doctrine/skills directory."""
@@ -33,7 +39,7 @@ def ensure_trace_index():
     cache_file = get_cache_path(sha)
     if not cache_file.exists():
         print(f"--- [TRACE] Missing index for {sha[:8]}. Building... ---")
-        subprocess.run(["python3", "tools/infra/trace_and_retrieve.py", "--build-index"])
+        run_checked(["python3", "tools/infra/trace_and_retrieve.py", "--build-index"])
     else:
         print(f"--- [TRACE] Index for {sha[:8]} verified. ---")
 
@@ -121,7 +127,20 @@ def exec_subagent(sandbox_path, role, prompt):
         "--toolsets", "skills,terminal", 
         "-q", f"Role: {role}. {prompt}"
     ]
-    return subprocess.run(cmd, env=env)
+    return run_checked(cmd, env=env)
+
+
+def load_task_manifest(task_path: Path) -> dict:
+    with task_path.open("r", encoding="utf-8") as f:
+        task = json.load(f)
+
+    required = ["taskId", "targetFile", "theoremName", "expectedType"]
+    missing = [k for k in required if k not in task]
+    if missing:
+        raise ValueError(
+            f"Task manifest {task_path} is missing required keys: {', '.join(missing)}"
+        )
+    return task
 
 def main():
     if len(sys.argv) < 2:
@@ -179,12 +198,17 @@ def main():
         sys.exit(0)
 
     elif sys.argv[1] == "--task":
+        if len(sys.argv) < 3:
+            print("Usage: python3 hermes_isolated_adapter.py --task <path_to_task.json>")
+            sys.exit(1)
         task_path = Path(sys.argv[2])
-        with open(task_path, "r") as f:
-            task = json.load(f)
+        task = load_task_manifest(task_path)
 
         print(f"--- [REGIME B] Constitutional Certification for {task['taskId']} ---")
         setup_sandbox(sandbox_path, constitution_path)
+    else:
+        print("Usage: python3 hermes_isolated_adapter.py [--forge | --task <path_to_task.json>]")
+        sys.exit(1)
 
     # 1. Proposer Stage (Synthesis)
     print(f"--- [PHASE 1] Proposer Dispatch (Qwen3-32B) ---")
@@ -222,11 +246,16 @@ def main():
     
     # Gate 2: Semantic Audit
     audit_cmd = ["python3", "tools/infra/semantic_audit.py", "--task", str(task_path)]
-    subprocess.run(audit_cmd)
+    result = run_checked(audit_cmd)
+    if result.returncode != 0:
+        raise RuntimeError("Semantic audit failed unexpectedly.")
     
     # Gate 3: Fresh Replay
     replay_cmd = ["bash", "tools/infra/verify_replay.sh", task['targetFile'], str(task_path)]
-    subprocess.run(replay_cmd)
+    result = run_checked(replay_cmd)
+    if result.returncode != 0:
+        raise RuntimeError("Replay gate failed unexpectedly.")
+    print("--- [RESULT] RUBEDO PASSED ---")
 
 if __name__ == "__main__":
     main()

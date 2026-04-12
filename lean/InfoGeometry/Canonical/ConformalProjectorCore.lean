@@ -875,4 +875,33 @@ theorem chiralAnomaly_eq_zero_of_projectors_commute
 
 end ConformalInference
 
+namespace CertifiedConformalInference
+
+variable [FiniteDimensional ℝ E]
+
+/--
+Finite-dimensional constructor: any certified spectral triple induces a
+`CertifiedConformalInference` package on the same base Dirac operator.
+-/
+theorem exists_of_spectralTriple
+    (ST : InfoGeometry.Canonical.SpectralInference.SpectralTriple E) :
+    ∃ CCI : CertifiedConformalInference E, CCI.A = ST.D := by
+  rcases InfoGeometry.Canonical.SpectralInference.CertifiedChiralSpectralTriple.exists_of_spectralTriple
+      (E := E) ST with ⟨CCST, hST⟩
+  subst hST
+  refine ⟨
+    CertifiedInverseKernel.toCertifiedConformalInference (E := E) CCST.toCertifiedInverseKernel,
+    rfl
+  ⟩
+
+/--
+Finite-dimensional constructor specialized to `InfoSpectralTriple`.
+-/
+theorem exists_of_infoSpectralTriple
+    (IST : InfoGeometry.Canonical.SpectralInference.InfoSpectralTriple E) :
+    ∃ CCI : CertifiedConformalInference E, CCI.A = IST.D :=
+  exists_of_spectralTriple (E := E) IST.toSpectralTriple
+
+end CertifiedConformalInference
+
 end InfoGeometry.Canonical.ConformalUnification

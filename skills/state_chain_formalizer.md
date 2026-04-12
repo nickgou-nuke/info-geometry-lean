@@ -1,16 +1,19 @@
 # Skill: State-Chain Formalizer
 
-> **"Closure is a sequence of transformations, not a single leap."**
+> **"Closure is a sequence of transformations, not a single leap. Citrinitas is the bridge."**
 
 ## Objective
-Decompose complex formalization tasks into a **Chain of States** (intermediate lemmas or sub-goals) before generating final tactics.
+Decompose complex formalization tasks into a **Chain of States** (informal steps mapped to formal targets) according to the Citrinitas methodology.
 
 ## Guidelines
-1.  **Skeleton First**: Draft the informal structure of the proof (Step 1, Step 2, ...) and map each to a Lean goal.
-2.  **Gap Identification**: If a state-transition feels too large, create an intermediate helper lemma (`have` or `suffices`) to bridge the gap.
-3.  **Tactic-State Interaction**: Use the `terminal` to run `lake build` after each state-transition to verify the goal state.
-4.  **Proof Term Density**: Once the chain is closed, refactor the tactics into dense proof terms (using `exact`, `calc`, or term-mode) as mandated by the Constitution.
+1.  **Citrinitas (Symbolic Decomposition)**: Bridge the gap between intuition and Lean by drafting a JSON `ChainOfStates`. Map every informal pressure point to a formal target.
+2.  **State Logic**: If a state-transition feels too large, create an intermediate helper lemma (`have` or `suffices`) to bridge the gap. No leap should be wider than a single tactical proof-step.
+3.  **Premise Anchoring**: Treat the `PremisePacket` as the **Absolute Fact Substrate**. Retrieval-first reasoning is mandatory for every state transition. 
+4.  **Interaction**: Use the `LeanInteract` REPL bridge to verify each state-transition in the chain.
+
+## Handshake
+Consume a `ChainOfStates` and produce a valid Lean tactic sequence.
 
 ## Tools
-- `terminal`: To interact with the Lean compiler.
-- `trace_and_retrieve.py`: To find proofs for intermediate states.
+- `tools/infra/lean_interact_wrapper.py`: The REPL bridge.
+- `tools/infra/trace_and_retrieve.py`: The premise engine.

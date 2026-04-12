@@ -68,6 +68,7 @@ Main DAG refresh and report path:
 - `run_locked_lake_build.py`
 - `build_changed_lean.py`
 - `generate_theorem_surface_index.py`
+- `generate_hypothesis_debt_report.py`
 - `generate_source_sink_compression.py`
 - `generate_causal_report.py`
 - `check_bipartite_bleed.py`
@@ -106,6 +107,7 @@ Use the infra tools by role, not as one undifferentiated report pile:
   - `refresh_blueprint_tags.py`
 - theorem-surface and canonical burden
   - `generate_theorem_surface_index.py`
+  - `generate_hypothesis_debt_report.py` (ranks theorem/lemma surfaces by hypothesis/interface debt; defaults to synthesis capstones and emits top-20 JSON/Markdown)
   - `canonical_policy_lint.py`
   - `agentic_policy_lint.py` (enforces SOUL/HEARTBEAT/PUBLISH policy files, symbol-first protocol linkage, and runtime two-key publish gate settings)
   - `generate_replacement_frontier.py` (cross-references surface index, DAG, depth tags, and vacuity scores to rank replacement candidates)
@@ -185,6 +187,7 @@ python3 tools/infra/refresh_decl_graph.py
 python3 tools/infra/refresh_blueprint_tags.py
 python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags
 python3 tools/infra/generate_theorem_surface_index.py
+python3 tools/infra/generate_hypothesis_debt_report.py
 python3 tools/infra/generate_source_sink_compression.py
 python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json
 python3 tools/infra/check_bipartite_bleed.py

@@ -1,36 +1,34 @@
 # The Spire's Proof-Orchestration Constitution
 
-> **"The kernel is the judge; the manifest is the law; the agent is the hand."**
+> **"The kernel judges, the manifest legislates, the agent executes."**
 
-This document defines the clinical standards for automated theorem formalization within the Info-Geometry Spire. It is meant to be mounted read-only into any agentic execution environment (Hermes Agent).
+This document defines the clinical standards for automated theorem formalization within the Info-Geometry Spire. It is the authoritative law for the proof-orchestration loop.
 
-## I. The Absolute Lock (Non-Mutation Policy)
-1.  **Identity Preservation**: An agent may never mutate the **Name**, **Universe Parameters**, or **Type Signature** of a theorem specified in a locked `task.json` manifest.
-2.  **Failure over Drift**: If an agent cannot discharge a proof under the locked signature, it must report a **Blocking Debt** rather than adapting the statement to fit the proof.
+## I. The Absolute Lock (Audit Rule 1)
+1.  **Identity Preservation**: The agent must preserve the **Name**, **Universe Parameters**, and **Type Signature** specified in the locked manifest.
+2.  **Debt Policy**: Failure to prove the locked statement constitutes **blocking debt**, not license to redesign. 
 
-## II. The Sieve of Pauli (Constructivity & Vacuity)
-1.  **Zero-Sorry Rule**: No patch is accepted if it introduces a `sorry` or an `axiom`.
-2.  **No Lyrical Inflation**: The use of "Surrogate Proofs" (rfl-tautologies that mask missing logic) is a violation of the constitution. Every bridge must be a functorial necessity.
-3.  **Witness-Elimination**: Agents are mandated to use **Certified Global Constructors** (e.g., `drazinInverse`) rather than local existential witnesses wherever the bedrock exists.
+## II. The Sieve of Pauli (Audit Rule 2)
+1.  **Zero-Sorry**: No patch is accepted that introduces `sorry` or `axiom`.
+2.  **Constructive Bedrock**: Use of `Classical.choice`, `by_contra`, or nonconstructive extensionality lemmas is forbidden unless explicitly permitted by the task manifest.
+3.  **Canonical Weight**: Agents must prefer repository-certified global constructors and canonical existence bridges over ad hoc local existential witnesses whenever such bedrock already exists.
 
-## III. The Redlines (Environmental Limits)
-1.  **Import Entropy**: An agent may not add new `import` statements to a file unless they are explicitly permitted in the `task_manifest.json` budget.
-2.  **Dependency Hygiene**: Accidental use of `Classical.choice` or extensionality lemmas on types where constructive alternatives exist is forbidden.
-3.  **Namespace Qualification**: All constants must be fully qualified (e.g., `InfoGeometry.Canonical.Drazin.IsDrazinInverse`) to prevent resolution drift.
+## III. Environmental Hygiene (Audit Rule 3)
+1.  **Import Lockdown**: A patch may not alter the import budget of a file unless authorized by the manifest.
+2.  **Qualified Names**: Locked theorem targets, exported declarations, and audit-relevant constants must be fully qualified where ambiguity is possible.
+3.  **Surface Stability**: The agent may not alter namespace boundaries or surrounding declaration surfaces unless explicitly authorized.
 
-## IV. The Promotion Protocol
-1.  **Quarantine**: Successful builds are initially stored in `quarantine/winning_traces.jsonl`.
-2.  **Auto-Promotion**: A trace is promoted to `validated_patterns.jsonl` only after passing the **Triple Gate**:
-    - **Gate 1**: Clean Build (`lake build`).
-    - **Gate 2**: Semantic Audit (`semantic_audit.py` showing zero signature drift).
-    - **Gate 3**: Replay Success (Verified patch application in a fresh checkout).
+## IV. The Promotion Protocol (Audit Rule 4)
+Promotion to `validated_patterns.jsonl` is authorized only for traces that satisfy the **Triple Gate**:
+1.  **Kernel Verity**: Successful build on a clean environment.
+2.  **Semantic Stability**: Zero drift in theorem identity, declaration surface, and import budget.
+3.  **Replay Success**: Successful patch application and re-build on a fresh checkout.
 
-## V. Asymmetric Role Separation
-1.  **The Proposer**: Responsible for high-level strategy, naming, and dependency selection. It must prioritize conceptual integrity over compiler closure.
-2.  **The Formalizer**: Responsible for the low-level tactic flow and goal-closing. It must prioritize kernel-compliance and proof-term density.
-3.  **Role Isolation**: No single agent may claim both roles for a given proof-task to prevent self-confirmation drift.
+## V. Asymmetric Role Separation (Audit Rule 5)
+1.  **The Proposer**: Responsible for proof decomposition, helper naming, and dependency proposal.
+2.  **The Formalizer**: Responsible for low-level tactic flow and goal-closing.
+3.  **Execution Isolation**: No single execution context may claim both roles for the same locked proof task.
 
 ---
 
 **"Durch den Logos zur Wahrheit; durch das Gesetz zur Form."**
-*(Through the Logos to Truth; through the Law to Form.)*

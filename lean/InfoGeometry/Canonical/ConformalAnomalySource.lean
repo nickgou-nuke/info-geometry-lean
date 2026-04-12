@@ -769,4 +769,53 @@ theorem chiralAnomalyOperator_eq_zero_of_unitRelativeVolume
 
 end ConformalInference
 
+namespace CertifiedInverseKernel
+
+variable (CIK : InfoGeometry.Canonical.CertifiedInverseKernel E)
+
+/--
+Certified-kernel Einstein source closure.
+
+This is the owner-path gravity bridge: the Einstein source equation is derived
+from the canonical certified inverse-kernel package via the conformal adapter,
+without introducing a separate bridge payload.
+-/
+theorem einsteinEquation_of_projectorObstruction_source
+    (c : ℝ) (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x) :
+    EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CIK.chiralScale)) Λ κ
+      (anomalyStressEnergyAt Kgeo x CIK.chiralScale) := by
+  simpa [InfoGeometry.Canonical.ConformalUnification.CertifiedInverseKernel.toConformalInference]
+    using
+      (ConformalInference.einsteinEquation_of_projectorObstruction_source
+        (CI := InfoGeometry.Canonical.ConformalUnification.CertifiedInverseKernel.toConformalInference CIK)
+        (c := c) (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) hEin)
+
+end CertifiedInverseKernel
+
+namespace CertifiedConformalInference
+
+variable (CCI : InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference E)
+
+/-- Certified-conformal Einstein source closure routed through the certified
+inverse-kernel owner package. -/
+theorem einsteinEquation_of_projectorObstruction_source
+    (c : ℝ) (R : RicciTensor E)
+    (Kgeo : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E) (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x) :
+    EinsteinEquationAt R Kgeo x
+        (2 * (c + Λ - κ * CCI.toConformalInference.chiralScale)) Λ κ
+        (anomalyStressEnergyAt Kgeo x CCI.toConformalInference.chiralScale) := by
+  simpa [InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.toCertifiedInverseKernel,
+      InfoGeometry.Canonical.ConformalUnification.CertifiedInverseKernel.toConformalInference]
+    using
+      (CertifiedInverseKernel.einsteinEquation_of_projectorObstruction_source
+        (CIK := CCI.toCertifiedInverseKernel)
+        (c := c) (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) hEin)
+
+end CertifiedConformalInference
+
 end InfoGeometry.Canonical.ConformalUnification

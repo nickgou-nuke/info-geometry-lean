@@ -391,6 +391,73 @@ theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_global_draz
     (E := E) A B_mp hRiesz.D h_mp ⟨hRiesz.k, hRiesz.hIsDrazin⟩
     (h_dr_star_of_drazin hRiesz.hIsDrazin)
 
+/--
+Finite-dimensional canonical-Drazin skewness wrapper:
+use the canonical Drazin choice from `DrazinInfiniteCore` and keep only the
+projector star/selfadjointness obligation as external input.
+-/
+theorem anomalySkew_of_regularization_canonical_drazin
+    (A B_mp : VelocityField E)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr_star :
+      star (A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+        = A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A) :
+    ContinuousLinearMap.adjoint
+        (EinsteinAnomaly A B_mp
+          (DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A))
+      =
+      -EinsteinAnomaly A B_mp
+        (DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A) := by
+  simpa using
+    (einsteinAnomaly_skew_adjoint
+      (a := A)
+      (b_mp := B_mp)
+      (b_dr := DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+      (k := DrazinInfiniteCore.canonicalDrazinIndex_endCLM (E := E) A)
+      h_mp
+      (DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A)
+      h_dr_star)
+
+/--
+Finite-dimensional canonical-Drazin momentum closure wrapper.
+-/
+theorem anomalyMomentumResidual_eq_zero_of_regularization_canonical_drazin
+    (A B_mp : VelocityField E)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr_star :
+      star (A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+        = A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A) :
+    momentumResidual (E := E)
+      (EinsteinAnomaly A B_mp
+        (DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)) = 0 := by
+  exact anomalyMomentumResidual_eq_zero_of_regularization
+    (E := E)
+    A B_mp (DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+    h_mp
+    (DrazinInfiniteCore.canonicalDrazinIndex_endCLM (E := E) A)
+    (DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A)
+    h_dr_star
+
+/--
+Finite-dimensional canonical-Drazin state-level momentum closure wrapper.
+-/
+theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_canonical_drazin
+    (A B_mp : VelocityField E)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr_star :
+      star (A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+        = A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A) :
+    momentumResidual (E := E)
+      ((anomalyFluidState (E := E) A B_mp
+        (DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)).u) = 0 := by
+  exact anomalyFluidState_momentumResidual_eq_zero_of_regularization
+    (E := E)
+    A B_mp (DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+    h_mp
+    (DrazinInfiniteCore.canonicalDrazinIndex_endCLM (E := E) A)
+    (DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A)
+    h_dr_star
+
 end RealKreinFluid
 
 section MadelungBridge

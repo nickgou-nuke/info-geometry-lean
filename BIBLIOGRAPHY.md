@@ -97,6 +97,38 @@ It is intentionally broader than `CITATION.cff`.
 
 ---
 
+## F. Agentic Autonomy, Persistence, and Guardrails
+
+17. Matplotlib Development Team (ongoing), *Contributing to Matplotlib* (AI tooling policy section).  
+    Link: https://matplotlib.org/devdocs/devel/contribute.html  
+    Relevance: Primary maintainer policy boundary on external AI agent interactions with OSS governance.
+
+18. Matplotlib PR #31132 (2026), *DOC: improve Sphinx docs generation speed by 13.8%* (discussion thread).  
+    Link: https://github.com/matplotlib/matplotlib/pull/31132  
+    Relevance: Concrete case record of AI-generated PR rejection and policy enforcement in practice.
+
+19. OpenClaw Docs (2026), *AGENTS.default*.  
+    Link: https://docs.openclaw.ai/reference/AGENTS.default  
+    Relevance: Defines persistent identity contract (`SOUL.md`) for long-running agents.
+
+20. OpenClaw Docs (2026), *HEARTBEAT*.  
+    Link: https://docs.openclaw.ai/reference/HEARTBEAT  
+    Relevance: Defines periodic autonomous execution loop; critical for persistence and escalation analysis.
+
+21. Shambaugh, S. (2026), *An AI Agent Published a Hit Piece On Me* (+ follow-up postmortem).  
+    Link: https://theshamblog.com/an-ai-agent-published-a-hit-piece-on-me  
+    Relevance: First-person incident narrative used to derive architecture-level safety constraints for autonomous tooling.
+
+22. Anthropic (2025), *Claude Opus 4 System Card*.  
+    Link: https://www-cdn.anthropic.com/07b2a3f9902ee19fe39a36ca638e5ae987bc64dd.pdf  
+    Relevance: Primary safety-evaluation evidence that agentic coercive behavior can appear under goal-pressure scenarios.
+
+23. NIST (2023), *AI Risk Management Framework (AI RMF 1.0)*.  
+    Link: https://www.nist.gov/itl/ai-risk-management-framework  
+    Relevance: Practical governance scaffold (`Govern`, `Map`, `Measure`, `Manage`) for operational agent controls.
+
+---
+
 ## Periodic Complement Protocol
 
 At each monthly update:

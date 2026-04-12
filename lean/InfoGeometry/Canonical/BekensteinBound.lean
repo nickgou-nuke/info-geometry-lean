@@ -206,6 +206,117 @@ theorem cocycleGeneratorLift_of_cocycleEntropyPotential_match
             (n := n) (T := T) k
 
 /--
+Zero-anchored uniqueness on integer times:
+if a cocycle entropy potential satisfies the concrete generator-lift relation
+and is normalized at time `0`, then it matches the canonical trajectory
+RN-generator potential on all natural steps.
+-/
+theorem cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (T : SinkhornTrajectory n)
+    (hLift :
+      CocycleGeneratorLift n T (CocycleEntropyPotential (H := H) σ u hBridge))
+    (hZero :
+      CocycleEntropyPotential (H := H) σ u hBridge 0 = 0) :
+    ∀ k : Nat,
+      CocycleEntropyPotential (H := H) σ u hBridge k
+        = trajectoryRNGeneratorPotential (n := n) T k := by
+  intro k
+  induction k with
+  | zero =>
+      simpa [trajectoryRNGeneratorPotential, trajectoryRNGeneratorPotentialNat] using hZero
+  | succ k ih =>
+      have hStepΦ :
+          CocycleEntropyPotential (H := H) σ u hBridge ((k : ℝ) + 1)
+            = CocycleEntropyPotential (H := H) σ u hBridge k
+              + phaseRNGeneratorBefore n (phaseAt k) (T.state k) := by
+        have hLiftk :
+            CocycleEntropyPotential (H := H) σ u hBridge ((k : ℝ) + 1)
+              - CocycleEntropyPotential (H := H) σ u hBridge k
+              = phaseRNGeneratorBefore n (phaseAt k) (T.state k) := by
+          simpa [Nat.cast_add, Nat.cast_one] using hLift k
+        linarith
+      have hStepΨ :
+          trajectoryRNGeneratorPotential (n := n) T ((k : ℝ) + 1)
+            = trajectoryRNGeneratorPotential (n := n) T k
+              + phaseRNGeneratorBefore n (phaseAt k) (T.state k) := by
+        calc
+          trajectoryRNGeneratorPotential (n := n) T ((k : ℝ) + 1)
+              = trajectoryRNGeneratorPotential (n := n) T (k + 1 : Nat) := by
+                  simpa [Nat.cast_add, Nat.cast_one]
+          _ =
+            trajectoryRNGeneratorPotentialNat (n := n) T (k + 1) := by
+                  simpa using trajectoryRNGeneratorPotential_natCast (n := n) (T := T) (k := k + 1)
+          _ = trajectoryRNGeneratorPotentialNat (n := n) T k
+                + phaseRNGeneratorBefore n (phaseAt k) (T.state k) := by
+                simp [trajectoryRNGeneratorPotentialNat]
+          _ = trajectoryRNGeneratorPotential (n := n) T k
+                + phaseRNGeneratorBefore n (phaseAt k) (T.state k) := by
+                simpa using (congrArg
+                  (fun r : ℝ => r + phaseRNGeneratorBefore n (phaseAt k) (T.state k))
+                  (trajectoryRNGeneratorPotential_natCast (n := n) (T := T) (k := k)).symm)
+      calc
+        CocycleEntropyPotential (H := H) σ u hBridge (k + 1 : Nat)
+            = CocycleEntropyPotential (H := H) σ u hBridge ((k : ℝ) + 1) := by
+                simpa [Nat.cast_add, Nat.cast_one]
+        _ = CocycleEntropyPotential (H := H) σ u hBridge k
+                + phaseRNGeneratorBefore n (phaseAt k) (T.state k) := hStepΦ
+        _ = trajectoryRNGeneratorPotential (n := n) T k
+              + phaseRNGeneratorBefore n (phaseAt k) (T.state k) := by
+              rw [ih]
+        _ = trajectoryRNGeneratorPotential (n := n) T ((k : ℝ) + 1) := by
+              linarith [hStepΨ]
+        _ = trajectoryRNGeneratorPotential (n := n) T (k + 1 : Nat) := by
+              simpa [Nat.cast_add, Nat.cast_one]
+
+/--
+Nat-step cocycle potential matching derived from cocycle law and generator lift.
+The zero-time normalization is discharged from `IsConnesCocycle`.
+-/
+theorem cocycleEntropyPotential_natMatch_of_connesCocycle_generatorLift
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hCocycle : IsConnesCocycle σ u)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (hLift :
+      CocycleGeneratorLift n T (CocycleEntropyPotential (H := H) σ u hBridge)) :
+    ∀ k : Nat,
+      CocycleEntropyPotential (H := H) σ u hBridge k
+        = trajectoryRNGeneratorPotential (n := n) T k := by
+  exact cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
+    (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T)
+    hLift (by
+      simpa [CocycleEntropyPotential] using
+        (cocycleLogPotential_zero (H := H) (σ := σ) (u := u) hCocycle hBridge))
+
+/--
+Under a Connes cocycle law, the concrete generator-lift condition is equivalent
+to integer-time matching with the canonical trajectory RN-generator potential.
+-/
+theorem cocycleGeneratorLift_iff_natMatch_of_connesCocycle
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hCocycle : IsConnesCocycle σ u)
+    (hBridge : ScalarCocycleBridge (H := H) σ) :
+    CocycleGeneratorLift n T (CocycleEntropyPotential (H := H) σ u hBridge)
+      ↔
+    (∀ k : Nat,
+      CocycleEntropyPotential (H := H) σ u hBridge k
+        = trajectoryRNGeneratorPotential (n := n) T k) := by
+  constructor
+  · intro hLift
+    exact cocycleEntropyPotential_natMatch_of_connesCocycle_generatorLift
+      (n := n) (H := H) (σ := σ) (u := u) (T := T)
+      (hCocycle := hCocycle) (hBridge := hBridge) hLift
+  · intro hMatch
+    exact cocycleGeneratorLift_of_cocycleEntropyPotential_match
+      (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T) hMatch
+
+/--
 Refined cocycle-to-bound theorem:
 if the cocycle potential increments realize the concrete trajectory RN generator,
 the topological Bekenstein bound follows directly.
@@ -287,6 +398,30 @@ theorem topologicalBekensteinBound_of_connesCocycle_natMatch
     (hLift :=
       cocycleGeneratorLift_of_cocycleEntropyPotential_match
         (n := n) (H := H) (σ := σ) (u := u) (hBridge := hBridge) (T := T) hMatch)
+
+/--
+Zero-anchored cocycle-to-bound theorem:
+if the cocycle potential satisfies the concrete generator lift and is normalized
+at `0`, the integer-time match is derived internally and the topological
+Bekenstein bound follows.
+-/
+theorem topologicalBekensteinBound_of_connesCocycle_generatorLift_zero
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hCocycle : IsConnesCocycle σ u)
+    (hBridge : ScalarCocycleBridge (H := H) σ)
+    (hLift :
+      CocycleGeneratorLift n T
+        (CocycleEntropyPotential (H := H) σ u hBridge)) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_connesCocycle_natMatch
+    (n := n) (H := H) (σ := σ) (u := u) (T := T)
+    (hCocycle := hCocycle) (hBridge := hBridge)
+    (hMatch :=
+      cocycleEntropyPotential_natMatch_of_connesCocycle_generatorLift
+        (n := n) (H := H) (σ := σ) (u := u) (T := T)
+        (hCocycle := hCocycle) (hBridge := hBridge) hLift)
 
 /--
 Casini-style relative-entropy profile on discrete Sinkhorn steps.
@@ -414,6 +549,58 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift
       (n := n) (H := H)
       (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
       (u := u) (T := T) (hCocycle := hCocycle) (hBridge := hBridge) (hLift := hLift)
+
+/--
+Tomita-specialized cocycle-to-bound theorem with internally derived generator lift:
+it suffices to match integer-time cocycle potential values with the canonical
+trajectory RN-generator potential.
+-/
+theorem topologicalBekensteinBound_of_tomitaConnesCocycle_natMatch
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hCocycle :
+      IsConnesCocycle
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        u)
+    (hBridge :
+      ScalarCocycleBridge (H := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (hMatch :
+      ∀ k : Nat,
+        TomitaCocycleEntropyPotential (H := H) u hBridge k
+          = trajectoryRNGeneratorPotential (n := n) T k) :
+    TopologicalBekensteinBound n T := by
+  simpa [TomitaCocycleEntropyPotential] using
+    topologicalBekensteinBound_of_connesCocycle_natMatch
+      (n := n) (H := H)
+      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (u := u) (T := T)
+      (hCocycle := hCocycle) (hBridge := hBridge) (hMatch := hMatch)
+
+/--
+Tomita-specialized zero-anchored cocycle-to-bound theorem.
+-/
+theorem topologicalBekensteinBound_of_tomitaConnesCocycle_generatorLift_zero
+    (u : ℝ → AlgebraEnd H)
+    (T : SinkhornTrajectory n)
+    (hCocycle :
+      IsConnesCocycle
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        u)
+    (hBridge :
+      ScalarCocycleBridge (H := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (hLift :
+      CocycleGeneratorLift n T
+        (TomitaCocycleEntropyPotential (H := H) u hBridge)) :
+    TopologicalBekensteinBound n T := by
+  simpa [TomitaCocycleEntropyPotential] using
+    topologicalBekensteinBound_of_connesCocycle_generatorLift_zero
+      (n := n) (H := H)
+      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (u := u) (T := T)
+      (hCocycle := hCocycle) (hBridge := hBridge)
+      (hLift := hLift)
 
 /--
 Tomita-specialized Casini-route cocycle-to-bound theorem.

@@ -25,6 +25,7 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →ₗ[ℝ] H₂
 
+omit [CompleteSpace E] in
 /-- The canonical analytical-index positive projector is the root `ε = +1` projector. -/
 @[rep_depth krein]
 theorem root_chiralProjectorPlus_eq_spectralChiralPlusProjector :
@@ -34,6 +35,7 @@ theorem root_chiralProjectorPlus_eq_spectralChiralPlusProjector :
     simp [chiralProjectorPlus, spectralChiralPlusProjector, spectralPlusProj,
       spectral_epsilon_apply, one_div]
 
+omit [CompleteSpace E] in
 /-- The canonical analytical-index negative projector is the root `ε = -1` projector. -/
 @[rep_depth krein]
 theorem root_chiralProjectorMinus_eq_spectralChiralMinusProjector :

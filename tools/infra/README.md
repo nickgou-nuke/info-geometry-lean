@@ -78,6 +78,7 @@ Main DAG refresh and report path:
 - `generate_projection_coloring.py`
 - `select_openclaw_target.py`
 - `canonical_policy_lint.py`
+- `agentic_policy_lint.py`
 - `generate_replacement_frontier.py`
 - `classify_missing_all.py`
 
@@ -106,6 +107,7 @@ Use the infra tools by role, not as one undifferentiated report pile:
 - theorem-surface and canonical burden
   - `generate_theorem_surface_index.py`
   - `canonical_policy_lint.py`
+  - `agentic_policy_lint.py` (enforces SOUL/HEARTBEAT/PUBLISH policy files, symbol-first protocol linkage, and runtime two-key publish gate settings)
   - `generate_replacement_frontier.py` (cross-references surface index, DAG, depth tags, and vacuity scores to rank replacement candidates)
 - causal/ownership shape
   - `generate_source_sink_compression.py`

@@ -59,6 +59,7 @@ noncomputable abbrev Qplus : EndH := rootDiracPlus (E := E)
 @[rep_depth krein]
 noncomputable abbrev Qminus : EndH := rootDiracMinus (E := E)
 
+omit [CompleteSpace E] in
 /-- Root odd lane split: `J = Q₊ + Q₋`. -/
 @[rep_depth krein]
 theorem modular_j_eq_Qplus_add_Qminus :
@@ -71,6 +72,7 @@ theorem modular_j_eq_Qplus_add_Qminus :
 noncomputable def phaseAxisK : EndH :=
   complex_i (E := E)
 
+omit [CompleteSpace E] in
 /-- Canonical split identity: `K = J ∘ ε`. -/
 @[rep_depth krein]
 theorem phaseAxisK_eq_modular_j_comp_spectral_epsilon :
@@ -115,6 +117,7 @@ noncomputable def sectorExchangeObservablePlus (T : EndH) : EndH :=
 noncomputable def sectorExchangeObservableMinus (T : EndH) : EndH :=
   transportCommutator (E := E) T (spectralMinusProj (E := E))
 
+omit [CompleteSpace E] in
 /--
 The existing projector-flux owner uses `[P₊, T]`; this is the negative of
 the dictionary orientation `[T, P₊]`.
@@ -125,6 +128,7 @@ theorem plusProjectorFlux_eq_neg_sectorExchangeObservablePlus (T : EndH) :
   unfold plusProjectorFlux sectorExchangeObservablePlus transportCommutator
   abel
 
+omit [CompleteSpace E] in
 /--
 The existing projector-flux owner uses `[P₋, T]`; this is the negative of
 the dictionary orientation `[T, P₋]`.

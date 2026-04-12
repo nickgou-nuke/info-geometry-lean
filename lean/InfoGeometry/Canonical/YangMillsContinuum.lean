@@ -1,4 +1,6 @@
 import InfoGeometry.Canonical.KMSSinkhornWeightedTransport
+import InfoGeometry.Canonical.KMSCocycleGeneratorBridge
+import InfoGeometry.Canonical.BekensteinBound
 import InfoGeometry.Volume.ConnesCocycle
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Exponential
@@ -386,6 +388,31 @@ theorem sinkhornControl_of_sampledIB
       (Ω := Ω) hΩ hJointKernel hCommOrthogonal)
 
 /--
+Sampled IB dynamics give the explicit stepwise entropy-budget estimate:
+the KMS residual at each sampled step is bounded by the pre-step RN barrier.
+-/
+theorem sinkhornResidual_bound_of_sampledIB
+    (T : InfoGeometry.Canonical.MoE.SinkhornTrajectory n)
+    (K : EndH E)
+    (β : ℝ)
+    (S : IBSampledFlow (Xib := Xib) (Yib := Yib) (Tib := Tib) (prob := prob))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω) :
+    ∀ k : Nat, ∀ A B : EndH E,
+      kmsResidual K ((sampledObservable (prob := prob) S x0 t0 Ω) (k + 1)) β A B
+        ≤ InfoGeometry.Canonical.MoE.trajectoryRNBarrier n T k := by
+  exact
+    sinkhorn_stepwise_kms_bound (n := n) (T := T) (K := K)
+      (ω := sampledObservable (prob := prob) S x0 t0 Ω) (β := β)
+      (sinkhornControl_of_sampledIB
+        (n := n) (prob := prob)
+        (T := T) (K := K) (β := β) (S := S)
+        (x0 := x0) (t0 := t0) (Ω := Ω) hΩ hJointKernel hCommOrthogonal)
+
+/--
 Sampled IB dynamics induce exact stepwise KMS closure.
 -/
 theorem sinkhornClosure_of_sampledIB
@@ -408,6 +435,108 @@ theorem sinkhornClosure_of_sampledIB
       (n := n) (prob := prob)
       (T := T) (K := K) (β := β) (S := S)
       (x0 := x0) (t0 := t0) (Ω := Ω) hΩ hJointKernel hCommOrthogonal)
+
+/--
+Sampled IB endpoint on the entropy-time weld:
+trajectorywise topological Bekenstein bound together with exact stepwise KMS
+closure.
+-/
+theorem topologicalBekensteinBound_and_sinkhornClosure_of_sampledIB
+    (T : InfoGeometry.Canonical.MoE.SinkhornTrajectory n)
+    (K : EndH E)
+    (β : ℝ)
+    (S : IBSampledFlow (Xib := Xib) (Yib := Yib) (Tib := Tib) (prob := prob))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω) :
+    InfoGeometry.Canonical.BekensteinBound.TopologicalBekensteinBound n T
+      ∧ SinkhornKMSClosure n T K
+          (sampledObservable (prob := prob) S x0 t0 Ω) β := by
+  refine ⟨?_, ?_⟩
+  · exact
+      InfoGeometry.Canonical.BekensteinBound.topologicalBekensteinBound_of_sinkhornTrajectory
+        (n := n) T
+  · exact
+      sinkhornClosure_of_sampledIB
+        (n := n) (prob := prob)
+        (T := T) (K := K) (β := β) (S := S)
+        (x0 := x0) (t0 := t0) (Ω := Ω) hΩ hJointKernel hCommOrthogonal
+
+/--
+Sampled IB cocycle endpoint (closure form):
+Connes cocycle law plus sampled Sinkhorn KMS closure and a pairing witness
+yield the topological Bekenstein bound.
+-/
+theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornClosure_of_sampledIB_pairingWitness
+    (T : InfoGeometry.Canonical.MoE.SinkhornTrajectory n)
+    (K : EndH E)
+    (β : ℝ)
+    (S : IBSampledFlow (Xib := Xib) (Yib := Yib) (Tib := Tib) (prob := prob))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω)
+    (σ : InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow (H := E))
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd E)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle σ u)
+    (hBridge : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := E) σ)
+    (hPair :
+      InfoGeometry.Canonical.KMSCocycleBridge.KMSPairingWitness
+        (n := n) (E := E)
+        T σ u hBridge K
+        (sampledObservable (prob := prob) S x0 t0 Ω) β) :
+    InfoGeometry.Canonical.BekensteinBound.TopologicalBekensteinBound n T := by
+  exact
+    InfoGeometry.Canonical.KMSCocycleBridge.topologicalBekensteinBound_of_connesCocycle_and_sinkhornKMSClosure_pairingWitness
+      (n := n) (E := E)
+      (T := T) (σ := σ) (u := u) (hCocycle := hCocycle) (bridge := hBridge)
+      (K := K) (ω := sampledObservable (prob := prob) S x0 t0 Ω) (β := β)
+      (hClosure :=
+        sinkhornClosure_of_sampledIB
+          (n := n) (prob := prob)
+          (T := T) (K := K) (β := β) (S := S)
+          (x0 := x0) (t0 := t0) (Ω := Ω) hΩ hJointKernel hCommOrthogonal)
+      hPair
+
+/--
+Sampled IB cocycle endpoint (control form):
+Connes cocycle law plus sampled Sinkhorn KMS control and a pairing witness
+yield the topological Bekenstein bound.
+-/
+theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornControl_of_sampledIB_pairingWitness
+    (T : InfoGeometry.Canonical.MoE.SinkhornTrajectory n)
+    (K : EndH E)
+    (β : ℝ)
+    (S : IBSampledFlow (Xib := Xib) (Yib := Yib) (Tib := Tib) (prob := prob))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω)
+    (σ : InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow (H := E))
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd E)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle σ u)
+    (hBridge : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := E) σ)
+    (hPair :
+      InfoGeometry.Canonical.KMSCocycleBridge.KMSPairingWitness
+        (n := n) (E := E)
+        T σ u hBridge K
+        (sampledObservable (prob := prob) S x0 t0 Ω) β) :
+    InfoGeometry.Canonical.BekensteinBound.TopologicalBekensteinBound n T := by
+  exact
+    InfoGeometry.Canonical.KMSCocycleBridge.topologicalBekensteinBound_of_connesCocycle_and_sinkhornKMSControl_pairingWitness
+      (n := n) (E := E)
+      (T := T) (σ := σ) (u := u) (hCocycle := hCocycle) (bridge := hBridge)
+      (K := K) (ω := sampledObservable (prob := prob) S x0 t0 Ω) (β := β)
+      (hControl :=
+        sinkhornControl_of_sampledIB
+          (n := n) (prob := prob)
+          (T := T) (K := K) (β := β) (S := S)
+          (x0 := x0) (t0 := t0) (Ω := Ω) hΩ hJointKernel hCommOrthogonal)
+      hPair
 
 end IBSampledFlow
 

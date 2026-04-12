@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
 import InfoGeometry.Canonical.TopologicalInvariantInvariance
+import InfoGeometry.Canonical.DIIICommutatorInitialization
 import InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv
 import InfoGeometry.Canonical.AnalyticalIndexCore
 import InfoGeometry.Meta.Architecture
@@ -39,6 +40,7 @@ open InfoGeometry.Canonical.CentralChargeKKTParityBridge
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
 open InfoGeometry.Canonical.SuperchargeCentralChargeClosure
 open InfoGeometry.Canonical.TopologicalInvariantInvariance
+open InfoGeometry.Canonical.DIIICommutatorInitialization
 open InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv
 open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.KK
@@ -170,6 +172,68 @@ theorem canonicalDIIIProxy_root_laws :
       (canonicalDIIIProxy (E := E)).TC_eq_S
   · simpa [canonicalDIIIProxy_S_eq_neg_spectral_epsilon (E := E)] using
       (canonicalDIIIProxy (E := E)).CT_eq_neg_S
+
+/--
+The canonical DIII proxy instantiates the thin `TopologicalClassDIII` package
+on every real BdG datum whose chiral lane is `J`.
+-/
+@[rep_depth transport]
+theorem canonicalDIIIProxy_topologicalClassDIII_of_realBdGDatum
+    (X : RealBdGDatum (E := E))
+    (hChiral : X.chiral = modular_j (E := E)) :
+    TopologicalClassDIII (E := E)
+      X.H
+      (canonicalDIIIProxy (E := E)).T
+      (canonicalDIIIProxy (E := E)).C := by
+  have hBase :
+      TopologicalClassDIII (E := E) X.H (modularK (E := E)) (modular_j (E := E)) :=
+    topologicalClassDIII_of_realBdGDatum (E := E) X hChiral
+  simpa [canonicalDIIIProxy_T_eq_modularK (E := E), canonicalDIIIProxy_C_eq_modular_j (E := E)] using hBase
+
+/--
+Canonical DIII commutator packet on a real BdG datum:
+`[T,H]=0` and `{C,H}=0`, with `T,C` taken from `canonicalDIIIProxy`.
+-/
+@[rep_depth transport]
+theorem canonicalDIIIProxy_commutator_packet_of_realBdGDatum
+    (X : RealBdGDatum (E := E))
+    (hChiral : X.chiral = modular_j (E := E)) :
+    endCommutator
+        (E := E)
+        (canonicalDIIIProxy (E := E)).T
+        X.H = 0
+      ∧
+    endAnticommutator
+        (E := E)
+        (canonicalDIIIProxy (E := E)).C
+        X.H = 0 := by
+  letI :
+      TopologicalClassDIII (E := E)
+        X.H
+        (canonicalDIIIProxy (E := E)).T
+        (canonicalDIIIProxy (E := E)).C :=
+    canonicalDIIIProxy_topologicalClassDIII_of_realBdGDatum (E := E) X hChiral
+  have hComm :
+      endCommutator
+          (E := E)
+          (canonicalDIIIProxy (E := E)).T
+          X.H = 0 :=
+    commutator_T_H_eq_zero
+      (E := E)
+      (H := X.H)
+      (T := (canonicalDIIIProxy (E := E)).T)
+      (P := (canonicalDIIIProxy (E := E)).C)
+  have hAnti :
+      endAnticommutator
+          (E := E)
+          (canonicalDIIIProxy (E := E)).C
+          X.H = 0 :=
+    anticommutator_P_H_eq_zero
+      (E := E)
+      (H := X.H)
+      (T := (canonicalDIIIProxy (E := E)).T)
+      (P := (canonicalDIIIProxy (E := E)).C)
+  exact ⟨hComm, hAnti⟩
 
 /-- The canonical time-reversal proxy swaps positive chiral vectors to negative ones. -/
 @[rep_depth transport]
@@ -314,6 +378,117 @@ theorem canonicalDIIIProxy_transport_root_closure
   refine ⟨canonicalDIIIProxy_root_laws (E := E), canonicalDIIIProxy_concreteCARPair, ?_⟩
   exact root_gap_hessian_centralCharge_closure
     (A := A) (B := B) (E := E) V X hX hEven t
+
+/--
+Root-name DIII/commutator closure on a transport slice:
+
+1. canonical DIII proxy root laws,
+2. concrete split-`Cl(1,1)` CAR pair,
+3. nonzero transported analytical index forces nonzero transport commutator with
+   `ε` under source/sink boundary identification.
+-/
+@[rep_depth transport]
+theorem canonicalDIIIProxy_transport_root_index_commutator_closure
+    [FiniteDimensional ℝ E]
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hIndexNonzero :
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) ≠ 0)
+    (hBoundary :
+      S.boundaryGenerator = InfoGeometry.Canonical.VortexAnomalyLink.sourceVortexSeed (E := E) V
+        ∨ S.boundaryGenerator = InfoGeometry.Canonical.VortexAnomalyLink.sinkVortexSeed (E := E) V) :
+    (let P := canonicalDIIIProxy (E := E);
+      P.T = complex_i (E := E)
+        ∧ P.C = modular_j (E := E)
+        ∧ P.S = -(spectral_epsilon (E := E))
+        ∧ P.T.comp P.T = -(ContinuousLinearMap.id ℝ H₂)
+        ∧ P.C.comp P.C = ContinuousLinearMap.id ℝ H₂
+        ∧ P.T.comp P.C = -(spectral_epsilon (E := E))
+        ∧ P.C.comp P.T = spectral_epsilon (E := E))
+      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
+          (concreteCARAnnihilation (E := E))
+          (concreteCARCreation (E := E))
+      ∧
+      InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+        V.connectionGenerator (spectral_epsilon (E := E)) ≠ 0 := by
+  refine ⟨canonicalDIIIProxy_root_laws (E := E), canonicalDIIIProxy_concreteCARPair, ?_⟩
+  exact
+    quasilatticeAnalyticalIndex_ne_zero_transportCommutator_spectral_epsilon_ne_zero_of_boundaryGenerator_eq_source_or_sink_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E)
+      V X hX hEven t M P0 S hA hplus hminus hodd hBoundaryOnZeroModes hIndexNonzero hBoundary
+
+/--
+Root-name DIII/commutator closure on a transport slice, central-charge-native
+form:
+
+1. canonical DIII proxy root laws,
+2. concrete split-`Cl(1,1)` CAR pair,
+3. nonzero operatorial central charge forces nonzero transport commutator with
+   `ε` under source/sink boundary identification.
+-/
+@[rep_depth transport]
+theorem canonicalDIIIProxy_transport_root_centralCharge_commutator_closure
+    [FiniteDimensional ℝ E]
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : S.kernel.A = InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hCentral :
+      InfoGeometry.Canonical.OperatorialCentralCharge.operatorialCentralCharge
+        (A := A) (B := B) (E := E) X hX ≠ 0)
+    (hBoundary :
+      S.boundaryGenerator = InfoGeometry.Canonical.VortexAnomalyLink.sourceVortexSeed (E := E) V
+        ∨ S.boundaryGenerator = InfoGeometry.Canonical.VortexAnomalyLink.sinkVortexSeed (E := E) V) :
+    (let P := canonicalDIIIProxy (E := E);
+      P.T = complex_i (E := E)
+        ∧ P.C = modular_j (E := E)
+        ∧ P.S = -(spectral_epsilon (E := E))
+        ∧ P.T.comp P.T = -(ContinuousLinearMap.id ℝ H₂)
+        ∧ P.C.comp P.C = ContinuousLinearMap.id ℝ H₂
+        ∧ P.T.comp P.C = -(spectral_epsilon (E := E))
+        ∧ P.C.comp P.T = spectral_epsilon (E := E))
+      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
+          (concreteCARAnnihilation (E := E))
+          (concreteCARCreation (E := E))
+      ∧
+      InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+        V.connectionGenerator (spectral_epsilon (E := E)) ≠ 0 := by
+  refine ⟨canonicalDIIIProxy_root_laws (E := E), canonicalDIIIProxy_concreteCARPair, ?_⟩
+  exact
+    operatorialCentralCharge_ne_zero_transportCommutator_spectral_epsilon_ne_zero_of_boundaryGenerator_eq_source_or_sink_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E)
+      V X hX hEven t M P0 S hA hplus hminus hodd hBoundaryOnZeroModes hCentral hBoundary
 
 /--
 Parity-lifted DIII/KKT closure on a transport slice:

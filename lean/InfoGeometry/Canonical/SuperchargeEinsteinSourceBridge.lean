@@ -396,6 +396,7 @@ theorem mismatch_forces_projector_noncommute_of_boundaryScale_ne_zero
     (S.boundaryScale_eq_zero_iff_boundaryGenerator_eq_zero).2 hBoundaryGeneratorZero
   exact (hBoundaryScaleNonzeroOfMismatch hMismatch) hBoundaryScaleZero
 
+omit [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)] in
 /--
 Carrier-identification lift:
 noncommutation of the singular-boundary projector pair transfers to

@@ -14,7 +14,10 @@ import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.ZetaDeterminant
 import InfoGeometry.Canonical.MongeAmpereCramerRao
 import InfoGeometry.Canonical.BekensteinBound
+import InfoGeometry.Canonical.KMSCocycleGeneratorBridge
+import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Canonical.RealBdGDIIIAtom
 import InfoGeometry.Clifford.Hestenes
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Canonical.SpectralInference
@@ -65,6 +68,8 @@ open InfoGeometry.Canonical.UniversalVolume
 open InfoGeometry.Canonical.Determinant
 open InfoGeometry.Canonical.MongeAmpereCramerRao
 open InfoGeometry.Canonical.BekensteinBound
+open InfoGeometry.Canonical.KMSCocycleBridge
+open InfoGeometry.Canonical.RealBdGDIIIAtom
 open InfoGeometry.Clifford.Hestenes
 open InfoGeometry.Convex
 open InfoGeometry.KK
@@ -214,12 +219,12 @@ private theorem bridge_fluid_helicity
     (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
       helicityInvariant A ω' = twinWaveHelicity A Ω') :=
   by
+    have hOnePos : (1 : ℝ) > 0 := by norm_num
     let state : FluidState E :=
-      anomalyFluidStateWithDensity (E := E) A B_mp B_dr 1 (by norm_num)
+      anomalyFluidStateWithDensity (E := E) A B_mp B_dr 1 hOnePos
     have hState :
         state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1 := by
-      simpa [state] using anomaly_as_fluid_state_with_density
-        (E := E) A B_mp B_dr 1 (by norm_num : (1 : ℝ) > 0)
+      simp [state, anomalyFluidStateWithDensity]
     have hResidual :
         momentumResidual (E := E) state.u = 0 := by
       have hResidualEin :
@@ -228,13 +233,14 @@ private theorem bridge_fluid_helicity
       simpa [hState.1] using hResidualEin
     exact ⟨⟨state, hState.1, hState.2, hResidual⟩, ⟨ω, Ω, hHelicity⟩⟩
 
+omit [FiniteDimensional ℝ E] in
 /--
 Regularization-sourced anomaly skewness on the fluid lane.
 -/
 private theorem anomalySkew_of_regularization
     (A B_mp B_dr : VelocityField E)
-    (k : ℕ)
     (h_mp : IsMoorePenroseInverse A B_mp)
+    (k : ℕ)
     (h_dr : IsDrazinInverse A B_dr k)
     (h_dr_star : star (A * B_dr) = A * B_dr) :
     ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
@@ -250,8 +256,8 @@ private theorem bridge_fluid_helicity_of_regularization
     (A B_mp B_dr : VelocityField E)
     (ω : VelocityField E →L[ℝ] ℝ)
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
-    (k : ℕ)
     (h_mp : IsMoorePenroseInverse A B_mp)
+    (k : ℕ)
     (h_dr : IsDrazinInverse A B_dr k)
     (h_dr_star : star (A * B_dr) = A * B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω) :
@@ -265,9 +271,36 @@ private theorem bridge_fluid_helicity_of_regularization
       ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
         = -EinsteinAnomaly A B_mp B_dr :=
     anomalySkew_of_regularization (A := A) (B_mp := B_mp) (B_dr := B_dr)
-      (k := k) h_mp h_dr h_dr_star
+      h_mp k h_dr h_dr_star
   exact bridge_fluid_helicity A B_mp B_dr ω Ω hAnomalySkew hHelicity
 
+/--
+Finite-dimensional regularization wrapper:
+derive a canonical Drazin witness internally and expose the fluid/helicity
+bridge under the remaining projector self-adjointness condition.
+-/
+private theorem bridge_fluid_helicity_of_regularization_of_finiteDimensional
+    (A B_mp : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω) :
+    ∃ (k : ℕ) (B_dr : VelocityField E),
+      IsDrazinInverse A B_dr k ∧
+      (star (A * B_dr) = A * B_dr →
+        ((∃ state : FluidState E,
+            state.u = EinsteinAnomaly A B_mp B_dr
+              ∧ state.ρ = 1
+              ∧ momentumResidual (E := E) state.u = 0) ∧
+          (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
+            helicityInvariant A ω' = twinWaveHelicity A Ω'))) := by
+  rcases InfoGeometry.Canonical.anomalySkew_of_regularization_of_finiteDimensional
+      (E := E) A B_mp h_mp with ⟨k, B_dr, h_dr, hSkew_of_star⟩
+  refine ⟨k, B_dr, h_dr, ?_⟩
+  intro h_dr_star
+  exact bridge_fluid_helicity A B_mp B_dr ω Ω (hSkew_of_star h_dr_star) hHelicity
+
+omit [FiniteDimensional ℝ E] in
 /--
 Transport-to-Bott helper:
 derive the `LichnerowiczBalancedCl11` witness from the owned operatorial
@@ -373,7 +406,7 @@ private theorem bits_to_gravity_to_fluid_capstone
 
 /--
 Defect-sourced capstone variant:
-if transported index mismatch is wired to conformal projector noncommutation,
+if transported-index compatibility with the conformal projector lane is provided,
 then the capstone conjunction holds and the conformal source scale is provably
 nonzero.
 -/
@@ -405,12 +438,11 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilat
     (Xdef : RealSplitKreinDiracFredholmModule A₀ B₀ H₂)
     (tdef : ℝ)
     (hVXdef : QuasilatticeChiralFredholmSurface V Xdef tdef)
-    (hMismatchNoncommute :
-      InfoGeometry.Canonical.ChiralDefectIndexBridge.TransportedChiralKernelDimMismatch
-        (A := A₀) (B := B₀) (E := E) V Xdef tdef hVXdef →
-        CI.spectralChiralProjector * CI.metricChiralProjector
-          ≠
-        CI.metricChiralProjector * CI.spectralChiralProjector)
+    (hCompatDefect :
+      SuperchargeProjectorCompatibility
+        (A := A₀) (B := B₀) (E := E)
+        CI V Xdef tdef hVXdef
+        CI.spectralChiralProjector CI.metricChiralProjector)
     (hIndexNonzero : quasilatticeAnalyticalIndex V Xdef tdef hVXdef ≠ 0)
     (n : Nat)
     (Tflow : SinkhornTrajectory n)
@@ -443,10 +475,12 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilat
         ∧
       EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
         (anomalyStressEnergyAt Kgeo x CI.chiralScale) :=
-    chiralScale_ne_zero_and_einsteinEquation_of_quasilatticeAnalyticalIndex_ne_zero_of_mismatch_forces_projector_noncommute
+    chiralScale_ne_zero_and_einsteinEquation_of_quasilatticeAnalyticalIndex_ne_zero_of_compat
       (A := A₀) (B := B₀) (E := E)
       (CI := CI) (V := V) (X := Xdef) (t := tdef) (hVX := hVXdef)
-      (hMismatchNoncommute := hMismatchNoncommute)
+      (superchargeProj := CI.spectralChiralProjector)
+      (transportedProj := CI.metricChiralProjector)
+      (hCompat := hCompatDefect)
       (hIndexNonzero := hIndexNonzero)
       (c := c) (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) hEin
   have hCap :
@@ -478,6 +512,211 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilat
       (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
       (n := n) (Tflow := Tflow) (γ := γ) (N := N)
   exact ⟨hScaleEin.1, hCap⟩
+
+/--
+Defect-sourced capstone variant (canonical projector pair):
+the compatibility witness is derived from the mismatch-to-noncommutation
+implication on the same transported defect slice.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilatticeAnalyticalIndex_of_mismatch_forces_projector_noncommute
+    {A₀ B₀ : Type}
+    [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [KreinSpace H₂] [KreinGradedModule H₂]
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (Xdef : RealSplitKreinDiracFredholmModule A₀ B₀ H₂)
+    (tdef : ℝ)
+    (hVXdef : QuasilatticeChiralFredholmSurface V Xdef tdef)
+    (hMismatchNoncommute :
+      InfoGeometry.Canonical.ChiralDefectIndexBridge.TransportedChiralKernelDimMismatch
+          V Xdef tdef hVXdef →
+        CI.spectralChiralProjector * CI.metricChiralProjector
+          ≠
+        CI.metricChiralProjector * CI.spectralChiralProjector)
+    (hIndexNonzero : quasilatticeAnalyticalIndex V Xdef tdef hVXdef ≠ 0)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ) :
+    CI.chiralScale ≠ 0
+      ∧
+    (0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+      ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod)) := by
+  have hCompatDefect :
+      SuperchargeProjectorCompatibility
+        (A := A₀) (B := B₀) (E := E)
+        CI V Xdef tdef hVXdef
+        CI.spectralChiralProjector CI.metricChiralProjector :=
+    superchargeProjectorCompatibility_of_mismatch_forces_projector_noncommute
+      CI V Xdef tdef hVXdef hMismatchNoncommute
+  exact
+    bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilatticeAnalyticalIndex
+      (A₀ := A₀) (B₀ := B₀)
+      (S := S) (hRankPos := hRankPos)
+      (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+      (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
+      (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+      (hAnomalySkew := hAnomalySkew)
+      (hHelicity := hHelicity)
+      (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+      (Xdef := Xdef) (tdef := tdef) (hVXdef := hVXdef)
+      (hCompatDefect := hCompatDefect)
+      (hIndexNonzero := hIndexNonzero)
+      (n := n) (Tflow := Tflow)
+      (γ := γ) (N := N)
+
+/--
+Defect-sourced capstone + DIII commutator wrapper:
+reuse the mismatch-driven capstone path, and append the DIII-owned transport
+commutator consequence from the canonical real BdG DIII atom closure.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_and_diii_transportCommutator_of_quasilatticeAnalyticalIndex_of_mismatch_forces_projector_noncommute
+    {A₀ B₀ : Type}
+    [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [KreinSpace H₂] [KreinGradedModule H₂]
+    (Sstate : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (Xdef : RealSplitKreinDiracFredholmModule A₀ B₀ H₂)
+    (hXdef : ChiralFredholmSurface Xdef)
+    (hEvenDef : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (tdef : ℝ)
+    (hVXdef : QuasilatticeChiralFredholmSurface V Xdef tdef)
+    (hMismatchNoncommute :
+      InfoGeometry.Canonical.ChiralDefectIndexBridge.TransportedChiralKernelDimMismatch
+          V Xdef tdef hVXdef →
+        CI.spectralChiralProjector * CI.metricChiralProjector
+          ≠
+        CI.metricChiralProjector * CI.spectralChiralProjector)
+    (hIndexNonzero : quasilatticeAnalyticalIndex V Xdef tdef hVXdef ≠ 0)
+    (hCentral :
+      InfoGeometry.Canonical.OperatorialCentralCharge.operatorialCentralCharge
+        (A := A₀) (B := B₀) (E := E) Xdef hXdef ≠ 0)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (Sbd : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA : Sbd.kernel.A = InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V Xdef.F tdef)
+    (hplus : P0.plus = quasilatticeChiralKernelSlicePlus V Xdef tdef)
+    (hminus : P0.minus = quasilatticeChiralKernelSliceMinus V Xdef tdef)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0 (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V Xdef.F tdef))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V Xdef.F tdef v = 0 →
+          v ≠ 0 → Sbd.boundaryGenerator v ≠ 0)
+    (hBoundary :
+      Sbd.boundaryGenerator = InfoGeometry.Canonical.VortexAnomalyLink.sourceVortexSeed (E := E) V
+        ∨ Sbd.boundaryGenerator = InfoGeometry.Canonical.VortexAnomalyLink.sinkVortexSeed (E := E) V)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ) :
+    (CI.chiralScale ≠ 0
+      ∧
+    (0 < Sstate.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+      ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod)))
+      ∧
+    InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+      V.connectionGenerator (spectral_epsilon (E := E)) ≠ 0 := by
+  have hCap :=
+    bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilatticeAnalyticalIndex_of_mismatch_forces_projector_noncommute
+      (A₀ := A₀) (B₀ := B₀)
+      (S := Sstate) (hRankPos := hRankPos)
+      (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+      (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
+      (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+      (hAnomalySkew := hAnomalySkew)
+      (hHelicity := hHelicity)
+      (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+      (Xdef := Xdef) (tdef := tdef) (hVXdef := hVXdef)
+      (hMismatchNoncommute := hMismatchNoncommute)
+      (hIndexNonzero := hIndexNonzero)
+      (n := n) (Tflow := Tflow)
+      (γ := γ) (N := N)
+  have hComm :
+      InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
+        V.connectionGenerator (spectral_epsilon (E := E)) ≠ 0 := by
+    have hDIII :=
+      canonicalDIIIProxy_transport_root_centralCharge_commutator_closure
+        (A := A₀) (B := B₀) (E := E)
+        V Xdef hXdef hEvenDef tdef M P0 Sbd hA hplus hminus hodd
+        hBoundaryOnZeroModes hCentral hBoundary
+    exact hDIII.2.2
+  exact ⟨hCap, hComm⟩
 
 /--
 Owner-path capstone composition:
@@ -579,8 +818,8 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization
     (A B_mp B_dr : VelocityField E)
     (ω : VelocityField E →L[ℝ] ℝ)
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
-    (k : ℕ)
     (h_mp : IsMoorePenroseInverse A B_mp)
+    (k : ℕ)
     (h_dr : IsDrazinInverse A B_dr k)
     (h_dr_star : star (A * B_dr) = A * B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
@@ -616,13 +855,79 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization
       ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
         = -EinsteinAnomaly A B_mp B_dr :=
     anomalySkew_of_regularization (A := A) (B_mp := B_mp) (B_dr := B_dr)
-      (k := k) h_mp h_dr h_dr_star
+      h_mp k h_dr h_dr_star
   exact bits_to_gravity_to_fluid_capstone
     (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
     (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
     (hEin := hEin)
     (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
     (hAnomalySkew := hAnomalySkew) (hHelicity := hHelicity)
+    (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+    (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+
+/--
+Regularization wrapper with internalized Drazin witness:
+derive `h_dr` from finite-dimensional global existence and keep only the
+star/selfadjointness regularization obligation as external input.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_of_regularization_global_drazin
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr_star_of_drazin :
+      ∀ {k : ℕ} {B_dr : VelocityField E},
+        IsDrazinInverse A B_dr k →
+          star (A * B_dr) = A * B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ) :
+    ∃ (B_dr : VelocityField E),
+      0 < S.variance_limit
+        ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+            (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+        ∧ (∃ state : FluidState E,
+            state.u = EinsteinAnomaly A B_mp B_dr
+              ∧ state.ρ = 1
+              ∧ momentumResidual (E := E) state.u = 0)
+        ∧ Mod.ConnesRovelliThermalTimeIdentity
+        ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+            (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+        ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+            helicityInvariant A ω = twinWaveHelicity A Ω)
+        ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+        ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+            LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+        ∧ (∀ k' : Nat, 0 ≤ trajectoryRNBarrier n Tflow k')
+        ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+        ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+            Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+  rcases DrazinInfiniteCore.nonempty_rieszDrazinData_endCLM (E := E) A with ⟨hRiesz⟩
+  refine ⟨hRiesz.D, ?_⟩
+  exact bits_to_gravity_to_fluid_capstone_of_regularization
+    (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
+    (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
+    (hEin := hEin)
+    (A := A) (B_mp := B_mp) (B_dr := hRiesz.D) (ω := ω) (Ω := Ω)
+    (h_mp := h_mp) (k := hRiesz.k) (h_dr := hRiesz.hIsDrazin)
+    (h_dr_star := h_dr_star_of_drazin hRiesz.hIsDrazin)
+    (hHelicity := hHelicity)
     (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
     (n := n) (Tflow := Tflow) (γ := γ) (N := N)
 
@@ -831,13 +1136,14 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
     (x : E)
     (Λ κ : ℝ)
     (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
-    (A B_mp B_dr : VelocityField E)
+    (A B_mp : VelocityField E)
     (ω : VelocityField E →L[ℝ] ℝ)
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
-    (k0 : ℕ)
     (h_mp : IsMoorePenroseInverse A B_mp)
-    (h_dr : IsDrazinInverse A B_dr k0)
-    (h_dr_star : star (A * B_dr) = A * B_dr)
+    (h_dr_star_of_drazin :
+      ∀ {k : ℕ} {B_dr : VelocityField E},
+        IsDrazinInverse A B_dr k →
+          star (A * B_dr) = A * B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
     (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
@@ -849,18 +1155,17 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
     (N : ℕ)
     (j : Nat)
     (t : ℝ)
-    (hTime : |t| ≤ trajectoryRNBarrier n Tflow j) :
+      (hTime : |t| ≤ trajectoryRNBarrier n Tflow j) :
     |squeezingLogShear t| ≤ 4 * trajectoryRNBarrier n Tflow j := by
-  have hCapstone :=
-    bits_to_gravity_to_fluid_capstone_of_regularization
+  rcases bits_to_gravity_to_fluid_capstone_of_regularization_global_drazin
       (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
       (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
       (hEin := hEin)
-      (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
-      (k := k0) (h_mp := h_mp) (h_dr := h_dr) (h_dr_star := h_dr_star)
+      (A := A) (B_mp := B_mp) (ω := ω) (Ω := Ω)
+      (h_mp := h_mp) (h_dr_star_of_drazin := h_dr_star_of_drazin)
       (hHelicity := hHelicity)
       (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
-      (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+      (n := n) (Tflow := Tflow) (γ := γ) (N := N) with ⟨B_dr, hCapstone⟩
   exact squeezingLogShear_bound_of_capstone_conjunction
     (S := S) (CI := CI) (c := c)
     (R := R) (Kgeo := Kgeo) (x := x)
@@ -944,6 +1249,205 @@ private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
     (n := n) (H := G) (σ := σ) (u := u) (T := Tflow) hCocycle hBridge hGeneratorLift
 
 /--
+KMS-closure / pairing-witness cocycle-sourced capstone variant:
+the cocycle generator-lift clause is discharged from exact Sinkhorn-step KMS
+closure plus the pairing witness.
+-/
+private def bits_to_gravity_to_fluid_capstone_cocycle_sourced_sinkhornKMSClosure_pairingWitness
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
+    {G : Type}
+    [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [FiniteDimensional ℝ G]
+    (σ : InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow (H := G))
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle σ u)
+    (hBridge : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := G) σ)
+    (K : InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd G)
+    (ωKMS :
+      Nat → InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd G →L[ℝ] ℝ)
+    (β : ℝ)
+    (hClosure :
+      InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSClosure
+        n Tflow K ωKMS β)
+    (hPair :
+      KMSPairingWitness (n := n) (E := G) Tflow σ u hBridge K ωKMS β) := by
+  exact bits_to_gravity_to_fluid_capstone_cocycle_sourced
+    (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+    (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+    (hAnomalySkew := hAnomalySkew)
+    (hHelicity := hHelicity)
+    (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+    (n := n) (Tflow := Tflow)
+    (γ := γ) (N := N)
+    (σ := σ) (u := u) (hCocycle := hCocycle) (hBridge := hBridge)
+    (hGeneratorLift :=
+      cocycleGeneratorLift_of_sinkhornKMSClosure_pairingWitness
+        (n := n) (E := G)
+        (T := Tflow) (σ := σ) (u := u) (bridge := hBridge)
+        (K := K) (ω := ωKMS) (β := β)
+        hClosure hPair)
+
+/--
+KMS-control / pairing-witness cocycle-sourced capstone variant:
+the cocycle generator-lift clause is discharged from Sinkhorn KMS control by
+first closing to exact stepwise KMS.
+-/
+private def bits_to_gravity_to_fluid_capstone_cocycle_sourced_sinkhornKMSControl_pairingWitness
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
+    {G : Type}
+    [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [FiniteDimensional ℝ G]
+    (σ : InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow (H := G))
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle σ u)
+    (hBridge : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := G) σ)
+    (K : InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd G)
+    (ωKMS :
+      Nat → InfoGeometry.Canonical.KMSSinkhornBridge.AlgebraEnd G →L[ℝ] ℝ)
+    (β : ℝ)
+    (hControl :
+      InfoGeometry.Canonical.KMSSinkhornBridge.SinkhornKMSControl
+        n Tflow K ωKMS β)
+    (hPair :
+      KMSPairingWitness (n := n) (E := G) Tflow σ u hBridge K ωKMS β) := by
+  exact bits_to_gravity_to_fluid_capstone_cocycle_sourced
+    (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+    (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+    (hAnomalySkew := hAnomalySkew)
+    (hHelicity := hHelicity)
+    (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+    (n := n) (Tflow := Tflow)
+    (γ := γ) (N := N)
+    (σ := σ) (u := u) (hCocycle := hCocycle) (hBridge := hBridge)
+    (hGeneratorLift :=
+      cocycleGeneratorLift_of_sinkhornKMSControl_pairingWitness
+        (n := n) (E := G)
+        (T := Tflow) (σ := σ) (u := u) (bridge := hBridge)
+        (K := K) (ω := ωKMS) (β := β)
+        hControl hPair)
+
+/--
+Integer-time cocycle-match capstone variant:
+the RN cocycle bridge discharges the topological Bekenstein clause from
+`hMatch` by deriving the generator-lift condition internally.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced_natMatch
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
+    {G : Type}
+    [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [FiniteDimensional ℝ G]
+    (σ : InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow (H := G))
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle σ u)
+    (hBridge : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := G) σ)
+    (hMatch :
+      ∀ k : Nat,
+        CocycleEntropyPotential (H := G) σ u hBridge k
+          = trajectoryRNGeneratorPotential (n := n) Tflow k) :
+    0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+        ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+  exact bits_to_gravity_to_fluid_capstone_cocycle_sourced
+    (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+    (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+    (hAnomalySkew := hAnomalySkew)
+    (hHelicity := hHelicity)
+    (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+    (n := n) (Tflow := Tflow)
+    (γ := γ) (N := N)
+    (σ := σ) (u := u) (hCocycle := hCocycle) (hBridge := hBridge)
+    (hGeneratorLift :=
+      cocycleGeneratorLift_of_cocycleEntropyPotential_match
+        (n := n) (H := G) (σ := σ) (u := u) (hBridge := hBridge)
+        (T := Tflow) hMatch)
+
+/--
 Tomita-specialized cocycle-sourced capstone variant using the canonical
 modular-sign additive flow.
 -/
@@ -1017,5 +1521,84 @@ private theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
     (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := G))
     (u := u) (hCocycle := hCocycle) (hBridge := hBridge)
     (hGeneratorLift := by simpa [TomitaCocycleEntropyPotential] using hGeneratorLift)
+
+/--
+Tomita-specialized integer-time cocycle-match capstone variant.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced_natMatch
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
+    {G : Type}
+    [NormedAddCommGroup G] [InnerProductSpace ℝ G] [CompleteSpace G] [FiniteDimensional ℝ G]
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd G)
+    (hCocycle :
+      InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := G))
+        u)
+    (hBridge :
+      InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := G)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := G)))
+    (hMatch :
+      ∀ k : Nat,
+        TomitaCocycleEntropyPotential (H := G) u hBridge k
+          = trajectoryRNGeneratorPotential (n := n) Tflow k) :
+    0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+        ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+  exact bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
+    (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
+    (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+    (hAnomalySkew := hAnomalySkew)
+    (hHelicity := hHelicity)
+    (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+    (n := n) (Tflow := Tflow)
+    (γ := γ) (N := N)
+    (u := u) (hCocycle := hCocycle) (hBridge := hBridge)
+    (hGeneratorLift := by
+      simpa [TomitaCocycleEntropyPotential] using
+        (cocycleGeneratorLift_of_cocycleEntropyPotential_match
+          (n := n) (H := G)
+          (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := G))
+          (u := u) (hBridge := hBridge) (T := Tflow) hMatch))
 
 end InfoGeometry.Canonical.MasterSynthesis

@@ -2,31 +2,33 @@
 ## Recurrent Scorpio->Virgo Pipeline for Autotheory Work
 
 This defines a batch workflow that keeps generation high and closure honest.
-It is explicitly natural-language first.
+It is explicitly symbol-first. Natural language is coordination-only.
 
 ## Loop Unit
 
 One loop unit consumes one topic packet and outputs one admission decision.
 
-### Step 1: Jungian pass (generate)
+### Step 1: Jungian pass (symbol generate)
 
 - Input: topic packet + recent failures + current owner map.
 - Prompt: `tools/prompts/jungian_pass.md`
-- Output: motif packet + Socratic synthesis + unresolved contradictions.
+- Output: symbolic motif packet + proof skeleton packet + unresolved contradictions.
+- Must satisfy: `tools/prompts/SYMBOL_FIRST_PROTOCOL.md`.
 
 ### Step 2: Socratic regeneration (repeatable)
 
-- Rephrase, reorder, compress, and amplify the packet in natural language.
-- Run multiple passes until at least one coherent synthesis survives contradiction checks.
+- Rephrase, reorder, compress, and amplify symbol relations and lemma chains.
+- Use natural language only as short gloss for coordination.
+- Run multiple passes until at least one coherent symbolic chain survives contradiction checks.
 - Keep unresolved but high-value motifs alive.
 
 ### Step 3: Translator normalization (pre-formal)
 
-- Convert each surviving synthesis claim into:
+- Convert each surviving symbolic claim into:
   - one pre-formal statement shape,
   - one likely owner path,
   - one likely bridge path.
-- Remove claims that cannot name any formal lane.
+- Remove claims that cannot name formal lane and first-goal shape.
 
 ### Step 4: Pauli pass (exclude/admit)
 
@@ -50,6 +52,7 @@ Only apply this step for claims marked formalizable-now.
 
 - run targeted build for changed module(s),
 - then umbrella check when batch stabilizes.
+- record first failing goal/error signature for unresolved claims.
 
 ### Step 6: Archive memory
 
@@ -57,6 +60,7 @@ Only apply this step for claims marked formalizable-now.
   - surviving motifs,
   - rejected motifs and why,
   - obstruction class.
+  - symbolic deltas from compiler feedback.
 
 ---
 

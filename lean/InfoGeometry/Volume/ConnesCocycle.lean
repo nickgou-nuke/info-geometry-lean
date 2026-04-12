@@ -222,6 +222,31 @@ theorem scalarCocycle_mul
           rw [B.sigma_invariant s (u t)]
 
 /--
+Normalization at time zero for the induced scalar cocycle.
+This follows from the cocycle law at `(0,0)` and cancellation in `ℝˣ`.
+-/
+theorem scalarCocycle_zero_eq_one
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) :
+    scalarCocycle (H := H) σ u B 0 = 1 := by
+  have h00 :
+      scalarCocycle (H := H) σ u B 0
+        = scalarCocycle (H := H) σ u B 0
+            * scalarCocycle (H := H) σ u B 0 := by
+    simpa using (scalarCocycle_mul (H := H) σ u hCocycle B 0 0)
+  have hmul :
+      scalarCocycle (H := H) σ u B 0 * 1
+        = scalarCocycle (H := H) σ u B 0
+            * scalarCocycle (H := H) σ u B 0 := by
+    simpa [one_mul] using h00
+  have hcancel :
+      (1 : ℝˣ) = scalarCocycle (H := H) σ u B 0 := by
+    exact mul_left_cancel hmul
+  simpa using hcancel.symm
+
+/--
 Additive cocycle potential induced from the scalar cocycle by logarithm.
 -/
 noncomputable def cocycleLogPotential
@@ -229,6 +254,19 @@ noncomputable def cocycleLogPotential
     (u : ℝ → AlgebraEnd H)
     (B : ScalarCocycleBridge (H := H) σ) : ℝ → ℝ :=
   fun t => Real.log |((scalarCocycle (H := H) σ u B t : ℝˣ) : ℝ)|
+
+/--
+Normalization at time zero for the additive cocycle log potential.
+-/
+theorem cocycleLogPotential_zero
+  (σ : AdditiveModularFlow (H := H))
+    (u : ℝ → AlgebraEnd H)
+    (hCocycle : IsConnesCocycle σ u)
+    (B : ScalarCocycleBridge (H := H) σ) :
+    cocycleLogPotential (H := H) σ u B 0 = 0 := by
+  unfold cocycleLogPotential
+  rw [scalarCocycle_zero_eq_one (H := H) (σ := σ) (u := u) hCocycle B]
+  simp
 
 /--
 Defective descent surface for the scalar cocycle, viewed as a multiplicative

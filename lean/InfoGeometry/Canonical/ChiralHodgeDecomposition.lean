@@ -96,6 +96,7 @@ omit [CompleteSpace E] in
   rw [spectralMinusProj_apply_eq_minusPoint]
   apply DoubledSpace.ext <;> simp [plusPoint, minusPoint]
 
+omit [CompleteSpace E] in
 /-- Pointwise form of the `P₊ → P₋` chiral Dirac arrow. -/
 @[rep_depth krein, simp] theorem rootDiracPlus_apply (u : H₂) :
     rootDiracPlus (E := E) u = minusPoint (E := E) (WithLp.fst u) := by
@@ -103,6 +104,7 @@ omit [CompleteSpace E] in
     spectralPlusProj_apply_eq_plusPoint, modular_j_plusPoint, spectralMinusProj_apply_eq_minusPoint]
   simp [minusPoint]
 
+omit [CompleteSpace E] in
 /-- Pointwise form of the `P₋ → P₊` chiral Dirac arrow. -/
 @[rep_depth krein, simp] theorem rootDiracMinus_apply (u : H₂) :
     rootDiracMinus (E := E) u = plusPoint (E := E) (WithLp.snd u) := by
@@ -110,6 +112,7 @@ omit [CompleteSpace E] in
     spectralMinusProj_apply_eq_minusPoint, modular_j_minusPoint, spectralPlusProj_apply_eq_plusPoint]
   simp [plusPoint]
 
+omit [CompleteSpace E] in
 /-- The `P₊DP₊` diagonal block vanishes for the root odd Dirac lane. -/
 @[rep_depth krein]
 theorem rootDirac_plus_plus_block_eq_zero :
@@ -124,6 +127,7 @@ theorem rootDirac_plus_plus_block_eq_zero :
     rw [spectralPlusProj_apply_eq_plusPoint, modular_j_plusPoint]
   rw [hmod, spectralChiralPlusProjector_apply_minusPoint]
 
+omit [CompleteSpace E] in
 /-- The `P₋DP₋` diagonal block vanishes for the root odd Dirac lane. -/
 @[rep_depth krein]
 theorem rootDirac_minus_minus_block_eq_zero :
@@ -138,6 +142,7 @@ theorem rootDirac_minus_minus_block_eq_zero :
     rw [spectralMinusProj_apply_eq_minusPoint, modular_j_minusPoint]
   rw [hmod, spectralChiralMinusProjector_apply_plusPoint]
 
+omit [CompleteSpace E] in
 /-- The root odd Dirac lane splits into its two off-diagonal chiral arrows. -/
 @[rep_depth krein]
 theorem rootDiracOddLane_eq_chiral_sum :
@@ -148,6 +153,7 @@ theorem rootDiracOddLane_eq_chiral_sum :
   change modular_j u = minusPoint (E := E) (WithLp.fst u) + plusPoint (E := E) (WithLp.snd u)
   apply DoubledSpace.ext <;> simp [plusPoint, minusPoint, modular_j_apply]
 
+omit [CompleteSpace E] in
 /-- The positive-sector Hodge loop is the `ε = +1` projector. -/
 @[rep_depth krein]
 theorem rootChiralLaplacianPlus_eq_spectralChiralPlusProjector :
@@ -158,6 +164,7 @@ theorem rootChiralLaplacianPlus_eq_spectralChiralPlusProjector :
   rw [rootDiracPlus_apply, rootDiracMinus_apply, spectralPlusProj_apply_eq_plusPoint]
   apply DoubledSpace.ext <;> simp [plusPoint, minusPoint]
 
+omit [CompleteSpace E] in
 /-- The negative-sector Hodge loop is the `ε = -1` projector. -/
 @[rep_depth krein]
 theorem rootChiralLaplacianMinus_eq_spectralChiralMinusProjector :
@@ -180,8 +187,7 @@ theorem rootDiracOddLane_sq_eq_chiralLaplacian_sum :
           simp [rootDiracOddLane]
     _ = spectralChiralPlusProjector (E := E) + spectralChiralMinusProjector (E := E) := by
           symm
-          simpa [spectralChiralPlusProjector, spectralChiralMinusProjector] using
-            spectralProj_sum (E := E)
+          simp [spectralChiralPlusProjector, spectralChiralMinusProjector]
     _ = rootChiralLaplacianPlus (E := E) + rootChiralLaplacianMinus (E := E) := by
           rw [rootChiralLaplacianPlus_eq_spectralChiralPlusProjector,
             rootChiralLaplacianMinus_eq_spectralChiralMinusProjector]

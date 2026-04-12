@@ -100,6 +100,54 @@ theorem logAbsDet_cramerRaoMetric_eq_zero_of_rnEntropySource_of_unitRelativeVolu
 
 omit [FiniteDimensional ℝ E] in
 /--
+RN entropy sourcing plus unit relative-volume closure yields the vacuum Einstein
+equation on the `c = 0` branch (`scalar = 2Λ`) once a metric RN bridge is fixed.
+-/
+theorem vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolume
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (R : RicciTensor E)
+    (x : E)
+    (Λ : ℝ)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (hUnit : relativeVolumeChangeRN n M = 1)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
+    VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  have hUnitState : UnitRelativeVolumeState Kgeo :=
+    unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
+      (n := n) (Kgeo := Kgeo) (M := M) hSource hUnit
+  exact vacuumEinsteinEquation_of_unitRelativeVolume
+    (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hBridge
+
+omit [FiniteDimensional ℝ E] in
+/--
+RN entropy sourcing plus unit relative-volume closure yields both Ricci-flatness
+and the vacuum Einstein equation once a metric RN bridge is fixed.
+-/
+theorem isRicciFlat_and_vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolume
+    (n : Nat)
+    (Kgeo : KaehlerInformationGeometry E)
+    (R : RicciTensor E)
+    (x : E)
+    (Λ : ℝ)
+    (M : SinkhornMatrix n)
+    (hSource : RNEntropySourcesMongeAmpere n Kgeo M)
+    (hUnit : relativeVolumeChangeRN n M = 1)
+    (hBridge : MetricRNRicciBridge R Kgeo x) :
+    IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
+  have hUnitState : UnitRelativeVolumeState Kgeo :=
+    unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolume
+      (n := n) (Kgeo := Kgeo) (M := M) hSource hUnit
+  refine ⟨?_, ?_⟩
+  · exact isRicciFlat_of_unitRelativeVolume
+      (R := R) (K := Kgeo) (x := x) hUnitState hBridge
+  · exact vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolume
+      (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
+      (M := M) hSource hUnit hBridge
+
+omit [FiniteDimensional ℝ E] in
+/--
 Constant-density witness extracted from RN-entropy Monge-Ampere sourcing.
 -/
 private theorem hasConstantMongeAmpereDensity_of_rnEntropySource

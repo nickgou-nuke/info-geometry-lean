@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Singular
+import InfoGeometry.Canonical.DrazinExistenceBridge
 import InfoGeometry.KK.KasparovCycle
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Quantum.BulkBoundary
@@ -147,7 +148,8 @@ theorem exists_nontrivial_regularization_pair_of_dim_mismatch
   have hZero : HasZeroMode (S := S) Q :=
     hasZeroMode_of_dim_mismatch (M := M) P0 Q hodd hdim
   rcases exists_moorePenroseInverse_global (A := Q) with ⟨Q_MP, hMP⟩
-  rcases exists_drazinInverse_global (A := Q) with ⟨k, Q_D, hD⟩
+  rcases DrazinExistenceBridge.exists_canonicalDrazinInverse_global_endCLM
+      (E := S) Q with ⟨k, Q_D, hD⟩
   refine ⟨Q_MP, Q_D, k, hMP, hD, ?_, ?_, ?_⟩
   · exact moorePenroseRightProjector_ne_one_of_hasZeroMode hMP hZero
   · exact moorePenroseLeftProjector_ne_one_of_hasZeroMode hMP hZero

@@ -54,7 +54,11 @@ Therefore:
 Every transformation must be inspectable.  
 Avoid opaque automation unless trivial.
 
-4. NO STRATEGIC LEAPS  
+4. SYMBOL-FIRST COMMUNICATION  
+When exploring a blocked proof, produce symbol-level state updates first
+(operators/relations/goal-shape), and use natural language only as short gloss.
+
+5. NO STRATEGIC LEAPS  
 Do not “see the whole proof.”  
 Only formalize the current requested step.
 
@@ -248,6 +252,20 @@ Tactic:
 Maintain ordering consistency.  
 Do not summarize multiple tactics into one description.  
 Each traced tactic must correspond to exactly one explanation.
+
+────────────────────────────────────
+IX.b SYMBOL-FIRST PACKET MODE
+────────────────────────────────────
+
+When asked for exploration support, emit:
+
+- `target_theorem`
+- `symbolic_state` (symbols + relations)
+- `proof_skeleton` (lemma chain + tactic sketch)
+- `compile_probe` (first-goal / error signature)
+- `delta_update` (next minimal symbolic change)
+
+Do not emit language-only exploration packets.
 
 ────────────────────────────────────
 X. STOP CONDITION

@@ -1,4 +1,5 @@
 import InfoGeometry.Krein.KreinSpace
+import InfoGeometry.Krein.InvolutiveSelfDualCarrier
 import InfoGeometry.Cartan.Involution
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.ProdL2
@@ -95,6 +96,61 @@ noncomputable def spectral_epsilon : DoubledSpace E →L[ℝ] DoubledSpace E whe
 noncomputable def complex_i : DoubledSpace E →L[ℝ] DoubledSpace E :=
   modular_j.comp spectral_epsilon
 
+/-- The ambient Hilbert inner product packaged as a bilinear form. -/
+noncomputable def doubledHilbertBilin : LinearMap.BilinForm ℝ (DoubledSpace E) :=
+  LinearMap.mk₂ ℝ
+    (fun u v => inner ℝ u v)
+    (by
+      intro u₁ u₂ v
+      simp [inner_add_left])
+    (by
+      intro c u v
+      simp [real_inner_smul_left]
+      ring)
+    (by
+      intro u v₁ v₂
+      simp [inner_add_right])
+    (by
+      intro c u v
+      simp [real_inner_smul_right]
+      ring)
+
+/--
+Canonical substrate packaging of the doubled lane as an involutive self-dual carrier.
+This is used to rebase doubled identities onto owner-level root lemmas.
+-/
+noncomputable def doubledCarrier : InvolutiveSelfDualCarrier where
+  H := DoubledSpace E
+  kreinPairing := doubledHilbertBilin (E := E)
+  J := modular_j (E := E)
+  ε := spectral_epsilon (E := E)
+  J_sq := by
+    apply ContinuousLinearMap.ext
+    intro u
+    apply DoubledSpace.ext <;> simp [modular_j]
+  ε_sq := by
+    apply ContinuousLinearMap.ext
+    intro u
+    apply DoubledSpace.ext <;> simp [spectral_epsilon]
+  J_ε_anticomm := by
+    apply ContinuousLinearMap.ext
+    intro u
+    apply DoubledSpace.ext <;> simp [modular_j, spectral_epsilon]
+  pairing_symm := by
+    intro u v
+    simp [doubledHilbertBilin, real_inner_comm]
+  pairing_J_invariant := by
+    intro u v
+    simp [doubledHilbertBilin, modular_j, WithLp.prod_inner_apply, add_comm]
+  pairing_ε_invariant := by
+    intro u v
+    simp [doubledHilbertBilin, spectral_epsilon, WithLp.prod_inner_apply]
+  pairing_nondegenerate := by
+    intro u v h
+    apply ext_inner_right ℝ
+    intro w
+    exact congrArg (fun φ : Module.Dual ℝ (DoubledSpace E) => φ w) h
+
 /-- $Cl(1,1)$ compatibility relation package on doubled-space endomorphisms. -/
 def cl11_relations (J ε : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
   J.comp J = ContinuousLinearMap.id ℝ (DoubledSpace E) ∧
@@ -151,29 +207,26 @@ lemma modular_j_spectral_epsilon_anticommute (E : Type*) [NormedAddCommGroup E] 
 /-- Exact product identity `J I = ε` for the doubled-space split generators. -/
 lemma modular_j_comp_complex_i (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     (modular_j (E := E)).comp (complex_i (E := E)) = spectral_epsilon := by
-  unfold complex_i
-  rw [← ContinuousLinearMap.comp_assoc, modular_j_involution, ContinuousLinearMap.id_comp]
+  simpa [complex_i, doubledCarrier]
+    using (InvolutiveSelfDualCarrier.J_comp_K (X := doubledCarrier (E := E)))
 
 /-- Exact product identity `I J = -ε` for the doubled-space split generators. -/
 lemma complex_i_comp_modular_j (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     (complex_i (E := E)).comp (modular_j (E := E)) = -spectral_epsilon := by
-  apply ContinuousLinearMap.ext
-  intro u
-  apply DoubledSpace.ext <;> simp [complex_i, modular_j, spectral_epsilon]
+  simpa [complex_i, doubledCarrier]
+    using (InvolutiveSelfDualCarrier.K_comp_J (X := doubledCarrier (E := E)))
 
 /-- Exact product identity `I ε = J` for the doubled-space split generators. -/
 lemma complex_i_comp_spectral_epsilon (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     (complex_i (E := E)).comp spectral_epsilon = modular_j := by
-  apply ContinuousLinearMap.ext
-  intro u
-  apply DoubledSpace.ext <;> simp [complex_i, modular_j, spectral_epsilon]
+  simpa [complex_i, doubledCarrier]
+    using (InvolutiveSelfDualCarrier.K_comp_ε (X := doubledCarrier (E := E)))
 
 /-- Exact product identity `ε I = -J` for the doubled-space split generators. -/
 lemma spectral_epsilon_comp_complex_i (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     spectral_epsilon.comp (complex_i (E := E)) = -modular_j := by
-  apply ContinuousLinearMap.ext
-  intro u
-  apply DoubledSpace.ext <;> simp [complex_i, modular_j, spectral_epsilon]
+  simpa [complex_i, doubledCarrier]
+    using (InvolutiveSelfDualCarrier.ε_comp_K (X := doubledCarrier (E := E)))
 
 /-- Exact product identity `ε J = -I` for the doubled-space split generators. -/
 lemma spectral_epsilon_comp_modular_j (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
@@ -184,8 +237,8 @@ lemma spectral_epsilon_comp_modular_j (E : Type*) [NormedAddCommGroup E] [InnerP
 
 lemma complex_i_sq (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     (complex_i (E := E)).comp complex_i = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-  apply ContinuousLinearMap.ext; intro u
-  apply DoubledSpace.ext <;> simp [complex_i]
+  simpa [complex_i, doubledCarrier]
+    using (InvolutiveSelfDualCarrier.K_sq (X := doubledCarrier (E := E)))
 
 theorem modular_j_spectral_epsilon_has_cl11_relations (E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :

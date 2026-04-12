@@ -23,7 +23,7 @@ Reviewer:
 - Unanchored closure language:
 
 ## Formalization Readiness
-- language-only:
+- symbolic-incomplete:
 - pre-formal:
 - formalizable-now:
 

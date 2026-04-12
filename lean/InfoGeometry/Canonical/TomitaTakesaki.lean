@@ -268,7 +268,8 @@ lemma modularComplexI_kreinInner_comp
     -KreinSpace.kreinInner (H := DoubledSpace E) u v := by
   have hK2 :
       (modularComplexI (E := E)) ((modularComplexI (E := E)) v) = -v := by
-    apply DoubledSpace.ext <;> simp [modularComplexI]
+    have hSq := modularComplexI_sq (E := E)
+    exact congrArg (fun F : DoubledSpace E →L[ℝ] DoubledSpace E => F v) hSq
   calc
     KreinSpace.kreinInner (H := DoubledSpace E)
         ((modularComplexI (E := E)) u)
@@ -312,7 +313,8 @@ lemma modularComplexI_inner_comp
     ⟪u, v⟫_ℝ := by
   have hK2 :
       (modularComplexI (E := E)) ((modularComplexI (E := E)) v) = -v := by
-    apply DoubledSpace.ext <;> simp [modularComplexI]
+    have hSq := modularComplexI_sq (E := E)
+    exact congrArg (fun F : DoubledSpace E →L[ℝ] DoubledSpace E => F v) hSq
   calc
     ⟪modularComplexI (E := E) u, modularComplexI (E := E) v⟫_ℝ
         =

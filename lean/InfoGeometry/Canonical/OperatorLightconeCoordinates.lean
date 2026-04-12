@@ -42,6 +42,22 @@ noncomputable def lightconePlusCoordinate (ψ : H₂) : ℝ :=
 noncomputable def lightconeMinusCoordinate (ψ : H₂) : ℝ :=
   kreinExpectation (E := E) ψ P₋
 
+/--
+Operator-native alias for the `+` spectral polarization coordinate channel.
+This keeps downstream prose independent from manifold-facing terminology.
+-/
+@[rep_depth transport]
+noncomputable abbrev polarizedPlusCoordinate (ψ : H₂) : ℝ :=
+  lightconePlusCoordinate (E := E) ψ
+
+/--
+Operator-native alias for the `-` spectral polarization coordinate channel.
+This keeps downstream prose independent from manifold-facing terminology.
+-/
+@[rep_depth transport]
+noncomputable abbrev polarizedMinusCoordinate (ψ : H₂) : ℝ :=
+  lightconeMinusCoordinate (E := E) ψ
+
 /-- Coordinate completeness: `x⁺ + x⁻` equals expectation of the identity channel. -/
 @[rep_depth transport]
 theorem lightconeCoordinate_sum_eq_id_expectation (ψ : H₂) :
@@ -66,6 +82,22 @@ noncomputable def rapidityPlusCoordinate (ψ : H₂) (η : ℝ) : ℝ :=
 noncomputable def rapidityMinusCoordinate (ψ : H₂) (η : ℝ) : ℝ :=
   kreinExpectation (E := E) ψ (transportedMinusProjector (E := E) (epsilonBoost (E := E) η))
 
+/--
+Operator-native alias for the `+` spectral polarization coordinate under
+`ε`-boost transport.
+-/
+@[rep_depth transport]
+noncomputable abbrev epsilonBoostPlusCoordinate (ψ : H₂) (η : ℝ) : ℝ :=
+  rapidityPlusCoordinate (E := E) ψ η
+
+/--
+Operator-native alias for the `-` spectral polarization coordinate under
+`ε`-boost transport.
+-/
+@[rep_depth transport]
+noncomputable abbrev epsilonBoostMinusCoordinate (ψ : H₂) (η : ℝ) : ℝ :=
+  rapidityMinusCoordinate (E := E) ψ η
+
 /-- Under `ε`-boost rapidity `η`, the `+` light-cone coordinate scales by `exp(η)`. -/
 @[rep_depth transport]
 theorem rapidityPlusCoordinate_eq_exp_mul_lightconePlus (ψ : H₂) (η : ℝ) :
@@ -89,6 +121,20 @@ noncomputable def rapidityTimeCoordinate (ψ : H₂) (η : ℝ) : ℝ :=
 @[rep_depth transport]
 noncomputable def rapiditySpaceCoordinate (ψ : H₂) (η : ℝ) : ℝ :=
   (1 / 2 : ℝ) * (rapidityPlusCoordinate (E := E) ψ η - rapidityMinusCoordinate (E := E) ψ η)
+
+/--
+Operator-native alias for the boosted identity-like polarization channel.
+-/
+@[rep_depth transport]
+noncomputable abbrev epsilonBoostTimeCoordinate (ψ : H₂) (η : ℝ) : ℝ :=
+  rapidityTimeCoordinate (E := E) ψ η
+
+/--
+Operator-native alias for the boosted grading-like polarization channel.
+-/
+@[rep_depth transport]
+noncomputable abbrev epsilonBoostSpaceCoordinate (ψ : H₂) (η : ℝ) : ℝ :=
+  rapiditySpaceCoordinate (E := E) ψ η
 
 /-- Time-like expectation channel from light-cone coordinates: `t = (x⁺ + x⁻)/2`. -/
 @[rep_depth transport]

@@ -230,6 +230,9 @@ jobs:
       - name: Enforce canonical policy
         run: python3 tools/infra/canonical_policy_lint.py
 
+      - name: Enforce agentic autonomy policy
+        run: python3 tools/infra/agentic_policy_lint.py
+
       - name: Baseline graph extraction
         run: python3 -m scripts make-graph --probe-unresolved --out docs-map/graph.json
 

@@ -63,6 +63,9 @@ fi
 echo "[strict-check] enforcing quarantine boundary"
 bash scripts/enforce_quarantine_imports.sh
 
+echo "[strict-check] enforcing agentic autonomy policy"
+python3 tools/infra/agentic_policy_lint.py
+
 echo "[strict-check] running constructivity audit on stable surface"
 python3 tools/quality/audit_constructivity.py --mode stable
 

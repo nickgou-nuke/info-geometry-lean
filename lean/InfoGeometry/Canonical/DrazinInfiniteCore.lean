@@ -310,6 +310,29 @@ theorem nonempty_rieszDrazinData_endCLM (T : E →L[ℝ] E) :
       hP := rfl
     }⟩
 
+/--
+Canonical finite-dimensional Riesz-Drazin package chosen from existence.
+-/
+noncomputable def canonicalRieszDrazinData_endCLM (T : E →L[ℝ] E) :
+    RieszDrazinData T :=
+  Classical.choice (nonempty_rieszDrazinData_endCLM (E := E) T)
+
+/-- Canonical finite-dimensional Drazin index. -/
+noncomputable def canonicalDrazinIndex_endCLM (T : E →L[ℝ] E) : ℕ :=
+  (canonicalRieszDrazinData_endCLM (E := E) T).k
+
+/-- Canonical finite-dimensional Drazin inverse. -/
+noncomputable def canonicalDrazinInverse_endCLM (T : E →L[ℝ] E) : E →L[ℝ] E :=
+  (canonicalRieszDrazinData_endCLM (E := E) T).D
+
+/-- Canonical finite-dimensional Drazin witness specification. -/
+theorem canonicalDrazinInverse_endCLM_spec (T : E →L[ℝ] E) :
+    Drazin.IsDrazinInverse T
+      (canonicalDrazinInverse_endCLM (E := E) T)
+      (canonicalDrazinIndex_endCLM (E := E) T) := by
+  simpa [canonicalDrazinInverse_endCLM, canonicalDrazinIndex_endCLM] using
+    (canonicalRieszDrazinData_endCLM (E := E) T).hIsDrazin
+
 end FiniteDimensionalBridge
 
 end InfoGeometry.Canonical.DrazinInfiniteCore

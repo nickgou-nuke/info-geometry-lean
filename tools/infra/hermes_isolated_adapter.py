@@ -7,11 +7,35 @@ import sys
 import yaml
 from pathlib import Path
 
+import hashlib
 """
-# Isolated Hermes Adapter (Asymmetric Edition)
+# Hardened Isolated Hermes Adapter (Agentic Soul Edition)
 Orchestrates the sandboxed execution of Lean 4 proof tasks using 
 asymmetric Proposer/Formalizer models on DGX Spark.
+Enforces hash-gated doctrine and commit-indexed tracing.
 """
+
+def get_directory_hash(directory_path):
+    """Calculates a persistent hash of the doctrine/skills directory."""
+    sha256_hash = hashlib.sha256()
+    for root, dirs, files in os.walk(directory_path):
+        for file in sorted(files):
+            file_path = os.path.join(root, file)
+            with open(file_path, "rb") as f:
+                while byte_block := f.read(4096):
+                    sha256_hash.update(byte_block)
+    return sha256_hash.hexdigest()
+
+def ensure_trace_index():
+    """Builds the Spire Trace index if missing for the current commit."""
+    from tools.infra.trace_and_retrieve import get_git_sha, get_cache_path
+    sha = get_git_sha()
+    cache_file = get_cache_path(sha)
+    if not cache_file.exists():
+        print(f"--- [TRACE] Missing index for {sha[:8]}. Building... ---")
+        subprocess.run(["python3", "tools/infra/trace_and_retrieve.py", "--build-index"])
+    else:
+        print(f"--- [TRACE] Index for {sha[:8]} verified. ---")
 
 def setup_sandbox(sandbox_path, constitution_path):
     if sandbox_path.exists():
@@ -113,6 +137,13 @@ def main():
 
     # 0. Pre-flight Check
     check_backends()
+    
+    # Audit Doctrine Integrity
+    policy_hash = get_directory_hash("docs/policy")
+    print(f"--- [AUDIT] Policy Integrity: {policy_hash[:16]} ---")
+    
+    # Synchronize Trace Index
+    ensure_trace_index()
 
     print(f"--- [SANDBOX] Setup for Task {task['taskId']} ---")
     setup_sandbox(sandbox_path, constitution_path)

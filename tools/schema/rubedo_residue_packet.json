@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "RubedoResiduePacket",
+  "description": "Output of Stage IV (Failure). Implements the Law of Lineage Preservation by splitting Core and Frontier.",
+  "type": "object",
+  "required": ["taskId", "status", "proven_core", "frontier_residue"],
+  "properties": {
+    "taskId": { "type": "string", "format": "uuid" },
+    "status": { "type": "string", "enum": ["audited_failure", "partial_closure"] },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "proven_core": {
+      "type": "array",
+      "description": "The gold: the sequence of tactics/states that were verified.",
+      "items": {
+        "type": "object",
+        "required": ["state", "tactic"],
+        "properties": {
+          "state": { "type": "string" },
+          "tactic": { "type": "string" },
+          "verified": { "type": "boolean", "const": true }
+        }
+      }
+    },
+    "frontier_residue": {
+      "type": "object",
+      "description": "The slag: the specific obstruction that returns to the Athanor.",
+      "required": ["obstruction", "error_logs"],
+      "properties": {
+        "obstruction": { "type": "string" },
+        "error_logs": { "type": "string" },
+        "suggested_refinement": { "type": "string" }
+      }
+    },
+    "lineage_hashes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Hashes of the stabilized strata to be inherited by the next ascent."
+    }
+  }
+}

@@ -1,68 +1,80 @@
-import InfoGeometry.Canonical.ChiralDefectIndexBridge
-import InfoGeometry.Canonical.ConformalAnomalySource
-import InfoGeometry.Krein.InvolutiveSelfDualCarrier
+import InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge
+import InfoGeometry.Meta.Architecture
+
+open scoped InnerProductSpace
 
 /-!
 # InfoGeometry.Canonical.KernelCommutatorObstruction
 
-The definitive algebraic weld for the gravitational canopy.
+Thin wrapper surface for the kernel-commutator obstruction lane.
 
-This module proves the core lemma required for nomological closure:
-A non-vanishing analytical index (topological defect) on the doubled 
-carrier forces the non-commutation of the spectral and metric projectors.
-
-This converts the "Promissory Note" of the Einstein-source bridge into 
-compiled equity.
+This module does not introduce new defect ontology. It re-exports:
+- a finite-dimensional kernel-mismatch noncommutation lemma,
+- and the direct projector-obstruction consequence already owned by
+  `SuperchargeEinsteinSourceBridge`.
 -/
 
 namespace InfoGeometry.Canonical.KernelCommutatorObstruction
 
+open InfoGeometry.Canonical.BogoliubovVielbein
 open InfoGeometry.Canonical.ChiralDefectIndexBridge
 open InfoGeometry.Canonical.ConformalUnification
+open InfoGeometry.Canonical.OperatorialCentralCharge
+open InfoGeometry.KK
+open InfoGeometry.KK.RealSplitKreinKasparovCycle
 open InfoGeometry.Krein
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
+section Core
+
+variable {A B E : Type}
+variable [NormedRing A] [NormedRing B]
+variable [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)]
+
 local notation "H₂" => DoubledSpace E
 
 /--
-**The Commutator Obstruction Lemma**
-Proves that if the kernels of the mixed projections P1*P2 and P2*P1 have 
-different dimensions, the projectors P1 and P2 cannot commute.
-
-Proof:
-If P1 and P2 commute, then P1*P2 = P2*P1.
-Equal operators must have kernels of equal dimension.
-By contrapositive, dimension mismatch forces non-commutation.
+Finite-dimensional kernel mismatch forces noncommutation.
 -/
 theorem commutator_ne_zero_of_kernel_mismatch
+    [FiniteDimensional ℝ H₂]
     (P1 P2 : H₂ →L[ℝ] H₂)
-    (hMismatch : (LinearMap.ker (P1.comp P2)).finrank ≠ (LinearMap.ker (P2.comp P1)).finrank) :
+    (hMismatch :
+      Module.finrank ℝ ((P1.comp P2).toLinearMap.ker)
+        ≠
+      Module.finrank ℝ ((P2.comp P1).toLinearMap.ker)) :
     P1.comp P2 ≠ P2.comp P1 := by
-  intro hCommute
+  intro hComm
   apply hMismatch
-  rw [hCommute]
+  rw [hComm]
 
 /--
-**The Einstein-Defect Weld**
-Formally identifies the Chiral Mismatch with the Projector Obstruction.
-This proves that Information (the topological index) forces Gravity (the anomaly).
+Direct central-charge-to-obstruction eliminator using the canonical projector
+pair and a supplied mismatch-to-noncommutation implication.
 -/
 @[rep_depth transport, capstone]
 theorem projectorObstruction_ne_zero_of_mismatch_direct
     (CI : ConformalInference E)
-    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (V : BogoliubovVielbeinBundle (E := E))
     (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
     (t : ℝ)
-    (hVX : QuasilatticeChiralFredholmSurface V X t)
-    (hMismatch : TransportedChiralKernelDimMismatch V X t hVX)
-    (hSpectralAlign : CI.spectralChiralProjector = (KreinGradedModule.gradeProjPlus (H := H₂)).toLinearMap)
-    (hMetricAlign : CI.metricChiralProjector = (quasilatticeDirac V X.F t)) :
+    (hMismatchNoncommute :
+      TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E)
+          V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) →
+        CI.spectralChiralProjector * CI.metricChiralProjector
+          ≠
+        CI.metricChiralProjector * CI.spectralChiralProjector)
+    (hCentral :
+      operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0) :
     CI.projectorObstruction ≠ 0 := by
-  -- 1. Identify the projectors
-  rw [CI.projectorObstruction_eq_commutator]
-  -- 2. Apply the commutator obstruction lemma
-  apply commutator_ne_zero_of_kernel_mismatch
-  -- 3. Discharge the mismatch from the topological index
-  exact hMismatch
+  exact
+    InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge.projectorObstruction_ne_zero_of_operatorialCentralCharge_ne_zero_of_mismatch_forces_projector_noncommute
+      (A := A) (B := B) (E := E)
+      CI V X hX hEven t hMismatchNoncommute hCentral
+
+end Core
 
 end InfoGeometry.Canonical.KernelCommutatorObstruction

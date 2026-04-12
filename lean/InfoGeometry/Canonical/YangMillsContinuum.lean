@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.KMSSinkhornWeightedTransport
 import InfoGeometry.Canonical.KMSCocycleGeneratorBridge
 import InfoGeometry.Canonical.BekensteinBound
+import InfoGeometry.Canonical.ModularWeldBridge
 import InfoGeometry.Volume.ConnesCocycle
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Exponential
@@ -537,6 +538,90 @@ theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornControl_of_sampl
           (T := T) (K := K) (β := β) (S := S)
           (x0 := x0) (t0 := t0) (Ω := Ω) hΩ hJointKernel hCommOrthogonal)
       hPair
+
+/--
+Sampled IB cocycle endpoint (Tomita flow-unit specialization, closure form):
+the Connes cocycle witness is derived from the Tomita modular-sign flow and the
+bridge is fixed to `unitScalarBridge`.
+-/
+theorem topologicalBekensteinBound_of_tomitaFlowUnitCocycle_and_sinkhornClosure_of_sampledIB_pairingWitness
+    (T : InfoGeometry.Canonical.MoE.SinkhornTrajectory n)
+    (K : EndH E)
+    (β : ℝ)
+    (S : IBSampledFlow (Xib := Xib) (Yib := Yib) (Tib := Tib) (prob := prob))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω)
+    (hPair :
+      InfoGeometry.Canonical.KMSCocycleBridge.KMSPairingWitness
+        (n := n) (E := E)
+        T
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := E))
+        (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := E)))
+        (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+          (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := E)))
+        K
+        (sampledObservable (prob := prob) S x0 t0 Ω) β) :
+    InfoGeometry.Canonical.BekensteinBound.TopologicalBekensteinBound n T := by
+  exact
+    topologicalBekensteinBound_of_connesCocycle_and_sinkhornClosure_of_sampledIB_pairingWitness
+      (n := n) (E := E) (Xib := Xib) (Yib := Yib) (Tib := Tib) (prob := prob)
+      (T := T) (K := K) (β := β)
+      (S := S) (x0 := x0) (t0 := t0) (Ω := Ω)
+      (hΩ := hΩ) (hJointKernel := hJointKernel) (hCommOrthogonal := hCommOrthogonal)
+      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := E))
+      (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := E)))
+      (hCocycle := InfoGeometry.Canonical.ModularWeldBridge.tomita_modularSign_flowUnitCocycle_isConnesCocycle
+        (H := E))
+      (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+        (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := E)))
+      (hPair := hPair)
+
+/--
+Sampled IB cocycle endpoint (Tomita flow-unit specialization, control form):
+the Connes cocycle witness is derived from the Tomita modular-sign flow and the
+bridge is fixed to `unitScalarBridge`.
+-/
+theorem topologicalBekensteinBound_of_tomitaFlowUnitCocycle_and_sinkhornControl_of_sampledIB_pairingWitness
+    (T : InfoGeometry.Canonical.MoE.SinkhornTrajectory n)
+    (K : EndH E)
+    (β : ℝ)
+    (S : IBSampledFlow (Xib := Xib) (Yib := Yib) (Tib := Tib) (prob := prob))
+    (x0 : Xib) (t0 : Tib)
+    (Ω : InfoGeometry.Krein.DoubledSpace E)
+    (hΩ : Ω ≠ 0)
+    (hJointKernel : JointKernelOnOmega (F := E) K β Ω)
+    (hCommOrthogonal : CommutatorOrthogonalOnOmega (F := E) Ω)
+    (hPair :
+      InfoGeometry.Canonical.KMSCocycleBridge.KMSPairingWitness
+        (n := n) (E := E)
+        T
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := E))
+        (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := E)))
+        (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+          (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := E)))
+        K
+        (sampledObservable (prob := prob) S x0 t0 Ω) β) :
+    InfoGeometry.Canonical.BekensteinBound.TopologicalBekensteinBound n T := by
+  exact
+    topologicalBekensteinBound_of_connesCocycle_and_sinkhornControl_of_sampledIB_pairingWitness
+      (n := n) (E := E) (Xib := Xib) (Yib := Yib) (Tib := Tib) (prob := prob)
+      (T := T) (K := K) (β := β)
+      (S := S) (x0 := x0) (t0 := t0) (Ω := Ω)
+      (hΩ := hΩ) (hJointKernel := hJointKernel) (hCommOrthogonal := hCommOrthogonal)
+      (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := E))
+      (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := E)))
+      (hCocycle := InfoGeometry.Canonical.ModularWeldBridge.tomita_modularSign_flowUnitCocycle_isConnesCocycle
+        (H := E))
+      (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+        (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := E)))
+      (hPair := hPair)
 
 end IBSampledFlow
 

@@ -135,5 +135,29 @@ Starting with the activation of the Alchemical Loop, the system enforces a
 - The record must include the symbol name, the successful tactic sequence,
   and the alchemical phase transition (e.g., Citrinitas -> Rubedo).
 
+## 12. The Statement Lock and Autonomous Promotion
+
+To ensure absolute agentic autonomy without semantic drift, the following
+mechanical gates are mandatory:
+
+1. **The Statement Lock**: Proposers are forbidden from mutating theorem
+   names or types. Success is binary: either the exact target is proved, or
+   the task fails.
+2. **Triadic Memory Basin**:
+   - `quarantine/winning_traces.jsonl`: Raw successful attempts.
+   - `quarantine/replayed_traces.jsonl`: Attempts that reproduced cleanly.
+   - `skills/automated-learning/validated_patterns.jsonl`: Crystalline memory.
+3. **Machine-Gated Promotion**:
+   - Auto-promotion from raw trace to validated pattern happens only when
+     all gates (Build, Semantic Audit, Policy Lint, Clean Replay) pass.
+   - **No human review is required for individual proof promotion.**
+4. **Constitutional Governance**:
+   - Humans are excluded from the proof-approval loop.
+   - Humans remain the sole authority over the **Repository Law**: modifying
+     manifests, adjusting policy thresholds, and defining import budgets.
+
+This enforces the Spire's law: Humans set the constitution; Lean decides the
+truth; Agents execute the individuation.
+
 This ensures the Spire constantly formalizes its own "common unconscious" into
 reusable tactical knowledge.

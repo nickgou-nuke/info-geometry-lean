@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TheoremCandidatePacket",
+  "description": "Output of Stage I (Nigredo). Captures raw symbolic generation and latent pressures.",
+  "type": "object",
+  "required": ["taskId", "source", "timestamp", "symbolic_origin", "conceptual_payload"],
+  "properties": {
+    "taskId": { "type": "string", "format": "uuid" },
+    "source": { "type": "string", "enum": ["scorpio-probe", "blackbook-generator"] },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "symbolic_origin": { 
+      "type": "string", 
+      "description": "Reference to the Black Book or latent field source." 
+    },
+    "conceptual_payload": {
+      "type": "object",
+      "required": ["claim", "motivation"],
+      "properties": {
+        "claim": { "type": "string" },
+        "motivation": { "type": "string" },
+        "potential_morphisms": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "raw_signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "entity": { "type": "string" },
+          "potential_type": { "type": "string" }
+        }
+      }
+    }
+  }
+}

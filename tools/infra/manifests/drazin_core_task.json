@@ -1,0 +1,11 @@
+{
+  "name": "ascentAtZero_of_isDrazinInverse",
+  "file": "lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean",
+  "statement_hash": "LOCKED_HASH_PLACEHOLDER",
+  "type": "IsDrazinInverse T TD k → AscentAtZero T k",
+  "dependency_budget": [
+    "Mathlib.LinearAlgebra.Basic",
+    "InfoGeometry.Canonical.Drazin"
+  ],
+  "allowed_helpers": "InfoGeometry.Canonical.Drazin.IsDrazinInverse"
+}

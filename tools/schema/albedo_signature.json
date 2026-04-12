@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AlbedoSignature",
+  "description": "Output of Stage II (Albedo). The refined, formal candidate ready for distillation.",
+  "type": "object",
+  "required": ["taskId", "formal_target", "type_signature", "audit_hash"],
+  "properties": {
+    "taskId": { "type": "string", "format": "uuid" },
+    "formal_target": {
+      "type": "object",
+      "required": ["file", "theorem_name"],
+      "properties": {
+        "file": { "type": "string" },
+        "theorem_name": { "type": "string" }
+      }
+    },
+    "type_signature": { "type": "string" },
+    "dependencies": { "type": "array", "items": { "type": "string" } },
+    "audit_hash": { 
+      "type": "string", 
+      "description": "Hash of the adversarial filtration result." 
+    },
+    "status": { "type": "string", "enum": ["refined", "rejected"] }
+  }
+}

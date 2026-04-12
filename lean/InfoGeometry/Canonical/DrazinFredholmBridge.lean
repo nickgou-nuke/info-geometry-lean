@@ -49,7 +49,7 @@ noncomputable def defectChiralBlockMinus (T TD : EndH₂) : EndH₂ :=
   (defectProjector (E := E) T TD).comp (chiralMinus (E := E))
 
 /-- The defect projector splits as the sum of its chiral blocks. -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem defectProjector_eq_sum_defectChiralBlocks (T TD : EndH₂) :
     defectProjector (E := E) T TD
       =
@@ -174,7 +174,7 @@ structure DrazinDefectFredholmPackage
   defectSurface : DefectChiralFredholmSurface (E := E) T TD
 
 /-- The packaged defect block is nontrivial whenever the underlying compat layer says so. -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem defectProjector_ne_zero_of_package
     {T TD : EndH₂} {k : ℕ}
     (_hPkg : DrazinDefectFredholmPackage (E := E) T TD k)

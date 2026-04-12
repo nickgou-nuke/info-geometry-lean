@@ -1,0 +1,21 @@
+# 📜 HERMES CONFIG: Local Repository Isolation
+# This file ensures Hermes remains a tool of retrieval, not an owner of truth.
+
+model:
+  provider: custom
+  base_url: http://localhost:11434/v1
+  api_key: ollama
+  default: hermes-3-llama-3.1-8b
+
+# Skill and Memory Isolation
+# Hermes is forbidden from auto-learning into the Spire's authoritative skills.
+# It uses a local quarantine for session-specific tactics.
+paths:
+  skills: "./quarantine/hermes_skills"
+  memory: "./quarantine/hermes_memory"
+
+# Task Enforcement
+# Hermes must always operate on the provided task.json manifest.
+runtime:
+  statement_lock: true
+  audit_required: true

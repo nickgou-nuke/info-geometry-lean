@@ -64,6 +64,25 @@ structure ProjectorAgreementCertifiedConformalInference (E : Type*) [NormedAddCo
     IsMoorePenroseInverse.rightProjector A A_MP =
       IsMoorePenroseInverse.leftProjector A A_MP
 
+namespace CertifiedInverseKernel
+
+variable (CIK : InfoGeometry.Canonical.CertifiedInverseKernel E)
+
+/-- Adapter from the canonical certified inverse-kernel owner to the conformal
+surface. -/
+abbrev toConformalInference : ConformalInference E :=
+  { toInverseKernel := CIK.toInverseKernel' }
+
+/-- Certified adapter from the inverse-kernel owner to the certified conformal
+surface. -/
+abbrev toCertifiedConformalInference : CertifiedConformalInference E :=
+  { toConformalInference := toConformalInference CIK
+    drazinIndex := CIK.drazinIndex
+    hDrazin := CIK.hDrazin
+    hMoorePenrose := CIK.hMoorePenrose }
+
+end CertifiedInverseKernel
+
 namespace CertifiedConformalInference
 
 variable (CCI : CertifiedConformalInference E)
@@ -74,6 +93,12 @@ abbrev toCertifiedInverseKernel : InfoGeometry.Canonical.CertifiedInverseKernel 
     drazinIndex := CCI.drazinIndex
     hDrazin := CCI.hDrazin
     hMoorePenrose := CCI.hMoorePenrose }
+
+@[simp] theorem toCertifiedConformalInference_toCertifiedInverseKernel
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel E) :
+    toCertifiedInverseKernel
+      (CertifiedInverseKernel.toCertifiedConformalInference (E := E) CIK) = CIK := by
+  rfl
 
 /-- The certified Drazin spectral projector. -/
 abbrev spectralProjector : E →L[ℝ] E := CCI.toCertifiedInverseKernel.spectralProjector

@@ -397,6 +397,29 @@ theorem mismatch_forces_projector_noncommute_of_boundaryScale_ne_zero
   exact (hBoundaryScaleNonzeroOfMismatch hMismatch) hBoundaryScaleZero
 
 /--
+Carrier-identification lift:
+noncommutation of the singular-boundary projector pair transfers to
+noncommutation of the conformal projector pair whenever the two projector
+families are identified.
+-/
+@[rep_depth transport]
+theorem conformal_projector_noncommute_of_boundary_projector_noncommute_of_alignment
+    (CI : ConformalInference E)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection E)
+    (hSpectralAlign : CI.spectralChiralProjector = S.spectralProjector)
+    (hMetricAlign : CI.metricChiralProjector = S.leftProjector)
+    (hBoundaryNoncommute :
+      S.spectralProjector * S.leftProjector
+        ≠
+      S.leftProjector * S.spectralProjector) :
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      ≠
+    CI.metricChiralProjector * CI.spectralChiralProjector := by
+  intro hComm
+  apply hBoundaryNoncommute
+  simpa [hSpectralAlign, hMetricAlign] using hComm
+
+/--
 Kernel-to-boundary-projector-commutator closure on the identified transported
 polarization lane: transported chiral-kernel mismatch forces noncommutation of
 the singular-boundary spectral/left projectors.
@@ -448,6 +471,269 @@ theorem mismatch_forces_boundary_projector_noncommute_of_identifiedTransportedPo
   have hBoundaryGeneratorZero : S.boundaryGenerator = 0 :=
     S.boundaryGenerator_eq_zero_of_projectors_commute hBoundaryComm
   exact hBoundaryGeneratorNonzero hBoundaryGeneratorZero
+
+/--
+Kernel-to-conformal-projector-commutator closure on the identified transported
+polarization lane (boundary carrier form):
+transported chiral-kernel mismatch forces noncommutation of the conformal
+projectors once they are identified with the singular-boundary pair.
+-/
+@[rep_depth transport]
+theorem mismatch_forces_conformal_projector_noncommute_of_identifiedTransportedPolarization_on_boundaryCarrier
+    [FiniteDimensional ℝ E]
+    (CI : ConformalInference H₂)
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA :
+      S.kernel.A =
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+    (hplus :
+      P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus :
+      P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0
+        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hSpectralAlign : CI.spectralChiralProjector = S.spectralProjector)
+    (hMetricAlign : CI.metricChiralProjector = S.leftProjector) :
+    TransportedChiralKernelDimMismatch
+        (A := A) (B := B) (E := E)
+        V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) →
+      CI.spectralChiralProjector * CI.metricChiralProjector
+        ≠
+      CI.metricChiralProjector * CI.spectralChiralProjector := by
+  intro hMismatch
+  have hBoundaryNoncommute :
+      S.spectralProjector * S.leftProjector
+        ≠
+      S.leftProjector * S.spectralProjector :=
+    mismatch_forces_boundary_projector_noncommute_of_identifiedTransportedPolarization
+      (A := A) (B := B) (E := E)
+      V X hX hEven t M P0 S hA hplus hminus hodd hBoundaryOnZeroModes hMismatch
+  intro hComm
+  apply hBoundaryNoncommute
+  simpa [hSpectralAlign, hMetricAlign] using hComm
+
+/--
+Kernel-commutator closure on the identified transported-polarization lane
+(boundary carrier form):
+nonzero transported analytical index forces noncommutation of the conformal
+projectors.
+-/
+@[rep_depth transport]
+theorem conformal_projector_noncommute_of_quasilatticeAnalyticalIndex_ne_zero_of_identifiedTransportedPolarization_on_boundaryCarrier
+    [FiniteDimensional ℝ E]
+    (CI : ConformalInference H₂)
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA :
+      S.kernel.A =
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+    (hplus :
+      P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus :
+      P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0
+        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hSpectralAlign : CI.spectralChiralProjector = S.spectralProjector)
+    (hMetricAlign : CI.metricChiralProjector = S.leftProjector)
+    (hIndexNonzero :
+      quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t) ≠ 0) :
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      ≠
+    CI.metricChiralProjector * CI.spectralChiralProjector := by
+  let hVX := quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t
+  have hMismatch :
+      TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E) V X t hVX :=
+    transportedChiralKernelDimMismatch_of_quasilatticeAnalyticalIndex_ne_zero
+      (A := A) (B := B) (E := E) V X t hVX hIndexNonzero
+  exact
+    mismatch_forces_conformal_projector_noncommute_of_identifiedTransportedPolarization_on_boundaryCarrier
+      (A := A) (B := B) (E := E)
+      CI V X hX hEven t M P0 S hA hplus hminus hodd hBoundaryOnZeroModes
+      hSpectralAlign hMetricAlign hMismatch
+
+/--
+Boundary-carrier compatibility witness between the transported defect lane and
+the conformal projector lane.
+-/
+@[rep_depth transport]
+structure SuperchargeBoundaryCarrierCompatibility
+    [FiniteDimensional ℝ E]
+    (CI : ConformalInference H₂)
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (t : ℝ)
+    (hVX : QuasilatticeChiralFredholmSurface V X t)
+    (superchargeProj transportedProj : H₂ →L[ℝ] H₂) : Prop where
+  spectralProj_eq_superchargeProj :
+    CI.spectralChiralProjector = superchargeProj
+  metricProj_eq_transportedProj :
+    CI.metricChiralProjector = transportedProj
+  mismatch_forces_projector_noncommute :
+    TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E) V X t hVX →
+      CI.spectralChiralProjector * CI.metricChiralProjector
+        ≠
+      CI.metricChiralProjector * CI.spectralChiralProjector
+
+/--
+Boundary-carrier compatibility constructor on the identified
+transported-polarization lane. This discharges the load-bearing
+mismatch-to-noncommutation implication from existing owners.
+-/
+@[rep_depth transport]
+theorem superchargeBoundaryCarrierCompatibility_of_identifiedTransportedPolarization
+    [FiniteDimensional ℝ E]
+    (CI : ConformalInference H₂)
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA :
+      S.kernel.A =
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+    (hplus :
+      P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus :
+      P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0
+        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hSpectralAlign : CI.spectralChiralProjector = S.spectralProjector)
+    (hMetricAlign : CI.metricChiralProjector = S.leftProjector) :
+    SuperchargeBoundaryCarrierCompatibility (A := A) (B := B) (E := E)
+      CI V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      S.spectralProjector S.leftProjector := by
+  refine ⟨hSpectralAlign, hMetricAlign, ?_⟩
+  exact
+    mismatch_forces_conformal_projector_noncommute_of_identifiedTransportedPolarization_on_boundaryCarrier
+      (A := A) (B := B) (E := E)
+      CI V X hX hEven t M P0 S hA hplus hminus hodd hBoundaryOnZeroModes
+      hSpectralAlign hMetricAlign
+
+/--
+On the identified transported-polarization lane (boundary carrier form),
+nonzero operatorial central charge forces noncommutation of the conformal
+projectors.
+-/
+@[rep_depth transport]
+theorem conformal_projector_noncommute_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization_on_boundaryCarrier
+    [FiniteDimensional ℝ E]
+    (CI : ConformalInference H₂)
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA :
+      S.kernel.A =
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+    (hplus :
+      P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus :
+      P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0
+        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hSpectralAlign : CI.spectralChiralProjector = S.spectralProjector)
+    (hMetricAlign : CI.metricChiralProjector = S.leftProjector)
+    (hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0) :
+    CI.spectralChiralProjector * CI.metricChiralProjector
+      ≠
+    CI.metricChiralProjector * CI.spectralChiralProjector := by
+  let hVX := quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t
+  have hMismatch :
+      TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E) V X t hVX :=
+    transportedChiralKernelDimMismatch_of_operatorialCentralCharge_ne_zero
+      (A := A) (B := B) (E := E) V X hX hEven t hCentral
+  exact
+    mismatch_forces_conformal_projector_noncommute_of_identifiedTransportedPolarization_on_boundaryCarrier
+      (A := A) (B := B) (E := E)
+      CI V X hX hEven t M P0 S hA hplus hminus hodd hBoundaryOnZeroModes
+      hSpectralAlign hMetricAlign hMismatch
+
+/--
+On the identified transported-polarization lane (boundary carrier form),
+nonzero operatorial central charge forces nonzero conformal source scale.
+-/
+@[rep_depth transport]
+theorem chiralScale_ne_zero_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization_on_boundaryCarrier
+    [FiniteDimensional ℝ E]
+    (CI : ConformalInference H₂)
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (M : InfoGeometry.Quantum.RealMajorana.RealMajoranaDatum (S := H₂))
+    (P0 : InfoGeometry.Quantum.RealMajorana.KPolarization (S := H₂) M)
+    (S : InfoGeometry.Canonical.SingularBoundaryCorrection H₂)
+    (hA :
+      S.kernel.A =
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t)
+    (hplus :
+      P0.plus = quasilatticeChiralKernelSlicePlus V X t)
+    (hminus :
+      P0.minus = quasilatticeChiralKernelSliceMinus V X t)
+    (hodd :
+      InfoGeometry.Quantum.BulkBoundary.PolarizationOdd
+        (M := M) P0
+        (InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t))
+    (hBoundaryOnZeroModes :
+      ∀ v : H₂,
+        InfoGeometry.Canonical.QuasilatticeDirac.quasilatticeDirac V X.F t v = 0 →
+          v ≠ 0 → S.boundaryGenerator v ≠ 0)
+    (hSpectralAlign : CI.spectralChiralProjector = S.spectralProjector)
+    (hMetricAlign : CI.metricChiralProjector = S.leftProjector)
+    (hCentral : operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0) :
+    CI.chiralScale ≠ 0 := by
+  exact
+    CI.chiralScale_ne_zero_of_projectors_not_commute
+      (conformal_projector_noncommute_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization_on_boundaryCarrier
+        (A := A) (B := B) (E := E)
+        CI V X hX hEven t M P0 S hA hplus hminus hodd hBoundaryOnZeroModes
+        hSpectralAlign hMetricAlign hCentral)
 
 /--
 Compatibility constructor from singular-boundary scale forcing.

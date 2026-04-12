@@ -884,10 +884,9 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization_global_drazi
     (ω : VelocityField E →L[ℝ] ℝ)
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
     (h_mp : IsMoorePenroseInverse A B_mp)
-    (h_dr_star_of_drazin :
-      ∀ {k : ℕ} {B_dr : VelocityField E},
-        IsDrazinInverse A B_dr k →
-          star (A * B_dr) = A * B_dr)
+    (h_dr_star_canonical :
+      star (A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+        = A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
     (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
@@ -918,15 +917,18 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization_global_drazi
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
         ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
             Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
-  rcases DrazinInfiniteCore.nonempty_rieszDrazinData_endCLM (E := E) A with ⟨hRiesz⟩
-  refine ⟨hRiesz.D, ?_⟩
+  refine ⟨DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A, ?_⟩
   exact bits_to_gravity_to_fluid_capstone_of_regularization
     (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
     (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
     (hEin := hEin)
-    (A := A) (B_mp := B_mp) (B_dr := hRiesz.D) (ω := ω) (Ω := Ω)
-    (h_mp := h_mp) (k := hRiesz.k) (h_dr := hRiesz.hIsDrazin)
-    (h_dr_star := h_dr_star_of_drazin hRiesz.hIsDrazin)
+    (A := A) (B_mp := B_mp)
+    (B_dr := DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+    (ω := ω) (Ω := Ω)
+    (h_mp := h_mp)
+    (k := DrazinInfiniteCore.canonicalDrazinIndex_endCLM (E := E) A)
+    (h_dr := DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A)
+    (h_dr_star := h_dr_star_canonical)
     (hHelicity := hHelicity)
     (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
     (n := n) (Tflow := Tflow) (γ := γ) (N := N)
@@ -1140,10 +1142,9 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
     (ω : VelocityField E →L[ℝ] ℝ)
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
     (h_mp : IsMoorePenroseInverse A B_mp)
-    (h_dr_star_of_drazin :
-      ∀ {k : ℕ} {B_dr : VelocityField E},
-        IsDrazinInverse A B_dr k →
-          star (A * B_dr) = A * B_dr)
+    (h_dr_star_canonical :
+      star (A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+        = A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
     (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
@@ -1162,7 +1163,7 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
       (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
       (hEin := hEin)
       (A := A) (B_mp := B_mp) (ω := ω) (Ω := Ω)
-      (h_mp := h_mp) (h_dr_star_of_drazin := h_dr_star_of_drazin)
+      (h_mp := h_mp) (h_dr_star_canonical := h_dr_star_canonical)
       (hHelicity := hHelicity)
       (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
       (n := n) (Tflow := Tflow) (γ := γ) (N := N) with ⟨B_dr, hCapstone⟩

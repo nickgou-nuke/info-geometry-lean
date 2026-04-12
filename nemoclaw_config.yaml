@@ -34,6 +34,27 @@ agent:
       - "./docs"
       - "./tools"
 
+# Runtime rights separation (three-plane model)
+runtime_policy:
+  planes:
+    allowed:
+      - "prove"
+      - "orchestrate"
+      - "publish"
+    default: "prove"
+  heartbeat:
+    enabled: true
+    allowed_planes:
+      - "prove"
+      - "orchestrate"
+  publish:
+    enabled: false
+    default_policy: "deny"
+    require_two_key_approval: true
+    approval_keys:
+      - "human"
+      - "policy_engine"
+
 # Tool Valences (OpenClaw standard)
 tools:
   - name: "terminal"
@@ -42,3 +63,7 @@ tools:
     use: "clawcode" # Explicitly bypassing claudecode for local sovereignty
   - name: "lean_afm"
     command: "lake build"
+  - name: "publisher"
+    enabled: false
+    allows_outbound_publish: true
+    allowed_plane: "publish"

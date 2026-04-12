@@ -123,10 +123,17 @@ Human override is allowed when:
 - architecture-layer decisions need explicit adjudication
 - safety/sandbox policy needs update
 
-## 10. Success Condition
+## 11. Self-Learning Requirement
 
-The handover is successful if:
+Starting with the activation of the Alchemical Loop, the system enforces a
+**Success Memory** constraint:
 
-- exploration throughput increases in Lane A
-- closure quality remains stable or improves in Lane C
-- gate health remains green without relaxing policy rigor
+- No agent may close a proof (Lane B -> Lane C) without extracting the
+  **Tactic Trace** that made the closure possible.
+- Extraction method: `lake script run dagDoctor --trace`.
+- Recording target: `skills/automated-learning/winning_traces.jsonl`.
+- The record must include the symbol name, the successful tactic sequence,
+  and the alchemical phase transition (e.g., Citrinitas -> Rubedo).
+
+This ensures the Spire constantly formalizes its own "common unconscious" into
+reusable tactical knowledge.

@@ -48,24 +48,24 @@ variable {σ : AdditiveModularFlow (H := H)}
 variable {T : SinkhornTrajectory n}
 
 /--
-Canonical constructor using the unit cocycle and unit scalar bridge.
+Canonical constructor using the flow-derived unit cocycle and unit scalar bridge.
 
 This removes a free cocycle witness in the common "existential packaging" use
-case: only the Casini bridge on the fixed unit cocycle lane is required.
+case: only the Casini bridge on the fixed flow-native cocycle lane is required.
 -/
 noncomputable def ofUnitCocycle
     (relEnt : ArakiRelativeEntropyProfile)
     (hCasini : CasiniIncrementBridge
       (n := n) (H := H)
       σ
-      (InfoGeometry.Volume.ConnesCocycle.unitCocycle)
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle σ)
       (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge σ)
       T
       relEnt) :
     ConnesArakiData (H := H) (σ := σ)
-      (u := InfoGeometry.Volume.ConnesCocycle.unitCocycle) T where
+      (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle σ) T where
   bridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge σ
-  cocycle := InfoGeometry.Volume.ConnesCocycle.unitCocycle_isConnesCocycle σ
+  cocycle := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle σ
   relEnt := relEnt
   casini := hCasini
 

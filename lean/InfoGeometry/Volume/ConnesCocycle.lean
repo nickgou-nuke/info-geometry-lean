@@ -181,6 +181,31 @@ def IsConnesCocycle
   ∀ s t : ℝ, u (s + t) = (u s) * (σ s (u t))
 
 /--
+Derived cocycle from a modular flow by evaluating the flow on the unit.
+
+This keeps cocycle construction flow-native: the cocycle is produced from `σ`
+rather than supplied as an external constant.
+-/
+noncomputable def flowUnitCocycle
+    (σ : AdditiveModularFlow (H := H)) : ℝ → AlgebraEnd H :=
+  fun t => σ t 1
+
+@[simp] theorem flowUnitCocycle_apply
+    (σ : AdditiveModularFlow (H := H)) (t : ℝ) :
+    flowUnitCocycle (H := H) σ t = σ t 1 := rfl
+
+/--
+The flow-unit cocycle satisfies the Connes cocycle identity.
+-/
+theorem flowUnitCocycle_isConnesCocycle
+    (σ : AdditiveModularFlow (H := H)) :
+    IsConnesCocycle σ (flowUnitCocycle (H := H) σ) := by
+  intro s t
+  change σ (s + t) 1 = σ s 1 * σ s (σ t 1)
+  rw [AdditiveModularFlow.map_add]
+  simp
+
+/--
 Canonical unit cocycle.
 
 This gives a concrete `IsConnesCocycle` witness for any additive modular flow,

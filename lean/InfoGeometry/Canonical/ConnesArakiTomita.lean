@@ -36,7 +36,10 @@ abbrev TomitaConnesArakiData
 /-- Tomita-specialized Connes-Araki package on the canonical unit cocycle lane. -/
 abbrev TomitaUnitConnesArakiData
     (T : SinkhornTrajectory n) :=
-  TomitaConnesArakiData (H := H) (InfoGeometry.Volume.ConnesCocycle.unitCocycle) T
+  TomitaConnesArakiData (H := H)
+    (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    T
 
 /--
 Canonical constructor on the Tomita unit-cocycle lane.
@@ -50,7 +53,8 @@ noncomputable def tomitaUnitConnesArakiDataOfCasini
     (hCasini : CasiniIncrementBridge
       (n := n) (H := H)
       (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
-      (InfoGeometry.Volume.ConnesCocycle.unitCocycle)
+      (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
         (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
       T

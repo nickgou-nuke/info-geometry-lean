@@ -628,6 +628,38 @@ theorem topologicalBekensteinBound_of_tomitaConnesCocycle_casiniIncrement
       (u := u) (T := T) (hCocycle := hCocycle) (hBridge := hBridge)
       (relEnt := relEnt) (hCasini := hCasini)
 
+/--
+Tomita-specialized Casini-route endpoint on the canonical flow-unit cocycle
+lane.
+
+This discharges the cocycle witness from the welded Tomita flow surface and
+keeps only the Casini bridge as input data.
+-/
+theorem topologicalBekensteinBound_of_tomitaFlowUnitConnesCocycle_casiniIncrement
+    (T : SinkhornTrajectory n)
+    (relEnt : RelativeEntropyProfile)
+    (hCasini :
+      CasiniIncrementBridge (n := n) (H := H)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+        (InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+          (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+        T relEnt) :
+    TopologicalBekensteinBound n T := by
+  exact topologicalBekensteinBound_of_tomitaConnesCocycle_casiniIncrement
+    (n := n) (H := H)
+    (u := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (T := T)
+    (hCocycle := InfoGeometry.Volume.ConnesCocycle.flowUnitCocycle_isConnesCocycle
+      (H := H)
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (hBridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+    (relEnt := relEnt)
+    (hCasini := hCasini)
+
 end TomitaSpecialization
 
 end InfoGeometry.Canonical.BekensteinBound

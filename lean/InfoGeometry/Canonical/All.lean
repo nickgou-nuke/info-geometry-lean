@@ -67,6 +67,7 @@ import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinExistenceBridge
 import InfoGeometry.Canonical.DrazinInfiniteCore
+import InfoGeometry.Canonical.DrazinWitnessElimination
 import InfoGeometry.Canonical.DrazinSpectralBridge
 import InfoGeometry.Canonical.DrazinKreinCompatibility
 import InfoGeometry.Canonical.DrazinFredholmBridge

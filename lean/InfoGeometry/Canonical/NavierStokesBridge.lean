@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.Singular
 import InfoGeometry.Canonical.DrazinInfiniteCore
+import InfoGeometry.Canonical.DrazinWitnessElimination
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Krein.KreinSpace
 import InfoGeometry.Krein.Thermal
@@ -410,6 +411,31 @@ theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_global_draz
       (DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A))
 
 /--
+Auto-eliminated regularization skewness:
+in the finite-dimensional lane, use the canonical Drazin witness package from
+`DrazinWitnessElimination` and keep only projector self-adjointness external.
+-/
+theorem anomalySkew_of_regularization_auto
+    (A B_mp : VelocityField E)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr_star :
+      star (A * DrazinWitnessElimination.drazinInverse (E := E) A)
+        = A * DrazinWitnessElimination.drazinInverse (E := E) A) :
+    ContinuousLinearMap.adjoint
+        (EinsteinAnomaly A B_mp (DrazinWitnessElimination.drazinInverse (E := E) A))
+      =
+      -EinsteinAnomaly A B_mp (DrazinWitnessElimination.drazinInverse (E := E) A) := by
+  simpa using
+    (einsteinAnomaly_skew_adjoint
+      (a := A)
+      (b_mp := B_mp)
+      (b_dr := DrazinWitnessElimination.drazinInverse (E := E) A)
+      (k := DrazinWitnessElimination.drazinIndex (E := E) A)
+      h_mp
+      (DrazinWitnessElimination.isDrazinInverse_drazinInverse (E := E) A)
+      h_dr_star)
+
+/--
 Finite-dimensional canonical-Drazin skewness wrapper:
 use the canonical Drazin choice from `DrazinInfiniteCore` and keep only the
 projector star/selfadjointness obligation as external input.
@@ -426,14 +452,12 @@ theorem anomalySkew_of_regularization_canonical_drazin
       =
       -EinsteinAnomaly A B_mp
         (DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A) := by
-  simpa using
-    (einsteinAnomaly_skew_adjoint
-      (a := A)
-      (b_mp := B_mp)
-      (b_dr := DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
-      (k := DrazinInfiniteCore.canonicalDrazinIndex_endCLM (E := E) A)
+  simpa [DrazinWitnessElimination.drazinInverse] using
+    (anomalySkew_of_regularization_auto
+      (E := E)
+      (A := A)
+      (B_mp := B_mp)
       h_mp
-      (DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A)
       h_dr_star)
 
 /--

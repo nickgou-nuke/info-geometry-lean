@@ -1,18 +1,18 @@
 {
   "taskId": "drazin_core_ascent_bridge_v1",
-  "priority": "high",
   "targetFile": "lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean",
   "theoremName": "exists_drazinInverse_of_finiteAscentDescent",
-  "universePolymorphism": "u_1, u_2",
-  "expectedType": "∀ {K : Type u_1} {V : Type u_2} [inst : DivisionRing K] [inst_1 : AddCommGroup V] [inst_2 : Module K V] {T : Module.End K V} (h : HasFiniteAscentDescentAtZero T), ∃ (k' : ℕ) (TD' : Module.End K V), InfoGeometry.Canonical.Drazin.IsDrazinInverse T TD' k'",
+  "expectedType": "(h : HasFiniteAscentDescentAtZero T) : ∃ k' TD', Drazin.IsDrazinInverse T TD' k'",
+  "statementHash": "a70196b39f8a07557cf66487811bf0af0032a9fa6df69eb7e7fc6dba8f5e9eaa",
+  "baselineRef": "HEAD~1",
   "budget": {
     "imports": ["InfoGeometry.Canonical.Drazin"],
-    "witnesses": ["h.k", "h.D", "h.hIsDrazin"]
+    "allowedHelpers": ["InfoGeometry.Canonical.Drazin.IsDrazinInverse"]
   },
   "constraints": [
     "No statement mutation",
     "No new axioms",
-    "Zero Import Creep",
-    "Qualified Constants Only"
+    "No import creep",
+    "No unauthorized classical"
   ]
 }

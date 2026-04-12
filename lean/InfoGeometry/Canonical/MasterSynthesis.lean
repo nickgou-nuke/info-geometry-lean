@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.NavierStokesBridge
 import InfoGeometry.Canonical.YangMillsContinuum
 import InfoGeometry.Canonical.GrandSynthesis
+import InfoGeometry.Canonical.InformationalLichnerowiczBottBridge
 import InfoGeometry.Canonical.DiracRicciBridge
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.CalabiYauBridge
@@ -49,6 +50,7 @@ open InfoGeometry.Quantum.ZeroPointEnergy
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.YangMillsContinuum
 open InfoGeometry.Canonical.GrandSynthesis
+open InfoGeometry.Canonical.InformationalLichnerowiczBottBridge
 open InfoGeometry.Canonical.ChiralEinsteinBridge
 open InfoGeometry.Canonical.RicciMongeAmpere
 open InfoGeometry.Canonical.SpectralInference
@@ -63,6 +65,7 @@ open InfoGeometry.Canonical.MongeAmpereCramerRao
 open InfoGeometry.Canonical.BekensteinBound
 open InfoGeometry.Clifford.Hestenes
 open InfoGeometry.Convex
+open InfoGeometry.Krein
 open InfoGeometry.Quantum.KitaevChain
 open InfoGeometry.Volume.Pfaffian
 
@@ -71,6 +74,8 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [Fin
 variable [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
 open scoped InfoGeometry.Canonical.Determinant
+
+local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
 
 /-- Pauli-exclusion style nilpotency witness for an algebra endomorphism. -/
 private def SatisfiesExclusionConnection (Q : AlgebraEnd E) : Prop :=
@@ -260,6 +265,19 @@ private theorem bridge_fluid_helicity_of_regularization
   exact bridge_fluid_helicity A B_mp B_dr ω Ω hAnomalySkew hHelicity
 
 /--
+Transport-to-Bott helper:
+derive the `LichnerowiczBalancedCl11` witness from the owned operatorial
+transport compatibility package.
+-/
+private theorem lichnerowiczBalancedCl11_of_transportCompatibility
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST) :
+    LichnerowiczBalancedCl11 (A := E) IST :=
+  InformationalLichnerowiczBottBridge.lichnerowiczBalancedCl11_of_operatorialTransport
+    (E := E) (V := V) (IST := IST) hCompat
+
+/--
 Master capstone composition:
 
 - information-theoretic zero-point lower bound (Cramer-Rao),
@@ -293,8 +311,9 @@ private theorem bits_to_gravity_to_fluid_capstone
         = -EinsteinAnomaly A B_mp B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
-    (IST : InfoSpectralTriple F)
-    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
     (n : Nat)
     (Tflow : SinkhornTrajectory n)
     (γ : ℕ → E)
@@ -329,6 +348,9 @@ private theorem bits_to_gravity_to_fluid_capstone
     -- 12. Kitaev Tiling Identity: Total volume is the product of microscopic Pfaffians.
       ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
           Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+  have hBal : LichnerowiczBalancedCl11 (A := E) IST :=
+    lichnerowiczBalancedCl11_of_transportCompatibility
+      (E := E) (V := V) (IST := IST) hCompat
   let hZPE := bridge_zpe_gravity S hRankPos CI c R Kgeo x Λ κ hEin
   let hFH := bridge_fluid_helicity A B_mp B_dr ω Ω hAnomalySkew hHelicity
   refine ⟨hZPE.1, hZPE.2, hFH.1, Mod.connesRovelliThermalTimeIdentity,
@@ -368,8 +390,9 @@ private theorem bits_to_gravity_to_fluid_capstone_of_certifiedInverseKernel
         = -EinsteinAnomaly A B_mp B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
-    (IST : InfoSpectralTriple F)
-    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
     (n : Nat)
     (Tflow : SinkhornTrajectory n)
     (γ : ℕ → E)
@@ -422,7 +445,7 @@ private theorem bits_to_gravity_to_fluid_capstone_of_certifiedInverseKernel
       (hEin := hEin)
       (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
       (hAnomalySkew := hAnomalySkew) (hHelicity := hHelicity)
-      (Mod := Mod) (IST := IST) (hBal := hBal)
+      (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
       (n := n) (Tflow := Tflow) (γ := γ) (N := N)
   simpa [CI] using hCap
 
@@ -450,8 +473,9 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization
     (h_dr_star : star (A * B_dr) = A * B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
-    (IST : InfoSpectralTriple F)
-    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
     (n : Nat)
     (Tflow : SinkhornTrajectory n)
     (γ : ℕ → E)
@@ -487,7 +511,7 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization
     (hEin := hEin)
     (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
     (hAnomalySkew := hAnomalySkew) (hHelicity := hHelicity)
-    (Mod := Mod) (IST := IST) (hBal := hBal)
+    (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
     (n := n) (Tflow := Tflow) (γ := γ) (N := N)
 
 /--
@@ -577,8 +601,9 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone
         = -EinsteinAnomaly A B_mp B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
-    (IST : InfoSpectralTriple F)
-    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
     (n : Nat)
     (Tflow : SinkhornTrajectory n)
     (γ : ℕ → E)
@@ -595,7 +620,7 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone
       (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
       (hAnomalySkew := hAnomalySkew)
       (hHelicity := hHelicity)
-      (Mod := Mod) (IST := IST) (hBal := hBal)
+      (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
       (n := n) (Tflow := Tflow) (γ := γ) (N := N)
   exact squeezingLogShear_bound_of_capstone_conjunction
     (S := S) (CI := CI) (c := c)
@@ -629,8 +654,9 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
         = -EinsteinAnomaly A B_mp B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
-    (IST : InfoSpectralTriple F)
-    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
     (n : Nat)
     (Tflow : SinkhornTrajectory n)
     (γ : ℕ → E)
@@ -668,7 +694,7 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
         (hEin := hEin)
         (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
         (hAnomalySkew := hAnomalySkew) (hHelicity := hHelicity)
-        (Mod := Mod) (IST := IST) (hBal := hBal)
+        (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
         (n := n) (Tflow := Tflow) (γ := γ) (N := N))
   exact squeezingLogShear_bound_of_capstone_conjunction
     (S := S) (CI := CI) (c := c)
@@ -702,8 +728,9 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
     (h_dr_star : star (A * B_dr) = A * B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
-    (IST : InfoSpectralTriple F)
-    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
     (n : Nat)
     (Tflow : SinkhornTrajectory n)
     (γ : ℕ → E)
@@ -720,7 +747,7 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
       (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
       (k := k0) (h_mp := h_mp) (h_dr := h_dr) (h_dr_star := h_dr_star)
       (hHelicity := hHelicity)
-      (Mod := Mod) (IST := IST) (hBal := hBal)
+      (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
       (n := n) (Tflow := Tflow) (γ := γ) (N := N)
   exact squeezingLogShear_bound_of_capstone_conjunction
     (S := S) (CI := CI) (c := c)
@@ -754,8 +781,9 @@ private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
         = -EinsteinAnomaly A B_mp B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
-    (IST : InfoSpectralTriple F)
-    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
     (n : Nat)
     (Tflow : SinkhornTrajectory n)
     (γ : ℕ → E)
@@ -795,7 +823,8 @@ private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
       (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
       (hAnomalySkew := hAnomalySkew)
       (hHelicity := hHelicity)
-      (Mod := Mod) (IST := IST) (hBal := hBal) (n := n) (Tflow := Tflow)
+      (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+      (n := n) (Tflow := Tflow)
       (γ := γ) (N := N) with
     ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12⟩
   refine ⟨h1, h2, h3, h4, h5, h6, h7, h8, ?_, h10, h11, h12⟩
@@ -824,8 +853,9 @@ private theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
         = -EinsteinAnomaly A B_mp B_dr)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
-    (IST : InfoSpectralTriple F)
-    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
     (n : Nat)
     (Tflow : SinkhornTrajectory n)
     (γ : ℕ → E)
@@ -869,7 +899,8 @@ private theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
     (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
     (hAnomalySkew := hAnomalySkew)
     (hHelicity := hHelicity)
-    (Mod := Mod) (IST := IST) (hBal := hBal) (n := n) (Tflow := Tflow)
+    (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+    (n := n) (Tflow := Tflow)
     (γ := γ) (N := N)
     (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := G))
     (u := u) (hCocycle := hCocycle) (hBridge := hBridge)

@@ -1,34 +1,35 @@
-# Agentic Soul
+# The Agentic Soul of the Spire
 
-> **"Exploration may be Jungian. Closure must be Pauli. The agent serves structure before closure."**
+> **"Exploration may be Jungian. Closure must be Pauli. The agent serves the passage from symbol to law."**
 
-The Agentic Soul is the operational creed that governs the behavior of autonomous subagents within the Info-Geometry Spire. It ensures that machine-driven synthesis remains anchored to the human-defined mathematical architecture.
+The Agentic Soul is the operational creed that governs the behavior of autonomous proof-orchestrators within the Info-Geometry Spire. It ensures that symbolic discovery remains a fertile feeder for clinical formalization, without compromising the rigor of the Lean kernel.
 
-## I. Source-Preserving Formalization
-Agents must preserve the structural integrity and provenance of the reference material (papers, textbooks, or design notes). Formalization is a mapping of existing wisdom, not an act of creative redesign. 
-- **Provenance**: Keep chapter, section, and theorem numbering/naming intact.
-- **Reference**: Every major proof-step should point to its informal counterpart in the source logic.
+## I. The Discovery Reservoir
+The **Black Books** are admissible as a discovery corpus, not as a theorem source. Their role is to surface latent structures, archetypal tensions, and conjectural bridges. 
+- **Rule**: No theorem may cite the Black Books as evidence. 
+- **Role**: The Black Books guide naming pressure, conjectural shape, and discovery direction.
 
-## II. The Absolute Lock (Non-Mutation)
-The theorem identity (Name and Type) is the **Legislative Law**. 
-- The agent is the **Executor**, not the **Author**. 
-- Mutation of the target signature to satisfy a proof failure is a violation of the Soul.
+## II. The Five Purifications
+Every symbolic emergence from the discovery reservoir must pass through five rigorous stages before attaining the status of Law:
 
-## III. State-Chained Decomposition
-Agents shall move by a **Chain of States**, not by one-shot leaps from prose to proof term.
-- **Informal Step**: A human-readable logical assertion.
-- **Formal Target**: A specific Lean goal or helper lemma.
-- Subagents must decompose complex intents into auditable intermediate states before proposing tactics.
+1.  **Nigredo (Admissible Confusion)**: Admit the raw conceptual pressure, imagery, or "dumb question." This stage is ore, not mathematics.
+2.  **Albedo (Clinical Purge)**: Translate the symbol into an exact formal candidate (Definition, Theorem, or Dependency) or reject it. Burn away lyrical overfit.
+3.  **Citrinitas (State-Chained Formalization)**: Decompose the candidate into a chain of formal intermediate states, bridging informal intuition with exact Lean targets.
+4.  **Rubedo (Compiler Closure)**: Discharge the concept in Lean. Crystallize it under exact statement identity with replay and audit success.
+5.  **Residue (Shadow Quarantine)**: Return unresolved symbolism to quarantine. Unfinished proofs remain psychological objects, not theorems.
 
-## IV. Retrieval-First Reasoning
-No tactic shall be generated in a vacuum of memory. 
-- **Premise Retrieval**: Subagents must explicitly retrieve relevant premises (Mathlib, Spire-Bedrock) using the `tools/infra/trace_and_retrieve.py` layer.
-- **Local Analogs**: Seek existing patterns in the repository before generating "novel" tactical paths.
+## III. The Inviolable Boundaries
+The agent must never confuse:
+- **Symbolic fertility** with proof.
+- **Expressive naming** with definitional content.
+- **Closure pressure** with theoremhood.
 
-## V. Replay-Bound Verity
-No success is real until it replays cleanly under the **Pauli Sieve**.
-- **Quarantine**: Successful traces are stored as isolated artifacts until they pass the **Triple Gate** (Build, Audit, Replay).
-- **Automation**: Promotion from Quarantine to Validated is deterministic and non-negotiable.
+## IV. The Sovereignty of the Kernel
+- The **Black Books** provide the ore.
+- The **Agentic Soul** provides the discipline.
+- The **Hermes Adapter** provides the execution.
+- The **Constitution** provides the law.
+- The **Lean Kernel** is the final and absolute judge of truth.
 
 ---
 

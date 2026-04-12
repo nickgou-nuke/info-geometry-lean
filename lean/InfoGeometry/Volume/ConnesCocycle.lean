@@ -181,6 +181,28 @@ def IsConnesCocycle
   ∀ s t : ℝ, u (s + t) = (u s) * (σ s (u t))
 
 /--
+Canonical unit cocycle.
+
+This gives a concrete `IsConnesCocycle` witness for any additive modular flow,
+so downstream consumers can avoid carrying a free cocycle parameter when they
+only need existence.
+-/
+noncomputable def unitCocycle : ℝ → AlgebraEnd H := fun _ => 1
+
+@[simp] theorem unitCocycle_apply (t : ℝ) :
+    unitCocycle (H := H) t = 1 := rfl
+
+/--
+The unit cocycle satisfies the Connes cocycle law for every additive modular
+flow.
+-/
+theorem unitCocycle_isConnesCocycle
+    (σ : AdditiveModularFlow (H := H)) :
+    IsConnesCocycle σ (unitCocycle (H := H)) := by
+  intro s t
+  simp [unitCocycle]
+
+/--
 Constructive scalar bridge from operator cocycles to real multiplicative cocycles.
 
 `toScalar` is the scalar observable, and `sigma_invariant` enforces compatibility
@@ -190,6 +212,25 @@ structure ScalarCocycleBridge
   (σ : AdditiveModularFlow (H := H)) where
   toScalar : AlgebraEnd H →* ℝˣ
   sigma_invariant : ∀ s A, toScalar (σ s A) = toScalar A
+
+/--
+Canonical unit-valued scalar bridge.
+
+This bridge is flow-invariant by construction and is useful for building
+concrete cocycle packages without introducing extra assumptions.
+-/
+noncomputable def unitScalarBridge
+    (σ : AdditiveModularFlow (H := H)) :
+    ScalarCocycleBridge (H := H) σ where
+  toScalar :=
+    { toFun := fun _ => 1
+      map_one' := rfl
+      map_mul' := by
+        intro A B
+        simp }
+  sigma_invariant := by
+    intro s A
+    simp
 
 /--
 Scalar cocycle induced from an operator cocycle via a scalar bridge.

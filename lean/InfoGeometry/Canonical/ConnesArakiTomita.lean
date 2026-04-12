@@ -33,6 +33,36 @@ abbrev TomitaConnesArakiData
     (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
     u T
 
+/-- Tomita-specialized Connes-Araki package on the canonical unit cocycle lane. -/
+abbrev TomitaUnitConnesArakiData
+    (T : SinkhornTrajectory n) :=
+  TomitaConnesArakiData (H := H) (InfoGeometry.Volume.ConnesCocycle.unitCocycle) T
+
+/--
+Canonical constructor on the Tomita unit-cocycle lane.
+
+This keeps `u` non-free for consumers that only need a concrete cocycle
+instantiation and a Casini bridge witness.
+-/
+noncomputable def tomitaUnitConnesArakiDataOfCasini
+    (T : SinkhornTrajectory n)
+    (relEnt : ArakiRelativeEntropyProfile)
+    (hCasini : CasiniIncrementBridge
+      (n := n) (H := H)
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+      (InfoGeometry.Volume.ConnesCocycle.unitCocycle)
+      (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+        (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H)))
+      T
+      relEnt) :
+    TomitaUnitConnesArakiData (H := H) T :=
+  ConnesArakiData.ofUnitCocycle
+    (H := H)
+    (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+    (T := T)
+    relEnt
+    hCasini
+
 /--
 Tomita-specialized canonical squeezing endpoint:
 ambient and restricted Araki-drop presentations both flow through the same

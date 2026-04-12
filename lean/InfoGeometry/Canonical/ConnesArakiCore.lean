@@ -42,6 +42,35 @@ structure ConnesArakiData
   relEnt : ArakiRelativeEntropyProfile
   casini : CasiniIncrementBridge (n := n) (H := H) σ u bridge T relEnt
 
+namespace ConnesArakiData
+
+variable {σ : AdditiveModularFlow (H := H)}
+variable {T : SinkhornTrajectory n}
+
+/--
+Canonical constructor using the unit cocycle and unit scalar bridge.
+
+This removes a free cocycle witness in the common "existential packaging" use
+case: only the Casini bridge on the fixed unit cocycle lane is required.
+-/
+noncomputable def ofUnitCocycle
+    (relEnt : ArakiRelativeEntropyProfile)
+    (hCasini : CasiniIncrementBridge
+      (n := n) (H := H)
+      σ
+      (InfoGeometry.Volume.ConnesCocycle.unitCocycle)
+      (InfoGeometry.Volume.ConnesCocycle.unitScalarBridge σ)
+      T
+      relEnt) :
+    ConnesArakiData (H := H) (σ := σ)
+      (u := InfoGeometry.Volume.ConnesCocycle.unitCocycle) T where
+  bridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge σ
+  cocycle := InfoGeometry.Volume.ConnesCocycle.unitCocycle_isConnesCocycle σ
+  relEnt := relEnt
+  casini := hCasini
+
+end ConnesArakiData
+
 section Core
 
 variable {σ : AdditiveModularFlow (H := H)}

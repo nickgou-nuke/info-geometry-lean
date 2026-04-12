@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.NavierStokesBridge
 import InfoGeometry.Canonical.YangMillsContinuum
 import InfoGeometry.Canonical.GrandSynthesis
 import InfoGeometry.Canonical.InformationalLichnerowiczBottBridge
+import InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge
 import InfoGeometry.Canonical.DiracRicciBridge
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.CalabiYauBridge
@@ -51,6 +52,7 @@ open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.YangMillsContinuum
 open InfoGeometry.Canonical.GrandSynthesis
 open InfoGeometry.Canonical.InformationalLichnerowiczBottBridge
+open InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge
 open InfoGeometry.Canonical.ChiralEinsteinBridge
 open InfoGeometry.Canonical.RicciMongeAmpere
 open InfoGeometry.Canonical.SpectralInference
@@ -65,6 +67,8 @@ open InfoGeometry.Canonical.MongeAmpereCramerRao
 open InfoGeometry.Canonical.BekensteinBound
 open InfoGeometry.Clifford.Hestenes
 open InfoGeometry.Convex
+open InfoGeometry.KK
+open InfoGeometry.KK.RealSplitKreinKasparovCycle
 open InfoGeometry.Krein
 open InfoGeometry.Quantum.KitaevChain
 open InfoGeometry.Volume.Pfaffian
@@ -366,6 +370,114 @@ private theorem bits_to_gravity_to_fluid_capstone
       (InfoGeometry.Krein.cl11RepLin_sq (E := E) ((1 / 2 : ℝ), (1 / 2 : ℝ)))
   · -- Max Caliber witness from caller-supplied trajectory and horizon.
     exact ⟨Kgeo.H, γ, N, InfoGeometry.Canonical.SpectralInference.bayesianAction_nonneg Kgeo.H γ N⟩
+
+/--
+Defect-sourced capstone variant:
+if transported index mismatch is wired to conformal projector noncommutation,
+then the capstone conjunction holds and the conformal source scale is provably
+nonzero.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilatticeAnalyticalIndex
+    {A₀ B₀ : Type}
+    [NormedRing A₀] [NormedRing B₀]
+    [NormedAlgebra ℝ A₀] [NormedAlgebra ℝ B₀]
+    [KreinSpace H₂] [KreinGradedModule H₂]
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CI : ConformalInference E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
+    (IST : InfoSpectralTriple H₂)
+    (hCompat : InformationalLichnerowiczBottCompatibility (E := E) V IST)
+    (Xdef : RealSplitKreinDiracFredholmModule A₀ B₀ H₂)
+    (tdef : ℝ)
+    (hVXdef : QuasilatticeChiralFredholmSurface V Xdef tdef)
+    (hMismatchNoncommute :
+      InfoGeometry.Canonical.ChiralDefectIndexBridge.TransportedChiralKernelDimMismatch
+        (A := A₀) (B := B₀) (E := E) V Xdef tdef hVXdef →
+        CI.spectralChiralProjector * CI.metricChiralProjector
+          ≠
+        CI.metricChiralProjector * CI.spectralChiralProjector)
+    (hIndexNonzero : quasilatticeAnalyticalIndex V Xdef tdef hVXdef ≠ 0)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ) :
+    CI.chiralScale ≠ 0
+      ∧
+    (0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+      ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod)) := by
+  have hScaleEin :
+      CI.chiralScale ≠ 0
+        ∧
+      EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+        (anomalyStressEnergyAt Kgeo x CI.chiralScale) :=
+    chiralScale_ne_zero_and_einsteinEquation_of_quasilatticeAnalyticalIndex_ne_zero_of_mismatch_forces_projector_noncommute
+      (A := A₀) (B := B₀) (E := E)
+      (CI := CI) (V := V) (X := Xdef) (t := tdef) (hVX := hVXdef)
+      (hMismatchNoncommute := hMismatchNoncommute)
+      (hIndexNonzero := hIndexNonzero)
+      (c := c) (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) hEin
+  have hCap :
+      0 < S.variance_limit
+        ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+            (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+        ∧ (∃ state : FluidState E,
+            state.u = EinsteinAnomaly A B_mp B_dr
+              ∧ state.ρ = 1
+              ∧ momentumResidual (E := E) state.u = 0)
+        ∧ Mod.ConnesRovelliThermalTimeIdentity
+        ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+            (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+        ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+            helicityInvariant A ω = twinWaveHelicity A Ω)
+        ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+        ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+            LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+        ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+        ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+        ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+            Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) :=
+    bits_to_gravity_to_fluid_capstone
+      (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
+      (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
+      (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+      (hAnomalySkew := hAnomalySkew) (hHelicity := hHelicity)
+      (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
+      (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+  exact ⟨hScaleEin.1, hCap⟩
 
 /--
 Owner-path capstone composition:

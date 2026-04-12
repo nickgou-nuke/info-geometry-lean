@@ -124,16 +124,12 @@ def exec_subagent(sandbox_path, role, prompt):
     return subprocess.run(cmd, env=env)
 
 def main():
-    if len(sys.argv) < 3 or sys.argv[1] != "--task":
-        print("Usage: python3 hermes_isolated_adapter.py --task <path_to_task.json>")
+    if len(sys.argv) < 2:
+        print("Usage: python3 hermes_isolated_adapter.py [--forge | --task <path_to_task.json>]")
         sys.exit(1)
 
-    task_path = Path(sys.argv[2])
     sandbox_path = Path(".hermes_sandbox")
     constitution_path = Path("docs/policy/hermes_proof_constitution.md")
-
-    with open(task_path, "r") as f:
-        task = json.load(f)
 
     # 0. Pre-flight Check
     check_backends()
@@ -142,11 +138,53 @@ def main():
     policy_hash = get_directory_hash("docs/policy")
     print(f"--- [AUDIT] Policy Integrity: {policy_hash[:16]} ---")
     
-    # Synchronize Trace Index
+    # Static commit-indexed trace check
     ensure_trace_index()
 
-    print(f"--- [SANDBOX] Setup for Task {task['taskId']} ---")
-    setup_sandbox(sandbox_path, constitution_path)
+    if sys.argv[1] == "--forge":
+        print(f"--- [REGIME A] Generative Forge (High-Temp Discovery) ---")
+        setup_sandbox(sandbox_path, constitution_path)
+        
+        # 0.1 Wild Generation
+        forge_prompt = (
+            "Activate 'blackbook_generator'. "
+            "Scan 'docs/black_books/' for latent symbolic pressures. "
+            "Propose a new Bridge Theorem between L1 Projectors and L3 Clifford states. "
+            "Connect the Drazin Core to the Holonomy plane. "
+            "Output: Discovery Packet JSON."
+        )
+        # Use high temperature for discovery via env/config override if needed
+        # For simplicity, we assume the skill handles the temperature mindset
+        exec_subagent(sandbox_path, "proposer", forge_prompt)
+
+        # 0.2 Adversarial Filtration
+        print(f"--- [REGIME A] Adversarial Sieve (Cold-Model Filter) ---")
+        filter_prompt = (
+            "Activate 'adversarial_compressor'. "
+            "Kill the Discovery Packet from the Forge. "
+            "Check for vacuity, triviality, or repo-latency. "
+            "If it survives: Output Refined Albedo Signature."
+        )
+        exec_subagent(sandbox_path, "formalizer", filter_prompt)
+        
+        # 0.3 Distillation
+        print(f"--- [REGIME A] Distiller (Manifest Production) ---")
+        distill_prompt = (
+            "Activate 'source_packetizer'. "
+            "Distill the Albedo Signature into a strict JSON Manifest. "
+            "Save to '.tasks/forged_bridge_manifest.json'."
+        )
+        exec_subagent(sandbox_path, "proposer", distill_prompt)
+        print("SUCCESS: Regime A Handover complete. Next: python3 hermes_isolated_adapter.py --task .tasks/forged_bridge_manifest.json")
+        sys.exit(0)
+
+    elif sys.argv[1] == "--task":
+        task_path = Path(sys.argv[2])
+        with open(task_path, "r") as f:
+            task = json.load(f)
+
+        print(f"--- [REGIME B] Constitutional Certification for {task['taskId']} ---")
+        setup_sandbox(sandbox_path, constitution_path)
 
     # 1. Proposer Stage (Synthesis)
     print(f"--- [PHASE 1] Proposer Dispatch (Qwen3-32B) ---")

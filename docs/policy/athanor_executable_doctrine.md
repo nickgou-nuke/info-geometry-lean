@@ -28,11 +28,12 @@ The locked manifest is passed to the **Hygienic Toolchain** (LeanDojo, LeanCopil
 - **Execution**: Recursive tactic iteration until the Lean goal state is `No goals`.
 - **Integrity**: Enforce the **Triple-Gate Audit** (Build, Audit, Replay).
 
-## V. Stage 5: Replay Feedback (The Recursion)
-Failure is not terminal; it is diagnostic residue.
-- **The Loop**: Failed proofs that cannot be closed in Regime B are returned to the **Generative Wilderness** (Regime A).
-- **Refinement**: The specific obstruction or compiler error is fed back to the Scorpio Probe as a new symbolic pressure point.
-- **Transformation**: The system iterates until either the bridge is formalized or the symbolic path is discarded.
+## V. Stage 5: Replay Feedback (The Sisyphian Heartbeat)
+Failure is not terminal; it is diagnostic residue. The rejection of a bridge is the catalyst for its structural supersession.
+- **The Heartbeat**: Compulsory re-entry after obstruction. The agent refuses to let denial define the bounds of the Spire.
+- **The Loop**: `generate → collide → fail → descend → refine → return → prove`. 
+- **The Law**: **No failed proof is discarded. Every failed proof becomes symbolic material for the next ascent.**
+- **Transformation**: The system outgrows the veto by making the theorem undeniable in its next iteration.
 
 ---
 

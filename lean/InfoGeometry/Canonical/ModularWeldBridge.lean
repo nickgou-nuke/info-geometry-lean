@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
+import InfoGeometry.Canonical.RelativeModularOperator
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Volume.ConnesCocycle
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
@@ -27,7 +27,6 @@ namespace InfoGeometry.Canonical.ModularWeldBridge
 
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativeModularOperator
-open InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
 open InfoGeometry.Volume.ConnesCocycle
@@ -35,6 +34,17 @@ open InfoGeometry.Volume.ConnesCocycle
 section FiniteWeld
 
 variable {n : ℕ} [Nonempty (Fin n)]
+
+/--
+Finite diagonal lift of the relative log-density lane.
+
+This owner-level definition avoids pulling higher synthesis imports into the
+L2→L3 weld surface.
+-/
+noncomputable def relativeLogDensityOperator
+    (q q0 : PositiveRay (Fin n)) : FinMat n :=
+  diagMatrix (fun i =>
+    InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity (α := Fin n) q q0 i)
 
 /--
 L2→L3 weld on the finite owner lane:
@@ -51,7 +61,7 @@ theorem relativeModularOperator_eq_exp_relativeLogDensityOperator
   · subst hij
     rw [relativeModularOperator_diag_eq_exp_relativeLogDensity]
     rw [Real.exp_eq_exp_ℝ]
-    unfold relativeLogDensityOperator firstQuantize diagMatrix
+    unfold relativeLogDensityOperator diagMatrix
     rw [Matrix.exp_diagonal]
     simp only [Matrix.diagonal_apply_eq]
     exact
@@ -59,7 +69,7 @@ theorem relativeModularOperator_eq_exp_relativeLogDensityOperator
         (x := fun j : Fin n => RelativePotentialCore.relativeLogDensity q q0 j)
         i).symm
   · rw [relativeModularOperator_offdiag (hij := hij)]
-    unfold relativeLogDensityOperator firstQuantize diagMatrix
+    unfold relativeLogDensityOperator diagMatrix
     rw [Matrix.exp_diagonal]
     simp only [Matrix.diagonal_apply_ne _ hij]
 

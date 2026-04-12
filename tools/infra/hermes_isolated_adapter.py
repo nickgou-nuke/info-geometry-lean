@@ -217,9 +217,16 @@ def main():
     )
     exec_subagent(sandbox_path, "formalizer", formalize_prompt)
 
-    # 3. Final Audit
+    # 4. Final Triple-Gate Audit (Rubedo)
+    print(f"--- [PHASE 4] Final Triple-Gate Audit (Rubedo) ---")
+    
+    # Gate 2: Semantic Audit
     audit_cmd = ["python3", "tools/infra/semantic_audit.py", "--task", str(task_path)]
     subprocess.run(audit_cmd)
+    
+    # Gate 3: Fresh Replay
+    replay_cmd = ["bash", "tools/infra/verify_replay.sh", task['targetFile'], str(task_path)]
+    subprocess.run(replay_cmd)
 
 if __name__ == "__main__":
     main()

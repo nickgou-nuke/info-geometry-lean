@@ -165,6 +165,31 @@ private theorem bridge_zpe_gravity
   ⟨zero_point_energy_topological_obstruction S hRankPos,
    CI.einsteinEquation_of_projectorObstruction_source c R Kgeo x Λ κ hEin⟩
 
+/--
+Owner-path variant of the ZPE/gravity bridge routed through the certified
+inverse-kernel package.
+-/
+private theorem bridge_zpe_gravity_of_certifiedInverseKernel
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x) :
+    0 < S.variance_limit ∧
+    EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CIK.chiralScale)) Λ κ
+      (anomalyStressEnergyAt Kgeo x CIK.chiralScale) := by
+  refine ⟨zero_point_energy_topological_obstruction S hRankPos, ?_⟩
+  let CI : ConformalInference E := { toInverseKernel := CIK.toInverseKernel' }
+  have hCI :
+      EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+        (anomalyStressEnergyAt Kgeo x CI.chiralScale) :=
+    CI.einsteinEquation_of_projectorObstruction_source c R Kgeo x Λ κ hEin
+  simpa [CI] using hCI
+
 private theorem bridge_fluid_helicity
     (A B_mp B_dr : VelocityField E)
     (ω : VelocityField E →L[ℝ] ℝ)
@@ -319,6 +344,87 @@ private theorem bits_to_gravity_to_fluid_capstone
       (InfoGeometry.Krein.cl11RepLin_sq (E := E) ((1 / 2 : ℝ), (1 / 2 : ℝ)))
   · -- Max Caliber witness from caller-supplied trajectory and horizon.
     exact ⟨Kgeo.H, γ, N, InfoGeometry.Canonical.SpectralInference.bayesianAction_nonneg Kgeo.H γ N⟩
+
+/--
+Owner-path capstone composition:
+same capstone payload as `bits_to_gravity_to_fluid_capstone`, but routed through
+`CertifiedInverseKernel` instead of taking a free `ConformalInference` argument.
+-/
+private theorem bits_to_gravity_to_fluid_capstone_of_certifiedInverseKernel
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (IST : InfoSpectralTriple F)
+    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ) :
+    0 < S.variance_limit
+      ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CIK.chiralScale)) Λ κ
+          (anomalyStressEnergyAt Kgeo x CIK.chiralScale)
+      ∧ (∃ state : FluidState E,
+          state.u = EinsteinAnomaly A B_mp B_dr
+            ∧ state.ρ = 1
+            ∧ momentumResidual (E := E) state.u = 0)
+      ∧ Mod.ConnesRovelliThermalTimeIdentity
+      ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+          (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+      ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+          helicityInvariant A ω = twinWaveHelicity A Ω)
+      ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+      ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+          LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+      ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+      ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+      ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+  let CI : ConformalInference E := { toInverseKernel := CIK.toInverseKernel' }
+  have hCap :
+      0 < S.variance_limit
+        ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+            (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+        ∧ (∃ state : FluidState E,
+            state.u = EinsteinAnomaly A B_mp B_dr
+              ∧ state.ρ = 1
+              ∧ momentumResidual (E := E) state.u = 0)
+        ∧ Mod.ConnesRovelliThermalTimeIdentity
+        ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+            (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+        ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+            helicityInvariant A ω = twinWaveHelicity A Ω)
+        ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+        ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+            LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+        ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+        ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+        ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+            Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) :=
+    bits_to_gravity_to_fluid_capstone
+      (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
+      (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
+      (hEin := hEin)
+      (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+      (hAnomalySkew := hAnomalySkew) (hHelicity := hHelicity)
+      (Mod := Mod) (IST := IST) (hBal := hBal)
+      (n := n) (Tflow := Tflow) (γ := γ) (N := N)
+  simpa [CI] using hCap
 
 /--
 Regularization-sourced capstone wrapper:
@@ -499,6 +605,79 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone
     (Mod := Mod) (IST := IST)
     (n := n) (Tflow := Tflow)
     hCapstone j t hTime
+
+/--
+Owner-path squeezing corollary:
+the same squeezing bound routed through `CertifiedInverseKernel` instead of a
+free conformal bridge argument.
+-/
+private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_certifiedInverseKernel
+    (S : SpinFactorState E)
+    (hRankPos : 0 < Module.finrank ℝ E)
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel E)
+    (c : ℝ)
+    (R : RicciTensor E)
+    (Kgeo : KaehlerInformationGeometry E)
+    (x : E)
+    (Λ κ : ℝ)
+    (hEin : IsEinsteinKaehlerAtWith c R Kgeo x)
+    (A B_mp B_dr : VelocityField E)
+    (ω : VelocityField E →L[ℝ] ℝ)
+    (Ω : AlgebraEnd E →L[ℝ] ℝ)
+    (hAnomalySkew :
+      ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+        = -EinsteinAnomaly A B_mp B_dr)
+    (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
+    (Mod : ModularRadonNikodymData E)
+    (IST : InfoSpectralTriple F)
+    (hBal : LichnerowiczBalancedCl11 (A := E) IST)
+    (n : Nat)
+    (Tflow : SinkhornTrajectory n)
+    (γ : ℕ → E)
+    (N : ℕ)
+    (j : Nat)
+    (t : ℝ)
+    (hTime : |t| ≤ trajectoryRNBarrier n Tflow j) :
+    |squeezingLogShear t| ≤ 4 * trajectoryRNBarrier n Tflow j := by
+  let CI : ConformalInference E := { toInverseKernel := CIK.toInverseKernel' }
+  have hCap :
+      0 < S.variance_limit
+        ∧ EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
+            (anomalyStressEnergyAt Kgeo x CI.chiralScale)
+        ∧ (∃ state : FluidState E,
+            state.u = EinsteinAnomaly A B_mp B_dr
+              ∧ state.ρ = 1
+              ∧ momentumResidual (E := E) state.u = 0)
+        ∧ Mod.ConnesRovelliThermalTimeIdentity
+        ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
+            (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
+        ∧ (∃ (ω : VelocityField E →L[ℝ] ℝ) (Ω : AlgebraEnd E →L[ℝ] ℝ),
+            helicityInvariant A ω = twinWaveHelicity A Ω)
+        ∧ (∃ Q : AlgebraEnd E, SatisfiesExclusionConnection Q)
+        ∧ (∀ f g : (Fin n → ℝ) ≃ₗ[ℝ] (Fin n → ℝ),
+            LogAbsVolume (f.trans g) = LogAbsVolume f + LogAbsVolume g)
+        ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
+        ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
+        ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
+        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
+            Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+    simpa [CI] using
+      (bits_to_gravity_to_fluid_capstone_of_certifiedInverseKernel
+        (S := S) (hRankPos := hRankPos) (CIK := CIK) (c := c)
+        (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
+        (hEin := hEin)
+        (A := A) (B_mp := B_mp) (B_dr := B_dr) (ω := ω) (Ω := Ω)
+        (hAnomalySkew := hAnomalySkew) (hHelicity := hHelicity)
+        (Mod := Mod) (IST := IST) (hBal := hBal)
+        (n := n) (Tflow := Tflow) (γ := γ) (N := N))
+  exact squeezingLogShear_bound_of_capstone_conjunction
+    (S := S) (CI := CI) (c := c)
+    (R := R) (Kgeo := Kgeo) (x := x)
+    (Λ := Λ) (κ := κ)
+    (A := A) (B_mp := B_mp) (B_dr := B_dr)
+    (Mod := Mod) (IST := IST)
+    (n := n) (Tflow := Tflow)
+    hCap j t hTime
 
 /--
 Regularization-sourced squeezing corollary:

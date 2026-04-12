@@ -102,6 +102,7 @@ import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.IB
 import InfoGeometry.Canonical.InformationNumber
 import InfoGeometry.Canonical.InformationalLichnerowicz
+import InfoGeometry.Canonical.InformationalLichnerowiczBottBridge
 import InfoGeometry.Canonical.InformationTorsion
 import InfoGeometry.Canonical.KKTCore
 import InfoGeometry.Canonical.KKTGeneralizedInverseBridge
@@ -119,6 +120,7 @@ import InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge
 import InfoGeometry.Canonical.ChiralHodgeIndexBridge
 import InfoGeometry.Canonical.ChiralDefectIndexBridge
 import InfoGeometry.Canonical.BoundaryChiralIndexBridge
+import InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge
 import InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv
 import InfoGeometry.Canonical.CentralChargeKKTParityBridge
 import InfoGeometry.Canonical.SuperJordanLie

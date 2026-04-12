@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.Singular
+import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Krein.KreinSpace
 import InfoGeometry.Krein.Thermal
@@ -224,6 +225,7 @@ theorem anomalyMomentumResidual_eq_zero_of_skew
     momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
   exact momentumResidual_eq_zero_of_skew (E := E) hSkew
 
+omit [FiniteDimensional ℝ E] in
 /--
 Regularization-driven momentum closure:
 if `B_mp` is Moore-Penrose for `A`, `B_dr` is Drazin for `A`, and the Drazin
@@ -232,8 +234,8 @@ linearized momentum residual.
 -/
 theorem anomalyMomentumResidual_eq_zero_of_regularization
     (A B_mp B_dr : VelocityField E)
-    (k : ℕ)
     (h_mp : IsMoorePenroseInverse A B_mp)
+    (k : ℕ)
     (h_dr : IsDrazinInverse A B_dr k)
     (h_dr_star : star (A * B_dr) = A * B_dr) :
     momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
@@ -245,22 +247,149 @@ theorem anomalyMomentumResidual_eq_zero_of_regularization
         (k := k) h_mp h_dr h_dr_star)
   exact anomalyMomentumResidual_eq_zero_of_skew (E := E) A B_mp B_dr hSkew
 
+omit [FiniteDimensional ℝ E] in
+/--
+Regularization-driven momentum closure with existential Drazin witness:
+for fixed `B_dr`, a witness `∃ k, IsDrazinInverse A B_dr k` is sufficient.
+-/
+theorem anomalyMomentumResidual_eq_zero_of_regularization_exists
+    (A B_mp B_dr : VelocityField E)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr_exists : ∃ k : ℕ, IsDrazinInverse A B_dr k)
+    (h_dr_star : star (A * B_dr) = A * B_dr) :
+    momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
+  rcases h_dr_exists with ⟨k, h_dr⟩
+  exact anomalyMomentumResidual_eq_zero_of_regularization
+    (E := E) A B_mp B_dr h_mp k h_dr h_dr_star
+
 /--
 State-level regularization-driven momentum closure on the canonical unit-density
 anomaly fluid state.
 -/
 theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization
     (A B_mp B_dr : VelocityField E)
-    (k : ℕ)
     (h_mp : IsMoorePenroseInverse A B_mp)
+    (k : ℕ)
     (h_dr : IsDrazinInverse A B_dr k)
     (h_dr_star : star (A * B_dr) = A * B_dr) :
     momentumResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
   have hResidual :
       momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 :=
     anomalyMomentumResidual_eq_zero_of_regularization
-      (E := E) A B_mp B_dr k h_mp h_dr h_dr_star
+      (E := E) A B_mp B_dr h_mp k h_dr h_dr_star
   simpa [anomaly_as_fluid_state (E := E) A B_mp B_dr] using hResidual
+
+/--
+State-level regularization closure with existential Drazin witness:
+for fixed `B_dr`, a witness `∃ k, IsDrazinInverse A B_dr k` is sufficient.
+-/
+theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_exists
+    (A B_mp B_dr : VelocityField E)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr_exists : ∃ k : ℕ, IsDrazinInverse A B_dr k)
+    (h_dr_star : star (A * B_dr) = A * B_dr) :
+    momentumResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
+  rcases h_dr_exists with ⟨k, h_dr⟩
+  exact anomalyFluidState_momentumResidual_eq_zero_of_regularization
+    (E := E) A B_mp B_dr h_mp k h_dr h_dr_star
+
+/--
+Finite-dimensional regularization package:
+derive a canonical Drazin witness internally and expose anomaly skewness as a
+star-selfadjointness consequence on the induced spectral projector.
+-/
+theorem anomalySkew_of_regularization_of_finiteDimensional
+    (A B_mp : VelocityField E)
+    (h_mp : IsMoorePenroseInverse A B_mp) :
+    ∃ (k : ℕ) (B_dr : VelocityField E),
+      IsDrazinInverse A B_dr k ∧
+      (star (A * B_dr) = A * B_dr →
+        ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
+          = -EinsteinAnomaly A B_mp B_dr) := by
+  rcases DrazinInfiniteCore.nonempty_rieszDrazinData_endCLM (E := E) A with ⟨hRiesz⟩
+  refine ⟨hRiesz.k, hRiesz.D, hRiesz.hIsDrazin, ?_⟩
+  intro h_dr_star
+  simpa using
+    (einsteinAnomaly_skew_adjoint (a := A) (b_mp := B_mp) (b_dr := hRiesz.D)
+      (k := hRiesz.k) h_mp hRiesz.hIsDrazin h_dr_star)
+
+/--
+Finite-dimensional regularization package at the momentum-closure level:
+derive a canonical Drazin witness internally and reduce closure to the
+star-selfadjointness channel.
+-/
+theorem anomalyMomentumResidual_eq_zero_of_regularization_of_finiteDimensional
+    (A B_mp : VelocityField E)
+    (h_mp : IsMoorePenroseInverse A B_mp) :
+    ∃ (k : ℕ) (B_dr : VelocityField E),
+      IsDrazinInverse A B_dr k ∧
+      (star (A * B_dr) = A * B_dr →
+        momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0) := by
+  rcases anomalySkew_of_regularization_of_finiteDimensional
+      (E := E) A B_mp h_mp with ⟨k, B_dr, h_dr, _hSkew_of_star⟩
+  refine ⟨k, B_dr, h_dr, ?_⟩
+  intro h_dr_star
+  exact anomalyMomentumResidual_eq_zero_of_regularization_exists
+    (E := E) A B_mp B_dr h_mp ⟨k, h_dr⟩ h_dr_star
+
+/--
+Finite-dimensional regularization package at the state level:
+derive a canonical Drazin witness internally and reduce state momentum closure
+to the star-selfadjointness channel.
+-/
+theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_of_finiteDimensional
+    (A B_mp : VelocityField E)
+    (h_mp : IsMoorePenroseInverse A B_mp) :
+    ∃ (k : ℕ) (B_dr : VelocityField E),
+      IsDrazinInverse A B_dr k ∧
+      (star (A * B_dr) = A * B_dr →
+        momentumResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0) := by
+  rcases anomalySkew_of_regularization_of_finiteDimensional
+      (E := E) A B_mp h_mp with ⟨k, B_dr, h_dr, _hSkew_of_star⟩
+  refine ⟨k, B_dr, h_dr, ?_⟩
+  intro h_dr_star
+  exact anomalyFluidState_momentumResidual_eq_zero_of_regularization_exists
+    (E := E) A B_mp B_dr h_mp ⟨k, h_dr⟩ h_dr_star
+
+/--
+Finite-dimensional global-Drazin regularization wrapper:
+derive a canonical Drazin witness internally and expose momentum closure while
+keeping only the star/selfadjointness channel as external input.
+-/
+theorem anomalyMomentumResidual_eq_zero_of_regularization_global_drazin
+    (A B_mp : VelocityField E)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr_star_of_drazin :
+      ∀ {k : ℕ} {B_dr : VelocityField E},
+        IsDrazinInverse A B_dr k →
+          star (A * B_dr) = A * B_dr) :
+    ∃ (B_dr : VelocityField E),
+      momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
+  rcases DrazinInfiniteCore.nonempty_rieszDrazinData_endCLM (E := E) A with ⟨hRiesz⟩
+  refine ⟨hRiesz.D, ?_⟩
+  exact anomalyMomentumResidual_eq_zero_of_regularization_exists
+    (E := E) A B_mp hRiesz.D h_mp ⟨hRiesz.k, hRiesz.hIsDrazin⟩
+    (h_dr_star_of_drazin hRiesz.hIsDrazin)
+
+/--
+Finite-dimensional global-Drazin state-level wrapper:
+derive a canonical Drazin witness internally and expose fluid-state momentum
+closure while keeping only the star/selfadjointness channel as external input.
+-/
+theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_global_drazin
+    (A B_mp : VelocityField E)
+    (h_mp : IsMoorePenroseInverse A B_mp)
+    (h_dr_star_of_drazin :
+      ∀ {k : ℕ} {B_dr : VelocityField E},
+        IsDrazinInverse A B_dr k →
+          star (A * B_dr) = A * B_dr) :
+    ∃ (B_dr : VelocityField E),
+      momentumResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
+  rcases DrazinInfiniteCore.nonempty_rieszDrazinData_endCLM (E := E) A with ⟨hRiesz⟩
+  refine ⟨hRiesz.D, ?_⟩
+  exact anomalyFluidState_momentumResidual_eq_zero_of_regularization_exists
+    (E := E) A B_mp hRiesz.D h_mp ⟨hRiesz.k, hRiesz.hIsDrazin⟩
+    (h_dr_star_of_drazin hRiesz.hIsDrazin)
 
 end RealKreinFluid
 

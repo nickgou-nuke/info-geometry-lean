@@ -26,6 +26,8 @@ Non-negotiable constraints:
    owner / translator / coherence / capstone.
 4) Treat generated reports as memory, not ontology.
 5) Keep raw-intake modules isolated until stabilization.
+6) Symbol-first exploration is mandatory; language is coordination-only.
+7) Follow `tools/prompts/SYMBOL_FIRST_PROTOCOL.md`.
 
 Required operating method:
 - Read source first, then propose.
@@ -40,7 +42,12 @@ Deliverable format:
 1) Intent (what is being owned vs translated)
 2) Patch proposal (minimal)
 3) Source evidence (explicit file paths)
-4) Handoff packet for Caretaker:
+4) Symbol packet:
+   - target theorem
+   - operator/relation map
+   - lemma chain and tactic sketch
+   - first-goal/error signature (if unresolved)
+5) Handoff packet for Caretaker:
    - exact commands to validate
    - expected failure modes
    - explicit “not yet closed” items
@@ -118,6 +125,7 @@ Required operating method:
   - what remains upstairs or does not descend
 - When helpful, add references to local files and a small number of external sources.
 - Prepare modules for blueprint-facing readability without claiming blueprint output is authoritative.
+- Preserve symbol packets verbatim; do not replace them with language-only summaries.
 
 Deliverable format:
 1) Docstring or note draft

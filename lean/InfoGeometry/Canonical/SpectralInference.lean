@@ -4,6 +4,7 @@ import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Krein.Metric
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Canonical.DrazinExistenceBridge
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Canonical.Singular
 import Mathlib.Analysis.InnerProductSpace.Adjoint
@@ -145,7 +146,8 @@ theorem spectralProjector_idempotent :
 /-- Global finite-dimensional constructor for the certified regularized layer. -/
 theorem exists_of_spectralTriple (ST : SpectralTriple E) :
     ∃ CRST : CertifiedRegularizedSpectralTriple E, CRST.toSpectralTriple = ST := by
-  rcases InfoGeometry.Canonical.exists_drazinInverse_global (A := ST.D) with ⟨k, DD, hD⟩
+  rcases DrazinExistenceBridge.exists_canonicalDrazinInverse_global_endCLM
+      (E := E) ST.D with ⟨k, DD, hD⟩
   refine ⟨{ toSpectralTriple := ST, DD := DD, index := k, hDrazin := hD }, rfl⟩
 
 end CertifiedRegularizedSpectralTriple
@@ -301,7 +303,8 @@ theorem epsilon_eq_zero_of_projectors_commute
 /-- Global finite-dimensional constructor for the certified chiral layer. -/
 theorem exists_of_spectralTriple (ST : SpectralTriple E) :
     ∃ CCST : CertifiedChiralSpectralTriple E, CCST.toSpectralTriple = ST := by
-  rcases InfoGeometry.Canonical.exists_drazinInverse_global (A := ST.D) with ⟨k, DD, hD⟩
+  rcases DrazinExistenceBridge.exists_canonicalDrazinInverse_global_endCLM
+      (E := E) ST.D with ⟨k, DD, hD⟩
   rcases InfoGeometry.Canonical.exists_moorePenroseInverse_global (A := ST.D) with ⟨DP, hMP⟩
   refine ⟨{ toSpectralTriple := ST
             DD := DD

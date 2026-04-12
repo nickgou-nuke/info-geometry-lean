@@ -65,6 +65,10 @@ import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Canonical.CoarseGraining
 import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.Drazin
+import InfoGeometry.Canonical.DrazinExistenceBridge
+import InfoGeometry.Canonical.DrazinInfiniteCore
+import InfoGeometry.Canonical.DrazinKreinCompatibility
+import InfoGeometry.Canonical.DrazinFredholmBridge
 import InfoGeometry.Canonical.DrazinCoreFlow
 import InfoGeometry.Canonical.DrazinDescriptorSystems
 import InfoGeometry.Canonical.InverseKernelAlgebra
@@ -132,6 +136,7 @@ import InfoGeometry.KL.EntropicInferenceTest
 import InfoGeometry.SLT.ConditionalExpectation
 import InfoGeometry.TransformationGroups
 import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.KMSCocycleGeneratorBridge
 import InfoGeometry.Canonical.KreinDoubledAtom
 import InfoGeometry.Canonical.KLinearRepresentation
 import InfoGeometry.Canonical.PolarizedMadelungBridge
@@ -193,6 +198,7 @@ import InfoGeometry.Canonical.ReferenceSectorGaugeBridge
 import InfoGeometry.Canonical.VortexReferenceGaugeBridge
 import InfoGeometry.Canonical.WeightedWeylNormalizationBridge
 import InfoGeometry.Canonical.SouriauPlanckVector
+import InfoGeometry.Canonical.SouriauFlowCliffordBridge
 import InfoGeometry.Canonical.ThermodynamicAction
 import InfoGeometry.Canonical.ThermodynamicGenerator
 import InfoGeometry.Canonical.MajoranaKreinCartanSplit
@@ -213,6 +219,7 @@ import InfoGeometry.Canonical.RestrictedVolumeCharacter
 import InfoGeometry.Canonical.WeylGaugeOperatorLift
 import InfoGeometry.Canonical.WeylKKTAnomalyIdentity
 import InfoGeometry.Canonical.RealBdG
+import InfoGeometry.Canonical.DIIICommutatorInitialization
 import InfoGeometry.Canonical.RealBdGDIIIAtom
 import InfoGeometry.Canonical.RealBdGSheetBridge
 import InfoGeometry.Canonical.SpectralInference

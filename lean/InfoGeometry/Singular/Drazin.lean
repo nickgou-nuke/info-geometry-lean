@@ -259,6 +259,32 @@ theorem exists_drazinInverse_global (A : Module.End K V) :
 
   exact ⟨k, D, IsDrazinInverse.mk hEq1 hEq2 hEq3⟩
 
+/-- 
+The Drazin Index: The smallest k for which the Fitting decomposition stabilizes. 
+-/
+noncomputable def drazinIndex (A : Module.End K V) : ℕ :=
+  (exists_drazinInverse_global A).choose
+
+/--
+The Constructive Drazin Inverse Operator.
+Chooses the unique Drazin inverse guaranteed by the Fitting decomposition.
+-/
+noncomputable def drazinInverse (A : Module.End K V) : Module.End K V :=
+  (exists_drazinInverse_global A).choose_spec.choose
+
+/--
+Theorem: The chosen operator satisfies the Drazin laws.
+-/
+theorem drazinInverse_spec (A : Module.End K V) :
+    IsDrazinInverse A (drazinInverse A) (drazinIndex A) :=
+  (exists_drazinInverse_global A).choose_spec.choose_spec
+
+/--
+The Spectral Projector P_D constructed natively from the operator A.
+-/
+noncomputable def drazinProjector (A : Module.End K V) : Module.End K V :=
+  A * (drazinInverse A)
+
 end DrazinLinear
 
 section Anomaly

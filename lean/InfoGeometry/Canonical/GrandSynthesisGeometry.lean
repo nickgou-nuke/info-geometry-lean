@@ -201,11 +201,10 @@ private theorem vacuumEinsteinEquation_of_rnEntropySource
     (hUnit : relativeVolumeChangeRN n M = 1)
     (hBridge : MetricRNRicciBridge R Kgeo x) :
     VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
-  have hUnitState : UnitRelativeVolumeState Kgeo := by
-    intro x'
-    simpa [RNEntropySourcesMongeAmpere, hUnit] using hSource x'
-  exact vacuumEinsteinEquation_of_unitRelativeVolume
-    (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hBridge
+  exact
+    InfoGeometry.Canonical.CalabiYauBridge.vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolume
+      (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
+      (M := M) hSource hUnit hBridge
 
 omit [FiniteDimensional ℝ X] in
 /--
@@ -223,13 +222,8 @@ private theorem gravity_generated_by_rnEntropy
     (hUnit : relativeVolumeChangeRN n M = 1)
     (hBridge : MetricRNRicciBridge R Kgeo x) :
     IsRicciFlat R ∧ VacuumEinsteinEquationAt R Kgeo x (2 * Λ) Λ := by
-  have hUnitState : UnitRelativeVolumeState Kgeo := by
-    intro x'
-    simpa [RNEntropySourcesMongeAmpere, hUnit] using hSource x'
-  refine ⟨?_, ?_⟩
-  · exact isRicciFlat_of_unitRelativeVolume
-      (R := R) (K := Kgeo) (x := x) hUnitState hBridge
-  · exact vacuumEinsteinEquation_of_rnEntropySource
+  exact
+    InfoGeometry.Canonical.CalabiYauBridge.isRicciFlat_and_vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolume
       (n := n) (Kgeo := Kgeo) (R := R) (x := x) (Λ := Λ)
       (M := M) hSource hUnit hBridge
 

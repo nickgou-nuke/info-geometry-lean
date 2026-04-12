@@ -32,10 +32,12 @@ Must do:
 - generate small, testable, source-backed patches
 - keep unresolved assumptions explicit
 - hand off candidate packets with exact validation commands
+- emit symbol-first proof packets (operator map, relation map, lemma chain)
 
 Must not do:
 - weaken theorem statements
 - hide uncertainty behind theorem-shaped placeholders
+- ship language-only exploration packets
 
 ## 3. DocClaw — Librarian / Professor
 
@@ -47,6 +49,7 @@ Must do:
 - name owner / translator / coherence roles explicitly
 - add notation maps and references where they improve orientation
 - keep blueprint-facing explanatory surfaces aligned with compiled sources
+- preserve and cite symbol packets as the primary exploration artifact
 
 Must not do:
 - claim closure from prose or references

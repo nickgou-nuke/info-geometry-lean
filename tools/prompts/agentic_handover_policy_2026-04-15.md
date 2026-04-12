@@ -16,6 +16,8 @@ Run a disciplined dual-loop:
 - **Closure loop**: admit only kernel-verified structures into the authoritative lane.
 
 The purpose is high exploration throughput without ontology drift.
+Exploration in this stack is symbol-first; language is coordination-only.
+See: `tools/prompts/SYMBOL_FIRST_PROTOCOL.md`.
 
 This handover is multilingual in presentation and single-valued in authority:
 - repo-native semantic language is preserved

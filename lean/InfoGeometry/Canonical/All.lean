@@ -100,6 +100,8 @@ import InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge
 import InfoGeometry.Canonical.Geometry
 import InfoGeometry.Canonical.GrandCanonicalCore
 import InfoGeometry.Canonical.GrandCanonicalExperts
+import InfoGeometry.Canonical.GenerativeInferenceCore
+import InfoGeometry.Canonical.PhysicsOfInformationCore
 import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Canonical.GrandUnificationMetric
 import InfoGeometry.Canonical.HeatKernel
@@ -236,6 +238,7 @@ import InfoGeometry.Canonical.TopologicalEuler
 import InfoGeometry.Canonical.TopologicalInvariants
 import InfoGeometry.Canonical.TopologicalInvariantInvariance
 import InfoGeometry.Canonical.Triality
+import InfoGeometry.Canonical.HeadTrialityCore
 import InfoGeometry.Canonical.Twistor
 import InfoGeometry.Canonical.Unification
 import InfoGeometry.PositiveMeasure

@@ -79,7 +79,6 @@ plus/minus defect slices, nonzero operatorial central charge yields a genuine
 zero mode together with a nontrivial Moore-Penrose/Drazin regularization
 package for the transported Dirac operator.
 -/
-@[rep_depth transport]
 noncomputable def zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
     (V : BogoliubovVielbeinBundle (E := E))
     (X : RealSplitKreinDiracFredholmModule A B H₂)
@@ -109,7 +108,7 @@ noncomputable def zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_z
 Under the same identification and oddness hypotheses, nonzero operatorial
 central charge forces a genuine zero mode of the transported Dirac operator.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem transportedHasZeroMode_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
     (V : BogoliubovVielbeinBundle (E := E))
     (X : RealSplitKreinDiracFredholmModule A B H₂)
@@ -137,7 +136,7 @@ theorem transportedHasZeroMode_of_operatorialCentralCharge_ne_zero_of_identified
 /--
 Witness form of the transported zero-mode consequence.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem transportedZeroModeWitness_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization
     (V : BogoliubovVielbeinBundle (E := E))
     (X : RealSplitKreinDiracFredholmModule A B H₂)

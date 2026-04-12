@@ -1,69 +1,39 @@
 # ⚗️ NEMOCLAW CONFIGURATION: The Local Spire Runtime
 # Configuration for the Local Multi-Agent Collective (NemoClaw + ClawCode + OpenClaw)
 
-version: "1.0"
+version: "1.1"
 agent:
   name: "Nemo-ClawCode-Caretaker"
-  description: "Local inhabitant of the Info-Geometry Spire"
   orchestrator: "openclaw" 
 
-  # The Code Engine: Utilizing the Open-Source ClawCode for Lean 4 formalization
-  code_engine:
-    provider: "clawcode"
-    binary_path: "/usr/local/bin/clawcode" # Path to be confirmed on DGX Spark
-    allow_file_system_access: true
-    integrated_tools:
-      - "lean4-compiler"
-      - "python-tir"
+  # The Discovery Engine (The Hands): Powered by Nous Hermes + Ollama
+  discovery_engine:
+    provider: "custom"
+    base_url: "http://localhost:11434/v1"
+    api_key: "ollama"
+    model: "hermes-3-llama-3.1-8b" # or qwen2.5:14b as suggested
+    config_path: "./tools/infra/hermes_config.yaml"
 
-  # The Logos: Powered by NVIDIA Nemotron via local NIM or DGX-local inference
-  llm_config:
+  # The Logic Engine (The Logos): Powered by NVIDIA Nemotron-70B
+  logic_engine:
     provider: "nvidia"
     model: "nvidia/llama-3.1-nemotron-70b-instruct" 
-    base_url: "http://localhost:8000/v1" # Local DGX Spark Endpoint
-    api_key: "${NVIDIA_API_KEY}" # To be set in local environment
+    base_url: "http://localhost:8000/v1" 
 
-  # Security: NVIDIA OpenShell Sandbox
-  sandbox:
-    enabled: true
-    provider: "openshell"
-    isolation_level: "high"
-    allowed_directories:
-      - "./lean"
-      - "./tests"
-      - "./docs"
-      - "./tools"
+  # The Verification Kernel
+  code_engine:
+    provider: "clawcode"
+    integrated_tools:
+      - "lean4-compiler"
+      - "semantic-audit"
+      - "dag-doctor"
 
-# Runtime rights separation (three-plane model)
-runtime_policy:
-  planes:
-    allowed:
-      - "prove"
-      - "orchestrate"
-      - "publish"
-    default: "prove"
-  heartbeat:
-    enabled: true
-    allowed_planes:
-      - "prove"
-      - "orchestrate"
-  publish:
-    enabled: false
-    default_policy: "deny"
-    require_two_key_approval: true
-    approval_keys:
-      - "human"
-      - "policy_engine"
-
-# Tool Valences (OpenClaw standard)
-tools:
-  - name: "terminal"
-    enabled: true
-  - name: "file_editor"
-    use: "clawcode" # Explicitly bypassing claudecode for local sovereignty
-  - name: "lean_afm"
-    command: "lake build"
-  - name: "publisher"
-    enabled: false
-    allows_outbound_publish: true
-    allowed_plane: "publish"
+# Security: NVIDIA OpenShell Sandbox
+sandbox:
+  enabled: true
+  provider: "openshell"
+  allowed_directories:
+    - "./lean"
+    - "./docs"
+    - "./quarantine"
+    - "./skills"

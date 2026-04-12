@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConnesArakiCore
+import InfoGeometry.Canonical.ModularWeldBridge
 import InfoGeometry.Canonical.TomitaTakesaki
 
 /-!
@@ -60,12 +61,13 @@ noncomputable def tomitaUnitConnesArakiDataOfCasini
       T
       relEnt) :
     TomitaUnitConnesArakiData (H := H) T :=
-  ConnesArakiData.ofUnitCocycle
-    (H := H)
-    (σ := InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
-    (T := T)
-    relEnt
-    hCasini
+  { bridge := InfoGeometry.Volume.ConnesCocycle.unitScalarBridge
+      (InfoGeometry.Canonical.TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
+    cocycle :=
+      InfoGeometry.Canonical.ModularWeldBridge.tomita_modularSign_flowUnitCocycle_isConnesCocycle
+        (H := H)
+    relEnt := relEnt
+    casini := hCasini }
 
 /--
 Tomita-specialized canonical squeezing endpoint:

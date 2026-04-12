@@ -313,8 +313,15 @@ theorem anomalySkew_of_regularization_of_finiteDimensional
     ?_
   ⟩
   intro h_dr_star
-  exact anomalySkew_of_regularization_canonical_drazin
-    (E := E) A B_mp h_mp h_dr_star
+  simpa using
+    (einsteinAnomaly_skew_adjoint
+      (a := A)
+      (b_mp := B_mp)
+      (b_dr := DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+      (k := DrazinInfiniteCore.canonicalDrazinIndex_endCLM (E := E) A)
+      h_mp
+      (DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A)
+      h_dr_star)
 
 /--
 Finite-dimensional regularization package at the momentum-closure level:
@@ -369,8 +376,12 @@ theorem anomalyMomentumResidual_eq_zero_of_regularization_global_drazin
     ∃ (B_dr : VelocityField E),
       momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 := by
   refine ⟨DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A, ?_⟩
-  exact anomalyMomentumResidual_eq_zero_of_regularization_canonical_drazin
-    (E := E) A B_mp h_mp
+  exact anomalyMomentumResidual_eq_zero_of_regularization
+    (E := E)
+    A B_mp (DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+    h_mp
+    (DrazinInfiniteCore.canonicalDrazinIndex_endCLM (E := E) A)
+    (DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A)
     (h_dr_star_of_drazin
       (DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A))
 
@@ -389,8 +400,12 @@ theorem anomalyFluidState_momentumResidual_eq_zero_of_regularization_global_draz
     ∃ (B_dr : VelocityField E),
       momentumResidual (E := E) ((anomalyFluidState (E := E) A B_mp B_dr).u) = 0 := by
   refine ⟨DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A, ?_⟩
-  exact anomalyFluidState_momentumResidual_eq_zero_of_regularization_canonical_drazin
-    (E := E) A B_mp h_mp
+  exact anomalyFluidState_momentumResidual_eq_zero_of_regularization
+    (E := E)
+    A B_mp (DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+    h_mp
+    (DrazinInfiniteCore.canonicalDrazinIndex_endCLM (E := E) A)
+    (DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A)
     (h_dr_star_of_drazin
       (DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A))
 

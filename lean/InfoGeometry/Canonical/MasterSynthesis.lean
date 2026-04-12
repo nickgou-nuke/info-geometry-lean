@@ -876,7 +876,7 @@ Regularization wrapper with internalized Drazin witness:
 derive `h_dr` from finite-dimensional global existence and keep only the
 star/selfadjointness regularization obligation as external input.
 -/
-private theorem bits_to_gravity_to_fluid_capstone_of_regularization_global_drazin
+private theorem bits_to_gravity_to_fluid_capstone_of_regularization_canonical_drazin
     (S : SpinFactorState E)
     (hRankPos : 0 < Module.finrank ℝ E)
     (CI : ConformalInference E)
@@ -1134,7 +1134,7 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
 Regularization-sourced squeezing corollary:
 derives anomaly skewness from MP/Drazin data before invoking the capstone.
 -/
-private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_regularization
+private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_regularization_canonical_drazin
     (S : SpinFactorState E)
     (hRankPos : 0 < Module.finrank ℝ E)
     (CI : ConformalInference E)
@@ -1164,7 +1164,7 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
     (t : ℝ)
       (hTime : |t| ≤ trajectoryRNBarrier n Tflow j) :
     |squeezingLogShear t| ≤ 4 * trajectoryRNBarrier n Tflow j := by
-  rcases bits_to_gravity_to_fluid_capstone_of_regularization_global_drazin
+  rcases bits_to_gravity_to_fluid_capstone_of_regularization_canonical_drazin
       (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
       (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
       (hEin := hEin)

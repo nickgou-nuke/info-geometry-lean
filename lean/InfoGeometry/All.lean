@@ -18,6 +18,10 @@ import InfoGeometry.Quantum.All
 import InfoGeometry.Singular.All
 import InfoGeometry.Thermo.All
 import InfoGeometry.Volume.All
+import InfoGeometry.Canonical.KernelCommutatorObstruction
+import InfoGeometry.Dynamics.UnruhKMS
+import InfoGeometry.Physics.DIIISymmetryAtom
+import InfoGeometry.Thermodynamics.SouriauKillingFlow
 
 import InfoGeometry.Basic
 import InfoGeometry.Cartan

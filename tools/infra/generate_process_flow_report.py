@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, cast
@@ -77,6 +78,36 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--report-out", default=DEFAULT_REPORT_OUT, help="Markdown report path.")
     parser.add_argument("--json-out", default=DEFAULT_JSON_OUT, help="JSON summary path.")
     parser.add_argument("--top", type=int, default=12, help="Top-N rows per ranked section.")
+    parser.add_argument(
+        "--max-shared-sources-per-path",
+        type=int,
+        default=16,
+        help="Cap shared comparison source expansion per path (0 disables cap).",
+    )
+    parser.add_argument(
+        "--max-candidate-paths-per-path",
+        type=int,
+        default=128,
+        help="Cap candidate comparison paths considered per path (0 disables cap).",
+    )
+    parser.add_argument(
+        "--max-comparison-pairs",
+        type=int,
+        default=20000,
+        help="Global cap on comparison pairs evaluated (0 disables cap).",
+    )
+    parser.add_argument(
+        "--max-witness-searches",
+        type=int,
+        default=2000,
+        help="Global cap on closure witness searches for pair comparisons (0 disables cap).",
+    )
+    parser.add_argument(
+        "--max-comparison-seconds",
+        type=float,
+        default=45.0,
+        help="Wall-clock budget for comparison generation in seconds (0 disables cap).",
+    )
     return parser.parse_args()
 
 
@@ -488,6 +519,12 @@ def find_comparison_witnesses(
 def build_comparison_candidates(
     path_summaries: list[JsonDict],
     events: list[JsonDict],
+    *,
+    max_shared_sources_per_path: int,
+    max_candidate_paths_per_path: int,
+    max_comparison_pairs: int,
+    max_witness_searches: int,
+    max_comparison_seconds: float,
 ) -> tuple[list[JsonDict], list[JsonDict]]:
     events_by_target = build_event_target_index(events)
     paths_by_src: dict[str, list[JsonDict]] = defaultdict(list)
@@ -504,11 +541,20 @@ def build_comparison_candidates(
 
     rows: list[JsonDict] = []
     seen_pairs: set[tuple[int, int]] = set()
+    capped_out = False
+    witness_search_count = 0
+    started_at = time.perf_counter()
     for path_a in path_summaries:
+        if max_comparison_seconds > 0 and (time.perf_counter() - started_at) >= max_comparison_seconds:
+            capped_out = True
+            break
         path_a_id = int(path_a["pathId"])
         candidate_paths_by_id: dict[int, JsonDict] = {}
         candidate_srcs = shared_candidates_by_path_id[path_a_id]
-        for src in sorted(candidate_srcs):
+        sorted_srcs = sorted(candidate_srcs)
+        if max_shared_sources_per_path > 0:
+            sorted_srcs = sorted_srcs[:max_shared_sources_per_path]
+        for src in sorted_srcs:
             for path_b in paths_by_src.get(src, []):
                 candidate_paths_by_id[int(path_b["pathId"])] = path_b
         same_dst_paths = paths_by_dst.get(str(path_a["dst"]), [])
@@ -516,7 +562,13 @@ def build_comparison_candidates(
             for path_b in same_dst_paths:
                 candidate_paths_by_id[int(path_b["pathId"])] = path_b
 
-        for path_b_id, path_b in sorted(candidate_paths_by_id.items()):
+        candidate_items = sorted(candidate_paths_by_id.items())
+        if max_candidate_paths_per_path > 0:
+            candidate_items = candidate_items[:max_candidate_paths_per_path]
+        for path_b_id, path_b in candidate_items:
+            if max_comparison_seconds > 0 and (time.perf_counter() - started_at) >= max_comparison_seconds:
+                capped_out = True
+                break
             path_b_id = int(path_b["pathId"])
             if path_b_id <= path_a_id:
                 continue
@@ -553,11 +605,16 @@ def build_comparison_candidates(
             else:
                 evidence_class = "overlap_only"
             should_search_witnesses = same_dst or evidence_class == "coherence_candidate"
-            witness_matches = (
-                find_comparison_witnesses(path_a, path_b, events_by_target)
-                if should_search_witnesses
-                else []
-            )
+            if should_search_witnesses:
+                if max_witness_searches > 0 and witness_search_count >= max_witness_searches:
+                    should_search_witnesses = False
+                elif max_comparison_seconds > 0 and (time.perf_counter() - started_at) >= max_comparison_seconds:
+                    should_search_witnesses = False
+            if should_search_witnesses:
+                witness_matches = find_comparison_witnesses(path_a, path_b, events_by_target)
+                witness_search_count += 1
+            else:
+                witness_matches = []
             witness_nodes = [row["node"] for row in witness_matches]
             if evidence_class == "overlap_only":
                 comparison_status = "merely_similar"
@@ -589,6 +646,11 @@ def build_comparison_candidates(
                     "witnessDetails": witness_matches[:5],
                 }
             )
+            if max_comparison_pairs > 0 and len(rows) >= max_comparison_pairs:
+                capped_out = True
+                break
+        if capped_out:
+            break
     rows.sort(
         key=lambda row: (
             COMPARISON_STATUS_RANK.get(str(row["comparisonStatus"]), 99),
@@ -1059,7 +1121,15 @@ def main() -> int:
     print(f"[generate_process_flow_report] cocycles={len(cocycles)}", flush=True)
     path_summaries = build_path_summaries(paths, cocycles_by_pair, events)
     print(f"[generate_process_flow_report] path_summaries={len(path_summaries)}", flush=True)
-    comparison_candidates, path_summaries = build_comparison_candidates(path_summaries, events)
+    comparison_candidates, path_summaries = build_comparison_candidates(
+        path_summaries,
+        events,
+        max_shared_sources_per_path=max(0, int(args.max_shared_sources_per_path)),
+        max_candidate_paths_per_path=max(0, int(args.max_candidate_paths_per_path)),
+        max_comparison_pairs=max(0, int(args.max_comparison_pairs)),
+        max_witness_searches=max(0, int(args.max_witness_searches)),
+        max_comparison_seconds=max(0.0, float(args.max_comparison_seconds)),
+    )
     print(f"[generate_process_flow_report] comparisons={len(comparison_candidates)}", flush=True)
     validate_derived_state(path_summaries, comparison_candidates)
     write_jsonl(comparisons_out, comparison_candidates)

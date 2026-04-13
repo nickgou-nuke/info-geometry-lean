@@ -80,7 +80,7 @@ noncomputable abbrev PR : EndH := U.kernel.mpRangeProjector
 
 /-- Projected Drazin even Hamiltonian candidate `HD = QD²`. -/
 noncomputable abbrev HD : EndH :=
-  InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian U.kernel
+  InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.kernel
 
 /-- Spectral grading of the projected lane. -/
 noncomputable abbrev GammaS : EndH := U.kernel.toInformationCartanTriple.GammaS
@@ -124,9 +124,9 @@ theorem primitive_phaseChannel_sq_eq_neg_id :
 
 /-- The projected supercharge is odd in the Drazin spectral grading. -/
 theorem projected_supercharge_is_odd :
-    InfoGeometry.Canonical.DrazinSupercharge.anticommutator (GammaS U) (QD U) = 0 := by
+    InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (GammaS U) (QD U) = 0 := by
   simpa [QD, GammaS] using
-    (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge_is_odd
+    (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge_is_oddK
       (CIK := U.kernel))
 
 /-- The projected kinetic operator is even/compact in the Drazin grading. -/
@@ -134,15 +134,15 @@ theorem projected_hamiltonian_is_even :
     let T := U.kernel.toInformationCartanTriple
     T.IsSpectralCompact (HD U) := by
   simpa [HD] using
-    (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian_isSpectralCompact
+    (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK_isSpectralCompact
       (CIK := U.kernel))
 
 /-- The projected supercharge admits the exact dilation-gap commutator presentation. -/
 theorem projected_supercharge_eq_two_commutator :
     QD U = (2 : ℝ) •
-      InfoGeometry.Canonical.DrazinSupercharge.commutator U.kernel.spectralProjector U.kernel.dilationGap := by
+      InfoGeometry.Canonical.DrazinSupercharge.commutatorK U.kernel.spectralProjector U.kernel.dilationGap := by
   simpa [QD] using
-    (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge_eq_two_smul_commutator_spectralProjector_dilationGap
+    (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge_eq_two_smul_commutatorK_spectralProjector_dilationGap
       (CIK := U.kernel))
 
 /-- Projected right/left decomposition `Q_D = Q_R - Q_L`. -/
@@ -349,12 +349,12 @@ theorem unified_central_supercharge_theorem
     (τ t : ℝ) :
     (let T := U.kernel.toInformationCartanTriple;
       T.IsSpectralCompact
-          (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian U.kernel)
+          (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.kernel)
         ∧
       T.spectralAdjointFlow T.GammaS τ
-          (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian U.kernel)
+          (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.kernel)
         =
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian U.kernel)
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.kernel)
       ∧
     rootGapHessianClosure (E := F) Tpkg.V
       ∧
@@ -383,7 +383,7 @@ theorem unified_cross_family_compatibility
     (hX : ChiralFredholmSurface X)
     (hEven : KreinGradedModule.IsEven (H := H₂) Tpkg.V.connectionGenerator)
     (τ t : ℝ) :
-    (InfoGeometry.Canonical.DrazinSupercharge.anticommutator
+    (InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK
         (UnifiedSuperchargePackage.GammaS U)
         (UnifiedSuperchargePackage.QD U)
       = 0)
@@ -433,19 +433,19 @@ theorem unified_sources_sinks_onsager_with_internal_central_split
     (Tpkg : TransportedSuperchargePackage (E := F))
     (t : ℝ) :
     (∃ H Z : H₂ →L[ℝ] H₂,
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupported U.kernel Z
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK U.kernel Z
         ∧
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.HasVanishingDefectBlock
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.HasVanishingDefectBlockK
         U.kernel H
         ∧
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian U.kernel
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.kernel
         = H + Z)
       ∧
     (UnifiedSuperchargePackage.QD U
       =
       UnifiedSuperchargePackage.QR U - UnifiedSuperchargePackage.QL U)
       ∧
-    (InfoGeometry.Canonical.DrazinSupercharge.commutator
+    (InfoGeometry.Canonical.DrazinSupercharge.commutatorK
         U.kernel.spectralProjector U.kernel.dilationGap
       =
       ((2 : ℝ)⁻¹) • UnifiedSuperchargePackage.QD U)
@@ -470,11 +470,27 @@ theorem unified_sources_sinks_onsager_with_internal_central_split
             (E := F) X0 X0 (modular_j (E := F))) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.exists_superHamiltonian_canonical_split
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.exists_superHamiltonian_canonical_splitK
         (CIK := U.kernel)
   · exact UnifiedSuperchargePackage.projected_supercharge_eq_sub_chiral U
-  · simpa [UnifiedSuperchargePackage.QD] using
-      (U.kernel.spectralProjector_commutator_dilationGap_eq_half_sub_anomalies)
+  · have hQ := UnifiedSuperchargePackage.projected_supercharge_eq_two_commutator (U := U)
+    have hHalf :
+        ((2 : ℝ)⁻¹) • UnifiedSuperchargePackage.QD U
+          =
+        InfoGeometry.Canonical.DrazinSupercharge.commutatorK
+          U.kernel.spectralProjector U.kernel.dilationGap := by
+      calc
+        ((2 : ℝ)⁻¹) • UnifiedSuperchargePackage.QD U
+            = ((2 : ℝ)⁻¹) •
+              ((2 : ℝ) •
+                InfoGeometry.Canonical.DrazinSupercharge.commutatorK
+                  U.kernel.spectralProjector U.kernel.dilationGap) := by
+                  simpa [hQ]
+        _ =
+            InfoGeometry.Canonical.DrazinSupercharge.commutatorK
+              U.kernel.spectralProjector U.kernel.dilationGap := by
+                simp [smul_smul]
+    exact hHalf.symm
   · exact TransportedSuperchargePackage.deriv_QPi_t Tpkg t
   · exact TransportedSuperchargePackage.deriv_QJ_t Tpkg t
   · exact TransportedSuperchargePackage.deriv2_QPi_t_eq_metricPart_add_half_curvaturePart Tpkg

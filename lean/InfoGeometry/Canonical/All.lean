@@ -172,6 +172,10 @@ import InfoGeometry.Canonical.ManifoldDegree
 import InfoGeometry.Canonical.ManifoldHomology
 import InfoGeometry.Canonical.ManifoldDegreeIntegration
 import InfoGeometry.Canonical.MajoranaKitaevSpinorBridge
+import InfoGeometry.Canonical.HestenesKramersBridge
+import InfoGeometry.Canonical.HestenesRealStructures
+import InfoGeometry.Canonical.TimeReversalKramers
+import InfoGeometry.Canonical.KramersSuperchargeBridge
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.ModularSpinorBridge
 import InfoGeometry.Canonical.SpinorModularBridge

@@ -78,6 +78,11 @@ noncomputable def plusProjector : H₂ →L[ℝ] H₂ :=
 noncomputable def minusProjector : H₂ →L[ℝ] H₂ :=
   (⅟ (2 : ℝ)) • (IdH - spectral_epsilon (E := E))
 
+/-- Projector-first modular sign operator `P₊ - P₋`. -/
+@[rep_depth krein]
+noncomputable def modularSign : H₂ →L[ℝ] H₂ :=
+  plusProjector (E := E) - minusProjector (E := E)
+
 /-- Fixed-grading phase-flip action on the grading involution (`ε ↦ -ε`). -/
 @[rep_depth transport]
 noncomputable def fixedGradingPhaseFlipEpsilon : H₂ →L[ℝ] H₂ :=
@@ -100,6 +105,28 @@ noncomputable def minusProjectorAfterPhaseFlip : H₂ →L[ℝ] H₂ :=
 @[rep_depth krein, simp] theorem minusProjector_eq_spectralMinusProj :
     minusProjector (E := E) = spectralMinusProj (E := E) := by
   rfl
+
+/-- Projector-first sign operator recovers the owned grading involution `ε`. -/
+@[rep_depth krein]
+theorem modularSign_eq_spectral_epsilon :
+    modularSign (E := E) = spectral_epsilon (E := E) := by
+  simpa [modularSign, plusProjector, minusProjector,
+    InvolutiveSelfDualCarrier.Pplus, InvolutiveSelfDualCarrier.Pminus] using
+    (InvolutiveSelfDualCarrier.Pplus_sub_Pminus (X := doubledCarrier (E := E)))
+
+/-- Inverse dictionary form: `ε = P₊ - P₋`. -/
+@[rep_depth krein]
+theorem spectral_epsilon_eq_modularSign :
+    spectral_epsilon (E := E) = modularSign (E := E) := by
+  simpa using (modularSign_eq_spectral_epsilon (E := E)).symm
+
+/-- Projector-first sign operator squares to the identity. -/
+@[rep_depth krein, simp]
+theorem modularSign_sq_one :
+    (modularSign (E := E) : EndH) * modularSign (E := E) = (1 : EndH) := by
+  change (modularSign (E := E)).comp (modularSign (E := E))
+      = (ContinuousLinearMap.id ℝ H₂)
+  simpa [modularSign_eq_spectral_epsilon] using spectral_epsilon_involution (E := E)
 
 /-- Fixed-grading phase-flip swaps `P+` with `P-`. -/
 @[rep_depth transport]

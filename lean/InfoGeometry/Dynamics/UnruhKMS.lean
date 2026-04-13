@@ -44,6 +44,13 @@ This generator has square `+Id` and is the correct owner for
 noncomputable def boostGenerator : EndH :=
   spectral_epsilon (E := E)
 
+/-- Projector-first equivalent form of the boost generator: `B = P₊ - P₋`. -/
+@[rep_depth krein]
+theorem boostGenerator_eq_modularSign :
+    boostGenerator (E := E) = InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E) := by
+  simpa [boostGenerator] using
+    (InfoGeometry.Canonical.ProjectorEquivariance.spectral_epsilon_eq_modularSign (E := E))
+
 /--
 Modular Hamiltonian on the Unruh/Rindler (hyperbolic) lane.
 
@@ -52,6 +59,12 @@ phase axis remains `phaseGenerator = J ∘ ε` (elliptic, `K² = -Id`).
 -/
 noncomputable def modularHamiltonian : DoubledSpace E →L[ℝ] DoubledSpace E :=
   boostGenerator (E := E)
+
+/-- Projector-first equivalent form of the modular Hamiltonian. -/
+@[rep_depth krein]
+theorem modularHamiltonian_eq_modularSign :
+    modularHamiltonian (E := E) = InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E) := by
+  simpa [modularHamiltonian] using boostGenerator_eq_modularSign (E := E)
 
 /-- Hyperbolic convention owner law: `modularHamiltonian^2 = Id`. -/
 @[simp] theorem modularHamiltonian_sq_one :

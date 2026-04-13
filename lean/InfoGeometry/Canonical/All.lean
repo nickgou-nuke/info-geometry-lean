@@ -160,6 +160,9 @@ import InfoGeometry.Canonical.BogoliubovProjectorFlux
 import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Canonical.ModularOrientationContract
 import InfoGeometry.Canonical.RealTomitaCore
+import InfoGeometry.Canonical.ModularSpectralWedge
+import InfoGeometry.Canonical.ModularSpectralWedgeBridge
+import InfoGeometry.Canonical.ModularSpectralConjugationBridge
 import InfoGeometry.Canonical.WedgeBoostModularBridge
 import InfoGeometry.Canonical.TypeIIIContinuousCoreReal
 import InfoGeometry.Canonical.OperatorLightconeCoordinates

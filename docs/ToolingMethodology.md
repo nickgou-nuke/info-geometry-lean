@@ -116,59 +116,101 @@ The current managed `dagReports` sequence regenerates:
 - `reports/dag/frontier-burndown.{md,json}`
 - `reports/dag/replacement-frontier.{md,json}`
 
-## Method 3: Raw DAG Repair
+## Method 3: Raw DAG Repair (Lean + Python)
 
-Use this only when the managed lane fails and you need to narrow the failing
-stage.
+Use this only when the managed lane fails and you need exact stage control.
+Run sequentially.
 
-### 3A. Authoritative DAG Core
+### 3A. Full Strict Sequence
+
+Use this when coverage must be strict and any partial graph should fail.
 
 ```bash
 python3 tools/infra/run_locked_lake_build.py InfoGeometry.Audit
 python3 tools/infra/refresh_decl_graph.py
-python3 tools/infra/generate_theorem_surface_index.py
-python3 tools/infra/generate_source_sink_compression.py
-python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json
-python3 tools/theorem_significance.py
-python3 tools/infra/generate_sorry_equivalence.py
-python3 tools/infra/plot_decl_graph.py
-python3 tools/infra/generate_replacement_frontier.py
-```
-
-### 3B. Representation-Depth And Blueprint Refresh
-
-Use this when the depth-tag lane or `BlueprintTags`-dependent reports matter.
-
-```bash
 python3 tools/infra/refresh_blueprint_tags.py
 python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags
+python3 tools/infra/generate_theorem_surface_index.py
+python3 tools/infra/generate_hypothesis_debt_report.py
+python3 tools/infra/generate_source_sink_compression.py
+python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json
+python3 tools/infra/check_bipartite_bleed.py
+python3 tools/infra/generate_structural_dedup.py
+python3 tools/infra/generate_structural_fibers.py
+python3 tools/infra/generate_semantic_quotient.py
+python3 tools/infra/generate_projection_coloring.py
+python3 tools/theorem_significance.py --out reports/theorem-significance-current.json --md reports/theorem-significance-current.md
+python3 tools/infra/select_openclaw_target.py
+python3 tools/infra/canonical_policy_lint.py
+python3 tools/infra/generate_replacement_frontier.py
 python3 tools/infra/check_representation_depth.py
 python3 tools/infra/generate_representation_depth_graph.py
+python3 tools/infra/dag_status.py
+python3 tools/infra/dag_doctor.py
 ```
 
-### 3C. Extended Structural Diagnostics
+Notes:
+- `generate_causal_report.py` can fail on partial coverage by design.
+- `canonical_policy_lint.py` is a debt gate and may fail even when artifacts are fresh.
 
-Use these only when you intentionally need the extended derived layer.
+### 3B. Partial-Coverage Diagnostic Variant
+
+Use this when you intentionally want current diagnostics even if coverage is partial.
 
 ```bash
+python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json --allow-partial-coverage
+python3 tools/infra/dag_status.py
+python3 tools/infra/dag_doctor.py
+```
+
+### 3C. Process-Flow Lane
+
+```bash
+lake env lean --run lean/DAG/ProcessFlowExport.lean InfoGeometry.Audit artifacts/dag/process-flow
+python3 tools/infra/generate_process_flow_report.py
+```
+
+The Lean export is the authoritative process-flow surface.
+The Python report step derives cocycles/comparison candidates and can be heavy on large snapshots.
+
+### 3D. Full Theory-Graph Snapshot (Lean + DAG + Debt + Doctor)
+
+Use this when you want one reproducible end-to-end state check before planning
+major refactors or publishing an audit note.
+
+```bash
+lake build -R
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.Audit
+python3 tools/infra/refresh_decl_graph.py
+python3 tools/infra/refresh_blueprint_tags.py
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags
+python3 tools/infra/generate_theorem_surface_index.py
+python3 tools/infra/generate_source_sink_compression.py
+python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json --allow-partial-coverage --allow-uncovered-debt
 python3 tools/infra/check_bipartite_bleed.py
 python3 tools/infra/generate_structural_dedup.py
 python3 tools/infra/generate_structural_fibers.py
 python3 tools/infra/generate_semantic_quotient.py
 python3 tools/infra/generate_projection_coloring.py
 python3 tools/infra/select_openclaw_target.py
-python3 tools/infra/canonical_policy_lint.py
-python3 tools/infra/causal_cone_spectrum.py
-python3 tools/infra/apex_defect_profile.py
-python3 tools/infra/graph_hodge_spectrum.py
-```
-
-### 3D. Process-Flow Lane
-
-```bash
+python3 tools/infra/canonical_policy_lint.py || true
+python3 tools/infra/generate_replacement_frontier.py
+python3 tools/infra/check_representation_depth.py
+python3 tools/infra/generate_representation_depth_graph.py
 lake env lean --run lean/DAG/ProcessFlowExport.lean InfoGeometry.Audit artifacts/dag/process-flow
 python3 tools/infra/generate_process_flow_report.py
+python3 tools/infra/dag_doctor.py
+python3 tools/theorem_significance.py --out reports/theorem-significance-current.json --md reports/theorem-significance-current.md
+python3 tools/infra/generate_hypothesis_debt_report.py --json-out reports/dag/hypothesis-debt-new-corpus.json --md-out reports/dag/hypothesis-debt-new-corpus.md
+python3 tools/infra/reports/generate_vacuity_index.py --out reports/dag/hypothesis-vacuity-debt-current.md
+python3 tools/infra/reports/generate_bridge_thinness_index.py
+python3 tools/infra/reports/generate_surrogate_index.py
 ```
+
+Notes:
+- `canonical_policy_lint.py` is a regression gate and can fail on active debt.
+- `dag_doctor.py` can fail on coverage policy while still reporting fresh artifacts.
+- `generate_process_flow_report.py` can run significantly longer than the core DAG lane.
 
 ## Method 4: Frontier Semantic And Proof-State Work
 

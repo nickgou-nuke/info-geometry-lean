@@ -104,27 +104,25 @@ structure KreinGradedDrazinCompatibility
 
 section CartanTransport
 
-variable {T TD : Op} {k : ℕ}
-
 /-- The source operator is Cartan-compatible under a graded Drazin package. -/
 @[rep_depth operator]
-theorem isCartanCompatible_T_of_compat
+def isCartanCompatible_T_of_compat
+    (T TD : Op) (k : ℕ)
     (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k) :
-    IsCartanCompatible (E := E) hCompat.η T := by
-  exact
-    { eta_comm := hCompat.η_comm_T
-      epsilon_comm := hCompat.ε_comm_T
-      modularJ_comm := hCompat.J_comm_T }
+    IsCartanCompatible (E := E) hCompat.η T :=
+  { eta_comm := hCompat.η_comm_T
+    epsilon_comm := hCompat.ε_comm_T
+    modularJ_comm := hCompat.J_comm_T }
 
 /-- The Drazin witness operator is Cartan-compatible under a graded package. -/
 @[rep_depth operator]
-theorem isCartanCompatible_TD_of_compat
+def isCartanCompatible_TD_of_compat
+    (T TD : Op) (k : ℕ)
     (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k) :
-    IsCartanCompatible (E := E) hCompat.η TD := by
-  exact
-    { eta_comm := hCompat.η_comm_TD
-      epsilon_comm := hCompat.ε_comm_TD
-      modularJ_comm := hCompat.J_comm_TD }
+    IsCartanCompatible (E := E) hCompat.η TD :=
+  { eta_comm := hCompat.η_comm_TD
+    epsilon_comm := hCompat.ε_comm_TD
+    modularJ_comm := hCompat.J_comm_TD }
 
 end CartanTransport
 

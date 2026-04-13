@@ -194,6 +194,10 @@ noncomputable abbrev dilationGap : E →L[ℝ] E :=
 noncomputable abbrev chiralScale : ℝ :=
   CIK.toInverseKernel'.chiralScale
 
+/-- Certified geometric grading `Γ_G = P_R - P_L`. -/
+noncomputable abbrev GammaG : E →L[ℝ] E :=
+  CIK.toInformationCartanTriple.GammaG
+
 /-- The certified Drazin projector is idempotent. -/
 theorem spectralProjector_idempotent :
     CIK.spectralProjector * CIK.spectralProjector = CIK.spectralProjector := by
@@ -298,6 +302,23 @@ theorem rightChiralAnomaly_eq_chiralAnomaly_of_projectorAgreement
     CertifiedInverseKernel.toInverseKernel'] using
     CIK.toInverseKernel'.rightChiralAnomaly_eq_chiralAnomaly_of_projectorAgreement hProj
 
+/-- Certified geometric grading equals twice the certified dilation gap. -/
+theorem GammaG_eq_two_smul_dilationGap :
+    CIK.GammaG = (2 : ℝ) • CIK.dilationGap := by
+  unfold CertifiedInverseKernel.GammaG
+  change CIK.mpRangeProjector - CIK.metricProjector = (2 : ℝ) • CIK.dilationGap
+  unfold CertifiedInverseKernel.dilationGap CertifiedInverseKernel.toInverseKernel'
+  unfold InverseKernel.dilationGap
+  have htwo : ((2 : ℝ) * (2 : ℝ)⁻¹) = 1 := by norm_num
+  calc
+    CIK.mpRangeProjector - CIK.metricProjector
+        = (1 : ℝ) • (CIK.mpRangeProjector - CIK.metricProjector) := by simp
+    _ = ((2 : ℝ) * (2 : ℝ)⁻¹) • (CIK.mpRangeProjector - CIK.metricProjector) := by
+          rw [htwo]
+    _ = (2 : ℝ) • ((2 : ℝ)⁻¹ • (CIK.mpRangeProjector - CIK.metricProjector)) := by
+          simp [smul_smul, mul_assoc]
+    _ = (2 : ℝ) • CIK.dilationGap := by rfl
+
 /-- Certified spectral/dilation commutator decomposition. -/
 theorem spectralProjector_commutator_dilationGap_eq_half_sub_anomalies :
     CIK.spectralProjector * CIK.dilationGap - CIK.dilationGap * CIK.spectralProjector =
@@ -326,6 +347,24 @@ theorem spectralProjector_commutator_dilationGap_eq_zero_of_rightProjector_commu
     CertifiedInverseKernel.mpRangeProjector, CertifiedInverseKernel.chiralScale,
     CertifiedInverseKernel.toInverseKernel'] using
     CIK.toInverseKernel'.spectralProjector_commutator_dilationGap_eq_zero_of_rightProjector_commute_of_chiralScale_eq_zero hRight hScale
+
+/-- Certified commutator identity `[P_D, Γ_G] = χ_R - χ_L`. -/
+theorem spectralProjector_commutator_GammaG_eq_sub_anomalies :
+    CIK.spectralProjector * CIK.GammaG - CIK.GammaG * CIK.spectralProjector =
+      CIK.rightChiralAnomaly - CIK.chiralAnomaly := by
+  rw [CIK.GammaG_eq_two_smul_dilationGap]
+  calc
+    CIK.spectralProjector * ((2 : ℝ) • CIK.dilationGap)
+        - ((2 : ℝ) • CIK.dilationGap) * CIK.spectralProjector
+        = (2 : ℝ) •
+            (CIK.spectralProjector * CIK.dilationGap
+              - CIK.dilationGap * CIK.spectralProjector) := by
+          simp [smul_sub, sub_eq_add_neg, smul_mul_assoc, mul_smul_comm, mul_assoc]
+    _ = (2 : ℝ) • (((2 : ℝ)⁻¹) • (CIK.rightChiralAnomaly - CIK.chiralAnomaly)) := by
+          rw [CIK.spectralProjector_commutator_dilationGap_eq_half_sub_anomalies]
+    _ = CIK.rightChiralAnomaly - CIK.chiralAnomaly := by
+          have htwo : ((2 : ℝ) * (2 : ℝ)⁻¹) = 1 := by norm_num
+          simpa [smul_smul, htwo]
 
 /-- If the metric projector commutes with the spectral projector, it is fixed by the spectral grading flow. -/
 theorem metricProjector_fixed_under_spectralGradingFlow_of_projector_commute

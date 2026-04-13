@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CertifiedInverseKernel
+import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
 import InfoGeometry.Meta.Architecture
 
@@ -199,70 +200,200 @@ theorem superHamiltonian_commutes_spectralGradingFlow
     T.commute_spectralGradingFlow_of_commute_GammaS hComm t
 
 /--
-Centrality predicate for the repo-owned Drazin/Penrose/dilation generator
-surface.
+Defect-support predicate on the Drazin singular block.
+
+`Z` is defect-supported when its full action is carried by the complementary
+spectral projector `Q₀ = 1 - P_D`.
 -/
 @[rep_depth operator]
-def IsDrazinCentral (Z : EndH) : Prop :=
-  Commute Z CIK.spectralProjector
-    ∧ Commute Z CIK.metricProjector
-    ∧ Commute Z CIK.mpRangeProjector
-    ∧ Commute Z CIK.projectorMismatch
-    ∧ Commute Z CIK.dilationGap
-    ∧ Commute Z CIK.chiralAnomaly
-    ∧ Commute Z CIK.rightChiralAnomaly
-    ∧ Commute Z CIK.toInformationCartanTriple.GammaS
-    ∧ Commute Z CIK.toInformationCartanTriple.GammaG
-
-/-- Scalar central element inside the Drazin algebra. -/
-@[rep_depth operator]
-def scalarCentral (z : ℝ) : EndH := z • (1 : EndH)
+def IsDefectSupported (Z : EndH) : Prop :=
+  CIK.spectralComplementaryProjector * Z * CIK.spectralComplementaryProjector = Z
 
 /--
-Kinetic remainder once a scalar-central element is extracted from `Q²`.
+Vanishing-defect-block predicate for a kinetic candidate.
+
+`H` has no singular Drazin block when its `Q₀`-compressed component is zero.
 -/
 @[rep_depth operator]
-def superHamiltonianKineticPart (z : ℝ) : EndH :=
-  superHamiltonian CIK - scalarCentral z
+def HasVanishingDefectBlock (H : EndH) : Prop :=
+  CIK.spectralComplementaryProjector * H * CIK.spectralComplementaryProjector = 0
 
-/-- Every scalar-central element is central on the Drazin generator surface. -/
+/--
+Canonical defect-supported extraction from `Q²`.
+
+This is the singular-block compression of the projected superHamiltonian.
+-/
 @[rep_depth operator]
-theorem scalarCentral_isDrazinCentral (z : ℝ) :
-    IsDrazinCentral CIK (scalarCentral z) := by
-  unfold IsDrazinCentral scalarCentral
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · simpa using (Commute.one_left CIK.spectralProjector).smul_left z
-  · simpa using (Commute.one_left CIK.metricProjector).smul_left z
-  · simpa using (Commute.one_left CIK.mpRangeProjector).smul_left z
-  · simpa using (Commute.one_left CIK.projectorMismatch).smul_left z
-  · simpa using (Commute.one_left CIK.dilationGap).smul_left z
-  · simpa using (Commute.one_left CIK.chiralAnomaly).smul_left z
-  · simpa using (Commute.one_left CIK.rightChiralAnomaly).smul_left z
-  · simpa using (Commute.one_left CIK.toInformationCartanTriple.GammaS).smul_left z
-  · simpa using (Commute.one_left CIK.toInformationCartanTriple.GammaG).smul_left z
+def canonicalDefectCentral : EndH :=
+  CIK.spectralComplementaryProjector * superHamiltonian CIK * CIK.spectralComplementaryProjector
+
+/--
+Canonical kinetic remainder after removing the defect-supported central channel.
+-/
+@[rep_depth operator]
+def canonicalKineticPart : EndH :=
+  superHamiltonian CIK - canonicalDefectCentral CIK
+
+/-- The canonical defect-central part is supported on the defect block. -/
+@[rep_depth operator]
+theorem canonicalDefectCentral_isDefectSupported :
+    IsDefectSupported CIK (canonicalDefectCentral CIK) := by
+  set Q0 : EndH := CIK.spectralComplementaryProjector
+  set SH : EndH := superHamiltonian CIK
+  have hQ0 : Q0 * Q0 = Q0 := by
+    simpa [Q0] using CIK.spectralComplementaryProjector_idempotent
+  unfold IsDefectSupported canonicalDefectCentral
+  change Q0 * (Q0 * SH * Q0) * Q0 = Q0 * SH * Q0
+  calc
+    Q0 * (Q0 * SH * Q0) * Q0 = ((Q0 * Q0) * SH) * (Q0 * Q0) := by
+      simp [mul_assoc]
+    _ = (Q0 * SH) * Q0 := by
+      simpa [hQ0, mul_assoc]
+    _ = Q0 * SH * Q0 := by
+      simp [mul_assoc]
+
+/-- The canonical kinetic remainder has vanishing defect block. -/
+@[rep_depth operator]
+theorem canonicalKineticPart_hasVanishingDefectBlock :
+    HasVanishingDefectBlock CIK (canonicalKineticPart CIK) := by
+  set Q0 : EndH := CIK.spectralComplementaryProjector
+  set SH : EndH := superHamiltonian CIK
+  have hQ0 : Q0 * Q0 = Q0 := by
+    simpa [Q0] using CIK.spectralComplementaryProjector_idempotent
+  unfold HasVanishingDefectBlock canonicalKineticPart canonicalDefectCentral
+  change Q0 * (SH - Q0 * SH * Q0) * Q0 = 0
+  have hcompress : Q0 * (Q0 * SH * Q0) * Q0 = Q0 * SH * Q0 := by
+    calc
+      Q0 * (Q0 * SH * Q0) * Q0 = ((Q0 * Q0) * SH) * (Q0 * Q0) := by
+        simp [mul_assoc]
+      _ = (Q0 * SH) * Q0 := by
+        simpa [hQ0, mul_assoc]
+      _ = Q0 * SH * Q0 := by
+        simp [mul_assoc]
+  calc
+    Q0 * (SH - Q0 * SH * Q0) * Q0
+        = Q0 * SH * Q0 - Q0 * (Q0 * SH * Q0) * Q0 := by
+            simp [mul_sub, sub_mul, mul_assoc]
+    _ = Q0 * SH * Q0 - Q0 * SH * Q0 := by
+          simpa [hcompress]
+    _ = 0 := by simp
 
 /--
 Internal operator-valued Drazin split:
-`Q² = H + Z` with `Z` central in the Drazin algebra.
+`Q² = H + Z` with `Z` canonically extracted from the singular block.
 -/
 @[rep_depth operator]
-theorem superHamiltonian_eq_kinetic_plus_central (z : ℝ) :
+theorem superHamiltonian_eq_canonicalKinetic_plus_canonicalDefectCentral :
     superHamiltonian CIK
-      = superHamiltonianKineticPart (CIK := CIK) z + scalarCentral z := by
-  unfold superHamiltonianKineticPart
-  simp [sub_eq_add_neg, add_assoc]
+      = canonicalKineticPart (CIK := CIK) + canonicalDefectCentral CIK := by
+  unfold canonicalKineticPart
+  exact (sub_add_cancel (superHamiltonian CIK) (canonicalDefectCentral CIK)).symm
 
 /--
-Existence form of the Drazin central split `Q² = H + Z`.
+Canonical existence form of the Drazin central split `Q² = H + Z`.
 -/
 @[rep_depth operator]
-theorem exists_superHamiltonian_central_split (z : ℝ) :
+theorem exists_superHamiltonian_canonical_split :
     ∃ H Z : EndH,
-      IsDrazinCentral CIK Z
+      IsDefectSupported CIK Z
+        ∧ HasVanishingDefectBlock CIK H
         ∧ superHamiltonian CIK = H + Z := by
-  refine ⟨superHamiltonianKineticPart (CIK := CIK) z, scalarCentral z, ?_, ?_⟩
-  · exact scalarCentral_isDrazinCentral (CIK := CIK) z
-  · exact superHamiltonian_eq_kinetic_plus_central (CIK := CIK) z
+  refine ⟨canonicalKineticPart (CIK := CIK), canonicalDefectCentral CIK, ?_, ?_, ?_⟩
+  · exact canonicalDefectCentral_isDefectSupported (CIK := CIK)
+  · exact canonicalKineticPart_hasVanishingDefectBlock (CIK := CIK)
+  · exact superHamiltonian_eq_canonicalKinetic_plus_canonicalDefectCentral (CIK := CIK)
+
+/--
+Uniqueness of the canonical defect-central extraction:
+any split with defect-supported `Z` and vanishing-defect-block `H`
+must recover `Z = Q₀ Q² Q₀`.
+-/
+@[rep_depth operator]
+theorem defectCentral_eq_of_split
+    {H Z : EndH}
+    (hDefect : IsDefectSupported CIK Z)
+    (hKinetic : HasVanishingDefectBlock CIK H)
+    (hSplit : superHamiltonian CIK = H + Z) :
+    Z = canonicalDefectCentral CIK := by
+  unfold IsDefectSupported at hDefect
+  unfold HasVanishingDefectBlock at hKinetic
+  unfold canonicalDefectCentral
+  have hQSplit :
+      CIK.spectralComplementaryProjector * superHamiltonian CIK *
+          CIK.spectralComplementaryProjector
+        =
+      CIK.spectralComplementaryProjector * H *
+          CIK.spectralComplementaryProjector
+        +
+      CIK.spectralComplementaryProjector * Z *
+          CIK.spectralComplementaryProjector := by
+    rw [hSplit]
+    simp [add_mul, mul_add, mul_assoc]
+  calc
+    Z = CIK.spectralComplementaryProjector * Z *
+          CIK.spectralComplementaryProjector := by
+          symm
+          exact hDefect
+    _ =
+      CIK.spectralComplementaryProjector * H *
+          CIK.spectralComplementaryProjector
+        +
+      CIK.spectralComplementaryProjector * Z *
+          CIK.spectralComplementaryProjector := by
+            rw [hKinetic]
+            simp
+    _ =
+      CIK.spectralComplementaryProjector * superHamiltonian CIK *
+          CIK.spectralComplementaryProjector := by
+            exact hQSplit.symm
+
+/-- Uniqueness of the canonical kinetic remainder under the split axioms. -/
+@[rep_depth operator]
+theorem canonicalKineticPart_eq_of_split
+    {H Z : EndH}
+    (hDefect : IsDefectSupported CIK Z)
+    (hKinetic : HasVanishingDefectBlock CIK H)
+    (hSplit : superHamiltonian CIK = H + Z) :
+    H = canonicalKineticPart (CIK := CIK) := by
+  have hZ : Z = canonicalDefectCentral CIK :=
+    defectCentral_eq_of_split (CIK := CIK) hDefect hKinetic hSplit
+  have hH : H = superHamiltonian CIK - Z := by
+    calc
+      H = (H + Z) - Z := by simp
+      _ = superHamiltonian CIK - Z := by rw [← hSplit]
+  rw [hH, hZ]
+  rfl
+
+/-- Any two lawful defect/kinetic splits are equal to the canonical one. -/
+@[rep_depth operator]
+theorem canonical_split_unique
+    {H₁ Z₁ H₂ Z₂ : EndH}
+    (hDefect₁ : IsDefectSupported CIK Z₁)
+    (hKinetic₁ : HasVanishingDefectBlock CIK H₁)
+    (hSplit₁ : superHamiltonian CIK = H₁ + Z₁)
+    (hDefect₂ : IsDefectSupported CIK Z₂)
+    (hKinetic₂ : HasVanishingDefectBlock CIK H₂)
+    (hSplit₂ : superHamiltonian CIK = H₂ + Z₂) :
+    H₁ = H₂ ∧ Z₁ = Z₂ := by
+  have hH₁ :
+      H₁ = canonicalKineticPart (CIK := CIK) :=
+    canonicalKineticPart_eq_of_split (CIK := CIK) hDefect₁ hKinetic₁ hSplit₁
+  have hH₂ :
+      H₂ = canonicalKineticPart (CIK := CIK) :=
+    canonicalKineticPart_eq_of_split (CIK := CIK) hDefect₂ hKinetic₂ hSplit₂
+  have hZ₁ :
+      Z₁ = canonicalDefectCentral CIK :=
+    defectCentral_eq_of_split (CIK := CIK) hDefect₁ hKinetic₁ hSplit₁
+  have hZ₂ :
+      Z₂ = canonicalDefectCentral CIK :=
+    defectCentral_eq_of_split (CIK := CIK) hDefect₂ hKinetic₂ hSplit₂
+  constructor
+  · calc
+      H₁ = canonicalKineticPart (CIK := CIK) := hH₁
+      _ = H₂ := hH₂.symm
+  · calc
+      Z₁ = canonicalDefectCentral CIK := hZ₁
+      _ = Z₂ := hZ₂.symm
 
 end CertifiedInverseKernel
 

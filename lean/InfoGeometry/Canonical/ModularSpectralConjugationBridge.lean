@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.ModularSpectralWedgeBridge
 import InfoGeometry.Canonical.TomitaTakesaki
+import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -125,6 +126,31 @@ theorem P_D_mul_activeModularConjugation_eq_zero
           simp [mul_assoc]
     _ = (modular_j (E := E)) * 0 := by rw [hLeft]
     _ = 0 := by simp
+
+/--
+Certified-kernel comparison theorem:
+if the bridged apex is the certified spectral complement `Q₀`,
+then active modular conjugation is exactly `J * P_D` on the regular lane.
+-/
+@[rep_depth transport]
+theorem activeModularConjugation_eq_modular_j_mul_spectralProjector
+    (CIK : CertifiedInverseKernel H₂)
+    (owned_epsilon : EndH)
+    (comp :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.IsCompatibleWedge
+        W owned_epsilon CIK.spectralComplementaryProjector)
+    (hActivePhase :
+      modularComplexI (E := E) = (modular_j (E := E)) * owned_epsilon) :
+    activeModularConjugation (E := E) owned_epsilon CIK.spectralComplementaryProjector
+      =
+    (modular_j (E := E)) * CIK.spectralProjector := by
+  calc
+    activeModularConjugation (E := E) owned_epsilon CIK.spectralComplementaryProjector
+        = (modular_j (E := E)) * ((1 : EndH) - CIK.spectralComplementaryProjector) := by
+            exact activeModularConjugation_eq_modular_j_mul_active
+              (E := E) (W := W) owned_epsilon CIK.spectralComplementaryProjector comp hActivePhase
+    _ = (modular_j (E := E)) * CIK.spectralProjector := by
+          simp [CertifiedInverseKernel.spectralComplementaryProjector]
 
 end Compatibility
 

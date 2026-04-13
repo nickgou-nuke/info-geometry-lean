@@ -72,6 +72,9 @@ import InfoGeometry.Canonical.DrazinSpectralBridge
 import InfoGeometry.Canonical.DrazinKreinCompatibility
 import InfoGeometry.Canonical.DrazinFredholmBridge
 import InfoGeometry.Canonical.DrazinCoreFlow
+import InfoGeometry.Canonical.DrazinPenroseDilationAlgebra
+import InfoGeometry.Canonical.DrazinPenroseDilationKKT
+import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Canonical.DrazinDescriptorSystems
 import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.InverseKernelCartanCore
@@ -123,6 +126,7 @@ import InfoGeometry.Canonical.SuperchargeTransportBridge
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.SuperchargeGapHessianBridge
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
+import InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge
 import InfoGeometry.Canonical.ChiralHodgeIndexBridge

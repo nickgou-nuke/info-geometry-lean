@@ -181,6 +181,8 @@ This intentionally skips umbrella modules like `*.All` unless `--allow-umbrella`
 
 Use the raw order below only when narrowing or repairing a tool failure.
 
+Strict-coverage raw runbook (fails if graph coverage is partial):
+
 ```bash
 python3 tools/infra/run_locked_lake_build.py InfoGeometry.Audit
 python3 tools/infra/refresh_decl_graph.py
@@ -195,33 +197,72 @@ python3 tools/infra/generate_structural_dedup.py
 python3 tools/infra/generate_structural_fibers.py
 python3 tools/infra/generate_semantic_quotient.py
 python3 tools/infra/generate_projection_coloring.py
-python3 tools/theorem_significance.py
+python3 tools/theorem_significance.py --out reports/theorem-significance-current.json --md reports/theorem-significance-current.md
 python3 tools/infra/select_openclaw_target.py
 python3 tools/infra/canonical_policy_lint.py
 python3 tools/infra/generate_replacement_frontier.py
-python3 tools/infra/causal_cone_spectrum.py
-python3 tools/infra/apex_defect_profile.py
-python3 tools/infra/graph_hodge_spectrum.py
-```
-
-Supplemental stable-spine reports:
-
-```bash
 python3 tools/infra/check_representation_depth.py
 python3 tools/infra/generate_representation_depth_graph.py
+python3 tools/infra/dag_status.py
+python3 tools/infra/dag_doctor.py
 ```
 
-Process-flow refresh:
+Partial-coverage diagnostic variant (continues when coverage is known partial):
+
+```bash
+python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json --allow-partial-coverage
+python3 tools/infra/dag_status.py
+python3 tools/infra/dag_doctor.py
+```
+
+Process-flow refresh (Lean export + Python derivation):
 
 ```bash
 lake env lean --run lean/DAG/ProcessFlowExport.lean InfoGeometry.Audit artifacts/dag/process-flow
 python3 tools/infra/generate_process_flow_report.py
 ```
 
-The Lean export writes the constitutive process-flow lane
-(`flow-edges`, `process-events`, `lawful-path-candidates`, `defects`).
-The Python step derives `flow-cocycles`, `comparison-candidates`, and the
-readable report surfaces from those authoritative inputs.
+The Lean export writes the constitutive process-flow lane:
+`flow-edges`, `process-events`, `lawful-path-candidates`, `defects`.
+The Python step derives:
+`flow-cocycles`, `comparison-candidates`, and the process-flow defect report.
+This step can be heavy on large snapshots; run it after the core DAG reports are stable.
+
+Full end-to-end audit snapshot (build + DAG + doctor + debt surfaces):
+
+```bash
+lake build -R
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.Audit
+python3 tools/infra/refresh_decl_graph.py
+python3 tools/infra/refresh_blueprint_tags.py
+python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags
+python3 tools/infra/generate_theorem_surface_index.py
+python3 tools/infra/generate_source_sink_compression.py
+python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json --allow-partial-coverage --allow-uncovered-debt
+python3 tools/infra/check_bipartite_bleed.py
+python3 tools/infra/generate_structural_dedup.py
+python3 tools/infra/generate_structural_fibers.py
+python3 tools/infra/generate_semantic_quotient.py
+python3 tools/infra/generate_projection_coloring.py
+python3 tools/infra/select_openclaw_target.py
+python3 tools/infra/canonical_policy_lint.py || true
+python3 tools/infra/generate_replacement_frontier.py
+python3 tools/infra/check_representation_depth.py
+python3 tools/infra/generate_representation_depth_graph.py
+lake env lean --run lean/DAG/ProcessFlowExport.lean InfoGeometry.Audit artifacts/dag/process-flow
+python3 tools/infra/generate_process_flow_report.py
+python3 tools/infra/dag_doctor.py
+python3 tools/theorem_significance.py --out reports/theorem-significance-current.json --md reports/theorem-significance-current.md
+python3 tools/infra/generate_hypothesis_debt_report.py --json-out reports/dag/hypothesis-debt-new-corpus.json --md-out reports/dag/hypothesis-debt-new-corpus.md
+python3 tools/infra/reports/generate_vacuity_index.py --out reports/dag/hypothesis-vacuity-debt-current.md
+python3 tools/infra/reports/generate_bridge_thinness_index.py
+python3 tools/infra/reports/generate_surrogate_index.py
+```
+
+Interpretation notes:
+- keep `canonical_policy_lint.py` as a hard signal; do not suppress failures in CI
+- `dag_doctor.py` coverage-policy failure can coexist with fresh artifacts
+- `generate_process_flow_report.py` is often the slowest step on large snapshots
 
 Run the native audit before trusting the representation-depth reports. Run the main sequence sequentially. Do not trust `reports/dag/*` as current until the main sequence has finished.
 

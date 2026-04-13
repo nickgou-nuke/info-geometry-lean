@@ -1,19 +1,19 @@
 # Declaration Vacuity Triage Report
 
-**Declarations scored:** 8441  
-**With violations:** 3079 (2178 error, 901 warning-only)  
-**Clean:** 5362  
+**Declarations scored:** 8503  
+**With violations:** 3096 (2195 error, 901 warning-only)  
+**Clean:** 5407  
 
 ## Tag Distribution
 
 | Tag | Count |
 |-----|-------|
-| `dead-candidate` | 4885 |
-| `proof-infrastructure` | 3302 |
-| `auto-generated` | 1951 |
-| `certified-surface` | 434 |
-| `statement-bearing` | 254 |
-| `rfl-like` | 234 |
+| `dead-candidate` | 4910 |
+| `proof-infrastructure` | 3332 |
+| `auto-generated` | 1959 |
+| `certified-surface` | 453 |
+| `statement-bearing` | 261 |
+| `rfl-like` | 238 |
 | `high-fan-in` | 108 |
 | `wrapper-candidate` | 101 |
 | `role-exempt` | 100 |
@@ -27,9 +27,9 @@
 
 | Violation | Count |
 |-----------|-------|
-| `V2/dead-public-theorem` | 3014 |
+| `V2/dead-public-theorem` | 3031 |
 | `V1/public-wrapper-inflation` | 101 |
-| `V0/syntactic-vacuity` | 89 |
+| `V0/syntactic-vacuity` | 93 |
 | `V4/bridge-infrastructure-promoted` | 4 |
 
 ## Top Vacuity Suspicion (derived ranking)
@@ -52,19 +52,19 @@
 | 14 | `InfoGeometry.ExponentialFamily.Bernoulli.deriv_logPartition` | 0.7200 | 0.7849 | `shape.rfl-like`, `structure.low-public-fan-in`, `structure.low-descendant-mass` |
 | 15 | `InfoGeometry.measurable_potential` | 0.7200 | 0.7849 | `shape.rfl-like`, `structure.low-public-fan-in`, `structure.low-descendant-mass` |
 | 16 | `InfoGeometry.Canonical.AnomalyGauge.commutator_is_skew_adjoint` | 0.7100 | 0.7989 | `shape.rfl-like`, `structure.low-descendant-mass`, `structure.proof-only-reuse` |
-| 17 | `InfoGeometry.Canonical.HeadTrialityCore.blocked128_dimension` | 0.7100 | 0.7941 | `shape.rfl-like`, `structure.low-descendant-mass`, `structure.low-public-fan-in` |
-| 18 | `InfoGeometry.Canonical.HeadTrialityCore.splitDoubled128_dimension` | 0.7100 | 0.7941 | `shape.rfl-like`, `structure.low-descendant-mass`, `structure.low-public-fan-in` |
-| 19 | `InfoGeometry.Canonical.IB.pmf_normalize_apply_toReal` | 0.7100 | 0.7941 | `shape.rfl-like`, `structure.low-descendant-mass`, `structure.low-public-fan-in` |
-| 20 | `InfoGeometry.Canonical.ManifoldDegree.exists_isolating_nhds_of_discrete` | 0.7100 | 0.7941 | `shape.rfl-like`, `structure.low-descendant-mass`, `structure.low-public-fan-in` |
+| 17 | `InfoGeometry.Canonical.DrazinPenroseDilationKKT.instIsScalarTowerRealContinuousLinearMapId_infoGeometry` | 0.7100 | 0.7941 | `shape.rfl-like`, `structure.low-descendant-mass`, `structure.low-public-fan-in` |
+| 18 | `InfoGeometry.Canonical.DrazinPenroseDilationKKT.instSMulCommClassRealContinuousLinearMapId_infoGeometry` | 0.7100 | 0.7941 | `shape.rfl-like`, `structure.low-descendant-mass`, `structure.low-public-fan-in` |
+| 19 | `InfoGeometry.Canonical.DrazinSupercharge.instIsScalarTowerRealContinuousLinearMapId_infoGeometry` | 0.7100 | 0.7941 | `shape.rfl-like`, `structure.low-descendant-mass`, `structure.low-public-fan-in` |
+| 20 | `InfoGeometry.Canonical.DrazinSupercharge.instSMulCommClassRealContinuousLinearMapId_infoGeometry` | 0.7100 | 0.7941 | `shape.rfl-like`, `structure.low-descendant-mass`, `structure.low-public-fan-in` |
 
 ## Structural Metrics (top 20 by transitive reverse reach)
 
 | Declaration | Reverse Reach | Descendant Mass | Depth | SCC Role | Public Fan-In | Proof-Only Reuse |
 |---------|--------------:|----------------:|------:|----------|---------------:|-----------------:|
-| `InfoGeometry.Krein.instL2Complete` | 1299 | 0 | 25 | `acyclic` | 424 | 126 |
-| `InfoGeometry.Krein.DoubledSpace.ext` | 1217 | 1 | 23 | `acyclic` | 0 | 156 |
-| `InfoGeometry.Canonical.CertifiedInverseKernel.toInverseKernel` | 516 | 2 | 18 | `acyclic` | 102 | 27 |
-| `InfoGeometry.Canonical.CertifiedInverseKernel.toInverseKernel'` | 489 | 3 | 17 | `acyclic` | 3 | 40 |
+| `InfoGeometry.Krein.instL2Complete` | 1303 | 0 | 25 | `acyclic` | 426 | 127 |
+| `InfoGeometry.Krein.DoubledSpace.ext` | 1218 | 1 | 23 | `acyclic` | 0 | 156 |
+| `InfoGeometry.Canonical.CertifiedInverseKernel.toInverseKernel` | 557 | 2 | 18 | `acyclic` | 102 | 28 |
+| `InfoGeometry.Canonical.CertifiedInverseKernel.toInverseKernel'` | 527 | 3 | 17 | `acyclic` | 3 | 42 |
 | `InfoGeometry.PositiveMeasure.pos` | 452 | 2 | 26 | `acyclic` | 0 | 24 |
 | `InfoGeometry.Krein.complex_i_apply` | 419 | 6 | 16 | `acyclic` | 0 | 124 |
 | `InfoGeometry.Projective.positiveMeasureToEuclidean_apply` | 396 | 3 | 26 | `acyclic` | 0 | 2 |
@@ -77,10 +77,10 @@
 | `InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace_bijective` | 384 | 28 | 20 | `acyclic` | 0 | 1 |
 | `InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.toConformalInference` | 332 | 2 | 18 | `acyclic` | 137 | 14 |
 | `InfoGeometry.Krein.spectral_epsilon_involution` | 322 | 4 | 13 | `acyclic` | 1 | 10 |
-| `InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector` | 283 | 8 | 16 | `acyclic` | 33 | 23 |
+| `InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector` | 301 | 8 | 16 | `acyclic` | 35 | 25 |
 | `InfoGeometry.Krein.modular_j_involution` | 258 | 4 | 12 | `acyclic` | 1 | 9 |
+| `InfoGeometry.Canonical.CertifiedInverseKernel.metricProjector` | 250 | 8 | 15 | `acyclic` | 23 | 14 |
 | `InfoGeometry.Clifford.splitQ11_apply` | 240 | 1 | 15 | `acyclic` | 0 | 41 |
-| `InfoGeometry.Canonical.CertifiedInverseKernel.metricProjector` | 235 | 8 | 15 | `acyclic` | 23 | 13 |
 
 ## Errors (require action)
 
@@ -747,6 +747,8 @@
   - Tags: `certified-surface`, `dead-candidate`
 - **`InfoGeometry.Canonical.CertifiedInverseKernel.rightChiralAnomaly_spectralAdjointFlow_mem_noncompact`** — `V2/dead-public-theorem`
   - Tags: `certified-surface`, `dead-candidate`
+- **`InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector_commutator_GammaG_eq_sub_anomalies`** — `V2/dead-public-theorem`
+  - Tags: `certified-surface`, `dead-candidate`
 - **`InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector_commutator_spectralAdjointFlow_dilationGap_eq_mul_spectralGradingFlow_neg_two`** — `V2/dead-public-theorem`
   - Tags: `certified-surface`, `dead-candidate`
 - **`InfoGeometry.Canonical.instIsScalarTowerRealContinuousLinearMapId_infoGeometry`** — `V2/dead-public-theorem`
@@ -1275,17 +1277,11 @@
 
 ### `lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean`
 
-- **`InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility.J_comm_T`** — `V2/dead-public-theorem`
+- **`InfoGeometry.Canonical.DrazinKreinCompatibility.IsCartanCompatible.epsilon_comm`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility.J_comm_TD`** — `V2/dead-public-theorem`
+- **`InfoGeometry.Canonical.DrazinKreinCompatibility.IsCartanCompatible.eta_comm`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility.ε_comm_T`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility.ε_comm_TD`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility.η_comm_T`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility.η_comm_TD`** — `V2/dead-public-theorem`
+- **`InfoGeometry.Canonical.DrazinKreinCompatibility.IsCartanCompatible.modularJ_comm`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility.η_sq`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
@@ -1300,6 +1296,65 @@
 - **`InfoGeometry.Canonical.DrazinKreinCompatibility.Pzero_idempotent`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.DrazinKreinCompatibility.Pzero_mul_Preg`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinKreinCompatibility.isCartanCompatible_Preg`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinKreinCompatibility.isCartanCompatible_Pzero`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+
+### `lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean`
+
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.GammaS_eq_two_mul_P_D_sub_one`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.P_D_mul_GammaS`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.Q_D_mul_GammaS`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.anticommutator_GammaS_leftSupercharge_eq_zero`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.anticommutator_GammaS_rightSupercharge_eq_zero`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.commutator_P_D_G_eq_half_sub_supercharges`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.commutator_P_D_GammaG_eq_rightSupercharge_sub_leftSupercharge`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.leftSupercharge_isSpectralNonCompact`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.rightSupercharge_isSpectralNonCompact`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.two_smul_G_eq_GammaG`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.centralSupercharge_transport_invariant`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.instIsScalarTowerRealContinuousLinearMapId_infoGeometry`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`, `rfl-like`
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.instIsTopologicalRingContinuousLinearMapRealId_infoGeometry`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.instSMulCommClassRealContinuousLinearMapId_infoGeometry`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`, `rfl-like`
+
+### `lean/InfoGeometry/Canonical/DrazinSupercharge.lean`
+
+- **`InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge_eq_two_smul_commutator_spectralProjector_dilationGap`** — `V2/dead-public-theorem`
+  - Tags: `certified-surface`, `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge_isSpectralNonCompact`** — `V2/dead-public-theorem`
+  - Tags: `certified-surface`, `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinSupercharge.instIsScalarTowerRealContinuousLinearMapId_infoGeometry`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`, `rfl-like`
+- **`InfoGeometry.Canonical.DrazinSupercharge.instIsTopologicalRingContinuousLinearMapRealId_infoGeometry`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinSupercharge.instSMulCommClassRealContinuousLinearMapId_infoGeometry`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`, `rfl-like`
+
+### `lean/InfoGeometry/Canonical/DrazinWitnessElimination.lean`
+
+- **`InfoGeometry.Canonical.DrazinWitnessElimination.drazinComplementaryProjector_idempotent`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinWitnessElimination.drazinComplementaryProjector_mul_drazinProjector`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinWitnessElimination.drazinProjector_idempotent`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.DrazinWitnessElimination.drazinProjector_mul_drazinComplementaryProjector`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 
 ### `lean/InfoGeometry/Canonical/DualConnectionsCore.lean`
@@ -2051,12 +2106,6 @@
 
 - **`InfoGeometry.Canonical.CertifiedInverseKernel.GammaS_eq_spectralProjector_sub_spectralComplementaryProjector`** — `V2/dead-public-theorem`
   - Tags: `certified-surface`, `dead-candidate`
-- **`InfoGeometry.Canonical.CertifiedInverseKernel.GammaS_eq_two_mul_spectralProjector_sub_one`** — `V2/dead-public-theorem`
-  - Tags: `certified-surface`, `dead-candidate`
-- **`InfoGeometry.Canonical.CertifiedInverseKernel.GammaS_mul_spectralComplementaryProjector`** — `V2/dead-public-theorem`
-  - Tags: `certified-surface`, `dead-candidate`
-- **`InfoGeometry.Canonical.CertifiedInverseKernel.GammaS_mul_spectralProjector`** — `V2/dead-public-theorem`
-  - Tags: `certified-surface`, `dead-candidate`
 - **`InfoGeometry.Canonical.CertifiedInverseKernel.GammaS_sq_eq_one`** — `V2/dead-public-theorem`
   - Tags: `certified-surface`, `dead-candidate`
 - **`InfoGeometry.Canonical.CertifiedInverseKernel.isSpectralNonCompact_iff_anticommute_GammaS`** — `V2/dead-public-theorem`
@@ -2064,8 +2113,6 @@
 - **`InfoGeometry.Canonical.CertifiedInverseKernel.spectralComplementaryProjector_commutes_spectralGradingFlow`** — `V2/dead-public-theorem`
   - Tags: `certified-surface`, `dead-candidate`
 - **`InfoGeometry.Canonical.CertifiedInverseKernel.spectralComplementaryProjector_fixed_under_spectralGradingFlow`** — `V2/dead-public-theorem`
-  - Tags: `certified-surface`, `dead-candidate`
-- **`InfoGeometry.Canonical.CertifiedInverseKernel.spectralComplementaryProjector_isSpectralCompact`** — `V2/dead-public-theorem`
   - Tags: `certified-surface`, `dead-candidate`
 - **`InfoGeometry.Canonical.CertifiedInverseKernel.spectralGradingFlow_add`** — `V2/dead-public-theorem`
   - Tags: `certified-surface`, `dead-candidate`
@@ -2076,8 +2123,6 @@
 - **`InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector_commutes_spectralGradingFlow`** — `V2/dead-public-theorem`
   - Tags: `certified-surface`, `dead-candidate`
 - **`InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector_fixed_under_spectralGradingFlow`** — `V2/dead-public-theorem`
-  - Tags: `certified-surface`, `dead-candidate`
-- **`InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector_isSpectralCompact`** — `V2/dead-public-theorem`
   - Tags: `certified-surface`, `dead-candidate`
 - **`InfoGeometry.Canonical.CertifiedInverseKernel.thetaS_involutive`** — `V2/dead-public-theorem`
   - Tags: `certified-surface`, `dead-candidate`
@@ -2702,8 +2747,6 @@
 
 ### `lean/InfoGeometry/Canonical/OperatorialCentralCharge.lean`
 
-- **`InfoGeometry.Canonical.OperatorialCentralCharge.operatorialCentralCharge_transport_invariant`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.OperatorialCentralCharge.quasilatticeSlice_ne_zero_transport_protected`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 

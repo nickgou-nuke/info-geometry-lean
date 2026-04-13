@@ -108,3 +108,10 @@ Current status:
 - Einstein anomalies are lifted to the doubled carrier
 - the Quantum Geometric Tensor (QGT) is derived from operator transport laws
 - infinitesimal transport is formalized via Lie derivatives of exponential conjugation
+
+## Current Closure Backlog
+
+For the live closure ledger (fixed points, open fixtures, and priority
+elimination order after `9d81730`), see:
+
+- [analytic_closure_backlog.md](analytic_closure_backlog.md)

@@ -92,7 +92,25 @@ theorem primitive_anticommutator_eq_zero :
   exact InfoGeometry.Quantum.SuperchargeMultiplet.parity_modular_anticommutator_eq_zero
     (E := E) U.primitive
 
-/-- Primitive phase channel is the repo-native `K = J ε` axis. -/
+/-- Primitive phase channel as the internal doubled real phase axis `K = J ∘ ε`. -/
+theorem primitive_phaseChannel_eq_phaseAxis :
+    phaseChannel U =
+      ((modular_j (E := E)).toLinearMap).comp ((spectral_epsilon (E := E)).toLinearMap) := by
+  have hComplex :
+      phaseChannel U = (complex_i (E := E)).toLinearMap := by
+    exact InfoGeometry.Quantum.SuperchargeMultiplet.phaseChannel_eq_complexI
+      (E := E) U.primitive
+  calc
+    phaseChannel U = (complex_i (E := E)).toLinearMap := hComplex
+    _ =
+      ((modular_j (E := E)).toLinearMap).comp ((spectral_epsilon (E := E)).toLinearMap) := by
+        rfl
+
+/--
+Legacy compatibility alias:
+the internal phase axis `K = J ∘ ε` coincides with the historical `complex_i`
+surface.
+-/
 theorem primitive_phaseChannel_eq_complexI :
     phaseChannel U = (complex_i (E := E)).toLinearMap := by
   exact InfoGeometry.Quantum.SuperchargeMultiplet.phaseChannel_eq_complexI
@@ -402,7 +420,7 @@ theorem unified_cross_family_compatibility
 /--
 Sources/sinks + Onsager packet on the unified lane:
 
-1. internal Drazin central split `Q_D² = H + Z` with `Z` central,
+1. internal Drazin canonical split `Q_D² = H + Z` with `Z` defect-supported,
 2. projected left/right anomaly channels and net divergence channel
    `Q_D = Q_R - Q_L`,
 3. divergence identity `[P_D, G] = (1/2)•Q_D`,
@@ -413,9 +431,12 @@ Sources/sinks + Onsager packet on the unified lane:
 theorem unified_sources_sinks_onsager_with_internal_central_split
     (U : UnifiedSuperchargePackage (E := F))
     (Tpkg : TransportedSuperchargePackage (E := F))
-    (z t : ℝ) :
+    (t : ℝ) :
     (∃ H Z : H₂ →L[ℝ] H₂,
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinCentral U.kernel Z
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupported U.kernel Z
+        ∧
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.HasVanishingDefectBlock
+        U.kernel H
         ∧
       InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian U.kernel
         = H + Z)
@@ -449,8 +470,8 @@ theorem unified_sources_sinks_onsager_with_internal_central_split
             (E := F) X0 X0 (modular_j (E := F))) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.exists_superHamiltonian_central_split
-        (CIK := U.kernel) z
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.exists_superHamiltonian_canonical_split
+        (CIK := U.kernel)
   · exact UnifiedSuperchargePackage.projected_supercharge_eq_sub_chiral U
   · simpa [UnifiedSuperchargePackage.QD] using
       (U.kernel.spectralProjector_commutator_dilationGap_eq_half_sub_anomalies)

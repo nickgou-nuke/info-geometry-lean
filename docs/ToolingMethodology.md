@@ -106,6 +106,7 @@ This is the normal exact sequence.
 
 The current managed `dagReports` sequence regenerates:
 
+- `reports/dag/repository-surface-index.{md,json}`
 - `reports/dag/theorem-surface-index.{md,json}`
 - `reports/dag/source-sink-compression.{md,json}`
 - `reports/dag/true-root-order.{md,json}`
@@ -115,6 +116,12 @@ The current managed `dagReports` sequence regenerates:
 - `reports/dag/module-networkx*.{graphml,svg,json}`
 - `reports/dag/frontier-burndown.{md,json}`
 - `reports/dag/replacement-frontier.{md,json}`
+
+`reports/dag/repository-surface-index.{md,json}` is the canonical typed inventory
+for tracked repository files. It scans `git ls-files` and classifies the full
+tracked surface into Lean, Markdown, Python, and configuration classes.
+For exhaustive local audits that also include untracked non-ignored files, run
+`python3 tools/infra/reports/generate_repository_surface_index.py --include-untracked`.
 
 ## Method 3: Raw DAG Repair (Lean + Python)
 
@@ -130,6 +137,7 @@ python3 tools/infra/run_locked_lake_build.py InfoGeometry.Audit
 python3 tools/infra/refresh_decl_graph.py
 python3 tools/infra/refresh_blueprint_tags.py
 python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags
+python3 tools/infra/reports/generate_repository_surface_index.py --md-out reports/dag/repository-surface-index.md --json-out reports/dag/repository-surface-index.json
 python3 tools/infra/generate_theorem_surface_index.py
 python3 tools/infra/generate_hypothesis_debt_report.py
 python3 tools/infra/generate_source_sink_compression.py
@@ -184,6 +192,7 @@ python3 tools/infra/run_locked_lake_build.py InfoGeometry.Audit
 python3 tools/infra/refresh_decl_graph.py
 python3 tools/infra/refresh_blueprint_tags.py
 python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags
+python3 tools/infra/reports/generate_repository_surface_index.py --md-out reports/dag/repository-surface-index.md --json-out reports/dag/repository-surface-index.json
 python3 tools/infra/generate_theorem_surface_index.py
 python3 tools/infra/generate_source_sink_compression.py
 python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json --allow-partial-coverage --allow-uncovered-debt

@@ -31,6 +31,15 @@ def commutator (X Y : EndH) : EndH := X * Y - Y * X
 @[rep_depth operator]
 def anticommutator (X Y : EndH) : EndH := X * Y + Y * X
 
+/--
+Scalar-operator predicate on the doubled real carrier lane.
+
+`Z` is scalar when it is an identity multiple.
+-/
+@[rep_depth operator]
+def IsScalarOperator (Z : EndH) : Prop :=
+  ∃ c : ℝ, Z = c • (1 : EndH)
+
 /-- Krein-depth bridge wrapper for the commutator surface. -/
 @[rep_depth krein]
 def commutatorK (X Y : EndH) : EndH := commutator X Y
@@ -38,6 +47,10 @@ def commutatorK (X Y : EndH) : EndH := commutator X Y
 /-- Krein-depth bridge wrapper for the anticommutator surface. -/
 @[rep_depth krein]
 def anticommutatorK (X Y : EndH) : EndH := anticommutator X Y
+
+/-- Krein-depth bridge wrapper for scalar-operator classification. -/
+@[rep_depth krein]
+def IsScalarOperatorK (Z : EndH) : Prop := IsScalarOperator Z
 
 namespace CertifiedInverseKernel
 
@@ -50,6 +63,10 @@ The canonical odd generator already latent in the certified inverse kernel:
 @[rep_depth operator]
 def supercharge : EndH :=
   CIK.rightChiralAnomaly - CIK.chiralAnomaly
+
+/-- Krein-depth bridge alias for the canonical odd generator `Q`. -/
+@[rep_depth krein]
+def superchargeK : EndH := supercharge CIK
 
 /--
 Equivalent commutator presentation:
@@ -253,7 +270,8 @@ def IsDefectSupported (Z : EndH) : Prop :=
 
 /-- Krein-depth bridge wrapper for defect support. -/
 @[rep_depth krein]
-def IsDefectSupportedK (Z : EndH) : Prop := IsDefectSupported CIK Z
+def IsDefectSupportedK (Z : EndH) : Prop :=
+  CIK.spectralComplementaryProjector * Z * CIK.spectralComplementaryProjector = Z
 
 /--
 Vanishing-defect-block predicate for a kinetic candidate.
@@ -266,7 +284,8 @@ def HasVanishingDefectBlock (H : EndH) : Prop :=
 
 /-- Krein-depth bridge wrapper for vanishing defect block. -/
 @[rep_depth krein]
-def HasVanishingDefectBlockK (H : EndH) : Prop := HasVanishingDefectBlock CIK H
+def HasVanishingDefectBlockK (H : EndH) : Prop :=
+  CIK.spectralComplementaryProjector * H * CIK.spectralComplementaryProjector = 0
 
 /--
 Internal centrality predicate for the Drazin spectral lane.
@@ -281,7 +300,9 @@ def IsDrazinSpectralCentral (Z : EndH) : Prop :=
 
 /-- Krein-depth bridge wrapper for Drazin spectral centrality. -/
 @[rep_depth krein]
-def IsDrazinSpectralCentralK (Z : EndH) : Prop := IsDrazinSpectralCentral CIK Z
+def IsDrazinSpectralCentralK (Z : EndH) : Prop :=
+  Commute Z CIK.spectralProjector
+    ∧ Commute Z CIK.spectralComplementaryProjector
 
 /--
 Centrality predicate for the full Drazin algebra lane.
@@ -296,7 +317,9 @@ def IsDrazinLaneCentral (Z : EndH) : Prop :=
 
 /-- Krein-depth bridge wrapper for full Drazin-lane centrality. -/
 @[rep_depth krein]
-def IsDrazinLaneCentralK (Z : EndH) : Prop := IsDrazinLaneCentral CIK Z
+def IsDrazinLaneCentralK (Z : EndH) : Prop :=
+  IsDrazinSpectralCentralK CIK Z
+    ∧ Commute Z CIK.toInformationCartanTriple.GammaS
 
 /--
 Canonical defect-supported extraction from `Q²`.
@@ -313,6 +336,14 @@ Canonical kinetic remainder after removing the defect-supported central channel.
 @[rep_depth operator]
 def canonicalKineticPart : EndH :=
   superHamiltonian CIK - canonicalDefectCentral CIK
+
+/-- Krein-depth bridge wrapper for the canonical defect-central extraction. -/
+@[rep_depth krein]
+def canonicalDefectCentralK : EndH := canonicalDefectCentral CIK
+
+/-- Krein-depth bridge wrapper for the canonical kinetic remainder. -/
+@[rep_depth krein]
+def canonicalKineticPartK : EndH := canonicalKineticPart CIK
 
 /-- The canonical defect-central part is supported on the defect block. -/
 @[rep_depth operator]
@@ -331,6 +362,67 @@ theorem canonicalDefectCentral_isDefectSupported :
       simpa [hQ0, mul_assoc]
     _ = Q0 * SH * Q0 := by
       simp [mul_assoc]
+
+/-- Krein-depth bridge form of defect support for the canonical central extraction. -/
+@[rep_depth krein]
+theorem canonicalDefectCentralK_isDefectSupportedK :
+    IsDefectSupportedK CIK (canonicalDefectCentralK CIK) := by
+  simpa [canonicalDefectCentralK] using
+    canonicalDefectCentral_isDefectSupported (CIK := CIK)
+
+/--
+Nontrivial defect projector criterion:
+if `Q₀` is neither `0` nor `1`, it cannot be scalar.
+-/
+@[rep_depth operator]
+theorem spectralComplementaryProjector_not_scalar_of_nontrivial
+    (hQ0ne0 : CIK.spectralComplementaryProjector ≠ 0)
+    (hQ0ne1 : CIK.spectralComplementaryProjector ≠ (1 : EndH)) :
+    ¬ IsScalarOperator CIK.spectralComplementaryProjector := by
+  intro hScalar
+  rcases hScalar with ⟨c, hc⟩
+  have hIdem : CIK.spectralComplementaryProjector * CIK.spectralComplementaryProjector
+      = CIK.spectralComplementaryProjector :=
+    CIK.spectralComplementaryProjector_idempotent
+  have hScalarIdem :
+      (c • (1 : EndH)) * (c • (1 : EndH)) = c • (1 : EndH) := by
+    simpa [hc] using hIdem
+  have hOneNe : (1 : EndH) ≠ 0 := by
+    intro hOneZero
+    apply hQ0ne0
+    calc
+      CIK.spectralComplementaryProjector
+          = CIK.spectralComplementaryProjector * (1 : EndH) := by simp
+      _ = CIK.spectralComplementaryProjector * 0 := by simpa [hOneZero]
+      _ = 0 := by simp
+  have hCoeffEq :
+      (c * c : ℝ) • (1 : EndH) = c • (1 : EndH) := by
+    simpa [smul_smul, mul_assoc] using hScalarIdem
+  have hCoeff : c * c = c := by
+    exact smul_left_injective ℝ hOneNe hCoeffEq
+  have hmul : c * (c - 1) = 0 := by
+    nlinarith [hCoeff]
+  have hc01 : c = 0 ∨ c = 1 := by
+    rcases mul_eq_zero.mp hmul with hc0 | hc1
+    · exact Or.inl hc0
+    · exact Or.inr (sub_eq_zero.mp hc1)
+  cases hc01 with
+  | inl hc0 =>
+      apply hQ0ne0
+      simpa [hc, hc0]
+  | inr hc1 =>
+      apply hQ0ne1
+      simpa [hc, hc1]
+
+/-- Krein-depth bridge form of non-scalarity for a nontrivial defect projector. -/
+@[rep_depth krein]
+theorem spectralComplementaryProjector_not_scalar_of_nontrivialK
+    (hQ0ne0 : CIK.spectralComplementaryProjector ≠ 0)
+    (hQ0ne1 : CIK.spectralComplementaryProjector ≠ (1 : EndH)) :
+    ¬ IsScalarOperatorK CIK.spectralComplementaryProjector := by
+  simpa [IsScalarOperatorK] using
+    spectralComplementaryProjector_not_scalar_of_nontrivial
+      (CIK := CIK) hQ0ne0 hQ0ne1
 
 /-- The canonical kinetic remainder has vanishing defect block. -/
 @[rep_depth operator]
@@ -357,6 +449,13 @@ theorem canonicalKineticPart_hasVanishingDefectBlock :
     _ = Q0 * SH * Q0 - Q0 * SH * Q0 := by
           simpa [hcompress]
     _ = 0 := by simp
+
+/-- Krein-depth bridge form of defect-block vanishing for the canonical kinetic part. -/
+@[rep_depth krein]
+theorem canonicalKineticPartK_hasVanishingDefectBlockK :
+    HasVanishingDefectBlockK CIK (canonicalKineticPartK CIK) := by
+  simpa [canonicalKineticPartK] using
+    canonicalKineticPart_hasVanishingDefectBlock (CIK := CIK)
 
 /--
 Defect support implies left compression by the complementary projector.
@@ -514,6 +613,43 @@ theorem canonicalDefectCentral_isDrazinLaneCentral :
   exact commute_GammaS_of_isDrazinSpectralCentral (CIK := CIK)
     (canonicalDefectCentral_isDrazinSpectralCentral (CIK := CIK))
 
+/-- Krein-depth bridge form of spectral centrality for the canonical central extraction. -/
+@[rep_depth krein]
+theorem canonicalDefectCentralK_isDrazinSpectralCentralK :
+    IsDrazinSpectralCentralK CIK (canonicalDefectCentralK CIK) := by
+  simpa [canonicalDefectCentralK, IsDrazinSpectralCentralK] using
+    canonicalDefectCentral_isDrazinSpectralCentral (CIK := CIK)
+
+/-- Krein-depth bridge form of full Drazin-lane centrality for the canonical central extraction. -/
+@[rep_depth krein]
+theorem canonicalDefectCentralK_isDrazinLaneCentralK :
+    IsDrazinLaneCentralK CIK (canonicalDefectCentralK CIK) := by
+  simpa [canonicalDefectCentralK, IsDrazinLaneCentralK] using
+    canonicalDefectCentral_isDrazinLaneCentral (CIK := CIK)
+
+/-- Krein-depth bridge: scalar multiples of `Q₀` are defect-supported. -/
+@[rep_depth krein]
+theorem isDefectSupportedK_smul_spectralComplementaryProjector (c : ℝ) :
+    IsDefectSupportedK CIK (c • CIK.spectralComplementaryProjector) := by
+  unfold IsDefectSupportedK
+  simp [mul_assoc, smul_mul_assoc, mul_smul_comm, CIK.spectralComplementaryProjector_idempotent]
+
+/-- Krein-depth bridge: defect-supported operators are spectrally central on the Drazin lane. -/
+@[rep_depth krein]
+theorem isDrazinSpectralCentralK_of_isDefectSupportedK
+    {Z : EndH}
+    (hDefect : IsDefectSupportedK CIK Z) :
+    IsDrazinSpectralCentralK CIK Z := by
+  exact isDrazinSpectralCentral_of_isDefectSupported (CIK := CIK) hDefect
+
+/-- Krein-depth bridge: spectral centrality implies commutation with `Γ_S`. -/
+@[rep_depth krein]
+theorem commute_GammaS_of_isDrazinSpectralCentralK
+    {Z : EndH}
+    (hCentral : IsDrazinSpectralCentralK CIK Z) :
+    Commute Z CIK.toInformationCartanTriple.GammaS := by
+  exact commute_GammaS_of_isDrazinSpectralCentral (CIK := CIK) hCentral
+
 /--
 Internal operator-valued Drazin split:
 `Q² = H + Z` with `Z` canonically extracted from the singular block.
@@ -524,6 +660,14 @@ theorem superHamiltonian_eq_canonicalKinetic_plus_canonicalDefectCentral :
       = canonicalKineticPart (CIK := CIK) + canonicalDefectCentral CIK := by
   unfold canonicalKineticPart
   exact (sub_add_cancel (superHamiltonian CIK) (canonicalDefectCentral CIK)).symm
+
+/-- Krein-depth bridge form of the canonical internal split `Q² = H + Z`. -/
+@[rep_depth krein]
+theorem superHamiltonianK_eq_canonicalKineticPartK_plus_canonicalDefectCentralK :
+    superHamiltonianK CIK
+      = canonicalKineticPartK (CIK := CIK) + canonicalDefectCentralK CIK := by
+  simpa [superHamiltonianK, canonicalKineticPartK, canonicalDefectCentralK] using
+    superHamiltonian_eq_canonicalKinetic_plus_canonicalDefectCentral (CIK := CIK)
 
 /--
 Canonical existence form of the Drazin central split `Q² = H + Z`.
@@ -721,6 +865,326 @@ variable [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 variable [KreinSpace (DoubledSpace F)] [KreinGradedModule (DoubledSpace F)]
 
 local notation "H₂" => DoubledSpace F
+local notation "EndH₂" => H₂ →L[ℝ] H₂
+
+noncomputable local instance : NormedRing EndH₂ := inferInstance
+noncomputable local instance : NormedAlgebra ℝ EndH₂ := inferInstance
+noncomputable local instance : NormedAlgebra ℚ EndH₂ :=
+  NormedAlgebra.restrictScalars ℚ ℝ EndH₂
+local instance : IsTopologicalRing EndH₂ := inferInstance
+local instance : SMulCommClass ℝ EndH₂ EndH₂ := inferInstance
+local instance : IsScalarTower ℝ EndH₂ EndH₂ := inferInstance
+
+/--
+Transported operatorial-central-charge shadow on the intrinsic Drazin defect lane.
+
+Unlike the identity-multiple scalar shadow, this is carried by the defect
+projector `Q₀ = 1 - P_D`, so it is generally non-scalar as an operator.
+-/
+@[rep_depth transport]
+noncomputable def operatorialCentralDefectShadow
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) : EndH₂ :=
+  ((operatorialCentralCharge (A := A) (B := B) (E := F) X hX : ℝ))
+    • CIK.spectralComplementaryProjector
+
+/--
+Strict non-scalarity witness for the transported operatorial-central defect
+shadow.
+
+Under nonzero operatorial central charge and a nontrivial defect projector
+(`Q₀ ≠ 0`, `Q₀ ≠ 1`), the defect shadow cannot collapse to a scalar operator.
+-/
+@[rep_depth transport]
+theorem operatorialCentralDefectShadow_not_scalar_of_nonzero_charge_of_nontrivial_defect_projector
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hCharge : operatorialCentralCharge (A := A) (B := B) (E := F) X hX ≠ 0)
+    (hQ0ne0 : CIK.spectralComplementaryProjector ≠ 0)
+    (hQ0ne1 : CIK.spectralComplementaryProjector ≠ (1 : EndH₂)) :
+    ¬ IsScalarOperatorK (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) := by
+  intro hScalarShadow
+  set z : ℝ := (operatorialCentralCharge (A := A) (B := B) (E := F) X hX : ℝ)
+  have hz0 :
+      ((operatorialCentralCharge (A := A) (B := B) (E := F) X hX : ℤ) : ℝ) ≠ 0 := by
+    exact_mod_cast hCharge
+  have hz : z ≠ 0 := by
+    simpa [z] using hz0
+  rcases hScalarShadow with ⟨c, hc⟩
+  have hScaleQ0 :
+      (z⁻¹ : ℝ) • (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX)
+        = CIK.spectralComplementaryProjector := by
+    unfold operatorialCentralDefectShadow
+    calc
+      (z⁻¹ : ℝ)
+            • (((operatorialCentralCharge (A := A) (B := B) (E := F) X hX : ℝ))
+                • CIK.spectralComplementaryProjector)
+          =
+        ((z⁻¹ : ℝ) * (operatorialCentralCharge (A := A) (B := B) (E := F) X hX : ℝ))
+          • CIK.spectralComplementaryProjector := by
+            simp [smul_smul]
+      _ = ((z⁻¹ : ℝ) * z) • CIK.spectralComplementaryProjector := by
+            simp [z]
+      _ = CIK.spectralComplementaryProjector := by
+            simp [inv_mul_cancel₀ hz]
+  have hScaleScalar :
+      (z⁻¹ : ℝ) • (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX)
+        = ((z⁻¹ : ℝ) * c) • (1 : EndH₂) := by
+    calc
+      (z⁻¹ : ℝ) • (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX)
+          = (z⁻¹ : ℝ) • (c • (1 : EndH₂)) := by
+              simpa [hc]
+      _ = ((z⁻¹ : ℝ) * c) • (1 : EndH₂) := by
+            simp [smul_smul]
+  have hQ0Scalar : IsScalarOperatorK CIK.spectralComplementaryProjector := by
+    refine ⟨(z⁻¹ : ℝ) * c, ?_⟩
+    calc
+      CIK.spectralComplementaryProjector
+          = (z⁻¹ : ℝ) • (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) := by
+              exact hScaleQ0.symm
+      _ = ((z⁻¹ : ℝ) * c) • (1 : EndH₂) := hScaleScalar
+  exact
+    (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.spectralComplementaryProjector_not_scalar_of_nontrivialK
+      (CIK := CIK) hQ0ne0 hQ0ne1) hQ0Scalar
+
+/--
+The operatorial-central defect shadow is defect-supported by construction.
+-/
+@[rep_depth transport]
+theorem operatorialCentralDefectShadow_isDefectSupported
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) :
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK
+      CIK (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) := by
+  simpa [operatorialCentralDefectShadow] using
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.isDefectSupportedK_smul_spectralComplementaryProjector
+      (CIK := CIK)
+      (operatorialCentralCharge (A := A) (B := B) (E := F) X hX : ℝ)
+
+/--
+The operatorial-central defect shadow is central on the Drazin spectral lane.
+-/
+@[rep_depth transport]
+theorem operatorialCentralDefectShadow_isDrazinSpectralCentral
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) :
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinSpectralCentralK
+      CIK (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) := by
+  exact
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.isDrazinSpectralCentralK_of_isDefectSupportedK
+      (CIK := CIK)
+      (operatorialCentralDefectShadow_isDefectSupported
+        (A := A) (B := B) CIK X hX)
+
+/--
+The operatorial-central defect shadow is central on the full Drazin lane.
+-/
+@[rep_depth transport]
+theorem operatorialCentralDefectShadow_isDrazinLaneCentral
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) :
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentralK
+      CIK (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) := by
+  refine ⟨?_, ?_⟩
+  · exact operatorialCentralDefectShadow_isDrazinSpectralCentral
+      (A := A) (B := B) CIK X hX
+  · exact
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.commute_GammaS_of_isDrazinSpectralCentralK
+        (CIK := CIK)
+        (operatorialCentralDefectShadow_isDrazinSpectralCentral
+          (A := A) (B := B) CIK X hX)
+
+/--
+Transported-slice equality written directly on the intrinsic defect shadow.
+-/
+@[rep_depth transport]
+theorem operatorialCentralDefectShadow_eq_transport_slice
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (V : BogoliubovVielbeinBundle (E := F))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ) :
+    operatorialCentralDefectShadow (A := A) (B := B) CIK X hX
+      =
+    ((quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := F) V X hX hEven t) : ℝ))
+      • CIK.spectralComplementaryProjector := by
+  have hIdx :
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := F) V X hX hEven t)
+        =
+      operatorialCentralCharge (A := A) (B := B) (E := F) X hX := by
+    exact operatorialCentralCharge_eq_transport_slice
+      (A := A) (B := B) (E := F) V X hX hEven t
+  have hIdxR :
+      (operatorialCentralCharge (A := A) (B := B) (E := F) X hX : ℝ)
+        =
+      (quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := F) V X hX hEven t) : ℝ) := by
+    exact congrArg (fun z : ℤ => (z : ℝ)) hIdx.symm
+  simpa [operatorialCentralDefectShadow, hIdxR]
+
+/--
+Intrinsic mismatch between the canonical non-scalar internal central term and
+the transported operatorial-index defect shadow.
+-/
+@[rep_depth transport]
+noncomputable def intrinsicCentralIndexResidual
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) : EndH₂ :=
+  InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK
+    - operatorialCentralDefectShadow (A := A) (B := B) CIK X hX
+
+/--
+The intrinsic residual is defect-supported.
+-/
+@[rep_depth transport]
+theorem intrinsicCentralIndexResidual_isDefectSupported
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) :
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK
+      CIK (intrinsicCentralIndexResidual (A := A) (B := B) CIK X hX) := by
+  set Q0 : EndH₂ := CIK.spectralComplementaryProjector
+  have hCan :
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK
+        CIK (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK) :=
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK_isDefectSupportedK
+      (CIK := CIK)
+  have hShadow :
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK
+        CIK (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) :=
+    operatorialCentralDefectShadow_isDefectSupported
+      (A := A) (B := B) CIK X hX
+  have hCanQ :
+      Q0 * InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK * Q0
+        =
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK := by
+    simpa [Q0] using hCan
+  have hShadowQ :
+      Q0 * operatorialCentralDefectShadow (A := A) (B := B) CIK X hX * Q0
+        =
+      operatorialCentralDefectShadow (A := A) (B := B) CIK X hX := by
+    simpa [Q0] using hShadow
+  unfold InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK
+  unfold intrinsicCentralIndexResidual
+  change
+    Q0
+          * (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK
+              - operatorialCentralDefectShadow (A := A) (B := B) CIK X hX)
+          * Q0
+        =
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK
+      - operatorialCentralDefectShadow (A := A) (B := B) CIK X hX
+  calc
+    Q0
+          * (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK
+              - operatorialCentralDefectShadow (A := A) (B := B) CIK X hX)
+          * Q0
+        =
+      Q0 * InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK * Q0
+        -
+      Q0 * operatorialCentralDefectShadow (A := A) (B := B) CIK X hX * Q0 := by
+            simp [mul_sub, sub_mul, mul_assoc]
+    _ =
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK
+        - operatorialCentralDefectShadow (A := A) (B := B) CIK X hX := by
+          rw [hCanQ, hShadowQ]
+
+/--
+The intrinsic residual is central on the full Drazin lane.
+-/
+@[rep_depth transport]
+theorem intrinsicCentralIndexResidual_isDrazinLaneCentral
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) :
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentralK
+      CIK (intrinsicCentralIndexResidual (A := A) (B := B) CIK X hX) := by
+  have hDef :
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK
+        CIK (intrinsicCentralIndexResidual (A := A) (B := B) CIK X hX) :=
+    intrinsicCentralIndexResidual_isDefectSupported
+      (A := A) (B := B) CIK X hX
+  have hSpec :
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinSpectralCentralK
+        CIK (intrinsicCentralIndexResidual (A := A) (B := B) CIK X hX) :=
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.isDrazinSpectralCentralK_of_isDefectSupportedK
+      (CIK := CIK) hDef
+  exact ⟨hSpec,
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.commute_GammaS_of_isDrazinSpectralCentralK
+      (CIK := CIK) hSpec⟩
+
+/--
+Canonical non-scalar Drazin split + transported index-shadow packet:
+
+1. internal split `Q_D² = H + Z` with intrinsic non-scalar `Z`,
+2. operatorial-central defect shadow is lane-central and defect-supported,
+3. residual `Z - Z_shadow` stays lane-central and defect-supported,
+4. transported analytical-index equality on the same slice.
+-/
+@[rep_depth transport]
+theorem canonical_split_with_intrinsic_nonScalar_and_index_shadow
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (V : BogoliubovVielbeinBundle (E := F))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ) :
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
+      =
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPartK (CIK := CIK)
+      +
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK
+      ∧
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentralK
+      CIK
+      (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK)
+      ∧
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentralK
+      CIK
+      (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX)
+      ∧
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK
+      CIK
+      (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX)
+      ∧
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentralK
+      CIK
+      (intrinsicCentralIndexResidual (A := A) (B := B) CIK X hX)
+      ∧
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK
+      CIK
+      (intrinsicCentralIndexResidual (A := A) (B := B) CIK X hX)
+      ∧
+    quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := F) V X hX hEven t)
+      =
+    operatorialCentralCharge (A := A) (B := B) (E := F) X hX := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK_eq_canonicalKineticPartK_plus_canonicalDefectCentralK
+        (CIK := CIK)
+  · exact
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK_isDrazinLaneCentralK
+        (CIK := CIK)
+  · exact operatorialCentralDefectShadow_isDrazinLaneCentral
+      (A := A) (B := B) CIK X hX
+  · exact operatorialCentralDefectShadow_isDefectSupported
+      (A := A) (B := B) CIK X hX
+  · exact intrinsicCentralIndexResidual_isDrazinLaneCentral
+      (A := A) (B := B) CIK X hX
+  · exact intrinsicCentralIndexResidual_isDefectSupported
+      (A := A) (B := B) CIK X hX
+  · exact operatorialCentralCharge_eq_transport_slice
+      (A := A) (B := B) (E := F) V X hX hEven t
 
 /--
 Central supercharge theorem (repo-native root form):

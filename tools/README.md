@@ -37,6 +37,14 @@ lake script run dagAll
 lake script run dagDoctor
 ```
 
+Theory-cloud visualization (declaration particles + semantic field):
+
+```bash
+python3 tools/infra/generate_theory_cloud_movie.py --mode semantic
+python3 tools/infra/generate_theory_cloud_movie.py --mode structural
+python3 tools/infra/generate_theory_cloud_movie.py --mode commits --commits WORKTREE,HEAD
+```
+
 Short procedural docs:
 
 - [docs/OperatorQuickstart.md](../docs/OperatorQuickstart.md)

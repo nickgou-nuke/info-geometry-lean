@@ -23,6 +23,9 @@ Relativity of Measurement**:
 - [black_books/24_the_operatorial_condensation.md](black_books/24_the_operatorial_condensation.md) — The phase-transition chapter where operatorial closure supersedes manifold-first narration.
 - [black_books/25_the_vindication_of_weyl.md](black_books/25_the_vindication_of_weyl.md) — The ray-first reformulation tying gauge/curvature/anomaly to compiled closure lanes.
 - [black_books/26_the_dog_chasing_its_tail.md](black_books/26_the_dog_chasing_its_tail.md) — The mass-as-coupling and localized-vortex witness chapter on the DIII lane.
+- [black_books/52_kramers_pairs_krein_majorana_type_iii_lightcone.md](black_books/52_kramers_pairs_krein_majorana_type_iii_lightcone.md) — External-science synthesis chapter for Kramers/Krein/Majorana/Type-III/apex language.
+- [black_books/52native_krein_hestenes_real_doubled_translation.md](black_books/52native_krein_hestenes_real_doubled_translation.md) — Repo-native doubled-real translation of chapter 52.
+- [black_books/55_external_approval_real_all_translation.md](black_books/55_external_approval_real_all_translation.md) — Active roadmap for real modular/type-III closure in owned canonical files.
 - [Theory.md](Theory.md) — How the principle maps to the repo presentations.
 - [Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md) — The project's roadmap and trajectory.
 - [SEMANTIC_POTENTIAL.md](SEMANTIC_POTENTIAL.md) — The "Scorpio & Virgo" multi-agent generative engine.
@@ -53,6 +56,7 @@ Use these first when you want the current repo state:
 - [lean/DAG/README.md](../lean/DAG/README.md)
 - [tools/README.md](../tools/README.md)
 - [tools/infra/README.md](../tools/infra/README.md)
+- [tools/infra/generate_theory_cloud_movie.py](../tools/infra/generate_theory_cloud_movie.py)
 - [tools/prompts/agentic_autotheory_prompts_2026-04-15.md](../tools/prompts/agentic_autotheory_prompts_2026-04-15.md)
 
 These are the maintained hand-written entry surfaces.
@@ -84,7 +88,11 @@ That includes:
 
 - synthesis notes such as `welding_theorem_synthesis.md`, `*_synthesis.md`
 - diagnostics and backlog notes such as `analytic_closure_backlog.md` and `apex_*.md`
+- active closure trackers such as
+  `krein_hestenes_closure_tracker_2026-04-13.md` and
+  `active_closure/kramers_krein_modular_tracker.md`
 - niche conceptual overlays such as `causal_apex_binding.md`
+- future infra blueprints such as `private_reviewer_chat_blueprint.md`
 - glossaries and indexes such as `keyword_index.md` and `lawful-flow-glossary.md`
 
 These files can still be useful, but they must be re-audited against Lean source

@@ -29,7 +29,9 @@ def compute_olean_content_hash(root: Path) -> str:
     return h.hexdigest()
 
 
-def run_locked_lake_build(targets: Sequence[str], *, wait_for_lock: bool = False) -> int:
+def run_locked_lake_build(
+    targets: Sequence[str], *, wait_for_lock: bool = False, wfail: bool = False
+) -> int:
     root = repo_root()
     owner = f"locked-lake-build:{os.getpid()}:{' '.join(targets) if targets else '<default>'}"
     try:
@@ -46,7 +48,10 @@ def run_locked_lake_build(targets: Sequence[str], *, wait_for_lock: bool = False
         )
         return 2
 
-    cmd = ["lake", "build", *targets]
+    cmd = ["lake", "build"]
+    if wfail:
+        cmd.append("--wfail")
+    cmd.extend(targets)
     print(f"[locked-lake-build] acquired {lock.lock_path}", flush=True)
     print(f"[locked-lake-build] running: {' '.join(cmd)}", flush=True)
     try:

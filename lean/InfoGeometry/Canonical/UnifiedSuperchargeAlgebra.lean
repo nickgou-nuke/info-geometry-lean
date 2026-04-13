@@ -517,20 +517,20 @@ theorem unified_internal_split_with_operatorial_shadow
     (hEven : KreinGradedModule.IsEven (H := H₂) Tpkg.V.connectionGenerator)
     (t : ℝ) :
     ∃ H Z : H₂ →L[ℝ] H₂,
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentral
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentralK
           U.kernel Z
         ∧
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupported
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK
           U.kernel Z
         ∧
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.HasVanishingDefectBlock
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.HasVanishingDefectBlockK
           U.kernel H
         ∧
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK
           U.kernel
         = H + Z
         ∧
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentral
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentralK
           U.kernel
           (InfoGeometry.Canonical.DrazinCentralChargeBridge.DrazinLane.operatorialCentralScalar
             (A := A) (B := B) X hX)

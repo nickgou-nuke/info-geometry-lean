@@ -22,6 +22,7 @@ import InfoGeometry.Thermo.FiniteDiagonal
 import InfoGeometry.Thermo.FiniteMatrix
 import InfoGeometry.Thermo.FromBregman
 import InfoGeometry.Canonical.ThermoFromLogDet
+import InfoGeometry.Canonical.ModularKLDivergenceBridge
 import InfoGeometry.Thermo.Gibbs
 import InfoGeometry.Thermo.ThermodynamicIdentities
 import InfoGeometry.Thermal.FiniteMatrix

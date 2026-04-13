@@ -1,6 +1,7 @@
 import InfoGeometry.Quantum.SuperchargeMultiplet
 import InfoGeometry.Canonical.SuperchargeTransportBridge
 import InfoGeometry.Canonical.DrazinSupercharge
+import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.Meta.Architecture
 
@@ -498,6 +499,49 @@ theorem unified_sources_sinks_onsager_with_internal_central_split
   · exact TransportedSuperchargePackage.deriv_QPi_t Tpkg t
   · exact TransportedSuperchargePackage.deriv_QJ_t Tpkg t
   · exact TransportedSuperchargePackage.deriv2_QPi_t_eq_metricPart_add_half_curvaturePart Tpkg
+
+/--
+Integrated internal split + transported operatorial-shadow theorem.
+
+This strengthens the unified lane with the bridge that packages:
+1. internal Drazin split `Q_D² = H + Z`,
+2. Drazin-lane centrality of the transported operatorial central-charge scalar shadow,
+3. transported analytical-index equality on the same slice.
+-/
+@[rep_depth transport]
+theorem unified_internal_split_with_operatorial_shadow
+    (U : UnifiedSuperchargePackage (E := F))
+    (Tpkg : TransportedSuperchargePackage (E := F))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) Tpkg.V.connectionGenerator)
+    (t : ℝ) :
+    ∃ H Z : H₂ →L[ℝ] H₂,
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentral
+          U.kernel Z
+        ∧
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupported
+          U.kernel Z
+        ∧
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.HasVanishingDefectBlock
+          U.kernel H
+        ∧
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian
+          U.kernel
+        = H + Z
+        ∧
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentral
+          U.kernel
+          (InfoGeometry.Canonical.DrazinCentralChargeBridge.DrazinLane.operatorialCentralScalar
+            (A := A) (B := B) X hX)
+        ∧
+      quasilatticeAnalyticalIndex Tpkg.V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := F) Tpkg.V X hX hEven t)
+        =
+      operatorialCentralCharge (A := A) (B := B) (E := F) X hX := by
+  simpa using
+    InfoGeometry.Canonical.DrazinCentralChargeBridge.DrazinLane.exists_internal_split_with_operatorial_shadow
+      (A := A) (B := B) (F := F) (CIK := U.kernel) (V := Tpkg.V) X hX hEven t
 
 end Fusion
 

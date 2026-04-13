@@ -967,6 +967,47 @@ theorem canonicalSeedFlowEqUnruhTarget_iff_superHamiltonian_eq_two_pi_modularHam
         (E := E) CIK hHD
 
 /--
+Projector-first closure equivalence package:
+`FlowEqUnruh(canonicalModularSeed)` is equivalent to
+`H_D = (2π)·(P₊ - P₋)`.
+-/
+@[rep_depth transport]
+theorem canonicalSeedFlowEqUnruhTarget_iff_superHamiltonian_eq_two_pi_modularSign
+    (CIK : CertifiedInverseKernel H₂) :
+    canonicalSeedFlowEqUnruhTarget (E := E) CIK
+      ↔
+    (DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
+      = (2 * Real.pi)
+          • InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E)) := by
+  constructor
+  · intro hFlow
+    have hHD :
+        DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
+          = (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E) :=
+      (canonicalSeedFlowEqUnruhTarget_iff_superHamiltonian_eq_two_pi_modularHamiltonian
+        (E := E) CIK).1 hFlow
+    calc
+      DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
+          = (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E) := hHD
+      _ =
+        (2 * Real.pi) • InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E) := by
+          simp [InfoGeometry.Dynamics.modularHamiltonian_eq_modularSign]
+  · intro hHDsign
+    have hHD :
+        DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
+          = (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
+      calc
+        DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
+            = (2 * Real.pi)
+                • InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E) := hHDsign
+        _ =
+          (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
+            simp [InfoGeometry.Dynamics.modularHamiltonian_eq_modularSign]
+    exact
+      (canonicalSeedFlowEqUnruhTarget_iff_superHamiltonian_eq_two_pi_modularHamiltonian
+        (E := E) CIK).2 hHD
+
+/--
 Canonical single-gap target:
 `FlowEqUnruh(canonicalModularSeed)`.
 -/

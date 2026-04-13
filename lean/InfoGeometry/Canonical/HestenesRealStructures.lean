@@ -52,6 +52,13 @@ abbrev KAntilinear (A : EndH) : Prop :=
 abbrev KreinIsometric (U : EndH) : Prop :=
   KreinSpace.IsKreinIsometry (H := H₂) U
 
+/-- Real-linearity plus pairing sign-flip in the owned Krein metric. -/
+@[rep_depth krein]
+abbrev KreinAntiIsometric (U : EndH) : Prop :=
+  ∀ u v : H₂,
+    KreinSpace.kreinInner (H := H₂) (U u) (U v)
+      = -KreinSpace.kreinInner (H := H₂) u v
+
 /-- Krein-selfadjoint operators on the doubled carrier. -/
 @[rep_depth krein]
 def KreinSelfAdjoint (A : EndH) : Prop :=
@@ -83,6 +90,39 @@ theorem kAntilinear_iff_phaseAxisAnticommutator_eq_zero (A : EndH) :
     calc
       A.comp K + K.comp A = -(K.comp A) + K.comp A := by rw [h]
       _ = 0 := by abel
+
+/-- The internal phase axis `K` is `K`-linear (it commutes with itself). -/
+@[rep_depth krein]
+theorem phaseAxisK_isKLinear :
+    KLinear (E := E) (phaseAxisK (E := E)) := by
+  apply (kLinear_iff_phaseAxisCommutator_eq_zero (E := E) (phaseAxisK (E := E))).1
+  unfold transportCommutator
+  simp
+
+/-- The internal phase axis `K` is the canonical Krein anti-isometric axis. -/
+@[rep_depth krein]
+theorem phaseAxisK_isKreinAntiIsometric :
+    KreinAntiIsometric (E := E) (phaseAxisK (E := E)) := by
+  intro u v
+  exact phaseAxisK_kreinInner_comp (E := E) u v
+
+/-!
+Canonical intrinsic phase axis package for the real doubled Kramers lane.
+-/
+@[rep_depth krein]
+structure PhaseKramersAxis where
+  Θ : EndH
+  kreinAntiIsometric : KreinAntiIsometric (E := E) Θ
+  phaseLinear : KLinear (E := E) Θ
+  square_neg : Θ.comp Θ = -(ContinuousLinearMap.id ℝ H₂)
+
+/-- Canonical phase-axis Kramers data owned by `K = J ∘ ε`. -/
+@[rep_depth krein]
+noncomputable def canonicalPhaseKramersAxis : PhaseKramersAxis (E := E) where
+  Θ := phaseAxisK (E := E)
+  kreinAntiIsometric := phaseAxisK_isKreinAntiIsometric (E := E)
+  phaseLinear := phaseAxisK_isKLinear (E := E)
+  square_neg := phaseAxisK_sq_eq_neg_id (E := E)
 
 /--
 Kramers symmetry on the real doubled carrier:

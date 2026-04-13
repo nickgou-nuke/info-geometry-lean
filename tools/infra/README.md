@@ -41,7 +41,7 @@ The preferred operator entrypoints are:
 - `lake script run bilingualSpineReport`
 
 These are thin wrappers over the current Python corridor. `dagReports` also sets a repo-local Matplotlib cache under `.artifacts/matplotlib` so managed report runs do not depend on a writable home-directory config path. The underlying script lane remains maintained, but the pinned config and authoritative status surface now live above it.
-The current managed report sequence keeps the theorem-surface index, bilingual RedLine spine report, source-sink compression, causal coverage report, theorem-significance report, sorry-equivalence report, NetworkX graph exports, and replacement-frontier outputs in sync with the authoritative DAG artifacts.
+The current managed report sequence keeps the repository-surface index (Lean/Markdown/Python/config tracking), theorem-surface index, bilingual RedLine spine report, source-sink compression, causal coverage report, theorem-significance report, sorry-equivalence report, NetworkX graph exports, and replacement-frontier outputs in sync with the authoritative DAG artifacts.
 `bilingualSpineReport` can also emit per-module docstring stubs with reference seeds via `--stub-out-dir reports/dag/bilingual-docstring-stubs`.
 The managed lane also records timing sidecars for the last authoritative refresh (`artifacts/dag/index/indexer-timing.json`) and the last managed report run (`artifacts/dag/report-timing.json`), which `dagStatus` and `dagDoctor` surface as operator-facing performance summaries.
 
@@ -68,6 +68,7 @@ Main DAG refresh and report path:
 - `run_locked_lake_build.py`
 - `build_changed_lean.py`
 - `generate_theorem_surface_index.py`
+- `reports/generate_repository_surface_index.py`
 - `generate_hypothesis_debt_report.py`
 - `generate_source_sink_compression.py`
 - `generate_causal_report.py`
@@ -106,6 +107,7 @@ Use the infra tools by role, not as one undifferentiated report pile:
   - `refresh_decl_graph.py`
   - `refresh_blueprint_tags.py`
 - theorem-surface and canonical burden
+  - `reports/generate_repository_surface_index.py` (typed inventory of tracked Lean/Markdown/Python/config surfaces via `git ls-files`; linear in file count; optional `--include-untracked` mode for exhaustive local scans)
   - `generate_theorem_surface_index.py`
   - `generate_hypothesis_debt_report.py` (ranks theorem/lemma surfaces by hypothesis/interface debt; defaults to synthesis capstones and emits top-20 JSON/Markdown)
   - `canonical_policy_lint.py`
@@ -238,6 +240,28 @@ process-flow artifacts:
 - pairwise entropy-production ranking (`O(E)`)
 - SCC-level loop/holonomy obstruction proxies (`O(V + E)`)
 It intentionally avoids full cycle enumeration and path-pair combinatorics.
+
+Theory-cloud movie exporter (particle ontology over declarations):
+
+```bash
+python3 tools/infra/generate_theory_cloud_movie.py --mode semantic
+python3 tools/infra/generate_theory_cloud_movie.py --mode structural
+python3 tools/infra/generate_theory_cloud_movie.py --mode commits --commits WORKTREE,HEAD
+```
+
+`generate_theory_cloud_movie.py` treats declarations as particles and uses:
+- structural attraction from declaration dependencies
+- depth anchors from `structural-topology.json`
+- semantic drift from process-flow-derived chiral/obstruction fields
+
+Complexity is bounded for large snapshots by:
+- node/edge caps (`--max-nodes`, `--max-edges`)
+- local spatial hashing for repulsion (near-linear expected per step)
+- fixed-step relaxation budget (`--steps`)
+
+Commit mode reads artifacts via `git show`. If selected commits do not contain
+the required DAG artifacts, the exporter skips them (or fails with
+`--strict-commit-artifacts`).
 
 For CI/lightweight enforcement, validate that the semantic lane executes and
 emits the expected schema keys:

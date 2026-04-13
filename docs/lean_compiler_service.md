@@ -102,3 +102,13 @@ Current mathematical closure work is still ahead of this service work:
 
 So this note should be read as future infra planning, not as an active
 implementation commitment.
+
+## Related blueprint
+
+For the reviewer-facing control plane and private Socratic interrogation surface
+that can sit above this proof infrastructure, see:
+
+- [private_reviewer_chat_blueprint.md](private_reviewer_chat_blueprint.md)
+
+That blueprint covers identity, room policy, gateway/tool governance, audit
+trails, and phased rollout. This file remains focused on typed proof-state RPC.

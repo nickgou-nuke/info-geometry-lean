@@ -335,7 +335,7 @@ Master capstone composition:
 - Kitaev tiling identity.
 
 All pieces are interpreted under the **Rigidity of the Volume Form** principle,
-ensuring the information flow is volume-preserving (unitary).
+ensuring the information flow is volume-preserving (pairing-preserving/Krein-isometric on the doubled carrier).
 -/
 private theorem bits_to_gravity_to_fluid_capstone
     (S : SpinFactorState E)

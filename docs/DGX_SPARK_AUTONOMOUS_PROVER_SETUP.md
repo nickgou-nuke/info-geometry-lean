@@ -250,6 +250,23 @@ python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.
   | tee logs/locked_build_$(date -u +%Y%m%dT%H%M%SZ).log
 ```
 
+### Runtime lock artifact (required for reproducibility)
+
+The bootstrap script now emits a machine-readable lock file:
+
+- `logs/hermes_runtime_lock_<timestamp>.json`
+
+It records:
+
+- exact toolchain/runtime versions (`openclaw`, `nemoclaw`, `lean`, `lake`, `python`, `docker`, `ollama`)
+- git branch + commit head
+- configured model endpoints/models (Hermes + discovery + logic engines)
+- locked build modules, verdict, and log path
+
+Promotion rule:
+
+- no promotion from quarantine to canonical lanes without a successful locked build and corresponding runtime lock artifact.
+
 ## 11. Example Bootstrap Script
 
 See:

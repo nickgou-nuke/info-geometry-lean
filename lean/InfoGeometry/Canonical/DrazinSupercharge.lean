@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Canonical.InverseKernelAlgebra
+import InfoGeometry.Canonical.InverseKernelCartanCore
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
 import InfoGeometry.Meta.Architecture
 
@@ -268,6 +269,36 @@ def HasVanishingDefectBlock (H : EndH) : Prop :=
 def HasVanishingDefectBlockK (H : EndH) : Prop := HasVanishingDefectBlock CIK H
 
 /--
+Internal centrality predicate for the Drazin spectral lane.
+
+`Z` is central on this lane when it commutes with both the regular and defect
+spectral projectors.
+-/
+@[rep_depth operator]
+def IsDrazinSpectralCentral (Z : EndH) : Prop :=
+  Commute Z CIK.spectralProjector
+    ∧ Commute Z CIK.spectralComplementaryProjector
+
+/-- Krein-depth bridge wrapper for Drazin spectral centrality. -/
+@[rep_depth krein]
+def IsDrazinSpectralCentralK (Z : EndH) : Prop := IsDrazinSpectralCentral CIK Z
+
+/--
+Centrality predicate for the full Drazin algebra lane.
+
+This extends spectral-projector centrality by requiring commutation with the
+spectral grading `Γ_S`.
+-/
+@[rep_depth operator]
+def IsDrazinLaneCentral (Z : EndH) : Prop :=
+  IsDrazinSpectralCentral CIK Z
+    ∧ Commute Z CIK.toInformationCartanTriple.GammaS
+
+/-- Krein-depth bridge wrapper for full Drazin-lane centrality. -/
+@[rep_depth krein]
+def IsDrazinLaneCentralK (Z : EndH) : Prop := IsDrazinLaneCentral CIK Z
+
+/--
 Canonical defect-supported extraction from `Q²`.
 
 This is the singular-block compression of the projected superHamiltonian.
@@ -328,6 +359,162 @@ theorem canonicalKineticPart_hasVanishingDefectBlock :
     _ = 0 := by simp
 
 /--
+Defect support implies left compression by the complementary projector.
+-/
+@[rep_depth operator]
+theorem spectralComplementaryProjector_mul_eq_of_isDefectSupported
+    {Z : EndH}
+    (hDefect : IsDefectSupported CIK Z) :
+    CIK.spectralComplementaryProjector * Z = Z := by
+  have hQ0 : CIK.spectralComplementaryProjector * CIK.spectralComplementaryProjector
+      = CIK.spectralComplementaryProjector := CIK.spectralComplementaryProjector_idempotent
+  unfold IsDefectSupported at hDefect
+  calc
+    CIK.spectralComplementaryProjector * Z
+        = CIK.spectralComplementaryProjector
+            * (CIK.spectralComplementaryProjector * Z * CIK.spectralComplementaryProjector) := by
+              rw [hDefect]
+    _ = (CIK.spectralComplementaryProjector * CIK.spectralComplementaryProjector) * Z
+          * CIK.spectralComplementaryProjector := by
+            simp [mul_assoc]
+    _ = CIK.spectralComplementaryProjector * Z * CIK.spectralComplementaryProjector := by
+          simpa [hQ0, mul_assoc]
+    _ = Z := hDefect
+
+/--
+Defect support implies right compression by the complementary projector.
+-/
+@[rep_depth operator]
+theorem mul_spectralComplementaryProjector_eq_of_isDefectSupported
+    {Z : EndH}
+    (hDefect : IsDefectSupported CIK Z) :
+    Z * CIK.spectralComplementaryProjector = Z := by
+  have hQ0 : CIK.spectralComplementaryProjector * CIK.spectralComplementaryProjector
+      = CIK.spectralComplementaryProjector := CIK.spectralComplementaryProjector_idempotent
+  unfold IsDefectSupported at hDefect
+  calc
+    Z * CIK.spectralComplementaryProjector
+        = (CIK.spectralComplementaryProjector * Z * CIK.spectralComplementaryProjector)
+            * CIK.spectralComplementaryProjector := by
+              rw [hDefect]
+    _ = CIK.spectralComplementaryProjector * Z
+          * (CIK.spectralComplementaryProjector * CIK.spectralComplementaryProjector) := by
+            simp [mul_assoc]
+    _ = CIK.spectralComplementaryProjector * Z * CIK.spectralComplementaryProjector := by
+          simpa [hQ0, mul_assoc]
+    _ = Z := hDefect
+
+/--
+Defect support forces annihilation by the regular Drazin projector on the left.
+-/
+@[rep_depth operator]
+theorem spectralProjector_mul_eq_zero_of_isDefectSupported
+    {Z : EndH}
+    (hDefect : IsDefectSupported CIK Z) :
+    CIK.spectralProjector * Z = 0 := by
+  unfold IsDefectSupported at hDefect
+  calc
+    CIK.spectralProjector * Z
+        = CIK.spectralProjector
+            * (CIK.spectralComplementaryProjector * Z * CIK.spectralComplementaryProjector) := by
+              conv_lhs => rw [← hDefect]
+    _ = ((CIK.spectralProjector * CIK.spectralComplementaryProjector) * Z)
+          * CIK.spectralComplementaryProjector := by
+            simp [mul_assoc]
+    _ = 0 := by
+          simp [CIK.spectralProjector_mul_spectralComplementaryProjector]
+
+/--
+Defect support forces annihilation by the regular Drazin projector on the right.
+-/
+@[rep_depth operator]
+theorem mul_spectralProjector_eq_zero_of_isDefectSupported
+    {Z : EndH}
+    (hDefect : IsDefectSupported CIK Z) :
+    Z * CIK.spectralProjector = 0 := by
+  unfold IsDefectSupported at hDefect
+  calc
+    Z * CIK.spectralProjector
+        = (CIK.spectralComplementaryProjector * Z * CIK.spectralComplementaryProjector)
+            * CIK.spectralProjector := by
+              conv_lhs => rw [← hDefect]
+    _ = CIK.spectralComplementaryProjector
+          * Z * (CIK.spectralComplementaryProjector * CIK.spectralProjector) := by
+            simp [mul_assoc]
+    _ = 0 := by
+          simp [CIK.spectralComplementaryProjector_mul_spectralProjector]
+
+/--
+Any defect-supported operator is central on the internal Drazin spectral lane.
+-/
+@[rep_depth operator]
+theorem isDrazinSpectralCentral_of_isDefectSupported
+    {Z : EndH}
+    (hDefect : IsDefectSupported CIK Z) :
+    IsDrazinSpectralCentral CIK Z := by
+  refine ⟨?_, ?_⟩
+  ·
+    have hLeft :
+        CIK.spectralProjector * Z = 0 :=
+      spectralProjector_mul_eq_zero_of_isDefectSupported (CIK := CIK) hDefect
+    have hRight :
+        Z * CIK.spectralProjector = 0 :=
+      mul_spectralProjector_eq_zero_of_isDefectSupported (CIK := CIK) hDefect
+    calc
+      Z * CIK.spectralProjector = 0 := hRight
+      _ = CIK.spectralProjector * Z := by simpa [hLeft]
+  ·
+    have hLeft :
+        CIK.spectralComplementaryProjector * Z = Z :=
+      spectralComplementaryProjector_mul_eq_of_isDefectSupported (CIK := CIK) hDefect
+    have hRight :
+        Z * CIK.spectralComplementaryProjector = Z :=
+      mul_spectralComplementaryProjector_eq_of_isDefectSupported (CIK := CIK) hDefect
+    calc
+      Z * CIK.spectralComplementaryProjector = Z := hRight
+      _ = CIK.spectralComplementaryProjector * Z := hLeft.symm
+
+/--
+Spectral centrality implies commutation with the spectral grading `Γ_S`.
+-/
+@[rep_depth operator]
+theorem commute_GammaS_of_isDrazinSpectralCentral
+    {Z : EndH}
+    (hCentral : IsDrazinSpectralCentral CIK Z) :
+    Commute Z CIK.toInformationCartanTriple.GammaS := by
+  rcases hCentral with ⟨hP, hQ0⟩
+  have hGamma :
+      CIK.toInformationCartanTriple.GammaS
+        = CIK.spectralProjector - CIK.spectralComplementaryProjector := by
+    simpa [CertifiedInverseKernel.GammaS] using
+      CIK.GammaS_eq_spectralProjector_sub_spectralComplementaryProjector
+  calc
+    Z * CIK.toInformationCartanTriple.GammaS
+        = Z * (CIK.spectralProjector - CIK.spectralComplementaryProjector) := by rw [hGamma]
+    _ = Z * CIK.spectralProjector - Z * CIK.spectralComplementaryProjector := by
+          simp [mul_sub]
+    _ = CIK.spectralProjector * Z - CIK.spectralComplementaryProjector * Z := by
+          rw [hP.eq, hQ0.eq]
+    _ = (CIK.spectralProjector - CIK.spectralComplementaryProjector) * Z := by
+          simp [sub_mul]
+    _ = CIK.toInformationCartanTriple.GammaS * Z := by rw [hGamma]
+
+/-- The canonical defect-central extraction is central on the Drazin spectral lane. -/
+@[rep_depth operator]
+theorem canonicalDefectCentral_isDrazinSpectralCentral :
+    IsDrazinSpectralCentral CIK (canonicalDefectCentral CIK) := by
+  exact isDrazinSpectralCentral_of_isDefectSupported (CIK := CIK)
+    (canonicalDefectCentral_isDefectSupported (CIK := CIK))
+
+/-- The canonical defect-central extraction is central on the full Drazin algebra lane. -/
+@[rep_depth operator]
+theorem canonicalDefectCentral_isDrazinLaneCentral :
+    IsDrazinLaneCentral CIK (canonicalDefectCentral CIK) := by
+  refine ⟨canonicalDefectCentral_isDrazinSpectralCentral (CIK := CIK), ?_⟩
+  exact commute_GammaS_of_isDrazinSpectralCentral (CIK := CIK)
+    (canonicalDefectCentral_isDrazinSpectralCentral (CIK := CIK))
+
+/--
 Internal operator-valued Drazin split:
 `Q² = H + Z` with `Z` canonically extracted from the singular block.
 -/
@@ -362,6 +549,64 @@ theorem exists_superHamiltonian_canonical_splitK :
   rcases exists_superHamiltonian_canonical_split (CIK := CIK) with
     ⟨H, Z, hDef, hVan, hSplit⟩
   exact ⟨H, Z, hDef, hVan, by simpa [superHamiltonianK] using hSplit⟩
+
+/--
+Canonical Drazin split with an internal spectral centrality witness for `Z`.
+-/
+@[rep_depth operator]
+theorem exists_superHamiltonian_canonical_split_with_spectral_centrality :
+    ∃ H Z : EndH,
+      IsDrazinSpectralCentral CIK Z
+        ∧ IsDefectSupported CIK Z
+        ∧ HasVanishingDefectBlock CIK H
+        ∧ superHamiltonian CIK = H + Z := by
+  refine ⟨canonicalKineticPart (CIK := CIK), canonicalDefectCentral CIK, ?_, ?_, ?_, ?_⟩
+  · exact canonicalDefectCentral_isDrazinSpectralCentral (CIK := CIK)
+  · exact canonicalDefectCentral_isDefectSupported (CIK := CIK)
+  · exact canonicalKineticPart_hasVanishingDefectBlock (CIK := CIK)
+  · exact superHamiltonian_eq_canonicalKinetic_plus_canonicalDefectCentral (CIK := CIK)
+
+/-- Krein-depth bridge form of the centralized canonical split `Q² = H + Z`. -/
+@[rep_depth krein]
+theorem exists_superHamiltonian_canonical_split_with_spectral_centralityK :
+    ∃ H Z : EndH,
+      IsDrazinSpectralCentralK CIK Z
+        ∧ IsDefectSupportedK CIK Z
+        ∧ HasVanishingDefectBlockK CIK H
+        ∧ superHamiltonianK CIK = H + Z := by
+  rcases exists_superHamiltonian_canonical_split_with_spectral_centrality (CIK := CIK) with
+    ⟨H, Z, hCentral, hDef, hVan, hSplit⟩
+  exact ⟨H, Z, hCentral, hDef, hVan, by simpa [superHamiltonianK] using hSplit⟩
+
+/--
+Canonical Drazin split with full Drazin-lane centrality witness for `Z`.
+-/
+@[rep_depth operator]
+theorem exists_superHamiltonian_canonical_split_with_drazin_lane_centrality :
+    ∃ H Z : EndH,
+      IsDrazinLaneCentral CIK Z
+        ∧ IsDefectSupported CIK Z
+        ∧ HasVanishingDefectBlock CIK H
+        ∧ superHamiltonian CIK = H + Z := by
+  refine ⟨canonicalKineticPart (CIK := CIK), canonicalDefectCentral CIK, ?_, ?_, ?_, ?_⟩
+  · exact canonicalDefectCentral_isDrazinLaneCentral (CIK := CIK)
+  · exact canonicalDefectCentral_isDefectSupported (CIK := CIK)
+  · exact canonicalKineticPart_hasVanishingDefectBlock (CIK := CIK)
+  · exact superHamiltonian_eq_canonicalKinetic_plus_canonicalDefectCentral (CIK := CIK)
+
+/--
+Krein-depth bridge form of the Drazin-lane centralized canonical split `Q² = H + Z`.
+-/
+@[rep_depth krein]
+theorem exists_superHamiltonian_canonical_split_with_drazin_lane_centralityK :
+    ∃ H Z : EndH,
+      IsDrazinLaneCentralK CIK Z
+        ∧ IsDefectSupportedK CIK Z
+        ∧ HasVanishingDefectBlockK CIK H
+        ∧ superHamiltonianK CIK = H + Z := by
+  rcases exists_superHamiltonian_canonical_split_with_drazin_lane_centrality (CIK := CIK) with
+    ⟨H, Z, hCentral, hDef, hVan, hSplit⟩
+  exact ⟨H, Z, hCentral, hDef, hVan, by simpa [superHamiltonianK] using hSplit⟩
 
 /--
 Uniqueness of the canonical defect-central extraction:

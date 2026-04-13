@@ -73,6 +73,24 @@ If the underlying Lean build is the issue, fix the build first and rerun:
 lake script run dagAll
 ```
 
+## Coverage Policy Failed (Partial Graph)
+
+If `generate_causal_report.py` or `dagDoctor` fails on coverage policy, check
+the current gap first:
+
+```bash
+python3 tools/infra/dag_status.py
+python3 tools/infra/dag_doctor.py
+```
+
+If you need a diagnostic report while coverage is still partial, run:
+
+```bash
+python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json --allow-partial-coverage
+```
+
+Use this only as an explicit diagnostic mode. Do not treat it as strict green health.
+
 ## Blueprint Or Depth Tags Look Wrong
 
 Refresh the tag surfaces first, then rerun the managed lane if needed.
@@ -83,6 +101,17 @@ Typical repair commands:
 python3 tools/infra/refresh_blueprint_tags.py
 lake script run dagAll
 ```
+
+## Process-Flow Report Takes Too Long
+
+Run the process-flow lane in two steps and keep the Lean export as the authoritative artifact boundary:
+
+```bash
+lake env lean --run lean/DAG/ProcessFlowExport.lean InfoGeometry.Audit artifacts/dag/process-flow
+python3 tools/infra/generate_process_flow_report.py
+```
+
+If the Python report step is too heavy for the current machine state, keep the exported JSONL process-flow artifacts and defer report regeneration until the machine is less loaded.
 
 ## I Only Changed Lean Files
 

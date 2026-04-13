@@ -48,6 +48,15 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)]
 
 local notation "H₂" => DoubledSpace E
+local notation "EndH" => H₂ →L[ℝ] H₂
+
+noncomputable local instance : NormedRing EndH := inferInstance
+noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
+noncomputable local instance : NormedAlgebra ℚ EndH :=
+  NormedAlgebra.restrictScalars ℚ ℝ EndH
+local instance : IsTopologicalRing EndH := inferInstance
+local instance : SMulCommClass ℝ EndH EndH := inferInstance
+local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /-- Local alias for the owned CPT gap/Hessian closure proposition. -/
 @[rep_depth transport]
@@ -355,6 +364,179 @@ theorem root_supercharge_lichnerowicz_centralCharge_closure
       (A := A) (B := B) (E := E) V X hX hEven t with ⟨hRoot, hIdx, hNz⟩
   rcases hRoot with ⟨_, _, _, hLich⟩
   exact ⟨hLich, hIdx, hNz⟩
+
+/--
+Operator-valued central element induced by the operatorial central charge:
+a scalar multiple of the identity on the doubled carrier.
+-/
+@[rep_depth transport]
+noncomputable def operatorialCentralChargeOperator
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) : EndH :=
+  (((operatorialCentralCharge (A := A) (B := B) (E := E) X hX : ℤ) : ℝ)) • (1 : EndH)
+
+/--
+Kinetic even part for the CPT supercharge square after extracting the
+operator-valued central element.
+-/
+@[rep_depth transport]
+noncomputable def cptSuperchargeKineticPart
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) : EndH :=
+  -(ContinuousLinearMap.id ℝ H₂) - operatorialCentralChargeOperator (A := A) (B := B) (E := E) X hX
+
+/--
+The operator-valued central charge commutes with every doubled-carrier
+endomorphism.
+-/
+@[rep_depth transport]
+theorem operatorialCentralChargeOperator_commute
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (Y : EndH) :
+    Commute (operatorialCentralChargeOperator (A := A) (B := B) (E := E) X hX) Y := by
+  unfold operatorialCentralChargeOperator
+  simpa using
+    (Commute.one_left Y).smul_left
+      ((((operatorialCentralCharge (A := A) (B := B) (E := E) X hX : ℤ) : ℝ)))
+
+/--
+CPT supercharge square decomposition on the doubled carrier:
+`Q² = H + Z`, where `Z` is the operator-valued central charge element.
+-/
+@[rep_depth transport]
+theorem cptSupercharge_sq_eq_kinetic_plus_centralChargeOperator
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X) :
+    (cptSuperchargeOp (E := E)).comp (cptSuperchargeOp (E := E))
+      =
+    cptSuperchargeKineticPart (A := A) (B := B) (E := E) X hX
+      + operatorialCentralChargeOperator (A := A) (B := B) (E := E) X hX := by
+  unfold cptSuperchargeKineticPart
+  rw [cptSuperchargeOp_sq]
+  simp [operatorialCentralChargeOperator, sub_eq_add_neg]
+
+/--
+Central supercharge theorem on the root lane:
+
+1. an explicit operator-valued central element `Z` is extracted from the
+   operatorial central charge,
+2. the CPT supercharge square decomposes as `Q² = H + Z` with `Z` central,
+3. the transported root supercharge keeps the Lichnerowicz metric-plus-curvature
+   closure,
+4. the transported analytical index equals the operatorial central charge,
+5. nonzero operatorial central charge forces nonvanishing transported index.
+-/
+@[rep_depth transport]
+theorem root_central_supercharge_theorem
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ) :
+    (let Z := operatorialCentralChargeOperator (A := A) (B := B) (E := E) X hX
+     let H := cptSuperchargeKineticPart (A := A) (B := B) (E := E) X hX
+     (cptSuperchargeOp (E := E)).comp (cptSuperchargeOp (E := E)) = H + Z
+       ∧ (∀ Y : EndH, Commute Z Y))
+      ∧
+    (let Xv := V.connectionGenerator;
+      deriv (fun t => deriv (fun s => transportedParitySupercharge (E := E) V s) t) 0
+        =
+      operatorInformationMetricPart (E := E) Xv Xv (modular_j (E := E))
+        + ((2 : ℝ)⁻¹) • operatorInformationCurvaturePart (E := E) Xv Xv
+            (modular_j (E := E)))
+      ∧
+    (quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      =
+    operatorialCentralCharge (A := A) (B := B) (E := E) X hX)
+      ∧
+    (operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 →
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+        ≠ 0) := by
+  rcases root_supercharge_lichnerowicz_centralCharge_closure
+      (A := A) (B := B) (E := E) V X hX hEven t with ⟨hLich, hIdx, hNz⟩
+  refine ⟨?_, hLich, hIdx, hNz⟩
+  refine ⟨?_, ?_⟩
+  · simpa using
+      cptSupercharge_sq_eq_kinetic_plus_centralChargeOperator
+        (A := A) (B := B) (E := E) X hX
+  · intro Y
+    simpa using
+      operatorialCentralChargeOperator_commute (A := A) (B := B) (E := E) X hX Y
+
+/--
+Unified supercharge closure surface:
+
+- supergraded CAR/CCR primitive algebra with CPT square law,
+- central split `Q² = H + Z` with operator-valued central element,
+- root transported supercharge parity/KKT odd split package,
+- root Lichnerowicz closure,
+- and operatorial central-charge/topological-index transport closure.
+-/
+@[rep_depth transport]
+theorem unified_supercharge_central_supergeometry_topological_closure
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ)
+    (hParity :
+      operatorialCentralChargeParity (A := A) (B := B) X hX ≠ 0)
+    (hGrade : KreinGradedModule.gradeCLM (H := H₂) = X.cl11.eps) :
+    (CARBracket (E := E)
+        (paritySuperchargeOp (E := E))
+        (modularSuperchargeOp (E := E))
+      = 0
+      ∧
+      CCRBracket (E := E)
+          (paritySuperchargeOp (E := E))
+          (modularSuperchargeOp (E := E))
+        = (2 : ℝ) • cptSuperchargeOp (E := E)
+      ∧
+      (cptSuperchargeOp (E := E)).comp (cptSuperchargeOp (E := E))
+        = -(ContinuousLinearMap.id ℝ (DoubledSpace E)))
+      ∧
+    (let Z := operatorialCentralChargeOperator (A := A) (B := B) (E := E) X hX
+     let H := cptSuperchargeKineticPart (A := A) (B := B) (E := E) X hX
+     (cptSuperchargeOp (E := E)).comp (cptSuperchargeOp (E := E)) = H + Z
+       ∧ (∀ Y : EndH, Commute Z Y))
+      ∧
+    rootGapHessianClosure (E := E) V
+      ∧
+    TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E)
+      V X t (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      ∧
+    X.F = gOnePart X.cl11 X.F + gNegOnePart X.cl11 X.F
+      ∧
+    IsGZero X.cl11 (commutator (gOnePart X.cl11 X.F) (gNegOnePart X.cl11 X.F))
+      ∧
+    (let Xv := V.connectionGenerator;
+      deriv (fun t => deriv (fun s => transportedParitySupercharge (E := E) V s) t) 0
+        =
+      operatorInformationMetricPart (E := E) Xv Xv (modular_j (E := E))
+        + ((2 : ℝ)⁻¹) • operatorInformationCurvaturePart (E := E) Xv Xv
+            (modular_j (E := E)))
+      ∧
+    (quasilatticeAnalyticalIndex V X t
+        (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+      =
+    operatorialCentralCharge (A := A) (B := B) (E := E) X hX)
+      ∧
+    (operatorialCentralCharge (A := A) (B := B) (E := E) X hX ≠ 0 →
+      quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+        ≠ 0) := by
+  rcases harmonic_oscillator_spine (E := E) with
+    ⟨hCAR, hCCR, hSq, _, _, _⟩
+  rcases root_gap_hessian_parity_kkt_closure
+      (A := A) (B := B) (E := E) V X hX hEven t hParity hGrade with
+    ⟨hRoot, hMismatch, hSplit, hGZero⟩
+  rcases root_central_supercharge_theorem
+      (A := A) (B := B) (E := E) V X hX hEven t with
+    ⟨hCentralSplit, hLich, hIdx, hNz⟩
+  exact ⟨⟨hCAR, hCCR, hSq⟩, hCentralSplit, hRoot, hMismatch, hSplit, hGZero, hLich, hIdx, hNz⟩
 
 end Core
 

@@ -1,6 +1,6 @@
 # Surrogate Index
 
-Generated: `2026-04-10 00:07:06`
+Generated: `2026-04-13 02:22:23`
 
 This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and named contract interfaces so surrogate debt can be replaced aggressively with real proofs.
 
@@ -10,35 +10,36 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
   - `[surrogate-audit] checking for imports from InfoGeometry.Unstable in stable modules`
   - `[surrogate-audit] checking for direct open/namespace references to InfoGeometry.Unstable`
   - `[surrogate-audit] checking for placeholder/surrogate keywords outside allowed paths`
-  - `lean/InfoGeometry/Canonical/VariationalLadder.lean:48:    -- This is a placeholder for the deep reciprocity proof already present in the repo.`
+  - `lean/InfoGeometry/Thermodynamics/SouriauKillingFlow.lean:80:    True := -- placeholder for operatorial Fenchel-Legendre duality predicate`
   - `[surrogate-audit] placeholder/surrogate markers are only allowed under InfoGeometry/Unstable or Archive`
 
 ## Counts
-- total tracked findings: **7**
+- total tracked findings: **8**
 - proof holes: **4**
 - explicit axiom declarations: **0**
 - quarantine manifest drift findings: **0**
-- vacuous `trivial` theorems: **2**
+- vacuous `trivial` theorems: **1**
 - constant `Prop := True/False` surfaces: **0**
 - universal `∀ _, True` fields: **0**
 - zero quadratic-form surrogates: **0**
 - scaled-zero quadratic-form surrogates: **0**
 - conditional theorem wrappers (`_of_axioms/_of_hypotheses/_of_assumptions`): **0**
-- named contract declarations (`Axioms/Hypotheses/Assumptions`): **1**
-- contract constructors (`to...Assumptions`, `..._of_concrete`, `..._of_finiteSupport`): **0**
+- named contract declarations (`Axioms/Hypotheses/Assumptions`): **2**
+- contract constructors (`to...Assumptions`, `..._of_concrete`, `..._of_finiteSupport`): **1**
 - stable surrogate/placeholder markers: **0**
 - canonical findings: **2**
-- other stable findings: **5**
+- other stable findings: **6**
 - unstable/archive findings: **0**
 
 ## Aggressive Replacement Queue
-- `critical` `trivial_theorem` witten_index_invariant_under_onsager_flow at `lean/InfoGeometry/Canonical/TopologicalResidue.lean:71`
-- `critical` `trivial_theorem` onsager_reciprocity_at_comparison at `lean/InfoGeometry/Canonical/VariationalLadder.lean:45`
 - `critical` `proof_hole` evaluateAdmission at `lean/InfoGeometry/Meta/Admission.lean:141`
 - `critical` `proof_hole` StrictDeclData at `lean/InfoGeometry/Meta/StrictDef.lean:18`
 - `critical` `proof_hole` validateStrictDeclSyntax at `lean/InfoGeometry/Meta/StrictDef.lean:31`
 - `critical` `proof_hole` validateStrictDeclSyntax at `lean/InfoGeometry/Meta/StrictDef.lean:34`
+- `critical` `trivial_theorem` hodge_star_executes_legendre_transform at `lean/InfoGeometry/Thermodynamics/SouriauKillingFlow.lean:75`
+- `medium` `contract_decl` DrazinInfiniteAssumptions at `lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean:196`
 - `medium` `contract_decl` defaultForbiddenAxioms at `lean/InfoGeometry/Meta/Trust.lean:14`
+- `low` `contract_constructor` DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum at `lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean:41`
 
 ## Explicit Proof Holes
 
@@ -57,8 +58,7 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
 
 ## Vacuous `trivial` Theorems
 
-- `lean/InfoGeometry/Canonical/TopologicalResidue.lean:71` `theorem witten_index_invariant_under_onsager_flow` [critical]
-- `lean/InfoGeometry/Canonical/VariationalLadder.lean:45` `theorem onsager_reciprocity_at_comparison` [critical]
+- `lean/InfoGeometry/Thermodynamics/SouriauKillingFlow.lean:75` `theorem hodge_star_executes_legendre_transform` [critical]
 
 ## Constant `Prop := True/False` Surfaces
 
@@ -82,11 +82,12 @@ This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and
 
 ## Named Contract Declarations
 
+- `lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean:196` `structure DrazinInfiniteAssumptions` [medium]
 - `lean/InfoGeometry/Meta/Trust.lean:14` `def defaultForbiddenAxioms` [medium]
 
 ## Contract Constructors
 
-- none
+- `lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean:41` `def DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum` [low]
 
 ## Stable Surrogate/Placeholder Markers
 

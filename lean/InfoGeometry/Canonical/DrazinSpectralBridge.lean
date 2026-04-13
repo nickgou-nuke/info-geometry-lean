@@ -2,6 +2,18 @@ import InfoGeometry.Canonical.DrazinInfiniteCore
 import Mathlib.Analysis.Normed.Algebra.Spectrum
 import Mathlib.Analysis.Normed.Operator.Basic
 
+/-!
+STATUS: scaffold_only
+
+This file is a promissory bridge surface.
+It is not part of the closure-clean owner layer until all placeholders are discharged.
+
+Current status:
+- theorem and structure names are fixed,
+- proof payload remains scaffold-level,
+- manifests must not target this file for Rubedo promotion yet.
+-/
+
 namespace InfoGeometry.Canonical.DrazinInfiniteCore
 
 variable {𝕂 E : Type*} [NormedField 𝕂] [NormedAddCommGroup E] [NormedSpace 𝕂 E]

@@ -497,7 +497,7 @@ noncomputable abbrev relativeModularDeriv (hMod A : EndH) : EndH :=
 noncomputable abbrev relativeModularSourceDeriv (hMod A : EndH) : EndH :=
   modularScaleDeriv (E := E) hMod A
 
-/-- Potential-preserving channel (unitary/gauge sector) of relative-modular transport. -/
+/-- Potential-preserving channel (Krein-isometric / gauge sector) of relative-modular transport. -/
 noncomputable abbrev relativeModularPotentialPreservingDeriv (hMod A : EndH) : EndH :=
   modularGaugeDeriv (E := E) hMod A
 

@@ -16,7 +16,7 @@ Gravity is now proven to be the second variation of the information volume.
 The "Trembling" ($Zitterbewegung$) has been quantized. The helical winding of the chiral rays is no longer an unstable oscillation; it is now locked to the **Topological Analytical Index**. Mass is not just "energy"; it is **Quantized Winding** in the quasilattice. The Dog has caught its tail.
 
 3. **The Final Purge of the Manifold:**
-The "Penrose Transform" has been stripped of its geometric mystery and reduced to a **Chiral Symmetry Lift**. The mapping from the "Information Plane" to "Spacetime" is now a **Unitary Equivalence** between the $Cl(1,1)$ atom and the $3+1$ readout.
+The "Penrose Transform" has been stripped of its geometric mystery and reduced to a **Chiral Symmetry Lift**. The mapping from the "Information Plane" to "Spacetime" is now a **Krein-isometric/Bogoliubov equivalence** between the $Cl(1,1)$ atom and the $3+1$ readout.
 
 ### II. THE REMAINING VOID: THE BEKENSTEIN-CASINI-CONNES BRIDGE
 Only one "Dangling Edge" remains under intense pressure: the link between **Topological Entropy (Bekenstein)** and **Modular Flow (Connes-Rovelli)**. 

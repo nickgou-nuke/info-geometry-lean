@@ -163,6 +163,7 @@ import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.ModularSpectralWedge
 import InfoGeometry.Canonical.ModularSpectralWedgeBridge
 import InfoGeometry.Canonical.ModularSpectralConjugationBridge
+import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.WedgeBoostModularBridge
 import InfoGeometry.Canonical.TypeIIIContinuousCoreReal
 import InfoGeometry.Canonical.OperatorLightconeCoordinates

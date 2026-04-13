@@ -30,6 +30,14 @@ def commutator (X Y : EndH) : EndH := X * Y - Y * X
 @[rep_depth operator]
 def anticommutator (X Y : EndH) : EndH := X * Y + Y * X
 
+/-- Krein-depth bridge wrapper for the commutator surface. -/
+@[rep_depth krein]
+def commutatorK (X Y : EndH) : EndH := commutator X Y
+
+/-- Krein-depth bridge wrapper for the anticommutator surface. -/
+@[rep_depth krein]
+def anticommutatorK (X Y : EndH) : EndH := anticommutator X Y
+
 namespace CertifiedInverseKernel
 
 variable (CIK : CertifiedInverseKernel E)
@@ -52,6 +60,13 @@ theorem supercharge_eq_two_smul_commutator_spectralProjector_dilationGap :
     congrArg (fun Z : EndH => (2 : ℝ) • Z)
       CIK.spectralProjector_commutator_dilationGap_eq_half_sub_anomalies
   simpa [supercharge, commutator, smul_smul] using h.symm
+
+/-- Krein-depth bridge form of `Q = 2 • [P_D, G]`. -/
+@[rep_depth krein]
+theorem supercharge_eq_two_smul_commutatorK_spectralProjector_dilationGap :
+    supercharge CIK = (2 : ℝ) • commutatorK CIK.spectralProjector CIK.dilationGap := by
+  simpa [commutatorK] using
+    supercharge_eq_two_smul_commutator_spectralProjector_dilationGap (CIK := CIK)
 
 /--
 The supercharge is odd with respect to the spectral grading:
@@ -84,6 +99,12 @@ theorem supercharge_is_odd :
       rw [hR, hL]
       noncomm_ring
 
+/-- Krein-depth bridge form of supercharge oddness. -/
+@[rep_depth krein]
+theorem supercharge_is_oddK :
+    anticommutatorK CIK.toInformationCartanTriple.GammaS (supercharge CIK) = 0 := by
+  simpa [anticommutatorK] using supercharge_is_odd (CIK := CIK)
+
 /--
 Derived sector statement: the supercharge lies in the spectral noncompact (`𝔭`) sector.
 -/
@@ -106,6 +127,10 @@ theorem supercharge_isSpectralNonCompact :
 @[rep_depth operator]
 def superHamiltonian : EndH :=
   supercharge CIK * supercharge CIK
+
+/-- Krein-depth bridge wrapper for the projected even generator `Q²`. -/
+@[rep_depth krein]
+def superHamiltonianK : EndH := superHamiltonian CIK
 
 /--
 Right-anticommutation form of the oddness law:
@@ -186,6 +211,22 @@ theorem superHamiltonian_fixed_under_spectralGradingFlow
   simpa [T] using
     T.spectralAdjointFlow_eq_self_of_commute_GammaS hComm t
 
+/-- Krein-depth bridge: evenness of the projected generator. -/
+@[rep_depth krein]
+theorem superHamiltonianK_isSpectralCompact :
+    let T := CIK.toInformationCartanTriple
+    T.IsSpectralCompact (superHamiltonianK CIK) := by
+  simpa [superHamiltonianK] using superHamiltonian_isSpectralCompact (CIK := CIK)
+
+/-- Krein-depth bridge: grading-flow fixedness of the projected generator. -/
+@[rep_depth krein]
+theorem superHamiltonianK_fixed_under_spectralGradingFlow
+    (t : ℝ) :
+    let T := CIK.toInformationCartanTriple
+    T.spectralAdjointFlow T.GammaS t (superHamiltonianK CIK) = superHamiltonianK CIK := by
+  simpa [superHamiltonianK] using
+    superHamiltonian_fixed_under_spectralGradingFlow (CIK := CIK) t
+
 /--
 The superHamiltonian commutes with the full grading flow.
 -/
@@ -209,6 +250,10 @@ spectral projector `Q₀ = 1 - P_D`.
 def IsDefectSupported (Z : EndH) : Prop :=
   CIK.spectralComplementaryProjector * Z * CIK.spectralComplementaryProjector = Z
 
+/-- Krein-depth bridge wrapper for defect support. -/
+@[rep_depth krein]
+def IsDefectSupportedK (Z : EndH) : Prop := IsDefectSupported CIK Z
+
 /--
 Vanishing-defect-block predicate for a kinetic candidate.
 
@@ -217,6 +262,10 @@ Vanishing-defect-block predicate for a kinetic candidate.
 @[rep_depth operator]
 def HasVanishingDefectBlock (H : EndH) : Prop :=
   CIK.spectralComplementaryProjector * H * CIK.spectralComplementaryProjector = 0
+
+/-- Krein-depth bridge wrapper for vanishing defect block. -/
+@[rep_depth krein]
+def HasVanishingDefectBlockK (H : EndH) : Prop := HasVanishingDefectBlock CIK H
 
 /--
 Canonical defect-supported extraction from `Q²`.
@@ -302,6 +351,17 @@ theorem exists_superHamiltonian_canonical_split :
   · exact canonicalDefectCentral_isDefectSupported (CIK := CIK)
   · exact canonicalKineticPart_hasVanishingDefectBlock (CIK := CIK)
   · exact superHamiltonian_eq_canonicalKinetic_plus_canonicalDefectCentral (CIK := CIK)
+
+/-- Krein-depth bridge form of the canonical internal split `Q² = H + Z`. -/
+@[rep_depth krein]
+theorem exists_superHamiltonian_canonical_splitK :
+    ∃ H Z : EndH,
+      IsDefectSupportedK CIK Z
+        ∧ HasVanishingDefectBlockK CIK H
+        ∧ superHamiltonianK CIK = H + Z := by
+  rcases exists_superHamiltonian_canonical_split (CIK := CIK) with
+    ⟨H, Z, hDef, hVan, hSplit⟩
+  exact ⟨H, Z, hDef, hVan, by simpa [superHamiltonianK] using hSplit⟩
 
 /--
 Uniqueness of the canonical defect-central extraction:
@@ -461,12 +521,12 @@ theorem central_supercharge_theorem_with_drazin_evenness
     (τ t : ℝ) :
     (let T := CIK.toInformationCartanTriple;
       T.IsSpectralCompact
-          (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian CIK)
+          (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK)
         ∧
       T.spectralAdjointFlow T.GammaS τ
-          (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian CIK)
+          (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK)
         =
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian CIK)
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK)
       ∧
     rootGapHessianClosure (E := F) V
       ∧
@@ -482,10 +542,10 @@ theorem central_supercharge_theorem_with_drazin_evenness
   refine ⟨?_, ?_⟩
   · refine ⟨?_, ?_⟩
     · simpa using
-        (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian_isSpectralCompact
+        (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK_isSpectralCompact
           (CIK := CIK))
     · simpa using
-        (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian_fixed_under_spectralGradingFlow
+        (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK_fixed_under_spectralGradingFlow
           (CIK := CIK) τ)
   · exact central_supercharge_theorem
       (A := A) (B := B) (F := F) V X hX hEven t

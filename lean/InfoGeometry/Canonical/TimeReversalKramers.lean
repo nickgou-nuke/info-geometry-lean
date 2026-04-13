@@ -17,6 +17,7 @@ namespace InfoGeometry.Canonical.TimeReversalKramers
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.HestenesRealStructures
+open InfoGeometry.Canonical.HestenesKramersBridge
 open InfoGeometry.Canonical.OperatorDictionary
 open InfoGeometry.Canonical.BogoliubovTransport
 
@@ -67,6 +68,31 @@ theorem preserves_kreinInner (u v : H₂) :
       = KreinSpace.kreinInner (H := H₂) u v :=
   R.kreinIsometric u v
 
+/--
+Owner bridge to the intrinsic Hestenes partner map:
+every real time-reversal surrogate `Θ` sends `K u` to `-K(Θ u)`.
+-/
+@[rep_depth krein]
+theorem map_phasePartner_eq_neg_phasePartner_map (u : H₂) :
+    R.Θ (phasePartner (E := E) u)
+      =
+    -(phasePartner (E := E) (R.Θ u)) := by
+  have hAnti := R.anticomm_phaseAxisK
+  have hApply := congrArg (fun F : EndH => F u) hAnti
+  simpa [phasePartner] using hApply
+
+/--
+Pair transport law against the intrinsic phase partner:
+`pair (K u) = (K u, -K (Θ u))`.
+-/
+@[rep_depth krein]
+theorem pair_phasePartner (u : H₂) :
+    R.pair (phasePartner (E := E) u)
+      = (phasePartner (E := E) u, -(phasePartner (E := E) (R.Θ u))) := by
+  change (phasePartner (E := E) u, R.Θ (phasePartner (E := E) u))
+      = (phasePartner (E := E) u, -(phasePartner (E := E) (R.Θ u)))
+  rw [R.map_phasePartner_eq_neg_phasePartner_map (u := u)]
+
 end RealTimeReversal
 
 /-- Kramers specialization: real time reversal with square `-1`. -/
@@ -92,6 +118,19 @@ theorem partner_ne_self_of_ne_zero {u : H₂} (hu : u ≠ 0) :
     R.Θ u ≠ u := by
   simpa [toKramersSymmetry] using
     (KramersSymmetry.partner_ne_self_of_ne_zero (E := E) (S := R.toKramersSymmetry) hu)
+
+/--
+Kramers specialization of the intrinsic partner anti-transport law:
+`Θ (K u) = -K (Θ u)`.
+-/
+@[rep_depth krein]
+theorem map_phasePartner_eq_neg_phasePartner_map (u : H₂) :
+    R.Θ (phasePartner (E := E) u)
+      =
+    -(phasePartner (E := E) (R.Θ u)) := by
+  simpa using
+    (RealTimeReversal.map_phasePartner_eq_neg_phasePartner_map
+      (E := E) (R := R.toRealTimeReversal) u)
 
 end KramersTimeReversal
 

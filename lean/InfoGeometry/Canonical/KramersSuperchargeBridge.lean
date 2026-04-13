@@ -17,6 +17,7 @@ open InfoGeometry.Krein
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DrazinSupercharge
 open InfoGeometry.Canonical.HestenesRealStructures
+open InfoGeometry.Canonical.OperatorDictionary
 
 section Core
 
@@ -64,6 +65,39 @@ theorem hD_is_even (CIK : CertifiedInverseKernel H₂) :
     (HD CIK) * (GammaS CIK) = (GammaS CIK) * (HD CIK) := by
   simpa [GammaS, HD] using
     (DrazinSupercharge.CertifiedInverseKernel.superHamiltonian_commutes_GammaS (CIK := CIK))
+
+/--
+Carrier bridge law between abstract Kramers symmetry `Θ` and intrinsic phase
+partner map `phasePartner`:
+`Θ (K u) = -(K (Θ u))`.
+-/
+@[rep_depth krein]
+theorem theta_phasePartner_eq_neg_phasePartner_theta
+    (S : KramersSymmetry (E := E))
+    (u : H₂) :
+    S.Θ (InfoGeometry.Canonical.HestenesKramersBridge.phasePartner (E := E) u)
+      =
+    -(InfoGeometry.Canonical.HestenesKramersBridge.phasePartner (E := E) (S.Θ u)) := by
+  have hApply := congrArg (fun F : EndH => F u) S.anticomm_phaseAxisK
+  simpa [InfoGeometry.Canonical.HestenesKramersBridge.phasePartner, phaseAxisK] using hApply
+
+/--
+Pair-level bridge:
+the Kramers pair of a phase partner equals the phase-rotated pair with the
+second component flipped by the anticommutation sign.
+-/
+@[rep_depth krein]
+theorem kramersPair_phasePartner_bridge
+    (S : KramersSymmetry (E := E))
+    (u : H₂) :
+    S.pair (InfoGeometry.Canonical.HestenesKramersBridge.phasePartner (E := E) u)
+      =
+    (InfoGeometry.Canonical.HestenesKramersBridge.phasePartner (E := E) u,
+      -(InfoGeometry.Canonical.HestenesKramersBridge.phasePartner (E := E) (S.Θ u))) := by
+  refine Prod.ext ?_ ?_
+  · rfl
+  · simpa [KramersSymmetry.pair] using
+      (theta_phasePartner_eq_neg_phasePartner_theta (S := S) (u := u))
 
 /--
 If a Kramers symmetry commutes with `Γ_S`, then the Kramers-conjugated projected

@@ -6,6 +6,60 @@ It is not an authority file and it is not a completeness certificate. It exists
 to record the shortest remaining theorem paths after the corrected phase-space
 owner and generalized-metric algebra were made real.
 
+## Snapshot: `9d81730` Fixed Points
+
+This snapshot materially strengthens the operator spine, but it is not yet
+uniformly kernel-closed.
+
+### Settled Improvements
+
+- Drazin lane now has a compiled existence backbone:
+  - `lean/InfoGeometry/Singular/Drazin.lean` (`exists_drazinInverse_global`)
+  - `lean/InfoGeometry/Canonical/DrazinExistenceBridge.lean`
+    (`exists_canonicalDrazinInverse_global_endCLM`)
+  - `lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean`
+    (`AscentAtZero`, `DescentAtZero`, finite ascent/descent packaging, Riesz-style packaging)
+- Defect-to-gravity bridge is no longer promissory:
+  - `lean/InfoGeometry/Canonical/SuperchargeEinsteinSourceBridge.lean`
+    now carries explicit compatibility packaging, mismatch-to-obstruction, `chiralScale ≠ 0`,
+    and Einstein-source closures (including localized boundary-carrier variants).
+- Capstone internalization improved:
+  - `lean/InfoGeometry/Canonical/MasterSynthesis.lean` now derives Bott closure
+    via `InformationalLichnerowiczBottBridge` from `hCompat`, rather than taking
+    a free `LichnerowiczBalancedCl11` witness.
+- Tomita/cocycle internalization improved:
+  - `lean/InfoGeometry/Canonical/ModularWeldBridge.lean` owns finite `relativeLogDensityOperator`.
+  - `lean/InfoGeometry/Canonical/ConnesArakiTomita.lean` and
+    `lean/InfoGeometry/Canonical/YangMillsContinuum.lean` add welded flow-unit wrappers
+    reducing free cocycle/bridge parameters.
+- Representation-lineage corpus is now on the canonical umbrella:
+  - `lean/InfoGeometry/Canonical/PhysicsOfInformationCore.lean`
+  - `lean/InfoGeometry/Canonical/GenerativeInferenceCore.lean`
+  - `lean/InfoGeometry/Canonical/HeadTrialityCore.lean`
+  These are structurally honest owner surfaces, but still early-stage.
+- Tooling/process hardening improved:
+  replay verification, schema-governed residue packets, statement-lock tightening,
+  and isolated Hermes configuration.
+
+### Open Fixtures
+
+- `lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean` is still promissory in this snapshot
+  (explicit `sorry` placeholders remain in the spectral-isolation-to-Drazin descent lane).
+- `lean/InfoGeometry/Canonical/MasterSynthesis.lean` still carries capstone-facing external
+  witnesses on top-level synthesis (notably `hEin`, `hAnomalySkew`, `hHelicity`, `Mod`, `hCompat`).
+- Representation-lineage theorems are mostly first-step invariants, transports, and
+  preservation wrappers; deeper closure results remain to be proved.
+
+### Priority Order (Post-`9d81730`)
+
+1. Close `DrazinSpectralBridge` (eliminate `sorry`; compile spectral zero-isolation descent).
+2. Reduce or internalize `hCompat` in `MasterSynthesis` through lower owner bridges.
+3. Eliminate `hHelicity` as a top-level external witness.
+4. Attack `hEin` elimination only after the above reductions are complete.
+
+This order is intentional: it removes explicit interface debt from the most local
+operator lane outward, rather than trying to discharge the highest geometric witness first.
+
 ## What is already closed enough
 
 The following packets are no longer the primary bottleneck:

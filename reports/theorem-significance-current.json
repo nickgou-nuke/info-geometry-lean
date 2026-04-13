@@ -51329,8 +51329,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 3,
     "is_sink": false,
-    "depth": 3,
-    "transitive_reverse_reach": 7,
+    "depth": 4,
+    "transitive_reverse_reach": 8,
     "descendant_mass": 10,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -51341,8 +51341,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.37,
-      "confidence": 0.78,
+      "score": 0.29,
+      "confidence": 0.7658,
       "factors": [
         {
           "signal": "structure.proof-only-reuse",
@@ -51355,6 +51355,12 @@
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.deep-embedding",
+          "contribution": -0.08,
+          "reliability": 0.7,
+          "rationale": "depth = 4"
         },
         {
           "signal": "context.strict-file",
@@ -51390,8 +51396,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 4,
     "is_sink": false,
-    "depth": 3,
-    "transitive_reverse_reach": 10,
+    "depth": 4,
+    "transitive_reverse_reach": 12,
     "descendant_mass": 9,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -51402,8 +51408,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.37,
-      "confidence": 0.78,
+      "score": 0.29,
+      "confidence": 0.7658,
       "factors": [
         {
           "signal": "structure.proof-only-reuse",
@@ -51416,6 +51422,12 @@
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.deep-embedding",
+          "contribution": -0.08,
+          "reliability": 0.7,
+          "rationale": "depth = 4"
         },
         {
           "signal": "context.strict-file",
@@ -51452,7 +51464,7 @@
     "reverse_proof_only_reuse": 5,
     "is_sink": false,
     "depth": 5,
-    "transitive_reverse_reach": 31,
+    "transitive_reverse_reach": 36,
     "descendant_mass": 8,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -51799,7 +51811,7 @@
     "reverse_proof_only_reuse": 8,
     "is_sink": false,
     "depth": 2,
-    "transitive_reverse_reach": 15,
+    "transitive_reverse_reach": 17,
     "descendant_mass": 11,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -51853,14 +51865,14 @@
     "module": "InfoGeometry.Canonical.CartanDecomposition",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 6,
+    "reverse_value": 7,
     "forward_type": 6,
     "forward_value": 8,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 6,
+    "reverse_proof_only_reuse": 7,
     "is_sink": false,
     "depth": 2,
-    "transitive_reverse_reach": 8,
+    "transitive_reverse_reach": 11,
     "descendant_mass": 11,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -51878,7 +51890,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 6"
+          "rationale": "reverse_proof_only_reuse = 7"
         },
         {
           "signal": "structure.low-public-fan-in",
@@ -53084,8 +53096,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 1,
-    "transitive_reverse_reach": 1,
+    "depth": 2,
+    "transitive_reverse_reach": 2,
     "descendant_mass": 15,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -53096,20 +53108,14 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.34,
-      "confidence": 0.7276,
+      "score": 0.26,
+      "confidence": 0.7485,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
-        },
-        {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 1"
         },
         {
           "signal": "structure.proof-only-reuse",
@@ -53151,8 +53157,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 3,
     "is_sink": false,
-    "depth": 3,
-    "transitive_reverse_reach": 7,
+    "depth": 4,
+    "transitive_reverse_reach": 8,
     "descendant_mass": 10,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -53163,8 +53169,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.37,
-      "confidence": 0.78,
+      "score": 0.29,
+      "confidence": 0.7658,
       "factors": [
         {
           "signal": "structure.proof-only-reuse",
@@ -53177,6 +53183,12 @@
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.deep-embedding",
+          "contribution": -0.08,
+          "reliability": 0.7,
+          "rationale": "depth = 4"
         },
         {
           "signal": "context.strict-file",
@@ -53792,8 +53804,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 1,
-    "transitive_reverse_reach": 1,
+    "depth": 2,
+    "transitive_reverse_reach": 2,
     "descendant_mass": 14,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -53804,20 +53816,14 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.34,
-      "confidence": 0.7276,
+      "score": 0.26,
+      "confidence": 0.7485,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
-        },
-        {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 1"
         },
         {
           "signal": "structure.proof-only-reuse",
@@ -53859,8 +53865,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 3,
     "is_sink": false,
-    "depth": 3,
-    "transitive_reverse_reach": 9,
+    "depth": 4,
+    "transitive_reverse_reach": 10,
     "descendant_mass": 9,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -53871,8 +53877,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.37,
-      "confidence": 0.78,
+      "score": 0.29,
+      "confidence": 0.7658,
       "factors": [
         {
           "signal": "structure.proof-only-reuse",
@@ -53885,6 +53891,12 @@
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.deep-embedding",
+          "contribution": -0.08,
+          "reliability": 0.7,
+          "rationale": "depth = 4"
         },
         {
           "signal": "context.strict-file",
@@ -54053,8 +54065,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 2,
-    "transitive_reverse_reach": 2,
+    "depth": 3,
+    "transitive_reverse_reach": 3,
     "descendant_mass": 13,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -54114,8 +54126,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 2,
-    "transitive_reverse_reach": 2,
+    "depth": 3,
+    "transitive_reverse_reach": 3,
     "descendant_mass": 12,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -57073,20 +57085,138 @@
     }
   },
   {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.GammaG",
+    "kind": "def",
+    "file": "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean",
+    "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
+    "attrs": [],
+    "reverse_type": 2,
+    "reverse_value": 2,
+    "forward_type": 1,
+    "forward_value": 3,
+    "reverse_public_fan_in": 2,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 2,
+    "transitive_reverse_reach": 2,
+    "descendant_mass": 14,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 3,
+    "n_forward_theorem": 0,
+    "tags": [
+      "certified-surface",
+      "statement-bearing"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.07,
+      "confidence": 0.6543,
+      "factors": [
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.GammaG_eq_two_smul_dilationGap",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean",
+    "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 3,
+    "forward_value": 10,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
+    "descendant_mass": 22,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 10,
+    "n_forward_theorem": 0,
+    "tags": [
+      "certified-surface",
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.34,
+      "confidence": 0.7276,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
     "name": "InfoGeometry.Canonical.CertifiedInverseKernel.GammaS",
     "kind": "def",
     "file": "lean/InfoGeometry/Canonical/InverseKernelCartanCore.lean",
     "module": "InfoGeometry.Canonical.InverseKernelCartanCore",
     "attrs": [],
     "reverse_type": 14,
-    "reverse_value": 18,
+    "reverse_value": 22,
     "forward_type": 1,
     "forward_value": 3,
     "reverse_public_fan_in": 14,
-    "reverse_proof_only_reuse": 4,
+    "reverse_proof_only_reuse": 8,
     "is_sink": false,
-    "depth": 2,
-    "transitive_reverse_reach": 18,
+    "depth": 4,
+    "transitive_reverse_reach": 27,
     "descendant_mass": 14,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -57099,14 +57229,20 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.23,
-      "confidence": 0.7557,
+      "score": 0.15,
+      "confidence": 0.7413,
       "factors": [
         {
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 4"
+          "rationale": "reverse_proof_only_reuse = 8"
+        },
+        {
+          "signal": "structure.deep-embedding",
+          "contribution": -0.08,
+          "reliability": 0.7,
+          "rationale": "depth = 4"
         },
         {
           "signal": "context.strict-file",
@@ -57203,14 +57339,14 @@
     "module": "InfoGeometry.Canonical.InverseKernelCartanCore",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 1,
     "forward_type": 3,
     "forward_value": 2,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
     "descendant_mass": 18,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -57218,17 +57354,12 @@
     "n_forward_theorem": 0,
     "tags": [
       "certified-surface",
-      "dead-candidate"
+      "proof-infrastructure"
     ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
+    "violations": [],
     "vacuity_suspicion": {
-      "score": 0.29,
-      "confidence": 0.7359,
+      "score": 0.34,
+      "confidence": 0.7276,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -57240,7 +57371,13 @@
           "signal": "structure.shallow-depth",
           "contribution": 0.08,
           "reliability": 0.66,
-          "rationale": "depth = 0"
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
         },
         {
           "signal": "context.strict-file",
@@ -57270,14 +57407,14 @@
     "module": "InfoGeometry.Canonical.InverseKernelCartanCore",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 1,
     "forward_type": 3,
     "forward_value": 5,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
+    "depth": 2,
+    "transitive_reverse_reach": 2,
     "descendant_mass": 26,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -57285,17 +57422,12 @@
     "n_forward_theorem": 1,
     "tags": [
       "certified-surface",
-      "dead-candidate"
+      "proof-infrastructure"
     ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
+    "violations": [],
     "vacuity_suspicion": {
-      "score": 0.29,
-      "confidence": 0.7359,
+      "score": 0.26,
+      "confidence": 0.7485,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -57304,10 +57436,10 @@
           "rationale": "reverse_public_fan_in = 0"
         },
         {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 0"
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
         },
         {
           "signal": "context.strict-file",
@@ -57337,14 +57469,14 @@
     "module": "InfoGeometry.Canonical.InverseKernelCartanCore",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 1,
     "forward_type": 3,
     "forward_value": 7,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
+    "depth": 2,
+    "transitive_reverse_reach": 2,
     "descendant_mass": 25,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -57352,17 +57484,12 @@
     "n_forward_theorem": 2,
     "tags": [
       "certified-surface",
-      "dead-candidate"
+      "proof-infrastructure"
     ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
+    "violations": [],
     "vacuity_suspicion": {
-      "score": 0.29,
-      "confidence": 0.7359,
+      "score": 0.26,
+      "confidence": 0.7485,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -57371,10 +57498,10 @@
           "rationale": "reverse_public_fan_in = 0"
         },
         {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 0"
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
         },
         {
           "signal": "context.strict-file",
@@ -57591,14 +57718,14 @@
     "module": "InfoGeometry.Canonical.InverseKernelCartanCore",
     "attrs": [],
     "reverse_type": 7,
-    "reverse_value": 7,
+    "reverse_value": 9,
     "forward_type": 1,
     "forward_value": 3,
     "reverse_public_fan_in": 7,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 2,
-    "transitive_reverse_reach": 7,
+    "transitive_reverse_reach": 9,
     "descendant_mass": 16,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -57611,9 +57738,15 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.07,
-      "confidence": 0.6543,
+      "score": 0.18,
+      "confidence": 0.7128,
       "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
         {
           "signal": "context.strict-file",
           "contribution": 0.04,
@@ -58276,8 +58409,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 7,
     "is_sink": false,
-    "depth": 3,
-    "transitive_reverse_reach": 32,
+    "depth": 5,
+    "transitive_reverse_reach": 41,
     "descendant_mass": 9,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -58289,8 +58422,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.37,
-      "confidence": 0.78,
+      "score": 0.29,
+      "confidence": 0.7658,
       "factors": [
         {
           "signal": "structure.proof-only-reuse",
@@ -58303,6 +58436,12 @@
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.deep-embedding",
+          "contribution": -0.08,
+          "reliability": 0.7,
+          "rationale": "depth = 5"
         },
         {
           "signal": "context.strict-file",
@@ -58406,15 +58545,15 @@
     "file": "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean",
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
-    "reverse_type": 23,
-    "reverse_value": 25,
+    "reverse_type": 25,
+    "reverse_value": 32,
     "forward_type": 1,
     "forward_value": 3,
-    "reverse_public_fan_in": 23,
-    "reverse_proof_only_reuse": 5,
+    "reverse_public_fan_in": 25,
+    "reverse_proof_only_reuse": 11,
     "is_sink": false,
     "depth": 12,
-    "transitive_reverse_reach": 131,
+    "transitive_reverse_reach": 144,
     "descendant_mass": 12,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -58434,7 +58573,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 5"
+          "rationale": "reverse_proof_only_reuse = 11"
         },
         {
           "signal": "structure.deep-embedding",
@@ -58470,14 +58609,14 @@
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 2,
+    "reverse_value": 4,
     "forward_type": 5,
     "forward_value": 8,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 2,
+    "reverse_proof_only_reuse": 4,
     "is_sink": false,
     "depth": 2,
-    "transitive_reverse_reach": 4,
+    "transitive_reverse_reach": 8,
     "descendant_mass": 27,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -58489,20 +58628,20 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.32,
-      "confidence": 0.7597,
+      "score": 0.37,
+      "confidence": 0.78,
       "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.16,
+          "reliability": 0.8,
+          "rationale": "reverse_proof_only_reuse = 4"
+        },
         {
           "signal": "structure.low-public-fan-in",
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
-        },
-        {
-          "signal": "structure.proof-only-reuse",
-          "contribution": 0.11,
-          "reliability": 0.75,
-          "rationale": "reverse_proof_only_reuse = 2"
         },
         {
           "signal": "context.strict-file",
@@ -58734,14 +58873,14 @@
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 1,
+    "reverse_value": 2,
     "forward_type": 5,
     "forward_value": 10,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 1,
+    "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 1,
-    "transitive_reverse_reach": 1,
+    "transitive_reverse_reach": 2,
     "descendant_mass": 32,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -58753,8 +58892,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.34,
-      "confidence": 0.7276,
+      "score": 0.4,
+      "confidence": 0.7398,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -58763,16 +58902,16 @@
           "rationale": "reverse_public_fan_in = 0"
         },
         {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
           "signal": "structure.shallow-depth",
           "contribution": 0.08,
           "reliability": 0.66,
           "rationale": "depth = 1"
-        },
-        {
-          "signal": "structure.proof-only-reuse",
-          "contribution": 0.05,
-          "reliability": 0.68,
-          "rationale": "reverse_proof_only_reuse = 1"
         },
         {
           "signal": "context.strict-file",
@@ -59635,15 +59774,15 @@
     "file": "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean",
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
-    "reverse_type": 32,
-    "reverse_value": 29,
+    "reverse_type": 34,
+    "reverse_value": 35,
     "forward_type": 1,
     "forward_value": 3,
-    "reverse_public_fan_in": 32,
-    "reverse_proof_only_reuse": 3,
+    "reverse_public_fan_in": 34,
+    "reverse_proof_only_reuse": 7,
     "is_sink": false,
     "depth": 7,
-    "transitive_reverse_reach": 39,
+    "transitive_reverse_reach": 49,
     "descendant_mass": 11,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -59663,7 +59802,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 3"
+          "rationale": "reverse_proof_only_reuse = 7"
         },
         {
           "signal": "structure.deep-embedding",
@@ -59699,14 +59838,14 @@
     "module": "InfoGeometry.Canonical.EPDefectAlgebra",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 4,
+    "reverse_value": 6,
     "forward_type": 3,
     "forward_value": 2,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 4,
+    "reverse_proof_only_reuse": 6,
     "is_sink": false,
     "depth": 6,
-    "transitive_reverse_reach": 12,
+    "transitive_reverse_reach": 15,
     "descendant_mass": 17,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -59725,7 +59864,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 4"
+          "rationale": "reverse_proof_only_reuse = 6"
         },
         {
           "signal": "structure.low-public-fan-in",
@@ -60092,20 +60231,82 @@
     }
   },
   {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.dilationGenerator",
+    "kind": "def",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationAlgebra.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationAlgebra",
+    "attrs": [],
+    "reverse_type": 1,
+    "reverse_value": 3,
+    "forward_type": 1,
+    "forward_value": 2,
+    "reverse_public_fan_in": 1,
+    "reverse_proof_only_reuse": 3,
+    "is_sink": false,
+    "depth": 3,
+    "transitive_reverse_reach": 6,
+    "descendant_mass": 12,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "certified-surface",
+      "statement-bearing"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.3,
+      "confidence": 0.7567,
+      "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.16,
+          "reliability": 0.8,
+          "rationale": "reverse_proof_only_reuse = 3"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.07,
+          "reliability": 0.76,
+          "rationale": "reverse_public_fan_in = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
     "name": "InfoGeometry.Canonical.CertifiedInverseKernel.drazinCoreProj",
     "kind": "def",
     "file": "lean/InfoGeometry/Canonical/DrazinCoreFlow.lean",
     "module": "InfoGeometry.Canonical.DrazinCoreFlow",
     "attrs": [],
     "reverse_type": 15,
-    "reverse_value": 13,
+    "reverse_value": 15,
     "forward_type": 1,
     "forward_value": 2,
     "reverse_public_fan_in": 15,
-    "reverse_proof_only_reuse": 5,
+    "reverse_proof_only_reuse": 7,
     "is_sink": false,
     "depth": 6,
-    "transitive_reverse_reach": 28,
+    "transitive_reverse_reach": 36,
     "descendant_mass": 9,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -60125,7 +60326,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 5"
+          "rationale": "reverse_proof_only_reuse = 7"
         },
         {
           "signal": "structure.deep-embedding",
@@ -60228,14 +60429,14 @@
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
     "reverse_type": 3,
-    "reverse_value": 26,
+    "reverse_value": 27,
     "forward_type": 1,
     "forward_value": 1,
     "reverse_public_fan_in": 3,
-    "reverse_proof_only_reuse": 24,
+    "reverse_proof_only_reuse": 25,
     "is_sink": false,
     "depth": 7,
-    "transitive_reverse_reach": 66,
+    "transitive_reverse_reach": 76,
     "descendant_mass": 1,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -60255,7 +60456,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 24"
+          "rationale": "reverse_proof_only_reuse = 25"
         },
         {
           "signal": "structure.low-descendant-mass",
@@ -60291,20 +60492,268 @@
     }
   },
   {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.drazinProjector",
+    "kind": "def",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationAlgebra.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationAlgebra",
+    "attrs": [],
+    "reverse_type": 1,
+    "reverse_value": 3,
+    "forward_type": 1,
+    "forward_value": 2,
+    "reverse_public_fan_in": 1,
+    "reverse_proof_only_reuse": 2,
+    "is_sink": false,
+    "depth": 3,
+    "transitive_reverse_reach": 7,
+    "descendant_mass": 10,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "certified-surface",
+      "statement-bearing"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.25,
+      "confidence": 0.726,
+      "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.07,
+          "reliability": 0.76,
+          "rationale": "reverse_public_fan_in = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.drazinProjector_commutator_geometricCartanGenerator_eq_sub_anomalies",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationAlgebra.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationAlgebra",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 5,
+    "forward_value": 15,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
+    "descendant_mass": 38,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 15,
+    "n_forward_theorem": 3,
+    "tags": [
+      "certified-surface",
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.34,
+      "confidence": 0.7276,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.geometricCartanGenerator",
+    "kind": "def",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationAlgebra.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationAlgebra",
+    "attrs": [],
+    "reverse_type": 2,
+    "reverse_value": 3,
+    "forward_type": 1,
+    "forward_value": 2,
+    "reverse_public_fan_in": 2,
+    "reverse_proof_only_reuse": 2,
+    "is_sink": false,
+    "depth": 3,
+    "transitive_reverse_reach": 5,
+    "descendant_mass": 15,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "certified-surface",
+      "statement-bearing"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.18,
+      "confidence": 0.7128,
+      "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.geometricCartanGenerator_eq_two_smul_dilationGenerator",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationAlgebra.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationAlgebra",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 2,
+    "forward_type": 3,
+    "forward_value": 2,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 2,
+    "is_sink": false,
+    "depth": 2,
+    "transitive_reverse_reach": 3,
+    "descendant_mass": 22,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 1,
+    "tags": [
+      "certified-surface",
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.32,
+      "confidence": 0.7597,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
     "name": "InfoGeometry.Canonical.CertifiedInverseKernel.hDrazin",
     "kind": "theorem",
     "file": "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean",
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 26,
+    "reverse_value": 27,
     "forward_type": 6,
     "forward_value": 1,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 26,
+    "reverse_proof_only_reuse": 27,
     "is_sink": false,
     "depth": 6,
-    "transitive_reverse_reach": 65,
+    "transitive_reverse_reach": 75,
     "descendant_mass": 7,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -60324,7 +60773,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 26"
+          "rationale": "reverse_proof_only_reuse = 27"
         },
         {
           "signal": "structure.low-public-fan-in",
@@ -60630,14 +61079,14 @@
     "module": "InfoGeometry.Canonical.InverseKernelCartanCore",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 4,
+    "reverse_value": 6,
     "forward_type": 3,
     "forward_value": 7,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 4,
+    "reverse_proof_only_reuse": 6,
     "is_sink": false,
     "depth": 1,
-    "transitive_reverse_reach": 4,
+    "transitive_reverse_reach": 6,
     "descendant_mass": 25,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -60656,7 +61105,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 4"
+          "rationale": "reverse_proof_only_reuse = 6"
         },
         {
           "signal": "structure.low-public-fan-in",
@@ -60736,6 +61185,68 @@
           "contribution": 0.08,
           "reliability": 0.66,
           "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.leftAnomalyGenerator",
+    "kind": "def",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationAlgebra.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationAlgebra",
+    "attrs": [],
+    "reverse_type": 1,
+    "reverse_value": 3,
+    "forward_type": 1,
+    "forward_value": 2,
+    "reverse_public_fan_in": 1,
+    "reverse_proof_only_reuse": 2,
+    "is_sink": false,
+    "depth": 2,
+    "transitive_reverse_reach": 6,
+    "descendant_mass": 13,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "certified-surface",
+      "statement-bearing"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.25,
+      "confidence": 0.726,
+      "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.07,
+          "reliability": 0.76,
+          "rationale": "reverse_public_fan_in = 1"
         },
         {
           "signal": "context.strict-file",
@@ -61022,14 +61533,14 @@
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
     "reverse_type": 23,
-    "reverse_value": 31,
+    "reverse_value": 32,
     "forward_type": 1,
     "forward_value": 3,
     "reverse_public_fan_in": 23,
-    "reverse_proof_only_reuse": 13,
+    "reverse_proof_only_reuse": 14,
     "is_sink": false,
     "depth": 15,
-    "transitive_reverse_reach": 235,
+    "transitive_reverse_reach": 250,
     "descendant_mass": 8,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -61049,7 +61560,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 13"
+          "rationale": "reverse_proof_only_reuse = 14"
         },
         {
           "signal": "structure.deep-embedding",
@@ -61906,14 +62417,14 @@
     "module": "InfoGeometry.Canonical.EPDefectAlgebra",
     "attrs": [],
     "reverse_type": 15,
-    "reverse_value": 12,
+    "reverse_value": 15,
     "forward_type": 1,
     "forward_value": 3,
     "reverse_public_fan_in": 15,
-    "reverse_proof_only_reuse": 5,
+    "reverse_proof_only_reuse": 8,
     "is_sink": false,
     "depth": 7,
-    "transitive_reverse_reach": 27,
+    "transitive_reverse_reach": 34,
     "descendant_mass": 14,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -61933,7 +62444,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 5"
+          "rationale": "reverse_proof_only_reuse = 8"
         },
         {
           "signal": "structure.deep-embedding",
@@ -62038,14 +62549,14 @@
     "module": "InfoGeometry.Canonical.EPDefectAlgebra",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 1,
+    "reverse_value": 2,
     "forward_type": 3,
     "forward_value": 4,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 1,
+    "reverse_proof_only_reuse": 2,
     "is_sink": false,
-    "depth": 2,
-    "transitive_reverse_reach": 2,
+    "depth": 3,
+    "transitive_reverse_reach": 6,
     "descendant_mass": 19,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -62057,8 +62568,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.26,
-      "confidence": 0.7485,
+      "score": 0.32,
+      "confidence": 0.7597,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -62068,9 +62579,9 @@
         },
         {
           "signal": "structure.proof-only-reuse",
-          "contribution": 0.05,
-          "reliability": 0.68,
-          "rationale": "reverse_proof_only_reuse = 1"
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
         },
         {
           "signal": "context.strict-file",
@@ -62359,14 +62870,14 @@
     "module": "InfoGeometry.Canonical.EPDefectAlgebra",
     "attrs": [],
     "reverse_type": 3,
-    "reverse_value": 3,
+    "reverse_value": 4,
     "forward_type": 1,
     "forward_value": 2,
     "reverse_public_fan_in": 3,
-    "reverse_proof_only_reuse": 2,
+    "reverse_proof_only_reuse": 3,
     "is_sink": false,
     "depth": 8,
-    "transitive_reverse_reach": 30,
+    "transitive_reverse_reach": 39,
     "descendant_mass": 9,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -62378,14 +62889,14 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.1,
-      "confidence": 0.7088,
+      "score": 0.15,
+      "confidence": 0.7413,
       "factors": [
         {
           "signal": "structure.proof-only-reuse",
-          "contribution": 0.11,
-          "reliability": 0.75,
-          "rationale": "reverse_proof_only_reuse = 2"
+          "contribution": 0.16,
+          "reliability": 0.8,
+          "rationale": "reverse_proof_only_reuse = 3"
         },
         {
           "signal": "structure.deep-embedding",
@@ -62459,6 +62970,74 @@
           "contribution": 0.08,
           "reliability": 0.66,
           "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.mpLeftProjector",
+    "kind": "def",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationAlgebra.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationAlgebra",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 1,
+    "forward_value": 2,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
+    "descendant_mass": 10,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "certified-surface",
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.34,
+      "confidence": 0.7276,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
         },
         {
           "signal": "context.strict-file",
@@ -62745,14 +63324,14 @@
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
     "reverse_type": 23,
-    "reverse_value": 28,
+    "reverse_value": 29,
     "forward_type": 1,
     "forward_value": 3,
     "reverse_public_fan_in": 23,
-    "reverse_proof_only_reuse": 10,
+    "reverse_proof_only_reuse": 11,
     "is_sink": false,
     "depth": 16,
-    "transitive_reverse_reach": 121,
+    "transitive_reverse_reach": 136,
     "descendant_mass": 8,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -62772,7 +63351,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 10"
+          "rationale": "reverse_proof_only_reuse = 11"
         },
         {
           "signal": "structure.deep-embedding",
@@ -63353,8 +63932,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 3,
-    "transitive_reverse_reach": 3,
+    "depth": 4,
+    "transitive_reverse_reach": 7,
     "descendant_mass": 15,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -63366,14 +63945,20 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.26,
-      "confidence": 0.7485,
+      "score": 0.18,
+      "confidence": 0.7371,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.deep-embedding",
+          "contribution": -0.08,
+          "reliability": 0.7,
+          "rationale": "depth = 4"
         },
         {
           "signal": "structure.proof-only-reuse",
@@ -63409,14 +63994,14 @@
     "module": "InfoGeometry.Canonical.EPDefectAlgebra",
     "attrs": [],
     "reverse_type": 5,
-    "reverse_value": 5,
+    "reverse_value": 6,
     "forward_type": 1,
     "forward_value": 2,
     "reverse_public_fan_in": 5,
-    "reverse_proof_only_reuse": 2,
+    "reverse_proof_only_reuse": 3,
     "is_sink": false,
     "depth": 8,
-    "transitive_reverse_reach": 30,
+    "transitive_reverse_reach": 39,
     "descendant_mass": 9,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -63429,14 +64014,14 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.1,
-      "confidence": 0.7088,
+      "score": 0.15,
+      "confidence": 0.7413,
       "factors": [
         {
           "signal": "structure.proof-only-reuse",
-          "contribution": 0.11,
-          "reliability": 0.75,
-          "rationale": "reverse_proof_only_reuse = 2"
+          "contribution": 0.16,
+          "reliability": 0.8,
+          "rationale": "reverse_proof_only_reuse = 3"
         },
         {
           "signal": "structure.deep-embedding",
@@ -63510,6 +64095,74 @@
           "contribution": 0.08,
           "reliability": 0.66,
           "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.mpRightProjector",
+    "kind": "def",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationAlgebra.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationAlgebra",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 1,
+    "forward_value": 2,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
+    "descendant_mass": 10,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "certified-surface",
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.34,
+      "confidence": 0.7276,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
         },
         {
           "signal": "context.strict-file",
@@ -64106,14 +64759,14 @@
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
     "reverse_type": 8,
-    "reverse_value": 8,
+    "reverse_value": 9,
     "forward_type": 1,
     "forward_value": 3,
     "reverse_public_fan_in": 8,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 2,
-    "transitive_reverse_reach": 8,
+    "transitive_reverse_reach": 10,
     "descendant_mass": 12,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -64126,9 +64779,83 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.07,
-      "confidence": 0.6543,
+      "score": 0.12,
+      "confidence": 0.665,
       "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.projectorMismatchGenerator",
+    "kind": "def",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationAlgebra.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationAlgebra",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 1,
+    "forward_value": 2,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
+    "descendant_mass": 13,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "certified-surface",
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.34,
+      "confidence": 0.7276,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
         {
           "signal": "context.strict-file",
           "contribution": 0.04,
@@ -64556,20 +65283,82 @@
     }
   },
   {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.rightAnomalyGenerator",
+    "kind": "def",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationAlgebra.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationAlgebra",
+    "attrs": [],
+    "reverse_type": 1,
+    "reverse_value": 3,
+    "forward_type": 1,
+    "forward_value": 2,
+    "reverse_public_fan_in": 1,
+    "reverse_proof_only_reuse": 2,
+    "is_sink": false,
+    "depth": 2,
+    "transitive_reverse_reach": 6,
+    "descendant_mass": 13,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "certified-surface",
+      "statement-bearing"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.25,
+      "confidence": 0.726,
+      "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.07,
+          "reliability": 0.76,
+          "rationale": "reverse_public_fan_in = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
     "name": "InfoGeometry.Canonical.CertifiedInverseKernel.rightChiralAnomaly",
     "kind": "def",
     "file": "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean",
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
-    "reverse_type": 12,
-    "reverse_value": 15,
+    "reverse_type": 14,
+    "reverse_value": 22,
     "forward_type": 1,
     "forward_value": 3,
-    "reverse_public_fan_in": 12,
-    "reverse_proof_only_reuse": 3,
+    "reverse_public_fan_in": 14,
+    "reverse_proof_only_reuse": 9,
     "is_sink": false,
     "depth": 3,
-    "transitive_reverse_reach": 17,
+    "transitive_reverse_reach": 30,
     "descendant_mass": 12,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -64589,7 +65378,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 3"
+          "rationale": "reverse_proof_only_reuse = 9"
         },
         {
           "signal": "context.strict-file",
@@ -64619,14 +65408,14 @@
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 2,
+    "reverse_value": 4,
     "forward_type": 5,
     "forward_value": 8,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 2,
+    "reverse_proof_only_reuse": 4,
     "is_sink": false,
     "depth": 2,
-    "transitive_reverse_reach": 4,
+    "transitive_reverse_reach": 8,
     "descendant_mass": 27,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -64638,20 +65427,20 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.32,
-      "confidence": 0.7597,
+      "score": 0.37,
+      "confidence": 0.78,
       "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.16,
+          "reliability": 0.8,
+          "rationale": "reverse_proof_only_reuse = 4"
+        },
         {
           "signal": "structure.low-public-fan-in",
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
-        },
-        {
-          "signal": "structure.proof-only-reuse",
-          "contribution": 0.11,
-          "reliability": 0.75,
-          "rationale": "reverse_proof_only_reuse = 2"
         },
         {
           "signal": "context.strict-file",
@@ -65017,14 +65806,14 @@
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 1,
+    "reverse_value": 2,
     "forward_type": 5,
     "forward_value": 10,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 1,
+    "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 1,
-    "transitive_reverse_reach": 1,
+    "transitive_reverse_reach": 2,
     "descendant_mass": 32,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -65036,8 +65825,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.34,
-      "confidence": 0.7276,
+      "score": 0.4,
+      "confidence": 0.7398,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -65046,16 +65835,16 @@
           "rationale": "reverse_public_fan_in = 0"
         },
         {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
           "signal": "structure.shallow-depth",
           "contribution": 0.08,
           "reliability": 0.66,
           "rationale": "depth = 1"
-        },
-        {
-          "signal": "structure.proof-only-reuse",
-          "contribution": 0.05,
-          "reliability": 0.68,
-          "rationale": "reverse_proof_only_reuse = 1"
         },
         {
           "signal": "context.strict-file",
@@ -65461,6 +66250,68 @@
     }
   },
   {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.spectralCartanGenerator",
+    "kind": "def",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationAlgebra.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationAlgebra",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 2,
+    "forward_type": 1,
+    "forward_value": 2,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 2,
+    "is_sink": false,
+    "depth": 3,
+    "transitive_reverse_reach": 8,
+    "descendant_mass": 15,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "certified-surface",
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.32,
+      "confidence": 0.7597,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
     "name": "InfoGeometry.Canonical.CertifiedInverseKernel.spectralCommutator",
     "kind": "def",
     "file": "lean/InfoGeometry/Canonical/InverseKernelCartanCore.lean",
@@ -65597,14 +66448,14 @@
     "module": "InfoGeometry.Canonical.InverseKernelAlgebra",
     "attrs": [],
     "reverse_type": 9,
-    "reverse_value": 12,
+    "reverse_value": 14,
     "forward_type": 1,
     "forward_value": 3,
     "reverse_public_fan_in": 9,
-    "reverse_proof_only_reuse": 4,
+    "reverse_proof_only_reuse": 6,
     "is_sink": false,
     "depth": 7,
-    "transitive_reverse_reach": 26,
+    "transitive_reverse_reach": 29,
     "descendant_mass": 9,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -65624,7 +66475,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 4"
+          "rationale": "reverse_proof_only_reuse = 6"
         },
         {
           "signal": "structure.deep-embedding",
@@ -65861,14 +66712,14 @@
     "module": "InfoGeometry.Canonical.InverseKernelCartanCore",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 1,
     "forward_type": 3,
     "forward_value": 7,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
     "descendant_mass": 32,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -65876,17 +66727,12 @@
     "n_forward_theorem": 2,
     "tags": [
       "certified-surface",
-      "dead-candidate"
+      "proof-infrastructure"
     ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
+    "violations": [],
     "vacuity_suspicion": {
-      "score": 0.29,
-      "confidence": 0.7359,
+      "score": 0.34,
+      "confidence": 0.7276,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -65898,7 +66744,13 @@
           "signal": "structure.shallow-depth",
           "contribution": 0.08,
           "reliability": 0.66,
-          "rationale": "depth = 0"
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
         },
         {
           "signal": "context.strict-file",
@@ -66320,15 +67172,15 @@
     "file": "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean",
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
-    "reverse_type": 33,
-    "reverse_value": 49,
+    "reverse_type": 35,
+    "reverse_value": 53,
     "forward_type": 1,
     "forward_value": 3,
-    "reverse_public_fan_in": 33,
-    "reverse_proof_only_reuse": 23,
+    "reverse_public_fan_in": 35,
+    "reverse_proof_only_reuse": 25,
     "is_sink": false,
     "depth": 16,
-    "transitive_reverse_reach": 283,
+    "transitive_reverse_reach": 301,
     "descendant_mass": 8,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -66348,7 +67200,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 23"
+          "rationale": "reverse_proof_only_reuse = 25"
         },
         {
           "signal": "structure.deep-embedding",
@@ -66440,20 +67292,87 @@
     }
   },
   {
+    "name": "InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector_commutator_GammaG_eq_sub_anomalies",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean",
+    "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 5,
+    "forward_value": 8,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 32,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 8,
+    "n_forward_theorem": 2,
+    "tags": [
+      "certified-surface",
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
     "name": "InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector_commutator_dilationGap_eq_half_sub_anomalies",
     "kind": "theorem",
     "file": "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean",
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 2,
+    "reverse_value": 6,
     "forward_type": 5,
     "forward_value": 7,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 2,
+    "reverse_proof_only_reuse": 6,
     "is_sink": false,
     "depth": 2,
-    "transitive_reverse_reach": 2,
+    "transitive_reverse_reach": 7,
     "descendant_mass": 21,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -66465,20 +67384,20 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.32,
-      "confidence": 0.7597,
+      "score": 0.37,
+      "confidence": 0.78,
       "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.16,
+          "reliability": 0.8,
+          "rationale": "reverse_proof_only_reuse = 6"
+        },
         {
           "signal": "structure.low-public-fan-in",
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
-        },
-        {
-          "signal": "structure.proof-only-reuse",
-          "contribution": 0.11,
-          "reliability": 0.75,
-          "rationale": "reverse_proof_only_reuse = 2"
         },
         {
           "signal": "context.strict-file",
@@ -67121,7 +68040,7 @@
     "reverse_proof_only_reuse": 11,
     "is_sink": false,
     "depth": 5,
-    "transitive_reverse_reach": 26,
+    "transitive_reverse_reach": 34,
     "descendant_mass": 14,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -67313,14 +68232,14 @@
     "module": "InfoGeometry.Canonical.InverseKernelCartanCore",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 1,
     "forward_type": 3,
     "forward_value": 7,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
     "descendant_mass": 30,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -67328,17 +68247,12 @@
     "n_forward_theorem": 2,
     "tags": [
       "certified-surface",
-      "dead-candidate"
+      "proof-infrastructure"
     ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
+    "violations": [],
     "vacuity_suspicion": {
-      "score": 0.29,
-      "confidence": 0.7359,
+      "score": 0.34,
+      "confidence": 0.7276,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -67350,7 +68264,13 @@
           "signal": "structure.shallow-depth",
           "contribution": 0.08,
           "reliability": 0.66,
-          "rationale": "depth = 0"
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
         },
         {
           "signal": "context.strict-file",
@@ -67779,15 +68699,15 @@
     "file": "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean",
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
-    "reverse_type": 15,
-    "reverse_value": 30,
+    "reverse_type": 19,
+    "reverse_value": 36,
     "forward_type": 2,
     "forward_value": 6,
-    "reverse_public_fan_in": 15,
-    "reverse_proof_only_reuse": 15,
+    "reverse_public_fan_in": 19,
+    "reverse_proof_only_reuse": 17,
     "is_sink": false,
-    "depth": 4,
-    "transitive_reverse_reach": 48,
+    "depth": 6,
+    "transitive_reverse_reach": 64,
     "descendant_mass": 8,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -67807,13 +68727,13 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 15"
+          "rationale": "reverse_proof_only_reuse = 17"
         },
         {
           "signal": "structure.deep-embedding",
           "contribution": -0.08,
           "reliability": 0.7,
-          "rationale": "depth = 4"
+          "rationale": "depth = 6"
         },
         {
           "signal": "context.strict-file",
@@ -67912,14 +68832,14 @@
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
     "reverse_type": 102,
-    "reverse_value": 120,
+    "reverse_value": 121,
     "forward_type": 2,
     "forward_value": 1,
     "reverse_public_fan_in": 102,
-    "reverse_proof_only_reuse": 27,
+    "reverse_proof_only_reuse": 28,
     "is_sink": false,
     "depth": 18,
-    "transitive_reverse_reach": 516,
+    "transitive_reverse_reach": 557,
     "descendant_mass": 2,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -67939,7 +68859,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 27"
+          "rationale": "reverse_proof_only_reuse = 28"
         },
         {
           "signal": "structure.low-descendant-mass",
@@ -67981,14 +68901,14 @@
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
     "reverse_type": 3,
-    "reverse_value": 40,
+    "reverse_value": 42,
     "forward_type": 2,
     "forward_value": 2,
     "reverse_public_fan_in": 3,
-    "reverse_proof_only_reuse": 40,
+    "reverse_proof_only_reuse": 42,
     "is_sink": false,
     "depth": 17,
-    "transitive_reverse_reach": 489,
+    "transitive_reverse_reach": 527,
     "descendant_mass": 3,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -68008,7 +68928,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 40"
+          "rationale": "reverse_proof_only_reuse = 42"
         },
         {
           "signal": "structure.deep-embedding",
@@ -106673,20 +107593,94 @@
     }
   },
   {
+    "name": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection.eq_1",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
+    "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 2,
+    "forward_value": 1,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 2,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 1,
+    "n_forward_theorem": 0,
+    "tags": [
+      "auto-generated",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.8867,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.12,
+          "reliability": 0.75,
+          "rationale": "descendant_mass = 2"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
     "name": "InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_is_idempotent",
     "kind": "theorem",
     "file": "lean/InfoGeometry/Canonical/Drazin.lean",
     "module": "InfoGeometry.Canonical.Drazin",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 3,
+    "reverse_value": 4,
     "forward_type": 2,
     "forward_value": 4,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 3,
+    "reverse_proof_only_reuse": 4,
     "is_sink": false,
     "depth": 4,
-    "transitive_reverse_reach": 6,
+    "transitive_reverse_reach": 7,
     "descendant_mass": 5,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -106704,7 +107698,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 3"
+          "rationale": "reverse_proof_only_reuse = 4"
         },
         {
           "signal": "structure.low-public-fan-in",
@@ -106752,14 +107746,14 @@
     "module": "InfoGeometry.Canonical.Drazin",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 2,
+    "reverse_value": 3,
     "forward_type": 3,
     "forward_value": 4,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 2,
+    "reverse_proof_only_reuse": 3,
     "is_sink": false,
     "depth": 1,
-    "transitive_reverse_reach": 2,
+    "transitive_reverse_reach": 3,
     "descendant_mass": 5,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -106770,20 +107764,20 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.46,
-      "confidence": 0.7346,
+      "score": 0.51,
+      "confidence": 0.7518,
       "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.16,
+          "reliability": 0.8,
+          "rationale": "reverse_proof_only_reuse = 3"
+        },
         {
           "signal": "structure.low-public-fan-in",
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
-        },
-        {
-          "signal": "structure.proof-only-reuse",
-          "contribution": 0.11,
-          "reliability": 0.75,
-          "rationale": "reverse_proof_only_reuse = 2"
         },
         {
           "signal": "structure.shallow-depth",
@@ -107178,7 +108172,7 @@
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 7,
-    "transitive_reverse_reach": 89,
+    "transitive_reverse_reach": 103,
     "descendant_mass": 1,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -107323,7 +108317,7 @@
     "reverse_proof_only_reuse": 5,
     "is_sink": true,
     "depth": 17,
-    "transitive_reverse_reach": 111,
+    "transitive_reverse_reach": 123,
     "descendant_mass": 1,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -108161,14 +109155,14 @@
     "module": "InfoGeometry.Canonical.Drazin",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 12,
+    "reverse_value": 13,
     "forward_type": 2,
     "forward_value": 3,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 12,
+    "reverse_proof_only_reuse": 13,
     "is_sink": false,
     "depth": 6,
-    "transitive_reverse_reach": 87,
+    "transitive_reverse_reach": 101,
     "descendant_mass": 3,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -108187,7 +109181,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 12"
+          "rationale": "reverse_proof_only_reuse = 13"
         },
         {
           "signal": "structure.low-public-fan-in",
@@ -108235,14 +109229,14 @@
     "module": "InfoGeometry.Canonical.Drazin",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 2,
+    "reverse_value": 3,
     "forward_type": 3,
     "forward_value": 4,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 2,
+    "reverse_proof_only_reuse": 3,
     "is_sink": false,
     "depth": 1,
-    "transitive_reverse_reach": 2,
+    "transitive_reverse_reach": 3,
     "descendant_mass": 5,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -108253,20 +109247,20 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.46,
-      "confidence": 0.7346,
+      "score": 0.51,
+      "confidence": 0.7518,
       "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.16,
+          "reliability": 0.8,
+          "rationale": "reverse_proof_only_reuse = 3"
+        },
         {
           "signal": "structure.low-public-fan-in",
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
-        },
-        {
-          "signal": "structure.proof-only-reuse",
-          "contribution": 0.11,
-          "reliability": 0.75,
-          "rationale": "reverse_proof_only_reuse = 2"
         },
         {
           "signal": "structure.shallow-depth",
@@ -108388,7 +109382,7 @@
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 16,
-    "transitive_reverse_reach": 106,
+    "transitive_reverse_reach": 118,
     "descendant_mass": 3,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -108467,7 +109461,7 @@
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 15,
-    "transitive_reverse_reach": 105,
+    "transitive_reverse_reach": 117,
     "descendant_mass": 6,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -108540,7 +109534,7 @@
     "reverse_proof_only_reuse": 4,
     "is_sink": false,
     "depth": 14,
-    "transitive_reverse_reach": 104,
+    "transitive_reverse_reach": 116,
     "descendant_mass": 7,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -111085,8 +112079,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 6,
     "is_sink": false,
-    "depth": 3,
-    "transitive_reverse_reach": 17,
+    "depth": 5,
+    "transitive_reverse_reach": 23,
     "descendant_mass": 4,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -111097,8 +112091,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.43,
-      "confidence": 0.7688,
+      "score": 0.35,
+      "confidence": 0.758,
       "factors": [
         {
           "signal": "structure.proof-only-reuse",
@@ -111111,6 +112105,12 @@
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.deep-embedding",
+          "contribution": -0.08,
+          "reliability": 0.7,
+          "rationale": "depth = 5"
         },
         {
           "signal": "structure.low-descendant-mass",
@@ -111489,6 +112489,74 @@
     }
   },
   {
+    "name": "InfoGeometry.Canonical.DrazinInfiniteCore.canonicalDrazinIndex_endCLM.congr_simp",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinWitnessElimination.lean",
+    "module": "InfoGeometry.Canonical.DrazinWitnessElimination",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 1,
+    "forward_value": 1,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 15,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 1,
+    "n_forward_theorem": 0,
+    "tags": [
+      "auto-generated",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.8999,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
     "name": "InfoGeometry.Canonical.DrazinInfiniteCore.canonicalDrazinIndex_endCLM.eq_1",
     "kind": "theorem",
     "file": "lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean",
@@ -111559,8 +112627,8 @@
   {
     "name": "InfoGeometry.Canonical.DrazinInfiniteCore.canonicalDrazinInverse_endCLM.congr_simp",
     "kind": "theorem",
-    "file": "lean/InfoGeometry/Canonical/NavierStokesBridge.lean",
-    "module": "InfoGeometry.Canonical.NavierStokesBridge",
+    "file": "lean/InfoGeometry/Canonical/DrazinWitnessElimination.lean",
+    "module": "InfoGeometry.Canonical.DrazinWitnessElimination",
     "attrs": [],
     "reverse_type": 0,
     "reverse_value": 0,
@@ -111583,7 +112651,7 @@
     "violations": [],
     "vacuity_suspicion": {
       "score": 0.0,
-      "confidence": 0.889,
+      "confidence": 0.8999,
       "factors": [
         {
           "signal": "policy.auto-generated-exempt",
@@ -111602,12 +112670,6 @@
           "contribution": 0.08,
           "reliability": 0.66,
           "rationale": "depth = 0"
-        },
-        {
-          "signal": "context.bridge-file",
-          "contribution": 0.08,
-          "reliability": 0.72,
-          "rationale": "bridge hint matched file stem"
         },
         {
           "signal": "context.strict-file",
@@ -111711,8 +112773,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 6,
     "is_sink": false,
-    "depth": 2,
-    "transitive_reverse_reach": 11,
+    "depth": 4,
+    "transitive_reverse_reach": 17,
     "descendant_mass": 18,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -111723,8 +112785,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.37,
-      "confidence": 0.78,
+      "score": 0.29,
+      "confidence": 0.7658,
       "factors": [
         {
           "signal": "structure.proof-only-reuse",
@@ -111737,6 +112799,12 @@
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.deep-embedding",
+          "contribution": -0.08,
+          "reliability": 0.7,
+          "rationale": "depth = 4"
         },
         {
           "signal": "context.strict-file",
@@ -112400,8 +113468,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 5,
-    "transitive_reverse_reach": 19,
+    "depth": 7,
+    "transitive_reverse_reach": 31,
     "descendant_mass": 11,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -112425,7 +113493,7 @@
           "signal": "structure.deep-embedding",
           "contribution": -0.08,
           "reliability": 0.7,
-          "rationale": "depth = 5"
+          "rationale": "depth = 7"
         },
         {
           "signal": "structure.proof-only-reuse",
@@ -112790,7 +113858,7 @@
     }
   },
   {
-    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility.J_comm_T",
+    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.IsCartanCompatible.epsilon_comm",
     "kind": "theorem",
     "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
     "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
@@ -112862,7 +113930,79 @@
     }
   },
   {
-    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility.J_comm_TD",
+    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.IsCartanCompatible.eta_comm",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
+    "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 3,
+    "forward_value": 3,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 3,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 3,
+    "n_forward_theorem": 0,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.35,
+      "confidence": 0.7297,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.06,
+          "reliability": 0.7,
+          "rationale": "descendant_mass = 3"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.IsCartanCompatible.modularJ_comm",
     "kind": "theorem",
     "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
     "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
@@ -112905,6 +114045,140 @@
           "contribution": 0.08,
           "reliability": 0.66,
           "rationale": "depth = 0"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.06,
+          "reliability": 0.7,
+          "rationale": "descendant_mass = 4"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility.J_comm_T",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
+    "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 2,
+    "forward_type": 4,
+    "forward_value": 3,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 2,
+    "is_sink": false,
+    "depth": 3,
+    "transitive_reverse_reach": 5,
+    "descendant_mass": 4,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 3,
+    "n_forward_theorem": 0,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.38,
+      "confidence": 0.7503,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.06,
+          "reliability": 0.7,
+          "rationale": "descendant_mass = 4"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility.J_comm_TD",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
+    "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 2,
+    "forward_type": 4,
+    "forward_value": 3,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 2,
+    "is_sink": false,
+    "depth": 3,
+    "transitive_reverse_reach": 5,
+    "descendant_mass": 4,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 3,
+    "n_forward_theorem": 0,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.38,
+      "confidence": 0.7503,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
         },
         {
           "signal": "structure.low-descendant-mass",
@@ -113149,31 +114423,26 @@
     "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 2,
     "forward_type": 4,
     "forward_value": 3,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 2,
     "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
+    "depth": 3,
+    "transitive_reverse_reach": 5,
     "descendant_mass": 4,
     "scc_size": 1,
     "scc_role": "acyclic",
     "n_forward_value": 3,
     "n_forward_theorem": 0,
     "tags": [
-      "dead-candidate"
+      "proof-infrastructure"
     ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
+    "violations": [],
     "vacuity_suspicion": {
-      "score": 0.35,
-      "confidence": 0.7297,
+      "score": 0.38,
+      "confidence": 0.7503,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -113182,10 +114451,10 @@
           "rationale": "reverse_public_fan_in = 0"
         },
         {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 0"
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
         },
         {
           "signal": "structure.low-descendant-mass",
@@ -113221,31 +114490,26 @@
     "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 2,
     "forward_type": 4,
     "forward_value": 3,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 2,
     "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
+    "depth": 3,
+    "transitive_reverse_reach": 5,
     "descendant_mass": 4,
     "scc_size": 1,
     "scc_role": "acyclic",
     "n_forward_value": 3,
     "n_forward_theorem": 0,
     "tags": [
-      "dead-candidate"
+      "proof-infrastructure"
     ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
+    "violations": [],
     "vacuity_suspicion": {
-      "score": 0.35,
-      "confidence": 0.7297,
+      "score": 0.38,
+      "confidence": 0.7503,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -113254,10 +114518,10 @@
           "rationale": "reverse_public_fan_in = 0"
         },
         {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 0"
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
         },
         {
           "signal": "structure.low-descendant-mass",
@@ -113293,31 +114557,26 @@
     "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 2,
     "forward_type": 4,
     "forward_value": 3,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 2,
     "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
+    "depth": 3,
+    "transitive_reverse_reach": 5,
     "descendant_mass": 4,
     "scc_size": 1,
     "scc_role": "acyclic",
     "n_forward_value": 3,
     "n_forward_theorem": 0,
     "tags": [
-      "dead-candidate"
+      "proof-infrastructure"
     ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
+    "violations": [],
     "vacuity_suspicion": {
-      "score": 0.35,
-      "confidence": 0.7297,
+      "score": 0.38,
+      "confidence": 0.7503,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -113326,10 +114585,10 @@
           "rationale": "reverse_public_fan_in = 0"
         },
         {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 0"
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
         },
         {
           "signal": "structure.low-descendant-mass",
@@ -113365,31 +114624,26 @@
     "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 2,
     "forward_type": 4,
     "forward_value": 3,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 2,
     "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
+    "depth": 3,
+    "transitive_reverse_reach": 5,
     "descendant_mass": 4,
     "scc_size": 1,
     "scc_role": "acyclic",
     "n_forward_value": 3,
     "n_forward_theorem": 0,
     "tags": [
-      "dead-candidate"
+      "proof-infrastructure"
     ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
+    "violations": [],
     "vacuity_suspicion": {
-      "score": 0.35,
-      "confidence": 0.7297,
+      "score": 0.38,
+      "confidence": 0.7503,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -113398,10 +114652,10 @@
           "rationale": "reverse_public_fan_in = 0"
         },
         {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 0"
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
         },
         {
           "signal": "structure.low-descendant-mass",
@@ -113943,6 +115197,2868 @@
           "contribution": 0.08,
           "reliability": 0.66,
           "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.epsilon_comm_Preg",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
+    "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 2,
+    "forward_type": 5,
+    "forward_value": 6,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 2,
+    "is_sink": false,
+    "depth": 2,
+    "transitive_reverse_reach": 3,
+    "descendant_mass": 8,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 6,
+    "n_forward_theorem": 2,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.32,
+      "confidence": 0.7597,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.epsilon_comm_Pzero",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
+    "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 5,
+    "forward_value": 5,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
+    "descendant_mass": 11,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 5,
+    "n_forward_theorem": 1,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.34,
+      "confidence": 0.7276,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.eta_comm_Preg",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
+    "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 2,
+    "forward_type": 5,
+    "forward_value": 6,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 2,
+    "is_sink": false,
+    "depth": 2,
+    "transitive_reverse_reach": 3,
+    "descendant_mass": 8,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 6,
+    "n_forward_theorem": 2,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.32,
+      "confidence": 0.7597,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.eta_comm_Pzero",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
+    "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 5,
+    "forward_value": 5,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
+    "descendant_mass": 11,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 5,
+    "n_forward_theorem": 1,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.34,
+      "confidence": 0.7276,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.isCartanCompatible_Preg",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
+    "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 6,
+    "forward_value": 9,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 19,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 9,
+    "n_forward_theorem": 3,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.isCartanCompatible_Pzero",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
+    "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 6,
+    "forward_value": 9,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 24,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 9,
+    "n_forward_theorem": 3,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.modularJ_comm_Preg",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
+    "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 2,
+    "forward_type": 5,
+    "forward_value": 6,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 2,
+    "is_sink": false,
+    "depth": 2,
+    "transitive_reverse_reach": 3,
+    "descendant_mass": 8,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 6,
+    "n_forward_theorem": 2,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.32,
+      "confidence": 0.7597,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinKreinCompatibility.modularJ_comm_Pzero",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
+    "module": "InfoGeometry.Canonical.DrazinKreinCompatibility",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 5,
+    "forward_value": 5,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
+    "descendant_mass": 11,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 5,
+    "n_forward_theorem": 1,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.34,
+      "confidence": 0.7276,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.GammaS_eq_two_mul_P_D_sub_one",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 3,
+    "forward_value": 5,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 26,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 5,
+    "n_forward_theorem": 1,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.GammaS_mul_P_D",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 3,
+    "forward_value": 5,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
+    "descendant_mass": 33,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 5,
+    "n_forward_theorem": 1,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.34,
+      "confidence": 0.7276,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.GammaS_mul_Q_D",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 3,
+    "forward_value": 10,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
+    "descendant_mass": 32,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 10,
+    "n_forward_theorem": 1,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.34,
+      "confidence": 0.7276,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.P_D_mul_GammaS",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 3,
+    "forward_value": 9,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 44,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 9,
+    "n_forward_theorem": 3,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.Q_D_mul_GammaS",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 3,
+    "forward_value": 9,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 46,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 9,
+    "n_forward_theorem": 3,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.anticommutator_GammaS_leftSupercharge_eq_zero",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 4,
+    "forward_value": 6,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 37,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 6,
+    "n_forward_theorem": 1,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.anticommutator_GammaS_rightSupercharge_eq_zero",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 4,
+    "forward_value": 6,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 37,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 6,
+    "n_forward_theorem": 1,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.commutator_P_D_G_eq_half_sub_supercharges",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 6,
+    "forward_value": 17,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 40,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 17,
+    "n_forward_theorem": 2,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.commutator_P_D_GammaG_eq_rightSupercharge_sub_leftSupercharge",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 6,
+    "forward_value": 8,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 46,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 8,
+    "n_forward_theorem": 1,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.leftSupercharge_isSpectralNonCompact",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 6,
+    "forward_value": 7,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 37,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 7,
+    "n_forward_theorem": 1,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.mk.inj",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 3,
+    "forward_value": 4,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 8,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 4,
+    "n_forward_theorem": 0,
+    "tags": [
+      "auto-generated",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.8999,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.mk.sizeOf_spec",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 3,
+    "forward_value": 1,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 3,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 1,
+    "n_forward_theorem": 0,
+    "tags": [
+      "auto-generated",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.8907,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.06,
+          "reliability": 0.7,
+          "rationale": "descendant_mass = 3"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.rightSupercharge_isSpectralNonCompact",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 6,
+    "forward_value": 7,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 37,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 7,
+    "n_forward_theorem": 1,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.two_smul_G_eq_GammaG",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 3,
+    "forward_value": 7,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 27,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 7,
+    "n_forward_theorem": 1,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.centralSupercharge_transport_invariant",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 13,
+    "forward_value": 12,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 67,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 12,
+    "n_forward_theorem": 2,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.commutator.eq_1",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 1,
+    "forward_value": 1,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 1,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 1,
+    "n_forward_theorem": 0,
+    "tags": [
+      "auto-generated",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.8867,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.12,
+          "reliability": 0.75,
+          "rationale": "descendant_mass = 1"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.instIsScalarTowerRealContinuousLinearMapId_infoGeometry",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 0,
+    "forward_value": 0,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": true,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 0,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 0,
+    "n_forward_theorem": 0,
+    "tags": [
+      "dead-candidate",
+      "rfl-like"
+    ],
+    "violations": [
+      {
+        "level": "warning",
+        "code": "V0/syntactic-vacuity"
+      },
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.71,
+      "confidence": 0.7941,
+      "factors": [
+        {
+          "signal": "shape.rfl-like",
+          "contribution": 0.24,
+          "reliability": 0.86,
+          "rationale": "zero value dependencies"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.18,
+          "reliability": 0.8,
+          "rationale": "descendant_mass = 0"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.instIsTopologicalRingContinuousLinearMapRealId_infoGeometry",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 0,
+    "forward_value": 1,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 1,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 1,
+    "n_forward_theorem": 0,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.41,
+      "confidence": 0.74,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.12,
+          "reliability": 0.75,
+          "rationale": "descendant_mass = 1"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.instSMulCommClassRealContinuousLinearMapId_infoGeometry",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+    "module": "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 0,
+    "forward_value": 0,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": true,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 0,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 0,
+    "n_forward_theorem": 0,
+    "tags": [
+      "dead-candidate",
+      "rfl-like"
+    ],
+    "violations": [
+      {
+        "level": "warning",
+        "code": "V0/syntactic-vacuity"
+      },
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.71,
+      "confidence": 0.7941,
+      "factors": [
+        {
+          "signal": "shape.rfl-like",
+          "contribution": 0.24,
+          "reliability": 0.86,
+          "rationale": "zero value dependencies"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.18,
+          "reliability": 0.8,
+          "rationale": "descendant_mass = 0"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge",
+    "kind": "def",
+    "file": "lean/InfoGeometry/Canonical/DrazinSupercharge.lean",
+    "module": "InfoGeometry.Canonical.DrazinSupercharge",
+    "attrs": [],
+    "reverse_type": 4,
+    "reverse_value": 4,
+    "forward_type": 1,
+    "forward_value": 3,
+    "reverse_public_fan_in": 4,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 2,
+    "transitive_reverse_reach": 4,
+    "descendant_mass": 17,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 3,
+    "n_forward_theorem": 0,
+    "tags": [
+      "certified-surface",
+      "statement-bearing"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.07,
+      "confidence": 0.6543,
+      "factors": [
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge.eq_1",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinSupercharge.lean",
+    "module": "InfoGeometry.Canonical.DrazinSupercharge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 4,
+    "forward_value": 2,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 18,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "auto-generated",
+      "certified-surface",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.8999,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge_eq_two_smul_commutator_spectralProjector_dilationGap",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinSupercharge.lean",
+    "module": "InfoGeometry.Canonical.DrazinSupercharge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 5,
+    "forward_value": 8,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 24,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 8,
+    "n_forward_theorem": 1,
+    "tags": [
+      "certified-surface",
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge_isSpectralNonCompact",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinSupercharge.lean",
+    "module": "InfoGeometry.Canonical.DrazinSupercharge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 5,
+    "forward_value": 11,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 41,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 11,
+    "n_forward_theorem": 3,
+    "tags": [
+      "certified-surface",
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge_is_odd",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinSupercharge.lean",
+    "module": "InfoGeometry.Canonical.DrazinSupercharge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 5,
+    "forward_value": 9,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
+    "descendant_mass": 36,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 9,
+    "n_forward_theorem": 2,
+    "tags": [
+      "certified-surface",
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.34,
+      "confidence": 0.7276,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinSupercharge.commutator.eq_1",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinSupercharge.lean",
+    "module": "InfoGeometry.Canonical.DrazinSupercharge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 1,
+    "forward_value": 1,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 1,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 1,
+    "n_forward_theorem": 0,
+    "tags": [
+      "auto-generated",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.8867,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.12,
+          "reliability": 0.75,
+          "rationale": "descendant_mass = 1"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinSupercharge.instIsScalarTowerRealContinuousLinearMapId_infoGeometry",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinSupercharge.lean",
+    "module": "InfoGeometry.Canonical.DrazinSupercharge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 0,
+    "forward_value": 0,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": true,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 0,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 0,
+    "n_forward_theorem": 0,
+    "tags": [
+      "dead-candidate",
+      "rfl-like"
+    ],
+    "violations": [
+      {
+        "level": "warning",
+        "code": "V0/syntactic-vacuity"
+      },
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.71,
+      "confidence": 0.7941,
+      "factors": [
+        {
+          "signal": "shape.rfl-like",
+          "contribution": 0.24,
+          "reliability": 0.86,
+          "rationale": "zero value dependencies"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.18,
+          "reliability": 0.8,
+          "rationale": "descendant_mass = 0"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinSupercharge.instIsTopologicalRingContinuousLinearMapRealId_infoGeometry",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinSupercharge.lean",
+    "module": "InfoGeometry.Canonical.DrazinSupercharge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 0,
+    "forward_value": 1,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 1,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 1,
+    "n_forward_theorem": 0,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.41,
+      "confidence": 0.74,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.12,
+          "reliability": 0.75,
+          "rationale": "descendant_mass = 1"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinSupercharge.instSMulCommClassRealContinuousLinearMapId_infoGeometry",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinSupercharge.lean",
+    "module": "InfoGeometry.Canonical.DrazinSupercharge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 0,
+    "forward_value": 0,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": true,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 0,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 0,
+    "n_forward_theorem": 0,
+    "tags": [
+      "dead-candidate",
+      "rfl-like"
+    ],
+    "violations": [
+      {
+        "level": "warning",
+        "code": "V0/syntactic-vacuity"
+      },
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.71,
+      "confidence": 0.7941,
+      "factors": [
+        {
+          "signal": "shape.rfl-like",
+          "contribution": 0.24,
+          "reliability": 0.86,
+          "rationale": "zero value dependencies"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.18,
+          "reliability": 0.8,
+          "rationale": "descendant_mass = 0"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinWitnessElimination.drazinComplementaryProjector_idempotent",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinWitnessElimination.lean",
+    "module": "InfoGeometry.Canonical.DrazinWitnessElimination",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 1,
+    "forward_value": 4,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 27,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 4,
+    "n_forward_theorem": 2,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinWitnessElimination.drazinComplementaryProjector_mul_drazinProjector",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinWitnessElimination.lean",
+    "module": "InfoGeometry.Canonical.DrazinWitnessElimination",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 2,
+    "forward_value": 4,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 28,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 4,
+    "n_forward_theorem": 2,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinWitnessElimination.drazinInverse.congr_simp",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/NavierStokesBridge.lean",
+    "module": "InfoGeometry.Canonical.NavierStokesBridge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 1,
+    "forward_value": 1,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 16,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 1,
+    "n_forward_theorem": 0,
+    "tags": [
+      "auto-generated",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.889,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.bridge-file",
+          "contribution": 0.08,
+          "reliability": 0.72,
+          "rationale": "bridge hint matched file stem"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinWitnessElimination.drazinProjector_idempotent",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinWitnessElimination.lean",
+    "module": "InfoGeometry.Canonical.DrazinWitnessElimination",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 1,
+    "forward_value": 4,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 25,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 4,
+    "n_forward_theorem": 2,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinWitnessElimination.drazinProjector_mul_drazinComplementaryProjector",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinWitnessElimination.lean",
+    "module": "InfoGeometry.Canonical.DrazinWitnessElimination",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 2,
+    "forward_value": 4,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 28,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 4,
+    "n_forward_theorem": 2,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DrazinWitnessElimination.isDrazinInverse_drazinInverse",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/DrazinWitnessElimination.lean",
+    "module": "InfoGeometry.Canonical.DrazinWitnessElimination",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 5,
+    "forward_type": 3,
+    "forward_value": 4,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 5,
+    "is_sink": false,
+    "depth": 3,
+    "transitive_reverse_reach": 7,
+    "descendant_mass": 21,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 4,
+    "n_forward_theorem": 1,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.37,
+      "confidence": 0.78,
+      "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.16,
+          "reliability": 0.8,
+          "rationale": "reverse_proof_only_reuse = 5"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
         },
         {
           "signal": "context.strict-file",
@@ -158172,8 +162288,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
-    "depth": 4,
-    "transitive_reverse_reach": 8,
+    "depth": 5,
+    "transitive_reverse_reach": 12,
     "descendant_mass": 8,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -158203,7 +162319,7 @@
           "signal": "structure.deep-embedding",
           "contribution": -0.08,
           "reliability": 0.7,
-          "rationale": "depth = 4"
+          "rationale": "depth = 5"
         },
         {
           "signal": "context.strict-file",
@@ -159093,7 +163209,7 @@
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 4,
-    "transitive_reverse_reach": 9,
+    "transitive_reverse_reach": 14,
     "descendant_mass": 13,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -198291,7 +202407,7 @@
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 17,
-    "transitive_reverse_reach": 46,
+    "transitive_reverse_reach": 47,
     "descendant_mass": 1,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -207447,31 +211563,26 @@
     "module": "InfoGeometry.Canonical.OperatorialCentralCharge",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 1,
     "forward_type": 13,
     "forward_value": 12,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
     "descendant_mass": 66,
     "scc_size": 1,
     "scc_role": "acyclic",
     "n_forward_value": 12,
     "n_forward_theorem": 2,
     "tags": [
-      "dead-candidate"
+      "proof-infrastructure"
     ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
+    "violations": [],
     "vacuity_suspicion": {
-      "score": 0.29,
-      "confidence": 0.7359,
+      "score": 0.34,
+      "confidence": 0.7276,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -207483,7 +211594,13 @@
           "signal": "structure.shallow-depth",
           "contribution": 0.08,
           "reliability": 0.66,
-          "rationale": "depth = 0"
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
         },
         {
           "signal": "context.strict-file",
@@ -233516,7 +237633,7 @@
     "reverse_proof_only_reuse": 5,
     "is_sink": false,
     "depth": 24,
-    "transitive_reverse_reach": 223,
+    "transitive_reverse_reach": 224,
     "descendant_mass": 3,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -348666,6 +352783,73 @@
     }
   },
   {
+    "name": "InfoGeometry.Canonical.anomalySkew_of_regularization_auto",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/NavierStokesBridge.lean",
+    "module": "InfoGeometry.Canonical.NavierStokesBridge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 4,
+    "forward_value": 6,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 2,
+    "transitive_reverse_reach": 2,
+    "descendant_mass": 29,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 6,
+    "n_forward_theorem": 2,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.34,
+      "confidence": 0.7418,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "context.bridge-file",
+          "contribution": 0.08,
+          "reliability": 0.72,
+          "rationale": "bridge hint matched file stem"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
     "name": "InfoGeometry.Canonical.anomalySkew_of_regularization_canonical",
     "kind": "theorem",
     "file": "lean/InfoGeometry/Canonical/NavierStokesBridge.lean",
@@ -348680,7 +352864,7 @@
     "is_sink": false,
     "depth": 0,
     "transitive_reverse_reach": 0,
-    "descendant_mass": 27,
+    "descendant_mass": 31,
     "scc_size": 1,
     "scc_role": "acyclic",
     "n_forward_value": 4,
@@ -348746,17 +352930,17 @@
     "reverse_type": 0,
     "reverse_value": 1,
     "forward_type": 4,
-    "forward_value": 6,
+    "forward_value": 4,
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 1,
     "transitive_reverse_reach": 1,
-    "descendant_mass": 26,
+    "descendant_mass": 30,
     "scc_size": 1,
     "scc_role": "acyclic",
-    "n_forward_value": 6,
-    "n_forward_theorem": 2,
+    "n_forward_value": 4,
+    "n_forward_theorem": 1,
     "tags": [
       "proof-infrastructure"
     ],
@@ -350723,7 +354907,7 @@
     "reverse_proof_only_reuse": 3,
     "is_sink": false,
     "depth": 4,
-    "transitive_reverse_reach": 15,
+    "transitive_reverse_reach": 16,
     "descendant_mass": 6,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -423383,7 +427567,7 @@
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 23,
-    "transitive_reverse_reach": 113,
+    "transitive_reverse_reach": 114,
     "descendant_mass": 13,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -423736,7 +427920,7 @@
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 24,
-    "transitive_reverse_reach": 114,
+    "transitive_reverse_reach": 115,
     "descendant_mass": 12,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -423797,7 +427981,7 @@
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 22,
-    "transitive_reverse_reach": 111,
+    "transitive_reverse_reach": 112,
     "descendant_mass": 3,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -423864,7 +428048,7 @@
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 23,
-    "transitive_reverse_reach": 114,
+    "transitive_reverse_reach": 115,
     "descendant_mass": 3,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -423993,7 +428177,7 @@
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 21,
-    "transitive_reverse_reach": 108,
+    "transitive_reverse_reach": 109,
     "descendant_mass": 25,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -424054,7 +428238,7 @@
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 21,
-    "transitive_reverse_reach": 108,
+    "transitive_reverse_reach": 109,
     "descendant_mass": 25,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -424115,7 +428299,7 @@
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 22,
-    "transitive_reverse_reach": 112,
+    "transitive_reverse_reach": 113,
     "descendant_mass": 21,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -424176,7 +428360,7 @@
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 21,
-    "transitive_reverse_reach": 110,
+    "transitive_reverse_reach": 111,
     "descendant_mass": 17,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -424237,7 +428421,7 @@
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 21,
-    "transitive_reverse_reach": 110,
+    "transitive_reverse_reach": 111,
     "descendant_mass": 2,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -424304,7 +428488,7 @@
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 21,
-    "transitive_reverse_reach": 110,
+    "transitive_reverse_reach": 111,
     "descendant_mass": 2,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -424495,7 +428679,7 @@
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 22,
-    "transitive_reverse_reach": 109,
+    "transitive_reverse_reach": 110,
     "descendant_mass": 3,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -424562,7 +428746,7 @@
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 22,
-    "transitive_reverse_reach": 109,
+    "transitive_reverse_reach": 110,
     "descendant_mass": 3,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -424770,8 +428954,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 3,
     "is_sink": false,
-    "depth": 1,
-    "transitive_reverse_reach": 3,
+    "depth": 2,
+    "transitive_reverse_reach": 4,
     "descendant_mass": 65,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -424782,8 +428966,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.41,
-      "confidence": 0.7663,
+      "score": 0.33,
+      "confidence": 0.7921,
       "factors": [
         {
           "signal": "structure.proof-only-reuse",
@@ -424796,12 +428980,6 @@
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
-        },
-        {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 1"
         },
         {
           "signal": "structure.acyclic",
@@ -424832,7 +429010,7 @@
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 17,
-    "transitive_reverse_reach": 104,
+    "transitive_reverse_reach": 105,
     "descendant_mass": 64,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -424893,7 +429071,7 @@
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 20,
-    "transitive_reverse_reach": 107,
+    "transitive_reverse_reach": 108,
     "descendant_mass": 43,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -424954,7 +429132,7 @@
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 20,
-    "transitive_reverse_reach": 107,
+    "transitive_reverse_reach": 108,
     "descendant_mass": 43,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -430826,7 +435004,7 @@
     "reverse_proof_only_reuse": 156,
     "is_sink": false,
     "depth": 23,
-    "transitive_reverse_reach": 1217,
+    "transitive_reverse_reach": 1218,
     "descendant_mass": 1,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -435530,7 +439708,7 @@
     "reverse_proof_only_reuse": 5,
     "is_sink": false,
     "depth": 25,
-    "transitive_reverse_reach": 125,
+    "transitive_reverse_reach": 126,
     "descendant_mass": 5,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -436225,7 +440403,7 @@
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 26,
-    "transitive_reverse_reach": 126,
+    "transitive_reverse_reach": 127,
     "descendant_mass": 3,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -452298,15 +456476,15 @@
     "file": "lean/InfoGeometry/Krein/KreinSpace.lean",
     "module": "InfoGeometry.Krein.KreinSpace",
     "attrs": [],
-    "reverse_type": 424,
-    "reverse_value": 506,
+    "reverse_type": 426,
+    "reverse_value": 509,
     "forward_type": 0,
     "forward_value": 0,
-    "reverse_public_fan_in": 424,
-    "reverse_proof_only_reuse": 126,
+    "reverse_public_fan_in": 426,
+    "reverse_proof_only_reuse": 127,
     "is_sink": true,
     "depth": 25,
-    "transitive_reverse_reach": 1299,
+    "transitive_reverse_reach": 1303,
     "descendant_mass": 0,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -452343,7 +456521,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 126"
+          "rationale": "reverse_proof_only_reuse = 127"
         },
         {
           "signal": "structure.deep-embedding",
@@ -551813,7 +555991,7 @@
     "reverse_proof_only_reuse": 3,
     "is_sink": true,
     "depth": 17,
-    "transitive_reverse_reach": 115,
+    "transitive_reverse_reach": 127,
     "descendant_mass": 1,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -552019,7 +556197,7 @@
     "reverse_proof_only_reuse": 6,
     "is_sink": false,
     "depth": 16,
-    "transitive_reverse_reach": 112,
+    "transitive_reverse_reach": 124,
     "descendant_mass": 2,
     "scc_size": 1,
     "scc_role": "acyclic",

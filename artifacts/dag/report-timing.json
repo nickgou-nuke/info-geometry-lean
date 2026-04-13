@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "artifactTimestamp": "2026-04-11T03:55:27.566719+00:00",
-  "oleanHash": "f858489a25b7b7075090b591f312e1102768a899755dd868bb4f282c6f2587e0",
+  "artifactTimestamp": "2026-04-12T23:01:09.686630+00:00",
+  "oleanHash": "5805b95474e730f72f6fda39855fc8c1089bbcb0fe1edae6e6687628fabf3e19",
   "artifactSchemaVersion": 3,
-  "recordedAt": "2026-04-11T03:55:42.057073+00:00",
+  "recordedAt": "2026-04-12T23:01:22.211795+00:00",
   "configPath": "/home/goutev/LEAN4/info-geometry-lean/dag-toolchain.json",
   "stepCount": 4,
   "steps": [
@@ -28,7 +28,7 @@
         "--json-out",
         "reports/dag/bilingual-spine-report.json"
       ],
-      "elapsed_ms": 85,
+      "elapsed_ms": 66,
       "exit_code": 0
     },
     {
@@ -38,7 +38,7 @@
         "/home/goutev/LEAN4/info-geometry-lean/.venv/bin/python3",
         "tools/infra/generate_source_sink_compression.py"
       ],
-      "elapsed_ms": 4123,
+      "elapsed_ms": 4239,
       "exit_code": 0
     },
     {
@@ -52,10 +52,10 @@
         "--json-out",
         "reports/dag/true-root-order.json"
       ],
-      "elapsed_ms": 4811,
+      "elapsed_ms": 5920,
       "exit_code": 1
     }
   ],
-  "total_ms": 11263,
+  "total_ms": 12468,
   "status": "failed"
 }

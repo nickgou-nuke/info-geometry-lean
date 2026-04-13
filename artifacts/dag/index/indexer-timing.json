@@ -1,36 +1,36 @@
 {
   "schemaVersion": 1,
-  "artifactTimestamp": "2026-04-11T03:55:27.566719+00:00",
-  "oleanHash": "f858489a25b7b7075090b591f312e1102768a899755dd868bb4f282c6f2587e0",
+  "artifactTimestamp": "2026-04-12T23:01:09.686630+00:00",
+  "oleanHash": "5805b95474e730f72f6fda39855fc8c1089bbcb0fe1edae6e6687628fabf3e19",
   "artifactSchemaVersion": 3,
-  "recordedAt": "2026-04-11T03:55:27.574498+00:00",
+  "recordedAt": "2026-04-12T23:01:09.686969+00:00",
   "sourceLog": "indexer-timing.log",
-  "importModules_ms": 6026,
+  "importModules_ms": 3034,
   "stageCount": 10,
   "stages": [
     {
-      "label": "collect/process constants (14631 decls, 880483 raw edges, 900 morphisms)",
-      "elapsed_ms": 53827
+      "label": "collect/process constants (15796 decls, 967315 raw edges, 949 morphisms)",
+      "elapsed_ms": 33394
     },
     {
-      "label": "classify/filter edges (114986 kept / 880483 raw)",
-      "elapsed_ms": 4509
+      "label": "classify/filter edges (130375 kept / 967315 raw)",
+      "elapsed_ms": 3610
     },
     {
       "label": "write index jsonl artifacts",
-      "elapsed_ms": 364
+      "elapsed_ms": 339
     },
     {
       "label": "build typed adjacency",
-      "elapsed_ms": 60
+      "elapsed_ms": 58
     },
     {
       "label": "sort typed adjacency",
-      "elapsed_ms": 1
+      "elapsed_ms": 0
     },
     {
       "label": "write full_graph.json",
-      "elapsed_ms": 327
+      "elapsed_ms": 360
     },
     {
       "label": "hydrate graph (SCC + DAG + dominators)",
@@ -42,12 +42,12 @@
     },
     {
       "label": "write structural-topology.json",
-      "elapsed_ms": 2718
+      "elapsed_ms": 3247
     },
     {
       "label": "write meta.json",
-      "elapsed_ms": 5
+      "elapsed_ms": 0
     }
   ],
-  "total_ms": 61811
+  "total_ms": 41008
 }

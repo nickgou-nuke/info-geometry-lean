@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TaskManifest",
+  "description": "Canonical statement-locked proof task manifest for the Spire.",
+  "type": "object",
+  "required": [
+    "taskId",
+    "targetFile",
+    "theoremName",
+    "expectedType",
+    "budget",
+    "constraints"
+  ],
+  "properties": {
+    "taskId": {
+      "type": "string"
+    },
+    "targetFile": {
+      "type": "string"
+    },
+    "theoremName": {
+      "type": "string"
+    },
+    "expectedType": {
+      "type": "string"
+    },
+    "statementHash": {
+      "type": "string",
+      "description": "Optional SHA256 hash of normalized expectedType."
+    },
+    "baselineRef": {
+      "type": "string",
+      "default": "HEAD~1",
+      "description": "Git ref used for import-delta comparison."
+    },
+    "budget": {
+      "type": "object",
+      "required": ["imports"],
+      "properties": {
+        "imports": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "allowedHelpers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

@@ -420,7 +420,8 @@ theorem unified_cross_family_compatibility
 /--
 Sources/sinks + Onsager packet on the unified lane:
 
-1. internal Drazin canonical split `Q_D² = H + Z` with `Z` defect-supported,
+1. internal Drazin canonical split `Q_D² = H + Z` with `Z` spectrally central
+   and defect-supported,
 2. projected left/right anomaly channels and net divergence channel
    `Q_D = Q_R - Q_L`,
 3. divergence identity `[P_D, G] = (1/2)•Q_D`,
@@ -433,6 +434,9 @@ theorem unified_sources_sinks_onsager_with_internal_central_split
     (Tpkg : TransportedSuperchargePackage (E := F))
     (t : ℝ) :
     (∃ H Z : H₂ →L[ℝ] H₂,
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentralK
+        U.kernel Z
+        ∧
       InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK U.kernel Z
         ∧
       InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.HasVanishingDefectBlockK
@@ -470,7 +474,7 @@ theorem unified_sources_sinks_onsager_with_internal_central_split
             (E := F) X0 X0 (modular_j (E := F))) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact
-      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.exists_superHamiltonian_canonical_splitK
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.exists_superHamiltonian_canonical_split_with_drazin_lane_centralityK
         (CIK := U.kernel)
   · exact UnifiedSuperchargePackage.projected_supercharge_eq_sub_chiral U
   · have hQ := UnifiedSuperchargePackage.projected_supercharge_eq_two_commutator (U := U)

@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.DrazinModularSingularityBridge
 import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.WedgeBoostModularBridge
+import InfoGeometry.Canonical.ModularSpectralConjugationBridge
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import InfoGeometry.Meta.Architecture
@@ -58,6 +59,77 @@ noncomputable def canonicalModularSeed
     (CIK : CertifiedInverseKernel H₂) : EndH :=
   -(DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK).comp
     (modularComplexI (E := E))
+
+/--
+Comparison theorem to the active spectral-wedge lane:
+after multiplying by the bridged wedge sign, the canonical modular seed factors
+through `J * P_D` on the certified regular Drazin block.
+-/
+@[rep_depth transport]
+theorem canonicalModularSeed_mul_owned_epsilon_eq_neg_superHamiltonian_mul_modular_j_mul_spectralProjector
+    (CIK : CertifiedInverseKernel H₂)
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (owned_epsilon : EndH)
+    (comp :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.IsCompatibleWedge
+        W owned_epsilon CIK.spectralComplementaryProjector)
+    (hActivePhase :
+      modularComplexI (E := E) = (modular_j (E := E)) * owned_epsilon) :
+    canonicalModularSeed (E := E) CIK * owned_epsilon
+      =
+    -(
+      DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
+        * ((modular_j (E := E)) * CIK.spectralProjector)
+      ) := by
+  have hActive :
+      InfoGeometry.Canonical.ModularSpectralConjugationBridge.activeModularConjugation
+          (E := E) owned_epsilon CIK.spectralComplementaryProjector
+        =
+      (modular_j (E := E)) * CIK.spectralProjector :=
+    InfoGeometry.Canonical.ModularSpectralConjugationBridge.Compatibility.activeModularConjugation_eq_modular_j_mul_spectralProjector
+      (E := E) (W := W) CIK owned_epsilon comp hActivePhase
+  calc
+    canonicalModularSeed (E := E) CIK * owned_epsilon
+        =
+      -(
+        DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
+          * InfoGeometry.Canonical.ModularSpectralConjugationBridge.activeModularConjugation
+              (E := E) owned_epsilon CIK.spectralComplementaryProjector
+      ) := by
+        ext x <;> rfl
+    _ =
+      -(
+        DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
+          * ((modular_j (E := E)) * CIK.spectralProjector)
+      ) := by rw [hActive]
+
+/--
+Projector-first specialization of the canonical-seed comparison theorem:
+using the owned sign operator `Σ = P₊ - P₋`, the canonical seed factors through
+`J * P_D` on the certified regular Drazin block.
+-/
+@[rep_depth transport]
+theorem canonicalModularSeed_mul_modularSign_eq_neg_superHamiltonian_mul_modular_j_mul_spectralProjector
+    (CIK : CertifiedInverseKernel H₂)
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (comp :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.IsCompatibleWedge
+        W (InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E))
+          CIK.spectralComplementaryProjector) :
+    canonicalModularSeed (E := E) CIK
+      * InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E)
+      =
+    -(
+      DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
+        * ((modular_j (E := E)) * CIK.spectralProjector)
+      ) := by
+  exact canonicalModularSeed_mul_owned_epsilon_eq_neg_superHamiltonian_mul_modular_j_mul_spectralProjector
+    (E := E) (CIK := CIK)
+    (W := W)
+    (owned_epsilon := InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E))
+    comp
+    (InfoGeometry.Canonical.ModularSpectralConjugationBridge.Compatibility.modularComplexI_eq_modular_j_mul_modularSign
+      (E := E))
 
 /--
 The canonical seed realizes the projected even generator as a true modular

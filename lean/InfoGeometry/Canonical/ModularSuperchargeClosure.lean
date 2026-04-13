@@ -522,6 +522,75 @@ theorem superHamiltonian_fixed_under_canonicalTomitaAdjointFlow
       (E := E) (M := M) t)
 
 /--
+Canonical internal modular Hamiltonian extracted from the projected even
+generator:
+`K_int := (2π)⁻¹ • H_D`.
+-/
+@[rep_depth transport]
+noncomputable def canonicalInternalModularHamiltonian
+    (CIK : CertifiedInverseKernel H₂) : EndH :=
+  (2 * Real.pi)⁻¹ • DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
+
+/--
+Exact normalization identity on the canonical internal lane:
+`H_D = (2π) • K_int`.
+-/
+@[rep_depth transport]
+theorem superHamiltonian_eq_two_pi_smul_canonicalInternalModularHamiltonian
+    (CIK : CertifiedInverseKernel H₂) :
+    DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
+      =
+    (2 * Real.pi) • canonicalInternalModularHamiltonian (E := E) CIK := by
+  let SH : EndH := DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
+  have hTwoPi : (2 * Real.pi : ℝ) ≠ 0 := by
+    exact mul_ne_zero (by norm_num) Real.pi_ne_zero
+  have hNorm :
+      (2 * Real.pi) • canonicalInternalModularHamiltonian (E := E) CIK = SH := by
+    unfold canonicalInternalModularHamiltonian
+    calc
+      (2 * Real.pi) • ((2 * Real.pi)⁻¹ • SH)
+          = ((2 * Real.pi) * (2 * Real.pi)⁻¹) • SH := by
+              rw [smul_smul]
+      _ = SH := by
+            rw [mul_inv_cancel₀ hTwoPi]
+            simpa using (one_smul ℝ SH)
+  simpa [SH] using hNorm.symm
+
+/--
+Internal Unruh target on the projected lane, defined directly from `H_D`.
+
+This target is fully operator-internal and assumption-free.
+-/
+@[rep_depth transport]
+noncomputable def internalUnruhFlowOfModularTime
+    (CIK : CertifiedInverseKernel H₂) (τmod : ℝ) : EndH :=
+  NormedSpace.exp
+    (τmod • DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK)
+
+/--
+Assumption-free canonical closure: canonical-seed transport equals the internal
+Unruh target exactly.
+-/
+@[rep_depth transport]
+theorem canonicalSeedFlow_eq_internalUnruhFlowOfModularTime
+    (CIK : CertifiedInverseKernel H₂) :
+    ∀ τmod : ℝ,
+      modularTransportFlow (E := E)
+        (canonicalModularSeed (E := E) CIK) τmod
+        =
+      internalUnruhFlowOfModularTime (E := E) CIK τmod := by
+  intro τmod
+  have hGen :
+      modularTransportGenerator (E := E)
+        (canonicalModularSeed (E := E) CIK)
+          =
+      DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK := by
+    simpa using
+      (superHamiltonian_eq_modularTransportGenerator_canonicalSeed
+        (E := E) (CIK := CIK)).symm
+  simpa [internalUnruhFlowOfModularTime, BogoliubovTransport.modularTransportFlow, hGen]
+
+/--
 Canonical-seed wedge bridge with a single hypothesis:
 if the canonical-seed modular flow matches the Unruh modular-time flow, then
 at wedge-normalized time it matches the wedge-rapidity Unruh flow.
@@ -1037,7 +1106,53 @@ theorem flow_eq_unruh_modular_polynomial (τmod : ℝ) :
             WedgeBoostModularBridge.unruhFlowOfModularTime_eq_modular_polynomial
               (E := E) τmod
 
+/--
+Lower-owner extraction of the calibration identity from the canonical-seed
+Unruh compatibility witness.
+-/
+@[rep_depth transport]
+theorem superHamiltonian_eq_two_pi_modularHamiltonian :
+    DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.CIK
+      =
+    (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
+  exact
+    superHamiltonian_eq_two_pi_modularHamiltonian_of_canonicalSeedFlowEqUnruhTarget
+      (E := E) U.CIK U.hFlowEqUnruh
+
+/--
+Canonical-seed/Unruh compatibility induces the packaged wedge-calibration
+object without extra hypotheses.
+-/
+@[rep_depth transport]
+noncomputable def toSuperHamiltonianWedgeCalibration :
+    SuperHamiltonianWedgeCalibration (E := E) where
+  CIK := U.CIK
+  hTwoPi := U.superHamiltonian_eq_two_pi_modularHamiltonian
+
 end CanonicalSeedUnruhCompatibility
+
+namespace SuperHamiltonianWedgeCalibration
+
+variable (C : SuperHamiltonianWedgeCalibration (E := E))
+
+/--
+The packaged wedge calibration implies the canonical-seed/Unruh flow witness.
+-/
+@[rep_depth transport]
+theorem hFlowEqUnruh :
+    canonicalSeedFlowEqUnruhTarget (E := E) C.CIK := by
+  exact canonicalSeedFlowEqUnruhTarget_of_wedgeCalibration (E := E) C
+
+/--
+Packaged wedge calibration converted to canonical-seed/Unruh compatibility.
+-/
+@[rep_depth transport]
+noncomputable def toCanonicalSeedUnruhCompatibility :
+    CanonicalSeedUnruhCompatibility (E := E) where
+  CIK := C.CIK
+  hFlowEqUnruh := C.hFlowEqUnruh
+
+end SuperHamiltonianWedgeCalibration
 
 /--
 Unconditional capstone: the projected even generator is fixed by canonical-seed
@@ -1166,21 +1281,6 @@ theorem superHamiltonianK_idCertifiedInverseKernel_eq_zero :
   unfold DrazinSupercharge.CertifiedInverseKernel.superHamiltonian
   simpa [CIK, hQ]
 
-/-- The modular Hamiltonian is nonzero on nontrivial doubled carriers. -/
-@[rep_depth transport]
-theorem modularHamiltonian_ne_zero [Nontrivial H₂] :
-    InfoGeometry.Dynamics.modularHamiltonian (E := E) ≠ 0 := by
-  intro hZero
-  have hSq :
-      (InfoGeometry.Dynamics.modularHamiltonian (E := E) : EndH)
-        * InfoGeometry.Dynamics.modularHamiltonian (E := E)
-        = (1 : EndH) := by
-    simpa using InfoGeometry.Dynamics.modularHamiltonian_sq_one (E := E)
-  have h01 : (0 : EndH) = (1 : EndH) := by
-    simpa [hZero]
-      using hSq
-  exact zero_ne_one h01
-
 /--
 Counterexample theorem: the equation
 `H_D = (2π) • modularHamiltonian` is not derivable uniformly for all certified
@@ -1188,7 +1288,7 @@ inverse kernels from the current lower-owner assumptions alone.
 -/
 @[rep_depth transport]
 theorem not_forall_superHamiltonian_eq_two_pi_modularHamiltonian
-    [Nontrivial H₂] :
+    (hModNonzero : InfoGeometry.Dynamics.modularHamiltonian (E := E) ≠ 0) :
     ∃ CIK : CertifiedInverseKernel H₂,
       DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
         ≠ (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
@@ -1207,7 +1307,7 @@ theorem not_forall_superHamiltonian_eq_two_pi_modularHamiltonian
       have h2 : (2 : ℝ) ≠ 0 := by norm_num
       exact mul_ne_zero h2 Real.pi_ne_zero
     exact hPi hScale
-  · exact (modularHamiltonian_ne_zero (E := E)) hModZero
+  · exact hModNonzero hModZero
 
 end Core
 

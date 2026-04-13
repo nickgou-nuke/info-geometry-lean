@@ -52,6 +52,16 @@ noncomputable abbrev QD (CIK : CertifiedInverseKernel H₂) : EndH :=
 noncomputable abbrev HD (CIK : CertifiedInverseKernel H₂) : EndH :=
   DrazinSupercharge.CertifiedInverseKernel.superHamiltonian CIK
 
+/-- Canonical defect-central extraction from `Q_D²`. -/
+@[rep_depth krein]
+noncomputable abbrev ZD (CIK : CertifiedInverseKernel H₂) : EndH :=
+  DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentral CIK
+
+/-- Canonical kinetic remainder from `Q_D² = H + Z`. -/
+@[rep_depth krein]
+noncomputable abbrev HK (CIK : CertifiedInverseKernel H₂) : EndH :=
+  DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPart CIK
+
 /-- Owner parity law for the projected odd supercharge. -/
 @[rep_depth krein]
 theorem qD_is_odd (CIK : CertifiedInverseKernel H₂) :
@@ -65,6 +75,14 @@ theorem hD_is_even (CIK : CertifiedInverseKernel H₂) :
     (HD CIK) * (GammaS CIK) = (GammaS CIK) * (HD CIK) := by
   simpa [GammaS, HD] using
     (DrazinSupercharge.CertifiedInverseKernel.superHamiltonian_commutes_GammaS (CIK := CIK))
+
+/-- Owner split identity for the projected lane: `Q_D² = H_K + Z_D`. -/
+@[rep_depth krein]
+theorem hD_eq_hK_add_zD (CIK : CertifiedInverseKernel H₂) :
+    HD CIK = HK CIK + ZD CIK := by
+  simpa [HD, HK, ZD] using
+    (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian_eq_canonicalKinetic_plus_canonicalDefectCentral
+      (CIK := CIK))
 
 /--
 Carrier bridge law between abstract Kramers symmetry `Θ` and intrinsic phase
@@ -233,6 +251,127 @@ theorem majorana_closed_HD_of_commute_chi
   have hCH : Commute M.C (HD CIK) :=
     commute_C_HD_of_commute_C_QD (CIK := CIK) (M := M) hCQ
   exact majorana_fixed_closed_of_commute (M := M) hCH hu
+
+/--
+If `C` commutes with both anomalies and with the defect projector `Q₀`,
+then it commutes with the canonical defect-central operator `Z_D`.
+-/
+@[rep_depth krein]
+theorem commute_C_ZD_of_commute_chi_and_Q0
+    (CIK : CertifiedInverseKernel H₂)
+    (M : MajoranaRealStructure (E := E))
+    (hCL : Commute M.C (chiL CIK))
+    (hCR : Commute M.C (chiR CIK))
+    (hCQ0 : Commute M.C CIK.spectralComplementaryProjector) :
+    Commute M.C (ZD CIK) := by
+  have hCQ : Commute M.C (QD CIK) :=
+    commute_C_QD_of_commute_C_chi (CIK := CIK) (M := M) hCL hCR
+  have hCHD : Commute M.C (HD CIK) :=
+    commute_C_HD_of_commute_C_QD (CIK := CIK) (M := M) hCQ
+  have hQ0 : M.C * CIK.spectralComplementaryProjector
+      = CIK.spectralComplementaryProjector * M.C := hCQ0.eq
+  have hH : M.C * HD CIK = HD CIK * M.C := hCHD.eq
+  show M.C * ZD CIK = ZD CIK * M.C
+  unfold ZD DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentral
+  calc
+    M.C * (CIK.spectralComplementaryProjector * HD CIK * CIK.spectralComplementaryProjector)
+        = ((M.C * CIK.spectralComplementaryProjector) * HD CIK)
+            * CIK.spectralComplementaryProjector := by
+              simp [mul_assoc]
+    _ = ((CIK.spectralComplementaryProjector * M.C) * HD CIK)
+          * CIK.spectralComplementaryProjector := by rw [hQ0]
+    _ = (CIK.spectralComplementaryProjector * (M.C * HD CIK))
+          * CIK.spectralComplementaryProjector := by
+            simp [mul_assoc]
+    _ = (CIK.spectralComplementaryProjector * (HD CIK * M.C))
+          * CIK.spectralComplementaryProjector := by rw [hH]
+    _ = (CIK.spectralComplementaryProjector * HD CIK)
+          * (M.C * CIK.spectralComplementaryProjector) := by
+            simp [mul_assoc]
+    _ = (CIK.spectralComplementaryProjector * HD CIK)
+          * (CIK.spectralComplementaryProjector * M.C) := by rw [hQ0]
+    _ = (CIK.spectralComplementaryProjector * HD CIK * CIK.spectralComplementaryProjector)
+          * M.C := by
+            simp [mul_assoc]
+
+/--
+If `C` commutes with both anomalies and with the defect projector `Q₀`,
+then it commutes with the canonical kinetic remainder `H_K`.
+-/
+@[rep_depth krein]
+theorem commute_C_HK_of_commute_chi_and_Q0
+    (CIK : CertifiedInverseKernel H₂)
+    (M : MajoranaRealStructure (E := E))
+    (hCL : Commute M.C (chiL CIK))
+    (hCR : Commute M.C (chiR CIK))
+    (hCQ0 : Commute M.C CIK.spectralComplementaryProjector) :
+    Commute M.C (HK CIK) := by
+  have hCQ : Commute M.C (QD CIK) :=
+    commute_C_QD_of_commute_C_chi (CIK := CIK) (M := M) hCL hCR
+  have hCHD : Commute M.C (HD CIK) :=
+    commute_C_HD_of_commute_C_QD (CIK := CIK) (M := M) hCQ
+  have hCZD : Commute M.C (ZD CIK) :=
+    commute_C_ZD_of_commute_chi_and_Q0
+      (CIK := CIK) (M := M) hCL hCR hCQ0
+  show M.C * HK CIK = HK CIK * M.C
+  unfold HK DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPart
+  calc
+    M.C * (HD CIK - ZD CIK)
+        = M.C * HD CIK - M.C * ZD CIK := by simp [mul_sub]
+    _ = HD CIK * M.C - ZD CIK * M.C := by rw [hCHD.eq, hCZD.eq]
+    _ = (HD CIK - ZD CIK) * M.C := by simp [sub_mul]
+
+/-- Majorana compatibility with the canonical defect-central channel `Z_D`. -/
+@[rep_depth krein]
+theorem majorana_closed_ZD_of_commute_chi_and_Q0
+    (CIK : CertifiedInverseKernel H₂)
+    (M : MajoranaRealStructure (E := E))
+    (hCL : Commute M.C (chiL CIK))
+    (hCR : Commute M.C (chiR CIK))
+    (hCQ0 : Commute M.C CIK.spectralComplementaryProjector)
+    {u : H₂}
+    (hu : M.IsMajorana u) :
+    M.IsMajorana ((ZD CIK) u) := by
+  have hCZ : Commute M.C (ZD CIK) :=
+    commute_C_ZD_of_commute_chi_and_Q0
+      (CIK := CIK) (M := M) hCL hCR hCQ0
+  exact majorana_fixed_closed_of_commute (M := M) hCZ hu
+
+/-- Majorana compatibility with the canonical kinetic channel `H_K`. -/
+@[rep_depth krein]
+theorem majorana_closed_HK_of_commute_chi_and_Q0
+    (CIK : CertifiedInverseKernel H₂)
+    (M : MajoranaRealStructure (E := E))
+    (hCL : Commute M.C (chiL CIK))
+    (hCR : Commute M.C (chiR CIK))
+    (hCQ0 : Commute M.C CIK.spectralComplementaryProjector)
+    {u : H₂}
+    (hu : M.IsMajorana u) :
+    M.IsMajorana ((HK CIK) u) := by
+  have hCH : Commute M.C (HK CIK) :=
+    commute_C_HK_of_commute_chi_and_Q0
+      (CIK := CIK) (M := M) hCL hCR hCQ0
+  exact majorana_fixed_closed_of_commute (M := M) hCH hu
+
+/--
+Majorana-compatible closure of the canonical internal split channels
+under anomaly compatibility and defect-projector compatibility.
+-/
+@[rep_depth krein]
+theorem majorana_closed_HK_and_ZD_of_commute_chi_and_Q0
+    (CIK : CertifiedInverseKernel H₂)
+    (M : MajoranaRealStructure (E := E))
+    (hCL : Commute M.C (chiL CIK))
+    (hCR : Commute M.C (chiR CIK))
+    (hCQ0 : Commute M.C CIK.spectralComplementaryProjector)
+    {u : H₂}
+    (hu : M.IsMajorana u) :
+    M.IsMajorana ((HK CIK) u) ∧ M.IsMajorana ((ZD CIK) u) := by
+  constructor
+  · exact majorana_closed_HK_of_commute_chi_and_Q0
+      (CIK := CIK) (M := M) hCL hCR hCQ0 hu
+  · exact majorana_closed_ZD_of_commute_chi_and_Q0
+      (CIK := CIK) (M := M) hCL hCR hCQ0 hu
 
 end Core
 

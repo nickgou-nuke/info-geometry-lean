@@ -301,6 +301,24 @@ private theorem ε_is_cartan (X : InvolutiveSelfDualCarrier) :
   have h := LinearMap.congr_fun (InfoGeometry.Cartan.Pplus_add_Pminus_eq_id (θ := X.ε.toLinearMap)) x
   simpa [Pplus, Pminus, InfoGeometry.Cartan.Pplus, InfoGeometry.Cartan.Pminus] using h
 
+theorem Pplus_sub_Pminus : X.Pplus - X.Pminus = X.ε := by
+  apply ContinuousLinearMap.ext
+  intro x
+  have hStep :
+      (X.Pplus - X.Pminus) x
+        = (2 : ℝ)⁻¹ • X.ε x + (2 : ℝ)⁻¹ • X.ε x := by
+    simp [Pplus, Pminus, sub_eq_add_neg, smul_add, add_assoc, add_left_comm, add_comm]
+  have hHalf : ((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) = (1 : ℝ) := by
+    norm_num
+  calc
+    (X.Pplus - X.Pminus) x
+        = (2 : ℝ)⁻¹ • X.ε x + (2 : ℝ)⁻¹ • X.ε x := hStep
+    _ = (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • X.ε x := by rw [add_smul]
+    _ = X.ε x := by simpa [hHalf]
+
+theorem ε_eq_Pplus_sub_Pminus : X.ε = X.Pplus - X.Pminus := by
+  simpa using (Pplus_sub_Pminus (X := X)).symm
+
 @[simp] theorem Pplus_comp_Pminus : X.Pplus.comp X.Pminus = 0 := by
   have h :=
     congrArg (fun T : X.H →L[ℝ] X.H => T.comp X.Pminus) (X.Pplus_add_Pminus)

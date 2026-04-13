@@ -22,6 +22,11 @@ def parse_args() -> argparse.Namespace:
         help="Block until the shared build lock is available instead of failing immediately.",
     )
     parser.add_argument(
+        "--wfail",
+        action="store_true",
+        help="Pass `--wfail` to `lake build` so warnings are treated as errors.",
+    )
+    parser.add_argument(
         "targets",
         nargs="*",
         help="Optional lake build targets. If omitted, this runs the default `lake build` target set.",
@@ -31,7 +36,9 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    return run_locked_lake_build(args.targets, wait_for_lock=args.wait_for_build_lock)
+    return run_locked_lake_build(
+        args.targets, wait_for_lock=args.wait_for_build_lock, wfail=args.wfail
+    )
 
 
 if __name__ == "__main__":

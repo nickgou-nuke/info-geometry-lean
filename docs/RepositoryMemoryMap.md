@@ -80,6 +80,9 @@ operational authority:
 Backlog and diagnostics:
 
 - [analytic_closure_backlog.md](analytic_closure_backlog.md)
+- [krein_hestenes_closure_tracker_2026-04-13.md](krein_hestenes_closure_tracker_2026-04-13.md)
+- [active_closure/kramers_krein_modular_tracker.md](active_closure/kramers_krein_modular_tracker.md)
+- [black_books/55_external_approval_real_all_translation.md](black_books/55_external_approval_real_all_translation.md)
 - [apex_defect_diagnosis.md](apex_defect_diagnosis.md)
 - [apex_hodge_dirac_diagnostics.md](apex_hodge_dirac_diagnostics.md)
 
@@ -89,6 +92,7 @@ Conceptual overlays and formal-side notes:
 - [causal_cone_formal_definitions.md](causal_cone_formal_definitions.md)
 - [lawful-flow-glossary.md](lawful-flow-glossary.md)
 - [lean_compiler_service.md](lean_compiler_service.md)
+- [private_reviewer_chat_blueprint.md](private_reviewer_chat_blueprint.md)
 - [typed_lean_compiler_bridge.md](typed_lean_compiler_bridge.md)
 - [legacy_intake.md](legacy_intake.md)
 

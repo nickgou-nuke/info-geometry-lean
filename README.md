@@ -236,6 +236,14 @@ lake script run dagAll
 lake script run changedVerify
 ```
 
+Theory-cloud movie exporter (declaration cloud / semantic plasma):
+
+```bash
+python3 tools/infra/generate_theory_cloud_movie.py --mode semantic
+python3 tools/infra/generate_theory_cloud_movie.py --mode structural
+python3 tools/infra/generate_theory_cloud_movie.py --mode commits --commits WORKTREE,HEAD
+```
+
 ## Maintained DAG Pipeline
 
 The maintained pipeline is documented in [tools/infra/README.md](tools/infra/README.md).

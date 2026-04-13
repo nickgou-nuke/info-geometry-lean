@@ -15,6 +15,13 @@
     "coverageReportJson": "reports/dag/true-root-order.json",
     "reportSequence": [
       [
+        "tools/infra/reports/generate_repository_surface_index.py",
+        "--md-out",
+        "reports/dag/repository-surface-index.md",
+        "--json-out",
+        "reports/dag/repository-surface-index.json"
+      ],
+      [
         "tools/infra/generate_theorem_surface_index.py"
       ],
       [

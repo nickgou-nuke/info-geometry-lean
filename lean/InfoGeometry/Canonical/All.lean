@@ -68,13 +68,14 @@ import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinExistenceBridge
 import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Canonical.DrazinWitnessElimination
-import InfoGeometry.Canonical.DrazinSpectralBridge
 import InfoGeometry.Canonical.DrazinKreinCompatibility
 import InfoGeometry.Canonical.DrazinFredholmBridge
 import InfoGeometry.Canonical.DrazinCoreFlow
 import InfoGeometry.Canonical.DrazinPenroseDilationAlgebra
 import InfoGeometry.Canonical.DrazinPenroseDilationKKT
 import InfoGeometry.Canonical.DrazinSupercharge
+import InfoGeometry.Canonical.DrazinModularSingularityBridge
+import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.DrazinDescriptorSystems
 import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.InverseKernelCartanCore
@@ -118,6 +119,8 @@ import InfoGeometry.Canonical.InformationTorsion
 import InfoGeometry.Canonical.KKTCore
 import InfoGeometry.Canonical.KKTGeneralizedInverseBridge
 import InfoGeometry.Canonical.KKTGeneralizedMetricBridge
+import InfoGeometry.Canonical.KKTNoetherCharges
+import InfoGeometry.Canonical.KKTClosureSymmetry
 import InfoGeometry.Canonical.KKFoundation
 import InfoGeometry.Canonical.SuperchargeGapBridge
 import InfoGeometry.Canonical.SuperchargeRoleBridge
@@ -126,6 +129,7 @@ import InfoGeometry.Canonical.SuperchargeTransportBridge
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.SuperchargeGapHessianBridge
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
+import InfoGeometry.Canonical.ModularSuperchargeClosure
 import InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge
@@ -154,6 +158,10 @@ import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.BogoliubovProjectorTransport
 import InfoGeometry.Canonical.BogoliubovProjectorFlux
 import InfoGeometry.Canonical.OperatorDictionary
+import InfoGeometry.Canonical.ModularOrientationContract
+import InfoGeometry.Canonical.RealTomitaCore
+import InfoGeometry.Canonical.WedgeBoostModularBridge
+import InfoGeometry.Canonical.TypeIIIContinuousCoreReal
 import InfoGeometry.Canonical.OperatorLightconeCoordinates
 import InfoGeometry.Canonical.OperatorSpacetimeObservables
 import InfoGeometry.Canonical.KaehlerGeometry
@@ -175,6 +183,9 @@ import InfoGeometry.Canonical.MajoranaKitaevSpinorBridge
 import InfoGeometry.Canonical.HestenesKramersBridge
 import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Canonical.TimeReversalKramers
+import InfoGeometry.Canonical.KramersPhaseAxisReduction
+import InfoGeometry.Canonical.ModularKramersBridge
+import InfoGeometry.Canonical.KramersMajoranaCompatibility
 import InfoGeometry.Canonical.KramersSuperchargeBridge
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.ModularSpinorBridge
@@ -216,6 +227,7 @@ import InfoGeometry.Canonical.ThermodynamicGenerator
 import InfoGeometry.Canonical.MajoranaKreinCartanSplit
 import InfoGeometry.Canonical.RelativeModularPolarizedBridge
 import InfoGeometry.Canonical.RelativeModularProjectiveBridge
+import InfoGeometry.Canonical.ModularKLDivergenceBridge
 import InfoGeometry.Canonical.RelativeModularRecomposition
 import InfoGeometry.Canonical.RobustThermodynamicRegression
 import InfoGeometry.Canonical.Quantum
@@ -236,6 +248,7 @@ import InfoGeometry.Canonical.RealBdGDIIIAtom
 import InfoGeometry.Canonical.RealBdGSheetBridge
 import InfoGeometry.Canonical.SpectralInference
 import InfoGeometry.Canonical.StandardFormCore
+import InfoGeometry.Canonical.TomitaTakesakiRealStandardForm
 import InfoGeometry.Canonical.SingularBoundaryCorrection
 import InfoGeometry.Canonical.CalabiYauSingularBridge
 import InfoGeometry.Canonical.SingularTransportSystem

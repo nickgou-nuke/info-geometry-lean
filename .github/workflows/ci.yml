@@ -228,6 +228,9 @@ jobs:
           python3 tools/infra/generate_projection_coloring.py
           python3 tools/infra/select_openclaw_target.py
 
+      - name: Validate semantic flow report schema
+        run: python3 tools/infra/check_semantic_flow_report.py
+
       - name: Upload hypothesis debt report artifact
         if: always()
         uses: actions/upload-artifact@v4

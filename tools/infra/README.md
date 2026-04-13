@@ -220,6 +220,7 @@ Process-flow refresh (Lean export + Python derivation):
 ```bash
 lake env lean --run lean/DAG/ProcessFlowExport.lean InfoGeometry.Audit artifacts/dag/process-flow
 python3 tools/infra/generate_process_flow_report.py
+python3 tools/infra/generate_semantic_flow_report.py
 ```
 
 The Lean export writes the constitutive process-flow lane:
@@ -227,6 +228,23 @@ The Lean export writes the constitutive process-flow lane:
 The Python step derives:
 `flow-cocycles`, `comparison-candidates`, and the process-flow defect report.
 This step can be heavy on large snapshots; run it after the core DAG reports are stable.
+`generate_process_flow_report.py` now uses bounded comparison search by default
+(`--max-comparison-pairs`, `--max-witness-searches`, `--max-comparison-seconds`)
+to prevent superlinear blowups on large path sets.
+
+`generate_semantic_flow_report.py` is the low-complexity semantic lane over
+process-flow artifacts:
+- signed chiral diffusion/relaxation (`O(iterations * E)`)
+- pairwise entropy-production ranking (`O(E)`)
+- SCC-level loop/holonomy obstruction proxies (`O(V + E)`)
+It intentionally avoids full cycle enumeration and path-pair combinatorics.
+
+For CI/lightweight enforcement, validate that the semantic lane executes and
+emits the expected schema keys:
+
+```bash
+python3 tools/infra/check_semantic_flow_report.py
+```
 
 Full end-to-end audit snapshot (build + DAG + doctor + debt surfaces):
 

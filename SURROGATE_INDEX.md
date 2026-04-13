@@ -1,6 +1,6 @@
 # Surrogate Index
 
-Generated: `2026-04-13 02:22:23`
+Generated: `2026-04-13 10:23:10`
 
 This report tracks explicit proof gaps, assumption-bearing theorem surfaces, and named contract interfaces so surrogate debt can be replaced aggressively with real proofs.
 

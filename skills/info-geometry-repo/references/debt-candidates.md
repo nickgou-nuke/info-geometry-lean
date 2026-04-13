@@ -10,10 +10,10 @@ shrunk by a critical lane, and then materialized into quarantine for Lean valida
 
 ## Audit Context
 
-- surrogate findings: `7`
+- surrogate findings: `8`
 - vacuity findings: `0`
-- thin-bridge findings: `5`
-- aggregated replacement targets: `11`
+- thin-bridge findings: `17`
+- aggregated replacement targets: `24`
 
 ## Selection Rule
 
@@ -26,67 +26,7 @@ shrunk by a critical lane, and then materialized into quarantine for Lean valida
 
 `name`
 
-`DebtCandidate.repair_witten_index_invariant_under_onsager_flow_1`
-
-`Lean-style signature sketch`
-
-```lean
-@[rep_depth transport] := by
-  -- constructive replacement target generated from the tracked debt packet
-```
-
-`why this closes a real frontier edge`
-
-This candidate targets the tracked debt surface `witten_index_invariant_under_onsager_flow` at `lean/InfoGeometry/Canonical/TopologicalResidue.lean:71`. It aggregates the audit signals `surrogate:trivial_theorem (critical)`. A successful replacement would replace the trivial proof with a constructive derivation from load-bearing hypotheses.
-
-`likely proof ingredients already present in repo`
-
-- `target file: lean/InfoGeometry/Canonical/TopologicalResidue.lean`
-- `target line: 71`
-- `strongest priority: critical`
-- `audit signals: surrogate:trivial_theorem (critical)`
-- `nearby declarations: InformationalZeroMode, IsTopologicalMemory, wittenIndexResidue`
-- `surrogate debt goal: replace the trivial proof with a constructive derivation from load-bearing hypotheses`
-
-`risk level`
-
-`high`
-
-## Candidate 2
-
-`name`
-
-`DebtCandidate.repair_onsager_reciprocity_at_comparison_2`
-
-`Lean-style signature sketch`
-
-```lean
-@[rep_depth transport] := by
-  -- constructive replacement target generated from the tracked debt packet
-```
-
-`why this closes a real frontier edge`
-
-This candidate targets the tracked debt surface `onsager_reciprocity_at_comparison` at `lean/InfoGeometry/Canonical/VariationalLadder.lean:45`. It aggregates the audit signals `surrogate:trivial_theorem (critical)`. A successful replacement would replace the trivial proof with a constructive derivation from load-bearing hypotheses.
-
-`likely proof ingredients already present in repo`
-
-- `target file: lean/InfoGeometry/Canonical/VariationalLadder.lean`
-- `target line: 45`
-- `strongest priority: critical`
-- `audit signals: surrogate:trivial_theorem (critical)`
-- `nearby declarations: informationalCurrent, VariationalLadder, IsOnsagerStationary`
-- `surrogate debt goal: replace the trivial proof with a constructive derivation from load-bearing hypotheses`
-
-`risk level`
-
-`high`
-
-## Candidate 3
-
-`name`
-
-`DebtCandidate.repair_evaluateAdmission_3`
+`DebtCandidate.repair_evaluateAdmission_1`
 
 `Lean-style signature sketch`
 
@@ -115,11 +55,11 @@ This candidate targets the tracked debt surface `evaluateAdmission` at `lean/Inf
 
 `high`
 
-## Candidate 4
+## Candidate 2
 
 `name`
 
-`DebtCandidate.repair_StrictDeclData_4`
+`DebtCandidate.repair_StrictDeclData_2`
 
 `Lean-style signature sketch`
 
@@ -150,11 +90,11 @@ This candidate targets the tracked debt surface `StrictDeclData` at `lean/InfoGe
 
 `high`
 
-## Candidate 5
+## Candidate 3
 
 `name`
 
-`DebtCandidate.repair_validateStrictDeclSyntax_5`
+`DebtCandidate.repair_validateStrictDeclSyntax_3`
 
 `Lean-style signature sketch`
 
@@ -184,11 +124,41 @@ This candidate targets the tracked debt surface `validateStrictDeclSyntax` at `l
 
 `high`
 
-## Candidate 6
+## Candidate 4
 
 `name`
 
-`DebtCandidate.repair_moorePenroseRightProjector_ne_one_of_hasZeroMode_6`
+`DebtCandidate.repair_hodge_star_executes_legendre_transform_4`
+
+`Lean-style signature sketch`
+
+```lean
+@[capstone] := by
+  -- constructive replacement target generated from the tracked debt packet
+```
+
+`why this closes a real frontier edge`
+
+This candidate targets the tracked debt surface `hodge_star_executes_legendre_transform` at `lean/InfoGeometry/Thermodynamics/SouriauKillingFlow.lean:75`. It aggregates the audit signals `surrogate:trivial_theorem (critical)`. A successful replacement would replace the trivial proof with a constructive derivation from load-bearing hypotheses.
+
+`likely proof ingredients already present in repo`
+
+- `target file: lean/InfoGeometry/Thermodynamics/SouriauKillingFlow.lean`
+- `target line: 75`
+- `strongest priority: critical`
+- `audit signals: surrogate:trivial_theorem (critical)`
+- `nearby declarations: souriau_is_killing_field, star_product_decomposition`
+- `surrogate debt goal: replace the trivial proof with a constructive derivation from load-bearing hypotheses`
+
+`risk level`
+
+`high`
+
+## Candidate 5
+
+`name`
+
+`DebtCandidate.repair_moorePenroseRightProjector_ne_one_of_hasZeroMode_5`
 
 `Lean-style signature sketch`
 
@@ -202,12 +172,12 @@ theorem moorePenroseRightProjector_ne_one_of_hasZeroMode
 
 `why this closes a real frontier edge`
 
-This candidate targets the tracked debt surface `moorePenroseRightProjector_ne_one_of_hasZeroMode` at `lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean:80`. It aggregates the audit signals `thinness:underscore_hypothesis (medium)`. A successful replacement would replace hidden placeholder hypotheses with explicit constructive assumptions or proved facts.
+This candidate targets the tracked debt surface `moorePenroseRightProjector_ne_one_of_hasZeroMode` at `lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean:81`. It aggregates the audit signals `thinness:underscore_hypothesis (medium)`. A successful replacement would replace hidden placeholder hypotheses with explicit constructive assumptions or proved facts.
 
 `likely proof ingredients already present in repo`
 
 - `target file: lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean`
-- `target line: 80`
+- `target line: 81`
 - `strongest priority: medium`
 - `audit signals: thinness:underscore_hypothesis (medium)`
 - `nearby declarations: NontrivialRegularizationPackage, ZeroModeRegularizationPackage, moorePenroseLeftProjector_ne_one_of_hasZeroMode, drazinProjection_ne_one_of_hasZeroMode, exists_nontrivial_regularization_pair_of_dim_mismatch, nontrivialRegularizationPackage_of_dim_mismatch`
@@ -217,11 +187,11 @@ This candidate targets the tracked debt surface `moorePenroseRightProjector_ne_o
 
 `medium`
 
-## Candidate 7
+## Candidate 6
 
 `name`
 
-`DebtCandidate.repair_moorePenroseLeftProjector_ne_one_of_hasZeroMode_7`
+`DebtCandidate.repair_moorePenroseLeftProjector_ne_one_of_hasZeroMode_6`
 
 `Lean-style signature sketch`
 
@@ -236,12 +206,12 @@ theorem moorePenroseLeftProjector_ne_one_of_hasZeroMode
 
 `why this closes a real frontier edge`
 
-This candidate targets the tracked debt surface `moorePenroseLeftProjector_ne_one_of_hasZeroMode` at `lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean:95`. It aggregates the audit signals `thinness:underscore_hypothesis (medium)`. A successful replacement would replace hidden placeholder hypotheses with explicit constructive assumptions or proved facts.
+This candidate targets the tracked debt surface `moorePenroseLeftProjector_ne_one_of_hasZeroMode` at `lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean:96`. It aggregates the audit signals `thinness:underscore_hypothesis (medium)`. A successful replacement would replace hidden placeholder hypotheses with explicit constructive assumptions or proved facts.
 
 `likely proof ingredients already present in repo`
 
 - `target file: lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean`
-- `target line: 95`
+- `target line: 96`
 - `strongest priority: medium`
 - `audit signals: thinness:underscore_hypothesis (medium)`
 - `nearby declarations: NontrivialRegularizationPackage, ZeroModeRegularizationPackage, moorePenroseRightProjector_ne_one_of_hasZeroMode, drazinProjection_ne_one_of_hasZeroMode, exists_nontrivial_regularization_pair_of_dim_mismatch, nontrivialRegularizationPackage_of_dim_mismatch`
@@ -251,11 +221,11 @@ This candidate targets the tracked debt surface `moorePenroseLeftProjector_ne_on
 
 `medium`
 
-## Candidate 8
+## Candidate 7
 
 `name`
 
-`DebtCandidate.repair_drazinProjection_ne_one_of_hasZeroMode_8`
+`DebtCandidate.repair_drazinProjection_ne_one_of_hasZeroMode_7`
 
 `Lean-style signature sketch`
 
@@ -270,12 +240,12 @@ theorem drazinProjection_ne_one_of_hasZeroMode
 
 `why this closes a real frontier edge`
 
-This candidate targets the tracked debt surface `drazinProjection_ne_one_of_hasZeroMode` at `lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean:109`. It aggregates the audit signals `thinness:underscore_hypothesis (medium)`. A successful replacement would replace hidden placeholder hypotheses with explicit constructive assumptions or proved facts.
+This candidate targets the tracked debt surface `drazinProjection_ne_one_of_hasZeroMode` at `lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean:110`. It aggregates the audit signals `thinness:underscore_hypothesis (medium)`. A successful replacement would replace hidden placeholder hypotheses with explicit constructive assumptions or proved facts.
 
 `likely proof ingredients already present in repo`
 
 - `target file: lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean`
-- `target line: 109`
+- `target line: 110`
 - `strongest priority: medium`
 - `audit signals: thinness:underscore_hypothesis (medium)`
 - `nearby declarations: NontrivialRegularizationPackage, ZeroModeRegularizationPackage, moorePenroseRightProjector_ne_one_of_hasZeroMode, moorePenroseLeftProjector_ne_one_of_hasZeroMode, exists_nontrivial_regularization_pair_of_dim_mismatch, nontrivialRegularizationPackage_of_dim_mismatch`
@@ -285,11 +255,11 @@ This candidate targets the tracked debt surface `drazinProjection_ne_one_of_hasZ
 
 `medium`
 
-## Candidate 9
+## Candidate 8
 
 `name`
 
-`DebtCandidate.repair_bottStep_headNullMinus_9`
+`DebtCandidate.repair_bottStep_headNullMinus_8`
 
 `Lean-style signature sketch`
 
@@ -319,11 +289,11 @@ This candidate targets the tracked debt surface `bottStep_headNullMinus` at `lea
 
 `medium`
 
-## Candidate 10
+## Candidate 9
 
 `name`
 
-`DebtCandidate.repair_bottStep_headNullPlus_10`
+`DebtCandidate.repair_bottStep_headNullPlus_9`
 
 `Lean-style signature sketch`
 
@@ -353,31 +323,96 @@ This candidate targets the tracked debt surface `bottStep_headNullPlus` at `lean
 
 `medium`
 
-## Candidate 11
+## Candidate 10
 
 `name`
 
-`DebtCandidate.repair_defaultForbiddenAxioms_11`
+`DebtCandidate.repair_defectProjector_ne_zero_of_package_10`
 
 `Lean-style signature sketch`
 
 ```lean
-def defaultForbiddenAxioms : List Name := by
+@[rep_depth transport, capstone] := by
   -- constructive replacement target generated from the tracked debt packet
 ```
 
 `why this closes a real frontier edge`
 
-This candidate targets the tracked debt surface `defaultForbiddenAxioms` at `lean/InfoGeometry/Meta/Trust.lean:14`. It aggregates the audit signals `surrogate:contract_decl (medium)`. A successful replacement would replace the open contract surface with a concrete proved interface or theorem.
+This candidate targets the tracked debt surface `defectProjector_ne_zero_of_package` at `lean/InfoGeometry/Canonical/DrazinFredholmBridge.lean:178`. It aggregates the audit signals `thinness:underscore_hypothesis (medium)`. A successful replacement would replace hidden placeholder hypotheses with explicit constructive assumptions or proved facts.
 
 `likely proof ingredients already present in repo`
 
-- `target file: lean/InfoGeometry/Meta/Trust.lean`
-- `target line: 14`
+- `target file: lean/InfoGeometry/Canonical/DrazinFredholmBridge.lean`
+- `target line: 178`
+- `strongest priority: medium`
+- `audit signals: thinness:underscore_hypothesis (medium)`
+- `nearby declarations: defectKernelSlicePlus, defectKernelSliceMinus, DefectChiralFredholmSurface, defectChiralIndex, defectKernelDimMismatch_of_defectChiralIndex_ne_zero, DrazinDefectFredholmPackage`
+- `thin-bridge debt goal: replace hidden placeholder hypotheses with explicit constructive assumptions or proved facts`
+
+`risk level`
+
+`medium`
+
+## Candidate 11
+
+`name`
+
+`DebtCandidate.repair_DrazinInfiniteAssumptions_11`
+
+`Lean-style signature sketch`
+
+```lean
+@[rep_depth operator] := by
+  -- constructive replacement target generated from the tracked debt packet
+```
+
+`why this closes a real frontier edge`
+
+This candidate targets the tracked debt surface `DrazinInfiniteAssumptions` at `lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean:196`. It aggregates the audit signals `surrogate:contract_decl (medium)`. A successful replacement would replace the open contract surface with a concrete proved interface or theorem.
+
+`likely proof ingredients already present in repo`
+
+- `target file: lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean`
+- `target line: 196`
 - `strongest priority: medium`
 - `audit signals: surrogate:contract_decl (medium)`
-- `nearby declarations: isAuditableDecl, constantKindLabel, moduleNameOf, collectHardEvidence`
+- `nearby declarations: descentAtZero_of_isDrazinInverse, ascentAtZero_of_isDrazinInverse, finiteAscentDescentAtZero_of_isDrazinInverse, exists_drazinInverse_of_finiteAscentDescent, ZeroIsolatedInSpectrum, HasClassicalRieszDecompositionAtZero`
 - `surrogate debt goal: replace the open contract surface with a concrete proved interface or theorem`
+
+`risk level`
+
+`medium`
+
+## Candidate 12
+
+`name`
+
+`DebtCandidate.repair_splitCliffordTensorStep_headFactor_12`
+
+`Lean-style signature sketch`
+
+```lean
+@[rep_depth krein] theorem splitCliffordTensorStep_headFactor
+    (n : ℕ) (x : ℝ × ℝ) :
+    splitCliffordTensorStepEquiv n
+        (CliffordAlgebra.ι (SplitClNNQuad (n + 1)) (headPair n x))
+      = (CliffordAlgebra.ι InfoGeometry.CliffordTower.Q11 x)
+          ᵍ⊗ₜ (1 : CliffordAlgebra (Qsplit n)) := by
+  -- constructive replacement target generated from the tracked debt packet
+```
+
+`why this closes a real frontier edge`
+
+This candidate targets the tracked debt surface `splitCliffordTensorStep_headFactor` at `lean/InfoGeometry/Canonical/SplitCliffordTensorBridge.lean:148`. It aggregates the audit signals `thinness:direct_forwarder (medium)`. A successful replacement would replace the direct forwarder with a local constructive derivation.
+
+`likely proof ingredients already present in repo`
+
+- `target file: lean/InfoGeometry/Canonical/SplitCliffordTensorBridge.lean`
+- `target line: 148`
+- `strongest priority: medium`
+- `audit signals: thinness:direct_forwarder (medium)`
+- `nearby declarations: SplitCl11Alg, SplitClNNCarrier, SplitClNNQuad, SplitClNNAlg, SplitClNNTensorStep, doubledHeadAtom`
+- `thin-bridge debt goal: replace the direct forwarder with a local constructive derivation`
 
 `risk level`
 

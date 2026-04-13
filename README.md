@@ -189,14 +189,15 @@ For the latest condensation sequence on the operatorial DIII lane, see
 10. [docs/BILINGUAL_SPINE_POLICY.md](docs/BILINGUAL_SPINE_POLICY.md)
 11. [docs/cl11_rosetta_refactor_plan.md](docs/cl11_rosetta_refactor_plan.md)
 12. [docs/cl11_content_collision_map.md](docs/cl11_content_collision_map.md)
-13. [docs/Theory.md](docs/Theory.md)
-14. [lean/InfoGeometry/Audit.lean](lean/InfoGeometry/Audit.lean)
-15. [lean/DAG/README.md](lean/DAG/README.md)
-16. [tools/README.md](tools/README.md)
-17. [tools/infra/README.md](tools/infra/README.md)
-18. [tools/frontier/README.md](tools/frontier/README.md)
-19. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
-20. [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)
+13. [docs/DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](docs/DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
+14. [docs/Theory.md](docs/Theory.md)
+15. [lean/InfoGeometry/Audit.lean](lean/InfoGeometry/Audit.lean)
+16. [lean/DAG/README.md](lean/DAG/README.md)
+17. [tools/README.md](tools/README.md)
+18. [tools/infra/README.md](tools/infra/README.md)
+19. [tools/frontier/README.md](tools/frontier/README.md)
+20. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
+21. [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)
 
 If you are operating as an agent inside this repo, also use:
 - [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)

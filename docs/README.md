@@ -45,6 +45,7 @@ Use these first when you want the current repo state:
 - [cl11_content_collision_map.md](cl11_content_collision_map.md)
 - [AGENTIC_HANDOVER_POLICY_2026-04-15.md](AGENTIC_HANDOVER_POLICY_2026-04-15.md)
 - [AGENTIC_PERSONAS_2026-04-15.md](AGENTIC_PERSONAS_2026-04-15.md)
+- [DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
 - [tools/prompts/agentic_handover_policy_2026-04-15.md](../tools/prompts/agentic_handover_policy_2026-04-15.md)
 - [tools/prompts/agentic_personas_2026-04-15.md](../tools/prompts/agentic_personas_2026-04-15.md)
 - [projective_mathlib_canonicalization_plan.md](projective_mathlib_canonicalization_plan.md)
@@ -110,10 +111,11 @@ For current repo structure:
 6. [BILINGUAL_SPINE_POLICY.md](BILINGUAL_SPINE_POLICY.md)
 7. [cl11_rosetta_refactor_plan.md](cl11_rosetta_refactor_plan.md)
 8. [ToolingMethodology.md](ToolingMethodology.md)
-9. [Theory.md](Theory.md)
-10. [ModuleMap.md](ModuleMap.md)
-11. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
-12. [tools/infra/README.md](../tools/infra/README.md)
+9. [DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
+10. [Theory.md](Theory.md)
+11. [ModuleMap.md](ModuleMap.md)
+12. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
+13. [tools/infra/README.md](../tools/infra/README.md)
 
 For the current count/projective/operator trunk:
 

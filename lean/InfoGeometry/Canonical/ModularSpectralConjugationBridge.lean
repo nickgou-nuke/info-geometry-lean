@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.ModularSpectralWedgeBridge
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.InverseKernelAlgebra
+import InfoGeometry.Canonical.ProjectorEquivariance
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -151,6 +152,43 @@ theorem activeModularConjugation_eq_modular_j_mul_spectralProjector
               (E := E) (W := W) owned_epsilon CIK.spectralComplementaryProjector comp hActivePhase
     _ = (modular_j (E := E)) * CIK.spectralProjector := by
           simp [CertifiedInverseKernel.spectralComplementaryProjector]
+
+/--
+Owned active-phase identity on the projector-first lane:
+`K = J * (P₊ - P₋)`.
+-/
+@[rep_depth transport]
+theorem modularComplexI_eq_modular_j_mul_modularSign :
+    modularComplexI (E := E)
+      =
+    (modular_j (E := E))
+      * InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E) := by
+  ext x <;>
+    simp [modularComplexI_eq_complex_i, ContinuousLinearMap.mul_def,
+      InfoGeometry.Canonical.ProjectorEquivariance.modularSign_eq_spectral_epsilon]
+
+/--
+Projector-first specialization of the certified-kernel comparison theorem:
+if the bridged wedge sign is `P₊ - P₋`, active modular conjugation is exactly
+`J * P_D` on the regular lane.
+-/
+@[rep_depth transport]
+theorem activeModularConjugation_eq_modular_j_mul_spectralProjector_of_modularSign
+    (CIK : CertifiedInverseKernel H₂)
+    (comp :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.IsCompatibleWedge
+        W (InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E))
+          CIK.spectralComplementaryProjector) :
+    activeModularConjugation (E := E)
+      (InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E))
+      CIK.spectralComplementaryProjector
+      =
+    (modular_j (E := E)) * CIK.spectralProjector := by
+  exact activeModularConjugation_eq_modular_j_mul_spectralProjector
+    (E := E) (W := W) CIK
+    (InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E))
+    comp
+    (modularComplexI_eq_modular_j_mul_modularSign (E := E))
 
 end Compatibility
 

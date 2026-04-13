@@ -164,7 +164,74 @@ Recommended for prover stack:
 - keep Hermes adaptive skills in `quarantine/hermes_skills`
 - use explicit promotion to canonical repo skills only after proof-carrying validation
 
-## 9. Locked Diagnostics (No Unlocked Submission)
+## 9. ChatGPT History Import (OpenClaw v2026.4.11+)
+
+OpenClaw added ChatGPT import ingestion in `v2026.4.11` (and it is present in `v2026.4.12`).
+This is the highest-impact path if you have GB-scale prior theory chats.
+
+### Version gate
+
+```bash
+openclaw --version
+# expect >= 2026.4.11
+```
+
+### Enable/prepare memory-wiki
+
+```bash
+openclaw wiki status
+openclaw wiki init
+openclaw wiki doctor
+```
+
+### Import flow (CLI-first)
+
+The memory-wiki plugin exposes ChatGPT import support in the `wiki` CLI surface.
+Check exact subcommands on your installed version:
+
+```bash
+openclaw wiki --help
+openclaw wiki chatgpt --help
+```
+
+Typical import/maintenance flow:
+
+```bash
+# import from your ChatGPT export artifact(s)
+openclaw wiki chatgpt import <chatgpt-export-path>
+
+# rebuild compiled digests and dashboards
+openclaw wiki compile
+openclaw wiki lint
+
+# inspect imported material
+openclaw wiki search "modular supercharge"
+openclaw wiki get <page-or-claim-id>
+```
+
+Rollback support is also available in the ChatGPT import lane:
+
+```bash
+openclaw wiki chatgpt rollback <run-id>
+```
+
+### UI verification
+
+In Dreaming, verify the new subtabs:
+
+- `Imported Insights`
+- `Memory Palace`
+
+These surfaces were added with the ChatGPT import feature and are intended for source-chat inspection plus compiled-memory review.
+
+### Large dataset guidance (GB-scale)
+
+- Import in batches (per export file/date range), then `compile`/`lint` after each batch.
+- Keep `maxConcurrentJobs` conservative in `memory-wiki` config on first run.
+- Prefer `bridge` mode for safe ingestion from public memory artifacts.
+- Always run `wiki lint` before trusting derived claims for theorem-target packets.
+
+## 10. Locked Diagnostics (No Unlocked Submission)
 
 Always run closure builds with the repo lock wrapper to avoid race conditions:
 
@@ -183,7 +250,7 @@ python3 tools/infra/run_locked_lake_build.py --wait-for-build-lock InfoGeometry.
   | tee logs/locked_build_$(date -u +%Y%m%dT%H%M%SZ).log
 ```
 
-## 10. Example Bootstrap Script
+## 11. Example Bootstrap Script
 
 See:
 
@@ -196,7 +263,12 @@ It provisions OpenClaw + NemoClaw, initializes Hermes learnable paths, and runs 
 - OpenClaw install docs: https://docs.openclaw.ai/install
 - OpenClaw skills docs: https://docs.openclaw.ai/tools/skills
 - OpenClaw memory docs: https://docs.openclaw.ai/concepts/memory
+- OpenClaw memory-wiki docs: https://docs.openclaw.ai/plugins/memory-wiki
+- OpenClaw wiki CLI docs: https://docs.openclaw.ai/cli/wiki
 - OpenClaw AGENTS default template: https://docs.openclaw.ai/reference/AGENTS.default
+- OpenClaw v2026.4.11 release notes (ChatGPT import ingestion): https://github.com/openclaw/openclaw/releases/tag/v2026.4.11
+- OpenClaw v2026.4.12 release notes: https://github.com/openclaw/openclaw/releases/tag/v2026.4.12
+- OpenClaw PR #64505 (`Imported Insights` / `Memory Palace`): https://github.com/openclaw/openclaw/pull/64505
 - NemoClaw quickstart: https://docs.nvidia.com/nemoclaw/latest/get-started/quickstart.html
 - NemoClaw docs index: https://docs.nvidia.com/nemoclaw/index.html
 - DGX Spark + OpenShell guide: https://build.nvidia.com/spark/openshell

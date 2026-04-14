@@ -24,22 +24,31 @@ inductive H70Status where
   | testable
   deriving DecidableEq, Repr
 
+/-- Authority/evidence tier for Chapter 70 claims. -/
+inductive H70Authority where
+  | externalFact
+  | repoTheorem
+  | analogy
+  | speculative
+  deriving DecidableEq, Repr
+
 /-- Minimal metadata carrier for hypothesis tracking. -/
 structure H70Claim where
   id : String
   label : String
   status : H70Status
+  authority : H70Authority
 
 /-- Chapter 70 registry (formal hooks only; no proof commitments here). -/
 def registry : List H70Claim :=
   [
-    { id := "H70-003", label := "Router free-energy/Massieu bridge", status := H70Status.testable }
-  , { id := "H70-004", label := "Per-layer scale/shape split", status := H70Status.testable }
-  , { id := "H70-005", label := "Stack-level defect quarantine", status := H70Status.testable }
-  , { id := "H70-007", label := "Krein attention inner product surface", status := H70Status.testable }
-  , { id := "H70-008", label := "Softmax/KMS finite normalization bridge", status := H70Status.testable }
-  , { id := "H70-013", label := "Krein vs Euclidean compact comparison surface", status := H70Status.testable }
-  , { id := "H70-010", label := "Horizon inversion gate", status := H70Status.spec }
+    { id := "H70-003", label := "Router free-energy/Massieu bridge", status := H70Status.testable, authority := H70Authority.repoTheorem }
+  , { id := "H70-004", label := "Per-layer scale/shape split", status := H70Status.testable, authority := H70Authority.repoTheorem }
+  , { id := "H70-005", label := "Stack-level defect quarantine", status := H70Status.testable, authority := H70Authority.repoTheorem }
+  , { id := "H70-007", label := "Krein attention inner product surface", status := H70Status.testable, authority := H70Authority.repoTheorem }
+  , { id := "H70-008", label := "Softmax/KMS finite normalization bridge", status := H70Status.testable, authority := H70Authority.repoTheorem }
+  , { id := "H70-013", label := "Krein vs Euclidean compact comparison surface", status := H70Status.testable, authority := H70Authority.repoTheorem }
+  , { id := "H70-010", label := "Horizon inversion gate", status := H70Status.spec, authority := H70Authority.speculative }
   ]
 
 section KreinInterface

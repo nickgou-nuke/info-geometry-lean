@@ -13,8 +13,13 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from tools.build_lock import DEFAULT_BUILD_LOCK_PATH, read_lock_metadata
-    from tools.infra.artifacts import EXPECTED_INDEXER_SCHEMA_VERSION, load_decl_index_meta, load_json_dict
-    from tools.infra.build import compute_olean_content_hash
+    from tools.infra.artifacts import (
+        EXPECTED_INDEXER_SCHEMA_VERSION,
+        find_missing_decl_source_files,
+        load_decl_index_meta,
+        load_json_dict,
+    )
+    from tools.infra.build import compute_lean_source_hash, compute_olean_content_hash
     from tools.infra.dag_config import load_dag_toolchain_config, repo_display_path
     from tools.infra.timings import (
         load_indexer_timing,
@@ -26,8 +31,13 @@ if __package__ in (None, ""):
     from tools.pathing import repo_root
 else:
     from tools.build_lock import DEFAULT_BUILD_LOCK_PATH, read_lock_metadata
-    from tools.infra.artifacts import EXPECTED_INDEXER_SCHEMA_VERSION, load_decl_index_meta, load_json_dict
-    from tools.infra.build import compute_olean_content_hash
+    from tools.infra.artifacts import (
+        EXPECTED_INDEXER_SCHEMA_VERSION,
+        find_missing_decl_source_files,
+        load_decl_index_meta,
+        load_json_dict,
+    )
+    from tools.infra.build import compute_lean_source_hash, compute_olean_content_hash
     from tools.infra.dag_config import load_dag_toolchain_config, repo_display_path
     from tools.infra.timings import (
         load_indexer_timing,
@@ -265,6 +275,26 @@ def main() -> int:
             add(results, "warn", "olean hash", "artifacts appear stale relative to current build products")
         else:
             add(results, "warn", "olean hash", "missing current or stored olean hash")
+
+        current_source_hash = compute_lean_source_hash(root)
+        stored_source_hash = meta.get("sourceHash")
+        if current_source_hash and stored_source_hash == current_source_hash:
+            add(results, "ok", "source hash", "artifacts match current Lean sources")
+        elif current_source_hash and stored_source_hash:
+            add(results, "warn", "source hash", "artifacts appear stale relative to current Lean sources")
+        else:
+            add(results, "warn", "source hash", "missing current or stored source hash")
+
+        stale_sources = find_missing_decl_source_files(config.authoritative_artifacts.index_dir, limit=3)
+        if stale_sources:
+            add(
+                results,
+                "fail",
+                "decl source paths",
+                f"index references missing Lean files (sample: {', '.join(stale_sources)})",
+            )
+        else:
+            add(results, "ok", "decl source paths", "decl index paths resolve on disk")
 
     indexer_timing = load_indexer_timing(config.authoritative_artifacts.index_dir)
     if not indexer_timing:

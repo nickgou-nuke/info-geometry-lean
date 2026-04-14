@@ -51,6 +51,7 @@ Cause:
 Current behavior:
 - `refresh_decl_graph.py` now checks for missing source paths in `artifacts/dag/index/decls.jsonl` before honoring a skip.
 - if stale paths are found, it forces a refresh automatically.
+- `dagDoctor` now reports `source hash` freshness and fails on unresolved decl source paths.
 
 Manual recovery order (if you still suspect contamination):
 

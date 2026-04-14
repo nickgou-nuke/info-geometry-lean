@@ -21,6 +21,7 @@
 | H70-006 | SPEC | Residual stream acts as Jaynes reference-state measurement frame. | "Residual Stream: The Jaynes Reference State" | pending dedicated module |
 | H70-007 | TESTABLE | Krein/split-signature interaction is available as an explicit attention-energy surface. | "Euclidean illusion vs Krein reality" | `InfoGeometry.LLM.KreinAttentionEnergy.kreinInteractionEnergy_eq_neg_splitB11` |
 | H70-008 | TESTABLE | Softmax/KMS weighting is finite-normalized on each token-local expert slice. | "Softmax as the Unruh Thermal Bath (KMS State)" | `InfoGeometry.LLM.KMSSoftmaxBridge.softmaxWeight_sum_one` |
+| H70-013 | TESTABLE | Compact Krein-vs-Euclidean comparison on the same carrier/context lane. | "same context window, two energies" | `InfoGeometry.LLM.KreinEuclideanComparison.krein_minus_euclidean_energy` |
 | H70-009 | SPEC | iRoPE/nope interleaving behaves as dynamic gauge field queried only on defects. | "position becomes a dynamic gauge field" | pending explicit theorem surface |
 | H70-010 | SPEC | Horizon inversion gate `Q -> -Q` cancels local thermal fluctuation. | "horizon acts as an inversion mirror (Q -> -Q)" | pending |
 | H70-011 | SPEC | Majorana-like paired latent modes yield topological fault tolerance. | "Majorana Zero Modes in the Latent Space" | pending |
@@ -29,8 +30,8 @@
 ## Immediate Formalization Queue (One-Week Target)
 
 1. Decide if `H70-010` stays metaphorical (`SPEC`) or graduates to a formal involutive transport interface.
-2. Add a compact Krein-vs-Euclidean comparison theorem surface (same context window, two energies).
-3. Add a joint `KMS + logit + partition` capstone package theorem for the `H70-008` lane.
+2. Add a joint `KMS + logit + partition` capstone package theorem for the `H70-008` lane.
+3. Extend `H70-013` from pairwise energy gap to a context-level weight-comparison law under explicit channel constraints.
 
 ## Policy for This Chapter
 

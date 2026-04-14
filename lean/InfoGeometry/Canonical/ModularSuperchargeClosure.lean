@@ -135,7 +135,7 @@ theorem canonicalModularSeed_mul_modularSign_eq_neg_superHamiltonian_mul_modular
 Projector-first DPD split specialization on the modular lane:
 `Q_D = [P_D, Σ] + [P_D, Γ_G - Σ]` with `Σ = P₊ - P₋`.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem supercharge_eq_commutator_spectralProjector_modularSign_add_commutator_spectralProjector_GammaG_sub_modularSign
     (CIK : CertifiedInverseKernel H₂) :
     DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
@@ -154,7 +154,7 @@ theorem supercharge_eq_commutator_spectralProjector_modularSign_add_commutator_s
 Equivalent `ε`-form of the DPD split specialization:
 `Q_D = [P_D, ε] + [P_D, Γ_G - ε]`.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem supercharge_eq_commutator_spectralProjector_spectral_epsilon_add_commutator_spectralProjector_GammaG_sub_spectral_epsilon
     (CIK : CertifiedInverseKernel H₂) :
     DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
@@ -1417,7 +1417,7 @@ theorem supercharge_idCertifiedInverseKernel_eq_zero :
       simp [DrazinSupercharge.commutator, hDil]
 
 /-- On the identity certified kernel, the projected even generator `Q_D²` vanishes. -/
-@[rep_depth operator]
+@[rep_depth krein]
 theorem superHamiltonianK_idCertifiedInverseKernel_eq_zero :
     DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK
       (idCertifiedInverseKernel (E := E))
@@ -1435,7 +1435,7 @@ Counterexample theorem: the equation
 `H_D = (2π) • modularHamiltonian` is not derivable uniformly for all certified
 inverse kernels from the current lower-owner assumptions alone.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem not_forall_superHamiltonian_eq_two_pi_modularHamiltonian
     (hModNonzero : InfoGeometry.Dynamics.modularHamiltonian (E := E) ≠ 0) :
     ∃ CIK : CertifiedInverseKernel H₂,

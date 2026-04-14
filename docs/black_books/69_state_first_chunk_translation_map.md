@@ -37,6 +37,16 @@ No narrative claims beyond compiled owner surfaces.
   - `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3.stateFirstAdmissibleOperator_projectorCompressed_stable`
   - `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3.stateFirst_admissibleGate_transport_and_operatorialCramerRao`
 
+## Chunk 4
+
+- File: `lean/InfoGeometry/Canonical/OperatorialCramerRaoStateFirstChunk4.lean`
+- Theorems/defs:
+  - `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4.MeasurableOperator`
+  - `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4.measurableOperator_projectorCompressed_stable`
+  - `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4.measurableOperator_modularFlow_state_stable`
+  - `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4.measurableOperator_uncertainty_bridge`
+  - `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4.stateFirst_measurable_uncertainty_operatorialCramerRao_package`
+
 ## Semantic Audit Surface
 
 - File: `lean/InfoGeometry/Canonical/OperatorialCramerRaoStateFirstSemanticAudit.lean`
@@ -44,7 +54,18 @@ No narrative claims beyond compiled owner surfaces.
   - `Chunk1.stateFirst_modularSplit_singularClosure_operatorialCramerRao`
   - `Chunk2.stateFirst_apexZero_activeOnly_operatorialCramerRao`
   - `Chunk3.stateFirst_admissibleGate_transport_and_operatorialCramerRao`
+  - `Chunk4.stateFirst_measurable_uncertainty_operatorialCramerRao_package`
 - Audit theorems:
   - `chunk2_active_only_reduction_audit`
   - `chunk3_admissibility_package_audit`
+  - `chunk4_measurable_uncertainty_package_audit`
 
+## CI Build Lane
+
+- Script: `tools/infra/build_state_first_lane.py`
+- Targets:
+  - `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1`
+  - `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk2`
+  - `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3`
+  - `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4`
+  - `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstSemanticAudit`

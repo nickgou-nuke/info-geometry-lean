@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk2
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3
+import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -20,6 +21,7 @@ This file provides:
 #print axioms InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1.stateFirst_modularSplit_singularClosure_operatorialCramerRao
 #print axioms InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk2.stateFirst_apexZero_activeOnly_operatorialCramerRao
 #print axioms InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3.stateFirst_admissibleGate_transport_and_operatorialCramerRao
+#print axioms InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4.stateFirst_measurable_uncertainty_operatorialCramerRao_package
 
 namespace InfoGeometry.Canonical.OperatorialCramerRaoStateFirstSemanticAudit
 
@@ -29,6 +31,7 @@ open InfoGeometry.Canonical.RelationalInformationCore
 open InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1
 open InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk2
 open InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3
+open InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4
 
 section Core
 
@@ -88,7 +91,56 @@ theorem chunk3_admissibility_package_audit
     stateFirst_admissibleGate_transport_and_operatorialCramerRao
       (E := E) (CIK := CIK) (S := S) τ t
 
+/--
+Audit alias: Chunk-4 measurable/uncertainty package extraction.
+-/
+@[rep_depth transport]
+theorem chunk4_measurable_uncertainty_package_audit
+    (CIK : CertifiedInverseKernel H₂)
+    (S : StateFirstCRWitness (E := E) CIK)
+    (τ : ℝ)
+    (X : PerturbationChannel E)
+    (B : ℝ)
+    (hBnonneg : 0 ≤ B)
+    (hVar :
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison X X ≤ B)
+    (hX : InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear X) :
+    let R :=
+      InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+        (E := E) CIK τ
+    MeasurableOperator (E := E) CIK R S.comparison S.comparison X
+      ∧
+    MeasurableOperator
+      (E := E)
+      CIK
+      (projectorCompressed (E := E) CIK R)
+      S.comparison
+      S.comparison
+      X
+      ∧
+    ((InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison X S.Y) ^ 2
+      +
+      (InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorPhase
+        (E := E) S.comparison X S.Y) ^ 2
+      ≤
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison X X
+        *
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison S.Y S.Y)
+      ∧
+    (1 /
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison S.Y S.Y
+      ≤
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison S.X S.X) := by
+  exact
+    stateFirst_measurable_uncertainty_operatorialCramerRao_package
+      (E := E) (CIK := CIK) (S := S) τ X B hBnonneg hVar hX
+
 end Core
 
 end InfoGeometry.Canonical.OperatorialCramerRaoStateFirstSemanticAudit
-

@@ -8,6 +8,7 @@ Status: Exploratory witness surface
 This document preserves the CP-002 sandbox exploration as a **witness artifact**.
 It is intentionally kept outside the canonical import graph and does not define
 new owner ontology.
+The former sandbox module has been retired after transfer into canonical owners.
 
 Canonical owner surfaces remain:
 - `lean/InfoGeometry/Canonical/RelativeModularBlockDiagonalCore.lean`

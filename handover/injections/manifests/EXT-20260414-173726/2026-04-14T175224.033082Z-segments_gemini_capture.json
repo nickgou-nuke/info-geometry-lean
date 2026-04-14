@@ -1,0 +1,84 @@
+{
+  "packet_id": "EXT-20260414-173726",
+  "stage": "segments:gemini_capture",
+  "timestamp": "2026-04-14T17:52:24+00:00",
+  "prompt_hash": "8f1c0f48cce8697e97c2855e876f9c90944c4c952f5194e3c96be8d30b72366c",
+  "command": [
+    "tools/infra/injection_capture_gemini_cli.py",
+    "EXT-20260414-173726",
+    "--gemini-bin",
+    "gemini",
+    "--input-mode",
+    "stdin",
+    "--max-segments",
+    "1",
+    "--sleep-sec",
+    "2.0",
+    "--mark-creative-complete"
+  ],
+  "runtime": {
+    "python": "3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0]",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "env_models": {
+      "HERMES_MODEL": "",
+      "OPENAI_MODEL": "",
+      "GEMINI_MODEL": "",
+      "LLM_MODEL": ""
+    },
+    "versions": {
+      "git_rev_parse": {
+        "cmd": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "exit": 0,
+        "stdout": "775422c952cf787af8a5b8cc68c74667a828db55",
+        "stderr": ""
+      },
+      "git_describe": {
+        "cmd": [
+          "git",
+          "describe",
+          "--always",
+          "--dirty"
+        ],
+        "exit": 0,
+        "stdout": "775422c-dirty",
+        "stderr": ""
+      },
+      "lake_version": {
+        "cmd": [
+          "lake",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lake version 5.0.0-src+7e01a1b (Lean version 4.28.0)",
+        "stderr": ""
+      },
+      "lean_version": {
+        "cmd": [
+          "lean",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lean (version 4.28.0, x86_64-unknown-linux-gnu, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b, Release)",
+        "stderr": ""
+      }
+    }
+  },
+  "result": {
+    "ok": true,
+    "processed": 1,
+    "selected": 1,
+    "failures": []
+  },
+  "extra": {
+    "lock_wait_sec": 6.2099998103803955e-06,
+    "input_mode": "stdin",
+    "gemini_bin": "gemini",
+    "gemini_args": [],
+    "dropped_unsupported_gemini_args": [],
+    "sleep_sec": 2.0
+  }
+}

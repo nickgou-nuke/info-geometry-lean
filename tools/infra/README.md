@@ -84,6 +84,27 @@ Main DAG refresh and report path:
 - `generate_replacement_frontier.py`
 - `classify_missing_all.py`
 
+Research-injection pipeline surfaces:
+- `injection_create_packet.py`
+- `injection_research_packet.py`
+- `injection_chunk_ideate.py`
+- `injection_capture_gemini_cli.py`
+- `gemini_account_adapter.py`
+- `injection_enrich_segment.py`
+- `injection_build_digest.py`
+- `injection_promote.py`
+- `injection_status.py`
+
+Gemini passthrough arg guard:
+- `injection_capture_gemini_cli.py` and `gemini_account_adapter.py` strip any
+  passthrough arg containing `prompt_cache_retention` and emit a warning to
+  `stderr`; this prevents legacy cache-retention flags from breaking modern
+  Gemini/OpenAI-compatible backends.
+- This guard protects repo-side Gemini invocations only. If Codex itself emits
+  `Error running remote compact task` for `prompt_cache_retention`, that
+  failure is in Codex's remote compaction path; see
+  [docs/CodexTroubleshooting.md](../../docs/CodexTroubleshooting.md).
+
 Stable spine supplements:
 - `check_representation_depth.py`
 - `generate_representation_depth_graph.py`

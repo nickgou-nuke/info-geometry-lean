@@ -12,6 +12,7 @@ import InfoGeometry.LLM.SpectralToken
 import InfoGeometry.LLM.PinCPTBridge
 import InfoGeometry.LLM.SpinPinTransformerLayer
 import InfoGeometry.LLM.Llama4SpinSpec
+import InfoGeometry.LLM.Llama4PythonBlockSpec
 import InfoGeometry.LLM.PromptDefectRegularization
 import InfoGeometry.LLM.TrialityMoE
 import InfoGeometry.Canonical.Attention

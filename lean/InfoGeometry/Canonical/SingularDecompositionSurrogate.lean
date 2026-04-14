@@ -340,6 +340,32 @@ theorem singular_decomposition_surrogate_package_of_commute
       (E := E) CIK
 
 /--
+Legacy CP-003 package alias in canonical namespace.
+
+Keeps the historical claim-packet surface while delegating to the owner theorem
+in `GlobalChiralDecomposition`.
+-/
+@[rep_depth transport]
+theorem cp003_singular_polar_kan_package_of_commute
+    (CIK : CertifiedInverseKernel H₂)
+    (R : EndH)
+    (hComm : Commute CIK.spectralProjector R) :
+    R
+      =
+    CIK.spectralComplementaryProjector * R * CIK.spectralComplementaryProjector
+      +
+    CIK.spectralProjector * R * CIK.spectralProjector
+      ∧
+    CIK.mpRangeProjector - CIK.metricProjector = (2 : ℝ) • CIK.dilationGap
+      ∧
+    CIK.spectralProjector * CIK.dilationGap - CIK.dilationGap * CIK.spectralProjector
+      =
+    ((2 : ℝ)⁻¹) • (CIK.rightChiralAnomaly - CIK.chiralAnomaly) := by
+  exact
+    InfoGeometry.Canonical.GlobalChiralDecomposition.singularPolarKAN_replacement_of_commute
+      (E := E) (CIK := CIK) (R := R) hComm
+
+/--
 CP-003 extracted commutator clause:
 from one commutation witness, recover the Drazin-vs-dilation commutator law.
 -/

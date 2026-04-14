@@ -1,4 +1,4 @@
-{"totalEdges": 1048650,
+{"totalEdges": 1087526,
  "topUnknownTargets":
  [{"label":
    "_private.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.0.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.realCopyRhoEquiv._proof_1",
@@ -13,6 +13,12 @@
    "_private.InfoGeometry.Canonical.BottDirac.0.InfoGeometry.Canonical.BottDirac.cl11DiracSeed",
    "count": 14},
   {"label":
+   "_private.InfoGeometry.Canonical.RelativeModularBlockDiagonalCore.0.InfoGeometry.Canonical.RelativeModularBlockDiagonalCore.instNormedRingContinuousLinearMapRealIdDoubledSpace",
+   "count": 12},
+  {"label":
+   "_private.InfoGeometry.Canonical.RelativeModularBlockDiagonalCore.0.InfoGeometry.Canonical.RelativeModularBlockDiagonalCore.instNormedAlgebraRealContinuousLinearMapIdDoubledSpace",
+   "count": 11},
+  {"label":
    "_private.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.0.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.realCopyRhoEquiv._proof_6",
    "count": 10},
   {"label":
@@ -23,15 +29,9 @@
    "count": 6},
   {"label":
    "_private.InfoGeometry.Canonical.BottDirac.0.InfoGeometry.Canonical.BottDirac.cl11Grading",
-   "count": 5},
-  {"label":
-   "_private.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.0.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.doubledCopyEquiv._proof_1",
-   "count": 5},
-  {"label":
-   "_private.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.0.InfoGeometry.Clifford.NeutralPhaseSpaceDoubledBridge.doubledCopyEquiv._proof_2",
    "count": 5}],
  "topInternalTargets":
- [{"label": "InfoGeometry.Krein.DoubledSpace._proof_1", "count": 7905},
+ [{"label": "InfoGeometry.Krein.DoubledSpace._proof_1", "count": 8341},
   {"label":
    "InfoGeometry.Canonical.WeylTransportBridge.FlatCurvatureProjectorObstructionBridge._proof_1",
    "count": 74},
@@ -51,7 +51,7 @@
    "InfoGeometry.Canonical.MongeAmpereDualSheetBridge.dualSheetLift._proof_2",
    "count": 34}],
  "topInternalModules":
- [{"label": "InfoGeometry.Krein.DoubledSpace", "count": 7997},
+ [{"label": "InfoGeometry.Krein.DoubledSpace", "count": 8433},
   {"label": "InfoGeometry.Canonical.BogoliubovTransport", "count": 185},
   {"label": "InfoGeometry.Clifford.Grading", "count": 180},
   {"label": "InfoGeometry.Canonical.MongeAmpereDualSheetBridge", "count": 164},
@@ -63,33 +63,33 @@
   {"label": "InfoGeometry.Canonical.BogoliubovFockSuper", "count": 111},
   {"label": "InfoGeometry.Krein.KreinSpace", "count": 108}],
  "topExternalTargets":
- [{"label": "Real", "count": 26095},
-  {"label": "NormedAddCommGroup.toSeminormedAddCommGroup", "count": 18504},
-  {"label": "NormedAddCommGroup", "count": 18133},
-  {"label": "Real.instRCLike", "count": 18106},
-  {"label": "PseudoMetricSpace.toUniformSpace", "count": 17868},
-  {"label": "InnerProductSpace", "count": 17366},
-  {"label": "SeminormedAddCommGroup.toPseudoMetricSpace", "count": 17323},
-  {"label": "Eq", "count": 15266},
-  {"label": "OfNat.ofNat", "count": 14490},
-  {"label": "Real.semiring", "count": 14260}],
+ [{"label": "Real", "count": 27022},
+  {"label": "NormedAddCommGroup.toSeminormedAddCommGroup", "count": 19179},
+  {"label": "NormedAddCommGroup", "count": 18910},
+  {"label": "Real.instRCLike", "count": 18662},
+  {"label": "PseudoMetricSpace.toUniformSpace", "count": 18500},
+  {"label": "SeminormedAddCommGroup.toPseudoMetricSpace", "count": 17955},
+  {"label": "InnerProductSpace", "count": 17921},
+  {"label": "Eq", "count": 16007},
+  {"label": "OfNat.ofNat", "count": 15092},
+  {"label": "Real.semiring", "count": 14812}],
  "topExternalModules":
- [{"label": "Init.Prelude", "count": 122905},
-  {"label": "Mathlib.Analysis.Normed.Group.Defs", "count": 97360},
-  {"label": "Mathlib.Data.Real.Basic", "count": 80571},
-  {"label": "Mathlib.Algebra.Group.Defs", "count": 58434},
-  {"label": "Mathlib.Algebra.Ring.Defs", "count": 48505},
-  {"label": "Mathlib.Analysis.InnerProductSpace.Defs", "count": 30890},
-  {"label": "Mathlib.Topology.Algebra.Module.LinearMap", "count": 28660},
-  {"label": "Mathlib.Data.Nat.Cast.Defs", "count": 27342},
-  {"label": "Mathlib.Data.ENNReal.Basic", "count": 21537},
-  {"label": "Mathlib.Topology.MetricSpace.Pseudo.Defs", "count": 21111}],
+ [{"label": "Init.Prelude", "count": 128653},
+  {"label": "Mathlib.Analysis.Normed.Group.Defs", "count": 101359},
+  {"label": "Mathlib.Data.Real.Basic", "count": 82809},
+  {"label": "Mathlib.Algebra.Group.Defs", "count": 60297},
+  {"label": "Mathlib.Algebra.Ring.Defs", "count": 49744},
+  {"label": "Mathlib.Analysis.InnerProductSpace.Defs", "count": 31893},
+  {"label": "Mathlib.Topology.Algebra.Module.LinearMap", "count": 29718},
+  {"label": "Mathlib.Data.Nat.Cast.Defs", "count": 28677},
+  {"label": "Mathlib.Data.ENNReal.Basic", "count": 22609},
+  {"label": "Mathlib.Topology.MetricSpace.Pseudo.Defs", "count": 21819}],
  "srcOutsideFilteredSet": 0,
  "schemaVersion": 1,
  "nsFilter": "InfoGeometry",
- "keptEdges": 140882,
- "dstUnknownEdges": 370,
- "dstOutsideModuleEdges": 892939,
+ "keptEdges": 148128,
+ "dstUnknownEdges": 400,
+ "dstOutsideModuleEdges": 923944,
  "dstInsideModuleStableEdges": 162,
- "dstInsideModuleGeneratedEdges": 14297,
- "droppedEdges": 907768}
+ "dstInsideModuleGeneratedEdges": 14892,
+ "droppedEdges": 939398}

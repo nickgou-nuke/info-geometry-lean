@@ -214,6 +214,7 @@ import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.Canonical.CentralChargeAnomaly
 import InfoGeometry.Canonical.OperatorialCramerRao
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1
+import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk2
 import InfoGeometry.Canonical.OperatorialUncertainty
 import InfoGeometry.Canonical.PathIntegral
 import InfoGeometry.Canonical.PhaseSpaceRecompositionExample

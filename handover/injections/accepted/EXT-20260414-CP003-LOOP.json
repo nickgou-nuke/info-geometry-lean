@@ -1,0 +1,101 @@
+{
+  "packet_id": "EXT-20260414-CP003-LOOP",
+  "title": "CP-003 loop: surrogate closure thickening",
+  "source": {
+    "type": "manual",
+    "ref": "codex-loop-2026-04-14",
+    "date": "2026-04-14T11:06:43+00:00"
+  },
+  "raw_text": "Execute one closed research->implementation loop for CP-003.",
+  "distilled_claim": "CP-003 should be thickened via a repo-native surrogate closure extension: add one downstream theorem that reuses existing active/apex, range/domain, and anomaly closure surfaces without introducing existential KAN factors.",
+  "research": {
+    "topic": "CP-003 surrogate closure thickening on operator lane",
+    "questions": [
+      "Which existing owner surfaces already prove active/apex split, range/domain split, and anomaly closure?",
+      "What minimal downstream theorem can be added without introducing new ontology?"
+    ],
+    "sources": [
+      {
+        "kind": "note",
+        "ref": "Internal repo owner surfaces + prior validated CP-003 work"
+      },
+      {
+        "kind": "note",
+        "ref": "Goal: one small theorem + targeted build + acceptance"
+      }
+    ],
+    "coverage": "distilled"
+  },
+  "repo_mapping": {
+    "owner_files": [
+      "lean/InfoGeometry/Canonical/SingularDecompositionSurrogate.lean",
+      "lean/InfoGeometry/Canonical/GlobalChiralDecomposition.lean",
+      "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean"
+    ],
+    "symbols": [
+      "singular_decomposition_surrogate_package_of_commute",
+      "global_active_apex_decomposition",
+      "chiral_range_domain_decomposition",
+      "singular_polar_surrogate_closure"
+    ],
+    "target_theorems": [
+      "singular_decomposition_surrogate_commutator_of_commute"
+    ]
+  },
+  "verification_plan": {
+    "build_targets": [
+      "InfoGeometry.Canonical.SingularDecompositionSurrogate"
+    ],
+    "audit_targets": [
+      "targeted-module-build-only"
+    ]
+  },
+  "status": "accepted",
+  "history": [
+    {
+      "at": "2026-04-14T11:06:43+00:00",
+      "event": "created:research",
+      "note": "created in lane=raw"
+    },
+    {
+      "at": "2026-04-14T11:06:54+00:00",
+      "event": "promoted:raw->distilled",
+      "note": "Initial distillation started"
+    },
+    {
+      "at": "2026-04-14T11:07:20+00:00",
+      "event": "distilled:claim",
+      "note": "Set distilled claim and coverage for CP-003 loop."
+    },
+    {
+      "at": "2026-04-14T11:07:33+00:00",
+      "event": "translated:mapping",
+      "note": "Mapped owner files, symbols, target theorem, and verification surface."
+    },
+    {
+      "at": "2026-04-14T11:07:43+00:00",
+      "event": "promoted:distilled->translated",
+      "note": "Repo-native mapping complete"
+    },
+    {
+      "at": "2026-04-14T11:07:50+00:00",
+      "event": "digest:built",
+      "note": "handover/injections/digests/EXT-20260414-CP003-LOOP.md"
+    },
+    {
+      "at": "2026-04-14T11:08:03+00:00",
+      "event": "promoted:translated->gated",
+      "note": "Digest built and implementation target selected"
+    },
+    {
+      "at": "2026-04-14T11:10:27+00:00",
+      "event": "promoted:gated->accepted",
+      "note": "Implemented singular_decomposition_surrogate_commutator_of_commute and verified via lake build InfoGeometry.Canonical.SingularDecompositionSurrogate"
+    },
+    {
+      "at": "2026-04-14T11:11:08+00:00",
+      "event": "digest:built",
+      "note": "handover/injections/digests/EXT-20260414-CP003-LOOP.md"
+    }
+  ]
+}

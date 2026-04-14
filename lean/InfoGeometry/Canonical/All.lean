@@ -76,6 +76,8 @@ import InfoGeometry.Canonical.DrazinCoreFlow
 import InfoGeometry.Canonical.DrazinPenroseDilationAlgebra
 import InfoGeometry.Canonical.DrazinPenroseDilationKKT
 import InfoGeometry.Canonical.DrazinSupercharge
+import InfoGeometry.Canonical.ObserverDefect
+import InfoGeometry.Canonical.ModularSourceBridge
 import InfoGeometry.Canonical.DrazinModularSingularityBridge
 import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.DrazinDescriptorSystems

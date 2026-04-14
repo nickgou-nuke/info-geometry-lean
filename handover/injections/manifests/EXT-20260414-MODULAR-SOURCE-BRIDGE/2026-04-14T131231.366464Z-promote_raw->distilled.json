@@ -1,0 +1,74 @@
+{
+  "packet_id": "EXT-20260414-MODULAR-SOURCE-BRIDGE",
+  "stage": "promote:raw->distilled",
+  "timestamp": "2026-04-14T13:12:31+00:00",
+  "prompt_hash": "00317a4203a575ba40302c6d0272a6e4480076e94e484dc2d8fff858d20b7f96",
+  "command": [
+    "tools/infra/injection_promote.py",
+    "EXT-20260414-MODULAR-SOURCE-BRIDGE",
+    "--to",
+    "distilled",
+    "--note",
+    "bridge-seeded distilled packet"
+  ],
+  "runtime": {
+    "python": "3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0]",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "env_models": {
+      "HERMES_MODEL": "",
+      "OPENAI_MODEL": "",
+      "GEMINI_MODEL": "",
+      "LLM_MODEL": ""
+    },
+    "versions": {
+      "git_rev_parse": {
+        "cmd": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "exit": 0,
+        "stdout": "16dc67918b7a8d3dd3a844abb65e7638284c20e7",
+        "stderr": ""
+      },
+      "git_describe": {
+        "cmd": [
+          "git",
+          "describe",
+          "--always",
+          "--dirty"
+        ],
+        "exit": 0,
+        "stdout": "16dc679-dirty",
+        "stderr": ""
+      },
+      "lake_version": {
+        "cmd": [
+          "lake",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lake version 5.0.0-src+7e01a1b (Lean version 4.28.0)",
+        "stderr": ""
+      },
+      "lean_version": {
+        "cmd": [
+          "lean",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lean (version 4.28.0, x86_64-unknown-linux-gnu, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b, Release)",
+        "stderr": ""
+      }
+    }
+  },
+  "result": {
+    "ok": true,
+    "src_lane": "raw",
+    "dst_lane": "distilled"
+  },
+  "extra": {
+    "lock_wait_sec": 4.927016561850905e-06,
+    "note": "bridge-seeded distilled packet"
+  }
+}

@@ -380,6 +380,53 @@ theorem canonicalRelativeModularOperator_activeApex_stability_of_wedgeCalibrated
   refine ⟨hMixed.1, hMixed.2, hSupport.1, ?_⟩
   exact hSupport.2.2.2
 
+/--
+Wedge-calibrated full block package for the canonical bounded relative modular
+representative: block split, mixed-block vanishing, full projector support on
+both diagonal blocks, and the CP-003 supercharge commutator closure.
+-/
+@[rep_depth transport, capstone]
+theorem canonicalRelativeModularOperator_full_block_package_of_wedgeCalibrated
+    (CIK : CertifiedInverseKernel H₂)
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (C :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+        (E := E)
+        (T := InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := spectral_epsilon (E := E))
+        (owned_P_D := CIK.spectralComplementaryProjector))
+    (τ : ℝ) :
+    let R := canonicalRelativeModularOperator (E := E) CIK τ
+    let Q := CIK.spectralComplementaryProjector
+    let P := CIK.spectralProjector
+    R = Q * R * Q + P * R * P
+      ∧
+    (Q * R * P = 0 ∧ P * R * Q = 0)
+      ∧
+    (Q * (Q * R * Q) = Q * R * Q
+      ∧
+    (Q * R * Q) * Q = Q * R * Q
+      ∧
+    P * (P * R * P) = P * R * P
+      ∧
+    (P * R * P) * P = P * R * P)
+      ∧
+    DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+      =
+    DrazinSupercharge.commutator CIK.spectralProjector CIK.GammaG := by
+  have hSplitSuper :=
+    canonicalRelativeModularOperator_singular_surrogate_package_of_wedgeCalibrated
+      (E := E) (CIK := CIK) (W := W) C τ
+  have hMixed :=
+    canonicalRelativeModularOperator_mixed_blocks_zero_of_wedgeCalibrated
+      (E := E) (CIK := CIK) (W := W) C τ
+  have hSupport :=
+    canonicalRelativeModularOperator_block_support_of_wedgeCalibrated
+      (E := E) (CIK := CIK) (W := W) C τ
+  dsimp
+  exact ⟨hSplitSuper.1, hMixed, hSupport, hSplitSuper.2⟩
+
 end Core
 
 end InfoGeometry.Canonical.SingularDecompositionSurrogate

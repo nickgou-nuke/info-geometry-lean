@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://info-geometry-lean.local/schemas/claim_packet.schema.json",
+  "title": "InjectionClaimPacket",
+  "type": "object",
+  "required": [
+    "packet_id",
+    "title",
+    "source",
+    "raw_text",
+    "distilled_claim",
+    "repo_mapping",
+    "verification_plan",
+    "status",
+    "history"
+  ],
+  "properties": {
+    "packet_id": {"type": "string", "minLength": 3},
+    "title": {"type": "string", "minLength": 3},
+    "source": {
+      "type": "object",
+      "required": ["type", "ref", "date"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["web", "chat", "manual", "llm", "paper", "other"]
+        },
+        "ref": {"type": "string"},
+        "date": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    },
+    "raw_text": {"type": "string"},
+    "distilled_claim": {"type": "string"},
+    "repo_mapping": {
+      "type": "object",
+      "required": ["owner_files", "symbols", "target_theorems"],
+      "properties": {
+        "owner_files": {"type": "array", "items": {"type": "string"}},
+        "symbols": {"type": "array", "items": {"type": "string"}},
+        "target_theorems": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "verification_plan": {
+      "type": "object",
+      "required": ["build_targets"],
+      "properties": {
+        "build_targets": {"type": "array", "items": {"type": "string"}},
+        "audit_targets": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "type": "string",
+      "enum": ["raw", "distilled", "translated", "gated", "accepted", "rejected", "archived"]
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["at", "event"],
+        "properties": {
+          "at": {"type": "string", "format": "date-time"},
+          "event": {"type": "string"},
+          "note": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": true
+}

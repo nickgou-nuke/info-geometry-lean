@@ -5,26 +5,23 @@ from __future__ import annotations
 
 import argparse
 import json
-from datetime import datetime, timezone
+import sys
 from pathlib import Path
 from typing import Any
 
-LANES = ("raw", "distilled", "translated", "gated", "accepted", "rejected", "archive")
+if __package__ in (None, ""):
+    sys.path.append(str(Path(__file__).resolve().parents[2]))
 
-
-def utc_now() -> str:
-    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-
-
-def resolve_packet(injections: Path, ref: str) -> Path:
-    p = Path(ref)
-    if p.exists():
-        return p
-    for lane in LANES:
-        cand = injections / lane / f"{ref}.json"
-        if cand.exists():
-            return cand
-    raise FileNotFoundError(f"packet not found for ref={ref}")
+from tools.infra.injection_common import (
+    acquire_packet_lock,
+    append_history_event,
+    injections_root,
+    repo_root,
+    resolve_packet,
+    validate_packet_schema,
+    write_json_atomic,
+    write_run_manifest,
+)
 
 
 def normalize_sources(packet: dict[str, Any]) -> list[dict[str, str]]:
@@ -77,6 +74,16 @@ def as_list(v: Any) -> list[str]:
     return []
 
 
+def latest_history_time(packet: dict[str, Any], fallback: str) -> str:
+    history = packet.get("history", [])
+    if isinstance(history, list):
+        times = [str(h.get("at", "")).strip() for h in history if isinstance(h, dict)]
+        times = [t for t in times if t]
+        if times:
+            return max(times)
+    return fallback
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build a markdown digest from an injection packet")
     parser.add_argument("packet", help="Packet id or packet path")
@@ -84,12 +91,13 @@ def main() -> int:
     parser.add_argument("--update-packet", action="store_true", help="Append digest event to packet history")
     args = parser.parse_args()
 
-    repo_root = Path(__file__).resolve().parents[2]
-    injections = repo_root / "handover" / "injections"
+    root = repo_root()
+    injections = injections_root(root)
 
     packet_path = resolve_packet(injections, args.packet)
     lane = packet_path.parent.name
     packet = json.loads(packet_path.read_text(encoding="utf-8"))
+    validate_packet_schema(packet)
 
     packet_id = str(packet.get("packet_id", packet_path.stem))
     title = str(packet.get("title", packet_id))
@@ -128,6 +136,8 @@ def main() -> int:
     builds_md = "\n".join(f"- `{x}`" for x in build_targets) if build_targets else "- (not set)"
     audits_md = "\n".join(f"- `{x}`" for x in audit_targets) if audit_targets else "- (not set)"
 
+    deterministic_generated_at = latest_history_time(packet, source_date)
+
     if source_keys:
         trace_line = f"Current claims are grounded in {', '.join(f'[{k}]' for k in source_keys)}."
     else:
@@ -140,7 +150,7 @@ def main() -> int:
 - Lane: `{lane}`
 - Status: `{status}`
 - Coverage: `{coverage}`
-- Generated: `{utc_now()}`
+- Generated: `{deterministic_generated_at}`
 
 ## Provenance
 - Source type: `{source_type}`
@@ -188,15 +198,27 @@ def main() -> int:
     digest_path.write_text(md, encoding="utf-8")
 
     if args.update_packet:
-        hist = packet.setdefault("history", [])
-        hist.append(
-            {
-                "at": utc_now(),
-                "event": "digest:built",
-                "note": str(digest_path.relative_to(repo_root)),
-            }
-        )
-        packet_path.write_text(json.dumps(packet, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
+        lock_owner = f"injection_digest:{packet_id}"
+        with acquire_packet_lock(packet_id, lock_owner, block=True) as lock:
+            # Re-read under lock before mutation.
+            locked_packet = json.loads(packet_path.read_text(encoding="utf-8"))
+            validate_packet_schema(locked_packet)
+            append_history_event(
+                locked_packet,
+                event="digest:built",
+                note=str(digest_path.relative_to(root)),
+                idempotent=True,
+            )
+            validate_packet_schema(locked_packet)
+            write_json_atomic(packet_path, locked_packet)
+            write_run_manifest(
+                root,
+                packet=locked_packet,
+                stage="digest:build",
+                command_argv=list(sys.argv),
+                result={"ok": True, "digest": str(digest_path.relative_to(root))},
+                extra={"lock_wait_sec": lock.wait_seconds},
+            )
 
     print(digest_path)
     return 0

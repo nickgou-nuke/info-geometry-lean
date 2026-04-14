@@ -4,19 +4,25 @@
 from __future__ import annotations
 
 import argparse
-import json
-from datetime import datetime, timezone
+import os
+import sys
 from pathlib import Path
 
-LANES = ("raw", "distilled", "translated", "gated", "accepted", "rejected", "archive")
+if __package__ in (None, ""):
+    sys.path.append(str(Path(__file__).resolve().parents[2]))
 
-
-def utc_now() -> str:
-    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
-
-
-def default_packet_id() -> str:
-    return "EXT-" + datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+from tools.infra.injection_common import (
+    LANES,
+    acquire_packet_lock,
+    default_packet_id,
+    injections_root,
+    repo_root,
+    status_for_lane,
+    utc_now,
+    validate_packet_schema,
+    write_json_atomic,
+    write_run_manifest,
+)
 
 
 def main() -> int:
@@ -30,47 +36,58 @@ def main() -> int:
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
 
-    repo_root = Path(__file__).resolve().parents[2]
-    injections = repo_root / "handover" / "injections"
+    root = repo_root()
+    injections = injections_root(root)
     lane_dir = injections / args.lane
     lane_dir.mkdir(parents=True, exist_ok=True)
 
     packet_id = args.packet_id or default_packet_id()
     out_path = lane_dir / f"{packet_id}.json"
 
-    if out_path.exists() and not args.overwrite:
-        raise SystemExit(f"error: packet exists: {out_path} (use --overwrite)")
+    lock_owner = f"injection_create:{os.getpid()}:{packet_id}"
+    with acquire_packet_lock(packet_id, lock_owner, block=True) as lock:
+        if out_path.exists() and not args.overwrite:
+            raise SystemExit(f"error: packet exists: {out_path} (use --overwrite)")
 
-    packet = {
-        "packet_id": packet_id,
-        "title": args.title,
-        "source": {
-            "type": args.source_type,
-            "ref": args.source_ref,
-            "date": utc_now(),
-        },
-        "raw_text": args.raw_text,
-        "distilled_claim": "",
-        "repo_mapping": {
-            "owner_files": [],
-            "symbols": [],
-            "target_theorems": [],
-        },
-        "verification_plan": {
-            "build_targets": [],
-            "audit_targets": [],
-        },
-        "status": "archived" if args.lane == "archive" else args.lane,
-        "history": [
-            {
-                "at": utc_now(),
-                "event": "created",
-                "note": f"created in lane={args.lane}",
-            }
-        ],
-    }
+        packet = {
+            "packet_id": packet_id,
+            "title": args.title,
+            "source": {
+                "type": args.source_type,
+                "ref": args.source_ref,
+                "date": utc_now(),
+            },
+            "raw_text": args.raw_text,
+            "distilled_claim": "",
+            "repo_mapping": {
+                "owner_files": [],
+                "symbols": [],
+                "target_theorems": [],
+            },
+            "verification_plan": {
+                "build_targets": [],
+                "audit_targets": [],
+            },
+            "status": status_for_lane(args.lane),
+            "history": [
+                {
+                    "at": utc_now(),
+                    "event": "created",
+                    "note": f"created in lane={args.lane}",
+                }
+            ],
+        }
 
-    out_path.write_text(json.dumps(packet, ensure_ascii=True, indent=2) + "\n", encoding="utf-8")
+        validate_packet_schema(packet)
+        write_json_atomic(out_path, packet)
+        write_run_manifest(
+            root,
+            packet=packet,
+            stage=f"create:{args.lane}",
+            command_argv=list(os.sys.argv),
+            result={"ok": True},
+            extra={"lock_wait_sec": lock.wait_seconds, "lane": args.lane},
+        )
     print(out_path)
     return 0
 

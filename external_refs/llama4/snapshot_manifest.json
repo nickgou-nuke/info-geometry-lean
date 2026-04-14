@@ -1,0 +1,55 @@
+{
+  "snapshot_utc": "2026-04-14T15:54:49Z",
+  "sources": [
+    {
+      "path": "external_refs/llama4/args.py",
+      "sha256": "e10bfccad9e73344ea4d008f9c7b4ea5a9e456fe155d83dabaeb51d7099c49a8",
+      "bytes": 3458
+    },
+    {
+      "path": "external_refs/llama4/datatypes.py",
+      "sha256": "b3d4687569c847d20b9ae8c8cad67de6eecfcaa89b5a360525dc24f833332842",
+      "bytes": 1721
+    },
+    {
+      "path": "external_refs/llama4/ffn.py",
+      "sha256": "39382be23ac75f241b80a50c5e8cabab7ff151c3f937e4a635bc07cc6e2d2374",
+      "bytes": 1995
+    },
+    {
+      "path": "external_refs/llama4/model.py",
+      "sha256": "a3b50fac19b702c59e5faa2e6471fbc242d15214c41db0f49f5abd6d96110aaf",
+      "bytes": 16309
+    },
+    {
+      "path": "external_refs/llama4/moe.py",
+      "sha256": "a0338e75fcb6bfb3dd561da69c0b2dd095efcef33b4165278d3b969a6843d727",
+      "bytes": 6928
+    },
+    {
+      "path": "external_refs/llama4/scripts/chat_completion.py",
+      "sha256": "f7c7b540f262e8ea31dd4489c836170ad0cd837da5e5abaf0c6865ea2fceb956",
+      "bytes": 4004
+    },
+    {
+      "path": "external_refs/llama4/scripts/completion.py",
+      "sha256": "25a0ea91ad5061c24bfa25f0962bde239e52b8e0fe3330c433e2abcba01e4475",
+      "bytes": 2085
+    },
+    {
+      "path": "external_refs/llama4/scripts/quantize.py",
+      "sha256": "b121ab2d928a9577babc1ce1794a14bd47c4a3e8bd97144cdee548af2d53a779",
+      "bytes": 8544
+    },
+    {
+      "path": "external_refs/llama4/meta/pyproject.toml",
+      "sha256": "d7f4e80bd68f218f407a630bc0a3cd3c0fe4313f37402f009e838e9dd1aeba92",
+      "bytes": 1421
+    },
+    {
+      "path": "external_refs/llama4/ollama/llama4_library.html",
+      "sha256": "756ed48be841f6da78a03ce537bcd8d8204172935ded374bf97b5e8caf76f24b",
+      "bytes": 87885
+    }
+  ]
+}

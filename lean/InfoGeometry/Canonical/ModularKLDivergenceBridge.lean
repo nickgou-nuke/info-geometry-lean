@@ -1,6 +1,7 @@
 import InfoGeometry.Thermo.ModularKLDivergence
 import InfoGeometry.Canonical.PositiveRayProjectiveBridge
 import InfoGeometry.Canonical.DPDWedgeCompatibility
+import InfoGeometry.Canonical.RelativeModularScaleShapeSplit
 import InfoGeometry.Meta.Architecture
 
 /-!
@@ -25,6 +26,7 @@ open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCore
 open InfoGeometry.Canonical.DPDWedgeCompatibility
 open InfoGeometry.Canonical.ModularSpectralWedge
+open InfoGeometry.Canonical.RelativeModularScaleShapeSplit
 
 section ScaleShape
 
@@ -285,6 +287,65 @@ theorem relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit
         (E := E) (α := α) CIK W comp μ ν with
     ⟨hKL, hActive, hZero⟩
   exact ⟨hOp, hKL, hActive, hZero⟩
+
+/--
+Wedge-calibrated CP-002 comparison theorem:
+the operator-level split is discharged from the canonical-flow commutation
+witness, so no manual off-diagonal hypotheses are needed.
+-/
+@[rep_depth transport, capstone]
+theorem relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit_of_wedgeCalibrated
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E))
+    (W : HasModularSpectralWedge E)
+    (comp : IsCompatibleDPDWedge (E := E) CIK W)
+    (C :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+        (E := E)
+        (T := InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := InfoGeometry.Krein.spectral_epsilon (E := E))
+        (owned_P_D := CIK.spectralComplementaryProjector))
+    (τ : ℝ)
+    (μ ν : PositiveMeasure α ℝ) :
+    canonicalRelativeModularOperator (E := E) CIK τ
+      =
+    IsCompatibleDPDWedge.relativeModularKernelScalePart
+      (CIK := CIK) (canonicalRelativeModularOperator (E := E) CIK τ)
+      +
+    IsCompatibleDPDWedge.relativeModularActiveShapePart
+      (CIK := CIK) (canonicalRelativeModularOperator (E := E) CIK τ)
+      ∧
+    generalizedKL (α := α) μ ν
+      =
+    generalizedKL_activeShapeTerm (α := α) μ ν
+      + generalizedKL_kernelMassTerm (α := α) μ ν
+      ∧
+    W.activeProjector = (1 : EndH) - CIK.spectralComplementaryProjector
+      ∧
+    CIK.spectralComplementaryProjector = W.PZero := by
+  have hComm :
+      Commute
+        (canonicalRelativeModularOperator (E := E) CIK τ)
+        CIK.spectralProjector :=
+    canonicalRelativeModularOperator_commutes_spectralProjector_of_wedgeCalibrated
+      (E := E) (CIK := CIK) (W := W) C τ
+  have hBlocks :
+      CIK.spectralComplementaryProjector
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * CIK.spectralProjector
+        = 0
+        ∧
+      CIK.spectralProjector
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * CIK.spectralComplementaryProjector
+        = 0 :=
+    relativeModular_block_diagonal (E := E) (CIK := CIK)
+      (R := canonicalRelativeModularOperator (E := E) CIK τ) hComm.symm
+  exact
+    relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit
+      (E := E) (α := α) CIK W comp
+      (canonicalRelativeModularOperator (E := E) CIK τ)
+      hBlocks.1 hBlocks.2 μ ν
 
 end DrazinModularScaleShape
 

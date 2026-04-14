@@ -46,7 +46,29 @@ python3 tools/infra/injection_research_packet.py \
   --question "Question 2" \
   --source-url "https://..." \
   --source-paper "arXiv:..." \
+  --workflow-mode gemini-hermes-codex \
+  --segment "segment seed text #1" \
+  --segment "segment seed text #2" \
   --lane raw
+```
+
+Attach Gemini/Hermes segment enrichment:
+```bash
+python3 tools/infra/injection_enrich_segment.py <PACKET_ID> \
+  --segment-id S1 \
+  --creative-notes "Gemini concept expansion..." \
+  --claim "Claim A" \
+  --inference-flag "inference:analogy" \
+  --evidence-url "https://..." \
+  --evidence-summary "Hermes-verified source summary..." \
+  --mark-creative-complete
+
+python3 tools/infra/injection_enrich_segment.py <PACKET_ID> \
+  --segment-id S1 \
+  --enriched-context "Hermes deep search synthesis..." \
+  --evidence-url "https://..." \
+  --evidence-summary "Second evidence summary..." \
+  --mark-verification-complete
 ```
 
 Promote packet by id:
@@ -80,9 +102,15 @@ python3 tools/infra/injection_build_digest.py <PACKET_ID> --update-packet
 
 ## Policy
 - Gemini can create/distill hypotheses.
+- Gemini can run creative segment expansion before verification.
+- Hermes should perform strict evidence enrichment before translation.
 - Codex must translate + validate before any canonical edit.
 - No packet reaches `accepted/` without targeted build verification.
 - `artifacts/` remain generated outputs and are not committed as source of truth.
 - Every mutation path (`create/research/promote/build_digest --update-packet`) is schema-validated.
 - Every mutation path uses per-packet file locks and atomic writes.
 - Promotion uses a strict transition graph (no skip overrides).
+- For `research.workflow.mode=gemini-hermes-codex`, promotion to `translated` requires:
+  - `creative_complete=true`
+  - `verification_complete=true`
+  - non-empty segment cards with `creative_notes` and `literature_evidence`.

@@ -32,6 +32,91 @@
     },
     "raw_text": {"type": "string"},
     "distilled_claim": {"type": "string"},
+    "research": {
+      "type": "object",
+      "properties": {
+        "topic": {"type": "string"},
+        "questions": {"type": "array", "items": {"type": "string"}},
+        "sources": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {"type": "string"},
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {"type": "string"},
+                  "ref": {"type": "string"},
+                  "title": {"type": "string"},
+                  "date": {"type": "string"}
+                },
+                "required": ["kind", "ref"],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "coverage": {"type": "string"},
+        "workflow": {
+          "type": "object",
+          "required": [
+            "mode",
+            "creative_provider",
+            "verification_provider",
+            "coding_provider",
+            "creative_complete",
+            "verification_complete"
+          ],
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": ["standard", "gemini-hermes-codex"]
+            },
+            "creative_provider": {"type": "string"},
+            "verification_provider": {"type": "string"},
+            "coding_provider": {"type": "string"},
+            "creative_complete": {"type": "boolean"},
+            "verification_complete": {"type": "boolean"}
+          },
+          "additionalProperties": false
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["segment_id", "seed_text"],
+            "properties": {
+              "segment_id": {"type": "string"},
+              "title": {"type": "string"},
+              "source_span": {"type": "string"},
+              "seed_text": {"type": "string"},
+              "creative_notes": {"type": "string"},
+              "enriched_context": {"type": "string"},
+              "claims": {"type": "array", "items": {"type": "string"}},
+              "inference_flags": {"type": "array", "items": {"type": "string"}},
+              "confidence": {"type": "number"},
+              "literature_evidence": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["url", "summary"],
+                  "properties": {
+                    "url": {"type": "string"},
+                    "title": {"type": "string"},
+                    "date": {"type": "string"},
+                    "summary": {"type": "string"},
+                    "relevance": {"type": "string"}
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "repo_mapping": {
       "type": "object",
       "required": ["owner_files", "symbols", "target_theorems"],

@@ -2,7 +2,6 @@ import InfoGeometry.LLM.TransformerPhysicsEngine
 import InfoGeometry.LLM.RouterFreeEnergyBridge
 import InfoGeometry.LLM.KreinAttentionEnergy
 import InfoGeometry.LLM.KMSSoftmaxBridge
-import InfoGeometry.LLM.KreinEuclideanComparison
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
@@ -12,7 +11,6 @@ namespace InfoGeometry.LLM.HypothesisScaffold70
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.LLM.AllTopThermodynamicTransformer
 open InfoGeometry.LLM.KreinAttentionEnergy
-open InfoGeometry.LLM.KreinEuclideanComparison
 open InfoGeometry.LLM.KMSSoftmaxBridge
 open InfoGeometry.LLM.RouterFreeEnergyBridge
 open InfoGeometry.LLM.TransformerPhysicsEngine
@@ -47,7 +45,6 @@ def registry : List H70Claim :=
   , { id := "H70-005", label := "Stack-level defect quarantine", status := H70Status.testable, authority := H70Authority.repoTheorem }
   , { id := "H70-007", label := "Krein attention inner product surface", status := H70Status.testable, authority := H70Authority.repoTheorem }
   , { id := "H70-008", label := "Softmax/KMS finite normalization bridge", status := H70Status.testable, authority := H70Authority.repoTheorem }
-  , { id := "H70-013", label := "Krein vs Euclidean compact comparison surface", status := H70Status.testable, authority := H70Authority.repoTheorem }
   , { id := "H70-010", label := "Horizon inversion gate", status := H70Status.spec, authority := H70Authority.speculative }
   ]
 
@@ -80,17 +77,6 @@ theorem h70_kms_softmax_normalization
   · exact kmsWeight_sum_one (n := n) (β := β) (x := x) (i := i)
 
 end KMSSoftmaxInterface
-
-section ComparisonInterface
-
-/-- Testable hook for H70-013 (compact Krein-vs-Euclidean comparison surface). -/
-@[rep_depth krein]
-theorem h70_krein_vs_euclidean_energy_gap
-    (q k : ℝ × ℝ) :
-    kreinInteractionEnergy q k - euclideanInteractionEnergy2D q k = 2 * q.2 * k.2 := by
-  exact krein_minus_euclidean_energy q k
-
-end ComparisonInterface
 
 section ThermoInterface
 

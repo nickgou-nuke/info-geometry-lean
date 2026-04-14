@@ -28,7 +28,6 @@
 | H70-006 | SPEC | SPECULATIVE | Residual stream acts as Jaynes reference-state measurement frame. | "Residual Stream: The Jaynes Reference State" | pending dedicated module |
 | H70-007 | TESTABLE | REPO_THEOREM | Krein/split-signature interaction is available as an explicit attention-energy surface. | "Euclidean illusion vs Krein reality" | `InfoGeometry.LLM.KreinAttentionEnergy.kreinInteractionEnergy_eq_neg_splitB11` |
 | H70-008 | TESTABLE | REPO_THEOREM | Softmax/KMS weighting is finite-normalized on each token-local expert slice. | "Softmax as the Unruh Thermal Bath (KMS State)" | `InfoGeometry.LLM.KMSSoftmaxBridge.softmaxWeight_sum_one` |
-| H70-013 | TESTABLE | REPO_THEOREM | Compact Krein-vs-Euclidean comparison on the same carrier/context lane. | "same context window, two energies" | `InfoGeometry.LLM.KreinEuclideanComparison.krein_minus_euclidean_energy` |
 | H70-009 | SPEC | ANALOGY | iRoPE/nope interleaving behaves as dynamic gauge field queried only on defects. | "position becomes a dynamic gauge field" | pending explicit theorem surface |
 | H70-010 | SPEC | SPECULATIVE | Horizon inversion gate `Q -> -Q` cancels local thermal fluctuation. | "horizon acts as an inversion mirror (Q -> -Q)" | pending |
 | H70-011 | SPEC | SPECULATIVE | Majorana-like paired latent modes yield topological fault tolerance. | "Majorana Zero Modes in the Latent Space" | pending |
@@ -39,7 +38,7 @@
 1. Lock Rosetta calibration in chapter `71` and require evidence-tier tag on each new H70 claim.
 2. Decide if `H70-010` stays metaphorical (`SPEC`) or graduates to a formal involutive transport interface.
 3. Add a joint `KMS + logit + partition` capstone package theorem for the `H70-008` lane.
-4. Extend `H70-013` from pairwise energy gap to a context-level weight-comparison law under explicit channel constraints.
+4. Keep Chapter 70 test hooks strictly on info-geometric/thermodynamic owners (KMS, Massieu, KL/Bregman), not Euclidean comparison baselines.
 
 ## Policy for This Chapter
 

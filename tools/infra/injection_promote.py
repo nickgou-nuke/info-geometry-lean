@@ -17,6 +17,8 @@ from tools.infra.injection_common import (
     acquire_packet_lock,
     append_history_event,
     check_transition_allowed,
+    enforce_authority_tier_transition_gate,
+    enforce_external_analogy_translation_gate,
     enforce_gated_gate,
     enforce_translation_gate,
     injections_root,
@@ -58,9 +60,13 @@ def main() -> int:
 
         packet = json.loads(src.read_text(encoding="utf-8"))
         validate_packet_schema(packet)
+        enforce_authority_tier_transition_gate(packet, args.to)
 
         if args.to == "translated":
-            enforce_translation_gate(packet)
+            if str(packet.get("authority_tier", "repo_native")) == "external_analogy":
+                enforce_external_analogy_translation_gate(packet)
+            else:
+                enforce_translation_gate(packet)
         elif args.to == "gated":
             enforce_gated_gate(packet)
         elif args.to == "accepted":

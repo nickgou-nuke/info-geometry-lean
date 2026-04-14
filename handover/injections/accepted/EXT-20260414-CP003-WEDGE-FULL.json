@@ -1,0 +1,86 @@
+{
+  "packet_id": "EXT-20260414-CP003-WEDGE-FULL",
+  "title": "CP-003 wedge full-block package",
+  "source": {
+    "type": "manual",
+    "ref": "codex-loop-2026-04-14",
+    "date": "2026-04-14T11:14:57+00:00"
+  },
+  "raw_text": "Add a wedge-calibrated full block package theorem in SingularDecompositionSurrogate using existing split/mixed/support/supercharge closures.",
+  "distilled_claim": "CP-003 wedge lane should expose one theorem that packages canonical relative modular block split, mixed-block vanishing, full block support, and supercharge commutator closure under wedge calibration, without adding new ontology.",
+  "research": {
+    "topic": "CP-003 wedge-calibrated full block package",
+    "questions": [
+      "What minimal theorem packages split + mixed + support + supercharge closure without new ontology?"
+    ],
+    "sources": [
+      {
+        "kind": "note",
+        "ref": "Internal owner surfaces and existing wedge-calibrated theorems"
+      }
+    ],
+    "coverage": "distilled"
+  },
+  "repo_mapping": {
+    "owner_files": [
+      "lean/InfoGeometry/Canonical/SingularDecompositionSurrogate.lean",
+      "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "lean/InfoGeometry/Canonical/GlobalChiralDecomposition.lean"
+    ],
+    "symbols": [
+      "canonicalRelativeModularOperator_singular_surrogate_package_of_wedgeCalibrated",
+      "canonicalRelativeModularOperator_mixed_blocks_zero_of_wedgeCalibrated",
+      "canonicalRelativeModularOperator_block_support_of_wedgeCalibrated",
+      "canonicalRelativeModularOperator_full_block_package_of_wedgeCalibrated"
+    ],
+    "target_theorems": [
+      "canonicalRelativeModularOperator_full_block_package_of_wedgeCalibrated"
+    ]
+  },
+  "verification_plan": {
+    "build_targets": [
+      "InfoGeometry.Canonical.SingularDecompositionSurrogate"
+    ],
+    "audit_targets": [
+      "targeted-module-build-only"
+    ]
+  },
+  "status": "accepted",
+  "history": [
+    {
+      "at": "2026-04-14T11:14:57+00:00",
+      "event": "created:research",
+      "note": "created in lane=raw"
+    },
+    {
+      "at": "2026-04-14T11:15:34+00:00",
+      "event": "promoted:raw->distilled",
+      "note": "Distilled claim and mapping populated"
+    },
+    {
+      "at": "2026-04-14T11:15:34+00:00",
+      "event": "promoted:distilled->translated",
+      "note": "Repo mapping and theorem target set"
+    },
+    {
+      "at": "2026-04-14T11:15:34+00:00",
+      "event": "digest:built",
+      "note": "handover/injections/digests/EXT-20260414-CP003-WEDGE-FULL.md"
+    },
+    {
+      "at": "2026-04-14T11:15:34+00:00",
+      "event": "promoted:translated->gated",
+      "note": "Targeted build passed for theorem implementation"
+    },
+    {
+      "at": "2026-04-14T11:15:34+00:00",
+      "event": "promoted:gated->accepted",
+      "note": "Implemented full block package theorem and verified via lake build InfoGeometry.Canonical.SingularDecompositionSurrogate"
+    },
+    {
+      "at": "2026-04-14T11:15:34+00:00",
+      "event": "digest:built",
+      "note": "handover/injections/digests/EXT-20260414-CP003-WEDGE-FULL.md"
+    }
+  ]
+}

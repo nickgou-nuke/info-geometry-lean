@@ -2,6 +2,7 @@ import InfoGeometry.LLM.TransformerBlock
 import InfoGeometry.LLM.MaskedTransformerBlock
 import InfoGeometry.LLM.TransformerArchitecture
 import InfoGeometry.LLM.ThermodynamicSwitching
+import InfoGeometry.LLM.AllTopThermodynamicRouter
 import InfoGeometry.LLM.ScalarThermoBridge
 import InfoGeometry.LLM.DiscreteRouterBayesStep
 import InfoGeometry.LLM.DiscreteRouterBayesRegularizationBridge

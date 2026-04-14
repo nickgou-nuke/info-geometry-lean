@@ -9,6 +9,7 @@ Agent skill definitions for this repository.
 | [info-geometry-repo](info-geometry-repo/SKILL.md) | Primary repo skill: trust order, DAG pipeline, artifact inventory, default workflow |
 | [lean-canonicalization-policy](lean-canonicalization-policy/SKILL.md) | Theorem ownership, file splitting, graph-guided refactors |
 | [frontier-proof-compression](frontier-proof-compression/SKILL.md) | Skynet/OpenClaw proof compression and structural debt burn-down |
+| [lean-sandbox](lean-sandbox/SKILL.md) | Mandatory sandbox-first development for safe repo integration |
 
 ## Generic Lean/Mathlib Skills
 

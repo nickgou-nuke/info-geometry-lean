@@ -29,6 +29,36 @@ def compute_olean_content_hash(root: Path) -> str:
     return h.hexdigest()
 
 
+def compute_lean_source_hash(root: Path) -> str:
+    """Compute a content hash over Lean source/config inputs relevant to decl indexing."""
+    lean_root = root / "lean"
+    if not lean_root.exists():
+        return ""
+    lean_files = sorted(lean_root.rglob("*.lean"))
+    if not lean_files:
+        return ""
+    h = hashlib.sha256()
+    for path in lean_files:
+        try:
+            stat = path.stat()
+        except FileNotFoundError:
+            # Concurrent source edits should not crash hash computation.
+            continue
+        h.update(str(path.relative_to(root)).encode())
+        h.update(str(stat.st_mtime_ns).encode())
+        h.update(str(stat.st_size).encode())
+
+    for extra in ("lakefile.lean", "lakefile.toml", "lean-toolchain"):
+        extra_path = root / extra
+        if not extra_path.exists():
+            continue
+        stat = extra_path.stat()
+        h.update(extra.encode())
+        h.update(str(stat.st_mtime_ns).encode())
+        h.update(str(stat.st_size).encode())
+    return h.hexdigest()
+
+
 def run_locked_lake_build(
     targets: Sequence[str], *, wait_for_lock: bool = False, wfail: bool = False
 ) -> int:

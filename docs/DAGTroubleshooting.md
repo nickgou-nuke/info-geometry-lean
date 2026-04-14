@@ -39,6 +39,28 @@ Or do the full managed repair:
 lake script run dagAll
 ```
 
+## Deleted/Renamed Lean Files Still Appear In DAG Reports
+
+Symptom:
+- declarations from removed or renamed files keep appearing in `reports/dag/*`
+- refresh runs look "green" but downstream reports still reference old paths
+
+Cause:
+- this was usually an incremental-skip mismatch: index refresh skipped because build hashes looked unchanged, while stale `decls.jsonl` rows still pointed at now-missing source files.
+
+Current behavior:
+- `refresh_decl_graph.py` now checks for missing source paths in `artifacts/dag/index/decls.jsonl` before honoring a skip.
+- if stale paths are found, it forces a refresh automatically.
+
+Manual recovery order (if you still suspect contamination):
+
+```bash
+lake script run dagStatus
+lake script run dagRefresh -- --force
+lake script run dagReports
+lake script run dagDoctor
+```
+
 ## Reports Are Missing Or Stale
 
 Run:

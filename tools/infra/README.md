@@ -163,6 +163,14 @@ For normal use, prefer the managed exact sequence from
 lake script run dagAll
 ```
 
+Execution-order rule:
+- refresh must run before reports (`dagRefresh` -> `dagReports`), otherwise reports can legitimately reflect stale index inputs.
+- for source deletes/renames, keep this order strict; do not run report generators directly on old artifacts.
+
+Stale-source guard:
+- `refresh_decl_graph.py` now refuses skip-mode when `artifacts/dag/index/decls.jsonl` references missing Lean source files.
+- this closes the common contamination case where deleted files persisted through an incremental hash skip.
+
 Expanded managed sequence:
 
 ```bash

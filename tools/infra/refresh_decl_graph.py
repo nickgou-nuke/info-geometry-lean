@@ -13,10 +13,12 @@ if __package__ in (None, ""):
         should_skip_decl_refresh,
         load_decl_index_meta,
         stamp_decl_index_meta,
+        find_missing_decl_source_files,
     )
     from tools.infra.build import (
         build_indexer_command,
         compute_olean_content_hash,
+        compute_lean_source_hash,
         run_locked_prebuild,
     )
     from tools.infra.timings import write_indexer_timing_sidecar
@@ -32,10 +34,12 @@ else:
         should_skip_decl_refresh,
         load_decl_index_meta,
         stamp_decl_index_meta,
+        find_missing_decl_source_files,
     )
     from tools.infra.build import (
         build_indexer_command,
         compute_olean_content_hash,
+        compute_lean_source_hash,
         run_locked_prebuild,
     )
     from tools.infra.timings import write_indexer_timing_sidecar
@@ -129,16 +133,28 @@ def main() -> int:
     # Content-hash incremental skip: avoid full re-import when oleans haven't changed.
     if not args.force:
         current_hash = compute_olean_content_hash(root)
+        current_source_hash = compute_lean_source_hash(root)
         if should_skip_decl_refresh(
             meta_path,
             current_hash=current_hash,
+            current_source_hash=current_source_hash,
             import_root=args.import_root,
             namespace=args.namespace,
         ):
-            print("[refresh-decl-graph] oleans unchanged since last run, skipping (use --force to override)", flush=True)
-            return 0
+            stale_sources = find_missing_decl_source_files(index_dir, limit=5)
+            if stale_sources:
+                sample = ", ".join(stale_sources)
+                print(
+                    "[refresh-decl-graph] stale decl source references detected; forcing refresh "
+                    f"instead of skip (sample: {sample})",
+                    flush=True,
+                )
+            else:
+                print("[refresh-decl-graph] oleans unchanged since last run, skipping (use --force to override)", flush=True)
+                return 0
     else:
         current_hash = compute_olean_content_hash(root)
+        current_source_hash = compute_lean_source_hash(root)
 
     index_dir.mkdir(parents=True, exist_ok=True)
     graph_out.parent.mkdir(parents=True, exist_ok=True)
@@ -168,10 +184,15 @@ def main() -> int:
     # Recompute after prebuild/indexer execution so the stamped hash reflects
     # the build products that actually produced the refreshed artifacts.
     current_hash = compute_olean_content_hash(root)
+    current_source_hash = compute_lean_source_hash(root)
 
     # Backfill the ISO timestamp that the Lean indexer cannot produce.
     # Also store the olean content hash for incremental skip on next run.
-    if stamp_decl_index_meta(meta_path, olean_hash=current_hash) is not None:
+    if stamp_decl_index_meta(
+        meta_path,
+        olean_hash=current_hash,
+        source_hash=current_source_hash,
+    ) is not None:
         print(f"[refresh-decl-graph] stamped {meta_path}", flush=True)
     meta = load_decl_index_meta(meta_path)
     timing_sidecar = write_indexer_timing_sidecar(index_dir, meta)

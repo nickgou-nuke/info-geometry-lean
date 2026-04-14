@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.RelativeModularBlockDiagonalCore
+import InfoGeometry.Canonical.GlobalChiralDecomposition
 import InfoGeometry.Canonical.ModularSuperchargeClosure
 import InfoGeometry.Canonical.ModularSpectralWedgeBridge
 import Mathlib.Tactic.NoncommRing
@@ -169,6 +170,29 @@ theorem relativeModular_scaleShapeSplit
       CIK.spectralComplementaryProjector * (R * CIK.spectralComplementaryProjector)
         + CIK.spectralProjector * (R * CIK.spectralProjector) := by
           rfl
+
+/--
+CP-002 ↔ CP-003 bridge:
+from a single commutation witness, expose both split surfaces
+(nested projector form and projector-compressed surrogate form).
+-/
+@[rep_depth transport, capstone]
+theorem cp002_cp003_bridge_of_commute
+    {CIK : CertifiedInverseKernel H₂}
+    {R : EndH}
+    (hComm : Commute CIK.spectralProjector R) :
+    (R =
+      CIK.spectralComplementaryProjector * (R * CIK.spectralComplementaryProjector)
+        + CIK.spectralProjector * (R * CIK.spectralProjector))
+      ∧
+    (R =
+      CIK.spectralComplementaryProjector * R * CIK.spectralComplementaryProjector
+        + CIK.spectralProjector * R * CIK.spectralProjector) := by
+  constructor
+  · exact relativeModular_scaleShapeSplit (E := E) (CIK := CIK) (R := R) hComm
+  · simpa [mul_assoc] using
+      InfoGeometry.Canonical.GlobalChiralDecomposition.global_active_apex_decomposition
+        (E := E) (CIK := CIK) (R := R) hComm
 
 @[rep_depth transport, capstone]
 -- theorem-class: closure

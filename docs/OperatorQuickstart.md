@@ -82,3 +82,23 @@ Use this lane when you are debugging a proof, exploring theorem surfaces, or ins
 - changed Lean work: `lake script run changedVerify`
 - whole-repo DAG maintenance: `lake script run dagAll`
 - diagnosis first: `lake script run dagDoctor`
+
+## Patch-Loop Rule (Fast Iteration)
+
+Do not run full-chain builds after every small patch.
+
+Use this order:
+
+1. `lake env lean <changed-file>.lean`
+2. If file-level check passes, continue patching related files only.
+3. Run owner-module build (`lake build <Owner.Module>`) when the local patch set is coherent.
+4. Run `changedVerify` before commit.
+5. Run full DAG/full umbrella only at packet checkpoints or pre-promotion.
+
+For CP-002 work, prefer:
+
+```bash
+lake env lean lean/InfoGeometry/Canonical/RelativeModularBlockDiagonalCore.lean
+lake env lean lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean
+lake env lean lean/InfoGeometry/Canonical/Sandbox_CP002_Lifted.lean
+```

@@ -164,11 +164,11 @@ theorem relativeModular_scaleShapeSplit
             simpa [mul_assoc] using hMixed.1
           rw [hPRQ, hQRP]
     _ = Q * (R * Q) + P * (R * P) := by
-          simp [add_assoc, add_comm]
+          simp [add_comm]
     _ =
       CIK.spectralComplementaryProjector * (R * CIK.spectralComplementaryProjector)
         + CIK.spectralProjector * (R * CIK.spectralProjector) := by
-          unfold P Q
+          rfl
 
 @[rep_depth transport, capstone]
 -- theorem-class: closure

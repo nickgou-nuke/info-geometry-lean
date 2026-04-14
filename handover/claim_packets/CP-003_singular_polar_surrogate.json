@@ -1,0 +1,44 @@
+{
+  "packet_id": "CP-003",
+  "seed_symbol": "singular_polar_kan_surrogate",
+  "exploratory_source": "docs/black_books/60_the_kan_polar_operator_algebra_mapping.md + DPD/KKT closure lane",
+  "philosophical_claim": "On a singular, graded, doubled-real carrier, clean global KAN/polar factorization is replaced by a projector-algebra surrogate: active/apex and range/domain splits, with anomaly commutator as odd transport generator.",
+  "repo_native_formulation": "Carrier H₂ = DoubledSpace E with phase/hyperbolic axes from ProjectorEquivariance; singular regularization from CertifiedInverseKernel and DPDKKT where P_D, Q_D, P_R, P_L, Γ_G, G, χ_L, χ_R satisfy [P_D, Γ_G] = χ_R - χ_L and [P_D, G] = (1/2)(χ_R - χ_L).",
+  "mathlib_native_formulation": "Bounded-operator ring identities in EndH using idempotent projectors, commutators, and transport-level closure; no new unbounded functional-calculus owner is introduced.",
+  "latex_statement": "\\text{(surrogate closure)}\\quad [P_D,\\Gamma_G]=\\chi_R-\\chi_L,\\qquad [P_D,G]=\\tfrac12(\\chi_R-\\chi_L),\\qquad Q=2[P_D,G],\\ H_D=Q^2.",
+  "symbolic_witness": {
+    "kind": "lean-sandbox",
+    "path": "lean/InfoGeometry/Canonical/Sandbox_CP003_SingularPolarDecomposition.lean",
+    "result_summary": "PENDING: witness aliases proving the CP-003 theorem family by reuse of GlobalChiralDecomposition owner theorems."
+  },
+  "lean_target": {
+    "theorem_name": "singularPolarKAN_replacement_of_commute",
+    "expected_type": "Prop",
+    "owner_file": "lean/InfoGeometry/Canonical/GlobalChiralDecomposition.lean",
+    "imports_budget": [
+      "InfoGeometry.Canonical.ProjectorEquivariance",
+      "InfoGeometry.Canonical.DrazinPenroseDilationKKT",
+      "InfoGeometry.Canonical.DrazinSupercharge",
+      "InfoGeometry.Canonical.RelativeModularScaleShapeSplit"
+    ]
+  },
+  "comparison_theorem_required": false,
+  "comparison_target": "Keep CP-003 as operator-level surrogate closure; optional later comparison to classical KAN/polar language remains interpretive and non-owner.",
+  "explicit_hypotheses": [
+    "[NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]",
+    "CIK : CertifiedInverseKernel (DoubledSpace E)",
+    "K : DPDKKT (DoubledSpace E)",
+    "R : EndH with Commute CIK.spectralProjector R"
+  ],
+  "downstream_consumers": [
+    "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
+    "lean/InfoGeometry/Canonical/TypeIIIContinuousCoreReal.lean",
+    "lean/InfoGeometry/Canonical/OperatorialVolumePreservation.lean"
+  ],
+  "upstairs_content_remaining": "Any Type-III continuous-core/Breuer index quantization claims remain upstairs and are intentionally excluded from CP-003 owner burden.",
+  "lock_status": "sandbox_witness",
+  "next_actions": [
+    "Compile sandbox witness file-level and keep it outside Canonical umbrella owner obligations.",
+    "Promote only if theorem-significance indicates nontrivial downstream fan-in beyond existing GlobalChiralDecomposition owner."
+  ]
+}

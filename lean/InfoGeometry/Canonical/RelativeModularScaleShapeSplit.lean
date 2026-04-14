@@ -1,8 +1,7 @@
 import InfoGeometry.Canonical.DPDWedgeCompatibility
-import InfoGeometry.Canonical.ModularKLDivergenceBridge
 import InfoGeometry.Meta.Architecture
 
-open scoped ENNReal NNReal InnerProductSpace
+open scoped InnerProductSpace
 
 /-!
 # InfoGeometry.Canonical.RelativeModularScaleShapeSplit
@@ -17,17 +16,14 @@ into a dedicated capstone namespace.
 namespace InfoGeometry.Canonical.RelativeModularScaleShapeSplit
 
 open InfoGeometry.Krein
-open InfoGeometry.PositiveMeasure
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DPDWedgeCompatibility
 open InfoGeometry.Canonical.ModularSpectralWedge
-open InfoGeometry.Canonical.ModularKLDivergenceBridge
 
 section Core
 
 variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable {α : Type*} [Fintype α] [Nonempty α]
 
 local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
@@ -62,6 +58,16 @@ noncomputable abbrev relativeModularScalePart
 noncomputable abbrev relativeModularShapePart
     (CIK : CertifiedInverseKernel H₂) (RMO : EndH) : EndH :=
   IsCompatibleDPDWedge.relativeModularActiveShapePart (CIK := CIK) RMO
+
+/--
+Owner-level compatibility witness for CP-002:
+the relative modular operator candidate commutes with the certified active
+projector (`P_D`) on the doubled-real carrier.
+-/
+@[rep_depth transport]
+structure RelativeModularCompatibleWithDrazin
+    (CIK : CertifiedInverseKernel H₂) (RMO : EndH) : Prop where
+  commutes_activeProjector : Commute RMO (activeProjector (E := E) CIK)
 
 /--
 Generic two-block decoupling:
@@ -127,6 +133,20 @@ theorem relativeModular_crossTerms_zero_of_commutes_activeProjector
       ∧
     activeProjector (E := E) CIK * RMO * kernelProjector (E := E) CIK = 0 := by
   exact relativeModular_block_diagonal (E := E) (CIK := CIK) (RMO := RMO) hComm
+
+/--
+Compatibility-packaged form of the CP-002 off-diagonal lock.
+-/
+@[rep_depth transport]
+theorem relativeModular_block_diagonal_of_compatible
+    (CIK : CertifiedInverseKernel H₂)
+    (RMO : EndH)
+    (hCompat : RelativeModularCompatibleWithDrazin (E := E) CIK RMO) :
+    kernelProjector (E := E) CIK * RMO * activeProjector (E := E) CIK = 0
+      ∧
+    activeProjector (E := E) CIK * RMO * kernelProjector (E := E) CIK = 0 := by
+  exact relativeModular_block_diagonal (E := E) (CIK := CIK) (RMO := RMO)
+    hCompat.commutes_activeProjector
 
 /-- Kernel support of the CP-002 scale block. -/
 @[rep_depth transport]
@@ -225,10 +245,16 @@ theorem relativeModular_scaleShapeSplit
     relativeModularScalePart (E := E) CIK RMO
       +
     relativeModularShapePart (E := E) CIK RMO := by
-  exact IsCompatibleDPDWedge.relativeModular_scaleShapeSplit
-      (CIK := CIK)
-      (hQD_RMO_PD_zero := hQD_RMO_PD_zero)
-      (hPD_RMO_QD_zero := hPD_RMO_QD_zero)
+  have hSplit :
+      RMO =
+        IsCompatibleDPDWedge.relativeModularKernelScalePart (CIK := CIK) RMO
+          +
+        IsCompatibleDPDWedge.relativeModularActiveShapePart (CIK := CIK) RMO := by
+    exact IsCompatibleDPDWedge.relativeModular_scaleShapeSplit
+        (CIK := CIK)
+        (hQD_RMO_PD_zero := hQD_RMO_PD_zero)
+        (hPD_RMO_QD_zero := hPD_RMO_QD_zero)
+  simpa [relativeModularScalePart, relativeModularShapePart] using hSplit
 
 /--
 Commutation-form CP-002 capstone:
@@ -250,9 +276,27 @@ theorem relativeModular_scaleShapeSplit_of_commutes_activeProjector
       (E := E) (CIK := CIK) (RMO := RMO) hQP hPQ
 
 /--
+Compatibility-packaged CP-002 capstone:
+derive the canonical scale/shape split from the owner-level compatibility
+witness instead of an ad-hoc commutation hypothesis.
+-/
+@[rep_depth transport, capstone]
+theorem relativeModular_scaleShapeSplit_of_compatible
+    (CIK : CertifiedInverseKernel H₂)
+    (RMO : EndH)
+    (hCompat : RelativeModularCompatibleWithDrazin (E := E) CIK RMO) :
+    RMO
+      =
+    relativeModularScalePart (E := E) CIK RMO
+      +
+    relativeModularShapePart (E := E) CIK RMO := by
+  exact relativeModular_scaleShapeSplit_of_commutes_activeProjector
+    (E := E) (CIK := CIK) (RMO := RMO) hCompat.commutes_activeProjector
+
+/--
 CP-002 comparison theorem:
-the operatorial Drazin block split and the strict-positive projective/gauge
-split are packaged on the same compatible DPD/wedge lane.
+the operatorial Drazin block split and the wedge active/kernel package are
+packaged on the same compatible DPD/wedge lane.
 -/
 @[rep_depth transport, capstone]
 theorem relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit
@@ -263,30 +307,29 @@ theorem relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit
     (hQD_RMO_PD_zero :
       kernelProjector (E := E) CIK * RMO * activeProjector (E := E) CIK = 0)
     (hPD_RMO_QD_zero :
-      activeProjector (E := E) CIK * RMO * kernelProjector (E := E) CIK = 0)
-    (μ ν : PositiveMeasure α ℝ) :
+      activeProjector (E := E) CIK * RMO * kernelProjector (E := E) CIK = 0) :
     RMO
       =
     relativeModularScalePart (E := E) CIK RMO
       +
     relativeModularShapePart (E := E) CIK RMO
       ∧
-    generalizedKL (α := α) μ ν
-      =
-    generalizedKL_activeShapeTerm (α := α) μ ν
-      + generalizedKL_kernelMassTerm (α := α) μ ν
-      ∧
     W.activeProjector = (1 : EndH) - CIK.spectralComplementaryProjector
       ∧
     CIK.spectralComplementaryProjector = W.PZero := by
-  exact ModularKLDivergenceBridge.relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit
-      (E := E) (α := α) CIK W comp RMO hQD_RMO_PD_zero hPD_RMO_QD_zero μ ν
+  refine ⟨?_, ?_⟩
+  · exact relativeModular_scaleShapeSplit
+      (E := E) (CIK := CIK) (RMO := RMO) hQD_RMO_PD_zero hPD_RMO_QD_zero
+  · constructor
+    · exact IsCompatibleDPDWedge.activeProjector_eq_one_sub_spectralComplementaryProjector
+        (CIK := CIK) (W := W) comp
+    · exact (IsCompatibleDPDWedge.kernelConventionLock_pzero_eq_spectralComplementaryProjector
+        (CIK := CIK) (W := W) comp).symm
 
 /--
 Phase B capstone in commutation form:
 from `[RMO, P_D] = 0`, derive both the operatorial scale/shape split and the
-strict-positive projective/gauge comparison package on the compatible DPD/wedge
-lane.
+wedge active/kernel comparison package on the compatible DPD/wedge lane.
 -/
 @[rep_depth transport, capstone]
 theorem relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit_of_commutes_activeProjector
@@ -294,18 +337,12 @@ theorem relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit_of_commutes_acti
     (W : HasModularSpectralWedge E)
     (comp : IsCompatibleDPDWedge (E := E) CIK W)
     (RMO : EndH)
-    (hComm : Commute RMO (activeProjector (E := E) CIK))
-    (μ ν : PositiveMeasure α ℝ) :
+    (hComm : Commute RMO (activeProjector (E := E) CIK)) :
     RMO
       =
     relativeModularScalePart (E := E) CIK RMO
       +
     relativeModularShapePart (E := E) CIK RMO
-      ∧
-    generalizedKL (α := α) μ ν
-      =
-    generalizedKL_activeShapeTerm (α := α) μ ν
-      + generalizedKL_kernelMassTerm (α := α) μ ν
       ∧
     W.activeProjector = (1 : EndH) - CIK.spectralComplementaryProjector
       ∧
@@ -313,7 +350,30 @@ theorem relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit_of_commutes_acti
   rcases relativeModular_crossTerms_zero_of_commutes_activeProjector
       (E := E) (CIK := CIK) (RMO := RMO) hComm with ⟨hQP, hPQ⟩
   exact relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit
-      (E := E) (α := α) CIK W comp RMO hQP hPQ μ ν
+      (E := E) CIK W comp RMO hQP hPQ
+
+/--
+Compatibility-packaged Phase-B CP-002 capstone:
+the comparison package is derived from the owner-level compatibility witness.
+-/
+@[rep_depth transport, capstone]
+theorem relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit_of_compatible
+    (CIK : CertifiedInverseKernel H₂)
+    (W : HasModularSpectralWedge E)
+    (comp : IsCompatibleDPDWedge (E := E) CIK W)
+    (RMO : EndH)
+    (hCompat : RelativeModularCompatibleWithDrazin (E := E) CIK RMO) :
+    RMO
+      =
+    relativeModularScalePart (E := E) CIK RMO
+      +
+    relativeModularShapePart (E := E) CIK RMO
+      ∧
+    W.activeProjector = (1 : EndH) - CIK.spectralComplementaryProjector
+      ∧
+    CIK.spectralComplementaryProjector = W.PZero := by
+  exact relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit_of_commutes_activeProjector
+    (E := E) CIK W comp RMO hCompat.commutes_activeProjector
 
 end Core
 

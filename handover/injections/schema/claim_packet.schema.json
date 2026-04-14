@@ -17,6 +17,10 @@
   "properties": {
     "packet_id": {"type": "string", "minLength": 3},
     "title": {"type": "string", "minLength": 3},
+    "authority_tier": {
+      "type": "string",
+      "enum": ["repo_native", "external_analogy"]
+    },
     "source": {
       "type": "object",
       "required": ["type", "ref", "date"],

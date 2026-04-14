@@ -64,6 +64,12 @@ def main() -> int:
     parser.add_argument("--lane", default="raw", choices=LANES)
     parser.add_argument("--source-type", default="web", choices=["web", "chat", "manual", "llm", "paper", "other"])
     parser.add_argument("--source-ref", default="deep-research", help="Primary source ref label")
+    parser.add_argument(
+        "--authority-tier",
+        default="external_analogy",
+        choices=["repo_native", "external_analogy"],
+        help="Authority tier for downstream promotion rules",
+    )
     parser.add_argument("--raw-text", default="", help="Raw intake text")
     parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
@@ -117,6 +123,7 @@ def main() -> int:
         packet = {
             "packet_id": packet_id,
             "title": title,
+            "authority_tier": args.authority_tier,
             "source": {
                 "type": args.source_type,
                 "ref": args.source_ref,

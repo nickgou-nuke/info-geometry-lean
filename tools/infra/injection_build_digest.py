@@ -102,6 +102,7 @@ def main() -> int:
     packet_id = str(packet.get("packet_id", packet_path.stem))
     title = str(packet.get("title", packet_id))
     status = str(packet.get("status", "unknown"))
+    authority_tier = str(packet.get("authority_tier", "repo_native"))
     source = packet.get("source", {}) if isinstance(packet.get("source", {}), dict) else {}
     source_type = str(source.get("type", "other"))
     source_ref = str(source.get("ref", ""))
@@ -171,6 +172,7 @@ def main() -> int:
 - Packet ID: `{packet_id}`
 - Lane: `{lane}`
 - Status: `{status}`
+- Authority tier: `{authority_tier}`
 - Coverage: `{coverage}`
 - Generated: `{deterministic_generated_at}`
 
@@ -227,6 +229,7 @@ def main() -> int:
 - Confirm source quality and recency.
 - Mark inferred statements explicitly before promotion to `translated`.
 - Block canonical edits until owner/symbol mapping is concrete.
+- External-analogy packets must not be promoted to `gated/accepted` by automation.
 """
 
     digest_path.write_text(md, encoding="utf-8")

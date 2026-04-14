@@ -35,6 +35,7 @@ python3 tools/infra/injection_create_packet.py \
   --source-type manual \
   --source-ref "chat-2026-04-14" \
   --title "CP-BOOT external stream" \
+  --authority-tier repo_native \
   --raw-text "Initial external vision input"
 ```
 
@@ -46,6 +47,7 @@ python3 tools/infra/injection_research_packet.py \
   --question "Question 2" \
   --source-url "https://..." \
   --source-paper "arXiv:..." \
+  --authority-tier external_analogy \
   --workflow-mode gemini-hermes-codex \
   --segment "segment seed text #1" \
   --segment "segment seed text #2" \
@@ -110,6 +112,9 @@ python3 tools/infra/injection_build_digest.py <PACKET_ID> --update-packet
 - Every mutation path (`create/research/promote/build_digest --update-packet`) is schema-validated.
 - Every mutation path uses per-packet file locks and atomic writes.
 - Promotion uses a strict transition graph (no skip overrides).
+- `authority_tier` controls promotion discipline:
+  - `repo_native`: full lane promotion allowed (subject to existing gates).
+  - `external_analogy`: may translate to owner mappings, but automation blocks promotion to `gated/accepted`.
 - For `research.workflow.mode=gemini-hermes-codex`, promotion to `translated` requires:
   - `creative_complete=true`
   - `verification_complete=true`

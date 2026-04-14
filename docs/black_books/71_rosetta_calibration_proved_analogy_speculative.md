@@ -31,6 +31,6 @@
 
 ## Immediate Build Targets
 
-1. Extend `H70-013` to context-level weight-comparison constraints.
+1. Add a compact `KMS + logit + partition` capstone package on token-local expert slices.
 2. Add an involutive transport interface candidate for `H70-010` without promoting beyond speculative.
 3. Keep `H70-012` as conjectural until a modular-flow theorem skeleton is owner-complete.

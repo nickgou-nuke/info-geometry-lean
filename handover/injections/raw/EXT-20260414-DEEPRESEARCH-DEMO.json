@@ -1,0 +1,45 @@
+{
+  "packet_id": "EXT-20260414-DEEPRESEARCH-DEMO",
+  "title": "Deep research: Operator-first modular geometry",
+  "source": {
+    "type": "web",
+    "ref": "deep-research",
+    "date": "2026-04-14T10:56:16+00:00"
+  },
+  "raw_text": "Operator-first modular geometry",
+  "distilled_claim": "",
+  "research": {
+    "topic": "Operator-first modular geometry",
+    "questions": [
+      "Which owner files already support bounded surrogate theorems?"
+    ],
+    "sources": [
+      {
+        "kind": "url",
+        "ref": "https://hermes-agent.nousresearch.com/docs/integrations/providers/"
+      },
+      {
+        "kind": "paper",
+        "ref": "arXiv:math-ph/9802003"
+      }
+    ],
+    "coverage": "draft"
+  },
+  "repo_mapping": {
+    "owner_files": [],
+    "symbols": [],
+    "target_theorems": []
+  },
+  "verification_plan": {
+    "build_targets": [],
+    "audit_targets": []
+  },
+  "status": "raw",
+  "history": [
+    {
+      "at": "2026-04-14T10:56:16+00:00",
+      "event": "created:research",
+      "note": "created in lane=raw"
+    }
+  ]
+}

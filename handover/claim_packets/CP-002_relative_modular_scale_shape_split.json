@@ -1,0 +1,47 @@
+{
+  "packet_id": "CP-002",
+  "seed_symbol": "relative_modular_scale_shape_split",
+  "exploratory_source": "docs/palatial_twistor_synthesis.md + operatorial KL/modular discussions",
+  "philosophical_claim": "Generalized KL scale/shape decomposition is represented operatorially by the Drazin modular split: gauge-mass mismatch localizes to kernel projector P0 (or QD by convention), while projective Itakura-Saito shape is the active modular sector.",
+  "repo_native_formulation": "In the DPD/wedge-compatible sector (CIK, W): PR=PiPlus, PL=PiMinus, P0=spectralComplementaryProjector. Then epsilon_wedge^2 = 1 - P0 and 2G = epsilon_wedge. The intended capstone is a relative-modular divergence split whose kernel term factors through P0 and active term factors through (1-P0).",
+  "mathlib_native_formulation": "Represent decomposition as an equality in ℝ: D_total = D_shape + D_scale, where D_shape is invariant under positive scalar rescaling on rays and D_scale depends only on kernel/complement mass mismatch. Operator projections enter through bounded endomorphisms EndH and projector identities.",
+  "latex_statement": "D_{\\mathrm{rel}}(\\Psi\\|\\Phi) = D_{\\mathrm{shape}}(\\Psi\\|\\Phi; 1-P_0) + D_{\\mathrm{scale}}(\\Psi\\|\\Phi; P_0),\\quad P_0^2=P_0,\\; \\varepsilon_{\\mathrm{wedge}}^2=1-P_0.",
+  "symbolic_witness": {
+    "kind": "python",
+    "path": "tools/witnesses/CP-002_relative_modular_scale_shape_split_check.py",
+    "result_summary": "PENDING: finite-dimensional positive-vector sanity check for gKL scale/shape identity and projector-separated bookkeeping"
+  },
+  "lean_target": {
+    "theorem_name": "relativeModularScaleShapeSplit_eq_drazinActiveKernelSplit_with_dilationGap",
+    "expected_type": "Prop",
+    "owner_file": "lean/InfoGeometry/Canonical/RelativeModularOperator.lean",
+    "imports_budget": [
+      "InfoGeometry.Canonical.RelativeModularCore",
+      "InfoGeometry.Canonical.DPDWedgeCompatibility",
+      "InfoGeometry.Canonical.ModularSpectralWedgeBridge",
+      "InfoGeometry.Canonical.PositiveRayProjectiveBridge"
+    ]
+  },
+  "comparison_theorem_required": true,
+  "comparison_target": "Bridge existing KL/projective split surfaces to RelativeModularOperator via explicit projector compatibility theorem; no new primitive ontology.",
+  "explicit_hypotheses": [
+    "[NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]",
+    "CIK : CertifiedInverseKernel (DoubledSpace E)",
+    "Hmod : EndH",
+    "W : HasModularSpectralWedge (E := E) Hmod",
+    "hCompat : IsCompatibleDPDWedge (E := E) CIK W",
+    "Projector convention fixed explicitly: kernel projector is P0 (or QD := 1-PD by theorem-local convention), never implicit"
+  ],
+  "downstream_consumers": [
+    "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
+    "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+    "lean/InfoGeometry/Canonical/TypeIIIContinuousCoreReal.lean"
+  ],
+  "upstairs_content_remaining": "Type III continuous-core Breuer index interpretation remains interface-level and explicitly separated from this finite/operator bridge closure.",
+  "lock_status": "formalized",
+  "next_actions": [
+    "Promote from bridge-level closure to owner-level theorem in RelativeModularOperator.lean if needed by downstream capstones",
+    "Thread this theorem into ModularSuperchargeClosure or TypeIIIContinuousCoreReal as a direct consumer",
+    "Run theorem-significance delta to measure fan-in gain"
+  ]
+}

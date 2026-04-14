@@ -234,6 +234,7 @@ import InfoGeometry.Canonical.MajoranaKreinCartanSplit
 import InfoGeometry.Canonical.RelativeModularPolarizedBridge
 import InfoGeometry.Canonical.RelativeModularProjectiveBridge
 import InfoGeometry.Canonical.ModularKLDivergenceBridge
+import InfoGeometry.Canonical.RelativeModularScaleShapeSplit
 import InfoGeometry.Canonical.RelativeModularRecomposition
 import InfoGeometry.Canonical.RobustThermodynamicRegression
 import InfoGeometry.Canonical.Quantum

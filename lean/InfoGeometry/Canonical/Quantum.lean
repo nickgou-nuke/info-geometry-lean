@@ -31,9 +31,13 @@ import InfoGeometry.Quantum.SplitCliffordAtom
 import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Quantum.RealMajorana
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.Quantum
 
 Canonical quantum-layer umbrella (publication surface), routed through
 canonical facades.
 -/
+
+end InfoGeometry

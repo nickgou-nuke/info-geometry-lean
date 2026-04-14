@@ -1,5 +1,7 @@
 import InfoGeometry.MaxEnt.JaynesInfoStatMech
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.MaxEnt.JaynesInfoStatMechTest
 
@@ -30,3 +32,5 @@ by
   constructor
   · intro ω; exact (boltzmannDist E b).nonneg ω
   · exact (boltzmannDist E b).sum_one
+
+end InfoGeometry

@@ -29,6 +29,8 @@ import InfoGeometry.Krein.Prelude
 import InfoGeometry.Krein.Superalgebra
 import InfoGeometry.Krein.Thermal
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.Krein
 
@@ -39,3 +41,5 @@ This file re‑exports the various Krein submodules so that
 infrastructure.  Legacy compatibility modules like
 `InfoGeometry.Krein` simply import this file.
 -/
+
+end InfoGeometry

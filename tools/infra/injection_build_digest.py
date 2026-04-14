@@ -111,6 +111,14 @@ def main() -> int:
     topic = str(research.get("topic", packet.get("raw_text", "")))
     questions = as_list(research.get("questions", []))
     coverage = str(research.get("coverage", "draft"))
+    workflow = research.get("workflow", {}) if isinstance(research.get("workflow", {}), dict) else {}
+    workflow_mode = str(workflow.get("mode", "standard"))
+    creative_provider = str(workflow.get("creative_provider", ""))
+    verification_provider = str(workflow.get("verification_provider", ""))
+    coding_provider = str(workflow.get("coding_provider", ""))
+    creative_complete = bool(workflow.get("creative_complete", False))
+    verification_complete = bool(workflow.get("verification_complete", False))
+    segments = research.get("segments", []) if isinstance(research.get("segments", []), list) else []
 
     distilled_claim = str(packet.get("distilled_claim", "")).strip()
 
@@ -143,6 +151,20 @@ def main() -> int:
     else:
         trace_line = "No source grounding recorded yet."
 
+    segment_lines: list[str] = []
+    for i, seg in enumerate(segments):
+        if not isinstance(seg, dict):
+            continue
+        sid = str(seg.get("segment_id", f"S{i+1}"))
+        title_seg = str(seg.get("title", "")).strip()
+        evs = seg.get("literature_evidence", [])
+        ev_count = len(evs) if isinstance(evs, list) else 0
+        creative = "yes" if str(seg.get("creative_notes", "")).strip() else "no"
+        segment_lines.append(
+            f"- `{sid}` {f'({title_seg})' if title_seg else ''}: creative={creative}, evidence={ev_count}"
+        )
+    segments_md = "\n".join(segment_lines) if segment_lines else "- (no segments)"
+
     md = f"""# Literature Digest: {title}
 
 ## Packet Metadata
@@ -159,6 +181,18 @@ def main() -> int:
 
 ## Topic
 {topic}
+
+## Workflow
+- Mode: `{workflow_mode}`
+- Creative provider: `{creative_provider}`
+- Verification provider: `{verification_provider}`
+- Coding provider: `{coding_provider}`
+- Creative complete: `{str(creative_complete).lower()}`
+- Verification complete: `{str(verification_complete).lower()}`
+- Segment count: `{len(segments)}`
+
+### Segment Coverage
+{segments_md}
 
 ## Research Questions
 {questions_md}

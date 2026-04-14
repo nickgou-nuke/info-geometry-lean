@@ -1,5 +1,6 @@
 import InfoGeometry.LLM.TransformerBlock
 import InfoGeometry.LLM.MaskedTransformerBlock
+import InfoGeometry.LLM.TrialityMoE
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit

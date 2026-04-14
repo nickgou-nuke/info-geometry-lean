@@ -4,6 +4,7 @@ import InfoGeometry.LLM.TransformerArchitecture
 import InfoGeometry.LLM.ThermodynamicSwitching
 import InfoGeometry.LLM.ScalarThermoBridge
 import InfoGeometry.LLM.DiscreteRouterBayesStep
+import InfoGeometry.LLM.DiscreteRouterBayesRegularizationBridge
 import InfoGeometry.LLM.RouterFreeEnergyBridge
 import InfoGeometry.LLM.KMSSoftmaxBridge
 import InfoGeometry.LLM.SpectralToken

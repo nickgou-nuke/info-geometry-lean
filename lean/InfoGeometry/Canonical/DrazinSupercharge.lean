@@ -79,6 +79,89 @@ theorem supercharge_eq_two_smul_commutator_spectralProjector_dilationGap :
       CIK.spectralProjector_commutator_dilationGap_eq_half_sub_anomalies
   simpa [supercharge, commutator, smul_smul] using h.symm
 
+/--
+Equivalent geometric-Cartan commutator presentation:
+`Q = [P_D, Γ_G]`.
+-/
+theorem supercharge_eq_commutator_spectralProjector_GammaG :
+    supercharge CIK = commutator CIK.spectralProjector CIK.GammaG := by
+  simpa [supercharge, commutator] using
+    (CIK.spectralProjector_commutator_GammaG_eq_sub_anomalies).symm
+
+/--
+Geometric-range mismatch relative to a chosen sign/chiral axis `sigma`.
+
+This packages the obstruction `Xi := Γ_G - sigma`.
+-/
+@[rep_depth operator]
+noncomputable def geometricMismatch (sigma : EndH) : EndH :=
+  CIK.GammaG - sigma
+
+/-- Geometric Cartan generator decomposition through a chosen axis `sigma`. -/
+theorem GammaG_eq_sigma_add_geometricMismatch (sigma : EndH) :
+    CIK.GammaG = sigma + geometricMismatch CIK sigma := by
+  unfold geometricMismatch
+  abel
+
+/--
+Commutator split through a chosen axis `sigma`:
+`[P_D, Γ_G] = [P_D, sigma] + [P_D, Xi]`, where `Xi := Γ_G - sigma`.
+-/
+theorem commutator_spectralProjector_GammaG_eq_commutator_spectralProjector_sigma_add_commutator_spectralProjector_geometricMismatch
+    (sigma : EndH) :
+    commutator CIK.spectralProjector CIK.GammaG
+      =
+    commutator CIK.spectralProjector sigma
+      +
+    commutator CIK.spectralProjector (geometricMismatch CIK sigma) := by
+  rw [GammaG_eq_sigma_add_geometricMismatch (CIK := CIK) sigma]
+  unfold commutator
+  noncomm_ring
+
+/--
+Supercharge split through a chosen axis `sigma`:
+`Q = [P_D, sigma] + [P_D, Xi]`, where `Xi := Γ_G - sigma`.
+-/
+theorem supercharge_eq_commutator_spectralProjector_sigma_add_commutator_spectralProjector_geometricMismatch
+    (sigma : EndH) :
+    supercharge CIK
+      =
+    commutator CIK.spectralProjector sigma
+      +
+    commutator CIK.spectralProjector (geometricMismatch CIK sigma) := by
+  calc
+    supercharge CIK = commutator CIK.spectralProjector CIK.GammaG :=
+      supercharge_eq_commutator_spectralProjector_GammaG (CIK := CIK)
+    _ =
+      commutator CIK.spectralProjector sigma
+        +
+      commutator CIK.spectralProjector (geometricMismatch CIK sigma) :=
+      commutator_spectralProjector_GammaG_eq_commutator_spectralProjector_sigma_add_commutator_spectralProjector_geometricMismatch
+        (CIK := CIK) sigma
+
+/--
+Calibrated specialization:
+if the geometric mismatch vanishes (`Xi = 0`), then
+`Q = [P_D, sigma]`.
+-/
+theorem supercharge_eq_commutator_spectralProjector_sigma_of_geometricMismatch_eq_zero
+    (sigma : EndH)
+    (hMismatch : geometricMismatch CIK sigma = 0) :
+    supercharge CIK = commutator CIK.spectralProjector sigma := by
+  calc
+    supercharge CIK
+        =
+      commutator CIK.spectralProjector sigma
+        +
+      commutator CIK.spectralProjector (geometricMismatch CIK sigma) :=
+      supercharge_eq_commutator_spectralProjector_sigma_add_commutator_spectralProjector_geometricMismatch
+        (CIK := CIK) sigma
+    _ = commutator CIK.spectralProjector sigma + commutator CIK.spectralProjector 0 := by
+          simp [hMismatch]
+    _ = commutator CIK.spectralProjector sigma + 0 := by
+          simp [commutator]
+    _ = commutator CIK.spectralProjector sigma := by simp
+
 /-- Krein-depth bridge form of `Q = 2 • [P_D, G]`. -/
 @[rep_depth krein]
 theorem supercharge_eq_two_smul_commutatorK_spectralProjector_dilationGap :

@@ -13,3 +13,4 @@ This tracked copy mirrors the operational tracker format for closure packets tha
   - `lean/InfoGeometry/Canonical/RelativeModularBlockDiagonalCore.lean`: file-level compile OK.
   - `lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean`: file-level compile OK (only linter warning at line 107: `simpa` → `simp` suggestion).
   - `lean/InfoGeometry/Canonical/Sandbox_CP002_Lifted.lean`: file-level compile OK after replacing brittle rewrite flow with projector-orthogonality proof.
+  - Witness memo preserved at `handover/witnesses/CP-002_sandbox_witness.md` (non-authority sandbox surface).

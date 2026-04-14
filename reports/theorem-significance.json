@@ -207077,6 +207077,80 @@
     }
   },
   {
+    "name": "InfoGeometry.Canonical.MoE.normalizedWeights.eq_1",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/LLM/KMSSoftmaxBridge.lean",
+    "module": "InfoGeometry.LLM.KMSSoftmaxBridge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 4,
+    "forward_value": 2,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 5,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "auto-generated",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.8868,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.bridge-file",
+          "contribution": 0.08,
+          "reliability": 0.72,
+          "rationale": "bridge hint matched file stem"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.06,
+          "reliability": 0.7,
+          "rationale": "descendant_mass = 5"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
     "name": "InfoGeometry.Canonical.MoE.normalizedWeights_nonneg",
     "kind": "theorem",
     "file": "lean/InfoGeometry/Canonical/SinkhornFoundation.lean",
@@ -207150,14 +207224,14 @@
     "module": "InfoGeometry.Canonical.MixtureOfExperts",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 4,
+    "reverse_value": 5,
     "forward_type": 1,
     "forward_value": 4,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 4,
+    "reverse_proof_only_reuse": 5,
     "is_sink": false,
     "depth": 5,
-    "transitive_reverse_reach": 22,
+    "transitive_reverse_reach": 24,
     "descendant_mass": 6,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -207175,7 +207249,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 4"
+          "rationale": "reverse_proof_only_reuse = 5"
         },
         {
           "signal": "structure.low-public-fan-in",
@@ -208442,7 +208516,7 @@
     "reverse_proof_only_reuse": 4,
     "is_sink": false,
     "depth": 6,
-    "transitive_reverse_reach": 26,
+    "transitive_reverse_reach": 28,
     "descendant_mass": 4,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -211873,6 +211947,80 @@
           "contribution": 0.04,
           "reliability": 0.68,
           "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.MoE.unnormalizedWeights.eq_1",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/LLM/KMSSoftmaxBridge.lean",
+    "module": "InfoGeometry.LLM.KMSSoftmaxBridge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 3,
+    "forward_value": 2,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 3,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "auto-generated",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.8868,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.bridge-file",
+          "contribution": 0.08,
+          "reliability": 0.72,
+          "rationale": "bridge hint matched file stem"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.06,
+          "reliability": 0.7,
+          "rationale": "descendant_mass = 3"
         },
         {
           "signal": "structure.acyclic",
@@ -512645,6 +512793,66 @@
     }
   },
   {
+    "name": "InfoGeometry.LLM.HypothesisScaffold70.h70_kms_softmax_normalization",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/LLM/HypothesisScaffold70.lean",
+    "module": "InfoGeometry.LLM.HypothesisScaffold70",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 3,
+    "forward_value": 5,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 16,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 5,
+    "n_forward_theorem": 2,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "warning",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.25,
+      "confidence": 0.7448,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
     "name": "InfoGeometry.LLM.HypothesisScaffold70.h70_krein_energy_surface",
     "kind": "theorem",
     "file": "lean/InfoGeometry/LLM/HypothesisScaffold70.lean",
@@ -513528,6 +513736,73 @@
     }
   },
   {
+    "name": "InfoGeometry.LLM.KMSSoftmaxBridge.kmsWeight_sum_one",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/LLM/KMSSoftmaxBridge.lean",
+    "module": "InfoGeometry.LLM.KMSSoftmaxBridge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 2,
+    "forward_value": 4,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
+    "descendant_mass": 8,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 4,
+    "n_forward_theorem": 1,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.38,
+      "confidence": 0.7311,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "context.bridge-file",
+          "contribution": 0.08,
+          "reliability": 0.72,
+          "rationale": "bridge hint matched file stem"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
     "name": "InfoGeometry.LLM.KMSSoftmaxBridge.routerFreeEnergyEps_eq_neg_eps_kmsLogPartition",
     "kind": "theorem",
     "file": "lean/InfoGeometry/LLM/KMSSoftmaxBridge.lean",
@@ -513547,6 +513822,214 @@
     "scc_role": "acyclic",
     "n_forward_value": 6,
     "n_forward_theorem": 3,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.33,
+      "confidence": 0.7388,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.bridge-file",
+          "contribution": 0.08,
+          "reliability": 0.72,
+          "rationale": "bridge hint matched file stem"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.LLM.KMSSoftmaxBridge.routerLogit.eq_1",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/LLM/KMSSoftmaxBridge.lean",
+    "module": "InfoGeometry.LLM.KMSSoftmaxBridge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 3,
+    "forward_value": 2,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 4,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "auto-generated",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.8868,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.bridge-file",
+          "contribution": 0.08,
+          "reliability": 0.72,
+          "rationale": "bridge hint matched file stem"
+        },
+        {
+          "signal": "structure.low-descendant-mass",
+          "contribution": 0.06,
+          "reliability": 0.7,
+          "rationale": "descendant_mass = 4"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.LLM.KMSSoftmaxBridge.softmaxWeight.eq_1",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/LLM/KMSSoftmaxBridge.lean",
+    "module": "InfoGeometry.LLM.KMSSoftmaxBridge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 3,
+    "forward_value": 2,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 6,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 2,
+    "n_forward_theorem": 0,
+    "tags": [
+      "auto-generated",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.8955,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.bridge-file",
+          "contribution": 0.08,
+          "reliability": 0.72,
+          "rationale": "bridge hint matched file stem"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.LLM.KMSSoftmaxBridge.softmaxWeight_eq_exp_routerLogit_div_partition",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/LLM/KMSSoftmaxBridge.lean",
+    "module": "InfoGeometry.LLM.KMSSoftmaxBridge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 4,
+    "forward_value": 6,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 8,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 6,
+    "n_forward_theorem": 0,
     "tags": [
       "dead-candidate"
     ],
@@ -513643,6 +514126,73 @@
           "contribution": 0.08,
           "reliability": 0.72,
           "rationale": "bridge hint matched file stem"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.LLM.KMSSoftmaxBridge.softmaxWeight_sum_one",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/LLM/KMSSoftmaxBridge.lean",
+    "module": "InfoGeometry.LLM.KMSSoftmaxBridge",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 1,
+    "forward_type": 2,
+    "forward_value": 4,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
+    "descendant_mass": 8,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 4,
+    "n_forward_theorem": 1,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.38,
+      "confidence": 0.7311,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "context.bridge-file",
+          "contribution": 0.08,
+          "reliability": 0.72,
+          "rationale": "bridge hint matched file stem"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
         },
         {
           "signal": "structure.acyclic",
@@ -628352,14 +628902,14 @@
     "module": "InfoGeometry.Thermo.FiniteDiagonal",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 2,
+    "reverse_value": 3,
     "forward_type": 1,
     "forward_value": 3,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 2,
+    "reverse_proof_only_reuse": 3,
     "is_sink": false,
     "depth": 3,
-    "transitive_reverse_reach": 5,
+    "transitive_reverse_reach": 7,
     "descendant_mass": 3,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -628370,20 +628920,20 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.34,
-      "confidence": 0.7585,
+      "score": 0.39,
+      "confidence": 0.7779,
       "factors": [
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.16,
+          "reliability": 0.8,
+          "rationale": "reverse_proof_only_reuse = 3"
+        },
         {
           "signal": "structure.low-public-fan-in",
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
-        },
-        {
-          "signal": "structure.proof-only-reuse",
-          "contribution": 0.11,
-          "reliability": 0.75,
-          "rationale": "reverse_proof_only_reuse = 2"
         },
         {
           "signal": "structure.low-descendant-mass",
@@ -629194,7 +629744,7 @@
     "reverse_proof_only_reuse": 4,
     "is_sink": false,
     "depth": 5,
-    "transitive_reverse_reach": 15,
+    "transitive_reverse_reach": 17,
     "descendant_mass": 1,
     "scc_size": 1,
     "scc_role": "acyclic",

@@ -167,6 +167,152 @@ theorem canonicalRelativeModularOperator_singular_surrogate_package_of_wedgeCali
       InfoGeometry.Canonical.GlobalChiralDecomposition.supergraded_supercharge_closure
         (E := E) CIK
 
+/--
+Wedge-calibrated mixed-block vanishing for the canonical bounded relative modular
+representative on the Drazin active/apex split.
+-/
+@[rep_depth transport]
+theorem canonicalRelativeModularOperator_mixed_blocks_zero_of_wedgeCalibrated
+    (CIK : CertifiedInverseKernel H₂)
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (C :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+        (E := E)
+        (T := InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := spectral_epsilon (E := E))
+        (owned_P_D := CIK.spectralComplementaryProjector))
+    (τ : ℝ) :
+    CIK.spectralComplementaryProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralProjector
+      = 0
+      ∧
+    CIK.spectralProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralComplementaryProjector
+      = 0 := by
+  have hComm :
+      Commute
+        (canonicalRelativeModularOperator (E := E) CIK τ)
+        CIK.spectralProjector :=
+    canonicalRelativeModularOperator_commutes_spectralProjector_of_wedgeCalibrated
+      (E := E) (CIK := CIK) (W := W) C τ
+  exact
+    relativeModular_block_diagonal
+      (E := E) (CIK := CIK)
+      (R := canonicalRelativeModularOperator (E := E) CIK τ)
+      hComm.symm
+
+/--
+Wedge-calibrated support identities for the apex block and active block of the
+canonical bounded relative modular representative.
+-/
+@[rep_depth transport]
+theorem canonicalRelativeModularOperator_block_support_of_wedgeCalibrated
+    (CIK : CertifiedInverseKernel H₂)
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (_C :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+        (E := E)
+        (T := InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := spectral_epsilon (E := E))
+        (owned_P_D := CIK.spectralComplementaryProjector))
+    (τ : ℝ) :
+    CIK.spectralComplementaryProjector
+      * (CIK.spectralComplementaryProjector
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * CIK.spectralComplementaryProjector)
+      =
+    CIK.spectralComplementaryProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralComplementaryProjector
+      ∧
+    (CIK.spectralComplementaryProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralComplementaryProjector)
+      * CIK.spectralComplementaryProjector
+      =
+    CIK.spectralComplementaryProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralComplementaryProjector
+      ∧
+    CIK.spectralProjector
+      * (CIK.spectralProjector
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * CIK.spectralProjector)
+      =
+    CIK.spectralProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralProjector
+      ∧
+    (CIK.spectralProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralProjector)
+      * CIK.spectralProjector
+      =
+    CIK.spectralProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralProjector := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · calc
+      CIK.spectralComplementaryProjector
+          * (CIK.spectralComplementaryProjector
+              * canonicalRelativeModularOperator (E := E) CIK τ
+              * CIK.spectralComplementaryProjector)
+          =
+        (CIK.spectralComplementaryProjector * CIK.spectralComplementaryProjector)
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * CIK.spectralComplementaryProjector := by
+            simp [mul_assoc]
+      _ =
+        CIK.spectralComplementaryProjector
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * CIK.spectralComplementaryProjector := by
+            simp [CIK.spectralComplementaryProjector_idempotent]
+  · calc
+      (CIK.spectralComplementaryProjector
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * CIK.spectralComplementaryProjector)
+          * CIK.spectralComplementaryProjector
+          =
+        CIK.spectralComplementaryProjector
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * (CIK.spectralComplementaryProjector * CIK.spectralComplementaryProjector) := by
+            simp [mul_assoc]
+      _ =
+        CIK.spectralComplementaryProjector
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * CIK.spectralComplementaryProjector := by
+            simp [CIK.spectralComplementaryProjector_idempotent]
+  · calc
+      CIK.spectralProjector
+          * (CIK.spectralProjector
+              * (canonicalRelativeModularOperator (E := E) CIK τ * CIK.spectralProjector))
+          =
+        (CIK.spectralProjector * CIK.spectralProjector)
+          * (canonicalRelativeModularOperator (E := E) CIK τ * CIK.spectralProjector) := by
+            rw [← mul_assoc]
+      _ =
+        CIK.spectralProjector
+          * (canonicalRelativeModularOperator (E := E) CIK τ * CIK.spectralProjector) := by
+            rw [CIK.spectralProjector_idempotent]
+  · calc
+      (CIK.spectralProjector
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * CIK.spectralProjector)
+          * CIK.spectralProjector
+          =
+        CIK.spectralProjector
+          * (canonicalRelativeModularOperator (E := E) CIK τ
+              * (CIK.spectralProjector * CIK.spectralProjector)) := by
+            simp [mul_assoc]
+      _ =
+        CIK.spectralProjector
+          * (canonicalRelativeModularOperator (E := E) CIK τ * CIK.spectralProjector) := by
+            simp [CIK.spectralProjector_idempotent]
+
 end Core
 
 end InfoGeometry.Canonical.SingularDecompositionSurrogate

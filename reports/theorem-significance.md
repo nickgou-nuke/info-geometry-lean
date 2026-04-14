@@ -1,16 +1,16 @@
 # Declaration Vacuity Triage Report
 
-**Declarations scored:** 9481  
-**With violations:** 3422 (2434 error, 988 warning-only)  
-**Clean:** 6059  
+**Declarations scored:** 9489  
+**With violations:** 3424 (2435 error, 989 warning-only)  
+**Clean:** 6065  
 
 ## Tag Distribution
 
 | Tag | Count |
 |-----|-------|
-| `dead-candidate` | 5456 |
-| `proof-infrastructure` | 3737 |
-| `auto-generated` | 2179 |
+| `dead-candidate` | 5462 |
+| `proof-infrastructure` | 3739 |
+| `auto-generated` | 2183 |
 | `certified-surface` | 527 |
 | `statement-bearing` | 288 |
 | `rfl-like` | 264 |
@@ -27,7 +27,7 @@
 
 | Violation | Count |
 |-----------|-------|
-| `V2/dead-public-theorem` | 3349 |
+| `V2/dead-public-theorem` | 3351 |
 | `V1/public-wrapper-inflation` | 115 |
 | `V0/syntactic-vacuity` | 100 |
 | `V4/bridge-infrastructure-promoted` | 5 |
@@ -5402,6 +5402,8 @@
   - Forwards to: `InfoGeometry.LLM.RouterFreeEnergyBridge.routerMassieu_eq_logSumExpRouter`
   - Tags: `proof-infrastructure`, `wrapper-candidate`
 - **`InfoGeometry.LLM.KMSSoftmaxBridge.routerFreeEnergyEps_eq_neg_eps_kmsLogPartition`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.LLM.KMSSoftmaxBridge.softmaxWeight_eq_exp_routerLogit_div_partition`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.LLM.KMSSoftmaxBridge.softmaxWeight_eq_kmsWeight`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`

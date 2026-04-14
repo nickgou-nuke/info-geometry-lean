@@ -1,12 +1,12 @@
 {
   "typeCount": 652,
-  "timestamp": "2026-04-14T20:41:40.741773+00:00",
+  "timestamp": "2026-04-14T20:45:05.588272+00:00",
   "schemaVersion": 3,
   "nsFilter": "InfoGeometry",
-  "nodeCount": 17734,
+  "nodeCount": 17743,
   "morphismCount": 1042,
   "importRoot": "InfoGeometry.All",
-  "edgeCount": 148128,
-  "oleanHash": "2b03693c75083cad277fe719f6cb5b93b9d907e559e6f2f13231133317f366e5",
+  "edgeCount": 148182,
+  "oleanHash": "d87d2d11aa37727089c04da0d18ebdc3c89ecb5470b2289cd0f8e5b9684447bb",
   "sourceHash": "1029d95b54f8a5f6b77a73b9289403a4a8e9c2a9814886245846bae1484db100"
 }

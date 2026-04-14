@@ -7,7 +7,6 @@ import InfoGeometry.LLM.AllTopThermodynamicTransformer
 import InfoGeometry.LLM.TransformerPhysicsEngine
 import InfoGeometry.LLM.HypothesisScaffold70
 import InfoGeometry.LLM.KreinAttentionEnergy
-import InfoGeometry.LLM.KreinEuclideanComparison
 import InfoGeometry.LLM.ScalarThermoBridge
 import InfoGeometry.LLM.DiscreteRouterBayesStep
 import InfoGeometry.LLM.DiscreteRouterBayesRegularizationBridge

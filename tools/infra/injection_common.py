@@ -29,6 +29,7 @@ STATUS_MAP = {"archive": "archived"}
 SOURCE_TYPES = {"web", "chat", "manual", "llm", "paper", "other"}
 STATUSES = {"raw", "distilled", "translated", "gated", "accepted", "rejected", "archived"}
 WORKFLOW_MODES = {"standard", "gemini-hermes-codex"}
+AUTHORITY_TIERS = {"repo_native", "external_analogy"}
 
 DEFAULT_PACKET_LOCK_DIR = Path("/tmp/info-geometry-injection-packet-locks")
 TRANSITION_GRAPH: dict[str, set[str]] = {
@@ -174,6 +175,9 @@ def validate_packet_schema(packet: dict[str, Any], *, schema_file: Path | None =
     _require_str(packet["title"], "title", min_len=3)
     _require_str(packet["raw_text"], "raw_text")
     _require_str(packet["distilled_claim"], "distilled_claim")
+    tier = str(packet.get("authority_tier", "repo_native"))
+    if tier not in AUTHORITY_TIERS:
+        raise ValueError(f"authority_tier must be one of {sorted(AUTHORITY_TIERS)}")
 
     status = _require_str(packet["status"], "status")
     if status not in STATUSES:
@@ -658,6 +662,11 @@ def _non_empty_str_list(v: Any) -> list[str]:
     return [str(x).strip() for x in v if str(x).strip()]
 
 
+def packet_authority_tier(packet: dict[str, Any]) -> str:
+    tier = str(packet.get("authority_tier", "repo_native")).strip()
+    return tier if tier else "repo_native"
+
+
 def check_transition_allowed(src_lane: str, dst_lane: str) -> None:
     if src_lane == dst_lane:
         return
@@ -680,6 +689,30 @@ def enforce_translation_gate(packet: dict[str, Any]) -> None:
     enforce_dual_stage_research_gate(packet)
 
 
+def enforce_external_analogy_translation_gate(packet: dict[str, Any]) -> None:
+    """
+    External-analogy packets may be mapped to owner files/symbols but may not
+    claim canonical theorem targets.
+    """
+    mapping = packet.get("repo_mapping", {}) if isinstance(packet.get("repo_mapping"), dict) else {}
+    owner_files = _non_empty_str_list(mapping.get("owner_files"))
+    symbols = _non_empty_str_list(mapping.get("symbols"))
+    target_theorems = _non_empty_str_list(mapping.get("target_theorems"))
+    if not owner_files:
+        raise ValueError(
+            "translated gate failed: external_analogy packet requires repo_mapping.owner_files"
+        )
+    if not symbols:
+        raise ValueError(
+            "translated gate failed: external_analogy packet requires repo_mapping.symbols"
+        )
+    if target_theorems:
+        raise ValueError(
+            "translated gate failed: external_analogy packet must not set repo_mapping.target_theorems"
+        )
+    enforce_dual_stage_research_gate(packet)
+
+
 def enforce_gated_gate(packet: dict[str, Any]) -> None:
     enforce_translation_gate(packet)
     verification = (
@@ -690,6 +723,16 @@ def enforce_gated_gate(packet: dict[str, Any]) -> None:
     builds = _non_empty_str_list(verification.get("build_targets"))
     if not builds:
         raise ValueError("gated gate failed: verification_plan.build_targets is empty")
+
+
+def enforce_authority_tier_transition_gate(packet: dict[str, Any], dst_lane: str) -> None:
+    tier = packet_authority_tier(packet)
+    if tier != "external_analogy":
+        return
+    if dst_lane in {"gated", "accepted"}:
+        raise ValueError(
+            "authority gate failed: external_analogy packets cannot be promoted to gated/accepted"
+        )
 
 
 def enforce_dual_stage_research_gate(packet: dict[str, Any]) -> None:

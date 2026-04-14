@@ -132,6 +132,42 @@ theorem canonicalModularSeed_mul_modularSign_eq_neg_superHamiltonian_mul_modular
       (E := E))
 
 /--
+Projector-first DPD split specialization on the modular lane:
+`Q_D = [P_D, Σ] + [P_D, Γ_G - Σ]` with `Σ = P₊ - P₋`.
+-/
+@[rep_depth transport]
+theorem supercharge_eq_commutator_spectralProjector_modularSign_add_commutator_spectralProjector_GammaG_sub_modularSign
+    (CIK : CertifiedInverseKernel H₂) :
+    DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+      =
+    DrazinSupercharge.commutator CIK.spectralProjector
+      (InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E))
+      +
+    DrazinSupercharge.commutator CIK.spectralProjector
+      (CIK.GammaG - InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E)) := by
+  simpa [DrazinSupercharge.CertifiedInverseKernel.geometricMismatch] using
+    (DrazinSupercharge.CertifiedInverseKernel.supercharge_eq_commutator_spectralProjector_sigma_add_commutator_spectralProjector_geometricMismatch
+      (CIK := CIK)
+      (sigma := InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E)))
+
+/--
+Equivalent `ε`-form of the DPD split specialization:
+`Q_D = [P_D, ε] + [P_D, Γ_G - ε]`.
+-/
+@[rep_depth transport]
+theorem supercharge_eq_commutator_spectralProjector_spectral_epsilon_add_commutator_spectralProjector_GammaG_sub_spectral_epsilon
+    (CIK : CertifiedInverseKernel H₂) :
+    DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+      =
+    DrazinSupercharge.commutator CIK.spectralProjector (spectral_epsilon (E := E))
+      +
+    DrazinSupercharge.commutator CIK.spectralProjector
+      (CIK.GammaG - spectral_epsilon (E := E)) := by
+  simpa [InfoGeometry.Canonical.ProjectorEquivariance.modularSign_eq_spectral_epsilon] using
+    supercharge_eq_commutator_spectralProjector_modularSign_add_commutator_spectralProjector_GammaG_sub_modularSign
+      (E := E) (CIK := CIK)
+
+/--
 The canonical seed realizes the projected even generator as a true modular
 transport generator:
 `H_D = modularTransportGenerator(canonicalModularSeed)`.

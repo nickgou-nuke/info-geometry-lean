@@ -217,6 +217,7 @@ import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk2
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4
+import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstSemanticAudit
 import InfoGeometry.Canonical.OperatorialUncertainty
 import InfoGeometry.Canonical.PathIntegral
 import InfoGeometry.Canonical.PhaseSpaceRecompositionExample
@@ -243,6 +244,7 @@ import InfoGeometry.Canonical.ModularKLDivergenceBridge
 import InfoGeometry.Canonical.RelativeModularScaleShapeSplit
 import InfoGeometry.Canonical.GlobalChiralDecomposition
 import InfoGeometry.Canonical.SingularDecompositionSurrogate
+import InfoGeometry.Canonical.CapstoneSemanticAudit
 import InfoGeometry.Canonical.OperatorialVolumePreservation
 import InfoGeometry.Canonical.RelativeModularRecomposition
 import InfoGeometry.Canonical.RobustThermodynamicRegression

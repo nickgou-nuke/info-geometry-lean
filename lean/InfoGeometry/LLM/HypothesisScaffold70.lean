@@ -1,6 +1,7 @@
 import InfoGeometry.LLM.TransformerPhysicsEngine
 import InfoGeometry.LLM.RouterFreeEnergyBridge
 import InfoGeometry.LLM.KreinAttentionEnergy
+import InfoGeometry.LLM.KMSSoftmaxBridge
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
@@ -10,6 +11,7 @@ namespace InfoGeometry.LLM.HypothesisScaffold70
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.LLM.AllTopThermodynamicTransformer
 open InfoGeometry.LLM.KreinAttentionEnergy
+open InfoGeometry.LLM.KMSSoftmaxBridge
 open InfoGeometry.LLM.RouterFreeEnergyBridge
 open InfoGeometry.LLM.TransformerPhysicsEngine
 
@@ -33,6 +35,7 @@ def registry : List H70Claim :=
   , { id := "H70-004", label := "Per-layer scale/shape split", status := H70Status.testable }
   , { id := "H70-005", label := "Stack-level defect quarantine", status := H70Status.testable }
   , { id := "H70-007", label := "Krein attention inner product surface", status := H70Status.testable }
+  , { id := "H70-008", label := "Softmax/KMS finite normalization bridge", status := H70Status.testable }
   , { id := "H70-010", label := "Horizon inversion gate", status := H70Status.spec }
   ]
 
@@ -46,6 +49,25 @@ theorem h70_krein_energy_surface
   exact kreinInteractionEnergy_eq_neg_splitB11 q k
 
 end KreinInterface
+
+section KMSSoftmaxInterface
+
+variable {Tok V : Type*}
+variable [NormedAddCommGroup V]
+variable {n : Nat} [Nonempty (Fin n)]
+
+/-- Testable hook for H70-008 (finite KMS-compatible normalization bridge). -/
+@[rep_depth thermo]
+theorem h70_kms_softmax_normalization
+    (β : ℝ) (x : Tok → V) (i : Tok) :
+    (∑ e : ExpertIdx n, softmaxWeight n β x i e = 1)
+      ∧
+    (∑ e : ExpertIdx n, kmsWeight n β x i e = 1) := by
+  refine ⟨?_, ?_⟩
+  · exact softmaxWeight_sum_one (n := n) (β := β) (x := x) (i := i)
+  · exact kmsWeight_sum_one (n := n) (β := β) (x := x) (i := i)
+
+end KMSSoftmaxInterface
 
 section ThermoInterface
 

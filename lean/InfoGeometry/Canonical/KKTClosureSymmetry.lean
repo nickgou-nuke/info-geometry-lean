@@ -110,7 +110,7 @@ theorem conjugateUnit_anticommutator (U : EndHˣ) (X Y : EndH) :
 Generator-preservation predicate for KKT closure symmetries:
 conjugation invariance of `(Γ_S, Γ_G, Q_D, H_D, Z_D)`.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 def PreservesKKTGenerators
     (CIK : CertifiedInverseKernel E) (U : EndHˣ) : Prop :=
   conjugateUnit (E := E) U (GammaS CIK) = GammaS CIK
@@ -122,7 +122,7 @@ def PreservesKKTGenerators
 /--
 Repo-native closure symmetry object for the DPD/KKT lane.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 structure KKTClosureSymmetry (CIK : CertifiedInverseKernel E) where
   U : EndHˣ
   preserves : PreservesKKTGenerators (E := E) CIK U
@@ -130,7 +130,7 @@ structure KKTClosureSymmetry (CIK : CertifiedInverseKernel E) where
 /--
 Subgroup of unit conjugations preserving `(Γ_S, Γ_G, Q_D, H_D, Z_D)`.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 def kktClosureSymmetrySubgroup
     (CIK : CertifiedInverseKernel E) : Subgroup EndHˣ where
   carrier := {U | PreservesKKTGenerators (E := E) CIK U}
@@ -184,7 +184,7 @@ def kktClosureSymmetrySubgroup
 /--
 Any `KKTClosureSymmetry` element lies in the closure-symmetry subgroup.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem KKTClosureSymmetry.mem_subgroup
     (CIK : CertifiedInverseKernel E)
     (S : KKTClosureSymmetry (E := E) CIK) :
@@ -196,7 +196,7 @@ theorem KKTClosureSymmetry.mem_subgroup
 if a unit preserves `(Γ_S, Γ_G, Q_D, H_D, Z_D)`, then it preserves
 the commutator lane `[Γ_S, Q_D]`.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem commutator_GammaS_QD_conjugation_invariant_of_preserves
     (CIK : CertifiedInverseKernel E) (U : EndHˣ)
     (hU : PreservesKKTGenerators (E := E) CIK U) :
@@ -215,7 +215,7 @@ theorem commutator_GammaS_QD_conjugation_invariant_of_preserves
 if a unit preserves `(Γ_S, Γ_G, Q_D, H_D, Z_D)`, then it preserves
 the commutator lane `[Γ_G, Q_D]`.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem commutator_GammaG_QD_conjugation_invariant_of_preserves
     (CIK : CertifiedInverseKernel E) (U : EndHˣ)
     (hU : PreservesKKTGenerators (E := E) CIK U) :
@@ -233,7 +233,7 @@ theorem commutator_GammaG_QD_conjugation_invariant_of_preserves
 `{odd, odd}` closure witness:
 the anticommutator of the odd generator with itself lands in the even lane.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem anticommutator_QD_QD_eq_two_smul_HD (CIK : CertifiedInverseKernel E) :
     DrazinSupercharge.anticommutator (QD CIK) (QD CIK) = (2 : ℝ) • HD CIK := by
   change QD CIK * QD CIK + QD CIK * QD CIK = (2 : ℝ) • (QD CIK * QD CIK)
@@ -244,7 +244,7 @@ theorem anticommutator_QD_QD_eq_two_smul_HD (CIK : CertifiedInverseKernel E) :
 `{Q_D,Q_D}` lands in `even ⊕ center` through the canonical split
 `H_D = H_kin + Z_D`.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem anticommutator_QD_QD_eq_two_smul_kinetic_plus_central
     (CIK : CertifiedInverseKernel E) :
     DrazinSupercharge.anticommutator (QD CIK) (QD CIK)
@@ -264,7 +264,7 @@ theorem anticommutator_QD_QD_eq_two_smul_kinetic_plus_central
           rw [hSplit]
 
 /-- Central channel witness: `Z_D` is central on the full Drazin lane. -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem ZD_isDrazinLaneCentral (CIK : CertifiedInverseKernel E) :
     DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentral CIK (ZD CIK) := by
   simpa [ZD] using
@@ -273,7 +273,7 @@ theorem ZD_isDrazinLaneCentral (CIK : CertifiedInverseKernel E) :
 /--
 `{odd, odd}` closure is conjugation-invariant under any KKT closure symmetry.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem anticommutator_QD_QD_conjugation_invariant_of_preserves
     (CIK : CertifiedInverseKernel E) (U : EndHˣ)
     (hU : PreservesKKTGenerators (E := E) CIK U) :

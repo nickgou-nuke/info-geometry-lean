@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.YangMillsContinuum
+import InfoGeometry.Canonical.GlobalChiralDecomposition
 import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Meta.Architecture
 
@@ -182,6 +183,54 @@ theorem trace_constant_on_dualFixed
     (t : ℝ) :
     C.coreTrace (C.dualAction t x) = C.coreTrace x := by
   simpa using C.trace_dualAction_invariant t x
+
+/--
+Downstream CP-003 consumer on the Type-III core lane:
+if an operator commutes with the active projector, its core-trace equals the
+core-trace of the singular polar/KAN surrogate split from
+`GlobalChiralDecomposition`.
+-/
+@[rep_depth transport]
+theorem coreTrace_eq_singularPolar_split_of_commute
+    (CIK : CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E))
+    (A : EndH)
+    (hComm : Commute CIK.spectralProjector A) :
+    C.coreTrace (C.toCore A)
+      =
+    C.coreTrace
+      (C.toCore
+        (CIK.spectralComplementaryProjector * A * CIK.spectralComplementaryProjector
+          + CIK.spectralProjector * A * CIK.spectralProjector)) := by
+  have hSplit :
+      A
+        =
+      CIK.spectralComplementaryProjector * A * CIK.spectralComplementaryProjector
+        + CIK.spectralProjector * A * CIK.spectralProjector := by
+    exact
+      (InfoGeometry.Canonical.GlobalChiralDecomposition.singularPolarKAN_replacement_of_commute
+        (E := E) (CIK := CIK) (R := A) hComm).1
+  exact congrArg (fun X => C.coreTrace (C.toCore X)) hSplit
+
+/--
+Dual-action trace form of the CP-003 consumer:
+trace invariance transports the singular split equality to every dual-action
+time.
+-/
+@[rep_depth transport]
+theorem coreTrace_dualAction_eq_singularPolar_split_of_commute
+    (CIK : CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E))
+    (A : EndH)
+    (hComm : Commute CIK.spectralProjector A)
+    (t : ℝ) :
+    C.coreTrace (C.dualAction t (C.toCore A))
+      =
+    C.coreTrace
+      (C.dualAction t
+        (C.toCore
+          (CIK.spectralComplementaryProjector * A * CIK.spectralComplementaryProjector
+            + CIK.spectralProjector * A * CIK.spectralProjector))) := by
+  rw [C.trace_dualAction_invariant, C.trace_dualAction_invariant]
+  exact C.coreTrace_eq_singularPolar_split_of_commute (CIK := CIK) (A := A) hComm
 
 end RealContinuousCoreInterface
 

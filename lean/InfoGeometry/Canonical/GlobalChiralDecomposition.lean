@@ -1,4 +1,3 @@
-import InfoGeometry.Canonical.RelativeModularScaleShapeSplit
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.DrazinPenroseDilationKKT
 import InfoGeometry.Canonical.DrazinSupercharge
@@ -10,7 +9,6 @@ namespace InfoGeometry.Canonical.GlobalChiralDecomposition
 
 open InfoGeometry.Krein
 open InfoGeometry.Canonical
-open InfoGeometry.Canonical.RelativeModularScaleShapeSplit
 open InfoGeometry.Canonical.DPDWedgeCompatibility
 open InfoGeometry.Canonical.DrazinPenroseDilationKKT
 open InfoGeometry.Canonical.DrazinSupercharge
@@ -41,15 +39,11 @@ theorem activeApex_decomposition_of_commute
     IsCompatibleDPDWedge.relativeModularKernelScalePart (CIK := CIK) R
       +
     IsCompatibleDPDWedge.relativeModularActiveShapePart (CIK := CIK) R := by
-  rcases mixed_blocks_vanish_of_commute_spectralProjector
-      (E := E) (CIK := CIK) (H_gen := R) hComm with
-    ⟨hQD_R_PD_zero, hPD_R_QD_zero⟩
-  exact IsCompatibleDPDWedge.relativeModular_scaleShapeSplit
+  exact IsCompatibleDPDWedge.relativeModular_scaleShapeSplit_of_commutes_spectralProjector
     (E := E)
     (CIK := CIK)
     (RMO := R)
-    hQD_R_PD_zero
-    hPD_R_QD_zero
+    hComm.symm
 
 /--
 Projector-compressed form of the global active/apex decomposition.
@@ -69,6 +63,23 @@ theorem activeApex_decomposition_projector_form_of_commute
     activeApex_decomposition_of_commute (E := E) (CIK := CIK) (R := R) hComm
 
 /--
+CP-003 canonical alias:
+global active/apex decomposition in projector-compressed form.
+-/
+@[rep_depth transport]
+theorem global_active_apex_decomposition
+    (CIK : CertifiedInverseKernel H₂)
+    (R : EndH)
+    (hComm : Commute CIK.spectralProjector R) :
+    R
+      =
+    CIK.spectralComplementaryProjector * R * CIK.spectralComplementaryProjector
+      +
+    CIK.spectralProjector * R * CIK.spectralProjector := by
+  exact activeApex_decomposition_projector_form_of_commute
+    (E := E) (CIK := CIK) (R := R) hComm
+
+/--
 Chiral range/domain decomposition identity on the DPD-KKT lane:
 `Γ_G = P_R - P_L`.
 -/
@@ -77,6 +88,16 @@ theorem chiralRangeDomain_decomposition
     (K : DPDKKT H₂) :
     K.GammaG = K.P_R - K.P_L := by
   rfl
+
+/--
+CP-003 canonical alias:
+chiral range/domain decomposition in snake_case naming.
+-/
+@[rep_depth krein]
+theorem chiral_range_domain_decomposition
+    (K : DPDKKT H₂) :
+    K.GammaG = K.P_R - K.P_L := by
+  exact chiralRangeDomain_decomposition (E := E) K
 
 /--
 Half-gap chiral decomposition identity:
@@ -111,6 +132,18 @@ theorem chiralKKT_commutator_geometric_closure
       =
     K.rightSupercharge - K.leftSupercharge :=
   K.commutator_P_D_GammaG_eq_rightSupercharge_sub_leftSupercharge
+
+/--
+CP-003 canonical alias:
+singular projector/anomaly closure on the geometric Cartan lane.
+-/
+@[rep_depth krein]
+theorem singular_polar_surrogate_closure
+    (K : DPDKKT H₂) :
+    DrazinPenroseDilationKKT.commutator K.P_D K.GammaG
+      =
+    K.rightSupercharge - K.leftSupercharge := by
+  exact chiralKKT_commutator_geometric_closure (E := E) K
 
 /--
 Supergraded closure projection from the KKT lane:

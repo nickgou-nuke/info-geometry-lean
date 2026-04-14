@@ -58,6 +58,11 @@ python3 tools/infra/injection_status.py
 python3 tools/infra/injection_status.py --list gated
 ```
 
+Build reviewer-ready digest from a packet:
+```bash
+python3 tools/infra/injection_build_digest.py <PACKET_ID> --update-packet
+```
+
 ## Policy
 - Gemini can create/distill hypotheses.
 - Codex must translate + validate before any canonical edit.

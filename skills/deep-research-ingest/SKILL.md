@@ -58,6 +58,11 @@ python3 tools/infra/injection_status.py --list raw
 python3 tools/infra/injection_status.py --list distilled
 ```
 
+Build reviewer/examiner digest:
+```bash
+python3 tools/infra/injection_build_digest.py <PACKET_ID> --update-packet
+```
+
 ## Quality Checklist
 - Source dates verified
 - Contradictions noted

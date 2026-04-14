@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.YangMillsContinuum
 import InfoGeometry.Canonical.GlobalChiralDecomposition
+import InfoGeometry.Canonical.SingularDecompositionSurrogate
 import InfoGeometry.Volume.ConnesCocycle
 import InfoGeometry.Meta.Architecture
 
@@ -231,6 +232,94 @@ theorem coreTrace_dualAction_eq_singularPolar_split_of_commute
             + CIK.spectralProjector * A * CIK.spectralProjector))) := by
   rw [C.trace_dualAction_invariant, C.trace_dualAction_invariant]
   exact C.coreTrace_eq_singularPolar_split_of_commute (CIK := CIK) (A := A) hComm
+
+/--
+Wedge-calibrated downstream CP-003 consumer on the Type-III core lane:
+the canonical bounded relative modular representative has the same core-trace as
+its active/apex projector-compressed surrogate split.
+-/
+@[rep_depth transport]
+theorem coreTrace_eq_singularPolar_split_of_wedgeCalibrated
+    (CIK : CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E))
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (Cw :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+        (E := E)
+        (T := InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := InfoGeometry.Krein.spectral_epsilon (E := E))
+        (owned_P_D := CIK.spectralComplementaryProjector))
+    (τ : ℝ) :
+    C.coreTrace
+      (C.toCore
+        (InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+          (E := E) CIK τ))
+      =
+    C.coreTrace
+      (C.toCore
+        (CIK.spectralComplementaryProjector
+            * InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+                (E := E) CIK τ
+            * CIK.spectralComplementaryProjector
+          +
+          CIK.spectralProjector
+            * InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+                (E := E) CIK τ
+            * CIK.spectralProjector)) := by
+  have hSplit :
+      InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+          (E := E) CIK τ
+        =
+      CIK.spectralComplementaryProjector
+          * InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+              (E := E) CIK τ
+          * CIK.spectralComplementaryProjector
+        +
+      CIK.spectralProjector
+          * InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+              (E := E) CIK τ
+          * CIK.spectralProjector := by
+    exact
+      (InfoGeometry.Canonical.SingularDecompositionSurrogate.canonicalRelativeModularOperator_singular_surrogate_package_of_wedgeCalibrated
+        (E := E) (CIK := CIK) (W := W) Cw τ).1
+  exact congrArg (fun X => C.coreTrace (C.toCore X)) hSplit
+
+/--
+Dual-action trace form of the wedge-calibrated CP-003 consumer.
+-/
+@[rep_depth transport]
+theorem coreTrace_dualAction_eq_singularPolar_split_of_wedgeCalibrated
+    (CIK : CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E))
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (Cw :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+        (E := E)
+        (T := InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := InfoGeometry.Krein.spectral_epsilon (E := E))
+        (owned_P_D := CIK.spectralComplementaryProjector))
+    (τ t : ℝ) :
+    C.coreTrace
+      (C.dualAction t
+        (C.toCore
+          (InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+            (E := E) CIK τ)))
+      =
+    C.coreTrace
+      (C.dualAction t
+        (C.toCore
+          (CIK.spectralComplementaryProjector
+              * InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+                  (E := E) CIK τ
+              * CIK.spectralComplementaryProjector
+            +
+            CIK.spectralProjector
+              * InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+                  (E := E) CIK τ
+              * CIK.spectralProjector))) := by
+  rw [C.trace_dualAction_invariant, C.trace_dualAction_invariant]
+  exact C.coreTrace_eq_singularPolar_split_of_wedgeCalibrated
+    (CIK := CIK) (W := W) Cw τ
 
 end RealContinuousCoreInterface
 

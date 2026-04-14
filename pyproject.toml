@@ -10,6 +10,9 @@ authors = [ { name = "Project Authors" } ]
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.8"
+dependencies = [
+  "jsonschema==4.23.0",
+]
 
 
 [project.scripts]
@@ -18,4 +21,3 @@ infogeometry = "scripts.cli:main"
 [tool.setuptools.packages.find]
 where = ["scripts", "tools"]
 include = ["scripts*", "tools*"]
-

@@ -14,6 +14,11 @@ This subsystem keeps the repo open to external input while preserving owner disc
 ## Packet Contract
 Schema: `handover/injections/schema/claim_packet.schema.json`
 
+Infra runtime dependency:
+```bash
+.venv/bin/pip install "jsonschema==4.23.0"
+```
+
 Every packet must have:
 - stable `packet_id`
 - provenance (`source.type`, `source.ref`, `source.date`)
@@ -52,6 +57,16 @@ python3 tools/infra/injection_promote.py EXT-20260414-001 --to gated --note "Pol
 python3 tools/infra/injection_promote.py EXT-20260414-001 --to accepted --note "Implemented + verified"
 ```
 
+Build SLO report and optional alert gates:
+```bash
+python3 tools/infra/injection_slo_report.py
+python3 tools/infra/injection_slo_report.py \
+  --max-failure-rate 0.10 \
+  --max-p95-latency-sec 7200 \
+  --max-p95-lock-wait-sec 1.0 \
+  --min-gpu-free-mb 1024
+```
+
 Status dashboard:
 ```bash
 python3 tools/infra/injection_status.py
@@ -68,3 +83,6 @@ python3 tools/infra/injection_build_digest.py <PACKET_ID> --update-packet
 - Codex must translate + validate before any canonical edit.
 - No packet reaches `accepted/` without targeted build verification.
 - `artifacts/` remain generated outputs and are not committed as source of truth.
+- Every mutation path (`create/research/promote/build_digest --update-packet`) is schema-validated.
+- Every mutation path uses per-packet file locks and atomic writes.
+- Promotion uses a strict transition graph (no skip overrides).

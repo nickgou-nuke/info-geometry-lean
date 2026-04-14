@@ -65,6 +65,17 @@ SKIP_CANONICAL_THEOREM_FILES = {
     'lean/InfoGeometry/Canonical/Quantum.lean',
 }
 LEAN_REPORT_PATH_RE = re.compile(r"^lean/InfoGeometry/.+\.lean$")
+IMPORT_RE = re.compile(r"^\s*import\s+([A-Za-z0-9_.']+)\s*$")
+
+# Canonical modular capstones that must remain in doubled-real/Krein operator language.
+# These files are not allowed to depend directly on finite diagonal/projective-KL owners.
+FDIM_CONTAMINATION_GUARDS: dict[str, tuple[str, ...]] = {
+    'lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean': (
+        'InfoGeometry.Canonical.RelativeModularOperator',
+        'InfoGeometry.Canonical.ModularKLDivergenceBridge',
+        'InfoGeometry.MaxEnt.JaynesInfoStatMech',
+    ),
+}
 
 
 @dataclass(frozen=True, order=True)
@@ -202,6 +213,15 @@ def read_file_lines(path: Path, cache: dict[Path, list[str]]) -> list[str]:
     if path not in cache:
         cache[path] = path.read_text(encoding='utf-8').splitlines()
     return cache[path]
+
+
+def scan_imports(path: Path) -> set[str]:
+    imports: set[str] = set()
+    for line in path.read_text(encoding='utf-8').splitlines():
+        match = IMPORT_RE.match(line)
+        if match:
+            imports.add(match.group(1))
+    return imports
 
 
 def theorem_block(lines: list[str], start_line: int, next_decl_line: int | None) -> str:
@@ -418,6 +438,22 @@ def compare_suspect_theorem_baseline(baseline: dict[str, object], current: list[
     ]
 
 
+def check_fdim_contamination_guards() -> list[str]:
+    failures: list[str] = []
+    for rel_path, forbidden_imports in sorted(FDIM_CONTAMINATION_GUARDS.items()):
+        path = ROOT / rel_path
+        if not path.exists():
+            failures.append(f"fdim contamination guard points to missing file: {rel_path}")
+            continue
+        present_imports = scan_imports(path)
+        for forbidden in forbidden_imports:
+            if forbidden in present_imports:
+                failures.append(
+                    f"fdim contamination: {rel_path} must not import {forbidden}"
+                )
+    return failures
+
+
 def write_baseline(
     path: Path,
     prop_surfaces: Iterable[PropSurface],
@@ -589,6 +625,7 @@ def main() -> int:
 
     failures = []
     failures.extend(report_failures(baseline))
+    failures.extend(check_fdim_contamination_guards())
     failures.extend(compare_prop_baseline(baseline, prop_surfaces))
     failures.extend(compare_new_public_theorems(baseline, public_theorems))
     failures.extend(compare_suspect_theorem_baseline(baseline, suspect_theorems))

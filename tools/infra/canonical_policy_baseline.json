@@ -5137,6 +5137,10 @@
     },
     {
       "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.activeProjector_eq_one_sub_spectralComplementaryProjector"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
       "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.dilationGap_eq_half_wedgeSign"
     },
     {
@@ -5153,6 +5157,10 @@
     },
     {
       "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.kernelConventionLock_pzero_eq_spectralComplementaryProjector"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
       "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.projected_supercharge_eq_commutator_PD_wedgeSign"
     },
     {
@@ -5161,7 +5169,35 @@
     },
     {
       "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.relativeModular_offDiagonal_blocks_zero_of_commutes_spectralProjector"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.relativeModular_scaleShapeSplit"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.relativeModular_scaleShapeSplit_of_commutes_spectralProjector"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.spectralComplementaryProjector_mul_wedgeSign_eq_zero"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
       "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.two_smul_dilationGap_eq_wedgeSign"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.wedgeSign_mul_spectralComplementaryProjector_eq_zero"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.wedgeSign_sq_eq_spectralProjector"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.wedgeSign_sq_mul_spectralProjector_eq_spectralProjector"
     },
     {
       "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
@@ -5962,6 +5998,38 @@
     {
       "file": "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
       "name": "InfoGeometry.Canonical.DrazinPenroseDilationKKT.instSMulCommClassRealContinuousLinearMapId_infoGeometry"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_classical"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_finite_ascent_descent"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_generalized"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_zero_isolated"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum_eq"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.exists_drazinInverse_of_zeroIsolatedInSpectrum_package"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralProjectorBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralProjectorBridge.exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_package"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralProjectorBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralProjectorBridge.exists_drazin_projection_idempotent_of_zeroIsolatedInSpectrum_package"
     },
     {
       "file": "lean/InfoGeometry/Canonical/DrazinSupercharge.lean",
@@ -9961,6 +10029,14 @@
     },
     {
       "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.instCompleteSpaceContinuousLinearMapRealIdDoubledSpace"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
       "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.positiveRay_logGenerator_eq_neg_relativeLogDensity"
     },
     {
@@ -9970,6 +10046,18 @@
     {
       "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
       "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.positiveRay_logGenerator_eq_relativeModularPotential_ae"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.relativeModularScaleShapeSplit_eq_drazinActiveKernelSplit"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.relativeModularScaleShapeSplit_eq_drazinActiveKernelSplit_with_dilationGap"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit"
     },
     {
       "file": "lean/InfoGeometry/Canonical/ModularKramersBridge.lean",
@@ -10200,6 +10288,30 @@
       "name": "InfoGeometry.Canonical.ModularSpectralWedgeBridge.IsCompatibleWedge.pzero_eq"
     },
     {
+      "file": "lean/InfoGeometry/Canonical/ModularSpectralWedgeBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated.compat"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularSpectralWedgeBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated.flow_commutes_owned_P_D"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularSpectralWedgeBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated.flow_commutes_owned_epsilon"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularSpectralWedgeBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated.flow_commutes_pzero"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularSpectralWedgeBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated.flow_commutes_wedgeSign"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularSpectralWedgeBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated.flow_mul_activeProjector_eq_activeProjector_mul_flow"
+    },
+    {
       "file": "lean/InfoGeometry/Canonical/ModularSpinorBridge.lean",
       "name": "InfoGeometry.Canonical.ModularSpinorBridge.MajoranaFrame.is_cl11"
     },
@@ -10378,6 +10490,14 @@
     {
       "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
       "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaFlow_at_wedgeParameter_of_flowEqUnruh"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
+      "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaFlow_commutes_activeProjector_of_wedgeCalibrated"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
+      "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaFlow_commutes_spectralComplementaryProjector_of_wedgeCalibrated"
     },
     {
       "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
@@ -13678,6 +13798,42 @@
     {
       "file": "lean/InfoGeometry/Canonical/RelativeModularRecomposition.lean",
       "name": "InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.vanishingCoupling_of_sectorwiseExact"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.block_diagonal_of_commute_idempotent"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_block_diagonal"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_crossTerms_zero_of_commutes_activeProjector"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_scalePart_supported_on_kernel"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_scaleShapeSplit"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit_of_commutes_activeProjector"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_scaleShapeSplit_of_commutes_activeProjector"
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_shapePart_supported_on_active"
     },
     {
       "file": "lean/InfoGeometry/Canonical/RelativeModularSingularization.lean",
@@ -22905,7 +23061,7 @@
       "file": "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean",
       "name": "InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector_idempotent",
       "category": "likely_constructive",
-      "dependent_theorem_count": 12,
+      "dependent_theorem_count": 14,
       "reasons": [
         "proof is definitional/trivial"
       ]
@@ -24893,9 +25049,27 @@
     },
     {
       "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.activeProjector_eq_one_sub_spectralComplementaryProjector",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
       "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.dilationGap_eq_half_wedgeSign",
       "category": "likely_constructive",
       "dependent_theorem_count": 1,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.kernelConventionLock_pzero_eq_spectralComplementaryProjector",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
       "reasons": [
         "proof is definitional/trivial"
       ]
@@ -24920,9 +25094,63 @@
     },
     {
       "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.relativeModular_offDiagonal_blocks_zero_of_commutes_spectralProjector",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 1,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.relativeModular_scaleShapeSplit",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 3,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.spectralComplementaryProjector_mul_wedgeSign_eq_zero",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
       "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.two_smul_dilationGap_eq_wedgeSign",
       "category": "likely_constructive",
       "dependent_theorem_count": 3,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.wedgeSign_mul_spectralComplementaryProjector_eq_zero",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.wedgeSign_sq_eq_spectralProjector",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 1,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
+      "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.wedgeSign_sq_mul_spectralProjector_eq_spectralProjector",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
       "reasons": [
         "proof is definitional/trivial"
       ]
@@ -25980,6 +26208,90 @@
       "dependent_theorem_count": 0,
       "reasons": [
         "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_classical",
+      "category": "surrogate_or_vacuous",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "no downstream theorem dependents",
+        "proof is definitional/trivial",
+        "theorem-surface category surrogate_or_vacuous"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_finite_ascent_descent",
+      "category": "surrogate_or_vacuous",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "no downstream theorem dependents",
+        "proof is definitional/trivial",
+        "theorem-surface category surrogate_or_vacuous"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_generalized",
+      "category": "surrogate_or_vacuous",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "no downstream theorem dependents",
+        "proof is definitional/trivial",
+        "theorem-surface category surrogate_or_vacuous"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_zero_isolated",
+      "category": "surrogate_or_vacuous",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "no downstream theorem dependents",
+        "proof is definitional/trivial",
+        "theorem-surface category surrogate_or_vacuous"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum_eq",
+      "category": "surrogate_or_vacuous",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "no downstream theorem dependents",
+        "proof is definitional/trivial",
+        "theorem-surface category surrogate_or_vacuous"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralBridge.exists_drazinInverse_of_zeroIsolatedInSpectrum_package",
+      "category": "hypothesis_bridge",
+      "dependent_theorem_count": 1,
+      "reasons": [
+        "proof is definitional/trivial",
+        "theorem-surface category hypothesis_bridge"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralProjectorBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralProjectorBridge.exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_package",
+      "category": "package_reprojection",
+      "dependent_theorem_count": 1,
+      "reasons": [
+        "theorem-surface category package_reprojection"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/DrazinSpectralProjectorBridge.lean",
+      "name": "InfoGeometry.Canonical.DrazinSpectralProjectorBridge.exists_drazin_projection_idempotent_of_zeroIsolatedInSpectrum_package",
+      "category": "package_reprojection",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "no downstream theorem dependents",
+        "theorem-surface category package_reprojection"
       ]
     },
     {
@@ -29926,7 +30238,7 @@
       "file": "lean/InfoGeometry/Canonical/InverseKernelAlgebra.lean",
       "name": "InfoGeometry.Canonical.CertifiedInverseKernel.spectralComplementaryProjector_idempotent",
       "category": "likely_constructive",
-      "dependent_theorem_count": 6,
+      "dependent_theorem_count": 7,
       "reasons": [
         "proof is definitional/trivial"
       ]
@@ -29935,7 +30247,7 @@
       "file": "lean/InfoGeometry/Canonical/InverseKernelAlgebra.lean",
       "name": "InfoGeometry.Canonical.CertifiedInverseKernel.spectralComplementaryProjector_mul_spectralProjector",
       "category": "likely_constructive",
-      "dependent_theorem_count": 2,
+      "dependent_theorem_count": 3,
       "reasons": [
         "proof is definitional/trivial"
       ]
@@ -29944,7 +30256,7 @@
       "file": "lean/InfoGeometry/Canonical/InverseKernelAlgebra.lean",
       "name": "InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector_add_spectralComplementaryProjector",
       "category": "likely_constructive",
-      "dependent_theorem_count": 1,
+      "dependent_theorem_count": 2,
       "reasons": [
         "proof is definitional/trivial"
       ]
@@ -29953,7 +30265,7 @@
       "file": "lean/InfoGeometry/Canonical/InverseKernelAlgebra.lean",
       "name": "InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector_mul_spectralComplementaryProjector",
       "category": "likely_constructive",
-      "dependent_theorem_count": 2,
+      "dependent_theorem_count": 3,
       "reasons": [
         "proof is definitional/trivial"
       ]
@@ -32089,6 +32401,33 @@
     },
     {
       "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.generalizedKL_eq_klLike_add_massSlack",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.generalizedKL_scale_shape_mass_term_pos_of_mass_ne",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.generalizedKL_scale_shape_split",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 2,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
       "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.generalizedKL_scale_shape_split_with_nonneg",
       "category": "package_reprojection",
       "dependent_theorem_count": 0,
@@ -32099,7 +32438,16 @@
     },
     {
       "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
-      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.generalizedKL_scale_shape_terms_nonneg",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.positiveRay_logGenerator_eq_neg_relativeLogDensity",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.positiveRay_logGenerator_eq_relativeModularPotential",
       "category": "likely_constructive",
       "dependent_theorem_count": 1,
       "reasons": [
@@ -32108,11 +32456,41 @@
     },
     {
       "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
-      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.positiveRay_logGenerator_eq_neg_relativeLogDensity",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.positiveRay_logGenerator_eq_relativeModularPotential_ae",
       "category": "likely_constructive",
       "dependent_theorem_count": 0,
       "reasons": [
         "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.relativeModularScaleShapeSplit_eq_drazinActiveKernelSplit",
+      "category": "package_reprojection",
+      "dependent_theorem_count": 2,
+      "reasons": [
+        "proof is definitional/trivial",
+        "theorem-surface category package_reprojection"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.relativeModularScaleShapeSplit_eq_drazinActiveKernelSplit_with_dilationGap",
+      "category": "package_reprojection",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "no downstream theorem dependents",
+        "theorem-surface category package_reprojection"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularKLDivergenceBridge.relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit",
+      "category": "package_reprojection",
+      "dependent_theorem_count": 1,
+      "reasons": [
+        "proof is definitional/trivial",
+        "theorem-surface category package_reprojection"
       ]
     },
     {
@@ -32333,6 +32711,33 @@
       ]
     },
     {
+      "file": "lean/InfoGeometry/Canonical/ModularSpectralWedgeBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated.flow_commutes_pzero",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularSpectralWedgeBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated.flow_commutes_wedgeSign",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularSpectralWedgeBridge.lean",
+      "name": "InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated.flow_mul_activeProjector_eq_activeProjector_mul_flow",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 1,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
       "file": "lean/InfoGeometry/Canonical/ModularSpinorBridge.lean",
       "name": "InfoGeometry.Canonical.ModularSpinorBridge.bayesian_update_as_spinor_bilinear_witness",
       "category": "likely_constructive",
@@ -32439,26 +32844,7 @@
       "dependent_theorem_count": 0,
       "reasons": [
         "no downstream theorem dependents",
-        "proof is definitional/trivial",
         "theorem-surface category hypothesis_bridge"
-      ]
-    },
-    {
-      "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
-      "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.CanonicalSeedUnruhCompatibility.hFlowEqUnruh",
-      "category": "likely_constructive",
-      "dependent_theorem_count": 4,
-      "reasons": [
-        "proof is definitional/trivial"
-      ]
-    },
-    {
-      "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
-      "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.CanonicalSeedUnruhCompatibility.superHamiltonian_eq_two_pi_modularHamiltonian",
-      "category": "likely_constructive",
-      "dependent_theorem_count": 0,
-      "reasons": [
-        "proof is definitional/trivial"
       ]
     },
     {
@@ -32531,7 +32917,6 @@
       "category": "hypothesis_bridge",
       "dependent_theorem_count": 1,
       "reasons": [
-        "proof is definitional/trivial",
         "theorem-surface category hypothesis_bridge"
       ]
     },
@@ -32575,15 +32960,6 @@
     },
     {
       "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
-      "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalSeedFlowEqUnruhTarget_of_generator_identification",
-      "category": "likely_constructive",
-      "dependent_theorem_count": 1,
-      "reasons": [
-        "proof is definitional/trivial"
-      ]
-    },
-    {
-      "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
       "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalSeedFlowEqUnruhTarget_of_superHamiltonian_identification",
       "category": "package_reprojection",
       "dependent_theorem_count": 1,
@@ -32598,6 +32974,7 @@
       "category": "hypothesis_bridge",
       "dependent_theorem_count": 2,
       "reasons": [
+        "proof is definitional/trivial",
         "theorem-surface category hypothesis_bridge"
       ]
     },
@@ -32618,7 +32995,17 @@
       "dependent_theorem_count": 0,
       "reasons": [
         "no downstream theorem dependents",
+        "proof is definitional/trivial",
         "theorem-surface category hypothesis_bridge"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
+      "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalSeed_flow_at_wedgeParameter_of_flowEqUnruh",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 2,
+      "reasons": [
+        "proof is definitional/trivial"
       ]
     },
     {
@@ -32627,8 +33014,25 @@
       "category": "hypothesis_bridge",
       "dependent_theorem_count": 1,
       "reasons": [
-        "proof is definitional/trivial",
         "theorem-surface category hypothesis_bridge"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
+      "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaFlow_commutes_activeProjector_of_wedgeCalibrated",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
+      "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaFlow_commutes_spectralComplementaryProjector_of_wedgeCalibrated",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "proof is definitional/trivial"
       ]
     },
     {
@@ -32653,21 +33057,11 @@
     },
     {
       "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
-      "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.modularGenerator_eq_canonicalKinetic_plus_canonicalDefectCentral_canonicalSeed",
-      "category": "likely_constructive",
-      "dependent_theorem_count": 0,
-      "reasons": [
-        "proof is definitional/trivial"
-      ]
-    },
-    {
-      "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
       "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.not_forall_superHamiltonian_eq_two_pi_modularHamiltonian",
       "category": "hypothesis_bridge",
       "dependent_theorem_count": 0,
       "reasons": [
         "no downstream theorem dependents",
-        "proof is definitional/trivial",
         "theorem-surface category hypothesis_bridge"
       ]
     },
@@ -32705,7 +33099,6 @@
       "dependent_theorem_count": 0,
       "reasons": [
         "no downstream theorem dependents",
-        "proof is definitional/trivial",
         "theorem-surface category hypothesis_bridge"
       ]
     },
@@ -32723,6 +33116,15 @@
       "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.supercharge_eq_commutator_spectralProjector_spectral_epsilon_add_commutator_spectralProjector_GammaG_sub_spectral_epsilon",
       "category": "likely_constructive",
       "dependent_theorem_count": 0,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/ModularSuperchargeClosure.lean",
+      "name": "InfoGeometry.Canonical.ModularSuperchargeClosure.supercharge_idCertifiedInverseKernel_eq_zero",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 1,
       "reasons": [
         "proof is definitional/trivial"
       ]
@@ -37957,6 +38359,80 @@
       "name": "InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.vanishingCoupling_iff_exactPotentialRecomposition",
       "category": "likely_constructive",
       "dependent_theorem_count": 4,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.block_diagonal_of_commute_idempotent",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 1,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_block_diagonal",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 1,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_crossTerms_zero_of_commutes_activeProjector",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 2,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_scalePart_supported_on_kernel",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_scaleShapeSplit",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 1,
+      "reasons": [
+        "proof is definitional/trivial"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit",
+      "category": "package_reprojection",
+      "dependent_theorem_count": 1,
+      "reasons": [
+        "proof is definitional/trivial",
+        "theorem-surface category package_reprojection"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit_of_commutes_activeProjector",
+      "category": "package_reprojection",
+      "dependent_theorem_count": 0,
+      "reasons": [
+        "no downstream theorem dependents",
+        "theorem-surface category package_reprojection"
+      ]
+    },
+    {
+      "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_shapePart_supported_on_active",
+      "category": "likely_constructive",
+      "dependent_theorem_count": 0,
       "reasons": [
         "proof is definitional/trivial"
       ]
@@ -44865,7 +45341,7 @@
       "file": "lean/InfoGeometry/Canonical/WedgeBoostModularBridge.lean",
       "name": "InfoGeometry.Canonical.WedgeBoostModularBridge.unruhFlowOfModularTime_eq_modular_polynomial",
       "category": "likely_constructive",
-      "dependent_theorem_count": 0,
+      "dependent_theorem_count": 1,
       "reasons": [
         "proof is definitional/trivial"
       ]
@@ -44874,7 +45350,7 @@
       "file": "lean/InfoGeometry/Canonical/WedgeBoostModularBridge.lean",
       "name": "InfoGeometry.Canonical.WedgeBoostModularBridge.unruhFlowOfModularTime_eq_unruhFlow",
       "category": "likely_constructive",
-      "dependent_theorem_count": 10,
+      "dependent_theorem_count": 9,
       "reasons": [
         "proof is definitional/trivial"
       ]

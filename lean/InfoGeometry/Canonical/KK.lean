@@ -7,9 +7,13 @@ import InfoGeometry.KK.RealSplitKreinBoundedTransform
 import InfoGeometry.KK.KasparovCompactOperator
 import InfoGeometry.KK.Product
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.KK
 
 Canonical facade for bounded and unbounded real split-Krein KK interfaces and
 theory packaging.
 -/
+
+end InfoGeometry

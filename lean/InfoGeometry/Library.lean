@@ -20,8 +20,12 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import InfoGeometry.Canonical.All
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Library
 
 Stable, linted umbrella module for the canonical InfoGeometry publication surface.
 -/
+
+end InfoGeometry

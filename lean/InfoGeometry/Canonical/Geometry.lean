@@ -25,8 +25,12 @@ import InfoGeometry.Geometry.KreinAsHessian
 import InfoGeometry.Geometry.LegendreDuality
 import InfoGeometry.Canonical.ManifoldDegree
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.Geometry
 
 Canonical geometric/physical umbrella for publication.
 -/
+
+end InfoGeometry

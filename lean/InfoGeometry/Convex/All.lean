@@ -10,8 +10,12 @@ import InfoGeometry.Convex.RadonHelly
 import InfoGeometry.Convex.SelfDualCone
 import InfoGeometry.Convex.SpinFactorHessian
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Convex.All
 
 Umbrella module for the convex information geometry layer.
 -/
+
+end InfoGeometry

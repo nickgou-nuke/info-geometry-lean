@@ -30,8 +30,12 @@ import InfoGeometry.Clifford.SplitQ11Projectors
 import InfoGeometry.Clifford.Supercharge
 import InfoGeometry.Clifford.Tower
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.Clifford
 
 Canonical Clifford-layer umbrella (publication surface).
 -/
+
+end InfoGeometry

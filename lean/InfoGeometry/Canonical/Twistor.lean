@@ -23,6 +23,8 @@ import InfoGeometry.Twistor.NullProjective
 import InfoGeometry.Twistor.Incidence
 import InfoGeometry.Canonical.TwistorOperatorialIncidence
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.Twistor
 
@@ -30,3 +32,5 @@ Canonical twistor-layer umbrella (publication surface), including:
 - null/projective layer,
 - incidence/light-ray layer.
 -/
+
+end InfoGeometry

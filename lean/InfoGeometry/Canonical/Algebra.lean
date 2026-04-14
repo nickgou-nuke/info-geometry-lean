@@ -25,6 +25,8 @@ import InfoGeometry.Canonical.Triality
 import InfoGeometry.Canonical.CartanDecomposition
 import InfoGeometry.Canonical.SuperUnified
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.Algebra
 
@@ -36,3 +38,5 @@ Integrated canonical modules:
 - Triality attention core
 - Cartan decomposition bridge
 -/
+
+end InfoGeometry

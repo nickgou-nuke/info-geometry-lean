@@ -8,6 +8,8 @@ import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Canonical.LorentzianRouting
 import InfoGeometry.Canonical.Triality
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.LLM
 
@@ -18,3 +20,5 @@ Unified entrypoint for LLM-oriented formalization layers:
 - canonical transformer-block scaffold (attention + residual + normalization + MLP)
 - causal-mask transformer interface
 -/
+
+end InfoGeometry

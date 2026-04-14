@@ -49,6 +49,8 @@ import InfoGeometry.SuperUnified
 import InfoGeometry.TransformationGroups
 import InfoGeometry.generalizedKL
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.All
 
@@ -57,3 +59,5 @@ This module re-exports the full declaration graph, including canonical,
 experimental, and bedrock layers. LeanArchitect-facing blueprint coverage
 lives in `InfoGeometry.BlueprintTags` and is kept separate from this umbrella.
 -/
+
+end InfoGeometry

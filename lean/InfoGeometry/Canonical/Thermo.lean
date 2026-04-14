@@ -27,8 +27,12 @@ import InfoGeometry.Thermo.Gibbs
 import InfoGeometry.Thermo.ThermodynamicIdentities
 import InfoGeometry.Thermal.FiniteMatrix
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.Thermo
 
 Canonical thermodynamic umbrella for publication.
 -/
+
+end InfoGeometry

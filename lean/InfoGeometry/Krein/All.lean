@@ -47,8 +47,12 @@ import InfoGeometry.Krein.CarrierTransport
 import InfoGeometry.Krein.CarrierWithGenerator
 import InfoGeometry.Krein.README
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Krein.All
 
 Umbrella module for the Krein/Modular layer.
 -/
+
+end InfoGeometry

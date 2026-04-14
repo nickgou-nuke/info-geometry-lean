@@ -42,6 +42,8 @@ import InfoGeometry.Renyi
 import InfoGeometry.ExponentialFamily.Class
 import InfoGeometry.ExponentialFamily.Finite
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.Statistics
 
@@ -52,3 +54,5 @@ Integrated canonical exponential-family modules:
 - Gaussian Hessian geometry
 - Optimal-transport / KL / Bregman bridge aliases
 -/
+
+end InfoGeometry

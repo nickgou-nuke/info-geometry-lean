@@ -3,6 +3,8 @@ import InfoGeometry.Canonical.AQFTHilbertCompression
 import InfoGeometry.Canonical.AQFTReadiness
 import InfoGeometry.Canonical.AQFTOperatorEndpoints
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.AQFTOperatorInterface
 
@@ -13,3 +15,5 @@ Umbrella import for the AQFT operator interface:
 - static readiness packages
 - constructive AQFT endpoints
 -/
+
+end InfoGeometry

@@ -22,6 +22,8 @@ import InfoGeometry.Clifford.Supercharge
 import InfoGeometry.Clifford.Tower
 import InfoGeometry.Clifford.TowerMatrix
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Clifford.All
 
@@ -35,3 +37,5 @@ Authority note:
   neutral phase-space lane on `E × E*`,
 - both lanes are imported here, but they should not be read as competing roots.
 -/
+
+end InfoGeometry

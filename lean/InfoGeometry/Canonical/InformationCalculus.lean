@@ -1,5 +1,7 @@
 import InfoGeometry.Canonical.InformationPartitionCore
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.InformationCalculus
 
@@ -10,3 +12,5 @@ The lower partition/log-partition calculus now lives in
 `InfoGeometry.Canonical.InformationPartitionCore`. This module remains opt-in
 while the broader continuum interpretation stays on the review surface.
 -/
+
+end InfoGeometry

@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.WeylPathHysteresis
 import InfoGeometry.Canonical.WeylAnomalySource
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.WeylInformationGauge
 
@@ -11,3 +13,5 @@ Concrete theorem families now live in:
 - `InfoGeometry.Canonical.WeylPathHysteresis`
 - `InfoGeometry.Canonical.WeylAnomalySource`
 -/
+
+end InfoGeometry

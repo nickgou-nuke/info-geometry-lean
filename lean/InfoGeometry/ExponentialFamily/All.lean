@@ -10,8 +10,12 @@ import InfoGeometry.ExponentialFamily.KLBregman
 import InfoGeometry.ExponentialFamily.Legendre
 import InfoGeometry.ExponentialFamily.TwistedGaussian
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.ExponentialFamily.All
 
 Umbrella module for the exponential family layer.
 -/
+
+end InfoGeometry

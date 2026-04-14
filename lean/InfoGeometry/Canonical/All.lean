@@ -358,6 +358,8 @@ import InfoGeometry.Canonical.AttentionPolarizedSplit
 import InfoGeometry.Canonical.AttentionPolarizedGibbsBridge
 import InfoGeometry.Canonical.AttentionPolarizedSinkhornBridge
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.All
 
@@ -379,3 +381,5 @@ Conceptual notes under `docs/` are orientation aids only. Exact ownership,
 theorem names, and file boundaries must be checked against the current owner
 modules in `lean/InfoGeometry/Canonical/`.
 -/
+
+end InfoGeometry

@@ -15,9 +15,13 @@ import InfoGeometry.Projective.ProjectiveMap
 import InfoGeometry.Projective.Rays
 import InfoGeometry.Projective.SelfDualCone
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Projective.All
 
 Stable umbrella module for the projective and self-dual cone layer.
 The zero-null twistor bridge remains quarantined and must be imported explicitly.
 -/
+
+end InfoGeometry

@@ -3,6 +3,8 @@ import InfoGeometry.Canonical.ChiralTorsionGeneralizedKL
 import InfoGeometry.Canonical.ChiralTorsionTwistor
 import InfoGeometry.Canonical.ChiralTorsionState
 
+namespace InfoGeometry
+
 /-!
 # Research.ChiralTorsionBridge
 
@@ -14,3 +16,5 @@ Owned theorem families now live in:
 - `ChiralTorsionTwistor`
 - `ChiralTorsionState`
 -/
+
+end InfoGeometry

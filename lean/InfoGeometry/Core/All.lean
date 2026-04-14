@@ -12,8 +12,12 @@ import InfoGeometry.Core.SymmetricLieSpaces
 import InfoGeometry.Core.SymmetricSpaces
 import InfoGeometry.Core.UnifiedGeometry
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Core.All
 
 Umbrella module for the core bedrock geometry layer.
 -/
+
+end InfoGeometry

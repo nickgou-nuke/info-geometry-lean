@@ -8,8 +8,12 @@ import InfoGeometry.Thermo.ModularKLDivergence
 import InfoGeometry.Thermo.ThermodynamicIdentities
 import InfoGeometry.Potential.Thermo
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Thermo.All
 
 Umbrella module for the thermodynamics and thermal matrix layer.
 -/
+
+end InfoGeometry

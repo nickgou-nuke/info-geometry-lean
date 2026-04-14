@@ -37,6 +37,8 @@ import InfoGeometry.Projective.TwistorBridge
 import InfoGeometry.Unstable.SingularUnitaryBridge
 import InfoGeometry.Unstable.YangMillsBridge
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Unstable.Quarantine
 
@@ -48,3 +50,5 @@ Policy:
 - They may be imported only from unstable/research entrypoints until replaced
   by explicit non-vacuous proofs.
 -/
+
+end InfoGeometry

@@ -6,8 +6,12 @@ import InfoGeometry.MeasureProjective
 import InfoGeometry.MeasureProjective.GeneratorBridge
 import InfoGeometry.MeasureProjective.Invariant
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Measure.All
 
 Umbrella module for the measure-theoretic and projective state layer.
 -/
+
+end InfoGeometry

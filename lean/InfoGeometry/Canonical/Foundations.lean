@@ -38,8 +38,12 @@ import InfoGeometry.OptimalTransport
 import InfoGeometry.Potential
 import InfoGeometry.Potential.Thermo
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Canonical.Foundations
 
 Canonical analytic/convex/core/foundational umbrella for publication.
 -/
+
+end InfoGeometry

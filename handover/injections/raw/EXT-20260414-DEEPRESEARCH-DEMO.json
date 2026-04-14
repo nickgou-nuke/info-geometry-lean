@@ -40,6 +40,11 @@
       "at": "2026-04-14T10:56:16+00:00",
       "event": "created:research",
       "note": "created in lane=raw"
+    },
+    {
+      "at": "2026-04-14T11:01:44+00:00",
+      "event": "digest:built",
+      "note": "handover/injections/digests/EXT-20260414-DEEPRESEARCH-DEMO.md"
     }
   ]
 }

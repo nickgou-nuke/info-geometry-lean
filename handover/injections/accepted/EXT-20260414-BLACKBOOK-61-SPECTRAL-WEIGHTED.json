@@ -1,0 +1,99 @@
+{
+  "packet_id": "EXT-20260414-BLACKBOOK-61-SPECTRAL-WEIGHTED",
+  "title": "Black Book Ch61 injection: spectral-weighted decomposition",
+  "source": {
+    "type": "manual",
+    "ref": "docs/black_books/61_spectral\u2011weighted_decomposition.md",
+    "date": "2026-04-14T11:17:25+00:00"
+  },
+  "raw_text": "Chapter 61 frames spectral-weighted decomposition as a singular operator-first surrogate for global KAN/polar decomposition with kernel quarantine (Drazin/MP projectors), active-lane elliptic/hyperbolic factorization, and modular-gauge vs spectral-shape separation.",
+  "distilled_claim": "Chapter 61 should land as a CP-003/CP-002-aligned surrogate decomposition surface: active-vs-kernel split, range/domain anomaly closure, and gauge-vs-shape bridge encoded through existing canonical owner symbols without introducing new ontology.",
+  "research": {
+    "topic": "Black Book Chapter 61 spectral-weighted decomposition",
+    "questions": [
+      "How should CP-003/CP-002 theorem surfaces encode active-vs-kernel, elliptic-vs-hyperbolic, and gauge-vs-shape separation?"
+    ],
+    "sources": [
+      {
+        "kind": "note",
+        "ref": "Chapter 61 executive summary and decomposition template"
+      }
+    ],
+    "coverage": "distilled"
+  },
+  "repo_mapping": {
+    "owner_files": [
+      "lean/InfoGeometry/Canonical/SingularDecompositionSurrogate.lean",
+      "lean/InfoGeometry/Canonical/GlobalChiralDecomposition.lean",
+      "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+      "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean"
+    ],
+    "symbols": [
+      "singular_decomposition_surrogate_package_of_commute",
+      "singular_decomposition_surrogate_commutator_of_commute",
+      "canonicalRelativeModularOperator_full_block_package_of_wedgeCalibrated",
+      "global_active_apex_decomposition",
+      "chiral_range_domain_decomposition",
+      "singular_polar_surrogate_closure",
+      "relativeModular_scaleShapeSplit_bridge_of_commute"
+    ],
+    "target_theorems": [
+      "canonicalRelativeModularOperator_full_block_package_of_wedgeCalibrated",
+      "singular_decomposition_surrogate_commutator_of_commute"
+    ]
+  },
+  "verification_plan": {
+    "build_targets": [
+      "InfoGeometry.Canonical.SingularDecompositionSurrogate",
+      "InfoGeometry.Canonical.GlobalChiralDecomposition",
+      "InfoGeometry.Canonical.RelativeModularScaleShapeSplit"
+    ],
+    "audit_targets": [
+      "targeted-module-build-only",
+      "no-full-chain-by-default"
+    ]
+  },
+  "status": "accepted",
+  "history": [
+    {
+      "at": "2026-04-14T11:17:25+00:00",
+      "event": "created:research",
+      "note": "created in lane=raw"
+    },
+    {
+      "at": "2026-04-14T11:17:25+00:00",
+      "event": "digest:built",
+      "note": "handover/injections/digests/EXT-20260414-BLACKBOOK-61-SPECTRAL-WEIGHTED.md"
+    },
+    {
+      "at": "2026-04-14T11:18:59+00:00",
+      "event": "promoted:raw->distilled",
+      "note": "Mapped Chapter 61 to CP-003/CP-002 surrogate closure claim"
+    },
+    {
+      "at": "2026-04-14T11:18:59+00:00",
+      "event": "promoted:distilled->translated",
+      "note": "Owner files, symbols, and build-targeted verification plan set"
+    },
+    {
+      "at": "2026-04-14T11:18:59+00:00",
+      "event": "digest:built",
+      "note": "handover/injections/digests/EXT-20260414-BLACKBOOK-61-SPECTRAL-WEIGHTED.md"
+    },
+    {
+      "at": "2026-04-14T11:22:00+00:00",
+      "event": "promoted:translated->gated",
+      "note": "Targeted builds passed: SingularDecompositionSurrogate, GlobalChiralDecomposition, RelativeModularScaleShapeSplit"
+    },
+    {
+      "at": "2026-04-14T11:22:00+00:00",
+      "event": "promoted:gated->accepted",
+      "note": "Chapter 61 mapping verified on current CP-003/CP-002 owner surfaces"
+    },
+    {
+      "at": "2026-04-14T11:22:00+00:00",
+      "event": "digest:built",
+      "note": "handover/injections/digests/EXT-20260414-BLACKBOOK-61-SPECTRAL-WEIGHTED.md"
+    }
+  ]
+}

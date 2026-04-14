@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.WedgeBoostModularBridge
 import InfoGeometry.Canonical.ModularSpectralConjugationBridge
+import InfoGeometry.Canonical.GlobalChiralDecomposition
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import InfoGeometry.Meta.Architecture
@@ -166,6 +167,21 @@ theorem supercharge_eq_commutator_spectralProjector_spectral_epsilon_add_commuta
   simpa [InfoGeometry.Canonical.ProjectorEquivariance.modularSign_eq_spectral_epsilon] using
     supercharge_eq_commutator_spectralProjector_modularSign_add_commutator_spectralProjector_GammaG_sub_modularSign
       (E := E) (CIK := CIK)
+
+/--
+CP-003 downstream consumer on the modular lane:
+reuse the singular projector/anomaly surrogate closure directly from the
+global-chiral owner surface.
+-/
+@[rep_depth transport]
+theorem cp003_singular_surrogate_commutator_closure
+    (CIK : CertifiedInverseKernel H₂) :
+    let K : InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT H₂ := ⟨CIK⟩
+    InfoGeometry.Canonical.DrazinPenroseDilationKKT.commutator K.P_D K.GammaG
+      = K.rightSupercharge - K.leftSupercharge := by
+  intro K
+  exact InfoGeometry.Canonical.GlobalChiralDecomposition.singular_polar_surrogate_closure
+    (E := E) K
 
 /--
 The canonical seed realizes the projected even generator as a true modular

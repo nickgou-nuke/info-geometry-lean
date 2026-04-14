@@ -9,7 +9,7 @@
   "symbolic_witness": {
     "kind": "lean-sandbox",
     "path": "lean/InfoGeometry/Canonical/Sandbox_CP003_SingularPolarDecomposition.lean",
-    "result_summary": "PENDING: witness aliases proving the CP-003 theorem family by reuse of GlobalChiralDecomposition owner theorems."
+    "result_summary": "PASS (2026-04-14): `lake env lean lean/InfoGeometry/Canonical/Sandbox_CP003_SingularPolarDecomposition.lean` and `lake build InfoGeometry.Canonical.Sandbox_CP003_SingularPolarDecomposition` completed successfully."
   },
   "lean_target": {
     "theorem_name": "singularPolarKAN_replacement_of_commute",
@@ -36,9 +36,9 @@
     "lean/InfoGeometry/Canonical/OperatorialVolumePreservation.lean"
   ],
   "upstairs_content_remaining": "Any Type-III continuous-core/Breuer index quantization claims remain upstairs and are intentionally excluded from CP-003 owner burden.",
-  "lock_status": "sandbox_witness",
+  "lock_status": "sandbox_compiled",
   "next_actions": [
-    "Compile sandbox witness file-level and keep it outside Canonical umbrella owner obligations.",
+    "Keep CP-003 on sandbox alias surface while validating downstream fan-in impact.",
     "Promote only if theorem-significance indicates nontrivial downstream fan-in beyond existing GlobalChiralDecomposition owner."
   ]
 }

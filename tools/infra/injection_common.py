@@ -28,6 +28,7 @@ LANES = ("raw", "distilled", "translated", "gated", "accepted", "rejected", "arc
 STATUS_MAP = {"archive": "archived"}
 SOURCE_TYPES = {"web", "chat", "manual", "llm", "paper", "other"}
 STATUSES = {"raw", "distilled", "translated", "gated", "accepted", "rejected", "archived"}
+WORKFLOW_MODES = {"standard", "gemini-hermes-codex"}
 
 DEFAULT_PACKET_LOCK_DIR = Path("/tmp/info-geometry-injection-packet-locks")
 TRANSITION_GRAPH: dict[str, set[str]] = {
@@ -130,6 +131,13 @@ def _assert_no_extra_keys(data: dict[str, Any], allowed: set[str], name: str) ->
         raise ValueError(f"{name} has unsupported keys: {', '.join(sorted(extra))}")
 
 
+def _non_empty_str(v: Any, name: str) -> str:
+    s = _require_str(v, name)
+    if not s.strip():
+        raise ValueError(f"{name} must be non-empty")
+    return s
+
+
 def validate_packet_schema(packet: dict[str, Any], *, schema_file: Path | None = None) -> None:
     """
     Strictly validate packet contract (hard fail).
@@ -218,6 +226,13 @@ def validate_packet_schema(packet: dict[str, Any], *, schema_file: Path | None =
     if research is not None:
         if not isinstance(research, dict):
             raise ValueError("research must be an object when present")
+        _assert_no_extra_keys(
+            research,
+            {"topic", "questions", "sources", "coverage", "workflow", "segments"},
+            "research",
+        )
+        if "topic" in research:
+            _require_str(research.get("topic"), "research.topic")
         if "questions" in research:
             _require_str_list(research.get("questions"), "research.questions")
         if "coverage" in research:
@@ -232,8 +247,126 @@ def validate_packet_schema(packet: dict[str, Any], *, schema_file: Path | None =
                         _require_str(src["kind"], f"research.sources[{i}].kind")
                     if "ref" in src:
                         _require_str(src["ref"], f"research.sources[{i}].ref")
+                    if "title" in src:
+                        _require_str(src["title"], f"research.sources[{i}].title")
+                    if "date" in src:
+                        _require_str(src["date"], f"research.sources[{i}].date")
                 elif not isinstance(src, str):
                     raise ValueError(f"research.sources[{i}] must be object or string")
+        if "workflow" in research:
+            workflow = research["workflow"]
+            if not isinstance(workflow, dict):
+                raise ValueError("research.workflow must be an object")
+            _assert_no_extra_keys(
+                workflow,
+                {
+                    "mode",
+                    "creative_provider",
+                    "verification_provider",
+                    "coding_provider",
+                    "creative_complete",
+                    "verification_complete",
+                },
+                "research.workflow",
+            )
+            mode = _require_str(workflow.get("mode"), "research.workflow.mode")
+            if mode not in WORKFLOW_MODES:
+                raise ValueError(
+                    f"research.workflow.mode must be one of {sorted(WORKFLOW_MODES)}"
+                )
+            _non_empty_str(workflow.get("creative_provider"), "research.workflow.creative_provider")
+            _non_empty_str(
+                workflow.get("verification_provider"), "research.workflow.verification_provider"
+            )
+            _non_empty_str(workflow.get("coding_provider"), "research.workflow.coding_provider")
+            if not isinstance(workflow.get("creative_complete"), bool):
+                raise ValueError("research.workflow.creative_complete must be boolean")
+            if not isinstance(workflow.get("verification_complete"), bool):
+                raise ValueError("research.workflow.verification_complete must be boolean")
+        if "segments" in research:
+            segments = research["segments"]
+            if not isinstance(segments, list):
+                raise ValueError("research.segments must be a list")
+            seen_ids: set[str] = set()
+            for i, seg in enumerate(segments):
+                if not isinstance(seg, dict):
+                    raise ValueError(f"research.segments[{i}] must be an object")
+                _assert_no_extra_keys(
+                    seg,
+                    {
+                        "segment_id",
+                        "title",
+                        "source_span",
+                        "seed_text",
+                        "creative_notes",
+                        "enriched_context",
+                        "claims",
+                        "inference_flags",
+                        "confidence",
+                        "literature_evidence",
+                    },
+                    f"research.segments[{i}]",
+                )
+                seg_id = _non_empty_str(seg.get("segment_id"), f"research.segments[{i}].segment_id")
+                if seg_id in seen_ids:
+                    raise ValueError(f"duplicate research segment_id: {seg_id}")
+                seen_ids.add(seg_id)
+                _require_str(seg.get("seed_text"), f"research.segments[{i}].seed_text")
+                if "title" in seg:
+                    _require_str(seg["title"], f"research.segments[{i}].title")
+                if "source_span" in seg:
+                    _require_str(seg["source_span"], f"research.segments[{i}].source_span")
+                if "creative_notes" in seg:
+                    _require_str(seg["creative_notes"], f"research.segments[{i}].creative_notes")
+                if "enriched_context" in seg:
+                    _require_str(seg["enriched_context"], f"research.segments[{i}].enriched_context")
+                if "claims" in seg:
+                    _require_str_list(seg["claims"], f"research.segments[{i}].claims")
+                if "inference_flags" in seg:
+                    _require_str_list(
+                        seg["inference_flags"], f"research.segments[{i}].inference_flags"
+                    )
+                if "confidence" in seg and not isinstance(seg["confidence"], (int, float)):
+                    raise ValueError(f"research.segments[{i}].confidence must be numeric")
+                if "literature_evidence" in seg:
+                    evs = seg["literature_evidence"]
+                    if not isinstance(evs, list):
+                        raise ValueError(
+                            f"research.segments[{i}].literature_evidence must be a list"
+                        )
+                    for j, ev in enumerate(evs):
+                        if not isinstance(ev, dict):
+                            raise ValueError(
+                                f"research.segments[{i}].literature_evidence[{j}] must be an object"
+                            )
+                        _assert_no_extra_keys(
+                            ev,
+                            {"url", "title", "date", "summary", "relevance"},
+                            f"research.segments[{i}].literature_evidence[{j}]",
+                        )
+                        _non_empty_str(
+                            ev.get("url"),
+                            f"research.segments[{i}].literature_evidence[{j}].url",
+                        )
+                        _non_empty_str(
+                            ev.get("summary"),
+                            f"research.segments[{i}].literature_evidence[{j}].summary",
+                        )
+                        if "title" in ev:
+                            _require_str(
+                                ev["title"],
+                                f"research.segments[{i}].literature_evidence[{j}].title",
+                            )
+                        if "date" in ev:
+                            _require_str(
+                                ev["date"],
+                                f"research.segments[{i}].literature_evidence[{j}].date",
+                            )
+                        if "relevance" in ev:
+                            _require_str(
+                                ev["relevance"],
+                                f"research.segments[{i}].literature_evidence[{j}].relevance",
+                            )
 
 
 def append_history_event(
@@ -376,6 +509,8 @@ def packet_prompt_hash(packet: dict[str, Any]) -> str:
         "topic": research.get("topic", ""),
         "questions": research.get("questions", []),
         "sources": research.get("sources", []),
+        "workflow": research.get("workflow", {}),
+        "segments": research.get("segments", []),
     }
     serialized = json.dumps(payload, sort_keys=True, ensure_ascii=True, separators=(",", ":"))
     return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
@@ -542,6 +677,7 @@ def enforce_translation_gate(packet: dict[str, Any]) -> None:
         raise ValueError("translated gate failed: repo_mapping.symbols is empty")
     if not target_theorems:
         raise ValueError("translated gate failed: repo_mapping.target_theorems is empty")
+    enforce_dual_stage_research_gate(packet)
 
 
 def enforce_gated_gate(packet: dict[str, Any]) -> None:
@@ -554,6 +690,51 @@ def enforce_gated_gate(packet: dict[str, Any]) -> None:
     builds = _non_empty_str_list(verification.get("build_targets"))
     if not builds:
         raise ValueError("gated gate failed: verification_plan.build_targets is empty")
+
+
+def enforce_dual_stage_research_gate(packet: dict[str, Any]) -> None:
+    """
+    If packet declares gemini-hermes-codex workflow, enforce both stages are complete
+    and segment cards are evidence-enriched.
+    """
+    research = packet.get("research")
+    if not isinstance(research, dict):
+        return
+    workflow = research.get("workflow")
+    if not isinstance(workflow, dict):
+        return
+    mode = str(workflow.get("mode", "")).strip()
+    if mode != "gemini-hermes-codex":
+        return
+
+    if workflow.get("creative_complete") is not True:
+        raise ValueError(
+            "translated gate failed: research.workflow.creative_complete must be true for gemini-hermes-codex mode"
+        )
+    if workflow.get("verification_complete") is not True:
+        raise ValueError(
+            "translated gate failed: research.workflow.verification_complete must be true for gemini-hermes-codex mode"
+        )
+
+    segments = research.get("segments")
+    if not isinstance(segments, list) or not segments:
+        raise ValueError(
+            "translated gate failed: research.segments must be non-empty for gemini-hermes-codex mode"
+        )
+
+    for i, seg in enumerate(segments):
+        if not isinstance(seg, dict):
+            raise ValueError(f"translated gate failed: research.segments[{i}] must be object")
+        creative_notes = str(seg.get("creative_notes", "")).strip()
+        if not creative_notes:
+            raise ValueError(
+                f"translated gate failed: research.segments[{i}].creative_notes is empty"
+            )
+        evs = seg.get("literature_evidence", [])
+        if not isinstance(evs, list) or not evs:
+            raise ValueError(
+                f"translated gate failed: research.segments[{i}].literature_evidence is empty"
+            )
 
 
 def run_and_record_build_targets(root: Path, packet: dict[str, Any]) -> dict[str, Any]:

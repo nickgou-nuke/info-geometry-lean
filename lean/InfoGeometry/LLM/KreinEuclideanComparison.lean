@@ -49,7 +49,9 @@ theorem context_energy_agreement_of_zero_second_channel
   have hsub :
       kreinInteractionEnergy q (ctx.keys j)
         - euclideanInteractionEnergy2D q (ctx.keys j) = 0 := by
-    simpa [hq, hk] using (krein_minus_euclidean_energy q (ctx.keys j))
+    have h := krein_minus_euclidean_energy q (ctx.keys j)
+    rw [hq, hk] at h
+    simpa using h
   exact sub_eq_zero.mp hsub
 
 end ContextComparison

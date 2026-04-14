@@ -64,8 +64,59 @@ noncomputable abbrev relativeModularShapePart
   IsCompatibleDPDWedge.relativeModularActiveShapePart (CIK := CIK) RMO
 
 /--
+Generic two-block decoupling:
+if `P^2 = P` and `P` commutes with `R`, then off-diagonal blocks vanish.
+-/
+@[rep_depth transport]
+theorem block_diagonal_of_commute_idempotent
+    (P R : EndH)
+    (hP : P * P = P)
+    (hPR : Commute P R) :
+    ((1 : EndH) - P) * R * P = 0
+      ∧
+    P * R * ((1 : EndH) - P) = 0 := by
+  constructor
+  · calc
+      ((1 : EndH) - P) * R * P
+          = R * P - P * R * P := by
+              simp [sub_mul, mul_assoc]
+      _ = R * P - R * P := by
+            simp [hPR.eq, mul_assoc, hP]
+      _ = 0 := sub_self _
+  · calc
+      P * R * ((1 : EndH) - P)
+          = P * R - P * R * P := by
+              simp [mul_sub, mul_assoc]
+      _ = P * R - P * R := by
+            simp [hPR.eq, mul_assoc, hP]
+      _ = 0 := sub_self _
+
+/--
 Block-diagonality witness on the Drazin split.
 This is the CP-002 off-diagonal vanishing lock.
+-/
+@[rep_depth transport]
+theorem relativeModular_block_diagonal
+    (CIK : CertifiedInverseKernel H₂)
+    (RMO : EndH)
+    (hComm : Commute RMO (activeProjector (E := E) CIK)) :
+    kernelProjector (E := E) CIK * RMO * activeProjector (E := E) CIK = 0
+      ∧
+    activeProjector (E := E) CIK * RMO * kernelProjector (E := E) CIK = 0 := by
+  have hIdem :
+      activeProjector (E := E) CIK * activeProjector (E := E) CIK
+        = activeProjector (E := E) CIK := by
+    simpa [activeProjector] using CIK.spectralProjector_idempotent
+  have hBlocks :=
+    block_diagonal_of_commute_idempotent
+      (E := E) (P := activeProjector (E := E) CIK) (R := RMO)
+      hIdem hComm.symm
+  simpa [kernelProjector, activeProjector, CertifiedInverseKernel.spectralComplementaryProjector,
+    CertifiedInverseKernel.toInverseKernel', InverseKernel.spectralComplementaryProjector]
+    using hBlocks
+
+/--
+Alias preserving the old CP-002 theorem name for downstream compatibility.
 -/
 @[rep_depth transport]
 theorem relativeModular_crossTerms_zero_of_commutes_activeProjector
@@ -75,9 +126,7 @@ theorem relativeModular_crossTerms_zero_of_commutes_activeProjector
     kernelProjector (E := E) CIK * RMO * activeProjector (E := E) CIK = 0
       ∧
     activeProjector (E := E) CIK * RMO * kernelProjector (E := E) CIK = 0 := by
-  simpa [kernelProjector, activeProjector] using
-    IsCompatibleDPDWedge.relativeModular_offDiagonal_blocks_zero_of_commutes_spectralProjector
-      (CIK := CIK) (RMO := RMO) hComm
+  exact relativeModular_block_diagonal (E := E) (CIK := CIK) (RMO := RMO) hComm
 
 /-- Kernel support of the CP-002 scale block. -/
 @[rep_depth transport]
@@ -91,8 +140,33 @@ theorem relativeModular_scalePart_supported_on_kernel
     relativeModularScalePart (E := E) CIK RMO
         * kernelProjector (E := E) CIK
       = relativeModularScalePart (E := E) CIK RMO := by
-  constructor <;> simp [kernelProjector, relativeModularScalePart, mul_assoc,
-    CIK.spectralComplementaryProjector_idempotent]
+  constructor
+  · unfold kernelProjector relativeModularScalePart
+    calc
+      CIK.spectralComplementaryProjector
+          * (IsCompatibleDPDWedge.relativeModularKernelScalePart (CIK := CIK) RMO)
+          =
+        (CIK.spectralComplementaryProjector * CIK.spectralComplementaryProjector)
+          * RMO * CIK.spectralComplementaryProjector := by
+            simp [IsCompatibleDPDWedge.relativeModularKernelScalePart, mul_assoc]
+      _ =
+        CIK.spectralComplementaryProjector * RMO * CIK.spectralComplementaryProjector := by
+          simp [CIK.spectralComplementaryProjector_idempotent]
+      _ = IsCompatibleDPDWedge.relativeModularKernelScalePart (CIK := CIK) RMO := by
+          simp [IsCompatibleDPDWedge.relativeModularKernelScalePart]
+  · unfold kernelProjector relativeModularScalePart
+    calc
+      (IsCompatibleDPDWedge.relativeModularKernelScalePart (CIK := CIK) RMO)
+          * CIK.spectralComplementaryProjector
+          =
+        CIK.spectralComplementaryProjector * RMO
+          * (CIK.spectralComplementaryProjector * CIK.spectralComplementaryProjector) := by
+            simp [IsCompatibleDPDWedge.relativeModularKernelScalePart, mul_assoc]
+      _ =
+        CIK.spectralComplementaryProjector * RMO * CIK.spectralComplementaryProjector := by
+          simp [CIK.spectralComplementaryProjector_idempotent]
+      _ = IsCompatibleDPDWedge.relativeModularKernelScalePart (CIK := CIK) RMO := by
+          simp [IsCompatibleDPDWedge.relativeModularKernelScalePart]
 
 /-- Active support of the CP-002 shape block. -/
 @[rep_depth transport]
@@ -106,8 +180,33 @@ theorem relativeModular_shapePart_supported_on_active
     relativeModularShapePart (E := E) CIK RMO
         * activeProjector (E := E) CIK
       = relativeModularShapePart (E := E) CIK RMO := by
-  constructor <;> simp [activeProjector, relativeModularShapePart, mul_assoc,
-    CIK.spectralProjector_idempotent]
+  constructor
+  · unfold activeProjector relativeModularShapePart
+    calc
+      CIK.spectralProjector
+          * (IsCompatibleDPDWedge.relativeModularActiveShapePart (CIK := CIK) RMO)
+          =
+        (CIK.spectralProjector * CIK.spectralProjector)
+          * RMO * CIK.spectralProjector := by
+            simp [IsCompatibleDPDWedge.relativeModularActiveShapePart, mul_assoc]
+      _ =
+        CIK.spectralProjector * RMO * CIK.spectralProjector := by
+          simp [CIK.spectralProjector_idempotent]
+      _ = IsCompatibleDPDWedge.relativeModularActiveShapePart (CIK := CIK) RMO := by
+          simp [IsCompatibleDPDWedge.relativeModularActiveShapePart]
+  · unfold activeProjector relativeModularShapePart
+    calc
+      (IsCompatibleDPDWedge.relativeModularActiveShapePart (CIK := CIK) RMO)
+          * CIK.spectralProjector
+          =
+        CIK.spectralProjector * RMO
+          * (CIK.spectralProjector * CIK.spectralProjector) := by
+            simp [IsCompatibleDPDWedge.relativeModularActiveShapePart, mul_assoc]
+      _ =
+        CIK.spectralProjector * RMO * CIK.spectralProjector := by
+          simp [CIK.spectralProjector_idempotent]
+      _ = IsCompatibleDPDWedge.relativeModularActiveShapePart (CIK := CIK) RMO := by
+          simp [IsCompatibleDPDWedge.relativeModularActiveShapePart]
 
 /--
 Operatorial CP-002 capstone:

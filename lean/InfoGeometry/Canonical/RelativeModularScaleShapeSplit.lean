@@ -139,33 +139,36 @@ theorem relativeModular_scaleShapeSplit
     {R : EndH}
     (hComm : Commute CIK.spectralProjector R) :
     R =
-      CIK.spectralComplementaryProjector * R * CIK.spectralComplementaryProjector
-        + CIK.spectralProjector * R * CIK.spectralProjector := by
-  have hDec :
-      CIK.spectralProjector + CIK.spectralComplementaryProjector = (1 : EndH) :=
-    CIK.spectralProjector_add_spectralComplementaryProjector
-  have hMixed := relativeModular_block_diagonal (E := E) (CIK := CIK) (R := R) hComm
+      CIK.spectralComplementaryProjector * (R * CIK.spectralComplementaryProjector)
+        + CIK.spectralProjector * (R * CIK.spectralProjector) := by
+  let P : EndH := CIK.spectralProjector
+  let Q : EndH := CIK.spectralComplementaryProjector
+  have hDec : P + Q = (1 : EndH) := by
+    simpa [P, Q] using CIK.spectralProjector_add_spectralComplementaryProjector
+  have hMixed : Q * R * P = 0 ∧ P * R * Q = 0 := by
+    simpa [P, Q] using relativeModular_block_diagonal (E := E) (CIK := CIK) (R := R) hComm
+  have hExpand :
+      (P + Q) * R * (P + Q)
+        = P * (R * P) + (P * (R * Q) + (Q * (R * P) + Q * (R * Q))) := by
+    noncomm_ring
   calc
-    R = (1 : EndH) * R * (1 : EndH) := by simp
+    R = (P + Q) * R * (P + Q) := by
+          calc
+            R = (1 : EndH) * R * (1 : EndH) := by simp
+            _ = (P + Q) * R * (P + Q) := by simpa [hDec]
+    _ = P * (R * P) + (P * (R * Q) + (Q * (R * P) + Q * (R * Q))) := hExpand
+    _ = P * (R * P) + (0 + (0 + Q * (R * Q))) := by
+          have hPRQ : P * (R * Q) = 0 := by
+            simpa [mul_assoc] using hMixed.2
+          have hQRP : Q * (R * P) = 0 := by
+            simpa [mul_assoc] using hMixed.1
+          rw [hPRQ, hQRP]
+    _ = Q * (R * Q) + P * (R * P) := by
+          simp [add_assoc, add_comm]
     _ =
-      (CIK.spectralProjector + CIK.spectralComplementaryProjector) * R
-        * (CIK.spectralProjector + CIK.spectralComplementaryProjector) := by
-          rw [hDec]
-    _ =
-      CIK.spectralProjector * R * CIK.spectralProjector
-        + CIK.spectralProjector * R * CIK.spectralComplementaryProjector
-        + (CIK.spectralComplementaryProjector * R * CIK.spectralProjector
-            + CIK.spectralComplementaryProjector * R * CIK.spectralComplementaryProjector) := by
-          noncomm_ring
-    _ =
-      CIK.spectralProjector * R * CIK.spectralProjector
-        + CIK.spectralComplementaryProjector * R * CIK.spectralComplementaryProjector := by
-          rw [hMixed.2, hMixed.1]
-          simp
-    _ =
-      CIK.spectralComplementaryProjector * R * CIK.spectralComplementaryProjector
-        + CIK.spectralProjector * R * CIK.spectralProjector := by
-          rw [add_comm]
+      CIK.spectralComplementaryProjector * (R * CIK.spectralComplementaryProjector)
+        + CIK.spectralProjector * (R * CIK.spectralProjector) := by
+          unfold P Q
 
 @[rep_depth transport, capstone]
 -- theorem-class: closure
@@ -240,7 +243,8 @@ theorem canonicalRelativeModularOperator_commutes_spectralProjector_of_wedgeCali
       (E := E) (CIK := CIK) (W := W) C τ
   have hProj :
       ((1 : EndH) - CIK.spectralComplementaryProjector) = CIK.spectralProjector := by
-    change (1 : EndH) - (1 - CIK.spectralProjector) = CIK.spectralProjector
+    rw [CertifiedInverseKernel.spectralComplementaryProjector,
+      CertifiedInverseKernel.toInverseKernel', InverseKernel.spectralComplementaryProjector]
     simp
   simpa [Commute, canonicalRelativeModularOperator, hProj] using hActive
 
@@ -276,10 +280,12 @@ theorem canonicalRelativeModularOperator_scaleShapeSplit_of_wedgeCalibrated
         CIK.spectralProjector :=
     canonicalRelativeModularOperator_commutes_spectralProjector_of_wedgeCalibrated
       (E := E) (CIK := CIK) (W := W) C τ
-  exact relativeModular_scaleShapeSplit
+  have hSplit :=
+    relativeModular_scaleShapeSplit
       (E := E) (CIK := CIK)
       (R := canonicalRelativeModularOperator (E := E) CIK τ)
       hComm.symm
+  simpa [mul_assoc] using hSplit
 
 end Core
 

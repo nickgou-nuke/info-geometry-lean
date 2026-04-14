@@ -1,0 +1,290 @@
+{
+  "packet_id": "EXT-20260414-LLAMA4-TRIALITY",
+  "title": "Llama4 snapshot to TrialityMoE formalization",
+  "source": {
+    "type": "web",
+    "ref": "deep-research",
+    "date": "2026-04-14T16:00:56+00:00"
+  },
+  "raw_text": "Llama4 MoE architecture to Lean operator-first formalization",
+  "distilled_claim": "Llama4 router and residual patterns admit a Lean operator-first formalization where total routed output decomposes into active/defect lanes and the sourced generator inherits canonical spectral-cut commutation through RouterDefectBridge.",
+  "research": {
+    "topic": "Llama4 MoE architecture to Lean operator-first formalization",
+    "questions": [
+      "Which MoE router structures map to active/defect projector split?",
+      "What minimal Lean theorem family captures router decomposition without vendor assumptions?"
+    ],
+    "sources": [
+      {
+        "kind": "url",
+        "ref": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama4/model.py"
+      },
+      {
+        "kind": "url",
+        "ref": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama4/scripts/chat_completion.py"
+      },
+      {
+        "kind": "url",
+        "ref": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama4/scripts/completion.py"
+      },
+      {
+        "kind": "url",
+        "ref": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama4/scripts/quantize.py"
+      },
+      {
+        "kind": "url",
+        "ref": "https://raw.githubusercontent.com/meta-llama/llama-models/main/pyproject.toml"
+      },
+      {
+        "kind": "url",
+        "ref": "https://ollama.com/library/llama4"
+      },
+      {
+        "kind": "note",
+        "ref": "Local snapshot manifest: external_refs/llama4/snapshot_manifest.json"
+      }
+    ],
+    "coverage": "verified",
+    "workflow": {
+      "mode": "gemini-hermes-codex",
+      "creative_provider": "gemini_cli",
+      "verification_provider": "hermes",
+      "coding_provider": "codex",
+      "creative_complete": true,
+      "verification_complete": true
+    },
+    "segments": [
+      {
+        "segment_id": "S1",
+        "title": "MoE core architecture",
+        "source_span": "external_refs/llama4/model.py",
+        "seed_text": "Transformer + MoE blocks in model.py",
+        "creative_notes": "Map SparseRouter.gate and inactive_weight_eq_zero to active/defect projector intuition: active experts carry routed mass, inactive experts collapse to defect lane.",
+        "enriched_context": "model.py contains explicit MoE components and router-conditioned paths; this supports a route-split formalization into active/defect lanes.",
+        "claims": [
+          "Router weights can be decomposed into active and defect contributions pointwise."
+        ],
+        "inference_flags": [
+          "inference:operator-analogy"
+        ],
+        "confidence": 0.74,
+        "literature_evidence": [
+          {
+            "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama4/model.py",
+            "summary": "Defines Transformer, MoE import/use, RMSNorm and attention/feed-forward path where routing and expert aggregation are explicit.",
+            "title": "Llama4 model architecture",
+            "date": "2026-04-14",
+            "relevance": "primary"
+          }
+        ]
+      },
+      {
+        "segment_id": "S2",
+        "title": "Inference API structure",
+        "source_span": "external_refs/llama4/scripts/chat_completion.py + completion.py",
+        "seed_text": "Inference API surface in chat_completion.py and completion.py",
+        "creative_notes": "Inference scripts expose a stable boundary (build, generation, completion/chat). Formalization should target algebraic interface, not runtime/serving specifics.",
+        "enriched_context": "chat_completion.py and completion.py expose CLI-level inference entrypoints and model bootstrap boundaries; decomposition claims should stay API-agnostic.",
+        "claims": [
+          "Lean bridge should encode decomposition identities independently of serving API details."
+        ],
+        "inference_flags": [
+          "inference:abstraction"
+        ],
+        "confidence": 0.71,
+        "literature_evidence": [
+          {
+            "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama4/scripts/chat_completion.py",
+            "summary": "Defines chat completion CLI path and model-loading/inference invocation surface.",
+            "title": "Llama4 chat completion script",
+            "date": "2026-04-14",
+            "relevance": "primary"
+          },
+          {
+            "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama4/scripts/completion.py",
+            "summary": "Defines non-chat completion inference entrypoint and completion pipeline wrapper.",
+            "title": "Llama4 completion script",
+            "date": "2026-04-14",
+            "relevance": "supporting"
+          }
+        ]
+      },
+      {
+        "segment_id": "S3",
+        "title": "Quantization track",
+        "source_span": "external_refs/llama4/scripts/quantize.py",
+        "seed_text": "Quantization path (fp8/int4) in quantize.py",
+        "creative_notes": "Quantization is a representation transform lane (fp8/int4) and should stay theorem-neutral unless invariants are explicit.",
+        "enriched_context": "quantize.py defines precision-conversion path and deployment constraints; this informs implementation metadata, not core theorem axioms.",
+        "claims": [
+          "Quantization constraints belong to verification/implementation metadata, not core decomposition axioms."
+        ],
+        "inference_flags": [
+          "inference:representation-layer"
+        ],
+        "confidence": 0.68,
+        "literature_evidence": [
+          {
+            "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama4/scripts/quantize.py",
+            "summary": "Contains quantization workflow (fp8/int4 conversion path) and command-line interface.",
+            "title": "Llama4 quantization script",
+            "date": "2026-04-14",
+            "relevance": "primary"
+          }
+        ]
+      },
+      {
+        "segment_id": "S4",
+        "title": "Packaging/runtime envelope",
+        "source_span": "external_refs/llama4/meta/pyproject.toml + ollama/llama4_library.html",
+        "seed_text": "Packaging/runtime constraints from pyproject + ollama library surface",
+        "creative_notes": "Runtime/dependency constraints define feasibility envelope; formalization should encode only structural claims and keep deployment claims external.",
+        "enriched_context": "pyproject and ollama library define packaging/runtime envelope; formalization remains operator-structural and vendor-neutral.",
+        "claims": [
+          "Operator-first Lean surfaces must remain vendor/runtime-agnostic with external refs as evidence only."
+        ],
+        "inference_flags": [
+          "inference:governance"
+        ],
+        "confidence": 0.77,
+        "literature_evidence": [
+          {
+            "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/pyproject.toml",
+            "summary": "Declares package dependencies and entry points for llama-models tooling.",
+            "title": "llama-models pyproject",
+            "date": "2026-04-14",
+            "relevance": "primary"
+          },
+          {
+            "url": "https://ollama.com/library/llama4",
+            "summary": "Documents local runtime model availability/usage surface for Llama4 in Ollama.",
+            "title": "Ollama llama4 library page",
+            "date": "2026-04-14",
+            "relevance": "supporting"
+          }
+        ]
+      }
+    ]
+  },
+  "repo_mapping": {
+    "owner_files": [
+      "lean/InfoGeometry/LLM/TrialityMoE.lean",
+      "lean/InfoGeometry/Canonical/ObserverDefect.lean",
+      "lean/InfoGeometry/Canonical/ModularSourceBridge.lean"
+    ],
+    "symbols": [
+      "InfoGeometry.LLM.TrialityMoE.TwoStageResidualBlock.two_stage_residual_block_update",
+      "InfoGeometry.LLM.TrialityMoE.SparseRouter.router_weight_split",
+      "InfoGeometry.LLM.TrialityMoE.TrialityMoEBlock.moe_output_split",
+      "InfoGeometry.LLM.TrialityMoE.RouterDefectBridge.sourcedGenerator_eq_canonical",
+      "InfoGeometry.LLM.TrialityMoE.RouterDefectBridge.sourcedGenerator_respects_cut"
+    ],
+    "target_theorems": [
+      "two_stage_residual_block_update",
+      "moe_output_split",
+      "output_eq_shared_plus_active",
+      "sourcedGenerator_respects_cut"
+    ]
+  },
+  "verification_plan": {
+    "build_targets": [
+      "InfoGeometry.LLM.TrialityMoE"
+    ],
+    "audit_targets": [
+      "InfoGeometry.Audit"
+    ]
+  },
+  "status": "accepted",
+  "history": [
+    {
+      "at": "2026-04-14T16:00:56+00:00",
+      "event": "created:research",
+      "note": "created in lane=raw"
+    },
+    {
+      "at": "2026-04-14T16:02:14+00:00",
+      "event": "segment:enriched",
+      "note": "segment=S1"
+    },
+    {
+      "at": "2026-04-14T16:02:25+00:00",
+      "event": "segment:enriched",
+      "note": "segment=S2"
+    },
+    {
+      "at": "2026-04-14T16:02:32+00:00",
+      "event": "segment:enriched",
+      "note": "segment=S3"
+    },
+    {
+      "at": "2026-04-14T16:02:45+00:00",
+      "event": "segment:enriched",
+      "note": "segment=S4; gemini-stage complete"
+    },
+    {
+      "at": "2026-04-14T16:02:54+00:00",
+      "event": "segment:enriched",
+      "note": "segment=S1"
+    },
+    {
+      "at": "2026-04-14T16:05:10+00:00",
+      "event": "segment:enriched",
+      "note": "segment=S2; hermes-stage"
+    },
+    {
+      "at": "2026-04-14T16:05:10+00:00",
+      "event": "segment:enriched",
+      "note": "segment=S3; hermes-stage"
+    },
+    {
+      "at": "2026-04-14T16:05:10+00:00",
+      "event": "segment:enriched",
+      "note": "segment=S4; hermes-stage complete"
+    },
+    {
+      "at": "2026-04-14T16:05:44+00:00",
+      "event": "packet:distilled",
+      "note": "distilled_claim + repo_mapping + verification_plan set"
+    },
+    {
+      "at": "2026-04-14T16:05:54+00:00",
+      "event": "promoted:raw->distilled",
+      "note": "creative+verification complete; mapped"
+    },
+    {
+      "at": "2026-04-14T16:05:54+00:00",
+      "event": "promoted:distilled->translated",
+      "note": "translation gate satisfied"
+    },
+    {
+      "at": "2026-04-14T16:06:03+00:00",
+      "event": "promoted:translated->gated",
+      "note": "build target declared"
+    },
+    {
+      "at": "2026-04-14T16:06:15+00:00",
+      "event": "promoted:gated->accepted",
+      "note": "single-target build verified"
+    },
+    {
+      "at": "2026-04-14T16:06:19+00:00",
+      "event": "digest:built",
+      "note": "handover/injections/digests/EXT-20260414-LLAMA4-TRIALITY.md"
+    }
+  ],
+  "verification_results": {
+    "last_build_targets": [
+      "InfoGeometry.LLM.TrialityMoE"
+    ],
+    "last_build_results": [
+      {
+        "target": "InfoGeometry.LLM.TrialityMoE",
+        "exit": 0,
+        "ok": true
+      }
+    ],
+    "last_build_ok": true,
+    "last_build_at": "2026-04-14T16:06:15+00:00",
+    "last_build_elapsed_sec": 7.374063548999857
+  }
+}

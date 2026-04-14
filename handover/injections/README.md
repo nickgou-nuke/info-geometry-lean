@@ -33,6 +33,17 @@ python3 tools/infra/injection_create_packet.py \
   --raw-text "Initial external vision input"
 ```
 
+Create a topic-focused deep-research packet:
+```bash
+python3 tools/infra/injection_research_packet.py \
+  --topic "Your specific research topic" \
+  --question "Question 1" \
+  --question "Question 2" \
+  --source-url "https://..." \
+  --source-paper "arXiv:..." \
+  --lane raw
+```
+
 Promote packet by id:
 ```bash
 python3 tools/infra/injection_promote.py EXT-20260414-001 --to distilled --note "Gemini distilled"

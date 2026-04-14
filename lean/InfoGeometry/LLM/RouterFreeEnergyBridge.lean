@@ -1,4 +1,4 @@
-import InfoGeometry.LLM.ScalarThermoBridge
+import InfoGeometry.LLM.ThermodynamicSwitching
 import InfoGeometry.Thermo.ThermodynamicIdentities
 import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
 import InfoGeometry.Meta.Architecture
@@ -12,7 +12,7 @@ open InfoGeometry.Thermo.FiniteDiagonal
 
 section TokenLocalThermo
 
-variable {Tok V : Type*} [Fintype Tok] [DecidableEq Tok]
+variable {Tok V : Type*}
 variable [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Token-local Hamiltonian over experts induced by router energy. -/
@@ -105,7 +105,7 @@ end TokenLocalThermo
 
 section ScaledEntropicBridge
 
-variable {Tok V : Type*} [Fintype Tok] [DecidableEq Tok]
+variable {Tok V : Type*}
 variable [NormedAddCommGroup V] [NormedSpace ℝ V]
 
 /-- Router-scaled entropic objective (KL side) in the analytic log-sum-exp family. -/
@@ -142,7 +142,7 @@ theorem routerScaledEntropicObjective_eq_scaledKL
       ε θ η)
 
 @[simp, rep_depth transport]
-theorem routerScaledPotentialGap_eq_scaledBregman
+theorem routerScaledPotentialGap_eq_scaledBregman_swapped
     (n : Nat) [Nonempty (Fin n)]
     (ε θ η : ℝ) (x : Tok → V) (i : Tok) :
     routerScaledPotentialGap n ε θ η x i
@@ -155,6 +155,23 @@ theorem routerScaledPotentialGap_eq_scaledBregman
       (w := fun _ : ExpertIdx n => (1 : ℝ))
       (a := fun e => -routerEnergy n x i e)
       ε θ η)
+
+/--
+Compatibility alias.
+
+Note the argument order on the Bregman side is intentionally `(ε, η, θ)`,
+while the potential-gap side is parameterized as `(ε, θ, η)`.
+-/
+@[simp, rep_depth transport]
+theorem routerScaledPotentialGap_eq_scaledBregman
+    (n : Nat) [Nonempty (Fin n)]
+    (ε θ η : ℝ) (x : Tok → V) (i : Tok) :
+    routerScaledPotentialGap n ε θ η x i
+      = InfoGeometry.Analytic.logSumExpScaledBregman
+          (w := fun _ : ExpertIdx n => (1 : ℝ))
+          (a := fun e => -routerEnergy n x i e)
+          ε η θ :=
+  routerScaledPotentialGap_eq_scaledBregman_swapped (n := n) (ε := ε) (θ := θ) (η := η) (x := x) (i := i)
 
 end ScaledEntropicBridge
 

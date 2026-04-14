@@ -130,6 +130,22 @@ theorem singular_decomposition_surrogate_package_of_commute
       (E := E) CIK
 
 /--
+CP-003 extracted commutator clause:
+from one commutation witness, recover the Drazin-vs-dilation commutator law.
+-/
+@[rep_depth transport]
+theorem singular_decomposition_surrogate_commutator_of_commute
+    (CIK : CertifiedInverseKernel H₂)
+    (R : EndH)
+    (hComm : Commute CIK.spectralProjector R) :
+    CIK.spectralProjector * CIK.dilationGap - CIK.dilationGap * CIK.spectralProjector
+      =
+    ((2 : ℝ)⁻¹) • (CIK.rightChiralAnomaly - CIK.chiralAnomaly) := by
+  exact
+    (singular_decomposition_surrogate_package_of_commute
+      (E := E) (CIK := CIK) (R := R) hComm).2.2.1
+
+/--
 Wedge-calibrated specialization of the CP-003 surrogate package:
 the canonical bounded relative modular representative splits across
 apex/active Drazin blocks, together with the supercharge commutator closure.

@@ -28,10 +28,11 @@ Every research session must produce a packet in `handover/injections/` with:
 
 ## Workflow
 1. Define topic and questions.
-2. Search and shortlist sources (web/papers).
-3. Seed packet in `raw` or `distilled` lane.
-4. Promote through lanes as certainty increases.
-5. Translate to repo-native owner surfaces before coding.
+2. Gemini pass: semantic segmenting + creative elaboration.
+3. Hermes pass: strict literature/evidence enrichment per segment.
+4. Seed/update packet in `raw`/`distilled` with workflow and segment cards.
+5. Promote through lanes as certainty increases.
+6. Translate to repo-native owner surfaces before coding.
 
 ## Commands
 Seed a research packet:
@@ -42,7 +43,27 @@ python3 tools/infra/injection_research_packet.py \
   --question "What owner files already prove prerequisites?" \
   --source-url "https://example.org/paper" \
   --source-url "https://example.org/docs" \
+  --workflow-mode gemini-hermes-codex \
+  --segment "seed segment one" \
+  --segment "seed segment two" \
   --lane raw
+```
+
+Attach segment enrichment from Gemini/Hermes:
+```bash
+python3 tools/infra/injection_enrich_segment.py <PACKET_ID> \
+  --segment-id S1 \
+  --creative-notes "Gemini creative expansion..." \
+  --claim "candidate claim" \
+  --inference-flag "inference:creative" \
+  --mark-creative-complete
+
+python3 tools/infra/injection_enrich_segment.py <PACKET_ID> \
+  --segment-id S1 \
+  --enriched-context "Hermes verified context..." \
+  --evidence-url "https://example.org/source" \
+  --evidence-summary "evidence summary" \
+  --mark-verification-complete
 ```
 
 Promote packet:
@@ -67,5 +88,6 @@ python3 tools/infra/injection_build_digest.py <PACKET_ID> --update-packet
 - Source dates verified
 - Contradictions noted
 - Inference labeled as inference
+- For `gemini-hermes-codex` mode, both workflow stage flags are set to true before `translated`
 - No speculative theorem names without owner symbols
 - Targeted verification surface identified before integration

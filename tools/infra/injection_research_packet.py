@@ -34,6 +34,33 @@ def main() -> int:
     parser.add_argument("--source-url", action="append", default=[], help="Source URL (repeat)")
     parser.add_argument("--source-paper", action="append", default=[], help="Paper ref (DOI/arXiv/etc), repeat")
     parser.add_argument("--source-note", action="append", default=[], help="Free-form source note, repeat")
+    parser.add_argument(
+        "--workflow-mode",
+        default="gemini-hermes-codex",
+        choices=["standard", "gemini-hermes-codex"],
+        help="Research workflow mode",
+    )
+    parser.add_argument(
+        "--creative-provider",
+        default="gemini_cli",
+        help="Creative stage provider label",
+    )
+    parser.add_argument(
+        "--verification-provider",
+        default="hermes",
+        help="Verification stage provider label",
+    )
+    parser.add_argument(
+        "--coding-provider",
+        default="codex",
+        help="Coding stage provider label",
+    )
+    parser.add_argument(
+        "--segment",
+        action="append",
+        default=[],
+        help="Seed segment text; repeat for multiple segments",
+    )
     parser.add_argument("--lane", default="raw", choices=LANES)
     parser.add_argument("--source-type", default="web", choices=["web", "chat", "manual", "llm", "paper", "other"])
     parser.add_argument("--source-ref", default="deep-research", help="Primary source ref label")
@@ -67,6 +94,26 @@ def main() -> int:
         if not raw_text:
             raw_text = args.topic
 
+        segments = []
+        for idx, seg in enumerate(args.segment, start=1):
+            text = seg.strip()
+            if not text:
+                continue
+            segments.append(
+                {
+                    "segment_id": f"S{idx}",
+                    "title": f"Segment {idx}",
+                    "source_span": "",
+                    "seed_text": text,
+                    "creative_notes": "",
+                    "enriched_context": "",
+                    "claims": [],
+                    "inference_flags": [],
+                    "confidence": 0.0,
+                    "literature_evidence": [],
+                }
+            )
+
         packet = {
             "packet_id": packet_id,
             "title": title,
@@ -82,6 +129,15 @@ def main() -> int:
                 "questions": args.question,
                 "sources": sources,
                 "coverage": "draft",
+                "workflow": {
+                    "mode": args.workflow_mode,
+                    "creative_provider": args.creative_provider.strip() or "gemini_cli",
+                    "verification_provider": args.verification_provider.strip() or "hermes",
+                    "coding_provider": args.coding_provider.strip() or "codex",
+                    "creative_complete": False,
+                    "verification_complete": False,
+                },
+                "segments": segments,
             },
             "repo_mapping": {
                 "owner_files": [],

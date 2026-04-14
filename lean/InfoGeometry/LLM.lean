@@ -4,9 +4,11 @@ import InfoGeometry.LLM.TransformerArchitecture
 import InfoGeometry.LLM.ThermodynamicSwitching
 import InfoGeometry.LLM.ScalarThermoBridge
 import InfoGeometry.LLM.RouterFreeEnergyBridge
+import InfoGeometry.LLM.KMSSoftmaxBridge
 import InfoGeometry.LLM.SpectralToken
 import InfoGeometry.LLM.PinCPTBridge
 import InfoGeometry.LLM.SpinPinTransformerLayer
+import InfoGeometry.LLM.Llama4SpinSpec
 import InfoGeometry.LLM.TrialityMoE
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionEuclidean

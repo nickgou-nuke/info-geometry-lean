@@ -26,6 +26,7 @@ Relativity of Measurement**:
 - [black_books/52_kramers_pairs_krein_majorana_type_iii_lightcone.md](black_books/52_kramers_pairs_krein_majorana_type_iii_lightcone.md) — External-science synthesis chapter for Kramers/Krein/Majorana/Type-III/apex language.
 - [black_books/52native_krein_hestenes_real_doubled_translation.md](black_books/52native_krein_hestenes_real_doubled_translation.md) — Repo-native doubled-real translation of chapter 52.
 - [black_books/55_external_approval_real_all_translation.md](black_books/55_external_approval_real_all_translation.md) — Active roadmap for real modular/type-III closure in owned canonical files.
+- [black_books/67_the_external_analogy_doctrine.md](black_books/67_the_external_analogy_doctrine.md) — Respect external frameworks as heuristics, but keep canonical truth strictly owner-native and Lean-verified.
 - [Theory.md](Theory.md) — How the principle maps to the repo presentations.
 - [Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md) — The project's roadmap and trajectory.
 - [SEMANTIC_POTENTIAL.md](SEMANTIC_POTENTIAL.md) — The "Scorpio & Virgo" multi-agent generative engine.
@@ -39,6 +40,7 @@ Use these first when you want the current repo state:
 - [OperationalIntent.md](OperationalIntent.md)
 - [OperatorQuickstart.md](OperatorQuickstart.md)
 - [DAGTroubleshooting.md](DAGTroubleshooting.md)
+- [CODEX_TROUBLESHOOTING.md](../CODEX_TROUBLESHOOTING.md)
 - [BILINGUAL_SPINE_POLICY.md](BILINGUAL_SPINE_POLICY.md)
 - [cl11_rosetta_refactor_plan.md](cl11_rosetta_refactor_plan.md)
 - [cl11_replica_inventory.md](cl11_replica_inventory.md)
@@ -108,14 +110,15 @@ For current repo structure:
 3. [OperationalIntent.md](OperationalIntent.md)
 4. [OperatorQuickstart.md](OperatorQuickstart.md)
 5. [DAGTroubleshooting.md](DAGTroubleshooting.md)
-6. [BILINGUAL_SPINE_POLICY.md](BILINGUAL_SPINE_POLICY.md)
-7. [cl11_rosetta_refactor_plan.md](cl11_rosetta_refactor_plan.md)
-8. [ToolingMethodology.md](ToolingMethodology.md)
-9. [DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
-10. [Theory.md](Theory.md)
-11. [ModuleMap.md](ModuleMap.md)
-12. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
-13. [tools/infra/README.md](../tools/infra/README.md)
+6. [CODEX_TROUBLESHOOTING.md](../CODEX_TROUBLESHOOTING.md)
+7. [BILINGUAL_SPINE_POLICY.md](BILINGUAL_SPINE_POLICY.md)
+8. [cl11_rosetta_refactor_plan.md](cl11_rosetta_refactor_plan.md)
+9. [ToolingMethodology.md](ToolingMethodology.md)
+10. [DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
+11. [Theory.md](Theory.md)
+12. [ModuleMap.md](ModuleMap.md)
+13. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
+14. [tools/infra/README.md](../tools/infra/README.md)
 
 For the current count/projective/operator trunk:
 

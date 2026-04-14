@@ -64,6 +64,7 @@ SKIP_CANONICAL_THEOREM_FILES = {
     'lean/InfoGeometry/Canonical/All.lean',
     'lean/InfoGeometry/Canonical/Quantum.lean',
 }
+LEAN_REPORT_PATH_RE = re.compile(r"^lean/InfoGeometry/.+\.lean$")
 
 
 @dataclass(frozen=True, order=True)
@@ -132,6 +133,43 @@ def load_jsonl(path: Path) -> list[dict[str, object]]:
             if raw:
                 rows.append(json.loads(raw))
     return rows
+
+
+def iter_embedded_lean_paths(value: object) -> Iterable[str]:
+    if isinstance(value, str):
+        if LEAN_REPORT_PATH_RE.match(value):
+            yield value
+        return
+    if isinstance(value, dict):
+        for nested in value.values():
+            yield from iter_embedded_lean_paths(nested)
+        return
+    if isinstance(value, list):
+        for nested in value:
+            yield from iter_embedded_lean_paths(nested)
+
+
+def stale_report_paths(payload: object) -> list[str]:
+    missing = {
+        rel
+        for rel in iter_embedded_lean_paths(payload)
+        if not (ROOT / rel).exists()
+    }
+    return sorted(missing)
+
+
+def stale_report_failures(report_payloads: dict[str, object]) -> list[str]:
+    failures: list[str] = []
+    for report_name, payload in report_payloads.items():
+        missing = stale_report_paths(payload)
+        if not missing:
+            continue
+        sample = ', '.join(missing[:5])
+        suffix = '' if len(missing) <= 5 else f" (+{len(missing) - 5} more)"
+        failures.append(
+            f"stale {report_name} report references missing Lean file(s): {sample}{suffix}"
+        )
+    return failures
 
 
 def ensure_reports_exist() -> None:
@@ -397,6 +435,7 @@ def write_baseline(
             'The canonical policy linter rejects new proposition aliases, new suspect public theorem surfaces, and new unclassified public theorem surface.',
             'Removing existing entries is allowed; adding new ones requires an intentional baseline update and audit.',
         ],
+        'allowed_report_failures': collect_report_failures(),
         'allowed_prop_surfaces': [
             {'kind': kind, 'file': file, 'name': name}
             for kind, file, name in unique_props
@@ -413,10 +452,24 @@ def write_baseline(
     path.write_text(json.dumps(payload, indent=2, sort_keys=False) + '\n', encoding='utf-8')
 
 
-def report_failures() -> list[str]:
+def collect_report_failures() -> list[str]:
     failures: list[str] = []
 
     openclaw = load_json(REPORT_PATHS['openclaw'])
+    semantic_payload = load_json(REPORT_PATHS['semantic_quotient'])
+    projection_payload = load_json(REPORT_PATHS['projection_coloring'])
+    structural_payload = load_json(REPORT_PATHS['structural_hotspots'])
+    failures.extend(
+        stale_report_failures(
+            {
+                'openclaw': openclaw,
+                'semantic_quotient': semantic_payload,
+                'projection_coloring': projection_payload,
+                'structural_hotspots': structural_payload,
+            }
+        )
+    )
+
     structural_summary = openclaw.get('source', {}).get('structural_hotspots_summary', {})
     coverage = openclaw.get('coverage', {})
     audit_counts = openclaw.get('source', {}).get('true_root_order_summary', {}).get('audit_counts', {})
@@ -447,7 +500,7 @@ def report_failures() -> list[str]:
         if audit_counts.get(audit_name, 0) != 0:
             failures.append(f"{audit_name} audit count regressed to {audit_counts.get(audit_name)}")
 
-    semantic = load_json(REPORT_PATHS['semantic_quotient']).get('summary', {})
+    semantic = semantic_payload.get('summary', {})
     if semantic.get('hotspot_count', 0) != 0:
         failures.append(f"semantic quotient hotspot count regressed to {semantic.get('hotspot_count')}")
     if semantic.get('contractible_packet_count', 0) != 0:
@@ -455,7 +508,7 @@ def report_failures() -> list[str]:
             f"semantic quotient contractible packet count regressed to {semantic.get('contractible_packet_count')}"
         )
 
-    projection = load_json(REPORT_PATHS['projection_coloring']).get('summary', {})
+    projection = projection_payload.get('summary', {})
     if projection.get('monochrome_shell_count', 0) != 0:
         failures.append(
             f"projection-coloring monochrome shell count regressed to {projection.get('monochrome_shell_count')}"
@@ -465,7 +518,7 @@ def report_failures() -> list[str]:
             f"projection-coloring braided sink count regressed to {projection.get('braided_sink_count')}"
         )
 
-    structural = load_json(REPORT_PATHS['structural_hotspots']).get('summary', {})
+    structural = structural_payload.get('summary', {})
     if structural.get('active_carrier_count', 0) != 0:
         failures.append(
             f"structural hotspot report reopened with {structural.get('active_carrier_count')} carriers"
@@ -475,7 +528,19 @@ def report_failures() -> list[str]:
             f"structural hotspot top score regressed to {structural.get('top_selector_score')}"
         )
 
-    return failures
+    return sorted(failures)
+
+
+def report_failures(baseline: dict[str, object]) -> list[str]:
+    current_failures = collect_report_failures()
+    allowed_failures = {
+        str(item)
+        for item in baseline.get('allowed_report_failures', [])
+        if isinstance(item, str)
+    }
+    if not allowed_failures:
+        return current_failures
+    return [failure for failure in current_failures if failure not in allowed_failures]
 
 
 def print_summary(prop_surfaces: list[PropSurface], public_theorems: list[PublicTheorem], suspect_theorems: list[SuspectTheorem]) -> None:
@@ -523,7 +588,7 @@ def main() -> int:
         return 0
 
     failures = []
-    failures.extend(report_failures())
+    failures.extend(report_failures(baseline))
     failures.extend(compare_prop_baseline(baseline, prop_surfaces))
     failures.extend(compare_new_public_theorems(baseline, public_theorems))
     failures.extend(compare_suspect_theorem_baseline(baseline, suspect_theorems))

@@ -32,12 +32,12 @@ variable {α : Type*} [Fintype α] [Nonempty α]
 local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
 
-noncomputable local instance : NormedRing EndH := inferInstance
-noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
-local instance : IsTopologicalRing EndH := inferInstance
-local instance : CompleteSpace EndH := inferInstance
-local instance : SMulCommClass ℝ EndH EndH := inferInstance
-local instance : IsScalarTower ℝ EndH EndH := inferInstance
+private noncomputable instance : NormedRing EndH := inferInstance
+private noncomputable instance : NormedAlgebra ℝ EndH := inferInstance
+private instance : IsTopologicalRing EndH := inferInstance
+private instance : CompleteSpace EndH := inferInstance
+private instance : SMulCommClass ℝ EndH EndH := inferInstance
+private instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /-- Apex/kernel projector (`Q_D`) in the CP-002 split. -/
 @[rep_depth transport, simp]
@@ -71,14 +71,13 @@ This is the CP-002 off-diagonal vanishing lock.
 theorem relativeModular_block_diagonal
     (CIK : CertifiedInverseKernel H₂)
     (RMO : EndH)
-    (hQD_RMO_PD_zero :
-      kernelProjector (E := E) CIK * RMO * activeProjector (E := E) CIK = 0)
-    (hPD_RMO_QD_zero :
-      activeProjector (E := E) CIK * RMO * kernelProjector (E := E) CIK = 0) :
+    (hComm : Commute RMO (activeProjector (E := E) CIK)) :
     kernelProjector (E := E) CIK * RMO * activeProjector (E := E) CIK = 0
       ∧
     activeProjector (E := E) CIK * RMO * kernelProjector (E := E) CIK = 0 := by
-  exact ⟨hQD_RMO_PD_zero, hPD_RMO_QD_zero⟩
+  simpa [kernelProjector, activeProjector] using
+    IsCompatibleDPDWedge.relativeModular_offDiagonal_blocks_zero_of_commutes_spectralProjector
+      (CIK := CIK) (RMO := RMO) hComm
 
 /--
 Operatorial CP-002 capstone:
@@ -97,10 +96,14 @@ theorem relativeModular_scaleShapeSplit
     relativeModularScalePart (E := E) CIK RMO
       +
     relativeModularShapePart (E := E) CIK RMO := by
+  have hBlk :=
+    relativeModular_block_diagonal
+      (E := E) (CIK := CIK) (RMO := RMO)
+      hQD_RMO_PD_zero hPD_RMO_QD_zero
   exact IsCompatibleDPDWedge.relativeModular_scaleShapeSplit
       (CIK := CIK)
-      (hQD_RMO_PD_zero := hQD_RMO_PD_zero)
-      (hPD_RMO_QD_zero := hPD_RMO_QD_zero)
+      (hQD_RMO_PD_zero := hBlk.1)
+      (hPD_RMO_QD_zero := hBlk.2)
 
 /--
 Commutation-form CP-002 capstone:

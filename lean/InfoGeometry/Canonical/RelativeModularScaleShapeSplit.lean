@@ -68,7 +68,7 @@ Block-diagonality witness on the Drazin split.
 This is the CP-002 off-diagonal vanishing lock.
 -/
 @[rep_depth transport]
-theorem relativeModular_block_diagonal
+theorem relativeModular_crossTerms_zero_of_commutes_activeProjector
     (CIK : CertifiedInverseKernel H₂)
     (RMO : EndH)
     (hComm : Commute RMO (activeProjector (E := E) CIK)) :
@@ -78,6 +78,36 @@ theorem relativeModular_block_diagonal
   simpa [kernelProjector, activeProjector] using
     IsCompatibleDPDWedge.relativeModular_offDiagonal_blocks_zero_of_commutes_spectralProjector
       (CIK := CIK) (RMO := RMO) hComm
+
+/-- Kernel support of the CP-002 scale block. -/
+@[rep_depth transport]
+theorem relativeModular_scalePart_supported_on_kernel
+    (CIK : CertifiedInverseKernel H₂)
+    (RMO : EndH) :
+    kernelProjector (E := E) CIK
+        * relativeModularScalePart (E := E) CIK RMO
+      = relativeModularScalePart (E := E) CIK RMO
+      ∧
+    relativeModularScalePart (E := E) CIK RMO
+        * kernelProjector (E := E) CIK
+      = relativeModularScalePart (E := E) CIK RMO := by
+  constructor <;> simp [kernelProjector, relativeModularScalePart, mul_assoc,
+    CIK.spectralComplementaryProjector_idempotent]
+
+/-- Active support of the CP-002 shape block. -/
+@[rep_depth transport]
+theorem relativeModular_shapePart_supported_on_active
+    (CIK : CertifiedInverseKernel H₂)
+    (RMO : EndH) :
+    activeProjector (E := E) CIK
+        * relativeModularShapePart (E := E) CIK RMO
+      = relativeModularShapePart (E := E) CIK RMO
+      ∧
+    relativeModularShapePart (E := E) CIK RMO
+        * activeProjector (E := E) CIK
+      = relativeModularShapePart (E := E) CIK RMO := by
+  constructor <;> simp [activeProjector, relativeModularShapePart, mul_assoc,
+    CIK.spectralProjector_idempotent]
 
 /--
 Operatorial CP-002 capstone:
@@ -96,14 +126,10 @@ theorem relativeModular_scaleShapeSplit
     relativeModularScalePart (E := E) CIK RMO
       +
     relativeModularShapePart (E := E) CIK RMO := by
-  have hBlk :=
-    relativeModular_block_diagonal
-      (E := E) (CIK := CIK) (RMO := RMO)
-      hQD_RMO_PD_zero hPD_RMO_QD_zero
   exact IsCompatibleDPDWedge.relativeModular_scaleShapeSplit
       (CIK := CIK)
-      (hQD_RMO_PD_zero := hBlk.1)
-      (hPD_RMO_QD_zero := hBlk.2)
+      (hQD_RMO_PD_zero := hQD_RMO_PD_zero)
+      (hPD_RMO_QD_zero := hPD_RMO_QD_zero)
 
 /--
 Commutation-form CP-002 capstone:
@@ -119,8 +145,10 @@ theorem relativeModular_scaleShapeSplit_of_commutes_activeProjector
     relativeModularScalePart (E := E) CIK RMO
       +
     relativeModularShapePart (E := E) CIK RMO := by
-  exact IsCompatibleDPDWedge.relativeModular_scaleShapeSplit_of_commutes_spectralProjector
-      (CIK := CIK) hComm
+  rcases relativeModular_crossTerms_zero_of_commutes_activeProjector
+      (E := E) (CIK := CIK) (RMO := RMO) hComm with ⟨hQP, hPQ⟩
+  exact relativeModular_scaleShapeSplit
+      (E := E) (CIK := CIK) (RMO := RMO) hQP hPQ
 
 /--
 CP-002 comparison theorem:

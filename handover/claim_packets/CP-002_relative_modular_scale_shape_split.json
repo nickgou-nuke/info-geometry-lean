@@ -12,14 +12,13 @@
     "result_summary": "PENDING: finite-dimensional positive-vector sanity check for gKL scale/shape identity and projector-separated bookkeeping"
   },
   "lean_target": {
-    "theorem_name": "relativeModularScaleShapeSplit_eq_drazinActiveKernelSplit_with_dilationGap",
+    "theorem_name": "relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit",
     "expected_type": "Prop",
-    "owner_file": "lean/InfoGeometry/Canonical/RelativeModularOperator.lean",
+    "owner_file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
     "imports_budget": [
-      "InfoGeometry.Canonical.RelativeModularCore",
       "InfoGeometry.Canonical.DPDWedgeCompatibility",
-      "InfoGeometry.Canonical.ModularSpectralWedgeBridge",
-      "InfoGeometry.Canonical.PositiveRayProjectiveBridge"
+      "InfoGeometry.Canonical.ModularKLDivergenceBridge",
+      "InfoGeometry.Canonical.RelativeModularOperator"
     ]
   },
   "comparison_theorem_required": true,
@@ -40,7 +39,7 @@
   "upstairs_content_remaining": "Type III continuous-core Breuer index interpretation remains interface-level and explicitly separated from this finite/operator bridge closure.",
   "lock_status": "formalized",
   "next_actions": [
-    "Promote from bridge-level closure to owner-level theorem in RelativeModularOperator.lean if needed by downstream capstones",
+    "Drive downstream fan-in by importing RelativeModularScaleShapeSplit in higher capstones (ModularSuperchargeClosure / TypeIIIContinuousCoreReal) where semantically appropriate",
     "Thread this theorem into ModularSuperchargeClosure or TypeIIIContinuousCoreReal as a direct consumer",
     "Run theorem-significance delta to measure fan-in gain"
   ]

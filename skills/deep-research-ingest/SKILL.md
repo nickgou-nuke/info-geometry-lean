@@ -28,11 +28,12 @@ Every research session must produce a packet in `handover/injections/` with:
 
 ## Workflow
 1. Define topic and questions.
-2. Gemini pass: semantic segmenting + creative elaboration.
-3. Hermes pass: strict literature/evidence enrichment per segment.
-4. Seed/update packet in `raw`/`distilled` with workflow and segment cards.
-5. Promote through lanes as certainty increases.
-6. Translate to repo-native owner surfaces before coding.
+2. Syntactic chunk pass: cut intake into segment cards.
+3. Gemini pass: creative elaboration per chunk.
+4. Hermes pass: strict literature/evidence enrichment per segment.
+5. Seed/update packet in `raw`/`distilled` with workflow and segment cards.
+6. Promote through lanes as certainty increases.
+7. Translate to repo-native owner surfaces before coding.
 
 ## Commands
 Seed a research packet:
@@ -47,6 +48,31 @@ python3 tools/infra/injection_research_packet.py \
   --segment "seed segment one" \
   --segment "seed segment two" \
   --lane raw
+```
+
+Syntactic chunking + ideation prompt export:
+```bash
+python3 tools/infra/injection_chunk_ideate.py <PACKET_ID> \
+  --max-chars 650 \
+  --prompt-dir handover/injections/prompts/<PACKET_ID> \
+  --set-workflow-mode gemini-hermes-codex
+```
+
+Gemini CLI account-auth capture (no API key):
+```bash
+python3 tools/infra/injection_capture_gemini_cli.py <PACKET_ID> \
+  --gemini-bin gemini \
+  --input-mode stdin \
+  --sleep-sec 4 \
+  --mark-creative-complete
+```
+
+Single-segment account-auth adapter (Hermes piping mode):
+```bash
+echo '{"segment_id":"S1","content":"..."}' \
+  | python3 tools/infra/gemini_account_adapter.py \
+      --gemini-bin gemini \
+      --input-mode stdin
 ```
 
 Attach segment enrichment from Gemini/Hermes:

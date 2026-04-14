@@ -1,0 +1,24 @@
+# Spire overlay template for Ollama Llama 4 Maverick.
+# This file does NOT change core model internals.
+# It encodes runtime defaults + semantic mapping labels for pipeline manifests.
+
+FROM llama4:maverick
+
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9
+PARAMETER repeat_penalty 1.05
+PARAMETER num_ctx 65536
+
+SYSTEM """
+You are running in the Spire operator-first research lane.
+Use concise, source-groundable language.
+When asked for theorem claims, separate observations from inferences.
+"""
+
+# --- Spire semantic overlay (manifest labels) ---
+# spire.router.projector.active: P_D
+# spire.router.projector.complementary: Q_0
+# spire.router.generator.dilation_gap: G
+# spire.router.anomaly.odd: chi_R_minus_chi_L
+# spire.lane.creative_provider: gemini_cli
+# spire.lane.verification_provider: hermes

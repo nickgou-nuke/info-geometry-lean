@@ -10,6 +10,7 @@ It is an operator runbook, not a conceptual note.
 - use Lake-managed entrypoints by default
 - use raw Python or Lean commands only when repairing or narrowing a tool failure
 - run the DAG lane sequentially, not in parallel
+- do not run the full DAG lane (`dagAll`) for every patch; use targeted module builds and `changedVerify` first
 - do not trust `reports/dag/*` as current until the managed refresh and report sequence has finished
 - do not hand-edit `artifacts/dag/*` or generated `reports/dag/*`
 

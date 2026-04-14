@@ -313,6 +313,57 @@ theorem canonicalRelativeModularOperator_block_support_of_wedgeCalibrated
           * (canonicalRelativeModularOperator (E := E) CIK τ * CIK.spectralProjector) := by
             simp [CIK.spectralProjector_idempotent]
 
+/--
+Wedge-calibrated active/apex stability package for the canonical bounded relative
+modular representative: mixed blocks vanish and both diagonal blocks are
+projector-supported on their respective lanes.
+-/
+@[rep_depth transport, capstone]
+theorem canonicalRelativeModularOperator_activeApex_stability_of_wedgeCalibrated
+    (CIK : CertifiedInverseKernel H₂)
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (C :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+        (E := E)
+        (T := InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := spectral_epsilon (E := E))
+        (owned_P_D := CIK.spectralComplementaryProjector))
+    (τ : ℝ) :
+    (CIK.spectralComplementaryProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralProjector = 0)
+      ∧
+    (CIK.spectralProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralComplementaryProjector = 0)
+      ∧
+    (CIK.spectralComplementaryProjector
+      * (CIK.spectralComplementaryProjector
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * CIK.spectralComplementaryProjector)
+      =
+    CIK.spectralComplementaryProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralComplementaryProjector)
+      ∧
+    ((CIK.spectralProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralProjector)
+      * CIK.spectralProjector
+      =
+    CIK.spectralProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralProjector) := by
+  have hMixed :=
+    canonicalRelativeModularOperator_mixed_blocks_zero_of_wedgeCalibrated
+      (E := E) (CIK := CIK) (W := W) C τ
+  have hSupport :=
+    canonicalRelativeModularOperator_block_support_of_wedgeCalibrated
+      (E := E) (CIK := CIK) (W := W) C τ
+  refine ⟨hMixed.1, hMixed.2, hSupport.1, ?_⟩
+  exact hSupport.2.2.2
+
 end Core
 
 end InfoGeometry.Canonical.SingularDecompositionSurrogate

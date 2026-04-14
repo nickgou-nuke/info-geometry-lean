@@ -78,6 +78,216 @@ theorem singular_polar_surrogate_closure
       (E := E) K
 
 /--
+Defect-supported operators are exactly carried by the complementary spectral
+projector and annihilated by the regular spectral projector.
+-/
+@[rep_depth transport]
+theorem defect_supported_projector_relations
+    (CIK : CertifiedInverseKernel H₂) :
+    ∀ {Z : EndH},
+      DrazinSupercharge.CertifiedInverseKernel.IsDefectSupported CIK Z →
+        CIK.spectralComplementaryProjector * Z = Z
+          ∧
+        Z * CIK.spectralComplementaryProjector = Z
+          ∧
+        CIK.spectralProjector * Z = 0
+          ∧
+        Z * CIK.spectralProjector = 0 := by
+  intro Z hDef
+  refine ⟨?_, ?_, ?_, ?_⟩
+  ·
+    exact
+      DrazinSupercharge.CertifiedInverseKernel.spectralComplementaryProjector_mul_eq_of_isDefectSupported
+        (CIK := CIK) hDef
+  ·
+    exact
+      DrazinSupercharge.CertifiedInverseKernel.mul_spectralComplementaryProjector_eq_of_isDefectSupported
+        (CIK := CIK) hDef
+  ·
+    exact
+      DrazinSupercharge.CertifiedInverseKernel.spectralProjector_mul_eq_zero_of_isDefectSupported
+        (CIK := CIK) hDef
+  ·
+    exact
+      DrazinSupercharge.CertifiedInverseKernel.mul_spectralProjector_eq_zero_of_isDefectSupported
+        (CIK := CIK) hDef
+
+/--
+The geometric grading is twice the dilation gap, and its spectral commutator
+is exactly the anomaly difference.
+-/
+@[rep_depth transport]
+theorem spectral_dilation_anomaly_relations
+    (CIK : CertifiedInverseKernel H₂) :
+    CIK.GammaG = (2 : ℝ) • CIK.dilationGap
+      ∧
+    (CIK.spectralProjector * CIK.dilationGap
+        - CIK.dilationGap * CIK.spectralProjector
+      =
+      ((2 : ℝ)⁻¹) • (CIK.rightChiralAnomaly - CIK.chiralAnomaly))
+      ∧
+    (CIK.spectralProjector * CIK.GammaG
+        - CIK.GammaG * CIK.spectralProjector
+      =
+      CIK.rightChiralAnomaly - CIK.chiralAnomaly) := by
+  refine ⟨?_, ?_, ?_⟩
+  ·
+    exact CIK.GammaG_eq_two_smul_dilationGap
+  ·
+    exact CIK.spectralProjector_commutator_dilationGap_eq_half_sub_anomalies
+  ·
+    exact CIK.spectralProjector_commutator_GammaG_eq_sub_anomalies
+
+/--
+The odd generator equals twice the spectral/dilation commutator.
+-/
+@[rep_depth transport]
+theorem supercharge_commutator_relation
+    (CIK : CertifiedInverseKernel H₂) :
+    DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+      =
+    (2 : ℝ) • DrazinSupercharge.commutator CIK.spectralProjector CIK.dilationGap := by
+  exact
+    DrazinSupercharge.CertifiedInverseKernel.supercharge_eq_two_smul_commutator_spectralProjector_dilationGap
+      (CIK := CIK)
+
+/--
+The odd generator anticommutes with the spectral grading.
+-/
+@[rep_depth transport]
+theorem supercharge_odd_relation
+    (CIK : CertifiedInverseKernel H₂) :
+    DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+        * CIK.toInformationCartanTriple.GammaS
+      =
+    -(CIK.toInformationCartanTriple.GammaS
+        * DrazinSupercharge.CertifiedInverseKernel.supercharge CIK) := by
+  exact
+    DrazinSupercharge.CertifiedInverseKernel.supercharge_mul_GammaS_eq_neg
+      (CIK := CIK)
+
+/--
+Double grading-conjugation on the odd generator is involutive (`Z₂` law).
+
+Equivalently: crossing the grading boundary twice returns the original odd
+generator.
+-/
+@[rep_depth transport]
+theorem supercharge_double_grading_conjugation_relation
+    (CIK : CertifiedInverseKernel H₂) :
+    let ΓS := CIK.toInformationCartanTriple.GammaS
+    let Q := DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+    ΓS * (ΓS * Q * ΓS) * ΓS = Q := by
+  dsimp
+  let T := CIK.toInformationCartanTriple
+  simpa [T, CartanDecomposition.InformationCartanTriple.thetaS] using
+    (CartanDecomposition.InformationCartanTriple.thetaS_involutive
+      (T := T) CIK.hDrazin
+      (DrazinSupercharge.CertifiedInverseKernel.supercharge CIK))
+
+/--
+The square of the odd generator commutes with the spectral grading.
+-/
+@[rep_depth transport]
+theorem superHamiltonian_even_relation
+    (CIK : CertifiedInverseKernel H₂) :
+    DrazinSupercharge.CertifiedInverseKernel.superHamiltonian CIK
+        * CIK.toInformationCartanTriple.GammaS
+      =
+    CIK.toInformationCartanTriple.GammaS
+        * DrazinSupercharge.CertifiedInverseKernel.superHamiltonian CIK := by
+  exact
+    DrazinSupercharge.CertifiedInverseKernel.superHamiltonian_commutes_GammaS
+      (CIK := CIK)
+
+/--
+The even operator admits the canonical singular split.
+-/
+@[rep_depth transport]
+theorem superHamiltonian_canonical_split_exists
+    (CIK : CertifiedInverseKernel H₂) :
+    ∃ H Z : EndH,
+      DrazinSupercharge.CertifiedInverseKernel.IsDefectSupported CIK Z
+        ∧
+      DrazinSupercharge.CertifiedInverseKernel.HasVanishingDefectBlock CIK H
+        ∧
+      DrazinSupercharge.CertifiedInverseKernel.superHamiltonian CIK = H + Z := by
+  exact
+    DrazinSupercharge.CertifiedInverseKernel.exists_superHamiltonian_canonical_split
+      (CIK := CIK)
+
+/--
+Thin capstone packet assembling projector, anomaly, odd/even, and canonical split
+relations with minimal semantic drift.
+-/
+@[rep_depth transport]
+theorem drazin_singular_closure_packet
+    (CIK : CertifiedInverseKernel H₂) :
+    (∀ {Z : EndH},
+      DrazinSupercharge.CertifiedInverseKernel.IsDefectSupported CIK Z →
+        CIK.spectralComplementaryProjector * Z = Z
+          ∧
+        Z * CIK.spectralComplementaryProjector = Z
+          ∧
+        CIK.spectralProjector * Z = 0
+          ∧
+        Z * CIK.spectralProjector = 0)
+      ∧
+    (CIK.GammaG = (2 : ℝ) • CIK.dilationGap
+      ∧
+     (CIK.spectralProjector * CIK.dilationGap
+        - CIK.dilationGap * CIK.spectralProjector
+      =
+      ((2 : ℝ)⁻¹) • (CIK.rightChiralAnomaly - CIK.chiralAnomaly))
+      ∧
+     (CIK.spectralProjector * CIK.GammaG
+        - CIK.GammaG * CIK.spectralProjector
+      =
+      CIK.rightChiralAnomaly - CIK.chiralAnomaly))
+      ∧
+    (DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+        =
+      (2 : ℝ) • DrazinSupercharge.commutator CIK.spectralProjector CIK.dilationGap
+       ∧
+     DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+        * CIK.toInformationCartanTriple.GammaS
+      =
+     -(CIK.toInformationCartanTriple.GammaS
+        * DrazinSupercharge.CertifiedInverseKernel.supercharge CIK)
+       ∧
+     CIK.toInformationCartanTriple.GammaS
+        * (CIK.toInformationCartanTriple.GammaS
+            * DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+            * CIK.toInformationCartanTriple.GammaS)
+        * CIK.toInformationCartanTriple.GammaS
+      =
+     DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+       ∧
+     DrazinSupercharge.CertifiedInverseKernel.superHamiltonian CIK
+        * CIK.toInformationCartanTriple.GammaS
+      =
+     CIK.toInformationCartanTriple.GammaS
+        * DrazinSupercharge.CertifiedInverseKernel.superHamiltonian CIK
+       ∧
+     (∃ H Z : EndH,
+        DrazinSupercharge.CertifiedInverseKernel.IsDefectSupported CIK Z
+          ∧
+        DrazinSupercharge.CertifiedInverseKernel.HasVanishingDefectBlock CIK H
+          ∧
+        DrazinSupercharge.CertifiedInverseKernel.superHamiltonian CIK = H + Z)) := by
+  refine ⟨?_, ?_, ?_⟩
+  ·
+    intro Z hDef
+    exact defect_supported_projector_relations (CIK := CIK) hDef
+  · exact spectral_dilation_anomaly_relations (CIK := CIK)
+  · refine ⟨?_, ?_, ?_, ?_, ?_⟩
+    · exact supercharge_commutator_relation (CIK := CIK)
+    · exact supercharge_odd_relation (CIK := CIK)
+    · exact supercharge_double_grading_conjugation_relation (CIK := CIK)
+    · exact superHamiltonian_even_relation (CIK := CIK)
+    · exact superHamiltonian_canonical_split_exists (CIK := CIK)
+
+/--
 CP-002/CP-003 bridge clause:
 one commutation witness yields both split surfaces
 (nested projector form and projector-compressed form).

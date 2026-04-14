@@ -13,7 +13,7 @@ open InfoGeometry.Thermo.FiniteDiagonal
 section TokenLocalThermo
 
 variable {Tok V : Type*}
-variable [NormedAddCommGroup V] [NormedSpace ℝ V]
+variable [NormedAddCommGroup V]
 
 /-- Token-local Hamiltonian over experts induced by router energy. -/
 def routerHamiltonian (n : Nat) (x : Tok → V) (i : Tok) : Fin n → ℝ :=
@@ -106,7 +106,7 @@ end TokenLocalThermo
 section ScaledEntropicBridge
 
 variable {Tok V : Type*}
-variable [NormedAddCommGroup V] [NormedSpace ℝ V]
+variable [NormedAddCommGroup V]
 
 /-- Router-scaled entropic objective (KL side) in the analytic log-sum-exp family. -/
 noncomputable def routerScaledEntropicObjective
@@ -135,11 +135,11 @@ theorem routerScaledEntropicObjective_eq_scaledKL
           (w := fun _ : ExpertIdx n => (1 : ℝ))
           (a := fun e => -routerEnergy n x i e)
           ε θ η := by
-  simpa [routerScaledEntropicObjective] using
-    (InfoGeometry.Analytic.logSumExpScaledEntropicTransportObjective_eq
+  unfold routerScaledEntropicObjective
+  exact InfoGeometry.Analytic.logSumExpScaledEntropicTransportObjective_eq
       (w := fun _ : ExpertIdx n => (1 : ℝ))
       (a := fun e => -routerEnergy n x i e)
-      ε θ η)
+      ε θ η
 
 @[simp, rep_depth transport]
 theorem routerScaledPotentialGap_eq_scaledBregman_swapped
@@ -150,11 +150,11 @@ theorem routerScaledPotentialGap_eq_scaledBregman_swapped
           (w := fun _ : ExpertIdx n => (1 : ℝ))
           (a := fun e => -routerEnergy n x i e)
           ε η θ := by
-  simpa [routerScaledPotentialGap] using
-    (InfoGeometry.Analytic.logSumExpScaledEntropicTransportPotentialGap_eq
+  unfold routerScaledPotentialGap
+  exact InfoGeometry.Analytic.logSumExpScaledEntropicTransportPotentialGap_eq
       (w := fun _ : ExpertIdx n => (1 : ℝ))
       (a := fun e => -routerEnergy n x i e)
-      ε θ η)
+      ε θ η
 
 /--
 Compatibility alias.

@@ -282,6 +282,39 @@ theorem relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit
   exact ModularKLDivergenceBridge.relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit
       (E := E) (α := α) CIK W comp RMO hQD_RMO_PD_zero hPD_RMO_QD_zero μ ν
 
+/--
+Phase B capstone in commutation form:
+from `[RMO, P_D] = 0`, derive both the operatorial scale/shape split and the
+strict-positive projective/gauge comparison package on the compatible DPD/wedge
+lane.
+-/
+@[rep_depth transport, capstone]
+theorem relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit_of_commutes_activeProjector
+    (CIK : CertifiedInverseKernel H₂)
+    (W : HasModularSpectralWedge E)
+    (comp : IsCompatibleDPDWedge (E := E) CIK W)
+    (RMO : EndH)
+    (hComm : Commute RMO (activeProjector (E := E) CIK))
+    (μ ν : PositiveMeasure α ℝ) :
+    RMO
+      =
+    relativeModularScalePart (E := E) CIK RMO
+      +
+    relativeModularShapePart (E := E) CIK RMO
+      ∧
+    generalizedKL (α := α) μ ν
+      =
+    generalizedKL_activeShapeTerm (α := α) μ ν
+      + generalizedKL_kernelMassTerm (α := α) μ ν
+      ∧
+    W.activeProjector = (1 : EndH) - CIK.spectralComplementaryProjector
+      ∧
+    CIK.spectralComplementaryProjector = W.PZero := by
+  rcases relativeModular_crossTerms_zero_of_commutes_activeProjector
+      (E := E) (CIK := CIK) (RMO := RMO) hComm with ⟨hQP, hPQ⟩
+  exact relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit
+      (E := E) (α := α) CIK W comp RMO hQP hPQ μ ν
+
 end Core
 
 end InfoGeometry.Canonical.RelativeModularScaleShapeSplit

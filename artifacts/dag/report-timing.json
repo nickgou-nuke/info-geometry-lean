@@ -1,24 +1,38 @@
 {
   "schemaVersion": 1,
-  "artifactTimestamp": "2026-04-12T23:01:09.686630+00:00",
-  "oleanHash": "5805b95474e730f72f6fda39855fc8c1089bbcb0fe1edae6e6687628fabf3e19",
+  "artifactTimestamp": "2026-04-14T20:41:40.741773+00:00",
+  "oleanHash": "2b03693c75083cad277fe719f6cb5b93b9d907e559e6f2f13231133317f366e5",
   "artifactSchemaVersion": 3,
-  "recordedAt": "2026-04-12T23:01:22.211795+00:00",
+  "recordedAt": "2026-04-14T20:42:32.743484+00:00",
   "configPath": "/home/goutev/LEAN4/info-geometry-lean/dag-toolchain.json",
-  "stepCount": 4,
+  "stepCount": 9,
   "steps": [
     {
       "index": 1,
+      "label": "tools/infra/reports/generate_repository_surface_index.py",
+      "command": [
+        "/home/goutev/LEAN4/info-geometry-lean/.venv/bin/python3",
+        "tools/infra/reports/generate_repository_surface_index.py",
+        "--md-out",
+        "reports/dag/repository-surface-index.md",
+        "--json-out",
+        "reports/dag/repository-surface-index.json"
+      ],
+      "elapsed_ms": 145,
+      "exit_code": 0
+    },
+    {
+      "index": 2,
       "label": "tools/infra/generate_theorem_surface_index.py",
       "command": [
         "/home/goutev/LEAN4/info-geometry-lean/.venv/bin/python3",
         "tools/infra/generate_theorem_surface_index.py"
       ],
-      "elapsed_ms": 2242,
+      "elapsed_ms": 4105,
       "exit_code": 0
     },
     {
-      "index": 2,
+      "index": 3,
       "label": "tools/infra/reports/generate_bilingual_spine_report.py",
       "command": [
         "/home/goutev/LEAN4/info-geometry-lean/.venv/bin/python3",
@@ -28,21 +42,21 @@
         "--json-out",
         "reports/dag/bilingual-spine-report.json"
       ],
-      "elapsed_ms": 66,
+      "elapsed_ms": 107,
       "exit_code": 0
     },
     {
-      "index": 3,
+      "index": 4,
       "label": "tools/infra/generate_source_sink_compression.py",
       "command": [
         "/home/goutev/LEAN4/info-geometry-lean/.venv/bin/python3",
         "tools/infra/generate_source_sink_compression.py"
       ],
-      "elapsed_ms": 4239,
+      "elapsed_ms": 8026,
       "exit_code": 0
     },
     {
-      "index": 4,
+      "index": 5,
       "label": "tools/infra/generate_causal_report.py",
       "command": [
         "/home/goutev/LEAN4/info-geometry-lean/.venv/bin/python3",
@@ -52,10 +66,50 @@
         "--json-out",
         "reports/dag/true-root-order.json"
       ],
-      "elapsed_ms": 5920,
-      "exit_code": 1
+      "elapsed_ms": 9493,
+      "exit_code": 0
+    },
+    {
+      "index": 6,
+      "label": "tools/theorem_significance.py",
+      "command": [
+        "/home/goutev/LEAN4/info-geometry-lean/.venv/bin/python3",
+        "tools/theorem_significance.py"
+      ],
+      "elapsed_ms": 3821,
+      "exit_code": 0
+    },
+    {
+      "index": 7,
+      "label": "tools/infra/generate_sorry_equivalence.py",
+      "command": [
+        "/home/goutev/LEAN4/info-geometry-lean/.venv/bin/python3",
+        "tools/infra/generate_sorry_equivalence.py"
+      ],
+      "elapsed_ms": 1667,
+      "exit_code": 0
+    },
+    {
+      "index": 8,
+      "label": "tools/infra/plot_decl_graph.py",
+      "command": [
+        "/home/goutev/LEAN4/info-geometry-lean/.venv/bin/python3",
+        "tools/infra/plot_decl_graph.py"
+      ],
+      "elapsed_ms": 9587,
+      "exit_code": 0
+    },
+    {
+      "index": 9,
+      "label": "tools/infra/generate_replacement_frontier.py",
+      "command": [
+        "/home/goutev/LEAN4/info-geometry-lean/.venv/bin/python3",
+        "tools/infra/generate_replacement_frontier.py"
+      ],
+      "elapsed_ms": 1819,
+      "exit_code": 0
     }
   ],
-  "total_ms": 12468,
-  "status": "failed"
+  "total_ms": 38775,
+  "status": "ok"
 }

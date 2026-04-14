@@ -1,23 +1,23 @@
 # Declaration Vacuity Triage Report
 
-**Declarations scored:** 9115  
-**With violations:** 3325 (2407 error, 918 warning-only)  
-**Clean:** 5790  
+**Declarations scored:** 9481  
+**With violations:** 3422 (2434 error, 988 warning-only)  
+**Clean:** 6059  
 
 ## Tag Distribution
 
 | Tag | Count |
 |-----|-------|
-| `dead-candidate` | 5242 |
-| `proof-infrastructure` | 3585 |
-| `auto-generated` | 2061 |
-| `certified-surface` | 525 |
+| `dead-candidate` | 5456 |
+| `proof-infrastructure` | 3737 |
+| `auto-generated` | 2179 |
+| `certified-surface` | 527 |
 | `statement-bearing` | 288 |
-| `rfl-like` | 246 |
+| `rfl-like` | 264 |
+| `role-exempt` | 132 |
 | `high-fan-in` | 126 |
-| `role-exempt` | 114 |
-| `wrapper-candidate` | 107 |
-| `attr:capstone` | 49 |
+| `wrapper-candidate` | 115 |
+| `attr:capstone` | 67 |
 | `attr:infrastructure` | 38 |
 | `attr:expository` | 26 |
 | `capstone-candidate` | 4 |
@@ -27,10 +27,10 @@
 
 | Violation | Count |
 |-----------|-------|
-| `V2/dead-public-theorem` | 3255 |
-| `V1/public-wrapper-inflation` | 107 |
+| `V2/dead-public-theorem` | 3349 |
+| `V1/public-wrapper-inflation` | 115 |
 | `V0/syntactic-vacuity` | 100 |
-| `V4/bridge-infrastructure-promoted` | 4 |
+| `V4/bridge-infrastructure-promoted` | 5 |
 
 ## Top Vacuity Suspicion (derived ranking)
 
@@ -61,26 +61,26 @@
 
 | Declaration | Reverse Reach | Descendant Mass | Depth | SCC Role | Public Fan-In | Proof-Only Reuse |
 |---------|--------------:|----------------:|------:|----------|---------------:|-----------------:|
-| `InfoGeometry.Krein.instL2Complete` | 1679 | 0 | 25 | `acyclic` | 651 | 165 |
-| `InfoGeometry.Krein.DoubledSpace.ext` | 1263 | 1 | 23 | `acyclic` | 0 | 159 |
-| `InfoGeometry.Canonical.CertifiedInverseKernel.toInverseKernel` | 851 | 2 | 18 | `acyclic` | 102 | 29 |
-| `InfoGeometry.Canonical.CertifiedInverseKernel.toInverseKernel'` | 814 | 3 | 17 | `acyclic` | 3 | 46 |
+| `InfoGeometry.Krein.instL2Complete` | 1838 | 0 | 25 | `acyclic` | 804 | 163 |
+| `InfoGeometry.Krein.DoubledSpace.ext` | 1272 | 1 | 23 | `acyclic` | 0 | 159 |
+| `InfoGeometry.Canonical.CertifiedInverseKernel.toInverseKernel` | 991 | 2 | 18 | `acyclic` | 103 | 35 |
+| `InfoGeometry.Canonical.CertifiedInverseKernel.toInverseKernel'` | 944 | 3 | 17 | `acyclic` | 5 | 52 |
+| `InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector` | 482 | 8 | 16 | `acyclic` | 110 | 45 |
 | `InfoGeometry.PositiveMeasure.pos` | 474 | 2 | 26 | `acyclic` | 0 | 24 |
-| `InfoGeometry.Krein.complex_i_apply` | 432 | 6 | 16 | `acyclic` | 0 | 129 |
+| `InfoGeometry.Krein.complex_i_apply` | 441 | 6 | 16 | `acyclic` | 0 | 130 |
+| `InfoGeometry.Canonical.CertifiedInverseKernel.chiralAnomaly` | 416 | 12 | 12 | `acyclic` | 31 | 16 |
 | `InfoGeometry.Projective.positiveMeasureToEuclidean_apply` | 406 | 3 | 26 | `acyclic` | 0 | 2 |
 | `InfoGeometry.Projective.positiveMeasureToEuclidean_ne_zero` | 405 | 5 | 25 | `acyclic` | 0 | 4 |
 | `InfoGeometry.PositiveMeasure.ext` | 404 | 6 | 22 | `acyclic` | 0 | 8 |
-| `InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector` | 403 | 8 | 16 | `acyclic` | 59 | 35 |
 | `InfoGeometry.Projective.positiveMeasureToEuclidean_scale` | 403 | 5 | 24 | `acyclic` | 0 | 1 |
 | `InfoGeometry.Projective.positiveMeasureToConeInteriorRay_sameRay` | 402 | 17 | 23 | `acyclic` | 0 | 1 |
 | `InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace_injective` | 395 | 25 | 21 | `acyclic` | 0 | 1 |
 | `InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace_surjective` | 395 | 22 | 21 | `acyclic` | 0 | 1 |
 | `InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace_bijective` | 394 | 28 | 20 | `acyclic` | 0 | 1 |
-| `InfoGeometry.Canonical.CertifiedInverseKernel.chiralAnomaly` | 358 | 12 | 12 | `acyclic` | 25 | 14 |
 | `InfoGeometry.Krein.spectral_epsilon_involution` | 333 | 4 | 13 | `acyclic` | 1 | 13 |
 | `InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.toConformalInference` | 332 | 2 | 18 | `acyclic` | 137 | 14 |
-| `InfoGeometry.Canonical.CertifiedInverseKernel.metricProjector` | 285 | 8 | 15 | `acyclic` | 28 | 16 |
-| `InfoGeometry.Krein.InvolutiveSelfDualCarrier.J_ε_anticomm` | 267 | 6 | 15 | `acyclic` | 0 | 3 |
+| `InfoGeometry.Canonical.CertifiedInverseKernel.metricProjector` | 322 | 8 | 15 | `acyclic` | 31 | 19 |
+| `InfoGeometry.Canonical.CertifiedInverseKernel.rightChiralAnomaly` | 302 | 12 | 12 | `acyclic` | 20 | 14 |
 
 ## Errors (require action)
 
@@ -668,6 +668,15 @@
 - **`InfoGeometry.Canonical.CanonicalGaugeBridge.functionalShift_reference_cocycle`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.CanonicalGaugeBridge.functionalShift_self_eq_zero`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+
+### `lean/InfoGeometry/Canonical/CapstoneSemanticAudit.lean`
+
+- **`InfoGeometry.Canonical.CapstoneSemanticAudit.block_diagonal_of_commute_idempotent_similarity`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.CapstoneSemanticAudit.global_active_apex_decomposition_reduces_to_active_of_apex_zero`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.CapstoneSemanticAudit.spectralProjector_eq_one_of_apex_zero`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 
 ### `lean/InfoGeometry/Canonical/CartanBerezinianCore.lean`
@@ -1363,15 +1372,9 @@
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.anticommutator_GammaS_rightSupercharge_eq_zero`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.commutator_P_D_G_eq_half_sub_supercharges`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.commutator_P_D_GammaG_eq_rightSupercharge_sub_leftSupercharge`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.leftSupercharge_isSpectralNonCompact`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.rightSupercharge_isSpectralNonCompact`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT.two_smul_G_eq_GammaG`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.DrazinPenroseDilationKKT.centralSupercharge_transport_invariant`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
@@ -1498,8 +1501,6 @@
 ### `lean/InfoGeometry/Canonical/EPDefectAlgebra.lean`
 
 - **`InfoGeometry.Canonical.CertifiedInverseKernel.dilationGap_eq_half_smul_mpInverseCommutator`** — `V2/dead-public-theorem`
-  - Tags: `certified-surface`, `dead-candidate`
-- **`InfoGeometry.Canonical.CertifiedInverseKernel.drazinCoreProj_idempotent`** — `V2/dead-public-theorem`
   - Tags: `certified-surface`, `dead-candidate`
 - **`InfoGeometry.Canonical.CertifiedInverseKernel.mpInverseCommutator_eq_zero_iff_isEP`** — `V2/dead-public-theorem`
   - Tags: `certified-surface`, `dead-candidate`
@@ -1723,6 +1724,13 @@
 - **`InfoGeometry.Canonical.GenerativeInferenceCore.weylMassLikeCoupling_eq_zero_iff_balanced`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 
+### `lean/InfoGeometry/Canonical/GlobalChiralDecomposition.lean`
+
+- **`InfoGeometry.Canonical.GlobalChiralDecomposition.chiralHalfGap_decomposition`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.GlobalChiralDecomposition.chiralKKT_commutator_halfGap_closure`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+
 ### `lean/InfoGeometry/Canonical/GrandCanonicalExperts.lean`
 
 - **`InfoGeometry.Canonical.MoE.cliffordBasis_minus`** — `V2/dead-public-theorem`
@@ -1732,8 +1740,6 @@
 - **`InfoGeometry.Canonical.MoE.diracAction_def`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.MoE.diracEulerStep_zero`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.MoE.exists_modewiseClifford_rep_of_bistochastic`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.MoE.labelGenerator_sq_minus`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
@@ -2720,6 +2726,13 @@
 - **`InfoGeometry.Canonical.ModularOrientationContract.phaseAxisFlow_flip_eq_time_reverse`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 
+### `lean/InfoGeometry/Canonical/ModularSourceBridge.lean`
+
+- **`InfoGeometry.Canonical.ModularSourceBridge.sourcedModularGenerator_boundary_excitation`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.ModularSourceBridge.sourcedModularGenerator_bulk_invariant`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+
 ### `lean/InfoGeometry/Canonical/ModularSpectralConjugationBridge.lean`
 
 - **`InfoGeometry.Canonical.ModularSpectralConjugationBridge.Compatibility.P_D_mul_activeModularConjugation_eq_zero`** — `V2/dead-public-theorem`
@@ -2804,11 +2817,11 @@
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalSeedFlow_eq_internalUnruhFlowOfModularTime`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaFlow_commutes_activeProjector_of_wedgeCalibrated`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaFlow_commutes_spectralComplementaryProjector_of_wedgeCalibrated`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaLogData_deltaLog`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.ModularSuperchargeClosure.cp003_singular_surrogate_commutator_closure`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.ModularSuperchargeClosure.exists_modularGenerator_split_with_drazin_lane_centrality_canonicalSeed`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
@@ -2991,6 +3004,15 @@
 - **`InfoGeometry.Canonical.NoetherInference.fisher_metric_eq_killing_form_of_orbit_base_relation_of_commutes_with_involution`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 
+### `lean/InfoGeometry/Canonical/ObserverDefect.lean`
+
+- **`InfoGeometry.Canonical.ObserverDefect.ObserverL5.isOrientationFixing`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.ObserverDefect.observerDefectResidual_eq_zero_of_aligned`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.ObserverDefect.observerOrientationStrain_eq_zero_iff`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+
 ### `lean/InfoGeometry/Canonical/OnsagerCasimirJ.lean`
 
 - **`InfoGeometry.Canonical.OnsagerCasimirJ.JConjugate_involutive`** — `V2/dead-public-theorem`
@@ -3116,6 +3138,20 @@
 - **`InfoGeometry.Canonical.OperatorialCramerRao.toRelationalInformationDatum_inv_comparisonGeneratorMetric_self_le_of_unit_response`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 
+### `lean/InfoGeometry/Canonical/OperatorialCramerRaoStateFirstChunk4.lean`
+
+- **`InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4.measurableOperator_modularFlow_state_stable`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+
+### `lean/InfoGeometry/Canonical/OperatorialCramerRaoStateFirstSemanticAudit.lean`
+
+- **`InfoGeometry.Canonical.OperatorialCramerRaoStateFirstSemanticAudit.chunk2_active_only_reduction_audit`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.OperatorialCramerRaoStateFirstSemanticAudit.chunk3_admissibility_package_audit`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.OperatorialCramerRaoStateFirstSemanticAudit.chunk4_measurable_uncertainty_package_audit`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+
 ### `lean/InfoGeometry/Canonical/OperatorialInformationLift.lean`
 
 - **`InfoGeometry.Canonical.OperatorialInformationLift.instCompleteSpaceContinuousLinearMapRealIdDoubledSpace`** — `V2/dead-public-theorem`
@@ -3144,6 +3180,15 @@
 - **`InfoGeometry.Canonical.OperatorialUncertainty.toRelationalInformationDatum_comparisonGeneratorPhase_sq_le_of_IsPhaseLinear`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.OperatorialUncertainty.toRelationalInformationDatum_inv_comparisonGeneratorMetric_self_le_of_unit_phase_response_of_IsPhaseLinear`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+
+### `lean/InfoGeometry/Canonical/OperatorialVolumePreservation.lean`
+
+- **`InfoGeometry.Canonical.OperatorialVolumePreservation.biMaurerVolumeDrift_mixed_blocks_vanish_of_commute_active`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.OperatorialVolumePreservation.instCompleteSpaceContinuousLinearMapRealIdDoubledSpace`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.OperatorialVolumePreservation.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 
 ### `lean/InfoGeometry/Canonical/PartitionHierarchy.lean`
@@ -3759,19 +3804,6 @@
 - **`InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.recomposedModularPotential_eq_neg_recomposedLogDensity`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 
-### `lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean`
-
-- **`InfoGeometry.Canonical.RelativeModularScaleShapeSplit.instCompleteSpaceContinuousLinearMapRealIdDoubledSpace`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.RelativeModularScaleShapeSplit.instIsScalarTowerRealContinuousLinearMapIdDoubledSpace`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.RelativeModularScaleShapeSplit.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.RelativeModularScaleShapeSplit.instSMulCommClassRealContinuousLinearMapIdDoubledSpace`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_block_diagonal`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
-
 ### `lean/InfoGeometry/Canonical/RelativeModularSingularization.lean`
 
 - **`InfoGeometry.Canonical.RelativeModularSingularization.drazinProjection_ne_one_of_not_mem`** — `V2/dead-public-theorem`
@@ -4166,6 +4198,23 @@
 - **`InfoGeometry.Canonical.SingularBoundaryCorrection.rightBoundaryGenerator_eq_projector_commutator`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 
+### `lean/InfoGeometry/Canonical/SingularDecompositionSurrogate.lean`
+
+- **`InfoGeometry.Canonical.SingularDecompositionSurrogate.chiral_range_domain_decomposition`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.SingularDecompositionSurrogate.cp003_singular_polar_kan_package_of_commute`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.SingularDecompositionSurrogate.drazin_singular_closure_packet`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.SingularDecompositionSurrogate.global_active_apex_decomposition`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.SingularDecompositionSurrogate.relativeModular_scaleShapeSplit_bridge_of_commute`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.SingularDecompositionSurrogate.singular_decomposition_surrogate_commutator_of_commute`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.Canonical.SingularDecompositionSurrogate.singular_polar_surrogate_closure`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+
 ### `lean/InfoGeometry/Canonical/SingularTransportSystem.lean`
 
 - **`InfoGeometry.Canonical.SingularTransportSystem.boundaryGenerator_eq_projector_commutator`** — `V2/dead-public-theorem`
@@ -4229,8 +4278,6 @@
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.MoE.switchMatrix_apply`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.MoE.switchMatrix_mem_rowStochastic`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.MoE.trajectoryLyapunovNext_eq_zero`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 
@@ -4284,8 +4331,6 @@
 - **`InfoGeometry.Canonical.SpinConnection.U_add`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.SpinConnection.U_zero`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
-- **`InfoGeometry.Canonical.transportEnd_add`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.transportEnd_lie`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
@@ -4377,8 +4422,6 @@
 - **`InfoGeometry.Canonical.SplitCliffordTensorBridge.doubledHeadAtom_supergradedLiePackage_root`** — `V1/public-wrapper-inflation`, `V2/dead-public-theorem`
   - Forwards to: `InfoGeometry.Canonical.SplitCliffordTensorBridge.doubledHeadAtom_supergradedLiePackage`
   - Tags: `dead-candidate`, `wrapper-candidate`
-- **`InfoGeometry.Canonical.SplitCliffordTensorBridge.splitCl44_headFactor`** — `V2/dead-public-theorem`
-  - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.SplitCliffordTensorBridge.splitCl44_tailFactor`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 
@@ -4867,6 +4910,8 @@
 
 ### `lean/InfoGeometry/Canonical/TypeIIIContinuousCoreReal.lean`
 
+- **`InfoGeometry.Canonical.TypeIIIContinuousCoreReal.RealContinuousCoreInterface.coreTrace_dualAction_eq_singularPolar_split_of_commute`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.TypeIIIContinuousCoreReal.RealContinuousCoreInterface.dualAction_add`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
 - **`InfoGeometry.Canonical.TypeIIIContinuousCoreReal.RealContinuousCoreInterface.dualAction_preserves_dualFixed`** — `V2/dead-public-theorem`
@@ -5339,6 +5384,54 @@
   - Tags: `dead-candidate`
 - **`InfoGeometry.Krein.NeutralSpace.val_toLp`** — `V2/dead-public-theorem`
   - Tags: `dead-candidate`
+
+### `lean/InfoGeometry/LLM/DiscreteRouterBayesRegularizationBridge.lean`
+
+- **`InfoGeometry.LLM.bayesRouterUpdate_regularizedSignal_eq_coreSignal`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.LLM.bayesRouterUpdate_regularizedSignal_lambda_invariant`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+
+### `lean/InfoGeometry/LLM/KMSSoftmaxBridge.lean`
+
+- **`InfoGeometry.LLM.KMSSoftmaxBridge.beta_mul_routerFreeEnergy_eq_neg_kmsLogPartition`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.LLM.KMSSoftmaxBridge.kmsEntropy_eq_beta_internal_plus_logPartition`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.LLM.KMSSoftmaxBridge.kmsLogPartition_eq_logSumExpRouter`** — `V1/public-wrapper-inflation`
+  - Forwards to: `InfoGeometry.LLM.RouterFreeEnergyBridge.routerMassieu_eq_logSumExpRouter`
+  - Tags: `proof-infrastructure`, `wrapper-candidate`
+- **`InfoGeometry.LLM.KMSSoftmaxBridge.routerFreeEnergyEps_eq_neg_eps_kmsLogPartition`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.LLM.KMSSoftmaxBridge.softmaxWeight_eq_kmsWeight`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+
+### `lean/InfoGeometry/LLM/PinCPTBridge.lean`
+
+- **`InfoGeometry.LLM.PinCPTBridge.PinAction.odd_iff_anticommutator_zero`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+
+### `lean/InfoGeometry/LLM/RouterFreeEnergyBridge.lean`
+
+- **`InfoGeometry.LLM.RouterFreeEnergyBridge.routerScaledEntropicObjective_eq_scaledKL`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.LLM.RouterFreeEnergyBridge.routerScaledPotentialGap_eq_scaledBregman`** — `V1/public-wrapper-inflation`, `V2/dead-public-theorem`
+  - Forwards to: `InfoGeometry.LLM.RouterFreeEnergyBridge.routerScaledPotentialGap_eq_scaledBregman_swapped`
+  - Tags: `dead-candidate`, `wrapper-candidate`
+
+### `lean/InfoGeometry/LLM/ScalarThermoBridge.lean`
+
+- **`InfoGeometry.LLM.ScalarThermoBridge.fenchelGap_nonneg_bridge`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.LLM.ScalarThermoBridge.logSumExpRouter_eq_analytic_logSumExp`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.LLM.ScalarThermoBridge.logSumExpRouter_eq_convex_lse`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.LLM.ScalarThermoBridge.normalizedWeights_eq_analytic_logSumExpWeight`** — `V2/dead-public-theorem`
+  - Tags: `dead-candidate`
+- **`InfoGeometry.LLM.ScalarThermoBridge.switchMatrix_mem_rowStochastic_bridge`** — `V1/public-wrapper-inflation`, `V2/dead-public-theorem`
+  - Forwards to: `InfoGeometry.Canonical.MoE.switchMatrix_mem_rowStochastic`
+  - Tags: `dead-candidate`, `wrapper-candidate`
 
 ### `lean/InfoGeometry/MaxEnt/DualBridge.lean`
 
@@ -6015,8 +6108,8 @@
 | `lean/InfoGeometry/Core/SymmetricLieSpaces.lean` | 28 |
 | `lean/InfoGeometry/Canonical/RicciMongeAmpere.lean` | 27 |
 | `lean/InfoGeometry/MaxEnt/Jaynes.lean` | 27 |
-| `lean/InfoGeometry/Canonical/SinkhornFoundation.lean` | 26 |
 | `lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean` | 26 |
+| `lean/InfoGeometry/Canonical/SinkhornFoundation.lean` | 25 |
 | `lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean` | 25 |
 | `lean/InfoGeometry/Thermal/FiniteMatrix.lean` | 25 |
 | `lean/InfoGeometry/Canonical/RelativeModularSingularization.lean` | 24 |

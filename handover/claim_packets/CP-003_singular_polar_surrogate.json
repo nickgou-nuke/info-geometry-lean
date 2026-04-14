@@ -7,9 +7,9 @@
   "mathlib_native_formulation": "Bounded-operator ring identities in EndH using idempotent projectors, commutators, and transport-level closure; no new unbounded functional-calculus owner is introduced.",
   "latex_statement": "\\text{(surrogate closure)}\\quad [P_D,\\Gamma_G]=\\chi_R-\\chi_L,\\qquad [P_D,G]=\\tfrac12(\\chi_R-\\chi_L),\\qquad Q=2[P_D,G],\\ H_D=Q^2.",
   "symbolic_witness": {
-    "kind": "lean-sandbox",
-    "path": "lean/InfoGeometry/Canonical/Sandbox_CP003_SingularPolarDecomposition.lean",
-    "result_summary": "PASS (2026-04-14): `lake env lean lean/InfoGeometry/Canonical/Sandbox_CP003_SingularPolarDecomposition.lean` and `lake build InfoGeometry.Canonical.Sandbox_CP003_SingularPolarDecomposition` completed successfully."
+    "kind": "lean-owner",
+    "path": "lean/InfoGeometry/Canonical/SingularDecompositionSurrogate.lean",
+    "result_summary": "PASS (2026-04-14): `lake env lean lean/InfoGeometry/Canonical/SingularDecompositionSurrogate.lean` and `lake build InfoGeometry.Canonical.All` completed successfully after sandbox removal."
   },
   "lean_target": {
     "theorem_name": "singularPolarKAN_replacement_of_commute",
@@ -36,9 +36,9 @@
     "lean/InfoGeometry/Canonical/OperatorialVolumePreservation.lean"
   ],
   "upstairs_content_remaining": "Any Type-III continuous-core/Breuer index quantization claims remain upstairs and are intentionally excluded from CP-003 owner burden.",
-  "lock_status": "sandbox_compiled",
+  "lock_status": "formalized",
   "next_actions": [
-    "Keep CP-003 on sandbox alias surface while validating downstream fan-in impact.",
-    "Promote only if theorem-significance indicates nontrivial downstream fan-in beyond existing GlobalChiralDecomposition owner."
+    "Keep CP-003 on canonical owner surfaces (`GlobalChiralDecomposition` + `SingularDecompositionSurrogate`).",
+    "Monitor theorem-significance and downstream fan-in before adding any stronger factorization surface."
   ]
 }

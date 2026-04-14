@@ -100,5 +100,5 @@ For CP-002 work, prefer:
 ```bash
 lake env lean lean/InfoGeometry/Canonical/RelativeModularBlockDiagonalCore.lean
 lake env lean lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean
-lake env lean lean/InfoGeometry/Canonical/Sandbox_CP002_Lifted.lean
+lake env lean lean/InfoGeometry/Canonical/SingularDecompositionSurrogate.lean
 ```

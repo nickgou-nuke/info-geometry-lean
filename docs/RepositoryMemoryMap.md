@@ -30,6 +30,7 @@ These are the maintained hand-written entry surfaces for current repo state:
 - [docs/WORKBENCH.md](WORKBENCH.md)
 - [docs/black_books/](black_books/)
 - [docs/black_books/09_science_after_coding.md](black_books/09_science_after_coding.md)
+- [docs/black_books/67_the_external_analogy_doctrine.md](black_books/67_the_external_analogy_doctrine.md)
 - [docs/projective_to_krein_transition_doctrine.md](projective_to_krein_transition_doctrine.md)
 - [docs/Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md)
 - [docs/SEMANTIC_POTENTIAL.md](SEMANTIC_POTENTIAL.md)

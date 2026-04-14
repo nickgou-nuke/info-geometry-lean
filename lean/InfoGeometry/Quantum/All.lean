@@ -30,8 +30,12 @@ import InfoGeometry.Quantum.TriadicBogoliubovBridge
 import InfoGeometry.Quantum.WeldedProjectorCorrelationBridge
 import InfoGeometry.Quantum.ZeroPointEnergy
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Quantum.All
 
 Umbrella module for the quantum information geometry layer.
 -/
+
+end InfoGeometry

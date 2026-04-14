@@ -14,8 +14,12 @@ import InfoGeometry.KK.RealSplitKreinKasparovCycle
 import InfoGeometry.KK.RealSplitKreinResolvent
 import InfoGeometry.KK.RealSplitKreinUnboundedCycle
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.KK.All
 
 Umbrella module for the Kasparov KK-theory layer.
 -/
+
+end InfoGeometry

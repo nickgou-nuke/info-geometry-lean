@@ -1,5 +1,7 @@
 import InfoGeometry.Krein.Superphysics
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.Clifford.Supercharge
 
@@ -22,3 +24,5 @@ export InfoGeometry.Krein
    complex_i_isOdd
    complex_iSupercharge
    complex_iSupercharge_hamiltonian)
+
+end InfoGeometry

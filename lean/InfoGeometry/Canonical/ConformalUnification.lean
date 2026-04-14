@@ -3,3 +3,7 @@ import InfoGeometry.Canonical.ConformalAnomalySource
 import InfoGeometry.Canonical.ConformalAnomalyOperator
 import InfoGeometry.Canonical.ConformalAnomalyReadout
 import InfoGeometry.Canonical.ConformalAnomalyDegenerate
+
+namespace InfoGeometry
+
+end InfoGeometry

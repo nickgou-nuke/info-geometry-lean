@@ -2,6 +2,8 @@ import InfoGeometry.Thermo.FromBregman
 import InfoGeometry.ExponentialFamily.KLBregman
 import InfoGeometry.ExponentialFamily.Analytic.LogSumExp
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.OptimalTransport
 
@@ -12,3 +14,5 @@ This module exposes OT-facing names and equivalence theorems already derived in:
 - finite exponential-family KL/Bregman bridges (`ExponentialFamily.KLBregman`)
 - analytic log-sum-exp regularized KL identities (`ExponentialFamily.Analytic.LogSumExp`)
 -/
+
+end InfoGeometry

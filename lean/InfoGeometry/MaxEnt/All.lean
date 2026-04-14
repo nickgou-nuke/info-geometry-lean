@@ -9,8 +9,12 @@ import InfoGeometry.MaxEnt.JaynesRNMaxEnt
 import InfoGeometry.MaxEnt.Lagrange
 import InfoGeometry.MaxEnt.Optimality
 
+namespace InfoGeometry
+
 /-!
 # InfoGeometry.MaxEnt.All
 
 Umbrella module for the Maximum Entropy inference layer.
 -/
+
+end InfoGeometry

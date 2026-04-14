@@ -129,7 +129,44 @@ theorem singular_decomposition_surrogate_package_of_commute
     InfoGeometry.Canonical.GlobalChiralDecomposition.supergraded_supercharge_closure
       (E := E) CIK
 
+/--
+Wedge-calibrated specialization of the CP-003 surrogate package:
+the canonical bounded relative modular representative splits across
+apex/active Drazin blocks, together with the supercharge commutator closure.
+-/
+@[rep_depth transport, capstone]
+theorem canonicalRelativeModularOperator_singular_surrogate_package_of_wedgeCalibrated
+    (CIK : CertifiedInverseKernel H₂)
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (C :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+        (E := E)
+        (T := InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := spectral_epsilon (E := E))
+        (owned_P_D := CIK.spectralComplementaryProjector))
+    (τ : ℝ) :
+    canonicalRelativeModularOperator (E := E) CIK τ
+      =
+    CIK.spectralComplementaryProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralComplementaryProjector
+      +
+    CIK.spectralProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralProjector
+      ∧
+    DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+      =
+    DrazinSupercharge.commutator CIK.spectralProjector CIK.GammaG := by
+  refine ⟨?_, ?_⟩
+  · exact
+      canonicalRelativeModularOperator_scaleShapeSplit_of_wedgeCalibrated
+        (E := E) (CIK := CIK) (W := W) C τ
+  · exact
+      InfoGeometry.Canonical.GlobalChiralDecomposition.supergraded_supercharge_closure
+        (E := E) CIK
+
 end Core
 
 end InfoGeometry.Canonical.SingularDecompositionSurrogate
-

@@ -77,6 +77,70 @@ theorem P_D_mul_owned_epsilon_eq_zero
 
 end IsCompatibleWedge
 
+/--
+Wedge-calibrated modular closure interface.
+
+This records exactly what is needed on the bounded lane:
+- projector/sign compatibility with the wedge package;
+- modular-flow commutation with the locked kernel/sign operators.
+
+No global unbounded-generator identification is assumed here.
+-/
+@[rep_depth transport]
+structure WedgeCalibrated
+    (T : RealModularLogData (E := E))
+    (W : HasModularSpectralWedge E)
+    (owned_epsilon owned_P_D : EndH) : Prop where
+  compat : IsCompatibleWedge W owned_epsilon owned_P_D
+  flow_commutes_owned_P_D : ∀ τ : ℝ, Commute (T.flow τ) owned_P_D
+  flow_commutes_owned_epsilon : ∀ τ : ℝ, Commute (T.flow τ) owned_epsilon
+
+namespace WedgeCalibrated
+
+variable {T : RealModularLogData (E := E)}
+variable {W : HasModularSpectralWedge E}
+
+/-- On a calibrated lane, modular flow commutes with the wedge sign. -/
+@[rep_depth transport]
+theorem flow_commutes_wedgeSign
+    {owned_epsilon owned_PD : EndH}
+    (C : WedgeCalibrated (E := E) (T := T) (W := W) owned_epsilon owned_PD)
+    (t : ℝ) :
+    Commute (T.flow t) W.wedgeSign := by
+  simpa [C.compat.epsilon_eq] using C.flow_commutes_owned_epsilon t
+
+/-- On a calibrated lane, modular flow commutes with the wedge kernel projector. -/
+@[rep_depth transport]
+theorem flow_commutes_pzero
+    {owned_epsilon owned_PD : EndH}
+    (C : WedgeCalibrated (E := E) (T := T) (W := W) owned_epsilon owned_PD)
+    (t : ℝ) :
+    Commute (T.flow t) W.PZero := by
+  simpa [C.compat.pzero_eq] using C.flow_commutes_owned_P_D t
+
+/--
+On a calibrated lane, modular flow commutes with the active projector
+`1 - owned_P_D`.
+-/
+@[rep_depth transport]
+theorem flow_mul_activeProjector_eq_activeProjector_mul_flow
+    {owned_epsilon owned_PD : EndH}
+    (C : WedgeCalibrated (E := E) (T := T) (W := W) owned_epsilon owned_PD)
+    (t : ℝ) :
+    (T.flow t) * ((1 : EndH) - owned_PD)
+      = ((1 : EndH) - owned_PD) * (T.flow t) := by
+  have hcomm : (T.flow t) * owned_PD = owned_PD * (T.flow t) :=
+    (C.flow_commutes_owned_P_D t).eq
+  calc
+    (T.flow t) * ((1 : EndH) - owned_PD)
+        = (T.flow t) - (T.flow t) * owned_PD := by
+            simp [mul_sub]
+    _ = (T.flow t) - owned_PD * (T.flow t) := by rw [hcomm]
+    _ = ((1 : EndH) - owned_PD) * (T.flow t) := by
+          simp [sub_mul]
+
+end WedgeCalibrated
+
 end Bridge
 
 end InfoGeometry.Canonical.ModularSpectralWedgeBridge

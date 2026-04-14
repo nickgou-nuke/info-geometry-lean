@@ -1,5 +1,6 @@
 import InfoGeometry.Thermo.ModularKLDivergence
 import InfoGeometry.Canonical.PositiveRayProjectiveBridge
+import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Meta.Architecture
 
 /-!
@@ -22,6 +23,8 @@ open MeasureTheory
 open InfoGeometry.PositiveMeasure
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativePotentialCore
+open InfoGeometry.Canonical.DPDWedgeCompatibility
+open InfoGeometry.Canonical.ModularSpectralWedge
 
 section ScaleShape
 
@@ -127,6 +130,163 @@ theorem generalizedKL_scale_shape_split_with_nonneg
   exact generalizedKL_scale_shape_terms_nonneg (α := α) μ ν
 
 end ScaleShape
+
+section DrazinModularScaleShape
+
+variable {E : Type 0}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {α : Type*} [Fintype α] [Nonempty α]
+
+local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
+local notation "EndH" => H₂ →L[ℝ] H₂
+
+noncomputable local instance : NormedRing EndH := inferInstance
+noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
+local instance : IsTopologicalRing EndH := inferInstance
+local instance : CompleteSpace EndH := inferInstance
+
+/-- Projective (shape) part of generalized KL on the strict-positive cone. -/
+@[rep_depth projective]
+noncomputable def generalizedKL_activeShapeTerm
+    (μ ν : PositiveMeasure α ℝ) : ℝ :=
+  Z (α := α) (R := ℝ) μ
+    * generalizedKL (α := α)
+        (normalize (α := α) (R := ℝ) μ)
+        (normalize (α := α) (R := ℝ) ν)
+
+/-- Radial/gauge (mass) part of generalized KL on the strict-positive cone. -/
+@[rep_depth projective]
+noncomputable def generalizedKL_kernelMassTerm
+    (μ ν : PositiveMeasure α ℝ) : ℝ :=
+  gklTerm (Z (α := α) (R := ℝ) μ) (Z (α := α) (R := ℝ) ν)
+
+/--
+Capstone bridge: strict-positive generalized-KL scale/shape split together with
+explicit Drazin/wedge projector alignment.
+
+This theorem adds no new ontology; it packages:
+- KL shape/scale decomposition,
+- kernel identification `P_0 = P_D^⊥` on the compatible lane,
+- active-sector identification `active = 1 - P_0`.
+-/
+@[rep_depth transport, capstone]
+theorem relativeModularScaleShapeSplit_eq_drazinActiveKernelSplit
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E))
+    (W : HasModularSpectralWedge E)
+    (comp : IsCompatibleDPDWedge (E := E) CIK W)
+    (μ ν : PositiveMeasure α ℝ) :
+    generalizedKL (α := α) μ ν
+      =
+    generalizedKL_activeShapeTerm (α := α) μ ν
+      + generalizedKL_kernelMassTerm (α := α) μ ν
+      ∧
+    W.activeProjector = (1 : EndH) - CIK.spectralComplementaryProjector
+      ∧
+    CIK.spectralComplementaryProjector = W.PZero := by
+  refine ⟨?_, ?_, comp.hZero⟩
+  · simpa [generalizedKL_activeShapeTerm, generalizedKL_kernelMassTerm] using
+      generalizedKL_scale_shape_split (α := α) μ ν
+  · unfold HasModularSpectralWedge.activeProjector
+    apply eq_sub_iff_add_eq.mpr
+    calc
+      W.PiPlus + W.PiMinus + CIK.spectralComplementaryProjector
+          = W.PiPlus + W.PiMinus + W.PZero := by
+              simp [comp.hZero]
+      _ = (1 : EndH) := by
+            simpa [add_assoc] using W.resolution
+
+/--
+Strengthened scale/shape bridge: besides the KL decomposition and
+`P_0`/active-sector alignment, this packages the DPD generator identification
+`2G = ε_wedge` and the projected supercharge wedge-commutator form on the same
+compatible lane.
+-/
+@[rep_depth transport, capstone]
+theorem relativeModularScaleShapeSplit_eq_drazinActiveKernelSplit_with_dilationGap
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E))
+    (W : HasModularSpectralWedge E)
+    (comp : IsCompatibleDPDWedge (E := E) CIK W)
+    (μ ν : PositiveMeasure α ℝ) :
+    generalizedKL (α := α) μ ν
+      =
+    generalizedKL_activeShapeTerm (α := α) μ ν
+      + generalizedKL_kernelMassTerm (α := α) μ ν
+      ∧
+    W.activeProjector = (1 : EndH) - CIK.spectralComplementaryProjector
+      ∧
+    CIK.spectralComplementaryProjector = W.PZero
+      ∧
+    (2 : ℝ) • CIK.dilationGap = W.wedgeSign
+      ∧
+    CIK.dilationGap = ((2 : ℝ)⁻¹) • W.wedgeSign
+      ∧
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
+      =
+    InfoGeometry.Canonical.DrazinSupercharge.commutator CIK.spectralProjector W.wedgeSign := by
+  rcases
+      relativeModularScaleShapeSplit_eq_drazinActiveKernelSplit
+        (E := E) (α := α) CIK W comp μ ν with
+    ⟨hSplit, hActive, hZero⟩
+  refine ⟨hSplit, hActive, hZero, ?_, ?_, ?_⟩
+  · exact IsCompatibleDPDWedge.two_smul_dilationGap_eq_wedgeSign
+      (E := E) (CIK := CIK) (W := W) comp
+  · exact IsCompatibleDPDWedge.dilationGap_eq_half_wedgeSign
+      (E := E) (CIK := CIK) (W := W) comp
+  · exact IsCompatibleDPDWedge.projected_supercharge_eq_commutator_PD_wedgeSign
+      (E := E) (CIK := CIK) (W := W) comp
+
+/--
+Locked comparison theorem:
+the Drazin block decomposition of a relative modular operator candidate matches
+the strict-positive projective/gauge split package on the same compatible lane.
+
+Operatorially:
+`RMO = Q_D RMO Q_D + P_D RMO P_D`.
+Scalar/projective:
+`gKL = shape + mass`.
+-/
+@[rep_depth transport, capstone]
+theorem relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E))
+    (W : HasModularSpectralWedge E)
+    (comp : IsCompatibleDPDWedge (E := E) CIK W)
+    (RMO : EndH)
+    (hQD_RMO_PD_zero :
+      CIK.spectralComplementaryProjector * RMO * CIK.spectralProjector = 0)
+    (hPD_RMO_QD_zero :
+      CIK.spectralProjector * RMO * CIK.spectralComplementaryProjector = 0)
+    (μ ν : PositiveMeasure α ℝ) :
+    RMO
+      =
+    IsCompatibleDPDWedge.relativeModularKernelScalePart (CIK := CIK) RMO
+      +
+    IsCompatibleDPDWedge.relativeModularActiveShapePart (CIK := CIK) RMO
+      ∧
+    generalizedKL (α := α) μ ν
+      =
+    generalizedKL_activeShapeTerm (α := α) μ ν
+      + generalizedKL_kernelMassTerm (α := α) μ ν
+      ∧
+    W.activeProjector = (1 : EndH) - CIK.spectralComplementaryProjector
+      ∧
+    CIK.spectralComplementaryProjector = W.PZero := by
+  have hOp :
+      RMO
+        =
+      IsCompatibleDPDWedge.relativeModularKernelScalePart (CIK := CIK) RMO
+        +
+      IsCompatibleDPDWedge.relativeModularActiveShapePart (CIK := CIK) RMO := by
+    exact IsCompatibleDPDWedge.relativeModular_scaleShapeSplit
+      (CIK := CIK)
+      (hQD_RMO_PD_zero := hQD_RMO_PD_zero)
+      (hPD_RMO_QD_zero := hPD_RMO_QD_zero)
+  rcases
+      relativeModularScaleShapeSplit_eq_drazinActiveKernelSplit
+        (E := E) (α := α) CIK W comp μ ν with
+    ⟨hKL, hActive, hZero⟩
+  exact ⟨hOp, hKL, hActive, hZero⟩
+
+end DrazinModularScaleShape
 
 section PositiveRayCompatibility
 

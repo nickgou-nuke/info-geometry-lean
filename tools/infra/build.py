@@ -130,6 +130,7 @@ def run_locked_prebuild(
     *,
     run_mode: str = "exe",
     python_executable: str | None = None,
+    allow_failure: bool = False,
 ) -> bool:
     prebuild_target = "dagIndexer" if run_mode == "exe" else "DAG.Indexer"
     cmd = [
@@ -144,6 +145,12 @@ def run_locked_prebuild(
         subprocess.run(cmd, cwd=root, check=True)
         return True
     except subprocess.CalledProcessError as exc:
+        if not allow_failure:
+            raise RuntimeError(
+                "[refresh-decl-graph] prebuild failed; refusing to continue with indexing "
+                f"(target={build_target}, exit={exc.returncode}). "
+                "Fix the build or rerun with --allow-prebuild-failure."
+            ) from exc
         print(
             "[refresh-decl-graph] prebuild failed; continuing with direct indexer run "
             f"(exit={exc.returncode})",

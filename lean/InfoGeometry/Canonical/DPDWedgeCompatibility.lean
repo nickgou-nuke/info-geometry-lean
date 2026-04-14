@@ -46,6 +46,99 @@ variable {CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krei
 variable {W : HasModularSpectralWedge E}
 
 /--
+Kernel/sign convention lock on the compatible DPD/wedge lane:
+the wedge-kernel projector is exactly the certified Drazin complementary
+projector `Q_D := 1 - P_D`.
+-/
+@[rep_depth transport]
+theorem kernelConventionLock_pzero_eq_spectralComplementaryProjector
+    (comp : IsCompatibleDPDWedge CIK W) :
+    W.PZero = CIK.spectralComplementaryProjector := by
+  simpa using comp.hZero.symm
+
+/--
+Active projector lock on the compatible lane:
+`P_active = 1 - Q_D`.
+-/
+@[rep_depth transport]
+theorem activeProjector_eq_one_sub_spectralComplementaryProjector
+    (comp : IsCompatibleDPDWedge CIK W) :
+    W.activeProjector = (1 : EndH) - CIK.spectralComplementaryProjector := by
+  unfold HasModularSpectralWedge.activeProjector
+  apply eq_sub_iff_add_eq.mpr
+  calc
+    W.PiPlus + W.PiMinus + CIK.spectralComplementaryProjector
+        = W.PiPlus + W.PiMinus + W.PZero := by
+            simp [comp.hZero]
+    _ = (1 : EndH) := by
+          simpa [add_assoc] using W.resolution
+
+/--
+With the kernel convention lock, the wedge sign squares to the certified
+regular Drazin projector:
+`ε_wedge^2 = P_D`.
+-/
+@[rep_depth transport]
+theorem wedgeSign_sq_eq_spectralProjector
+    (comp : IsCompatibleDPDWedge CIK W) :
+    W.wedgeSign * W.wedgeSign = CIK.spectralProjector := by
+  calc
+    W.wedgeSign * W.wedgeSign
+        = (1 : EndH) - W.PZero := W.wedgeSign_sq
+    _ = (1 : EndH) - CIK.spectralComplementaryProjector := by
+          simp [comp.hZero]
+    _ = CIK.spectralProjector := by
+          change (1 : EndH)
+              - (1 - CIK.spectralProjector)
+              = CIK.spectralProjector
+          simp
+
+/--
+Kernel annihilation on the right:
+`ε_wedge * Q_D = 0`.
+-/
+@[rep_depth transport]
+theorem wedgeSign_mul_spectralComplementaryProjector_eq_zero
+    (comp : IsCompatibleDPDWedge CIK W) :
+    W.wedgeSign * CIK.spectralComplementaryProjector = 0 := by
+  rw [comp.hZero]
+  unfold HasModularSpectralWedge.wedgeSign
+  calc
+    (W.PiPlus - W.PiMinus) * W.PZero
+        = W.PiPlus * W.PZero - W.PiMinus * W.PZero := by
+            simp [sub_mul]
+    _ = 0 - 0 := by rw [W.PiPlus_PZero, W.PiMinus_PZero]
+    _ = 0 := by simp
+
+/--
+Kernel annihilation on the left:
+`Q_D * ε_wedge = 0`.
+-/
+@[rep_depth transport]
+theorem spectralComplementaryProjector_mul_wedgeSign_eq_zero
+    (comp : IsCompatibleDPDWedge CIK W) :
+    CIK.spectralComplementaryProjector * W.wedgeSign = 0 := by
+  rw [comp.hZero]
+  unfold HasModularSpectralWedge.wedgeSign
+  calc
+    W.PZero * (W.PiPlus - W.PiMinus)
+        = W.PZero * W.PiPlus - W.PZero * W.PiMinus := by
+            simp [mul_sub]
+    _ = 0 - 0 := by rw [W.PZero_PiPlus, W.PZero_PiMinus]
+    _ = 0 := by simp
+
+/--
+`ε_wedge` is involutive on the active regular lane:
+right restriction to `P_D` is fixed.
+-/
+@[rep_depth transport]
+theorem wedgeSign_sq_mul_spectralProjector_eq_spectralProjector
+    (comp : IsCompatibleDPDWedge CIK W) :
+    (W.wedgeSign * W.wedgeSign) * CIK.spectralProjector = CIK.spectralProjector := by
+  rw [wedgeSign_sq_eq_spectralProjector (CIK := CIK) (W := W) comp]
+  simpa using CIK.spectralProjector_idempotent
+
+/--
 On a compatible DPD/wedge lane, the DPD dilation generator satisfies
 `2G = ε_wedge`.
 -/
@@ -133,6 +226,126 @@ theorem projected_supercharge_eq_neg_commutator_PZero_wedgeSign
     _ = -InfoGeometry.Canonical.DrazinSupercharge.commutator CIK.spectralComplementaryProjector W.wedgeSign := by
           rw [hComm]
           simp
+
+/--
+Kernel-supported (`Q_D`) scale block of a relative modular operator candidate.
+-/
+@[rep_depth transport]
+noncomputable def relativeModularKernelScalePart
+    (RMO : EndH) : EndH :=
+  CIK.spectralComplementaryProjector * RMO * CIK.spectralComplementaryProjector
+
+/--
+Active (`P_D`) projective-shape block of a relative modular operator candidate.
+-/
+@[rep_depth transport]
+noncomputable def relativeModularActiveShapePart
+    (RMO : EndH) : EndH :=
+  CIK.spectralProjector * RMO * CIK.spectralProjector
+
+/--
+If a relative modular operator candidate commutes with the certified active
+projector `P_D`, then both mixed Drazin blocks vanish.
+-/
+@[rep_depth transport]
+theorem relativeModular_offDiagonal_blocks_zero_of_commutes_spectralProjector
+    {RMO : EndH}
+    (hComm : Commute RMO CIK.spectralProjector) :
+    CIK.spectralComplementaryProjector * RMO * CIK.spectralProjector = 0
+      ∧
+    CIK.spectralProjector * RMO * CIK.spectralComplementaryProjector = 0 := by
+  constructor
+  · calc
+      CIK.spectralComplementaryProjector * RMO * CIK.spectralProjector
+          = CIK.spectralComplementaryProjector * (RMO * CIK.spectralProjector) := by
+              simp [mul_assoc]
+      _ = CIK.spectralComplementaryProjector * (CIK.spectralProjector * RMO) := by
+            rw [hComm.eq]
+      _ = (CIK.spectralComplementaryProjector * CIK.spectralProjector) * RMO := by
+            simp [mul_assoc]
+      _ = 0 := by
+            simp [CIK.spectralComplementaryProjector_mul_spectralProjector]
+  · calc
+      CIK.spectralProjector * RMO * CIK.spectralComplementaryProjector
+          = (CIK.spectralProjector * RMO) * CIK.spectralComplementaryProjector := by
+              simp [mul_assoc]
+      _ = (RMO * CIK.spectralProjector) * CIK.spectralComplementaryProjector := by
+            rw [hComm.eq.symm]
+      _ = RMO * (CIK.spectralProjector * CIK.spectralComplementaryProjector) := by
+            simp [mul_assoc]
+      _ = 0 := by
+            simp [CIK.spectralProjector_mul_spectralComplementaryProjector]
+
+/--
+Operatorial scale/shape split on the Drazin lane:
+if mixed blocks vanish, the relative modular operator candidate decomposes as
+`RMO = Q_D RMO Q_D + P_D RMO P_D`.
+-/
+@[rep_depth transport, capstone]
+theorem relativeModular_scaleShapeSplit
+    {RMO : EndH}
+    (hQD_RMO_PD_zero :
+      CIK.spectralComplementaryProjector * RMO * CIK.spectralProjector = 0)
+    (hPD_RMO_QD_zero :
+      CIK.spectralProjector * RMO * CIK.spectralComplementaryProjector = 0) :
+    RMO
+      =
+    relativeModularKernelScalePart (CIK := CIK) RMO
+      +
+    relativeModularActiveShapePart (CIK := CIK) RMO := by
+  have hSplit :
+      CIK.spectralProjector + CIK.spectralComplementaryProjector = (1 : EndH) :=
+    CIK.spectralProjector_add_spectralComplementaryProjector
+  calc
+    RMO = (1 : EndH) * RMO * (1 : EndH) := by simp
+    _ =
+      (CIK.spectralProjector + CIK.spectralComplementaryProjector)
+        * RMO *
+      (CIK.spectralProjector + CIK.spectralComplementaryProjector) := by
+        simp [hSplit]
+    _ =
+      ((CIK.spectralProjector * RMO * CIK.spectralProjector)
+        + (CIK.spectralProjector * RMO * CIK.spectralComplementaryProjector))
+        +
+      ((CIK.spectralComplementaryProjector * RMO * CIK.spectralProjector)
+        + (CIK.spectralComplementaryProjector * RMO * CIK.spectralComplementaryProjector)) := by
+        noncomm_ring
+    _ =
+      ((CIK.spectralProjector * RMO * CIK.spectralProjector) + 0)
+        +
+      (0 + (CIK.spectralComplementaryProjector * RMO * CIK.spectralComplementaryProjector)) := by
+        rw [hPD_RMO_QD_zero, hQD_RMO_PD_zero]
+    _ =
+      CIK.spectralProjector * RMO * CIK.spectralProjector
+        + CIK.spectralComplementaryProjector * RMO * CIK.spectralComplementaryProjector := by
+        simp
+    _ =
+      relativeModularKernelScalePart (CIK := CIK) RMO
+        + relativeModularActiveShapePart (CIK := CIK) RMO := by
+        rw [add_comm]
+        rfl
+
+/--
+Derived block split from the commuting criterion:
+`[RMO, P_D] = 0` implies the canonical Drazin scale/shape decomposition.
+-/
+@[rep_depth transport, capstone]
+theorem relativeModular_scaleShapeSplit_of_commutes_spectralProjector
+    {RMO : EndH}
+    (hComm : Commute RMO CIK.spectralProjector) :
+    RMO
+      =
+    relativeModularKernelScalePart (CIK := CIK) RMO
+      +
+    relativeModularActiveShapePart (CIK := CIK) RMO := by
+  rcases
+      relativeModular_offDiagonal_blocks_zero_of_commutes_spectralProjector
+        (CIK := CIK) hComm with
+    ⟨hQD_RMO_PD_zero, hPD_RMO_QD_zero⟩
+  exact relativeModular_scaleShapeSplit
+      (CIK := CIK)
+      (hQD_RMO_PD_zero := hQD_RMO_PD_zero)
+      (hPD_RMO_QD_zero := hPD_RMO_QD_zero)
 
 end IsCompatibleDPDWedge
 

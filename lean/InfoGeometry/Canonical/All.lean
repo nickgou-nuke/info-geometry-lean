@@ -70,6 +70,8 @@ import InfoGeometry.Canonical.DrazinInfiniteCore
 import InfoGeometry.Canonical.DrazinWitnessElimination
 import InfoGeometry.Canonical.DrazinKreinCompatibility
 import InfoGeometry.Canonical.DrazinFredholmBridge
+import InfoGeometry.Canonical.DrazinSpectralBridge
+import InfoGeometry.Canonical.DrazinSpectralProjectorBridge
 import InfoGeometry.Canonical.DrazinCoreFlow
 import InfoGeometry.Canonical.DrazinPenroseDilationAlgebra
 import InfoGeometry.Canonical.DrazinPenroseDilationKKT

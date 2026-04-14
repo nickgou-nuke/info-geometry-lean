@@ -630,6 +630,59 @@ theorem superHamiltonian_fixed_under_canonicalTomitaAdjointFlow
       (E := E) (M := M) t)
 
 /--
+Wedge-calibrated closure (kernel lane):
+if canonical Tomita flow is calibrated to a compatible wedge packet, then it
+commutes with the certified complementary Drazin projector `Q_D`.
+-/
+@[rep_depth transport]
+theorem canonicalTomitaFlow_commutes_spectralComplementaryProjector_of_wedgeCalibrated
+    (CIK : CertifiedInverseKernel H₂)
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (C :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+        (E := E)
+        (T := canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := spectral_epsilon (E := E))
+        (owned_P_D := CIK.spectralComplementaryProjector))
+    (τ : ℝ) :
+    (canonicalTomitaLogData (E := E) CIK).flow τ * CIK.spectralComplementaryProjector
+      =
+    CIK.spectralComplementaryProjector * (canonicalTomitaLogData (E := E) CIK).flow τ := by
+  exact (C.flow_commutes_owned_P_D τ).eq
+
+/--
+Wedge-calibrated closure (active lane):
+if canonical Tomita flow is calibrated to a compatible wedge packet, then it
+commutes with the active projector `1 - Q_D`.
+-/
+@[rep_depth transport]
+theorem canonicalTomitaFlow_commutes_activeProjector_of_wedgeCalibrated
+    (CIK : CertifiedInverseKernel H₂)
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (C :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+        (E := E)
+        (T := canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := spectral_epsilon (E := E))
+        (owned_P_D := CIK.spectralComplementaryProjector))
+    (τ : ℝ) :
+    (canonicalTomitaLogData (E := E) CIK).flow τ
+        * ((1 : EndH) - CIK.spectralComplementaryProjector)
+      =
+    ((1 : EndH) - CIK.spectralComplementaryProjector)
+        * (canonicalTomitaLogData (E := E) CIK).flow τ := by
+  exact
+    InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated.flow_mul_activeProjector_eq_activeProjector_mul_flow
+        (E := E)
+        (T := canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := spectral_epsilon (E := E))
+        (owned_PD := CIK.spectralComplementaryProjector)
+        C τ
+
+/--
 Canonical internal modular Hamiltonian extracted from the projected even
 generator:
 `K_int := (2π)⁻¹ • H_D`.
@@ -1162,19 +1215,32 @@ theorem canonicalTomitaFlow_at_wedgeParameter_of_flowEqUnruh
       (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
       =
     InfoGeometry.Dynamics.unruhFlow (E := E) τwedge := by
+  have hSeedFlow :
+      modularTransportFlow (E := E)
+        (canonicalModularSeed (E := E) CIK)
+        (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
+        =
+      InfoGeometry.Dynamics.unruhFlow (E := E) τwedge :=
+    canonicalSeed_flow_at_wedgeParameter_of_flowEqUnruh
+      (E := E) CIK hFlowEqUnruh τwedge
+  have hTomitaSeed :
+      (canonicalTomitaLogData (E := E) CIK).flow
+        (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
+        =
+      modularTransportFlow (E := E)
+        (canonicalModularSeed (E := E) CIK)
+        (RealTomitaCore.modularTimeOfWedgeBoost τwedge) := by
+    symm
+    exact canonicalSeed_flow_eq_canonicalTomitaFlow (E := E) CIK
+      (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
   calc
     (canonicalTomitaLogData (E := E) CIK).flow
       (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
         =
       modularTransportFlow (E := E)
         (canonicalModularSeed (E := E) CIK)
-        (RealTomitaCore.modularTimeOfWedgeBoost τwedge) := by
-          symm
-          exact canonicalSeed_flow_eq_canonicalTomitaFlow (E := E) CIK
-            (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
-    _ = InfoGeometry.Dynamics.unruhFlow (E := E) τwedge := by
-          exact canonicalSeed_flow_at_wedgeParameter_of_flowEqUnruh
-            (E := E) CIK hFlowEqUnruh τwedge
+        (RealTomitaCore.modularTimeOfWedgeBoost τwedge) := hTomitaSeed
+    _ = InfoGeometry.Dynamics.unruhFlow (E := E) τwedge := hSeedFlow
 
 /--
 Single-hypothesis canonical-seed compatibility interface for wedge/Unruh flow.
@@ -1211,8 +1277,15 @@ theorem flow_at_wedgeParameter (τwedge : ℝ) :
       (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
       =
     InfoGeometry.Dynamics.unruhFlow (E := E) τwedge := by
-  exact canonicalSeed_flow_at_wedgeParameter_of_flowEqUnruh
-    (E := E) U.CIK U.hFlowEqUnruh τwedge
+  have hFlow :
+      modularTransportFlow (E := E)
+        (canonicalModularSeed (E := E) U.CIK)
+        (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
+        =
+      InfoGeometry.Dynamics.unruhFlow (E := E) τwedge :=
+    canonicalSeed_flow_at_wedgeParameter_of_flowEqUnruh
+      (E := E) U.CIK U.hFlowEqUnruh τwedge
+  exact hFlow
 
 /--
 Tomita-flow wedge bridge on the canonical seed from the same interface.
@@ -1223,8 +1296,14 @@ theorem tomitaFlow_at_wedgeParameter (τwedge : ℝ) :
       (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
       =
     InfoGeometry.Dynamics.unruhFlow (E := E) τwedge := by
-  exact canonicalTomitaFlow_at_wedgeParameter_of_flowEqUnruh
-    (E := E) U.CIK U.hFlowEqUnruh τwedge
+  have hTomita :
+      (canonicalTomitaLogData (E := E) U.CIK).flow
+        (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
+        =
+      InfoGeometry.Dynamics.unruhFlow (E := E) τwedge :=
+    canonicalTomitaFlow_at_wedgeParameter_of_flowEqUnruh
+      (E := E) U.CIK U.hFlowEqUnruh τwedge
+  exact hTomita
 
 /--
 Polynomial modular-time form of the canonical-seed flow under the same single
@@ -1240,20 +1319,31 @@ theorem flow_eq_unruh_modular_polynomial (τmod : ℝ) :
       +
     (Real.sinh (RealTomitaCore.wedgeBoostParameter τmod))
       • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
+  have hUnruhEq :
+      modularTransportFlow (E := E)
+        (canonicalModularSeed (E := E) U.CIK) τmod
+        = WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod :=
+    U.hFlowEqUnruh τmod
+  have hPoly :
+      WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod
+        =
+      (Real.cosh (RealTomitaCore.wedgeBoostParameter τmod))
+        • (ContinuousLinearMap.id ℝ H₂)
+        +
+      (Real.sinh (RealTomitaCore.wedgeBoostParameter τmod))
+        • InfoGeometry.Dynamics.modularHamiltonian (E := E) :=
+    WedgeBoostModularBridge.unruhFlowOfModularTime_eq_modular_polynomial
+      (E := E) τmod
   calc
     modularTransportFlow (E := E)
       (canonicalModularSeed (E := E) U.CIK) τmod
-        = WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod := by
-            simpa using U.hFlowEqUnruh τmod
+        = WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod := hUnruhEq
     _ =
       (Real.cosh (RealTomitaCore.wedgeBoostParameter τmod))
         • (ContinuousLinearMap.id ℝ H₂)
         +
       (Real.sinh (RealTomitaCore.wedgeBoostParameter τmod))
-        • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
-          simpa using
-            WedgeBoostModularBridge.unruhFlowOfModularTime_eq_modular_polynomial
-              (E := E) τmod
+        • InfoGeometry.Dynamics.modularHamiltonian (E := E) := hPoly
 
 /--
 Lower-owner extraction of the calibration identity from the canonical-seed
@@ -1264,9 +1354,13 @@ theorem superHamiltonian_eq_two_pi_modularHamiltonian :
     DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.CIK
       =
     (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
-  exact
+  have hTwoPi :
+      DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.CIK
+        =
+      (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E) :=
     superHamiltonian_eq_two_pi_modularHamiltonian_of_canonicalSeedFlowEqUnruhTarget
       (E := E) U.CIK U.hFlowEqUnruh
+  exact hTwoPi
 
 /--
 Canonical-seed/Unruh compatibility induces the packaged wedge-calibration
@@ -1290,7 +1384,9 @@ The packaged wedge calibration implies the canonical-seed/Unruh flow witness.
 @[rep_depth transport]
 theorem hFlowEqUnruh :
     canonicalSeedFlowEqUnruhTarget (E := E) C.CIK := by
-  exact canonicalSeedFlowEqUnruhTarget_of_wedgeCalibration (E := E) C
+  have hFlow : canonicalSeedFlowEqUnruhTarget (E := E) C.CIK :=
+    canonicalSeedFlowEqUnruhTarget_of_wedgeCalibration (E := E) C
+  exact hFlow
 
 /--
 Packaged wedge calibration converted to canonical-seed/Unruh compatibility.
@@ -1318,9 +1414,17 @@ theorem superHamiltonian_fixed_under_modularAdjointFlow_canonicalSeed
       =
     DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK := by
   let M : ModularSuperchargeCompatibility (E := E) := { CIK := CIK }
-  simpa [M, ModularSuperchargeCompatibility.HD] using
-    (ModularSuperchargeCompatibility.hD_fixed_under_modularAdjointFlow
-      (E := E) (M := M) t)
+  have hFixed :
+      DrazinModularSingularityBridge.modularAdjointFlow
+        (E := E)
+        (canonicalModularSeed (E := E) M.CIK)
+        t
+        (ModularSuperchargeCompatibility.HD (E := E) M)
+        =
+      ModularSuperchargeCompatibility.HD (E := E) M :=
+    ModularSuperchargeCompatibility.hD_fixed_under_modularAdjointFlow
+      (E := E) (M := M) t
+  simpa [M, ModularSuperchargeCompatibility.HD] using hFixed
 
 /--
 Wedge-normalized unconditional capstone: `H_D` fixedness at
@@ -1337,9 +1441,17 @@ theorem superHamiltonian_fixed_under_wedgeAdjointFlow_canonicalSeed
       =
     DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK := by
   let M : ModularSuperchargeCompatibility (E := E) := { CIK := CIK }
-  simpa [M, ModularSuperchargeCompatibility.HD] using
-    (ModularSuperchargeCompatibility.hD_fixed_under_wedgeAdjointFlow
-      (E := E) (M := M) τwedge)
+  have hFixed :
+      DrazinModularSingularityBridge.modularAdjointFlow
+        (E := E)
+        (canonicalModularSeed (E := E) M.CIK)
+        (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
+        (ModularSuperchargeCompatibility.HD (E := E) M)
+        =
+      ModularSuperchargeCompatibility.HD (E := E) M :=
+    ModularSuperchargeCompatibility.hD_fixed_under_wedgeAdjointFlow
+      (E := E) (M := M) τwedge
+  simpa [M, ModularSuperchargeCompatibility.HD] using hFixed
 
 /--
 Unconditional modular-lane transport of the internal canonical split.

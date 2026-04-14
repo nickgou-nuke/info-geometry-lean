@@ -5,6 +5,7 @@ import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.WedgeBoostModularBridge
 import InfoGeometry.Canonical.ModularSpectralConjugationBridge
 import InfoGeometry.Canonical.GlobalChiralDecomposition
+import InfoGeometry.Canonical.RelativeModularBlockDiagonalCore
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import InfoGeometry.Meta.Architecture
@@ -697,6 +698,147 @@ theorem canonicalTomitaFlow_commutes_activeProjector_of_wedgeCalibrated
         (owned_epsilon := spectral_epsilon (E := E))
         (owned_PD := CIK.spectralComplementaryProjector)
         C τ
+
+/--
+Bounded operator-level canonical relative modular representative on the modular
+closure lane: the canonical Tomita flow at time `τ`.
+-/
+@[rep_depth transport]
+noncomputable def canonicalRelativeModularOperator
+    (CIK : CertifiedInverseKernel H₂) (τ : ℝ) : EndH :=
+  (canonicalTomitaLogData (E := E) CIK).flow τ
+
+/--
+Wedge-calibrated commutation witness on the active projector lane:
+the canonical bounded relative modular representative commutes with `P_D`.
+-/
+@[rep_depth transport]
+theorem canonicalRelativeModularOperator_commutes_spectralProjector_of_wedgeCalibrated
+    (CIK : CertifiedInverseKernel H₂)
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (C :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+        (E := E)
+        (T := canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := spectral_epsilon (E := E))
+        (owned_P_D := CIK.spectralComplementaryProjector))
+    (τ : ℝ) :
+    Commute
+      (canonicalRelativeModularOperator (E := E) CIK τ)
+      CIK.spectralProjector := by
+  have hActive :
+      (canonicalTomitaLogData (E := E) CIK).flow τ
+          * ((1 : EndH) - CIK.spectralComplementaryProjector)
+        =
+      ((1 : EndH) - CIK.spectralComplementaryProjector)
+          * (canonicalTomitaLogData (E := E) CIK).flow τ :=
+    canonicalTomitaFlow_commutes_activeProjector_of_wedgeCalibrated
+      (E := E) (CIK := CIK) (W := W) C τ
+  have hProj :
+      ((1 : EndH) - CIK.spectralComplementaryProjector) = CIK.spectralProjector := by
+    rw [CertifiedInverseKernel.spectralComplementaryProjector,
+      CertifiedInverseKernel.toInverseKernel', InverseKernel.spectralComplementaryProjector]
+    simp
+  simpa [Commute, canonicalRelativeModularOperator, hProj] using hActive
+
+/--
+Wedge-calibrated mixed-block vanishing for the canonical bounded relative
+modular representative on the certified active/apex split.
+-/
+@[rep_depth transport]
+theorem canonicalRelativeModularOperator_mixed_blocks_zero_of_wedgeCalibrated
+    (CIK : CertifiedInverseKernel H₂)
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (C :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+        (E := E)
+        (T := canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := spectral_epsilon (E := E))
+        (owned_P_D := CIK.spectralComplementaryProjector))
+    (τ : ℝ) :
+    CIK.spectralComplementaryProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralProjector = 0
+      ∧
+    CIK.spectralProjector
+      * canonicalRelativeModularOperator (E := E) CIK τ
+      * CIK.spectralComplementaryProjector = 0 := by
+  have hComm :
+      Commute
+        CIK.spectralProjector
+        (canonicalRelativeModularOperator (E := E) CIK τ) :=
+    (canonicalRelativeModularOperator_commutes_spectralProjector_of_wedgeCalibrated
+      (E := E) (CIK := CIK) (W := W) C τ).symm
+  have hCore :=
+    InfoGeometry.Canonical.RelativeModularBlockDiagonalCore.block_diagonal_of_commute_idempotent
+      (E := E)
+      (P := CIK.spectralProjector)
+      (R := canonicalRelativeModularOperator (E := E) CIK τ)
+      CIK.spectralProjector_idempotent
+      hComm
+  constructor
+  · calc
+      CIK.spectralComplementaryProjector
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * CIK.spectralProjector
+          =
+        ((1 : EndH) - CIK.spectralProjector)
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * CIK.spectralProjector := by
+            rw [CertifiedInverseKernel.spectralComplementaryProjector,
+              CertifiedInverseKernel.toInverseKernel', InverseKernel.spectralComplementaryProjector]
+      _ = 0 := hCore.1
+  · calc
+      CIK.spectralProjector
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * CIK.spectralComplementaryProjector
+          =
+        CIK.spectralProjector
+          * canonicalRelativeModularOperator (E := E) CIK τ
+          * ((1 : EndH) - CIK.spectralProjector) := by
+            rw [CertifiedInverseKernel.spectralComplementaryProjector,
+              CertifiedInverseKernel.toInverseKernel', InverseKernel.spectralComplementaryProjector]
+      _ = 0 := hCore.2
+
+/--
+Wedge-calibrated active/apex split for the canonical bounded relative modular
+representative.
+-/
+@[rep_depth transport, capstone]
+theorem canonicalRelativeModularOperator_activeApex_split_of_wedgeCalibrated
+    (CIK : CertifiedInverseKernel H₂)
+    {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
+    (C :
+      InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+        (E := E)
+        (T := canonicalTomitaLogData (E := E) CIK)
+        (W := W)
+        (owned_epsilon := spectral_epsilon (E := E))
+        (owned_P_D := CIK.spectralComplementaryProjector))
+    (τ : ℝ) :
+    canonicalRelativeModularOperator (E := E) CIK τ
+      =
+    CIK.spectralComplementaryProjector
+        * canonicalRelativeModularOperator (E := E) CIK τ
+        * CIK.spectralComplementaryProjector
+      +
+    CIK.spectralProjector
+        * canonicalRelativeModularOperator (E := E) CIK τ
+        * CIK.spectralProjector := by
+  have hComm :
+      Commute
+        CIK.spectralProjector
+        (canonicalRelativeModularOperator (E := E) CIK τ) :=
+    (canonicalRelativeModularOperator_commutes_spectralProjector_of_wedgeCalibrated
+      (E := E) (CIK := CIK) (W := W) C τ).symm
+  exact
+    InfoGeometry.Canonical.GlobalChiralDecomposition.global_active_apex_decomposition
+      (E := E)
+      (CIK := CIK)
+      (R := canonicalRelativeModularOperator (E := E) CIK τ)
+      hComm
 
 /--
 Canonical internal modular Hamiltonian extracted from the projected even

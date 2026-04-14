@@ -19,7 +19,7 @@
 | H70-004 | TESTABLE | Per-layer scale/shape split is preserved in all-top routed engine. | "decompose latent space into scale and shape" | `InfoGeometry.LLM.TransformerPhysicsEngine.scale_shape_split_preserved_per_layer` |
 | H70-005 | TESTABLE | Defect quarantine survives stack composition under zero-routed branch map. | "quarantine ... defect ... boundary" | `InfoGeometry.LLM.TransformerPhysicsEngine.defect_quarantine_preserved_under_stack` |
 | H70-006 | SPEC | Residual stream acts as Jaynes reference-state measurement frame. | "Residual Stream: The Jaynes Reference State" | pending dedicated module |
-| H70-007 | UNPROVEN | Krein inner product should replace Euclidean dot product as attention energy surface. | "Euclidean illusion vs Krein reality" | pending canonical attention bridge |
+| H70-007 | TESTABLE | Krein/split-signature interaction is available as an explicit attention-energy surface. | "Euclidean illusion vs Krein reality" | `InfoGeometry.LLM.KreinAttentionEnergy.kreinInteractionEnergy_eq_neg_splitB11` |
 | H70-008 | UNPROVEN | Softmax can be treated as thermal/KMS weighting over attention energies. | "Softmax as the Unruh Thermal Bath (KMS State)" | partially proxied by `KMSSoftmaxBridge` |
 | H70-009 | SPEC | iRoPE/nope interleaving behaves as dynamic gauge field queried only on defects. | "position becomes a dynamic gauge field" | pending explicit theorem surface |
 | H70-010 | SPEC | Horizon inversion gate `Q -> -Q` cancels local thermal fluctuation. | "horizon acts as an inversion mirror (Q -> -Q)" | pending |
@@ -28,9 +28,9 @@
 
 ## Immediate Formalization Queue (One-Week Target)
 
-1. Close `H70-007` with a minimal Krein attention energy owner surface.
-2. Tighten `H70-008` by proving a finite KMS-compatible normalization bridge for router/attention logits.
-3. Decide if `H70-010` stays metaphorical (`SPEC`) or graduates to a formal involutive transport interface.
+1. Tighten `H70-008` by proving a finite KMS-compatible normalization bridge for router/attention logits.
+2. Decide if `H70-010` stays metaphorical (`SPEC`) or graduates to a formal involutive transport interface.
+3. Add a compact Krein-vs-Euclidean comparison theorem surface (same context window, two energies).
 
 ## Policy for This Chapter
 

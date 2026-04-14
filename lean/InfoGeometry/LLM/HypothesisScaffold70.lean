@@ -1,5 +1,6 @@
 import InfoGeometry.LLM.TransformerPhysicsEngine
 import InfoGeometry.LLM.RouterFreeEnergyBridge
+import InfoGeometry.LLM.KreinAttentionEnergy
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
@@ -8,6 +9,7 @@ namespace InfoGeometry.LLM.HypothesisScaffold70
 
 open InfoGeometry.Canonical.MoE
 open InfoGeometry.LLM.AllTopThermodynamicTransformer
+open InfoGeometry.LLM.KreinAttentionEnergy
 open InfoGeometry.LLM.RouterFreeEnergyBridge
 open InfoGeometry.LLM.TransformerPhysicsEngine
 
@@ -30,9 +32,20 @@ def registry : List H70Claim :=
     { id := "H70-003", label := "Router free-energy/Massieu bridge", status := H70Status.testable }
   , { id := "H70-004", label := "Per-layer scale/shape split", status := H70Status.testable }
   , { id := "H70-005", label := "Stack-level defect quarantine", status := H70Status.testable }
-  , { id := "H70-007", label := "Krein attention inner product surface", status := H70Status.unproven }
+  , { id := "H70-007", label := "Krein attention inner product surface", status := H70Status.testable }
   , { id := "H70-010", label := "Horizon inversion gate", status := H70Status.spec }
   ]
+
+section KreinInterface
+
+/-- Testable hook for H70-007 (split-signature/Krein attention energy surface). -/
+@[rep_depth krein]
+theorem h70_krein_energy_surface
+    (q k : ℝ × ℝ) :
+    kreinInteractionEnergy q k = -(q.1 * k.1 - q.2 * k.2) := by
+  exact kreinInteractionEnergy_eq_neg_splitB11 q k
+
+end KreinInterface
 
 section ThermoInterface
 

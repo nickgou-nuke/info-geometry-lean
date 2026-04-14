@@ -1,28 +1,28 @@
 {
   "schemaVersion": 1,
-  "artifactTimestamp": "2026-04-12T23:01:09.686630+00:00",
-  "oleanHash": "5805b95474e730f72f6fda39855fc8c1089bbcb0fe1edae6e6687628fabf3e19",
+  "artifactTimestamp": "2026-04-14T04:41:49.943517+00:00",
+  "oleanHash": "5418aba7bbb6b71271c2474e01ab0518401d32a4cfc860cab9b045eb38da590f",
   "artifactSchemaVersion": 3,
-  "recordedAt": "2026-04-12T23:01:09.686969+00:00",
+  "recordedAt": "2026-04-14T04:41:49.943991+00:00",
   "sourceLog": "indexer-timing.log",
-  "importModules_ms": 3034,
-  "stageCount": 10,
+  "importModules_ms": 6447,
+  "stageCount": 20,
   "stages": [
     {
-      "label": "collect/process constants (15796 decls, 967315 raw edges, 949 morphisms)",
-      "elapsed_ms": 33394
+      "label": "collect/process constants (16807 decls, 1048650 raw edges, 974 morphisms)",
+      "elapsed_ms": 66308
     },
     {
-      "label": "classify/filter edges (130375 kept / 967315 raw)",
-      "elapsed_ms": 3610
+      "label": "classify/filter edges (140882 kept / 1048650 raw)",
+      "elapsed_ms": 8175
     },
     {
       "label": "write index jsonl artifacts",
-      "elapsed_ms": 339
+      "elapsed_ms": 1508
     },
     {
       "label": "build typed adjacency",
-      "elapsed_ms": 58
+      "elapsed_ms": 106
     },
     {
       "label": "sort typed adjacency",
@@ -30,7 +30,7 @@
     },
     {
       "label": "write full_graph.json",
-      "elapsed_ms": 360
+      "elapsed_ms": 559
     },
     {
       "label": "hydrate graph (SCC + DAG + dominators)",
@@ -42,12 +42,52 @@
     },
     {
       "label": "write structural-topology.json",
-      "elapsed_ms": 3247
+      "elapsed_ms": 5520
     },
     {
       "label": "write meta.json",
+      "elapsed_ms": 4
+    },
+    {
+      "label": "collect/process constants (16807 decls, 1048650 raw edges, 974 morphisms)",
+      "elapsed_ms": 72969
+    },
+    {
+      "label": "classify/filter edges (140882 kept / 1048650 raw)",
+      "elapsed_ms": 4315
+    },
+    {
+      "label": "write index jsonl artifacts",
+      "elapsed_ms": 492
+    },
+    {
+      "label": "build typed adjacency",
+      "elapsed_ms": 77
+    },
+    {
+      "label": "sort typed adjacency",
       "elapsed_ms": 0
+    },
+    {
+      "label": "write full_graph.json",
+      "elapsed_ms": 512
+    },
+    {
+      "label": "hydrate graph (SCC + DAG + dominators)",
+      "elapsed_ms": 0
+    },
+    {
+      "label": "build structural payload",
+      "elapsed_ms": 0
+    },
+    {
+      "label": "write structural-topology.json",
+      "elapsed_ms": 4305
+    },
+    {
+      "label": "write meta.json",
+      "elapsed_ms": 1
     }
   ],
-  "total_ms": 41008
+  "total_ms": 82671
 }

@@ -60574,7 +60574,7 @@
     "reverse_proof_only_reuse": 27,
     "is_sink": false,
     "depth": 12,
-    "transitive_reverse_reach": 139,
+    "transitive_reverse_reach": 144,
     "descendant_mass": 1,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -60891,7 +60891,7 @@
     "reverse_proof_only_reuse": 29,
     "is_sink": false,
     "depth": 11,
-    "transitive_reverse_reach": 138,
+    "transitive_reverse_reach": 143,
     "descendant_mass": 7,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -66597,15 +66597,15 @@
     "file": "lean/InfoGeometry/Canonical/InverseKernelAlgebra.lean",
     "module": "InfoGeometry.Canonical.InverseKernelAlgebra",
     "attrs": [],
-    "reverse_type": 48,
-    "reverse_value": 69,
+    "reverse_type": 50,
+    "reverse_value": 71,
     "forward_type": 1,
     "forward_value": 3,
-    "reverse_public_fan_in": 48,
-    "reverse_proof_only_reuse": 28,
+    "reverse_public_fan_in": 50,
+    "reverse_proof_only_reuse": 29,
     "is_sink": false,
     "depth": 10,
-    "transitive_reverse_reach": 162,
+    "transitive_reverse_reach": 166,
     "descendant_mass": 9,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -66625,7 +66625,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 28"
+          "rationale": "reverse_proof_only_reuse = 29"
         },
         {
           "signal": "structure.deep-embedding",
@@ -66795,14 +66795,14 @@
     "module": "InfoGeometry.Canonical.InverseKernelAlgebra",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 6,
+    "reverse_value": 7,
     "forward_type": 2,
     "forward_value": 4,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 6,
+    "reverse_proof_only_reuse": 7,
     "is_sink": false,
     "depth": 8,
-    "transitive_reverse_reach": 39,
+    "transitive_reverse_reach": 40,
     "descendant_mass": 17,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -66821,7 +66821,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 6"
+          "rationale": "reverse_proof_only_reuse = 7"
         },
         {
           "signal": "structure.low-public-fan-in",
@@ -66938,7 +66938,7 @@
     "reverse_proof_only_reuse": 3,
     "is_sink": false,
     "depth": 8,
-    "transitive_reverse_reach": 33,
+    "transitive_reverse_reach": 32,
     "descendant_mass": 17,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -67323,15 +67323,15 @@
     "file": "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean",
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
-    "reverse_type": 59,
-    "reverse_value": 84,
+    "reverse_type": 60,
+    "reverse_value": 85,
     "forward_type": 1,
     "forward_value": 3,
-    "reverse_public_fan_in": 59,
-    "reverse_proof_only_reuse": 35,
+    "reverse_public_fan_in": 60,
+    "reverse_proof_only_reuse": 36,
     "is_sink": false,
     "depth": 16,
-    "transitive_reverse_reach": 403,
+    "transitive_reverse_reach": 408,
     "descendant_mass": 8,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -67351,7 +67351,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 35"
+          "rationale": "reverse_proof_only_reuse = 36"
         },
         {
           "signal": "structure.deep-embedding",
@@ -67393,8 +67393,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
-    "depth": 3,
-    "transitive_reverse_reach": 10,
+    "depth": 4,
+    "transitive_reverse_reach": 11,
     "descendant_mass": 12,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -67406,8 +67406,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.32,
-      "confidence": 0.7597,
+      "score": 0.24,
+      "confidence": 0.7478,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -67420,6 +67420,12 @@
           "contribution": 0.11,
           "reliability": 0.75,
           "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
+          "signal": "structure.deep-embedding",
+          "contribution": -0.08,
+          "reliability": 0.7,
+          "rationale": "depth = 4"
         },
         {
           "signal": "context.strict-file",
@@ -68191,14 +68197,14 @@
     "module": "InfoGeometry.Canonical.CertifiedInverseKernel",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 12,
+    "reverse_value": 14,
     "forward_type": 2,
     "forward_value": 8,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 12,
+    "reverse_proof_only_reuse": 14,
     "is_sink": false,
     "depth": 10,
-    "transitive_reverse_reach": 97,
+    "transitive_reverse_reach": 102,
     "descendant_mass": 14,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -68218,7 +68224,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 12"
+          "rationale": "reverse_proof_only_reuse = 14"
         },
         {
           "signal": "structure.low-public-fan-in",
@@ -68465,7 +68471,7 @@
     "reverse_proof_only_reuse": 3,
     "is_sink": false,
     "depth": 8,
-    "transitive_reverse_reach": 33,
+    "transitive_reverse_reach": 32,
     "descendant_mass": 17,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -68997,7 +69003,7 @@
     "reverse_proof_only_reuse": 29,
     "is_sink": false,
     "depth": 18,
-    "transitive_reverse_reach": 851,
+    "transitive_reverse_reach": 857,
     "descendant_mass": 2,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -69066,7 +69072,7 @@
     "reverse_proof_only_reuse": 46,
     "is_sink": false,
     "depth": 17,
-    "transitive_reverse_reach": 814,
+    "transitive_reverse_reach": 820,
     "descendant_mass": 3,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -102061,8 +102067,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 6,
     "is_sink": false,
-    "depth": 3,
-    "transitive_reverse_reach": 10,
+    "depth": 4,
+    "transitive_reverse_reach": 11,
     "descendant_mass": 17,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -102073,8 +102079,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.37,
-      "confidence": 0.78,
+      "score": 0.29,
+      "confidence": 0.7658,
       "factors": [
         {
           "signal": "structure.proof-only-reuse",
@@ -102087,6 +102093,12 @@
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.deep-embedding",
+          "contribution": -0.08,
+          "reliability": 0.7,
+          "rationale": "depth = 4"
         },
         {
           "signal": "context.strict-file",
@@ -102324,6 +102336,142 @@
     }
   },
   {
+    "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.relativeModularActiveShapePart.eq_1",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+    "module": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 7,
+    "forward_value": 6,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 14,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 6,
+    "n_forward_theorem": 1,
+    "tags": [
+      "auto-generated",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.8999,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.relativeModularKernelScalePart.eq_1",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+    "module": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 7,
+    "forward_value": 6,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 15,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 6,
+    "n_forward_theorem": 1,
+    "tags": [
+      "auto-generated",
+      "dead-candidate"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.8999,
+      "factors": [
+        {
+          "signal": "policy.auto-generated-exempt",
+          "contribution": -0.95,
+          "reliability": 0.95,
+          "rationale": "generated theorem exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
     "name": "InfoGeometry.Canonical.DPDWedgeCompatibility.IsCompatibleDPDWedge.relativeModular_offDiagonal_blocks_zero_of_commutes_spectralProjector",
     "kind": "theorem",
     "file": "lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean",
@@ -102336,8 +102484,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 2,
-    "transitive_reverse_reach": 2,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
     "descendant_mass": 23,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -102348,14 +102496,20 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.26,
-      "confidence": 0.7485,
+      "score": 0.34,
+      "confidence": 0.7276,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
         },
         {
           "signal": "structure.proof-only-reuse",
@@ -102399,8 +102553,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 3,
     "is_sink": false,
-    "depth": 2,
-    "transitive_reverse_reach": 5,
+    "depth": 3,
+    "transitive_reverse_reach": 6,
     "descendant_mass": 20,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -102464,14 +102618,14 @@
       "capstone"
     ],
     "reverse_type": 0,
-    "reverse_value": 1,
+    "reverse_value": 0,
     "forward_type": 8,
     "forward_value": 11,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 1,
+    "reverse_proof_only_reuse": 0,
     "is_sink": false,
-    "depth": 1,
-    "transitive_reverse_reach": 1,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
     "descendant_mass": 30,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -102479,13 +102633,13 @@
     "n_forward_theorem": 3,
     "tags": [
       "attr:capstone",
-      "proof-infrastructure",
+      "dead-candidate",
       "role-exempt"
     ],
     "violations": [],
     "vacuity_suspicion": {
       "score": 0.0,
-      "confidence": 0.889,
+      "confidence": 0.8978,
       "factors": [
         {
           "signal": "policy.role-exempt",
@@ -102503,13 +102657,7 @@
           "signal": "structure.shallow-depth",
           "contribution": 0.08,
           "reliability": 0.66,
-          "rationale": "depth = 1"
-        },
-        {
-          "signal": "structure.proof-only-reuse",
-          "contribution": 0.05,
-          "reliability": 0.68,
-          "rationale": "reverse_proof_only_reuse = 1"
+          "rationale": "depth = 0"
         },
         {
           "signal": "context.strict-file",
@@ -109683,7 +109831,7 @@
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
     "depth": 12,
-    "transitive_reverse_reach": 168,
+    "transitive_reverse_reach": 173,
     "descendant_mass": 1,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -110667,7 +110815,7 @@
     "reverse_proof_only_reuse": 14,
     "is_sink": false,
     "depth": 11,
-    "transitive_reverse_reach": 166,
+    "transitive_reverse_reach": 171,
     "descendant_mass": 3,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -175131,8 +175279,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 4,
-    "transitive_reverse_reach": 11,
+    "depth": 5,
+    "transitive_reverse_reach": 12,
     "descendant_mass": 6,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -175156,7 +175304,7 @@
           "signal": "structure.deep-embedding",
           "contribution": -0.08,
           "reliability": 0.7,
-          "rationale": "depth = 4"
+          "rationale": "depth = 5"
         },
         {
           "signal": "structure.proof-only-reuse",
@@ -211449,8 +211597,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
-    "depth": 3,
-    "transitive_reverse_reach": 5,
+    "depth": 4,
+    "transitive_reverse_reach": 6,
     "descendant_mass": 22,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -211461,8 +211609,8 @@
     ],
     "violations": [],
     "vacuity_suspicion": {
-      "score": 0.4,
-      "confidence": 0.7518,
+      "score": 0.32,
+      "confidence": 0.7431,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -211475,6 +211623,12 @@
           "contribution": 0.11,
           "reliability": 0.75,
           "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
+          "signal": "structure.deep-embedding",
+          "contribution": -0.08,
+          "reliability": 0.7,
+          "rationale": "depth = 4"
         },
         {
           "signal": "context.bridge-file",
@@ -212036,8 +212190,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
-    "depth": 2,
-    "transitive_reverse_reach": 3,
+    "depth": 3,
+    "transitive_reverse_reach": 4,
     "descendant_mass": 48,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -212190,8 +212344,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 1,
-    "transitive_reverse_reach": 1,
+    "depth": 2,
+    "transitive_reverse_reach": 2,
     "descendant_mass": 56,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -212205,7 +212359,7 @@
     "violations": [],
     "vacuity_suspicion": {
       "score": 0.0,
-      "confidence": 0.8788,
+      "confidence": 0.8929,
       "factors": [
         {
           "signal": "policy.role-exempt",
@@ -212218,12 +212372,6 @@
           "contribution": 0.14,
           "reliability": 0.82,
           "rationale": "reverse_public_fan_in = 0"
-        },
-        {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 1"
         },
         {
           "signal": "context.bridge-file",
@@ -215744,7 +215892,7 @@
     "reverse_proof_only_reuse": 4,
     "is_sink": false,
     "depth": 6,
-    "transitive_reverse_reach": 17,
+    "transitive_reverse_reach": 18,
     "descendant_mass": 6,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -290815,109 +290963,32 @@
     }
   },
   {
-    "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.instCompleteSpaceContinuousLinearMapRealIdDoubledSpace",
+    "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.block_diagonal_of_commute_idempotent",
     "kind": "theorem",
     "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
     "module": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 0,
-    "forward_type": 2,
-    "forward_value": 3,
-    "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
-    "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
-    "descendant_mass": 3,
-    "scc_size": 1,
-    "scc_role": "acyclic",
-    "n_forward_value": 3,
-    "n_forward_theorem": 1,
-    "tags": [
-      "dead-candidate"
-    ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
-    "vacuity_suspicion": {
-      "score": 0.35,
-      "confidence": 0.7297,
-      "factors": [
-        {
-          "signal": "structure.low-public-fan-in",
-          "contribution": 0.14,
-          "reliability": 0.82,
-          "rationale": "reverse_public_fan_in = 0"
-        },
-        {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 0"
-        },
-        {
-          "signal": "structure.low-descendant-mass",
-          "contribution": 0.06,
-          "reliability": 0.7,
-          "rationale": "descendant_mass = 3"
-        },
-        {
-          "signal": "context.strict-file",
-          "contribution": 0.04,
-          "reliability": 0.68,
-          "rationale": "strict path policy applies"
-        },
-        {
-          "signal": "structure.acyclic",
-          "contribution": 0.03,
-          "reliability": 0.62,
-          "rationale": "acyclic declaration"
-        }
-      ]
-    },
-    "bridge_evidence": {
-      "semanticExprCount": 0,
-      "fingerprintMatchCount": 0,
-      "confidence": 0.0,
-      "provenanceCounts": {}
-    }
-  },
-  {
-    "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.instIsScalarTowerRealContinuousLinearMapIdDoubledSpace",
-    "kind": "theorem",
-    "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
-    "module": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit",
-    "attrs": [],
-    "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 1,
     "forward_type": 2,
     "forward_value": 2,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
+    "depth": 3,
+    "transitive_reverse_reach": 4,
     "descendant_mass": 2,
     "scc_size": 1,
     "scc_role": "acyclic",
     "n_forward_value": 2,
     "n_forward_theorem": 0,
     "tags": [
-      "dead-candidate"
+      "proof-infrastructure"
     ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
+    "violations": [],
     "vacuity_suspicion": {
-      "score": 0.41,
-      "confidence": 0.74,
+      "score": 0.38,
+      "confidence": 0.7489,
       "factors": [
         {
           "signal": "structure.low-public-fan-in",
@@ -290932,154 +291003,10 @@
           "rationale": "descendant_mass = 2"
         },
         {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 0"
-        },
-        {
-          "signal": "context.strict-file",
-          "contribution": 0.04,
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
           "reliability": 0.68,
-          "rationale": "strict path policy applies"
-        },
-        {
-          "signal": "structure.acyclic",
-          "contribution": 0.03,
-          "reliability": 0.62,
-          "rationale": "acyclic declaration"
-        }
-      ]
-    },
-    "bridge_evidence": {
-      "semanticExprCount": 0,
-      "fingerprintMatchCount": 0,
-      "confidence": 0.0,
-      "provenanceCounts": {}
-    }
-  },
-  {
-    "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.instIsTopologicalRingContinuousLinearMapRealIdDoubledSpace",
-    "kind": "theorem",
-    "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
-    "module": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit",
-    "attrs": [],
-    "reverse_type": 0,
-    "reverse_value": 0,
-    "forward_type": 2,
-    "forward_value": 3,
-    "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
-    "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
-    "descendant_mass": 3,
-    "scc_size": 1,
-    "scc_role": "acyclic",
-    "n_forward_value": 3,
-    "n_forward_theorem": 0,
-    "tags": [
-      "dead-candidate"
-    ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
-    "vacuity_suspicion": {
-      "score": 0.35,
-      "confidence": 0.7297,
-      "factors": [
-        {
-          "signal": "structure.low-public-fan-in",
-          "contribution": 0.14,
-          "reliability": 0.82,
-          "rationale": "reverse_public_fan_in = 0"
-        },
-        {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 0"
-        },
-        {
-          "signal": "structure.low-descendant-mass",
-          "contribution": 0.06,
-          "reliability": 0.7,
-          "rationale": "descendant_mass = 3"
-        },
-        {
-          "signal": "context.strict-file",
-          "contribution": 0.04,
-          "reliability": 0.68,
-          "rationale": "strict path policy applies"
-        },
-        {
-          "signal": "structure.acyclic",
-          "contribution": 0.03,
-          "reliability": 0.62,
-          "rationale": "acyclic declaration"
-        }
-      ]
-    },
-    "bridge_evidence": {
-      "semanticExprCount": 0,
-      "fingerprintMatchCount": 0,
-      "confidence": 0.0,
-      "provenanceCounts": {}
-    }
-  },
-  {
-    "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.instSMulCommClassRealContinuousLinearMapIdDoubledSpace",
-    "kind": "theorem",
-    "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
-    "module": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit",
-    "attrs": [],
-    "reverse_type": 0,
-    "reverse_value": 0,
-    "forward_type": 2,
-    "forward_value": 2,
-    "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
-    "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
-    "descendant_mass": 2,
-    "scc_size": 1,
-    "scc_role": "acyclic",
-    "n_forward_value": 2,
-    "n_forward_theorem": 0,
-    "tags": [
-      "dead-candidate"
-    ],
-    "violations": [
-      {
-        "level": "error",
-        "code": "V2/dead-public-theorem"
-      }
-    ],
-    "vacuity_suspicion": {
-      "score": 0.41,
-      "confidence": 0.74,
-      "factors": [
-        {
-          "signal": "structure.low-public-fan-in",
-          "contribution": 0.14,
-          "reliability": 0.82,
-          "rationale": "reverse_public_fan_in = 0"
-        },
-        {
-          "signal": "structure.low-descendant-mass",
-          "contribution": 0.12,
-          "reliability": 0.75,
-          "rationale": "descendant_mass = 2"
-        },
-        {
-          "signal": "structure.shallow-depth",
-          "contribution": 0.08,
-          "reliability": 0.66,
-          "rationale": "depth = 0"
+          "rationale": "reverse_proof_only_reuse = 1"
         },
         {
           "signal": "context.strict-file",
@@ -291109,19 +291036,147 @@
     "module": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit",
     "attrs": [],
     "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 1,
+    "forward_type": 7,
+    "forward_value": 9,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 1,
+    "is_sink": false,
+    "depth": 2,
+    "transitive_reverse_reach": 3,
+    "descendant_mass": 24,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 9,
+    "n_forward_theorem": 3,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.26,
+      "confidence": 0.7485,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_crossTerms_zero_of_commutes_activeProjector",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+    "module": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 2,
     "forward_type": 7,
     "forward_value": 7,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 2,
+    "is_sink": false,
+    "depth": 1,
+    "transitive_reverse_reach": 2,
+    "descendant_mass": 25,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 7,
+    "n_forward_theorem": 2,
+    "tags": [
+      "proof-infrastructure"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.4,
+      "confidence": 0.7398,
+      "factors": [
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.11,
+          "reliability": 0.75,
+          "rationale": "reverse_proof_only_reuse = 2"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_scalePart_supported_on_kernel",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+    "module": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 7,
+    "forward_value": 10,
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 0,
     "is_sink": false,
     "depth": 0,
     "transitive_reverse_reach": 0,
-    "descendant_mass": 17,
+    "descendant_mass": 25,
     "scc_size": 1,
     "scc_role": "acyclic",
-    "n_forward_value": 7,
-    "n_forward_theorem": 1,
+    "n_forward_value": 10,
+    "n_forward_theorem": 2,
     "tags": [
       "dead-candidate"
     ],
@@ -291177,14 +291232,14 @@
       "capstone"
     ],
     "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 1,
     "forward_type": 9,
     "forward_value": 8,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
     "descendant_mass": 25,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -291192,13 +291247,13 @@
     "n_forward_theorem": 2,
     "tags": [
       "attr:capstone",
-      "dead-candidate",
+      "proof-infrastructure",
       "role-exempt"
     ],
     "violations": [],
     "vacuity_suspicion": {
       "score": 0.0,
-      "confidence": 0.8978,
+      "confidence": 0.889,
       "factors": [
         {
           "signal": "policy.role-exempt",
@@ -291216,7 +291271,13 @@
           "signal": "structure.shallow-depth",
           "contribution": 0.08,
           "reliability": 0.66,
-          "rationale": "depth = 0"
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
         },
         {
           "signal": "context.strict-file",
@@ -291248,19 +291309,96 @@
       "capstone"
     ],
     "reverse_type": 0,
-    "reverse_value": 0,
+    "reverse_value": 1,
     "forward_type": 18,
     "forward_value": 11,
     "reverse_public_fan_in": 0,
-    "reverse_proof_only_reuse": 0,
+    "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 0,
-    "transitive_reverse_reach": 0,
+    "depth": 1,
+    "transitive_reverse_reach": 1,
     "descendant_mass": 61,
     "scc_size": 1,
     "scc_role": "acyclic",
     "n_forward_value": 11,
     "n_forward_theorem": 2,
+    "tags": [
+      "attr:capstone",
+      "proof-infrastructure",
+      "role-exempt"
+    ],
+    "violations": [],
+    "vacuity_suspicion": {
+      "score": 0.0,
+      "confidence": 0.889,
+      "factors": [
+        {
+          "signal": "policy.role-exempt",
+          "contribution": -0.9,
+          "reliability": 0.95,
+          "rationale": "attribute-based exemption"
+        },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 1"
+        },
+        {
+          "signal": "structure.proof-only-reuse",
+          "contribution": 0.05,
+          "reliability": 0.68,
+          "rationale": "reverse_proof_only_reuse = 1"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_scaleShapeSplit_eq_projectiveGaugeSplit_of_commutes_activeProjector",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+    "module": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit",
+    "attrs": [
+      "capstone"
+    ],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 17,
+    "forward_value": 20,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 71,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 20,
+    "n_forward_theorem": 3,
     "tags": [
       "attr:capstone",
       "dead-candidate",
@@ -291321,17 +291459,17 @@
     "reverse_type": 0,
     "reverse_value": 0,
     "forward_type": 8,
-    "forward_value": 7,
+    "forward_value": 11,
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 0,
     "is_sink": false,
     "depth": 0,
     "transitive_reverse_reach": 0,
-    "descendant_mass": 34,
+    "descendant_mass": 35,
     "scc_size": 1,
     "scc_role": "acyclic",
-    "n_forward_value": 7,
-    "n_forward_theorem": 2,
+    "n_forward_value": 11,
+    "n_forward_theorem": 3,
     "tags": [
       "attr:capstone",
       "dead-candidate",
@@ -291348,6 +291486,72 @@
           "reliability": 0.95,
           "rationale": "attribute-based exemption"
         },
+        {
+          "signal": "structure.low-public-fan-in",
+          "contribution": 0.14,
+          "reliability": 0.82,
+          "rationale": "reverse_public_fan_in = 0"
+        },
+        {
+          "signal": "structure.shallow-depth",
+          "contribution": 0.08,
+          "reliability": 0.66,
+          "rationale": "depth = 0"
+        },
+        {
+          "signal": "context.strict-file",
+          "contribution": 0.04,
+          "reliability": 0.68,
+          "rationale": "strict path policy applies"
+        },
+        {
+          "signal": "structure.acyclic",
+          "contribution": 0.03,
+          "reliability": 0.62,
+          "rationale": "acyclic declaration"
+        }
+      ]
+    },
+    "bridge_evidence": {
+      "semanticExprCount": 0,
+      "fingerprintMatchCount": 0,
+      "confidence": 0.0,
+      "provenanceCounts": {}
+    }
+  },
+  {
+    "name": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit.relativeModular_shapePart_supported_on_active",
+    "kind": "theorem",
+    "file": "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+    "module": "InfoGeometry.Canonical.RelativeModularScaleShapeSplit",
+    "attrs": [],
+    "reverse_type": 0,
+    "reverse_value": 0,
+    "forward_type": 7,
+    "forward_value": 10,
+    "reverse_public_fan_in": 0,
+    "reverse_proof_only_reuse": 0,
+    "is_sink": false,
+    "depth": 0,
+    "transitive_reverse_reach": 0,
+    "descendant_mass": 22,
+    "scc_size": 1,
+    "scc_role": "acyclic",
+    "n_forward_value": 10,
+    "n_forward_theorem": 2,
+    "tags": [
+      "dead-candidate"
+    ],
+    "violations": [
+      {
+        "level": "error",
+        "code": "V2/dead-public-theorem"
+      }
+    ],
+    "vacuity_suspicion": {
+      "score": 0.29,
+      "confidence": 0.7359,
+      "factors": [
         {
           "signal": "structure.low-public-fan-in",
           "contribution": 0.14,
@@ -497149,15 +497353,15 @@
     "file": "lean/InfoGeometry/Krein/KreinSpace.lean",
     "module": "InfoGeometry.Krein.KreinSpace",
     "attrs": [],
-    "reverse_type": 651,
-    "reverse_value": 747,
+    "reverse_type": 657,
+    "reverse_value": 752,
     "forward_type": 0,
     "forward_value": 0,
-    "reverse_public_fan_in": 651,
-    "reverse_proof_only_reuse": 165,
+    "reverse_public_fan_in": 657,
+    "reverse_proof_only_reuse": 164,
     "is_sink": true,
     "depth": 25,
-    "transitive_reverse_reach": 1679,
+    "transitive_reverse_reach": 1684,
     "descendant_mass": 0,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -497194,7 +497398,7 @@
           "signal": "structure.proof-only-reuse",
           "contribution": 0.16,
           "reliability": 0.8,
-          "rationale": "reverse_proof_only_reuse = 165"
+          "rationale": "reverse_proof_only_reuse = 164"
         },
         {
           "signal": "structure.deep-embedding",
@@ -524415,7 +524619,7 @@
     "reverse_proof_only_reuse": 7,
     "is_sink": false,
     "depth": 9,
-    "transitive_reverse_reach": 63,
+    "transitive_reverse_reach": 64,
     "descendant_mass": 5,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -524481,8 +524685,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 4,
     "is_sink": false,
-    "depth": 6,
-    "transitive_reverse_reach": 22,
+    "depth": 7,
+    "transitive_reverse_reach": 23,
     "descendant_mass": 10,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -524512,7 +524716,7 @@
           "signal": "structure.deep-embedding",
           "contribution": -0.08,
           "reliability": 0.7,
-          "rationale": "depth = 6"
+          "rationale": "depth = 7"
         },
         {
           "signal": "structure.acyclic",
@@ -524543,7 +524747,7 @@
     "reverse_proof_only_reuse": 6,
     "is_sink": false,
     "depth": 13,
-    "transitive_reverse_reach": 90,
+    "transitive_reverse_reach": 91,
     "descendant_mass": 4,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -525045,8 +525249,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 12,
     "is_sink": false,
-    "depth": 7,
-    "transitive_reverse_reach": 22,
+    "depth": 8,
+    "transitive_reverse_reach": 23,
     "descendant_mass": 6,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -525077,7 +525281,7 @@
           "signal": "structure.deep-embedding",
           "contribution": -0.08,
           "reliability": 0.7,
-          "rationale": "depth = 7"
+          "rationale": "depth = 8"
         },
         {
           "signal": "structure.acyclic",
@@ -525107,8 +525311,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
-    "depth": 6,
-    "transitive_reverse_reach": 18,
+    "depth": 7,
+    "transitive_reverse_reach": 19,
     "descendant_mass": 7,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -525138,7 +525342,7 @@
           "signal": "structure.deep-embedding",
           "contribution": -0.08,
           "reliability": 0.7,
-          "rationale": "depth = 6"
+          "rationale": "depth = 7"
         },
         {
           "signal": "structure.acyclic",
@@ -525393,8 +525597,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 2,
     "is_sink": false,
-    "depth": 5,
-    "transitive_reverse_reach": 8,
+    "depth": 6,
+    "transitive_reverse_reach": 9,
     "descendant_mass": 20,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -525424,7 +525628,7 @@
           "signal": "structure.deep-embedding",
           "contribution": -0.08,
           "reliability": 0.7,
-          "rationale": "depth = 5"
+          "rationale": "depth = 6"
         },
         {
           "signal": "structure.acyclic",
@@ -526095,8 +526299,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 6,
-    "transitive_reverse_reach": 9,
+    "depth": 7,
+    "transitive_reverse_reach": 10,
     "descendant_mass": 8,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -526120,7 +526324,7 @@
           "signal": "structure.deep-embedding",
           "contribution": -0.08,
           "reliability": 0.7,
-          "rationale": "depth = 6"
+          "rationale": "depth = 7"
         },
         {
           "signal": "structure.proof-only-reuse",
@@ -526492,7 +526696,7 @@
     "reverse_proof_only_reuse": 4,
     "is_sink": false,
     "depth": 9,
-    "transitive_reverse_reach": 50,
+    "transitive_reverse_reach": 51,
     "descendant_mass": 9,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -526614,7 +526818,7 @@
     "reverse_proof_only_reuse": 24,
     "is_sink": false,
     "depth": 26,
-    "transitive_reverse_reach": 474,
+    "transitive_reverse_reach": 475,
     "descendant_mass": 2,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -526889,8 +527093,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 8,
     "is_sink": false,
-    "depth": 7,
-    "transitive_reverse_reach": 20,
+    "depth": 8,
+    "transitive_reverse_reach": 21,
     "descendant_mass": 4,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -526920,7 +527124,7 @@
           "signal": "structure.deep-embedding",
           "contribution": -0.08,
           "reliability": 0.7,
-          "rationale": "depth = 7"
+          "rationale": "depth = 8"
         },
         {
           "signal": "structure.low-descendant-mass",
@@ -527025,7 +527229,7 @@
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
     "depth": 12,
-    "transitive_reverse_reach": 79,
+    "transitive_reverse_reach": 80,
     "descendant_mass": 6,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -605386,8 +605590,8 @@
     "reverse_public_fan_in": 0,
     "reverse_proof_only_reuse": 1,
     "is_sink": false,
-    "depth": 4,
-    "transitive_reverse_reach": 6,
+    "depth": 5,
+    "transitive_reverse_reach": 7,
     "descendant_mass": 21,
     "scc_size": 1,
     "scc_role": "acyclic",
@@ -605411,7 +605615,7 @@
           "signal": "structure.deep-embedding",
           "contribution": -0.08,
           "reliability": 0.7,
-          "rationale": "depth = 4"
+          "rationale": "depth = 5"
         },
         {
           "signal": "structure.proof-only-reuse",

@@ -100,6 +100,14 @@ def parse_args() -> argparse.Namespace:
         help="Skip the locked prebuild step and run the indexer directly.",
     )
     parser.add_argument(
+        "--allow-prebuild-failure",
+        action="store_true",
+        help=(
+            "Allow indexing to continue when locked prebuild fails. "
+            "Default behavior is fail-fast to prevent stale/partial DAG contamination."
+        ),
+    )
+    parser.add_argument(
         "--run-mode",
         choices=["exe", "run"],
         default="exe",
@@ -142,6 +150,7 @@ def main() -> int:
             args.build_target,
             run_mode=args.run_mode,
             python_executable=sys.executable,
+            allow_failure=args.allow_prebuild_failure,
         )
 
     cmd = build_indexer_command(

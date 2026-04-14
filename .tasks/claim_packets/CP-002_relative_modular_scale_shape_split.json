@@ -1,0 +1,24 @@
+{
+  "seed_symbol": "CP-002_relative_modular_scale_shape_split",
+  "exploratory_source": "Black Book / Socratic Dialogues",
+  "philosophical_claim": "Generalized KL scale-shape split matches relative modular spectral split: gauge mass term aligns with Drazin kernel projector and projective Itakura-Saito shape aligns with active modular sector.",
+  "repo_native_formulation": "",
+  "mathlib_native_formulation": "",
+  "latex_statement": "",
+  "symbolic_witness": {
+    "kind": "python",
+    "path": "tools/witnesses/CP-002_relative_modular_scale_shape_split_check.py",
+    "result_summary": "PENDING"
+  },
+  "lean_target": {
+    "theorem_name": "relativeModularScaleShapeSplit_eq_drazinActiveKernelSplit",
+    "expected_type": "Prop",
+    "owner_file": "lean/InfoGeometry/Canonical/RelativeModularOperator.lean",
+    "imports_budget": [
+      "InfoGeometry.Canonical.All"
+    ]
+  },
+  "comparison_theorem_required": true,
+  "upstairs_content_remaining": "Full derivation from Clifford bedrock",
+  "lock_status": "draft"
+}

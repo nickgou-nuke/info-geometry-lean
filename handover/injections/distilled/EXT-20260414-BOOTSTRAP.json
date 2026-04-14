@@ -1,0 +1,33 @@
+{
+  "packet_id": "EXT-20260414-BOOTSTRAP",
+  "title": "Hermes bootstrap + outer-sense injection",
+  "source": {
+    "type": "manual",
+    "ref": "user-chat-2026-04-14",
+    "date": "2026-04-14T09:50:02+00:00"
+  },
+  "raw_text": "Need an external knowledge injection mechanism with codex strict lane and gemini ideation lane.",
+  "distilled_claim": "",
+  "repo_mapping": {
+    "owner_files": [],
+    "symbols": [],
+    "target_theorems": []
+  },
+  "verification_plan": {
+    "build_targets": [],
+    "audit_targets": []
+  },
+  "status": "distilled",
+  "history": [
+    {
+      "at": "2026-04-14T09:50:02+00:00",
+      "event": "created",
+      "note": "created in lane=raw"
+    },
+    {
+      "at": "2026-04-14T09:50:14+00:00",
+      "event": "promoted:raw->distilled",
+      "note": "Initial distillation placeholder"
+    }
+  ]
+}

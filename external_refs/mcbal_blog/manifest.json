@@ -1,0 +1,51 @@
+{
+  "source_index": "https://mcbal.github.io/post/",
+  "count_urls": 9,
+  "downloads": [
+    {
+      "url": "https://mcbal.github.io/post/index.xml",
+      "saved": true,
+      "file": "external_refs/mcbal_blog/index.xml.html"
+    },
+    {
+      "url": "https://mcbal.github.io/post/entropy-production-in-non-equilibrium-neural-networks/",
+      "saved": true,
+      "file": "external_refs/mcbal_blog/entropy-production-in-non-equilibrium-neural-networks.html"
+    },
+    {
+      "url": "https://mcbal.github.io/post/spin-model-transformers/",
+      "saved": true,
+      "file": "external_refs/mcbal_blog/spin-model-transformers.html"
+    },
+    {
+      "url": "https://mcbal.github.io/post/transformers-are-secretly-collectives-of-spin-systems/",
+      "saved": true,
+      "file": "external_refs/mcbal_blog/transformers-are-secretly-collectives-of-spin-systems.html"
+    },
+    {
+      "url": "https://mcbal.github.io/post/transformers-from-spin-models-approximate-free-energy-minimization/",
+      "saved": true,
+      "file": "external_refs/mcbal_blog/transformers-from-spin-models-approximate-free-energy-minimization.html"
+    },
+    {
+      "url": "https://mcbal.github.io/post/deep-implicit-attention-a-mean-field-theory-perspective-on-attention-mechanisms/",
+      "saved": true,
+      "file": "external_refs/mcbal_blog/deep-implicit-attention-a-mean-field-theory-perspective-on-attention-mechanisms.html"
+    },
+    {
+      "url": "https://mcbal.github.io/post/attention-as-energy-minimization-visualizing-energy-landscapes/",
+      "saved": true,
+      "file": "external_refs/mcbal_blog/attention-as-energy-minimization-visualizing-energy-landscapes.html"
+    },
+    {
+      "url": "https://mcbal.github.io/post/transformer-attention-as-an-implicit-mixture-of-effective-energy-based-models/",
+      "saved": true,
+      "file": "external_refs/mcbal_blog/transformer-attention-as-an-implicit-mixture-of-effective-energy-based-models.html"
+    },
+    {
+      "url": "https://mcbal.github.io/post/an-energy-based-perspective-on-attention-mechanisms-in-transformers/",
+      "saved": true,
+      "file": "external_refs/mcbal_blog/an-energy-based-perspective-on-attention-mechanisms-in-transformers.html"
+    }
+  ]
+}

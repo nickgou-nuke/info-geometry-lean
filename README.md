@@ -185,19 +185,20 @@ For the latest condensation sequence on the operatorial DIII lane, see
 6. [docs/OperationalIntent.md](docs/OperationalIntent.md)
 7. [docs/OperatorQuickstart.md](docs/OperatorQuickstart.md)
 8. [docs/DAGTroubleshooting.md](docs/DAGTroubleshooting.md)
-9. [docs/ToolingMethodology.md](docs/ToolingMethodology.md)
-10. [docs/BILINGUAL_SPINE_POLICY.md](docs/BILINGUAL_SPINE_POLICY.md)
-11. [docs/cl11_rosetta_refactor_plan.md](docs/cl11_rosetta_refactor_plan.md)
-12. [docs/cl11_content_collision_map.md](docs/cl11_content_collision_map.md)
-13. [docs/DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](docs/DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
-14. [docs/Theory.md](docs/Theory.md)
-15. [lean/InfoGeometry/Audit.lean](lean/InfoGeometry/Audit.lean)
-16. [lean/DAG/README.md](lean/DAG/README.md)
-17. [tools/README.md](tools/README.md)
-18. [tools/infra/README.md](tools/infra/README.md)
-19. [tools/frontier/README.md](tools/frontier/README.md)
-20. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
-21. [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)
+9. [CODEX_TROUBLESHOOTING.md](CODEX_TROUBLESHOOTING.md)
+10. [docs/ToolingMethodology.md](docs/ToolingMethodology.md)
+11. [docs/BILINGUAL_SPINE_POLICY.md](docs/BILINGUAL_SPINE_POLICY.md)
+12. [docs/cl11_rosetta_refactor_plan.md](docs/cl11_rosetta_refactor_plan.md)
+13. [docs/cl11_content_collision_map.md](docs/cl11_content_collision_map.md)
+14. [docs/DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](docs/DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
+15. [docs/Theory.md](docs/Theory.md)
+16. [lean/InfoGeometry/Audit.lean](lean/InfoGeometry/Audit.lean)
+17. [lean/DAG/README.md](lean/DAG/README.md)
+18. [tools/README.md](tools/README.md)
+19. [tools/infra/README.md](tools/infra/README.md)
+20. [tools/frontier/README.md](tools/frontier/README.md)
+21. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
+22. [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)
 
 If you are operating as an agent inside this repo, also use:
 - [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)
@@ -236,6 +237,49 @@ lake script run strictCheck
 lake script run dagAll
 lake script run changedVerify
 ```
+
+## Codex CLI Compact Error Workaround
+
+If Codex emits:
+
+```text
+Error running remote compact task: {
+  "error": {
+    "message": "Unknown parameter: 'prompt_cache_retention'.",
+    ...
+  }
+}
+```
+
+this is a Codex CLI auto-compaction failure, not a repo theorem/tooling bug.
+On 2026-04-14 this was observed even with
+`enable_request_compression = false` (a different switch).
+
+Recommended mitigation:
+
+1. Start a fresh Codex thread/session.
+2. Run Codex with a high auto-compact threshold.
+
+```bash
+codex -c model_auto_compact_token_limit=1000000000
+
+# optional visibility checks
+codex features list | rg enable_request_compression
+rg -n "compact_remote|prompt_cache_retention" ~/.codex/log/codex-tui.log
+```
+
+Profile form (persistent and explicit):
+
+```bash
+cat >> ~/.codex/config.toml <<'TOML'
+[profiles.no_compact]
+model_auto_compact_token_limit = 1000000000
+TOML
+
+codex -p no_compact
+```
+
+Full note: [CODEX_TROUBLESHOOTING.md](CODEX_TROUBLESHOOTING.md)
 
 Theory-cloud movie exporter (declaration cloud / semantic plasma):
 

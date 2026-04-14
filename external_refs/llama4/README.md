@@ -18,6 +18,15 @@ Gemini → Hermes → Codex ingestion pipeline.
 - `external_refs/llama4/meta/pyproject.toml`
 - `external_refs/llama4/ollama/llama4_library.html`
 
+## Spire Runtime Overlay (Ollama)
+
+These files are local runtime overlays for pipeline manifests. They do not assert
+vendor-internal parameter names; they only pin Spire-side semantic labels.
+
+- `external_refs/llama4/ollama/Modelfile.spire.llama4-scout`
+- `external_refs/llama4/ollama/Modelfile.spire.llama4-maverick`
+- `external_refs/llama4/ollama/spire_router_semantics_manifest.json`
+
 ## Regeneration
 
 ```bash

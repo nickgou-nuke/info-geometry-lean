@@ -1,0 +1,81 @@
+{
+  "packet_id": "EXT-20260414-173726",
+  "stage": "segments:chunk_ideate",
+  "timestamp": "2026-04-14T17:37:27+00:00",
+  "prompt_hash": "e05961b22925e79a94d97cac0020eade090af03eda7c59158b627df42173b71a",
+  "command": [
+    "tools/infra/injection_chunk_ideate.py",
+    "EXT-20260414-173726",
+    "--max-chars",
+    "650",
+    "--max-segments",
+    "3",
+    "--set-workflow-mode",
+    "gemini-hermes-codex",
+    "--note",
+    "stageA: Creative Spin (P_D) chunking"
+  ],
+  "runtime": {
+    "python": "3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0]",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "env_models": {
+      "HERMES_MODEL": "",
+      "OPENAI_MODEL": "",
+      "GEMINI_MODEL": "",
+      "LLM_MODEL": ""
+    },
+    "versions": {
+      "git_rev_parse": {
+        "cmd": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "exit": 0,
+        "stdout": "775422c952cf787af8a5b8cc68c74667a828db55",
+        "stderr": ""
+      },
+      "git_describe": {
+        "cmd": [
+          "git",
+          "describe",
+          "--always",
+          "--dirty"
+        ],
+        "exit": 0,
+        "stdout": "775422c-dirty",
+        "stderr": ""
+      },
+      "lake_version": {
+        "cmd": [
+          "lake",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lake version 5.0.0-src+7e01a1b (Lean version 4.28.0)",
+        "stderr": ""
+      },
+      "lean_version": {
+        "cmd": [
+          "lean",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lean (version 4.28.0, x86_64-unknown-linux-gnu, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b, Release)",
+        "stderr": ""
+      }
+    }
+  },
+  "result": {
+    "ok": true,
+    "new_segments": 1,
+    "prompt_files": 0,
+    "creative_notes_seeded": 0
+  },
+  "extra": {
+    "lock_wait_sec": 4.470000021683518e-06,
+    "replace_segments": false,
+    "max_chars": 650,
+    "max_segments": 3
+  }
+}

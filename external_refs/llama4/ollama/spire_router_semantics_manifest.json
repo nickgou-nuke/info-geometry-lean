@@ -1,0 +1,41 @@
+{
+  "schema": "spire.llama4.router-semantics.v1",
+  "created_at_utc": "2026-04-14T00:00:00Z",
+  "runtime": {
+    "targets": [
+      "llama4:scout",
+      "llama4:maverick"
+    ],
+    "modelfile_templates": [
+      "external_refs/llama4/ollama/Modelfile.spire.llama4-scout",
+      "external_refs/llama4/ollama/Modelfile.spire.llama4-maverick"
+    ]
+  },
+  "router_semantics": {
+    "active_projector": {
+      "symbol": "P_D",
+      "description": "regular/active routing sector label"
+    },
+    "complementary_projector": {
+      "symbol": "Q_0",
+      "description": "defect/apex complementary sector label"
+    },
+    "dilation_gap": {
+      "symbol": "G",
+      "description": "range-domain mismatch generator label"
+    },
+    "odd_anomaly": {
+      "symbol": "chi_R_minus_chi_L",
+      "description": "odd residual label in projector mismatch lane"
+    }
+  },
+  "governance": {
+    "note": "semantic mapping labels only; not a claim about vendor-internal parameter names",
+    "owner_surface": [
+      "lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean",
+      "lean/InfoGeometry/Canonical/DrazinPenroseDilationKKT.lean",
+      "lean/InfoGeometry/Canonical/DrazinSupercharge.lean",
+      "lean/InfoGeometry/LLM/TrialityMoE.lean"
+    ]
+  }
+}

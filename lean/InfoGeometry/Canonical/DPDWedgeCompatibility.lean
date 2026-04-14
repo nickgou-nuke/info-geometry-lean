@@ -82,7 +82,7 @@ theorem dilationGap_eq_half_wedgeSign
 Projected supercharge bridge to the modular wedge sign on the regular Drazin lane:
 `Q_D = [P_reg, ε_wedge]`.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem projected_supercharge_eq_commutator_PD_wedgeSign
     (comp : IsCompatibleDPDWedge CIK W) :
     InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
@@ -105,7 +105,7 @@ Complementary-apex form (with repo orientation): the same bridge on `P_0`
 appears with a sign flip:
 `Q_D = -[P_0, ε_wedge]`, where `P_0 = 1 - P_reg`.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem projected_supercharge_eq_neg_commutator_PZero_wedgeSign
     (comp : IsCompatibleDPDWedge CIK W) :
     InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.supercharge CIK

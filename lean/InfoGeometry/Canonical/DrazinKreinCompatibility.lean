@@ -177,12 +177,115 @@ theorem Preg_add_Pzero :
       = (1 : DoubledSpace E →L[ℝ] DoubledSpace E)
   exact IsDrazinInverse.projection_add_complementaryProjection (a := T) (b := TD)
 
+/--
+Regular-lane projector compression of an operator candidate.
+
+This is the projector-controlled support restriction used before any logarithmic
+generator readout lane.
+-/
+@[rep_depth operator]
+noncomputable def regularCompression
+    (T TD K : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    DoubledSpace E →L[ℝ] DoubledSpace E :=
+  Preg T TD * K * Preg T TD
+
+/--
+Left support law on the regular Drazin lane:
+`P_reg * K_reg = K_reg`.
+-/
+@[rep_depth operator]
+theorem Preg_mul_regularCompression
+    (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k)
+    (K : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    Preg T TD * regularCompression (E := E) T TD K
+      = regularCompression (E := E) T TD K := by
+  unfold regularCompression
+  calc
+    Preg T TD * (Preg T TD * K * Preg T TD)
+        = (Preg T TD * Preg T TD) * K * Preg T TD := by
+            simp [mul_assoc]
+    _ = Preg T TD * K * Preg T TD := by
+          simp [Preg_idempotent (E := E) (T := T) (TD := TD) (k := k) hCompat, mul_assoc]
+
+/--
+Right support law on the regular Drazin lane:
+`K_reg * P_reg = K_reg`.
+-/
+@[rep_depth operator]
+theorem regularCompression_mul_Preg
+    (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k)
+    (K : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    regularCompression (E := E) T TD K * Preg T TD
+      = regularCompression (E := E) T TD K := by
+  unfold regularCompression
+  calc
+    (Preg T TD * K * Preg T TD) * Preg T TD
+        = Preg T TD * K * (Preg T TD * Preg T TD) := by
+            simp [mul_assoc]
+    _ = Preg T TD * K * Preg T TD := by
+          simp [Preg_idempotent (E := E) (T := T) (TD := TD) (k := k) hCompat, mul_assoc]
+
+/--
+Left defect annihilation of the regular-lane compression:
+`P₀ * K_reg = 0`.
+-/
+@[rep_depth operator]
+theorem Pzero_mul_regularCompression_eq_zero
+    (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k)
+    (K : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    Pzero T TD * regularCompression (E := E) T TD K = 0 := by
+  unfold regularCompression
+  calc
+    Pzero T TD * (Preg T TD * K * Preg T TD)
+        = (Pzero T TD * Preg T TD) * K * Preg T TD := by
+            simp [mul_assoc]
+    _ = 0 := by
+          simp [Pzero_mul_Preg (E := E) (T := T) (TD := TD) (k := k) hCompat]
+
+/--
+Right defect annihilation of the regular-lane compression:
+`K_reg * P₀ = 0`.
+-/
+@[rep_depth operator]
+theorem regularCompression_mul_Pzero_eq_zero
+    (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k)
+    (K : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    regularCompression (E := E) T TD K * Pzero T TD = 0 := by
+  unfold regularCompression
+  calc
+    (Preg T TD * K * Preg T TD) * Pzero T TD
+        = Preg T TD * K * (Preg T TD * Pzero T TD) := by
+            simp [mul_assoc]
+    _ = 0 := by
+          simp [Preg_mul_Pzero (E := E) (T := T) (TD := TD) (k := k) hCompat]
+
+/--
+Support package for regular-lane compression:
+left/right support invariance and left/right defect annihilation.
+-/
+@[rep_depth operator]
+theorem regularCompression_support_package
+    (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k)
+    (K : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    Preg T TD * regularCompression (E := E) T TD K
+        = regularCompression (E := E) T TD K
+      ∧ regularCompression (E := E) T TD K * Preg T TD
+        = regularCompression (E := E) T TD K
+      ∧ Pzero T TD * regularCompression (E := E) T TD K = 0
+      ∧ regularCompression (E := E) T TD K * Pzero T TD = 0 := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact Preg_mul_regularCompression (E := E) (T := T) (TD := TD) (k := k) hCompat K
+  · exact regularCompression_mul_Preg (E := E) (T := T) (TD := TD) (k := k) hCompat K
+  · exact Pzero_mul_regularCompression_eq_zero (E := E) (T := T) (TD := TD) (k := k) hCompat K
+  · exact regularCompression_mul_Pzero_eq_zero (E := E) (T := T) (TD := TD) (k := k) hCompat K
+
 /-- Canonical chiral decomposition `P₊ + P₋ = 1`. -/
 @[rep_depth operator]
 theorem Pplus_add_Pminus :
     chiralPlus (E := E) + chiralMinus (E := E)
       = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
-  simpa [chiralPlus, chiralMinus] using (krein_projector_completeness (E := E))
+  unfold chiralPlus chiralMinus
+  exact krein_projector_completeness (E := E)
 
 private theorem commutes_with_Preg
     {S T TD : Op}

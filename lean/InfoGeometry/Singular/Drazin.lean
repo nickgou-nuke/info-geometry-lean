@@ -43,6 +43,30 @@ theorem eq3 (h : IsDrazinInverse A D k) : A^k = A^(k + 1) * D := h.pow_eq_pow_su
 
 end IsDrazinInverse
 
+namespace IsDrazinInverse
+
+variable {A D : R} {k ℓ : ℕ}
+
+/--
+Lift a Drazin witness from index `k` to any larger index `ℓ`.
+-/
+theorem lift (h : IsDrazinInverse A D k) (hkℓ : k ≤ ℓ) :
+    IsDrazinInverse A D ℓ := by
+  rcases Nat.exists_eq_add_of_le hkℓ with ⟨t, rfl⟩
+  have hcommDA : Commute D A := h.comm.symm
+  refine IsDrazinInverse.mk h.dad_eq_d h.comm ?_
+  calc
+    A ^ (k + t) = A ^ k * A ^ t := by rw [pow_add]
+    _ = (A ^ (k + 1) * D) * A ^ t := by rw [h.pow_eq_pow_succ_mul]
+    _ = A ^ (k + 1) * (D * A ^ t) := by simp [mul_assoc]
+    _ = A ^ (k + 1) * (A ^ t * D) := by rw [(hcommDA.pow_right t).eq]
+    _ = (A ^ (k + 1) * A ^ t) * D := by simp [mul_assoc]
+    _ = A ^ ((k + 1) + t) * D := by rw [← pow_add]
+    _ = A ^ (k + t + 1) * D := by
+      simp [Nat.add_assoc, Nat.add_left_comm, Nat.add_comm]
+
+end IsDrazinInverse
+
 /-- A positive power of an idempotent is itself. -/
 lemma pow_succ_eq_of_idempotent {R : Type*} [Monoid R] {P : R}
     (hP : P * P = P) :
@@ -98,9 +122,9 @@ theorem Drazin_unique {A B C : R} {k : ℕ}
     B = C := by
   rcases k with _ | n
   · have hAB : A * B = 1 := by
-      simpa [pow_one] using (hB.pow_eq_pow_succ_mul).symm
+      simpa using hB.pow_eq_pow_succ_mul.symm
     have hAC : A * C = 1 := by
-      simpa [pow_one] using (hC.pow_eq_pow_succ_mul).symm
+      simpa using hC.pow_eq_pow_succ_mul.symm
     have hBA : B * A = 1 := by
       calc
         B * A = A * B := hB.comm.symm
@@ -114,14 +138,15 @@ theorem Drazin_unique {A B C : R} {k : ℕ}
   ·
     let E : R := A * B
     let F : R := A * C
-    have hcommAB : Commute A B := hB.comm
-    have hcommAC : Commute A C := hC.comm
 
     have hEpow : B ^ (n + 1) * A ^ (n + 1) = E := by
       simpa [E] using mul_pow_eq_drazinProjector_of_pos (h := hB)
 
     have hFpow : C ^ (n + 1) * A ^ (n + 1) = F := by
       simpa [F] using mul_pow_eq_drazinProjector_of_pos (h := hC)
+
+    have hcommAB : Commute A B := hB.comm
+    have hcommAC : Commute A C := hC.comm
 
     have hE_mul_F : E = F * E := by
       have hABpow : A ^ (n + 1) * B ^ (n + 1) = B ^ (n + 1) * A ^ (n + 1) := by
@@ -180,6 +205,23 @@ theorem Drazin_unique {A B C : R} {k : ℕ}
       _ = C * (A * C) := by rw [hAB]
       _ = C * A * C := by simp [mul_assoc]
       _ = C := hC.dad_eq_d
+
+/--
+Index-independent uniqueness of Drazin witnesses.
+
+If two witnesses satisfy the Drazin laws for possibly different indices,
+they still coincide.
+-/
+theorem Drazin_unique_of_indices {A B C : R} {k ℓ : ℕ}
+    (hB : IsDrazinInverse A B k)
+    (hC : IsDrazinInverse A C ℓ) :
+    B = C := by
+  let m := max k ℓ
+  have hBm : IsDrazinInverse A B m :=
+    IsDrazinInverse.lift hB (Nat.le_max_left _ _)
+  have hCm : IsDrazinInverse A C m :=
+    IsDrazinInverse.lift hC (Nat.le_max_right _ _)
+  exact Drazin_unique hBm hCm
 
 /-- The Spectral/Core Projector P_D = A * A^D -/
 def Drazin_Projector (A D : R) (k : ℕ) (_h : IsDrazinInverse A D k) : R := A * D
@@ -424,6 +466,13 @@ theorem drazinInverse_eq_of_spec
     D = drazinInverse A := by
   exact Drazin_unique hD (drazinInverse_spec A)
 
+/-- Any Drazin witness at any index coincides with the chosen inverse. -/
+theorem drazinInverse_eq_of_spec_any_index
+    (A : Module.End K V) {D : Module.End K V} {k : ℕ}
+    (hD : IsDrazinInverse A D k) :
+    D = drazinInverse A := by
+  exact Drazin_unique_of_indices hD (drazinInverse_spec A)
+
 /-- The chosen Drazin inverse is the unique witness at the chosen index. -/
 theorem drazinInverse_unique
     (A : Module.End K V) {D : Module.End K V} :
@@ -432,6 +481,18 @@ theorem drazinInverse_unique
   · intro hD
     exact drazinInverse_eq_of_spec A hD
   · intro hD
+    rw [hD]
+    exact drazinInverse_spec A
+
+/-- Existence of any Drazin witness is equivalent to equality with the chosen inverse. -/
+theorem drazinInverse_unique_any_index
+    (A : Module.End K V) {D : Module.End K V} :
+    (∃ k : ℕ, IsDrazinInverse A D k) ↔ D = drazinInverse A := by
+  constructor
+  · rintro ⟨k, hD⟩
+    exact drazinInverse_eq_of_spec_any_index A hD
+  · intro hD
+    refine ⟨drazinIndex A, ?_⟩
     rw [hD]
     exact drazinInverse_spec A
 

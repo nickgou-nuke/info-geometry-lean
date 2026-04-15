@@ -2,6 +2,7 @@ import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Singular.Drazin
 
 namespace InfoGeometry.Canonical.Drazin
 
@@ -12,7 +13,7 @@ def IsDrazinInverse {R : Type*} [Ring R] (a b : R) (k : ℕ) : Prop :=
 
 namespace IsDrazinInverse
 
-variable {R : Type*} [Ring R] {a b : R} {k : ℕ}
+variable {R : Type*} [Ring R] {a b c : R} {k : ℕ}
 
 /-- Constructor for the Drazin laws predicate. -/
 @[rep_depth operator]
@@ -107,6 +108,28 @@ theorem power_le (h : IsDrazinInverse a b k) {m : ℕ} (hm : k ≤ m) :
     _ = a^t * a^k := by rw [h.power]
     _ = a^(t + k) := by rw [← pow_add]
     _ = a^(k + t) := by simp [Nat.add_comm]
+
+/-- Transport a canonical Drazin witness to the singular Drazin API. -/
+private theorem toSingular (h : IsDrazinInverse a b k) :
+    InfoGeometry.Singular.Drazin.IsDrazinInverse a b k := by
+  exact InfoGeometry.Singular.Drazin.IsDrazinInverse.mk
+    h.idempotent h.comm h.power.symm
+
+/-- Fixed-index uniqueness of the canonical Drazin inverse witness. -/
+@[rep_depth operator]
+theorem unique (hB : IsDrazinInverse a b k) (hC : IsDrazinInverse a c k) :
+    b = c := by
+  exact InfoGeometry.Singular.Drazin.Drazin_unique (toSingular hB) (toSingular hC)
+
+/--
+Index-independent uniqueness of the canonical Drazin inverse witness.
+-/
+@[rep_depth operator]
+theorem unique_of_indices {ℓ : ℕ}
+    (hB : IsDrazinInverse a b k) (hC : IsDrazinInverse a c ℓ) :
+    b = c := by
+  exact InfoGeometry.Singular.Drazin.Drazin_unique_of_indices
+    (toSingular hB) (toSingular hC)
 
 /-- Lemma `inverse_eq_pow_mul_pow`. -/
 @[rep_depth operator]

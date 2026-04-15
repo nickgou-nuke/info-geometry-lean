@@ -113,6 +113,32 @@ See:
 - [docs/black_books/91_syk_traversable_wormholes_er_epr_and_kitaev_scope.md](docs/black_books/91_syk_traversable_wormholes_er_epr_and_kitaev_scope.md)
 - [docs/black_books/92_syk_vs_kitaev_theorem_target_map.md](docs/black_books/92_syk_vs_kitaev_theorem_target_map.md)
 
+## Modular Support Charter
+
+Canonical Type III root:
+
+- support is spectral: `s(Δ) = 1_(0,∞)(Δ)`,
+- modular generator is support-restricted: `K = -log(Δ|_{s(Δ)})`,
+- mechanism is spectral projection + functional calculus (not inversion).
+
+Repo-native doubled/Krein realization:
+
+- one abstract support is realized in two inequivalent operator lanes,
+- Drazin lane (spectral/algebraic): `P_reg = ΔΔ^D`, `P0 = 1 - P_reg`,
+- Moore-Penrose lane (metric/self-adjoint): `P_R = ΔΔ⁺`, `P_L = Δ⁺Δ`,
+- anomaly/obstruction: `χ = [P_D, P_L]` (failure of simultaneous spectral/metric diagonalization).
+
+Execution guardrail:
+
+- modular-lane operations must route through the certified projector package
+  (`CertifiedInverseKernel`), not through ad hoc trace/inverse shortcuts.
+
+Owner references:
+
+- [docs/black_books/86_support_restricted_relative_modular_hamiltonian_lane_map.md](docs/black_books/86_support_restricted_relative_modular_hamiltonian_lane_map.md)
+- [lean/InfoGeometry/Canonical/DrazinSupercharge.lean](lean/InfoGeometry/Canonical/DrazinSupercharge.lean)
+- [lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean](lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean)
+
 ## Current Anchor Corridor
 
 The current clean seed-to-operator corridor is:

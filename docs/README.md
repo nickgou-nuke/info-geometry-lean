@@ -26,6 +26,8 @@ Relativity of Measurement**:
 - [black_books/52_kramers_pairs_krein_majorana_type_iii_lightcone.md](black_books/52_kramers_pairs_krein_majorana_type_iii_lightcone.md) — External-science synthesis chapter for Kramers/Krein/Majorana/Type-III/apex language.
 - [black_books/52native_krein_hestenes_real_doubled_translation.md](black_books/52native_krein_hestenes_real_doubled_translation.md) — Repo-native doubled-real translation of chapter 52.
 - [black_books/55_external_approval_real_all_translation.md](black_books/55_external_approval_real_all_translation.md) — Active roadmap for real modular/type-III closure in owned canonical files.
+- [black_books/90_burg_stein_spectral_shadow_of_log_det_rn_lane.md](black_books/90_burg_stein_spectral_shadow_of_log_det_rn_lane.md) — Finite-dimensional Burg/Stein spectral closure of the log-det RN/Connes lane, with theorem anchors.
+- [black_books/91_first_quantization_of_probability_dictionary.md](black_books/91_first_quantization_of_probability_dictionary.md) — Compiled density-ratio/surprisal/expectation substitution dictionary (`λ -> Δ`, `-log λ -> K`, expectation pairing).
 - [black_books/67_the_external_analogy_doctrine.md](black_books/67_the_external_analogy_doctrine.md) — Respect external frameworks as heuristics, but keep canonical truth strictly owner-native and Lean-verified.
 - [Theory.md](Theory.md) — How the principle maps to the repo presentations.
 - [Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md) — The project's roadmap and trajectory.

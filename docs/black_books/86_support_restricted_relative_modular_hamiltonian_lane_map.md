@@ -11,6 +11,36 @@ Owner order is preserved:
 This lane adds a finite support surrogate for domain-aware Hamiltonians without
 over-claiming unbounded functional calculus.
 
+## Canonical Support Mechanism (Type III Root)
+
+At the modular-theory root, support handling is spectral, not inverse-based:
+
+- support projector: `s(Δ) = 1_(0,∞)(Δ)`,
+- Hamiltonian domain: `K := -log Δ` defined on `s(Δ)`,
+- mechanism: spectral projection + functional calculus.
+
+So the `Δ -> log Δ` transition is a support-restricted spectral logarithm.
+No Moore–Penrose or Drazin inverse is required at this canonical root layer.
+
+## Repo-Translated Implementation Lane (Doubled Carrier)
+
+In this repository, singular/support-sensitive structure is intentionally
+translated into the doubled real/Krein operator package through certified
+projector owners:
+
+- Moore–Penrose lane: metric/range projectors,
+- Drazin lane: regular/defect spectral split,
+- mismatch commutator: anomaly surface.
+
+These are load-bearing in the repo's translated operator grammar and must not
+be mistaken for replacing the canonical Type III root mechanism above.
+
+Operational rule:
+
+1. root narrative: support projection of `Δ` + functional calculus;
+2. translated finite/operator implementation: Drazin/Moore–Penrose projector
+   package on the doubled carrier.
+
 ## Theorem Status
 
 - `REPO_THEOREM`: compiled in Lean.
@@ -68,4 +98,3 @@ lake build InfoGeometry.Canonical.RelativeModularHamiltonianSupport
 lake build InfoGeometry.Canonical.All
 lake build InfoGeometry.All
 ```
-

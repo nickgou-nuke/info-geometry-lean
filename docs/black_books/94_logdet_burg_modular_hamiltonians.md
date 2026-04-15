@@ -3,6 +3,21 @@
 This chapter records the finite SPD owner lane now attached to the canonical
 surface, together with the operator/modular lift map.
 
+## 0. Merge-Safe Abstract
+
+Starting from the scalar convex kernel `f(λ) = λ - log λ - 1`, the Burg/Stein
+log-det divergence on `S_{++}^n` is obtained by spectral calculus on the
+relative spectrum of `Q⁻¹P`. This divergence is congruence-invariant and
+spectrally reducible, and its second-order expansion induces the same local
+Riemannian metric as affine-invariant geometry on the SPD cone, but it is not
+the affine-invariant geodesic distance itself. In the noncommutative lift, the
+finite-dimensional density-ratio intuition is replaced by the relative modular
+operator (the noncommutative Radon-Nikodym object), expectations are realized
+as state/weight pairings (e.g. natural-cone vector expectation in standard
+form), and the classical chain rule is replaced by the Connes cocycle identity.
+In finite-dimensional commuting lanes, Araki relative entropy collapses to the
+usual density-matrix formula.
+
 ## I. SPD Burg/Stein Owner Lane
 
 New owner anchors:
@@ -20,6 +35,17 @@ Definition now present on `SPD`:
 
 The scalar convex atom is also explicit:
 `burgKernel(λ) = λ - log λ - 1`, with nonnegativity on `λ > 0`.
+
+Spectral normal form for the SPD relative spectrum (`λᵢ = eig(Q⁻¹P)`):
+`D_Stein(P|Q) = tr(PQ⁻¹) - log det(PQ⁻¹) - n = Σᵢ (λᵢ - log λᵢ - 1)`.
+
+Precision guardrail on geometry:
+
+- Burg/Stein is congruence-invariant and spectrally reducible.
+- Burg/Stein is not the AIRM geodesic distance.
+- The AIRM geodesic distance is `||log(Q⁻¹ᐟ² P Q⁻¹ᐟ²)||_F`.
+- The bridge to AIRM is local/Hessian: same second-order metric
+  `½ tr(dP P⁻¹ dP P⁻¹)`.
 
 ## II. Canonical Facade Integration
 
@@ -43,6 +69,13 @@ The noncommutative lift remains on these owner surfaces:
 - `INTERFACE_READY`
   [PedersenTakesakiRNInterface.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/PedersenTakesakiRNInterface.lean)
 
+Standard-form hypotheses used by the dictionary below:
+
+- normal faithful states (or weights) in standard form,
+- unique natural-cone vector representatives for those states,
+- relative Tomita operator whose polar decomposition yields the relative
+  modular operator `Δ`.
+
 ## IV. The "First Quantization" Dictionary
 
 To safely map classical information geometry into operator-algebra lanes, the
@@ -56,7 +89,8 @@ Canonical Type III guardrail:
 
 The corrected dictionary is:
 
-- density ratio `p/q` -> relative modular operator `Δ_{ψ|φ}` (primary object),
+- classical density-ratio intuition `p/q` -> relative modular operator
+  `Δ_{ψ|φ}` (the noncommutative Radon-Nikodym object; primary object),
 - surprisal `-log(p/q)` -> modular Hamiltonian `K_{ψ|φ} = -log Δ_{ψ|φ}`
   (derived via functional calculus),
 - expectation `∫ p(·)` -> state/weight pairing (GNS; natural-cone language
@@ -84,7 +118,16 @@ Interpretation remains ordered:
 2. additive generator (`-log Δ` lane),
 3. scalar shadows (trace/log-det/Burg/entropy readouts).
 
-## VII. Boundary (Not Yet Owner-Complete)
+## VII. Commuting Sanity Check
+
+Commuting collapse closes the classical-to-modular loop explicitly:
+
+- SPD lane: if `P` and `Q` commute, spectral calculus reduces Burg/Stein to
+  `Σ f(λᵢ)` with `f(λ)=λ-log λ-1`.
+- Operator lane: in finite-dimensional commuting lanes, Araki relative entropy
+  reduces to the usual density-matrix expression.
+
+## VIII. Boundary (Not Yet Owner-Complete)
 
 - spectral-eigenvalue normal form theorem
   `steinLoss = Σ_i (λ_i - log λ_i - 1)` as an owner theorem surface;

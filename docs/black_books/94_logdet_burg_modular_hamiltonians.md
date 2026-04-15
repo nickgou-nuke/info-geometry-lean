@@ -43,34 +43,48 @@ The noncommutative lift remains on these owner surfaces:
 - `INTERFACE_READY`
   [PedersenTakesakiRNInterface.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/PedersenTakesakiRNInterface.lean)
 
-## IV. Δ-First Rule
+## IV. The "First Quantization" Dictionary
 
-Interpretation is strict and ordered:
+To safely map classical information geometry into operator-algebra lanes, the
+direction is strict: log-det does not generalize upward into Type III; it is
+the abelian shadow of modular theory.
+
+Canonical Type III guardrail:
+
+- In Type III, only `Δ` and `log Δ` are canonical.
+- Determinant/trace scalarizations are representation-dependent shadows.
+
+The corrected dictionary is:
+
+- density ratio `p/q` -> relative modular operator `Δ_{ψ|φ}` (primary object),
+- surprisal `-log(p/q)` -> modular Hamiltonian `K_{ψ|φ} = -log Δ_{ψ|φ}`
+  (derived via functional calculus),
+- expectation `∫ p(·)` -> state/weight pairing (GNS; natural-cone language
+  only after choosing a standard-form representation),
+- chain rule -> Connes cocycle identity (multiplicative, time-parameterized);
+  additive structure is recovered from logarithmic generators where defined.
+
+This keeps cocycle and generator lanes distinct and prevents finite
+trace/determinant formulas from being treated as Type III roots.
+
+## V. Three-Tier Scalarization Hierarchy
+
+1. Type III root lane: no trace and no determinant; geometry is carried by `Δ`
+   and `-log Δ`.
+2. Semifinite/Type II lane: with a faithful normal semifinite trace `τ`,
+   scalarization appears as `τ(log Δ)`.
+3. Classical/finite abelian shadow: commuting spectral collapse recovers
+   log-det potentials such as Burg/Stein.
+
+## VI. Δ-First Rule
+
+Interpretation remains ordered:
 
 1. multiplicative owner (`Δ`/cocycles),
-2. additive readout (`-log Δ` lane),
+2. additive generator (`-log Δ` lane),
 3. scalar shadows (trace/log-det/Burg/entropy readouts).
 
-Canonical guardrail:
-
-- In Type III, `Δ` and `log Δ` are canonical.
-- Determinant/trace scalarizations are representation-dependent shadows.
-- Log-det geometry is the abelian shadow of modular theory, not the owner in
-  the Type III lane.
-
-## V. Corrected Lift Dictionary
-
-- density ratio -> relative modular operator `Δ_{φ|ψ}`,
-- surprisal -> modular Hamiltonian `K = -log Δ`,
-- expectation -> state/weight pairing (GNS; natural-cone language only after
-  choosing standard form),
-- chain rule -> Connes cocycle (multiplicative), with additive generator only
-  where logarithmic generator calculus is defined.
-
-This preserves the cocycle/generator distinction and avoids collapsing finite
-trace/determinant formulas into Type III ontology.
-
-## VI. Boundary (Not Yet Owner-Complete)
+## VII. Boundary (Not Yet Owner-Complete)
 
 - spectral-eigenvalue normal form theorem
   `steinLoss = Σ_i (λ_i - log λ_i - 1)` as an owner theorem surface;

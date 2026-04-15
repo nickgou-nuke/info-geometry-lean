@@ -134,17 +134,27 @@ Canonical modular-theory statement (Type III root):
 - support is handled spectrally, via `s(Δ) = 1_(0,∞)(Δ)`,
 - `K = -log Δ` is a support-restricted functional-calculus object on
   `s(Δ)H`,
-- this is projection + functional calculus, not a pseudo-inverse step.
+- `log Δ` is defined spectrally (not via pseudo-inverse inversion).
 
 Repo-translated doubled-carrier statement (owner architecture):
 
 - the support/defect split is routed through the owned Drazin/Moore-Penrose
   projector package on doubled real carriers,
+- Drazin projector lane (`P_D = Δ * Δᴰ`) realizes the spectral regular sector,
+- Moore-Penrose projector lane (`P_MP = Δ⁺ * Δ`) realizes the metric/self-adjoint
+  support sector,
 - the metric/spectral mismatch and anomaly lanes are explicit and theorem-bearing
   in:
   [MoorePenrose.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/MoorePenrose.lean),
   [CertifiedInverseKernel.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean),
   [DrazinKreinCompatibility.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean).
+
+Operational invariant:
+
+- the projectors do not define `log`; they realize support restriction for the
+  spectral logarithm in the doubled algebra,
+- projector mismatch (`P_D - P_MP`) tracks spectral-vs-metric support divergence,
+- commutator anomaly (`[P_D, P_MP]`) is the chiral anomaly lane.
 
 Guardrail:
 

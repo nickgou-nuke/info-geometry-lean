@@ -90,6 +90,21 @@ inside the repo's doubled/Krein operator algebra.
 - `REPO_THEOREM`
   [`finite_commuting_lift_package`](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RelativeModularCommutingLift.lean:90)
 
+## B2. Projector-Controlled Execution Invariants (now compiled)
+
+- `REPO_THEOREM`
+  [`regularRestrictedSuperHamiltonian`](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinSupercharge.lean:245)
+- `REPO_THEOREM`
+  [`spectralProjector_mul_regularRestrictedSuperHamiltonian`](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinSupercharge.lean:259)
+- `REPO_THEOREM`
+  [`regularRestrictedSuperHamiltonian_mul_spectralProjector`](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinSupercharge.lean:278)
+- `REPO_THEOREM`
+  [`regularRestrictedSuperHamiltonian_fixed_under_spectralGradingFlow`](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinSupercharge.lean:434)
+- `REPO_THEOREM`
+  [`defectCompression_regularRestrictedSuperHamiltonian_eq_zero`](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinSupercharge.lean:334)
+- `REPO_THEOREM`
+  [`regularRestrictedSuperHamiltonian_support_flow_package`](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinSupercharge.lean:488)
+
 ## C. Immediate Next Owner Targets
 
 - `NEXT_OWNER_TARGET`

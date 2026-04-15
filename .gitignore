@@ -19,6 +19,7 @@ lean/Temp*.lean
 *.lean.bak
 *.log
 *.txt
+!tools/infra/archive_excludes.txt
 
 # Documentation Output
 docs/**
@@ -72,3 +73,6 @@ full_graph.json
 
 # Accidental vendor payloads
 interspec_src/
+
+# Evidence bundles (generated archives, hash sidecars, signed files)
+archive/evidence/

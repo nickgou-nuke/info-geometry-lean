@@ -9,12 +9,16 @@ open scoped InnerProductSpace
 /-!
 # InfoGeometry.Canonical.OperatorialCramerRaoStateFirstSemanticAudit
 
-Lean-native semantic audit surface for the state-first Chunk1/2/3 lane.
+Lean-native audit/extraction surface for the state-first Chunk1/2/3/4 lane.
 
 This file provides:
 1. explicit axiom-surface print checks for the three chunk capstones,
 2. a direct non-vacuity reduction witness (Chunk-2 apex-zero reduction),
-3. an admissibility gate witness (Chunk-3 package extraction).
+3. admissibility/measurability extraction witnesses (Chunk-3/4),
+4. package aliases for backward-compatible downstream consumers.
+
+This is an audit surface (inspection + extraction), not an internalized
+meta-theorem proving axiom-freeness or global non-vacuity.
 -/
 
 -- Axiom-hygiene surface for the three chunk capstone targets.
@@ -92,6 +96,63 @@ theorem chunk3_admissibility_package_audit
       (E := E) (CIK := CIK) (S := S) τ t
 
 /--
+Audit witness: Chunk-3 base admissibility on the canonical representative.
+-/
+@[rep_depth transport]
+theorem chunk3_admissibility_base_audit
+    (CIK : CertifiedInverseKernel H₂)
+    (S : StateFirstCRWitness (E := E) CIK)
+    (τ t : ℝ) :
+    let R :=
+      InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+        (E := E) CIK τ
+    StateFirstAdmissibleOperator (E := E) CIK R S.comparison := by
+  intro R
+  exact
+    (stateFirst_admissibleGate_transport_and_operatorialCramerRao
+      (E := E) (CIK := CIK) (S := S) τ t).1
+
+/--
+Audit witness: Chunk-3 compressed/modular-flow admissibility.
+-/
+@[rep_depth transport]
+theorem chunk3_admissibility_compressed_audit
+    (CIK : CertifiedInverseKernel H₂)
+    (S : StateFirstCRWitness (E := E) CIK)
+    (τ t : ℝ) :
+    let R :=
+      InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+        (E := E) CIK τ
+    StateFirstAdmissibleOperator
+      (E := E)
+      CIK
+      (projectorCompressed (E := E) CIK R)
+      ((InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaLogData (E := E) CIK).flow t
+        S.comparison) := by
+  intro R
+  exact
+    (stateFirst_admissibleGate_transport_and_operatorialCramerRao
+      (E := E) (CIK := CIK) (S := S) τ t).2.1
+
+/--
+Audit witness: Chunk-3 preserves the operatorial Cramér-Rao lower bound.
+-/
+@[rep_depth transport]
+theorem chunk3_cr_lower_bound_audit
+    (CIK : CertifiedInverseKernel H₂)
+    (S : StateFirstCRWitness (E := E) CIK)
+    (τ t : ℝ) :
+    (1 /
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison S.Y S.Y
+      ≤
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison S.X S.X) := by
+  exact
+    (stateFirst_admissibleGate_transport_and_operatorialCramerRao
+      (E := E) (CIK := CIK) (S := S) τ t).2.2
+
+/--
 Audit alias: Chunk-4 measurable/uncertainty package extraction.
 -/
 @[rep_depth transport]
@@ -105,6 +166,7 @@ theorem chunk4_measurable_uncertainty_package_audit
     (hVar :
       InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
         (E := E) S.comparison X X ≤ B)
+    (hXnonzero : X S.comparison ≠ 0)
     (hX : InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear X) :
     let R :=
       InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
@@ -139,7 +201,120 @@ theorem chunk4_measurable_uncertainty_package_audit
         (E := E) S.comparison S.X S.X) := by
   exact
     stateFirst_measurable_uncertainty_operatorialCramerRao_package
-      (E := E) (CIK := CIK) (S := S) τ X B hBnonneg hVar hX
+      (E := E) (CIK := CIK) (S := S) τ X B hBnonneg hVar hXnonzero hX
+
+/--
+Audit witness: Chunk-4 base measurable-operator gate on the canonical representative.
+-/
+@[rep_depth transport]
+theorem chunk4_measurable_base_audit
+    (CIK : CertifiedInverseKernel H₂)
+    (S : StateFirstCRWitness (E := E) CIK)
+    (τ : ℝ)
+    (X : PerturbationChannel E)
+    (B : ℝ)
+    (hBnonneg : 0 ≤ B)
+    (hVar :
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison X X ≤ B)
+    (hXnonzero : X S.comparison ≠ 0)
+    (hX : InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear X) :
+    let R :=
+      InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+        (E := E) CIK τ
+    MeasurableOperator (E := E) CIK R S.comparison S.comparison X := by
+  intro R
+  exact
+    (stateFirst_measurable_uncertainty_operatorialCramerRao_package
+      (E := E) (CIK := CIK) (S := S) τ X B hBnonneg hVar hXnonzero hX).1
+
+/--
+Audit witness: Chunk-4 measurable gate after projector compression.
+-/
+@[rep_depth transport]
+theorem chunk4_measurable_compressed_audit
+    (CIK : CertifiedInverseKernel H₂)
+    (S : StateFirstCRWitness (E := E) CIK)
+    (τ : ℝ)
+    (X : PerturbationChannel E)
+    (B : ℝ)
+    (hBnonneg : 0 ≤ B)
+    (hVar :
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison X X ≤ B)
+    (hXnonzero : X S.comparison ≠ 0)
+    (hX : InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear X) :
+    let R :=
+      InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
+        (E := E) CIK τ
+    MeasurableOperator
+      (E := E)
+      CIK
+      (projectorCompressed (E := E) CIK R)
+      S.comparison
+      S.comparison
+      X := by
+  intro R
+  exact
+    (stateFirst_measurable_uncertainty_operatorialCramerRao_package
+      (E := E) (CIK := CIK) (S := S) τ X B hBnonneg hVar hXnonzero hX).2.1
+
+/--
+Audit witness: Chunk-4 uncertainty inequality payload.
+-/
+@[rep_depth transport]
+theorem chunk4_uncertainty_inequality_audit
+    (CIK : CertifiedInverseKernel H₂)
+    (S : StateFirstCRWitness (E := E) CIK)
+    (τ : ℝ)
+    (X : PerturbationChannel E)
+    (B : ℝ)
+    (hBnonneg : 0 ≤ B)
+    (hVar :
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison X X ≤ B)
+    (hXnonzero : X S.comparison ≠ 0)
+    (hX : InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear X) :
+    (InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison X S.Y) ^ 2
+      +
+    (InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorPhase
+        (E := E) S.comparison X S.Y) ^ 2
+      ≤
+    InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison X X
+      *
+    InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison S.Y S.Y := by
+  exact
+    (stateFirst_measurable_uncertainty_operatorialCramerRao_package
+      (E := E) (CIK := CIK) (S := S) τ X B hBnonneg hVar hXnonzero hX).2.2.1
+
+/--
+Audit witness: Chunk-4 preserves the operatorial Cramér-Rao lower bound.
+-/
+@[rep_depth transport]
+theorem chunk4_cr_lower_bound_audit
+    (CIK : CertifiedInverseKernel H₂)
+    (S : StateFirstCRWitness (E := E) CIK)
+    (τ : ℝ)
+    (X : PerturbationChannel E)
+    (B : ℝ)
+    (hBnonneg : 0 ≤ B)
+    (hVar :
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison X X ≤ B)
+    (hXnonzero : X S.comparison ≠ 0)
+    (hX : InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear X) :
+    (1 /
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison S.Y S.Y
+      ≤
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) S.comparison S.X S.X) := by
+  exact
+    (stateFirst_measurable_uncertainty_operatorialCramerRao_package
+      (E := E) (CIK := CIK) (S := S) τ X B hBnonneg hVar hXnonzero hX).2.2.2
 
 end Core
 

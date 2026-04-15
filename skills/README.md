@@ -7,6 +7,7 @@ Agent skill definitions for this repository.
 | Skill | Purpose |
 |-------|---------|
 | [info-geometry-repo](info-geometry-repo/SKILL.md) | Primary repo skill: trust order, DAG pipeline, artifact inventory, default workflow |
+| [repo-topic-deep-research](repo-topic-deep-research/SKILL.md) | Topic-agnostic deep repo investigation with status matrix (`implemented/interface/missing`) and agent context-pack generation |
 | [lean-canonicalization-policy](lean-canonicalization-policy/SKILL.md) | Theorem ownership, file splitting, graph-guided refactors |
 | [frontier-proof-compression](frontier-proof-compression/SKILL.md) | Skynet/OpenClaw proof compression and structural debt burn-down |
 | [lean-sandbox](lean-sandbox/SKILL.md) | Mandatory sandbox-first development for safe repo integration |

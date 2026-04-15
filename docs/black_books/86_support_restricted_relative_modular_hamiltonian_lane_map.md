@@ -21,6 +21,8 @@ At the modular-theory root, support handling is spectral, not inverse-based:
 
 So the `Δ -> log Δ` transition is a support-restricted spectral logarithm.
 No Moore–Penrose or Drazin inverse is required at this canonical root layer.
+Equivalently: functional calculus defines `log Δ` spectrally; support selects
+the valid domain.
 
 ## Repo-Translated Implementation Lane (Doubled Carrier)
 
@@ -28,18 +30,35 @@ In this repository, singular/support-sensitive structure is intentionally
 translated into the doubled real/Krein operator package through certified
 projector owners:
 
-- Moore–Penrose lane: metric/range projectors,
-- Drazin lane: regular/defect spectral split,
-- mismatch commutator: anomaly surface.
+- Drazin lane: `P_reg = Δ Δ^D`, `P0 = 1 - P_reg` (spectral/algebraic support),
+- Moore–Penrose lane: `P_R = Δ Δ⁺`, `P_L = Δ⁺ Δ` (metric/self-adjoint support),
+- anomaly lane: `χ = [P_D, P_L]`.
 
-These are load-bearing in the repo's translated operator grammar and must not
-be mistaken for replacing the canonical Type III root mechanism above.
+This is not "two different supports" at ontology level. It is one abstract
+support with two inequivalent realizations after translation into the doubled
+carrier:
+
+- Drazin realization preserves the functional-calculus lane (commutes with `Δ`),
+- Moore–Penrose realization preserves metric/self-adjoint closure.
+
+Their mismatch commutator is interpreted as the obstruction to simultaneous
+spectral and geometric diagonalization.
+
+These are load-bearing in the repo's translated operator grammar and do not
+replace the canonical Type III root mechanism above.
 
 Operational rule:
 
 1. root narrative: support projection of `Δ` + functional calculus;
 2. translated finite/operator implementation: Drazin/Moore–Penrose projector
    package on the doubled carrier.
+
+Execution semantics for the modular generator lane:
+
+`K = -log(Δ|_{P_reg})`
+
+where log is spectral, and projector data realizes the admissible sector
+inside the repo's doubled/Krein operator algebra.
 
 ## Theorem Status
 

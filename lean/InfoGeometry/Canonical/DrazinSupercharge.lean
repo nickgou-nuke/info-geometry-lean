@@ -234,6 +234,106 @@ def superHamiltonian : EndH :=
 def superHamiltonianK : EndH := superHamiltonian CIK
 
 /--
+Regular-support compressed superHamiltonian on the Drazin lane:
+`K_reg := P_D * Q² * P_D`.
+
+This is the repo-native projector-controlled realization of the support
+restriction used before logarithmic-generator readouts.
+-/
+@[rep_depth operator]
+def regularRestrictedSuperHamiltonian : EndH :=
+  CIK.spectralProjector * superHamiltonian CIK * CIK.spectralProjector
+
+/-- Krein-depth bridge wrapper for the regular-support compressed Hamiltonian. -/
+@[rep_depth krein]
+def regularRestrictedSuperHamiltonianK : EndH :=
+  regularRestrictedSuperHamiltonian CIK
+
+/--
+Left support invariance on the regular Drazin projector lane:
+`P_D * K_reg = K_reg`.
+-/
+@[rep_depth operator]
+theorem spectralProjector_mul_regularRestrictedSuperHamiltonian :
+    CIK.spectralProjector * regularRestrictedSuperHamiltonian CIK
+      = regularRestrictedSuperHamiltonian CIK := by
+  unfold regularRestrictedSuperHamiltonian
+  calc
+    CIK.spectralProjector
+          * (CIK.spectralProjector * superHamiltonian CIK * CIK.spectralProjector)
+        = (CIK.spectralProjector * CIK.spectralProjector) * superHamiltonian CIK
+            * CIK.spectralProjector := by
+              simp [mul_assoc]
+    _ = CIK.spectralProjector * superHamiltonian CIK * CIK.spectralProjector := by
+          simpa [mul_assoc, CIK.spectralProjector_idempotent]
+    _ = regularRestrictedSuperHamiltonian CIK := by rfl
+
+/--
+Right support invariance on the regular Drazin projector lane:
+`K_reg * P_D = K_reg`.
+-/
+@[rep_depth operator]
+theorem regularRestrictedSuperHamiltonian_mul_spectralProjector :
+    regularRestrictedSuperHamiltonian CIK * CIK.spectralProjector
+      = regularRestrictedSuperHamiltonian CIK := by
+  unfold regularRestrictedSuperHamiltonian
+  calc
+    (CIK.spectralProjector * superHamiltonian CIK * CIK.spectralProjector)
+          * CIK.spectralProjector
+        = CIK.spectralProjector * superHamiltonian CIK
+            * (CIK.spectralProjector * CIK.spectralProjector) := by
+              simp [mul_assoc]
+    _ = CIK.spectralProjector * superHamiltonian CIK * CIK.spectralProjector := by
+          simpa [mul_assoc, CIK.spectralProjector_idempotent]
+    _ = regularRestrictedSuperHamiltonian CIK := by rfl
+
+/--
+Left defect annihilation of the regular-support compressed Hamiltonian:
+`P₀ * K_reg = 0`.
+-/
+@[rep_depth operator]
+theorem spectralComplementaryProjector_mul_regularRestrictedSuperHamiltonian_eq_zero :
+    CIK.spectralComplementaryProjector * regularRestrictedSuperHamiltonian CIK = 0 := by
+  unfold regularRestrictedSuperHamiltonian
+  calc
+    CIK.spectralComplementaryProjector
+          * (CIK.spectralProjector * superHamiltonian CIK * CIK.spectralProjector)
+        = (CIK.spectralComplementaryProjector * CIK.spectralProjector)
+            * superHamiltonian CIK * CIK.spectralProjector := by
+              simp [mul_assoc]
+    _ = 0 := by
+          simp [CIK.spectralComplementaryProjector_mul_spectralProjector, mul_assoc]
+
+/--
+Right defect annihilation of the regular-support compressed Hamiltonian:
+`K_reg * P₀ = 0`.
+-/
+@[rep_depth operator]
+theorem regularRestrictedSuperHamiltonian_mul_spectralComplementaryProjector_eq_zero :
+    regularRestrictedSuperHamiltonian CIK * CIK.spectralComplementaryProjector = 0 := by
+  unfold regularRestrictedSuperHamiltonian
+  calc
+    (CIK.spectralProjector * superHamiltonian CIK * CIK.spectralProjector)
+          * CIK.spectralComplementaryProjector
+        = CIK.spectralProjector * superHamiltonian CIK
+            * (CIK.spectralProjector * CIK.spectralComplementaryProjector) := by
+              simp [mul_assoc]
+    _ = 0 := by
+          simp [CIK.spectralProjector_mul_spectralComplementaryProjector, mul_assoc]
+
+/--
+Defect-block compression vanishes for the regular-support compressed Hamiltonian:
+`P₀ * K_reg * P₀ = 0`.
+-/
+@[rep_depth operator]
+theorem defectCompression_regularRestrictedSuperHamiltonian_eq_zero :
+    CIK.spectralComplementaryProjector
+      * regularRestrictedSuperHamiltonian CIK
+      * CIK.spectralComplementaryProjector = 0 := by
+  rw [spectralComplementaryProjector_mul_regularRestrictedSuperHamiltonian_eq_zero (CIK := CIK)]
+  simp
+
+/--
 Right-anticommutation form of the oddness law:
 `Q * Γ_S = -(Γ_S * Q)`.
 This is the algebraic input for the evenness of `Q²`.

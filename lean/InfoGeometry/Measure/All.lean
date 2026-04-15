@@ -2,6 +2,7 @@ import InfoGeometry.Measure.DiscreteRN
 import InfoGeometry.Measure.Normalized
 import InfoGeometry.Measure.Potential
 import InfoGeometry.Measure.Projective
+import InfoGeometry.Measure.RadonNikodymNormalForms
 import InfoGeometry.MeasureProjective
 import InfoGeometry.MeasureProjective.GeneratorBridge
 import InfoGeometry.MeasureProjective.Invariant

@@ -94,6 +94,8 @@ Research-injection pipeline surfaces:
 - `injection_build_digest.py`
 - `injection_promote.py`
 - `injection_status.py`
+- `openai_deep_research_gateway.py` (Codex-facing MCP gateway for OpenAI DR jobs)
+- `openai_deep_research_datasource_mcp_example.py` (nested `search`/`fetch` datasource template)
 
 Gemini passthrough arg guard:
 - `injection_capture_gemini_cli.py` and `gemini_account_adapter.py` strip any

@@ -77,7 +77,7 @@ theorem stateFirstCommutationInterface_of_wedgeCalibrated
 From one explicit commutation witness, recover the projector-compressed split
 and the supercharge closure clause.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem modularSplit_and_supercharge_of_commutationInterface
     (CIK : CertifiedInverseKernel H₂)
     (R : EndH)
@@ -104,7 +104,7 @@ Apex-zero degeneration:
 if the certified apex projector vanishes, the split collapses to the active
 projector block.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem modularSplit_degenerates_to_active_of_apex_zero
     (CIK : CertifiedInverseKernel H₂)
     (R : EndH)

@@ -110,6 +110,16 @@ Build reviewer/examiner digest:
 python3 tools/infra/injection_build_digest.py <PACKET_ID> --update-packet
 ```
 
+OpenAI Deep Research gateway (Codex-facing MCP):
+```bash
+python3 tools/infra/openai_deep_research_gateway.py
+```
+
+Then from MCP client tooling:
+- `dr_start` with deep-research brief and source config
+- `dr_status` until `completed`
+- `dr_ingest_result_to_packet` to attach output into packet segment cards
+
 ## Quality Checklist
 - Source dates verified
 - Contradictions noted

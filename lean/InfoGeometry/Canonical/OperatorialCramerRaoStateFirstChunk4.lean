@@ -42,7 +42,8 @@ noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 /--
 Strict state-first measurable operator:
 Chunk-3 admissibility plus a finite comparison-state variance bound for
-an observer channel `X`.
+an observer channel `X`, with strictly positive variance at the comparison
+state.
 -/
 @[rep_depth transport]
 structure MeasurableOperator
@@ -57,6 +58,10 @@ structure MeasurableOperator
         ∧
       InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
         (E := E) comparison X X ≤ B
+  positiveVariance :
+    0 <
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+        (E := E) comparison X X
 
 /-- Constructor helper from explicit admissibility + bound witnesses. -/
 @[rep_depth transport]
@@ -69,9 +74,13 @@ theorem measurableOperator_mk
     (B : ℝ)
     (hBnonneg : 0 ≤ B)
     (hVar : InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
-      (E := E) comparison X X ≤ B) :
+      (E := E) comparison X X ≤ B)
+    (hVarPos :
+      0 <
+        InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+          (E := E) comparison X X) :
     MeasurableOperator (E := E) CIK R ψ comparison X := by
-  exact ⟨hA, ⟨B, hBnonneg, hVar⟩⟩
+  exact ⟨hA, ⟨B, hBnonneg, hVar⟩, hVarPos⟩
 
 /--
 Measurability is stable under projector-compressed operator transport.
@@ -90,7 +99,7 @@ theorem measurableOperator_projectorCompressed_stable
       ψ
       comparison
       X := by
-  refine ⟨?_, hM.finiteVariance⟩
+  refine ⟨?_, hM.finiteVariance, hM.positiveVariance⟩
   exact
     stateFirstAdmissibleOperator_projectorCompressed_stable
       (E := E) (CIK := CIK) (R := R) (ψ := ψ) hM.admissible
@@ -108,7 +117,7 @@ theorem measurableOperator_modularFlow_state_stable
     (T : InfoGeometry.Canonical.RealTomitaCore.RealModularLogData (E := E))
     (t : ℝ) :
     MeasurableOperator (E := E) CIK R ((T.flow t) ψ) comparison X := by
-  refine ⟨?_, hM.finiteVariance⟩
+  refine ⟨?_, hM.finiteVariance, hM.positiveVariance⟩
   exact
     stateFirstAdmissibleOperator_modularFlow_state_stable
       (E := E) (CIK := CIK) (R := R) (ψ := ψ) hM.admissible T t
@@ -162,6 +171,7 @@ theorem stateFirst_measurable_uncertainty_operatorialCramerRao_package
     (hVar :
       InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
         (E := E) S.comparison X X ≤ B)
+    (hXnonzero : X S.comparison ≠ 0)
     (hX : InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear X) :
     let R :=
       InfoGeometry.Canonical.RelativeModularScaleShapeSplit.canonicalRelativeModularOperator
@@ -202,10 +212,17 @@ theorem stateFirst_measurable_uncertainty_operatorialCramerRao_package
         (E := E) (CIK := CIK) (W := S.W) S.calibrated τ S.comparison
   have hM :
       MeasurableOperator (E := E) CIK R S.comparison S.comparison X := by
+    have hVarPos :
+        0 <
+          InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+            (E := E) S.comparison X X := by
+      exact
+        comparisonStateGeneratorMetric_self_pos_of_apply_ne_zero
+          (E := E) S.comparison X hXnonzero
     exact
       measurableOperator_mk
         (E := E) (CIK := CIK) (R := R) (ψ := S.comparison)
-        (comparison := S.comparison) (X := X) hA B hBnonneg hVar
+        (comparison := S.comparison) (X := X) hA B hBnonneg hVar hVarPos
   have hMcompressed :
       MeasurableOperator
         (E := E) CIK (projectorCompressed (E := E) CIK R)

@@ -150,6 +150,7 @@ import InfoGeometry.Canonical.VortexAnomalyLink
 import InfoGeometry.Canonical.SpinConnection
 import InfoGeometry.Canonical.TransportLieDerivative
 import InfoGeometry.Canonical.SuperAnomaly
+import InfoGeometry.Canonical.SYKTwoCopyInterface
 import InfoGeometry.KL.EntropicInferenceTest
 import InfoGeometry.SLT.ConditionalExpectation
 import InfoGeometry.TransformationGroups
@@ -172,6 +173,8 @@ import InfoGeometry.Canonical.ModularSpectralConjugationBridge
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.WedgeBoostModularBridge
 import InfoGeometry.Canonical.TypeIIIContinuousCoreReal
+import InfoGeometry.Canonical.PedersenTakesakiRNInterface
+import InfoGeometry.Canonical.ConnesCocycleDeltaPrimaryBridge
 import InfoGeometry.Canonical.OperatorLightconeCoordinates
 import InfoGeometry.Canonical.OperatorSpacetimeObservables
 import InfoGeometry.Canonical.KaehlerGeometry

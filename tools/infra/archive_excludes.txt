@@ -1,0 +1,6 @@
+# Repo-relative path prefixes excluded from legal evidence source archives.
+# Keep this list conservative: only paths that are third-party or intentionally
+# out-of-scope for the project's own copyright/evidence package.
+
+external_refs/
+interspec_src/

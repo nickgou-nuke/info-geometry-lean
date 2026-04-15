@@ -1,4 +1,5 @@
 import InfoGeometry.Jordan.LogDet
+import InfoGeometry.Jordan.BurgStein
 
 /-!
 # InfoGeometry.Canonical.LogDet
@@ -10,6 +11,14 @@ matrices.
 namespace InfoGeometry.Canonical.LogDet
 
 export InfoGeometry.Jordan (
+  burgKernel
+  burgKernel_nonneg
+  burgKernel_one
+  steinLoss
+  steinLoss_eq_trace_minus_logdet_minus_dim
+  steinLoss_self
+  steinLoss_eq_trace_add_barrier_diff_sub_dim
+  burgKernel_normalizedDistortion_det_nonneg
   logDetBarrier
   normalizedDistortion
   normalizedDistortion_det_pos

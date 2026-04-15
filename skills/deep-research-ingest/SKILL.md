@@ -124,6 +124,9 @@ Then from MCP client tooling:
 - Source dates verified
 - Contradictions noted
 - Inference labeled as inference
+- Confabulation output separated from validated claims
+- Rejected high-novelty hypotheses preserved with rejection reason
+- Every promoted claim has declaration/evidence/verification trace
 - For `gemini-hermes-codex` mode, both workflow stage flags are set to true before `translated`
 - No speculative theorem names without owner symbols
 - Targeted verification surface identified before integration

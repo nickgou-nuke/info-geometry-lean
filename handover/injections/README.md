@@ -73,6 +73,17 @@ python3 tools/infra/injection_enrich_segment.py <PACKET_ID> \
   --mark-verification-complete
 ```
 
+Run OpenAI Deep Research via MCP gateway and ingest result:
+```bash
+# Terminal A: run the gateway
+python3 tools/infra/openai_deep_research_gateway.py
+
+# Then from your MCP client call:
+# 1) dr_start(...)
+# 2) dr_status(response_id) until status=completed
+# 3) dr_ingest_result_to_packet(response_id=<id>, packet=<PACKET_ID>, segment_id=S1)
+```
+
 Promote packet by id:
 ```bash
 python3 tools/infra/injection_promote.py EXT-20260414-001 --to distilled --note "Gemini distilled"

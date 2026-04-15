@@ -26,6 +26,7 @@ import InfoGeometry.Canonical.AnomalyInflow
 import InfoGeometry.Canonical.AnomalyGauge
 import InfoGeometry.Canonical.ArnoldMajoranaNetwork
 import InfoGeometry.Canonical.Attention
+import InfoGeometry.Canonical.AttentionDiracBridge
 import InfoGeometry.Canonical.AttentionEuclidean
 import InfoGeometry.Canonical.AttentionSplit
 import InfoGeometry.Canonical.AssociativeSuperBracket
@@ -345,6 +346,11 @@ import InfoGeometry.Projective.Normalize
 -- L2: diagonal operator lift and partition calculus
 import InfoGeometry.Canonical.InformationPartitionCore
 import InfoGeometry.Canonical.RelativeModularOperator
+import InfoGeometry.Canonical.RelativeModularHamiltonian
+import InfoGeometry.Canonical.RelativeModularHamiltonianSupport
+import InfoGeometry.Canonical.RelativeModularCommutingLift
+import InfoGeometry.Canonical.RNDeterminantConnesChainBridge
+import InfoGeometry.Canonical.RelativeModularBoundedCommutingInterface
 import InfoGeometry.Canonical.RelativeModularSingularization
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
 import InfoGeometry.Canonical.ModularWeldBridge

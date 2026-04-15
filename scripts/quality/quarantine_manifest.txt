@@ -34,3 +34,5 @@ InfoGeometry.Unstable.YangMillsBridge | bridge stores QFT obligations and later 
 
 InfoGeometry.Canonical.ChiralTorsionRelativeVolume | imports quarantined BeliefDynamics and still sits on the review-surface facade path
 InfoGeometry.Canonical.CountEmergentFlow | imports quarantined HolographicEmergence and still sits on the review-surface facade path
+InfoGeometry.Exploration.Symphony.Basic | exploratory symphony lane is intentionally outside the authoritative `InfoGeometry.All` coverage spine
+InfoGeometry.Exploration.Symphony.Draft | draft symphony-attention lane contains placeholder/sorry scaffolding and is intentionally excluded from strict coverage

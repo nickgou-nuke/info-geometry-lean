@@ -267,6 +267,27 @@ theorem relativeModularVolumePotential_eq_sum_relativeModularPotential
           intro i hi
           rw [relativeModularPotential_eq_neg_relativeLogDensity]
 
+@[rep_depth thermo, capstone]
+theorem log_relativeModularVolumeShadow_cocycle
+    (q q0 q1 : PositiveRay (Fin n)) :
+    Real.log (relativeModularVolumeShadow (n := n) q q1)
+      = Real.log (relativeModularVolumeShadow (n := n) q q0)
+          + Real.log (relativeModularVolumeShadow (n := n) q0 q1) := by
+  rw [relativeModularVolumeShadow_cocycle]
+  exact Real.log_mul
+    (ne_of_gt (relativeModularVolumeShadow_pos (n := n) q q0))
+    (ne_of_gt (relativeModularVolumeShadow_pos (n := n) q0 q1))
+
+@[rep_depth thermo, capstone]
+theorem relativeModularVolumePotential_cocycle
+    (q q0 q1 : PositiveRay (Fin n)) :
+    relativeModularVolumePotential (n := n) q q1
+      = relativeModularVolumePotential (n := n) q q0
+          + relativeModularVolumePotential (n := n) q0 q1 := by
+  unfold relativeModularVolumePotential
+  rw [log_relativeModularVolumeShadow_cocycle (n := n) q q0 q1]
+  ring
+
 @[simp, rep_depth thermo, capstone]
 theorem relativeModularVolumePotential_self
     (q : PositiveRay (Fin n)) :
@@ -376,6 +397,18 @@ theorem relativeModularHamiltonianReadout_eq_inv_card_mul_relativeModularVolumeP
       = (n : ℝ)⁻¹ * relativeModularVolumePotential (n := n) q q0 := by
   rw [relativeModularHamiltonianReadout_eq_average_relativeModularPotential]
   rw [relativeModularVolumePotential_eq_sum_relativeModularPotential]
+
+@[rep_depth thermo, capstone]
+theorem relativeModularHamiltonianReadout_cocycle
+    (q q0 q1 : PositiveRay (Fin n)) :
+    relativeModularHamiltonianReadout (n := n) q q1
+      = relativeModularHamiltonianReadout (n := n) q q0
+          + relativeModularHamiltonianReadout (n := n) q0 q1 := by
+  rw [relativeModularHamiltonianReadout_eq_inv_card_mul_relativeModularVolumePotential]
+  rw [relativeModularHamiltonianReadout_eq_inv_card_mul_relativeModularVolumePotential]
+  rw [relativeModularHamiltonianReadout_eq_inv_card_mul_relativeModularVolumePotential]
+  rw [relativeModularVolumePotential_cocycle (n := n) q q0 q1]
+  ring
 
 /--
 Self-relative modular Hamiltonian readout vanishes.

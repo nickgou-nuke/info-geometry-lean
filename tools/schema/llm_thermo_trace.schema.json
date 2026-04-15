@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://infogeometry.local/tools/schema/llm_thermo_trace.schema.json",
+  "title": "LLM Thermo Trace Row",
+  "type": "object",
+  "properties": {
+    "trace_id": {"type": "string", "minLength": 1},
+    "beta": {"type": "number"},
+    "epsilon": {"type": "number"},
+
+    "weights": {
+      "type": "array",
+      "items": {"type": "number"}
+    },
+    "energies": {
+      "type": "array",
+      "items": {"type": "number"}
+    },
+    "logits": {
+      "type": "array",
+      "items": {"type": "number"}
+    },
+
+    "partition": {"type": "number", "exclusiveMinimum": 0},
+    "massieu": {"type": "number"},
+    "internal_energy": {"type": "number"},
+    "entropy": {"type": "number"},
+    "free_energy": {"type": "number"},
+
+    "free_energy_eps": {"type": "number"},
+    "kms_log_partition": {"type": "number"},
+
+    "defect_output_norm": {"type": "number", "minimum": 0},
+    "defect_weight_sum": {"type": "number"},
+    "active_weight_sum": {"type": "number"}
+  },
+  "additionalProperties": true
+}

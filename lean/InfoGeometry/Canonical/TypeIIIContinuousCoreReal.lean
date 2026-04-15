@@ -238,7 +238,7 @@ Wedge-calibrated downstream CP-003 consumer on the Type-III core lane:
 the canonical bounded relative modular representative has the same core-trace as
 its active/apex projector-compressed surrogate split.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem coreTrace_eq_singularPolar_split_of_wedgeCalibrated
     (CIK : CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E))
     {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}

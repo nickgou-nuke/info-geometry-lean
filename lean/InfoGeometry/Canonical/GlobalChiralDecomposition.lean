@@ -149,7 +149,7 @@ theorem singular_polar_surrogate_closure
 Supergraded closure projection from the KKT lane:
 `Q = [P_D, Γ_G]`.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem supergraded_supercharge_closure
     (CIK : CertifiedInverseKernel H₂) :
     DrazinSupercharge.CertifiedInverseKernel.supercharge CIK

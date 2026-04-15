@@ -174,7 +174,7 @@ CP-003 downstream consumer on the modular lane:
 reuse the singular projector/anomaly surrogate closure directly from the
 global-chiral owner surface.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem cp003_singular_surrogate_commutator_closure
     (CIK : CertifiedInverseKernel H₂) :
     let K : InfoGeometry.Canonical.DrazinPenroseDilationKKT.DPDKKT H₂ := ⟨CIK⟩

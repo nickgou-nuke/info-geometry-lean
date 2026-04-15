@@ -138,28 +138,34 @@ Canonical modular-theory statement (Type III root):
 
 Repo-translated doubled-carrier statement (owner architecture):
 
-- the support/defect split is routed through the owned Drazin/Moore-Penrose
-  projector package on doubled real carriers,
-- Drazin projector lane (`P_D = Δ * Δᴰ`) realizes the spectral regular sector,
-- Moore-Penrose projector lane (`P_MP = Δ⁺ * Δ`) realizes the metric/self-adjoint
-  support sector,
-- the metric/spectral mismatch and anomaly lanes are explicit and theorem-bearing
-  in:
+- there is one abstract support notion, with two inequivalent realizations in
+  the doubled/Krein algebra,
+- Drazin realization: `P_reg = Δ * Δᴰ` (repo spectral projector lane). This
+  commutes with `Δ` and preserves the functional-calculus lane,
+- Moore-Penrose realization: `P_L = Δ⁺ * Δ` (repo metric/self-adjoint support
+  lane),
+- modular Hamiltonian lane is implemented as a projector-controlled spectral
+  restriction: `K = -log(Δ|_{P_reg})`,
+- the projector package and its mismatch/anomaly owners are explicit and
+  theorem-bearing in:
   [MoorePenrose.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/MoorePenrose.lean),
   [CertifiedInverseKernel.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean),
   [DrazinKreinCompatibility.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean).
 
 Operational invariant:
 
-- the projectors do not define `log`; they realize support restriction for the
+- projectors do not define `log`; they realize support restriction for the
   spectral logarithm in the doubled algebra,
-- projector mismatch (`P_D - P_MP`) tracks spectral-vs-metric support divergence,
-- commutator anomaly (`[P_D, P_MP]`) is the chiral anomaly lane.
+- mismatch `P_D - P_L` tracks spectral-vs-metric support divergence,
+- anomaly `χ = [P_D, P_L]` is the obstruction to simultaneous spectral and
+  metric diagonalization.
 
 Guardrail:
 
 - this repo lane is a conservative translation layer and must not be read as
-  replacing the canonical Type III support-projection ontology.
+  replacing the canonical Type III support-projection ontology,
+- modular-lane operations in the doubled carrier should be routed through this
+  projector package.
 
 ## IX. Boundary (Not Yet Owner-Complete)
 

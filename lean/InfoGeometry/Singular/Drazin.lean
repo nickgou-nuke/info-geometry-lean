@@ -170,7 +170,7 @@ theorem Drazin_unique {A B C : R} {k : ℕ}
         simpa [mul_assoc] using congrArg (fun t => t * B ^ (n + 1)) hA_pow_eq_F_mul
       calc
         E = B ^ (n + 1) * A ^ (n + 1) := hEpow.symm
-        _ = A ^ (n + 1) * B ^ (n + 1) := by rw [hABpow]
+        _ = A ^ (n + 1) * B ^ (n + 1) := by rw [← hABpow]
         _ = (F * A ^ (n + 1)) * B ^ (n + 1) := hMulByBpow
         _ = F * (A ^ (n + 1) * B ^ (n + 1)) := by simp [mul_assoc]
         _ = F * (B ^ (n + 1) * A ^ (n + 1)) := by rw [hABpow]

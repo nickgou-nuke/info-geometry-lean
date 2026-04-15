@@ -96,6 +96,23 @@ story is treated here as the projective shadow of an internal real operatorial
 presentation built from doubled Krein sheets, Majorana polarization, and the
 phase axis `K = Jε`.
 
+## Terminology Guardrail: SYK Traversable Protocol vs Kitaev Chain
+
+To keep claims scope-correct:
+
+- `Kitaev chain` language in this repository refers to the owned finite
+  topological-Majorana and boundary-zero-mode theorem surfaces.
+- `Traversable wormhole teleportation` language refers to a distinct two-copy
+  coupled many-body lane (SYK/SYK-like with sign-sensitive left-right
+  coupling), which is not currently an owner-complete theorem surface here.
+- Current modular/cocycle owners are valid bridge substrate, but they do not by
+  themselves assert a literal spacetime-wormhole realization.
+
+See:
+
+- [docs/black_books/91_syk_traversable_wormholes_er_epr_and_kitaev_scope.md](docs/black_books/91_syk_traversable_wormholes_er_epr_and_kitaev_scope.md)
+- [docs/black_books/92_syk_vs_kitaev_theorem_target_map.md](docs/black_books/92_syk_vs_kitaev_theorem_target_map.md)
+
 ## Current Anchor Corridor
 
 The current clean seed-to-operator corridor is:

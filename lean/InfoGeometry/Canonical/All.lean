@@ -91,6 +91,7 @@ import InfoGeometry.Canonical.WeylGaugeField
 import InfoGeometry.Canonical.WeylTransport
 import InfoGeometry.Canonical.WeylTransportChiralBridge
 import InfoGeometry.Canonical.MultiplicativeToAdditiveBridge
+import InfoGeometry.Canonical.LogDetRadonNikodymMechanism
 import InfoGeometry.Canonical.VolumeDeformationPrinciple
 import InfoGeometry.Canonical.PartitionHierarchy
 import InfoGeometry.Canonical.DualConnections
@@ -353,6 +354,7 @@ import InfoGeometry.Canonical.RNDeterminantConnesChainBridge
 import InfoGeometry.Canonical.RelativeModularBoundedCommutingInterface
 import InfoGeometry.Canonical.RelativeModularSingularization
 import InfoGeometry.Canonical.RelativeSurprisalOperatorLift
+import InfoGeometry.Canonical.FirstQuantizationProbability
 import InfoGeometry.Canonical.ModularWeldBridge
 
 -- L3: spectral / metric coherence on the doubled carrier

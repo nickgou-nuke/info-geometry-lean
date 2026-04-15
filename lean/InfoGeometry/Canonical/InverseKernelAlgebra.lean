@@ -237,6 +237,107 @@ theorem rightChiralAnomaly_eq_rightProjectorMismatch_commutator_mpRange :
     CertifiedInverseKernel.mpRangeProjector, CertifiedInverseKernel.toInverseKernel'] using
     CIK.toInverseKernel'.rightChiralAnomaly_eq_rightProjectorMismatch_commutator_mpRange
 
+/--
+Regular-block diagonal compression of `χ = [P_D, P_L]` vanishes:
+`P_D * χ * P_D = 0`.
+-/
+theorem spectralProjector_mul_chiralAnomaly_mul_spectralProjector_eq_zero :
+    CIK.spectralProjector * CIK.chiralAnomaly * CIK.spectralProjector = 0 := by
+  set P : E →L[ℝ] E := CIK.spectralProjector
+  set L : E →L[ℝ] E := CIK.metricProjector
+  have hP2 : P * P = P := by
+    simpa [P] using CIK.spectralProjector_idempotent
+  change P * (P * L - L * P) * P = 0
+  calc
+    P * (P * L - L * P) * P
+        = (P * P) * L * P - P * L * (P * P) := by
+            noncomm_ring
+    _ = P * L * P - P * L * P := by
+          simp [hP2, mul_assoc]
+    _ = 0 := by simp
+
+/--
+Defect-block diagonal compression of `χ = [P_D, P_L]` vanishes:
+`P₀ * χ * P₀ = 0`.
+-/
+theorem spectralComplementaryProjector_mul_chiralAnomaly_mul_spectralComplementaryProjector_eq_zero :
+    CIK.spectralComplementaryProjector * CIK.chiralAnomaly * CIK.spectralComplementaryProjector = 0 := by
+  set P : E →L[ℝ] E := CIK.spectralProjector
+  set L : E →L[ℝ] E := CIK.metricProjector
+  set Q : E →L[ℝ] E := 1 - P
+  have hP2 : P * P = P := by
+    simpa [P] using CIK.spectralProjector_idempotent
+  have hQP : Q * P = 0 := by
+    calc
+      Q * P = (1 - P) * P := by simp [Q]
+      _ = P - P * P := by noncomm_ring
+      _ = 0 := by simp [hP2]
+  have hPQ : P * Q = 0 := by
+    calc
+      P * Q = P * (1 - P) := by simp [Q]
+      _ = P - P * P := by noncomm_ring
+      _ = 0 := by simp [hP2]
+  change Q * (P * L - L * P) * Q = 0
+  calc
+    Q * (P * L - L * P) * Q
+        = (Q * P) * L * Q - Q * L * (P * Q) := by
+            noncomm_ring
+    _ = 0 := by simp [hQP, hPQ]
+
+/--
+Off-diagonal Drazin-split decomposition of the certified anomaly:
+`χ = P_D χ P₀ + P₀ χ P_D`.
+-/
+theorem chiralAnomaly_eq_offDiagonal_spectralSplit :
+    CIK.chiralAnomaly
+      =
+    CIK.spectralProjector * CIK.chiralAnomaly * CIK.spectralComplementaryProjector
+      +
+    CIK.spectralComplementaryProjector * CIK.chiralAnomaly * CIK.spectralProjector := by
+  have hDiagReg :
+      CIK.spectralProjector * CIK.chiralAnomaly * CIK.spectralProjector = 0 :=
+    CIK.spectralProjector_mul_chiralAnomaly_mul_spectralProjector_eq_zero
+  have hDiagDef :
+      CIK.spectralComplementaryProjector * CIK.chiralAnomaly * CIK.spectralComplementaryProjector
+        = 0 :=
+    CIK.spectralComplementaryProjector_mul_chiralAnomaly_mul_spectralComplementaryProjector_eq_zero
+  calc
+    CIK.chiralAnomaly
+        =
+      (CIK.spectralProjector + CIK.spectralComplementaryProjector)
+        * CIK.chiralAnomaly
+        * (CIK.spectralProjector + CIK.spectralComplementaryProjector) := by
+          simp [CIK.spectralProjector_add_spectralComplementaryProjector]
+    _ =
+      CIK.spectralProjector * CIK.chiralAnomaly * CIK.spectralProjector
+        + CIK.spectralProjector * CIK.chiralAnomaly * CIK.spectralComplementaryProjector
+        + (CIK.spectralComplementaryProjector * CIK.chiralAnomaly * CIK.spectralProjector
+            + CIK.spectralComplementaryProjector * CIK.chiralAnomaly * CIK.spectralComplementaryProjector) := by
+          noncomm_ring
+    _ =
+      CIK.spectralProjector * CIK.chiralAnomaly * CIK.spectralComplementaryProjector
+        + CIK.spectralComplementaryProjector * CIK.chiralAnomaly * CIK.spectralProjector := by
+          simp [hDiagReg, hDiagDef]
+
+/--
+Support profile package for `χ = [P_D, P_L]` on the Drazin split:
+both diagonal compressions vanish and only off-diagonal blocks remain.
+-/
+theorem chiralAnomaly_spectralSupportProfile :
+    CIK.spectralProjector * CIK.chiralAnomaly * CIK.spectralProjector = 0
+      ∧
+    CIK.spectralComplementaryProjector * CIK.chiralAnomaly * CIK.spectralComplementaryProjector = 0
+      ∧
+    CIK.chiralAnomaly
+      =
+      CIK.spectralProjector * CIK.chiralAnomaly * CIK.spectralComplementaryProjector
+        +
+      CIK.spectralComplementaryProjector * CIK.chiralAnomaly * CIK.spectralProjector := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact CIK.spectralProjector_mul_chiralAnomaly_mul_spectralProjector_eq_zero
+  · exact CIK.spectralComplementaryProjector_mul_chiralAnomaly_mul_spectralComplementaryProjector_eq_zero
+  · exact CIK.chiralAnomaly_eq_offDiagonal_spectralSplit
+
 end CertifiedInverseKernel
 
 end InfoGeometry.Canonical

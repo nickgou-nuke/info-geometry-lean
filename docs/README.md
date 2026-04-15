@@ -29,6 +29,7 @@ Relativity of Measurement**:
 - [black_books/90_burg_stein_spectral_shadow_of_log_det_rn_lane.md](black_books/90_burg_stein_spectral_shadow_of_log_det_rn_lane.md) — Finite-dimensional Burg/Stein spectral closure of the log-det RN/Connes lane, with theorem anchors.
 - [black_books/91_first_quantization_of_probability_dictionary.md](black_books/91_first_quantization_of_probability_dictionary.md) — Compiled density-ratio/surprisal/expectation substitution dictionary (`λ -> Δ`, `-log λ -> K`, expectation pairing).
 - [black_books/93_typeiii_operator_owner_queue.md](black_books/93_typeiii_operator_owner_queue.md) — Build-ordered Type III operator owner queue, including the new Pedersen–Takesaki interface lane and next owner targets.
+- [black_books/94_logdet_burg_modular_hamiltonians.md](black_books/94_logdet_burg_modular_hamiltonians.md) — SPD Burg/Stein owner lane (`tr - log det - n`) and its strict bridge boundary toward modular Hamiltonian/Type III lanes.
 - [black_books/67_the_external_analogy_doctrine.md](black_books/67_the_external_analogy_doctrine.md) — Respect external frameworks as heuristics, but keep canonical truth strictly owner-native and Lean-verified.
 - [Theory.md](Theory.md) — How the principle maps to the repo presentations.
 - [Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md) — The project's roadmap and trajectory.

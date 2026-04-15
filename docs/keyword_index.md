@@ -1,39 +1,94 @@
 # Keyword Index
 
-This index is intentionally conservative.
+This index now has two explicit layers:
 
-It lists current high-confidence files for major topics without claiming that a
-single file exhausts the topic.
+1. machine index over **all tracked Lean files** (sorted lexical frequency),
+2. deep declaration search (`theorem`/`lemma`/`axiom`) over selected
+   characteristic terms, then story synthesis.
 
-## Current keywords
+## Full Lean Corpus Index (Machine)
 
-| Keyword | Current high-confidence files |
+Command:
+
+```bash
+python3 tools/infra/generate_keyword_research_report.py
+```
+
+Outputs:
+
+- [docs/auto/lean_keyword_research_report.md](auto/lean_keyword_research_report.md)
+- `reports/keywords/lean_keyword_research_report.json`
+
+Properties:
+
+- corpus is all tracked `*.lean` files in repo,
+- terms are sorted by frequency (with lexical cleanup),
+- each term includes hotspot files.
+
+## Characteristic-Term Deep Search and Story
+
+Command:
+
+```bash
+python3 tools/infra/generate_repo_story_from_keyword_index.py
+```
+
+Outputs:
+
+- [docs/auto/repo_story_from_keyword_index.md](auto/repo_story_from_keyword_index.md)
+- `reports/keywords/characteristic_term_deep_search.json`
+
+Properties:
+
+- characteristic terms are selected from the sorted full index,
+- deep search scans declaration blocks for `theorem`, `lemma`, `axiom`,
+- story is refactored from declaration-grounded evidence, not prose-first tags.
+
+## Black Books Corpus (Parallel Lane)
+
+Machine index on black books only:
+
+```bash
+python3 tools/infra/generate_black_books_keyword_report.py
+```
+
+Story synthesis (profile-aware):
+
+```bash
+python3 tools/infra/generate_black_books_story_from_keyword_index.py --profile balanced
+python3 tools/infra/generate_black_books_story_from_keyword_index.py --profile physics \
+  --story-out docs/auto/black_books_story_from_keyword_index.physics.md \
+  --json-out reports/keywords/black_books_characteristic_term_deep_search.physics.json
+python3 tools/infra/generate_black_books_story_from_keyword_index.py --profile methodology \
+  --story-out docs/auto/black_books_story_from_keyword_index.methodology.md \
+  --json-out reports/keywords/black_books_characteristic_term_deep_search.methodology.json
+```
+
+Outputs:
+
+- [docs/auto/black_books_keyword_research_report.md](auto/black_books_keyword_research_report.md)
+- [docs/auto/black_books_story_from_keyword_index.md](auto/black_books_story_from_keyword_index.md)
+- `reports/keywords/black_books_keyword_research_report.json`
+- `reports/keywords/black_books_characteristic_term_deep_search*.json`
+
+## Curated Anchor Map (Human)
+
+This table remains a conservative human navigation layer over the stable owner
+lanes.
+
+| Topic | Current high-confidence files |
 | --- | --- |
-| Positive measure / normalization | `lean/InfoGeometry/PositiveMeasure.lean`, `lean/InfoGeometry/Projective/Normalize.lean`, `lean/InfoGeometry/Measure/Normalized.lean` |
-| Positive ray / projective state | `lean/InfoGeometry/Canonical/PositiveRayCore.lean`, `lean/InfoGeometry/Canonical/ProjectiveStateCore.lean`, `lean/InfoGeometry/Canonical/PositiveRayProjectiveBridge.lean` |
-| Relative potential / count bridge | `lean/InfoGeometry/Canonical/RelativePotentialCore.lean`, `lean/InfoGeometry/Canonical/RelativePotentialScalarBridge.lean`, `lean/InfoGeometry/Canonical/RelativePotentialDiscreteBridge.lean`, `lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean`, `lean/InfoGeometry/Canonical/RedLine.lean` |
-| Relative modular / polarized projective lane | `lean/InfoGeometry/Canonical/RelativeModularProjectiveBridge.lean`, `lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean`, `lean/InfoGeometry/Canonical/RelativeModularOperator.lean`, `lean/InfoGeometry/Canonical/RelativeModularBerezinianBridge.lean`, `lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean` |
-| Krein / doubled space | `lean/InfoGeometry/Krein/KreinSpace.lean`, `lean/InfoGeometry/Krein/DoubledSpace.lean`, `lean/InfoGeometry/Krein/DoubledSpaceMatrix.lean` |
-| Corrected neutral phase space | `lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean`, `lean/InfoGeometry/Clifford/NeutralPhaseSpaceDoubledBridge.lean` |
-| Phase-space generalized metric | `lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean`, `lean/InfoGeometry/Canonical/PhaseSpaceGeneralizedMetricChiralityBridge.lean` |
-| Polarization / recomposition | `lean/InfoGeometry/Canonical/PhaseSpacePolarizedBridge.lean`, `lean/InfoGeometry/Canonical/PhaseSpaceRecompositionBridge.lean`, `lean/InfoGeometry/Canonical/GeneralizedMetricPolarizedBridge.lean` |
-| KKT grading / generalized inverse | `lean/InfoGeometry/Canonical/KKTCore.lean`, `lean/InfoGeometry/Canonical/EPDefectAlgebra.lean`, `lean/InfoGeometry/Canonical/KKTGeneralizedInverseBridge.lean` |
-| Conformal projector / anomaly | `lean/InfoGeometry/Canonical/ConformalProjectorCore.lean`, `lean/InfoGeometry/Canonical/ChiralCartanCore.lean`, `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean`, `lean/InfoGeometry/Canonical/PhaseSpaceConformalKKTBridge.lean` |
-| Weyl gauge / transport / QGT | `lean/InfoGeometry/Canonical/WeylGaugeField.lean`, `lean/InfoGeometry/Canonical/WeylTransport.lean`, `lean/InfoGeometry/Canonical/EinsteinAnomalyOperator.lean`, `lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean`, `lean/InfoGeometry/Canonical/PhaseSpaceWeylCausalBridge.lean` |
-| Tomita / Bogoliubov / Connes-Araki | `lean/InfoGeometry/Canonical/TomitaTakesaki.lean`, `lean/InfoGeometry/Canonical/BogoliubovTransport.lean`, `lean/InfoGeometry/Canonical/TransportLieDerivative.lean`, `lean/InfoGeometry/Canonical/ConnesArakiTomita.lean` |
-| Bulk-Boundary / Majorana / Kitaev | `lean/InfoGeometry/Quantum/BulkBoundary.lean`, `lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean`, `lean/InfoGeometry/Canonical/MajoranaKitaevSpinorBridge.lean` |
-| Grand Canonical / Response Matrix | `lean/InfoGeometry/Core/GrandCanonical.lean`, `lean/InfoGeometry/GrandCanonical/ResponseMatrix.lean` |
-| Determinant / scalar log corridor | `lean/InfoGeometry/Canonical/DeterminantCore.lean`, `lean/InfoGeometry/Canonical/Determinant.lean`, `lean/InfoGeometry/Canonical/ZetaDeterminant.lean` |
-| Operatorial scalar lifts | `lean/InfoGeometry/Canonical/OperatorialInformationLift.lean`, `lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean` |
-| KK / Fredholm frontier | `lean/InfoGeometry/KK/ClNNFredholmBridge.lean` |
-| Compatibility split-tower lane | `lean/InfoGeometry/Clifford/ClNN.lean`, `lean/InfoGeometry/Clifford/ClNNSpecialization.lean`, `lean/InfoGeometry/Canonical/ClNNBottBridge.lean`, `lean/InfoGeometry/Clifford/GeneralizedMetricBField.lean` |
+| Modular / relative / operator lanes | `lean/InfoGeometry/Canonical/RelativeModularOperator.lean`, `lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean`, `lean/InfoGeometry/Canonical/ConnesArakiTomita.lean`, `lean/InfoGeometry/Canonical/TomitaTakesaki.lean` |
+| Krein / Clifford / doubled geometry | `lean/InfoGeometry/Krein/KreinSpace.lean`, `lean/InfoGeometry/Krein/DoubledSpace.lean`, `lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean`, `lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean` |
+| Transport / thermo / KMS | `lean/InfoGeometry/Canonical/BogoliubovTransport.lean`, `lean/InfoGeometry/Canonical/TransportLieDerivative.lean`, `lean/InfoGeometry/Canonical/SinkhornFoundation.lean`, `lean/InfoGeometry/Canonical/SinkhornKMSCore.lean` |
+| Anomaly / Drazin / inverse-kernel | `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean`, `lean/InfoGeometry/Canonical/EinsteinAnomalyOperator.lean`, `lean/InfoGeometry/Canonical/DrazinSupercharge.lean`, `lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean` |
+| Projective / potential / measure roots | `lean/InfoGeometry/PositiveMeasure.lean`, `lean/InfoGeometry/Projective/Normalize.lean`, `lean/InfoGeometry/Canonical/PositiveRayCore.lean`, `lean/InfoGeometry/Canonical/RelativePotentialCore.lean`, `lean/InfoGeometry/Canonical/RelativePotentialCountBridge.lean` |
+| Quantum geometric tensor / Weyl / gauge | `lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean`, `lean/InfoGeometry/Canonical/WeylGaugeField.lean`, `lean/InfoGeometry/Canonical/WeylTransport.lean`, `lean/InfoGeometry/Canonical/PhaseSpaceWeylCausalBridge.lean` |
 
-## Use rule
+## Use Rule
 
-This index is only a starting point.
+Treat this file as an entrypoint only.
 
-For current ownership after refactors:
-
-1. read the owner and bridge module docstrings;
-2. check `docs/ModuleMap.md` and `docs/unification_map.md`; and
-3. verify with source, not with this table alone.
+1. Start from the generated machine reports above.
+2. Confirm with source in the cited Lean files.
+3. Keep curated table changes synchronized with regenerated reports.

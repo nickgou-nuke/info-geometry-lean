@@ -4,12 +4,19 @@ title: "info-geometry-lean"
 type: software
 license: Apache-2.0
 date-released: 2026-02-26
-repository-code: "https://github.com/nklgtv-nuke/info-geometry-lean"
-url: "https://github.com/nklgtv-nuke/info-geometry-lean"
+repository-code: "https://github.com/nickgou-nuke/info-geometry-lean"
+url: "https://github.com/nickgou-nuke/info-geometry-lean"
 abstract: >
-  Lean 4 formalization project spanning information geometry, convex and
-  thermodynamic inference, Clifford/Krein structures, and research modules
-  connecting gauge-theoretic and transformer-style abstractions.
+  Lean 4 formalization project for information geometry with a maintained
+  representation-depth theorem spine
+  (count/projective/operator/krein/transport/thermo). Repository-wide lexical
+  and declaration-level indexing across Lean sources and black-book chapters
+  identifies a stable core centered on modular and spectral operator theory,
+  Krein-Clifford doubled geometry, transport/thermodynamic inference lanes
+  (including KMS and Bogoliubov structures), and Drazin/inverse-kernel anomaly
+  analysis with Einstein-source bridges. The workflow couples hypothesis-first
+  black-book research with theorem-target promotion under Lean-native
+  architecture audits, DAG diagnostics, and vacuity checks.
 authors:
   - family-names: Goutev
     given-names: Nikolay
@@ -19,8 +26,34 @@ authors:
     affiliation: "Institute for Nuclear Research and Nuclear Energy (INRNE-BAS), Bulgarian Academy of Sciences"
 keywords:
   - lean4
+  - theorem-proving
+  - formal-verification
   - information-geometry
-  - formalization
-  - gauge-theory
-  - transformers
-
+  - projective-geometry
+  - operator-algebras
+  - von-neumann-algebras
+  - modular-theory
+  - spectral-operator-theory
+  - tomita-takesaki
+  - connes-cocycle
+  - radon-nikodym
+  - krein-space
+  - clifford-algebra
+  - phase-space-geometry
+  - transport-theory
+  - bogoliubov-transport
+  - drazin-inverse
+  - anomaly-operators
+  - einstein-source-bridges
+  - quantum-geometric-tensor
+  - thermodynamic-inference
+  - kms-states
+  - sinkhorn
+  - llm-thermodynamics
+  - representation-depth-architecture
+  - dependency-graph-analysis
+  - vacuity-audit
+  - black-book-methodology
+  - jung-pauli-methodology
+  - pauli-auditor-protocol
+  - reproducible-research

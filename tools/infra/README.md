@@ -100,6 +100,12 @@ Research-injection pipeline surfaces:
 Runtime LLM theorem-conformance surface:
 - `llm_thermo_conformance.py` (numerical residual audit for KMS/softmax/free-energy/defect identities on JSONL traces)
 
+Release/compliance surfaces:
+- `create_evidence_bundle.sh` (deterministic archive + checksum + certificate bundle; optional OpenTimestamps stamping)
+- `verify_evidence_bundle.sh` (checksum verification for bundle outputs)
+- `export_public_release.py` (clean public-release export with third-party exclusion stubs)
+- `scan_third_party_licenses.py` (deep copyright/license marker scan and report generation)
+
 Gemini passthrough arg guard:
 - `injection_capture_gemini_cli.py` and `gemini_account_adapter.py` strip any
   passthrough arg containing `prompt_cache_retention` and emit a warning to
@@ -160,6 +166,12 @@ Use the infra tools by role, not as one undifferentiated report pile:
 - classification and structural
   - `classify_missing_all.py`
   - `generate_structural_dictionary.py`
+- full-lean keyword indexing and story synthesis
+  - `generate_keyword_research_report.py` (indexes all tracked Lean files; sorted lexical frequency + hotspot files)
+  - `generate_repo_story_from_keyword_index.py` (characteristic-term selection + deep theorem/lemma/axiom search + story synthesis)
+- black-books keyword indexing and story synthesis
+  - `generate_black_books_keyword_report.py` (indexes black-book markdown corpus; sorted lexical frequency + chapter hotspots)
+  - `generate_black_books_story_from_keyword_index.py` (profile-aware characteristic terms + deep excerpt search + story synthesis)
 - process-flow and coherence pressure
   - `lean/DAG/ProcessFlowExport.lean`
   - `generate_process_flow_report.py`

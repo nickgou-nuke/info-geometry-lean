@@ -35,6 +35,20 @@ Relativity of Measurement**:
 - [Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md) — The project's roadmap and trajectory.
 - [SEMANTIC_POTENTIAL.md](SEMANTIC_POTENTIAL.md) — The "Scorpio & Virgo" multi-agent generative engine.
 
+## Modular Support Charter
+
+For modular/support-sensitive work (especially Type III-facing lanes), use the
+dual-projector owner package as the execution surface:
+
+- [black_books/94_logdet_burg_modular_hamiltonians.md](black_books/94_logdet_burg_modular_hamiltonians.md) — Charter narrative and guardrails (`Δ`-first, support-restricted log lane).
+- [lean/InfoGeometry/Canonical/MoorePenrose.lean](../lean/InfoGeometry/Canonical/MoorePenrose.lean) — Metric/self-adjoint projector lane and spectral-vs-metric anomaly surface.
+- [lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean](../lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean) — Unified projector/anomaly kernel routed by downstream modules.
+- [lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean](../lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean) — Drazin regular/defect projector algebra and Krein compatibility transport.
+- [lean/InfoGeometry/Canonical/DrazinSupercharge.lean](../lean/InfoGeometry/Canonical/DrazinSupercharge.lean) — Projector-controlled regular restriction and support package theorems.
+
+Guardrail: modular-lane operations should route through this package rather than
+raw textbook support narration.
+
 ## What Is Current
 
 Use these first when you want the current repo state:

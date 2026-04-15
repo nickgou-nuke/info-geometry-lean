@@ -81,7 +81,7 @@ theorem singular_polar_surrogate_closure
 Defect-supported operators are exactly carried by the complementary spectral
 projector and annihilated by the regular spectral projector.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem defect_supported_projector_relations
     (CIK : CertifiedInverseKernel H₂) :
     ∀ {Z : EndH},
@@ -141,7 +141,7 @@ theorem spectral_dilation_anomaly_relations
 /--
 The odd generator equals twice the spectral/dilation commutator.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem supercharge_commutator_relation
     (CIK : CertifiedInverseKernel H₂) :
     DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
@@ -154,7 +154,7 @@ theorem supercharge_commutator_relation
 /--
 The odd generator anticommutes with the spectral grading.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem supercharge_odd_relation
     (CIK : CertifiedInverseKernel H₂) :
     DrazinSupercharge.CertifiedInverseKernel.supercharge CIK
@@ -172,7 +172,7 @@ Double grading-conjugation on the odd generator is involutive (`Z₂` law).
 Equivalently: crossing the grading boundary twice returns the original odd
 generator.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem supercharge_double_grading_conjugation_relation
     (CIK : CertifiedInverseKernel H₂) :
     let ΓS := CIK.toInformationCartanTriple.GammaS
@@ -220,7 +220,7 @@ theorem superHamiltonian_canonical_split_exists
 Thin capstone packet assembling projector, anomaly, odd/even, and canonical split
 relations with minimal semantic drift.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem drazin_singular_closure_packet
     (CIK : CertifiedInverseKernel H₂) :
     (∀ {Z : EndH},
@@ -369,7 +369,7 @@ theorem cp003_singular_polar_kan_package_of_commute
 CP-003 extracted commutator clause:
 from one commutation witness, recover the Drazin-vs-dilation commutator law.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem singular_decomposition_surrogate_commutator_of_commute
     (CIK : CertifiedInverseKernel H₂)
     (R : EndH)
@@ -460,7 +460,7 @@ theorem canonicalRelativeModularOperator_mixed_blocks_zero_of_wedgeCalibrated
 Wedge-calibrated support identities for the apex block and active block of the
 canonical bounded relative modular representative.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem canonicalRelativeModularOperator_block_support_of_wedgeCalibrated
     (CIK : CertifiedInverseKernel H₂)
     {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}

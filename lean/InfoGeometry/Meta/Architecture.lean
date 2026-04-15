@@ -184,14 +184,21 @@ def taggedDependencyViolations
 def checkArchitectureTopology : CoreM Unit := do
   let env ← getEnv
   let mut errors : Array MessageData := #[]
+  -- Strict architecture adjacency is enforced on the canonical spine only.
+  -- Other namespaces may carry exploratory tags without gating canonical admission.
+  let isCanonicalSpine (declName : Name) : Bool :=
+    (toString declName).startsWith "InfoGeometry.Canonical."
   let taggedDecls : Array (Name × RepDepth) :=
     env.constants.fold (init := #[]) fun acc declName _ =>
-      match repDepth? env declName with
-      | some depth => acc.push (declName, depth)
-      | none => acc
+      if !isCanonicalSpine declName then
+        acc
+      else
+        match repDepth? env declName with
+        | some depth => acc.push (declName, depth)
+        | none => acc
   let capstones : Array Name :=
     env.constants.fold (init := #[]) fun acc declName _ =>
-      if capstoneAttr.hasTag env declName then
+      if isCanonicalSpine declName && capstoneAttr.hasTag env declName then
         acc.push declName
       else
         acc

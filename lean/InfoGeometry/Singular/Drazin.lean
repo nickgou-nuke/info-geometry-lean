@@ -43,6 +43,144 @@ theorem eq3 (h : IsDrazinInverse A D k) : A^k = A^(k + 1) * D := h.pow_eq_pow_su
 
 end IsDrazinInverse
 
+/-- A positive power of an idempotent is itself. -/
+lemma pow_succ_eq_of_idempotent {R : Type*} [Monoid R] {P : R}
+    (hP : P * P = P) :
+    ∀ n : ℕ, P ^ (n + 1) = P := by
+  intro n
+  induction n with
+  | zero =>
+      simp [pow_succ]
+  | succ n ih =>
+      calc
+        P ^ (n.succ + 1) = P ^ (n + 1) * P := by
+          simp [pow_succ]
+        _ = P * P := by rw [ih]
+        _ = P := hP
+
+/-- The Drazin projector attached to a Drazin witness is idempotent. -/
+lemma drazin_projector_idempotent'
+    {A D : R} {k : ℕ}
+    (h : IsDrazinInverse A D k) :
+    (A * D) * (A * D) = A * D := by
+  calc
+    (A * D) * (A * D) = A * (D * A * D) := by simp [mul_assoc]
+    _ = A * D := by rw [h.dad_eq_d]
+
+/--
+For a positive-index Drazin witness, the mixed power collapses to the projector
+`A * D`.
+-/
+lemma mul_pow_eq_drazinProjector_of_pos
+    {A D : R} {n : ℕ}
+    (h : IsDrazinInverse A D (n + 1)) :
+    D ^ (n + 1) * A ^ (n + 1) = A * D := by
+  have hcommAD : Commute A D := h.comm
+  have hcommDA : Commute D A := hcommAD.symm
+  have hIdem : (A * D) * (A * D) = A * D :=
+    drazin_projector_idempotent' h
+  calc
+    D ^ (n + 1) * A ^ (n + 1) = (D * A) ^ (n + 1) := by
+      simpa using (hcommDA.mul_pow (n + 1)).symm
+    _ = (A * D) ^ (n + 1) := by
+      rw [h.comm.symm]
+    _ = A * D := pow_succ_eq_of_idempotent hIdem n
+
+/--
+Uniqueness of the Drazin inverse at a fixed index.
+
+If `B` and `C` both satisfy the Drazin equations for `A` with the same
+index `k`, then they are equal.
+-/
+theorem Drazin_unique {A B C : R} {k : ℕ}
+    (hB : IsDrazinInverse A B k)
+    (hC : IsDrazinInverse A C k) :
+    B = C := by
+  rcases k with _ | n
+  · have hAB : A * B = 1 := by
+      simpa [pow_one] using (hB.pow_eq_pow_succ_mul).symm
+    have hAC : A * C = 1 := by
+      simpa [pow_one] using (hC.pow_eq_pow_succ_mul).symm
+    have hBA : B * A = 1 := by
+      calc
+        B * A = A * B := hB.comm.symm
+        _ = 1 := hAB
+    calc
+      B = B * 1 := by simp
+      _ = B * (A * C) := by rw [hAC]
+      _ = (B * A) * C := by simp [mul_assoc]
+      _ = 1 * C := by rw [hBA]
+      _ = C := by simp
+  ·
+    let E : R := A * B
+    let F : R := A * C
+    have hcommAB : Commute A B := hB.comm
+    have hcommAC : Commute A C := hC.comm
+
+    have hEpow : B ^ (n + 1) * A ^ (n + 1) = E := by
+      simpa [E] using mul_pow_eq_drazinProjector_of_pos (h := hB)
+
+    have hFpow : C ^ (n + 1) * A ^ (n + 1) = F := by
+      simpa [F] using mul_pow_eq_drazinProjector_of_pos (h := hC)
+
+    have hE_mul_F : E = F * E := by
+      have hABpow : A ^ (n + 1) * B ^ (n + 1) = B ^ (n + 1) * A ^ (n + 1) := by
+        simpa using (hcommAB.pow_pow (n + 1) (n + 1)).eq
+      have hA_pow_eq_F_mul : A ^ (n + 1) = F * A ^ (n + 1) := by
+        calc
+          A ^ (n + 1) = A ^ (n + 2) * C := hC.pow_eq_pow_succ_mul
+          _ = C * A ^ (n + 2) := by
+            simpa using (hcommAC.pow_left (n + 2)).eq
+          _ = (A * C) * A ^ (n + 1) := by
+            calc
+              C * A ^ (n + 2) = C * (A * A ^ (n + 1)) := by
+                simp [pow_succ']
+              _ = (C * A) * A ^ (n + 1) := by
+                simp [mul_assoc]
+              _ = (A * C) * A ^ (n + 1) := by
+                rw [hcommAC.eq]
+          _ = F * A ^ (n + 1) := by rfl
+      have hMulByBpow :
+          A ^ (n + 1) * B ^ (n + 1) = (F * A ^ (n + 1)) * B ^ (n + 1) := by
+        simpa [mul_assoc] using congrArg (fun t => t * B ^ (n + 1)) hA_pow_eq_F_mul
+      calc
+        E = B ^ (n + 1) * A ^ (n + 1) := hEpow.symm
+        _ = A ^ (n + 1) * B ^ (n + 1) := by rw [hABpow]
+        _ = (F * A ^ (n + 1)) * B ^ (n + 1) := hMulByBpow
+        _ = F * (A ^ (n + 1) * B ^ (n + 1)) := by simp [mul_assoc]
+        _ = F * (B ^ (n + 1) * A ^ (n + 1)) := by rw [hABpow]
+        _ = F * E := by rw [hEpow]
+
+    have hF_mul_E : F = F * E := by
+      calc
+        F = C ^ (n + 1) * A ^ (n + 1) := hFpow.symm
+        _ = C ^ (n + 1) * (A ^ (n + 2) * B) := by
+          rw [hB.pow_eq_pow_succ_mul]
+        _ = (C ^ (n + 1) * A ^ (n + 1)) * (A * B) := by
+          simp [pow_succ, mul_assoc]
+        _ = F * E := by simp [hFpow, E, F]
+
+    have hEF : E = F := by
+      exact hE_mul_F.trans hF_mul_E.symm
+
+    have hAB : A * B = A * C := by
+      simpa [E, F] using hEF
+
+    have hBA : B * A = C * A := by
+      calc
+        B * A = A * B := hB.comm.symm
+        _ = A * C := hAB
+        _ = C * A := hC.comm
+
+    calc
+      B = B * A * B := hB.dad_eq_d.symm
+      _ = (B * A) * B := by simp [mul_assoc]
+      _ = (C * A) * B := by rw [hBA]
+      _ = C * (A * B) := by simp [mul_assoc]
+      _ = C * (A * C) := by rw [hAB]
+      _ = C * A * C := by simp [mul_assoc]
+      _ = C := hC.dad_eq_d
+
 /-- The Spectral/Core Projector P_D = A * A^D -/
 def Drazin_Projector (A D : R) (k : ℕ) (_h : IsDrazinInverse A D k) : R := A * D
 
@@ -278,6 +416,24 @@ Theorem: The chosen operator satisfies the Drazin laws.
 theorem drazinInverse_spec (A : Module.End K V) :
     IsDrazinInverse A (drazinInverse A) (drazinIndex A) :=
   (exists_drazinInverse_global A).choose_spec.choose_spec
+
+/-- Any witness at the chosen Drazin index equals the chosen Drazin inverse. -/
+theorem drazinInverse_eq_of_spec
+    (A : Module.End K V) {D : Module.End K V}
+    (hD : IsDrazinInverse A D (drazinIndex A)) :
+    D = drazinInverse A := by
+  exact Drazin_unique hD (drazinInverse_spec A)
+
+/-- The chosen Drazin inverse is the unique witness at the chosen index. -/
+theorem drazinInverse_unique
+    (A : Module.End K V) {D : Module.End K V} :
+    IsDrazinInverse A D (drazinIndex A) ↔ D = drazinInverse A := by
+  constructor
+  · intro hD
+    exact drazinInverse_eq_of_spec A hD
+  · intro hD
+    rw [hD]
+    exact drazinInverse_spec A
 
 /--
 The Spectral Projector P_D constructed natively from the operator A.

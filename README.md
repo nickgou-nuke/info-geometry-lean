@@ -238,6 +238,20 @@ lake script run dagAll
 lake script run changedVerify
 ```
 
+Optional runtime conformance audit for the LLM thermo lane (JSONL traces):
+
+```bash
+python3 tools/infra/llm_thermo_conformance.py \
+  --input traces/runtime_router.jsonl \
+  --json-out reports/llm/thermo_conformance.json \
+  --md-out reports/llm/thermo_conformance.md \
+  --strict-schema \
+  --fail-on-violation
+```
+
+See [docs/llm_thermo_conformance.md](docs/llm_thermo_conformance.md) and
+[tools/schema/llm_thermo_trace.schema.json](tools/schema/llm_thermo_trace.schema.json).
+
 ## Codex CLI Compact Error Workaround
 
 If Codex emits:

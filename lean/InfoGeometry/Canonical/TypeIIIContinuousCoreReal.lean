@@ -111,6 +111,56 @@ theorem modularTransportFlow_eq_realTomitaFlow
       = (R.toRealModularLogData hExp).flow t := by
   rfl
 
+/--
+Pairwise-commuting observable family on the Type-III doubled carrier.
+This is the conservative MASA-style entry surface used by downstream observers.
+-/
+@[rep_depth operator]
+def IsPairwiseCommutingObservableFamily (Ω : Set EndH) : Prop :=
+  ∀ ⦃A B : EndH⦄, A ∈ Ω → B ∈ Ω → Commute A B
+
+/--
+Maximal commuting observable family:
+every operator commuting with all members of `Ω` is already in `Ω`.
+-/
+@[rep_depth operator]
+def IsMaximalCommutingObservableFamily (Ω : Set EndH) : Prop :=
+  IsPairwiseCommutingObservableFamily (E := E) Ω
+    ∧ ∀ A : EndH, (∀ B : EndH, B ∈ Ω → Commute A B) → A ∈ Ω
+
+/--
+Additive Boltzmann entropy potential on the Type-III cocycle lane:
+the logarithmic volume potential induced from the scalar Connes cocycle bridge.
+-/
+@[rep_depth thermo]
+noncomputable def boltzmannEntropyPotential
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd E)
+    (B : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := E) R.additiveFlow) :
+    ℝ → ℝ :=
+  InfoGeometry.Volume.ConnesCocycle.cocycleLogPotential (H := E) R.additiveFlow u B
+
+@[rep_depth thermo]
+theorem boltzmannEntropyPotential_add
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd E)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle R.additiveFlow u)
+    (B : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := E) R.additiveFlow) :
+    ∀ s t : ℝ,
+      R.boltzmannEntropyPotential u B (s + t)
+        = R.boltzmannEntropyPotential u B s + R.boltzmannEntropyPotential u B t := by
+  intro s t
+  simpa [boltzmannEntropyPotential] using
+    (InfoGeometry.Volume.ConnesCocycle.cocycleLogPotential_add
+      (H := E) R.additiveFlow u hCocycle B s t)
+
+@[rep_depth thermo, capstone]
+theorem exists_boltzmannEntropyPotential_of_cocycle
+    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd E)
+    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle R.additiveFlow u)
+    (B : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := E) R.additiveFlow) :
+    ∃ Φ : ℝ → ℝ, ∀ s t, Φ (s + t) = Φ s + Φ t := by
+  refine ⟨R.boltzmannEntropyPotential u B, ?_⟩
+  exact R.boltzmannEntropyPotential_add u hCocycle B
+
 end RealTypeIIIModularData
 
 /--

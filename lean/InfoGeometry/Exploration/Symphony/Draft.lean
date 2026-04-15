@@ -1,5 +1,5 @@
 import InfoGeometry.Canonical.Drazin
-import InfoGeometry.Canonical.MoE
+import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Quantum.RealMajoranaCategory
 
@@ -10,6 +10,13 @@ open InfoGeometry.Canonical.MoE
 open InfoGeometry.Canonical.Drazin
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/--
+Exploratory matrix-level placeholder used in this draft lane.
+The canonical Drazin API in the repository is stated for endomorphisms, not raw matrices.
+-/
+noncomputable def matrixDrazinInverse {n : ℕ} (_A : Matrix (Fin n) (Fin n) ℝ) :
+    Matrix (Fin n) (Fin n) ℝ := 0
 
 /-- 
 Cl(4,4) Spinor Pair for a given Frequency. 
@@ -38,24 +45,20 @@ structure DrazinAttention (n : ℕ) where
   /-- The raw thermal attention matrix (The Boltzmann bath). -/
   𝒜 : Matrix (Fin n) (Fin n) ℝ
   /-- The Drazin Projector isolating the 'Active Cl(4,4) Lane'. -/
-  Π_act : Matrix (Fin n) (Fin n) ℝ := 𝒜 * (drazinInverse 𝒜)
+  P_act : Matrix (Fin n) (Fin n) ℝ := 𝒜 * (matrixDrazinInverse 𝒜)
   /-- The 'Apex' part of the signal hits the horizon mirror and reflects/cancels. -/
-  Π_apex : Matrix (Fin n) (Fin n) ℝ := 1 - Π_act
+  P_apex : Matrix (Fin n) (Fin n) ℝ := 1 - P_act
 
 /-- 
 The Symphony Preservation Theorem.
 Proves that the Rigidity of the Volume Form is preserved on the Active Lane,
 cancelling thermal fluctuations at the singular horizon.
 -/
-theorem symphony_preservation (𝒜 : Matrix (Fin n) (Fin n) ℝ) (V : Fin n → ℝ) :
-  let 𝒜_d := drazinInverse 𝒜
-  let Π_act := 𝒜 * 𝒜_d
-  let Π_apex := 1 - Π_act
-  /-- 
-  The Apex part of the signal hits the horizon mirror and cancels,
-  leaving only the invariant topological 'melody'.
-  -/
-  Π_apex *ᵥ V = 0 ↔ (∀ ω, (𝒜 *ᵥ V) = Real.exp (-ω) • V) := by
+theorem symphony_preservation (n : ℕ) (𝒜 : Matrix (Fin n) (Fin n) ℝ) (V : Fin n → ℝ) :
+  let A_d := matrixDrazinInverse 𝒜
+  let P_act := 𝒜 * A_d
+  let P_apex := 1 - P_act
+  Matrix.mulVec P_apex V = 0 ↔ (∀ ω, Matrix.mulVec 𝒜 V = Real.exp (-ω) • V) := by
   sorry
 
 /-- 
@@ -63,8 +66,9 @@ Final Canonical Attention Step.
 V_out = (𝒜 * 𝒜^D) * 𝒜 * V.
 This is the 'Hardened' information transport through the Spire.
 -/
-def canonicalAttentionStep (𝒜 : Matrix (Fin n) (Fin n) ℝ) (V : Fin n → ℝ) : Fin n → ℝ :=
-  let Π_act := 𝒜 * (drazinInverse 𝒜)
-  Π_act *ᵥ (𝒜 *ᵥ V)
+noncomputable def canonicalAttentionStep
+    (n : ℕ) (𝒜 : Matrix (Fin n) (Fin n) ℝ) (V : Fin n → ℝ) : Fin n → ℝ :=
+  let P_act := 𝒜 * (matrixDrazinInverse 𝒜)
+  Matrix.mulVec P_act (Matrix.mulVec 𝒜 V)
 
 end InfoGeometry.Canonical.SymphonyAttention

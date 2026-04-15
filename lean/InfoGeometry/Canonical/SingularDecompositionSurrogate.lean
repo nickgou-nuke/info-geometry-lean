@@ -188,7 +188,7 @@ theorem supercharge_double_grading_conjugation_relation
 /--
 The square of the odd generator commutes with the spectral grading.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem superHamiltonian_even_relation
     (CIK : CertifiedInverseKernel H₂) :
     DrazinSupercharge.CertifiedInverseKernel.superHamiltonian CIK
@@ -203,7 +203,7 @@ theorem superHamiltonian_even_relation
 /--
 The even operator admits the canonical singular split.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem superHamiltonian_canonical_split_exists
     (CIK : CertifiedInverseKernel H₂) :
     ∃ H Z : EndH,

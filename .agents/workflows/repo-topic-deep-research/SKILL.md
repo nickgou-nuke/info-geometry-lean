@@ -129,6 +129,9 @@ Use the templates in:
 - `skills/repo-topic-deep-research/templates/gemini_cli_prompt_template.md`
 - `skills/repo-topic-deep-research/templates/hermes_enrichment_prompt_template.md`
 - `skills/repo-topic-deep-research/templates/openai_deep_research_brief_template.md`
+- `skills/repo-topic-deep-research/templates/topic_dossier_template.md`
+- `skills/repo-topic-deep-research/templates/lean_context_pack_template.lean`
+- `skills/repo-topic-deep-research/templates/architecture_snapshot_template.md`
 
 ## Lane Mirrors
 

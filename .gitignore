@@ -26,6 +26,7 @@ docs/**
 !docs/auto/
 docs/auto/**
 !docs/auto/index.md
+!docs/**/*.md
 !docs/README.md
 !docs/ModuleMap.md
 !docs/RepositoryMemoryMap.md
@@ -44,13 +45,30 @@ publication/
 
 # Generated DAG extraction payloads
 docs-map/declarations*.json
+docs-map/*.json
 reports/theory-dag-*/declarations.json
-reports/dag/
-reports/optimization-runs/
+reports/theory-dag-*/graph.json
+reports/dag/**
+!reports/dag/**/*.md
+reports/dag/**/*.json
+reports/dag/**/*.jsonl
+reports/dag/**/*.graphml
+reports/dag/**/*.svg
+reports/optimization-runs/**
+!reports/optimization-runs/**/*.md
+reports/**/*.json
+reports/**/*.jsonl
 reports/lift-naturality-diagnostics.md
 reports/naturality-promoter.md
-artifacts/dag/structural-topology.json
-artifacts/dag/process-flow/comparison-candidates.jsonl
+artifacts/dag/**/*.json
+artifacts/dag/**/*.jsonl
+artifacts/dag/**/*.hash
+artifacts/dag/**/*.trace
+.spire_cache/*.json
+lean/DAG/*.jsonl
+index/*.json
+index/*.jsonl
+full_graph.json
 
 # Accidental vendor payloads
 interspec_src/

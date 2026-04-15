@@ -97,6 +97,9 @@ Research-injection pipeline surfaces:
 - `openai_deep_research_gateway.py` (Codex-facing MCP gateway for OpenAI DR jobs)
 - `openai_deep_research_datasource_mcp_example.py` (nested `search`/`fetch` datasource template)
 
+Runtime LLM theorem-conformance surface:
+- `llm_thermo_conformance.py` (numerical residual audit for KMS/softmax/free-energy/defect identities on JSONL traces)
+
 Gemini passthrough arg guard:
 - `injection_capture_gemini_cli.py` and `gemini_account_adapter.py` strip any
   passthrough arg containing `prompt_cache_retention` and emit a warning to

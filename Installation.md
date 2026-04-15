@@ -75,6 +75,24 @@ python3 tools/infra/generate_source_sink_compression.py
 
 Continue with the rest of the maintained sequence from [README.md](README.md) or [tools/infra/README.md](tools/infra/README.md).
 
+## Optional: Runtime Thermo Conformance Audit
+
+If you capture open-weights runtime traces (JSONL), you can audit them against
+the finite theorem lane (`KMSSoftmaxBridge`, `RouterFreeEnergyBridge`,
+`PromptDefectRegularization`):
+
+```bash
+python3 tools/infra/llm_thermo_conformance.py \
+  --input traces/runtime_router.jsonl \
+  --json-out reports/llm/thermo_conformance.json \
+  --md-out reports/llm/thermo_conformance.md \
+  --strict-schema \
+  --fail-on-violation
+```
+
+Input schema:
+- `tools/schema/llm_thermo_trace.schema.json`
+
 ## Notes
 
 - Use the locked build wrapper for umbrella builds; do not run concurrent `lake build` jobs.

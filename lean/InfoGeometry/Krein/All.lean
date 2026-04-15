@@ -42,6 +42,7 @@ import InfoGeometry.Krein.Dilation
 import InfoGeometry.Krein.ExponentialIsometry
 import InfoGeometry.Krein.Prelude
 import InfoGeometry.Krein.DoubledSpaceMatrix
+import InfoGeometry.Krein.SplitCliffordNN
 import InfoGeometry.Krein.InvolutiveSelfDualCarrier
 import InfoGeometry.Krein.CarrierTransport
 import InfoGeometry.Krein.CarrierWithGenerator

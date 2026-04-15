@@ -378,6 +378,142 @@ theorem superHamiltonian_commutes_GammaS :
           simp [mul_assoc]
 
 /--
+Regular-support compressed superHamiltonian commutes with the spectral grading.
+
+This is the projector-stable commutation law needed for flow-level fixedness on
+the regular Drazin lane.
+-/
+@[rep_depth operator]
+theorem regularRestrictedSuperHamiltonian_commutes_GammaS :
+    regularRestrictedSuperHamiltonian CIK * CIK.GammaS
+      = CIK.GammaS * regularRestrictedSuperHamiltonian CIK := by
+  have hP : CIK.spectralProjector * CIK.GammaS = CIK.GammaS * CIK.spectralProjector := by
+    exact
+      (CIK.isSpectralCompact_iff_commute_GammaS (X := CIK.spectralProjector)).1
+        (CIK.spectralProjector_isSpectralCompact)
+  have hSH : superHamiltonian CIK * CIK.GammaS = CIK.GammaS * superHamiltonian CIK := by
+    simpa [CertifiedInverseKernel.GammaS, CertifiedInverseKernel.cartanTriple,
+      CertifiedInverseKernel.toInformationCartanTriple] using
+      superHamiltonian_commutes_GammaS (CIK := CIK)
+  unfold regularRestrictedSuperHamiltonian
+  calc
+    (CIK.spectralProjector * superHamiltonian CIK * CIK.spectralProjector) * CIK.GammaS
+        = CIK.spectralProjector * superHamiltonian CIK * (CIK.spectralProjector * CIK.GammaS) := by
+            simp [mul_assoc]
+    _ = CIK.spectralProjector * superHamiltonian CIK * (CIK.GammaS * CIK.spectralProjector) := by
+          rw [hP]
+    _ = CIK.spectralProjector * (superHamiltonian CIK * CIK.GammaS) * CIK.spectralProjector := by
+          simp [mul_assoc]
+    _ = CIK.spectralProjector * (CIK.GammaS * superHamiltonian CIK) * CIK.spectralProjector := by
+          rw [hSH]
+    _ = (CIK.spectralProjector * CIK.GammaS) * superHamiltonian CIK * CIK.spectralProjector := by
+          simp [mul_assoc]
+    _ = (CIK.GammaS * CIK.spectralProjector) * superHamiltonian CIK * CIK.spectralProjector := by
+          rw [hP]
+    _ = CIK.GammaS * (CIK.spectralProjector * superHamiltonian CIK * CIK.spectralProjector) := by
+          simp [mul_assoc]
+
+/--
+Regular-support compressed superHamiltonian is spectrally compact/even.
+-/
+@[rep_depth operator]
+theorem regularRestrictedSuperHamiltonian_isSpectralCompact :
+    let T := CIK.toInformationCartanTriple
+    T.IsSpectralCompact (regularRestrictedSuperHamiltonian CIK) := by
+  let T := CIK.toInformationCartanTriple
+  rw [CartanDecomposition.InformationCartanTriple.isSpectralCompact_iff_commute T CIK.hDrazin]
+  simpa [T, CertifiedInverseKernel.GammaS, CertifiedInverseKernel.cartanTriple,
+    CertifiedInverseKernel.toInformationCartanTriple] using
+    regularRestrictedSuperHamiltonian_commutes_GammaS (CIK := CIK)
+
+/--
+Regular-support compressed superHamiltonian is fixed by the spectral grading
+adjoint flow.
+-/
+@[rep_depth operator]
+theorem regularRestrictedSuperHamiltonian_fixed_under_spectralGradingFlow
+    (t : ℝ) :
+    let T := CIK.toInformationCartanTriple
+    T.spectralAdjointFlow T.GammaS t (regularRestrictedSuperHamiltonian CIK)
+      = regularRestrictedSuperHamiltonian CIK := by
+  let T := CIK.toInformationCartanTriple
+  have hComm : Commute (regularRestrictedSuperHamiltonian CIK) T.GammaS := by
+    simpa [T] using regularRestrictedSuperHamiltonian_commutes_GammaS (CIK := CIK)
+  simpa [T] using
+    T.spectralAdjointFlow_eq_self_of_commute_GammaS hComm t
+
+/--
+Defect-side annihilation persists after spectral-grading adjoint transport of
+the regular-support compressed superHamiltonian (left compression).
+-/
+@[rep_depth operator]
+theorem spectralComplementaryProjector_mul_regularRestrictedSuperHamiltonianFlow_eq_zero
+    (t : ℝ) :
+    let T := CIK.toInformationCartanTriple
+    CIK.spectralComplementaryProjector
+      * T.spectralAdjointFlow T.GammaS t (regularRestrictedSuperHamiltonian CIK) = 0 := by
+  let T := CIK.toInformationCartanTriple
+  calc
+    CIK.spectralComplementaryProjector
+          * T.spectralAdjointFlow T.GammaS t (regularRestrictedSuperHamiltonian CIK)
+        = CIK.spectralComplementaryProjector * regularRestrictedSuperHamiltonian CIK := by
+            rw [regularRestrictedSuperHamiltonian_fixed_under_spectralGradingFlow (CIK := CIK) t]
+    _ = 0 := spectralComplementaryProjector_mul_regularRestrictedSuperHamiltonian_eq_zero (CIK := CIK)
+
+/--
+Defect-side annihilation persists after spectral-grading adjoint transport of
+the regular-support compressed superHamiltonian (right compression).
+-/
+@[rep_depth operator]
+theorem regularRestrictedSuperHamiltonianFlow_mul_spectralComplementaryProjector_eq_zero
+    (t : ℝ) :
+    let T := CIK.toInformationCartanTriple
+    T.spectralAdjointFlow T.GammaS t (regularRestrictedSuperHamiltonian CIK)
+      * CIK.spectralComplementaryProjector = 0 := by
+  let T := CIK.toInformationCartanTriple
+  calc
+    T.spectralAdjointFlow T.GammaS t (regularRestrictedSuperHamiltonian CIK)
+          * CIK.spectralComplementaryProjector
+        = regularRestrictedSuperHamiltonian CIK * CIK.spectralComplementaryProjector := by
+            rw [regularRestrictedSuperHamiltonian_fixed_under_spectralGradingFlow (CIK := CIK) t]
+    _ = 0 := regularRestrictedSuperHamiltonian_mul_spectralComplementaryProjector_eq_zero (CIK := CIK)
+
+/--
+Package theorem for regular-support modular execution on the projector lane:
+
+1. `K_reg` is left/right `P_D`-stable,
+2. `K_reg` is fixed by grading adjoint flow,
+3. transported `K_reg` remains annihilated by `P₀` on both sides.
+-/
+@[rep_depth operator, capstone]
+theorem regularRestrictedSuperHamiltonian_support_flow_package
+    (t : ℝ) :
+    (CIK.spectralProjector * regularRestrictedSuperHamiltonian CIK
+        = regularRestrictedSuperHamiltonian CIK)
+      ∧ (regularRestrictedSuperHamiltonian CIK * CIK.spectralProjector
+          = regularRestrictedSuperHamiltonian CIK)
+      ∧ (CIK.toInformationCartanTriple.spectralAdjointFlow
+            CIK.toInformationCartanTriple.GammaS t
+            (regularRestrictedSuperHamiltonian CIK)
+            = regularRestrictedSuperHamiltonian CIK)
+      ∧ (CIK.spectralComplementaryProjector
+            * CIK.toInformationCartanTriple.spectralAdjointFlow
+                CIK.toInformationCartanTriple.GammaS t
+                (regularRestrictedSuperHamiltonian CIK) = 0)
+      ∧ (CIK.toInformationCartanTriple.spectralAdjointFlow
+            CIK.toInformationCartanTriple.GammaS t
+            (regularRestrictedSuperHamiltonian CIK)
+            * CIK.spectralComplementaryProjector = 0) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact spectralProjector_mul_regularRestrictedSuperHamiltonian (CIK := CIK)
+  · exact regularRestrictedSuperHamiltonian_mul_spectralProjector (CIK := CIK)
+  · exact regularRestrictedSuperHamiltonian_fixed_under_spectralGradingFlow (CIK := CIK) t
+  · exact spectralComplementaryProjector_mul_regularRestrictedSuperHamiltonianFlow_eq_zero
+      (CIK := CIK) t
+  · exact regularRestrictedSuperHamiltonianFlow_mul_spectralComplementaryProjector_eq_zero
+      (CIK := CIK) t
+
+/--
 The kinetic operator `Q²` lies in the spectral compact/even sector.
 -/
 theorem superHamiltonian_isSpectralCompact :

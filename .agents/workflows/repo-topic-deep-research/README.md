@@ -9,6 +9,9 @@ Use templates:
 - `templates/gemini_cli_prompt_template.md`
 - `templates/hermes_enrichment_prompt_template.md`
 - `templates/openai_deep_research_brief_template.md`
+- `templates/topic_dossier_template.md`
+- `templates/lean_context_pack_template.lean`
+- `templates/architecture_snapshot_template.md`
 
 OpenAI Deep Research gateway:
 - `tools/infra/openai_deep_research_gateway.py`

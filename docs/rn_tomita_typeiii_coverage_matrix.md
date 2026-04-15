@@ -34,14 +34,15 @@ Search footprint used for this pass:
 | Finite thermal/KMS models | implemented | [`lean/InfoGeometry/Thermo/FiniteMatrix.lean`](../lean/InfoGeometry/Thermo/FiniteMatrix.lean), [`lean/InfoGeometry/Thermal/FiniteMatrix.lean`](../lean/InfoGeometry/Thermal/FiniteMatrix.lean) | Matrix/diagonal KMS-like realizations are formalized. |
 | Full spectral-theorem multiplication model (`L²(μ)`, cyclic subspaces, spectrum decomposition) | missing | No owner module with cyclic-subspace + multiplication representation + spectral-measure decomposition was found in `lean/InfoGeometry` | Current spectral files are finite/operator-lift packaging, not a full Hilbert spectral theorem lane. |
 | Full GNS construction layer for C\*-states (repo owner surface) | missing | No dedicated GNS owner module was found in `lean/InfoGeometry` in this pass | Standard-form interfaces exist, but not full GNS/Tomita construction stack. |
-| Noncommutative Pedersen–Takesaki affiliated-operator RN theorem stack | missing | No Lean owner theorem surface with Pedersen–Takesaki/Vaes affiliated-operator RN statements found | Appears in black-book analysis text, not yet in Lean owner modules. |
+| Pedersen–Takesaki/Vaes affiliated-operator RN lane | interface | [`lean/InfoGeometry/Canonical/PedersenTakesakiRNInterface.lean`](../lean/InfoGeometry/Canonical/PedersenTakesakiRNInterface.lean): `AffiliatedOperatorRNInterface`, `typeIII_affiliatedRN_interface_package`, `finiteAffiliatedDensity` | New interface scaffold is compiled; full existence/uniqueness affiliated-operator owner theorems are still not formalized. |
 
 ## Evidence That These Are Integrated (Not Isolated)
 
 - Canonical umbrella imports include the modular/RN/TypeIII lane:
   [`lean/InfoGeometry/Canonical/All.lean`](../lean/InfoGeometry/Canonical/All.lean)
   imports `TomitaTakesaki`, `StandardFormCore`, `TomitaTakesakiRealStandardForm`,
-  `TypeIIIContinuousCoreReal`, `RelativeModularCore`, `RelativeModularOperator`,
+  `TypeIIIContinuousCoreReal`, `PedersenTakesakiRNInterface`,
+  `RelativeModularCore`, `RelativeModularOperator`,
   `RelativeModularHamiltonian`, `RelativeModularCommutingLift`,
   `ConnesArakiCore`, `ConnesArakiTomita`, and `Volume.RadonNikodym`.
 - Measure and volume umbrellas include the RN/cocycle owners:
@@ -52,4 +53,4 @@ Search footprint used for this pass:
 
 - The repo already contains a substantial, theorem-bearing RN/modular/TypeIII-inspired stack.
 - What is still absent is the full classical operator-algebra endpoint:
-  spectral multiplication-model theorem layer, full GNS standard-form realization, and Pedersen–Takesaki-style affiliated-operator RN theorem stack.
+  spectral multiplication-model theorem layer, full GNS standard-form realization, and full Pedersen–Takesaki/Vaes affiliated-operator existence/uniqueness owner stack.

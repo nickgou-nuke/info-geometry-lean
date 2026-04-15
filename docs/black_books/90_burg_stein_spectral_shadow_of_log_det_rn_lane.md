@@ -13,6 +13,9 @@ multiplicative-to-additive mechanism:
 2. abelian scalar descent,
 3. additive log-potential readout.
 
+`log-det` geometry is an abelian shadow of modular theory, not the Type-III
+owner itself.
+
 The canonical convex atom is
 
 `f(lambda) = lambda - log lambda - 1`,
@@ -77,7 +80,7 @@ For invertible `M`, replacing
 preserves the relative spectrum up to similarity, so Burg/Stein is invariant
 under coordinate change and is natural on SPD geometry.
 
-## IV. Gaussian KL Bridge
+## IV. Gaussian KL Bridge (Finite Shadow)
 
 For multivariate Gaussians, the covariance contribution of KL is exactly the
 trace-minus-logdet expression (up to the standard one-half factor and
@@ -97,8 +100,16 @@ Owner order:
 1. `Delta_{psi|phi}` primary (relative modular operator / RN-like owner),
 2. `K_{psi|phi} := -log Delta_{psi|phi}` derived by spectral functional
    calculus (support/domain aware),
-3. scalar readout as expectation pairing,
-4. cocycle/chain law primary, additive log law as commuting shadow.
+3. scalar readout as state/weight pairing (GNS; natural cone in standard form),
+4. cocycle chain law primary (multiplicative), additive log structure derived
+   from its generator where defined.
+
+Scalarization hierarchy:
+
+- finite: `-log det` shadows,
+- semifinite: trace pairings like `Tr(-log Delta)` when available,
+- Type III: no determinant/trace owner in general; `Delta` and `log Delta`
+  remain primary operators.
 
 This avoids the false rule `log(AB) = log A + log B` at raw operator level.
 
@@ -108,13 +119,20 @@ Classical -> modular dictionary:
 
 - density ratio `p/q` -> relative modular operator `Delta_{phi,psi}`,
 - surprisal `-log(p/q)` -> relative modular Hamiltonian `-log Delta_{phi,psi}`,
-- expectation under density -> vector expectation in standard form,
-- RN/Jacobian chain rule -> Connes cocycle chain rule.
+- expectation under density -> state/weight pairing (GNS; natural cone only in
+  standard-form realization),
+- RN/Jacobian chain rule -> Connes cocycle (multiplicative), with additive
+  structure from the logarithmic generator where defined.
 
 This is the mathematically honest translation layer from commutative
 log-det/RN mechanics to noncommutative modular dynamics.
 
-## VII. Repo Anchors
+## VII. Canonical Guardrail
+
+In Type III, only `Delta` and `log Delta` are canonical at the owner level;
+all scalarizations are representation-dependent shadows.
+
+## VIII. Repo Anchors
 
 RN / determinant / cocycle ownership:
 
@@ -132,7 +150,7 @@ Log-det mechanism packaging:
 
 - [TypeIIILogDetRNPackage](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/LogDetRadonNikodymMechanism.lean:69)
 
-## VIII. Boundary Law
+## IX. Boundary Law
 
 This chapter formalizes the finite SPD and finite/support operator-owner
 bridge. It does not claim full unbounded affiliated-operator closure for

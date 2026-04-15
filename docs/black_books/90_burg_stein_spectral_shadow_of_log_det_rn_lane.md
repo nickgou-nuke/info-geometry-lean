@@ -1,4 +1,4 @@
-# Burg-Stein Spectral Shadow of the Log-Det RN Lane
+# Log-det Potentials, Burg Divergence, and Modular Hamiltonians
 
 ## Executive Thesis
 
@@ -13,89 +13,128 @@ multiplicative-to-additive mechanism:
 2. abelian scalar descent,
 3. additive log-potential readout.
 
-## I. Spectral Core of the Burg/Stein Potential
+The canonical convex atom is
 
-For `P, Q` symmetric positive definite, write the generalized spectrum
-`lambda_i = eig(Q^{-1/2} P Q^{-1/2})`, then:
+`f(lambda) = lambda - log lambda - 1`,
 
-`D_B(P || Q) = sum_i (lambda_i - log lambda_i - 1)`.
+which drives positivity, asymmetry, and spectral normal form.
 
-The scalar kernel `f(lambda) = lambda - log lambda - 1` has:
+## I. Burg/Stein as the SPD Log-det Bregman Potential
 
-- strict convexity on `(0, infty)`,
-- unique minimum `f(1) = 0`,
-- positivity `f(lambda) >= 0`.
+On the SPD cone `S_{++}^n`, take the strictly convex potential
 
-Hence `D_B(P || Q) >= 0`, with equality iff `P = Q`.
+`zeta(C) = -log det C`.
 
-## II. Directionality (Asymmetry)
+Its Bregman divergence yields Burg/Stein loss:
 
-Swapping inputs inverts spectral values:
+`B(P, Q) = tr(P Q^{-1}) - log det(P Q^{-1}) - n`.
+
+This is the exact finite lane where log-det acts as an additive potential:
+the divergence is the affine linearization error of `-log det`.
+
+## II. Spectral Normal Form
+
+For `P, Q` SPD, define
+
+`R = Q^{-1/2} P Q^{-1/2}`.
+
+`R` is SPD with positive eigenvalues `lambda_i`, and
+
+`D_B(P || Q) = sum_i f(lambda_i)`,
+
+with `f(lambda) = lambda - log lambda - 1`.
+
+Consequences:
+
+- `f` is strictly convex on `(0, infinity)`.
+- `f(1) = 0` and `f(lambda) >= 0`.
+- `D_B(P || Q) >= 0`, equality iff `P = Q`.
+
+So Burg/Stein is a spectral sum of one scalar convex kernel.
+
+## III. Directionality and Congruence Invariance
+
+### Asymmetry
+
+Swapping inputs inverts the relative spectrum:
 
 - `eig(P^{-1/2} Q P^{-1/2}) = lambda_i^{-1}`.
 
-Since
+Since `f(lambda) != f(lambda^{-1})` in general,
 
-- `lambda - log lambda - 1 != lambda^{-1} + log lambda - 1`,
+`D_B(P || Q) != D_B(Q || P)`.
 
-we get `D_B(P || Q) != D_B(Q || P)` in general.
+This finite asymmetry is the classical shadow of directional relative modular
+comparisons.
 
-This is the finite-lane analogue of directed relative modular data: the
-relative object is oriented from reference state to comparison state.
+### Congruence invariance
 
-## III. Congruence Invariance (Natural Geometry)
-
-For invertible `M`,
+For invertible `M`, replacing
 
 - `P -> M P M^T`,
 - `Q -> M Q M^T`,
 
-preserves the spectrum of `Q^{-1} P` up to similarity. Therefore `D_B` is
-congruence-invariant and is natural on the SPD quotient geometry.
+preserves the relative spectrum up to similarity, so Burg/Stein is invariant
+under coordinate change and is natural on SPD geometry.
 
-## IV. Gaussian KL Identity (Classical Information Bridge)
+## IV. Gaussian KL Bridge
 
-In the centered Gaussian covariance lane, the KL divergence reduces to the same
-trace-minus-logdet expression, so Burg/Stein is not an analogy artifact but the
-exact finite statistical realization of the log-det potential mechanism.
+For multivariate Gaussians, the covariance contribution of KL is exactly the
+trace-minus-logdet expression (up to the standard one-half factor and
+orientation convention):
 
-## V. Repo Owner Anchors
+`D_KL(N(m_p,P) || N(m_q,Q))`
+`= 1/2 * [ tr(Q^{-1} P) + (m_q-m_p)^T Q^{-1} (m_q-m_p) - log det(Q^{-1} P) - n ]`.
 
-Primary noncommutative chain owners already compiled:
+When means match, Burg/Stein is the covariance skeleton of Gaussian KL.
+
+## V. Noncommutative Lift: Relative Modular Operator Primary
+
+The Type-III/operator-algebraic lift keeps multiplicative objects primary.
+
+Owner order:
+
+1. `Delta_{psi|phi}` primary (relative modular operator / RN-like owner),
+2. `K_{psi|phi} := -log Delta_{psi|phi}` derived by spectral functional
+   calculus (support/domain aware),
+3. scalar readout as expectation pairing,
+4. cocycle/chain law primary, additive log law as commuting shadow.
+
+This avoids the false rule `log(AB) = log A + log B` at raw operator level.
+
+## VI. First-Quantization Dictionary (Repo Lane)
+
+Classical -> modular dictionary:
+
+- density ratio `p/q` -> relative modular operator `Delta_{phi,psi}`,
+- surprisal `-log(p/q)` -> relative modular Hamiltonian `-log Delta_{phi,psi}`,
+- expectation under density -> vector expectation in standard form,
+- RN/Jacobian chain rule -> Connes cocycle chain rule.
+
+This is the mathematically honest translation layer from commutative
+log-det/RN mechanics to noncommutative modular dynamics.
+
+## VII. Repo Anchors
+
+RN / determinant / cocycle ownership:
 
 - [relativeDensity_state_chain](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RNDeterminantConnesChainBridge.lean:37)
 - [relativeModularOperator_state_chain](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RNDeterminantConnesChainBridge.lean:46)
-- [relativeModularVolumeShadow_state_chain](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RNDeterminantConnesChainBridge.lean:58)
 - [connesCocycle_state_chain](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RNDeterminantConnesChainBridge.lean:120)
 
-Delta-primary / additive-potential owners:
+Delta-primary to Hamiltonian finite/support lane:
 
 - [relativeModularOperator](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RelativeModularOperator.lean:100)
-- [relativeModularVolumePotential](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RelativeModularOperator.lean:235)
-- [relativeModularHamiltonianExpectation_eq_inv_card_mul_relativeModularVolumePotential](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RelativeModularHamiltonian.lean:135)
+- [relativeModularHamiltonianOperator](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/RelativeModularHamiltonian.lean:100)
+- [deltaFiniteSupportShadow](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ConnesCocycleDeltaPrimaryBridge.lean:43)
 
-Unified packaging layer for this chapter's mechanism:
+Log-det mechanism packaging:
 
 - [TypeIIILogDetRNPackage](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/LogDetRadonNikodymMechanism.lean:69)
-- [TypeIIILogDetRNPackage.logPotential_add](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/LogDetRadonNikodymMechanism.lean:82)
-- [TypeIIILogDetRNPackage.cocycle_chain_rule](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/LogDetRadonNikodymMechanism.lean:88)
 
-Finite thermodynamic/log-det lane:
+## VIII. Boundary Law
 
-- [energyFromLogDet](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Thermo/FromLogDet.lean:16)
-- [freeEnergyFromLogDet](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Thermo/FromLogDet.lean:29)
-
-## VI. Boundary Law
-
-This chapter is a finite SPD spectral closure statement. It does not claim full
-unbounded affiliated-operator `log Delta` closure in Type III generality.
-That lane remains continuous-core / modular-owner work.
-
-## VII. Applied Lane Targets
-
-Direct computational targets for this exact divergence surface:
-
-1. covariance estimation and shrinkage scoring on SPD cones,
-2. matrix-valued optimal transport regularization with log-det barriers,
-3. finite-dimensional quantum state tomography in covariance-like parameter
-   charts.
+This chapter formalizes the finite SPD and finite/support operator-owner
+bridge. It does not claim full unbounded affiliated-operator closure for
+`K = -log Delta` in general Type-III owner form. That remains the open
+continuous-core queue.

@@ -80,6 +80,18 @@ For invertible `M`, replacing
 preserves the relative spectrum up to similarity, so Burg/Stein is invariant
 under coordinate change and is natural on SPD geometry.
 
+### AIRM relation (local, not identical)
+
+Burg/Stein is not the affine-invariant geodesic distance. The AIRM distance is
+the Frobenius norm of the log-spectrum:
+
+`d_AIRM(P, Q) = ||log(Q^{-1/2} P Q^{-1/2})||_F`.
+
+The precise bridge is local/Hessian: the log-det divergence and AIRM induce the
+same second-order SPD metric
+
+`g_P(dP, dP) = 1/2 * tr(dP P^{-1} dP P^{-1})`.
+
 ## IV. Gaussian KL Bridge (Finite Shadow)
 
 For multivariate Gaussians, the covariance contribution of KL is exactly the
@@ -94,6 +106,13 @@ When means match, Burg/Stein is the covariance skeleton of Gaussian KL.
 ## V. Noncommutative Lift: Relative Modular Operator Primary
 
 The Type-III/operator-algebraic lift keeps multiplicative objects primary.
+
+Standard-form hypotheses used in this lane:
+
+- faithful normal states/weights on a von Neumann algebra,
+- standard-form realization with unique natural-cone vector representatives,
+- relative Tomita operator whose polar decomposition yields the relative
+  modular operator.
 
 Owner order:
 
@@ -117,22 +136,32 @@ This avoids the false rule `log(AB) = log A + log B` at raw operator level.
 
 Classical -> modular dictionary:
 
-- density ratio `p/q` -> relative modular operator `Delta_{phi,psi}`,
+- commutative density-ratio intuition `p/q` -> relative modular operator
+  `Delta_{phi,psi}` (the noncommutative RN object),
 - surprisal `-log(p/q)` -> relative modular Hamiltonian `-log Delta_{phi,psi}`,
 - expectation under density -> state/weight pairing (GNS; natural cone only in
   standard-form realization),
-- RN/Jacobian chain rule -> Connes cocycle (multiplicative), with additive
-  structure from the logarithmic generator where defined.
+- RN/Jacobian chain rule -> Connes cocycle identity (multiplicative and
+  time-parameterized), with additive structure recovered from the logarithmic
+  generator where defined.
 
 This is the mathematically honest translation layer from commutative
 log-det/RN mechanics to noncommutative modular dynamics.
 
-## VII. Canonical Guardrail
+## VII. Commuting Sanity Check
+
+When `P` and `Q` commute, spectral calculus collapses to scalar entries and the
+SPD divergence is exactly the sum of scalar kernels `f(lambda)`.
+On the operator-algebra side, Araki relative entropy collapses in finite
+dimensions to the usual density-matrix formula. This is the explicit closure
+from scalar convexity to modular theory.
+
+## VIII. Canonical Guardrail
 
 In Type III, only `Delta` and `log Delta` are canonical at the owner level;
 all scalarizations are representation-dependent shadows.
 
-## VIII. Repo Anchors
+## IX. Repo Anchors
 
 RN / determinant / cocycle ownership:
 
@@ -150,7 +179,7 @@ Log-det mechanism packaging:
 
 - [TypeIIILogDetRNPackage](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/LogDetRadonNikodymMechanism.lean:69)
 
-## IX. Boundary Law
+## X. Boundary Law
 
 This chapter formalizes the finite SPD and finite/support operator-owner
 bridge. It does not claim full unbounded affiliated-operator closure for

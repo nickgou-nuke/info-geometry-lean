@@ -97,6 +97,7 @@ Research-injection pipeline surfaces:
 - `openai_deep_research_gateway.py` (Codex-facing MCP gateway for OpenAI DR jobs)
 - `openai_deep_research_datasource_mcp_example.py` (nested `search`/`fetch` datasource template)
 - `research_controller.py` (closed-loop planner/retriever/reader/critic loop with strict gating and state memory)
+- `autonomous_math/research_controller.py` (multi-phase stack: deep research -> Socratic -> Pauli audit -> Lean design/coder -> compiler loop -> memory ingest)
 
 Runtime LLM theorem-conformance surface:
 - `llm_thermo_conformance.py` (numerical residual audit for KMS/softmax/free-energy/defect identities on JSONL traces)
@@ -172,6 +173,15 @@ Use the infra tools by role, not as one undifferentiated report pile:
   - `generate_repo_story_from_keyword_index.py` (characteristic-term selection + deep theorem/lemma/axiom search + story synthesis)
 - closed-loop deep-research control
   - `research_controller.py` (iterative stateful controller that composes keyword retrieval, declaration-grounded extraction, vacuity verification, and confidence-gated convergence)
+- autonomous mathematician stack
+  - `autonomous_math/evidence_packet.py`
+  - `autonomous_math/socratic_engine.py`
+  - `autonomous_math/pauli_auditor.py`
+  - `autonomous_math/lean_designer.py`
+  - `autonomous_math/lean_coder.py`
+  - `autonomous_math/compiler_loop.py`
+  - `autonomous_math/memory_ingest.py`
+  - `autonomous_math/research_controller.py`
 - black-books keyword indexing and story synthesis
   - `generate_black_books_keyword_report.py` (indexes black-book markdown corpus; sorted lexical frequency + chapter hotspots)
   - `generate_black_books_story_from_keyword_index.py` (profile-aware characteristic terms + deep excerpt search + story synthesis)

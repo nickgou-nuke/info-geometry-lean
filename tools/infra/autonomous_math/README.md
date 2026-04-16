@@ -34,3 +34,8 @@ Outputs:
 - optional final report markdown (if gates pass),
 - generated Lean draft under `reports/research/generated_lean/`,
 - append-only memory row in `reports/research/autonomous_memory.jsonl`.
+
+## Current Codebase Status
+
+Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../../docs/CODEBASE_STATUS.md](../../../docs/CODEBASE_STATUS.md) for the current build/audit state.
+

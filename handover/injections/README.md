@@ -130,3 +130,8 @@ python3 tools/infra/injection_build_digest.py <PACKET_ID> --update-packet
   - `creative_complete=true`
   - `verification_complete=true`
   - non-empty segment cards with `creative_notes` and `literature_evidence`.
+
+## Current Codebase Status
+
+Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
+

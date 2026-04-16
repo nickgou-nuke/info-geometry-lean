@@ -68,6 +68,44 @@ theorem toQuantumPresentation_generator_eq_arnold
       = arnoldNetworkOutput n net β (fun _ : Unit => ψ) () := by
   rfl
 
+/--
+Transport bridge: if every expert preserves a submodule, the one-token Arnold
+generator preserves it as well.
+-/
+@[rep_depth transport]
+theorem arnoldGenerator_mem_submodule
+    (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ)
+    (U : Submodule ℝ (ArnoldMajoranaCarrier E))
+    (ψ : ArnoldMajoranaCarrier E)
+    (hU : ∀ e : ExpertIdx n, ∀ v : ArnoldMajoranaCarrier E,
+      v ∈ U → (net.moe.experts e).apply v ∈ U)
+    (hψ : ψ ∈ U) :
+    arnoldGenerator (E := E) n net β ψ ∈ U := by
+  simpa [arnoldGenerator] using
+    (arnoldNetwork_preserves_submodule (E := E)
+      (n := n) (net := net) (β := β)
+      (U := U) (x := fun _ : Unit => ψ) (i := ())
+      hU hψ)
+
+/--
+Fixed-point bridge: if every expert fixes the current state, the one-token
+Arnold generator is the identity on that state.
+-/
+@[rep_depth transport]
+theorem arnoldGenerator_eq_of_experts_fix
+    (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ)
+    [Nonempty (Fin n)]
+    (ψ : ArnoldMajoranaCarrier E)
+    (hfix : ∀ e : ExpertIdx n, (net.moe.experts e).apply ψ = ψ) :
+    arnoldGenerator (E := E) n net β ψ = ψ := by
+  simpa [arnoldGenerator] using
+    (arnoldNetworkOutput_eq_of_experts_fix (E := E)
+      (n := n) (net := net) (β := β)
+      (x := fun _ : Unit => ψ) (i := ())
+      (hfix := by
+        intro e
+        simpa using hfix e))
+
 /-- Tagged presentation witness for the Arnold/Majorana doubled lane. -/
 @[rep_depth operator]
 noncomputable def taggedPresentation

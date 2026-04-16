@@ -72,6 +72,7 @@ Main DAG refresh and report path:
 - `generate_hypothesis_debt_report.py`
 - `generate_source_sink_compression.py`
 - `generate_causal_report.py`
+- `check_gauge_obstruction_tags.py`
 - `check_bipartite_bleed.py`
 - `generate_structural_dedup.py`
 - `generate_structural_dictionary.py`
@@ -154,6 +155,7 @@ Use the infra tools by role, not as one undifferentiated report pile:
 - causal/ownership shape
   - `generate_source_sink_compression.py`
   - `generate_causal_report.py`
+  - `check_gauge_obstruction_tags.py` (tags files/declarations carrying `gaugeObstruction` nonzero/zero assumptions and conclusions; emits anomaly-bearing classification reports; supports strict CI flags `--fail-on-any-anomaly-bearing` and `--fail-on-anomaly-bearing-path <prefix>`)
   - `check_bipartite_bleed.py`
   - `generate_structural_dedup.py`
   - `generate_structural_fibers.py`

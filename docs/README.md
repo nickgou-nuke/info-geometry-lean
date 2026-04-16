@@ -46,6 +46,8 @@ Relativity of Measurement**:
 - [black_books/109_true_modular_hamiltonian_co_owner_bridge.md](black_books/109_true_modular_hamiltonian_co_owner_bridge.md) — Co-owner bridge charter: keep `K = -log Δ` as owner meaning and prove doubled/Krein/Hestenes equality forms by theorem.
 - [black_books/110_spectroscopic_multimodal_reconstruction_doctrine.md](black_books/110_spectroscopic_multimodal_reconstruction_doctrine.md) — Spectroscopic reconstruction doctrine: presentations as probing channels, coherence as cross-modality calibration, and obstructions as line splitting.
 - [black_books/111_spectroscopic_audit_pipeline_and_gauge_vacuum.md](black_books/111_spectroscopic_audit_pipeline_and_gauge_vacuum.md) — Spectroscopic audit dictionary and formal reference-state/gauge framing for owner, translator, coherence, and obstruction lanes.
+- [black_books/112_digital_spectrometer_formalization_epistemology.md](black_books/112_digital_spectrometer_formalization_epistemology.md) — Digital-spectrometer formalization doctrine: invariant response identity, pipeline vocabulary, and lane-local vacuum/gauge semantics.
+- [black_books/113_reference_state_and_gauge_in_informational_supergravity.md](black_books/113_reference_state_and_gauge_in_informational_supergravity.md) — Reference-state and gauge closure doctrine for informational-supergravity lanes: engineered vacuum, representational frame, and invariance/obstruction discipline.
 - [black_books/112_considering_alignment_reference_state_gauge_and_digital_spectrometer.md](black_books/112_considering_alignment_reference_state_gauge_and_digital_spectrometer.md) — Alignment chapter formalizing reference state, gauge transforms, doubled response spectra, and the repo as a digital spectrometer with kernel-gated closure.
 - [black_books/67_the_external_analogy_doctrine.md](black_books/67_the_external_analogy_doctrine.md) — Respect external frameworks as heuristics, but keep canonical truth strictly owner-native and Lean-verified.
 - [Theory.md](Theory.md) — How the principle maps to the repo presentations.
@@ -64,6 +66,8 @@ dual-projector owner package as the execution surface:
 - [lean/InfoGeometry/Canonical/DrazinSupercharge.lean](../lean/InfoGeometry/Canonical/DrazinSupercharge.lean) — Projector-controlled regular restriction and support package theorems.
 - [lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean](../lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean) — Theorem-level co-owner bridge from Tomita/relative modular owner surfaces to doubled real/Krein/Hestenes presentation.
 - [lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean](../lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean) — Support-restricted regular-core bridge package for modular Hamiltonian surfaces on `Preg`.
+- [lean/InfoGeometry/Canonical/SpectroscopicGauge.lean](../lean/InfoGeometry/Canonical/SpectroscopicGauge.lean) — Translator/coherence scaffold for gauge-relative response packets (`PotentialDatum` + analyzer + probe) and obstruction/anomaly readouts.
+- [lean/InfoGeometry/Canonical/SpectroscopicGaugeKMSBridge.lean](../lean/InfoGeometry/Canonical/SpectroscopicGaugeKMSBridge.lean) — Downstream compatibility bridge tying spectroscopic gauges to the owned `Dynamics.UnruhKMS` modular-flow lane (without rerooting KMS ownerhood).
 
 Guardrail: modular-lane operations should route through this package rather than
 raw textbook support narration.

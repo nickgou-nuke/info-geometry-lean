@@ -217,6 +217,8 @@ import InfoGeometry.Canonical.CorrelationSymmetrization
 import InfoGeometry.Canonical.CorrelationAntisymmetrization
 import InfoGeometry.Canonical.CoordinateFreeSecondVariation
 import InfoGeometry.Canonical.OnsagerCasimirJ
+import InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
+import InfoGeometry.Canonical.SpectroscopicGauge
 import InfoGeometry.Canonical.NoetherInference
 import InfoGeometry.Canonical.ModularHessian
 import InfoGeometry.Canonical.FisherVolumeBridge

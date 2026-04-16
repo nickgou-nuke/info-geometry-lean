@@ -9,8 +9,10 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from tools.pathing import repo_root
+    from tools.infra.build import log_spectral_stage
 else:
     from tools.pathing import repo_root
+    from tools.infra.build import log_spectral_stage
 
 
 def parse_args() -> argparse.Namespace:
@@ -46,20 +48,32 @@ def main() -> int:
         ("dagDoctor", step_command("tools/infra/dag_doctor.py", config=args.config)),
     ]
 
-    print("[dag-all] managed DAG lane", flush=True)
+    log_spectral_stage("PREP", "dag-all", "managed DAG lane")
+    step_stage = {
+        "dagStatus": "PREP",
+        "dagRefresh": "DECOMP",
+        "dagReports": "ASSIGN",
+        "dagDoctor": "PAULI",
+    }
     for i, (label, cmd) in enumerate(steps, start=1):
-        print(f"[dag-all] step {i}/{len(steps)} {label}: {' '.join(cmd)}", flush=True)
+        stage = step_stage.get(label, "ASSIGN")
+        log_spectral_stage(stage, f"dag-all:{label}", f"step {i}/{len(steps)} {' '.join(cmd)}")
         if args.dry_run:
             continue
         completed = subprocess.run(cmd, cwd=root, check=False)
         if completed.returncode != 0:
-            print(f"[dag-all] failed at {label}", flush=True)
+            log_spectral_stage(
+                "CONGEST",
+                f"dag-all:{label}",
+                f"failed with exit code {completed.returncode}",
+            )
             return completed.returncode
 
     if args.dry_run:
-        print("[dag-all] dry-run only; no commands executed", flush=True)
+        log_spectral_stage("ATLAS", "dag-all", "dry-run only; no commands executed")
     else:
-        print("[dag-all] completed successfully", flush=True)
+        log_spectral_stage("CRYSTAL", "dag-all", "managed DAG lane completed successfully")
+        log_spectral_stage("ATLAS", "dag-all", "status/refresh/reports/doctor registry up to date")
     return 0
 
 

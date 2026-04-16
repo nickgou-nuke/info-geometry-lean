@@ -10,14 +10,16 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from tools.build_lock import DEFAULT_BUILD_LOCK_PATH, read_lock_metadata
+    from tools.infra.build import log_spectral_stage
 else:
     from tools.build_lock import DEFAULT_BUILD_LOCK_PATH, read_lock_metadata
+    from tools.infra.build import log_spectral_stage
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def run_step(step_name: str, cmd: list[str]) -> None:
-    print(f"[full-dag] {step_name}: {' '.join(cmd)}")
+def run_step(stage: str, step_name: str, cmd: list[str]) -> None:
+    log_spectral_stage(stage, step_name, f"running {' '.join(cmd)}")
     subprocess.run(cmd, cwd=ROOT, check=True)
 
 
@@ -73,30 +75,49 @@ def main() -> int:
         action="store_true",
         help="Refresh canonical policy baseline before final policy validation.",
     )
+    parser.add_argument(
+        "--fail-on-any-anomaly-bearing",
+        action="store_true",
+        help="Fail when the gauge-obstruction tagger finds any anomaly-bearing file.",
+    )
+    parser.add_argument(
+        "--fail-on-anomaly-bearing-path",
+        action="append",
+        default=[],
+        help=(
+            "Fail when an anomaly-bearing file is under this relative path prefix. "
+            "May be repeated."
+        ),
+    )
     args = parser.parse_args()
 
     preflight_build_lock_health()
 
     if not args.skip_audit:
         run_step(
+            "PREP",
             "audit",
             ["python3", "tools/infra/run_locked_lake_build.py", "InfoGeometry.Audit"],
         )
         run_step(
+            "PAULI",
             "audit-strict",
             ["python3", "tools/infra/run_locked_lake_build.py", "InfoGeometry.AuditStrict"],
         )
 
-    run_step("refresh-decl-graph", ["python3", "tools/infra/refresh_decl_graph.py"])
+    run_step("DECOMP", "refresh-decl-graph", ["python3", "tools/infra/refresh_decl_graph.py"])
     run_step(
+        "ASSIGN",
         "theorem-surface-index",
         ["python3", "tools/infra/generate_theorem_surface_index.py"],
     )
     run_step(
+        "CONGEST",
         "source-sink-compression",
         ["python3", "tools/infra/generate_source_sink_compression.py"],
     )
     run_step(
+        "DECOMP",
         "process-flow-report",
         [
             "python3",
@@ -110,6 +131,7 @@ def main() -> int:
         ],
     )
     run_step(
+        "CONGEST",
         "semantic-flow-report",
         [
             "python3",
@@ -123,6 +145,7 @@ def main() -> int:
         ],
     )
     run_step(
+        "PAULI",
         "semantic-flow-check",
         [
             "python3",
@@ -137,6 +160,7 @@ def main() -> int:
         ],
     )
     run_step(
+        "ASSIGN",
         "causal-report",
         [
             "python3",
@@ -147,15 +171,32 @@ def main() -> int:
             "reports/dag/true-root-order.json",
         ],
     )
+    gauge_cmd = [
+        "python3",
+        "tools/infra/check_gauge_obstruction_tags.py",
+        "--src-root",
+        "lean/InfoGeometry",
+        "--json-out",
+        "reports/dag/gauge-obstruction-tags.json",
+        "--md-out",
+        "reports/dag/gauge-obstruction-tags.md",
+    ]
+    if args.fail_on_any_anomaly_bearing:
+        gauge_cmd.append("--fail-on-any-anomaly-bearing")
+    for prefix in args.fail_on_anomaly_bearing_path:
+        gauge_cmd.extend(["--fail-on-anomaly-bearing-path", prefix])
+    run_step("CONGEST", "gauge-obstruction-tags", gauge_cmd)
 
     if args.write_policy_baseline:
         run_step(
+            "ASSIGN",
             "policy-baseline",
             ["python3", "tools/infra/canonical_policy_lint.py", "--write-baseline"],
         )
 
-    run_step("policy-lint", ["python3", "tools/infra/canonical_policy_lint.py"])
-    print("[full-dag] completed successfully")
+    run_step("PAULI", "policy-lint", ["python3", "tools/infra/canonical_policy_lint.py"])
+    log_spectral_stage("CRYSTAL", "full-dag", "stable closure achieved")
+    log_spectral_stage("ATLAS", "full-dag", "registry and reports refreshed")
     return 0
 
 

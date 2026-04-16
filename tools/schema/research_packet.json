@@ -1,0 +1,120 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HermesResearchPacket",
+  "description": "Typed quarantined intake packet from Hermes deep-research into Prompt A / Prompt B routing.",
+  "type": "object",
+  "required": [
+    "packet_id",
+    "created_at",
+    "research_goal",
+    "allowed_sources",
+    "trusted_domains",
+    "provenance",
+    "evidence",
+    "contradictions",
+    "candidate_invariants",
+    "forbidden_moves",
+    "formalization_targets",
+    "classification",
+    "status"
+  ],
+  "properties": {
+    "packet_id": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "minLength": 1 },
+    "research_goal": { "type": "string", "minLength": 1 },
+    "allowed_sources": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["web", "files", "mcp"] },
+      "minItems": 1
+    },
+    "trusted_domains": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source", "models", "state_path"],
+      "properties": {
+        "source": { "type": "string" },
+        "state_path": { "type": "string" },
+        "models": {
+          "type": "object",
+          "properties": {
+            "planner": { "type": "string" },
+            "research": { "type": "string" },
+            "verifier": { "type": "string" },
+            "writer": { "type": "string" }
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["claim", "sources", "confidence"],
+        "properties": {
+          "claim": { "type": "string", "minLength": 1 },
+          "sources": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "minItems": 1
+          },
+          "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+          "evidence_summary": { "type": "string" },
+          "subquestion_id": { "type": "string" }
+        }
+      }
+    },
+    "contradictions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "candidate_invariants": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "forbidden_moves": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "formalization_targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["kind", "name"],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": ["definition", "theorem", "lemma", "coherence", "translator", "capstone"]
+          },
+          "name": { "type": "string", "minLength": 1 },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "required": ["facts", "interpretations", "metaphors", "formalization_candidates"],
+      "properties": {
+        "facts": { "type": "array", "items": { "type": "string" } },
+        "interpretations": { "type": "array", "items": { "type": "string" } },
+        "metaphors": { "type": "array", "items": { "type": "string" } },
+        "formalization_candidates": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "prompt_a_ready": { "type": "boolean" },
+        "requires_nemoclaw_note": { "type": "boolean" },
+        "requires_clawcode_gate": { "type": "boolean" }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "stabilization", "admitted", "rejected"]
+    }
+  }
+}
+

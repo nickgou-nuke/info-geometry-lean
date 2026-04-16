@@ -28,6 +28,7 @@ from tools.infra.deep_research.planner import create_plan
 from tools.infra.deep_research.retriever import build_tools, research_subquestion
 from tools.infra.deep_research.verifier import verify_research
 from tools.infra.deep_research.writer import synthesize_report
+from tools.infra.research_packet import build_packet_from_state, validate_packet
 
 
 ALLOWED_SOURCES = {"web", "files", "mcp"}
@@ -138,6 +139,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-extra-rounds", type=int, default=1)
     p.add_argument("--state-out", default="")
     p.add_argument("--report-out", default="")
+    p.add_argument(
+        "--research-packet-out",
+        default="",
+        help="Output path for typed research packet (default: quarantine/hermes_memory/research_packets/<timestamp>-<slug>.json).",
+    )
     return p.parse_args()
 
 
@@ -151,8 +157,10 @@ def main() -> None:
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     default_state_out = repo_root / "reports" / "research" / f"deep-research-state-{stamp}-{_slug(args.goal)}.json"
     default_report_out = repo_root / "reports" / "research" / f"deep-research-report-{stamp}-{_slug(args.goal)}.md"
+    default_packet_out = repo_root / "quarantine" / "hermes_memory" / "research_packets" / f"{stamp}-{_slug(args.goal)}.json"
     state_out = Path(args.state_out).resolve() if args.state_out else default_state_out
     report_out = Path(args.report_out).resolve() if args.report_out else default_report_out
+    packet_out = Path(args.research_packet_out).resolve() if args.research_packet_out else default_packet_out
 
     constraints = list(args.constraint)
     if not constraints:
@@ -367,7 +375,25 @@ def main() -> None:
     }
     write_json(state_out, state)
 
+    packet = build_packet_from_state(
+        state,
+        packet_id=f"rp-{stamp}-{_slug(args.goal)}",
+        state_path=str(state_out),
+    )
+    packet_errors = validate_packet(packet)
+    if packet_errors:
+        state["status"] = "blocked_by_packet_validation"
+        state.setdefault("packet_validation_errors", packet_errors)
+        write_json(state_out, state)
+        print(f"[deep-research] state: {state_out}")
+        print("[deep-research] packet validation failed:")
+        for err in packet_errors:
+            print(f"  - {err}")
+        sys.exit(3)
+    write_json(packet_out, packet)
+
     print(f"[deep-research] state: {state_out}")
+    print(f"[deep-research] research packet: {packet_out}")
     if report_md:
         print(f"[deep-research] report: {report_out}")
     if gate_failures:

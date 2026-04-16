@@ -29,6 +29,14 @@ The human methodological pairing is retained in operational form:
 - closure must be Pauli
 - the toolchain is the vessel
 
+Deep research integration rule:
+
+- Hermes discovery is a quarantined intake subphase only.
+- It emits typed `research_packet` JSON under
+  `quarantine/hermes_memory/research_packets/`.
+- OpenClaw and NemoClaw may consume that packet.
+- ClawCode must gate on packet + provenance before authoritative admission.
+
 ## Shared System Prompt
 
 The following text is the shared system-level charge for all four agents:
@@ -95,6 +103,11 @@ NemoClaw should produce short architecture notes with:
 3. dependency justification
 4. allowed downstream consumers
 5. rejection risks
+6. research provenance split:
+   - facts
+   - interpretations
+   - metaphors
+   - formalization candidates
 
 ### Persona Prompt
 
@@ -150,6 +163,7 @@ OpenClaw should produce:
 2. import-minimal file skeletons
 3. explicit unresolved assumptions
 4. possible comparison theorem surfaces
+5. explicit `research_packet_path` and packet id used for intake
 
 ### Persona Prompt
 
@@ -257,6 +271,7 @@ ClawCode should produce:
 2. quarantine actions
 3. import-surface changes
 4. unresolved defects blocking Lane C
+5. research handoff gate status (packet + NemoClaw provenance note)
 
 ### Persona Prompt
 

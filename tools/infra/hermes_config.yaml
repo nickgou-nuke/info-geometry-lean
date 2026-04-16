@@ -13,6 +13,7 @@ model:
 paths:
   skills: "./quarantine/hermes_skills"
   memory: "./quarantine/hermes_memory"
+  research_packets: "./quarantine/hermes_memory/research_packets"
 
 # Task Enforcement
 # Hermes must always operate on the provided task.json manifest.

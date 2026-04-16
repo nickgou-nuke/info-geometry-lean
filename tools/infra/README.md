@@ -96,6 +96,9 @@ Research-injection pipeline surfaces:
 - `injection_status.py`
 - `openai_deep_research_gateway.py` (Codex-facing MCP gateway for OpenAI DR jobs)
 - `openai_deep_research_datasource_mcp_example.py` (nested `search`/`fetch` datasource template)
+- `deep_research/controller.py` (official Responses-pattern planner/retriever/verifier/writer controller with source constraints and hard gates)
+- `research_packet.py` (typed Hermes intake packet builder/validator)
+- `check_research_handoff_gate.py` (ClawCode gate: packet + NemoClaw provenance note)
 - `research_controller.py` (closed-loop planner/retriever/reader/critic loop with strict gating and state memory)
 - `autonomous_math/research_controller.py` (multi-phase stack: deep research -> Socratic -> Pauli audit -> Lean design/coder -> compiler loop -> memory ingest)
 
@@ -172,6 +175,9 @@ Use the infra tools by role, not as one undifferentiated report pile:
   - `generate_keyword_research_report.py` (indexes all tracked Lean files; sorted lexical frequency + hotspot files)
   - `generate_repo_story_from_keyword_index.py` (characteristic-term selection + deep theorem/lemma/axiom search + story synthesis)
 - closed-loop deep-research control
+  - `deep_research/controller.py` (official Responses tool stack: web_search/file_search/mcp with stateful planning and verification gates)
+  - `research_packet.py` (typed packet contract from Hermes intake to Prompt A/B)
+  - `check_research_handoff_gate.py` (mandatory packet+provenance admission gate for closure)
   - `research_controller.py` (iterative stateful controller that composes keyword retrieval, declaration-grounded extraction, vacuity verification, and confidence-gated convergence)
 - autonomous mathematician stack
   - `autonomous_math/evidence_packet.py`
@@ -216,6 +222,37 @@ python3 tools/infra/research_controller.py \
 The controller writes a full JSON memory trace under `reports/research/`
 including iteration-by-iteration subtasks, command results, extracted metrics,
 critique verdicts, blockers, and unresolved questions.
+
+### Hermes Intake Packet Contract
+
+Schema:
+
+```bash
+tools/schema/research_packet.json
+```
+
+Build packet from deep-research state:
+
+```bash
+python3 tools/infra/research_packet.py build \
+  --state reports/research/deep-research-state-<...>.json \
+  --out quarantine/hermes_memory/research_packets/<packet>.json
+```
+
+Validate packet:
+
+```bash
+python3 tools/infra/research_packet.py validate \
+  --packet quarantine/hermes_memory/research_packets/<packet>.json
+```
+
+ClawCode admission gate:
+
+```bash
+python3 tools/infra/check_research_handoff_gate.py \
+  --packet quarantine/hermes_memory/research_packets/<packet>.json \
+  --nemoclaw-note <nemoclaw-note.md>
+```
 
 ## Authoritative Inputs
 

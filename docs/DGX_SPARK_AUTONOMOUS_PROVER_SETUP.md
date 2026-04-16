@@ -25,6 +25,26 @@ The repo-native `hermes_config.yaml` already isolates learnable assets to:
 
 This keeps Hermes learnable while preserving Lean + canonical files as authority surfaces.
 
+### Hermes research packet contract
+
+Hermes discovery output is typed and quarantined:
+
+- schema: `tools/schema/research_packet.json`
+- default packet lane: `quarantine/hermes_memory/research_packets/`
+- validator:
+
+```bash
+python3 tools/infra/research_packet.py validate --packet <packet.json>
+```
+
+ClawCode closure requires both:
+
+```bash
+python3 tools/infra/check_research_handoff_gate.py \
+  --packet <packet.json> \
+  --nemoclaw-note <nemoclaw-note.md>
+```
+
 ## 2. DGX Spark Baseline (Hardware/Runtime)
 
 From NVIDIA's DGX Spark OpenShell guide:

@@ -25,6 +25,7 @@ import InfoGeometry.Canonical.ActionDuality
 import InfoGeometry.Canonical.AnomalyInflow
 import InfoGeometry.Canonical.AnomalyGauge
 import InfoGeometry.Canonical.ArnoldMajoranaNetwork
+import InfoGeometry.Canonical.ArnoldNetworkPresentation
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionDiracBridge
 import InfoGeometry.Canonical.AttentionEuclidean
@@ -169,6 +170,7 @@ import InfoGeometry.Canonical.BogoliubovProjectorFlux
 import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Canonical.QuantumPresentation
 import InfoGeometry.Canonical.GraphDiracPresentation
+import InfoGeometry.Canonical.ArnoldNetworkPresentation
 import InfoGeometry.Canonical.ModularOrientationContract
 import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.ModularSpectralWedge

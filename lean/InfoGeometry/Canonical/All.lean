@@ -294,6 +294,7 @@ import InfoGeometry.Canonical.Triality
 import InfoGeometry.Canonical.HeadTrialityCore
 import InfoGeometry.Canonical.Twistor
 import InfoGeometry.Canonical.Unification
+import InfoGeometry.Canonical.OperatorPenroseUnification
 import InfoGeometry.PositiveMeasure
 import InfoGeometry.Quantum.BulkBoundaryIndexBridge
 import InfoGeometry.Canonical.BulkBoundaryRegularizationBridge

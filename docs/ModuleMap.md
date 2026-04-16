@@ -27,7 +27,7 @@ These top-level files have different roles:
 | doubled / Krein / chirality | realized carrier and sheet geometry | [DoubledSpace.lean](../lean/InfoGeometry/Krein/DoubledSpace.lean) |
 | generalized metric / chirality / recomposition | current branch junction from corrected owner to maintained leaves | [PhaseSpaceGeneralizedMetric.lean](../lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean) |
 | KKT / inverse-kernel / conformal | grade decomposition and defect algebra | [KKTCore.lean](../lean/InfoGeometry/Canonical/KKTCore.lean) |
-| Tomita / Bogoliubov / Weyl | modular and transport branches | [TomitaTakesaki.lean](../lean/InfoGeometry/Canonical/TomitaTakesaki.lean) |
+| Tomita / Bogoliubov / Weyl | modular, transport, and doubled Hamiltonian bridge branches | [TomitaTakesaki.lean](../lean/InfoGeometry/Canonical/TomitaTakesaki.lean) |
 | Quantum Geometric Tensor (QGT) / Anomaly | metric readout and operator transport | [GeometricTensorOperatorLift.lean](../lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean) |
 | Bulk-Boundary / Majorana / Kitaev | boundary regularization and zero-mode pairs | [BulkBoundary.lean](../lean/InfoGeometry/Quantum/BulkBoundary.lean) |
 | concrete realization / finite model | explicit finite-dimensional recomposition performance | [PhaseSpaceRecompositionExample.lean](../lean/InfoGeometry/Canonical/PhaseSpaceRecompositionExample.lean) |
@@ -109,8 +109,14 @@ Read:
 1. [TomitaTakesaki.lean](../lean/InfoGeometry/Canonical/TomitaTakesaki.lean)
 2. [BogoliubovTransport.lean](../lean/InfoGeometry/Canonical/BogoliubovTransport.lean)
 3. [TransportLieDerivative.lean](../lean/InfoGeometry/Canonical/TransportLieDerivative.lean)
+4. [ModularHamiltonianDoubledBridge.lean](../lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean)
+5. [ModularHamiltonianPregSupportBridge.lean](../lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean)
 
-This branch now includes explicit infinitesimal transport laws via Lie derivatives.
+Current state:
+
+- explicit infinitesimal transport laws via Lie derivatives are present;
+- modular Hamiltonian has a theorem-level doubled/Krein/Hestenes bridge surface;
+- support-restricted modular Hamiltonian lane on `Preg` is explicitly packaged.
 
 ### If you want the Bulk-Boundary / Majorana frontier
 

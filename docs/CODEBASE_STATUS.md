@@ -28,6 +28,10 @@ The following checks were executed successfully (exit code `0`):
   - `lean/InfoGeometry/Canonical/ArnoldNetworkPresentation.lean`
 - Canonical umbrella import is active:
   - `lean/InfoGeometry/Canonical/All.lean`
+- Candidate bridge packet intake lane is present:
+  - `tools/schema/candidate_bridge_packet.json`
+  - `tools/infra/candidate_bridge_packet.py`
+  - `docs/CandidateBridgePacketContract.md`
 
 ## Documentation Sync Snapshot
 

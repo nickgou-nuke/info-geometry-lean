@@ -11,14 +11,14 @@ Flow orientation:
 - this report reverses the declaration dependency arrows into generative flow: constructive sources -> downstream sinks
 
 ## Hotspot Modules
-- `#1 InfoGeometry.Core.SymmetricLie` score=770.871 mix=2/8/40
-- `#2 InfoGeometry.Canonical.BulkBoundaryRegularizationBridge` score=306.399 mix=0/26/3
-- `#3 InfoGeometry.Canonical.UnifiedSuperchargeAlgebra` score=268.505 mix=0/31/0
-- `#4 InfoGeometry.Canonical.ConformalProjectorCore` score=260.609 mix=0/24/0
-- `#5 InfoGeometry.Canonical.ModularSuperchargeClosure` score=241.159 mix=8/19/2
-- `#6 InfoGeometry.Quantum.RealMajoranaCategory` score=184.676 mix=0/18/0
-- `#7 InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge` score=167.706 mix=5/16/0
-- `#8 InfoGeometry.Canonical.RealBdGDIIIAtom` score=144.608 mix=0/15/0
+- `#1 InfoGeometry.Canonical.BulkBoundaryRegularizationBridge` score=306.399 mix=0/26/3
+- `#2 InfoGeometry.Canonical.UnifiedSuperchargeAlgebra` score=268.505 mix=0/31/0
+- `#3 InfoGeometry.Canonical.ConformalProjectorCore` score=260.609 mix=0/24/0
+- `#4 InfoGeometry.Canonical.ModularSuperchargeClosure` score=241.159 mix=8/19/2
+- `#5 InfoGeometry.Quantum.RealMajoranaCategory` score=184.676 mix=0/18/0
+- `#6 InfoGeometry.Canonical.PhaseSpaceWeylCausalBridge` score=167.706 mix=5/16/0
+- `#7 InfoGeometry.Canonical.RealBdGDIIIAtom` score=144.608 mix=0/15/0
+- `#8 InfoGeometry.Canonical.LogDetRadonNikodymMechanism` score=131.461 mix=0/15/0
 
 ## Canonical Sources
 - `InfoGeometry.Krein.instL2Complete` score=103.767 reachable_sinks=15 closest_distance=1
@@ -33,18 +33,18 @@ Flow orientation:
 - `InfoGeometry.Canonical.KKTCore.minusProjector_mul_plusProjector` score=9.622 reachable_sinks=5 closest_distance=6
 
 ## Selected Sinks
-- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.exists_zeroMode_and_nontrivial_regularization_pair_of_dim_mismatch` category=`package_reprojection` hotspot_rank=2 flow_out_degree=0
-- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.moorePenroseLeftProjector_ne_one_of_hasZeroMode` category=`surrogate_or_vacuous` hotspot_rank=2 flow_out_degree=1
-- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.drazinProjection_ne_one_of_hasZeroMode` category=`surrogate_or_vacuous` hotspot_rank=2 flow_out_degree=1
-- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.moorePenroseRightProjector_ne_one_of_hasZeroMode` category=`surrogate_or_vacuous` hotspot_rank=2 flow_out_degree=1
-- `InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.unified_internal_split_with_operatorial_shadow` category=`package_reprojection` hotspot_rank=3 flow_out_degree=0
-- `InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.TopologicalCentralChargePackage.Zop_eq_analyticIndex` category=`package_reprojection` hotspot_rank=3 flow_out_degree=0
-- `InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.instCompleteSpaceContinuousLinearMapRealIdDoubledSpace` category=`package_reprojection` hotspot_rank=3 flow_out_degree=0
-- `InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.instIsScalarTowerRealContinuousLinearMapIdDoubledSpace` category=`package_reprojection` hotspot_rank=3 flow_out_degree=0
-- `InfoGeometry.Canonical.ModularSuperchargeClosure.cp003_singular_surrogate_commutator_closure` category=`surrogate_or_vacuous` hotspot_rank=5 flow_out_degree=0
-- `InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalSeedFlowEqUnruhTarget_iff_superHamiltonian_eq_two_pi_modularSign` category=`package_reprojection` hotspot_rank=5 flow_out_degree=0
-- `InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaLogData_deltaLog` category=`package_reprojection` hotspot_rank=5 flow_out_degree=0
-- `InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalSeedFlow_eq_internalUnruhFlowOfModularTime` category=`hypothesis_bridge` hotspot_rank=5 flow_out_degree=0
+- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.exists_zeroMode_and_nontrivial_regularization_pair_of_dim_mismatch` category=`package_reprojection` hotspot_rank=1 flow_out_degree=0
+- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.moorePenroseLeftProjector_ne_one_of_hasZeroMode` category=`surrogate_or_vacuous` hotspot_rank=1 flow_out_degree=1
+- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.drazinProjection_ne_one_of_hasZeroMode` category=`surrogate_or_vacuous` hotspot_rank=1 flow_out_degree=1
+- `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.moorePenroseRightProjector_ne_one_of_hasZeroMode` category=`surrogate_or_vacuous` hotspot_rank=1 flow_out_degree=1
+- `InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.unified_internal_split_with_operatorial_shadow` category=`package_reprojection` hotspot_rank=2 flow_out_degree=0
+- `InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.TopologicalCentralChargePackage.Zop_eq_analyticIndex` category=`package_reprojection` hotspot_rank=2 flow_out_degree=0
+- `InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.instCompleteSpaceContinuousLinearMapRealIdDoubledSpace` category=`package_reprojection` hotspot_rank=2 flow_out_degree=0
+- `InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.instIsScalarTowerRealContinuousLinearMapIdDoubledSpace` category=`package_reprojection` hotspot_rank=2 flow_out_degree=0
+- `InfoGeometry.Canonical.ModularSuperchargeClosure.cp003_singular_surrogate_commutator_closure` category=`surrogate_or_vacuous` hotspot_rank=4 flow_out_degree=0
+- `InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalSeedFlowEqUnruhTarget_iff_superHamiltonian_eq_two_pi_modularSign` category=`package_reprojection` hotspot_rank=4 flow_out_degree=0
+- `InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaLogData_deltaLog` category=`package_reprojection` hotspot_rank=4 flow_out_degree=0
+- `InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalSeedFlow_eq_internalUnruhFlowOfModularTime` category=`hypothesis_bridge` hotspot_rank=4 flow_out_degree=0
 
 ## Top Source Bundles
 

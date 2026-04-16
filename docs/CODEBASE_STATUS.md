@@ -32,6 +32,15 @@ The following checks were executed successfully (exit code `0`):
   - `tools/schema/candidate_bridge_packet.json`
   - `tools/infra/candidate_bridge_packet.py`
   - `docs/CandidateBridgePacketContract.md`
+- LeanTrail semantic explorer scaffold is present:
+  - `leantrail/backend/indexer.py`
+  - `leantrail/backend/normalizer.py`
+  - `leantrail/backend/query_api.py`
+  - `leantrail/api/server.py`
+  - `leantrail/schemas/leantrail_graph_snapshot.schema.json`
+  - `leantrail/schemas/leantrail_bridge_request.schema.json`
+  - `docs/LeanTrail.md`
+  - `docs/LeanTrailBlueprint.md`
 
 ## Documentation Sync Snapshot
 

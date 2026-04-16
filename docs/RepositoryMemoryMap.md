@@ -52,6 +52,8 @@ These are the maintained hand-written entry surfaces for current repo state:
 - [docs/Theory.md](Theory.md)
 - [docs/ModuleMap.md](ModuleMap.md)
 - [docs/CandidateBridgePacketContract.md](CandidateBridgePacketContract.md)
+- [docs/LeanTrail.md](LeanTrail.md)
+- [docs/LeanTrailBlueprint.md](LeanTrailBlueprint.md)
 - [lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean](../lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean)
 - [lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean](../lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean)
 - [Installation.md](../Installation.md)

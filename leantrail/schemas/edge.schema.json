@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LeanTrailEdge",
+  "type": "object",
+  "required": ["src", "dst", "kind"],
+  "properties": {
+    "src": {"type": "string", "minLength": 1},
+    "dst": {"type": "string", "minLength": 1},
+    "kind": {"type": "string", "enum": ["type", "value"]},
+    "direction": {"type": "string", "enum": ["in", "out"]}
+  },
+  "additionalProperties": true
+}

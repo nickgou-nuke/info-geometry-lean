@@ -1,0 +1,41 @@
+{
+  "goal": "Bridge signed-particle phase-space language to doubled/Krein projector language",
+  "role": "translator_surface_only",
+  "owner_files": [
+    "lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean",
+    "lean/InfoGeometry/Canonical/MoorePenrose.lean"
+  ],
+  "source_claims": [
+    {
+      "claim": "Signed particles represent positive/negative contributions rather than ordinary probabilities",
+      "status": "research"
+    },
+    {
+      "claim": "Annihilation corresponds to cancellation of opposite-sign contributions",
+      "status": "research"
+    }
+  ],
+  "repo_native_targets": [
+    {
+      "kind": "def",
+      "name": "SignedParticleShadow.annihilationShadow"
+    },
+    {
+      "kind": "def",
+      "name": "SignedParticleShadow.classicalShadowOnRegularCore"
+    },
+    {
+      "kind": "def",
+      "name": "nonclassicalShadow"
+    }
+  ],
+  "forbidden_moves": [
+    "do not make signed particles an owner ontology",
+    "do not identify Wigner negativity with anomaly by definition",
+    "do not bypass Drazin/MoorePenrose owner files"
+  ],
+  "unresolved_assumptions": [
+    "exact transport law still to be formulated",
+    "computational Monte Carlo interpretation remains a shadow lane"
+  ]
+}

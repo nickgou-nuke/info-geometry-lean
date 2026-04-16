@@ -205,6 +205,8 @@ import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Canonical.TimeReversalKramers
 import InfoGeometry.Canonical.KramersPhaseAxisReduction
 import InfoGeometry.Canonical.ModularKramersBridge
+import InfoGeometry.Canonical.ModularHamiltonianDoubledBridge
+import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
 import InfoGeometry.Canonical.KramersMajoranaCompatibility
 import InfoGeometry.Canonical.KramersSuperchargeBridge
 import InfoGeometry.Canonical.MixtureOfExperts

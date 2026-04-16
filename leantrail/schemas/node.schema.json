@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LeanTrailNode",
+  "type": "object",
+  "required": ["name", "module", "file", "line", "kind"],
+  "properties": {
+    "name": {"type": "string", "minLength": 1},
+    "module": {"type": "string"},
+    "file": {"type": "string"},
+    "line": {"type": "integer", "minimum": 0},
+    "kind": {"type": "string"},
+    "doc": {"type": "string"},
+    "rep_depth": {"type": "string"},
+    "rep_depth_nat": {"type": ["integer", "null"]},
+    "judgment": {"type": "string"},
+    "capstone": {"type": "boolean"},
+    "out_degree": {"type": "integer", "minimum": 0},
+    "in_degree": {"type": "integer", "minimum": 0}
+  },
+  "additionalProperties": true
+}

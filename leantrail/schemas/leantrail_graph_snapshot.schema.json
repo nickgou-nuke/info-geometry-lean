@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LeanTrailGraphSnapshot",
+  "type": "object",
+  "required": ["metadata", "nodes", "edges"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["created_at", "commit_sha", "toolchain", "artifact_version"],
+      "properties": {
+        "created_at": {"type": "string", "minLength": 1},
+        "commit_sha": {"type": "string", "minLength": 1},
+        "toolchain": {"type": "string", "minLength": 1},
+        "artifact_version": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": true
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "module",
+          "rep_depth",
+          "role",
+          "commit_sha",
+          "toolchain",
+          "artifact_version"
+        ],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "name": {"type": "string", "minLength": 1},
+          "kind": {
+            "type": "string",
+            "enum": [
+              "Declaration",
+              "Module",
+              "Morphism",
+              "SCC",
+              "ProcessEvent",
+              "ProofSnapshot",
+              "BridgeCandidate"
+            ]
+          },
+          "module": {"type": "string"},
+          "file": {"type": ["string", "null"]},
+          "line": {"type": ["integer", "null"]},
+          "rep_depth": {"type": ["string", "null"]},
+          "role": {"type": ["string", "null"]},
+          "module_family": {"type": ["string", "null"]},
+          "commit_sha": {"type": "string", "minLength": 1},
+          "toolchain": {"type": "string", "minLength": 1},
+          "artifact_version": {"type": "integer", "minimum": 0},
+          "attrs": {"type": "object"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["src", "dst", "kind", "weight", "evidence_ref"],
+        "properties": {
+          "src": {"type": "string", "minLength": 1},
+          "dst": {"type": "string", "minLength": 1},
+          "kind": {
+            "type": "string",
+            "enum": [
+              "depends_type",
+              "depends_value",
+              "translator_of",
+              "coheres_with",
+              "violates_depth",
+              "obstructs",
+              "contains"
+            ]
+          },
+          "weight": {"type": "number"},
+          "evidence_ref": {"type": "string", "minLength": 1},
+          "attrs": {"type": "object"}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

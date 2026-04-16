@@ -2,10 +2,12 @@
 """Official-pattern deep research controller.
 
 Implements:
-1) planner pass
-2) controlled retrieval pass
-3) verifier pass
-4) final synthesis pass
+1) clarifier pass
+2) research-brief rewrite pass
+3) planner pass
+4) controlled retrieval pass
+5) verifier pass
+6) final synthesis pass
 
 With explicit source constraints, persisted state, and hard gates.
 """
@@ -23,6 +25,8 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[3]))
 
+from tools.infra.deep_research.brief_rewriter import normalize_research_brief, rewrite_research_brief
+from tools.infra.deep_research.clarifier import clarify_goal, normalize_clarification
 from tools.infra.deep_research.common import utc_now, write_json
 from tools.infra.deep_research.planner import create_plan
 from tools.infra.deep_research.retriever import build_tools, research_subquestion
@@ -132,11 +136,15 @@ def parse_args() -> argparse.Namespace:
         default=[],
         help='Repeatable JSON object: {"server_label":"name","server_url":"https://...","require_approval":"never"}',
     )
+    p.add_argument("--clarifier-model", default=os.environ.get("OPENAI_DR_CLARIFIER_MODEL", "gpt-5"))
+    p.add_argument("--rewriter-model", default=os.environ.get("OPENAI_DR_REWRITER_MODEL", "gpt-5"))
     p.add_argument("--planner-model", default=os.environ.get("OPENAI_DR_PLANNER_MODEL", "gpt-5"))
     p.add_argument("--research-model", default=os.environ.get("OPENAI_DR_RESEARCH_MODEL", "gpt-5"))
     p.add_argument("--verifier-model", default=os.environ.get("OPENAI_DR_VERIFIER_MODEL", "gpt-5"))
     p.add_argument("--writer-model", default=os.environ.get("OPENAI_DR_WRITER_MODEL", "gpt-5"))
     p.add_argument("--max-extra-rounds", type=int, default=1)
+    p.add_argument("--skip-clarify", action="store_true", help="Skip clarify stage and use raw goal.")
+    p.add_argument("--skip-rewrite", action="store_true", help="Skip research-brief rewrite and use clarified goal.")
     p.add_argument("--state-out", default="")
     p.add_argument("--report-out", default="")
     p.add_argument(
@@ -173,13 +181,76 @@ def main() -> None:
     client = _make_client()
     activity_log: list[dict[str, Any]] = []
     findings: dict[str, Any] = {}
+    user_goal = args.goal
 
-    # 1) Planner pass
+    # 1) Clarifier pass
+    clarification = normalize_clarification({}, goal=user_goal)
+    if not args.skip_clarify:
+        clarification = clarify_goal(
+            client=client,
+            model=args.clarifier_model,
+            goal=user_goal,
+            constraints=constraints,
+            allowed_sources=allowed_sources,
+            trusted_domains=trusted_domains,
+        )
+    activity_log.append(
+        {
+            "ts": utc_now(),
+            "phase": "clarify",
+            "model": args.clarifier_model,
+            "skipped": bool(args.skip_clarify),
+            "needs_clarification": bool(clarification.get("needs_clarification", False)),
+            "question_count": len(clarification.get("clarifying_questions", [])),
+            "assumption_count": len(clarification.get("assumptions", [])),
+        }
+    )
+    clarified_goal = str(clarification.get("clarified_goal", "")).strip() or user_goal
+
+    # 2) Research-brief rewrite pass
+    research_brief = normalize_research_brief({}, goal=clarified_goal)
+    if not args.skip_rewrite:
+        research_brief = rewrite_research_brief(
+            client=client,
+            model=args.rewriter_model,
+            goal=clarified_goal,
+            clarification=clarification,
+            constraints=constraints,
+            allowed_sources=allowed_sources,
+            trusted_domains=trusted_domains,
+        )
+    activity_log.append(
+        {
+            "ts": utc_now(),
+            "phase": "rewrite",
+            "model": args.rewriter_model,
+            "skipped": bool(args.skip_rewrite),
+            "scope_items": len(research_brief.get("scope", [])),
+            "exclusions": len(research_brief.get("exclusions", [])),
+            "eval_criteria": len(research_brief.get("evaluation_criteria", [])),
+        }
+    )
+    execution_goal = str(research_brief.get("research_brief", "")).strip() or clarified_goal
+    execution_constraints = constraints[:]
+    scope = research_brief.get("scope", [])
+    exclusions = research_brief.get("exclusions", [])
+    source_prefs = research_brief.get("source_preferences", [])
+    eval_criteria = research_brief.get("evaluation_criteria", [])
+    if isinstance(scope, list) and scope:
+        execution_constraints.append("Scope: " + "; ".join(str(x) for x in scope))
+    if isinstance(exclusions, list) and exclusions:
+        execution_constraints.append("Exclusions: " + "; ".join(str(x) for x in exclusions))
+    if isinstance(source_prefs, list) and source_prefs:
+        execution_constraints.append("Source preferences: " + "; ".join(str(x) for x in source_prefs))
+    if isinstance(eval_criteria, list) and eval_criteria:
+        execution_constraints.append("Evaluation criteria: " + "; ".join(str(x) for x in eval_criteria))
+
+    # 3) Planner pass
     plan = create_plan(
         client=client,
         model=args.planner_model,
-        goal=args.goal,
-        constraints=constraints,
+        goal=execution_goal,
+        constraints=execution_constraints,
         allowed_sources=allowed_sources,
         trusted_domains=trusted_domains,
     )
@@ -192,7 +263,7 @@ def main() -> None:
         }
     )
 
-    # 2) Controlled execution loop
+    # 4) Controlled execution loop
     tools = build_tools(
         allowed_sources=allowed_sources,
         trusted_domains=trusted_domains,
@@ -212,8 +283,8 @@ def main() -> None:
             client=client,
             model=args.research_model,
             subquestion=subq,
-            goal=args.goal,
-            constraints=constraints,
+            goal=execution_goal,
+            constraints=execution_constraints,
             allowed_sources=allowed_sources,
             tools=tools,
         )
@@ -230,14 +301,14 @@ def main() -> None:
             }
         )
 
-    # 3) Verifier pass
+    # 5) Verifier pass
     verification = verify_research(
         client=client,
         model=args.verifier_model,
-        goal=args.goal,
+        goal=execution_goal,
         plan=plan,
         findings=findings,
-        constraints=constraints,
+        constraints=execution_constraints,
     )
     activity_log.append(
         {
@@ -266,8 +337,8 @@ def main() -> None:
                 client=client,
                 model=args.research_model,
                 subquestion=subq,
-                goal=args.goal,
-                constraints=constraints,
+                goal=execution_goal,
+                constraints=execution_constraints,
                 allowed_sources=allowed_sources,
                 tools=tools,
             )
@@ -288,10 +359,10 @@ def main() -> None:
         verification = verify_research(
             client=client,
             model=args.verifier_model,
-            goal=args.goal,
+            goal=execution_goal,
             plan=plan,
             findings=findings,
-            constraints=constraints,
+            constraints=execution_constraints,
         )
         activity_log.append(
             {
@@ -305,7 +376,7 @@ def main() -> None:
             }
         )
 
-    # 4) Verification gates before synthesis
+    # 6) Verification gates before synthesis
     covered_ok, missing_ids = _required_subquestions_covered(plan, findings)
     citation_ok, citation_missing = _ensure_claim_citations(findings)
     verifier_ok = not bool(verification.get("more_research_required", False))
@@ -326,7 +397,7 @@ def main() -> None:
         report_md = synthesize_report(
             client=client,
             model=args.writer_model,
-            goal=args.goal,
+            goal=execution_goal,
             plan=plan,
             findings=findings,
             verification=verification,
@@ -346,8 +417,13 @@ def main() -> None:
     state = {
         "generated_at": utc_now(),
         "status": status,
-        "goal": args.goal,
+        "goal": user_goal,
+        "clarified_goal": clarified_goal,
+        "execution_goal": execution_goal,
+        "clarification": clarification,
+        "research_brief": research_brief,
         "constraints": constraints,
+        "execution_constraints": execution_constraints,
         "allowed_sources": allowed_sources,
         "trusted_domains": trusted_domains,
         "tools_config": {
@@ -356,6 +432,8 @@ def main() -> None:
             "tool_count": len(tools),
         },
         "models": {
+            "clarifier": args.clarifier_model,
+            "rewriter": args.rewriter_model,
             "planner": args.planner_model,
             "research": args.research_model,
             "verifier": args.verifier_model,

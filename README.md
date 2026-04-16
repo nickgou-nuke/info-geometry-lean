@@ -136,8 +136,11 @@ Execution guardrail:
 Owner references:
 
 - [docs/black_books/86_support_restricted_relative_modular_hamiltonian_lane_map.md](docs/black_books/86_support_restricted_relative_modular_hamiltonian_lane_map.md)
+- [docs/black_books/109_true_modular_hamiltonian_co_owner_bridge.md](docs/black_books/109_true_modular_hamiltonian_co_owner_bridge.md)
 - [lean/InfoGeometry/Canonical/DrazinSupercharge.lean](lean/InfoGeometry/Canonical/DrazinSupercharge.lean)
 - [lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean](lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean)
+- [lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean](lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean)
+- [lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean](lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean)
 
 ## Interactive Geometry Surfaces
 
@@ -377,3 +380,7 @@ python3 tools/infra/generate_representation_depth_graph.py
 - `reports/` and `artifacts/dag/` are generated or regenerated surfaces.
 - Python reports visualize and summarize the enforced structure; they do not define it.
 - Stale prose loses to code and regenerated artifacts.
+
+## Current Codebase Status
+
+Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md) for the current build/audit state.

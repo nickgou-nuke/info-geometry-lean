@@ -5,16 +5,24 @@ which are generated, and which remain as reference memory.
 
 Do not treat every surviving markdown file as equally current.
 
+For live repository state, start with [CODEBASE_STATUS.md](CODEBASE_STATUS.md).
+
+## Current Codebase Status
+
+Repository-wide build/audit freshness is tracked in
+[CODEBASE_STATUS.md](CODEBASE_STATUS.md).
+
 ## Trust Order
 
 When surfaces disagree, trust them in this order:
 
 1. Lean source under `lean/InfoGeometry/`
 2. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean) and [lean/InfoGeometry/Meta/Architecture.lean](../lean/InfoGeometry/Meta/Architecture.lean)
-3. [artifacts/dag/index/meta.json](../artifacts/dag/index/meta.json) and the atomic DAG artifacts under `artifacts/dag/`
-4. derived reports under `reports/dag/`
-5. hand-maintained operational docs
-6. reference protocols, backlog notes, and synthesis docs
+3. [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+4. [artifacts/dag/index/meta.json](../artifacts/dag/index/meta.json) and the atomic DAG artifacts under `artifacts/dag/`
+5. derived reports under `reports/dag/`
+6. hand-maintained operational docs
+7. reference protocols, backlog notes, and synthesis docs
 
 ## Documentation Status
 
@@ -25,12 +33,15 @@ These are the maintained hand-written entry surfaces for current repo state:
 - [README.md](../README.md)
 - [docs/README.md](README.md)
 - [docs/RepositoryMemoryMap.md](RepositoryMemoryMap.md)
+- [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 - [docs/Goutevs_Principle.md](Goutevs_Principle.md)
 - [docs/LIBER_NOVUS_MATH.md](LIBER_NOVUS_MATH.md)
 - [docs/WORKBENCH.md](WORKBENCH.md)
 - [docs/black_books/](black_books/)
 - [docs/black_books/09_science_after_coding.md](black_books/09_science_after_coding.md)
 - [docs/black_books/67_the_external_analogy_doctrine.md](black_books/67_the_external_analogy_doctrine.md)
+- [docs/black_books/108_unbounded_modular_machinery_repo_native_translation.md](black_books/108_unbounded_modular_machinery_repo_native_translation.md)
+- [docs/black_books/109_true_modular_hamiltonian_co_owner_bridge.md](black_books/109_true_modular_hamiltonian_co_owner_bridge.md)
 - [docs/projective_to_krein_transition_doctrine.md](projective_to_krein_transition_doctrine.md)
 - [docs/Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md)
 - [docs/SEMANTIC_POTENTIAL.md](SEMANTIC_POTENTIAL.md)
@@ -40,6 +51,8 @@ These are the maintained hand-written entry surfaces for current repo state:
 - [docs/DAGTroubleshooting.md](DAGTroubleshooting.md)
 - [docs/Theory.md](Theory.md)
 - [docs/ModuleMap.md](ModuleMap.md)
+- [lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean](../lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean)
+- [lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean](../lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean)
 - [Installation.md](../Installation.md)
 - [NEWCOMER_PATH.md](../NEWCOMER_PATH.md)
 - [lean/DAG/README.md](../lean/DAG/README.md)

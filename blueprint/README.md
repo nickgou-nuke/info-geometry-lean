@@ -29,3 +29,8 @@ The exhaustive generated blueprint payload is emitted under `.lake/build/bluepri
 - Treat `blueprint/` as the human-facing wrapper layer.
 - Treat `auto_blueprints.lean` and `BlueprintTags.lean` as generated/refreshable.
 - Do not confuse exhaustive node extraction with a curated mathematical monograph.
+
+## Current Codebase Status
+
+Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md) for the current build/audit state.
+

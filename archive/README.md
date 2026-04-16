@@ -40,3 +40,8 @@ For current work, prefer:
   - scratch Lean files removed from the package build surface.
 
 See [archive/legacy/README.md](/home/goutev/LEAN4/info-geometry-lean/archive/legacy/README.md) for the local notes on that bucket.
+
+## Current Codebase Status
+
+Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md) for the current build/audit state.
+

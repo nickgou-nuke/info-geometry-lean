@@ -215,3 +215,8 @@ Use it to recover memory and choose the next file to read.
 Do not use it to delete mathematics without reading the owner code.
 
 Do not use a single hotspot heuristic as the whole theory map.
+
+## Current Codebase Status
+
+Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
+

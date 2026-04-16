@@ -108,3 +108,8 @@ Manual templates for team use:
 
 - `tools/frontier/templates/socratic_cycle_packet.md`
 - `tools/frontier/templates/pauli_admission_report.md`
+
+## Current Codebase Status
+
+Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
+

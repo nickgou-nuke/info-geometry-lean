@@ -4,6 +4,11 @@ This repository is one theory with several presentations.
 The main burden is not to flatten those presentations into one file-level story,
 but to make the morphisms between them explicit, adjacent, and checkable.
 
+## Current Codebase Status
+
+For the latest verified build/audit snapshot, use
+[CODEBASE_STATUS.md](CODEBASE_STATUS.md).
+
 ## What Is Being Formalized
 
 The stable grammar is the semantic representation ladder defined in

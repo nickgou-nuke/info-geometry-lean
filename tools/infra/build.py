@@ -11,6 +11,23 @@ from typing import Sequence
 from tools.build_lock import BuildLockBusyError, acquire_build_lock
 from tools.pathing import repo_root
 
+_SPECTRAL_STAGE_PREFIX: dict[str, str] = {
+    "PREP": "[Sample Preparation]",
+    "DECOMP": "[Spectral Decomposition]",
+    "CONGEST": "[Band Congestion Analysis]",
+    "ASSIGN": "[Line Assignment]",
+    "PAULI": "[Selection-Rule Enforcement]",
+    "CRYSTAL": "[Crystallized Assignment]",
+    "ATLAS": "[Spectral Atlas]",
+}
+
+
+def log_spectral_stage(stage: str, module: str, details: str = "") -> None:
+    """Emit build-lane status using spectroscopic workflow terminology."""
+    prefix = _SPECTRAL_STAGE_PREFIX.get(stage, "[UNKNOWN]")
+    tail = f" {details}" if details else ""
+    print(f"{prefix} {module}{tail}", flush=True)
+
 
 def compute_olean_content_hash(root: Path) -> str:
     """Compute a fast content hash over .olean files to detect environment changes."""
@@ -63,7 +80,9 @@ def run_locked_lake_build(
     targets: Sequence[str], *, wait_for_lock: bool = False, wfail: bool = False
 ) -> int:
     root = repo_root()
-    owner = f"locked-lake-build:{os.getpid()}:{' '.join(targets) if targets else '<default>'}"
+    target_label = " ".join(targets) if targets else "<default>"
+    owner = f"locked-lake-build:{os.getpid()}:{target_label}"
+    log_spectral_stage("PREP", target_label, "establishing locked build vacuum")
     try:
         lock = acquire_build_lock(None, owner, block=wait_for_lock)
     except BuildLockBusyError as exc:
@@ -81,15 +100,28 @@ def run_locked_lake_build(
     cmd = ["lake", "build"]
     if wfail:
         cmd.append("--wfail")
+        log_spectral_stage("PAULI", target_label, "warnings promoted to errors (--wfail)")
+    else:
+        log_spectral_stage("ASSIGN", target_label, "running default selection rules")
     cmd.extend(targets)
     print(f"[locked-lake-build] acquired {lock.lock_path}", flush=True)
+    log_spectral_stage("DECOMP", target_label, f"lock acquired at {lock.lock_path}")
     print(f"[locked-lake-build] running: {' '.join(cmd)}", flush=True)
     try:
         proc = subprocess.run(cmd, cwd=root)
+        if proc.returncode == 0:
+            log_spectral_stage("CRYSTAL", target_label, "stable closure achieved")
+        else:
+            log_spectral_stage(
+                "CONGEST",
+                target_label,
+                f"build exited with code {proc.returncode}",
+            )
         return proc.returncode
     finally:
         lock.release()
         print(f"[locked-lake-build] released {lock.lock_path}", flush=True)
+        log_spectral_stage("ATLAS", target_label, "lock released; registry ready for refresh")
 
 
 def ensure_built_executable(root: Path, target: str) -> Path:

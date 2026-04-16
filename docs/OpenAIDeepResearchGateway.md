@@ -111,3 +111,33 @@ Use the same packet contract and promote flow.
   `skills/repo-topic-deep-research/templates/hermes_enrichment_prompt_template.md`
 
 Deep Research can be used as an additional provider stage, without changing the lane schema.
+
+## Official Responses Pattern Controller
+
+For the official planner -> retrieval -> verifier -> writer pattern on top of
+Responses tools (`web_search`, `file_search`, `mcp`), use:
+
+```bash
+python3 tools/infra/deep_research/controller.py \
+  --goal "Assess implementation options for X" \
+  --allowed-sources web,files \
+  --trusted-domain openai.com \
+  --trusted-domain platform.openai.com
+```
+
+This controller persists:
+- plan,
+- per-subquestion findings,
+- verifier verdict,
+- activity log,
+- gate status (coverage + citation requirements),
+- final report path.
+
+For the full autonomous stack (deep research -> Socratic -> Pauli -> Lean
+design/coder -> compiler loop -> memory ingestion), use:
+
+```bash
+python3 tools/infra/autonomous_math/research_controller.py \
+  --goal "Formalize support-restricted modular Hamiltonian on Preg" \
+  --allowed-sources web
+```

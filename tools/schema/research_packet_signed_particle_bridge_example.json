@@ -1,0 +1,89 @@
+{
+  "packet_id": "rp-20260416T000000Z-signed-particle-bridge",
+  "created_at": "2026-04-16T00:00:00Z",
+  "research_goal": "Bridge signed-particle phase-space language to doubled/Krein projector language",
+  "allowed_sources": [
+    "web",
+    "files"
+  ],
+  "trusted_domains": [
+    "arxiv.org"
+  ],
+  "provenance": {
+    "source": "HermesDeepResearchController",
+    "state_path": "reports/research/deep-research-state-signed-particle-bridge.json",
+    "models": {
+      "planner": "gpt-5",
+      "research": "gpt-5",
+      "verifier": "gpt-5",
+      "writer": "gpt-5"
+    }
+  },
+  "evidence": [
+    {
+      "claim": "Signed particles represent positive/negative contributions rather than ordinary probabilities.",
+      "sources": [
+        "arXiv:0807.3365"
+      ],
+      "confidence": "medium",
+      "evidence_summary": "Research claim; no owner-level adoption.",
+      "subquestion_id": "sq1"
+    },
+    {
+      "claim": "Annihilation corresponds to cancellation of opposite-sign contributions.",
+      "sources": [
+        "arXiv:0807.3365"
+      ],
+      "confidence": "medium",
+      "evidence_summary": "Used only as translator correspondence.",
+      "subquestion_id": "sq2"
+    }
+  ],
+  "contradictions": [],
+  "candidate_invariants": [
+    "Regular-core transport remains on Preg sector.",
+    "Nonclassical correction is read through projector mismatch/anomaly."
+  ],
+  "forbidden_moves": [
+    "do not make signed particles an owner ontology",
+    "do not identify Wigner negativity with anomaly by definition",
+    "do not bypass Drazin/MoorePenrose owner files"
+  ],
+  "formalization_targets": [
+    {
+      "kind": "definition",
+      "name": "SignedParticleShadow"
+    },
+    {
+      "kind": "definition",
+      "name": "annihilationShadow"
+    },
+    {
+      "kind": "definition",
+      "name": "classicalShadowOnRegularCore"
+    },
+    {
+      "kind": "translator",
+      "name": "nonclassicalShadow"
+    }
+  ],
+  "classification": {
+    "facts": [],
+    "interpretations": [
+      "Signed-particle language is a computational shadow and must not outrank owner modules."
+    ],
+    "metaphors": [],
+    "formalization_candidates": [
+      "SignedParticleShadow",
+      "annihilationShadow",
+      "classicalShadowOnRegularCore",
+      "nonclassicalShadow"
+    ]
+  },
+  "handoff": {
+    "prompt_a_ready": true,
+    "requires_nemoclaw_note": true,
+    "requires_clawcode_gate": true
+  },
+  "status": "draft"
+}

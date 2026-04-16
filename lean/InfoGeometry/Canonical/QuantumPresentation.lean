@@ -19,6 +19,7 @@ inductive PresentationLane where
   | phaseSpace
   | hydrodynamic
   | stochastic
+  | graphDirac
   | doubledKrein
   deriving DecidableEq, Repr
 

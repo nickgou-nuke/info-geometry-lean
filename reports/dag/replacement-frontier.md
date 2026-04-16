@@ -6,16 +6,16 @@ It integrates DAG consumer classes, representation depth, vacuity signals, and a
 ## Artifact Trust
 
 - schema version: `3`
-- timestamp: `2026-04-15T17:36:52.538858+00:00`
-- olean hash: `003dcbc996b53b2d90186e433bb89afda0bd941f1feaf75e8e30057b3b74fc2e`
+- timestamp: `2026-04-15T22:06:28.722846+00:00`
+- olean hash: `43f327054d34dbf35f81d2319cd264a7f27409ac136f9bcdd5ee0e74d0837ff0`
 
 ## Summary
 
-- candidate declarations: `3758`
-- modules with replacement pressure: `551`
-- class counts: `{'wrapper_surface': 88, 'bridge_surface_promoted': 3, 'dead_public_theorem': 3294, 'package_reprojection_surface': 232, 'hypothesis_bridge_surface': 45, 'surrogate_surface': 77, 'internal_staging_only': 17, 'live_wrapper_surface': 2}`
-- depth counts: `{'untracked': 3756, 'transport': 1, 'operator': 1}`
-- vacuity counts: `{'V1/public-wrapper-inflation': 92, 'V2/dead-public-theorem': 3376, 'V4/bridge-infrastructure-promoted': 5, 'V0/syntactic-vacuity': 84}`
+- candidate declarations: `3773`
+- modules with replacement pressure: `554`
+- class counts: `{'wrapper_surface': 88, 'bridge_surface_promoted': 3, 'dead_public_theorem': 3300, 'package_reprojection_surface': 241, 'hypothesis_bridge_surface': 45, 'surrogate_surface': 77, 'internal_staging_only': 17, 'live_wrapper_surface': 2}`
+- depth counts: `{'untracked': 3771, 'transport': 1, 'operator': 1}`
+- vacuity counts: `{'V1/public-wrapper-inflation': 92, 'V2/dead-public-theorem': 3382, 'V4/bridge-infrastructure-promoted': 5, 'V0/syntactic-vacuity': 84}`
 
 ## Top Modules
 

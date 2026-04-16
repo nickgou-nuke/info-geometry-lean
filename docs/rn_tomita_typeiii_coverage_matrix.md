@@ -35,6 +35,7 @@ Search footprint used for this pass:
 | Full spectral-theorem multiplication model (`L²(μ)`, cyclic subspaces, spectrum decomposition) | missing | No owner module with cyclic-subspace + multiplication representation + spectral-measure decomposition was found in `lean/InfoGeometry` | Current spectral files are finite/operator-lift packaging, not a full Hilbert spectral theorem lane. |
 | Full GNS construction layer for C\*-states (repo owner surface) | missing | No dedicated GNS owner module was found in `lean/InfoGeometry` in this pass | Standard-form interfaces exist, but not full GNS/Tomita construction stack. |
 | Pedersen–Takesaki/Vaes affiliated-operator RN lane | interface | [`lean/InfoGeometry/Canonical/PedersenTakesakiRNInterface.lean`](../lean/InfoGeometry/Canonical/PedersenTakesakiRNInterface.lean): `AffiliatedOperatorRNInterface`, `typeIII_affiliatedRN_interface_package`, `finiteAffiliatedDensity` | New interface scaffold is compiled; full existence/uniqueness affiliated-operator owner theorems are still not formalized. |
+| Connes cocycle -> finite/support `Δ` bridge (conservative lane) | implemented | [`lean/InfoGeometry/Canonical/ConnesCocycleDeltaPrimaryBridge.lean`](../lean/InfoGeometry/Canonical/ConnesCocycleDeltaPrimaryBridge.lean): `deltaFiniteShadow_chain`, `deltaFiniteSupportShadow_chain`, `connes_to_deltaFiniteSupport_package` | Adds a theorem-bearing bridge from Type-III cocycle witnesses to finite/support `Δ` shadows; intentionally does not claim unbounded affiliated `K = -log Δ` ownership. |
 
 ## Evidence That These Are Integrated (Not Isolated)
 
@@ -42,6 +43,7 @@ Search footprint used for this pass:
   [`lean/InfoGeometry/Canonical/All.lean`](../lean/InfoGeometry/Canonical/All.lean)
   imports `TomitaTakesaki`, `StandardFormCore`, `TomitaTakesakiRealStandardForm`,
   `TypeIIIContinuousCoreReal`, `PedersenTakesakiRNInterface`,
+  `ConnesCocycleDeltaPrimaryBridge`,
   `RelativeModularCore`, `RelativeModularOperator`,
   `RelativeModularHamiltonian`, `RelativeModularCommutingLift`,
   `ConnesArakiCore`, `ConnesArakiTomita`, and `Volume.RadonNikodym`.

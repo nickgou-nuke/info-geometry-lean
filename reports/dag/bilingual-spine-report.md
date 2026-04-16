@@ -1,6 +1,6 @@
 # Bilingual RedLine Spine Report
 
-Generated: 2026-04-15 22:01:35
+Generated: 2026-04-16 01:06:31
 Repository: /home/goutev/LEAN4/info-geometry-lean
 Spine root: `InfoGeometry.Canonical.RedLine`
 

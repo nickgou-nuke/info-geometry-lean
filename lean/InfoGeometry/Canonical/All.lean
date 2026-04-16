@@ -166,6 +166,7 @@ import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.BogoliubovProjectorTransport
 import InfoGeometry.Canonical.BogoliubovProjectorFlux
 import InfoGeometry.Canonical.OperatorDictionary
+import InfoGeometry.Canonical.QuantumPresentation
 import InfoGeometry.Canonical.ModularOrientationContract
 import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.ModularSpectralWedge

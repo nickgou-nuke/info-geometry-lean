@@ -22,31 +22,37 @@ So:
 - **inertia** is reverse structural load penalized by weighted debt
 
 ## Structural Summary
-- declaration nodes: `17372`
-- declaration edges: `93242`
-- SCC components: `17372`
+- declaration nodes: `17442`
+- declaration edges: `93667`
+- SCC components: `17442`
 - total layers: `31`
-- root components: `722`
-- capstone components: `6627`
+- root components: `724`
+- capstone components: `6643`
 - thinness findings: `17`
 - vacuity findings: `0`
 - surrogate findings: `8`
-- repo Lean files under `lean/InfoGeometry` in coverage scope: `692`
-- declaration-bearing source files in coverage scope: `615`
+- repo Lean files under `lean/InfoGeometry` in coverage scope: `698`
+- declaration-bearing source files in coverage scope: `621`
 - excluded quarantine Lean files: `45`
 - import-only / umbrella Lean files: `77`
-- declaration-index files in authoritative `artifacts/dag` graph: `615`
-- missing declaration-bearing files from graph coverage: `0`
+- declaration-index files in authoritative `artifacts/dag` graph: `618`
+- missing declaration-bearing files from graph coverage: `3`
 - debt files currently outside graph coverage: `0`
 
 ## Coverage Warning
-- The authoritative `artifacts/dag` declaration graph covers the live in-scope declaration-bearing `lean/InfoGeometry` files.
+- The authoritative `artifacts/dag` declaration graph is partial relative to the live in-scope declaration-bearing `lean/InfoGeometry` files.
 - Quarantine files under `lean/InfoGeometry/Unstable/` are excluded from this coverage gate; import-only umbrella files are also counted separately.
+- Any debt file listed below is invisible to the current graph-based inertia ranking and must not be treated as resolved.
+
+### First Missing Declaration-Bearing Lean Files
+- `lean/InfoGeometry/Canonical/ConnesCocycleDeltaPrimaryBridge.lean`
+- `lean/InfoGeometry/Canonical/SYKKitaevGuardrails.lean`
+- `lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean`
 
 ## Root Set
-- `InfoGeometry.Krein.DoubledSpace` | load `10572.00` | inertia `10572.00` | supports `2381` capstones | files: `lean/InfoGeometry/Krein/DoubledSpace.lean`
-- `InfoGeometry.Krein.instL2NormedGroup` | load `10183.00` | inertia `10183.00` | supports `2300` capstones | files: `lean/InfoGeometry/Krein/KreinSpace.lean`
-- `InfoGeometry.Krein.instL2InnerProduct` | load `4026.00` | inertia `4026.00` | supports `924` capstones | files: `lean/InfoGeometry/Krein/KreinSpace.lean`
+- `InfoGeometry.Krein.DoubledSpace` | load `10633.00` | inertia `10633.00` | supports `2392` capstones | files: `lean/InfoGeometry/Krein/DoubledSpace.lean`
+- `InfoGeometry.Krein.instL2NormedGroup` | load `10244.00` | inertia `10244.00` | supports `2311` capstones | files: `lean/InfoGeometry/Krein/KreinSpace.lean`
+- `InfoGeometry.Krein.instL2InnerProduct` | load `4082.00` | inertia `4082.00` | supports `935` capstones | files: `lean/InfoGeometry/Krein/KreinSpace.lean`
 - `InfoGeometry.Krein.instL2Complete` | load `3397.00` | inertia `3397.00` | supports `785` capstones | files: `lean/InfoGeometry/Krein/KreinSpace.lean`
 - `InfoGeometry.Canonical.InverseKernel` | load `2698.00` | inertia `2698.00` | supports `592` capstones | files: `lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean`
 - `InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection` | load `2525.00` | inertia `2525.00` | supports `554` capstones | files: `lean/InfoGeometry/Canonical/Drazin.lean`
@@ -61,9 +67,9 @@ So:
 
 | Layer | Representative SCC | Size | Min depth | Max depth | Reverse load | Debt | Inertia | Notes |
 | :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: | :--- |
-| 0 | `InfoGeometry.Krein.DoubledSpace` | 1 | 0 | 0 | 10572.00 | 0.00 | 10572.00 | Bedrock |
-| 0 | `InfoGeometry.Krein.instL2NormedGroup` | 1 | 0 | 0 | 10183.00 | 0.00 | 10183.00 | Bedrock |
-| 0 | `InfoGeometry.Krein.instL2InnerProduct` | 1 | 0 | 0 | 4026.00 | 0.00 | 4026.00 | Bedrock |
+| 0 | `InfoGeometry.Krein.DoubledSpace` | 1 | 0 | 0 | 10633.00 | 0.00 | 10633.00 | Bedrock |
+| 0 | `InfoGeometry.Krein.instL2NormedGroup` | 1 | 0 | 0 | 10244.00 | 0.00 | 10244.00 | Bedrock |
+| 0 | `InfoGeometry.Krein.instL2InnerProduct` | 1 | 0 | 0 | 4082.00 | 0.00 | 4082.00 | Bedrock |
 | 0 | `InfoGeometry.Krein.instL2Complete` | 1 | 0 | 0 | 3397.00 | 0.00 | 3397.00 | Bedrock |
 | 0 | `InfoGeometry.Canonical.InverseKernel` | 1 | 0 | 0 | 2698.00 | 0.00 | 2698.00 | Bedrock |
 | 0 | `InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection` | 1 | 0 | 0 | 2525.00 | 0.00 | 2525.00 | Bedrock |
@@ -82,36 +88,36 @@ So:
 | 1 | `InfoGeometry.Canonical.CertifiedInverseKernel.toInverseKernel` | 1 | 1 | 1 | 1741.00 | 0.00 | 1741.00 | - |
 | 1 | `InfoGeometry.Krein.to_doubled` | 1 | 1 | 1 | 1598.00 | 0.00 | 1598.00 | - |
 | 1 | `InfoGeometry.Canonical.ConformalUnification.ConformalInference.toInverseKernel` | 1 | 1 | 1 | 1202.00 | 0.00 | 1202.00 | - |
-| 1 | `InfoGeometry.PositiveMeasure.mass` | 1 | 1 | 1 | 1123.00 | 0.00 | 1123.00 | - |
-| 1 | `InfoGeometry.PositiveMeasure.mk` | 1 | 1 | 1 | 1079.00 | 0.00 | 1079.00 | - |
+| 1 | `InfoGeometry.PositiveMeasure.mass` | 1 | 1 | 1 | 1142.00 | 0.00 | 1142.00 | - |
+| 1 | `InfoGeometry.PositiveMeasure.mk` | 1 | 1 | 1 | 1098.00 | 0.00 | 1098.00 | - |
 | 1 | `InfoGeometry.Canonical.BogoliubovTransport.transportCommutator` | 1 | 1 | 1 | 1075.00 | 0.00 | 1075.00 | - |
 | 2 | `InfoGeometry.Krein.complex_i` | 1 | 1 | 2 | 2883.00 | 0.00 | 2883.00 | - |
 | 2 | `InfoGeometry.Canonical.CertifiedInverseKernel.toInverseKernel'` | 1 | 1 | 2 | 1663.00 | 0.00 | 1663.00 | - |
 | 2 | `InfoGeometry.Canonical.InverseKernel.spectralProjector` | 1 | 1 | 2 | 1542.00 | 0.00 | 1542.00 | - |
 | 2 | `InfoGeometry.Canonical.InverseKernel.metricProjector` | 1 | 1 | 2 | 1298.00 | 0.00 | 1298.00 | - |
-| 2 | `InfoGeometry.PositiveMeasure.pos` | 1 | 1 | 2 | 945.00 | 0.00 | 945.00 | - |
-| 2 | `InfoGeometry.PositiveMeasure.scale` | 1 | 1 | 2 | 924.00 | 0.00 | 924.00 | - |
+| 2 | `InfoGeometry.PositiveMeasure.pos` | 1 | 1 | 2 | 964.00 | 0.00 | 964.00 | - |
+| 2 | `InfoGeometry.PositiveMeasure.scale` | 1 | 1 | 2 | 943.00 | 0.00 | 943.00 | - |
 | 2 | `InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.instAddCommGroup` | 1 | 1 | 2 | 923.00 | 0.00 | 923.00 | - |
 | 2 | `InfoGeometry.Canonical.InverseKernel.mpRangeProjector` | 1 | 1 | 2 | 893.00 | 0.00 | 893.00 | - |
 | 2 | `InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon` | 1 | 1 | 2 | 883.00 | 0.00 | 883.00 | - |
+| 2 | `InfoGeometry.Projective.positiveMeasureToEuclidean` | 1 | 1 | 2 | 850.00 | 0.00 | 850.00 | - |
 | 2 | `InfoGeometry.Krein.SplitQuadraticSheets.plusPoint` | 1 | 1 | 2 | 842.00 | 0.00 | 842.00 | - |
-| 2 | `InfoGeometry.Projective.positiveMeasureToEuclidean` | 1 | 1 | 2 | 831.00 | 0.00 | 831.00 | - |
-| 2 | `InfoGeometry.PositiveMeasure.ext` | 1 | 1 | 2 | 823.00 | 0.00 | 823.00 | - |
+| 2 | `InfoGeometry.PositiveMeasure.ext` | 1 | 1 | 2 | 842.00 | 0.00 | 842.00 | - |
 | 3 | `InfoGeometry.Canonical.TomitaTakesaki.modularComplexI` | 1 | 1 | 3 | 2428.00 | 0.00 | 2428.00 | - |
 | 3 | `InfoGeometry.Quantum.RealMajoranaCategory.RealMajoranaCore.instModule` | 1 | 1 | 3 | 922.00 | 0.00 | 922.00 | - |
+| 3 | `InfoGeometry.PositiveMeasure.SameRay` | 1 | 1 | 3 | 897.00 | 0.00 | 897.00 | - |
 | 3 | `InfoGeometry.Canonical.CertifiedInverseKernel.spectralProjector` | 1 | 1 | 3 | 888.00 | 0.00 | 888.00 | - |
-| 3 | `InfoGeometry.PositiveMeasure.SameRay` | 1 | 1 | 3 | 878.00 | 0.00 | 878.00 | - |
 | 3 | `InfoGeometry.Krein.complex_i_apply` | 1 | 1 | 3 | 854.00 | 0.00 | 854.00 | - |
-| 3 | `InfoGeometry.Projective.positiveMeasureToEuclidean_apply` | 1 | 1 | 3 | 819.00 | 0.00 | 819.00 | - |
-| 3 | `InfoGeometry.Projective.positiveMeasureToEuclidean_scale` | 1 | 1 | 3 | 814.00 | 0.00 | 814.00 | - |
+| 3 | `InfoGeometry.Projective.positiveMeasureToEuclidean_apply` | 1 | 1 | 3 | 838.00 | 0.00 | 838.00 | - |
+| 3 | `InfoGeometry.Projective.positiveMeasureToEuclidean_scale` | 1 | 1 | 3 | 833.00 | 0.00 | 833.00 | - |
 | 3 | `InfoGeometry.Canonical.InverseKernel.chiralAnomaly` | 1 | 1 | 3 | 802.00 | 0.00 | 802.00 | - |
 | 3 | `InfoGeometry.Canonical.MongeAmpereDualSheetBridge.minusPointL` | 1 | 1 | 3 | 663.00 | 0.00 | 663.00 | - |
 | 3 | `InfoGeometry.Krein.KreinGradedModule.gradeCLM` | 1 | 1 | 3 | 663.00 | 0.00 | 663.00 | - |
 | 3 | `InfoGeometry.Canonical.MongeAmpereDualSheetBridge.plusPointL` | 1 | 1 | 3 | 662.00 | 0.00 | 662.00 | - |
 | 3 | `InfoGeometry.Krein.InvolutiveSelfDualCarrier.instInnerProductSpace` | 1 | 1 | 3 | 655.00 | 0.00 | 655.00 | - |
 | 4 | `InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator` | 1 | 1 | 4 | 1189.00 | 0.00 | 1189.00 | - |
-| 4 | `InfoGeometry.PositiveMeasure.instSetoidReal` | 1 | 1 | 4 | 861.00 | 0.00 | 861.00 | - |
-| 4 | `InfoGeometry.Projective.positiveMeasureToEuclidean_ne_zero` | 1 | 1 | 4 | 818.00 | 0.00 | 818.00 | - |
+| 4 | `InfoGeometry.PositiveMeasure.instSetoidReal` | 1 | 1 | 4 | 880.00 | 0.00 | 880.00 | - |
+| 4 | `InfoGeometry.Projective.positiveMeasureToEuclidean_ne_zero` | 1 | 1 | 4 | 837.00 | 0.00 | 837.00 | - |
 | 4 | `InfoGeometry.Canonical.CertifiedInverseKernel.chiralAnomaly` | 1 | 1 | 4 | 738.00 | 0.00 | 738.00 | - |
 | 4 | `InfoGeometry.Krein.InvolutiveSelfDualCarrier.ε` | 1 | 1 | 4 | 583.00 | 0.00 | 583.00 | - |
 | 4 | `InfoGeometry.Krein.InvolutiveSelfDualCarrier.J` | 1 | 1 | 4 | 551.00 | 0.00 | 551.00 | - |
@@ -121,8 +127,8 @@ So:
 | 4 | `InfoGeometry.Canonical.MongeAmpereDualSheetBridge.dualSheetLift` | 1 | 1 | 4 | 435.00 | 0.00 | 435.00 | - |
 | 4 | `InfoGeometry.Krein.KreinGradedModule.gradeProjMinus` | 1 | 1 | 4 | 430.00 | 0.00 | 430.00 | - |
 | 4 | `InfoGeometry.Krein.KreinGradedModule.gradeProjPlus` | 1 | 1 | 4 | 430.00 | 0.00 | 430.00 | - |
-| 5 | `InfoGeometry.PositiveMeasure.Proj` | 1 | 1 | 5 | 860.00 | 0.00 | 860.00 | - |
-| 5 | `InfoGeometry.Projective.positiveMeasureToConeInteriorRay` | 1 | 1 | 5 | 817.00 | 0.00 | 817.00 | - |
+| 5 | `InfoGeometry.PositiveMeasure.Proj` | 1 | 1 | 5 | 879.00 | 0.00 | 879.00 | - |
+| 5 | `InfoGeometry.Projective.positiveMeasureToConeInteriorRay` | 1 | 1 | 5 | 836.00 | 0.00 | 836.00 | - |
 | 5 | `InfoGeometry.Krein.InvolutiveSelfDualCarrier.K` | 1 | 1 | 5 | 539.00 | 0.00 | 539.00 | - |
 | 5 | `InfoGeometry.Krein.InvolutiveSelfDualCarrier.J_ε_anticomm` | 1 | 1 | 5 | 532.00 | 0.00 | 532.00 | - |
 | 5 | `InfoGeometry.Canonical.BogoliubovTransport.modularDeriv` | 1 | 1 | 5 | 522.00 | 0.00 | 522.00 | - |
@@ -133,8 +139,8 @@ So:
 | 5 | `InfoGeometry.Canonical.ConformalUnification.ConformalInference.projectorObstruction` | 1 | 1 | 5 | 444.00 | 0.00 | 444.00 | - |
 | 5 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.chiralProjectorMinus` | 1 | 1 | 5 | 361.00 | 0.00 | 361.00 | - |
 | 5 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.chiralProjectorPlus` | 1 | 1 | 5 | 361.00 | 0.00 | 361.00 | - |
-| 6 | `InfoGeometry.Projective.positiveMeasureToConeInteriorRay_sameRay` | 1 | 1 | 6 | 813.00 | 0.00 | 813.00 | - |
-| 6 | `InfoGeometry.Canonical.PositiveRayCore.PositiveRay` | 1 | 2 | 6 | 761.00 | 0.00 | 761.00 | - |
+| 6 | `InfoGeometry.Projective.positiveMeasureToConeInteriorRay_sameRay` | 1 | 1 | 6 | 832.00 | 0.00 | 832.00 | - |
+| 6 | `InfoGeometry.Canonical.PositiveRayCore.PositiveRay` | 1 | 2 | 6 | 780.00 | 0.00 | 780.00 | - |
 | 6 | `InfoGeometry.Canonical.BogoliubovTransport.relativeModularDeriv` | 1 | 1 | 6 | 471.00 | 0.00 | 471.00 | - |
 | 6 | `InfoGeometry.Krein.InvolutiveSelfDualCarrier.K_sq` | 1 | 1 | 6 | 452.00 | 0.00 | 452.00 | - |
 | 6 | `InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian` | 1 | 1 | 6 | 409.00 | 0.00 | 409.00 | - |
@@ -145,20 +151,20 @@ So:
 | 6 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.QuasilatticeChiralFredholmSurface.mk` | 1 | 1 | 6 | 241.00 | 0.00 | 241.00 | - |
 | 6 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.gradeCLM_comp_eq_comp_gradeCLM_of_isEven` | 1 | 1 | 6 | 228.00 | 0.00 | 228.00 | - |
 | 6 | `InfoGeometry.Canonical.IB.ibBlahutArimotoStepFrozen` | 1 | 1 | 6 | 219.00 | 0.00 | 219.00 | - |
-| 7 | `InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace` | 1 | 1 | 7 | 812.00 | 0.00 | 812.00 | - |
+| 7 | `InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace` | 1 | 1 | 7 | 831.00 | 0.00 | 831.00 | - |
 | 7 | `InfoGeometry.Krein.complex_i_sq` | 1 | 1 | 7 | 451.00 | 0.00 | 451.00 | - |
 | 7 | `InfoGeometry.Canonical.StateDependentTransport.stateInducedDynamics` | 1 | 1 | 7 | 393.00 | 0.00 | 393.00 | - |
 | 7 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.ChiralFredholmSurface.mk` | 1 | 1 | 7 | 343.00 | 0.00 | 343.00 | - |
-| 7 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.source` | 1 | 1 | 7 | 323.00 | 0.00 | 323.00 | - |
-| 7 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.target` | 1 | 1 | 7 | 323.00 | 0.00 | 323.00 | - |
-| 7 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.mk` | 1 | 1 | 7 | 322.00 | 0.00 | 322.00 | - |
+| 7 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.source` | 1 | 1 | 7 | 333.00 | 0.00 | 333.00 | - |
+| 7 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.target` | 1 | 1 | 7 | 333.00 | 0.00 | 333.00 | - |
+| 7 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.mk` | 1 | 1 | 7 | 332.00 | 0.00 | 332.00 | - |
 | 7 | `InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK` | 1 | 1 | 7 | 285.00 | 0.00 | 285.00 | - |
 | 7 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.QuasilatticeChiralFredholmSurface.rec` | 1 | 1 | 7 | 239.00 | 0.00 | 239.00 | - |
 | 7 | `InfoGeometry.Canonical.RelativeModularPotential.transportGenerator` | 1 | 1 | 7 | 236.00 | 0.00 | 236.00 | - |
 | 7 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.commute_gradeCLM_of_isEven` | 1 | 1 | 7 | 227.00 | 0.00 | 227.00 | - |
 | 7 | `InfoGeometry.Canonical.RelativePotentialCountBridge.countRay` | 1 | 1 | 7 | 205.00 | 0.00 | 205.00 | - |
-| 8 | `InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace_injective` | 1 | 1 | 8 | 800.00 | 0.00 | 800.00 | - |
-| 8 | `InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace_surjective` | 1 | 1 | 8 | 800.00 | 0.00 | 800.00 | - |
+| 8 | `InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace_injective` | 1 | 1 | 8 | 819.00 | 0.00 | 819.00 | - |
+| 8 | `InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace_surjective` | 1 | 1 | 8 | 819.00 | 0.00 | 819.00 | - |
 | 8 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.ChiralFredholmSurface.rec` | 1 | 1 | 8 | 341.00 | 0.00 | 341.00 | - |
 | 8 | `InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_sq` | 1 | 1 | 8 | 299.00 | 0.00 | 299.00 | - |
 | 8 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.QuasilatticeChiralFredholmSurface.casesOn` | 1 | 1 | 8 | 235.00 | 0.00 | 235.00 | - |
@@ -169,7 +175,7 @@ So:
 | 8 | `InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.liftedLeftChiralAnomalyOperator` | 1 | 1 | 8 | 156.00 | 0.00 | 156.00 | - |
 | 8 | `InfoGeometry.Canonical.StateDependentTransport.stateQGTPhaseReadout` | 1 | 1 | 8 | 156.00 | 0.00 | 156.00 | - |
 | 8 | `InfoGeometry.Krein.complex_i_isOdd` | 1 | 1 | 8 | 155.00 | 0.00 | 155.00 | - |
-| 9 | `InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace_bijective` | 1 | 1 | 9 | 799.00 | 0.00 | 799.00 | - |
+| 9 | `InfoGeometry.Projective.projectiveClassToConeInteriorStateSpace_bijective` | 1 | 1 | 9 | 818.00 | 0.00 | 818.00 | - |
 | 9 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.ChiralFredholmSurface.casesOn` | 1 | 1 | 9 | 337.00 | 0.00 | 337.00 | - |
 | 9 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.quasilatticeAnalyticalIndex` | 1 | 1 | 9 | 234.00 | 0.00 | 234.00 | - |
 | 9 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.inverseQuasilatticeFlow_commutes_chiralProjectorMinus` | 1 | 1 | 9 | 222.00 | 0.00 | 222.00 | - |
@@ -181,7 +187,7 @@ So:
 | 9 | `InfoGeometry.Quantum.RealMajoranaCategory.cl11_uPlus` | 1 | 2 | 9 | 125.00 | 0.00 | 125.00 | - |
 | 9 | `InfoGeometry.Canonical.ModularSuperchargeClosure.canonicalTomitaLogData` | 1 | 1 | 9 | 106.00 | 0.00 | 106.00 | - |
 | 9 | `InfoGeometry.Krein.complex_iSupercharge` | 1 | 1 | 9 | 98.00 | 0.00 | 98.00 | - |
-| 10 | `InfoGeometry.Projective.projectiveEquivConeInteriorStateSpace` | 1 | 1 | 10 | 798.00 | 0.00 | 798.00 | - |
+| 10 | `InfoGeometry.Projective.projectiveEquivConeInteriorStateSpace` | 1 | 1 | 10 | 817.00 | 0.00 | 817.00 | - |
 | 10 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.analyticalIndex` | 1 | 1 | 10 | 335.00 | 0.00 | 335.00 | - |
 | 10 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.quasilatticeChiralKernelSliceMinus_map_eq` | 1 | 1 | 10 | 221.00 | 0.00 | 221.00 | - |
 | 10 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.quasilatticeChiralKernelSlicePlus_map_eq` | 1 | 1 | 10 | 221.00 | 0.00 | 221.00 | - |
@@ -193,7 +199,7 @@ So:
 | 10 | `InfoGeometry.Krein.complex_iSupercharge_hamiltonian` | 1 | 1 | 10 | 94.00 | 0.00 | 94.00 | - |
 | 10 | `InfoGeometry.Quantum.vectorToLeftSpinor` | 1 | 2 | 10 | 63.00 | 0.00 | 63.00 | - |
 | 10 | `InfoGeometry.Quantum.vectorToRightSpinor` | 1 | 2 | 10 | 63.00 | 0.00 | 63.00 | - |
-| 11 | `InfoGeometry.Projective.coneInteriorStateSpaceToProjectiveClass` | 1 | 1 | 11 | 797.00 | 0.00 | 797.00 | - |
+| 11 | `InfoGeometry.Projective.coneInteriorStateSpaceToProjectiveClass` | 1 | 1 | 11 | 816.00 | 0.00 | 816.00 | - |
 | 11 | `InfoGeometry.Canonical.OperatorialCentralCharge.operatorialCentralCharge` | 1 | 1 | 11 | 281.00 | 0.00 | 281.00 | - |
 | 11 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.quasilatticeChiralKernelSliceMinusEquiv` | 1 | 1 | 11 | 220.00 | 0.00 | 220.00 | - |
 | 11 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.quasilatticeChiralKernelSlicePlusEquiv` | 1 | 1 | 11 | 220.00 | 0.00 | 220.00 | - |
@@ -205,7 +211,7 @@ So:
 | 11 | `InfoGeometry.Canonical.SplitCliffordHeadLift.headNullMinusTensor_eq_formula` | 1 | 1 | 11 | 56.00 | 0.00 | 56.00 | - |
 | 11 | `InfoGeometry.Canonical.SplitCliffordHeadLift.headNullPlusTensor_eq_formula` | 1 | 1 | 11 | 56.00 | 0.00 | 56.00 | - |
 | 11 | `InfoGeometry.Canonical.SuperchargeTransportBridge.deriv2_transportedParitySupercharge_at_zero_eq_metricPart_add_half_curvaturePart` | 1 | 1 | 11 | 54.00 | 0.00 | 54.00 | - |
-| 12 | `InfoGeometry.Projective.Normalize.normalizeOnConeInteriorStateSpace` | 1 | 1 | 12 | 781.00 | 0.00 | 781.00 | - |
+| 12 | `InfoGeometry.Projective.Normalize.normalizeOnConeInteriorStateSpace` | 1 | 1 | 12 | 800.00 | 0.00 | 800.00 | - |
 | 12 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.quasilatticeChiralFredholmSurfaceOf` | 1 | 1 | 12 | 219.00 | 0.00 | 219.00 | - |
 | 12 | `InfoGeometry.Projective.coneInteriorStateSpaceToProjectiveClass_projectiveClass` | 1 | 1 | 12 | 127.00 | 0.00 | 127.00 | - |
 | 12 | `InfoGeometry.Canonical.SuperchargeCARCCRBridge.cptSuperchargeOp_eq_complex_i` | 1 | 1 | 12 | 92.00 | 1.00 | 46.00 | - |
@@ -217,7 +223,7 @@ So:
 | 12 | `InfoGeometry.Canonical.CentralChargeKKTParityBridge.operatorialCentralChargeParity` | 1 | 1 | 12 | 50.00 | 0.00 | 50.00 | - |
 | 12 | `InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteAnnihilation_toLinearMap` | 1 | 1 | 12 | 48.00 | 0.00 | 48.00 | - |
 | 12 | `InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteCreation_toLinearMap` | 1 | 1 | 12 | 48.00 | 0.00 | 48.00 | - |
-| 13 | `InfoGeometry.Projective.Normalize.normalizeOnProj` | 1 | 1 | 13 | 757.00 | 0.00 | 757.00 | - |
+| 13 | `InfoGeometry.Projective.Normalize.normalizeOnProj` | 1 | 1 | 13 | 776.00 | 0.00 | 776.00 | - |
 | 13 | `InfoGeometry.KK.RealSplitKreinKasparovCycle.quasilatticeAnalyticalIndex_eq_initial` | 1 | 1 | 13 | 218.00 | 0.00 | 218.00 | - |
 | 13 | `InfoGeometry.Canonical.RealBdGDIIIAtom.canonicalDIIIProxy` | 1 | 1 | 13 | 70.00 | 0.00 | 70.00 | - |
 | 13 | `InfoGeometry.Quantum.canonicalSplitTrialityKernel` | 1 | 1 | 13 | 56.00 | 0.00 | 56.00 | - |
@@ -229,7 +235,7 @@ So:
 | 13 | `InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3.stateFirstAdmissibleOperator_of_wedgeCalibrated` | 1 | 1 | 13 | 29.00 | 0.00 | 29.00 | - |
 | 13 | `InfoGeometry.Canonical.OperatorialUncertainty.comparisonStateGeneratorMetric_sq_add_phase_sq_le_of_IsPhaseLinear` | 1 | 1 | 13 | 24.00 | 0.00 | 24.00 | - |
 | 13 | `InfoGeometry.Canonical.SuperchargeCentralChargeClosure.rootGapHessianClosure_iff_cptGapHessianClosure` | 1 | 1 | 13 | 19.00 | 0.00 | 19.00 | - |
-| 14 | `InfoGeometry.Canonical.PositiveRayCore.gaugeSection` | 1 | 1 | 14 | 700.00 | 0.00 | 700.00 | - |
+| 14 | `InfoGeometry.Canonical.PositiveRayCore.gaugeSection` | 1 | 1 | 14 | 719.00 | 0.00 | 719.00 | - |
 | 14 | `InfoGeometry.Canonical.OperatorialCentralCharge.operatorialCentralCharge_eq_transport_slice` | 1 | 1 | 14 | 203.00 | 0.00 | 203.00 | - |
 | 14 | `InfoGeometry.Projective.Normalize.normalizeOnProj_mk` | 1 | 1 | 14 | 123.00 | 0.00 | 123.00 | - |
 | 14 | `InfoGeometry.Canonical.SuperchargeCARCCRBridge.concrete_car_pair` | 1 | 2 | 14 | 40.00 | 1.00 | 20.00 | - |
@@ -241,9 +247,9 @@ So:
 | 14 | `InfoGeometry.Canonical.RealBdGDIIIAtom.canonicalDIIIProxy_C_eq_modular_j` | 1 | 1 | 14 | 23.00 | 0.00 | 23.00 | - |
 | 14 | `InfoGeometry.Canonical.RealBdGDIIIAtom.canonicalDIIIProxy_S_eq_neg_spectral_epsilon` | 1 | 1 | 14 | 23.00 | 0.00 | 23.00 | - |
 | 14 | `InfoGeometry.Canonical.RealBdGDIIIAtom.canonicalDIIIProxy_T_eq_complex_i` | 1 | 1 | 14 | 23.00 | 0.00 | 23.00 | - |
-| 15 | `InfoGeometry.Canonical.RelativePotentialCore.relativeDensity` | 1 | 2 | 15 | 346.00 | 0.00 | 346.00 | - |
-| 15 | `InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity` | 1 | 2 | 15 | 317.00 | 0.00 | 317.00 | - |
-| 15 | `InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential` | 1 | 2 | 15 | 227.00 | 0.00 | 227.00 | - |
+| 15 | `InfoGeometry.Canonical.RelativePotentialCore.relativeDensity` | 1 | 2 | 15 | 365.00 | 0.00 | 365.00 | - |
+| 15 | `InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity` | 1 | 2 | 15 | 327.00 | 0.00 | 327.00 | - |
+| 15 | `InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential` | 1 | 2 | 15 | 233.00 | 0.00 | 233.00 | - |
 | 15 | `InfoGeometry.Canonical.PositiveRayCore.logDensity` | 1 | 2 | 15 | 212.00 | 0.00 | 212.00 | - |
 | 15 | `InfoGeometry.Canonical.OperatorialCentralCharge.quasilatticeSlice_eq_zero_iff_operatorialCentralCharge_eq_zero` | 1 | 1 | 15 | 174.00 | 0.00 | 174.00 | - |
 | 15 | `InfoGeometry.Canonical.PositiveRayCore.gaugeSection_mk` | 1 | 1 | 15 | 89.00 | 0.00 | 89.00 | - |
@@ -253,80 +259,80 @@ So:
 | 15 | `InfoGeometry.Canonical.SuperchargeCentralChargeClosure.quasilatticeAnalyticalIndex_eq_operatorialCentralCharge_on_cpt_lane` | 1 | 1 | 15 | 30.00 | 0.00 | 30.00 | - |
 | 15 | `InfoGeometry.Canonical.RealBdGDIIIAtom.canonicalDIIIProxy_concreteCARPair` | 1 | 2 | 15 | 24.00 | 0.00 | 24.00 | - |
 | 15 | `InfoGeometry.Canonical.RealBdGDIIIAtom.canonicalDIIIProxy_root_laws` | 1 | 1 | 15 | 22.00 | 0.00 | 22.00 | - |
-| 16 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.density` | 1 | 1 | 16 | 205.00 | 0.00 | 205.00 | - |
+| 16 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.density` | 1 | 1 | 16 | 215.00 | 0.00 | 215.00 | - |
+| 16 | `InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential_eq_neg_relativeLogDensity` | 1 | 2 | 16 | 178.00 | 0.00 | 178.00 | - |
 | 16 | `InfoGeometry.Canonical.OperatorialCentralCharge.quasilatticeSlice_ne_zero_iff_operatorialCentralCharge_ne_zero` | 1 | 1 | 16 | 173.00 | 0.00 | 173.00 | - |
-| 16 | `InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential_eq_neg_relativeLogDensity` | 1 | 2 | 16 | 172.00 | 0.00 | 172.00 | - |
-| 16 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.logDensity` | 1 | 1 | 16 | 156.00 | 0.00 | 156.00 | - |
-| 16 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.modularPotential` | 1 | 1 | 16 | 132.00 | 0.00 | 132.00 | - |
+| 16 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.logDensity` | 1 | 1 | 16 | 164.00 | 0.00 | 164.00 | - |
+| 16 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.modularPotential` | 1 | 1 | 16 | 136.00 | 0.00 | 136.00 | - |
 | 16 | `InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity_eq_logDensity_sub_logDensity` | 1 | 2 | 16 | 132.00 | 0.00 | 132.00 | - |
-| 16 | `InfoGeometry.Canonical.RelativePotentialCore.relativeDensity_eq_exp_relativeLogDensity` | 1 | 2 | 16 | 111.00 | 0.00 | 111.00 | - |
+| 16 | `InfoGeometry.Canonical.RelativePotentialCore.relativeDensity_eq_exp_relativeLogDensity` | 1 | 2 | 16 | 121.00 | 0.00 | 121.00 | - |
 | 16 | `InfoGeometry.Canonical.StandardFormCore.RelativeModularBridge.projectiveLogDensity` | 1 | 1 | 16 | 88.00 | 0.00 | 88.00 | - |
 | 16 | `InfoGeometry.Canonical.RelativeModularCore.RestrictedRelativeModularData.source_logDensity_eq_pullback_add_shift` | 1 | 1 | 16 | 76.00 | 0.00 | 76.00 | - |
 | 16 | `InfoGeometry.Canonical.RelativeModularCore.RestrictedRelativeModularData.target_logDensity_eq_pullback_add_shift` | 1 | 1 | 16 | 76.00 | 0.00 | 76.00 | - |
 | 16 | `InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity_mk_eq_representativeRelativeLogDensity_add_massShift` | 1 | 1 | 16 | 57.00 | 0.00 | 57.00 | - |
 | 16 | `InfoGeometry.Canonical.RelativePotentialDiscreteBridge.toProjectiveState` | 1 | 2 | 16 | 55.00 | 0.00 | 55.00 | - |
-| 17 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.modularOperator` | 1 | 1 | 17 | 204.00 | 0.00 | 204.00 | - |
+| 17 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.modularOperator` | 1 | 1 | 17 | 214.00 | 0.00 | 214.00 | - |
 | 17 | `InfoGeometry.Canonical.OperatorialCentralCharge.quasilatticeSlice_ne_zero_of_operatorialCentralCharge_ne_zero` | 1 | 1 | 17 | 172.00 | 0.00 | 172.00 | - |
-| 17 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.modularPotential_eq_neg_logDensity` | 1 | 1 | 17 | 103.00 | 0.00 | 103.00 | - |
+| 17 | `InfoGeometry.Canonical.RelativeModularCore.RelativeStatePair.modularPotential_eq_neg_logDensity` | 1 | 1 | 17 | 107.00 | 0.00 | 107.00 | - |
 | 17 | `InfoGeometry.Canonical.RelativeModularCore.RestrictedRelativeModularData.local_logDensity_eq_pullback_add_shiftDiff` | 1 | 1 | 17 | 75.00 | 0.00 | 75.00 | - |
 | 17 | `InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential_eq_logDensity_base_sub_logDensity` | 1 | 3 | 17 | 60.00 | 0.00 | 60.00 | - |
 | 17 | `InfoGeometry.Canonical.RelativePotentialDiscreteBridge.gaugeSectionFinProb_apply_toReal` | 1 | 1 | 17 | 50.00 | 0.00 | 50.00 | - |
 | 17 | `InfoGeometry.Canonical.StandardFormCore.RelativeModularBridge.projectiveModularPotential_eq_neg_projectiveLogDensity` | 1 | 1 | 17 | 48.00 | 0.00 | 48.00 | - |
 | 17 | `InfoGeometry.Canonical.RelativePotentialDiscreteBridge.gaugeSectionFinProb_absolutelyContinuous` | 1 | 1 | 17 | 47.00 | 0.00 | 47.00 | - |
+| 17 | `InfoGeometry.Canonical.RelativeSurprisalOperatorLift.relativeModularPotentialOperator.eq_1` | 1 | 1 | 17 | 46.00 | 0.00 | 46.00 | - |
 | 17 | `InfoGeometry.Canonical.RelativePotentialCountBridge.projectiveCountHamiltonianProfile` | 1 | 1 | 17 | 43.00 | 0.00 | 43.00 | - |
-| 17 | `InfoGeometry.Canonical.RelativeSurprisalOperatorLift.relativeModularPotentialOperator.eq_1` | 1 | 1 | 17 | 41.00 | 0.00 | 41.00 | - |
 | 17 | `InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential_mk_eq_representativeModularPotential_sub_massShift` | 1 | 1 | 17 | 39.00 | 0.00 | 39.00 | - |
 | 17 | `InfoGeometry.Canonical.RelativePotentialDiscreteBridge.gaugeSectionFinProb_apply_ne_zero` | 1 | 1 | 17 | 38.00 | 0.00 | 38.00 | - |
-| 18 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularOperator` | 1 | 1 | 18 | 196.00 | 0.00 | 196.00 | - |
+| 18 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularOperator` | 1 | 1 | 18 | 206.00 | 0.00 | 206.00 | - |
 | 18 | `InfoGeometry.Canonical.ChiralDefectIndexBridge.transportedChiralKernelDimMismatch_of_operatorialCentralCharge_ne_zero` | 1 | 1 | 18 | 146.00 | 0.00 | 146.00 | - |
-| 18 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.modularOperator_eq_diagMatrix_density` | 1 | 1 | 18 | 112.00 | 0.00 | 112.00 | - |
+| 18 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.modularOperator_eq_diagMatrix_density` | 1 | 1 | 18 | 120.00 | 0.00 | 120.00 | - |
 | 18 | `InfoGeometry.Canonical.RelativeModularCore.RestrictedRelativeModularData.local_modularPotential_eq_pullback_add_shiftDiff` | 1 | 1 | 18 | 46.00 | 0.00 | 46.00 | - |
 | 18 | `InfoGeometry.Canonical.RelativePotentialDiscreteBridge.projectiveLogGenerator_eq_relativeModularPotential_ae` | 1 | 1 | 18 | 46.00 | 0.00 | 46.00 | - |
+| 18 | `InfoGeometry.Canonical.RelativeSurprisalOperatorLift.relativeModularPotentialOperator_diag` | 1 | 1 | 18 | 43.00 | 0.00 | 43.00 | - |
 | 18 | `InfoGeometry.Canonical.RelativePotentialCountBridge.relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift` | 1 | 1 | 18 | 38.00 | 0.00 | 38.00 | - |
-| 18 | `InfoGeometry.Canonical.RelativeSurprisalOperatorLift.relativeModularPotentialOperator_diag` | 1 | 1 | 18 | 38.00 | 0.00 | 38.00 | - |
 | 18 | `InfoGeometry.Canonical.PhaseSpaceRecompositionExample.polarizedPair` | 1 | 1 | 18 | 29.00 | 0.00 | 29.00 | - |
 | 18 | `InfoGeometry.Canonical.SuperchargeCentralChargeClosure.cpt_gap_hessian_centralCharge_closure` | 1 | 1 | 18 | 29.00 | 0.00 | 29.00 | - |
 | 18 | `InfoGeometry.Canonical.RelativeModularPolarizedBridge.MinusRestrictedRelativeModularData.local_logDensity_eq_pullback_add_shiftDiff` | 1 | 1 | 18 | 22.00 | 0.00 | 22.00 | - |
 | 18 | `InfoGeometry.Canonical.RelativeModularPolarizedBridge.PlusRestrictedRelativeModularData.local_logDensity_eq_pullback_add_shiftDiff` | 1 | 1 | 18 | 22.00 | 0.00 | 22.00 | - |
 | 18 | `InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.recomposedAmbientLogDensity_eq_commonCarrier` | 1 | 1 | 18 | 21.00 | 0.00 | 21.00 | - |
 | 19 | `InfoGeometry.Canonical.BoundaryChiralIndexBridge.dim_mismatch_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization` | 1 | 1 | 19 | 123.00 | 0.00 | 123.00 | - |
-| 19 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.modularOperator_diag` | 1 | 1 | 19 | 83.00 | 0.00 | 83.00 | - |
+| 19 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.modularOperator_diag` | 1 | 1 | 19 | 92.00 | 0.00 | 92.00 | - |
 | 19 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularVolumeShadow` | 1 | 2 | 19 | 60.00 | 0.00 | 60.00 | - |
-| 19 | `InfoGeometry.Canonical.RelativeModularHamiltonian.relativeModularHamiltonianOperator` | 1 | 1 | 19 | 47.00 | 0.00 | 47.00 | - |
+| 19 | `InfoGeometry.Canonical.RelativeModularHamiltonian.relativeModularHamiltonianOperator` | 1 | 1 | 19 | 51.00 | 0.00 | 51.00 | - |
 | 19 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularHamiltonianReadout` | 1 | 2 | 19 | 43.00 | 0.00 | 43.00 | - |
 | 19 | `InfoGeometry.Canonical.RelativePotentialDiscreteBridge.projectiveLogGenerator_eq_relativeModularPotential` | 1 | 1 | 19 | 37.00 | 0.00 | 37.00 | - |
 | 19 | `InfoGeometry.Canonical.PhaseSpaceRecompositionExample.recompositionData` | 1 | 1 | 19 | 28.00 | 0.00 | 28.00 | - |
 | 19 | `InfoGeometry.Canonical.RelativeModularPolarizedBridge.MinusRestrictedRelativeModularData.local_modularPotential_eq_pullback_add_shiftDiff` | 1 | 1 | 19 | 25.00 | 0.00 | 25.00 | - |
 | 19 | `InfoGeometry.Canonical.RelativeModularPolarizedBridge.PlusRestrictedRelativeModularData.local_modularPotential_eq_pullback_add_shiftDiff` | 1 | 1 | 19 | 25.00 | 0.00 | 25.00 | - |
 | 19 | `InfoGeometry.Canonical.RelativeSurprisalOperatorLift.relativeModularPotentialOperator_countRay_eq_raw_add_massShift` | 1 | 1 | 19 | 22.00 | 0.00 | 22.00 | - |
+| 19 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.compose_modularOperator` | 1 | 1 | 19 | 21.00 | 0.00 | 21.00 | - |
 | 19 | `InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.recomposedLogDensity_eq_ambient_add_coupling` | 1 | 1 | 19 | 21.00 | 0.00 | 21.00 | - |
-| 19 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.compose_modularOperator` | 1 | 1 | 19 | 19.00 | 0.00 | 19.00 | - |
 | 20 | `InfoGeometry.Canonical.BoundaryChiralIndexBridge.zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization` | 1 | 1 | 20 | 122.00 | 0.00 | 122.00 | - |
-| 20 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.modularOperator_diag_eq_exp_logDensity` | 1 | 1 | 20 | 69.00 | 0.00 | 69.00 | - |
+| 20 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.modularOperator_diag_eq_exp_logDensity` | 1 | 1 | 20 | 77.00 | 0.00 | 77.00 | - |
 | 20 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularVolumeShadow_eq_prod_relativeDensity` | 1 | 2 | 20 | 36.00 | 0.00 | 36.00 | - |
 | 20 | `InfoGeometry.Canonical.RelativeModularHamiltonianSupport.supportRestrictedModularHamiltonianOperator` | 1 | 1 | 20 | 26.00 | 0.00 | 26.00 | - |
 | 20 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularVolumePotential` | 1 | 3 | 20 | 25.00 | 0.00 | 25.00 | - |
 | 20 | `InfoGeometry.Canonical.RelativeModularProjectiveBridge.RestrictedRelativeModularData.local_projectiveLogGenerator_eq_local_modularPotential` | 1 | 1 | 20 | 25.00 | 0.00 | 25.00 | - |
+| 20 | `InfoGeometry.Canonical.RelativeModularHamiltonian.relativeModularHamiltonianOperator.eq_1` | 1 | 1 | 20 | 21.00 | 0.00 | 21.00 | - |
 | 20 | `InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.recomposedModularPotential_eq_ambient_add_coupling` | 1 | 1 | 20 | 21.00 | 0.00 | 21.00 | - |
 | 20 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularBerezinianShadow` | 1 | 3 | 20 | 20.00 | 0.00 | 20.00 | - |
+| 20 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularOperator_cocycle` | 1 | 1 | 20 | 20.00 | 0.00 | 20.00 | - |
 | 20 | `InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.recomposedLogDensity_eq_commonCarrier_add_coupling` | 1 | 1 | 20 | 20.00 | 0.00 | 20.00 | - |
-| 20 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularOperator_cocycle` | 1 | 1 | 20 | 18.00 | 0.00 | 18.00 | - |
 | 20 | `InfoGeometry.Canonical.RelativeSurprisalOperatorLift.diagonalAverage_relativeModularPotentialOperator_countRay` | 1 | 1 | 20 | 18.00 | 0.00 | 18.00 | - |
-| 20 | `InfoGeometry.Canonical.RelativeModularHamiltonian.relativeModularHamiltonianOperator.eq_1` | 1 | 1 | 20 | 17.00 | 0.00 | 17.00 | - |
 | 21 | `InfoGeometry.Canonical.BoundaryChiralIndexBridge.transportedZeroModeWitness_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization` | 1 | 1 | 21 | 118.00 | 0.00 | 118.00 | - |
-| 21 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.log_modularOperator_diag_eq_logDensity` | 1 | 1 | 21 | 61.00 | 0.00 | 61.00 | - |
+| 21 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.log_modularOperator_diag_eq_logDensity` | 1 | 1 | 21 | 65.00 | 0.00 | 65.00 | - |
 | 21 | `InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.recomposedModularPotential_eq_commonCarrier_add_coupling` | 1 | 1 | 21 | 20.00 | 0.00 | 20.00 | - |
 | 21 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularVolumeShadow_pos` | 1 | 3 | 21 | 18.00 | 0.00 | 18.00 | - |
+| 21 | `InfoGeometry.Canonical.RelativeModularHamiltonian.relativeModularHamiltonianOperator_offdiag` | 1 | 1 | 21 | 17.00 | 0.00 | 17.00 | - |
 | 21 | `InfoGeometry.Canonical.RelativeModularProjectiveBridge.RestrictedRelativeModularData.local_projectiveLogGenerator_eq_projectiveCountHamiltonianProfile_of_countRays` | 1 | 1 | 21 | 15.00 | 0.00 | 15.00 | - |
 | 21 | `InfoGeometry.Canonical.RelativeModularOperator.log_relativeModularVolumeShadow_eq_sum_relativeLogDensity` | 1 | 3 | 21 | 14.00 | 0.00 | 14.00 | - |
 | 21 | `InfoGeometry.Canonical.PhaseSpaceRecompositionExample.couplingLogDefect_eq_zero` | 1 | 1 | 21 | 13.00 | 0.00 | 13.00 | - |
-| 21 | `InfoGeometry.Canonical.RelativeModularHamiltonian.relativeModularHamiltonianOperator_offdiag` | 1 | 1 | 21 | 13.00 | 0.00 | 13.00 | - |
 | 21 | `InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.vanishingCoupling_iff_exactLogRecomposition` | 1 | 1 | 21 | 12.00 | 0.00 | 12.00 | - |
 | 21 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularBerezinianPotential` | 1 | 3 | 21 | 11.00 | 0.00 | 11.00 | - |
 | 21 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularVolumeShadow_cocycle` | 1 | 1 | 21 | 11.00 | 0.00 | 11.00 | - |
 | 21 | `InfoGeometry.Canonical.RelativeModularHamiltonianSupport.supportRestrictedModularHamiltonianOperator_diag` | 1 | 2 | 21 | 10.00 | 0.00 | 10.00 | - |
 | 22 | `InfoGeometry.Canonical.SpinorModularBridge.exists_danglingZeroMode_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization` | 1 | 1 | 22 | 117.00 | 0.00 | 117.00 | - |
-| 22 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.modularPotential_eq_neg_log_modularOperator_diag` | 1 | 1 | 22 | 52.00 | 0.00 | 52.00 | - |
+| 22 | `InfoGeometry.Canonical.RelativeModularOperator.RelativeStatePair.modularPotential_eq_neg_log_modularOperator_diag` | 1 | 1 | 22 | 56.00 | 0.00 | 56.00 | - |
 | 22 | `InfoGeometry.Canonical.RelativeModularRecomposition.PolarizedRecompositionData.recomposedModularPotential_eq_commonCarrier_of_vanishingCoupling` | 1 | 1 | 22 | 16.00 | 0.00 | 16.00 | - |
 | 22 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularVolumePotential_eq_sum_relativeModularPotential` | 1 | 3 | 22 | 13.00 | 0.00 | 13.00 | - |
 | 22 | `InfoGeometry.Canonical.RelativeModularOperator.relativeLogDensity_eq_log_relativeModularOperator_diag` | 1 | 2 | 22 | 10.00 | 0.00 | 10.00 | - |
@@ -336,8 +342,8 @@ So:
 | 22 | `InfoGeometry.Canonical.RelativeModularBerezinianBridge.relativeModularRestrictedSheetEquiv_character_coe_eq_berezinianShadow` | 1 | 1 | 22 | 4.00 | 0.00 | 4.00 | - |
 | 22 | `InfoGeometry.Canonical.RelativeModularOperator.log_relativeModularBerezinianShadow_eq_volumeLog_sub_volumeLog` | 1 | 3 | 22 | 4.00 | 0.00 | 4.00 | - |
 | 22 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularBerezinianShadow_pos` | 1 | 3 | 22 | 4.00 | 0.00 | 4.00 | - |
-| 22 | `InfoGeometry.Canonical.PhaseSpaceRecompositionExample.couplingPotentialDefect_eq_zero` | 1 | 1 | 22 | 3.00 | 0.00 | 3.00 | - |
-| 23 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularPotential_eq_neg_log_relativeModularOperator_diag` | 1 | 2 | 23 | 51.00 | 0.00 | 51.00 | - |
+| 22 | `InfoGeometry.Canonical.PedersenTakesakiRNInterface.finiteAffiliatedDensity_chain` | 1 | 1 | 22 | 3.00 | 0.00 | 3.00 | - |
+| 23 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularPotential_eq_neg_log_relativeModularOperator_diag` | 1 | 2 | 23 | 55.00 | 0.00 | 55.00 | - |
 | 23 | `InfoGeometry.Canonical.SpinorModularBridge.boundaryScale_ne_zero_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization` | 1 | 1 | 23 | 45.00 | 0.00 | 45.00 | - |
 | 23 | `InfoGeometry.Canonical.VortexAnomalyLink.exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization` | 1 | 1 | 23 | 27.00 | 0.00 | 27.00 | - |
 | 23 | `InfoGeometry.Canonical.VortexAnomalyLink.exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization` | 1 | 1 | 23 | 27.00 | 0.00 | 27.00 | - |
@@ -351,8 +357,8 @@ So:
 | 23 | `InfoGeometry.Canonical.RelativeModularCommutingLift.log_relativeModularOperator_diag_cocycle` | 1 | 2 | 23 | 3.00 | 0.00 | 3.00 | - |
 | 24 | `InfoGeometry.Canonical.TopologicalInvariantInvariance.quasilatticeAnalyticalIndex_ne_zero_boundaryScale_ne_zero_of_identifiedTransportedPolarization` | 1 | 1 | 24 | 31.00 | 2.00 | 10.33 | - |
 | 24 | `InfoGeometry.Canonical.RelativeSurprisalOperatorLift.relativeModularPotentialOperator_eq_firstQuantize_neg_log_relativeModularOperator_diag` | 1 | 1 | 24 | 23.00 | 0.00 | 23.00 | - |
+| 24 | `InfoGeometry.Canonical.RelativeModularHamiltonian.relativeModularHamiltonianOperator_diag` | 1 | 1 | 24 | 16.00 | 0.00 | 16.00 | - |
 | 24 | `InfoGeometry.Canonical.RelativeModularOperator.relativeModularHamiltonianReadout_eq_average_relativeModularPotential` | 1 | 2 | 24 | 13.00 | 0.00 | 13.00 | - |
-| 24 | `InfoGeometry.Canonical.RelativeModularHamiltonian.relativeModularHamiltonianOperator_diag` | 1 | 1 | 24 | 12.00 | 0.00 | 12.00 | - |
 | 24 | `InfoGeometry.Canonical.TopologicalInvariantInvariance.operatorialCentralChargeParity_ne_zero_boundaryScale_ne_zero_of_identifiedTransportedPolarization` | 1 | 1 | 24 | 12.00 | 2.00 | 4.00 | - |
 | 24 | `InfoGeometry.Canonical.TopologicalInvariantInvariance.quasilatticeAnalyticalIndex_ne_zero_transportCommutator_spectral_epsilon_ne_zero_of_boundaryGenerator_eq_sink_of_identifiedTransportedPolarization` | 1 | 1 | 24 | 11.00 | 2.00 | 3.67 | - |
 | 24 | `InfoGeometry.Canonical.TopologicalInvariantInvariance.quasilatticeAnalyticalIndex_ne_zero_transportCommutator_spectral_epsilon_ne_zero_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization` | 1 | 1 | 24 | 11.00 | 2.00 | 3.67 | - |
@@ -371,8 +377,8 @@ So:
 | 25 | `InfoGeometry.Canonical.TopologicalInvariantInvariance.operatorialCentralChargeParity_ne_zero_boundaryScale_ne_zero_of_kernelSeparation_of_identifiedTransportedPolarization` | 1 | 1 | 25 | 4.00 | 2.00 | 1.33 | - |
 | 25 | `InfoGeometry.Canonical.TopologicalInvariantInvariance.quasilatticeAnalyticalIndex_ne_zero_boundaryScale_ne_zero_of_kernelSeparation_of_identifiedTransportedPolarization` | 1 | 1 | 25 | 4.00 | 2.00 | 1.33 | - |
 | 25 | `InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv.operatorialCentralChargeParity_ne_zero_boundaryGenerator_ne_zero_of_identifiedTransportedPolarization` | 1 | 1 | 25 | 3.00 | 0.00 | 3.00 | - |
+| 25 | `InfoGeometry.Canonical.FirstQuantizationProbability.relativeModularHamiltonianOperator_eq_quantizedSurprisalOperator` | 1 | 1 | 25 | 3.00 | 0.00 | 3.00 | - |
 | 25 | `InfoGeometry.Canonical.PhaseSpaceRecompositionBridge.PolarizedRecompositionData.phaseSpace_projectiveCount_weld_of_countRays` | 1 | 1 | 25 | 3.00 | 0.00 | 3.00 | - |
-| 25 | `InfoGeometry.Canonical.RelativeModularHamiltonian.relativeModularHamiltonianOperator_cocycle` | 1 | 1 | 25 | 3.00 | 0.00 | 3.00 | - |
 | 26 | `InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge.mismatch_forces_boundary_projector_noncommute_of_identifiedTransportedPolarization` | 1 | 1 | 26 | 26.00 | 0.00 | 26.00 | - |
 | 26 | `InfoGeometry.Canonical.RelativeSurprisalOperatorLift.relativeModularHamiltonian_sub_countMassShift_eq_relativeModularHamiltonianReadout_countRay` | 1 | 1 | 26 | 14.00 | 0.00 | 14.00 | - |
 | 26 | `InfoGeometry.Canonical.TopologicalInvariantInvariance.operatorialCentralChargeParity_ne_zero_boundaryScale_kkt_and_headSuperBracket_package_of_identifiedTransportedPolarization` | 1 | 1 | 26 | 6.00 | 2.00 | 2.00 | - |
@@ -441,9 +447,9 @@ So:
   longest causal chain: `InfoGeometry.Krein.KreinSpace` -> `InfoGeometry.Krein.KreinGradedModule` -> `InfoGeometry.Krein.KreinGradedModule.grade` -> `InfoGeometry.Krein.KreinGradedModule.gradeCLM` -> `InfoGeometry.Krein.KreinGradedModule.gradeConj` -> `InfoGeometry.Krein.KreinGradedModule.IsEven` -> `InfoGeometry.KK.RealSplitKreinKasparovCycle.gradeCLM_comp_eq_comp_gradeCLM_of_isEven` -> `InfoGeometry.KK.RealSplitKreinKasparovCycle.commute_gradeCLM_of_isEven` -> `InfoGeometry.KK.RealSplitKreinKasparovCycle.inverseQuasilatticeFlow_commutes_grade` -> `InfoGeometry.KK.RealSplitKreinKasparovCycle.inverseQuasilatticeFlow_commutes_chiralProjectorMinus` -> `InfoGeometry.KK.RealSplitKreinKasparovCycle.quasilatticeChiralKernelSliceMinus_map_eq` -> `InfoGeometry.KK.RealSplitKreinKasparovCycle.quasilatticeChiralKernelSliceMinusEquiv` -> `InfoGeometry.KK.RealSplitKreinKasparovCycle.quasilatticeChiralFredholmSurfaceOf` -> `InfoGeometry.KK.RealSplitKreinKasparovCycle.quasilatticeAnalyticalIndex_eq_initial` -> `InfoGeometry.Canonical.OperatorialCentralCharge.operatorialCentralCharge_eq_transport_slice` -> `InfoGeometry.Canonical.OperatorialCentralCharge.quasilatticeSlice_eq_zero_iff_operatorialCentralCharge_eq_zero` -> `InfoGeometry.Canonical.OperatorialCentralCharge.quasilatticeSlice_ne_zero_iff_operatorialCentralCharge_ne_zero` -> `InfoGeometry.Canonical.OperatorialCentralCharge.quasilatticeSlice_ne_zero_of_operatorialCentralCharge_ne_zero` -> `InfoGeometry.Canonical.ChiralDefectIndexBridge.transportedChiralKernelDimMismatch_of_operatorialCentralCharge_ne_zero` -> `InfoGeometry.Canonical.BoundaryChiralIndexBridge.dim_mismatch_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization` -> `InfoGeometry.Canonical.BoundaryChiralIndexBridge.zeroModeRegularizationPackage_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization` -> `InfoGeometry.Canonical.BoundaryChiralIndexBridge.transportedZeroModeWitness_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization` -> `InfoGeometry.Canonical.SpinorModularBridge.exists_danglingZeroMode_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization` -> `InfoGeometry.Canonical.SpinorModularBridge.exists_danglingZeroMode_of_operatorialCentralCharge_ne_zero_of_kernelSeparation_of_identifiedTransportedPolarization` -> `InfoGeometry.Canonical.SpinorModularBridge.boundaryScale_ne_zero_of_operatorialCentralCharge_ne_zero_of_kernelSeparation_of_identifiedTransportedPolarization` -> `InfoGeometry.Canonical.TopologicalInvariantInvariance.operatorialCentralChargeParity_ne_zero_boundaryScale_ne_zero_of_kernelSeparation_of_identifiedTransportedPolarization` -> `InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv.operatorialCentralChargeParity_ne_zero_boundaryGenerator_ne_zero_of_kernelSeparation_of_identifiedTransportedPolarization` -> `InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv.operatorialCentralChargeParity_ne_zero_coriolisVorticity_ne_zero_of_kernelSeparation_of_identifiedTransportedPolarization`
 
 ## Dominant Roots By Capstone Support
-- `InfoGeometry.Krein.DoubledSpace` supports `2381` capstones (load `10572.00`, inertia `10572.00`)
-- `InfoGeometry.Krein.instL2NormedGroup` supports `2300` capstones (load `10183.00`, inertia `10183.00`)
-- `InfoGeometry.Krein.instL2InnerProduct` supports `924` capstones (load `4026.00`, inertia `4026.00`)
+- `InfoGeometry.Krein.DoubledSpace` supports `2392` capstones (load `10633.00`, inertia `10633.00`)
+- `InfoGeometry.Krein.instL2NormedGroup` supports `2311` capstones (load `10244.00`, inertia `10244.00`)
+- `InfoGeometry.Krein.instL2InnerProduct` supports `935` capstones (load `4082.00`, inertia `4082.00`)
 - `InfoGeometry.Krein.instL2Complete` supports `785` capstones (load `3397.00`, inertia `3397.00`)
 - `InfoGeometry.Canonical.InverseKernel` supports `592` capstones (load `2698.00`, inertia `2698.00`)
 - `InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection` supports `554` capstones (load `2525.00`, inertia `2525.00`)
@@ -474,14 +480,15 @@ So:
 | :--- | ---: | ---: | ---: | ---: | ---: | :--- |
 | `InfoGeometry.Canonical.RealBdGDIIIAtom` | 30 | 0 | 94.00 | 0.00 | 94.00 | Bedrock module |
 | `InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge` | 30 | 1 | 41.00 | 0.00 | 41.00 | Capstone module |
-| `InfoGeometry.Canonical.RelativeSurprisalOperatorLift` | 29 | 1 | 139.00 | 0.00 | 139.00 | Capstone module |
+| `InfoGeometry.Canonical.RelativeSurprisalOperatorLift` | 29 | 1 | 150.00 | 0.00 | 150.00 | Capstone module |
 | `InfoGeometry.Thermo.ModularKLDivergence` | 28 | 1 | 12.00 | 0.00 | 12.00 | Capstone module |
 | `InfoGeometry.Canonical.TopologicalInvariantInvariance` | 27 | 1 | 65.00 | 2.00 | 21.67 | Capstone module |
 | `InfoGeometry.Canonical.BoundaryLocalizationIndexEquiv` | 27 | 1 | 51.00 | 0.00 | 51.00 | Capstone module |
 | `InfoGeometry.Canonical.RelativeModularHamiltonianSupport` | 27 | 1 | 26.00 | 0.00 | 26.00 | Capstone module |
-| `InfoGeometry.Canonical.RelativeModularOperator` | 26 | 1 | 204.00 | 0.00 | 204.00 | Capstone module |
-| `InfoGeometry.Canonical.RelativeModularHamiltonian` | 26 | 1 | 53.00 | 0.00 | 53.00 | Capstone module |
+| `InfoGeometry.Canonical.RelativeModularOperator` | 26 | 1 | 214.00 | 0.00 | 214.00 | Capstone module |
+| `InfoGeometry.Canonical.RelativeModularHamiltonian` | 26 | 1 | 57.00 | 0.00 | 57.00 | Capstone module |
 | `InfoGeometry.Canonical.PhaseSpaceRecompositionBridge` | 26 | 1 | 16.00 | 0.00 | 16.00 | Capstone module |
+| `InfoGeometry.Canonical.FirstQuantizationProbability` | 26 | 1 | 13.00 | 0.00 | 13.00 | Capstone module |
 | `InfoGeometry.Canonical.RelativeModularCommutingLift` | 26 | 1 | 4.00 | 0.00 | 4.00 | Capstone module |
 | `InfoGeometry.Canonical.VortexAnomalyLink` | 25 | 0 | 162.00 | 0.00 | 162.00 | Bedrock module |
 | `InfoGeometry.Canonical.SpinorModularBridge` | 25 | 1 | 141.00 | 0.00 | 141.00 | Capstone module |
@@ -491,7 +498,6 @@ So:
 | `InfoGeometry.Canonical.PhaseSpacePolarizedBridge` | 24 | 1 | 37.00 | 0.00 | 37.00 | Capstone module |
 | `InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge` | 24 | 1 | 23.00 | 0.00 | 23.00 | Capstone module |
 | `InfoGeometry.Canonical.RelativeModularBerezinianBridge` | 24 | 1 | 11.00 | 0.00 | 11.00 | Capstone module |
-| `InfoGeometry.Canonical.RNDeterminantConnesChainBridge` | 24 | 1 | 3.00 | 0.00 | 3.00 | Capstone module |
 
 ## Interpretation
 - `Min depth` is the shortest causal distance from the root set.

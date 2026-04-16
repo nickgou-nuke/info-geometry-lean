@@ -68,6 +68,27 @@ They do not certify ontology.
   - requires green policy gates
   - only this lane is used for closure claims
 
+### 3.1 Hermes Intake Subphase (Quarantined)
+
+Hermes deep research is an intake surface inside Lane A, not a closure surface.
+
+- output path:
+  `quarantine/hermes_memory/research_packets/<timestamp>-<goal>.json`
+- packet contract:
+  `tools/schema/research_packet.json`
+- packet validator:
+  `python3 tools/infra/research_packet.py validate --packet <path>`
+
+The packet must separate:
+
+1. facts
+2. interpretations
+3. metaphors
+4. formalization candidates
+
+Only facts/interpretations may drive theorem candidates; metaphors are
+exploratory scaffolding and cannot close claims.
+
 ## 4. Persona Assignment
 
 | Agent | Primary role | Constraint focus |
@@ -101,11 +122,14 @@ In practice:
 ### Lane A -> Lane B
 
 Required:
+- typed research packet from Hermes intake (`research_packet.json`)
 - source-level rationale for ownership and layer placement
 - no theorem-statement tampering
 - explicit list of assumptions still unresolved
 - explicit declaration of file role:
   owner, translator, coherence, or capstone
+- NemoClaw architecture note must include a **Research Provenance** split:
+  facts / interpretations / metaphors / formalization candidates
 - if the module is intended to be bilingual or blueprint-facing, a docstring or
   adjacent note must name the repo-native formulation, the mathlib-native
   formulation, and the intended comparison surface
@@ -113,6 +137,8 @@ Required:
 ### Lane B -> Lane C
 
 Required:
+- research handoff gate:
+  - `python3 tools/infra/check_research_handoff_gate.py --packet <packet> --nemoclaw-note <note>`
 - `lake build InfoGeometry.All` green
 - managed DAG cycle green:
   - `python3 tools/infra/dag_refresh.py`

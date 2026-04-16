@@ -23,7 +23,7 @@ Current repository metadata already includes:
   - Dimitar Tonev
 - Citation file: `CITATION.cff`
 - Repository URLs (in `CITATION.cff`):
-  - `https://github.com/nklgtv-nuke/info-geometry-lean`
+  - `https://github.com/nickgou-nuke/info-geometry-lean`
 
 If needed, update `NOTICE` and `CITATION.cff` before creating evidence bundles.
 
@@ -33,6 +33,18 @@ Use the bundled script:
 
 ```bash
 tools/infra/create_evidence_bundle.sh --ref HEAD --with-pdf
+```
+
+For PDF-first blockchain proof in one command:
+
+```bash
+tools/infra/create_evidence_bundle.sh --ref HEAD --with-pdf --ots-stamp pdf --ots-upgrade
+```
+
+If your environment blocks writes to `~/.cache`, pass an explicit cache dir:
+
+```bash
+tools/infra/create_evidence_bundle.sh --with-pdf --ots-stamp pdf --ots-cache-dir /tmp/ots-cache
 ```
 
 Modes:
@@ -55,6 +67,10 @@ Generated files:
 - `*.certificate.pdf` (if `pandoc` is installed and `--with-pdf` is used)
 - `*.metadata.txt` (commit/remotes/size/provenance)
 - copies of `LICENSE`, `NOTICE`, `CITATION.cff`
+- bundle-local verifiers:
+  - `verify_evidence_bundle.sh`
+  - `verify_certificate_hash_binding.sh`
+  - `VERIFY.md`
 
 By default the script applies exclusion policy from:
 
@@ -79,6 +95,12 @@ Verify the bundle:
 
 ```bash
 tools/infra/verify_evidence_bundle.sh archive/evidence/<bundle-dir>
+```
+
+Verify SHA-512 binding between archive, checksum manifest, and certificate text:
+
+```bash
+tools/infra/verify_certificate_hash_binding.sh archive/evidence/<bundle-dir>
 ```
 
 ## 2. Write-protect / immutability hardening
@@ -116,7 +138,13 @@ Keep both `CERTIFICATE.tsq` and `CERTIFICATE.tsr` in the evidence folder.
 
 ### B) Public blockchain anchoring
 
-Recommended approach is OpenTimestamps:
+Integrated approach (script-managed) uses OpenTimestamps when `ots` is installed:
+
+```bash
+tools/infra/create_evidence_bundle.sh --with-pdf --ots-stamp pdf --ots-upgrade
+```
+
+Manual OpenTimestamps commands:
 
 ```bash
 ots stamp CERTIFICATE.pdf
@@ -157,5 +185,36 @@ Suggested canonical repository citation line:
 
 ```text
 Repository: nickgou-nuke/info-geometry-lean.git
-Canonical URL: https://github.com/nklgtv-nuke/info-geometry-lean
+Canonical URL: https://github.com/nickgou-nuke/info-geometry-lean
 ```
+
+## 7. Public release export (own code lane)
+
+For publication-oriented exports with third-party zones excluded and stubbed:
+
+```bash
+python3 tools/infra/export_public_release.py --ref HEAD
+```
+
+This generates:
+
+- clean tree: `archive/public-release/<timestamp>_<sha>/info-geometry-lean-public/`
+- `THIRD_PARTY_RELEASE_INDEX.md` (auto-generated exclusion audit)
+- `PUBLIC_RELEASE_MANIFEST.json`
+- deterministic `.tgz` + checksum manifest
+
+## 8. Deep third-party/license scan before release
+
+Run a full repository scan:
+
+```bash
+python3 tools/infra/scan_third_party_licenses.py --all-files --out docs/ThirdPartyDeepScanReport.md
+```
+
+This report classifies findings into:
+
+- `third_party_or_reference`
+- `review_needed`
+- `project_owned`
+
+Use it before publishing a public release bundle.

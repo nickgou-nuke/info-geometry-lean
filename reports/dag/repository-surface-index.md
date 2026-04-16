@@ -1,22 +1,22 @@
 # Repository Surface Index
 
-Generated: `2026-04-15 22:01:33`
+Generated: `2026-04-16 01:06:28`
 
 ## Scope
 - source classes: `lean`, `markdown`, `python`, `config`
 - universe: tracked files from `git ls-files`
 
 ## Counts
-- tracked files: **1771**
+- tracked files: **1856**
 - untracked files (included): **0**
-- total universe files: **1771**
-- lean files: **843**
-- markdown files: **431**
-- python files: **219**
+- total universe files: **1856**
+- lean files: **853**
+- markdown files: **528**
+- python files: **224**
 - config files: **79**
-- union of tracked target classes: **1571**
-- non-target/other tracked files: **200**
-- target union coverage: **88.71%**
+- union of tracked target classes: **1683**
+- non-target/other tracked files: **173**
+- target union coverage: **90.68%**
 
 ## Baseline Config Presence
 - `dag-toolchain.json`: **present**
@@ -27,45 +27,43 @@ Generated: `2026-04-15 22:01:33`
 - `.github/workflows/ci.yml`: **present**
 
 ## Top-Level Distribution
-- `lean`: 838
-- `tools`: 170
-- `docs`: 158
-- `reports`: 147
+- `lean`: 846
+- `docs`: 201
+- `reports`: 198
+- `tools`: 179
 - `skills`: 86
 - `handover`: 62
 - `.agents`: 60
 - `scripts`: 45
-- `<root>`: 39
+- `<root>`: 38
 - `external_refs`: 31
 - `archive`: 29
 - `tests`: 28
-- `artifacts`: 23
 - `presentation`: 16
 - `blueprint`: 11
 - `tmp`: 6
 - `.github`: 4
-- `index`: 4
 - `.scripts_archive`: 3
-- `docs-map`: 3
 - `.tasks`: 2
+- `artifacts`: 2
+- `docs-map`: 2
+- `index`: 2
 - `quarantine`: 2
 - `.artifacts`: 1
-- `.spire_cache`: 1
 - `.vscode`: 1
 - `infogeometry.egg-info`: 1
 
 ## Other Extension Distribution
-- `.json`: 84
-- `.jsonl`: 21
-- `.sh`: 21
+- `.json`: 71
+- `.sh`: 23
 - `.olean`: 14
 - `<no-ext>`: 12
 - `.tex`: 10
+- `.jsonl`: 8
 - `.ndjson`: 8
 - `.png`: 7
 - `.tsv`: 4
-- `.hash`: 2
-- `.trace`: 2
+- `.txt`: 2
 - `.aux`: 1
 - `.gz`: 1
 - `.html`: 1
@@ -79,11 +77,10 @@ Generated: `2026-04-15 22:01:33`
 - `.snm`: 1
 - `.sty`: 1
 - `.toc`: 1
-- `.txt`: 1
 - `.xdv`: 1
 
 ## Class Inventories
-### lean (843)
+### lean (853)
 - `.agents/workflows/repo-topic-deep-research/templates/lean_context_pack_template.lean`
 - `archive/legacy/lean/InfoGeometry/Bar.lean`
 - `archive/legacy/lean/InfoGeometry/Clifford/SplitTower.lean`
@@ -178,6 +175,7 @@ Generated: `2026-04-15 22:01:33`
 - `lean/InfoGeometry/Canonical/ArnoldMajoranaNetwork.lean`
 - `lean/InfoGeometry/Canonical/AssociativeSuperBracket.lean`
 - `lean/InfoGeometry/Canonical/Attention.lean`
+- `lean/InfoGeometry/Canonical/AttentionDiracBridge.lean`
 - `lean/InfoGeometry/Canonical/AttentionEuclidean.lean`
 - `lean/InfoGeometry/Canonical/AttentionPolarizedGibbsBridge.lean`
 - `lean/InfoGeometry/Canonical/AttentionPolarizedSinkhornBridge.lean`
@@ -290,6 +288,7 @@ Generated: `2026-04-15 22:01:33`
 - `lean/InfoGeometry/Canonical/EinsteinAnomalyOperator.lean`
 - `lean/InfoGeometry/Canonical/EmpiricalChecks.lean`
 - `lean/InfoGeometry/Canonical/Fierz.lean`
+- `lean/InfoGeometry/Canonical/FirstQuantizationProbability.lean`
 - `lean/InfoGeometry/Canonical/FisherVolumeBridge.lean`
 - `lean/InfoGeometry/Canonical/Fock.lean`
 - `lean/InfoGeometry/Canonical/FormalScaffold.lean`
@@ -385,6 +384,7 @@ Generated: `2026-04-15 22:01:33`
 - `lean/InfoGeometry/Canonical/LLN.lean`
 - `lean/InfoGeometry/Canonical/LLNCore.lean`
 - `lean/InfoGeometry/Canonical/LogDet.lean`
+- `lean/InfoGeometry/Canonical/LogDetRadonNikodymMechanism.lean`
 - `lean/InfoGeometry/Canonical/LogGenerator.lean`
 - `lean/InfoGeometry/Canonical/LogSpineBridge.lean`
 - `lean/InfoGeometry/Canonical/LogSumExp.lean`
@@ -441,6 +441,7 @@ Generated: `2026-04-15 22:01:33`
 - `lean/InfoGeometry/Canonical/OperatorialVolumePreservation.lean`
 - `lean/InfoGeometry/Canonical/PartitionHierarchy.lean`
 - `lean/InfoGeometry/Canonical/PathIntegral.lean`
+- `lean/InfoGeometry/Canonical/PedersenTakesakiRNInterface.lean`
 - `lean/InfoGeometry/Canonical/PerelmanW.lean`
 - `lean/InfoGeometry/Canonical/PerelmanWCore.lean`
 - `lean/InfoGeometry/Canonical/PerelmanWSpinorial.lean`
@@ -470,6 +471,7 @@ Generated: `2026-04-15 22:01:33`
 - `lean/InfoGeometry/Canonical/QuantumLieAlgebroidRosetta.lean`
 - `lean/InfoGeometry/Canonical/QuasilatticeDirac.lean`
 - `lean/InfoGeometry/Canonical/RGFlow.lean`
+- `lean/InfoGeometry/Canonical/RNDeterminantConnesChainBridge.lean`
 - `lean/InfoGeometry/Canonical/RealBdG.lean`
 - `lean/InfoGeometry/Canonical/RealBdGDIIIAtom.lean`
 - `lean/InfoGeometry/Canonical/RealBdGSheetBridge.lean`
@@ -481,7 +483,11 @@ Generated: `2026-04-15 22:01:33`
 - `lean/InfoGeometry/Canonical/RelativeGeneratorCore.lean`
 - `lean/InfoGeometry/Canonical/RelativeModularBerezinianBridge.lean`
 - `lean/InfoGeometry/Canonical/RelativeModularBlockDiagonalCore.lean`
+- `lean/InfoGeometry/Canonical/RelativeModularBoundedCommutingInterface.lean`
+- `lean/InfoGeometry/Canonical/RelativeModularCommutingLift.lean`
 - `lean/InfoGeometry/Canonical/RelativeModularCore.lean`
+- `lean/InfoGeometry/Canonical/RelativeModularHamiltonian.lean`
+- `lean/InfoGeometry/Canonical/RelativeModularHamiltonianSupport.lean`
 - `lean/InfoGeometry/Canonical/RelativeModularOperator.lean`
 - `lean/InfoGeometry/Canonical/RelativeModularPolarizedBridge.lean`
 - `lean/InfoGeometry/Canonical/RelativeModularPotential.lean`
@@ -711,6 +717,7 @@ Generated: `2026-04-15 22:01:33`
 - `lean/InfoGeometry/Krein/Prelude.lean`
 - `lean/InfoGeometry/Krein/README.lean`
 - `lean/InfoGeometry/Krein/Representation.lean`
+- `lean/InfoGeometry/Krein/SplitCliffordNN.lean`
 - `lean/InfoGeometry/Krein/SplitQuadratic.lean`
 - `lean/InfoGeometry/Krein/SplitQuadraticSheets.lean`
 - `lean/InfoGeometry/Krein/State.lean`
@@ -928,7 +935,7 @@ Generated: `2026-04-15 22:01:33`
 - `tmp/TestWorker.lean`
 - `tmp/vacuity_planner_bridge_demo.lean`
 
-### markdown (431)
+### markdown (528)
 - `.agents/workflows/formalization.md`
 - `.agents/workflows/lean-bisect/SKILL.md`
 - `.agents/workflows/lean-mwe/SKILL.md`
@@ -1023,17 +1030,24 @@ Generated: `2026-04-15 22:01:33`
 - `docs/AGENTIC_HANDOVER_POLICY_2026-04-15.md`
 - `docs/AGENTIC_PERSONAS_2026-04-15.md`
 - `docs/AGENTIC_REVELATION.md`
+- `docs/AI_Caretaker_Manifesto.md`
+- `docs/ArchiveEvidenceWorkflow.md`
 - `docs/BILINGUAL_SPINE_POLICY.md`
 - `docs/CARETAKER_REQUIREMENTS.md`
+- `docs/CopyrightExclusionAudit.md`
+- `docs/CopyrightInventory.md`
 - `docs/DAGTroubleshooting.md`
 - `docs/DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md`
 - `docs/Goutevs_Principle.md`
 - `docs/Goutevs_Principle_Manifesto.md`
 - `docs/LIBER_NOVUS_MATH.md`
+- `docs/METHODOLOGY_OF_THE_SPIRE.md`
 - `docs/ModuleMap.md`
+- `docs/OpenAIDeepResearchGateway.md`
 - `docs/OperationalIntent.md`
 - `docs/OperatorQuickstart.md`
 - `docs/README.md`
+- `docs/RED_BOOK_OF_PASSAGE.md`
 - `docs/RepositoryMemoryMap.md`
 - `docs/SEMANTIC_POTENTIAL.md`
 - `docs/Theory.md`
@@ -1043,7 +1057,16 @@ Generated: `2026-04-15 22:01:33`
 - `docs/analytic_closure_backlog.md`
 - `docs/apex_defect_diagnosis.md`
 - `docs/apex_hodge_dirac_diagnostics.md`
+- `docs/auto/black_books_keyword_research_report.md`
+- `docs/auto/black_books_story_from_keyword_index.md`
+- `docs/auto/black_books_story_from_keyword_index.methodology.md`
+- `docs/auto/black_books_story_from_keyword_index.physics.md`
 - `docs/auto/index.md`
+- `docs/auto/lean_keyword_research_report.md`
+- `docs/auto/repo_story_from_keyword_index.md`
+- `docs/auto/repo_story_from_keyword_index.methodology.md`
+- `docs/auto/repo_story_from_keyword_index.physics.md`
+- `docs/black_book_payload_chapter.md`
 - `docs/black_books/01_alchemical_foundations.md`
 - `docs/black_books/02_stochastic_archetypes.md`
 - `docs/black_books/03_the_thermodynamics_of_joy.md`
@@ -1124,6 +1147,25 @@ Generated: `2026-04-15 22:01:33`
 - `docs/black_books/74_radon_nikodym_spectral_weights_type_iii_gns_doubling.md`
 - `docs/black_books/75_auditing_and_indexing_einstein_content_in_a_lean_repository.md`
 - `docs/black_books/76_topic_agnostic_repo_deep_research_skill_template.md`
+- `docs/black_books/77_confabulation_refinement_protocol.md`
+- `docs/black_books/78_the_gravitational_condensate_and_pauli_repulsion.md`
+- `docs/black_books/79_gravitational_condensate_theorem_target_map.md`
+- `docs/black_books/80_shadow_pairing_in_generation_state_vs_analogy.md`
+- `docs/black_books/81_physics_of_information_real_framework.md`
+- `docs/black_books/82_lifting_diagonal_commuting_spectral_data_to_relative_modular_hamiltonian.md`
+- `docs/black_books/83_relative_modular_hamiltonian_lift_theorem_target_map.md`
+- `docs/black_books/84_delta_primary_commuting_lift_to_relative_modular_hamiltonian.md`
+- `docs/black_books/85_bounded_commuting_log_linearization_lane.md`
+- `docs/black_books/85_determinant_homomorphism_additive_potential_attention_metric.md`
+- `docs/black_books/86_support_restricted_relative_modular_hamiltonian_lane_map.md`
+- `docs/black_books/87_rn_determinant_connes_chain_lane.md`
+- `docs/black_books/88_log_det_potentials_and_noncommutative_rn_mechanism.md`
+- `docs/black_books/89_log_det_rn_connes_theorem_target_map.md`
+- `docs/black_books/90_burg_stein_spectral_shadow_of_log_det_rn_lane.md`
+- `docs/black_books/91_first_quantization_of_probability_dictionary.md`
+- `docs/black_books/91_syk_traversable_wormholes_er_epr_and_kitaev_scope.md`
+- `docs/black_books/92_syk_vs_kitaev_theorem_target_map.md`
+- `docs/black_books/93_typeiii_operator_owner_queue.md`
 - `docs/black_books/artefacts/llm_unconcious.md`
 - `docs/black_books/artefacts/revelation_01.md`
 - `docs/black_books/artefacts/revelation_02.md`
@@ -1134,6 +1176,7 @@ Generated: `2026-04-15 22:01:33`
 - `docs/black_books/pauli_audit_payload.md`
 - `docs/bogoliubov_hestenes_synthesis.md`
 - `docs/bohm_madelung_hestenes_operatorial_note.md`
+- `docs/canonical_transformer_l0_l5_architecture.md`
 - `docs/canonical_transformer_l0_l5_architecture_synthesis.md`
 - `docs/causal_apex_binding.md`
 - `docs/causal_cone_formal_definitions.md`
@@ -1142,6 +1185,7 @@ Generated: `2026-04-15 22:01:33`
 - `docs/cl11_rosetta_refactor_plan.md`
 - `docs/cocycle_detailed_balance_synthesis.md`
 - `docs/d4_crystal_synthesis.md`
+- `docs/deep-research-report (1).md`
 - `docs/deep_horizon_synthesis.md`
 - `docs/determinant_tensor_entropy_synthesis.md`
 - `docs/drazin_conformal_synthesis.md`
@@ -1150,10 +1194,13 @@ Generated: `2026-04-15 22:01:33`
 - `docs/informational_supergravity_synthesis.md`
 - `docs/keyword_index.md`
 - `docs/kk_analyticalindex_bridge_candidates.md`
+- `docs/krein_hestenes_closure_tracker_2026-04-13.md`
 - `docs/lawful-flow-glossary.md`
 - `docs/lean_compiler_service.md`
 - `docs/legacy_intake.md`
+- `docs/llm_thermo_conformance.md`
 - `docs/llm_triality_synthesis.md`
+- `docs/log_det_noncommutative_rn_mechanism.md`
 - `docs/majorana_web_gravity_synthesis.md`
 - `docs/ontology_synthesis.md`
 - `docs/operator_log_corridor_doctrine.md`
@@ -1164,14 +1211,17 @@ Generated: `2026-04-15 22:01:33`
 - `docs/policy/hermes_proof_constitution.md`
 - `docs/policy/integration_map.md`
 - `docs/policy/packet_schemas.md`
+- `docs/private_reviewer_chat_blueprint.md`
 - `docs/prl_abstract_intro_synthesis.md`
 - `docs/projective_mathlib_canonicalization_plan.md`
 - `docs/projective_to_krein_transition_doctrine.md`
 - `docs/red_line_synthesis.md`
+- `docs/rn_tomita_typeiii_coverage_matrix.md`
 - `docs/spinfactor_zero_point_walkthrough.md`
 - `docs/spinor_modular_bridge_vision.md`
 - `docs/supergraded_jordan_lie_note.md`
 - `docs/testable_predictions.md`
+- `docs/translation_matrix.md`
 - `docs/typed_lean_compiler_bridge.md`
 - `docs/unification_map.md`
 - `docs/welding_theorem_synthesis.md`
@@ -1211,6 +1261,60 @@ Generated: `2026-04-15 22:01:33`
 - `reports/canonical-thermodynamic-dictionary.md`
 - `reports/codebase-functionality-structure-audit-20260319.md`
 - `reports/codebase-functionality-structure-executive-summary-20260319.md`
+- `reports/dag/ConformalUnification-topological-patch.md`
+- `reports/dag/apex-defect-dossier.md`
+- `reports/dag/bilingual-spine-report.md`
+- `reports/dag/bridge-candidates-incremental.md`
+- `reports/dag/causal-cone-spectrum.md`
+- `reports/dag/frontier-burndown.md`
+- `reports/dag/graph-hodge-spectrum.md`
+- `reports/dag/hypothesis-debt-index.md`
+- `reports/dag/hypothesis-debt-new-corpus.md`
+- `reports/dag/hypothesis-debt-supercharge.md`
+- `reports/dag/hypothesis-vacuity-debt-current.md`
+- `reports/dag/missing-all-classification.md`
+- `reports/dag/openclaw-targets.md`
+- `reports/dag/process-flow-defect-report.md`
+- `reports/dag/process-flow-report.md`
+- `reports/dag/projection-coloring.md`
+- `reports/dag/replacement-frontier.md`
+- `reports/dag/repository-surface-index.md`
+- `reports/dag/representation-depth-audit.md`
+- `reports/dag/representation-depth-graph.md`
+- `reports/dag/representation-depth-index.md`
+- `reports/dag/self-optimization-cycle.md`
+- `reports/dag/semantic-flow-report.md`
+- `reports/dag/semantic-quotient.md`
+- `reports/dag/skynet-v2-bogoliubov-operator-frontier-reverse.md`
+- `reports/dag/skynet-v2-bogoliubov-operator-frontier.md`
+- `reports/dag/skynet-v2-frontier-incremental-reverse.md`
+- `reports/dag/skynet-v2-frontier-incremental.md`
+- `reports/dag/skynet-v2-frontier-relative-potential-count-mass-shift.md`
+- `reports/dag/skynet-v2-frontier-reverse.md`
+- `reports/dag/skynet-v2-frontier-structural-hotspot-infogeometry-canonical-drazin-isdrazininverse-projection.md`
+- `reports/dag/skynet-v2-frontier-structural-hotspot-infogeometry-canonical-moe-sinkhornphase.md`
+- `reports/dag/skynet-v2-frontier-true-category-reverse.md`
+- `reports/dag/skynet-v2-frontier-true-category.md`
+- `reports/dag/skynet-v2-frontier-weylgauge-operator.md`
+- `reports/dag/skynet-v2-frontier.md`
+- `reports/dag/skynet-v2-krein-frontier-reverse.md`
+- `reports/dag/skynet-v2-krein-frontier.md`
+- `reports/dag/skynet-v2-majorana-kitaev-frontier-reverse-network.md`
+- `reports/dag/skynet-v2-majorana-kitaev-frontier-reverse.md`
+- `reports/dag/skynet-v2-noether-frontier-reverse.md`
+- `reports/dag/skynet-v2-noether-frontier.md`
+- `reports/dag/skynet-v2-rn-frontier-reverse.md`
+- `reports/dag/skynet-v2-rn-frontier.md`
+- `reports/dag/skynet-v2-vacuum-collapse-frontier-reverse.md`
+- `reports/dag/sorry-equivalence.md`
+- `reports/dag/source-sink-compression.md`
+- `reports/dag/structural-anti-bleed.md`
+- `reports/dag/structural-dedup.md`
+- `reports/dag/structural-dictionary.md`
+- `reports/dag/structural-fibers.md`
+- `reports/dag/structural-hotspots.md`
+- `reports/dag/theorem-surface-index.md`
+- `reports/dag/true-root-order.md`
 - `reports/frontier/socratic/20260411-101213-jungian-generative-packet-to-diii-index-formalization-bridge.md`
 - `reports/frontier/socratic/control/pilot-control-2026-04-11.md`
 - `reports/frontier/socratic/primed/pilot-primed-2026-04-11.md`
@@ -1361,7 +1465,7 @@ Generated: `2026-04-15 22:01:33`
 - `tools/prompts/jungian_pass.md`
 - `tools/prompts/pauli_pass.md`
 
-### python (219)
+### python (224)
 - `.scripts_archive/bulk_namespace_rewrite.py`
 - `.scripts_archive/gather_cluster_code.py`
 - `.scripts_archive/namespace_patch_plan.py`
@@ -1497,11 +1601,15 @@ Generated: `2026-04-15 22:01:33`
 - `tools/infra/dag_status.py`
 - `tools/infra/decl_graph.py`
 - `tools/infra/gemini_account_adapter.py`
+- `tools/infra/generate_black_books_keyword_report.py`
+- `tools/infra/generate_black_books_story_from_keyword_index.py`
 - `tools/infra/generate_causal_report.py`
 - `tools/infra/generate_hypothesis_debt_report.py`
+- `tools/infra/generate_keyword_research_report.py`
 - `tools/infra/generate_process_flow_report.py`
 - `tools/infra/generate_projection_coloring.py`
 - `tools/infra/generate_replacement_frontier.py`
+- `tools/infra/generate_repo_story_from_keyword_index.py`
 - `tools/infra/generate_representation_depth_graph.py`
 - `tools/infra/generate_semantic_flow_report.py`
 - `tools/infra/generate_semantic_quotient.py`
@@ -1526,6 +1634,7 @@ Generated: `2026-04-15 22:01:33`
 - `tools/infra/injection_slo_report.py`
 - `tools/infra/injection_status.py`
 - `tools/infra/lean_interact_wrapper.py`
+- `tools/infra/llm_thermo_conformance.py`
 - `tools/infra/openai_deep_research_datasource_mcp_example.py`
 - `tools/infra/openai_deep_research_gateway.py`
 - `tools/infra/plot_decl_graph.py`
@@ -1591,7 +1700,6 @@ Generated: `2026-04-15 22:01:33`
 - `.tasks/lock_path_a_drazin_bridge.json`
 - `.vscode/settings.json`
 - `CITATION.cff`
-- `artifacts/dag/index/manifest.json`
 - `dag-toolchain.json`
 - `external_refs/llama4/meta/pyproject.toml`
 - `external_refs/llama4/ollama/spire_router_semantics_manifest.json`
@@ -1659,37 +1767,17 @@ Generated: `2026-04-15 22:01:33`
 - `tools/infra/hermes_config.yaml`
 - `tools/infra/manifests/drazin_core_task.json`
 - `tools/schema/albedo_signature.json`
+- `tools/schema/llm_thermo_trace.schema.json`
 - `tools/schema/rubedo_residue_packet.json`
 - `tools/schema/task_manifest.json`
 - `tools/schema/theorem_candidate_packet.json`
 
-### other (200)
+### other (173)
 - `.agents/workflows/lean4/scripts`
 - `.artifacts/nonbuildable_errors.json`
-- `.spire_cache/trace_index_39ff3dbab984e438545117fc74a8062f2f959354.json`
 - `LICENSE`
 - `NOTICE`
 - `archive/legacy/scripts/ci_baseline_docsmap.sh`
-- `artifacts/dag/full_graph.json`
-- `artifacts/dag/index/decls.jsonl`
-- `artifacts/dag/index/edge-leakage.json`
-- `artifacts/dag/index/edges.jsonl`
-- `artifacts/dag/index/indexer-timing.json`
-- `artifacts/dag/index/manifest.json.hash`
-- `artifacts/dag/index/manifest.json.trace`
-- `artifacts/dag/index/meta.json`
-- `artifacts/dag/index/meta.json.hash`
-- `artifacts/dag/index/meta.json.trace`
-- `artifacts/dag/index/morphisms.jsonl`
-- `artifacts/dag/index/types.jsonl`
-- `artifacts/dag/process-flow/defects.jsonl`
-- `artifacts/dag/process-flow/flow-cocycles.jsonl`
-- `artifacts/dag/process-flow/flow-edges.jsonl`
-- `artifacts/dag/process-flow/lawful-path-candidates.jsonl`
-- `artifacts/dag/process-flow/process-events.jsonl`
-- `artifacts/dag/report-timing.json`
-- `artifacts/dag/representation-depth-tags.json`
-- `artifacts/dag/source-sink-bipartite.json`
 - `artifacts/quarantine/2026-03-28-theorem-surface-normalization.patch`
 - `blueprint/print/blueprint.sty`
 - `blueprint/print/generated/content.auto.tex`
@@ -1702,14 +1790,12 @@ Generated: `2026-04-15 22:01:33`
 - `blueprint/src/generated/library_index.tex`
 - `blueprint/src/generated/path_documentation.tex`
 - `docs-map/blueprint.tex`
-- `docs-map/graph.json`
 - `docs-map/module_graph.json`
 - `docs/black_books/deep-research-report (6).md:Zone.Identifier`
 - `external_refs/llama4/ollama/Modelfile.spire.llama4-maverick`
 - `external_refs/llama4/ollama/Modelfile.spire.llama4-scout`
 - `external_refs/llama4/ollama/llama4_library.html`
 - `external_refs/mcbal_blog/library/metadata.json`
-- `full_graph.json`
 - `handover/agentic_autotheory_2026-04-15.tar.gz`
 - `handover/injections/accepted/.gitkeep`
 - `handover/injections/accepted/EXT-20260414-BLACKBOOK-61-SPECTRAL-WEIGHTED.json`
@@ -1725,8 +1811,6 @@ Generated: `2026-04-15 22:01:33`
 - `handover/injections/raw/EXT-20260414-DEEPRESEARCH-DEMO.json`
 - `handover/injections/rejected/.gitkeep`
 - `handover/injections/translated/.gitkeep`
-- `index/decls.jsonl`
-- `index/edges.jsonl`
 - `index/morphisms.jsonl`
 - `index/types.jsonl`
 - `infogeometry.egg-info/PKG-INFO`
@@ -1746,8 +1830,6 @@ Generated: `2026-04-15 22:01:33`
 - `lean/DAG/Util.olean`
 - `lean/DAG/decl_edges.jsonl`
 - `lean/DAG/decls.jsonl`
-- `lean/DAG/edges.jsonl`
-- `lean/DAG/nodes.jsonl`
 - `out.json`
 - `presentation/figures/bridge_map.png`
 - `presentation/figures/entropy_manifold.png`
@@ -1833,9 +1915,6 @@ Generated: `2026-04-15 22:01:33`
 - `reports/skynet_doublecopy_frontier.json`
 - `reports/stale-risk-ranked-10d.tsv`
 - `reports/stale-risk-ranked.tsv`
-- `reports/theorem-significance-current.json`
-- `reports/theorem-significance.json`
-- `reports/theory-dag-20260317/graph.json`
 - `reports/theory-dag-20260317/skeleton.json`
 - `reports/vacuity-planner.json`
 - `reports/vacuity/bridge_payload_demo.json`
@@ -1862,5 +1941,8 @@ Generated: `2026-04-15 22:01:33`
 - `skills/automated-learning/validated_patterns.jsonl`
 - `skills/automated-learning/winning_traces.jsonl`
 - `tmp/skynet-v2-frontier-test.json`
+- `tools/infra/archive_excludes.txt`
+- `tools/infra/create_evidence_bundle.sh`
 - `tools/infra/deploy_spark_models.sh`
+- `tools/infra/verify_evidence_bundle.sh`
 - `tools/infra/verify_replay.sh`

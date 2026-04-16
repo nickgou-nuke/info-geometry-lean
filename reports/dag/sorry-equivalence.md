@@ -1,20 +1,20 @@
 # Sorry-Equivalence Report
 
-Total theorems analysed: **9399**
+Total theorems analysed: **9434**
 
 ## Classification Summary
 
 | Class | Count | % |
 |-------|------:|--:|
-| dead | 3279 | 34.9% |
-| dead-endpoint | 2208 | 23.5% |
+| dead | 3285 | 34.8% |
+| dead-endpoint | 2215 | 23.5% |
 | type-only | 5 | 0.1% |
-| forwarding | 265 | 2.8% |
-| live | 3642 | 38.7% |
+| forwarding | 267 | 2.8% |
+| live | 3662 | 38.8% |
 
-**Sorry-equivalent (dead + type-only):** 5492 (58.4%)
-**Wrappers (forwarding):** 265
-**Load-bearing (live):** 3642
+**Sorry-equivalent (dead + type-only):** 5505 (58.4%)
+**Wrappers (forwarding):** 267
+**Load-bearing (live):** 3662
 
 ## Top Files by Dead Theorem Count
 
@@ -48,8 +48,8 @@ Total theorems analysed: **9399**
 | lean/InfoGeometry/Canonical/StandardFormCore.lean | 31 | 0 | 1 | 6 | 38 |
 | lean/InfoGeometry/Core/Involution.lean | 31 | 0 | 3 | 21 | 55 |
 | lean/InfoGeometry/Canonical/RelativeModularSingularization.lean | 30 | 0 | 3 | 16 | 49 |
-| lean/InfoGeometry/Canonical/RelativeSurprisalOperatorLift.lean | 30 | 0 | 0 | 28 | 58 |
 | lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean | 29 | 0 | 3 | 9 | 41 |
+| lean/InfoGeometry/Canonical/NavierStokesBridge.lean | 29 | 0 | 1 | 15 | 45 |
 
 ## Dead Theorems With Docstrings (Possible Capstones)
 
@@ -181,7 +181,7 @@ under the polarized split grand-canonical
 
 ## Forwarding Theorems (Thin Wrappers)
 
-Total: 265
+Total: 267
 
 - `InfoGeometry.Analytic.deriv_logSumExpMoment1` → `InfoGeometry.Analytic.hasDerivAt_logSumExpMoment1` (lean/InfoGeometry/ExponentialFamily/Analytic/LogSumExp.lean:261)
 - `InfoGeometry.Analytic.deriv_logSumExpPartition` → `InfoGeometry.Analytic.hasDerivAt_logSumExpPartition` (lean/InfoGeometry/ExponentialFamily/Analytic/LogSumExp.lean:234)

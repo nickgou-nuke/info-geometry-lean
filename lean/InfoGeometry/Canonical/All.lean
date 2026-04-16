@@ -77,6 +77,7 @@ import InfoGeometry.Canonical.DrazinCoreFlow
 import InfoGeometry.Canonical.DrazinPenroseDilationAlgebra
 import InfoGeometry.Canonical.DrazinPenroseDilationKKT
 import InfoGeometry.Canonical.DrazinSupercharge
+import InfoGeometry.Canonical.CertifiedModularReduction
 import InfoGeometry.Canonical.ObserverDefect
 import InfoGeometry.Canonical.ModularSourceBridge
 import InfoGeometry.Canonical.DrazinModularSingularityBridge
@@ -173,6 +174,7 @@ import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.WedgeBoostModularBridge
 import InfoGeometry.Canonical.TypeIIIContinuousCoreReal
 import InfoGeometry.Canonical.PedersenTakesakiRNInterface
+import InfoGeometry.Canonical.ConnesCocycleDeltaPrimaryBridge
 import InfoGeometry.Canonical.OperatorLightconeCoordinates
 import InfoGeometry.Canonical.OperatorSpacetimeObservables
 import InfoGeometry.Canonical.KaehlerGeometry

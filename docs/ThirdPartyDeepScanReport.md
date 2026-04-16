@@ -1,0 +1,267 @@
+# Third-Party / License Deep Scan Report
+
+- Generated (UTC): `2026-04-15T20:28:03.984319+00:00`
+- Repository root: `/home/goutev/LEAN4/info-geometry-lean`
+- Scan mode: `all-files`
+- Files scanned: `2639`
+- Files with license/copyright markers: `50`
+
+## Project owner names (NOTICE-derived)
+- `Copyright 2024-2026 Nikolay Goutev and Dimitar Tonev`
+- `Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),`
+- `Bulgarian Academy of Sciences`
+
+## Exclusion policy prefixes
+- `external_refs/`
+- `interspec_src/`
+
+## Classification summary
+- `review_needed`: **29**
+- `third_party_or_reference`: **20**
+- `project_owned`: **1**
+
+## Top-level directory distribution
+- `lean`: 20
+- `external_refs`: 13
+- `tools`: 5
+- `docs`: 4
+- `.agents`: 2
+- `skills`: 2
+- `.spire_cache`: 1
+- `LICENSE`: 1
+- `NOTICE`: 1
+- `infogeometry.egg-info`: 1
+
+## third_party_or_reference
+- `.agents/workflows/lean-pr/SKILL.md`
+  - reason: external owner/licensing markers in file text
+  - hit: L65 `## Copyright Headers`
+  - hit: L67 `New files in `src/` require a copyright header:`
+  - hit: L71 `Copyright (c) YYYY Author or Organization. All rights reserved.`
+  - hit: L77 `Check other recent files in the repository to determine the correct copyright holder. Test files (in `tests/`) do not need copyright headers.`
+- `.agents/workflows/lean4/references/mathlib-style.md`
+  - reason: external owner/licensing markers in file text
+  - hit: L11 `### 1. Copyright Headers (CRITICAL)`
+  - hit: L13 `Every `.lean` file must start with a copyright header:`
+  - hit: L17 `Copyright (c) YYYY Author Name. All rights reserved.`
+  - hit: L30 `- No blank line between copyright and imports`
+- `docs/CopyrightInventory.md`
+  - reason: external owner/licensing markers in file text
+  - hit: L1 `# Copyright Surface Inventory (Tracked Repo)`
+  - hit: L7 `"copyright|all rights reserved|licensed under|spdx-license-identifier|community license|gnu lesser general public license|proprietary"`
+  - hit: L28 `- `Copyright (c) Meta Platforms, Inc. and affiliates.``
+  - hit: L29 `- `All rights reserved.``
+- `external_refs/llama4/args.py`
+  - reason: path is in archive exclusion policy
+  - hit: L1 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+  - hit: L2 `# All rights reserved.`
+  - hit: L4 `# This source code is licensed under the terms described in the LICENSE file in`
+- `external_refs/llama4/chat_completion.py`
+  - reason: path is in archive exclusion policy
+  - hit: L1 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+  - hit: L2 `# All rights reserved.`
+  - hit: L4 `# This source code is licensed under the terms described in the LICENSE file in`
+  - hit: L8 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+- `external_refs/llama4/completion.py`
+  - reason: path is in archive exclusion policy
+  - hit: L1 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+  - hit: L2 `# All rights reserved.`
+  - hit: L4 `# This source code is licensed under the terms described in the LICENSE file in`
+  - hit: L8 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+- `external_refs/llama4/datatypes.py`
+  - reason: path is in archive exclusion policy
+  - hit: L1 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+  - hit: L2 `# All rights reserved.`
+  - hit: L4 `# This source code is licensed under the terms described in the LICENSE file in`
+- `external_refs/llama4/ffn.py`
+  - reason: path is in archive exclusion policy
+  - hit: L1 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+  - hit: L2 `# All rights reserved.`
+  - hit: L4 `# This source code is licensed under the terms described in the LICENSE file in`
+- `external_refs/llama4/model.py`
+  - reason: path is in archive exclusion policy
+  - hit: L1 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+  - hit: L2 `# All rights reserved.`
+  - hit: L4 `# This source code is licensed under the terms described in the LICENSE file in`
+- `external_refs/llama4/moe.py`
+  - reason: path is in archive exclusion policy
+  - hit: L1 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+  - hit: L2 `# All rights reserved.`
+  - hit: L4 `# This source code is licensed under the terms described in the LICENSE file in`
+- `external_refs/llama4/ollama/llama4_library.html`
+  - reason: path is in archive exclusion policy
+  - hit: L798 `<p><strong>Intended Use Cases:</strong> Llama 4 is intended for commercial and research use in multiple languages. Instruction tuned models are intended for assistant-like chat and visual reasoning...`
+  - hit: L800 `<p><strong>Out-of-scope</strong>: Use in any manner that violates applicable laws or regulations (including trade compliance laws). Use in any other way that is prohibited by the Acceptable Use Pol...`
+  - hit: L805 `<li><p>Llama 4 has been trained on a broader collection of languages than the 12 supported languages (pre-training includes <a href="https://ai.meta.com/research/no-language-left-behind/" rel="nofo...`
+  - hit: L1044 `**Intended Use Cases:** Llama 4 is intended for commercial and research use in multiple languages. Instruction tuned models are intended for assistant-like chat and visual reasoning tasks, whereas ...`
+- `external_refs/llama4/quantize.py`
+  - reason: path is in archive exclusion policy
+  - hit: L1 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+  - hit: L2 `# All rights reserved.`
+  - hit: L4 `# This source code is licensed under the terms described in the LICENSE file in`
+- `external_refs/llama4/scripts/chat_completion.py`
+  - reason: path is in archive exclusion policy
+  - hit: L1 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+  - hit: L2 `# All rights reserved.`
+  - hit: L4 `# This source code is licensed under the terms described in the LICENSE file in`
+  - hit: L8 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+- `external_refs/llama4/scripts/completion.py`
+  - reason: path is in archive exclusion policy
+  - hit: L1 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+  - hit: L2 `# All rights reserved.`
+  - hit: L4 `# This source code is licensed under the terms described in the LICENSE file in`
+  - hit: L8 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+- `external_refs/llama4/scripts/quantize.py`
+  - reason: path is in archive exclusion policy
+  - hit: L1 `# Copyright (c) Meta Platforms, Inc. and affiliates.`
+  - hit: L2 `# All rights reserved.`
+  - hit: L4 `# This source code is licensed under the terms described in the LICENSE file in`
+- `external_refs/mcbal_blog/index.xml.html`
+  - reason: path is in archive exclusion policy
+  - hit: L8 `<generator>Wowchemy (https://wowchemy.com)</generator><language>en-gb</language><copyright>Matthias Bal © 2020–2026</copyright><lastBuildDate>Mon, 02 Feb 2026 09:28:17 +0100</lastBuildDate>`
+- `skills/lean-pr/SKILL.md`
+  - reason: external owner/licensing markers in file text
+  - hit: L65 `## Copyright Headers`
+  - hit: L67 `New files in `src/` require a copyright header:`
+  - hit: L71 `Copyright (c) YYYY Author or Organization. All rights reserved.`
+  - hit: L77 `Check other recent files in the repository to determine the correct copyright holder. Test files (in `tests/`) do not need copyright headers.`
+- `skills/lean4/references/mathlib-style.md`
+  - reason: external owner/licensing markers in file text
+  - hit: L11 `### 1. Copyright Headers (CRITICAL)`
+  - hit: L13 `Every `.lean` file must start with a copyright header:`
+  - hit: L17 `Copyright (c) YYYY Author Name. All rights reserved.`
+  - hit: L30 `- No blank line between copyright and imports`
+- `tools/infra/export_public_release.py`
+  - reason: external owner/licensing markers in file text
+  - hit: L18 `r"copyright|all rights reserved|licensed under|spdx-license-identifier|"`
+  - hit: L19 `r"community license|gnu lesser general public license|proprietary",`
+- `tools/infra/scan_third_party_licenses.py`
+  - reason: external owner/licensing markers in file text
+  - hit: L16 `r"copyright|all rights reserved|licensed under|spdx-license-identifier|"`
+  - hit: L17 `r"community license|gnu lesser general public license|proprietary|license as published by",`
+  - hit: L135 `if EXTERNAL_OWNER_RE.search(joined) or re.search(r"all rights reserved", joined, re.IGNORECASE):`
+  - hit: L184 `lines.append(f"- Files with license/copyright markers: `{len(findings)}`")`
+
+## review_needed
+- `.spire_cache/trace_index_39ff3dbab984e438545117fc74a8062f2f959354.json`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L545004 `"docstring": "Return if `line` looks like a correct authors line in a copyright header.\n\nThe `offset` input is used to shift the position information of the `Syntax` that the command\nproduces.\n...`
+  - hit: L545009 `"docstring": "The main function to validate the copyright string.\nThe input is the copyright string, the output is an array of `Syntax \u00d7 String` encoding:\n* the `Syntax` factors are atoms wh...`
+  - hit: L545014 `"docstring": "`inMathlibRef` is\n* `none` at initialization time;\n* `some true` if the `header` linter has already discovered that the current file\n  is imported in `Mathlib.lean`;\n* `some false...`
+- `LICENSE`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L12 `"Licensor" shall mean the copyright owner or entity authorized by`
+  - hit: L13 `the copyright owner that is granting the License.`
+  - hit: L37 `copyright notice that is included in or attached to the work`
+  - hit: L51 `submitted to Licensor for inclusion in the Work by the copyright owner`
+- `docs/ArchiveEvidenceWorkflow.md`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L21 `- Copyright holders (`NOTICE`):`
+  - hit: L148 `Have both listed copyright holders sign the certificate PDF:`
+- `docs/CopyrightExclusionAudit.md`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L1 `# Copyright / Third-Party Exclusion Audit`
+  - hit: L14 `- Contains third-party InterSpec source files with external copyright/license headers.`
+  - hit: L24 `Detected third-party license/copyright markers, including:`
+- `docs/black_books/22_the_silicon_athanor.md`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L13 `The sandbox is the physical realization of the **Topological Gap ($Z=14$)**. It is the "Absolute Zero" environment where the information flow is confined. Any attempt by the agent to leak proprieta...`
+- `infogeometry.egg-info/PKG-INFO`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L17 `"Licensor" shall mean the copyright owner or entity authorized by`
+  - hit: L18 `the copyright owner that is granting the License.`
+  - hit: L42 `copyright notice that is included in or attached to the work`
+  - hit: L56 `submitted to Licensor for inclusion in the Work by the copyright owner`
+- `lean/InfoGeometry.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Canonical/Algebra.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Canonical/All.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Canonical/Clifford.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Canonical/Foundations.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Canonical/Geometry.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Canonical/Krein.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Canonical/Prequantum.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Canonical/Projective.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Canonical/Quantum.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Canonical/RobustThermodynamicRegression.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+- `lean/InfoGeometry/Canonical/Statistics.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Canonical/Thermo.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Canonical/Twistor.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Krein/All.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Library.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/InfoGeometry/Lint/Vacuity.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+- `lean/InfoGeometry/PositiveMeasure.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2026.`
+- `lean/SelfReference.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+  - hit: L6 `Licensed under the Apache License, Version 2.0 (the "License");`
+- `lean/SelfReference/RobustThermodynamicRegression.lean`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L2 `Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.`
+- `tools/infra/README.md`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L107 `- `scan_third_party_licenses.py` (deep copyright/license marker scan and report generation)`
+- `tools/infra/archive_excludes.txt`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L3 `# out-of-scope for the project's own copyright/evidence package.`
+- `tools/infra/create_evidence_bundle.sh`
+  - reason: license marker found but ownership not auto-resolved
+  - hit: L267 `echo "copyright metadata, and cryptographic checksums."`
+  - hit: L284 `echo "- Notice/copyright: \`NOTICE\`"`
+  - hit: L286 `echo "- Copyright holders (per NOTICE):"`
+
+## project_owned
+- `NOTICE`
+  - reason: contains project owner name
+  - hit: L2 `Copyright 2024-2026 Nikolay Goutev and Dimitar Tonev`
+

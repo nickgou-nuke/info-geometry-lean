@@ -87,6 +87,7 @@ Use these first when you want the current repo state:
 - [tools/prompts/agentic_personas_2026-04-15.md](../tools/prompts/agentic_personas_2026-04-15.md)
 - [projective_mathlib_canonicalization_plan.md](projective_mathlib_canonicalization_plan.md)
 - [ToolingMethodology.md](ToolingMethodology.md)
+- [CandidateBridgePacketContract.md](CandidateBridgePacketContract.md)
 - [Theory.md](Theory.md)
 - [ModuleMap.md](ModuleMap.md)
 - [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)

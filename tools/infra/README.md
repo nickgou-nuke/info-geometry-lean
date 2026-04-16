@@ -98,6 +98,7 @@ Research-injection pipeline surfaces:
 - `openai_deep_research_datasource_mcp_example.py` (nested `search`/`fetch` datasource template)
 - `deep_research/controller.py` (official staged controller: clarify -> rewrite -> planner -> retriever -> verifier -> writer, with source constraints and hard gates)
 - `research_packet.py` (typed Hermes intake packet builder/validator)
+- `candidate_bridge_packet.py` (typed candidate-map packet builder/validator for equivalence/obstruction/discard classification)
 - `check_research_handoff_gate.py` (ClawCode gate: packet + NemoClaw provenance note)
 - `research_controller.py` (closed-loop planner/retriever/reader/critic loop with strict gating and state memory)
 - `autonomous_math/research_controller.py` (multi-phase stack: clarify -> rewrite -> deep research -> Socratic -> Pauli audit -> Lean design/coder -> compiler loop -> memory ingest)
@@ -177,6 +178,7 @@ Use the infra tools by role, not as one undifferentiated report pile:
 - closed-loop deep-research control
   - `deep_research/controller.py` (official Responses tool stack: web_search/file_search/mcp with stateful planning and verification gates)
   - `research_packet.py` (typed packet contract from Hermes intake to Prompt A/B)
+  - `candidate_bridge_packet.py` (typed bridge packet contract that forces candidate symbolic maps into equivalence/obstruction/discard outcomes)
   - `check_research_handoff_gate.py` (mandatory packet+provenance admission gate for closure)
   - `research_controller.py` (iterative stateful controller that composes keyword retrieval, declaration-grounded extraction, vacuity verification, and confidence-gated convergence)
 - autonomous mathematician stack
@@ -252,6 +254,36 @@ ClawCode admission gate:
 python3 tools/infra/check_research_handoff_gate.py \
   --packet quarantine/hermes_memory/research_packets/<packet>.json \
   --nemoclaw-note <nemoclaw-note.md>
+```
+
+### Candidate Bridge Packet Contract
+
+Schema:
+
+```bash
+tools/schema/candidate_bridge_packet.json
+```
+
+Build packet:
+
+```bash
+python3 tools/infra/candidate_bridge_packet.py build \
+  --out reports/research/bridge-packets/<packet>.json \
+  --source-owner <source-owner-surface> \
+  --target-owner <target-owner-surface> \
+  --claimed-invariant "<invariant>" \
+  --map-expression "<explicit map>" \
+  --outcome-class obstruction \
+  --theorem-name <target-theorem> \
+  --mismatch-name <mismatch-object> \
+  --mismatch-gap "<preservation gap>"
+```
+
+Validate packet:
+
+```bash
+python3 tools/infra/candidate_bridge_packet.py validate \
+  --packet reports/research/bridge-packets/<packet>.json
 ```
 
 ## Authoritative Inputs
@@ -457,4 +489,3 @@ valid source line are not part of its public-theorem scan.
 ## Current Codebase Status
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
-

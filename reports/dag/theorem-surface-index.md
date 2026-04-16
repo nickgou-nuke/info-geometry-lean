@@ -4,14 +4,14 @@ This report is a heuristic declaration-level classification, not kernel truth.
 It distinguishes likely constructive declarations from hypothesis bridges, package/reprojection surfaces, and surrogate/vacuous surfaces using the exported declaration inventory, tracked debt indices, quarantine annotations, and local source context.
 
 ## Summary
-- analyzed declarations: `16582`
-- theorem declarations: `9399`
-- definition declarations: `7183`
-- likely constructive: `8921`
+- analyzed declarations: `16648`
+- theorem declarations: `9434`
+- definition declarations: `7214`
+- likely constructive: `8947`
 - hypothesis bridges: `89`
-- package / reprojection surfaces: `833`
+- package / reprojection surfaces: `854`
 - surrogate / vacuous surfaces: `276`
-- neutral definitions: `6463`
+- neutral definitions: `6482`
 - declarations with audit hits: `46`
 - declarations in quarantined modules: `17`
 
@@ -130,9 +130,9 @@ It distinguishes likely constructive declarations from hypothesis bridges, packa
 | `InfoGeometry.Quantum.RealMajoranaCategory` | 0 | 18 | 0 | 18 |
 | `InfoGeometry.Canonical.HeadTrialityCore` | 0 | 17 | 0 | 17 |
 | `InfoGeometry.Canonical.Unification` | 2 | 14 | 0 | 16 |
+| `InfoGeometry.Canonical.LogDetRadonNikodymMechanism` | 0 | 15 | 0 | 15 |
 | `InfoGeometry.Canonical.RealBdGDIIIAtom` | 0 | 15 | 0 | 15 |
 | `InfoGeometry.Quantum.BulkBoundary` | 4 | 11 | 0 | 15 |
-| `InfoGeometry.Canonical.MajoranaKitaevSpinorBridge` | 1 | 13 | 0 | 14 |
 
 ## Quarantine Anchors
 - `InfoGeometry.Canonical.AQFTOperatorInterface` | downgraded to a preparation layer, but still only packages readiness certificates beside compression/interpretation surrogates

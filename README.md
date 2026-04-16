@@ -139,6 +139,11 @@ Owner references:
 - [lean/InfoGeometry/Canonical/DrazinSupercharge.lean](lean/InfoGeometry/Canonical/DrazinSupercharge.lean)
 - [lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean](lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean)
 
+## Interactive Geometry Surfaces
+
+- [docs/penrose_diagram_explorer.html](docs/penrose_diagram_explorer.html)  
+  Interactive causal compactification viewer for conformal spacetime.
+
 ## Current Anchor Corridor
 
 The current clean seed-to-operator corridor is:
@@ -242,7 +247,6 @@ For the latest condensation sequence on the operatorial DIII lane, see
 20. [tools/frontier/README.md](tools/frontier/README.md)
 21. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
 22. [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)
-23. [docs/penrose_diagram_explorer.html](docs/penrose_diagram_explorer.html)
 
 If you are operating as an agent inside this repo, also use:
 - [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)

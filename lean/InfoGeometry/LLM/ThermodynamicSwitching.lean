@@ -2,6 +2,7 @@ import InfoGeometry.LLM.TransformerArchitecture
 import InfoGeometry.Canonical.MixtureOfExperts
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Canonical.ArnoldMajoranaNetwork
+import InfoGeometry.Canonical.ArnoldNetworkPresentation
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
@@ -104,8 +105,9 @@ end BistochasticBridge
 section ArnoldBridge
 
 open InfoGeometry.Quantum.RealMajorana
+open InfoGeometry.Canonical.QuantumPresentation
 
-variable {E : Type*}
+variable {E : Type}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E]
 
 /-- LLM-lane alias of canonical Arnold-Majorana routed output. -/
@@ -136,6 +138,70 @@ theorem arnoldNetwork_preserves_submodule_bridge
   simpa [arnoldNetworkOutput] using
     (InfoGeometry.Canonical.MoE.arnoldNetwork_preserves_submodule (E := E)
       (n := n) (net := net) (β := β) (U := U) (x := x) (i := i) hU hx)
+
+/--
+LLM-facing view of Arnold routing as a `QuantumPresentation` instance.
+
+This is a direct translator call; it does not duplicate owner logic.
+-/
+@[rep_depth operator]
+noncomputable def arnoldQuantumPresentation
+    (n : Nat)
+    (net : InfoGeometry.Canonical.MoE.ArnoldMajoranaNetwork n E)
+    (β : ℝ) : QuantumPresentation :=
+  InfoGeometry.Canonical.ArnoldNetworkPresentation.toQuantumPresentation
+    (E := E) n net β
+
+/-- Tagged representation witness for the Arnold network lane in LLM space. -/
+@[rep_depth operator]
+noncomputable def arnoldTaggedPresentation
+    (n : Nat)
+    (net : InfoGeometry.Canonical.MoE.ArnoldMajoranaNetwork n E)
+    (β : ℝ) : TaggedPresentation :=
+  InfoGeometry.Canonical.ArnoldNetworkPresentation.taggedPresentation
+    (E := E) n net β
+
+@[rep_depth operator]
+theorem arnoldTaggedPresentation_lane
+    (n : Nat)
+    (net : InfoGeometry.Canonical.MoE.ArnoldMajoranaNetwork n E)
+    (β : ℝ) :
+    (arnoldTaggedPresentation (E := E) n net β).lane = PresentationLane.arnoldNetwork := by
+  rfl
+
+/--
+Generator bridge at the LLM interface boundary: the presentation generator is
+exactly one-token Arnold routed output.
+-/
+@[rep_depth transport]
+theorem arnoldQuantumPresentation_generator_eq_arnold
+    (n : Nat)
+    (net : InfoGeometry.Canonical.MoE.ArnoldMajoranaNetwork n E)
+    (β : ℝ)
+    (ψ : InfoGeometry.Canonical.ArnoldMajoranaCarrier E) :
+    (arnoldQuantumPresentation (E := E) n net β).generator ψ
+      = arnoldNetworkOutput (E := E) (n := n) net β (fun _ : Unit => ψ) () := by
+  simpa [arnoldQuantumPresentation, arnoldNetworkOutput] using
+    (InfoGeometry.Canonical.ArnoldNetworkPresentation.toQuantumPresentation_generator_eq_arnold
+      (E := E) n net β ψ)
+
+/--
+Submodule-preservation bridge for the LLM-side presentation generator.
+-/
+@[rep_depth transport]
+theorem arnoldQuantumPresentation_generator_mem_submodule
+    (n : Nat)
+    (net : InfoGeometry.Canonical.MoE.ArnoldMajoranaNetwork n E)
+    (β : ℝ)
+    (U : Submodule ℝ (InfoGeometry.Canonical.ArnoldMajoranaCarrier E))
+    (ψ : InfoGeometry.Canonical.ArnoldMajoranaCarrier E)
+    (hU : ∀ e : ExpertIdx n, ∀ v : InfoGeometry.Canonical.ArnoldMajoranaCarrier E,
+      v ∈ U → (net.moe.experts e).apply v ∈ U)
+    (hψ : ψ ∈ U) :
+    (arnoldQuantumPresentation (E := E) n net β).generator ψ ∈ U := by
+  simpa [arnoldQuantumPresentation] using
+    (InfoGeometry.Canonical.ArnoldNetworkPresentation.arnoldGenerator_mem_submodule
+      (E := E) n net β U ψ hU hψ)
 
 end ArnoldBridge
 

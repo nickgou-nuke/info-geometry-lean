@@ -171,6 +171,7 @@ import InfoGeometry.Canonical.OperatorDictionary
 import InfoGeometry.Canonical.QuantumPresentation
 import InfoGeometry.Canonical.GraphDiracPresentation
 import InfoGeometry.Canonical.ArnoldNetworkPresentation
+import InfoGeometry.Canonical.ArnoldNetworkIntertwiner
 import InfoGeometry.Canonical.ModularOrientationContract
 import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.ModularSpectralWedge

@@ -11,6 +11,7 @@ import InfoGeometry.LLM.ScalarThermoBridge
 import InfoGeometry.LLM.DiscreteRouterBayesStep
 import InfoGeometry.LLM.DiscreteRouterBayesRegularizationBridge
 import InfoGeometry.LLM.RouterFreeEnergyBridge
+import InfoGeometry.LLM.CliffordCantorGraphRouting
 import InfoGeometry.LLM.KMSSoftmaxBridge
 import InfoGeometry.LLM.SpectralToken
 import InfoGeometry.LLM.PinCPTBridge

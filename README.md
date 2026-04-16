@@ -242,6 +242,7 @@ For the latest condensation sequence on the operatorial DIII lane, see
 20. [tools/frontier/README.md](tools/frontier/README.md)
 21. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
 22. [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)
+23. [docs/penrose_diagram_explorer.html](docs/penrose_diagram_explorer.html)
 
 If you are operating as an agent inside this repo, also use:
 - [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)

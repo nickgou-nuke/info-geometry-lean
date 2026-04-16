@@ -32,3 +32,8 @@ Practical rule:
 - mine this directory for ideas or historical context;
 - do not route new automation through it unless you are intentionally reviving
   an old line of work.
+
+## Current Codebase Status
+
+Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
+

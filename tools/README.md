@@ -97,3 +97,8 @@ If documentation about tooling disagrees, trust:
 
 Tooling should summarize the theory's morphisms and debt.
 It should not invent ontology that is absent from the code.
+
+## Current Codebase Status
+
+Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md) for the current build/audit state.
+

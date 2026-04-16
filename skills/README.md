@@ -38,3 +38,8 @@ It contains one additional file not present here:
 
 > **Note:** The 10 generic Lean/Mathlib skill directories exist as full copies in both
 > `skills/` and `.agents/workflows/`. If they drift, `skills/` is authoritative.
+
+## Current Codebase Status
+
+Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md) for the current build/audit state.
+

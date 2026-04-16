@@ -88,6 +88,8 @@ Use these first when you want the current repo state:
 - [projective_mathlib_canonicalization_plan.md](projective_mathlib_canonicalization_plan.md)
 - [ToolingMethodology.md](ToolingMethodology.md)
 - [CandidateBridgePacketContract.md](CandidateBridgePacketContract.md)
+- [LeanTrail.md](LeanTrail.md)
+- [LeanTrailBlueprint.md](LeanTrailBlueprint.md)
 - [Theory.md](Theory.md)
 - [ModuleMap.md](ModuleMap.md)
 - [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
@@ -150,11 +152,12 @@ For current repo structure:
 7. [BILINGUAL_SPINE_POLICY.md](BILINGUAL_SPINE_POLICY.md)
 8. [cl11_rosetta_refactor_plan.md](cl11_rosetta_refactor_plan.md)
 9. [ToolingMethodology.md](ToolingMethodology.md)
-10. [DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
-11. [Theory.md](Theory.md)
-12. [ModuleMap.md](ModuleMap.md)
-13. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
-14. [tools/infra/README.md](../tools/infra/README.md)
+10. [LeanTrail.md](LeanTrail.md)
+11. [DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
+12. [Theory.md](Theory.md)
+13. [ModuleMap.md](ModuleMap.md)
+14. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
+15. [tools/infra/README.md](../tools/infra/README.md)
 
 For the current count/projective/operator trunk:
 

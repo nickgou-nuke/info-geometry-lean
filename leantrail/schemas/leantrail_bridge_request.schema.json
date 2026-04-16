@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LeanTrailBridgeCandidateRequest",
+  "type": "object",
+  "required": [
+    "source_owner_surfaces",
+    "target_owner_surfaces",
+    "claimed_invariant",
+    "map_kind",
+    "map_expression",
+    "outcome_class"
+  ],
+  "properties": {
+    "packet_id": {"type": "string"},
+    "source_owner_surfaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "target_owner_surfaces": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "claimed_invariant": {"type": "string", "minLength": 1},
+    "map_kind": {
+      "type": "string",
+      "enum": ["equivalence", "intertwiner", "functor", "natural_transformation", "translator", "coherence"]
+    },
+    "map_expression": {"type": "string", "minLength": 1},
+    "outcome_class": {
+      "type": "string",
+      "enum": ["equivalence", "obstruction", "discard"]
+    },
+    "theorem_target": {
+      "type": "object",
+      "required": ["kind", "name"],
+      "properties": {
+        "kind": {"type": "string", "enum": ["theorem", "lemma", "coherence", "definition"]},
+        "name": {"type": "string", "minLength": 1},
+        "note": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "mismatch_object": {
+      "type": "object",
+      "required": ["name", "preservation_gap"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "preservation_gap": {"type": "string", "minLength": 1},
+        "note": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "discard_reason": {"type": "string"},
+    "evidence_refs": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "unresolved_assumptions": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "forbidden_moves": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "stabilization", "admitted", "rejected"]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "outcome_class": {"const": "equivalence"}
+        }
+      },
+      "then": {"required": ["theorem_target"]}
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome_class": {"const": "obstruction"}
+        }
+      },
+      "then": {"required": ["theorem_target", "mismatch_object"]}
+    },
+    {
+      "if": {
+        "properties": {
+          "outcome_class": {"const": "discard"}
+        }
+      },
+      "then": {"required": ["discard_reason"]}
+    }
+  ],
+  "additionalProperties": false
+}

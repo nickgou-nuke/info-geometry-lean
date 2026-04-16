@@ -96,11 +96,11 @@ Research-injection pipeline surfaces:
 - `injection_status.py`
 - `openai_deep_research_gateway.py` (Codex-facing MCP gateway for OpenAI DR jobs)
 - `openai_deep_research_datasource_mcp_example.py` (nested `search`/`fetch` datasource template)
-- `deep_research/controller.py` (official Responses-pattern planner/retriever/verifier/writer controller with source constraints and hard gates)
+- `deep_research/controller.py` (official staged controller: clarify -> rewrite -> planner -> retriever -> verifier -> writer, with source constraints and hard gates)
 - `research_packet.py` (typed Hermes intake packet builder/validator)
 - `check_research_handoff_gate.py` (ClawCode gate: packet + NemoClaw provenance note)
 - `research_controller.py` (closed-loop planner/retriever/reader/critic loop with strict gating and state memory)
-- `autonomous_math/research_controller.py` (multi-phase stack: deep research -> Socratic -> Pauli audit -> Lean design/coder -> compiler loop -> memory ingest)
+- `autonomous_math/research_controller.py` (multi-phase stack: clarify -> rewrite -> deep research -> Socratic -> Pauli audit -> Lean design/coder -> compiler loop -> memory ingest)
 
 Runtime LLM theorem-conformance surface:
 - `llm_thermo_conformance.py` (numerical residual audit for KMS/softmax/free-energy/defect identities on JSONL traces)

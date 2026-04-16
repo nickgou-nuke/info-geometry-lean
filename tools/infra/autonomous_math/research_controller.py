@@ -14,6 +14,8 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[3]))
 
+from tools.infra.deep_research.brief_rewriter import normalize_research_brief, rewrite_research_brief
+from tools.infra.deep_research.clarifier import clarify_goal, normalize_clarification
 from tools.infra.deep_research.common import utc_now, write_json
 from tools.infra.deep_research.planner import create_plan
 from tools.infra.deep_research.retriever import build_tools, research_subquestion
@@ -59,11 +61,15 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--trusted-domain", action="append", default=[])
     p.add_argument("--vector-store-id", action="append", default=[])
     p.add_argument("--mcp-server", action="append", default=[])
+    p.add_argument("--clarifier-model", default=os.environ.get("OPENAI_DR_CLARIFIER_MODEL", "gpt-5"))
+    p.add_argument("--rewriter-model", default=os.environ.get("OPENAI_DR_REWRITER_MODEL", "gpt-5"))
     p.add_argument("--planner-model", default=os.environ.get("OPENAI_DR_PLANNER_MODEL", "gpt-5"))
     p.add_argument("--research-model", default=os.environ.get("OPENAI_DR_RESEARCH_MODEL", "gpt-5"))
     p.add_argument("--verifier-model", default=os.environ.get("OPENAI_DR_VERIFIER_MODEL", "gpt-5"))
     p.add_argument("--writer-model", default=os.environ.get("OPENAI_DR_WRITER_MODEL", "gpt-5"))
     p.add_argument("--max-extra-rounds", type=int, default=1)
+    p.add_argument("--skip-clarify", action="store_true")
+    p.add_argument("--skip-rewrite", action="store_true")
     p.add_argument("--state-out", default="")
     p.add_argument("--report-out", default="")
     p.add_argument("--memory-log", default="reports/research/autonomous_memory.jsonl")
@@ -153,13 +159,76 @@ def main() -> None:
     client = _make_client()
     activity: list[dict[str, Any]] = []
     findings: dict[str, Any] = {}
+    user_goal = args.goal
+
+    # Clarify intent
+    clarification = normalize_clarification({}, goal=user_goal)
+    if not args.skip_clarify:
+        clarification = clarify_goal(
+            client=client,
+            model=args.clarifier_model,
+            goal=user_goal,
+            constraints=constraints,
+            allowed_sources=allowed_sources,
+            trusted_domains=trusted_domains,
+        )
+    activity.append(
+        {
+            "phase": "clarifier",
+            "ts": utc_now(),
+            "model": args.clarifier_model,
+            "skipped": bool(args.skip_clarify),
+            "needs_clarification": bool(clarification.get("needs_clarification", False)),
+            "question_count": len(clarification.get("clarifying_questions", [])),
+            "assumption_count": len(clarification.get("assumptions", [])),
+        }
+    )
+    clarified_goal = str(clarification.get("clarified_goal", "")).strip() or user_goal
+
+    # Rewrite into execution brief
+    research_brief = normalize_research_brief({}, goal=clarified_goal)
+    if not args.skip_rewrite:
+        research_brief = rewrite_research_brief(
+            client=client,
+            model=args.rewriter_model,
+            goal=clarified_goal,
+            clarification=clarification,
+            constraints=constraints,
+            allowed_sources=allowed_sources,
+            trusted_domains=trusted_domains,
+        )
+    activity.append(
+        {
+            "phase": "brief_rewriter",
+            "ts": utc_now(),
+            "model": args.rewriter_model,
+            "skipped": bool(args.skip_rewrite),
+            "scope_items": len(research_brief.get("scope", [])),
+            "exclusions": len(research_brief.get("exclusions", [])),
+            "eval_criteria": len(research_brief.get("evaluation_criteria", [])),
+        }
+    )
+    execution_goal = str(research_brief.get("research_brief", "")).strip() or clarified_goal
+    execution_constraints = constraints[:]
+    scope = research_brief.get("scope", [])
+    exclusions = research_brief.get("exclusions", [])
+    source_prefs = research_brief.get("source_preferences", [])
+    eval_criteria = research_brief.get("evaluation_criteria", [])
+    if isinstance(scope, list) and scope:
+        execution_constraints.append("Scope: " + "; ".join(str(x) for x in scope))
+    if isinstance(exclusions, list) and exclusions:
+        execution_constraints.append("Exclusions: " + "; ".join(str(x) for x in exclusions))
+    if isinstance(source_prefs, list) and source_prefs:
+        execution_constraints.append("Source preferences: " + "; ".join(str(x) for x in source_prefs))
+    if isinstance(eval_criteria, list) and eval_criteria:
+        execution_constraints.append("Evaluation criteria: " + "; ".join(str(x) for x in eval_criteria))
 
     # Research planner
     plan = create_plan(
         client=client,
         model=args.planner_model,
-        goal=args.goal,
-        constraints=constraints,
+        goal=execution_goal,
+        constraints=execution_constraints,
         allowed_sources=allowed_sources,
         trusted_domains=trusted_domains,
     )
@@ -185,8 +254,8 @@ def main() -> None:
             client=client,
             model=args.research_model,
             subquestion=subq,
-            goal=args.goal,
-            constraints=constraints,
+            goal=execution_goal,
+            constraints=execution_constraints,
             allowed_sources=allowed_sources,
             tools=tools,
         )
@@ -205,10 +274,10 @@ def main() -> None:
     verification = verify_research(
         client=client,
         model=args.verifier_model,
-        goal=args.goal,
+        goal=execution_goal,
         plan=plan,
         findings=findings,
-        constraints=constraints,
+        constraints=execution_constraints,
     )
     activity.append(
         {
@@ -237,8 +306,8 @@ def main() -> None:
                 client=client,
                 model=args.research_model,
                 subquestion=subq,
-                goal=args.goal,
-                constraints=constraints,
+                goal=execution_goal,
+                constraints=execution_constraints,
                 allowed_sources=allowed_sources,
                 tools=tools,
             )
@@ -258,10 +327,10 @@ def main() -> None:
         verification = verify_research(
             client=client,
             model=args.verifier_model,
-            goal=args.goal,
+            goal=execution_goal,
             plan=plan,
             findings=findings,
-            constraints=constraints,
+            constraints=execution_constraints,
         )
         activity.append(
             {
@@ -289,7 +358,7 @@ def main() -> None:
 
     # Socratic/Jungian -> Pauli -> Lean design/coder -> compile loop
     deep_state = {
-        "goal": args.goal,
+        "goal": execution_goal,
         "findings": findings,
         "verification": verification,
     }
@@ -314,7 +383,7 @@ def main() -> None:
         report_text = synthesize_report(
             client=client,
             model=args.writer_model,
-            goal=args.goal,
+            goal=execution_goal,
             plan=plan,
             findings=findings,
             verification=verification,
@@ -327,11 +396,18 @@ def main() -> None:
     state = {
         "generated_at": utc_now(),
         "status": status,
-        "goal": args.goal,
+        "goal": user_goal,
+        "clarified_goal": clarified_goal,
+        "execution_goal": execution_goal,
+        "clarification": clarification,
+        "research_brief": research_brief,
         "constraints": constraints,
+        "execution_constraints": execution_constraints,
         "allowed_sources": allowed_sources,
         "trusted_domains": trusted_domains,
         "models": {
+            "clarifier": args.clarifier_model,
+            "rewriter": args.rewriter_model,
             "planner": args.planner_model,
             "research": args.research_model,
             "verifier": args.verifier_model,
@@ -365,7 +441,14 @@ def main() -> None:
     write_json(state_out, state)
 
     packet = build_packet_from_state(
-        {"goal": args.goal, "allowed_sources": allowed_sources, "trusted_domains": trusted_domains, "models": state.get("models", {}), "findings": findings, "verification": verification},
+        {
+            "goal": user_goal,
+            "allowed_sources": allowed_sources,
+            "trusted_domains": trusted_domains,
+            "models": state.get("models", {}),
+            "findings": findings,
+            "verification": verification,
+        },
         packet_id=f"rp-{stamp}-{slug}",
         state_path=str(state_out),
     )

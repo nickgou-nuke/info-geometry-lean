@@ -20,6 +20,7 @@ inductive PresentationLane where
   | hydrodynamic
   | stochastic
   | graphDirac
+  | arnoldNetwork
   | doubledKrein
   deriving DecidableEq, Repr
 

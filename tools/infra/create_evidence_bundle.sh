@@ -18,6 +18,10 @@ Options:
                             (default: tools/infra/archive_excludes.txt if present)
   --no-exclusion-stubs      Do not place README stubs for excluded paths
   --with-pdf                Render certificate PDF with pandoc (if installed)
+  --ots-stamp <mode>        OpenTimestamps blockchain stamp target:
+                            pdf | archive | both
+  --ots-upgrade             Run `ots upgrade` on generated .ots proof files
+  --ots-cache-dir <dir>     Override XDG cache dir for ots client
   --lock-readonly           chmod bundle files/directories to read-only at the end
   --lock-immutable          Try chattr +i after read-only lock (Linux/ext fs; may fail)
   --help                    Show this help
@@ -31,7 +35,9 @@ Output files:
 
 Notes:
   - Archive uses `git archive` at a commit, not working tree contents.
+  - In `--full-state` mode, the script first snapshots into an isolated temp tree.
   - Hashes: SHA-256, SHA-512, BLAKE2b (b2sum), SHA3-512 (openssl, if available).
+  - OpenTimestamps requires `ots` to be installed if `--ots-stamp` is used.
 USAGE
 }
 
@@ -44,6 +50,9 @@ LOCK_IMMUTABLE=0
 EXCLUDE_LIST=""
 ARCHIVE_MODE="source-only"
 WRITE_STUBS=1
+OTS_STAMP_MODE=""
+OTS_UPGRADE=0
+OTS_CACHE_DIR=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -79,6 +88,18 @@ while [[ $# -gt 0 ]]; do
       WITH_PDF=1
       shift
       ;;
+    --ots-stamp)
+      OTS_STAMP_MODE="${2:?missing value for --ots-stamp}"
+      shift 2
+      ;;
+    --ots-upgrade)
+      OTS_UPGRADE=1
+      shift
+      ;;
+    --ots-cache-dir)
+      OTS_CACHE_DIR="${2:?missing value for --ots-cache-dir}"
+      shift 2
+      ;;
     --lock-readonly)
       LOCK_READONLY=1
       shift
@@ -99,6 +120,18 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+case "$OTS_STAMP_MODE" in
+  ""|pdf|archive|both) ;;
+  *)
+    echo "Invalid --ots-stamp value: $OTS_STAMP_MODE (expected pdf|archive|both)" >&2
+    exit 2
+    ;;
+esac
+
+if [[ "$OTS_STAMP_MODE" == "pdf" || "$OTS_STAMP_MODE" == "both" ]]; then
+  WITH_PDF=1
+fi
 
 ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
@@ -132,10 +165,21 @@ trap cleanup EXIT
 
 if [[ "$ARCHIVE_MODE" == "full-state" ]]; then
   mkdir -p "$TMP_DIR/$PREFIX"
-  tar -C "$ROOT" \
-      --exclude=.git \
-      --exclude=archive/evidence \
-      -cf - . | tar -xf - -C "$TMP_DIR/$PREFIX"
+  # Freeze into isolated workspace first to avoid archiving a mutating live tree.
+  if command -v rsync >/dev/null 2>&1; then
+    rsync -a --delete \
+      --exclude='.git' \
+      --exclude='archive/evidence' \
+      --exclude='archive/public-release' \
+      "$ROOT/" "$TMP_DIR/$PREFIX/"
+  else
+    # Fallback if rsync is unavailable.
+    tar -C "$ROOT" \
+        --exclude=.git \
+        --exclude=archive/evidence \
+        --exclude=archive/public-release \
+        -cf - . | tar -xf - -C "$TMP_DIR/$PREFIX"
+  fi
 else
   git archive --format=tar --prefix="${PREFIX}/" "$COMMIT" | tar -xf - -C "$TMP_DIR"
 fi
@@ -201,6 +245,31 @@ fi
 cp LICENSE "$OUT_DIR/LICENSE"
 cp NOTICE "$OUT_DIR/NOTICE"
 cp CITATION.cff "$OUT_DIR/CITATION.cff"
+if [[ -f "$ROOT/tools/infra/verify_evidence_bundle.sh" ]]; then
+  cp "$ROOT/tools/infra/verify_evidence_bundle.sh" "$OUT_DIR/verify_evidence_bundle.sh"
+  chmod +x "$OUT_DIR/verify_evidence_bundle.sh"
+fi
+if [[ -f "$ROOT/tools/infra/verify_certificate_hash_binding.sh" ]]; then
+  cp "$ROOT/tools/infra/verify_certificate_hash_binding.sh" "$OUT_DIR/verify_certificate_hash_binding.sh"
+  chmod +x "$OUT_DIR/verify_certificate_hash_binding.sh"
+fi
+
+cat > "$OUT_DIR/VERIFY.md" <<'EOF'
+# Bundle Verification (Outside Repo)
+
+Run these commands from any directory (no repo checkout required):
+
+```bash
+./verify_evidence_bundle.sh .
+./verify_certificate_hash_binding.sh .
+```
+
+If OpenTimestamps proof exists:
+
+```bash
+ots verify *.certificate.pdf.ots
+```
+EOF
 
 {
   echo "bundle_name=${BASENAME}"
@@ -214,6 +283,7 @@ cp CITATION.cff "$OUT_DIR/CITATION.cff"
   echo "git_commit_time=${COMMIT_TIME}"
   echo "git_subject=${SUBJECT}"
   echo "repo_root=${ROOT}"
+  echo "bundle_self_verify_scripts=verify_evidence_bundle.sh,verify_certificate_hash_binding.sh"
   if [[ -n "$EXCLUDE_LIST" && -f "$EXCLUDE_LIST" ]]; then
     echo "exclude_list=${EXCLUDE_LIST}"
     echo "excluded_paths_begin"
@@ -298,6 +368,81 @@ if [[ "$WITH_PDF" -eq 1 ]]; then
     pandoc "$CERT_MD_PATH" -o "${CERT_MD_PATH%.md}.pdf"
   else
     echo "WARN: --with-pdf set but pandoc not found; skipping PDF render." >&2
+  fi
+fi
+
+OTS_PROOF_LIST=()
+if [[ -n "$OTS_STAMP_MODE" ]]; then
+  if ! command -v ots >/dev/null 2>&1; then
+    echo "ERROR: --ots-stamp requested but 'ots' command is not installed." >&2
+    echo "Install OpenTimestamps client and rerun." >&2
+    exit 3
+  fi
+
+  if [[ -z "$OTS_CACHE_DIR" ]]; then
+    OTS_CACHE_DIR="$OUT_DIR/.ots-cache"
+  fi
+  mkdir -p "$OTS_CACHE_DIR"
+  export XDG_CACHE_HOME="$OTS_CACHE_DIR"
+
+  stamp_target() {
+    local target="$1"
+    if [[ ! -f "$target" ]]; then
+      echo "WARN: OTS target missing, skipped: $target" >&2
+      return
+    fi
+    ots stamp "$target"
+    local proof="${target}.ots"
+    if [[ -f "$proof" ]]; then
+      OTS_PROOF_LIST+=("$(basename "$proof")")
+      if [[ "$OTS_UPGRADE" -eq 1 ]]; then
+        ots upgrade "$proof" || echo "WARN: ots upgrade failed for $proof" >&2
+      fi
+    fi
+  }
+
+  case "$OTS_STAMP_MODE" in
+    pdf)
+      stamp_target "${CERT_MD_PATH%.md}.pdf"
+      ;;
+    archive)
+      stamp_target "$ARCHIVE_PATH"
+      ;;
+    both)
+      stamp_target "${CERT_MD_PATH%.md}.pdf"
+      stamp_target "$ARCHIVE_PATH"
+      ;;
+  esac
+
+  if [[ "${#OTS_PROOF_LIST[@]}" -gt 0 ]]; then
+    {
+      echo
+      echo "## OpenTimestamps Proofs Generated"
+      for pf in "${OTS_PROOF_LIST[@]}"; do
+        echo "- ${pf}"
+      done
+      if [[ "$OTS_UPGRADE" -eq 1 ]]; then
+        echo "- upgrade: requested (`ots upgrade` attempted)"
+      fi
+    } >> "$CERT_MD_PATH"
+
+    if [[ -f "${CERT_MD_PATH%.md}.pdf" && ( "$OTS_STAMP_MODE" == "archive" ) ]]; then
+      # Keep PDF in sync with markdown metadata when only archive stamping is used.
+      if command -v pandoc >/dev/null 2>&1; then
+        pandoc "$CERT_MD_PATH" -o "${CERT_MD_PATH%.md}.pdf"
+      fi
+    fi
+
+    {
+      echo "ots_stamp_mode=${OTS_STAMP_MODE}"
+      echo "ots_upgrade_requested=${OTS_UPGRADE}"
+      echo "ots_cache_dir=${OTS_CACHE_DIR}"
+      echo "ots_proofs_begin"
+      for pf in "${OTS_PROOF_LIST[@]}"; do
+        echo "$pf"
+      done
+      echo "ots_proofs_end"
+    } >> "$META_PATH"
   fi
 fi
 

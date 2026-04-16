@@ -14,6 +14,10 @@ The maintained tooling surface is split into three directories and one planner p
 - [tools/docs/README.md](docs/README.md)
 - `tools/planner/`
 
+LeanTrail semantic explorer scaffold:
+- [leantrail/README.md](../leantrail/README.md)
+- [docs/LeanTrail.md](../docs/LeanTrail.md)
+
 The core maintained top-level support modules are:
 - `pathing.py`
 - `build_lock.py`
@@ -101,4 +105,3 @@ It should not invent ontology that is absent from the code.
 ## Current Codebase Status
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md) for the current build/audit state.
-

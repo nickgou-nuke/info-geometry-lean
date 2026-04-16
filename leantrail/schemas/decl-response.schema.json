@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LeanTrailDeclResponse",
+  "type": "object",
+  "required": ["found", "name"],
+  "properties": {
+    "found": {"type": "boolean"},
+    "name": {"type": "string"},
+    "module": {"type": "string"},
+    "file": {"type": "string"},
+    "line": {"type": "integer", "minimum": 0},
+    "kind": {"type": "string"},
+    "doc": {"type": "string"},
+    "rep_depth": {"type": "string"},
+    "rep_depth_nat": {"type": ["integer", "null"]},
+    "judgment": {"type": "string"},
+    "capstone": {"type": "boolean"},
+    "out_degree": {"type": "integer", "minimum": 0},
+    "in_degree": {"type": "integer", "minimum": 0},
+    "dependencies": {
+      "type": "array",
+      "items": {"$ref": "edge.schema.json"}
+    },
+    "dependents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["src", "kind"],
+        "properties": {
+          "src": {"type": "string"},
+          "kind": {"type": "string", "enum": ["type", "value"]}
+        }
+      }
+    }
+  },
+  "additionalProperties": true
+}

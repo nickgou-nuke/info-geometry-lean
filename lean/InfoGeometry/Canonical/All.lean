@@ -63,6 +63,7 @@ import InfoGeometry.Core.SymmetricLieGeneric
 import InfoGeometry.Core.SymmetricSpaces
 import InfoGeometry.Core.UnifiedGeometry
 import InfoGeometry.Canonical.CertifiedInverseKernel
+import InfoGeometry.Canonical.SignedParticleBridge
 import InfoGeometry.Canonical.CoarseGraining
 import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.Drazin

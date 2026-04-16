@@ -48,3 +48,8 @@ See [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/RE
 - Treat `.build/` as a transient build cache or fallback, not as documented graph truth.
 - `tools/pathing.py` resolves these paths canonically with `.build/` fallback.
 - Regenerate these artifacts; do not hand-edit them.
+
+## Current Codebase Status
+
+Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
+

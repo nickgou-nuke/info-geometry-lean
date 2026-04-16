@@ -41,6 +41,9 @@ Relativity of Measurement**:
 - [black_books/105_math_behind_physics_inspired_routing_llm_architecture.md](black_books/105_math_behind_physics_inspired_routing_llm_architecture.md) — Mathematical substantiation of the physics-inspired routing spine (sparse MoE optimization, graph transport, Clifford lane split, fractal sparsity, and typed coherence).
 - [black_books/106_architectural_symmetries_from_spectral_regularization_to_causal_compactification.md](black_books/106_architectural_symmetries_from_spectral_regularization_to_causal_compactification.md) — Unified operator/geometric compactification chapter linking Drazin spectral regularization, Lean functional calculus admissibility, twistor infinity structures, and the Operator Penrose Analogue.
 - [black_books/107_operator_penrose_analogue_repo_native_krein_doubled_hestenes.md](black_books/107_operator_penrose_analogue_repo_native_krein_doubled_hestenes.md) — Repo-native translation of the Operator Penrose Analogue into doubled real/Krein/Hestenes owner language (projector package, support-restricted log lane, and closure guardrails).
+- [black_books/108_unbounded_modular_machinery_repo_native_translation.md](black_books/108_unbounded_modular_machinery_repo_native_translation.md) — Unbounded modular translation chapter: affiliated `Δ`, spectral support, support-restricted unbounded `-log Δ`, and the bridge obligations between canonical and surrogate projector lanes.
+- [black_books/108_unbounded_modular_translation_queue_for_operator_penrose_unification.md](black_books/108_unbounded_modular_translation_queue_for_operator_penrose_unification.md) — Queue-style theorem-target chapter for the unbounded modular/operator-Penrose unification lane.
+- [black_books/109_true_modular_hamiltonian_co_owner_bridge.md](black_books/109_true_modular_hamiltonian_co_owner_bridge.md) — Co-owner bridge charter: keep `K = -log Δ` as owner meaning and prove doubled/Krein/Hestenes equality forms by theorem.
 - [black_books/67_the_external_analogy_doctrine.md](black_books/67_the_external_analogy_doctrine.md) — Respect external frameworks as heuristics, but keep canonical truth strictly owner-native and Lean-verified.
 - [Theory.md](Theory.md) — How the principle maps to the repo presentations.
 - [Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md) — The project's roadmap and trajectory.
@@ -56,6 +59,8 @@ dual-projector owner package as the execution surface:
 - [lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean](../lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean) — Unified projector/anomaly kernel routed by downstream modules.
 - [lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean](../lean/InfoGeometry/Canonical/DrazinKreinCompatibility.lean) — Drazin regular/defect projector algebra and Krein compatibility transport.
 - [lean/InfoGeometry/Canonical/DrazinSupercharge.lean](../lean/InfoGeometry/Canonical/DrazinSupercharge.lean) — Projector-controlled regular restriction and support package theorems.
+- [lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean](../lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean) — Theorem-level co-owner bridge from Tomita/relative modular owner surfaces to doubled real/Krein/Hestenes presentation.
+- [lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean](../lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean) — Support-restricted regular-core bridge package for modular Hamiltonian surfaces on `Preg`.
 
 Guardrail: modular-lane operations should route through this package rather than
 raw textbook support narration.
@@ -64,6 +69,7 @@ raw textbook support narration.
 
 Use these first when you want the current repo state:
 
+- [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 - [README.md](../README.md)
 - [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
 - [OperationalIntent.md](OperationalIntent.md)
@@ -171,7 +177,7 @@ For the corrected phase-space/generalized-metric trunk:
 
 If a doc and Lean source disagree, trust Lean source.
 
-## Consistency Pass (2026-04-07)
+## Consistency Pass (2026-04-16)
 
 Repository-wide checks were run across all files under `docs/`:
 
@@ -181,6 +187,11 @@ Repository-wide checks were run across all files under `docs/`:
 
 Files updated in this pass:
 
-- `docs/red_line_synthesis.md`
-- `docs/lean_compiler_service.md`
-- `docs/keyword_index.md`
+- `docs/CODEBASE_STATUS.md`
+- `docs/README.md`
+- `docs/RepositoryMemoryMap.md`
+- `docs/ModuleMap.md`
+
+## Current Codebase Status
+
+Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [CODEBASE_STATUS.md](CODEBASE_STATUS.md) for the current build/audit state.

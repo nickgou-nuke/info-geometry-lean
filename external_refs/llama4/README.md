@@ -42,3 +42,8 @@ curl -fsSL https://ollama.com/library/llama4 -o external_refs/llama4/ollama/llam
 ## Local Runtime Note
 
 - `ollama --version`: `ollama:not-installed` (on this machine at capture time).
+
+## Current Codebase Status
+
+Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
+

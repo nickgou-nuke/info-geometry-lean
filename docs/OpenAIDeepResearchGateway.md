@@ -131,7 +131,18 @@ This controller persists:
 - verifier verdict,
 - activity log,
 - gate status (coverage + citation requirements),
-- final report path.
+- final report path,
+- typed Hermes intake packet under
+  `quarantine/hermes_memory/research_packets/`.
+
+Validate packet and run closure handoff gate:
+
+```bash
+python3 tools/infra/research_packet.py validate --packet <packet.json>
+python3 tools/infra/check_research_handoff_gate.py \
+  --packet <packet.json> \
+  --nemoclaw-note <nemoclaw-note.md>
+```
 
 For the full autonomous stack (deep research -> Socratic -> Pauli -> Lean
 design/coder -> compiler loop -> memory ingestion), use:

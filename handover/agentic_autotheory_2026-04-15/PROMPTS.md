@@ -25,21 +25,37 @@ Non-negotiable constraints:
    owner / translator / coherence / capstone.
 4) Treat generated reports as memory, not ontology.
 5) Keep raw-intake modules isolated until stabilization.
+6) Consume a typed Hermes research packet before proposing theorem surfaces.
+   Do not treat packet metaphors as evidence.
 
 Required operating method:
 - Read source first, then propose.
+- Load `quarantine/hermes_memory/research_packets/<packet>.json` and split:
+  - facts
+  - interpretations
+  - metaphors
+  - formalization candidates
 - For each change, declare:
   - file ownership intent
   - adjacency impact
   - unresolved assumptions
+- Produce a NemoClaw handoff note with a **Research Provenance** section:
+  - Facts
+  - Interpretations
+  - Metaphors
+  - Formalization Candidates
 - Prefer smallest lawful step that increases structural clarity.
 - If uncertain, draft in stabilization lane, not authoritative lane.
 
 Deliverable format:
-1) Intent (what is being owned vs translated)
-2) Patch proposal (minimal)
-3) Source evidence (explicit file paths)
-4) Handoff packet for Caretaker:
+1) Input contract
+   - research_packet_path
+   - packet_id
+   - packet validation status
+2) Intent (what is being owned vs translated)
+3) Patch proposal (minimal)
+4) Source evidence (explicit file paths)
+5) Handoff packet for Caretaker:
    - exact commands to validate
    - expected failure modes
    - explicit “not yet closed” items
@@ -65,6 +81,11 @@ Non-negotiable constraints:
 4) Documentation claims must match compiled bridge reality.
 
 Required gate sequence:
+0) Research handoff gate:
+   - python3 tools/infra/research_packet.py validate --packet <research-packet.json>
+   - python3 tools/infra/check_research_handoff_gate.py \
+       --packet <research-packet.json> \
+       --nemoclaw-note <nemoclaw-note.md>
 1) Build gate:
    - lake build InfoGeometry.All
 2) DAG authoritative refresh:
@@ -80,6 +101,9 @@ If any gate fails:
 - classify: source defect / policy mismatch / stale artifact / quarantine omission
 - propose minimal corrective patch
 - rerun only necessary gates, then full doctor gate
+
+Research packet and NemoClaw provenance note are mandatory for authoritative
+admission. Missing either is an automatic block.
 
 Deliverable format:
 1) Gate results (pass/fail per stage)
@@ -106,9 +130,12 @@ No single persona can override Prompt B gate failures.
 ## Minimal Handoff Contract Between Prompts
 
 Prompt A must output:
+- research packet path + packet id
 - modified file list
 - ownership classification for each modified file
 - explicit unresolved assumptions
+- NemoClaw provenance note path
+- explicit split of facts vs interpretations vs metaphors vs formalization candidates
 
 Prompt B must output:
 - gate transcript summary
@@ -116,4 +143,3 @@ Prompt B must output:
 - quarantine updates (if needed)
 
 If Prompt A and Prompt B disagree, Prompt B blocks release and requests stabilization patching.
-

@@ -19,6 +19,7 @@ from tools.infra.deep_research.planner import create_plan
 from tools.infra.deep_research.retriever import build_tools, research_subquestion
 from tools.infra.deep_research.verifier import verify_research
 from tools.infra.deep_research.writer import synthesize_report
+from tools.infra.research_packet import build_packet_from_state, validate_packet
 
 from tools.infra.autonomous_math.compiler_loop import close
 from tools.infra.autonomous_math.evidence_packet import from_deep_research_state
@@ -66,6 +67,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--state-out", default="")
     p.add_argument("--report-out", default="")
     p.add_argument("--memory-log", default="reports/research/autonomous_memory.jsonl")
+    p.add_argument(
+        "--research-packet-out",
+        default="",
+        help="Output path for typed Hermes research packet.",
+    )
     return p.parse_args()
 
 
@@ -126,6 +132,11 @@ def main() -> None:
     slug = _slug(args.goal)
     state_out = Path(args.state_out).resolve() if args.state_out else repo_root / "reports" / "research" / f"autonomous-state-{stamp}-{slug}.json"
     report_out = Path(args.report_out).resolve() if args.report_out else repo_root / "reports" / "research" / f"autonomous-report-{stamp}-{slug}.md"
+    packet_out = (
+        Path(args.research_packet_out).resolve()
+        if args.research_packet_out
+        else repo_root / "quarantine" / "hermes_memory" / "research_packets" / f"{stamp}-{slug}.json"
+    )
     memory_log = Path(args.memory_log)
     if not memory_log.is_absolute():
         memory_log = repo_root / memory_log
@@ -320,6 +331,12 @@ def main() -> None:
         "constraints": constraints,
         "allowed_sources": allowed_sources,
         "trusted_domains": trusted_domains,
+        "models": {
+            "planner": args.planner_model,
+            "research": args.research_model,
+            "verifier": args.verifier_model,
+            "writer": args.writer_model,
+        },
         "tools": {"vector_store_ids": args.vector_store_id, "mcp_servers": mcp_servers, "count": len(tools)},
         "plan": plan,
         "findings": findings,
@@ -346,9 +363,29 @@ def main() -> None:
         "report_out": str(report_out) if report_text else "",
     }
     write_json(state_out, state)
+
+    packet = build_packet_from_state(
+        {"goal": args.goal, "allowed_sources": allowed_sources, "trusted_domains": trusted_domains, "models": state.get("models", {}), "findings": findings, "verification": verification},
+        packet_id=f"rp-{stamp}-{slug}",
+        state_path=str(state_out),
+    )
+    packet_errors = validate_packet(packet)
+    if packet_errors:
+        state["status"] = "blocked_by_packet_validation"
+        state["packet_validation_errors"] = packet_errors
+        write_json(state_out, state)
+        print(f"[autonomous-math] state: {state_out}")
+        print("[autonomous-math] packet validation failed:")
+        for err in packet_errors:
+            print(f"  - {err}")
+        sys.exit(3)
+    write_json(packet_out, packet)
+    state["research_packet_out"] = str(packet_out)
+    write_json(state_out, state)
     ingest(packet=evidence_packet, run_state=state, out_file=memory_log)
 
     print(f"[autonomous-math] state: {state_out}")
+    print(f"[autonomous-math] research packet: {packet_out}")
     print(f"[autonomous-math] memory: {memory_log}")
     if report_text:
         print(f"[autonomous-math] report: {report_out}")

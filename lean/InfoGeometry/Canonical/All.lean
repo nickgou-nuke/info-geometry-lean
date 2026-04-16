@@ -101,6 +101,7 @@ import InfoGeometry.Canonical.EmpiricalChecks
 import InfoGeometry.Canonical.EPAndGroupInverse
 import InfoGeometry.Canonical.EPDefectAlgebra
 import InfoGeometry.Canonical.Fierz
+import InfoGeometry.Canonical.FierzReadout
 import InfoGeometry.Canonical.FormalScaffold
 import InfoGeometry.Canonical.Fock
 import InfoGeometry.Canonical.Foundations

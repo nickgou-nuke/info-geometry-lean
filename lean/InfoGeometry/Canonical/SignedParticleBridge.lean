@@ -141,4 +141,93 @@ noncomputable def wignerNonclassicalReadout
     (a a_d a_mp : WignerAlgebra (E := E)) : WignerAlgebra (E := E) :=
   wignerBracket (E := E) A B + nonclassicalShadow a a_d a_mp
 
+/-! ## Task bridge: packet negativity ↔ anomaly -/
+
+/--
+Packet negativity readout (nontrivial lane):
+spectral-vs-metric routing residual on the positive sector of a signed shadow.
+-/
+@[rep_depth operator]
+noncomputable def packetNegativity
+    (CIK : CertifiedInverseKernel (DoubledSpace E))
+    {T TD : Op} {k : ℕ}
+    (S : SignedParticleShadow (E := E) T TD k) : ℝ :=
+  ‖(CIK.spectralProjector * S.positiveSector * CIK.spectralProjector)
+      - (CIK.metricProjector * S.positiveSector * CIK.metricProjector)‖
+
+/--
+Mismatch closure implies vanishing packet negativity.
+-/
+@[rep_depth operator]
+theorem packetNegativity_eq_zero_of_projectorMismatch_eq_zero
+    (CIK : CertifiedInverseKernel (DoubledSpace E))
+    {T TD : Op} {k : ℕ}
+    (hΔ : CIK.projectorMismatch = 0)
+    (S : SignedParticleShadow (E := E) T TD k) :
+    packetNegativity (E := E) CIK S = 0 := by
+  unfold packetNegativity
+  have hProj : CIK.spectralProjector = CIK.metricProjector :=
+    (CIK.projectorMismatch_eq_zero_iff).1 hΔ
+  simp [hProj]
+
+/--
+Task assumptions for proving a nontrivial packet-level equivalence
+`packetNegativity = 0 ↔ chiralAnomaly = 0`.
+-/
+@[rep_depth operator]
+structure PacketNegativityTaskAssumptions
+    (CIK : CertifiedInverseKernel (DoubledSpace E))
+    (T TD : Op) (k : ℕ) where
+  anomaly_zero_implies_projectorMismatch_zero :
+    CIK.chiralAnomaly = 0 → CIK.projectorMismatch = 0
+  packetNegativity_zero_implies_anomaly_zero :
+    ∀ S : SignedParticleShadow (E := E) T TD k,
+      packetNegativity (E := E) CIK S = 0 → CIK.chiralAnomaly = 0
+
+/--
+Nontrivial task theorem: under task assumptions, packet negativity and anomaly
+vanishing are equivalent.
+-/
+@[rep_depth operator]
+theorem packetNegativity_zero_iff_anomaly_zero_of_taskAssumptions
+    (CIK : CertifiedInverseKernel (DoubledSpace E))
+    {T TD : Op} {k : ℕ}
+    (A : PacketNegativityTaskAssumptions (E := E) CIK T TD k)
+    (S : SignedParticleShadow (E := E) T TD k) :
+    packetNegativity (E := E) CIK S = 0 ↔ CIK.chiralAnomaly = 0 := by
+  constructor
+  · intro hNeg
+    exact A.packetNegativity_zero_implies_anomaly_zero S hNeg
+  · intro hχ
+    have hΔ : CIK.projectorMismatch = 0 := A.anomaly_zero_implies_projectorMismatch_zero hχ
+    exact packetNegativity_eq_zero_of_projectorMismatch_eq_zero (E := E) (CIK := CIK) (hΔ := hΔ) S
+
+/--
+Bridge package using the nontrivial packet negativity as the negativity
+functional, discharged by task assumptions.
+-/
+@[rep_depth operator]
+structure NegativityAnomalyBridge
+    (CIK : CertifiedInverseKernel (DoubledSpace E))
+    (T TD : Op) (k : ℕ) where
+  negativity : SignedParticleShadow (E := E) T TD k → ℝ
+  negativity_zero_iff_anomaly_zero :
+    ∀ S : SignedParticleShadow (E := E) T TD k,
+      negativity S = 0 ↔ CIK.chiralAnomaly = 0
+
+/--
+Canonical constructor from task assumptions for the nontrivial bridge.
+-/
+@[rep_depth operator]
+noncomputable def packetNegativityAnomalyBridgeOfTaskAssumptions
+    (CIK : CertifiedInverseKernel (DoubledSpace E))
+    {T TD : Op} {k : ℕ}
+    (A : PacketNegativityTaskAssumptions (E := E) CIK T TD k) :
+    NegativityAnomalyBridge (E := E) CIK T TD k where
+  negativity := packetNegativity (E := E) CIK
+  negativity_zero_iff_anomaly_zero := by
+    intro S
+    exact packetNegativity_zero_iff_anomaly_zero_of_taskAssumptions
+      (E := E) (CIK := CIK) A S
+
 end InfoGeometry.Canonical.SignedParticleBridge

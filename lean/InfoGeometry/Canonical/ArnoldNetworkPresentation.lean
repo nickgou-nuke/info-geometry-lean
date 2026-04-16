@@ -111,7 +111,7 @@ theorem arnoldGenerator_eq_of_experts_fix
 noncomputable def taggedPresentation
     (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ) :
     TaggedPresentation where
-  lane := PresentationLane.doubledKrein
+  lane := PresentationLane.arnoldNetwork
   data := toQuantumPresentation (E := E) n net β
 
 end InfoGeometry.Canonical.ArnoldNetworkPresentation

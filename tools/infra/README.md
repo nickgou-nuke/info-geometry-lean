@@ -96,6 +96,7 @@ Research-injection pipeline surfaces:
 - `injection_status.py`
 - `openai_deep_research_gateway.py` (Codex-facing MCP gateway for OpenAI DR jobs)
 - `openai_deep_research_datasource_mcp_example.py` (nested `search`/`fetch` datasource template)
+- `research_controller.py` (closed-loop planner/retriever/reader/critic loop with strict gating and state memory)
 
 Runtime LLM theorem-conformance surface:
 - `llm_thermo_conformance.py` (numerical residual audit for KMS/softmax/free-energy/defect identities on JSONL traces)
@@ -169,12 +170,42 @@ Use the infra tools by role, not as one undifferentiated report pile:
 - full-lean keyword indexing and story synthesis
   - `generate_keyword_research_report.py` (indexes all tracked Lean files; sorted lexical frequency + hotspot files)
   - `generate_repo_story_from_keyword_index.py` (characteristic-term selection + deep theorem/lemma/axiom search + story synthesis)
+- closed-loop deep-research control
+  - `research_controller.py` (iterative stateful controller that composes keyword retrieval, declaration-grounded extraction, vacuity verification, and confidence-gated convergence)
 - black-books keyword indexing and story synthesis
   - `generate_black_books_keyword_report.py` (indexes black-book markdown corpus; sorted lexical frequency + chapter hotspots)
   - `generate_black_books_story_from_keyword_index.py` (profile-aware characteristic terms + deep excerpt search + story synthesis)
 - process-flow and coherence pressure
   - `lean/DAG/ProcessFlowExport.lean`
   - `generate_process_flow_report.py`
+
+### Closed-Loop Research Controller
+
+Minimal run (artifact-driven; no forced refresh):
+
+```bash
+python3 tools/infra/research_controller.py \
+  --goal "map Type III modular support closure gaps" \
+  --profile methodology \
+  --include-significance \
+  --run-vacuity-gate \
+  --refresh-policy missing
+```
+
+Refresh-heavy run (recompute stale surfaces before critique):
+
+```bash
+python3 tools/infra/research_controller.py \
+  --goal "derive theorem-target map for RN/Connes bridge" \
+  --profile physics \
+  --include-significance \
+  --refresh-policy stale \
+  --max-artifact-age-hours 12
+```
+
+The controller writes a full JSON memory trace under `reports/research/`
+including iteration-by-iteration subtasks, command results, extracted metrics,
+critique verdicts, blockers, and unresolved questions.
 
 ## Authoritative Inputs
 

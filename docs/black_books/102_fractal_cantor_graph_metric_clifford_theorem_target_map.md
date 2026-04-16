@@ -1,110 +1,193 @@
-# Fractal/Cantor, Graph-Metric, and Clifford Lanes: Bibliography + Theorem Target Map
+# Black Book: Fractal-Clifford-Graph Geometry Intake
 
-## Executive summary
+## Status
 
-The safe repo statement is:
+**Lane:** Raw Intake -> Translator Candidate  
+**Closure:** Not yet formalized  
+**Risk:** High (nonstandard geometry; requires invariant extraction)
 
-- fractal/Cantor constructions, graph-metric Dirac machinery, and split Clifford/Bott ladders can be compared in one program,
-- but only through typed invariants and lawful intertwiners,
-- not by collapsing them into a single unqualified ontology claim.
+## 1. Context
 
-This chapter gives a curated bibliography and a theorem-target map aligned to current repo surfaces.
+There exists a nontrivial research line connecting:
 
-## Curated bibliography (research intake)
+- Cantor/fractal sets
+- Clifford algebras
+- graph-induced metrics
+- non-classical function spaces
 
-### A. Turkish Cantor/Clifford representation lane
+This line attempts to encode algebraic structure on totally disconnected or non-manifold domains, often using:
 
-1. Çelik, Koçak, Özdemir (2011), *Representations of Clifford Algebras on Function Spaces on the Cantor Set*, Adv. Appl. Clifford Algebras.  
-   DOI: https://doi.org/10.1007/s00006-010-0235-7
-2. Çelik, Koçak (2012), *A Fractal Representation of the Complex Clifford Algebra Equivalent to the Fock Representation*, Adv. Appl. Clifford Algebras.  
-   DOI: https://doi.org/10.1007/s00006-011-0295-3
-3. Çelik (2023), *A new approach to matrix isomorphisms of complex Clifford algebras via Cantor set*, Turkish Journal of Mathematics.  
-   DOI: https://doi.org/10.55730/1300-0098.3346
+- Cantor sets as carriers
+- graph approximations
+- matrix/representation lifts
 
-These are the strongest direct matches for the “Turkish author + Cantor/fractal + Clifford representation” memory lane.
+Key point for this repo:
 
-### B. Fractal-boundary Clifford analysis lane
+> This is not a competing ontology.  
+> It is a candidate shadow/translation layer for non-smooth geometry.
 
-4. Abreu-Blaya, Bory-Reyes, Bosch (2010), *Extension theorem for complex Clifford algebras-valued functions on fractal domains*, Boundary Value Problems.  
-   EUDML entry: https://eudml.org/doc/228231
+## 2. Primary References (Curated)
 
-This is useful for “fractal domain -> operator/analysis constraints” targets.
+### Core Turkish line
 
-### C. Graph-metric / discrete Dirac intake lane
+- Derya Celik, *A fractal representation of the complex Clifford algebra equivalent to the Fock representation*  
+  DOI: 10.1007/s00006-011-0295-3
+- Derya Celik, *Matrix isomorphisms of complex Clifford algebras via Cantor set* (2023), Turkish Journal of Mathematics  
+  DOI: 10.55730/1300-0098.3346
 
-5. Knill (2013), *The Dirac Operator of a Graph* (seminar/preprint surface).  
-   PDF: https://people.math.harvard.edu/~knill/seminars/providence/providence.pdf
-6. Chung (1997), *Spectral Graph Theory*, AMS.  
-   DOI: https://doi.org/10.1090/cbms/092
+### Related lines
 
-These are intake references for graph-defined metrics and Dirac/Hodge-type discrete operators.
+- Abreu-Blaya et al. (2010), Clifford analysis on fractal domains
+- General literature:
+- Clifford-valued functions on irregular sets
+- Graph Laplacians approximating fractal geometry
+- Noncommutative geometry on Cantor-type spaces
 
-### D. Phase-space signed-lane context (connected but distinct)
+## 3. Structural Interpretation (Repo-native)
 
-7. Sellier (2015), *The Signed Particle Formulation of Quantum Mechanics*, Journal of Computational Physics.  
-   DOI: https://doi.org/10.1016/j.jcp.2015.06.006
-8. Wigner (1932), *On the Quantum Correction For Thermodynamic Equilibrium*, Physical Review.  
-   DOI: https://doi.org/10.1103/PhysRev.40.749
+This material should be read as:
 
-This lane should remain translator-level relative to the doubled/Krein owner package.
+### NOT
 
-## Status bands
+- "Clifford algebra lives on Cantor sets" (as ontology)
 
-- `REPO_THEOREM`: compiled theorem/definition in current owner/translator surfaces.
-- `FORMALIZABLE_NEXT_OWNER_TARGET`: scoped theorem package to implement next.
-- `EXTERNAL_RESEARCH_INPUT`: bibliography input not yet translated to owner declarations.
-- `EXTERNAL_INTERPRETATION`: ontological claims that must not be promoted without owner proofs.
+### BUT
 
-## I. Repo theorem anchors already available
+> A representation mechanism for encoding algebraic structure on discontinuous carriers.
 
-- `REPO_THEOREM`  
-  [operatorialIncidence_iff_projectorObstructionOperator_zero](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/TwistorOperatorialIncidence.lean:46)
-- `REPO_THEOREM`  
-  [bott_step_periodicity](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/BottPeriodicity.lean:134)
-- `REPO_THEOREM`  
-  [bottStep_headPair](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ClNNBottBridge.lean:32)
-- `REPO_THEOREM`  
-  [bottStep_tailLift](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/ClNNBottBridge.lean:46)
-- `REPO_THEOREM`  
-  [annihilationShadow](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/SignedParticleBridge.lean:58)
-- `REPO_THEOREM`  
-  [classicalShadowOnRegularCore](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/SignedParticleBridge.lean:66)
-- `REPO_THEOREM`  
-  [idIntertwiner](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/QuantumPresentation.lean:77)
-- `REPO_THEOREM`  
-  [compIntertwiner](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/QuantumPresentation.lean:93)
+## 4. Mapping to Repo Architecture
 
-## II. Formalizable next-owner targets
+### 4.1 Carrier layer
 
-- `FORMALIZABLE_NEXT_OWNER_TARGET`:
-  `FierzReadout` interface in split `Cl(n,n)`:
-  channel decomposition into scalar/vector/bivector readouts with typed invariance obligations.
-- `FORMALIZABLE_NEXT_OWNER_TARGET`:
-  graph-Dirac presentation instance of `QuantumPresentation`
-  (state space, observable action, generator, metric/phase readout contracts).
-- `FORMALIZABLE_NEXT_OWNER_TARGET`:
-  intertwiner package from Cantor/fractal function-space Clifford representation
-  to finite matrix/Pauli realization for low-rank test cases.
-- `FORMALIZABLE_NEXT_OWNER_TARGET`:
-  Bott-ladder step functoriality:
-  compatibility of representation intertwiners with `bott_step_periodicity`.
-- `FORMALIZABLE_NEXT_OWNER_TARGET`:
-  projector-controlled support transfer lemma from fractal-boundary extension data
-  into the doubled/Krein support lane (`Preg/Pzero` boundary behavior).
+| Fractal literature | Repo |
+|---|---|
+| Cantor set | discrete / projective / measure carriers |
+| fractal metric | induced metric / comparison metric |
+| graph approximation | DAG / dependency graph / operator graph |
 
-## III. External research input (not yet owner-translated)
+### 4.2 Algebra layer
 
-- `EXTERNAL_RESEARCH_INPUT`: Cantor/fractal Clifford representation papers listed above.
-- `EXTERNAL_RESEARCH_INPUT`: fractal-domain Clifford extension theorem literature.
-- `EXTERNAL_RESEARCH_INPUT`: graph Dirac and spectral graph references as discrete metric intake.
+| Fractal literature | Repo |
+|---|---|
+| Clifford algebra on fractal | doubled/Krein + Cl(1,1) packet |
+| matrix isomorphism | operator lift / LinearMap |
+| Fock representation | operator/Krein representation |
 
-These should be consumed via typed translator modules, not imported as owner claims.
+### 4.3 Geometry layer
 
-## IV. Explicitly external interpretation claims
+| Fractal literature | Repo |
+|---|---|
+| graph metric | comparisonMetricReadout |
+| fractal dimension | entropy / modular potential |
+| irregular domain | defect sector (Pzero) |
 
-- `EXTERNAL_INTERPRETATION`: “Clifford algebras are fractal sets producing spacetime.”
-- `EXTERNAL_INTERPRETATION`: “Graph metric alone is a full quantum ontology.”
-- `EXTERNAL_INTERPRETATION`: “Cantor representation proves physical discreteness by itself.”
+## 5. Key Insight (Nontrivial)
 
-All three remain non-owner until translated into precise declarations and proved in the Lean kernel.
+The real connection is:
 
+> Fractal/graph geometries provide discrete or singular carriers where continuous differential structure fails but algebraic/operator structure survives.
+
+This is exactly the same problem your repo solves via:
+
+- Drazin defect sector
+- projector decomposition
+- modular operator
+
+So the correct interpretation is:
+
+> Fractal Clifford constructions are geometric shadows of defect-sector operator geometry.
+
+## 6. Theorem Target Map
+
+### Target 1 - Graph metric <-> comparison metric
+
+```text
+graph_metric ≈ comparisonMetricReadout
+```
+
+Goal:
+
+- formalize graph-induced distance
+- compare with operator-induced metric
+
+### Target 2 - Cantor support <-> defect projector
+
+```text
+Cantor_support ≈ Pzero sector
+```
+
+Goal:
+
+- show fractal support behaves like non-invertible kernel
+- map to Drazin defect block
+
+### Target 3 - Clifford on fractal <-> doubled/Krein representation
+
+```text
+Clifford(fractal) ≈ Cl(1,1) doubled carrier
+```
+
+Goal:
+
+- show representation equivalence at operator level
+- not pointwise geometric equality
+
+### Target 4 - Matrix isomorphism <-> operator lift
+
+```text
+matrix_isomorphism ≈ LinearMap equivalence
+```
+
+Goal:
+
+- express Celik constructions as operator equivalences
+
+## 7. Strict Guardrails (Pauli filter)
+
+### Forbidden moves
+
+- Treat fractal constructions as fundamental ontology
+- Replace modular/operator structure with graph geometry
+- Claim equivalence without explicit operator bridge
+- Collapse metric and spectral structure
+
+### Required for promotion
+
+Before any canonical merge:
+
+- explicit operator mapping
+- proof of invariant preservation
+- mismatch quantified (not ignored)
+
+## 8. Role in the System
+
+This material belongs to:
+
+```text
+Raw intake -> Translator -> Possible bridge -> (maybe) canonical
+```
+
+NOT:
+
+```text
+Canonical owner layer
+```
+
+## 9. Suggested Next Step
+
+Minimal safe move:
+
+- extract one construction from Celik
+- express it as:
+
+  ```lean
+  def fractalCliffordLift : ...
+  ```
+
+- prove:
+- algebraic structure preserved
+- domain mismatch explicit
+
+## 10. One-line summary
+
+> Fractal Clifford geometry is a discrete shadow of operator defect geometry, and must be treated as a translator surface, not a foundational replacement.

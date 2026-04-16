@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Penrose Diagram Explorer</title>
+  <style>
+    :root {
+      --bg: #eef1f8;
+      --panel: #ffffff;
+      --ink: #141a2b;
+      --muted: #4b556f;
+      --boundary: #1f2537;
+      --observer: #0c74d8;
+      --eventA: #d81b8a;
+      --eventB: #14a05a;
+      --future: #0c74d8;
+      --past: #d81b8a;
+      --card-shadow: 0 12px 30px rgba(8, 17, 43, 0.14);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "IBM Plex Sans", "Segoe UI", "Noto Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(12, 116, 216, 0.14), transparent 34%),
+        radial-gradient(circle at 82% 12%, rgba(216, 27, 138, 0.10), transparent 30%),
+        linear-gradient(165deg, #f8faff 0%, #eef1f8 55%, #e9edf7 100%);
+      display: grid;
+      place-items: center;
+      padding: 28px;
+    }
+
+    .shell {
+      width: min(1120px, 100%);
+      background: var(--panel);
+      border: 1px solid rgba(31, 37, 55, 0.12);
+      border-radius: var(--radius);
+      box-shadow: var(--card-shadow);
+      overflow: hidden;
+    }
+
+    .head {
+      padding: 18px 20px 10px;
+      border-bottom: 1px solid rgba(31, 37, 55, 0.08);
+      background:
+        linear-gradient(90deg, rgba(12, 116, 216, 0.06), rgba(216, 27, 138, 0.04));
+    }
+
+    .title {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .subtitle {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+      align-items: center;
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(31, 37, 55, 0.08);
+      background: #fafbff;
+    }
+
+    .controls label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    input[type="range"] {
+      inline-size: min(360px, 70vw);
+      accent-color: var(--observer);
+    }
+
+    button {
+      border: 1px solid rgba(31, 37, 55, 0.2);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 10px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(8, 17, 43, 0.12);
+    }
+
+    .stats {
+      padding: 10px 20px 6px;
+      border-bottom: 1px solid rgba(31, 37, 55, 0.08);
+      background: #fcfdff;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 8px 14px;
+    }
+
+    .stat {
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.35;
+    }
+
+    .viz-wrap {
+      padding: 18px;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid rgba(31, 37, 55, 0.15);
+      background: var(--bg);
+      cursor: crosshair;
+      touch-action: none;
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      padding: 10px 20px 18px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      inline-size: 10px;
+      block-size: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .line {
+      inline-size: 20px;
+      block-size: 0;
+      border-top: 2px solid currentColor;
+      display: inline-block;
+      transform: translateY(1px);
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="head">
+      <h1 class="title">Penrose Diagram Explorer</h1>
+      <p class="subtitle">Mode A: place up to two events and inspect causal class. Mode B: click-drag to trace a null geodesic to conformal boundary.</p>
+    </section>
+
+    <section class="controls">
+      <label for="observerRange">Animate Observer</label>
+      <input id="observerRange" type="range" min="0" max="100" value="50" step="1" />
+      <button id="modeBtn" type="button">Mode: Place Events</button>
+      <button id="gridBtn" type="button">Grid: Off</button>
+      <button id="clearBtn" type="button">Clear Events/Ray</button>
+      <button id="centerBtn" type="button">Center Observer</button>
+    </section>
+
+    <section class="stats">
+      <span class="stat" id="observerStat">Observer t = 0.50</span>
+      <span class="stat" id="eventStat">Events: none</span>
+      <span class="stat" id="causalStat">Observer relation: n/a</span>
+      <span class="stat" id="pairStat">Event pair relation: n/a</span>
+      <span class="stat" id="traceStat">Null trace: none</span>
+    </section>
+
+    <section class="viz-wrap">
+      <svg id="penroseSvg" viewBox="0 0 900 700" role="img" aria-label="Interactive Penrose diagram">
+        <defs>
+          <clipPath id="diamondClip">
+            <path id="diamondPath" d="" />
+          </clipPath>
+        </defs>
+
+        <g id="layerBoundary"></g>
+        <g id="layerGrid" clip-path="url(#diamondClip)"></g>
+        <g id="layerCones" clip-path="url(#diamondClip)"></g>
+        <g id="layerWorldline" clip-path="url(#diamondClip)"></g>
+        <g id="layerTrace" clip-path="url(#diamondClip)"></g>
+        <g id="layerPoints"></g>
+        <g id="layerLabels"></g>
+      </svg>
+    </section>
+
+    <section class="legend">
+      <span class="chip"><span class="line" style="color:var(--future)"></span> future light cone</span>
+      <span class="chip"><span class="line" style="color:var(--past);border-top-style:dashed"></span> past light cone</span>
+      <span class="chip"><span class="dot" style="background:var(--observer)"></span> observer</span>
+      <span class="chip"><span class="dot" style="background:var(--eventA)"></span> event E1</span>
+      <span class="chip"><span class="dot" style="background:var(--eventB)"></span> event E2</span>
+    </section>
+  </main>
+
+  <script>
+    const SVG_NS = "http://www.w3.org/2000/svg";
+    const W = 900, H = 700, M = 60;
+    const CX = W / 2, CY = H / 2;
+    const TOP = { x: CX, y: M };
+    const RIGHT = { x: W - M, y: CY };
+    const BOTTOM = { x: CX, y: H - M };
+    const LEFT = { x: M, y: CY };
+
+    const EDGES = [
+      { a: TOP, b: RIGHT, label: "Scri+" },
+      { a: RIGHT, b: BOTTOM, label: "Scri-" },
+      { a: BOTTOM, b: LEFT, label: "Scri-" },
+      { a: LEFT, b: TOP, label: "Scri+" }
+    ];
+
+    const state = {
+      observer: 50,
+      events: [],
+      mode: "event", // event | trace
+      showGrid: false,
+      nullRay: null,
+      traceDraft: null
+    };
+
+    const svg = document.getElementById("penroseSvg");
+    const layerBoundary = document.getElementById("layerBoundary");
+    const layerGrid = document.getElementById("layerGrid");
+    const layerCones = document.getElementById("layerCones");
+    const layerWorldline = document.getElementById("layerWorldline");
+    const layerTrace = document.getElementById("layerTrace");
+    const layerPoints = document.getElementById("layerPoints");
+    const layerLabels = document.getElementById("layerLabels");
+
+    const observerRange = document.getElementById("observerRange");
+    const modeBtn = document.getElementById("modeBtn");
+    const gridBtn = document.getElementById("gridBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const centerBtn = document.getElementById("centerBtn");
+
+    const observerStat = document.getElementById("observerStat");
+    const eventStat = document.getElementById("eventStat");
+    const causalStat = document.getElementById("causalStat");
+    const pairStat = document.getElementById("pairStat");
+    const traceStat = document.getElementById("traceStat");
+
+    const diamondD = `M ${TOP.x} ${TOP.y} L ${RIGHT.x} ${RIGHT.y} L ${BOTTOM.x} ${BOTTOM.y} L ${LEFT.x} ${LEFT.y} Z`;
+    document.getElementById("diamondPath").setAttribute("d", diamondD);
+
+    function make(tag, attrs = {}, text = null) {
+      const el = document.createElementNS(SVG_NS, tag);
+      for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, String(v));
+      if (text !== null) el.textContent = text;
+      return el;
+    }
+
+    function ptFromEvent(e) {
+      const box = svg.getBoundingClientRect();
+      return {
+        x: ((e.clientX - box.left) / box.width) * W,
+        y: ((e.clientY - box.top) / box.height) * H
+      };
+    }
+
+    function insideDiamond(p) {
+      const nx = (p.x - CX) / (RIGHT.x - CX);
+      const ny = (p.y - CY) / (BOTTOM.y - CY);
+      return Math.abs(nx) + Math.abs(ny) <= 1;
+    }
+
+    function worldlinePoint(t01) {
+      const y = BOTTOM.y + (TOP.y - BOTTOM.y) * t01;
+      const bulge = 28 * (1 - Math.pow(2 * t01 - 1, 2));
+      const x = CX + bulge * 0.25;
+      return { x, y };
+    }
+
+    function drawBoundary() {
+      layerBoundary.replaceChildren();
+      layerBoundary.appendChild(make("path", {
+        d: diamondD,
+        fill: "#ffffff",
+        stroke: "#1f2537",
+        "stroke-width": 2.5
+      }));
+    }
+
+    function drawGrid() {
+      layerGrid.replaceChildren();
+      if (!state.showGrid) return;
+      const step = 40;
+      for (let x = M; x <= W - M; x += step) {
+        layerGrid.appendChild(make("line", {
+          x1: x, y1: 0, x2: x, y2: H,
+          stroke: "#bfc7da", "stroke-width": 0.8, opacity: 0.45
+        }));
+      }
+      for (let y = M; y <= H - M; y += step) {
+        layerGrid.appendChild(make("line", {
+          x1: 0, y1: y, x2: W, y2: y,
+          stroke: "#bfc7da", "stroke-width": 0.8, opacity: 0.45
+        }));
+      }
+    }
+
+    function drawLabels() {
+      layerLabels.replaceChildren();
+      const specs = [
+        [TOP.x, TOP.y - 12, "middle", "Future Timelike Infinity (i+)", 13],
+        [BOTTOM.x, BOTTOM.y + 24, "middle", "Past Timelike Infinity (i-)", 13],
+        [LEFT.x - 10, LEFT.y + 4, "end", "Spacelike Infinity (i0)", 13],
+        [RIGHT.x + 10, RIGHT.y + 4, "start", "Spacelike Infinity (i0)", 13],
+        [(TOP.x + RIGHT.x) / 2 + 8, (TOP.y + RIGHT.y) / 2 - 8, "start", "Future Null Infinity (Scri+)", 12],
+        [(TOP.x + LEFT.x) / 2 - 8, (TOP.y + LEFT.y) / 2 - 8, "end", "Future Null Infinity (Scri+)", 12],
+        [(BOTTOM.x + RIGHT.x) / 2 + 8, (BOTTOM.y + RIGHT.y) / 2 + 18, "start", "Past Null Infinity (Scri-)", 12],
+        [(BOTTOM.x + LEFT.x) / 2 - 8, (BOTTOM.y + LEFT.y) / 2 + 18, "end", "Past Null Infinity (Scri-)", 12]
+      ];
+      specs.forEach(([x, y, anchor, txt, size]) => {
+        layerLabels.appendChild(make("text", {
+          x, y, "text-anchor": anchor, "font-size": size, fill: "#2f3a55"
+        }, txt));
+      });
+    }
+
+    function cross(a, b) {
+      return a.x * b.y - a.y * b.x;
+    }
+
+    function intersectRayWithSegment(start, dir, a, b) {
+      const e = { x: b.x - a.x, y: b.y - a.y };
+      const den = cross(dir, e);
+      if (Math.abs(den) < 1e-10) return null;
+      const as = { x: a.x - start.x, y: a.y - start.y };
+      const t = cross(as, e) / den;
+      const u = cross(as, dir) / den;
+      if (t >= 0 && u >= -1e-9 && u <= 1 + 1e-9) {
+        return { t, p: { x: start.x + t * dir.x, y: start.y + t * dir.y } };
+      }
+      return null;
+    }
+
+    function near(p, q, eps = 2.5) {
+      return Math.hypot(p.x - q.x, p.y - q.y) <= eps;
+    }
+
+    function rayToDiamondBoundary(start, dirX, dirY) {
+      const dir = { x: dirX, y: dirY };
+      let best = null;
+      let edgeLabel = "";
+      for (const e of EDGES) {
+        const hit = intersectRayWithSegment(start, dir, e.a, e.b);
+        if (!hit) continue;
+        if (!best || hit.t < best.t) {
+          best = hit;
+          edgeLabel = e.label;
+        }
+      }
+      if (!best) return null;
+      const p = best.p;
+      if (near(p, TOP)) edgeLabel = "i+";
+      else if (near(p, BOTTOM)) edgeLabel = "i-";
+      else if (near(p, LEFT) || near(p, RIGHT)) edgeLabel = "i0";
+      return { end: p, label: edgeLabel };
+    }
+
+    function addLightCones(p, futureColor, pastColor) {
+      const L = 2000;
+      const future = { stroke: futureColor, "stroke-width": 2, "stroke-linecap": "round", opacity: 0.95 };
+      const past = { stroke: pastColor, "stroke-width": 2, "stroke-linecap": "round", "stroke-dasharray": "7 6", opacity: 0.95 };
+
+      layerCones.appendChild(make("line", { x1: p.x, y1: p.y, x2: p.x + L, y2: p.y - L, ...future }));
+      layerCones.appendChild(make("line", { x1: p.x, y1: p.y, x2: p.x - L, y2: p.y - L, ...future }));
+      layerCones.appendChild(make("line", { x1: p.x, y1: p.y, x2: p.x + L, y2: p.y + L, ...past }));
+      layerCones.appendChild(make("line", { x1: p.x, y1: p.y, x2: p.x - L, y2: p.y + L, ...past }));
+    }
+
+    function addConeRegion(p, future, fill, opacity) {
+      const r1 = future ? rayToDiamondBoundary(p, 1, -1) : rayToDiamondBoundary(p, 1, 1);
+      const r2 = future ? rayToDiamondBoundary(p, -1, -1) : rayToDiamondBoundary(p, -1, 1);
+      if (!r1 || !r2) return;
+      const apex = future ? TOP : BOTTOM;
+      const points = `${p.x},${p.y} ${r1.end.x},${r1.end.y} ${apex.x},${apex.y} ${r2.end.x},${r2.end.y}`;
+      layerCones.appendChild(make("polygon", {
+        points,
+        fill,
+        opacity,
+        stroke: "none"
+      }));
+    }
+
+    function classifyRelation(a, b) {
+      const dx = b.x - a.x;
+      const dt = a.y - b.y; // up is future
+      const sigma = dt * dt - dx * dx;
+      const eps = 1e-7;
+      if (Math.abs(sigma) < eps) {
+        return { kind: "null", detail: "null-separated" };
+      }
+      if (sigma > 0) {
+        return {
+          kind: "timelike",
+          detail: dt > 0 ? "b in future of a" : "b in past of a"
+        };
+      }
+      return { kind: "spacelike", detail: "spacelike-separated" };
+    }
+
+    function drawWorldline() {
+      layerWorldline.replaceChildren();
+      layerWorldline.appendChild(make("path", {
+        d: `M ${BOTTOM.x} ${BOTTOM.y} Q ${CX + 20} ${CY} ${TOP.x} ${TOP.y}`,
+        fill: "none",
+        stroke: "#5a647a",
+        "stroke-width": 2.5,
+        "stroke-dasharray": "4 4"
+      }));
+    }
+
+    function drawTrace() {
+      layerTrace.replaceChildren();
+      const drawOne = (obj, strong) => {
+        if (!obj) return;
+        const hit = rayToDiamondBoundary(obj.start, obj.dirX, obj.dirY);
+        if (!hit) return;
+        const color = strong ? "#0f172a" : "#64748b";
+        layerTrace.appendChild(make("line", {
+          x1: obj.start.x, y1: obj.start.y,
+          x2: hit.end.x, y2: hit.end.y,
+          stroke: color,
+          "stroke-width": strong ? 2.4 : 1.6,
+          "stroke-dasharray": strong ? "" : "5 5",
+          opacity: 0.95
+        }));
+        layerTrace.appendChild(make("circle", {
+          cx: hit.end.x, cy: hit.end.y, r: 3.2,
+          fill: color
+        }));
+      };
+
+      drawOne(state.traceDraft, false);
+      drawOne(state.nullRay, true);
+    }
+
+    function drawConesAndPoints() {
+      layerCones.replaceChildren();
+      layerPoints.replaceChildren();
+
+      const t = state.observer / 100;
+      const obs = worldlinePoint(t);
+
+      addLightCones(obs, "#0c74d8", "#d81b8a");
+
+      layerPoints.appendChild(make("circle", {
+        cx: obs.x, cy: obs.y, r: 6,
+        fill: "#0c74d8", stroke: "#ffffff", "stroke-width": 1.5
+      }));
+
+      const eventColors = ["#d81b8a", "#14a05a"];
+      state.events.forEach((ev, idx) => {
+        // Same fill color for both events: overlap darkens as intersection highlight
+        addConeRegion(ev, true, "#f59e0b", 0.10);
+        addConeRegion(ev, false, "#0ea5e9", 0.08);
+        addLightCones(ev, eventColors[idx], "#6b7280");
+
+        layerPoints.appendChild(make("circle", {
+          cx: ev.x, cy: ev.y, r: 6,
+          fill: eventColors[idx], stroke: "#ffffff", "stroke-width": 1.5
+        }));
+        layerPoints.appendChild(make("text", {
+          x: ev.x + 8, y: ev.y - 8,
+          "font-size": 12,
+          fill: "#111827",
+          "font-weight": 700
+        }, `E${idx + 1}`));
+      });
+
+      observerStat.textContent = `Observer t = ${t.toFixed(2)}`;
+      eventStat.textContent = state.events.length
+        ? `Events: ${state.events.map((e, i) => `E${i+1}(${e.x.toFixed(1)}, ${e.y.toFixed(1)})`).join("; ")}`
+        : "Events: none";
+
+      if (state.events.length) {
+        const rel = state.events
+          .map((ev, i) => {
+            const r = classifyRelation(obs, ev);
+            return `E${i + 1}: ${r.kind} (${r.detail.replace("a", "observer").replace("b", `E${i+1}`)})`;
+          })
+          .join(" | ");
+        causalStat.textContent = `Observer relation: ${rel}`;
+      } else {
+        causalStat.textContent = "Observer relation: n/a";
+      }
+
+      if (state.events.length === 2) {
+        const r = classifyRelation(state.events[0], state.events[1]);
+        pairStat.textContent = `Event pair relation: ${r.kind} (${r.detail.replace("a", "E1").replace("b", "E2")})`;
+      } else {
+        pairStat.textContent = "Event pair relation: n/a";
+      }
+
+      if (state.nullRay) {
+        const hit = rayToDiamondBoundary(state.nullRay.start, state.nullRay.dirX, state.nullRay.dirY);
+        traceStat.textContent = hit
+          ? `Null trace: endpoint at ${hit.label} (${hit.end.x.toFixed(1)}, ${hit.end.y.toFixed(1)})`
+          : "Null trace: none";
+      } else if (state.traceDraft) {
+        traceStat.textContent = "Null trace: drafting";
+      } else {
+        traceStat.textContent = "Null trace: none";
+      }
+    }
+
+    function redraw() {
+      drawBoundary();
+      drawGrid();
+      drawLabels();
+      drawWorldline();
+      drawConesAndPoints();
+      drawTrace();
+      modeBtn.textContent = state.mode === "event" ? "Mode: Place Events" : "Mode: Trace Null Ray";
+      gridBtn.textContent = state.showGrid ? "Grid: On" : "Grid: Off";
+    }
+
+    function pushEvent(p) {
+      state.events.push(p);
+      if (state.events.length > 2) state.events.shift();
+    }
+
+    function directionFromDrag(start, now) {
+      const dx = now.x - start.x;
+      const dy = now.y - start.y;
+      if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return null;
+      return {
+        dirX: dx >= 0 ? 1 : -1,
+        dirY: dy >= 0 ? 1 : -1
+      };
+    }
+
+    svg.addEventListener("click", (e) => {
+      if (state.mode !== "event") return;
+      const p = ptFromEvent(e);
+      if (!insideDiamond(p)) return;
+      pushEvent(p);
+      redraw();
+    });
+
+    svg.addEventListener("pointerdown", (e) => {
+      if (state.mode !== "trace") return;
+      const p = ptFromEvent(e);
+      if (!insideDiamond(p)) return;
+      const obj = { start: p, dirX: 1, dirY: -1 };
+      state.traceDraft = obj;
+      svg.setPointerCapture(e.pointerId);
+      redraw();
+    });
+
+    svg.addEventListener("pointermove", (e) => {
+      if (!state.traceDraft) return;
+      const p = ptFromEvent(e);
+      const d = directionFromDrag(state.traceDraft.start, p);
+      if (!d) return;
+      state.traceDraft.dirX = d.dirX;
+      state.traceDraft.dirY = d.dirY;
+      redraw();
+    });
+
+    svg.addEventListener("pointerup", (e) => {
+      if (!state.traceDraft) return;
+      const p = ptFromEvent(e);
+      const d = directionFromDrag(state.traceDraft.start, p);
+      if (d) {
+        state.nullRay = {
+          start: state.traceDraft.start,
+          dirX: d.dirX,
+          dirY: d.dirY
+        };
+      }
+      state.traceDraft = null;
+      try { svg.releasePointerCapture(e.pointerId); } catch (_) {}
+      redraw();
+    });
+
+    observerRange.addEventListener("input", (e) => {
+      state.observer = Number(e.target.value);
+      redraw();
+    });
+
+    modeBtn.addEventListener("click", () => {
+      state.mode = state.mode === "event" ? "trace" : "event";
+      state.traceDraft = null;
+      redraw();
+    });
+
+    gridBtn.addEventListener("click", () => {
+      state.showGrid = !state.showGrid;
+      redraw();
+    });
+
+    clearBtn.addEventListener("click", () => {
+      state.events = [];
+      state.nullRay = null;
+      state.traceDraft = null;
+      redraw();
+    });
+
+    centerBtn.addEventListener("click", () => {
+      state.observer = 50;
+      observerRange.value = "50";
+      redraw();
+    });
+
+    redraw();
+  </script>
+</body>
+</html>

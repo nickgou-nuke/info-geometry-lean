@@ -114,8 +114,16 @@ Deep Research can be used as an additional provider stage, without changing the 
 
 ## Official Responses Pattern Controller
 
-For the official planner -> retrieval -> verifier -> writer pattern on top of
-Responses tools (`web_search`, `file_search`, `mcp`), use:
+For the official staged pattern on top of Responses tools:
+
+1. `clarify` (intent tightening),
+2. `rewrite` (execution brief synthesis),
+3. `planner`,
+4. `retrieval`,
+5. `verifier`,
+6. `writer`,
+
+use:
 
 ```bash
 python3 tools/infra/deep_research/controller.py \
@@ -125,7 +133,17 @@ python3 tools/infra/deep_research/controller.py \
   --trusted-domain platform.openai.com
 ```
 
+Optional stage controls:
+
+```bash
+--clarifier-model gpt-5
+--rewriter-model gpt-5
+--skip-clarify
+--skip-rewrite
+```
+
 This controller persists:
+- clarify/rewrite artifacts (`clarification`, `research_brief`),
 - plan,
 - per-subquestion findings,
 - verifier verdict,
@@ -152,3 +170,14 @@ python3 tools/infra/autonomous_math/research_controller.py \
   --goal "Formalize support-restricted modular Hamiltonian on Preg" \
   --allowed-sources web
 ```
+
+The autonomous stack now uses the same deep-research front-end stages before
+Socratic/Pauli/Lean closure:
+
+1. clarify,
+2. rewrite,
+3. planner,
+4. retrieval + verifier,
+5. Socratic/Jungian expansion,
+6. Pauli audit,
+7. Lean design/coder/compiler loop.

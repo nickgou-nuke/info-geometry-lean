@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.ModularSpectralWedgeBridge
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.ProjectorEquivariance
+import InfoGeometry.Canonical.WindingOrbitClosure
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -13,6 +14,7 @@ open InfoGeometry.Canonical.RealTomitaCore
 open InfoGeometry.Canonical.ModularSpectralWedge
 open InfoGeometry.Canonical.ModularSpectralWedgeBridge
 open InfoGeometry.Canonical.TomitaTakesaki
+open InfoGeometry.Canonical.WindingOrbitClosure
 
 section Core
 
@@ -33,7 +35,7 @@ local instance : IsScalarTower ℝ EndH EndH := inferInstance
 @[rep_depth transport]
 noncomputable def activeModularConjugation
     (owned_epsilon _owned_P_D : EndH) : EndH :=
-  (modularComplexI (E := E)) * owned_epsilon
+  (clockAxis E) * owned_epsilon
 
 namespace Compatibility
 
@@ -51,7 +53,7 @@ theorem activeModularConjugation_eq_modular_j_mul_active
       InfoGeometry.Canonical.ModularSpectralWedgeBridge.IsCompatibleWedge
         W owned_epsilon owned_P_D)
     (hActivePhase :
-      modularComplexI (E := E) = (modular_j (E := E)) * owned_epsilon) :
+      clockAxis E = (modular_j (E := E)) * owned_epsilon) :
     activeModularConjugation (E := E) owned_epsilon owned_P_D
       =
     (modular_j (E := E)) * ((1 : EndH) - owned_P_D) := by
@@ -73,7 +75,7 @@ theorem activeModularConjugation_mul_P_D_eq_zero
       InfoGeometry.Canonical.ModularSpectralWedgeBridge.IsCompatibleWedge
         W owned_epsilon owned_P_D)
     (hActivePhase :
-      modularComplexI (E := E) = (modular_j (E := E)) * owned_epsilon) :
+      clockAxis E = (modular_j (E := E)) * owned_epsilon) :
     activeModularConjugation (E := E) owned_epsilon owned_P_D * owned_P_D = 0 := by
   rw [activeModularConjugation_eq_modular_j_mul_active
     (E := E) (W := W) owned_epsilon owned_P_D comp hActivePhase]
@@ -103,7 +105,7 @@ theorem P_D_mul_activeModularConjugation_eq_zero
       InfoGeometry.Canonical.ModularSpectralWedgeBridge.IsCompatibleWedge
         W owned_epsilon owned_P_D)
     (hActivePhase :
-      modularComplexI (E := E) = (modular_j (E := E)) * owned_epsilon)
+      clockAxis E = (modular_j (E := E)) * owned_epsilon)
     (hComm : Commute owned_P_D (modular_j (E := E))) :
     owned_P_D * activeModularConjugation (E := E) owned_epsilon owned_P_D = 0 := by
   rw [activeModularConjugation_eq_modular_j_mul_active
@@ -141,7 +143,7 @@ theorem activeModularConjugation_eq_modular_j_mul_spectralProjector
       InfoGeometry.Canonical.ModularSpectralWedgeBridge.IsCompatibleWedge
         W owned_epsilon CIK.spectralComplementaryProjector)
     (hActivePhase :
-      modularComplexI (E := E) = (modular_j (E := E)) * owned_epsilon) :
+      clockAxis E = (modular_j (E := E)) * owned_epsilon) :
     activeModularConjugation (E := E) owned_epsilon CIK.spectralComplementaryProjector
       =
     (modular_j (E := E)) * CIK.spectralProjector := by
@@ -158,8 +160,8 @@ Owned active-phase identity on the projector-first lane:
 `K = J * (P₊ - P₋)`.
 -/
 @[rep_depth transport]
-theorem modularComplexI_eq_modular_j_mul_modularSign :
-    modularComplexI (E := E)
+theorem clockAxis_eq_modular_j_mul_modularSign :
+    clockAxis E
       =
     (modular_j (E := E))
       * InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E) := by
@@ -188,7 +190,7 @@ theorem activeModularConjugation_eq_modular_j_mul_spectralProjector_of_modularSi
     (E := E) (W := W) CIK
     (InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E))
     comp
-    (modularComplexI_eq_modular_j_mul_modularSign (E := E))
+    (clockAxis_eq_modular_j_mul_modularSign (E := E))
 
 end Compatibility
 

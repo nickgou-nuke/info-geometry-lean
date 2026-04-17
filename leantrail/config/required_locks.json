@@ -1,0 +1,8 @@
+[
+  {
+    "from": "InfoGeometry.Analytic.deriv2_logSumExp_eq_softmaxVariance",
+    "to": "InfoGeometry.Analytic.logSumExp",
+    "lawful_only": true,
+    "state_policy": "locked-only"
+  }
+]

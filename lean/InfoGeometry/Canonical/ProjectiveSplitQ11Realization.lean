@@ -83,7 +83,7 @@ lemma pointed_out_nonzero
   calc
     q.1 = InfoGeometry.Projective.projectivize (E := E) (Quotient.out q.1) := by
       symm
-      simpa [InfoGeometry.Projective.projectivize] using (Quotient.out_eq' q.1)
+      exact Quotient.out_eq' q.1
     _ = InfoGeometry.Projective.vacuum (E := E) := by
       simp [InfoGeometry.Projective.vacuum, hout]
 
@@ -112,7 +112,7 @@ noncomputable def projectiveRay_toMathlibProjectivization
         InfoGeometry.Projective.projectivize (E := E) v := by
     calc
       InfoGeometry.Projective.projectivize (E := E) (Quotient.out q.1) = q.1 := by
-        simpa [InfoGeometry.Projective.projectivize] using (Quotient.out_eq' q.1)
+        exact Quotient.out_eq' q.1
       _ = InfoGeometry.Projective.projectivize (E := E) v := rfl
   exact strict_projectivize_eq_of_same_ray
     ((InfoGeometry.Projective.projectivize_eq_iff).mp hclass)
@@ -140,11 +140,11 @@ noncomputable def mathlibProjectivization_toProjectiveRay
         InfoGeometry.Projective.projectivize (E := E) q.rep := by
     calc
       InfoGeometry.Projective.projectivize (E := E) (Quotient.out r.1) = r.1 := by
-        simpa [InfoGeometry.Projective.projectivize] using (Quotient.out_eq' r.1)
+        exact Quotient.out_eq' r.1
       _ = InfoGeometry.Projective.projectivize (E := E) q.rep := rfl
   have hstrict : strictProjectivize q.rep q.rep_nonzero = q := by
-    simpa [strictProjectivize, InfoGeometry.Convex.projectivize] using
-      (Projectivization.mk_rep (K := ℝ) (v := q))
+    unfold strictProjectivize InfoGeometry.Convex.projectivize
+    exact Projectivization.mk_rep (K := ℝ) (v := q)
   calc
     projectiveRay_toMathlibProjectivization (mathlibProjectivization_toProjectiveRay q)
       = strictProjectivize (Quotient.out r.1) (pointed_out_nonzero r) := by
@@ -176,9 +176,10 @@ noncomputable def mathlibProjectivization_toProjectiveRay
         InfoGeometry.Convex.projectivize] using
           congrArg (InfoGeometry.Projective.projectivize (E := E)) ha.symm
     _ = InfoGeometry.Projective.projectivize (E := E) v := by
-      simpa using (InfoGeometry.Projective.projectivize_smul (E := E) a v)
+      exact InfoGeometry.Projective.projectivize_smul (E := E) a v
     _ = q.1 := by
-      simpa [v, InfoGeometry.Projective.projectivize] using (Quotient.out_eq' q.1)
+      change InfoGeometry.Projective.projectivize (E := E) (Quotient.out q.1) = q.1
+      exact Quotient.out_eq' q.1
 
 /-- The two projective presentations coincide away from the distinguished vacuum point. -/
 noncomputable def projectiveRay_equiv_mathlibProjectivization :
@@ -287,7 +288,7 @@ theorem doubled_modular_j_descends_compatibly (v : H₂) (hv : v ≠ 0) :
               (v := InfoGeometry.Krein.modular_j (E := E) v)
               (hv := modular_j_ne_zero hv))
     _ = mathlibProjectiveJ (strictProjectivize v hv) := by
-          simpa using (mathlibProjectiveJ_projectivize (E := E) (v := v) (hv := hv)).symm
+          exact (mathlibProjectiveJ_projectivize (E := E) (v := v) (hv := hv)).symm
 
 /-- `ε` descends compatibly on the old nonvacuum quotient and the Mathlib projectivization. -/
 theorem doubled_spectral_epsilon_descends_compatibly (v : H₂) (hv : v ≠ 0) :
@@ -314,7 +315,7 @@ theorem doubled_spectral_epsilon_descends_compatibly (v : H₂) (hv : v ≠ 0) :
               (v := InfoGeometry.Krein.spectral_epsilon (E := E) v)
               (hv := spectral_epsilon_ne_zero hv))
     _ = mathlibProjectiveEpsilon (strictProjectivize v hv) := by
-          simpa using
+          exact
             (mathlibProjectiveEpsilon_projectivize (E := E) (v := v) (hv := hv)).symm
 
 /-- `I = J ∘ ε` descends compatibly on the old nonvacuum quotient and the Mathlib projectivization. -/
@@ -340,7 +341,7 @@ theorem doubled_phaseAxis_descends_compatibly (v : H₂) (hv : v ≠ 0) :
               (v := InfoGeometry.Krein.complex_i (E := E) v)
               (hv := complex_i_ne_zero hv))
     _ = mathlibProjectiveI (strictProjectivize v hv) := by
-          simpa using (mathlibProjectiveI_projectivize (E := E) (v := v) (hv := hv)).symm
+          exact (mathlibProjectiveI_projectivize (E := E) (v := v) (hv := hv)).symm
 
 /-- The existing doubled-space split-`Cl(1,1)` realization is the Clifford hinge for this bridge. -/
 theorem realSplitClifford_realizes_Q11 :

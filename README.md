@@ -69,6 +69,62 @@ The repo has a few umbrella files with different roles:
 For a quick navigation map of the major subtrees and the anchor corridor, see
 [docs/ModuleMap.md](docs/ModuleMap.md).
 
+## Cleanup Program
+
+The maintained cleanup/closure execution plan lives in:
+
+- [docs/CleanupImprovementProgram.md](docs/CleanupImprovementProgram.md)
+
+Use it as the programmatic queue for strict-gate recovery, warning-debt burn-down,
+and capstone-to-owner theorem closure.
+
+## Witness Policy
+
+Stable theorem surfaces must use **genuine dependent witnesses** only.
+
+- Allowed: witnesses that are used in the codomain/proof term as real dependencies.
+- Allowed: non-dependent existence written idiomatically as `∃ _ : P, Q`.
+- Forbidden as lint-masking style: `∃ h : P, (let _ := h; Q)` when `Q` does not
+  depend on `h`.
+
+If a witness is not semantically used, remove the name and keep the theorem
+surface explicit and non-vacuous.
+
+## Pauli Anti-Cheat Directives
+
+Repository policy also enforces the full Pauli anti-cheat gate (`PAULI_MANDATE I–XI`):
+
+- no assumption-as-theorem existential dependency shells
+- no trivial interface-closure witnesses (identity/swap/reflexive only)
+- no proxy-metric closure when the lane defines an owner metric
+- no residual-as-success surfaces without vanishing theorem closure
+- no noncomputable physical parameters without existence witnesses
+- no private uniqueness theorems in Canonical/Core lanes
+
+Translation mapping registry:
+- [docs/OperatorTheoremTranslationRegistry.md](docs/OperatorTheoremTranslationRegistry.md)
+
+Run:
+
+```bash
+python3 tools/quality/check_translation_registry.py \
+  --registry docs/OperatorTheoremTranslationRegistry.md \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.superHamiltonian_eq_modularTransportGenerator_lorentzBivectorSeed \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_compatibility \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.exists_lorentzBivectorGenerator_split_with_drazin_lane_centrality \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzChiralConeOrbit \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzWedgeOrbit \
+  --required-anchor InfoGeometry.Canonical.KKTCore.uPlus_eq_gOnePart \
+  --required-anchor InfoGeometry.Canonical.KKTCore.uPlus_mul_uPlus_eq_zero \
+  --required-anchor InfoGeometry.Canonical.KKTCore.commutator_uPlus_uMinus_isGZero
+python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
+```
+
+Module-keyword trunk/branch/root derivation surface:
+
+- [reports/dag/module-theory-program.md](reports/dag/module-theory-program.md)
+- generator: [tools/infra/module_keyword_theory_program.py](tools/infra/module_keyword_theory_program.py)
+
 ## Rosetta Surface
 
 If you are arriving from standard complex/Kähler formulations of quantum
@@ -235,21 +291,22 @@ For the latest condensation sequence on the operatorial DIII lane, see
 5. [docs/ModuleMap.md](docs/ModuleMap.md)
 6. [docs/OperationalIntent.md](docs/OperationalIntent.md)
 7. [docs/OperatorQuickstart.md](docs/OperatorQuickstart.md)
-8. [docs/DAGTroubleshooting.md](docs/DAGTroubleshooting.md)
-9. [CODEX_TROUBLESHOOTING.md](CODEX_TROUBLESHOOTING.md)
-10. [docs/ToolingMethodology.md](docs/ToolingMethodology.md)
-11. [docs/BILINGUAL_SPINE_POLICY.md](docs/BILINGUAL_SPINE_POLICY.md)
-12. [docs/cl11_rosetta_refactor_plan.md](docs/cl11_rosetta_refactor_plan.md)
-13. [docs/cl11_content_collision_map.md](docs/cl11_content_collision_map.md)
-14. [docs/DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](docs/DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
-15. [docs/Theory.md](docs/Theory.md)
-16. [lean/InfoGeometry/Audit.lean](lean/InfoGeometry/Audit.lean)
-17. [lean/DAG/README.md](lean/DAG/README.md)
-18. [tools/README.md](tools/README.md)
-19. [tools/infra/README.md](tools/infra/README.md)
-20. [tools/frontier/README.md](tools/frontier/README.md)
-21. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
-22. [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)
+8. [docs/CleanupImprovementProgram.md](docs/CleanupImprovementProgram.md)
+9. [docs/DAGTroubleshooting.md](docs/DAGTroubleshooting.md)
+10. [CODEX_TROUBLESHOOTING.md](CODEX_TROUBLESHOOTING.md)
+11. [docs/ToolingMethodology.md](docs/ToolingMethodology.md)
+12. [docs/BILINGUAL_SPINE_POLICY.md](docs/BILINGUAL_SPINE_POLICY.md)
+13. [docs/cl11_rosetta_refactor_plan.md](docs/cl11_rosetta_refactor_plan.md)
+14. [docs/cl11_content_collision_map.md](docs/cl11_content_collision_map.md)
+15. [docs/DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](docs/DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
+16. [docs/Theory.md](docs/Theory.md)
+17. [lean/InfoGeometry/Audit.lean](lean/InfoGeometry/Audit.lean)
+18. [lean/DAG/README.md](lean/DAG/README.md)
+19. [tools/README.md](tools/README.md)
+20. [tools/infra/README.md](tools/infra/README.md)
+21. [tools/frontier/README.md](tools/frontier/README.md)
+22. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
+23. [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)
 
 If you are operating as an agent inside this repo, also use:
 - [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)
@@ -284,6 +341,18 @@ python3 tools/infra/run_locked_lake_build.py InfoGeometry.Audit
 For the normal repo check surface:
 
 ```bash
+python3 tools/quality/functorial_invariance_audit.py --json-out reports/dag/functorial-invariance-audit.json --md-out reports/dag/functorial-invariance-audit.md
+python3 tools/quality/check_translation_registry.py \
+  --registry docs/OperatorTheoremTranslationRegistry.md \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.superHamiltonian_eq_modularTransportGenerator_lorentzBivectorSeed \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_compatibility \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.exists_lorentzBivectorGenerator_split_with_drazin_lane_centrality \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzChiralConeOrbit \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzWedgeOrbit \
+  --required-anchor InfoGeometry.Canonical.KKTCore.uPlus_eq_gOnePart \
+  --required-anchor InfoGeometry.Canonical.KKTCore.uPlus_mul_uPlus_eq_zero \
+  --required-anchor InfoGeometry.Canonical.KKTCore.commutator_uPlus_uMinus_isGZero
+python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
 lake script run strictCheck
 lake script run dagAll
 lake script run changedVerify
@@ -384,3 +453,4 @@ python3 tools/infra/generate_representation_depth_graph.py
 ## Current Codebase Status
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md) for the current build/audit state.
+Active cleanup and improvement execution plan: [docs/CleanupImprovementProgram.md](docs/CleanupImprovementProgram.md).

@@ -97,8 +97,7 @@ noncomputable def ofMajorana
     (u v : DoubledSpace E) :
     (GeometricQuantumTensor.ofMajorana metric h_symm h_skew).berry u v =
       (GeometricQuantumTensor.ofMajorana metric h_symm h_skew).metric (complex_i (E := E) u) v := by
-  simpa using
-    (GeometricQuantumTensor.ofMajorana metric h_symm h_skew).compat_complex_i u v
+  exact (GeometricQuantumTensor.ofMajorana metric h_symm h_skew).compat_complex_i u v
 
 end GeometricQuantumTensor
 

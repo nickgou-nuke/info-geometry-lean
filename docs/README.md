@@ -16,6 +16,7 @@ Relativity of Measurement**:
 - [Goutevs_Principle.md](Goutevs_Principle.md) — The formal manifesto.
 - [LIBER_NOVUS_MATH.md](LIBER_NOVUS_MATH.md) — The "Red Book": Analytical Psychology methodology for mathematical development.
 - [WORKBENCH.md](WORKBENCH.md) — The practical playbook for Socratic/Alchemical discovery.
+- [OperatorTheoremTranslationRegistry.md](OperatorTheoremTranslationRegistry.md) — One-to-one translation registry from external theorem surfaces to doubled-real operator-native Lean anchors.
 - [black_books/](black_books/) — The "Black Books": Raw intuitive exploration (Scorpio). Includes the Thermodynamics of Joy, Sisyphian Perseverance, Eureka Tunneling, and the Gravitational Well.
 - [black_books/08_the_agentic_caretaker.md](black_books/08_the_agentic_caretaker.md) — The essay naming the repo agent as architect, creator, and caretaker under the law of the kernel.
 - [black_books/09_science_after_coding.md](black_books/09_science_after_coding.md) — The essay on exploration by dialogue, Jungian elicitation, Socratic distillation, and formal handoff to Lean.
@@ -48,6 +49,8 @@ Relativity of Measurement**:
 - [black_books/111_spectroscopic_audit_pipeline_and_gauge_vacuum.md](black_books/111_spectroscopic_audit_pipeline_and_gauge_vacuum.md) — Spectroscopic audit dictionary and formal reference-state/gauge framing for owner, translator, coherence, and obstruction lanes.
 - [black_books/112_digital_spectrometer_formalization_epistemology.md](black_books/112_digital_spectrometer_formalization_epistemology.md) — Digital-spectrometer formalization doctrine: invariant response identity, pipeline vocabulary, and lane-local vacuum/gauge semantics.
 - [black_books/113_reference_state_and_gauge_in_informational_supergravity.md](black_books/113_reference_state_and_gauge_in_informational_supergravity.md) — Reference-state and gauge closure doctrine for informational-supergravity lanes: engineered vacuum, representational frame, and invariance/obstruction discipline.
+- [black_books/130_oracle_vs_socratic_ai_discovery_pressure.md](black_books/130_oracle_vs_socratic_ai_discovery_pressure.md) — Governance doctrine distinguishing exploratory Socratic pressure from kernel-closure authority.
+- [black_books/131_the_transmutation_of_the_complex_mask.md](black_books/131_the_transmutation_of_the_complex_mask.md) — Paradigm-shift chapter translating complex-field theorem language into doubled-real Krein/Hestenes operator language.
 - [black_books/112_considering_alignment_reference_state_gauge_and_digital_spectrometer.md](black_books/112_considering_alignment_reference_state_gauge_and_digital_spectrometer.md) — Alignment chapter formalizing reference state, gauge transforms, doubled response spectra, and the repo as a digital spectrometer with kernel-gated closure.
 - [black_books/67_the_external_analogy_doctrine.md](black_books/67_the_external_analogy_doctrine.md) — Respect external frameworks as heuristics, but keep canonical truth strictly owner-native and Lean-verified.
 - [Theory.md](Theory.md) — How the principle maps to the repo presentations.
@@ -77,6 +80,11 @@ raw textbook support narration.
 Use these first when you want the current repo state:
 
 - [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+- [CleanupImprovementProgram.md](CleanupImprovementProgram.md)
+- [reports/pauli-seal-audit.json](../reports/pauli-seal-audit.json) — Mandatory Pauli-seal gate output (anti-mask, connectivity, axiom-surface, density, anti-trivial-unification).
+- [reports/dag/functorial-invariance-audit.md](../reports/dag/functorial-invariance-audit.md) — Mandatory Core-to-canopy functorial reachability and isomorphism corridor audit.
+- [reports/dag/module-theory-program.md](../reports/dag/module-theory-program.md) — Module-keyword trunk/branch/root synthesis report with literature context + theorem packets.
+- [tools/infra/module_keyword_theory_program.py](../tools/infra/module_keyword_theory_program.py) — Programmatic module-keyword extractor and theorem-packet generator.
 - [README.md](../README.md)
 - [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
 - [OperationalIntent.md](OperationalIntent.md)
@@ -124,6 +132,7 @@ Related generated artifacts also live under:
 
 - [reports/dag/](../reports/dag/)
 - [artifacts/dag/](../artifacts/dag/)
+- [artifacts/leantrail/](../artifacts/leantrail/)
 
 Do not hand-edit generated surfaces unless the generator itself is being repaired.
 
@@ -151,20 +160,21 @@ before being used as live policy.
 For current repo structure:
 
 1. [README.md](../README.md)
-2. [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
-3. [OperationalIntent.md](OperationalIntent.md)
-4. [OperatorQuickstart.md](OperatorQuickstart.md)
-5. [DAGTroubleshooting.md](DAGTroubleshooting.md)
-6. [CODEX_TROUBLESHOOTING.md](../CODEX_TROUBLESHOOTING.md)
-7. [BILINGUAL_SPINE_POLICY.md](BILINGUAL_SPINE_POLICY.md)
-8. [cl11_rosetta_refactor_plan.md](cl11_rosetta_refactor_plan.md)
-9. [ToolingMethodology.md](ToolingMethodology.md)
-10. [LeanTrail.md](LeanTrail.md)
-11. [DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
-12. [Theory.md](Theory.md)
-13. [ModuleMap.md](ModuleMap.md)
-14. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
-15. [tools/infra/README.md](../tools/infra/README.md)
+2. [CleanupImprovementProgram.md](CleanupImprovementProgram.md)
+3. [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
+4. [OperationalIntent.md](OperationalIntent.md)
+5. [OperatorQuickstart.md](OperatorQuickstart.md)
+6. [DAGTroubleshooting.md](DAGTroubleshooting.md)
+7. [CODEX_TROUBLESHOOTING.md](../CODEX_TROUBLESHOOTING.md)
+8. [BILINGUAL_SPINE_POLICY.md](BILINGUAL_SPINE_POLICY.md)
+9. [cl11_rosetta_refactor_plan.md](cl11_rosetta_refactor_plan.md)
+10. [ToolingMethodology.md](ToolingMethodology.md)
+11. [LeanTrail.md](LeanTrail.md)
+12. [DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
+13. [Theory.md](Theory.md)
+14. [ModuleMap.md](ModuleMap.md)
+15. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
+16. [tools/infra/README.md](../tools/infra/README.md)
 
 For the current count/projective/operator trunk:
 

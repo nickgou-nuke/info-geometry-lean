@@ -39,7 +39,8 @@ noncomputable def transport (B : SpinPinTransformerLayer (E := E)) (t : ℝ) (X 
 @[simp] theorem transport_add
     (B : SpinPinTransformerLayer (E := E)) (t : ℝ) (X Y : EndN) :
     B.transport t (X + Y) = B.transport t X + B.transport t Y := by
-  simpa [transport] using transportEnd_add B.spin t X Y
+  unfold transport
+  exact transportEnd_add B.spin t X Y
 
 @[simp] theorem transport_zero
     (B : SpinPinTransformerLayer (E := E)) (t : ℝ) :
@@ -51,8 +52,7 @@ noncomputable def transport (B : SpinPinTransformerLayer (E := E)) (t : ℝ) (X 
     (B : SpinPinTransformerLayer (E := E)) (t : ℝ) (a : ℝ) (X : EndN) :
     B.transport t (a • X) = a • B.transport t X := by
   unfold transport transportEnd
-  simpa [InfoGeometry.Krein.conjugateCLM] using
-    (InfoGeometry.Krein.conjEnd (U := (B.spin.U t : N ≃L[ℝ] N))).map_smul a X
+  simp [InfoGeometry.Krein.conjugateCLM]
 
 /-- Layer update gap `run X - X`. -/
 noncomputable def gap (B : SpinPinTransformerLayer (E := E)) (X : EndN) : EndN :=
@@ -85,8 +85,8 @@ theorem afterAttention_transport_commute
   unfold DecoderLayer.afterAttention
   rw [hEq.preAttentionNorm t X]
   rw [hEq.attention t (B.layer.preAttentionNorm X)]
-  simpa [transport] using
-    (transportEnd_add B.spin t X (B.layer.attention (B.layer.preAttentionNorm X))).symm
+  unfold transport
+  exact (transportEnd_add B.spin t X (B.layer.attention (B.layer.preAttentionNorm X))).symm
 
 /-- Second residual stage commutes with spin transport under equivariance assumptions. -/
 @[rep_depth transport]
@@ -109,7 +109,8 @@ theorem afterFeedForward_transport_commute
     _ = B.transport t hX + B.transport t (B.layer.feedForward (B.layer.preFFNNorm hX)) := by
           rw [hEq.feedForward t (B.layer.preFFNNorm hX)]
     _ = B.transport t (hX + B.layer.feedForward (B.layer.preFFNNorm hX)) := by
-          simpa [transport] using
+          unfold transport
+          exact
             (transportEnd_add B.spin t hX (B.layer.feedForward (B.layer.preFFNNorm hX))).symm
     _ = B.transport t (B.layer.afterFeedForward X) := by
           simp [hX, DecoderLayer.afterFeedForward]
@@ -136,14 +137,13 @@ theorem gap_transport_commute
   unfold transport
   have hneg : transportEnd B.spin t (-X) = -transportEnd B.spin t X := by
     unfold transportEnd
-    simpa using
-      (InfoGeometry.Krein.conjugateCLM_neg (U := (B.spin.U t : N ≃L[ℝ] N)) X)
+    exact InfoGeometry.Krein.conjugateCLM_neg (U := (B.spin.U t : N ≃L[ℝ] N)) X
   calc
     transportEnd B.spin t (B.layer.run X) - transportEnd B.spin t X
         = transportEnd B.spin t (B.layer.run X) + transportEnd B.spin t (-X) := by
             rw [sub_eq_add_neg, hneg.symm]
     _ = transportEnd B.spin t (B.layer.run X + (-X)) := by
-          simpa using (transportEnd_add B.spin t (B.layer.run X) (-X)).symm
+          exact (transportEnd_add B.spin t (B.layer.run X) (-X)).symm
     _ = transportEnd B.spin t (B.layer.run X - X) := by
           simp [sub_eq_add_neg]
 

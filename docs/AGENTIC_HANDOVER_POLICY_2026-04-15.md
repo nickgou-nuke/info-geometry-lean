@@ -159,6 +159,25 @@ The following are prohibited in closure claims:
 
 All “unity/coalescence” claims must point to explicit compiled bridge theorems.
 
+## 6.4 Pauli Seal (Mandatory)
+
+For all agents and coding agents in stabilization/closure lanes, the following
+directives are mandatory:
+
+1. `I.no_mask_mandate`
+2. `II.functorial_connectivity`
+3. `III.axiom_surface_seal`
+4. `IV.semantic_weight_ratio`
+5. `V.identity_via_reflexivity`
+
+Machine gate:
+
+```bash
+python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
+```
+
+Any nonzero finding count blocks Lane B -> Lane C promotion.
+
 ## 6.1 Bilingual Module Contract
 
 When a stable bridge module uses both repo-native and mathlib-native language,

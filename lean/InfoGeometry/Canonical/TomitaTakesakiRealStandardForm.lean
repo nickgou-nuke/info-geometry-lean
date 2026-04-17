@@ -52,6 +52,7 @@ def IsAntilinearWrt (K A : EndH) : Prop := A.comp K = -(K.comp A)
 @[rep_depth krein]
 theorem isLinearWrt_negAxis_iff (K A : EndH) :
     IsLinearWrt (-K) A ↔ IsLinearWrt K A := by
+  let _ : CompleteSpace E := inferInstance
   unfold IsLinearWrt
   constructor <;> intro h <;> simpa using h
 
@@ -59,6 +60,7 @@ theorem isLinearWrt_negAxis_iff (K A : EndH) :
 @[rep_depth krein]
 theorem isAntilinearWrt_negAxis_iff (K A : EndH) :
     IsAntilinearWrt (-K) A ↔ IsAntilinearWrt K A := by
+  let _ : CompleteSpace E := inferInstance
   unfold IsAntilinearWrt
   constructor
   · intro h
@@ -80,6 +82,7 @@ def jConjugate (J A : EndH) : EndH := J * A * J
 @[rep_depth krein]
 theorem jConjugate_negJ (J A : EndH) :
     jConjugate (-J) A = jConjugate J A := by
+  let _ : CompleteSpace E := inferInstance
   unfold jConjugate
   noncomm_ring
 
@@ -138,6 +141,7 @@ def swapLeftRight : RealStandardForm (E := E) where
 @[rep_depth krein]
 theorem swapLeftRight_involutive :
     (S.swapLeftRight).swapLeftRight = S := by
+  let _ : CompleteSpace E := inferInstance
   cases S
   rfl
 
@@ -151,12 +155,16 @@ theorem flipJ_involutive :
 /-- `M ↔ M'` label swap: left-membership is right-membership of the original frame. -/
 @[rep_depth krein]
 theorem mem_leftAlgebra_swapLeftRight_iff (A : EndH) :
-    A ∈ S.swapLeftRight.leftAlgebra ↔ A ∈ S.rightAlgebra := Iff.rfl
+    A ∈ S.swapLeftRight.leftAlgebra ↔ A ∈ S.rightAlgebra := by
+  let _ : CompleteSpace E := inferInstance
+  exact Iff.rfl
 
 /-- `M ↔ M'` label swap: right-membership is left-membership of the original frame. -/
 @[rep_depth krein]
 theorem mem_rightAlgebra_swapLeftRight_iff (A : EndH) :
-    A ∈ S.swapLeftRight.rightAlgebra ↔ A ∈ S.leftAlgebra := Iff.rfl
+    A ∈ S.swapLeftRight.rightAlgebra ↔ A ∈ S.leftAlgebra := by
+  let _ : CompleteSpace E := inferInstance
+  exact Iff.rfl
 
 end RealStandardForm
 
@@ -225,6 +233,7 @@ Concrete left/right grading-label swap packet induced by `ε ↦ -ε` in the fix
 theorem gradingFlip_swaps_plus_minus_projectors :
     plusProjectorAfterPhaseFlip (E := E) = minusProjector (E := E)
       ∧ minusProjectorAfterPhaseFlip (E := E) = plusProjector (E := E) := by
+  let _ : CompleteSpace E := inferInstance
   exact fixedGrading_projectorSwap (E := E)
 
 /--

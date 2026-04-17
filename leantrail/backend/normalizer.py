@@ -14,6 +14,10 @@ EDGE_KIND_MAP = {
     "value": "depends_value",
 }
 
+_FAILED_KINDS = {"obstructs", "violates_depth"}
+_META_KINDS = {"contains"}
+_LOCKABLE_STATES = {"bound", "locked"}
+
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -32,6 +36,145 @@ def _iter_jsonl(path: Path, max_rows: int | None = None) -> Iterable[dict[str, A
             if not line:
                 continue
             yield json.loads(line)
+
+
+def _edge_key(src: str, dst: str, kind: str) -> tuple[str, str, str]:
+    return (src, dst, kind)
+
+
+def _load_failed_transition_index(path: Path) -> dict[tuple[str, str, str], dict[str, Any]]:
+    out: dict[tuple[str, str, str], dict[str, Any]] = {}
+    if not path.exists():
+        return out
+
+    for row in _iter_jsonl(path):
+        src = str(row.get("src", "")).strip()
+        dst = str(row.get("dst", "")).strip()
+        kind = str(row.get("kind", "depends_value")).strip() or "depends_value"
+        if not src or not dst:
+            continue
+        count_raw = row.get("count")
+        count = int(count_raw) if isinstance(count_raw, int) and count_raw > 0 else 1
+        error_kind = str(row.get("error_kind", "")).strip() or "unknown"
+        key = _edge_key(src, dst, kind)
+        rec = out.get(key)
+        if rec is None:
+            out[key] = {"count": count, "kinds": {error_kind}}
+        else:
+            rec["count"] = int(rec.get("count", 0)) + count
+            kinds = rec.get("kinds")
+            if isinstance(kinds, set):
+                kinds.add(error_kind)
+            else:
+                rec["kinds"] = {error_kind}
+    return out
+
+
+def _load_path_lock_index(path: Path) -> set[tuple[str, str, str]]:
+    locked: set[tuple[str, str, str]] = set()
+    if not path.exists():
+        return locked
+
+    for row in _iter_jsonl(path):
+        state = str(row.get("state", "locked")).strip().lower()
+        if state != "locked":
+            continue
+
+        edges = row.get("edges")
+        if isinstance(edges, list):
+            for edge in edges:
+                if not isinstance(edge, dict):
+                    continue
+                src = str(edge.get("src", "")).strip()
+                dst = str(edge.get("dst", "")).strip()
+                kind = str(edge.get("kind", "")).strip()
+                if src and dst and kind:
+                    locked.add(_edge_key(src, dst, kind))
+            continue
+
+        src = str(row.get("src", "")).strip()
+        dst = str(row.get("dst", "")).strip()
+        kind = str(row.get("kind", "")).strip()
+        if src and dst and kind:
+            locked.add(_edge_key(src, dst, kind))
+    return locked
+
+
+def _default_path_state(kind: str) -> str:
+    if kind in _FAILED_KINDS:
+        return "failed"
+    if kind in _META_KINDS:
+        return "meta"
+    return "bound"
+
+
+def _annotate_edge_path_states(
+    edges: list[EdgeRecord],
+    *,
+    failed_index: dict[tuple[str, str, str], dict[str, Any]],
+    locked_index: set[tuple[str, str, str]],
+) -> None:
+    for edge in edges:
+        key = _edge_key(edge.src, edge.dst, edge.kind)
+        attrs = edge.attrs if isinstance(edge.attrs, dict) else {}
+        attrs = dict(attrs)
+
+        if key in locked_index:
+            state = "locked"
+        elif key in failed_index:
+            state = "failed"
+        else:
+            state = _default_path_state(edge.kind)
+        attrs["path_state"] = state
+
+        failure_row = failed_index.get(key)
+        if failure_row:
+            attrs["failure_count"] = int(failure_row.get("count", 0))
+            kinds = failure_row.get("kinds")
+            if isinstance(kinds, set):
+                attrs["failure_kinds"] = sorted(str(k) for k in kinds if str(k))
+        edge.attrs = attrs
+
+
+def _annotate_node_endpoints(nodes: list[NodeRecord], edges: list[EdgeRecord]) -> dict[str, int]:
+    decl_ids = {node.id for node in nodes if node.kind == "Declaration"}
+    indeg: dict[str, int] = {nid: 0 for nid in decl_ids}
+    outdeg: dict[str, int] = {nid: 0 for nid in decl_ids}
+
+    for edge in edges:
+        if edge.kind in _META_KINDS:
+            continue
+        attrs = edge.attrs if isinstance(edge.attrs, dict) else {}
+        state = str(attrs.get("path_state", "")).strip().lower()
+        if state not in _LOCKABLE_STATES:
+            continue
+        if edge.src in decl_ids:
+            outdeg[edge.src] = outdeg.get(edge.src, 0) + 1
+        if edge.dst in decl_ids:
+            indeg[edge.dst] = indeg.get(edge.dst, 0) + 1
+
+    summary = {"source": 0, "sink": 0, "internal": 0, "isolated": 0}
+    for node in nodes:
+        if node.kind != "Declaration":
+            continue
+        attrs = node.attrs if isinstance(node.attrs, dict) else {}
+        attrs = dict(attrs)
+        inn = int(indeg.get(node.id, 0))
+        out = int(outdeg.get(node.id, 0))
+        if inn == 0 and out == 0:
+            endpoint = "isolated"
+        elif inn == 0:
+            endpoint = "source"
+        elif out == 0:
+            endpoint = "sink"
+        else:
+            endpoint = "internal"
+        summary[endpoint] += 1
+        attrs["path_endpoint"] = endpoint
+        attrs["path_in_degree"] = inn
+        attrs["path_out_degree"] = out
+        node.attrs = attrs
+    return summary
 
 
 def _safe_git_head(repo_root: Path) -> str:
@@ -88,12 +231,16 @@ class LeanTrailNormalizer:
         self,
         max_process_events: int | None = None,
         max_candidates_per_node: int = 12,
+        include_modules: set[str] | None = None,
     ) -> GraphSnapshot:
         meta_file = self.dag_root / "index" / "meta.json"
         decl_file = self.dag_root / "index" / "decls.jsonl"
         edge_file = self.dag_root / "index" / "edges.jsonl"
         depth_file = self.dag_root / "representation-depth-tags.json"
         process_file = self.dag_root / "process-flow" / "process-events.jsonl"
+        holonomy_file = self.dag_root / "process-flow" / "holonomy-events.jsonl"
+        failed_transitions_file = self.repo_root / "artifacts" / "leantrail" / "failed_transitions.jsonl"
+        path_locks_file = self.repo_root / "artifacts" / "leantrail" / "path_locks.jsonl"
 
         dag_meta = _read_json(meta_file)
         depth_payload = _read_json(depth_file)
@@ -105,8 +252,17 @@ class LeanTrailNormalizer:
             if name:
                 depth_by_name[name] = row
 
+        holonomy_by_name: dict[str, dict[str, Any]] = {}
+        if holonomy_file.exists():
+            for row in _iter_jsonl(holonomy_file):
+                name = str(row.get("node", "")).strip()
+                if name:
+                    holonomy_by_name[name] = row
+
         process_by_name: dict[str, dict[str, Any]] = {}
         extra_edges: list[EdgeRecord] = []
+        failed_index = _load_failed_transition_index(failed_transitions_file)
+        locked_index = _load_path_lock_index(path_locks_file)
         if process_file.exists():
             for row in _iter_jsonl(process_file, max_rows=max_process_events):
                 name = str(row.get("node", "")).strip()
@@ -139,12 +295,14 @@ class LeanTrailNormalizer:
                             )
                         )
 
+        module_filter = {m for m in include_modules or set() if m}
         commit_sha = _safe_git_head(self.repo_root)
         toolchain = _read_toolchain(self.repo_root)
         artifact_version = int(dag_meta.get("schemaVersion", 0))
 
         nodes: list[NodeRecord] = []
         edges: list[EdgeRecord] = []
+        include_decl_ids: set[str] | None = set() if module_filter else None
 
         module_seen: set[str] = set()
         for decl in _iter_jsonl(decl_file):
@@ -152,6 +310,10 @@ class LeanTrailNormalizer:
             module = str(decl.get("module", "")).strip()
             if not name or not module:
                 continue
+            if module_filter and module not in module_filter:
+                continue
+            if include_decl_ids is not None:
+                include_decl_ids.add(name)
 
             depth_row = depth_by_name.get(name, {})
             process_row = process_by_name.get(name, {})
@@ -237,6 +399,8 @@ class LeanTrailNormalizer:
             raw_kind = str(dep.get("kind", "value")).strip()
             if not src or not dst:
                 continue
+            if include_decl_ids is not None and src not in include_decl_ids and dst not in include_decl_ids:
+                continue
 
             kind = EDGE_KIND_MAP.get(raw_kind, "depends_value")
             edges.append(
@@ -264,7 +428,19 @@ class LeanTrailNormalizer:
                     )
                 )
 
-        edges.extend(extra_edges)
+        if include_decl_ids is None:
+            edges.extend(extra_edges)
+        else:
+            for edge in extra_edges:
+                if edge.src in include_decl_ids or edge.dst in include_decl_ids:
+                    edges.append(edge)
+
+        _annotate_edge_path_states(
+            edges,
+            failed_index=failed_index,
+            locked_index=locked_index,
+        )
+        endpoint_summary = _annotate_node_endpoints(nodes, edges)
 
         snapshot_meta = {
             "created_at": _utc_now(),
@@ -272,11 +448,20 @@ class LeanTrailNormalizer:
             "commit_sha": commit_sha,
             "toolchain": toolchain,
             "artifact_version": artifact_version,
+            "scope": "partial" if module_filter else "full",
+            "include_modules": sorted(module_filter) if module_filter else [],
             "dag_meta": dag_meta,
             "counts": {
                 "nodes": len(nodes),
                 "edges": len(edges),
                 "depth_rows": len(depth_records),
+                "path_endpoints": endpoint_summary,
+                "failed_transition_edges": len(failed_index),
+                "locked_edges": len(locked_index),
+            },
+            "path_state_sources": {
+                "failed_transitions_file": str(failed_transitions_file),
+                "path_locks_file": str(path_locks_file),
             },
         }
 

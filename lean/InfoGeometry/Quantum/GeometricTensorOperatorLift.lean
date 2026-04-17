@@ -105,7 +105,8 @@ omit [CompleteSpace E] in
     metricOfOperator A
       (((modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))) u) v := rfl
 
-/-- Root-name form of the explicit split-`Cl(1,1)` Berry 2-form seed. -/
+-- Root-name form of the explicit split-`Cl(1,1)` Berry 2-form seed.
+omit [CompleteSpace E] in
 @[simp] theorem berryTwoFormJEpsOfOperator_apply_root
     (A : EndH) (u v : H₂) :
     berryTwoFormJEpsOfOperator (E := E) A u v
@@ -113,8 +114,7 @@ omit [CompleteSpace E] in
     metricOfOperator A
       (((InfoGeometry.Krein.modular_j (E := E)).comp
           (InfoGeometry.Krein.spectral_epsilon (E := E))) u) v := by
-  simpa [modularConjugationJ_eq_modular_j, modularSignEpsilon_eq_spectral_epsilon] using
-    (berryTwoFormJEpsOfOperator_apply (E := E) A u v)
+  exact berryTwoFormJEpsOfOperator_apply (E := E) A u v
 
 omit [CompleteSpace E] in
 @[simp] theorem berryTwoFormJEpsOfOperator_eq_berryOfOperator
@@ -154,14 +154,14 @@ omit [CompleteSpace E] in
       =
     metricOfOperator A (modularComplexI (E := E) u) v := rfl
 
-/-- Root-name form of the operatorial Berry readout. -/
+-- Root-name form of the operatorial Berry readout.
+omit [CompleteSpace E] in
 @[simp] theorem berryOfOperator_apply_complex_i
     (A : EndH) (u v : H₂) :
     berryOfOperator (E := E) A u v
       =
     metricOfOperator A (InfoGeometry.Krein.complex_i (E := E) u) v := by
-  simpa [modularComplexI_eq_complex_i] using
-    (berryOfOperator_apply (E := E) A u v)
+  exact berryOfOperator_apply (E := E) A u v
 
 omit [CompleteSpace E] in
 @[simp] theorem berryOfOperator_add

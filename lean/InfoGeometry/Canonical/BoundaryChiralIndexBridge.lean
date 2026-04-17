@@ -44,6 +44,7 @@ variable [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)]
 
 local notation "H₂" => DoubledSpace E
 
+omit [FiniteDimensional ℝ H₂] in
 /--
 If a boundary polarization is explicitly identified with the transported
 plus/minus defect slices, then nonzero operatorial central charge forces a

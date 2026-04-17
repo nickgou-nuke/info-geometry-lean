@@ -32,17 +32,25 @@ namespace TopKRouter
 noncomputable def weight (R : TopKRouter (X := X) (Expert := Expert)) (x : X) (e : Expert) : ℝ :=
   if R.selected x e then sigmoid (R.rawScore x e) else 0
 
-@[simp] theorem weight_of_selected
+section OmitDecidableEqRouterLemmas
+
+omit [DecidableEq Expert]
+
+@[simp]
+theorem weight_of_selected
     (R : TopKRouter (X := X) (Expert := Expert)) (x : X) (e : Expert)
     (h : R.selected x e = true) :
     R.weight x e = sigmoid (R.rawScore x e) := by
   simp [weight, h]
 
-@[simp] theorem weight_of_not_selected
+@[simp]
+theorem weight_of_not_selected
     (R : TopKRouter (X := X) (Expert := Expert)) (x : X) (e : Expert)
     (h : R.selected x e = false) :
     R.weight x e = 0 := by
   simp [weight, h]
+
+end OmitDecidableEqRouterLemmas
 
 /-- Adapter into the shared sparse-router owner surface. -/
 noncomputable def toSparseRouter (R : TopKRouter (X := X) (Expert := Expert)) :
@@ -86,7 +94,12 @@ noncomputable def asSharedRouted (B : SharedTopKMoE (X := X) (V := V) (Expert :=
 noncomputable def output (B : SharedTopKMoE (X := X) (V := V) (Expert := Expert)) (x : X) : V :=
   B.asSharedRouted.output x
 
-@[simp] theorem output_eq_shared_plus_total
+section OmitDecidableEqSharedTopK
+
+omit [DecidableEq Expert]
+
+@[simp]
+theorem output_eq_shared_plus_total
     (B : SharedTopKMoE (X := X) (V := V) (Expert := Expert)) (x : X) :
     B.output x = B.sharedExpert x + B.routedBlock.totalOutput x := by
   rfl
@@ -109,6 +122,8 @@ theorem output_eq_shared_plus_active
           expert := B.routedExpert
         }
       }) x)
+
+end OmitDecidableEqSharedTopK
 
 end SharedTopKMoE
 

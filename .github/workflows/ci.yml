@@ -228,6 +228,85 @@ jobs:
           python3 tools/infra/generate_projection_coloring.py
           python3 tools/infra/select_openclaw_target.py
 
+      - name: LeanTrail lock-gate conformance
+        run: |
+          mkdir -p artifacts/leantrail
+          python3 -m leantrail.backend.indexer \
+            --repo-root . \
+            --snapshot-out artifacts/leantrail/graph_snapshot.json \
+            --incremental \
+            --incremental-radius 1
+          python3 - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          required_path = Path("leantrail/config/required_locks.json")
+          rows = json.loads(required_path.read_text(encoding="utf-8"))
+          if not isinstance(rows, list):
+              raise SystemExit("leantrail/config/required_locks.json must be a list")
+
+          for idx, row in enumerate(rows):
+              if not isinstance(row, dict):
+                  raise SystemExit(f"required lock row {idx} must be an object")
+              src = str(row.get("from", "")).strip()
+              dst = str(row.get("to", "")).strip()
+              if not src or not dst:
+                  raise SystemExit(f"required lock row {idx} missing from/to")
+
+              cmd = [
+                  "python3",
+                  "tools/leantrail/path_lock_registry.py",
+                  "--snapshot",
+                  "artifacts/leantrail/graph_snapshot.json",
+                  "--src",
+                  src,
+                  "--dst",
+                  dst,
+                  "--state",
+                  "locked",
+                  "--state-policy",
+                  "exclude-failed",
+                  "--registry-out",
+                  "artifacts/leantrail/path_locks.jsonl",
+                  "--json-out",
+                  f"artifacts/leantrail/path_lock_ci_{idx}.json",
+              ]
+              if bool(row.get("lawful_only", True)):
+                  cmd.append("--lawful-only")
+              subprocess.check_call(cmd)
+          PY
+          python3 -m leantrail.backend.indexer \
+            --repo-root . \
+            --snapshot-out artifacts/leantrail/graph_snapshot.json \
+            --incremental \
+            --incremental-radius 1
+          lake script run leantrailExport \
+            --snapshot artifacts/leantrail/graph_snapshot.json \
+            --to arango-json
+          lake script run leantrailConformance \
+            --baseline artifacts/leantrail/graph_snapshot.json \
+            --baseline-format snapshot \
+            --candidate artifacts/leantrail/arango \
+            --candidate-format arango-json \
+            --required-locked-paths leantrail/config/required_locks.json \
+            --json-out artifacts/leantrail/conformance_lock_gate.json \
+            --md-out artifacts/leantrail/conformance_lock_gate.md \
+            --fail-on-violation
+
+      - name: Upload LeanTrail lock-gate artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: leantrail-lock-gate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            artifacts/leantrail/conformance_lock_gate.json
+            artifacts/leantrail/conformance_lock_gate.md
+            artifacts/leantrail/path_locks.jsonl
+            artifacts/leantrail/path_lock_ci_*.json
+          retention-days: 7
+          if-no-files-found: warn
+
       - name: Validate semantic flow report schema
         run: python3 tools/infra/check_semantic_flow_report.py
 

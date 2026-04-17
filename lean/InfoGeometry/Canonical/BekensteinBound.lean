@@ -245,7 +245,9 @@ theorem cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
         calc
           trajectoryRNGeneratorPotential (n := n) T ((k : ℝ) + 1)
               = trajectoryRNGeneratorPotential (n := n) T (k + 1 : Nat) := by
-                  simpa [Nat.cast_add, Nat.cast_one]
+                  have hcast : ((k : ℝ) + 1) = (k + 1 : Nat) := by
+                    norm_num [Nat.cast_add]
+                  exact congrArg (trajectoryRNGeneratorPotential (n := n) T) hcast
           _ =
             trajectoryRNGeneratorPotentialNat (n := n) T (k + 1) := by
                   simpa using trajectoryRNGeneratorPotential_natCast (n := n) (T := T) (k := k + 1)
@@ -254,13 +256,15 @@ theorem cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
                 simp [trajectoryRNGeneratorPotentialNat]
           _ = trajectoryRNGeneratorPotential (n := n) T k
                 + phaseRNGeneratorBefore n (phaseAt k) (T.state k) := by
-                simpa using (congrArg
+                exact (congrArg
                   (fun r : ℝ => r + phaseRNGeneratorBefore n (phaseAt k) (T.state k))
                   (trajectoryRNGeneratorPotential_natCast (n := n) (T := T) (k := k)).symm)
       calc
         CocycleEntropyPotential (H := H) σ u hBridge (k + 1 : Nat)
             = CocycleEntropyPotential (H := H) σ u hBridge ((k : ℝ) + 1) := by
-                simpa [Nat.cast_add, Nat.cast_one]
+                have hcast : (k + 1 : Nat) = ((k : ℝ) + 1) := by
+                  norm_num [Nat.cast_add]
+                exact congrArg (CocycleEntropyPotential (H := H) σ u hBridge) hcast
         _ = CocycleEntropyPotential (H := H) σ u hBridge k
                 + phaseRNGeneratorBefore n (phaseAt k) (T.state k) := hStepΦ
         _ = trajectoryRNGeneratorPotential (n := n) T k
@@ -269,7 +273,9 @@ theorem cocycleEntropyPotential_natMatch_of_cocycleGeneratorLift_zero
         _ = trajectoryRNGeneratorPotential (n := n) T ((k : ℝ) + 1) := by
               linarith [hStepΨ]
         _ = trajectoryRNGeneratorPotential (n := n) T (k + 1 : Nat) := by
-              simpa [Nat.cast_add, Nat.cast_one]
+              have hcast : ((k : ℝ) + 1) = (k + 1 : Nat) := by
+                norm_num [Nat.cast_add]
+              exact congrArg (trajectoryRNGeneratorPotential (n := n) T) hcast
 
 /--
 Nat-step cocycle potential matching derived from cocycle law and generator lift.

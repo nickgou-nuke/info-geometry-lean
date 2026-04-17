@@ -185,6 +185,108 @@ theorem phaseAntilinearPart_isPhaseAntilinear
     _ = -((modularComplexI (E := E)).comp (A + phaseConjugate (E := E) A)) := by
           simp [ContinuousLinearMap.comp_add]
 
+lemma phaseConjugate_eq_neg_of_IsPhaseLinear
+    (A : EndH) (hA : IsPhaseLinear (E := E) A) :
+    phaseConjugate (E := E) A = -A := by
+  apply ContinuousLinearMap.ext
+  intro x
+  have hK2 : (modularComplexI (E := E)) ((modularComplexI (E := E)) x) = -x := by
+    exact congrArg (fun F : EndH => F x) (TomitaTakesaki.modularComplexI_sq (E := E))
+  have hAatKx :
+      A ((modularComplexI (E := E)) ((modularComplexI (E := E)) x))
+        =
+      (modularComplexI (E := E)) (A ((modularComplexI (E := E)) x)) := by
+    exact congrArg (fun F : EndH => F ((modularComplexI (E := E)) x)) hA
+  unfold phaseConjugate
+  calc
+    (modularComplexI (E := E)) (A ((modularComplexI (E := E)) x))
+      = A ((modularComplexI (E := E)) ((modularComplexI (E := E)) x)) := by
+          symm
+          exact hAatKx
+    _ = A (-x) := by rw [hK2]
+    _ = -(A x) := by simp
+
+lemma phaseConjugate_eq_self_of_IsPhaseAntilinear
+    (A : EndH) (hA : IsPhaseAntilinear (E := E) A) :
+    phaseConjugate (E := E) A = A := by
+  apply ContinuousLinearMap.ext
+  intro x
+  have hK2 : (modularComplexI (E := E)) ((modularComplexI (E := E)) x) = -x := by
+    exact congrArg (fun F : EndH => F x) (TomitaTakesaki.modularComplexI_sq (E := E))
+  have hAatKx :
+      A ((modularComplexI (E := E)) ((modularComplexI (E := E)) x))
+        =
+      -((modularComplexI (E := E)) (A ((modularComplexI (E := E)) x))) := by
+    exact congrArg (fun F : EndH => F ((modularComplexI (E := E)) x)) hA
+  unfold phaseConjugate
+  calc
+    (modularComplexI (E := E)) (A ((modularComplexI (E := E)) x))
+      = -A ((modularComplexI (E := E)) ((modularComplexI (E := E)) x)) := by
+          have hNeg : -A ((modularComplexI (E := E)) ((modularComplexI (E := E)) x))
+              = (modularComplexI (E := E)) (A ((modularComplexI (E := E)) x)) := by
+            simpa using congrArg Neg.neg hAatKx
+          exact hNeg.symm
+    _ = -A (-x) := by rw [hK2]
+    _ = A x := by simp
+
+theorem phaseLinearPart_eq_self_of_IsPhaseLinear
+    (A : EndH) (hA : IsPhaseLinear (E := E) A) :
+    phaseLinearPart (E := E) A = A := by
+  rw [phaseLinearPart]
+  rw [phaseConjugate_eq_neg_of_IsPhaseLinear (E := E) A hA]
+  calc
+    (1 / 2 : ℝ) • (A - -A) = (1 / 2 : ℝ) • A + (1 / 2 : ℝ) • A := by
+      simp [smul_add]
+    _ = (2 : ℝ) • ((1 / 2 : ℝ) • A) := by
+      simpa [two_smul] using (two_smul ℝ ((1 / 2 : ℝ) • A)).symm
+    _ = ((2 : ℝ) * (1 / 2 : ℝ)) • A := by simp [smul_smul]
+    _ = A := by norm_num
+
+theorem phaseAntilinearPart_eq_self_of_IsPhaseAntilinear
+    (A : EndH) (hA : IsPhaseAntilinear (E := E) A) :
+    phaseAntilinearPart (E := E) A = A := by
+  rw [phaseAntilinearPart]
+  rw [phaseConjugate_eq_self_of_IsPhaseAntilinear (E := E) A hA]
+  calc
+    (1 / 2 : ℝ) • (A + A) = (1 / 2 : ℝ) • A + (1 / 2 : ℝ) • A := by
+      simp [smul_add]
+    _ = (2 : ℝ) • ((1 / 2 : ℝ) • A) := by
+      simpa [two_smul] using (two_smul ℝ ((1 / 2 : ℝ) • A)).symm
+    _ = ((2 : ℝ) * (1 / 2 : ℝ)) • A := by simp [smul_smul]
+    _ = A := by norm_num
+
+theorem phaseLinearPart_eq_zero_of_IsPhaseAntilinear
+    (A : EndH) (hA : IsPhaseAntilinear (E := E) A) :
+    phaseLinearPart (E := E) A = 0 := by
+  rw [phaseLinearPart]
+  rw [phaseConjugate_eq_self_of_IsPhaseAntilinear (E := E) A hA]
+  simp
+
+theorem phaseAntilinearPart_eq_zero_of_IsPhaseLinear
+    (A : EndH) (hA : IsPhaseLinear (E := E) A) :
+    phaseAntilinearPart (E := E) A = 0 := by
+  rw [phaseAntilinearPart]
+  rw [phaseConjugate_eq_neg_of_IsPhaseLinear (E := E) A hA]
+  simp
+
+theorem phaseLinearPart_idempotent
+    (A : EndH) :
+    phaseLinearPart (E := E) (phaseLinearPart (E := E) A)
+      = phaseLinearPart (E := E) A := by
+  exact phaseLinearPart_eq_self_of_IsPhaseLinear
+    (E := E)
+    (phaseLinearPart (E := E) A)
+    (phaseLinearPart_isPhaseLinear (E := E) A)
+
+theorem phaseAntilinearPart_idempotent
+    (A : EndH) :
+    phaseAntilinearPart (E := E) (phaseAntilinearPart (E := E) A)
+      = phaseAntilinearPart (E := E) A := by
+  exact phaseAntilinearPart_eq_self_of_IsPhaseAntilinear
+    (E := E)
+    (phaseAntilinearPart (E := E) A)
+    (phaseAntilinearPart_isPhaseAntilinear (E := E) A)
+
 /-- Exact Heisenberg commutator transport on the doubled real carrier. -/
 noncomputable def transportCommutator (H A : EndH) : EndH :=
   H.comp A - A.comp H
@@ -677,6 +779,36 @@ theorem modularDeriv_split
     transportCommutator_split_generator
       (E := E) (modularTransportGenerator (E := E) hMod) A
 
+theorem modularGeneratorGaugePart_eq_zero_of_generator_IsPhaseAntilinear
+    (hMod : EndH)
+    (hAnti : IsPhaseAntilinear (E := E) (modularTransportGenerator (E := E) hMod)) :
+    modularGeneratorGaugePart (E := E) hMod = 0 := by
+  unfold modularGeneratorGaugePart
+  exact phaseLinearPart_eq_zero_of_IsPhaseAntilinear
+    (E := E) (modularTransportGenerator (E := E) hMod) hAnti
+
+omit [CompleteSpace E] in
+theorem modularDeriv_eq_modularScaleDeriv_of_gaugePart_eq_zero
+    (hMod A : EndH)
+    (hGaugeZero : modularGeneratorGaugePart (E := E) hMod = 0) :
+    modularDeriv (E := E) hMod A = modularScaleDeriv (E := E) hMod A := by
+  rw [modularDeriv_split]
+  unfold modularGaugeDeriv
+  have hZeroComm : transportCommutator (E := E) (0 : EndH) A = 0 := by
+    unfold transportCommutator
+    simp
+  rw [hGaugeZero]
+  simp [hZeroComm]
+
+theorem modularDeriv_eq_modularScaleDeriv_of_generator_IsPhaseAntilinear
+    (hMod A : EndH)
+    (hAnti : IsPhaseAntilinear (E := E) (modularTransportGenerator (E := E) hMod)) :
+    modularDeriv (E := E) hMod A = modularScaleDeriv (E := E) hMod A := by
+  exact modularDeriv_eq_modularScaleDeriv_of_gaugePart_eq_zero
+    (E := E) hMod A
+    (modularGeneratorGaugePart_eq_zero_of_generator_IsPhaseAntilinear
+      (E := E) hMod hAnti)
+
 omit [CompleteSpace E] in
 /--
 If an operator commutes with the gauge sector of the modular generator, the
@@ -784,6 +916,46 @@ theorem deriv_modularTransport_conjugation_eq_expTransport_modularDeriv
       (X := modularTransportGenerator (E := E) hMod)
       (A₀ := A)
       t).deriv
+
+theorem deriv_modularTransport_conjugation_eq_expTransport_modularScaleDeriv_of_gaugePart_eq_zero
+    (hMod A : EndH)
+    (hGaugeZero : modularGeneratorGaugePart (E := E) hMod = 0)
+    (t : ℝ) :
+    deriv
+      (fun s =>
+        InfoGeometry.Canonical.expTransport
+          (A := EndH) (modularTransportGenerator (E := E) hMod) A s)
+      t
+      =
+    InfoGeometry.Canonical.expTransport
+      (A := EndH)
+      (modularTransportGenerator (E := E) hMod)
+      (modularScaleDeriv (E := E) hMod A)
+      t := by
+  rw [deriv_modularTransport_conjugation_eq_expTransport_modularDeriv
+    (E := E) hMod A t]
+  rw [modularDeriv_eq_modularScaleDeriv_of_gaugePart_eq_zero
+    (E := E) hMod A hGaugeZero]
+
+theorem deriv_modularTransport_conjugation_eq_expTransport_modularScaleDeriv_of_generator_IsPhaseAntilinear
+    (hMod A : EndH)
+    (hAnti : IsPhaseAntilinear (E := E) (modularTransportGenerator (E := E) hMod))
+    (t : ℝ) :
+    deriv
+      (fun s =>
+        InfoGeometry.Canonical.expTransport
+          (A := EndH) (modularTransportGenerator (E := E) hMod) A s)
+      t
+      =
+    InfoGeometry.Canonical.expTransport
+      (A := EndH)
+      (modularTransportGenerator (E := E) hMod)
+      (modularScaleDeriv (E := E) hMod A)
+      t := by
+  exact deriv_modularTransport_conjugation_eq_expTransport_modularScaleDeriv_of_gaugePart_eq_zero
+    (E := E) hMod A
+    (modularGeneratorGaugePart_eq_zero_of_generator_IsPhaseAntilinear (E := E) hMod hAnti)
+    t
 
 /--
 Global operator split at arbitrary `t`: modular evolution decomposes into
@@ -984,6 +1156,77 @@ theorem modularTransportFlow_preserves_inner_of_isSelfAdjoint_of_IsPhaseLinear
     simpa [modularTransportFlow] using NormedSpace.exp_mem_unitary_of_mem_skewAdjoint hSkew
   simpa using ContinuousLinearMap.inner_map_map_of_mem_unitary hUnitary u v
 
+@[simp] theorem inner_modularSignEpsilon_apply_eq_kreinInner
+    (u v : H₂) :
+    ⟪(modularSignEpsilon (E := E)) u, v⟫_ℝ
+      =
+    KreinSpace.kreinInner (H := H₂) u v := by
+  rw [krein_inner_prod_l2]
+  simp [modularSignEpsilon, spectral_epsilon, WithLp.prod_inner_apply, sub_eq_add_neg]
+
+omit [CompleteSpace E] in
+theorem modularSignEpsilon_comp_modularTransportFlow_eq_modularTransportFlow_comp_modularSignEpsilon_of_commute_generator
+    (hMod : EndH)
+    (hCommSign : Commute (modularSignEpsilon (E := E)) (modularTransportGenerator (E := E) hMod))
+    (t : ℝ) :
+    (modularSignEpsilon (E := E)).comp (modularTransportFlow (E := E) hMod t)
+      =
+    (modularTransportFlow (E := E) hMod t).comp (modularSignEpsilon (E := E)) := by
+  have hComm :
+      Commute (modularSignEpsilon (E := E)) (modularTransportFlow (E := E) hMod t) := by
+    simpa [modularTransportFlow] using (hCommSign.smul_right t).exp_right
+  apply ContinuousLinearMap.ext
+  intro x
+  exact congrArg (fun f : EndH => f x) hComm.eq
+
+/--
+Krein-metric invariance of modular transport under explicit axis-compatibility:
+the flow is Hilbert-unitary and commutes with the doubled Krein symmetry `ε`.
+-/
+theorem modularTransportFlow_preserves_kreinInner_of_isSelfAdjoint_of_IsPhaseLinear_of_commute_modularSign
+    (hMod : EndH)
+    (hSelf : IsSelfAdjoint hMod)
+    (hPhase : IsPhaseLinear (E := E) hMod)
+    (hCommSign : Commute (modularSignEpsilon (E := E)) (modularTransportGenerator (E := E) hMod))
+    (t : ℝ) (u v : H₂) :
+    KreinSpace.kreinInner (H := H₂)
+      (modularTransportFlow (E := E) hMod t u)
+      (modularTransportFlow (E := E) hMod t v)
+      =
+    KreinSpace.kreinInner (H := H₂) u v := by
+  have hCommFlow :
+      (modularSignEpsilon (E := E)).comp (modularTransportFlow (E := E) hMod t)
+        =
+      (modularTransportFlow (E := E) hMod t).comp (modularSignEpsilon (E := E)) :=
+    modularSignEpsilon_comp_modularTransportFlow_eq_modularTransportFlow_comp_modularSignEpsilon_of_commute_generator
+      (E := E) hMod hCommSign t
+  have hCommEval :
+      (modularSignEpsilon (E := E)) (modularTransportFlow (E := E) hMod t u)
+        =
+      modularTransportFlow (E := E) hMod t ((modularSignEpsilon (E := E)) u) := by
+    exact congrArg (fun F : EndH => F u) hCommFlow
+  calc
+    KreinSpace.kreinInner (H := H₂)
+        (modularTransportFlow (E := E) hMod t u)
+        (modularTransportFlow (E := E) hMod t v)
+      =
+    ⟪(modularSignEpsilon (E := E)) (modularTransportFlow (E := E) hMod t u),
+      modularTransportFlow (E := E) hMod t v⟫_ℝ := by
+          symm
+          simpa using
+            (inner_modularSignEpsilon_apply_eq_kreinInner
+              (E := E)
+              (modularTransportFlow (E := E) hMod t u)
+              (modularTransportFlow (E := E) hMod t v))
+    _ = ⟪modularTransportFlow (E := E) hMod t ((modularSignEpsilon (E := E)) u),
+          modularTransportFlow (E := E) hMod t v⟫_ℝ := by
+          rw [hCommEval]
+    _ = ⟪(modularSignEpsilon (E := E)) u, v⟫_ℝ := by
+          exact modularTransportFlow_preserves_inner_of_isSelfAdjoint_of_IsPhaseLinear
+            (E := E) hMod hSelf hPhase t ((modularSignEpsilon (E := E)) u) v
+    _ = KreinSpace.kreinInner (H := H₂) u v := by
+          simpa using inner_modularSignEpsilon_apply_eq_kreinInner (E := E) u v
+
 omit [CompleteSpace E] in
 theorem modularComplexI_comp_modularTransportFlow_eq_modularTransportFlow_comp_modularComplexI_of_IsPhaseLinear
     (hMod : EndH)
@@ -1143,6 +1386,34 @@ theorem modularVariance_of_normalized
         - (kreinExpectation (E := E) ψ hMod)^2 := by
   rw [modularVariance_expand (E := E) ψ hMod, hψ]
   ring
+
+/--
+`modularVariance` is a signed Krein second moment on the doubled carrier.
+Its sign is not fixed by definition; positivity requires extra hypotheses.
+-/
+theorem modularVariance_nonneg_iff_signed_secondMoment_nonneg
+    (ψ : H₂) (hMod : EndH) :
+    0 ≤ modularVariance (E := E) ψ hMod
+      ↔
+    0 ≤ kreinExpectation (E := E) ψ
+      ((centeredModularGenerator (E := E) ψ hMod) *
+        (centeredModularGenerator (E := E) ψ hMod)) := by
+  rfl
+
+/--
+Signed-sector specialization: if the centered seed squares to `-1` and has
+zero first moment, the modular variance is exactly the negative Krein norm
+factor of the state.
+-/
+theorem modularVariance_eq_neg_kreinExpectation_one_of_expectation_zero_of_square_neg_one
+    (ψ : H₂) (hMod : EndH)
+    (hMean : kreinExpectation (E := E) ψ hMod = 0)
+    (hSq : hMod * hMod = -(1 : EndH)) :
+    modularVariance (E := E) ψ hMod
+      =
+    -kreinExpectation (E := E) ψ (1 : EndH) := by
+  rw [modularVariance_expand (E := E) ψ hMod, hMean, hSq]
+  simp
 
 end Basic
 

@@ -146,6 +146,76 @@ script changedVerify (args) do
   }
   child.wait
 
+script leantrailConformance (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/conformance.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailExport (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/export.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailArangoIngest (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/arango_ingest.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailArangoPhysicsEval (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/arango_physics_evaluator.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailFailureHarvest (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/failure_harvester.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailPathLock (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/path_lock_registry.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
+script leantrailHolePackets (args) do
+  let child ← IO.Process.spawn {
+    cmd := "python3",
+    args := #["tools/leantrail/hole_packets.py"] ++ args.toArray,
+    stdin := .inherit,
+    stdout := .inherit,
+    stderr := .inherit
+  }
+  child.wait
+
 input_file dagToolchainConfigFile where
   path := "dag-toolchain.json"
   text := true

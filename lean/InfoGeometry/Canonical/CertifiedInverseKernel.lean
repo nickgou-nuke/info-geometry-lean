@@ -316,7 +316,7 @@ theorem GammaG_eq_two_smul_dilationGap :
     _ = ((2 : ℝ) * (2 : ℝ)⁻¹) • (CIK.mpRangeProjector - CIK.metricProjector) := by
           rw [htwo]
     _ = (2 : ℝ) • ((2 : ℝ)⁻¹ • (CIK.mpRangeProjector - CIK.metricProjector)) := by
-          simp [smul_smul, mul_assoc]
+          simp [smul_smul]
     _ = (2 : ℝ) • CIK.dilationGap := by rfl
 
 /-- Certified spectral/dilation commutator decomposition. -/
@@ -359,12 +359,11 @@ theorem spectralProjector_commutator_GammaG_eq_sub_anomalies :
         = (2 : ℝ) •
             (CIK.spectralProjector * CIK.dilationGap
               - CIK.dilationGap * CIK.spectralProjector) := by
-          simp [smul_sub, sub_eq_add_neg, smul_mul_assoc, mul_smul_comm, mul_assoc]
+          simp [sub_eq_add_neg]
     _ = (2 : ℝ) • (((2 : ℝ)⁻¹) • (CIK.rightChiralAnomaly - CIK.chiralAnomaly)) := by
           rw [CIK.spectralProjector_commutator_dilationGap_eq_half_sub_anomalies]
     _ = CIK.rightChiralAnomaly - CIK.chiralAnomaly := by
-          have htwo : ((2 : ℝ) * (2 : ℝ)⁻¹) = 1 := by norm_num
-          simpa [smul_smul, htwo]
+          simp [smul_smul]
 
 /-- If the metric projector commutes with the spectral projector, it is fixed by the spectral grading flow. -/
 theorem metricProjector_fixed_under_spectralGradingFlow_of_projector_commute

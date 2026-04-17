@@ -37,6 +37,51 @@ Use the tooling by question:
 - semantic block structure, proof state, or declaration value printout
   - run the frontier lane under `tools/frontier`
 
+## Method 0: LeanTrail Memory Carrier Parity
+
+Use this when exporting LeanTrail to external memory carriers (GraphML, Neo4j,
+Arango) and you need proof that exports preserve canonical structure.
+
+1. Build/refresh canonical snapshot.
+
+```bash
+python3 -m leantrail.backend.indexer \
+  --repo-root . \
+  --snapshot-out artifacts/leantrail/graph_snapshot.json
+```
+
+2. Export adapters.
+
+```bash
+lake script run leantrailExport \
+  --snapshot artifacts/leantrail/graph_snapshot.json \
+  --to all
+```
+
+3. Run conformance gates against each carrier.
+
+```bash
+lake script run leantrailConformance \
+  --baseline artifacts/leantrail/graph_snapshot.json --baseline-format snapshot \
+  --candidate artifacts/leantrail/graph_snapshot.graphml --candidate-format graphml \
+  --fail-on-violation
+
+lake script run leantrailConformance \
+  --baseline artifacts/leantrail/graph_snapshot.json --baseline-format snapshot \
+  --candidate artifacts/leantrail/neo4j --candidate-format neo4j-csv \
+  --fail-on-violation
+
+lake script run leantrailConformance \
+  --baseline artifacts/leantrail/graph_snapshot.json --baseline-format snapshot \
+  --candidate artifacts/leantrail/arango --candidate-format arango-json \
+  --fail-on-violation
+```
+
+Policy:
+- `.olean` + canonical LeanTrail snapshot remain truth carriers.
+- external DB/graph formats are retrieval carriers only.
+- any nonzero conformance drift blocks ingestion.
+
 ## Method 1: Source Change Verification
 
 Use this after editing Lean source.

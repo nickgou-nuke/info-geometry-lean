@@ -6,7 +6,7 @@ Agent skill definitions for this repository.
 
 | Skill | Purpose |
 |-------|---------|
-| [info-geometry-repo](info-geometry-repo/SKILL.md) | Primary repo skill: trust order, DAG pipeline, artifact inventory, default workflow |
+| [info-geometry-repo](info-geometry-repo/SKILL.md) | Primary repo skill: trust order, DAG pipeline, LeanTrail adapters/conformance, Arango ingest + physics eval, failure memory + path lock lanes, artifact inventory, default workflow |
 | [repo-topic-deep-research](repo-topic-deep-research/SKILL.md) | Topic-agnostic deep repo investigation with status matrix (`implemented/interface/missing`) and agent context-pack generation |
 | [lean-canonicalization-policy](lean-canonicalization-policy/SKILL.md) | Theorem ownership, file splitting, graph-guided refactors |
 | [frontier-proof-compression](frontier-proof-compression/SKILL.md) | Skynet/OpenClaw proof compression and structural debt burn-down |
@@ -43,3 +43,11 @@ It contains one additional file not present here:
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md) for the current build/audit state.
 
+## Style Guardrail
+
+Repository-wide theorem-surface policy now enforces genuine witness dependency:
+
+- avoid linter-masking existential wrappers like `∃ h : P, (let _ := h; Q)` for non-dependent `Q`
+- prefer `∃ _ : P, Q` for non-dependent existence
+- keep named witnesses only when they are semantically used downstream
+- apply `PAULI_MANDATE` gate I–XI (including anti-existential-hypothesis, interface witness fidelity, metric fidelity, anti-residual-redirect, parameter-admission, and public-uniqueness)

@@ -69,6 +69,10 @@ def KreinSelfAdjoint (A : EndH) : Prop :=
 def KreinSkewAdjoint (A : EndH) : Prop :=
   KreinSpace.kreinAdjoint (H := H₂) A = -A
 
+section OmitCompleteLinearityLemmas
+
+omit [CompleteSpace E]
+
 /-- `K`-linearity is exactly vanishing phase-axis commutator. -/
 @[rep_depth krein]
 theorem kLinear_iff_phaseAxisCommutator_eq_zero (A : EndH) :
@@ -91,6 +95,12 @@ theorem kAntilinear_iff_phaseAxisAnticommutator_eq_zero (A : EndH) :
       A.comp K + K.comp A = -(K.comp A) + K.comp A := by rw [h]
       _ = 0 := by abel
 
+end OmitCompleteLinearityLemmas
+
+section OmitCompletePhaseAxisLinear
+
+omit [CompleteSpace E]
+
 /-- The internal phase axis `K` is `K`-linear (it commutes with itself). -/
 @[rep_depth krein]
 theorem phaseAxisK_isKLinear :
@@ -98,6 +108,8 @@ theorem phaseAxisK_isKLinear :
   apply (kLinear_iff_phaseAxisCommutator_eq_zero (E := E) (phaseAxisK (E := E))).1
   unfold transportCommutator
   simp
+
+end OmitCompletePhaseAxisLinear
 
 /-- The internal phase axis `K` is the canonical Krein anti-isometric axis. -/
 @[rep_depth krein]
@@ -216,15 +228,15 @@ def fixedSubmodule : Submodule ℝ H₂ where
     have hu' : M.C u = u := hu
     have hv' : M.C v = v := hv
     calc
-      M.C (u + v) = M.C u + M.C v := by simpa using M.C.map_add u v
-      _ = u + v := by simpa [hu', hv']
+      M.C (u + v) = M.C u + M.C v := by exact M.C.map_add u v
+      _ = u + v := by simp [hu', hv']
   smul_mem' := by
     intro c u hu
     change M.C (c • u) = c • u
     have hu' : M.C u = u := hu
     calc
-      M.C (c • u) = c • (M.C u) := by simpa using M.C.map_smul c u
-      _ = c • u := by simpa [hu']
+      M.C (c • u) = c • (M.C u) := by exact M.C.map_smul c u
+      _ = c • u := by simp [hu']
 
 /-- Involution fixes Majorana vectors on second application. -/
 @[rep_depth krein]

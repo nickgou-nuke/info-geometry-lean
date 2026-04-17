@@ -92,7 +92,7 @@ Negating the grading swaps the chiral sectors and flips the analytical index.
 lemma chiralProjectorPlus_neg (Γ : Endomorphism V) :
     chiralProjectorPlus (-Γ) = chiralProjectorMinus Γ := by
   ext v
-  simp [chiralProjectorPlus, chiralProjectorMinus, sub_eq_add_neg, add_assoc, add_comm, add_left_comm]
+  simp [chiralProjectorPlus, chiralProjectorMinus, sub_eq_add_neg]
 
 /--
 Negating the grading swaps the chiral sectors (`P₋(-Γ) = P₊(Γ)`).
@@ -100,7 +100,7 @@ Negating the grading swaps the chiral sectors (`P₋(-Γ) = P₊(Γ)`).
 lemma chiralProjectorMinus_neg (Γ : Endomorphism V) :
     chiralProjectorMinus (-Γ) = chiralProjectorPlus Γ := by
   ext v
-  simp [chiralProjectorPlus, chiralProjectorMinus, sub_eq_add_neg, add_assoc, add_comm, add_left_comm]
+  simp [chiralProjectorPlus, chiralProjectorMinus, sub_eq_add_neg]
 
 /--
 Negating the grading swaps the chiral sectors and flips the analytical index.

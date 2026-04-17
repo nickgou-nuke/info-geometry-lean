@@ -43,8 +43,7 @@ noncomputable def headKFlipIsometry (n : ℕ) :
     rcases X with ⟨x, xs⟩
     change InfoGeometry.CliffordTower.Q11 (phaseFlip x) + Qsplit n xs
       = InfoGeometry.CliffordTower.Q11 x + Qsplit n xs
-    simpa [InfoGeometry.CliffordTower.Q11] using
-      congrArg (fun t : ℝ => t + Qsplit n xs) (phaseFlip.map_app' x)
+    exact congrArg (fun t : ℝ => t + Qsplit n xs) (phaseFlip.map_app' x)
 
 /-- Clifford-algebra automorphism induced by flipping the head `K`-axis. -/
 @[rep_depth krein]
@@ -103,7 +102,8 @@ noncomputable def headKFlipTensor (n : ℕ) :
     (n : ℕ) :
     headKFlipAlg n (CliffordAlgebra.ι (SplitClNNQuad (n + 1)) (headPair n (1, 0)))
       = CliffordAlgebra.ι (SplitClNNQuad (n + 1)) (headPair n (1, 0)) := by
-  simpa using headKFlipAlg_apply_ι n (headPair n (1, 0))
+  rw [headKFlipAlg_apply_ι, headKFlipCarrier_headPair]
+  simp
 
 @[rep_depth krein, simp] theorem headKFlipAlg_headK
     (n : ℕ) :
@@ -111,8 +111,11 @@ noncomputable def headKFlipTensor (n : ℕ) :
       = -(CliffordAlgebra.ι (SplitClNNQuad (n + 1)) (headPair n (0, 1))) := by
   calc
     headKFlipAlg n (CliffordAlgebra.ι (SplitClNNQuad (n + 1)) (headPair n (0, 1)))
-        = CliffordAlgebra.ι (SplitClNNQuad (n + 1)) (headPair n (0, -1)) := by
-            simpa using headKFlipAlg_apply_ι n (headPair n (0, 1))
+        = CliffordAlgebra.ι (SplitClNNQuad (n + 1))
+            (headKFlipCarrierEquiv n (headPair n (0, 1))) := by
+            rw [headKFlipAlg_apply_ι]
+    _ = CliffordAlgebra.ι (SplitClNNQuad (n + 1)) (headPair n (0, -1)) := by
+          rw [headKFlipCarrier_headPair]
     _ = -(CliffordAlgebra.ι (SplitClNNQuad (n + 1)) (headPair n (0, 1))) := by
           have hpair :
               headPair n (0, -1) = -headPair n (0, 1) := by
@@ -124,14 +127,14 @@ noncomputable def headKFlipTensor (n : ℕ) :
 @[rep_depth krein, simp] theorem headKFlipAlg_headNullMinus
     (n : ℕ) :
     headKFlipAlg n (gammaHeadNullMinus n) = gammaHeadNullPlus n := by
-  simpa [gammaHeadNullMinus, gammaHeadNullPlus] using
-    headKFlipAlg_apply_ι n (headNullMinus n)
+  unfold gammaHeadNullMinus gammaHeadNullPlus
+  rw [headKFlipAlg_apply_ι, headKFlipCarrier_headNullMinus]
 
 @[rep_depth krein, simp] theorem headKFlipAlg_headNullPlus
     (n : ℕ) :
     headKFlipAlg n (gammaHeadNullPlus n) = gammaHeadNullMinus n := by
-  simpa [gammaHeadNullMinus, gammaHeadNullPlus] using
-    headKFlipAlg_apply_ι n (headNullPlus n)
+  unfold gammaHeadNullMinus gammaHeadNullPlus
+  rw [headKFlipAlg_apply_ι, headKFlipCarrier_headNullPlus]
 
 @[rep_depth krein, simp] theorem headKFlipTensor_apply_headJTensor
     (n : ℕ) :

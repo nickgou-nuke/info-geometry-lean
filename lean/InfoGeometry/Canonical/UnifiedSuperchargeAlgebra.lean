@@ -418,6 +418,7 @@ theorem unified_cross_family_compatibility
   · exact (unified_central_supercharge_theorem
       (A := A) (B := B) (F := F) U Tpkg X hX hEven τ t).2.2.2
 
+omit [KreinSpace H₂] [KreinGradedModule H₂] in
 /--
 Sources/sinks + Onsager packet on the unified lane:
 
@@ -490,7 +491,7 @@ theorem unified_sources_sinks_onsager_with_internal_central_split
               ((2 : ℝ) •
                 InfoGeometry.Canonical.DrazinSupercharge.commutatorK
                   U.kernel.spectralProjector U.kernel.dilationGap) := by
-                  simpa [hQ]
+                  rw [hQ]
         _ =
             InfoGeometry.Canonical.DrazinSupercharge.commutatorK
               U.kernel.spectralProjector U.kernel.dilationGap := by

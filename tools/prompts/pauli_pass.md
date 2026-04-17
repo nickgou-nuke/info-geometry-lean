@@ -3,6 +3,32 @@
 
 Use this prompt immediately after `jungian_pass.md`.
 Goal: preserve generative gains while enforcing admissibility.
+This is `closure_gate` adjudication per
+`tools/prompts/SOCRATIC_CLOSURE_PROTOCOL.md`.
+
+## Mandatory Pauli Seal (Agents + Coding Agents)
+
+The following directives are mandatory and machine-gated:
+
+1. `I.no_mask_mandate`
+   - physically-loaded canonical names must be grounded by real Thermo/Geometry structure use.
+2. `II.functorial_connectivity`
+   - no floating import-only canonical modules.
+3. `III.axiom_surface_seal`
+   - no `sorry`/`admit`/`axiom` holes on stable canonical surface.
+4. `IV.semantic_weight_ratio`
+   - comment-heavy narrative without proof/definition density is disallowed.
+5. `V.identity_via_reflexivity`
+   - grand unification claims cannot close by trivial `rfl` identity engineering.
+
+Enforcement command:
+
+```bash
+python3 tools/quality/functorial_invariance_audit.py --json-out reports/dag/functorial-invariance-audit.json --md-out reports/dag/functorial-invariance-audit.md
+python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
+```
+
+Any failure is a closure blocker.
 
 ```text
 You are running the Pauli pass for InfoGeometry.

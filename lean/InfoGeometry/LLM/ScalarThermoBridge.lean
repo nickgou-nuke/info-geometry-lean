@@ -16,11 +16,15 @@ section RouterScalarBridges
 
 variable {Tok V : Type*} [Fintype Tok] [DecidableEq Tok]
 variable [NormedAddCommGroup V] [NormedSpace ℝ V]
-variable {n : Nat} [Nonempty (Fin n)]
+variable {n : Nat}
 
 /-- Router logits induced by inverse-temperature and energy. -/
 noncomputable def routerLogits (β : ℝ) (x : Tok → V) (i : Tok) : ExpertIdx n → ℝ :=
   fun e => -β * routerEnergy n x i e
+
+section RouterOmitted
+
+omit [Fintype Tok] [DecidableEq Tok] [NormedSpace ℝ V]
 
 /-- Router partition is the finite convex log-sum-exp partition of router logits. -/
 @[rep_depth transport]
@@ -54,7 +58,7 @@ theorem normalizedWeights_eq_convex_softmax
 /-- Convex softmax on router logits is invariant under uniform additive shifts. -/
 @[rep_depth transport]
 theorem convex_softmax_routerLogits_add_uniformShift
-    (β c : ℝ) (x : Tok → V) (i : Tok) :
+    [Nonempty (Fin n)] (β c : ℝ) (x : Tok → V) (i : Tok) :
     InfoGeometry.Convex.LogSumExp.softmax
         (n := ExpertIdx n)
         ((routerLogits (n := n) β x i)
@@ -104,6 +108,8 @@ theorem normalizedWeights_eq_analytic_logSumExpWeight
   rw [routerPartition_eq_analytic_logSumExpPartition (n := n) β x i]
   ring_nf
 
+end RouterOmitted
+
 end RouterScalarBridges
 
 section SinkhornGaugeBridge
@@ -111,12 +117,18 @@ section SinkhornGaugeBridge
 variable {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
 variable (n : Nat) [Nonempty (Fin n)]
 
+section SinkhornOmitted
+
+omit [NormedSpace ℝ V]
+
 /-- LLM-facing alias: router switch matrix is row-stochastic (simplex-normalized rows). -/
 @[rep_depth transport]
 theorem switchMatrix_mem_rowStochastic_bridge
     (β : ℝ) (x : Fin n → V) :
     switchMatrix n β x ∈ Matrix.rowStochastic ℝ (Fin n) := by
   simpa using InfoGeometry.Canonical.MoE.switchMatrix_mem_rowStochastic (n := n) β x
+
+end SinkhornOmitted
 
 end SinkhornGaugeBridge
 

@@ -34,6 +34,10 @@ variable [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)]
 
 local notation "H₂" => DoubledSpace E
 
+section OmitUnusedCommutatorInstances
+
+omit [CompleteSpace E] [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)]
+
 /--
 Finite-dimensional kernel mismatch forces noncommutation.
 -/
@@ -48,6 +52,8 @@ theorem commutator_ne_zero_of_kernel_mismatch
   intro hComm
   apply hMismatch
   rw [hComm]
+
+end OmitUnusedCommutatorInstances
 
 /--
 Direct central-charge-to-obstruction eliminator using the canonical projector

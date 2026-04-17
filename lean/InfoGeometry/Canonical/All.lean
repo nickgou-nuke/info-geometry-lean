@@ -127,6 +127,8 @@ import InfoGeometry.Canonical.InformationalLichnerowicz
 import InfoGeometry.Canonical.InformationalLichnerowiczBottBridge
 import InfoGeometry.Canonical.InformationTorsion
 import InfoGeometry.Canonical.KKTCore
+import InfoGeometry.Canonical.KKTLorentzOrbitBridge
+import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Canonical.KKTGeneralizedInverseBridge
 import InfoGeometry.Canonical.KKTGeneralizedMetricBridge
 import InfoGeometry.Canonical.KKTNoetherCharges
@@ -140,6 +142,7 @@ import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Canonical.SuperchargeGapHessianBridge
 import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
 import InfoGeometry.Canonical.ModularSuperchargeClosure
+import InfoGeometry.Canonical.ComplexMaskTransmutationBridge
 import InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge
@@ -210,7 +213,6 @@ import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
 import InfoGeometry.Canonical.KramersMajoranaCompatibility
 import InfoGeometry.Canonical.KramersSuperchargeBridge
 import InfoGeometry.Canonical.MixtureOfExperts
-import InfoGeometry.Canonical.ModularSpinorBridge
 import InfoGeometry.Canonical.SpinorModularBridge
 import InfoGeometry.Canonical.ModularTwoStateCorrelation
 import InfoGeometry.Canonical.CorrelationSymmetrization
@@ -218,6 +220,7 @@ import InfoGeometry.Canonical.CorrelationAntisymmetrization
 import InfoGeometry.Canonical.CoordinateFreeSecondVariation
 import InfoGeometry.Canonical.OnsagerCasimirJ
 import InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
+import InfoGeometry.Canonical.StateIndexedModularSeedBridge
 import InfoGeometry.Canonical.SpectroscopicGauge
 import InfoGeometry.Canonical.NoetherInference
 import InfoGeometry.Canonical.ModularHessian
@@ -236,6 +239,7 @@ import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk4
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstSemanticAudit
 import InfoGeometry.Canonical.OperatorialUncertainty
 import InfoGeometry.Canonical.PathIntegral
+import InfoGeometry.Canonical.HestenesGibbsPathIntegral
 import InfoGeometry.Canonical.PhaseSpaceRecompositionExample
 import InfoGeometry.Canonical.Prequantum
 import InfoGeometry.Canonical.Projective

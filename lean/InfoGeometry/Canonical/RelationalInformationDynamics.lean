@@ -532,9 +532,8 @@ theorem constructiveRelationalDatum_comparisonGeneratorPhase_apply
       =
     ⟪(X.comp (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E))) comparison,
       Y comparison⟫_ℝ := by
-  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
-    (constructiveRelationalDatum_comparisonGeneratorPhase_apply_eq_comp_complex_i
-      (E := E) reference comparison M ω X Y)
+  exact constructiveRelationalDatum_comparisonGeneratorPhase_apply_eq_comp_complex_i
+    (E := E) reference comparison M ω X Y
 
 end Core
 

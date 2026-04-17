@@ -69,7 +69,7 @@ noncomputable def canonical : Cl11Dictionary E where
 
 @[simp] theorem canonical_K_eq_complex_i :
     (canonical (E := E)).K = complex_i (E := E) := by
-  simpa [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+  simp [canonical, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
 
 section SpinorObservables
 
@@ -103,7 +103,7 @@ noncomputable def phaseObservable (ψ : H₂) : ℝ :=
     (ψ : H₂) :
     phaseObservable (E := E) ψ =
       operatorObservable (E := E) ψ ψ (complex_i (E := E)) := by
-  simpa [phaseObservable, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+  simp [phaseObservable, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
 
 /-- 
 **Spinor Normalization**:

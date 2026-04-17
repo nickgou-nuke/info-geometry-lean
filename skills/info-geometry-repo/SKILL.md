@@ -58,6 +58,11 @@ The DAG and Python layers are maintained memory.
 Use them to restore context, surface transport pressure, and choose what to read next.
 Do not use them to replace Lean source or invent ontology absent from code.
 
+LeanTrail memory carriers are now also maintained retrieval surfaces:
+- canonical snapshot: `artifacts/leantrail/graph_snapshot.json`
+- external adapters: GraphML / Neo4j CSV / Arango JSON
+- conformance gate must pass before treating any external carrier as valid memory
+
 ## Trust Order
 
 If surfaces disagree, trust in this order:
@@ -88,12 +93,56 @@ The full artifact set under `artifacts/dag/` is:
 - `index/types.jsonl` — type-node records
 - `process-flow/` — transport evidence (flow-edges, process-events, flow-cocycles, comparison-candidates, lawful-path-candidates, defects)
 
+LeanTrail memory-carrier artifacts under `artifacts/leantrail/`:
+- `graph_snapshot.json` — canonical LeanTrail snapshot
+- `graph_snapshot.graphml` — GraphML adapter
+- `neo4j/{nodes.csv,edges.csv,metadata.json}` — Neo4j CSV adapter
+- `arango/{ig_nodes.jsonl,ig_edges.jsonl,metadata.json}` — Arango JSON adapter
+- `conformance_*.{json,md}` — adapter parity reports
+
 ## Hard Proof Policy
 
 Treat vacuous success as failure.
 - no `sorry`, `admit`, `axiom`, or equivalent gaps on the stable path
 - trivial transport and aliasing do not count as proof progress
 - capstone claims are only real when composed from lower repo owners already present
+- existential witnesses must be genuine dependencies
+- do not use `∃ h : P, (let _ := h; Q)` as a linter workaround when `Q` is non-dependent
+- for non-dependent existence claims, prefer idiomatic `∃ _ : P, Q`
+
+## Pauli Seal (Mandatory)
+
+For stabilization/closure work by agents and coding agents, enforce:
+1. `I.no_mask_mandate`
+2. `II.functorial_connectivity`
+3. `III.axiom_surface_seal`
+4. `IV.semantic_weight_ratio`
+5. `V.identity_via_reflexivity`
+6. `VI.anti_existential_hypothesis`
+7. `VII.interface_witness_fidelity`
+8. `VIII.metric_fidelity`
+9. `IX.anti_residual_redirect`
+10. `X.parameter_admission`
+11. `XI.public_uniqueness_mandate`
+
+Run:
+
+```bash
+python3 tools/quality/functorial_invariance_audit.py --json-out reports/dag/functorial-invariance-audit.json --md-out reports/dag/functorial-invariance-audit.md
+python3 tools/quality/check_translation_registry.py \
+  --registry docs/OperatorTheoremTranslationRegistry.md \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.superHamiltonian_eq_modularTransportGenerator_lorentzBivectorSeed \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_compatibility \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.exists_lorentzBivectorGenerator_split_with_drazin_lane_centrality \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzChiralConeOrbit \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzWedgeOrbit \
+  --required-anchor InfoGeometry.Canonical.KKTCore.uPlus_eq_gOnePart \
+  --required-anchor InfoGeometry.Canonical.KKTCore.uPlus_mul_uPlus_eq_zero \
+  --required-anchor InfoGeometry.Canonical.KKTCore.commutator_uPlus_uMinus_isGZero
+python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
+```
+
+Any findings block closure promotion.
 
 ## Vacuity Enforcement
 
@@ -132,6 +181,18 @@ Process-flow supplements:
 - `lake env lean --run lean/DAG/ProcessFlowExport.lean InfoGeometry.Audit artifacts/dag/process-flow`
 - `python3 tools/infra/generate_process_flow_report.py`
 
+LeanTrail memory-carrier supplements:
+- `lake script run leantrailExport --snapshot artifacts/leantrail/graph_snapshot.json --to all`
+- `lake script run leantrailConformance --baseline ... --candidate ... --fail-on-violation`
+- `python3 tools/leantrail/conformance.py --baseline ... --candidate ... --required-locked-paths leantrail/config/required_locks.json --fail-on-violation`
+- `lake script run leantrailArangoIngest --input-dir artifacts/leantrail/arango`
+- `lake script run leantrailArangoPhysicsEval --mode local --input artifacts/leantrail/arango --center <decl>`
+- `lake script run leantrailFailureHarvest --defects artifacts/dag/process-flow/defects.jsonl --out artifacts/leantrail/failed_transitions.jsonl`
+- `python3 tools/leantrail/failure_harvester.py --defects ... --build-stdout ... --build-stderr ... --out artifacts/leantrail/failed_transitions.jsonl --merge-existing`
+- `lake script run leantrailPathLock --snapshot artifacts/leantrail/graph_snapshot.json --src <decl> --dst <decl> --state locked`
+- `lake script run leantrailHolePackets --failed-transitions artifacts/leantrail/failed_transitions.jsonl`
+- `bash scripts/quality/strict-check.sh` (on failure auto-harvests logs into `artifacts/leantrail/failed_transitions.jsonl`)
+
 ## Default Workflow
 
 1. Identify whether the task is source ownership, proof stabilization, graph refresh, or heavy-file frontier work.
@@ -142,6 +203,7 @@ Process-flow supplements:
 6. Use DAG reports to choose the next file, not to replace code reading.
 7. Prefer representation-depth reports for rendered layer grammar and hotspot reports for residual debt only.
 8. Use process-flow artifacts when the question is about transport, boundary, defect, or coherence pressure.
+9. For external graph/database use, run LeanTrail conformance against the canonical snapshot first.
 
 ## Heavy Files
 

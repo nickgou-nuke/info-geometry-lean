@@ -35,6 +35,16 @@ The structural rule is simple:
 - non-capstone declarations should move only one depth step at a time
 - capstones may span further, but they are consumers, not roots
 
+Current gate note:
+
+- `InfoGeometry.LLM` currently compiles under locked build.
+- `strictCheck` is currently red due warning-as-error debt.
+- standalone [`ProjectorEquivariance.lean`](../lean/InfoGeometry/Canonical/ProjectorEquivariance.lean)
+  currently compiles.
+
+For execution order and closure milestones, use
+[CleanupImprovementProgram.md](CleanupImprovementProgram.md).
+
 ## Current Semantic Roots
 
 The most important current roots are:
@@ -100,3 +110,19 @@ What is already closed here:
 - the metric readout of operator transport commutators
 - the lift of the Einstein anomaly to the doubled carrier
 - the infinitesimal Lie derivative law for exponential conjugation
+
+### 4. Spectroscopic/KMS and path-ensemble translator trunk
+
+This branch is the current measurement-relativity and path-weight packaging lane:
+
+- [UnruhKMS.lean](../lean/InfoGeometry/Dynamics/UnruhKMS.lean)
+- [SpectroscopicGaugeKMSBridge.lean](../lean/InfoGeometry/Canonical/SpectroscopicGaugeKMSBridge.lean)
+- [SpectroscopicGauge.lean](../lean/InfoGeometry/Canonical/SpectroscopicGauge.lean)
+- [HestenesGibbsPathIntegral.lean](../lean/InfoGeometry/Canonical/HestenesGibbsPathIntegral.lean)
+- [DiscreteRouterHestenesPathBridge.lean](../lean/InfoGeometry/LLM/DiscreteRouterHestenesPathBridge.lean)
+
+What is already closed here:
+- KMS compatibility is downstream to owned Unruh flow (not rerooted).
+- gauge obstruction and packet-shift surfaces are explicit.
+- path-surprisal Gibbs weight is explicit on the doubled carrier.
+- LLM Bayes update is bridged to path-Gibbs form under explicit matching assumptions.

@@ -37,6 +37,10 @@ variable [Fintype Tok] [DecidableEq Tok]
 variable [NormedAddCommGroup V] [NormedSpace ℝ V]
 variable {n : Nat} [Nonempty (Fin n)]
 
+section OmitEngineRouterVars
+
+omit [Fintype Tok] [DecidableEq Tok] [Nonempty (Fin n)]
+
 /--
 Per-layer scale/shape split in the all-top engine:
 the token update decomposes into base transport plus normalized routed mixture.
@@ -66,6 +70,12 @@ theorem defect_quarantine_preserved_under_stack
     WeightReuse.runLayerStack_map_withZeroMoE_eq_pointwise
       (Tok := Tok) (V := V) (n := n) (layers := layers) (β := β) (x := x)
 
+end OmitEngineRouterVars
+
+section OmitEngineCapstoneVars
+
+omit [Fintype Tok] [DecidableEq Tok]
+
 /--
 Capstone engine witness:
 the all-top transformer lane satisfies per-layer scale/shape split,
@@ -90,6 +100,8 @@ theorem transformer_engine_realizes_information_physics
       (n := n) (β := β) (x := x) (i := i) hβ
   · exact defect_quarantine_preserved_under_stack
       (Tok := Tok) (V := V) (n := n) (layers := layers) (β := β) (x := x)
+
+end OmitEngineCapstoneVars
 
 end EngineInvariants
 

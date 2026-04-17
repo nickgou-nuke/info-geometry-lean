@@ -65,6 +65,7 @@ noncomputable def HorizonSubspace : Submodule ℝ H₂ :=
   InfoGeometry.Canonical.boundarySubspace
     (E := E) (InfoGeometry.Canonical.TomitaTakesaki.modularOperatorDelta (E := E))
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 /--
 Theorem: Scale Inversion Fixed Point.
 On the Horizon Subspace, the scale inversion `J Δ J = Δ⁻¹` stabilizes at `Δ = 1`.
@@ -91,6 +92,7 @@ noncomputable def coriolisVorticity
     (S : SingularBoundaryCorrection E) : E →L[ℝ] E :=
   vorticity S.boundaryGenerator
 
+omit [FiniteDimensional ℝ E] in
 /--
 Theorem: The boundary generator is its own vorticity.
 Since the boundary generator `χ = [P_D, P_MP]` is skew-adjoint (proved in
@@ -126,6 +128,7 @@ noncomputable def danglingChiralFlux
     (ω : (E →L[ℝ] E) →L[ℝ] ℝ) : ℝ :=
   chiralFlux S.boundaryGenerator ω
 
+omit [FiniteDimensional ℝ E] in
 /--
 Finality: The gravity-like curvature (anomaly) of the informational state space
 is concentrated precisely on the dangling Majorana threads.
@@ -136,6 +139,7 @@ theorem curvature_concentrated_on_dangling_modes
     S.boundaryGenerator v ≠ 0 :=
   hDangling.2
 
+omit [FiniteDimensional ℝ E] in
 /-- Any dangling zero mode forces the boundary generator to be nonzero. -/
 theorem boundaryGenerator_ne_zero_of_exists_danglingZeroMode
     (S : SingularBoundaryCorrection E)
@@ -146,6 +150,7 @@ theorem boundaryGenerator_ne_zero_of_exists_danglingZeroMode
   have hEval := congrArg (fun T : E →L[ℝ] E => T v) hZero
   exact hv.2 (by simpa using hEval)
 
+omit [FiniteDimensional ℝ E] in
 /-- Any dangling zero mode forces the scalar boundary obstruction to be nonzero. -/
 theorem boundaryScale_ne_zero_of_exists_danglingZeroMode
     (S : SingularBoundaryCorrection E)
@@ -156,6 +161,7 @@ theorem boundaryScale_ne_zero_of_exists_danglingZeroMode
     (S.boundaryScale_eq_zero_iff_boundaryGenerator_eq_zero).mp hScale
   exact boundaryGenerator_ne_zero_of_exists_danglingZeroMode S hDangling hZero
 
+omit [FiniteDimensional ℝ E] in
 /--
 Kernel-separation form of boundary activity:
 if the bulk kernel and boundary-generator kernel intersect trivially, then
@@ -167,8 +173,7 @@ theorem boundary_active_on_nonzero_kernel_of_kernel_separation
       (S.kernel.A.toLinearMap.ker ⊓ LinearMap.ker S.boundaryGenerator.toLinearMap)
         = (⊥ : Submodule ℝ E)) :
     ∀ v : E, S.kernel.A v = 0 → v ≠ 0 → S.boundaryGenerator v ≠ 0 := by
-  intro v hvA hvne
-  intro hvB
+  intro v hvA hvne hvB
   have hvMem :
       v ∈ (S.kernel.A.toLinearMap.ker ⊓ LinearMap.ker S.boundaryGenerator.toLinearMap) := by
     constructor
@@ -177,6 +182,7 @@ theorem boundary_active_on_nonzero_kernel_of_kernel_separation
   have hvBot : v ∈ (⊥ : Submodule ℝ E) := by simpa [hSep] using hvMem
   exact hvne (by simpa using hvBot)
 
+omit [FiniteDimensional ℝ E] in
 /--
 Reverse direction: pointwise boundary activity on nontrivial bulk zero modes
 forces trivial kernel intersection.
@@ -191,11 +197,15 @@ theorem kernel_separation_of_boundary_active_on_nonzero_kernel
   · intro v hv
     rcases hv with ⟨hvA, hvB⟩
     by_cases hv0 : v = 0
-    · simpa [hv0]
+    · simp [hv0]
     · have hA0 : S.kernel.A v = 0 := by simpa [LinearMap.mem_ker] using hvA
       have hB0 : S.boundaryGenerator v = 0 := by simpa [LinearMap.mem_ker] using hvB
       exact (False.elim ((hBoundaryOnZeroModes v hA0 hv0) hB0))
   · exact bot_le
+
+section
+
+omit [FiniteDimensional ℝ E]
 
 /--
 Kernel-separation and pointwise boundary-activity are equivalent formulations of
@@ -211,6 +221,8 @@ theorem boundary_active_on_nonzero_kernel_iff_kernel_separation
   · exact kernel_separation_of_boundary_active_on_nonzero_kernel (S := S)
   · exact boundary_active_on_nonzero_kernel_of_kernel_separation (S := S)
 
+end
+
 section TransportedBoundary
 
 variable {A B : Type}
@@ -219,6 +231,7 @@ variable [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
 variable [FiniteDimensional ℝ (DoubledSpace E)]
 variable [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)]
 
+omit [FiniteDimensional ℝ E]
 /--
 If the singular boundary package shares its bulk operator with the transported
 Dirac lane, and every nontrivial transported zero mode is boundary-active, then

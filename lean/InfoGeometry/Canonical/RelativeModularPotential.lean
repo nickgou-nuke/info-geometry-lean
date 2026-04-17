@@ -200,9 +200,8 @@ theorem firstVariation_eq_gauge_add_source
       =
     (comparisonMetricReadout (E := E) P comparison A).compLeft
       (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
-  simpa [comparisonPhaseReadout, comparisonMetricReadout] using
-    (stateQGTPhaseReadout_eq_metric_comp_complex_i
-      (E := E) P.modularData comparison A)
+  exact stateQGTPhaseReadout_eq_metric_comp_complex_i
+    (E := E) P.modularData comparison A
 
 @[rep_depth transport, simp] theorem comparisonPhaseReadout_eq_metric_comp_modularComplexI
     (P : PotentialDatum (E := E)) (comparison : H₂) (A : EndH) :
@@ -210,9 +209,8 @@ theorem firstVariation_eq_gauge_add_source
       =
     (comparisonMetricReadout (E := E) P comparison A).compLeft
       (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
-  simpa [comparisonPhaseReadout, comparisonMetricReadout] using
-    (stateQGTPhaseReadout_eq_metric_comp_modularComplexI
-      (E := E) P.modularData comparison A)
+  exact stateQGTPhaseReadout_eq_metric_comp_modularComplexI
+    (E := E) P.modularData comparison A
 
 @[rep_depth krein, simp] theorem channelCorrelationAtState_apply
     (ψ : H₂) (X Y : PerturbationChannel E) :
@@ -239,9 +237,9 @@ theorem firstVariation_eq_gauge_add_source
       =
     ⟪(X.comp (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E))) comparison,
       Y comparison⟫_ℝ := by
-  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
-    (comparisonStateGeneratorPhase_apply_eq_comp_complex_i
-      (E := E) comparison X Y)
+  rw [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)]
+  exact comparisonStateGeneratorPhase_apply_eq_comp_complex_i
+    (E := E) comparison X Y
 
 @[rep_depth transport, simp] theorem toRelationalInformationDatum_informationFunctional
     (P : PotentialDatum (E := E)) (reference comparison ψ : H₂) :

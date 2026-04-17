@@ -49,17 +49,17 @@ structure DrazinAttention (n : ℕ) where
   /-- The 'Apex' part of the signal hits the horizon mirror and reflects/cancels. -/
   P_apex : Matrix (Fin n) (Fin n) ℝ := 1 - P_act
 
-/-- 
-The Symphony Preservation Theorem.
-Proves that the Rigidity of the Volume Form is preserved on the Active Lane,
-cancelling thermal fluctuations at the singular horizon.
+/--
+Exploratory preservation claim for the symphony lane.
+
+This remains an explicit proposition surface in the draft lane until a genuine
+matrix-level Drazin proof is supplied in the canonical owner stack.
 -/
-theorem symphony_preservation (n : ℕ) (𝒜 : Matrix (Fin n) (Fin n) ℝ) (V : Fin n → ℝ) :
+def symphonyPreservationClaim (n : ℕ) (𝒜 : Matrix (Fin n) (Fin n) ℝ) (V : Fin n → ℝ) : Prop :=
   let A_d := matrixDrazinInverse 𝒜
   let P_act := 𝒜 * A_d
   let P_apex := 1 - P_act
-  Matrix.mulVec P_apex V = 0 ↔ (∀ ω, Matrix.mulVec 𝒜 V = Real.exp (-ω) • V) := by
-  sorry
+  Matrix.mulVec P_apex V = 0 ↔ (∀ ω, Matrix.mulVec 𝒜 V = Real.exp (-ω) • V)
 
 /-- 
 Final Canonical Attention Step.

@@ -32,7 +32,12 @@ noncomputable def coreSignal
     (x : Tok → EndN) : Tok → EndN :=
   fun i => B.coreUpdate (x i)
 
+section OmitTokInstances
+
+omit [Fintype Tok] [DecidableEq Tok] [DecidableEq Expert]
+
 /-- Defect-regularized tokenwise signal is independent of `λ`. -/
+
 @[rep_depth transport]
 theorem regularizedSignal_lambda_invariant
     (B : Llama4BlockSpec (S := S) (Pos := Pos) (Expert := Expert))
@@ -50,10 +55,17 @@ theorem regularizedSignal_eq_coreSignal
   funext i
   exact regularizedCoreUpdate_eq_coreUpdate (B := B) lambda (x i)
 
+end OmitTokInstances
+
+section OmitNonemptyFinN
+
+omit [Fintype Tok] [DecidableEq Tok] [DecidableEq Expert] [Nonempty (Fin n)]
+
 /--
 Bayes router update is invariant under defect-regularization weight `λ`
 on the tokenwise regularized signal.
 -/
+
 @[rep_depth transport]
 theorem bayesRouterUpdate_regularizedSignal_lambda_invariant
     (B : Llama4BlockSpec (S := S) (Pos := Pos) (Expert := Expert))
@@ -73,6 +85,8 @@ theorem bayesRouterUpdate_regularizedSignal_eq_coreSignal
     bayesRouterUpdate (n := n) beta (regularizedSignal (B := B) lambda x) i
       = bayesRouterUpdate (n := n) beta (coreSignal (B := B) x) i := by
   rw [regularizedSignal_eq_coreSignal (B := B) lambda x]
+
+end OmitNonemptyFinN
 
 end RouterRegularization
 

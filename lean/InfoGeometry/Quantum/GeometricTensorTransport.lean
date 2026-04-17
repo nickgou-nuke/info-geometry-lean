@@ -477,16 +477,16 @@ theorem qgtOfOperator_modularTransportFlow_invariant_of_commute_generator
         =
       Q.metric ((complex_i (E := E)) (modularTransportFlow (E := E) hMod t u))
         (modularTransportFlow (E := E) hMod t v) := by
-            simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
-              Q.compat _ _
+            rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)]
+            exact Q.compat _ _
       _ =
       Q.metric (modularTransportFlow (E := E) hMod t ((complex_i (E := E)) u))
         (modularTransportFlow (E := E) hMod t v) := by
             rw [hKu]
       _ = Q.metric ((complex_i (E := E)) u) v := hMetric _ _
       _ = Q.berry u v := by
-            simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
-              (Q.compat u v).symm
+            rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)]
+            exact (Q.compat u v).symm
 
 /--
 If the modular transport generator lies on the local Cartan phase axis, then

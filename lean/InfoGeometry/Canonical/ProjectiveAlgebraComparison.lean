@@ -25,6 +25,6 @@ theorem epsilon_is_mathlib_involute (v : H₂) (hv : v ≠ 0) :
       strictProjectivize (E := E)
         (spectral_epsilon (E := E) v)
         (spectral_epsilon_ne_zero (E := E) hv) := by
-  simpa using (mathlibProjectiveEpsilon_projectivize (E := E) v hv)
+  exact mathlibProjectiveEpsilon_projectivize (E := E) v hv
 
 end InfoGeometry.Canonical.ProjectiveAlgebraComparison

@@ -75,6 +75,7 @@ theorem active_projector_of_compat
     active_projector A B k :=
   hCompat.hD
 
+omit [CompleteSpace E] in
 /--
 Any two active-projector witnesses for the same operator coincide,
 even if presented at different Drazin indices.

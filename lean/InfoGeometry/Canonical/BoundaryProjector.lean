@@ -19,11 +19,13 @@ the locus where `Δ ψ = ψ`, i.e. the inversion-stable horizon.
 def boundarySubspace (Δ : EndH) : Submodule ℝ H₂ :=
   LinearMap.eqLocus Δ.toLinearMap 1
 
+omit [CompleteSpace E] in
 @[simp] theorem mem_boundarySubspace
     (Δ : EndH) (ψ : H₂) :
     ψ ∈ boundarySubspace (E := E) Δ ↔ Δ ψ = ψ := by
-  simpa [boundarySubspace] using
-    (LinearMap.mem_eqLocus (x := ψ) (f := Δ.toLinearMap) (g := (1 : H₂ →ₗ[ℝ] H₂)))
+  change ψ ∈ LinearMap.eqLocus Δ.toLinearMap (1 : H₂ →ₗ[ℝ] H₂) ↔
+      Δ.toLinearMap ψ = (1 : H₂ →ₗ[ℝ] H₂) ψ
+  exact LinearMap.mem_eqLocus (x := ψ) (f := Δ.toLinearMap) (g := (1 : H₂ →ₗ[ℝ] H₂))
 
 /--
 Boundary projector: the orthogonal projection onto the fixed-point subspace.

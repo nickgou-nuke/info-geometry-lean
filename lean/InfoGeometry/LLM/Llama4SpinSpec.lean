@@ -65,6 +65,10 @@ noncomputable def run (B : Llama4BlockSpec (S := S) (Pos := Pos) (Expert := Expe
     (x : EndN) : EndN :=
   B.spinPin.layer.run (B.coreUpdate x)
 
+section OmitDecidableEqRoutingLemmas
+
+omit [DecidableEq Expert]
+
 @[simp] theorem routedUpdate_split
     (B : Llama4BlockSpec (S := S) (Pos := Pos) (Expert := Expert)) (x : EndN) :
     B.routedUpdate x =
@@ -156,6 +160,8 @@ theorem transport_preserves_routed_split_of_split
       B.spinPin.transport t (B.moe.routed.defectOutput x) := by
   exact transport_preserves_routed_split (B := B)
     (hOut := routedUpdate_transport_commute_of_split (B := B) hEq) t x
+
+end OmitDecidableEqRoutingLemmas
 
 end Llama4BlockSpec
 

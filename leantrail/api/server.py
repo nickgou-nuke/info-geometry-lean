@@ -47,9 +47,10 @@ class LeanTrailRequestHandler(BaseHTTPRequestHandler):
                             "GET /search?q=...",
                             "GET /decl/{name}",
                             "GET /neighborhood/{name}?radius=2",
-                            "GET /path?from=...&to=...&lawful_only=true",
+                            "GET /path?from=...&to=...&lawful_only=true&state_policy=any",
                             "GET /proofstate?file=...&line=...&col=...",
                             "GET /coherence/hotspots",
+                            "GET /holonomy/hotspots",
                             "POST /bridge-candidate",
                         ],
                         "aliases": [
@@ -59,6 +60,7 @@ class LeanTrailRequestHandler(BaseHTTPRequestHandler):
                             "/api/v1/path",
                             "/api/v1/proofstate",
                             "/api/v1/coherence/hotspots",
+                            "/api/v1/holonomy/hotspots",
                             "/api/v1/bridge-candidate",
                         ],
                     }
@@ -90,7 +92,15 @@ class LeanTrailRequestHandler(BaseHTTPRequestHandler):
                 src = (query.get("from") or [""])[0]
                 dst = (query.get("to") or [""])[0]
                 lawful_only = _bool_query((query.get("lawful_only") or ["true"])[0], default=True)
-                self._write_json(self.api.path(src=src, dst=dst, lawful_only=lawful_only))
+                state_policy = (query.get("state_policy") or ["any"])[0]
+                self._write_json(
+                    self.api.path(
+                        src=src,
+                        dst=dst,
+                        lawful_only=lawful_only,
+                        state_policy=state_policy,
+                    )
+                )
                 return
 
             if path in {"/proofstate", "/api/v1/proofstate"}:
@@ -103,6 +113,23 @@ class LeanTrailRequestHandler(BaseHTTPRequestHandler):
             if path in {"/coherence/hotspots", "/api/v1/coherence/hotspots"}:
                 limit = int((query.get("limit") or ["25"])[0])
                 self._write_json(self.api.coherence_hotspots(limit=limit))
+                return
+
+            if path in {"/holonomy/hotspots", "/api/v1/holonomy/hotspots"}:
+                limit = int((query.get("limit") or ["25"])[0])
+                alpha = float((query.get("alpha") or ["1.5"])[0])
+                beta = float((query.get("beta") or ["2.0"])[0])
+                gamma = float((query.get("gamma") or ["3.0"])[0])
+                min_score = float((query.get("min_score") or ["0.0"])[0])
+                self._write_json(
+                    self.api.holonomy_hotspots(
+                        limit=limit,
+                        alpha=alpha,
+                        beta=beta,
+                        gamma=gamma,
+                        min_score=min_score,
+                    )
+                )
                 return
 
             self._write_json({"error": f"unknown endpoint: {path}"}, status=HTTPStatus.NOT_FOUND)

@@ -75,8 +75,39 @@ class GraphStore:
         return {"nodes": nodes, "edges": edges}
 
     def shortest_path(self, src: str, dst: str, lawful_only: bool = True) -> dict[str, Any]:
+        return self.shortest_path_with_state_policy(
+            src=src,
+            dst=dst,
+            lawful_only=lawful_only,
+            state_policy="any",
+        )
+
+    @staticmethod
+    def _edge_path_state(edge: EdgeRecord) -> str:
+        attrs = edge.attrs if isinstance(edge.attrs, dict) else {}
+        state_raw = str(attrs.get("path_state", "")).strip().lower()
+        if state_raw in {"failed", "bound", "locked", "meta"}:
+            return state_raw
+        if edge.kind in {"obstructs", "violates_depth"}:
+            return "failed"
+        if edge.kind == "contains":
+            return "meta"
+        return "bound"
+
+    def shortest_path_with_state_policy(
+        self,
+        src: str,
+        dst: str,
+        *,
+        lawful_only: bool = True,
+        state_policy: str = "any",
+    ) -> dict[str, Any]:
         if src not in self.node_by_id or dst not in self.node_by_id:
             return {"path": [], "edges": [], "found": False}
+
+        policy = str(state_policy).strip().lower() or "any"
+        if policy not in {"any", "exclude-failed", "locked-only"}:
+            raise ValueError(f"unsupported state_policy: {state_policy}")
 
         blocked = {"violates_depth", "obstructs"} if lawful_only else set()
         parent: dict[str, str | None] = {src: None}
@@ -87,7 +118,16 @@ class GraphStore:
         while q and not found:
             current = q.popleft()
             for edge in self.out_edges.get(current, []):
+                if edge.kind == "contains":
+                    continue
                 if edge.kind in blocked:
+                    continue
+                edge_state = self._edge_path_state(edge)
+                if edge_state == "meta":
+                    continue
+                if policy == "exclude-failed" and edge_state == "failed":
+                    continue
+                if policy == "locked-only" and edge_state != "locked":
                     continue
                 nxt = edge.dst
                 if nxt in parent:
@@ -114,7 +154,7 @@ class GraphStore:
 
         path_nodes.reverse()
         path_edges.reverse()
-        return {"path": path_nodes, "edges": path_edges, "found": True}
+        return {"path": path_nodes, "edges": path_edges, "found": True, "state_policy": policy}
 
     def coherence_hotspots(self, limit: int = 25) -> list[dict[str, Any]]:
         rows: list[tuple[float, dict[str, Any]]] = []
@@ -137,6 +177,78 @@ class GraphStore:
                         "translator_edges": translator_count,
                         "violation_edges": violation_count,
                         "dependency_edges": dependency_count,
+                    },
+                )
+            )
+
+        rows.sort(key=lambda x: x[0], reverse=True)
+        return [row for _, row in rows[:limit]]
+
+    def holonomy_hotspots(
+        self,
+        limit: int = 25,
+        alpha: float = 1.5,
+        beta: float = 2.0,
+        gamma: float = 3.0,
+        min_score: float = 0.0,
+    ) -> list[dict[str, Any]]:
+        def _as_nonneg_number(value: Any) -> float | None:
+            if isinstance(value, (int, float)):
+                return float(value) if float(value) >= 0.0 else None
+            return None
+
+        rows: list[tuple[float, dict[str, Any]]] = []
+        for node in self.snapshot.nodes:
+            if node.kind != "Declaration":
+                continue
+
+            attrs = node.attrs if isinstance(node.attrs, dict) else {}
+            holonomy_attrs = attrs.get("holonomy")
+            telemetry = holonomy_attrs if isinstance(holonomy_attrs, dict) else {}
+
+            tactic_steps = _as_nonneg_number(telemetry.get("tactic_steps"))
+            context_expansion = _as_nonneg_number(telemetry.get("context_expansion"))
+            metavariable_flux = _as_nonneg_number(telemetry.get("metavariable_flux"))
+            source = "telemetry"
+
+            if tactic_steps is None or context_expansion is None or metavariable_flux is None:
+                source = "proxy"
+                outgoing = self.out_edges.get(node.id, [])
+                incoming = self.in_edges.get(node.id, [])
+                tactic_steps = float(
+                    sum(1 for e in outgoing if e.kind in {"depends_type", "depends_value"})
+                )
+                context_expansion = float(
+                    sum(1 for e in incoming if e.kind in {"depends_type", "depends_value"})
+                )
+                metavariable_flux = float(
+                    sum(1 for e in outgoing + incoming if e.kind in {"obstructs", "violates_depth"})
+                )
+                boundary_class = str(attrs.get("boundary_class", "")).strip().lower()
+                if boundary_class in {"boundary", "apex"}:
+                    metavariable_flux += 1.0
+
+            holonomy_score = (
+                alpha * float(tactic_steps)
+                + beta * float(context_expansion)
+                + gamma * float(metavariable_flux)
+            )
+            if holonomy_score < min_score:
+                continue
+
+            rows.append(
+                (
+                    holonomy_score,
+                    {
+                        "node": node.to_dict(),
+                        "holonomy_score": holonomy_score,
+                        "components": {
+                            "tactic_steps": float(tactic_steps),
+                            "context_expansion": float(context_expansion),
+                            "metavariable_flux": float(metavariable_flux),
+                        },
+                        "weights": {"alpha": alpha, "beta": beta, "gamma": gamma},
+                        "source": source,
                     },
                 )
             )

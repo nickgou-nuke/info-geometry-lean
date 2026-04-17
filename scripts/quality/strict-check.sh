@@ -1,6 +1,45 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+STRICT_CHECK_ARTIFACT_DIR="${STRICT_CHECK_ARTIFACT_DIR:-artifacts/leantrail}"
+mkdir -p "$STRICT_CHECK_ARTIFACT_DIR"
+
+STRICT_CHECK_STDOUT_LOG="${STRICT_CHECK_STDOUT_LOG:-$STRICT_CHECK_ARTIFACT_DIR/strict-check.stdout.log}"
+STRICT_CHECK_STDERR_LOG="${STRICT_CHECK_STDERR_LOG:-$STRICT_CHECK_ARTIFACT_DIR/strict-check.stderr.log}"
+STRICT_CHECK_FAILURE_OUT="${STRICT_CHECK_FAILURE_OUT:-$STRICT_CHECK_ARTIFACT_DIR/failed_transitions.jsonl}"
+STRICT_CHECK_FAILURE_REPORT="${STRICT_CHECK_FAILURE_REPORT:-$STRICT_CHECK_ARTIFACT_DIR/failure_harvest_strict_report.json}"
+STRICT_CHECK_HARVEST_WARNINGS="${STRICT_CHECK_HARVEST_WARNINGS:-0}"
+
+: >"$STRICT_CHECK_STDOUT_LOG"
+: >"$STRICT_CHECK_STDERR_LOG"
+
+exec > >(tee -a "$STRICT_CHECK_STDOUT_LOG")
+exec 2> >(tee -a "$STRICT_CHECK_STDERR_LOG" >&2)
+
+harvest_strict_failures_on_exit() {
+  local exit_code=$?
+  if [[ $exit_code -eq 0 ]]; then
+    return 0
+  fi
+  echo "[strict-check] build failed; harvesting failed transitions from strict-check logs"
+  harvest_cmd=(
+    python3 tools/leantrail/failure_harvester.py
+    --defects artifacts/dag/process-flow/defects.jsonl
+    --build-stdout "$STRICT_CHECK_STDOUT_LOG"
+    --build-stderr "$STRICT_CHECK_STDERR_LOG"
+    --out "$STRICT_CHECK_FAILURE_OUT"
+    --json-out "$STRICT_CHECK_FAILURE_REPORT"
+    --merge-existing
+  )
+  if [[ "$STRICT_CHECK_HARVEST_WARNINGS" == "1" ]]; then
+    harvest_cmd+=(--include-warnings)
+  fi
+  if ! "${harvest_cmd[@]}"; then
+    echo "[strict-check] warning: failed to harvest strict-check failure memory" >&2
+  fi
+}
+trap harvest_strict_failures_on_exit EXIT
+
 echo "[strict-check] building canonical entrypoints with warnings as errors"
 python3 tools/run_locked_lake_build.py --wait-for-build-lock InfoGeometry --wfail
 
@@ -68,6 +107,26 @@ python3 tools/infra/agentic_policy_lint.py
 
 echo "[strict-check] running constructivity audit on stable surface"
 python3 tools/quality/audit_constructivity.py --mode stable
+
+echo "[strict-check] running functorial invariance and core isomorphism tracing audit"
+python3 tools/quality/functorial_invariance_audit.py \
+  --json-out reports/dag/functorial-invariance-audit.json \
+  --md-out reports/dag/functorial-invariance-audit.md
+
+echo "[strict-check] enforcing translation registry anchors"
+python3 tools/quality/check_translation_registry.py \
+  --registry docs/OperatorTheoremTranslationRegistry.md \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.superHamiltonian_eq_modularTransportGenerator_lorentzBivectorSeed \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_compatibility \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.exists_lorentzBivectorGenerator_split_with_drazin_lane_centrality \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzChiralConeOrbit \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzWedgeOrbit \
+  --required-anchor InfoGeometry.Canonical.KKTCore.uPlus_eq_gOnePart \
+  --required-anchor InfoGeometry.Canonical.KKTCore.uPlus_mul_uPlus_eq_zero \
+  --required-anchor InfoGeometry.Canonical.KKTCore.commutator_uPlus_uMinus_isGZero
+
+echo "[strict-check] enforcing Pauli seal directives (I-XI) on canonical surface"
+python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
 
 echo "[strict-check] running surrogate dependency audit"
 scripts/audit_surrogates.sh

@@ -70,14 +70,26 @@ class LeanTrailQueryAPI:
         data = self.store.neighborhood(name, radius=radius)
         return {"name": name, "radius": radius, **data}
 
-    def path(self, src: str, dst: str, lawful_only: bool = True) -> dict[str, Any]:
+    def path(
+        self,
+        src: str,
+        dst: str,
+        lawful_only: bool = True,
+        state_policy: str = "any",
+    ) -> dict[str, Any]:
         self.ensure_loaded()
         assert self.store is not None
         return {
             "from": src,
             "to": dst,
             "lawful_only": lawful_only,
-            **self.store.shortest_path(src, dst, lawful_only=lawful_only),
+            "state_policy": state_policy,
+            **self.store.shortest_path_with_state_policy(
+                src,
+                dst,
+                lawful_only=lawful_only,
+                state_policy=state_policy,
+            ),
         }
 
     def proofstate(self, file: str, line: int, col: int) -> dict[str, Any]:
@@ -112,6 +124,28 @@ class LeanTrailQueryAPI:
         self.ensure_loaded()
         assert self.store is not None
         return {"hotspots": self.store.coherence_hotspots(limit=limit)}
+
+    def holonomy_hotspots(
+        self,
+        limit: int = 25,
+        alpha: float = 1.5,
+        beta: float = 2.0,
+        gamma: float = 3.0,
+        min_score: float = 0.0,
+    ) -> dict[str, Any]:
+        self.ensure_loaded()
+        assert self.store is not None
+        return {
+            "weights": {"alpha": alpha, "beta": beta, "gamma": gamma},
+            "min_score": min_score,
+            "hotspots": self.store.holonomy_hotspots(
+                limit=limit,
+                alpha=alpha,
+                beta=beta,
+                gamma=gamma,
+                min_score=min_score,
+            ),
+        }
 
     def create_bridge_candidate(self, payload: dict[str, Any]) -> dict[str, Any]:
         self.ensure_loaded()

@@ -138,6 +138,7 @@ theorem majoranaFix_preserved_under_modularFlow_of_commute_C
     _ = modularTransportFlow (E := E) hMod t (M.C u) := rfl
     _ = modularTransportFlow (E := E) hMod t u := by rw [hu]
 
+omit [CompleteSpace E] in
 /--
 If the modular seed is phase-linear, the exact modular transport flow commutes
 with the internal phase axis `K = J ∘ ε`.

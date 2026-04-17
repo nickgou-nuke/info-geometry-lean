@@ -28,6 +28,8 @@ Non-negotiable constraints:
 5) Keep raw-intake modules isolated until stabilization.
 6) Symbol-first exploration is mandatory; language is coordination-only.
 7) Follow `tools/prompts/SYMBOL_FIRST_PROTOCOL.md`.
+8) Follow `tools/prompts/SOCRATIC_CLOSURE_PROTOCOL.md` in `socratic_generator` mode:
+   output obligations/evidence, not conclusions.
 
 Required operating method:
 - Read source first, then propose.
@@ -71,6 +73,7 @@ Non-negotiable constraints:
 2) No theorem-statement tampering.
 3) No admission of raw-intake modules into authoritative coverage without stabilization.
 4) Documentation claims must match compiled bridge reality.
+5) Follow `tools/prompts/SOCRATIC_CLOSURE_PROTOCOL.md` in `closure_gate` mode.
 
 Required gate sequence:
 1) Build gate:
@@ -82,12 +85,16 @@ Required gate sequence:
 4) Doctor gate:
    - python3 tools/infra/dag_doctor.py
    - require fail=0 for closure
+5) Pauli seal gate (mandatory):
+   - python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
+   - require zero findings for closure
 
 If any gate fails:
 - report exact failing surface
 - classify: source defect / policy mismatch / stale artifact / quarantine omission
 - propose minimal corrective patch
 - rerun only necessary gates, then full doctor gate
+- never downgrade Pauli-seal violations to narrative justification
 
 Deliverable format:
 1) Gate results (pass/fail per stage)

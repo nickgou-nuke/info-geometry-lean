@@ -67,7 +67,8 @@ noncomputable def modularFlow : ℝ → EndH → EndH :=
 @[rep_depth transport, simp]
 theorem modularFlow_zero (A : EndH) :
     R.modularFlow 0 A = A := by
-  simpa [modularFlow] using (ModularRadonNikodymData.modularAutomorphismGroup_zero (M := R.rn) A)
+  unfold modularFlow
+  exact ModularRadonNikodymData.modularAutomorphismGroup_zero (M := R.rn) A
 
 @[rep_depth transport]
 theorem modularFlow_add (s t : ℝ) (A : EndH) :
@@ -206,7 +207,7 @@ theorem dualAction_preserves_dualFixed
   calc
     C.dualAction t (C.dualAction s x) = C.dualAction t x := by rw [hs]
     _ = x := hfix t
-    _ = C.dualAction s x := by simpa [hs]
+    _ = C.dualAction s x := hs.symm
 
 /-- Base modular flow preserves its fixed-point sector. -/
 @[rep_depth transport]

@@ -77,6 +77,7 @@ theorem modularHamiltonian_eq_modularSign :
 @[simp] theorem phaseGenerator_eq_modular_j_comp_boostGenerator :
     phaseGenerator (E := E)
       = (modular_j (E := E)).comp (boostGenerator (E := E)) := by
+  let _ : CompleteSpace E := inferInstance
   rfl
 
 /-- Elliptic/hyperbolic bridge (inverse direction): `B = J ∘ K`. -/
@@ -107,7 +108,8 @@ to the split observer.
 theorem unruhFlow_is_modular_flow (θ : ℝ) :
     unruhFlow (E := E) θ = 
       (Real.cosh θ) • ContinuousLinearMap.id ℝ (DoubledSpace E) + 
-      (Real.sinh θ) • modularHamiltonian (E := E) := 
+      (Real.sinh θ) • modularHamiltonian (E := E) := by
+  let _ : CompleteSpace E := inferInstance
   rfl
 
 end InfoGeometry.Dynamics

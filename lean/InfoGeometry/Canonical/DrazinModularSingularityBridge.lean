@@ -101,6 +101,7 @@ noncomputable def modularAdjointFlow
 theorem modularAdjointFlow_zero
     (hMod : EndH) (A : EndH) :
     modularAdjointFlow hMod 0 A = A := by
+  let _ : CompleteSpace E := inferInstance
   unfold modularAdjointFlow
   simp
 
@@ -125,7 +126,8 @@ theorem modularAdjointFlow_eq_self_of_commute_flow
     _ = A * U 0 := by simp
     _ = A * 1 := by
           have hU0 : U 0 = 1 := by
-            simpa [U] using (modularTransportFlow_zero (E := E) hMod)
+            change modularTransportFlow (E := E) hMod 0 = 1
+            exact modularTransportFlow_zero (E := E) hMod
           simp [hU0]
     _ = A := by simp
 

@@ -47,15 +47,37 @@ noncomputable def minusProjector (X : RealSplitCl11Action H) : EndH :=
 noncomputable def gZeroPart (X : RealSplitCl11Action H) (A : EndH) : EndH :=
   plusProjector X * A * plusProjector X + minusProjector X * A * minusProjector X
 
-/-- Grade `+1` off-diagonal channel. -/
+/-- Grade `+1` off-diagonal projection. -/
 @[rep_depth krein]
 noncomputable def gOnePart (X : RealSplitCl11Action H) (A : EndH) : EndH :=
   plusProjector X * A * minusProjector X
 
-/-- Grade `-1` off-diagonal channel. -/
+/-- Grade `-1` off-diagonal projection. -/
 @[rep_depth krein]
 noncomputable def gNegOnePart (X : RealSplitCl11Action H) (A : EndH) : EndH :=
   minusProjector X * A * plusProjector X
+
+/-- Circularly polarized `u+` channel (plus-to-minus). -/
+@[rep_depth krein]
+noncomputable def uPlus (X : RealSplitCl11Action H) (A : EndH) : EndH :=
+  gOnePart X A
+
+/-- Circularly polarized `u-` channel (minus-to-plus). -/
+@[rep_depth krein]
+noncomputable def uMinus (X : RealSplitCl11Action H) (A : EndH) : EndH :=
+  gNegOnePart X A
+
+/-- The `u+` channel is exactly the `g₁` off-diagonal channel. -/
+@[rep_depth krein, simp]
+theorem uPlus_eq_gOnePart
+    (X : RealSplitCl11Action H) (A : EndH) :
+    uPlus X A = gOnePart X A := rfl
+
+/-- The `u-` channel is exactly the `g₋₁` off-diagonal channel. -/
+@[rep_depth krein, simp]
+theorem uMinus_eq_gNegOnePart
+    (X : RealSplitCl11Action H) (A : EndH) :
+    uMinus X A = gNegOnePart X A := rfl
 
 /-- Ordinary commutator in the endomorphism algebra. -/
 @[rep_depth krein]
@@ -339,6 +361,24 @@ theorem RealSplitCl11Action.eps_is_cartan (X : RealSplitCl11Action H) :
           rw [plusProjector_mul_minusProjector]
           simp
 
+/--
+Circularly polarized `u+` channel is nilpotent under channel multiplication.
+-/
+@[rep_depth krein]
+theorem uPlus_mul_uPlus_eq_zero
+    (X : RealSplitCl11Action H) (A B : EndH) :
+    uPlus X A * uPlus X B = 0 := by
+  simpa [uPlus] using gOnePart_mul_gOnePart_eq_zero (X := X) A B
+
+/--
+Circularly polarized `u-` channel is nilpotent under channel multiplication.
+-/
+@[rep_depth krein]
+theorem uMinus_mul_uMinus_eq_zero
+    (X : RealSplitCl11Action H) (A B : EndH) :
+    uMinus X A * uMinus X B = 0 := by
+  simpa [uMinus] using gNegOnePart_mul_gNegOnePart_eq_zero (X := X) A B
+
 @[rep_depth krein] theorem gOnePart_mul_gOnePart_gNegOnePart_eq_zero
     (X : RealSplitCl11Action H) (A B : EndH) :
     gOnePart X (gOnePart X A * gNegOnePart X B) = 0 := by
@@ -572,6 +612,16 @@ theorem RealSplitCl11Action.eps_is_cartan (X : RealSplitCl11Action H) :
   apply isGZero_sub (X := X)
   · exact gOnePart_mul_gNegOnePart_isGZero X A B
   · exact gNegOnePart_mul_gOnePart_isGZero X B A
+
+/--
+Circularly polarized commutator closes in the `g₀` channel.
+-/
+@[rep_depth krein]
+theorem commutator_uPlus_uMinus_isGZero
+    (X : RealSplitCl11Action H) (A B : EndH) :
+    IsGZero X (commutator (uPlus X A) (uMinus X B)) := by
+  simpa [uPlus, uMinus] using
+    (commutator_gOne_gNegOne_isGZero (X := X) A B)
 
 @[rep_depth krein] theorem commutator_isGZero_of_isGOne_of_isGNegOne
     (X : RealSplitCl11Action H) {A B : EndH}

@@ -18,6 +18,36 @@ LeanTrail semantic explorer scaffold:
 - [leantrail/README.md](../leantrail/README.md)
 - [docs/LeanTrail.md](../docs/LeanTrail.md)
 
+LeanTrail conformance checker:
+- `python3 tools/leantrail/conformance.py`
+- `lake script run leantrailConformance -- ...`
+- optional lock gate: `--required-locked-paths leantrail/config/required_locks.json`
+
+LeanTrail external analyzer exports:
+- `python3 tools/leantrail/export.py`
+- `lake script run leantrailExport -- ...`
+- adapters: `graphml`, `neo4j-csv`, `arango-json`
+
+LeanTrail Arango ingestion:
+- `python3 tools/leantrail/arango_ingest.py`
+- `lake script run leantrailArangoIngest -- ...`
+
+LeanTrail Arango physics evaluation:
+- `python3 tools/leantrail/arango_physics_evaluator.py`
+- `lake script run leantrailArangoPhysicsEval -- ...`
+
+LeanTrail failure memory harvesting:
+- `python3 tools/leantrail/failure_harvester.py`
+- `lake script run leantrailFailureHarvest -- ...`
+
+LeanTrail path bind/lock registry:
+- `python3 tools/leantrail/path_lock_registry.py`
+- `lake script run leantrailPathLock -- ...`
+
+LeanTrail hole packet builder:
+- `python3 tools/leantrail/hole_packets.py`
+- `lake script run leantrailHolePackets -- ...`
+
 The core maintained top-level support modules are:
 - `pathing.py`
 - `build_lock.py`

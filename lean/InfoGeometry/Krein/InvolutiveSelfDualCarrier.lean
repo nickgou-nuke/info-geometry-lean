@@ -314,7 +314,7 @@ theorem Pplus_sub_Pminus : X.Pplus - X.Pminus = X.ε := by
     (X.Pplus - X.Pminus) x
         = (2 : ℝ)⁻¹ • X.ε x + (2 : ℝ)⁻¹ • X.ε x := hStep
     _ = (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • X.ε x := by rw [add_smul]
-    _ = X.ε x := by simpa [hHalf]
+    _ = X.ε x := by simp [hHalf]
 
 theorem ε_eq_Pplus_sub_Pminus : X.ε = X.Pplus - X.Pminus := by
   simpa using (Pplus_sub_Pminus (X := X)).symm

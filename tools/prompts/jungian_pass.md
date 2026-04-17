@@ -3,6 +3,8 @@
 
 Use this prompt when we need non-sterile hypothesis generation.
 Goal: increase high-value symbolic variation before formalization.
+This is strictly `socratic_generator` mode per
+`tools/prompts/SOCRATIC_CLOSURE_PROTOCOL.md`.
 
 ```text
 You are running the Jungian pass for InfoGeometry.

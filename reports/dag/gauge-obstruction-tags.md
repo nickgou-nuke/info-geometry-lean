@@ -3,7 +3,7 @@
 ## Summary
 
 - Source root: `lean/InfoGeometry`
-- Files scanned: `757`
+- Files scanned: `759`
 - Files with `gaugeObstruction`: `1`
 - `anomaly-bearing` files: `0`
 - `anomaly-sensitive` files: `0`

@@ -102,6 +102,10 @@ variable [Fintype Tok] [DecidableEq Tok]
 variable [NormedAddCommGroup V] [NormedSpace ℝ V]
 variable {n : Nat} [Nonempty (Fin n)]
 
+section OmitTransportRouterVars
+
+omit [Fintype Tok] [DecidableEq Tok] [Nonempty (Fin n)]
+
 /-- Testable hook for H70-004 (scale/shape split per layer). -/
 @[rep_depth transport]
 theorem h70_scale_shape_split
@@ -125,6 +129,12 @@ theorem h70_defect_quarantine
     defect_quarantine_preserved_under_stack
       (Tok := Tok) (V := V) (n := n) (layers := layers) (β := β) (x := x)
 
+end OmitTransportRouterVars
+
+section OmitTransportSurfaceVars
+
+omit [Fintype Tok] [DecidableEq Tok]
+
 /-- Capstone package: all currently testable Chapter 70 hooks bundled together. -/
 @[rep_depth transport, capstone]
 theorem h70_test_surface
@@ -143,6 +153,8 @@ theorem h70_test_surface
   · exact h70_router_free_energy_bridge (n := n) (β := β) (x := x) (i := i) hβ
   · exact h70_scale_shape_split (L := L) (β := β) (x := x) (i := i)
   · exact h70_defect_quarantine (Tok := Tok) (V := V) (n := n) (layers := layers) (β := β) (x := x)
+
+end OmitTransportSurfaceVars
 
 end TransportInterfaces
 

@@ -83,8 +83,7 @@ theorem densityWeightLiftedDynamics_eq_zeroWeight_add_weighted_phaseAxis_commuta
   intro x
   apply DoubledSpace.ext <;>
     simp [transportCommutator, sub_eq_add_neg, ContinuousLinearMap.add_comp,
-      ContinuousLinearMap.comp_add, ContinuousLinearMap.smul_comp,
-      ContinuousLinearMap.comp_smul]
+      ContinuousLinearMap.comp_add, ContinuousLinearMap.smul_comp]
   · abel
   · abel
 

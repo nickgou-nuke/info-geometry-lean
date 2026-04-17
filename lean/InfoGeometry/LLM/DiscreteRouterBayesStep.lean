@@ -27,6 +27,10 @@ theorem bayes_router_update_preserves_simplex
     ∑ e : ExpertIdx n, bayesRouterUpdate (n := n) β x i e = 1 := by
   simpa [bayesRouterUpdate] using normalizedWeights_sum_one (n := n) β x i
 
+section OmitBayesSoftmaxShift
+
+omit [Fintype Tok] [DecidableEq Tok] [NormedSpace ℝ V]
+
 /--
 The Bayes router update equals convex softmax on uniformly shifted router logits.
 This is the additive-gauge invariance surface used by downstream discrete updates.
@@ -58,6 +62,8 @@ theorem bayes_router_update_eq_softmax_shift
             exact
               convex_softmax_routerLogits_add_uniformShift
                 (n := n) (β := β) (c := c) (x := x) (i := i)
+
+end OmitBayesSoftmaxShift
 
 end RouterBayesStep
 

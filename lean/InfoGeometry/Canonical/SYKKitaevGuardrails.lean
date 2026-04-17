@@ -61,6 +61,7 @@ noncomputable def traversableClaimBand : ScopeBand :=
       then ScopeBand.formalizable_next_owner_target
       else ScopeBand.external_interpretation
 
+omit [CompleteSpace S] [FiniteDimensional ℝ S] in
 @[rep_depth transport]
 theorem traversableClaimBand_eq_external_of_noProtocol
     (hNo : ¬HasTwoCopySYKLikeProtocol (S := S)) :
@@ -69,6 +70,7 @@ theorem traversableClaimBand_eq_external_of_noProtocol
   unfold traversableClaimBand
   simp [hNo]
 
+omit [CompleteSpace S] [FiniteDimensional ℝ S] in
 @[rep_depth transport]
 theorem traversableClaimBand_eq_formalizable_of_protocol
     (hYes : HasTwoCopySYKLikeProtocol (S := S)) :
@@ -96,6 +98,7 @@ def KitaevRepoHypotheses
         ParticleHoleSymmetric (M := M) (P0 := M.chiralityPolarization) (localOp c))
     ∧ SimplifiedBoundaryModel (M := M) (P0 := M.chiralityPolarization) localOp chain
 
+omit [FiniteDimensional ℝ S] in
 @[rep_depth krein]
 theorem exists_weylBoundarySpinorPair_of_kitaevRepoHypotheses
     (M : RealMajoranaDatum (S := S))
@@ -145,7 +148,7 @@ Four-step modular lane package:
 @[rep_depth thermo, capstone]
 theorem fourStep_modular_lane_package
     (q q0 q1 : PositiveRay (Fin n)) :
-    let Delta := relativeModularOperator (n := n) q q0
+    let _Delta := relativeModularOperator (n := n) q q0
     let K := relativeModularHamiltonianOperator (n := n) q q0
     let scalarReadout := relativeModularHamiltonianReadout (n := n) q q0
     K = quantizedSurprisalOperator (n := n) q q0

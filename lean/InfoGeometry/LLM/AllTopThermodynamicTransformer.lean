@@ -44,6 +44,10 @@ noncomputable def runState
     (β : ℝ) (x : Tok → V) : Tok → V :=
   fun i => L.runToken β x i
 
+section OmitCoreRouterVars
+
+omit [Fintype Tok] [DecidableEq Tok] [Nonempty (Fin n)]
+
 @[simp, rep_depth transport]
 theorem runToken_eq_base_plus_routed
     (L : ReusedAllTopLayer V n)
@@ -55,9 +59,9 @@ theorem routedAllTop_eq_normalizedMixture
     (L : ReusedAllTopLayer V n)
     (β : ℝ) (x : Tok → V) (i : Tok) :
     L.routedAllTop β x i = normalizedMixture L.routedMoE β x i := by
-  simpa [routedAllTop] using
-    allTopMixture_eq_normalizedMixture
-      (n := n) (layer := L.routedMoE) (β := β) (x := x) (i := i)
+  unfold routedAllTop
+  exact allTopMixture_eq_normalizedMixture
+    (n := n) (layer := L.routedMoE) (β := β) (x := x) (i := i)
 
 @[rep_depth transport]
 theorem runToken_eq_base_plus_normalizedMixture
@@ -65,6 +69,8 @@ theorem runToken_eq_base_plus_normalizedMixture
     (β : ℝ) (x : Tok → V) (i : Tok) :
     L.runToken β x i = L.base.run (x i) + normalizedMixture L.routedMoE β x i := by
   rw [runToken_eq_base_plus_routed, routedAllTop_eq_normalizedMixture]
+
+end OmitCoreRouterVars
 
 end Core
 
@@ -83,6 +89,10 @@ noncomputable def runLayerStack
     (β : ℝ) (x : Tok → V) : Tok → V :=
   layers.foldl (fun state layer => layer.runState β state) x
 
+section OmitStackRouterVars
+
+omit [Fintype Tok] [DecidableEq Tok] [Nonempty (Fin n)]
+
 @[simp] theorem runLayerStack_nil (β : ℝ) (x : Tok → V) :
     runLayerStack (Tok := Tok) (V := V) (n := n) [] β x = x := by
   rfl
@@ -94,6 +104,8 @@ noncomputable def runLayerStack
     runLayerStack (Tok := Tok) (V := V) (n := n) (L :: Ls) β x
       = runLayerStack (Tok := Tok) (V := V) (n := n) Ls β (L.runState β x) := by
   rfl
+
+end OmitStackRouterVars
 
 /-- Pointwise execution of the standard decoder stack. -/
 noncomputable def runDecoderStackPointwise
@@ -119,16 +131,26 @@ def zeroExpert : Expert V where
 def zeroMoE : MoELayer n V where
   experts := fun _ => zeroExpert (V := V)
 
+section OmitWeightReuseRouterVars
+
+omit [Fintype Tok] [DecidableEq Tok] [Nonempty (Fin n)]
+
 @[simp] theorem allTopMixture_zeroMoE
     (β : ℝ) (x : Tok → V) (i : Tok) :
     allTopMixture (n := n) (zeroMoE (V := V) (n := n)) β x i = 0 := by
   unfold allTopMixture maskedNormalizedMixture zeroMoE zeroExpert
   simp
 
+end OmitWeightReuseRouterVars
+
 /-- Attach a zero routed branch to a base decoder layer. -/
 def withZeroMoE (B : DecoderLayer V) : ReusedAllTopLayer V n where
   base := B
   routedMoE := zeroMoE (V := V) (n := n)
+
+section OmitWeightReuseRunTokenVars
+
+omit [Fintype Tok] [DecidableEq Tok] [Nonempty (Fin n)]
 
 @[rep_depth transport]
 theorem runToken_withZeroMoE_eq_base
@@ -146,6 +168,12 @@ theorem runState_withZeroMoE_eq_pointwise
   funext i
   simpa [ReusedAllTopLayer.runState] using
     runToken_withZeroMoE_eq_base (V := V) (n := n) B β x i
+
+end OmitWeightReuseRunTokenVars
+
+section OmitWeightReuseStackVars
+
+omit [Fintype Tok] [DecidableEq Tok] [Nonempty (Fin n)]
 
 /--
 Stack-level exact reuse theorem:
@@ -169,6 +197,8 @@ theorem runLayerStack_map_withZeroMoE_eq_pointwise
       simpa [runLayerStack, runDecoderStackPointwise,
         runState_withZeroMoE_eq_pointwise (Tok := Tok) (V := V) (n := n)]
         using hih
+
+end OmitWeightReuseStackVars
 
 end Core
 
@@ -234,6 +264,10 @@ noncomputable def liftBaseWithRoute
       finalNorm := base.backbone.finalNorm }
   lmHead := base.lmHead
 
+section OmitLiftBaseWithRouteVars
+
+omit [Fintype Tok] [DecidableEq Tok] [NormedSpace ℝ V] [Nonempty (Fin n)]
+
 @[simp] theorem liftBaseWithRoute_tokenEmbedding
     (base : DecoderLanguageModel Tok V Logits)
     (routeOf : DecoderLayer V → MoELayer n V) :
@@ -252,12 +286,18 @@ noncomputable def liftBaseWithRoute
     (liftBaseWithRoute (Tok := Tok) (V := V) (Logits := Logits) (n := n) base routeOf).lmHead
       = base.lmHead := rfl
 
+end OmitLiftBaseWithRouteVars
+
 /-- Zero-routed lift: exact reuse mode with thermodynamic branch disabled. -/
 noncomputable def liftBaseWithZeroMoE
     (base : DecoderLanguageModel Tok V Logits) :
     AllTopThermodynamicLanguageModel (Tok := Tok) (V := V) (Logits := Logits) (n := n) :=
   liftBaseWithRoute (Tok := Tok) (V := V) (Logits := Logits) (n := n) base
     (fun _ => WeightReuse.zeroMoE (V := V) (n := n))
+
+section OmitLiftBaseWithZeroMoEVars
+
+omit [Fintype Tok] [DecidableEq Tok] [Nonempty (Fin n)]
 
 @[rep_depth transport]
 theorem tokenLogits_liftBaseWithZeroMoE_eq_base
@@ -296,6 +336,8 @@ theorem logits_liftBaseWithZeroMoE_eq_base
   funext tok
   exact tokenLogits_liftBaseWithZeroMoE_eq_base
     (Tok := Tok) (V := V) (Logits := Logits) (n := n) base β tok
+
+end OmitLiftBaseWithZeroMoEVars
 
 end AllTopThermodynamicLanguageModel
 

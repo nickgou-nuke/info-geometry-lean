@@ -22,3 +22,11 @@ TSI occurs when linguistic complexity exceeds logical derivation. To prevent TSI
 - **No Symbolic Inflation:** Do not "paint" expensive names onto trivial math.
 - **Audit the Conjunctions:** Deconstruct any "Master Synthesis" (`∧` chains). Every conjunction must be a **Chain of Functorial Necessity**.
 - **The Pauli Sentence:** If the logic is not forced by the algebra, the verdict is **"Nicht einmal falsch" (Not even wrong).**
+
+### 🛡️ THE FIVE NOMOLOGICAL DIRECTIVES
+All operations must enforce the directives detailed in `PAULI_MANDATE.md`:
+1. **The "No-Mask" Mandate:** Physically loaded names must be backed by foundational transformations, not empty `Prop` wish lists.
+2. **Functorial Connectivity:** No floating modules or pure-import shells. Every module must have a value-edge.
+3. **The Axiom-Surface Seal:** No `sorryAx` or `Admission` trust tokens in `krein` or `canonical` layers. Check via `#print axioms`.
+4. **Semantic Weight Ratio:** Lean tactics and rigid definitions must outnumber physical prose at least 2:1.
+5. **The "Identity via Reflexivity" Audit:** Unification via `rfl` is only valid for terms originating from disjoint foundational modules.

@@ -49,8 +49,6 @@ theorem boundaryScale_ne_zero_iff_boundaryGenerator_ne_zero
 
 section Vorticity
 
-variable [FiniteDimensional ℝ E]
-
 /--
 On the singular boundary lane, nonvanishing scalar obstruction is equivalent to
 nonvanishing Coriolis vorticity.

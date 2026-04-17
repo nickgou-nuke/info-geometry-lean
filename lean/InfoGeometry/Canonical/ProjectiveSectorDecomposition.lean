@@ -55,7 +55,7 @@ theorem strictGradePlusRay_iff_pointed (q : PointedNonvacuumCarrier) :
           (projectiveRay_equiv_mathlibProjectivization (E := E) q)).1 = q.1 :=
     congrArg Subtype.val hInv
   unfold IsStrictGradePlusRay
-  simpa [hVal]
+  simp [hVal]
 
 theorem strictGradeMinusRay_iff_pointed (q : PointedNonvacuumCarrier) :
     IsStrictGradeMinusRay (E := E)
@@ -75,7 +75,7 @@ theorem strictGradeMinusRay_iff_pointed (q : PointedNonvacuumCarrier) :
           (projectiveRay_equiv_mathlibProjectivization (E := E) q)).1 = q.1 :=
     congrArg Subtype.val hInv
   unfold IsStrictGradeMinusRay
-  simpa [hVal]
+  simp [hVal]
 
 @[simp] theorem IsStrictGradePlusRay_projectivize (v : H₂) (hv : v ≠ 0) :
     IsStrictGradePlusRay (E := E) (strictProjectivize (E := E) v hv) ↔
@@ -92,11 +92,14 @@ theorem strictGradeMinusRay_iff_pointed (q : PointedNonvacuumCarrier) :
     IsStrictGradePlusRay (E := E) (strictProjectivize (E := E) v hv)
       ↔ IsStrictGradePlusRay (E := E)
           (projectiveRay_equiv_mathlibProjectivization (E := E) q) := by
-            simpa [hq]
+            simp [hq]
     _ ↔ InfoGeometry.Projective.IsGradePlusRay q.1 :=
       strictGradePlusRay_iff_pointed (E := E) q
     _ ↔ inGradePlus (E := E) v := by
-      simpa [q] using (InfoGeometry.Projective.IsGradePlusRay_projectivize (E := E) v)
+      change
+        InfoGeometry.Projective.IsGradePlusRay
+            (InfoGeometry.Projective.projectivize (E := E) v) ↔ inGradePlus (E := E) v
+      exact InfoGeometry.Projective.IsGradePlusRay_projectivize (E := E) v
 
 @[simp] theorem IsStrictGradeMinusRay_projectivize (v : H₂) (hv : v ≠ 0) :
     IsStrictGradeMinusRay (E := E) (strictProjectivize (E := E) v hv) ↔
@@ -113,11 +116,14 @@ theorem strictGradeMinusRay_iff_pointed (q : PointedNonvacuumCarrier) :
     IsStrictGradeMinusRay (E := E) (strictProjectivize (E := E) v hv)
       ↔ IsStrictGradeMinusRay (E := E)
           (projectiveRay_equiv_mathlibProjectivization (E := E) q) := by
-            simpa [hq]
+            simp [hq]
     _ ↔ InfoGeometry.Projective.IsGradeMinusRay q.1 :=
       strictGradeMinusRay_iff_pointed (E := E) q
     _ ↔ inGradeMinus (E := E) v := by
-      simpa [q] using (InfoGeometry.Projective.IsGradeMinusRay_projectivize (E := E) v)
+      change
+        InfoGeometry.Projective.IsGradeMinusRay
+            (InfoGeometry.Projective.projectivize (E := E) v) ↔ inGradeMinus (E := E) v
+      exact InfoGeometry.Projective.IsGradeMinusRay_projectivize (E := E) v
 
 theorem strictGradeNullRay_iff_pointed (q : PointedNonvacuumCarrier) :
     IsStrictGradeNullRay (E := E)
@@ -143,7 +149,7 @@ theorem mathlibProjectiveJ_eq_self_of_strictGradePlusRay :
         mathlibProjectiveJ (E := E) (strictProjectivize (E := E) v hv)
           = strictProjectivize (E := E)
               (modular_j (E := E) v) (modular_j_ne_zero (E := E) hv) := by
-                simpa using (mathlibProjectiveJ_projectivize (E := E) v hv)
+                exact mathlibProjectiveJ_projectivize (E := E) v hv
         _ = strictProjectivize (E := E) v hv := by
               simpa using
                 (strict_projectivize_eq_of_same_ray (E := E) hsame hv
@@ -165,7 +171,7 @@ theorem mathlibProjectiveJ_eq_self_of_strictGradeMinusRay :
         mathlibProjectiveJ (E := E) (strictProjectivize (E := E) v hv)
           = strictProjectivize (E := E)
               (modular_j (E := E) v) (modular_j_ne_zero (E := E) hv) := by
-                simpa using (mathlibProjectiveJ_projectivize (E := E) v hv)
+                exact mathlibProjectiveJ_projectivize (E := E) v hv
         _ = strictProjectivize (E := E) v hv := by
               simpa using
                 (strict_projectivize_eq_of_same_ray (E := E) hsame hv

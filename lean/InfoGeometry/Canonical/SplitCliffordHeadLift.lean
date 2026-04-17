@@ -90,14 +90,16 @@ noncomputable def headNullPlusTensor (n : ℕ) : SplitClNNTensorStep n :=
 @[rep_depth krein, simp] theorem headKTensor_mul_headJTensor (n : ℕ) :
     headKTensor n * headJTensor n = -(headEpsTensor n) := by
   exact eq_neg_of_add_eq_zero_left (by
-    simpa [headEpsTensor, add_comm] using (headJTensor_mul_headKTensor_add_swap n))
+    change headKTensor n * headJTensor n + headJTensor n * headKTensor n = 0
+    rw [add_comm]
+    exact headJTensor_mul_headKTensor_add_swap n)
 
 @[rep_depth krein, simp] theorem headEpsTensor_sq (n : ℕ) :
     headEpsTensor n * headEpsTensor n = 1 := by
   unfold headEpsTensor
   have hk :
       headKTensor n * headJTensor n = -(headJTensor n * headKTensor n) := by
-    simpa [headEpsTensor] using (headKTensor_mul_headJTensor n)
+    exact headKTensor_mul_headJTensor n
   calc
     (headJTensor n * headKTensor n) * (headJTensor n * headKTensor n)
         = headJTensor n * (headKTensor n * headJTensor n) * headKTensor n := by

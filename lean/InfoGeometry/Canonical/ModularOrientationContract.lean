@@ -48,7 +48,7 @@ theorem canonical_seed_phaseAxis_eq_phaseAxisK :
     (tomitaAtomSeed (H := E)).phaseAxis = phaseAxisK (E := E) := by
   calc
     (tomitaAtomSeed (H := E)).phaseAxis = complex_i (E := E) := by
-      simpa using (tomitaAtomSeed_phaseAxis_eq_complex_i (H := E))
+      exact tomitaAtomSeed_phaseAxis_eq_complex_i (H := E)
     _ = phaseAxisK (E := E) := by rfl
 
 /-- Canonical orientation contract: `K = J ∘ ε`. -/
@@ -56,7 +56,8 @@ theorem canonical_seed_phaseAxis_eq_phaseAxisK :
 theorem canonical_phaseAxis_eq_modular_j_comp_spectral_epsilon :
     phaseAxisK (E := E)
       = (modular_j (E := E)).comp (spectral_epsilon (E := E)) := by
-  simpa using phaseAxisK_eq_modular_j_comp_spectral_epsilon (E := E)
+  let _ : CompleteSpace E := inferInstance
+  exact phaseAxisK_eq_modular_j_comp_spectral_epsilon (E := E)
 
 /-- Phase-axis flip preserves the complex-structure law: `(-K)^2 = -Id`. -/
 @[rep_depth krein]
@@ -81,6 +82,7 @@ theorem commutantAction_invariant_under_modular_j_flip
     (A : EndH) :
     ((-(modular_j (E := E))) * A * (-(modular_j (E := E))))
       = commutantAction (E := E) A := by
+  let _ : CompleteSpace E := inferInstance
   calc
     (-(modular_j (E := E))) * A * (-(modular_j (E := E)))
         = ((-(modular_j (E := E))) * A) * (-(modular_j (E := E))) := by
@@ -88,7 +90,7 @@ theorem commutantAction_invariant_under_modular_j_flip
     _ = (-(modular_j (E := E) * A)) * (-(modular_j (E := E))) := by
           simp [neg_mul]
     _ = (modular_j (E := E) * A) * (modular_j (E := E)) := by
-          simpa using neg_mul_neg (modular_j (E := E) * A) (modular_j (E := E))
+          rw [neg_mul_neg]
     _ = commutantAction (E := E) A := by
           simp [commutantAction, mul_assoc]
 
@@ -98,6 +100,7 @@ theorem modularTransportGenerator_neg
     (hMod : EndH) :
     modularTransportGenerator (E := E) (-hMod)
       = -(modularTransportGenerator (E := E) hMod) := by
+  let _ : CompleteSpace E := inferInstance
   unfold modularTransportGenerator
   simp
 
@@ -118,6 +121,7 @@ theorem phaseAxisFlow_flip_eq_time_reverse
     (τ : ℝ) :
     NormedSpace.exp (τ • (-(phaseAxisK (E := E))))
       = NormedSpace.exp ((-τ) • (phaseAxisK (E := E))) := by
+  let _ : CompleteSpace E := inferInstance
   simp [smul_neg, neg_smul]
 
 /-- Vacuum-orientation flip swaps plus/minus polarizations. -/
@@ -150,6 +154,7 @@ theorem projectorFlux_orientation_contract (T : EndH) :
       ∧
     (InfoGeometry.Canonical.BogoliubovProjectorFlux.minusProjectorFlux (E := E) T
       = -(sectorExchangeObservableMinus (E := E) T)) := by
+  let _ : CompleteSpace E := inferInstance
   exact ⟨
     plusProjectorFlux_eq_neg_sectorExchangeObservablePlus (E := E) T,
     minusProjectorFlux_eq_neg_sectorExchangeObservableMinus (E := E) T

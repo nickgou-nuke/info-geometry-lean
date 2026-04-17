@@ -28,6 +28,11 @@ These top-level files have different roles:
 | generalized metric / chirality / recomposition | current branch junction from corrected owner to maintained leaves | [PhaseSpaceGeneralizedMetric.lean](../lean/InfoGeometry/Clifford/PhaseSpaceGeneralizedMetric.lean) |
 | KKT / inverse-kernel / conformal | grade decomposition and defect algebra | [KKTCore.lean](../lean/InfoGeometry/Canonical/KKTCore.lean) |
 | Tomita / Bogoliubov / Weyl | modular, transport, and doubled Hamiltonian bridge branches | [TomitaTakesaki.lean](../lean/InfoGeometry/Canonical/TomitaTakesaki.lean) |
+| spectroscopic / KMS-compatible gauge | measurement-relativity translator lane over owned Unruh-KMS flow | [SpectroscopicGauge.lean](../lean/InfoGeometry/Canonical/SpectroscopicGauge.lean) |
+| Hestenes-Gibbs path ensemble | real path-weight translator lane from modular transport to Gibbs routing | [HestenesGibbsPathIntegral.lean](../lean/InfoGeometry/Canonical/HestenesGibbsPathIntegral.lean) |
+| LLM path-bridge | Bayes-router compatibility bridge for path-surprisal weights | [DiscreteRouterHestenesPathBridge.lean](../lean/InfoGeometry/LLM/DiscreteRouterHestenesPathBridge.lean) |
+| compiler telemetry bridge | explicit extraction of tactic-state deltas (`ΔΓ`, `ΔM`) from `TacticInfo` | [CompilerTelemetry.lean](../lean/InfoGeometry/Meta/CompilerTelemetry.lean) |
+| compiler-to-shadow Rosetta | deterministic mapping from `TacticInfo` to Gibbs proposal/action shadow | [CompilerRosetta.lean](../lean/InfoGeometry/LLM/CompilerRosetta.lean) |
 | Quantum Geometric Tensor (QGT) / Anomaly | metric readout and operator transport | [GeometricTensorOperatorLift.lean](../lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean) |
 | Bulk-Boundary / Majorana / Kitaev | boundary regularization and zero-mode pairs | [BulkBoundary.lean](../lean/InfoGeometry/Quantum/BulkBoundary.lean) |
 | concrete realization / finite model | explicit finite-dimensional recomposition performance | [PhaseSpaceRecompositionExample.lean](../lean/InfoGeometry/Canonical/PhaseSpaceRecompositionExample.lean) |
@@ -118,6 +123,23 @@ Current state:
 - modular Hamiltonian has a theorem-level doubled/Krein/Hestenes bridge surface;
 - support-restricted modular Hamiltonian lane on `Preg` is explicitly packaged.
 
+### If you want the spectroscopic/path-ensemble lane
+
+Read:
+
+1. [UnruhKMS.lean](../lean/InfoGeometry/Dynamics/UnruhKMS.lean)
+2. [SpectroscopicGaugeKMSBridge.lean](../lean/InfoGeometry/Canonical/SpectroscopicGaugeKMSBridge.lean)
+3. [SpectroscopicGauge.lean](../lean/InfoGeometry/Canonical/SpectroscopicGauge.lean)
+4. [HestenesGibbsPathIntegral.lean](../lean/InfoGeometry/Canonical/HestenesGibbsPathIntegral.lean)
+5. [DiscreteRouterHestenesPathBridge.lean](../lean/InfoGeometry/LLM/DiscreteRouterHestenesPathBridge.lean)
+
+Current state:
+
+- KMS ownerhood remains in `UnruhKMS`;
+- spectroscopic data is downstream compatibility, not a replacement owner;
+- path surprisal and Gibbs weight are packaged on the doubled carrier;
+- LLM routing bridge proves Bayes/path-Gibbs equivalence under explicit assumptions.
+
 ### If you want the Bulk-Boundary / Majorana frontier
 
 Read:
@@ -191,10 +213,12 @@ Those are useful later. They are not the first proof surface.
 
 The next real gaps are:
 
-1. derive the realized-projector to maintained tomita-projector identification
-2. attach the count/projective trunk to the corrected phase-space trunk at the polarized junction
-3. add one twisted end-to-end finite-dimensional example
-4. tighten the response matrix to the Weyl anomaly readout for grand-canonical models
-5. formalize the spinor-modular identification theorem (currently in the "sorry-equivalent" layer)
+1. reduce strict-check warning debt under `--wfail` across canonical/LLM replay targets (unused section vars, unnecessary `simpa`, unused simp args)
+2. discharge the five typed dependency contracts in [OperatorPenroseUnification.lean](../lean/InfoGeometry/Canonical/OperatorPenroseUnification.lean) as concrete bridge theorems, not only package assumptions
+3. attach the count/projective trunk to the corrected phase-space trunk at the polarized junction
+4. add one twisted end-to-end finite-dimensional witness through the maintained trunk
+5. tighten Weyl anomaly response packaging by reducing explicit top-level hypotheses
 
 This is the current practical roadmap encoded by the codebase.
+
+Execution order is maintained in [CleanupImprovementProgram.md](CleanupImprovementProgram.md).

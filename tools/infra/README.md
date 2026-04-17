@@ -82,6 +82,7 @@ Main DAG refresh and report path:
 - `select_openclaw_target.py`
 - `canonical_policy_lint.py`
 - `agentic_policy_lint.py`
+- `module_keyword_theory_program.py`
 - `generate_replacement_frontier.py`
 - `classify_missing_all.py`
 
@@ -177,6 +178,7 @@ Use the infra tools by role, not as one undifferentiated report pile:
 - full-lean keyword indexing and story synthesis
   - `generate_keyword_research_report.py` (indexes all tracked Lean files; sorted lexical frequency + hotspot files)
   - `generate_repo_story_from_keyword_index.py` (characteristic-term selection + deep theorem/lemma/axiom search + story synthesis)
+  - `module_keyword_theory_program.py` (module-name keyword extraction + full-repo keyword scan + trunk→root dependency tracing + theorem-packet draft synthesis with literature context)
 - closed-loop deep-research control
   - `deep_research/controller.py` (official Responses tool stack: web_search/file_search/mcp with stateful planning and verification gates)
   - `research_packet.py` (typed packet contract from Hermes intake to Prompt A/B)

@@ -110,7 +110,8 @@ def rootGapHessianClosure
       + ((2 : ℝ)⁻¹) • operatorInformationCurvaturePart (E := E) X X
           (modular_j (E := E)))
 
-/-- The root-name and bilingual CPT-name closure propositions are equivalent. -/
+-- The root-name and bilingual CPT-name closure propositions are equivalent.
+omit [KreinSpace H₂] [KreinGradedModule H₂] in
 @[rep_depth transport]
 theorem rootGapHessianClosure_iff_cptGapHessianClosure
     (V : BogoliubovVielbeinBundle (E := E)) :

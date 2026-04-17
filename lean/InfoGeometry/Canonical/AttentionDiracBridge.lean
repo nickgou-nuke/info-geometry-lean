@@ -67,7 +67,8 @@ lemma interactionEnergy_eq_of_matchForm_eq_diracPairing
   cases hMatch
   rfl
 
-/-- Attention parameters are invariant under explicit identification of matching forms. -/
+-- Attention parameters are invariant under explicit identification of matching forms.
+omit [AddCommMonoid V] [Module ℝ V] [Fact (0 < n)] in
 lemma attentionParams_eq_of_matchForm_eq_diracPairing
     (q : S_plus)
     (ctx : ContextWindow n S_minus V)
@@ -77,7 +78,8 @@ lemma attentionParams_eq_of_matchForm_eq_diracPairing
   cases hMatch
   rfl
 
-/-- Attention weights are invariant under explicit identification of matching forms. -/
+-- Attention weights are invariant under explicit identification of matching forms.
+omit [AddCommMonoid V] [Module ℝ V] [Fact (0 < n)] in
 lemma attentionWeights_eq_of_matchForm_eq_diracPairing
     (q : S_plus)
     (ctx : ContextWindow n S_minus V)
@@ -88,7 +90,8 @@ lemma attentionWeights_eq_of_matchForm_eq_diracPairing
   cases hMatch
   rfl
 
-/-- Attention-head output is invariant under explicit identification of matching forms. -/
+-- Attention-head output is invariant under explicit identification of matching forms.
+omit [Fact (0 < n)] in
 lemma attentionHead_eq_of_matchForm_eq_diracPairing
     (q : S_plus)
     (ctx : ContextWindow n S_minus V)

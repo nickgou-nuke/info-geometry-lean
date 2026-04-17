@@ -50,7 +50,9 @@ theorem commutantAction_invariant_under_J_flip
     (A : EndH) :
     ((-(modular_j (E := E))) * A * (-(modular_j (E := E))))
       = commutantAction (E := E) A := by
-  simpa [commutantAction] using
+  let _ : CompleteSpace E := inferInstance
+  unfold commutantAction
+  exact
     (ModularOrientationContract.commutantAction_invariant_under_modular_j_flip
       (E := E) A)
 
@@ -82,7 +84,9 @@ noncomputable def adjointFlow (τ : ℝ) (A : EndH) : EndH :=
 
 @[rep_depth krein, simp]
 theorem flow_zero : T.flow 0 = 1 := by
-  simpa [flow] using modularTransportFlow_zero (E := E) T.deltaLog
+  let _ : CompleteSpace E := inferInstance
+  unfold flow
+  exact modularTransportFlow_zero (E := E) T.deltaLog
 
 @[rep_depth krein]
 theorem flow_add (s t : ℝ) :

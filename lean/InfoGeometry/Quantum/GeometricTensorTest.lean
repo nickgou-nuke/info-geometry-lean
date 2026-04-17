@@ -53,8 +53,8 @@ theorem ofMajorana_compat_complex_i
     let Q := GeometricQuantumTensor.ofMajorana metric h_symm h_skew
     ∀ u v, Q.berry u v = Q.metric (complex_i (E := E) u) v := by
   intro Q u v
-  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
-    Q.compat u v
+  rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)]
+  exact Q.compat u v
 
 /--
 **Berry Alternation**:

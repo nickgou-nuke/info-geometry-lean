@@ -56,6 +56,7 @@ def routingScore (R : RouterGeometry (X := X) (Node := Node) (F := F) (n := n))
     (α β γ : ℝ) (x : X) (e : ExpertIdx n) : ℝ :=
   -R.routingCost α β γ x e + R.bias e
 
+omit [Nonempty (Fin n)] in
 @[rep_depth transport]
 theorem routingCost_nonneg
     (R : RouterGeometry (X := X) (Node := Node) (F := F) (n := n))
@@ -69,6 +70,7 @@ theorem routingCost_nonneg
       (mul_nonneg hβ (R.cliffordSqDist_nonneg _ _)))
     (mul_nonneg hγ (R.cantorCost_nonneg _ _))
 
+omit [Nonempty (Fin n)] in
 @[rep_depth transport]
 theorem routingScore_eq_bias_sub_cost
     (R : RouterGeometry (X := X) (Node := Node) (F := F) (n := n))
@@ -171,6 +173,7 @@ lemma maskedRoutingWeight_nonneg
   · exact routingSoftmaxWeight_nonneg R α β γ τ x e
   · simp
 
+omit [Nonempty (Fin n)] in
 @[rep_depth transport]
 theorem maskedRoutingWeight_allActive_eq_softmax
     (R : RouterGeometry (X := X) (Node := Node) (F := F) (n := n))

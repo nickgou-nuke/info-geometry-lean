@@ -36,11 +36,17 @@ noncomputable def phasePartner (ψ : H₂) : H₂ :=
 noncomputable def kramersPair (ψ : H₂) : H₂ × H₂ :=
   (ψ, phasePartner (E := E) ψ)
 
+section
+
+omit [CompleteSpace E]
+
 /-- The phase partner is exactly the internal phase-axis action `K ψ`. -/
 @[rep_depth krein, simp]
 theorem phasePartner_eq_phaseAxisK (ψ : H₂) :
     phasePartner (E := E) ψ = phaseAxisK (E := E) ψ := by
   rfl
+
+end
 
 /-- `K² = -Id` on the doubled carrier. -/
 @[rep_depth krein, simp]
@@ -62,7 +68,7 @@ theorem inner_first_second_eq_zero (ψ : H₂) :
     simpa [phasePartner] using phaseAxisK_inner_skew (E := E) ψ ψ
   have hComm :
       ⟪phasePartner (E := E) ψ, ψ⟫_ℝ = ⟪ψ, phasePartner (E := E) ψ⟫_ℝ := by
-    simpa [real_inner_comm]
+    simp [real_inner_comm]
   have hSelf :
       ⟪ψ, phasePartner (E := E) ψ⟫_ℝ = -⟪ψ, phasePartner (E := E) ψ⟫_ℝ := by
     linarith [hSkew, hComm]
@@ -82,7 +88,7 @@ theorem phasePartner_ne_self_of_ne_zero {ψ : H₂} (hψ : ψ ≠ 0) :
     exact congrArg (phasePartner (E := E)) hEq
   have hNeg : -ψ = ψ := by
     calc
-      -ψ = phasePartner (E := E) (phasePartner (E := E) ψ) := by simpa using hSq.symm
+      -ψ = phasePartner (E := E) (phasePartner (E := E) ψ) := by exact hSq.symm
       _ = phasePartner (E := E) ψ := hApply
       _ = ψ := hEq
   have hTwoSum : ψ + ψ = 0 := by

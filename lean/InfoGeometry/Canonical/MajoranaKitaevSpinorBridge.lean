@@ -77,7 +77,8 @@ variable [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
 variable [InfoGeometry.Krein.KreinSpace S]
 variable [InfoGeometry.Krein.KreinGradedModule S]
 
- /--
+omit [FiniteDimensional ℝ S] in
+/--
 If the Majorana chirality operator is identified with the KK grading involution,
 then the bounded KK phase is polarization-odd for the canonical chirality
 polarization.

@@ -1,4 +1,3 @@
-import InfoGeometry.Canonical.BeliefDynamics
 import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 
 open scoped InnerProductSpace
@@ -6,13 +5,16 @@ open scoped InnerProductSpace
 namespace InfoGeometry.Canonical.QuantumGeometryDualSheetBridge
 
 open InfoGeometry.Convex
-open InfoGeometry.Canonical.BeliefDynamics
 open InfoGeometry.Canonical.BogoliubovProjectorFlux
 open InfoGeometry.Canonical.MongeAmpereCramerRao
 open InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 
 variable {E : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/-- Repo-native quantum-geometry readout on the base carrier. -/
+noncomputable def quantumGeometryOp (H : HessianGeometry E) (x : E) : E →L[ℝ] E :=
+  H.metricOp x
 
 /--
 Operator-valued Cramer-Rao and quantum-geometry readouts coincide on the base carrier.

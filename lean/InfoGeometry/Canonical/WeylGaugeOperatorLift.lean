@@ -134,6 +134,7 @@ noncomputable def logarithmicGenerator (g : LiftedSheetAut (E := E)) : EndH :=
   commonLogCoordinate g • (ContinuousLinearMap.id ℝ H₂)
     + relativeLogCoordinate g • modularSignEpsilon (E := E)
 
+omit [CompleteSpace E] [FiniteDimensional ℝ E] in
 @[simp] theorem logarithmicGenerator_eq_common_plus_relative_spectral_epsilon
     (g : LiftedSheetAut (E := E)) :
     logarithmicGenerator (E := E) g =

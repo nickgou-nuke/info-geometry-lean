@@ -141,7 +141,7 @@ theorem connesCocycle_state_chain_three
     u (s + (t + r)) = u s * σ s (u (t + r)) := hCocycle s (t + r)
     _ = u s * σ s (u t * σ t (u r)) := by rw [hCocycle t r]
     _ = u s * (σ s (u t) * σ s (σ t (u r))) := by
-          simpa using congrArg (fun x => u s * x) ((σ s).map_mul (u t) (σ t (u r)))
+          exact congrArg (fun x => u s * x) ((σ s).map_mul (u t) (σ t (u r)))
     _ = (u s * σ s (u t)) * σ s (σ t (u r)) := by
           simp [mul_assoc]
 

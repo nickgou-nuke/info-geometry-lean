@@ -292,7 +292,7 @@ theorem sourceSinkAnticommutator_sum_eq_two_smul_connectionGenerator
     _ = H.comp (ContinuousLinearMap.id ℝ H₂) + (ContinuousLinearMap.id ℝ H₂).comp H := by
           rfl
     _ = H + H := by simp
-    _ = (2 : ℝ) • H := by simpa [two_smul]
+    _ = (2 : ℝ) • H := by simp [two_smul]
     _ = (2 : ℝ) • V.connectionGenerator := rfl
 
 /-- Canonical source-minus-sink projector identity `P₊ - P₋ = ε`. -/
@@ -300,31 +300,31 @@ theorem sourceSinkAnticommutator_sum_eq_two_smul_connectionGenerator
 theorem canonicalVortexPair_source_sub_sink_eq_spectral_epsilon :
     (canonicalVortexPair (E := E)).source - (canonicalVortexPair (E := E)).sink
       = spectral_epsilon (E := E) := by
-  apply ContinuousLinearMap.ext
-  intro x
-  apply DoubledSpace.ext
+  ext u
   · calc
-      (WithLp.fst
-          (((canonicalVortexPair (E := E)).source - (canonicalVortexPair (E := E)).sink) x))
-          = (2⁻¹ : ℝ) • WithLp.fst x + (2⁻¹ : ℝ) • WithLp.fst x := by
-              simp [canonicalVortexPair, spectralPlusProj, spectralMinusProj,
-                sub_eq_add_neg, smul_add, smul_neg]
-      _ = ((2⁻¹ : ℝ) + (2⁻¹ : ℝ)) • WithLp.fst x := by
-            simpa [add_smul] using (add_smul (2⁻¹ : ℝ) (2⁻¹ : ℝ) (WithLp.fst x)).symm
-      _ = (1 : ℝ) • WithLp.fst x := by norm_num
-      _ = WithLp.fst ((spectral_epsilon (E := E)) x) := by
-            simp [spectral_epsilon_apply]
-  · calc
-      (WithLp.snd
-          (((canonicalVortexPair (E := E)).source - (canonicalVortexPair (E := E)).sink) x))
-          = -((2⁻¹ : ℝ) • WithLp.snd x) + -((2⁻¹ : ℝ) • WithLp.snd x) := by
-              simp [canonicalVortexPair, spectralPlusProj, spectralMinusProj,
-                sub_eq_add_neg, smul_add, smul_neg]
-      _ = -(((2⁻¹ : ℝ) • WithLp.snd x) + ((2⁻¹ : ℝ) • WithLp.snd x)) := by abel
-      _ = -(((2⁻¹ : ℝ) + (2⁻¹ : ℝ)) • WithLp.snd x) := by
+      WithLp.fst (((canonicalVortexPair (E := E)).source - (canonicalVortexPair (E := E)).sink) u)
+          = (2⁻¹ : ℝ) • WithLp.fst u + (2⁻¹ : ℝ) • WithLp.fst u := by
+              simp [canonicalVortexPair, spectralPlusProj, spectralMinusProj, sub_eq_add_neg]
+      _ = ((2⁻¹ : ℝ) + (2⁻¹ : ℝ)) • WithLp.fst u := by
             simp [add_smul]
-      _ = -((1 : ℝ) • WithLp.snd x) := by norm_num
-      _ = WithLp.snd ((spectral_epsilon (E := E)) x) := by
+      _ = (1 : ℝ) • WithLp.fst u := by norm_num
+      _ = WithLp.fst ((spectral_epsilon (E := E)) u) := by
+            simp [spectral_epsilon_apply]
+  · have hsnd :
+        ((2 : ℝ)⁻¹) • WithLp.snd u + ((2 : ℝ)⁻¹) • WithLp.snd u = WithLp.snd u := by
+        calc
+          ((2 : ℝ)⁻¹) • WithLp.snd u + ((2 : ℝ)⁻¹) • WithLp.snd u
+              = (((2 : ℝ)⁻¹) + ((2 : ℝ)⁻¹)) • WithLp.snd u := by
+                  simp [add_smul]
+          _ = (1 : ℝ) • WithLp.snd u := by norm_num
+          _ = WithLp.snd u := by simp
+    calc
+      WithLp.snd (((canonicalVortexPair (E := E)).source - (canonicalVortexPair (E := E)).sink) u)
+          = -(((2 : ℝ)⁻¹) • WithLp.snd u + ((2 : ℝ)⁻¹) • WithLp.snd u) := by
+              simp [canonicalVortexPair, spectralPlusProj, spectralMinusProj, sub_eq_add_neg,
+                add_comm, add_left_comm]
+      _ = -WithLp.snd u := by simp [hsnd]
+      _ = WithLp.snd ((spectral_epsilon (E := E)) u) := by
             simp [spectral_epsilon_apply]
 
 /--
@@ -431,7 +431,7 @@ theorem transportCommutator_spectral_epsilon_eq_two_smul_sourceVortexSeed
     _ = src + src := by
           simp [sub_eq_add_neg, hsink]
     _ = (2 : ℝ) • src := by
-          simpa [two_smul]
+          simp [two_smul]
     _ = (2 : ℝ) • sourceVortexSeed (E := E) V := rfl
 
 /--
@@ -446,8 +446,7 @@ theorem transportCommutator_spectral_epsilon_eq_neg_two_smul_sinkVortexSeed
   calc
     transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E))
       = (2 : ℝ) • sourceVortexSeed (E := E) V := by
-          simpa using
-            transportCommutator_spectral_epsilon_eq_two_smul_sourceVortexSeed (E := E) V
+          exact transportCommutator_spectral_epsilon_eq_two_smul_sourceVortexSeed (E := E) V
     _ = (2 : ℝ) • (-(sinkVortexSeed (E := E) V)) := by
           rw [sourceVortexSeed_eq_neg_sinkVortexSeed (E := E) V]
     _ = (-(2 : ℝ)) • sinkVortexSeed (E := E) V := by
@@ -463,11 +462,10 @@ theorem sourceVortexSeed_eq_half_transportCommutator_spectral_epsilon
     sourceVortexSeed (E := E) V
       = (2⁻¹ : ℝ) •
           transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E)) := by
-  have hhalf_two : (2⁻¹ : ℝ) * (2 : ℝ) = (1 : ℝ) := by norm_num
   calc
     sourceVortexSeed (E := E) V
       = (2⁻¹ : ℝ) • ((2 : ℝ) • sourceVortexSeed (E := E) V) := by
-          simpa [smul_smul, hhalf_two]
+          simp [smul_smul]
     _ = (2⁻¹ : ℝ) •
           transportCommutator (E := E) V.connectionGenerator (spectral_epsilon (E := E)) := by
           rw [transportCommutator_spectral_epsilon_eq_two_smul_sourceVortexSeed (E := E) V]
@@ -560,11 +558,26 @@ theorem sourceAnticommutator_eq_connectionGenerator_add_half_anticommutator_spec
     InfoGeometry.Quantum.RealMajorana.anticommutator
       (S := H₂) V.connectionGenerator (spectral_epsilon (E := E))
   have hSum : Aplus + Aminus = (2 : ℝ) • V.connectionGenerator := by
-    simpa [Aplus, Aminus] using
-      sourceSinkAnticommutator_sum_eq_two_smul_connectionGenerator (E := E) V
+    change
+      InfoGeometry.Quantum.RealMajorana.anticommutator
+          (S := H₂) V.connectionGenerator (canonicalVortexPair (E := E)).source
+        +
+      InfoGeometry.Quantum.RealMajorana.anticommutator
+          (S := H₂) V.connectionGenerator (canonicalVortexPair (E := E)).sink
+        =
+      (2 : ℝ) • V.connectionGenerator
+    exact sourceSinkAnticommutator_sum_eq_two_smul_connectionGenerator (E := E) V
   have hSub : Aplus - Aminus = Aeps := by
-    simpa [Aplus, Aminus, Aeps] using
-      sourceSinkAnticommutator_sub_eq_anticommutator_spectral_epsilon (E := E) V
+    change
+      InfoGeometry.Quantum.RealMajorana.anticommutator
+          (S := H₂) V.connectionGenerator (canonicalVortexPair (E := E)).source
+        -
+      InfoGeometry.Quantum.RealMajorana.anticommutator
+          (S := H₂) V.connectionGenerator (canonicalVortexPair (E := E)).sink
+        =
+      InfoGeometry.Quantum.RealMajorana.anticommutator
+        (S := H₂) V.connectionGenerator (spectral_epsilon (E := E))
+    exact sourceSinkAnticommutator_sub_eq_anticommutator_spectral_epsilon (E := E) V
   calc
     Aplus = (2⁻¹ : ℝ) • (Aplus + Aplus) := by
       calc
@@ -717,6 +730,7 @@ variable [FiniteDimensional ℝ E]
 variable [FiniteDimensional ℝ (DoubledSpace E)]
 variable [KreinSpace (DoubledSpace E)] [KreinGradedModule (DoubledSpace E)]
 
+set_option linter.unusedSectionVars false in
 /--
 If the singular boundary generator is identified with the canonical source seed,
 then nonzero transported central charge forces that source seed to act
@@ -807,6 +821,7 @@ theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralChargeParity_n
       (A := A) (B := B) (E := E) V X hX hEven t M P0 S hA hplus hminus hodd
       hBoundaryOnZeroModes hCentral hSource
 
+set_option linter.unusedSectionVars false in
 /--
 Sink-side version of the same bridge when the singular boundary generator is
 identified with the canonical sink seed.

@@ -10,6 +10,9 @@ import InfoGeometry.LLM.KreinAttentionEnergy
 import InfoGeometry.LLM.ScalarThermoBridge
 import InfoGeometry.LLM.DiscreteRouterBayesStep
 import InfoGeometry.LLM.DiscreteRouterBayesRegularizationBridge
+import InfoGeometry.LLM.DiscreteRouterHestenesPathBridge
+import InfoGeometry.LLM.ProofSamplingShadow
+import InfoGeometry.LLM.CompilerRosetta
 import InfoGeometry.LLM.RouterFreeEnergyBridge
 import InfoGeometry.LLM.CliffordCantorGraphRouting
 import InfoGeometry.LLM.KMSSoftmaxBridge

@@ -265,7 +265,7 @@ theorem spectralProjector_mul_regularRestrictedSuperHamiltonian :
             * CIK.spectralProjector := by
               simp [mul_assoc]
     _ = CIK.spectralProjector * superHamiltonian CIK * CIK.spectralProjector := by
-          simpa [mul_assoc, CIK.spectralProjector_idempotent]
+          simp [mul_assoc, CIK.spectralProjector_idempotent]
     _ = regularRestrictedSuperHamiltonian CIK := by rfl
 
 /--
@@ -284,7 +284,7 @@ theorem regularRestrictedSuperHamiltonian_mul_spectralProjector :
             * (CIK.spectralProjector * CIK.spectralProjector) := by
               simp [mul_assoc]
     _ = CIK.spectralProjector * superHamiltonian CIK * CIK.spectralProjector := by
-          simpa [mul_assoc, CIK.spectralProjector_idempotent]
+          simp [mul_assoc, CIK.spectralProjector_idempotent]
     _ = regularRestrictedSuperHamiltonian CIK := by rfl
 
 /--
@@ -302,7 +302,7 @@ theorem spectralComplementaryProjector_mul_regularRestrictedSuperHamiltonian_eq_
             * superHamiltonian CIK * CIK.spectralProjector := by
               simp [mul_assoc]
     _ = 0 := by
-          simp [CIK.spectralComplementaryProjector_mul_spectralProjector, mul_assoc]
+          simp [CIK.spectralComplementaryProjector_mul_spectralProjector]
 
 /--
 Right defect annihilation of the regular-support compressed Hamiltonian:
@@ -319,7 +319,7 @@ theorem regularRestrictedSuperHamiltonian_mul_spectralComplementaryProjector_eq_
             * (CIK.spectralProjector * CIK.spectralComplementaryProjector) := by
               simp [mul_assoc]
     _ = 0 := by
-          simp [CIK.spectralProjector_mul_spectralComplementaryProjector, mul_assoc]
+          simp [CIK.spectralProjector_mul_spectralComplementaryProjector]
 
 /--
 Defect-block compression vanishes for the regular-support compressed Hamiltonian:
@@ -678,7 +678,7 @@ theorem canonicalDefectCentral_isDefectSupported :
     Q0 * (Q0 * SH * Q0) * Q0 = ((Q0 * Q0) * SH) * (Q0 * Q0) := by
       simp [mul_assoc]
     _ = (Q0 * SH) * Q0 := by
-      simpa [hQ0, mul_assoc]
+      simp [hQ0, mul_assoc]
     _ = Q0 * SH * Q0 := by
       simp [mul_assoc]
 
@@ -712,7 +712,7 @@ theorem spectralComplementaryProjector_not_scalar_of_nontrivial
     calc
       CIK.spectralComplementaryProjector
           = CIK.spectralComplementaryProjector * (1 : EndH) := by simp
-      _ = CIK.spectralComplementaryProjector * 0 := by simpa [hOneZero]
+      _ = CIK.spectralComplementaryProjector * 0 := by simp [hOneZero]
       _ = 0 := by simp
   have hCoeffEq :
       (c * c : ℝ) • (1 : EndH) = c • (1 : EndH) := by
@@ -728,10 +728,10 @@ theorem spectralComplementaryProjector_not_scalar_of_nontrivial
   cases hc01 with
   | inl hc0 =>
       apply hQ0ne0
-      simpa [hc, hc0]
+      simp [hc, hc0]
   | inr hc1 =>
       apply hQ0ne1
-      simpa [hc, hc1]
+      simp [hc, hc1]
 
 /-- Krein-depth bridge form of non-scalarity for a nontrivial defect projector. -/
 @[rep_depth krein]
@@ -758,7 +758,7 @@ theorem canonicalKineticPart_hasVanishingDefectBlock :
       Q0 * (Q0 * SH * Q0) * Q0 = ((Q0 * Q0) * SH) * (Q0 * Q0) := by
         simp [mul_assoc]
       _ = (Q0 * SH) * Q0 := by
-        simpa [hQ0, mul_assoc]
+        simp [hQ0, mul_assoc]
       _ = Q0 * SH * Q0 := by
         simp [mul_assoc]
   calc
@@ -766,7 +766,7 @@ theorem canonicalKineticPart_hasVanishingDefectBlock :
         = Q0 * SH * Q0 - Q0 * (Q0 * SH * Q0) * Q0 := by
             simp [mul_sub, sub_mul, mul_assoc]
     _ = Q0 * SH * Q0 - Q0 * SH * Q0 := by
-          simpa [hcompress]
+          simp [hcompress]
     _ = 0 := by simp
 
 /-- Krein-depth bridge form of defect-block vanishing for the canonical kinetic part. -/
@@ -796,7 +796,7 @@ theorem spectralComplementaryProjector_mul_eq_of_isDefectSupported
           * CIK.spectralComplementaryProjector := by
             simp [mul_assoc]
     _ = CIK.spectralComplementaryProjector * Z * CIK.spectralComplementaryProjector := by
-          simpa [hQ0, mul_assoc]
+          simp [hQ0, mul_assoc]
     _ = Z := hDefect
 
 /--
@@ -819,7 +819,7 @@ theorem mul_spectralComplementaryProjector_eq_of_isDefectSupported
           * (CIK.spectralComplementaryProjector * CIK.spectralComplementaryProjector) := by
             simp [mul_assoc]
     _ = CIK.spectralComplementaryProjector * Z * CIK.spectralComplementaryProjector := by
-          simpa [hQ0, mul_assoc]
+          simp [hQ0, mul_assoc]
     _ = Z := hDefect
 
 /--
@@ -880,7 +880,7 @@ theorem isDrazinSpectralCentral_of_isDefectSupported
       mul_spectralProjector_eq_zero_of_isDefectSupported (CIK := CIK) hDefect
     calc
       Z * CIK.spectralProjector = 0 := hRight
-      _ = CIK.spectralProjector * Z := by simpa [hLeft]
+      _ = CIK.spectralProjector * Z := by simp [hLeft]
   ·
     have hLeft :
         CIK.spectralComplementaryProjector * Z = Z :=
@@ -951,7 +951,7 @@ theorem canonicalDefectCentralK_isDrazinLaneCentralK :
 theorem isDefectSupportedK_smul_spectralComplementaryProjector (c : ℝ) :
     IsDefectSupportedK CIK (c • CIK.spectralComplementaryProjector) := by
   unfold IsDefectSupportedK
-  simp [mul_assoc, smul_mul_assoc, mul_smul_comm, CIK.spectralComplementaryProjector_idempotent]
+  simp [CIK.spectralComplementaryProjector_idempotent]
 
 /-- Krein-depth bridge: defect-supported operators are spectrally central on the Drazin lane. -/
 @[rep_depth krein]
@@ -1254,7 +1254,7 @@ theorem operatorialCentralDefectShadow_not_scalar_of_nonzero_charge_of_nontrivia
     calc
       (z⁻¹ : ℝ) • (operatorialCentralDefectShadow (A := A) (B := B) CIK X hX)
           = (z⁻¹ : ℝ) • (c • (1 : EndH₂)) := by
-              simpa [hc]
+              simp [hc]
       _ = ((z⁻¹ : ℝ) * c) • (1 : EndH₂) := by
             simp [smul_smul]
   have hQ0Scalar : IsScalarOperatorK CIK.spectralComplementaryProjector := by
@@ -1347,7 +1347,7 @@ theorem operatorialCentralDefectShadow_eq_transport_slice
       (quasilatticeAnalyticalIndex V X t
           (quasilatticeChiralFredholmSurfaceOf (E := F) V X hX hEven t) : ℝ) := by
     exact congrArg (fun z : ℤ => (z : ℝ)) hIdx.symm
-  simpa [operatorialCentralDefectShadow, hIdxR]
+  simp [operatorialCentralDefectShadow, hIdxR]
 
 /--
 Intrinsic mismatch between the canonical non-scalar internal central term and

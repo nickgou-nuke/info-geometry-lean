@@ -47,10 +47,27 @@ namespace TaggedClaim
 def isRepoTheorem (C : TaggedClaim) : Prop :=
   C.tier = ClaimTier.repoTheorem
 
+/-- Predicate: this claim is tagged as a formalizable-next-owner target. -/
+@[rep_depth transport]
+def isFormalizableNextOwnerTarget (C : TaggedClaim) : Prop :=
+  C.tier = ClaimTier.formalizableNextOwnerTarget
+
 /-- Predicate: this claim is an external interpretation claim. -/
 @[rep_depth transport]
 def isExternalInterpretation (C : TaggedClaim) : Prop :=
   C.tier = ClaimTier.externalInterpretation
+
+/-- Formalizable-next-owner claims are not repo-theorem claims. -/
+@[rep_depth transport]
+theorem formalizableNextOwnerTarget_not_repoTheorem
+    (C : TaggedClaim)
+    (hTarget : C.isFormalizableNextOwnerTarget) :
+    ¬ C.isRepoTheorem := by
+  intro hRepo
+  unfold isFormalizableNextOwnerTarget at hTarget
+  unfold isRepoTheorem at hRepo
+  rw [hTarget] at hRepo
+  cases hRepo
 
 /-- External-interpretation claims are not repo-theorem claims. -/
 @[rep_depth transport]
@@ -71,7 +88,7 @@ end ClaimTier
 section TwoCopyFinite
 
 variable {H : Type*}
-variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+variable [NormedAddCommGroup H] [InnerProductSpace ℝ H]
 
 local notation "EndH" => H →L[ℝ] H
 
@@ -105,6 +122,18 @@ def traversableWindowOpen : Prop :=
 def traversableWindowClosed : Prop :=
   0 ≤ S.μ
 
+ /-- Open window iff the closed-window predicate is false. -/
+@[rep_depth transport]
+theorem traversableWindowOpen_iff_not_closed :
+    S.traversableWindowOpen ↔ ¬ S.traversableWindowClosed := by
+  constructor
+  · intro hOpen hClosed
+    exact (not_le_of_gt hOpen) hClosed
+  · intro hNotClosed
+    by_cases hClosed : S.traversableWindowClosed
+    · exact False.elim (hNotClosed hClosed)
+    · exact lt_of_not_ge hClosed
+
 /-- Open and closed windows are incompatible. -/
 @[rep_depth transport]
 theorem traversableWindowOpen_not_closed
@@ -121,7 +150,7 @@ theorem traversableWindow_side_split :
   exact lt_or_ge S.μ 0
 
 /--
-TFD-like preparation interface placeholder:
+TFD-like finite preparation record:
 state plus normalization law only; no holographic semantics asserted.
 -/
 @[rep_depth transport]
@@ -134,6 +163,14 @@ structure TFDLikePreparation where
 def traversableProtocolTargetClaim : TaggedClaim where
   tier := ClaimTier.formalizableNextOwnerTarget
   statement := S.traversableWindowOpen
+
+/-- The formalizable target claim is explicitly non-repo by tier tag. -/
+@[rep_depth transport]
+theorem traversableProtocolTargetClaim_not_repo :
+    ¬ (traversableProtocolTargetClaim (S := S)).isRepoTheorem := by
+  exact TaggedClaim.formalizableNextOwnerTarget_not_repoTheorem
+    (C := traversableProtocolTargetClaim (S := S))
+    (hTarget := rfl)
 
 /-- External ER=EPR interpretation claim constructor (kept non-owner by type tag). -/
 @[rep_depth transport, capstone]
@@ -149,13 +186,40 @@ theorem erEprInterpretationClaim_not_repo :
     (C := erEprInterpretationClaim (S := S))
     (hExt := rfl)
 
+/--
+Closed finite protocol witness:
+normalized preparation plus an explicit open-window proof.
+-/
+@[rep_depth transport]
+structure TraversableProtocolWitness where
+  prep : TFDLikePreparation (H := H)
+  openWindow : S.traversableWindowOpen
+
+/-- Repo-tier claim materialized from a closed finite protocol witness. -/
+@[rep_depth transport, capstone]
+def traversableProtocolRepoClaim (_w : TraversableProtocolWitness (S := S)) : TaggedClaim where
+  tier := ClaimTier.repoTheorem
+  statement := S.traversableWindowOpen
+
+/-- Witness-built repo claim is tagged in the repo theorem band. -/
+@[rep_depth transport]
+theorem traversableProtocolRepoClaim_is_repo
+    (w : TraversableProtocolWitness (S := S)) :
+    (traversableProtocolRepoClaim (S := S) w).isRepoTheorem := by
+  rfl
+
+/-- Witness-built repo claim carries a concrete proof of the open-window statement. -/
+@[rep_depth transport]
+theorem traversableProtocolRepoClaim_holds
+    (w : TraversableProtocolWitness (S := S)) :
+    (traversableProtocolRepoClaim (S := S) w).statement := by
+  exact w.openWindow
+
 end TwoCopyCoupledSystem
 
 end TwoCopyFinite
 
 section OwnerAnchorWrappers
-
-variable {n : ℕ}
 
 /--
 Owner-anchor wrapper: finite Kitaev `ℤ₂` append law.
@@ -169,6 +233,30 @@ theorem topologicalIndexZ2_append_owner
     topologicalIndexZ2 (chain₁ ++ chain₂)
       = topologicalIndexZ2 chain₁ + topologicalIndexZ2 chain₂ :=
   topologicalIndexZ2_append_of_macroscopicVolume_ne_zero chain₁ chain₂ h₁ h₂
+
+/-- Tagged repo-tier claim for the finite `ℤ₂` append owner theorem. -/
+@[rep_depth operator, capstone]
+def topologicalIndexZ2_append_owner_claim.{u} : TaggedClaim where
+  tier := ClaimTier.repoTheorem
+  statement :=
+    ∀ (chain₁ chain₂ : List (InfoGeometry.Quantum.KitaevChain.KitaevCell.{u})),
+      macroscopicVolume chain₁ ≠ 0 →
+      macroscopicVolume chain₂ ≠ 0 →
+      topologicalIndexZ2 (chain₁ ++ chain₂)
+        = topologicalIndexZ2 chain₁ + topologicalIndexZ2 chain₂
+
+/-- The finite `ℤ₂` append owner claim is tagged as repo theorem. -/
+@[rep_depth operator]
+theorem topologicalIndexZ2_append_owner_claim_is_repo.{u} :
+    (topologicalIndexZ2_append_owner_claim.{u}).isRepoTheorem := by
+  rfl
+
+/-- The finite `ℤ₂` append owner claim is constructively inhabited. -/
+@[rep_depth operator]
+theorem topologicalIndexZ2_append_owner_claim_holds.{u} :
+    (topologicalIndexZ2_append_owner_claim.{u}).statement := by
+  intro chain₁ chain₂ h₁ h₂
+  exact topologicalIndexZ2_append_owner chain₁ chain₂ h₁ h₂
 
 section Connes
 
@@ -187,6 +275,30 @@ theorem connesCocycle_state_chain_owner
     (s t : ℝ) :
     u (s + t) = u s * σ s (u t) :=
   connesCocycle_state_chain (σ := σ) (u := u) hCocycle s t
+
+/-- Tagged repo-tier claim for the Connes cocycle owner chain law. -/
+@[rep_depth transport, capstone]
+def connesCocycle_state_chain_owner_claim : TaggedClaim where
+  tier := ClaimTier.repoTheorem
+  statement :=
+    ∀ (σ : AdditiveModularFlow (H := E))
+      (u : ℝ → AlgebraEnd E),
+      IsConnesCocycle σ u →
+      ∀ (s t : ℝ),
+      u (s + t) = u s * σ s (u t)
+
+/-- The Connes cocycle owner claim is tagged as repo theorem. -/
+@[rep_depth transport]
+theorem connesCocycle_state_chain_owner_claim_is_repo :
+    (connesCocycle_state_chain_owner_claim (E := E)).isRepoTheorem := by
+  rfl
+
+/-- The Connes cocycle owner claim is constructively inhabited. -/
+@[rep_depth transport]
+theorem connesCocycle_state_chain_owner_claim_holds :
+    (connesCocycle_state_chain_owner_claim (E := E)).statement := by
+  intro σ u hCocycle s t
+  exact connesCocycle_state_chain_owner σ u hCocycle s t
 
 end Connes
 

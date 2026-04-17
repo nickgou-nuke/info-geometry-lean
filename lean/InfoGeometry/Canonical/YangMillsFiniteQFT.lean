@@ -59,6 +59,7 @@ def finiteOsterwalderSchraderLayerRoot
   0 ≤ inner ℝ ((InfoGeometry.Krein.modular_j (E := E)) Ω) Ω ∧
     InfoGeometry.Krein.modular_j (E := E) Ω = Ω
 
+omit [CompleteSpace E] in
 @[simp] theorem finiteOsterwalderSchraderLayerRoot_iff
     (Ω : InfoGeometry.Krein.DoubledSpace E) :
     finiteOsterwalderSchraderLayerRoot (E := E) Ω ↔

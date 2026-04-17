@@ -69,6 +69,7 @@ noncomputable def apexVolumeOperator
   CIK.spectralComplementaryProjector * V * CIK.spectralComplementaryProjector
 
 -- theorem-class: closure
+omit [CompleteSpace E] in
 theorem biMaurerVolumeDrift_eq_zero_of_transportLaw
     {Vdot ΘL ΘR V : EndH}
     (hDyn : Vdot = V * ΘR - ΘL * V) :

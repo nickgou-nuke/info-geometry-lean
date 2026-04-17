@@ -50,6 +50,7 @@ noncomputable def modularHamiltonianDoubledExpr
     (T : RealTomitaCore.RealModularLogData (E := E)) : EndH :=
   T.deltaLog.comp (complex_i (E := E))
 
+omit [CompleteSpace E] in
 /--
 Core bridge theorem: the owned modular Hamiltonian equals its doubled/Hestenes
 expression.
@@ -61,6 +62,7 @@ theorem modularHamiltonian_eq_doubledExpr
   simp [RealTomitaCore.RealModularLogData.generator, modularHamiltonianDoubledExpr,
     BogoliubovTransport.modularTransportGenerator]
 
+omit [CompleteSpace E] in
 /--
 Equivalent split-axis form `A = δ ∘ J ∘ ε`.
 -/
@@ -77,7 +79,7 @@ theorem modularHamiltonian_eq_phaseAxisForm
         rfl
 
 /-- The canonical Tomita package is an explicit `exp/log` witness on doubled space. -/
-@[rep_depth krein]
+@[rep_depth transport]
 theorem canonicalTomitaLogData_exp_deltaLog
     (CIK : CertifiedInverseKernel H₂) :
     NormedSpace.exp ((canonicalTomitaLogData (E := E) CIK).deltaLog)
@@ -85,7 +87,7 @@ theorem canonicalTomitaLogData_exp_deltaLog
   (canonicalTomitaLogData (E := E) CIK).exp_deltaLog
 
 /-- Equivalent form: `Δ = exp(δ)` on the same doubled carrier lane. -/
-@[rep_depth krein]
+@[rep_depth transport]
 theorem canonicalTomitaLogData_Delta_eq_exp_deltaLog
     (CIK : CertifiedInverseKernel H₂) :
     (canonicalTomitaLogData (E := E) CIK).Delta
@@ -96,7 +98,7 @@ theorem canonicalTomitaLogData_Delta_eq_exp_deltaLog
 `K = -log Δ` in repo language:
 if `K := -δ`, then `exp(-K) = Δ` for the canonical Tomita package.
 -/
-@[rep_depth krein]
+@[rep_depth transport]
 theorem canonicalTomita_modularHamiltonian_exp_neg_eq_Delta
     (CIK : CertifiedInverseKernel H₂) :
     let K : EndH := -((canonicalTomitaLogData (E := E) CIK).deltaLog)
@@ -109,7 +111,7 @@ theorem canonicalTomita_modularHamiltonian_exp_neg_eq_Delta
   simpa [K] using hExp
 
 /-- The canonical modular seed is the projected-even doubled expression. -/
-@[rep_depth krein]
+@[rep_depth transport]
 theorem canonicalTomita_deltaLog_eq_neg_superHamiltonian_comp_phaseAxisK
     (CIK : CertifiedInverseKernel H₂) :
     (canonicalTomitaLogData (E := E) CIK).deltaLog
@@ -118,7 +120,7 @@ theorem canonicalTomita_deltaLog_eq_neg_superHamiltonian_comp_phaseAxisK
   simp [canonicalTomitaLogData, canonicalModularSeed, phaseAxisK]
 
 /-- True modular generator in doubled language: `A = δ ∘ (J ∘ ε)`. -/
-@[rep_depth krein]
+@[rep_depth transport]
 theorem canonicalTomita_generator_eq_deltaLog_comp_phaseAxisK
     (CIK : CertifiedInverseKernel H₂) :
     (canonicalTomitaLogData (E := E) CIK).generator
@@ -126,12 +128,12 @@ theorem canonicalTomita_generator_eq_deltaLog_comp_phaseAxisK
           (phaseAxisK (E := E)) := by
   unfold RealTomitaCore.RealModularLogData.generator
   unfold BogoliubovTransport.modularTransportGenerator
-  simpa [phaseAxisK]
+  simp [phaseAxisK]
 
 /--
 Canonical-seed specialization of the core bridge theorem.
 -/
-@[rep_depth krein]
+@[rep_depth transport]
 theorem canonicalTomita_generator_eq_doubledExpr
     (CIK : CertifiedInverseKernel H₂) :
     (canonicalTomitaLogData (E := E) CIK).generator
@@ -139,7 +141,7 @@ theorem canonicalTomita_generator_eq_doubledExpr
   exact modularHamiltonian_eq_doubledExpr (E := E) (canonicalTomitaLogData (E := E) CIK)
 
 /-- True modular generator in split form: `A = δ ∘ J ∘ ε`. -/
-@[rep_depth krein]
+@[rep_depth transport]
 theorem canonicalTomita_generator_eq_deltaLog_comp_modular_j_comp_spectral_epsilon
     (CIK : CertifiedInverseKernel H₂) :
     (canonicalTomitaLogData (E := E) CIK).generator
@@ -154,7 +156,7 @@ theorem canonicalTomita_generator_eq_deltaLog_comp_modular_j_comp_spectral_epsil
           rw [phaseAxisK_eq_modular_j_comp_spectral_epsilon (E := E)]
 
 /-- Canonical real Tomita flow is exactly `exp(t • A)` in doubled language. -/
-@[rep_depth krein]
+@[rep_depth transport]
 theorem canonicalTomita_flow_eq_exp_time_generator
     (CIK : CertifiedInverseKernel H₂) (t : ℝ) :
     (canonicalTomitaLogData (E := E) CIK).flow t
@@ -166,7 +168,7 @@ theorem canonicalTomita_flow_eq_exp_time_generator
 The modular automorphism action is explicit generator conjugation on the
 same doubled carrier.
 -/
-@[rep_depth krein]
+@[rep_depth transport]
 theorem canonicalTomita_adjointFlow_eq_exp_generator_conjugation
     (CIK : CertifiedInverseKernel H₂) (t : ℝ) (A : EndH) :
     (canonicalTomitaLogData (E := E) CIK).adjointFlow t A
@@ -181,7 +183,7 @@ theorem canonicalTomita_adjointFlow_eq_exp_generator_conjugation
 Owner closure hook: projected-even super-Hamiltonian equals the canonical true
 modular generator on the same certified lane.
 -/
-@[rep_depth krein]
+@[rep_depth transport]
 theorem projectedEven_superHamiltonian_eq_canonicalTomita_generator
     (CIK : CertifiedInverseKernel H₂) :
     DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
@@ -191,7 +193,7 @@ theorem projectedEven_superHamiltonian_eq_canonicalTomita_generator
 /--
 Owner-lane closure in explicit doubled-expression form.
 -/
-@[rep_depth krein]
+@[rep_depth transport]
 theorem projectedEven_superHamiltonian_eq_doubledExpr
     (CIK : CertifiedInverseKernel H₂) :
     DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK

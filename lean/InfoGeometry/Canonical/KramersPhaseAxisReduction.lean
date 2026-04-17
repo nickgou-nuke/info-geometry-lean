@@ -158,7 +158,7 @@ theorem abstract_kramers_eq_intrinsic_phase_partner_iff
   · intro h
     exact ContinuousLinearMap.ext h
   · intro h u
-    simpa [h]
+    exact congrArg (fun T : H₂ →L[ℝ] H₂ => T u) h
 
 /--
 Capstone API name: if abstract Kramers action does not reduce to the intrinsic

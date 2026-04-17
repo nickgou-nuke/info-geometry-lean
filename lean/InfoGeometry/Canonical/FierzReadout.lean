@@ -56,19 +56,44 @@ theorem fierz_majorana
 Translator map from Fierz readout package to the generic presentation
 interface.
 
-This keeps Fierz scalar channels as readouts while leaving support/generator as
-minimal interface placeholders.
+This keeps Fierz scalar channels as readouts while making the support/generator
+lane explicit at the call site.
 -/
 @[rep_depth operator]
-def toQuantumPresentation (R : FierzChannelReadout) : QuantumPresentation where
+def toQuantumPresentationWith
+    (R : FierzChannelReadout)
+    (support : R.State → Prop)
+    (generator : R.State → R.State) :
+    Presentation where
   Scalar := ℝ
   State := R.State
   Observable := R.State → R.State
   act := fun A ψ => A ψ
-  support := fun _ => True
-  generator := fun ψ => ψ
+  support := support
+  generator := generator
   metricReadout := R.hilbert
   phaseReadout := R.symplectic
+
+/--
+Default support lane used by lightweight translator consumers.
+-/
+@[rep_depth operator]
+def defaultSupport (R : FierzChannelReadout) : R.State → Prop :=
+  fun _ => True
+
+/--
+Default generator lane used by lightweight translator consumers.
+-/
+@[rep_depth operator]
+def defaultGenerator (R : FierzChannelReadout) : R.State → R.State :=
+  fun ψ => ψ
+
+/--
+Default translator map preserving scalar readout channels.
+-/
+@[rep_depth operator]
+def toQuantumPresentation (R : FierzChannelReadout) : Presentation :=
+  toQuantumPresentationWith R (defaultSupport R) (defaultGenerator R)
 
 @[rep_depth operator]
 theorem toQuantumPresentation_metricReadout
@@ -80,6 +105,30 @@ theorem toQuantumPresentation_metricReadout
 theorem toQuantumPresentation_phaseReadout
     (R : FierzChannelReadout) (ψ : R.State) :
     (R.toQuantumPresentation.phaseReadout ψ) = R.symplectic ψ := by
+  rfl
+
+/--
+Metric readout is preserved for any explicit support/generator lane choice.
+-/
+@[rep_depth operator]
+theorem toQuantumPresentationWith_metricReadout
+    (R : FierzChannelReadout)
+    (support : R.State → Prop)
+    (generator : R.State → R.State)
+    (ψ : R.State) :
+    (toQuantumPresentationWith R support generator).metricReadout ψ = R.hilbert ψ := by
+  rfl
+
+/--
+Phase readout is preserved for any explicit support/generator lane choice.
+-/
+@[rep_depth operator]
+theorem toQuantumPresentationWith_phaseReadout
+    (R : FierzChannelReadout)
+    (support : R.State → Prop)
+    (generator : R.State → R.State)
+    (ψ : R.State) :
+    (toQuantumPresentationWith R support generator).phaseReadout ψ = R.symplectic ψ := by
   rfl
 
 end FierzChannelReadout

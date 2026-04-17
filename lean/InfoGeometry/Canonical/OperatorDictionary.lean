@@ -99,7 +99,9 @@ theorem phaseAxisK_sq_eq_neg_id :
 @[rep_depth krein]
 theorem phaseAxisK_inner_skew (u v : H₂) :
     ⟪phaseAxisK (E := E) u, v⟫_ℝ = -⟪u, phaseAxisK (E := E) v⟫_ℝ := by
-  simpa [phaseAxisK] using TomitaTakesaki.complex_i_inner_skew (E := E) u v
+  let _ : CompleteSpace E := inferInstance
+  unfold phaseAxisK
+  exact TomitaTakesaki.complex_i_inner_skew (E := E) u v
 
 /-- Krein-sign rule for the internal phase axis `K`. -/
 @[rep_depth krein]

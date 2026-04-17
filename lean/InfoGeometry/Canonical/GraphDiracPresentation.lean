@@ -58,7 +58,7 @@ Translator map to the generic representation interface.
 This is the canonical way to plug graph-Dirac lanes into intertwiners.
 -/
 @[rep_depth operator]
-def toQuantumPresentation (G : GraphMetricDirac) : QuantumPresentation where
+def toQuantumPresentation (G : GraphMetricDirac) : Presentation where
   Scalar := Real
   State := G.State
   Observable := G.Observable

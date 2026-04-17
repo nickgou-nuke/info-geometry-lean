@@ -80,6 +80,10 @@ theorem global_active_apex_decomposition_reduces_to_active_of_apex_zero
           simp [hApex]
     _ = CIK.spectralProjector * R * CIK.spectralProjector := by simp
 
+section OmitCompleteSpaceSimilarity
+
+omit [CompleteSpace E]
+
 /--
 Similarity transport preserves the idempotence+commutation witness package used
 by block-diagonal decoupling.
@@ -114,6 +118,8 @@ theorem similarity_preserves_idempotent_and_commute
       _ = U * R * (Uinv * U) * P * Uinv := by simp [mul_assoc]
       _ = U * R * Uinv * (U * P * Uinv) := by simp [mul_assoc]
       _ = R' * P' := rfl
+
+end OmitCompleteSpaceSimilarity
 
 /--
 Gauge/similarity specialization of block decoupling:

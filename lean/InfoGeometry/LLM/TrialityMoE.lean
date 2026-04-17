@@ -75,6 +75,10 @@ def activeWeight (R : SparseRouter (X := X) (E := E)) (x : X) (e : E) : ℝ :=
 def defectWeight (R : SparseRouter (X := X) (E := E)) (x : X) (e : E) : ℝ :=
   if R.gate x e then 0 else R.weight x e
 
+section OmitRouterTypeclasses
+
+omit [Fintype E] [DecidableEq E]
+
 /-- Pointwise router split into active and defect contributions. -/
 @[rep_depth transport]
 theorem router_weight_split (R : SparseRouter (X := X) (E := E)) (x : X) (e : E) :
@@ -85,7 +89,8 @@ theorem router_weight_split (R : SparseRouter (X := X) (E := E)) (x : X) (e : E)
   | true =>
       simp [activeWeight, defectWeight, hGate]
 
-@[simp] theorem activeWeight_eq_weight
+@[simp]
+theorem activeWeight_eq_weight
     (R : SparseRouter (X := X) (E := E)) (x : X) (e : E) :
     R.activeWeight x e = R.weight x e := by
   cases hGate : R.gate x e with
@@ -94,7 +99,8 @@ theorem router_weight_split (R : SparseRouter (X := X) (E := E)) (x : X) (e : E)
   | true =>
       simp [activeWeight, hGate]
 
-@[simp] theorem defectWeight_eq_zero
+@[simp]
+theorem defectWeight_eq_zero
     (R : SparseRouter (X := X) (E := E)) (x : X) (e : E) :
     R.defectWeight x e = 0 := by
   cases hGate : R.gate x e with
@@ -102,6 +108,8 @@ theorem router_weight_split (R : SparseRouter (X := X) (E := E)) (x : X) (e : E)
       simp [defectWeight, hGate, R.inactive_weight_eq_zero x e hGate]
   | true =>
       simp [defectWeight, hGate]
+
+end OmitRouterTypeclasses
 
 end SparseRouter
 
@@ -129,6 +137,10 @@ def activeOutput (B : TrialityMoEBlock (X := X) (V := V) (E := E)) (x : X) : V :
 def defectOutput (B : TrialityMoEBlock (X := X) (V := V) (E := E)) (x : X) : V :=
   B.weightedOutput B.router.defectWeight x
 
+section OmitDecidableEqMoE
+
+omit [DecidableEq E]
+
 /-- Algebraic MoE split: total output equals active plus defect output. -/
 @[rep_depth transport]
 theorem moe_output_split (B : TrialityMoEBlock (X := X) (V := V) (E := E)) (x : X) :
@@ -146,7 +158,7 @@ theorem moe_output_split (B : TrialityMoEBlock (X := X) (V := V) (E := E)) (x : 
           simp
     _ = (∑ e, (B.router.activeWeight x e) • B.expert e x)
           + (∑ e, (B.router.defectWeight x e) • B.expert e x) := by
-          simp
+          rw [Finset.sum_add_distrib]
 
 @[simp] theorem defectOutput_eq_zero
     (B : TrialityMoEBlock (X := X) (V := V) (E := E)) (x : X) :
@@ -162,6 +174,8 @@ theorem totalOutput_eq_activeOutput
   calc
     B.totalOutput x = B.activeOutput x + B.defectOutput x := B.moe_output_split x
     _ = B.activeOutput x := by simp
+
+end OmitDecidableEqMoE
 
 end TrialityMoEBlock
 
@@ -179,6 +193,10 @@ namespace SharedRoutedMoEBlock
 def output (B : SharedRoutedMoEBlock (X := X) (V := V) (E := E)) (x : X) : V :=
   B.shared x + B.routed.totalOutput x
 
+section OmitDecidableEqSharedRouted
+
+omit [DecidableEq E]
+
 /-- Shared + routed decomposition into active and defect routed parts. -/
 @[rep_depth transport]
 theorem output_split_active_defect
@@ -195,6 +213,8 @@ theorem output_eq_shared_plus_active
     B.output x = B.shared x + B.routed.activeOutput x := by
   unfold output
   rw [B.routed.totalOutput_eq_activeOutput x]
+
+end OmitDecidableEqSharedRouted
 
 end SharedRoutedMoEBlock
 

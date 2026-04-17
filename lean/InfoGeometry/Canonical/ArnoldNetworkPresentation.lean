@@ -38,11 +38,13 @@ noncomputable def arnoldMetricReadout (ψ : ArnoldMajoranaCarrier E) : ℝ :=
 noncomputable def arnoldPhaseReadout (ψ : ArnoldMajoranaCarrier E) : ℝ :=
   ‖WithLp.fst ψ‖ - ‖WithLp.snd ψ‖
 
+omit [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E] in
 /-- Arnold metric readout is always nonnegative. -/
-@[rep_depth operator]
 theorem arnoldMetricReadout_nonneg (ψ : ArnoldMajoranaCarrier E) :
     0 ≤ arnoldMetricReadout ψ := by
   simp [arnoldMetricReadout]
+
+attribute [rep_depth operator] arnoldMetricReadout_nonneg
 
 /--
 Translator map from Arnold-Majorana network data to `QuantumPresentation`.
@@ -50,7 +52,7 @@ Translator map from Arnold-Majorana network data to `QuantumPresentation`.
 @[rep_depth operator]
 noncomputable def toQuantumPresentation
     (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ) :
-    QuantumPresentation where
+    Presentation where
   Scalar := ℝ
   State := ArnoldMajoranaCarrier E
   Observable := ArnoldMajoranaCarrier E → ArnoldMajoranaCarrier E
@@ -72,7 +74,7 @@ theorem toQuantumPresentation_generator_eq_arnold
 Transport bridge: if every expert preserves a submodule, the one-token Arnold
 generator preserves it as well.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem arnoldGenerator_mem_submodule
     (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ)
     (U : Submodule ℝ (ArnoldMajoranaCarrier E))
@@ -91,7 +93,7 @@ theorem arnoldGenerator_mem_submodule
 Fixed-point bridge: if every expert fixes the current state, the one-token
 Arnold generator is the identity on that state.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem arnoldGenerator_eq_of_experts_fix
     (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ)
     [Nonempty (Fin n)]

@@ -18,6 +18,8 @@ Run a disciplined dual-loop:
 The purpose is high exploration throughput without ontology drift.
 Exploration in this stack is symbol-first; language is coordination-only.
 See: `tools/prompts/SYMBOL_FIRST_PROTOCOL.md`.
+Exploration/closure separation is mandatory via
+`tools/prompts/SOCRATIC_CLOSURE_PROTOCOL.md`.
 
 This handover is multilingual in presentation and single-valued in authority:
 - repo-native semantic language is preserved
@@ -51,6 +53,11 @@ Any conflict is resolved upward in this order.
   - `InfoGeometry.All` and managed DAG products
   - requires green policy gates
   - only this lane is used for closure claims
+
+Mode discipline:
+- Lane A uses `socratic_generator` behavior (obligations/evidence only).
+- Lane C uses `closure_gate` behavior (admit/stabilize/quarantine only).
+- Exploratory lanes must not emit conclusion language.
 
 ## 4. Persona Assignment
 
@@ -94,6 +101,25 @@ The following are prohibited in closure claims:
 - allowing bilingual modules to omit explicit translation/comparison theorem ownership
 
 All “unity/coalescence” claims must point to explicit compiled bridge theorems.
+
+## 6.4 Pauli Seal (Mandatory)
+
+For all agents and coding agents in stabilization/closure lanes, the following
+directives are mandatory:
+
+1. `I.no_mask_mandate`
+2. `II.functorial_connectivity`
+3. `III.axiom_surface_seal`
+4. `IV.semantic_weight_ratio`
+5. `V.identity_via_reflexivity`
+
+Machine gate:
+
+```bash
+python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
+```
+
+Any nonzero finding count blocks Lane B -> Lane C promotion.
 
 ## 7. Quarantine Discipline
 

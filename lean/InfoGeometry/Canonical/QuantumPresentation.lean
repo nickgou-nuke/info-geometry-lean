@@ -1,4 +1,5 @@
 import InfoGeometry.Meta.Architecture
+import Mathlib.Data.Real.Basic
 
 /-!
 # InfoGeometry.Canonical.QuantumPresentation
@@ -31,7 +32,7 @@ The point is not to force one ontology, but to require a common typed contract:
 state support, observable action, generator lane, and scalar readouts.
 -/
 @[rep_depth operator]
-structure QuantumPresentation where
+structure Presentation where
   Scalar : Type
   State : Type
   Observable : Type
@@ -45,15 +46,15 @@ structure QuantumPresentation where
 @[rep_depth operator]
 structure TaggedPresentation where
   lane : PresentationLane
-  data : QuantumPresentation
+  data : Presentation
 
 /--
 Intertwiner between two presentations.
 
 This is the typed place where "same physics, different representation" lives.
 -/
-@[rep_depth transport]
-structure Intertwiner (P Q : QuantumPresentation) where
+@[rep_depth krein]
+structure Intertwiner (P Q : Presentation) where
   mapState : P.State → Q.State
   mapObservable : P.Observable → Q.Observable
   mapScalar : P.Scalar → Q.Scalar
@@ -66,17 +67,17 @@ structure Intertwiner (P Q : QuantumPresentation) where
     ∀ s, mapState (P.generator s) = Q.generator (mapState s)
 
 /-- Scalar readout preservation contract for an intertwiner. -/
-@[rep_depth transport]
+@[rep_depth krein]
 structure ReadoutPreservation
-    {P Q : QuantumPresentation} (F : Intertwiner P Q) : Prop where
+    {P Q : Presentation} (F : Intertwiner P Q) : Prop where
   metric :
     ∀ s, F.mapScalar (P.metricReadout s) = Q.metricReadout (F.mapState s)
   phase :
     ∀ s, F.mapScalar (P.phaseReadout s) = Q.phaseReadout (F.mapState s)
 
 /-- Identity intertwiner on a presentation. -/
-@[rep_depth transport]
-def idIntertwiner (P : QuantumPresentation) : Intertwiner P P where
+@[rep_depth krein]
+def idIntertwiner (P : Presentation) : Intertwiner P P where
   mapState := fun s => s
   mapObservable := fun o => o
   mapScalar := fun x => x
@@ -91,9 +92,9 @@ def idIntertwiner (P : QuantumPresentation) : Intertwiner P P where
     rfl
 
 /-- Composition of intertwiners. -/
-@[rep_depth transport]
+@[rep_depth krein]
 def compIntertwiner
-    {P Q R : QuantumPresentation}
+    {P Q R : Presentation}
     (F : Intertwiner P Q)
     (G : Intertwiner Q R) :
     Intertwiner P R where
@@ -119,5 +120,62 @@ def compIntertwiner
               rw [F.map_generator s]
       _ = R.generator (G.mapState (F.mapState s)) := by
               rw [G.map_generator (F.mapState s)]
+
+/--
+Concrete nontrivial presentation on paired states.
+
+This gives a load-bearing witness that the intertwiner lane is not only identity
+scaffolding: the state map can be a genuine symmetry (swap) while preserving the
+typed action/support/generator contracts.
+-/
+@[rep_depth operator]
+def pairedFunctionPresentation (α : Type) : Presentation where
+  Scalar := Nat
+  State := α × α
+  Observable := α → α
+  act := fun o s => (o s.1, o s.2)
+  support := fun _ => True
+  generator := fun s => (s.2, s.1)
+  metricReadout := fun _ => 0
+  phaseReadout := fun _ => 0
+
+/-- Non-identity symmetry intertwiner on the paired-function presentation. -/
+@[rep_depth krein]
+def pairedSwapIntertwiner (α : Type) :
+    Intertwiner (pairedFunctionPresentation α) (pairedFunctionPresentation α) where
+  mapState := fun s => (s.2, s.1)
+  mapObservable := fun o => o
+  mapScalar := fun x => x
+  map_act := by
+    intro o s
+    cases s
+    rfl
+  map_support := by
+    intro s hs
+    trivial
+  map_generator := by
+    intro s
+    cases s
+    rfl
+
+/-- Readout preservation for the paired swap intertwiner. -/
+@[rep_depth krein]
+def pairedSwapReadoutPreservation (α : Type) :
+    ReadoutPreservation (pairedSwapIntertwiner α) where
+  metric := by
+    intro s
+    rfl
+  phase := by
+    intro s
+    rfl
+
+@[rep_depth krein]
+theorem pairedSwapIntertwiner_moves_state
+    {α : Type} (a b : α) (h : a ≠ b) :
+    (pairedSwapIntertwiner α).mapState (a, b) ≠ (a, b) := by
+  intro hEq
+  have hb : b = a := by
+    exact congrArg Prod.fst hEq
+  exact h hb.symm
 
 end InfoGeometry.Canonical.QuantumPresentation

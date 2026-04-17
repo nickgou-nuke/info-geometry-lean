@@ -37,3 +37,32 @@ sandbox:
     - "./docs"
     - "./quarantine"
     - "./skills"
+
+# Runtime Autonomy Policy (Required by agentic_policy_lint.py)
+runtime_policy:
+  planes:
+    allowed:
+      - "prove"
+      - "orchestrate"
+      - "publish"
+    default: "prove"
+  
+  heartbeat:
+    enabled: true
+    allowed_planes:
+      - "prove"
+      - "orchestrate"
+  
+  publish:
+    enabled: true
+    default_policy: "deny"
+    require_two_key_approval: true
+    approval_keys:
+      - "human"
+      - "policy_engine"
+
+tools:
+  - name: "semantic-audit"
+    enabled: true
+    allowed_plane: "orchestrate"
+    allows_outbound_publish: false

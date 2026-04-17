@@ -345,8 +345,8 @@ noncomputable def canonicalHyperbolicBoostRotor (n : ℕ) (θ : ℝ) :
 @[simp] theorem canonicalHyperbolicBoostRotor_zero (n : ℕ) :
     canonicalHyperbolicBoostRotor n 0
       = (1 : InfoGeometry.Canonical.SplitCliffordTensorBridge.SplitClNNTensorStep n) := by
-  simpa [canonicalHyperbolicBoostRotor] using
-    (InfoGeometry.Canonical.HyperbolicRotor.hyperbolicRotor_zero n)
+  unfold canonicalHyperbolicBoostRotor
+  exact InfoGeometry.Canonical.HyperbolicRotor.hyperbolicRotor_zero n
 
 end RotorLane
 

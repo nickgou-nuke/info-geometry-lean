@@ -29,7 +29,7 @@ variable [FiniteDimensional ℝ E]
 Intertwiner from Arnold-network presentation to doubled/Krein Fierz
 presentation under expert fixed-point hypotheses.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 noncomputable def arnoldToDoubledKreinIntertwiner_of_expertsFix
     (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ)
     [Nonempty (Fin n)]
@@ -60,7 +60,7 @@ noncomputable def arnoldToDoubledKreinIntertwiner_of_expertsFix
 Readout-preservation contract for the Arnold→doubled/Krein intertwiner,
 parametrized by pointwise readout-identification hypotheses.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 theorem arnoldToDoubledKrein_readoutPreservation_of_pointwise_eq
     (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ)
     [Nonempty (Fin n)]

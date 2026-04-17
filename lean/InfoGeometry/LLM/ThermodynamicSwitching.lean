@@ -21,6 +21,7 @@ variable {n : Nat} [Nonempty (Fin n)]
 noncomputable def logSumExpRouter (β : ℝ) (x : Tok → V) (i : Tok) : ℝ :=
   Real.log (routerPartition n β x i)
 
+omit [Fintype Tok] [DecidableEq Tok] [NormedSpace ℝ V] in
 /-- Router partition is exactly the exponential of log-sum-exp. -/
 @[rep_depth transport]
 theorem routerPartition_eq_exp_logSumExp (β : ℝ) (x : Tok → V) (i : Tok) :
@@ -47,6 +48,7 @@ noncomputable def maskedNormalizedMixture
   ∑ e : ExpertIdx n,
     (maskedNormalizedWeight (n := n) mask β x i e) • (layer.experts e).apply (x i)
 
+omit [Fintype Tok] [DecidableEq Tok] [NormedSpace ℝ V] in
 /-- Masked weights remain nonnegative. -/
 lemma maskedNormalizedWeight_nonneg
     (mask : SwitchMask n) (β : ℝ) (x : Tok → V) (i : Tok) (e : ExpertIdx n) :
@@ -57,6 +59,7 @@ lemma maskedNormalizedWeight_nonneg
     exact div_nonneg (le_of_lt (Real.exp_pos _)) (le_of_lt (routerPartition_pos (n := n) β x i))
   · simp
 
+omit [Fintype Tok] [DecidableEq Tok] [Nonempty (Fin n)] in
 /-- All-top mask recovers the canonical normalized mixture. -/
 @[rep_depth transport]
 theorem maskedNormalizedMixture_allTop_eq_normalizedMixture
@@ -68,6 +71,7 @@ theorem maskedNormalizedMixture_allTop_eq_normalizedMixture
   intro e he
   simp
 
+omit [Fintype Tok] [DecidableEq Tok] [NormedSpace ℝ V] in
 /-- All-top thermodynamic weights form a simplex point (sum to `1`). -/
 @[rep_depth transport]
 theorem allTop_weights_sum_one (β : ℝ) (x : Tok → V) (i : Tok) :
@@ -148,7 +152,7 @@ This is a direct translator call; it does not duplicate owner logic.
 noncomputable def arnoldQuantumPresentation
     (n : Nat)
     (net : InfoGeometry.Canonical.MoE.ArnoldMajoranaNetwork n E)
-    (β : ℝ) : QuantumPresentation :=
+    (β : ℝ) : Presentation :=
   InfoGeometry.Canonical.ArnoldNetworkPresentation.toQuantumPresentation
     (E := E) n net β
 

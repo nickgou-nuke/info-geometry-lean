@@ -14,6 +14,7 @@ SOUL_POLICY = ROOT / "tools/prompts/SOUL_POLICY.md"
 HEARTBEAT_POLICY = ROOT / "tools/prompts/HEARTBEAT_POLICY.md"
 PUBLISH_POLICY = ROOT / "tools/prompts/PUBLISH_GATE_POLICY.md"
 SYMBOL_FIRST_POLICY = ROOT / "tools/prompts/SYMBOL_FIRST_PROTOCOL.md"
+SOCRATIC_CLOSURE_POLICY = ROOT / "tools/prompts/SOCRATIC_CLOSURE_PROTOCOL.md"
 DEFAULT_CONFIG = ROOT / "nemoclaw_config.yaml"
 
 REQUIRED_TEXT: dict[Path, tuple[str, ...]] = {
@@ -38,6 +39,11 @@ REQUIRED_TEXT: dict[Path, tuple[str, ...]] = {
         "Natural language is a coordination layer, not the primary search surface.",
         "Only compiled Lean terms are authoritative.",
     ),
+    SOCRATIC_CLOSURE_POLICY: (
+        "Exploration agents must return evidence packets and open obligations, not conclusions.",
+        "Closure claims are allowed only in closure mode with compiled Lean anchors.",
+        "High-value failures are assets; preserve diagnostics.",
+    ),
 }
 
 REQUIRED_LINKAGE_TEXT: dict[Path, tuple[str, ...]] = {
@@ -56,10 +62,20 @@ REQUIRED_LINKAGE_TEXT: dict[Path, tuple[str, ...]] = {
     ROOT / "tools/prompts/agentic_autotheory_prompts_2026-04-15.md": (
         "Symbol-first exploration is mandatory; language is coordination-only.",
         "SYMBOL_FIRST_PROTOCOL.md",
+        "SOCRATIC_CLOSURE_PROTOCOL.md",
     ),
     ROOT / "tools/prompts/agentic_handover_policy_2026-04-15.md": (
         "Exploration in this stack is symbol-first; language is coordination-only.",
         "SYMBOL_FIRST_PROTOCOL.md",
+        "SOCRATIC_CLOSURE_PROTOCOL.md",
+    ),
+    ROOT / "tools/prompts/jungian_pass.md": (
+        "socratic_generator",
+        "SOCRATIC_CLOSURE_PROTOCOL.md",
+    ),
+    ROOT / "tools/prompts/pauli_pass.md": (
+        "closure_gate",
+        "SOCRATIC_CLOSURE_PROTOCOL.md",
     ),
 }
 

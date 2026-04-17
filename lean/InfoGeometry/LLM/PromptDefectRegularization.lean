@@ -46,6 +46,10 @@ noncomputable def regularizedRun
     (lambda : ℝ) (x : EndN) : EndN :=
   B.spinPin.layer.run (regularizedCoreUpdate (B := B) lambda x)
 
+section OmitDecidableEqPromptLemmas
+
+omit [DecidableEq Expert]
+
 @[rep_depth transport]
 theorem defect_quarantined_on_mixed_input
     (B : Llama4BlockSpec (S := S) (Pos := Pos) (Expert := Expert))
@@ -127,6 +131,8 @@ theorem regularizedRun_eq_run_on_mixed_input
     regularizedRun (B := B) lambda (MangledPrompt.mixedInput μ)
       = B.run (MangledPrompt.mixedInput μ) := by
   exact regularizedRun_eq_run (B := B) lambda (MangledPrompt.mixedInput μ)
+
+end OmitDecidableEqPromptLemmas
 
 end PromptRegularization
 

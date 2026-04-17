@@ -10,10 +10,10 @@ namespace InfoGeometry.Quantum
 
 open InfoGeometry.Convex
 open InfoGeometry.Krein
-open InfoGeometry.Canonical.BeliefDynamics
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.ConformalUnification
 open InfoGeometry.Canonical.MongeAmpereDualSheetBridge
+open InfoGeometry.Canonical.QuantumGeometryDualSheetBridge
 open InfoGeometry.Canonical.ModularTwoStateCorrelation
 open InfoGeometry.Canonical.RelativeModularPotential
 open InfoGeometry.Canonical.StateDependentTransport
@@ -76,12 +76,9 @@ noncomputable def quantumGeometryProjectorOperatorPair
       = 0 := by
   change InfoGeometry.Canonical.BogoliubovProjectorFlux.plusProjectorFlux
       SCI.toCertifiedConformalInference.liftedProjectorObstructionOperator = 0
-  have hFlux :
-      InfoGeometry.Canonical.BogoliubovProjectorFlux.plusProjectorFlux
-          SCI.toCertifiedConformalInference.liftedLeftChiralAnomalyOperator = 0 :=
-    SCI.toCertifiedConformalInference.plusProjectorFlux_liftedChiralAnomalyOperator
-  simpa [InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.liftedProjectorObstructionOperator,
-    InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.liftedLeftChiralAnomalyOperator] using hFlux
+  rw [show SCI.toCertifiedConformalInference.liftedProjectorObstructionOperator
+      = SCI.toCertifiedConformalInference.liftedLeftChiralAnomalyOperator from rfl]
+  exact SCI.toCertifiedConformalInference.plusProjectorFlux_liftedChiralAnomalyOperator
 
 @[simp] theorem minusProjectorFlux_snd_quantumGeometryProjectorOperatorPair
     (H : HessianGeometry E) (x : E)
@@ -91,12 +88,9 @@ noncomputable def quantumGeometryProjectorOperatorPair
       = 0 := by
   change InfoGeometry.Canonical.BogoliubovProjectorFlux.minusProjectorFlux
       SCI.toCertifiedConformalInference.liftedProjectorObstructionOperator = 0
-  have hFlux :
-      InfoGeometry.Canonical.BogoliubovProjectorFlux.minusProjectorFlux
-          SCI.toCertifiedConformalInference.liftedLeftChiralAnomalyOperator = 0 :=
-    SCI.toCertifiedConformalInference.minusProjectorFlux_liftedChiralAnomalyOperator
-  simpa [InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.liftedProjectorObstructionOperator,
-    InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference.liftedLeftChiralAnomalyOperator] using hFlux
+  rw [show SCI.toCertifiedConformalInference.liftedProjectorObstructionOperator
+      = SCI.toCertifiedConformalInference.liftedLeftChiralAnomalyOperator from rfl]
+  exact SCI.toCertifiedConformalInference.minusProjectorFlux_liftedChiralAnomalyOperator
 
 /--
 Operator-level bridge: under projector agreement, the phase half of the bridge is

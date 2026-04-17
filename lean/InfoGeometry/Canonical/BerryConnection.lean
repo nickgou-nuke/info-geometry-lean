@@ -79,8 +79,7 @@ noncomputable def toQGT
 @[simp] theorem toQGT_compat_complex_i
     (S : SuperHestenesKaehlerDatum (E := E)) (u v : H₂) :
     S.toQGT.berry u v = S.toQGT.metric (InfoGeometry.Krein.complex_i (E := E) u) v := by
-  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
-    S.toQGT.compat u v
+  exact S.toQGT.compat u v
 
 /-- Canonical constructor from the maintained real doubled QGT owner surface. -/
 noncomputable def ofQGT
@@ -133,8 +132,7 @@ noncomputable def ofQGT
     (Q : QGT E) :
     (ofQGT (E := E) Q).J =
       InfoGeometry.Krein.modular_j (E := E) := by
-  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_eq_modular_j] using
-    (ofQGT_J (E := E) Q)
+  exact ofQGT_J (E := E) Q
 
 @[simp] theorem ofQGT_epsilon
     (Q : QGT E) :
@@ -145,8 +143,7 @@ noncomputable def ofQGT
     (Q : QGT E) :
     (ofQGT (E := E) Q).epsilon =
       InfoGeometry.Krein.spectral_epsilon (E := E) := by
-  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_eq_spectral_epsilon] using
-    (ofQGT_epsilon (E := E) Q)
+  exact ofQGT_epsilon (E := E) Q
 
 @[simp] theorem ofQGT_K
     (Q : QGT E) :
@@ -305,8 +302,7 @@ noncomputable def hestenesBerryTwoForm
       =
     hestenesMetricTwoForm hMod A
       (InfoGeometry.Krein.complex_i (E := E) u) v := by
-  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
-    hestenesBerryTwoForm_apply (E := E) hMod A u v
+  exact hestenesBerryTwoForm_apply (E := E) hMod A u v
 
 /--
 Operator Maurer-Cartan curvature bracket on doubled real space.

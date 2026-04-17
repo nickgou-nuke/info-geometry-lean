@@ -33,10 +33,11 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 noncomputable def internalPhaseAxis : H₂ →L[ℝ] H₂ :=
   InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)
 
+set_option linter.unusedSectionVars false in
 @[rep_depth krein, simp] theorem internalPhaseAxis_eq_complex_i :
     internalPhaseAxis (E := E) = InfoGeometry.Krein.complex_i (E := E) := by
-  simpa [internalPhaseAxis] using
-    (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E))
+  unfold internalPhaseAxis
+  exact InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)
 
 /--
 Paper complex unit `i` corresponds to the repo's internal real-Majorana phase
@@ -45,8 +46,8 @@ axis `K = Jε` on the doubled carrier.
 @[rep_depth krein, simp] theorem paper_complexUnit_eq_internalPhaseAxis :
     (internalPhaseAxis (E := E)).toLinearMap =
       (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E).K := by
-  simpa [internalPhaseAxis_eq_complex_i] using
-    complex_i_toLinearMap_eq_realMajoranaKAxis (E := E)
+  rw [internalPhaseAxis_eq_complex_i]
+  exact complex_i_toLinearMap_eq_realMajoranaKAxis (E := E)
 
 /--
 On perturbation channels, the paper's complex multiplication by `i` is realized
@@ -113,8 +114,8 @@ repo's metric/Berry pair of the comparison-state anchor.
 @[rep_depth transport, simp] theorem paper_metricPhase_pair_eq_metricBerry_of_anchor
     (R : RelationalInformationDatum (E := E))
     (A : ObservableAlgebra E) (u v : H₂) :
-    ( comparisonMetricReadout R A u v
-    , comparisonPhaseReadout R A u v )
+    ( RelationalInformationCore.comparisonMetricReadout R A u v
+    , RelationalInformationCore.comparisonPhaseReadout R A u v )
       =
     ( InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
         (E := E) (comparisonInducedDynamics R A) u v
@@ -131,22 +132,23 @@ internal phase axis `K = Jε`, not by an external scalar `i`.
 @[rep_depth transport, simp] theorem paper_phaseReadout_eq_metric_comp_internalPhaseAxis
     (R : RelationalInformationDatum (E := E))
     (A : ObservableAlgebra E) :
-    comparisonPhaseReadout R A
+    RelationalInformationCore.comparisonPhaseReadout R A
       =
-    (comparisonMetricReadout R A).compLeft (internalPhaseAxis (E := E)).toLinearMap := by
-  simpa [internalPhaseAxis_eq_complex_i] using
-    (RelationalInformationCore.comparisonPhaseReadout_eq_metric_comp_complex_i
-      (E := E) R A)
+    (RelationalInformationCore.comparisonMetricReadout R A).compLeft
+      (internalPhaseAxis (E := E)).toLinearMap := by
+  rw [internalPhaseAxis_eq_complex_i]
+  exact RelationalInformationCore.comparisonPhaseReadout_eq_metric_comp_complex_i
+    (E := E) R A
 
 @[rep_depth transport, simp] theorem paper_phaseReadout_eq_metric_comp_complex_i
     (R : RelationalInformationDatum (E := E))
     (A : ObservableAlgebra E) :
-    comparisonPhaseReadout R A
+    RelationalInformationCore.comparisonPhaseReadout R A
       =
-    (comparisonMetricReadout R A).compLeft
+    (RelationalInformationCore.comparisonMetricReadout R A).compLeft
       (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
-  simpa [internalPhaseAxis_eq_complex_i] using
-    paper_phaseReadout_eq_metric_comp_internalPhaseAxis (E := E) R A
+  rw [paper_phaseReadout_eq_metric_comp_internalPhaseAxis (E := E) R A]
+  rw [internalPhaseAxis_eq_complex_i]
 
 /--
 When a relational datum is induced from a primitive potential datum, the paper's

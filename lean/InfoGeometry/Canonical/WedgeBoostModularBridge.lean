@@ -49,6 +49,7 @@ theorem unruhFlowOfModularTime_eq_unruhFlow (τmod : ℝ) :
       =
     InfoGeometry.Dynamics.unruhFlow (E := E)
       (RealTomitaCore.wedgeBoostParameter τmod) := by
+  let _ : CompleteSpace E := inferInstance
   rfl
 
 /-- Unruh flow in modular time has the canonical hyperbolic polynomial form. -/
@@ -59,7 +60,8 @@ theorem unruhFlowOfModularTime_eq_modular_polynomial (τmod : ℝ) :
           • (ContinuousLinearMap.id ℝ H₂)
         + (Real.sinh (RealTomitaCore.wedgeBoostParameter τmod))
           • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
-  simpa [unruhFlowOfModularTime] using
+  unfold unruhFlowOfModularTime
+  exact
     (InfoGeometry.Dynamics.unruhFlow_is_modular_flow
       (E := E) (θ := RealTomitaCore.wedgeBoostParameter τmod))
 

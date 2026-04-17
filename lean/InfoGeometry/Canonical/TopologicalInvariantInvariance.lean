@@ -93,6 +93,10 @@ open InfoGeometry.Canonical.ProjectorEquivariance
 variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
+section OmitCompleteFixedGrading
+
+omit [CompleteSpace E]
+
 /--
 Fixed-frame convention map:
 the canonical phase flip on the grading involution swaps the two chiral
@@ -108,6 +112,8 @@ theorem fixedGrading_phaseFlip_projectorSwap :
       =
     ProjectorEquivariance.plusProjector (E := E) := by
   simpa using (ProjectorEquivariance.fixedGrading_projectorSwap (E := E))
+
+end OmitCompleteFixedGrading
 
 end FixedVsTransportedConventions
 

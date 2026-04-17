@@ -123,9 +123,8 @@ noncomputable def defectChiralIndex
       -
     (Module.finrank ℝ (defectKernelSliceMinus (E := E) T TD) : ℤ)
 
-/--
-Nonzero defect chiral index forces plus/minus defect-slice dimension mismatch.
--/
+-- Nonzero defect chiral index forces plus/minus defect-slice dimension mismatch.
+omit [CompleteSpace E] in
 @[rep_depth transport]
 theorem defectKernelDimMismatch_of_defectChiralIndex_ne_zero
     (T TD : EndH₂)

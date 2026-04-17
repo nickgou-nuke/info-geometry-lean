@@ -1,5 +1,6 @@
 import InfoGeometry.Thermo.ModularKLDivergence
-import InfoGeometry.Canonical.PositiveRayProjectiveBridge
+import InfoGeometry.Canonical.ProjectiveStateCore
+import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 import InfoGeometry.Canonical.DPDWedgeCompatibility
 import InfoGeometry.Canonical.RelativeModularScaleShapeSplit
 import InfoGeometry.Meta.Architecture
@@ -23,7 +24,9 @@ open scoped ENNReal NNReal
 open MeasureTheory
 open InfoGeometry.PositiveMeasure
 open InfoGeometry.Canonical.PositiveRayCore
+open InfoGeometry.Canonical.ProjectiveStateCore
 open InfoGeometry.Canonical.RelativePotentialCore
+open InfoGeometry.Canonical.RelativePotentialDiscreteBridge
 open InfoGeometry.Canonical.DPDWedgeCompatibility
 open InfoGeometry.Canonical.ModularSpectralWedge
 open InfoGeometry.Canonical.RelativeModularScaleShapeSplit
@@ -355,6 +358,10 @@ variable {α : Type*}
 variable [Fintype α] [Nonempty α]
 variable [MeasurableSpace α] [MeasurableSingletonClass α] [Countable α]
 
+/-- Canonical embedding of a strict-positive ray into the widened projective substrate. -/
+noncomputable abbrev positiveRayToProjectiveState (q : PositiveRay α) : ProjectiveState α :=
+  toProjectiveState (α := α) q
+
 /--
 On the strict-positive slice, the widened projective logarithmic generator is
 almost everywhere the relative modular potential.
@@ -363,16 +370,14 @@ almost everywhere the relative modular potential.
 theorem positiveRay_logGenerator_eq_relativeModularPotential_ae
     (q q0 : PositiveRay α) :
     InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
-        (InfoGeometry.Canonical.PositiveRayProjectiveBridge.positiveRayToProjectiveState
-          (α := α) q0)
-        (InfoGeometry.Canonical.PositiveRayProjectiveBridge.positiveRayToProjectiveState
-          (α := α) q)
+        (positiveRayToProjectiveState (α := α) q0)
+        (positiveRayToProjectiveState (α := α) q)
       =ᶠ[ae (InfoGeometry.Canonical.RelativePotentialDiscreteBridge.gaugeSectionFinProb
             (α := α) q).toMeasure]
         fun a => relativeModularPotential (α := α) q q0 a := by
   exact
-    InfoGeometry.Canonical.PositiveRayProjectiveBridge.positiveRay_logGenerator_eq_relativeModularPotential_ae
-      (α := α) q q0
+    InfoGeometry.Canonical.RelativePotentialDiscreteBridge.projectiveLogGenerator_eq_relativeModularPotential_ae
+      (α := α) (q := q) (q0 := q0)
 
 /--
 Pointwise strict-positive compatibility: projective logarithmic generator equals
@@ -382,14 +387,12 @@ relative modular potential.
 theorem positiveRay_logGenerator_eq_relativeModularPotential
     (q q0 : PositiveRay α) (a : α) :
     InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
-        (InfoGeometry.Canonical.PositiveRayProjectiveBridge.positiveRayToProjectiveState
-          (α := α) q0)
-        (InfoGeometry.Canonical.PositiveRayProjectiveBridge.positiveRayToProjectiveState
-          (α := α) q) a
+        (positiveRayToProjectiveState (α := α) q0)
+        (positiveRayToProjectiveState (α := α) q) a
       = relativeModularPotential (α := α) q q0 a := by
   exact
-    InfoGeometry.Canonical.PositiveRayProjectiveBridge.positiveRay_logGenerator_eq_relativeModularPotential
-      (α := α) q q0 a
+    InfoGeometry.Canonical.RelativePotentialDiscreteBridge.projectiveLogGenerator_eq_relativeModularPotential
+      (α := α) (q := q) (q0 := q0) a
 
 /--
 Equivalent pointwise form: projective logarithmic generator equals the negative
@@ -399,10 +402,8 @@ relative log-density.
 theorem positiveRay_logGenerator_eq_neg_relativeLogDensity
     (q q0 : PositiveRay α) (a : α) :
     InfoGeometry.MeasureProjective.ProjectiveState.logGenerator
-        (InfoGeometry.Canonical.PositiveRayProjectiveBridge.positiveRayToProjectiveState
-          (α := α) q0)
-        (InfoGeometry.Canonical.PositiveRayProjectiveBridge.positiveRayToProjectiveState
-          (α := α) q) a
+        (positiveRayToProjectiveState (α := α) q0)
+        (positiveRayToProjectiveState (α := α) q) a
       = -relativeLogDensity (α := α) q q0 a := by
   rw [positiveRay_logGenerator_eq_relativeModularPotential (α := α) (q := q) (q0 := q0)
       (a := a)]

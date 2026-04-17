@@ -169,7 +169,8 @@ theorem Pzero_mul_Preg :
   change IsDrazinInverse.complementaryProjection T TD * IsDrazinInverse.projection T TD = 0
   exact IsDrazinInverse.complementaryProjection_mul_projection hCompat.hD
 
-/-- Decomposition identity `P + P₀ = 1`. -/
+-- Decomposition identity `P + P₀ = 1`.
+omit [CompleteSpace E] in
 @[rep_depth operator]
 theorem Preg_add_Pzero :
     Preg T TD + Pzero T TD = (1 : DoubledSpace E →L[ℝ] DoubledSpace E) := by
@@ -287,6 +288,7 @@ theorem Pplus_add_Pminus :
   unfold chiralPlus chiralMinus
   exact krein_projector_completeness (E := E)
 
+omit [CompleteSpace E] in
 private theorem commutes_with_Preg
     {S T TD : Op}
     (hST : S.comp T = T.comp S)
@@ -306,6 +308,7 @@ private theorem commutes_with_Preg
     _ = T (TD (S x)) := by rw [hSTDx]
     _ = ((Preg T TD).comp S) x := by rfl
 
+omit [CompleteSpace E] in
 private theorem commutes_with_Pzero
     {S T TD : Op}
     (hSP : S.comp (Preg T TD) = (Preg T TD).comp S) :

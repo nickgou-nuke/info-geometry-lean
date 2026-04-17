@@ -72,13 +72,15 @@ theorem chiral_symmetry_eq_epsilon :
 @[rep_depth transport, simp]
 theorem cl11DIIIPackage_T_eq_complex_i :
     (cl11DIIIPackage (E := E)).T = complex_i (E := E) := by
-  simpa [cl11DIIIPackage] using canonicalDIIIProxy_T_eq_complex_i (E := E)
+  change (canonicalDIIIProxy (E := E)).T = complex_i (E := E)
+  exact canonicalDIIIProxy_T_eq_complex_i (E := E)
 
 /-- Root-name companion: the physics translator uses `C = modular_j`. -/
 @[rep_depth transport, simp]
 theorem cl11DIIIPackage_C_eq_modular_j :
     (cl11DIIIPackage (E := E)).C = modular_j (E := E) := by
-  simpa [cl11DIIIPackage] using canonicalDIIIProxy_C_eq_modular_j (E := E)
+  change (canonicalDIIIProxy (E := E)).C = modular_j (E := E)
+  exact canonicalDIIIProxy_C_eq_modular_j (E := E)
 
 /--
 Packaged root-name law surface for the physics translator.
@@ -92,8 +94,12 @@ theorem cl11DIIIPackage_root_laws :
       ∧ P.C.comp P.C = ContinuousLinearMap.id ℝ H₂
       ∧ P.T.comp P.C = -(spectral_epsilon (E := E)) := by
   refine ⟨cl11DIIIPackage_T_eq_complex_i (E := E), cl11DIIIPackage_C_eq_modular_j (E := E), ?_, ?_, ?_⟩
-  · simpa [cl11DIIIPackage] using (canonicalDIIIProxy (E := E)).T_sq
-  · simpa [cl11DIIIPackage] using (canonicalDIIIProxy (E := E)).C_sq
+  · change (canonicalDIIIProxy (E := E)).T.comp (canonicalDIIIProxy (E := E)).T =
+      -(ContinuousLinearMap.id ℝ H₂)
+    exact (canonicalDIIIProxy (E := E)).T_sq
+  · change (canonicalDIIIProxy (E := E)).C.comp (canonicalDIIIProxy (E := E)).C =
+      ContinuousLinearMap.id ℝ H₂
+    exact (canonicalDIIIProxy (E := E)).C_sq
   · exact chiral_symmetry_eq_epsilon (E := E)
 
 end InfoGeometry.Physics.DIIISymmetryAtom

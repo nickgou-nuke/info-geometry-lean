@@ -40,6 +40,7 @@ local instance : IsTopologicalRing EndH := inferInstance
 local instance : SMulCommClass ℝ EndH EndH := inferInstance
 local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
+omit [CompleteSpace H] in
 /-- Bridge between commutator vanishing and commutation. -/
 @[rep_depth krein]
 theorem drazinCommutator_eq_zero_iff_commute
@@ -52,6 +53,7 @@ theorem drazinCommutator_eq_zero_iff_commute
   · intro h
     exact sub_eq_zero.mpr h.eq
 
+omit [CompleteSpace H] in
 /--
 Noether law on the operatorial split lane:
 if `Q² = H + Z` and `C` commutes with `Q` and `Z`, then `C` commutes with `H`.
@@ -81,6 +83,7 @@ theorem noether_charge_of_supercharge_split
     simpa [sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using hSub
   exact hHC
 
+omit [CompleteSpace H] in
 /--
 Commutator form of `noether_charge_of_supercharge_split`.
 -/

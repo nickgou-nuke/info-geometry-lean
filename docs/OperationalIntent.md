@@ -9,6 +9,14 @@ but to make the morphisms between them explicit, adjacent, and checkable.
 For the latest verified build/audit snapshot, use
 [CODEBASE_STATUS.md](CODEBASE_STATUS.md).
 
+Current gate reality:
+
+- `InfoGeometry.LLM` is build-green under locked build.
+- `strictCheck` is build-red due warning debt under `--wfail`.
+- standalone [`ProjectorEquivariance.lean`](../lean/InfoGeometry/Canonical/ProjectorEquivariance.lean)
+  currently builds green.
+- do not rely on stale “warning-only strict debt” assumptions.
+
 ## What Is Being Formalized
 
 The stable grammar is the semantic representation ladder defined in
@@ -34,6 +42,18 @@ The design rule is:
 - coherence files prove adjacent composites agree
 - capstones summarize lower content without pretending to be roots
 
+## Socratic Doctrine (Operational)
+
+The stack runs with two mandatory AI modes:
+
+- `socratic_generator`: produces obligations, counterexamples, and unresolved assumptions.
+- `closure_gate`: emits admit/reject only through compiled Lean anchors.
+
+Repository rule:
+
+- exploratory agents must not emit final closure claims;
+- closure language is reserved for kernel-verified surfaces and gate outputs.
+
 The maintained tooling layer now has two operator surfaces:
 
 - DAG refresh and reporting under [lean/DAG](../lean/DAG) and [tools/infra](../tools/infra)
@@ -41,6 +61,16 @@ The maintained tooling layer now has two operator surfaces:
 
 The first is authoritative memory for whole-repo structure. The second is the
 interactive elaboration surface closest to the Lean editor infoview.
+
+LeanTrail now adds a retrieval-carrier lane on top of the canonical snapshot:
+
+- canonical semantic carrier: `artifacts/leantrail/graph_snapshot.json`
+- external adapters: GraphML, Neo4j CSV, Arango JSON
+- mandatory parity gate: `tools/leantrail/conformance.py`
+
+Rule: external graph/vector/database carriers are read models, not truth
+owners; they are admissible only when conformance against the canonical
+snapshot is green.
 
 ## Current Live Trunks
 
@@ -114,9 +144,28 @@ Current status:
 - the Quantum Geometric Tensor (QGT) is derived from operator transport laws
 - infinitesimal transport is formalized via Lie derivatives of exponential conjugation
 
+### Spectroscopic and path-ensemble branch
+
+The spectroscopic lane is active as a translator/coherence surface downstream
+from owned KMS flow:
+
+- [UnruhKMS.lean](../lean/InfoGeometry/Dynamics/UnruhKMS.lean)
+- [SpectroscopicGaugeKMSBridge.lean](../lean/InfoGeometry/Canonical/SpectroscopicGaugeKMSBridge.lean)
+- [SpectroscopicGauge.lean](../lean/InfoGeometry/Canonical/SpectroscopicGauge.lean)
+- [HestenesGibbsPathIntegral.lean](../lean/InfoGeometry/Canonical/HestenesGibbsPathIntegral.lean)
+- [DiscreteRouterHestenesPathBridge.lean](../lean/InfoGeometry/LLM/DiscreteRouterHestenesPathBridge.lean)
+
+Status:
+
+- KMS ownerhood remains in `UnruhKMS`;
+- spectroscopic reference-state data is compatibility packaging, not a new owner;
+- path surprisal and Gibbs weighting are explicit in canonical translator form;
+- LLM bridge gives explicit Bayes/path-Gibbs correspondence under declared hypotheses.
+
 ## Current Closure Backlog
 
 For the live closure ledger (fixed points, open fixtures, and priority
 elimination order after `9d81730`), see:
 
 - [analytic_closure_backlog.md](analytic_closure_backlog.md)
+- [CleanupImprovementProgram.md](CleanupImprovementProgram.md)

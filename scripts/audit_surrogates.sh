@@ -150,4 +150,7 @@ if rg -n "vacuity gate: \\*\\*FAIL\\*\\*" VACUITY_INDEX.md >/dev/null; then
   exit 1
 fi
 
+echo "[surrogate-audit] enforcing Pauli seal directives on canonical surface"
+python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
+
 echo "[surrogate-audit] OK"

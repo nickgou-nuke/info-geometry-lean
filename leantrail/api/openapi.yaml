@@ -81,6 +81,12 @@ paths:
           name: lawful_only
           schema:
             type: boolean
+        - in: query
+          name: state_policy
+          description: Edge-state traversal filter (`any`, `exclude-failed`, `locked-only`)
+          schema:
+            type: string
+            enum: [any, exclude-failed, locked-only]
       responses:
         '200':
           description: Path payload
@@ -112,6 +118,35 @@ paths:
       responses:
         '200':
           description: Hotspot payload
+  /holonomy/hotspots:
+    get:
+      summary: Return declaration-level holonomy hotspots
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+        - in: query
+          name: alpha
+          schema:
+            type: number
+        - in: query
+          name: beta
+          schema:
+            type: number
+        - in: query
+          name: gamma
+          schema:
+            type: number
+        - in: query
+          name: min_score
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Holonomy hotspot payload
   /bridge-candidate:
     post:
       summary: Validate and persist candidate bridge packet

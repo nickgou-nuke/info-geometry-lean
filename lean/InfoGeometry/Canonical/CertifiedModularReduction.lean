@@ -187,6 +187,15 @@ theorem anomaly_zero_iff_alignment :
   simpa [anomaly, SpectralMetricAlignment, Preg, Pmetric, metricProjectorOf] using
     c.hAnomaly_zero_iff_alignment
 
+/--
+Named canonical surface for anomaly/support alignment:
+`χ = 0` iff spectral and metric lanes are aligned.
+-/
+@[rep_depth operator]
+theorem anomaly_vanishes_iff_alignment :
+    anomaly c = 0 ↔ SpectralMetricAlignment c :=
+  anomaly_zero_iff_alignment (c := c)
+
 end CertifiedModularReduction
 
 end InfoGeometry.Canonical

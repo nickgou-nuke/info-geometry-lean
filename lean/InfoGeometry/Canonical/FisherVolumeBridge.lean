@@ -83,9 +83,9 @@ theorem metric_to_phase_readout_bridge
       =
     (comparisonMetricReadout (E := E) P comparison A).compLeft
       (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
-  simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
-    (RelativeModularPotential.comparisonPhaseReadout_eq_metric_comp_complex_i
-      (E := E) P comparison A)
+  rw [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+  exact RelativeModularPotential.comparisonPhaseReadout_eq_metric_comp_complex_i
+    (E := E) P comparison A
 
 theorem metric_to_phase_readout_bridge_comp_complex_i
     (P : PotentialDatum (E := E))

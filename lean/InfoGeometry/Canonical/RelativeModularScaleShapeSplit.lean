@@ -145,7 +145,8 @@ theorem relativeModular_scaleShapeSplit
   let P : EndH := CIK.spectralProjector
   let Q : EndH := CIK.spectralComplementaryProjector
   have hDec : P + Q = (1 : EndH) := by
-    simpa [P, Q] using CIK.spectralProjector_add_spectralComplementaryProjector
+    change CIK.spectralProjector + CIK.spectralComplementaryProjector = (1 : EndH)
+    exact CIK.spectralProjector_add_spectralComplementaryProjector
   have hMixed : Q * R * P = 0 ∧ P * R * Q = 0 := by
     simpa [P, Q] using relativeModular_block_diagonal (E := E) (CIK := CIK) (R := R) hComm
   have hExpand :
@@ -156,7 +157,7 @@ theorem relativeModular_scaleShapeSplit
     R = (P + Q) * R * (P + Q) := by
           calc
             R = (1 : EndH) * R * (1 : EndH) := by simp
-            _ = (P + Q) * R * (P + Q) := by simpa [hDec]
+            _ = (P + Q) * R * (P + Q) := by rw [hDec]
     _ = P * (R * P) + (P * (R * Q) + (Q * (R * P) + Q * (R * Q))) := hExpand
     _ = P * (R * P) + (0 + (0 + Q * (R * Q))) := by
           have hPRQ : P * (R * Q) = 0 := by

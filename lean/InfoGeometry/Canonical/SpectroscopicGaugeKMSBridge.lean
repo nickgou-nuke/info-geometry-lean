@@ -67,8 +67,9 @@ theorem SpectroscopicKMSCompatible.kms_identity
         (InfoGeometry.Dynamics.modularHamiltonian (E := E))
         kms.inverseTemperature B)
       =
-    kms.state (B * A) :=
-  kms.compatible_with_owned_unruh_flow A B
+    kms.state (B * A) := by
+  let _ : CompleteSpace E := inferInstance
+  exact kms.compatible_with_owned_unruh_flow A B
 
 /-- Re-export of the owner modular-flow law for bridge users. -/
 @[rep_depth transport]

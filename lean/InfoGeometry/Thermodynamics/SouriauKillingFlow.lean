@@ -45,6 +45,9 @@ by
       (E := E)
       (A := ThermodynamicGenerator.souriauTemperatureVector P ψ)
       hKill x y)
+section NoComplete
+
+omit [CompleteSpace E]
 
 /--
 **The Clifford Thermodynamic Decomposition**
@@ -80,5 +83,7 @@ theorem hodge_star_executes_legendre_transform
     True := -- placeholder for operatorial Fenchel-Legendre duality predicate
 by
   trivial
+
+end NoComplete
 
 end InfoGeometry.Thermodynamics

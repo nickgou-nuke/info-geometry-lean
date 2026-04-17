@@ -60,17 +60,20 @@ noncomputable abbrev ZD (CIK : CertifiedInverseKernel E) : EndH :=
 noncomputable def conjugateUnit (U : EndHˣ) (A : EndH) : EndH :=
   (U : EndH) * A * (↑(U⁻¹) : EndH)
 
+omit [CompleteSpace E] in
 @[rep_depth operator, simp]
 theorem conjugateUnit_one (A : EndH) :
     conjugateUnit (E := E) (1 : EndHˣ) A = A := by
   simp [conjugateUnit]
 
+omit [CompleteSpace E] in
 @[rep_depth operator, simp]
 theorem conjugateUnit_mul (U V : EndHˣ) (A : EndH) :
     conjugateUnit (E := E) (U * V) A
       = conjugateUnit (E := E) U (conjugateUnit (E := E) V A) := by
   simp [conjugateUnit, mul_assoc]
 
+omit [CompleteSpace E] in
 @[rep_depth operator]
 theorem conjugateUnit_inv_eq_of_eq
     (U : EndHˣ) (A : EndH)
@@ -88,6 +91,7 @@ theorem conjugateUnit_inv_eq_of_eq
             simp [conjugateUnit, mul_assoc]
     _ = A := by simpa using h''.symm
 
+omit [CompleteSpace E] in
 /-- Conjugation by a unit transports commutators on the operator lane. -/
 @[rep_depth operator]
 theorem conjugateUnit_commutator (U : EndHˣ) (X Y : EndH) :
@@ -97,6 +101,7 @@ theorem conjugateUnit_commutator (U : EndHˣ) (X Y : EndH) :
   ext v
   simp [conjugateUnit, DrazinSupercharge.commutator, mul_assoc, mul_sub, sub_mul]
 
+omit [CompleteSpace E] in
 /-- Conjugation by a unit transports anticommutators on the operator lane. -/
 @[rep_depth operator]
 theorem conjugateUnit_anticommutator (U : EndHˣ) (X Y : EndH) :
@@ -207,8 +212,9 @@ theorem commutator_GammaS_QD_conjugation_invariant_of_preserves
     conjugateUnit (E := E) U (DrazinSupercharge.commutator (GammaS CIK) (QD CIK))
         = DrazinSupercharge.commutator (conjugateUnit (E := E) U (GammaS CIK))
             (conjugateUnit (E := E) U (QD CIK)) := by
-              simpa using conjugateUnit_commutator (E := E) U (GammaS CIK) (QD CIK)
-    _ = DrazinSupercharge.commutator (GammaS CIK) (QD CIK) := by simpa [hS, hQ]
+              exact conjugateUnit_commutator (E := E) U (GammaS CIK) (QD CIK)
+    _ = DrazinSupercharge.commutator (GammaS CIK) (QD CIK) := by
+          rw [hS, hQ]
 
 /--
 `[even, odd]` closure witness on the generator packet:
@@ -226,8 +232,9 @@ theorem commutator_GammaG_QD_conjugation_invariant_of_preserves
     conjugateUnit (E := E) U (DrazinSupercharge.commutator (GammaG CIK) (QD CIK))
         = DrazinSupercharge.commutator (conjugateUnit (E := E) U (GammaG CIK))
             (conjugateUnit (E := E) U (QD CIK)) := by
-              simpa using conjugateUnit_commutator (E := E) U (GammaG CIK) (QD CIK)
-    _ = DrazinSupercharge.commutator (GammaG CIK) (QD CIK) := by simpa [hG, hQ]
+              exact conjugateUnit_commutator (E := E) U (GammaG CIK) (QD CIK)
+    _ = DrazinSupercharge.commutator (GammaG CIK) (QD CIK) := by
+          rw [hG, hQ]
 
 /--
 `{odd, odd}` closure witness:
@@ -237,7 +244,7 @@ the anticommutator of the odd generator with itself lands in the even lane.
 theorem anticommutator_QD_QD_eq_two_smul_HD (CIK : CertifiedInverseKernel E) :
     DrazinSupercharge.anticommutator (QD CIK) (QD CIK) = (2 : ℝ) • HD CIK := by
   change QD CIK * QD CIK + QD CIK * QD CIK = (2 : ℝ) • (QD CIK * QD CIK)
-  simpa [two_smul]
+  simp [two_smul]
 
 /--
 `{odd, odd}` closure witness in split form:
@@ -284,8 +291,9 @@ theorem anticommutator_QD_QD_conjugation_invariant_of_preserves
     conjugateUnit (E := E) U (DrazinSupercharge.anticommutator (QD CIK) (QD CIK))
         = DrazinSupercharge.anticommutator (conjugateUnit (E := E) U (QD CIK))
             (conjugateUnit (E := E) U (QD CIK)) := by
-              simpa using conjugateUnit_anticommutator (E := E) U (QD CIK) (QD CIK)
-    _ = DrazinSupercharge.anticommutator (QD CIK) (QD CIK) := by simpa [hQ]
+              exact conjugateUnit_anticommutator (E := E) U (QD CIK) (QD CIK)
+    _ = DrazinSupercharge.anticommutator (QD CIK) (QD CIK) := by
+          rw [hQ]
 
 end Core
 

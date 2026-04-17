@@ -129,7 +129,8 @@ noncomputable def canonicalDIIIProxy : DIIISymmetryProxy (E := E) where
 
 @[rep_depth transport, simp] theorem canonicalDIIIProxy_T_eq_complex_i :
     (canonicalDIIIProxy (E := E)).T = complex_i (E := E) := by
-  simpa [modularK_eq_complex_i] using canonicalDIIIProxy_T_eq_modularK (E := E)
+  rw [canonicalDIIIProxy_T_eq_modularK (E := E)]
+  exact modularK_eq_complex_i (E := E)
 
 /-- The canonical DIII proxy has particle-hole proxy `C = J`. -/
 @[rep_depth transport, simp] theorem canonicalDIIIProxy_C_eq_paritySuperchargeOp :

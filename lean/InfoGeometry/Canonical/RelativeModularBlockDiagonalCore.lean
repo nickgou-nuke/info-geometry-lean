@@ -45,6 +45,7 @@ theorem block_diagonal_of_commute_idempotent
     ((1 : EndH) - P) * R * P = 0
       ∧
     P * R * ((1 : EndH) - P) = 0 := by
+  let _ : CompleteSpace E := inferInstance
   have hComm : P * R = R * P := hPR.eq
   constructor
   · calc

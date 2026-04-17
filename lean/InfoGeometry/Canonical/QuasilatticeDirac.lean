@@ -1,5 +1,4 @@
 import InfoGeometry.Canonical.BogoliubovVielbein
-import InfoGeometry.Canonical.ChiralAction
 
 /-!
 # Quasilattice Dirac Operator

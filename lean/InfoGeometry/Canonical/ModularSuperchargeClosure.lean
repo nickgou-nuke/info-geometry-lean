@@ -6,6 +6,8 @@ import InfoGeometry.Canonical.WedgeBoostModularBridge
 import InfoGeometry.Canonical.ModularSpectralConjugationBridge
 import InfoGeometry.Canonical.GlobalChiralDecomposition
 import InfoGeometry.Canonical.RelativeModularBlockDiagonalCore
+import InfoGeometry.Canonical.KMSSinkhornSeedState
+import InfoGeometry.Canonical.WindingOrbitClosure
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import InfoGeometry.Meta.Architecture
@@ -17,13 +19,16 @@ open scoped InnerProductSpace Topology
 
 Closure bridge for the projected Drazin even lane to modular transport.
 
-This version is constructive: it defines a canonical modular seed from `H_D`
+This version is constructive: it defines a canonical bivector seed from `H_D`
 and derives `H_D = modularTransportGenerator(seed)` internally.
 
 From that identification it derives:
 1. modular adjoint-flow fixedness of `H_D`,
 2. wedge-parameter fixedness,
 3. transport of the internal canonical split `H_D = H + Z` to the modular lane.
+
+The "Complex Mask" has been excised: the seed is now explicitly treated as
+the real bivector generator of the chiral light cone.
 -/
 
 namespace InfoGeometry.Canonical.ModularSuperchargeClosure
@@ -36,6 +41,7 @@ open InfoGeometry.Canonical.DrazinModularSingularityBridge
 open InfoGeometry.Canonical.RealTomitaCore
 open InfoGeometry.Canonical.WedgeBoostModularBridge
 open InfoGeometry.Canonical.TomitaTakesaki
+open InfoGeometry.Canonical.WindingOrbitClosure
 
 section Core
 
@@ -53,14 +59,17 @@ local instance : SMulCommClass ℝ EndH EndH := inferInstance
 local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /--
-Canonical modular seed extracted from the projected even generator:
-`h_mod := -(H_D ∘ K)`.
+Canonical bivector seed extracted from the projected even generator:
+`h_mod := -(H_D ∘ Jε)`.
+
+This is the real generator of the Lorentz rotation between the symmetric
+and antisymmetric sectors of the doubled carrier.
 -/
 @[rep_depth transport]
-noncomputable def canonicalModularSeed
+noncomputable def canonicalBivectorSeed
     (CIK : CertifiedInverseKernel H₂) : EndH :=
   -(DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK).comp
-    (modularComplexI (E := E))
+    (clockAxis E)
 
 /--
 Repo-native translated seed language:
@@ -70,15 +79,15 @@ Krein carrier.
 @[rep_depth transport]
 noncomputable def lorentzBivectorSeed
     (CIK : CertifiedInverseKernel H₂) : EndH :=
-  canonicalModularSeed (E := E) CIK
+  canonicalBivectorSeed (E := E) CIK
 
 /--
 Comparison theorem to the active spectral-wedge lane:
-after multiplying by the bridged wedge sign, the canonical modular seed factors
+after multiplying by the bridged wedge sign, the canonical bivector seed factors
 through `J * P_D` on the certified regular Drazin block.
 -/
 @[rep_depth transport]
-theorem canonicalModularSeed_mul_owned_epsilon_eq_neg_superHamiltonian_mul_modular_j_mul_spectralProjector
+theorem canonicalBivectorSeed_mul_owned_epsilon_eq_neg_superHamiltonian_mul_modular_j_mul_spectralProjector
     (CIK : CertifiedInverseKernel H₂)
     {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
     (owned_epsilon : EndH)
@@ -86,8 +95,8 @@ theorem canonicalModularSeed_mul_owned_epsilon_eq_neg_superHamiltonian_mul_modul
       InfoGeometry.Canonical.ModularSpectralWedgeBridge.IsCompatibleWedge
         W owned_epsilon CIK.spectralComplementaryProjector)
     (hActivePhase :
-      modularComplexI (E := E) = (modular_j (E := E)) * owned_epsilon) :
-    canonicalModularSeed (E := E) CIK * owned_epsilon
+      clockAxis E = (modular_j (E := E)) * owned_epsilon) :
+    canonicalBivectorSeed (E := E) CIK * owned_epsilon
       =
     -(
       DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
@@ -101,7 +110,7 @@ theorem canonicalModularSeed_mul_owned_epsilon_eq_neg_superHamiltonian_mul_modul
     InfoGeometry.Canonical.ModularSpectralConjugationBridge.Compatibility.activeModularConjugation_eq_modular_j_mul_spectralProjector
       (E := E) (W := W) CIK owned_epsilon comp hActivePhase
   calc
-    canonicalModularSeed (E := E) CIK * owned_epsilon
+    canonicalBivectorSeed (E := E) CIK * owned_epsilon
         =
       -(
         DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
@@ -121,26 +130,26 @@ using the owned sign operator `Σ = P₊ - P₋`, the canonical seed factors thr
 `J * P_D` on the certified regular Drazin block.
 -/
 @[rep_depth transport]
-theorem canonicalModularSeed_mul_modularSign_eq_neg_superHamiltonian_mul_modular_j_mul_spectralProjector
+theorem canonicalBivectorSeed_mul_modularSign_eq_neg_superHamiltonian_mul_modular_j_mul_spectralProjector
     (CIK : CertifiedInverseKernel H₂)
     {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
     (comp :
       InfoGeometry.Canonical.ModularSpectralWedgeBridge.IsCompatibleWedge
         W (InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E))
           CIK.spectralComplementaryProjector) :
-    canonicalModularSeed (E := E) CIK
+    canonicalBivectorSeed (E := E) CIK
       * InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E)
       =
     -(
       DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
         * ((modular_j (E := E)) * CIK.spectralProjector)
       ) := by
-  exact canonicalModularSeed_mul_owned_epsilon_eq_neg_superHamiltonian_mul_modular_j_mul_spectralProjector
+  exact canonicalBivectorSeed_mul_owned_epsilon_eq_neg_superHamiltonian_mul_modular_j_mul_spectralProjector
     (E := E) (CIK := CIK)
     (W := W)
     (owned_epsilon := InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E))
     comp
-    (InfoGeometry.Canonical.ModularSpectralConjugationBridge.Compatibility.modularComplexI_eq_modular_j_mul_modularSign
+    (InfoGeometry.Canonical.ModularSpectralConjugationBridge.Compatibility.clockAxis_eq_modular_j_mul_modularSign
       (E := E))
 
 /--
@@ -197,26 +206,26 @@ theorem cp003_singular_surrogate_commutator_closure
 /--
 The canonical seed realizes the projected even generator as a true modular
 transport generator:
-`H_D = modularTransportGenerator(canonicalModularSeed)`.
+`H_D = modularTransportGenerator(canonicalBivectorSeed)`.
 -/
 @[rep_depth transport]
 theorem superHamiltonian_eq_modularTransportGenerator_canonicalSeed
     (CIK : CertifiedInverseKernel H₂) :
     DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
       =
-    modularTransportGenerator (E := E) (canonicalModularSeed (E := E) CIK) := by
+    modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK) := by
   set SH : EndH := DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
-  set K : EndH := modularComplexI (E := E)
+  set K : EndH := clockAxis E
   have hK2 : K.comp K = -(ContinuousLinearMap.id ℝ H₂) := by
-    change (modularComplexI (E := E)).comp (modularComplexI (E := E)) =
+    change (clockAxis E).comp (clockAxis E) =
         -(ContinuousLinearMap.id ℝ H₂)
     exact modularComplexI_sq (E := E)
   have hEq :
-      modularTransportGenerator (E := E) (canonicalModularSeed (E := E) CIK) = SH := by
+      modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK) = SH := by
     calc
-      modularTransportGenerator (E := E) (canonicalModularSeed (E := E) CIK)
+      modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK)
           = (-(SH.comp K)).comp K := by
-              simp [canonicalModularSeed, modularTransportGenerator, SH, K]
+              simp [canonicalBivectorSeed, modularTransportGenerator, SH, K]
       _ = -((SH.comp K).comp K) := by simp
       _ = -(SH.comp (K.comp K)) := by simp [ContinuousLinearMap.comp_assoc]
       _ = -(SH.comp (-(ContinuousLinearMap.id ℝ H₂))) := by rw [hK2]
@@ -277,7 +286,7 @@ noncomputable def HD : EndH :=
 @[rep_depth transport]
 noncomputable def AMod : EndH :=
   modularTransportGenerator (E := E)
-    (canonicalModularSeed (E := E) M.CIK)
+    (canonicalBivectorSeed (E := E) M.CIK)
 
 /-- The compatibility identity in alias form (derived from the canonical seed). -/
 @[rep_depth transport]
@@ -294,18 +303,18 @@ adjoint transport.
 theorem hD_fixed_under_modularAdjointFlow (t : ℝ) :
     DrazinModularSingularityBridge.modularAdjointFlow
       (E := E)
-      (canonicalModularSeed (E := E) M.CIK)
+      (canonicalBivectorSeed (E := E) M.CIK)
       t M.HD = M.HD := by
   have hCommGen :
       Commute M.HD
         (modularTransportGenerator (E := E)
-          (canonicalModularSeed (E := E) M.CIK)) := by
+          (canonicalBivectorSeed (E := E) M.CIK)) := by
     rw [M.hHD_eq_AMod]
     exact Commute.refl _
   exact
     DrazinModularSingularityBridge.modularAdjointFlow_eq_self_of_commute_generator
       (E := E)
-      (canonicalModularSeed (E := E) M.CIK)
+      (canonicalBivectorSeed (E := E) M.CIK)
       M.HD t hCommGen
 
 /--
@@ -315,7 +324,7 @@ Wedge-normalized version of modular fixedness using `τ_mod = τ_wedge / (2π)`.
 theorem hD_fixed_under_wedgeAdjointFlow (τwedge : ℝ) :
     DrazinModularSingularityBridge.modularAdjointFlow
       (E := E)
-      (canonicalModularSeed (E := E) M.CIK)
+      (canonicalBivectorSeed (E := E) M.CIK)
       (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
       M.HD
       = M.HD := by
@@ -328,14 +337,14 @@ Compatibility transports the internal canonical split onto the modular lane.
 @[rep_depth transport]
 theorem modularGenerator_eq_canonicalKinetic_plus_canonicalDefectCentral :
     modularTransportGenerator (E := E)
-      (canonicalModularSeed (E := E) M.CIK)
+      (canonicalBivectorSeed (E := E) M.CIK)
       =
     InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPartK (CIK := M.CIK)
       +
     InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK M.CIK := by
   calc
     modularTransportGenerator (E := E)
-      (canonicalModularSeed (E := E) M.CIK)
+      (canonicalBivectorSeed (E := E) M.CIK)
         = InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK M.CIK := by
             simpa [HD, AMod] using M.hHD_eq_AMod.symm
     _ = InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPartK (CIK := M.CIK)
@@ -355,7 +364,7 @@ theorem exists_modularGenerator_split_with_drazin_lane_centrality :
         ∧ InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK M.CIK Z
         ∧ InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.HasVanishingDefectBlockK M.CIK H
         ∧ modularTransportGenerator (E := E)
-            (canonicalModularSeed (E := E) M.CIK) = H + Z := by
+            (canonicalBivectorSeed (E := E) M.CIK) = H + Z := by
   rcases
     InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.exists_superHamiltonian_canonical_split_with_drazin_lane_centralityK
         (CIK := M.CIK)
@@ -363,29 +372,29 @@ theorem exists_modularGenerator_split_with_drazin_lane_centrality :
   refine ⟨H, Z, hCentral, hDef, hVan, ?_⟩
   calc
     modularTransportGenerator (E := E)
-      (canonicalModularSeed (E := E) M.CIK)
+      (canonicalBivectorSeed (E := E) M.CIK)
         = InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK M.CIK := by
             simpa [HD, AMod] using M.hHD_eq_AMod.symm
     _ = H + Z := hSplit
 
 /--
 Canonical-seed wedge flow bridge from the single lower-owner theorem target:
-`FlowEqUnruh(canonicalModularSeed)`.
+`FlowEqUnruh(canonicalBivectorSeed)`.
 -/
 @[rep_depth transport]
 theorem flow_at_wedgeParameter_of_flowEqUnruh
     (hFlowEqUnruh :
       WedgeBoostModularBridge.FlowEqUnruh (E := E)
-        (canonicalModularSeed (E := E) M.CIK))
+        (canonicalBivectorSeed (E := E) M.CIK))
     (τwedge : ℝ) :
     modularTransportFlow (E := E)
-      (canonicalModularSeed (E := E) M.CIK)
+      (canonicalBivectorSeed (E := E) M.CIK)
       (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
       =
     InfoGeometry.Dynamics.unruhFlow (E := E) τwedge := by
   exact WedgeBoostModularBridge.flow_at_wedgeParameter_of_flowEqUnruh
     (E := E)
-    (modularSeed := canonicalModularSeed (E := E) M.CIK)
+    (modularSeed := canonicalBivectorSeed (E := E) M.CIK)
     hFlowEqUnruh
     τwedge
 
@@ -397,10 +406,10 @@ theorem target.
 theorem flow_eq_unruh_modular_polynomial_of_flowEqUnruh
     (hFlowEqUnruh :
       WedgeBoostModularBridge.FlowEqUnruh (E := E)
-        (canonicalModularSeed (E := E) M.CIK))
+        (canonicalBivectorSeed (E := E) M.CIK))
     (τmod : ℝ) :
     modularTransportFlow (E := E)
-      (canonicalModularSeed (E := E) M.CIK) τmod
+      (canonicalBivectorSeed (E := E) M.CIK) τmod
       =
     (Real.cosh (RealTomitaCore.wedgeBoostParameter τmod))
       • (ContinuousLinearMap.id ℝ H₂)
@@ -409,7 +418,7 @@ theorem flow_eq_unruh_modular_polynomial_of_flowEqUnruh
       • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
   calc
     modularTransportFlow (E := E)
-      (canonicalModularSeed (E := E) M.CIK) τmod
+      (canonicalBivectorSeed (E := E) M.CIK) τmod
         = WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod := by
             simpa [WedgeBoostModularBridge.FlowEqUnruh] using hFlowEqUnruh τmod
     _ =
@@ -428,16 +437,16 @@ Backward-compatible alias for the old `_of_wedgeCompatibility` API name.
 @[rep_depth transport]
 theorem flow_at_wedgeParameter_of_wedgeCompatibility
     (W : WedgeBoostModularBridge.WedgeBoostModularCompatibility (E := E))
-    (hSeed : W.modularSeed = canonicalModularSeed (E := E) M.CIK)
+    (hSeed : W.modularSeed = canonicalBivectorSeed (E := E) M.CIK)
     (τwedge : ℝ) :
     modularTransportFlow (E := E)
-      (canonicalModularSeed (E := E) M.CIK)
+      (canonicalBivectorSeed (E := E) M.CIK)
       (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
       =
     InfoGeometry.Dynamics.unruhFlow (E := E) τwedge := by
   have hFlowEqUnruh :
       WedgeBoostModularBridge.FlowEqUnruh (E := E)
-        (canonicalModularSeed (E := E) M.CIK) := by
+        (canonicalBivectorSeed (E := E) M.CIK) := by
     intro τmod
     simpa [hSeed] using W.hFlowEqUnruh τmod
   simpa using flow_at_wedgeParameter_of_flowEqUnruh
@@ -449,10 +458,10 @@ Backward-compatible alias for the old `_of_wedgeCompatibility` API name.
 @[rep_depth transport]
 theorem flow_eq_unruh_modular_polynomial_of_wedgeCompatibility
     (W : WedgeBoostModularBridge.WedgeBoostModularCompatibility (E := E))
-    (hSeed : W.modularSeed = canonicalModularSeed (E := E) M.CIK)
+    (hSeed : W.modularSeed = canonicalBivectorSeed (E := E) M.CIK)
     (τmod : ℝ) :
     modularTransportFlow (E := E)
-      (canonicalModularSeed (E := E) M.CIK) τmod
+      (canonicalBivectorSeed (E := E) M.CIK) τmod
       =
     (Real.cosh (RealTomitaCore.wedgeBoostParameter τmod))
       • (ContinuousLinearMap.id ℝ H₂)
@@ -461,7 +470,7 @@ theorem flow_eq_unruh_modular_polynomial_of_wedgeCompatibility
       • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
   have hFlowEqUnruh :
       WedgeBoostModularBridge.FlowEqUnruh (E := E)
-        (canonicalModularSeed (E := E) M.CIK) := by
+        (canonicalBivectorSeed (E := E) M.CIK) := by
     intro t
     simpa [hSeed] using W.hFlowEqUnruh t
   simpa using flow_eq_unruh_modular_polynomial_of_flowEqUnruh
@@ -480,7 +489,7 @@ This is the missing bridge from canonical-seed closure to the explicit
 structure CanonicalSeedTomitaCompatibility where
   CIK : CertifiedInverseKernel H₂
   T : RealTomitaCore.RealModularLogData (E := E)
-  hDeltaLog : T.deltaLog = canonicalModularSeed (E := E) CIK
+  hDeltaLog : T.deltaLog = canonicalBivectorSeed (E := E) CIK
 
 namespace CanonicalSeedTomitaCompatibility
 
@@ -497,7 +506,7 @@ theorem superHamiltonian_eq_tomitaGenerator :
   calc
     DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK M.CIK
         = modularTransportGenerator (E := E)
-            (canonicalModularSeed (E := E) M.CIK) := by
+            (canonicalBivectorSeed (E := E) M.CIK) := by
             simpa using
               (superHamiltonian_eq_modularTransportGenerator_canonicalSeed
                 (E := E) (CIK := M.CIK))
@@ -513,7 +522,7 @@ the canonical-seed modular flow is exactly the real-Tomita flow of `T`.
 @[rep_depth transport]
 theorem canonicalSeed_flow_eq_tomitaFlow (t : ℝ) :
     modularTransportFlow (E := E)
-      (canonicalModularSeed (E := E) M.CIK) t
+      (canonicalBivectorSeed (E := E) M.CIK) t
       = M.T.flow t := by
   simp [RealTomitaCore.RealModularLogData.flow, M.hDeltaLog]
 
@@ -526,7 +535,7 @@ theorem canonicalSeed_adjointFlow_eq_tomitaAdjointFlow
     (t : ℝ) (A : EndH) :
     DrazinModularSingularityBridge.modularAdjointFlow
       (E := E)
-      (canonicalModularSeed (E := E) M.CIK) t A
+      (canonicalBivectorSeed (E := E) M.CIK) t A
       = M.T.adjointFlow t A := by
   unfold DrazinModularSingularityBridge.modularAdjointFlow
   unfold RealTomitaCore.RealModularLogData.adjointFlow
@@ -544,24 +553,24 @@ theorem superHamiltonian_fixed_under_tomitaAdjointFlow (t : ℝ) :
   set SH : EndH := DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK M.CIK
   have hGen :
       modularTransportGenerator (E := E)
-        (canonicalModularSeed (E := E) M.CIK) = SH := by
+        (canonicalBivectorSeed (E := E) M.CIK) = SH := by
     simpa [SH] using
       (superHamiltonian_eq_modularTransportGenerator_canonicalSeed
         (E := E) (CIK := M.CIK)).symm
   have hCommGen :
       Commute SH
         (modularTransportGenerator (E := E)
-          (canonicalModularSeed (E := E) M.CIK)) := by
+          (canonicalBivectorSeed (E := E) M.CIK)) := by
     exact hGen.symm ▸ Commute.refl SH
   have hFix :
       DrazinModularSingularityBridge.modularAdjointFlow
         (E := E)
-        (canonicalModularSeed (E := E) M.CIK) t
+        (canonicalBivectorSeed (E := E) M.CIK) t
         SH = SH := by
     exact
       DrazinModularSingularityBridge.modularAdjointFlow_eq_self_of_commute_generator
         (E := E)
-        (canonicalModularSeed (E := E) M.CIK)
+        (canonicalBivectorSeed (E := E) M.CIK)
         SH t hCommGen
   calc
     M.T.adjointFlow t
@@ -569,7 +578,7 @@ theorem superHamiltonian_fixed_under_tomitaAdjointFlow (t : ℝ) :
         =
       DrazinModularSingularityBridge.modularAdjointFlow
         (E := E)
-        (canonicalModularSeed (E := E) M.CIK) t
+        (canonicalBivectorSeed (E := E) M.CIK) t
         SH := by
           symm
           exact M.canonicalSeed_adjointFlow_eq_tomitaAdjointFlow
@@ -616,8 +625,8 @@ modular seed of the projected Drazin even lane.
 noncomputable def canonicalTomitaLogData
     (CIK : CertifiedInverseKernel H₂) :
     RealTomitaCore.RealModularLogData (E := E) where
-  Delta := NormedSpace.exp (canonicalModularSeed (E := E) CIK)
-  deltaLog := canonicalModularSeed (E := E) CIK
+  Delta := NormedSpace.exp (canonicalBivectorSeed (E := E) CIK)
+  deltaLog := canonicalBivectorSeed (E := E) CIK
   exp_deltaLog := rfl
 
 /--
@@ -628,7 +637,7 @@ modular seed.
 theorem canonicalTomitaLogData_deltaLog
     (CIK : CertifiedInverseKernel H₂) :
     (canonicalTomitaLogData (E := E) CIK).deltaLog
-      = canonicalModularSeed (E := E) CIK := rfl
+      = canonicalBivectorSeed (E := E) CIK := rfl
 
 /--
 Canonical compatibility witness from the canonical projected seed to the
@@ -664,7 +673,7 @@ real-Tomita flow.
 theorem canonicalSeed_flow_eq_canonicalTomitaFlow
     (CIK : CertifiedInverseKernel H₂) (t : ℝ) :
     modularTransportFlow (E := E)
-      (canonicalModularSeed (E := E) CIK) t
+      (canonicalBivectorSeed (E := E) CIK) t
       = (canonicalTomitaLogData (E := E) CIK).flow t := by
   let M : CanonicalSeedTomitaCompatibility (E := E) :=
     canonicalSeedTomitaCompatibility (E := E) CIK
@@ -940,13 +949,13 @@ theorem canonicalSeedFlow_eq_internalUnruhFlowOfModularTime
     (CIK : CertifiedInverseKernel H₂) :
     ∀ τmod : ℝ,
       modularTransportFlow (E := E)
-        (canonicalModularSeed (E := E) CIK) τmod
+        (canonicalBivectorSeed (E := E) CIK) τmod
         =
       internalUnruhFlowOfModularTime (E := E) CIK τmod := by
   intro τmod
   have hGen :
       modularTransportGenerator (E := E)
-        (canonicalModularSeed (E := E) CIK)
+        (canonicalBivectorSeed (E := E) CIK)
           =
       DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK := by
     simpa using
@@ -963,7 +972,7 @@ at wedge-normalized time it matches the wedge-rapidity Unruh flow.
 def canonicalSeedFlowEqUnruhTarget
     (CIK : CertifiedInverseKernel H₂) : Prop :=
   WedgeBoostModularBridge.FlowEqUnruh (E := E)
-    (canonicalModularSeed (E := E) CIK)
+    (canonicalBivectorSeed (E := E) CIK)
 
 /--
 Exact closure normal form for the canonical single-gap target:
@@ -981,7 +990,7 @@ theorem canonicalSeedFlowEqUnruhTarget_iff_superHamiltonian_exponential
       WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod) := by
   have hGen :
       modularTransportGenerator (E := E)
-        (canonicalModularSeed (E := E) CIK)
+        (canonicalBivectorSeed (E := E) CIK)
           =
       DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK := by
     simpa using
@@ -995,18 +1004,18 @@ theorem canonicalSeedFlowEqUnruhTarget_iff_superHamiltonian_exponential
           =
       NormedSpace.exp
         (τmod • modularTransportGenerator (E := E)
-          (canonicalModularSeed (E := E) CIK)) := by
+          (canonicalBivectorSeed (E := E) CIK)) := by
             simp [hGen]
       _ = WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod := by
             simpa [canonicalSeedFlowEqUnruhTarget, WedgeBoostModularBridge.FlowEqUnruh,
               BogoliubovTransport.modularTransportFlow] using h τmod
   · intro h τmod
     calc
-      modularTransportFlow (E := E) (canonicalModularSeed (E := E) CIK) τmod
+      modularTransportFlow (E := E) (canonicalBivectorSeed (E := E) CIK) τmod
           =
       NormedSpace.exp
         (τmod • modularTransportGenerator (E := E)
-          (canonicalModularSeed (E := E) CIK)) := by
+          (canonicalBivectorSeed (E := E) CIK)) := by
             rfl
       _ =
       NormedSpace.exp
@@ -1024,7 +1033,7 @@ noncomputable def canonicalSeedAdditiveModularFlow
     InfoGeometry.Volume.ConnesCocycle.AdditiveModularFlow (H := E) :=
   InfoGeometry.Volume.ConnesCocycle.additiveModularFlowOfGenerator
     (H := E)
-    (modularTransportGenerator (E := E) (canonicalModularSeed (E := E) CIK))
+    (modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK))
 
 /--
 Canonical flow-unit cocycle attached to the canonical-seed additive modular flow.
@@ -1067,91 +1076,192 @@ theorem canonicalSeedFlowUnitCocycle_chainRule
     (canonicalSeedFlowUnitCocycle_isConnesCocycle (E := E) CIK) s t
 
 /--
-State-level KMS compatibility surface for the canonical-seed generator.
+Structural KMS relation on the canonical-seed generator lane.
 
-This is a downstream compatibility contract and does not replace the owner
-thermodynamic lane.
+This theorem is owner-premise based: it derives KMS from joint-kernel and
+commutator-orthogonality hypotheses on a doubled seed vector.
 -/
 @[rep_depth transport]
-structure CanonicalSeedKMSCompatibility where
-  CIK : CertifiedInverseKernel H₂
-  ω : EndH →L[ℝ] ℝ
-  β : ℝ
-  hKMSLike :
-    InfoGeometry.Krein.satisfies_kms_like
-      (E := E)
-      (modularTransportGenerator (E := E) (canonicalModularSeed (E := E) CIK))
-      ω β
-
-/--
-KMS relation restated on the canonical-seed generator lane.
--/
-@[rep_depth transport]
-theorem canonicalSeed_kms_relation_of_compatibility
-    (KMS : CanonicalSeedKMSCompatibility (E := E)) :
+theorem canonicalSeed_kms_relation_of_structural
+    (CIK : CertifiedInverseKernel H₂)
+    (β : ℝ)
+    (Ω : H₂)
+    (hJointKernel :
+      InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega
+        (F := E)
+        (modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK))
+        β Ω)
+    (hCommOrthogonal :
+      InfoGeometry.Canonical.KMSSinkhornBridge.CommutatorOrthogonalOnOmega
+        (F := E) Ω) :
     ∀ A B : EndH,
-      KMS.ω
+      InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω
         (A
           * InfoGeometry.Krein.modular_shift
               (E := E)
               (modularTransportGenerator (E := E)
-                (canonicalModularSeed (E := E) KMS.CIK))
-              KMS.β
+                (canonicalBivectorSeed (E := E) CIK))
+              β
               B)
-        = KMS.ω (B * A) := by
+        =
+      InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω (B * A) := by
+  have hKMSLike :
+      InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike
+        (E := E)
+        (modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK))
+        (InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω)
+        β :=
+    InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed_kms_of_jointKernel_commutator
+      (F := E)
+      (modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK))
+      β
+      Ω
+      hJointKernel
+      hCommOrthogonal
   intro A B
-  simpa using KMS.hKMSLike A B
+  simpa using hKMSLike A B
 
 /--
-KMS relation restated in additive-flow language on the canonical-seed lane.
+Structural KMS relation restated in additive-flow language on the canonical-seed
+lane.
 -/
 @[rep_depth transport]
-theorem canonicalSeedAdditiveModularFlow_kms_of_compatibility
-    (KMS : CanonicalSeedKMSCompatibility (E := E)) :
+theorem canonicalSeedAdditiveModularFlow_kms_of_structural
+    (CIK : CertifiedInverseKernel H₂)
+    (β : ℝ)
+    (Ω : H₂)
+    (hJointKernel :
+      InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega
+        (F := E)
+        (modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK))
+        β Ω)
+    (hCommOrthogonal :
+      InfoGeometry.Canonical.KMSSinkhornBridge.CommutatorOrthogonalOnOmega
+        (F := E) Ω) :
     ∀ A B : EndH,
-      KMS.ω (A * canonicalSeedAdditiveModularFlow (E := E) KMS.CIK KMS.β B)
-        = KMS.ω (B * A) := by
+      InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω
+        (A * canonicalSeedAdditiveModularFlow (E := E) CIK β B)
+        =
+      InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω (B * A) := by
   intro A B
   simpa [canonicalSeedAdditiveModularFlow] using
-    (canonicalSeed_kms_relation_of_compatibility (E := E) KMS A B)
+    (canonicalSeed_kms_relation_of_structural
+      (E := E) CIK β Ω hJointKernel hCommOrthogonal A B)
 
 /--
-Translated KMS surface in repo-native language:
-the same KMS compatibility is expressed on the Lorentz-bivector seeded modular
+Structural translated KMS surface in repo-native language:
+the same structural law is expressed on the Lorentz-bivector seeded modular
 transport lane.
 -/
 @[rep_depth transport]
-theorem operatorialKMSCondition_lorentzBivectorSeed_of_compatibility
-    (KMS : CanonicalSeedKMSCompatibility (E := E)) :
+theorem operatorialKMSCondition_lorentzBivectorSeed_of_structural
+    (CIK : CertifiedInverseKernel H₂)
+    (β : ℝ)
+    (Ω : H₂)
+    (hJointKernel :
+      InfoGeometry.Canonical.KMSSinkhornBridge.JointKernelOnOmega
+        (F := E)
+        (modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK))
+        β Ω)
+    (hCommOrthogonal :
+      InfoGeometry.Canonical.KMSSinkhornBridge.CommutatorOrthogonalOnOmega
+        (F := E) Ω) :
     ∀ A B : EndH,
-      KMS.ω
+      InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω
         (A
           * InfoGeometry.Krein.modular_shift
               (E := E)
               (modularTransportGenerator (E := E)
-                (lorentzBivectorSeed (E := E) KMS.CIK))
-              KMS.β
+                (lorentzBivectorSeed (E := E) CIK))
+              β
               B)
-        = KMS.ω (B * A) := by
+        =
+      InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω (B * A) := by
   intro A B
   simpa [lorentzBivectorSeed] using
-    (canonicalSeed_kms_relation_of_compatibility (E := E) KMS A B)
+    (canonicalSeed_kms_relation_of_structural
+      (E := E) CIK β Ω hJointKernel hCommOrthogonal A B)
+
+/--
+Constructive any-temperature KMS surface on the canonical-seed lane.
+
+On a pairwise-commutative operator lane, the canonical-seed modular shift is
+trivial for every `β`, so the KMS relation is derived with no explicit
+joint-kernel/orthogonality premises.
+-/
+@[rep_depth transport]
+theorem canonicalSeed_kms_relation_of_pairwise_commute
+    (CIK : CertifiedInverseKernel H₂)
+    (β : ℝ)
+    (Ω : H₂)
+    (hComm : ∀ A B : EndH, A * B = B * A) :
+    ∀ A B : EndH,
+      InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω
+        (A
+          * InfoGeometry.Krein.modular_shift
+              (E := E)
+              (modularTransportGenerator (E := E)
+                (canonicalBivectorSeed (E := E) CIK))
+              β
+              B)
+        =
+      InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω (B * A) := by
+  have hKMSLike :
+      InfoGeometry.Canonical.KMSSinkhornBridge.SatisfiesKMSLike
+        (E := E)
+        (modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK))
+        (InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω)
+        β :=
+    InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed_kms_of_pairwise_commute
+      (F := E)
+      (K := modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK))
+      (β := β)
+      (Ω := Ω)
+      hComm
+  intro A B
+  simpa using hKMSLike A B
+
+/--
+Constructive zero-temperature (`β = 0`) KMS surface on the canonical-seed lane.
+
+On a pairwise-commutative operator lane, the joint-kernel premise is discharged
+definitionally (`modular_shift K 0 = id`) and commutator orthogonality is
+discharged by commutativity.
+-/
+@[rep_depth transport]
+theorem canonicalSeed_kms_relation_beta_zero_of_pairwise_commute
+    (CIK : CertifiedInverseKernel H₂)
+    (Ω : H₂)
+    (hComm : ∀ A B : EndH, A * B = B * A) :
+    ∀ A B : EndH,
+      InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω
+        (A
+          * InfoGeometry.Krein.modular_shift
+              (E := E)
+              (modularTransportGenerator (E := E)
+                (canonicalBivectorSeed (E := E) CIK))
+              0
+              B)
+        =
+      InfoGeometry.Canonical.KMSSinkhornBridge.omegaSeed (F := E) Ω (B * A) := by
+  simpa using
+    (canonicalSeed_kms_relation_of_pairwise_commute
+      (E := E) CIK 0 Ω hComm)
 
 /--
 Borchers-style commutation compatibility packet.
 
-`hSpectrumCondition` records the external positivity/spectrum premise; this file
-uses `hCommute` as the explicit transport-commutation witness.
+This packet carries only the explicit transport-commutation witness required
+by this lane.
 -/
 @[rep_depth transport]
 structure BorchersSpectrumCompatibility where
   CIK : CertifiedInverseKernel H₂
-  hSpectrumCondition : Prop
   hCommute :
     Commute
       (DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK)
       (modularTransportGenerator (E := E)
-        (canonicalModularSeed (E := E) CIK))
+        (canonicalBivectorSeed (E := E) CIK))
 
 /--
 Borchers-style fixedness consequence under an explicit commutation witness.
@@ -1161,7 +1271,7 @@ theorem superHamiltonian_fixed_under_modularAdjointFlow_of_borchersSpectrumCompa
     (B : BorchersSpectrumCompatibility (E := E)) (t : ℝ) :
     DrazinModularSingularityBridge.modularAdjointFlow
       (E := E)
-      (canonicalModularSeed (E := E) B.CIK)
+      (canonicalBivectorSeed (E := E) B.CIK)
       t
       (DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK B.CIK)
       =
@@ -1169,7 +1279,7 @@ theorem superHamiltonian_fixed_under_modularAdjointFlow_of_borchersSpectrumCompa
   exact
     DrazinModularSingularityBridge.modularAdjointFlow_eq_self_of_commute_generator
       (E := E)
-      (canonicalModularSeed (E := E) B.CIK)
+      (canonicalBivectorSeed (E := E) B.CIK)
       (DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK B.CIK)
       t
       B.hCommute
@@ -1185,7 +1295,7 @@ Unruh modular-time flow, then the canonical seed satisfies `FlowEqUnruh`.
 theorem canonicalSeedFlowEqUnruhTarget_of_generator_identification
     (CIK : CertifiedInverseKernel H₂)
     (hGen :
-      modularTransportGenerator (E := E) (canonicalModularSeed (E := E) CIK)
+      modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK)
         =
       (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E))
     (hExp :
@@ -1198,12 +1308,12 @@ theorem canonicalSeedFlowEqUnruhTarget_of_generator_identification
   intro τmod
   change
     NormedSpace.exp
-        (τmod • modularTransportGenerator (E := E) (canonicalModularSeed (E := E) CIK))
+        (τmod • modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK))
       =
     WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod
   calc
     NormedSpace.exp
-        (τmod • modularTransportGenerator (E := E) (canonicalModularSeed (E := E) CIK))
+        (τmod • modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK))
       =
     NormedSpace.exp
         (τmod • ((2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E))) := by
@@ -1215,7 +1325,7 @@ Canonical generator-identification route specialized from `H_D`.
 
 This packages the single algebraic generator identification
 `H_D = (2π)·K_unruh` with the exponential-flow identification witness into
-`FlowEqUnruh(canonicalModularSeed)`.
+`FlowEqUnruh(canonicalBivectorSeed)`.
 -/
 @[rep_depth transport]
 theorem canonicalSeedFlowEqUnruhTarget_of_superHamiltonian_identification
@@ -1232,11 +1342,11 @@ theorem canonicalSeedFlowEqUnruhTarget_of_superHamiltonian_identification
         WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod) :
     canonicalSeedFlowEqUnruhTarget (E := E) CIK := by
   have hGen :
-      modularTransportGenerator (E := E) (canonicalModularSeed (E := E) CIK)
+      modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK)
         =
       (2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
     calc
-      modularTransportGenerator (E := E) (canonicalModularSeed (E := E) CIK)
+      modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK)
         = DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK := by
             simpa using
               (superHamiltonian_eq_modularTransportGenerator_canonicalSeed
@@ -1485,7 +1595,7 @@ theorem superHamiltonian_eq_two_pi_modularHamiltonian_of_canonicalSeedFlowEqUnru
   have hDerivCanonical :
       HasDerivAt
         (fun τmod : ℝ =>
-          modularTransportFlow (E := E) (canonicalModularSeed (E := E) CIK) τmod)
+          modularTransportFlow (E := E) (canonicalBivectorSeed (E := E) CIK) τmod)
         (DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK)
         0 := by
     have hExp :
@@ -1494,21 +1604,21 @@ theorem superHamiltonian_eq_two_pi_modularHamiltonian_of_canonicalSeedFlowEqUnru
             NormedSpace.exp
               (τmod •
                 modularTransportGenerator (E := E)
-                  (canonicalModularSeed (E := E) CIK)))
+                  (canonicalBivectorSeed (E := E) CIK)))
           (modularTransportGenerator (E := E)
-            (canonicalModularSeed (E := E) CIK))
+            (canonicalBivectorSeed (E := E) CIK))
           0 := by
       simpa [zero_smul, NormedSpace.exp_zero] using
         (hasDerivAt_exp_smul_const
           (modularTransportGenerator (E := E)
-            (canonicalModularSeed (E := E) CIK))
+            (canonicalBivectorSeed (E := E) CIK))
           (0 : ℝ))
     simpa [BogoliubovTransport.modularTransportFlow] using
       (superHamiltonian_eq_modularTransportGenerator_canonicalSeed
         (E := E) (CIK := CIK)) ▸ hExp
   have hFlowEq :
       (fun τmod : ℝ =>
-        modularTransportFlow (E := E) (canonicalModularSeed (E := E) CIK) τmod)
+        modularTransportFlow (E := E) (canonicalBivectorSeed (E := E) CIK) τmod)
         =
       (fun τmod : ℝ =>
         WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod) := by
@@ -1525,7 +1635,7 @@ theorem superHamiltonian_eq_two_pi_modularHamiltonian_of_canonicalSeedFlowEqUnru
 
 /--
 Hyperbolic closure equivalence package:
-`FlowEqUnruh(canonicalModularSeed)` is equivalent to
+`FlowEqUnruh(canonicalBivectorSeed)` is equivalent to
 `H_D = (2π)·modularHamiltonian`.
 -/
 @[rep_depth transport]
@@ -1547,7 +1657,7 @@ theorem canonicalSeedFlowEqUnruhTarget_iff_superHamiltonian_eq_two_pi_modularHam
 
 /--
 Projector-first closure equivalence package:
-`FlowEqUnruh(canonicalModularSeed)` is equivalent to
+`FlowEqUnruh(canonicalBivectorSeed)` is equivalent to
 `H_D = (2π)·(P₊ - P₋)`.
 -/
 @[rep_depth transport]
@@ -1588,7 +1698,7 @@ theorem canonicalSeedFlowEqUnruhTarget_iff_superHamiltonian_eq_two_pi_modularSig
 
 /--
 Canonical single-gap target:
-`FlowEqUnruh(canonicalModularSeed)`.
+`FlowEqUnruh(canonicalBivectorSeed)`.
 -/
 @[rep_depth transport]
 theorem canonicalSeed_flow_at_wedgeParameter_of_flowEqUnruh
@@ -1596,13 +1706,13 @@ theorem canonicalSeed_flow_at_wedgeParameter_of_flowEqUnruh
     (hFlowEqUnruh : canonicalSeedFlowEqUnruhTarget (E := E) CIK)
     (τwedge : ℝ) :
     modularTransportFlow (E := E)
-      (canonicalModularSeed (E := E) CIK)
+      (canonicalBivectorSeed (E := E) CIK)
       (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
       =
     InfoGeometry.Dynamics.unruhFlow (E := E) τwedge := by
   calc
     modularTransportFlow (E := E)
-      (canonicalModularSeed (E := E) CIK)
+      (canonicalBivectorSeed (E := E) CIK)
       (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
         =
       WedgeBoostModularBridge.unruhFlowOfModularTime (E := E)
@@ -1635,7 +1745,7 @@ theorem canonicalTomitaFlow_at_wedgeParameter_of_flowEqUnruh
     InfoGeometry.Dynamics.unruhFlow (E := E) τwedge := by
   have hSeedFlow :
       modularTransportFlow (E := E)
-        (canonicalModularSeed (E := E) CIK)
+        (canonicalBivectorSeed (E := E) CIK)
         (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
         =
       InfoGeometry.Dynamics.unruhFlow (E := E) τwedge :=
@@ -1646,7 +1756,7 @@ theorem canonicalTomitaFlow_at_wedgeParameter_of_flowEqUnruh
         (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
         =
       modularTransportFlow (E := E)
-        (canonicalModularSeed (E := E) CIK)
+        (canonicalBivectorSeed (E := E) CIK)
         (RealTomitaCore.modularTimeOfWedgeBoost τwedge) := by
     symm
     exact canonicalSeed_flow_eq_canonicalTomitaFlow (E := E) CIK
@@ -1656,7 +1766,7 @@ theorem canonicalTomitaFlow_at_wedgeParameter_of_flowEqUnruh
       (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
         =
       modularTransportFlow (E := E)
-        (canonicalModularSeed (E := E) CIK)
+        (canonicalBivectorSeed (E := E) CIK)
         (RealTomitaCore.modularTimeOfWedgeBoost τwedge) := hTomitaSeed
     _ = InfoGeometry.Dynamics.unruhFlow (E := E) τwedge := hSeedFlow
 
@@ -1664,7 +1774,7 @@ theorem canonicalTomitaFlow_at_wedgeParameter_of_flowEqUnruh
 Single-hypothesis canonical-seed compatibility interface for wedge/Unruh flow.
 
 This isolates the remaining modular capstone gap to one theorem field:
-`FlowEqUnruh(canonicalModularSeed)`.
+`FlowEqUnruh(canonicalBivectorSeed)`.
 -/
 @[rep_depth transport]
 structure CanonicalSeedUnruhCompatibility where
@@ -1681,7 +1791,7 @@ Export the canonical-seed compatibility as the generic wedge/modular witness.
 @[rep_depth transport]
 noncomputable def toWedgeBoostModularCompatibility :
     WedgeBoostModularBridge.WedgeBoostModularCompatibility (E := E) where
-  modularSeed := canonicalModularSeed (E := E) U.CIK
+  modularSeed := canonicalBivectorSeed (E := E) U.CIK
   hFlowEqUnruh := U.hFlowEqUnruh
 
 /--
@@ -1691,13 +1801,13 @@ compatibility interface.
 @[rep_depth transport]
 theorem flow_at_wedgeParameter (τwedge : ℝ) :
     modularTransportFlow (E := E)
-      (canonicalModularSeed (E := E) U.CIK)
+      (canonicalBivectorSeed (E := E) U.CIK)
       (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
       =
     InfoGeometry.Dynamics.unruhFlow (E := E) τwedge := by
   have hFlow :
       modularTransportFlow (E := E)
-        (canonicalModularSeed (E := E) U.CIK)
+        (canonicalBivectorSeed (E := E) U.CIK)
         (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
         =
       InfoGeometry.Dynamics.unruhFlow (E := E) τwedge :=
@@ -1730,7 +1840,7 @@ compatibility hypothesis.
 @[rep_depth transport]
 theorem flow_eq_unruh_modular_polynomial (τmod : ℝ) :
     modularTransportFlow (E := E)
-      (canonicalModularSeed (E := E) U.CIK) τmod
+      (canonicalBivectorSeed (E := E) U.CIK) τmod
       =
     (Real.cosh (RealTomitaCore.wedgeBoostParameter τmod))
       • (ContinuousLinearMap.id ℝ H₂)
@@ -1739,7 +1849,7 @@ theorem flow_eq_unruh_modular_polynomial (τmod : ℝ) :
       • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
   have hUnruhEq :
       modularTransportFlow (E := E)
-        (canonicalModularSeed (E := E) U.CIK) τmod
+        (canonicalBivectorSeed (E := E) U.CIK) τmod
         = WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod :=
     U.hFlowEqUnruh τmod
   have hPoly :
@@ -1754,7 +1864,7 @@ theorem flow_eq_unruh_modular_polynomial (τmod : ℝ) :
       (E := E) τmod
   calc
     modularTransportFlow (E := E)
-      (canonicalModularSeed (E := E) U.CIK) τmod
+      (canonicalBivectorSeed (E := E) U.CIK) τmod
         = WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod := hUnruhEq
     _ =
       (Real.cosh (RealTomitaCore.wedgeBoostParameter τmod))
@@ -1869,7 +1979,7 @@ theorem superHamiltonian_fixed_under_modularAdjointFlow_canonicalSeed
     (CIK : CertifiedInverseKernel H₂) (t : ℝ) :
     DrazinModularSingularityBridge.modularAdjointFlow
       (E := E)
-      (canonicalModularSeed (E := E) CIK)
+      (canonicalBivectorSeed (E := E) CIK)
       t
       (DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK)
       =
@@ -1878,7 +1988,7 @@ theorem superHamiltonian_fixed_under_modularAdjointFlow_canonicalSeed
   have hFixed :
       DrazinModularSingularityBridge.modularAdjointFlow
         (E := E)
-        (canonicalModularSeed (E := E) M.CIK)
+        (canonicalBivectorSeed (E := E) M.CIK)
         t
         (ModularSuperchargeCompatibility.HD (E := E) M)
         =
@@ -1896,7 +2006,7 @@ theorem superHamiltonian_fixed_under_wedgeAdjointFlow_canonicalSeed
     (CIK : CertifiedInverseKernel H₂) (τwedge : ℝ) :
     DrazinModularSingularityBridge.modularAdjointFlow
       (E := E)
-      (canonicalModularSeed (E := E) CIK)
+      (canonicalBivectorSeed (E := E) CIK)
       (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
       (DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK)
       =
@@ -1905,7 +2015,7 @@ theorem superHamiltonian_fixed_under_wedgeAdjointFlow_canonicalSeed
   have hFixed :
       DrazinModularSingularityBridge.modularAdjointFlow
         (E := E)
-        (canonicalModularSeed (E := E) M.CIK)
+        (canonicalBivectorSeed (E := E) M.CIK)
         (RealTomitaCore.modularTimeOfWedgeBoost τwedge)
         (ModularSuperchargeCompatibility.HD (E := E) M)
         =
@@ -1954,7 +2064,7 @@ Internal modular-lane transport of the canonical split.
 theorem modularGenerator_eq_canonicalKinetic_plus_canonicalDefectCentral_canonicalSeed
     (CIK : CertifiedInverseKernel H₂) :
     modularTransportGenerator (E := E)
-      (canonicalModularSeed (E := E) CIK)
+      (canonicalBivectorSeed (E := E) CIK)
       =
     InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPartK (CIK := CIK)
       +
@@ -1976,7 +2086,7 @@ theorem exists_modularGenerator_split_with_drazin_lane_centrality_canonicalSeed
         ∧ InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK CIK Z
         ∧ InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.HasVanishingDefectBlockK CIK H
         ∧ modularTransportGenerator (E := E)
-            (canonicalModularSeed (E := E) CIK) = H + Z := by
+            (canonicalBivectorSeed (E := E) CIK) = H + Z := by
   let M : ModularSuperchargeCompatibility (E := E) := { CIK := CIK }
   simpa [M] using
     (ModularSuperchargeCompatibility.exists_modularGenerator_split_with_drazin_lane_centrality

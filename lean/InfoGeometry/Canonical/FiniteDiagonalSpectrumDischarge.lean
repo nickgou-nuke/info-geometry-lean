@@ -3,20 +3,21 @@ import InfoGeometry.Meta.Architecture
 
 namespace InfoGeometry.Canonical.Positivity
 
-/-!
-# InfoGeometry.Canonical.FiniteDiagonalSpectrumDischarge
+variable {H₂ : Type*}
+variable [NormedAddCommGroup H₂] [InnerProductSpace ℝ H₂] [CompleteSpace H₂]
 
-Compatibility shadow module.
-
-Finite-dimensional diagonal toy constructions are intentionally excluded from
-the canonical owner lane. The active closure surface is
-`InfoGeometry.Canonical.PositiveMeasureSpectrum`.
--/
-
-/-- Canonical reminder that positivity/log closure is owned by the non-toy lane. -/
 @[rep_depth operator]
-theorem finiteDiagonalShadowExcluded : True := by
-  trivial
+theorem finiteDiagonalShadowExcluded
+    (c : CertifiedModularReduction (E := H₂))
+    (hPos : c.RegularSpectrumPositive) :
+    c.logAdmissible c.Δreg :=
+  log_defined_on_Δreg_of_regularSpectrumPositive (c := c) hPos
+
+@[rep_depth operator]
+theorem finiteDiagonalShadowExcluded_of_isStrictlyPositive
+    (c : CertifiedModularReduction (E := H₂))
+    (hStrict : IsStrictlyPositive c.Δreg) :
+    c.logAdmissible c.Δreg :=
+  log_defined_on_Δreg_of_isStrictlyPositive (c := c) hStrict
 
 end InfoGeometry.Canonical.Positivity
-

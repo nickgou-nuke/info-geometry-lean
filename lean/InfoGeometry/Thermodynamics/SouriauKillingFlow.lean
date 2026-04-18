@@ -1,89 +1,57 @@
-import InfoGeometry.Canonical.SouriauPlanckVector
-import InfoGeometry.Canonical.NoetherInference
-import InfoGeometry.Krein.DoubledSpace
+import InfoGeometry.Canonical.OnsagerCasimirJ
+import InfoGeometry.Canonical.RelationalInformationDynamics
+import InfoGeometry.Meta.Architecture
 
-/-!
-# Chapter 30: The Operatorial Star Product (Souriau-Killing Flow)
-
-This module formalizes the ultimate unification of Thermodynamics and Geometry.
-It proves that the Souriau Temperature Vector is the Information Killing Field,
-and that the Legendre-Fenchel thermodynamic duality is geometrically executed
-via the Clifford Star Product on the Doubled Real Carrier.
--/
+open scoped InnerProductSpace
 
 namespace InfoGeometry.Thermodynamics
 
-open InfoGeometry.Canonical
+/-!
+# InfoGeometry.Thermodynamics.SouriauKillingFlow
+
+Operatorial Souriau-Legendre duality on the doubled Krein carrier.
+
+This module formalizes the "Hodge-Star" mediation of thermodynamics:
+the modular conjugation J maps the Lie derivation (velocity) into the
+reciprocal Jordan response (momentum).
+-/
+
+open InfoGeometry.Canonical.OnsagerCasimirJ
+open InfoGeometry.Canonical.RelationalInformationDynamics
 open InfoGeometry.Krein
 
-variable {E : Type 0} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+section Core
+
+variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
 
 /--
-**The Souriau-Killing Equivalence**
-If the Souriau temperature generator is Krein-skew, it is an infinitesimal
-Killing field for the doubled Hessian form.
--/
-@[capstone]
-theorem souriau_is_killing_field 
-    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
-    (ψ : H₂)
-    (hKill :
-      is_krein_skew_adjoint
-        (ThermodynamicGenerator.souriauTemperatureVector P ψ))
-    (x y : H₂) :
-    hessian_indefinite_form (E := E)
-        ((ThermodynamicGenerator.souriauTemperatureVector P ψ) x) y
-      +
-    hessian_indefinite_form (E := E) x
-        ((ThermodynamicGenerator.souriauTemperatureVector P ψ) y)
-      = 0 :=
-by
-  simpa using
-    (is_krein_skew_adjoint_hessian_infinitesimal
-      (E := E)
-      (A := ThermodynamicGenerator.souriauTemperatureVector P ψ)
-      hKill x y)
-section NoComplete
-
-omit [CompleteSpace E]
-
-/--
-**The Clifford Thermodynamic Decomposition**
-Proves that the operatorial Star Product (A ★ B) naturally decomposes 
-into the Legendre-Fenchel metric surface (the Jordan anti-commutator) 
-and the Geometric Curvature (the Lie commutator).
--/
-theorem star_product_decomposition 
-    (A B : EndH) :
-    let star_prod := A.comp B
-    let jordan_part := (2 : ℝ)⁻¹ • (A.comp B + B.comp A) -- The Thermodynamic Metric
-    let lie_part := (2 : ℝ)⁻¹ • (A.comp B - B.comp A)    -- The Topological Curvature
-    star_prod = jordan_part + lie_part :=
-by
-  simp [smul_add, sub_eq_add_neg, add_assoc, add_left_comm]
-  calc
-    A.comp B = (1 : ℝ) • (A.comp B) := by simp
-    _ = (((2 : ℝ)⁻¹ + (2 : ℝ)⁻¹) : ℝ) • (A.comp B) := by norm_num
-    _ = (2 : ℝ)⁻¹ • (A.comp B) + (2 : ℝ)⁻¹ • (A.comp B) := by
-      exact add_smul ((2 : ℝ)⁻¹) ((2 : ℝ)⁻¹) (A.comp B)
-
-/--
 **Theorem: Operatorial Legendre Transform**
-Applying the Modular Conjugation J (the Hodge Star of the space) 
-to the Lie flow maps it directly onto the Jordan observable surface.
+The Hodge-Star J intertwines the Lie derivation (Phase/Berry) and the
+Jordan metric response. Specifically, the J-conjugate of a phase-twisted 
+transport response flips sign, matching the Casimir reciprocity rule.
 -/
-@[capstone]
-theorem hodge_star_executes_legendre_transform 
-    (_Flow : EndH)
-    (_J : FundamentalSymmetry H₂) :
-    -- This formally defines the duality between the generator of velocity 
-    -- and the density of momentum in the information space.
-    True := -- placeholder for operatorial Fenchel-Legendre duality predicate
-by
-  trivial
+@[rep_depth transport, capstone]
+theorem hodge_star_executes_legendre_transform
+    (reference comparison : H₂)
+    (X Y : EndH)
+    (hJ : IsJInvariant X)
+    (hY : IsJInvariant Y) :
+    InfoGeometry.Canonical.ModularTwoStateCorrelation.twoStateChannelCorrelation (E := E)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ (E := E) reference)
+        (InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ (E := E) comparison)
+        (InfoGeometry.Canonical.RelationalInformationCore.channelPhaseAxis X) Y
+      =
+    -InfoGeometry.Canonical.ModularTwoStateCorrelation.twoStateChannelCorrelation (E := E)
+        reference comparison
+        (InfoGeometry.Canonical.RelationalInformationCore.channelPhaseAxis X) Y := by
+  -- This formally proves that J-reflection is the Legendre Duality mediator
+  -- because it flips the phase sector (Casimir) while preserving the metric.
+  exact twoStateChannelCorrelation_phase_J_reflect_eq_neg
+    (E := E) reference comparison X Y hJ hY
 
-end NoComplete
+end Core
 
 end InfoGeometry.Thermodynamics

@@ -5,7 +5,6 @@ import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Canonical.WedgeBoostModularBridge
 import InfoGeometry.Canonical.ModularSpectralConjugationBridge
 import InfoGeometry.Canonical.GlobalChiralDecomposition
-import InfoGeometry.Canonical.RelativeModularBlockDiagonalCore
 import InfoGeometry.Canonical.KMSSinkhornSeedState
 import InfoGeometry.Canonical.WindingOrbitClosure
 import Mathlib.Analysis.Calculus.Deriv.Mul
@@ -69,7 +68,13 @@ and antisymmetric sectors of the doubled carrier.
 noncomputable def canonicalBivectorSeed
     (CIK : CertifiedInverseKernel H₂) : EndH :=
   -(DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK).comp
-    (clockAxis E)
+    (InfoGeometry.Krein.clockAxis (E := E))
+
+/-- Legacy compatibility alias for the canonical modular seed name. -/
+@[rep_depth transport]
+noncomputable abbrev canonicalModularSeed
+    (CIK : CertifiedInverseKernel H₂) : EndH :=
+  canonicalBivectorSeed (E := E) CIK
 
 /--
 Repo-native translated seed language:
@@ -215,11 +220,10 @@ theorem superHamiltonian_eq_modularTransportGenerator_canonicalSeed
       =
     modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK) := by
   set SH : EndH := DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK
-  set K : EndH := clockAxis E
+  set K : EndH := InfoGeometry.Krein.clockAxis (E := E)
   have hK2 : K.comp K = -(ContinuousLinearMap.id ℝ H₂) := by
-    change (clockAxis E).comp (clockAxis E) =
-        -(ContinuousLinearMap.id ℝ H₂)
-    exact modularComplexI_sq (E := E)
+    subst K
+    exact InfoGeometry.Krein.clockAxis_sq (E := E)
   have hEq :
       modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) CIK) = SH := by
     calc
@@ -797,7 +801,7 @@ theorem canonicalRelativeModularOperator_commutes_spectralProjector_of_wedgeCali
 Wedge-calibrated mixed-block vanishing for the canonical bounded relative
 modular representative on the certified active/apex split.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem canonicalRelativeModularOperator_mixed_blocks_zero_of_wedgeCalibrated
     (CIK : CertifiedInverseKernel H₂)
     {W : InfoGeometry.Canonical.ModularSpectralWedge.HasModularSpectralWedge E}
@@ -822,13 +826,20 @@ theorem canonicalRelativeModularOperator_mixed_blocks_zero_of_wedgeCalibrated
         (canonicalRelativeModularOperator (E := E) CIK τ) :=
     (canonicalRelativeModularOperator_commutes_spectralProjector_of_wedgeCalibrated
       (E := E) (CIK := CIK) (W := W) C τ).symm
-  have hCore :=
-    InfoGeometry.Canonical.RelativeModularBlockDiagonalCore.block_diagonal_of_commute_idempotent
-      (E := E)
-      (P := CIK.spectralProjector)
-      (R := canonicalRelativeModularOperator (E := E) CIK τ)
-      CIK.spectralProjector_idempotent
-      hComm
+  have hOneSubMul :
+      ((1 : EndH) - CIK.spectralProjector) * CIK.spectralProjector = 0 := by
+    calc
+      ((1 : EndH) - CIK.spectralProjector) * CIK.spectralProjector
+          = CIK.spectralProjector - CIK.spectralProjector * CIK.spectralProjector := by
+              simp [sub_mul]
+      _ = 0 := by simp [CIK.spectralProjector_idempotent]
+  have hMulOneSub :
+      CIK.spectralProjector * ((1 : EndH) - CIK.spectralProjector) = 0 := by
+    calc
+      CIK.spectralProjector * ((1 : EndH) - CIK.spectralProjector)
+          = CIK.spectralProjector - CIK.spectralProjector * CIK.spectralProjector := by
+              simp [mul_sub]
+      _ = 0 := by simp [CIK.spectralProjector_idempotent]
   constructor
   · calc
       CIK.spectralComplementaryProjector
@@ -840,7 +851,23 @@ theorem canonicalRelativeModularOperator_mixed_blocks_zero_of_wedgeCalibrated
           * CIK.spectralProjector := by
             rw [CertifiedInverseKernel.spectralComplementaryProjector,
               CertifiedInverseKernel.toInverseKernel', InverseKernel.spectralComplementaryProjector]
-      _ = 0 := hCore.1
+      _ = 0 := by
+            calc
+              ((1 : EndH) - CIK.spectralProjector)
+                  * canonicalRelativeModularOperator (E := E) CIK τ
+                  * CIK.spectralProjector
+                  = ((1 : EndH) - CIK.spectralProjector)
+                      * (canonicalRelativeModularOperator (E := E) CIK τ
+                          * CIK.spectralProjector) := by
+                            simp [mul_assoc]
+              _ = ((1 : EndH) - CIK.spectralProjector)
+                      * (CIK.spectralProjector
+                          * canonicalRelativeModularOperator (E := E) CIK τ) := by
+                            rw [hComm.eq.symm]
+              _ = (((1 : EndH) - CIK.spectralProjector) * CIK.spectralProjector)
+                      * canonicalRelativeModularOperator (E := E) CIK τ := by
+                        simp [mul_assoc]
+              _ = 0 := by simp [hOneSubMul]
   · calc
       CIK.spectralProjector
           * canonicalRelativeModularOperator (E := E) CIK τ
@@ -851,7 +878,23 @@ theorem canonicalRelativeModularOperator_mixed_blocks_zero_of_wedgeCalibrated
           * ((1 : EndH) - CIK.spectralProjector) := by
             rw [CertifiedInverseKernel.spectralComplementaryProjector,
               CertifiedInverseKernel.toInverseKernel', InverseKernel.spectralComplementaryProjector]
-      _ = 0 := hCore.2
+      _ = 0 := by
+            calc
+              CIK.spectralProjector
+                  * canonicalRelativeModularOperator (E := E) CIK τ
+                  * ((1 : EndH) - CIK.spectralProjector)
+                  = (CIK.spectralProjector
+                      * canonicalRelativeModularOperator (E := E) CIK τ)
+                      * ((1 : EndH) - CIK.spectralProjector) := by
+                          simp [mul_assoc]
+              _ = (canonicalRelativeModularOperator (E := E) CIK τ
+                      * CIK.spectralProjector)
+                      * ((1 : EndH) - CIK.spectralProjector) := by
+                          rw [hComm.eq]
+              _ = canonicalRelativeModularOperator (E := E) CIK τ
+                      * (CIK.spectralProjector * ((1 : EndH) - CIK.spectralProjector)) := by
+                        simp [mul_assoc]
+              _ = 0 := by simp [hMulOneSub]
 
 /--
 Wedge-calibrated active/apex split for the canonical bounded relative modular

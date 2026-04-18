@@ -1,0 +1,101 @@
+{
+  "packet_id": "EXT-20260418-054025",
+  "stage": "create:research:raw",
+  "timestamp": "2026-04-18T05:40:25+00:00",
+  "prompt_hash": "0d02ce7e01140a78bb246d933346dccc7a7dd5092829a68179a962ecb17e8c8d",
+  "command": [
+    "tools/infra/injection_research_packet.py",
+    "--topic",
+    "Neural Operators (FNO/DeepONet/PINO) and repo integration for operator-valued ML",
+    "--question",
+    "Which claims are robust for FNO vs DeepONet vs PINNs (speed, resolution invariance, geometry handling) based on primary sources?",
+    "--question",
+    "How should InfoGeometry encode neural-operator semantics as owner contracts without vacuous assumptions?",
+    "--source-url",
+    "https://arxiv.org/abs/2010.08895",
+    "--source-url",
+    "https://arxiv.org/abs/1910.03193",
+    "--source-url",
+    "https://arxiv.org/abs/2111.03794",
+    "--source-url",
+    "https://arxiv.org/abs/2202.11214",
+    "--source-url",
+    "https://jmlr.org/beta/papers/v24/21-1524.html",
+    "--source-url",
+    "https://jmlr.org/beta/papers/v24/23-0064.html",
+    "--source-url",
+    "https://www.sciencedirect.com/science/article/abs/pii/S0045782522001207",
+    "--source-url",
+    "https://deepxde.readthedocs.io/en/stable/demos/operator.html",
+    "--source-url",
+    "https://github.com/neuraloperator/neuraloperator",
+    "--workflow-mode",
+    "gemini-hermes-codex",
+    "--segment",
+    "Validate core claims: function-to-function learning, discretization transfer, and where speedup statements are conditional.",
+    "--segment",
+    "Compare FNO and DeepONet under geometry complexity, sensorization, and trunk/branch flexibility.",
+    "--segment",
+    "Map a rigorous Lean owner interface for neural operators onto existing Arnold/NavierStokes bridge lanes.",
+    "--lane",
+    "raw"
+  ],
+  "runtime": {
+    "python": "3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0]",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "env_models": {
+      "HERMES_MODEL": "",
+      "OPENAI_MODEL": "",
+      "GEMINI_MODEL": "",
+      "LLM_MODEL": ""
+    },
+    "versions": {
+      "git_rev_parse": {
+        "cmd": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "exit": 0,
+        "stdout": "bf4e18faf86984df67e82744e74c2ea345b7ea54",
+        "stderr": ""
+      },
+      "git_describe": {
+        "cmd": [
+          "git",
+          "describe",
+          "--always",
+          "--dirty"
+        ],
+        "exit": 0,
+        "stdout": "bf4e18f-dirty",
+        "stderr": ""
+      },
+      "lake_version": {
+        "cmd": [
+          "lake",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lake version 5.0.0-src+7e01a1b (Lean version 4.28.0)",
+        "stderr": ""
+      },
+      "lean_version": {
+        "cmd": [
+          "lean",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lean (version 4.28.0, x86_64-unknown-linux-gnu, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b, Release)",
+        "stderr": ""
+      }
+    }
+  },
+  "result": {
+    "ok": true
+  },
+  "extra": {
+    "lock_wait_sec": 6.107002263888717e-06,
+    "lane": "raw"
+  }
+}

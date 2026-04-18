@@ -7,7 +7,6 @@ open scoped InnerProductSpace
 namespace InfoGeometry.Quantum
 
 open InfoGeometry.Krein
-open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.BogoliubovClosedForms
 open InfoGeometry.Canonical.ConformalUnification
@@ -36,8 +35,13 @@ theorem KRotation_preserves_inner
   repeat rw [real_inner_smul_left, real_inner_smul_right]
   rw [inner_add_right]
   repeat rw [real_inner_smul_left, real_inner_smul_right]
-  rw [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_inner_skew (E := E) u v]
-  rw [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_inner_comp (E := E) u v]
+  have hClockSkew :
+      ⟪clockAxis (E := E) u, v⟫_ℝ = -⟪u, clockAxis (E := E) v⟫_ℝ := by
+    exact InfoGeometry.Canonical.TomitaTakesaki.complex_i_inner_skew (E := E) u v
+  have hClockComp :
+      ⟪clockAxis (E := E) u, clockAxis (E := E) v⟫_ℝ = ⟪u, v⟫_ℝ := by
+    exact InfoGeometry.Canonical.TomitaTakesaki.complex_i_inner_comp (E := E) u v
+  rw [hClockSkew, hClockComp]
   ring_nf
   have hcossin : Real.cos t ^ 2 + Real.sin t ^ 2 = 1 := by
     nlinarith [Real.sin_sq_add_cos_sq t]
@@ -133,9 +137,9 @@ The operatorial metric seed carried by a Cartan-even operator commuting with
 theorem metricOfOperator_KRotation_eq_of_commute
     (A : EndH)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (clockAxis (E := E))
         =
-      (modularComplexI (E := E)).comp A)
+      (clockAxis (E := E)).comp A)
     (t : ℝ) :
     ∀ u v : H₂,
       metricOfOperator A
@@ -160,9 +164,9 @@ The operatorial Berry 2-form seed is preserved by the exact phase propagator
 theorem berryOfOperator_KRotation_eq_of_commute
     (A : EndH)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (clockAxis (E := E))
         =
-      (modularComplexI (E := E)).comp A)
+      (clockAxis (E := E)).comp A)
     (t : ℝ) :
     ∀ u v : H₂,
       berryOfOperator (E := E) A
@@ -172,19 +176,18 @@ theorem berryOfOperator_KRotation_eq_of_commute
       berryOfOperator (E := E) A u v := by
   intro u v
   have hKComm :
-      (InfoGeometry.Krein.complex_i (E := E)).comp (KRotation (E := E) t)
+      (clockAxis (E := E)).comp (KRotation (E := E) t)
         =
-      (KRotation (E := E) t).comp (InfoGeometry.Krein.complex_i (E := E)) := by
-    simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
-      (comp_KRotation_eq_KRotation_comp_of_IsPhaseLinear
+      (KRotation (E := E) t).comp (clockAxis (E := E)) := by
+    exact comp_KRotation_eq_KRotation_comp_of_IsPhaseLinear
       (E := E)
-      (A := modularComplexI (E := E))
+      (A := clockAxis (E := E))
       (by simp [IsPhaseLinear])
-      t)
+      t
   have hKu :
-      InfoGeometry.Krein.complex_i (E := E) (KRotation (E := E) t u)
+      clockAxis (E := E) (KRotation (E := E) t u)
         =
-      KRotation (E := E) t (InfoGeometry.Krein.complex_i (E := E) u) := by
+      KRotation (E := E) t (clockAxis (E := E) u) := by
     simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hKComm
   calc
     berryOfOperator (E := E) A
@@ -192,22 +195,22 @@ theorem berryOfOperator_KRotation_eq_of_commute
         (KRotation (E := E) t v)
       =
     metricOfOperator (E := E) A
-      (InfoGeometry.Krein.complex_i (E := E) (KRotation (E := E) t u))
+      (clockAxis (E := E) (KRotation (E := E) t u))
       (KRotation (E := E) t v) := by
           simpa using
-            (berryOfOperator_apply_complex_i (E := E) A
+            (berryOfOperator_apply (E := E) A
               (KRotation (E := E) t u)
               (KRotation (E := E) t v))
     _ =
     metricOfOperator (E := E) A
-      (KRotation (E := E) t (InfoGeometry.Krein.complex_i (E := E) u))
+      (KRotation (E := E) t (clockAxis (E := E) u))
       (KRotation (E := E) t v) := by
           rw [hKu]
-    _ = metricOfOperator (E := E) A (InfoGeometry.Krein.complex_i (E := E) u) v := by
+    _ = metricOfOperator (E := E) A (clockAxis (E := E) u) v := by
           exact metricOfOperator_KRotation_eq_of_commute
-            (E := E) (A := A) hComm t (InfoGeometry.Krein.complex_i (E := E) u) v
+            (E := E) (A := A) hComm t (clockAxis (E := E) u) v
     _ = berryOfOperator (E := E) A u v := by
-          exact (berryOfOperator_apply_complex_i (E := E) A u v).symm
+          exact (berryOfOperator_apply (E := E) A u v).symm
 
 /--
 Split-`Cl(1,1)` (`J ∘ ε`) form of the phase-propagation invariance theorem for
@@ -216,9 +219,9 @@ the operatorial Berry 2-form.
 theorem berryTwoFormJEpsOfOperator_KRotation_eq_of_commute
     (A : EndH)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (clockAxis (E := E))
         =
-      (modularComplexI (E := E)).comp A)
+      (clockAxis (E := E)).comp A)
     (t : ℝ) :
     ∀ u v : H₂,
       berryTwoFormJEpsOfOperator (E := E) A
@@ -238,9 +241,9 @@ theorem qgtOfOperator_KRotation_invariant
     (A : EndH)
     (hA : IsSelfAdjoint A)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (clockAxis (E := E))
         =
-      (modularComplexI (E := E)).comp A)
+      (clockAxis (E := E)).comp A)
     (t : ℝ) :
     let Q := qgtOfOperator (E := E) A hA hComm
     (∀ u v : H₂,
@@ -260,28 +263,28 @@ theorem qgtOfOperator_KRotation_invariant
       metricOfOperator_KRotation_eq_of_commute
         (E := E) (A := A) hComm t
     have hKComm :
-        (modularComplexI (E := E)).comp (KRotation (E := E) t)
+        (clockAxis (E := E)).comp (KRotation (E := E) t)
           =
-        (KRotation (E := E) t).comp (modularComplexI (E := E)) := by
+        (KRotation (E := E) t).comp (clockAxis (E := E)) := by
       exact comp_KRotation_eq_KRotation_comp_of_IsPhaseLinear
         (E := E)
-        (A := modularComplexI (E := E))
+        (A := clockAxis (E := E))
         (by simp [IsPhaseLinear])
         t
     have hKu :
-        modularComplexI (E := E) (KRotation (E := E) t u)
+        clockAxis (E := E) (KRotation (E := E) t u)
           =
-        KRotation (E := E) t (modularComplexI (E := E) u) := by
+        KRotation (E := E) t (clockAxis (E := E) u) := by
       simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hKComm
     calc
       Q.berry (KRotation (E := E) t u) (KRotation (E := E) t v)
         =
-      Q.metric ((modularComplexI (E := E)) (KRotation (E := E) t u)) (KRotation (E := E) t v) := by
+      Q.metric ((clockAxis (E := E)) (KRotation (E := E) t u)) (KRotation (E := E) t v) := by
             exact Q.compat _ _
       _ =
-      Q.metric ((KRotation (E := E) t) ((modularComplexI (E := E)) u)) (KRotation (E := E) t v) := by
+      Q.metric ((KRotation (E := E) t) ((clockAxis (E := E)) u)) (KRotation (E := E) t v) := by
             rw [hKu]
-      _ = Q.metric ((modularComplexI (E := E)) u) v := hMetric _ _
+      _ = Q.metric ((clockAxis (E := E)) u) v := hMetric _ _
       _ = Q.berry u v := (Q.compat u v).symm
 
 /--
@@ -345,16 +348,16 @@ theorem berryOfOperator_modularTransportFlow_eq_of_commute_generator
       berryOfOperator (E := E) A u v := by
   intro u v
   have hKComm :
-      (complex_i (E := E)).comp (modularTransportFlow (E := E) hMod t)
+      (clockAxis (E := E)).comp (modularTransportFlow (E := E) hMod t)
         =
-      (modularTransportFlow (E := E) hMod t).comp (complex_i (E := E)) := by
+      (modularTransportFlow (E := E) hMod t).comp (clockAxis (E := E)) := by
     exact
-      complex_i_comp_modularTransportFlow_eq_modularTransportFlow_comp_complex_i_of_IsPhaseLinear
+      modularComplexI_comp_modularTransportFlow_eq_modularTransportFlow_comp_modularComplexI_of_IsPhaseLinear
         (E := E) hMod hPhase t
   have hKu :
-      complex_i (E := E) (modularTransportFlow (E := E) hMod t u)
+      clockAxis (E := E) (modularTransportFlow (E := E) hMod t u)
         =
-      modularTransportFlow (E := E) hMod t (complex_i (E := E) u) := by
+      modularTransportFlow (E := E) hMod t (clockAxis (E := E) u) := by
     simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hKComm
   calc
     berryOfOperator (E := E) A
@@ -362,22 +365,20 @@ theorem berryOfOperator_modularTransportFlow_eq_of_commute_generator
         (modularTransportFlow (E := E) hMod t v)
       =
     metricOfOperator (E := E) A
-      (complex_i (E := E) (modularTransportFlow (E := E) hMod t u))
+      (clockAxis (E := E) (modularTransportFlow (E := E) hMod t u))
       (modularTransportFlow (E := E) hMod t v) := by
-          simp [berryOfOperator_apply,
-            InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+          simp [berryOfOperator_apply]
     _ =
     metricOfOperator (E := E) A
-      (modularTransportFlow (E := E) hMod t (complex_i (E := E) u))
+      (modularTransportFlow (E := E) hMod t (clockAxis (E := E) u))
       (modularTransportFlow (E := E) hMod t v) := by
           rw [hKu]
-    _ = metricOfOperator (E := E) A (modularComplexI (E := E) u) v := by
+    _ = metricOfOperator (E := E) A (clockAxis (E := E) u) v := by
           exact metricOfOperator_modularTransportFlow_eq_of_commute_generator
             (E := E) (A := A) (hMod := hMod) hSelf hPhase hCommGen t
-            (complex_i (E := E) u) v
+            (clockAxis (E := E) u) v
     _ = berryOfOperator (E := E) A u v := by
-          simp [berryOfOperator_apply,
-            InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i]
+          simp [berryOfOperator_apply]
 
 /--
 Split-`Cl(1,1)` (`J ∘ ε`) form of exact modular-flow Berry transport:
@@ -433,9 +434,9 @@ theorem qgtOfOperator_modularTransportFlow_invariant_of_commute_generator
     (A hMod : EndH)
     (hA : IsSelfAdjoint A)
     (hACommK :
-      A.comp (modularComplexI (E := E))
+      A.comp (clockAxis (E := E))
         =
-      (modularComplexI (E := E)).comp A)
+      (clockAxis (E := E)).comp A)
     (hSelf : IsSelfAdjoint hMod)
     (hPhase : IsPhaseLinear (E := E) hMod)
     (hCommGen : Commute A (modularTransportGenerator (E := E) hMod))
@@ -461,32 +462,45 @@ theorem qgtOfOperator_modularTransportFlow_invariant_of_commute_generator
       metricOfOperator_modularTransportFlow_eq_of_commute_generator
         (E := E) (A := A) (hMod := hMod) hSelf hPhase hCommGen t
     have hKComm :
-        (complex_i (E := E)).comp (modularTransportFlow (E := E) hMod t)
+        (clockAxis (E := E)).comp (modularTransportFlow (E := E) hMod t)
           =
-        (modularTransportFlow (E := E) hMod t).comp (complex_i (E := E)) := by
-      exact complex_i_comp_modularTransportFlow_eq_modularTransportFlow_comp_complex_i_of_IsPhaseLinear
+        (modularTransportFlow (E := E) hMod t).comp (clockAxis (E := E)) := by
+      exact modularComplexI_comp_modularTransportFlow_eq_modularTransportFlow_comp_modularComplexI_of_IsPhaseLinear
         (E := E) hMod hPhase t
     have hKu :
-        complex_i (E := E) (modularTransportFlow (E := E) hMod t u)
+        clockAxis (E := E) (modularTransportFlow (E := E) hMod t u)
           =
-        modularTransportFlow (E := E) hMod t (complex_i (E := E) u) := by
+        modularTransportFlow (E := E) hMod t (clockAxis (E := E) u) := by
       simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hKComm
     calc
       Q.berry (modularTransportFlow (E := E) hMod t u)
         (modularTransportFlow (E := E) hMod t v)
         =
-      Q.metric ((complex_i (E := E)) (modularTransportFlow (E := E) hMod t u))
+      Q.metric ((clockAxis (E := E)) (modularTransportFlow (E := E) hMod t u))
         (modularTransportFlow (E := E) hMod t v) := by
-            rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)]
-            exact Q.compat _ _
+            calc
+              Q.berry (modularTransportFlow (E := E) hMod t u)
+                  (modularTransportFlow (E := E) hMod t v)
+                  =
+                Q.metric (complex_i (E := E) (modularTransportFlow (E := E) hMod t u))
+                  (modularTransportFlow (E := E) hMod t v) := by
+                    exact Q.compat_complex_i _ _
+              _ =
+                Q.metric ((clockAxis (E := E)) (modularTransportFlow (E := E) hMod t u))
+                  (modularTransportFlow (E := E) hMod t v) := by
+                    simp
       _ =
-      Q.metric (modularTransportFlow (E := E) hMod t ((complex_i (E := E)) u))
+      Q.metric (modularTransportFlow (E := E) hMod t ((clockAxis (E := E)) u))
         (modularTransportFlow (E := E) hMod t v) := by
             rw [hKu]
-      _ = Q.metric ((complex_i (E := E)) u) v := hMetric _ _
+      _ = Q.metric ((clockAxis (E := E)) u) v := hMetric _ _
       _ = Q.berry u v := by
-            rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)]
-            exact (Q.compat u v).symm
+            calc
+              Q.metric ((clockAxis (E := E)) u) v = Q.metric (complex_i (E := E) u) v := by
+                simp
+              _ = Q.berry u v := by
+                symm
+                exact Q.compat_complex_i u v
 
 /--
 If the modular transport generator lies on the local Cartan phase axis, then
@@ -496,14 +510,14 @@ modular transport flow.
 theorem metricOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phaseAxis
     (A hMod : EndH)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (clockAxis (E := E))
         =
-      (modularComplexI (E := E)).comp A)
+      (clockAxis (E := E)).comp A)
     (σ t : ℝ)
     (hGen :
       modularTransportGenerator (E := E) hMod
         =
-      σ • modularComplexI (E := E)) :
+      σ • clockAxis (E := E)) :
     ∀ u v : H₂,
       metricOfOperator A
           (modularTransportFlow (E := E) hMod t u)
@@ -511,11 +525,8 @@ theorem metricOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phaseAxis
         =
       metricOfOperator A u v := by
   intro u v
-  have hGenCore :
-      modularTransportGenerator (E := E) hMod = σ • complex_i (E := E) := by
-    simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using hGen
-  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_complex_i
-      (E := E) hMod σ t hGenCore]
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
+      (E := E) hMod σ t hGen]
   exact metricOfOperator_KRotation_eq_of_commute
     (E := E) (A := A) hComm (t * σ) u v
 
@@ -526,14 +537,14 @@ operatorial Berry seed is preserved along the exact modular transport flow.
 theorem berryOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phaseAxis
     (A hMod : EndH)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (clockAxis (E := E))
         =
-      (modularComplexI (E := E)).comp A)
+      (clockAxis (E := E)).comp A)
     (σ t : ℝ)
     (hGen :
       modularTransportGenerator (E := E) hMod
         =
-      σ • modularComplexI (E := E)) :
+      σ • clockAxis (E := E)) :
     ∀ u v : H₂,
       berryOfOperator (E := E) A
           (modularTransportFlow (E := E) hMod t u)
@@ -541,11 +552,8 @@ theorem berryOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phaseAxis
         =
       berryOfOperator (E := E) A u v := by
   intro u v
-  have hGenCore :
-      modularTransportGenerator (E := E) hMod = σ • complex_i (E := E) := by
-    simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using hGen
-  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_complex_i
-      (E := E) hMod σ t hGenCore]
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
+      (E := E) hMod σ t hGen]
   exact berryOfOperator_KRotation_eq_of_commute
     (E := E) (A := A) hComm (t * σ) u v
 
@@ -556,14 +564,14 @@ for the operatorial Berry seed.
 theorem berryTwoFormJEpsOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phaseAxis
     (A hMod : EndH)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (clockAxis (E := E))
         =
-      (modularComplexI (E := E)).comp A)
+      (clockAxis (E := E)).comp A)
     (σ t : ℝ)
     (hGen :
       modularTransportGenerator (E := E) hMod
         =
-      σ • modularComplexI (E := E)) :
+      σ • clockAxis (E := E)) :
     ∀ u v : H₂,
       berryTwoFormJEpsOfOperator (E := E) A
           (modularTransportFlow (E := E) hMod t u)
@@ -584,14 +592,14 @@ theorem qgtOfOperator_modularTransportFlow_invariant_of_generator_eq_smul_phaseA
     (A hMod : EndH)
     (hA : IsSelfAdjoint A)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (clockAxis (E := E))
         =
-      (modularComplexI (E := E)).comp A)
+      (clockAxis (E := E)).comp A)
     (σ t : ℝ)
     (hGen :
       modularTransportGenerator (E := E) hMod
         =
-      σ • modularComplexI (E := E)) :
+      σ • clockAxis (E := E)) :
     let Q := qgtOfOperator (E := E) A hA hComm
     (∀ u v : H₂,
       Q.metric (modularTransportFlow (E := E) hMod t u)
@@ -601,11 +609,8 @@ theorem qgtOfOperator_modularTransportFlow_invariant_of_generator_eq_smul_phaseA
       Q.berry (modularTransportFlow (E := E) hMod t u)
         (modularTransportFlow (E := E) hMod t v) = Q.berry u v) := by
   intro Q
-  have hGenCore :
-      modularTransportGenerator (E := E) hMod = σ • complex_i (E := E) := by
-    simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using hGen
-  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_complex_i
-      (E := E) hMod σ t hGenCore]
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
+      (E := E) hMod σ t hGen]
   simpa using qgtOfOperator_KRotation_invariant
     (E := E) (A := A) hA hComm (t * σ)
 
@@ -660,28 +665,28 @@ theorem kreinQgtOfOperator_KRotation_invariant
       kreinMetricOfOperator_KRotation_eq_of_IsPhaseAntilinear
         (E := E) (A := A) hAnti t
     have hKComm :
-        (modularComplexI (E := E)).comp (KRotation (E := E) t)
+        (clockAxis (E := E)).comp (KRotation (E := E) t)
           =
-        (KRotation (E := E) t).comp (modularComplexI (E := E)) := by
+        (KRotation (E := E) t).comp (clockAxis (E := E)) := by
       exact comp_KRotation_eq_KRotation_comp_of_IsPhaseLinear
         (E := E)
-        (A := modularComplexI (E := E))
+        (A := clockAxis (E := E))
         (by simp [IsPhaseLinear])
         t
     have hKu :
-        modularComplexI (E := E) (KRotation (E := E) t u)
+        clockAxis (E := E) (KRotation (E := E) t u)
           =
-        KRotation (E := E) t (modularComplexI (E := E) u) := by
+        KRotation (E := E) t (clockAxis (E := E) u) := by
       simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hKComm
     calc
       Q.berry (KRotation (E := E) t u) (KRotation (E := E) t v)
         =
-      Q.metric ((modularComplexI (E := E)) (KRotation (E := E) t u)) (KRotation (E := E) t v) := by
+      Q.metric ((clockAxis (E := E)) (KRotation (E := E) t u)) (KRotation (E := E) t v) := by
             exact Q.compat _ _
       _ =
-      Q.metric ((KRotation (E := E) t) ((modularComplexI (E := E)) u)) (KRotation (E := E) t v) := by
+      Q.metric ((KRotation (E := E) t) ((clockAxis (E := E)) u)) (KRotation (E := E) t v) := by
             rw [hKu]
-      _ = Q.metric ((modularComplexI (E := E)) u) v := hMetric _ _
+      _ = Q.metric ((clockAxis (E := E)) u) v := hMetric _ _
       _ = Q.berry u v := (Q.compat u v).symm
 
 /--
@@ -696,7 +701,7 @@ theorem kreinMetricOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phase
     (hGen :
       modularTransportGenerator (E := E) hMod
         =
-      σ • modularComplexI (E := E)) :
+      σ • clockAxis (E := E)) :
     ∀ u v : H₂,
       kreinMetricOfOperator A
           (modularTransportFlow (E := E) hMod t u)
@@ -704,11 +709,8 @@ theorem kreinMetricOfOperator_modularTransportFlow_eq_of_generator_eq_smul_phase
         =
       kreinMetricOfOperator A u v := by
   intro u v
-  have hGenCore :
-      modularTransportGenerator (E := E) hMod = σ • complex_i (E := E) := by
-    simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using hGen
-  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_complex_i
-      (E := E) hMod σ t hGenCore]
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
+      (E := E) hMod σ t hGen]
   exact kreinMetricOfOperator_KRotation_eq_of_IsPhaseAntilinear
     (E := E) (A := A) hAnti (t * σ) u v
 
@@ -725,7 +727,7 @@ theorem kreinQgtOfOperator_modularTransportFlow_invariant_of_generator_eq_smul_p
     (hGen :
       modularTransportGenerator (E := E) hMod
         =
-      σ • modularComplexI (E := E)) :
+      σ • clockAxis (E := E)) :
     let Q := kreinQgtOfOperator (E := E) A hA hAnti
     (∀ u v : H₂,
       Q.metric (modularTransportFlow (E := E) hMod t u)
@@ -735,11 +737,8 @@ theorem kreinQgtOfOperator_modularTransportFlow_invariant_of_generator_eq_smul_p
       Q.berry (modularTransportFlow (E := E) hMod t u)
         (modularTransportFlow (E := E) hMod t v) = Q.berry u v) := by
   intro Q
-  have hGenCore :
-      modularTransportGenerator (E := E) hMod = σ • complex_i (E := E) := by
-    simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using hGen
-  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_complex_i
-      (E := E) hMod σ t hGenCore]
+  rw [modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
+      (E := E) hMod σ t hGen]
   simpa using kreinQgtOfOperator_KRotation_invariant
     (E := E) (A := A) hA hAnti (t * σ)
 

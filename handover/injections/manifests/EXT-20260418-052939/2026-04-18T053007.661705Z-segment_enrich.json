@@ -1,0 +1,87 @@
+{
+  "packet_id": "EXT-20260418-052939",
+  "stage": "segment:enrich",
+  "timestamp": "2026-04-18T05:30:07+00:00",
+  "prompt_hash": "113bd4eb95b3068f03c3c194da2f32d12852672bc27d412380c337af8ea55818",
+  "command": [
+    "tools/infra/injection_enrich_segment.py",
+    "EXT-20260418-052939",
+    "--segment-id",
+    "S1",
+    "--claim",
+    "KANs are inspired by the Kolmogorov-Arnold representation theorem, while classical UAT concerns density of function classes; they are related but not equivalent theorem surfaces.",
+    "--inference-flag",
+    "inference:cross-source",
+    "--evidence-url",
+    "https://arxiv.org/abs/2404.19756",
+    "--evidence-summary",
+    "KAN paper frames architecture via Kolmogorov-Arnold representation and edge-wise learnable univariate functions.",
+    "--evidence-url",
+    "https://link.springer.com/article/10.1007/s10994-025-06800-6",
+    "--evidence-summary",
+    "Springer 2025 distinguishes exact representation vs approximate model/network and constructive training algorithms.",
+    "--mark-creative-complete",
+    "--mark-verification-complete"
+  ],
+  "runtime": {
+    "python": "3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0]",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "env_models": {
+      "HERMES_MODEL": "",
+      "OPENAI_MODEL": "",
+      "GEMINI_MODEL": "",
+      "LLM_MODEL": ""
+    },
+    "versions": {
+      "git_rev_parse": {
+        "cmd": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "exit": 0,
+        "stdout": "bf4e18faf86984df67e82744e74c2ea345b7ea54",
+        "stderr": ""
+      },
+      "git_describe": {
+        "cmd": [
+          "git",
+          "describe",
+          "--always",
+          "--dirty"
+        ],
+        "exit": 0,
+        "stdout": "bf4e18f-dirty",
+        "stderr": ""
+      },
+      "lake_version": {
+        "cmd": [
+          "lake",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lake version 5.0.0-src+7e01a1b (Lean version 4.28.0)",
+        "stderr": ""
+      },
+      "lean_version": {
+        "cmd": [
+          "lean",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lean (version 4.28.0, x86_64-unknown-linux-gnu, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b, Release)",
+        "stderr": ""
+      }
+    }
+  },
+  "result": {
+    "ok": true,
+    "segment_id": "S1"
+  },
+  "extra": {
+    "lock_wait_sec": 4.588997398968786e-06,
+    "mark_creative_complete": true,
+    "mark_verification_complete": true,
+    "evidence_count": 2
+  }
+}

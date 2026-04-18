@@ -232,12 +232,14 @@ theorem isAlgebraicallyStationary_of_central
 /-- The phase-axis response is the negative `K`-variation of the observable. -/
 @[rep_depth transport, simp]
 theorem phaseAxisResponse_eq_neg_KVariation
+    [CompleteSpace E]
     (D : EndH) :
     phaseAxisResponse (E := E) D
       =
     -operatorInformationFirstVariation (E := E) Kop D := by
   simp [phaseAxisResponse, phaseAxisForce, operatorInformationFirstVariation,
-    transportCommutator]
+    transportCommutator,
+    InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)]
 
 /--
 Applying the `K`-derivation to the phase-axis response produces minus the
@@ -245,6 +247,7 @@ modular curvature operator.
 -/
 @[rep_depth transport, simp]
 theorem KVariation_phaseAxisResponse_eq_neg_modularCurvature
+    [CompleteSpace E]
     (D : EndH) :
     operatorInformationFirstVariation (E := E) Kop (phaseAxisResponse (E := E) D)
       =
@@ -252,7 +255,7 @@ theorem KVariation_phaseAxisResponse_eq_neg_modularCurvature
   unfold phaseAxisResponse phaseAxisForce modularCurvatureOperator
   unfold operatorInformationHessian operatorInformationMixedSecondVariation
   unfold operatorInformationFirstVariation transportCommutator
-  simp
+  simp [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)]
   abel
 
 /--
@@ -261,6 +264,7 @@ then the expectation of the modular curvature operator vanishes.
 -/
 @[rep_depth transport]
 theorem modularCurvatureExpectation_eq_zero_of_phaseResponseStationary
+    [CompleteSpace E]
     (ω : EndH →L[ℝ] ℝ) (D : EndH)
     (hStat : IsStationaryAlong (E := E) ω Kop (phaseAxisResponse (E := E) D)) :
     ω (modularCurvatureOperator (E := E) D) = 0 := by

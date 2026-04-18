@@ -1,5 +1,9 @@
 # Blueprint Workflow
 
+> Status: local blueprint wrapper notes; not a global architecture spec.
+> Canonical docs: [`docs/README.md`](../docs/README.md), [`tools/infra/README.md`](../tools/infra/README.md).
+> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../docs/MarkdownCorpusGovernance.md).
+
 This directory documents the LeanArchitect-facing blueprint layer.
 
 ## Current source of blueprint coverage
@@ -33,4 +37,3 @@ The exhaustive generated blueprint payload is emitted under `.lake/build/bluepri
 ## Current Codebase Status
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md) for the current build/audit state.
-

@@ -178,19 +178,19 @@ theorem ray_eq_of_smul_representative
 /-- The stored Majorana phase axis also coincides with the root owner `complex_i`. -/
 theorem K_eq_complex_i
     (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)) :
-    D.K = complex_i (E := E) := by
+    D.K = InfoGeometry.Krein.clockAxis (E := E) := by
   calc
-    D.K = modularComplexI (E := E) := by
+    D.K = InfoGeometry.Krein.clockAxis (E := E) := by
       unfold ProjectivePolarizedBigradedBogoliubovDatum.K RealMajoranaDatum.K
       rw [D.J_eq_modularConjugationJ, D.eps_eq_modularSignEpsilon]
       rfl
-    _ = complex_i (E := E) := by
+    _ = InfoGeometry.Krein.clockAxis (E := E) := by
       exact InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)
 
 /-- The stored Majorana phase axis coincides with the canonical doubled-space `K = Jε`. -/
 theorem K_eq_modularComplexI
     (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)) :
-    D.K = modularComplexI (E := E) := by
+    D.K = InfoGeometry.Krein.clockAxis (E := E) := by
   simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
     D.K_eq_complex_i
 
@@ -220,10 +220,10 @@ theorem compat
 theorem compat_complex_i
     (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E))
     (u v : H₂) :
-    D.qgt.berry u v = D.qgt.metric (complex_i (E := E) u) v := by
+    D.qgt.berry u v = D.qgt.metric (InfoGeometry.Krein.clockAxis (E := E) u) v := by
   calc
     D.qgt.berry u v = D.qgt.metric (D.K u) v := D.compat u v
-    _ = D.qgt.metric (complex_i (E := E) u) v := by rw [D.K_eq_complex_i]
+    _ = D.qgt.metric (InfoGeometry.Krein.clockAxis (E := E) u) v := by rw [D.K_eq_complex_i]
 
 /-- The phase axis swaps the `+` polarization sector into the `-` sector. -/
 theorem K_maps_plus_to_minus
@@ -274,12 +274,12 @@ theorem eps_phase_odd
   unfold HasPhaseParity IsPhaseAntilinear ProjectivePolarizedBigradedBogoliubovDatum.eps
   rw [D.eps_eq_modularSignEpsilon]
   calc
-    (modularSignEpsilon (E := E)).comp (modularComplexI (E := E))
+    (modularSignEpsilon (E := E)).comp (InfoGeometry.Krein.clockAxis (E := E))
       = -(modularConjugationJ (E := E)) := by
           simpa [TomitaTakesaki.modularSignEpsilon, TomitaTakesaki.modularComplexI,
             TomitaTakesaki.modularConjugationJ] using
             (InfoGeometry.Krein.spectral_epsilon_comp_complex_i (E := E))
-    _ = -((modularComplexI (E := E)).comp (modularSignEpsilon (E := E))) := by
+    _ = -((InfoGeometry.Krein.clockAxis (E := E)).comp (modularSignEpsilon (E := E))) := by
           congr 1
           simpa [TomitaTakesaki.modularSignEpsilon, TomitaTakesaki.modularComplexI,
             TomitaTakesaki.modularConjugationJ] using
@@ -385,28 +385,30 @@ projector obstruction. It sits in the (phase-odd, super-even) sector.
 -/
 lemma comp_modularComplexI_isPhaseAntilinear
     (A : EndH) (hA : IsPhaseAntilinear (E := E) A) :
-    IsPhaseAntilinear (E := E) (A.comp (modularComplexI (E := E))) := by
+    IsPhaseAntilinear (E := E) (A.comp (InfoGeometry.Krein.clockAxis (E := E))) := by
   unfold IsPhaseAntilinear at hA ⊢
-  have hKA : (modularComplexI (E := E)).comp A = -(A.comp (modularComplexI (E := E))) := by
-    simpa using (congrArg Neg.neg hA).symm
+  let K : EndH := InfoGeometry.Krein.clockAxis (E := E)
+  have hK2 : K.comp K = -(ContinuousLinearMap.id ℝ H₂) := by
+    simpa [K] using (InfoGeometry.Krein.clockAxis_sq (E := E))
   calc
-    (A.comp (modularComplexI (E := E))).comp (modularComplexI (E := E))
-        = A.comp ((modularComplexI (E := E)).comp (modularComplexI (E := E))) := by
-            simp [ContinuousLinearMap.comp_assoc]
+    (A.comp K).comp K = A.comp (K.comp K) := by
+      simp [ContinuousLinearMap.comp_assoc]
     _ = A.comp (-(ContinuousLinearMap.id ℝ H₂)) := by
-          rw [modularComplexI_sq (E := E)]
+      rw [hK2]
     _ = -A := by
-          simp
-    _ = -(((modularComplexI (E := E)).comp A).comp (modularComplexI (E := E))) := by
-          rw [hKA]
-          simp [ContinuousLinearMap.comp_assoc]
-    _ = -((modularComplexI (E := E)).comp
-            (A.comp (modularComplexI (E := E)))) := by
-          simp [ContinuousLinearMap.comp_assoc]
+      simp
+    _ = -(K.comp (A.comp K)) := by
+      have hCore : K.comp (A.comp K) = A := by
+        calc
+          K.comp (A.comp K) = K.comp (-(K.comp A)) := by rw [hA]
+          _ = -((K.comp K).comp A) := by simp [ContinuousLinearMap.comp_assoc]
+          _ = -((-(ContinuousLinearMap.id ℝ H₂)).comp A) := by rw [hK2]
+          _ = A := by simp
+      simp [hCore]
 
 lemma comp_complex_i_isPhaseAntilinear
     (A : EndH) (hA : IsPhaseAntilinear (E := E) A) :
-    IsPhaseAntilinear (E := E) (A.comp (complex_i (E := E))) := by
+    IsPhaseAntilinear (E := E) (A.comp (InfoGeometry.Krein.clockAxis (E := E))) := by
   simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
     comp_modularComplexI_isPhaseAntilinear (E := E) A hA
 
@@ -419,7 +421,7 @@ lemma phaseAxisForce_phase_odd
     phaseAntilinearPart_isPhaseAntilinear (E := E) H
   have hComp :
       IsPhaseAntilinear (E := E)
-        ((phaseAntilinearPart (E := E) H).comp (modularComplexI (E := E))) :=
+        ((phaseAntilinearPart (E := E) H).comp (InfoGeometry.Krein.clockAxis (E := E))) :=
     comp_modularComplexI_isPhaseAntilinear
       (E := E) (A := phaseAntilinearPart (E := E) H) hA
   unfold IsPhaseAntilinear at hComp ⊢
@@ -631,10 +633,21 @@ noncomputable def starCertifiedEinsteinAnomalyStateDatum
       =
     (stateQGTMetricReadout (E := E)
         (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
+      (InfoGeometry.Krein.clockAxis (E := E)).toLinearMap := by
+  calc
+    stateQGTPhaseReadout (E := E)
+        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+      =
+    (stateQGTMetricReadout (E := E)
+        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
       (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
-  rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)]
-  exact stateQGTPhaseReadout_eq_metric_comp_modularComplexI (E := E)
-    (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+        exact stateQGTPhaseReadout_eq_metric_comp_complex_i (E := E)
+          (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+    _ =
+    (stateQGTMetricReadout (E := E)
+        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
+      (InfoGeometry.Krein.clockAxis (E := E)).toLinearMap := by
+        rw [InfoGeometry.Krein.complex_i_eq_clockAxis (E := E)]
 
 @[simp] theorem certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_K
     (CCI : CertifiedConformalInference E) (ψ : H₂) (A : EndH) :
@@ -643,7 +656,7 @@ noncomputable def starCertifiedEinsteinAnomalyStateDatum
       =
     (stateQGTMetricReadout (E := E)
         (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
-      (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
+      (InfoGeometry.Krein.clockAxis (E := E)).toLinearMap := by
   exact certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_complex_i
     (E := E) CCI ψ A
 
@@ -675,10 +688,21 @@ attribute
       =
     (stateQGTMetricReadout (E := E)
         (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A).compLeft
+      (InfoGeometry.Krein.clockAxis (E := E)).toLinearMap := by
+  calc
+    stateQGTPhaseReadout (E := E)
+        (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A
+      =
+    (stateQGTMetricReadout (E := E)
+        (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A).compLeft
       (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
-  rw [← InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)]
-  exact stateQGTPhaseReadout_eq_metric_comp_modularComplexI (E := E)
-    (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A
+        exact stateQGTPhaseReadout_eq_metric_comp_complex_i (E := E)
+          (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A
+    _ =
+    (stateQGTMetricReadout (E := E)
+        (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A).compLeft
+      (InfoGeometry.Krein.clockAxis (E := E)).toLinearMap := by
+        rw [InfoGeometry.Krein.complex_i_eq_clockAxis (E := E)]
 
 @[simp] theorem starCertifiedEinsteinAnomalyStatePhaseReadout_eq_metric_comp_K
     (SCI : StarCertifiedConformalInference E) (ψ : H₂) (A : EndH) :
@@ -687,7 +711,7 @@ attribute
       =
     (stateQGTMetricReadout (E := E)
         (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A).compLeft
-      (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)).toLinearMap := by
+      (InfoGeometry.Krein.clockAxis (E := E)).toLinearMap := by
   exact starCertifiedEinsteinAnomalyStatePhaseReadout_eq_metric_comp_complex_i
     (E := E) SCI ψ A
 

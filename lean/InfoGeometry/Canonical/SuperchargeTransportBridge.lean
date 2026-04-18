@@ -69,15 +69,15 @@ noncomputable abbrev transportedModularSupercharge
 @[rep_depth krein]
 theorem parity_modular_anticommutator_eq_zero :
     fockAnticommutator (E := E) (modular_j (E := E)) (spectral_epsilon (E := E)) = 0 := by
-  apply ContinuousLinearMap.ext
-  intro x
   rw [fockAnticommutator, anticommutator, superBracket_odd_odd]
-  have hAnti :
-      ((modular_j (E := E)).comp (spectral_epsilon (E := E))) x
-        =
-      -(((spectral_epsilon (E := E)).comp (modular_j (E := E))) x) := by
-    simpa using congrArg (fun T : EndH => T x) (modular_j_spectral_epsilon_anticommute (E := E))
-  simp [ContinuousLinearMap.add_apply, hAnti]
+  calc
+    (modular_j (E := E)).comp (spectral_epsilon (E := E))
+        + (spectral_epsilon (E := E)).comp (modular_j (E := E))
+      =
+      -((spectral_epsilon (E := E)).comp (modular_j (E := E)))
+        + (spectral_epsilon (E := E)).comp (modular_j (E := E)) := by
+          rw [modular_j_spectral_epsilon_anticommute (E := E)]
+    _ = 0 := by simp
 
 /-- The transported parity supercharge obeys the same infinitesimal commutator law as the Dirac lane. -/
 @[rep_depth transport]

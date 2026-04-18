@@ -76,16 +76,18 @@ omit [CompleteSpace E]
 /-- `K`-linearity is exactly vanishing phase-axis commutator. -/
 @[rep_depth krein]
 theorem kLinear_iff_phaseAxisCommutator_eq_zero (A : EndH) :
-    transportCommutator (E := E) A (phaseAxisK (E := E)) = 0 ↔ KLinear (E := E) A := by
-  let K := phaseAxisK (E := E)
+    transportCommutator (E := E) A (InfoGeometry.Krein.clockAxis (E := E)) = 0 ↔
+      KLinear (E := E) A := by
+  let K := InfoGeometry.Krein.clockAxis (E := E)
   show A.comp K - K.comp A = 0 ↔ A.comp K = K.comp A
   simpa using (sub_eq_zero : A.comp K - K.comp A = 0 ↔ A.comp K = K.comp A)
 
 /-- `K`-antilinearity is exactly vanishing phase-axis anticommutator. -/
 @[rep_depth krein]
 theorem kAntilinear_iff_phaseAxisAnticommutator_eq_zero (A : EndH) :
-    transportAnticommutator (E := E) A (phaseAxisK (E := E)) = 0 ↔ KAntilinear (E := E) A := by
-  let K := phaseAxisK (E := E)
+    transportAnticommutator (E := E) A (InfoGeometry.Krein.clockAxis (E := E)) = 0 ↔
+      KAntilinear (E := E) A := by
+  let K := InfoGeometry.Krein.clockAxis (E := E)
   show A.comp K + K.comp A = 0 ↔ A.comp K = -(K.comp A)
   constructor
   · intro h
@@ -104,8 +106,9 @@ omit [CompleteSpace E]
 /-- The internal phase axis `K` is `K`-linear (it commutes with itself). -/
 @[rep_depth krein]
 theorem phaseAxisK_isKLinear :
-    KLinear (E := E) (phaseAxisK (E := E)) := by
-  apply (kLinear_iff_phaseAxisCommutator_eq_zero (E := E) (phaseAxisK (E := E))).1
+    KLinear (E := E) (InfoGeometry.Krein.clockAxis (E := E)) := by
+  apply (kLinear_iff_phaseAxisCommutator_eq_zero (E := E)
+    (InfoGeometry.Krein.clockAxis (E := E))).1
   unfold transportCommutator
   simp
 
@@ -114,9 +117,9 @@ end OmitCompletePhaseAxisLinear
 /-- The internal phase axis `K` is the canonical Krein anti-isometric axis. -/
 @[rep_depth krein]
 theorem phaseAxisK_isKreinAntiIsometric :
-    KreinAntiIsometric (E := E) (phaseAxisK (E := E)) := by
+    KreinAntiIsometric (E := E) (InfoGeometry.Krein.clockAxis (E := E)) := by
   intro u v
-  exact phaseAxisK_kreinInner_comp (E := E) u v
+  exact InfoGeometry.Canonical.TomitaTakesaki.clockAxis_kreinInner_comp (E := E) u v
 
 /-!
 Canonical intrinsic phase axis package for the real doubled Kramers lane.
@@ -131,10 +134,10 @@ structure PhaseKramersAxis where
 /-- Canonical phase-axis Kramers data owned by `K = J ∘ ε`. -/
 @[rep_depth krein]
 noncomputable def canonicalPhaseKramersAxis : PhaseKramersAxis (E := E) where
-  Θ := phaseAxisK (E := E)
+  Θ := InfoGeometry.Krein.clockAxis (E := E)
   kreinAntiIsometric := phaseAxisK_isKreinAntiIsometric (E := E)
   phaseLinear := phaseAxisK_isKLinear (E := E)
-  square_neg := phaseAxisK_sq_eq_neg_id (E := E)
+  square_neg := InfoGeometry.Krein.clockAxis_sq (E := E)
 
 /--
 Kramers symmetry on the real doubled carrier:
@@ -165,10 +168,10 @@ theorem preserves_kreinInner (u v : H₂) :
 /-- Phase-antilinearity written directly against `K = phaseAxisK`. -/
 @[rep_depth krein]
 theorem anticomm_phaseAxisK :
-    S.Θ.comp (phaseAxisK (E := E))
+    S.Θ.comp (InfoGeometry.Krein.clockAxis (E := E))
       =
-    -((phaseAxisK (E := E)).comp S.Θ) := by
-  simpa [KAntilinear, IsPhaseAntilinear, phaseAxisK] using
+    -((InfoGeometry.Krein.clockAxis (E := E)).comp S.Θ) := by
+  simpa [KAntilinear, IsPhaseAntilinear] using
     S.phaseAntilinear
 
 /-- Nontriviality of Kramers partner for nonzero vectors. -/
@@ -247,18 +250,19 @@ theorem apply_apply_eq_self (u : H₂) :
 /-- The fixed sector is stable under the internal phase axis `K`. -/
 @[rep_depth krein]
 theorem phaseAxis_closed {u : H₂} (hu : M.IsMajorana u) :
-    M.IsMajorana ((phaseAxisK (E := E)) u) := by
+    M.IsMajorana ((InfoGeometry.Krein.clockAxis (E := E)) u) := by
   have hComm :
-      M.C.comp (phaseAxisK (E := E)) = (phaseAxisK (E := E)).comp M.C := by
-    simpa [KLinear, IsPhaseLinear, phaseAxisK] using
+      M.C.comp (InfoGeometry.Krein.clockAxis (E := E))
+        = (InfoGeometry.Krein.clockAxis (E := E)).comp M.C := by
+    simpa [KLinear, IsPhaseLinear] using
       M.phaseLinear
   unfold IsMajorana at hu ⊢
   calc
-    M.C ((phaseAxisK (E := E)) u)
-        = (M.C.comp (phaseAxisK (E := E))) u := rfl
-    _ = ((phaseAxisK (E := E)).comp M.C) u := by rw [hComm]
-    _ = (phaseAxisK (E := E)) (M.C u) := rfl
-    _ = (phaseAxisK (E := E)) u := by rw [hu]
+    M.C ((InfoGeometry.Krein.clockAxis (E := E)) u)
+        = (M.C.comp (InfoGeometry.Krein.clockAxis (E := E))) u := rfl
+    _ = ((InfoGeometry.Krein.clockAxis (E := E)).comp M.C) u := by rw [hComm]
+    _ = (InfoGeometry.Krein.clockAxis (E := E)) (M.C u) := rfl
+    _ = (InfoGeometry.Krein.clockAxis (E := E)) u := by rw [hu]
 
 /-- The fixed sector is stable under the grading axis `ε`. -/
 @[rep_depth krein]

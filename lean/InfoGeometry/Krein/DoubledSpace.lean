@@ -96,6 +96,18 @@ noncomputable def spectral_epsilon : DoubledSpace E →L[ℝ] DoubledSpace E whe
 noncomputable def complex_i : DoubledSpace E →L[ℝ] DoubledSpace E :=
   modular_j.comp spectral_epsilon
 
+/-- Canonical split rotation axis `K = J ∘ ε` on the doubled real carrier. -/
+noncomputable def clockAxis : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  complex_i
+
+omit [CompleteSpace E] in
+@[simp] lemma clockAxis_eq_complex_i :
+    clockAxis (E := E) = complex_i (E := E) := rfl
+
+omit [CompleteSpace E] in
+lemma complex_i_eq_clockAxis :
+    complex_i (E := E) = clockAxis (E := E) := rfl
+
 /-- The ambient Hilbert inner product packaged as a bilinear form. -/
 noncomputable def doubledHilbertBilin : LinearMap.BilinForm ℝ (DoubledSpace E) :=
   LinearMap.mk₂ ℝ
@@ -185,9 +197,21 @@ omit [CompleteSpace E] in
   apply DoubledSpace.ext <;> simp [complex_i]
 
 omit [CompleteSpace E] in
+@[simp] lemma clockAxis_apply (u : DoubledSpace E) :
+    clockAxis u = WithLp.toLp (2 : ENNReal) (-WithLp.snd u, WithLp.fst u) := by
+  rw [clockAxis]
+  exact complex_i_apply (E := E) u
+
+omit [CompleteSpace E] in
 @[simp] lemma complex_i_to_doubled (x ξ : E) :
     complex_i (to_doubled x ξ : DoubledSpace E) = to_doubled (-ξ) x := by
   apply DoubledSpace.ext <;> simp [complex_i]
+
+omit [CompleteSpace E] in
+@[simp] lemma clockAxis_to_doubled (x ξ : E) :
+    clockAxis (to_doubled x ξ : DoubledSpace E) = to_doubled (-ξ) x := by
+  rw [clockAxis]
+  exact complex_i_to_doubled (E := E) x ξ
 
 lemma modular_j_involution (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     (modular_j (E := E)).comp modular_j = ContinuousLinearMap.id ℝ (DoubledSpace E) := by
@@ -239,6 +263,10 @@ lemma complex_i_sq (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] 
     (complex_i (E := E)).comp complex_i = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
   simpa [complex_i, doubledCarrier]
     using (InvolutiveSelfDualCarrier.K_sq (X := doubledCarrier (E := E)))
+
+lemma clockAxis_sq (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    (clockAxis (E := E)).comp clockAxis = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+  simpa [clockAxis] using complex_i_sq (E := E)
 
 theorem modular_j_spectral_epsilon_has_cl11_relations (E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :

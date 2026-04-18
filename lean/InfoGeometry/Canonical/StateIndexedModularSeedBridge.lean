@@ -70,26 +70,27 @@ State-indexed bivector seed surface in GA-native language:
 @[rep_depth transport]
 noncomputable def stateIndexedBivectorSeed
     (D : StateIndexedSeedDatum (E := E)) : EndH :=
-  -((stateIndexedBoostGenerator (E := E) D).comp (phaseAxisK (E := E)))
+  -((stateIndexedBoostGenerator (E := E) D).comp (InfoGeometry.Krein.clockAxis (E := E)))
 
 /--
 Transport-generator recovery on the state-indexed seed surface:
 `modularTransportGenerator(δ_state) = H_state`.
 -/
 @[rep_depth transport]
-  theorem modularTransportGenerator_stateIndexedBivectorSeed
+theorem modularTransportGenerator_stateIndexedBivectorSeed
     (D : StateIndexedSeedDatum (E := E)) :
     modularTransportGenerator (E := E) (stateIndexedBivectorSeed (E := E) D)
       =
     stateIndexedBoostGenerator (E := E) D := by
   set H : EndH := stateIndexedBoostGenerator (E := E) D
-  set K : EndH := complex_i (E := E)
+  set K : EndH := InfoGeometry.Krein.clockAxis (E := E)
   have hK2 : K.comp K = -(ContinuousLinearMap.id ℝ H₂) := by
-    simp [K]
+    subst K
+    exact InfoGeometry.Krein.clockAxis_sq (E := E)
   calc
     modularTransportGenerator (E := E) (stateIndexedBivectorSeed (E := E) D)
         = (-(H.comp K)).comp K := by
-            simp [stateIndexedBivectorSeed, phaseAxisK, modularTransportGenerator, H, K]
+            simp [stateIndexedBivectorSeed, modularTransportGenerator, H, K]
     _ = -((H.comp K).comp K) := by simp
     _ = -(H.comp (K.comp K)) := by simp [ContinuousLinearMap.comp_assoc]
     _ = -(H.comp (-(ContinuousLinearMap.id ℝ H₂))) := by rw [hK2]
@@ -141,24 +142,14 @@ theorem stateIndexedBivectorSeed_eq_canonicalModularSeed_of_boundedWitness
     (W : BoundedCanonicalSeedWitness (E := E)) :
     stateIndexedBivectorSeed (E := E) W.datum
       =
-    canonicalModularSeed (E := E) W.datum.CIK := by
+    canonicalBivectorSeed (E := E) W.datum.CIK := by
   have hGen :
       stateIndexedBoostGenerator (E := E) W.datum
         =
       DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK W.datum.CIK :=
     stateIndexedBoostGenerator_eq_superHamiltonian_of_boundedWitness (E := E) W
-  calc
-    stateIndexedBivectorSeed (E := E) W.datum
-        = -((stateIndexedBoostGenerator (E := E) W.datum).comp (phaseAxisK (E := E))) := by
-            rfl
-    _ = -((DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK W.datum.CIK).comp
-            (phaseAxisK (E := E))) := by
-            rw [hGen]
-    _ = -((DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK W.datum.CIK).comp
-            (modularComplexI (E := E))) := by
-            rw [phaseAxisK, ← modularComplexI_eq_complex_i (E := E)]
-    _ = canonicalModularSeed (E := E) W.datum.CIK := by
-            simp [canonicalModularSeed]
+  unfold stateIndexedBivectorSeed canonicalBivectorSeed
+  simp [hGen]
 
 /--
 Transport-generator equivalence on bounded witnesses:
@@ -169,7 +160,7 @@ theorem stateIndexed_transportGenerator_eq_canonical_of_boundedWitness
     (W : BoundedCanonicalSeedWitness (E := E)) :
     modularTransportGenerator (E := E) (stateIndexedBivectorSeed (E := E) W.datum)
       =
-    modularTransportGenerator (E := E) (canonicalModularSeed (E := E) W.datum.CIK) := by
+    modularTransportGenerator (E := E) (canonicalBivectorSeed (E := E) W.datum.CIK) := by
   rw [stateIndexedBivectorSeed_eq_canonicalModularSeed_of_boundedWitness (E := E) W]
 
 end Core

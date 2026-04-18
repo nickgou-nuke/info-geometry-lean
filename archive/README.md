@@ -1,5 +1,9 @@
 # Archive
 
+> Status: historical/reference subtree; not authoritative for active build policy.
+> Canonical entry docs: [`README.md`](../README.md), [`docs/README.md`](../docs/README.md).
+> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../docs/MarkdownCorpusGovernance.md).
+
 This directory contains historical material intentionally kept inside the
 repository for provenance, design archaeology, and idea recovery.
 
@@ -44,4 +48,3 @@ See [archive/legacy/README.md](/home/goutev/LEAN4/info-geometry-lean/archive/leg
 ## Current Codebase Status
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../docs/CODEBASE_STATUS.md](../docs/CODEBASE_STATUS.md) for the current build/audit state.
-

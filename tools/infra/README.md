@@ -51,6 +51,8 @@ repair lane, the depth-tag lane, and the process-flow lane, see
 For the compressed operator surface, see
 [docs/OperatorQuickstart.md](../../docs/OperatorQuickstart.md) and
 [docs/DAGTroubleshooting.md](../../docs/DAGTroubleshooting.md).
+For the end-to-end local topology (authority layer, managed DAG lane, Expr/Arango lane, LeanTrail parity lane, and hypothesis/training lane), see
+[docs/LOCAL_TOOLCHAIN_ARCHITECTURE.md](../../docs/LOCAL_TOOLCHAIN_ARCHITECTURE.md).
 
 The first authoritative Lake facet experiment is also available:
 - `lake build :dagMeta`
@@ -66,8 +68,16 @@ Main DAG refresh and report path:
 - `refresh_blueprint_tags.py`
 - `reports/generate_bilingual_spine_report.py`
 - `run_locked_lake_build.py`
+- `dgx_spark_hybrid_orchestrator.py`
 - `build_changed_lean.py`
 - `generate_theorem_surface_index.py`
+- `generate_equivalence_dictionary.py`
+- `build_link_ats_dataset.py`
+- `train_link_scorer.py`
+- `score_link_candidates.py`
+- `rerank_arango_links.py`
+- `dual_hypothesis_sampler.py`
+- `hypothesis_fuser_and_lean_gate.py`
 - `reports/generate_repository_surface_index.py`
 - `generate_hypothesis_debt_report.py`
 - `generate_source_sink_compression.py`
@@ -136,12 +146,17 @@ Process-flow supplements:
 - `lean/DAG/ProcessFlowExport.lean`
 - `generate_process_flow_report.py`
 
+Arango expression graph supplement:
+- `lean/DAG/ExprArangoExport.lean` (Arango-ready decl+Expr DAG export with De Bruijn `bound_by` edges)
+- `tools/leantrail/arango_ingest.py` (loads `ig_nodes.jsonl` / `ig_edges.jsonl` into ArangoDB)
+
 ## Tool Families
 
 Use the infra tools by role, not as one undifferentiated report pile:
 
 - build/orchestration
   - `run_locked_lake_build.py`
+  - `dgx_spark_hybrid_orchestrator.py`
   - `build_changed_lean.py` (incremental owner-module builds from git-changed Lean files; avoids umbrella rebuild loops by default)
 - declaration graph refresh
   - `refresh_decl_graph.py`
@@ -149,13 +164,23 @@ Use the infra tools by role, not as one undifferentiated report pile:
 - theorem-surface and canonical burden
   - `reports/generate_repository_surface_index.py` (typed inventory of tracked Lean/Markdown/Python/config surfaces via `git ls-files`; linear in file count; optional `--include-untracked` mode for exhaustive local scans)
   - `generate_theorem_surface_index.py`
+  - `generate_equivalence_dictionary.py` (builds a maintained equivalence/alias dictionary across variables, functions, lemmas, and theorems from Lean declaration surfaces, merging optional curated pairs from `docs/NameEquivalenceRegistry.json`; emits `reports/dag/equivalence-dictionary.{json,md}`)
+  - `tools/quality/check_equivalence_dictionary_gate.py` (CI threshold gate for unresolved-token growth in the generated equivalence dictionary)
+  - `build_link_ats_dataset.py` (builds ATS-style local link-prediction dataset with paired `.lean` text snippets + `.olean`-derived structural signals from verified DAG edges and LeanTrail failure memory)
+  - `train_link_scorer.py` (trains local hashed logistic scorer on ATS rows; no torch dependency)
+  - `score_link_candidates.py` (scores/reranks candidate link rows using trained local scorer)
+  - `rerank_arango_links.py` (retrieves Arango neighborhood candidates around a center declaration and reranks them with the local scorer in one step)
+  - `dual_hypothesis_sampler.py` (samples candidate Lean hypotheses from base+tuned providers under repo-local context, including DAG and black-book context; providers: `openai-chat` for local OpenAI-compatible endpoints, or `gemini-cli` for account-auth Gemini CLI)
+  - `hypothesis_fuser_and_lean_gate.py` (fuses/ranks sampled hypotheses, runs `lake env lean` gate on top candidates, and can emit generated Hermes skill templates)
   - `generate_hypothesis_debt_report.py` (ranks theorem/lemma surfaces by hypothesis/interface debt; defaults to synthesis capstones and emits top-20 JSON/Markdown)
   - `canonical_policy_lint.py`
   - `agentic_policy_lint.py` (enforces SOUL/HEARTBEAT/PUBLISH policy files, symbol-first protocol linkage, and runtime two-key publish gate settings)
   - `generate_replacement_frontier.py` (cross-references surface index, DAG, depth tags, and vacuity scores to rank replacement candidates)
+
 - causal/ownership shape
   - `generate_source_sink_compression.py`
   - `generate_causal_report.py`
+  - `generate_expr_alpha_dedup.py` (alpha-equivalence style structural dedup over ExprArangoExport graphs; declaration/subgraph compression report)
   - `check_gauge_obstruction_tags.py` (tags files/declarations carrying `gaugeObstruction` nonzero/zero assumptions and conclusions; emits anomaly-bearing classification reports; supports strict CI flags `--fail-on-any-anomaly-bearing` and `--fail-on-anomaly-bearing-path <prefix>`)
   - `check_bipartite_bleed.py`
   - `generate_structural_dedup.py`
@@ -175,6 +200,8 @@ Use the infra tools by role, not as one undifferentiated report pile:
 - classification and structural
   - `classify_missing_all.py`
   - `generate_structural_dictionary.py`
+  - `reports/classify_markdown_corpus.py` (repo-wide markdown type classification with confidence scores)
+  - `reports/generate_markdown_hygiene_report.py` (staleness/orphan/readme hygiene audit with Black Books excluded by default)
 - full-lean keyword indexing and story synthesis
   - `generate_keyword_research_report.py` (indexes all tracked Lean files; sorted lexical frequency + hotspot files)
   - `generate_repo_story_from_keyword_index.py` (characteristic-term selection + deep theorem/lemma/axiom search + story synthesis)
@@ -200,6 +227,9 @@ Use the infra tools by role, not as one undifferentiated report pile:
 - process-flow and coherence pressure
   - `lean/DAG/ProcessFlowExport.lean`
   - `generate_process_flow_report.py`
+
+No-cloud/no-key note for hypothesis loop:
+- `dgx_spark_hybrid_orchestrator.py` and `dual_hypothesis_sampler.py` support local OpenAI-compatible model servers with placeholder API values (for example `EMPTY`) and also support `gemini-cli` account-auth execution paths.
 
 ### Closed-Loop Research Controller
 
@@ -288,6 +318,141 @@ Validate packet:
 ```bash
 python3 tools/infra/candidate_bridge_packet.py validate \
   --packet reports/research/bridge-packets/<packet>.json
+```
+
+### Local Link-Scorer Quickstart
+
+```bash
+python3 tools/infra/build_link_ats_dataset.py \
+  --out reports/training/link_ats_dataset.jsonl \
+  --stats-out reports/training/link_ats_dataset.stats.json
+
+python3 tools/infra/train_link_scorer.py \
+  --dataset reports/training/link_ats_dataset.jsonl \
+  --model-out reports/training/link_scorer_model.npz \
+  --metrics-out reports/training/link_scorer_metrics.json
+
+python3 tools/infra/score_link_candidates.py \
+  --model reports/training/link_scorer_model.npz \
+  --input reports/training/link_ats_dataset.jsonl \
+  --out reports/training/link_candidate_scores.jsonl \
+  --top-k 200
+
+python3 tools/infra/rerank_arango_links.py \
+  --mode local \
+  --input artifacts/leantrail/arango \
+  --center InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity \
+  --radius 2 \
+  --model reports/training/link_scorer_model.npz \
+  --out reports/training/arango_link_rerank.json \
+  --top-k 100
+```
+
+### DGX Spark Hybrid Orchestrator
+
+Use this when you want one deterministic local execution lane for:
+- optional locked Lean gate
+- ATS dataset build
+- local link-scorer training
+- Arango neighborhood rerank
+
+Hermes remains an intake/discovery layer, while this orchestrator owns training/rerank execution.
+
+```bash
+python3 tools/infra/dgx_spark_hybrid_orchestrator.py \
+  --profile dgx-spark \
+  --center InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity \
+  --mode local \
+  --arango-input artifacts/leantrail/arango \
+  --out-dir reports/training/dgx_hybrid
+```
+
+For lighter local iteration:
+
+```bash
+python3 tools/infra/dgx_spark_hybrid_orchestrator.py \
+  --profile hermes-hybrid \
+  --center InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity \
+  --skip-locked-build
+```
+
+Full one-command lane (link scorer + rerank + dual-hypothesis sampler/fuser):
+
+```bash
+python3 tools/infra/dgx_spark_hybrid_orchestrator.py \
+  --profile hermes-hybrid \
+  --center InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity \
+  --skip-locked-build \
+  --with-hypothesis-loop \
+  --hyp-goal "construct nonstandard bridge theorem for modular transport closure" \
+  --hyp-model-base qwen25-coder-7b-proposer \
+  --hyp-model-tuned deepseek-prover-v2-7b-formalizer \
+  --hyp-top-k 8 \
+  --hyp-max-pass 2 \
+  --hyp-emit-skills
+```
+
+If you already have candidate hypotheses and want only fuse+gate:
+
+```bash
+python3 tools/infra/dgx_spark_hybrid_orchestrator.py \
+  --skip-locked-build \
+  --skip-dataset \
+  --skip-train \
+  --skip-rerank \
+  --with-hypothesis-loop \
+  --skip-hypothesis-sampler \
+  --hyp-input-candidates reports/training/hypothesis/candidates.jsonl \
+  --hyp-goal "construct nonstandard bridge theorem for modular transport closure" \
+  --hyp-top-k 8 \
+  --hyp-max-pass 2
+```
+
+Low-memory backend profiles (for machines where Leanstral is too heavy):
+
+```bash
+set -a
+source tools/infra/profiles/dgx_spark_lowmem_7b.env
+set +a
+bash tools/infra/deploy_spark_models.sh
+```
+
+If dual endpoints still OOM:
+
+```bash
+set -a
+source tools/infra/profiles/dgx_spark_ultralow_single_7b.env
+set +a
+bash tools/infra/deploy_spark_models.sh
+```
+
+### Dual-Hypothesis Agent Lane
+
+Sample hypotheses from two model roles (base + tuned):
+
+```bash
+python3 tools/infra/dual_hypothesis_sampler.py \
+  --goal "construct nonstandard bridge theorem for modular transport closure" \
+  --dag-context reports/training/arango_link_rerank.json \
+  --base-url-base http://127.0.0.1:8000/v1 \
+  --model-base qwen25-coder-7b-proposer \
+  --base-url-tuned http://127.0.0.1:8001/v1 \
+  --model-tuned deepseek-prover-v2-7b-formalizer \
+  --samples-base 4 \
+  --samples-tuned 4 \
+  --out reports/training/hypothesis/candidates.jsonl
+```
+
+Fuse + Lean gate + optional generated skill emit:
+
+```bash
+python3 tools/infra/hypothesis_fuser_and_lean_gate.py \
+  --input reports/training/hypothesis/candidates.jsonl \
+  --goal "construct nonstandard bridge theorem for modular transport closure" \
+  --top-k 8 \
+  --max-pass 2 \
+  --emit-skills \
+  --out reports/training/hypothesis/fused-gated.json
 ```
 
 ## Authoritative Inputs

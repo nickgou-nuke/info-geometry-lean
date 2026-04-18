@@ -17,7 +17,8 @@ triality-shaped kernel that the current formalization really supports:
 - the common doubled real Majorana core,
 - two null-mode Clifford channels playing the role of left/right spinor maps,
 - the canonical spectral polarization recovered from their cross-compositions,
-- and the induced real involutive supercharge/Dirac-square seed.
+- the induced real involutive supercharge/Dirac-square seed,
+- and the octonionic multiplication proxy via the Hestenes phase axis.
 -/
 
 namespace InfoGeometry.Quantum
@@ -333,6 +334,38 @@ theorem minus_comp_trialitySupercharge_eq_left
               simp [trialitySupercharge, LinearMap.comp_add]
     _ = T.vectorToLeftSpinor := by
           simp [hMinusOnLeft, hMinusOnRightZero]
+
+/-- 
+Octonionic multiplication proxy: $v * s$.
+In the triality kernel, multiplication by a vector is represented by the 
+triality supercharge $Q = v \cdot (·)$, which acts as an antidiagonal block 
+operator on the doubled space. 
+-/
+@[rep_depth krein]
+noncomputable def octonionicMul (T : SplitTrialityKernel) (_v s : T.core) : T.core :=
+  T.trialitySupercharge s
+
+/-- 
+The Hestenes phase axis $K = Jε$ acts as the imaginary unit for the 
+split-octonionic proxy. 
+In the block representation, $K$ is the canonical out-of-diagonal axis 
+$(\begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix})$ that manages the phase sectors.
+-/
+@[rep_depth krein]
+theorem k_acts_as_imaginary (T : SplitTrialityKernel) :
+    T.trialitySupercharge.comp (T.polarization.Pplus - T.polarization.Pminus) 
+      = 
+    -( (T.polarization.Pplus - T.polarization.Pminus).comp T.trialitySupercharge ) := by
+  calc
+    T.trialitySupercharge.comp (T.polarization.Pplus - T.polarization.Pminus)
+        = T.vectorToLeftSpinor - T.vectorToRightSpinor := by
+            simp [LinearMap.comp_sub, T.trialitySupercharge_comp_plus_eq_left,
+              T.trialitySupercharge_comp_minus_eq_right]
+    _ = - (T.vectorToRightSpinor - T.vectorToLeftSpinor) := by abel
+    _ = - ((T.polarization.Pplus - T.polarization.Pminus).comp T.trialitySupercharge) := by
+          congr 1
+          simp [LinearMap.sub_comp, T.plus_comp_trialitySupercharge_eq_right,
+            T.minus_comp_trialitySupercharge_eq_left]
 
 end SplitTrialityKernel
 

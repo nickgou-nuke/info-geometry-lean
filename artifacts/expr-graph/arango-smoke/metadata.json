@@ -1,0 +1,9 @@
+{"selectedDecls": 50,
+ "schemaVersion": 1,
+ "nodes": 9842,
+ "namespacePrefix": "DAG",
+ "maxDecls": 50,
+ "includeExternalDecls": true,
+ "importModules": "DAG.Basic",
+ "edges": 14364,
+ "brokenBVarCount": 0}

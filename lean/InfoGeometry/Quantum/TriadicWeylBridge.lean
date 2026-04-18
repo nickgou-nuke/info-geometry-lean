@@ -1,6 +1,7 @@
 import InfoGeometry.Quantum.TriadicBogoliubovBridge
 import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 import InfoGeometry.Canonical.WeylGaugeOperatorLift
+import InfoGeometry.Canonical.DrazinInfiniteCore
 
 namespace InfoGeometry.Quantum.TriadicWeylBridge
 

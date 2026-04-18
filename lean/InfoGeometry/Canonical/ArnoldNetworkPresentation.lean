@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ArnoldMajoranaNetwork
+import InfoGeometry.Canonical.ArnoldApproximationCore
 import InfoGeometry.Canonical.QuantumPresentation
 import InfoGeometry.Meta.Architecture
 
@@ -16,6 +17,7 @@ namespace InfoGeometry.Canonical.ArnoldNetworkPresentation
 
 open InfoGeometry.Canonical.QuantumPresentation
 open InfoGeometry.Canonical.MoE
+open InfoGeometry.Canonical.ArnoldApproximationCore
 
 variable {E : Type}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -69,6 +71,56 @@ theorem toQuantumPresentation_generator_eq_arnold
     (toQuantumPresentation (E := E) n net β).generator ψ
       = arnoldNetworkOutput n net β (fun _ : Unit => ψ) () := by
   rfl
+
+/--
+Approximation bridge: a shape/scale cost contract on the Arnold lane controls
+the one-token generator error on the declared domain.
+-/
+@[rep_depth operator]
+theorem arnoldGenerator_totalCost_le_of_contract
+    (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ)
+    (C : ArnoldGeneratorApproximationContract (E := E) n net β)
+    {ψ : ArnoldMajoranaCarrier E} (hψ : ψ ∈ C.domain) :
+    C.costModel.totalCost
+      (arnoldGenerator (E := E) n net β ψ)
+      (C.target ψ) ≤ C.costBound := by
+  simpa [arnoldGenerator] using
+    (arnoldGeneratorCost_le (E := E) (C := C) hψ)
+
+/--
+Readout bridge: if the shape/scale cost dominates norm-readout differences, the
+metric readout discrepancy is bounded by the certified Arnold cost bound.
+-/
+@[rep_depth operator]
+theorem arnoldMetricReadout_error_le_of_shapeScaleContract
+    (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ)
+    (C : ArnoldGeneratorApproximationContract (E := E) n net β)
+    (hdom : ∀ x y : ArnoldMajoranaCarrier E,
+      |arnoldMetricReadout (E := E) x - arnoldMetricReadout (E := E) y|
+        ≤ C.costModel.totalCost x y)
+    {ψ : ArnoldMajoranaCarrier E} (hψ : ψ ∈ C.domain) :
+    |arnoldMetricReadout (E := E) (arnoldGenerator (E := E) n net β ψ)
+      - arnoldMetricReadout (E := E) (C.target ψ)| ≤ C.costBound := by
+  have hdom' : ∀ x y : ArnoldMajoranaCarrier E,
+      |‖x‖ - ‖y‖| ≤ C.costModel.totalCost x y := by
+    intro x y
+    simpa [arnoldMetricReadout] using hdom x y
+  simpa [arnoldMetricReadout, arnoldGenerator] using
+    (metricReadout_error_le_of_contract (E := E) (C := C) hdom' hψ)
+
+/--
+Presentation-level restatement of the Arnold shape/scale approximation bound.
+-/
+@[rep_depth operator]
+theorem toQuantumPresentation_generator_totalCost_le_of_contract
+    (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ)
+    (C : ArnoldGeneratorApproximationContract (E := E) n net β)
+    {ψ : ArnoldMajoranaCarrier E} (hψ : ψ ∈ C.domain) :
+    C.costModel.totalCost
+      ((toQuantumPresentation (E := E) n net β).generator ψ)
+      (C.target ψ) ≤ C.costBound := by
+  simpa [toQuantumPresentation] using
+    (arnoldGenerator_totalCost_le_of_contract (E := E) n net β C hψ)
 
 /--
 Transport bridge: if every expert preserves a submodule, the one-token Arnold

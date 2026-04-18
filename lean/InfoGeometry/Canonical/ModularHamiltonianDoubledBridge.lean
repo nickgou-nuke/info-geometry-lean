@@ -116,8 +116,8 @@ theorem canonicalTomita_deltaLog_eq_neg_superHamiltonian_comp_phaseAxisK
     (CIK : CertifiedInverseKernel H₂) :
     (canonicalTomitaLogData (E := E) CIK).deltaLog
       = -(DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK).comp
-          (phaseAxisK (E := E)) := by
-  simp [canonicalTomitaLogData, canonicalModularSeed, phaseAxisK]
+          (InfoGeometry.Krein.clockAxis (E := E)) := by
+  simp [canonicalTomitaLogData, canonicalBivectorSeed]
 
 /-- True modular generator in doubled language: `A = δ ∘ (J ∘ ε)`. -/
 @[rep_depth transport]
@@ -125,10 +125,10 @@ theorem canonicalTomita_generator_eq_deltaLog_comp_phaseAxisK
     (CIK : CertifiedInverseKernel H₂) :
     (canonicalTomitaLogData (E := E) CIK).generator
       = ((canonicalTomitaLogData (E := E) CIK).deltaLog).comp
-          (phaseAxisK (E := E)) := by
+          (InfoGeometry.Krein.clockAxis (E := E)) := by
   unfold RealTomitaCore.RealModularLogData.generator
   unfold BogoliubovTransport.modularTransportGenerator
-  simp [phaseAxisK]
+  simp
 
 /--
 Canonical-seed specialization of the core bridge theorem.
@@ -149,11 +149,12 @@ theorem canonicalTomita_generator_eq_deltaLog_comp_modular_j_comp_spectral_epsil
           ((modular_j (E := E)).comp (spectral_epsilon (E := E))) := by
   calc
     (canonicalTomitaLogData (E := E) CIK).generator
-        = ((canonicalTomitaLogData (E := E) CIK).deltaLog).comp (phaseAxisK (E := E)) :=
+        = ((canonicalTomitaLogData (E := E) CIK).deltaLog).comp
+            (InfoGeometry.Krein.clockAxis (E := E)) :=
           canonicalTomita_generator_eq_deltaLog_comp_phaseAxisK (E := E) CIK
     _ = ((canonicalTomitaLogData (E := E) CIK).deltaLog).comp
           ((modular_j (E := E)).comp (spectral_epsilon (E := E))) := by
-          rw [phaseAxisK_eq_modular_j_comp_spectral_epsilon (E := E)]
+          rfl
 
 /-- Canonical real Tomita flow is exactly `exp(t • A)` in doubled language. -/
 @[rep_depth transport]

@@ -1,5 +1,9 @@
 # Llama 4 Input Snapshot (Local Reference Bundle)
 
+> Status: external reference snapshot; not authoritative for repo semantics.
+> Canonical entry docs: [`README.md`](../../README.md), [`docs/README.md`](../../docs/README.md).
+> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../../docs/MarkdownCorpusGovernance.md).
+
 This folder is a local reference snapshot used to seed Chapter 64
 (`docs/black_books/64_triality_moe_formalization_goals.md`) and the
 Gemini → Hermes → Codex ingestion pipeline.
@@ -46,4 +50,3 @@ curl -fsSL https://ollama.com/library/llama4 -o external_refs/llama4/ollama/llam
 ## Current Codebase Status
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
-

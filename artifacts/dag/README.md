@@ -1,5 +1,9 @@
 # DAG Artifacts
 
+> Status: generated-artifact runbook for this subtree.
+> Canonical operator docs: [`tools/infra/README.md`](../../tools/infra/README.md), [`docs/ToolingMethodology.md`](../../docs/ToolingMethodology.md).
+> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../../docs/MarkdownCorpusGovernance.md).
+
 This directory is the authoritative home of the maintained graph artifacts.
 
 ## Authoritative files
@@ -52,4 +56,3 @@ See [tools/infra/README.md](/home/goutev/LEAN4/info-geometry-lean/tools/infra/RE
 ## Current Codebase Status
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
-

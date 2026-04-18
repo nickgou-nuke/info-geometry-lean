@@ -2,6 +2,23 @@
 
 This is the compressed operator surface for local Lean and DAG work.
 
+Architecture reference:
+- [LOCAL_TOOLCHAIN_ARCHITECTURE.md](LOCAL_TOOLCHAIN_ARCHITECTURE.md)
+
+## 0. Opening Instruction (Name Equivalence Dictionary)
+
+Before local patching, refresh the equivalence dictionary so nonstandard or legacy naming surfaces remain discoverable.
+
+```bash
+python3 tools/infra/generate_equivalence_dictionary.py \
+  --curated-json docs/NameEquivalenceRegistry.json \
+  --json-out reports/dag/equivalence-dictionary.json \
+  --md-out reports/dag/equivalence-dictionary.md
+```
+
+Curated aliases live in `docs/NameEquivalenceRegistry.json` with notes in
+`docs/NameEquivalenceRegistry.md`.
+
 ## 1. I Changed Lean Files
 
 Use the changed-file verification lane first.
@@ -79,6 +96,7 @@ Use this lane when you are debugging a proof, exploring theorem surfaces, or ins
 
 ## Default Rule
 
+- opening step: refresh `reports/dag/equivalence-dictionary.{json,md}`
 - changed Lean work: `lake script run changedVerify`
 - whole-repo DAG maintenance: `lake script run dagAll`
 - diagnosis first: `lake script run dagDoctor`

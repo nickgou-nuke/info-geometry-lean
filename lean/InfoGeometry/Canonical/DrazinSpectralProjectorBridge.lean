@@ -25,15 +25,13 @@ variable {𝕂 E : Type*} [NormedField 𝕂] [NormedAddCommGroup E] [NormedSpace
 variable {T : E →L[𝕂] E}
 
 /--
-From the bundled spectral package at `0`, recover a Drazin witness together
-with the full regular/defect projector algebra on the same witness.
+From isolation at `0` plus finite ascent/descent, recover a Drazin witness
+together with the full regular/defect projector algebra.
 -/
 @[rep_depth operator]
-theorem exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_package
+theorem exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_finiteAscentDescent
     (h : ZeroIsolatedInSpectrum T)
-    (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap)
-    (hClassical : HasClassicalRieszDecompositionAtZero T)
-    (hGeneralized : HasGeneralizedRieszDecompositionAtZero T) :
+    (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap) :
     ∃ k TD, IsDrazinInverse T.toLinearMap TD k
       ∧ IsDrazinInverse.projection T.toLinearMap TD * IsDrazinInverse.projection T.toLinearMap TD
           = IsDrazinInverse.projection T.toLinearMap TD
@@ -49,14 +47,42 @@ theorem exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_pack
       ∧ IsDrazinInverse.projection T.toLinearMap TD
             + IsDrazinInverse.complementaryProjection T.toLinearMap TD
           = (1 : E →ₗ[𝕂] E) := by
-  rcases exists_drazinInverse_of_zeroIsolatedInSpectrum_package
-      (T := T) h hFinite hClassical hGeneralized with ⟨k, TD, hD⟩
+  rcases exists_drazinInverse_of_zeroIsolatedInSpectrum_finiteAscentDescent
+      (T := T) h hFinite with ⟨k, TD, hD⟩
   refine ⟨k, TD, hD, ?_, ?_, ?_, ?_, ?_⟩
   · exact IsDrazinInverse.projection_is_idempotent hD
   · exact IsDrazinInverse.complementaryProjection_is_idempotent hD
   · exact IsDrazinInverse.projection_mul_complementaryProjection hD
   · exact IsDrazinInverse.complementaryProjection_mul_projection hD
   · exact IsDrazinInverse.projection_add_complementaryProjection (a := T.toLinearMap) (b := TD)
+
+/--
+From the bundled spectral package at `0`, recover a Drazin witness together
+with the full regular/defect projector algebra on the same witness.
+-/
+@[rep_depth operator]
+theorem exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_package
+    (h : ZeroIsolatedInSpectrum T)
+    (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap)
+    (_hClassical : HasClassicalRieszDecompositionAtZero T)
+    (_hGeneralized : HasGeneralizedRieszDecompositionAtZero T) :
+    ∃ k TD, IsDrazinInverse T.toLinearMap TD k
+      ∧ IsDrazinInverse.projection T.toLinearMap TD * IsDrazinInverse.projection T.toLinearMap TD
+          = IsDrazinInverse.projection T.toLinearMap TD
+      ∧ IsDrazinInverse.complementaryProjection T.toLinearMap TD
+            * IsDrazinInverse.complementaryProjection T.toLinearMap TD
+          = IsDrazinInverse.complementaryProjection T.toLinearMap TD
+      ∧ IsDrazinInverse.projection T.toLinearMap TD
+            * IsDrazinInverse.complementaryProjection T.toLinearMap TD
+          = 0
+      ∧ IsDrazinInverse.complementaryProjection T.toLinearMap TD
+            * IsDrazinInverse.projection T.toLinearMap TD
+          = 0
+      ∧ IsDrazinInverse.projection T.toLinearMap TD
+            + IsDrazinInverse.complementaryProjection T.toLinearMap TD
+          = (1 : E →ₗ[𝕂] E) := by
+  exact exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_finiteAscentDescent
+    (T := T) h hFinite
 
 /--
 Projection-only corollary of the spectral package:
@@ -66,15 +92,14 @@ recover idempotence of the regular projector on the chosen Drazin witness.
 theorem exists_drazin_projection_idempotent_of_zeroIsolatedInSpectrum_package
     (h : ZeroIsolatedInSpectrum T)
     (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap)
-    (hClassical : HasClassicalRieszDecompositionAtZero T)
-    (hGeneralized : HasGeneralizedRieszDecompositionAtZero T) :
+    (_hClassical : HasClassicalRieszDecompositionAtZero T)
+    (_hGeneralized : HasGeneralizedRieszDecompositionAtZero T) :
     ∃ k TD, IsDrazinInverse T.toLinearMap TD k
       ∧ IsDrazinInverse.projection T.toLinearMap TD * IsDrazinInverse.projection T.toLinearMap TD
           = IsDrazinInverse.projection T.toLinearMap TD := by
-  rcases exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_package
-      (T := T) h hFinite hClassical hGeneralized with
+  rcases exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_finiteAscentDescent
+      (T := T) h hFinite with
     ⟨k, TD, hD, hPidem, _hQidem, _hPQ, _hQP, _hDecomp⟩
   exact ⟨k, TD, hD, hPidem⟩
 
 end InfoGeometry.Canonical.DrazinSpectralProjectorBridge
-

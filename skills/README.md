@@ -1,5 +1,9 @@
 # Skills
 
+> Status: skill-surface index for this subtree; not a substitute for root/docs operator policy.
+> Canonical docs: [`README.md`](../README.md), [`docs/README.md`](../docs/README.md), [`docs/OperatorQuickstart.md`](../docs/OperatorQuickstart.md).
+> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../docs/MarkdownCorpusGovernance.md).
+
 Agent skill definitions for this repository.
 
 ## Repo-Specific Skills
@@ -11,6 +15,8 @@ Agent skill definitions for this repository.
 | [lean-canonicalization-policy](lean-canonicalization-policy/SKILL.md) | Theorem ownership, file splitting, graph-guided refactors |
 | [frontier-proof-compression](frontier-proof-compression/SKILL.md) | Skynet/OpenClaw proof compression and structural debt burn-down |
 | [lean-sandbox](lean-sandbox/SKILL.md) | Mandatory sandbox-first development for safe repo integration |
+| [pauli-auditor](pauli-auditor/SKILL.md) | Pauli-seal oriented proof-surface audit and anti-cheat enforcement |
+| [source_packetizer](source_packetizer.md) | Source packet workflow for staged intake/review material |
 
 ## Generic Lean/Mathlib Skills
 
@@ -38,6 +44,26 @@ It contains one additional file not present here:
 
 > **Note:** The 10 generic Lean/Mathlib skill directories exist as full copies in both
 > `skills/` and `.agents/workflows/`. If they drift, `skills/` is authoritative.
+
+## Deep-Research Template Surface
+
+Repo-topic templates:
+
+- [repo-topic-deep-research/templates/topic_dossier_template.md](repo-topic-deep-research/templates/topic_dossier_template.md)
+- [repo-topic-deep-research/templates/coverage_matrix_template.md](repo-topic-deep-research/templates/coverage_matrix_template.md)
+- [repo-topic-deep-research/templates/context_pack_template.md](repo-topic-deep-research/templates/context_pack_template.md)
+- [repo-topic-deep-research/templates/gemini_cli_prompt_template.md](repo-topic-deep-research/templates/gemini_cli_prompt_template.md)
+- [repo-topic-deep-research/templates/hermes_enrichment_prompt_template.md](repo-topic-deep-research/templates/hermes_enrichment_prompt_template.md)
+- [repo-topic-deep-research/templates/openai_deep_research_brief_template.md](repo-topic-deep-research/templates/openai_deep_research_brief_template.md)
+
+Gemini import snapshots (reference-only):
+
+- `skills/gemini-imports/pauli-auditor/SKILL.md`
+
+Info-geometry repo reference notes:
+
+- [info-geometry-repo/references/debt-candidates.md](info-geometry-repo/references/debt-candidates.md)
+- [info-geometry-repo/references/bridge-reviewed-candidates.md](info-geometry-repo/references/bridge-reviewed-candidates.md)
 
 ## Current Codebase Status
 

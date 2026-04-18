@@ -44,17 +44,19 @@ Repo-native name for the modular phase axis used historically as
 noncomputable def lorentzBivectorGenerator : EndH :=
   modularComplexI (E := E)
 
-/-- The transmuted generator is exactly `J ∘ ε` on the doubled-real carrier. -/
+/- The transmuted generator is exactly `J ∘ ε` on the doubled-real carrier. -/
 @[rep_depth transport]
 theorem lorentzBivectorGenerator_eq_modular_j_comp_spectral_epsilon :
     lorentzBivectorGenerator (E := E)
       = (modular_j (E := E)).comp (spectral_epsilon (E := E)) := by
+  let _ : CompleteSpace E := inferInstance
   rfl
 
 /-- Equivalent dictionary form through the projector-equivariance `HestenesI`. -/
 @[rep_depth transport]
 theorem lorentzBivectorGenerator_eq_hestenesI :
     lorentzBivectorGenerator (E := E) = HestenesI (E := E) := by
+  let _ : CompleteSpace E := inferInstance
   rfl
 
 /--
@@ -64,7 +66,7 @@ Canonical-seed restatement in transmuted language:
 @[rep_depth transport]
 theorem canonicalModularSeed_eq_neg_superHamiltonian_comp_lorentzBivectorGenerator
     (CIK : CertifiedInverseKernel H₂) :
-    canonicalModularSeed (E := E) CIK
+    canonicalBivectorSeed (E := E) CIK
       =
     -(DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK).comp
       (lorentzBivectorGenerator (E := E)) := by

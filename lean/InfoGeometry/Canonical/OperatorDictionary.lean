@@ -70,7 +70,7 @@ theorem modular_j_eq_Qplus_add_Qminus :
 /-- Dictionary entry: `K := J ∘ ε`. -/
 @[rep_depth krein]
 noncomputable def phaseAxisK : EndH :=
-  complex_i (E := E)
+  (modular_j (E := E)).comp (spectral_epsilon (E := E))
 
 omit [CompleteSpace E] in
 /-- Canonical split identity: `K = J ∘ ε`. -/
@@ -92,8 +92,7 @@ theorem modular_j_comp_spectral_epsilon_eq_neg_spectral_epsilon_comp_modular_j :
 theorem phaseAxisK_sq_eq_neg_id :
     (phaseAxisK (E := E)).comp (phaseAxisK (E := E))
       = -(ContinuousLinearMap.id ℝ H₂) := by
-  unfold phaseAxisK
-  exact complex_i_sq (E := E)
+  simp [phaseAxisK]
 
 /-- Hilbert-inner skew rule for the internal phase axis `K`. -/
 @[rep_depth krein]

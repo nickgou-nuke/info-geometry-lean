@@ -31,7 +31,7 @@ noncomputable def epsilon : ProjectiveState (E := E) → ProjectiveState (E := E
 
 /-- Projective dynamics induced by the Clifford complex structure `I`. -/
 noncomputable def I : ProjectiveState (E := E) → ProjectiveState (E := E) :=
-  projectiveMap (E := E) (complex_i (E := E))
+  projectiveMap (E := E) (clockAxis (E := E))
 
 @[simp] lemma J_projectivize (v : DoubledSpace E) :
     J (E := E) (projectivize (E := E) v)
@@ -43,7 +43,7 @@ noncomputable def I : ProjectiveState (E := E) → ProjectiveState (E := E) :=
 
 @[simp] lemma I_projectivize (v : DoubledSpace E) :
     I (E := E) (projectivize (E := E) v)
-      = projectivize (E := E) (complex_i (E := E) v) := rfl
+      = projectivize (E := E) (clockAxis (E := E) v) := rfl
 
 /-- Upstairs sign ambiguity disappears on projective rays. -/
 lemma projectiveMap_neg_id :
@@ -60,7 +60,7 @@ lemma J_comp_epsilon :
             symm
             simpa [ProjectiveDynamics.J, ProjectiveDynamics.epsilon] using
               (projectiveMap_comp (E := E) (modular_j (E := E)) (spectral_epsilon (E := E)))
-    _ = projectiveMap (E := E) (complex_i (E := E)) := by
+    _ = projectiveMap (E := E) (clockAxis (E := E)) := by
           rfl
     _ = I (E := E) := rfl
 
@@ -69,20 +69,20 @@ lemma epsilon_comp_J :
     (epsilon (E := E)) ∘ (J (E := E)) = I (E := E) := by
   have hswap :
       (spectral_epsilon (E := E)).comp (modular_j (E := E))
-        = -(complex_i (E := E)) := by
+        = -(clockAxis (E := E)) := by
     apply ContinuousLinearMap.ext
     intro u
-    apply DoubledSpace.ext <;> simp [complex_i]
+    apply DoubledSpace.ext <;> simp [clockAxis]
   calc
     (epsilon (E := E)) ∘ (J (E := E))
         = projectiveMap (E := E) ((spectral_epsilon (E := E)).comp (modular_j (E := E))) := by
             symm
             simpa [ProjectiveDynamics.J, ProjectiveDynamics.epsilon] using
               (projectiveMap_comp (E := E) (spectral_epsilon (E := E)) (modular_j (E := E)))
-    _ = projectiveMap (E := E) (-(complex_i (E := E))) := by
+    _ = projectiveMap (E := E) (-(clockAxis (E := E))) := by
           rw [hswap]
-    _ = projectiveMap (E := E) (complex_i (E := E)) := by
-          rw [projectiveMap_neg (E := E) (A := complex_i (E := E))]
+    _ = projectiveMap (E := E) (clockAxis (E := E)) := by
+          rw [projectiveMap_neg (E := E) (A := clockAxis (E := E))]
     _ = I (E := E) := rfl
 
 /-- The exact projective product `J ∘ I = ε`. -/
@@ -90,12 +90,12 @@ lemma J_comp_I :
     (J (E := E)) ∘ (I (E := E)) = epsilon (E := E) := by
   calc
     (J (E := E)) ∘ (I (E := E))
-        = projectiveMap (E := E) ((modular_j (E := E)).comp (complex_i (E := E))) := by
+        = projectiveMap (E := E) ((modular_j (E := E)).comp (clockAxis (E := E))) := by
             symm
             simpa [ProjectiveDynamics.J, ProjectiveDynamics.I] using
-              (projectiveMap_comp (E := E) (modular_j (E := E)) (complex_i (E := E)))
+              (projectiveMap_comp (E := E) (modular_j (E := E)) (clockAxis (E := E)))
     _ = projectiveMap (E := E) (spectral_epsilon (E := E)) := by
-          unfold InfoGeometry.Krein.complex_i
+          unfold InfoGeometry.Krein.clockAxis InfoGeometry.Krein.complex_i
           rw [← ContinuousLinearMap.comp_assoc, modular_j_involution, ContinuousLinearMap.id_comp]
     _ = epsilon (E := E) := rfl
 
@@ -103,17 +103,17 @@ lemma J_comp_I :
 lemma I_comp_J :
     (I (E := E)) ∘ (J (E := E)) = epsilon (E := E) := by
   have hswap :
-      (complex_i (E := E)).comp (modular_j (E := E))
+      (clockAxis (E := E)).comp (modular_j (E := E))
         = -(spectral_epsilon (E := E)) := by
     apply ContinuousLinearMap.ext
     intro u
-    apply DoubledSpace.ext <;> simp [complex_i]
+    apply DoubledSpace.ext <;> simp [clockAxis]
   calc
     (I (E := E)) ∘ (J (E := E))
-        = projectiveMap (E := E) ((complex_i (E := E)).comp (modular_j (E := E))) := by
+        = projectiveMap (E := E) ((clockAxis (E := E)).comp (modular_j (E := E))) := by
             symm
             simpa [ProjectiveDynamics.J, ProjectiveDynamics.I] using
-              (projectiveMap_comp (E := E) (complex_i (E := E)) (modular_j (E := E)))
+              (projectiveMap_comp (E := E) (clockAxis (E := E)) (modular_j (E := E)))
     _ = projectiveMap (E := E) (-(spectral_epsilon (E := E))) := by
           rw [hswap]
     _ = projectiveMap (E := E) (spectral_epsilon (E := E)) := by
@@ -125,12 +125,12 @@ lemma I_comp_epsilon :
     (I (E := E)) ∘ (epsilon (E := E)) = J (E := E) := by
   calc
     (I (E := E)) ∘ (epsilon (E := E))
-        = projectiveMap (E := E) ((complex_i (E := E)).comp (spectral_epsilon (E := E))) := by
+        = projectiveMap (E := E) ((clockAxis (E := E)).comp (spectral_epsilon (E := E))) := by
             symm
             simpa [ProjectiveDynamics.I, ProjectiveDynamics.epsilon] using
-              (projectiveMap_comp (E := E) (complex_i (E := E)) (spectral_epsilon (E := E)))
+              (projectiveMap_comp (E := E) (clockAxis (E := E)) (spectral_epsilon (E := E)))
     _ = projectiveMap (E := E) (modular_j (E := E)) := by
-          unfold InfoGeometry.Krein.complex_i
+          unfold InfoGeometry.Krein.clockAxis InfoGeometry.Krein.complex_i
           rw [ContinuousLinearMap.comp_assoc, spectral_epsilon_involution, ContinuousLinearMap.comp_id]
     _ = J (E := E) := rfl
 
@@ -138,17 +138,17 @@ lemma I_comp_epsilon :
 lemma epsilon_comp_I :
     (epsilon (E := E)) ∘ (I (E := E)) = J (E := E) := by
   have hswap :
-      (spectral_epsilon (E := E)).comp (complex_i (E := E))
+      (spectral_epsilon (E := E)).comp (clockAxis (E := E))
         = -(modular_j (E := E)) := by
     apply ContinuousLinearMap.ext
     intro u
-    apply DoubledSpace.ext <;> simp [complex_i]
+    apply DoubledSpace.ext <;> simp [clockAxis]
   calc
     (epsilon (E := E)) ∘ (I (E := E))
-        = projectiveMap (E := E) ((spectral_epsilon (E := E)).comp (complex_i (E := E))) := by
+        = projectiveMap (E := E) ((spectral_epsilon (E := E)).comp (clockAxis (E := E))) := by
             symm
             simpa [ProjectiveDynamics.I, ProjectiveDynamics.epsilon] using
-              (projectiveMap_comp (E := E) (spectral_epsilon (E := E)) (complex_i (E := E)))
+              (projectiveMap_comp (E := E) (spectral_epsilon (E := E)) (clockAxis (E := E)))
     _ = projectiveMap (E := E) (-(modular_j (E := E))) := by
           rw [hswap]
     _ = projectiveMap (E := E) (modular_j (E := E)) := by
@@ -203,12 +203,12 @@ lemma I_sq :
     (I (E := E)) ∘ (I (E := E)) = id := by
   calc
     (I (E := E)) ∘ (I (E := E))
-        = projectiveMap (E := E) ((complex_i (E := E)).comp (complex_i (E := E))) := by
+        = projectiveMap (E := E) ((clockAxis (E := E)).comp (clockAxis (E := E))) := by
             symm
             simpa [ProjectiveDynamics.I] using
-              (projectiveMap_comp (E := E) (complex_i (E := E)) (complex_i (E := E)))
+              (projectiveMap_comp (E := E) (clockAxis (E := E)) (clockAxis (E := E)))
     _ = projectiveMap (E := E) (-(ContinuousLinearMap.id ℝ (DoubledSpace E))) := by
-          rw [complex_i_sq (E := E)]
+          rw [clockAxis_sq (E := E)]
     _ = id := projectiveMap_neg_id (E := E)
 
 @[simp] lemma J_vacuum : J (E := E) (vacuum (E := E)) = vacuum (E := E) := by
@@ -218,7 +218,7 @@ lemma I_sq :
   exact projectiveMap_vacuum (E := E) (spectral_epsilon (E := E))
 
 @[simp] lemma I_vacuum : I (E := E) (vacuum (E := E)) = vacuum (E := E) := by
-  exact projectiveMap_vacuum (E := E) (complex_i (E := E))
+  exact projectiveMap_vacuum (E := E) (clockAxis (E := E))
 
 end ProjectiveDynamics
 

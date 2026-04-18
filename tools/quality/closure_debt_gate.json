@@ -1,0 +1,87 @@
+{
+  "bannedTokens": [
+    "sorry",
+    "admit",
+    "postulate",
+    "axiom"
+  ],
+  "groups": [
+    {
+      "name": "commutator_frontier",
+      "modules": [
+        "lean/InfoGeometry/Core/SymmetricLie.lean",
+        "lean/InfoGeometry/Core/SymmetricLieMetric.lean",
+        "lean/InfoGeometry/Core/CartanPhaseAxisForcing.lean",
+        "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+        "lean/InfoGeometry/Quantum/ModularAnomaly.lean"
+      ]
+    },
+    {
+      "name": "spectral_constructive_frontier",
+      "modules": [
+        "lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean",
+        "lean/InfoGeometry/Canonical/DrazinWeylConstructive.lean",
+        "lean/InfoGeometry/Quantum/TriadicWeylBridge.lean"
+      ]
+    },
+    {
+      "name": "sinkhorn_defect_frontier",
+      "modules": [
+        "lean/InfoGeometry/LLM/TrialityMoE.lean",
+        "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+        "lean/InfoGeometry/Canonical/KKTCore.lean",
+        "lean/InfoGeometry/Canonical/KKTClosureSymmetry.lean"
+      ]
+    }
+  ],
+  "requiredAnchors": [
+    {
+      "path": "lean/InfoGeometry/Core/CartanPhaseAxisForcing.lean",
+      "pattern": "theorem commutator_KI_mem_odd"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DrazinWeylConstructive.lean",
+      "pattern": "theorem drazinInverse_isWeylCompatible"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem δ_odd_nonneg"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem δ_odd_next_le_δ_odd"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem δ_relVol_nonneg"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem δ_relVol_next_le"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem δ_odd_next_le_of_relativeDefectBridge"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/TrialityMoE.lean",
+      "pattern": "theorem sourcedGenerator_deviation_norm_le_ZD"
+    },
+    {
+      "path": "lean/InfoGeometry/Quantum/ModularAnomaly.lean",
+      "pattern": "theorem unified_anomaly_bridge"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem winding_orbit_periodicity"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem modularTransportGenerator_commutes_clockAxis_of_forcingSeed"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem winding_orbit_periodicity_of_forcingSeed"
+    }
+  ]
+}

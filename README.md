@@ -110,7 +110,7 @@ Run:
 python3 tools/quality/check_translation_registry.py \
   --registry docs/OperatorTheoremTranslationRegistry.md \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.superHamiltonian_eq_modularTransportGenerator_lorentzBivectorSeed \
-  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_compatibility \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_structural \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.exists_lorentzBivectorGenerator_split_with_drazin_lane_centrality \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzChiralConeOrbit \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzWedgeOrbit \
@@ -345,7 +345,7 @@ python3 tools/quality/functorial_invariance_audit.py --json-out reports/dag/func
 python3 tools/quality/check_translation_registry.py \
   --registry docs/OperatorTheoremTranslationRegistry.md \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.superHamiltonian_eq_modularTransportGenerator_lorentzBivectorSeed \
-  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_compatibility \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_structural \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.exists_lorentzBivectorGenerator_split_with_drazin_lane_centrality \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzChiralConeOrbit \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzWedgeOrbit \
@@ -442,6 +442,9 @@ python3 tools/infra/generate_representation_depth_graph.py
 - `README.md`, `lean/DAG/README.md`, `tools/README.md`, and `tools/infra/README.md` are operational docs.
 - `tools/frontier/README.md` is the maintained operator guide for server-backed semantic snapshots and proof-print tooling.
 - [docs/RepositoryMemoryMap.md](docs/RepositoryMemoryMap.md) classifies which docs and tools are current, generated, compatibility-only, or reference memory.
+- [docs/MarkdownCorpusGovernance.md](docs/MarkdownCorpusGovernance.md) defines markdown classification/hygiene rules and excludes Black Books from cleanup rewrites.
+- [PAULI_MANDATE.md](PAULI_MANDATE.md) is the anti-cheat closure policy surface for theorem claims.
+- [docs/RigorousDerivationQueue.md](docs/RigorousDerivationQueue.md) tracks unresolved algebraic derivation obligations.
 - [docs/OperationalIntent.md](docs/OperationalIntent.md) states why the repo, DAG, and infra tooling are maintained the way they are.
 - [docs/black_books/08_the_agentic_caretaker.md](docs/black_books/08_the_agentic_caretaker.md) is a creative methodological note about the role of the agent; it inspires but does not overrule code or audit policy.
 - [docs/Theory.md](docs/Theory.md) is the conceptual map of the stable spine.

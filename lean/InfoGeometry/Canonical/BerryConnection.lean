@@ -54,14 +54,14 @@ structure SuperHestenesKaehlerDatum where
   epsilon_sq : epsilon.comp epsilon = ContinuousLinearMap.id ℝ H₂
   J_anticomm_epsilon : J.comp epsilon = -(epsilon.comp J)
   K_eq_J_comp_epsilon : K = J.comp epsilon
-  K_eq_modularComplexI : K = InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)
+  K_eq_modularComplexI : K = InfoGeometry.Krein.clockAxis (E := E)
   K_sq_neg : K.comp K = -(ContinuousLinearMap.id ℝ H₂)
 
 namespace SuperHestenesKaehlerDatum
 
 @[simp] theorem K_eq_complex_i
     (S : SuperHestenesKaehlerDatum (E := E)) :
-    S.K = InfoGeometry.Krein.complex_i (E := E) := by
+    S.K = InfoGeometry.Krein.clockAxis (E := E) := by
   simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
     S.K_eq_modularComplexI
 
@@ -78,7 +78,7 @@ noncomputable def toQGT
 
 @[simp] theorem toQGT_compat_complex_i
     (S : SuperHestenesKaehlerDatum (E := E)) (u v : H₂) :
-    S.toQGT.berry u v = S.toQGT.metric (InfoGeometry.Krein.complex_i (E := E) u) v := by
+    S.toQGT.berry u v = S.toQGT.metric (InfoGeometry.Krein.clockAxis (E := E) u) v := by
   exact S.toQGT.compat u v
 
 /-- Canonical constructor from the maintained real doubled QGT owner surface. -/
@@ -88,7 +88,7 @@ noncomputable def ofQGT
   phase := Q.berry
   J := InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ (E := E)
   epsilon := InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon (E := E)
-  K := InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)
+  K := InfoGeometry.Krein.clockAxis (E := E)
   metric_symm := Q.metric_symm
   phase_alt := Q.berry_alt
   compat := Q.compat
@@ -102,9 +102,9 @@ noncomputable def ofQGT
 
 @[simp] theorem ofQGT_K_eq_complex_i
     (Q : QGT E) :
-    (ofQGT (E := E) Q).K = InfoGeometry.Krein.complex_i (E := E) := by
-  change InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E) =
-      InfoGeometry.Krein.complex_i (E := E)
+    (ofQGT (E := E) Q).K = InfoGeometry.Krein.clockAxis (E := E) := by
+  change InfoGeometry.Krein.clockAxis (E := E) =
+      InfoGeometry.Krein.clockAxis (E := E)
   exact InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i (E := E)
 
 @[simp] theorem toQGT_metric
@@ -148,7 +148,7 @@ noncomputable def ofQGT
 @[simp] theorem ofQGT_K
     (Q : QGT E) :
     (ofQGT (E := E) Q).K =
-      InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E) := rfl
+      InfoGeometry.Krein.clockAxis (E := E) := rfl
 
 /-- The native `ℤ₂` parity surface attached to the doubled super-Hestenes datum. -/
 abbrev Parity :=
@@ -293,7 +293,7 @@ noncomputable def hestenesBerryTwoForm
     hestenesBerryTwoForm hMod A u v
       =
     hestenesMetricTwoForm hMod A
-      (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E) u) v := by
+      (InfoGeometry.Krein.clockAxis (E := E) u) v := by
   rfl
 
 @[simp] theorem hestenesBerryTwoForm_apply_complex_i
@@ -301,7 +301,7 @@ noncomputable def hestenesBerryTwoForm
     hestenesBerryTwoForm hMod A u v
       =
     hestenesMetricTwoForm hMod A
-      (InfoGeometry.Krein.complex_i (E := E) u) v := by
+      (InfoGeometry.Krein.clockAxis (E := E) u) v := by
   exact hestenesBerryTwoForm_apply (E := E) hMod A u v
 
 /--
@@ -338,7 +338,7 @@ theorem deriv_berryOfOperator_expTransport_at_zero
       (hestenesMaurerCartanCurvature X A) u v := by
   simpa [GeometricQuantumTensor.berryOfOperator, hestenesMaurerCartanCurvature] using
     GeometricQuantumTensor.deriv_metricOfOperator_expTransport_at_zero
-      (E := E) X A (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E) u) v
+      (E := E) X A (InfoGeometry.Krein.clockAxis (E := E) u) v
 
 /--
 Infinitesimal phase-axis Berry transport law:
@@ -354,7 +354,7 @@ theorem deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_phaseAxisRes
           (InfoGeometry.Canonical.expTransport
             (A := EndH)
             X
-            (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E))
+            (InfoGeometry.Krein.clockAxis (E := E))
             t)
           u v)
       0
@@ -366,7 +366,7 @@ theorem deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_phaseAxisRes
     deriv_berryOfOperator_expTransport_at_zero
       (E := E)
       (X := X)
-      (A := InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E))
+      (A := InfoGeometry.Krein.clockAxis (E := E))
       u v
 
 theorem deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_phaseAxisResponse_complex_i
@@ -378,7 +378,7 @@ theorem deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_phaseAxisRes
           (InfoGeometry.Canonical.expTransport
             (A := EndH)
             X
-            (InfoGeometry.Krein.complex_i (E := E))
+            (InfoGeometry.Krein.clockAxis (E := E))
             t)
           u v)
       0
@@ -405,14 +405,14 @@ theorem deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_two_smul_com
           (InfoGeometry.Canonical.expTransport
             (A := EndH)
             X
-            (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E))
+            (InfoGeometry.Krein.clockAxis (E := E))
             t)
           u v)
       0
       =
     GeometricQuantumTensor.berryOfOperator
       (E := E)
-      ((2 : ℝ) • (X.comp (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E)))) u v := by
+      ((2 : ℝ) • (X.comp (InfoGeometry.Krein.clockAxis (E := E)))) u v := by
   rw [deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_phaseAxisResponse
     (E := E) (X := X) u v]
   rw [phaseAxisResponse_antilinear_source (E := E) X hX]
@@ -428,14 +428,14 @@ theorem deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_two_smul_com
           (InfoGeometry.Canonical.expTransport
             (A := EndH)
             X
-            (InfoGeometry.Krein.complex_i (E := E))
+            (InfoGeometry.Krein.clockAxis (E := E))
             t)
           u v)
       0
       =
     GeometricQuantumTensor.berryOfOperator
       (E := E)
-      ((2 : ℝ) • (X.comp (InfoGeometry.Krein.complex_i (E := E)))) u v := by
+      ((2 : ℝ) • (X.comp (InfoGeometry.Krein.clockAxis (E := E)))) u v := by
   simpa [InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i] using
     deriv_berryOfOperator_phaseAxisTransport_at_zero_eq_berryOf_two_smul_comp_modularComplexI_of_IsPhaseAntilinear
       (E := E) X hX u v
@@ -466,7 +466,7 @@ theorem deriv_berryOfOperator_expTransport_at
   let ω : EndH →L[ℝ] ℝ :=
     (innerSL ℝ v).comp
       (ContinuousLinearMap.apply ℝ H₂
-        (InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E) u))
+        (InfoGeometry.Krein.clockAxis (E := E) u))
   have hωEval :
       ∀ B : EndH,
         ω B = GeometricQuantumTensor.berryOfOperator (E := E) B u v := by

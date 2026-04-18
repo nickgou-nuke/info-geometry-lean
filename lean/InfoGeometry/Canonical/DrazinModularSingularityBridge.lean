@@ -1,5 +1,7 @@
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Canonical.Cl11LorentzAction
+import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -21,6 +23,7 @@ open InfoGeometry.Krein
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DrazinSupercharge
 open InfoGeometry.Canonical.BogoliubovTransport
+open InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
 
 section Core
 
@@ -90,6 +93,76 @@ theorem canonicalKineticPart_singularity_package
     DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPart_hasVanishingDefectBlock
       (CIK := CIK)
 
+/--
+Functional-calculus seal on the Drazin regular lane.
+
+This package exposes, in the singularity bridge itself, the certified passage:
+`Δ|Preg -> log -> Kreg -> Kambient`, together with defect-lane exclusion.
+-/
+@[rep_depth transport, capstone]
+theorem drazin_regular_functionalCalculus_seal
+    (c : CertifiedModularReduction (E := H₂)) :
+    let KambientCanonical :=
+      compress (CertifiedModularReduction.Preg c)
+        (K_neg_log_PregDelta (V := E) c)
+    c.logAdmissible (compress (CertifiedModularReduction.Preg c) c.Δ)
+      ∧ ¬ c.logAdmissible (compress (CertifiedModularReduction.Pzero c) c.Δ)
+      ∧ (CertifiedModularReduction.Preg c * KambientCanonical = KambientCanonical)
+      ∧ (KambientCanonical * CertifiedModularReduction.Preg c = KambientCanonical)
+      ∧ (CertifiedModularReduction.Pzero c * KambientCanonical = 0)
+      ∧ (KambientCanonical * CertifiedModularReduction.Pzero c = 0) := by
+  intro KambientCanonical
+  have hLog :
+      c.logAdmissible
+        (compress (CertifiedModularReduction.Preg c) c.Δ) :=
+    log_defined_on_Preg (V := E) c
+  have hNoLog :
+      ¬ c.logAdmissible
+        (compress (CertifiedModularReduction.Pzero c) c.Δ) :=
+    canonicalTomita_no_log_on_Pzero_of_certifiedReduction (V := E) c
+  have hSupportPkg :
+      (CertifiedModularReduction.Preg c * KambientCanonical = KambientCanonical)
+        ∧ (KambientCanonical * CertifiedModularReduction.Preg c = KambientCanonical)
+        ∧ (CertifiedModularReduction.Pzero c * KambientCanonical = 0)
+        ∧ (KambientCanonical * CertifiedModularReduction.Pzero c = 0) := by
+    simpa [KambientCanonical] using
+      (K_neg_log_PregDelta_support_package (V := E) c)
+  exact ⟨hLog, hNoLog, hSupportPkg.1, hSupportPkg.2.1, hSupportPkg.2.2.1, hSupportPkg.2.2.2⟩
+
+/--
+Inertial regular-lane closure package (`χ = 0`):
+
+- regular-lane logarithm is admitted on `Preg Δ`,
+- the physical compressed generator has no defect leakage across `Pzero`.
+-/
+@[rep_depth operator]
+theorem inertial_regular_lane_closure_package
+    (c : CertifiedModularReduction (E := H₂))
+    (hInertial : CertifiedModularReduction.InertialRegularLane (c := c)) :
+    c.logAdmissible (compress (CertifiedModularReduction.Preg c) c.Δ)
+      ∧ (CertifiedModularReduction.Pzero c * CertifiedModularReduction.Kphys c = 0)
+      ∧ (CertifiedModularReduction.Kphys c * CertifiedModularReduction.Pzero c = 0) := by
+  have hLog :
+      c.logAdmissible (compress (CertifiedModularReduction.Preg c) c.Δ) :=
+    log_defined_on_Preg (V := E) c
+  have hKill :
+      CertifiedModularReduction.Pzero c * CertifiedModularReduction.Kphys c = 0
+        ∧
+      CertifiedModularReduction.Kphys c * CertifiedModularReduction.Pzero c = 0 :=
+    CertifiedModularReduction.Kphys_kills_Pzero_of_inertial_regular_lane
+      (c := c) hInertial
+  exact ⟨hLog, hKill.1, hKill.2⟩
+
+/--
+Curved regular lane (`χ ≠ 0`) is exactly the alignment obstruction.
+-/
+@[rep_depth operator]
+theorem curved_regular_lane_obstructs_alignment
+    (c : CertifiedModularReduction (E := H₂))
+    (hCurved : CertifiedModularReduction.CurvedRegularLane (c := c)) :
+    ¬ CertifiedModularReduction.SpectralMetricAlignment (c := c) :=
+  (CertifiedModularReduction.curved_regular_lane_iff_non_alignment (c := c)).1 hCurved
+
 /-- Modular adjoint transport of an operator along the true modular flow. -/
 @[rep_depth transport]
 noncomputable def modularAdjointFlow
@@ -144,6 +217,24 @@ theorem modularAdjointFlow_eq_self_of_commute_generator
     intro τ
     simpa [modularTransportFlow] using ((hCommGen.smul_right τ).exp_right)
   exact modularAdjointFlow_eq_self_of_commute_flow (E := E) hMod A t hCommFlow
+
+/--
+Interoperability bridge: if the transport flow in this lane is identified with
+the `Cl11LorentzAction.modularFlow`, then both adjoint surfaces coincide.
+-/
+@[rep_depth transport]
+theorem modularAdjointFlow_eq_cl11_modularAdjointFlow_of_flow_eq
+    (X : InfoGeometry.Quantum.RealSplitCl11Action (DoubledSpace E))
+    (hMod : EndH) (t : ℝ) (A : EndH)
+    (hFlowEq : ∀ τ : ℝ,
+      modularTransportFlow (E := E) hMod τ
+        = InfoGeometry.Canonical.Cl11LorentzAction.modularFlow
+            (H := DoubledSpace E) X τ) :
+    modularAdjointFlow (E := E) hMod t A
+      = InfoGeometry.Canonical.Cl11LorentzAction.modularAdjointFlow
+          (H := DoubledSpace E) X t A := by
+  unfold modularAdjointFlow InfoGeometry.Canonical.Cl11LorentzAction.modularAdjointFlow
+  rw [hFlowEq t, hFlowEq (-t)]
 
 /--
 Modular fixedness bridge for the canonical defect-supported central channel.

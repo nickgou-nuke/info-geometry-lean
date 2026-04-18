@@ -18,7 +18,7 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 local notation "P₊" => spectralPlusProj (E := E)
 local notation "P₋" => spectralMinusProj (E := E)
 local notation "J" => modularConjugationJ (E := E)
-local notation "K" => modularComplexI (E := E)
+local notation "K" => InfoGeometry.Krein.clockAxis (E := E)
 
 /-- The transported positive grading projector under an operator-valued transport. -/
 noncomputable def transportedPlusProjector (T : EndH) : EndH :=
@@ -115,38 +115,38 @@ theorem JBoost_comp_spectralMinusProj_modular_j
 theorem KRotation_comp_spectralPlusProj
     (t : ℝ) :
     (KRotation (E := E) t).comp P₊
-      = Real.cos t • P₊ + Real.sin t • (P₋.comp (modularComplexI (E := E))) := by
+      = Real.cos t • P₊ + Real.sin t • (P₋.comp (InfoGeometry.Krein.clockAxis (E := E))) := by
   rw [KRotation_eq_cos_add_sin_K (E := E) t]
   rw [ContinuousLinearMap.add_comp, ContinuousLinearMap.smul_comp, ContinuousLinearMap.smul_comp]
   have hcomp1 : (1 : EndH).comp P₊ = P₊ := by
     change (ContinuousLinearMap.id ℝ H₂).comp P₊ = P₊
     exact ContinuousLinearMap.id_comp P₊
-  rw [hcomp1, ← spectralMinusProj_comp_complex_i (E := E)]
+  rw [hcomp1, ← spectralMinusProj_comp_K (E := E)]
 
 theorem KRotation_comp_spectralPlusProj_complex_i
     (t : ℝ) :
     (KRotation (E := E) t).comp P₊
       = Real.cos t • P₊ + Real.sin t • (P₋.comp (complex_i (E := E))) := by
-  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+  simpa [InfoGeometry.Krein.clockAxis_eq_complex_i] using
     KRotation_comp_spectralPlusProj (E := E) t
 
 /-- Right-composition action of the `K`-rotation on the negative projector block. -/
 theorem KRotation_comp_spectralMinusProj
     (t : ℝ) :
     (KRotation (E := E) t).comp P₋
-      = Real.cos t • P₋ + Real.sin t • (P₊.comp (modularComplexI (E := E))) := by
+      = Real.cos t • P₋ + Real.sin t • (P₊.comp (InfoGeometry.Krein.clockAxis (E := E))) := by
   rw [KRotation_eq_cos_add_sin_K (E := E) t]
   rw [ContinuousLinearMap.add_comp, ContinuousLinearMap.smul_comp, ContinuousLinearMap.smul_comp]
   have hcomp1 : (1 : EndH).comp P₋ = P₋ := by
     change (ContinuousLinearMap.id ℝ H₂).comp P₋ = P₋
     exact ContinuousLinearMap.id_comp P₋
-  rw [hcomp1, ← spectralPlusProj_comp_complex_i (E := E)]
+  rw [hcomp1, ← spectralPlusProj_comp_K (E := E)]
 
 theorem KRotation_comp_spectralMinusProj_complex_i
     (t : ℝ) :
     (KRotation (E := E) t).comp P₋
       = Real.cos t • P₋ + Real.sin t • (P₊.comp (complex_i (E := E))) := by
-  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+  simpa [InfoGeometry.Krein.clockAxis_eq_complex_i] using
     KRotation_comp_spectralMinusProj (E := E) t
 
 @[simp] theorem transportedPlusProjector_epsilonBoost
@@ -188,7 +188,7 @@ theorem KRotation_comp_spectralMinusProj_complex_i
 @[simp] theorem transportedPlusProjector_KRotation
     (t : ℝ) :
     transportedPlusProjector (E := E) (KRotation (E := E) t)
-      = Real.cos t • P₊ + Real.sin t • ((modularComplexI (E := E)).comp P₋) := by
+      = Real.cos t • P₊ + Real.sin t • ((InfoGeometry.Krein.clockAxis (E := E)).comp P₋) := by
   simpa [transportedPlusProjector] using spectralPlusProj_comp_KRotation (E := E) t
 
 @[simp] theorem transportedPlusProjector_KRotation_complex_i
@@ -196,11 +196,12 @@ theorem KRotation_comp_spectralMinusProj_complex_i
     transportedPlusProjector (E := E) (KRotation (E := E) t)
       = Real.cos t • P₊ + Real.sin t • ((complex_i (E := E)).comp P₋) := by
   rw [transportedPlusProjector_KRotation (E := E) t]
+  simp [InfoGeometry.Krein.clockAxis]
 
 @[simp] theorem transportedMinusProjector_KRotation
     (t : ℝ) :
     transportedMinusProjector (E := E) (KRotation (E := E) t)
-      = Real.cos t • P₋ + Real.sin t • ((modularComplexI (E := E)).comp P₊) := by
+      = Real.cos t • P₋ + Real.sin t • ((InfoGeometry.Krein.clockAxis (E := E)).comp P₊) := by
   simpa [transportedMinusProjector] using spectralMinusProj_comp_KRotation (E := E) t
 
 @[simp] theorem transportedMinusProjector_KRotation_complex_i
@@ -208,6 +209,7 @@ theorem KRotation_comp_spectralMinusProj_complex_i
     transportedMinusProjector (E := E) (KRotation (E := E) t)
       = Real.cos t • P₋ + Real.sin t • ((complex_i (E := E)).comp P₊) := by
   rw [transportedMinusProjector_KRotation (E := E) t]
+  simp [InfoGeometry.Krein.clockAxis]
 
 /-- The positive projector flux vanishes for the grading-diagonal `ε`-boost. -/
 theorem plusProjectorFlux_epsilonBoost
@@ -274,44 +276,44 @@ theorem minusProjectorFlux_JBoost_modular_j
 theorem plusProjectorFlux_KRotation
     (t : ℝ) :
     plusProjectorFlux (E := E) (KRotation (E := E) t)
-      = Real.sin t • (((modularComplexI (E := E)).comp P₋) - (P₋.comp (modularComplexI (E := E)))) := by
+      = Real.sin t • (((InfoGeometry.Krein.clockAxis (E := E)).comp P₋) - (P₋.comp (InfoGeometry.Krein.clockAxis (E := E)))) := by
   unfold plusProjectorFlux
   rw [spectralPlusProj_comp_KRotation (E := E) t, KRotation_comp_spectralPlusProj (E := E) t]
   calc
-    (Real.cos t • P₊ + Real.sin t • ((modularComplexI (E := E)).comp P₋)) -
-        (Real.cos t • P₊ + Real.sin t • (P₋.comp (modularComplexI (E := E))))
-      = (Real.sin t • ((modularComplexI (E := E)).comp P₋)) - (Real.sin t • (P₋.comp (modularComplexI (E := E)))) := by
+    (Real.cos t • P₊ + Real.sin t • ((InfoGeometry.Krein.clockAxis (E := E)).comp P₋)) -
+        (Real.cos t • P₊ + Real.sin t • (P₋.comp (InfoGeometry.Krein.clockAxis (E := E))))
+      = (Real.sin t • ((InfoGeometry.Krein.clockAxis (E := E)).comp P₋)) - (Real.sin t • (P₋.comp (InfoGeometry.Krein.clockAxis (E := E)))) := by
           abel
-    _ = Real.sin t • (((modularComplexI (E := E)).comp P₋) - (P₋.comp (modularComplexI (E := E)))) := by
+    _ = Real.sin t • (((InfoGeometry.Krein.clockAxis (E := E)).comp P₋) - (P₋.comp (InfoGeometry.Krein.clockAxis (E := E)))) := by
           rw [smul_sub]
 
 theorem plusProjectorFlux_KRotation_complex_i
     (t : ℝ) :
     plusProjectorFlux (E := E) (KRotation (E := E) t)
       = Real.sin t • (((complex_i (E := E)).comp P₋) - (P₋.comp (complex_i (E := E)))) := by
-  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+  simpa [InfoGeometry.Krein.clockAxis_eq_complex_i] using
     plusProjectorFlux_KRotation (E := E) t
 
 /-- The negative projector flux of the `K`-rotation is the oscillatory off-diagonal block. -/
 theorem minusProjectorFlux_KRotation
     (t : ℝ) :
     minusProjectorFlux (E := E) (KRotation (E := E) t)
-      = Real.sin t • (((modularComplexI (E := E)).comp P₊) - (P₊.comp (modularComplexI (E := E)))) := by
+      = Real.sin t • (((InfoGeometry.Krein.clockAxis (E := E)).comp P₊) - (P₊.comp (InfoGeometry.Krein.clockAxis (E := E)))) := by
   unfold minusProjectorFlux
   rw [spectralMinusProj_comp_KRotation (E := E) t, KRotation_comp_spectralMinusProj (E := E) t]
   calc
-    (Real.cos t • P₋ + Real.sin t • ((modularComplexI (E := E)).comp P₊)) -
-        (Real.cos t • P₋ + Real.sin t • (P₊.comp (modularComplexI (E := E))))
-      = (Real.sin t • ((modularComplexI (E := E)).comp P₊)) - (Real.sin t • (P₊.comp (modularComplexI (E := E)))) := by
+    (Real.cos t • P₋ + Real.sin t • ((InfoGeometry.Krein.clockAxis (E := E)).comp P₊)) -
+        (Real.cos t • P₋ + Real.sin t • (P₊.comp (InfoGeometry.Krein.clockAxis (E := E))))
+      = (Real.sin t • ((InfoGeometry.Krein.clockAxis (E := E)).comp P₊)) - (Real.sin t • (P₊.comp (InfoGeometry.Krein.clockAxis (E := E)))) := by
           abel
-    _ = Real.sin t • (((modularComplexI (E := E)).comp P₊) - (P₊.comp (modularComplexI (E := E)))) := by
+    _ = Real.sin t • (((InfoGeometry.Krein.clockAxis (E := E)).comp P₊) - (P₊.comp (InfoGeometry.Krein.clockAxis (E := E)))) := by
           rw [smul_sub]
 
 theorem minusProjectorFlux_KRotation_complex_i
     (t : ℝ) :
     minusProjectorFlux (E := E) (KRotation (E := E) t)
       = Real.sin t • (((complex_i (E := E)).comp P₊) - (P₊.comp (complex_i (E := E)))) := by
-  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+  simpa [InfoGeometry.Krein.clockAxis_eq_complex_i] using
     minusProjectorFlux_KRotation (E := E) t
 
 end Basic

@@ -87,7 +87,7 @@ Operatorial Berry 2-form seed on doubled space, induced from the operatorial
 metric seed via the local phase axis `K = Jε`.
 -/
 noncomputable def berryOfOperator (A : EndH) : LinearMap.BilinForm ℝ H₂ :=
-  (metricOfOperator A).compLeft (modularComplexI (E := E)).toLinearMap
+  (metricOfOperator A).compLeft (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).toLinearMap
 
 /--
 Explicit split-`Cl(1,1)` Berry 2-form seed:
@@ -121,7 +121,7 @@ omit [CompleteSpace E] in
     (A : EndH) :
     berryTwoFormJEpsOfOperator (E := E) A = berryOfOperator (E := E) A := by
   ext u v
-  simp [berryTwoFormJEpsOfOperator, berryOfOperator, modularComplexI,
+  simp [berryTwoFormJEpsOfOperator, berryOfOperator,
     modularConjugationJ, modularSignEpsilon]
 
 omit [CompleteSpace E] in
@@ -152,7 +152,7 @@ omit [CompleteSpace E] in
     (A : EndH) (u v : H₂) :
     berryOfOperator (E := E) A u v
       =
-    metricOfOperator A (modularComplexI (E := E) u) v := rfl
+    metricOfOperator A (InfoGeometry.Canonical.TomitaTakesaki.clockAxis u) v := rfl
 
 -- Root-name form of the operatorial Berry readout.
 omit [CompleteSpace E] in
@@ -188,34 +188,34 @@ seed of `K ∘ A` is exactly minus the untwisted operator metric seed of `A`.
 theorem berryOfOperator_modularComplexI_comp_eq_neg_metricOfOperator_of_IsPhaseLinear
     (A : EndH)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)
         =
-      (modularComplexI (E := E)).comp A) :
-    berryOfOperator (E := E) ((modularComplexI (E := E)).comp A)
+      (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) :
+    berryOfOperator (E := E) ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A)
       =
     -metricOfOperator (E := E) A := by
   ext u v
   have hCommEval :
-      A ((modularComplexI (E := E)) u)
+      A ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis) u)
         =
-      (modularComplexI (E := E)) (A u) := by
+      (InfoGeometry.Canonical.TomitaTakesaki.clockAxis) (A u) := by
     simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hComm
   have hK2 :
-      (modularComplexI (E := E)) ((modularComplexI (E := E)) (A u))
+      (InfoGeometry.Canonical.TomitaTakesaki.clockAxis) ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis) (A u))
         =
       -(A u) := by
     change
-      (((modularComplexI (E := E)).comp (modularComplexI (E := E))) (A u))
+      (((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)) (A u))
         =
       (-(ContinuousLinearMap.id ℝ H₂)) (A u)
     rw [modularComplexI_sq (E := E)]
   calc
-    berryOfOperator (E := E) ((modularComplexI (E := E)).comp A) u v
-        = ⟪((modularComplexI (E := E)).comp A) ((modularComplexI (E := E)) u), v⟫_ℝ := by
+    berryOfOperator (E := E) ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) u v
+        = ⟪((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis) u), v⟫_ℝ := by
             rw [berryOfOperator_apply, metricOfOperator_apply]
-    _ = ⟪(modularComplexI (E := E)) (A ((modularComplexI (E := E)) u)), v⟫_ℝ := by
+    _ = ⟪(InfoGeometry.Canonical.TomitaTakesaki.clockAxis) (A ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis) u)), v⟫_ℝ := by
           rfl
-    _ = ⟪(modularComplexI (E := E)) ((modularComplexI (E := E)) (A u)), v⟫_ℝ := by
+    _ = ⟪(InfoGeometry.Canonical.TomitaTakesaki.clockAxis) ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis) (A u)), v⟫_ℝ := by
           rw [hCommEval]
     _ = ⟪-(A u), v⟫_ℝ := by rw [hK2]
     _ = (-metricOfOperator (E := E) A) u v := by
@@ -380,7 +380,7 @@ theorem deriv_berryOfOperator_expTransport
         t) u v := by
   simpa [berryOfOperator] using
     deriv_metricOfOperator_expTransport
-      (E := E) X A (modularComplexI (E := E) u) v t
+      (E := E) X A (InfoGeometry.Canonical.TomitaTakesaki.clockAxis u) v t
 
 /--
 Infinitesimal modular-conjugation transport law for the QGT operatorial metric
@@ -577,7 +577,7 @@ theorem deriv_berryOfOperator_modularTransport_conjugation_at_zero_eq_berryOf_re
     berryOfOperator (E := E) (relativeModularDeriv (E := E) hMod A) u v := by
   simpa [berryOfOperator] using
     deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_relativeModularDeriv
-      (E := E) hMod A (modularComplexI (E := E) u) v
+      (E := E) hMod A (InfoGeometry.Canonical.TomitaTakesaki.clockAxis u) v
 
 /--
 Split-`Cl(1,1)` (`J ∘ ε`) form of the infinitesimal Berry transport law:
@@ -834,7 +834,7 @@ theorem deriv_berryOfOperator_modularTransport_conjugation_at_zero_eq_berryOf_mo
     berryOfOperator (E := E) (relativeModularSourceDeriv (E := E) hMod A) u v := by
   simpa [berryOfOperator] using
     deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_modularGaugeDeriv_add_metricOf_relativeModularSourceDeriv
-      (E := E) hMod A (modularComplexI (E := E) u) v
+      (E := E) hMod A (InfoGeometry.Canonical.TomitaTakesaki.clockAxis u) v
 
 /--
 Gauge-commuting Berry-source law:
@@ -860,7 +860,7 @@ theorem deriv_berryOfOperator_modularTransport_conjugation_at_zero_eq_berryOf_re
     berryOfOperator (E := E) (relativeModularSourceDeriv (E := E) hMod A) u v := by
   simpa [berryOfOperator] using
     deriv_metricOfOperator_modularTransport_conjugation_at_zero_eq_metricOf_relativeModularSourceDeriv_of_commute_gaugePart
-      (E := E) hMod A hCommGauge (modularComplexI (E := E) u) v
+      (E := E) hMod A hCommGauge (InfoGeometry.Canonical.TomitaTakesaki.clockAxis u) v
 
 /--
 Split-`Cl(1,1)` (`J ∘ ε`) source-channel law:
@@ -1045,7 +1045,7 @@ theorem deriv_berryOfOperator_liftedEinsteinAnomalyOperator_relativeModularTrans
       u v := by
   simpa [berryOfOperator] using
     deriv_metricOfOperator_liftedEinsteinAnomalyOperator_relativeModularTransport_at_zero_eq_metricOf_relativeModularSourceDeriv_of_commute_gaugePart
-      (E := E) CCI hMod hCommGauge (modularComplexI (E := E) u) v
+      (E := E) CCI hMod hCommGauge (InfoGeometry.Canonical.TomitaTakesaki.clockAxis u) v
 
 /--
 Split-`Cl(1,1)` (`J ∘ ε`) specialization of the lifted Einstein-anomaly source
@@ -1287,15 +1287,15 @@ metric satisfies the exact `K`-skew law required by `QGT.ofMajorana`.
 theorem metricOfOperator_K_skew_of_commutesWithK
     (A : EndH)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)
         =
-      (modularComplexI (E := E)).comp A) :
+      (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) :
     ∀ u v,
-      metricOfOperator A (modularComplexI (E := E) u) v
+      metricOfOperator A (InfoGeometry.Canonical.TomitaTakesaki.clockAxis u) v
         =
-      -metricOfOperator A u (modularComplexI (E := E) v) := by
+      -metricOfOperator A u (InfoGeometry.Canonical.TomitaTakesaki.clockAxis v) := by
   intro u v
-  have hCommEval : A (modularComplexI (E := E) u) = modularComplexI (E := E) (A u) := by
+  have hCommEval : A (InfoGeometry.Canonical.TomitaTakesaki.clockAxis u) = InfoGeometry.Canonical.TomitaTakesaki.clockAxis (A u) := by
     simpa [ContinuousLinearMap.comp_apply] using congrArg (fun T : EndH => T u) hComm
   rw [metricOfOperator_apply, metricOfOperator_apply, hCommEval]
   exact modularComplexI_inner_skew (E := E) (A u) v
@@ -1312,9 +1312,9 @@ theorem metricOfOperator_complex_i_skew_of_commutesWith_complex_i
       -metricOfOperator A u (InfoGeometry.Krein.complex_i (E := E) v) := by
   intro u v
   have hComm' :
-      A.comp (modularComplexI (E := E))
+      A.comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)
         =
-      (modularComplexI (E := E)).comp A := by
+      (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A := by
     simpa [modularComplexI_eq_complex_i] using hComm
   simpa [modularComplexI_eq_complex_i] using
     metricOfOperator_K_skew_of_commutesWithK (E := E) (A := A) hComm' u v
@@ -1324,7 +1324,8 @@ On the positive doubled-space Hilbert metric, the local Cartan axis `K = Jε`
 is skew-adjoint.
 -/
 theorem modularComplexI_star_eq_neg :
-    star (modularComplexI (E := E)) = -(modularComplexI (E := E)) := by
+    star (InfoGeometry.Canonical.TomitaTakesaki.clockAxis (E := E))
+      = -(InfoGeometry.Canonical.TomitaTakesaki.clockAxis (E := E)) := by
   rw [ContinuousLinearMap.star_eq_adjoint]
   apply ContinuousLinearMap.ext
   intro u
@@ -1332,9 +1333,9 @@ theorem modularComplexI_star_eq_neg :
   intro v
   rw [ContinuousLinearMap.adjoint_inner_right]
   change
-    ⟪modularComplexI (E := E) v, u⟫_ℝ
+    ⟪InfoGeometry.Canonical.TomitaTakesaki.clockAxis v, u⟫_ℝ
       =
-    ⟪v, -(modularComplexI (E := E) u)⟫_ℝ
+    ⟪v, -(InfoGeometry.Canonical.TomitaTakesaki.clockAxis u)⟫_ℝ
   rw [inner_neg_right]
   exact modularComplexI_inner_skew (E := E) v u
 
@@ -1352,23 +1353,24 @@ theorem isSelfAdjoint_modularComplexI_comp_of_star_eq_neg_of_commutesWithK
     (A : EndH)
     (hStar : star A = -A)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)
         =
-      (modularComplexI (E := E)).comp A) :
-    IsSelfAdjoint ((modularComplexI (E := E)).comp A) := by
+      (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) :
+    IsSelfAdjoint ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) := by
+  let K : EndH := InfoGeometry.Canonical.TomitaTakesaki.clockAxis (E := E)
   have hCommMul :
-      A * modularComplexI (E := E) = modularComplexI (E := E) * A := by
-    simpa using hComm
-  change star ((modularComplexI (E := E)) * A) = (modularComplexI (E := E)) * A
+      A * K = K * A := by
+    simpa [K] using hComm
+  change star (K * A) = K * A
   calc
-    star ((modularComplexI (E := E)) * A)
-        = star A * star (modularComplexI (E := E)) := by
+    star (K * A)
+        = star A * star K := by
             rw [star_mul]
-    _ = (-A) * (-(modularComplexI (E := E))) := by
-          simp [hStar, modularComplexI_star_eq_neg (E := E)]
-    _ = A * modularComplexI (E := E) := by
+    _ = (-A) * (-K) := by
+          rw [hStar, modularComplexI_star_eq_neg (E := E)]
+    _ = A * K := by
           simp
-    _ = modularComplexI (E := E) * A := hCommMul
+    _ = K * A := hCommMul
 
 section
 
@@ -1381,18 +1383,18 @@ with `K`.
 theorem isPhaseLinear_modularComplexI_comp_of_IsPhaseLinear
     (A : EndH)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)
         =
-      (modularComplexI (E := E)).comp A) :
-    IsPhaseLinear (E := E) ((modularComplexI (E := E)).comp A) := by
+      (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) :
+    IsPhaseLinear (E := E) ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) := by
   unfold IsPhaseLinear at *
   calc
-    ((modularComplexI (E := E)).comp A).comp (modularComplexI (E := E))
-        = (modularComplexI (E := E)).comp (A.comp (modularComplexI (E := E))) := by
+    ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A).comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)
+        = (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp (A.comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)) := by
             simp [ContinuousLinearMap.comp_assoc]
-    _ = (modularComplexI (E := E)).comp ((modularComplexI (E := E)).comp A) := by
+    _ = (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) := by
           rw [hComm]
-    _ = (modularComplexI (E := E)).comp ((modularComplexI (E := E)).comp A) := rfl
+    _ = (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) := rfl
 
 end
 
@@ -1404,9 +1406,9 @@ noncomputable def qgtOfOperator
     (A : EndH)
     (hA : IsSelfAdjoint A)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)
         =
-      (modularComplexI (E := E)).comp A) : QGT E :=
+      (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) : QGT E :=
   ofMajorana
     (metricOfOperator A)
     (metricOfOperator_isSymm_of_selfAdjoint (A := A) hA)
@@ -1416,9 +1418,9 @@ noncomputable def qgtOfOperator
     (A : EndH)
     (hA : IsSelfAdjoint A)
     (hComm :
-      A.comp (modularComplexI (E := E))
+      A.comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)
         =
-      (modularComplexI (E := E)).comp A) :
+      (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) :
     berryOfOperator (E := E) A
       =
     (qgtOfOperator (E := E) A hA hComm).berry := by
@@ -1435,7 +1437,7 @@ noncomputable def qgtOfSkewPhaseLinearOperator
     (hPhase : IsPhaseLinear (E := E) A) : QGT E :=
   qgtOfOperator
     (E := E)
-    ((modularComplexI (E := E)).comp A)
+    ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A)
     (isSelfAdjoint_modularComplexI_comp_of_star_eq_neg_of_commutesWithK
       (E := E) (A := A) hSkew hPhase)
     (isPhaseLinear_modularComplexI_comp_of_IsPhaseLinear
@@ -1451,11 +1453,11 @@ constructor.
     (hPhase : IsPhaseLinear (E := E) A) :
     (qgtOfSkewPhaseLinearOperator (E := E) A hSkew hPhase).berry
       =
-    berryOfOperator (E := E) ((modularComplexI (E := E)).comp A) := by
+    berryOfOperator (E := E) ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) := by
   symm
   exact berryOfOperator_eq_qgtOfOperator_berry
     (E := E)
-    ((modularComplexI (E := E)).comp A)
+    ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A)
     (isSelfAdjoint_modularComplexI_comp_of_star_eq_neg_of_commutesWithK
       (E := E) (A := A) hSkew hPhase)
     (isPhaseLinear_modularComplexI_comp_of_IsPhaseLinear
@@ -1485,7 +1487,7 @@ star-certified conformal surface.
 -/
 theorem isSelfAdjoint_modularComplexI_comp_liftedEinsteinAnomalyOperator
     (SCI : StarCertifiedConformalInference E) :
-    IsSelfAdjoint ((modularComplexI (E := E)).comp SCI.liftedEinsteinAnomalyOperator) := by
+    IsSelfAdjoint ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp SCI.liftedEinsteinAnomalyOperator) := by
   exact isSelfAdjoint_modularComplexI_comp_of_star_eq_neg_of_commutesWithK
     (E := E) (A := SCI.liftedEinsteinAnomalyOperator)
     SCI.liftedEinsteinAnomalyOperator_star_eq_neg
@@ -1498,7 +1500,7 @@ carrier.
 theorem isPhaseLinear_modularComplexI_comp_liftedEinsteinAnomalyOperator
     (SCI : StarCertifiedConformalInference E) :
     IsPhaseLinear (E := E)
-      ((modularComplexI (E := E)).comp SCI.liftedEinsteinAnomalyOperator) := by
+      ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp SCI.liftedEinsteinAnomalyOperator) := by
   exact isPhaseLinear_modularComplexI_comp_of_IsPhaseLinear
     (E := E) (A := SCI.liftedEinsteinAnomalyOperator)
     SCI.liftedEinsteinAnomalyOperator_isPhaseLinear
@@ -1524,7 +1526,7 @@ Berry sector readout of the canonical star-certified Einstein-anomaly QGT.
       =
     berryOfOperator
       (E := E)
-      ((modularComplexI (E := E)).comp SCI.liftedEinsteinAnomalyOperator) := by
+      ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp SCI.liftedEinsteinAnomalyOperator) := by
   symm
   exact qgtOfSkewPhaseLinearOperator_berry_eq_berryOfOperator
     (E := E)
@@ -1608,24 +1610,24 @@ theorem kreinMetricOfOperator_K_skew_of_IsPhaseAntilinear
     (A : EndH)
     (hAnti : IsPhaseAntilinear (E := E) A) :
     ∀ u v,
-      kreinMetricOfOperator A (modularComplexI (E := E) u) v
+      kreinMetricOfOperator A (InfoGeometry.Canonical.TomitaTakesaki.clockAxis u) v
         =
-      -kreinMetricOfOperator A u (modularComplexI (E := E) v) := by
+      -kreinMetricOfOperator A u (InfoGeometry.Canonical.TomitaTakesaki.clockAxis v) := by
   intro u v
   have hAntiEval :
-      A (modularComplexI (E := E) u)
+      A (InfoGeometry.Canonical.TomitaTakesaki.clockAxis u)
         =
-      -((modularComplexI (E := E)) (A u)) := by
+      -((InfoGeometry.Canonical.TomitaTakesaki.clockAxis) (A u)) := by
     have h := congrArg (fun T : EndH => T u) hAnti
     simpa [IsPhaseAntilinear, ContinuousLinearMap.comp_apply] using h
   rw [kreinMetricOfOperator_apply, kreinMetricOfOperator_apply, hAntiEval]
   calc
-    KreinSpace.kreinInner (H := H₂) (-((modularComplexI (E := E)) (A u))) v
-      = -KreinSpace.kreinInner (H := H₂) ((modularComplexI (E := E)) (A u)) v := by
+    KreinSpace.kreinInner (H := H₂) (-((InfoGeometry.Canonical.TomitaTakesaki.clockAxis) (A u))) v
+      = -KreinSpace.kreinInner (H := H₂) ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis) (A u)) v := by
           simp
-    _ = -KreinSpace.kreinInner (H := H₂) (A u) ((modularComplexI (E := E)) v) := by
+    _ = -KreinSpace.kreinInner (H := H₂) (A u) ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis) v) := by
           rw [modularComplexI_kreinInner_swap]
-    _ = -kreinMetricOfOperator A u (modularComplexI (E := E) v) := by
+    _ = -kreinMetricOfOperator A u (InfoGeometry.Canonical.TomitaTakesaki.clockAxis v) := by
           rw [kreinMetricOfOperator_apply]
 
 /--
@@ -1747,9 +1749,9 @@ theorem qgtOfOperator_modularVarianceSeed_realizes_modularVariance
     (ψ : H₂) (hMod : EndH)
     (hA : IsSelfAdjoint (modularVarianceSeed (E := E) ψ hMod))
     (hComm :
-      (modularVarianceSeed (E := E) ψ hMod).comp (modularComplexI (E := E))
+      (modularVarianceSeed (E := E) ψ hMod).comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)
         =
-      (modularComplexI (E := E)).comp (modularVarianceSeed (E := E) ψ hMod)) :
+      (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp (modularVarianceSeed (E := E) ψ hMod)) :
     QGTRealizesModularVariance (E := E)
       (qgtOfOperator (E := E) (modularVarianceSeed (E := E) ψ hMod) hA hComm)
       ψ hMod := by
@@ -1793,32 +1795,38 @@ theorem isPhaseLinear_modularSignEpsilon_comp_of_IsPhaseAntilinear
     (A : EndH)
     (hAnti : IsPhaseAntilinear (E := E) A) :
     IsPhaseLinear (E := E) ((modularSignEpsilon (E := E)).comp A) := by
+  have hAntiK :
+      A.comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)
+        =
+      -((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A) := by
+    simpa [InfoGeometry.Canonical.TomitaTakesaki.clockAxis_eq_complex_i,
+      InfoGeometry.Krein.clockAxis_eq_complex_i] using hAnti
   have hEpsK :
-      (modularSignEpsilon (E := E)).comp (modularComplexI (E := E))
+      (modularSignEpsilon (E := E)).comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)
         =
       -(modularConjugationJ (E := E)) := by
     simpa [modularConjugationJ, modularSignEpsilon, modularComplexI] using
       (InfoGeometry.Krein.spectral_epsilon_comp_complex_i (E := E))
   have hKEps :
-      (modularComplexI (E := E)).comp (modularSignEpsilon (E := E))
+      (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp (modularSignEpsilon (E := E))
         =
       modularConjugationJ (E := E) := by
     simpa [modularConjugationJ, modularSignEpsilon, modularComplexI] using
       (InfoGeometry.Krein.complex_i_comp_spectral_epsilon (E := E))
   unfold IsPhaseLinear IsPhaseAntilinear at *
   calc
-    (((modularSignEpsilon (E := E)).comp A).comp (modularComplexI (E := E)))
-        = (modularSignEpsilon (E := E)).comp (A.comp (modularComplexI (E := E))) := by
+    (((modularSignEpsilon (E := E)).comp A).comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis))
+        = (modularSignEpsilon (E := E)).comp (A.comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)) := by
             simp [ContinuousLinearMap.comp_assoc]
-    _ = (modularSignEpsilon (E := E)).comp (-((modularComplexI (E := E)).comp A)) := by
-          rw [hAnti]
-    _ = -(((modularSignEpsilon (E := E)).comp (modularComplexI (E := E))).comp A) := by
+    _ = (modularSignEpsilon (E := E)).comp (-((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp A)) := by
+          rw [hAntiK]
+    _ = -(((modularSignEpsilon (E := E)).comp (InfoGeometry.Canonical.TomitaTakesaki.clockAxis)).comp A) := by
           simp [ContinuousLinearMap.comp_assoc]
     _ = -((-(modularConjugationJ (E := E))).comp A) := by rw [hEpsK]
     _ = (modularConjugationJ (E := E)).comp A := by
           simp
-    _ = ((modularComplexI (E := E)).comp (modularSignEpsilon (E := E))).comp A := by rw [hKEps]
-    _ = (modularComplexI (E := E)).comp ((modularSignEpsilon (E := E)).comp A) := by
+    _ = ((InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp (modularSignEpsilon (E := E))).comp A := by rw [hKEps]
+    _ = (InfoGeometry.Canonical.TomitaTakesaki.clockAxis).comp ((modularSignEpsilon (E := E)).comp A) := by
           simp [ContinuousLinearMap.comp_assoc]
 
 /-- Root-name form of phase-linearity after `spectral_epsilon` transport. -/

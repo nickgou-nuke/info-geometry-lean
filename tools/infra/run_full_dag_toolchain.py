@@ -112,6 +112,37 @@ def main() -> int:
         ["python3", "tools/infra/generate_theorem_surface_index.py"],
     )
     run_step(
+        "ASSIGN",
+        "equivalence-dictionary",
+        [
+            "python3",
+            "tools/infra/generate_equivalence_dictionary.py",
+            "--curated-json",
+            "docs/NameEquivalenceRegistry.json",
+            "--json-out",
+            "reports/dag/equivalence-dictionary.json",
+            "--md-out",
+            "reports/dag/equivalence-dictionary.md",
+        ],
+    )
+    run_step(
+        "ASSIGN",
+        "expr-alpha-dedup",
+        [
+            "python3",
+            "tools/infra/generate_expr_alpha_dedup.py",
+            "--input-dir",
+            "artifacts/expr-graph/arango",
+            "--json-out",
+            "reports/dag/expr-alpha-dedup.json",
+            "--md-out",
+            "reports/dag/expr-alpha-dedup.md",
+            "--const-mode",
+            "normalize",
+            "--allow-missing-input",
+        ],
+    )
+    run_step(
         "CONGEST",
         "source-sink-compression",
         ["python3", "tools/infra/generate_source_sink_compression.py"],

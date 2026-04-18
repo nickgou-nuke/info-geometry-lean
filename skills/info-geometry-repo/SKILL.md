@@ -132,7 +132,7 @@ python3 tools/quality/functorial_invariance_audit.py --json-out reports/dag/func
 python3 tools/quality/check_translation_registry.py \
   --registry docs/OperatorTheoremTranslationRegistry.md \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.superHamiltonian_eq_modularTransportGenerator_lorentzBivectorSeed \
-  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_compatibility \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_structural \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.exists_lorentzBivectorGenerator_split_with_drazin_lane_centrality \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzChiralConeOrbit \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzWedgeOrbit \
@@ -162,16 +162,17 @@ Use this exact main sequence:
 3. `python3 tools/infra/refresh_blueprint_tags.py`
 4. `python3 tools/infra/run_locked_lake_build.py InfoGeometry.BlueprintTags`
 5. `python3 tools/infra/generate_theorem_surface_index.py`
-6. `python3 tools/infra/generate_source_sink_compression.py`
-7. `python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json`
-8. `python3 tools/infra/check_bipartite_bleed.py`
-9. `python3 tools/infra/generate_structural_dedup.py`
-10. `python3 tools/infra/generate_structural_fibers.py`
-11. `python3 tools/infra/generate_semantic_quotient.py`
-12. `python3 tools/infra/generate_projection_coloring.py`
-13. `python3 tools/infra/select_openclaw_target.py`
-14. `python3 tools/infra/canonical_policy_lint.py`
-15. `python3 tools/infra/generate_replacement_frontier.py`
+6. `python3 tools/infra/generate_equivalence_dictionary.py --curated-json docs/NameEquivalenceRegistry.json --json-out reports/dag/equivalence-dictionary.json --md-out reports/dag/equivalence-dictionary.md`
+7. `python3 tools/infra/generate_source_sink_compression.py`
+8. `python3 tools/infra/generate_causal_report.py --out reports/dag/true-root-order.md --json-out reports/dag/true-root-order.json`
+9. `python3 tools/infra/check_bipartite_bleed.py`
+10. `python3 tools/infra/generate_structural_dedup.py`
+11. `python3 tools/infra/generate_structural_fibers.py`
+12. `python3 tools/infra/generate_semantic_quotient.py`
+13. `python3 tools/infra/generate_projection_coloring.py`
+14. `python3 tools/infra/select_openclaw_target.py`
+15. `python3 tools/infra/canonical_policy_lint.py`
+16. `python3 tools/infra/generate_replacement_frontier.py`
 
 Stable spine supplements:
 - `python3 tools/infra/check_representation_depth.py`
@@ -195,6 +196,8 @@ LeanTrail memory-carrier supplements:
 
 ## Default Workflow
 
+0. Refresh the maintained name-equivalence dictionary:
+   `python3 tools/infra/generate_equivalence_dictionary.py --curated-json docs/NameEquivalenceRegistry.json --json-out reports/dag/equivalence-dictionary.json --md-out reports/dag/equivalence-dictionary.md`
 1. Identify whether the task is source ownership, proof stabilization, graph refresh, or heavy-file frontier work.
 2. Read the target file and direct consumers before trusting any report.
 3. Check `artifacts/dag/index/meta.json` timestamp to confirm artifacts are current.

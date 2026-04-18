@@ -49,13 +49,16 @@ theorem modularComplexI_comp_modularConjugationJ
       =
     -((modularConjugationJ (E := E)).comp (modularComplexI (E := E))) := by
   have h := InfoGeometry.Krein.modular_j_complex_i_anticommute (E := E)
-  calc
-    (modularComplexI (E := E)).comp (modularConjugationJ (E := E))
+  have hFlip :
+      (InfoGeometry.Krein.complex_i (E := E)).comp (InfoGeometry.Krein.modular_j (E := E))
         =
-      -(-((modularComplexI (E := E)).comp (modularConjugationJ (E := E)))) := by
-          simp
-    _ = -((modularConjugationJ (E := E)).comp (modularComplexI (E := E))) := by
-          rw [← h]
+      -((InfoGeometry.Krein.modular_j (E := E)).comp (InfoGeometry.Krein.complex_i (E := E))) := by
+    have hNeg : -((InfoGeometry.Krein.modular_j (E := E)).comp (InfoGeometry.Krein.complex_i (E := E)))
+        =
+      (InfoGeometry.Krein.complex_i (E := E)).comp (InfoGeometry.Krein.modular_j (E := E)) := by
+      simpa [neg_neg] using congrArg (fun T => -T) h
+    exact hNeg.symm
+  simpa [modularComplexI_eq_complex_i, modularConjugationJ_eq_modular_j] using hFlip
 
 @[rep_depth krein]
 theorem complex_i_comp_modularConjugationJ

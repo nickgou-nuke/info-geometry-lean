@@ -125,7 +125,8 @@ noncomputable def canonicalDIIIProxy : DIIISymmetryProxy (E := E) where
 
 @[rep_depth transport, simp] theorem canonicalDIIIProxy_T_eq_modularK :
     (canonicalDIIIProxy (E := E)).T = modularK (E := E) := by
-  simpa using cptSuperchargeOp_eq_modularK (E := E)
+  rw [canonicalDIIIProxy_T_eq_cptSuperchargeOp (E := E)]
+  exact cptSuperchargeOp_eq_modularK (E := E)
 
 @[rep_depth transport, simp] theorem canonicalDIIIProxy_T_eq_complex_i :
     (canonicalDIIIProxy (E := E)).T = complex_i (E := E) := by

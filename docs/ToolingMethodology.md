@@ -5,6 +5,9 @@ tooling surfaces in this repository.
 
 It is an operator runbook, not a conceptual note.
 
+For system topology (lanes, authority boundaries, artifact planes), see
+[LOCAL_TOOLCHAIN_ARCHITECTURE.md](LOCAL_TOOLCHAIN_ARCHITECTURE.md).
+
 ## Rules
 
 - use Lake-managed entrypoints by default

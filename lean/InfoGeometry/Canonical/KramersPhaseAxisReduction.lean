@@ -256,10 +256,20 @@ theorem kramers_not_scalar_multiple_phaseAxis
     exact hx hxZero
   intro hEq
   have hPhaseLinear : KLinear (E := E) S.Θ := by
-    rw [hEq]
+    have hPhaseAxisEqClock :
+        phaseAxisK (E := E) = InfoGeometry.Krein.clockAxis (E := E) := by
+      change (modular_j (E := E)).comp (spectral_epsilon (E := E))
+          = InfoGeometry.Krein.clockAxis (E := E)
+      exact
+        (InfoGeometry.Canonical.TomitaTakesaki.clockAxis_eq_modular_j_comp_spectral_epsilon
+          (E := E)).symm
+    have hEqClock : S.Θ = c • (InfoGeometry.Krein.clockAxis (E := E)) := by
+      calc
+        S.Θ = c • (phaseAxisK (E := E)) := hEq
+        _ = c • (InfoGeometry.Krein.clockAxis (E := E)) := by rw [hPhaseAxisEqClock]
+    rw [hEqClock]
     unfold KLinear IsPhaseLinear
-    simpa [ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul] using
-      congrArg (fun T : EndH => (c : ℝ) • T) (phaseAxisK_isKLinear (E := E))
+    rw [ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul]
   have hZeroTheta : S.Θ = 0 :=
     eq_zero_of_kLinear_and_kAntilinear
       (E := E) hPhaseLinear S.phaseAntilinear

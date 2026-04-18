@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "description": "Curated name-equivalence pairs merged into the maintained equivalence dictionary.",
+  "pairs": [
+    {
+      "lhs": "InfoGeometry.Krein.complex_i",
+      "rhs": "InfoGeometry.Krein.clockAxis",
+      "relationKind": "curated_alias",
+      "note": "Canonical global clock axis naming: root complex_i is represented as clockAxis."
+    },
+    {
+      "lhs": "InfoGeometry.Krein.dilationOperator",
+      "rhs": "InfoGeometry.Krein.clockAxis",
+      "relationKind": "curated_alias",
+      "note": "Dilation commutator package closes to the same J∘ε axis."
+    },
+    {
+      "lhs": "InfoGeometry.Canonical.TomitaTakesaki.clockAxis",
+      "rhs": "InfoGeometry.Krein.clockAxis",
+      "relationKind": "curated_alias",
+      "note": "Tomita compatibility alias to canonical doubled-space clock axis."
+    },
+    {
+      "lhs": "InfoGeometry.Canonical.TomitaTakesaki.phaseAxisK",
+      "rhs": "InfoGeometry.Krein.clockAxis",
+      "relationKind": "curated_alias",
+      "note": "PhaseAxisK is a naming surface for the same global axis."
+    },
+    {
+      "lhs": "InfoGeometry.Canonical.TomitaTakesaki.modularComplexI",
+      "rhs": "InfoGeometry.Krein.clockAxis",
+      "relationKind": "curated_alias",
+      "note": "Legacy modularComplexI retained as compatibility name for clockAxis."
+    },
+    {
+      "lhs": "InfoGeometry.Canonical.OperatorDictionary.phaseAxisK",
+      "rhs": "InfoGeometry.Krein.clockAxis",
+      "relationKind": "curated_alias",
+      "note": "Operator dictionary K entry aligns to canonical global clock axis."
+    },
+    {
+      "lhs": "InfoGeometry.Canonical.QuantumLieAlgebroidRosetta.internalPhaseAxis",
+      "rhs": "InfoGeometry.Krein.clockAxis",
+      "relationKind": "curated_alias",
+      "note": "Rosetta internal phase axis is routed through modularComplexI to clockAxis."
+    },
+    {
+      "lhs": "InfoGeometry.Canonical.RealBdG.modularK",
+      "rhs": "InfoGeometry.Krein.clockAxis",
+      "relationKind": "curated_alias",
+      "note": "Real BdG modularK = J∘ε axis."
+    },
+    {
+      "lhs": "InfoGeometry.Canonical.ProjectorEquivariance.HestenesI",
+      "rhs": "InfoGeometry.Krein.clockAxis",
+      "relationKind": "curated_alias",
+      "note": "Projector-equivariance HestenesI is the same split phase axis."
+    },
+    {
+      "lhs": "InfoGeometry.Canonical.WindingOrbitClosure.clockAxis",
+      "rhs": "InfoGeometry.Krein.clockAxis",
+      "relationKind": "curated_alias",
+      "note": "Winding closure clock generator reuses the same doubled-space axis."
+    },
+    {
+      "lhs": "InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ",
+      "rhs": "InfoGeometry.Krein.modular_j",
+      "relationKind": "curated_alias",
+      "note": "Canonical J axis naming merge."
+    },
+    {
+      "lhs": "InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon",
+      "rhs": "InfoGeometry.Krein.spectral_epsilon",
+      "relationKind": "curated_alias",
+      "note": "Canonical epsilon axis naming merge."
+    },
+    {
+      "lhs": "InfoGeometry.Canonical.ProjectorEquivariance.modularSign",
+      "rhs": "InfoGeometry.Krein.spectral_epsilon",
+      "relationKind": "curated_alias",
+      "note": "Projector-first sign operator reifies the same epsilon grading."
+    }
+  ]
+}

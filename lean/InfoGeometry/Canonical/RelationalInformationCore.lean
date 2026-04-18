@@ -129,8 +129,21 @@ theorem channelPhaseAxis_sq :
     channelPhaseAxis.comp channelPhaseAxis
       =
     -(LinearMap.id : PerturbationChannel E →ₗ[ℝ] PerturbationChannel E) := by
-  ext X u <;>
-    simp [channelPhaseAxis, LinearMap.comp_apply, ContinuousLinearMap.comp_assoc]
+  ext X u
+  · have hu : WithLp.toLp 2 (-WithLp.fst u, -WithLp.snd u) = -u := by
+      ext <;> simp
+    have hx : X (WithLp.toLp 2 (-WithLp.fst u, -WithLp.snd u)) = -X u := by
+      rw [hu]
+      exact X.map_neg u
+    simpa [channelPhaseAxis, LinearMap.comp_apply, ContinuousLinearMap.comp_assoc,
+      modularComplexI_sq (E := E)] using congrArg WithLp.fst hx
+  · have hu : WithLp.toLp 2 (-WithLp.fst u, -WithLp.snd u) = -u := by
+      ext <;> simp
+    have hx : X (WithLp.toLp 2 (-WithLp.fst u, -WithLp.snd u)) = -X u := by
+      rw [hu]
+      exact X.map_neg u
+    simpa [channelPhaseAxis, LinearMap.comp_apply, ContinuousLinearMap.comp_assoc,
+      modularComplexI_sq (E := E)] using congrArg WithLp.snd hx
 
 /-- `(Jε)`-polarized second-variation form on perturbation channels. -/
 @[rep_depth krein]

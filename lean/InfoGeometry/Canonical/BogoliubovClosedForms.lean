@@ -17,7 +17,7 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
-local notation "Kop" => modularComplexI (E := E)
+local notation "Kop" => InfoGeometry.Krein.clockAxis (E := E)
 
 noncomputable local instance : NormedRing EndH := inferInstance
 noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
@@ -169,9 +169,9 @@ private lemma modularSignEpsilon_sq_mul :
 
 private lemma modularComplexI_sq_mul :
     (Kop : EndH) * Kop = -(1 : EndH) := by
-  change (modularComplexI (E := E)).comp (modularComplexI (E := E))
+  change (InfoGeometry.Krein.clockAxis (E := E)).comp (InfoGeometry.Krein.clockAxis (E := E))
       = -(ContinuousLinearMap.id ℝ H₂)
-  exact modularComplexI_sq (E := E)
+  exact InfoGeometry.Krein.clockAxis_sq (E := E)
 
 theorem JBoost_eq_cosh_add_sinh_J
     (t : ℝ) :
@@ -204,7 +204,7 @@ theorem epsilonBoost_eq_cosh_add_sinh_spectral_epsilon
 theorem KRotation_eq_cos_add_sin_K
     (t : ℝ) :
     KRotation (E := E) t
-      = Real.cos t • (1 : EndH) + Real.sin t • modularComplexI (E := E) := by
+      = Real.cos t • (1 : EndH) + Real.sin t • InfoGeometry.Krein.clockAxis (E := E) := by
   unfold KRotation
   exact exp_eq_cos_add_sin_of_sq_eq_neg_one (E := E) modularComplexI_sq_mul t
 
@@ -212,7 +212,7 @@ theorem KRotation_eq_cos_add_sin_complex_i
     (t : ℝ) :
     KRotation (E := E) t
       = Real.cos t • (1 : EndH) + Real.sin t • complex_i (E := E) := by
-  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+  simpa [InfoGeometry.Krein.clockAxis_eq_complex_i] using
     KRotation_eq_cos_add_sin_K (E := E) t
 
 @[simp] theorem JBoost_apply
@@ -241,7 +241,7 @@ theorem KRotation_eq_cos_add_sin_complex_i
 
 @[simp] theorem KRotation_apply
     (t : ℝ) (ψ : H₂) :
-    KRotation (E := E) t ψ = (Real.cos t) • ψ + (Real.sin t) • (modularComplexI (E := E) ψ) := by
+    KRotation (E := E) t ψ = (Real.cos t) • ψ + (Real.sin t) • (InfoGeometry.Krein.clockAxis (E := E) ψ) := by
   rw [KRotation_eq_cos_add_sin_K (E := E) t]
   simp
 
@@ -249,6 +249,7 @@ theorem KRotation_eq_cos_add_sin_complex_i
     (t : ℝ) (ψ : H₂) :
     KRotation (E := E) t ψ = (Real.cos t) • ψ + (Real.sin t) • (complex_i (E := E) ψ) := by
   rw [KRotation_apply (E := E) t ψ]
+  simp [InfoGeometry.Krein.clockAxis]
 
 /--
 Phase-linear operators commute with the exact exponential phase propagator.
@@ -262,14 +263,14 @@ theorem comp_KRotation_eq_KRotation_comp_of_IsPhaseLinear
     A.comp (KRotation (E := E) t) = (KRotation (E := E) t).comp A := by
   apply ContinuousLinearMap.ext
   intro x
-  have hA_eval : A (modularComplexI (E := E) x) = modularComplexI (E := E) (A x) := by
+  have hA_eval : A (InfoGeometry.Krein.clockAxis (E := E) x) = InfoGeometry.Krein.clockAxis (E := E) (A x) := by
     have h := congrArg (fun T : EndH => T x) hA
     simpa [IsPhaseLinear, ContinuousLinearMap.comp_apply] using h
   have hA_eval' :
       A (WithLp.toLp (2 : ENNReal) (-WithLp.snd x, WithLp.fst x))
         =
       WithLp.toLp (2 : ENNReal) (-WithLp.snd (A x), WithLp.fst (A x)) := by
-    simpa [modularComplexI] using hA_eval
+    simpa [InfoGeometry.Krein.clockAxis] using hA_eval
   simp [ContinuousLinearMap.comp_apply, KRotation_apply, map_add, map_smul, hA_eval']
 
 /--
@@ -284,14 +285,14 @@ theorem comp_KRotation_eq_KRotation_neg_comp_of_IsPhaseAntilinear
   apply ContinuousLinearMap.ext
   intro x
   have hA_eval :
-      A (modularComplexI (E := E) x) = -((modularComplexI (E := E)) (A x)) := by
+      A (InfoGeometry.Krein.clockAxis (E := E) x) = -((InfoGeometry.Krein.clockAxis (E := E)) (A x)) := by
     have h := congrArg (fun T : EndH => T x) hA
     simpa [IsPhaseAntilinear, ContinuousLinearMap.comp_apply] using h
   have hA_eval' :
       A (WithLp.toLp (2 : ENNReal) (-WithLp.snd x, WithLp.fst x))
         =
       -WithLp.toLp (2 : ENNReal) (-WithLp.snd (A x), WithLp.fst (A x)) := by
-    simpa [modularComplexI] using hA_eval
+    simpa [InfoGeometry.Krein.clockAxis] using hA_eval
   simp [ContinuousLinearMap.comp_apply, KRotation_apply, map_add, map_smul,
     Real.cos_neg, Real.sin_neg, neg_smul, hA_eval']
 
@@ -306,7 +307,17 @@ theorem kreinInner_KRotation_neg_left_KRotation_right
         (KRotation (E := E) t v)
       =
     KreinSpace.kreinInner (H := H₂) u v := by
+  have hClock :
+      (InfoGeometry.Krein.clockAxis (E := E) : EndH) = (modularComplexI (E := E) : EndH) := by
+    calc
+      (InfoGeometry.Krein.clockAxis (E := E) : EndH)
+          =
+        (complex_i (E := E) : EndH) := by
+            simp [InfoGeometry.Krein.clockAxis]
+      _ = (modularComplexI (E := E) : EndH) := by
+            exact (TomitaTakesaki.modularComplexI_eq_complex_i (E := E)).symm
   rw [KRotation_apply, KRotation_apply, Real.cos_neg, Real.sin_neg, neg_smul]
+  rw [hClock]
   repeat rw [KreinSpace.kreinInner_add_left, KreinSpace.kreinInner_add_right]
   repeat rw [KreinSpace.kreinInner_smul_left, KreinSpace.kreinInner_smul_right]
   rw [show -(Real.sin t • modularComplexI (E := E) u) = (-Real.sin t) • modularComplexI (E := E) u by simp]
@@ -365,7 +376,7 @@ theorem epsilon_comp_KRotation
   apply ContinuousLinearMap.ext
   intro x
   apply DoubledSpace.ext <;>
-    simp [TomitaTakesaki.modularSignEpsilon, TomitaTakesaki.modularComplexI,
+    simp [TomitaTakesaki.modularSignEpsilon,
       Real.cos_neg, Real.sin_neg]
 
 theorem spectral_epsilon_comp_KRotation

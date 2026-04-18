@@ -34,6 +34,7 @@ import InfoGeometry.LLM
 import InfoGeometry.Library
 import InfoGeometry.Meta.Admission
 import InfoGeometry.Meta.CurvatureTelemetry
+import InfoGeometry.Meta.DrazinRefactor
 import InfoGeometry.Meta.ProofShape
 import InfoGeometry.Meta.RegionPolicy
 import InfoGeometry.Meta.StrictDef

@@ -122,7 +122,7 @@ theorem cartan_flow_scales_uMinus_exp
   simpa using channelBoost_mul_uMinus (X := X) (τ := τ) (A := A)
 
 /--
-Modular flow diagonal action on the `uPlus` chiral channel.
+Modular flow weighted action on the `uPlus` chiral channel.
 
 `uPlus` is the positive-weight channel and scales by `exp t`.
 -/
@@ -141,7 +141,7 @@ theorem modular_flow_scales_uPlus
           ring
 
 /--
-Modular flow diagonal action on the `uMinus` chiral channel.
+Modular flow weighted action on the `uMinus` chiral channel.
 
 `uMinus` is the negative-weight channel and scales by `exp (-t)`.
 -/
@@ -210,6 +210,46 @@ theorem modularFlow_neg_mul_modularFlow
     _ = x := by simp
 
 /--
+Additive/group law for the modular flow family.
+-/
+@[rep_depth transport]
+theorem modularFlow_add
+    (X : RealSplitCl11Action H) (s t : ℝ) :
+    modularFlow X (s + t) = modularFlow X s * modularFlow X t := by
+  apply ContinuousLinearMap.ext
+  intro x
+  unfold modularFlow channelBoost
+  rw [Real.cosh_add, Real.sinh_add]
+  simp [smul_add, add_smul, smul_smul, X.eps_sq_apply,
+    add_assoc, add_left_comm, add_comm, mul_comm]
+
+/--
+Lie-exponential transport packet on the Bogoliubov frame channels.
+
+This packages the minimal owner facts:
+- `modularFlow` is a one-parameter Lie group (`0`, additive law),
+- the `uPlus/uMinus` channels scale exponentially with weights `±1`.
+-/
+@[rep_depth transport]
+theorem modularFlow_lieExponential_transport_packet
+    (X : RealSplitCl11Action H) :
+    modularFlow X 0 = (1 : EndH)
+      ∧ (∀ s t : ℝ, modularFlow X (s + t) = modularFlow X s * modularFlow X t)
+      ∧ (∀ t : ℝ, ∀ A : EndH, modularFlow X t * uPlus X A = Real.exp t • uPlus X A)
+      ∧ (∀ t : ℝ, ∀ A : EndH, modularFlow X t * uMinus X A = Real.exp (-t) • uMinus X A) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · unfold modularFlow channelBoost
+    apply ContinuousLinearMap.ext
+    intro x
+    simp
+  · intro s t
+    exact modularFlow_add (X := X) (s := s) (t := t)
+  · intro t A
+    exact modular_flow_scales_uPlus (X := X) (t := t) (A := A)
+  · intro t A
+    exact modular_flow_scales_uMinus (X := X) (t := t) (A := A)
+
+/--
 Right action of `modularFlow (-t)` on the `uPlus` channel.
 -/
 @[rep_depth transport]
@@ -268,6 +308,27 @@ theorem uMinus_mul_modularFlow_neg
 noncomputable def modularAdjointFlow
     (X : RealSplitCl11Action H) (t : ℝ) (A : EndH) : EndH :=
   modularFlow X t * A * modularFlow X (-t)
+
+/--
+Additive/group action law for adjoint transport:
+`Ad_{s+t} = Ad_s ∘ Ad_t`.
+-/
+@[rep_depth transport]
+theorem modularAdjointFlow_add
+    (X : RealSplitCl11Action H) (s t : ℝ) (A : EndH) :
+    modularAdjointFlow X (s + t) A
+      = modularAdjointFlow X s (modularAdjointFlow X t A) := by
+  unfold modularAdjointFlow
+  calc
+    modularFlow X (s + t) * A * modularFlow X (-(s + t))
+        = (modularFlow X s * modularFlow X t) * A * modularFlow X ((-t) + (-s)) := by
+            rw [modularFlow_add (X := X) (s := s) (t := t)]
+            congr 1
+            ring_nf
+    _ = (modularFlow X s * modularFlow X t) * A * (modularFlow X (-t) * modularFlow X (-s)) := by
+          rw [modularFlow_add (X := X) (s := -t) (t := -s)]
+    _ = modularFlow X s * (modularFlow X t * A * modularFlow X (-t)) * modularFlow X (-s) := by
+          simp [mul_assoc]
 
 /--
 Adjoint/conjugation scaling on `uPlus`: weight `exp (2*t)`.

@@ -46,7 +46,8 @@ lemma modularK_eq_modularComplexI :
 
 @[simp] lemma modularK_eq_complex_i :
     modularK (E := E) = complex_i (E := E) := by
-  simpa using modularK_eq_modularComplexI (E := E)
+  unfold modularK modularConjugationJ modularSignEpsilon
+  rfl
 
 /-- Core identity: `K² = -Id`. -/
 @[simp] lemma modularK_sq :
@@ -59,7 +60,10 @@ lemma modularK_eq_modularComplexI :
 @[simp] lemma modularK_apply_modularK (v : DoubledSpace E) :
     modularK (E := E) (modularK (E := E) v) = -v := by
   have h := congrArg (fun f : EndH (E := E) => f v) (modularK_sq (E := E))
-  simpa using h
+  calc
+    modularK (E := E) (modularK (E := E) v)
+        = (-(ContinuousLinearMap.id ℝ (DoubledSpace E))) v := h
+    _ = -v := by simp
 
 /-- `K`-linear operators commute with `K`. -/
 def KLinear (A : EndH (E := E)) : Prop :=

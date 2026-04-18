@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "description": "Unresolved-token growth thresholds for reports/dag/equivalence-dictionary.json",
+  "thresholds": [
+    {
+      "metric": "unresolved_head_token_total",
+      "baseline": 242,
+      "maxGrowth": 30
+    },
+    {
+      "metric": "unresolved_head_unique_count",
+      "baseline": 84,
+      "maxGrowth": 10
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.ObserverDefect
 import InfoGeometry.Canonical.ModularSourceBridge
+import InfoGeometry.Canonical.KKTClosureSymmetry
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
@@ -260,6 +261,33 @@ theorem sourcedGenerator_respects_cut (B : RouterDefectBridge (E := E)) :
   exact sourcedModularGenerator_respects_spectral_cut (CIK := B.CIK) (obs := B.obs) (flow := B.flow)
 
 end RouterDefectBridge
+
+/--
+Bounded bridge variant: the router residual is controlled by the canonical
+defect-central channel `Z_D` on the same Drazin/KKT lane.
+-/
+structure RouterDefectBoundBridge where
+  CIK : CertifiedInverseKernel H₂
+  flow : BackgroundModularFlow CIK
+  routerResidual : EndH
+  residual_norm_le_ZD :
+    ‖routerResidual‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖
+
+namespace RouterDefectBoundBridge
+
+/-- Sourced generator built from the bounded LLM-side residual input. -/
+noncomputable def sourcedGenerator (B : RouterDefectBoundBridge (E := E)) : EndH :=
+  B.flow.K0 + B.routerResidual
+
+/-- The residual budget is exactly the sourced-generator deviation from baseline flow. -/
+@[rep_depth transport]
+theorem sourcedGenerator_deviation_norm_le_ZD
+    (B : RouterDefectBoundBridge (E := E)) :
+    ‖B.sourcedGenerator - B.flow.K0‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) B.CIK‖ := by
+  simpa [sourcedGenerator, sub_eq_add_neg, add_assoc, add_comm, add_left_comm] using
+    B.residual_norm_le_ZD
+
+end RouterDefectBoundBridge
 
 end CanonicalBridge
 

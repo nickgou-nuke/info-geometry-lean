@@ -1,5 +1,9 @@
 # Autonomous Math Pipeline
 
+> Status: package-local runbook for autonomous-math lane.
+> Canonical infra docs: [`tools/infra/README.md`](../README.md), [`docs/LOCAL_TOOLCHAIN_ARCHITECTURE.md`](../../../docs/LOCAL_TOOLCHAIN_ARCHITECTURE.md).
+> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../../../docs/MarkdownCorpusGovernance.md).
+
 This package wires one end-to-end lane:
 
 1. deep research clarify + rewrite front-end,
@@ -38,4 +42,3 @@ Outputs:
 ## Current Codebase Status
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../../docs/CODEBASE_STATUS.md](../../../docs/CODEBASE_STATUS.md) for the current build/audit state.
-

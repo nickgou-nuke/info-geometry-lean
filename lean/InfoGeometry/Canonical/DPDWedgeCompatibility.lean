@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.ModularSpectralWedge
+import InfoGeometry.Canonical.ModularSpectralWedgeBridge
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic.NoncommRing
 
@@ -170,6 +171,28 @@ theorem dilationGap_eq_half_wedgeSign
           simp [smul_smul]
     _ = (2 : ℝ)⁻¹ • W.wedgeSign := by
           rw [two_smul_dilationGap_eq_wedgeSign comp]
+
+/--
+Canonical constructor from a DPD/wedge compatibility witness to the wedge-flow
+calibration packet used on the modular spectral bridge lane.
+-/
+@[rep_depth transport]
+theorem wedgeCalibrated_of_compatibleDPDWedge
+    (T : InfoGeometry.Canonical.RealTomitaCore.RealModularLogData (E := E))
+    (comp : IsCompatibleDPDWedge CIK W)
+    (hFlowCommQd : ∀ τ : ℝ, Commute (T.flow τ) CIK.spectralComplementaryProjector)
+    (hFlowCommEps :
+      ∀ τ : ℝ, Commute (T.flow τ) ((2 : ℝ) • CIK.dilationGap)) :
+    InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
+      (E := E) (T := T) (W := W)
+      ((2 : ℝ) • CIK.dilationGap) CIK.spectralComplementaryProjector := by
+  refine
+    { compat :=
+        { epsilon_eq := ?_
+          pzero_eq := comp.hZero.symm }
+      flow_commutes_owned_P_D := hFlowCommQd
+      flow_commutes_owned_epsilon := hFlowCommEps }
+  simpa using (two_smul_dilationGap_eq_wedgeSign (CIK := CIK) (W := W) comp).symm
 
 /--
 Projected supercharge bridge to the modular wedge sign on the regular Drazin lane:

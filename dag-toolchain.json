@@ -25,6 +25,27 @@
         "tools/infra/generate_theorem_surface_index.py"
       ],
       [
+        "tools/infra/generate_equivalence_dictionary.py",
+        "--curated-json",
+        "docs/NameEquivalenceRegistry.json",
+        "--json-out",
+        "reports/dag/equivalence-dictionary.json",
+        "--md-out",
+        "reports/dag/equivalence-dictionary.md"
+      ],
+      [
+        "tools/infra/generate_expr_alpha_dedup.py",
+        "--input-dir",
+        "artifacts/expr-graph/arango",
+        "--json-out",
+        "reports/dag/expr-alpha-dedup.json",
+        "--md-out",
+        "reports/dag/expr-alpha-dedup.md",
+        "--const-mode",
+        "normalize",
+        "--allow-missing-input"
+      ],
+      [
         "tools/infra/reports/generate_bilingual_spine_report.py",
         "--out",
         "reports/dag/bilingual-spine-report.md",

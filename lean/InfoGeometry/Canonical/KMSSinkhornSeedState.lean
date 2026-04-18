@@ -14,6 +14,13 @@ Seed-state KMS derivation layer for the Sinkhorn/KMS corridor.
 
 variable {F : Type} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
 
+noncomputable local instance : NormedRing (AlgebraEnd F) := inferInstance
+noncomputable local instance : NormedAlgebra ℝ (AlgebraEnd F) := inferInstance
+local instance : IsTopologicalRing (AlgebraEnd F) := inferInstance
+local instance : CompleteSpace (AlgebraEnd F) := inferInstance
+local instance : SMulCommClass ℝ (AlgebraEnd F) (AlgebraEnd F) := inferInstance
+local instance : IsScalarTower ℝ (AlgebraEnd F) (AlgebraEnd F) := inferInstance
+
 /--
 Expectation-based seed functional on doubled operators:
 `ωSeed(A) = ⟪A Ω, Ω⟫`.
@@ -97,6 +104,84 @@ def CommutatorOrthogonalOnOmega
   ∀ A B : AlgebraEnd F, inner ℝ (((A * B - B * A) Ω)) Ω = 0
 
 /--
+At zero modular time (`β = 0`), the joint-kernel condition holds identically.
+-/
+@[simp] lemma jointKernelOnOmega_beta_zero
+    (K : AlgebraEnd F)
+    (Ω : DoubledSpace F) :
+    JointKernelOnOmega (F := F) K 0 Ω := by
+  intro B
+  simp [modularShift]
+
+/--
+If the operator lane is pairwise commutative, the commutator-orthogonality
+condition holds identically on every seed vector.
+-/
+lemma commutatorOrthogonalOnOmega_of_pairwise_commute
+    (Ω : DoubledSpace F)
+    (hComm : ∀ A B : AlgebraEnd F, A * B = B * A) :
+    CommutatorOrthogonalOnOmega (F := F) Ω := by
+  intro A B
+  have hAB : A * B - B * A = 0 := sub_eq_zero.mpr (hComm A B)
+  calc
+    inner ℝ (((A * B - B * A) Ω)) Ω = inner ℝ ((0 : AlgebraEnd F) Ω) Ω := by
+      simp [hAB]
+    _ = 0 := by simp
+
+/--
+On a pairwise-commutative operator lane, modular conjugation is trivial for all
+inverse temperatures `β`.
+-/
+lemma modularShift_eq_self_of_pairwise_commute
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    (hComm : ∀ A B : AlgebraEnd F, A * B = B * A)
+    (B : AlgebraEnd F) :
+    modularShift (E := F) K β B = B := by
+  have hBK : Commute B K := by
+    exact (hComm B K)
+  have hBexp : Commute B (NormedSpace.exp (β • K)) := by
+    simpa using (hBK.smul_right β).exp_right
+  have hExpMul :
+      NormedSpace.exp (β • K) * B = B * NormedSpace.exp (β • K) := by
+    simpa using hBexp.eq.symm
+  have hExpCancel :
+      NormedSpace.exp (β • K) * NormedSpace.exp ((-β) • K) = 1 := by
+    have hCommβ : Commute (β • K) ((-β) • K) :=
+      ((Commute.refl K).smul_left β).smul_right (-β)
+    calc
+      NormedSpace.exp (β • K) * NormedSpace.exp ((-β) • K)
+          = NormedSpace.exp ((β • K) + ((-β) • K)) := by
+            rw [← NormedSpace.exp_add_of_commute hCommβ]
+      _ = 1 := by simp
+  unfold modularShift
+  calc
+    modularShift (E := F) K β B
+        = NormedSpace.exp (β • K) * B * NormedSpace.exp ((-β) • K) := rfl
+    _ = (B * NormedSpace.exp (β • K)) * NormedSpace.exp ((-β) • K) := by
+          rw [hExpMul]
+    _ = B * (NormedSpace.exp (β • K) * NormedSpace.exp ((-β) • K)) := by
+          simp [mul_assoc]
+    _ = B * 1 := by rw [hExpCancel]
+    _ = B := by simp
+
+/--
+Nonzero/zero-temperature joint-kernel derivation from pairwise commutativity.
+-/
+lemma jointKernelOnOmega_of_pairwise_commute
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    (Ω : DoubledSpace F)
+    (hComm : ∀ A B : AlgebraEnd F, A * B = B * A) :
+    JointKernelOnOmega (F := F) K β Ω := by
+  intro B
+  have hShift :
+      modularShift (E := F) K β B = B :=
+    modularShift_eq_self_of_pairwise_commute (F := F) K β hComm B
+  have hSub : modularShift (E := F) K β B - B = 0 := sub_eq_zero.mpr hShift
+  simpa using congrArg (fun T => T Ω) hSub
+
+/--
 `JointKernelOnOmega` implies the structural modular-on-`Ω` identity.
 -/
 lemma modularOnOmega_of_jointKernel
@@ -175,5 +260,37 @@ theorem omegaSeed_kms_of_jointKernel_commutator
     (F := F) (K := K) (β := β) (Ω := Ω)
     (modularOnOmega_of_jointKernel (F := F) (K := K) (β := β) (Ω := Ω) hJointKernel)
     (cyclicOnOmega_of_commutator_orthogonal (F := F) (Ω := Ω) hCommOrthogonal)
+
+/--
+Constructive any-temperature surface:
+if the operator lane is pairwise commutative, `ωSeed` satisfies KMS for any
+inverse temperature `β`.
+-/
+theorem omegaSeed_kms_of_pairwise_commute
+    (K : AlgebraEnd F)
+    (β : ℝ)
+    (Ω : DoubledSpace F)
+    (hComm : ∀ A B : AlgebraEnd F, A * B = B * A) :
+    SatisfiesKMSLike (E := F) K (omegaSeed (F := F) Ω) β := by
+  have hJoint :
+      JointKernelOnOmega (F := F) K β Ω :=
+    jointKernelOnOmega_of_pairwise_commute (F := F) K β Ω hComm
+  have hOrth :
+      CommutatorOrthogonalOnOmega (F := F) Ω :=
+    commutatorOrthogonalOnOmega_of_pairwise_commute (F := F) (Ω := Ω) hComm
+  exact omegaSeed_kms_of_jointKernel_commutator
+    (F := F) (K := K) (β := β) (Ω := Ω) hJoint hOrth
+
+/--
+Constructive zero-temperature surface:
+if the operator lane is pairwise commutative, `ωSeed` satisfies KMS at `β = 0`.
+-/
+theorem omegaSeed_kms_of_beta_zero_of_pairwise_commute
+    (K : AlgebraEnd F)
+    (Ω : DoubledSpace F)
+    (hComm : ∀ A B : AlgebraEnd F, A * B = B * A) :
+    SatisfiesKMSLike (E := F) K (omegaSeed (F := F) Ω) 0 := by
+  simpa using
+    (omegaSeed_kms_of_pairwise_commute (F := F) (K := K) (β := 0) (Ω := Ω) hComm)
 
 end InfoGeometry.Canonical.KMSSinkhornBridge

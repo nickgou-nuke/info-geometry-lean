@@ -1,5 +1,9 @@
 # mcbal Blog Local Library
 
+> Status: imported external reading library; not a maintained theorem/runbook surface.
+> Canonical entry docs: [`README.md`](../../../README.md), [`docs/README.md`](../../../docs/README.md).
+> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../../../docs/MarkdownCorpusGovernance.md).
+
 Generated from downloaded HTML snapshots in `external_refs/mcbal_blog/`.
 
 ## Posts

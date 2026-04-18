@@ -1,0 +1,67 @@
+{
+  "description": "Hard integrity gate for closure/spectral/sinkhorn frontier clusters.",
+  "forbidden_patterns": [
+    {
+      "name": "sorry_or_admit",
+      "regex": "\\b(?:sorry|admit)\\b"
+    },
+    {
+      "name": "axiom_decl",
+      "regex": "(?m)^\\s*axiom\\b"
+    },
+    {
+      "name": "postulate_decl",
+      "regex": "(?m)^\\s*postulate\\b"
+    }
+  ],
+  "clusters": {
+    "closure": {
+      "files": [
+        "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+        "lean/InfoGeometry/Canonical/ChiralOperatorConeClosure.lean",
+        "lean/InfoGeometry/Canonical/KKTCore.lean",
+        "lean/InfoGeometry/Canonical/KKTClosureSymmetry.lean",
+        "lean/InfoGeometry/Canonical/ClosureDrazinBridge.lean"
+      ],
+      "buildTargets": [
+        "InfoGeometry.Canonical.WindingOrbitClosure",
+        "InfoGeometry.Canonical.ChiralOperatorConeClosure",
+        "InfoGeometry.Canonical.KKTCore",
+        "InfoGeometry.Canonical.KKTClosureSymmetry",
+        "InfoGeometry.Canonical.ClosureDrazinBridge"
+      ]
+    },
+    "spectral_constructive": {
+      "files": [
+        "lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean",
+        "lean/InfoGeometry/Canonical/DrazinWitnessElimination.lean",
+        "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
+        "lean/InfoGeometry/Canonical/DrazinSpectralProjectorBridge.lean",
+        "lean/InfoGeometry/Canonical/DrazinSupercharge.lean"
+      ],
+      "buildTargets": [
+        "InfoGeometry.Canonical.DrazinInfiniteCore",
+        "InfoGeometry.Canonical.DrazinWitnessElimination",
+        "InfoGeometry.Canonical.DrazinSpectralBridge",
+        "InfoGeometry.Canonical.DrazinSpectralProjectorBridge",
+        "InfoGeometry.Canonical.DrazinSupercharge"
+      ]
+    },
+    "sinkhorn_defect": {
+      "files": [
+        "lean/InfoGeometry/Canonical/RelativeModularScaleShapeSplit.lean",
+        "lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean",
+        "lean/InfoGeometry/Canonical/KMSSinkhornSeedState.lean",
+        "lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean",
+        "lean/InfoGeometry/Canonical/ThermodynamicClosureTargets.lean"
+      ],
+      "buildTargets": [
+        "InfoGeometry.Canonical.RelativeModularScaleShapeSplit",
+        "InfoGeometry.Canonical.ModularKLDivergenceBridge",
+        "InfoGeometry.Canonical.KMSSinkhornSeedState",
+        "InfoGeometry.Canonical.ThermodynamicGenerator",
+        "InfoGeometry.Canonical.ThermodynamicClosureTargets"
+      ]
+    }
+  }
+}

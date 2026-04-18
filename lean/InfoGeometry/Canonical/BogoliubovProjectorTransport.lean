@@ -119,36 +119,36 @@ theorem spectralMinusProj_comp_modular_j :
 
 omit [CompleteSpace E] in
 theorem spectralPlusProj_comp_K :
-    (spectralPlusProj (E := E)).comp (modularComplexI (E := E))
-      = (modularComplexI (E := E)).comp (spectralMinusProj (E := E)) := by
+    (spectralPlusProj (E := E)).comp (InfoGeometry.Krein.clockAxis (E := E))
+      = (InfoGeometry.Krein.clockAxis (E := E)).comp (spectralMinusProj (E := E)) := by
   apply ContinuousLinearMap.ext
   intro x
   apply DoubledSpace.ext <;>
-    simp [spectralPlusProj, spectralMinusProj, TomitaTakesaki.modularComplexI,
+    simp [spectralPlusProj, spectralMinusProj,
       spectral_epsilon_apply, sub_eq_add_neg, smul_add, smul_neg]
 
 omit [CompleteSpace E] in
 theorem spectralPlusProj_comp_complex_i :
     (spectralPlusProj (E := E)).comp (complex_i (E := E))
       = (complex_i (E := E)).comp (spectralMinusProj (E := E)) := by
-  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+  simpa [TomitaTakesaki.clockAxis_eq_complex_i] using
     spectralPlusProj_comp_K (E := E)
 
 omit [CompleteSpace E] in
 theorem spectralMinusProj_comp_K :
-    (spectralMinusProj (E := E)).comp (modularComplexI (E := E))
-      = (modularComplexI (E := E)).comp (spectralPlusProj (E := E)) := by
+    (spectralMinusProj (E := E)).comp (InfoGeometry.Krein.clockAxis (E := E))
+      = (InfoGeometry.Krein.clockAxis (E := E)).comp (spectralPlusProj (E := E)) := by
   apply ContinuousLinearMap.ext
   intro x
   apply DoubledSpace.ext <;>
-    simp [spectralPlusProj, spectralMinusProj, TomitaTakesaki.modularComplexI,
+    simp [spectralPlusProj, spectralMinusProj,
       spectral_epsilon_apply, sub_eq_add_neg, smul_add, smul_neg]
 
 omit [CompleteSpace E] in
 theorem spectralMinusProj_comp_complex_i :
     (spectralMinusProj (E := E)).comp (complex_i (E := E))
       = (complex_i (E := E)).comp (spectralPlusProj (E := E)) := by
-  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+  simpa [TomitaTakesaki.clockAxis_eq_complex_i] using
     spectralMinusProj_comp_K (E := E)
 
 /-- Positive projector block of the `ε`-boost transport matrix. -/
@@ -217,7 +217,7 @@ theorem spectralPlusProj_comp_KRotation
     (t : ℝ) :
     (spectralPlusProj (E := E)).comp (KRotation (E := E) t)
       = Real.cos t • (spectralPlusProj (E := E))
-        + Real.sin t • ((modularComplexI (E := E)).comp (spectralMinusProj (E := E))) := by
+        + Real.sin t • ((InfoGeometry.Krein.clockAxis (E := E)).comp (spectralMinusProj (E := E))) := by
   rw [KRotation_eq_cos_add_sin_K (E := E) t]
   rw [ContinuousLinearMap.comp_add, ContinuousLinearMap.comp_smul, ContinuousLinearMap.comp_smul]
   have hcomp1 : (spectralPlusProj (E := E)).comp (1 : EndH) = spectralPlusProj (E := E) := by
@@ -231,7 +231,7 @@ theorem spectralMinusProj_comp_KRotation
     (t : ℝ) :
     (spectralMinusProj (E := E)).comp (KRotation (E := E) t)
       = Real.cos t • (spectralMinusProj (E := E))
-        + Real.sin t • ((modularComplexI (E := E)).comp (spectralPlusProj (E := E))) := by
+        + Real.sin t • ((InfoGeometry.Krein.clockAxis (E := E)).comp (spectralPlusProj (E := E))) := by
   rw [KRotation_eq_cos_add_sin_K (E := E) t]
   rw [ContinuousLinearMap.comp_add, ContinuousLinearMap.comp_smul, ContinuousLinearMap.comp_smul]
   have hcomp1 : (spectralMinusProj (E := E)).comp (1 : EndH) = spectralMinusProj (E := E) := by
@@ -293,31 +293,31 @@ theorem modular_j_maps_minusSheet_to_plusSheet
 omit [CompleteSpace E] in
 theorem modularComplexI_maps_plusSheet_to_minusSheet
     {u : H₂} (hu : u ∈ plusSheet (E := E)) :
-    modularComplexI (E := E) u ∈ minusSheet (E := E) := by
+    InfoGeometry.Krein.clockAxis (E := E) u ∈ minusSheet (E := E) := by
   rw [eq_plusPoint_of_mem_plusSheet (E := E) hu]
   rw [mem_minusSheet_iff_fst_eq_zero]
-  simp [plusPoint, TomitaTakesaki.modularComplexI]
+  simp [plusPoint]
 
 omit [CompleteSpace E] in
 theorem complex_i_maps_plusSheet_to_minusSheet
     {u : H₂} (hu : u ∈ plusSheet (E := E)) :
     complex_i (E := E) u ∈ minusSheet (E := E) := by
-  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+  simpa [TomitaTakesaki.clockAxis_eq_complex_i] using
     modularComplexI_maps_plusSheet_to_minusSheet (E := E) hu
 
 omit [CompleteSpace E] in
 theorem modularComplexI_maps_minusSheet_to_plusSheet
     {u : H₂} (hu : u ∈ minusSheet (E := E)) :
-    modularComplexI (E := E) u ∈ plusSheet (E := E) := by
+    InfoGeometry.Krein.clockAxis (E := E) u ∈ plusSheet (E := E) := by
   rw [eq_minusPoint_of_mem_minusSheet (E := E) hu]
   rw [mem_plusSheet_iff_snd_eq_zero]
-  simp [minusPoint, TomitaTakesaki.modularComplexI]
+  simp [minusPoint]
 
 omit [CompleteSpace E] in
 theorem complex_i_maps_minusSheet_to_plusSheet
     {u : H₂} (hu : u ∈ minusSheet (E := E)) :
     complex_i (E := E) u ∈ plusSheet (E := E) := by
-  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+  simpa [TomitaTakesaki.clockAxis_eq_complex_i] using
     modularComplexI_maps_minusSheet_to_plusSheet (E := E) hu
 
 section ModularFlow

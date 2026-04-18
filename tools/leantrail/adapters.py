@@ -445,8 +445,12 @@ def import_arango_json(path: Path) -> GraphSnapshot:
 
     nodes: list[NodeRecord] = []
     key_to_node_id: dict[str, str] = {}
+    schema_version = metadata.get("schemaVersion", 0)
+    artifact_version_default = int(schema_version) if isinstance(schema_version, int) else 0
     for row in _iter_jsonl(nodes_path):
         node_id = str(row.get("id", "")).strip()
+        if not node_id:
+            node_id = str(row.get("_key", "")).strip()
         if not node_id:
             continue
         key = str(row.get("_key", "")).strip()
@@ -454,21 +458,39 @@ def import_arango_json(path: Path) -> GraphSnapshot:
             key_to_node_id[key] = node_id
         line_raw = row.get("line")
         artifact_raw = row.get("artifact_version")
+        attrs = row.get("attrs", {}) if isinstance(row.get("attrs", {}), dict) else {}
+        # Preserve richer Lean ExprArangoExport attributes in a backward-compatible way.
+        for extra_key in (
+            "graphKind",
+            "decl",
+            "sectionTag",
+            "path",
+            "exprTag",
+            "info",
+            "doc",
+            "deBruijnIdx",
+            "shapeHash",
+            "quality",
+        ):
+            if extra_key in row and extra_key not in attrs:
+                attrs[extra_key] = row.get(extra_key)
         nodes.append(
             NodeRecord(
                 id=node_id,
-                name=str(row.get("name", node_id)),
+                name=str(row.get("name", row.get("decl", node_id))),
                 kind=str(row.get("kind", "Declaration")),
                 module=str(row.get("module", "")),
                 file=row.get("file"),
                 line=int(line_raw) if isinstance(line_raw, int) else None,
                 rep_depth=(str(row.get("rep_depth", "")).strip() or None),
-                role=(str(row.get("role", "")).strip() or None),
+                role=(str(row.get("role", row.get("graphKind", ""))).strip() or None),
                 module_family=(str(row.get("module_family", "")).strip() or None),
                 commit_sha=str(row.get("commit_sha", "unknown")),
                 toolchain=str(row.get("toolchain", "unknown")),
-                artifact_version=int(artifact_raw) if isinstance(artifact_raw, int) else 0,
-                attrs=row.get("attrs", {}) if isinstance(row.get("attrs", {}), dict) else {},
+                artifact_version=(
+                    int(artifact_raw) if isinstance(artifact_raw, int) else artifact_version_default
+                ),
+                attrs=attrs,
             )
         )
 
@@ -490,14 +512,18 @@ def import_arango_json(path: Path) -> GraphSnapshot:
             continue
 
         weight_raw = row.get("weight")
+        edge_attrs = row.get("attrs", {}) if isinstance(row.get("attrs", {}), dict) else {}
+        for extra_key in ("role", "quality", "notes", "decl", "sectionTag"):
+            if extra_key in row and extra_key not in edge_attrs:
+                edge_attrs[extra_key] = row.get(extra_key)
         edges.append(
             EdgeRecord(
                 src=src,
                 dst=dst,
                 kind=str(row.get("kind", "depends_value")),
                 weight=float(weight_raw) if isinstance(weight_raw, (int, float)) else 1.0,
-                evidence_ref=str(row.get("evidence_ref", "")),
-                attrs=row.get("attrs", {}) if isinstance(row.get("attrs", {}), dict) else {},
+                evidence_ref=str(row.get("evidence_ref", row.get("decl", ""))),
+                attrs=edge_attrs,
             )
         )
 

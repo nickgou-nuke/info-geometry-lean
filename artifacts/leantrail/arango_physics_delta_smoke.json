@@ -1,0 +1,50 @@
+{
+  "created_at": "2026-04-16T16:24:35.910871+00:00",
+  "mode": "local",
+  "center": "InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity",
+  "radius": 1,
+  "weights": {
+    "alpha": 1.0,
+    "beta": 2.0,
+    "gamma": 1.0
+  },
+  "baseline": {
+    "node_count": 97,
+    "edge_count": 142,
+    "action_sum": 115.79999999999957,
+    "dependency_count": 65,
+    "obstruction_count": 56,
+    "coherence_count": 20,
+    "surprisal": 207.79999999999956,
+    "thermal_efficiency": 0.004789272030651351,
+    "weights": {
+      "alpha": 1.0,
+      "beta": 2.0,
+      "gamma": 1.0
+    },
+    "center": "InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity",
+    "radius": 1
+  },
+  "candidate": {
+    "node_count": 97,
+    "edge_count": 142,
+    "action_sum": 115.79999999999957,
+    "dependency_count": 65,
+    "obstruction_count": 56,
+    "coherence_count": 20,
+    "surprisal": 207.79999999999956,
+    "thermal_efficiency": 0.004789272030651351,
+    "weights": {
+      "alpha": 1.0,
+      "beta": 2.0,
+      "gamma": 1.0
+    },
+    "center": "InfoGeometry.Canonical.RelativePotentialCore.relativeLogDensity",
+    "radius": 1
+  },
+  "delta": {
+    "delta_surprisal": 0.0,
+    "delta_efficiency": 0.0,
+    "improved": false
+  }
+}

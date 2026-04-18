@@ -1,0 +1,95 @@
+{
+  "packet_id": "EXT-20260418-052939",
+  "stage": "segment:enrich",
+  "timestamp": "2026-04-18T05:30:28+00:00",
+  "prompt_hash": "dc9db8a8284b9fda05ab02e7a64304a2fd7ba3768a47bdba521311edaf702dbf",
+  "command": [
+    "tools/infra/injection_enrich_segment.py",
+    "EXT-20260418-052939",
+    "--segment-id",
+    "S3",
+    "--claim",
+    "Repo leverage path is to separate (a) approximation-class owner contracts from (b) symmetry/chirality invariance contracts, then connect them through certified readouts and benchmark obligations rather than rhetorical theorem names.",
+    "--inference-flag",
+    "inference:repo-mapping",
+    "--evidence-url",
+    "https://arxiv.org/abs/2408.10205",
+    "--evidence-summary",
+    "KAN 2.0 emphasizes science-facing tooling (feature relevance, modularity, symbolic extraction) rather than a blanket replacement claim.",
+    "--evidence-url",
+    "https://arxiv.org/abs/2409.10594",
+    "--evidence-summary",
+    "KAT isolates engineering bottlenecks (basis function, efficiency, initialization) and provides concrete mitigations.",
+    "--evidence-url",
+    "https://openai.com/index/introducing-deep-research/",
+    "--evidence-summary",
+    "Deep research supports multi-step synthesis with citations and source restriction controls (updated Feb 10, 2026).",
+    "--evidence-url",
+    "https://help.openai.com/articles/10500283",
+    "--evidence-summary",
+    "Operational guidance for deep research plans, source controls, connectors, and report outputs.",
+    "--mark-creative-complete",
+    "--mark-verification-complete"
+  ],
+  "runtime": {
+    "python": "3.10.12 (main, Mar  3 2026, 11:56:32) [GCC 11.4.0]",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
+    "env_models": {
+      "HERMES_MODEL": "",
+      "OPENAI_MODEL": "",
+      "GEMINI_MODEL": "",
+      "LLM_MODEL": ""
+    },
+    "versions": {
+      "git_rev_parse": {
+        "cmd": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "exit": 0,
+        "stdout": "bf4e18faf86984df67e82744e74c2ea345b7ea54",
+        "stderr": ""
+      },
+      "git_describe": {
+        "cmd": [
+          "git",
+          "describe",
+          "--always",
+          "--dirty"
+        ],
+        "exit": 0,
+        "stdout": "bf4e18f-dirty",
+        "stderr": ""
+      },
+      "lake_version": {
+        "cmd": [
+          "lake",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lake version 5.0.0-src+7e01a1b (Lean version 4.28.0)",
+        "stderr": ""
+      },
+      "lean_version": {
+        "cmd": [
+          "lean",
+          "--version"
+        ],
+        "exit": 0,
+        "stdout": "Lean (version 4.28.0, x86_64-unknown-linux-gnu, commit 7e01a1bf5c70fc6167d49c345d3bf80596e9a79b, Release)",
+        "stderr": ""
+      }
+    }
+  },
+  "result": {
+    "ok": true,
+    "segment_id": "S3"
+  },
+  "extra": {
+    "lock_wait_sec": 4.113004251848906e-06,
+    "mark_creative_complete": true,
+    "mark_verification_complete": true,
+    "evidence_count": 4
+  }
+}

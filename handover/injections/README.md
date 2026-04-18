@@ -1,5 +1,9 @@
 # Knowledge Injection Subsystem
 
+> Status: subsystem-local runbook; canonical repo policy still routes through root/docs entry surfaces.
+> Canonical docs: [`docs/README.md`](../../docs/README.md), [`tools/infra/README.md`](../../tools/infra/README.md).
+> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../../docs/MarkdownCorpusGovernance.md).
+
 This subsystem keeps the repo open to external input while preserving owner discipline.
 
 ## Lanes
@@ -113,6 +117,11 @@ Build reviewer-ready digest from a packet:
 python3 tools/infra/injection_build_digest.py <PACKET_ID> --update-packet
 ```
 
+Recent digests:
+- [digests/EXT-20260414-BLACKBOOK-61-SPECTRAL-WEIGHTED.md](digests/EXT-20260414-BLACKBOOK-61-SPECTRAL-WEIGHTED.md)
+- [digests/EXT-20260418-052939.md](digests/EXT-20260418-052939.md)
+- [digests/EXT-20260418-054025.md](digests/EXT-20260418-054025.md)
+
 ## Policy
 - Gemini can create/distill hypotheses.
 - Gemini can run creative segment expansion before verification.
@@ -134,4 +143,3 @@ python3 tools/infra/injection_build_digest.py <PACKET_ID> --update-packet
 ## Current Codebase Status
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
-

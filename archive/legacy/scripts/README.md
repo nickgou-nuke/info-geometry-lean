@@ -1,5 +1,9 @@
 # Archived Legacy Scripts
 
+> Status: legacy compatibility notes; do not treat as active tooling contracts.
+> Canonical infra docs: [`tools/infra/README.md`](../../../tools/infra/README.md), [`docs/README.md`](../../../docs/README.md).
+> Markdown governance: [`docs/MarkdownCorpusGovernance.md`](../../../docs/MarkdownCorpusGovernance.md).
+
 These scripts were removed from the active `scripts` CLI and the maintained
 documentation/build pipeline. They are kept only for archaeology, one-off
 conversions, or historical comparison work.
@@ -40,4 +44,3 @@ Practical rule:
 ## Current Codebase Status
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../../docs/CODEBASE_STATUS.md](../../../docs/CODEBASE_STATUS.md) for the current build/audit state.
-

@@ -119,18 +119,29 @@ theorem DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_generalized
   rfl
 
 /--
+Constructive spectral bridge:
+from isolation at `0` plus finite ascent/descent, recover a Drazin witness.
+-/
+@[rep_depth operator]
+theorem exists_drazinInverse_of_zeroIsolatedInSpectrum_finiteAscentDescent
+    (_h : ZeroIsolatedInSpectrum T)
+    (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap) :
+    ∃ k TD, Drazin.IsDrazinInverse T.toLinearMap TD k := by
+  exact
+    InfoGeometry.Canonical.DrazinInfiniteCore.exists_drazinInverse_of_finiteAscentDescent_constructive
+      (T := T.toLinearMap) hFinite
+
+/--
 The bundled spectral bridge package carries a canonical Drazin witness.
 -/
 @[rep_depth operator]
 theorem exists_drazinInverse_of_zeroIsolatedInSpectrum_package
     (h : ZeroIsolatedInSpectrum T)
     (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap)
-    (hClassical : HasClassicalRieszDecompositionAtZero T)
-    (hGeneralized : HasGeneralizedRieszDecompositionAtZero T) :
+    (_hClassical : HasClassicalRieszDecompositionAtZero T)
+    (_hGeneralized : HasGeneralizedRieszDecompositionAtZero T) :
     ∃ k TD, Drazin.IsDrazinInverse T.toLinearMap TD k := by
-  exact
-    InfoGeometry.Canonical.DrazinInfiniteCore.exists_drazinInverse_of_finiteAscentDescent
-      (T := T.toLinearMap)
-      (DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum (T := T) h hFinite hClassical hGeneralized).finite_ascent_descent
+  exact exists_drazinInverse_of_zeroIsolatedInSpectrum_finiteAscentDescent
+    (T := T) h hFinite
 
 end InfoGeometry.Canonical.DrazinSpectralBridge

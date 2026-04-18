@@ -184,12 +184,44 @@ noncomputable abbrev modularSignEpsilon : DoubledSpace E →L[ℝ] DoubledSpace 
 @[simp] lemma modularSignEpsilon_eq_spectral_epsilon :
     modularSignEpsilon (E := E) = spectral_epsilon (E := E) := rfl
 
-/-- Composite `Jε`, the split-complex structure axis. -/
+/-- Composite `Jε`, the real Hestenes rotation axis on doubled space. -/
+noncomputable abbrev clockAxis : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  (modularConjugationJ (E := E)).comp (modularSignEpsilon (E := E))
+
+/-- Canonical split identity: `clockAxis = J ∘ ε`. -/
+lemma clockAxis_eq_modular_j_comp_spectral_epsilon :
+    clockAxis (E := E)
+      = (modular_j (E := E)).comp (spectral_epsilon (E := E)) := by
+  rfl
+
+/-- Canonical phase-axis name used on transport lanes. -/
+noncomputable abbrev phaseAxisK : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  clockAxis (E := E)
+
+lemma phaseAxisK_eq_clockAxis :
+    phaseAxisK (E := E) = clockAxis (E := E) := rfl
+
+/-- Legacy alias kept for API compatibility. -/
 noncomputable abbrev modularComplexI : DoubledSpace E →L[ℝ] DoubledSpace E :=
-  complex_i (E := E)
+  clockAxis (E := E)
+
+lemma modularComplexI_eq_clockAxis :
+    modularComplexI (E := E) = clockAxis (E := E) := rfl
 
 @[simp] lemma modularComplexI_eq_complex_i :
-    modularComplexI (E := E) = complex_i (E := E) := rfl
+    modularComplexI (E := E) = complex_i (E := E) := by
+  ext u <;> simp [modularComplexI, clockAxis, modularConjugationJ, modularSignEpsilon,
+    complex_i, modular_j, spectral_epsilon]
+
+@[simp] lemma modularComplexI_apply_eq_complex_i (u : DoubledSpace E) :
+    modularComplexI (E := E) u = complex_i (E := E) u := by
+  simpa using congrArg (fun F : DoubledSpace E →L[ℝ] DoubledSpace E => F u)
+    (modularComplexI_eq_complex_i (E := E))
+
+lemma clockAxis_eq_complex_i :
+    clockAxis (E := E) = complex_i (E := E) := by
+  simpa [modularComplexI_eq_clockAxis] using
+    (modularComplexI_eq_complex_i (E := E))
 
 /--
 Legacy/Clifford compatibility: the modular complex axis `Jε` coincides with the
@@ -199,6 +231,11 @@ lemma modularComplexI_eq_dilationOperator :
     modularComplexI (E := E) = dilationOperator (E := E) := by
   rw [modularComplexI]
   exact (dilationOperator_eq_complex_i (E := E)).symm
+
+lemma clockAxis_eq_dilationOperator :
+    clockAxis (E := E) = dilationOperator (E := E) := by
+  simpa [modularComplexI_eq_clockAxis] using
+    (modularComplexI_eq_dilationOperator (E := E))
 
 @[simp] lemma modularConjugationJ_sq :
     (modularConjugationJ (E := E)).comp (modularConjugationJ (E := E))
@@ -216,10 +253,17 @@ lemma modularConjugationJ_anticommutes_modularSign :
       = -((modularSignEpsilon (E := E)).comp (modularConjugationJ (E := E))) :=
   modular_j_spectral_epsilon_anticommute (E := E)
 
+@[simp] lemma clockAxis_sq :
+    (clockAxis (E := E)).comp (clockAxis (E := E))
+      = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+  simpa [clockAxis, modularConjugationJ, modularSignEpsilon,
+    InvolutiveSelfDualCarrier.K, doubledCarrier] using
+      (InvolutiveSelfDualCarrier.K_sq (X := doubledCarrier (E := E)))
+
 @[simp] lemma modularComplexI_sq :
     (modularComplexI (E := E)).comp (modularComplexI (E := E))
-      = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) :=
-  complex_i_sq (E := E)
+      = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+  simpa [modularComplexI] using (clockAxis_sq (E := E))
 
 /-- `J` anticommutes with the internal phase axis `Jε`. -/
 lemma modularConjugationJ_anticommutes_modularComplexI :
@@ -258,6 +302,16 @@ lemma modularComplexI_kreinInner_swap
   simp [modularComplexI, sub_eq_add_neg, real_inner_comm]
   abel
 
+lemma clockAxis_kreinInner_swap
+    (u v : DoubledSpace E) :
+    KreinSpace.kreinInner (H := DoubledSpace E)
+        ((clockAxis (E := E)) u) v
+      =
+    KreinSpace.kreinInner (H := DoubledSpace E)
+        u ((clockAxis (E := E)) v) := by
+  simpa [modularComplexI_eq_clockAxis] using
+    modularComplexI_kreinInner_swap (E := E) u v
+
 /-- The modular complex axis squares to `-1` inside the doubled Krein pairing. -/
 lemma modularComplexI_kreinInner_comp
     (u v : DoubledSpace E) :
@@ -284,6 +338,16 @@ lemma modularComplexI_kreinInner_comp
             (KreinSpace.kreinInner_smul_right
               (H := DoubledSpace E) (-1) u v)
 
+lemma clockAxis_kreinInner_comp
+    (u v : DoubledSpace E) :
+    KreinSpace.kreinInner (H := DoubledSpace E)
+        ((clockAxis (E := E)) u)
+        ((clockAxis (E := E)) v)
+      =
+    -KreinSpace.kreinInner (H := DoubledSpace E) u v := by
+  simpa [modularComplexI_eq_clockAxis] using
+    modularComplexI_kreinInner_comp (E := E) u v
+
 /--
 On the positive doubled-space Hilbert metric, the modular complex axis `K = Jε`
 is skew:
@@ -297,6 +361,14 @@ lemma modularComplexI_inner_skew
   repeat rw [WithLp.prod_inner_apply]
   repeat rw [WithLp.ofLp_fst, WithLp.ofLp_snd]
   simp [modularComplexI, real_inner_comm]
+
+lemma clockAxis_inner_skew
+    (u v : DoubledSpace E) :
+    ⟪clockAxis (E := E) u, v⟫_ℝ
+      =
+    -⟪u, clockAxis (E := E) v⟫_ℝ := by
+  simpa [modularComplexI_eq_clockAxis] using
+    modularComplexI_inner_skew (E := E) u v
 
 lemma complex_i_inner_skew
     (u v : DoubledSpace E) :
@@ -322,6 +394,14 @@ lemma modularComplexI_inner_comp
           rw [modularComplexI_inner_skew]
     _ = -⟪u, -v⟫_ℝ := by rw [hK2]
     _ = ⟪u, v⟫_ℝ := by simp
+
+lemma clockAxis_inner_comp
+    (u v : DoubledSpace E) :
+    ⟪clockAxis (E := E) u, clockAxis (E := E) v⟫_ℝ
+      =
+    ⟪u, v⟫_ℝ := by
+  simpa [modularComplexI_eq_clockAxis] using
+    modularComplexI_inner_comp (E := E) u v
 
 lemma complex_i_inner_comp
     (u v : DoubledSpace E) :

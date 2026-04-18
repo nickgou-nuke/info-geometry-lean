@@ -25,7 +25,10 @@ import InfoGeometry.Canonical.ActionDuality
 import InfoGeometry.Canonical.AnomalyInflow
 import InfoGeometry.Canonical.AnomalyGauge
 import InfoGeometry.Canonical.ArnoldMajoranaNetwork
+import InfoGeometry.Canonical.ArnoldApproximationCore
+import InfoGeometry.Canonical.NeuralOperatorCore
 import InfoGeometry.Canonical.ArnoldNetworkPresentation
+import InfoGeometry.Canonical.NavierStokesNeuralOperatorBridge
 import InfoGeometry.Canonical.Attention
 import InfoGeometry.Canonical.AttentionDiracBridge
 import InfoGeometry.Canonical.AttentionEuclidean
@@ -39,6 +42,7 @@ import InfoGeometry.Canonical.BregmanTriality
 import InfoGeometry.Canonical.CartanDecomposition
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.ChiralAnomaly
+import InfoGeometry.Canonical.ChiralOperatorConeClosure
 import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.ChiralGravity
 import InfoGeometry.Canonical.ChiralRGFlow
@@ -70,6 +74,8 @@ import InfoGeometry.Canonical.Determinant
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinExistenceBridge
 import InfoGeometry.Canonical.DrazinInfiniteCore
+import InfoGeometry.Canonical.DrazinWeylConstructive
+import InfoGeometry.Canonical.ClosureDrazinBridge
 import InfoGeometry.Canonical.DrazinWitnessElimination
 import InfoGeometry.Canonical.DrazinKreinCompatibility
 import InfoGeometry.Canonical.DrazinFredholmBridge
@@ -120,6 +126,7 @@ import InfoGeometry.Canonical.GenerativeInferenceCore
 import InfoGeometry.Canonical.PhysicsOfInformationCore
 import InfoGeometry.Canonical.GrandUnification
 import InfoGeometry.Canonical.GrandUnificationMetric
+import InfoGeometry.Canonical.GrandCanonicalGaussianScaleShape
 import InfoGeometry.Canonical.HeatKernel
 import InfoGeometry.Canonical.IB
 import InfoGeometry.Canonical.InformationNumber
@@ -167,6 +174,10 @@ import InfoGeometry.Canonical.KLinearRepresentation
 import InfoGeometry.Canonical.PolarizedMadelungBridge
 import InfoGeometry.Canonical.BohmMadelungOperatorialBridge
 import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Canonical.BogoliubovWeightedKMSCertification
+import InfoGeometry.Canonical.BogoliubovOptimalTransport
+import InfoGeometry.Canonical.PositiveMeasureSpectrum
+import InfoGeometry.Canonical.UhlmannBuresHolonomy
 import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.BogoliubovProjectorTransport
 import InfoGeometry.Canonical.BogoliubovProjectorFlux
@@ -229,6 +240,7 @@ import InfoGeometry.Canonical.PhaseVolumeDynamics
 import InfoGeometry.Canonical.VariationalLadder
 import InfoGeometry.Canonical.TopologicalResidue
 import InfoGeometry.Canonical.OnsagerReciprocity
+import InfoGeometry.Canonical.OnsagerSinkhornOperatorLift
 import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.Canonical.CentralChargeAnomaly
 import InfoGeometry.Canonical.OperatorialCramerRao
@@ -262,6 +274,8 @@ import InfoGeometry.Canonical.RelativeModularPolarizedBridge
 import InfoGeometry.Canonical.RelativeModularProjectiveBridge
 import InfoGeometry.Canonical.ModularKLDivergenceBridge
 import InfoGeometry.Canonical.RelativeModularScaleShapeSplit
+import InfoGeometry.Canonical.ThermodynamicClosureTargets
+import InfoGeometry.Canonical.OddDefectFunctional
 import InfoGeometry.Canonical.GlobalChiralDecomposition
 import InfoGeometry.Canonical.SingularDecompositionSurrogate
 import InfoGeometry.Canonical.CapstoneSemanticAudit

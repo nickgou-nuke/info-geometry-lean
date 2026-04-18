@@ -7,6 +7,8 @@ import InfoGeometry.Core.Involution
 import InfoGeometry.Core.Jordan
 import InfoGeometry.Core.ProjectiveSimplex
 import InfoGeometry.Core.SymmetricLie
+import InfoGeometry.Core.SymmetricLieMetric
+import InfoGeometry.Core.CartanPhaseAxisForcing
 import InfoGeometry.Core.SymmetricLieGeneric
 import InfoGeometry.Core.SymmetricLieSpaces
 import InfoGeometry.Core.SymmetricSpaces

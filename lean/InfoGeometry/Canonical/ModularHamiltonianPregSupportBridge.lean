@@ -47,6 +47,31 @@ theorem log_defined_on_Preg
   c.logDomain
 
 /--
+Equivalent regular-lane form of the same certificate:
+the logarithm is admitted on `Δreg = Preg Δ Preg`.
+-/
+@[rep_depth operator]
+theorem log_defined_on_Δreg
+    (c : CertifiedModularReduction (E := H₂)) :
+    c.logAdmissible c.Δreg := by
+  simpa [CertifiedModularReduction.Δreg, CertifiedModularReduction.Preg] using
+    (log_defined_on_Preg (V := V) c)
+
+/--
+Regular-lane spectral positivity implies the same `Preg` log-domain certificate,
+provided by the analytic bridge law encoded in `CertifiedModularReduction`.
+-/
+@[rep_depth operator]
+theorem log_defined_on_Preg_of_regularSpectrumPositive
+    (c : CertifiedModularReduction (E := H₂))
+    (hPos : CertifiedModularReduction.RegularSpectrumPositive (c := c)) :
+    c.logAdmissible
+      (compress (CertifiedModularReduction.Preg c) c.Δ) := by
+  simpa [CertifiedModularReduction.Δreg, CertifiedModularReduction.Preg] using
+    (CertifiedModularReduction.log_defined_on_Δreg_of_regularSpectrumPositive
+      (c := c) hPos)
+
+/--
 Explicit support-restricted modular generator:
 `K := -log (Preg Δ)` in certified lane form.
 -/

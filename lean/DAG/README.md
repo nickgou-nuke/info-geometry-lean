@@ -59,6 +59,7 @@ It remains subordinate to Lean source:
 | `SkeletonExport.lean` | `skeleton.json` | Vulnerability-ranked theorem skeleton (`SkeletonRow`: name, vulSrcs, vulPaths) |
 | `StructuralExport.lean` | `structural-topology.json` | SCC-level metadata: depth spread, dominators, root witnesses, layer membership |
 | `ProcessFlowExport.lean` | `process-flow/*.jsonl` | Rich v4 schema: 8 dependency roles, boundary/locality/polarity/defect classifications, `DerivationalRole`; writes the constitutive process-flow export consumed by downstream Python derivations |
+| `ExprArangoExport.lean` | `ig_nodes.jsonl`, `ig_edges.jsonl`, `metadata.json` | Expression-level Arango export (declarations + Expr DAG) with De Bruijn `bvar` annotations and explicit `bound_by` edges; tolerates unresolved binders by marking records as `quality="broken"` |
 | `BlockExport.lean` | block-level JSON | File slicing: `Block` (text span, produced decls, deps, spine tags, tactics, docstrings) with `ScopeFrame` nesting |
 | `RepresentationDepthExport.lean` | `representation-depth-tags.json` | Lean-enforced depth grammar tags projected onto the declaration DAG |
 | `RootOrderExport.lean` | root-order JSON | True root ordering for causal reports |
@@ -155,6 +156,37 @@ The downstream Python report step then derives:
 - `artifacts/dag/process-flow/flow-cocycles.jsonl`
 - `artifacts/dag/process-flow/comparison-candidates.jsonl`
 
+The direct Arango expression graph is exported with:
+
+```bash
+lake env lean --run lean/DAG/ExprArangoExport.lean DAG.Basic DAG artifacts/expr-graph/arango-smoke 50 true
+```
+
+For the full repo namespace surface:
+
+```bash
+lake env lean --run lean/DAG/ExprArangoExport.lean InfoGeometry.Audit InfoGeometry artifacts/expr-graph/arango 0 true
+```
+
+Then ingest to Arango:
+
+```bash
+python3 tools/leantrail/arango_ingest.py \
+  --input-dir artifacts/expr-graph/arango \
+  --database infogeometry \
+  --nodes-collection ig_nodes \
+  --edges-collection ig_edges \
+  --drop-existing
+```
+
+`ExprArangoExport` writes one node collection (`ig_nodes`) and one edge collection (`ig_edges`), with:
+- decl nodes (`graphKind="decl"`)
+- expr nodes (`graphKind="expr"`, `exprTag`, `deBruijnIdx`)
+- structural edges (`kind="ast"`, `role=fn|arg|type|body|value|expr`)
+- binding edges (`kind="bind"`, `role="bound_by"`)
+- declaration root edges (`kind="decl_root"`)
+- constant reference edges (`kind="const_ref"`)
+
 ## Processing Pipeline
 
 ```
@@ -219,4 +251,3 @@ Do not use a single hotspot heuristic as the whole theory map.
 ## Current Codebase Status
 
 Status pointer refreshed: 2026-04-16 (Europe/Sofia). See [../../docs/CODEBASE_STATUS.md](../../docs/CODEBASE_STATUS.md) for the current build/audit state.
-

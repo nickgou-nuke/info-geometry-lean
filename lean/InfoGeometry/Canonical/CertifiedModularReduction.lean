@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Canonical.InverseKernelAlgebra
 import InfoGeometry.Canonical.InverseKernelNormalForm
 import InfoGeometry.Canonical.DrazinKreinCompatibility
+import Mathlib.Analysis.Normed.Algebra.Spectrum
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -67,6 +68,9 @@ structure CertifiedModularReduction where
   -- spectral lane
   hPreg_commutes_Δ : Commute cik.spectralProjector Δ
   logDomain : logAdmissible (compress cik.spectralProjector Δ)
+  hRegularSpectrumPositive_to_logDomain :
+    spectrum ℝ (compress cik.spectralProjector Δ) ⊆ Set.Ioi (0 : ℝ) →
+      logAdmissible (compress cik.spectralProjector Δ)
   noLogOnDefect : ¬ logAdmissible (compress cik.spectralComplementaryProjector Δ)
 
   -- carrier lane
@@ -154,6 +158,34 @@ theorem Preg_commutes :
     Commute (Preg c) c.Δ :=
   c.hPreg_commutes_Δ
 
+/--
+Functional-calculus readiness on the regular Drazin lane:
+the logarithm domain certificate is available on `Δreg = Preg Δ Preg`.
+-/
+@[rep_depth operator]
+theorem log_defined_on_Δreg :
+    c.logAdmissible (Δreg c) := by
+  simpa [Δreg, Preg] using c.logDomain
+
+/--
+Owner surface for regular-lane spectral positivity:
+the spectrum of `Δreg` lies on the positive real axis.
+-/
+@[rep_depth operator]
+def RegularSpectrumPositive : Prop :=
+  spectrum ℝ (Δreg c) ⊆ Set.Ioi (0 : ℝ)
+
+/--
+Functional-calculus bridge law (owner form):
+if regular-lane spectral positivity implies log-admissibility for this analytic
+hook, then `Δreg` is log-admissible.
+-/
+@[rep_depth operator]
+theorem log_defined_on_Δreg_of_regularSpectrumPositive
+    (hPos : RegularSpectrumPositive c) :
+    c.logAdmissible (Δreg c) := by
+  simpa [Δreg, Preg] using c.hRegularSpectrumPositive_to_logDomain hPos
+
 /-- `Kambient` is supported on `Preg` on both sides. -/
 @[rep_depth operator]
 theorem Kambient_supported_on_Preg :
@@ -195,6 +227,93 @@ Named canonical surface for anomaly/support alignment:
 theorem anomaly_vanishes_iff_alignment :
     anomaly c = 0 ↔ SpectralMetricAlignment c :=
   anomaly_zero_iff_alignment (c := c)
+
+/--
+Under spectral/metric alignment, the defect projector commutes with the chosen
+metric projector.
+-/
+@[rep_depth operator]
+theorem Pzero_commutes_Pmetric_of_alignment
+    (hAlign : SpectralMetricAlignment c) :
+    Commute (Pzero c) (Pmetric c) := by
+  have hPzero :
+      Pzero c = (1 : EndH) - Preg c := by
+    simp [Pzero, Preg, CertifiedInverseKernel.spectralComplementaryProjector,
+      CertifiedInverseKernel.toInverseKernel', InverseKernel.spectralComplementaryProjector]
+  exact
+    calc
+      Pzero c * Pmetric c
+          = ((1 : EndH) - Preg c) * Pmetric c := by rw [hPzero]
+      _ = Pmetric c - Preg c * Pmetric c := by simp [sub_mul]
+      _ = Pmetric c - Pmetric c * Preg c := by rw [hAlign.eq]
+      _ = Pmetric c * ((1 : EndH) - Preg c) := by simp [mul_sub]
+      _ = Pmetric c * Pzero c := by rw [hPzero]
+
+/--
+Anomaly-closure law for the physical generator lane:
+if `χ = 0` (alignment), then the metric-compressed generator has no defect
+leakage across `Pzero`.
+-/
+@[rep_depth operator]
+theorem Kphys_kills_Pzero_of_alignment
+    (hχ : anomaly c = 0) :
+    Pzero c * Kphys c = 0 ∧ Kphys c * Pzero c = 0 := by
+  have hAlign : SpectralMetricAlignment c :=
+    (anomaly_vanishes_iff_alignment (c := c)).mp hχ
+  have hP0Pmetric : Commute (Pzero c) (Pmetric c) :=
+    Pzero_commutes_Pmetric_of_alignment (c := c) hAlign
+  have hKill : Pzero c * Kambient c = 0 ∧ Kambient c * Pzero c = 0 :=
+    Kambient_kills_Pzero (c := c)
+  constructor
+  · calc
+      Pzero c * Kphys c
+          = Pzero c * (Pmetric c * Kambient c * Pmetric c) := by
+              rfl
+      _ = (Pzero c * Pmetric c) * Kambient c * Pmetric c := by simp [mul_assoc]
+      _ = (Pmetric c * Pzero c) * Kambient c * Pmetric c := by
+            rw [hP0Pmetric.eq]
+      _ = Pmetric c * (Pzero c * Kambient c) * Pmetric c := by simp [mul_assoc]
+      _ = 0 := by simp [hKill.1]
+  · calc
+      Kphys c * Pzero c
+          = (Pmetric c * Kambient c * Pmetric c) * Pzero c := by
+              rfl
+      _ = Pmetric c * Kambient c * (Pmetric c * Pzero c) := by simp [mul_assoc]
+      _ = Pmetric c * Kambient c * (Pzero c * Pmetric c) := by
+            rw [hP0Pmetric.eq]
+      _ = Pmetric c * (Kambient c * Pzero c) * Pmetric c := by simp [mul_assoc]
+      _ = 0 := by simp [hKill.2]
+
+/-- Flat/inertial regular lane: anomaly is cancelled. -/
+@[rep_depth operator]
+def InertialRegularLane : Prop := anomaly c = 0
+
+/-- Curved regular lane: anomaly is not cancelled. -/
+@[rep_depth operator]
+def CurvedRegularLane : Prop := anomaly c ≠ 0
+
+/-- Inertial lane is exactly spectral/metric alignment. -/
+@[rep_depth operator]
+theorem inertial_regular_lane_iff_alignment :
+    InertialRegularLane c ↔ SpectralMetricAlignment c :=
+  anomaly_vanishes_iff_alignment (c := c)
+
+/-- Curved lane is exactly failure of spectral/metric alignment. -/
+@[rep_depth operator]
+theorem curved_regular_lane_iff_non_alignment :
+    CurvedRegularLane c ↔ ¬ SpectralMetricAlignment c := by
+  constructor
+  · intro hCurved hAlign
+    exact hCurved ((anomaly_vanishes_iff_alignment (c := c)).2 hAlign)
+  · intro hNonAlign hZero
+    exact hNonAlign ((anomaly_vanishes_iff_alignment (c := c)).1 hZero)
+
+/-- Inertial-lane form of the no-defect-leakage law for `Kphys`. -/
+@[rep_depth operator]
+theorem Kphys_kills_Pzero_of_inertial_regular_lane
+    (hInertial : InertialRegularLane c) :
+    Pzero c * Kphys c = 0 ∧ Kphys c * Pzero c = 0 :=
+  Kphys_kills_Pzero_of_alignment (c := c) hInertial
 
 end CertifiedModularReduction
 

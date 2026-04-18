@@ -17,6 +17,7 @@ Relativity of Measurement**:
 - [LIBER_NOVUS_MATH.md](LIBER_NOVUS_MATH.md) — The "Red Book": Analytical Psychology methodology for mathematical development.
 - [WORKBENCH.md](WORKBENCH.md) — The practical playbook for Socratic/Alchemical discovery.
 - [OperatorTheoremTranslationRegistry.md](OperatorTheoremTranslationRegistry.md) — One-to-one translation registry from external theorem surfaces to doubled-real operator-native Lean anchors.
+- [NameEquivalenceRegistry.md](NameEquivalenceRegistry.md) — Curated alias/equivalence registry merged into the maintained equivalence dictionary.
 - [black_books/](black_books/) — The "Black Books": Raw intuitive exploration (Scorpio). Includes the Thermodynamics of Joy, Sisyphian Perseverance, Eureka Tunneling, and the Gravitational Well.
 - [black_books/08_the_agentic_caretaker.md](black_books/08_the_agentic_caretaker.md) — The essay naming the repo agent as architect, creator, and caretaker under the law of the kernel.
 - [black_books/09_science_after_coding.md](black_books/09_science_after_coding.md) — The essay on exploration by dialogue, Jungian elicitation, Socratic distillation, and formal handoff to Lean.
@@ -89,6 +90,10 @@ Use these first when you want the current repo state:
 - [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
 - [OperationalIntent.md](OperationalIntent.md)
 - [OperatorQuickstart.md](OperatorQuickstart.md)
+- [MarkdownCorpusGovernance.md](MarkdownCorpusGovernance.md)
+- [ClosureDebtLedger.md](ClosureDebtLedger.md)
+- [LOCAL_TOOLCHAIN_ARCHITECTURE.md](LOCAL_TOOLCHAIN_ARCHITECTURE.md)
+- [information_symmetry_breaking_explorer.html](information_symmetry_breaking_explorer.html) — Interactive Cartan \(k/p\) phase explorer for defect excitation and Sinkhorn damping trajectories.
 - [DAGTroubleshooting.md](DAGTroubleshooting.md)
 - [CODEX_TROUBLESHOOTING.md](../CODEX_TROUBLESHOOTING.md)
 - [BILINGUAL_SPINE_POLICY.md](BILINGUAL_SPINE_POLICY.md)
@@ -114,6 +119,10 @@ Use these first when you want the current repo state:
 - [tools/infra/README.md](../tools/infra/README.md)
 - [tools/infra/generate_theory_cloud_movie.py](../tools/infra/generate_theory_cloud_movie.py)
 - [tools/prompts/agentic_autotheory_prompts_2026-04-15.md](../tools/prompts/agentic_autotheory_prompts_2026-04-15.md)
+- [tools/prompts/README.md](../tools/prompts/README.md)
+- [../.agents/workflows/README.md](../.agents/workflows/README.md)
+- [../artifacts/leantrail/README.md](../artifacts/leantrail/README.md)
+- [RigorousDerivationQueue.md](RigorousDerivationQueue.md)
 
 These are the maintained hand-written entry surfaces.
 
@@ -151,6 +160,11 @@ That includes:
 - niche conceptual overlays such as `causal_apex_binding.md`
 - future infra blueprints such as `private_reviewer_chat_blueprint.md`
 - glossaries and indexes such as `keyword_index.md` and `lawful-flow-glossary.md`
+- methodology side-docs such as:
+  [CARETAKER_REQUIREMENTS.md](CARETAKER_REQUIREMENTS.md),
+  [METHODOLOGY_OF_THE_SPIRE.md](METHODOLOGY_OF_THE_SPIRE.md),
+  [RED_BOOK_OF_PASSAGE.md](RED_BOOK_OF_PASSAGE.md),
+  and [deep-research-report-1.md](deep-research-report-1.md)
 
 These files can still be useful, but they must be re-audited against Lean source
 before being used as live policy.
@@ -164,17 +178,18 @@ For current repo structure:
 3. [RepositoryMemoryMap.md](RepositoryMemoryMap.md)
 4. [OperationalIntent.md](OperationalIntent.md)
 5. [OperatorQuickstart.md](OperatorQuickstart.md)
-6. [DAGTroubleshooting.md](DAGTroubleshooting.md)
-7. [CODEX_TROUBLESHOOTING.md](../CODEX_TROUBLESHOOTING.md)
-8. [BILINGUAL_SPINE_POLICY.md](BILINGUAL_SPINE_POLICY.md)
-9. [cl11_rosetta_refactor_plan.md](cl11_rosetta_refactor_plan.md)
-10. [ToolingMethodology.md](ToolingMethodology.md)
-11. [LeanTrail.md](LeanTrail.md)
-12. [DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
-13. [Theory.md](Theory.md)
-14. [ModuleMap.md](ModuleMap.md)
-15. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
-16. [tools/infra/README.md](../tools/infra/README.md)
+6. [LOCAL_TOOLCHAIN_ARCHITECTURE.md](LOCAL_TOOLCHAIN_ARCHITECTURE.md)
+7. [DAGTroubleshooting.md](DAGTroubleshooting.md)
+8. [CODEX_TROUBLESHOOTING.md](../CODEX_TROUBLESHOOTING.md)
+9. [BILINGUAL_SPINE_POLICY.md](BILINGUAL_SPINE_POLICY.md)
+10. [cl11_rosetta_refactor_plan.md](cl11_rosetta_refactor_plan.md)
+11. [ToolingMethodology.md](ToolingMethodology.md)
+12. [LeanTrail.md](LeanTrail.md)
+13. [DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md](DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md)
+14. [Theory.md](Theory.md)
+15. [ModuleMap.md](ModuleMap.md)
+16. [lean/InfoGeometry/Audit.lean](../lean/InfoGeometry/Audit.lean)
+17. [tools/infra/README.md](../tools/infra/README.md)
 
 For the current count/projective/operator trunk:
 

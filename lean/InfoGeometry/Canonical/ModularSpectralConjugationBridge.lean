@@ -165,9 +165,14 @@ theorem clockAxis_eq_modular_j_mul_modularSign :
       =
     (modular_j (E := E))
       * InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E) := by
-  ext x <;>
-    simp [modularComplexI_eq_complex_i, ContinuousLinearMap.mul_def,
-      InfoGeometry.Canonical.ProjectorEquivariance.modularSign_eq_spectral_epsilon]
+  calc
+    clockAxis E
+        = (modular_j (E := E)) * (spectral_epsilon (E := E)) := by
+            unfold InfoGeometry.Canonical.WindingOrbitClosure.clockAxis
+            simp [ContinuousLinearMap.mul_def]
+    _ = (modular_j (E := E))
+          * InfoGeometry.Canonical.ProjectorEquivariance.modularSign (E := E) := by
+            rw [InfoGeometry.Canonical.ProjectorEquivariance.spectral_epsilon_eq_modularSign (E := E)]
 
 /--
 Projector-first specialization of the certified-kernel comparison theorem:

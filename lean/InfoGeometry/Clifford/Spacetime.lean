@@ -2,18 +2,21 @@ import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Equivs
 import Mathlib.Algebra.QuaternionBasis
 import Mathlib.LinearAlgebra.Matrix.Notation
+import InfoGeometry.Clifford.Biquaternion
+import InfoGeometry.Quantum.HestenesKahler
 import Mathlib.Tactic
 
 /-!
 # Spacetime Soldering: 4-Vectors, Quaternions, and Matrices
 
 This module formalizes the "soldering form" which identifies spacetime 4-vectors
-with elements of a quaternionic matrix algebra.
+with elements of a quaternionic matrix algebra or the operatorial Biquaternion 
+representation.
 
 For Minkowski signature (1,3), we typically use:
 * V = ℝ⁴ with q(t,x,y,z) = t² - x² - y² - z²
-* This space is soldered to Hermitian 2x2 matrices.
-* The determinant of the matrix gives the Minkowski norm.
+* This space is soldered to Biquaternionic operators on the doubled carrier.
+* The determinant (refl. operator trace/norm) gives the Minkowski norm.
 -/
 
 open scoped Matrix
@@ -21,10 +24,16 @@ open scoped Quaternion
 
 namespace InfoGeometry.Clifford.Spacetime
 
-/-- Minkowski 4-vector space. -/
+open InfoGeometry.Krein
+
+/-- 
+Standard Minkowski 4-vector space. 
+-/
+@[rep_depth projective]
 abbrev Vec13 := ℝ × (ℝ × ℝ × ℝ)
 
 /-- The Minkowski quadratic form: Q(t, x, y, z) = t² - x² - y² - z². -/
+@[rep_depth projective]
 noncomputable def minkiQ : QuadraticForm ℝ Vec13 :=
   QuadraticMap.ofPolar (fun v => v.1^2 - v.2.1^2 - v.2.2.1^2 - v.2.2.2^2)
     (fun a v => by dsimp; ring)
@@ -47,10 +56,37 @@ def sigma2_i : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; -1, 0] -- iσ₂
 def sigma3 : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
 
 /-- 
-Soldering Form: v ↦ σ(v)
-This map 'solders' a 4-vector to a matrix.
-For simplicity in this real-valued context, we use the (2,2) signature 
-representation which maps to M₂(ℝ).
+Biquaternionic Soldering Form: v ↦ Σ(v)
+This map solders a 4-vector to an operatorial Biquaternion.
+For Minkowski signature (1,3), we use the phase-axis K = Jε to manage the 
+imaginary component of the biquaternion.
+-/
+@[rep_depth operator]
+noncomputable def biquaternionSoldering (E : Type*) 
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] : 
+    Vec13 → InfoGeometry.Clifford.Biquaternion E := fun v =>
+    let t := v.1
+    let x := v.2.1
+    let y := v.2.2.1
+    let z := v.2.2.2
+    let raw : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E :=
+      t • (ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E))
+        + x • (InfoGeometry.Krein.modular_j (E := E))
+        + y • (InfoGeometry.Krein.clockAxis (E := E))
+        + z • (InfoGeometry.Krein.spectral_epsilon (E := E))
+    let op : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E :=
+      InfoGeometry.Canonical.BogoliubovTransport.phaseLinearPart (E := E) raw
+    { op := op
+    , is_k_linear := by
+        simpa [op] using
+          (InfoGeometry.Canonical.BogoliubovTransport.phaseLinearPart_isPhaseLinear
+            (E := E) raw)
+    , is_biquaternionic := by
+        refine ⟨op, 0, ?_⟩
+        simp [op] }
+
+/-- 
+Standard soldering map to real matrices for the signature (2,2) representation.
 -/
 noncomputable def soldering : Vec13 →ₗ[ℝ] Matrix (Fin 2) (Fin 2) ℝ where
   toFun v := v.1 • sigma0 + v.2.1 • sigma1 + v.2.2.1 • sigma2_i + v.2.2.2 • sigma3

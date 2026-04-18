@@ -178,6 +178,26 @@ Exit criteria:
 2. Each promoted module has at least one trunk→root path witness and one
    concrete theorem packet candidate.
 
+### W8. Not-Even-Wrong Derivation Closure
+
+Target:
+- discharge the remaining assumption-heavy junctions documented in
+  [RigorousDerivationQueue.md](RigorousDerivationQueue.md).
+
+Actions:
+1. Replace raw commutation assumption consumption in winding closure with a
+   derived symmetry-to-commutation theorem path.
+2. Add a theorem-level Drazin/Weyl compatibility bridge using the constructive
+   Riesz/Drazin package.
+3. Replace `RouterDefectBridge.residual_eq_observerDefect` assumption-only
+   usage with a limit/closure theorem-backed constructor.
+
+Exit criteria:
+1. Queue items A/B/C in `RigorousDerivationQueue.md` are marked closed with
+   theorem anchors.
+2. No new bridge theorem consumes the previous raw assumptions without a
+   derivation witness.
+
 ## Command Loop
 
 Use this minimal loop:
@@ -190,7 +210,7 @@ python3 tools/quality/functorial_invariance_audit.py --json-out reports/dag/func
 python3 tools/quality/check_translation_registry.py \
   --registry docs/OperatorTheoremTranslationRegistry.md \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.superHamiltonian_eq_modularTransportGenerator_lorentzBivectorSeed \
-  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_compatibility \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_structural \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.exists_lorentzBivectorGenerator_split_with_drazin_lane_centrality \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzChiralConeOrbit \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzWedgeOrbit \

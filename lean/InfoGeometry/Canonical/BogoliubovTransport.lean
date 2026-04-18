@@ -33,7 +33,7 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
-local notation "Kop" => modularComplexI (E := E)
+local notation "Kop" => InfoGeometry.Krein.clockAxis (E := E)
 
 noncomputable local instance : NormedRing EndH := inferInstance
 noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
@@ -47,7 +47,7 @@ noncomputable def kreinExpectation
 
 /-- Endomorphisms commuting with the doubled-space phase axis `K = Jε`. -/
 def IsPhaseLinear (A : EndH) : Prop :=
-  A.comp Kop = (modularComplexI (E := E)).comp A
+  A.comp Kop = (InfoGeometry.Krein.clockAxis (E := E)).comp A
 
 omit [CompleteSpace E] in
 theorem isPhaseLinear_iff_comp_complex_i
@@ -55,11 +55,11 @@ theorem isPhaseLinear_iff_comp_complex_i
     IsPhaseLinear (E := E) A
       ↔
     A.comp (complex_i (E := E)) = (complex_i (E := E)).comp A := by
-  rfl
+  simp [IsPhaseLinear, InfoGeometry.Krein.clockAxis]
 
 /-- Endomorphisms anticommuting with the doubled-space phase axis `K = Jε`. -/
 def IsPhaseAntilinear (A : EndH) : Prop :=
-  A.comp Kop = -((modularComplexI (E := E)).comp A)
+  A.comp Kop = -((InfoGeometry.Krein.clockAxis (E := E)).comp A)
 
 omit [CompleteSpace E] in
 theorem isPhaseAntilinear_iff_comp_complex_i
@@ -67,11 +67,11 @@ theorem isPhaseAntilinear_iff_comp_complex_i
     IsPhaseAntilinear (E := E) A
       ↔
     A.comp (complex_i (E := E)) = -((complex_i (E := E)).comp A) := by
-  rfl
+  simp [IsPhaseAntilinear, InfoGeometry.Krein.clockAxis]
 
 /-- Conjugation of an endomorphism by the doubled-space phase axis `K = Jε`. -/
 noncomputable def phaseConjugate (A : EndH) : EndH :=
-  (modularComplexI (E := E)).comp (A.comp Kop)
+  (InfoGeometry.Krein.clockAxis (E := E)).comp (A.comp Kop)
 
 /-- The phase-linear projection of a doubled-space endomorphism. -/
 noncomputable def phaseLinearPart (A : EndH) : EndH :=
@@ -106,39 +106,39 @@ omit [CompleteSpace E] in
 omit [CompleteSpace E] in
 lemma phaseConjugate_comp_phaseAxis
     (A : EndH) :
-    (phaseConjugate (E := E) A).comp Kop = -((modularComplexI (E := E)).comp A) := by
+    (phaseConjugate (E := E) A).comp Kop = -((InfoGeometry.Krein.clockAxis (E := E)).comp A) := by
   apply ContinuousLinearMap.ext
   intro x
   have hK2x : Kop (Kop x) = -x := by
-    apply DoubledSpace.ext <;> simp [TomitaTakesaki.modularComplexI]
+    apply DoubledSpace.ext <;> simp [InfoGeometry.Krein.clockAxis]
   unfold phaseConjugate
   calc
-    (modularComplexI (E := E)) (A (Kop (Kop x)))
-      = (modularComplexI (E := E)) (A (-x)) := by rw [hK2x]
-    _ = -((modularComplexI (E := E)) (A x)) := by
-          apply DoubledSpace.ext <;> simp [TomitaTakesaki.modularComplexI]
+    (InfoGeometry.Krein.clockAxis (E := E)) (A (Kop (Kop x)))
+      = (InfoGeometry.Krein.clockAxis (E := E)) (A (-x)) := by rw [hK2x]
+    _ = -((InfoGeometry.Krein.clockAxis (E := E)) (A x)) := by
+          apply DoubledSpace.ext <;> simp [InfoGeometry.Krein.clockAxis]
 
 omit [CompleteSpace E] in
 lemma phaseAxis_comp_phaseConjugate
     (A : EndH) :
-    (modularComplexI (E := E)).comp (phaseConjugate (E := E) A) = -(A.comp Kop) := by
+    (InfoGeometry.Krein.clockAxis (E := E)).comp (phaseConjugate (E := E) A) = -(A.comp Kop) := by
   apply ContinuousLinearMap.ext
   intro x
   have hK2Ax : Kop (Kop (A (Kop x))) = -(A (Kop x)) := by
-    apply DoubledSpace.ext <;> simp [TomitaTakesaki.modularComplexI]
+    apply DoubledSpace.ext <;> simp [InfoGeometry.Krein.clockAxis]
   unfold phaseConjugate
   simpa [ContinuousLinearMap.comp_apply] using hK2Ax
 
 omit [CompleteSpace E] in
 lemma neg_phaseConjugate_comp_phaseAxis
     (A : EndH) :
-    -((phaseConjugate (E := E) A).comp Kop) = (modularComplexI (E := E)).comp A := by
+    -((phaseConjugate (E := E) A).comp Kop) = (InfoGeometry.Krein.clockAxis (E := E)).comp A := by
   simpa using congrArg Neg.neg (phaseConjugate_comp_phaseAxis (E := E) A)
 
 omit [CompleteSpace E] in
 lemma neg_phaseAxis_comp_phaseConjugate
     (A : EndH) :
-    -((modularComplexI (E := E)).comp (phaseConjugate (E := E) A)) = A.comp Kop := by
+    -((InfoGeometry.Krein.clockAxis (E := E)).comp (phaseConjugate (E := E) A)) = A.comp Kop := by
   simpa using congrArg Neg.neg (phaseAxis_comp_phaseConjugate (E := E) A)
 
 omit [CompleteSpace E] in
@@ -152,15 +152,15 @@ theorem phaseLinearPart_isPhaseLinear
     (A - phaseConjugate (E := E) A).comp Kop
         = A.comp Kop - (phaseConjugate (E := E) A).comp Kop := by
             simp [ContinuousLinearMap.sub_comp]
-    _ = A.comp Kop + (modularComplexI (E := E)).comp A := by
+    _ = A.comp Kop + (InfoGeometry.Krein.clockAxis (E := E)).comp A := by
           rw [phaseConjugate_comp_phaseAxis (E := E)]
           abel
-    _ = (modularComplexI (E := E)).comp A + A.comp Kop := by
+    _ = (InfoGeometry.Krein.clockAxis (E := E)).comp A + A.comp Kop := by
           abel
-    _ = (modularComplexI (E := E)).comp A - (modularComplexI (E := E)).comp (phaseConjugate (E := E) A) := by
+    _ = (InfoGeometry.Krein.clockAxis (E := E)).comp A - (InfoGeometry.Krein.clockAxis (E := E)).comp (phaseConjugate (E := E) A) := by
           rw [← neg_phaseAxis_comp_phaseConjugate (E := E)]
           abel
-    _ = (modularComplexI (E := E)).comp (A - phaseConjugate (E := E) A) := by
+    _ = (InfoGeometry.Krein.clockAxis (E := E)).comp (A - phaseConjugate (E := E) A) := by
           simp [ContinuousLinearMap.comp_sub]
 
 omit [CompleteSpace E] in
@@ -174,15 +174,15 @@ theorem phaseAntilinearPart_isPhaseAntilinear
     (A + phaseConjugate (E := E) A).comp Kop
         = A.comp Kop + (phaseConjugate (E := E) A).comp Kop := by
             simp [ContinuousLinearMap.add_comp]
-    _ = A.comp Kop - (modularComplexI (E := E)).comp A := by
+    _ = A.comp Kop - (InfoGeometry.Krein.clockAxis (E := E)).comp A := by
           rw [phaseConjugate_comp_phaseAxis (E := E)]
           abel
-    _ = -((modularComplexI (E := E)).comp A - A.comp Kop) := by
+    _ = -((InfoGeometry.Krein.clockAxis (E := E)).comp A - A.comp Kop) := by
           abel
-    _ = -((modularComplexI (E := E)).comp A + (modularComplexI (E := E)).comp (phaseConjugate (E := E) A)) := by
+    _ = -((InfoGeometry.Krein.clockAxis (E := E)).comp A + (InfoGeometry.Krein.clockAxis (E := E)).comp (phaseConjugate (E := E) A)) := by
           rw [← neg_phaseAxis_comp_phaseConjugate (E := E)]
           abel
-    _ = -((modularComplexI (E := E)).comp (A + phaseConjugate (E := E) A)) := by
+    _ = -((InfoGeometry.Krein.clockAxis (E := E)).comp (A + phaseConjugate (E := E) A)) := by
           simp [ContinuousLinearMap.comp_add]
 
 lemma phaseConjugate_eq_neg_of_IsPhaseLinear
@@ -190,17 +190,17 @@ lemma phaseConjugate_eq_neg_of_IsPhaseLinear
     phaseConjugate (E := E) A = -A := by
   apply ContinuousLinearMap.ext
   intro x
-  have hK2 : (modularComplexI (E := E)) ((modularComplexI (E := E)) x) = -x := by
-    exact congrArg (fun F : EndH => F x) (TomitaTakesaki.modularComplexI_sq (E := E))
+  have hK2 : (InfoGeometry.Krein.clockAxis (E := E)) ((InfoGeometry.Krein.clockAxis (E := E)) x) = -x := by
+    exact congrArg (fun F : EndH => F x) (InfoGeometry.Krein.clockAxis_sq (E := E))
   have hAatKx :
-      A ((modularComplexI (E := E)) ((modularComplexI (E := E)) x))
+      A ((InfoGeometry.Krein.clockAxis (E := E)) ((InfoGeometry.Krein.clockAxis (E := E)) x))
         =
-      (modularComplexI (E := E)) (A ((modularComplexI (E := E)) x)) := by
-    exact congrArg (fun F : EndH => F ((modularComplexI (E := E)) x)) hA
+      (InfoGeometry.Krein.clockAxis (E := E)) (A ((InfoGeometry.Krein.clockAxis (E := E)) x)) := by
+    exact congrArg (fun F : EndH => F ((InfoGeometry.Krein.clockAxis (E := E)) x)) hA
   unfold phaseConjugate
   calc
-    (modularComplexI (E := E)) (A ((modularComplexI (E := E)) x))
-      = A ((modularComplexI (E := E)) ((modularComplexI (E := E)) x)) := by
+    (InfoGeometry.Krein.clockAxis (E := E)) (A ((InfoGeometry.Krein.clockAxis (E := E)) x))
+      = A ((InfoGeometry.Krein.clockAxis (E := E)) ((InfoGeometry.Krein.clockAxis (E := E)) x)) := by
           symm
           exact hAatKx
     _ = A (-x) := by rw [hK2]
@@ -211,19 +211,19 @@ lemma phaseConjugate_eq_self_of_IsPhaseAntilinear
     phaseConjugate (E := E) A = A := by
   apply ContinuousLinearMap.ext
   intro x
-  have hK2 : (modularComplexI (E := E)) ((modularComplexI (E := E)) x) = -x := by
-    exact congrArg (fun F : EndH => F x) (TomitaTakesaki.modularComplexI_sq (E := E))
+  have hK2 : (InfoGeometry.Krein.clockAxis (E := E)) ((InfoGeometry.Krein.clockAxis (E := E)) x) = -x := by
+    exact congrArg (fun F : EndH => F x) (InfoGeometry.Krein.clockAxis_sq (E := E))
   have hAatKx :
-      A ((modularComplexI (E := E)) ((modularComplexI (E := E)) x))
+      A ((InfoGeometry.Krein.clockAxis (E := E)) ((InfoGeometry.Krein.clockAxis (E := E)) x))
         =
-      -((modularComplexI (E := E)) (A ((modularComplexI (E := E)) x))) := by
-    exact congrArg (fun F : EndH => F ((modularComplexI (E := E)) x)) hA
+      -((InfoGeometry.Krein.clockAxis (E := E)) (A ((InfoGeometry.Krein.clockAxis (E := E)) x))) := by
+    exact congrArg (fun F : EndH => F ((InfoGeometry.Krein.clockAxis (E := E)) x)) hA
   unfold phaseConjugate
   calc
-    (modularComplexI (E := E)) (A ((modularComplexI (E := E)) x))
-      = -A ((modularComplexI (E := E)) ((modularComplexI (E := E)) x)) := by
-          have hNeg : -A ((modularComplexI (E := E)) ((modularComplexI (E := E)) x))
-              = (modularComplexI (E := E)) (A ((modularComplexI (E := E)) x)) := by
+    (InfoGeometry.Krein.clockAxis (E := E)) (A ((InfoGeometry.Krein.clockAxis (E := E)) x))
+      = -A ((InfoGeometry.Krein.clockAxis (E := E)) ((InfoGeometry.Krein.clockAxis (E := E)) x)) := by
+          have hNeg : -A ((InfoGeometry.Krein.clockAxis (E := E)) ((InfoGeometry.Krein.clockAxis (E := E)) x))
+              = (InfoGeometry.Krein.clockAxis (E := E)) (A ((InfoGeometry.Krein.clockAxis (E := E)) x)) := by
             simpa using congrArg Neg.neg hAatKx
           exact hNeg.symm
     _ = -A (-x) := by rw [hK2]
@@ -313,26 +313,27 @@ theorem deriv_KRotation_transport_at_zero
     deriv
       (fun t =>
         InfoGeometry.Canonical.expTransport
-          (A := EndH) (modularComplexI (E := E)) A t)
+          (A := EndH) (InfoGeometry.Krein.clockAxis (E := E)) A t)
       0
       =
-    transportCommutator (E := E) (modularComplexI (E := E)) A := by
-  rw [← lieBracket_eq_transportCommutator (E := E) (modularComplexI (E := E)) A]
+    transportCommutator (E := E) (InfoGeometry.Krein.clockAxis (E := E)) A := by
+  rw [← lieBracket_eq_transportCommutator (E := E) (InfoGeometry.Krein.clockAxis (E := E)) A]
   simpa using
     (InfoGeometry.Canonical.deriv_expTransport_at_zero
-      (A := EndH) (X := modularComplexI (E := E)) (A₀ := A))
+      (A := EndH) (X := InfoGeometry.Krein.clockAxis (E := E)) (A₀ := A))
 
 /-- The doubled-space phase force generated by transport of the internal axis `Jε`. -/
 noncomputable def phaseAxisForce (H : EndH) : EndH :=
   transportCommutator (E := E) H Kop
 
+omit [CompleteSpace E] in
 theorem phaseAxisForce_eq_transportCommutator_complex_i
     (H : EndH) :
     phaseAxisForce (E := E) H
       =
     transportCommutator (E := E) H (complex_i (E := E)) := by
   unfold phaseAxisForce transportCommutator
-  rw [TomitaTakesaki.modularComplexI_eq_complex_i]
+  rw [InfoGeometry.Krein.clockAxis_eq_complex_i]
 
 /-- The geometric response of the phase axis K to the generator X. -/
 noncomputable abbrev phaseAxisResponse (X : EndH) : EndH :=
@@ -395,13 +396,9 @@ omit [CompleteSpace E] in
 theorem phaseAxisForce_eq_two_smul_comp_of_IsPhaseAntilinear
     (H : EndH) (hH : IsPhaseAntilinear (E := E) H) :
     phaseAxisForce (E := E) H = (2 : ℝ) • (H.comp Kop) := by
-  have hKH : (modularComplexI (E := E)).comp H = -(H.comp Kop) := by
-    calc
-      (modularComplexI (E := E)).comp H = -(-((modularComplexI (E := E)).comp H)) := by simp
-      _ = -(H.comp Kop) := by rw [← hH]
-  apply ContinuousLinearMap.ext
-  intro x
-  apply DoubledSpace.ext <;> simp [phaseAxisForce, transportCommutator, hKH, two_smul]
+  unfold phaseAxisForce transportCommutator IsPhaseAntilinear at *
+  rw [hH]
+  simp [two_smul, sub_eq_add_neg]
 
 omit [CompleteSpace E] in
 theorem phaseAxisForce_of_phaseLinearPart_eq_zero
@@ -496,7 +493,7 @@ noncomputable def epsilonBoost (t : ℝ) : EndH :=
 
 /-- Internal phase rotation generated by the concrete doubled-space axis `K = Jε`. -/
 noncomputable def KRotation (t : ℝ) : EndH :=
-  NormedSpace.exp (t • modularComplexI (E := E))
+  NormedSpace.exp (t • InfoGeometry.Krein.clockAxis (E := E))
 
 omit [CompleteSpace E] in
 @[simp] theorem JBoost_zero :
@@ -543,15 +540,15 @@ theorem epsilonBoost_add (s t : ℝ) :
 
 theorem KRotation_add (s t : ℝ) :
     KRotation (E := E) (s + t) = KRotation (E := E) s * KRotation (E := E) t := by
-  have hComm : Commute (s • modularComplexI (E := E)) (t • modularComplexI (E := E)) := by
-    exact ((Commute.refl (modularComplexI (E := E))).smul_left s).smul_right t
+  have hComm : Commute (s • InfoGeometry.Krein.clockAxis (E := E)) (t • InfoGeometry.Krein.clockAxis (E := E)) := by
+    exact ((Commute.refl (InfoGeometry.Krein.clockAxis (E := E))).smul_left s).smul_right t
   calc
     KRotation (E := E) (s + t)
-        = NormedSpace.exp ((s + t) • modularComplexI (E := E)) := rfl
-    _ = NormedSpace.exp (s • modularComplexI (E := E) + t • modularComplexI (E := E)) := by
+        = NormedSpace.exp ((s + t) • InfoGeometry.Krein.clockAxis (E := E)) := rfl
+    _ = NormedSpace.exp (s • InfoGeometry.Krein.clockAxis (E := E) + t • InfoGeometry.Krein.clockAxis (E := E)) := by
           simp [add_smul]
-    _ = NormedSpace.exp (s • modularComplexI (E := E)) *
-          NormedSpace.exp (t • modularComplexI (E := E)) := by
+    _ = NormedSpace.exp (s • InfoGeometry.Krein.clockAxis (E := E)) *
+          NormedSpace.exp (t • InfoGeometry.Krein.clockAxis (E := E)) := by
           rw [NormedSpace.exp_add_of_commute hComm]
     _ = KRotation (E := E) s * KRotation (E := E) t := rfl
 
@@ -760,6 +757,56 @@ theorem modularTransportGenerator_split
   symm
   exact phaseLinearPart_add_phaseAntilinearPart
     (E := E) (modularTransportGenerator (E := E) hMod)
+
+omit [CompleteSpace E] in
+/--
+Phase-linearity forces commutation with the canonical doubled-space clock axis.
+-/
+theorem commute_clockAxis_of_IsPhaseLinear
+    {A : EndH}
+    (hPhase : IsPhaseLinear (E := E) A) :
+    Commute A (InfoGeometry.Krein.clockAxis (E := E)) := by
+  simpa [IsPhaseLinear] using hPhase
+
+omit [CompleteSpace E] in
+/--
+If the scaling (Cartan-odd) part vanishes, the full modular transport generator
+is phase-linear.
+-/
+theorem modularTransportGenerator_isPhaseLinear_of_scalePart_eq_zero
+    (hMod : EndH)
+    (hScaleZero : modularGeneratorScalePart (E := E) hMod = 0) :
+    IsPhaseLinear (E := E) (modularTransportGenerator (E := E) hMod) := by
+  have hSplit := modularTransportGenerator_split (E := E) hMod
+  have hEqGauge :
+      modularTransportGenerator (E := E) hMod
+        =
+      modularGeneratorGaugePart (E := E) hMod := by
+    calc
+      modularTransportGenerator (E := E) hMod
+          =
+        modularGeneratorGaugePart (E := E) hMod
+          +
+        modularGeneratorScalePart (E := E) hMod := hSplit
+      _ = modularGeneratorGaugePart (E := E) hMod := by simp [hScaleZero]
+  rw [hEqGauge]
+  exact modularGeneratorGaugePart_isPhaseLinear (E := E) hMod
+
+omit [CompleteSpace E] in
+/--
+Commutator-forcing form of the Cartan closure:
+if the scaling (Cartan-odd) part vanishes, then the modular generator commutes
+with the clock axis.
+-/
+theorem modularTransportGenerator_commutes_clockAxis_of_scalePart_eq_zero
+    (hMod : EndH)
+    (hScaleZero : modularGeneratorScalePart (E := E) hMod = 0) :
+    Commute
+      (modularTransportGenerator (E := E) hMod)
+      (InfoGeometry.Krein.clockAxis (E := E)) := by
+  exact commute_clockAxis_of_IsPhaseLinear (E := E)
+    (modularTransportGenerator_isPhaseLinear_of_scalePart_eq_zero
+      (E := E) hMod hScaleZero)
 
 omit [CompleteSpace E] in
 /--
@@ -1057,9 +1104,9 @@ theorem modularTransportGenerator_mem_skewAdjoint_of_isSelfAdjoint_of_IsPhaseLin
     (hPhase : IsPhaseLinear (E := E) hMod) :
     modularTransportGenerator (E := E) hMod ∈ skewAdjoint EndH := by
   have hPhaseEq :
-      hMod.comp (modularComplexI (E := E))
+      hMod.comp (InfoGeometry.Krein.clockAxis (E := E))
         =
-      (modularComplexI (E := E)).comp hMod := by
+      (InfoGeometry.Krein.clockAxis (E := E)).comp hMod := by
     simpa [IsPhaseLinear] using hPhase
   rw [skewAdjoint.mem_iff, ContinuousLinearMap.star_eq_adjoint]
   apply ContinuousLinearMap.ext
@@ -1067,19 +1114,19 @@ theorem modularTransportGenerator_mem_skewAdjoint_of_isSelfAdjoint_of_IsPhaseLin
   refine ext_inner_left ℝ fun v => ?_
   rw [ContinuousLinearMap.adjoint_inner_right]
   have hPhaseEval :
-      (modularComplexI (E := E)) (hMod u)
+      (InfoGeometry.Krein.clockAxis (E := E)) (hMod u)
         =
-      hMod ((modularComplexI (E := E)) u) := by
+      hMod ((InfoGeometry.Krein.clockAxis (E := E)) u) := by
     simpa [ContinuousLinearMap.comp_apply] using
       (congrArg (fun T : EndH => T u) hPhaseEq).symm
   calc inner ℝ (modularTransportGenerator (E := E) hMod v) u
-      = inner ℝ (hMod ((modularComplexI (E := E)) v)) u := by
+      = inner ℝ (hMod ((InfoGeometry.Krein.clockAxis (E := E)) v)) u := by
           rfl
-    _ = inner ℝ ((modularComplexI (E := E)) v) (hMod u) := by
+    _ = inner ℝ ((InfoGeometry.Krein.clockAxis (E := E)) v) (hMod u) := by
           rw [← ContinuousLinearMap.adjoint_inner_left, IsSelfAdjoint.adjoint_eq hSelf]
-    _ = -inner ℝ v ((modularComplexI (E := E)) (hMod u)) := by
-          exact modularComplexI_inner_skew (E := E) v (hMod u)
-    _ = -inner ℝ v (hMod ((modularComplexI (E := E)) u)) := by
+    _ = -inner ℝ v ((InfoGeometry.Krein.clockAxis (E := E)) (hMod u)) := by
+          exact clockAxis_inner_skew (E := E) v (hMod u)
+    _ = -inner ℝ v (hMod ((InfoGeometry.Krein.clockAxis (E := E)) u)) := by
           rw [hPhaseEval]
     _ = -inner ℝ v (modularTransportGenerator (E := E) hMod u) := by
           rfl
@@ -1094,21 +1141,21 @@ the seed is phase-linear.
 theorem modularComplexI_commutes_modularTransportGenerator_of_IsPhaseLinear
     (hMod : EndH)
     (hPhase : IsPhaseLinear (E := E) hMod) :
-    Commute (modularComplexI (E := E)) (modularTransportGenerator (E := E) hMod) := by
+    Commute (InfoGeometry.Krein.clockAxis (E := E)) (modularTransportGenerator (E := E) hMod) := by
   have hPhaseEq :
-      hMod.comp (modularComplexI (E := E))
+      hMod.comp (InfoGeometry.Krein.clockAxis (E := E))
         =
-      (modularComplexI (E := E)).comp hMod := by
+      (InfoGeometry.Krein.clockAxis (E := E)).comp hMod := by
     simpa [IsPhaseLinear] using hPhase
   change
-    (modularComplexI (E := E)).comp (hMod.comp (modularComplexI (E := E)))
+    (InfoGeometry.Krein.clockAxis (E := E)).comp (hMod.comp (InfoGeometry.Krein.clockAxis (E := E)))
       =
-    (hMod.comp (modularComplexI (E := E))).comp (modularComplexI (E := E))
+    (hMod.comp (InfoGeometry.Krein.clockAxis (E := E))).comp (InfoGeometry.Krein.clockAxis (E := E))
   calc
-    (modularComplexI (E := E)).comp (hMod.comp (modularComplexI (E := E)))
-      = ((modularComplexI (E := E)).comp hMod).comp (modularComplexI (E := E)) := by
+    (InfoGeometry.Krein.clockAxis (E := E)).comp (hMod.comp (InfoGeometry.Krein.clockAxis (E := E)))
+      = ((InfoGeometry.Krein.clockAxis (E := E)).comp hMod).comp (InfoGeometry.Krein.clockAxis (E := E)) := by
           simp [ContinuousLinearMap.comp_assoc]
-    _ = (hMod.comp (modularComplexI (E := E))).comp (modularComplexI (E := E)) := by
+    _ = (hMod.comp (InfoGeometry.Krein.clockAxis (E := E))).comp (InfoGeometry.Krein.clockAxis (E := E)) := by
           rw [← hPhaseEq]
 
 omit [CompleteSpace E] in
@@ -1116,7 +1163,7 @@ theorem complex_i_commutes_modularTransportGenerator_of_IsPhaseLinear
     (hMod : EndH)
     (hPhase : IsPhaseLinear (E := E) hMod) :
     Commute (complex_i (E := E)) (modularTransportGenerator (E := E) hMod) := by
-  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+  simpa [InfoGeometry.Krein.clockAxis_eq_complex_i] using
     modularComplexI_commutes_modularTransportGenerator_of_IsPhaseLinear (E := E) hMod hPhase
 
 /--
@@ -1232,11 +1279,11 @@ theorem modularComplexI_comp_modularTransportFlow_eq_modularTransportFlow_comp_m
     (hMod : EndH)
     (hPhase : IsPhaseLinear (E := E) hMod)
     (t : ℝ) :
-    (modularComplexI (E := E)).comp (modularTransportFlow (E := E) hMod t)
+    (InfoGeometry.Krein.clockAxis (E := E)).comp (modularTransportFlow (E := E) hMod t)
       =
-    (modularTransportFlow (E := E) hMod t).comp (modularComplexI (E := E)) := by
+    (modularTransportFlow (E := E) hMod t).comp (InfoGeometry.Krein.clockAxis (E := E)) := by
   have hComm :
-      Commute (modularComplexI (E := E)) (modularTransportFlow (E := E) hMod t) := by
+      Commute (InfoGeometry.Krein.clockAxis (E := E)) (modularTransportFlow (E := E) hMod t) := by
     simpa [modularTransportFlow] using
       ((modularComplexI_commutes_modularTransportGenerator_of_IsPhaseLinear
         (E := E) hMod hPhase).smul_right t).exp_right
@@ -1252,7 +1299,7 @@ theorem complex_i_comp_modularTransportFlow_eq_modularTransportFlow_comp_complex
     (complex_i (E := E)).comp (modularTransportFlow (E := E) hMod t)
       =
     (modularTransportFlow (E := E) hMod t).comp (complex_i (E := E)) := by
-  simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using
+  simpa [InfoGeometry.Krein.clockAxis_eq_complex_i] using
     modularComplexI_comp_modularTransportFlow_eq_modularTransportFlow_comp_modularComplexI_of_IsPhaseLinear
       (E := E) hMod hPhase t
 
@@ -1266,16 +1313,16 @@ theorem modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis
     (hGen :
       modularTransportGenerator (E := E) hMod
         =
-      σ • modularComplexI (E := E)) :
+      σ • InfoGeometry.Krein.clockAxis (E := E)) :
     modularTransportFlow (E := E) hMod t = KRotation (E := E) (t * σ) := by
   unfold modularTransportFlow KRotation
   rw [hGen]
   congr 1
   calc
-    t • (σ • modularComplexI (E := E))
-      = (t * σ) • modularComplexI (E := E) := by
+    t • (σ • InfoGeometry.Krein.clockAxis (E := E))
+      = (t * σ) • InfoGeometry.Krein.clockAxis (E := E) := by
           rw [smul_smul]
-    _ = (t * σ) • modularComplexI (E := E) := rfl
+    _ = (t * σ) • InfoGeometry.Krein.clockAxis (E := E) := rfl
 
 omit [CompleteSpace E] in
 theorem modularTransportFlow_eq_KRotation_of_generator_eq_smul_complex_i
@@ -1288,8 +1335,8 @@ theorem modularTransportFlow_eq_KRotation_of_generator_eq_smul_complex_i
   have hGen' :
       modularTransportGenerator (E := E) hMod
         =
-      σ • modularComplexI (E := E) := by
-    simpa [TomitaTakesaki.modularComplexI_eq_complex_i] using hGen
+      σ • InfoGeometry.Krein.clockAxis (E := E) := by
+    simpa [InfoGeometry.Krein.clockAxis_eq_complex_i] using hGen
   exact modularTransportFlow_eq_KRotation_of_generator_eq_smul_phaseAxis (E := E) hMod σ t hGen'
 
 /-- Center the modular generator by its Krein expectation in the state `ψ`. -/

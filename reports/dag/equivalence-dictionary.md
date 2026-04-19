@@ -3,22 +3,22 @@
 Maintained dictionary of equivalent naming surfaces extracted from Lean source. It combines theorem/lemma `=` and `↔` relations with `def`/`abbrev` alias surfaces.
 
 ## Summary
-- `lean_file_count`: `784`
-- `declaration_count`: `6301`
-- `auto_relation_count`: `2063`
+- `lean_file_count`: `792`
+- `declaration_count`: `6379`
+- `auto_relation_count`: `2073`
 - `curated_relation_count`: `13`
-- `relation_count`: `2076`
-- `resolved_pair_count`: `603`
-- `unresolved_head_token_total_raw`: `1956`
-- `unresolved_head_unique_count_raw`: `554`
+- `relation_count`: `2086`
+- `resolved_pair_count`: `605`
+- `unresolved_head_token_total_raw`: `1966`
+- `unresolved_head_unique_count_raw`: `557`
 - `unresolved_head_token_total`: `242`
 - `unresolved_head_unique_count`: `84`
 - `unresolved_ambiguous_token_total`: `242`
 - `unresolved_ambiguous_unique_count`: `84`
-- `unresolved_missing_token_total`: `1714`
-- `unresolved_missing_unique_count`: `470`
-- `unresolved_missing_nonlocal_token_total`: `981`
-- `unresolved_missing_nonlocal_unique_count`: `416`
+- `unresolved_missing_token_total`: `1724`
+- `unresolved_missing_unique_count`: `473`
+- `unresolved_missing_nonlocal_token_total`: `987`
+- `unresolved_missing_nonlocal_unique_count`: `419`
 - `component_count`: `162`
 - `parse_failure_count`: `0`
 - `curated_registry`: `docs/NameEquivalenceRegistry.json`

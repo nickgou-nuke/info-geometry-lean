@@ -99,6 +99,46 @@ if rg -n "content will be moved here" "${CANONICAL_PATHS[@]}" -g '*.lean'; then
   exit 1
 fi
 
+echo "[strict-check] enforcing frontier integrity gate (no sorry/admit/axiom/postulate)"
+python3 tools/quality/check_frontier_integrity_gate.py \
+  --config tools/quality/frontier_gate.json \
+  --json-out reports/dag/frontier-gate-report.json
+
+CLOSURE_SPINE_PATHS=(
+  lean/InfoGeometry/Canonical/CertifiedModularReduction.lean
+  lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean
+  lean/InfoGeometry/Canonical/DrazinModularSingularityBridge.lean
+  lean/InfoGeometry/Canonical/Cl11LorentzAction.lean
+  lean/InfoGeometry/Canonical/BogoliubovOptimalTransport.lean
+  lean/InfoGeometry/Canonical/PositiveMeasureSpectrum.lean
+  lean/InfoGeometry/Canonical/UhlmannBuresHolonomy.lean
+  lean/InfoGeometry/Canonical/WindingOrbitClosure.lean
+)
+
+echo "[strict-check] enforcing closure-spine non-shadow policy (no finite-dimensional/matrix toys)"
+if rg -n "FiniteDimensional|\\bMatrix\\b" "${CLOSURE_SPINE_PATHS[@]}"; then
+  echo "[strict-check] closure spine must remain operator-level (no finite-dimensional/matrix assumptions)"
+  exit 1
+fi
+
+echo "[strict-check] strict building frontier trunks with warnings as errors"
+python3 tools/run_locked_lake_build.py --wait-for-build-lock --wfail \
+  InfoGeometry.Canonical.WindingOrbitClosure \
+  InfoGeometry.Canonical.ChiralOperatorConeClosure \
+  InfoGeometry.Canonical.KKTCore \
+  InfoGeometry.Canonical.KKTClosureSymmetry \
+  InfoGeometry.Canonical.ClosureDrazinBridge \
+  InfoGeometry.Canonical.DrazinInfiniteCore \
+  InfoGeometry.Canonical.DrazinWitnessElimination \
+  InfoGeometry.Canonical.DrazinSpectralBridge \
+  InfoGeometry.Canonical.DrazinSpectralProjectorBridge \
+  InfoGeometry.Canonical.DrazinSupercharge \
+  InfoGeometry.Canonical.RelativeModularScaleShapeSplit \
+  InfoGeometry.Canonical.ModularKLDivergenceBridge \
+  InfoGeometry.Canonical.KMSSinkhornSeedState \
+  InfoGeometry.Canonical.ThermodynamicGenerator \
+  InfoGeometry.Canonical.ThermodynamicClosureTargets
+
 echo "[strict-check] enforcing quarantine boundary"
 bash scripts/enforce_quarantine_imports.sh
 
@@ -113,17 +153,48 @@ python3 tools/quality/functorial_invariance_audit.py \
   --json-out reports/dag/functorial-invariance-audit.json \
   --md-out reports/dag/functorial-invariance-audit.md
 
+echo "[strict-check] refreshing maintained equivalence dictionary"
+python3 tools/infra/generate_equivalence_dictionary.py \
+  --curated-json docs/NameEquivalenceRegistry.json \
+  --json-out reports/dag/equivalence-dictionary.json \
+  --md-out reports/dag/equivalence-dictionary.md
+
+echo "[strict-check] enforcing equivalence dictionary unresolved-growth gate"
+python3 tools/quality/check_equivalence_dictionary_gate.py \
+  --report reports/dag/equivalence-dictionary.json \
+  --policy tools/quality/equivalence_dictionary_gate.json
+
 echo "[strict-check] enforcing translation registry anchors"
 python3 tools/quality/check_translation_registry.py \
   --registry docs/OperatorTheoremTranslationRegistry.md \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.superHamiltonian_eq_modularTransportGenerator_lorentzBivectorSeed \
-  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_compatibility \
+  --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.operatorialKMSCondition_lorentzBivectorSeed_of_structural \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.exists_lorentzBivectorGenerator_split_with_drazin_lane_centrality \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzChiralConeOrbit \
   --required-anchor InfoGeometry.Canonical.ModularSuperchargeClosure.projectedEvenGenerator_fixed_under_lorentzWedgeOrbit \
   --required-anchor InfoGeometry.Canonical.KKTCore.uPlus_eq_gOnePart \
   --required-anchor InfoGeometry.Canonical.KKTCore.uPlus_mul_uPlus_eq_zero \
   --required-anchor InfoGeometry.Canonical.KKTCore.commutator_uPlus_uMinus_isGZero
+
+echo "[strict-check] enforcing closure debt frontier gate"
+python3 tools/quality/check_closure_debt_gate.py \
+  --policy tools/quality/closure_debt_gate.json
+
+CLOSURE_DEBT_BUILD_TARGETS=(
+  InfoGeometry.Core.CartanPhaseAxisForcing
+  InfoGeometry.Canonical.WindingOrbitClosure
+  InfoGeometry.Quantum.ModularAnomaly
+  InfoGeometry.Canonical.DrazinWeylConstructive
+  InfoGeometry.Quantum.TriadicWeylBridge
+  InfoGeometry.LLM.TrialityMoE
+  InfoGeometry.LLM.SinkhornDefectFlow
+)
+
+echo "[strict-check] strict-building closure-debt target trunks"
+for target in "${CLOSURE_DEBT_BUILD_TARGETS[@]}"; do
+  echo "  - lake build ${target}"
+  lake build "${target}"
+done
 
 echo "[strict-check] enforcing Pauli seal directives (I-XI) on canonical surface"
 python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json

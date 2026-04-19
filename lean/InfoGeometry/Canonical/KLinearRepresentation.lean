@@ -133,12 +133,12 @@ theorem kLinearPart_isKLinear
     (1 / 2 : ℝ) • (f (X.K x) - X.K (f (X.K (X.K x))))
         = (1 / 2 : ℝ) • (f (X.K x) + X.K (f x)) := by
             rw [hKfK2x]
-            abel
+            abel_nf
     _ = (1 / 2 : ℝ) • (X.K (f x) + f (X.K x)) := by
-          abel
+          abel_nf
     _ = (1 / 2 : ℝ) • (X.K (f x) - X.K (X.K (f (X.K x)))) := by
           rw [hK2fKx]
-          abel
+          abel_nf
     _ = (1 / 2 : ℝ) • X.K (f x - X.K (f (X.K x))) := by
           simp [map_sub]
     _ = X.K ((1 / 2 : ℝ) • (f x - X.K (f (X.K x)))) := by
@@ -161,15 +161,15 @@ theorem kAntilinearPart_isKAntilinear
     (1 / 2 : ℝ) • (f (X.K x) + X.K (f (X.K (X.K x))))
         = (1 / 2 : ℝ) • (f (X.K x) - X.K (f x)) := by
             rw [hKfK2x]
-            abel
+            abel_nf
     _ = (1 / 2 : ℝ) • (-(X.K (f x) - f (X.K x))) := by
           congr 1
-          abel
+          abel_nf
     _ = -((1 / 2 : ℝ) • (X.K (f x) - f (X.K x))) := by
           simp [smul_neg]
     _ = -((1 / 2 : ℝ) • (X.K (f x) + X.K (X.K (f (X.K x))))) := by
           rw [hK2fKx]
-          abel
+          abel_nf
     _ = -((1 / 2 : ℝ) • X.K (f x + X.K (f (X.K x)))) := by
           simp [map_add]
     _ = -(X.K ((1 / 2 : ℝ) • (f x + X.K (f (X.K x))))) := by

@@ -14,6 +14,8 @@ Use the existing repo lane, not a parallel architecture:
 
 - Policy and handover: `docs/AGENTIC_HANDOVER_POLICY.md`, `docs/CARETAKER_REQUIREMENTS.md`
 - Translation roadmap: `docs/black_books/55_external_approval_real_all_translation.md`
+- Canonical stack definition: `docs/CANONICAL_AGENT_STACK.md`
+- LeanDojo integration: `docs/LEANDOJO_V2_INTEGRATION_BLUEPRINT.md`
 - Runtime configs already in repo:
   - `nemoclaw_config.yaml`
   - `tools/infra/hermes_config.yaml`
@@ -55,10 +57,36 @@ From NVIDIA's DGX Spark OpenShell guide:
 - Python 3.12+
 - `uv`
 - Ollama 0.17+
+- ArangoDB running on `127.0.0.1:8529`
+
+Current local prover-serving lane on this host:
+
+- **Nemotron (Planner):**
+  - `http://127.0.0.1:30000/v1`
+  - role: High-level planning and orchestration for Hermes.
+- **Goedel (Audit):**
+  - `http://127.0.0.1:30001/v1`
+  - role: Conservative local audit and system verification.
+- **DeepSeek (Prover):**
+  - `http://127.0.0.1:30002/v1`
+  - role: Specialized Lean 4 proof-local generation.
+- API key for all:
+  - `token-123`
 
 Reference: `build.nvidia.com/spark/openshell`.
 
-## 3. Install OpenClaw and NemoClaw
+## 3. Bounded Autonomous Loop
+
+The Spire operates an autonomous, non-mutating research loop:
+
+- **systemd timer:** `hermes-info-geometry-loop.timer`
+- **runner:** `tools/infra/hermes_bounded_runner.py`
+- **logic:**
+  - Polls `quarantine/hermes_memory/research_packets`.
+  - Writes planning artifacts to `artifacts/hermes_loop/runs`.
+  - **Non-mutating:** It is strictly forbidden from mutating canonical files or invoking Codex automatically.
+
+## 4. Install OpenClaw and NemoClaw
 
 ### OpenClaw
 
@@ -91,7 +119,7 @@ nemoclaw my-assistant connect
 
 NemoClaw docs explicitly list **DGX Spark + Docker** as tested in quickstart.
 
-## 4. Configure Hermes as Orchestrator (Learnable Skills + Memory)
+## 5. Configure Hermes as Orchestrator (Learnable Skills + Memory)
 
 Use the repo file `tools/infra/hermes_config.yaml`.
 
@@ -100,9 +128,9 @@ Minimal expected shape:
 ```yaml
 model:
   provider: custom
-  base_url: http://localhost:11434/v1
-  api_key: ollama
-  default: hermes-3-llama-3.1-8b
+  base_url: http://127.0.0.1:30000/v1
+  api_key: token-123
+  default: Nemotron-3-Nano-30B-A3B-UD-Q8_K_XL.gguf
 paths:
   skills: ./quarantine/hermes_skills
   memory: ./quarantine/hermes_memory
@@ -118,7 +146,7 @@ mkdir -p quarantine/hermes_skills quarantine/hermes_memory
 [ -f quarantine/hermes_memory/MEMORY.md ] || printf "# Hermes Memory\n" > quarantine/hermes_memory/MEMORY.md
 ```
 
-## 5. NIM + NVIDIA Inference Layer
+## 6. NIM + NVIDIA Inference Layer
 
 NIM prerequisites include Linux, NVIDIA GPU, supported driver/toolkit, Docker, container toolkit, and NGC API key.
 
@@ -131,23 +159,43 @@ echo "$NGC_API_KEY" | docker login nvcr.io --username '$oauthtoken' --password-s
 
 NIM docs also support serving fine-tuned/local HuggingFace checkpoints via environment variables like `NIM_FT_MODEL` or `NIM_MODEL_NAME` depending on container mode.
 
-## 6. Lean4 Toolchain + Prover Layer
+## 7. Lean4 Toolchain + Prover Layer
+
+### Hermes orchestration layer
+
+Current local note:
+
+- `Hermes Agent` is the central orchestrator.
+- **Planner Lane (Nemotron):** `http://127.0.0.1:30000/v1`
+- **Proof Lane (DeepSeek):** `http://127.0.0.1:30002/v1`
+- **Audit Lane (Goedel):** `http://127.0.0.1:30001/v1`
+- Current local execution cwd is `/home/goutev/repos/info-geometry-lean`.
 
 ### Lean4 base
 
-```bash
-sudo apt install -y git curl
-curl https://elan.lean-lang.org/elan-init.sh -sSf | sh
-source "$HOME/.elan/env"
-```
+The repository is pinned to **Lean 4.28.0**.
+
+Verification:
+- `lake build` (or `lake build -R`) has succeeded on this host.
+- Repo-native diagnostics and policy gates should still be run before
+  canonical promotion.
 
 ### LeanDojo / ReProver / LeanCopilot
 
-- LeanDojo supports Lean3/Lean4 data extraction and programmatic interaction.
-- ReProver main branch is Lean4-only and publishes Lean4 ByT5 prover/retriever models.
-- LeanCopilot runs LLM-assisted tactics/proof search inside Lean and supports local (GPU/non-GPU) and remote models.
+- **LeanDojo-v2:** Installed in `/home/goutev/lean-dojo-venv`.
+- **Token-Free Integration:** The Spire now uses the token-free `LeanProgress -> Hermes packets` lane.
+- The maintained current bridge is token-free LeanProgress data into Hermes
+  packets. Deeper LeanDojo interaction still requires credentials and a
+  hardened repo-native bridge.
 
-## 7. Lean4 Pretrained Prover Models (DGX/NVIDIA GPU-friendly)
+First repo-native validation:
+
+```bash
+source /home/goutev/lean-dojo-venv/bin/activate
+python tools/infra/leandojo_token_free.py
+```
+
+## 8. Lean4 Pretrained Prover Models (DGX/NVIDIA GPU-friendly)
 
 ### Lean-specific theorem-prover models
 
@@ -163,7 +211,7 @@ As of the referenced model cards/docs:
 - DeepSeek-Prover/InternLM step-prover are published on HuggingFace but are typically **self-served** (e.g., vLLM/TGI/custom server) rather than first-class NIM entries.
 - NIM LLM catalog is broad (DeepSeek, Llama, etc.), but Lean-specific prover models are generally integrated as custom local model serving behind OpenAI-compatible endpoints.
 
-## 8. OpenClaw Memory/Skills Integration for Proving
+## 9. OpenClaw Memory/Skills Integration for Proving
 
 OpenClaw memory files (workspace-local):
 
@@ -184,7 +232,7 @@ Recommended for prover stack:
 - keep Hermes adaptive skills in `quarantine/hermes_skills`
 - use explicit promotion to canonical repo skills only after proof-carrying validation
 
-## 9. ChatGPT History Import (OpenClaw v2026.4.11+)
+## 10. ChatGPT History Import (OpenClaw v2026.4.11+)
 
 OpenClaw added ChatGPT import ingestion in `v2026.4.11` (and it is present in `v2026.4.12`).
 This is the highest-impact path if you have GB-scale prior theory chats.
@@ -251,7 +299,7 @@ These surfaces were added with the ChatGPT import feature and are intended for s
 - Prefer `bridge` mode for safe ingestion from public memory artifacts.
 - Always run `wiki lint` before trusting derived claims for theorem-target packets.
 
-## 10. Locked Diagnostics (No Unlocked Submission)
+## 11. Locked Diagnostics (No Unlocked Submission)
 
 Always run closure builds with the repo lock wrapper to avoid race conditions:
 
@@ -287,7 +335,7 @@ Promotion rule:
 
 - no promotion from quarantine to canonical lanes without a successful locked build and corresponding runtime lock artifact.
 
-## 11. Example Bootstrap Script
+## 12. Example Bootstrap Script
 
 See:
 

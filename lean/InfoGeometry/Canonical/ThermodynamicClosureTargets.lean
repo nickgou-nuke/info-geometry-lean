@@ -204,6 +204,17 @@ def routerResidual_bounded_by_defectCentral_target
     ∀ CIK : CertifiedInverseKernel H₂,
       ‖routerResidual CIK‖ ≤ c * defectCentralNorm (E := E) CIK
 
+/-- Vanishing closure: zero router residual satisfies the defect-central bound. -/
+@[rep_depth transport]
+theorem routerResidual_bounded_by_defectCentral_target_vanishes_of_zero
+    (routerResidual : CertifiedInverseKernel H₂ → EndH)
+    (hZero : ∀ CIK : CertifiedInverseKernel H₂, routerResidual CIK = 0) :
+    routerResidual_bounded_by_defectCentral_target (E := E) routerResidual := by
+  refine ⟨1, zero_le_one, ?_⟩
+  intro CIK
+  rw [hZero CIK, norm_zero, one_mul]
+  exact norm_nonneg _
+
 /--
 Target surface: in the operatorial scale/shape split, a scalar Weyl-scale
 coefficient exists that dominates the defect-central norm.

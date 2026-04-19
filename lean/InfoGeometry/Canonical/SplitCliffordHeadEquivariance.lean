@@ -40,6 +40,13 @@ noncomputable def headKFlipResidualTensor (n : ℕ) (x : SplitClNNTensorStep n) 
   unfold headKFlipResidualTensor
   rw [headKFlipTensor_apply_headEpsProjectorTensor_sum, sub_self]
 
+/-- Explicit vanishing closure for the canonical head `K`-flip residual. -/
+@[rep_depth krein, simp] theorem headKFlipResidualTensor_vanishes_on_headEpsProjectorTensor_sum
+    (n : ℕ) :
+    headKFlipResidualTensor n
+        (headEpsMinusProjectorTensor n + headEpsPlusProjectorTensor n) = 0 :=
+  headKFlipResidualTensor_apply_headEpsProjectorTensor_sum n
+
 /-- The head projector difference is anti-fixed under the head `K`-flip. -/
 @[rep_depth krein, simp] theorem headKFlipTensor_apply_headEpsProjectorTensor_diff
     (n : ℕ) :

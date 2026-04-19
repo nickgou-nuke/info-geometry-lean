@@ -151,6 +151,7 @@ import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
 import InfoGeometry.Canonical.ModularSuperchargeClosure
 import InfoGeometry.Canonical.ComplexMaskTransmutationBridge
 import InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
+import InfoGeometry.Canonical.MajoranaLiftPacketBridge
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Canonical.ChiralHodgeLichnerowiczBridge
 import InfoGeometry.Canonical.ChiralHodgeIndexBridge
@@ -240,6 +241,7 @@ import InfoGeometry.Canonical.PhaseVolumeDynamics
 import InfoGeometry.Canonical.VariationalLadder
 import InfoGeometry.Canonical.TopologicalResidue
 import InfoGeometry.Canonical.OnsagerReciprocity
+import InfoGeometry.Canonical.OnsagerSpineBridge
 import InfoGeometry.Canonical.OnsagerSinkhornOperatorLift
 import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.Canonical.CentralChargeAnomaly
@@ -276,6 +278,7 @@ import InfoGeometry.Canonical.ModularKLDivergenceBridge
 import InfoGeometry.Canonical.RelativeModularScaleShapeSplit
 import InfoGeometry.Canonical.ThermodynamicClosureTargets
 import InfoGeometry.Canonical.OddDefectFunctional
+import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.Canonical.GlobalChiralDecomposition
 import InfoGeometry.Canonical.SingularDecompositionSurrogate
 import InfoGeometry.Canonical.CapstoneSemanticAudit

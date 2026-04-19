@@ -1,14 +1,11 @@
 import json
-import os
-import subprocess
 import tempfile
 import unittest
 from pathlib import Path
 
+from tools.infra.representation_depth_from_graph import report_from_dir
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-EXPORTER = REPO_ROOT / "lean" / "DAG" / "RepresentationDepthExport.lean"
-IMPORT_MODULES = os.environ.get("REP_DEPTH_IMPORTS", "InfoGeometry.Audit")
 
 
 def _render_name(x) -> str:
@@ -17,36 +14,72 @@ def _render_name(x) -> str:
     return json.dumps(x, ensure_ascii=False, sort_keys=True)
 
 
+def _write_jsonl(path: Path, rows: list[dict]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        "".join(json.dumps(row, ensure_ascii=True, sort_keys=True) + "\n" for row in rows),
+        encoding="utf-8",
+    )
+
+
+def _node(name: str, depth: int | None, *, capstone: bool = False) -> dict:
+    slugs = ["count", "projective", "operator", "krein", "transport", "thermo"]
+    layers = [
+        "L0_Count",
+        "L1_Projective",
+        "L2_Operator",
+        "L3_Krein",
+        "L4_ModularTransport",
+        "L5_ThermodynamicClosure",
+    ]
+    attrs = {}
+    labels = []
+    if depth is not None:
+        attrs = {
+            "rep_depth_nat": depth,
+            "rep_depth_slug": slugs[depth],
+            "rep_layer": layers[depth],
+        }
+        labels = [f"rep_depth:{slugs[depth]}", f"rep_depth_nat:{depth}", f"rep_layer:{layers[depth]}"]
+    if capstone:
+        labels.append("attr:capstone")
+    return {
+        "_key": name.replace(".", "_"),
+        "name": name,
+        "module": ".".join(name.split(".")[:-1]),
+        "kind": "theorem",
+        "attrs": attrs,
+        "labels": labels,
+        "rep_depth": depth,
+        "rep_depth_nat": depth,
+        "rep_depth_slug": attrs.get("rep_depth_slug"),
+        "rep_layer": attrs.get("rep_layer"),
+    }
+
+
+def _edge(src: str, dst: str) -> dict:
+    return {"src": src, "dst": dst, "kind": "uses"}
+
+
 def _load_export():
     with tempfile.TemporaryDirectory() as td:
-        out = Path(td) / "representation-depth-tags.json"
-        cmd = [
-            "lake",
-            "env",
-            "lean",
-            "--run",
-            str(EXPORTER),
-            IMPORT_MODULES,
-            str(out),
+        root = Path(td)
+        nodes = [
+            _node("InfoGeometry.Canonical.transportDirac_sq_eq_transportMetricOp", 4),
+            _node("InfoGeometry.Canonical.kreinBridge", 3),
+            _node("InfoGeometry.Canonical.operatorOwner", 2),
+            _node("InfoGeometry.Canonical.thermoCapstone", 5, capstone=True),
+            _node("Mathlib.External.untyped", None),
         ]
-        proc = subprocess.run(
-            cmd,
-            cwd=REPO_ROOT,
-            text=True,
-            capture_output=True,
-        )
-        if proc.returncode != 0:
-            raise AssertionError(
-                "exporter failed\n"
-                f"cmd: {' '.join(cmd)}\n"
-                f"stdout:\n{proc.stdout}\n"
-                f"stderr:\n{proc.stderr}"
-            )
-        if not out.exists():
-            raise AssertionError(f"expected output file was not written: {out}")
-
-        payload = json.loads(out.read_text(encoding="utf-8"))
-        return payload, proc
+        edges = [
+            _edge("InfoGeometry.Canonical.transportDirac_sq_eq_transportMetricOp", "InfoGeometry.Canonical.kreinBridge"),
+            _edge("InfoGeometry.Canonical.kreinBridge", "InfoGeometry.Canonical.operatorOwner"),
+            _edge("InfoGeometry.Canonical.thermoCapstone", "InfoGeometry.Canonical.transportDirac_sq_eq_transportMetricOp"),
+            _edge("InfoGeometry.Canonical.thermoCapstone", "Mathlib.External.untyped"),
+        ]
+        _write_jsonl(root / "ig_nodes.jsonl", nodes)
+        _write_jsonl(root / "ig_edges.jsonl", edges)
+        return report_from_dir(root), None
 
 
 def _rows_by_name(rows):

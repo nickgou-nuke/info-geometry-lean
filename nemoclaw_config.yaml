@@ -1,32 +1,100 @@
 # ⚗️ NEMOCLAW CONFIGURATION: The Local Spire Runtime
-# Configuration for the Local Multi-Agent Collective (NemoClaw + ClawCode + OpenClaw)
+# Configuration for the local proving collective under Hermes orchestration.
 
 version: "1.1"
 agent:
   name: "Nemo-ClawCode-Caretaker"
-  orchestrator: "openclaw" 
+  orchestrator: "hermes"
 
-  # The Discovery Engine (The Hands): Powered by Nous Hermes + Ollama
+# Operator surfaces are execution planes, not inference providers.
+operator_surfaces:
+  primary:
+    name: "codex-cli"
+    role: "caretaker_executor"
+    enabled: true
+    command: "codex"
+    responsibilities:
+      - "workspace edits"
+      - "tool orchestration"
+      - "compilation"
+      - "gate execution"
+      - "runtime repair"
+  secondary:
+    name: "gemini-cli"
+    role: "creative_research_sidecar"
+    enabled: true
+    auto_route: false
+    explicit_operator_only: true
+    guard_command: "tools/infra/run_gemini_guarded.sh"
+    mode: "irregular_dreaming_sidecar"
+    never_poll: true
+    command: "gemini"
+    responsibilities:
+      - "deep research packet drafting"
+      - "socratic expansion"
+      - "bridge ideation"
+    forbidden_auth_paths:
+      - "google-gemini-cli-oauth-adapter"
+      - "gemini-code-assist-oauth"
+      - "antigravity-oauth"
+      - "token-extraction"
+      - "quota-piggybacking"
+
+lanes:
+  # Hermes manages the swarm but does not certify truth.
+  hermes:
+    role: "swarm_manager"
+    config_path: "./tools/infra/hermes_config.yaml"
+    default_plane: "orchestrate"
+
+  # Default local dialogue/prover lane for Socratic proof search.
   discovery_engine:
     provider: "custom"
-    base_url: "http://localhost:11434/v1"
-    api_key: "ollama"
-    model: "hermes-3-llama-3.1-8b" # or qwen2.5:14b as suggested
-    config_path: "./tools/infra/hermes_config.yaml"
+    role: "socratic_dialogue"
+    base_url: "http://127.0.0.1:30002/v1"
+    api_key: "token-123"
+    model: "deepseek-prover-v2-7b-q8_0.gguf"
 
-  # The Logic Engine (The Logos): Powered by NVIDIA Nemotron-70B
+  # High-level planning/orchestration lane for Hermes.
+  planner_engine:
+    provider: "custom"
+    role: "planner"
+    base_url: "http://127.0.0.1:30000/v1"
+    api_key: "token-123"
+    model: "Nemotron-3-Nano-30B-A3B-UD-Q8_K_XL.gguf"
+
+  # Conservative local audit/system lane.
   logic_engine:
-    provider: "nvidia"
-    model: "nvidia/llama-3.1-nemotron-70b-instruct" 
-    base_url: "http://localhost:8000/v1" 
+    provider: "custom"
+    role: "audit"
+    base_url: "http://127.0.0.1:30001/v1"
+    api_key: "token-123"
+    model: "Goedel-Prover-SFT.Q8_0.gguf"
 
-  # The Verification Kernel
+  # Execution surface only when Hermes routes a task into mutation/build/gates.
   code_engine:
     provider: "clawcode"
+    operator_surface: "codex-cli"
     integrated_tools:
       - "lean4-compiler"
       - "semantic-audit"
       - "dag-doctor"
+
+agent_runtime:
+  defaults:
+    planner: "hermes"
+    planner_lane: "planner_engine"
+    exploration_lane: "discovery_engine"
+    audit_lane: "logic_engine"
+    execution_lane: "code_engine"
+  routing_policy:
+    codex_on_demand_only: true
+    hermes_decides_execution: true
+    exploration_precedes_mutation: true
+    lean_is_truth_authority: true
+    gemini_auto_route: false
+    gemini_explicit_operator_only: true
+    forbid_antigravity_oauth_piggybacking: true
 
 # Security: NVIDIA OpenShell Sandbox
 sandbox:

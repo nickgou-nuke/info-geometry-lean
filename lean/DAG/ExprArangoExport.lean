@@ -43,6 +43,7 @@ structure ExportMeta where
   edges : Nat
   brokenBVarCount : Nat
   includeExternalDecls : Bool
+  includeGeneratedDecls : Bool
   maxDecls : Nat
 deriving Repr, ToJson
 
@@ -337,12 +338,13 @@ private def parseBoolDefault (s : String) (default : Bool) : Bool :=
 private def collectDeclTargets
     (env : Environment)
     (nsPrefix? : Option String)
-    (maxDecls : Nat) : Array Name :=
+    (maxDecls : Nat)
+    (includeGeneratedDecls : Bool) : Array Name :=
   let names :=
     env.constants.toList.foldl (init := #[]) fun acc (name, ci) =>
       if !inNamespace nsPrefix? name then
         acc
-      else if generatedLike name then
+      else if !includeGeneratedDecls && generatedLike name then
         acc
       else
         match ci with
@@ -356,11 +358,12 @@ private def collectDeclTargets
 private def runExport
     (importModsStr nsPrefix outDirStr : String)
     (maxDecls : Nat)
-    (includeExternalDecls : Bool) : IO UInt32 := do
+    (includeExternalDecls : Bool)
+    (includeGeneratedDecls : Bool) : IO UInt32 := do
   let imports := parseImports importModsStr
   let env ← importModules imports {} 0
   let nsPrefix? := normalizePrefix? nsPrefix
-  let targets := collectDeclTargets env nsPrefix? maxDecls
+  let targets := collectDeclTargets env nsPrefix? maxDecls includeGeneratedDecls
 
   IO.println s!"[ExprArangoExport] imported modules={importModsStr}"
   IO.println s!"[ExprArangoExport] selected declarations={targets.size}"
@@ -399,6 +402,7 @@ private def runExport
     edges := st.edges.size
     brokenBVarCount := st.brokenBVarCount
     includeExternalDecls := includeExternalDecls
+    includeGeneratedDecls := includeGeneratedDecls
     maxDecls := maxDecls
   }
   IO.println s!"[ExprArangoExport] wrote {outDirStr}/ig_nodes.jsonl"
@@ -409,17 +413,23 @@ private def runExport
 def main (args : List String) : IO UInt32 := do
   match args with
   | [importModsStr, nsPrefix, outDir] =>
-      runExport importModsStr nsPrefix outDir 0 true
+      runExport importModsStr nsPrefix outDir 0 true true
   | [importModsStr, nsPrefix, outDir, maxDeclsStr] =>
-      runExport importModsStr nsPrefix outDir (parseNatDefault maxDeclsStr 0) true
+      runExport importModsStr nsPrefix outDir (parseNatDefault maxDeclsStr 0) true true
   | [importModsStr, nsPrefix, outDir, maxDeclsStr, includeExternalStr] =>
       runExport importModsStr nsPrefix outDir
         (parseNatDefault maxDeclsStr 0)
         (parseBoolDefault includeExternalStr true)
+        true
+  | [importModsStr, nsPrefix, outDir, maxDeclsStr, includeExternalStr, includeGeneratedStr] =>
+      runExport importModsStr nsPrefix outDir
+        (parseNatDefault maxDeclsStr 0)
+        (parseBoolDefault includeExternalStr true)
+        (parseBoolDefault includeGeneratedStr true)
   | _ =>
-      IO.eprintln "usage: ExprArangoExport <import-module[,module2,...]> <namespace-prefix|*> <output-dir> [max-decls] [include-external-decls]"
+      IO.eprintln "usage: ExprArangoExport <import-module[,module2,...]> <namespace-prefix|*> <output-dir> [max-decls] [include-external-decls] [include-generated-decls]"
       IO.eprintln "example:"
-      IO.eprintln "  lake env lean --run lean/DAG/ExprArangoExport.lean InfoGeometry.Audit InfoGeometry artifacts/expr-graph/arango 1000 true"
+      IO.eprintln "  lake env lean --run lean/DAG/ExprArangoExport.lean InfoGeometry.Audit InfoGeometry artifacts/expr-graph/raw-lossless 0 true true"
       pure 1
 
 end DAG.ExprArangoExport

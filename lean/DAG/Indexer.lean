@@ -204,6 +204,7 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
                | none   => pure ""
   let attrStrs : Array String := Id.run do
     let mut attrs := InfoGeometry.Meta.vacuityRoleTagStringsOf env name
+    attrs := attrs ++ InfoGeometry.Meta.repDepthTagStringsOf env name
     if InfoGeometry.Meta.capstoneAttr.hasTag env name then
       attrs := attrs.push "capstone"
     attrs
@@ -464,6 +465,11 @@ def runIndexer (nsPrefix : String) (importRoot : String) (outDir : String) (grap
     atomicWriteFile (outPath / filename) (String.intercalate "\n" lines.toList)
 
   liftM <| writeJsonl "decls.jsonl" st.decls
+  -- Lossless raw edge layer. `edges.jsonl` remains the filtered canonical DAG
+  -- projection; `raw_edges.jsonl` preserves every dependency edge discovered
+  -- before endpoint filtering, so downstream Arango imports can preserve the
+  -- original topology and attach hydration/SCC labels as overlays.
+  liftM <| writeJsonl "raw_edges.jsonl" st.edges
   liftM <| writeJsonl "edges.jsonl" edgesFiltered
   liftM <| writeJsonl "morphisms.jsonl" st.morphisms
 

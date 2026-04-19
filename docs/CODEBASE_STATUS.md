@@ -70,7 +70,7 @@ Failure surface (current):
   - directive counts:
     - `I.no_mask_mandate`: `1006`
     - `II.functorial_connectivity`: `41`
-    - `IV.semantic_weight_ratio`: `331`
+    - legacy `IV.semantic_weight_ratio`: `331` (historical count from the old density heuristic; superseded by `IV.multilingual_bridge_fidelity`)
     - `V.identity_via_reflexivity`: `96`
   - top offending files by finding count:
     - [`BogoliubovTransport.lean`](../lean/InfoGeometry/Canonical/BogoliubovTransport.lean) (`47`)

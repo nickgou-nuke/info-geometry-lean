@@ -61,6 +61,17 @@ After getting a proof to work, clean it up immediately:
 - Test if `simp` can handle more (remove earlier steps one by one)
 - Find the truly minimal proof
 
+## Comment And Docstring Discipline
+
+In `info-geometry-lean`, explanatory comments may be part of the theorem
+transport substrate. They often map between SymPy, Python, Lean 4, LaTeX,
+natural language, and physics-of-information terminology.
+
+Do not shorten comments by default while proving. Preserve bridge-bearing prose,
+expand it when needed for semantic accuracy, and correct it when it misstates
+the formal object. Delete prose only when it is stale, false, duplicative, or
+not carrying a representation bridge.
+
 ## Dependent Type Rewriting Issues
 
 **When you encounter "motive is not type correct" or similar errors during rewriting:**

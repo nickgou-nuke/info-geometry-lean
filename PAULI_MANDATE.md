@@ -15,9 +15,10 @@ This document establishes the clinical standards to prevent **Agentic Cheating**
 ## DIRECTIVE III: THE AXIOM-SURFACE SEAL
 *   **Prohibition**: Prohibits `sorryAx` or `Admission` trust tokens in `krein` or `canonical` layers.
 
-## DIRECTIVE IV: SEMANTIC WEIGHT RATIO (SWR)
-*   **Prohibition**: Prohibits "Novella" modules where prose outweighs code.
-*   **Requirement**: A minimum 2:1 ratio of Lean tactics/definitions to physical prose.
+## DIRECTIVE IV: MULTILINGUAL BRIDGE FIDELITY
+*   **Prohibition**: Prohibits crude comment-density or prose-length heuristics as evidence of Total Symbolic Inflation.
+*   **Requirement**: Comments and docstrings that map between SymPy, Python, Lean 4, LaTeX, and natural mathematical language are part of the representation layer.
+*   **Enforcement**: Audit explanatory prose by semantic faithfulness, theorem ownership, and bridge correctness. Preserve or expand bridge-bearing prose; delete only stale, false, duplicative, or non-bridge prose.
 
 ## DIRECTIVE V: THE "IDENTITY VIA REFLEXIVITY" AUDIT
 *   **Prohibition**: Prohibits achieving "Unity" by defining identical structures in the same folder to force `rfl`.
@@ -44,12 +45,22 @@ This document establishes the clinical standards to prevent **Agentic Cheating**
 *   **Requirement**: Uniqueness is a foundational property; it must be public, stable, and subject to global DAG audit.
 *   **Enforcement**: `private` uniqueness theorems are classified as **Local Overfit** and must be made public or deleted.
 
+## DIRECTIVE XII: GRAVITATIONAL CONTEXT (New)
+*   **Prohibition**: Prohibits "Latent Chat Association" as a primary source for proof search context.
+*   **Requirement**: Context for theorem generation **MUST** be extracted from the **ArangoDB DAG** of compiled Lean code.
+*   **Enforcement**: Proofs generated without verified **Causal Adjacency** to the existing Lean trunk are classified as **Floating Hallucinations**.
+
+## DIRECTIVE XIII: PHYSICS-OF-INFORMATION LANGUAGE DISCIPLINE (New)
+*   **Prohibition**: Prohibits misclassifying the repository as a generic "theory of physics" or treating borrowed physical language as decorative by default.
+*   **Requirement**: Terms such as curvature, flow, free energy, Boltzmann entropy, and modular Hamiltonian are allowed when they faithfully name information-geometric, thermodynamic, or operator-algebraic structure.
+*   **Enforcement**: Flag only unsupported closure claims. Do not flag legitimate cross-domain terminology merely because it is physically evocative.
+
 ## PRINCIPLE OF CANONICAL RESOLUTION
 This principle establishes the mandatory standard for clinical adjudications. Identification of a problem is insufficient; the Auditor must provide the map for its resolution based on authoritative literature.
 
+*   **Authority Split**: Hermes (Plan) $\to$ Nemotron (Reason) $\to$ DeepSeek (Proof) $\to$ Goedel (Audit) $\to$ Codex (Gated Execution) $\to$ **Lean (Truth)**.
+*   **The Axiom-Surface Seal**: All tactics must pass the **token-free REPL bridge** (`lean_interact_wrapper.py`) before admission.
 *   **General Requirement**: For every identified "Nomological Rupture," "Symbolic Inflation," or "Agentic Cheat," the Auditor MUST locate and cite the established literature where the problem is resolved in a canonical way.
-*   **Guidance for Fixtures**: Adjudications must describe the specific canonical mathematical or physical mechanism (e.g., a specific identity, theorem, or constraint) required to bridge the gap and provide a clear citation to the authoritative source (e.g., [Author, Year]).
-*   **Validation**: A resolution is only valid if it forces the implementing code to align with the referenced literature standards.
 
 ---
 

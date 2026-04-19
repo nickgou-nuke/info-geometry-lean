@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Information Symmetry Breaking Explorer</title>
+  <style>
+    :root {
+      --bg: #f2f6ff;
+      --panel: #ffffff;
+      --ink: #121823;
+      --muted: #42516e;
+      --grid: #c7d2e7;
+      --axis: #1f293b;
+      --equilibrium: #64748b;
+      --particle: #ef4444;
+      --trail: #0ea5e9;
+      --glow: rgba(14, 165, 233, 0.22);
+      --active: #0f766e;
+      --active-ink: #ecfeff;
+      --shadow: 0 14px 30px rgba(15, 23, 42, 0.14);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "IBM Plex Sans", "Segoe UI", "Noto Sans", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(59, 130, 246, 0.12), transparent 35%),
+        radial-gradient(circle at 86% 18%, rgba(14, 165, 233, 0.14), transparent 30%),
+        linear-gradient(160deg, #f8fbff 0%, #eef3ff 56%, #e8f0ff 100%);
+      display: grid;
+      place-items: center;
+      padding: 26px;
+    }
+
+    .shell {
+      width: min(1100px, 100%);
+      background: var(--panel);
+      border: 1px solid rgba(30, 41, 59, 0.14);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .head {
+      padding: 18px 20px 12px;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.1);
+      background: linear-gradient(95deg, rgba(14, 165, 233, 0.08), rgba(16, 185, 129, 0.07));
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.12rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .subtitle {
+      margin: 7px 0 0;
+      color: var(--muted);
+      font-size: 0.91rem;
+      line-height: 1.4;
+    }
+
+    .controls {
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.1);
+      background: #fafcff;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px 18px;
+      align-items: end;
+    }
+
+    .control {
+      display: grid;
+      gap: 6px;
+    }
+
+    .control label {
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #0ea5e9;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button {
+      border: 1px solid rgba(30, 41, 59, 0.2);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 10px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      padding: 9px 12px;
+      cursor: pointer;
+      transition: transform 110ms ease, box-shadow 110ms ease, background 110ms ease, color 110ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 7px 15px rgba(15, 23, 42, 0.12);
+    }
+
+    .flow-active {
+      background: var(--active);
+      color: var(--active-ink);
+      border-color: rgba(15, 118, 110, 0.6);
+    }
+
+    .stats {
+      padding: 10px 20px;
+      background: #fcfdff;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.1);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 8px 14px;
+    }
+
+    .stat {
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .viz {
+      padding: 16px;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid rgba(30, 41, 59, 0.16);
+      background: var(--bg);
+    }
+
+    .foot {
+      padding: 10px 20px 18px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="head">
+      <h1>Information Symmetry Breaking Explorer</h1>
+      <p class="subtitle">
+        Cartan phase-plane simulation: defect excitation drives the odd channel, while Sinkhorn flow damps shape divergence and shifts the even scale.
+      </p>
+    </section>
+
+    <section class="controls">
+      <div class="control">
+        <label for="berrySlider">
+          <span>Berry Curvature (Defect Magnitude)</span>
+          <strong id="berryValue">5.0</strong>
+        </label>
+        <input id="berrySlider" type="range" min="1" max="10" step="0.1" value="5" />
+      </div>
+
+      <div class="control">
+        <label for="couplingSlider">
+          <span>Sinkhorn Coupling Strength</span>
+          <strong id="couplingValue">0.050</strong>
+        </label>
+        <input id="couplingSlider" type="range" min="0.01" max="0.1" step="0.001" value="0.05" />
+      </div>
+
+      <div class="buttons">
+        <button id="exciteBtn" type="button">Excite Defect (Spontaneous Breaking)</button>
+        <button id="flowBtn" type="button">Activate Sinkhorn Flow (Higgs Damping)</button>
+        <button id="resetBtn" type="button">Reset State</button>
+      </div>
+    </section>
+
+    <section class="stats">
+      <span class="stat" id="shapeStat">Shape Divergence |p| = 0.000</span>
+      <span class="stat" id="scaleStat">Scale Shift k = 0.000</span>
+      <span class="stat" id="energyStat">Defect Energy E = 0.000</span>
+      <span class="stat" id="modeStat">Mode: Equilibrium</span>
+    </section>
+
+    <section class="viz">
+      <canvas id="phaseCanvas" width="980" height="620" aria-label="Cartan k/p phase-space simulation"></canvas>
+    </section>
+
+    <section class="foot">
+      X-axis: Even sector (k) - Weyl scale / chemical potential. Y-axis: Odd sector (p) - Itakura-Saito shape / Goldstone-like mode amplitude.
+    </section>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("phaseCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const berrySlider = document.getElementById("berrySlider");
+    const couplingSlider = document.getElementById("couplingSlider");
+    const berryValue = document.getElementById("berryValue");
+    const couplingValue = document.getElementById("couplingValue");
+    const exciteBtn = document.getElementById("exciteBtn");
+    const flowBtn = document.getElementById("flowBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const shapeStat = document.getElementById("shapeStat");
+    const scaleStat = document.getElementById("scaleStat");
+    const energyStat = document.getElementById("energyStat");
+    const modeStat = document.getElementById("modeStat");
+
+    const world = {
+      xMin: -12,
+      xMax: 18,
+      yMin: -12,
+      yMax: 12
+    };
+
+    const state = {
+      x: 0,
+      y: 0,
+      vx: 0,
+      vy: 0,
+      flowOn: false,
+      berry: 5,
+      coupling: 0.05,
+      trail: [{ x: 0, y: 0 }],
+      trailCounter: 0,
+      lastTs: 0
+    };
+
+    function clamp(v, lo, hi) {
+      return Math.min(hi, Math.max(lo, v));
+    }
+
+    function wxToPx(x) {
+      const t = (x - world.xMin) / (world.xMax - world.xMin);
+      return t * canvas.width;
+    }
+
+    function wyToPy(y) {
+      const t = (y - world.yMin) / (world.yMax - world.yMin);
+      return canvas.height - t * canvas.height;
+    }
+
+    function drawAxes() {
+      const x0 = wxToPx(0);
+      const y0 = wyToPy(0);
+
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--grid").trim();
+      ctx.lineWidth = 1;
+      ctx.setLineDash([]);
+      for (let gx = Math.ceil(world.xMin); gx <= Math.floor(world.xMax); gx += 2) {
+        const px = wxToPx(gx);
+        ctx.beginPath();
+        ctx.moveTo(px, 0);
+        ctx.lineTo(px, canvas.height);
+        ctx.stroke();
+      }
+      for (let gy = Math.ceil(world.yMin); gy <= Math.floor(world.yMax); gy += 2) {
+        const py = wyToPy(gy);
+        ctx.beginPath();
+        ctx.moveTo(0, py);
+        ctx.lineTo(canvas.width, py);
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--axis").trim();
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.moveTo(wxToPx(world.xMin), y0);
+      ctx.lineTo(wxToPx(world.xMax), y0);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x0, wyToPy(world.yMin));
+      ctx.lineTo(x0, wyToPy(world.yMax));
+      ctx.stroke();
+
+      ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue("--equilibrium").trim();
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 7]);
+      ctx.beginPath();
+      ctx.moveTo(wxToPx(world.xMin), y0);
+      ctx.lineTo(wxToPx(world.xMax), y0);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = "#1f293b";
+      ctx.font = "600 14px IBM Plex Sans, Segoe UI, Noto Sans, sans-serif";
+      ctx.fillText("Even Sector (k) - Weyl Scale / Chemical Potential", wxToPx(world.xMin) + 10, y0 - 10);
+      ctx.save();
+      ctx.translate(x0 + 24, wyToPy(world.yMax) + 22);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText("Odd Sector (p) - Itakura-Saito Shape / Goldstone Modes", 0, 0);
+      ctx.restore();
+
+      ctx.fillStyle = "#64748b";
+      ctx.font = "600 13px IBM Plex Sans, Segoe UI, Noto Sans, sans-serif";
+      ctx.fillText("Symmetric Equilibrium (p = 0)", wxToPx(world.xMin) + 12, y0 + 18);
+    }
+
+    function drawTrail() {
+      if (state.trail.length < 2) return;
+      ctx.save();
+      const trailColor = getComputedStyle(document.documentElement).getPropertyValue("--trail").trim();
+      const glowColor = getComputedStyle(document.documentElement).getPropertyValue("--glow").trim();
+
+      ctx.strokeStyle = glowColor;
+      ctx.lineWidth = 8;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      state.trail.forEach((p, i) => {
+        const px = wxToPx(p.x);
+        const py = wyToPy(p.y);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+
+      ctx.strokeStyle = trailColor;
+      ctx.lineWidth = 2.4;
+      ctx.beginPath();
+      state.trail.forEach((p, i) => {
+        const px = wxToPx(p.x);
+        const py = wyToPy(p.y);
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      });
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawParticle() {
+      const px = wxToPx(state.x);
+      const py = wyToPy(state.y);
+      const color = getComputedStyle(document.documentElement).getPropertyValue("--particle").trim();
+
+      ctx.fillStyle = "rgba(239,68,68,0.16)";
+      ctx.beginPath();
+      ctx.arc(px, py, 12, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(px, py, 6.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawAxes();
+      drawTrail();
+      drawParticle();
+    }
+
+    function pushTrail() {
+      state.trail.push({ x: state.x, y: state.y });
+      if (state.trail.length > 1400) state.trail.shift();
+    }
+
+    function stepPhysics(dt) {
+      const ySpring = 0.9 + 18 * state.coupling;
+      const yDamper = 1.6 + 20 * state.coupling;
+      const xDrive = 0.55 + 12 * state.coupling;
+      const xDamper = 1.1;
+
+      if (state.flowOn) {
+        state.vy += (-ySpring * state.y - yDamper * state.vy) * dt;
+        state.vx += (xDrive - xDamper * state.vx) * dt;
+      } else {
+        state.vx += (-0.5 * state.vx) * dt;
+        state.vy += (-0.5 * state.vy) * dt;
+      }
+
+      state.x += state.vx * dt;
+      state.y += state.vy * dt;
+
+      state.x = clamp(state.x, world.xMin + 0.2, world.xMax - 0.2);
+      state.y = clamp(state.y, world.yMin + 0.2, world.yMax - 0.2);
+
+      state.trailCounter += 1;
+      if (state.trailCounter % 2 === 0) pushTrail();
+    }
+
+    function updateStats() {
+      const shape = Math.abs(state.y);
+      const scale = state.x;
+      const defectEnergy = 0.5 * shape * shape + 0.18 * Math.max(0, scale);
+      shapeStat.textContent = `Shape Divergence |p| = ${shape.toFixed(3)}`;
+      scaleStat.textContent = `Scale Shift k = ${scale.toFixed(3)}`;
+      energyStat.textContent = `Defect Energy E = ${defectEnergy.toFixed(3)}`;
+      if (state.flowOn) modeStat.textContent = "Mode: Sinkhorn damping active";
+      else if (shape < 0.03 && Math.abs(state.vy) < 0.03) modeStat.textContent = "Mode: Equilibrium";
+      else modeStat.textContent = "Mode: Defect relaxation";
+    }
+
+    function tick(ts) {
+      if (!state.lastTs) state.lastTs = ts;
+      const dt = Math.min((ts - state.lastTs) / 1000, 0.05);
+      state.lastTs = ts;
+
+      stepPhysics(dt * 7.5);
+      updateStats();
+      render();
+      requestAnimationFrame(tick);
+    }
+
+    function updateSliderViews() {
+      berryValue.textContent = state.berry.toFixed(1);
+      couplingValue.textContent = state.coupling.toFixed(3);
+    }
+
+    function exciteDefect() {
+      const jump = 0.68 * state.berry;
+      const wobble = (Math.random() * 0.4 - 0.2) * state.berry;
+      state.y = clamp(state.y + jump, world.yMin + 0.4, world.yMax - 0.4);
+      state.vy += 0.65 * jump;
+      state.x = clamp(state.x + 0.19 * state.berry + wobble * 0.1, world.xMin + 0.4, world.xMax - 0.4);
+      state.vx += 0.22 * state.berry;
+      pushTrail();
+      render();
+      updateStats();
+    }
+
+    function resetState() {
+      state.x = 0;
+      state.y = 0;
+      state.vx = 0;
+      state.vy = 0;
+      state.trail = [{ x: 0, y: 0 }];
+      state.trailCounter = 0;
+      render();
+      updateStats();
+    }
+
+    berrySlider.addEventListener("input", (e) => {
+      state.berry = parseFloat(e.target.value);
+      updateSliderViews();
+    });
+
+    couplingSlider.addEventListener("input", (e) => {
+      state.coupling = parseFloat(e.target.value);
+      updateSliderViews();
+    });
+
+    exciteBtn.addEventListener("click", exciteDefect);
+
+    flowBtn.addEventListener("click", () => {
+      state.flowOn = !state.flowOn;
+      flowBtn.classList.toggle("flow-active", state.flowOn);
+      flowBtn.textContent = state.flowOn
+        ? "Pause Sinkhorn Flow (Higgs Damping)"
+        : "Activate Sinkhorn Flow (Higgs Damping)";
+      updateStats();
+    });
+
+    resetBtn.addEventListener("click", resetState);
+
+    updateSliderViews();
+    render();
+    updateStats();
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>

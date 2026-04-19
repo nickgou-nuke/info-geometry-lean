@@ -3,9 +3,21 @@
 
 model:
   provider: custom
-  base_url: http://localhost:11434/v1
-  api_key: ollama
-  default: hermes-3-llama-3.1-8b
+  base_url: http://127.0.0.1:30000/v1
+  api_key: token-123
+  default: Nemotron-3-Nano-30B-A3B-UD-Q8_K_XL.gguf
+  role: compact_local_route_selection
+  policy_note: "Do not use Gemini/Google Code Assist/Antigravity OAuth providers from Hermes. Gemini CLI is explicit-operator-use only."
+
+fallback_models:
+  - provider: custom
+    base_url: http://127.0.0.1:30002/v1
+    api_key: token-123
+    model: deepseek-prover-v2-7b-q8_0.gguf
+  - provider: custom
+    base_url: http://127.0.0.1:30001/v1
+    api_key: token-123
+    model: Goedel-Prover-SFT.Q8_0.gguf
 
 # Skill and Memory Isolation
 # Hermes is forbidden from auto-learning into the Spire's authoritative skills.
@@ -20,3 +32,19 @@ paths:
 runtime:
   statement_lock: true
   audit_required: true
+  codex_on_demand_only: true
+  execution_surface: codex-cli
+  gemini_auto_route: false
+  gemini_explicit_operator_only: true
+  gemini_guard_command: "tools/infra/run_gemini_guarded.sh"
+  gemini_mode: "irregular_dreaming_sidecar"
+  gemini_never_poll: true
+  forbidden_providers:
+    - google-gemini-cli
+    - gemini-code-assist-oauth
+    - antigravity-oauth
+  forbidden_auth_patterns:
+    - token_extraction
+    - token_harvesting
+    - quota_piggybacking
+    - oauth_proxying

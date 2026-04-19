@@ -338,7 +338,7 @@ omit [FiniteDimensional ℝ E] in
 Uniqueness under constructive closure states:
 if two Ricci tensors are both Ricci-flat under the same geometry scaffold, they coincide.
 -/
-private theorem ricciTensor_unique_of_mongeAmpereRicciState
+theorem ricciTensor_unique_of_mongeAmpereRicciState
     (R₁ R₂ : RicciTensor E) (K : KaehlerInformationGeometry E)
     (hState₁ : MongeAmpereRicciState R₁ K)
     (hState₂ : MongeAmpereRicciState R₂ K) :

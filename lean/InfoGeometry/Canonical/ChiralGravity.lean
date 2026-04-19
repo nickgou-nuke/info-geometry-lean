@@ -26,6 +26,16 @@ noncomputable def anomalyEinsteinResidualAt
     anomalyEinsteinResidualAt R K x scalar Λ u v
       = einsteinTensorAt R K x scalar u v + Λ * K.H.metric x u v := rfl
 
+/-- Residual closure: vacuum Einstein implies the anomaly residual vanishes. -/
+theorem anomalyEinsteinResidualAt_vanishes_of_vacuum
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (hVac : VacuumEinsteinEquationAt R K x scalar Λ)
+    (u v : E) :
+    anomalyEinsteinResidualAt R K x scalar Λ u v = 0 := by
+  unfold anomalyEinsteinResidualAt
+  simpa using hVac u v
+
 /-- Canonical curvature-forcing state at a given pair of directions. -/
 def AnomalyCurvatureForcingStateAt
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)

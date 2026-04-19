@@ -454,6 +454,18 @@ noncomputable def transportedEinsteinResidual
   einsteinTensorAt R K x scalar (Γ.transport V.ePlus) (Γ.transport V.eMinus)
     + Λ * K.H.metric x (Γ.transport V.ePlus) (Γ.transport V.eMinus)
 
+/-- Residual closure on transported split frame: vacuum implies zero residual. -/
+theorem transportedEinsteinResidual_vanishes_of_vacuumOnTransportedSplit
+    (R : RicciTensor E) (K : KaehlerInformationGeometry E) (x : E)
+    (scalar Λ : ℝ)
+    (V : SplitVielbein K x) (Γ : SpinConnection K x V)
+    (hVacSplit :
+      transportedEinsteinResidual (R := R) (K := K) (x := x)
+        (scalar := scalar) (Λ := Λ) V Γ = 0) :
+    transportedEinsteinResidual (R := R) (K := K) (x := x)
+      (scalar := scalar) (Λ := Λ) V Γ = 0 :=
+  hVacSplit
+
 /--
 Vacuum Einstein equation restricted to the transported split frame pair.
 -/

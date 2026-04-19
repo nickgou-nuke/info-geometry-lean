@@ -167,7 +167,7 @@ directives are mandatory:
 1. `I.no_mask_mandate`
 2. `II.functorial_connectivity`
 3. `III.axiom_surface_seal`
-4. `IV.semantic_weight_ratio`
+4. `IV.multilingual_bridge_fidelity`
 5. `V.identity_via_reflexivity`
 
 Machine gate:

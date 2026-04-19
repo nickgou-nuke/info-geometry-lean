@@ -15,6 +15,8 @@ operator inequalities on the defect budget.
 namespace InfoGeometry.LLM.SinkhornDefectFlow
 
 open InfoGeometry.LLM.TrialityMoE
+open InfoGeometry.Canonical.DrazinSupercharge
+open InfoGeometry.Canonical.ModularSourceBridge
 
 variable {E : Type}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -87,6 +89,80 @@ structure RouterClockDefectBridge where
   residual_eq_clockDefect :
     bound.routerResidual =
       InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect (H := E) hMod
+
+namespace RouterClockDefectBridge
+
+/--
+Canonical clock-defect constructor.
+
+The router residual is fixed to the canonical non-equilibrium clock defect. The
+remaining `ZD` bound is explicit: it must be proved upstream rather than hidden
+inside an arbitrary residual field.
+-/
+noncomputable def ofCanonicalClockDefect
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (flow : BackgroundModularFlow CIK)
+    (hMod : EndH)
+    (hBound :
+      ‖InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect (H := E) hMod‖ ≤
+        ‖InfoGeometry.Canonical.KKTClosure.ZD CIK‖) :
+    RouterClockDefectBridge (E := E) :=
+  { bound :=
+      { CIK := CIK
+        flow := flow
+        routerResidual :=
+          InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect (H := E) hMod
+        residual_norm_le_ZD := hBound }
+    hMod := hMod
+    residual_eq_clockDefect := rfl }
+
+@[simp] theorem ofCanonicalClockDefect_routerResidual
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (flow : BackgroundModularFlow CIK)
+    (hMod : EndH)
+    (hBound :
+      ‖InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect (H := E) hMod‖ ≤
+        ‖InfoGeometry.Canonical.KKTClosure.ZD CIK‖) :
+    (ofCanonicalClockDefect (E := E) CIK flow hMod hBound).bound.routerResidual =
+      InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect (H := E) hMod := by
+  rfl
+
+/--
+Zero-defect clock bridge for detailed equilibrium.
+
+Detailed equilibrium kills the canonical non-equilibrium clock defect, so the
+`ZD` budget is closed without an independent bound assumption.
+-/
+noncomputable def ofDetailedEquilibrium
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (flow : BackgroundModularFlow CIK)
+    (hMod : EndH)
+    (hEq : InfoGeometry.Canonical.WindingOrbitClosure.IsDetailedEquilibriumSeed (H := E) hMod) :
+    RouterClockDefectBridge (E := E) :=
+  ofCanonicalClockDefect (E := E) CIK flow hMod (by
+    have hZero :
+        InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect (H := E) hMod = 0 :=
+      InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect_eq_zero_of_detailedEquilibrium
+        (H := E) hMod hEq
+    rw [hZero]
+    calc
+      ‖(0 : EndH)‖ = 0 := ContinuousLinearMap.opNorm_zero
+      _ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD CIK‖ :=
+        norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD CIK))
+
+@[simp] theorem ofDetailedEquilibrium_routerResidual
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (flow : BackgroundModularFlow CIK)
+    (hMod : EndH)
+    (hEq : InfoGeometry.Canonical.WindingOrbitClosure.IsDetailedEquilibriumSeed (H := E) hMod) :
+    (ofDetailedEquilibrium (E := E) CIK flow hMod hEq).bound.routerResidual = 0 := by
+  have hZero :
+      InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect (H := E) hMod = 0 :=
+    InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect_eq_zero_of_detailedEquilibrium
+      (H := E) hMod hEq
+  simpa [ofDetailedEquilibrium] using hZero
+
+end RouterClockDefectBridge
 
 /--
 On the clock-defect bridge, odd-sector defect is exactly the non-equilibrium

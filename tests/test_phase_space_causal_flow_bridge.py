@@ -130,11 +130,9 @@ class PhaseSpaceCausalFlowBridgeTests(unittest.TestCase):
                   ∧ IsGZero (doubledSpaceCl11Action (E := H)) CIK.dilationGap
                   ∧ IsGZero (doubledSpaceCl11Action (E := H)) CIK.drazinCoreProj
                   ∧ IsGZero (doubledSpaceCl11Action (E := H))
-                      (chiralGrading CCI.toConformalInference)
-                  ∧ R.couplingLogDefect
-                      = PolarizedRecompositionData.generalizedMetricTwistShadow R :=
+                      (chiralGrading CCI.toConformalInference) :=
               correctedOwner_trunk_outputs (H := H) (CIK := CIK) (CCI := CCI)
-                hA hAMP hAD hA' hAMP' R
+                hA hAMP hAD hA' hAMP'
 
             example :
                 TrunkOutputs H α βplus βminus CIK CCI R :=

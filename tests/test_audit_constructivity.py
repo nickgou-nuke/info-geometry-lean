@@ -10,7 +10,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _load_audit_module() -> ModuleType:
-    module_path = REPO_ROOT / "scripts" / "quality" / "audit_constructivity.py"
+    module_path = REPO_ROOT / "tools" / "quality" / "audit_constructivity.py"
     spec = importlib.util.spec_from_file_location("audit_constructivity", module_path)
     if spec is None or spec.loader is None:
         raise RuntimeError("Unable to load audit_constructivity module")

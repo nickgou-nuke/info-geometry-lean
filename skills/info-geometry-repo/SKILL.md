@@ -58,6 +58,27 @@ The DAG and Python layers are maintained memory.
 Use them to restore context, surface transport pressure, and choose what to read next.
 Do not use them to replace Lean source or invent ontology absent from code.
 
+## Multilingual Bridge Comment Policy
+
+This repository is a Lean 4 formalization of the physics of information. It
+uses established language from information geometry, statistical mechanics,
+operator algebra, quantum mechanics, and thermodynamics because that is the
+least obscure vocabulary for the structures being formalized.
+
+Treat bridge-bearing comments and docstrings as part of the representation
+layer, not as disposable prose. They may encode the transport between SymPy,
+Python, Lean 4, LaTeX, and natural mathematical language.
+
+Do not judge modules by comment-to-code ratio, prose length, or the mere
+presence of physically loaded terms. Judge semantic faithfulness, theorem
+ownership, dependency connectivity, and bridge correctness.
+
+When editing comments:
+- preserve or expand cross-representation explanations
+- correct false or stale interpretation
+- distinguish analogy, definition, and theorem
+- delete only prose that is false, duplicative, stale, or not bridge-bearing
+
 LeanTrail memory carriers are now also maintained retrieval surfaces:
 - canonical snapshot: `artifacts/leantrail/graph_snapshot.json`
 - external adapters: GraphML / Neo4j CSV / Arango JSON
@@ -116,7 +137,7 @@ For stabilization/closure work by agents and coding agents, enforce:
 1. `I.no_mask_mandate`
 2. `II.functorial_connectivity`
 3. `III.axiom_surface_seal`
-4. `IV.semantic_weight_ratio`
+4. `IV.multilingual_bridge_fidelity`
 5. `V.identity_via_reflexivity`
 6. `VI.anti_existential_hypothesis`
 7. `VII.interface_witness_fidelity`

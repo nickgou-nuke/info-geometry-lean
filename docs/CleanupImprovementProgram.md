@@ -64,7 +64,7 @@ Actions:
 1. Enforce `I.no_mask_mandate` (physically loaded names must be grounded).
 2. Enforce `II.functorial_connectivity` (no floating import-only canonical modules).
 3. Enforce `III.axiom_surface_seal` (no `sorry`/`admit`/`axiom` holes).
-4. Enforce `IV.semantic_weight_ratio` (prose cannot dominate proof/definition surface).
+4. Enforce `IV.multilingual_bridge_fidelity` (bridge-bearing prose is preserved; only unsupported or non-bridge rhetoric is rejected).
 5. Enforce `V.identity_via_reflexivity` (no grand unity via trivial `rfl`).
 6. Keep this gate mandatory in `scripts/audit_surrogates.sh`.
 

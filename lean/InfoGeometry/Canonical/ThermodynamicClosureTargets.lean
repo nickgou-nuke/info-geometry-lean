@@ -205,7 +205,7 @@ def routerResidual_bounded_by_defectCentral_target
       ‖routerResidual CIK‖ ≤ c * defectCentralNorm (E := E) CIK
 
 /-- Vanishing closure: zero router residual satisfies the defect-central bound. -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem routerResidual_bounded_by_defectCentral_target_vanishes_of_zero
     (routerResidual : CertifiedInverseKernel H₂ → EndH)
     (hZero : ∀ CIK : CertifiedInverseKernel H₂, routerResidual CIK = 0) :

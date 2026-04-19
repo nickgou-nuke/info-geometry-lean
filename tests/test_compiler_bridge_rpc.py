@@ -69,9 +69,10 @@ class CompilerBridgeRpcTests(unittest.TestCase):
         input_path: Path,
         rpc_method: str,
         *,
-        line: int = 0,
+        line: int | None = None,
         character: int = 0,
         decl_name: str | None = None,
+        pretty_print_type: bool = False,
     ) -> dict:
         return bridge_client.call_bridge_method(
             input_path=input_path,
@@ -83,6 +84,7 @@ class CompilerBridgeRpcTests(unittest.TestCase):
             wait_for_diagnostics=True,
             rpc_method=rpc_method,
             decl_name=decl_name,
+            pretty_print_type=pretty_print_type,
         )
 
     @contextmanager
@@ -183,6 +185,7 @@ class CompilerBridgeRpcTests(unittest.TestCase):
             self.clean_file,
             "validateDecl",
             decl_name="bridge_ok",
+            pretty_print_type=True,
         )
         self.assertTrue(result["ok"])
         self.assertTrue(result["declFound"])

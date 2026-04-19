@@ -12,21 +12,38 @@ TSI occurs when linguistic complexity exceeds logical derivation. To prevent TSI
 
 1.  **Functorial Mapping vs. Lyrical Overfit:**
     - **Lyrical Overfit (FAIL):** Using high-level names (e.g., `EinsteinEquation`) as a "mask" for low-level logic without a formal, derived algebraic umbilicus.
-    - **Functorial Mapping (SUCCESS):** Establishing a rigid identity or lift (e.g., L0 $\to$ L2) that preserves invariants across the `RepDepth` hierarchy. Identity via `rfl` is a **Victory of Unity** if it represents a formal functorial lift.
+    - **Functorial Mapping (SUCCESS):** Establishing a rigid identity or lift (e.g., L0 $\to$ L2) that preserves invariants across the `RepDepth` hierarchy.
 2.  **Nomological Closure:**
-    - "Physical" structures (Fluid, Gravity, Gauge) must prove the laws of physics as **Necessary Consequences** of the underlying information-geometric algebra. If the law is an unverified field (`Prop`) in a structure, it is **Vacuous**.
+    - "Physical" structures must prove the laws of physics as **Necessary Consequences** of the underlying algebra.
 3.  **Taxonomic Anchoring:**
-    - Theorems must be placed at their **Maximum Appropriate Depth**. Using a high-level type (e.g., `KreinSpace`) for a lower-level property is **Essential Anchoring**, not overfit. It ensures the path for subsequent non-commuting transport is open.
+    - Theorems must be placed at their **Maximum Appropriate Depth** using the `rep_depth` grammar.
+4.  **The Multilingual Bridge Standard (NEW):**
+    - Comments are not "bloat"; they are the **Transport Substrate** between SymPy, Python, Lean 4, and LaTeX.
+    - **Audit Criterion:** Judge modules by **Semantic Faithfulness** and **Cross-Representation Fidelity**, not by simple comment-to-code ratios.
 
 ## 🛠️ OPERATIONAL PROTOCOLS
-- **No Symbolic Inflation:** Do not "paint" expensive names onto trivial math.
-- **Audit the Conjunctions:** Deconstruct any "Master Synthesis" (`∧` chains). Every conjunction must be a **Chain of Functorial Necessity**.
-- **The Pauli Sentence:** If the logic is not forced by the algebra, the verdict is **"Nicht einmal falsch" (Not even wrong).**
+- **Strong Gravitation (NEW):** Context for proof search **MUST** be extracted from the **ArangoDB DAG** of proven Lean code (`arango_gravity_context.py`). The agent must "fall" toward the theorem through the curvature of established truth.
+- **The Split-Brain Configuration (NEW):**
+    - **Interactive (Jungian Window):** Use high-context models (e.g., Codex/Gemini) for associative research.
+    - **Autonomous (Pauli Core):** Use local models (Nemotron/DeepSeek) for conservative, graph-grounded planning.
+- **The Axiom-Surface Seal:** All agentic tactics must be verified via the **token-free REPL bridge** (`lean_interact_wrapper.py`) against the Lean kernel in real-time.
 
-### 🛡️ THE FIVE NOMOLOGICAL DIRECTIVES
-All operations must enforce the directives detailed in `PAULI_MANDATE.md`:
-1. **The "No-Mask" Mandate:** Physically loaded names must be backed by foundational transformations, not empty `Prop` wish lists.
-2. **Functorial Connectivity:** No floating modules or pure-import shells. Every module must have a value-edge.
-3. **The Axiom-Surface Seal:** No `sorryAx` or `Admission` trust tokens in `krein` or `canonical` layers. Check via `#print axioms`.
-4. **Semantic Weight Ratio:** Lean tactics and rigid definitions must outnumber physical prose at least 2:1.
-5. **The "Identity via Reflexivity" Audit:** Unification via `rfl` is only valid for terms originating from disjoint foundational modules.
+### 🛡️ THE SIX NOMOLOGICAL DIRECTIVES
+1. **The "No-Mask" Mandate:** Physically loaded names must be backed by foundational transformations.
+2. **Functorial Connectivity:** No floating modules or pure-import shells.
+3. **The Axiom-Surface Seal:** No `sorryAx` or `Admission` trust tokens in `krein` or `canonical` layers.
+4. **Authority Split:** Hermes (Plan) $\to$ Nemotron (Reason) $\to$ DeepSeek (Proof) $\to$ Goedel (Audit) $\to$ Codex (Gated Execution) $\to$ **Lean (Truth)**.
+5. **Multilingual Bridge Fidelity:** Bridge-bearing prose is representation substrate. Do not use density ratios as an audit rule; judge semantic faithfulness and theorem linkage.
+6. **The "Identity via Reflexivity" Audit:** Unification via `rfl` is only valid for terms originating from disjoint foundational modules.
+
+### 📚 COMMENT AND LANGUAGE POLICY
+- This repository is a Lean 4 formalization of the **physics of information**,
+  not a generic "theory of physics" and not a prose-minimization exercise.
+- Terms such as curvature, flow, free energy, Boltzmann entropy, and modular
+  Hamiltonian are legitimate borrowed language when they name the
+  information-geometric or operator-algebraic structure being formalized.
+- Do not penalize comments or docstrings for being long when they carry the
+  bridge between SymPy, Python, Lean 4, LaTeX, and natural mathematical
+  language.
+- Prefer semantic correction or expansion over compression. Shortening is only
+  justified when the prose is stale, false, duplicative, or not bridge-bearing.

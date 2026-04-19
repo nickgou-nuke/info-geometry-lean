@@ -17,6 +17,14 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
 
+noncomputable local instance : NormedRing EndH := inferInstance
+noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
+noncomputable local instance : NormedAlgebra ℚ EndH :=
+  NormedAlgebra.restrictScalars ℚ ℝ EndH
+local instance : IsTopologicalRing EndH := inferInstance
+local instance : SMulCommClass ℝ EndH EndH := inferInstance
+local instance : IsScalarTower ℝ EndH EndH := inferInstance
+
 /--
 Local observer slice that preserves the spectral grading orientation.
 -/
@@ -27,12 +35,91 @@ structure ObserverL5 (CIK : CertifiedInverseKernel H₂) where
       CIK.toInformationCartanTriple.GammaS * localSlice
 
 /--
+The observer slice lies in the spectral compact Cartan sector because it is
+orientation-fixing with respect to the certified grading `Γ_S`.
+-/
+theorem observerLocalSlice_isSpectralCompact
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) :
+    CIK.IsSpectralCompact obs.localSlice := by
+  rw [CIK.isSpectralCompact_iff_commute_GammaS]
+  simpa using obs.isOrientationFixing
+
+/--
+Deviation of the observer slice from the certified Drazin spectral projector.
+
+This is the smallest upstream algebraic datum for comparing observer-induced
+residuals with the canonical inverse-kernel lane.
+-/
+noncomputable def observerProjectorDeviation
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) : EndH :=
+  obs.localSlice - CIK.spectralProjector
+
+@[simp] theorem localSlice_eq_spectralProjector_add_observerProjectorDeviation
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) :
+    obs.localSlice = CIK.spectralProjector + observerProjectorDeviation CIK obs := by
+  unfold observerProjectorDeviation
+  abel
+
+/--
 Primary observer residual against the geometric dilation lane.
 -/
 noncomputable def observerOrientationResidual
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK) : EndH :=
   DrazinSupercharge.commutator obs.localSlice CIK.dilationGap
+
+/--
+Split the observer residual into the canonical spectral-projector commutator and
+an observer-deviation commutator.
+-/
+theorem observerOrientationResidual_eq_commutator_spectralProjector_add_commutator_deviation
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) :
+    observerOrientationResidual CIK obs
+      = DrazinSupercharge.commutator CIK.spectralProjector CIK.dilationGap
+        + DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap := by
+  unfold observerOrientationResidual
+  rw [localSlice_eq_spectralProjector_add_observerProjectorDeviation (CIK := CIK) (obs := obs)]
+  unfold DrazinSupercharge.commutator
+  noncomm_ring
+
+/--
+Observer-side Cartan split through a chosen axis `sigma` on the geometric lane:
+`2 • [L_obs, G] = [L_obs, sigma] + [L_obs, Xi]`, where `Xi := Γ_G - sigma`.
+
+This is the observer analogue of the repo-native
+`supercharge_eq_commutator_spectralProjector_sigma_add_commutator_spectralProjector_geometricMismatch`
+surface, but it stays on the existing observer residual and uses no new ontology.
+-/
+theorem two_smul_observerOrientationResidual_eq_commutator_localSlice_sigma_add_commutator_localSlice_geometricMismatch
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (sigma : EndH) :
+    (2 : ℝ) • observerOrientationResidual CIK obs
+      = DrazinSupercharge.commutator obs.localSlice sigma
+        + DrazinSupercharge.commutator obs.localSlice
+            (DrazinSupercharge.CertifiedInverseKernel.geometricMismatch CIK sigma) := by
+  have hGamma :
+      (2 : ℝ) • observerOrientationResidual CIK obs
+        = DrazinSupercharge.commutator obs.localSlice CIK.GammaG := by
+    unfold observerOrientationResidual DrazinSupercharge.commutator
+    rw [CIK.GammaG_eq_two_smul_dilationGap]
+    change (2 : ℝ) • (obs.localSlice * CIK.dilationGap - CIK.dilationGap * obs.localSlice) =
+      obs.localSlice * ((2 : ℝ) • CIK.dilationGap) - ((2 : ℝ) • CIK.dilationGap) * obs.localSlice
+    simp only [two_smul, smul_add, sub_eq_add_neg, add_mul, mul_add, add_assoc]
+    abel_nf
+  calc
+    (2 : ℝ) • observerOrientationResidual CIK obs
+        = DrazinSupercharge.commutator obs.localSlice CIK.GammaG := hGamma
+    _ = DrazinSupercharge.commutator obs.localSlice sigma
+          + DrazinSupercharge.commutator obs.localSlice
+              (DrazinSupercharge.CertifiedInverseKernel.geometricMismatch CIK sigma) := by
+          rw [DrazinSupercharge.CertifiedInverseKernel.GammaG_eq_sigma_add_geometricMismatch (CIK := CIK) sigma]
+          unfold DrazinSupercharge.commutator
+          noncomm_ring
 
 /--
 Defect-compressed observer residual in the Drazin complementary block.
@@ -43,6 +130,81 @@ noncomputable def observerDefectResidual
   CIK.spectralComplementaryProjector *
     observerOrientationResidual CIK obs *
     CIK.spectralComplementaryProjector
+
+/--
+Defect-compressed observer residual rewritten through the spectral-projector and
+observer-deviation commutator split.
+-/
+theorem observerDefectResidual_eq_projectorCompression_commutator_split
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) :
+    observerDefectResidual CIK obs
+      = CIK.spectralComplementaryProjector *
+          (DrazinSupercharge.commutator CIK.spectralProjector CIK.dilationGap
+            + DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap) *
+          CIK.spectralComplementaryProjector := by
+  unfold observerDefectResidual
+  rw [observerOrientationResidual_eq_commutator_spectralProjector_add_commutator_deviation (CIK := CIK) (obs := obs)]
+
+/--
+Defect-compressed observer-side Cartan split through a chosen axis `sigma`.
+-/
+theorem two_smul_observerDefectResidual_eq_projectorCompression_commutator_localSlice_sigma_add_commutator_localSlice_geometricMismatch
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (sigma : EndH) :
+    (2 : ℝ) • observerDefectResidual CIK obs
+      = CIK.spectralComplementaryProjector *
+          (DrazinSupercharge.commutator obs.localSlice sigma
+            + DrazinSupercharge.commutator obs.localSlice
+                (DrazinSupercharge.CertifiedInverseKernel.geometricMismatch CIK sigma)) *
+          CIK.spectralComplementaryProjector := by
+  unfold observerDefectResidual
+  calc
+    (2 : ℝ) •
+        (CIK.spectralComplementaryProjector * observerOrientationResidual CIK obs *
+          CIK.spectralComplementaryProjector)
+      = CIK.spectralComplementaryProjector * ((2 : ℝ) • observerOrientationResidual CIK obs) *
+          CIK.spectralComplementaryProjector := by
+            simp only [two_smul, add_mul, mul_add]
+    _ = CIK.spectralComplementaryProjector *
+          (DrazinSupercharge.commutator obs.localSlice sigma
+            + DrazinSupercharge.commutator obs.localSlice
+                (DrazinSupercharge.CertifiedInverseKernel.geometricMismatch CIK sigma)) *
+          CIK.spectralComplementaryProjector := by
+            rw [two_smul_observerOrientationResidual_eq_commutator_localSlice_sigma_add_commutator_localSlice_geometricMismatch
+              (CIK := CIK) (obs := obs) (sigma := sigma)]
+
+/--
+If the observer slice agrees with the certified spectral projector, the observer
+orientation residual collapses to the canonical commutator seed.
+-/
+theorem observerOrientationResidual_eq_commutator_spectralProjector_of_deviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    observerOrientationResidual CIK obs
+      = DrazinSupercharge.commutator CIK.spectralProjector CIK.dilationGap := by
+  rw [observerOrientationResidual_eq_commutator_spectralProjector_add_commutator_deviation (CIK := CIK) (obs := obs)]
+  rw [hDev]
+  simp [DrazinSupercharge.commutator]
+
+/--
+If the observer slice agrees with the certified spectral projector, the defect
+residual is exactly the defect-block compression of the canonical commutator
+seed.
+-/
+theorem observerDefectResidual_eq_projectorCompression_commutator_spectralProjector_of_deviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    observerDefectResidual CIK obs
+      = CIK.spectralComplementaryProjector *
+          DrazinSupercharge.commutator CIK.spectralProjector CIK.dilationGap *
+          CIK.spectralComplementaryProjector := by
+  rw [observerDefectResidual_eq_projectorCompression_commutator_split (CIK := CIK) (obs := obs)]
+  rw [hDev]
+  simp [DrazinSupercharge.commutator, mul_assoc]
 
 /--
 Defect compression is stable under left/right `Q₀` action.
@@ -122,8 +284,8 @@ theorem observerOrientationStrain_eq_zero_iff
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK) :
     observerOrientationStrain CIK obs = 0 ↔ observerDefectResidual CIK obs = 0 := by
-  simpa [observerOrientationStrain] using
-    (ContinuousLinearMap.opNorm_zero_iff (f := observerDefectResidual CIK obs))
+  show ‖observerDefectResidual CIK obs‖ = 0 ↔ observerDefectResidual CIK obs = 0
+  exact norm_eq_zero
 
 end Core
 

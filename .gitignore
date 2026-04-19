@@ -43,6 +43,7 @@ docs/auto/**
 !docs/lean_compiler_service.md
 !docs/typed_lean_compiler_bridge.md
 !docs/penrose_diagram_explorer.html
+!docs/information_symmetry_breaking_explorer.html
 docbuild/
 publication/
 

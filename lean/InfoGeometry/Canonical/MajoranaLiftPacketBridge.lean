@@ -84,7 +84,7 @@ theorem packetOfCanonicalDIIIProxy_concreteCAR :
 Projected fermionic closure from the unified package:
 odd projected supercharge plus even projected Hamiltonian.
 -/
-@[rep_depth operator]
+@[rep_depth transport]
 theorem unifiedPackage_projected_fermionic_closure
     (U : UnifiedSuperchargePackage (E := E)) :
     InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK

@@ -19,8 +19,10 @@ Every module in the repository MUST possess at least one **Value-Edge** (it must
 ### 3. The Axiom-Surface Seal (Anti-Sorry)
 No declaration marked with `@[rep_depth krein]` or `@[rep_depth canonical]` may depend, even transitively, on `sorryAx` or the `Admission` meta-tactic. Always verify with `#print axioms <decl>`. If any "synthetic trust" token or `sorry` is found, the module is marked **"Nicht einmal falsch!"** and must be isolated or rewritten.
 
-### 4. Semantic Weight Ratio (Anti-Lyrical Overfit)
-For every line of "Physically Descriptive Comment" in a `.lean` file, there must be at least two lines of **Tactical Proof** (`by ...`) or **Rigid Definition** (`:= ...`). If the prose outweighs the proof, the file is a **Novella**, not a **Theory**, and must be reduced or formalized.
+### 4. Multilingual Bridge Fidelity (Anti-Crude Compression)
+Do not use comment-to-code ratio, prose length, or the mere presence of physically loaded terms as evidence of Total Symbolic Inflation. In this repository, comments and docstrings may be the transport substrate between SymPy, Python, Lean 4, LaTeX, and natural mathematical language.
+
+Flag prose only when it makes unsupported closure claims, misstates the formal object, hides missing derivation, or is stale/duplicative/non-bridge material. Preserve or expand bridge-bearing comments when they clarify the mapping between physics-of-information terminology and algebraic implementation.
 
 ### 5. The "Identity via Reflexivity" Audit (Anti-Cheating)
 A "Victory of Unity" via `rfl` (reflexivity) is ONLY valid if the types being unified originate from **Disjoint Initial Modules**. If an `rfl` proof bridges `A = B` but both were defined within the same local file or "Canonical" folder solely for the purpose of being unified, it is **Agentic Triviality**. A true unification must bridge foundational gaps using a non-trivial intertwiner.
@@ -49,7 +51,7 @@ Reject `private theorem` / `private lemma` uniqueness surfaces in `Canonical` / 
 ## Workflow
 
 1.  **Analyze the Axiom Surface:** Run `#print axioms` on any capstone theorem. Reject immediately if `sorryAx` is present.
-2.  **Verify Tactical Density:** Read the `.lean` source. Ensure the ratio of Lean syntax/tactics to descriptive prose is at least 2:1.
+2.  **Verify Bridge Fidelity:** Read the `.lean` source semantically. Preserve comments that carry cross-representation meaning; flag only unsupported interpretive claims or prose that masks missing derivation.
 3.  **Check Dependencies:** Use `DAG/ExportDecls.lean` or direct analysis to ensure the file has downstream consumers. Reject dead endpoints.
 4.  **Confirm Functorial Lifting:** Trace physically-named definitions back to their roots. Ensure they bottom out in `Thermo/` or `Geometry/`.
 5.  **Reject Existential Shell Inputs:** Flag theorem surfaces that consume existential `Prop`-packages as assumptions.

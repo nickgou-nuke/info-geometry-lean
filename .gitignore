@@ -28,6 +28,7 @@ docs/**
 docs/auto/**
 !docs/auto/index.md
 !docs/**/*.md
+!docs/NameEquivalenceRegistry.json
 !docs/README.md
 !docs/ModuleMap.md
 !docs/RepositoryMemoryMap.md

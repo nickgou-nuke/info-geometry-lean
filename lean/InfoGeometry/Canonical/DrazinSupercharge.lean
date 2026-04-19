@@ -1361,6 +1361,20 @@ noncomputable def intrinsicCentralIndexResidual
   InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK
     - operatorialCentralDefectShadow (A := A) (B := B) CIK X hX
 
+/-- Residual closure: equality of canonical and shadow channels kills the residual. -/
+@[rep_depth transport]
+theorem intrinsicCentralIndexResidual_vanishes_of_channelEq
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hX : ChiralFredholmSurface X)
+    (hEq :
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK CIK
+        =
+      operatorialCentralDefectShadow (A := A) (B := B) CIK X hX) :
+    intrinsicCentralIndexResidual (A := A) (B := B) CIK X hX = 0 := by
+  unfold intrinsicCentralIndexResidual
+  simp [hEq]
+
 /--
 The intrinsic residual is defect-supported.
 -/

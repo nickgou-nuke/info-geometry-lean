@@ -586,7 +586,7 @@ theorem sourceAnticommutator_eq_connectionGenerator_add_half_anticommutator_spec
         _ = (2⁻¹ : ℝ) • ((2 : ℝ) • Aplus) := by simp [smul_smul]
         _ = (2⁻¹ : ℝ) • (Aplus + Aplus) := by simp [two_smul]
     _ = (2⁻¹ : ℝ) • ((Aplus + Aminus) + (Aplus - Aminus)) := by
-      abel
+      abel_nf
     _ = (2⁻¹ : ℝ) • ((2 : ℝ) • V.connectionGenerator + Aeps) := by
       rw [hSum, hSub]
     _ = V.connectionGenerator + (2⁻¹ : ℝ) • Aeps := by
@@ -636,7 +636,7 @@ theorem sinkAnticommutator_eq_connectionGenerator_sub_half_anticommutator_spectr
         _ = (2⁻¹ : ℝ) • ((2 : ℝ) • Aminus) := by simp [smul_smul]
         _ = (2⁻¹ : ℝ) • (Aminus + Aminus) := by simp [two_smul]
     _ = (2⁻¹ : ℝ) • ((Aplus + Aminus) - (Aplus - Aminus)) := by
-      abel
+      abel_nf
     _ = (2⁻¹ : ℝ) • ((2 : ℝ) • V.connectionGenerator - Aeps) := by
       rw [hSum, hSub]
     _ = V.connectionGenerator - (2⁻¹ : ℝ) • Aeps := by

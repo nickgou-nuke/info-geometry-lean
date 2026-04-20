@@ -1,0 +1,2255 @@
+{
+  "query": "constructive drazin local weyl symmetry penrose projector weyl compatible",
+  "queryTokens": [
+    "compatible",
+    "constructive",
+    "drazin",
+    "local",
+    "penrose",
+    "projector",
+    "symmetry",
+    "weyl"
+  ],
+  "graph": {
+    "nodeCount": 95,
+    "edgeCount": 184,
+    "useGpuRequested": true,
+    "backendPriorityAlgos": [
+      "cugraph"
+    ],
+    "backendPriorityGenerators": [
+      "cugraph"
+    ]
+  },
+  "seeds": [
+    {
+      "chunkKey": "chunk_de9785411163d9c2",
+      "lexicalScore": 3.0
+    },
+    {
+      "chunkKey": "chunk_14dd9f5c01153bf6",
+      "lexicalScore": 2.0
+    },
+    {
+      "chunkKey": "chunk_6a36f5317f5d1e6a",
+      "lexicalScore": 2.0
+    },
+    {
+      "chunkKey": "chunk_772c7403f9643fe1",
+      "lexicalScore": 2.0
+    },
+    {
+      "chunkKey": "chunk_7e59fd78a1362313",
+      "lexicalScore": 2.0
+    },
+    {
+      "chunkKey": "chunk_cef46622ee5332e7",
+      "lexicalScore": 2.0
+    }
+  ],
+  "hits": [
+    {
+      "chunk": {
+        "_key": "chunk_772c7403f9643fe1",
+        "key": "chunk_772c7403f9643fe1",
+        "documentKey": "doc_debc96ec760154aa",
+        "sectionKey": "section_4bc348695d6c84c4",
+        "ordinal": 12,
+        "chunkKind": "chunk",
+        "title": "4. Scale Invariance and the Gauge",
+        "text": "**Conclusion:** The Spire does not \"divide.\" It **distills** the regular from the null, using the Drazin-Penrose bridge to transport meaning across singular operator surfaces. We have moved from coordinate division to topological ratio.",
+        "tokens": [
+          "across",
+          "bridge",
+          "conclusion",
+          "coordinate",
+          "distills",
+          "divide",
+          "division",
+          "does",
+          "drazin",
+          "from",
+          "have",
+          "meaning",
+          "moved",
+          "not",
+          "null",
+          "operator",
+          "penrose",
+          "ratio",
+          "regular",
+          "singular",
+          "spire",
+          "surfaces",
+          "the",
+          "topological",
+          "transport",
+          "using"
+        ],
+        "provenance": {
+          "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+          "section": "4. Scale Invariance and the Gauge",
+          "ordinal": 12
+        }
+      },
+      "graphScore": 0.08558334794395536,
+      "lexicalScore": 2,
+      "entities": [
+        {
+          "_key": "entity_07dc37248e5e94bc",
+          "key": "entity_07dc37248e5e94bc",
+          "chunkKey": "chunk_772c7403f9643fe1",
+          "entityType": "symbol",
+          "surface": "Scale",
+          "normalized": "Scale"
+        },
+        {
+          "_key": "entity_7d4fa725cb36f0ed",
+          "key": "entity_7d4fa725cb36f0ed",
+          "chunkKey": "chunk_772c7403f9643fe1",
+          "entityType": "symbol",
+          "surface": "Invariance",
+          "normalized": "Invariance"
+        },
+        {
+          "_key": "entity_c6776e2825066868",
+          "key": "entity_c6776e2825066868",
+          "chunkKey": "chunk_772c7403f9643fe1",
+          "entityType": "symbol",
+          "surface": "Gauge",
+          "normalized": "Gauge"
+        },
+        {
+          "_key": "entity_5969183ef5066655",
+          "key": "entity_5969183ef5066655",
+          "chunkKey": "chunk_772c7403f9643fe1",
+          "entityType": "symbol",
+          "surface": "Conclusion",
+          "normalized": "Conclusion"
+        },
+        {
+          "_key": "entity_622ba2f05745bb9a",
+          "key": "entity_622ba2f05745bb9a",
+          "chunkKey": "chunk_772c7403f9643fe1",
+          "entityType": "symbol",
+          "surface": "The",
+          "normalized": "The"
+        },
+        {
+          "_key": "entity_54ea14fe869182fd",
+          "key": "entity_54ea14fe869182fd",
+          "chunkKey": "chunk_772c7403f9643fe1",
+          "entityType": "symbol",
+          "surface": "Spire",
+          "normalized": "Spire"
+        },
+        {
+          "_key": "entity_3608aa4faab15331",
+          "key": "entity_3608aa4faab15331",
+          "chunkKey": "chunk_772c7403f9643fe1",
+          "entityType": "symbol",
+          "surface": "It",
+          "normalized": "It"
+        },
+        {
+          "_key": "entity_95e96abb0522ef89",
+          "key": "entity_95e96abb0522ef89",
+          "chunkKey": "chunk_772c7403f9643fe1",
+          "entityType": "symbol",
+          "surface": "Drazin",
+          "normalized": "Drazin"
+        },
+        {
+          "_key": "entity_e1c95bbbdfd1900b",
+          "key": "entity_e1c95bbbdfd1900b",
+          "chunkKey": "chunk_772c7403f9643fe1",
+          "entityType": "symbol",
+          "surface": "Penrose",
+          "normalized": "Penrose"
+        },
+        {
+          "_key": "entity_d4e7733183e97e05",
+          "key": "entity_d4e7733183e97e05",
+          "chunkKey": "chunk_772c7403f9643fe1",
+          "entityType": "symbol",
+          "surface": "We",
+          "normalized": "We"
+        }
+      ],
+      "neighbors": [
+        {
+          "kind": "chunk",
+          "_key": "chunk_62505cdc8fed5b98",
+          "key": "chunk_62505cdc8fed5b98",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_4bc348695d6c84c4",
+          "ordinal": 11,
+          "chunkKind": "chunk",
+          "title": "4. Scale Invariance and the Gauge",
+          "text": "The **Information-Geometric Relative Norm** is scale-invariant by construction (`informationGeometricRelativeNorm_scale_scale`). This invariance is the prerequisite for the operatorial ratio: the scale is killed by the **PositiveRay** quotient and the canonical **gaugeSection**, ensuring the norm reads only the normalized modular contrast, not the coordinate magnitude.",
+          "tokens": [
+            "and",
+            "canonical",
+            "construction",
+            "contrast",
+            "coordinate",
+            "ensuring",
+            "for",
+            "gaugesection",
+            "geometric",
+            "information",
+            "informationgeometricrelativenorm_scale_scale",
+            "invariance",
+            "invariant",
+            "killed",
+            "magnitude",
+            "modular",
+            "norm",
+            "normalized",
+            "not",
+            "only",
+            "operatorial",
+            "positiveray",
+            "prerequisite",
+            "quotient",
+            "ratio",
+            "reads",
+            "relative",
+            "scale",
+            "the",
+            "this"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "4. Scale Invariance and the Gauge",
+            "ordinal": 11
+          }
+        },
+        {
+          "kind": "chunk",
+          "_key": "chunk_4a9af3c82e1962c9",
+          "key": "chunk_4a9af3c82e1962c9",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_4bc348695d6c84c4",
+          "ordinal": 13,
+          "chunkKind": "chunk",
+          "title": "4. Scale Invariance and the Gauge",
+          "text": "**Audit Status: Operatorial Ratio Formalized | Drazin-Penrose Bridge Established | Connected | Idle.**",
+          "tokens": [
+            "audit",
+            "bridge",
+            "connected",
+            "drazin",
+            "established",
+            "formalized",
+            "idle",
+            "operatorial",
+            "penrose",
+            "ratio",
+            "status"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "4. Scale Invariance and the Gauge",
+            "ordinal": 13
+          }
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "_key": "chunk_7e59fd78a1362313",
+        "key": "chunk_7e59fd78a1362313",
+        "documentKey": "doc_debc96ec760154aa",
+        "sectionKey": "section_b9418a7421d28fca",
+        "ordinal": 10,
+        "chunkKind": "theorem",
+        "title": "3. The \"Algebraically Weird\" Spectral Theorem",
+        "text": "As recorded in the `CertifiedInverseKernel` and `DrazinSupercharge` modules:\n- **Drazin** governs the spectral regular part.\n- **Moore-Penrose** governs the metric-facing compatibility.\n- **Logarithm** is applied only to the supported, regularized result.",
+        "tokens": [
+          "and",
+          "applied",
+          "certifiedinversekernel",
+          "compatibility",
+          "drazin",
+          "drazinsupercharge",
+          "facing",
+          "governs",
+          "logarithm",
+          "metric",
+          "modules",
+          "moore",
+          "only",
+          "part",
+          "penrose",
+          "recorded",
+          "regular",
+          "regularized",
+          "result",
+          "spectral",
+          "supported",
+          "the"
+        ],
+        "provenance": {
+          "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+          "section": "3. The \"Algebraically Weird\" Spectral Theorem",
+          "ordinal": 10
+        }
+      },
+      "graphScore": 0.07531649552048401,
+      "lexicalScore": 2,
+      "entities": [
+        {
+          "_key": "entity_44f46a5b6f7686d2",
+          "key": "entity_44f46a5b6f7686d2",
+          "chunkKey": "chunk_7e59fd78a1362313",
+          "entityType": "theorem",
+          "surface": "theorem",
+          "normalized": "theorem"
+        },
+        {
+          "_key": "entity_332bdb7bedc8485c",
+          "key": "entity_332bdb7bedc8485c",
+          "chunkKey": "chunk_7e59fd78a1362313",
+          "entityType": "symbol",
+          "surface": "The",
+          "normalized": "The"
+        },
+        {
+          "_key": "entity_8d360a2b241abc32",
+          "key": "entity_8d360a2b241abc32",
+          "chunkKey": "chunk_7e59fd78a1362313",
+          "entityType": "symbol",
+          "surface": "Algebraically",
+          "normalized": "Algebraically"
+        },
+        {
+          "_key": "entity_0a5f848c0a581066",
+          "key": "entity_0a5f848c0a581066",
+          "chunkKey": "chunk_7e59fd78a1362313",
+          "entityType": "symbol",
+          "surface": "Weird",
+          "normalized": "Weird"
+        },
+        {
+          "_key": "entity_5c8a4b83f5ae1e4a",
+          "key": "entity_5c8a4b83f5ae1e4a",
+          "chunkKey": "chunk_7e59fd78a1362313",
+          "entityType": "symbol",
+          "surface": "Spectral",
+          "normalized": "Spectral"
+        },
+        {
+          "_key": "entity_78e876f990e41834",
+          "key": "entity_78e876f990e41834",
+          "chunkKey": "chunk_7e59fd78a1362313",
+          "entityType": "symbol",
+          "surface": "Theorem",
+          "normalized": "Theorem"
+        },
+        {
+          "_key": "entity_b57ca4d2dec4b368",
+          "key": "entity_b57ca4d2dec4b368",
+          "chunkKey": "chunk_7e59fd78a1362313",
+          "entityType": "symbol",
+          "surface": "As",
+          "normalized": "As"
+        },
+        {
+          "_key": "entity_c2679fe54696bf87",
+          "key": "entity_c2679fe54696bf87",
+          "chunkKey": "chunk_7e59fd78a1362313",
+          "entityType": "symbol",
+          "surface": "CertifiedInverseKernel",
+          "normalized": "CertifiedInverseKernel"
+        },
+        {
+          "_key": "entity_5fb443008f0d6f54",
+          "key": "entity_5fb443008f0d6f54",
+          "chunkKey": "chunk_7e59fd78a1362313",
+          "entityType": "symbol",
+          "surface": "DrazinSupercharge",
+          "normalized": "DrazinSupercharge"
+        },
+        {
+          "_key": "entity_28ac2c24987e9274",
+          "key": "entity_28ac2c24987e9274",
+          "chunkKey": "chunk_7e59fd78a1362313",
+          "entityType": "symbol",
+          "surface": "Drazin",
+          "normalized": "Drazin"
+        },
+        {
+          "_key": "entity_c3644f077cd87001",
+          "key": "entity_c3644f077cd87001",
+          "chunkKey": "chunk_7e59fd78a1362313",
+          "entityType": "symbol",
+          "surface": "Moore",
+          "normalized": "Moore"
+        },
+        {
+          "_key": "entity_2115fda7292ffea7",
+          "key": "entity_2115fda7292ffea7",
+          "chunkKey": "chunk_7e59fd78a1362313",
+          "entityType": "symbol",
+          "surface": "Penrose",
+          "normalized": "Penrose"
+        },
+        {
+          "_key": "entity_967e9a8cb742ce02",
+          "key": "entity_967e9a8cb742ce02",
+          "chunkKey": "chunk_7e59fd78a1362313",
+          "entityType": "symbol",
+          "surface": "Logarithm",
+          "normalized": "Logarithm"
+        }
+      ],
+      "neighbors": [
+        {
+          "kind": "chunk",
+          "_key": "chunk_8c08fdf1b2cf1ecc",
+          "key": "chunk_8c08fdf1b2cf1ecc",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_b9418a7421d28fca",
+          "ordinal": 9,
+          "chunkKind": "theorem",
+          "title": "3. The \"Algebraically Weird\" Spectral Theorem",
+          "text": "This process is the **Alchemical Spectral Theorem**. It does not merely diagonalize an operator; it regularizes the transport before applying the logarithm. The **Relative Modular Hamiltonian** and the **Relative Tomita-Takesaki Operator** are defined only after this projection is complete.",
+          "tokens": [
+            "after",
+            "alchemical",
+            "and",
+            "applying",
+            "are",
+            "before",
+            "complete",
+            "defined",
+            "diagonalize",
+            "does",
+            "hamiltonian",
+            "logarithm",
+            "merely",
+            "modular",
+            "not",
+            "only",
+            "operator",
+            "process",
+            "projection",
+            "regularizes",
+            "relative",
+            "spectral",
+            "takesaki",
+            "the",
+            "theorem",
+            "this",
+            "tomita",
+            "transport"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "3. The \"Algebraically Weird\" Spectral Theorem",
+            "ordinal": 9
+          }
+        },
+        {
+          "kind": "chunk",
+          "_key": "chunk_62505cdc8fed5b98",
+          "key": "chunk_62505cdc8fed5b98",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_4bc348695d6c84c4",
+          "ordinal": 11,
+          "chunkKind": "chunk",
+          "title": "4. Scale Invariance and the Gauge",
+          "text": "The **Information-Geometric Relative Norm** is scale-invariant by construction (`informationGeometricRelativeNorm_scale_scale`). This invariance is the prerequisite for the operatorial ratio: the scale is killed by the **PositiveRay** quotient and the canonical **gaugeSection**, ensuring the norm reads only the normalized modular contrast, not the coordinate magnitude.",
+          "tokens": [
+            "and",
+            "canonical",
+            "construction",
+            "contrast",
+            "coordinate",
+            "ensuring",
+            "for",
+            "gaugesection",
+            "geometric",
+            "information",
+            "informationgeometricrelativenorm_scale_scale",
+            "invariance",
+            "invariant",
+            "killed",
+            "magnitude",
+            "modular",
+            "norm",
+            "normalized",
+            "not",
+            "only",
+            "operatorial",
+            "positiveray",
+            "prerequisite",
+            "quotient",
+            "ratio",
+            "reads",
+            "relative",
+            "scale",
+            "the",
+            "this"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "4. Scale Invariance and the Gauge",
+            "ordinal": 11
+          }
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "_key": "chunk_14dd9f5c01153bf6",
+        "key": "chunk_14dd9f5c01153bf6",
+        "documentKey": "doc_debc96ec760154aa",
+        "sectionKey": "section_c3cf06e79d6952b0",
+        "ordinal": 2,
+        "chunkKind": "chunk",
+        "title": "Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge",
+        "text": "This chapter records the formal architectural move from commutative density ratios to noncommutative operator ratios. It documents the realization that \"dividing one operator by another\" is an algebraically ill-defined operation that must be replaced by the structured separation of null spaces and regular parts using **Drazin** and **Moore-Penrose** machinery.",
+        "tokens": [
+          "algebraically",
+          "and",
+          "another",
+          "architectural",
+          "chapter",
+          "commutative",
+          "defined",
+          "density",
+          "dividing",
+          "documents",
+          "drazin",
+          "formal",
+          "from",
+          "ill",
+          "machinery",
+          "moore",
+          "move",
+          "must",
+          "noncommutative",
+          "null",
+          "one",
+          "operation",
+          "operator",
+          "parts",
+          "penrose",
+          "ratios",
+          "realization",
+          "records",
+          "regular",
+          "replaced",
+          "separation",
+          "spaces",
+          "structured",
+          "that",
+          "the",
+          "this",
+          "using"
+        ],
+        "provenance": {
+          "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+          "section": "Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge",
+          "ordinal": 2
+        }
+      },
+      "graphScore": 0.06989355536260805,
+      "lexicalScore": 2,
+      "entities": [
+        {
+          "_key": "entity_988787d9747b0621",
+          "key": "entity_988787d9747b0621",
+          "chunkKey": "chunk_14dd9f5c01153bf6",
+          "entityType": "symbol",
+          "surface": "Chapter",
+          "normalized": "Chapter"
+        },
+        {
+          "_key": "entity_bad9d5cab9bc65de",
+          "key": "entity_bad9d5cab9bc65de",
+          "chunkKey": "chunk_14dd9f5c01153bf6",
+          "entityType": "symbol",
+          "surface": "The",
+          "normalized": "The"
+        },
+        {
+          "_key": "entity_9859d4c0f39d9dd4",
+          "key": "entity_9859d4c0f39d9dd4",
+          "chunkKey": "chunk_14dd9f5c01153bf6",
+          "entityType": "symbol",
+          "surface": "Operatorial",
+          "normalized": "Operatorial"
+        },
+        {
+          "_key": "entity_bcd602a5fb274a4e",
+          "key": "entity_bcd602a5fb274a4e",
+          "chunkKey": "chunk_14dd9f5c01153bf6",
+          "entityType": "symbol",
+          "surface": "Ratio",
+          "normalized": "Ratio"
+        },
+        {
+          "_key": "entity_c3d0502f64ec9dd7",
+          "key": "entity_c3d0502f64ec9dd7",
+          "chunkKey": "chunk_14dd9f5c01153bf6",
+          "entityType": "symbol",
+          "surface": "Drazin",
+          "normalized": "Drazin"
+        },
+        {
+          "_key": "entity_77b5595fff91d0ef",
+          "key": "entity_77b5595fff91d0ef",
+          "chunkKey": "chunk_14dd9f5c01153bf6",
+          "entityType": "symbol",
+          "surface": "Penrose",
+          "normalized": "Penrose"
+        },
+        {
+          "_key": "entity_626cb05287ace7a2",
+          "key": "entity_626cb05287ace7a2",
+          "chunkKey": "chunk_14dd9f5c01153bf6",
+          "entityType": "symbol",
+          "surface": "Bridge",
+          "normalized": "Bridge"
+        },
+        {
+          "_key": "entity_202ce28aec82b7e0",
+          "key": "entity_202ce28aec82b7e0",
+          "chunkKey": "chunk_14dd9f5c01153bf6",
+          "entityType": "symbol",
+          "surface": "This",
+          "normalized": "This"
+        },
+        {
+          "_key": "entity_4645a608047eec89",
+          "key": "entity_4645a608047eec89",
+          "chunkKey": "chunk_14dd9f5c01153bf6",
+          "entityType": "symbol",
+          "surface": "It",
+          "normalized": "It"
+        },
+        {
+          "_key": "entity_8b540c3db55c649c",
+          "key": "entity_8b540c3db55c649c",
+          "chunkKey": "chunk_14dd9f5c01153bf6",
+          "entityType": "symbol",
+          "surface": "Moore",
+          "normalized": "Moore"
+        }
+      ],
+      "neighbors": [
+        {
+          "kind": "chunk",
+          "_key": "chunk_d3b48ebb84c48a95",
+          "key": "chunk_d3b48ebb84c48a95",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_c3cf06e79d6952b0",
+          "ordinal": 1,
+          "chunkKind": "chunk",
+          "title": "Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge",
+          "text": "> **\"Closure is not 'invert then log,' but 'project, regularize, and then log where lawful.' The ratio is the separation of the null from the regular.\"**",
+          "tokens": [
+            "and",
+            "but",
+            "closure",
+            "from",
+            "invert",
+            "lawful",
+            "log",
+            "not",
+            "null",
+            "project",
+            "ratio",
+            "regular",
+            "regularize",
+            "separation",
+            "the",
+            "then",
+            "where"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge",
+            "ordinal": 1
+          }
+        },
+        {
+          "kind": "chunk",
+          "_key": "chunk_21a46dedce28ca07",
+          "key": "chunk_21a46dedce28ca07",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_c3cf06e79d6952b0",
+          "ordinal": 3,
+          "chunkKind": "chunk",
+          "title": "Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge",
+          "text": "---",
+          "tokens": [],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge",
+            "ordinal": 3
+          }
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "_key": "chunk_de9785411163d9c2",
+        "key": "chunk_de9785411163d9c2",
+        "documentKey": "doc_80dff116f3474539",
+        "sectionKey": "section_387aadfaa0b0ee99",
+        "ordinal": 25,
+        "chunkKind": "chunk",
+        "title": "4. Казимиров принос и Регуларизация",
+        "text": "Използването на Drazin инверсията в $\\zeta$-регуларизацията позволява да се игнорират нилпотентните части (които не допринасят за енергията на вакуума), оставяйки само чистия Казимиров принос от физическите фолиации на ентропията.\nСинтез: Тези алгебрични инструменти позволяват да се инвертират \"неинвертируеми\" термодинамични системи, осигурявайки стабилност на решенията в BPS точката.\nЖелаете ли да разпишем коммутационните релации между Moore-Penrose проектора и Weyl-овия оператор на мащабиране в хиралната база на спинорите на Цорн?\nСледваща стъпка: Изчисляване на нилпотентния индекс на Drazin за дисипативната част на оператора на Онзагер.",
+        "tokens": [
+          "bps",
+          "drazin",
+          "moore",
+          "penrose",
+          "weyl",
+          "zeta"
+        ],
+        "provenance": {
+          "path": "docs/black_books/00w_drazin_penrose_lightcone_projectors_and_casimir_gravity.md",
+          "section": "4. Казимиров принос и Регуларизация",
+          "ordinal": 25
+        }
+      },
+      "graphScore": 0.06963710273080884,
+      "lexicalScore": 3,
+      "entities": [
+        {
+          "_key": "entity_7cf143f6e3ac4ba9",
+          "key": "entity_7cf143f6e3ac4ba9",
+          "chunkKey": "chunk_de9785411163d9c2",
+          "entityType": "symbol",
+          "surface": "Drazin",
+          "normalized": "Drazin"
+        },
+        {
+          "_key": "entity_162e50a7747ae557",
+          "key": "entity_162e50a7747ae557",
+          "chunkKey": "chunk_de9785411163d9c2",
+          "entityType": "symbol",
+          "surface": "BPS",
+          "normalized": "BPS"
+        },
+        {
+          "_key": "entity_6f0c0a29987f00ac",
+          "key": "entity_6f0c0a29987f00ac",
+          "chunkKey": "chunk_de9785411163d9c2",
+          "entityType": "symbol",
+          "surface": "Moore",
+          "normalized": "Moore"
+        },
+        {
+          "_key": "entity_38d4bbe5dfe83941",
+          "key": "entity_38d4bbe5dfe83941",
+          "chunkKey": "chunk_de9785411163d9c2",
+          "entityType": "symbol",
+          "surface": "Penrose",
+          "normalized": "Penrose"
+        },
+        {
+          "_key": "entity_2f17d57f3ff628c6",
+          "key": "entity_2f17d57f3ff628c6",
+          "chunkKey": "chunk_de9785411163d9c2",
+          "entityType": "symbol",
+          "surface": "Weyl",
+          "normalized": "Weyl"
+        }
+      ],
+      "neighbors": [
+        {
+          "kind": "chunk",
+          "_key": "chunk_740f12d19e28ce89",
+          "key": "chunk_740f12d19e28ce89",
+          "documentKey": "doc_80dff116f3474539",
+          "sectionKey": "section_82e4e8dbbb5f0e05",
+          "ordinal": 24,
+          "chunkKind": "chunk",
+          "title": "3. Хирални оператори и Алгебра на Светлинния конус",
+          "text": "* Проекторна алгебра: Комбинацията от Moore-Penrose и хиралност позволява конструирането на проектори за състояния с определена хелицитност, които са регуларизирани срещу инфрачервени разходимости.\n* Weyl Gauge: Калибровката на Вайл осигурява, че тези проектори са инвариантни при мащабиране на светлинния конус, запазвайки причинно-следствената структура на информационния поток.",
+          "tokens": [
+            "gauge",
+            "moore",
+            "penrose",
+            "weyl"
+          ],
+          "provenance": {
+            "path": "docs/black_books/00w_drazin_penrose_lightcone_projectors_and_casimir_gravity.md",
+            "section": "3. Хирални оператори и Алгебра на Светлинния конус",
+            "ordinal": 24
+          }
+        },
+        {
+          "kind": "chunk",
+          "_key": "chunk_8ac1272c440f4ef0",
+          "key": "chunk_8ac1272c440f4ef0",
+          "documentKey": "doc_80dff116f3474539",
+          "sectionKey": "section_387aadfaa0b0ee99",
+          "ordinal": 26,
+          "chunkKind": "chunk",
+          "title": "4. Казимиров принос и Регуларизация",
+          "text": "Изчисляването на Казимировата енергия ($E_C$) в този суперобемен модел е крайният тест за консистентността на Weyl калибровката. В безкоординатната рамка на Сорио, тя не произтича от физически граници (стени), а от спектралната празнина (gap) на супералгебрата на Ли.\nЕто как се извлича тя чрез $\\zeta$-регуларизация на супер-обема:",
+          "tokens": [
+            "e_c",
+            "gap",
+            "weyl",
+            "zeta"
+          ],
+          "provenance": {
+            "path": "docs/black_books/00w_drazin_penrose_lightcone_projectors_and_casimir_gravity.md",
+            "section": "4. Казимиров принос и Регуларизация",
+            "ordinal": 26
+          }
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "_key": "chunk_6a36f5317f5d1e6a",
+        "key": "chunk_6a36f5317f5d1e6a",
+        "documentKey": "doc_debc96ec760154aa",
+        "sectionKey": "section_5e5701f4af9e2d4a",
+        "ordinal": 6,
+        "chunkKind": "chunk",
+        "title": "2. The Drazin-Penrose Substitution",
+        "text": "1.  **Support Separation:** The operator is split into its **regular (spectral) part** and its **null part**.\n2.  **Drazin Inverse:** The Drazin inverse captures the regular part of the spectrum, providing the lawful \"ratio-like\" object on the supported lane.\n3.  **Penrose Projectors:** Moore-Penrose left and right projectors capture the support geometry, defining the \"left/right\" orientation of the division when the operators are singular.",
+        "tokens": [
+          "and",
+          "are",
+          "capture",
+          "captures",
+          "defining",
+          "division",
+          "drazin",
+          "geometry",
+          "into",
+          "inverse",
+          "its",
+          "lane",
+          "lawful",
+          "left",
+          "like",
+          "moore",
+          "null",
+          "object",
+          "operator",
+          "operators",
+          "orientation",
+          "part",
+          "penrose",
+          "projectors",
+          "providing",
+          "ratio",
+          "regular",
+          "right",
+          "separation",
+          "singular",
+          "spectral",
+          "spectrum",
+          "split",
+          "support",
+          "supported",
+          "the",
+          "when"
+        ],
+        "provenance": {
+          "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+          "section": "2. The Drazin-Penrose Substitution",
+          "ordinal": 6
+        }
+      },
+      "graphScore": 0.061265683677931365,
+      "lexicalScore": 2,
+      "entities": [
+        {
+          "_key": "entity_800197d09128f4d0",
+          "key": "entity_800197d09128f4d0",
+          "chunkKey": "chunk_6a36f5317f5d1e6a",
+          "entityType": "symbol",
+          "surface": "The",
+          "normalized": "The"
+        },
+        {
+          "_key": "entity_70e32ea49621c11a",
+          "key": "entity_70e32ea49621c11a",
+          "chunkKey": "chunk_6a36f5317f5d1e6a",
+          "entityType": "symbol",
+          "surface": "Drazin",
+          "normalized": "Drazin"
+        },
+        {
+          "_key": "entity_2d84bf5ca48e158d",
+          "key": "entity_2d84bf5ca48e158d",
+          "chunkKey": "chunk_6a36f5317f5d1e6a",
+          "entityType": "symbol",
+          "surface": "Penrose",
+          "normalized": "Penrose"
+        },
+        {
+          "_key": "entity_d58563c30a4cd05a",
+          "key": "entity_d58563c30a4cd05a",
+          "chunkKey": "chunk_6a36f5317f5d1e6a",
+          "entityType": "symbol",
+          "surface": "Substitution",
+          "normalized": "Substitution"
+        },
+        {
+          "_key": "entity_d1ce72950ee11027",
+          "key": "entity_d1ce72950ee11027",
+          "chunkKey": "chunk_6a36f5317f5d1e6a",
+          "entityType": "symbol",
+          "surface": "Support",
+          "normalized": "Support"
+        },
+        {
+          "_key": "entity_53f4adcc8365147a",
+          "key": "entity_53f4adcc8365147a",
+          "chunkKey": "chunk_6a36f5317f5d1e6a",
+          "entityType": "symbol",
+          "surface": "Separation",
+          "normalized": "Separation"
+        },
+        {
+          "_key": "entity_8f06c8bfe66b8644",
+          "key": "entity_8f06c8bfe66b8644",
+          "chunkKey": "chunk_6a36f5317f5d1e6a",
+          "entityType": "symbol",
+          "surface": "Inverse",
+          "normalized": "Inverse"
+        },
+        {
+          "_key": "entity_3600dd346039fd9f",
+          "key": "entity_3600dd346039fd9f",
+          "chunkKey": "chunk_6a36f5317f5d1e6a",
+          "entityType": "symbol",
+          "surface": "Projectors",
+          "normalized": "Projectors"
+        },
+        {
+          "_key": "entity_46de0c121f5074be",
+          "key": "entity_46de0c121f5074be",
+          "chunkKey": "chunk_6a36f5317f5d1e6a",
+          "entityType": "symbol",
+          "surface": "Moore",
+          "normalized": "Moore"
+        }
+      ],
+      "neighbors": [
+        {
+          "kind": "chunk",
+          "_key": "chunk_621c5ef8af19a10f",
+          "key": "chunk_621c5ef8af19a10f",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_5e5701f4af9e2d4a",
+          "ordinal": 5,
+          "chunkKind": "chunk",
+          "title": "2. The Drazin-Penrose Substitution",
+          "text": "The Spire replaces naive operator division with a tripartite structural bridge:",
+          "tokens": [
+            "bridge",
+            "division",
+            "naive",
+            "operator",
+            "replaces",
+            "spire",
+            "structural",
+            "the",
+            "tripartite",
+            "with"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "2. The Drazin-Penrose Substitution",
+            "ordinal": 5
+          }
+        },
+        {
+          "kind": "chunk",
+          "_key": "chunk_70bd933d6d13e3cb",
+          "key": "chunk_70bd933d6d13e3cb",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_5e5701f4af9e2d4a",
+          "ordinal": 7,
+          "chunkKind": "chunk",
+          "title": "2. The Drazin-Penrose Substitution",
+          "text": "Together, these provide the **Support-Restricted Inverse**—the only algebraically valid way to express \"A / B\" when B is singular.",
+          "tokens": [
+            "algebraically",
+            "express",
+            "inverse",
+            "only",
+            "provide",
+            "restricted",
+            "singular",
+            "support",
+            "the",
+            "these",
+            "together",
+            "valid",
+            "way",
+            "when"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "2. The Drazin-Penrose Substitution",
+            "ordinal": 7
+          }
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "_key": "chunk_62505cdc8fed5b98",
+        "key": "chunk_62505cdc8fed5b98",
+        "documentKey": "doc_debc96ec760154aa",
+        "sectionKey": "section_4bc348695d6c84c4",
+        "ordinal": 11,
+        "chunkKind": "chunk",
+        "title": "4. Scale Invariance and the Gauge",
+        "text": "The **Information-Geometric Relative Norm** is scale-invariant by construction (`informationGeometricRelativeNorm_scale_scale`). This invariance is the prerequisite for the operatorial ratio: the scale is killed by the **PositiveRay** quotient and the canonical **gaugeSection**, ensuring the norm reads only the normalized modular contrast, not the coordinate magnitude.",
+        "tokens": [
+          "and",
+          "canonical",
+          "construction",
+          "contrast",
+          "coordinate",
+          "ensuring",
+          "for",
+          "gaugesection",
+          "geometric",
+          "information",
+          "informationgeometricrelativenorm_scale_scale",
+          "invariance",
+          "invariant",
+          "killed",
+          "magnitude",
+          "modular",
+          "norm",
+          "normalized",
+          "not",
+          "only",
+          "operatorial",
+          "positiveray",
+          "prerequisite",
+          "quotient",
+          "ratio",
+          "reads",
+          "relative",
+          "scale",
+          "the",
+          "this"
+        ],
+        "provenance": {
+          "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+          "section": "4. Scale Invariance and the Gauge",
+          "ordinal": 11
+        }
+      },
+      "graphScore": 0.05403444267757846,
+      "lexicalScore": 0,
+      "entities": [
+        {
+          "_key": "entity_ad8e66c5cb0f861b",
+          "key": "entity_ad8e66c5cb0f861b",
+          "chunkKey": "chunk_62505cdc8fed5b98",
+          "entityType": "symbol",
+          "surface": "Scale",
+          "normalized": "Scale"
+        },
+        {
+          "_key": "entity_7e749c35b3c1ecd7",
+          "key": "entity_7e749c35b3c1ecd7",
+          "chunkKey": "chunk_62505cdc8fed5b98",
+          "entityType": "symbol",
+          "surface": "Invariance",
+          "normalized": "Invariance"
+        },
+        {
+          "_key": "entity_08ec7f9a926c93e0",
+          "key": "entity_08ec7f9a926c93e0",
+          "chunkKey": "chunk_62505cdc8fed5b98",
+          "entityType": "symbol",
+          "surface": "Gauge",
+          "normalized": "Gauge"
+        },
+        {
+          "_key": "entity_97e7834002bcc97d",
+          "key": "entity_97e7834002bcc97d",
+          "chunkKey": "chunk_62505cdc8fed5b98",
+          "entityType": "symbol",
+          "surface": "The",
+          "normalized": "The"
+        },
+        {
+          "_key": "entity_37e3aa9376544e78",
+          "key": "entity_37e3aa9376544e78",
+          "chunkKey": "chunk_62505cdc8fed5b98",
+          "entityType": "symbol",
+          "surface": "Information",
+          "normalized": "Information"
+        },
+        {
+          "_key": "entity_81fc0cfc2152180e",
+          "key": "entity_81fc0cfc2152180e",
+          "chunkKey": "chunk_62505cdc8fed5b98",
+          "entityType": "symbol",
+          "surface": "Geometric",
+          "normalized": "Geometric"
+        },
+        {
+          "_key": "entity_4fd261ec94755bbd",
+          "key": "entity_4fd261ec94755bbd",
+          "chunkKey": "chunk_62505cdc8fed5b98",
+          "entityType": "symbol",
+          "surface": "Relative",
+          "normalized": "Relative"
+        },
+        {
+          "_key": "entity_5457368ff6ad349d",
+          "key": "entity_5457368ff6ad349d",
+          "chunkKey": "chunk_62505cdc8fed5b98",
+          "entityType": "symbol",
+          "surface": "Norm",
+          "normalized": "Norm"
+        },
+        {
+          "_key": "entity_b890aa1c83a8cacc",
+          "key": "entity_b890aa1c83a8cacc",
+          "chunkKey": "chunk_62505cdc8fed5b98",
+          "entityType": "identifier",
+          "surface": "informationGeometricRelativeNorm_scale_scale",
+          "normalized": "informationGeometricRelativeNorm_scale_scale"
+        },
+        {
+          "_key": "entity_cc292335fdcfef0d",
+          "key": "entity_cc292335fdcfef0d",
+          "chunkKey": "chunk_62505cdc8fed5b98",
+          "entityType": "symbol",
+          "surface": "This",
+          "normalized": "This"
+        },
+        {
+          "_key": "entity_b36d5ad51ade7dc7",
+          "key": "entity_b36d5ad51ade7dc7",
+          "chunkKey": "chunk_62505cdc8fed5b98",
+          "entityType": "symbol",
+          "surface": "PositiveRay",
+          "normalized": "PositiveRay"
+        }
+      ],
+      "neighbors": [
+        {
+          "kind": "chunk",
+          "_key": "chunk_7e59fd78a1362313",
+          "key": "chunk_7e59fd78a1362313",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_b9418a7421d28fca",
+          "ordinal": 10,
+          "chunkKind": "theorem",
+          "title": "3. The \"Algebraically Weird\" Spectral Theorem",
+          "text": "As recorded in the `CertifiedInverseKernel` and `DrazinSupercharge` modules:\n- **Drazin** governs the spectral regular part.\n- **Moore-Penrose** governs the metric-facing compatibility.\n- **Logarithm** is applied only to the supported, regularized result.",
+          "tokens": [
+            "and",
+            "applied",
+            "certifiedinversekernel",
+            "compatibility",
+            "drazin",
+            "drazinsupercharge",
+            "facing",
+            "governs",
+            "logarithm",
+            "metric",
+            "modules",
+            "moore",
+            "only",
+            "part",
+            "penrose",
+            "recorded",
+            "regular",
+            "regularized",
+            "result",
+            "spectral",
+            "supported",
+            "the"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "3. The \"Algebraically Weird\" Spectral Theorem",
+            "ordinal": 10
+          }
+        },
+        {
+          "kind": "chunk",
+          "_key": "chunk_772c7403f9643fe1",
+          "key": "chunk_772c7403f9643fe1",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_4bc348695d6c84c4",
+          "ordinal": 12,
+          "chunkKind": "chunk",
+          "title": "4. Scale Invariance and the Gauge",
+          "text": "**Conclusion:** The Spire does not \"divide.\" It **distills** the regular from the null, using the Drazin-Penrose bridge to transport meaning across singular operator surfaces. We have moved from coordinate division to topological ratio.",
+          "tokens": [
+            "across",
+            "bridge",
+            "conclusion",
+            "coordinate",
+            "distills",
+            "divide",
+            "division",
+            "does",
+            "drazin",
+            "from",
+            "have",
+            "meaning",
+            "moved",
+            "not",
+            "null",
+            "operator",
+            "penrose",
+            "ratio",
+            "regular",
+            "singular",
+            "spire",
+            "surfaces",
+            "the",
+            "topological",
+            "transport",
+            "using"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "4. Scale Invariance and the Gauge",
+            "ordinal": 12
+          }
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "_key": "chunk_cef46622ee5332e7",
+        "key": "chunk_cef46622ee5332e7",
+        "documentKey": "doc_897482e446a73551",
+        "sectionKey": "section_fb521e83970db143",
+        "ordinal": 9,
+        "chunkKind": "chunk",
+        "title": "Основни концепции и връзки",
+        "text": "* Метрика на Сурио-Фишер: Тя представлява геометрично разширение на класическата информационна метрика на Фишер, дефинирана върху коадюнктни орбити на групи на Ли. Тази метрика е инвариантна спрямо действието на групата и се явява „скелетът“ на термодинамиката на групите на Ли.\n* Голям каноничен ансамбъл (Gibbs Grand Canonical Ensemble): В модела на Сурио термодинамичните състояния (състояния на Гибс) се дефинират чрез действието на динамична група (например групата на Галилей или Поанкаре) върху симплектично многообразие. „Геометричната температура“ е елемент от алгебрата на Ли, а енергията и броят на частиците се появяват като компоненти на инерционния момент (moment map).\n* Llocal Symmetry и Weyl Gauge:\n* Локалната калибровъчна симетрия на Вайл (Weyl gauge symmetry) е свързана с локални мащабни трансформации.\n   * В контекста на статистическата механика, нарушаването на калибровъчната симетрия (gauge symmetry breaking) е критично за описанието на кондензирани фази (например Бозе-Айнщайнова кондензация), където големият каноничен ансамбъл без нарушена симетрия би довел до некоректни флуктуации (т.нар. „голяма канонична катастрофа“).\n* Брой частици (Particle Number): В големия каноничен ансамбъл броят на частиците $N$ не е фиксиран, а се контролира от химическия потенциал $\\mu$. Геометрично това съответства на допълнително измерение в пространството на параметрите на ансамбъла, където операторът $\\mu \\hat{N}$ се включва в обобщения Хамилтониан. [1, 4, 5, 6, 7, 8, 9, 10]",
+        "tokens": [
+          "breaking",
+          "canonical",
+          "ensemble",
+          "gauge",
+          "gibbs",
+          "grand",
+          "hat",
+          "llocal",
+          "map",
+          "moment",
+          "number",
+          "particle",
+          "symmetry",
+          "weyl"
+        ],
+        "provenance": {
+          "path": "docs/black_books/00g_local_symmetry_weyl_gauge_and_recent_arxiv_threads.md",
+          "section": "Основни концепции и връзки",
+          "ordinal": 9
+        }
+      },
+      "graphScore": 0.04813226403450309,
+      "lexicalScore": 2,
+      "entities": [
+        {
+          "_key": "entity_aff253f3646b19dd",
+          "key": "entity_aff253f3646b19dd",
+          "chunkKey": "chunk_cef46622ee5332e7",
+          "entityType": "symbol",
+          "surface": "Gibbs",
+          "normalized": "Gibbs"
+        },
+        {
+          "_key": "entity_23d76d8293d8ab62",
+          "key": "entity_23d76d8293d8ab62",
+          "chunkKey": "chunk_cef46622ee5332e7",
+          "entityType": "symbol",
+          "surface": "Grand",
+          "normalized": "Grand"
+        },
+        {
+          "_key": "entity_a4951d77200c9240",
+          "key": "entity_a4951d77200c9240",
+          "chunkKey": "chunk_cef46622ee5332e7",
+          "entityType": "symbol",
+          "surface": "Canonical",
+          "normalized": "Canonical"
+        },
+        {
+          "_key": "entity_aabc724794a9c176",
+          "key": "entity_aabc724794a9c176",
+          "chunkKey": "chunk_cef46622ee5332e7",
+          "entityType": "symbol",
+          "surface": "Ensemble",
+          "normalized": "Ensemble"
+        },
+        {
+          "_key": "entity_47a63662ed1123ae",
+          "key": "entity_47a63662ed1123ae",
+          "chunkKey": "chunk_cef46622ee5332e7",
+          "entityType": "symbol",
+          "surface": "Llocal",
+          "normalized": "Llocal"
+        },
+        {
+          "_key": "entity_89f6bf73f1bde1bd",
+          "key": "entity_89f6bf73f1bde1bd",
+          "chunkKey": "chunk_cef46622ee5332e7",
+          "entityType": "symbol",
+          "surface": "Symmetry",
+          "normalized": "Symmetry"
+        },
+        {
+          "_key": "entity_514b4a10f342d4b2",
+          "key": "entity_514b4a10f342d4b2",
+          "chunkKey": "chunk_cef46622ee5332e7",
+          "entityType": "symbol",
+          "surface": "Weyl",
+          "normalized": "Weyl"
+        },
+        {
+          "_key": "entity_106919d72b53de2a",
+          "key": "entity_106919d72b53de2a",
+          "chunkKey": "chunk_cef46622ee5332e7",
+          "entityType": "symbol",
+          "surface": "Gauge",
+          "normalized": "Gauge"
+        },
+        {
+          "_key": "entity_a87764d10f179285",
+          "key": "entity_a87764d10f179285",
+          "chunkKey": "chunk_cef46622ee5332e7",
+          "entityType": "symbol",
+          "surface": "Particle",
+          "normalized": "Particle"
+        },
+        {
+          "_key": "entity_73b2e1d976e90e82",
+          "key": "entity_73b2e1d976e90e82",
+          "chunkKey": "chunk_cef46622ee5332e7",
+          "entityType": "symbol",
+          "surface": "Number",
+          "normalized": "Number"
+        }
+      ],
+      "neighbors": [
+        {
+          "kind": "chunk",
+          "_key": "chunk_9d8b698268ae574c",
+          "key": "chunk_9d8b698268ae574c",
+          "documentKey": "doc_897482e446a73551",
+          "sectionKey": "section_b0b31350027048c4",
+          "ordinal": 8,
+          "chunkKind": "chunk",
+          "title": "Актуални изследвания в arXiv",
+          "text": "Темата обхваща пресечната точка между информационната геометрия, симплектичната механика и термодинамиката на групите на Ли, разработена основно от Жан-Мари Сурио (Jean-Marie Souriau). В съвременния контекст, особено в трудовете на [Frédéric Barbaresco](https://franknielsen.github.io/SPIG-LesHouches2020/Barbaresco-SPILG2020.pdf), тези концепции се обединяват под името метрика на Сурио-Фишер (Souriau-Fisher metric). [1, 2, 3]",
+          "tokens": [
+            "barbaresco",
+            "fisher",
+            "franknielsen",
+            "github",
+            "https",
+            "jean",
+            "leshouches2020",
+            "marie",
+            "metric",
+            "pdf",
+            "ric",
+            "souriau",
+            "spig",
+            "spilg2020"
+          ],
+          "provenance": {
+            "path": "docs/black_books/00g_local_symmetry_weyl_gauge_and_recent_arxiv_threads.md",
+            "section": "Актуални изследвания в arXiv",
+            "ordinal": 8
+          }
+        },
+        {
+          "kind": "chunk",
+          "_key": "chunk_d669d06aae69692e",
+          "key": "chunk_d669d06aae69692e",
+          "documentKey": "doc_897482e446a73551",
+          "sectionKey": "section_7e00c04c6d47dcd0",
+          "ordinal": 10,
+          "chunkKind": "chunk",
+          "title": "Актуални изследвания в arXiv",
+          "text": "Според скорошни публикации в [arXiv](https://arxiv.org/abs/2509.20910), се изследва как 2-коциклите (2-cocycles) могат локално да модифицират метриката на Сурио-Фишер върху коадюнктни орбити. Това е пряко свързано с нееквивариантността на инерционния момент, което в термодинамиката съответства на появата на централни разширения на групите на Ли (като например масата в групата на Галилей). [1, 5] \nПовече технически подробности за връзката между информационната геометрия на Вайл и квантовата ентропия могат да бъдат намерени в специализирани издания като [International Journal of Theoretical Physics](https://www.researchgate.net/publication/234719756_Weyl_Geometries_Fisher_Information_and_QuantumEntropy_in_Quantum_Mechanics). [11] \nИнтересувате ли се от конкретно математическо извеждане на метриката на Сурио-Фишер за специфична група на Ли (например $SO(3)$ или $SE(3)$)? [2, 12]",
+          "tokens": [
+            "abs",
+            "arxiv",
+            "cocycles",
+            "https",
+            "international",
+            "journal",
+            "net",
+            "org",
+            "physics",
+            "publication",
+            "researchgate",
+            "theoretical",
+            "weyl_geometries_fisher_information_and_quantumentropy_in_quantum_mechanics",
+            "www"
+          ],
+          "provenance": {
+            "path": "docs/black_books/00g_local_symmetry_weyl_gauge_and_recent_arxiv_threads.md",
+            "section": "Актуални изследвания в arXiv",
+            "ordinal": 10
+          }
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "_key": "chunk_6db70f1736cbbaf6",
+        "key": "chunk_6db70f1736cbbaf6",
+        "documentKey": "doc_debc96ec760154aa",
+        "sectionKey": "section_5e5701f4af9e2d4a",
+        "ordinal": 8,
+        "chunkKind": "chunk",
+        "title": "2. The Drazin-Penrose Substitution",
+        "text": "---",
+        "tokens": [],
+        "provenance": {
+          "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+          "section": "2. The Drazin-Penrose Substitution",
+          "ordinal": 8
+        }
+      },
+      "graphScore": 0.041219137235950984,
+      "lexicalScore": 0,
+      "entities": [
+        {
+          "_key": "entity_d11260576b05b4e7",
+          "key": "entity_d11260576b05b4e7",
+          "chunkKey": "chunk_6db70f1736cbbaf6",
+          "entityType": "symbol",
+          "surface": "The",
+          "normalized": "The"
+        },
+        {
+          "_key": "entity_a3d2b266e6bdb2ff",
+          "key": "entity_a3d2b266e6bdb2ff",
+          "chunkKey": "chunk_6db70f1736cbbaf6",
+          "entityType": "symbol",
+          "surface": "Drazin",
+          "normalized": "Drazin"
+        },
+        {
+          "_key": "entity_787990695b6a98d4",
+          "key": "entity_787990695b6a98d4",
+          "chunkKey": "chunk_6db70f1736cbbaf6",
+          "entityType": "symbol",
+          "surface": "Penrose",
+          "normalized": "Penrose"
+        },
+        {
+          "_key": "entity_f9579f1aeb8f151c",
+          "key": "entity_f9579f1aeb8f151c",
+          "chunkKey": "chunk_6db70f1736cbbaf6",
+          "entityType": "symbol",
+          "surface": "Substitution",
+          "normalized": "Substitution"
+        }
+      ],
+      "neighbors": [
+        {
+          "kind": "chunk",
+          "_key": "chunk_70bd933d6d13e3cb",
+          "key": "chunk_70bd933d6d13e3cb",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_5e5701f4af9e2d4a",
+          "ordinal": 7,
+          "chunkKind": "chunk",
+          "title": "2. The Drazin-Penrose Substitution",
+          "text": "Together, these provide the **Support-Restricted Inverse**—the only algebraically valid way to express \"A / B\" when B is singular.",
+          "tokens": [
+            "algebraically",
+            "express",
+            "inverse",
+            "only",
+            "provide",
+            "restricted",
+            "singular",
+            "support",
+            "the",
+            "these",
+            "together",
+            "valid",
+            "way",
+            "when"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "2. The Drazin-Penrose Substitution",
+            "ordinal": 7
+          }
+        },
+        {
+          "kind": "chunk",
+          "_key": "chunk_8c08fdf1b2cf1ecc",
+          "key": "chunk_8c08fdf1b2cf1ecc",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_b9418a7421d28fca",
+          "ordinal": 9,
+          "chunkKind": "theorem",
+          "title": "3. The \"Algebraically Weird\" Spectral Theorem",
+          "text": "This process is the **Alchemical Spectral Theorem**. It does not merely diagonalize an operator; it regularizes the transport before applying the logarithm. The **Relative Modular Hamiltonian** and the **Relative Tomita-Takesaki Operator** are defined only after this projection is complete.",
+          "tokens": [
+            "after",
+            "alchemical",
+            "and",
+            "applying",
+            "are",
+            "before",
+            "complete",
+            "defined",
+            "diagonalize",
+            "does",
+            "hamiltonian",
+            "logarithm",
+            "merely",
+            "modular",
+            "not",
+            "only",
+            "operator",
+            "process",
+            "projection",
+            "regularizes",
+            "relative",
+            "spectral",
+            "takesaki",
+            "the",
+            "theorem",
+            "this",
+            "tomita",
+            "transport"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "3. The \"Algebraically Weird\" Spectral Theorem",
+            "ordinal": 9
+          }
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "_key": "chunk_6ba0970c3a4d8dc2",
+        "key": "chunk_6ba0970c3a4d8dc2",
+        "documentKey": "doc_debc96ec760154aa",
+        "sectionKey": "section_68dbb48f05c95b85",
+        "ordinal": 4,
+        "chunkKind": "chunk",
+        "title": "1. The Failure of Naive Division",
+        "text": "In the commutative `RedLine` lane, the ratio is simply the Radon-Nikodym derivative $d\\mu / d\\nu$, and the modular potential is its negative logarithm. In the operator lane (L2/L3), this naive division breaks as soon as kernels appear. A \"ratio of operators\" cannot be defined globally without a rigorous handling of the null space.",
+        "tokens": [
+          "and",
+          "appear",
+          "breaks",
+          "cannot",
+          "commutative",
+          "defined",
+          "derivative",
+          "division",
+          "globally",
+          "handling",
+          "its",
+          "kernels",
+          "lane",
+          "logarithm",
+          "modular",
+          "naive",
+          "negative",
+          "nikodym",
+          "null",
+          "operator",
+          "operators",
+          "potential",
+          "radon",
+          "ratio",
+          "redline",
+          "rigorous",
+          "simply",
+          "soon",
+          "space",
+          "the",
+          "this",
+          "without"
+        ],
+        "provenance": {
+          "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+          "section": "1. The Failure of Naive Division",
+          "ordinal": 4
+        }
+      },
+      "graphScore": 0.03958015649715632,
+      "lexicalScore": 0,
+      "entities": [
+        {
+          "_key": "entity_b9c4fbf7cf065022",
+          "key": "entity_b9c4fbf7cf065022",
+          "chunkKey": "chunk_6ba0970c3a4d8dc2",
+          "entityType": "symbol",
+          "surface": "The",
+          "normalized": "The"
+        },
+        {
+          "_key": "entity_4415049a3396bf3c",
+          "key": "entity_4415049a3396bf3c",
+          "chunkKey": "chunk_6ba0970c3a4d8dc2",
+          "entityType": "symbol",
+          "surface": "Failure",
+          "normalized": "Failure"
+        },
+        {
+          "_key": "entity_b4e7fe20af787720",
+          "key": "entity_b4e7fe20af787720",
+          "chunkKey": "chunk_6ba0970c3a4d8dc2",
+          "entityType": "symbol",
+          "surface": "Naive",
+          "normalized": "Naive"
+        },
+        {
+          "_key": "entity_f5ee6c46f939ef8d",
+          "key": "entity_f5ee6c46f939ef8d",
+          "chunkKey": "chunk_6ba0970c3a4d8dc2",
+          "entityType": "symbol",
+          "surface": "Division",
+          "normalized": "Division"
+        },
+        {
+          "_key": "entity_fc715ec71d17d2ea",
+          "key": "entity_fc715ec71d17d2ea",
+          "chunkKey": "chunk_6ba0970c3a4d8dc2",
+          "entityType": "symbol",
+          "surface": "In",
+          "normalized": "In"
+        },
+        {
+          "_key": "entity_a475f253da596d94",
+          "key": "entity_a475f253da596d94",
+          "chunkKey": "chunk_6ba0970c3a4d8dc2",
+          "entityType": "symbol",
+          "surface": "RedLine",
+          "normalized": "RedLine"
+        },
+        {
+          "_key": "entity_2d8dc417c0c5f6fa",
+          "key": "entity_2d8dc417c0c5f6fa",
+          "chunkKey": "chunk_6ba0970c3a4d8dc2",
+          "entityType": "symbol",
+          "surface": "Radon",
+          "normalized": "Radon"
+        },
+        {
+          "_key": "entity_e5ab3c0391904993",
+          "key": "entity_e5ab3c0391904993",
+          "chunkKey": "chunk_6ba0970c3a4d8dc2",
+          "entityType": "symbol",
+          "surface": "Nikodym",
+          "normalized": "Nikodym"
+        },
+        {
+          "_key": "entity_83a8972ffb96e91c",
+          "key": "entity_83a8972ffb96e91c",
+          "chunkKey": "chunk_6ba0970c3a4d8dc2",
+          "entityType": "symbol",
+          "surface": "L2",
+          "normalized": "L2"
+        },
+        {
+          "_key": "entity_34a6b92456df7128",
+          "key": "entity_34a6b92456df7128",
+          "chunkKey": "chunk_6ba0970c3a4d8dc2",
+          "entityType": "symbol",
+          "surface": "L3",
+          "normalized": "L3"
+        }
+      ],
+      "neighbors": [
+        {
+          "kind": "chunk",
+          "_key": "chunk_21a46dedce28ca07",
+          "key": "chunk_21a46dedce28ca07",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_c3cf06e79d6952b0",
+          "ordinal": 3,
+          "chunkKind": "chunk",
+          "title": "Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge",
+          "text": "---",
+          "tokens": [],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge",
+            "ordinal": 3
+          }
+        },
+        {
+          "kind": "chunk",
+          "_key": "chunk_621c5ef8af19a10f",
+          "key": "chunk_621c5ef8af19a10f",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_5e5701f4af9e2d4a",
+          "ordinal": 5,
+          "chunkKind": "chunk",
+          "title": "2. The Drazin-Penrose Substitution",
+          "text": "The Spire replaces naive operator division with a tripartite structural bridge:",
+          "tokens": [
+            "bridge",
+            "division",
+            "naive",
+            "operator",
+            "replaces",
+            "spire",
+            "structural",
+            "the",
+            "tripartite",
+            "with"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "2. The Drazin-Penrose Substitution",
+            "ordinal": 5
+          }
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "_key": "chunk_8c08fdf1b2cf1ecc",
+        "key": "chunk_8c08fdf1b2cf1ecc",
+        "documentKey": "doc_debc96ec760154aa",
+        "sectionKey": "section_b9418a7421d28fca",
+        "ordinal": 9,
+        "chunkKind": "theorem",
+        "title": "3. The \"Algebraically Weird\" Spectral Theorem",
+        "text": "This process is the **Alchemical Spectral Theorem**. It does not merely diagonalize an operator; it regularizes the transport before applying the logarithm. The **Relative Modular Hamiltonian** and the **Relative Tomita-Takesaki Operator** are defined only after this projection is complete.",
+        "tokens": [
+          "after",
+          "alchemical",
+          "and",
+          "applying",
+          "are",
+          "before",
+          "complete",
+          "defined",
+          "diagonalize",
+          "does",
+          "hamiltonian",
+          "logarithm",
+          "merely",
+          "modular",
+          "not",
+          "only",
+          "operator",
+          "process",
+          "projection",
+          "regularizes",
+          "relative",
+          "spectral",
+          "takesaki",
+          "the",
+          "theorem",
+          "this",
+          "tomita",
+          "transport"
+        ],
+        "provenance": {
+          "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+          "section": "3. The \"Algebraically Weird\" Spectral Theorem",
+          "ordinal": 9
+        }
+      },
+      "graphScore": 0.036655550264930344,
+      "lexicalScore": 0,
+      "entities": [
+        {
+          "_key": "entity_a2bb54ad479ac8fc",
+          "key": "entity_a2bb54ad479ac8fc",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "theorem",
+          "surface": "theorem",
+          "normalized": "theorem"
+        },
+        {
+          "_key": "entity_3a03f8d447dcab71",
+          "key": "entity_3a03f8d447dcab71",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "The",
+          "normalized": "The"
+        },
+        {
+          "_key": "entity_51f1d09ee7d02a5b",
+          "key": "entity_51f1d09ee7d02a5b",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "Algebraically",
+          "normalized": "Algebraically"
+        },
+        {
+          "_key": "entity_dcabf3db033d4b88",
+          "key": "entity_dcabf3db033d4b88",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "Weird",
+          "normalized": "Weird"
+        },
+        {
+          "_key": "entity_e5bb61cbb489191c",
+          "key": "entity_e5bb61cbb489191c",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "Spectral",
+          "normalized": "Spectral"
+        },
+        {
+          "_key": "entity_2ba0162a4ac2a0f3",
+          "key": "entity_2ba0162a4ac2a0f3",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "Theorem",
+          "normalized": "Theorem"
+        },
+        {
+          "_key": "entity_900fc891797c5e85",
+          "key": "entity_900fc891797c5e85",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "This",
+          "normalized": "This"
+        },
+        {
+          "_key": "entity_1f8316024cf23034",
+          "key": "entity_1f8316024cf23034",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "Alchemical",
+          "normalized": "Alchemical"
+        },
+        {
+          "_key": "entity_55f372746d7308e5",
+          "key": "entity_55f372746d7308e5",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "It",
+          "normalized": "It"
+        },
+        {
+          "_key": "entity_5e0b3fca09ea73fb",
+          "key": "entity_5e0b3fca09ea73fb",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "Relative",
+          "normalized": "Relative"
+        },
+        {
+          "_key": "entity_6e27a65b231bd366",
+          "key": "entity_6e27a65b231bd366",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "Modular",
+          "normalized": "Modular"
+        },
+        {
+          "_key": "entity_bb465b8cbd4bed72",
+          "key": "entity_bb465b8cbd4bed72",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "Hamiltonian",
+          "normalized": "Hamiltonian"
+        },
+        {
+          "_key": "entity_598c84c58411b75d",
+          "key": "entity_598c84c58411b75d",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "Tomita",
+          "normalized": "Tomita"
+        },
+        {
+          "_key": "entity_4e4be1074ddef8a7",
+          "key": "entity_4e4be1074ddef8a7",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "Takesaki",
+          "normalized": "Takesaki"
+        },
+        {
+          "_key": "entity_d7accbaec2e8eaa0",
+          "key": "entity_d7accbaec2e8eaa0",
+          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
+          "entityType": "symbol",
+          "surface": "Operator",
+          "normalized": "Operator"
+        }
+      ],
+      "neighbors": [
+        {
+          "kind": "chunk",
+          "_key": "chunk_6db70f1736cbbaf6",
+          "key": "chunk_6db70f1736cbbaf6",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_5e5701f4af9e2d4a",
+          "ordinal": 8,
+          "chunkKind": "chunk",
+          "title": "2. The Drazin-Penrose Substitution",
+          "text": "---",
+          "tokens": [],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "2. The Drazin-Penrose Substitution",
+            "ordinal": 8
+          }
+        },
+        {
+          "kind": "chunk",
+          "_key": "chunk_7e59fd78a1362313",
+          "key": "chunk_7e59fd78a1362313",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_b9418a7421d28fca",
+          "ordinal": 10,
+          "chunkKind": "theorem",
+          "title": "3. The \"Algebraically Weird\" Spectral Theorem",
+          "text": "As recorded in the `CertifiedInverseKernel` and `DrazinSupercharge` modules:\n- **Drazin** governs the spectral regular part.\n- **Moore-Penrose** governs the metric-facing compatibility.\n- **Logarithm** is applied only to the supported, regularized result.",
+          "tokens": [
+            "and",
+            "applied",
+            "certifiedinversekernel",
+            "compatibility",
+            "drazin",
+            "drazinsupercharge",
+            "facing",
+            "governs",
+            "logarithm",
+            "metric",
+            "modules",
+            "moore",
+            "only",
+            "part",
+            "penrose",
+            "recorded",
+            "regular",
+            "regularized",
+            "result",
+            "spectral",
+            "supported",
+            "the"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "3. The \"Algebraically Weird\" Spectral Theorem",
+            "ordinal": 10
+          }
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "_key": "chunk_21a46dedce28ca07",
+        "key": "chunk_21a46dedce28ca07",
+        "documentKey": "doc_debc96ec760154aa",
+        "sectionKey": "section_c3cf06e79d6952b0",
+        "ordinal": 3,
+        "chunkKind": "chunk",
+        "title": "Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge",
+        "text": "---",
+        "tokens": [],
+        "provenance": {
+          "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+          "section": "Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge",
+          "ordinal": 3
+        }
+      },
+      "graphScore": 0.035245932182177434,
+      "lexicalScore": 0,
+      "entities": [
+        {
+          "_key": "entity_3feba22954ee5c6b",
+          "key": "entity_3feba22954ee5c6b",
+          "chunkKey": "chunk_21a46dedce28ca07",
+          "entityType": "symbol",
+          "surface": "Chapter",
+          "normalized": "Chapter"
+        },
+        {
+          "_key": "entity_1ab9807c805f6a52",
+          "key": "entity_1ab9807c805f6a52",
+          "chunkKey": "chunk_21a46dedce28ca07",
+          "entityType": "symbol",
+          "surface": "The",
+          "normalized": "The"
+        },
+        {
+          "_key": "entity_97ba66d617f4aa56",
+          "key": "entity_97ba66d617f4aa56",
+          "chunkKey": "chunk_21a46dedce28ca07",
+          "entityType": "symbol",
+          "surface": "Operatorial",
+          "normalized": "Operatorial"
+        },
+        {
+          "_key": "entity_67be31aa83b8e00d",
+          "key": "entity_67be31aa83b8e00d",
+          "chunkKey": "chunk_21a46dedce28ca07",
+          "entityType": "symbol",
+          "surface": "Ratio",
+          "normalized": "Ratio"
+        },
+        {
+          "_key": "entity_78201c5025466a89",
+          "key": "entity_78201c5025466a89",
+          "chunkKey": "chunk_21a46dedce28ca07",
+          "entityType": "symbol",
+          "surface": "Drazin",
+          "normalized": "Drazin"
+        },
+        {
+          "_key": "entity_2ec84a2b53c279f8",
+          "key": "entity_2ec84a2b53c279f8",
+          "chunkKey": "chunk_21a46dedce28ca07",
+          "entityType": "symbol",
+          "surface": "Penrose",
+          "normalized": "Penrose"
+        },
+        {
+          "_key": "entity_f604cc2a55a07dfe",
+          "key": "entity_f604cc2a55a07dfe",
+          "chunkKey": "chunk_21a46dedce28ca07",
+          "entityType": "symbol",
+          "surface": "Bridge",
+          "normalized": "Bridge"
+        }
+      ],
+      "neighbors": [
+        {
+          "kind": "chunk",
+          "_key": "chunk_14dd9f5c01153bf6",
+          "key": "chunk_14dd9f5c01153bf6",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_c3cf06e79d6952b0",
+          "ordinal": 2,
+          "chunkKind": "chunk",
+          "title": "Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge",
+          "text": "This chapter records the formal architectural move from commutative density ratios to noncommutative operator ratios. It documents the realization that \"dividing one operator by another\" is an algebraically ill-defined operation that must be replaced by the structured separation of null spaces and regular parts using **Drazin** and **Moore-Penrose** machinery.",
+          "tokens": [
+            "algebraically",
+            "and",
+            "another",
+            "architectural",
+            "chapter",
+            "commutative",
+            "defined",
+            "density",
+            "dividing",
+            "documents",
+            "drazin",
+            "formal",
+            "from",
+            "ill",
+            "machinery",
+            "moore",
+            "move",
+            "must",
+            "noncommutative",
+            "null",
+            "one",
+            "operation",
+            "operator",
+            "parts",
+            "penrose",
+            "ratios",
+            "realization",
+            "records",
+            "regular",
+            "replaced",
+            "separation",
+            "spaces",
+            "structured",
+            "that",
+            "the",
+            "this",
+            "using"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge",
+            "ordinal": 2
+          }
+        },
+        {
+          "kind": "chunk",
+          "_key": "chunk_6ba0970c3a4d8dc2",
+          "key": "chunk_6ba0970c3a4d8dc2",
+          "documentKey": "doc_debc96ec760154aa",
+          "sectionKey": "section_68dbb48f05c95b85",
+          "ordinal": 4,
+          "chunkKind": "chunk",
+          "title": "1. The Failure of Naive Division",
+          "text": "In the commutative `RedLine` lane, the ratio is simply the Radon-Nikodym derivative $d\\mu / d\\nu$, and the modular potential is its negative logarithm. In the operator lane (L2/L3), this naive division breaks as soon as kernels appear. A \"ratio of operators\" cannot be defined globally without a rigorous handling of the null space.",
+          "tokens": [
+            "and",
+            "appear",
+            "breaks",
+            "cannot",
+            "commutative",
+            "defined",
+            "derivative",
+            "division",
+            "globally",
+            "handling",
+            "its",
+            "kernels",
+            "lane",
+            "logarithm",
+            "modular",
+            "naive",
+            "negative",
+            "nikodym",
+            "null",
+            "operator",
+            "operators",
+            "potential",
+            "radon",
+            "ratio",
+            "redline",
+            "rigorous",
+            "simply",
+            "soon",
+            "space",
+            "the",
+            "this",
+            "without"
+          ],
+          "provenance": {
+            "path": "docs/black_books/159_the_operatorial_ratio_and_the_drazin_penrose_bridge.md",
+            "section": "1. The Failure of Naive Division",
+            "ordinal": 4
+          }
+        }
+      ]
+    },
+    {
+      "chunk": {
+        "_key": "chunk_740f12d19e28ce89",
+        "key": "chunk_740f12d19e28ce89",
+        "documentKey": "doc_80dff116f3474539",
+        "sectionKey": "section_82e4e8dbbb5f0e05",
+        "ordinal": 24,
+        "chunkKind": "chunk",
+        "title": "3. Хирални оператори и Алгебра на Светлинния конус",
+        "text": "* Проекторна алгебра: Комбинацията от Moore-Penrose и хиралност позволява конструирането на проектори за състояния с определена хелицитност, които са регуларизирани срещу инфрачервени разходимости.\n* Weyl Gauge: Калибровката на Вайл осигурява, че тези проектори са инвариантни при мащабиране на светлинния конус, запазвайки причинно-следствената структура на информационния поток.",
+        "tokens": [
+          "gauge",
+          "moore",
+          "penrose",
+          "weyl"
+        ],
+        "provenance": {
+          "path": "docs/black_books/00w_drazin_penrose_lightcone_projectors_and_casimir_gravity.md",
+          "section": "3. Хирални оператори и Алгебра на Светлинния конус",
+          "ordinal": 24
+        }
+      },
+      "graphScore": 0.03379715820413824,
+      "lexicalScore": 2,
+      "entities": [
+        {
+          "_key": "entity_1fcf0612b9e03c7c",
+          "key": "entity_1fcf0612b9e03c7c",
+          "chunkKey": "chunk_740f12d19e28ce89",
+          "entityType": "symbol",
+          "surface": "Moore",
+          "normalized": "Moore"
+        },
+        {
+          "_key": "entity_066fe3f26d700203",
+          "key": "entity_066fe3f26d700203",
+          "chunkKey": "chunk_740f12d19e28ce89",
+          "entityType": "symbol",
+          "surface": "Penrose",
+          "normalized": "Penrose"
+        },
+        {
+          "_key": "entity_e0af4b3ca1ef2b9f",
+          "key": "entity_e0af4b3ca1ef2b9f",
+          "chunkKey": "chunk_740f12d19e28ce89",
+          "entityType": "symbol",
+          "surface": "Weyl",
+          "normalized": "Weyl"
+        },
+        {
+          "_key": "entity_263c41715aceffec",
+          "key": "entity_263c41715aceffec",
+          "chunkKey": "chunk_740f12d19e28ce89",
+          "entityType": "symbol",
+          "surface": "Gauge",
+          "normalized": "Gauge"
+        }
+      ],
+      "neighbors": [
+        {
+          "kind": "chunk",
+          "_key": "chunk_67276306c6d0282b",
+          "key": "chunk_67276306c6d0282b",
+          "documentKey": "doc_80dff116f3474539",
+          "sectionKey": "section_82e4e8dbbb5f0e05",
+          "ordinal": 23,
+          "chunkKind": "chunk",
+          "title": "3. Хирални оператори и Алгебра на Светлинния конус",
+          "text": "На светлинния конус хиралният оператор $\\gamma_5$ (или неговият аналог в $C\\ell(4,4)$) комутира с проекторите, изведени от Drazin инверсията.",
+          "tokens": [
+            "drazin",
+            "ell",
+            "gamma_5"
+          ],
+          "provenance": {
+            "path": "docs/black_books/00w_drazin_penrose_lightcone_projectors_and_casimir_gravity.md",
+            "section": "3. Хирални оператори и Алгебра на Светлинния конус",
+            "ordinal": 23
+          }
+        },
+        {
+          "kind": "chunk",
+          "_key": "chunk_de9785411163d9c2",
+          "key": "chunk_de9785411163d9c2",
+          "documentKey": "doc_80dff116f3474539",
+          "sectionKey": "section_387aadfaa0b0ee99",
+          "ordinal": 25,
+          "chunkKind": "chunk",
+          "title": "4. Казимиров принос и Регуларизация",
+          "text": "Използването на Drazin инверсията в $\\zeta$-регуларизацията позволява да се игнорират нилпотентните части (които не допринасят за енергията на вакуума), оставяйки само чистия Казимиров принос от физическите фолиации на ентропията.\nСинтез: Тези алгебрични инструменти позволяват да се инвертират \"неинвертируеми\" термодинамични системи, осигурявайки стабилност на решенията в BPS точката.\nЖелаете ли да разпишем коммутационните релации между Moore-Penrose проектора и Weyl-овия оператор на мащабиране в хиралната база на спинорите на Цорн?\nСледваща стъпка: Изчисляване на нилпотентния индекс на Drazin за дисипативната част на оператора на Онзагер.",
+          "tokens": [
+            "bps",
+            "drazin",
+            "moore",
+            "penrose",
+            "weyl",
+            "zeta"
+          ],
+          "provenance": {
+            "path": "docs/black_books/00w_drazin_penrose_lightcone_projectors_and_casimir_gravity.md",
+            "section": "4. Казимиров принос и Регуларизация",
+            "ordinal": 25
+          }
+        }
+      ]
+    }
+  ]
+}

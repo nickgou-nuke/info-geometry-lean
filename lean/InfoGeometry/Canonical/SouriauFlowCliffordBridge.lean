@@ -84,7 +84,7 @@ theorem souriau_comp_eq_jordan_plus_lie
 Infinitesimal thermodynamic conjugation at `β = 0` on the Souriau lane:
 the derivative of the Gibbs partition readout is minus the Souriau expectation.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem deriv_apply_operatorialGibbsWeight_zero_eq_neg_expectation_souriau
     (ω : EndH →L[ℝ] ℝ)
     (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))

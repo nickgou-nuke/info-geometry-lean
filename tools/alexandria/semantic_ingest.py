@@ -12,12 +12,18 @@ from typing import Iterable
 HEADER_RE = re.compile(r"^(#{1,6})\s+(.*\S)\s*$")
 IDENTIFIER_RE = re.compile(r"`([^`]+)`|\b([A-Z][A-Za-z0-9_.]+(?:\.[A-Z][A-Za-z0-9_.]+)*)\b|\b([a-z][A-Za-z0-9_]+(?:_[A-Za-z0-9_]+)+)\b")
 MODULE_RE = re.compile(r"\b([A-Z][A-Za-z0-9_]*(?:\.[A-Z][A-Za-z0-9_]*)+)\b")
+THEOREM_NAME_RE = re.compile(r"\b(?:theorem|lemma|proposition|corollary)\s+([A-Za-z_][A-Za-z0-9_'.]*)", re.IGNORECASE)
 RELATION_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
     ("uses", re.compile(r"\b(using|uses|via|through)\b", re.IGNORECASE)),
     ("implies", re.compile(r"\b(implies|therefore|thus|hence)\b", re.IGNORECASE)),
     ("assumes", re.compile(r"\b(assume|suppose|given|under)\b", re.IGNORECASE)),
     ("defines", re.compile(r"\b(defines|is defined as|denote by)\b", re.IGNORECASE)),
 ]
+NOISY_SYMBOLS = {
+    "The", "This", "That", "These", "Those", "It", "We", "As", "Conclusion", "Chapter", "Front", "Matter",
+    "Scale", "Invariance", "Gauge", "Proof", "Theorem", "Lemma", "Proposition", "Corollary", "Definition", "Remark",
+}
+SYMBOL_PREFIX_BLOCKLIST = ("Figure", "Section", "Chapter")
 
 
 @dataclass
@@ -126,6 +132,30 @@ def chunk_section_lines(lines: Iterable[str]) -> list[str]:
     return [block for block in blocks if block]
 
 
+def is_probably_symbol(normalized: str) -> bool:
+    if not normalized or len(normalized) < 2:
+        return False
+    if normalized in NOISY_SYMBOLS:
+        return False
+    if any(normalized.startswith(prefix) for prefix in SYMBOL_PREFIX_BLOCKLIST):
+        return False
+    if normalized.isupper() and len(normalized) > 6:
+        return False
+    if normalized[0].isupper() and normalized[1:].islower() and len(normalized) <= 4:
+        return False
+    if re.fullmatch(r"[A-Z][a-z]+", normalized) and normalized not in {"Python", "SymPy", "Weyl", "Drazin", "Penrose", "Moore", "Souriau"}:
+        return False
+    return True
+
+
+def is_probably_identifier(normalized: str) -> bool:
+    if not normalized:
+        return False
+    if "_" not in normalized and "." not in normalized:
+        return False
+    return len(normalized) >= 6
+
+
 def add_entity(entities: list[Entity], seen: set[tuple[str, str]], chunk_key: str, entity_type: str, surface: str) -> None:
     normalized = normalize_surface(surface)
     if not normalized:
@@ -153,6 +183,9 @@ def extract_entities(chunk: Chunk) -> list[Entity]:
     if chunk.chunkKind in {"theorem", "proof", "hypothesis", "definition", "remark"}:
         add_entity(entities, seen, chunk.key, chunk.chunkKind, chunk.chunkKind)
 
+    for match in THEOREM_NAME_RE.finditer(text):
+        add_entity(entities, seen, chunk.key, "theorem_name", match.group(1))
+
     theorem_like = re.findall(r"\b(Theorem|Lemma|Proposition|Corollary)\b", text, flags=re.IGNORECASE)
     for surface in theorem_like:
         add_entity(entities, seen, chunk.key, "theorem", surface)
@@ -169,18 +202,20 @@ def extract_entities(chunk: Chunk) -> list[Entity]:
     for surface in definition_like:
         add_entity(entities, seen, chunk.key, "definition", surface)
 
+    for match in MODULE_RE.finditer(text):
+        normalized = normalize_surface(match.group(1))
+        if normalized.count(".") >= 1:
+            add_entity(entities, seen, chunk.key, "module", normalized)
+
     for match in IDENTIFIER_RE.finditer(text):
         surface = next(group for group in match.groups() if group)
         normalized = normalize_surface(surface)
         if "." in normalized and normalized[0].isupper():
             add_entity(entities, seen, chunk.key, "module", normalized)
-        elif normalized and normalized[0].isupper():
-            add_entity(entities, seen, chunk.key, "symbol", normalized)
-        else:
+        elif is_probably_identifier(normalized):
             add_entity(entities, seen, chunk.key, "identifier", normalized)
-
-    for match in MODULE_RE.finditer(text):
-        add_entity(entities, seen, chunk.key, "module", match.group(1))
+        elif is_probably_symbol(normalized):
+            add_entity(entities, seen, chunk.key, "symbol", normalized)
 
     return entities
 
@@ -192,7 +227,7 @@ def extract_relations(chunk: Chunk, entities: list[Entity]) -> list[Relation]:
     for entity in entities:
         by_type.setdefault(entity.entityType, []).append(entity)
 
-    theorem_entities = by_type.get("theorem", [])
+    theorem_entities = by_type.get("theorem", []) + by_type.get("theorem_name", [])
     proof_entities = by_type.get("proof", [])
     hypothesis_entities = by_type.get("hypothesis", [])
     symbol_entities = by_type.get("symbol", []) + by_type.get("identifier", [])
@@ -209,24 +244,24 @@ def extract_relations(chunk: Chunk, entities: list[Entity]) -> list[Relation]:
             if signature not in seen:
                 seen.add(signature)
                 relations.append(Relation(stable_key("rel", *signature), theorem.key, hyp.key, "assumes", chunk.key, "theorem/hypothesis co-occurrence"))
-        for symbol in symbol_entities:
+        for symbol in symbol_entities[:8]:
             signature = (theorem.key, symbol.key, "mentions")
             if signature not in seen:
                 seen.add(signature)
                 relations.append(Relation(stable_key("rel", *signature), theorem.key, symbol.key, "mentions", chunk.key, "theorem/symbol co-occurrence"))
-        for module in module_entities:
+        for module in module_entities[:6]:
             signature = (theorem.key, module.key, "references_module")
             if signature not in seen:
                 seen.add(signature)
                 relations.append(Relation(stable_key("rel", *signature), theorem.key, module.key, "references_module", chunk.key, "theorem/module co-occurrence"))
 
+    preferred_sources = theorem_entities or proof_entities or hypothesis_entities or symbol_entities
+    preferred_targets = symbol_entities + module_entities
     for relation_type, pattern in RELATION_PATTERNS:
         if not pattern.search(chunk.text):
             continue
-        all_entities = theorem_entities or proof_entities or hypothesis_entities or symbol_entities
-        targets = symbol_entities + module_entities
-        for src in all_entities[:4]:
-            for dst in targets[:6]:
+        for src in preferred_sources[:3]:
+            for dst in preferred_targets[:4]:
                 if src.key == dst.key:
                     continue
                 signature = (src.key, dst.key, relation_type)

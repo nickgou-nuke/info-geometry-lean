@@ -43,6 +43,7 @@ import InfoGeometry.Canonical.CartanDecomposition
 import InfoGeometry.Canonical.CayleyBregmanBridge
 import InfoGeometry.Canonical.ChiralAnomaly
 import InfoGeometry.Canonical.ChiralOperatorConeClosure
+import InfoGeometry.Canonical.ChiralChargeFockNumberBridge
 import InfoGeometry.Canonical.ChiralEinsteinBridge
 import InfoGeometry.Canonical.ChiralGravity
 import InfoGeometry.Canonical.ChiralRGFlow
@@ -121,6 +122,8 @@ import InfoGeometry.Canonical.GeneralizedMetricPolarizedBridge
 import InfoGeometry.Canonical.GeneralizedMetricRecompositionBridge
 import InfoGeometry.Canonical.Geometry
 import InfoGeometry.Canonical.GrandCanonicalCore
+import InfoGeometry.Canonical.GrandCanonicalGaugePotentialBridge
+import InfoGeometry.Canonical.GrandCanonicalFockNumberBridge
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Canonical.GenerativeInferenceCore
 import InfoGeometry.Canonical.PhysicsOfInformationCore
@@ -169,6 +172,7 @@ import InfoGeometry.KL.EntropicInferenceTest
 import InfoGeometry.SLT.ConditionalExpectation
 import InfoGeometry.TransformationGroups
 import InfoGeometry.Canonical.KMSSinkhornBridge
+import InfoGeometry.Canonical.SinkhornGaugeThermodynamicsBridge
 import InfoGeometry.Canonical.KMSCocycleGeneratorBridge
 import InfoGeometry.Canonical.KreinDoubledAtom
 import InfoGeometry.Canonical.KLinearRepresentation
@@ -235,9 +239,12 @@ import InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
 import InfoGeometry.Canonical.StateIndexedModularSeedBridge
 import InfoGeometry.Canonical.SpectroscopicGauge
 import InfoGeometry.Canonical.NoetherInference
+import InfoGeometry.Canonical.NoetherRelationalBridge
+import InfoGeometry.Canonical.OperatorialHessianBridge
 import InfoGeometry.Canonical.ModularHessian
 import InfoGeometry.Canonical.FisherVolumeBridge
 import InfoGeometry.Canonical.PhaseVolumeDynamics
+import InfoGeometry.Canonical.PhaseAxisCartanSymmetricLie
 import InfoGeometry.Canonical.VariationalLadder
 import InfoGeometry.Canonical.TopologicalResidue
 import InfoGeometry.Canonical.OnsagerReciprocity
@@ -269,8 +276,10 @@ import InfoGeometry.Canonical.VortexReferenceGaugeBridge
 import InfoGeometry.Canonical.WeightedWeylNormalizationBridge
 import InfoGeometry.Canonical.SouriauPlanckVector
 import InfoGeometry.Canonical.SouriauFlowCliffordBridge
+import InfoGeometry.Canonical.SouriauThermodynamics
 import InfoGeometry.Canonical.ThermodynamicAction
 import InfoGeometry.Canonical.ThermodynamicGenerator
+import InfoGeometry.Canonical.OperatorSuperKaehlerLift
 import InfoGeometry.Canonical.MajoranaKreinCartanSplit
 import InfoGeometry.Canonical.RelativeModularPolarizedBridge
 import InfoGeometry.Canonical.RelativeModularProjectiveBridge

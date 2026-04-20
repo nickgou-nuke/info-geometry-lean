@@ -98,7 +98,7 @@ theorem apply_operatorialGibbsWeight_eq_informationPartitionFunction
 The operatorial Gibbs expectation has infinitesimal value given by the negated
 Souriau temperature vector.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem hasDerivAt_apply_operatorialGibbsWeight_zero
     (ω : EndH →L[ℝ] ℝ)
     (P : PotentialDatum (E := E)) (ψ : H₂) :

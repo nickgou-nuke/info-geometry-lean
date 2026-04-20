@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Any
 
 SCHEMA = "info_geometry.alexandria_algorithms.v1"
-ANCHOR_TYPES = {"theorem", "theorem_name", "module"}
+ANCHOR_TYPES = {"theorem", "theorem_name", "module", "identifier"}
 WEAK_TYPES = {"tooling", "symbol"}
 DEFECT_SEVERITY = {
     "weak_anchor_chain": 4,
@@ -31,6 +31,7 @@ class AlexandriaGraph:
     edge_weights: dict[tuple[int, int], float]
     entities_by_chunk: dict[str, list[dict[str, Any]]]
     canonical_entities: dict[str, list[dict[str, Any]]]
+    canonical_to_chunks: dict[str, list[str]]
 
 
 def stable_hash(obj: Any) -> str:
@@ -88,6 +89,7 @@ def build_graph(root: Path) -> AlexandriaGraph:
     entities_by_chunk: dict[str, list[dict[str, Any]]] = defaultdict(list)
     entity_to_chunks: dict[str, list[str]] = defaultdict(list)
     canonical_entities: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    canonical_to_chunks: dict[str, list[str]] = defaultdict(list)
 
     for edge in chunk_entities:
         chunk_key = chunk_key_from_doc_id(edge["_from"])
@@ -97,10 +99,12 @@ def build_graph(root: Path) -> AlexandriaGraph:
             continue
         entities_by_chunk[chunk_key].append(entity)
         entity_to_chunks[entity_key].append(chunk_key)
-        canonical_entities[canonical_entity_key(entity)].append(entity)
+        canonical = canonical_entity_key(entity)
+        canonical_entities[canonical].append(entity)
+        canonical_to_chunks[canonical].append(chunk_key)
 
-    for bucket in canonical_entities.values():
-        linked_chunks = sorted({chunk for entity in bucket for chunk in entity_to_chunks.get(entity["_key"], [])})
+    for canonical, bucket in canonical_entities.items():
+        linked_chunks = sorted(set(canonical_to_chunks.get(canonical, [])))
         if len(linked_chunks) < 2:
             continue
         representative = max(bucket, key=lambda row: float(row.get("confidence", 0.0)))
@@ -152,33 +156,84 @@ def build_graph(root: Path) -> AlexandriaGraph:
         edge_weights=edge_weights,
         entities_by_chunk=dict(entities_by_chunk),
         canonical_entities=dict(canonical_entities),
+        canonical_to_chunks={key: sorted(set(value)) for key, value in canonical_to_chunks.items()},
     )
 
 
-def basin_components(graph: AlexandriaGraph, *, min_weight: float = 0.72) -> list[list[int]]:
-    seen = [False] * len(graph.chunks)
-    out: list[list[int]] = []
-    for start in range(len(graph.chunks)):
-        if seen[start]:
+def anchor_seed_indices(graph: AlexandriaGraph) -> list[int]:
+    scored: list[tuple[float, int]] = []
+    for idx, chunk in enumerate(graph.chunks):
+        entities = graph.entities_by_chunk.get(chunk["_key"], [])
+        score = 0.0
+        for entity in entities:
+            conf = float(entity.get("confidence", 0.0))
+            etype = str(entity.get("entityType", ""))
+            if etype in ANCHOR_TYPES:
+                score += 1.5 * conf
+            elif etype == "math_notation":
+                score += 0.5 * conf
+        if score > 0:
+            scored.append((score, idx))
+    return [idx for _score, idx in sorted(scored, reverse=True)]
+
+
+def neighbor_affinity(graph: AlexandriaGraph, src: int, dst: int) -> float:
+    direct = max(graph.edge_weights.get((src, dst), 0.0), graph.edge_weights.get((dst, src), 0.0))
+    src_entities = graph.entities_by_chunk.get(graph.chunk_keys[src], [])
+    dst_entities = graph.entities_by_chunk.get(graph.chunk_keys[dst], [])
+    src_anchor = {canonical_entity_key(entity) for entity in src_entities if entity.get("entityType") in ANCHOR_TYPES}
+    dst_anchor = {canonical_entity_key(entity) for entity in dst_entities if entity.get("entityType") in ANCHOR_TYPES}
+    shared_anchor = len(src_anchor & dst_anchor)
+    return direct + 0.6 * shared_anchor
+
+
+def anchor_seeded_basins(graph: AlexandriaGraph, *, absorb_threshold: float = 1.1) -> list[list[int]]:
+    seeds = anchor_seed_indices(graph)
+    if not seeds:
+        return [list(range(len(graph.chunks)))] if graph.chunks else []
+
+    basin_of: dict[int, int] = {}
+    basins: list[set[int]] = []
+    seed_to_basin: dict[int, int] = {}
+
+    for seed in seeds:
+        if seed in basin_of:
             continue
-        comp: list[int] = []
-        queue: deque[int] = deque([start])
-        seen[start] = True
+        basin_id = len(basins)
+        seed_to_basin[seed] = basin_id
+        basins.append({seed})
+        basin_of[seed] = basin_id
+        queue: deque[int] = deque([seed])
         while queue:
             u = queue.popleft()
-            comp.append(u)
-            neighbors = set(graph.forward[u] + graph.preds[u])
-            for v in neighbors:
-                if seen[v]:
+            for v in set(graph.forward[u] + graph.preds[u]):
+                if v in basin_of:
                     continue
-                uv = graph.edge_weights.get((u, v), 0.0)
-                vu = graph.edge_weights.get((v, u), 0.0)
-                if max(uv, vu) < min_weight:
+                if neighbor_affinity(graph, u, v) < absorb_threshold:
                     continue
-                seen[v] = True
+                basin_of[v] = basin_id
+                basins[basin_id].add(v)
                 queue.append(v)
-        out.append(sorted(comp))
-    return out
+
+    for idx in range(len(graph.chunks)):
+        if idx in basin_of:
+            continue
+        best_basin: int | None = None
+        best_score = 0.0
+        for basin_id, members in enumerate(basins):
+            score = max((neighbor_affinity(graph, idx, member) for member in members), default=0.0)
+            if score > best_score:
+                best_score = score
+                best_basin = basin_id
+        if best_basin is not None and best_score >= 0.9:
+            basin_of[idx] = best_basin
+            basins[best_basin].add(idx)
+        else:
+            basin_id = len(basins)
+            basin_of[idx] = basin_id
+            basins.append({idx})
+
+    return [sorted(basin) for basin in basins if basin]
 
 
 def basin_seed_score(chunk: dict[str, Any], entities: list[dict[str, Any]]) -> float:
@@ -322,7 +377,7 @@ def main() -> int:
     input_dir = Path(args.input_dir)
     output_dir = Path(args.output_dir) if args.output_dir else input_dir / "overlay"
     graph = build_graph(input_dir)
-    components = basin_components(graph)
+    components = anchor_seeded_basins(graph)
     run_id = stable_hash({"input": str(input_dir), "components": len(components), "chunks": len(graph.chunks)})
 
     basin_rows = component_docs(graph, components, run_id=run_id)

@@ -1,5 +1,7 @@
 import InfoGeometry.Quantum.TriadicWeylBridge
 
+set_option linter.unusedSectionVars false
+
 /-!
 # Constructive Drazin/Weyl Compatibility Owner
 
@@ -18,6 +20,11 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSp
 
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
+
+noncomputable local instance : NormedRing EndH := inferInstance
+noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
+local instance : IsTopologicalRing EndH := inferInstance
+local instance : CompleteSpace EndH := inferInstance
 
 /--
 Constructive compatibility datum: a candidate inverse together with the proved
@@ -39,6 +46,30 @@ structure ConstructiveRieszWeylData (T : EndH) where
     (constructiveDrazinCandidate riesz).comp (spectral_epsilon (E := E))
       = (spectral_epsilon (E := E)).comp (constructiveDrazinCandidate riesz)
 
+/--
+Local Weyl symmetry package for a constructive Riesz problem.
+
+This removes the direct candidate-commutation assumption from the constructive
+lane.  Instead, the regular problem is symmetric under the sheet involution
+`ε`, and the regular inverse is unique among maps satisfying the same
+regular-lane inverse/support equations.  The Drazin candidate is then forced to
+commute with `ε`.
+-/
+structure ConstructiveRieszLocalWeylSymmetryData (T : EndH) where
+  riesz : ConstructiveRieszDecompositionAtZero (𝕂 := ℝ) T
+  operator_commutes_spectralEpsilon :
+    T.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp T
+  projector_commutes_spectralEpsilon :
+    riesz.P.comp (spectral_epsilon (E := E))
+      = (spectral_epsilon (E := E)).comp riesz.P
+  regular_inverse_unique :
+    ∀ S' : EndH,
+      S' * T = riesz.P →
+      T * S' = riesz.P →
+      S' * riesz.P = S' →
+      riesz.P * S' = S' →
+        S' = riesz.S
+
 /-- Shim theorem exporting constructive commutation into legacy Weyl compatibility. -/
 theorem drazinInverse_isWeylCompatible
     (D : ConstructiveDrazinWeylData (E := E)) :
@@ -59,6 +90,115 @@ theorem constructiveDrazinCandidate_isWeylCompatible
       D.candidate_commutes_spectralEpsilon
 
 /--
+The ε-conjugate of the constructive regular inverse is the same inverse when
+the Riesz regular problem is locally Weyl-symmetric and the regular inverse is
+unique. This is the constructive D2 forcing step.
+-/
+theorem spectralEpsilon_conj_constructiveDrazinCandidate_eq
+    {T : EndH}
+    (D : ConstructiveRieszLocalWeylSymmetryData (E := E) T) :
+    (spectral_epsilon (E := E)) *
+        constructiveDrazinCandidate D.riesz *
+          (spectral_epsilon (E := E))
+      =
+    constructiveDrazinCandidate D.riesz := by
+  let ε : EndH := spectral_epsilon (E := E)
+  let Sε : EndH := ε * D.riesz.S * ε
+  have hε2 : ε * ε = ContinuousLinearMap.id ℝ H₂ := by
+    apply ContinuousLinearMap.ext
+    intro x
+    apply DoubledSpace.ext <;> simp [ε, spectral_epsilon]
+  have hTε : T * ε = ε * T := by
+    simpa [ε] using D.operator_commutes_spectralEpsilon
+  have hPε : D.riesz.P * ε = ε * D.riesz.P := by
+    simpa [ε] using D.projector_commutes_spectralEpsilon
+  have hSε_left : Sε * T = D.riesz.P := by
+    calc
+      Sε * T = ε * D.riesz.S * ε * T := by simp [Sε, mul_assoc]
+      _ = ε * D.riesz.S * (ε * T) := by simp [mul_assoc]
+      _ = ε * D.riesz.S * (T * ε) := by rw [hTε]
+      _ = ε * (D.riesz.S * T) * ε := by simp [mul_assoc]
+      _ = ε * D.riesz.P * ε := by rw [D.riesz.left_inverse_on_regular]
+      _ = (ε * D.riesz.P) * ε := by simp [mul_assoc]
+      _ = (D.riesz.P * ε) * ε := by rw [← hPε]
+      _ = D.riesz.P * (ε * ε) := by simp [mul_assoc]
+      _ = D.riesz.P * ContinuousLinearMap.id ℝ H₂ := by rw [hε2]
+      _ = D.riesz.P := by
+        apply ContinuousLinearMap.ext
+        intro x
+        apply DoubledSpace.ext <;> simp
+  have hSε_right : T * Sε = D.riesz.P := by
+    calc
+      T * Sε = T * (ε * D.riesz.S * ε) := by simp [Sε]
+      _ = (T * ε) * D.riesz.S * ε := by simp [mul_assoc]
+      _ = (ε * T) * D.riesz.S * ε := by rw [hTε]
+      _ = ε * (T * D.riesz.S) * ε := by simp [mul_assoc]
+      _ = ε * D.riesz.P * ε := by rw [D.riesz.right_inverse_on_regular]
+      _ = (ε * D.riesz.P) * ε := by simp [mul_assoc]
+      _ = (D.riesz.P * ε) * ε := by rw [← hPε]
+      _ = D.riesz.P * (ε * ε) := by simp [mul_assoc]
+      _ = D.riesz.P * ContinuousLinearMap.id ℝ H₂ := by rw [hε2]
+      _ = D.riesz.P := by
+        apply ContinuousLinearMap.ext
+        intro x
+        apply DoubledSpace.ext <;> simp
+  have hSε_support_left : Sε * D.riesz.P = Sε := by
+    calc
+      Sε * D.riesz.P = ε * D.riesz.S * ε * D.riesz.P := by simp [Sε, mul_assoc]
+      _ = ε * D.riesz.S * (ε * D.riesz.P) := by simp [mul_assoc]
+      _ = ε * D.riesz.S * (D.riesz.P * ε) := by rw [← hPε]
+      _ = ε * (D.riesz.S * D.riesz.P) * ε := by simp [mul_assoc]
+      _ = ε * D.riesz.S * ε := by rw [D.riesz.S_supported_on_regular_left]
+      _ = Sε := by rfl
+  have hSε_support_right : D.riesz.P * Sε = Sε := by
+    calc
+      D.riesz.P * Sε = D.riesz.P * (ε * D.riesz.S * ε) := by simp [Sε]
+      _ = (D.riesz.P * ε) * D.riesz.S * ε := by simp [mul_assoc]
+      _ = (ε * D.riesz.P) * D.riesz.S * ε := by rw [hPε]
+      _ = ε * (D.riesz.P * D.riesz.S) * ε := by simp [mul_assoc]
+      _ = ε * D.riesz.S * ε := by rw [D.riesz.S_supported_on_regular_right]
+      _ = Sε := by rfl
+  simpa [constructiveDrazinCandidate, Sε, ε] using
+    D.regular_inverse_unique Sε hSε_left hSε_right hSε_support_left hSε_support_right
+
+/--
+Local Weyl symmetry of the constructive Riesz problem forces the extracted
+Drazin candidate to commute with the sheet involution.
+-/
+theorem constructiveDrazinCandidate_commutes_spectralEpsilon_of_localWeylSymmetry
+    {T : EndH}
+    (D : ConstructiveRieszLocalWeylSymmetryData (E := E) T) :
+    (constructiveDrazinCandidate D.riesz).comp (spectral_epsilon (E := E))
+      =
+    (spectral_epsilon (E := E)).comp (constructiveDrazinCandidate D.riesz) := by
+  let ε : EndH := spectral_epsilon (E := E)
+  have hConj :
+      ε * constructiveDrazinCandidate D.riesz * ε =
+        constructiveDrazinCandidate D.riesz :=
+    spectralEpsilon_conj_constructiveDrazinCandidate_eq (E := E) D
+  apply ContinuousLinearMap.ext
+  intro x
+  have hAtεx :=
+    congrArg (fun F : EndH => F (ε x)) hConj
+  have hε2x : ε (ε x) = x := by
+    exact congrArg (fun F : EndH => F x) (spectral_epsilon_involution (E := E))
+  simpa [ε, ContinuousLinearMap.comp_apply, mul_assoc, hε2x] using hAtεx.symm
+
+/--
+Constructive D2 bridge: local Weyl symmetry and uniqueness of the regular
+Riesz inverse imply Weyl compatibility of the constructive Drazin candidate.
+-/
+theorem constructiveDrazinCandidate_isWeylCompatible_of_localWeylSymmetry
+    {T : EndH}
+    (D : ConstructiveRieszLocalWeylSymmetryData (E := E) T) :
+    IsWeylCompatible (E := E) (constructiveDrazinCandidate D.riesz) := by
+  exact
+    (isWeylCompatible_iff_comp_spectralEpsilon
+      (E := E) (constructiveDrazinCandidate D.riesz)).2
+      (constructiveDrazinCandidate_commutes_spectralEpsilon_of_localWeylSymmetry
+        (E := E) D)
+
+/--
 Constructive Riesz-side Weyl package yields a Drazin witness together with Weyl
 compatibility for the same candidate, without any nonconstructive choice.
 -/
@@ -72,6 +212,23 @@ theorem exists_isDrazinInverse_isWeylCompatible_of_constructiveRieszWeylData
       (constructiveDrazinCandidate_inner (hR := D.riesz))
       (constructiveDrazinCandidate_power (hR := D.riesz))
   · exact constructiveDrazinCandidate_isWeylCompatible (E := E) D
+
+/--
+Constructive local-symmetry variant of the D2 witness theorem. The Weyl
+compatibility proof is derived from ε-symmetry plus uniqueness, not supplied as
+direct candidate commutation.
+-/
+theorem exists_isDrazinInverse_isWeylCompatible_of_localWeylSymmetry
+    {T : EndH} (D : ConstructiveRieszLocalWeylSymmetryData (E := E) T) :
+    ∃ k TD,
+      Drazin.IsDrazinInverse T TD k ∧ IsWeylCompatible (E := E) TD := by
+  refine ⟨D.riesz.k, constructiveDrazinCandidate D.riesz, ?_, ?_⟩
+  · exact Drazin.IsDrazinInverse.mk
+      (constructiveDrazinCandidate_comm (hR := D.riesz))
+      (constructiveDrazinCandidate_inner (hR := D.riesz))
+      (constructiveDrazinCandidate_power (hR := D.riesz))
+  · exact constructiveDrazinCandidate_isWeylCompatible_of_localWeylSymmetry
+      (E := E) D
 
 /--
 Translator-lane specialization: a constructive Drazin witness package produces

@@ -261,6 +261,7 @@ theorem gaugeClock_commutator_mem_phaseAxis_even
     InfoGeometry.Core.SymmetricLieAlgebra.bracket_k_k
       (S := phaseAxisSymmetricLieAlgebra (E := E)) hg hk
 
+omit [CompleteSpace E] in
 /--
 The gauge-clock commutator is actually zero because the gauge sector is
 phase-linear and therefore commutes with the phase axis.

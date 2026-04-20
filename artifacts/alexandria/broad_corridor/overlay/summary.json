@@ -1,0 +1,117 @@
+{
+  "schema": "info_geometry.alexandria_algorithms.v1",
+  "run_id": "2f79ae0bbfbb3bb931d50293e6bbb880",
+  "chunk_count": 157,
+  "component_count": 31,
+  "canonical_entity_count": 92,
+  "top_basins": [
+    {
+      "basin": "basin_0001",
+      "member_count": 27,
+      "representative_title": "4. Казимиров принос и Регуларизация",
+      "defect_tags": [
+        "weak_anchor_chain",
+        "tooling_overweight",
+        "notation_without_anchor",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0002",
+      "member_count": 21,
+      "representative_title": "1. Exact Definition",
+      "defect_tags": [
+        "tooling_overweight"
+      ]
+    },
+    {
+      "basin": "basin_0003",
+      "member_count": 13,
+      "representative_title": "Актуални изследвания в arXiv",
+      "defect_tags": [
+        "weak_anchor_chain",
+        "notation_without_anchor",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0004",
+      "member_count": 12,
+      "representative_title": "Алгоритмична реализация в Python (SymPy)",
+      "defect_tags": [
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0005",
+      "member_count": 11,
+      "representative_title": "3. The \"Algebraically Weird\" Spectral Theorem",
+      "defect_tags": [
+        "tooling_overweight"
+      ]
+    },
+    {
+      "basin": "basin_0006",
+      "member_count": 7,
+      "representative_title": "1. Казимиров оператор и Спектрален остатък",
+      "defect_tags": [
+        "weak_anchor_chain",
+        "notation_without_anchor",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0007",
+      "member_count": 7,
+      "representative_title": "Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge",
+      "defect_tags": [
+        "weak_anchor_chain",
+        "tooling_overweight",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0008",
+      "member_count": 5,
+      "representative_title": "4. Holographic Thermodynamics of the Latent Space",
+      "defect_tags": [
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0009",
+      "member_count": 5,
+      "representative_title": "4. Връзка с Айнщайновата гравитация",
+      "defect_tags": [
+        "weak_anchor_chain",
+        "notation_without_anchor",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0010",
+      "member_count": 4,
+      "representative_title": "3. The Lie Algebra Weights Collection",
+      "defect_tags": [
+        "tooling_overweight"
+      ]
+    },
+    {
+      "basin": "basin_0011",
+      "member_count": 4,
+      "representative_title": "1. $\\zeta(0)$ и функционалният детерминант",
+      "defect_tags": [
+        "weak_anchor_chain",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0012",
+      "member_count": 3,
+      "representative_title": "2. Nonequilibrium Thermodynamics as a Gauge Theory on Graphs",
+      "defect_tags": [
+        "rhetorical_drift"
+      ]
+    }
+  ]
+}

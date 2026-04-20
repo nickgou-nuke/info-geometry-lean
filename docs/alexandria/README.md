@@ -14,6 +14,7 @@ It is intentionally separate from the operational DAG / infotree export pipeline
 - `tools/alexandria/semantic_ingest.py` parses text/markdown into semantic chunks
 - `tools/alexandria/arango_ingest.py` creates Alexandria collections and ingests records
 - `tools/alexandria/retrieve_context.py` builds raw hybrid context packets from vector-like lexical similarity plus graph adjacency
+- `tools/alexandria/graph_context_rank.py` reranks semantic seeds with graph expansion, and can request cuGraph-backed NetworkX dispatch
 - `configs/alexandria/docker-compose.yml` launches a second ArangoDB instance on port 8530 by default
 
 ## First-pass schema
@@ -65,7 +66,25 @@ python3 tools/alexandria/retrieve_context.py \
   --input-dir artifacts/alexandria/blackbook_payload
 ```
 
+## Graph reranking with the cuGraph-compatible venv
+
+Use the repaired graph stack in `/home/goutev/arango-graph-venv` when you want GPU-backed NetworkX dispatch:
+
+```bash
+NETWORKX_BACKEND_PRIORITY_ALGOS=cugraph \
+NETWORKX_BACKEND_PRIORITY_GENERATORS=cugraph \
+NETWORKX_FALLBACK_TO_NX=true \
+NETWORKX_CACHE_CONVERTED_GRAPHS=true \
+/home/goutev/arango-graph-venv/bin/python tools/alexandria/graph_context_rank.py \
+  --query "constructive drazin local weyl symmetry" \
+  --input-dir artifacts/alexandria/blackbook_payload \
+  --use-gpu
+```
+
+The helper also applies those environment variables itself when `--use-gpu` is passed, as long as they are set before `networkx` import inside the process.
+
 ## Notes
 
 This first pass uses theorem-aware semantic splitting plus lexical similarity and explicit graph adjacency.
+The graph reranker adds personalized PageRank style expansion from lexical seed chunks.
 It is designed to be extended later with embeddings, vector indexes, and crystallized theorem overlays.

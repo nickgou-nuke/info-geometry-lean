@@ -48,6 +48,54 @@ theorem commutator_KI_mem_p
     ⁅D.K, D.I⁆ ∈ D.S.𝔭 :=
   commutator_KI_mem_odd (D := D)
 
+/--
+Over the real Cartan split, the even and odd eigenspaces of the same
+involution intersect only at zero.
+-/
+theorem eq_zero_of_mem_even_and_odd
+    {L : Type _} [LieRing L] [LieAlgebra ℝ L]
+    (S : SymmetricLieAlgebra L) {x : L}
+    (hxEven : x ∈ S.evenLieSubalgebra)
+    (hxOdd : x ∈ S.oddSubmodule) :
+    x = 0 := by
+  have hEven : S.θ x = x := (S.mem_even_iff).1 hxEven
+  have hOdd : S.θ x = -x := (S.mem_oddSubmodule_iff).1 hxOdd
+  have hx : x = -x := by
+    calc
+      x = S.θ x := hEven.symm
+      _ = -x := hOdd
+  have htwo : (2 : ℝ) • x = 0 := by
+    calc
+      (2 : ℝ) • x = x + x := by simp [two_smul]
+      _ = x + -x := by exact congrArg (fun y : L => x + y) hx
+      _ = 0 := by simp
+  have hhalf :
+      ((2 : ℝ)⁻¹) • ((2 : ℝ) • x) = ((2 : ℝ)⁻¹) • (0 : L) := by
+    exact congrArg (fun y : L => ((2 : ℝ)⁻¹) • y) htwo
+  simpa [smul_smul] using hhalf
+
+/--
+If the forced commutator also lies in the even sector, the Cartan-grade
+intersection rule kills it.
+-/
+theorem commutator_KI_eq_zero_of_mem_even
+    {L : Type _} [LieRing L] [LieAlgebra ℝ L]
+    (D : CartanPhaseAxisForcingData L)
+    (hEven : ⁅D.K, D.I⁆ ∈ D.S.evenLieSubalgebra) :
+    ⁅D.K, D.I⁆ = 0 :=
+  eq_zero_of_mem_even_and_odd D.S hEven (commutator_KI_mem_odd (D := D))
+
+/--
+Compatibility name for the D1 closure pattern: odd-sector forcing plus
+independent even-sector membership gives a zero phase-axis commutator.
+-/
+theorem commutator_KI_eq_zero_of_dual_grade_forcing
+    {L : Type _} [LieRing L] [LieAlgebra ℝ L]
+    (D : CartanPhaseAxisForcingData L)
+    (hEven : ⁅D.K, D.I⁆ ∈ D.S.𝔨) :
+    ⁅D.K, D.I⁆ = 0 :=
+  commutator_KI_eq_zero_of_mem_even (D := D) hEven
+
 end SymmetricLieAlgebra
 
 end InfoGeometry.Core

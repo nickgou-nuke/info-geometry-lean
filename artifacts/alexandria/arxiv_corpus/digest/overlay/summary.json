@@ -1,0 +1,120 @@
+{
+  "schema": "info_geometry.alexandria_algorithms.v1",
+  "run_id": "2bd2f9eb896c1d868fd6265c0063445a",
+  "chunk_count": 3181,
+  "component_count": 63,
+  "canonical_entity_count": 316,
+  "top_basins": [
+    {
+      "basin": "basin_0001",
+      "member_count": 1677,
+      "representative_title": "Generalized Fefferman—Graham gauge and boundary Weyl structures",
+      "defect_tags": []
+    },
+    {
+      "basin": "basin_0002",
+      "member_count": 268,
+      "representative_title": "[1609.00271] On structure and TKK algebras for Jordan superalgebras",
+      "defect_tags": [
+        "tooling_overweight",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0003",
+      "member_count": 134,
+      "representative_title": "Canonical and Grand-Canonical Singular Ensembles within a Thermodynamicized Gravity Framework",
+      "defect_tags": [
+        "tooling_overweight",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0004",
+      "member_count": 119,
+      "representative_title": "[1609.00271] On structure and TKK algebras for Jordan superalgebras",
+      "defect_tags": [
+        "tooling_overweight",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0005",
+      "member_count": 81,
+      "representative_title": "[1603.04490] Lie algebroids, gauge theories, and compatible geometrical structures",
+      "defect_tags": [
+        "weak_anchor_chain",
+        "tooling_overweight",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0006",
+      "member_count": 77,
+      "representative_title": "[2210.15393] Efficient Learning of Decision-Making Models: A Penalty Block Coordinate Descent Algorithm for Data-Driven Inverse Optimization",
+      "defect_tags": [
+        "weak_anchor_chain",
+        "tooling_overweight",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0007",
+      "member_count": 74,
+      "representative_title": "[2310.18854] On the role of postulates in the understanding of Weyl gauge symmetry",
+      "defect_tags": [
+        "weak_anchor_chain",
+        "tooling_overweight",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0008",
+      "member_count": 73,
+      "representative_title": "[2306.12662] Higher group Weyl Symmetry",
+      "defect_tags": [
+        "weak_anchor_chain",
+        "tooling_overweight",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0009",
+      "member_count": 72,
+      "representative_title": "[2204.02966] Gauge Quantum Thermodynamics of Time-local non-Markovian Evolutions",
+      "defect_tags": [
+        "weak_anchor_chain",
+        "tooling_overweight",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0010",
+      "member_count": 63,
+      "representative_title": "[2407.02695] Topics in Weyl Geometry and Quantum Anomalies",
+      "defect_tags": [
+        "tooling_overweight",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0011",
+      "member_count": 45,
+      "representative_title": "[hep-ph/0105050] A Grand Canonical Ensemble Approach to the Thermodynamic Properties of the Nucleon in the Quark-Gluon Coupling Model",
+      "defect_tags": [
+        "tooling_overweight",
+        "rhetorical_drift"
+      ]
+    },
+    {
+      "basin": "basin_0012",
+      "member_count": 37,
+      "representative_title": "Canonical and Grand-Canonical Singular Ensembles within a Thermodynamicized Gravity Framework",
+      "defect_tags": [
+        "weak_anchor_chain",
+        "tooling_overweight",
+        "rhetorical_drift"
+      ]
+    }
+  ]
+}

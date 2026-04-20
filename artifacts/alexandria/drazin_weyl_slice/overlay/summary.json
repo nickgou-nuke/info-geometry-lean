@@ -1,0 +1,17 @@
+{
+  "schema": "info_geometry.alexandria_algorithms.v1",
+  "run_id": "3aab81f573d441ddc362dffab7463cd4",
+  "chunk_count": 95,
+  "component_count": 1,
+  "canonical_entity_count": 47,
+  "top_basins": [
+    {
+      "basin": "basin_0001",
+      "member_count": 95,
+      "representative_title": "Алгоритмична реализация в Python (SymPy)",
+      "defect_tags": [
+        "tooling_overweight"
+      ]
+    }
+  ]
+}

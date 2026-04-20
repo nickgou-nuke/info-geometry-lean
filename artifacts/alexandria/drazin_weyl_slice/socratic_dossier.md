@@ -35,16 +35,8 @@ constructive drazin local weyl symmetry penrose projector weyl compatible
 **Conclusion:** The Spire does not "divide." It **distills** the regular from the null, using the Drazin-Penrose bridge to transport meaning across singular operator surfaces. We have moved from coordinate division to topological ratio.
 
 ### Entities
-- `symbol`: Scale
-- `symbol`: Invariance
-- `symbol`: Gauge
-- `symbol`: Conclusion
-- `symbol`: The
-- `symbol`: Spire
-- `symbol`: It
 - `symbol`: Drazin
 - `symbol`: Penrose
-- `symbol`: We
 
 ### Nearby context
 - chunk | 4. Scale Invariance and the Gauge | The **Information-Geometric Relative Norm** is scale-invariant by construction (`informationGeometricRelativeNorm_scale_scale`). This invariance is the prerequisite for the operato
@@ -64,12 +56,7 @@ As recorded in the `CertifiedInverseKernel` and `DrazinSupercharge` modules:
 
 ### Entities
 - `theorem`: theorem
-- `symbol`: The
-- `symbol`: Algebraically
-- `symbol`: Weird
-- `symbol`: Spectral
-- `symbol`: Theorem
-- `symbol`: As
+- `theorem_name`: As
 - `symbol`: CertifiedInverseKernel
 - `symbol`: DrazinSupercharge
 - `symbol`: Drazin
@@ -90,15 +77,8 @@ As recorded in the `CertifiedInverseKernel` and `DrazinSupercharge` modules:
 This chapter records the formal architectural move from commutative density ratios to noncommutative operator ratios. It documents the realization that "dividing one operator by another" is an algebraically ill-defined operation that must be replaced by the structured separation of null spaces and regular parts using **Drazin** and **Moore-Penrose** machinery.
 
 ### Entities
-- `symbol`: Chapter
-- `symbol`: The
-- `symbol`: Operatorial
-- `symbol`: Ratio
 - `symbol`: Drazin
 - `symbol`: Penrose
-- `symbol`: Bridge
-- `symbol`: This
-- `symbol`: It
 - `symbol`: Moore
 
 ### Nearby context
@@ -122,7 +102,6 @@ This chapter records the formal architectural move from commutative density rati
 - `symbol`: BPS
 - `symbol`: Moore
 - `symbol`: Penrose
-- `symbol`: Weyl
 
 ### Nearby context
 - chunk | 3. Хирални оператори и Алгебра на Светлинния конус | * Проекторна алгебра: Комбинацията от Moore-Penrose и хиралност позволява конструирането на проектори за състояния с определена хелицитност, които са регуларизирани срещу инфрачерв
@@ -140,14 +119,8 @@ This chapter records the formal architectural move from commutative density rati
 3.  **Penrose Projectors:** Moore-Penrose left and right projectors capture the support geometry, defining the "left/right" orientation of the division when the operators are singular.
 
 ### Entities
-- `symbol`: The
 - `symbol`: Drazin
 - `symbol`: Penrose
-- `symbol`: Substitution
-- `symbol`: Support
-- `symbol`: Separation
-- `symbol`: Inverse
-- `symbol`: Projectors
 - `symbol`: Moore
 
 ### Nearby context
@@ -164,16 +137,7 @@ This chapter records the formal architectural move from commutative density rati
 The **Information-Geometric Relative Norm** is scale-invariant by construction (`informationGeometricRelativeNorm_scale_scale`). This invariance is the prerequisite for the operatorial ratio: the scale is killed by the **PositiveRay** quotient and the canonical **gaugeSection**, ensuring the norm reads only the normalized modular contrast, not the coordinate magnitude.
 
 ### Entities
-- `symbol`: Scale
-- `symbol`: Invariance
-- `symbol`: Gauge
-- `symbol`: The
-- `symbol`: Information
-- `symbol`: Geometric
-- `symbol`: Relative
-- `symbol`: Norm
 - `identifier`: informationGeometricRelativeNorm_scale_scale
-- `symbol`: This
 - `symbol`: PositiveRay
 
 ### Nearby context
@@ -196,18 +160,6 @@ The **Information-Geometric Relative Norm** is scale-invariant by construction (
    * В контекста на статистическата механика, нарушаването на калибровъчната симетрия (gauge symmetry breaking) е критично за описанието на кондензирани фази (например Бозе-Айнщайнова кондензация), където големият каноничен ансамбъл без нарушена симетрия би довел до некоректни флуктуации (т.нар. „голяма канонична катастрофа“).
 * Брой частици (Particle Number): В големия каноничен ансамбъл броят на частиците $N$ не е фиксиран, а се контролира от химическия потенциал $\mu$. Геометрично това съответства на допълнително измерение в пространството на параметрите на ансамбъла, където операторът $\mu \hat{N}$ се включва в обобщения Хамилтониан. [1, 4, 5, 6, 7, 8, 9, 10]
 
-### Entities
-- `symbol`: Gibbs
-- `symbol`: Grand
-- `symbol`: Canonical
-- `symbol`: Ensemble
-- `symbol`: Llocal
-- `symbol`: Symmetry
-- `symbol`: Weyl
-- `symbol`: Gauge
-- `symbol`: Particle
-- `symbol`: Number
-
 ### Nearby context
 - chunk | Актуални изследвания в arXiv | Темата обхваща пресечната точка между информационната геометрия, симплектичната механика и термодинамиката на групите на Ли, разработена основно от Жан-Мари Сурио (Jean-Marie Souri
 - chunk | Актуални изследвания в arXiv | Според скорошни публикации в [arXiv](https://arxiv.org/abs/2509.20910), се изследва как 2-коциклите (2-cocycles) могат локално да модифицират метриката на Сурио-Фишер върху коадюнк
@@ -222,10 +174,8 @@ The **Information-Geometric Relative Norm** is scale-invariant by construction (
 ---
 
 ### Entities
-- `symbol`: The
 - `symbol`: Drazin
 - `symbol`: Penrose
-- `symbol`: Substitution
 
 ### Nearby context
 - chunk | 2. The Drazin-Penrose Substitution | Together, these provide the **Support-Restricted Inverse**—the only algebraically valid way to express "A / B" when B is singular.
@@ -241,14 +191,7 @@ The **Information-Geometric Relative Norm** is scale-invariant by construction (
 In the commutative `RedLine` lane, the ratio is simply the Radon-Nikodym derivative $d\mu / d\nu$, and the modular potential is its negative logarithm. In the operator lane (L2/L3), this naive division breaks as soon as kernels appear. A "ratio of operators" cannot be defined globally without a rigorous handling of the null space.
 
 ### Entities
-- `symbol`: The
-- `symbol`: Failure
-- `symbol`: Naive
-- `symbol`: Division
-- `symbol`: In
 - `symbol`: RedLine
-- `symbol`: Radon
-- `symbol`: Nikodym
 - `symbol`: L2
 - `symbol`: L3
 
@@ -267,17 +210,7 @@ This process is the **Alchemical Spectral Theorem**. It does not merely diagonal
 
 ### Entities
 - `theorem`: theorem
-- `symbol`: The
-- `symbol`: Algebraically
-- `symbol`: Weird
-- `symbol`: Spectral
-- `symbol`: Theorem
-- `symbol`: This
-- `symbol`: Alchemical
-- `symbol`: It
-- `symbol`: Relative
-- `symbol`: Modular
-- `symbol`: Hamiltonian
+- `theorem_name`: This
 
 ### Nearby context
 - chunk | 2. The Drazin-Penrose Substitution | ---
@@ -295,13 +228,8 @@ This process is the **Alchemical Spectral Theorem**. It does not merely diagonal
 ---
 
 ### Entities
-- `symbol`: Chapter
-- `symbol`: The
-- `symbol`: Operatorial
-- `symbol`: Ratio
 - `symbol`: Drazin
 - `symbol`: Penrose
-- `symbol`: Bridge
 
 ### Nearby context
 - chunk | Chapter 159: The Operatorial Ratio and the Drazin-Penrose Bridge | This chapter records the formal architectural move from commutative density ratios to noncommutative operator ratios. It documents the realization that "dividing one operator by an
@@ -320,8 +248,6 @@ This process is the **Alchemical Spectral Theorem**. It does not merely diagonal
 ### Entities
 - `symbol`: Moore
 - `symbol`: Penrose
-- `symbol`: Weyl
-- `symbol`: Gauge
 
 ### Nearby context
 - chunk | 3. Хирални оператори и Алгебра на Светлинния конус | На светлинния конус хиралният оператор $\gamma_5$ (или неговият аналог в $C\ell(4,4)$) комутира с проекторите, изведени от Drazin инверсията.

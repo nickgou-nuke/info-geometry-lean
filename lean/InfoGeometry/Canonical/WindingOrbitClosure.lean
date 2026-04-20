@@ -3,6 +3,9 @@ import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.BogoliubovClosedForms
 import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Canonical.PhaseAxisCartanSymmetricLie
+import InfoGeometry.Canonical.WeylGaugeField
+import InfoGeometry.Core.CartanPhaseAxisForcing
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -27,6 +30,7 @@ open InfoGeometry.Canonical.KKTCore
 open InfoGeometry.Canonical.Cl11LorentzAction
 open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Quantum
+open InfoGeometry.Core
 
 section Core
 
@@ -221,6 +225,64 @@ Winding obstruction: deviation from exact branch-periodic closure at winding `N`
 @[rep_depth transport]
 noncomputable def windingOrbitObstruction (K : EndH) (N : ℤ) : EndH :=
   NormedSpace.exp (multiBranchedGenerator K N) - NormedSpace.exp K
+
+/--
+Clock-faithful exponential branch predicate.
+
+This is the exact extra hypothesis needed for the reverse D1 direction. It is
+not global injectivity of the exponential map, which would be false on winding
+branches. It only says that, on the chosen branch and generator, zero winding
+obstruction is a faithful detector of clock-axis commutation.
+-/
+@[rep_depth transport]
+def IsClockFaithfulExponentialBranch (K : EndH) (N : ℤ) : Prop :=
+  NormedSpace.exp (multiBranchedGenerator K N) = NormedSpace.exp K →
+    Commute K (clockAxis H)
+
+/--
+Local gauge certificate for clock-faithful winding branches.
+
+The Weyl field/shift/response fields record the local-gauge data. The only
+non-formal analytic content required for D1 is the final faithful-readout field:
+if the gauge readout cannot distinguish the two exponential branch values, then
+the clock commutator must vanish. This isolates the needed local symmetry
+hypothesis instead of replacing it with global exponential injectivity.
+-/
+@[rep_depth transport]
+structure LocalClockGaugeSymmetryCertificate (K : EndH) (N : ℤ) where
+  gaugeField : InfoGeometry.Canonical.WeylGaugeField EndH EndH
+  gaugeShift : InfoGeometry.Canonical.WeylGaugeParameter EndH EndH
+  response : InfoGeometry.Canonical.GeometricResponse EndH EndH
+  logGenerator : InfoGeometry.Canonical.LogGenerator EndH EndH
+  response_gaugeInvariant :
+    InfoGeometry.Canonical.WeylGaugeField.IsGaugeInvariant response
+  branch_readout_faithful :
+    response.responseOf (NormedSpace.exp (multiBranchedGenerator K N)) =
+      response.responseOf (NormedSpace.exp K) →
+        Commute K (clockAxis H)
+
+/--
+The local Weyl gauge fields in a clock-gauge certificate have invariant
+responses under the certified local shift.
+-/
+theorem localClockGauge_response_transform_eq
+    {K : EndH} {N : ℤ}
+    (C : LocalClockGaugeSymmetryCertificate (H := H) K N) :
+    (C.gaugeField.transform C.gaugeShift).respond C.response C.logGenerator =
+      C.gaugeField.respond C.response C.logGenerator := by
+  exact InfoGeometry.Canonical.WeylGaugeField.respond_transform_eq_of_isGaugeInvariant
+    C.gaugeField C.gaugeShift C.response C.logGenerator C.response_gaugeInvariant
+
+/--
+Local gauge symmetry plus faithful branch readout yields the clock-faithful
+exponential branch required for the reverse D1 implication.
+-/
+theorem clockFaithfulExponentialBranch_of_localClockGaugeSymmetry
+    {K : EndH} {N : ℤ}
+    (C : LocalClockGaugeSymmetryCertificate (H := H) K N) :
+    IsClockFaithfulExponentialBranch (H := H) K N := by
+  intro hExp
+  exact C.branch_readout_faithful (congrArg C.response.responseOf hExp)
 
 /--
 If the generator commutes with the modular clock axis, the winding obstruction
@@ -439,6 +501,32 @@ theorem modularTransportGenerator_commutator_clockAxis_eq_zero_of_cartanGradeFor
   exact modularTransportGenerator_commutator_clockAxis_eq_zero_of_detailedEquilibrium
     (H := H) hMod hForce
 
+/--
+Cartan-grade forcing bridge for the winding owner:
+if an explicit Cartan symmetric-pair certificate places the modular generator
+and clock axis in the phase-axis forcing pattern, and the same commutator is
+also forced into the even sector, then the concrete transport commutator
+vanishes by the real even/odd intersection rule.
+-/
+theorem modularTransportGenerator_commutator_clockAxis_eq_zero_of_cartanDualGrade
+    (hMod : EndH)
+    (D : InfoGeometry.Core.SymmetricLieAlgebra.CartanPhaseAxisForcingData EndH)
+    (hK :
+      D.K =
+        InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+    (hI : D.I = clockAxis H)
+    (hEven : ⁅D.K, D.I⁆ ∈ D.S.𝔨) :
+    InfoGeometry.Canonical.BogoliubovTransport.transportCommutator (E := H)
+      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+      (clockAxis H)
+      = 0 := by
+  have hZero :
+      ⁅D.K, D.I⁆ = 0 :=
+    InfoGeometry.Core.SymmetricLieAlgebra.commutator_KI_eq_zero_of_dual_grade_forcing
+      D hEven
+  simpa [InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator,
+    hK, hI] using hZero
+
 theorem modularTransportGenerator_commutator_clockAxis_eq_zero_of_scalePart_eq_zero
     (hMod : EndH)
     (hScaleZero :
@@ -467,6 +555,25 @@ def IsNoncommutingScaleLane (hMod : EndH) : Prop :=
   nonEquilibriumClockDefect (H := H) hMod ≠ 0
 
 /--
+Equilibrium clock lane: the modular transport generator has zero clock defect.
+This is the exact equilibrium boundary for D1, not a generic
+non-equilibrium claim.
+-/
+@[rep_depth transport]
+def IsClockEquilibriumLane (hMod : EndH) : Prop :=
+  nonEquilibriumClockDefect (H := H) hMod = 0
+
+/--
+The non-equilibrium predicate is exactly the negation of the clock-equilibrium
+predicate.
+-/
+theorem isNoncommutingScaleLane_iff_not_clockEquilibrium
+    (hMod : EndH) :
+    IsNoncommutingScaleLane (H := H) hMod ↔
+      ¬ IsClockEquilibriumLane (H := H) hMod := by
+  rfl
+
+/--
 The non-equilibrium clock defect is exactly the commutation defect.
 -/
 theorem nonEquilibriumClockDefect_eq_zero_iff_commute
@@ -482,6 +589,74 @@ theorem nonEquilibriumClockDefect_eq_zero_iff_commute
     exact sub_eq_zero.mp hZero
   · intro hComm
     exact sub_eq_zero.mpr hComm.eq
+
+/--
+Cartan dual-grade forcing produces the actual `Commute` witness required by
+the winding periodicity owner theorem.
+-/
+theorem modularTransportGenerator_commutes_clockAxis_of_cartanDualGrade
+    (hMod : EndH)
+    (D : InfoGeometry.Core.SymmetricLieAlgebra.CartanPhaseAxisForcingData EndH)
+    (hK :
+      D.K =
+        InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+    (hI : D.I = clockAxis H)
+    (hEven : ⁅D.K, D.I⁆ ∈ D.S.𝔨) :
+    Commute
+      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+      (clockAxis H) := by
+  exact (nonEquilibriumClockDefect_eq_zero_iff_commute (H := H) hMod).1
+    (modularTransportGenerator_commutator_clockAxis_eq_zero_of_cartanDualGrade
+      (H := H) hMod D hK hI hEven)
+
+/--
+Winding periodicity obtained directly from an explicit Cartan dual-grade
+certificate, without an exposed raw commutation hypothesis.
+-/
+theorem winding_orbit_periodicity_of_cartanDualGrade
+    (hMod : EndH) (N : ℤ)
+    (D : InfoGeometry.Core.SymmetricLieAlgebra.CartanPhaseAxisForcingData EndH)
+    (hK :
+      D.K =
+        InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+    (hI : D.I = clockAxis H)
+    (hEven : ⁅D.K, D.I⁆ ∈ D.S.𝔨) :
+    NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) =
+      NormedSpace.exp
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) := by
+  exact winding_orbit_periodicity
+    (H := H)
+    (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+    (N := N)
+    (modularTransportGenerator_commutes_clockAxis_of_cartanDualGrade
+      (H := H) hMod D hK hI hEven)
+
+/--
+Successor branch periodicity obtained directly from the Cartan dual-grade
+certificate.
+-/
+theorem winding_orbit_periodicity_succ_of_cartanDualGrade
+    (hMod : EndH) (N : ℤ)
+    (D : InfoGeometry.Core.SymmetricLieAlgebra.CartanPhaseAxisForcingData EndH)
+    (hK :
+      D.K =
+        InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+    (hI : D.I = clockAxis H)
+    (hEven : ⁅D.K, D.I⁆ ∈ D.S.𝔨) :
+    NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) (N + 1)) =
+      NormedSpace.exp
+        (multiBranchedGenerator
+          (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) := by
+  exact winding_orbit_periodicity_succ
+    (H := H)
+    (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+    (N := N)
+    (modularTransportGenerator_commutes_clockAxis_of_cartanDualGrade
+      (H := H) hMod D hK hI hEven)
 
 /--
 The non-equilibrium defect is sourced exactly by the Cartan-odd scale channel.
@@ -510,6 +685,107 @@ theorem nonEquilibriumClockDefect_eq_two_smul_scalePart_comp_clockAxis
     clockAxis] using hSource
 
 /--
+Named Cartan scale-split source law for D1:
+the winding clock commutator is sourced exactly by the Cartan-odd
+phase-antilinear scale sector of the modular generator.
+-/
+theorem modularTransportGenerator_clockAxis_commutator_eq_cartanScaleSource
+    (hMod : EndH) :
+    InfoGeometry.Canonical.BogoliubovTransport.transportCommutator (E := H)
+      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+      (clockAxis H)
+      =
+    (2 : ℝ) •
+      ((InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod).comp
+        (clockAxis H)) := by
+  simpa [nonEquilibriumClockDefect] using
+    nonEquilibriumClockDefect_eq_two_smul_scalePart_comp_clockAxis (H := H) hMod
+
+/--
+Equilibrium/non-equilibrium boundary in source form:
+the clock lane is at equilibrium exactly when the Cartan scale-source readout
+`2 • scalePart ∘ clockAxis` vanishes.
+-/
+theorem clockEquilibrium_iff_cartanScaleSource_eq_zero
+    (hMod : EndH) :
+    IsClockEquilibriumLane (H := H) hMod ↔
+      (2 : ℝ) •
+        ((InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod).comp
+          (clockAxis H)) = 0 := by
+  unfold IsClockEquilibriumLane
+  rw [nonEquilibriumClockDefect_eq_two_smul_scalePart_comp_clockAxis]
+
+/--
+The non-equilibrium clock lane is exactly non-vanishing of the Cartan
+scale-source readout.
+-/
+theorem noncommutingScaleLane_iff_cartanScaleSource_ne_zero
+    (hMod : EndH) :
+    IsNoncommutingScaleLane (H := H) hMod ↔
+      (2 : ℝ) •
+        ((InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod).comp
+          (clockAxis H)) ≠ 0 := by
+  unfold IsNoncommutingScaleLane
+  rw [nonEquilibriumClockDefect_eq_two_smul_scalePart_comp_clockAxis]
+
+/--
+Concrete phase-axis Cartan closure for D1:
+the full modular-generator clock commutator vanishes once the scale-clock
+source commutator is certified in the even sector.  The scale-clock commutator
+is already odd by `PhaseAxisCartanSymmetricLie`; this theorem is the maintained
+bridge from that dual-grade certificate to the winding owner.
+-/
+theorem modularTransportGenerator_commutator_clockAxis_eq_zero_of_scaleClock_mem_phaseAxis_even
+    (hMod : EndH)
+    (hEven :
+      ⁅InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod,
+        clockAxis H⁆
+        ∈ (InfoGeometry.Canonical.PhaseAxisCartanSymmetricLie.phaseAxisSymmetricLieAlgebra
+            (E := H)).evenLieSubalgebra) :
+    InfoGeometry.Canonical.BogoliubovTransport.transportCommutator (E := H)
+      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+      (clockAxis H)
+      = 0 := by
+  have hScaleZero :
+      ⁅InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod,
+        InfoGeometry.Krein.clockAxis (E := H)⁆ = 0 :=
+    InfoGeometry.Canonical.PhaseAxisCartanSymmetricLie.scaleClock_commutator_eq_zero_of_mem_phaseAxis_even
+      (E := H) hMod hEven
+  have hScaleTransport :
+      InfoGeometry.Canonical.BogoliubovTransport.transportCommutator (E := H)
+        (InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod)
+        (clockAxis H)
+        = 0 := by
+    simpa [InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator]
+      using hScaleZero
+  have hFullEqScale :
+      InfoGeometry.Canonical.BogoliubovTransport.transportCommutator (E := H)
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+        (clockAxis H)
+        =
+      InfoGeometry.Canonical.BogoliubovTransport.transportCommutator (E := H)
+        (InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod)
+        (clockAxis H) := by
+    have hFull :=
+      modularTransportGenerator_clockAxis_commutator_eq_cartanScaleSource (H := H) hMod
+    have hScaleSource :
+        InfoGeometry.Canonical.BogoliubovTransport.transportCommutator (E := H)
+          (InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod)
+          (clockAxis H)
+          =
+        (2 : ℝ) •
+          ((InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod).comp
+            (clockAxis H)) := by
+      simpa [InfoGeometry.Canonical.BogoliubovTransport.phaseAxisForce, clockAxis] using
+        InfoGeometry.Canonical.BogoliubovTransport.phaseAxisForce_eq_two_smul_comp_of_IsPhaseAntilinear
+          (E := H)
+          (InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod)
+          (InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart_isPhaseAntilinear
+            (E := H) hMod)
+    exact hFull.trans hScaleSource.symm
+  rw [hFullEqScale, hScaleTransport]
+
+/--
 Detailed equilibrium kills the non-equilibrium defect exactly.
 -/
 theorem nonEquilibriumClockDefect_eq_zero_of_detailedEquilibrium
@@ -535,6 +811,110 @@ theorem windingOrbitObstruction_modularTransportGenerator_eq_zero_of_detailedEqu
     (N := N)
     (modularTransportGenerator_commutes_clockAxis_of_detailedEquilibrium
       (H := H) hMod hEq)
+
+/--
+Clock-equilibrium is the exact source condition needed by the winding owner:
+zero clock defect gives the commutation witness and therefore zero winding
+obstruction.
+-/
+theorem windingOrbitObstruction_modularTransportGenerator_eq_zero_of_clockEquilibrium
+    (hMod : EndH) (N : ℤ)
+    (hEq : IsClockEquilibriumLane (H := H) hMod) :
+    windingOrbitObstruction
+      (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N = 0 := by
+  exact windingOrbitObstruction_eq_zero_of_commute
+    (H := H)
+    (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+    (N := N)
+    ((nonEquilibriumClockDefect_eq_zero_iff_commute (H := H) hMod).1 hEq)
+
+/--
+Faithful branch reverse direction:
+if the selected exponential branch detects clock commutation, then zero winding
+obstruction forces clock equilibrium of the modular transport generator.
+-/
+theorem clockEquilibrium_of_windingOrbitObstruction_eq_zero_of_clockFaithfulBranch
+    (hMod : EndH) (N : ℤ)
+    (hFaithful :
+      IsClockFaithfulExponentialBranch
+        (H := H)
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+        N)
+    (hObs :
+      windingOrbitObstruction
+        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+        N = 0) :
+    IsClockEquilibriumLane (H := H) hMod := by
+  have hExp :
+      NormedSpace.exp
+        (multiBranchedGenerator
+          (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N)
+        =
+      NormedSpace.exp
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) := by
+    exact sub_eq_zero.mp hObs
+  exact (nonEquilibriumClockDefect_eq_zero_iff_commute (H := H) hMod).2
+    (hFaithful hExp)
+
+/--
+With an explicit clock-faithful exponential branch, clock equilibrium is
+equivalent to zero winding obstruction. Without this faithfulness hypothesis,
+only the forward direction is source-owned.
+-/
+theorem clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_clockFaithfulBranch
+    (hMod : EndH) (N : ℤ)
+    (hFaithful :
+      IsClockFaithfulExponentialBranch
+        (H := H)
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+        N) :
+    IsClockEquilibriumLane (H := H) hMod ↔
+      windingOrbitObstruction
+        (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+        N = 0 := by
+  constructor
+  · intro hEq
+    exact windingOrbitObstruction_modularTransportGenerator_eq_zero_of_clockEquilibrium
+      (H := H) hMod N hEq
+  · intro hObs
+    exact clockEquilibrium_of_windingOrbitObstruction_eq_zero_of_clockFaithfulBranch
+      (H := H) hMod N hFaithful hObs
+
+/--
+Clock-equilibrium gives branch periodicity for the modular transport generator.
+-/
+theorem winding_orbit_periodicity_of_clockEquilibrium
+    (hMod : EndH) (N : ℤ)
+    (hEq : IsClockEquilibriumLane (H := H) hMod) :
+    NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) =
+      NormedSpace.exp
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) := by
+  exact winding_orbit_periodicity
+    (H := H)
+    (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+    (N := N)
+    ((nonEquilibriumClockDefect_eq_zero_iff_commute (H := H) hMod).1 hEq)
+
+/--
+Clock-equilibrium gives successor branch periodicity for the modular transport
+generator.
+-/
+theorem winding_orbit_periodicity_succ_of_clockEquilibrium
+    (hMod : EndH) (N : ℤ)
+    (hEq : IsClockEquilibriumLane (H := H) hMod) :
+    NormedSpace.exp
+      (multiBranchedGenerator
+        (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) (N + 1)) =
+      NormedSpace.exp
+        (multiBranchedGenerator
+          (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) := by
+  exact winding_orbit_periodicity_succ
+    (H := H)
+    (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+    (N := N)
+    ((nonEquilibriumClockDefect_eq_zero_iff_commute (H := H) hMod).1 hEq)
 
 /--
 Any noncommuting scale lane is necessarily outside detailed equilibrium.

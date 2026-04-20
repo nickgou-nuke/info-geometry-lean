@@ -195,6 +195,27 @@ lemma mem_oddSubmodule_iff (S : SymmetricLieAlgebra L) {x : L} :
     x ∈ S.oddSubmodule ↔ S.θ x = -x := by
   rfl
 
+/-- Grade intersection is zero: the even and odd submodules are disjoint except at 0. -/
+theorem intersection_eq_zero (S : SymmetricLieAlgebra L) (x : L)
+    (h_even : x ∈ S.evenSubmodule)
+    (h_odd : x ∈ S.oddSubmodule) :
+    x = 0 := by
+  have h1 : S.θ x = x := (S.mem_evenSubmodule_iff).1 h_even
+  have h2 : S.θ x = -x := (S.mem_oddSubmodule_iff).1 h_odd
+  have h_eq : x = -x := by
+    calc
+      x = S.θ x := h1.symm
+      _ = -x := h2
+  have htwo : (2 : ℝ) • x = 0 := by
+    calc
+      (2 : ℝ) • x = x + x := by simp [two_smul]
+      _ = x + -x := by exact congrArg (fun y : L => x + y) h_eq
+      _ = 0 := by simp
+  have hhalf :
+      ((2 : ℝ)⁻¹) • ((2 : ℝ) • x) = ((2 : ℝ)⁻¹) • (0 : L) := by
+    exact congrArg (fun y : L => ((2 : ℝ)⁻¹) • y) htwo
+  simpa [smul_smul] using hhalf
+
 /-- Compatibility alias for the `+1` Cartan projector linear map. -/
 noncomputable def P_plus (S : SymmetricLieAlgebra L) : L →ₗ[ℝ] L :=
   { toFun := fun x => ((2 : ℝ)⁻¹) • (x + S.θ x)
@@ -799,6 +820,17 @@ noncomputable def endoSymmetricLieAlgebra
       simpa [conjugationLieEquiv] using
         (conjugationMap_involutive J hJ :
           Function.Involutive (conjugationMap J))⟩
+
+/-- Conjugation by an endomorphism squaring to -Id as an abstract symmetric Lie algebra. -/
+noncomputable def endoSymmetricLieAlgebra_sq_neg_one
+    (J : V →L[ℝ] V)
+    (hJ : J.comp J = -ContinuousLinearMap.id ℝ V) :
+    SymmetricLieAlgebra (V →L[ℝ] V) :=
+  SymmetricLieAlgebra.ofInvolutiveLieAut
+    ⟨conjugationLieEquiv_sq_neg_one J hJ, by
+      simpa [conjugationLieEquiv_sq_neg_one] using
+        (conjugationMapNeg_involutive J hJ :
+          Function.Involutive (conjugationMapNeg J))⟩
 
 end Endomorphism
 

@@ -96,62 +96,6 @@
       "lexicalScore": 2,
       "entities": [
         {
-          "_key": "entity_07dc37248e5e94bc",
-          "key": "entity_07dc37248e5e94bc",
-          "chunkKey": "chunk_772c7403f9643fe1",
-          "entityType": "symbol",
-          "surface": "Scale",
-          "normalized": "Scale"
-        },
-        {
-          "_key": "entity_7d4fa725cb36f0ed",
-          "key": "entity_7d4fa725cb36f0ed",
-          "chunkKey": "chunk_772c7403f9643fe1",
-          "entityType": "symbol",
-          "surface": "Invariance",
-          "normalized": "Invariance"
-        },
-        {
-          "_key": "entity_c6776e2825066868",
-          "key": "entity_c6776e2825066868",
-          "chunkKey": "chunk_772c7403f9643fe1",
-          "entityType": "symbol",
-          "surface": "Gauge",
-          "normalized": "Gauge"
-        },
-        {
-          "_key": "entity_5969183ef5066655",
-          "key": "entity_5969183ef5066655",
-          "chunkKey": "chunk_772c7403f9643fe1",
-          "entityType": "symbol",
-          "surface": "Conclusion",
-          "normalized": "Conclusion"
-        },
-        {
-          "_key": "entity_622ba2f05745bb9a",
-          "key": "entity_622ba2f05745bb9a",
-          "chunkKey": "chunk_772c7403f9643fe1",
-          "entityType": "symbol",
-          "surface": "The",
-          "normalized": "The"
-        },
-        {
-          "_key": "entity_54ea14fe869182fd",
-          "key": "entity_54ea14fe869182fd",
-          "chunkKey": "chunk_772c7403f9643fe1",
-          "entityType": "symbol",
-          "surface": "Spire",
-          "normalized": "Spire"
-        },
-        {
-          "_key": "entity_3608aa4faab15331",
-          "key": "entity_3608aa4faab15331",
-          "chunkKey": "chunk_772c7403f9643fe1",
-          "entityType": "symbol",
-          "surface": "It",
-          "normalized": "It"
-        },
-        {
           "_key": "entity_95e96abb0522ef89",
           "key": "entity_95e96abb0522ef89",
           "chunkKey": "chunk_772c7403f9643fe1",
@@ -166,14 +110,6 @@
           "entityType": "symbol",
           "surface": "Penrose",
           "normalized": "Penrose"
-        },
-        {
-          "_key": "entity_d4e7733183e97e05",
-          "key": "entity_d4e7733183e97e05",
-          "chunkKey": "chunk_772c7403f9643fe1",
-          "entityType": "symbol",
-          "surface": "We",
-          "normalized": "We"
         }
       ],
       "neighbors": [
@@ -308,50 +244,10 @@
           "normalized": "theorem"
         },
         {
-          "_key": "entity_332bdb7bedc8485c",
-          "key": "entity_332bdb7bedc8485c",
+          "_key": "entity_2127bae6044a6f49",
+          "key": "entity_2127bae6044a6f49",
           "chunkKey": "chunk_7e59fd78a1362313",
-          "entityType": "symbol",
-          "surface": "The",
-          "normalized": "The"
-        },
-        {
-          "_key": "entity_8d360a2b241abc32",
-          "key": "entity_8d360a2b241abc32",
-          "chunkKey": "chunk_7e59fd78a1362313",
-          "entityType": "symbol",
-          "surface": "Algebraically",
-          "normalized": "Algebraically"
-        },
-        {
-          "_key": "entity_0a5f848c0a581066",
-          "key": "entity_0a5f848c0a581066",
-          "chunkKey": "chunk_7e59fd78a1362313",
-          "entityType": "symbol",
-          "surface": "Weird",
-          "normalized": "Weird"
-        },
-        {
-          "_key": "entity_5c8a4b83f5ae1e4a",
-          "key": "entity_5c8a4b83f5ae1e4a",
-          "chunkKey": "chunk_7e59fd78a1362313",
-          "entityType": "symbol",
-          "surface": "Spectral",
-          "normalized": "Spectral"
-        },
-        {
-          "_key": "entity_78e876f990e41834",
-          "key": "entity_78e876f990e41834",
-          "chunkKey": "chunk_7e59fd78a1362313",
-          "entityType": "symbol",
-          "surface": "Theorem",
-          "normalized": "Theorem"
-        },
-        {
-          "_key": "entity_b57ca4d2dec4b368",
-          "key": "entity_b57ca4d2dec4b368",
-          "chunkKey": "chunk_7e59fd78a1362313",
-          "entityType": "symbol",
+          "entityType": "theorem_name",
           "surface": "As",
           "normalized": "As"
         },
@@ -394,14 +290,6 @@
           "entityType": "symbol",
           "surface": "Penrose",
           "normalized": "Penrose"
-        },
-        {
-          "_key": "entity_967e9a8cb742ce02",
-          "key": "entity_967e9a8cb742ce02",
-          "chunkKey": "chunk_7e59fd78a1362313",
-          "entityType": "symbol",
-          "surface": "Logarithm",
-          "normalized": "Logarithm"
         }
       ],
       "neighbors": [
@@ -560,38 +448,6 @@
       "lexicalScore": 2,
       "entities": [
         {
-          "_key": "entity_988787d9747b0621",
-          "key": "entity_988787d9747b0621",
-          "chunkKey": "chunk_14dd9f5c01153bf6",
-          "entityType": "symbol",
-          "surface": "Chapter",
-          "normalized": "Chapter"
-        },
-        {
-          "_key": "entity_bad9d5cab9bc65de",
-          "key": "entity_bad9d5cab9bc65de",
-          "chunkKey": "chunk_14dd9f5c01153bf6",
-          "entityType": "symbol",
-          "surface": "The",
-          "normalized": "The"
-        },
-        {
-          "_key": "entity_9859d4c0f39d9dd4",
-          "key": "entity_9859d4c0f39d9dd4",
-          "chunkKey": "chunk_14dd9f5c01153bf6",
-          "entityType": "symbol",
-          "surface": "Operatorial",
-          "normalized": "Operatorial"
-        },
-        {
-          "_key": "entity_bcd602a5fb274a4e",
-          "key": "entity_bcd602a5fb274a4e",
-          "chunkKey": "chunk_14dd9f5c01153bf6",
-          "entityType": "symbol",
-          "surface": "Ratio",
-          "normalized": "Ratio"
-        },
-        {
           "_key": "entity_c3d0502f64ec9dd7",
           "key": "entity_c3d0502f64ec9dd7",
           "chunkKey": "chunk_14dd9f5c01153bf6",
@@ -606,30 +462,6 @@
           "entityType": "symbol",
           "surface": "Penrose",
           "normalized": "Penrose"
-        },
-        {
-          "_key": "entity_626cb05287ace7a2",
-          "key": "entity_626cb05287ace7a2",
-          "chunkKey": "chunk_14dd9f5c01153bf6",
-          "entityType": "symbol",
-          "surface": "Bridge",
-          "normalized": "Bridge"
-        },
-        {
-          "_key": "entity_202ce28aec82b7e0",
-          "key": "entity_202ce28aec82b7e0",
-          "chunkKey": "chunk_14dd9f5c01153bf6",
-          "entityType": "symbol",
-          "surface": "This",
-          "normalized": "This"
-        },
-        {
-          "_key": "entity_4645a608047eec89",
-          "key": "entity_4645a608047eec89",
-          "chunkKey": "chunk_14dd9f5c01153bf6",
-          "entityType": "symbol",
-          "surface": "It",
-          "normalized": "It"
         },
         {
           "_key": "entity_8b540c3db55c649c",
@@ -753,14 +585,6 @@
           "entityType": "symbol",
           "surface": "Penrose",
           "normalized": "Penrose"
-        },
-        {
-          "_key": "entity_2f17d57f3ff628c6",
-          "key": "entity_2f17d57f3ff628c6",
-          "chunkKey": "chunk_de9785411163d9c2",
-          "entityType": "symbol",
-          "surface": "Weyl",
-          "normalized": "Weyl"
         }
       ],
       "neighbors": [
@@ -869,14 +693,6 @@
       "lexicalScore": 2,
       "entities": [
         {
-          "_key": "entity_800197d09128f4d0",
-          "key": "entity_800197d09128f4d0",
-          "chunkKey": "chunk_6a36f5317f5d1e6a",
-          "entityType": "symbol",
-          "surface": "The",
-          "normalized": "The"
-        },
-        {
           "_key": "entity_70e32ea49621c11a",
           "key": "entity_70e32ea49621c11a",
           "chunkKey": "chunk_6a36f5317f5d1e6a",
@@ -891,46 +707,6 @@
           "entityType": "symbol",
           "surface": "Penrose",
           "normalized": "Penrose"
-        },
-        {
-          "_key": "entity_d58563c30a4cd05a",
-          "key": "entity_d58563c30a4cd05a",
-          "chunkKey": "chunk_6a36f5317f5d1e6a",
-          "entityType": "symbol",
-          "surface": "Substitution",
-          "normalized": "Substitution"
-        },
-        {
-          "_key": "entity_d1ce72950ee11027",
-          "key": "entity_d1ce72950ee11027",
-          "chunkKey": "chunk_6a36f5317f5d1e6a",
-          "entityType": "symbol",
-          "surface": "Support",
-          "normalized": "Support"
-        },
-        {
-          "_key": "entity_53f4adcc8365147a",
-          "key": "entity_53f4adcc8365147a",
-          "chunkKey": "chunk_6a36f5317f5d1e6a",
-          "entityType": "symbol",
-          "surface": "Separation",
-          "normalized": "Separation"
-        },
-        {
-          "_key": "entity_8f06c8bfe66b8644",
-          "key": "entity_8f06c8bfe66b8644",
-          "chunkKey": "chunk_6a36f5317f5d1e6a",
-          "entityType": "symbol",
-          "surface": "Inverse",
-          "normalized": "Inverse"
-        },
-        {
-          "_key": "entity_3600dd346039fd9f",
-          "key": "entity_3600dd346039fd9f",
-          "chunkKey": "chunk_6a36f5317f5d1e6a",
-          "entityType": "symbol",
-          "surface": "Projectors",
-          "normalized": "Projectors"
         },
         {
           "_key": "entity_46de0c121f5074be",
@@ -1056,84 +832,12 @@
       "lexicalScore": 0,
       "entities": [
         {
-          "_key": "entity_ad8e66c5cb0f861b",
-          "key": "entity_ad8e66c5cb0f861b",
-          "chunkKey": "chunk_62505cdc8fed5b98",
-          "entityType": "symbol",
-          "surface": "Scale",
-          "normalized": "Scale"
-        },
-        {
-          "_key": "entity_7e749c35b3c1ecd7",
-          "key": "entity_7e749c35b3c1ecd7",
-          "chunkKey": "chunk_62505cdc8fed5b98",
-          "entityType": "symbol",
-          "surface": "Invariance",
-          "normalized": "Invariance"
-        },
-        {
-          "_key": "entity_08ec7f9a926c93e0",
-          "key": "entity_08ec7f9a926c93e0",
-          "chunkKey": "chunk_62505cdc8fed5b98",
-          "entityType": "symbol",
-          "surface": "Gauge",
-          "normalized": "Gauge"
-        },
-        {
-          "_key": "entity_97e7834002bcc97d",
-          "key": "entity_97e7834002bcc97d",
-          "chunkKey": "chunk_62505cdc8fed5b98",
-          "entityType": "symbol",
-          "surface": "The",
-          "normalized": "The"
-        },
-        {
-          "_key": "entity_37e3aa9376544e78",
-          "key": "entity_37e3aa9376544e78",
-          "chunkKey": "chunk_62505cdc8fed5b98",
-          "entityType": "symbol",
-          "surface": "Information",
-          "normalized": "Information"
-        },
-        {
-          "_key": "entity_81fc0cfc2152180e",
-          "key": "entity_81fc0cfc2152180e",
-          "chunkKey": "chunk_62505cdc8fed5b98",
-          "entityType": "symbol",
-          "surface": "Geometric",
-          "normalized": "Geometric"
-        },
-        {
-          "_key": "entity_4fd261ec94755bbd",
-          "key": "entity_4fd261ec94755bbd",
-          "chunkKey": "chunk_62505cdc8fed5b98",
-          "entityType": "symbol",
-          "surface": "Relative",
-          "normalized": "Relative"
-        },
-        {
-          "_key": "entity_5457368ff6ad349d",
-          "key": "entity_5457368ff6ad349d",
-          "chunkKey": "chunk_62505cdc8fed5b98",
-          "entityType": "symbol",
-          "surface": "Norm",
-          "normalized": "Norm"
-        },
-        {
           "_key": "entity_b890aa1c83a8cacc",
           "key": "entity_b890aa1c83a8cacc",
           "chunkKey": "chunk_62505cdc8fed5b98",
           "entityType": "identifier",
           "surface": "informationGeometricRelativeNorm_scale_scale",
           "normalized": "informationGeometricRelativeNorm_scale_scale"
-        },
-        {
-          "_key": "entity_cc292335fdcfef0d",
-          "key": "entity_cc292335fdcfef0d",
-          "chunkKey": "chunk_62505cdc8fed5b98",
-          "entityType": "symbol",
-          "surface": "This",
-          "normalized": "This"
         },
         {
           "_key": "entity_b36d5ad51ade7dc7",
@@ -1265,88 +969,7 @@
       },
       "graphScore": 0.04813226403450309,
       "lexicalScore": 2,
-      "entities": [
-        {
-          "_key": "entity_aff253f3646b19dd",
-          "key": "entity_aff253f3646b19dd",
-          "chunkKey": "chunk_cef46622ee5332e7",
-          "entityType": "symbol",
-          "surface": "Gibbs",
-          "normalized": "Gibbs"
-        },
-        {
-          "_key": "entity_23d76d8293d8ab62",
-          "key": "entity_23d76d8293d8ab62",
-          "chunkKey": "chunk_cef46622ee5332e7",
-          "entityType": "symbol",
-          "surface": "Grand",
-          "normalized": "Grand"
-        },
-        {
-          "_key": "entity_a4951d77200c9240",
-          "key": "entity_a4951d77200c9240",
-          "chunkKey": "chunk_cef46622ee5332e7",
-          "entityType": "symbol",
-          "surface": "Canonical",
-          "normalized": "Canonical"
-        },
-        {
-          "_key": "entity_aabc724794a9c176",
-          "key": "entity_aabc724794a9c176",
-          "chunkKey": "chunk_cef46622ee5332e7",
-          "entityType": "symbol",
-          "surface": "Ensemble",
-          "normalized": "Ensemble"
-        },
-        {
-          "_key": "entity_47a63662ed1123ae",
-          "key": "entity_47a63662ed1123ae",
-          "chunkKey": "chunk_cef46622ee5332e7",
-          "entityType": "symbol",
-          "surface": "Llocal",
-          "normalized": "Llocal"
-        },
-        {
-          "_key": "entity_89f6bf73f1bde1bd",
-          "key": "entity_89f6bf73f1bde1bd",
-          "chunkKey": "chunk_cef46622ee5332e7",
-          "entityType": "symbol",
-          "surface": "Symmetry",
-          "normalized": "Symmetry"
-        },
-        {
-          "_key": "entity_514b4a10f342d4b2",
-          "key": "entity_514b4a10f342d4b2",
-          "chunkKey": "chunk_cef46622ee5332e7",
-          "entityType": "symbol",
-          "surface": "Weyl",
-          "normalized": "Weyl"
-        },
-        {
-          "_key": "entity_106919d72b53de2a",
-          "key": "entity_106919d72b53de2a",
-          "chunkKey": "chunk_cef46622ee5332e7",
-          "entityType": "symbol",
-          "surface": "Gauge",
-          "normalized": "Gauge"
-        },
-        {
-          "_key": "entity_a87764d10f179285",
-          "key": "entity_a87764d10f179285",
-          "chunkKey": "chunk_cef46622ee5332e7",
-          "entityType": "symbol",
-          "surface": "Particle",
-          "normalized": "Particle"
-        },
-        {
-          "_key": "entity_73b2e1d976e90e82",
-          "key": "entity_73b2e1d976e90e82",
-          "chunkKey": "chunk_cef46622ee5332e7",
-          "entityType": "symbol",
-          "surface": "Number",
-          "normalized": "Number"
-        }
-      ],
+      "entities": [],
       "neighbors": [
         {
           "kind": "chunk",
@@ -1435,14 +1058,6 @@
       "lexicalScore": 0,
       "entities": [
         {
-          "_key": "entity_d11260576b05b4e7",
-          "key": "entity_d11260576b05b4e7",
-          "chunkKey": "chunk_6db70f1736cbbaf6",
-          "entityType": "symbol",
-          "surface": "The",
-          "normalized": "The"
-        },
-        {
           "_key": "entity_a3d2b266e6bdb2ff",
           "key": "entity_a3d2b266e6bdb2ff",
           "chunkKey": "chunk_6db70f1736cbbaf6",
@@ -1457,14 +1072,6 @@
           "entityType": "symbol",
           "surface": "Penrose",
           "normalized": "Penrose"
-        },
-        {
-          "_key": "entity_f9579f1aeb8f151c",
-          "key": "entity_f9579f1aeb8f151c",
-          "chunkKey": "chunk_6db70f1736cbbaf6",
-          "entityType": "symbol",
-          "surface": "Substitution",
-          "normalized": "Substitution"
         }
       ],
       "neighbors": [
@@ -1602,68 +1209,12 @@
       "lexicalScore": 0,
       "entities": [
         {
-          "_key": "entity_b9c4fbf7cf065022",
-          "key": "entity_b9c4fbf7cf065022",
-          "chunkKey": "chunk_6ba0970c3a4d8dc2",
-          "entityType": "symbol",
-          "surface": "The",
-          "normalized": "The"
-        },
-        {
-          "_key": "entity_4415049a3396bf3c",
-          "key": "entity_4415049a3396bf3c",
-          "chunkKey": "chunk_6ba0970c3a4d8dc2",
-          "entityType": "symbol",
-          "surface": "Failure",
-          "normalized": "Failure"
-        },
-        {
-          "_key": "entity_b4e7fe20af787720",
-          "key": "entity_b4e7fe20af787720",
-          "chunkKey": "chunk_6ba0970c3a4d8dc2",
-          "entityType": "symbol",
-          "surface": "Naive",
-          "normalized": "Naive"
-        },
-        {
-          "_key": "entity_f5ee6c46f939ef8d",
-          "key": "entity_f5ee6c46f939ef8d",
-          "chunkKey": "chunk_6ba0970c3a4d8dc2",
-          "entityType": "symbol",
-          "surface": "Division",
-          "normalized": "Division"
-        },
-        {
-          "_key": "entity_fc715ec71d17d2ea",
-          "key": "entity_fc715ec71d17d2ea",
-          "chunkKey": "chunk_6ba0970c3a4d8dc2",
-          "entityType": "symbol",
-          "surface": "In",
-          "normalized": "In"
-        },
-        {
           "_key": "entity_a475f253da596d94",
           "key": "entity_a475f253da596d94",
           "chunkKey": "chunk_6ba0970c3a4d8dc2",
           "entityType": "symbol",
           "surface": "RedLine",
           "normalized": "RedLine"
-        },
-        {
-          "_key": "entity_2d8dc417c0c5f6fa",
-          "key": "entity_2d8dc417c0c5f6fa",
-          "chunkKey": "chunk_6ba0970c3a4d8dc2",
-          "entityType": "symbol",
-          "surface": "Radon",
-          "normalized": "Radon"
-        },
-        {
-          "_key": "entity_e5ab3c0391904993",
-          "key": "entity_e5ab3c0391904993",
-          "chunkKey": "chunk_6ba0970c3a4d8dc2",
-          "entityType": "symbol",
-          "surface": "Nikodym",
-          "normalized": "Nikodym"
         },
         {
           "_key": "entity_83a8972ffb96e91c",
@@ -1788,116 +1339,12 @@
           "normalized": "theorem"
         },
         {
-          "_key": "entity_3a03f8d447dcab71",
-          "key": "entity_3a03f8d447dcab71",
+          "_key": "entity_22719a8d97a06067",
+          "key": "entity_22719a8d97a06067",
           "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
-          "surface": "The",
-          "normalized": "The"
-        },
-        {
-          "_key": "entity_51f1d09ee7d02a5b",
-          "key": "entity_51f1d09ee7d02a5b",
-          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
-          "surface": "Algebraically",
-          "normalized": "Algebraically"
-        },
-        {
-          "_key": "entity_dcabf3db033d4b88",
-          "key": "entity_dcabf3db033d4b88",
-          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
-          "surface": "Weird",
-          "normalized": "Weird"
-        },
-        {
-          "_key": "entity_e5bb61cbb489191c",
-          "key": "entity_e5bb61cbb489191c",
-          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
-          "surface": "Spectral",
-          "normalized": "Spectral"
-        },
-        {
-          "_key": "entity_2ba0162a4ac2a0f3",
-          "key": "entity_2ba0162a4ac2a0f3",
-          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
-          "surface": "Theorem",
-          "normalized": "Theorem"
-        },
-        {
-          "_key": "entity_900fc891797c5e85",
-          "key": "entity_900fc891797c5e85",
-          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
+          "entityType": "theorem_name",
           "surface": "This",
           "normalized": "This"
-        },
-        {
-          "_key": "entity_1f8316024cf23034",
-          "key": "entity_1f8316024cf23034",
-          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
-          "surface": "Alchemical",
-          "normalized": "Alchemical"
-        },
-        {
-          "_key": "entity_55f372746d7308e5",
-          "key": "entity_55f372746d7308e5",
-          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
-          "surface": "It",
-          "normalized": "It"
-        },
-        {
-          "_key": "entity_5e0b3fca09ea73fb",
-          "key": "entity_5e0b3fca09ea73fb",
-          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
-          "surface": "Relative",
-          "normalized": "Relative"
-        },
-        {
-          "_key": "entity_6e27a65b231bd366",
-          "key": "entity_6e27a65b231bd366",
-          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
-          "surface": "Modular",
-          "normalized": "Modular"
-        },
-        {
-          "_key": "entity_bb465b8cbd4bed72",
-          "key": "entity_bb465b8cbd4bed72",
-          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
-          "surface": "Hamiltonian",
-          "normalized": "Hamiltonian"
-        },
-        {
-          "_key": "entity_598c84c58411b75d",
-          "key": "entity_598c84c58411b75d",
-          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
-          "surface": "Tomita",
-          "normalized": "Tomita"
-        },
-        {
-          "_key": "entity_4e4be1074ddef8a7",
-          "key": "entity_4e4be1074ddef8a7",
-          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
-          "surface": "Takesaki",
-          "normalized": "Takesaki"
-        },
-        {
-          "_key": "entity_d7accbaec2e8eaa0",
-          "key": "entity_d7accbaec2e8eaa0",
-          "chunkKey": "chunk_8c08fdf1b2cf1ecc",
-          "entityType": "symbol",
-          "surface": "Operator",
-          "normalized": "Operator"
         }
       ],
       "neighbors": [
@@ -1981,38 +1428,6 @@
       "lexicalScore": 0,
       "entities": [
         {
-          "_key": "entity_3feba22954ee5c6b",
-          "key": "entity_3feba22954ee5c6b",
-          "chunkKey": "chunk_21a46dedce28ca07",
-          "entityType": "symbol",
-          "surface": "Chapter",
-          "normalized": "Chapter"
-        },
-        {
-          "_key": "entity_1ab9807c805f6a52",
-          "key": "entity_1ab9807c805f6a52",
-          "chunkKey": "chunk_21a46dedce28ca07",
-          "entityType": "symbol",
-          "surface": "The",
-          "normalized": "The"
-        },
-        {
-          "_key": "entity_97ba66d617f4aa56",
-          "key": "entity_97ba66d617f4aa56",
-          "chunkKey": "chunk_21a46dedce28ca07",
-          "entityType": "symbol",
-          "surface": "Operatorial",
-          "normalized": "Operatorial"
-        },
-        {
-          "_key": "entity_67be31aa83b8e00d",
-          "key": "entity_67be31aa83b8e00d",
-          "chunkKey": "chunk_21a46dedce28ca07",
-          "entityType": "symbol",
-          "surface": "Ratio",
-          "normalized": "Ratio"
-        },
-        {
           "_key": "entity_78201c5025466a89",
           "key": "entity_78201c5025466a89",
           "chunkKey": "chunk_21a46dedce28ca07",
@@ -2027,14 +1442,6 @@
           "entityType": "symbol",
           "surface": "Penrose",
           "normalized": "Penrose"
-        },
-        {
-          "_key": "entity_f604cc2a55a07dfe",
-          "key": "entity_f604cc2a55a07dfe",
-          "chunkKey": "chunk_21a46dedce28ca07",
-          "entityType": "symbol",
-          "surface": "Bridge",
-          "normalized": "Bridge"
         }
       ],
       "neighbors": [
@@ -2185,22 +1592,6 @@
           "entityType": "symbol",
           "surface": "Penrose",
           "normalized": "Penrose"
-        },
-        {
-          "_key": "entity_e0af4b3ca1ef2b9f",
-          "key": "entity_e0af4b3ca1ef2b9f",
-          "chunkKey": "chunk_740f12d19e28ce89",
-          "entityType": "symbol",
-          "surface": "Weyl",
-          "normalized": "Weyl"
-        },
-        {
-          "_key": "entity_263c41715aceffec",
-          "key": "entity_263c41715aceffec",
-          "chunkKey": "chunk_740f12d19e28ce89",
-          "entityType": "symbol",
-          "surface": "Gauge",
-          "normalized": "Gauge"
         }
       ],
       "neighbors": [

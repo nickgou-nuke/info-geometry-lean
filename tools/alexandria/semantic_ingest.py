@@ -10,11 +10,13 @@ from pathlib import Path
 from typing import Iterable
 
 HEADER_RE = re.compile(r"^(#{1,6})\s+(.*\S)\s*$")
-ENTITY_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
-    ("theorem", re.compile(r"\b(theorem|lemma|proposition|corollary)\b", re.IGNORECASE)),
-    ("proof", re.compile(r"\bproof\b", re.IGNORECASE)),
-    ("hypothesis", re.compile(r"\b(if|assume|suppose|given|hypothesis|assumption)\b", re.IGNORECASE)),
-    ("definition", re.compile(r"\bdefinition\b", re.IGNORECASE)),
+IDENTIFIER_RE = re.compile(r"`([^`]+)`|\b([A-Z][A-Za-z0-9_.]+(?:\.[A-Z][A-Za-z0-9_.]+)*)\b|\b([a-z][A-Za-z0-9_]+(?:_[A-Za-z0-9_]+)+)\b")
+MODULE_RE = re.compile(r"\b([A-Z][A-Za-z0-9_]*(?:\.[A-Z][A-Za-z0-9_]*)+)\b")
+RELATION_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
+    ("uses", re.compile(r"\b(using|uses|via|through)\b", re.IGNORECASE)),
+    ("implies", re.compile(r"\b(implies|therefore|thus|hence)\b", re.IGNORECASE)),
+    ("assumes", re.compile(r"\b(assume|suppose|given|under)\b", re.IGNORECASE)),
+    ("defines", re.compile(r"\b(defines|is defined as|denote by)\b", re.IGNORECASE)),
 ]
 
 
@@ -46,6 +48,17 @@ class Entity:
     chunkKey: str
     entityType: str
     surface: str
+    normalized: str
+
+
+@dataclass
+class Relation:
+    key: str
+    fromEntityKey: str
+    toEntityKey: str
+    relationType: str
+    chunkKey: str
+    evidence: str
 
 
 def stable_key(prefix: str, *parts: object) -> str:
@@ -54,6 +67,10 @@ def stable_key(prefix: str, *parts: object) -> str:
         h.update(str(part).encode("utf-8"))
         h.update(b"\0")
     return f"{prefix}_{h.hexdigest()[:16]}"
+
+
+def normalize_surface(text: str) -> str:
+    return re.sub(r"\s+", " ", text.strip().strip("`"))
 
 
 def tokenize(text: str) -> list[str]:
@@ -109,29 +126,119 @@ def chunk_section_lines(lines: Iterable[str]) -> list[str]:
     return [block for block in blocks if block]
 
 
+def add_entity(entities: list[Entity], seen: set[tuple[str, str]], chunk_key: str, entity_type: str, surface: str) -> None:
+    normalized = normalize_surface(surface)
+    if not normalized:
+        return
+    signature = (entity_type, normalized.lower())
+    if signature in seen:
+        return
+    seen.add(signature)
+    entities.append(
+        Entity(
+            key=stable_key("entity", chunk_key, entity_type, normalized.lower()),
+            chunkKey=chunk_key,
+            entityType=entity_type,
+            surface=surface,
+            normalized=normalized,
+        )
+    )
+
+
 def extract_entities(chunk: Chunk) -> list[Entity]:
     entities: list[Entity] = []
     seen: set[tuple[str, str]] = set()
     text = f"{chunk.title}\n{chunk.text}"
-    for entity_type, pattern in ENTITY_PATTERNS:
-        for match in pattern.finditer(text):
-            surface = match.group(0)
-            signature = (entity_type, surface.lower())
-            if signature in seen:
-                continue
-            seen.add(signature)
-            entities.append(
-                Entity(
-                    key=stable_key("entity", chunk.key, entity_type, surface.lower()),
-                    chunkKey=chunk.key,
-                    entityType=entity_type,
-                    surface=surface,
-                )
-            )
+
+    if chunk.chunkKind in {"theorem", "proof", "hypothesis", "definition", "remark"}:
+        add_entity(entities, seen, chunk.key, chunk.chunkKind, chunk.chunkKind)
+
+    theorem_like = re.findall(r"\b(Theorem|Lemma|Proposition|Corollary)\b", text, flags=re.IGNORECASE)
+    for surface in theorem_like:
+        add_entity(entities, seen, chunk.key, "theorem", surface)
+
+    proof_like = re.findall(r"\b(Proof)\b", text, flags=re.IGNORECASE)
+    for surface in proof_like:
+        add_entity(entities, seen, chunk.key, "proof", surface)
+
+    hypothesis_like = re.findall(r"\b(Assume|Suppose|Given|Hypothesis|Assumption)\b", text, flags=re.IGNORECASE)
+    for surface in hypothesis_like:
+        add_entity(entities, seen, chunk.key, "hypothesis", surface)
+
+    definition_like = re.findall(r"\b(Definition)\b", text, flags=re.IGNORECASE)
+    for surface in definition_like:
+        add_entity(entities, seen, chunk.key, "definition", surface)
+
+    for match in IDENTIFIER_RE.finditer(text):
+        surface = next(group for group in match.groups() if group)
+        normalized = normalize_surface(surface)
+        if "." in normalized and normalized[0].isupper():
+            add_entity(entities, seen, chunk.key, "module", normalized)
+        elif normalized and normalized[0].isupper():
+            add_entity(entities, seen, chunk.key, "symbol", normalized)
+        else:
+            add_entity(entities, seen, chunk.key, "identifier", normalized)
+
+    for match in MODULE_RE.finditer(text):
+        add_entity(entities, seen, chunk.key, "module", match.group(1))
+
     return entities
 
 
-def digest_document(path: Path) -> tuple[dict, list[Section], list[Chunk], list[Entity], list[dict]]:
+def extract_relations(chunk: Chunk, entities: list[Entity]) -> list[Relation]:
+    relations: list[Relation] = []
+    seen: set[tuple[str, str, str]] = set()
+    by_type: dict[str, list[Entity]] = {}
+    for entity in entities:
+        by_type.setdefault(entity.entityType, []).append(entity)
+
+    theorem_entities = by_type.get("theorem", [])
+    proof_entities = by_type.get("proof", [])
+    hypothesis_entities = by_type.get("hypothesis", [])
+    symbol_entities = by_type.get("symbol", []) + by_type.get("identifier", [])
+    module_entities = by_type.get("module", [])
+
+    for theorem in theorem_entities:
+        for proof in proof_entities:
+            signature = (theorem.key, proof.key, "supported_by")
+            if signature not in seen:
+                seen.add(signature)
+                relations.append(Relation(stable_key("rel", *signature), theorem.key, proof.key, "supported_by", chunk.key, "theorem/proof co-occurrence"))
+        for hyp in hypothesis_entities:
+            signature = (theorem.key, hyp.key, "assumes")
+            if signature not in seen:
+                seen.add(signature)
+                relations.append(Relation(stable_key("rel", *signature), theorem.key, hyp.key, "assumes", chunk.key, "theorem/hypothesis co-occurrence"))
+        for symbol in symbol_entities:
+            signature = (theorem.key, symbol.key, "mentions")
+            if signature not in seen:
+                seen.add(signature)
+                relations.append(Relation(stable_key("rel", *signature), theorem.key, symbol.key, "mentions", chunk.key, "theorem/symbol co-occurrence"))
+        for module in module_entities:
+            signature = (theorem.key, module.key, "references_module")
+            if signature not in seen:
+                seen.add(signature)
+                relations.append(Relation(stable_key("rel", *signature), theorem.key, module.key, "references_module", chunk.key, "theorem/module co-occurrence"))
+
+    for relation_type, pattern in RELATION_PATTERNS:
+        if not pattern.search(chunk.text):
+            continue
+        all_entities = theorem_entities or proof_entities or hypothesis_entities or symbol_entities
+        targets = symbol_entities + module_entities
+        for src in all_entities[:4]:
+            for dst in targets[:6]:
+                if src.key == dst.key:
+                    continue
+                signature = (src.key, dst.key, relation_type)
+                if signature in seen:
+                    continue
+                seen.add(signature)
+                relations.append(Relation(stable_key("rel", *signature), src.key, dst.key, relation_type, chunk.key, pattern.pattern))
+
+    return relations
+
+
+def digest_document(path: Path) -> tuple[dict, list[Section], list[Chunk], list[Entity], list[dict], list[Relation]]:
     text = path.read_text(encoding="utf-8")
     document_key = stable_key("doc", path.as_posix())
     document = {
@@ -144,6 +251,7 @@ def digest_document(path: Path) -> tuple[dict, list[Section], list[Chunk], list[
     chunks: list[Chunk] = []
     entities: list[Entity] = []
     adjacent_edges: list[dict] = []
+    relations: list[Relation] = []
     chunk_ordinal = 0
     prev_chunk_key: str | None = None
     for section_ordinal, (level, title, lines) in enumerate(split_sections(text), start=1):
@@ -169,7 +277,9 @@ def digest_document(path: Path) -> tuple[dict, list[Section], list[Chunk], list[
                 provenance={"path": path.as_posix(), "section": title, "ordinal": chunk_ordinal},
             )
             chunks.append(chunk)
-            entities.extend(extract_entities(chunk))
+            chunk_entities = extract_entities(chunk)
+            entities.extend(chunk_entities)
+            relations.extend(extract_relations(chunk, chunk_entities))
             if prev_chunk_key is not None:
                 adjacent_edges.append(
                     {
@@ -180,7 +290,7 @@ def digest_document(path: Path) -> tuple[dict, list[Section], list[Chunk], list[
                     }
                 )
             prev_chunk_key = chunk.key
-    return document, sections, chunks, entities, adjacent_edges
+    return document, sections, chunks, entities, adjacent_edges, relations
 
 
 def write_jsonl(path: Path, rows: list[dict]) -> None:
@@ -212,9 +322,10 @@ def main() -> int:
     section_chunk_edges: list[dict] = []
     chunk_entity_edges: list[dict] = []
     chunk_adjacent_edges: list[dict] = []
+    entity_relation_edges: list[dict] = []
 
     for path in inputs:
-        document, doc_sections, doc_chunks, doc_entities, adjacent_edges = digest_document(path)
+        document, doc_sections, doc_chunks, doc_entities, adjacent_edges, relations = digest_document(path)
         documents.append(document)
         for section in doc_sections:
             sections.append({"_key": section.key, **asdict(section)})
@@ -256,6 +367,17 @@ def main() -> int:
                     "kind": edge["kind"],
                 }
             )
+        for relation in relations:
+            entity_relation_edges.append(
+                {
+                    "_key": relation.key,
+                    "_from": f"alexandria_entities/{relation.fromEntityKey}",
+                    "_to": f"alexandria_entities/{relation.toEntityKey}",
+                    "relationType": relation.relationType,
+                    "chunkKey": relation.chunkKey,
+                    "evidence": relation.evidence,
+                }
+            )
 
     out = Path(args.output)
     write_jsonl(out / "alexandria_documents.jsonl", documents)
@@ -266,7 +388,7 @@ def main() -> int:
     write_jsonl(out / "alexandria_section_chunk_edges.jsonl", section_chunk_edges)
     write_jsonl(out / "alexandria_chunk_entity_edges.jsonl", chunk_entity_edges)
     write_jsonl(out / "alexandria_chunk_adjacent_edges.jsonl", chunk_adjacent_edges)
-    write_jsonl(out / "alexandria_entity_relation_edges.jsonl", [])
+    write_jsonl(out / "alexandria_entity_relation_edges.jsonl", entity_relation_edges)
     return 0
 
 

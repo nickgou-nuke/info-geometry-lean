@@ -1,0 +1,16 @@
+services:
+  arango_alexandria:
+    image: arangodb:3.12
+    container_name: arango_alexandria
+    restart: unless-stopped
+    environment:
+      ARANGO_ROOT_PASSWORD: ${ARANGO_ROOT_PASSWORD:-alexandria_root}
+    ports:
+      - "${ALEXANDRIA_ARANGO_PORT:-8530}:8529"
+    volumes:
+      - alexandria_arango_data:/var/lib/arangodb3
+      - alexandria_arango_apps:/var/lib/arangodb3-apps
+
+volumes:
+  alexandria_arango_data:
+  alexandria_arango_apps:

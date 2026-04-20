@@ -98,8 +98,8 @@ This chapter records the formal architectural move from commutative density rati
 Следваща стъпка: Изчисляване на нилпотентния индекс на Drazin за дисипативната част на оператора на Онзагер.
 
 ### Entities
+- `math_notation`: BPS
 - `symbol`: Drazin
-- `symbol`: BPS
 - `symbol`: Moore
 - `symbol`: Penrose
 

@@ -13,17 +13,36 @@ HEADER_RE = re.compile(r"^(#{1,6})\s+(.*\S)\s*$")
 IDENTIFIER_RE = re.compile(r"`([^`]+)`|\b([A-Z][A-Za-z0-9_.]+(?:\.[A-Z][A-Za-z0-9_.]+)*)\b|\b([a-z][A-Za-z0-9_]+(?:_[A-Za-z0-9_]+)+)\b")
 MODULE_RE = re.compile(r"\b([A-Z][A-Za-z0-9_]*(?:\.[A-Z][A-Za-z0-9_]*)+)\b")
 THEOREM_NAME_RE = re.compile(r"\b(?:theorem|lemma|proposition|corollary)\s+([A-Za-z_][A-Za-z0-9_'.]*)", re.IGNORECASE)
-RELATION_PATTERNS: list[tuple[str, re.Pattern[str]]] = [
-    ("uses", re.compile(r"\b(using|uses|via|through)\b", re.IGNORECASE)),
-    ("implies", re.compile(r"\b(implies|therefore|thus|hence)\b", re.IGNORECASE)),
-    ("assumes", re.compile(r"\b(assume|suppose|given|under)\b", re.IGNORECASE)),
-    ("defines", re.compile(r"\b(defines|is defined as|denote by)\b", re.IGNORECASE)),
+MATH_NOTATION_RE = re.compile(r"\b([A-Z](?:_[A-Za-z0-9]+)+|[A-Z]{2,5}|[a-z]+_[A-Za-z0-9_]+)\b")
+RELATION_PATTERNS: list[tuple[str, re.Pattern[str], float]] = [
+    ("uses", re.compile(r"\b(using|uses|via|through)\b", re.IGNORECASE), 0.55),
+    ("implies", re.compile(r"\b(implies|therefore|thus|hence)\b", re.IGNORECASE), 0.7),
+    ("assumes", re.compile(r"\b(assume|suppose|given|under)\b", re.IGNORECASE), 0.75),
+    ("defines", re.compile(r"\b(defines|is defined as|denote by)\b", re.IGNORECASE), 0.65),
 ]
-NOISY_SYMBOLS = {
+BASE_STOPLIST = {
     "The", "This", "That", "These", "Those", "It", "We", "As", "Conclusion", "Chapter", "Front", "Matter",
     "Scale", "Invariance", "Gauge", "Proof", "Theorem", "Lemma", "Proposition", "Corollary", "Definition", "Remark",
 }
+CORPUS_STOPLISTS: dict[str, set[str]] = {
+    "black_books": {"Python", "SymPy", "Front", "Matter", "Chapter"},
+}
 SYMBOL_PREFIX_BLOCKLIST = ("Figure", "Section", "Chapter")
+TOOLING_TOKENS = {"Python", "SymPy", "NumPy", "Lean", "ArangoDB", "NetworkX", "cuGraph"}
+ANCHOR_TYPES = {"theorem", "theorem_name", "module"}
+ENTITY_CONFIDENCE: dict[str, float] = {
+    "theorem": 1.0,
+    "theorem_name": 0.98,
+    "proof": 0.92,
+    "hypothesis": 0.9,
+    "definition": 0.88,
+    "module": 0.94,
+    "identifier": 0.78,
+    "math_notation": 0.82,
+    "tooling": 0.5,
+    "symbol": 0.62,
+    "remark": 0.45,
+}
 
 
 @dataclass
@@ -55,6 +74,8 @@ class Entity:
     entityType: str
     surface: str
     normalized: str
+    confidence: float
+    domain: str
 
 
 @dataclass
@@ -65,6 +86,7 @@ class Relation:
     relationType: str
     chunkKey: str
     evidence: str
+    weight: float
 
 
 def stable_key(prefix: str, *parts: object) -> str:
@@ -77,6 +99,13 @@ def stable_key(prefix: str, *parts: object) -> str:
 
 def normalize_surface(text: str) -> str:
     return re.sub(r"\s+", " ", text.strip().strip("`"))
+
+
+def detect_domain(path: Path) -> str:
+    lower = path.as_posix().lower()
+    if "docs/black_books/" in lower:
+        return "black_books"
+    return "default"
 
 
 def tokenize(text: str) -> list[str]:
@@ -132,31 +161,43 @@ def chunk_section_lines(lines: Iterable[str]) -> list[str]:
     return [block for block in blocks if block]
 
 
-def is_probably_symbol(normalized: str) -> bool:
-    if not normalized or len(normalized) < 2:
-        return False
-    if normalized in NOISY_SYMBOLS:
-        return False
+def corpus_stoplist(domain: str) -> set[str]:
+    return BASE_STOPLIST | CORPUS_STOPLISTS.get(domain, set())
+
+
+def classify_surface(normalized: str, *, domain: str) -> tuple[str | None, float]:
+    stoplist = corpus_stoplist(domain)
+    if not normalized or normalized in stoplist:
+        return None, 0.0
     if any(normalized.startswith(prefix) for prefix in SYMBOL_PREFIX_BLOCKLIST):
-        return False
+        return None, 0.0
+    if normalized in TOOLING_TOKENS:
+        return "tooling", ENTITY_CONFIDENCE["tooling"]
+    if "." in normalized and normalized[0].isupper():
+        return "module", ENTITY_CONFIDENCE["module"]
+    if re.fullmatch(r"[A-Z](?:_[A-Za-z0-9]+)+", normalized) or normalized in {"BPS", "QFT", "SO", "SE", "E_C", "P_D", "D_4"}:
+        return "math_notation", ENTITY_CONFIDENCE["math_notation"]
+    if ("_" in normalized or "." in normalized) and len(normalized) >= 6:
+        return "identifier", ENTITY_CONFIDENCE["identifier"]
     if normalized.isupper() and len(normalized) > 6:
-        return False
+        return None, 0.0
     if normalized[0].isupper() and normalized[1:].islower() and len(normalized) <= 4:
-        return False
-    if re.fullmatch(r"[A-Z][a-z]+", normalized) and normalized not in {"Python", "SymPy", "Weyl", "Drazin", "Penrose", "Moore", "Souriau"}:
-        return False
-    return True
+        return None, 0.0
+    if re.fullmatch(r"[A-Z][a-z]+", normalized) and normalized not in {"Weyl", "Drazin", "Penrose", "Moore", "Souriau", "DeWitt"}:
+        return None, 0.0
+    return "symbol", ENTITY_CONFIDENCE["symbol"]
 
 
-def is_probably_identifier(normalized: str) -> bool:
-    if not normalized:
-        return False
-    if "_" not in normalized and "." not in normalized:
-        return False
-    return len(normalized) >= 6
-
-
-def add_entity(entities: list[Entity], seen: set[tuple[str, str]], chunk_key: str, entity_type: str, surface: str) -> None:
+def add_entity(
+    entities: list[Entity],
+    seen: set[tuple[str, str]],
+    chunk_key: str,
+    entity_type: str,
+    surface: str,
+    *,
+    confidence: float | None = None,
+    domain: str,
+) -> None:
     normalized = normalize_surface(surface)
     if not normalized:
         return
@@ -171,53 +212,67 @@ def add_entity(entities: list[Entity], seen: set[tuple[str, str]], chunk_key: st
             entityType=entity_type,
             surface=surface,
             normalized=normalized,
+            confidence=float(confidence if confidence is not None else ENTITY_CONFIDENCE.get(entity_type, 0.5)),
+            domain=domain,
         )
     )
 
 
-def extract_entities(chunk: Chunk) -> list[Entity]:
+def extract_entities(chunk: Chunk, *, domain: str) -> list[Entity]:
     entities: list[Entity] = []
     seen: set[tuple[str, str]] = set()
     text = f"{chunk.title}\n{chunk.text}"
 
     if chunk.chunkKind in {"theorem", "proof", "hypothesis", "definition", "remark"}:
-        add_entity(entities, seen, chunk.key, chunk.chunkKind, chunk.chunkKind)
+        add_entity(entities, seen, chunk.key, chunk.chunkKind, chunk.chunkKind, domain=domain)
 
     for match in THEOREM_NAME_RE.finditer(text):
-        add_entity(entities, seen, chunk.key, "theorem_name", match.group(1))
+        theorem_name = normalize_surface(match.group(1))
+        if theorem_name in corpus_stoplist(domain):
+            continue
+        add_entity(entities, seen, chunk.key, "theorem_name", theorem_name, domain=domain)
 
     theorem_like = re.findall(r"\b(Theorem|Lemma|Proposition|Corollary)\b", text, flags=re.IGNORECASE)
     for surface in theorem_like:
-        add_entity(entities, seen, chunk.key, "theorem", surface)
+        add_entity(entities, seen, chunk.key, "theorem", surface, domain=domain)
 
     proof_like = re.findall(r"\b(Proof)\b", text, flags=re.IGNORECASE)
     for surface in proof_like:
-        add_entity(entities, seen, chunk.key, "proof", surface)
+        add_entity(entities, seen, chunk.key, "proof", surface, domain=domain)
 
     hypothesis_like = re.findall(r"\b(Assume|Suppose|Given|Hypothesis|Assumption)\b", text, flags=re.IGNORECASE)
     for surface in hypothesis_like:
-        add_entity(entities, seen, chunk.key, "hypothesis", surface)
+        add_entity(entities, seen, chunk.key, "hypothesis", surface, domain=domain)
 
     definition_like = re.findall(r"\b(Definition)\b", text, flags=re.IGNORECASE)
     for surface in definition_like:
-        add_entity(entities, seen, chunk.key, "definition", surface)
+        add_entity(entities, seen, chunk.key, "definition", surface, domain=domain)
 
     for match in MODULE_RE.finditer(text):
         normalized = normalize_surface(match.group(1))
         if normalized.count(".") >= 1:
-            add_entity(entities, seen, chunk.key, "module", normalized)
+            add_entity(entities, seen, chunk.key, "module", normalized, domain=domain)
+
+    for match in MATH_NOTATION_RE.finditer(text):
+        normalized = normalize_surface(match.group(1))
+        entity_type, confidence = classify_surface(normalized, domain=domain)
+        if entity_type == "math_notation":
+            add_entity(entities, seen, chunk.key, entity_type, normalized, confidence=confidence, domain=domain)
 
     for match in IDENTIFIER_RE.finditer(text):
         surface = next(group for group in match.groups() if group)
         normalized = normalize_surface(surface)
-        if "." in normalized and normalized[0].isupper():
-            add_entity(entities, seen, chunk.key, "module", normalized)
-        elif is_probably_identifier(normalized):
-            add_entity(entities, seen, chunk.key, "identifier", normalized)
-        elif is_probably_symbol(normalized):
-            add_entity(entities, seen, chunk.key, "symbol", normalized)
+        entity_type, confidence = classify_surface(normalized, domain=domain)
+        if entity_type is not None:
+            add_entity(entities, seen, chunk.key, entity_type, normalized, confidence=confidence, domain=domain)
 
     return entities
+
+
+def relation_weight(src: Entity, dst: Entity, base_weight: float) -> float:
+    structural_bonus = 1.15 if src.entityType in ANCHOR_TYPES or dst.entityType in ANCHOR_TYPES else 1.0
+    notation_penalty = 0.9 if src.entityType == "tooling" or dst.entityType == "tooling" else 1.0
+    return round(base_weight * structural_bonus * notation_penalty * src.confidence * dst.confidence, 6)
 
 
 def extract_relations(chunk: Chunk, entities: list[Entity]) -> list[Relation]:
@@ -230,7 +285,7 @@ def extract_relations(chunk: Chunk, entities: list[Entity]) -> list[Relation]:
     theorem_entities = by_type.get("theorem", []) + by_type.get("theorem_name", [])
     proof_entities = by_type.get("proof", [])
     hypothesis_entities = by_type.get("hypothesis", [])
-    symbol_entities = by_type.get("symbol", []) + by_type.get("identifier", [])
+    symbol_entities = by_type.get("symbol", []) + by_type.get("identifier", []) + by_type.get("math_notation", [])
     module_entities = by_type.get("module", [])
 
     for theorem in theorem_entities:
@@ -238,26 +293,26 @@ def extract_relations(chunk: Chunk, entities: list[Entity]) -> list[Relation]:
             signature = (theorem.key, proof.key, "supported_by")
             if signature not in seen:
                 seen.add(signature)
-                relations.append(Relation(stable_key("rel", *signature), theorem.key, proof.key, "supported_by", chunk.key, "theorem/proof co-occurrence"))
+                relations.append(Relation(stable_key("rel", *signature), theorem.key, proof.key, "supported_by", chunk.key, "theorem/proof co-occurrence", relation_weight(theorem, proof, 0.92)))
         for hyp in hypothesis_entities:
             signature = (theorem.key, hyp.key, "assumes")
             if signature not in seen:
                 seen.add(signature)
-                relations.append(Relation(stable_key("rel", *signature), theorem.key, hyp.key, "assumes", chunk.key, "theorem/hypothesis co-occurrence"))
-        for symbol in symbol_entities[:8]:
+                relations.append(Relation(stable_key("rel", *signature), theorem.key, hyp.key, "assumes", chunk.key, "theorem/hypothesis co-occurrence", relation_weight(theorem, hyp, 0.88)))
+        for symbol in symbol_entities[:6]:
             signature = (theorem.key, symbol.key, "mentions")
             if signature not in seen:
                 seen.add(signature)
-                relations.append(Relation(stable_key("rel", *signature), theorem.key, symbol.key, "mentions", chunk.key, "theorem/symbol co-occurrence"))
-        for module in module_entities[:6]:
+                relations.append(Relation(stable_key("rel", *signature), theorem.key, symbol.key, "mentions", chunk.key, "theorem/symbol co-occurrence", relation_weight(theorem, symbol, 0.56)))
+        for module in module_entities[:5]:
             signature = (theorem.key, module.key, "references_module")
             if signature not in seen:
                 seen.add(signature)
-                relations.append(Relation(stable_key("rel", *signature), theorem.key, module.key, "references_module", chunk.key, "theorem/module co-occurrence"))
+                relations.append(Relation(stable_key("rel", *signature), theorem.key, module.key, "references_module", chunk.key, "theorem/module co-occurrence", relation_weight(theorem, module, 0.84)))
 
     preferred_sources = theorem_entities or proof_entities or hypothesis_entities or symbol_entities
     preferred_targets = symbol_entities + module_entities
-    for relation_type, pattern in RELATION_PATTERNS:
+    for relation_type, pattern, base_weight in RELATION_PATTERNS:
         if not pattern.search(chunk.text):
             continue
         for src in preferred_sources[:3]:
@@ -268,7 +323,7 @@ def extract_relations(chunk: Chunk, entities: list[Entity]) -> list[Relation]:
                 if signature in seen:
                     continue
                 seen.add(signature)
-                relations.append(Relation(stable_key("rel", *signature), src.key, dst.key, relation_type, chunk.key, pattern.pattern))
+                relations.append(Relation(stable_key("rel", *signature), src.key, dst.key, relation_type, chunk.key, pattern.pattern, relation_weight(src, dst, base_weight)))
 
     return relations
 
@@ -276,11 +331,13 @@ def extract_relations(chunk: Chunk, entities: list[Entity]) -> list[Relation]:
 def digest_document(path: Path) -> tuple[dict, list[Section], list[Chunk], list[Entity], list[dict], list[Relation]]:
     text = path.read_text(encoding="utf-8")
     document_key = stable_key("doc", path.as_posix())
+    domain = detect_domain(path)
     document = {
         "_key": document_key,
         "path": path.as_posix(),
         "title": path.stem,
         "sourceType": path.suffix.lower().lstrip(".") or "text",
+        "domain": domain,
     }
     sections: list[Section] = []
     chunks: list[Chunk] = []
@@ -309,10 +366,10 @@ def digest_document(path: Path) -> tuple[dict, list[Section], list[Chunk], list[
                 title=title,
                 text=block,
                 tokens=tokenize(block),
-                provenance={"path": path.as_posix(), "section": title, "ordinal": chunk_ordinal},
+                provenance={"path": path.as_posix(), "section": title, "ordinal": chunk_ordinal, "domain": domain},
             )
             chunks.append(chunk)
-            chunk_entities = extract_entities(chunk)
+            chunk_entities = extract_entities(chunk, domain=domain)
             entities.extend(chunk_entities)
             relations.extend(extract_relations(chunk, chunk_entities))
             if prev_chunk_key is not None:
@@ -322,6 +379,7 @@ def digest_document(path: Path) -> tuple[dict, list[Section], list[Chunk], list[
                         "fromChunkKey": prev_chunk_key,
                         "toChunkKey": chunk.key,
                         "kind": "adjacent",
+                        "weight": 1.0,
                     }
                 )
             prev_chunk_key = chunk.key
@@ -391,6 +449,7 @@ def main() -> int:
                     "_from": f"alexandria_chunks/{entity.chunkKey}",
                     "_to": f"alexandria_entities/{entity.key}",
                     "entityType": entity.entityType,
+                    "confidence": entity.confidence,
                 }
             )
         for edge in adjacent_edges:
@@ -400,6 +459,7 @@ def main() -> int:
                     "_from": f"alexandria_chunks/{edge['fromChunkKey']}",
                     "_to": f"alexandria_chunks/{edge['toChunkKey']}",
                     "kind": edge["kind"],
+                    "weight": edge.get("weight", 1.0),
                 }
             )
         for relation in relations:
@@ -411,6 +471,7 @@ def main() -> int:
                     "relationType": relation.relationType,
                     "chunkKey": relation.chunkKey,
                     "evidence": relation.evidence,
+                    "weight": relation.weight,
                 }
             )
 

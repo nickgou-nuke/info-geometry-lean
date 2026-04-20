@@ -10,6 +10,9 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+ANCHOR_ENTITY_TYPES = {"theorem", "theorem_name", "module"}
+WEAK_ENTITY_TYPES = {"tooling", "symbol"}
+
 
 def maybe_enable_gpu_backend(use_gpu: bool) -> None:
     if not use_gpu:
@@ -44,28 +47,67 @@ def chunk_key_from_doc_id(doc_id: str) -> str:
     return doc_id.split("/", 1)[1] if "/" in doc_id else doc_id
 
 
-def build_graph(nx: Any, chunks: list[dict[str, Any]], chunk_entities: list[dict[str, Any]], adjacent: list[dict[str, Any]]):
+def entity_bonus(entity: dict[str, Any]) -> float:
+    confidence = float(entity.get("confidence", 0.5))
+    entity_type = str(entity.get("entityType", ""))
+    if entity_type in ANCHOR_ENTITY_TYPES:
+        return 1.2 * confidence
+    if entity_type in WEAK_ENTITY_TYPES:
+        return 0.7 * confidence
+    return 0.95 * confidence
+
+
+def build_graph(
+    nx: Any,
+    chunks: list[dict[str, Any]],
+    entities: list[dict[str, Any]],
+    chunk_entities: list[dict[str, Any]],
+    adjacent: list[dict[str, Any]],
+    entity_relations: list[dict[str, Any]],
+):
     graph = nx.DiGraph()
     for chunk in chunks:
         graph.add_node(chunk["_key"], kind="chunk", **chunk)
+
     for edge in adjacent:
         src = chunk_key_from_doc_id(edge["_from"])
         dst = chunk_key_from_doc_id(edge["_to"])
+        weight = float(edge.get("weight", 1.0))
         if src in graph and dst in graph:
-            graph.add_edge(src, dst, kind="adjacent", weight=1.0)
-            graph.add_edge(dst, src, kind="adjacent", weight=1.0)
+            graph.add_edge(src, dst, kind="adjacent", weight=weight)
+            graph.add_edge(dst, src, kind="adjacent", weight=weight)
+
+    entity_by_key = {row["_key"]: row for row in entities}
     entity_to_chunks: dict[str, list[str]] = defaultdict(list)
     for edge in chunk_entities:
         chunk_key = chunk_key_from_doc_id(edge["_from"])
         entity_key = chunk_key_from_doc_id(edge["_to"])
         entity_to_chunks[entity_key].append(chunk_key)
-    for linked_chunks in entity_to_chunks.values():
+
+    for entity_key, linked_chunks in entity_to_chunks.items():
         unique = list(dict.fromkeys(linked_chunks))
+        entity = entity_by_key.get(entity_key, {})
+        shared_weight = entity_bonus(entity)
         for i, src in enumerate(unique):
             for dst in unique[i + 1:]:
                 if src in graph and dst in graph:
-                    graph.add_edge(src, dst, kind="shared_entity", weight=0.6)
-                    graph.add_edge(dst, src, kind="shared_entity", weight=0.6)
+                    graph.add_edge(src, dst, kind="shared_entity", weight=shared_weight)
+                    graph.add_edge(dst, src, kind="shared_entity", weight=shared_weight)
+
+    for relation in entity_relations:
+        src_entity = entity_by_key.get(chunk_key_from_doc_id(relation["_from"]), {})
+        dst_entity = entity_by_key.get(chunk_key_from_doc_id(relation["_to"]), {})
+        src_chunks = entity_to_chunks.get(src_entity.get("_key", ""), [])
+        dst_chunks = entity_to_chunks.get(dst_entity.get("_key", ""), [])
+        weight = float(relation.get("weight", 0.4))
+        for src_chunk in src_chunks[:4]:
+            for dst_chunk in dst_chunks[:4]:
+                if src_chunk == dst_chunk or src_chunk not in graph or dst_chunk not in graph:
+                    continue
+                current = float(graph[src_chunk][dst_chunk]["weight"]) if graph.has_edge(src_chunk, dst_chunk) else 0.0
+                merged = max(current, weight)
+                graph.add_edge(src_chunk, dst_chunk, kind="entity_relation", weight=merged)
+
     return graph
 
 
@@ -123,8 +165,9 @@ def main() -> int:
     entities = read_jsonl(root / "alexandria_entities.jsonl")
     chunk_entities = read_jsonl(root / "alexandria_chunk_entity_edges.jsonl")
     adjacent = read_jsonl(root / "alexandria_chunk_adjacent_edges.jsonl")
+    entity_relations = read_jsonl(root / "alexandria_entity_relation_edges.jsonl")
 
-    graph = build_graph(nx, chunks, chunk_entities, adjacent)
+    graph = build_graph(nx, chunks, entities, chunk_entities, adjacent, entity_relations)
     query_tokens = tokenize(args.query)
     lexical_ranked = sorted(chunks, key=lambda row: (lexical_score(query_tokens, row), len(row.get("tokens", []))), reverse=True)
     seeds = {
@@ -165,12 +208,8 @@ def main() -> int:
                 "chunk": row,
                 "graphScore": pr.get(row["_key"], 0.0),
                 "lexicalScore": lexical_score(query_tokens, row),
-                "entities": entities_for_chunk.get(row["_key"], []),
-                "neighbors": [
-                    graph.nodes[n]
-                    for n in list(graph.successors(row["_key"]))[:6]
-                    if n in graph.nodes
-                ],
+                "entities": sorted(entities_for_chunk.get(row["_key"], []), key=lambda ent: (ent.get("confidence", 0.0), ent.get("entityType", "")), reverse=True),
+                "neighbors": [graph.nodes[n] for n in list(graph.successors(row["_key"]))[:6] if n in graph.nodes],
             }
             for row in results[: args.top_k]
             if pr.get(row["_key"], 0.0) > 0 or lexical_score(query_tokens, row) > 0

@@ -108,6 +108,7 @@ import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Canonical.CertifiedModularReduction
 import InfoGeometry.Canonical.ObserverDefect
 import InfoGeometry.Canonical.ModularSourceBridge
+import InfoGeometry.Canonical.ModularSurprisalThermoPacket
 import InfoGeometry.Canonical.DrazinModularSingularityBridge
 import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.DrazinDescriptorSystems

@@ -78,6 +78,39 @@ The maintained cleanup/closure execution plan lives in:
 Use it as the programmatic queue for strict-gate recovery, warning-debt burn-down,
 and capstone-to-owner theorem closure.
 
+## Current Theorem-Factory Workflow
+
+The current working method is deliberately two-phase: symbolic material is used
+to find theorem corridors, but only Lean/lake validation establishes proof.
+
+1. Normalize the input into a theorem packet:
+   terms, claims, assumptions, owner surfaces, Lean theorem surfaces, and debt.
+2. Search the real code first with `rg`; identify owner, translator,
+   coherence, or capstone files before editing.
+3. Use Arango-DAG or gravity retrieval only as navigation.  A graph hit must
+   descend to raw Lean declarations before it can inform a theorem statement.
+4. Formalize the strongest source-supported statement.  If the analytic
+   substrate is missing, introduce an explicit proof-carrying context instead
+   of asserting an unconditional theorem.
+5. Compile the edited module and immediate consumers with `lake env lean` or
+   targeted `lake build`.
+6. Refresh the declaration graph with `lake script run dagRefresh` only after
+   the build gate is clean.
+7. Regenerate theorem-significance/vacuity reports and classify intentional
+   bridge endpoints with `@[terminal]`, `@[expository]`, or
+   `@[infrastructure]`; do not use these tags to hide missing mathematics.
+8. Record remaining debt as concrete obligations: missing owner lemma, missing
+   analytic inverse theorem, missing positivity gate, missing raw serialization,
+   or stale graph artifact.
+
+Example status language:
+
+- `proved`: Lean theorem compiles without placeholders.
+- `bridged`: a theorem surface delegates to an existing owner proof.
+- `contextual`: the statement is valid under explicit hypothesis fields.
+- `diagnostic`: Arango/DAG indicates a corridor or debt, not proof.
+- `debt`: the repo lacks the owner theorem or analytic substrate.
+
 ## Witness Policy
 
 Stable theorem surfaces must use **genuine dependent witnesses** only.

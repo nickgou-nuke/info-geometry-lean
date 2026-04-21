@@ -346,7 +346,7 @@ theorem sourceVortexSeed_sub_sinkVortexSeed_eq_transportCommutator_spectral_epsi
     apply ContinuousLinearMap.ext
     intro x
     simp [transportCommutator, sub_eq_add_neg]
-    abel
+    abel_nf
   calc
     sourceVortexSeed (E := E) V - sinkVortexSeed (E := E) V
       = transportCommutator (E := E) H Pplus - transportCommutator (E := E) H Pminus := by
@@ -391,7 +391,7 @@ theorem sourceSinkAnticommutator_sub_eq_anticommutator_spectral_epsilon
     apply ContinuousLinearMap.ext
     intro x
     simp [InfoGeometry.Quantum.RealMajorana.anticommutator, sub_eq_add_neg]
-    abel
+    abel_nf
   calc
     InfoGeometry.Quantum.RealMajorana.anticommutator (S := H₂) H Pplus
         -

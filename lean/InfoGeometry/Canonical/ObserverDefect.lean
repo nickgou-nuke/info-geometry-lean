@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinSupercharge
+import InfoGeometry.Canonical.KKTClosureSymmetry
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -28,6 +29,7 @@ local instance : IsScalarTower ℝ EndH EndH := inferInstance
 /--
 Local observer slice that preserves the spectral grading orientation.
 -/
+@[rep_depth transport]
 structure ObserverL5 (CIK : CertifiedInverseKernel H₂) where
   localSlice : EndH
   isOrientationFixing :
@@ -145,6 +147,91 @@ theorem observerDefectResidual_eq_projectorCompression_commutator_split
           CIK.spectralComplementaryProjector := by
   unfold observerDefectResidual
   rw [observerOrientationResidual_eq_commutator_spectralProjector_add_commutator_deviation (CIK := CIK) (obs := obs)]
+
+/--
+The canonical spectral-projector commutator seed vanishes after defect-block
+compression. The unrestricted observer defect therefore lives entirely in the
+observer-deviation lane after `Q₀` compression.
+-/
+theorem projectorCompression_commutator_spectralProjector_dilationGap_eq_zero
+    (CIK : CertifiedInverseKernel H₂) :
+    CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator CIK.spectralProjector CIK.dilationGap *
+        CIK.spectralComplementaryProjector
+      = 0 := by
+  set Q0 : EndH := CIK.spectralComplementaryProjector
+  set P : EndH := CIK.spectralProjector
+  set D : EndH := CIK.dilationGap
+  have hQ0P : Q0 * P = 0 := by
+    simpa [Q0, P] using CIK.spectralComplementaryProjector_mul_spectralProjector
+  have hPQ0 : P * Q0 = 0 := by
+    simpa [Q0, P] using CIK.spectralProjector_mul_spectralComplementaryProjector
+  unfold DrazinSupercharge.commutator
+  change Q0 * (P * D - D * P) * Q0 = 0
+  calc
+    Q0 * (P * D - D * P) * Q0
+      = (Q0 * P) * D * Q0 - Q0 * D * (P * Q0) := by
+          simp [sub_mul, mul_sub, mul_assoc]
+    _ = 0 := by simp [hQ0P, hPQ0]
+
+/--
+Defect-compressed observer residual is exactly the defect-block compression of
+its observer-deviation commutator. This isolates the only uncontrolled owner
+term remaining in the unrestricted `observerDefectResidual ≤ Z_D` debt.
+-/
+theorem observerDefectResidual_eq_projectorCompression_commutator_deviation
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) :
+    observerDefectResidual CIK obs
+      = CIK.spectralComplementaryProjector *
+          DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+          CIK.spectralComplementaryProjector := by
+  rw [observerDefectResidual_eq_projectorCompression_commutator_split (CIK := CIK) (obs := obs)]
+  have hZero := projectorCompression_commutator_spectralProjector_dilationGap_eq_zero (CIK := CIK)
+  calc
+    CIK.spectralComplementaryProjector *
+        (DrazinSupercharge.commutator CIK.spectralProjector CIK.dilationGap
+          + DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap) *
+        CIK.spectralComplementaryProjector
+      = CIK.spectralComplementaryProjector *
+          DrazinSupercharge.commutator CIK.spectralProjector CIK.dilationGap *
+          CIK.spectralComplementaryProjector
+        + CIK.spectralComplementaryProjector *
+          DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+          CIK.spectralComplementaryProjector := by
+            simp [add_mul, mul_add]
+    _ = 0 + CIK.spectralComplementaryProjector *
+          DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+          CIK.spectralComplementaryProjector := by rw [hZero]
+    _ = CIK.spectralComplementaryProjector *
+          DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+          CIK.spectralComplementaryProjector := by simp
+
+/--
+Upstream target surface for closing the unrestricted D3 debt.
+
+This is the exact remaining owner obligation after the canonical spectral seed is
+shown to vanish under defect compression.
+-/
+def ObserverDeviationDefectCommutatorBoundedByZD
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) : Prop :=
+  ‖CIK.spectralComplementaryProjector *
+      DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+      CIK.spectralComplementaryProjector‖
+    ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖
+
+/--
+The unrestricted observer-defect-to-`Z_D` debt reduces exactly to the norm bound
+on the defect-compressed observer-deviation commutator.
+-/
+theorem observerDefectResidualBoundedByZD_of_deviation_bound
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hDevBound : ObserverDeviationDefectCommutatorBoundedByZD CIK obs) :
+    ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+  rw [observerDefectResidual_eq_projectorCompression_commutator_deviation (CIK := CIK) (obs := obs)]
+  exact hDevBound
 
 /--
 Defect-compressed observer-side Cartan split through a chosen axis `sigma`.

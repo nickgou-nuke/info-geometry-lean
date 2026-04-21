@@ -173,22 +173,31 @@ def path_to_module(path: str) -> str | None:
     return None
 
 
-def strip_lean_comments(source: str) -> str:
+def strip_lean_comments(source: str, keep_docstrings: bool = False) -> str:
     out: list[str] = []
     i = 0
     n = len(source)
     block_depth = 0
+    is_doc = False
     while i < n:
         if block_depth > 0:
             if source.startswith("/-", i):
                 block_depth += 1
+                if is_doc:
+                    out.extend(["/", "-"])
                 i += 2
                 continue
             if source.startswith("-/", i):
                 block_depth -= 1
+                if is_doc:
+                    out.extend(["-", "/"])
+                if block_depth == 0:
+                    is_doc = False
                 i += 2
                 continue
-            if source[i] == "\n":
+            if is_doc:
+                out.append(source[i])
+            elif source[i] == "\n":
                 out.append("\n")
             i += 1
             continue
@@ -202,6 +211,10 @@ def strip_lean_comments(source: str) -> str:
             continue
         if source.startswith("/-", i):
             block_depth = 1
+            nnxt = source[i + 2] if i + 2 < n else ""
+            if keep_docstrings and (nnxt == "-" or nnxt == "!"):
+                is_doc = True
+                out.extend(["/", "-"])
             i += 2
             continue
 

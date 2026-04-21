@@ -1,0 +1,44 @@
+{
+  "schema": "info_geometry.raw_infotree_export_validation.v1",
+  "input_dir": "/home/goutev/repos/info-geometry-lean-fusion/artifacts/infotree/fusion-validation-raw-infotree",
+  "ok": true,
+  "topology_ok": true,
+  "lossless_ok": false,
+  "lossless_errors": [
+    "metadata fully_lossless is not true",
+    "leakage rows present: 3"
+  ],
+  "errors": [],
+  "counts": {
+    "roots": 1,
+    "nodes": 2,
+    "edges": 1,
+    "contexts": 1,
+    "payloads": 1,
+    "payload_fields": 2,
+    "decl_links": 0,
+    "env_refs": 2,
+    "mctx_refs": 1,
+    "mctx_decls": 0,
+    "leakage": 3
+  },
+  "metadata": {
+    "stage": "stage_1_context_decllink_probe",
+    "schema": "info_geometry.raw_infotree_export.v1",
+    "root_count": 1,
+    "payload_field_count": 2,
+    "payload_count": 1,
+    "node_count": 2,
+    "module": "[anonymous]",
+    "mctx_ref_count": 1,
+    "mctx_decl_count": 0,
+    "loss_audited": true,
+    "leakage_count": 3,
+    "fully_lossless": false,
+    "file": "lean/DAG/HolonomyExporter.lean",
+    "env_ref_count": 2,
+    "edge_count": 1,
+    "decl_link_count": 0,
+    "context_count": 1
+  }
+}

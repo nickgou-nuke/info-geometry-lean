@@ -130,6 +130,96 @@ theorem drazin_regular_functionalCalculus_seal
   exact ⟨hLog, hNoLog, hSupportPkg.1, hSupportPkg.2.1, hSupportPkg.2.2.1, hSupportPkg.2.2.2⟩
 
 /--
+Operator-ratio regularization corridor.
+
+The finite RedLine owner represents the relative modular operator as the
+projective ratio `dμ / dν` and reads its modular Hamiltonian as
+`-log(dμ / dν)`. In the singular operator lane this global ratio must not be
+formed across the defect kernel. The certified Drazin/Penrose package instead
+separates:
+
+- `Preg`: the Drazin regular support on which the logarithm is certified;
+- `Pzero`: the Drazin defect/null lane on which no logarithm certificate exists;
+- `Pmetric`: the Moore-Penrose metric lane used for physical compression.
+
+This theorem is the named algebraic seal for that corridor. It exposes only the
+proved facts: regular-lane log admissibility, defect-lane exclusion, support of
+the canonical generator on `Preg`, annihilation of `Pzero`, and the Penrose
+alignment criterion for the remaining metric compression.
+-/
+@[rep_depth transport, capstone]
+theorem certified_operator_ratio_regularization_corridor
+    (c : CertifiedModularReduction (E := H₂)) :
+    let KambientCanonical :=
+      compress (CertifiedModularReduction.Preg c)
+        (K_neg_log_PregDelta (V := E) c)
+    c.logAdmissible (CertifiedModularReduction.Δreg c)
+      ∧ ¬ c.logAdmissible (compress (CertifiedModularReduction.Pzero c) c.Δ)
+      ∧ (CertifiedModularReduction.Preg c * KambientCanonical = KambientCanonical)
+      ∧ (KambientCanonical * CertifiedModularReduction.Preg c = KambientCanonical)
+      ∧ (CertifiedModularReduction.Pzero c * KambientCanonical = 0)
+      ∧ (KambientCanonical * CertifiedModularReduction.Pzero c = 0)
+      ∧ (CertifiedModularReduction.anomaly c = 0
+          ↔ CertifiedModularReduction.SpectralMetricAlignment c) := by
+  intro KambientCanonical
+  have hSeal := drazin_regular_functionalCalculus_seal (E := E) c
+  have hAlign := CertifiedModularReduction.anomaly_vanishes_iff_alignment (c := c)
+  exact ⟨
+    by simpa [CertifiedModularReduction.Δreg] using hSeal.1,
+    hSeal.2.1,
+    hSeal.2.2.1,
+    hSeal.2.2.2.1,
+    hSeal.2.2.2.2.1,
+    hSeal.2.2.2.2.2,
+    hAlign
+  ⟩
+
+/--
+Noncommutative regularized-ratio closure under spectral/metric alignment.
+
+This is the next proved step after the regularization corridor: once the
+Drazin-regular logarithm has been formed on `Preg` and the Penrose metric lane
+is aligned with the Drazin support, the physical generator `Kphys` has no
+leakage through the defect/null projector `Pzero`.
+
+No finite diagonal model is used here. The proof runs only through the certified
+regular-lane operator package and the Drazin/Penrose projector algebra.
+-/
+@[rep_depth transport, capstone]
+theorem certified_operator_ratio_regularization_kills_defect_of_alignment
+    (c : CertifiedModularReduction (E := H₂))
+    (hAlign : CertifiedModularReduction.SpectralMetricAlignment (c := c)) :
+    c.logAdmissible (CertifiedModularReduction.Δreg c)
+      ∧ (CertifiedModularReduction.Pzero c * CertifiedModularReduction.Kphys c = 0)
+      ∧ (CertifiedModularReduction.Kphys c * CertifiedModularReduction.Pzero c = 0) := by
+  have hCorridor := certified_operator_ratio_regularization_corridor (E := E) c
+  have hAnomaly :
+      CertifiedModularReduction.anomaly c = 0 :=
+    hCorridor.2.2.2.2.2.2.mpr hAlign
+  have hKill :=
+    CertifiedModularReduction.Kphys_kills_Pzero_of_alignment (c := c) hAnomaly
+  exact ⟨hCorridor.1, hKill.1, hKill.2⟩
+
+/--
+Noncommutative regularized-ratio closure under the inertial-lane formulation.
+
+This is the same theorem with the existing `InertialRegularLane` predicate
+(`anomaly = 0`) as input.
+-/
+@[rep_depth transport, capstone]
+theorem certified_operator_ratio_regularization_kills_defect_of_inertial_lane
+    (c : CertifiedModularReduction (E := H₂))
+    (hInertial : CertifiedModularReduction.InertialRegularLane (c := c)) :
+    c.logAdmissible (CertifiedModularReduction.Δreg c)
+      ∧ (CertifiedModularReduction.Pzero c * CertifiedModularReduction.Kphys c = 0)
+      ∧ (CertifiedModularReduction.Kphys c * CertifiedModularReduction.Pzero c = 0) := by
+  have hAlign :
+      CertifiedModularReduction.SpectralMetricAlignment (c := c) :=
+    (CertifiedModularReduction.inertial_regular_lane_iff_alignment (c := c)).mp hInertial
+  exact certified_operator_ratio_regularization_kills_defect_of_alignment
+    (E := E) c hAlign
+
+/--
 Inertial regular-lane closure package (`χ = 0`):
 
 - regular-lane logarithm is admitted on `Preg Δ`,

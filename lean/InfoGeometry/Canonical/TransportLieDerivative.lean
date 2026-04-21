@@ -138,6 +138,37 @@ theorem deriv_expTransport_at_zero_eq_zero_of_commute
   unfold expTransport
   simp [mul_assoc, mul_add, add_mul]
 
+/--
+Exact exponential conjugation fixes a seed that commutes with the generator.
+
+This is the finite-time version of `deriv_expTransport_at_zero_eq_zero_of_commute`;
+it turns a commutation witness into a constructive transport-fixedness proof.
+-/
+theorem expTransport_eq_self_of_commute
+    {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A] [CompleteSpace A]
+    (X A₀ : A) (t : ℝ) (hComm : Commute A₀ X) :
+    expTransport X A₀ t = A₀ := by
+  have hCommScaled : Commute A₀ (t • X) := by
+    simpa using hComm.smul_right t
+  have hCommExp : Commute A₀ (NormedSpace.exp (t • X)) := by
+    simpa using hCommScaled.exp_right
+  have hScaledNeg : Commute (t • X) (t • (-X)) := by
+    rw [smul_neg]
+    exact (Commute.refl (t • X)).neg_right
+  unfold expTransport
+  calc
+    (NormedSpace.exp (t • X) * A₀) * NormedSpace.exp (t • (-X))
+        = (A₀ * NormedSpace.exp (t • X)) * NormedSpace.exp (t • (-X)) := by
+            rw [hCommExp.eq]
+    _ = A₀ * (NormedSpace.exp (t • X) * NormedSpace.exp (t • (-X))) := by
+          rw [mul_assoc]
+    _ = A₀ * NormedSpace.exp (t • X + t • (-X)) := by
+          rw [← NormedSpace.exp_add_of_commute hScaledNeg]
+    _ = A₀ * 1 := by
+          simp
+    _ = A₀ := by
+          simp
+
 /-- Explicit finite exponential conjugation transport on `EndN`. -/
 noncomputable def expTransportEnd (X A : EndN) (t : ℝ) : EndN :=
   expTransport X A t

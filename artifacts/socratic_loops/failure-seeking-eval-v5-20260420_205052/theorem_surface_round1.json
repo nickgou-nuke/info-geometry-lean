@@ -1,0 +1,9 @@
+{
+  "round": 1,
+  "surface": {
+    "goal": "(N : NegLogRectifier R A) : N.toPotential 1 = 0",
+    "kind": "theorem",
+    "name": "map_one_apply",
+    "tactic": "N.map_one"
+  }
+}

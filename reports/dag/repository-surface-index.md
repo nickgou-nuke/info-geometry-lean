@@ -1,22 +1,22 @@
 # Repository Surface Index
 
-Generated: `2026-04-16 01:06:28`
+Generated: `2026-04-21 00:44:23`
 
 ## Scope
 - source classes: `lean`, `markdown`, `python`, `config`
 - universe: tracked files from `git ls-files`
 
 ## Counts
-- tracked files: **1856**
+- tracked files: **2265**
 - untracked files (included): **0**
-- total universe files: **1856**
-- lean files: **853**
-- markdown files: **528**
-- python files: **224**
-- config files: **79**
-- union of tracked target classes: **1683**
-- non-target/other tracked files: **173**
-- target union coverage: **90.68%**
+- total universe files: **2265**
+- lean files: **931**
+- markdown files: **670**
+- python files: **322**
+- config files: **118**
+- union of tracked target classes: **2040**
+- non-target/other tracked files: **225**
+- target union coverage: **90.07%**
 
 ## Baseline Config Presence
 - `dag-toolchain.json`: **present**
@@ -27,46 +27,50 @@ Generated: `2026-04-16 01:06:28`
 - `.github/workflows/ci.yml`: **present**
 
 ## Top-Level Distribution
-- `lean`: 846
-- `docs`: 201
-- `reports`: 198
-- `tools`: 179
-- `skills`: 86
-- `handover`: 62
-- `.agents`: 60
+- `lean`: 915
+- `docs`: 298
+- `tools`: 271
+- `reports`: 220
+- `skills`: 89
+- `handover`: 75
+- `artifacts`: 74
+- `.agents`: 61
 - `scripts`: 45
-- `<root>`: 38
+- `<root>`: 39
+- `tests`: 37
 - `external_refs`: 31
 - `archive`: 29
-- `tests`: 28
+- `leantrail`: 23
 - `presentation`: 16
 - `blueprint`: 11
-- `tmp`: 6
+- `tmp`: 7
+- `quarantine`: 6
 - `.github`: 4
 - `.scripts_archive`: 3
 - `.tasks`: 2
-- `artifacts`: 2
+- `configs`: 2
 - `docs-map`: 2
 - `index`: 2
-- `quarantine`: 2
 - `.artifacts`: 1
 - `.vscode`: 1
 - `infogeometry.egg-info`: 1
 
 ## Other Extension Distribution
-- `.json`: 71
-- `.sh`: 23
+- `.json`: 104
+- `.sh`: 25
+- `.jsonl`: 17
 - `.olean`: 14
 - `<no-ext>`: 12
 - `.tex`: 10
-- `.jsonl`: 8
 - `.ndjson`: 8
 - `.png`: 7
-- `.tsv`: 4
-- `.txt`: 2
+- `.tsv`: 5
+- `.html`: 4
+- `.txt`: 3
+- `.env`: 2
 - `.aux`: 1
+- `.example`: 1
 - `.gz`: 1
-- `.html`: 1
 - `.identifier`: 1
 - `.llama4-maverick`: 1
 - `.llama4-scout`: 1
@@ -80,7 +84,7 @@ Generated: `2026-04-16 01:06:28`
 - `.xdv`: 1
 
 ## Class Inventories
-### lean (853)
+### lean (931)
 - `.agents/workflows/repo-topic-deep-research/templates/lean_context_pack_template.lean`
 - `archive/legacy/lean/InfoGeometry/Bar.lean`
 - `archive/legacy/lean/InfoGeometry/Clifford/SplitTower.lean`
@@ -112,11 +116,13 @@ Generated: `2026-04-16 01:06:28`
 - `lean/DAG/ExactMorphismTest.lean`
 - `lean/DAG/ExportDecls.lean`
 - `lean/DAG/ExportForwardGraph.lean`
+- `lean/DAG/ExprArangoExport.lean`
 - `lean/DAG/FinalSearch.lean`
 - `lean/DAG/FindFinrank.lean`
 - `lean/DAG/Functor.lean`
 - `lean/DAG/GlobalDisassembler.lean`
 - `lean/DAG/GraphHodge.lean`
+- `lean/DAG/HolonomyExporter.lean`
 - `lean/DAG/Hydrate.lean`
 - `lean/DAG/Impact.lean`
 - `lean/DAG/Indexer.lean`
@@ -127,6 +133,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/DAG/LiftNaturality.lean`
 - `lean/DAG/ProcessFlowExport.lean`
 - `lean/DAG/QueryEngine.lean`
+- `lean/DAG/RawInfoTreeExport.lean`
 - `lean/DAG/RepresentationDepthExport.lean`
 - `lean/DAG/RootOrderExport.lean`
 - `lean/DAG/SCC.lean`
@@ -148,6 +155,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/Docs/emit_blueprint_tex.lean`
 - `lean/Docs/generated_blueprints.lean`
 - `lean/InfoGeometry.lean`
+- `lean/InfoGeometry/Algebraic/Fitting.lean`
 - `lean/InfoGeometry/All.lean`
 - `lean/InfoGeometry/Architecture/All.lean`
 - `lean/InfoGeometry/Architecture/SpinFactor.lean`
@@ -172,7 +180,10 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/AnomalyDilationBridge.lean`
 - `lean/InfoGeometry/Canonical/AnomalyGauge.lean`
 - `lean/InfoGeometry/Canonical/AnomalyInflow.lean`
+- `lean/InfoGeometry/Canonical/ArnoldApproximationCore.lean`
 - `lean/InfoGeometry/Canonical/ArnoldMajoranaNetwork.lean`
+- `lean/InfoGeometry/Canonical/ArnoldNetworkIntertwiner.lean`
+- `lean/InfoGeometry/Canonical/ArnoldNetworkPresentation.lean`
 - `lean/InfoGeometry/Canonical/AssociativeSuperBracket.lean`
 - `lean/InfoGeometry/Canonical/Attention.lean`
 - `lean/InfoGeometry/Canonical/AttentionDiracBridge.lean`
@@ -188,11 +199,13 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/BerryPhase.lean`
 - `lean/InfoGeometry/Canonical/BogoliubovClosedForms.lean`
 - `lean/InfoGeometry/Canonical/BogoliubovFockSuper.lean`
+- `lean/InfoGeometry/Canonical/BogoliubovOptimalTransport.lean`
 - `lean/InfoGeometry/Canonical/BogoliubovPolarizationBridge.lean`
 - `lean/InfoGeometry/Canonical/BogoliubovProjectorFlux.lean`
 - `lean/InfoGeometry/Canonical/BogoliubovProjectorTransport.lean`
 - `lean/InfoGeometry/Canonical/BogoliubovTransport.lean`
 - `lean/InfoGeometry/Canonical/BogoliubovVielbein.lean`
+- `lean/InfoGeometry/Canonical/BogoliubovWeightedKMSCertification.lean`
 - `lean/InfoGeometry/Canonical/BohmMadelungOperatorialBridge.lean`
 - `lean/InfoGeometry/Canonical/BottDirac.lean`
 - `lean/InfoGeometry/Canonical/BottPeriodicity.lean`
@@ -214,9 +227,11 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/CentralChargeAnomaly.lean`
 - `lean/InfoGeometry/Canonical/CentralChargeKKTParityBridge.lean`
 - `lean/InfoGeometry/Canonical/CertifiedInverseKernel.lean`
+- `lean/InfoGeometry/Canonical/CertifiedModularReduction.lean`
 - `lean/InfoGeometry/Canonical/ChiralAction.lean`
 - `lean/InfoGeometry/Canonical/ChiralAnomaly.lean`
 - `lean/InfoGeometry/Canonical/ChiralCartanCore.lean`
+- `lean/InfoGeometry/Canonical/ChiralChargeFockNumberBridge.lean`
 - `lean/InfoGeometry/Canonical/ChiralCliffordBridge.lean`
 - `lean/InfoGeometry/Canonical/ChiralDefectIndexBridge.lean`
 - `lean/InfoGeometry/Canonical/ChiralEinsteinBridge.lean`
@@ -224,16 +239,21 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/ChiralHodgeDecomposition.lean`
 - `lean/InfoGeometry/Canonical/ChiralHodgeIndexBridge.lean`
 - `lean/InfoGeometry/Canonical/ChiralHodgeLichnerowiczBridge.lean`
+- `lean/InfoGeometry/Canonical/ChiralOperatorConeClosure.lean`
 - `lean/InfoGeometry/Canonical/ChiralRGFlow.lean`
 - `lean/InfoGeometry/Canonical/ChiralTorsionBridge.lean`
 - `lean/InfoGeometry/Canonical/ChiralTorsionGeneralizedKL.lean`
 - `lean/InfoGeometry/Canonical/ChiralTorsionRelativeVolume.lean`
 - `lean/InfoGeometry/Canonical/ChiralTorsionState.lean`
 - `lean/InfoGeometry/Canonical/ChiralTorsionTwistor.lean`
+- `lean/InfoGeometry/Canonical/Cl11LorentzAction.lean`
+- `lean/InfoGeometry/Canonical/Cl11PolarizedBasis.lean`
 - `lean/InfoGeometry/Canonical/ClNNBottBridge.lean`
 - `lean/InfoGeometry/Canonical/Clifford.lean`
 - `lean/InfoGeometry/Canonical/CliffordBridge.lean`
+- `lean/InfoGeometry/Canonical/ClosureDrazinBridge.lean`
 - `lean/InfoGeometry/Canonical/CoarseGraining.lean`
+- `lean/InfoGeometry/Canonical/ComplexMaskTransmutationBridge.lean`
 - `lean/InfoGeometry/Canonical/ConformalAlgebra.lean`
 - `lean/InfoGeometry/Canonical/ConformalAnomalyDegenerate.lean`
 - `lean/InfoGeometry/Canonical/ConformalAnomalyOperator.lean`
@@ -245,6 +265,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/ConnesArakiCore.lean`
 - `lean/InfoGeometry/Canonical/ConnesArakiFramework.lean`
 - `lean/InfoGeometry/Canonical/ConnesArakiTomita.lean`
+- `lean/InfoGeometry/Canonical/ConnesCocycleDeltaPrimaryBridge.lean`
 - `lean/InfoGeometry/Canonical/CoordinateFreeSecondVariation.lean`
 - `lean/InfoGeometry/Canonical/CorrelationAntisymmetrization.lean`
 - `lean/InfoGeometry/Canonical/CorrelationSymmetrization.lean`
@@ -255,6 +276,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/CountSubstrateBridge.lean`
 - `lean/InfoGeometry/Canonical/CurvatureRGFlow.lean`
 - `lean/InfoGeometry/Canonical/DIIICommutatorInitialization.lean`
+- `lean/InfoGeometry/Canonical/DIIIIndexVerification.lean`
 - `lean/InfoGeometry/Canonical/DPDWedgeCompatibility.lean`
 - `lean/InfoGeometry/Canonical/DeepHorizon.lean`
 - `lean/InfoGeometry/Canonical/DensityWeightIntertwinerBridge.lean`
@@ -279,6 +301,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean`
 - `lean/InfoGeometry/Canonical/DrazinSpectralProjectorBridge.lean`
 - `lean/InfoGeometry/Canonical/DrazinSupercharge.lean`
+- `lean/InfoGeometry/Canonical/DrazinWeylConstructive.lean`
 - `lean/InfoGeometry/Canonical/DrazinWitnessElimination.lean`
 - `lean/InfoGeometry/Canonical/DualConnections.lean`
 - `lean/InfoGeometry/Canonical/DualConnectionsCore.lean`
@@ -288,6 +311,8 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/EinsteinAnomalyOperator.lean`
 - `lean/InfoGeometry/Canonical/EmpiricalChecks.lean`
 - `lean/InfoGeometry/Canonical/Fierz.lean`
+- `lean/InfoGeometry/Canonical/FierzReadout.lean`
+- `lean/InfoGeometry/Canonical/FiniteDiagonalSpectrumDischarge.lean`
 - `lean/InfoGeometry/Canonical/FirstQuantizationProbability.lean`
 - `lean/InfoGeometry/Canonical/FisherVolumeBridge.lean`
 - `lean/InfoGeometry/Canonical/Fock.lean`
@@ -306,6 +331,9 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/GlobalChiralDecomposition.lean`
 - `lean/InfoGeometry/Canonical/GrandCanonicalCore.lean`
 - `lean/InfoGeometry/Canonical/GrandCanonicalExperts.lean`
+- `lean/InfoGeometry/Canonical/GrandCanonicalFockNumberBridge.lean`
+- `lean/InfoGeometry/Canonical/GrandCanonicalGaugePotentialBridge.lean`
+- `lean/InfoGeometry/Canonical/GrandCanonicalGaussianScaleShape.lean`
 - `lean/InfoGeometry/Canonical/GrandSynthesis.lean`
 - `lean/InfoGeometry/Canonical/GrandSynthesisBott.lean`
 - `lean/InfoGeometry/Canonical/GrandSynthesisGeometry.lean`
@@ -314,8 +342,10 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/GrandUnification.lean`
 - `lean/InfoGeometry/Canonical/GrandUnificationBlueprint.lean`
 - `lean/InfoGeometry/Canonical/GrandUnificationMetric.lean`
+- `lean/InfoGeometry/Canonical/GraphDiracPresentation.lean`
 - `lean/InfoGeometry/Canonical/HeadTrialityCore.lean`
 - `lean/InfoGeometry/Canonical/HeatKernel.lean`
+- `lean/InfoGeometry/Canonical/HestenesGibbsPathIntegral.lean`
 - `lean/InfoGeometry/Canonical/HestenesKramersBridge.lean`
 - `lean/InfoGeometry/Canonical/HestenesRealStructures.lean`
 - `lean/InfoGeometry/Canonical/HolographicEmergence.lean`
@@ -362,6 +392,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/KKTCore.lean`
 - `lean/InfoGeometry/Canonical/KKTGeneralizedInverseBridge.lean`
 - `lean/InfoGeometry/Canonical/KKTGeneralizedMetricBridge.lean`
+- `lean/InfoGeometry/Canonical/KKTLorentzOrbitBridge.lean`
 - `lean/InfoGeometry/Canonical/KKTNoetherCharges.lean`
 - `lean/InfoGeometry/Canonical/KLinearRepresentation.lean`
 - `lean/InfoGeometry/Canonical/KMSCocycleGeneratorBridge.lean`
@@ -391,6 +422,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/LorentzianRouting.lean`
 - `lean/InfoGeometry/Canonical/MajoranaKitaevSpinorBridge.lean`
 - `lean/InfoGeometry/Canonical/MajoranaKreinCartanSplit.lean`
+- `lean/InfoGeometry/Canonical/MajoranaLiftPacketBridge.lean`
 - `lean/InfoGeometry/Canonical/ManifoldDegree.lean`
 - `lean/InfoGeometry/Canonical/ManifoldDegreeCore.lean`
 - `lean/InfoGeometry/Canonical/ManifoldDegreeIntegration.lean`
@@ -398,6 +430,8 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/ManifoldHomologyCore.lean`
 - `lean/InfoGeometry/Canonical/MasterSynthesis.lean`
 - `lean/InfoGeometry/Canonical/MixtureOfExperts.lean`
+- `lean/InfoGeometry/Canonical/ModularHamiltonianDoubledBridge.lean`
+- `lean/InfoGeometry/Canonical/ModularHamiltonianPregSupportBridge.lean`
 - `lean/InfoGeometry/Canonical/ModularHessian.lean`
 - `lean/InfoGeometry/Canonical/ModularKLDivergenceBridge.lean`
 - `lean/InfoGeometry/Canonical/ModularKramersBridge.lean`
@@ -417,18 +451,27 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/MoorePenroseAdjoint.lean`
 - `lean/InfoGeometry/Canonical/MultiplicativeToAdditiveBridge.lean`
 - `lean/InfoGeometry/Canonical/NavierStokesBridge.lean`
+- `lean/InfoGeometry/Canonical/NavierStokesNeuralOperatorBridge.lean`
+- `lean/InfoGeometry/Canonical/NeuralOperatorCore.lean`
 - `lean/InfoGeometry/Canonical/NoetherInference.lean`
+- `lean/InfoGeometry/Canonical/NoetherRelationalBridge.lean`
 - `lean/InfoGeometry/Canonical/ObserverDefect.lean`
+- `lean/InfoGeometry/Canonical/OddDefectFunctional.lean`
 - `lean/InfoGeometry/Canonical/OnsagerCasimirJ.lean`
 - `lean/InfoGeometry/Canonical/OnsagerReciprocity.lean`
+- `lean/InfoGeometry/Canonical/OnsagerSinkhornOperatorLift.lean`
+- `lean/InfoGeometry/Canonical/OnsagerSpineBridge.lean`
 - `lean/InfoGeometry/Canonical/OperatorAlgebraAQFTPackage.lean`
 - `lean/InfoGeometry/Canonical/OperatorAlgebraBridge.lean`
 - `lean/InfoGeometry/Canonical/OperatorAlgebraKKBridge.lean`
 - `lean/InfoGeometry/Canonical/OperatorAlgebraModularAtom.lean`
 - `lean/InfoGeometry/Canonical/OperatorAlgebraReadiness.lean`
 - `lean/InfoGeometry/Canonical/OperatorDictionary.lean`
+- `lean/InfoGeometry/Canonical/OperatorFenchelRegularCone.lean`
 - `lean/InfoGeometry/Canonical/OperatorLightconeCoordinates.lean`
+- `lean/InfoGeometry/Canonical/OperatorPenroseUnification.lean`
 - `lean/InfoGeometry/Canonical/OperatorSpacetimeObservables.lean`
+- `lean/InfoGeometry/Canonical/OperatorSuperKaehlerLift.lean`
 - `lean/InfoGeometry/Canonical/OperatorialCentralCharge.lean`
 - `lean/InfoGeometry/Canonical/OperatorialCramerRao.lean`
 - `lean/InfoGeometry/Canonical/OperatorialCramerRaoStateFirstChunk1.lean`
@@ -436,6 +479,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/OperatorialCramerRaoStateFirstChunk3.lean`
 - `lean/InfoGeometry/Canonical/OperatorialCramerRaoStateFirstChunk4.lean`
 - `lean/InfoGeometry/Canonical/OperatorialCramerRaoStateFirstSemanticAudit.lean`
+- `lean/InfoGeometry/Canonical/OperatorialHessianBridge.lean`
 - `lean/InfoGeometry/Canonical/OperatorialInformationLift.lean`
 - `lean/InfoGeometry/Canonical/OperatorialUncertainty.lean`
 - `lean/InfoGeometry/Canonical/OperatorialVolumePreservation.lean`
@@ -445,6 +489,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/PerelmanW.lean`
 - `lean/InfoGeometry/Canonical/PerelmanWCore.lean`
 - `lean/InfoGeometry/Canonical/PerelmanWSpinorial.lean`
+- `lean/InfoGeometry/Canonical/PhaseAxisCartanSymmetricLie.lean`
 - `lean/InfoGeometry/Canonical/PhaseSpaceCausalFlowBridge.lean`
 - `lean/InfoGeometry/Canonical/PhaseSpaceConformalKKTBridge.lean`
 - `lean/InfoGeometry/Canonical/PhaseSpaceGeneralizedMetricChiralityBridge.lean`
@@ -455,8 +500,10 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/PhaseVolumeDynamics.lean`
 - `lean/InfoGeometry/Canonical/PhysicsOfInformationCore.lean`
 - `lean/InfoGeometry/Canonical/PolarizedMadelungBridge.lean`
+- `lean/InfoGeometry/Canonical/PositiveMeasureSpectrum.lean`
 - `lean/InfoGeometry/Canonical/PositiveRayCore.lean`
 - `lean/InfoGeometry/Canonical/PositiveRayProjectiveBridge.lean`
+- `lean/InfoGeometry/Canonical/Positivity.lean`
 - `lean/InfoGeometry/Canonical/Prequantum.lean`
 - `lean/InfoGeometry/Canonical/Projective.lean`
 - `lean/InfoGeometry/Canonical/ProjectiveAlgebraComparison.lean`
@@ -469,6 +516,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/QuantumGeometryDualSheetBridge.lean`
 - `lean/InfoGeometry/Canonical/QuantumInference.lean`
 - `lean/InfoGeometry/Canonical/QuantumLieAlgebroidRosetta.lean`
+- `lean/InfoGeometry/Canonical/QuantumPresentation.lean`
 - `lean/InfoGeometry/Canonical/QuasilatticeDirac.lean`
 - `lean/InfoGeometry/Canonical/RGFlow.lean`
 - `lean/InfoGeometry/Canonical/RNDeterminantConnesChainBridge.lean`
@@ -509,15 +557,22 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/RosettaScaleTransport.lean`
 - `lean/InfoGeometry/Canonical/RosettaSourceBridge.lean`
 - `lean/InfoGeometry/Canonical/SUSYBayes.lean`
+- `lean/InfoGeometry/Canonical/SYKKitaevGuardrails.lean`
+- `lean/InfoGeometry/Canonical/SYKTwoCopyInterface.lean`
+- `lean/InfoGeometry/Canonical/SignedParticleBridge.lean`
 - `lean/InfoGeometry/Canonical/Singular.lean`
 - `lean/InfoGeometry/Canonical/SingularBoundaryCorrection.lean`
 - `lean/InfoGeometry/Canonical/SingularDecompositionSurrogate.lean`
 - `lean/InfoGeometry/Canonical/SingularTransportSystem.lean`
 - `lean/InfoGeometry/Canonical/SinkhornFoundation.lean`
+- `lean/InfoGeometry/Canonical/SinkhornGaugeThermodynamicsBridge.lean`
 - `lean/InfoGeometry/Canonical/SinkhornKMSCore.lean`
 - `lean/InfoGeometry/Canonical/SouriauFlowCliffordBridge.lean`
 - `lean/InfoGeometry/Canonical/SouriauPlanckVector.lean`
+- `lean/InfoGeometry/Canonical/SouriauThermodynamics.lean`
 - `lean/InfoGeometry/Canonical/SpectralInference.lean`
+- `lean/InfoGeometry/Canonical/SpectroscopicGauge.lean`
+- `lean/InfoGeometry/Canonical/SpectroscopicGaugeKMSBridge.lean`
 - `lean/InfoGeometry/Canonical/SpinConnection.lean`
 - `lean/InfoGeometry/Canonical/SpineAttributes.lean`
 - `lean/InfoGeometry/Canonical/SpinorModularBridge.lean`
@@ -531,6 +586,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/SplitCliffordThermalBridge.lean`
 - `lean/InfoGeometry/Canonical/StandardFormCore.lean`
 - `lean/InfoGeometry/Canonical/StateDependentTransport.lean`
+- `lean/InfoGeometry/Canonical/StateIndexedModularSeedBridge.lean`
 - `lean/InfoGeometry/Canonical/Statistics.lean`
 - `lean/InfoGeometry/Canonical/SuperAnomaly.lean`
 - `lean/InfoGeometry/Canonical/SuperInference.lean`
@@ -546,6 +602,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/Thermo.lean`
 - `lean/InfoGeometry/Canonical/ThermoFromLogDet.lean`
 - `lean/InfoGeometry/Canonical/ThermodynamicAction.lean`
+- `lean/InfoGeometry/Canonical/ThermodynamicClosureTargets.lean`
 - `lean/InfoGeometry/Canonical/ThermodynamicGenerator.lean`
 - `lean/InfoGeometry/Canonical/TimeReversalKramers.lean`
 - `lean/InfoGeometry/Canonical/TomitaTakesaki.lean`
@@ -559,6 +616,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/Twistor.lean`
 - `lean/InfoGeometry/Canonical/TwistorOperatorialIncidence.lean`
 - `lean/InfoGeometry/Canonical/TypeIIIContinuousCoreReal.lean`
+- `lean/InfoGeometry/Canonical/UhlmannBuresHolonomy.lean`
 - `lean/InfoGeometry/Canonical/Unification.lean`
 - `lean/InfoGeometry/Canonical/UnifiedSuperchargeAlgebra.lean`
 - `lean/InfoGeometry/Canonical/UniversalVolume.lean`
@@ -577,6 +635,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Canonical/WeylTransport.lean`
 - `lean/InfoGeometry/Canonical/WeylTransportChiralBridge.lean`
 - `lean/InfoGeometry/Canonical/WilsonLoop.lean`
+- `lean/InfoGeometry/Canonical/WindingOrbitClosure.lean`
 - `lean/InfoGeometry/Canonical/YangMillsBridge.lean`
 - `lean/InfoGeometry/Canonical/YangMillsContinuum.lean`
 - `lean/InfoGeometry/Canonical/YangMillsFinite.lean`
@@ -589,7 +648,9 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Causal/Cones.lean`
 - `lean/InfoGeometry/Causal/MirrorAlignment.lean`
 - `lean/InfoGeometry/Clifford/All.lean`
+- `lean/InfoGeometry/Clifford/Biquaternion.lean`
 - `lean/InfoGeometry/Clifford/CartanInstance.lean`
+- `lean/InfoGeometry/Clifford/ChiralBasis.lean`
 - `lean/InfoGeometry/Clifford/Cl11Matrix.lean`
 - `lean/InfoGeometry/Clifford/Cl11Quaternion.lean`
 - `lean/InfoGeometry/Clifford/ClNN.lean`
@@ -629,15 +690,18 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Convex/SpinFactorHessian.lean`
 - `lean/InfoGeometry/Core.lean`
 - `lean/InfoGeometry/Core/All.lean`
+- `lean/InfoGeometry/Core/CartanPhaseAxisForcing.lean`
 - `lean/InfoGeometry/Core/Derivatives.lean`
 - `lean/InfoGeometry/Core/DerivativesSmoke.lean`
 - `lean/InfoGeometry/Core/Entropy.lean`
 - `lean/InfoGeometry/Core/GrandCanonical.lean`
 - `lean/InfoGeometry/Core/Involution.lean`
 - `lean/InfoGeometry/Core/Jordan.lean`
+- `lean/InfoGeometry/Core/MajoranaLiftPacket.lean`
 - `lean/InfoGeometry/Core/ProjectiveSimplex.lean`
 - `lean/InfoGeometry/Core/SymmetricLie.lean`
 - `lean/InfoGeometry/Core/SymmetricLieGeneric.lean`
+- `lean/InfoGeometry/Core/SymmetricLieMetric.lean`
 - `lean/InfoGeometry/Core/SymmetricLieSpaces.lean`
 - `lean/InfoGeometry/Core/SymmetricSpaces.lean`
 - `lean/InfoGeometry/Core/UnifiedGeometry.lean`
@@ -670,6 +734,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Information/MultiLogPotential.lean`
 - `lean/InfoGeometry/Interpretation/ThermodynamicDictionary.lean`
 - `lean/InfoGeometry/Jordan/All.lean`
+- `lean/InfoGeometry/Jordan/BurgStein.lean`
 - `lean/InfoGeometry/Jordan/Core.lean`
 - `lean/InfoGeometry/Jordan/LogDet.lean`
 - `lean/InfoGeometry/Jordan/SPD.lean`
@@ -727,8 +792,11 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/LLM.lean`
 - `lean/InfoGeometry/LLM/AllTopThermodynamicRouter.lean`
 - `lean/InfoGeometry/LLM/AllTopThermodynamicTransformer.lean`
+- `lean/InfoGeometry/LLM/CliffordCantorGraphRouting.lean`
+- `lean/InfoGeometry/LLM/CompilerRosetta.lean`
 - `lean/InfoGeometry/LLM/DiscreteRouterBayesRegularizationBridge.lean`
 - `lean/InfoGeometry/LLM/DiscreteRouterBayesStep.lean`
+- `lean/InfoGeometry/LLM/DiscreteRouterHestenesPathBridge.lean`
 - `lean/InfoGeometry/LLM/HypothesisScaffold70.lean`
 - `lean/InfoGeometry/LLM/KMSSoftmaxBridge.lean`
 - `lean/InfoGeometry/LLM/KreinAttentionEnergy.lean`
@@ -737,8 +805,10 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/LLM/MaskedTransformerBlock.lean`
 - `lean/InfoGeometry/LLM/PinCPTBridge.lean`
 - `lean/InfoGeometry/LLM/PromptDefectRegularization.lean`
+- `lean/InfoGeometry/LLM/ProofSamplingShadow.lean`
 - `lean/InfoGeometry/LLM/RouterFreeEnergyBridge.lean`
 - `lean/InfoGeometry/LLM/ScalarThermoBridge.lean`
+- `lean/InfoGeometry/LLM/SinkhornDefectFlow.lean`
 - `lean/InfoGeometry/LLM/SpectralToken.lean`
 - `lean/InfoGeometry/LLM/SpinPinTransformerLayer.lean`
 - `lean/InfoGeometry/LLM/ThermodynamicSwitching.lean`
@@ -773,7 +843,9 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/MeasureProjective/Invariant.lean`
 - `lean/InfoGeometry/Meta/Admission.lean`
 - `lean/InfoGeometry/Meta/Architecture.lean`
+- `lean/InfoGeometry/Meta/CompilerTelemetry.lean`
 - `lean/InfoGeometry/Meta/CurvatureTelemetry.lean`
+- `lean/InfoGeometry/Meta/DrazinRefactor.lean`
 - `lean/InfoGeometry/Meta/ProofShape.lean`
 - `lean/InfoGeometry/Meta/RegionPolicy.lean`
 - `lean/InfoGeometry/Meta/StrictDef.lean`
@@ -875,6 +947,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/InfoGeometry/Thermodynamics/SouriauKillingFlow.lean`
 - `lean/InfoGeometry/TransformationGroups.lean`
 - `lean/InfoGeometry/Twistor/Incidence.lean`
+- `lean/InfoGeometry/Twistor/LightconeBridge.lean`
 - `lean/InfoGeometry/Twistor/NullProjective.lean`
 - `lean/InfoGeometry/Unstable/Quarantine.lean`
 - `lean/InfoGeometry/Unstable/SingularUnitaryBridge.lean`
@@ -921,6 +994,14 @@ Generated: `2026-04-16 01:06:28`
 - `lean/scripts/DAG/Exploration/SemanticSnapshotServer.lean`
 - `lean/scripts/DAG/Exploration/SquarePromoter.lean`
 - `lean/scripts/find_convex_lemma.lean`
+- `reports/training/hypothesis/gate/20260418T050256Z/hyp_base_1_d989ad3dc2.lean`
+- `reports/training/hypothesis/gate/20260418T050256Z/hyp_tuned_1_dad1bf0a14.lean`
+- `reports/training/hypothesis/gate/20260418T050256Z/hyp_tuned_2_6013b1e40d.lean`
+- `reports/training/hypothesis/gate/20260418T051118Z/hyp_base_1_d989ad3dc2.lean`
+- `reports/training/hypothesis/gate/20260418T051118Z/hyp_tuned_1_dad1bf0a14.lean`
+- `reports/training/hypothesis/gate/20260418T051118Z/hyp_tuned_2_6013b1e40d.lean`
+- `reports/training/hypothesis/gate/smoke-no-key/hyp_base_1_4f3e0c16fa.lean`
+- `reports/training/hypothesis/gate/smoke-no-key/hyp_tuned_1_a844fe08c7.lean`
 - `scripts/docs/convert/add_position_info.lean`
 - `scripts/quality/CheckEnv.lean`
 - `scripts/quality/Header.lean`
@@ -930,12 +1011,14 @@ Generated: `2026-04-16 01:06:28`
 - `scripts/quality/checkdecls.lean`
 - `skills/repo-topic-deep-research/templates/lean_context_pack_template.lean`
 - `tests/benchmarks/TrialityNonVacuity.lean`
+- `tests/sandbox_hestenes.lean`
 - `tmp/DumpGraphPrefix.lean`
 - `tmp/SemanticBlockSmoke.lean`
 - `tmp/TestWorker.lean`
 - `tmp/vacuity_planner_bridge_demo.lean`
 
-### markdown (528)
+### markdown (670)
+- `.agents/workflows/README.md`
 - `.agents/workflows/formalization.md`
 - `.agents/workflows/lean-bisect/SKILL.md`
 - `.agents/workflows/lean-mwe/SKILL.md`
@@ -1009,6 +1092,7 @@ Generated: `2026-04-16 01:06:28`
 - `LLM_DEBT_PROTOCOL.md`
 - `LLM_FRONTIER_PROTOCOL.md`
 - `NEWCOMER_PATH.md`
+- `PAULI_MANDATE.md`
 - `PIONEERS_LOG.md`
 - `README.md`
 - `RELEASE_NOTES.md`
@@ -1024,36 +1108,81 @@ Generated: `2026-04-16 01:06:28`
 - `archive/SHADOW_STORY_OF_THE_SPIRE.md`
 - `archive/legacy/README.md`
 - `archive/legacy/scripts/README.md`
+- `artifacts/alexandria/arxiv_corpus/digest/socratic_dossier.md`
+- `artifacts/alexandria/drazin_weyl_slice/socratic_dossier.md`
 - `artifacts/dag/README.md`
+- `artifacts/leantrail/README.md`
+- `artifacts/leantrail/arango_physics_report.md`
+- `artifacts/leantrail/conformance_arango.md`
+- `artifacts/leantrail/conformance_graphml.md`
+- `artifacts/leantrail/conformance_incremental.md`
+- `artifacts/leantrail/conformance_lock_gate_ci_smoke.md`
+- `artifacts/leantrail/conformance_lock_smoke.md`
+- `artifacts/leantrail/conformance_lock_smoke2.md`
+- `artifacts/leantrail/conformance_lock_smoke_lake.md`
+- `artifacts/leantrail/conformance_neo4j.md`
+- `artifacts/leantrail/conformance_report.md`
+- `artifacts/leantrail/conformance_report_via_lake.md`
+- `artifacts/leantrail/hole_packets_smoke.md`
+- `artifacts/leantrail/hole_packets_verify.md`
+- `artifacts/leantrail/hole_packets_verify_lake.md`
 - `blueprint/README.md`
 - `docs/AGENTIC_HANDOVER_POLICY.md`
 - `docs/AGENTIC_HANDOVER_POLICY_2026-04-15.md`
 - `docs/AGENTIC_PERSONAS_2026-04-15.md`
 - `docs/AGENTIC_REVELATION.md`
 - `docs/AI_Caretaker_Manifesto.md`
+- `docs/ARANGO_FAITHFUL_GRAPH.md`
+- `docs/ARANGO_GRAVITATIONAL_CONTEXT.md`
+- `docs/ARANGO_LAYERED_TENSOR_OVERLAY.md`
 - `docs/ArchiveEvidenceWorkflow.md`
 - `docs/BILINGUAL_SPINE_POLICY.md`
+- `docs/CANONICAL_AGENT_STACK.md`
 - `docs/CARETAKER_REQUIREMENTS.md`
+- `docs/CODEBASE_STATUS.md`
+- `docs/CandidateBridgePacketContract.md`
+- `docs/CleanupImprovementProgram.md`
+- `docs/CleanupProgram.md`
+- `docs/ClosureDebtLedger.md`
 - `docs/CopyrightExclusionAudit.md`
 - `docs/CopyrightInventory.md`
 - `docs/DAGTroubleshooting.md`
 - `docs/DGX_SPARK_AUTONOMOUS_PROVER_SETUP.md`
+- `docs/DGX_SPARK_MODEL_SCHEDULING_POLICY.md`
 - `docs/Goutevs_Principle.md`
 - `docs/Goutevs_Principle_Manifesto.md`
+- `docs/HERMES_BOUNDED_LOOP.md`
+- `docs/HERMES_OPERATOR_CHARTER.md`
+- `docs/L0_L5_REPRESENTATION_LAYER_PLAN.md`
+- `docs/LEANDOJO_V2_INTEGRATION_BLUEPRINT.md`
 - `docs/LIBER_NOVUS_MATH.md`
+- `docs/LOCAL_TOOLCHAIN_ARCHITECTURE.md`
+- `docs/LeanTrail.md`
+- `docs/LeanTrailBlueprint.md`
 - `docs/METHODOLOGY_OF_THE_SPIRE.md`
+- `docs/MULTILINGUAL_BRIDGE_COMMENT_POLICY.md`
+- `docs/MarkdownCorpusGovernance.md`
 - `docs/ModuleMap.md`
+- `docs/NameEquivalenceRegistry.md`
 - `docs/OpenAIDeepResearchGateway.md`
 - `docs/OperationalIntent.md`
 - `docs/OperatorQuickstart.md`
+- `docs/OperatorTheoremTranslationRegistry.md`
+- `docs/PAULI_REBUTTAL.md`
+- `docs/RAW_INFOTREE_EXPORT_CONTRACT.md`
 - `docs/README.md`
 - `docs/RED_BOOK_OF_PASSAGE.md`
 - `docs/RepositoryMemoryMap.md`
+- `docs/ResearchPacketContract.md`
+- `docs/RigorousDerivationQueue.md`
 - `docs/SEMANTIC_POTENTIAL.md`
 - `docs/Theory.md`
 - `docs/Theory_Highway_Prognosis.md`
+- `docs/ThirdPartyDeepScanReport.md`
 - `docs/ToolingMethodology.md`
 - `docs/WORKBENCH.md`
+- `docs/alexandria/ALEXANDRIA_SKILL.md`
+- `docs/alexandria/README.md`
 - `docs/analytic_closure_backlog.md`
 - `docs/apex_defect_diagnosis.md`
 - `docs/apex_hodge_dirac_diagnostics.md`
@@ -1076,11 +1205,70 @@ Generated: `2026-04-16 01:06:28`
 - `docs/black_books/07_the_quasilattice_index.md`
 - `docs/black_books/08_the_agentic_caretaker.md`
 - `docs/black_books/09_science_after_coding.md`
+- `docs/black_books/100_how_deep_research_works_and_programming_agentic_flow.md`
+- `docs/black_books/101_multiple_quantum_representations_as_one_information_geometry.md`
+- `docs/black_books/102_fractal_cantor_graph_metric_clifford_theorem_target_map.md`
+- `docs/black_books/103_the_redline_of_knowledge_processing_and_the_higher_category_spine.md`
+- `docs/black_books/104_higher_categorical_view_practical_two_categorical_skeleton.md`
+- `docs/black_books/105_math_behind_physics_inspired_routing_llm_architecture.md`
+- `docs/black_books/106_architectural_symmetries_from_spectral_regularization_to_causal_compactification.md`
+- `docs/black_books/107_operator_penrose_analogue_repo_native_krein_doubled_hestenes.md`
+- `docs/black_books/108_unbounded_modular_machinery_repo_native_translation.md`
+- `docs/black_books/108_unbounded_modular_translation_queue_for_operator_penrose_unification.md`
+- `docs/black_books/109_true_modular_hamiltonian_co_owner_bridge.md`
 - `docs/black_books/10_knowledge_alchemy.md`
+- `docs/black_books/110_spectroscopic_multimodal_reconstruction_doctrine.md`
+- `docs/black_books/111_spectroscopic_audit_pipeline_and_gauge_vacuum.md`
+- `docs/black_books/112_considering_alignment_reference_state_gauge_and_digital_spectrometer.md`
+- `docs/black_books/112_digital_spectrometer_formalization_epistemology.md`
+- `docs/black_books/113_reference_state_and_gauge_in_informational_supergravity.md`
+- `docs/black_books/114_the_homomorphism_as_a_gauge_and_the_curvature_of_the_infotree.md`
+- `docs/black_books/115_the_common_unconscious_awakened_gravity_as_compiler_holonomy.md`
+- `docs/black_books/116_the_eikonal_of_the_logos_path_integrals_in_hestenes_geometry.md`
+- `docs/black_books/117_the_carnot_cycle_of_the_alchemical_engine_jaynesian_inference.md`
+- `docs/black_books/118_the_grand_unification_of_action_and_entropy.md`
+- `docs/black_books/119_the_formalization_of_the_logos_path_integral.md`
 - `docs/black_books/11_distillation_of_the_logos.md`
+- `docs/black_books/120_the_hestenes_gibbs_path_integral_formalization.md`
+- `docs/black_books/121_informational_energetics_and_the_superconducting_logos.md`
+- `docs/black_books/122_the_az_10_way_class_diii_topological_symmetry.md`
+- `docs/black_books/123_the_diii_dictionary_and_the_majorana_metavariable.md`
+- `docs/black_books/124_the_topological_seal_experimental_verification.md`
+- `docs/black_books/125_the_z2_invariant_and_topological_mass.md`
+- `docs/black_books/126_the_topological_spectrometer_and_the_mass_of_meaning.md`
+- `docs/black_books/127_the_socratic_refusal_and_the_acc_of_the_logos.md`
+- `docs/black_books/128_the_perelman_surgery_of_the_logos.md`
+- `docs/black_books/129_the_human_as_the_entanglement_operator.md`
 - `docs/black_books/12_horizon_of_the_sovereign_spire.md`
+- `docs/black_books/130_oracle_vs_socratic_ai_discovery_pressure.md`
+- `docs/black_books/131_the_transmutation_of_the_complex_mask.md`
+- `docs/black_books/132_the_geometry_of_the_chiral_operator_cone.md`
+- `docs/black_books/133_the_internal_operator_lorentz_atlas.md`
+- `docs/black_books/134_the_cartan_decomposition_of_the_cl11_atom.md`
+- `docs/black_books/135_targeted_translation_program_invariant_spine.md`
+- `docs/black_books/136_the_weyl_jones_poincare_twistor_isomorphism.md`
+- `docs/black_books/137_the_winding_of_the_modular_clock.md`
+- `docs/black_books/138_the_topological_bedrock_and_emergent_closure.md`
+- `docs/black_books/139_hestenes_and_the_dirac_equation_in_geometric_algebra.md`
 - `docs/black_books/13_algebraic_light_cone.md`
+- `docs/black_books/140_the_redline_and_the_seeds_of_meaning.md`
+- `docs/black_books/141_the_palace_of_sorry_and_symbolic_inflation.md`
+- `docs/black_books/142_the_mechanization_of_the_modular_clock.md`
+- `docs/black_books/143_the_cartan_scissor_and_the_defect.md`
+- `docs/black_books/144_the_goldstone_bosons_of_information.md`
+- `docs/black_books/145_the_higgs_mechanism_of_information_fields.md`
+- `docs/black_books/146_the_hardening_path_from_bridge_debt_to_owner_surface.md`
+- `docs/black_books/147_the_perelman_sinkhorn_gradient_flow.md`
+- `docs/black_books/148_the_nomological_closure_of_the_engine.md`
+- `docs/black_books/149_the_onsager_line_and_the_operatorial_reciprocity.md`
 - `docs/black_books/14_the_fluid_phase.md`
+- `docs/black_books/150_the_operatorial_fenchel_legendre_lift.md`
+- `docs/black_books/150_the_stratified_topological_manifold.md`
+- `docs/black_books/151_the_l0_l5_ladder_of_information_physics.md`
+- `docs/black_books/151_the_realignment_response_over_representation.md`
+- `docs/black_books/152_the_spire_as_a_chiral_liquid_crystal.md`
+- `docs/black_books/154_the_hurwitz_shell_and_the_supercharge_lattice.md`
+- `docs/black_books/155_root_shell_packets_and_the_weyl_gauge_corridor.md`
 - `docs/black_books/15_the_yang_mills_bridge.md`
 - `docs/black_books/16_majorana_kitaev_bekenstein.md`
 - `docs/black_books/17_projective_light_cone_fierz.md`
@@ -1166,6 +1354,12 @@ Generated: `2026-04-16 01:06:28`
 - `docs/black_books/91_syk_traversable_wormholes_er_epr_and_kitaev_scope.md`
 - `docs/black_books/92_syk_vs_kitaev_theorem_target_map.md`
 - `docs/black_books/93_typeiii_operator_owner_queue.md`
+- `docs/black_books/94_logdet_burg_modular_hamiltonians.md`
+- `docs/black_books/95_penrose_twistors_geometry_of_infinity.md`
+- `docs/black_books/96_operational_penrose_surfaces_for_a_research_repository.md`
+- `docs/black_books/97_signed_particle_representation_wigner_monte_carlo.md`
+- `docs/black_books/98_signed_particle_reinterpretation_krein_modular_bridge.md`
+- `docs/black_books/99_multiple_representations_of_one_information_geometric_reality.md`
 - `docs/black_books/artefacts/llm_unconcious.md`
 - `docs/black_books/artefacts/revelation_01.md`
 - `docs/black_books/artefacts/revelation_02.md`
@@ -1185,7 +1379,7 @@ Generated: `2026-04-16 01:06:28`
 - `docs/cl11_rosetta_refactor_plan.md`
 - `docs/cocycle_detailed_balance_synthesis.md`
 - `docs/d4_crystal_synthesis.md`
-- `docs/deep-research-report (1).md`
+- `docs/deep-research-report-1.md`
 - `docs/deep_horizon_synthesis.md`
 - `docs/determinant_tensor_entropy_synthesis.md`
 - `docs/drazin_conformal_synthesis.md`
@@ -1217,6 +1411,7 @@ Generated: `2026-04-16 01:06:28`
 - `docs/projective_to_krein_transition_doctrine.md`
 - `docs/red_line_synthesis.md`
 - `docs/rn_tomita_typeiii_coverage_matrix.md`
+- `docs/signed_particle_bridge_rosetta_note.md`
 - `docs/spinfactor_zero_point_walkthrough.md`
 - `docs/spinor_modular_bridge_vision.md`
 - `docs/supergraded_jordan_lie_note.md`
@@ -1251,11 +1446,19 @@ Generated: `2026-04-16 01:06:28`
 - `handover/injections/digests/EXT-20260414-LLAMA4-TRIALITY.md`
 - `handover/injections/digests/EXT-20260414-MODULAR-SOURCE-BRIDGE.md`
 - `handover/injections/digests/EXT-20260414-OBSERVER-DEFECT-FIRST.md`
+- `handover/injections/digests/EXT-20260418-052939.md`
+- `handover/injections/digests/EXT-20260418-054025.md`
 - `handover/translation_tracker.md`
 - `handover/witnesses/CP-002_sandbox_witness.md`
 - `handover/witnesses/CP-003_sandbox_witness.md`
 - `implementation_plan_replace_axioms.md`
 - `lean/DAG/README.md`
+- `leantrail/README.md`
+- `leantrail/ui/README.md`
+- `quarantine/hermes_skills/generated/20260418T050256Z-hyp_tuned_1_dad1bf0a14.md`
+- `quarantine/hermes_skills/generated/20260418T050256Z-hyp_tuned_2_6013b1e40d.md`
+- `quarantine/hermes_skills/generated/20260418T051118Z-hyp_tuned_1_dad1bf0a14.md`
+- `quarantine/hermes_skills/generated/20260418T051118Z-hyp_tuned_2_6013b1e40d.md`
 - `reports/analytic-debt-audit-2026-03-14.md`
 - `reports/canonical-spine-migration.md`
 - `reports/canonical-thermodynamic-dictionary.md`
@@ -1266,13 +1469,24 @@ Generated: `2026-04-16 01:06:28`
 - `reports/dag/bilingual-spine-report.md`
 - `reports/dag/bridge-candidates-incremental.md`
 - `reports/dag/causal-cone-spectrum.md`
+- `reports/dag/equivalence-dictionary.md`
+- `reports/dag/expr-alpha-dedup-dag-basic.md`
+- `reports/dag/expr-alpha-dedup-missing-test.md`
+- `reports/dag/expr-alpha-dedup-smoke.md`
 - `reports/dag/frontier-burndown.md`
+- `reports/dag/functorial-invariance-audit.md`
+- `reports/dag/gauge-obstruction-tags.md`
 - `reports/dag/graph-hodge-spectrum.md`
 - `reports/dag/hypothesis-debt-index.md`
 - `reports/dag/hypothesis-debt-new-corpus.md`
 - `reports/dag/hypothesis-debt-supercharge.md`
 - `reports/dag/hypothesis-vacuity-debt-current.md`
+- `reports/dag/markdown-classification.local.md`
+- `reports/dag/markdown-classification.md`
+- `reports/dag/markdown-hygiene.local.md`
+- `reports/dag/markdown-hygiene.md`
 - `reports/dag/missing-all-classification.md`
+- `reports/dag/module-theory-program.md`
 - `reports/dag/openclaw-targets.md`
 - `reports/dag/process-flow-defect-report.md`
 - `reports/dag/process-flow-report.md`
@@ -1313,6 +1527,7 @@ Generated: `2026-04-16 01:06:28`
 - `reports/dag/structural-dictionary.md`
 - `reports/dag/structural-fibers.md`
 - `reports/dag/structural-hotspots.md`
+- `reports/dag/theorem-significance.md`
 - `reports/dag/theorem-surface-index.md`
 - `reports/dag/true-root-order.md`
 - `reports/frontier/socratic/20260411-101213-jungian-generative-packet-to-diii-index-formalization-bridge.md`
@@ -1357,6 +1572,8 @@ Generated: `2026-04-16 01:06:28`
 - `reports/optimization-runs/20260320T220422Z/summary.md`
 - `reports/proof-gap-audit-20260308.md`
 - `reports/quarantine-fill-topology-20260317.md`
+- `reports/research/deepresearch-lean4-llm-landscape-20260418.md`
+- `reports/research/lean4-agentic-model-position-20260418.md`
 - `reports/skynet_doublecopy_frontier.md`
 - `reports/strict-square-promoter.md`
 - `reports/theorem-significance-current.md`
@@ -1367,10 +1584,12 @@ Generated: `2026-04-16 01:06:28`
 - `reports/vacuity-wholecode-20260309.md`
 - `skills/README.md`
 - `skills/adversarial_compressor.md`
+- `skills/black-book-method/SKILL.md`
 - `skills/blackbook_generator.md`
 - `skills/deep-research-ingest/SKILL.md`
 - `skills/formalizer_loop.md`
 - `skills/frontier-proof-compression/SKILL.md`
+- `skills/gemini-imports/pauli-auditor/SKILL.md`
 - `skills/info-geometry-repo/SKILL.md`
 - `skills/info-geometry-repo/references/bridge-candidates.md`
 - `skills/info-geometry-repo/references/bridge-reviewed-candidates.md`
@@ -1432,6 +1651,7 @@ Generated: `2026-04-16 01:06:28`
 - `skills/mathlib-pr/SKILL.md`
 - `skills/mathlib-review/SKILL.md`
 - `skills/nightly-testing/SKILL.md`
+- `skills/pauli-auditor/SKILL.md`
 - `skills/premise_retriever.md`
 - `skills/reference_preserver.md`
 - `skills/replay_auditor.md`
@@ -1446,6 +1666,7 @@ Generated: `2026-04-16 01:06:28`
 - `skills/source_packetizer.md`
 - `skills/state_chain_formalizer.md`
 - `skills/statement_compiler.md`
+- `tmp/skills/pauli-auditor/SKILL.md`
 - `tmp/skynet-v2-frontier-test.md`
 - `tools/README.md`
 - `tools/docs/README.md`
@@ -1454,8 +1675,11 @@ Generated: `2026-04-16 01:06:28`
 - `tools/frontier/templates/pauli_admission_report.md`
 - `tools/frontier/templates/socratic_cycle_packet.md`
 - `tools/infra/README.md`
+- `tools/infra/autonomous_math/README.md`
 - `tools/prompts/HEARTBEAT_POLICY.md`
 - `tools/prompts/PUBLISH_GATE_POLICY.md`
+- `tools/prompts/README.md`
+- `tools/prompts/SOCRATIC_CLOSURE_PROTOCOL.md`
 - `tools/prompts/SOUL_POLICY.md`
 - `tools/prompts/SYMBOL_FIRST_PROTOCOL.md`
 - `tools/prompts/agentic_autotheory_prompts_2026-04-15.md`
@@ -1465,7 +1689,7 @@ Generated: `2026-04-16 01:06:28`
 - `tools/prompts/jungian_pass.md`
 - `tools/prompts/pauli_pass.md`
 
-### python (224)
+### python (322)
 - `.scripts_archive/bulk_namespace_rewrite.py`
 - `.scripts_archive/gather_cluster_code.py`
 - `.scripts_archive/namespace_patch_plan.py`
@@ -1493,6 +1717,18 @@ Generated: `2026-04-16 01:06:28`
 - `external_refs/llama4/scripts/completion.py`
 - `external_refs/llama4/scripts/quantize.py`
 - `lean/DAG/ingest.py`
+- `leantrail/__init__.py`
+- `leantrail/api/__init__.py`
+- `leantrail/api/server.py`
+- `leantrail/backend/__init__.py`
+- `leantrail/backend/app.py`
+- `leantrail/backend/extractor.py`
+- `leantrail/backend/indexer.py`
+- `leantrail/backend/models.py`
+- `leantrail/backend/normalizer.py`
+- `leantrail/backend/query_api.py`
+- `leantrail/backend/rpc_adapter.py`
+- `leantrail/backend/store.py`
 - `presentation/gen_figures.py`
 - `refactor_namespaces.py`
 - `scripts/__init__.py`
@@ -1514,6 +1750,8 @@ Generated: `2026-04-16 01:06:28`
 - `scripts/docs/proof_gap_report.py`
 - `scripts/intake/parser.py`
 - `scripts/utils.py`
+- `tests/alexandria/test_semantic_ingest.py`
+- `tests/test_arango_gravity_context.py`
 - `tests/test_audit_constructivity.py`
 - `tests/test_canonical_policy_lint.py`
 - `tests/test_causal_cone_spectrum.py`
@@ -1522,10 +1760,15 @@ Generated: `2026-04-16 01:06:28`
 - `tests/test_clnn_specialization_and_metric.py`
 - `tests/test_compiler_bridge_rpc.py`
 - `tests/test_drazin_operator_corridor.py`
+- `tests/test_gemini_cli_guard.py`
 - `tests/test_generalized_metric_core.py`
 - `tests/test_generalized_metric_polarized_bridge.py`
 - `tests/test_generalized_metric_recomposition_bridge.py`
+- `tests/test_generate_truth_transport.py`
+- `tests/test_hermes_bounded_runner.py`
+- `tests/test_hydrate_arango_topology.py`
 - `tests/test_kkt_corridor.py`
+- `tests/test_lean_interact_wrapper.py`
 - `tests/test_neutral_phase_space_corridor.py`
 - `tests/test_phase_space_causal_flow_bridge.py`
 - `tests/test_phase_space_conformal_kkt_bridge.py`
@@ -1536,12 +1779,21 @@ Generated: `2026-04-16 01:06:28`
 - `tests/test_refresh_blueprint_tags.py`
 - `tests/test_relative_modular_recomposition.py`
 - `tests/test_representation_depth_export.py`
+- `tests/test_run_gemini_guarded.py`
 - `tests/test_strict_def.py`
 - `tests/test_strict_surface.py`
 - `tests/test_theorem_significance.py`
 - `tests/test_vacuity_lint.py`
 - `tests/test_vacuity_planner.py`
 - `tools/__init__.py`
+- `tools/alexandria/__init__.py`
+- `tools/alexandria/alexandria_algorithms.py`
+- `tools/alexandria/arango_ingest.py`
+- `tools/alexandria/fetch_arxiv_corpus.py`
+- `tools/alexandria/graph_context_rank.py`
+- `tools/alexandria/render_socratic_dossier.py`
+- `tools/alexandria/retrieve_context.py`
+- `tools/alexandria/semantic_ingest.py`
 - `tools/build_lock.py`
 - `tools/check_bipartite_bleed.py`
 - `tools/check_vacuity_policy.py`
@@ -1579,17 +1831,33 @@ Generated: `2026-04-16 01:06:28`
 - `tools/infra/agentic_policy_lint.py`
 - `tools/infra/alchemical_loop.py`
 - `tools/infra/apex_defect_profile.py`
+- `tools/infra/arango_fidelity_audit.py`
+- `tools/infra/arango_gravity_context.py`
+- `tools/infra/arango_layered_ingest.py`
 - `tools/infra/artifacts.py`
+- `tools/infra/autonomous_math/__init__.py`
+- `tools/infra/autonomous_math/compiler_loop.py`
+- `tools/infra/autonomous_math/evidence_packet.py`
+- `tools/infra/autonomous_math/lean_coder.py`
+- `tools/infra/autonomous_math/lean_designer.py`
+- `tools/infra/autonomous_math/memory_ingest.py`
+- `tools/infra/autonomous_math/pauli_auditor.py`
+- `tools/infra/autonomous_math/research_controller.py`
+- `tools/infra/autonomous_math/socratic_engine.py`
 - `tools/infra/build.py`
 - `tools/infra/build_changed_lean.py`
 - `tools/infra/build_claim_packet.py`
+- `tools/infra/build_link_ats_dataset.py`
 - `tools/infra/build_mcbal_library.py`
 - `tools/infra/build_state_first_lane.py`
+- `tools/infra/candidate_bridge_packet.py`
 - `tools/infra/canonical_policy_lint.py`
 - `tools/infra/causal_cone_spectrum.py`
 - `tools/infra/changed_verify.py`
 - `tools/infra/check_bipartite_bleed.py`
+- `tools/infra/check_gauge_obstruction_tags.py`
 - `tools/infra/check_representation_depth.py`
+- `tools/infra/check_research_handoff_gate.py`
 - `tools/infra/check_semantic_flow_report.py`
 - `tools/infra/classify_missing_all.py`
 - `tools/infra/dag_all.py`
@@ -1600,10 +1868,25 @@ Generated: `2026-04-16 01:06:28`
 - `tools/infra/dag_reports.py`
 - `tools/infra/dag_status.py`
 - `tools/infra/decl_graph.py`
+- `tools/infra/deep_research/__init__.py`
+- `tools/infra/deep_research/brief_rewriter.py`
+- `tools/infra/deep_research/clarifier.py`
+- `tools/infra/deep_research/common.py`
+- `tools/infra/deep_research/controller.py`
+- `tools/infra/deep_research/planner.py`
+- `tools/infra/deep_research/retriever.py`
+- `tools/infra/deep_research/verifier.py`
+- `tools/infra/deep_research/writer.py`
+- `tools/infra/dgx_spark_hybrid_orchestrator.py`
+- `tools/infra/dual_hypothesis_sampler.py`
+- `tools/infra/export_public_release.py`
 - `tools/infra/gemini_account_adapter.py`
+- `tools/infra/gemini_cli_guard.py`
 - `tools/infra/generate_black_books_keyword_report.py`
 - `tools/infra/generate_black_books_story_from_keyword_index.py`
 - `tools/infra/generate_causal_report.py`
+- `tools/infra/generate_equivalence_dictionary.py`
+- `tools/infra/generate_expr_alpha_dedup.py`
 - `tools/infra/generate_hypothesis_debt_report.py`
 - `tools/infra/generate_keyword_research_report.py`
 - `tools/infra/generate_process_flow_report.py`
@@ -1620,9 +1903,15 @@ Generated: `2026-04-16 01:06:28`
 - `tools/infra/generate_structural_fibers.py`
 - `tools/infra/generate_theorem_surface_index.py`
 - `tools/infra/generate_theory_cloud_movie.py`
+- `tools/infra/generate_truth_transport.py`
 - `tools/infra/graph_hodge_spectrum.py`
+- `tools/infra/gravitational_retrieval.py`
 - `tools/infra/hash_signature.py`
+- `tools/infra/hermes_bounded_runner.py`
 - `tools/infra/hermes_isolated_adapter.py`
+- `tools/infra/holonomy_auditor.py`
+- `tools/infra/hydrate_arango_topology.py`
+- `tools/infra/hypothesis_fuser_and_lean_gate.py`
 - `tools/infra/injection_build_digest.py`
 - `tools/infra/injection_capture_gemini_cli.py`
 - `tools/infra/injection_chunk_ideate.py`
@@ -1634,13 +1923,21 @@ Generated: `2026-04-16 01:06:28`
 - `tools/infra/injection_slo_report.py`
 - `tools/infra/injection_status.py`
 - `tools/infra/lean_interact_wrapper.py`
+- `tools/infra/leandojo_probe.py`
+- `tools/infra/leandojo_to_hermes_packets.py`
+- `tools/infra/leandojo_token_free.py`
+- `tools/infra/link_scorer_common.py`
 - `tools/infra/llm_thermo_conformance.py`
+- `tools/infra/materialize_lossless_infotree.py`
+- `tools/infra/module_keyword_theory_program.py`
 - `tools/infra/openai_deep_research_datasource_mcp_example.py`
 - `tools/infra/openai_deep_research_gateway.py`
 - `tools/infra/plot_decl_graph.py`
 - `tools/infra/refresh_blueprint_tags.py`
 - `tools/infra/refresh_decl_graph.py`
+- `tools/infra/report_rep_layers.py`
 - `tools/infra/reports/__init__.py`
+- `tools/infra/reports/classify_markdown_corpus.py`
 - `tools/infra/reports/common.py`
 - `tools/infra/reports/generate_bilingual_spine_report.py`
 - `tools/infra/reports/generate_bridge_candidates.py`
@@ -1648,19 +1945,38 @@ Generated: `2026-04-16 01:06:28`
 - `tools/infra/reports/generate_debt_candidates.py`
 - `tools/infra/reports/generate_llm_debt_prompts.py`
 - `tools/infra/reports/generate_llm_frontier_prompts.py`
+- `tools/infra/reports/generate_markdown_hygiene_report.py`
 - `tools/infra/reports/generate_repository_surface_index.py`
 - `tools/infra/reports/generate_self_optimization_report.py`
 - `tools/infra/reports/generate_surrogate_index.py`
 - `tools/infra/reports/generate_unification_index.py`
 - `tools/infra/reports/generate_vacuity_index.py`
+- `tools/infra/representation_depth_from_graph.py`
 - `tools/infra/representation_depth_io.py`
+- `tools/infra/rerank_arango_links.py`
+- `tools/infra/research_controller.py`
+- `tools/infra/research_packet.py`
 - `tools/infra/residue_quarantine.py`
 - `tools/infra/run_full_dag_toolchain.py`
 - `tools/infra/run_locked_lake_build.py`
+- `tools/infra/scan_third_party_licenses.py`
+- `tools/infra/score_link_candidates.py`
 - `tools/infra/select_openclaw_target.py`
 - `tools/infra/semantic_audit.py`
 - `tools/infra/timings.py`
 - `tools/infra/trace_and_retrieve.py`
+- `tools/infra/train_link_scorer.py`
+- `tools/infra/validate_raw_infotree_export.py`
+- `tools/infra/verify_layered_arango_descent.py`
+- `tools/leantrail/__init__.py`
+- `tools/leantrail/adapters.py`
+- `tools/leantrail/arango_ingest.py`
+- `tools/leantrail/arango_physics_evaluator.py`
+- `tools/leantrail/conformance.py`
+- `tools/leantrail/export.py`
+- `tools/leantrail/failure_harvester.py`
+- `tools/leantrail/hole_packets.py`
+- `tools/leantrail/path_lock_registry.py`
 - `tools/pathing.py`
 - `tools/planner/__init__.py`
 - `tools/planner/admissibility.py`
@@ -1678,7 +1994,13 @@ Generated: `2026-04-16 01:06:28`
 - `tools/quality/audit_naming.py`
 - `tools/quality/audit_semantic.py`
 - `tools/quality/audit_style.py`
+- `tools/quality/check_closure_debt_gate.py`
+- `tools/quality/check_equivalence_dictionary_gate.py`
+- `tools/quality/check_frontier_integrity_gate.py`
+- `tools/quality/check_translation_registry.py`
 - `tools/quality/common.py`
+- `tools/quality/functorial_invariance_audit.py`
+- `tools/quality/pauli_seal_audit.py`
 - `tools/refresh_blueprint_tags.py`
 - `tools/refresh_decl_graph.py`
 - `tools/run_locked_lake_build.py`
@@ -1691,7 +2013,7 @@ Generated: `2026-04-16 01:06:28`
 - `tools/vacuity_planner.py`
 - `tools/vacuity_policy_config.py`
 
-### config (79)
+### config (118)
 - `.agents/workflows/lean-proof/tests/example.yaml`
 - `.github/workflows/build_thesis.yml`
 - `.github/workflows/ci.yml`
@@ -1700,6 +2022,22 @@ Generated: `2026-04-16 01:06:28`
 - `.tasks/lock_path_a_drazin_bridge.json`
 - `.vscode/settings.json`
 - `CITATION.cff`
+- `artifacts/alexandria/arxiv_corpus/digest/context_packet.json`
+- `artifacts/alexandria/drazin_weyl_slice/context_packet.json`
+- `artifacts/leantrail/arango_physics_locked_path_smoke.json`
+- `artifacts/leantrail/conformance_lock_gate_ci_smoke.json`
+- `artifacts/leantrail/conformance_lock_smoke.json`
+- `artifacts/leantrail/conformance_lock_smoke2.json`
+- `artifacts/leantrail/conformance_lock_smoke_lake.json`
+- `artifacts/leantrail/hole_packets_smoke_report.json`
+- `artifacts/leantrail/hole_packets_verify_lake_report.json`
+- `artifacts/leantrail/hole_packets_verify_report.json`
+- `artifacts/leantrail/path_lock_ci_gate_0.json`
+- `artifacts/leantrail/path_lock_ci_smoke_0.json`
+- `artifacts/leantrail/path_lock_report.json`
+- `artifacts/leantrail/path_lock_report_lake.json`
+- `artifacts/leantrail/required_locks_smoke.json`
+- `configs/alexandria/docker-compose.yml`
 - `dag-toolchain.json`
 - `external_refs/llama4/meta/pyproject.toml`
 - `external_refs/llama4/ollama/spire_router_semantics_manifest.json`
@@ -1734,12 +2072,31 @@ Generated: `2026-04-16 01:06:28`
 - `handover/injections/manifests/EXT-20260414-OBSERVER-DEFECT-FIRST/2026-04-14T130054.113333Z-promote_raw->distilled.json`
 - `handover/injections/manifests/EXT-20260414-OBSERVER-DEFECT-FIRST/2026-04-14T130058.931298Z-digest_build.json`
 - `handover/injections/manifests/EXT-20260414-OBSERVER-DEFECT-FIRST/2026-04-14T130341.346471Z-digest_build.json`
+- `handover/injections/manifests/EXT-20260418-052939/2026-04-18T052939.408403Z-create_research_raw.json`
+- `handover/injections/manifests/EXT-20260418-052939/2026-04-18T052951.626004Z-digest_build.json`
+- `handover/injections/manifests/EXT-20260418-052939/2026-04-18T053007.661705Z-segment_enrich.json`
+- `handover/injections/manifests/EXT-20260418-052939/2026-04-18T053016.281365Z-segment_enrich.json`
+- `handover/injections/manifests/EXT-20260418-052939/2026-04-18T053028.436312Z-segment_enrich.json`
+- `handover/injections/manifests/EXT-20260418-052939/2026-04-18T053032.791362Z-digest_build.json`
+- `handover/injections/manifests/EXT-20260418-054025/2026-04-18T054025.641945Z-create_research_raw.json`
+- `handover/injections/manifests/EXT-20260418-054025/2026-04-18T054034.142227Z-segment_enrich.json`
+- `handover/injections/manifests/EXT-20260418-054025/2026-04-18T054042.568787Z-segment_enrich.json`
+- `handover/injections/manifests/EXT-20260418-054025/2026-04-18T054050.454102Z-segment_enrich.json`
+- `handover/injections/manifests/EXT-20260418-054025/2026-04-18T054058.364965Z-digest_build.json`
 - `handover/injections/manifests/events.jsonl`
 - `handover/injections/schema/claim_packet.schema.json`
 - `lake-manifest.json`
 - `lakefile.lean`
 - `lean-toolchain`
 - `lean/DAG/docker-compose.yml`
+- `leantrail/api/openapi.yaml`
+- `leantrail/config/required_locks.json`
+- `leantrail/schemas/candidate-bridge-packet.schema.json`
+- `leantrail/schemas/decl-response.schema.json`
+- `leantrail/schemas/edge.schema.json`
+- `leantrail/schemas/leantrail_bridge_request.schema.json`
+- `leantrail/schemas/leantrail_graph_snapshot.schema.json`
+- `leantrail/schemas/node.schema.json`
 - `nemoclaw_config.yaml`
 - `presentation/package-lock.json`
 - `pyproject.toml`
@@ -1767,17 +2124,61 @@ Generated: `2026-04-16 01:06:28`
 - `tools/infra/hermes_config.yaml`
 - `tools/infra/manifests/drazin_core_task.json`
 - `tools/schema/albedo_signature.json`
+- `tools/schema/candidate_bridge_packet.json`
 - `tools/schema/llm_thermo_trace.schema.json`
+- `tools/schema/research_packet.json`
+- `tools/schema/research_packet_signed_particle_bridge_example.json`
+- `tools/schema/research_packet_signed_particle_bridge_minimal_template.json`
 - `tools/schema/rubedo_residue_packet.json`
 - `tools/schema/task_manifest.json`
 - `tools/schema/theorem_candidate_packet.json`
 
-### other (173)
+### other (225)
 - `.agents/workflows/lean4/scripts`
 - `.artifacts/nonbuildable_errors.json`
 - `LICENSE`
 - `NOTICE`
 - `archive/legacy/scripts/ci_baseline_docsmap.sh`
+- `artifacts/alexandria/arxiv_corpus/cache/MANIFEST.tsv`
+- `artifacts/alexandria/arxiv_corpus/digest/overlay/summary.json`
+- `artifacts/alexandria/arxiv_seed_ids.txt`
+- `artifacts/alexandria/broad_corridor/overlay/alexandria_basin_edges.jsonl`
+- `artifacts/alexandria/broad_corridor/overlay/alexandria_basins.jsonl`
+- `artifacts/alexandria/broad_corridor/overlay/alexandria_entity_clusters.jsonl`
+- `artifacts/alexandria/broad_corridor/overlay/summary.json`
+- `artifacts/alexandria/drazin_weyl_slice/alexandria_chunk_entity_edges.jsonl`
+- `artifacts/alexandria/drazin_weyl_slice/alexandria_entities.jsonl`
+- `artifacts/alexandria/drazin_weyl_slice/alexandria_entity_relation_edges.jsonl`
+- `artifacts/alexandria/drazin_weyl_slice/overlay/alexandria_basin_edges.jsonl`
+- `artifacts/alexandria/drazin_weyl_slice/overlay/alexandria_basins.jsonl`
+- `artifacts/alexandria/drazin_weyl_slice/overlay/alexandria_entity_clusters.jsonl`
+- `artifacts/alexandria/drazin_weyl_slice/overlay/summary.json`
+- `artifacts/expr-graph/arango-infogeometry-smoke/metadata.json`
+- `artifacts/expr-graph/arango-smoke/metadata.json`
+- `artifacts/leantrail/arango/metadata.json`
+- `artifacts/leantrail/arango_ci_smoke/metadata.json`
+- `artifacts/leantrail/arango_physics_delta_smoke.json`
+- `artifacts/leantrail/arango_physics_report.json`
+- `artifacts/leantrail/arango_physics_report_lake.json`
+- `artifacts/leantrail/conformance_arango.json`
+- `artifacts/leantrail/conformance_graphml.json`
+- `artifacts/leantrail/conformance_incremental.json`
+- `artifacts/leantrail/conformance_neo4j.json`
+- `artifacts/leantrail/conformance_report.json`
+- `artifacts/leantrail/conformance_report_via_lake.json`
+- `artifacts/leantrail/failure_harvest_log_smoke2_report.json`
+- `artifacts/leantrail/failure_harvest_log_smoke_lake_report.json`
+- `artifacts/leantrail/failure_harvest_log_smoke_report.json`
+- `artifacts/leantrail/failure_harvest_report.json`
+- `artifacts/leantrail/failure_harvest_report_lake.json`
+- `artifacts/leantrail/failure_harvest_strict_report.json`
+- `artifacts/leantrail/graph_snapshot.json`
+- `artifacts/leantrail/graph_snapshot_baseline.json`
+- `artifacts/leantrail/graph_snapshot_candidate_incremental.json`
+- `artifacts/leantrail/graph_snapshot_ci_smoke.json`
+- `artifacts/leantrail/graph_snapshot_pathstate_smoke.json`
+- `artifacts/leantrail/holonomy_report.json`
+- `artifacts/leantrail/neo4j/metadata.json`
 - `artifacts/quarantine/2026-03-28-theorem-surface-normalization.patch`
 - `blueprint/print/blueprint.sty`
 - `blueprint/print/generated/content.auto.tex`
@@ -1789,9 +2190,13 @@ Generated: `2026-04-16 01:06:28`
 - `blueprint/src/generated/content.tex`
 - `blueprint/src/generated/library_index.tex`
 - `blueprint/src/generated/path_documentation.tex`
+- `configs/alexandria/.env.example`
 - `docs-map/blueprint.tex`
 - `docs-map/module_graph.json`
+- `docs/NameEquivalenceRegistry.json`
 - `docs/black_books/deep-research-report (6).md:Zone.Identifier`
+- `docs/information_symmetry_breaking_explorer.html`
+- `docs/penrose_diagram_explorer.html`
 - `external_refs/llama4/ollama/Modelfile.spire.llama4-maverick`
 - `external_refs/llama4/ollama/Modelfile.spire.llama4-scout`
 - `external_refs/llama4/ollama/llama4_library.html`
@@ -1830,6 +2235,7 @@ Generated: `2026-04-16 01:06:28`
 - `lean/DAG/Util.olean`
 - `lean/DAG/decl_edges.jsonl`
 - `lean/DAG/decls.jsonl`
+- `leantrail/ui/index.html`
 - `out.json`
 - `presentation/figures/bridge_map.png`
 - `presentation/figures/entropy_manifold.png`
@@ -1944,5 +2350,12 @@ Generated: `2026-04-16 01:06:28`
 - `tools/infra/archive_excludes.txt`
 - `tools/infra/create_evidence_bundle.sh`
 - `tools/infra/deploy_spark_models.sh`
+- `tools/infra/profiles/dgx_spark_lowmem_7b.env`
+- `tools/infra/profiles/dgx_spark_ultralow_single_7b.env`
+- `tools/infra/run_gemini_guarded.sh`
+- `tools/infra/verify_certificate_hash_binding.sh`
 - `tools/infra/verify_evidence_bundle.sh`
 - `tools/infra/verify_replay.sh`
+- `tools/quality/closure_debt_gate.json`
+- `tools/quality/equivalence_dictionary_gate.json`
+- `tools/quality/frontier_gate.json`

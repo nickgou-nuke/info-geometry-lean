@@ -1,6 +1,7 @@
 import InfoGeometry.LLM.TrialityMoE
 import InfoGeometry.Canonical.WindingOrbitClosure
 import InfoGeometry.Canonical.SinkhornFoundation
+import InfoGeometry.Canonical.RelativePotentialCountBridge
 
 /-!
 # Sinkhorn Defect Flow Owner Surface
@@ -15,6 +16,7 @@ operator inequalities on the defect budget.
 namespace InfoGeometry.LLM.SinkhornDefectFlow
 
 open InfoGeometry.LLM.TrialityMoE
+open InfoGeometry.LLM.TrialityMoE.RouterDefectBoundBridge
 open InfoGeometry.Canonical.DrazinSupercharge
 open InfoGeometry.Canonical.ModularSourceBridge
 
@@ -40,6 +42,33 @@ theorem δ_odd_nonneg (B : RouterDefectBoundBridge (E := E)) :
 theorem δ_odd_le_ZD (B : RouterDefectBoundBridge (E := E)) :
     δ_odd B ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD B.CIK‖ := by
   simpa [δ_odd] using B.residual_norm_le_ZD
+
+/--
+Thermodynamic odd-sector readout for the corrected D3 bridge.
+
+This is not an ambient operator norm. It is the explicit readout supplied by
+the Weyl/thermodynamic comparison packet attached to the router bridge.
+-/
+noncomputable def δ_odd_thermo
+    (B : RouterDefectThermodynamicBridge (E := E)) : ℝ :=
+  B.comparison.operatorInformationNormReadout B.routerResidual
+
+/-- Central `Z_D` thermodynamic readout on the same comparison packet. -/
+noncomputable def δ_ZD_thermo
+    (B : RouterDefectThermodynamicBridge (E := E)) : ℝ :=
+  B.comparison.operatorInformationNormReadout
+    (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) B.CIK)
+
+/--
+Corrected D3 readout bound: the thermodynamic router defect is bounded by the
+thermodynamic `Z_D` readout through the shared Weyl/relative-potential lane.
+-/
+theorem δ_odd_thermo_le_ZD
+    (B : RouterDefectThermodynamicBridge (E := E)) :
+    δ_odd_thermo B ≤ δ_ZD_thermo B := by
+  simpa [δ_odd_thermo, δ_ZD_thermo] using
+    RouterDefectThermodynamicBridge.operatorInformationNormReadout_routerResidual_le_ZD
+      (E := E) B
 
 /-- `δ_odd = 0` is exactly residual equilibrium. -/
 theorem δ_odd_eq_zero_iff_equilibrium (B : RouterDefectBoundBridge (E := E)) :
@@ -79,6 +108,21 @@ theorem sourcedGenerator_deviation_next_le
   rw [sourcedGenerator_deviation_eq_δ_odd step.next,
     sourcedGenerator_deviation_eq_δ_odd B]
   exact step.δ_odd_next_le_δ_odd
+
+/--
+One-step Sinkhorn update wrapper on the corrected thermodynamic readout lane.
+-/
+structure SinkhornThermodynamicDefectStep
+    (B : RouterDefectThermodynamicBridge (E := E)) where
+  next : RouterDefectThermodynamicBridge (E := E)
+  δ_odd_thermo_next_le :
+    δ_odd_thermo next ≤ δ_odd_thermo B
+
+theorem δ_odd_thermo_next_le
+    {B : RouterDefectThermodynamicBridge (E := E)}
+    (step : SinkhornThermodynamicDefectStep (E := E) B) :
+    δ_odd_thermo step.next ≤ δ_odd_thermo B :=
+  step.δ_odd_thermo_next_le
 
 /--
 Owner bridge from LLM residual budget to the non-equilibrium clock-defect lane.
@@ -313,6 +357,7 @@ theorem sourcedGenerator_deviation_iterate_le_initial
 section VolumeAnomaly
 
 open InfoGeometry.Canonical.MoE
+open InfoGeometry.Canonical.RelativePotentialCountBridge
 
 /--
 Primary relative-volume defect functional on a Sinkhorn trajectory:
@@ -369,6 +414,66 @@ theorem δ_volume_next_le
   simpa [δ_volume_eq_δ_relVol] using δ_relVol_next_le (n := n) T k
 
 /--
+One-step available RN work/heat budget.
+
+This is scalar thermodynamic bookkeeping on the Sinkhorn RN barrier: the amount
+of relative-volume imbalance removed by the current normalization step.
+-/
+noncomputable def availableWorkRN
+    (n : Nat)
+    (T : SinkhornTrajectory n)
+    (k : Nat) : ℝ :=
+  δ_relVol n T k - trajectoryRNBarrierNext n T k
+
+/--
+Heat-channel alias for the same one-step RN drop. A later owner surface may
+split work and heat; this file currently proves only the conserved scalar drop.
+-/
+noncomputable def dissipatedHeatRN
+    (n : Nat)
+    (T : SinkhornTrajectory n)
+    (k : Nat) : ℝ :=
+  availableWorkRN n T k
+
+theorem availableWorkRN_nonneg
+    (n : Nat)
+    (T : SinkhornTrajectory n)
+    (k : Nat) :
+    0 ≤ availableWorkRN n T k := by
+  unfold availableWorkRN
+  exact sub_nonneg.mpr (δ_relVol_next_le (n := n) T k)
+
+theorem dissipatedHeatRN_nonneg
+    (n : Nat)
+    (T : SinkhornTrajectory n)
+    (k : Nat) :
+    0 ≤ dissipatedHeatRN n T k := by
+  simpa [dissipatedHeatRN] using availableWorkRN_nonneg (n := n) T k
+
+/--
+Exact one-step RN balance: remaining RN barrier plus available work equals the
+pre-step RN barrier.
+-/
+theorem trajectoryRNBarrierNext_add_availableWorkRN_eq_δ_relVol
+    (n : Nat)
+    (T : SinkhornTrajectory n)
+    (k : Nat) :
+    trajectoryRNBarrierNext n T k + availableWorkRN n T k = δ_relVol n T k := by
+  unfold availableWorkRN
+  ring
+
+/--
+Equivalent heat-channel balance for the current scalar model.
+-/
+theorem trajectoryRNBarrierNext_add_dissipatedHeatRN_eq_δ_relVol
+    (n : Nat)
+    (T : SinkhornTrajectory n)
+    (k : Nat) :
+    trajectoryRNBarrierNext n T k + dissipatedHeatRN n T k = δ_relVol n T k := by
+  simpa [dissipatedHeatRN] using
+    trajectoryRNBarrierNext_add_availableWorkRN_eq_δ_relVol (n := n) T k
+
+/--
 Bridge from Sinkhorn relative-volume anomaly to the router odd-defect lane.
 This is the owner surface for volume-driven defect reduction.
 -/
@@ -385,6 +490,391 @@ Primary-name alias: relative-defect bridge driven by trajectory RN barriers.
 -/
 abbrev SinkhornRelativeDefectBridge (n : Nat) :=
   SinkhornVolumeAnomalyBridge (E := E) n
+
+/--
+Thermodynamic bridge from Sinkhorn relative-volume anomaly to the corrected
+router readout lane.
+
+This is the non-legacy D3 owner surface: its states carry
+`RouterDefectThermodynamicBridge`, and the defect readout is
+`δ_odd_thermo`, not an ambient operator norm.
+-/
+structure SinkhornThermodynamicRelativeDefectBridge (n : Nat) where
+  T : SinkhornTrajectory n
+  state : Nat → RouterDefectThermodynamicBridge (E := E)
+  next_le_volumeNext :
+    ∀ k : Nat, δ_odd_thermo (state (k + 1)) ≤ trajectoryRNBarrierNext n T k
+  volume_le_now :
+    ∀ k : Nat, trajectoryRNBarrier n T k ≤ δ_odd_thermo (state k)
+
+/--
+Single-step RN-barrier comparison for the corrected thermodynamic D3 lane.
+
+This structure does not identify the Sinkhorn RN barrier with
+`relativeInformationNorm`. It records only the explicit scalar comparison
+available in this owner file: the thermodynamic router readout is the current
+RN barrier, and that barrier is below the thermodynamic `Z_D` readout budget.
+-/
+structure SinkhornRNBarrierThermodynamicComparison (n : Nat) where
+  B : RouterDefectThermodynamicBridge (E := E)
+  T : SinkhornTrajectory n
+  k : Nat
+  residual_readout_eq_barrier :
+    δ_odd_thermo B = δ_relVol n T k
+  central_readout_budget :
+    δ_relVol n T k ≤ δ_ZD_thermo B
+
+/--
+An explicit RN-barrier comparison discharges the thermodynamic D3 bound.
+-/
+theorem δ_odd_thermo_le_ZD_of_rnBarrierComparison
+    {n : Nat}
+    (C : SinkhornRNBarrierThermodynamicComparison (E := E) n) :
+    δ_odd_thermo C.B ≤ δ_ZD_thermo C.B := by
+  rw [C.residual_readout_eq_barrier]
+  exact C.central_readout_budget
+
+/--
+Exact remaining D3 profile-lift obligation.
+
+The Sinkhorn RN barrier is an `L¹` sum of absolute logarithmic mass changes.
+The matching projective readout in `RelativePotentialCore` is therefore
+`informationGeometricRelativeNorm`, with an explicit finite-carrier scale
+factor. This avoids forcing the RN barrier into the RMS
+`relativeInformationNorm` lane before a separate comparison theorem exists.
+-/
+structure SinkhornRNBarrierProfileLift
+    (n : Nat)
+    (T : SinkhornTrajectory n)
+    (k : Nat) where
+  α : Type
+  fintype : Fintype α
+  nonempty : Nonempty α
+  scale : ℝ
+  scale_nonneg : 0 ≤ scale
+  defectRay : InfoGeometry.Canonical.PositiveRayCore.PositiveRay α
+  referenceRay : InfoGeometry.Canonical.PositiveRayCore.PositiveRay α
+  rnBarrier_eq_scaled_informationGeometricRelativeNorm :
+    δ_relVol n T k =
+      scale *
+        @InfoGeometry.Canonical.RelativePotentialCore.informationGeometricRelativeNorm
+          α fintype nonempty defectRay referenceRay
+
+/--
+Phase-local profile lift for the raw Sinkhorn RN barrier.
+
+This is the row/column-local form of the remaining D3 lift. It avoids mentioning
+trajectories and therefore isolates the actual construction problem: build the
+positive-ray profile for `phaseRNBarrierBefore n phase M`.
+-/
+structure PhaseRNBarrierProfileLift
+    (n : Nat)
+    (phase : SinkhornPhase)
+    (M : SinkhornMatrix n) where
+  α : Type
+  fintype : Fintype α
+  nonempty : Nonempty α
+  scale : ℝ
+  scale_nonneg : 0 ≤ scale
+  defectRay : InfoGeometry.Canonical.PositiveRayCore.PositiveRay α
+  referenceRay : InfoGeometry.Canonical.PositiveRayCore.PositiveRay α
+  phaseRNBarrier_eq_scaled_informationGeometricRelativeNorm :
+    phaseRNBarrierBefore n phase M =
+      scale *
+        @InfoGeometry.Canonical.RelativePotentialCore.informationGeometricRelativeNorm
+          α fintype nonempty defectRay referenceRay
+
+/-- Row-sum profile as observed positive count data. -/
+noncomputable def rowSumCounts
+    (n : Nat)
+    (M : SinkhornMatrix n) :
+    RelativeCounts n :=
+  fun i => rowSum n M i
+
+/-- Column-sum profile as observed positive count data. -/
+noncomputable def colSumCounts
+    (n : Nat)
+    (M : SinkhornMatrix n) :
+    RelativeCounts n :=
+  fun j => colSum n M j
+
+/-- Unit reference count profile on `Fin n`. -/
+noncomputable def unitCounts (n : Nat) : RelativeCounts n :=
+  fun _ => 1
+
+theorem unitCounts_pos (n : Nat) :
+    ∀ i : Fin n, 0 < unitCounts n i := by
+  intro i
+  simp [unitCounts]
+
+theorem countMass_unitCounts
+    (n : Nat)
+    [Nonempty (Fin n)] :
+    countMass (unitCounts n) (unitCounts_pos n) = n := by
+  simp [countMass, unitCounts, positiveMeasureOfCounts, InfoGeometry.PositiveMeasure.Z]
+
+/--
+Row RN-barrier profile lift through positive observed count data.
+
+The row sums are the observed positive counts. The explicit scale/equality field
+keeps the unnormalized RN barrier separate from the projective count-ray
+readout.
+-/
+structure RowRNBarrierCountProfileLift
+    (n : Nat)
+    [Nonempty (Fin n)]
+    (M : SinkhornMatrix n)
+    (hrow : HasPositiveRowSums n M) where
+  scale : ℝ
+  scale_nonneg : 0 ≤ scale
+  rowRNBarrier_eq_scaled_informationGeometricRelativeNorm :
+    rowRNBarrier n M =
+      scale *
+        InfoGeometry.Canonical.RelativePotentialCore.informationGeometricRelativeNorm
+          (countRay (unitCounts n) (unitCounts_pos n))
+          (countRay (rowSumCounts n M) hrow)
+
+/--
+Column RN-barrier profile lift through positive observed count data.
+-/
+structure ColRNBarrierCountProfileLift
+    (n : Nat)
+    [Nonempty (Fin n)]
+    (M : SinkhornMatrix n)
+    (hcol : HasPositiveColSums n M) where
+  scale : ℝ
+  scale_nonneg : 0 ≤ scale
+  colRNBarrier_eq_scaled_informationGeometricRelativeNorm :
+    colRNBarrier n M =
+      scale *
+        InfoGeometry.Canonical.RelativePotentialCore.informationGeometricRelativeNorm
+          (countRay (unitCounts n) (unitCounts_pos n))
+          (countRay (colSumCounts n M) hcol)
+
+/--
+Construct the row RN-barrier profile lift from positive observed row counts
+once the raw count profile has the expected carrier mass `n`.
+
+The unit ray is the readout ray. This is forced by the definition of
+`informationGeometricRelativeNorm`, which weights by its first argument; with
+unit weights and row-count mass `n`, the scaled projective readout is exactly
+the unweighted Sinkhorn RN barrier `∑ᵢ |log rowSumᵢ|`.
+-/
+noncomputable def RowRNBarrierCountProfileLift.ofMassNormalized
+    {n : Nat}
+    [Nonempty (Fin n)]
+    {M : SinkhornMatrix n}
+    (hrow : HasPositiveRowSums n M)
+    (hMass : countMass (rowSumCounts n M) hrow = n) :
+    RowRNBarrierCountProfileLift n M hrow :=
+  { scale := n
+    scale_nonneg := Nat.cast_nonneg n
+    rowRNBarrier_eq_scaled_informationGeometricRelativeNorm := by
+      unfold rowRNBarrier
+      unfold InfoGeometry.Canonical.RelativePotentialCore.informationGeometricRelativeNorm
+      rw [Finset.mul_sum]
+      refine Finset.sum_congr rfl ?_
+      intro i hi
+      have hn_nat : 0 < n := by
+        simpa using (Fintype.card_pos_iff.mpr ‹Nonempty (Fin n)›)
+      have hn_pos : 0 < (n : ℝ) := by
+        exact_mod_cast hn_nat
+      have hn_ne : (n : ℝ) ≠ 0 := hn_pos.ne'
+      have hunitMass :
+          countMass (unitCounts n) (unitCounts_pos n) = n :=
+        countMass_unitCounts n
+      have hshift :
+          countMassShift (unitCounts n) (rowSumCounts n M)
+            (unitCounts_pos n) hrow = 0 := by
+        rw [countMassShift_eq_neg_log_countRelativeVolumeChange]
+        unfold countRelativeVolumeChange
+        rw [hunitMass, hMass]
+        simp [hn_ne]
+      have hpot :
+          InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential
+              (countRay (unitCounts n) (unitCounts_pos n))
+              (countRay (rowSumCounts n M) hrow) i
+            = Real.log (rowSum n M i) := by
+        rw [relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift]
+        rw [hshift, sub_zero]
+        unfold relativeCountLogDensity relativeCountDensity rowSumCounts unitCounts
+        rw [Real.log_div (by norm_num : (1 : ℝ) ≠ 0) (hrow i).ne']
+        simp
+      rw [gaugeSection_countRay_apply, hunitMass, unitCounts, hpot]
+      field_simp [hn_ne] }
+
+/--
+Construct the column RN-barrier profile lift from positive observed column
+counts once the raw count profile has the expected carrier mass `n`.
+-/
+noncomputable def ColRNBarrierCountProfileLift.ofMassNormalized
+    {n : Nat}
+    [Nonempty (Fin n)]
+    {M : SinkhornMatrix n}
+    (hcol : HasPositiveColSums n M)
+    (hMass : countMass (colSumCounts n M) hcol = n) :
+    ColRNBarrierCountProfileLift n M hcol :=
+  { scale := n
+    scale_nonneg := Nat.cast_nonneg n
+    colRNBarrier_eq_scaled_informationGeometricRelativeNorm := by
+      unfold colRNBarrier
+      unfold InfoGeometry.Canonical.RelativePotentialCore.informationGeometricRelativeNorm
+      rw [Finset.mul_sum]
+      refine Finset.sum_congr rfl ?_
+      intro j hj
+      have hn_nat : 0 < n := by
+        simpa using (Fintype.card_pos_iff.mpr ‹Nonempty (Fin n)›)
+      have hn_pos : 0 < (n : ℝ) := by
+        exact_mod_cast hn_nat
+      have hn_ne : (n : ℝ) ≠ 0 := hn_pos.ne'
+      have hunitMass :
+          countMass (unitCounts n) (unitCounts_pos n) = n :=
+        countMass_unitCounts n
+      have hshift :
+          countMassShift (unitCounts n) (colSumCounts n M)
+            (unitCounts_pos n) hcol = 0 := by
+        rw [countMassShift_eq_neg_log_countRelativeVolumeChange]
+        unfold countRelativeVolumeChange
+        rw [hunitMass, hMass]
+        simp [hn_ne]
+      have hpot :
+          InfoGeometry.Canonical.RelativePotentialCore.relativeModularPotential
+              (countRay (unitCounts n) (unitCounts_pos n))
+              (countRay (colSumCounts n M) hcol) j
+            = Real.log (colSum n M j) := by
+        rw [relativeModularPotential_countRay_eq_neg_relativeCountLogDensity_sub_massShift]
+        rw [hshift, sub_zero]
+        unfold relativeCountLogDensity relativeCountDensity colSumCounts unitCounts
+        rw [Real.log_div (by norm_num : (1 : ℝ) ≠ 0) (hcol j).ne']
+        simp
+      rw [gaugeSection_countRay_apply, hunitMass, unitCounts, hpot]
+      field_simp [hn_ne] }
+
+/--
+Turn a row-count profile lift into the corresponding phase-local lift. The row
+RN barrier is the pre-step phase barrier for a column-normalization step.
+-/
+noncomputable def PhaseRNBarrierProfileLift.ofRowCounts
+    {n : Nat}
+    [Nonempty (Fin n)]
+    {M : SinkhornMatrix n}
+    {hrow : HasPositiveRowSums n M}
+    (L : RowRNBarrierCountProfileLift n M hrow) :
+    PhaseRNBarrierProfileLift n SinkhornPhase.col M :=
+  { α := Fin n
+    fintype := inferInstance
+    nonempty := inferInstance
+    scale := L.scale
+    scale_nonneg := L.scale_nonneg
+    defectRay := countRay (unitCounts n) (unitCounts_pos n)
+    referenceRay := countRay (rowSumCounts n M) hrow
+    phaseRNBarrier_eq_scaled_informationGeometricRelativeNorm := by
+      simpa [phaseRNBarrierBefore] using
+        L.rowRNBarrier_eq_scaled_informationGeometricRelativeNorm }
+
+/--
+Turn a column-count profile lift into the corresponding phase-local lift. The
+column RN barrier is the pre-step phase barrier for a row-normalization step.
+-/
+noncomputable def PhaseRNBarrierProfileLift.ofColCounts
+    {n : Nat}
+    [Nonempty (Fin n)]
+    {M : SinkhornMatrix n}
+    {hcol : HasPositiveColSums n M}
+    (L : ColRNBarrierCountProfileLift n M hcol) :
+    PhaseRNBarrierProfileLift n SinkhornPhase.row M :=
+  { α := Fin n
+    fintype := inferInstance
+    nonempty := inferInstance
+    scale := L.scale
+    scale_nonneg := L.scale_nonneg
+    defectRay := countRay (unitCounts n) (unitCounts_pos n)
+    referenceRay := countRay (colSumCounts n M) hcol
+    phaseRNBarrier_eq_scaled_informationGeometricRelativeNorm := by
+      simpa [phaseRNBarrierBefore] using
+        L.colRNBarrier_eq_scaled_informationGeometricRelativeNorm }
+
+/--
+A phase-local profile lift at `phaseAt k` gives the corresponding trajectory
+RN-barrier profile lift.
+-/
+noncomputable def SinkhornRNBarrierProfileLift.ofPhase
+    {n : Nat}
+    {T : SinkhornTrajectory n}
+    {k : Nat}
+    (L : PhaseRNBarrierProfileLift n (phaseAt k) (T.state k)) :
+    SinkhornRNBarrierProfileLift n T k :=
+  { α := L.α
+    fintype := L.fintype
+    nonempty := L.nonempty
+    scale := L.scale
+    scale_nonneg := L.scale_nonneg
+    defectRay := L.defectRay
+    referenceRay := L.referenceRay
+    rnBarrier_eq_scaled_informationGeometricRelativeNorm := by
+      simpa [δ_relVol, trajectoryRNBarrier] using
+        L.phaseRNBarrier_eq_scaled_informationGeometricRelativeNorm }
+
+/--
+If the remaining profile lift is supplied, the RN-barrier budget becomes a
+repo-native projective modular-potential budget on the `L¹` readout lane.
+-/
+theorem scaled_informationGeometricRelativeNorm_le_ZD_of_rnBarrierProfileLift
+    {n : Nat}
+    (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
+    (L : SinkhornRNBarrierProfileLift n C.T C.k) :
+    L.scale *
+        @InfoGeometry.Canonical.RelativePotentialCore.informationGeometricRelativeNorm
+          L.α L.fintype L.nonempty L.defectRay L.referenceRay
+      ≤ δ_ZD_thermo C.B := by
+  rw [← L.rnBarrier_eq_scaled_informationGeometricRelativeNorm]
+  exact C.central_readout_budget
+
+/--
+Concrete profile-level Weyl/thermodynamic packet derived from Sinkhorn RN
+barrier data.
+
+The residual readout is identified with the scaled projective count/profile
+readout supplied by `SinkhornRNBarrierProfileLift`. The central readout remains
+the same scalar budget already present in the thermodynamic bridge. This does
+not assert an RMS `relativeInformationNorm` identity.
+-/
+noncomputable def WeylThermodynamicProfileComparison.ofSinkhornRNBarrier
+    {n : Nat}
+    (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
+    (L : SinkhornRNBarrierProfileLift n C.T C.k) :
+    WeylThermodynamicProfileComparison (E := E)
+      C.B.routerResidual
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) :=
+  { α := L.α
+    fintype := L.fintype
+    nonempty := L.nonempty
+    operatorInformationNormReadout := C.B.comparison.operatorInformationNormReadout
+    defectScale := L.scale
+    defectScale_nonneg := L.scale_nonneg
+    defectRay := L.defectRay
+    referenceRay := L.referenceRay
+    residual_readout_eq_scaled_informationGeometricRelativeNorm := by
+      rw [← L.rnBarrier_eq_scaled_informationGeometricRelativeNorm]
+      exact C.residual_readout_eq_barrier
+    scaled_informationGeometricRelativeNorm_le_central_readout := by
+      rw [← L.rnBarrier_eq_scaled_informationGeometricRelativeNorm]
+      simpa [δ_ZD_thermo] using C.central_readout_budget }
+
+/--
+The Sinkhorn-derived profile comparison gives the corrected readout inequality.
+-/
+theorem operatorInformationNormReadout_le_of_sinkhornRNBarrierProfile
+    {n : Nat}
+    (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
+    (L : SinkhornRNBarrierProfileLift n C.T C.k) :
+    C.B.comparison.operatorInformationNormReadout C.B.routerResidual
+      ≤
+    C.B.comparison.operatorInformationNormReadout
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) :=
+  RouterDefectBoundBridge.operatorInformationNormReadout_le_of_weylThermodynamicProfileComparison
+    (E := E)
+    (WeylThermodynamicProfileComparison.ofSinkhornRNBarrier (E := E) C L)
 
 /--
 Volume anomaly monotonicity forces one-step odd-defect monotonicity.
@@ -406,6 +896,31 @@ theorem δ_odd_next_le_of_volumeAnomalyBridge
     (k : Nat) :
     δ_odd (B.state (k + 1)) ≤ δ_odd (B.state k) :=
   δ_odd_next_le_of_relativeDefectBridge (E := E) B k
+
+/--
+RN-barrier monotonicity forces one-step thermodynamic odd-readout reduction.
+-/
+theorem δ_odd_thermo_next_le_of_relativeDefectBridge
+    {n : Nat}
+    (B : SinkhornThermodynamicRelativeDefectBridge (E := E) n)
+    (k : Nat) :
+    δ_odd_thermo (B.state (k + 1)) ≤ δ_odd_thermo (B.state k) := by
+  exact le_trans (B.next_le_volumeNext k)
+    (le_trans (trajectoryRNBarrier_monotone (n := n) B.T k) (B.volume_le_now k))
+
+/--
+One-step thermodynamic D3 budget transport: if the current RN barrier is below
+the current thermodynamic `Z_D` readout, then the next router readout is also
+below that same current budget.
+-/
+theorem δ_odd_thermo_next_le_ZD_of_relativeDefectBridge
+    {n : Nat}
+    (B : SinkhornThermodynamicRelativeDefectBridge (E := E) n)
+    (k : Nat)
+    (hBudget : δ_relVol n B.T k ≤ δ_ZD_thermo (B.state k)) :
+    δ_odd_thermo (B.state (k + 1)) ≤ δ_ZD_thermo (B.state k) := by
+  exact le_trans (B.next_le_volumeNext k)
+    (le_trans (δ_relVol_next_le (n := n) B.T k) hBudget)
 
 end VolumeAnomaly
 

@@ -7,6 +7,11 @@ The proving lane should not assemble context by loose association. For Lean 4 pr
 - It prefers live ArangoDB collections `infogeometry/ig_nodes` and `infogeometry/ig_edges`.
 - It falls back to `artifacts/leantrail/arango/ig_nodes.jsonl` and `ig_edges.jsonl`.
 - It ranks declarations by lexical relevance, graph proximity, and proof mass.
+- In faithful mode, it uses the raw-DAG collections `raw_info_nodes` and
+  `raw_info_edges`, anchors first on SCC basins, and descends through raw
+  witnesses.
+- It emits live `rep_layer` / `rep_depth` summaries so the L0-L5 representation
+  ladder is visible in the packet rather than only stored in Arango.
 - It emits Lean source excerpts around the proven declaration lines.
 - It sets `promotion_allowed: false`; the packet is retrieval context, not proof admission.
 
@@ -19,6 +24,35 @@ python tools/infra/arango_gravity_context.py \
   --json-out artifacts/gravity_context/softmax_variance.json \
   --md-out artifacts/gravity_context/softmax_variance.md
 ```
+
+Faithful, SCC-anchored retrieval from the live layered graph:
+
+```bash
+python tools/infra/arango_gravity_context.py \
+  --query "RouterDefectBridge RouterDefectBoundBridge observerDefectResidual sourcedModularGenerator ZD" \
+  --graph-mode faithful \
+  --scc-anchor-first \
+  --top-k 20 \
+  --json-out artifacts/gravity_context/router_defect_d3.json \
+  --md-out artifacts/gravity_context/router_defect_d3.md
+```
+
+Layer-constrained retrieval is available when the task should stay inside a
+particular representation stratum:
+
+```bash
+python tools/infra/arango_gravity_context.py \
+  --query "sourced modular generator spectral cut" \
+  --graph-mode faithful \
+  --scc-anchor-first \
+  --rep-layer L4_ModularTransport \
+  --top-k 8
+```
+
+The `--rep-layer` option is repeatable. It filters returned declarations, not
+the underlying truth graph. The packet still reports the live graph-wide layer
+counts so callers can see how much of the loaded graph is labeled, unlabeled, or
+inside each L0-L5 stratum.
 
 The output is intended for DeepSeek/Nemotron prompt injection before tactic generation. The agent should be pulled toward nearby verified declarations instead of expanding through unconstrained prose.
 
@@ -38,6 +72,50 @@ Operational rule:
 - Lean/lake remains the only authority for truth.
 
 The graph context is strong gravitation: proven code is mass, and proof search should fall through the causal neighborhood of that mass.
+
+## L0-L5 Layer Visibility
+
+The live raw-DAG graph carries the Lean-owned `@[rep_depth ...]` ontology as
+queryable fields:
+
+- `rep_layer`, e.g. `L4_ModularTransport`
+- `rep_depth`, e.g. `4`
+- `rep_depth_slug`, e.g. `transport`
+- `rep_layer_description`, when exported from the declaration attributes
+
+Retrieval packets include:
+
+- `graph_rep_layer_counts`: layer distribution over all loaded nodes
+- `result_rep_layer_counts`: layer distribution over returned context items
+- per-item `rep_layer`, `rep_depth`, `rep_depth_slug`, and
+  `rep_layer_description`
+
+These fields are navigation metadata. They do not prove that a theorem belongs
+to a semantic corridor by themselves; the source excerpt and Lean build remain
+the truth gate.
+
+## NetworkX / cuGraph Runtime
+
+The Arango graph runtime uses `/home/goutev/arango-graph-venv` for
+`nx-arangodb`, `networkx`, and RAPIDS/cuGraph packages. Keep that environment on
+`networkx==3.5` while `nx-arangodb==1.3.1` declares `networkx<=3.5`.
+
+Do not use `NX_CUGRAPH_AUTOCONFIG=True` in this environment. RAPIDS 26.04 sets
+`NETWORKX_BACKEND_PRIORITY_CLASSES` for NetworkX 3.6 graph-class dispatch, but
+NetworkX 3.5 rejects that config key. Use the NetworkX-native backend variables
+instead:
+
+```bash
+NETWORKX_BACKEND_PRIORITY_ALGOS=cugraph \
+NETWORKX_BACKEND_PRIORITY_GENERATORS=cugraph \
+NETWORKX_FALLBACK_TO_NX=true \
+NETWORKX_CACHE_CONVERTED_GRAPHS=true \
+/home/goutev/arango-graph-venv/bin/python <script.py>
+```
+
+`tools/infra/arango_raw_infotree_graph.py --use-gpu` applies those compatible
+variables before importing NetworkX, so the helper can request cuGraph dispatch
+without violating the `nx-arangodb` version constraint.
 
 ## Known Filter Boundaries
 

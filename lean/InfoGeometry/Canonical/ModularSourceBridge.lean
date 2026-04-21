@@ -21,6 +21,7 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 /--
 Baseline modular generator packaged with Drazin-cut compatibility.
 -/
+@[rep_depth transport]
 structure BackgroundModularFlow (CIK : CertifiedInverseKernel H₂) where
   K0 : EndH
   commutesQ0 : Commute K0 CIK.spectralComplementaryProjector

@@ -1,0 +1,9 @@
+mdpi_22_6_642	ERROR	0	HTTPError: HTTP Error 403: Forbidden	https://www.mdpi.com/1099-4300/22/6/642
+mdpi_27_5_509	ERROR	0	HTTPError: HTTP Error 403: Forbidden	https://www.mdpi.com/1099-4300/27/5/509
+mdpi_27_7_710	ERROR	0	HTTPError: HTTP Error 403: Forbidden	https://www.mdpi.com/1099-4300/27/7/710
+mdpi_20_11_840	ERROR	0	HTTPError: HTTP Error 403: Forbidden	https://www.mdpi.com/1099-4300/20/11/840
+mdpi_18_11_386	ERROR	0	HTTPError: HTTP Error 403: Forbidden	https://www.mdpi.com/1099-4300/18/11/386
+pmc_7761515	OK	178137	text/html; charset=utf-8	https://pmc.ncbi.nlm.nih.gov/articles/PMC7761515/
+atiner_phy2024_0346	OK	390577	application/pdf	https://www.atiner.gr/presentations/PHY2024-0346.pdf
+aip_jcp_121_6_2718	ERROR	0	HTTPError: HTTP Error 403: Forbidden	https://pubs.aip.org/aip/jcp/article-pdf/121/6/2718/19087513/2718_1_online.pdf
+ncsu_or706_lf_transform	OK	318328	application/pdf	https://ise.ncsu.edu/wp-content/uploads/sites/9/2015/07/or706-LF-transform-1.pdf

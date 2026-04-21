@@ -398,6 +398,42 @@ theorem relativeModularHamiltonianReadout_eq_inv_card_mul_relativeModularVolumeP
   rw [relativeModularHamiltonianReadout_eq_average_relativeModularPotential]
   rw [relativeModularVolumePotential_eq_sum_relativeModularPotential]
 
+/--
+Finite commutative shadow of the RedLine information energy.
+
+This theorem is only the diagonal finite-dimensional readout shadow:
+the genuine noncommutative operator-ratio theorem must pass through the
+Drazin/Penrose regular-lane functional calculus, not through this diagonal
+model.
+-/
+@[rep_depth thermo, capstone]
+theorem relativeInformationEnergy_finiteShadow_eq_sum_gauge_sq_neg_log_relativeModularOperator_diag
+    (q q0 : PositiveRay (Fin n)) :
+    relativeInformationEnergy (α := Fin n) q q0 =
+      ∑ i, gaugeSection (α := Fin n) q0 i
+        * (-Real.log (relativeModularOperator (n := n) q q0 i i)) ^ (2 : ℕ) := by
+  unfold relativeInformationEnergy
+  refine Finset.sum_congr rfl ?_
+  intro i _
+  rw [relativeModularPotential_eq_neg_log_relativeModularOperator_diag]
+
+/--
+Finite commutative shadow of the RedLine information norm.
+
+This is the RMS size of the negative logarithmic diagonal readout in the finite
+diagonal model only. It is a shadow of the intended noncommutative theorem, not
+the noncommutative theorem itself.
+-/
+@[rep_depth thermo, capstone]
+theorem relativeInformationNorm_finiteShadow_eq_sqrt_sum_gauge_sq_neg_log_relativeModularOperator_diag
+    (q q0 : PositiveRay (Fin n)) :
+    relativeInformationNorm (α := Fin n) q q0 =
+      Real.sqrt
+        (∑ i, gaugeSection (α := Fin n) q0 i
+          * (-Real.log (relativeModularOperator (n := n) q q0 i i)) ^ (2 : ℕ)) := by
+  unfold relativeInformationNorm
+  rw [relativeInformationEnergy_finiteShadow_eq_sum_gauge_sq_neg_log_relativeModularOperator_diag]
+
 @[rep_depth thermo, capstone]
 theorem relativeModularHamiltonianReadout_cocycle
     (q q0 q1 : PositiveRay (Fin n)) :

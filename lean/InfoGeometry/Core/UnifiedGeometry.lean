@@ -178,6 +178,85 @@ lemma conjugationMap_involutive
   ext v
   simp [conjugationMap, hJ_apply]
 
+/-- Involutivity of conjugation when `J² = -Id`. -/
+lemma conjugationMap_involutive_sq_neg_one
+    (J : V →L[ℝ] V)
+    (hJ : J.comp J = -ContinuousLinearMap.id ℝ V) :
+    Function.Involutive (conjugationMap J) := by
+  intro A
+  have hJ_apply : ∀ x : V, J (J x) = -x := by
+    intro x
+    simpa using congrArg (fun T : V →L[ℝ] V => T x) hJ
+  ext v
+  simp [conjugationMap, hJ_apply]
+
+/-- Conjugation linear endomorphism on `End(V)` induced by `J` with sign flip. -/
+noncomputable def conjugationMapNeg
+    (J : V →L[ℝ] V) :
+    (V →L[ℝ] V) →ₗ[ℝ] (V →L[ℝ] V) :=
+  { toFun := fun A => -(J.comp (A.comp J))
+    map_add' := by
+      intro A B
+      ext v
+      simp
+      abel
+    map_smul' := by
+      intro a A
+      ext v
+      simp }
+
+/-- Involutivity of negative conjugation when `J² = -Id`. -/
+lemma conjugationMapNeg_involutive
+    (J : V →L[ℝ] V)
+    (hJ : J.comp J = -ContinuousLinearMap.id ℝ V) :
+    Function.Involutive (conjugationMapNeg J) := by
+  intro A
+  have hJ_apply : ∀ x : V, J (J x) = -x := by
+    intro x
+    simpa using congrArg (fun T : V →L[ℝ] V => T x) hJ
+  ext v
+  simp [conjugationMapNeg, hJ_apply]
+
+/-- Bracket compatibility of negative conjugation when `J² = -Id`. -/
+lemma conjugationMapNeg_bracket
+    (J : V →L[ℝ] V)
+    (hJ : J.comp J = -ContinuousLinearMap.id ℝ V)
+    (A B : V →L[ℝ] V) :
+    conjugationMapNeg J ⁅A, B⁆
+      = ⁅conjugationMapNeg J A, conjugationMapNeg J B⁆ := by
+  have hJ_apply : ∀ x : V, J (J x) = -x := by
+    intro x
+    simpa using congrArg (fun T : V →L[ℝ] V => T x) hJ
+  ext v
+  simp [conjugationMapNeg, hJ_apply, LieRing.of_associative_ring_bracket]
+  abel
+
+/-- Conjugation by a square-root of -1 as a Lie algebra equivalence on `End(V)`. -/
+noncomputable def conjugationLieEquiv_sq_neg_one
+    (J : V →L[ℝ] V)
+    (hJ : J.comp J = -ContinuousLinearMap.id ℝ V) :
+    (V →L[ℝ] V) ≃ₗ⁅ℝ⁆ (V →L[ℝ] V) := by
+  let θ := conjugationMapNeg J
+  have hInv := conjugationMapNeg_involutive J hJ
+  refine
+    { toFun := θ
+      invFun := θ
+      left_inv := by
+        intro A
+        exact hInv A
+      right_inv := by
+        intro A
+        exact hInv A
+      map_add' := by
+        intro A B
+        exact θ.map_add A B
+      map_smul' := by
+        intro a A
+        exact θ.map_smul a A
+      map_lie' := by
+        intro A B
+        exact conjugationMapNeg_bracket J hJ A B }
+
 /-- Bracket compatibility of conjugation when `J² = Id`. -/
 lemma conjugationMap_bracket
     (J : V →L[ℝ] V)

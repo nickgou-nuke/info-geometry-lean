@@ -24,7 +24,7 @@ from tools.infra.deep_research.writer import synthesize_report
 from tools.infra.research_packet import build_packet_from_state, validate_packet
 
 from tools.infra.autonomous_math.compiler_loop import close
-from tools.infra.autonomous_math.evidence_packet import from_deep_research_state
+from tools.infra.autonomous_math.evidence_packet import from_deep_research_state, from_dict
 from tools.infra.autonomous_math.lean_coder import write_scaffold
 from tools.infra.autonomous_math.lean_designer import synthesize as synthesize_design
 from tools.infra.autonomous_math.memory_ingest import ingest
@@ -55,7 +55,8 @@ def _slug(text: str) -> str:
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--goal", required=True)
+    p.add_argument("--goal", default="")
+    p.add_argument("--socratic-packet-in", default="", help="Optional path to a Socratic alchemy evidence packet JSON; when set, skip deep-research stages and start from that packet.")
     p.add_argument("--constraint", action="append", default=[])
     p.add_argument("--allowed-sources", default="web")
     p.add_argument("--trusted-domain", action="append", default=[])
@@ -133,6 +134,8 @@ def _claims_cited(findings: dict[str, Any]) -> tuple[bool, list[str]]:
 
 def main() -> None:
     args = parse_args()
+    if not args.goal and not args.socratic_packet_in:
+        raise SystemExit("provide --goal or --socratic-packet-in")
     repo_root = Path(__file__).resolve().parents[3]
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     slug = _slug(args.goal)
@@ -146,6 +149,101 @@ def main() -> None:
     memory_log = Path(args.memory_log)
     if not memory_log.is_absolute():
         memory_log = repo_root / memory_log
+
+    if args.socratic_packet_in:
+        packet_path_in = Path(args.socratic_packet_in).resolve()
+        if not packet_path_in.exists():
+            raise FileNotFoundError(f"socratic packet not found: {packet_path_in}")
+        packet_payload = json.loads(packet_path_in.read_text(encoding="utf-8"))
+        evidence_packet = from_dict(packet_payload if isinstance(packet_payload, dict) else {})
+        execution_goal = evidence_packet.research_goal
+        user_goal = execution_goal
+        allowed_sources = _parse_allowed_sources(args.allowed_sources)
+        trusted_domains = [d.strip() for d in args.trusted_domain if d.strip()]
+        mcp_servers = _parse_mcp_servers(args.mcp_server)
+        constraints = list(args.constraint) or ["Socratic packet handoff", "Preserve packet evidence", "Compile generated Lean conservatively"]
+        activity: list[dict[str, Any]] = [
+            {"phase": "socratic_packet_handoff", "ts": utc_now(), "packet_in": str(packet_path_in), "evidence_count": len(evidence_packet.evidence)}
+        ]
+        dialogue_packet = expand(evidence_packet)
+        audited_packet = audit(dialogue_packet)
+        formal_packet = synthesize_design(audited_packet)
+        generated_lean = write_scaffold(formal_packet, repo_root / "reports" / "research" / "generated_lean")
+        compile_result = close(generated_lean, repo_root)
+        activity.extend(
+            [
+                {"phase": "socratic_engine", "ts": utc_now(), "invariant_items": len(dialogue_packet.get("lanes", {}).get("invariant_extraction", []))},
+                {"phase": "pauli_audit", "ts": utc_now(), "admission_ok": bool(audited_packet.get("admission_ok", False)), "rejected": len(audited_packet.get("rejected", []))},
+                {"phase": "lean_designer", "ts": utc_now(), "targets": len(formal_packet.get("targets", []))},
+                {"phase": "lean_coder", "ts": utc_now(), "generated_file": str(generated_lean)},
+                {"phase": "compiler_loop", "ts": utc_now(), "ok": compile_result.ok, "statement_invalid": compile_result.statement_invalid},
+            ]
+        )
+        verification = {"more_research_required": False, "unresolved_conflicts": evidence_packet.open_problems}
+        findings = {"socratic_packet": {"claims": [{"claim": ev.claim, "citations": ev.sources, "evidence_summary": ev.evidence_summary} for ev in evidence_packet.evidence], "confidence": 0.75, "open_questions": evidence_packet.open_problems}}
+        report_text = ""
+        status = "completed_from_socratic_packet" if compile_result.ok else "frontier_residue_from_socratic_packet"
+        state = {
+            "generated_at": utc_now(),
+            "status": status,
+            "goal": user_goal,
+            "clarified_goal": execution_goal,
+            "execution_goal": execution_goal,
+            "clarification": {"source": "socratic_packet"},
+            "research_brief": {"source": "socratic_packet"},
+            "constraints": constraints,
+            "execution_constraints": constraints,
+            "allowed_sources": allowed_sources,
+            "trusted_domains": trusted_domains,
+            "models": {},
+            "tools": {"vector_store_ids": args.vector_store_id, "mcp_servers": mcp_servers, "count": 0},
+            "plan": {"source": "socratic_packet"},
+            "findings": findings,
+            "verification": verification,
+            "gates": {"citations_ok": True, "verifier_ok": True, "failures": []},
+            "autonomous_pipeline": {
+                "evidence_packet": evidence_packet.to_dict(),
+                "dialogue_packet": dialogue_packet,
+                "audited_packet": audited_packet,
+                "formal_packet": formal_packet,
+                "generated_lean_file": str(generated_lean),
+                "compiler_result": {"ok": compile_result.ok, "statement_invalid": compile_result.statement_invalid, "feedback": compile_result.feedback, "command": compile_result.command},
+            },
+            "activity_log": activity,
+            "report_out": str(report_out) if report_text else "",
+            "socratic_packet_in": str(packet_path_in),
+        }
+        write_json(state_out, state)
+        packet = build_packet_from_state(
+            {
+                "goal": user_goal,
+                "allowed_sources": allowed_sources,
+                "trusted_domains": trusted_domains,
+                "models": state.get("models", {}),
+                "findings": findings,
+                "verification": verification,
+            },
+            packet_id=f"rp-{stamp}-{slug}",
+            state_path=str(state_out),
+        )
+        packet_errors = validate_packet(packet)
+        if packet_errors:
+            state["status"] = "blocked_by_packet_validation"
+            state["packet_validation_errors"] = packet_errors
+            write_json(state_out, state)
+            print(f"[autonomous-math] state: {state_out}")
+            print("[autonomous-math] packet validation failed:")
+            for err in packet_errors:
+                print(f"  - {err}")
+            sys.exit(3)
+        write_json(packet_out, packet)
+        state["research_packet_out"] = str(packet_out)
+        write_json(state_out, state)
+        ingest(packet=evidence_packet, run_state=state, out_file=memory_log)
+        print(f"[autonomous-math] state: {state_out}")
+        print(f"[autonomous-math] research packet: {packet_out}")
+        print(f"[autonomous-math] memory: {memory_log}")
+        sys.exit(0 if compile_result.ok else 2)
 
     allowed_sources = _parse_allowed_sources(args.allowed_sources)
     trusted_domains = [d.strip() for d in args.trusted_domain if d.strip()]

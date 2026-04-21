@@ -1,0 +1,32 @@
+{
+  "kind": "tactic",
+  "probe": {
+    "context": "import Mathlib.Analysis.SpecialFunctions.Log.Basic\n\nnamespace NegLogHypothesis\n\nstructure NegLogRectifier where\n  generate : \u211d \u2192 \u211d\n  map_one : generate 1 = 0\n  map_mul : \u2200 {r s : \u211d}, 0 < r \u2192 0 < s \u2192\n    generate (r * s) = generate r + generate s\n\ndef negLog : NegLogRectifier where\n  generate r := -Real.log r\n  map_one := by\n    simp\n  map_mul := by\n    intro r s hr hs\n    rw [Real.log_mul hr hs]\n    ring\n\nnamespace NegLogRectifier\n\n@[simp]",
+    "goal": "\u2200 (r : \u211d), negLog.generate r = -Real.log r",
+    "imports": [
+      "Mathlib",
+      "Mathlib"
+    ],
+    "lean": {
+      "ok": false,
+      "returncode": 1,
+      "source": "import Mathlib\nimport Mathlib\n\nimport Mathlib.Analysis.SpecialFunctions.Log.Basic\nnamespace NegLogHypothesis\nstructure NegLogRectifier where\n  generate : \u211d \u2192 \u211d\n  map_one : generate 1 = 0\n  map_mul : \u2200 {r s : \u211d}, 0 < r \u2192 0 < s \u2192\n    generate (r * s) = generate r + generate s\ndef negLog : NegLogRectifier where\n  generate r := -Real.log r\n  map_one := by\n    simp\n  map_mul := by\n    intro r s hr hs\n    rw [Real.log_mul hr hs]\n    ring\nnamespace NegLogRectifier\n@[simp]\n\ntheorem hermes_probe : \u2200 (r : \u211d), negLog.generate r = -Real.log r := by\n  trace_state\n  repeat intro\n  rfl\n",
+      "source_path": "/tmp/hermes_probe_e64turia.lean",
+      "stderr": "",
+      "stdout": "/tmp/hermes_probe_e64turia.lean:17:21: error: Application type mismatch: The argument\n  hr\nhas type\n  0 < r\nbut is expected to have type\n  ?m.14 \u2260 0\nin the application\n  Real.log_mul hr\n/tmp/hermes_probe_e64turia.lean:15:13: error: unsolved goals\nr s : \u211d\nhr : 0 < r\nhs : 0 < s\n\u22a2 -Real.log (r * s) = -Real.log r + -Real.log s\n/tmp/hermes_probe_e64turia.lean:11:4: error(lean.dependsOnNoncomputable): failed to compile definition, consider marking it as 'noncomputable' because it depends on 'Real.log', which is 'noncomputable'\n\u22a2 \u2200 (r : \u211d), negLog.generate r = -Real.log r\n"
+    },
+    "normalized_goal": "\u2200 (r : \u211d), negLog.generate r = -Real.log r",
+    "normalized_tactic": "repeat intro\nrfl",
+    "proof_state_before": "/tmp/hermes_probe_e64turia.lean:17:21: error: Application type mismatch: The argument\n  hr\nhas type\n  0 < r\nbut is expected to have type\n  ?m.14 \u2260 0\nin the application\n  Real.log_mul hr\n/tmp/hermes_probe_e64turia.lean:15:13: error: unsolved goals\nr s : \u211d\nhr : 0 < r\nhs : 0 < s\n\u22a2 -Real.log (r * s) = -Real.log r + -Real.log s\n/tmp/hermes_probe_e64turia.lean:11:4: error(lean.dependsOnNoncomputable): failed to compile definition, consider marking it as 'noncomputable' because it depends on 'Real.log', which is 'noncomputable'\n\u22a2 \u2200 (r : \u211d), negLog.generate r = -Real.log r",
+    "schema": "lean_interact.tactic_probe.v1",
+    "status": "failure",
+    "tactic": "repeat intro\nrfl"
+  },
+  "round": 1,
+  "surface": {
+    "goal": "(r : \u211d) :\n    negLog.generate r = -Real.log r",
+    "kind": "theorem",
+    "name": "negLog_generate",
+    "tactic": "rfl"
+  }
+}

@@ -4,16 +4,16 @@ This report is a heuristic declaration-level classification, not kernel truth.
 It distinguishes likely constructive declarations from hypothesis bridges, package/reprojection surfaces, and surrogate/vacuous surfaces using the exported declaration inventory, tracked debt indices, quarantine annotations, and local source context.
 
 ## Summary
-- analyzed declarations: `16648`
-- theorem declarations: `9434`
-- definition declarations: `7214`
-- likely constructive: `8947`
-- hypothesis bridges: `89`
-- package / reprojection surfaces: `854`
-- surrogate / vacuous surfaces: `276`
-- neutral definitions: `6482`
-- declarations with audit hits: `46`
-- declarations in quarantined modules: `17`
+- analyzed declarations: `20128`
+- theorem declarations: `11089`
+- definition declarations: `9039`
+- likely constructive: `10495`
+- hypothesis bridges: `140`
+- package / reprojection surfaces: `1053`
+- surrogate / vacuous surfaces: `288`
+- neutral definitions: `8152`
+- declarations with audit hits: `47`
+- declarations in quarantined modules: `0`
 
 ## Category Notes
 - `likely_constructive`: theorem declarations with no current bridge/package/surrogate warning signal.
@@ -23,26 +23,26 @@ It distinguishes likely constructive declarations from hypothesis bridges, packa
 - `neutral_definition`: definitions and opaque wrappers without a stronger warning signal.
 
 ## Surrogate / Vacuous Surfaces
-- `InfoGeometry.Canonical.BeliefDynamics.parallelTransportE_eq` | `theorem` | `lean/InfoGeometry/Canonical/BeliefDynamics.lean:60` | confidence `high` | signals: quarantine_reason:finite scaffold hardcodes identity transport and metric replacement semantics
-- `InfoGeometry.Canonical.BeliefDynamics.parallelTransportM_eq` | `theorem` | `lean/InfoGeometry/Canonical/BeliefDynamics.lean:64` | confidence `high` | signals: quarantine_reason:finite scaffold hardcodes identity transport and metric replacement semantics
-- `InfoGeometry.Canonical.BeliefDynamics.quantumGeometryOp_eq_metricOp` | `theorem` | `lean/InfoGeometry/Canonical/BeliefDynamics.lean:68` | confidence `high` | signals: quarantine_reason:finite scaffold hardcodes identity transport and metric replacement semantics
-- `InfoGeometry.Canonical.BeliefDynamics.radonNikodymOp_pos` | `theorem` | `lean/InfoGeometry/Canonical/BeliefDynamics.lean:72` | confidence `high` | signals: quarantine_reason:finite scaffold hardcodes identity transport and metric replacement semantics
 - `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.moorePenroseRightProjector_ne_one_of_hasZeroMode` | `theorem` | `lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean:80` | confidence `high` | signals: audit:thinness:underscore_hypothesis:medium
 - `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.moorePenroseLeftProjector_ne_one_of_hasZeroMode` | `theorem` | `lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean:95` | confidence `high` | signals: audit:thinness:underscore_hypothesis:medium
 - `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.drazinProjection_ne_one_of_hasZeroMode` | `theorem` | `lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean:109` | confidence `high` | signals: audit:thinness:underscore_hypothesis:medium
-- `InfoGeometry.Canonical.ChiralAction.chiral_action_reduces_for_normal` | `theorem` | `lean/InfoGeometry/Canonical/ChiralAction.lean:33` | confidence `high` | signals: quarantine_reason:canonical bridge remains on the vacuity quarantine surface
-- `InfoGeometry.Canonical.ChiralAction.chiralDirac_eq_of_unitRelativeVolume` | `theorem` | `lean/InfoGeometry/Canonical/ChiralAction.lean:55` | confidence `high` | signals: quarantine_reason:canonical bridge remains on the vacuity quarantine surface
 - `InfoGeometry.Canonical.ClNNBottBridge.bottStep_headNullMinus` | `theorem` | `lean/InfoGeometry/Canonical/ClNNBottBridge.lean:60` | confidence `high` | signals: audit:thinness:direct_forwarder:medium
 - `InfoGeometry.Canonical.ClNNBottBridge.bottStep_headNullPlus` | `theorem` | `lean/InfoGeometry/Canonical/ClNNBottBridge.lean:68` | confidence `high` | signals: audit:thinness:direct_forwarder:medium
-- `InfoGeometry.Canonical.DrazinFredholmBridge.defectProjector_ne_zero_of_package` | `theorem` | `lean/InfoGeometry/Canonical/DrazinFredholmBridge.lean:176` | confidence `high` | signals: audit:thinness:underscore_hypothesis:medium; context:packaging
+- `InfoGeometry.Canonical.DrazinFredholmBridge.defectProjector_ne_zero_of_package` | `theorem` | `lean/InfoGeometry/Canonical/DrazinFredholmBridge.lean:175` | confidence `high` | signals: audit:thinness:underscore_hypothesis:medium; context:packaging
 - `InfoGeometry.Canonical.DrazinInfiniteCore.DrazinInfiniteAssumptions.mk.inj` | `theorem` | `lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean` | confidence `high` | signals: audit:surrogate:contract_decl:medium
 - `InfoGeometry.Canonical.DrazinInfiniteCore.DrazinInfiniteAssumptions.mk.sizeOf_spec` | `theorem` | `lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean` | confidence `high` | signals: audit:surrogate:contract_decl:medium
-- `InfoGeometry.Canonical.DrazinInfiniteCore.DrazinInfiniteAssumptions.zero_isolated_spectrum` | `theorem` | `lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean:198` | confidence `high` | signals: audit:surrogate:contract_decl:medium; context:hypotheses
+- `InfoGeometry.Canonical.DrazinInfiniteCore.DrazinInfiniteAssumptions.zero_isolated_spectrum` | `theorem` | `lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean:531` | confidence `high` | signals: audit:surrogate:contract_decl:medium; context:hypotheses
 - `InfoGeometry.Canonical.DrazinSpectralBridge.HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum_eq` | `theorem` | `lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean:41` | confidence `high` | signals: audit:surrogate:contract_constructor:low
 - `InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_finite_ascent_descent` | `theorem` | `lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean:69` | confidence `high` | signals: audit:surrogate:contract_constructor:low; context:hypotheses; context:packaging
 - `InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_zero_isolated` | `theorem` | `lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean:82` | confidence `high` | signals: audit:surrogate:contract_constructor:low; context:hypotheses; context:packaging
 - `InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_classical` | `theorem` | `lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean:95` | confidence `high` | signals: audit:surrogate:contract_constructor:low; context:hypotheses; context:packaging
 - `InfoGeometry.Canonical.DrazinSpectralBridge.DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum_generalized` | `theorem` | `lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean:108` | confidence `high` | signals: audit:surrogate:contract_constructor:low; context:hypotheses; context:packaging
+- `InfoGeometry.Canonical.SplitCliffordTensorBridge.splitCliffordTensorStep_headFactor` | `theorem` | `lean/InfoGeometry/Canonical/SplitCliffordTensorBridge.lean:148` | confidence `high` | signals: audit:thinness:direct_forwarder:medium
+- `InfoGeometry.Canonical.SplitCliffordTensorBridge.splitCliffordTensorStep_tailFactor` | `theorem` | `lean/InfoGeometry/Canonical/SplitCliffordTensorBridge.lean:157` | confidence `high` | signals: audit:thinness:direct_forwarder:medium
+- `InfoGeometry.Canonical.SplitCliffordTensorBridge.splitCliffordTensorStep_headNullMinus` | `theorem` | `lean/InfoGeometry/Canonical/SplitCliffordTensorBridge.lean:166` | confidence `high` | signals: audit:thinness:direct_forwarder:medium
+- `InfoGeometry.Canonical.SplitCliffordTensorBridge.splitCliffordTensorStep_headNullPlus` | `theorem` | `lean/InfoGeometry/Canonical/SplitCliffordTensorBridge.lean:173` | confidence `high` | signals: audit:thinness:direct_forwarder:medium
+- `InfoGeometry.Canonical.SplitCliffordTensorBridge.splitCl44_headFactor` | `theorem` | `lean/InfoGeometry/Canonical/SplitCliffordTensorBridge.lean:203` | confidence `high` | signals: audit:thinness:direct_forwarder:medium
+- `InfoGeometry.Canonical.SplitCliffordTensorBridge.splitCl44_tailFactor` | `theorem` | `lean/InfoGeometry/Canonical/SplitCliffordTensorBridge.lean:212` | confidence `high` | signals: audit:thinness:direct_forwarder:medium
 
 ## Package / Reprojection Surfaces
 - `InfoGeometry.Canonical.AQFTOperatorInterface.AQFTReadinessPackage.isCStarReadyF` | `theorem` | `lean/InfoGeometry/Canonical/AQFTReadiness.lean:26` | confidence `medium` | signals: context:packaging
@@ -63,15 +63,19 @@ It distinguishes likely constructive declarations from hypothesis bridges, packa
 - `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.exists_zeroMode_and_nontrivial_regularization_pair_of_dim_mismatch` | `theorem` | `lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean:219` | confidence `medium` | signals: context:packaging
 - `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge.exists_nontrivial_regularization_pair_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel` | `theorem` | `lean/InfoGeometry/Canonical/BulkBoundaryRegularizationBridge.lean:305` | confidence `medium` | signals: context:packaging
 - `InfoGeometry.Canonical.CanonicalGaugeBridge.firstVariation_referenceInvariant` | `theorem` | `lean/InfoGeometry/Canonical/CanonicalGaugeBridge.lean:101` | confidence `medium` | signals: context:packaging
-- `InfoGeometry.Canonical.CapstoneSemanticAudit.similarity_preserves_idempotent_and_commute` | `theorem` | `lean/InfoGeometry/Canonical/CapstoneSemanticAudit.lean:83` | confidence `medium` | signals: context:packaging
-- `InfoGeometry.Canonical.ConformalUnification.ConformalInference.ObstructionOperatorOwner.obstruction_eq_commutator` | `theorem` | `lean/InfoGeometry/Canonical/ConformalAnomalyOperator.lean:21` | confidence `medium` | signals: context:packaging
+- `InfoGeometry.Canonical.CapstoneSemanticAudit.similarity_preserves_idempotent_and_commute` | `theorem` | `lean/InfoGeometry/Canonical/CapstoneSemanticAudit.lean:87` | confidence `medium` | signals: context:packaging
+- `InfoGeometry.Canonical.CasimirWeylDrazinContext.CasimirWeylDrazinData.regularCoreHamiltonian_support_flow_package` | `theorem` | `lean/InfoGeometry/Canonical/CasimirWeylDrazinContext.lean:156` | confidence `medium` | signals: context:packaging
 
 ## Hypothesis Bridges
 - `InfoGeometry.Canonical.ConformalUnification.ConformalInference.dilationSource_eq_neg_half_projectorObstruction_of_structuredProjectorHypotheses` | `theorem` | `lean/InfoGeometry/Canonical/ConformalAnomalyOperator.lean:123` | confidence `high` | signals: context:hypotheses; name:hypotheses
 - `InfoGeometry.Canonical.WeylKKTAnomalyIdentity.ConformalInference.dilationCommutator_eq_neg_half_projectorObstruction_of_structuredProjectorHypotheses` | `theorem` | `lean/InfoGeometry/Canonical/WeylKKTAnomalyIdentity.lean:95` | confidence `high` | signals: context:hypotheses; name:hypotheses
 - `InfoGeometry.Canonical.AnalyticalIndex.chiralSliceIsoAlong_of_noZeroEigenCrossing_path` | `theorem` | `lean/InfoGeometry/Canonical/AnalyticalIndexCore.lean:498` | confidence `medium` | signals: context:hypotheses
 - `InfoGeometry.Canonical.AnalyticalIndex.indexInvariantAlong_of_modularCliffordTransport_components` | `theorem` | `lean/InfoGeometry/Canonical/AnalyticalIndexCore.lean:868` | confidence `medium` | signals: context:hypotheses
-- `InfoGeometry.Canonical.BoundaryChiralIndexBridge.transportedHasZeroMode_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization` | `theorem` | `lean/InfoGeometry/Canonical/BoundaryChiralIndexBridge.lean:107` | confidence `medium` | signals: context:hypotheses; context:packaging
+- `InfoGeometry.Canonical.ArnoldNetworkIntertwiner.arnoldToDoubledKrein_readoutPreservation_of_pointwise_eq` | `theorem` | `lean/InfoGeometry/Canonical/ArnoldNetworkIntertwiner.lean:59` | confidence `medium` | signals: context:hypotheses
+- `InfoGeometry.Canonical.BogoliubovTransport.modularVariance_nonneg_iff_signed_secondMoment_nonneg` | `theorem` | `lean/InfoGeometry/Canonical/BogoliubovTransport.lean:1437` | confidence `medium` | signals: context:hypotheses
+- `InfoGeometry.Canonical.BogoliubovWeightedKMSCertification.lorentzBivectorSeed_operatorialKMS_of_structural` | `theorem` | `lean/InfoGeometry/Canonical/BogoliubovWeightedKMSCertification.lean:133` | confidence `medium` | signals: context:hypotheses
+- `InfoGeometry.Canonical.BogoliubovWeightedKMSCertification.weightedNonequilibrium_sinkhornKMSClosure_of_structural` | `theorem` | `lean/InfoGeometry/Canonical/BogoliubovWeightedKMSCertification.lean:220` | confidence `medium` | signals: context:hypotheses
+- `InfoGeometry.Canonical.BoundaryChiralIndexBridge.transportedHasZeroMode_of_operatorialCentralCharge_ne_zero_of_identifiedTransportedPolarization` | `theorem` | `lean/InfoGeometry/Canonical/BoundaryChiralIndexBridge.lean:108` | confidence `medium` | signals: context:hypotheses; context:packaging
 - `InfoGeometry.Canonical.CalabiYauBridge.absDet_cramerRaoMetric_eq_one_of_rnEntropySource_of_unitRelativeVolume` | `theorem` | `lean/InfoGeometry/Canonical/CalabiYauRNMongeAmpere.lean:60` | confidence `medium` | signals: context:hypotheses
 - `InfoGeometry.Canonical.CalabiYauBridge.logAbsDet_cramerRaoMetric_eq_zero_of_rnEntropySource_of_unitRelativeVolume` | `theorem` | `lean/InfoGeometry/Canonical/CalabiYauRNMongeAmpere.lean:82` | confidence `medium` | signals: context:hypotheses
 - `InfoGeometry.Canonical.ConformalAlgebra.ConformalBeliefAlgebra.generatorCartanDecomposition_of_parts` | `theorem` | `lean/InfoGeometry/Canonical/ConformalAlgebra.lean:110` | confidence `medium` | signals: context:hypotheses
@@ -79,16 +83,19 @@ It distinguishes likely constructive declarations from hypothesis bridges, packa
 - `InfoGeometry.Canonical.ConformalUnification.ConformalInference.projectorObstruction_isGZero_of_kkt_wings` | `theorem` | `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean:34` | confidence `medium` | signals: context:hypotheses
 - `InfoGeometry.Canonical.ConformalUnification.ConformalInference.squashedProjectorObstruction_isGZero_of_kkt_wings` | `theorem` | `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean:427` | confidence `medium` | signals: context:hypotheses
 - `InfoGeometry.Canonical.ConformalUnification.ConformalInference.chiralAnomaly_eq_zero_of_kahlerLogDet_normalized_fixedpoint` | `theorem` | `lean/InfoGeometry/Canonical/ConformalAnomalySource.lean:645` | confidence `medium` | signals: context:hypotheses
+- `InfoGeometry.Canonical.ConformalUnification.ConformalCanopyPackage.hA` | `theorem` | `lean/InfoGeometry/Canonical/ConformalUnification.lean:26` | confidence `medium` | signals: context:hypotheses; context:packaging
 - `InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData` | `theorem` | `lean/InfoGeometry/Canonical/ConnesArakiTomita.lean:91` | confidence `medium` | signals: context:hypotheses
 - `InfoGeometry.Canonical.ConnesArakiFramework.topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData_root` | `theorem` | `lean/InfoGeometry/Canonical/ConnesArakiTomita.lean:120` | confidence `medium` | signals: context:hypotheses
-- `InfoGeometry.Canonical.DrazinInfiniteCore.isDrazinInverse_of_hasClassicalRieszDecompositionAtZero` | `theorem` | `lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean:202` | confidence `medium` | signals: context:hypotheses
-- `InfoGeometry.Canonical.DrazinSpectralBridge.exists_drazinInverse_of_zeroIsolatedInSpectrum_package` | `theorem` | `lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean:121` | confidence `medium` | signals: context:hypotheses; context:packaging
-- `InfoGeometry.Canonical.IB.ibFrozenFreeEnergy_hStepDecomp` | `theorem` | `lean/InfoGeometry/Canonical/IBFrozenDescent.lean:287` | confidence `medium` | signals: context:hypotheses
-- `InfoGeometry.Canonical.IB.ibFrozenFreeEnergy_hPDecomp` | `theorem` | `lean/InfoGeometry/Canonical/IBFrozenDescent.lean:313` | confidence `medium` | signals: context:hypotheses
-- `InfoGeometry.Canonical.IB.ibVariationalFunctional_frozen_descent` | `theorem` | `lean/InfoGeometry/Canonical/IBFrozenDescent.lean:464` | confidence `medium` | signals: context:hypotheses
-- `InfoGeometry.Canonical.IB.baNormalize_pointwise_massNndist_le_of_massRecipLipschitz_intrinsicUpper` | `theorem` | `lean/InfoGeometry/Canonical/IBUpdate.lean:1203` | confidence `medium` | signals: context:hypotheses
+- `InfoGeometry.Canonical.DiracSouriau.hasDrazinInverse_of_kktChiralContext` | `theorem` | `lean/InfoGeometry/Canonical/DiracSouriauKKTChiralContext.lean:39` | confidence `medium` | signals: context:hypotheses
 
 ## Likely Constructive Declarations
+- `InfoGeometry.Algebraic.Fitting.ascent_le` | `theorem` | `lean/InfoGeometry/Algebraic/Fitting.lean:27` | confidence `low` | signals: -
+- `InfoGeometry.Algebraic.Fitting.descent_le` | `theorem` | `lean/InfoGeometry/Algebraic/Fitting.lean:47` | confidence `low` | signals: -
+- `InfoGeometry.Algebraic.Fitting.ker_pow_eq_of_ascent_stabilized` | `theorem` | `lean/InfoGeometry/Algebraic/Fitting.lean:70` | confidence `low` | signals: -
+- `InfoGeometry.Algebraic.Fitting.range_pow_eq_of_descent_stabilized` | `theorem` | `lean/InfoGeometry/Algebraic/Fitting.lean:79` | confidence `low` | signals: -
+- `InfoGeometry.Algebraic.Fitting.isCompl_ker_pow_range_pow` | `theorem` | `lean/InfoGeometry/Algebraic/Fitting.lean:88` | confidence `low` | signals: -
+- `InfoGeometry.Algebraic.Fitting.surjective_on_range` | `theorem` | `lean/InfoGeometry/Algebraic/Fitting.lean:122` | confidence `low` | signals: -
+- `InfoGeometry.Algebraic.Fitting.injective_on_range` | `theorem` | `lean/InfoGeometry/Algebraic/Fitting.lean:133` | confidence `low` | signals: -
 - `InfoGeometry.Architecture.SpinFactor.spinFactor_poly_identity` | `theorem` | `lean/InfoGeometry/Architecture/SpinFactor.lean:27` | confidence `low` | signals: -
 - `InfoGeometry.Architecture.SpinFactor.spinFactorPotential_well_defined` | `theorem` | `lean/InfoGeometry/Architecture/SpinFactor.lean:47` | confidence `low` | signals: -
 - `InfoGeometry.Architecture.SpinFactor.spinFactorPotential_zero` | `theorem` | `lean/InfoGeometry/Architecture/SpinFactor.lean:54` | confidence `low` | signals: -
@@ -102,24 +109,17 @@ It distinguishes likely constructive declarations from hypothesis bridges, packa
 - `InfoGeometry.Architecture.SymmetricSpace.mk.sizeOf_spec` | `theorem` | `lean/InfoGeometry/Architecture/SymmetricSpace.lean` | confidence `low` | signals: -
 - `InfoGeometry.Architecture.cartanSymmetryOfInvolutiveMulAut.eq_1` | `theorem` | `lean/InfoGeometry/Architecture/SymmetricSpace.lean` | confidence `low` | signals: -
 - `InfoGeometry.Architecture.SymmetricSpace.symm_involutive` | `theorem` | `lean/InfoGeometry/Architecture/SymmetricSpace.lean:16` | confidence `low` | signals: -
-- `InfoGeometry.Architecture.SymmetricSpace.symm_fixpoint` | `theorem` | `lean/InfoGeometry/Architecture/SymmetricSpace.lean:18` | confidence `low` | signals: -
-- `InfoGeometry.Architecture.symmetry_symmetry` | `theorem` | `lean/InfoGeometry/Architecture/SymmetricSpace.lean:20` | confidence `low` | signals: -
-- `InfoGeometry.Architecture.symmetry_self` | `theorem` | `lean/InfoGeometry/Architecture/SymmetricSpace.lean:27` | confidence `low` | signals: -
-- `InfoGeometry.Architecture.CartanInvolution.involutive` | `theorem` | `lean/InfoGeometry/Architecture/SymmetricSpace.lean:37` | confidence `low` | signals: -
-- `InfoGeometry.Architecture.SymmetricPair.fix_eq` | `theorem` | `lean/InfoGeometry/Architecture/SymmetricSpace.lean:45` | confidence `low` | signals: -
-- `InfoGeometry.Architecture.mem_fixedSubgroup_iff` | `theorem` | `lean/InfoGeometry/Architecture/SymmetricSpace.lean:84` | confidence `low` | signals: -
-- `InfoGeometry.Architecture.CartanInvolution.mem_fixedSubgroup_iff` | `theorem` | `lean/InfoGeometry/Architecture/SymmetricSpace.lean:92` | confidence `low` | signals: -
 
 ## Modules With Highest Non-Constructive Load
 | Module | Hypothesis bridges | Package surfaces | Surrogate/vacuous | Total |
 | :--- | ---: | ---: | ---: | ---: |
-| `InfoGeometry.Core.SymmetricLie` | 2 | 8 | 40 | 50 |
+| `InfoGeometry.Core.SymmetricLie` | 2 | 8 | 41 | 51 |
 | `InfoGeometry.Meta.ProofShape` | 0 | 15 | 20 | 35 |
 | `InfoGeometry.Canonical.SingularBoundaryCorrection` | 0 | 32 | 0 | 32 |
+| `InfoGeometry.Canonical.ModularSuperchargeClosure` | 8 | 21 | 2 | 31 |
 | `InfoGeometry.Canonical.UnifiedSuperchargeAlgebra` | 0 | 31 | 0 | 31 |
+| `InfoGeometry.Canonical.DrazinInfiniteCore` | 1 | 17 | 12 | 30 |
 | `InfoGeometry.Canonical.BulkBoundaryRegularizationBridge` | 0 | 26 | 3 | 29 |
-| `InfoGeometry.Canonical.ModularSuperchargeClosure` | 8 | 19 | 2 | 29 |
-| `InfoGeometry.Canonical.DrazinInfiniteCore` | 1 | 14 | 12 | 27 |
 | `InfoGeometry.Canonical.TypeIIIContinuousCoreReal` | 0 | 12 | 14 | 26 |
 | `InfoGeometry.Canonical.SpectralInference` | 1 | 24 | 0 | 25 |
 | `InfoGeometry.Canonical.ConformalProjectorCore` | 0 | 24 | 0 | 24 |
@@ -129,10 +129,10 @@ It distinguishes likely constructive declarations from hypothesis bridges, packa
 | `InfoGeometry.Canonical.GenerativeInferenceCore` | 0 | 19 | 0 | 19 |
 | `InfoGeometry.Quantum.RealMajoranaCategory` | 0 | 18 | 0 | 18 |
 | `InfoGeometry.Canonical.HeadTrialityCore` | 0 | 17 | 0 | 17 |
+| `InfoGeometry.Canonical.OperatorPenroseUnification` | 0 | 16 | 0 | 16 |
 | `InfoGeometry.Canonical.Unification` | 2 | 14 | 0 | 16 |
 | `InfoGeometry.Canonical.LogDetRadonNikodymMechanism` | 0 | 15 | 0 | 15 |
 | `InfoGeometry.Canonical.RealBdGDIIIAtom` | 0 | 15 | 0 | 15 |
-| `InfoGeometry.Quantum.BulkBoundary` | 4 | 11 | 0 | 15 |
 
 ## Quarantine Anchors
 - `InfoGeometry.Canonical.AQFTOperatorInterface` | downgraded to a preparation layer, but still only packages readiness certificates beside compression/interpretation surrogates

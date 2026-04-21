@@ -47,7 +47,7 @@ noncomputable def kAntilinearPart (X : KreinDoubledAtom) (f : X →ₗ[ℝ] X) :
           ((1 / 2 : ℝ) • f + (1 / 2 : ℝ) • kConjugate X f) := by
             simp [smul_sub, smul_add]
     _ = (1 / 2 : ℝ) • f + (1 / 2 : ℝ) • f := by
-          abel
+          abel_nf
     _ = (2 : ℝ) • ((1 / 2 : ℝ) • f) := by
           simpa [two_smul] using (two_smul ℝ ((1 / 2 : ℝ) • f)).symm
     _ = ((2 : ℝ) * (1 / 2 : ℝ)) • f := by

@@ -1,0 +1,30 @@
+{
+  "kind": "goal",
+  "probe": {
+    "context": "import Mathlib\n\nnoncomputable section\n\nabbrev PositiveReal := {x : \u211d // 0 < x}\n\nstructure NegLogRectifier where\n  generate : PositiveReal \u2192 \u211d\n  map_one : generate \u27e81, by norm_num\u27e9 = 0\n  map_mul : \u2200 r s : PositiveReal,\n    generate \u27e8r.1 * s.1, mul_pos r.2 s.2\u27e9 = generate r + generate s\n\nnamespace NegLogRectifier\n\ndef negLog : NegLogRectifier where\n  generate r := -Real.log r.1\n  map_one := by simp\n  map_mul r s := by\n    sorry",
+    "goal": "negLog.generate \u27e81, by norm_num\u27e9 = 0",
+    "imports": [
+      "Mathlib",
+      "Mathlib"
+    ],
+    "lean": {
+      "ok": true,
+      "returncode": 0,
+      "source": "import Mathlib\nimport Mathlib\n\nimport Mathlib\nnoncomputable section\nabbrev PositiveReal := {x : \u211d // 0 < x}\nstructure NegLogRectifier where\n  generate : PositiveReal \u2192 \u211d\n  map_one : generate \u27e81, by norm_num\u27e9 = 0\n  map_mul : \u2200 r s : PositiveReal,\n    generate \u27e8r.1 * s.1, mul_pos r.2 s.2\u27e9 = generate r + generate s\nnamespace NegLogRectifier\ndef negLog : NegLogRectifier where\n  generate r := -Real.log r.1\n  map_one := by simp\n  map_mul r s := by\n    sorry\n\ntheorem hermes_probe : negLog.generate \u27e81, by norm_num\u27e9 = 0 := by\n  trace_state\n  sorry\n",
+      "source_path": "/tmp/hermes_probe__fp_q9nm.lean",
+      "stderr": "",
+      "stdout": "/tmp/hermes_probe__fp_q9nm.lean:13:4: warning: declaration uses `sorry`\n\u22a2 negLog.generate \u27e81, \u22ef\u27e9 = 0\n/tmp/hermes_probe__fp_q9nm.lean:19:8: warning: declaration uses `sorry`\n"
+    },
+    "normalized_goal": "negLog.generate \u27e81, by norm_num\u27e9 = 0",
+    "proof_state": "/tmp/hermes_probe__fp_q9nm.lean:13:4: warning: declaration uses `sorry`\n\u22a2 negLog.generate \u27e81, \u22ef\u27e9 = 0\n/tmp/hermes_probe__fp_q9nm.lean:19:8: warning: declaration uses `sorry`",
+    "schema": "lean_interact.proof_state.v1",
+    "status": "ok"
+  },
+  "round": 1,
+  "surface": {
+    "goal": "negLog.generate \u27e81, by norm_num\u27e9 = 0",
+    "kind": "theorem",
+    "name": "generate_one",
+    "tactic": "negLog.map_one"
+  }
+}

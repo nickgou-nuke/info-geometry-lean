@@ -1,0 +1,359 @@
+{"_key": "section_2fadc3a71ff227ca", "key": "section_2fadc3a71ff227ca", "documentKey": "doc_75302d7dcbf6b060", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_53afd4f695b678a2", "key": "section_53afd4f695b678a2", "documentKey": "doc_75302d7dcbf6b060", "title": "main.tex", "level": 1, "ordinal": 2}
+{"_key": "section_932b7af96a148fd4", "key": "section_932b7af96a148fd4", "documentKey": "doc_75302d7dcbf6b060", "title": "Abstract", "level": 2, "ordinal": 3}
+{"_key": "section_880b1b1b2190607e", "key": "section_880b1b1b2190607e", "documentKey": "doc_75302d7dcbf6b060", "title": "Introduction", "level": 2, "ordinal": 4}
+{"_key": "section_cf361fc0db0b7895", "key": "section_cf361fc0db0b7895", "documentKey": "doc_75302d7dcbf6b060", "title": "The equilibrium connection", "level": 2, "ordinal": 5}
+{"_key": "section_c1202c5c1abb6f4f", "key": "section_c1202c5c1abb6f4f", "documentKey": "doc_75302d7dcbf6b060", "title": "Conformal Gauge Symmetries in Thermodynamics", "level": 2, "ordinal": 6}
+{"_key": "section_4ef38dafd10690f1", "key": "section_4ef38dafd10690f1", "documentKey": "doc_75302d7dcbf6b060", "title": "Change of thermodynamic representation as a gauge transformation", "level": 2, "ordinal": 7}
+{"_key": "section_91e572edf7bf4590", "key": "section_91e572edf7bf4590", "documentKey": "doc_75302d7dcbf6b060", "title": "Closing remarks", "level": 2, "ordinal": 8}
+{"_key": "section_c1913e1ab6dba7f7", "key": "section_c1913e1ab6dba7f7", "documentKey": "doc_75302d7dcbf6b060", "title": "Acknowledgments", "level": 2, "ordinal": 9}
+{"_key": "section_59a9c323a65bd28a", "key": "section_59a9c323a65bd28a", "documentKey": "doc_c0331e05cfe52c17", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_e40b6e163e4c1069", "key": "section_e40b6e163e4c1069", "documentKey": "doc_c0331e05cfe52c17", "title": "main.tex", "level": 1, "ordinal": 2}
+{"_key": "section_97c0f1fd1e38ece5", "key": "section_97c0f1fd1e38ece5", "documentKey": "doc_c0331e05cfe52c17", "title": "Abstract", "level": 2, "ordinal": 3}
+{"_key": "section_9b93dda71afe27e4", "key": "section_9b93dda71afe27e4", "documentKey": "doc_c0331e05cfe52c17", "title": "Introduction", "level": 2, "ordinal": 4}
+{"_key": "section_267528081105b927", "key": "section_267528081105b927", "documentKey": "doc_c0331e05cfe52c17", "title": "Motivation via Mathematical Physics", "level": 2, "ordinal": 5}
+{"_key": "section_ebe53f94a5a77f91", "key": "section_ebe53f94a5a77f91", "documentKey": "doc_c0331e05cfe52c17", "title": "Connections on Lie algebroids", "level": 2, "ordinal": 6}
+{"_key": "section_ce06a2b61f1410fb", "key": "section_ce06a2b61f1410fb", "documentKey": "doc_c0331e05cfe52c17", "title": "Proposition [label:curvature_of_splitting]", "level": 2, "ordinal": 7}
+{"_key": "section_93de8c00b6371789", "key": "section_93de8c00b6371789", "documentKey": "doc_c0331e05cfe52c17", "title": "Example [label:J1(TM)]", "level": 2, "ordinal": 8}
+{"_key": "section_d3e19a9084025776", "key": "section_d3e19a9084025776", "documentKey": "doc_c0331e05cfe52c17", "title": "Proposition [label:A-conn-from-jet-rep]", "level": 2, "ordinal": 9}
+{"_key": "section_ee206a957135b3b3", "key": "section_ee206a957135b3b3", "documentKey": "doc_c0331e05cfe52c17", "title": "Proposition [label:compatibility_vs_S]", "level": 2, "ordinal": 10}
+{"_key": "section_b2105007aa685fda", "key": "section_b2105007aa685fda", "documentKey": "doc_c0331e05cfe52c17", "title": "Example [label:Action-Cartan-Lie]", "level": 2, "ordinal": 11}
+{"_key": "section_830645dc2061079c", "key": "section_830645dc2061079c", "documentKey": "doc_c0331e05cfe52c17", "title": "Proposition [label:Action-Cartan-Lie_proposition]", "level": 2, "ordinal": 12}
+{"_key": "section_5123b3ec97d4ae8d", "key": "section_5123b3ec97d4ae8d", "documentKey": "doc_c0331e05cfe52c17", "title": "Example", "level": 2, "ordinal": 13}
+{"_key": "section_9e4eea51cfc66d28", "key": "section_9e4eea51cfc66d28", "documentKey": "doc_c0331e05cfe52c17", "title": "Example", "level": 2, "ordinal": 14}
+{"_key": "section_1a81703e5847448c", "key": "section_1a81703e5847448c", "documentKey": "doc_c0331e05cfe52c17", "title": "Example: 05", "level": 2, "ordinal": 15}
+{"_key": "section_15bb2ecbf323b535", "key": "section_15bb2ecbf323b535", "documentKey": "doc_c0331e05cfe52c17", "title": "Lemma [label:Civita_splitting]", "level": 2, "ordinal": 16}
+{"_key": "section_ac40566ed1c27b53", "key": "section_ac40566ed1c27b53", "documentKey": "doc_c0331e05cfe52c17", "title": "Lie algebroids over Riemannian manifolds", "level": 2, "ordinal": 17}
+{"_key": "section_d2741b09b67dd495", "key": "section_d2741b09b67dd495", "documentKey": "doc_c0331e05cfe52c17", "title": "Lemma [label:rhoKilling]", "level": 2, "ordinal": 18}
+{"_key": "section_f3262b1d4034947e", "key": "section_f3262b1d4034947e", "documentKey": "doc_c0331e05cfe52c17", "title": "Lemma [label:Killing-lemma]", "level": 2, "ordinal": 19}
+{"_key": "section_8f36467702d14fbb", "key": "section_8f36467702d14fbb", "documentKey": "doc_c0331e05cfe52c17", "title": "Example [label:example_flat_CartanKilling]", "level": 2, "ordinal": 20}
+{"_key": "section_0c1e2b1888ccb0c1", "key": "section_0c1e2b1888ccb0c1", "documentKey": "doc_c0331e05cfe52c17", "title": "Example", "level": 2, "ordinal": 21}
+{"_key": "section_066b0590818c93a7", "key": "section_066b0590818c93a7", "documentKey": "doc_c0331e05cfe52c17", "title": "Example: -Strobl14 [label:reg_foliation]", "level": 2, "ordinal": 22}
+{"_key": "section_123872acd6cf995d", "key": "section_123872acd6cf995d", "documentKey": "doc_c0331e05cfe52c17", "title": "Proposition", "level": 2, "ordinal": 23}
+{"_key": "section_0d44eef95d66a07a", "key": "section_0d44eef95d66a07a", "documentKey": "doc_c0331e05cfe52c17", "title": "Example", "level": 2, "ordinal": 24}
+{"_key": "section_af2293daa7e43775", "key": "section_af2293daa7e43775", "documentKey": "doc_c0331e05cfe52c17", "title": "Proposition [label:rho0]", "level": 2, "ordinal": 25}
+{"_key": "section_995e254aad5850c5", "key": "section_995e254aad5850c5", "documentKey": "doc_c0331e05cfe52c17", "title": "Theorem [label:proper]", "level": 2, "ordinal": 26}
+{"_key": "section_b496add55c309c17", "key": "section_b496add55c309c17", "documentKey": "doc_c0331e05cfe52c17", "title": "Lemma: O'Neill, 'Neill66 [label:lemma_submersion1]", "level": 2, "ordinal": 27}
+{"_key": "section_92b7b6c88618ca8d", "key": "section_92b7b6c88618ca8d", "documentKey": "doc_c0331e05cfe52c17", "title": "Lemma [label:lemma_submersion2]", "level": 2, "ordinal": 28}
+{"_key": "section_9e89bf1c9ec0ac16", "key": "section_9e89bf1c9ec0ac16", "documentKey": "doc_c0331e05cfe52c17", "title": "Proposition [label:Riemannian_foliation]", "level": 2, "ordinal": 29}
+{"_key": "section_c1f21a495a1a1e5c", "key": "section_c1f21a495a1a1e5c", "documentKey": "doc_c0331e05cfe52c17", "title": "Proposition", "level": 2, "ordinal": 30}
+{"_key": "section_fab809122f33861d", "key": "section_fab809122f33861d", "documentKey": "doc_c0331e05cfe52c17", "title": "Proposition", "level": 2, "ordinal": 31}
+{"_key": "section_ef2055ca20905d3b", "key": "section_ef2055ca20905d3b", "documentKey": "doc_c0331e05cfe52c17", "title": "Proposition", "level": 2, "ordinal": 32}
+{"_key": "section_4462f4ef0757f14b", "key": "section_4462f4ef0757f14b", "documentKey": "doc_c0331e05cfe52c17", "title": "Lie algebroids over manifolds with other geometric structures", "level": 2, "ordinal": 33}
+{"_key": "section_2cd6caf0780daf98", "key": "section_2cd6caf0780daf98", "documentKey": "doc_c0331e05cfe52c17", "title": "Proposition [label:Bilinear_quotient]", "level": 2, "ordinal": 34}
+{"_key": "section_98345caf77b31f90", "key": "section_98345caf77b31f90", "documentKey": "doc_c0331e05cfe52c17", "title": "Example [label:Generalized-Lie-Killing_example]", "level": 2, "ordinal": 35}
+{"_key": "section_8ff36e8dd569310f", "key": "section_8ff36e8dd569310f", "documentKey": "doc_c0331e05cfe52c17", "title": "Example [label:symplectic_quotient]", "level": 2, "ordinal": 36}
+{"_key": "section_d88a78a670d4579d", "key": "section_d88a78a670d4579d", "documentKey": "doc_c0331e05cfe52c17", "title": "Appendix A: Flat Killing Lie algebroids, simple examples and facts", "level": 2, "ordinal": 37}
+{"_key": "section_c079733f0780e106", "key": "section_c079733f0780e106", "documentKey": "doc_c0331e05cfe52c17", "title": "Example [label:Klein-bottle]", "level": 2, "ordinal": 38}
+{"_key": "section_9a0d6ab4e951ccc3", "key": "section_9a0d6ab4e951ccc3", "documentKey": "doc_c0331e05cfe52c17", "title": "Example [label:example_Mink]", "level": 2, "ordinal": 39}
+{"_key": "section_eeb6c31a3f08936d", "key": "section_eeb6c31a3f08936d", "documentKey": "doc_c0331e05cfe52c17", "title": "Example [label:example_sphere]", "level": 2, "ordinal": 40}
+{"_key": "section_782b6bee9aab2a9b", "key": "section_782b6bee9aab2a9b", "documentKey": "doc_c0331e05cfe52c17", "title": "Proposition [label:Lemma2]", "level": 2, "ordinal": 41}
+{"_key": "section_bb3535b50bedbf10", "key": "section_bb3535b50bedbf10", "documentKey": "doc_533a7662c50888ee", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_2eeb0bf6eae2d223", "key": "section_2eeb0bf6eae2d223", "documentKey": "doc_533a7662c50888ee", "title": "main.tex", "level": 1, "ordinal": 2}
+{"_key": "section_b7da50e04981b69b", "key": "section_b7da50e04981b69b", "documentKey": "doc_533a7662c50888ee", "title": "Abstract", "level": 2, "ordinal": 3}
+{"_key": "section_8219318be9ef430b", "key": "section_8219318be9ef430b", "documentKey": "doc_533a7662c50888ee", "title": "Introduction", "level": 2, "ordinal": 4}
+{"_key": "section_a859f3849b5a8d94", "key": "section_a859f3849b5a8d94", "documentKey": "doc_533a7662c50888ee", "title": "Jordan superalgebras and superpairs", "level": 2, "ordinal": 5}
+{"_key": "section_40a4137096666532", "key": "section_40a4137096666532", "documentKey": "doc_533a7662c50888ee", "title": "Jordan superalgebras", "level": 3, "ordinal": 6}
+{"_key": "section_caa4f1f7c815db20", "key": "section_caa4f1f7c815db20", "documentKey": "doc_533a7662c50888ee", "title": "Definition", "level": 2, "ordinal": 7}
+{"_key": "section_ad057163f3f6e5f9", "key": "section_ad057163f3f6e5f9", "documentKey": "doc_533a7662c50888ee", "title": "Jordan superpairs", "level": 3, "ordinal": 8}
+{"_key": "section_f7f7d855873491d7", "key": "section_f7f7d855873491d7", "documentKey": "doc_533a7662c50888ee", "title": "Example [label:ExJD]", "level": 2, "ordinal": 9}
+{"_key": "section_77716028ae0eacea", "key": "section_77716028ae0eacea", "documentKey": "doc_533a7662c50888ee", "title": "Derivations and the structure algebra", "level": 2, "ordinal": 10}
+{"_key": "section_0d09912c3f238528", "key": "section_0d09912c3f238528", "documentKey": "doc_533a7662c50888ee", "title": "The structure algebra for a Jordan superalgebra", "level": 3, "ordinal": 11}
+{"_key": "section_2b629b7e619a3e15", "key": "section_2b629b7e619a3e15", "documentKey": "doc_533a7662c50888ee", "title": "Definition", "level": 2, "ordinal": 12}
+{"_key": "section_4d7f9d627e514d7b", "key": "section_4d7f9d627e514d7b", "documentKey": "doc_533a7662c50888ee", "title": "Definition [label:Definition structure algebra]", "level": 2, "ordinal": 13}
+{"_key": "section_10838c1312432bbe", "key": "section_10838c1312432bbe", "documentKey": "doc_533a7662c50888ee", "title": "Definition [label:Definition inner structure algebra]", "level": 2, "ordinal": 14}
+{"_key": "section_e3b95bbbc577836d", "key": "section_e3b95bbbc577836d", "documentKey": "doc_533a7662c50888ee", "title": "Remark [label:Remark decomposition structure algebra for unital Jordan algebras]", "level": 2, "ordinal": 15}
+{"_key": "section_6fc701a1135e2a71", "key": "section_6fc701a1135e2a71", "documentKey": "doc_533a7662c50888ee", "title": "Example [label:Example sum not direct]", "level": 2, "ordinal": 16}
+{"_key": "section_f38d1b33773d54d2", "key": "section_f38d1b33773d54d2", "documentKey": "doc_533a7662c50888ee", "title": "Derivations of Jordan superpairs", "level": 3, "ordinal": 17}
+{"_key": "section_7cbb8e45b719d1b3", "key": "section_7cbb8e45b719d1b3", "documentKey": "doc_533a7662c50888ee", "title": "Definition", "level": 2, "ordinal": 18}
+{"_key": "section_94f98682fc80bc2d", "key": "section_94f98682fc80bc2d", "documentKey": "doc_533a7662c50888ee", "title": "Connections", "level": 3, "ordinal": 19}
+{"_key": "section_dcb97867c761684a", "key": "section_dcb97867c761684a", "documentKey": "doc_533a7662c50888ee", "title": "Proposition [label:inner structure is isomorphic to inner derivations]", "level": 2, "ordinal": 20}
+{"_key": "section_60862ddefb0673a1", "key": "section_60862ddefb0673a1", "documentKey": "doc_533a7662c50888ee", "title": "Remark", "level": 2, "ordinal": 21}
+{"_key": "section_00e92d9d1adc5417", "key": "section_00e92d9d1adc5417", "documentKey": "doc_533a7662c50888ee", "title": "Remark [label:RemInn]", "level": 2, "ordinal": 22}
+{"_key": "section_ab28754146de3dc7", "key": "section_ab28754146de3dc7", "documentKey": "doc_533a7662c50888ee", "title": "Proposition [label:Prop: chain of inclusions]", "level": 2, "ordinal": 23}
+{"_key": "section_0aa48a90979f3654", "key": "section_0aa48a90979f3654", "documentKey": "doc_533a7662c50888ee", "title": "Remark", "level": 2, "ordinal": 24}
+{"_key": "section_58b399652b770546", "key": "section_58b399652b770546", "documentKey": "doc_533a7662c50888ee", "title": "Lemma [label:Lemma: left multiplication and D are derivations]", "level": 2, "ordinal": 25}
+{"_key": "section_d41a1a05ab0271b5", "key": "section_d41a1a05ab0271b5", "documentKey": "doc_533a7662c50888ee", "title": "Proof", "level": 2, "ordinal": 26}
+{"_key": "section_2871325dae1e13ff", "key": "section_2871325dae1e13ff", "documentKey": "doc_533a7662c50888ee", "title": "Proof: Proof of Proposition~ : chain of inclusions [label:equation psi]", "level": 2, "ordinal": 27}
+{"_key": "section_5fe24cbc395f199f", "key": "section_5fe24cbc395f199f", "documentKey": "doc_533a7662c50888ee", "title": "Lemma [label:h is isomorphic to subset of der(V,V)]", "level": 2, "ordinal": 28}
+{"_key": "section_1a9bfe34ba599dd1", "key": "section_1a9bfe34ba599dd1", "documentKey": "doc_533a7662c50888ee", "title": "Proof", "level": 2, "ordinal": 29}
+{"_key": "section_dba2da2db83168ef", "key": "section_dba2da2db83168ef", "documentKey": "doc_533a7662c50888ee", "title": "Lemma [label:LemP1]", "level": 2, "ordinal": 30}
+{"_key": "section_fc2768da5d853838", "key": "section_fc2768da5d853838", "documentKey": "doc_533a7662c50888ee", "title": "Proof", "level": 2, "ordinal": 31}
+{"_key": "section_4bb117eca83109a9", "key": "section_4bb117eca83109a9", "documentKey": "doc_533a7662c50888ee", "title": "Lemma [label:LemP2]", "level": 2, "ordinal": 32}
+{"_key": "section_51243d463d76d852", "key": "section_51243d463d76d852", "documentKey": "doc_533a7662c50888ee", "title": "Proof", "level": 2, "ordinal": 33}
+{"_key": "section_50c31b4d89845abc", "key": "section_50c31b4d89845abc", "documentKey": "doc_533a7662c50888ee", "title": "Proof: Proof of Proposition~ structure is isomorphic to inner derivations", "level": 2, "ordinal": 34}
+{"_key": "section_4eccaa9269ac1d61", "key": "section_4eccaa9269ac1d61", "documentKey": "doc_533a7662c50888ee", "title": "Alternative definitions for the (inner) structure algebra", "level": 3, "ordinal": 35}
+{"_key": "section_f3b834644b8caa8e", "key": "section_f3b834644b8caa8e", "documentKey": "doc_533a7662c50888ee", "title": "Lemma", "level": 2, "ordinal": 36}
+{"_key": "section_718fd018b89274c9", "key": "section_718fd018b89274c9", "documentKey": "doc_533a7662c50888ee", "title": "Proof", "level": 2, "ordinal": 37}
+{"_key": "section_7e5190f7aed489e5", "key": "section_7e5190f7aed489e5", "documentKey": "doc_533a7662c50888ee", "title": "Lemma", "level": 2, "ordinal": 38}
+{"_key": "section_7c3a8fa2951f3f85", "key": "section_7c3a8fa2951f3f85", "documentKey": "doc_533a7662c50888ee", "title": "Proof", "level": 2, "ordinal": 39}
+{"_key": "section_ab43daa01171c822", "key": "section_ab43daa01171c822", "documentKey": "doc_533a7662c50888ee", "title": "Remark [label:Rem: innerstructure and inner derivations]", "level": 2, "ordinal": 40}
+{"_key": "section_a4ca20bfc7d39939", "key": "section_a4ca20bfc7d39939", "documentKey": "doc_533a7662c50888ee", "title": "The Tits-Kantor-Koecher construction", "level": 2, "ordinal": 41}
+{"_key": "section_7f53124a3b4d6dc6", "key": "section_7f53124a3b4d6dc6", "documentKey": "doc_533a7662c50888ee", "title": "TKK for Jordan superalgebras (Kantor's approach)", "level": 3, "ordinal": 42}
+{"_key": "section_e3e651c5c481be11", "key": "section_e3e651c5c481be11", "documentKey": "doc_533a7662c50888ee", "title": "TKK for Jordan superpairs (Koecher's approach)", "level": 3, "ordinal": 43}
+{"_key": "section_16312b5d081f1a01", "key": "section_16312b5d081f1a01", "documentKey": "doc_533a7662c50888ee", "title": "Definition", "level": 2, "ordinal": 44}
+{"_key": "section_53d98aa217a3e14c", "key": "section_53d98aa217a3e14c", "documentKey": "doc_533a7662c50888ee", "title": "Proposition [label:TKK inverse]", "level": 2, "ordinal": 45}
+{"_key": "section_753a8a3d86ea91e4", "key": "section_753a8a3d86ea91e4", "documentKey": "doc_533a7662c50888ee", "title": "Connection", "level": 3, "ordinal": 46}
+{"_key": "section_4075cbd17caa96b5", "key": "section_4075cbd17caa96b5", "documentKey": "doc_533a7662c50888ee", "title": "Proposition [label:PropKan]", "level": 2, "ordinal": 47}
+{"_key": "section_7bcc242146ac4ee8", "key": "section_7bcc242146ac4ee8", "documentKey": "doc_533a7662c50888ee", "title": "Proof", "level": 2, "ordinal": 48}
+{"_key": "section_fa622f0fd042aebc", "key": "section_fa622f0fd042aebc", "documentKey": "doc_533a7662c50888ee", "title": "Remark", "level": 2, "ordinal": 49}
+{"_key": "section_3dec8e419e6ada69", "key": "section_3dec8e419e6ada69", "documentKey": "doc_533a7662c50888ee", "title": "Tits' approach.", "level": 3, "ordinal": 50}
+{"_key": "section_72e642bee8a82fea", "key": "section_72e642bee8a82fea", "documentKey": "doc_533a7662c50888ee", "title": "Proposition [label:proposition Koecher and Tits are isomorphic]", "level": 2, "ordinal": 51}
+{"_key": "section_349c1a44b6ca4385", "key": "section_349c1a44b6ca4385", "documentKey": "doc_533a7662c50888ee", "title": "Proof", "level": 2, "ordinal": 52}
+{"_key": "section_5ef51de07992b845", "key": "section_5ef51de07992b845", "documentKey": "doc_533a7662c50888ee", "title": "Remark [label:RemTits]", "level": 2, "ordinal": 53}
+{"_key": "section_348748d5429e3578", "key": "section_348748d5429e3578", "documentKey": "doc_533a7662c50888ee", "title": "Proposition", "level": 2, "ordinal": 54}
+{"_key": "section_245d0916fafaff05", "key": "section_245d0916fafaff05", "documentKey": "doc_533a7662c50888ee", "title": "Proof", "level": 2, "ordinal": 55}
+{"_key": "section_17c0273b985ec213", "key": "section_17c0273b985ec213", "documentKey": "doc_533a7662c50888ee", "title": "Further TKK constructions", "level": 2, "ordinal": 56}
+{"_key": "section_b80154b259d5b840", "key": "section_b80154b259d5b840", "documentKey": "doc_533a7662c50888ee", "title": "Definition", "level": 3, "ordinal": 57}
+{"_key": "section_e4fb9d4757a98fed", "key": "section_e4fb9d4757a98fed", "documentKey": "doc_533a7662c50888ee", "title": "Lemma [label:Lemma connection Tits generalized Koecher]", "level": 2, "ordinal": 58}
+{"_key": "section_131dd3d7ef962585", "key": "section_131dd3d7ef962585", "documentKey": "doc_533a7662c50888ee", "title": "Comparison of further TKK constructions", "level": 3, "ordinal": 59}
+{"_key": "section_1300300196084e95", "key": "section_1300300196084e95", "documentKey": "doc_533a7662c50888ee", "title": "Proposition [label:Propnu]", "level": 2, "ordinal": 60}
+{"_key": "section_df121a2d9d17ccdb", "key": "section_df121a2d9d17ccdb", "documentKey": "doc_533a7662c50888ee", "title": "Proof", "level": 2, "ordinal": 61}
+{"_key": "section_588302cf737476eb", "key": "section_588302cf737476eb", "documentKey": "doc_533a7662c50888ee", "title": "Remark", "level": 2, "ordinal": 62}
+{"_key": "section_71421218b957fa87", "key": "section_71421218b957fa87", "documentKey": "doc_533a7662c50888ee", "title": "Outer derivations", "level": 3, "ordinal": 63}
+{"_key": "section_217cd92f92ef16a3", "key": "section_217cd92f92ef16a3", "documentKey": "doc_533a7662c50888ee", "title": "Definition: See", "level": 2, "ordinal": 64}
+{"_key": "section_2ceb5c4ae902e398", "key": "section_2ceb5c4ae902e398", "documentKey": "doc_533a7662c50888ee", "title": "Proposition [label:Theorem of outer derivations]", "level": 2, "ordinal": 65}
+{"_key": "section_d7502ec2c8847f65", "key": "section_d7502ec2c8847f65", "documentKey": "doc_533a7662c50888ee", "title": "Remark", "level": 2, "ordinal": 66}
+{"_key": "section_4168cd46d9a83f4b", "key": "section_4168cd46d9a83f4b", "documentKey": "doc_533a7662c50888ee", "title": "Remark [label:RemGrad]", "level": 2, "ordinal": 67}
+{"_key": "section_e3d3f78059e0ebe5", "key": "section_e3d3f78059e0ebe5", "documentKey": "doc_533a7662c50888ee", "title": "Proposition [label:proposition Jordan superpairs and outer derivations]", "level": 2, "ordinal": 68}
+{"_key": "section_13c07fbe49663f1f", "key": "section_13c07fbe49663f1f", "documentKey": "doc_533a7662c50888ee", "title": "Lemma [label:Der(V,V) = Der0]", "level": 2, "ordinal": 69}
+{"_key": "section_8adf26e3d367aa5d", "key": "section_8adf26e3d367aa5d", "documentKey": "doc_533a7662c50888ee", "title": "Proof", "level": 2, "ordinal": 70}
+{"_key": "section_a0746053b9164ba4", "key": "section_a0746053b9164ba4", "documentKey": "doc_533a7662c50888ee", "title": "Proof: Proof of Proposition~ Jordan superpairs and outer derivations", "level": 2, "ordinal": 71}
+{"_key": "section_b5eb924a8daea794", "key": "section_b5eb924a8daea794", "documentKey": "doc_533a7662c50888ee", "title": "Lemma [label:Der2 = 0]", "level": 2, "ordinal": 72}
+{"_key": "section_e1cce72fece1d54b", "key": "section_e1cce72fece1d54b", "documentKey": "doc_533a7662c50888ee", "title": "Proof", "level": 2, "ordinal": 73}
+{"_key": "section_970a841e685de903", "key": "section_970a841e685de903", "documentKey": "doc_533a7662c50888ee", "title": "Lemma [label:V cong Der1]", "level": 2, "ordinal": 74}
+{"_key": "section_cd6a22702fcdf863", "key": "section_cd6a22702fcdf863", "documentKey": "doc_533a7662c50888ee", "title": "Proof", "level": 2, "ordinal": 75}
+{"_key": "section_d88f56f8ba69d2a4", "key": "section_d88f56f8ba69d2a4", "documentKey": "doc_533a7662c50888ee", "title": "Proof: Proof of Proposition~ of outer derivations", "level": 2, "ordinal": 76}
+{"_key": "section_abe1961f4b1fc82f", "key": "section_abe1961f4b1fc82f", "documentKey": "doc_533a7662c50888ee", "title": "Alternative construction", "level": 3, "ordinal": 77}
+{"_key": "section_614369dc9c161286", "key": "section_614369dc9c161286", "documentKey": "doc_533a7662c50888ee", "title": "Examples", "level": 2, "ordinal": 78}
+{"_key": "section_d6299a845b42699c", "key": "section_d6299a845b42699c", "documentKey": "doc_533a7662c50888ee", "title": "Unital finite dimensional simple Jordan superalgebras.", "level": 3, "ordinal": 79}
+{"_key": "section_04d948589b1659e4", "key": "section_04d948589b1659e4", "documentKey": "doc_533a7662c50888ee", "title": "The non-unital finite dimensional simple Jordan superalgebra.", "level": 3, "ordinal": 80}
+{"_key": "section_396bd50884d3610e", "key": "section_396bd50884d3610e", "documentKey": "doc_533a7662c50888ee", "title": "The Lie superalgebras of type $A$, $P$, $Q$ and $H$", "level": 2, "ordinal": 81}
+{"_key": "section_cb2426dacdd33e0f", "key": "section_cb2426dacdd33e0f", "documentKey": "doc_533a7662c50888ee", "title": "Type A", "level": 3, "ordinal": 82}
+{"_key": "section_16dd9e9e445be672", "key": "section_16dd9e9e445be672", "documentKey": "doc_533a7662c50888ee", "title": "Type P", "level": 3, "ordinal": 83}
+{"_key": "section_ccbfc5ff88bd5a43", "key": "section_ccbfc5ff88bd5a43", "documentKey": "doc_533a7662c50888ee", "title": "Type Q", "level": 3, "ordinal": 84}
+{"_key": "section_51f8770a5626f02e", "key": "section_51f8770a5626f02e", "documentKey": "doc_533a7662c50888ee", "title": "Type H", "level": 3, "ordinal": 85}
+{"_key": "section_e53b2a71d9249d31", "key": "section_e53b2a71d9249d31", "documentKey": "doc_791b06c6ac3c8cef", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_5081dbfe817d6249", "key": "section_5081dbfe817d6249", "documentKey": "doc_791b06c6ac3c8cef", "title": "LindQuantTherm_PRA.tex", "level": 1, "ordinal": 2}
+{"_key": "section_a3d3128a8d82b532", "key": "section_a3d3128a8d82b532", "documentKey": "doc_791b06c6ac3c8cef", "title": "Abstract", "level": 2, "ordinal": 3}
+{"_key": "section_8d5b12f9154bbe87", "key": "section_8d5b12f9154bbe87", "documentKey": "doc_791b06c6ac3c8cef", "title": "Introduction", "level": 2, "ordinal": 4}
+{"_key": "section_1c0c5b53fb7febf7", "key": "section_1c0c5b53fb7febf7", "documentKey": "doc_791b06c6ac3c8cef", "title": "System Dynamics and Thermodynamics", "level": 2, "ordinal": 5}
+{"_key": "section_f5840947bdfafc3c", "key": "section_f5840947bdfafc3c", "documentKey": "doc_791b06c6ac3c8cef", "title": "Energy Non-Invariance", "level": 3, "ordinal": 6}
+{"_key": "section_3eddf7f68e3d64c6", "key": "section_3eddf7f68e3d64c6", "documentKey": "doc_791b06c6ac3c8cef", "title": "Covariance of the First Law", "level": 3, "ordinal": 7}
+{"_key": "section_ed78b63e8841a02b", "key": "section_ed78b63e8841a02b", "documentKey": "doc_791b06c6ac3c8cef", "title": "The Interplay among Generators", "level": 3, "ordinal": 8}
+{"_key": "section_303e69e0e9625724", "key": "section_303e69e0e9625724", "documentKey": "doc_791b06c6ac3c8cef", "title": "Statistical Interpretation of Heat and Work", "level": 3, "ordinal": 9}
+{"_key": "section_96cbfcd78e305e5a", "key": "section_96cbfcd78e305e5a", "documentKey": "doc_791b06c6ac3c8cef", "title": "Thermodynamical Invariance", "level": 2, "ordinal": 10}
+{"_key": "section_00ddcb0a401ca949", "key": "section_00ddcb0a401ca949", "documentKey": "doc_791b06c6ac3c8cef", "title": "Invariance Conditions", "level": 3, "ordinal": 11}
+{"_key": "section_41dcce2c7aa01b50", "key": "section_41dcce2c7aa01b50", "documentKey": "doc_791b06c6ac3c8cef", "title": "Quantum Detailed Balance", "level": 3, "ordinal": 12}
+{"_key": "section_965baa53e0d50038", "key": "section_965baa53e0d50038", "documentKey": "doc_791b06c6ac3c8cef", "title": "Gauge-Dependent Thermodynamics", "level": 2, "ordinal": 13}
+{"_key": "section_c7d7a01a05eb9200", "key": "section_c7d7a01a05eb9200", "documentKey": "doc_791b06c6ac3c8cef", "title": "Unitary Dynamics and Non-interacting Systems", "level": 3, "ordinal": 14}
+{"_key": "section_266aa23170d74f99", "key": "section_266aa23170d74f99", "documentKey": "doc_791b06c6ac3c8cef", "title": "Analysis of Particular Processes", "level": 3, "ordinal": 15}
+{"_key": "section_e96f4fb9efc45985", "key": "section_e96f4fb9efc45985", "documentKey": "doc_791b06c6ac3c8cef", "title": "Entropy Production and Second Law", "level": 2, "ordinal": 16}
+{"_key": "section_9a27e922a7d973b7", "key": "section_9a27e922a7d973b7", "documentKey": "doc_791b06c6ac3c8cef", "title": "Example: Pure Decoherence Model", "level": 2, "ordinal": 17}
+{"_key": "section_255a5a32bce7facf", "key": "section_255a5a32bce7facf", "documentKey": "doc_791b06c6ac3c8cef", "title": "Application to Thermal Machines", "level": 2, "ordinal": 18}
+{"_key": "section_230a594c68f7e16a", "key": "section_230a594c68f7e16a", "documentKey": "doc_791b06c6ac3c8cef", "title": "General Comments", "level": 3, "ordinal": 19}
+{"_key": "section_2efa7e8eacce022d", "key": "section_2efa7e8eacce022d", "documentKey": "doc_791b06c6ac3c8cef", "title": "Gauge and Efficiency", "level": 3, "ordinal": 20}
+{"_key": "section_0312be77f114f360", "key": "section_0312be77f114f360", "documentKey": "doc_791b06c6ac3c8cef", "title": "Example: The Three-Level Maser", "level": 3, "ordinal": 21}
+{"_key": "section_2675d5e33763f325", "key": "section_2675d5e33763f325", "documentKey": "doc_791b06c6ac3c8cef", "title": "Final Remarks and Outlooks", "level": 2, "ordinal": 22}
+{"_key": "section_75f13000f00b7fe1", "key": "section_75f13000f00b7fe1", "documentKey": "doc_d66c092f35da3405", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_c3c15aa5db75e549", "key": "section_c3c15aa5db75e549", "documentKey": "doc_d66c092f35da3405", "title": "Manuscript.tex", "level": 1, "ordinal": 2}
+{"_key": "section_265a5878cb7d655b", "key": "section_265a5878cb7d655b", "documentKey": "doc_d66c092f35da3405", "title": "Abstract", "level": 2, "ordinal": 3}
+{"_key": "section_1e5ee9828f5de7ee", "key": "section_1e5ee9828f5de7ee", "documentKey": "doc_d66c092f35da3405", "title": "Introduction", "level": 2, "ordinal": 4}
+{"_key": "section_5980c78cf420f57a", "key": "section_5980c78cf420f57a", "documentKey": "doc_d66c092f35da3405", "title": "Literature Review", "level": 2, "ordinal": 5}
+{"_key": "section_37f2a0c4a7548db9", "key": "section_37f2a0c4a7548db9", "documentKey": "doc_d66c092f35da3405", "title": "Outline and Contributions", "level": 2, "ordinal": 6}
+{"_key": "section_a276de8bb63cd530", "key": "section_a276de8bb63cd530", "documentKey": "doc_d66c092f35da3405", "title": "The Inverse Optimization Problem", "level": 2, "ordinal": 7}
+{"_key": "section_56f9b2862a8ec222", "key": "section_56f9b2862a8ec222", "documentKey": "doc_d66c092f35da3405", "title": "Solution Strategy", "level": 2, "ordinal": 8}
+{"_key": "section_6742d3747636ac5f", "key": "section_6742d3747636ac5f", "documentKey": "doc_d66c092f35da3405", "title": "Single-Level Reformulation", "level": 3, "ordinal": 9}
+{"_key": "section_971510337c22d2b7", "key": "section_971510337c22d2b7", "documentKey": "doc_d66c092f35da3405", "title": "Penalty Reformulation", "level": 3, "ordinal": 10}
+{"_key": "section_1655cab568a29b43", "key": "section_1655cab568a29b43", "documentKey": "doc_d66c092f35da3405", "title": "Lemma [label:lem:regular]", "level": 2, "ordinal": 11}
+{"_key": "section_6aa8e3e192efeb7a", "key": "section_6aa8e3e192efeb7a", "documentKey": "doc_d66c092f35da3405", "title": "Proof", "level": 2, "ordinal": 12}
+{"_key": "section_b7f1aa21d9ad994f", "key": "section_b7f1aa21d9ad994f", "documentKey": "doc_d66c092f35da3405", "title": "Theorem", "level": 2, "ordinal": 13}
+{"_key": "section_ca828c8f71f92cc5", "key": "section_ca828c8f71f92cc5", "documentKey": "doc_d66c092f35da3405", "title": "Block Coordinate Descent", "level": 3, "ordinal": 14}
+{"_key": "section_9ab2eb62e46b6ffd", "key": "section_9ab2eb62e46b6ffd", "documentKey": "doc_d66c092f35da3405", "title": "Example", "level": 2, "ordinal": 15}
+{"_key": "section_69b3e2f5d6bd9e15", "key": "section_69b3e2f5d6bd9e15", "documentKey": "doc_d66c092f35da3405", "title": "Theorem [label:thm:ProxConv]", "level": 2, "ordinal": 16}
+{"_key": "section_9f00a047fb024a79", "key": "section_9f00a047fb024a79", "documentKey": "doc_d66c092f35da3405", "title": "Corollary", "level": 2, "ordinal": 17}
+{"_key": "section_965889a47fe9d3a6", "key": "section_965889a47fe9d3a6", "documentKey": "doc_d66c092f35da3405", "title": "Computational Case Studies", "level": 2, "ordinal": 18}
+{"_key": "section_f5199c5dc51823bb", "key": "section_f5199c5dc51823bb", "documentKey": "doc_d66c092f35da3405", "title": "The Water-Filling Problem", "level": 3, "ordinal": 19}
+{"_key": "section_aaf16e75a6599a8e", "key": "section_aaf16e75a6599a8e", "documentKey": "doc_d66c092f35da3405", "title": "Convergence criterion for Algorithm [ref:alg:Outerloop]", "level": 4, "ordinal": 20}
+{"_key": "section_9ad6180a9bad4fdb", "key": "section_9ad6180a9bad4fdb", "documentKey": "doc_d66c092f35da3405", "title": "Computational Performance", "level": 4, "ordinal": 21}
+{"_key": "section_d43fa99bd8ab5bd2", "key": "section_d43fa99bd8ab5bd2", "documentKey": "doc_d66c092f35da3405", "title": "Solution Quality", "level": 4, "ordinal": 22}
+{"_key": "section_5e1551c04dc7db09", "key": "section_5e1551c04dc7db09", "documentKey": "doc_d66c092f35da3405", "title": "Estimating Risk Preferences", "level": 3, "ordinal": 23}
+{"_key": "section_adfa8ce1055abf9d", "key": "section_adfa8ce1055abf9d", "documentKey": "doc_d66c092f35da3405", "title": "Resource Allocation Market", "level": 3, "ordinal": 24}
+{"_key": "section_84c9a17972ad1b65", "key": "section_84c9a17972ad1b65", "documentKey": "doc_d66c092f35da3405", "title": "Conclusions", "level": 2, "ordinal": 25}
+{"_key": "section_ffa1ad3d3ccea504", "key": "section_ffa1ad3d3ccea504", "documentKey": "doc_d66c092f35da3405", "title": "Acknowledgments", "level": 2, "ordinal": 26}
+{"_key": "section_738eeda7d2083af9", "key": "section_738eeda7d2083af9", "documentKey": "doc_d8affd389eafc91f", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_c3644671825fb2c0", "key": "section_c3644671825fb2c0", "documentKey": "doc_d8affd389eafc91f", "title": "main.tex", "level": 1, "ordinal": 2}
+{"_key": "section_19fab6e0b15b3c4f", "key": "section_19fab6e0b15b3c4f", "documentKey": "doc_d8affd389eafc91f", "title": "Abstract", "level": 2, "ordinal": 3}
+{"_key": "section_b4e4603f63205535", "key": "section_b4e4603f63205535", "documentKey": "doc_d8affd389eafc91f", "title": "Introduction", "level": 2, "ordinal": 4}
+{"_key": "section_5d711fdc9a22bfaf", "key": "section_5d711fdc9a22bfaf", "documentKey": "doc_d8affd389eafc91f", "title": "Higher group Weyl symmetry", "level": 2, "ordinal": 5}
+{"_key": "section_3728188681009c69", "key": "section_3728188681009c69", "documentKey": "doc_d8affd389eafc91f", "title": "2-group global symmetry", "level": 3, "ordinal": 6}
+{"_key": "section_c3ca33f8b5e8a81a", "key": "section_c3ca33f8b5e8a81a", "documentKey": "doc_d8affd389eafc91f", "title": "2-group Weyl symmetry", "level": 3, "ordinal": 7}
+{"_key": "section_691e6507164d232b", "key": "section_691e6507164d232b", "documentKey": "doc_d8affd389eafc91f", "title": "Local renormalization group equation", "level": 3, "ordinal": 8}
+{"_key": "section_268e06d227b37bc5", "key": "section_268e06d227b37bc5", "documentKey": "doc_d8affd389eafc91f", "title": "Discussions", "level": 2, "ordinal": 9}
+{"_key": "section_616382e1f3e6daad", "key": "section_616382e1f3e6daad", "documentKey": "doc_d8affd389eafc91f", "title": "Acknowledgements", "level": 2, "ordinal": 10}
+{"_key": "section_047152dcfd1ec5ae", "key": "section_047152dcfd1ec5ae", "documentKey": "doc_221944ee4c81f5ab", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_5573951d79477903", "key": "section_5573951d79477903", "documentKey": "doc_221944ee4c81f5ab", "title": "main.tex", "level": 1, "ordinal": 2}
+{"_key": "section_097abdabf679a6b1", "key": "section_097abdabf679a6b1", "documentKey": "doc_221944ee4c81f5ab", "title": "Abstract", "level": 2, "ordinal": 3}
+{"_key": "section_d97edea04fe64324", "key": "section_d97edea04fe64324", "documentKey": "doc_221944ee4c81f5ab", "title": "Motivation", "level": 2, "ordinal": 4}
+{"_key": "section_4c1c619bb9cf40b4", "key": "section_4c1c619bb9cf40b4", "documentKey": "doc_221944ee4c81f5ab", "title": "Weyl anomaly and beyond", "level": 2, "ordinal": 5}
+{"_key": "section_617935f40271ac14", "key": "section_617935f40271ac14", "documentKey": "doc_221944ee4c81f5ab", "title": "Weyl anomaly in Weyl geometry", "level": 2, "ordinal": 6}
+{"_key": "section_3e1dde21f81d727a", "key": "section_3e1dde21f81d727a", "documentKey": "doc_221944ee4c81f5ab", "title": "Weyl geometry with a metric description", "level": 3, "ordinal": 7}
+{"_key": "section_34d1cfd2f8cc53d4", "key": "section_34d1cfd2f8cc53d4", "documentKey": "doc_221944ee4c81f5ab", "title": "Weyl anomaly in Weyl geometry", "level": 3, "ordinal": 8}
+{"_key": "section_4f8d3d7e0c9453e6", "key": "section_4f8d3d7e0c9453e6", "documentKey": "doc_221944ee4c81f5ab", "title": "Relation to holographic Weyl anomaly and Riemannian limit", "level": 3, "ordinal": 9}
+{"_key": "section_19273287b1453dd7", "key": "section_19273287b1453dd7", "documentKey": "doc_221944ee4c81f5ab", "title": "Stueckelberg breaking of the symmetry", "level": 3, "ordinal": 10}
+{"_key": "section_6485f31468e0081d", "key": "section_6485f31468e0081d", "documentKey": "doc_221944ee4c81f5ab", "title": "Conclusions", "level": 2, "ordinal": 11}
+{"_key": "section_369405fa378f86d8", "key": "section_369405fa378f86d8", "documentKey": "doc_221944ee4c81f5ab", "title": "Appendix", "level": 2, "ordinal": 12}
+{"_key": "section_5babea03a736b2f5", "key": "section_5babea03a736b2f5", "documentKey": "doc_221944ee4c81f5ab", "title": "Weyl geometry in d dimensions", "level": 3, "ordinal": 13}
+{"_key": "section_5d57c4a47001fc2e", "key": "section_5d57c4a47001fc2e", "documentKey": "doc_221944ee4c81f5ab", "title": "Weyl gauge symmetry current", "level": 3, "ordinal": 14}
+{"_key": "section_94b26e8bc582e7d3", "key": "section_94b26e8bc582e7d3", "documentKey": "doc_b141d98929c9c339", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_40f5a0588c908f48", "key": "section_40f5a0588c908f48", "documentKey": "doc_b141d98929c9c339", "title": "main.tex", "level": 1, "ordinal": 2}
+{"_key": "section_8894e252a1dfcfa1", "key": "section_8894e252a1dfcfa1", "documentKey": "doc_b141d98929c9c339", "title": "Abstract", "level": 2, "ordinal": 3}
+{"_key": "section_57445635b035a908", "key": "section_57445635b035a908", "documentKey": "doc_b141d98929c9c339", "title": "Introduction", "level": 2, "ordinal": 4}
+{"_key": "section_89ddd031b9e927ff", "key": "section_89ddd031b9e927ff", "documentKey": "doc_b141d98929c9c339", "title": "The basics", "level": 2, "ordinal": 5}
+{"_key": "section_3ced4a43f844ac13", "key": "section_3ced4a43f844ac13", "documentKey": "doc_b141d98929c9c339", "title": "Conventional approach", "level": 2, "ordinal": 6}
+{"_key": "section_a2175c98df523827", "key": "section_a2175c98df523827", "documentKey": "doc_b141d98929c9c339", "title": "Implications of the CAP for gravitational theory", "level": 3, "ordinal": 7}
+{"_key": "section_7567cc44ac035dc9", "key": "section_7567cc44ac035dc9", "documentKey": "doc_b141d98929c9c339", "title": "$V_4$ background space", "level": 4, "ordinal": 8}
+{"_key": "section_8fa3a8c7dfb84369", "key": "section_8fa3a8c7dfb84369", "documentKey": "doc_b141d98929c9c339", "title": "$\\tilde W_4$ background space", "level": 4, "ordinal": 9}
+{"_key": "section_11bcc08b6e620b77", "key": "section_11bcc08b6e620b77", "documentKey": "doc_b141d98929c9c339", "title": "Alternative approach", "level": 2, "ordinal": 10}
+{"_key": "section_86b4de80d216fb55", "key": "section_86b4de80d216fb55", "documentKey": "doc_b141d98929c9c339", "title": "Weyl gauge invariant theory of gravity in $\\tilde W_4$ space", "level": 2, "ordinal": 11}
+{"_key": "section_fc34718aaad7200b", "key": "section_fc34718aaad7200b", "documentKey": "doc_b141d98929c9c339", "title": "Physical significance of gauge freedom", "level": 3, "ordinal": 12}
+{"_key": "section_29dcc174714e7cbf", "key": "section_29dcc174714e7cbf", "documentKey": "doc_b141d98929c9c339", "title": "General relativity gauge", "level": 4, "ordinal": 13}
+{"_key": "section_b6629d9319508ba9", "key": "section_b6629d9319508ba9", "documentKey": "doc_b141d98929c9c339", "title": "On the role of the gauge invariants", "level": 3, "ordinal": 14}
+{"_key": "section_ac0655daed574ae7", "key": "section_ac0655daed574ae7", "documentKey": "doc_b141d98929c9c339", "title": "Redshift effect in $\\tilde W_4$ space", "level": 2, "ordinal": 15}
+{"_key": "section_d421ee2ffc49331d", "key": "section_d421ee2ffc49331d", "documentKey": "doc_b141d98929c9c339", "title": "Curvature redshift", "level": 3, "ordinal": 16}
+{"_key": "section_406559ebf7ecbf7e", "key": "section_406559ebf7ecbf7e", "documentKey": "doc_b141d98929c9c339", "title": "Nonmetricity redshift", "level": 3, "ordinal": 17}
+{"_key": "section_bf83e9becf367f4f", "key": "section_bf83e9becf367f4f", "documentKey": "doc_b141d98929c9c339", "title": "Experimental differentiation of gauges", "level": 3, "ordinal": 18}
+{"_key": "section_0c6827c9ab38c2db", "key": "section_0c6827c9ab38c2db", "documentKey": "doc_b141d98929c9c339", "title": "General relativity gauge", "level": 4, "ordinal": 19}
+{"_key": "section_ba47c00299ee0a24", "key": "section_ba47c00299ee0a24", "documentKey": "doc_b141d98929c9c339", "title": "Arbitrary gauge", "level": 4, "ordinal": 20}
+{"_key": "section_61bc626357b0654e", "key": "section_61bc626357b0654e", "documentKey": "doc_b141d98929c9c339", "title": "Critique on the Alternative Approach to Gauge Symmetry", "level": 2, "ordinal": 21}
+{"_key": "section_36000459036658ae", "key": "section_36000459036658ae", "documentKey": "doc_b141d98929c9c339", "title": "Discussion", "level": 2, "ordinal": 22}
+{"_key": "section_f7dab5ead3e8726f", "key": "section_f7dab5ead3e8726f", "documentKey": "doc_b141d98929c9c339", "title": "Conclusion", "level": 2, "ordinal": 23}
+{"_key": "section_619f55de3b788f05", "key": "section_619f55de3b788f05", "documentKey": "doc_b141d98929c9c339", "title": "Varying mass and fifth force in $V_4$", "level": 2, "ordinal": 24}
+{"_key": "section_e3331c98f59b2574", "key": "section_e3331c98f59b2574", "documentKey": "doc_b141d98929c9c339", "title": "Autoparallels in $W_4$ space", "level": 2, "ordinal": 25}
+{"_key": "section_3e6f79cf2628d448", "key": "section_3e6f79cf2628d448", "documentKey": "doc_b141d98929c9c339", "title": "Mass variation in $W_4$ space", "level": 2, "ordinal": 26}
+{"_key": "section_978999271872425b", "key": "section_978999271872425b", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_2c2c58098b25d63d", "key": "section_2c2c58098b25d63d", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Cocycle_paper-arXiv-v3.tex", "level": 1, "ordinal": 2}
+{"_key": "section_50312d47bb6a60ff", "key": "section_50312d47bb6a60ff", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Introduction", "level": 2, "ordinal": 3}
+{"_key": "section_f6a4e1f38ee7be78", "key": "section_f6a4e1f38ee7be78", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Conformal anomaly and central extensions", "level": 3, "ordinal": 4}
+{"_key": "section_9432deecffc231db", "key": "section_9432deecffc231db", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Main results: Identification of the cocycle", "level": 3, "ordinal": 5}
+{"_key": "section_e9d7cd49a5713a54", "key": "section_e9d7cd49a5713a54", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Theorem [label:thm:main]", "level": 2, "ordinal": 6}
+{"_key": "section_2c8c8490010e6fcc", "key": "section_2c8c8490010e6fcc", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Remark", "level": 2, "ordinal": 7}
+{"_key": "section_b4f721c303343eda", "key": "section_b4f721c303343eda", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Remark [label:rmk:diffeomorphisms_triviality]", "level": 2, "ordinal": 8}
+{"_key": "section_57ef347cfec4d952", "key": "section_57ef347cfec4d952", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Remark [label:remark:obstruction]", "level": 2, "ordinal": 9}
+{"_key": "section_c8b12f3e0ea3746c", "key": "section_c8b12f3e0ea3746c", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Remarks on modular functors and universality", "level": 3, "ordinal": 10}
+{"_key": "section_99b818cae830ab2a", "key": "section_99b818cae830ab2a", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Corollary", "level": 2, "ordinal": 11}
+{"_key": "section_0cd85b6b59e1e1b3", "key": "section_0cd85b6b59e1e1b3", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Acknowledgments", "level": 3, "ordinal": 12}
+{"_key": "section_699655b365998781", "key": "section_699655b365998781", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Preliminaries", "level": 2, "ordinal": 13}
+{"_key": "section_5afd661655fb7208", "key": "section_5afd661655fb7208", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Diffeomorphisms and complex deformations of the circle", "level": 3, "ordinal": 14}
+{"_key": "section_f08b7653dc633341", "key": "section_f08b7653dc633341", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Cocycles and the Virasoro algebra", "level": 3, "ordinal": 15}
+{"_key": "section_33122c319d430452", "key": "section_33122c319d430452", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proposition [label:prop:virasoro_cocycle_classification]", "level": 2, "ordinal": 16}
+{"_key": "section_d582a7230775c314", "key": "section_d582a7230775c314", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof", "level": 2, "ordinal": 17}
+{"_key": "section_8aa2f7c843b150cb", "key": "section_8aa2f7c843b150cb", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Remark [label:rem:Vir_exact_sequence]", "level": 2, "ordinal": 18}
+{"_key": "section_782e13efcbc221cf", "key": "section_782e13efcbc221cf", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Cylinders with analytical boundary parametrizations", "level": 3, "ordinal": 19}
+{"_key": "section_9c06416fb16b9b93", "key": "section_9c06416fb16b9b93", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Definition [label:def:boundary_param]", "level": 2, "ordinal": 20}
+{"_key": "section_6ee62a6491495c0f", "key": "section_6ee62a6491495c0f", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Remark [label:remark:proper_class]", "level": 2, "ordinal": 21}
+{"_key": "section_9654e2de92c4835d", "key": "section_9654e2de92c4835d", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "The semigroup of cylinders and uniformization", "level": 3, "ordinal": 22}
+{"_key": "section_c227a6675d3823b1", "key": "section_c227a6675d3823b1", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Lemma [label:lem:conformal_atlas]", "level": 2, "ordinal": 23}
+{"_key": "section_521d42de062bd438", "key": "section_521d42de062bd438", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof", "level": 2, "ordinal": 24}
+{"_key": "section_3231b34375ae87a4", "key": "section_3231b34375ae87a4", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proposition [label:prop:neretin_form]", "level": 2, "ordinal": 25}
+{"_key": "section_d8a5692aaf052969", "key": "section_d8a5692aaf052969", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof", "level": 2, "ordinal": 26}
+{"_key": "section_73b352e61bf7e0cf", "key": "section_73b352e61bf7e0cf", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Definition [label:def:admissible]", "level": 2, "ordinal": 27}
+{"_key": "section_7394d4453b83f165", "key": "section_7394d4453b83f165", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Properties of the conformal anomaly", "level": 3, "ordinal": 28}
+{"_key": "section_717811b3ebf3124a", "key": "section_717811b3ebf3124a", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proposition [label:prop:actionsagree]", "level": 2, "ordinal": 29}
+{"_key": "section_3ced53169673621a", "key": "section_3ced53169673621a", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof [label:eq:pairingincoords]", "level": 2, "ordinal": 30}
+{"_key": "section_36debf00e4ee8eae", "key": "section_36debf00e4ee8eae", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proposition [label:prop:liou_properties]", "level": 2, "ordinal": 31}
+{"_key": "section_6b9cc40eb32bb19d", "key": "section_6b9cc40eb32bb19d", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof", "level": 2, "ordinal": 32}
+{"_key": "section_1d9805d83113fc14", "key": "section_1d9805d83113fc14", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Real determinant lines", "level": 2, "ordinal": 33}
+{"_key": "section_b30aa16d229129c8", "key": "section_b30aa16d229129c8", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Definitions and sewing isomorphisms", "level": 3, "ordinal": 34}
+{"_key": "section_23ff10f9bb58689f", "key": "section_23ff10f9bb58689f", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Definition [label:def:detrc]", "level": 2, "ordinal": 35}
+{"_key": "section_aaf85e4e557245d5", "key": "section_aaf85e4e557245d5", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proposition [label:prop:well_defined]", "level": 2, "ordinal": 36}
+{"_key": "section_0863994ded986362", "key": "section_0863994ded986362", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof", "level": 2, "ordinal": 37}
+{"_key": "section_3ad72488543bde43", "key": "section_3ad72488543bde43", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proposition [label:prop:global_section]", "level": 2, "ordinal": 38}
+{"_key": "section_dbf8f6ad225ca723", "key": "section_dbf8f6ad225ca723", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof", "level": 2, "ordinal": 39}
+{"_key": "section_d3a3560886e63ae4", "key": "section_d3a3560886e63ae4", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Definition [label:def:sewing_iso]", "level": 2, "ordinal": 40}
+{"_key": "section_69efde8bce666c5d", "key": "section_69efde8bce666c5d", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Remark [label:remark:cocycle_cylinders]", "level": 2, "ordinal": 41}
+{"_key": "section_b3f06166e5288617", "key": "section_b3f06166e5288617", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Comments on general moduli spaces and Laplacian determinants", "level": 3, "ordinal": 42}
+{"_key": "section_9636eac4aecd4d52", "key": "section_9636eac4aecd4d52", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proposition [label:proposition:detz]", "level": 2, "ordinal": 43}
+{"_key": "section_832e4254ac52b8fa", "key": "section_832e4254ac52b8fa", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof", "level": 2, "ordinal": 44}
+{"_key": "section_631095298b5e85f9", "key": "section_631095298b5e85f9", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proposition [label:prop:relation of global sections]", "level": 2, "ordinal": 45}
+{"_key": "section_78316e12962f6ed0", "key": "section_78316e12962f6ed0", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof [label:eq:exponents1]", "level": 2, "ordinal": 46}
+{"_key": "section_3fb578acad99560f", "key": "section_3fb578acad99560f", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Theorem [label:thm:loewner]", "level": 2, "ordinal": 47}
+{"_key": "section_9eb1b63afc2f05b4", "key": "section_9eb1b63afc2f05b4", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof", "level": 2, "ordinal": 48}
+{"_key": "section_9d671cd22a16286f", "key": "section_9d671cd22a16286f", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "The central extension", "level": 3, "ordinal": 49}
+{"_key": "section_a820f8a15565458c", "key": "section_a820f8a15565458c", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Definition [label:def:det_line]", "level": 2, "ordinal": 50}
+{"_key": "section_cfd9fc824d3e02cb", "key": "section_cfd9fc824d3e02cb", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Theorem [label:thm:natisophi]", "level": 2, "ordinal": 51}
+{"_key": "section_608ea21e41dd680b", "key": "section_608ea21e41dd680b", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Lemma [label:lemma:decomposition]", "level": 2, "ordinal": 52}
+{"_key": "section_c14bb7e1f1eef38a", "key": "section_c14bb7e1f1eef38a", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof", "level": 2, "ordinal": 53}
+{"_key": "section_6da7851606f14ea9", "key": "section_6da7851606f14ea9", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof: Proof of Theorem~ :natisophi [label:eq:decomposition_r]", "level": 2, "ordinal": 54}
+{"_key": "section_1626c74b3edf83a5", "key": "section_1626c74b3edf83a5", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Remark [label:remark:nofactor]", "level": 2, "ordinal": 55}
+{"_key": "section_d341bef31870149d", "key": "section_d341bef31870149d", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Theorem [label:thm:detmult]", "level": 2, "ordinal": 56}
+{"_key": "section_f5c4d897b033a478", "key": "section_f5c4d897b033a478", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof [label:eq:associativity_sufficient]", "level": 2, "ordinal": 57}
+{"_key": "section_228d377a70e35fa8", "key": "section_228d377a70e35fa8", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Definition [label:def:cocycle_deformation]", "level": 2, "ordinal": 58}
+{"_key": "section_2bc3ff3854b0b2bf", "key": "section_2bc3ff3854b0b2bf", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Corollary [label:cor:extension_sequence]", "level": 2, "ordinal": 59}
+{"_key": "section_0d278a226fb7771e", "key": "section_0d278a226fb7771e", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof", "level": 2, "ordinal": 60}
+{"_key": "section_3ae47f28de24ab05", "key": "section_3ae47f28de24ab05", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Computation of the Lie algebra cocycle", "level": 2, "ordinal": 61}
+{"_key": "section_e86a18b1f350d17e", "key": "section_e86a18b1f350d17e", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Convenient choices of metrics", "level": 3, "ordinal": 62}
+{"_key": "section_3483a8ceaa6af081", "key": "section_3483a8ceaa6af081", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Lemma [label:lemma:radius_of_convergence]", "level": 2, "ordinal": 63}
+{"_key": "section_67c612a448bca50d", "key": "section_67c612a448bca50d", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof", "level": 2, "ordinal": 64}
+{"_key": "section_8452f9f4aae3ffb1", "key": "section_8452f9f4aae3ffb1", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Lemma [label:lemma:nofactor_metrics]", "level": 2, "ordinal": 65}
+{"_key": "section_8f39a81aab33b02d", "key": "section_8f39a81aab33b02d", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof", "level": 2, "ordinal": 66}
+{"_key": "section_5f77399d6e1b5c62", "key": "section_5f77399d6e1b5c62", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Differentiation of the cocycle and the proof of Theorem~[ref:thm:main]", "level": 3, "ordinal": 67}
+{"_key": "section_87214d75d11d6609", "key": "section_87214d75d11d6609", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proposition [label:eq:change_ann_iso]", "level": 2, "ordinal": 68}
+{"_key": "section_4a05a2fc2ebd11ae", "key": "section_4a05a2fc2ebd11ae", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof [label:eq:global_section_s]", "level": 2, "ordinal": 69}
+{"_key": "section_6a0e1836d3a399bd", "key": "section_6a0e1836d3a399bd", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof: Proof of Theorem~ :main [label:eq:double derivative cocycle]", "level": 2, "ordinal": 70}
+{"_key": "section_add39ca8d41a3848", "key": "section_add39ca8d41a3848", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "The conformal anomaly with boundary term", "level": 2, "ordinal": 71}
+{"_key": "section_cc5fa7303112e3aa", "key": "section_cc5fa7303112e3aa", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proposition [label:prop:cocycle_property_boundary]", "level": 2, "ordinal": 72}
+{"_key": "section_e52e96980d3f2643", "key": "section_e52e96980d3f2643", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof [label:eq:stopairing]", "level": 2, "ordinal": 73}
+{"_key": "section_7adbf89f9052c00a", "key": "section_7adbf89f9052c00a", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Triviality of the cocycle on diffeomorphisms of the circle", "level": 2, "ordinal": 74}
+{"_key": "section_590f247590a0c4e9", "key": "section_590f247590a0c4e9", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proposition [label:prop:diffeomorphisms_triviality]", "level": 2, "ordinal": 75}
+{"_key": "section_462e3c7f90f3af0c", "key": "section_462e3c7f90f3af0c", "documentKey": "doc_ed3fa7f63f0a9cf0", "title": "Proof", "level": 2, "ordinal": 76}
+{"_key": "section_7c08eddf891fb4b7", "key": "section_7c08eddf891fb4b7", "documentKey": "doc_4dc768820535b6fd", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_d93b82e8ab22a763", "key": "section_d93b82e8ab22a763", "documentKey": "doc_4dc768820535b6fd", "title": "thesis.tex", "level": 1, "ordinal": 2}
+{"_key": "section_623f9158448748b0", "key": "section_623f9158448748b0", "documentKey": "doc_4dc768820535b6fd", "title": "Abstract", "level": 2, "ordinal": 3}
+{"_key": "section_204bef8a2e5ec4c7", "key": "section_204bef8a2e5ec4c7", "documentKey": "doc_4dc768820535b6fd", "title": "List of Abbreviations", "level": 1, "ordinal": 4}
+{"_key": "section_de99060944bc7dd1", "key": "section_de99060944bc7dd1", "documentKey": "doc_4dc768820535b6fd", "title": "List of Symbols", "level": 1, "ordinal": 5}
+{"_key": "section_64290f6ded816146", "key": "section_64290f6ded816146", "documentKey": "doc_cfdea602d6b134ce", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_96b227c0ba2b22a2", "key": "section_96b227c0ba2b22a2", "documentKey": "doc_cfdea602d6b134ce", "title": "Main.tex", "level": 1, "ordinal": 2}
+{"_key": "section_6fd6700b7bcd9f0d", "key": "section_6fd6700b7bcd9f0d", "documentKey": "doc_cfdea602d6b134ce", "title": "Introduction", "level": 2, "ordinal": 3}
+{"_key": "section_8579e79ee593809b", "key": "section_8579e79ee593809b", "documentKey": "doc_cfdea602d6b134ce", "title": "Holography and Weyl geometries", "level": 2, "ordinal": 4}
+{"_key": "section_2eb974ebad5dec62", "key": "section_2eb974ebad5dec62", "documentKey": "doc_cfdea602d6b134ce", "title": "Generalized Gauge", "level": 2, "ordinal": 5}
+{"_key": "section_550102b94b062a98", "key": "section_550102b94b062a98", "documentKey": "doc_cfdea602d6b134ce", "title": "Examples", "level": 2, "ordinal": 6}
+{"_key": "section_086a3a518cf43c4e", "key": "section_086a3a518cf43c4e", "documentKey": "doc_cfdea602d6b134ce", "title": "Discussion and Outlook", "level": 2, "ordinal": 7}
+{"_key": "section_c799c9014846573f", "key": "section_c799c9014846573f", "documentKey": "doc_cfdea602d6b134ce", "title": "Acknowledgements", "level": 2, "ordinal": 8}
+{"_key": "section_bdc5507c73621dfa", "key": "section_bdc5507c73621dfa", "documentKey": "doc_cfdea602d6b134ce", "title": "Generalized AdS$_3$ boundary conditions", "level": 2, "ordinal": 9}
+{"_key": "section_dc6469953b790b3e", "key": "section_dc6469953b790b3e", "documentKey": "doc_d93c9f441eedb45c", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_6a8a6d90f192671f", "key": "section_6a8a6d90f192671f", "documentKey": "doc_d93c9f441eedb45c", "title": "main.tex", "level": 1, "ordinal": 2}
+{"_key": "section_9d8375e1a6789887", "key": "section_9d8375e1a6789887", "documentKey": "doc_d93c9f441eedb45c", "title": "Introduction", "level": 2, "ordinal": 3}
+{"_key": "section_c4d7f96decbb81a8", "key": "section_c4d7f96decbb81a8", "documentKey": "doc_d93c9f441eedb45c", "title": "Rank $ 3", "level": 2, "ordinal": 4}
+{"_key": "section_f3ed0e8e24c582be", "key": "section_f3ed0e8e24c582be", "documentKey": "doc_d93c9f441eedb45c", "title": "The holomorphic anomaly recursion", "level": 2, "ordinal": 5}
+{"_key": "section_8d010715e5e50d85", "key": "section_8d010715e5e50d85", "documentKey": "doc_d93c9f441eedb45c", "title": "The SW prepotential in flat background", "level": 3, "ordinal": 6}
+{"_key": "section_12b9ef3a3c4981ed", "key": "section_12b9ef3a3c4981ed", "documentKey": "doc_d93c9f441eedb45c", "title": "Holomorphic anomaly equation", "level": 3, "ordinal": 7}
+{"_key": "section_acc88d39ad05b0ba", "key": "section_acc88d39ad05b0ba", "documentKey": "doc_d93c9f441eedb45c", "title": "$ H", "level": 3, "ordinal": 8}
+{"_key": "section_b25f2a7b10b19932", "key": "section_b25f2a7b10b19932", "documentKey": "doc_d93c9f441eedb45c", "title": "Applying holomorphic anomaly recursion to the $ H", "level": 3, "ordinal": 9}
+{"_key": "section_2333862eb857a483", "key": "section_2333862eb857a483", "documentKey": "doc_d93c9f441eedb45c", "title": "Heavy conformal block", "level": 2, "ordinal": 10}
+{"_key": "section_c01ff599fd527d3d", "key": "section_c01ff599fd527d3d", "documentKey": "doc_d93c9f441eedb45c", "title": "BPZ differential equation for rank $3/2$ conformal block", "level": 3, "ordinal": 11}
+{"_key": "section_ba46099e1d9c6364", "key": "section_ba46099e1d9c6364", "documentKey": "doc_d93c9f441eedb45c", "title": "The deformed SW curve", "level": 3, "ordinal": 12}
+{"_key": "section_29c1eccdc71d3b4c", "key": "section_29c1eccdc71d3b4c", "documentKey": "doc_d93c9f441eedb45c", "title": "Irregular states", "level": 2, "ordinal": 13}
+{"_key": "section_07c8ff588cb5c480", "key": "section_07c8ff588cb5c480", "documentKey": "doc_d93c9f441eedb45c", "title": "Integer rank irregular states", "level": 3, "ordinal": 14}
+{"_key": "section_7eed45e0f30f84ed", "key": "section_7eed45e0f30f84ed", "documentKey": "doc_d93c9f441eedb45c", "title": "Irregular states of (Poincar\\'e", "level": 3, "ordinal": 15}
+{"_key": "section_2bd27d036e8a452a", "key": "section_2bd27d036e8a452a", "documentKey": "doc_d93c9f441eedb45c", "title": "Expression for $ F", "level": 2, "ordinal": 16}
+{"_key": "section_018f7357bdba5acc", "key": "section_018f7357bdba5acc", "documentKey": "doc_d93c9f441eedb45c", "title": "The $A$-period from DSW", "level": 2, "ordinal": 17}
+{"_key": "section_692c36327083ce46", "key": "section_692c36327083ce46", "documentKey": "doc_ade8659af2c8ff88", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_1b4c521ee70bb0c6", "key": "section_1b4c521ee70bb0c6", "documentKey": "doc_ade8659af2c8ff88", "title": "main.tex", "level": 1, "ordinal": 2}
+{"_key": "section_476cfbe5f9d655ac", "key": "section_476cfbe5f9d655ac", "documentKey": "doc_ade8659af2c8ff88", "title": "Abstract", "level": 2, "ordinal": 3}
+{"_key": "section_e00a88158f5e9358", "key": "section_e00a88158f5e9358", "documentKey": "doc_ade8659af2c8ff88", "title": "Introduction", "level": 2, "ordinal": 4}
+{"_key": "section_982a2ac5b5a45435", "key": "section_982a2ac5b5a45435", "documentKey": "doc_ade8659af2c8ff88", "title": "Entropy-functional equilibrium criterion", "level": 2, "ordinal": 5}
+{"_key": "section_69bd198ddb944ed6", "key": "section_69bd198ddb944ed6", "documentKey": "doc_ade8659af2c8ff88", "title": "Canonical sector $A$: star-like subsystem", "level": 2, "ordinal": 6}
+{"_key": "section_09566b086001a3f5", "key": "section_09566b086001a3f5", "documentKey": "doc_ade8659af2c8ff88", "title": "Partition function and free energy", "level": 3, "ordinal": 7}
+{"_key": "section_d033d347cbe4da2b", "key": "section_d033d347cbe4da2b", "documentKey": "doc_ade8659af2c8ff88", "title": "Contour-integral representation of the singular contribution", "level": 3, "ordinal": 8}
+{"_key": "section_9db66be63a172b8f", "key": "section_9db66be63a172b8f", "documentKey": "doc_ade8659af2c8ff88", "title": "Schwarzschild-like realization", "level": 3, "ordinal": 9}
+{"_key": "section_edf0f56dc48370b6", "key": "section_edf0f56dc48370b6", "documentKey": "doc_ade8659af2c8ff88", "title": "Grand-canonical sector $B$: galaxy-like open subsystem", "level": 2, "ordinal": 10}
+{"_key": "section_c674250e4aea77a3", "key": "section_c674250e4aea77a3", "documentKey": "doc_ade8659af2c8ff88", "title": "Grand partition function and relativistic thermodynamics", "level": 3, "ordinal": 11}
+{"_key": "section_f138fe1a73f428f6", "key": "section_f138fe1a73f428f6", "documentKey": "doc_ade8659af2c8ff88", "title": "Singular contour representation", "level": 3, "ordinal": 12}
+{"_key": "section_2f8c0e826241bd23", "key": "section_2f8c0e826241bd23", "documentKey": "doc_ade8659af2c8ff88", "title": "Reissner--Nordstrom-like realization", "level": 3, "ordinal": 13}
+{"_key": "section_cd5572eb23249656", "key": "section_cd5572eb23249656", "documentKey": "doc_ade8659af2c8ff88", "title": "Unified residue formalism and comparison of the two sectors", "level": 2, "ordinal": 14}
+{"_key": "section_84f002806f9060f2", "key": "section_84f002806f9060f2", "documentKey": "doc_ade8659af2c8ff88", "title": "Illustrative potential plot and explicit", "level": 2, "ordinal": 15}
+{"_key": "section_2c69cbd1361471fa", "key": "section_2c69cbd1361471fa", "documentKey": "doc_ade8659af2c8ff88", "title": "Conclusion", "level": 2, "ordinal": 16}
+{"_key": "section_1801fc8a45963cae", "key": "section_1801fc8a45963cae", "documentKey": "doc_ade8659af2c8ff88", "title": "Derivation of the contour-temperature formula", "level": 2, "ordinal": 17}
+{"_key": "section_fa7180b0fd2bd719", "key": "section_fa7180b0fd2bd719", "documentKey": "doc_420a9ae3262e7bd5", "title": "Front Matter", "level": 1, "ordinal": 1}
+{"_key": "section_b69d97985de577d6", "key": "section_b69d97985de577d6", "documentKey": "doc_420a9ae3262e7bd5", "title": "proton.tex", "level": 1, "ordinal": 2}

@@ -179,12 +179,22 @@ def anchor_seed_indices(graph: AlexandriaGraph) -> list[int]:
 
 def neighbor_affinity(graph: AlexandriaGraph, src: int, dst: int) -> float:
     direct = max(graph.edge_weights.get((src, dst), 0.0), graph.edge_weights.get((dst, src), 0.0))
+    src_chunk = graph.chunks[src]
+    dst_chunk = graph.chunks[dst]
     src_entities = graph.entities_by_chunk.get(graph.chunk_keys[src], [])
     dst_entities = graph.entities_by_chunk.get(graph.chunk_keys[dst], [])
     src_anchor = {canonical_entity_key(entity) for entity in src_entities if entity.get("entityType") in ANCHOR_TYPES}
     dst_anchor = {canonical_entity_key(entity) for entity in dst_entities if entity.get("entityType") in ANCHOR_TYPES}
     shared_anchor = len(src_anchor & dst_anchor)
-    return direct + 0.6 * shared_anchor
+    score = direct + 0.6 * shared_anchor
+    if src_chunk.get("documentKey") == dst_chunk.get("documentKey"):
+        score *= 0.72
+        if shared_anchor == 0:
+            score *= 0.7
+    else:
+        if shared_anchor > 0:
+            score += 0.2 * shared_anchor
+    return score
 
 
 def anchor_seeded_basins(graph: AlexandriaGraph, *, absorb_threshold: float = 1.1) -> list[list[int]]:
@@ -209,7 +219,8 @@ def anchor_seeded_basins(graph: AlexandriaGraph, *, absorb_threshold: float = 1.
             for v in set(graph.forward[u] + graph.preds[u]):
                 if v in basin_of:
                     continue
-                if neighbor_affinity(graph, u, v) < absorb_threshold:
+                affinity = neighbor_affinity(graph, u, v)
+                if affinity < absorb_threshold:
                     continue
                 basin_of[v] = basin_id
                 basins[basin_id].add(v)

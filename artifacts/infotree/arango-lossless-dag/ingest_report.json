@@ -1,0 +1,56 @@
+{
+  "schema": "info_geometry.arango_layered_ingest.v1",
+  "endpoint": "http://127.0.0.1:8529",
+  "database": "infogeometry",
+  "input_dir": "/home/goutev/repos/info-geometry-lean-fusion/artifacts/infotree/arango-lossless-dag",
+  "collections": {
+    "raw_nodes": "raw_info_nodes",
+    "raw_edges": "raw_info_edges",
+    "overlay_nodes": "topology_overlay",
+    "overlay_edges": "topology_overlay_edges"
+  },
+  "imports": {
+    "raw_info_nodes": {
+      "error": false,
+      "created": 25947,
+      "updated": 0,
+      "errors": 0,
+      "total": 25947,
+      "batches": 6,
+      "method": "document_batch_replace"
+    },
+    "raw_info_edges": {
+      "error": false,
+      "created": 1184253,
+      "updated": 0,
+      "errors": 0,
+      "total": 1184253,
+      "batches": 237,
+      "method": "document_batch_replace"
+    },
+    "topology_overlay": {
+      "error": false,
+      "created": 25947,
+      "updated": 0,
+      "errors": 0,
+      "total": 25947,
+      "batches": 6,
+      "method": "document_batch_replace"
+    },
+    "topology_overlay_edges": {
+      "error": false,
+      "created": 1210200,
+      "updated": 0,
+      "errors": 0,
+      "total": 1210200,
+      "batches": 243,
+      "method": "document_batch_replace"
+    }
+  },
+  "counts": {
+    "raw_info_nodes": 25947,
+    "raw_info_edges": 1184253,
+    "topology_overlay": 25947,
+    "topology_overlay_edges": 1210200
+  }
+}

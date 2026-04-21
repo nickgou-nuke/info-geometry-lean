@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.RelativeModularOperator
 import InfoGeometry.Canonical.RestrictedVolumeCharacter
+import InfoGeometry.Geometry.KreinAsHessian
 import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
 import InfoGeometry.Meta.Architecture
 
@@ -20,8 +21,10 @@ namespace InfoGeometry.Canonical.RelativeModularBerezinianBridge
 open InfoGeometry.Canonical.PositiveRayCore
 open InfoGeometry.Canonical.RelativeModularOperator
 open InfoGeometry.Canonical.RestrictedVolumeCharacter
+open InfoGeometry.Geometry
 open InfoGeometry.MaxEnt.JaynesInfoStatMech.ThermalDiagonal
 open InfoGeometry.Volume.Base
+open scoped InnerProductSpace
 
 section Finite
 
@@ -110,5 +113,351 @@ theorem neg_log_relativeModularRestrictedSheetEquiv_restrictedVolumeScale_eq_sup
   rfl
 
 end Finite
+
+section KreinHessianLift
+
+variable {n : ℕ} [Nonempty (Fin n)]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
+
+/--
+Concrete quadratic operatorial lift of the finite relative modular supervolume
+potential.
+
+The finite Berezinian/supervolume potential anchors the value at the vacuum
+`0`; the operatorial fluctuation is the repo-native indefinite quadratic
+Krein potential.  This is the concrete lane where the second derivative is
+proved, not merely carried as a hypothesis.
+-/
+@[rep_depth operator]
+noncomputable def relativeModularSupervolumeKreinQuadraticPotential
+    (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) (v : H₂) : ℝ :=
+  relativeModularSupervolumePotential (n := n) qPlus q0Plus qMinus q0Minus
+    + krein_potential (E := E) v
+
+/-- Gradient of the concrete quadratic supervolume lift. -/
+@[rep_depth operator]
+noncomputable def relativeModularSupervolumeKreinGradient
+    (_qPlus _q0Plus _qMinus _q0Minus : PositiveRay (Fin n)) (v : H₂) : H₂ :=
+  krein_grad (E := E) v
+
+/-- Constant Hessian operator of the concrete quadratic supervolume lift. -/
+@[rep_depth operator]
+noncomputable def relativeModularSupervolumeKreinHessian
+    (_qPlus _q0Plus _qMinus _q0Minus : PositiveRay (Fin n)) : H₂ →L[ℝ] H₂ :=
+  krein_hessian (E := E)
+
+/-- The anchored quadratic lift has the finite supervolume value at the vacuum. -/
+@[rep_depth operator]
+theorem relativeModularSupervolumeKreinQuadraticPotential_zero
+    (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) :
+    relativeModularSupervolumeKreinQuadraticPotential
+        (n := n) (E := E) qPlus q0Plus qMinus q0Minus 0 =
+      relativeModularSupervolumePotential (n := n) qPlus q0Plus qMinus q0Minus := by
+  simp [relativeModularSupervolumeKreinQuadraticPotential,
+    krein_potential, krein_form, InfoGeometry.Krein.hessian_indefinite_form,
+    InfoGeometry.Krein.KreinSpace.kreinInner]
+
+/-- The concrete quadratic supervolume lift differentiates to the Krein gradient. -/
+@[rep_depth operator]
+theorem hasFDerivAt_relativeModularSupervolumeKreinQuadraticPotential
+    (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) (u : H₂) :
+    HasFDerivAt
+      (relativeModularSupervolumeKreinQuadraticPotential
+        (n := n) (E := E) qPlus q0Plus qMinus q0Minus)
+      (InnerProductSpace.toDual ℝ H₂
+        (relativeModularSupervolumeKreinGradient
+          (n := n) (E := E) qPlus q0Plus qMinus q0Minus u))
+      u := by
+  let c : ℝ :=
+    relativeModularSupervolumePotential (n := n) qPlus q0Plus qMinus q0Minus
+  have hConst : HasFDerivAt (fun _ : H₂ => c) (0 : H₂ →L[ℝ] ℝ) u :=
+    hasFDerivAt_const c u
+  have hKrein := hasFDerivAt_krein_potential (E := E) u
+  have hSum := hConst.add hKrein
+  simpa [relativeModularSupervolumeKreinQuadraticPotential,
+    relativeModularSupervolumeKreinGradient, c] using hSum
+
+/--
+The gradient of the concrete quadratic supervolume lift has constant derivative
+equal to the Krein Hessian operator.
+-/
+@[rep_depth operator]
+theorem hasFDerivAt_relativeModularSupervolumeKreinGradient
+    (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) (u : H₂) :
+    HasFDerivAt
+      (relativeModularSupervolumeKreinGradient
+        (n := n) (E := E) qPlus q0Plus qMinus q0Minus)
+      (relativeModularSupervolumeKreinHessian
+        (n := n) (E := E) qPlus q0Plus qMinus q0Minus)
+      u := by
+  simpa [relativeModularSupervolumeKreinGradient,
+    relativeModularSupervolumeKreinHessian] using
+    hasFDerivAt_krein_grad (E := E) u
+
+/--
+The Hessian bilinear readout of the concrete quadratic supervolume lift is the
+Krein inner/Hessian form.
+-/
+@[rep_depth operator]
+theorem relativeModularSupervolumeKreinHessian_bilin_eq_krein_form
+    (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) (u v : H₂) :
+    inner ℝ
+        (relativeModularSupervolumeKreinHessian
+          (n := n) (E := E) qPlus q0Plus qMinus q0Minus u) v =
+      krein_form (E := E) u v := by
+  rfl
+
+/--
+Concrete second-derivative packet: the anchored relative modular supervolume
+potential has finite Berezinian value at the vacuum, Krein gradient as first
+variation, and constant Krein Hessian as second variation.
+-/
+@[rep_depth operator]
+theorem relativeModularSupervolume_concrete_secondDerivative_Krein_packet
+    (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n)) (u v : H₂) :
+    relativeModularSupervolumeKreinQuadraticPotential
+        (n := n) (E := E) qPlus q0Plus qMinus q0Minus 0 =
+      relativeModularSupervolumePotential (n := n) qPlus q0Plus qMinus q0Minus
+      ∧ HasFDerivAt
+          (relativeModularSupervolumeKreinQuadraticPotential
+            (n := n) (E := E) qPlus q0Plus qMinus q0Minus)
+          (InnerProductSpace.toDual ℝ H₂
+            (relativeModularSupervolumeKreinGradient
+              (n := n) (E := E) qPlus q0Plus qMinus q0Minus u))
+          u
+      ∧ HasFDerivAt
+          (relativeModularSupervolumeKreinGradient
+            (n := n) (E := E) qPlus q0Plus qMinus q0Minus)
+          (relativeModularSupervolumeKreinHessian
+            (n := n) (E := E) qPlus q0Plus qMinus q0Minus)
+          u
+      ∧ inner ℝ
+          (relativeModularSupervolumeKreinHessian
+            (n := n) (E := E) qPlus q0Plus qMinus q0Minus u) v =
+        krein_form (E := E) u v
+      ∧ inner ℝ
+          (relativeModularSupervolumeKreinHessian
+            (n := n) (E := E) qPlus q0Plus qMinus q0Minus u) v =
+        inner ℝ
+          (relativeModularSupervolumeKreinHessian
+            (n := n) (E := E) qPlus q0Plus qMinus q0Minus v) u := by
+  exact
+    ⟨relativeModularSupervolumeKreinQuadraticPotential_zero
+        (n := n) (E := E) qPlus q0Plus qMinus q0Minus,
+      hasFDerivAt_relativeModularSupervolumeKreinQuadraticPotential
+        (n := n) (E := E) qPlus q0Plus qMinus q0Minus u,
+      hasFDerivAt_relativeModularSupervolumeKreinGradient
+        (n := n) (E := E) qPlus q0Plus qMinus q0Minus u,
+      relativeModularSupervolumeKreinHessian_bilin_eq_krein_form
+        (n := n) (E := E) qPlus q0Plus qMinus q0Minus u v,
+      by
+        rw [relativeModularSupervolumeKreinHessian_bilin_eq_krein_form
+          (n := n) (E := E) qPlus q0Plus qMinus q0Minus u v]
+        rw [relativeModularSupervolumeKreinHessian_bilin_eq_krein_form
+          (n := n) (E := E) qPlus q0Plus qMinus q0Minus v u]
+        exact krein_form_symm (E := E) u v⟩
+
+section HestenesRealDoubled
+
+/--
+Real doubled/Hestenes coordinate form of the concrete supervolume Hessian:
+the Krein Hessian readout is exactly the split `(1,1)` bilinear form.
+-/
+@[rep_depth operator]
+theorem relativeModularSupervolumeKreinHessian_realDoubled_eq_hestenes_splitB11
+    (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n))
+    (x ξ y η : ℝ) :
+    inner ℝ
+        (relativeModularSupervolumeKreinHessian
+          (n := n) (E := ℝ) qPlus q0Plus qMinus q0Minus
+          (InfoGeometry.Krein.to_doubled x ξ))
+        (InfoGeometry.Krein.to_doubled y η)
+      = InfoGeometry.Clifford.splitB11 (x, ξ) (y, η) := by
+  rw [relativeModularSupervolumeKreinHessian_bilin_eq_krein_form]
+  exact krein_form_to_doubled_real x ξ y η
+
+/--
+Diagonal Hestenes readout of the concrete supervolume Hessian: the self-pairing
+is the split quadratic form `splitQ11`.
+-/
+@[rep_depth operator]
+theorem relativeModularSupervolumeKreinHessian_realDoubled_diag_eq_hestenes_splitQ11
+    (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n))
+    (x ξ : ℝ) :
+    inner ℝ
+        (relativeModularSupervolumeKreinHessian
+          (n := n) (E := ℝ) qPlus q0Plus qMinus q0Minus
+          (InfoGeometry.Krein.to_doubled x ξ))
+        (InfoGeometry.Krein.to_doubled x ξ)
+      = InfoGeometry.Clifford.splitQ11 (x, ξ) := by
+  rw [relativeModularSupervolumeKreinHessian_realDoubled_eq_hestenes_splitB11]
+  simp [InfoGeometry.Clifford.splitQ11_apply, InfoGeometry.Clifford.splitB11_apply]
+
+/--
+The concrete supervolume lift in real doubled Hestenes coordinates is the finite
+relative modular supervolume plus one half of the split quadratic form.
+-/
+@[rep_depth operator]
+theorem relativeModularSupervolumeKreinQuadraticPotential_realDoubled_eq_hestenes_splitQ11
+    (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n))
+    (x ξ : ℝ) :
+    relativeModularSupervolumeKreinQuadraticPotential
+        (n := n) (E := ℝ) qPlus q0Plus qMinus q0Minus
+        (InfoGeometry.Krein.to_doubled x ξ)
+      =
+        relativeModularSupervolumePotential (n := n) qPlus q0Plus qMinus q0Minus
+          + (1 / 2 : ℝ) * InfoGeometry.Clifford.splitQ11 (x, ξ) := by
+  simp [relativeModularSupervolumeKreinQuadraticPotential]
+
+/--
+Packed Hestenes/real-doubled translation of the concrete Pauli-audit lane:
+quadratic potential, bilinear Hessian readout, and diagonal quadratic readout.
+-/
+@[rep_depth operator]
+theorem relativeModularSupervolume_Hestenes_realDoubled_packet
+    (qPlus q0Plus qMinus q0Minus : PositiveRay (Fin n))
+    (x ξ y η : ℝ) :
+    relativeModularSupervolumeKreinQuadraticPotential
+        (n := n) (E := ℝ) qPlus q0Plus qMinus q0Minus
+        (InfoGeometry.Krein.to_doubled x ξ)
+      =
+        relativeModularSupervolumePotential (n := n) qPlus q0Plus qMinus q0Minus
+          + (1 / 2 : ℝ) * InfoGeometry.Clifford.splitQ11 (x, ξ)
+      ∧ inner ℝ
+          (relativeModularSupervolumeKreinHessian
+            (n := n) (E := ℝ) qPlus q0Plus qMinus q0Minus
+            (InfoGeometry.Krein.to_doubled x ξ))
+          (InfoGeometry.Krein.to_doubled y η)
+        = InfoGeometry.Clifford.splitB11 (x, ξ) (y, η)
+      ∧ inner ℝ
+          (relativeModularSupervolumeKreinHessian
+            (n := n) (E := ℝ) qPlus q0Plus qMinus q0Minus
+            (InfoGeometry.Krein.to_doubled x ξ))
+          (InfoGeometry.Krein.to_doubled x ξ)
+        = InfoGeometry.Clifford.splitQ11 (x, ξ) := by
+  exact
+    ⟨relativeModularSupervolumeKreinQuadraticPotential_realDoubled_eq_hestenes_splitQ11
+        (n := n) qPlus q0Plus qMinus q0Minus x ξ,
+      relativeModularSupervolumeKreinHessian_realDoubled_eq_hestenes_splitB11
+        (n := n) qPlus q0Plus qMinus q0Minus x ξ y η,
+      relativeModularSupervolumeKreinHessian_realDoubled_diag_eq_hestenes_splitQ11
+        (n := n) qPlus q0Plus qMinus q0Minus x ξ⟩
+
+end HestenesRealDoubled
+
+/--
+Proof-carrying lift from finite relative modular supervolume to the operatorial
+Krein Hessian lane.
+
+The analytic second variation of the Type-III/operatorial lift is not inferred
+from the finite diagonal model.  A concrete modular-flow model must provide the
+`secondVariation_eq_kreinInner` field, which says that its second variation is
+the repo-native Krein Hessian form.  This structure then exposes the theorem
+surface needed by Sinkhorn/Perelman-style metric consumers without pretending
+to have constructed a trace-density Taylor series.
+-/
+@[rep_depth operator]
+structure RelativeModularSupervolumeKreinHessianLift where
+  qPlus : PositiveRay (Fin n)
+  q0Plus : PositiveRay (Fin n)
+  qMinus : PositiveRay (Fin n)
+  q0Minus : PositiveRay (Fin n)
+  /-- Projector/cut selecting the regular thermodynamic lane. -/
+  drazinCut : H₂ →L[ℝ] H₂
+  /-- Modular adjoint flow used to define the analytic continuation lane. -/
+  modularAdjointFlow : ℝ → H₂ → H₂
+  /-- Base point of the operatorial lift. -/
+  basepoint : H₂
+  /-- Lifted potential on the active regular lane. -/
+  liftedSupervolumePotential : H₂ → ℝ
+  /-- Bilinear second-variation readout of the lifted potential. -/
+  secondVariation : H₂ → H₂ → ℝ
+  /-- Metric used by downstream Sinkhorn/Perelman flow surfaces. -/
+  sinkhornPerelmanMetric : H₂ → H₂ → ℝ
+  /-- The lifted base value agrees with the finite modular supervolume owner. -/
+  lifted_base_eq_relativeModularSupervolumePotential :
+    liftedSupervolumePotential basepoint =
+      relativeModularSupervolumePotential
+        (n := n) qPlus q0Plus qMinus q0Minus
+  /--
+  The analytic second variation is the Krein Hessian form.
+  This is the explicit noncommutative/operatorial hypothesis supplied by the
+  modular-flow model.
+  -/
+  secondVariation_eq_kreinInner :
+    ∀ u v : H₂, secondVariation u v = krein_form (E := E) u v
+  /-- Downstream flow metric is exactly the second-variation readout. -/
+  sinkhornPerelmanMetric_eq_secondVariation :
+    ∀ u v : H₂, sinkhornPerelmanMetric u v = secondVariation u v
+
+namespace RelativeModularSupervolumeKreinHessianLift
+
+variable (C : RelativeModularSupervolumeKreinHessianLift (n := n) (E := E))
+
+/-- The lifted base potential is the finite relative modular supervolume potential. -/
+@[rep_depth operator]
+theorem lifted_base_eq_supervolumePotential :
+    C.liftedSupervolumePotential C.basepoint =
+      relativeModularSupervolumePotential
+        (n := n) C.qPlus C.q0Plus C.qMinus C.q0Minus :=
+  C.lifted_base_eq_relativeModularSupervolumePotential
+
+/--
+The second variation of the lifted relative modular supervolume potential is
+the repo-native Krein Hessian bilinear form.
+-/
+@[rep_depth operator]
+theorem secondVariation_eq_symmetric_kreinInner (u v : H₂) :
+    C.secondVariation u v = krein_form (E := E) u v :=
+  C.secondVariation_eq_kreinInner u v
+
+/-- The second-variation readout is symmetric because the Krein Hessian form is symmetric. -/
+@[rep_depth operator]
+theorem secondVariation_symmetric (u v : H₂) :
+    C.secondVariation u v = C.secondVariation v u := by
+  rw [C.secondVariation_eq_symmetric_kreinInner u v]
+  rw [C.secondVariation_eq_symmetric_kreinInner v u]
+  exact krein_form_symm (E := E) u v
+
+/-- The downstream Sinkhorn/Perelman metric is the same Krein Hessian form. -/
+@[rep_depth operator]
+theorem sinkhornPerelmanMetric_eq_kreinInner (u v : H₂) :
+    C.sinkhornPerelmanMetric u v = krein_form (E := E) u v := by
+  rw [C.sinkhornPerelmanMetric_eq_secondVariation u v]
+  exact C.secondVariation_eq_symmetric_kreinInner u v
+
+/-- The downstream Sinkhorn/Perelman metric is symmetric on this lifted lane. -/
+@[rep_depth operator]
+theorem sinkhornPerelmanMetric_symmetric (u v : H₂) :
+    C.sinkhornPerelmanMetric u v = C.sinkhornPerelmanMetric v u := by
+  rw [C.sinkhornPerelmanMetric_eq_kreinInner u v]
+  rw [C.sinkhornPerelmanMetric_eq_kreinInner v u]
+  exact krein_form_symm (E := E) u v
+
+/--
+Packed Pauli-audit theorem: finite supervolume base value, second variation as
+Krein Hessian, and Sinkhorn/Perelman metric compatibility.
+-/
+@[rep_depth operator]
+theorem relativeModularSupervolume_secondVariation_Krein_packet
+    (u v : H₂) :
+    C.liftedSupervolumePotential C.basepoint =
+        relativeModularSupervolumePotential
+          (n := n) C.qPlus C.q0Plus C.qMinus C.q0Minus
+      ∧ C.secondVariation u v = krein_form (E := E) u v
+      ∧ C.secondVariation u v = C.secondVariation v u
+      ∧ C.sinkhornPerelmanMetric u v = krein_form (E := E) u v
+      ∧ C.sinkhornPerelmanMetric u v = C.sinkhornPerelmanMetric v u :=
+  ⟨C.lifted_base_eq_supervolumePotential,
+    C.secondVariation_eq_symmetric_kreinInner u v,
+    C.secondVariation_symmetric u v,
+    C.sinkhornPerelmanMetric_eq_kreinInner u v,
+    C.sinkhornPerelmanMetric_symmetric u v⟩
+
+end RelativeModularSupervolumeKreinHessianLift
+
+end KreinHessianLift
 
 end InfoGeometry.Canonical.RelativeModularBerezinianBridge

@@ -12,6 +12,7 @@
         "lean/InfoGeometry/Core/SymmetricLie.lean",
         "lean/InfoGeometry/Core/SymmetricLieMetric.lean",
         "lean/InfoGeometry/Core/CartanPhaseAxisForcing.lean",
+        "lean/InfoGeometry/Canonical/PhaseAxisCartanSymmetricLie.lean",
         "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
         "lean/InfoGeometry/Quantum/ModularAnomaly.lean"
       ]
@@ -30,7 +31,48 @@
         "lean/InfoGeometry/LLM/TrialityMoE.lean",
         "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
         "lean/InfoGeometry/Canonical/KKTCore.lean",
-        "lean/InfoGeometry/Canonical/KKTClosureSymmetry.lean"
+        "lean/InfoGeometry/Canonical/KKTClosureSymmetry.lean",
+        "lean/InfoGeometry/Canonical/SinkhornGaugeThermodynamicsBridge.lean"
+      ]
+    },
+    {
+      "name": "grandcanonical_gauge_frontier",
+      "modules": [
+        "lean/InfoGeometry/Canonical/GrandCanonicalGaugePotentialBridge.lean",
+        "lean/InfoGeometry/Canonical/GrandCanonicalFockNumberBridge.lean"
+      ]
+    },
+    {
+      "name": "chiral_charge_fock_frontier",
+      "modules": [
+        "lean/InfoGeometry/Canonical/ChiralChargeFockNumberBridge.lean"
+      ]
+    },
+    {
+      "name": "information_norm_frontier",
+      "modules": [
+        "lean/InfoGeometry/Canonical/RelativePotentialCore.lean",
+        "lean/InfoGeometry/Canonical/RedLine.lean",
+        "lean/InfoGeometry/Canonical/RelativeModularOperator.lean",
+        "lean/InfoGeometry/Canonical/RelationalInformationDynamics.lean",
+        "lean/InfoGeometry/Canonical/NoetherRelationalBridge.lean",
+        "lean/InfoGeometry/Canonical/OperatorialHessianBridge.lean",
+        "lean/InfoGeometry/Canonical/DrazinModularSingularityBridge.lean"
+      ]
+    },
+    {
+      "name": "souriau_hessian_frontier",
+      "modules": [
+        "lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+        "lean/InfoGeometry/Geometry/LegendreHessianInverse.lean"
+      ]
+    },
+    {
+      "name": "souriau_translator_frontier",
+      "modules": [
+        "lean/InfoGeometry/Canonical/SouriauTheoremTranslatorPacket.lean",
+        "lean/InfoGeometry/Canonical/SouriauLieThermoKKTBridge.lean",
+        "lean/InfoGeometry/Canonical/SouriauThermodynamics.lean"
       ]
     }
   ],
@@ -40,16 +82,124 @@
       "pattern": "theorem commutator_KI_mem_odd"
     },
     {
+      "path": "lean/InfoGeometry/Core/CartanPhaseAxisForcing.lean",
+      "pattern": "theorem eq_zero_of_mem_even_and_odd"
+    },
+    {
+      "path": "lean/InfoGeometry/Core/CartanPhaseAxisForcing.lean",
+      "pattern": "theorem commutator_KI_eq_zero_of_dual_grade_forcing"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PhaseAxisCartanSymmetricLie.lean",
+      "pattern": "noncomputable def phaseAxisSymmetricLieAlgebra"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PhaseAxisCartanSymmetricLie.lean",
+      "pattern": "theorem modularGeneratorGaugePart_mem_phaseAxis_even"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PhaseAxisCartanSymmetricLie.lean",
+      "pattern": "theorem modularGeneratorScalePart_mem_phaseAxis_odd"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PhaseAxisCartanSymmetricLie.lean",
+      "pattern": "noncomputable def scaleClockCartanForcingData"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PhaseAxisCartanSymmetricLie.lean",
+      "pattern": "theorem scaleClock_commutator_mem_phaseAxis_odd"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PhaseAxisCartanSymmetricLie.lean",
+      "pattern": "theorem gaugeClock_commutator_mem_phaseAxis_even"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PhaseAxisCartanSymmetricLie.lean",
+      "pattern": "theorem gaugeClock_commutator_eq_zero"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/PhaseAxisCartanSymmetricLie.lean",
+      "pattern": "theorem scaleClock_commutator_eq_zero_of_mem_phaseAxis_even"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem modularTransportGenerator_commutator_clockAxis_eq_zero_of_scaleClock_mem_phaseAxis_even"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "def IsClockEquilibriumLane"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem isNoncommutingScaleLane_iff_not_clockEquilibrium"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem clockEquilibrium_iff_cartanScaleSource_eq_zero"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem noncommutingScaleLane_iff_cartanScaleSource_ne_zero"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem windingOrbitObstruction_modularTransportGenerator_eq_zero_of_clockEquilibrium"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem winding_orbit_periodicity_of_clockEquilibrium"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem winding_orbit_periodicity_succ_of_clockEquilibrium"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "def IsClockFaithfulExponentialBranch"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "structure LocalClockGaugeSymmetryCertificate"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem localClockGauge_response_transform_eq"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem clockFaithfulExponentialBranch_of_localClockGaugeSymmetry"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem clockEquilibrium_of_windingOrbitObstruction_eq_zero_of_clockFaithfulBranch"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem clockEquilibrium_iff_windingOrbitObstruction_eq_zero_of_clockFaithfulBranch"
+    },
+    {
       "path": "lean/InfoGeometry/Canonical/DrazinWeylConstructive.lean",
       "pattern": "theorem drazinInverse_isWeylCompatible"
     },
     {
-      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
-      "pattern": "theorem δ_odd_nonneg"
+      "path": "lean/InfoGeometry/Canonical/DrazinWeylConstructive.lean",
+      "pattern": "structure ConstructiveRieszLocalWeylSymmetryData"
     },
     {
-      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
-      "pattern": "theorem δ_odd_next_le_δ_odd"
+      "path": "lean/InfoGeometry/Canonical/DrazinWeylConstructive.lean",
+      "pattern": "theorem spectralEpsilon_conj_constructiveDrazinCandidate_eq"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DrazinWeylConstructive.lean",
+      "pattern": "theorem constructiveDrazinCandidate_commutes_spectralEpsilon_of_localWeylSymmetry"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DrazinWeylConstructive.lean",
+      "pattern": "theorem constructiveDrazinCandidate_isWeylCompatible_of_localWeylSymmetry"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DrazinWeylConstructive.lean",
+      "pattern": "theorem exists_isDrazinInverse_isWeylCompatible_of_localWeylSymmetry"
     },
     {
       "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
@@ -61,11 +211,331 @@
     },
     {
       "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
-      "pattern": "theorem δ_odd_next_le_of_relativeDefectBridge"
+      "pattern": "noncomputable def availableWorkRN"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "noncomputable def dissipatedHeatRN"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem availableWorkRN_nonneg"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem trajectoryRNBarrierNext_add_availableWorkRN_eq_δ_relVol"
     },
     {
       "path": "lean/InfoGeometry/LLM/TrialityMoE.lean",
-      "pattern": "theorem sourcedGenerator_deviation_norm_le_ZD"
+      "pattern": "structure RouterDefectThermodynamicBridge"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/TrialityMoE.lean",
+      "pattern": "theorem operatorInformationNormReadout_routerResidual_le_ZD"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/TrialityMoE.lean",
+      "pattern": "theorem observerDefectResidualWeylThermodynamicBoundedByZD"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "noncomputable def δ_odd_thermo"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem δ_odd_thermo_le_ZD"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "structure SinkhornThermodynamicDefectStep"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "structure SinkhornThermodynamicRelativeDefectBridge"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "structure SinkhornRNBarrierThermodynamicComparison"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem δ_odd_thermo_next_le"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem δ_odd_thermo_next_le_of_relativeDefectBridge"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem δ_odd_thermo_le_ZD_of_rnBarrierComparison"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem δ_odd_thermo_next_le_ZD_of_relativeDefectBridge"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "structure SinkhornRNBarrierProfileLift"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "structure PhaseRNBarrierProfileLift"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "structure RowRNBarrierCountProfileLift"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "structure ColRNBarrierCountProfileLift"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem countMass_unitCounts"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "noncomputable def RowRNBarrierCountProfileLift.ofMassNormalized"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "noncomputable def ColRNBarrierCountProfileLift.ofMassNormalized"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "noncomputable def SinkhornRNBarrierProfileLift.ofPhase"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "noncomputable def PhaseRNBarrierProfileLift.ofRowCounts"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "noncomputable def PhaseRNBarrierProfileLift.ofColCounts"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem scaled_informationGeometricRelativeNorm_le_ZD_of_rnBarrierProfileLift"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelativePotentialCore.lean",
+      "pattern": "noncomputable def relativeInformationNorm"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelativePotentialCore.lean",
+      "pattern": "theorem relativeInformationNorm_scale_left"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelativePotentialCore.lean",
+      "pattern": "theorem relativeInformationNorm_scale_right"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelativePotentialCore.lean",
+      "pattern": "theorem relativeInformationNorm_scale_scale"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/TrialityMoE.lean",
+      "pattern": "def ObserverDefectResidualWeylThermodynamicBoundedByZD"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/TrialityMoE.lean",
+      "pattern": "theorem operatorInformationNormReadout_le_of_weylThermodynamicComparison"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/TrialityMoE.lean",
+      "pattern": "structure WeylThermodynamicProfileComparison"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/TrialityMoE.lean",
+      "pattern": "theorem operatorInformationNormReadout_le_of_weylThermodynamicProfileComparison"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "noncomputable def WeylThermodynamicProfileComparison.ofSinkhornRNBarrier"
+    },
+    {
+      "path": "lean/InfoGeometry/LLM/SinkhornDefectFlow.lean",
+      "pattern": "theorem operatorInformationNormReadout_le_of_sinkhornRNBarrierProfile"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SinkhornGaugeThermodynamicsBridge.lean",
+      "pattern": "theorem rowNormalization_is_leftWeylGauge"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SinkhornGaugeThermodynamicsBridge.lean",
+      "pattern": "theorem colNormalization_is_rightWeylGauge"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SinkhornGaugeThermodynamicsBridge.lean",
+      "pattern": "theorem sinkhornTwoStep_is_twoSidedWeylGauge"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SinkhornGaugeThermodynamicsBridge.lean",
+      "pattern": "theorem phaseRNBarrier_thermodynamicForce_nonneg"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SinkhornGaugeThermodynamicsBridge.lean",
+      "pattern": "theorem sinkhornStep_RNForce_monotone"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SinkhornGaugeThermodynamicsBridge.lean",
+      "pattern": "theorem trajectoryRNForce_monotone"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SinkhornGaugeThermodynamicsBridge.lean",
+      "pattern": "theorem sinkhornGaugeBudget_controls_approxKMS"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SinkhornGaugeThermodynamicsBridge.lean",
+      "pattern": "theorem sinkhornGaugeBudget_zero_forces_KMSClosure"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GrandCanonicalGaugePotentialBridge.lean",
+      "pattern": "noncomputable def chemicalPotentialGauge"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GrandCanonicalGaugePotentialBridge.lean",
+      "pattern": "theorem shiftedEnergy_eq_energy_sub_chemicalPotentialGauge"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GrandCanonicalGaugePotentialBridge.lean",
+      "pattern": "theorem chemicalPotentialGauge_add"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GrandCanonicalGaugePotentialBridge.lean",
+      "pattern": "noncomputable def grandCanonicalMassieuPotential"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GrandCanonicalGaugePotentialBridge.lean",
+      "pattern": "theorem chemicalPotential_conjugate_count_readout"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GrandCanonicalGaugePotentialBridge.lean",
+      "pattern": "theorem inverseTemperature_conjugate_shiftedEnergy_readout"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GrandCanonicalFockNumberBridge.lean",
+      "pattern": "noncomputable def fockNumberGauge"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GrandCanonicalFockNumberBridge.lean",
+      "pattern": "theorem fockNumberGauge_add"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GrandCanonicalFockNumberBridge.lean",
+      "pattern": "theorem grandCanonicalFockGenerator_eq_hamiltonian_sub_fockNumberGauge"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GrandCanonicalFockNumberBridge.lean",
+      "pattern": "theorem fockNumberGauge_is_mu_times_numberOperator"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/GrandCanonicalFockNumberBridge.lean",
+      "pattern": "theorem grandCanonicalFockGenerator_zero_mu"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ChiralChargeFockNumberBridge.lean",
+      "pattern": "theorem krein_signed_polarization_readout"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ChiralChargeFockNumberBridge.lean",
+      "pattern": "theorem drazin_signed_chiral_polarization"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ChiralChargeFockNumberBridge.lean",
+      "pattern": "theorem drazin_supercharge_eq_chiral_polarization_defect"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ChiralChargeFockNumberBridge.lean",
+      "pattern": "theorem drazin_chiral_defect_eq_right_minus_left"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ChiralChargeFockNumberBridge.lean",
+      "pattern": "theorem fock_occupation_eq_creation_after_annihilation"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ChiralChargeFockNumberBridge.lean",
+      "pattern": "structure ChiralLightconeKKTClosure"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/ChiralChargeFockNumberBridge.lean",
+      "pattern": "def ChiralLightconeKKTClosure.ofOwners"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DrazinModularSingularityBridge.lean",
+      "pattern": "theorem certified_operator_ratio_regularization_corridor"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DrazinModularSingularityBridge.lean",
+      "pattern": "theorem certified_operator_ratio_regularization_kills_defect_of_alignment"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/DrazinModularSingularityBridge.lean",
+      "pattern": "theorem certified_operator_ratio_regularization_kills_defect_of_inertial_lane"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelationalInformationDynamics.lean",
+      "pattern": "theorem operatorInformationHessian_eq_double_transportCommutator"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelationalInformationDynamics.lean",
+      "pattern": "theorem operatorInformationHessian_eq_observableLieHessian"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelationalInformationDynamics.lean",
+      "pattern": "noncomputable def operatorExponentialChart"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelationalInformationDynamics.lean",
+      "pattern": "theorem hasDerivAt_operatorExponentialChart_zero"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelationalInformationDynamics.lean",
+      "pattern": "noncomputable def operatorLogGeneratingPotential"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelationalInformationDynamics.lean",
+      "pattern": "theorem operatorLogGeneratingPotential_normalizedInfinitesimalLaw"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelationalInformationDynamics.lean",
+      "pattern": "noncomputable def scalarLogTransportReadout"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelationalInformationDynamics.lean",
+      "pattern": "theorem hasDerivAt_transportedMassieuExpectation_zero"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelationalInformationDynamics.lean",
+      "pattern": "theorem hasDerivAt_scalarLogTransportReadout_zero"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/RelationalInformationDynamics.lean",
+      "pattern": "noncomputable def channelKreinMetricAtState"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/NoetherRelationalBridge.lean",
+      "pattern": "theorem fisherBilinAt_eq_channelKreinMetricAtState"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/OperatorialHessianBridge.lean",
+      "pattern": "noncomputable def scalarLogReadout"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/OperatorialHessianBridge.lean",
+      "pattern": "theorem hasDerivAt_scalarLogReadout_zero"
+    },
+    {
+      "path": "lean/InfoGeometry/Geometry/LegendreHessianInverse.lean",
+      "pattern": "theorem entropy_hessian_eq_fisher_inverse"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+      "pattern": "structure SmoothLegendreInverseWitness"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauCoadjointOrbitMetriplecticTheorem.lean",
+      "pattern": "theorem souriau_inverse_fisher_from_smooth_legendre_packet"
     },
     {
       "path": "lean/InfoGeometry/Quantum/ModularAnomaly.lean",
@@ -81,7 +551,67 @@
     },
     {
       "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem modularTransportGenerator_commutator_clockAxis_eq_zero_of_cartanDualGrade"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem modularTransportGenerator_commutes_clockAxis_of_cartanDualGrade"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem winding_orbit_periodicity_of_cartanDualGrade"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
+      "pattern": "theorem modularTransportGenerator_clockAxis_commutator_eq_cartanScaleSource"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
       "pattern": "theorem winding_orbit_periodicity_of_forcingSeed"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauTheoremTranslatorPacket.lean",
+      "pattern": "theorem claimK_kktEntropyStationarity_packet"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauTheoremTranslatorPacket.lean",
+      "pattern": "theorem structuredSouriauKKTTranslatorPacket"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauTheoremTranslatorPacket.lean",
+      "pattern": "theorem claimCDE_fullCoadjointOrbit_hessian_metriplectic_packet"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauTheoremTranslatorPacket.lean",
+      "pattern": "theorem claimW_representationWeight_lifts_to_densityTransport"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauTheoremTranslatorPacket.lean",
+      "pattern": "theorem claimS_superCoadjoint_stress_supercurrent_readouts"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauTheoremTranslatorPacket.lean",
+      "pattern": "theorem claimF_superSouriauFermionGas_packet"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauTheoremTranslatorPacket.lean",
+      "pattern": "theorem claimG_infiniteSuperCoadjointMetriplectic_packet"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauTheoremTranslatorPacket.lean",
+      "pattern": "theorem claimT_splitCl44_TKK_JordanLie_packet"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauTheoremTranslatorPacket.lean",
+      "pattern": "theorem claimM_coadjointLeaf_Casimir_transverseOnsager_packet"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauLieThermoKKTBridge.lean",
+      "pattern": "structure KKTEntropyStationarityShadow"
+    },
+    {
+      "path": "lean/InfoGeometry/Canonical/SouriauThermodynamics.lean",
+      "pattern": "theorem gibbsSouriau_massieu_fisher_onsager_secondLaw_packet"
     }
   ]
 }

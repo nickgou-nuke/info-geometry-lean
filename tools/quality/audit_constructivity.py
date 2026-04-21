@@ -155,11 +155,13 @@ def strip_comments(
     *,
     strip_strings: bool = False,
     strip_quoted_identifiers: bool = False,
+    keep_docstrings: bool = False,
 ) -> str:
     out: list[str] = []
     i = 0
     n = len(text)
     block_depth = 0
+    is_doc = False
     in_line = False
     in_string = False
     in_quoted_identifier = False
@@ -177,21 +179,26 @@ def strip_comments(
             continue
 
         if block_depth > 0:
-            if ch == "\n":
-                out.append("\n")
-                i += 1
-                continue
             if ch == "/" and nxt == "-":
                 block_depth += 1
-                out.extend("  ")
+                if is_doc:
+                    out.extend(["/", "-"])
                 i += 2
                 continue
             if ch == "-" and nxt == "/":
                 block_depth -= 1
-                out.extend("  ")
+                if is_doc:
+                    out.extend(["-", "/"])
+                if block_depth == 0:
+                    is_doc = False
                 i += 2
                 continue
-            out.append(" ")
+            if is_doc:
+                out.append(ch)
+            elif ch == "\n":
+                out.append("\n")
+            else:
+                out.append(" ")
             i += 1
             continue
 
@@ -234,7 +241,12 @@ def strip_comments(
             continue
         if ch == "/" and nxt == "-":
             block_depth = 1
-            out.extend("  ")
+            nnxt = text[i + 2] if i + 2 < n else ""
+            if keep_docstrings and (nnxt == "-" or nnxt == "!"):
+                is_doc = True
+                out.extend(["/", "-"])
+            else:
+                out.extend("  ")
             i += 2
             continue
 

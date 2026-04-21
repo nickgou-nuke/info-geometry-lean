@@ -1,0 +1,30 @@
+{
+  "kind": "goal",
+  "probe": {
+    "context": "import Mathlib.Analysis.SpecialFunctions.Log.Basic\n\nnamespace NegLogHypothesis\n\nstructure NegLogRectifier where\n  generate : \u211d \u2192 \u211d\n  map_one : generate 1 = 0\n  map_mul : \u2200 {r s : \u211d}, 0 < r \u2192 0 < s \u2192\n    generate (r * s) = generate r + generate s\n\nnoncomputable def negLog : NegLogRectifier where\n  generate r := -Real.log r\n  map_one := by\n    simp\n  map_mul := by\n    intro r s hr hs\n    rw [Real.log_mul (ne_of_gt hr) (ne_of_gt hs)]\n    ring\n\nnamespace NegLogRectifier\n\n@[simp]",
+    "goal": "\u2200 (r : \u211d), negLog.generate r = -Real.log r",
+    "imports": [
+      "Mathlib",
+      "Mathlib"
+    ],
+    "lean": {
+      "ok": true,
+      "returncode": 0,
+      "source": "import Mathlib\nimport Mathlib\n\nimport Mathlib.Analysis.SpecialFunctions.Log.Basic\nnamespace NegLogHypothesis\nstructure NegLogRectifier where\n  generate : \u211d \u2192 \u211d\n  map_one : generate 1 = 0\n  map_mul : \u2200 {r s : \u211d}, 0 < r \u2192 0 < s \u2192\n    generate (r * s) = generate r + generate s\nnoncomputable def negLog : NegLogRectifier where\n  generate r := -Real.log r\n  map_one := by\n    simp\n  map_mul := by\n    intro r s hr hs\n    rw [Real.log_mul (ne_of_gt hr) (ne_of_gt hs)]\n    ring\nnamespace NegLogRectifier\n@[simp]\n\ntheorem hermes_probe : \u2200 (r : \u211d), negLog.generate r = -Real.log r := by\n  trace_state\n  sorry\n",
+      "source_path": "/tmp/hermes_probe_0tu6_fqy.lean",
+      "stderr": "",
+      "stdout": "\u22a2 \u2200 (r : \u211d), negLog.generate r = -Real.log r\n/tmp/hermes_probe_0tu6_fqy.lean:22:8: warning: declaration uses `sorry`\n"
+    },
+    "normalized_goal": "\u2200 (r : \u211d), negLog.generate r = -Real.log r",
+    "proof_state": "\u22a2 \u2200 (r : \u211d), negLog.generate r = -Real.log r\n/tmp/hermes_probe_0tu6_fqy.lean:22:8: warning: declaration uses `sorry`",
+    "schema": "lean_interact.proof_state.v1",
+    "status": "ok"
+  },
+  "round": 2,
+  "surface": {
+    "goal": "(r : \u211d) :\n    negLog.generate r = -Real.log r",
+    "kind": "theorem",
+    "name": "negLog_generate",
+    "tactic": "rfl"
+  }
+}

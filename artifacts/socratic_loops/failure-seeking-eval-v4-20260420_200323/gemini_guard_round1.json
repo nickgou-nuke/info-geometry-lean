@@ -1,0 +1,9 @@
+{
+  "allow_burst": true,
+  "allowed": false,
+  "check_only": true,
+  "mode": "irregular_dreaming_sidecar",
+  "reason": "daily Gemini CLI limit reached; wait 79070s",
+  "state": "/tmp/gemini_guard_force_limit_for_repair_eval.json",
+  "wait_seconds": 79070
+}

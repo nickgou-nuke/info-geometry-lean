@@ -1,0 +1,1213 @@
+{
+  "schema": "info_geometry.gravity_context.v1",
+  "query": "Souriau Fisher Onsager inverse metric entropy production",
+  "query_tokens": [
+    "entropy",
+    "fisher",
+    "inverse",
+    "metric",
+    "onsager",
+    "production",
+    "souriau"
+  ],
+  "query_phrases": [],
+  "expanded_query_tokens": [
+    "algebraic",
+    "beta",
+    "canonical",
+    "coadjoint",
+    "compose",
+    "coordinateless",
+    "curvature",
+    "diagonal",
+    "entropy",
+    "eval",
+    "fisher",
+    "geometric",
+    "geometry",
+    "grand",
+    "identity",
+    "info",
+    "inverse",
+    "kmsbridge",
+    "matrix2",
+    "metric",
+    "metriplectic",
+    "onsager",
+    "operatorial",
+    "orbit",
+    "probe",
+    "production",
+    "quantum",
+    "rate",
+    "response",
+    "souriau",
+    "state",
+    "swapped",
+    "tensor",
+    "total"
+  ],
+  "synonym_expansion": {
+    "enabled": true,
+    "dictionary": "reports/dag/equivalence-dictionary.json",
+    "matched_group_count": 8,
+    "matched_groups": [
+      {
+        "id": "EQC-0043",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "entropy",
+          "metric",
+          "production"
+        ],
+        "added_tokens": [
+          "total"
+        ],
+        "members": [
+          "C.metricEntropyProduction",
+          "C.totalEntropyProduction"
+        ]
+      },
+      {
+        "id": "EQC-0023",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "entropy",
+          "metric",
+          "production"
+        ],
+        "added_tokens": [
+          "curvature",
+          "diagonal",
+          "operatorial",
+          "probe",
+          "response",
+          "swapped"
+        ],
+        "members": [
+          "C.P.probe",
+          "C.curvatureResponse",
+          "C.diagonalMetricResponse",
+          "C.metricResponse",
+          "C.operatorialEntropyProduction",
+          "C.swappedCurvatureResponse",
+          "C.swappedMetricResponse"
+        ]
+      },
+      {
+        "id": "EQC-0050",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "entropy",
+          "metric",
+          "production"
+        ],
+        "added_tokens": [
+          "metriplectic"
+        ],
+        "members": [
+          "C.operatorialMetriplectic.P.probe",
+          "C.operatorialMetriplectic.diagonalMetricResponse",
+          "C.operatorialMetriplectic.metricResponse",
+          "C.operatorialMetriplectic.operatorialEntropyProduction",
+          "C.operatorialMetriplectic.swappedMetricResponse"
+        ]
+      },
+      {
+        "id": "EQC-0182",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "entropy",
+          "production"
+        ],
+        "added_tokens": [
+          "beta"
+        ],
+        "members": [
+          "M.betaBeta",
+          "M.entropyProduction"
+        ]
+      },
+      {
+        "id": "EQC-0036",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "fisher",
+          "metric"
+        ],
+        "added_tokens": [
+          "eval",
+          "state"
+        ],
+        "members": [
+          "C.fisherMetric.metric",
+          "C.state.eval"
+        ]
+      },
+      {
+        "id": "EQC-0039",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "entropy",
+          "metric"
+        ],
+        "added_tokens": [
+          "coadjoint",
+          "orbit",
+          "rate"
+        ],
+        "members": [
+          "C.isOnCoadjointOrbit",
+          "C.metricEntropyRate",
+          "C.totalEntropyRate"
+        ]
+      },
+      {
+        "id": "EQC-0156",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "inverse",
+          "metric"
+        ],
+        "added_tokens": [
+          "canonical",
+          "compose",
+          "geometry",
+          "grand",
+          "identity",
+          "info",
+          "matrix2"
+        ],
+        "members": [
+          "InfoGeometry.GrandCanonical.ResponseMatrix2.identityMetric",
+          "M.compose",
+          "M.inverseMetric.compose"
+        ]
+      },
+      {
+        "id": "EQC-0101",
+        "source": "reports/dag/equivalence-dictionary.json",
+        "relation_kind": null,
+        "labels": [
+          "alias",
+          "eq",
+          "generated_component",
+          "synonym_component"
+        ],
+        "note": null,
+        "matched_tokens": [
+          "metric",
+          "souriau"
+        ],
+        "added_tokens": [
+          "algebraic",
+          "coordinateless",
+          "geometric",
+          "kmsbridge",
+          "quantum",
+          "tensor"
+        ],
+        "members": [
+          "InfoGeometry.Canonical.CoordinatelessSouriauKMSBridge.AlgebraicState.eval",
+          "InfoGeometry.Quantum.GeometricQuantumTensor.g",
+          "Q.metric"
+        ]
+      }
+    ]
+  },
+  "graph_source": "arango:faithful_raw",
+  "graph_mode": "faithful",
+  "repo_root": "/home/goutev/repos/info-geometry-lean-fusion",
+  "seed_count": 32,
+  "seed_scc_count": 32,
+  "scc_anchor_first": true,
+  "require_scc_anchor": true,
+  "requested_rep_layers": [],
+  "node_count": 25947,
+  "edge_count": 1184253,
+  "graph_rep_layer_counts": [
+    {
+      "rep_layer": null,
+      "count": 22555,
+      "rep_depths": [],
+      "rep_depth_slugs": []
+    },
+    {
+      "rep_layer": "L0_Count",
+      "count": 2,
+      "rep_depths": [
+        0
+      ],
+      "rep_depth_slugs": [
+        "count"
+      ]
+    },
+    {
+      "rep_layer": "L1_Projective",
+      "count": 193,
+      "rep_depths": [
+        1
+      ],
+      "rep_depth_slugs": [
+        "projective"
+      ]
+    },
+    {
+      "rep_layer": "L2_Operator",
+      "count": 724,
+      "rep_depths": [
+        2
+      ],
+      "rep_depth_slugs": [
+        "operator"
+      ]
+    },
+    {
+      "rep_layer": "L3_Krein",
+      "count": 1213,
+      "rep_depths": [
+        3
+      ],
+      "rep_depth_slugs": [
+        "krein"
+      ]
+    },
+    {
+      "rep_layer": "L4_ModularTransport",
+      "count": 1207,
+      "rep_depths": [
+        4
+      ],
+      "rep_depth_slugs": [
+        "transport"
+      ]
+    },
+    {
+      "rep_layer": "L5_ThermodynamicClosure",
+      "count": 53,
+      "rep_depths": [
+        5
+      ],
+      "rep_depth_slugs": [
+        "thermo"
+      ]
+    }
+  ],
+  "result_rep_layer_counts": [
+    {
+      "rep_layer": null,
+      "count": 11,
+      "rep_depths": [],
+      "rep_depth_slugs": []
+    },
+    {
+      "rep_layer": "L3_Krein",
+      "count": 1,
+      "rep_depths": [
+        3
+      ],
+      "rep_depth_slugs": [
+        "krein"
+      ]
+    }
+  ],
+  "top_k": 12,
+  "items": [
+    {
+      "id": "InfoGeometry.GrandCanonical.ResponseMatrix2.betaBeta",
+      "name": "InfoGeometry.GrandCanonical.ResponseMatrix2.betaBeta",
+      "module": "InfoGeometry.GrandCanonical.ResponseMatrix",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/GrandCanonical/ResponseMatrix.lean",
+      "line": 57,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 251.8125,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/GrandCanonical/ResponseMatrix.lean",
+        "line": 57,
+        "start": 53,
+        "end": 61,
+        "lines": [
+          {
+            "line": 53,
+            "text": "  deriv (fun t => muResponse params t μ) β"
+          },
+          {
+            "line": 54,
+            "text": ""
+          },
+          {
+            "line": 55,
+            "text": "/-- Thermodynamic response / susceptibility matrix in `(β, μ)` coordinates. -/"
+          },
+          {
+            "line": 56,
+            "text": "structure ResponseMatrix2 where"
+          },
+          {
+            "line": 57,
+            "text": "  betaBeta : ℝ"
+          },
+          {
+            "line": 58,
+            "text": "  betaMu   : ℝ"
+          },
+          {
+            "line": 59,
+            "text": "  muBeta   : ℝ"
+          },
+          {
+            "line": 60,
+            "text": "  muMu     : ℝ"
+          },
+          {
+            "line": 61,
+            "text": ""
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_ffcc2771b3fa581903e0a10b2a57e5fd0327b46c",
+        "raw_doc_id": "raw_info_nodes/raw_ffcc2771b3fa581903e0a10b2a57e5fd0327b46c",
+        "scc_id": 10420,
+        "scc_key": "scc_8c92a93548ee13eb9271ca8da13313b2d294236a",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.GrandCanonical.ResponseMatrix2.betaMu",
+      "name": "InfoGeometry.GrandCanonical.ResponseMatrix2.betaMu",
+      "module": "InfoGeometry.GrandCanonical.ResponseMatrix",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/GrandCanonical/ResponseMatrix.lean",
+      "line": 58,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 251.8125,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/GrandCanonical/ResponseMatrix.lean",
+        "line": 58,
+        "start": 54,
+        "end": 62,
+        "lines": [
+          {
+            "line": 54,
+            "text": ""
+          },
+          {
+            "line": 55,
+            "text": "/-- Thermodynamic response / susceptibility matrix in `(β, μ)` coordinates. -/"
+          },
+          {
+            "line": 56,
+            "text": "structure ResponseMatrix2 where"
+          },
+          {
+            "line": 57,
+            "text": "  betaBeta : ℝ"
+          },
+          {
+            "line": 58,
+            "text": "  betaMu   : ℝ"
+          },
+          {
+            "line": 59,
+            "text": "  muBeta   : ℝ"
+          },
+          {
+            "line": 60,
+            "text": "  muMu     : ℝ"
+          },
+          {
+            "line": 61,
+            "text": ""
+          },
+          {
+            "line": 62,
+            "text": "namespace ResponseMatrix2"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_b673d744466b69c992a3159cab6568d228c9b134",
+        "raw_doc_id": "raw_info_nodes/raw_b673d744466b69c992a3159cab6568d228c9b134",
+        "scc_id": 10421,
+        "scc_key": "scc_30d922504f3286ab6eac12664c189e34579c9a29",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.GrandCanonical.ResponseMatrix2.muBeta",
+      "name": "InfoGeometry.GrandCanonical.ResponseMatrix2.muBeta",
+      "module": "InfoGeometry.GrandCanonical.ResponseMatrix",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/GrandCanonical/ResponseMatrix.lean",
+      "line": 59,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 251.8125,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/GrandCanonical/ResponseMatrix.lean",
+        "line": 59,
+        "start": 55,
+        "end": 63,
+        "lines": [
+          {
+            "line": 55,
+            "text": "/-- Thermodynamic response / susceptibility matrix in `(β, μ)` coordinates. -/"
+          },
+          {
+            "line": 56,
+            "text": "structure ResponseMatrix2 where"
+          },
+          {
+            "line": 57,
+            "text": "  betaBeta : ℝ"
+          },
+          {
+            "line": 58,
+            "text": "  betaMu   : ℝ"
+          },
+          {
+            "line": 59,
+            "text": "  muBeta   : ℝ"
+          },
+          {
+            "line": 60,
+            "text": "  muMu     : ℝ"
+          },
+          {
+            "line": 61,
+            "text": ""
+          },
+          {
+            "line": 62,
+            "text": "namespace ResponseMatrix2"
+          },
+          {
+            "line": 63,
+            "text": ""
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_c3794c979c75ee6b6e2ed95809739ef408aec6d3",
+        "raw_doc_id": "raw_info_nodes/raw_c3794c979c75ee6b6e2ed95809739ef408aec6d3",
+        "scc_id": 10422,
+        "scc_key": "scc_21761d10a2f88f503924d8baa17aa36276b7279d",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Canonical.OperatorialCramerRao.inv_comparisonStateGeneratorMetric_self_le_of_unit_response",
+      "name": "InfoGeometry.Canonical.OperatorialCramerRao.inv_comparisonStateGeneratorMetric_self_le_of_unit_response",
+      "module": "InfoGeometry.Canonical.OperatorialCramerRao",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "Operatorial Cramer-Rao lower bound on the comparison-state channel metric.\n\nIf the channel pair `(X,Y)` has unit response and the reference channel `Y`\nacts nontrivially on the comparison state, then the diagonal cost of `X`\ndominates the inverse diagonal cost of `Y`.\n",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/OperatorialCramerRao.lean",
+      "line": 92,
+      "rep_depth": 3,
+      "rep_depth_slug": "krein",
+      "rep_layer": "L3_Krein",
+      "rep_layer_description": "Krein/doubled-geometry substrate",
+      "module_family": null,
+      "score": 242.903682,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Canonical/OperatorialCramerRao.lean",
+        "line": 92,
+        "start": 88,
+        "end": 96,
+        "lines": [
+          {
+            "line": 88,
+            "text": "      * comparisonStateGeneratorMetric (E := E) comparison Y Y := by"
+          },
+          {
+            "line": 89,
+            "text": "  have hCS := comparisonStateGeneratorMetric_sq_le (E := E) comparison X Y"
+          },
+          {
+            "line": 90,
+            "text": "  simpa [hUnit, pow_two] using hCS"
+          },
+          {
+            "line": 91,
+            "text": ""
+          },
+          {
+            "line": 92,
+            "text": "/--"
+          },
+          {
+            "line": 93,
+            "text": "Operatorial Cramer-Rao lower bound on the comparison-state channel metric."
+          },
+          {
+            "line": 94,
+            "text": ""
+          },
+          {
+            "line": 95,
+            "text": "If the channel pair `(X,Y)` has unit response and the reference channel `Y`"
+          },
+          {
+            "line": 96,
+            "text": "acts nontrivially on the comparison state, then the diagonal cost of `X`"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_8ad0cf3675dde7984765cc97600b1f04745b52a1",
+        "raw_doc_id": "raw_info_nodes/raw_8ad0cf3675dde7984765cc97600b1f04745b52a1",
+        "scc_id": 8697,
+        "scc_key": "scc_3403f62a63cc5281cb4423b92554886a718ab3da",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.GrandCanonical.ResponseMatrix2.muMu",
+      "name": "InfoGeometry.GrandCanonical.ResponseMatrix2.muMu",
+      "module": "InfoGeometry.GrandCanonical.ResponseMatrix",
+      "kind": "Declaration",
+      "decl_kind": "def",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/GrandCanonical/ResponseMatrix.lean",
+      "line": 60,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 242.748945,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/GrandCanonical/ResponseMatrix.lean",
+        "line": 60,
+        "start": 56,
+        "end": 64,
+        "lines": [
+          {
+            "line": 56,
+            "text": "structure ResponseMatrix2 where"
+          },
+          {
+            "line": 57,
+            "text": "  betaBeta : ℝ"
+          },
+          {
+            "line": 58,
+            "text": "  betaMu   : ℝ"
+          },
+          {
+            "line": 59,
+            "text": "  muBeta   : ℝ"
+          },
+          {
+            "line": 60,
+            "text": "  muMu     : ℝ"
+          },
+          {
+            "line": 61,
+            "text": ""
+          },
+          {
+            "line": 62,
+            "text": "namespace ResponseMatrix2"
+          },
+          {
+            "line": 63,
+            "text": ""
+          },
+          {
+            "line": 64,
+            "text": "/-- Extensionality for finite response packets. -/"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_ae5f4f3280fd8a4f4f4aba3b649329ca9380aa2a",
+        "raw_doc_id": "raw_info_nodes/raw_ae5f4f3280fd8a4f4f4aba3b649329ca9380aa2a",
+        "scc_id": 10423,
+        "scc_key": "scc_618a77e3eb1a4920a15f3ad8f8d52c1c8512c98f",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Quantum.GeometricQuantumTensor.berry_alt",
+      "name": "InfoGeometry.Quantum.GeometricQuantumTensor.berry_alt",
+      "module": "InfoGeometry.Quantum.GeometricTensor",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "The Berry curvature is alternating. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensor.lean",
+      "line": 41,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 242.636552,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensor.lean",
+        "line": 41,
+        "start": 37,
+        "end": 45,
+        "lines": [
+          {
+            "line": 37,
+            "text": "  berry  : LinearMap.BilinForm ℝ (DoubledSpace E)"
+          },
+          {
+            "line": 38,
+            "text": "  /-- The metric is symmetric. -/"
+          },
+          {
+            "line": 39,
+            "text": "  metric_symm : metric.IsSymm"
+          },
+          {
+            "line": 40,
+            "text": "  /-- The Berry curvature is alternating. -/"
+          },
+          {
+            "line": 41,
+            "text": "  berry_alt   : berry.IsAlt"
+          },
+          {
+            "line": 42,
+            "text": "  /-- Kähler Compatibility: $\\Omega(u, v) = g(K u, v)$. -/"
+          },
+          {
+            "line": 43,
+            "text": "  compat      : ∀ u v, berry u v = metric (modularComplexI u) v"
+          },
+          {
+            "line": 44,
+            "text": ""
+          },
+          {
+            "line": 45,
+            "text": "/-- Abbreviation for the Quantum Geometric Tensor. -/"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_e0daa57b35c50248667de5a72817c9c6da5579b5",
+        "raw_doc_id": "raw_info_nodes/raw_e0daa57b35c50248667de5a72817c9c6da5579b5",
+        "scc_id": 1239,
+        "scc_key": "scc_07bfa3f9a2849cc9ab053d3b8e1a74c487562856",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Quantum.GeometricQuantumTensor.metric_symm",
+      "name": "InfoGeometry.Quantum.GeometricQuantumTensor.metric_symm",
+      "module": "InfoGeometry.Quantum.GeometricTensor",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "The metric is symmetric. ",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensor.lean",
+      "line": 39,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 240.484375,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensor.lean",
+        "line": 39,
+        "start": 35,
+        "end": 43,
+        "lines": [
+          {
+            "line": 35,
+            "text": "  metric : LinearMap.BilinForm ℝ (DoubledSpace E)"
+          },
+          {
+            "line": 36,
+            "text": "  /-- The alternating Berry curvature (symplectic) component. -/"
+          },
+          {
+            "line": 37,
+            "text": "  berry  : LinearMap.BilinForm ℝ (DoubledSpace E)"
+          },
+          {
+            "line": 38,
+            "text": "  /-- The metric is symmetric. -/"
+          },
+          {
+            "line": 39,
+            "text": "  metric_symm : metric.IsSymm"
+          },
+          {
+            "line": 40,
+            "text": "  /-- The Berry curvature is alternating. -/"
+          },
+          {
+            "line": 41,
+            "text": "  berry_alt   : berry.IsAlt"
+          },
+          {
+            "line": 42,
+            "text": "  /-- Kähler Compatibility: $\\Omega(u, v) = g(K u, v)$. -/"
+          },
+          {
+            "line": 43,
+            "text": "  compat      : ∀ u v, berry u v = metric (modularComplexI u) v"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_d0149dfad987c460bd4ca22c5627c05486268d5c",
+        "raw_doc_id": "raw_info_nodes/raw_d0149dfad987c460bd4ca22c5627c05486268d5c",
+        "scc_id": 1242,
+        "scc_key": "scc_85d5a93505f95069973bee198766032f82f26944",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator_add",
+      "name": "InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator_add",
+      "module": "InfoGeometry.Quantum.GeometricTensorOperatorLift",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean",
+      "line": 61,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 240.3125,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean",
+        "line": 61,
+        "start": 57,
+        "end": 65,
+        "lines": [
+          {
+            "line": 57,
+            "text": "  ext u v"
+          },
+          {
+            "line": 58,
+            "text": "  simp [metricOfOperator_apply]"
+          },
+          {
+            "line": 59,
+            "text": ""
+          },
+          {
+            "line": 60,
+            "text": "omit [CompleteSpace E] in"
+          },
+          {
+            "line": 61,
+            "text": "@[simp] theorem metricOfOperator_add"
+          },
+          {
+            "line": 62,
+            "text": "    (A B : EndH) :"
+          },
+          {
+            "line": 63,
+            "text": "    metricOfOperator (E := E) (A + B)"
+          },
+          {
+            "line": 64,
+            "text": "      = metricOfOperator (E := E) A + metricOfOperator (E := E) B := by"
+          },
+          {
+            "line": 65,
+            "text": "  ext u v"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_cceaf889cab416e1607fc5abc8fab1290d828fac",
+        "raw_doc_id": "raw_info_nodes/raw_cceaf889cab416e1607fc5abc8fab1290d828fac",
+        "scc_id": 1312,
+        "scc_key": "scc_b57fc395c5cc36ad7f6d385018a69862af459a6d",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator_apply",
+      "name": "InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator_apply",
+      "module": "InfoGeometry.Quantum.GeometricTensorOperatorLift",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean",
+      "line": 50,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 240.3125,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean",
+        "line": 50,
+        "start": 46,
+        "end": 54,
+        "lines": [
+          {
+            "line": 46,
+            "text": "      intro c u v"
+          },
+          {
+            "line": 47,
+            "text": "      simp [real_inner_smul_right, smul_eq_mul, mul_add])"
+          },
+          {
+            "line": 48,
+            "text": ""
+          },
+          {
+            "line": 49,
+            "text": "omit [CompleteSpace E] in"
+          },
+          {
+            "line": 50,
+            "text": "@[simp] theorem metricOfOperator_apply"
+          },
+          {
+            "line": 51,
+            "text": "    (A : EndH) (u v : H₂) :"
+          },
+          {
+            "line": 52,
+            "text": "    metricOfOperator A u v = ⟪A u, v⟫_ℝ := rfl"
+          },
+          {
+            "line": 53,
+            "text": ""
+          },
+          {
+            "line": 54,
+            "text": "omit [CompleteSpace E] in"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_3200fffac72b2ab9d01c71a000902cfa8cb22da2",
+        "raw_doc_id": "raw_info_nodes/raw_3200fffac72b2ab9d01c71a000902cfa8cb22da2",
+        "scc_id": 1383,
+        "scc_key": "scc_7b781b840d012f60ea18b09e6db9daea02ca648c",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator_neg",
+      "name": "InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator_neg",
+      "module": "InfoGeometry.Quantum.GeometricTensorOperatorLift",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean",
+      "line": 69,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 240.3125,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean",
+        "line": 69,
+        "start": 65,
+        "end": 73,
+        "lines": [
+          {
+            "line": 65,
+            "text": "  ext u v"
+          },
+          {
+            "line": 66,
+            "text": "  simp [metricOfOperator_apply, inner_add_left]"
+          },
+          {
+            "line": 67,
+            "text": ""
+          },
+          {
+            "line": 68,
+            "text": "omit [CompleteSpace E] in"
+          },
+          {
+            "line": 69,
+            "text": "@[simp] theorem metricOfOperator_neg"
+          },
+          {
+            "line": 70,
+            "text": "    (A : EndH) :"
+          },
+          {
+            "line": 71,
+            "text": "    metricOfOperator (E := E) (-A)"
+          },
+          {
+            "line": 72,
+            "text": "      = -metricOfOperator (E := E) A := by"
+          },
+          {
+            "line": 73,
+            "text": "  ext u v"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_0b4aebdc09857d33ff912f1b45745156b4048394",
+        "raw_doc_id": "raw_info_nodes/raw_0b4aebdc09857d33ff912f1b45745156b4048394",
+        "scc_id": 1398,
+        "scc_key": "scc_8801ae1c2b98ac2ff007caf18ca64546b36e1303",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator_smul",
+      "name": "InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator_smul",
+      "module": "InfoGeometry.Quantum.GeometricTensorOperatorLift",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean",
+      "line": 77,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 240.3125,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean",
+        "line": 77,
+        "start": 73,
+        "end": 81,
+        "lines": [
+          {
+            "line": 73,
+            "text": "  ext u v"
+          },
+          {
+            "line": 74,
+            "text": "  simp [metricOfOperator_apply]"
+          },
+          {
+            "line": 75,
+            "text": ""
+          },
+          {
+            "line": 76,
+            "text": "omit [CompleteSpace E] in"
+          },
+          {
+            "line": 77,
+            "text": "@[simp] theorem metricOfOperator_smul"
+          },
+          {
+            "line": 78,
+            "text": "    (c : ℝ) (A : EndH) :"
+          },
+          {
+            "line": 79,
+            "text": "    metricOfOperator (E := E) (c • A)"
+          },
+          {
+            "line": 80,
+            "text": "      = c • metricOfOperator (E := E) A := by"
+          },
+          {
+            "line": 81,
+            "text": "  ext u v"
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_fe817702ac2c79444e54d9485c07307e6619701f",
+        "raw_doc_id": "raw_info_nodes/raw_fe817702ac2c79444e54d9485c07307e6619701f",
+        "scc_id": 1290,
+        "scc_key": "scc_eff469e0c44a17e91b37d737fcbfe90c93b2a501",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    },
+    {
+      "id": "InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator_zero",
+      "name": "InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator_zero",
+      "module": "InfoGeometry.Quantum.GeometricTensorOperatorLift",
+      "kind": "Declaration",
+      "decl_kind": "theorem",
+      "doc": "",
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean",
+      "line": 55,
+      "rep_depth": null,
+      "rep_depth_slug": null,
+      "rep_layer": null,
+      "rep_layer_description": null,
+      "module_family": null,
+      "score": 240.3125,
+      "distance": null,
+      "source_excerpt": {
+        "path": "/home/goutev/repos/info-geometry-lean-fusion/lean/InfoGeometry/Quantum/GeometricTensorOperatorLift.lean",
+        "line": 55,
+        "start": 51,
+        "end": 59,
+        "lines": [
+          {
+            "line": 51,
+            "text": "    (A : EndH) (u v : H₂) :"
+          },
+          {
+            "line": 52,
+            "text": "    metricOfOperator A u v = ⟪A u, v⟫_ℝ := rfl"
+          },
+          {
+            "line": 53,
+            "text": ""
+          },
+          {
+            "line": 54,
+            "text": "omit [CompleteSpace E] in"
+          },
+          {
+            "line": 55,
+            "text": "@[simp] theorem metricOfOperator_zero :"
+          },
+          {
+            "line": 56,
+            "text": "    metricOfOperator (E := E) (0 : EndH) = 0 := by"
+          },
+          {
+            "line": 57,
+            "text": "  ext u v"
+          },
+          {
+            "line": 58,
+            "text": "  simp [metricOfOperator_apply]"
+          },
+          {
+            "line": 59,
+            "text": ""
+          }
+        ]
+      },
+      "faithful_witness": {
+        "raw_key": "raw_d3f9e0502f0f7da74fa6c1d217fc2ab53615996b",
+        "raw_doc_id": "raw_info_nodes/raw_d3f9e0502f0f7da74fa6c1d217fc2ab53615996b",
+        "scc_id": 2045,
+        "scc_key": "scc_68a5a131e1f4d5181ef79e4f04ede5a5979cb931",
+        "witness_backed": true,
+        "mode": "raw_graph_source"
+      },
+      "scc_anchor_distance": 0
+    }
+  ],
+  "prompt_policy": {
+    "principle": "proven Lean code is gravitational mass",
+    "use": "inject these nearby verified declarations before asking a prover model for tactics",
+    "promotion_allowed": false,
+    "faithful_witness_required": true,
+    "scc_anchor_rule": "lexical/synonym match -> anchored SCC -> bounded quotient expansion -> raw witness descent"
+  }
+}

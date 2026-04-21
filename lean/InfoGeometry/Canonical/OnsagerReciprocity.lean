@@ -64,6 +64,14 @@ noncomputable def operatorSecondVariationForm
     P.probe (operatorInformationMixedSecondVariation (E := E) X Y A) := by
   simp [operatorSecondVariationForm, operatorInformationMixedSecondVariationMap_apply]
 
+/-- Primitive second variation read as the nested Lie derivation `ad_X ad_Y`. -/
+@[rep_depth transport, simp] theorem operatorSecondVariationForm_eq_probe_observableLieHessian
+    (P : PotentialDatum (E := E)) (A : EndH) (X Y : PerturbationChannel E) :
+    operatorSecondVariationForm (E := E) P A X Y
+      =
+    P.probe (observableLieHessian (E := E) X Y A) := by
+  simp [operatorSecondVariationForm_apply]
+
 /-- Symmetric operatorial Hessian form on perturbation channels. -/
 @[rep_depth transport]
 noncomputable def operatorMetricHessianForm
@@ -133,6 +141,24 @@ noncomputable def operatorPhaseHessianForm
     P.probe (operatorInformationHessian (E := E) X A) := by
   simp [operatorMetricHessianForm, operatorInformationMetricPartMap_diag]
 
+/--
+Onsager metric response as the symmetrized readout of nested Lie derivations.
+
+This is the source-faithful bridge between reciprocity and Lie transport:
+the symmetric response coefficient is the average of the two ordered
+Lie-Hessian readouts.
+-/
+@[rep_depth transport]
+theorem operatorMetricHessianForm_eq_half_probe_observableLieHessian_add_swap
+    (P : PotentialDatum (E := E)) (A : EndH) (X Y : PerturbationChannel E) :
+    operatorMetricHessianForm (E := E) P A X Y
+      =
+    (2 : ℝ)⁻¹ *
+      (P.probe (observableLieHessian (E := E) X Y A)
+        + P.probe (observableLieHessian (E := E) Y X A)) := by
+  simp [operatorMetricHessianForm_apply, operatorInformationMetricPart,
+    observableLieHessian_apply, map_add, map_smul, mul_add]
+
 @[rep_depth transport, simp] theorem operatorCurvatureHessianForm_diag
     (P : PotentialDatum (E := E)) (A X : EndH) :
     operatorCurvatureHessianForm (E := E) P A X X = 0 := by
@@ -159,6 +185,28 @@ theorem responseCoefficient_swap
     responseCoefficient (E := E) P Y X A := by
   simpa [responseCoefficient] using
     operatorMetricHessianForm_swap (E := E) P A X Y
+
+/-- Diagonal Onsager response is the probed square of the Lie derivation. -/
+@[rep_depth transport]
+theorem responseCoefficient_diag_eq_probe_observableLieHessian
+    (P : PotentialDatum (E := E)) (X A : EndH) :
+    responseCoefficient (E := E) P X X A
+      =
+    P.probe (observableLieHessian (E := E) X X A) := by
+  rw [responseCoefficient, operatorMetricHessianForm_diag,
+    operatorInformationHessian_eq_observableLieHessian]
+
+/-- Diagonal Onsager response is the probed double transport commutator. -/
+@[rep_depth transport]
+theorem responseCoefficient_diag_eq_probe_double_transportCommutator
+    (P : PotentialDatum (E := E)) (X A : EndH) :
+    responseCoefficient (E := E) P X X A
+      =
+    P.probe
+      (transportCommutator (E := E) X
+        (transportCommutator (E := E) X A)) := by
+  rw [responseCoefficient, operatorMetricHessianForm_diag,
+    operatorInformationHessian_eq_double_transportCommutator]
 
 /-- The skew bracket/curvature coefficient flips sign when the channels are swapped. -/
 @[rep_depth transport]

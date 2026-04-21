@@ -24,6 +24,34 @@
 
 ---
 
+## Multilingual Theorem Translation
+
+Dense multilingual theorem prose must pass through the translator layer before
+Lean editing.  Do not formalize directly from Bulgarian/English physics prose,
+Black Book language, or literature-style derivations.
+
+Required packet:
+- `TERMS`: source phrase -> repo-native symbol
+- `CLAIMS`: atomic theorem candidates
+- `ASSUMPTIONS`: hidden PSD, finite-state, regularity, differentiability, or KKT gates
+- `OWNER_SURFACES`: existing Lean files/declarations that own each claim
+- `LEAN_SURFACES`: conservative theorem names that delegate to owner proofs
+- `DEBT`: claims that remain unformalized
+
+Example: Souriau/Fisher/Onsager prose normalizes into Massieu/partition,
+moment derivative, Hessian/Fisher/covariance, Fenchel contact, and Onsager
+entropy-production claims.  The current repo documentation for this workflow is
+`docs/MULTILINGUAL_THEOREM_TRANSLATOR.md`.
+
+Important boundary: the repo owns both a finite `2×2` algebraic inverse Fisher
+response on the non-spinodal locus `det ≠ 0` and an explicit-context smooth
+Legendre/Hessian inverse surface in
+`InfoGeometry.Geometry.LegendreHessianInverse`.  The latter requires the
+analytic inverse-function/chain-rule data as fields.  Do not infer those fields
+from prose, graph proximity, or the finite matrix inverse alone.
+
+---
+
 ## DAG-Aware Discipline
 
 The formalization pipeline interacts with the DAG infrastructure at two points:

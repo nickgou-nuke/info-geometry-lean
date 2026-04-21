@@ -1,21 +1,27 @@
 import InfoGeometry.Canonical.OperatorialHessianBridge
-import InfoGeometry.Canonical.RelationalInformationDynamics
+import InfoGeometry.Canonical.OnsagerReciprocity
 
 open scoped InnerProductSpace
 
 /-!
 # InfoGeometry.Canonical.Operators
 
-Minimal operatorial thermodynamic surface for Fisher/Onsager style readouts.
+Operator-facing thermodynamic aliases for the existing Fisher/Onsager trunk.
 
-This module does not claim a full metriplectic semantics. It packages the
-already-owned operatorial first/second variation layers into a small interface
-useful for operator-side thermodynamic arguments:
+This module is intentionally thin. It does not introduce a parallel Onsager
+machinery. Instead, it exposes a compact operatorial surface over the already
+owned layers in:
 
-- operatorial scalar Massieu readout,
-- operatorial Fisher readout as the symmetric second-variation sector,
-- Onsager operator as a chosen symmetric channel form,
-- entropy production as the Onsager quadratic form evaluated on a force.
+- `OperatorialHessianBridge`
+- `RelationalInformationDynamics`
+- `OnsagerReciprocity`
+
+The exported objects are:
+
+- scalar operatorial Massieu/free-energy readout,
+- operatorial Fisher readout and its probed scalar form,
+- Onsager response coefficient on the operator lane,
+- diagonal entropy-production readout and its reciprocity/nonnegativity facts.
 -/
 
 namespace InfoGeometry.Canonical.Operators
@@ -23,6 +29,7 @@ namespace InfoGeometry.Canonical.Operators
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.RelationalInformationDynamics
 open InfoGeometry.Canonical.OperatorialHessianBridge
+open InfoGeometry.Canonical.OnsagerReciprocity
 open InfoGeometry.Krein
 
 section Bridge
@@ -57,6 +64,24 @@ noncomputable abbrev operatorFisherDiagonal
     (X A : EndH) : EndH :=
   operatorInformationHessian (E := E) X A
 
+/-- The probed Fisher readout on the operator lane. -/
+@[rep_depth transport]
+noncomputable abbrev probedFisherReadout
+    (P : PotentialDatum (E := E)) (X Y A : EndH) : ℝ :=
+  operatorMetricHessianForm (E := E) P A X Y
+
+/-- Onsager response coefficient, exposed on the compact operator surface. -/
+@[rep_depth transport]
+noncomputable abbrev onsagerCoefficient
+    (P : PotentialDatum (E := E)) (X Y A : EndH) : ℝ :=
+  responseCoefficient (E := E) P X Y A
+
+/-- Diagonal Onsager entropy production readout. -/
+@[rep_depth transport]
+noncomputable abbrev entropyProduction
+    (P : PotentialDatum (E := E)) (X A : EndH) : ℝ :=
+  onsagerCoefficient (E := E) P X X A
+
 /-- The operatorial Fisher sector is symmetric in its two channels. -/
 @[rep_depth transport]
 theorem operatorFisherReadout_swap
@@ -76,48 +101,52 @@ theorem operatorFisherReadout_diag
   unfold operatorFisherReadout operatorFisherDiagonal
   simp [operatorInformationMetricPart, operatorInformationHessian]
 
-/-- A chosen Onsager operator is any symmetric bilinear channel form. -/
+/-- The compact probed Fisher readout is exactly the owned metric Hessian form. -/
 @[rep_depth transport]
-structure OnsagerOperator where
-  toBilin : LinearMap.BilinForm ℝ EndH
-  symmetric' : ∀ X Y, toBilin X Y = toBilin Y X
+@[simp] theorem probedFisherReadout_def
+    (P : PotentialDatum (E := E)) (X Y A : EndH) :
+    probedFisherReadout (E := E) P X Y A
+      =
+    P.probe (operatorFisherReadout (E := E) X Y A) := by
+  simp [probedFisherReadout, operatorFisherReadout, operatorMetricHessianForm_apply]
 
-attribute [simp] OnsagerOperator.symmetric'
-
-/-- The canonical Onsager candidate induced by the ambient doubled-state inner product. -/
+/-- Compact Onsager coefficient is just the trunk response coefficient. -/
 @[rep_depth transport]
-noncomputable def fisherOnsagerOperator : OnsagerOperator (E := E) where
-  toBilin := fun X Y => ⟪X, Y⟫_ℝ
-  symmetric' := by
-    intro X Y
-    exact real_inner_comm X Y
+@[simp] theorem onsagerCoefficient_def
+    (P : PotentialDatum (E := E)) (X Y A : EndH) :
+    onsagerCoefficient (E := E) P X Y A
+      =
+    probedFisherReadout (E := E) P X Y A := by
+  rfl
 
-/-- Entropy production is the Onsager quadratic form evaluated on a force channel. -/
+/-- Onsager reciprocity on the compact operator surface. -/
 @[rep_depth transport]
-noncomputable def entropyProduction
-    (L : OnsagerOperator (E := E)) (X : EndH) : ℝ :=
-  L.toBilin X X
+theorem onsagerCoefficient_swap
+    (P : PotentialDatum (E := E)) (X Y A : EndH) :
+    onsagerCoefficient (E := E) P X Y A
+      =
+    onsagerCoefficient (E := E) P Y X A := by
+  exact responseCoefficient_swap (E := E) P X Y A
 
-/-- Entropy production for a symmetric Onsager operator is invariant under trivial relabeling. -/
+/-- Diagonal entropy production is the probe of the diagonal Fisher/Hessian sector. -/
 @[rep_depth transport]
-@[simp] theorem entropyProduction_def
-    (L : OnsagerOperator (E := E)) (X : EndH) :
-    entropyProduction (E := E) L X = L.toBilin X X := rfl
+@[simp] theorem entropyProduction_eq_probe_hessian
+    (P : PotentialDatum (E := E)) (X A : EndH) :
+    entropyProduction P X A
+      =
+    P.probe (operatorFisherDiagonal (E := E) X A) := by
+  simpa [entropyProduction, onsagerCoefficient, operatorFisherDiagonal] using
+    (operatorMetricHessianForm_diag (E := E) P A X)
 
-/-- The canonical Fisher-Onsager entropy production is the squared Hilbert norm. -/
+/-- If the probe reads the diagonal Fisher sector as nonnegative, entropy production is nonnegative. -/
 @[rep_depth transport]
-theorem fisherOnsager_entropyProduction_eq_norm_sq
-    (X : EndH) :
-    entropyProduction (E := E) (fisherOnsagerOperator (E := E)) X = ‖X‖ ^ 2 := by
-  simp [entropyProduction, fisherOnsagerOperator]
-
-/-- Hence the canonical Fisher-Onsager entropy production is nonnegative. -/
-@[rep_depth transport]
-theorem fisherOnsager_entropyProduction_nonneg
-    (X : EndH) :
-    0 ≤ entropyProduction (E := E) (fisherOnsagerOperator (E := E)) X := by
-  rw [fisherOnsager_entropyProduction_eq_norm_sq (E := E) X]
-  positivity
+theorem entropyProduction_nonneg_of_probe_hessian_nonneg
+    (P : PotentialDatum (E := E))
+    (hP : ∀ X A : EndH, 0 ≤ P.probe (operatorFisherDiagonal (E := E) X A))
+    (X A : EndH) :
+    0 ≤ entropyProduction P X A := by
+  rw [entropyProduction_eq_probe_hessian P X A]
+  exact hP X A
 
 end Bridge
 

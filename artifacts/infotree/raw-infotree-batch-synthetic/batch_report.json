@@ -1,0 +1,178 @@
+{
+  "schema": "info_geometry.raw_infotree_batch_export_report.v1",
+  "output_dir": "/home/goutev/repos/info-geometry-lean-fusion/artifacts/infotree/raw-infotree-batch-synthetic",
+  "merged_dir": "/home/goutev/repos/info-geometry-lean-fusion/artifacts/infotree/raw-infotree-batch-synthetic/merged",
+  "selected_file_count": 1,
+  "valid_file_count": 1,
+  "failure_count": 0,
+  "timeout_sec": 60,
+  "merged_metadata": {
+    "schema": "info_geometry.raw_infotree_batch_export.v1",
+    "stage": "stage_2_tactic_lctx_bridge_batch",
+    "file_count": 1,
+    "fully_lossless": false,
+    "loss_audited": true,
+    "source_metadata": [
+      {
+        "stage": "stage_2_tactic_lctx_bridge",
+        "schema": "info_geometry.raw_infotree_export.v1",
+        "root_count": 2,
+        "payload_field_count": 317,
+        "payload_count": 51,
+        "node_count": 112,
+        "module": "tmp.raw_infotree_stage2_synthetic",
+        "mctx_ref_count": 52,
+        "mctx_decl_count": 361,
+        "loss_audited": true,
+        "leakage_count": 383,
+        "lctx_decl_count": 1233,
+        "fully_lossless": false,
+        "file": "tmp/raw_infotree_stage2_synthetic.lean",
+        "env_ref_count": 76,
+        "edge_count": 110,
+        "decl_link_count": 24,
+        "context_count": 61
+      }
+    ],
+    "counts": {
+      "raw_infotree_roots.jsonl": 2,
+      "raw_infotree_nodes.jsonl": 112,
+      "raw_infotree_edges.jsonl": 110,
+      "raw_infotree_contexts.jsonl": 61,
+      "raw_infotree_payloads.jsonl": 51,
+      "raw_infotree_payload_fields.jsonl": 317,
+      "raw_infotree_decl_links.jsonl": 24,
+      "raw_infotree_env_refs.jsonl": 76,
+      "raw_infotree_mctx_refs.jsonl": 52,
+      "raw_infotree_mctx_decls.jsonl": 361,
+      "raw_infotree_lctx_decls.jsonl": 1233,
+      "raw_infotree_projection_leakage.jsonl": 383
+    }
+  },
+  "merged_validation": {
+    "schema": "info_geometry.raw_infotree_export_validation.v1",
+    "input_dir": "/home/goutev/repos/info-geometry-lean-fusion/artifacts/infotree/raw-infotree-batch-synthetic/merged",
+    "ok": true,
+    "topology_ok": true,
+    "lossless_ok": false,
+    "lossless_errors": [
+      "metadata fully_lossless is not true",
+      "leakage rows present: 383"
+    ],
+    "errors": [],
+    "counts": {
+      "roots": 2,
+      "nodes": 112,
+      "edges": 110,
+      "contexts": 61,
+      "payloads": 51,
+      "payload_fields": 317,
+      "decl_links": 24,
+      "env_refs": 76,
+      "mctx_refs": 52,
+      "mctx_decls": 361,
+      "lctx_decls": 1233,
+      "leakage": 383
+    },
+    "metadata": {
+      "schema": "info_geometry.raw_infotree_batch_export.v1",
+      "stage": "stage_2_tactic_lctx_bridge_batch",
+      "file_count": 1,
+      "fully_lossless": false,
+      "loss_audited": true,
+      "source_metadata": [
+        {
+          "stage": "stage_2_tactic_lctx_bridge",
+          "schema": "info_geometry.raw_infotree_export.v1",
+          "root_count": 2,
+          "payload_field_count": 317,
+          "payload_count": 51,
+          "node_count": 112,
+          "module": "tmp.raw_infotree_stage2_synthetic",
+          "mctx_ref_count": 52,
+          "mctx_decl_count": 361,
+          "loss_audited": true,
+          "leakage_count": 383,
+          "lctx_decl_count": 1233,
+          "fully_lossless": false,
+          "file": "tmp/raw_infotree_stage2_synthetic.lean",
+          "env_ref_count": 76,
+          "edge_count": 110,
+          "decl_link_count": 24,
+          "context_count": 61
+        }
+      ],
+      "counts": {
+        "raw_infotree_roots.jsonl": 2,
+        "raw_infotree_nodes.jsonl": 112,
+        "raw_infotree_edges.jsonl": 110,
+        "raw_infotree_contexts.jsonl": 61,
+        "raw_infotree_payloads.jsonl": 51,
+        "raw_infotree_payload_fields.jsonl": 317,
+        "raw_infotree_decl_links.jsonl": 24,
+        "raw_infotree_env_refs.jsonl": 76,
+        "raw_infotree_mctx_refs.jsonl": 52,
+        "raw_infotree_mctx_decls.jsonl": 361,
+        "raw_infotree_lctx_decls.jsonl": 1233,
+        "raw_infotree_projection_leakage.jsonl": 383
+      }
+    }
+  },
+  "results": [
+    {
+      "file": "/home/goutev/repos/info-geometry-lean-fusion/tmp/raw_infotree_stage2_synthetic.lean",
+      "out_dir": "/home/goutev/repos/info-geometry-lean-fusion/artifacts/infotree/raw-infotree-batch-synthetic/per_file/00000_tmp_raw_infotree_stage2_synthetic.lean",
+      "status": "ok",
+      "returncode": 0,
+      "duration_sec": 2.5541984839946963,
+      "validation": {
+        "schema": "info_geometry.raw_infotree_export_validation.v1",
+        "input_dir": "/home/goutev/repos/info-geometry-lean-fusion/artifacts/infotree/raw-infotree-batch-synthetic/per_file/00000_tmp_raw_infotree_stage2_synthetic.lean",
+        "ok": true,
+        "topology_ok": true,
+        "lossless_ok": false,
+        "lossless_errors": [
+          "metadata fully_lossless is not true",
+          "leakage rows present: 383"
+        ],
+        "errors": [],
+        "counts": {
+          "roots": 2,
+          "nodes": 112,
+          "edges": 110,
+          "contexts": 61,
+          "payloads": 51,
+          "payload_fields": 317,
+          "decl_links": 24,
+          "env_refs": 76,
+          "mctx_refs": 52,
+          "mctx_decls": 361,
+          "lctx_decls": 1233,
+          "leakage": 383
+        },
+        "metadata": {
+          "stage": "stage_2_tactic_lctx_bridge",
+          "schema": "info_geometry.raw_infotree_export.v1",
+          "root_count": 2,
+          "payload_field_count": 317,
+          "payload_count": 51,
+          "node_count": 112,
+          "module": "tmp.raw_infotree_stage2_synthetic",
+          "mctx_ref_count": 52,
+          "mctx_decl_count": 361,
+          "loss_audited": true,
+          "leakage_count": 383,
+          "lctx_decl_count": 1233,
+          "fully_lossless": false,
+          "file": "tmp/raw_infotree_stage2_synthetic.lean",
+          "env_ref_count": 76,
+          "edge_count": 110,
+          "decl_link_count": 24,
+          "context_count": 61
+        }
+      },
+      "stdout_tail": "{\n  \"schema\": \"info_geometry.raw_infotree_export_validation.v1\",\n  \"input_dir\": \"/home/goutev/repos/info-geometry-lean-fusion/artifacts/infotree/raw-infotree-batch-synthetic/per_file/00000_tmp_raw_infotree_stage2_synthetic.lean\",\n  \"ok\": true,\n  \"topology_ok\": true,\n  \"lossless_ok\": false,\n  \"lossless_errors\": [\n    \"metadata fully_lossless is not true\",\n    \"leakage rows present: 383\"\n  ],\n  \"errors\": [],\n  \"counts\": {\n    \"roots\": 2,\n    \"nodes\": 112,\n    \"edges\": 110,\n    \"contexts\": 61,\n    \"payloads\": 51,\n    \"payload_fields\": 317,\n    \"decl_links\": 24,\n    \"env_refs\": 76,\n    \"mctx_refs\": 52,\n    \"mctx_decls\": 361,\n    \"lctx_decls\": 1233,\n    \"leakage\": 383\n  },\n  \"metadata\": {\n    \"stage\": \"stage_2_tactic_lctx_bridge\",\n    \"schema\": \"info_geometry.raw_infotree_export.v1\",\n    \"root_count\": 2,\n    \"payload_field_count\": 317,\n    \"payload_count\": 51,\n    \"node_count\": 112,\n    \"module\": \"tmp.raw_infotree_stage2_synthetic\",\n    \"mctx_ref_count\": 52,\n    \"mctx_decl_count\": 361,\n    \"loss_audited\": true,\n    \"leakage_count\": 383,\n    \"lctx_decl_count\": 1233,\n    \"fully_lossless\": false,\n    \"file\": \"tmp/raw_infotree_stage2_synthetic.lean\",\n    \"env_ref_count\": 76,\n    \"edge_count\": 110,\n    \"decl_link_count\": 24,\n    \"context_count\": 61\n  }\n}\n",
+      "stderr_tail": ""
+    }
+  ]
+}

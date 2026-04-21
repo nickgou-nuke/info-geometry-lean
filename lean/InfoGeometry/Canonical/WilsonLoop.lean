@@ -52,23 +52,24 @@ open InfoGeometry.Convex
 open scoped BigOperators
 
 variable {X : Type*}
-variable {n : Type*} [Fintype n] [DecidableEq n]
+variable {E : Type 0} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-@[simp] theorem wilsonLoopDiscrete_eq_det
-    (Dε : DiracField X n) (γ : List X) (dt : ℂ) :
-    wilsonLoopDiscrete Dε γ dt = Matrix.det (wilsonPropagatorDiscrete Dε γ dt) := rfl
-
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+/-- The operator-model Wilson loop is the complexified operator-norm readout. -/
+@[simp] theorem wilsonLoopDiscrete_eq_norm
+    (Dε : DiracField X E) (γ : List X) (dt : ℝ) :
+    wilsonLoopDiscrete Dε γ dt =
+      (‖wilsonPropagatorDiscrete Dε γ dt‖ : ℝ) := rfl
 
 @[simp] theorem chiralPathWeight_eq_holonomy_mul_gibbs
-    (H : HessianGeometry E) (Dε : DiracField (ℝ → E) n) (γ : ℝ → E) (N : ℕ) (T : ℝ) :
+    (H : HessianGeometry E) (Dε : DiracField (ℝ → E) E)
+    (γ : ℝ → E) (N : ℕ) (T : ℝ) :
     chiralPathWeight H Dε γ N T
       = continuousWilsonLoop Dε γ
         * Complex.exp ((- (InfoGeometry.Canonical.SpectralInference.bayesianAction H
             (fun i => γ ((i : ℝ) / (N : ℝ))) N) : ℝ) / T) := rfl
 
 @[simp] theorem expectedHolonomy_eq_partition_ratio
-    (H : HessianGeometry E) (Dε : DiracField (ℝ → E) n)
+    (H : HessianGeometry E) (Dε : DiracField (ℝ → E) E)
     (paths : Finset (ℝ → E)) (N : ℕ) (T : ℝ) :
     expectedHolonomy H Dε paths N T
       = (∑ γ ∈ paths,

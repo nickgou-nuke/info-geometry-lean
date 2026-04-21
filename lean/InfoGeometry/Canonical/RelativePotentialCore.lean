@@ -180,6 +180,42 @@ noncomputable def relativeModularPotential
     (q q0 : PositiveRay α) : α → ℝ :=
   representativeModularPotential (gaugeSection (α := α) q) (gaugeSection (α := α) q0)
 
+/--
+Information-geometric relative norm of a projective state against a reference.
+
+This is not an ambient vector-space norm and not an operator norm. It is the
+normalized `L¹` magnitude of the modular potential `-log(dμ / dν)` on canonical
+gauge sections. Thus the only scale used is the repo-native projective
+normalization supplied by `gaugeSection`; absolute representative magnitude is
+quotiented out before the readout is formed.
+-/
+noncomputable def informationGeometricRelativeNorm
+    (q q0 : PositiveRay α) : ℝ :=
+  ∑ a, gaugeSection (α := α) q a * |relativeModularPotential q q0 a|
+
+/--
+Canonical second moment of the relative modular potential, measured against the
+normalized gauge section of the reference ray.
+
+This is the energy of the negative logarithmic Radon-Nikodym derivative in the
+RedLine chain. The representative scale has already been removed by passing to
+positive rays and by using the canonical gauge section.
+-/
+noncomputable def relativeInformationEnergy
+    (q q0 : PositiveRay α) : ℝ :=
+  ∑ a, gaugeSection (α := α) q0 a * (relativeModularPotential q q0 a) ^ (2 : ℕ)
+
+/--
+Observer-relative information-geometric norm.
+
+This is the RMS size of the modular contrast `-log(dμ / dν)` with respect to
+the normalized reference gauge. It is a norm/readout of relative measurement
+data, not an inherited ambient operator norm.
+-/
+noncomputable def relativeInformationNorm
+    (q q0 : PositiveRay α) : ℝ :=
+  Real.sqrt (relativeInformationEnergy q q0)
+
 /-- Global additive gauge shift induced by canonical normalization of representatives. -/
 noncomputable def representativeMassShift
     (μ ν : InfoGeometry.PositiveMeasure α ℝ) : ℝ :=
@@ -360,6 +396,167 @@ theorem relativeModularPotential_eq_logDensity_base_sub_logDensity
   rw [relativeModularPotential_eq_logDensity_base_sub_logDensity]
   ring
 
+@[simp] theorem informationGeometricRelativeNorm_self
+    (q : PositiveRay α) :
+    informationGeometricRelativeNorm q q = 0 := by
+  unfold informationGeometricRelativeNorm
+  simp only [relativeModularPotential_self, abs_zero, mul_zero, Finset.sum_const_zero]
+
+theorem informationGeometricRelativeNorm_nonneg
+    (q q0 : PositiveRay α) :
+    0 ≤ informationGeometricRelativeNorm q q0 := by
+  unfold informationGeometricRelativeNorm
+  exact Finset.sum_nonneg fun a _ =>
+    mul_nonneg (le_of_lt ((gaugeSection (α := α) q).pos a)) (abs_nonneg _)
+
+theorem informationGeometricRelativeNorm_eq_sum_gauge_abs_neg_relativeLogDensity
+    (q q0 : PositiveRay α) :
+    informationGeometricRelativeNorm q q0 =
+      ∑ a, gaugeSection (α := α) q a * |-relativeLogDensity q q0 a| := by
+  unfold informationGeometricRelativeNorm
+  simp only [relativeModularPotential_eq_neg_relativeLogDensity]
+
+@[simp] theorem relativeInformationEnergy_self
+    (q : PositiveRay α) :
+    relativeInformationEnergy q q = 0 := by
+  unfold relativeInformationEnergy
+  simp only [relativeModularPotential_self, zero_pow (by norm_num : (2 : ℕ) ≠ 0),
+    mul_zero, Finset.sum_const_zero]
+
+@[simp] theorem relativeInformationNorm_self
+    (q : PositiveRay α) :
+    relativeInformationNorm q q = 0 := by
+  simp [relativeInformationNorm]
+
+theorem relativeInformationEnergy_nonneg
+    (q q0 : PositiveRay α) :
+    0 ≤ relativeInformationEnergy q q0 := by
+  unfold relativeInformationEnergy
+  exact Finset.sum_nonneg fun a _ =>
+    mul_nonneg (le_of_lt ((gaugeSection (α := α) q0).pos a)) (sq_nonneg _)
+
+theorem relativeInformationNorm_nonneg
+    (q q0 : PositiveRay α) :
+    0 ≤ relativeInformationNorm q q0 := by
+  exact Real.sqrt_nonneg _
+
+theorem relativeInformationEnergy_eq_sum_gauge_sq_neg_relativeLogDensity
+    (q q0 : PositiveRay α) :
+    relativeInformationEnergy q q0 =
+      ∑ a, gaugeSection (α := α) q0 a * (-relativeLogDensity q q0 a) ^ (2 : ℕ) := by
+  unfold relativeInformationEnergy
+  simp only [relativeModularPotential_eq_neg_relativeLogDensity]
+
+@[simp] theorem informationGeometricRelativeNorm_scale_left
+    (c : ℝ) (hc : 0 < c)
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
+    informationGeometricRelativeNorm
+        (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale c hc μ))
+        (Quotient.mk _ ν)
+      =
+    informationGeometricRelativeNorm (Quotient.mk _ μ) (Quotient.mk _ ν) := by
+  have hq :
+      (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale c hc μ) : PositiveRay α)
+        = Quotient.mk _ μ := by
+    exact Quotient.sound (InfoGeometry.PositiveMeasure.SameRay.symm ⟨c, hc, rfl⟩)
+  rw [hq]
+
+@[simp] theorem informationGeometricRelativeNorm_scale_right
+    (d : ℝ) (hd : 0 < d)
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
+    informationGeometricRelativeNorm
+        (Quotient.mk _ μ)
+        (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale d hd ν))
+      =
+    informationGeometricRelativeNorm (Quotient.mk _ μ) (Quotient.mk _ ν) := by
+  have hq :
+      (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale d hd ν) : PositiveRay α)
+        = Quotient.mk _ ν := by
+    exact Quotient.sound (InfoGeometry.PositiveMeasure.SameRay.symm ⟨d, hd, rfl⟩)
+  rw [hq]
+
+@[simp] theorem informationGeometricRelativeNorm_scale_scale
+    (c d : ℝ) (hc : 0 < c) (hd : 0 < d)
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
+    informationGeometricRelativeNorm
+        (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale c hc μ))
+        (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale d hd ν))
+      =
+    informationGeometricRelativeNorm (Quotient.mk _ μ) (Quotient.mk _ ν) := by
+  rw [informationGeometricRelativeNorm_scale_left,
+    informationGeometricRelativeNorm_scale_right]
+
+@[simp] theorem relativeInformationEnergy_scale_left
+    (c : ℝ) (hc : 0 < c)
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
+    relativeInformationEnergy
+        (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale c hc μ))
+        (Quotient.mk _ ν)
+      =
+    relativeInformationEnergy (Quotient.mk _ μ) (Quotient.mk _ ν) := by
+  have hq :
+      (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale c hc μ) : PositiveRay α)
+        = Quotient.mk _ μ := by
+    exact Quotient.sound (InfoGeometry.PositiveMeasure.SameRay.symm ⟨c, hc, rfl⟩)
+  rw [hq]
+
+@[simp] theorem relativeInformationEnergy_scale_right
+    (d : ℝ) (hd : 0 < d)
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
+    relativeInformationEnergy
+        (Quotient.mk _ μ)
+        (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale d hd ν))
+      =
+    relativeInformationEnergy (Quotient.mk _ μ) (Quotient.mk _ ν) := by
+  have hq :
+      (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale d hd ν) : PositiveRay α)
+        = Quotient.mk _ ν := by
+    exact Quotient.sound (InfoGeometry.PositiveMeasure.SameRay.symm ⟨d, hd, rfl⟩)
+  rw [hq]
+
+@[simp] theorem relativeInformationEnergy_scale_scale
+    (c d : ℝ) (hc : 0 < c) (hd : 0 < d)
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
+    relativeInformationEnergy
+        (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale c hc μ))
+        (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale d hd ν))
+      =
+    relativeInformationEnergy (Quotient.mk _ μ) (Quotient.mk _ ν) := by
+  rw [relativeInformationEnergy_scale_left, relativeInformationEnergy_scale_right]
+
+@[simp] theorem relativeInformationNorm_scale_left
+    (c : ℝ) (hc : 0 < c)
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
+    relativeInformationNorm
+        (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale c hc μ))
+        (Quotient.mk _ ν)
+      =
+    relativeInformationNorm (Quotient.mk _ μ) (Quotient.mk _ ν) := by
+  unfold relativeInformationNorm
+  rw [relativeInformationEnergy_scale_left]
+
+@[simp] theorem relativeInformationNorm_scale_right
+    (d : ℝ) (hd : 0 < d)
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
+    relativeInformationNorm
+        (Quotient.mk _ μ)
+        (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale d hd ν))
+      =
+    relativeInformationNorm (Quotient.mk _ μ) (Quotient.mk _ ν) := by
+  unfold relativeInformationNorm
+  rw [relativeInformationEnergy_scale_right]
+
+@[simp] theorem relativeInformationNorm_scale_scale
+    (c d : ℝ) (hc : 0 < c) (hd : 0 < d)
+    (μ ν : InfoGeometry.PositiveMeasure α ℝ) :
+    relativeInformationNorm
+        (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale c hc μ))
+        (Quotient.mk _ (InfoGeometry.PositiveMeasure.scale d hd ν))
+      =
+    relativeInformationNorm (Quotient.mk _ μ) (Quotient.mk _ ν) := by
+  unfold relativeInformationNorm
+  rw [relativeInformationEnergy_scale_scale]
+
 @[simp] theorem relativeLogDensity_cocycle
     (q q0 q1 : PositiveRay α) (a : α) :
     relativeLogDensity q q1 a
@@ -407,6 +604,9 @@ attribute [rep_depth projective]
   relativeDensity
   relativeLogDensity
   relativeModularPotential
+  informationGeometricRelativeNorm
+  relativeInformationEnergy
+  relativeInformationNorm
   representativeMassShift
   representativeMassShift_self
   representativeMassShift_symm
@@ -421,6 +621,23 @@ attribute [rep_depth projective]
   relativeDensity_self
   relativeLogDensity_self
   relativeModularPotential_self
+  informationGeometricRelativeNorm_self
+  informationGeometricRelativeNorm_nonneg
+  informationGeometricRelativeNorm_eq_sum_gauge_abs_neg_relativeLogDensity
+  relativeInformationEnergy_self
+  relativeInformationNorm_self
+  relativeInformationEnergy_nonneg
+  relativeInformationNorm_nonneg
+  relativeInformationEnergy_eq_sum_gauge_sq_neg_relativeLogDensity
+  informationGeometricRelativeNorm_scale_left
+  informationGeometricRelativeNorm_scale_right
+  informationGeometricRelativeNorm_scale_scale
+  relativeInformationEnergy_scale_left
+  relativeInformationEnergy_scale_right
+  relativeInformationEnergy_scale_scale
+  relativeInformationNorm_scale_left
+  relativeInformationNorm_scale_right
+  relativeInformationNorm_scale_scale
   relativeLogDensity_cocycle
   relativeDensity_cocycle
   relativeModularPotential_cocycle

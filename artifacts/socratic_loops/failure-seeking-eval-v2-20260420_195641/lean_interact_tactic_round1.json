@@ -1,0 +1,32 @@
+{
+  "kind": "tactic",
+  "probe": {
+    "context": "import Mathlib\n\nset_option autoImplicit false\n\nnamespace InfoGeometry.Alchemical\n\nstructure NegLogRectifier (Ratio Potential : Type*)\n    [One Ratio] [Mul Ratio] [Zero Potential] [Add Potential] where\n  toPotential : Ratio \u2192 Potential\n  map_one' : toPotential 1 = 0\n  map_mul' : \u2200 x y : Ratio, toPotential (x * y) = toPotential x + toPotential y\n\nnamespace NegLogRectifier",
+    "goal": "\u2200 (R : NegLogRectifier Ratio Potential), R 1 = 0",
+    "imports": [
+      "Mathlib",
+      "Mathlib"
+    ],
+    "lean": {
+      "ok": false,
+      "returncode": 1,
+      "source": "import Mathlib\nimport Mathlib\n\nimport Mathlib\nset_option autoImplicit false\nnamespace InfoGeometry.Alchemical\nstructure NegLogRectifier (Ratio Potential : Type*)\n    [One Ratio] [Mul Ratio] [Zero Potential] [Add Potential] where\n  toPotential : Ratio \u2192 Potential\n  map_one' : toPotential 1 = 0\n  map_mul' : \u2200 x y : Ratio, toPotential (x * y) = toPotential x + toPotential y\nnamespace NegLogRectifier\n\ntheorem hermes_probe : \u2200 (R : NegLogRectifier Ratio Potential), R 1 = 0 := by\n  trace_state\n  repeat intro\n  R.map_one'\n  @[simp]\n",
+      "source_path": "/tmp/hermes_probe_xka0wqa0.lean",
+      "stderr": "",
+      "stdout": "/tmp/hermes_probe_xka0wqa0.lean:17:3: error: unknown tactic\n/tmp/hermes_probe_xka0wqa0.lean:14:46: error(lean.unknownIdentifier): Unknown identifier `Ratio`\n\nNote: It is not possible to treat `Ratio` as an implicitly bound variable here because the `autoImplicit` option is set to `false`.\n/tmp/hermes_probe_xka0wqa0.lean:14:52: error(lean.unknownIdentifier): Unknown identifier `Potential`\n\nNote: It is not possible to treat `Potential` as an implicitly bound variable here because the `autoImplicit` option is set to `false`.\n/tmp/hermes_probe_xka0wqa0.lean:14:75: error: unsolved goals\nR\u271d : sorry\n\u22a2 sorry = 0\n\u22a2 \u2200 (R : sorry), sorry = 0\n/tmp/hermes_probe_xka0wqa0.lean:19:0: error: unexpected end of input; expected 'lemma'\n"
+    },
+    "normalized_goal": "\u2200 (R : NegLogRectifier Ratio Potential), R 1 = 0",
+    "normalized_tactic": "repeat intro\nR.map_one'\n@[simp]",
+    "proof_state_before": "/tmp/hermes_probe_xka0wqa0.lean:17:3: error: unknown tactic\n/tmp/hermes_probe_xka0wqa0.lean:14:46: error(lean.unknownIdentifier): Unknown identifier `Ratio`\n\nNote: It is not possible to treat `Ratio` as an implicitly bound variable here because the `autoImplicit` option is set to `false`.\n/tmp/hermes_probe_xka0wqa0.lean:14:52: error(lean.unknownIdentifier): Unknown identifier `Potential`\n\nNote: It is not possible to treat `Potential` as an implicitly bound variable here because the `autoImplicit` option is set to `false`.\n/tmp/hermes_probe_xka0wqa0.lean:14:75: error: unsolved goals\nR\u271d : sorry\n\u22a2 sorry = 0\n\u22a2 \u2200 (R : sorry), sorry = 0\n/tmp/hermes_probe_xka0wqa0.lean:19:0: error: unexpected end of input; expected 'lemma'",
+    "schema": "lean_interact.tactic_probe.v1",
+    "status": "failure",
+    "tactic": "repeat intro\nR.map_one'\n@[simp]"
+  },
+  "round": 1,
+  "surface": {
+    "goal": "(R : NegLogRectifier Ratio Potential) : R 1 = 0",
+    "kind": "theorem",
+    "name": "map_one",
+    "tactic": "R.map_one'\n\n@[simp]"
+  }
+}

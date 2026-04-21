@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.ObserverDefect
 import InfoGeometry.Canonical.ModularSourceBridge
 import InfoGeometry.Canonical.KKTClosureSymmetry
+import InfoGeometry.Canonical.RelativePotentialCore
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
@@ -289,6 +290,10 @@ end RouterDefectBridge
 /--
 Bounded bridge variant: the router residual is controlled by the canonical
 defect-central channel `Z_D` on the same Drazin/KKT lane.
+
+Legacy ambient-norm shim. This is retained for old local consumers only; the
+active D3 closure surface is `RouterDefectThermodynamicBridge`, where comparison
+is performed through the Weyl/relative-potential readout lane.
 -/
 structure RouterDefectBoundBridge where
   CIK : CertifiedInverseKernel H₂
@@ -298,6 +303,236 @@ structure RouterDefectBoundBridge where
     ‖routerResidual‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖
 
 namespace RouterDefectBoundBridge
+
+/--
+Weyl/thermodynamic comparison packet for two operators.
+
+This is the repo-native replacement for using an ambient operator norm as the
+information-geometric comparison. An operator is first sent through an explicit
+information-geometric readout, and that readout must be identified with the
+normalized relative information norm from the RedLine corridor. The norm is the
+RMS size of `-log(dμ / dν)` on projective positive states, measured against the
+reference gauge; no ambient operator norm or base-space geometry is assumed.
+-/
+@[rep_depth transport]
+structure WeylThermodynamicOperatorComparison
+    (residual central : EndH) where
+  α : Type
+  fintype : Fintype α
+  nonempty : Nonempty α
+  operatorInformationNormReadout : EndH → ℝ
+  defectRay : InfoGeometry.Canonical.PositiveRayCore.PositiveRay α
+  centralRay : InfoGeometry.Canonical.PositiveRayCore.PositiveRay α
+  referenceRay : InfoGeometry.Canonical.PositiveRayCore.PositiveRay α
+  residual_readout_eq_relativeInformationNorm :
+    operatorInformationNormReadout residual =
+      @InfoGeometry.Canonical.RelativePotentialCore.relativeInformationNorm
+        α fintype nonempty defectRay referenceRay
+  central_readout_eq_relativeInformationNorm :
+    operatorInformationNormReadout central =
+      @InfoGeometry.Canonical.RelativePotentialCore.relativeInformationNorm
+        α fintype nonempty centralRay referenceRay
+  relativeInformationNorm_le_central :
+    @InfoGeometry.Canonical.RelativePotentialCore.relativeInformationNorm
+        α fintype nonempty defectRay referenceRay
+      ≤
+    @InfoGeometry.Canonical.RelativePotentialCore.relativeInformationNorm
+        α fintype nonempty centralRay referenceRay
+
+omit [CompleteSpace E] in
+/--
+Readout-level consequence of a Weyl/thermodynamic comparison packet.
+
+The result is an inequality between explicitly represented information-geometric
+relative norms, not an ambient norm inequality between operators.
+-/
+@[rep_depth transport]
+theorem operatorInformationNormReadout_le_of_weylThermodynamicComparison
+    {residual central : EndH}
+    (cmp : WeylThermodynamicOperatorComparison (E := E) residual central) :
+    cmp.operatorInformationNormReadout residual ≤ cmp.operatorInformationNormReadout central := by
+  rw [cmp.residual_readout_eq_relativeInformationNorm,
+    cmp.central_readout_eq_relativeInformationNorm]
+  exact cmp.relativeInformationNorm_le_central
+
+/--
+Profile-level Weyl/thermodynamic comparison packet for a scaled `L¹`
+modular-potential residual readout bounded by a central thermodynamic readout.
+
+This is the source-faithful packet for Sinkhorn RN barriers. It does not use
+the RMS `relativeInformationNorm`; it uses the projective
+`informationGeometricRelativeNorm` lane with explicit scale factors, because
+raw RN barriers are sums of absolute logarithmic count/profile changes. The
+central `Z_D` side remains an explicitly supplied thermodynamic scalar budget
+until a separate central positive-ray profile is constructed.
+-/
+@[rep_depth transport]
+structure WeylThermodynamicProfileComparison
+    (residual central : EndH) where
+  α : Type
+  fintype : Fintype α
+  nonempty : Nonempty α
+  operatorInformationNormReadout : EndH → ℝ
+  defectScale : ℝ
+  defectScale_nonneg : 0 ≤ defectScale
+  defectRay : InfoGeometry.Canonical.PositiveRayCore.PositiveRay α
+  referenceRay : InfoGeometry.Canonical.PositiveRayCore.PositiveRay α
+  residual_readout_eq_scaled_informationGeometricRelativeNorm :
+    operatorInformationNormReadout residual =
+      defectScale *
+        @InfoGeometry.Canonical.RelativePotentialCore.informationGeometricRelativeNorm
+          α fintype nonempty defectRay referenceRay
+  scaled_informationGeometricRelativeNorm_le_central_readout :
+    defectScale *
+        @InfoGeometry.Canonical.RelativePotentialCore.informationGeometricRelativeNorm
+          α fintype nonempty defectRay referenceRay
+      ≤
+    operatorInformationNormReadout central
+
+omit [CompleteSpace E] in
+/--
+Readout-level consequence of a profile Weyl/thermodynamic comparison packet.
+-/
+@[rep_depth transport]
+theorem operatorInformationNormReadout_le_of_weylThermodynamicProfileComparison
+    {residual central : EndH}
+    (cmp : WeylThermodynamicProfileComparison (E := E) residual central) :
+    cmp.operatorInformationNormReadout residual ≤ cmp.operatorInformationNormReadout central := by
+  rw [cmp.residual_readout_eq_scaled_informationGeometricRelativeNorm]
+  exact cmp.scaled_informationGeometricRelativeNorm_le_central_readout
+
+/--
+Correct D3 closure target in the Weyl/thermodynamic language.
+
+The observer defect is controlled by `Z_D` only after both operators have been
+represented by the same normalized relative-measurement potential lane. This is
+the operational comparison structure: Weyl gauge normalization, relative
+measurement, and modular potential as negative logarithmic Radon-Nikodym
+derivative.
+-/
+@[rep_depth transport]
+def ObserverDefectResidualWeylThermodynamicBoundedByZD
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) : Prop :=
+  Nonempty
+    (WeylThermodynamicOperatorComparison (E := E)
+      (observerDefectResidual CIK obs)
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK))
+
+/--
+Any concrete Weyl/thermodynamic comparison packet closes the corrected D3
+target. The proof is deliberately just packet transport: the real work is the
+construction of the shared relative-potential representation.
+-/
+@[rep_depth transport]
+theorem observerDefectResidualWeylThermodynamicBoundedByZD_of_comparison
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (cmp :
+      WeylThermodynamicOperatorComparison (E := E)
+        (observerDefectResidual CIK obs)
+        (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)) :
+    ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) CIK obs :=
+  ⟨cmp⟩
+
+/--
+Thermodynamic router bridge.
+
+This is the corrected D3 bridge surface: the router residual is identified with
+the canonical observer defect and compared to `Z_D` through a shared
+Weyl/thermodynamic relative-measurement readout. The legacy
+`RouterDefectBoundBridge` below remains only for existing norm-shaped consumers.
+-/
+@[rep_depth transport]
+structure RouterDefectThermodynamicBridge where
+  CIK : CertifiedInverseKernel H₂
+  obs : ObserverL5 CIK
+  flow : BackgroundModularFlow CIK
+  routerResidual : EndH
+  residual_eq_observerDefect :
+    routerResidual = observerDefectResidual CIK obs
+  comparison :
+    WeylThermodynamicOperatorComparison (E := E)
+      routerResidual
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
+
+namespace RouterDefectThermodynamicBridge
+
+/--
+Canonical constructor for the thermodynamic router bridge.
+
+The residual is fixed to the canonical observer defect. The only remaining
+input is the concrete Weyl/thermodynamic comparison packet, not an ambient
+operator-norm bound.
+-/
+noncomputable def ofCanonicalObserverDefect
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (cmp :
+      WeylThermodynamicOperatorComparison (E := E)
+        (observerDefectResidual CIK obs)
+        (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)) :
+    RouterDefectThermodynamicBridge (E := E) :=
+  { CIK := CIK
+    obs := obs
+    flow := flow
+    routerResidual := observerDefectResidual CIK obs
+    residual_eq_observerDefect := rfl
+    comparison := cmp }
+
+@[simp] theorem ofCanonicalObserverDefect_routerResidual
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (cmp :
+      WeylThermodynamicOperatorComparison (E := E)
+        (observerDefectResidual CIK obs)
+        (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)) :
+    (ofCanonicalObserverDefect (E := E) CIK obs flow cmp).routerResidual =
+      observerDefectResidual CIK obs := by
+  rfl
+
+/-- Sourced generator built from the thermodynamic router residual. -/
+noncomputable def sourcedGenerator (B : RouterDefectThermodynamicBridge (E := E)) : EndH :=
+  B.flow.K0 + B.routerResidual
+
+/-- The thermodynamic sourced generator coincides with the canonical sourced modular generator. -/
+@[rep_depth transport]
+theorem sourcedGenerator_eq_canonical
+    (B : RouterDefectThermodynamicBridge (E := E)) :
+    B.sourcedGenerator = sourcedModularGenerator B.CIK B.obs B.flow := by
+  unfold sourcedGenerator sourcedModularGenerator
+  simp [B.residual_eq_observerDefect]
+
+/--
+Thermodynamic residual comparison: the residual readout is bounded by the `Z_D`
+readout in the shared Weyl/relative-potential representation.
+-/
+@[rep_depth transport]
+theorem operatorInformationNormReadout_routerResidual_le_ZD
+    (B : RouterDefectThermodynamicBridge (E := E)) :
+    B.comparison.operatorInformationNormReadout B.routerResidual
+      ≤
+    B.comparison.operatorInformationNormReadout
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) B.CIK) :=
+  operatorInformationNormReadout_le_of_weylThermodynamicComparison
+    (E := E) B.comparison
+
+/--
+The thermodynamic bridge closes the corrected observer-defect target after
+transporting the residual equality.
+-/
+@[rep_depth transport]
+theorem observerDefectResidualWeylThermodynamicBoundedByZD
+    (B : RouterDefectThermodynamicBridge (E := E)) :
+    ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) B.CIK B.obs := by
+  rcases B with ⟨CIK, obs, flow, routerResidual, hEq, comparison⟩
+  dsimp [ObserverDefectResidualWeylThermodynamicBoundedByZD] at *
+  subst routerResidual
+  exact ⟨comparison⟩
+
+end RouterDefectThermodynamicBridge
 
 /--
 Canonical theorem-backed constructor for the bounded bridge.

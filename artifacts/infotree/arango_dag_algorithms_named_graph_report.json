@@ -1,0 +1,68 @@
+{
+  "schema": "info_geometry.arango_dag_algorithms.v1",
+  "run_id": "1776704295",
+  "source": {
+    "database": "infogeometry",
+    "overlay_nodes": "topology_overlay",
+    "overlay_edges": "topology_overlay_edges",
+    "edge_kind": null
+  },
+  "truth_status": "derived_overlay_not_lean_authority",
+  "loaded": {
+    "component_count": 25947,
+    "scc_quotient_row_count": 1184253,
+    "dedup_quotient_edge_count": 773050
+  },
+  "algorithms": {
+    "topological_order_count": 25947,
+    "cyclic_residue_count": 0,
+    "dependency_root_count": 6486,
+    "capstone_count": 7649,
+    "depth_min_max": 3,
+    "depth_max_max": 31,
+    "dominators_computed": true,
+    "two_complex": {
+      "computed": false,
+      "reason": "edge_limit_exceeded",
+      "edge_count": 773050,
+      "edge_limit": 200000
+    },
+    "seed": {
+      "index": 16060,
+      "source_id": "topology_overlay/scc_2b283b908d86c6103d7cfa92f2c5cc720cc115d0",
+      "representative": "InfoGeometry.LLM.TrialityMoE.RouterDefectBoundBridge",
+      "scc_id": 16060,
+      "downstream_reachable": 9,
+      "upstream_reachable": 107,
+      "downstream_path_sum": 9,
+      "upstream_path_sum": 1169
+    }
+  },
+  "timing": {
+    "load_seconds": 4.881,
+    "algorithm_seconds": 0.114
+  },
+  "write": {
+    "arango_dag_components": {
+      "created": 0,
+      "updated": 25947,
+      "errors": 0,
+      "total": 25947
+    },
+    "arango_dag_component_edges": {
+      "created": 0,
+      "updated": 773050,
+      "errors": 0,
+      "total": 773050
+    },
+    "live_counts": {
+      "arango_dag_components": 25947,
+      "arango_dag_component_edges": 773050
+    },
+    "named_graph": {
+      "created": true,
+      "graph_name": "arango_dag",
+      "error": false
+    }
+  }
+}

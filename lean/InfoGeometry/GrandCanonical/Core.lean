@@ -499,6 +499,77 @@ noncomputable def firstNumberUnnormalized
     (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
   ∑ x, params.number x * Real.exp (-β * shiftedEnergy params μ x)
 
+/-- Second unnormalized moment of the shifted observable `E - μN`. -/
+noncomputable def secondShiftUnnormalized
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, (shiftedEnergy params μ x) ^ (2 : ℕ) *
+    Real.exp (-β * shiftedEnergy params μ x)
+
+/-- Second unnormalized moment of the number observable `N`. -/
+noncomputable def secondNumberUnnormalized
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, (params.number x) ^ (2 : ℕ) *
+    Real.exp (-β * shiftedEnergy params μ x)
+
+/-- Unnormalized cross moment of `E - μN` and `N`. -/
+noncomputable def crossMomentUnnormalized
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, (shiftedEnergy params μ x * params.number x) *
+    Real.exp (-β * shiftedEnergy params μ x)
+
+/-- Normalized second moment of the shifted observable `E - μN`. -/
+noncomputable def secondShiftMoment
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, gibbsWeightGC params β μ x * (shiftedEnergy params μ x) ^ (2 : ℕ)
+
+/-- Normalized second moment of the number observable `N`. -/
+noncomputable def secondNumberMoment
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, gibbsWeightGC params β μ x * (params.number x) ^ (2 : ℕ)
+
+/-- Normalized cross moment of `E - μN` and `N`. -/
+noncomputable def crossShiftNumberMoment
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, gibbsWeightGC params β μ x *
+    (shiftedEnergy params μ x * params.number x)
+
+/-- Variance of the shifted observable `E - μN`. -/
+noncomputable def varianceShift
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, gibbsWeightGC params β μ x *
+    (shiftedEnergy params μ x - meanShift params β μ) ^ (2 : ℕ)
+
+/-- Shifted-energy variance is nonnegative by Gibbs-weight positivity. -/
+lemma varianceShift_nonneg
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    0 ≤ varianceShift params β μ := by
+  unfold varianceShift
+  refine Finset.sum_nonneg ?_
+  intro x _hx
+  exact mul_nonneg (gibbsWeightGC_nonneg params β μ x) (sq_nonneg _)
+
+/-- Variance of the number observable `N`. -/
+noncomputable def varianceNumber
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, gibbsWeightGC params β μ x *
+    (params.number x - meanNumber params β μ) ^ (2 : ℕ)
+
+/-- Number variance is nonnegative by Gibbs-weight positivity. -/
+lemma varianceNumber_nonneg
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    0 ≤ varianceNumber params β μ := by
+  unfold varianceNumber
+  refine Finset.sum_nonneg ?_
+  intro x _hx
+  exact mul_nonneg (gibbsWeightGC_nonneg params β μ x) (sq_nonneg _)
+
+/-- Covariance between the shifted observable `E - μN` and number observable `N`. -/
+noncomputable def covarianceShiftNumber
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) : ℝ :=
+  ∑ x, gibbsWeightGC params β μ x *
+    (shiftedEnergy params μ x - meanShift params β μ) *
+    (params.number x - meanNumber params β μ)
+
 -- Pointwise derivative in `β`.
 omit [Fintype α] [Nonempty α] in
 lemma hasDerivAt_exp_neg_mul_shiftedEnergy_beta
@@ -689,6 +760,215 @@ lemma meanNumber_eq_firstNumber_div_partition
     _ = firstNumberUnnormalized params β μ / partitionGC params β μ := by
           rfl
 
+lemma secondShiftMoment_eq_secondShiftUnnormalized_div_partition
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    secondShiftMoment params β μ =
+      secondShiftUnnormalized params β μ / partitionGC params β μ := by
+  unfold secondShiftMoment secondShiftUnnormalized gibbsWeightGC
+  have hZne : partitionGC params β μ ≠ 0 := ne_of_gt (partitionGC_pos params β μ)
+  calc
+    ∑ x, (Real.exp (-β * shiftedEnergy params μ x) / partitionGC params β μ) *
+        shiftedEnergy params μ x ^ (2 : ℕ)
+        = ∑ x, (shiftedEnergy params μ x ^ (2 : ℕ) *
+            Real.exp (-β * shiftedEnergy params μ x)) /
+            partitionGC params β μ := by
+            refine Finset.sum_congr rfl ?_
+            intro x hx
+            field_simp [hZne]
+    _ = (∑ x, shiftedEnergy params μ x ^ (2 : ℕ) *
+          Real.exp (-β * shiftedEnergy params μ x)) /
+          partitionGC params β μ := by
+          symm
+          simpa using
+            (Finset.sum_div
+              (s := (Finset.univ : Finset α))
+              (f := fun x => shiftedEnergy params μ x ^ (2 : ℕ) *
+                Real.exp (-β * shiftedEnergy params μ x))
+              (a := partitionGC params β μ))
+    _ = secondShiftUnnormalized params β μ / partitionGC params β μ := by
+          rfl
+
+lemma secondNumberMoment_eq_secondNumberUnnormalized_div_partition
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    secondNumberMoment params β μ =
+      secondNumberUnnormalized params β μ / partitionGC params β μ := by
+  unfold secondNumberMoment secondNumberUnnormalized gibbsWeightGC
+  have hZne : partitionGC params β μ ≠ 0 := ne_of_gt (partitionGC_pos params β μ)
+  calc
+    ∑ x, (Real.exp (-β * shiftedEnergy params μ x) / partitionGC params β μ) *
+        params.number x ^ (2 : ℕ)
+        = ∑ x, (params.number x ^ (2 : ℕ) *
+            Real.exp (-β * shiftedEnergy params μ x)) /
+            partitionGC params β μ := by
+            refine Finset.sum_congr rfl ?_
+            intro x hx
+            field_simp [hZne]
+    _ = (∑ x, params.number x ^ (2 : ℕ) *
+          Real.exp (-β * shiftedEnergy params μ x)) /
+          partitionGC params β μ := by
+          symm
+          simpa using
+            (Finset.sum_div
+              (s := (Finset.univ : Finset α))
+              (f := fun x => params.number x ^ (2 : ℕ) *
+                Real.exp (-β * shiftedEnergy params μ x))
+              (a := partitionGC params β μ))
+    _ = secondNumberUnnormalized params β μ / partitionGC params β μ := by
+          rfl
+
+lemma crossShiftNumberMoment_eq_crossMomentUnnormalized_div_partition
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    crossShiftNumberMoment params β μ =
+      crossMomentUnnormalized params β μ / partitionGC params β μ := by
+  unfold crossShiftNumberMoment crossMomentUnnormalized gibbsWeightGC
+  have hZne : partitionGC params β μ ≠ 0 := ne_of_gt (partitionGC_pos params β μ)
+  calc
+    ∑ x, (Real.exp (-β * shiftedEnergy params μ x) / partitionGC params β μ) *
+        (shiftedEnergy params μ x * params.number x)
+        = ∑ x, ((shiftedEnergy params μ x * params.number x) *
+            Real.exp (-β * shiftedEnergy params μ x)) /
+            partitionGC params β μ := by
+            refine Finset.sum_congr rfl ?_
+            intro x hx
+            field_simp [hZne]
+    _ = (∑ x, (shiftedEnergy params μ x * params.number x) *
+          Real.exp (-β * shiftedEnergy params μ x)) /
+          partitionGC params β μ := by
+          symm
+          simpa using
+            (Finset.sum_div
+              (s := (Finset.univ : Finset α))
+              (f := fun x => (shiftedEnergy params μ x * params.number x) *
+                Real.exp (-β * shiftedEnergy params μ x))
+              (a := partitionGC params β μ))
+    _ = crossMomentUnnormalized params β μ / partitionGC params β μ := by
+          rfl
+
+lemma varianceShift_eq_secondShiftMoment_sub_meanShift_sq
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    varianceShift params β μ =
+      secondShiftMoment params β μ - (meanShift params β μ) ^ (2 : ℕ) := by
+  have hexpand :
+      varianceShift params β μ
+        =
+      secondShiftMoment params β μ
+        - 2 * meanShift params β μ *
+            (∑ x, gibbsWeightGC params β μ x * shiftedEnergy params μ x)
+        + (meanShift params β μ) ^ (2 : ℕ) *
+            (∑ x, gibbsWeightGC params β μ x) := by
+    unfold varianceShift secondShiftMoment
+    calc
+      ∑ x, gibbsWeightGC params β μ x *
+          (shiftedEnergy params μ x - meanShift params β μ) ^ (2 : ℕ)
+          =
+        ∑ x,
+          (gibbsWeightGC params β μ x * shiftedEnergy params μ x ^ (2 : ℕ)
+            - (2 * meanShift params β μ) *
+                (gibbsWeightGC params β μ x * shiftedEnergy params μ x)
+            + (meanShift params β μ) ^ (2 : ℕ) *
+                gibbsWeightGC params β μ x) := by
+          refine Finset.sum_congr rfl ?_
+          intro x hx
+          ring
+      _ =
+        (∑ x, gibbsWeightGC params β μ x * shiftedEnergy params μ x ^ (2 : ℕ))
+          - (2 * meanShift params β μ) *
+              (∑ x, gibbsWeightGC params β μ x * shiftedEnergy params μ x)
+          + (meanShift params β μ) ^ (2 : ℕ) *
+              (∑ x, gibbsWeightGC params β μ x) := by
+          simp [Finset.sum_add_distrib, Finset.sum_sub_distrib, Finset.mul_sum]
+  rw [hexpand, gibbsWeightGC_sum_one]
+  rw [show (∑ x, gibbsWeightGC params β μ x * shiftedEnergy params μ x)
+      = meanShift params β μ by rfl]
+  ring
+
+lemma varianceNumber_eq_secondNumberMoment_sub_meanNumber_sq
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    varianceNumber params β μ =
+      secondNumberMoment params β μ - (meanNumber params β μ) ^ (2 : ℕ) := by
+  have hexpand :
+      varianceNumber params β μ
+        =
+      secondNumberMoment params β μ
+        - 2 * meanNumber params β μ *
+            (∑ x, gibbsWeightGC params β μ x * params.number x)
+        + (meanNumber params β μ) ^ (2 : ℕ) *
+            (∑ x, gibbsWeightGC params β μ x) := by
+    unfold varianceNumber secondNumberMoment
+    calc
+      ∑ x, gibbsWeightGC params β μ x *
+          (params.number x - meanNumber params β μ) ^ (2 : ℕ)
+          =
+        ∑ x,
+          (gibbsWeightGC params β μ x * params.number x ^ (2 : ℕ)
+            - (2 * meanNumber params β μ) *
+                (gibbsWeightGC params β μ x * params.number x)
+            + (meanNumber params β μ) ^ (2 : ℕ) *
+                gibbsWeightGC params β μ x) := by
+          refine Finset.sum_congr rfl ?_
+          intro x hx
+          ring
+      _ =
+        (∑ x, gibbsWeightGC params β μ x * params.number x ^ (2 : ℕ))
+          - (2 * meanNumber params β μ) *
+              (∑ x, gibbsWeightGC params β μ x * params.number x)
+          + (meanNumber params β μ) ^ (2 : ℕ) *
+              (∑ x, gibbsWeightGC params β μ x) := by
+          simp [Finset.sum_add_distrib, Finset.sum_sub_distrib, Finset.mul_sum]
+  rw [hexpand, gibbsWeightGC_sum_one]
+  rw [show (∑ x, gibbsWeightGC params β μ x * params.number x)
+      = meanNumber params β μ by rfl]
+  ring
+
+lemma covarianceShiftNumber_eq_crossMoment_sub_meanShift_mul_meanNumber
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    covarianceShiftNumber params β μ =
+      crossShiftNumberMoment params β μ - meanShift params β μ * meanNumber params β μ := by
+  have hexpand :
+      covarianceShiftNumber params β μ
+        =
+      crossShiftNumberMoment params β μ
+        - meanNumber params β μ *
+            (∑ x, gibbsWeightGC params β μ x * shiftedEnergy params μ x)
+        - meanShift params β μ *
+            (∑ x, gibbsWeightGC params β μ x * params.number x)
+        + meanShift params β μ * meanNumber params β μ *
+            (∑ x, gibbsWeightGC params β μ x) := by
+    unfold covarianceShiftNumber crossShiftNumberMoment
+    calc
+      ∑ x, gibbsWeightGC params β μ x *
+          (shiftedEnergy params μ x - meanShift params β μ) *
+          (params.number x - meanNumber params β μ)
+          =
+        ∑ x,
+          (gibbsWeightGC params β μ x *
+              (shiftedEnergy params μ x * params.number x)
+            - meanNumber params β μ *
+                (gibbsWeightGC params β μ x * shiftedEnergy params μ x)
+            - meanShift params β μ *
+                (gibbsWeightGC params β μ x * params.number x)
+            + meanShift params β μ * meanNumber params β μ *
+                gibbsWeightGC params β μ x) := by
+          refine Finset.sum_congr rfl ?_
+          intro x hx
+          ring
+      _ =
+        (∑ x, gibbsWeightGC params β μ x *
+            (shiftedEnergy params μ x * params.number x))
+          - meanNumber params β μ *
+              (∑ x, gibbsWeightGC params β μ x * shiftedEnergy params μ x)
+          - meanShift params β μ *
+              (∑ x, gibbsWeightGC params β μ x * params.number x)
+          + meanShift params β μ * meanNumber params β μ *
+              (∑ x, gibbsWeightGC params β μ x) := by
+          simp [Finset.sum_add_distrib, Finset.sum_sub_distrib, Finset.mul_sum]
+  rw [hexpand, gibbsWeightGC_sum_one]
+  rw [show (∑ x, gibbsWeightGC params β μ x * shiftedEnergy params μ x)
+      = meanShift params β μ by rfl]
+  rw [show (∑ x, gibbsWeightGC params β μ x * params.number x)
+      = meanNumber params β μ by rfl]
+  ring
+
 /-- Grand-canonical `μ`-derivative: `∂μ ψ = β E_{β,μ}[N]`. -/
 lemma potentialGC_deriv_mu_eq_beta_meanNumber
     (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
@@ -697,6 +977,435 @@ lemma potentialGC_deriv_mu_eq_beta_meanNumber
   rw [partitionGCDerivMuFun_eq_beta_mul_firstNumber, meanNumber_eq_firstNumber_div_partition]
   simpa [mul_assoc] using
     (mul_div_assoc β (firstNumberUnnormalized params β μ) (partitionGC params β μ))
+
+omit [Fintype α] [Nonempty α] in
+lemma hasDerivAt_firstShiftUnnormalized_beta_term
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) :
+    HasDerivAt
+      (fun t : ℝ => shiftedEnergy params μ x *
+        Real.exp (-t * shiftedEnergy params μ x))
+      (-(shiftedEnergy params μ x) ^ (2 : ℕ) *
+        Real.exp (-β * shiftedEnergy params μ x))
+      β := by
+  have hExp := hasDerivAt_exp_neg_mul_shiftedEnergy_beta params β μ x
+  simpa [pow_two, mul_comm, mul_left_comm, mul_assoc] using
+    hExp.const_mul (shiftedEnergy params μ x)
+
+omit [Nonempty α] in
+lemma hasDerivAt_firstShiftUnnormalized_beta
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    HasDerivAt
+      (fun t : ℝ => firstShiftUnnormalized params t μ)
+      (-(secondShiftUnnormalized params β μ))
+      β := by
+  classical
+  unfold firstShiftUnnormalized secondShiftUnnormalized
+  simpa [Finset.sum_neg_distrib] using
+    (HasDerivAt.fun_sum (u := (Finset.univ : Finset α))
+      (fun x _hx => hasDerivAt_firstShiftUnnormalized_beta_term params β μ x))
+
+omit [Nonempty α] in
+lemma deriv_firstShiftUnnormalized_beta
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t : ℝ => firstShiftUnnormalized params t μ) β
+      =
+    -(secondShiftUnnormalized params β μ) :=
+  (hasDerivAt_firstShiftUnnormalized_beta params β μ).deriv
+
+omit [Fintype α] [Nonempty α] in
+lemma hasDerivAt_firstNumberUnnormalized_beta_term
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) :
+    HasDerivAt
+      (fun t : ℝ => params.number x *
+        Real.exp (-t * shiftedEnergy params μ x))
+      (-(shiftedEnergy params μ x * params.number x) *
+        Real.exp (-β * shiftedEnergy params μ x))
+      β := by
+  have hExp := hasDerivAt_exp_neg_mul_shiftedEnergy_beta params β μ x
+  simpa [mul_comm, mul_left_comm, mul_assoc] using
+    hExp.const_mul (params.number x)
+
+omit [Nonempty α] in
+lemma hasDerivAt_firstNumberUnnormalized_beta
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    HasDerivAt
+      (fun t : ℝ => firstNumberUnnormalized params t μ)
+      (-(crossMomentUnnormalized params β μ))
+      β := by
+  classical
+  unfold firstNumberUnnormalized crossMomentUnnormalized
+  simpa [Finset.sum_neg_distrib] using
+    (HasDerivAt.fun_sum (u := (Finset.univ : Finset α))
+      (fun x _hx => hasDerivAt_firstNumberUnnormalized_beta_term params β μ x))
+
+omit [Nonempty α] in
+lemma deriv_firstNumberUnnormalized_beta
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t : ℝ => firstNumberUnnormalized params t μ) β
+      =
+    -(crossMomentUnnormalized params β μ) :=
+  (hasDerivAt_firstNumberUnnormalized_beta params β μ).deriv
+
+omit [Fintype α] [Nonempty α] in
+lemma hasDerivAt_firstNumberUnnormalized_mu_term
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) :
+    HasDerivAt
+      (fun t : ℝ => params.number x *
+        Real.exp (-β * shiftedEnergy params t x))
+      (β * (params.number x) ^ (2 : ℕ) *
+        Real.exp (-β * shiftedEnergy params μ x))
+      μ := by
+  have hExp := hasDerivAt_exp_neg_mul_shiftedEnergy_mu params β μ x
+  simpa [pow_two, mul_comm, mul_left_comm, mul_assoc] using
+    hExp.const_mul (params.number x)
+
+omit [Nonempty α] in
+lemma hasDerivAt_firstNumberUnnormalized_mu
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    HasDerivAt
+      (fun t : ℝ => firstNumberUnnormalized params β t)
+      (β * secondNumberUnnormalized params β μ)
+      μ := by
+  classical
+  unfold firstNumberUnnormalized secondNumberUnnormalized
+  simpa [Finset.mul_sum, mul_comm, mul_left_comm, mul_assoc] using
+    (HasDerivAt.fun_sum (u := (Finset.univ : Finset α))
+      (fun x _hx => hasDerivAt_firstNumberUnnormalized_mu_term params β μ x))
+
+omit [Nonempty α] in
+lemma deriv_firstNumberUnnormalized_mu
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t : ℝ => firstNumberUnnormalized params β t) μ
+      =
+    β * secondNumberUnnormalized params β μ :=
+  (hasDerivAt_firstNumberUnnormalized_mu params β μ).deriv
+
+omit [Fintype α] [Nonempty α] in
+lemma hasDerivAt_firstShiftUnnormalized_mu_term
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) (x : α) :
+    HasDerivAt
+      (fun t : ℝ => shiftedEnergy params t x *
+        Real.exp (-β * shiftedEnergy params t x))
+      (β * ((shiftedEnergy params μ x * params.number x) *
+        Real.exp (-β * shiftedEnergy params μ x))
+        - params.number x * Real.exp (-β * shiftedEnergy params μ x))
+      μ := by
+  have hmul : HasDerivAt (fun t : ℝ => t * params.number x) (params.number x) μ := by
+    simpa [mul_comm, mul_left_comm, mul_assoc] using
+      ((hasDerivAt_id' μ).mul_const (params.number x))
+  have hshift : HasDerivAt (fun t : ℝ => shiftedEnergy params t x) (-(params.number x)) μ := by
+    unfold shiftedEnergy
+    simpa [mul_comm, mul_left_comm, mul_assoc] using
+      hmul.const_sub (params.energy x)
+  have hExp := hasDerivAt_exp_neg_mul_shiftedEnergy_mu params β μ x
+  have hprod := hshift.mul hExp
+  simpa [mul_comm, mul_left_comm, mul_assoc, sub_eq_add_neg,
+    add_comm, add_left_comm, add_assoc] using hprod
+
+omit [Nonempty α] in
+lemma hasDerivAt_firstShiftUnnormalized_mu
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    HasDerivAt
+      (fun t : ℝ => firstShiftUnnormalized params β t)
+      (β * crossMomentUnnormalized params β μ - firstNumberUnnormalized params β μ)
+      μ := by
+  classical
+  unfold firstShiftUnnormalized crossMomentUnnormalized firstNumberUnnormalized
+  simpa [Finset.mul_sum, Finset.sum_sub_distrib, mul_comm, mul_left_comm, mul_assoc] using
+    (HasDerivAt.fun_sum (u := (Finset.univ : Finset α))
+      (fun x _hx => hasDerivAt_firstShiftUnnormalized_mu_term params β μ x))
+
+omit [Nonempty α] in
+lemma deriv_firstShiftUnnormalized_mu
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t : ℝ => firstShiftUnnormalized params β t) μ
+      =
+    β * crossMomentUnnormalized params β μ - firstNumberUnnormalized params β μ :=
+  (hasDerivAt_firstShiftUnnormalized_mu params β μ).deriv
+
+lemma deriv_meanShift_beta
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t : ℝ => meanShift params t μ) β
+      =
+    -varianceShift params β μ := by
+  have hfun :
+      (fun t : ℝ => meanShift params t μ)
+        =
+      fun t : ℝ => firstShiftUnnormalized params t μ / partitionGC params t μ := by
+    funext t
+    exact meanShift_eq_firstShift_div_partition params t μ
+  rw [hfun]
+  have hnumDiff :
+      DifferentiableAt ℝ (fun t : ℝ => firstShiftUnnormalized params t μ) β :=
+    (hasDerivAt_firstShiftUnnormalized_beta params β μ).differentiableAt
+  have hdenDiff :
+      DifferentiableAt ℝ (fun t : ℝ => partitionGC params t μ) β :=
+    (hasDerivAt_partitionGC_beta params β μ).differentiableAt
+  have hZne : partitionGC params β μ ≠ 0 := ne_of_gt (partitionGC_pos params β μ)
+  have hquot :
+      deriv (fun t : ℝ => firstShiftUnnormalized params t μ / partitionGC params t μ) β
+        =
+      (deriv (fun t : ℝ => firstShiftUnnormalized params t μ) β * partitionGC params β μ
+        - firstShiftUnnormalized params β μ * deriv (fun t : ℝ => partitionGC params t μ) β) /
+        (partitionGC params β μ) ^ (2 : ℕ) := by
+    simpa using
+      (deriv_div (c := fun t : ℝ => firstShiftUnnormalized params t μ)
+        (d := fun t : ℝ => partitionGC params t μ) (x := β)
+        hnumDiff hdenDiff hZne)
+  rw [hquot]
+  rw [deriv_firstShiftUnnormalized_beta, (hasDerivAt_partitionGC_beta params β μ).deriv]
+  rw [partitionGCDerivBetaFun_eq_neg_firstShift]
+  rw [varianceShift_eq_secondShiftMoment_sub_meanShift_sq]
+  rw [secondShiftMoment_eq_secondShiftUnnormalized_div_partition]
+  rw [meanShift_eq_firstShift_div_partition]
+  set Z := partitionGC params β μ
+  set M1 := firstShiftUnnormalized params β μ
+  set M2 := secondShiftUnnormalized params β μ
+  have hZ : Z ≠ 0 := by
+    simpa [Z] using hZne
+  field_simp [hZ]
+  ring
+
+lemma deriv_meanNumber_mu
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t : ℝ => meanNumber params β t) μ
+      =
+    β * varianceNumber params β μ := by
+  have hfun :
+      (fun t : ℝ => meanNumber params β t)
+        =
+      fun t : ℝ => firstNumberUnnormalized params β t / partitionGC params β t := by
+    funext t
+    exact meanNumber_eq_firstNumber_div_partition params β t
+  rw [hfun]
+  have hnumDiff :
+      DifferentiableAt ℝ (fun t : ℝ => firstNumberUnnormalized params β t) μ :=
+    (hasDerivAt_firstNumberUnnormalized_mu params β μ).differentiableAt
+  have hdenDiff :
+      DifferentiableAt ℝ (fun t : ℝ => partitionGC params β t) μ :=
+    (hasDerivAt_partitionGC_mu params β μ).differentiableAt
+  have hZne : partitionGC params β μ ≠ 0 := ne_of_gt (partitionGC_pos params β μ)
+  have hquot :
+      deriv (fun t : ℝ => firstNumberUnnormalized params β t / partitionGC params β t) μ
+        =
+      (deriv (fun t : ℝ => firstNumberUnnormalized params β t) μ * partitionGC params β μ
+        - firstNumberUnnormalized params β μ * deriv (fun t : ℝ => partitionGC params β t) μ) /
+        (partitionGC params β μ) ^ (2 : ℕ) := by
+    simpa using
+      (deriv_div (c := fun t : ℝ => firstNumberUnnormalized params β t)
+        (d := fun t : ℝ => partitionGC params β t) (x := μ)
+        hnumDiff hdenDiff hZne)
+  rw [hquot]
+  rw [deriv_firstNumberUnnormalized_mu, (hasDerivAt_partitionGC_mu params β μ).deriv]
+  rw [partitionGCDerivMuFun_eq_beta_mul_firstNumber]
+  rw [varianceNumber_eq_secondNumberMoment_sub_meanNumber_sq]
+  rw [secondNumberMoment_eq_secondNumberUnnormalized_div_partition]
+  rw [meanNumber_eq_firstNumber_div_partition]
+  set Z := partitionGC params β μ
+  set M1 := firstNumberUnnormalized params β μ
+  set M2 := secondNumberUnnormalized params β μ
+  have hZ : Z ≠ 0 := by
+    simpa [Z] using hZne
+  field_simp [hZ]
+
+lemma deriv_meanNumber_beta
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t : ℝ => meanNumber params t μ) β
+      =
+    -covarianceShiftNumber params β μ := by
+  have hfun :
+      (fun t : ℝ => meanNumber params t μ)
+        =
+      fun t : ℝ => firstNumberUnnormalized params t μ / partitionGC params t μ := by
+    funext t
+    exact meanNumber_eq_firstNumber_div_partition params t μ
+  rw [hfun]
+  have hnumDiff :
+      DifferentiableAt ℝ (fun t : ℝ => firstNumberUnnormalized params t μ) β :=
+    (hasDerivAt_firstNumberUnnormalized_beta params β μ).differentiableAt
+  have hdenDiff :
+      DifferentiableAt ℝ (fun t : ℝ => partitionGC params t μ) β :=
+    (hasDerivAt_partitionGC_beta params β μ).differentiableAt
+  have hZne : partitionGC params β μ ≠ 0 := ne_of_gt (partitionGC_pos params β μ)
+  have hquot :
+      deriv (fun t : ℝ => firstNumberUnnormalized params t μ / partitionGC params t μ) β
+        =
+      (deriv (fun t : ℝ => firstNumberUnnormalized params t μ) β * partitionGC params β μ
+        - firstNumberUnnormalized params β μ * deriv (fun t : ℝ => partitionGC params t μ) β) /
+        (partitionGC params β μ) ^ (2 : ℕ) := by
+    simpa using
+      (deriv_div (c := fun t : ℝ => firstNumberUnnormalized params t μ)
+        (d := fun t : ℝ => partitionGC params t μ) (x := β)
+        hnumDiff hdenDiff hZne)
+  rw [hquot]
+  rw [deriv_firstNumberUnnormalized_beta, (hasDerivAt_partitionGC_beta params β μ).deriv]
+  rw [partitionGCDerivBetaFun_eq_neg_firstShift]
+  rw [covarianceShiftNumber_eq_crossMoment_sub_meanShift_mul_meanNumber]
+  rw [crossShiftNumberMoment_eq_crossMomentUnnormalized_div_partition]
+  rw [meanShift_eq_firstShift_div_partition]
+  rw [meanNumber_eq_firstNumber_div_partition]
+  set Z := partitionGC params β μ
+  set MS := firstShiftUnnormalized params β μ
+  set MN := firstNumberUnnormalized params β μ
+  set C := crossMomentUnnormalized params β μ
+  have hZ : Z ≠ 0 := by
+    simpa [Z] using hZne
+  field_simp [hZ]
+  ring
+
+lemma deriv_meanShift_mu
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t : ℝ => meanShift params β t) μ
+      =
+    β * covarianceShiftNumber params β μ - meanNumber params β μ := by
+  have hfun :
+      (fun t : ℝ => meanShift params β t)
+        =
+      fun t : ℝ => firstShiftUnnormalized params β t / partitionGC params β t := by
+    funext t
+    exact meanShift_eq_firstShift_div_partition params β t
+  rw [hfun]
+  have hnumDiff :
+      DifferentiableAt ℝ (fun t : ℝ => firstShiftUnnormalized params β t) μ :=
+    (hasDerivAt_firstShiftUnnormalized_mu params β μ).differentiableAt
+  have hdenDiff :
+      DifferentiableAt ℝ (fun t : ℝ => partitionGC params β t) μ :=
+    (hasDerivAt_partitionGC_mu params β μ).differentiableAt
+  have hZne : partitionGC params β μ ≠ 0 := ne_of_gt (partitionGC_pos params β μ)
+  have hquot :
+      deriv (fun t : ℝ => firstShiftUnnormalized params β t / partitionGC params β t) μ
+        =
+      (deriv (fun t : ℝ => firstShiftUnnormalized params β t) μ * partitionGC params β μ
+        - firstShiftUnnormalized params β μ * deriv (fun t : ℝ => partitionGC params β t) μ) /
+        (partitionGC params β μ) ^ (2 : ℕ) := by
+    simpa using
+      (deriv_div (c := fun t : ℝ => firstShiftUnnormalized params β t)
+        (d := fun t : ℝ => partitionGC params β t) (x := μ)
+        hnumDiff hdenDiff hZne)
+  rw [hquot]
+  rw [deriv_firstShiftUnnormalized_mu, (hasDerivAt_partitionGC_mu params β μ).deriv]
+  rw [partitionGCDerivMuFun_eq_beta_mul_firstNumber]
+  rw [covarianceShiftNumber_eq_crossMoment_sub_meanShift_mul_meanNumber]
+  rw [crossShiftNumberMoment_eq_crossMomentUnnormalized_div_partition]
+  rw [meanShift_eq_firstShift_div_partition]
+  rw [meanNumber_eq_firstNumber_div_partition]
+  set Z := partitionGC params β μ
+  set MS := firstShiftUnnormalized params β μ
+  set MN := firstNumberUnnormalized params β μ
+  set C := crossMomentUnnormalized params β μ
+  have hZ : Z ≠ 0 := by
+    simpa [Z] using hZne
+  field_simp [hZ]
+  ring
+
+/-- Hessian entry `∂²_{ββ} log Z = Var(E - μN)`. -/
+theorem potentialGC_hessian_beta_beta
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t => deriv (fun s => potentialGC params s μ) t) β
+      =
+    varianceShift params β μ := by
+  have hderiv :
+      (fun t : ℝ => deriv (fun s => potentialGC params s μ) t)
+        =
+      fun t : ℝ => -meanShift params t μ := by
+    funext t
+    exact potentialGC_deriv_beta_eq_neg_meanShift params t μ
+  rw [hderiv]
+  have hneg :
+      deriv (fun t : ℝ => -meanShift params t μ) β
+        =
+      -deriv (fun t : ℝ => meanShift params t μ) β := by
+    simp
+  rw [hneg, deriv_meanShift_beta]
+  ring
+
+/-- Hessian entry `∂²_{μμ} log Z = β² Var(N)`. -/
+theorem potentialGC_hessian_mu_mu
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t => deriv (fun s => potentialGC params β s) t) μ
+      =
+    β ^ (2 : ℕ) * varianceNumber params β μ := by
+  have hderiv :
+      (fun t : ℝ => deriv (fun s => potentialGC params β s) t)
+        =
+      fun t : ℝ => β * meanNumber params β t := by
+    funext t
+    exact potentialGC_deriv_mu_eq_beta_meanNumber params β t
+  rw [hderiv]
+  rw [deriv_const_mul_field, deriv_meanNumber_mu]
+  ring
+
+/-- Mixed Hessian entry in the order `∂_μ ∂_β log Z`. -/
+theorem potentialGC_hessian_beta_mu
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t => deriv (fun s => potentialGC params s t) β) μ
+      =
+    meanNumber params β μ - β * covarianceShiftNumber params β μ := by
+  have hderiv :
+      (fun t : ℝ => deriv (fun s => potentialGC params s t) β)
+        =
+      fun t : ℝ => -meanShift params β t := by
+    funext t
+    exact potentialGC_deriv_beta_eq_neg_meanShift params β t
+  rw [hderiv]
+  have hneg :
+      deriv (fun t : ℝ => -meanShift params β t) μ
+        =
+      -deriv (fun t : ℝ => meanShift params β t) μ := by
+    simp
+  rw [hneg, deriv_meanShift_mu]
+  ring
+
+/-- Mixed Hessian entry in the order `∂_β ∂_μ log Z`. -/
+theorem potentialGC_hessian_mu_beta
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t => deriv (fun s => potentialGC params t s) μ) β
+      =
+    meanNumber params β μ - β * covarianceShiftNumber params β μ := by
+  have hderiv :
+      (fun t : ℝ => deriv (fun s => potentialGC params t s) μ)
+        =
+      fun t : ℝ => t * meanNumber params t μ := by
+    funext t
+    exact potentialGC_deriv_mu_eq_beta_meanNumber params t μ
+  rw [hderiv]
+  have hnumDiff :
+      DifferentiableAt ℝ (fun t : ℝ => meanNumber params t μ) β := by
+    have hfun :
+        (fun t : ℝ => meanNumber params t μ)
+          =
+        fun t : ℝ => firstNumberUnnormalized params t μ / partitionGC params t μ := by
+      funext t
+      exact meanNumber_eq_firstNumber_div_partition params t μ
+    rw [hfun]
+    exact
+      (hasDerivAt_firstNumberUnnormalized_beta params β μ).differentiableAt.div
+        (hasDerivAt_partitionGC_beta params β μ).differentiableAt
+        (ne_of_gt (partitionGC_pos params β μ))
+  have hprod :
+      deriv (fun t : ℝ => t * meanNumber params t μ) β
+        =
+      deriv (fun t : ℝ => t) β * meanNumber params β μ
+        + β * deriv (fun t : ℝ => meanNumber params t μ) β := by
+    simpa using
+      (deriv_fun_mul
+        (c := fun t : ℝ => t)
+        (d := fun t : ℝ => meanNumber params t μ)
+        (x := β)
+        differentiableAt_id hnumDiff)
+  rw [hprod]
+  have hid : deriv (fun t : ℝ => t) β = 1 := by
+    simp
+  rw [hid, deriv_meanNumber_beta]
+  ring
+
+/-- Symmetry of the grand-canonical Souriau/Onsager Hessian. -/
+theorem potentialGC_hessian_symmetry
+    (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
+    deriv (fun t => deriv (fun s => potentialGC params s t) β) μ
+      =
+    deriv (fun t => deriv (fun s => potentialGC params t s) μ) β := by
+  rw [potentialGC_hessian_beta_mu, potentialGC_hessian_mu_beta]
 
 end FiniteGrandCanonicalModel
 

@@ -67,6 +67,14 @@ def _extract_theorem_name(lean_code: str) -> str:
     return str(m.group(1)).strip()
 
 
+def _preferred_target_name(row: dict[str, Any]) -> str:
+    target_source = str(row.get("target_source", "")).strip().lower()
+    target_name = str(row.get("target_name", "")).strip()
+    if target_source == "compiled_decl" and target_name:
+        return target_name
+    return target_name or _extract_theorem_name(str(row.get("lean_code", "")))
+
+
 def _score_row(row: dict[str, Any], *, goal_tokens: set[str]) -> tuple[float, dict[str, float]]:
     status = str(row.get("status", "")).strip()
     if status and status != "ok":
@@ -75,6 +83,7 @@ def _score_row(row: dict[str, Any], *, goal_tokens: set[str]) -> tuple[float, di
     model_role = str(row.get("model_role", "")).strip().lower()
     lean_code = str(row.get("lean_code", "")).strip()
     response = str(row.get("response", "")).strip()
+    target_source = str(row.get("target_source", "")).strip().lower()
 
     score_parts: dict[str, float] = {}
     score_parts["base"] = 0.0
@@ -90,6 +99,7 @@ def _score_row(row: dict[str, Any], *, goal_tokens: set[str]) -> tuple[float, di
 
     lc = response.lower()
     score_parts["bridge_hint"] = 0.35 if any(k in lc for k in ("bridge", "intertwiner", "obstruction", "nonstandard")) else 0.0
+    score_parts["compiled_target_preference"] = 0.5 if target_source == "compiled_decl" else 0.0
 
     line_count = len([ln for ln in lean_code.splitlines() if ln.strip()])
     if line_count == 0:
@@ -153,6 +163,7 @@ def _write_skill(
     file_name = f"{run_id}-{short}.md"
     out_path = out_dir / file_name
     theorem_name = _extract_theorem_name(str(candidate.get("lean_code", "")))
+    preferred_name = _preferred_target_name(candidate)
     content = (
         f"---\n"
         f"name: {name}\n"
@@ -164,7 +175,8 @@ def _write_skill(
         f"Candidate:\n"
         f"- hypothesis_id: `{hypothesis_id}`\n"
         f"- model_role: `{candidate.get('model_role', '')}`\n"
-        f"- theorem_name: `{theorem_name or 'unknown'}`\n\n"
+        f"- theorem_name: `{preferred_name or theorem_name or 'unknown'}`\n"
+        f"- target_source: `{candidate.get('target_source', '')}`\n\n"
         f"Lean sketch:\n\n"
         f"```lean\n{str(candidate.get('lean_code', '')).strip()}\n```\n\n"
         f"Execution:\n"

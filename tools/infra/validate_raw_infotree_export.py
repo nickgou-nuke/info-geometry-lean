@@ -25,6 +25,8 @@ REQUIRED_FILES = [
     "raw_infotree_env_refs.jsonl",
     "raw_infotree_mctx_refs.jsonl",
     "raw_infotree_mctx_decls.jsonl",
+    "raw_infotree_lctx_refs.jsonl",
+    "raw_infotree_lctx_decls.jsonl",
     "raw_infotree_projection_leakage.jsonl",
     "metadata.json",
 ]
@@ -61,6 +63,8 @@ def validate(input_dir: Path) -> dict[str, Any]:
     env_refs = read_jsonl(input_dir / "raw_infotree_env_refs.jsonl") if not missing else []
     mctx_refs = read_jsonl(input_dir / "raw_infotree_mctx_refs.jsonl") if not missing else []
     mctx_decls = read_jsonl(input_dir / "raw_infotree_mctx_decls.jsonl") if not missing else []
+    lctx_refs = read_jsonl(input_dir / "raw_infotree_lctx_refs.jsonl") if not missing else []
+    lctx_decls = read_jsonl(input_dir / "raw_infotree_lctx_decls.jsonl") if not missing else []
     leakage = read_jsonl(input_dir / "raw_infotree_projection_leakage.jsonl") if not missing else []
     metadata = {}
     if not missing:
@@ -73,6 +77,11 @@ def validate(input_dir: Path) -> dict[str, Any]:
     nodes_by_key = {str(row.get("nodeKey")): row for row in nodes}
     payload_keys = {str(row.get("payloadKey")) for row in payloads}
     mctx_ref_keys = {str(row.get("mctxRefKey")) for row in mctx_refs}
+    mctx_keys = {str(row.get("mctxKey")) for row in mctx_refs}
+    mctx_decl_keys = {str(row.get("declKey")) for row in mctx_decls}
+    lctx_ref_keys = {str(row.get("lctxRefKey")) for row in lctx_refs}
+    lctx_keys = {str(row.get("lctxKey")) for row in lctx_refs}
+    payload_keys_by_node = {str(row.get("nodeKey")): str(row.get("payloadKey")) for row in payloads}
 
     def opt_field(row: dict[str, Any], name: str) -> Any:
         return row.get(name) if name in row else row.get(f"{name}?")
@@ -103,6 +112,12 @@ def validate(input_dir: Path) -> dict[str, Any]:
         payload = opt_field(row, "payloadKey")
         if payload is not None and str(payload) not in payload_keys:
             errors.append(f"node {row.get('nodeKey')} references missing payload {payload}")
+        hole_mvar = opt_field(row, "holeMVarId")
+        if row.get("kind") == "hole":
+            if not isinstance(hole_mvar, str) or not hole_mvar:
+                errors.append(f"hole node {row.get('nodeKey')} is missing holeMVarId")
+        elif hole_mvar is not None:
+            errors.append(f"non-hole node {row.get('nodeKey')} carries holeMVarId")
 
     edge_pairs: set[tuple[str, str, int]] = set()
     for row in edges:
@@ -195,13 +210,12 @@ def validate(input_dir: Path) -> dict[str, Any]:
         if not isinstance(row.get("present"), bool):
             errors.append(f"env ref {row.get('envRefKey')} has non-boolean present field")
         if row.get("present"):
-            for field in (
-                "directImportsHash",
-                "allImportedModulesHash",
-                "directImportCount",
-                "allImportedModuleCount",
-            ):
+            for field in ("directImportCount", "allImportedModuleCount"):
                 if not isinstance(opt_field(row, field), int):
+                    errors.append(f"env ref {row.get('envRefKey')} has non-integer {field}")
+            for field in ("directImportsHash", "allImportedModulesHash"):
+                value = opt_field(row, field)
+                if value is not None and not isinstance(value, int):
                     errors.append(f"env ref {row.get('envRefKey')} has non-integer {field}")
 
     for row in mctx_refs:
@@ -209,6 +223,8 @@ def validate(input_dir: Path) -> dict[str, Any]:
         if node not in node_keys:
             errors.append(f"mctx ref {row.get('mctxRefKey')} references missing node {node}")
         validate_node_provenance(row, f"mctx ref {row.get('mctxRefKey')}")
+        if not isinstance(row.get("mctxKey"), str) or not row.get("mctxKey"):
+            errors.append(f"mctx ref {row.get('mctxRefKey')} has empty mctxKey")
         for field in (
             "depth",
             "levelAssignDepth",
@@ -225,16 +241,16 @@ def validate(input_dir: Path) -> dict[str, Any]:
             if not isinstance(row.get(field), int):
                 errors.append(f"mctx ref {row.get('mctxRefKey')} has non-integer {field}")
 
-    mctx_decls_by_ref: dict[str, list[dict[str, Any]]] = {}
+    mctx_decls_by_key: dict[str, list[dict[str, Any]]] = {}
     for row in mctx_decls:
         node = str(row.get("nodeKey"))
         if node not in node_keys:
             errors.append(f"mctx decl {row.get('declKey')} references missing node {node}")
         validate_node_provenance(row, f"mctx decl {row.get('declKey')}")
-        mctx_ref = str(row.get("mctxRefKey"))
-        mctx_decls_by_ref.setdefault(mctx_ref, []).append(row)
-        if mctx_ref not in mctx_ref_keys:
-            errors.append(f"mctx decl {row.get('declKey')} references missing mctx ref {mctx_ref}")
+        mctx_key = str(row.get("mctxKey"))
+        mctx_decls_by_key.setdefault(mctx_key, []).append(row)
+        if mctx_key not in mctx_keys:
+            errors.append(f"mctx decl {row.get('declKey')} references missing mctx key {mctx_key}")
         for field in (
             "mvarId",
             "userName",
@@ -269,11 +285,12 @@ def validate(input_dir: Path) -> dict[str, Any]:
 
     for row in mctx_refs:
         mctx_ref = str(row.get("mctxRefKey"))
-        decl_rows = mctx_decls_by_ref.get(mctx_ref, [])
+        mctx_key = str(row.get("mctxKey"))
+        decl_rows = mctx_decls_by_key.get(mctx_key, [])
         decl_count = row.get("declCount")
         if isinstance(decl_count, int) and len(decl_rows) != decl_count:
             errors.append(
-                f"mctx ref {mctx_ref} declares declCount={decl_count} but "
+                f"mctx ref {mctx_ref} / mctxKey {mctx_key} declares declCount={decl_count} but "
                 f"raw_infotree_mctx_decls has {len(decl_rows)} rows"
             )
         decl_ids_text = row.get("declIdsText")
@@ -289,6 +306,61 @@ def validate(input_dir: Path) -> dict[str, Any]:
                     f"mctx ref {mctx_ref} declIdsText does not match "
                     "raw_infotree_mctx_decls mvarId set"
                 )
+
+    for row in lctx_refs:
+        node = str(row.get("nodeKey"))
+        if node not in node_keys:
+            errors.append(f"lctx ref {row.get('lctxRefKey')} references missing node {node}")
+        validate_node_provenance(row, f"lctx ref {row.get('lctxRefKey')}")
+        source_kind = row.get("sourceKind")
+        source_key = row.get("sourceKey")
+        if not isinstance(row.get("lctxRefKey"), str) or not row.get("lctxRefKey"):
+            errors.append("lctx ref has empty lctxRefKey")
+        if not isinstance(row.get("lctxKey"), str) or not row.get("lctxKey"):
+            errors.append(f"lctx ref {row.get('lctxRefKey')} has empty lctxKey")
+        if not isinstance(row.get("lctxSize"), int):
+            errors.append(f"lctx ref {row.get('lctxRefKey')} has non-integer lctxSize")
+        if source_kind == "mctx_decl" and str(source_key) not in mctx_decl_keys:
+            errors.append(f"lctx ref {row.get('lctxRefKey')} references missing mctx decl source {source_key}")
+        if source_kind != "mctx_decl" and node in payload_keys_by_node:
+            payload_key = payload_keys_by_node[node]
+            if not str(source_key).startswith(f"itlcs_{payload_key}_"):
+                errors.append(
+                    f"lctx ref {row.get('lctxRefKey')} sourceKey does not descend from node payload"
+                )
+
+    for row in lctx_decls:
+        node = str(row.get("nodeKey"))
+        if node not in node_keys:
+            errors.append(f"lctx decl {row.get('lctxDeclKey')} references missing node {node}")
+        validate_node_provenance(row, f"lctx decl {row.get('lctxDeclKey')}")
+        source_kind = row.get("sourceKind")
+        source_key = row.get("sourceKey")
+        if not isinstance(source_kind, str) or not source_kind:
+            errors.append(f"lctx decl {row.get('lctxDeclKey')} has empty sourceKind")
+        if not isinstance(source_key, str) or not source_key:
+            errors.append(f"lctx decl {row.get('lctxDeclKey')} has empty sourceKey")
+        if source_kind != "lctx_context":
+            errors.append(f"lctx decl {row.get('lctxDeclKey')} has invalid sourceKind {source_kind!r}")
+        if str(source_key) not in lctx_keys:
+            errors.append(f"lctx decl {row.get('lctxDeclKey')} references missing lctx context {source_key}")
+        for field in (
+            "fvarId",
+            "userName",
+            "localDeclKind",
+            "typeText",
+        ):
+            if not isinstance(row.get(field), str):
+                errors.append(f"lctx decl {row.get('lctxDeclKey')} has non-string {field}")
+        for field in ("index", "typeHash"):
+            if not isinstance(row.get(field), int):
+                errors.append(f"lctx decl {row.get('lctxDeclKey')} has non-integer {field}")
+        if not isinstance(row.get("isLet"), bool):
+            errors.append(f"lctx decl {row.get('lctxDeclKey')} has non-boolean isLet")
+        if row.get("valueText") is not None and not isinstance(row.get("valueText"), str):
+            errors.append(f"lctx decl {row.get('lctxDeclKey')} has non-string valueText")
+        if row.get("valueHash") is not None and not isinstance(row.get("valueHash"), int):
+            errors.append(f"lctx decl {row.get('lctxDeclKey')} has non-integer valueHash")
 
     parentful_nodes = [row for row in nodes if opt_field(row, "parentKey") is not None]
     if len(parentful_nodes) != len(edges):
@@ -318,6 +390,8 @@ def validate(input_dir: Path) -> dict[str, Any]:
             "env_refs": len(env_refs),
             "mctx_refs": len(mctx_refs),
             "mctx_decls": len(mctx_decls),
+            "lctx_refs": len(lctx_refs),
+            "lctx_decls": len(lctx_decls),
             "leakage": len(leakage),
         },
         "metadata": metadata,

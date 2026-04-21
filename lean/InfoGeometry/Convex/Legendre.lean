@@ -246,6 +246,43 @@ lemma thetaOfEta_eta (L : LegendrePotential) (θ : ℝ) :
     thetaOfEta L (eta L θ) = θ :=
   L.theta_eta_leftInverse θ
 
+/--
+One-dimensional inverse-Hessian/Fisher relation for Legendre coordinates.
+
+This is the analytic core of the informal statement
+`Hess(S) = Fisher⁻¹` in the scalar Legendre lane.  The theorem does not assert
+that the inverse coordinate is differentiable for free: it takes the required
+derivative witnesses explicitly.  Differentiating
+`thetaOfEta (eta θ) = θ` gives `a * fisher θ = 1`; away from the spinodal
+surface `fisher θ = 0`, the inverse-coordinate derivative is the reciprocal
+Fisher scalar.
+-/
+theorem thetaOfEta_deriv_eq_inv_fisher_of_hasDerivAt
+    (L : LegendrePotential) (θ a : ℝ)
+    (hEta : HasDerivAt (eta L) (L.fisher θ) θ)
+    (hTheta : HasDerivAt (thetaOfEta L) a (eta L θ))
+    (hFisher : L.fisher θ ≠ 0) :
+    a = (L.fisher θ)⁻¹ := by
+  have hcomp :
+      deriv (fun x : ℝ => thetaOfEta L (eta L x)) θ =
+        a * L.fisher θ := by
+    simpa [Function.comp_def] using (hTheta.comp θ hEta).deriv
+  have hfun :
+      (fun x : ℝ => thetaOfEta L (eta L x)) = fun x : ℝ => x := by
+    funext x
+    simp [thetaOfEta_eta]
+  rw [hfun] at hcomp
+  have hid : deriv (fun x : ℝ => x) θ = 1 := by
+    simp
+  have hmul : a * L.fisher θ = 1 := by
+    linarith
+  calc
+    a = (a * L.fisher θ) / L.fisher θ := by
+      field_simp [hFisher]
+    _ = (L.fisher θ)⁻¹ := by
+      rw [hmul]
+      field_simp [hFisher]
+
 /-!
 ### Legendre transform (structural)
 -/

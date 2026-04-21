@@ -1,0 +1,810 @@
+import InfoGeometry.Canonical.SouriauDensityWeightContext
+import InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
+import InfoGeometry.Canonical.ChiralCartanCore
+import InfoGeometry.Canonical.OnsagerReciprocity
+import InfoGeometry.Canonical.WeylGaugeField
+import InfoGeometry.Canonical.SuperJordanLie
+import InfoGeometry.Canonical.GrandCanonicalFockNumberBridge
+import InfoGeometry.Krein.Thermal
+
+/-!
+# InfoGeometry.Canonical.SouriauConformalKKTContext
+
+Context bridge from finite Souriau density-weight shadows to the existing
+conformal/KKT grade-zero corridor.
+
+This file does not identify finite Souriau states with the full conformal
+operator algebra.  It records the explicit context in which:
+
+- a finite Souriau number/charge weight selects the density-weight correction
+  in the doubled-carrier transport generator, and
+- an independent certified conformal/KKT carrier supplies the grade-zero
+  dilation and chiral-grading outputs.
+-/
+
+open scoped InnerProductSpace
+
+namespace InfoGeometry.Canonical.SouriauConformalKKT
+
+open InfoGeometry.Canonical.SouriauDensityWeight
+open InfoGeometry.Canonical.SouriauThermodynamics
+open InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
+open InfoGeometry.Canonical.ConformalUnification
+open InfoGeometry.Canonical.ChiralCartanCore
+open InfoGeometry.Canonical.KKTCore
+open InfoGeometry.Canonical.InformationCalculus.ModularRadonNikodymData
+open InfoGeometry.Canonical.OnsagerReciprocity
+open InfoGeometry.Canonical.BogoliubovFockSuper
+open InfoGeometry.Canonical.GrandCanonicalFockNumberBridge
+open InfoGeometry.Canonical.GrandCanonicalGaugePotentialBridge
+open InfoGeometry.GrandCanonical
+open InfoGeometry.Krein
+open InfoGeometry.Quantum
+
+variable {α : Type _}
+variable {H : Type}
+variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+
+/--
+Explicit context joining a finite Souriau density-weight shadow to one
+certified conformal/KKT carrier on the same doubled Hilbert carrier.
+-/
+structure SouriauConformalKKTContext where
+  density : SouriauDensityWeightContext (α := α) (E := H)
+  CCI : CertifiedConformalInference (DoubledSpace H)
+  hA : IsGOne (doubledSpaceCl11Action (E := H)) CCI.A
+  hAMP : IsGNegOne (doubledSpaceCl11Action (E := H)) CCI.A_MP
+
+namespace SouriauConformalKKTContext
+
+variable (C : SouriauConformalKKTContext (α := α) (H := H))
+
+local notation "H₂" => DoubledSpace H
+local notation "EndH₂" => H₂ →L[ℝ] H₂
+
+/-! ## Finite conformal-character shadow -/
+
+/--
+Finite conformal/Souriau weight pairing selected by the context.
+
+This is the finite representation shadow of `⟨J(x), β⟩`; the operator carrier
+is held separately in `CCI`.
+-/
+@[rep_depth thermo]
+def finiteWeightPairing (x : α) : ℝ :=
+  geometricTemperatureWeightPairing C.density.T (souriauWeightAt C.density.M x)
+
+/--
+Finite unnormalized conformal-character density `exp(-⟨J(x),β⟩)`.
+-/
+@[rep_depth thermo]
+noncomputable def finiteUnnormalizedDensity (x : α) : ℝ :=
+  Real.exp (-(C.finiteWeightPairing x))
+
+/--
+Finite conformal-character partition shadow.  In this finite context it is
+the same object as the Souriau/Gibbs partition.
+-/
+@[rep_depth thermo]
+noncomputable def finitePartition [Fintype α] : ℝ :=
+  ∑ x, C.finiteUnnormalizedDensity x
+
+/--
+Finite Massieu/log-character potential attached to the context.
+-/
+@[rep_depth thermo]
+noncomputable def finiteMassieu [Fintype α] : ℝ :=
+  Real.log C.finitePartition
+
+/--
+Finite admissibility for this shadow: the partition is strictly positive.
+This is not the full infinite-dimensional cone condition; it is the exact
+finite normalizability condition available in this context.
+-/
+@[rep_depth thermo]
+def IsFiniteAdmissible [Fintype α] : Prop :=
+  0 < C.finitePartition
+
+/-- The finite context density is the owner Souriau unnormalized density. -/
+@[rep_depth thermo]
+theorem finiteUnnormalizedDensity_eq_souriauUnnormalizedDensity (x : α) :
+    C.finiteUnnormalizedDensity x =
+      souriauUnnormalizedDensity C.density.M C.density.T x := by
+  rfl
+
+/-- The finite conformal-character partition is the owner Souriau partition. -/
+@[rep_depth thermo]
+theorem finitePartition_eq_souriauPartition [Fintype α] :
+    C.finitePartition = souriauPartition C.density.M C.density.T := by
+  rfl
+
+/-- In a finite nonempty context, admissibility is automatic from positivity. -/
+@[rep_depth thermo]
+theorem finiteAdmissible [Fintype α] [Nonempty α] :
+    C.IsFiniteAdmissible := by
+  simpa [IsFiniteAdmissible, finitePartition_eq_souriauPartition] using
+    souriauPartition_pos C.density.M C.density.T
+
+/-- The finite Massieu/log-character potential is the owner Souriau Massieu potential. -/
+@[rep_depth thermo]
+theorem finiteMassieu_eq_souriauMassieuPotential [Fintype α] [Nonempty α] :
+    C.finiteMassieu =
+      souriauMassieuPotential C.density.M C.density.T := by
+  rw [finiteMassieu, finitePartition_eq_souriauPartition,
+    souriauMassieuPotential_eq_log_partition]
+
+/--
+The Souriau density-weight side exposes the existing operatorial generator:
+Souriau temperature vector plus the selected number/charge-weighted dilation.
+-/
+theorem liftedTransportGenerator_eq_souriau_add_number_weighted_dilationOperator :
+    C.density.liftedTransportGenerator =
+      ThermodynamicGenerator.souriauTemperatureVector (E := H) C.density.P C.density.ψ
+        + C.density.densityWeight • dilationOperator (E := H) :=
+  C.density.liftedTransportGenerator_eq_souriau_add_number_weighted_dilationOperator
+
+/--
+On the certified conformal/KKT side, the conformal dilation is the certified
+inverse-kernel dilation gap.
+-/
+theorem conformalD_eq_dilationGap :
+    C.CCI.toConformalInference.D = C.CCI.toCertifiedInverseKernel.dilationGap :=
+  CertifiedConformalInference.D_eq_dilationGap C.CCI
+
+/--
+Under the explicit KKT wing hypotheses carried by the context, the conformal
+dilation generator is grade zero.
+-/
+theorem conformalD_isGZero :
+    IsGZero (doubledSpaceCl11Action (E := H)) C.CCI.toConformalInference.D :=
+  CertifiedConformalInference.D_isGZero
+    (X := doubledSpaceCl11Action (E := H)) C.CCI C.hA C.hAMP
+
+/--
+Under the same explicit KKT wing hypotheses, the conformal chiral grading is a
+grade-zero output.
+-/
+theorem chiralGrading_isGZero :
+    IsGZero (doubledSpaceCl11Action (E := H))
+      (InfoGeometry.Canonical.ChiralCartanCore.chiralGrading C.CCI.toConformalInference) :=
+  CertifiedConformalInference.chiralGrading_isGZero
+    (X := doubledSpaceCl11Action (E := H)) C.CCI C.hA C.hAMP
+
+end SouriauConformalKKTContext
+
+/-! ## Operatorial conformal Gibbs-Souriau partition context -/
+
+local notation "H₂" => DoubledSpace H
+local notation "EndH₂" => H₂ →L[ℝ] H₂
+
+noncomputable local instance : NormedRing EndH₂ := inferInstance
+noncomputable local instance : NormedAlgebra ℝ EndH₂ := inferInstance
+noncomputable local instance : NormedSpace ℝ EndH₂ := inferInstance
+local instance : IsTopologicalRing EndH₂ := inferInstance
+local instance : CompleteSpace EndH₂ := inferInstance
+
+/--
+Operator-first conformal Gibbs-Souriau context.
+
+The finite Souriau state remains only the representation shadow carried by
+`base`.  The actual conformal Gibbs object here is the noncommutative operator
+generator
+
+`β = b • P + ω • M + α • D + c • K`
+
+on the doubled Krein carrier, together with a linear readout `ω` and an
+explicit admissible cone.
+-/
+@[rep_depth transport]
+structure ConformalGibbsSouriauOperatorContext where
+  base : SouriauConformalKKTContext (α := α) (H := H)
+  /-- Chosen Cartan/rotation generator, the `M` lane in `[K,P]=2(ηD-M)`. -/
+  cartanGenerator : EndH₂
+  translationPotential : ℝ
+  cartanPotential : ℝ
+  dilationPotential : ℝ
+  specialConformalPotential : ℝ
+  readout : EndH₂ →L[ℝ] ℝ
+  admissibleCone : Set EndH₂
+
+namespace ConformalGibbsSouriauOperatorContext
+
+variable (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H))
+
+/-- Translation generator `P` in the certified conformal carrier. -/
+@[rep_depth transport]
+noncomputable def PGenerator : EndH₂ :=
+  C.base.CCI.toConformalInference.P
+
+/-- Dilation generator `D` in the certified conformal carrier. -/
+@[rep_depth transport]
+noncomputable def DGenerator : EndH₂ :=
+  C.base.CCI.toConformalInference.D
+
+/-- Special conformal generator `K` in the certified conformal carrier. -/
+@[rep_depth transport]
+noncomputable def KGenerator : EndH₂ :=
+  C.base.CCI.toConformalInference.K
+
+/--
+Operatorial conformal geometric temperature.
+
+This is the noncommutative replacement for the scalar inverse temperature:
+it is a Lie-algebra element on the doubled Krein carrier, not a diagonal
+finite-state list.
+-/
+@[rep_depth transport]
+noncomputable def conformalGeometricTemperature : EndH₂ :=
+  C.translationPotential • C.PGenerator
+    + C.cartanPotential • C.cartanGenerator
+      + C.dilationPotential • C.DGenerator
+        + C.specialConformalPotential • C.KGenerator
+
+/-- Operatorial admissibility: the conformal temperature lies in the chosen cone. -/
+@[rep_depth transport]
+def IsConeAdmissible : Prop :=
+  C.conformalGeometricTemperature ∈ C.admissibleCone
+
+/--
+Operatorial conformal partition function
+`Z(β)=ω(exp(-β))`, represented through the repo owner
+`informationPartitionFunction`.
+-/
+@[rep_depth transport]
+noncomputable def operatorPartition : ℝ :=
+  informationPartitionFunction C.readout (-C.conformalGeometricTemperature) 1
+
+/-- Operatorial Massieu/log-character potential `Φ(β)=log Z(β)`. -/
+@[rep_depth transport]
+noncomputable def operatorMassieu : ℝ :=
+  Real.log C.operatorPartition
+
+/-- Full operatorial admissibility: cone membership plus positive partition. -/
+@[rep_depth transport]
+def IsOperatorAdmissible : Prop :=
+  C.IsConeAdmissible ∧ 0 < C.operatorPartition
+
+/-- The operator partition is the readout of the noncommutative Gibbs exponential. -/
+@[rep_depth transport]
+theorem operatorPartition_eq_readout_exp_neg_temperature :
+    C.operatorPartition =
+      C.readout (NormedSpace.exp (-C.conformalGeometricTemperature)) := by
+  simp [operatorPartition, informationPartitionFunction]
+
+/-- The Massieu potential is the logarithm of the operator partition. -/
+@[rep_depth transport]
+theorem operatorMassieu_eq_log_partition :
+    C.operatorMassieu = Real.log C.operatorPartition := by
+  rfl
+
+/-- Souriau mean moment readout `Q=-dΦ`, evaluated on the conformal β lane. -/
+@[rep_depth transport]
+noncomputable def operatorMeanMoment : ℝ :=
+  -C.readout (-C.conformalGeometricTemperature)
+
+/-- The first-moment readout is the readout of the conformal temperature itself. -/
+@[rep_depth transport]
+theorem operatorMeanMoment_eq_readout_temperature :
+    C.operatorMeanMoment = C.readout C.conformalGeometricTemperature := by
+  simp [operatorMeanMoment]
+
+/-- Operatorial conformal moment pairing with an observable seed. -/
+@[rep_depth transport]
+noncomputable def operatorMomentPairing (A : EndH₂) : ℝ :=
+  C.readout (A * C.conformalGeometricTemperature)
+
+/--
+Operatorial Hessian/Onsager response of the conformal Massieu surface along
+two noncommutative perturbation channels.
+-/
+@[rep_depth transport]
+noncomputable def operatorConformalResponse (X Y : EndH₂) : ℝ :=
+  responseCoefficient (E := H) C.base.density.P X Y C.conformalGeometricTemperature
+
+/-- Operatorial conformal Hessian response is symmetric in its perturbation channels. -/
+@[rep_depth transport]
+theorem operatorConformalResponse_swap (X Y : EndH₂) :
+    C.operatorConformalResponse X Y = C.operatorConformalResponse Y X := by
+  simpa [operatorConformalResponse] using
+    responseCoefficient_swap (E := H) C.base.density.P X Y C.conformalGeometricTemperature
+
+/-- Operator-level TKK master relation for the chosen conformal Cartan generator. -/
+@[rep_depth transport]
+def SatisfiesOperatorTKKMasterRelation (η : ℝ) : Prop :=
+  C.KGenerator * C.PGenerator - C.PGenerator * C.KGenerator =
+    2 • (η • C.DGenerator - C.cartanGenerator)
+
+/--
+The operatorial conformal generator package exposes the same `P,D,K,M` packet
+used by the TKK master relation and the Gibbs-Souriau partition.
+-/
+@[rep_depth transport]
+theorem conformalTemperature_eq_components :
+    C.conformalGeometricTemperature =
+      C.translationPotential • C.PGenerator
+        + C.cartanPotential • C.cartanGenerator
+          + C.dilationPotential • C.DGenerator
+            + C.specialConformalPotential • C.KGenerator := by
+  rfl
+
+end ConformalGibbsSouriauOperatorContext
+
+/-! ## Weyl/TKK/KKT/Jordan-Lie operator closure package -/
+
+/--
+Proof-carrying noncommutative closure package for the operatorial conformal
+Gibbs-Souriau context.
+
+This structure records the hypotheses that are not derivable from the scalar
+finite shadow:
+
+* a Weyl gauge field acting on doubled-carrier operators,
+* a TKK master relation for the chosen conformal packet,
+* operatorial cone/partition admissibility,
+* two perturbation channels used for KKT circular-polarization and
+  Jordan-Lie closure readouts.
+-/
+@[rep_depth transport]
+structure ConformalWeylTKKKKTJordanLieContext where
+  gibbs : ConformalGibbsSouriauOperatorContext (α := α) (H := H)
+  weylGauge : WeylGaugeField EndH₂ EndH₂
+  tkkParameter : ℝ
+  hTKK : gibbs.SatisfiesOperatorTKKMasterRelation tkkParameter
+  hOperatorAdmissible : gibbs.IsOperatorAdmissible
+  X : EndH₂
+  Y : EndH₂
+
+namespace ConformalWeylTKKKKTJordanLieContext
+
+variable (C : ConformalWeylTKKKKTJordanLieContext (α := α) (H := H))
+
+local notation "cl11" => doubledSpaceCl11Action (E := H)
+
+/-- Weyl-gauged conformal geometric temperature. -/
+@[rep_depth transport]
+noncomputable def weylTemperature : EndH₂ :=
+  C.weylGauge.gaugeOf C.gibbs.conformalGeometricTemperature
+
+/-- The package carries the operator-level TKK master relation as data. -/
+@[rep_depth transport]
+theorem tkkMasterRelation :
+    C.gibbs.SatisfiesOperatorTKKMasterRelation C.tkkParameter :=
+  C.hTKK
+
+/-- The package carries the operatorial KKT cone/partition admissibility gate. -/
+@[rep_depth transport]
+theorem operatorAdmissible :
+    C.gibbs.IsOperatorAdmissible :=
+  C.hOperatorAdmissible
+
+/-- The certified conformal dilation remains in the KKT grade-zero lane. -/
+@[rep_depth transport]
+theorem dilation_isGZero :
+    IsGZero cl11 C.gibbs.DGenerator := by
+  simpa [ConformalGibbsSouriauOperatorContext.DGenerator] using
+    C.gibbs.base.conformalD_isGZero
+
+/-- The certified chiral grading remains in the KKT grade-zero lane. -/
+@[rep_depth transport]
+theorem chiralGrading_isGZero :
+    IsGZero cl11
+      (InfoGeometry.Canonical.ChiralCartanCore.chiralGrading
+        C.gibbs.base.CCI.toConformalInference) :=
+  C.gibbs.base.chiralGrading_isGZero
+
+/-- Circularly polarized `u+`/`u-` commutator attached to the context channels. -/
+@[rep_depth transport]
+noncomputable def circularPolarizedCommutator : EndH₂ :=
+  KKTCore.commutator (uPlus cl11 C.X) (uMinus cl11 C.Y)
+
+/-- Circular polarization closes in the KKT grade-zero operator lane. -/
+@[rep_depth transport]
+theorem circularPolarizedCommutator_isGZero :
+    IsGZero cl11 C.circularPolarizedCommutator := by
+  simpa [circularPolarizedCommutator] using
+    KKTCore.commutator_uPlus_uMinus_isGZero (X := cl11) C.X C.Y
+
+/-- Symmetric Jordan product of the conformal temperature and its Weyl-gauged copy. -/
+@[rep_depth transport]
+noncomputable def jordanProductTemperatureWeyl : EndH₂ :=
+  InfoGeometry.Canonical.SuperJordanLie.jordanProduct (E := H)
+    C.gibbs.conformalGeometricTemperature C.weylTemperature
+
+/-- Antisymmetric Lie product of the conformal temperature and its Weyl-gauged copy. -/
+@[rep_depth transport]
+noncomputable def lieProductTemperatureWeyl : EndH₂ :=
+  InfoGeometry.Canonical.SuperJordanLie.lieProduct (E := H)
+    C.gibbs.conformalGeometricTemperature C.weylTemperature
+
+/--
+The Fock commutator of the conformal temperature with its Weyl-gauged copy is
+exactly twice the operatorial Lie product.
+-/
+@[rep_depth transport]
+theorem fockCommutator_temperature_weyl_eq_two_smul_lieProduct :
+    InfoGeometry.Canonical.BogoliubovFockSuper.fockCommutator (E := H)
+      C.gibbs.conformalGeometricTemperature C.weylTemperature =
+        (2 : ℝ) • C.lieProductTemperatureWeyl := by
+  simpa [lieProductTemperatureWeyl] using
+    (InfoGeometry.Canonical.SuperJordanLie.fockCommutator_eq_two_smul_lieProduct
+      (E := H) C.gibbs.conformalGeometricTemperature C.weylTemperature)
+
+/--
+The Fock anticommutator of the conformal temperature with its Weyl-gauged copy
+is exactly twice the operatorial Jordan product.
+-/
+@[rep_depth transport]
+theorem fockAnticommutator_temperature_weyl_eq_two_smul_jordanProduct :
+    InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator (E := H)
+      C.gibbs.conformalGeometricTemperature C.weylTemperature =
+        (2 : ℝ) • C.jordanProductTemperatureWeyl := by
+  simpa [jordanProductTemperatureWeyl] using
+    (InfoGeometry.Canonical.SuperJordanLie.fockAnticommutator_eq_two_smul_jordanProduct
+      (E := H) C.gibbs.conformalGeometricTemperature C.weylTemperature)
+
+/--
+Single proposition bundling the compile-checked closure gates for this
+operatorial noncommutative layer.
+-/
+@[rep_depth transport]
+def SatisfiesKKT_TKK_Weyl_JordanLieClosure : Prop :=
+  C.gibbs.IsOperatorAdmissible
+    ∧ C.gibbs.SatisfiesOperatorTKKMasterRelation C.tkkParameter
+    ∧ IsGZero cl11 C.gibbs.DGenerator
+    ∧ IsGZero cl11
+        (InfoGeometry.Canonical.ChiralCartanCore.chiralGrading
+          C.gibbs.base.CCI.toConformalInference)
+    ∧ IsGZero cl11 C.circularPolarizedCommutator
+
+/-- The package supplies the KKT/TKK/Weyl/Jordan-Lie closure proposition. -/
+@[rep_depth transport]
+theorem satisfiesKKT_TKK_Weyl_JordanLieClosure :
+    C.SatisfiesKKT_TKK_Weyl_JordanLieClosure := by
+  exact ⟨C.operatorAdmissible, C.tkkMasterRelation, C.dilation_isGZero,
+    C.chiralGrading_isGZero, C.circularPolarizedCommutator_isGZero⟩
+
+/-- The Onsager/Hessian response symmetry survives on the selected channels. -/
+@[rep_depth transport]
+theorem operatorConformalResponse_XY_swap :
+    C.gibbs.operatorConformalResponse C.X C.Y =
+      C.gibbs.operatorConformalResponse C.Y C.X :=
+  C.gibbs.operatorConformalResponse_swap C.X C.Y
+
+/--
+Krein-rooted KMS-like state condition for the operatorial conformal generator.
+
+This is a noncommutative readout identity on the doubled Krein carrier, not a
+finite diagonal probability identity.
+-/
+@[rep_depth transport]
+noncomputable def SatisfiesKMSLike (β : ℝ) : Prop :=
+  InfoGeometry.Krein.satisfies_kms_like
+    C.gibbs.conformalGeometricTemperature C.gibbs.readout β
+
+/-- Compatibility alias for the KMS-like conformal operator-state condition. -/
+@[rep_depth transport]
+noncomputable def SatisfiesKMS (β : ℝ) : Prop :=
+  InfoGeometry.Krein.satisfies_kms
+    C.gibbs.conformalGeometricTemperature C.gibbs.readout β
+
+/--
+At zero modular time, the KMS condition forces cyclic readout symmetry for
+operator products.
+-/
+@[rep_depth transport]
+theorem kms_zero_implies_operatorReadout_commutation
+    (hKMS : C.SatisfiesKMS 0) (A B : EndH₂) :
+    C.gibbs.readout (A * B) = C.gibbs.readout (B * A) := by
+  exact
+    InfoGeometry.Krein.kms_zero_implies_commutation
+      (E := H) C.gibbs.conformalGeometricTemperature C.gibbs.readout hKMS A B
+
+/-! ### Weyl gauge covariance of the closure packet -/
+
+/--
+Apply an additive local Weyl gauge shift to the closure context.
+
+The conformal Gibbs packet, TKK relation, KKT admissibility gate, and circular
+polarization channels are unchanged; only the Weyl representative is shifted.
+-/
+@[rep_depth transport]
+noncomputable def transformWeylGauge
+    (σ : WeylGaugeParameter EndH₂ EndH₂) :
+    ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) where
+  gibbs := C.gibbs
+  weylGauge := C.weylGauge.transform σ
+  tkkParameter := C.tkkParameter
+  hTKK := C.hTKK
+  hOperatorAdmissible := C.hOperatorAdmissible
+  X := C.X
+  Y := C.Y
+
+/- The Weyl-transformed temperature is the original representative plus the
+local scale shift evaluated at the conformal geometric temperature. -/
+@[rep_depth transport]
+theorem transformWeylGauge_weylTemperature
+    (σ : WeylGaugeParameter EndH₂ EndH₂) :
+    (C.transformWeylGauge σ).weylTemperature =
+      C.weylTemperature + σ.shiftOf C.gibbs.conformalGeometricTemperature := by
+  rfl
+
+/--
+Additive Weyl gauge transformations preserve the compiled
+KKT/TKK/Weyl/Jordan-Lie closure packet.
+
+This is the formal content justified by the Weyl-gauge modeling choice: the
+closure theorem is invariant because its proof-carrying fields are independent
+of the selected Weyl representative.
+-/
+@[rep_depth transport]
+theorem transformWeylGauge_preserves_closure
+    (σ : WeylGaugeParameter EndH₂ EndH₂) :
+    (C.transformWeylGauge σ).SatisfiesKKT_TKK_Weyl_JordanLieClosure := by
+  exact (C.transformWeylGauge σ).satisfiesKKT_TKK_Weyl_JordanLieClosure
+
+/--
+Apply a potential-form Weyl gauge transform `W ↦ W - dα` to the closure
+context.
+-/
+@[rep_depth transport]
+noncomputable def transformWeylGaugeByPotential
+    (Δ : WeylDifferentialOperator ℝ EndH₂ EndH₂)
+    (αW : WeylGaugeParameter EndH₂ EndH₂) :
+    ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) where
+  gibbs := C.gibbs
+  weylGauge := C.weylGauge.transformByPotential Δ αW
+  tkkParameter := C.tkkParameter
+  hTKK := C.hTKK
+  hOperatorAdmissible := C.hOperatorAdmissible
+  X := C.X
+  Y := C.Y
+
+/-- Potential-form Weyl gauge transformations preserve the closure packet. -/
+@[rep_depth transport]
+theorem transformWeylGaugeByPotential_preserves_closure
+    (Δ : WeylDifferentialOperator ℝ EndH₂ EndH₂)
+    (αW : WeylGaugeParameter EndH₂ EndH₂) :
+    (C.transformWeylGaugeByPotential Δ αW).SatisfiesKKT_TKK_Weyl_JordanLieClosure := by
+  exact (C.transformWeylGaugeByPotential Δ αW).satisfiesKKT_TKK_Weyl_JordanLieClosure
+
+/--
+Potential-form Weyl gauge transformations preserve the associated
+field-strength object.
+-/
+@[rep_depth transport]
+theorem fieldStrength_transformWeylGaugeByPotential_eq
+    (Δ : WeylDifferentialOperator ℝ EndH₂ EndH₂)
+    (αW : WeylGaugeParameter EndH₂ EndH₂) :
+    ((C.transformWeylGaugeByPotential Δ αW).weylGauge.fieldStrength Δ) =
+      C.weylGauge.fieldStrength Δ := by
+  simpa [transformWeylGaugeByPotential] using
+    WeylGaugeField.fieldStrength_transformByPotential_eq Δ C.weylGauge αW
+
+end ConformalWeylTKKKKTJordanLieContext
+
+/-! ## Operatorial Fisher/Onsager positivity gate -/
+
+/--
+Positive Fisher/Onsager gate over the noncommutative conformal context.
+
+The nonnegativity field is explicit because an indefinite Krein carrier does
+not make every response positive.  A projective-count or regular-cone witness
+can feed this field upstream; this layer records only the operator theorem it
+actually uses.
+-/
+@[rep_depth transport]
+structure ConformalFisherOnsagerPositiveContext where
+  closure : ConformalWeylTKKKKTJordanLieContext (α := α) (H := H)
+  selfResponse_nonneg :
+    0 ≤ closure.gibbs.operatorConformalResponse closure.X closure.X
+
+namespace ConformalFisherOnsagerPositiveContext
+
+variable (C : ConformalFisherOnsagerPositiveContext (α := α) (H := H))
+
+/-- Diagonal Fisher/Onsager production along the selected operator channel. -/
+@[rep_depth transport]
+noncomputable def fisherOnsagerProduction : ℝ :=
+  C.closure.gibbs.operatorConformalResponse C.closure.X C.closure.X
+
+/-- The declared operatorial Fisher/Onsager production is nonnegative. -/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_nonneg :
+    0 ≤ C.fisherOnsagerProduction := by
+  simpa [fisherOnsagerProduction] using C.selfResponse_nonneg
+
+/-- Diagonal response is invariant under channel swap by Onsager symmetry. -/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_swap :
+    C.closure.gibbs.operatorConformalResponse C.closure.X C.closure.X =
+      C.closure.gibbs.operatorConformalResponse C.closure.X C.closure.X := by
+  exact C.closure.gibbs.operatorConformalResponse_swap C.closure.X C.closure.X
+
+end ConformalFisherOnsagerPositiveContext
+
+/-! ## Grand-canonical Fock-number coupling over the conformal operator context -/
+
+/--
+Grand-canonical Fock-number bridge over the conformal operator context.
+
+The Fock occupation lane is an operator on the same doubled Krein carrier.
+This structure does not identify Fock occupation with finite counts, chiral
+defect, or central charge; those require separate representation theorems.
+-/
+@[rep_depth transport]
+structure ConformalGrandCanonicalFockContext where
+  closure : ConformalWeylTKKKKTJordanLieContext (α := α) (H := H)
+  mixing : BogoliubovMixingParams
+  hamiltonian : EndH₂
+  chemicalPotential : ℝ
+
+namespace ConformalGrandCanonicalFockContext
+
+variable (C : ConformalGrandCanonicalFockContext (α := α) (H := H))
+
+/-- Bogoliubov Fock occupation operator selected by the context. -/
+@[rep_depth transport]
+noncomputable def fockOccupationOperator : EndH₂ :=
+  bogoliubovNumberOperator (E := H) C.mixing
+
+/-- Chemical-potential coupling `μN_B` as a Weyl/Fock gauge term. -/
+@[rep_depth transport]
+noncomputable def chemicalPotentialFockGaugeTerm : EndH₂ :=
+  (fockNumberGauge (E := H) C.mixing).gaugeOf C.chemicalPotential
+
+/-- Grand-canonical Fock generator `H - μN_B` on the doubled Krein carrier. -/
+@[rep_depth transport]
+noncomputable def grandCanonicalFockOperator : EndH₂ :=
+  grandCanonicalFockGenerator (E := H)
+    C.mixing C.hamiltonian C.chemicalPotential
+
+/-- The Fock occupation operator is creation after annihilation. -/
+@[rep_depth transport]
+theorem fockOccupationOperator_eq_creation_after_annihilation :
+    C.fockOccupationOperator =
+      (bogoliubovCreation (E := H) C.mixing).comp
+        (bogoliubovAnnihilation (E := H) C.mixing) := by
+  rfl
+
+/-- The chemical potential couples linearly to the Fock occupation operator. -/
+@[rep_depth transport]
+theorem chemicalPotentialFockGaugeTerm_eq_mu_smul_fockOccupation :
+    C.chemicalPotentialFockGaugeTerm =
+      C.chemicalPotential • C.fockOccupationOperator := by
+  rfl
+
+/-- The grand-canonical Fock operator has the owner form `H - μN_B`. -/
+@[rep_depth transport]
+theorem grandCanonicalFockOperator_eq_hamiltonian_sub_fockGauge :
+    C.grandCanonicalFockOperator =
+      C.hamiltonian - C.chemicalPotentialFockGaugeTerm := by
+  rfl
+
+/--
+Functorial affine bridge from a finite grand-canonical count shadow to the
+operatorial Fock number lane over this conformal KKT/TKK context.
+
+This preserves the chemical-potential affine form across categories:
+finite `E(x) - μN(x)` and operatorial `H - μN_B`.  It does not identify the
+finite count observable with the Fock occupation operator.
+-/
+@[rep_depth transport, spine_morphism, spine_functor, spine_functor_lift]
+def finiteFockChemicalPotentialAffineFunctor
+    (params : GrandCanonicalTwoParam α) :
+    FiniteFockChemicalPotentialAffineBridge
+      params C.mixing C.hamiltonian C.chemicalPotential :=
+  finiteFockChemicalPotentialAffineBridge
+    params C.mixing C.hamiltonian C.chemicalPotential
+
+/--
+First-quantization form of the same functorial bridge over the conformal
+KKT/TKK context: count-state functions are lifted to the Fock operator lane
+while preserving the affine chemical-potential expression.
+-/
+@[rep_depth transport, spine_morphism, spine_functor, spine_functor_lift]
+def firstQuantizationChemicalPotentialAffineFunctor
+    (params : GrandCanonicalTwoParam α) :
+    FiniteFockChemicalPotentialAffineBridge
+      params C.mixing C.hamiltonian C.chemicalPotential :=
+  firstQuantizationChemicalPotentialAffineBridge
+    params C.mixing C.hamiltonian C.chemicalPotential
+
+/--
+The functorial affine bridge exposes the finite chemical-potential gauge
+coupling as `μ * N(x)`.
+-/
+@[rep_depth transport]
+theorem finiteFockChemicalPotentialAffineFunctor_finiteGauge
+    (params : GrandCanonicalTwoParam α) (x : α) :
+    (C.finiteFockChemicalPotentialAffineFunctor params).finiteGauge x =
+      chemicalPotentialGauge_apply params C.chemicalPotential x := by
+  rfl
+
+/--
+The functorial affine bridge exposes the Fock operator form `H - μN_B`.
+-/
+@[rep_depth transport]
+theorem finiteFockChemicalPotentialAffineFunctor_fockShiftedHamiltonian
+    (params : GrandCanonicalTwoParam α) :
+    (C.finiteFockChemicalPotentialAffineFunctor params).fockShiftedHamiltonian =
+      grandCanonicalFockGenerator_eq_hamiltonian_sub_fockNumberGauge
+        (E := H) C.mixing C.hamiltonian C.chemicalPotential := by
+  rfl
+
+/--
+Grand-canonical/Weyl/TKK/KKT bridge proposition.
+
+This is the compile-backed form of the synthesis: finite chemical-potential
+coupling, Fock number coupling, and the operator Weyl/TKK/KKT closure packet
+hold simultaneously.  It is intentionally weaker than any black-hole or
+contour-residue claim, because those are not present as owner theorems in the
+current Lean source.
+-/
+@[rep_depth transport]
+def SatisfiesWeylGrandCanonicalTKKKKTBridge
+    (params : GrandCanonicalTwoParam α) : Prop :=
+  C.closure.SatisfiesKKT_TKK_Weyl_JordanLieClosure
+    ∧ (∀ x : α,
+        (chemicalPotentialGauge params).gaugeOf C.chemicalPotential x =
+          C.chemicalPotential * params.number x)
+    ∧ (∀ x : α,
+        shiftedEnergy params C.chemicalPotential x =
+          params.energy x
+            - (chemicalPotentialGauge params).gaugeOf C.chemicalPotential x)
+    ∧ C.chemicalPotentialFockGaugeTerm =
+        C.chemicalPotential • C.fockOccupationOperator
+    ∧ C.grandCanonicalFockOperator =
+        C.hamiltonian - C.chemicalPotentialFockGaugeTerm
+
+/--
+The conformal Fock context supplies the grand-canonical affine bridge and the
+operator Weyl/TKK/KKT closure gates.
+-/
+@[rep_depth transport, spine_morphism, spine_functor, spine_functor_lift]
+theorem satisfiesWeylGrandCanonicalTKKKKTBridge
+    (params : GrandCanonicalTwoParam α) :
+    C.SatisfiesWeylGrandCanonicalTKKKKTBridge params := by
+  exact
+    ⟨C.closure.satisfiesKKT_TKK_Weyl_JordanLieClosure,
+      (fun x => chemicalPotentialGauge_apply params C.chemicalPotential x),
+      (fun x => shiftedEnergy_eq_energy_sub_chemicalPotentialGauge
+        params C.chemicalPotential x),
+      C.chemicalPotentialFockGaugeTerm_eq_mu_smul_fockOccupation,
+      C.grandCanonicalFockOperator_eq_hamiltonian_sub_fockGauge⟩
+
+/--
+Change only the Weyl representative in the underlying conformal closure
+packet.  The grand-canonical Fock data are unchanged.
+-/
+@[rep_depth transport]
+noncomputable def transformWeylGauge
+    (σ : WeylGaugeParameter EndH₂ EndH₂) :
+    ConformalGrandCanonicalFockContext (α := α) (H := H) where
+  closure := C.closure.transformWeylGauge σ
+  mixing := C.mixing
+  hamiltonian := C.hamiltonian
+  chemicalPotential := C.chemicalPotential
+
+/--
+Additive Weyl gauge transformations preserve the combined
+grand-canonical/TKK/KKT bridge.
+-/
+@[rep_depth transport]
+theorem transformWeylGauge_preserves_weylGrandCanonicalTKKKKTBridge
+    (params : GrandCanonicalTwoParam α)
+    (σ : WeylGaugeParameter EndH₂ EndH₂) :
+    (C.transformWeylGauge σ).SatisfiesWeylGrandCanonicalTKKKKTBridge params := by
+  exact (C.transformWeylGauge σ).satisfiesWeylGrandCanonicalTKKKKTBridge params
+
+/-- At zero chemical potential, the grand-canonical Fock operator is the Hamiltonian. -/
+@[rep_depth transport]
+theorem grandCanonicalFockOperator_zero_mu
+    (hμ : C.chemicalPotential = 0) :
+    C.grandCanonicalFockOperator = C.hamiltonian := by
+  rw [grandCanonicalFockOperator, hμ]
+  exact
+    grandCanonicalFockGenerator_zero_mu (E := H) C.mixing C.hamiltonian
+
+end ConformalGrandCanonicalFockContext
+
+end InfoGeometry.Canonical.SouriauConformalKKT

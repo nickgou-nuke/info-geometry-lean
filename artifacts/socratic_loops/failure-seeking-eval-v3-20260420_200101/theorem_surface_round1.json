@@ -1,0 +1,9 @@
+{
+  "round": 1,
+  "surface": {
+    "goal": "negLog.generate \u27e81, by norm_num\u27e9 = 0",
+    "kind": "theorem",
+    "name": "generate_one",
+    "tactic": "negLog.map_one"
+  }
+}

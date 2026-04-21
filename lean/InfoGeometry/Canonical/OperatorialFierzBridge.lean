@@ -66,6 +66,20 @@ noncomputable def transportEvaluatedFierzReadout : FierzChannelReadout :=
   doubledFierzReadout (E := E)
 
 @[rep_depth operator]
+theorem transportEvaluatedFierzReadout_eq_doubledFierzReadout :
+    transportEvaluatedFierzReadout (E := E) = doubledFierzReadout (E := E) := rfl
+
+@[rep_depth operator]
+theorem operatorTransportScalarReadout_eq_doubledFierz_scalar
+    (ψ : H₂) :
+    operatorTransportScalarReadout (E := E) ψ = (doubledFierzReadout (E := E)).scalar ψ := rfl
+
+@[rep_depth operator]
+theorem operatorTransportAreaReadout_eq_doubledFierz_area
+    (ψ : H₂) :
+    operatorTransportAreaReadout (E := E) ψ = (doubledFierzReadout (E := E)).area ψ := rfl
+
+@[rep_depth operator]
 theorem transportEvaluatedFierzReadout_fierzIdentity
     (ψ : H₂) :
     ((transportEvaluatedFierzReadout (E := E)).hilbert ψ)^2

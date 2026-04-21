@@ -411,7 +411,146 @@ Once the runtime behavior is validated, formalize:
 
 ---
 
-## 17. Summary
+## 17. Appendix: Two-Lane Weak-Value Attention
+
+This appendix records a weak-measurement-inspired attention law for the twin
+Möbius tape architecture.
+
+The goal is not to literally swap query and key roles. The correct import from
+weak-measurement intuition is instead:
+
+- a pre-selected branch,
+- a post-selected/conjugate branch,
+- weak cross-branch influence,
+- and low-disturbance memory update.
+
+### 17.1 Branch roles
+
+Interpret the two branches as:
+
+- forward branch = pre-selected lane,
+- backward/conjugate branch = post-selected lane.
+
+At the current step, each branch contributes a conditioned readout.
+
+### 17.2 Forward branch attention
+
+Let:
+
+- `Q⁺` be the current forward query state,
+- `(K⁺, V⁺)` be the forward branch key/value state.
+
+Then the forward branch attention is:
+
+- `A⁺ = softmax((Q⁺ (K⁺)^T) / sqrt(d) + B⁺) V⁺`
+
+where `B⁺` is the usual branch-local positional or structural bias.
+
+### 17.3 Backward branch attention
+
+Let:
+
+- `Q⁻` be the current conjugate/backward query state,
+- `(K⁻, V⁻)` be the backward branch key/value state.
+
+Then the backward branch attention is:
+
+- `A⁻ = softmax((Q⁻ (K⁻)^T) / sqrt(d) + B⁻) V⁻`
+
+where `B⁻` may include:
+
+- residual penalties,
+- orientation tags,
+- decay terms,
+- conjugate branch position rules.
+
+### 17.4 Weak-value style fusion
+
+The simplest two-lane weak-value fusion is a weighted combination:
+
+- `A = α A⁺ + β A⁻`
+
+with:
+
+- `α + β = 1`,
+- typically `α >= β`,
+- and `β` small in the first implementation.
+
+This is the safest branchwise fusion law.
+
+### 17.5 Compatibility-gated weak fusion
+
+A stronger variant uses a compatibility gate between the two branches:
+
+- `A = A⁺ + ε G(A⁺, A⁻) ⊙ A⁻`
+
+where:
+
+- `ε` is weak coupling strength,
+- `G(A⁺, A⁻)` is a branch agreement or compatibility gate,
+- `⊙` is headwise or componentwise gating.
+
+This encodes the idea that the conjugate branch should influence the present
+weakly unless it is compatible with the forward branch.
+
+### 17.6 Query/key role clarification
+
+The weak-measurement analogy should not be implemented as a naive query-key
+swap.
+
+The recommended role interpretation is:
+
+- query = present interrogation,
+- key = branch-specific address structure,
+- value = recoverable branch content.
+
+If a stronger asymmetric version is desired later, use a transformed or twisted
+query on the conjugate branch rather than swapping query and key outright.
+
+### 17.7 Conjugate-query variant
+
+A future extension may define:
+
+- `Q⁻ = Θ(Q⁺)`
+
+where `Θ` is a branch-twist/conjugation map.
+
+Then the backward branch attention becomes:
+
+- `A⁻ = softmax((Θ(Q⁺) (K⁻)^T) / sqrt(d) + B⁻) V⁻`
+
+This is a better analog of two-state / pre-post-selected conditioning than a
+literal key-query exchange.
+
+### 17.8 Low-disturbance residual update
+
+The weak-measurement analogy is strongest in the memory update law.
+
+Residual memory should be updated weakly:
+
+- `V⁻_{t+1} = (1 - α_mem) V⁻_t + α_mem Φ(W_t, V⁻_t)`
+
+with:
+
+- `α_mem << 1`
+
+so that the conjugate branch is influenced gradually rather than overwritten.
+
+This is the runtime analogue of low-information-gain / low-disturbance update.
+
+### 17.9 Recommended implementation order
+
+The recommended progression is:
+
+1. branchwise independent attention,
+2. weighted two-lane fusion,
+3. compatibility-gated weak fusion,
+4. conjugate-query branch,
+5. slow residual memory update.
+
+This preserves stability while keeping the weak-value interpretation meaningful.
+
+## 18. Summary
 
 The Twin Möbius Tape Transformer is a symmetric two-branch streaming runtime.
 

@@ -402,6 +402,7 @@ import InfoGeometry.Canonical.KreinDiracWeightFunctionalLift
 import InfoGeometry.Canonical.SplitCliffordThermalBridge
 import InfoGeometry.Canonical.OperatorialInformationLift
 import InfoGeometry.Canonical.Operators
+import InfoGeometry.Canonical.OperatorThermoBridge
 
 -- L5: thermodynamic / attention surface
 import InfoGeometry.Canonical.AttentionPolarizedSplit

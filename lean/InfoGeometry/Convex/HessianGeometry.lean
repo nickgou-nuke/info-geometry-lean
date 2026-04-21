@@ -96,7 +96,7 @@ structure HessianGeometry (E : Type*) [NormedAddCommGroup E] [InnerProductSpace 
   grad : E → E
   has_gradient : ∀ x, HasFDerivAt potential (InnerProductSpace.toDual ℝ E (grad x)) x
   divergence_nonneg_axiom :
-    ∀ x y : E, 0 ≤ potential x - potential y - inner ℝ (grad y) (x - y)
+    ∀ x y, 0 ≤ potential x - potential y - inner ℝ (grad y) (x - y)
 
 namespace HessianGeometry
 
@@ -123,12 +123,17 @@ noncomputable def metric (x : E) (u v : E) : ℝ :=
 noncomputable def divergence (x y : E) : ℝ :=
   H.potential x - H.potential y - inner ℝ (H.dualMap y) (x - y)
 
-/-- 
-Theorem: Non-negativity of the Bregman divergence.
-This is the constructive witness carried by `HessianGeometry`.
+/--
+Non-negativity of the Bregman divergence.
+
+This is not inferred from differentiability alone.  It is derived from the
+convexity/first-order lower-bound witness carried by each concrete
+`HessianGeometry` constructor.
 -/
-theorem divergence_nonneg (x y : E) : 0 ≤ H.divergence x y := by
-  simpa [divergence, dualMap] using H.divergence_nonneg_axiom x y
+theorem divergence_nonneg (x y : E) :
+    0 ≤ H.divergence x y := by
+  simpa [HessianGeometry.divergence, HessianGeometry.dualMap] using
+    H.divergence_nonneg_axiom x y
 
 -- theorem-class: derived
 /-- The gradient map is monotone because the two oriented Bregman divergences sum to the
@@ -138,10 +143,13 @@ theorem grad_monotone (x y : E) :
   have hxy : 0 ≤ H.divergence x y := H.divergence_nonneg x y
   have hyx : 0 ≤ H.divergence y x := H.divergence_nonneg y x
   have hsum : 0 ≤ H.divergence x y + H.divergence y x := add_nonneg hxy hyx
-  simpa [HessianGeometry.divergence, HessianGeometry.dualMap, sub_eq_add_neg,
-    inner_add_left, inner_sub_left, inner_add_right, inner_sub_right,
-    inner_neg_left, inner_neg_right, add_assoc, add_comm, add_left_comm]
-    using hsum
+  have hsum_eq :
+      H.divergence x y + H.divergence y x =
+        inner ℝ (H.grad x - H.grad y) (x - y) := by
+    simp [HessianGeometry.divergence, HessianGeometry.dualMap,
+      sub_eq_add_neg, inner_add_left, inner_neg_left, real_inner_comm]
+    ring
+  simpa [hsum_eq] using hsum
 
 -- theorem-class: derived
 /-- The Hessian metric operator is symmetric, as it is the second derivative of the potential
@@ -224,8 +232,10 @@ noncomputable def bayesianAction (γ : ℕ → E) (N : ℕ) : ℝ :=
   Finset.sum (Finset.range N) (fun i => H.divergence (γ (i + 1)) (γ i))
 
 /-- Theorem: Non-negativity of the Bayesian Action. -/
-theorem bayesianAction_nonneg (γ : ℕ → E) (N : ℕ) : 0 ≤ H.bayesianAction γ N :=
-  Finset.sum_nonneg (fun i _ => H.divergence_nonneg (γ (i + 1)) (γ i))
+theorem bayesianAction_nonneg (γ : ℕ → E) (N : ℕ) :
+    0 ≤ H.bayesianAction γ N := by
+  unfold bayesianAction
+  exact Finset.sum_nonneg (fun i _ => H.divergence_nonneg (γ (i + 1)) (γ i))
 
 /-- Legendre dual potential (as supremum). -/
 noncomputable def dualPotential (θ : E) : ℝ :=

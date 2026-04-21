@@ -1,0 +1,30 @@
+{
+  "kind": "goal",
+  "probe": {
+    "context": "import Mathlib\n\nnoncomputable section\n\nstructure AdditivePotentialAction where\n  act : \u211d \u2192 \u211d \u2192 \u211d\n  act_zero : \u2200 x, act 0 x = x\n  act_add : \u2200 a b x, act (a + b) x = act a (act b x)\n\nstructure RatioToGeneratorSurface where\n  action : AdditivePotentialAction\n\nnamespace RatioToGeneratorSurface\n\n/-- Negative logarithm rectifies positive multiplicative relative data into additive potential data. -/\ndef NegLogRectifier (r : \u211d) : \u211d :=\n  -Real.log r\n\nnamespace NegLogRectifier",
+    "goal": "\u2200 {r s : \u211d} (hr : 0 < r) (hs : 0 < s), NegLogRectifier (r * s) = NegLogRectifier r + NegLogRectifier s",
+    "imports": [
+      "Mathlib",
+      "Mathlib"
+    ],
+    "lean": {
+      "ok": true,
+      "returncode": 0,
+      "source": "import Mathlib\nimport Mathlib\n\nimport Mathlib\nnoncomputable section\nstructure AdditivePotentialAction where\n  act : \u211d \u2192 \u211d \u2192 \u211d\n  act_zero : \u2200 x, act 0 x = x\n  act_add : \u2200 a b x, act (a + b) x = act a (act b x)\nstructure RatioToGeneratorSurface where\n  action : AdditivePotentialAction\nnamespace RatioToGeneratorSurface\n/-- Negative logarithm rectifies positive multiplicative relative data into additive potential data. -/\ndef NegLogRectifier (r : \u211d) : \u211d :=\n  -Real.log r\nnamespace NegLogRectifier\n\ntheorem hermes_probe : \u2200 {r s : \u211d} (hr : 0 < r) (hs : 0 < s), NegLogRectifier (r * s) = NegLogRectifier r + NegLogRectifier s := by\n  trace_state\n  sorry\n",
+      "source_path": "/tmp/hermes_probe_cg7s8uqo.lean",
+      "stderr": "",
+      "stdout": "\u22a2 \u2200 {r s : \u211d}, 0 < r \u2192 0 < s \u2192 NegLogRectifier (r * s) = NegLogRectifier r + NegLogRectifier s\n/tmp/hermes_probe_cg7s8uqo.lean:18:8: warning: declaration uses `sorry`\n"
+    },
+    "normalized_goal": "\u2200 {r s : \u211d} (hr : 0 < r) (hs : 0 < s), NegLogRectifier (r * s) = NegLogRectifier r + NegLogRectifier s",
+    "proof_state": "\u22a2 \u2200 {r s : \u211d}, 0 < r \u2192 0 < s \u2192 NegLogRectifier (r * s) = NegLogRectifier r + NegLogRectifier s\n/tmp/hermes_probe_cg7s8uqo.lean:18:8: warning: declaration uses `sorry`",
+    "schema": "lean_interact.proof_state.v1",
+    "status": "ok"
+  },
+  "round": 1,
+  "surface": {
+    "goal": "{r s : \u211d} (hr : 0 < r) (hs : 0 < s) :\n    NegLogRectifier (r * s) = NegLogRectifier r + NegLogRectifier s",
+    "kind": "theorem",
+    "name": "map_mul",
+    "tactic": "unfold NegLogRectifier\n  rw [Real.log_mul (ne_of_gt hr) (ne_of_gt hs)]\n  ring"
+  }
+}

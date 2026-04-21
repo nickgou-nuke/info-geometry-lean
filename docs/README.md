@@ -54,6 +54,8 @@ Relativity of Measurement**:
 - [black_books/131_the_transmutation_of_the_complex_mask.md](black_books/131_the_transmutation_of_the_complex_mask.md) — Paradigm-shift chapter translating complex-field theorem language into doubled-real Krein/Hestenes operator language.
 - [black_books/112_considering_alignment_reference_state_gauge_and_digital_spectrometer.md](black_books/112_considering_alignment_reference_state_gauge_and_digital_spectrometer.md) — Alignment chapter formalizing reference state, gauge transforms, doubled response spectra, and the repo as a digital spectrometer with kernel-gated closure.
 - [black_books/67_the_external_analogy_doctrine.md](black_books/67_the_external_analogy_doctrine.md) — Respect external frameworks as heuristics, but keep canonical truth strictly owner-native and Lean-verified.
+- [black_books/161_the_gauge_thermodynamics_of_the_router.md](black_books/161_the_gauge_thermodynamics_of_the_router.md) — The gauge-thermodynamic formalization of LLM routing and grand-canonical particle fluctuations.
+- [black_books/162_the_lie_thermodynamics_of_the_spire.md](black_books/162_the_lie_thermodynamics_of_the_spire.md) — Souriau's Moment Map and the Lie algebra grading of the ArangoDB DAG.
 - [Theory.md](Theory.md) — How the principle maps to the repo presentations.
 - [Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md) — The project's roadmap and trajectory.
 - [SEMANTIC_POTENTIAL.md](SEMANTIC_POTENTIAL.md) — The "Scorpio & Virgo" multi-agent generative engine.

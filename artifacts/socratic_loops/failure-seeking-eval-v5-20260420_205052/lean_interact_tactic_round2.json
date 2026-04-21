@@ -1,0 +1,32 @@
+{
+  "kind": "tactic",
+  "probe": {
+    "context": "import Mathlib\n\nnamespace Hypothesis\n\nThe concrete intended example is `r \u21a6 -log r`; logarithmic compatibility is\nkept as a lawful field rather than asserted universally.\n-/\nstructure NegLogRectifier (R A : Type*) [Mul R] [One R] [Add A] [Zero A] where\n  toPotential : R -> A\n  map_one : toPotential 1 = 0\n  map_mul : forall x y : R, toPotential (x * y) = toPotential x + toPotential y\n\nnamespace NegLogRectifier\n\nvariable {R A : Type*} [Mul R] [One R] [Add A] [Zero A]",
+    "goal": "\u2200 (N : NegLogRectifier R A), N.toPotential 1 = 0",
+    "imports": [
+      "Mathlib",
+      "Mathlib"
+    ],
+    "lean": {
+      "ok": false,
+      "returncode": 1,
+      "source": "import Mathlib\nimport Mathlib\n\nimport Mathlib\nnamespace Hypothesis\nThe concrete intended example is `r \u21a6 -log r`; logarithmic compatibility is\nkept as a lawful field rather than asserted universally.\n-/\nstructure NegLogRectifier (R A : Type*) [Mul R] [One R] [Add A] [Zero A] where\n  toPotential : R -> A\n  map_one : toPotential 1 = 0\n  map_mul : forall x y : R, toPotential (x * y) = toPotential x + toPotential y\nnamespace NegLogRectifier\nvariable {R A : Type*} [Mul R] [One R] [Add A] [Zero A]\n\ntheorem hermes_probe : \u2200 (N : NegLogRectifier R A), N.toPotential 1 = 0 := by\n  trace_state\n  repeat intro\n  N.map_one\n",
+      "source_path": "/tmp/hermes_probe_xhn4d85o.lean",
+      "stderr": "",
+      "stdout": "/tmp/hermes_probe_xhn4d85o.lean:6:0: error: unexpected identifier; expected command\n/tmp/hermes_probe_xhn4d85o.lean:6:32: error: unexpected token; expected ':=', 'where' or '|'\n/tmp/hermes_probe_xhn4d85o.lean:19:3: error: unknown tactic\n/tmp/hermes_probe_xhn4d85o.lean:16:75: error: unsolved goals\nR : Type u_1\nA : Type u_2\ninst\u271d\u00b3 : Mul R\ninst\u271d\u00b2 : One R\ninst\u271d\u00b9 : Add A\ninst\u271d : Zero A\nN\u271d : NegLogRectifier R A\n\u22a2 N\u271d.toPotential 1 = 0\nR : Type u_1\nA : Type u_2\ninst\u271d\u00b3 : Mul R\ninst\u271d\u00b2 : One R\ninst\u271d\u00b9 : Add A\ninst\u271d : Zero A\n\u22a2 \u2200 (N : NegLogRectifier R A), N.toPotential 1 = 0\n"
+    },
+    "normalized_goal": "\u2200 (N : NegLogRectifier R A), N.toPotential 1 = 0",
+    "normalized_tactic": "repeat intro\nN.map_one",
+    "proof_state_before": "/tmp/hermes_probe_xhn4d85o.lean:6:0: error: unexpected identifier; expected command\n/tmp/hermes_probe_xhn4d85o.lean:6:32: error: unexpected token; expected ':=', 'where' or '|'\n/tmp/hermes_probe_xhn4d85o.lean:19:3: error: unknown tactic\n/tmp/hermes_probe_xhn4d85o.lean:16:75: error: unsolved goals\nR : Type u_1\nA : Type u_2\ninst\u271d\u00b3 : Mul R\ninst\u271d\u00b2 : One R\ninst\u271d\u00b9 : Add A\ninst\u271d : Zero A\nN\u271d : NegLogRectifier R A\n\u22a2 N\u271d.toPotential 1 = 0\nR : Type u_1\nA : Type u_2\ninst\u271d\u00b3 : Mul R\ninst\u271d\u00b2 : One R\ninst\u271d\u00b9 : Add A\ninst\u271d : Zero A\n\u22a2 \u2200 (N : NegLogRectifier R A), N.toPotential 1 = 0",
+    "schema": "lean_interact.tactic_probe.v1",
+    "status": "failure",
+    "tactic": "repeat intro\nN.map_one"
+  },
+  "round": 2,
+  "surface": {
+    "goal": "(N : NegLogRectifier R A) : N.toPotential 1 = 0",
+    "kind": "theorem",
+    "name": "map_one_apply",
+    "tactic": "N.map_one"
+  }
+}

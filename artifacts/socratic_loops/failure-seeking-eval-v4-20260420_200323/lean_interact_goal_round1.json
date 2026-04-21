@@ -1,0 +1,30 @@
+{
+  "kind": "goal",
+  "probe": {
+    "context": "import Mathlib.Analysis.SpecialFunctions.Log.Basic\n\nnamespace InfoGeometry\n\nuniverse u v\n\nnoncomputable section",
+    "goal": "assumes exactly the logarithmic compatibility needed for negative logarithm to become additive. -/",
+    "imports": [
+      "Mathlib",
+      "Mathlib"
+    ],
+    "lean": {
+      "ok": false,
+      "returncode": 1,
+      "source": "import Mathlib\nimport Mathlib\n\nimport Mathlib.Analysis.SpecialFunctions.Log.Basic\nnamespace InfoGeometry\nuniverse u v\nnoncomputable section\n\ntheorem hermes_probe : assumes exactly the logarithmic compatibility needed for negative logarithm to become additive. -/ := by\n  trace_state\n  sorry\n",
+      "source_path": "/tmp/hermes_probe_6g2x1o09.lean",
+      "stderr": "",
+      "stdout": "/tmp/hermes_probe_6g2x1o09.lean:9:98: error: unexpected token 'to'; expected 'in'\n"
+    },
+    "normalized_goal": "assumes exactly the logarithmic compatibility needed for negative logarithm to become additive. -/",
+    "proof_state": "/tmp/hermes_probe_6g2x1o09.lean:9:98: error: unexpected token 'to'; expected 'in'",
+    "schema": "lean_interact.proof_state.v1",
+    "status": "error"
+  },
+  "round": 1,
+  "surface": {
+    "goal": "assumes exactly the logarithmic\ncompatibility needed for negative logarithm to become additive.\n-/",
+    "kind": "theorem",
+    "name": "surface",
+    "tactic": ""
+  }
+}

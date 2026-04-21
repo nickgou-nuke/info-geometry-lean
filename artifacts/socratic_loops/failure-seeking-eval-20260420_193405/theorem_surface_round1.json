@@ -1,0 +1,9 @@
+{
+  "round": 1,
+  "surface": {
+    "goal": "(r : \u211d) :\n    negLog.generate r = -Real.log r",
+    "kind": "theorem",
+    "name": "negLog_generate",
+    "tactic": "rfl"
+  }
+}

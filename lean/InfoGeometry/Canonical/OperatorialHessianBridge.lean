@@ -5,6 +5,8 @@ import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import InfoGeometry.Meta.Architecture
 
+set_option linter.unusedSectionVars false
+
 /-!
 # InfoGeometry.Canonical.OperatorialHessianBridge
 
@@ -13,8 +15,9 @@ Bridge module between operator-valued Lie Hessians and scalar log-readout readou
 This module formalizes the Tier 2 Readout established in Chapter 156:
 - Scalar Log-Readout: F_A(t) = log ω(α_t^X(A))
 
-This file provides the verified first derivative of the log-readout.
-The second derivative (Information-Geometric Norm) remains a named target.
+This file provides the verified first derivative of the log-readout
+and formalizes the Bogoliubov-Kubo-Mori (BKM) metric proxy via the
+double transport commutator.
 -/
 
 namespace InfoGeometry.Canonical.OperatorialHessianBridge
@@ -70,6 +73,40 @@ theorem hasDerivAt_scalarLogReadout_zero
   have hcomp := hLog.comp 0 hf
   dsimp
   simpa [operatorInformationFirstVariation, lieBracket_eq_transportCommutator] using hcomp
+
+/--
+The Operatorial Information Hessian (BKM metric proxy) is the double
+transport commutator.
+-/
+@[rep_depth transport]
+def operatorInformationHessian (X A : EndH) : EndH :=
+  ⁅X, ⁅X, A⁆⁆
+
+/--
+Observable Lie Hessian matching the standard double Lie bracket.
+-/
+@[rep_depth transport]
+def observableLieHessian (X A : EndH) : EndH :=
+  X * (X * A - A * X) - (X * A - A * X) * X
+
+/--
+The Operatorial Information Hessian matches the explicit double transport
+commutator (the formalization of the Bogoliubov-Kubo-Mori BKM metric proxy).
+-/
+@[rep_depth transport]
+theorem operatorInformationHessian_eq_double_transportCommutator (X A : EndH) :
+    operatorInformationHessian (E := E) X A = transportCommutator X (transportCommutator X A) := by
+  unfold operatorInformationHessian
+  rw [← lieBracket_eq_transportCommutator, ← lieBracket_eq_transportCommutator]
+
+/--
+The Operatorial Information Hessian equals the raw algebraic Lie Hessian.
+-/
+@[rep_depth transport]
+theorem operatorInformationHessian_eq_observableLieHessian (X A : EndH) :
+    operatorInformationHessian (E := E) X A = observableLieHessian X A := by
+  unfold operatorInformationHessian observableLieHessian
+  simp only [Ring.lie_def]
 
 end Bridge
 

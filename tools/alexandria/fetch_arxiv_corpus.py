@@ -15,7 +15,147 @@ TAG_RE = re.compile(r"<[^>]+>")
 WS_RE = re.compile(r"\s+")
 TEX_SECTION_RE = re.compile(r"\\(section|subsection|subsubsection|chapter)\*?\{([^}]*)\}")
 TEX_COMMAND_RE = re.compile(r"\\[A-Za-z@]+(?:\[[^\]]*\])?(?:\{[^{}]*\})?")
-TEX_COMMENT_RE = re.compile(r"(?m)^\s*%.*$")
+TEX_INLINE_TEXT_COMMAND_RE = re.compile(r"\\(?:emph|textit|textbf|mathrm|mathsf|operatorname)\{([^{}]*)\}")
+TEX_DROP_ENVS = (
+    "figure",
+    "figure*",
+    "table",
+    "table*",
+    "tikzpicture",
+    "picture",
+    "lstlisting",
+    "verbatim",
+    "thebibliography",
+)
+TEX_THEOREM_ENVS = (
+    "theorem",
+    "lemma",
+    "proposition",
+    "corollary",
+    "definition",
+    "remark",
+    "proof",
+    "example",
+    "conjecture",
+)
+TEX_MATH_ENVS = (
+    "equation",
+    "equation*",
+    "align",
+    "align*",
+    "gather",
+    "gather*",
+    "multline",
+    "multline*",
+)
+
+
+def strip_tex_comments(tex: str) -> str:
+    lines: list[str] = []
+    for line in tex.splitlines():
+        escaped = False
+        kept: list[str] = []
+        for char in line:
+            if char == "%" and not escaped:
+                break
+            kept.append(char)
+            escaped = char == "\\" and not escaped
+            if char != "\\":
+                escaped = False
+        lines.append("".join(kept))
+    return "\n".join(lines)
+
+
+def strip_tex_preamble(tex: str) -> str:
+    match = re.search(r"\\begin\{document\}(.*?)\\end\{document\}", tex, flags=re.DOTALL)
+    if match:
+        return match.group(1)
+    return tex
+
+
+def drop_tex_environments(tex: str) -> str:
+    for env in TEX_DROP_ENVS:
+        pattern = re.compile(rf"\\begin\{{{re.escape(env)}\}}.*?\\end\{{{re.escape(env)}\}}", re.DOTALL)
+        tex = pattern.sub("\n\n", tex)
+    return tex
+
+
+def strip_macro_definitions(tex: str) -> str:
+    tex = re.sub(r"(?m)^\s*\\(?:newcommand|renewcommand|providecommand)\*?(?:\{\\[A-Za-z@]+\}|\\[A-Za-z@]+)(?:\[[^\]]*\]){0,2}\{.*$", "", tex)
+    tex = re.sub(r"(?m)^\s*\\(?:def|DeclareMathOperator)\s*\\[A-Za-z@]+.*$", "", tex)
+    return tex
+
+
+def clean_tex_braces(text: str) -> str:
+    text = text.replace(r"\{", "{").replace(r"\}", "}")
+    text = text.replace("{", "").replace("}", "")
+    return text
+
+
+def protect_math_segments(text: str) -> tuple[str, list[str]]:
+    segments: list[str] = []
+
+    def repl(match: re.Match[str]) -> str:
+        segments.append(match.group(0))
+        return f"@@ALEXANDRIA_MATH_{len(segments) - 1}@@"
+
+    protected = re.sub(r"\$\$.*?\$\$|\$[^$\n]*\$", repl, text, flags=re.DOTALL)
+    return protected, segments
+
+
+def restore_math_segments(text: str, segments: list[str]) -> str:
+    for idx, segment in enumerate(segments):
+        text = text.replace(f"@@ALEXANDRIA_MATH_{idx}@@", segment)
+    return text
+
+
+def preserve_theorem_environments(tex: str) -> str:
+    for env in TEX_THEOREM_ENVS:
+        pattern = re.compile(
+            rf"\\begin\{{{env}\}}(?:\[([^\]]*)\])?(.*?)\\end\{{{env}\}}",
+            re.DOTALL | re.IGNORECASE,
+        )
+
+        def repl(match: re.Match[str], *, env: str = env) -> str:
+            title = env.title()
+            if match.group(1):
+                title = f"{title}: {clean_tex_braces(match.group(1)).strip()}"
+            body = match.group(2).strip()
+            label_match = re.search(r"\\label\{([^}]+)\}", body)
+            label = f" [label:{label_match.group(1)}]" if label_match else ""
+            body = re.sub(r"\\label\{[^}]+\}", "", body)
+            return f"\n\n## {title}{label}\n\n{body.strip()}\n\n"
+
+        tex = pattern.sub(repl, tex)
+    return tex
+
+
+def preserve_math_environments(tex: str) -> str:
+    for env in TEX_MATH_ENVS:
+        pattern = re.compile(
+            rf"\\begin\{{{re.escape(env)}\}}(.*?)\\end\{{{re.escape(env)}\}}",
+            re.DOTALL,
+        )
+
+        def repl(match: re.Match[str]) -> str:
+            body = match.group(1).strip()
+            labels = re.findall(r"\\label\{([^}]+)\}", body)
+            body = re.sub(r"\\label\{[^}]+\}", "", body).strip()
+            label_text = "".join(f"[equation:{label}]\n" for label in labels)
+            return f"\n\n{label_text}$$\n{body}\n$$\n\n"
+
+        tex = pattern.sub(repl, tex)
+    return tex
+
+
+def normalize_tex_commands(tex: str) -> str:
+    tex = TEX_INLINE_TEXT_COMMAND_RE.sub(lambda m: m.group(1), tex)
+    tex = re.sub(r"\\(?:cite|citet|citep)\*?(?:\[[^\]]*\])?\{([^}]+)\}", r"[cite:\1]", tex)
+    tex = re.sub(r"\\(?:ref|eqref|autoref|cref|Cref)\{([^}]+)\}", r"[ref:\1]", tex)
+    tex = re.sub(r"\\label\{([^}]+)\}", r"{#\1}", tex)
+    tex = re.sub(r"\\item(?:\[[^\]]*\])?", "\n- ", tex)
+    tex = re.sub(r"\\(begin|end)\{(?:itemize|enumerate|description|center)\}", "\n", tex)
+    return tex
 
 
 def extract_arxiv_id(raw: str) -> str | None:
@@ -52,10 +192,16 @@ def html_to_text(html: str) -> str:
 
 
 def tex_to_text(tex: str, *, title: str) -> str:
-    tex = TEX_COMMENT_RE.sub("", tex)
     tex = tex.replace("\r\n", "\n")
+    tex = strip_tex_comments(tex)
+    tex = strip_tex_preamble(tex)
+    tex = strip_macro_definitions(tex)
+    tex = drop_tex_environments(tex)
+    tex = preserve_theorem_environments(tex)
+    tex = preserve_math_environments(tex)
+    tex = normalize_tex_commands(tex)
     tex = tex.replace("\\[", "\n$$\n").replace("\\]", "\n$$\n")
-    tex = tex.replace("\\(", "$ ").replace("\\)", " $")
+    tex = tex.replace("\\(", "$").replace("\\)", "$")
 
     def section_repl(match: re.Match[str]) -> str:
         level = match.group(1)
@@ -71,13 +217,13 @@ def tex_to_text(tex: str, *, title: str) -> str:
     tex = TEX_SECTION_RE.sub(section_repl, tex)
     tex = re.sub(r"\\begin\{abstract\}", "\n\n## Abstract\n\n", tex)
     tex = re.sub(r"\\end\{abstract\}", "\n\n", tex)
-    tex = re.sub(r"\\begin\{(theorem|lemma|proposition|corollary|definition|remark|proof)\}", lambda m: f"\n\n## {m.group(1).title()}\n\n", tex)
-    tex = re.sub(r"\\end\{(theorem|lemma|proposition|corollary|definition|remark|proof)\}", "\n\n", tex)
+    tex, math_segments = protect_math_segments(tex)
     tex = TEX_COMMAND_RE.sub(" ", tex)
-    tex = re.sub(r"\$\$?", " $ ", tex)
-    tex = re.sub(r"\{|", " ", tex)
-    tex = re.sub(r"\}", " ", tex)
+    tex = clean_tex_braces(tex)
+    tex = restore_math_segments(tex, math_segments)
     tex = re.sub(r"[ \t]+", " ", tex)
+    tex = re.sub(r"[ \t]+\n", "\n", tex)
+    tex = re.sub(r"\n[ \t]+", "\n", tex)
     tex = re.sub(r"\n{3,}", "\n\n", tex)
     return f"# {title}\n\n{tex.strip()}\n"
 

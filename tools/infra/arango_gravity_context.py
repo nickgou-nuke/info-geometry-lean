@@ -313,6 +313,67 @@ def normalize_raw_edge(edge: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def node_rep_layer(node: dict[str, Any]) -> str | None:
+    attrs = node.get("attrs") if isinstance(node.get("attrs"), dict) else {}
+    value = node.get("rep_layer") or attrs.get("rep_layer")
+    return str(value) if value not in (None, "") else None
+
+
+def node_rep_depth(node: dict[str, Any]) -> int | str | None:
+    attrs = node.get("attrs") if isinstance(node.get("attrs"), dict) else {}
+    value = node.get("rep_depth")
+    if value is None:
+        value = node.get("rep_depth_nat")
+    if value is None:
+        value = attrs.get("rep_depth_nat")
+    return value if value not in ("", None) else None
+
+
+def node_rep_depth_slug(node: dict[str, Any]) -> str | None:
+    attrs = node.get("attrs") if isinstance(node.get("attrs"), dict) else {}
+    value = node.get("rep_depth_slug") or attrs.get("rep_depth_slug")
+    return str(value) if value not in (None, "") else None
+
+
+def node_rep_layer_description(node: dict[str, Any]) -> str | None:
+    attrs = node.get("attrs") if isinstance(node.get("attrs"), dict) else {}
+    value = node.get("rep_layer_description") or attrs.get("rep_layer_description")
+    return str(value) if value not in (None, "") else None
+
+
+def rep_layer_counts(nodes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    counts: collections.Counter[str | None] = collections.Counter(node_rep_layer(node) for node in nodes)
+    depth_by_layer: dict[str | None, set[Any]] = collections.defaultdict(set)
+    slug_by_layer: dict[str | None, set[str]] = collections.defaultdict(set)
+    for node in nodes:
+        layer = node_rep_layer(node)
+        depth = node_rep_depth(node)
+        slug = node_rep_depth_slug(node)
+        if depth is not None:
+            depth_by_layer[layer].add(depth)
+        if slug:
+            slug_by_layer[layer].add(slug)
+
+    def sort_key(item: tuple[str | None, int]) -> tuple[int, str]:
+        layer, _count = item
+        if layer is None:
+            return (-1, "")
+        match = re.match(r"L(\d+)_", layer)
+        return (int(match.group(1)) if match else 999, layer)
+
+    rows: list[dict[str, Any]] = []
+    for layer, count in sorted(counts.items(), key=sort_key):
+        rows.append(
+            {
+                "rep_layer": layer,
+                "count": count,
+                "rep_depths": sorted(depth_by_layer.get(layer, set()), key=lambda value: str(value)),
+                "rep_depth_slugs": sorted(slug_by_layer.get(layer, set())),
+            }
+        )
+    return rows
+
+
 def load_faithful_arango(
     base_url: str,
     db: str,
@@ -682,6 +743,13 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
                 )
             )
         ]
+    requested_rep_layers = set(args.rep_layer or [])
+    if requested_rep_layers:
+        ranked = [
+            (node_id, score)
+            for node_id, score in ranked
+            if node_rep_layer(nodes_by_id[node_id]) in requested_rep_layers
+        ]
     faithful_index: dict[str, dict[str, Any]] = {}
     if args.graph_mode == "hybrid":
         candidate_names: list[str] = []
@@ -726,9 +794,10 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
                 "doc": attrs.get("doc") or "",
                 "file": node.get("file"),
                 "line": node.get("line"),
-                "rep_depth": node.get("rep_depth"),
-                "rep_depth_slug": node.get("rep_depth_slug") or attrs.get("rep_depth_slug"),
-                "rep_layer": node.get("rep_layer") or attrs.get("rep_layer"),
+                "rep_depth": node_rep_depth(node),
+                "rep_depth_slug": node_rep_depth_slug(node),
+                "rep_layer": node_rep_layer(node),
+                "rep_layer_description": node_rep_layer_description(node),
                 "module_family": node.get("module_family"),
                 "score": round(float(score), 6),
                 "distance": distances.get(node_id),
@@ -763,8 +832,11 @@ def build_context(args: argparse.Namespace) -> dict[str, Any]:
         "seed_scc_count": len(seed_sccs),
         "scc_anchor_first": bool(args.scc_anchor_first),
         "require_scc_anchor": bool(args.require_scc_anchor),
+        "requested_rep_layers": sorted(requested_rep_layers),
         "node_count": len(nodes),
         "edge_count": len(edges),
+        "graph_rep_layer_counts": rep_layer_counts(nodes),
+        "result_rep_layer_counts": rep_layer_counts(items),
         "top_k": args.top_k,
         "items": items,
         "prompt_policy": {
@@ -810,6 +882,7 @@ def build_context_from_query(
     scc_anchor_weight: float = 120.0,
     scc_anchor_first: bool = True,
     require_scc_anchor: bool = True,
+    rep_layer: list[str] | None = None,
 ) -> dict[str, Any]:
     """Programmatic entry point for bounded agents."""
     args = argparse.Namespace(
@@ -845,6 +918,7 @@ def build_context_from_query(
         scc_anchor_weight=scc_anchor_weight,
         scc_anchor_first=scc_anchor_first,
         require_scc_anchor=require_scc_anchor,
+        rep_layer=rep_layer or [],
     )
     return build_context(args)
 
@@ -858,9 +932,22 @@ def write_markdown(packet: dict[str, Any], path: Path) -> None:
         f"- Nodes: `{packet['node_count']}`",
         f"- Edges: `{packet['edge_count']}`",
         f"- Synonym groups: `{packet.get('synonym_expansion', {}).get('matched_group_count', 0)}`",
+        f"- Requested layers: `{', '.join(packet.get('requested_rep_layers') or []) or 'all'}`",
         f"- Promotion allowed: `false`",
         "",
     ]
+    graph_layers = packet.get("graph_rep_layer_counts") or []
+    if graph_layers:
+        lines.extend(["## Representation Layers", ""])
+        for row in graph_layers:
+            layer = row.get("rep_layer") or "unlabeled"
+            depths = ", ".join(str(depth) for depth in row.get("rep_depths") or [])
+            slugs = ", ".join(str(slug) for slug in row.get("rep_depth_slugs") or [])
+            detail = f"; depth `{depths}`" if depths else ""
+            if slugs:
+                detail += f"; slug `{slugs}`"
+            lines.append(f"- `{layer}`: `{row.get('count')}`{detail}")
+        lines.append("")
     synonym_expansion = packet.get("synonym_expansion") or {}
     if synonym_expansion.get("matched_groups"):
         lines.extend(["## Synonym Expansion", ""])
@@ -881,11 +968,16 @@ def write_markdown(packet: dict[str, Any], path: Path) -> None:
                 f"- Distance: `{item['distance']}`",
                 f"- Module: `{item.get('module')}`",
                 f"- Declaration kind: `{item.get('decl_kind')}`",
+                f"- Representation layer: `{item.get('rep_layer')}`",
+                f"- Representation depth: `{item.get('rep_depth')}`",
+                f"- Representation slug: `{item.get('rep_depth_slug')}`",
                 f"- File: `{item.get('file')}`",
                 f"- Line: `{item.get('line')}`",
                 "",
             ]
         )
+        if item.get("rep_layer_description"):
+            lines.extend([f"Layer note: {item['rep_layer_description']}", ""])
         if item.get("doc"):
             lines.extend(["Doc:", "", item["doc"], ""])
         witness = item.get("faithful_witness")
@@ -963,6 +1055,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="In faithful SCC-first mode, return no graph context if no lexical/synonym SCC anchor exists.",
     )
     parser.add_argument("--top-k", type=int, default=8)
+    parser.add_argument(
+        "--rep-layer",
+        action="append",
+        default=[],
+        help="Restrict returned declarations to a representation layer such as L4_ModularTransport. Repeatable.",
+    )
     parser.add_argument("--max-hops", type=int, default=2)
     parser.add_argument("--source-radius", type=int, default=4)
     parser.add_argument("--equivalence-dictionary", type=Path, default=DEFAULT_EQUIVALENCE_DICTIONARY)

@@ -1535,9 +1535,9 @@ def generate_md_report(scored: list[ScoredDecl]) -> str:
     n_warnings = sum(1 for s in scored if any(v[0] == "warning" for v in s.violations) and not any(v[0] == "error" for v in s.violations))
     n_clean = total - n_violations
 
-    lines.append(f"**Declarations scored:** {total}  ")
-    lines.append(f"**With violations:** {n_violations} ({n_errors} error, {n_warnings} warning-only)  ")
-    lines.append(f"**Clean:** {n_clean}  \n")
+    lines.append(f"**Declarations scored:** {total}")
+    lines.append(f"**With violations:** {n_violations} ({n_errors} error, {n_warnings} warning-only)")
+    lines.append(f"**Clean:** {n_clean}\n")
 
     # Tag distribution
     tag_counts: Counter[str] = Counter()

@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Canonical.ModularSourceBridge
 import InfoGeometry.Canonical.BogoliubovTransport
+import InfoGeometry.Canonical.TransportLieDerivative
 import InfoGeometry.Meta.Architecture
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.Normed.Algebra.Exponential
@@ -102,18 +103,15 @@ structure ModularMellinLattice (E : Type 0) [NormedAddCommGroup E]
   /-- Drazin-cut compatibility. -/
   commutes_with_drazin : Commute K0 (CertifiedInverseKernel.spectralProjector (E := DoubledSpace E) CIK)
   /--
-  Explicit Drazin fixed-point gate for sampled Bogoliubov transport.
+  The Drazin projector commutes with the doubled-real phase axis.
 
-  This is required proof data. The discrete Mellin lattice must not infer
-  projector invariance merely from the presence of a modular generator.
+  Together with `commutes_with_drazin`, this gives a constructive proof that
+  the modular transport generator `K0 ∘ K` commutes with the Drazin projector.
   -/
-  drazin_projector_invariant_gate :
-    ∀ k : ℤ,
-      let X : DoubledSpace E →L[ℝ] DoubledSpace E := modularTransportGenerator (E := E) K0
-      expTransport (A := DoubledSpace E →L[ℝ] DoubledSpace E) X
-        (CertifiedInverseKernel.spectralProjector (E := DoubledSpace E) CIK)
-        ((k : ℝ) * Real.log q)
-        = CertifiedInverseKernel.spectralProjector (E := DoubledSpace E) CIK
+  phaseAxis_commutes_with_drazin :
+    Commute
+      (InfoGeometry.Krein.clockAxis (E := E))
+      (CertifiedInverseKernel.spectralProjector (E := DoubledSpace E) CIK)
 
 namespace ModularMellinLattice
 
@@ -126,6 +124,8 @@ local notation "EndH_loc" => H₂_loc →L[ℝ] H₂_loc
 
 noncomputable local instance : NormedRing EndH_loc := inferInstance
 noncomputable local instance : NormedAlgebra ℝ EndH_loc := inferInstance
+noncomputable local instance : NormedAlgebra ℚ EndH_loc :=
+  NormedAlgebra.restrictScalars ℚ ℝ EndH_loc
 local instance : IsTopologicalRing EndH_loc := inferInstance
 local instance : CompleteSpace EndH_loc := inferInstance
 
@@ -141,14 +141,68 @@ noncomputable def discreteBoost (k : ℤ) (A : EndH_loc) : EndH_loc :=
   expTransport (A := EndH_loc) X A (L.thermalTimeStep k)
 
 /--
+The true modular transport generator `K0 ∘ K` commutes with the Drazin projector
+when both `K0` and the doubled phase axis `K` commute with it.
+-/
+@[rep_depth operator]
+theorem modularTransportGenerator_commutes_drazin :
+    Commute
+      (modularTransportGenerator (E := E) L.K0)
+      (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK) := by
+  have hPhase :
+      (InfoGeometry.Krein.clockAxis (E := E)).comp
+          (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK)
+        =
+      (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK).comp
+          (InfoGeometry.Krein.clockAxis (E := E)) := by
+    simpa using L.phaseAxis_commutes_with_drazin.eq
+  have hK0 :
+      L.K0.comp (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK)
+        =
+      (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK).comp L.K0 := by
+    simpa using L.commutes_with_drazin.eq
+  unfold modularTransportGenerator
+  rw [Commute, SemiconjBy]
+  calc
+    (L.K0.comp (InfoGeometry.Krein.clockAxis (E := E))).comp
+        (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK)
+        =
+      L.K0.comp
+        ((InfoGeometry.Krein.clockAxis (E := E)).comp
+          (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK)) := by
+            rw [ContinuousLinearMap.comp_assoc]
+    _ =
+      L.K0.comp
+        ((CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK).comp
+          (InfoGeometry.Krein.clockAxis (E := E))) := by
+            rw [hPhase]
+    _ =
+      (L.K0.comp (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK)).comp
+        (InfoGeometry.Krein.clockAxis (E := E)) := by
+            rw [ContinuousLinearMap.comp_assoc]
+    _ =
+      ((CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK).comp L.K0).comp
+        (InfoGeometry.Krein.clockAxis (E := E)) := by
+            rw [hK0]
+    _ =
+      (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK).comp
+        (L.K0.comp (InfoGeometry.Krein.clockAxis (E := E))) := by
+            rw [ContinuousLinearMap.comp_assoc]
+
+/--
 The Drazin projector is invariant under the sampled modular boost.
-Confirmed fixed-point gate for the coordinate-free lattice.
+Constructed from finite exponential transport and commutation, not carried as
+a raw invariance hypothesis.
 -/
 @[rep_depth operator]
 theorem drazin_projector_invariant (k : ℤ) :
     L.discreteBoost k (CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK) = 
       CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK :=
-  L.drazin_projector_invariant_gate k
+  InfoGeometry.Canonical.expTransport_eq_self_of_commute
+    (X := modularTransportGenerator (E := E) L.K0)
+    (A₀ := CertifiedInverseKernel.spectralProjector (E := H₂_loc) CIK)
+    (t := L.thermalTimeStep k)
+    (modularTransportGenerator_commutes_drazin (L := L)).symm
 
 /--
 Algebraic band-limit predicate for future discrete Mellin sums.

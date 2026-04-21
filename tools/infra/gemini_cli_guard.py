@@ -54,6 +54,7 @@ def evaluate(
     min_interval_seconds: int,
     max_calls_per_day: int,
     jitter_seconds: int,
+    allow_burst: bool,
 ) -> tuple[bool, str, int]:
     if min_interval_seconds < 0:
         return False, "invalid policy: min_interval_seconds must be non-negative", 0
@@ -64,7 +65,7 @@ def evaluate(
 
     events = sorted(state.get("events", []), key=lambda item: float(item.get("time", 0)))
     last = events[-1] if events else None
-    if last:
+    if last and not allow_burst:
         required_interval = min_interval_seconds + int(last.get("jitter_seconds", 0))
         elapsed = now - float(last.get("time", 0))
         if elapsed < required_interval:
@@ -90,6 +91,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--operator", default="goutev")
     parser.add_argument("--now", type=float, help=argparse.SUPPRESS)
     parser.add_argument("--check", action="store_true", help="Only check allowance; do not record usage.")
+    parser.add_argument("--allow-burst", action="store_true", help="Skip inter-call interval for an explicit bounded loop, while keeping daily limits.")
     parser.add_argument("--json", action="store_true", help="Emit JSON status.")
     return parser.parse_args()
 
@@ -119,6 +121,7 @@ def main() -> int:
         min_interval_seconds=args.min_interval_seconds,
         max_calls_per_day=args.max_calls_per_day,
         jitter_seconds=args.jitter_seconds,
+        allow_burst=args.allow_burst,
     )
 
     if allowed and not args.check:
@@ -143,6 +146,7 @@ def main() -> int:
                 "explicit_operator_only": True,
                 "auto_route": False,
                 "mode": "irregular_dreaming_sidecar",
+                "allow_burst": args.allow_burst,
             },
             "events": events[-200:],
         }
@@ -155,6 +159,7 @@ def main() -> int:
         "state": str(args.state),
         "check_only": args.check,
         "mode": "irregular_dreaming_sidecar",
+        "allow_burst": args.allow_burst,
     }
     if args.json:
         print(json.dumps(payload, indent=2, sort_keys=True))

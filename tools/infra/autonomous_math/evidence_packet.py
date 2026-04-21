@@ -36,6 +36,45 @@ class EvidencePacket:
         return asdict(self)
 
 
+def from_dict(payload: dict[str, Any]) -> EvidencePacket:
+    evidence_rows = payload.get("evidence", [])
+    target_rows = payload.get("formalization_targets", [])
+    phase_rows = payload.get("phase_log", [])
+    evidence: list[EvidenceClaim] = []
+    for row in evidence_rows if isinstance(evidence_rows, list) else []:
+        if not isinstance(row, dict):
+            continue
+        evidence.append(
+            EvidenceClaim(
+                claim=str(row.get("claim", "")).strip(),
+                sources=[str(x).strip() for x in row.get("sources", []) if str(x).strip()] if isinstance(row.get("sources", []), list) else [],
+                confidence=str(row.get("confidence", "")).strip() or "medium",
+                evidence_summary=str(row.get("evidence_summary", "")).strip(),
+            )
+        )
+    targets: list[FormalizationTarget] = []
+    for row in target_rows if isinstance(target_rows, list) else []:
+        if not isinstance(row, dict):
+            continue
+        targets.append(
+            FormalizationTarget(
+                kind=str(row.get("kind", "")).strip() or "theorem",
+                name=str(row.get("name", "")).strip() or "unnamed_target",
+                note=str(row.get("note", "")).strip(),
+            )
+        )
+    phases = [row for row in phase_rows if isinstance(row, dict)] if isinstance(phase_rows, list) else []
+    return EvidencePacket(
+        research_goal=str(payload.get("research_goal", "")).strip() or "unspecified goal",
+        evidence=evidence,
+        open_problems=[str(x).strip() for x in payload.get("open_problems", []) if str(x).strip()] if isinstance(payload.get("open_problems", []), list) else [],
+        candidate_invariants=[str(x).strip() for x in payload.get("candidate_invariants", []) if str(x).strip()] if isinstance(payload.get("candidate_invariants", []), list) else [],
+        forbidden_moves=[str(x).strip() for x in payload.get("forbidden_moves", []) if str(x).strip()] if isinstance(payload.get("forbidden_moves", []), list) else [],
+        formalization_targets=targets,
+        phase_log=phases,
+    )
+
+
 def _confidence_bucket(value: float) -> str:
     if value >= 0.8:
         return "high"

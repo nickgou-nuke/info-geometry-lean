@@ -32,6 +32,7 @@ local instance : SMulCommClass ℝ EndH EndH := inferInstance
 local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /-- Witness-level inverse kernel with chosen Drazin and Moore-Penrose data. -/
+@[rep_depth krein]
 structure InverseKernel (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] where
   A : E →L[ℝ] E
@@ -42,6 +43,7 @@ structure InverseKernel (E : Type*) [NormedAddCommGroup E] [InnerProductSpace �
 Proof-carrying certified inverse kernel. This is the canonical center bundle for
 inverse/projector/anomaly data.
 -/
+@[rep_depth krein]
 structure CertifiedInverseKernel (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] extends InverseKernel E where
   drazinIndex : ℕ

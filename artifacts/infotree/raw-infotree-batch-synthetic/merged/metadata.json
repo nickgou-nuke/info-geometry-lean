@@ -1,0 +1,43 @@
+{
+  "schema": "info_geometry.raw_infotree_batch_export.v1",
+  "stage": "stage_2_tactic_lctx_bridge_batch",
+  "file_count": 1,
+  "fully_lossless": false,
+  "loss_audited": true,
+  "source_metadata": [
+    {
+      "stage": "stage_2_tactic_lctx_bridge",
+      "schema": "info_geometry.raw_infotree_export.v1",
+      "root_count": 2,
+      "payload_field_count": 317,
+      "payload_count": 51,
+      "node_count": 112,
+      "module": "tmp.raw_infotree_stage2_synthetic",
+      "mctx_ref_count": 52,
+      "mctx_decl_count": 361,
+      "loss_audited": true,
+      "leakage_count": 383,
+      "lctx_decl_count": 1233,
+      "fully_lossless": false,
+      "file": "tmp/raw_infotree_stage2_synthetic.lean",
+      "env_ref_count": 76,
+      "edge_count": 110,
+      "decl_link_count": 24,
+      "context_count": 61
+    }
+  ],
+  "counts": {
+    "raw_infotree_roots.jsonl": 2,
+    "raw_infotree_nodes.jsonl": 112,
+    "raw_infotree_edges.jsonl": 110,
+    "raw_infotree_contexts.jsonl": 61,
+    "raw_infotree_payloads.jsonl": 51,
+    "raw_infotree_payload_fields.jsonl": 317,
+    "raw_infotree_decl_links.jsonl": 24,
+    "raw_infotree_env_refs.jsonl": 76,
+    "raw_infotree_mctx_refs.jsonl": 52,
+    "raw_infotree_mctx_decls.jsonl": 361,
+    "raw_infotree_lctx_decls.jsonl": 1233,
+    "raw_infotree_projection_leakage.jsonl": 383
+  }
+}

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.DrazinSupercharge
+import InfoGeometry.Canonical.Cl11PolarizedBasis
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -159,6 +160,176 @@ theorem spectralCommutator_compact_mem_chiralOperatorCone
     CertifiedInverseKernel.IsSpectralNonCompact,
     CertifiedInverseKernel.cartanTriple,
     CertifiedInverseKernel.toInformationCartanTriple] using hComm
+
+/-! ## Operator-algebra closure surface -/
+
+/--
+The associative product of two chiral-cone operators is spectrally compact.
+
+Thus the chiral cone is not closed under multiplication as a cone; instead,
+the product closes in the even/compact lane.
+-/
+@[rep_depth krein]
+theorem mul_mem_spectralCompact_of_chiralOperatorCone
+    (CIK : CertifiedInverseKernel E)
+    {X Y : EndH}
+    (hX : IsInChiralOperatorCone CIK X)
+    (hY : IsInChiralOperatorCone CIK Y) :
+    CIK.IsSpectralCompact (X * Y) := by
+  rw [CertifiedInverseKernel.isSpectralCompact_iff_commute_GammaS]
+  rw [isInChiralOperatorCone_iff_anticommute_GammaS (CIK := CIK)] at hX hY
+  calc
+    (X * Y) * CIK.GammaS = X * (Y * CIK.GammaS) := by
+      simp [mul_assoc]
+    _ = X * (-(CIK.GammaS * Y)) := by rw [hY]
+    _ = -(X * (CIK.GammaS * Y)) := by simp
+    _ = -((X * CIK.GammaS) * Y) := by simp [mul_assoc]
+    _ = -((-(CIK.GammaS * X)) * Y) := by rw [hX]
+    _ = CIK.GammaS * (X * Y) := by simp [mul_assoc]
+
+/--
+The anticommutator of two chiral-cone operators lands in the spectrally
+compact lane.
+-/
+@[rep_depth krein]
+theorem anticommutator_mem_spectralCompact_of_chiralOperatorCone
+    (CIK : CertifiedInverseKernel E)
+    {X Y : EndH}
+    (hX : IsInChiralOperatorCone CIK X)
+    (hY : IsInChiralOperatorCone CIK Y) :
+    CIK.IsSpectralCompact (DrazinSupercharge.anticommutator X Y) := by
+  have hXY : CIK.IsSpectralCompact (X * Y) :=
+    mul_mem_spectralCompact_of_chiralOperatorCone (CIK := CIK) hX hY
+  have hYX : CIK.IsSpectralCompact (Y * X) :=
+    mul_mem_spectralCompact_of_chiralOperatorCone (CIK := CIK) hY hX
+  rw [CertifiedInverseKernel.isSpectralCompact_iff_commute_GammaS] at hXY hYX ⊢
+  unfold DrazinSupercharge.anticommutator
+  calc
+    (X * Y + Y * X) * CIK.GammaS
+        = (X * Y) * CIK.GammaS + (Y * X) * CIK.GammaS := by
+            simp [add_mul]
+    _ = CIK.GammaS * (X * Y) + CIK.GammaS * (Y * X) := by
+          rw [hXY, hYX]
+    _ = CIK.GammaS * (X * Y + Y * X) := by
+          simp [mul_add]
+
+/--
+The Lie commutator of two chiral-cone operators lands in the spectrally
+compact lane: `[𝔭_S, 𝔭_S] ⊆ 𝔨_S`.
+-/
+@[rep_depth krein]
+theorem spectralCommutator_chiral_chiral_mem_spectralCompact
+    (CIK : CertifiedInverseKernel E)
+    {X Y : EndH}
+    (hX : IsInChiralOperatorCone CIK X)
+    (hY : IsInChiralOperatorCone CIK Y) :
+    CIK.IsSpectralCompact (CertifiedInverseKernel.spectralCommutator X Y) := by
+  let T := CIK.toInformationCartanTriple
+  have hX' : T.IsSpectralNonCompact X := by
+    simpa [T, IsInChiralOperatorCone,
+      CertifiedInverseKernel.IsSpectralNonCompact,
+      CertifiedInverseKernel.cartanTriple,
+      CertifiedInverseKernel.toInformationCartanTriple] using hX
+  have hY' : T.IsSpectralNonCompact Y := by
+    simpa [T, IsInChiralOperatorCone,
+      CertifiedInverseKernel.IsSpectralNonCompact,
+      CertifiedInverseKernel.cartanTriple,
+      CertifiedInverseKernel.toInformationCartanTriple] using hY
+  have hComm : T.IsSpectralCompact (InformationCartanTriple.spectralCommutator X Y) :=
+    InformationCartanTriple.spectralCommutator_mem_compact_of_noncompact
+      T CIK.hDrazin hX' hY'
+  simpa [T, CertifiedInverseKernel.spectralCommutator,
+    CertifiedInverseKernel.IsSpectralCompact,
+    CertifiedInverseKernel.cartanTriple,
+    CertifiedInverseKernel.toInformationCartanTriple] using hComm
+
+/-! ## Circular-polarized and projector enrollment -/
+
+/--
+If the split `Cl(1,1)` grading `eps` is the certified spectral grading `Γ_S`,
+then `P+` is a spectrally compact operator.
+-/
+@[rep_depth krein]
+theorem plusProjector_mem_spectralCompact_of_eps_eq_GammaS
+    (CIK : CertifiedInverseKernel E)
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (hΓ : X.eps = CIK.GammaS) :
+    CIK.IsSpectralCompact (KKTCore.plusProjector X) := by
+  rw [CertifiedInverseKernel.isSpectralCompact_iff_commute_GammaS]
+  rw [← hΓ]
+  rw [KKTCore.plusProjector_mul_eps, KKTCore.eps_mul_plusProjector]
+
+/--
+If the split `Cl(1,1)` grading `eps` is the certified spectral grading `Γ_S`,
+then `P-` is a spectrally compact operator.
+-/
+@[rep_depth krein]
+theorem minusProjector_mem_spectralCompact_of_eps_eq_GammaS
+    (CIK : CertifiedInverseKernel E)
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (hΓ : X.eps = CIK.GammaS) :
+    CIK.IsSpectralCompact (KKTCore.minusProjector X) := by
+  rw [CertifiedInverseKernel.isSpectralCompact_iff_commute_GammaS]
+  rw [← hΓ]
+  rw [KKTCore.minusProjector_mul_eps, KKTCore.eps_mul_minusProjector]
+
+/--
+If the split `Cl(1,1)` grading `eps` is the certified spectral grading `Γ_S`,
+then the circularly polarized `u+` operator is in the chiral cone.
+-/
+@[rep_depth krein]
+theorem uPlus_mem_chiralOperatorCone_of_eps_eq_GammaS
+    (CIK : CertifiedInverseKernel E)
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (A : EndH)
+    (hΓ : X.eps = CIK.GammaS) :
+    IsInChiralOperatorCone CIK (Cl11PolarizedBasis.uPlus X A) := by
+  rw [isInChiralOperatorCone_iff_anticommute_GammaS (CIK := CIK)]
+  rw [← hΓ]
+  have hOdd :=
+    Cl11PolarizedBasis.eps_mul_eq_neg_mul_eps_of_isUPlus
+      (X := X) (A := A)
+  rw [hOdd]
+  simp
+
+/--
+If the split `Cl(1,1)` grading `eps` is the certified spectral grading `Γ_S`,
+then the circularly polarized `u-` operator is in the chiral cone.
+-/
+@[rep_depth krein]
+theorem uMinus_mem_chiralOperatorCone_of_eps_eq_GammaS
+    (CIK : CertifiedInverseKernel E)
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (A : EndH)
+    (hΓ : X.eps = CIK.GammaS) :
+    IsInChiralOperatorCone CIK (Cl11PolarizedBasis.uMinus X A) := by
+  rw [isInChiralOperatorCone_iff_anticommute_GammaS (CIK := CIK)]
+  rw [← hΓ]
+  have hOdd :=
+    Cl11PolarizedBasis.eps_mul_eq_neg_mul_eps_of_isUMinus
+      (X := X) (A := A)
+  rw [hOdd]
+  simp
+
+/--
+With `eps = Γ_S`, the circularly polarized commutator `[u+, u-]` closes in
+the spectrally compact lane of the chiral-cone algebra.
+-/
+@[rep_depth krein]
+theorem spectralCommutator_uPlus_uMinus_mem_spectralCompact_of_eps_eq_GammaS
+    (CIK : CertifiedInverseKernel E)
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E)
+    (A B : EndH)
+    (hΓ : X.eps = CIK.GammaS) :
+    CIK.IsSpectralCompact
+      (CertifiedInverseKernel.spectralCommutator
+        (Cl11PolarizedBasis.uPlus X A) (Cl11PolarizedBasis.uMinus X B)) := by
+  exact spectralCommutator_chiral_chiral_mem_spectralCompact
+    (CIK := CIK)
+    (uPlus_mem_chiralOperatorCone_of_eps_eq_GammaS
+      (CIK := CIK) (X := X) (A := A) hΓ)
+    (uMinus_mem_chiralOperatorCone_of_eps_eq_GammaS
+      (CIK := CIK) (X := X) (A := B) hΓ)
 
 /-- The projected Drazin supercharge is a canonical element of the chiral cone. -/
 @[rep_depth krein]

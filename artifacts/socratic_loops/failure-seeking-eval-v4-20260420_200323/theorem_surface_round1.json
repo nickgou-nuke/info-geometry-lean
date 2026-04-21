@@ -1,0 +1,9 @@
+{
+  "round": 1,
+  "surface": {
+    "goal": "assumes exactly the logarithmic\ncompatibility needed for negative logarithm to become additive.\n-/",
+    "kind": "theorem",
+    "name": "surface",
+    "tactic": ""
+  }
+}

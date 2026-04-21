@@ -403,6 +403,7 @@ import InfoGeometry.Canonical.SplitCliffordThermalBridge
 import InfoGeometry.Canonical.OperatorialInformationLift
 import InfoGeometry.Canonical.Operators
 import InfoGeometry.Canonical.OperatorThermoBridge
+import InfoGeometry.Canonical.OperatorialFierzBridge
 
 -- L5: thermodynamic / attention surface
 import InfoGeometry.Canonical.AttentionPolarizedSplit

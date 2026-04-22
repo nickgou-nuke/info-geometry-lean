@@ -462,6 +462,20 @@ theorem operatorPartition_eq_operatorSupercharacter_ofFermionicCorrection
   (ofFermionicCorrection (α := α) (H := H) gibbs fermionicReadout).operatorPartition_eq_operatorSupercharacter
 
 /--
+For the constructive fermionic-correction constructor, the Massieu potential is
+the logarithm of the operatorial boson-minus-fermion supercharacter without
+carrying a separate split-equality hypothesis.
+-/
+@[rep_depth transport]
+theorem operatorMassieu_eq_log_operatorSupercharacter_ofFermionicCorrection
+    (gibbs : ConformalGibbsSouriauOperatorContext (α := α) (H := H))
+    (fermionicReadout : EndH₂ →L[ℝ] ℝ) :
+    gibbs.operatorMassieu =
+      Real.log
+        ((ofFermionicCorrection (α := α) (H := H) gibbs fermionicReadout).operatorSupercharacter) :=
+  (ofFermionicCorrection (α := α) (H := H) gibbs fermionicReadout).operatorMassieu_eq_log_operatorSupercharacter
+
+/--
 Pure bosonic special case: the operatorial Souriau partition is its
 supercharacter with zero fermionic correction.
 -/
@@ -471,6 +485,17 @@ theorem operatorPartition_eq_operatorSupercharacter_ofPureBosonicReadout
     gibbs.operatorPartition =
       (ofPureBosonicReadout (α := α) (H := H) gibbs).operatorSupercharacter :=
   (ofPureBosonicReadout (α := α) (H := H) gibbs).operatorPartition_eq_operatorSupercharacter
+
+/--
+Pure bosonic special case: the Massieu potential is the logarithm of the
+operatorial supercharacter with zero fermionic correction.
+-/
+@[rep_depth transport]
+theorem operatorMassieu_eq_log_operatorSupercharacter_ofPureBosonicReadout
+    (gibbs : ConformalGibbsSouriauOperatorContext (α := α) (H := H)) :
+    gibbs.operatorMassieu =
+      Real.log ((ofPureBosonicReadout (α := α) (H := H) gibbs).operatorSupercharacter) :=
+  (ofPureBosonicReadout (α := α) (H := H) gibbs).operatorMassieu_eq_log_operatorSupercharacter
 
 end OperatorialWeylSupercharacterContext
 

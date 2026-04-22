@@ -58,6 +58,17 @@ def test_extract_tactic_supports_label_and_fenced_blocks() -> None:
     assert hive_bee.extract_tactic("```lean\nrfl\n```") == "rfl"
 
 
+def test_generated_theorem_source_indexes_verified_fossil() -> None:
+    theorem_name, source = hive_bee.generated_theorem_source(sample_goal(), sample_task(), "rfl")
+
+    assert theorem_name == "hive_Demo_task_123"
+    assert "import Init" in source
+    assert "import InfoGeometry.Meta.HiveLogos" in source
+    assert "theorem hive_Demo_task_123 : 1 = 1 := by" in source
+    assert "  rfl" in source
+    assert "#hive_index_decl hive_Demo_task_123" in source
+
+
 def test_build_deadend_doc_captures_recirculation_memory() -> None:
     doc = hive_bee.build_deadend_doc(
         sample_goal(),

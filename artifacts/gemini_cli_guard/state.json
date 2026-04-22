@@ -83,17 +83,24 @@
       "operator": "goutev",
       "reason": "batch Socratic alchemy gemini round 2",
       "time": 1776706893.7220864
+    },
+    {
+      "iso_utc": "2026-04-22T20:07:35Z",
+      "jitter_seconds": 523,
+      "operator": "goutev",
+      "reason": "explicit operator request",
+      "time": 1776888455.0791557
     }
   ],
   "policy": {
-    "allow_burst": true,
+    "allow_burst": false,
     "auto_route": false,
     "explicit_operator_only": true,
-    "jitter_seconds": 0,
+    "jitter_seconds": 900,
     "max_calls_per_day": 12,
-    "min_interval_seconds": 0,
+    "min_interval_seconds": 1800,
     "mode": "irregular_dreaming_sidecar"
   },
   "schema": "gemini_cli_guard.v1",
-  "updated_at": "2026-04-20T17:41:33Z"
+  "updated_at": "2026-04-22T20:07:35Z"
 }

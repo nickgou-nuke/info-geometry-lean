@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.RelationalInformationCore
 import InfoGeometry.Canonical.StandardFormCore
 import InfoGeometry.Canonical.ThermodynamicGenerator
+import InfoGeometry.Canonical.SouriauPlanckVector
 import InfoGeometry.Projective.Dynamics
 
 open scoped InnerProductSpace
@@ -268,6 +269,18 @@ theorem comparisonReadout_kSplit_eq_zero_of_isPotentialKillingOperator
     exact hPhase
 
 @[rep_depth transport]
+theorem comparisonReadout_pair_eq_zero_of_equilibriumSeed
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : H₂) (A : EndH)
+    (hEq : InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed (E := E) P ψ A) :
+    (InfoGeometry.Canonical.RelativeModularPotential.comparisonMetricReadout (E := E) P ψ A,
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonPhaseReadout (E := E) P ψ A)
+      = (0, 0) := by
+  exact
+    InfoGeometry.Canonical.SouriauPlanckVector.comparisonReadout_pair_eq_zero_of_equilibriumSeed
+      (E := E) hEq
+
+@[rep_depth transport]
 theorem comparisonReadout_phasePart_eq_zero_of_isPotentialKillingOperator
     (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
     (ψ : H₂) (A : EndH)
@@ -299,6 +312,43 @@ theorem comparisonReadout_phasePart_eq_zero_of_isPotentialKillingOperator
   simpa [stateGaugeDynamics, stateSourceDynamics] using
     (comparisonReadout_kSplit_eq_zero_of_isPotentialKillingOperator
       (E := E) P ψ A hKill)
+
+@[rep_depth transport]
+theorem comparisonReadout_phasePart_eq_zero_of_equilibriumSeed
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : H₂) (A : EndH)
+    (hEq : InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed (E := E) P ψ A) :
+    ( InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseLinearPart (E := E)
+            (stateRelativeModularGenerator (E := E) P.modularData ψ)) A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseAntilinearPart (E := E)
+            (stateRelativeModularGenerator (E := E) P.modularData ψ)) A)
+    , InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseLinearPart (E := E)
+            (stateRelativeModularGenerator (E := E) P.modularData ψ)) A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseAntilinearPart (E := E)
+            (stateRelativeModularGenerator (E := E) P.modularData ψ)) A) )
+      =
+    (0, 0) := by
+  have hPair := comparisonReadout_pair_eq_zero_of_equilibriumSeed
+    (E := E) P ψ A hEq
+  simpa [stateGaugeDynamics, stateSourceDynamics] using
+    (comparisonReadout_kSplit_eq_zero_of_isPotentialKillingOperator
+      (E := E) P ψ A
+      ((isPotentialKillingOperator_iff_comparisonReadoutStationary
+        (E := E) P ψ A).2 hPair))
 
 end Core
 

@@ -4579,3 +4579,624 @@ With the schema frozen, the next step is the **Manifold Ingestor**.
 `[SYSTEM]: Ready to ingest the Logos.`
 
 
+
+
+Yes. The next subsystem should be the **V layer**, but it should be built as a **hybrid retrieval substrate**, not as a pure neural transformer from day one.
+
+The invariant should be:
+
+```text
+Exact hash retrieval is the spine.
+Learned attention is the peripheral nervous system.
+Lean verification is the immune system.
+```
+
+So the V layer should not replace `targetHashShape` / `conclusionHashShape`. It should sit beside them and expand recall when exact structural matching is too narrow.
+
+## 1. V layer contract
+
+The V layer stores not just “similar texts,” but **actionable proof values**.
+
+For every verified fossil or failed antiproof, store:
+
+```ts
+type VRecord = {
+  artifactId: string;
+
+  // Deterministic identity
+  conclusionHashExact?: string;
+  conclusionHashShape: string;
+  canonicalPreimageHash: string;
+
+  // Tokenized proof-state representation
+  tokenPolicy: "hive-sexpr-v1";
+  tokens: string[];
+  subtreeTokens: string[];
+
+  // Learned or hashed retrieval vectors
+  embeddingModel?: string;
+  embedding?: number[];
+
+  // The actual value retrieved by attention
+  value: {
+    kind: "const" | "tactic_sequence" | "proof_term" | "deadend";
+    constName?: string;
+    tacticSequence?: string[];
+    proofTermRef?: string;
+    deadendRule?: string;
+  };
+
+  // Outcome statistics
+  closedCount: number;
+  partialCount: number;
+  rejectedCount: number;
+  solidarityScore: number;
+  mdlBits: number;
+
+  // Trust and visibility
+  kernelStatus: "verified" | "assumed" | "failed" | "partial";
+  visibilityScope: string[];
+  environmentHash: string;
+  leanVersion: string;
+};
+```
+
+The important distinction is that `V.value` is not necessarily a proof. It is a **candidate action package**. For `DiamondFossils`, the value may be `Nat.add_comm`. For `DeadEndMotifs`, the value may be an avoidance rule: “do not propose `Nat.add_comm` for this zero-right-addition shape.”
+
+## 2. Tokenization source: canonical Lean expressions, not pretty text
+
+The tokenizer must consume the Lean-emitted canonical S-expression, not the human pretty-printer output.
+
+Pretty text is unstable. It depends on notation, namespaces, coercions, implicit arguments, and pretty-printer settings. The V layer should read the canonical expression tree produced after abstraction, normalization, and policy stamping.
+
+Lean expressions are already an AST-like representation of terms, with constructors such as applications, constants, binders, bound variables, free variables, metadata, projections, and literals; this is why the tokenizer should be expression-structural rather than text-based. ([Lean Prover Community][1])
+
+The Lean extractor should emit something like:
+
+```json
+{
+  "policy": {
+    "hiveVersion": "hive-v1",
+    "normalization": "instantiateMVars+whnf(default)",
+    "fvars": "used-fvars-in-local-context-order",
+    "universe": "erase-for-shape",
+    "binderInfo": "erase-for-shape",
+    "projection": "preserve-proj"
+  },
+  "canonicalSExpr": "(app (app (app (const Eq) (const Nat)) (app (app (const Nat.add) (bvar 1)) (bvar 0))) (app (app (const Nat.add) (bvar 0)) (bvar 1)))"
+}
+```
+
+That example is schematic, but the format is the point: a stable, policy-declared, tree-shaped representation.
+
+## 3. Token classes
+
+Use a symbolic tokenizer first. Do **not** start with BPE. BPE is useful for natural language, but the Hive’s primitive units are typed AST constructors and mathematical constants.
+
+The base vocabulary should include:
+
+```text
+Structural tokens
+-----------------
+EXPR:APP
+EXPR:LAM
+EXPR:FORALL
+EXPR:LET
+EXPR:SORT
+EXPR:CONST
+EXPR:BVAR
+EXPR:MVAR
+EXPR:PROJ
+EXPR:LIT_NAT
+EXPR:LIT_STR
+
+Policy tokens
+-------------
+POLICY:HIVE_V1
+NORM:WHNF_DEFAULT
+FVAR:USED_ONLY
+UNIV:ERASED
+BINDER:ERASED
+PROJ:PRESERVE
+
+Binder / variable tokens
+------------------------
+BVAR:0
+BVAR:1
+BVAR:2
+BVAR:DEPTH_BUCKET_4_7
+BVAR:DEPTH_BUCKET_8_PLUS
+
+Constant tokens
+---------------
+CONST_FULL:Nat.add_comm
+CONST_NS:Nat
+CONST_BASE:add_comm
+CONST_HASH:sha256:...
+
+Graph-context tokens
+--------------------
+DEPENDS_ON:Nat.add_zero
+USED_AXIOM:Classical.choice
+MODULE:Init.Data.Nat.Basic
+DOMAIN:algebra
+
+Outcome tokens
+--------------
+OUTCOME:CLOSED
+OUTCOME:PARTIAL
+OUTCOME:REJECTED
+FAILURE:APPLY_FAILED
+FAILURE:PARTIAL_IN_STRICT_MODE
+```
+
+For privacy-sensitive scopes, do not expose raw `CONST_FULL` tokens globally. Use salted or scope-local constant hashes:
+
+```text
+CONST_SCOPE_HASH:sha256(scopeSalt ++ "Nat.add_comm")
+```
+
+This prevents global probing of private theorem names or proprietary type shapes.
+
+## 4. Tree tokenization, not flat tokenization only
+
+A flat token sequence loses too much structure. Use three simultaneous views:
+
+```text
+1. DFS token stream
+   A preorder traversal of the canonical S-expression.
+
+2. Subtree motifs
+   All subtrees up to depth k, usually k = 2 or 3.
+
+3. Path tokens
+   Parent-child constructor paths such as APP.LEFT.CONST, APP.RIGHT.BVAR.
+```
+
+For a schematic expression:
+
+```text
+Eq Nat (Nat.add #1 #0) (Nat.add #0 #1)
+```
+
+The tokenizer emits:
+
+```text
+DFS:
+  EXPR:APP
+  EXPR:APP
+  EXPR:APP
+  CONST_FULL:Eq
+  CONST_FULL:Nat
+  EXPR:APP
+  EXPR:APP
+  CONST_FULL:Nat.add
+  BVAR:1
+  BVAR:0
+  EXPR:APP
+  EXPR:APP
+  CONST_FULL:Nat.add
+  BVAR:0
+  BVAR:1
+
+SUBTREE:
+  APP(CONST:Nat.add, BVAR:1)
+  APP(APP(CONST:Nat.add, BVAR:1), BVAR:0)
+  APP(APP(CONST:Nat.add, BVAR:0), BVAR:1)
+  EQ(CONST:Nat, ADD(#1,#0), ADD(#0,#1))
+
+PATH:
+  APP.LEFT.APP
+  APP.RIGHT.BVAR
+  APP.LEFT.CONST:Nat.add
+```
+
+The subtree tokens are critical for the Yoneda Leap. Exact hash matching says “same expression.” Subtree motifs say “same local proof geometry.”
+
+## 5. Q, K, V definition
+
+Use two retrieval channels.
+
+### Symbolic channel
+
+```text
+Q_symbolic = targetHashShape + target tokens + context fingerprint
+K_symbolic = conclusionHashShape + fossil tokens + declaration context
+V_symbolic = const name / tactic sequence / proof term reference
+```
+
+This is the deterministic channel.
+
+### Learned channel
+
+```text
+Q_dense = EncoderGoal(goal_tokens, context_tokens)
+K_dense = EncoderFossil(conclusion_tokens, dependency_tokens)
+V_dense = action payload: const name, tactic sequence, or deadend rule
+```
+
+The transformer paper’s attention mechanism describes mapping a query and key-value pairs to an output vector, where the output is a weighted sum of values with weights determined by query/key compatibility. In Hive terms, the current hole is the query, the indexed fossil signatures are keys, and the retrieved proof actions are values. ([arXiv][2])
+
+The V layer should return a ranked list:
+
+```json
+{
+  "holeId": "InfoTrees/abc123",
+  "retrievalMode": "hybrid-v0",
+  "candidates": [
+    {
+      "constName": "Nat.add_zero",
+      "source": "exact_hash",
+      "score": 1.0,
+      "suggestedAction": "hive_annihilate Nat.add_zero"
+    },
+    {
+      "constName": "Nat.zero_add",
+      "source": "dense_similarity",
+      "score": 0.74,
+      "suggestedAction": "hive_try_const Nat.zero_add"
+    },
+    {
+      "constName": "Nat.add_comm",
+      "source": "negative_memory",
+      "score": -0.62,
+      "suggestedAction": "avoid",
+      "reason": "Repeated failure for zero-right-addition target shape."
+    }
+  ]
+}
+```
+
+## 6. Retrieval cascade
+
+The candidate search should not go directly to dense vector similarity. Use a cascade:
+
+```text
+Stage 0: ACL / visibility filtering
+Stage 1: exact hash match
+Stage 2: shape hash match
+Stage 3: subtree motif overlap
+Stage 4: dense vector retrieval
+Stage 5: graph-neighborhood rerank
+Stage 6: DeadEndMotif penalty
+Stage 7: Lean re-entry
+```
+
+This keeps the system precise.
+
+The initial scoring function can be simple:
+
+```text
+score =
+  10.0 * exactHashMatch
++  6.0 * shapeHashMatch
++  2.0 * subtreeJaccard
++  2.0 * denseCosine
++  1.5 * dependencyOverlap
++  1.0 * historicalCloseRate
+-  4.0 * deadEndPenalty
+-  2.0 * axiomMismatchPenalty
+-  2.0 * environmentMismatchPenalty
+```
+
+Dense retrieval should be an expansion mechanism, not the main source of truth.
+
+## 7. ArangoDB representation
+
+Use one document collection for embedding records:
+
+```text
+ProofValueRecords
+```
+
+Example:
+
+```json
+{
+  "_key": "v_nat_add_zero_hive_v1",
+  "artifactId": "DiamondFossils/nat_add_zero",
+  "constName": "Nat.add_zero",
+
+  "conclusionHashShape": "sha256:hive-v1:...",
+  "canonicalPreimageHash": "sha256:hive-v1:...",
+
+  "tokens": [
+    "POLICY:HIVE_V1",
+    "EXPR:APP",
+    "CONST_FULL:Eq",
+    "CONST_FULL:Nat",
+    "CONST_FULL:Nat.add",
+    "BVAR:0"
+  ],
+
+  "subtreeTokens": [
+    "APP(CONST:Nat.add,BVAR:0)",
+    "EQ(CONST:Nat,APP(APP(CONST:Nat.add,BVAR:0),LIT:0),BVAR:0)"
+  ],
+
+  "embeddingModel": "hive-dual-encoder-v0",
+  "embedding": [0.013, -0.221, 0.087],
+
+  "value": {
+    "kind": "const",
+    "constName": "Nat.add_zero"
+  },
+
+  "closedCount": 41,
+  "partialCount": 3,
+  "rejectedCount": 2,
+  "kernelStatus": "verified",
+  "visibilityScope": ["public"]
+}
+```
+
+If using ArangoDB’s vector search, store the dense embedding directly in the document and create a vector index on that embedding attribute. ArangoDB’s current vector-search AQL pattern sorts by functions such as `APPROX_NEAR_COSINE(doc.vector, @q)` and returns the top `LIMIT` results; vector indexes must be enabled and configured for the embedding field and metric. ([Arango Documentation][3])
+
+A hybrid AQL query can look like this:
+
+```aql
+LET exactMatches = (
+  FOR v IN ProofValueRecords
+    FILTER v.kernelStatus == "verified"
+    FILTER v.conclusionHashShape == @targetHashShape
+    FILTER LENGTH(INTERSECTION(v.visibilityScope, @allowedScopes)) > 0
+    SORT v.closedCount DESC, v.rejectedCount ASC
+    LIMIT 20
+    RETURN MERGE(v, { retrievalSource: "exact_hash", retrievalScore: 1.0 })
+)
+
+LET vectorMatches = (
+  FOR v IN ProofValueRecords
+    FILTER v.kernelStatus == "verified"
+    FILTER LENGTH(INTERSECTION(v.visibilityScope, @allowedScopes)) > 0
+    SORT APPROX_NEAR_COSINE(v.embedding, @queryEmbedding) DESC
+    LIMIT 50
+    RETURN MERGE(v, { retrievalSource: "dense_vector" })
+)
+
+LET deadendPenalties = (
+  FOR d IN DeadEndMotifs
+    FILTER d.goalShapeHash == @targetHashShape
+    RETURN {
+      constName: d.candidateConstName,
+      penalty: d.occurrences
+    }
+)
+
+RETURN {
+  exact: exactMatches,
+  vector: vectorMatches,
+  deadends: deadendPenalties
+}
+```
+
+## 8. Training the V encoder
+
+The first learned model should be a **dual encoder**, not a full generative model.
+
+Training examples:
+
+```text
+Positive:
+  (goal_tokens, fossil_tokens) where hive_annihilate closed the goal.
+
+Weak positive:
+  (goal_tokens, fossil_tokens) where hive_try_const applied and generated useful subgoals.
+
+Negative:
+  (goal_tokens, fossil_tokens) where Lean rejected the candidate.
+
+Hard negative:
+  Same domain, high token overlap, but rejected by Lean.
+
+DeadEnd negative:
+  Repeatedly rejected candidate for the same goal shape.
+```
+
+Labels:
+
+```text
+CLOSED     → 1.0
+PARTIAL    → 0.4
+REJECTED   → 0.0
+DEADEND    → -1.0 or hard-negative sampling
+```
+
+The first loss should be contrastive:
+
+```text
+maximize similarity(goal, successful_fossil)
+minimize similarity(goal, rejected_fossil)
+```
+
+Do not train an unconstrained tactic generator first. Train the retriever to rank already verified values.
+
+## 9. V update semantics
+
+When `S_-` succeeds:
+
+```text
+ClosedBy edge is added.
+closedCount increments.
+solidarityScore increases.
+candidate becomes stronger V for that goal shape.
+```
+
+When `S_-` partially applies:
+
+```text
+PartiallyAppliedBy edge is added.
+partialCount increments.
+candidate may become part of a TacticPatternMotif.
+```
+
+When `S_-` rejects:
+
+```text
+RejectedBy edge is added.
+rejectedCount increments.
+FailedCandidate is stored.
+Repeated failures distill into DeadEndMotif.
+candidate receives a local penalty for that goal shape.
+```
+
+This is the operational Dirac Sea.
+
+Do not update the model weights online at first. Update the database statistics online. Retrain or refresh embeddings offline under a versioned model ID:
+
+```text
+hive-dual-encoder-v0
+hive-dual-encoder-v1
+hive-dual-encoder-v2
+```
+
+That keeps retrieval reproducible.
+
+## 10. What S+ should receive
+
+The generative swarm should receive a typed retrieval context, not a raw dump of the graph.
+
+Example prompt payload:
+
+```json
+{
+  "hole": {
+    "targetPretty": "x + 0 = x",
+    "targetHashShape": "sha256:hive-v1:...",
+    "tokens": ["EXPR:APP", "CONST_FULL:Eq", "CONST_FULL:Nat.add", "BVAR:0"]
+  },
+  "positiveValues": [
+    {
+      "constName": "Nat.add_zero",
+      "action": "hive_annihilate Nat.add_zero",
+      "source": "exact_hash",
+      "closedCount": 41
+    }
+  ],
+  "partialValues": [
+    {
+      "constName": "Nat.add_comm",
+      "action": "hive_try_const Nat.add_comm",
+      "source": "subtree_overlap",
+      "partialCount": 2
+    }
+  ],
+  "negativeValues": [
+    {
+      "constName": "Nat.add_comm",
+      "avoidForThisShape": true,
+      "reason": "Rejected 17 times for zero-right-addition goals."
+    }
+  ],
+  "allowedActions": [
+    "apply_const",
+    "exact_const",
+    "rw",
+    "simp",
+    "constructor"
+  ]
+}
+```
+
+Then `S+` should output a typed action:
+
+```json
+{
+  "action": "apply_const",
+  "constName": "Nat.add_zero",
+  "confidence": 0.91
+}
+```
+
+Not arbitrary Lean text unless explicitly entering a freer synthesis mode.
+
+## 11. MVP V-layer build order
+
+Build it in this order:
+
+```text
+1. Lean emits canonical S-expression and policy metadata.
+
+2. Rust MotherBee parses the S-expression into:
+   - DFS tokens
+   - subtree tokens
+   - path tokens
+
+3. MotherBee computes:
+   - canonicalPreimageHash
+   - tokenDigest
+   - cheap syntactic MDL metrics
+
+4. ArangoDB stores ProofValueRecords.
+
+5. Retrieval v0:
+   - exact hash
+   - shape hash
+   - subtree overlap
+   - DeadEnd penalty
+
+6. Retrieval v1:
+   - dense embedding vector
+   - vector index / ANN search
+   - rerank by Lean outcome statistics
+
+7. S+ consumes only the top-k typed values.
+
+8. S- verifies every returned action.
+
+9. Outcomes update V statistics and DeadEndMotifs.
+```
+
+## 12. Acceptance tests
+
+The first V layer is done when these pass:
+
+```text
+Alpha stability:
+  Renaming variables does not change shape tokens.
+
+Context independence:
+  Adding unused local hypotheses does not change targetHashShape or primary tokens.
+
+Exact recall:
+  Goal `x + 0 = x` retrieves `Nat.add_zero`.
+
+Negative memory:
+  If `Nat.add_comm` repeatedly fails for `x + 0 = x`,
+  it is penalized for that goal shape.
+
+Partial distinction:
+  A lemma that applies but leaves subgoals is marked PARTIAL, not CLOSED.
+
+Visibility:
+  Private fossils are invisible outside their permitted scope.
+
+Reproducibility:
+  Tokenization includes the policy and model version.
+
+Trust:
+  No V-layer score can promote anything to DiamondFossil.
+  Only Lean acceptance can.
+```
+
+## 13. The key design constraint
+
+The V layer may learn similarity.
+
+It may learn analogy.
+
+It may learn which proof actions tend to close which holes.
+
+It may even learn Yoneda-like transfer patterns across domains.
+
+But it must never learn “truth.”
+
+Truth remains an effect of `S_-`.
+
+So yes: proceed to the V layer. Define the tokenizer first, using canonical Lean S-expressions; implement symbolic retrieval before dense neural retrieval; store values as typed proof actions; and use the Dirac Sea as hard-negative memory for the first dual encoder.
+
+[1]: https://leanprover-community.github.io/lean4-metaprogramming-book/main/03_expressions.html?utm_source=chatgpt.com "Expressions - Metaprogramming in Lean 4"
+[2]: https://arxiv.org/html/1706.03762v7?utm_source=chatgpt.com "Attention Is All You Need"
+[3]: https://docs.arango.ai/arangodb/stable/aql/functions/vector/?utm_source=chatgpt.com "Vector search functions in AQL - Arango Documentation"
+
+

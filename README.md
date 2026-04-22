@@ -1,38 +1,37 @@
----
-
-# The Spire Architecture
-
-> “It all starts with a stream of consciousness.”
-
-This repository is a living experiment in radical transparency. Here, the context of discovery is not hidden—it is celebrated, archived, and cross-referenced with every formal proof. The black books, chat logs, and associative streams are as essential as the Lean 4 code itself.
-
-**Contributors are invited to:**
-- Begin with wild, poetic, or chaotic streams in the black books or Issues.
-- Use the AI Caretaker and LLMs as semantic sieves and amplifiers.
-- Only then, crystallize your insights into Lean 4 code, always linking back to your creative lineage.
-
-See docs/black_books/meta_methodology_jungian_llm.md for the full manifesto and technical rationale.
-
----
-
 # InfoGeometry in Lean 4
 
-> 🧭 **New to the Spire?** Read the [**Pioneer’s Log**](PIONEERS_LOG.md) and the [**Alchemical Protocol**](ALCHEMICAL_PROTOCOL.md) for a narrative guide to the landscape, the chemistry of the logos, and the vision of this repository.
+`info-geometry-lean` is a Lean 4 research repository for formalizing a
+multi-presentation theory of information geometry and adjacent operator,
+Krein, transport, and thermodynamic structures.
 
-For method-level literature grounding, use the maintained
-[BIBLIOGRAPHY.md](BIBLIOGRAPHY.md).
+The project is exploratory in mathematical scope, but the repository discipline
+is deliberately formal:
 
-`info-geometry-lean` is a Lean 4 repository built on **Goutev’s Principle of 
-Absolute Relativity of Measurement**: measurement is projective; observables 
-are relational invariants.
+- claims are represented as Lean definitions, theorem statements, explicit
+  proof-carrying contexts, or concrete unresolved debt;
+- graph and retrieval systems are used as navigation layers, not as proof
+  authorities;
+- closure claims are reserved for Lean/lake-validated theorem surfaces.
 
 The repo has three maintained surfaces:
 - a theorem library under `lean/InfoGeometry/`
 - a Lean-native architecture kernel under `lean/InfoGeometry/Meta/` and `lean/InfoGeometry/Audit.lean`
 - a tooling layer under `lean/DAG/`, `tools/infra/`, and `tools/frontier/`
 
-The repo is best read as one theory with several presentations, not as many unrelated theories.
-The main mathematical burden is not only in the objects at each layer, but in the morphisms that move between those layers and prove that adjacent presentations agree.
+The repo is best read as one theory with several presentations, not as many
+unrelated theories.  The main mathematical burden is not only in the objects at
+each layer, but in the morphisms that move between those layers and prove that
+adjacent presentations agree.
+
+For a quick high-level status view, start with:
+
+- [docs/OperationalIntent.md](docs/OperationalIntent.md)
+- [docs/ModuleMap.md](docs/ModuleMap.md)
+- [docs/CODEBASE_STATUS.md](docs/CODEBASE_STATUS.md)
+- [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)
+
+## Architecture Summary
+
 The current stable spine is organized by semantic representation depth,
 defined as an inductive type `RepDepth` in `Architecture.lean` and enforced
 at build time via `#audit_architecture` in `Audit.lean`:
@@ -53,6 +52,36 @@ declarations at depth `d` or `d − 1`. Capstones (`@[capstone]`) are exempt.
 A public bridge file is healthy only if it is either:
 - an adjacent translator between neighboring depths
 - a coherence file proving two adjacent composites agree
+
+## Agent-Assisted Development
+
+The repository uses language-model-assisted development, but the intended
+workflow is proof-first:
+
+1. Normalize informal material into a theorem packet: terms, claims,
+   assumptions, owner surfaces, candidate Lean surfaces, and debt.
+2. Search the real source tree and graph overlays before editing.
+3. Descend from any graph or retrieval hit to raw Lean declarations.
+4. Add only theorem-backed bridges, owner lemmas, or explicit contexts carrying
+   the missing hypotheses.
+5. Validate with targeted `lake env lean`, `lake build`, and regression tests.
+
+The graph tooling supports theorem-dependency and SCC-level navigation, closure
+debt tracking, and context construction for future agent interaction.  These
+tools help locate proof obligations; they do not replace Lean as the authority.
+
+## Exploratory Material
+
+The repository also preserves notebooks, black-book fragments, and long-form
+semantic notes that record the context of discovery.  These materials are
+useful for generating theorem candidates, but they are not proof surfaces.  A
+claim becomes part of the formal project only when it is represented in Lean as
+a definition, theorem, explicit context, or tracked debt item.
+
+For narrative orientation, see [PIONEERS_LOG.md](PIONEERS_LOG.md).  For the
+methodological notes behind the archival layer, see
+[ALCHEMICAL_PROTOCOL.md](ALCHEMICAL_PROTOCOL.md) and
+[docs/black_books/meta_methodology_jungian_llm.md](docs/black_books/meta_methodology_jungian_llm.md).
 
 ## Entry Surfaces
 

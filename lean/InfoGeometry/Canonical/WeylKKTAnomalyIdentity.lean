@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.WeylAnomalySource
 import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Canonical.ConformalAnomalyReadout
+import InfoGeometry.Canonical.SouriauPlanckVector
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic.NoncommRing
 
@@ -176,6 +177,54 @@ end ConformalInference
 
 end WeylAnomalyClosure
 
+section SouriauWeylClosure
+
+variable {E : Type 0}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+namespace ConformalInference
+
+variable (CI : ConformalInference E)
+
+/--
+Souriau-to-Weyl zero-scale packet through an explicit stationarity readout.
+
+This theorem does not assert the false unconditional claim that a
+`GibbsSouriauEquilibriumSeed` alone determines the conformal anomaly scale.
+It removes the low-level `hScaleZero` gate only when the caller supplies the
+missing semantic witness from thermodynamic readout stationarity to
+`CI.chiralScale = 0`.
+-/
+@[rep_depth transport]
+theorem semanticCollapsePacket_of_equilibriumSeed_of_structuredProjectorHypotheses
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : InfoGeometry.Krein.DoubledSpace E}
+    {A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E}
+    (hEq :
+      InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed
+        (E := E) P ψ A)
+    (hStationaryToScaleZero :
+      InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
+        (E := E) P ψ A → CI.chiralScale = 0)
+    (hProj : CI.P_MP_right = CI.P_MP)
+    (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
+    CI.chiralScale = 0
+      ∧ CI.epsilon = 0
+      ∧ CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  have hStationary :
+      InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
+        (E := E) P ψ A :=
+    InfoGeometry.Canonical.SouriauPlanckVector.isThermodynamicReadoutStationary_of_equilibriumSeed
+      (E := E) hEq
+  exact
+    semanticCollapsePacket_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
+      (CI := CI) hProj hLeft (hStationaryToScaleZero hStationary)
+
+end ConformalInference
+
+end SouriauWeylClosure
+
 section EinsteinResidualClosure
 
 variable {E : Type*}
@@ -192,7 +241,7 @@ theorem nonzeroProjectorObstruction_sources_transportedEinsteinResidual
     (R : RicciTensor E)
     (K : InfoGeometry.Canonical.KaehlerGeometry.KaehlerInformationGeometry E)
     (x : E) (scalar Λ : ℝ)
-    (V : SplitVielbein K x) (Γ : SpinConnection K x V)
+    (V : SplitVielbein K x) (Γ : InfoGeometry.Canonical.RicciMongeAmpere.SpinConnection K x V)
     (hSource :
       transportedEinsteinResidual (R := R) (K := K) (x := x)
         (scalar := scalar) (Λ := Λ) V Γ = CBA.CI.chiralScale)

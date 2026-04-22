@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.PolarizedMadelungBridge
 import InfoGeometry.Canonical.ThermodynamicGenerator
+import InfoGeometry.Canonical.SouriauPlanckVector
 
 open scoped InnerProductSpace
 
@@ -287,6 +288,25 @@ theorem potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_if
       (E := E) P ψ A).symm
 
 @[rep_depth transport]
+theorem potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_equilibriumSeed
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (hEq : InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed (E := E) P ψ A) :
+    ( (StateGeneratorField.stateQGTReadout (E := E)
+          (constantStateGeneratorField (E := E) (P.modularData.modularSeed ψ))
+          ψ A).metric
+    , (StateGeneratorField.stateQGTReadout (E := E)
+          (constantStateGeneratorField (E := E) (P.modularData.modularSeed ψ))
+          ψ A).phase )
+      =
+    (0, 0) := by
+  have hStationary :
+      IsThermodynamicReadoutStationary (E := E) P ψ A :=
+    InfoGeometry.Canonical.SouriauPlanckVector.isThermodynamicReadoutStationary_of_equilibriumSeed
+      (E := E) hEq
+  rw [potentialDatum_constantStateGeneratorField_stateQGTReadout_pair_eq_comparisonReadout_pair]
+  simpa [IsThermodynamicReadoutStationary] using hStationary
+
+@[rep_depth transport]
 theorem potentialDatum_constantStateGeneratorField_kSplitReadout_stationary_iff_isPotentialKillingOperator
     (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH) :
     ( InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
@@ -320,6 +340,40 @@ theorem potentialDatum_constantStateGeneratorField_kSplitReadout_stationary_iff_
   exact
     potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_iff_isPotentialKillingOperator
       (E := E) P ψ A
+
+@[rep_depth transport]
+theorem potentialDatum_constantStateGeneratorField_kSplitReadout_stationary_of_equilibriumSeed
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (hEq : InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed (E := E) P ψ A) :
+    ( InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseLinearPart (E := E)
+            (modularTransportGenerator (E := E) (P.modularData.modularSeed ψ))) A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseAntilinearPart (E := E)
+            (modularTransportGenerator (E := E) (P.modularData.modularSeed ψ))) A)
+    , InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseLinearPart (E := E)
+            (modularTransportGenerator (E := E) (P.modularData.modularSeed ψ))) A)
+        +
+      InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator
+        (E := E)
+        (transportCommutator (E := E)
+          (phaseAntilinearPart (E := E)
+            (modularTransportGenerator (E := E) (P.modularData.modularSeed ψ))) A) )
+      =
+    (0, 0) := by
+  rw [← constantStateGeneratorField_stateQGTReadout_pair_eq_phaseLinearAntilinear_transport_pair
+    (E := E) (H := P.modularData.modularSeed ψ) (A := A) (ψ := ψ)]
+  exact
+    potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_equilibriumSeed
+      (E := E) P ψ A hEq
 
 @[rep_depth transport]
 theorem constantStateGeneratorField_stateGaugeGenerator_isPhaseLinear

@@ -217,6 +217,19 @@ theorem isPotentialKillingOperator_iff_firstVariation_eq_zero_of_probeFaithful
     simpa [firstVariation_eq_probe_stateInducedDynamics] using hFirst
 
 /--
+Faithful thermodynamic probing upgrades vanishing first variation into the
+operatorial Killing condition.
+-/
+@[rep_depth transport]
+theorem isPotentialKillingOperator_of_firstVariation_eq_zero_of_probeFaithful
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (hFaithful : ProbeFaithful (E := E) P)
+    (hFirst : firstVariation (E := E) P ψ A = 0) :
+    IsPotentialKillingOperator (E := E) P ψ A :=
+  (isPotentialKillingOperator_iff_firstVariation_eq_zero_of_probeFaithful
+    (E := E) P ψ A hFaithful).2 hFirst
+
+/--
 At the same state, an operatorial Killing channel has vanishing bundled
 operatorial metric/phase thermodynamic readout.
 -/
@@ -247,6 +260,24 @@ theorem comparisonReadout_pair_eq_zero_of_isPotentialKillingOperator
     RelativeModularPotential.comparisonPhaseReadout] using
     stateQGTReadout_pair_eq_zero_of_isPotentialKillingOperator
       (E := E) (P := P) (ψ := ψ) (A := A) hKill
+
+/--
+Faithful thermodynamic probing upgrades vanishing first variation directly into
+vanishing state-QGT readout on the doubled carrier.
+-/
+@[rep_depth transport]
+theorem stateQGTReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (hFaithful : ProbeFaithful (E := E) P)
+    (hFirst : firstVariation (E := E) P ψ A = 0) :
+    ( ((StateDependentTransport.stateQGTReadout (E := E) P.modularData ψ A).metric)
+    , ((StateDependentTransport.stateQGTReadout (E := E) P.modularData ψ A).phase) )
+      =
+    (0, 0) := by
+  exact stateQGTReadout_pair_eq_zero_of_isPotentialKillingOperator
+    (E := E) (P := P) (ψ := ψ) (A := A)
+    (isPotentialKillingOperator_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) P ψ A hFaithful hFirst)
 
 /--
 Vanishing comparison-state metric readout is faithful: it forces the underlying
@@ -348,6 +379,33 @@ theorem isThermodynamicReadoutStationary_iff_firstVariation_eq_zero_of_probeFait
     _ ↔ firstVariation (E := E) P ψ A = 0 :=
       isPotentialKillingOperator_iff_firstVariation_eq_zero_of_probeFaithful
         (E := E) P ψ A hFaithful
+
+/--
+Faithful thermodynamic probing upgrades vanishing first variation into the
+bundled thermodynamic readout-stationarity predicate.
+-/
+@[rep_depth transport]
+theorem isThermodynamicReadoutStationary_of_firstVariation_eq_zero_of_probeFaithful
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (hFaithful : ProbeFaithful (E := E) P)
+    (hFirst : firstVariation (E := E) P ψ A = 0) :
+    IsThermodynamicReadoutStationary (E := E) P ψ A :=
+  (isThermodynamicReadoutStationary_iff_firstVariation_eq_zero_of_probeFaithful
+    (E := E) P ψ A hFaithful).2 hFirst
+
+/--
+Faithful thermodynamic probing upgrades vanishing first variation into vanishing
+comparison-state metric/phase readout directly.
+-/
+@[rep_depth transport]
+theorem comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (hFaithful : ProbeFaithful (E := E) P)
+    (hFirst : firstVariation (E := E) P ψ A = 0) :
+    (comparisonMetricReadout (E := E) P ψ A,
+      comparisonPhaseReadout (E := E) P ψ A) = (0, 0) :=
+  isThermodynamicReadoutStationary_of_firstVariation_eq_zero_of_probeFaithful
+    (E := E) P ψ A hFaithful hFirst
 
 end Core
 

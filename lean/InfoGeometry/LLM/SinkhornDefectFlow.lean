@@ -172,6 +172,27 @@ noncomputable def ofCanonicalClockDefect
   rfl
 
 /--
+Detailed equilibrium closes the non-equilibrium clock-defect `Z_D` budget:
+the clock defect itself is zero, so only `0 ≤ ‖Z_D‖` remains.
+-/
+@[rep_depth transport]
+theorem nonEquilibriumClockDefect_norm_le_ZD_of_detailedEquilibrium
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (hMod : EndH)
+    (hEq : InfoGeometry.Canonical.WindingOrbitClosure.IsDetailedEquilibriumSeed (H := E) hMod) :
+    ‖InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect (H := E) hMod‖ ≤
+      ‖InfoGeometry.Canonical.KKTClosure.ZD CIK‖ := by
+  have hZero :
+      InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect (H := E) hMod = 0 :=
+    InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect_eq_zero_of_detailedEquilibrium
+      (H := E) hMod hEq
+  rw [hZero]
+  calc
+    ‖(0 : EndH)‖ = 0 := ContinuousLinearMap.opNorm_zero
+    _ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD CIK‖ :=
+      norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD CIK)
+
+/--
 Zero-defect clock bridge for detailed equilibrium.
 
 Detailed equilibrium kills the canonical non-equilibrium clock defect, so the
@@ -183,16 +204,8 @@ noncomputable def ofDetailedEquilibrium
     (hMod : EndH)
     (hEq : InfoGeometry.Canonical.WindingOrbitClosure.IsDetailedEquilibriumSeed (H := E) hMod) :
     RouterClockDefectBridge (E := E) :=
-  ofCanonicalClockDefect (E := E) CIK flow hMod (by
-    have hZero :
-        InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect (H := E) hMod = 0 :=
-      InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect_eq_zero_of_detailedEquilibrium
-        (H := E) hMod hEq
-    rw [hZero]
-    calc
-      ‖(0 : EndH)‖ = 0 := ContinuousLinearMap.opNorm_zero
-      _ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD CIK‖ :=
-        norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD CIK))
+  ofCanonicalClockDefect (E := E) CIK flow hMod
+    (nonEquilibriumClockDefect_norm_le_ZD_of_detailedEquilibrium (E := E) (CIK := CIK) (hMod := hMod) hEq)
 
 @[simp] theorem ofDetailedEquilibrium_routerResidual
     (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
@@ -205,6 +218,28 @@ noncomputable def ofDetailedEquilibrium
     InfoGeometry.Canonical.WindingOrbitClosure.nonEquilibriumClockDefect_eq_zero_of_detailedEquilibrium
       (H := E) hMod hEq
   simpa [ofDetailedEquilibrium] using hZero
+
+@[simp] theorem ofDetailedEquilibrium_δ_odd_eq_zero
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (flow : BackgroundModularFlow CIK)
+    (hMod : EndH)
+    (hEq : InfoGeometry.Canonical.WindingOrbitClosure.IsDetailedEquilibriumSeed (H := E) hMod) :
+    δ_odd (ofDetailedEquilibrium (E := E) CIK flow hMod hEq).bound = 0 := by
+  unfold δ_odd
+  rw [ofDetailedEquilibrium_routerResidual (E := E) (CIK := CIK) (flow := flow)
+    (hMod := hMod) (hEq := hEq)]
+  exact ContinuousLinearMap.opNorm_zero
+
+theorem ofDetailedEquilibrium_isRouterEquilibrium
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
+    (flow : BackgroundModularFlow CIK)
+    (hMod : EndH)
+    (hEq : InfoGeometry.Canonical.WindingOrbitClosure.IsDetailedEquilibriumSeed (H := E) hMod) :
+    IsRouterEquilibrium (ofDetailedEquilibrium (E := E) CIK flow hMod hEq).bound := by
+  exact equilibrium_of_δ_odd_eq_zero (E := E)
+    (ofDetailedEquilibrium (E := E) CIK flow hMod hEq).bound
+    (ofDetailedEquilibrium_δ_odd_eq_zero (E := E) (CIK := CIK) (flow := flow)
+      (hMod := hMod) (hEq := hEq))
 
 end RouterClockDefectBridge
 

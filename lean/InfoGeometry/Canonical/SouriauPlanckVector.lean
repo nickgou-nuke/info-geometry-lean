@@ -44,4 +44,96 @@ def IsSouriauEquilibrium
     (M : SuperchargeMultiplet (E := E)) (A : EndH) : Prop :=
   A * souriauTemperatureVector M - souriauTemperatureVector M * A = 0
 
+/--
+The Souriau admissible-temperature cone at `P, ψ` is the stationary kernel of
+the first thermodynamic variation on the doubled carrier.
+
+This is the smallest honest infinite-dimensional owner surface available in the
+current repo: admissibility is not guessed from external prose, but defined by
+vanishing first variation against the existing thermodynamic generator lane.
+-/
+@[rep_depth transport]
+def AdmissibleTemperatureCone
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : H₂) : Set EndH :=
+  {A | InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P ψ A = 0}
+
+@[rep_depth transport, simp]
+theorem mem_AdmissibleTemperatureCone_iff
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : H₂) (A : EndH) :
+    A ∈ AdmissibleTemperatureCone (E := E) P ψ
+      ↔ InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P ψ A = 0 := by
+  rfl
+
+/--
+A theorem-backed Gibbs-Souriau equilibrium seed on the doubled carrier:
+faithful thermodynamic probing plus stationarity of the first variation.
+-/
+@[rep_depth transport]
+structure GibbsSouriauEquilibriumSeed
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : H₂) (A : EndH) : Prop where
+  probe_faithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P
+  stationary : A ∈ AdmissibleTemperatureCone (E := E) P ψ
+
+/--
+A Gibbs-Souriau equilibrium seed forces the candidate channel to be an
+operatorial Killing generator for the thermodynamic potential.
+-/
+@[rep_depth transport]
+theorem admissibleTemperature_of_equilibriumSeed
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂} {A : EndH}
+    (hEq : GibbsSouriauEquilibriumSeed (E := E) P ψ A) :
+    InfoGeometry.Canonical.ThermodynamicGenerator.IsPotentialKillingOperator (E := E) P ψ A := by
+  exact
+    (InfoGeometry.Canonical.ThermodynamicGenerator.isPotentialKillingOperator_iff_firstVariation_eq_zero_of_probeFaithful
+      (E := E) (P := P) (ψ := ψ) (A := A) hEq.probe_faithful).2 hEq.stationary
+
+/--
+The Souriau equilibrium predicate itself follows constructively from the
+Gibbs-Souriau equilibrium seed when the equilibrium channel is the Souriau
+temperature vector.
+-/
+@[rep_depth transport]
+theorem souriauEquilibrium_of_equilibriumSeed
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂}
+    (hEq : GibbsSouriauEquilibriumSeed (E := E) P ψ
+      (InfoGeometry.Canonical.ThermodynamicGenerator.souriauTemperatureVector (E := E) P ψ)) :
+    InfoGeometry.Canonical.ThermodynamicGenerator.IsPotentialKillingOperator (E := E) P ψ
+      (InfoGeometry.Canonical.ThermodynamicGenerator.souriauTemperatureVector (E := E) P ψ) := by
+  exact admissibleTemperature_of_equilibriumSeed (E := E) hEq
+
+/--
+Stationary Gibbs-Souriau data directly constructs the bundled thermodynamic
+readout-stationarity predicate.  Downstream bridges should consume this theorem
+instead of reconstructing the route through an explicit Killing hypothesis.
+-/
+@[rep_depth transport]
+theorem isThermodynamicReadoutStationary_of_equilibriumSeed
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂} {A : EndH}
+    (hEq : GibbsSouriauEquilibriumSeed (E := E) P ψ A) :
+    InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
+      (E := E) P ψ A := by
+  exact
+    (InfoGeometry.Canonical.ThermodynamicGenerator.isPotentialKillingOperator_iff_isThermodynamicReadoutStationary
+      (E := E) P ψ A).1
+      (admissibleTemperature_of_equilibriumSeed (E := E) hEq)
+
+/--
+Stationary Gibbs-Souriau data has vanishing operatorial metric/phase readout.
+-/
+@[rep_depth transport]
+theorem comparisonReadout_pair_eq_zero_of_equilibriumSeed
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂} {A : EndH}
+    (hEq : GibbsSouriauEquilibriumSeed (E := E) P ψ A) :
+    (InfoGeometry.Canonical.RelativeModularPotential.comparisonMetricReadout (E := E) P ψ A,
+      InfoGeometry.Canonical.RelativeModularPotential.comparisonPhaseReadout (E := E) P ψ A)
+      = (0, 0) := by
+  exact isThermodynamicReadoutStationary_of_equilibriumSeed (E := E) hEq
+
 end InfoGeometry.Canonical.SouriauPlanckVector

@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
+import InfoGeometry.Canonical.SouriauLieThermoKKTBridge
 import InfoGeometry.Canonical.GrandCanonicalFockNumberBridge
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Meta.Architecture
@@ -352,5 +353,95 @@ theorem is_weyl_invariant :
   C.weyl_invariant
 
 end WeylSupertraceFreeStressContext
+
+/-! ## Constructive stress/supertrace packet from the identity-balanced lane -/
+
+/--
+Concrete scalar stress package used to expose a supertrace-free stress witness
+without a separate balance hypothesis.
+
+This is still dimension-agnostic: the scalars are readouts of a doubled-carrier
+moment object, not entries of a finite stress matrix.
+-/
+@[rep_depth transport]
+structure BalancedScalarStress where
+  stressPart : ℝ
+  supercurrentPart : ℝ
+
+namespace BalancedScalarStress
+
+/-- The scalar supertrace shadow is the even-plus-odd readout. -/
+@[rep_depth transport]
+def superTrace (S : BalancedScalarStress) : ℝ :=
+  S.stressPart + S.supercurrentPart
+
+end BalancedScalarStress
+
+/--
+Constructive supertrace-free stress context from the identity-balanced
+super-coadjoint lane.
+
+The odd readout is definitionally the negative of the even stress readout, so
+the supertrace-free claim is proved rather than passed as an independent field.
+Weyl covariance is also not set to `True`: the carried proposition is the exact
+identity-action covariance statement owned by
+`SouriauLieThermoKKTBridge.SuperCoadjointMomentMapData.identityBalanced`.
+-/
+@[rep_depth transport]
+def WeylSupertraceFreeStressContext.ofIdentityBalanced
+    {G Gdual Orbit : Type*}
+    (moment : Orbit → Gdual)
+    (geometricTemperature : G)
+    (pairing : G → Gdual → ℝ)
+    (parityOfGenerator : G →
+      InfoGeometry.Canonical.SouriauLieThermoKKTBridge.SuperParity)
+    (stressTensorProjection : Gdual → ℝ)
+    (x : Orbit) :
+    WeylSupertraceFreeStressContext BalancedScalarStress := by
+  let J :=
+    InfoGeometry.Canonical.SouriauLieThermoKKTBridge.SuperCoadjointMomentMapData.identityBalanced
+      (G := G) (Gdual := Gdual) (Orbit := Orbit)
+      moment geometricTemperature pairing parityOfGenerator stressTensorProjection
+  refine
+    { stress :=
+        ⟨J.stressTensorProjection (J.moment x),
+          J.supercurrentProjection (J.moment x)⟩
+      superTrace := BalancedScalarStress.superTrace
+      weylInvariant := ∀ g : G, J.coadjointAction g (J.moment x) = J.moment x
+      stress_supertrace_free := ?_
+      weyl_invariant := ?_ }
+  · change J.stressTensorProjection (J.moment x) + J.supercurrentProjection (J.moment x) = 0
+    simpa using
+      InfoGeometry.Canonical.SouriauLieThermoKKTBridge.SuperCoadjointMomentMapData.identityBalanced_supertrace_balance
+        (G := G) (Gdual := Gdual) (Orbit := Orbit)
+        moment geometricTemperature pairing parityOfGenerator stressTensorProjection x
+  · intro g
+    simpa using
+      InfoGeometry.Canonical.SouriauLieThermoKKTBridge.SuperCoadjointMomentMapData.identityBalanced_coadjointAction
+        (G := G) (Gdual := Gdual) (Orbit := Orbit)
+        moment geometricTemperature pairing parityOfGenerator stressTensorProjection g (J.moment x)
+
+/-- The constructive identity-balanced packet is supertrace-free by evaluation. -/
+@[rep_depth transport]
+theorem superTrace_eq_zero_ofIdentityBalanced
+    {G Gdual Orbit : Type*}
+    (moment : Orbit → Gdual)
+    (geometricTemperature : G)
+    (pairing : G → Gdual → ℝ)
+    (parityOfGenerator : G →
+      InfoGeometry.Canonical.SouriauLieThermoKKTBridge.SuperParity)
+    (stressTensorProjection : Gdual → ℝ)
+    (x : Orbit) :
+    let W :=
+      WeylSupertraceFreeStressContext.ofIdentityBalanced
+        (G := G) (Gdual := Gdual) (Orbit := Orbit)
+        moment geometricTemperature pairing parityOfGenerator
+        stressTensorProjection x
+    W.superTrace W.stress = 0 := by
+  simpa using
+    (WeylSupertraceFreeStressContext.ofIdentityBalanced
+      (G := G) (Gdual := Gdual) (Orbit := Orbit)
+      moment geometricTemperature pairing parityOfGenerator
+      stressTensorProjection x).superTrace_stress_eq_zero
 
 end InfoGeometry.Canonical.SuperSouriauFermionGasBridge

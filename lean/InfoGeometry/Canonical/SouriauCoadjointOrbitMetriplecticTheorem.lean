@@ -256,6 +256,57 @@ theorem full_square_dissipation_metriplectic_theorem (x : Orbit) :
 
 attribute [terminal] full_square_dissipation_metriplectic_theorem
 
+/--
+Constructive Casimir-leaf/transverse-Onsager packet for the Souriau prose.
+
+The reversible leg is the symplectic/coadjoint-leaf channel and is a Casimir
+direction by construction (`0`).  The transverse metric/Onsager leg is the
+square of a real dissipation amplitude, hence nonnegative, and the total
+metriplectic entropy production is exactly that transverse square.  This is
+dimension-agnostic: `Orbit` is arbitrary and no finite state model is used.
+-/
+@[rep_depth transport]
+theorem casimir_leaf_transverse_onsager_square_packet (x : Orbit) :
+    C□.reversibleEntropyRate x = 0
+      ∧ C□.metricEntropyRate x = dissipationAmplitude x ^ (2 : ℕ)
+      ∧ C□.totalEntropyRate x = C□.metricEntropyRate x
+      ∧ 0 ≤ C□.metricEntropyRate x
+      ∧ 0 ≤ C□.totalEntropyRate x := by
+  exact
+    ⟨reversibleEntropyRate_eq_zero
+        (moment := moment)
+        (geometricTemperature := geometricTemperature)
+        (reversibleVectorField := reversibleVectorField)
+        (metricVectorField := metricVectorField)
+        (entropy := entropy)
+        (dissipationAmplitude := dissipationAmplitude) x,
+      metricEntropyRate_eq_square
+        (moment := moment)
+        (geometricTemperature := geometricTemperature)
+        (reversibleVectorField := reversibleVectorField)
+        (metricVectorField := metricVectorField)
+        (entropy := entropy)
+        (dissipationAmplitude := dissipationAmplitude) x,
+      by rfl,
+      by
+        rw [metricEntropyRate_eq_square
+          (moment := moment)
+          (geometricTemperature := geometricTemperature)
+          (reversibleVectorField := reversibleVectorField)
+          (metricVectorField := metricVectorField)
+          (entropy := entropy)
+          (dissipationAmplitude := dissipationAmplitude)]
+        exact sq_nonneg (dissipationAmplitude x),
+      totalEntropyRate_nonnegative
+        (moment := moment)
+        (geometricTemperature := geometricTemperature)
+        (reversibleVectorField := reversibleVectorField)
+        (metricVectorField := metricVectorField)
+        (entropy := entropy)
+        (dissipationAmplitude := dissipationAmplitude) x⟩
+
+attribute [terminal] casimir_leaf_transverse_onsager_square_packet
+
 end SquareDissipation
 
 /-- Every represented state has its moment on the selected coadjoint orbit. -/
@@ -1186,6 +1237,41 @@ noncomputable def ofSmoothLegendreGramSquareDissipation
       moment geometricTemperature reversibleVectorField metricVectorField
       entropy dissipationAmplitude
 
+/--
+Fully constructive dimension-agnostic Hessian/metriplectic context using a
+continuous-linear equivalence as the local Legendre inverse.
+
+This removes the separate two-sided inverse-law fields from the Souriau input:
+they are proved in `LegendreContinuousLinearEquivInverseData` from
+`fisherEquiv` and `fisherEquiv.symm`.
+-/
+@[rep_depth transport]
+noncomputable def ofContinuousLinearEquivLegendreGramSquareDissipation
+    {Feature : Type*}
+    [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
+    (moment : Orbit → MomentCoord Θ)
+    (geometricTemperature : Θ)
+    (reversibleVectorField metricVectorField : Orbit → Orbit)
+    (entropy : Orbit → ℝ)
+    (dissipationAmplitude : Orbit → ℝ)
+    (partitionFunction : Θ → ℝ)
+    (thermodynamicMoment : Θ → MomentCoord Θ)
+    (souriauEntropy : MomentCoord Θ → ℝ)
+    (legendreData : LegendreContinuousLinearEquivInverseData Θ)
+    (feature : Θ → Feature)
+    (fisherHessian_eq_gram :
+      ∀ X Y : Θ,
+        legendreData.toLegendreHessianInverseContext.fisherHessian X Y =
+          inner ℝ (feature X) (feature Y)) :
+    InfiniteCoadjointOrbitHessianMetriplecticContext
+      Orbit Θ (MomentCoord Θ) Θ (MomentCoord Θ) :=
+  ofSmoothLegendreGramSquareDissipation
+    (Orbit := Orbit)
+    moment geometricTemperature reversibleVectorField metricVectorField
+    entropy dissipationAmplitude partitionFunction thermodynamicMoment
+    souriauEntropy legendreData.toLegendreHessianInverseContext
+    feature fisherHessian_eq_gram
+
 namespace InfiniteCoadjointOrbitHessianMetriplecticContext
 
 variable {Orbit : Type u} {LieAlg : Type v} {LieCoalg : Type w}
@@ -1408,6 +1494,250 @@ theorem full_smooth_legendre_gram_square_dissipation_constructive_theorem
       sq_nonneg (dissipationAmplitude x)⟩
 
 attribute [terminal] full_smooth_legendre_gram_square_dissipation_constructive_theorem
+
+/--
+Stronger constructive full Souriau theorem for the smooth-Legendre Gram plus
+square-dissipation route.
+
+This pays the inverse-Hessian closure debt inside the infinite/dimension-
+agnostic lane: besides the Souriau Hessian/metriplectic packet, it also exports
+the repo-owned smooth Legendre derivative identity and both two-sided inverse
+laws for `Hess(S) = Fisher⁻¹`.  No finite response matrix or count-state model
+is used.
+-/
+@[rep_depth transport]
+theorem full_smooth_legendre_gram_square_dissipation_inverse_laws_theorem
+    {Feature : Type*}
+    [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
+    (moment : Orbit → MomentCoord Θ)
+    (geometricTemperature : Θ)
+    (reversibleVectorField metricVectorField : Orbit → Orbit)
+    (entropy : Orbit → ℝ)
+    (dissipationAmplitude : Orbit → ℝ)
+    (partitionFunction : Θ → ℝ)
+    (thermodynamicMoment : Θ → MomentCoord Θ)
+    (souriauEntropy : MomentCoord Θ → ℝ)
+    (legendre : LegendreHessianInverseContext Θ)
+    (feature : Θ → Feature)
+    (fisherHessian_eq_gram :
+      ∀ X Y : Θ, legendre.fisherHessian X Y = inner ℝ (feature X) (feature Y))
+    (β X Y : Θ) (Q : MomentCoord Θ) (x : Orbit)
+    (hX : feature X ≠ 0) :
+    let C :=
+      ofSmoothLegendreGramSquareDissipation
+        moment geometricTemperature reversibleVectorField metricVectorField
+        entropy dissipationAmplitude partitionFunction thermodynamicMoment
+        souriauEntropy legendre feature fisherHessian_eq_gram
+    C.hessian.massieuPotential β =
+        Real.log (C.hessian.partitionFunction β)
+      ∧ C.hessian.first_variation_eq_moment
+      ∧ C.hessian.second_variation_eq_fisher
+      ∧ C.hessian.fisherHessian β = C.hessian.momentCovariance β
+      ∧ C.hessian.fisherHessian β X Y = inner ℝ (feature X) (feature Y)
+      ∧ C.hessian.fisherHessian β X Y =
+        C.hessian.fisherHessian β Y X
+      ∧ 0 ≤ C.hessian.fisherHessian β X X
+      ∧ 0 < C.hessian.fisherHessian β X X
+      ∧ C.hessian.fenchel_legendre_contact
+      ∧ C.hessian.entropy_gradient_eq_beta
+      ∧ C.hessian.entropyHessian Q =
+        C.hessian.inverseFisherHessian Q
+      ∧ 0 ≤ C.metriplectic.totalEntropyRate x
+      ∧ legendre.entropyHessian = fderiv ℝ legendre.entropyGradient legendre.moment
+      ∧ legendre.entropyHessian.comp legendre.fisherHessian =
+        ContinuousLinearMap.id ℝ Θ
+      ∧ legendre.fisherHessian.comp legendre.entropyHessian =
+        ContinuousLinearMap.id ℝ (MomentCoord Θ) := by
+  dsimp [ofSmoothLegendreGramSquareDissipation,
+    InfiniteCoadjointOrbitHessianContext.ofSmoothLegendreGramReadout,
+    InfiniteCoadjointOrbitHessianContext.ofSmoothLegendreReadout,
+    InfiniteCoadjointOrbitHessianContext.ofLogPartitionAndFisherCovariance,
+    InfiniteCoadjointOrbitMetriplecticContext.ofMomentImageSquareDissipation,
+    InfiniteCoadjointOrbitMetriplecticContext.ofMomentImage]
+  exact
+    ⟨rfl,
+      legendre.moment_eq_gradient,
+      legendre.fisherHessian_eq_hessianMassieu,
+      rfl,
+      fisherHessian_eq_gram X Y,
+      by
+        rw [fisherHessian_eq_gram X Y, fisherHessian_eq_gram Y X]
+        exact (real_inner_comm (feature X) (feature Y)).symm,
+      by
+        rw [fisherHessian_eq_gram X X]
+        exact real_inner_self_nonneg,
+      by
+        rw [fisherHessian_eq_gram X X]
+        exact (real_inner_self_pos).2 hX,
+      legendre.entropyGradient_contact,
+      legendre.entropyGradient_contact,
+      rfl,
+      sq_nonneg (dissipationAmplitude x),
+      legendre.entropyHessian_eq_derivEntropyGradient,
+      legendre.entropy_hessian_eq_fisher_inverse.1,
+      legendre.entropy_hessian_eq_fisher_inverse.2⟩
+
+attribute [terminal] full_smooth_legendre_gram_square_dissipation_inverse_laws_theorem
+
+/--
+Constructive full Souriau theorem from continuous-linear-equivalence Legendre
+data, Gram Fisher representation, and square dissipation.
+
+This is the non-finite replacement for raw inverse-Hessian hypotheses: the
+Legendre inverse laws are derived from `fisherEquiv`/`fisherEquiv.symm`, Fisher
+positivity comes from the Gram inner product, and entropy production comes from
+a square.
+-/
+@[rep_depth transport]
+theorem full_cle_legendre_gram_square_dissipation_constructive_theorem
+    {Feature : Type*}
+    [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
+    (moment : Orbit → MomentCoord Θ)
+    (geometricTemperature : Θ)
+    (reversibleVectorField metricVectorField : Orbit → Orbit)
+    (entropy : Orbit → ℝ)
+    (dissipationAmplitude : Orbit → ℝ)
+    (partitionFunction : Θ → ℝ)
+    (thermodynamicMoment : Θ → MomentCoord Θ)
+    (souriauEntropy : MomentCoord Θ → ℝ)
+    (legendreData : LegendreContinuousLinearEquivInverseData Θ)
+    (feature : Θ → Feature)
+    (fisherHessian_eq_gram :
+      ∀ X Y : Θ,
+        legendreData.toLegendreHessianInverseContext.fisherHessian X Y =
+          inner ℝ (feature X) (feature Y))
+    (β X Y : Θ) (Q : MomentCoord Θ) (x : Orbit)
+    (hX : feature X ≠ 0) :
+    let C :=
+      ofContinuousLinearEquivLegendreGramSquareDissipation
+        moment geometricTemperature reversibleVectorField metricVectorField
+        entropy dissipationAmplitude partitionFunction thermodynamicMoment
+        souriauEntropy legendreData feature fisherHessian_eq_gram
+    C.hessian.massieuPotential β =
+        Real.log (C.hessian.partitionFunction β)
+      ∧ C.hessian.first_variation_eq_moment
+      ∧ C.hessian.second_variation_eq_fisher
+      ∧ C.hessian.fisherHessian β = C.hessian.momentCovariance β
+      ∧ C.hessian.fisherHessian β X Y = inner ℝ (feature X) (feature Y)
+      ∧ C.hessian.fisherHessian β X Y =
+        C.hessian.fisherHessian β Y X
+      ∧ 0 ≤ C.hessian.fisherHessian β X X
+      ∧ 0 < C.hessian.fisherHessian β X X
+      ∧ C.hessian.fenchel_legendre_contact
+      ∧ C.hessian.entropy_gradient_eq_beta
+      ∧ C.hessian.entropyHessian Q =
+        C.hessian.inverseFisherHessian Q
+      ∧ 0 ≤ C.metriplectic.totalEntropyRate x
+      ∧ legendreData.toLegendreHessianInverseContext.entropyHessian =
+        fderiv ℝ
+          legendreData.toLegendreHessianInverseContext.entropyGradient
+          legendreData.toLegendreHessianInverseContext.moment
+      ∧ legendreData.toLegendreHessianInverseContext.entropyHessian.comp
+          legendreData.toLegendreHessianInverseContext.fisherHessian =
+        ContinuousLinearMap.id ℝ Θ
+      ∧ legendreData.toLegendreHessianInverseContext.fisherHessian.comp
+          legendreData.toLegendreHessianInverseContext.entropyHessian =
+        ContinuousLinearMap.id ℝ (MomentCoord Θ) := by
+  exact
+    full_smooth_legendre_gram_square_dissipation_inverse_laws_theorem
+      (Orbit := Orbit)
+      moment geometricTemperature reversibleVectorField metricVectorField
+      entropy dissipationAmplitude partitionFunction thermodynamicMoment
+      souriauEntropy legendreData.toLegendreHessianInverseContext
+      feature fisherHessian_eq_gram β X Y Q x hX
+
+attribute [terminal] full_cle_legendre_gram_square_dissipation_constructive_theorem
+
+/--
+Step-by-step constructive Fisher/Onsager/metriplectic proof packet.
+
+This is the Lean-facing form of the Souriau proof narrative:
+
+* the Massieu Hessian/Fisher readout is a real Gram form;
+* Fisher symmetry and positivity are derived from the inner product;
+* the entropy Hessian is the inverse Fisher map via the continuous-linear
+  Legendre equivalence;
+* the reversible coadjoint-leaf channel is Casimir (`0`);
+* the transverse Onsager channel is a square;
+* total entropy production is the transverse channel and is nonnegative.
+
+All carriers are arbitrary.  No finite response matrix or count-state shadow is
+used.
+-/
+@[rep_depth transport]
+theorem fisher_onsager_metriplectic_constructive_proof_packet
+    {Feature : Type*}
+    [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
+    (moment : Orbit → MomentCoord Θ)
+    (geometricTemperature : Θ)
+    (reversibleVectorField metricVectorField : Orbit → Orbit)
+    (entropy : Orbit → ℝ)
+    (dissipationAmplitude : Orbit → ℝ)
+    (partitionFunction : Θ → ℝ)
+    (thermodynamicMoment : Θ → MomentCoord Θ)
+    (souriauEntropy : MomentCoord Θ → ℝ)
+    (legendreData : LegendreContinuousLinearEquivInverseData Θ)
+    (feature : Θ → Feature)
+    (fisherHessian_eq_gram :
+      ∀ X Y : Θ,
+        legendreData.toLegendreHessianInverseContext.fisherHessian X Y =
+          inner ℝ (feature X) (feature Y))
+    (β X Y : Θ) (Q : MomentCoord Θ) (x : Orbit)
+    (hX : feature X ≠ 0) :
+    let C :=
+      ofContinuousLinearEquivLegendreGramSquareDissipation
+        moment geometricTemperature reversibleVectorField metricVectorField
+        entropy dissipationAmplitude partitionFunction thermodynamicMoment
+        souriauEntropy legendreData feature fisherHessian_eq_gram
+    C.hessian.massieuPotential β =
+        Real.log (C.hessian.partitionFunction β)
+      ∧ C.hessian.fisherHessian β X Y = inner ℝ (feature X) (feature Y)
+      ∧ C.hessian.fisherHessian β X Y =
+        C.hessian.fisherHessian β Y X
+      ∧ 0 ≤ C.hessian.fisherHessian β X X
+      ∧ 0 < C.hessian.fisherHessian β X X
+      ∧ C.hessian.entropyHessian Q =
+        C.hessian.inverseFisherHessian Q
+      ∧ legendreData.toLegendreHessianInverseContext.entropyHessian.comp
+          legendreData.toLegendreHessianInverseContext.fisherHessian =
+        ContinuousLinearMap.id ℝ Θ
+      ∧ legendreData.toLegendreHessianInverseContext.fisherHessian.comp
+          legendreData.toLegendreHessianInverseContext.entropyHessian =
+        ContinuousLinearMap.id ℝ (MomentCoord Θ)
+      ∧ C.metriplectic.reversibleEntropyRate x = 0
+      ∧ C.metriplectic.metricEntropyRate x = dissipationAmplitude x ^ (2 : ℕ)
+      ∧ C.metriplectic.totalEntropyRate x = C.metriplectic.metricEntropyRate x
+      ∧ 0 ≤ C.metriplectic.metricEntropyRate x
+      ∧ 0 ≤ C.metriplectic.totalEntropyRate x := by
+  dsimp [ofContinuousLinearEquivLegendreGramSquareDissipation,
+    ofSmoothLegendreGramSquareDissipation,
+    InfiniteCoadjointOrbitHessianContext.ofSmoothLegendreGramReadout,
+    InfiniteCoadjointOrbitHessianContext.ofSmoothLegendreReadout,
+    InfiniteCoadjointOrbitHessianContext.ofLogPartitionAndFisherCovariance,
+    InfiniteCoadjointOrbitMetriplecticContext.ofMomentImageSquareDissipation,
+    InfiniteCoadjointOrbitMetriplecticContext.ofMomentImage]
+  exact
+    ⟨rfl,
+      fisherHessian_eq_gram X Y,
+      by
+        rw [fisherHessian_eq_gram X Y, fisherHessian_eq_gram Y X]
+        exact (real_inner_comm (feature X) (feature Y)).symm,
+      by
+        rw [fisherHessian_eq_gram X X]
+        exact real_inner_self_nonneg,
+      by
+        rw [fisherHessian_eq_gram X X]
+        exact (real_inner_self_pos).2 hX,
+      rfl,
+      legendreData.toLegendreHessianInverseContext.entropy_hessian_eq_fisher_inverse.1,
+      legendreData.toLegendreHessianInverseContext.entropy_hessian_eq_fisher_inverse.2,
+      rfl,
+      rfl,
+      rfl,
+      sq_nonneg (dissipationAmplitude x),
+      sq_nonneg (dissipationAmplitude x)⟩
+
+attribute [terminal] fisher_onsager_metriplectic_constructive_proof_packet
 
 end ConstructiveCombinedContext
 

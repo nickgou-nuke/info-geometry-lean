@@ -28,7 +28,7 @@ When surfaces disagree, trust them in this order:
 
 ### Operational authority
 
-These are the maintained hand-written entry surfaces for current repo state:
+These are the maintained hand-written entry surfaces for current repo state. Together they frame the repo as a Lean validation surface with theorem-graph navigation, closure-debt discipline, and agent-assisted workflows built around checked artifacts:
 
 - [README.md](../README.md)
 - [docs/README.md](README.md)
@@ -37,7 +37,7 @@ These are the maintained hand-written entry surfaces for current repo state:
 - [docs/Goutevs_Principle.md](Goutevs_Principle.md)
 - [docs/LIBER_NOVUS_MATH.md](LIBER_NOVUS_MATH.md)
 - [docs/WORKBENCH.md](WORKBENCH.md)
-- [docs/black_books/](black_books/)
+- [docs/black_books/](black_books/) — exploratory substrate and reference memory, not proof authority
 - [docs/black_books/09_science_after_coding.md](black_books/09_science_after_coding.md)
 - [docs/black_books/67_the_external_analogy_doctrine.md](black_books/67_the_external_analogy_doctrine.md)
 - [docs/black_books/108_unbounded_modular_machinery_repo_native_translation.md](black_books/108_unbounded_modular_machinery_repo_native_translation.md)
@@ -99,7 +99,7 @@ current repo state:
 ### Reference memory under `docs/`
 
 The following current files under `docs/` are reference memory, not primary
-operational authority:
+operational authority. This includes exploratory archives and black-book material unless a specific file is explicitly promoted elsewhere in this map:
 
 Backlog and diagnostics:
 

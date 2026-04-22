@@ -2,6 +2,8 @@
 
 This is the shortest reliable entry path into the repository.
 
+The repo should be approached first as a Lean 4 formalization and theorem-graph tooling environment. Exploratory archive material exists, but it is theorem-candidate substrate, not the primary proof surface.
+
 ## Step 1: understand the repo split
 
 Read:
@@ -27,6 +29,9 @@ Read:
 1. [lean/DAG/README.md](lean/DAG/README.md)
 2. [tools/README.md](tools/README.md)
 3. [tools/infra/README.md](tools/infra/README.md)
+4. [docs/ClosureDebtLedger.md](docs/ClosureDebtLedger.md)
+
+This is the practical infrastructure stack: theorem-graph navigation, audit tooling, and explicit closure-debt accounting for agent-assisted formalization.
 
 ## Step 3: add one concrete realization and one interpretation key
 
@@ -55,6 +60,7 @@ python3 tools/infra/run_locked_lake_build.py InfoGeometry.All
 Do not start with:
 - `reports/`
 - `archive/`
+- `docs/black_books/` or other exploratory archives as sources of proof authority
 - conceptual notes under `docs/` as sources of live repo state
 - stale generated counts embedded in old markdown files
 

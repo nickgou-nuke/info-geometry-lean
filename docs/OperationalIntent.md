@@ -4,6 +4,8 @@ This repository is one theory with several presentations.
 The main burden is not to flatten those presentations into one file-level story,
 but to make the morphisms between them explicit, adjacent, and checkable.
 
+Operationally, the repository is maintained as a Lean 4 formal artifact with theorem-graph infrastructure, closure-debt discipline, and agent-assisted development loops wrapped around the checked corpus. The graph and archive surfaces preserve memory and navigation, but proof authority remains with Lean and the native audit layer.
+
 ## Current Codebase Status
 
 For the latest verified build/audit snapshot, use
@@ -52,7 +54,8 @@ The stack runs with two mandatory AI modes:
 Repository rule:
 
 - exploratory agents must not emit final closure claims;
-- closure language is reserved for kernel-verified surfaces and gate outputs.
+- closure language is reserved for kernel-verified surfaces and gate outputs;
+- exploratory archives, black-book notes, and retrieved context may seed theorem candidates, but they do not count as proof until they become checked Lean surfaces or explicit closure debt.
 
 The maintained tooling layer now has two operator surfaces:
 

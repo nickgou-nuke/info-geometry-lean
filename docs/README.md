@@ -8,6 +8,12 @@ This directory is mixed:
 
 Lean source is still the truth surface. These docs exist to help orientation, not to override code.
 
+The maintained operational framing is:
+- the Lean corpus is the validation surface
+- theorem-graph and audit tooling are navigation and closure infrastructure, not proof
+- exploratory archives and black-book material are theorem-candidate substrate, not authoritative theorem surfaces
+- unresolved claims should appear either as proof-carrying Lean contexts or as explicit closure debt
+
 ## Foundational Theory
 
 The repository's core theoretical axiom is **Goutev’s Principle of Absolute 
@@ -18,7 +24,7 @@ Relativity of Measurement**:
 - [WORKBENCH.md](WORKBENCH.md) — The practical playbook for Socratic/Alchemical discovery.
 - [OperatorTheoremTranslationRegistry.md](OperatorTheoremTranslationRegistry.md) — One-to-one translation registry from external theorem surfaces to doubled-real operator-native Lean anchors.
 - [NameEquivalenceRegistry.md](NameEquivalenceRegistry.md) — Curated alias/equivalence registry merged into the maintained equivalence dictionary.
-- [black_books/](black_books/) — The "Black Books": Raw intuitive exploration (Scorpio). Includes the Thermodynamics of Joy, Sisyphian Perseverance, Eureka Tunneling, and the Gravitational Well.
+- [black_books/](black_books/) — The "Black Books": exploratory source material and theorem-candidate substrate. Useful for discovery and translation, but not proof.
 - [black_books/08_the_agentic_caretaker.md](black_books/08_the_agentic_caretaker.md) — The essay naming the repo agent as architect, creator, and caretaker under the law of the kernel.
 - [black_books/09_science_after_coding.md](black_books/09_science_after_coding.md) — The essay on exploration by dialogue, Jungian elicitation, Socratic distillation, and formal handoff to Lean.
 - [black_books/18_multilingual_logos_pauli_jung.md](black_books/18_multilingual_logos_pauli_jung.md) — The chapter on multilingual docstrings, Jungian generation, Pauli closure, and the toolchain as vessel.
@@ -79,6 +85,12 @@ raw textbook support narration.
 ## What Is Current
 
 Use these first when you want the current repo state:
+
+The practical entry stack is:
+- [README.md](../README.md) for the formal architecture and validation workflow
+- [NEWCOMER_PATH.md](../NEWCOMER_PATH.md) for the shortest technical route into the repo
+- [OperationalIntent.md](OperationalIntent.md) for the representation ladder and current live trunks
+- [RepositoryMemoryMap.md](RepositoryMemoryMap.md) for trust order and documentation status
 
 - [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 - [CleanupImprovementProgram.md](CleanupImprovementProgram.md)

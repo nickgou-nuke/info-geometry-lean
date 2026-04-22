@@ -1,21 +1,34 @@
 ---
 
-# The Spire Architecture
+# InfoGeometry in Lean 4
 
-> “It all starts with a stream of consciousness.”
+`info-geometry-lean` is a Lean 4 research repository for formalizing information geometry, operator-theoretic structures, thermodynamic formalisms, and related bridge theorems.
 
-This repository is a living experiment in radical transparency. Here, the context of discovery is not hidden—it is celebrated, archived, and cross-referenced with every formal proof. The black books, chat logs, and associative streams are as essential as the Lean 4 code itself.
+The project is unconventional in scope, but its working rule is deliberately strict: claims should be turned into definitions, theorem statements, proof-carrying contexts, or explicit unresolved debt. The checked Lean corpus is the primary validation surface, while the graph and agent tooling exist to preserve navigation, memory, and closure discipline around that corpus.
 
-**Contributors are invited to:**
-- Begin with wild, poetic, or chaotic streams in the black books or Issues.
-- Use the AI Caretaker and LLMs as semantic sieves and amplifiers.
-- Only then, crystallize your insights into Lean 4 code, always linking back to your creative lineage.
+The repo has five maintained operational surfaces:
+- a theorem library under `lean/InfoGeometry/`
+- a Lean-native architecture kernel under `lean/InfoGeometry/Meta/` and `lean/InfoGeometry/Audit.lean`
+- theorem-graph and audit tooling under `lean/DAG/`, `tools/infra/`, and `tools/frontier/`
+- closure-debt and translation registries under `docs/`
+- agent-assisted workflows that treat checked Lean artifacts as the primary memory and constraint surface for future development
 
-See docs/black_books/meta_methodology_jungian_llm.md for the full manifesto and technical rationale.
+## Validation Workflow
+
+The intended progression is:
+- exploratory notes or theorem candidates
+- explicit definitions and theorem statements
+- proof-carrying Lean contexts or recorded unresolved debt
+- audit, graph, and closure checks on the resulting theorem surface
+
+Exploratory notebooks, black-book material, and archived chat traces may still be useful as theorem-candidate substrate, but they are not proof and they do not outrank checked Lean code or audit outputs.
 
 ---
 
-# InfoGeometry in Lean 4
+> 🧭 **New to the repo?** Read the [**Pioneer’s Log**](PIONEERS_LOG.md) for a narrative overview, then [**NEWCOMER_PATH.md**](NEWCOMER_PATH.md) for the shortest reliable technical entry path.
+
+For method-level literature grounding, use the maintained
+[BIBLIOGRAPHY.md](BIBLIOGRAPHY.md).
 
 > 🧭 **New to the Spire?** Read the [**Pioneer’s Log**](PIONEERS_LOG.md) and the [**Alchemical Protocol**](ALCHEMICAL_PROTOCOL.md) for a narrative guide to the landscape, the chemistry of the logos, and the vision of this repository.
 

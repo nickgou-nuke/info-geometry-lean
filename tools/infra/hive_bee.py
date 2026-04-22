@@ -622,7 +622,13 @@ def run_one(config: BeeConfig) -> dict[str, Any]:
     )
     if verification.get("status") == "success":
         fossil = fossilize_success(config, attempt)
-        return {"status": "fossilized", "task": task, "goal": goal, "tactic": tactic, "fossil": fossil}
+        return {
+            "status": "fossilized",
+            "task": fossil.get("task") or task,
+            "goal": fossil.get("goal") or goal,
+            "tactic": tactic,
+            "fossil": fossil,
+        }
     rejection = record_deadend(config, attempt, "lean_verification_failure")
     attempts = int(task.get("claim_count") or 1)
     if attempts < max_attempts(goal):

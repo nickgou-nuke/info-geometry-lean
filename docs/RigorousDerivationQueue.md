@@ -41,8 +41,13 @@ Context:
   [lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean](/home/goutev/LEAN4/info-geometry-lean/lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean).
 
 Gap:
-- missing explicit theorem that the chosen Drazin inverse preserves Weyl
-  sheet-compatibility under commuting constraints.
+- the local-symmetry route now proves that an ε-symmetric constructive Riesz
+  problem with regular-inverse uniqueness forces the extracted Drazin candidate
+  to commute with the sheet involution, and exposes
+  `constructiveRieszWeylData_of_localWeylSymmetry` for downstream consumers.
+  Remaining work is to replace direct `ConstructiveRieszWeylData` assumptions
+  in concrete corridors with this local-symmetry constructor when the source
+  data is available.
 
 Required derivation path:
 1. State a theorem target connecting Drazin witness commutation to Weyl
@@ -51,7 +56,7 @@ Required derivation path:
    constructive candidate lane) rather than ad hoc choice.
 3. Export the theorem into the Triadic/Weyl translator lane.
 
-Status: `open`.
+Status: `reduced; local Weyl-symmetry constructor landed`.
 
 ## Target C: Sinkhorn RN Profile Lift Equality
 

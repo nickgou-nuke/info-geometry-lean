@@ -217,6 +217,7 @@ import InfoGeometry.Canonical.ArnoldNetworkPresentation
 import InfoGeometry.Canonical.ArnoldNetworkIntertwiner
 import InfoGeometry.Canonical.ModularOrientationContract
 import InfoGeometry.Canonical.RealTomitaCore
+import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 import InfoGeometry.Canonical.ModularSpectralWedge
 import InfoGeometry.Canonical.ModularSpectralWedgeBridge
 import InfoGeometry.Canonical.ModularSpectralConjugationBridge

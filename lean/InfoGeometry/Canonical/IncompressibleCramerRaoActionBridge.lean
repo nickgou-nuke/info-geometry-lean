@@ -129,6 +129,52 @@ theorem normalInference_of_incompressible
       R hIncomp x
 
 /--
+The same readout identifies the conformal unit of action with the negative
+Cramer-Rao log-volume mode.
+
+This is the manuscript-facing equality
+`unit of action = anomaly scale = -log |det(g_CR)|`, with `g_CR` still carried
+by the operatorial Souriau-Fisher metric owner.
+-/
+@[rep_depth transport]
+theorem unitOfAction_eq_metricVolumePotential
+    (R : CramerRaoNegLogVolumeAnomalyReadout CI H) (x : E) :
+    CI.unitOfAction = souriauFisherMetricVolumePotential H x := by
+  calc
+    CI.unitOfAction = CI.chiralScale := CI.unitOfAction_eq_chiralScale
+    _ = souriauFisherMetricVolumePotential H x :=
+      CramerRaoNegLogVolumeAnomalyReadout.chiralScale_eq_metricVolumePotential R x
+
+/--
+The Weyl/KKT epsilon readout is the same negative Cramer-Rao log-volume mode
+under the explicit anomaly readout.
+-/
+@[rep_depth transport]
+theorem epsilon_eq_metricVolumePotential
+    (R : CramerRaoNegLogVolumeAnomalyReadout CI H) (x : E) :
+    CI.epsilon = souriauFisherMetricVolumePotential H x := by
+  calc
+    CI.epsilon = CI.chiralScale := by
+      exact (ConformalInference.chiralScale_eq_epsilon (CI := CI)).symm
+    _ = souriauFisherMetricVolumePotential H x :=
+      CramerRaoNegLogVolumeAnomalyReadout.chiralScale_eq_metricVolumePotential R x
+
+/--
+Readout packet: chiral scale, unit of action, and Weyl/KKT epsilon are the
+same negative log-volume mode of the operatorial Souriau-Fisher metric shadow.
+-/
+@[rep_depth transport]
+theorem anomalyReadoutPacket_eq_metricVolumePotential
+    (R : CramerRaoNegLogVolumeAnomalyReadout CI H) (x : E) :
+    CI.chiralScale = souriauFisherMetricVolumePotential H x
+      ∧ CI.unitOfAction = souriauFisherMetricVolumePotential H x
+      ∧ CI.epsilon = souriauFisherMetricVolumePotential H x := by
+  exact ⟨
+    CramerRaoNegLogVolumeAnomalyReadout.chiralScale_eq_metricVolumePotential R x,
+    CramerRaoNegLogVolumeAnomalyReadout.unitOfAction_eq_metricVolumePotential R x,
+    CramerRaoNegLogVolumeAnomalyReadout.epsilon_eq_metricVolumePotential R x⟩
+
+/--
 The incompressible negative-log Cramer-Rao readout forces zero unit of action.
 -/
 @[rep_depth transport]

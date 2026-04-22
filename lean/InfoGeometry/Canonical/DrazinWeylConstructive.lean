@@ -185,6 +185,21 @@ theorem constructiveDrazinCandidate_commutes_spectralEpsilon_of_localWeylSymmetr
   simpa [ε, ContinuousLinearMap.comp_apply, mul_assoc, hε2x] using hAtεx.symm
 
 /--
+Local Weyl symmetry discharges the older raw candidate-commutation package.
+This is the bridge constructor downstream code should use when it has an
+ε-symmetric Riesz problem plus regular-inverse uniqueness, rather than a direct
+commutation proof for the extracted Drazin candidate.
+-/
+def constructiveRieszWeylData_of_localWeylSymmetry
+    {T : EndH}
+    (D : ConstructiveRieszLocalWeylSymmetryData (E := E) T) :
+    ConstructiveRieszWeylData (E := E) T where
+  riesz := D.riesz
+  candidate_commutes_spectralEpsilon :=
+    constructiveDrazinCandidate_commutes_spectralEpsilon_of_localWeylSymmetry
+      (E := E) D
+
+/--
 Constructive D2 bridge: local Weyl symmetry and uniqueness of the regular
 Riesz inverse imply Weyl compatibility of the constructive Drazin candidate.
 -/

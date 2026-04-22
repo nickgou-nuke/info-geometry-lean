@@ -28,6 +28,19 @@ def test_souriau_tomita_modular_flow_bridge_is_source_owned() -> None:
 
 
 
+def test_souriau_tomita_bridge_exposes_cyclic_standard_form_kms_owner_route() -> None:
+    text = SOURCE.read_text(encoding="utf-8")
+
+    assert "structure CyclicSouriauTomitaKMSContext" in text
+    assert "modularHamiltonian_zero" in text
+    assert "theorem sigma_apply_eq_self" in text
+    assert "theorem toStandardFormCarrier_Delta_eq_zero" in text
+    assert "theorem toStandardFormCarrier_modularFlow_apply_eq_self" in text
+    assert "theorem kms_eval_mul_souriau_modular_eq_eval_flip" in text
+    assert "theorem constructive_kms_packet" in text
+
+
+
 def test_souriau_tomita_bridge_exposes_standard_form_owner_route() -> None:
     text = SOURCE.read_text(encoding="utf-8")
 

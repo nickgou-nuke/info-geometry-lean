@@ -67,6 +67,7 @@ def test_run_one_success_with_all_roles(monkeypatch, tmp_path: Path) -> None:
     task = sample_task()
     goal = sample_goal()
 
+    monkeypatch.setattr(hive_swarm, "ARTIFACT_DIR", tmp_path)
     monkeypatch.setattr(hive_swarm.hive_bee, "fetch_claimed_task_and_goal", lambda cfg: (task, goal))
     monkeypatch.setattr(
         hive_swarm.hive_bee,
@@ -98,6 +99,7 @@ def test_run_one_critic_rejection_requeues(monkeypatch, tmp_path: Path) -> None:
     goal = sample_goal()
     events = []
 
+    monkeypatch.setattr(hive_swarm, "ARTIFACT_DIR", tmp_path)
     monkeypatch.setattr(hive_swarm.hive_bee, "fetch_claimed_task_and_goal", lambda cfg: (task, goal))
     monkeypatch.setattr(
         hive_swarm.hive_bee,

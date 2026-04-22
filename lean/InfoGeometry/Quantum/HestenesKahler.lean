@@ -9,6 +9,8 @@ import InfoGeometry.Canonical.StateDependentTransport
 import InfoGeometry.Canonical.PolarizedMadelungBridge
 import InfoGeometry.Canonical.EinsteinAnomalyOperator
 import InfoGeometry.Canonical.TwistorOperatorialIncidence
+import InfoGeometry.Canonical.ConformalAlgebra
+import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
 
 /-!
 # Projective Polarized Bi-graded Hestenes Geometry
@@ -35,10 +37,16 @@ open InfoGeometry.Canonical.TomitaTakesaki
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical.ConformalUnification
+open InfoGeometry.Canonical.ConformalAlgebra
+open InfoGeometry.Canonical.SuperchargeCentralChargeClosure
+open InfoGeometry.Canonical.OperatorialCentralCharge
+open InfoGeometry.Canonical.BogoliubovVielbein
 open InfoGeometry.Quantum.RealMajorana
 open InfoGeometry.Quantum.GeometricQuantumTensor
 open InfoGeometry.Canonical.StateDependentTransport
 open InfoGeometry.Canonical.PolarizedMadelungBridge
+open InfoGeometry.KK
+open InfoGeometry.KK.RealSplitKreinKasparovCycle
 
 variable {E : Type}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -389,7 +397,7 @@ lemma comp_modularComplexI_isPhaseAntilinear
   unfold IsPhaseAntilinear at hA ⊢
   let K : EndH := InfoGeometry.Krein.clockAxis (E := E)
   have hK2 : K.comp K = -(ContinuousLinearMap.id ℝ H₂) := by
-    simpa [K] using (InfoGeometry.Krein.clockAxis_sq (E := E))
+    simp [K]
   calc
     (A.comp K).comp K = A.comp (K.comp K) := by
       simp [ContinuousLinearMap.comp_assoc]
@@ -470,6 +478,44 @@ theorem weldedProjectorObstructionBerry_eq_zero_of_operatorialIncidence
   ext u v
   simp [weldedProjectorObstructionBerry, berryTwoFormJEpsOfOperator, hAxis,
     GeometricQuantumTensor.metricOfOperator_zero]
+
+/--
+Operatorial dilation-charge response mode.
+
+This packet is deliberately assembled from owner theorems rather than a new
+scalar charge: Cartan puts the conformal generator `D` in the Weyl-dilation
+sector, operatorial incidence kills the Hestenes-welded Berry obstruction, and
+the CPT supercharge transport lane identifies the quasilattice analytical index
+with the operatorial central charge.
+-/
+@[rep_depth transport]
+theorem dilationChargeResponseMode_of_operatorialIncidence
+    {A B : Type}
+    [NormedRing A] [NormedRing B]
+    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+    [FiniteDimensional ℝ E]
+    [KreinSpace H₂] [KreinGradedModule H₂]
+    (CBA : ConformalBeliefAlgebra E)
+    (CCI : CertifiedConformalInference E)
+    (V : BogoliubovVielbeinBundle (E := E))
+    (X : RealSplitKreinDiracFredholmModule A B H₂)
+    (hCartan : CBA.GeneratorCartanDecomposition)
+    (hInc : CCI.operatorialIncidence)
+    (hX : ChiralFredholmSurface X)
+    (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
+    (t : ℝ) :
+    CBA.IsWeylDilationPart CBA.D
+      ∧ weldedProjectorObstructionBerry (E := E) CCI = 0
+      ∧ quasilatticeAnalyticalIndex V X t
+          (quasilatticeChiralFredholmSurfaceOf (E := E) V X hX hEven t)
+        =
+        operatorialCentralCharge (A := A) (B := B) (E := E) X hX := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact CBA.D_in_weylDilation_of_cartan hCartan
+  · exact weldedProjectorObstructionBerry_eq_zero_of_operatorialIncidence
+      (E := E) CCI hInc
+  · exact quasilatticeAnalyticalIndex_eq_operatorialCentralCharge_on_cpt_lane
+      (A := A) (B := B) (E := E) V X hX hEven t
 
 section StateDependent
 

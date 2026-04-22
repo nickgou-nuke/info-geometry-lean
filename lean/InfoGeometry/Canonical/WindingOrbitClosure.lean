@@ -685,6 +685,57 @@ theorem nonEquilibriumClockDefect_eq_two_smul_scalePart_comp_clockAxis
     clockAxis] using hSource
 
 /--
+Right-composition by the clock axis is injective because the doubled-real
+clock axis squares to `-1`.  This is the constructive cancellation step that
+lets the clock defect detect the scale part itself, not just its right action.
+-/
+theorem right_comp_clockAxis_eq_zero_iff
+    (A : EndH) :
+    A.comp (clockAxis H) = 0 ↔ A = 0 := by
+  constructor
+  · intro hAK
+    have hSq : (clockAxis H).comp (clockAxis H) =
+        -(ContinuousLinearMap.id ℝ (DoubledSpace H)) := by
+      simpa [clockAxis, InvolutiveSelfDualCarrier.K, doubledCarrier] using
+        (InvolutiveSelfDualCarrier.K_sq (X := doubledCarrier (E := H)))
+    have hAKK : A.comp ((clockAxis H).comp (clockAxis H)) = 0 := by
+      rw [← ContinuousLinearMap.comp_assoc, hAK]
+      simp
+    have hNegA : A.comp ((clockAxis H).comp (clockAxis H)) = -A := by
+      rw [hSq]
+      simp
+    exact neg_eq_zero.mp (hNegA.symm.trans hAKK)
+  · intro hA
+    simp [hA]
+
+/--
+The non-equilibrium clock defect vanishes exactly on detailed equilibrium:
+the defect is `2 • scalePart ∘ clockAxis`, and the clock axis is invertible
+up to sign.
+-/
+theorem nonEquilibriumClockDefect_eq_zero_iff_detailedEquilibrium
+    (hMod : EndH) :
+    nonEquilibriumClockDefect (H := H) hMod = 0 ↔
+      IsDetailedEquilibriumSeed (H := H) hMod := by
+  rw [nonEquilibriumClockDefect_eq_two_smul_scalePart_comp_clockAxis (H := H) hMod]
+  constructor
+  · intro hZero
+    have hComp :
+        (InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod).comp
+          (clockAxis H) = 0 :=
+      (smul_eq_zero.mp hZero).resolve_left (by norm_num)
+    simpa [IsDetailedEquilibriumSeed] using
+      (right_comp_clockAxis_eq_zero_iff
+        (H := H)
+        (A := InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod)).1 hComp
+  · intro hEq
+    change (2 : ℝ) •
+        ((InfoGeometry.Canonical.BogoliubovTransport.modularGeneratorScalePart (E := H) hMod).comp
+          (clockAxis H)) = 0
+    rw [hEq]
+    simp
+
+/--
 Named Cartan scale-split source law for D1:
 the winding clock commutator is sourced exactly by the Cartan-odd
 phase-antilinear scale sector of the modular generator.
@@ -925,6 +976,21 @@ theorem not_detailedEquilibrium_of_noncommutingScaleLane
     ¬ IsDetailedEquilibriumSeed (H := H) hMod := by
   intro hEq
   exact hNon (nonEquilibriumClockDefect_eq_zero_of_detailedEquilibrium (H := H) hMod hEq)
+
+/--
+The noncommuting scale lane is precisely the complement of detailed
+equilibrium on the winding clock defect.
+-/
+theorem noncommutingScaleLane_iff_not_detailedEquilibrium
+    (hMod : EndH) :
+    IsNoncommutingScaleLane (H := H) hMod ↔
+      ¬ IsDetailedEquilibriumSeed (H := H) hMod := by
+  unfold IsNoncommutingScaleLane
+  constructor
+  · exact not_detailedEquilibrium_of_noncommutingScaleLane (H := H) hMod
+  · intro hNot hZero
+    exact hNot
+      ((nonEquilibriumClockDefect_eq_zero_iff_detailedEquilibrium (H := H) hMod).1 hZero)
 
 end Core
 

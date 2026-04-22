@@ -127,6 +127,51 @@ theorem semanticCollapsePacket
     dilationCommutator_eq_neg_half_projectorObstruction_of_structuredProjectorHypotheses
       (CI := CI) hProj hLeft
 
+/--
+Zero chiral scale collapses both projector obstruction and the Weyl dilation
+commutator under the structured projector hypotheses.
+-/
+@[rep_depth transport]
+theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
+    (hProj : CI.P_MP_right = CI.P_MP)
+    (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D)
+    (hScaleZero : CI.chiralScale = 0) :
+    CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  have hComm : Commute CI.spectralChiralProjector CI.metricChiralProjector := by
+    simpa [Commute] using CI.projectors_commute_of_chiralScale_eq_zero hScaleZero
+  have hObsZero : CI.projectorObstruction = 0 :=
+    CI.projectorObstruction_eq_zero_of_commute hComm
+  have hRight : CI.P_D * CI.P_MP_right = CI.P_MP_right * CI.P_D := by
+    rw [hProj]
+    exact hLeft
+  have hDilZero : CI.P_D * CI.D - CI.D * CI.P_D = 0 :=
+    CI.spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_chiralScale_eq_zero
+      hRight hScaleZero
+  exact ⟨hObsZero, hDilZero⟩
+
+/--
+Zero-scale semantic collapse packet: the scalar anomaly readouts vanish
+together with projector obstruction and the Weyl dilation commutator.
+-/
+@[rep_depth transport]
+theorem semanticCollapsePacket_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
+    (hProj : CI.P_MP_right = CI.P_MP)
+    (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D)
+    (hScaleZero : CI.chiralScale = 0) :
+    CI.chiralScale = 0
+      ∧ CI.epsilon = 0
+      ∧ CI.projectorObstruction = 0
+      ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
+  have hObsDil :=
+    projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
+      (CI := CI) hProj hLeft hScaleZero
+  have hEpsZero : CI.epsilon = 0 := by
+    calc
+      CI.epsilon = CI.chiralScale := by symm; exact chiralScale_eq_epsilon (CI := CI)
+      _ = 0 := hScaleZero
+  exact ⟨hScaleZero, hEpsZero, hObsDil.1, hObsDil.2⟩
+
 end ConformalInference
 
 end WeylAnomalyClosure

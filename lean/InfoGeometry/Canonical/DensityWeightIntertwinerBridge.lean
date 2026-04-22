@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.RelativePotentialCountBridge
 import InfoGeometry.Canonical.ThermodynamicGenerator
 import InfoGeometry.Canonical.MajoranaKreinCartanSplit
 import InfoGeometry.Canonical.KreinDiracWeightFunctionalLift
+import InfoGeometry.Canonical.SouriauPlanckVector
 
 open scoped InnerProductSpace
 
@@ -236,6 +237,58 @@ theorem densityWeightLiftedReadout_zero_apply_eq_metricPhase_transportCommutator
           (souriauTemperatureVector (E := E) P ψ) A) u v ) := by
   unfold densityWeightLiftedReadout
   rw [densityWeightLiftedDynamics_zero (E := E) (P := P) (ψ := ψ) (A := A)]
+
+/--
+Zero-weight density-lifted readout is exactly the comparison-state thermodynamic
+readout.
+-/
+@[rep_depth transport]
+theorem densityWeightLiftedReadout_zero_pair_eq_comparisonReadout_pair
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH) :
+    ((densityWeightLiftedReadout (E := E) P ψ A 0).metric,
+      (densityWeightLiftedReadout (E := E) P ψ A 0).phase)
+      =
+    (comparisonMetricReadout (E := E) P ψ A,
+      comparisonPhaseReadout (E := E) P ψ A) := by
+  apply Prod.ext
+  · ext u v
+    simp [densityWeightLiftedReadout, densityWeightLiftedDynamics_zero,
+      StateDependentTransport.stateInducedDynamics,
+      StateDependentTransport.stateTransportGenerator,
+      StateDependentTransport.stateRelativeModularGenerator,
+      BogoliubovTransport.relativeModularDeriv,
+      BogoliubovTransport.relativeModularKGenerator,
+      BogoliubovTransport.modularDeriv,
+      BogoliubovTransport.modularTransportGenerator,
+      comparisonMetricReadout_apply]
+  · ext u v
+    simp [densityWeightLiftedReadout, densityWeightLiftedDynamics_zero,
+      StateDependentTransport.stateInducedDynamics,
+      StateDependentTransport.stateTransportGenerator,
+      StateDependentTransport.stateRelativeModularGenerator,
+      BogoliubovTransport.relativeModularDeriv,
+      BogoliubovTransport.relativeModularKGenerator,
+      BogoliubovTransport.modularDeriv,
+      BogoliubovTransport.modularTransportGenerator]
+
+/--
+A Gibbs-Souriau equilibrium seed forces the zero-weight density-lifted readout
+packet to vanish.
+
+This is an infinite operatorial theorem: it stays on the doubled carrier and
+reuses the already-owned equilibrium-to-readout-stationarity route rather than
+introducing any finite response matrix.
+-/
+@[rep_depth transport]
+theorem densityWeightLiftedReadout_zero_pair_eq_zero_of_equilibriumSeed
+    {P : PotentialDatum (E := E)} {ψ : H₂} {A : EndH}
+    (hEq : InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed (E := E) P ψ A) :
+    ((densityWeightLiftedReadout (E := E) P ψ A 0).metric,
+      (densityWeightLiftedReadout (E := E) P ψ A 0).phase)
+      = (0, 0) := by
+  rw [densityWeightLiftedReadout_zero_pair_eq_comparisonReadout_pair (E := E) P ψ A]
+  exact InfoGeometry.Canonical.SouriauPlanckVector.comparisonReadout_pair_eq_zero_of_equilibriumSeed
+    (E := E) hEq
 
 end DoubledCarrier
 

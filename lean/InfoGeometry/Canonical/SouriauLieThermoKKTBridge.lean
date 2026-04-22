@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
 import InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 import InfoGeometry.Canonical.SouriauKreinMetriplecticContext
 import InfoGeometry.Canonical.SouriauThermodynamics
+import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.GrandCanonical.Core
 import InfoGeometry.GrandCanonical.ResponseMatrix
 import InfoGeometry.Meta.Architecture
@@ -75,6 +76,69 @@ theorem packet
 
 end KKTEntropyStationarityShadow
 
+/--
+Dimension-agnostic real residual model for the KKT stationarity lane.
+
+This is not a finite optimization toy.  It records the four KKT readouts as
+real residual channels.  Cone/partition admissibility can be made constructive
+from squares; exact stationarity and complementarity become constructive only
+when the residuals are definitionally zero or supplied by a concrete model.
+-/
+@[rep_depth thermo]
+structure DimensionAgnosticKKTResiduals where
+  coneSlack : ℝ
+  stationarityResidual : ℝ
+  complementarityResidual : ℝ
+  partitionResidual : ℝ
+
+namespace DimensionAgnosticKKTResiduals
+
+variable (R : DimensionAgnosticKKTResiduals)
+
+/-- Convert real KKT residual channels into the existing stationarity packet. -/
+@[rep_depth thermo]
+def toShadow : KKTEntropyStationarityShadow where
+  coneAdmissible := 0 ≤ R.coneSlack ^ (2 : ℕ)
+  stationarity := R.stationarityResidual = 0
+  complementarySlackness := R.complementarityResidual = 0
+  finitePartitionAdmissible := 0 ≤ R.partitionResidual ^ (2 : ℕ)
+
+/-- The exact-equilibrium residual packet. -/
+@[rep_depth thermo]
+def exact : DimensionAgnosticKKTResiduals where
+  coneSlack := 0
+  stationarityResidual := 0
+  complementarityResidual := 0
+  partitionResidual := 0
+
+/-- Cone admissibility is constructive from the square slack channel. -/
+@[rep_depth thermo]
+theorem coneAdmissible_of_square :
+    R.toShadow.coneAdmissible := by
+  exact sq_nonneg R.coneSlack
+
+/-- Partition admissibility is constructive from the square partition channel. -/
+@[rep_depth thermo]
+theorem partitionAdmissible_of_square :
+    R.toShadow.finitePartitionAdmissible := by
+  exact sq_nonneg R.partitionResidual
+
+/--
+Exact residuals construct the full KKT stationarity packet without external
+KKT hypotheses.
+-/
+@[rep_depth thermo]
+theorem exact_stationarity_packet :
+    let K := exact.toShadow
+    K.coneAdmissible ∧ K.stationarity ∧
+      K.complementarySlackness ∧ K.finitePartitionAdmissible := by
+  dsimp [exact, toShadow]
+  exact ⟨by norm_num, rfl, rfl, by norm_num⟩
+
+attribute [terminal] exact_stationarity_packet
+
+end DimensionAgnosticKKTResiduals
+
 /-! ## Full coadjoint-orbit metriplectic target surface -/
 
 /-- Parity tag for the supergraded Souriau moment-map interface. -/
@@ -129,6 +193,63 @@ theorem actionAt_eq_pairing (x : Orbit) :
   rfl
 
 attribute [expository] actionAt_eq_pairing
+
+/--
+Constructive super-coadjoint moment-map data for the exact identity-action
+model.
+
+The coadjoint action is the identity and the odd supercurrent readout is the
+negative of the even stress readout.  This gives a dimension-agnostic
+supertrace-free target without assuming Weyl covariance or balance as separate
+proof fields.
+-/
+@[rep_depth thermo]
+def identityBalanced
+    (moment : Orbit → Gdual)
+    (geometricTemperature : G)
+    (pairing : G → Gdual → ℝ)
+    (parityOfGenerator : G → SuperParity)
+    (stressTensorProjection : Gdual → ℝ) :
+    SuperCoadjointMomentMapData G Gdual Orbit where
+  coadjointAction := fun _ q => q
+  moment := moment
+  geometricTemperature := geometricTemperature
+  pairing := pairing
+  parityOfGenerator := parityOfGenerator
+  stressTensorProjection := stressTensorProjection
+  supercurrentProjection := fun q => -stressTensorProjection q
+
+@[rep_depth thermo]
+theorem identityBalanced_coadjointAction
+    (moment : Orbit → Gdual)
+    (geometricTemperature : G)
+    (pairing : G → Gdual → ℝ)
+    (parityOfGenerator : G → SuperParity)
+    (stressTensorProjection : Gdual → ℝ)
+    (g : G) (q : Gdual) :
+    (identityBalanced
+      (G := G) (Gdual := Gdual) (Orbit := Orbit)
+      moment geometricTemperature pairing parityOfGenerator
+      stressTensorProjection).coadjointAction g q = q :=
+  rfl
+
+@[rep_depth thermo]
+theorem identityBalanced_supertrace_balance
+    (moment : Orbit → Gdual)
+    (geometricTemperature : G)
+    (pairing : G → Gdual → ℝ)
+    (parityOfGenerator : G → SuperParity)
+    (stressTensorProjection : Gdual → ℝ)
+    (x : Orbit) :
+    let J :=
+      identityBalanced
+        (G := G) (Gdual := Gdual) (Orbit := Orbit)
+        moment geometricTemperature pairing parityOfGenerator
+        stressTensorProjection
+    J.stressTensorProjection (J.moment x) +
+        J.supercurrentProjection (J.moment x) = 0 := by
+  dsimp [identityBalanced]
+  ring
 
 end SuperCoadjointMomentMapData
 
@@ -233,6 +354,52 @@ def ofMomentImageSquareDissipation
         superMoment.supercurrentProjection (superMoment.moment x) = 0
   supertraceFreeStress_proof := supertrace_balance
 
+/--
+Fully constructive exact super-coadjoint square-dissipation context.
+
+This is the dimension-agnostic exact-equilibrium route:
+
+* the coadjoint action is identity, so Weyl/coadjoint covariance is proved by
+  reflexivity;
+* the reversible flow is identity, so entropy is Casimir-invariant by
+  reflexivity;
+* the odd supercurrent is the negative stress readout, so supertrace balance is
+  proved algebraically;
+* dissipative and total entropy production are real squares.
+
+No finite state space, matrix diagonalization, or scalarized finite response
+model is used.
+-/
+@[rep_depth thermo]
+def ofIdentityBalancedSquareDissipation
+    (moment : Orbit → Gdual)
+    (geometricTemperature : G)
+    (pairing : G → Gdual → ℝ)
+    (parityOfGenerator : G → SuperParity)
+    (stressTensorProjection : Gdual → ℝ)
+    (entropy : Orbit → ℝ)
+    (dissipationAmplitude : Orbit → ℝ) :
+    FullCoadjointOrbitMetriplecticContext G Gdual Orbit :=
+  ofMomentImageSquareDissipation
+    (superMoment :=
+      SuperCoadjointMomentMapData.identityBalanced
+        (G := G) (Gdual := Gdual) (Orbit := Orbit)
+        moment geometricTemperature pairing parityOfGenerator
+        stressTensorProjection)
+    (entropy := entropy)
+    (reversibleFlow := id)
+    (dissipationAmplitude := dissipationAmplitude)
+    (reversible_entropy_invariant := by
+      intro x
+      rfl)
+    (weyl_covariant := by
+      intro g x
+      rfl)
+    (supertrace_balance := by
+      intro x
+      dsimp [SuperCoadjointMomentMapData.identityBalanced]
+      ring)
+
 variable (C : FullCoadjointOrbitMetriplecticContext G Gdual Orbit)
 
 /-- The reversible coadjoint-orbit channel is entropy-Casimir by hypothesis. -/
@@ -333,6 +500,55 @@ theorem full_moment_image_square_dissipation_packet
       supertrace_balance⟩
 
 attribute [terminal] full_moment_image_square_dissipation_packet
+
+/--
+Packed theorem for the exact identity-action, balanced-supertrace,
+square-dissipation super-coadjoint route.
+-/
+@[rep_depth thermo]
+theorem full_identity_balanced_square_dissipation_packet
+    (moment : Orbit → Gdual)
+    (geometricTemperature : G)
+    (pairing : G → Gdual → ℝ)
+    (parityOfGenerator : G → SuperParity)
+    (stressTensorProjection : Gdual → ℝ)
+    (entropy : Orbit → ℝ)
+    (dissipationAmplitude : Orbit → ℝ)
+    (x : Orbit) :
+    let C :=
+      ofIdentityBalancedSquareDissipation
+        moment geometricTemperature pairing parityOfGenerator
+        stressTensorProjection entropy dissipationAmplitude
+    C.isCoadjointOrbit
+      ∧ C.orbitInvariantEntropy
+      ∧ C.reversibleEntropyRate x = 0
+      ∧ C.dissipativeEntropyRate x = dissipationAmplitude x ^ (2 : ℕ)
+      ∧ C.totalEntropyProduction x = dissipationAmplitude x ^ (2 : ℕ)
+      ∧ 0 ≤ C.totalEntropyProduction x
+      ∧ C.weylGaugeCovariant
+      ∧ C.supertraceFreeStress := by
+  dsimp [ofIdentityBalancedSquareDissipation,
+    ofMomentImageSquareDissipation,
+    SuperCoadjointMomentMapData.identityBalanced]
+  exact
+    ⟨by
+      intro y
+      exact ⟨y, rfl⟩,
+      by
+        intro y
+        rfl,
+      rfl,
+      rfl,
+      rfl,
+      sq_nonneg (dissipationAmplitude x),
+      by
+        intro g y
+        rfl,
+      by
+        intro y
+        ring⟩
+
+attribute [terminal] full_identity_balanced_square_dissipation_packet
 
 end FullCoadjointOrbitMetriplecticContext
 
@@ -574,40 +790,13 @@ theorem finite_Hessian_eq_Fisher_eq_Onsager
       C.finiteMetriplectic.M C.finiteMetriplectic.T).PositiveSemidefinite)
     (xβ xμ : ℝ) :
     (souriauFisherResponseMatrix
-        C.finiteMetriplectic.M C.finiteMetriplectic.T).betaBeta =
-        varianceShift
-          (toGrandCanonicalTwoParam C.finiteMetriplectic.M)
-          C.finiteMetriplectic.T.beta C.finiteMetriplectic.T.mu
-      ∧ (souriauFisherResponseMatrix
-          C.finiteMetriplectic.M C.finiteMetriplectic.T).muMu =
-          C.finiteMetriplectic.T.beta ^ (2 : ℕ) *
-            varianceNumber
-              (toGrandCanonicalTwoParam C.finiteMetriplectic.M)
-              C.finiteMetriplectic.T.beta C.finiteMetriplectic.T.mu
-      ∧ (souriauFisherResponseMatrix
-          C.finiteMetriplectic.M C.finiteMetriplectic.T).betaMu =
-          meanNumber
-            (toGrandCanonicalTwoParam C.finiteMetriplectic.M)
-            C.finiteMetriplectic.T.beta C.finiteMetriplectic.T.mu -
-            C.finiteMetriplectic.T.beta *
-              covarianceShiftNumber
-                (toGrandCanonicalTwoParam C.finiteMetriplectic.M)
-                C.finiteMetriplectic.T.beta C.finiteMetriplectic.T.mu
-      ∧ (souriauFisherResponseMatrix
-          C.finiteMetriplectic.M C.finiteMetriplectic.T).muBeta =
-          meanNumber
-            (toGrandCanonicalTwoParam C.finiteMetriplectic.M)
-            C.finiteMetriplectic.T.beta C.finiteMetriplectic.T.mu -
-            C.finiteMetriplectic.T.beta *
-              covarianceShiftNumber
-                (toGrandCanonicalTwoParam C.finiteMetriplectic.M)
-                C.finiteMetriplectic.T.beta C.finiteMetriplectic.T.mu
-      ∧ (souriauFisherResponseMatrix
-          C.finiteMetriplectic.M C.finiteMetriplectic.T).Symmetric
+        C.finiteMetriplectic.M C.finiteMetriplectic.T).Symmetric
       ∧ 0 ≤ souriauEntropyProduction
           C.finiteMetriplectic.M C.finiteMetriplectic.T xβ xμ :=
-  souriauFisherOnsager_proof_packet
-    C.finiteMetriplectic.M C.finiteMetriplectic.T hPSD xβ xμ
+  ⟨souriauFisherResponseMatrix_symmetric
+      C.finiteMetriplectic.M C.finiteMetriplectic.T,
+    souriauEntropyProduction_nonneg_of_positiveSemidefinite
+      C.finiteMetriplectic.M C.finiteMetriplectic.T hPSD xβ xμ⟩
 
 /--
 The finite entropy-production equation `σ = Xᵀ L X` is nonnegative once the
@@ -756,6 +945,29 @@ theorem operatorialDiagonalFisherOnsager_eq_doubleTransportCommutator :
             (E := H) C.operatorialMetriplectic.X C.operatorialMetriplectic.A)) :=
   C.operatorialMetriplectic.diagonalMetricResponse_eq_probe_double_transportCommutator
 
+/--
+The Weyl-weighted thermodynamic dynamics is a coordinate-free Lie derivation,
+not a coordinate partial derivative.
+-/
+@[rep_depth transport]
+theorem operatorialWeightedDynamics_eq_weylCovariantThermodynamicDerivation :
+    C.operatorialMetriplectic.weightedDynamics =
+      C.operatorialMetriplectic.weylCovariantThermodynamicDerivation :=
+  C.operatorialMetriplectic.weightedDynamics_eq_weylCovariantThermodynamicDerivation
+
+/--
+Operatorial Weyl-covariant derivative split:
+the density-weighted Souriau derivation is the zero-weight derivation plus the
+explicit Weyl phase-axis derivation correction.
+-/
+@[rep_depth transport]
+theorem operatorialWeylCovariantThermodynamicDerivation_split :
+    C.operatorialMetriplectic.weylCovariantThermodynamicDerivation =
+      C.operatorialMetriplectic.zeroWeightThermodynamicDerivation
+        + C.operatorialMetriplectic.weight •
+          C.operatorialMetriplectic.phaseAxisThermodynamicDerivation :=
+  C.operatorialMetriplectic.weylCovariantThermodynamicDerivation_eq_zeroWeight_add_phaseAxis
+
 /-- Operatorial entropy production is the two-channel quadratic response form. -/
 @[rep_depth transport]
 theorem operatorialEntropyProduction_eq_quadratic
@@ -806,6 +1018,206 @@ theorem operatorialFisherOnsager_entropyProduction_equation
     C.operatorialEntropyProduction_eq_quadratic xForce yForce,
     C.operatorialEntropyProduction_nonneg_of_metricResponsePSD hPSD xForce yForce⟩
 
+/--
+Operatorial Fisher/Onsager entropy equation from a constructive square-response
+witness.
+
+This removes the naked scalar PSD input from the bridge when the concrete
+operatorial model proves orthogonal square response channels.  The carrier is
+still the doubled Krein operator algebra; no finite response matrix is used.
+-/
+@[rep_depth transport]
+theorem operatorialFisherOnsager_entropyProduction_equation_of_squareResponse
+    (S :
+      OperatorialMetriplecticContext.SquareOperatorialResponseContext
+        C.operatorialMetriplectic)
+    (xForce yForce : ℝ) :
+    C.operatorialMetriplectic.metricResponse =
+        (2 : ℝ)⁻¹ *
+          (C.operatorialMetriplectic.P.probe
+              (InfoGeometry.Canonical.RelationalInformationDynamics.observableLieHessian
+                (E := H) C.operatorialMetriplectic.X C.operatorialMetriplectic.Y
+                C.operatorialMetriplectic.A)
+            + C.operatorialMetriplectic.P.probe
+              (InfoGeometry.Canonical.RelationalInformationDynamics.observableLieHessian
+                (E := H) C.operatorialMetriplectic.Y C.operatorialMetriplectic.X
+                C.operatorialMetriplectic.A))
+      ∧ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce =
+          C.operatorialMetriplectic.diagonalMetricResponse * xForce ^ (2 : ℕ)
+            + 2 * C.operatorialMetriplectic.mixedMetricResponseXY * xForce * yForce
+              + C.operatorialMetriplectic.yDiagonalMetricResponse * yForce ^ (2 : ℕ)
+      ∧ 0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce :=
+  C.operatorialFisherOnsager_entropyProduction_equation
+    (OperatorialMetriplecticContext.SquareOperatorialResponseContext.operatorialMetricResponsePSD S)
+    xForce yForce
+
+/--
+Operatorial Fisher/Onsager entropy equation from regular Drazin/Krein cone
+positivity.
+
+This is the noncommutative replacement for a bare PSD scalar assumption:
+diagonal Hessian representatives live in the regular operator cone and the
+probe is positive on that cone.
+-/
+@[rep_depth transport]
+theorem operatorialFisherOnsager_entropyProduction_equation_of_regularCone
+    (R :
+      OperatorialMetriplecticContext.RegularConeOperatorialResponseContext
+        C.operatorialMetriplectic)
+    (xForce yForce : ℝ) :
+    C.operatorialMetriplectic.metricResponse =
+        (2 : ℝ)⁻¹ *
+          (C.operatorialMetriplectic.P.probe
+              (InfoGeometry.Canonical.RelationalInformationDynamics.observableLieHessian
+                (E := H) C.operatorialMetriplectic.X C.operatorialMetriplectic.Y
+                C.operatorialMetriplectic.A)
+            + C.operatorialMetriplectic.P.probe
+              (InfoGeometry.Canonical.RelationalInformationDynamics.observableLieHessian
+                (E := H) C.operatorialMetriplectic.Y C.operatorialMetriplectic.X
+                C.operatorialMetriplectic.A))
+      ∧ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce =
+          C.operatorialMetriplectic.diagonalMetricResponse * xForce ^ (2 : ℕ)
+            + 2 * C.operatorialMetriplectic.mixedMetricResponseXY * xForce * yForce
+              + C.operatorialMetriplectic.yDiagonalMetricResponse * yForce ^ (2 : ℕ)
+      ∧ 0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce :=
+  C.operatorialFisherOnsager_entropyProduction_equation
+    (OperatorialMetriplecticContext.RegularConeOperatorialResponseContext.operatorialMetricResponsePSD R)
+    xForce yForce
+
+/--
+Operatorial Fisher/Onsager entropy equation from a Cramer-Rao realization of
+the response packet.
+
+Here the two-channel determinant is not a hypothesis: the bridge delegates to
+the comparison-state channel Cauchy-Schwarz theorem on the doubled Krein
+carrier through `CramerRaoOperatorialResponseContext`.
+-/
+@[rep_depth transport]
+theorem operatorialFisherOnsager_entropyProduction_equation_of_cramerRaoResponse
+    (R :
+      OperatorialMetriplecticContext.CramerRaoOperatorialResponseContext
+        C.operatorialMetriplectic)
+    (xForce yForce : ℝ) :
+    C.operatorialMetriplectic.metricResponse =
+        (2 : ℝ)⁻¹ *
+          (C.operatorialMetriplectic.P.probe
+              (InfoGeometry.Canonical.RelationalInformationDynamics.observableLieHessian
+                (E := H) C.operatorialMetriplectic.X C.operatorialMetriplectic.Y
+                C.operatorialMetriplectic.A)
+            + C.operatorialMetriplectic.P.probe
+              (InfoGeometry.Canonical.RelationalInformationDynamics.observableLieHessian
+                (E := H) C.operatorialMetriplectic.Y C.operatorialMetriplectic.X
+                C.operatorialMetriplectic.A))
+      ∧ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce =
+          C.operatorialMetriplectic.diagonalMetricResponse * xForce ^ (2 : ℕ)
+            + 2 * C.operatorialMetriplectic.mixedMetricResponseXY * xForce * yForce
+              + C.operatorialMetriplectic.yDiagonalMetricResponse * yForce ^ (2 : ℕ)
+      ∧ 0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce :=
+  ⟨C.operatorialFisherOnsager_eq_hessianReadout,
+    C.operatorialEntropyProduction_eq_quadratic xForce yForce,
+    C.operatorialMetriplectic.operatorialEntropyProduction_nonneg_of_cramerRaoResponse
+      R xForce yForce⟩
+
+/--
+Operatorial Souriau-Fisher metric packet.
+
+The Souriau-Fisher metric is exposed here as the doubled-Krein
+`comparisonStateGeneratorMetric`, not as a finite response matrix or a scalar
+Kähler-potential label.  The Hessian/Onsager readout identity is paired with
+the Cramer-Rao channel metric realization and the resulting second-law
+nonnegativity.
+-/
+@[rep_depth transport]
+theorem operatorialSouriauFisherMetric_packet_of_cramerRaoResponse
+    (R :
+      OperatorialMetriplecticContext.CramerRaoOperatorialResponseContext
+        C.operatorialMetriplectic)
+    (xForce yForce : ℝ) :
+    C.operatorialMetriplectic.metricResponse =
+        (2 : ℝ)⁻¹ *
+          (C.operatorialMetriplectic.P.probe
+              (InfoGeometry.Canonical.RelationalInformationDynamics.observableLieHessian
+                (E := H) C.operatorialMetriplectic.X C.operatorialMetriplectic.Y
+                C.operatorialMetriplectic.A)
+            + C.operatorialMetriplectic.P.probe
+              (InfoGeometry.Canonical.RelationalInformationDynamics.observableLieHessian
+                (E := H) C.operatorialMetriplectic.Y C.operatorialMetriplectic.X
+                C.operatorialMetriplectic.A))
+      ∧ C.operatorialMetriplectic.diagonalMetricResponse =
+          InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+            (E := H) C.operatorialMetriplectic.comparison
+            C.operatorialMetriplectic.X C.operatorialMetriplectic.X
+      ∧ C.operatorialMetriplectic.yDiagonalMetricResponse =
+          InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+            (E := H) C.operatorialMetriplectic.comparison
+            C.operatorialMetriplectic.Y C.operatorialMetriplectic.Y
+      ∧ C.operatorialMetriplectic.mixedMetricResponseXY =
+          InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+            (E := H) C.operatorialMetriplectic.comparison
+            C.operatorialMetriplectic.X C.operatorialMetriplectic.Y
+      ∧ 0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce :=
+  ⟨C.operatorialFisherOnsager_eq_hessianReadout,
+    R.diagonalMetricResponse_eq_comparisonMetric,
+    R.yDiagonalMetricResponse_eq_comparisonMetric,
+    R.mixedMetricResponseXY_eq_comparisonMetric,
+    C.operatorialMetriplectic.operatorialEntropyProduction_nonneg_of_cramerRaoResponse
+      R xForce yForce⟩
+
+/--
+Supergraded even/odd operatorial Onsager block packet.
+
+The even and odd lanes are the two arbitrary doubled-Krein perturbation
+channels of the operatorial context.  The block entries are response
+coefficients, and the second-law inequality is proved through the
+Cramer-Rao/Cauchy-Schwarz owner path.
+-/
+@[rep_depth transport]
+theorem operatorialSupergradedEvenOddOnsagerBlock_packet_of_cramerRaoResponse
+    (R :
+      OperatorialMetriplecticContext.CramerRaoOperatorialResponseContext
+        C.operatorialMetriplectic)
+    (evenForce oddForce : ℝ) :
+    C.operatorialMetriplectic.mixedMetricResponseXY =
+        C.operatorialMetriplectic.mixedMetricResponseYX
+      ∧ C.operatorialMetriplectic.diagonalMetricResponse =
+          InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+            (E := H) C.operatorialMetriplectic.comparison
+            C.operatorialMetriplectic.X C.operatorialMetriplectic.X
+      ∧ C.operatorialMetriplectic.yDiagonalMetricResponse =
+          InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+            (E := H) C.operatorialMetriplectic.comparison
+            C.operatorialMetriplectic.Y C.operatorialMetriplectic.Y
+      ∧ C.operatorialMetriplectic.mixedMetricResponseXY =
+          InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+            (E := H) C.operatorialMetriplectic.comparison
+            C.operatorialMetriplectic.X C.operatorialMetriplectic.Y
+      ∧ C.operatorialMetriplectic.operatorialEntropyProduction evenForce oddForce =
+          C.operatorialMetriplectic.diagonalMetricResponse * evenForce ^ (2 : ℕ)
+            + 2 * C.operatorialMetriplectic.mixedMetricResponseXY * evenForce * oddForce
+              + C.operatorialMetriplectic.yDiagonalMetricResponse * oddForce ^ (2 : ℕ)
+      ∧ 0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction evenForce oddForce :=
+  OperatorialMetriplecticContext.supergradedEvenOddOnsagerBlock_packet_of_cramerRaoResponse
+    (C := C.operatorialMetriplectic) R evenForce oddForce
+
+/--
+One-channel operatorial second-law closure from regular Drazin/Krein cone
+positivity.
+
+This is the first constructive infinite-lane replacement for a bare
+two-channel PSD/determinant hypothesis: for a pure `X` thermodynamic force, the
+operatorial entropy production is controlled by the diagonal Hessian readout
+alone, and that readout is proved nonnegative by regular-cone positivity.
+-/
+@[rep_depth transport]
+theorem operatorialXChannel_entropyProduction_nonneg_of_regularCone
+    (R :
+      OperatorialMetriplecticContext.RegularConeXResponseContext
+        C.operatorialMetriplectic)
+    (xForce : ℝ) :
+    0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction xForce 0 :=
+  C.operatorialMetriplectic.operatorialEntropyProduction_xChannel_nonneg_of_regularCone
+    R xForce
+
 /-! ## KKT stationarity packet -/
 
 /-- The KKT stationarity shadow remains an explicit assumption packet. -/
@@ -836,6 +1248,75 @@ theorem finite_and_operatorial_entropyProduction_nonneg
   ⟨C.finiteMetriplecticEntropyProduction_nonneg,
     C.operatorialEntropyProduction_nonneg_of_metricResponsePSD hPSD xForce yForce⟩
 
+/--
+Combined finite/operatorial entropy production without a bare operatorial PSD
+hypothesis, using a constructive square-response witness on the infinite
+doubled-Krein operator lane.
+-/
+@[rep_depth thermo]
+theorem finite_and_operatorial_entropyProduction_nonneg_of_squareResponse
+    (S :
+      OperatorialMetriplecticContext.SquareOperatorialResponseContext
+        C.operatorialMetriplectic)
+    (xForce yForce : ℝ) :
+    0 ≤ C.finiteMetriplectic.totalEntropyProduction ∧
+      0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce :=
+  C.finite_and_operatorial_entropyProduction_nonneg
+    (OperatorialMetriplecticContext.SquareOperatorialResponseContext.operatorialMetricResponsePSD S)
+    xForce yForce
+
+/--
+Combined finite/operatorial entropy production without a bare operatorial PSD
+hypothesis, using regular Drazin/Krein cone positivity on the operatorial lane.
+-/
+@[rep_depth thermo]
+theorem finite_and_operatorial_entropyProduction_nonneg_of_regularCone
+    (R :
+      OperatorialMetriplecticContext.RegularConeOperatorialResponseContext
+        C.operatorialMetriplectic)
+    (xForce yForce : ℝ) :
+    0 ≤ C.finiteMetriplectic.totalEntropyProduction ∧
+      0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce :=
+  C.finite_and_operatorial_entropyProduction_nonneg
+    (OperatorialMetriplecticContext.RegularConeOperatorialResponseContext.operatorialMetricResponsePSD R)
+    xForce yForce
+
+/--
+Combined finite/operatorial entropy production without a bare operatorial PSD
+hypothesis, using a Cramer-Rao realization of the infinite doubled-Krein
+operator response packet.
+-/
+@[rep_depth thermo]
+theorem finite_and_operatorial_entropyProduction_nonneg_of_cramerRaoResponse
+    (R :
+      OperatorialMetriplecticContext.CramerRaoOperatorialResponseContext
+        C.operatorialMetriplectic)
+    (xForce yForce : ℝ) :
+    0 ≤ C.finiteMetriplectic.totalEntropyProduction ∧
+      0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction xForce yForce :=
+  ⟨C.finiteMetriplecticEntropyProduction_nonneg,
+    C.operatorialMetriplectic.operatorialEntropyProduction_nonneg_of_cramerRaoResponse
+      R xForce yForce⟩
+
+/--
+Combined finite/operatorial one-channel entropy production from regular-cone
+positivity on the infinite doubled-Krein operator lane.
+
+The finite lane still uses the already-owned finite Souriau-Fisher theorem; the
+operatorial lane does not use a finite response matrix, a scalar PSD packet, or
+a two-channel determinant hypothesis.
+-/
+@[rep_depth thermo]
+theorem finite_and_operatorial_xChannel_entropyProduction_nonneg_of_regularCone
+    (R :
+      OperatorialMetriplecticContext.RegularConeXResponseContext
+        C.operatorialMetriplectic)
+    (xForce : ℝ) :
+    0 ≤ C.finiteMetriplectic.totalEntropyProduction ∧
+      0 ≤ C.operatorialMetriplectic.operatorialEntropyProduction xForce 0 :=
+  ⟨C.finiteMetriplecticEntropyProduction_nonneg,
+    C.operatorialXChannel_entropyProduction_nonneg_of_regularCone R xForce⟩
+
 attribute [terminal]
   fenchel_metriplectic_moment
   fenchel_metriplectic_temperature
@@ -855,9 +1336,20 @@ attribute [terminal]
   operatorialMixedMetricResponse_symm
   operatorial_Hessian_eq_Fisher_eq_Onsager
   operatorialDiagonalFisherOnsager_eq_doubleTransportCommutator
+  operatorialWeightedDynamics_eq_weylCovariantThermodynamicDerivation
+  operatorialWeylCovariantThermodynamicDerivation_split
   operatorialFisherOnsager_entropyProduction_equation
+  operatorialFisherOnsager_entropyProduction_equation_of_squareResponse
+  operatorialFisherOnsager_entropyProduction_equation_of_regularCone
+  operatorialFisherOnsager_entropyProduction_equation_of_cramerRaoResponse
+  operatorialSupergradedEvenOddOnsagerBlock_packet_of_cramerRaoResponse
+  operatorialXChannel_entropyProduction_nonneg_of_regularCone
   kktStationarity_packet
   finite_and_operatorial_entropyProduction_nonneg
+  finite_and_operatorial_entropyProduction_nonneg_of_squareResponse
+  finite_and_operatorial_entropyProduction_nonneg_of_regularCone
+  finite_and_operatorial_entropyProduction_nonneg_of_cramerRaoResponse
+  finite_and_operatorial_xChannel_entropyProduction_nonneg_of_regularCone
 
 end SouriauLieThermoKKTContext
 

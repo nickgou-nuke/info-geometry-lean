@@ -3,6 +3,8 @@
 This repository should be read as one theory with several simultaneous
 presentations. The mathematical burden is on the adjacent morphisms.
 
+Operationally, this means the repository is organized around owned theorem surfaces, adjacent translation layers, and explicit bridge obligations, rather than around a single narrative exposition.
+
 ## Foundational Axiom: Goutev’s Principle
 
 The repository is built on **Goutev’s Principle of Absolute Relativity of 
@@ -41,6 +43,8 @@ Current gate note:
 - `strictCheck` is currently red due warning-as-error debt.
 - standalone [`ProjectorEquivariance.lean`](../lean/InfoGeometry/Canonical/ProjectorEquivariance.lean)
   currently compiles.
+
+For the authoritative current snapshot, consult [CODEBASE_STATUS.md](CODEBASE_STATUS.md).
 
 For execution order and closure milestones, use
 [CleanupImprovementProgram.md](CleanupImprovementProgram.md).

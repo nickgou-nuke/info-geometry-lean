@@ -1,13 +1,13 @@
 # Operator Quickstart
 
-This is the compressed operator surface for local Lean and DAG work.
+This is the compressed operator surface for local Lean and DAG work. It is intended for contributors who already know the repo framing and need the shortest practical command path.
 
 Architecture reference:
 - [LOCAL_TOOLCHAIN_ARCHITECTURE.md](LOCAL_TOOLCHAIN_ARCHITECTURE.md)
 
 ## 0. Opening Instruction (Name Equivalence Dictionary)
 
-Before local patching, refresh the equivalence dictionary so nonstandard or legacy naming surfaces remain discoverable.
+Before local patching, refresh the equivalence dictionary so nonstandard or legacy naming surfaces remain discoverable. This is a navigation aid, not a proof step.
 
 ```bash
 python3 tools/infra/generate_equivalence_dictionary.py \
@@ -100,6 +100,8 @@ Use this lane when you are debugging a proof, exploring theorem surfaces, or ins
 - changed Lean work: `lake script run changedVerify`
 - whole-repo DAG maintenance: `lake script run dagAll`
 - diagnosis first: `lake script run dagDoctor`
+
+The proof authority remains the Lean kernel and the native audit layer. These commands help you reach the right surfaces quickly.
 
 ## Patch-Loop Rule (Fast Iteration)
 

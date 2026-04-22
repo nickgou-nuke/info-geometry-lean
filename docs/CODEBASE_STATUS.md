@@ -6,7 +6,9 @@ Last refreshed: 2026-04-16 (Europe/Sofia)
 
 - Branch: `main`
 - HEAD: `056132a5ce3b4c619c86f9f1eb6c0cedbbb27818`
-- Working tree: **dirty** (tracked edits + untracked lanes under `docs/black_books/`, `lean/InfoGeometry/Canonical/`, `lean/InfoGeometry/LLM/`, `leantrail/`, `tools/infra/`)
+- Working tree: **dirty** at the time of this snapshot (tracked edits + untracked lanes under `docs/black_books/`, `lean/InfoGeometry/Canonical/`, `lean/InfoGeometry/LLM/`, `leantrail/`, `tools/infra/`)
+
+This file is the maintained operational status surface for external readers who need a concrete build and audit snapshot.
 
 ## Verification Gates
 
@@ -70,7 +72,7 @@ Failure surface (current):
   - directive counts:
     - `I.no_mask_mandate`: `1006`
     - `II.functorial_connectivity`: `41`
-    - `IV.semantic_weight_ratio`: `331`
+    - legacy `IV.semantic_weight_ratio`: `331` (historical count from the old density heuristic; superseded by `IV.multilingual_bridge_fidelity`)
     - `V.identity_via_reflexivity`: `96`
   - top offending files by finding count:
     - [`BogoliubovTransport.lean`](../lean/InfoGeometry/Canonical/BogoliubovTransport.lean) (`47`)
@@ -217,7 +219,7 @@ From `reports/dag/representation-depth-audit.json`:
 
 ## Documentation Rule
 
-Use this file as the operational status source for README/doc surfaces.
+Use this file as the operational status source for README and other entry docs.
 When status changes, update this file first, then README/doc links.
 
 Truth order remains:

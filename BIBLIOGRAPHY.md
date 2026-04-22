@@ -1,7 +1,7 @@
 # Detailed Bibliography
-## Jung-Pauli Method, LLM Generative Loops, and Formal Closure
+## Formalization method, agent-assisted development, and related research
 
-This bibliography is a maintained research surface for the repository method.
+This bibliography is a maintained research surface for repository method and tooling context.
 It is intentionally broader than `CITATION.cff`.
 
 ## Curation Policy
@@ -13,19 +13,19 @@ It is intentionally broader than `CITATION.cff`.
 
 ---
 
-## A. Jung-Pauli Primary Sources
+## A. Historical and methodological sources
 
 1. C. G. Jung and W. Pauli (eds. C. A. Meier), *The Interpretation of Nature and the Psyche*.  
    Link: https://openlibrary.org/books/OL6157420M/The_Interpretation_of_nature_and_the_psyche.  
-   Relevance: Primary source for the psyche-nature junction used as generative framing.
+   Relevance: Historical source for the repository's exploratory framing and methodology vocabulary.
 
 2. C. G. Jung, *Synchronicity: An Acausal Connecting Principle*.  
    Link: https://www.jstor.org/stable/j.ctt7s94k  
-   Relevance: Core text for acausal-pattern language used in black-book generation.
+   Relevance: Background source for exploratory pattern-language references in archival material.
 
 3. C. A. Meier (ed.), *Atom and Archetype: The Pauli/Jung Letters, 1932-1958*. Princeton University Press.  
    Link: https://press.princeton.edu/books/paperback/9780691012075/atom-and-archetype  
-   Relevance: Direct correspondence documenting the Jung/Pauli methodological tension.
+   Relevance: Historical source on exploratory versus adjudicative methodological tension.
 
 ---
 
@@ -136,10 +136,10 @@ At each monthly update:
 1. Add newly relevant primary sources.
 2. Mark superseded or low-quality secondary entries for review.
 3. Keep category balance:
-   - Jung/Pauli roots,
+   - historical/methodological roots,
    - LLM generation/evaluation methods,
    - formal-math/Lean systems,
-   - psychology/LLM bridge papers.
+   - structured cognition or psychology/LLM interface papers.
 4. Update this file first, then propagate distilled references into:
    - `docs/BILINGUAL_SPINE_POLICY.md`
    - `tools/prompts/*.md`

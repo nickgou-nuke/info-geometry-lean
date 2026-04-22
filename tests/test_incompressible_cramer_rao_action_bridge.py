@@ -14,6 +14,9 @@ def test_incompressible_cramer_rao_action_bridge_surface():
     assert "noncomputable def souriauFisherMetricVolumePotential" in text
     assert "structure CramerRaoNegLogVolumeAnomalyReadout" in text
     assert "chiralScale_eq_metricVolumePotential" in text
+    assert "theorem unitOfAction_eq_metricVolumePotential" in text
+    assert "theorem epsilon_eq_metricVolumePotential" in text
+    assert "theorem anomalyReadoutPacket_eq_metricVolumePotential" in text
     assert "-Real.log (souriauFisherMetricVolumeShadow H x)" in text
     assert "theorem chiralScale_eq_zero_of_incompressible" in text
     assert "theorem normalInference_of_incompressible" in text

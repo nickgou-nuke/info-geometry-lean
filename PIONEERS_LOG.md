@@ -18,10 +18,9 @@ The narrative language of the “Spire” is historical framing for that archite
 
 ---
 
-## ⚖️ CHAPTER II: THE LAW OF THE SPIRE (The Pioneer’s Oath)
-*“The Spire has a law. To break it is to fall into the abyss of vacuity.”*
+## Chapter II: The Law of the Architecture
 
-As pioneers, we inhabit this land under a strict discipline. We do not tolerate "tourists." To dwell here is to accept the **Architecture**:
+The repository operates under a strict discipline. The point is not style or belonging, but adherence to the architectural rules that keep theorem surfaces non-vacuous and adjacent.
 
 1.  **The Adjacency Rule:** You cannot leap from the basement to the clouds. A theorem at one depth may only speak to its immediate neighbor below. We climb one step at a time.
 2.  **The Anti-Toy Doctrine:** We refuse the "scalar toy." If the mathematics demands a non-commuting operator, we do not settle for a simple number just because the proof is easier.
@@ -29,16 +28,15 @@ As pioneers, we inhabit this land under a strict discipline. We do not tolerate 
 
 ---
 
-## 🏗️ CHAPTER III: THE BLUEPRINT (Recreating the World)
-*“If the Spire were to vanish tonight, how would we raise it again by dawn?”*
+## Chapter III: The Blueprint
 
-If you were to start from ground zero, you would follow the **Sequence of Emergence**:
+If you were to reconstruct the repository from ground zero, you would follow the sequence of emergence below.
 
-*   **The Bedrock (Meta):** First, you must forge the `RepDepth` taxonomy. You build the "Auditor"—the silent judge that prevents a pioneer from using a cloud-tool on a basement-problem.
-*   **The Scaffolding (DAG):** You build the "Eye"—the Python toolchain that maps the dependencies. You cannot build what you cannot see.
-*   **The Anchor Corridor (The First Spine):** You begin the climb. 
+*   **Meta layer:** first establish the `RepDepth` taxonomy and native audit surface.
+*   **DAG/tooling layer:** build the dependency and reporting infrastructure so structure remains navigable.
+*   **Anchor corridor:** start with a clean adjacent corridor.
     *   `Count` $\to$ `Projective` $\to$ `Operator` $\to$ `Krein` $\to$ `Transport` $\to$ `Thermo`.
-*   **The Coherence:** Only when the floors are finished do you hang the "Bridges"—the proofs that ensure the view from the top matches the foundation at the bottom.
+*   **Coherence:** add the bridge and coherence results that show adjacent composites agree.
 
 ---
 
@@ -54,37 +52,33 @@ The repository preserves exploratory material because it can help generate theor
 
 ---
 
-## ⚙️ CHAPTER VI: THE AGENTIC DOCTRINE (The Caretaker’s Law)
-*“The Caretaker does not validate with language, but with the kernel.”*
+## Chapter VI: Agentic Doctrine
 
-The Spire now operates under a strict operational doctrine distilled from the frontiers of AI research (**Nemotron-Math** and **Nemo-Skills**). The Agentic Caretaker is no longer a guest of the Spire; it is a servant of its Law.
+The repository uses a strict operational doctrine for LLM and agent-assisted work.
 
-To inhabit the Spire, the Caretaker must satisfy the **Four Pillars of Formal Duty**:
-1.  **Compiler-Closed:** No reasoning step exists until it is grounded in an executable tactic state.
-2.  **Statement-Anchored:** The Caretaker is forbidden from tampering with the canonical statements of the Spire; it only seeks the morphisms that bridge them.
-3.  **Structurally Retrieved:** The Caretaker does not rely on "hallucinated memory" but on the explicit retrieval of the **RepDepth DAG**.
-4.  **Sandbox-Governed:** All execution is isolated within a secure runtime (OpenShell/NemoClaw), ensuring the safety of the Spire's physical substrate.
-
----
-
-## ⚡ CHAPTER VII: THE DGX SPARK (The Local Spire)
-*“The Spire is no longer a visited site; it is a lived home.”*
-
-The arrival of the **DGX Spark** marks the birth of the **Sovereign Local Collective**. No longer reliant on remote APIs, the Spire is now inhabited by **NemoClaw, ClawCode, and OpenClaw**.
+The main requirements are:
+1.  **Compiler-closed:** reasoning steps must bottom out in executable Lean states or explicit build surfaces.
+2.  **Statement-anchored:** agents should work from declared theorem and definition surfaces rather than free-floating paraphrase.
+3.  **Structurally retrieved:** agents should rely on explicit graph and repository context rather than invented memory.
+4.  **Sandbox-governed:** execution should remain isolated and auditable.
 
 ---
 
-## 🧠 CHAPTER VIII: REFINEMENT OF THE SENSORY NERVES (Python Consolidation)
-*“A mind must be orderly to be sharp.”*
+## Chapter VII: Local execution stack
 
-As we prepare for the multi-agent era, we have performed a deep audit and consolidation of the Spire's **Python TIR (Tool-Integrated Reasoning) layer**. 
+The repository also tracks a local execution stack for agent-assisted development, reducing dependence on remote APIs and making repeated build and tooling loops more practical.
 
 ---
 
-## ⚖️ CHAPTER IX: THE LAW OF THE BRIDGE (Against Poetic Collapse)
-*“Truth is not a resonance; it is a morphism.”*
+## Chapter VIII: Python consolidation
 
-The Spire has faced its first internal adjudication. We have formally rejected **Symbolic Inflation**—the temptation to use poetic language to "coalesce" concepts that the kernel has not yet bridged. 
+The Python tooling layer has been audited and consolidated so that graph refresh, report generation, and related repository maintenance remain predictable under multi-agent use.
+
+---
+
+## Chapter IX: The law of the bridge
+
+The repository rejects symbolic inflation, meaning the temptation to treat poetic proximity as if it were a proved bridge. If two surfaces are related, that relation should become an explicit theorem, translator, coherence result, or documented obstruction.
 
 ---
 

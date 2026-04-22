@@ -45,7 +45,7 @@ These are the maintained hand-written entry surfaces for current repo state. Tog
 - [docs/projective_to_krein_transition_doctrine.md](projective_to_krein_transition_doctrine.md)
 - [docs/Theory_Highway_Prognosis.md](Theory_Highway_Prognosis.md)
 - [docs/SEMANTIC_POTENTIAL.md](SEMANTIC_POTENTIAL.md)
-- [docs/AGENTIC_REVELATION.md](AGENTIC_REVELATION.md)
+- [docs/AGENTIC_REVELATION.md](AGENTIC_REVELATION.md) — reference methodology note, not theorem authority
 - [docs/OperationalIntent.md](OperationalIntent.md)
 - [docs/OperatorQuickstart.md](OperatorQuickstart.md)
 - [docs/DAGTroubleshooting.md](DAGTroubleshooting.md)

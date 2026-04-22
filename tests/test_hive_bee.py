@@ -94,16 +94,27 @@ def test_generated_theorem_source_indexes_verified_fossil() -> None:
 
 
 def test_build_deadend_doc_captures_recirculation_memory() -> None:
+    gravity_context = {
+        "items": [
+            {
+                "id": "InfoGeometry.Canonical.Demo.foo",
+                "module": "InfoGeometry.Canonical.Demo",
+                "score": 321.0,
+                "faithful_witness": {"scc_key": "scc_demo", "raw_doc_id": "raw_demo"},
+            }
+        ]
+    }
     doc = hive_bee.build_deadend_doc(
         sample_goal(),
         sample_task(),
         worker_id="bee-a",
         tactic="exact 0",
         failure_kind="lean_verification_failure",
-        verification={"lean": {"stdout": "", "stderr": "error: mismatch"}},
+        verification={"lean": {"stdout": "", "stderr": "error: unknown constant InfoGeometry.Canonical.Demo.foo"}},
         gravity_path=Path("/tmp/gravity.json"),
         elapsed_wall_s=1.25,
         lean_latency_s=0.75,
+        gravity_context=gravity_context,
     )
 
     assert doc["failure_kind"] == "lean_verification_failure"
@@ -111,6 +122,38 @@ def test_build_deadend_doc_captures_recirculation_memory() -> None:
     assert doc["retry_policy"]["max_attempts"] == 2
     assert doc["metabolic_cost"]["lean_verification_latency_s"] == 0.75
     assert doc["state_taxonomy"] == ["retrieved", "proposed", "checked", "deadend"]
+    assert doc["blocked_by_dependency"]["candidate_id"] == "InfoGeometry.Canonical.Demo.foo"
+
+
+def test_build_replay_packet_contains_required_audit_fields() -> None:
+    attempt = hive_bee.BeeAttempt(
+        task=sample_task(),
+        goal=sample_goal(),
+        proof_state={"proof_state": "⊢ 1 = 1"},
+        gravity_context={"items": [{"id": "Demo.foo", "module": "Demo", "score": 10.0, "faithful_witness": {"scc_key": "scc1", "raw_doc_id": "raw1"}}]},
+        gravity_path=Path("/tmp/gravity.json"),
+        proposed_tactic="rfl",
+        verification={"status": "success", "lean": {"stdout": "trace", "stderr": ""}},
+        elapsed_wall_s=2.0,
+        lean_latency_s=0.5,
+    )
+    packet = hive_bee.build_replay_packet(
+        attempt,
+        worker_id="bee-a",
+        fossil_doc={"_key": "fossil_1", "created_at": "2026-01-01T00:00:00Z"},
+        theorem_name="hive_Demo_task_123",
+        theorem_source="theorem hive_Demo_task_123 : 1 = 1 := by\n  rfl\n",
+        generated_lean_output="HIVE_JSON ...",
+    )
+
+    assert packet["generated_theorem_name"] == "hive_Demo_task_123"
+    assert packet["goal_key"] == "goal_123"
+    assert packet["task_key"] == "task_123"
+    assert packet["fossil_key"] == "fossil_1"
+    assert packet["gravity_neighbors"][0]["id"] == "Demo.foo"
+    assert packet["proof_state_before"] == "⊢ 1 = 1"
+    assert packet["tactic_trace"][0]["tactic"] == "rfl"
+    assert packet["lean_output"]["generated_theorem_check"] == "HIVE_JSON ..."
 
 
 def test_build_replay_packet_captures_declaration_indexed_fossil_context() -> None:

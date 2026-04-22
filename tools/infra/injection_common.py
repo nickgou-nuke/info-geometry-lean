@@ -571,6 +571,12 @@ def current_gpu_memory_snapshot() -> dict[str, Any]:
     """
     Return per-GPU memory snapshot when nvidia-smi exists.
     """
+    def parse_gpu_int(value: str) -> int | None:
+        value = value.strip()
+        if value in {"", "N/A", "[N/A]"}:
+            return None
+        return int(value)
+
     probe = _run_version_cmd(
         ["nvidia-smi", "--query-gpu=index,memory.total,memory.used,memory.free", "--format=csv,noheader,nounits"],
         repo_root(),
@@ -585,9 +591,9 @@ def current_gpu_memory_snapshot() -> dict[str, Any]:
         rows.append(
             {
                 "index": int(parts[0]),
-                "memory_total_mb": int(parts[1]),
-                "memory_used_mb": int(parts[2]),
-                "memory_free_mb": int(parts[3]),
+                "memory_total_mb": parse_gpu_int(parts[1]),
+                "memory_used_mb": parse_gpu_int(parts[2]),
+                "memory_free_mb": parse_gpu_int(parts[3]),
             }
         )
     return {"available": True, "gpus": rows}

@@ -1,0 +1,26 @@
+{
+  "schema": "info_geometry.hive_swarm_run.v1",
+  "task_key": "task_123",
+  "goal_key": "goal_123",
+  "generator_tactic": "rfl",
+  "critic": {
+    "verdict": "reject",
+    "tactic": "REASON: tactic family is unsafe here",
+    "reason": "tactic family is unsafe here"
+  },
+  "auditor": {
+    "verdict": "pass",
+    "notes": "Lean remains the proof authority. The trust boundary stayed intact.",
+    "promotion_allowed": "no"
+  },
+  "verification": null,
+  "gravity_context_path": "/tmp/pytest-of-goutev/pytest-76/test_run_one_critic_rejection_0/gravity.json",
+  "elapsed_wall_s": 2.3e-05,
+  "state_taxonomy": [
+    "retrieved",
+    "generated",
+    "criticized",
+    "rejected",
+    "audited"
+  ]
+}

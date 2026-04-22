@@ -662,6 +662,12 @@ def max_attempts(goal: dict[str, Any]) -> int:
 
 
 def fetch_claimed_task_and_goal(config: BeeConfig) -> tuple[dict[str, Any], dict[str, Any]] | tuple[None, None]:
+    queue_tool.init_schema(
+        config.hive_endpoint,
+        config.hive_database,
+        config.hive_username,
+        config.hive_password,
+    )
     queue_tool.heartbeat_worker(
         config.hive_endpoint,
         config.hive_database,

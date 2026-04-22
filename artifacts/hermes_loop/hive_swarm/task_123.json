@@ -14,8 +14,8 @@
     "promotion_allowed": "no"
   },
   "verification": null,
-  "gravity_context_path": "/tmp/pytest-of-goutev/pytest-76/test_run_one_critic_rejection_0/gravity.json",
-  "elapsed_wall_s": 2.3e-05,
+  "gravity_context_path": "artifacts/hermes_loop/hive_swarm/task_123-gravity.json",
+  "elapsed_wall_s": 0.0,
   "state_taxonomy": [
     "retrieved",
     "generated",

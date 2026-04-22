@@ -1,0 +1,14 @@
+{
+  "artifact_kinds": [
+    "InfoTreeArtifact",
+    "DiamondFossil"
+  ],
+  "out_path": "artifacts/hermes_loop/hive_memory/live_smoke.jsonl",
+  "packet_sha256": [
+    "b97c83b85a352ded40971d38e744c7f82b817207167dcd03d0eb92db144e7332",
+    "477fea48b3c3d2934d97584a041deaeca6607edc00f262ba4c00060c0a5d08f8"
+  ],
+  "record_count": 2,
+  "schema": "info_geometry.hive_memory_manifest.v1",
+  "source": "hive-queue-smoke"
+}

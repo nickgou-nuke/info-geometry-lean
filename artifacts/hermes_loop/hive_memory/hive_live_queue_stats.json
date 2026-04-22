@@ -1,0 +1,10 @@
+{
+  "queue_name": "proof-search",
+  "rows": [
+    {
+      "count": 1,
+      "status": "leased"
+    }
+  ],
+  "schema": "info_geometry.hive_queue_stats.v1"
+}

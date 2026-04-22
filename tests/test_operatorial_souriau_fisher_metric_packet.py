@@ -11,4 +11,6 @@ def test_operatorial_souriau_fisher_metric_packet_surface():
     assert "comparisonStateGeneratorMetric" in text
     assert "operatorialFisherOnsager_eq_hessianReadout" in text
     assert "operatorialEntropyProduction_nonneg_of_cramerRaoResponse" in text
+    assert "operatorCanonicalEntropyProduction_nonneg_of_cramerRaoResponse" in text
+    assert "Operators.entropyProduction" in text
     assert "CramerRaoOperatorialResponseContext" in text

@@ -64,6 +64,38 @@ theorem eval_one :
 end AlgebraicState
 
 /--
+Cyclic algebraic state.
+
+This is the constructive operator-algebraic replacement for trace prose in the
+coordinateless corridor: cyclicity is the exact property needed to build the
+trivial-modular KMS branch and to prove SLD/Fisher symmetry.
+-/
+@[rep_depth operator]
+structure CyclicAlgebraicState where
+  state : AlgebraicState (H := H)
+  cyclic : ∀ A B : Obs, state.eval (A * B) = state.eval (B * A)
+
+namespace CyclicAlgebraicState
+
+variable (ω : CyclicAlgebraicState (H := H))
+
+@[rep_depth operator]
+theorem eval_mul_comm (A B : Obs) :
+    ω.state.eval (A * B) = ω.state.eval (B * A) :=
+  ω.cyclic A B
+
+end CyclicAlgebraicState
+
+/-- Identity modular flow on the observable algebra. -/
+@[rep_depth operator]
+def identityAdditiveModularFlow : AdditiveModularFlow (H := H) where
+  toFun := fun _ => 1
+  map_zero' := rfl
+  map_add' := by
+    intro s t
+    simp
+
+/--
 KMS state relative to an additive modular automorphism flow.
 
 The KMS identity is stated directly on observables:
@@ -93,6 +125,33 @@ theorem state_eval_one :
   K.state.eval_one
 
 end KMSState
+
+namespace CyclicAlgebraicState
+
+variable (ω : CyclicAlgebraicState (H := H))
+
+/--
+Constructive KMS state on the identity modular branch.
+
+No density matrix or trace is introduced: the proof is exactly cyclicity of the
+algebraic state.
+-/
+@[rep_depth operator]
+def toIdentityKMSState (beta : ℝ) :
+    KMSState (H := H) (identityAdditiveModularFlow (H := H)) beta where
+  state := ω.state
+  kms_identity := by
+    intro A B
+    simpa [identityAdditiveModularFlow] using ω.cyclic A B
+
+@[rep_depth operator]
+theorem identityKMS_eval_mul_modular_eq_eval_flip (beta : ℝ) (A B : Obs) :
+    (ω.toIdentityKMSState beta).state.eval
+        (A * (identityAdditiveModularFlow (H := H)) beta B) =
+      (ω.toIdentityKMSState beta).state.eval (B * A) :=
+  (ω.toIdentityKMSState beta).eval_mul_modular_eq_eval_flip A B
+
+end CyclicAlgebraicState
 
 /--
 Operator-valued Souriau moment map.
@@ -155,6 +214,37 @@ theorem metric_symm (X Y : Tangent) :
 
 end QuantumFisherSLDMetric
 
+namespace CyclicAlgebraicState
+
+variable {Tangent : Type v}
+variable (ω : CyclicAlgebraicState (H := H))
+
+/--
+Construct the coordinate-free SLD/Fisher metric from a cyclic algebraic state.
+
+The metric symmetry is not another hypothesis: it is derived from cyclicity.
+-/
+@[rep_depth operator]
+def sldQuantumFisherMetric (sld : Tangent → Obs) :
+    QuantumFisherSLDMetric (H := H) Tangent ω.state where
+  sld := sld
+  metric := fun X Y => ω.state.eval ((sld X) * (sld Y))
+  metric_eq_sld_readout := by
+    intro X Y
+    rfl
+  symmetric := by
+    intro X Y
+    exact ω.cyclic (sld X) (sld Y)
+
+@[rep_depth operator]
+theorem sldQuantumFisherMetric_symm
+    (sld : Tangent → Obs) (X Y : Tangent) :
+    (ω.sldQuantumFisherMetric sld).metric X Y =
+      (ω.sldQuantumFisherMetric sld).metric Y X :=
+  (ω.sldQuantumFisherMetric sld).metric_symm X Y
+
+end CyclicAlgebraicState
+
 /--
 Weyl gauge as an automorphism of the observable algebra preserving the
 algebraic state.
@@ -182,6 +272,15 @@ theorem gauge_map_mul (A B : Obs) :
   map_mul W.gauge A B
 
 end WeylAlgebraGauge
+
+/-- The identity Weyl gauge is constructively state-preserving. -/
+@[rep_depth operator]
+def identityWeylAlgebraGauge (ω : AlgebraicState (H := H)) :
+    WeylAlgebraGauge (H := H) ω where
+  gauge := 1
+  state_invariant := by
+    intro A
+    rfl
 
 /--
 Modular-time package for a KMS state.
@@ -315,6 +414,58 @@ theorem modular_time_add (s t : ℝ) :
   AdditiveModularFlow.map_add C.sigma s t
 
 end CoordinatelessSouriauFisherContext
+
+namespace CyclicAlgebraicState
+
+variable {Symmetry : Type v} {Tangent : Type v}
+variable (ω : CyclicAlgebraicState (H := H))
+
+/--
+Constructive coordinateless Souriau/KMS/Fisher packet on the cyclic identity
+modular branch.
+
+This proves the table entries that are constructible from the current repo
+owners: algebraic state normalization, KMS identity, operator-valued Souriau
+moment, SLD/Fisher symmetry, and Weyl identity-gauge invariance.
+-/
+@[rep_depth operator]
+def toCoordinatelessSouriauFisherContext
+    (beta : ℝ)
+    (J : OperatorSouriauMoment (H := H) Symmetry)
+    (sld : Tangent → Obs) :
+    CoordinatelessSouriauFisherContext (H := H) Symmetry Tangent where
+  state := ω.state
+  sigma := identityAdditiveModularFlow (H := H)
+  beta := beta
+  kms := ω.toIdentityKMSState beta
+  kms_state_eq := rfl
+  souriauMoment := J
+  fisherMetric := ω.sldQuantumFisherMetric sld
+  weylGauge := identityWeylAlgebraGauge (H := H) ω.state
+
+/-- Search-facing theorem packet for the constructive coordinateless branch. -/
+@[rep_depth operator]
+theorem coordinateless_constructive_packet
+    (beta : ℝ)
+    (J : OperatorSouriauMoment (H := H) Symmetry)
+    (sld : Tangent → Obs)
+    (A B : Obs) (X Y : Tangent) :
+    let C := ω.toCoordinatelessSouriauFisherContext beta J sld
+    C.state.eval 1 = 1 ∧
+    C.state.eval (A * C.sigma C.beta B) = C.state.eval (B * A) ∧
+    C.souriauMoment.thermalGenerator =
+      C.souriauMoment.momentOperator C.souriauMoment.geometricTemperature ∧
+    C.fisherMetric.metric X Y = C.fisherMetric.metric Y X ∧
+    C.state.eval (C.weylGauge.gauge A) = C.state.eval A := by
+  intro C
+  exact ⟨
+    C.state.eval_one,
+    C.kms_identity A B,
+    C.souriau_thermalGenerator_eq_moment,
+    C.fisher_metric_symm X Y,
+    C.weyl_state_invariant A⟩
+
+end CyclicAlgebraicState
 
 end OperatorAlgebra
 

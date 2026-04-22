@@ -131,4 +131,117 @@ attribute [terminal] legendre_hessian_inverse_packet
 
 end LegendreHessianInverseContext
 
+/-! ## Constructive local inverse from a continuous-linear equivalence -/
+
+/--
+Dimension-agnostic local Legendre inverse data where the Hessian inverse is not
+an arbitrary pair of linear maps with inverse-law hypotheses.
+
+The Fisher Hessian is supplied as a continuous-linear equivalence and the
+entropy Hessian is its inverse.  Thus the two-sided inverse laws are proved
+constructively from the equivalence, while the genuinely analytic obligations
+left to the concrete smooth model are the Hessian identification and the
+derivative identification of the entropy-gradient map.
+-/
+@[rep_depth thermo]
+structure LegendreContinuousLinearEquivInverseData (Θ : Type _)
+    [NormedAddCommGroup Θ] [NormedSpace ℝ Θ] where
+  massieu : HessianGeometry Θ
+  beta : Θ
+  entropyGradient : MomentCoord Θ → Θ
+  fisherEquiv : Θ ≃L[ℝ] MomentCoord Θ
+  entropyGradient_at_moment :
+    entropyGradient (dualCoord massieu beta) = beta
+  fisherEquiv_eq_massieuHessian :
+    (fisherEquiv : Θ →L[ℝ] MomentCoord Θ) = hessian massieu beta
+  entropyGradient_derivative_eq_inverse :
+    fderiv ℝ entropyGradient (dualCoord massieu beta) =
+      (fisherEquiv.symm : MomentCoord Θ →L[ℝ] Θ)
+
+namespace LegendreContinuousLinearEquivInverseData
+
+variable (D : LegendreContinuousLinearEquivInverseData Θ)
+
+/-- The moment coordinate is constructively the Massieu gradient at `β`. -/
+@[rep_depth thermo]
+noncomputable def moment : MomentCoord Θ :=
+  dualCoord D.massieu D.beta
+
+/-- Fisher Hessian as the forward continuous-linear equivalence. -/
+@[rep_depth thermo]
+noncomputable def fisherHessian : Θ →L[ℝ] MomentCoord Θ :=
+  D.fisherEquiv
+
+/-- Entropy Hessian as the inverse continuous-linear equivalence. -/
+@[rep_depth thermo]
+noncomputable def entropyHessian : MomentCoord Θ →L[ℝ] Θ :=
+  D.fisherEquiv.symm
+
+/-- The inverse entropy Hessian composed with Fisher is identity. -/
+@[rep_depth thermo]
+theorem entropyHessian_comp_fisherHessian :
+    D.entropyHessian.comp D.fisherHessian =
+      ContinuousLinearMap.id ℝ Θ := by
+  ext x
+  simp [entropyHessian, fisherHessian]
+
+/-- Fisher composed with the inverse entropy Hessian is identity. -/
+@[rep_depth thermo]
+theorem fisherHessian_comp_entropyHessian :
+    D.fisherHessian.comp D.entropyHessian =
+      ContinuousLinearMap.id ℝ (MomentCoord Θ) := by
+  ext q
+  simp [entropyHessian, fisherHessian]
+
+/--
+Build the existing Legendre inverse context from explicit continuous-linear
+equivalence data.  The two inverse laws are no longer fields: they are proved
+from `fisherEquiv` and `fisherEquiv.symm`.
+-/
+@[rep_depth thermo]
+noncomputable def toLegendreHessianInverseContext :
+    LegendreHessianInverseContext Θ where
+  massieu := D.massieu
+  beta := D.beta
+  moment := D.moment
+  entropyGradient := D.entropyGradient
+  fisherHessian := D.fisherHessian
+  entropyHessian := D.entropyHessian
+  moment_eq_massieuGradient := rfl
+  entropyGradient_at_moment := D.entropyGradient_at_moment
+  fisherHessian_eq_massieuHessian := D.fisherEquiv_eq_massieuHessian
+  entropyHessian_eq_gradientDerivative := by
+    exact D.entropyGradient_derivative_eq_inverse.symm
+  entropyHessian_comp_fisherHessian :=
+    D.entropyHessian_comp_fisherHessian
+  fisherHessian_comp_entropyHessian :=
+    D.fisherHessian_comp_entropyHessian
+
+/--
+Constructive inverse-Hessian packet from a continuous-linear equivalence.
+
+This is the dimension-agnostic replacement for separately assuming the two
+inverse laws in the Legendre context.
+-/
+@[rep_depth thermo]
+theorem constructive_legendre_hessian_inverse_packet :
+    D.toLegendreHessianInverseContext.moment =
+        dualCoord D.massieu D.beta
+      ∧ D.entropyGradient D.toLegendreHessianInverseContext.moment = D.beta
+      ∧ D.toLegendreHessianInverseContext.fisherHessian =
+        hessian D.massieu D.beta
+      ∧ D.toLegendreHessianInverseContext.entropyHessian =
+        fderiv ℝ D.entropyGradient D.toLegendreHessianInverseContext.moment
+      ∧ D.toLegendreHessianInverseContext.entropyHessian.comp
+          D.toLegendreHessianInverseContext.fisherHessian =
+        ContinuousLinearMap.id ℝ Θ
+      ∧ D.toLegendreHessianInverseContext.fisherHessian.comp
+          D.toLegendreHessianInverseContext.entropyHessian =
+        ContinuousLinearMap.id ℝ (MomentCoord Θ) := by
+  exact D.toLegendreHessianInverseContext.legendre_hessian_inverse_packet
+
+attribute [terminal] constructive_legendre_hessian_inverse_packet
+
+end LegendreContinuousLinearEquivInverseData
+
 end InfoGeometry.Geometry

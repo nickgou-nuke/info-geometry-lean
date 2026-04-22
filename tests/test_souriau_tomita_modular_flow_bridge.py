@@ -10,7 +10,9 @@ def test_souriau_tomita_modular_flow_bridge_is_source_owned() -> None:
     text = SOURCE.read_text(encoding="utf-8")
 
     assert "structure SouriauTomitaLogContext" in text
-    assert "OperatorSouriauMoment.thermalGenerator" in text
+    assert "souriauMoment.thermalGenerator" in text
+    assert "deltaLog : Obs" not in text
+    assert "deltaLog_eq_thermalGenerator :\n    deltaLog =" not in text
     assert "def toRealModularLogData" in text
     assert "def souriauAdditiveModularFlow" in text
     assert "theorem tomita_deltaLog_eq_thermalGenerator" in text

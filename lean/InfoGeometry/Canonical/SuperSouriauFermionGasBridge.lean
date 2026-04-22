@@ -69,6 +69,20 @@ theorem stressTensor_eq_even_readout (x : State) :
 theorem supercurrent_eq_odd_readout (x : State) :
     J.supercurrent x = J.supercurrentReadout (J.oddMoment x) := rfl
 
+/--
+Projection packet for the super-moment map.
+
+This is the Lean-facing normalization of the prose statement that stress,
+bosonic charge, and supercurrent are different readouts of the same
+super-moment data.
+-/
+@[rep_depth transport]
+theorem projection_readout_packet (x : State) :
+    J.stressTensor x = J.stressTensorReadout (J.evenMoment x) ∧
+    J.bosonicCharge x = J.chargeReadout (J.evenMoment x) ∧
+    J.supercurrent x = J.supercurrentReadout (J.oddMoment x) := by
+  exact ⟨rfl, rfl, rfl⟩
+
 end SuperMomentMapData
 
 /-- Even/odd Souriau temperature parameters for a supergraded ensemble. -/
@@ -236,6 +250,62 @@ noncomputable def cliffordConcreteFermionicCAROperatorPair :
   annihilation := cliffordConcreteAnnihilation (E := E)
   creation := cliffordConcreteCreation (E := E)
   car := cliffordConcreteIsCARPair (E := E)
+
+/--
+Concrete CAR packet supplied by the split-`Cl(1,1)` construction.
+
+This replaces the abstract Pauli/Fermi hypothesis with the existing
+dimension-agnostic doubled real Krein construction.
+-/
+@[rep_depth krein]
+theorem cliffordConcreteFermionicCARPacket :
+    fockAnticommutator (E := E)
+        (cliffordConcreteAnnihilation (E := E))
+        (cliffordConcreteAnnihilation (E := E)) = 0 ∧
+    fockAnticommutator (E := E)
+        (cliffordConcreteCreation (E := E))
+        (cliffordConcreteCreation (E := E)) = 0 ∧
+    fockAnticommutator (E := E)
+        (cliffordConcreteAnnihilation (E := E))
+        (cliffordConcreteCreation (E := E)) =
+      ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E) := by
+  let F := cliffordConcreteFermionicCAROperatorPair (E := E)
+  exact ⟨
+    FermionicCAROperatorPair.annihilation_anticommutator_self_zero (E := E) F,
+    FermionicCAROperatorPair.creation_anticommutator_self_zero (E := E) F,
+    FermionicCAROperatorPair.annihilation_creation_anticommutator_id (E := E) F⟩
+
+/--
+Constructive super-Fock fermion-gas packet.
+
+It combines the even grand-canonical generator, the explicit odd source, and
+the concrete CAR/Pauli identities without passing through a finite-dimensional
+toy model.
+-/
+@[rep_depth krein]
+theorem superFockConcreteFermionGasPacket
+    (B : BogoliubovMixingParams) (H Qodd : FockEndomorphism E) (mu betaOdd : ℝ) :
+    superGrandCanonicalFockGenerator (E := E) B H mu betaOdd Qodd =
+      evenGrandCanonicalFockGenerator (E := E) B H mu
+        + oddFockSourceCoupling (E := E) betaOdd Qodd ∧
+    fockSuperBracket (E := E) SuperParity.odd SuperParity.odd
+        (cliffordConcreteAnnihilation (E := E))
+        (cliffordConcreteCreation (E := E)) =
+      CARBracket (E := E)
+        (cliffordConcreteAnnihilation (E := E))
+        (cliffordConcreteCreation (E := E)) ∧
+    fockAnticommutator (E := E)
+        (cliffordConcreteAnnihilation (E := E))
+        (cliffordConcreteAnnihilation (E := E)) = 0 ∧
+    fockAnticommutator (E := E)
+        (cliffordConcreteCreation (E := E))
+        (cliffordConcreteCreation (E := E)) = 0 ∧
+    fockAnticommutator (E := E)
+        (cliffordConcreteAnnihilation (E := E))
+        (cliffordConcreteCreation (E := E)) =
+      ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E) := by
+  have hcar := cliffordConcreteFermionicCARPacket (E := E)
+  exact ⟨rfl, rfl, hcar.1, hcar.2.1, hcar.2.2⟩
 
 /--
 Honesty bridge: the canonical doubled-projector ladder surface gives a

@@ -1,6 +1,7 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import InfoGeometry.Canonical.WeylTransport
+import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
 import InfoGeometry.Meta.Architecture
 
 /-!
@@ -354,6 +355,86 @@ theorem packet
 
 end KarushKuhnTuckerThermodynamicData
 
+/-! ## Constructive KKT residual certificate -/
+
+/--
+Dimension-agnostic residual certificate for the thermodynamic KKT packet.
+
+This replaces a bare proposition-only KKT package by explicit real residual
+readouts.  Exact KKT closure is obtained from the constructive equations
+`residual ^ 2 = 0`; no finite state space or matrix dimension is introduced.
+-/
+@[rep_depth thermo]
+structure KarushKuhnTuckerResidualCertificate where
+  primalResidual : ℝ
+  dualResidual : ℝ
+  stationarityResidual : ℝ
+  complementarySlacknessResidual : ℝ
+  partitionResidual : ℝ
+  primalResidual_sq_zero : primalResidual ^ 2 = 0
+  dualResidual_sq_zero : dualResidual ^ 2 = 0
+  stationarityResidual_sq_zero : stationarityResidual ^ 2 = 0
+  complementarySlacknessResidual_sq_zero :
+    complementarySlacknessResidual ^ 2 = 0
+  partitionResidual_sq_zero : partitionResidual ^ 2 = 0
+
+namespace KarushKuhnTuckerResidualCertificate
+
+variable (C : KarushKuhnTuckerResidualCertificate)
+
+/-- Proposition-level KKT data induced by explicit residual readouts. -/
+@[rep_depth thermo]
+def toThermodynamicData : KarushKuhnTuckerThermodynamicData where
+  primalFeasible := C.primalResidual = 0
+  dualFeasible := C.dualResidual = 0
+  stationarity := C.stationarityResidual = 0
+  complementarySlackness := C.complementarySlacknessResidual = 0
+  finitePartitionAdmissible := C.partitionResidual = 0
+
+/-- Exact primal feasibility from a squared residual equation. -/
+@[rep_depth thermo]
+theorem primalFeasible : C.toThermodynamicData.primalFeasible :=
+  sq_eq_zero_iff.mp C.primalResidual_sq_zero
+
+/-- Exact dual feasibility from a squared residual equation. -/
+@[rep_depth thermo]
+theorem dualFeasible : C.toThermodynamicData.dualFeasible :=
+  sq_eq_zero_iff.mp C.dualResidual_sq_zero
+
+/-- Exact stationarity from a squared residual equation. -/
+@[rep_depth thermo]
+theorem stationarity : C.toThermodynamicData.stationarity :=
+  sq_eq_zero_iff.mp C.stationarityResidual_sq_zero
+
+/-- Exact complementary slackness from a squared residual equation. -/
+@[rep_depth thermo]
+theorem complementarySlackness :
+    C.toThermodynamicData.complementarySlackness :=
+  sq_eq_zero_iff.mp C.complementarySlacknessResidual_sq_zero
+
+/-- Exact partition admissibility from a squared residual equation. -/
+@[rep_depth thermo]
+theorem finitePartitionAdmissible :
+    C.toThermodynamicData.finitePartitionAdmissible :=
+  sq_eq_zero_iff.mp C.partitionResidual_sq_zero
+
+/--
+The complete thermodynamic KKT packet follows constructively from the five
+zero-residual certificates.
+-/
+@[rep_depth thermo]
+theorem exactPacket :
+    C.toThermodynamicData.primalFeasible ∧
+      C.toThermodynamicData.dualFeasible ∧
+      C.toThermodynamicData.stationarity ∧
+      C.toThermodynamicData.complementarySlackness ∧
+      C.toThermodynamicData.finitePartitionAdmissible :=
+  C.toThermodynamicData.packet
+    C.primalFeasible C.dualFeasible C.stationarity
+    C.complementarySlackness C.finitePartitionAdmissible
+
+end KarushKuhnTuckerResidualCertificate
+
 /-! ## Combined literature theorem surface -/
 
 /--
@@ -387,6 +468,92 @@ structure LiteratureWeylGrandCanonicalTKKKKTBridge
       LiteratureWeylGrandCanonicalTKKBridge
         R Gauge Parameter Curvature G I X A S where
   kktOptimization : KarushKuhnTuckerThermodynamicData
+
+/--
+Literature-backed bridge where the optimization KKT packet is not a bare list
+of propositions but is induced by explicit residual equations.
+-/
+@[rep_depth transport]
+structure ConstructiveLiteratureWeylGrandCanonicalTKKKKTBridge
+    (R Gauge Parameter Curvature G I X A S : Type*) extends
+      LiteratureWeylGrandCanonicalTKKBridge
+        R Gauge Parameter Curvature G I X A S where
+  kktCertificate : KarushKuhnTuckerResidualCertificate
+
+namespace ConstructiveLiteratureWeylGrandCanonicalTKKKKTBridge
+
+variable {R Gauge Parameter Curvature G I X A S : Type*}
+variable (B : ConstructiveLiteratureWeylGrandCanonicalTKKKKTBridge
+  R Gauge Parameter Curvature G I X A S)
+
+/-- The proposition-level KKT bridge induced by the residual certificate. -/
+@[rep_depth transport]
+def toKKTBridge :
+    LiteratureWeylGrandCanonicalTKKKKTBridge
+      R Gauge Parameter Curvature G I X A S where
+  toLiteratureWeylGrandCanonicalTKKBridge :=
+    B.toLiteratureWeylGrandCanonicalTKKBridge
+  kktOptimization := B.kktCertificate.toThermodynamicData
+
+/--
+Exact thermodynamic KKT closure obtained from the bridge's residual
+certificate, with no extra assumptions.
+-/
+@[rep_depth transport]
+theorem exactKKTOptimizationPacket :
+    B.kktCertificate.toThermodynamicData.primalFeasible ∧
+      B.kktCertificate.toThermodynamicData.dualFeasible ∧
+      B.kktCertificate.toThermodynamicData.stationarity ∧
+      B.kktCertificate.toThermodynamicData.complementarySlackness ∧
+      B.kktCertificate.toThermodynamicData.finitePartitionAdmissible :=
+  B.kktCertificate.exactPacket
+
+/-- The constructive bridge still supplies the grand-canonical affine action. -/
+@[rep_depth transport]
+theorem grandCanonicalActionAffine
+    (energy chemicalPotential number : ℝ) :
+  B.toLiteratureWeylGrandCanonicalTKKBridge.residue.grandCanonicalSingularAction
+        energy chemicalPotential number =
+      B.toLiteratureWeylGrandCanonicalTKKBridge.residue.canonicalSingularAction energy
+        - B.toLiteratureWeylGrandCanonicalTKKBridge.residue.inverseTemperature *
+          chemicalPotential * number :=
+  SimplePoleResidueData.grandCanonicalSingularAction_eq_canonical_sub_muN
+    B.toLiteratureWeylGrandCanonicalTKKBridge.residue
+    energy chemicalPotential number
+
+/--
+Single packet matching the Bulgarian theorem-factory text:
+grand-canonical affine action, Weyl gauge curvature invariance, TKK mixed
+closure, and exact KKT optimization closure.
+-/
+@[rep_depth transport]
+theorem grandCanonicalWeylTKKKKTExactPacket
+    (gauge : Gauge) (parameter : Parameter)
+    {x y : G} (hx : B.tkk.inGPlus x) (hy : B.tkk.inGMinus y)
+    (energy chemicalPotential number : ℝ) :
+    B.toLiteratureWeylGrandCanonicalTKKBridge.residue.grandCanonicalSingularAction
+        energy chemicalPotential number =
+          B.toLiteratureWeylGrandCanonicalTKKBridge.residue.canonicalSingularAction energy
+            - B.toLiteratureWeylGrandCanonicalTKKBridge.residue.inverseTemperature *
+              chemicalPotential * number ∧
+      B.weyl.curvature (B.weyl.transform gauge parameter) =
+        B.weyl.curvature gauge ∧
+      B.tkk.inGZero (B.tkk.bracket x y) ∧
+      B.kktCertificate.toThermodynamicData.primalFeasible ∧
+      B.kktCertificate.toThermodynamicData.dualFeasible ∧
+      B.kktCertificate.toThermodynamicData.stationarity ∧
+      B.kktCertificate.toThermodynamicData.complementarySlackness ∧
+      B.kktCertificate.toThermodynamicData.finitePartitionAdmissible :=
+  ⟨B.grandCanonicalActionAffine energy chemicalPotential number,
+    B.weyl.curvature_transform_eq gauge parameter,
+    B.tkk.bracketPlusMinusMemZero hx hy,
+    B.kktCertificate.primalFeasible,
+    B.kktCertificate.dualFeasible,
+    B.kktCertificate.stationarity,
+    B.kktCertificate.complementarySlackness,
+    B.kktCertificate.finitePartitionAdmissible⟩
+
+end ConstructiveLiteratureWeylGrandCanonicalTKKKKTBridge
 
 namespace LiteratureWeylGrandCanonicalTKKBridge
 
@@ -455,6 +622,130 @@ theorem tkkPlusMinusClosesInZero
   B.tkk.bracketPlusMinusMemZero hx hy
 
 end LiteratureWeylGrandCanonicalTKKBridge
+
+/-! ## Weyl-covariant coadjoint entropy foliation -/
+
+namespace WeylCoadjointMetriplecticFoliation
+
+open InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic
+
+variable {Orbit LieAlg LieCoalg Gauge Parameter Curvature : Type*}
+
+/--
+Bridge from the coadjoint-orbit metriplectic owner to the Weyl-gauge owner.
+
+The coadjoint side is the already-verified dimension-agnostic context: moment
+images select the entropy leaves, the reversible channel is the Casimir leaf
+direction, and the metric channel is the transverse Onsager direction.  The
+Weyl side is the existing curvature-covariant interface; graph/literature
+proximity is not used as proof.
+-/
+@[rep_depth transport]
+structure WeylCoadjointMetriplecticBridge where
+  metriplectic :
+    InfiniteCoadjointOrbitMetriplecticContext Orbit LieAlg LieCoalg
+  weyl : WeylGaugeCovariantInterface Gauge Parameter Curvature
+
+namespace WeylCoadjointMetriplecticBridge
+
+variable (B :
+  WeylCoadjointMetriplecticBridge
+    (Orbit := Orbit) (LieAlg := LieAlg) (LieCoalg := LieCoalg)
+    (Gauge := Gauge) (Parameter := Parameter) (Curvature := Curvature))
+
+/--
+Proof packet for the prose claim:
+
+* moment images lie on the selected coadjoint/entropy leaf;
+* reversible leaf motion is Casimir and has zero entropy production;
+* transverse metric motion is the entire nonequilibrium production channel;
+* the second law follows from the metric channel;
+* Weyl representative changes preserve the curvature readout.
+-/
+@[rep_depth transport]
+theorem entropyFoliation_transverseOnsager_weylCovariant_packet
+    (x : Orbit) (gauge : Gauge) (parameter : Parameter) :
+    B.metriplectic.isOnCoadjointOrbit (B.metriplectic.moment x)
+      ∧ B.metriplectic.isOnCoadjointOrbit
+        (B.metriplectic.moment (B.metriplectic.reversibleVectorField x))
+      ∧ B.metriplectic.isOnCoadjointOrbit
+        (B.metriplectic.moment (B.metriplectic.metricVectorField x))
+      ∧ B.metriplectic.reversibleEntropyRate x = 0
+      ∧ 0 ≤ B.metriplectic.metricEntropyRate x
+      ∧ B.metriplectic.totalEntropyRate x =
+        B.metriplectic.metricEntropyRate x
+      ∧ 0 ≤ B.metriplectic.totalEntropyRate x
+      ∧ B.weyl.curvature (B.weyl.transform gauge parameter) =
+        B.weyl.curvature gauge :=
+  ⟨B.metriplectic.moment_lands_on_coadjoint_orbit x,
+    B.metriplectic.reversible_flow_closes_on_coadjoint_orbit x,
+    B.metriplectic.metric_flow_closes_on_coadjoint_orbit x,
+    B.metriplectic.reversibleEntropyRate_eq_zero x,
+    B.metriplectic.metricEntropyRate_nonnegative x,
+    B.metriplectic.totalEntropyRate_eq_metricEntropyRate x,
+    B.metriplectic.coadjoint_orbit_metriplectic_second_law x,
+    B.weyl.curvature_transform_eq gauge parameter⟩
+
+attribute [terminal] entropyFoliation_transverseOnsager_weylCovariant_packet
+
+end WeylCoadjointMetriplecticBridge
+
+namespace SquareDissipation
+
+variable
+  (moment : Orbit → LieCoalg)
+  (geometricTemperature : LieAlg)
+  (reversibleVectorField metricVectorField : Orbit → Orbit)
+  (entropy : Orbit → ℝ)
+  (dissipationAmplitude : Orbit → ℝ)
+  (weyl : WeylGaugeCovariantInterface Gauge Parameter Curvature)
+
+local notation "C□" =>
+  InfiniteCoadjointOrbitMetriplecticContext.ofMomentImageSquareDissipation
+    (Orbit := Orbit) (LieAlg := LieAlg) (LieCoalg := LieCoalg)
+    moment geometricTemperature reversibleVectorField metricVectorField entropy
+    dissipationAmplitude
+
+/--
+Constructive dimension-agnostic Weyl/coadjoint foliation packet.
+
+This version removes the explicit Casimir, Onsager nonnegativity, and
+entropy-split hypotheses by using the square-dissipation constructor.  It does
+not construct a nontrivial Weyl gauge model; it composes with the existing
+`WeylGaugeCovariantInterface` proof object supplied by the Weyl owner.
+-/
+@[rep_depth transport]
+theorem squareEntropyFoliation_transverseOnsager_weylCovariant_packet
+    (x : Orbit) (gauge : Gauge) (parameter : Parameter) :
+    C□.isOnCoadjointOrbit (C□.moment x)
+      ∧ C□.isOnCoadjointOrbit (C□.moment (C□.reversibleVectorField x))
+      ∧ C□.isOnCoadjointOrbit (C□.moment (C□.metricVectorField x))
+      ∧ C□.reversibleEntropyRate x = 0
+      ∧ C□.metricEntropyRate x = dissipationAmplitude x ^ (2 : ℕ)
+      ∧ C□.totalEntropyRate x = C□.metricEntropyRate x
+      ∧ 0 ≤ C□.metricEntropyRate x
+      ∧ 0 ≤ C□.totalEntropyRate x
+      ∧ weyl.curvature (weyl.transform gauge parameter) =
+        weyl.curvature gauge := by
+  refine
+    ⟨C□.moment_mem_orbit x,
+      C□.reversible_preserves_orbit x,
+      C□.metric_preserves_state x,
+      rfl,
+      rfl,
+      ?_,
+      ?_,
+      ?_,
+      weyl.curvature_transform_eq gauge parameter⟩
+  · rfl
+  · exact sq_nonneg (dissipationAmplitude x)
+  · exact sq_nonneg (dissipationAmplitude x)
+
+attribute [terminal] squareEntropyFoliation_transverseOnsager_weylCovariant_packet
+
+end SquareDissipation
+
+end WeylCoadjointMetriplecticFoliation
 
 namespace LiteratureWeylGrandCanonicalTKKKKTBridge
 

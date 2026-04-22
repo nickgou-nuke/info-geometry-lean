@@ -235,7 +235,60 @@ def propose_tactic(config: BeeConfig, goal: dict[str, Any], proof_state: dict[st
     return tactic
 
 
-def build_deadend_doc(goal: dict[str, Any], task: dict[str, Any], *, worker_id: str, tactic: str, failure_kind: str, verification: dict[str, Any], gravity_path: Path, elapsed_wall_s: float, lean_latency_s: float) -> dict[str, Any]:
+def infer_blocked_dependency(gravity_context: dict[str, Any], verification_output: str) -> dict[str, Any] | None:
+    text = verification_output.lower()
+    items = [item for item in (gravity_context.get("items") or []) if isinstance(item, dict)]
+    if not items:
+        return None
+    likely_block = any(
+        marker in text
+        for marker in [
+            "unknown constant",
+            "unknown identifier",
+            "failed to synthesize",
+            "type mismatch",
+            "application type mismatch",
+            "unsolved goals",
+            "cannot be applied",
+            "don't know how to synthesize",
+        ]
+    )
+    if not likely_block:
+        return None
+    best: dict[str, Any] | None = None
+    best_score = -1
+    for item in items:
+        score = 0
+        names = [str(item.get("id") or ""), str(item.get("name") or ""), str(item.get("module") or "")]
+        for name in names:
+            if not name:
+                continue
+            tokens = [tok.lower() for tok in re.split(r"[^A-Za-z0-9_]+", name) if len(tok) >= 3]
+            if any(tok and tok in text for tok in tokens):
+                score += 3
+        if item.get("score") is not None:
+            try:
+                score += int(float(item.get("score")) // 100)
+            except Exception:  # noqa: BLE001
+                pass
+        if score > best_score:
+            best_score = score
+            best = item
+    if not best:
+        best = items[0]
+    witness = best.get("faithful_witness") or {}
+    return {
+        "candidate_id": best.get("id") or best.get("name"),
+        "module": best.get("module"),
+        "score": best.get("score"),
+        "scc_key": witness.get("scc_key") or witness.get("scc_id"),
+        "raw_doc_id": witness.get("raw_doc_id"),
+        "reason": "gravity-nearest likely dependency/blocker inferred from Lean verification output",
+    }
+
+
+
+def build_deadend_doc(goal: dict[str, Any], task: dict[str, Any], *, worker_id: str, tactic: str, failure_kind: str, verification: dict[str, Any], gravity_path: Path, elapsed_wall_s: float, lean_latency_s: float, gravity_context: dict[str, Any] | None = None) -> dict[str, Any]:
     key = queue_tool.stable_key(
         "deadend",
         str(goal.get("_key")),
@@ -244,6 +297,7 @@ def build_deadend_doc(goal: dict[str, Any], task: dict[str, Any], *, worker_id: 
         str(task.get("claim_count") or 0),
     )
     output = ((verification.get("lean") or {}).get("stdout") or "") + ((verification.get("lean") or {}).get("stderr") or "")
+    blocked_dependency = infer_blocked_dependency(gravity_context or {}, output) if gravity_context else None
     return {
         "_key": key,
         "schema": "info_geometry.hive_deadend.v1",
@@ -257,7 +311,7 @@ def build_deadend_doc(goal: dict[str, Any], task: dict[str, Any], *, worker_id: 
         "local_context_slice": parse_context(goal),
         "failure_kind": failure_kind,
         "retry_policy": {"max_attempts": goal.get("max_attempts") or DEFAULT_MAX_ATTEMPTS},
-        "blocked_by_dependency": None,
+        "blocked_by_dependency": blocked_dependency,
         "verification_output": output[-4000:],
         "gravity_context_path": str(gravity_path),
         "metabolic_cost": {
@@ -337,7 +391,13 @@ def generated_theorem_source(goal: dict[str, Any], task: dict[str, Any], tactic:
     return theorem_name, "\n".join(lines)
 
 
-def run_generated_theorem_capture(goal: dict[str, Any], task: dict[str, Any], tactic: str, *, timeout: int) -> tuple[str, str, list[dict[str, Any]]]:
+def run_generated_theorem_capture(
+    goal: dict[str, Any],
+    task: dict[str, Any],
+    tactic: str,
+    *,
+    timeout: int,
+) -> tuple[str, str, str, list[dict[str, Any]]]:
     theorem_name, source = generated_theorem_source(goal, task, tactic)
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile("w", suffix=".lean", prefix=f"{theorem_name}_", dir=ARTIFACT_DIR, encoding="utf-8", delete=False) as handle:
@@ -362,13 +422,113 @@ def run_generated_theorem_capture(goal: dict[str, Any], task: dict[str, Any], ta
         records = ingest_text(output, source=f"hive-bee:{theorem_name}")
         if not records:
             raise RuntimeError(f"no HIVE_JSON fossils emitted for {theorem_name}")
-        return theorem_name, source, records
+        return theorem_name, source, output, records
     finally:
         path.unlink(missing_ok=True)
 
 
+def gravity_neighbors_used(context: dict[str, Any]) -> list[dict[str, Any]]:
+    neighbors: list[dict[str, Any]] = []
+    for item in context.get("items") or []:
+        if not isinstance(item, dict):
+            continue
+        witness = item.get("faithful_witness") or {}
+        neighbors.append(
+            {
+                "id": item.get("id") or item.get("name"),
+                "module": item.get("module"),
+                "score": item.get("score"),
+                "scc_key": witness.get("scc_key") or witness.get("scc_id"),
+                "raw_doc_id": witness.get("raw_doc_id"),
+            }
+        )
+    return neighbors
+
+
+def lean_output_from_verification(verification: dict[str, Any]) -> str:
+    lean = verification.get("lean") or {}
+    return str(lean.get("stdout") or "") + str(lean.get("stderr") or "")
+
+
+def build_replay_packet(
+    attempt: BeeAttempt,
+    *,
+    worker_id: str,
+    fossil_doc: dict[str, Any],
+    theorem_name: str,
+    theorem_source: str,
+    generated_lean_output: str,
+) -> dict[str, Any]:
+    fossil_key = str(fossil_doc.get("_key") or "")
+    now = utc_now()
+    proof_state_text = str(attempt.proof_state.get("proof_state") or "")
+    tactic_verification_output = lean_output_from_verification(attempt.verification)
+    return {
+        "_key": queue_tool.stable_key(
+            "replay",
+            str(attempt.goal.get("_key") or ""),
+            str(attempt.task.get("_key") or ""),
+            fossil_key,
+        ),
+        "schema": "info_geometry.hive_replay_packet.v1",
+        "goal_key": attempt.goal.get("_key"),
+        "task_key": attempt.task.get("_key"),
+        "fossil_key": fossil_key,
+        "worker_id": worker_id,
+        "generated_theorem_name": theorem_name,
+        "theorem_source": theorem_source,
+        "gravity_neighbors": gravity_neighbors_used(attempt.gravity_context),
+        "gravity_context_path": str(attempt.gravity_path),
+        "proof_state_before": proof_state_text,
+        "tactic_trace": [
+            {
+                "phase": "proposed",
+                "tactic": attempt.proposed_tactic,
+                "tactic_family": attempt.proposed_tactic.split()[0]
+                if attempt.proposed_tactic.split()
+                else attempt.proposed_tactic,
+            },
+            {
+                "phase": "apply_tactic",
+                "status": attempt.verification.get("status"),
+                "lean_output": tactic_verification_output[-4000:],
+            },
+            {
+                "phase": "generated_theorem_check",
+                "status": "success",
+                "lean_output": generated_lean_output[-4000:],
+            },
+        ],
+        "lean_output": {
+            "proof_state": proof_state_text,
+            "tactic_verification": tactic_verification_output[-4000:],
+            "generated_theorem_check": generated_lean_output[-4000:],
+        },
+        "metabolic_cost": {
+            "wall_time_s": round(attempt.elapsed_wall_s, 6),
+            "lean_verification_latency_s": round(attempt.lean_latency_s, 6),
+            "proof_depth": len([line for line in attempt.proposed_tactic.splitlines() if line.strip()]),
+            "gravity_neighbors_count": len(gravity_neighbors_used(attempt.gravity_context)),
+        },
+        "timestamps": {
+            "created_at": now,
+            "goal_created_at": attempt.goal.get("created_at"),
+            "task_created_at": attempt.task.get("created_at"),
+            "task_claimed_at": attempt.task.get("claimed_at") or attempt.task.get("claimed_at_utc"),
+            "fossil_created_at": fossil_doc.get("created_at"),
+        },
+    }
+
+
+def write_replay_packet_artifact(packet: dict[str, Any]) -> Path:
+    ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
+    path = ARTIFACT_DIR / f"{packet['_key']}-replay.json"
+    path.write_text(json.dumps(packet, indent=2, ensure_ascii=False, sort_keys=True), encoding="utf-8")
+    return path
+
+
 def fossilize_success(config: BeeConfig, attempt: BeeAttempt) -> dict[str, Any]:
-    theorem_name, theorem_source, records = run_generated_theorem_capture(
+    theorem_name, theorem_source, generated_lean_output, records = run_generated_theorem_capture(
         attempt.goal,
         attempt.task,
         attempt.proposed_tactic,
@@ -393,8 +553,28 @@ def fossilize_success(config: BeeConfig, attempt: BeeAttempt) -> dict[str, Any]:
     }
     packet["stateTaxonomy"] = ["retrieved", "proposed", "checked", "fossilized"]
     fossil_doc = queue_tool.build_fossil_doc(fossil_record)
+    replay_packet = build_replay_packet(
+        attempt,
+        worker_id=config.worker_id,
+        fossil_doc=fossil_doc,
+        theorem_name=theorem_name,
+        theorem_source=theorem_source,
+        generated_lean_output=generated_lean_output,
+    )
+    replay_path = write_replay_packet_artifact(replay_packet)
+    packet["replayPacketKey"] = replay_packet["_key"]
+    packet["replayPacketPath"] = str(replay_path)
+    fossil_doc = queue_tool.build_fossil_doc(fossil_record)
     event_doc = queue_tool.build_event_doc(fossil_record)
     queue_tool.import_rows(config.hive_endpoint, config.hive_database, config.hive_username, config.hive_password, "hive_fossils", [fossil_doc])
+    queue_tool.import_rows(
+        config.hive_endpoint,
+        config.hive_database,
+        config.hive_username,
+        config.hive_password,
+        "hive_replay_packets",
+        [replay_packet],
+    )
     queue_tool.import_rows(config.hive_endpoint, config.hive_database, config.hive_username, config.hive_password, "hive_events", [event_doc])
     queue_tool.import_rows(
         config.hive_endpoint,
@@ -439,6 +619,8 @@ def fossilize_success(config: BeeConfig, attempt: BeeAttempt) -> dict[str, Any]:
         "fossil": fossil_doc,
         "event": event_doc,
         "closed_edge": closed_edge,
+        "replay_packet": replay_packet,
+        "replay_packet_path": str(replay_path),
         "goal": updated_goal,
         "task": updated_task,
         "generated_theorem_name": theorem_name,
@@ -456,6 +638,7 @@ def record_deadend(config: BeeConfig, attempt: BeeAttempt, failure_kind: str) ->
         gravity_path=attempt.gravity_path,
         elapsed_wall_s=attempt.elapsed_wall_s,
         lean_latency_s=attempt.lean_latency_s,
+        gravity_context=attempt.gravity_context,
     )
     queue_tool.import_rows(config.hive_endpoint, config.hive_database, config.hive_username, config.hive_password, "hive_deadends", [deadend_doc])
     rejection_edge = {

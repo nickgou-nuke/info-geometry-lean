@@ -53,6 +53,30 @@ def sample_task() -> dict:
     }
 
 
+def sample_attempt() -> hive_bee.BeeAttempt:
+    return hive_bee.BeeAttempt(
+        task=sample_task(),
+        goal=sample_goal(),
+        proof_state={"status": "ok", "proof_state": "⊢ 1 = 1"},
+        gravity_context={
+            "items": [
+                {
+                    "id": "Demo.owner",
+                    "module": "Demo",
+                    "score": 1.0,
+                    "faithful_witness": {"scc_key": "scc_1", "raw_doc_id": "raw_1"},
+                }
+            ],
+            "graph_source": "arango",
+        },
+        gravity_path=Path("/tmp/gravity.json"),
+        proposed_tactic="rfl",
+        verification={"status": "success", "lean": {"stdout": "ok", "stderr": ""}},
+        elapsed_wall_s=1.5,
+        lean_latency_s=0.25,
+    )
+
+
 def test_extract_tactic_supports_label_and_fenced_blocks() -> None:
     assert hive_bee.extract_tactic("TACTIC: exact rfl\nRATIONALE: trivial") == "exact rfl"
     assert hive_bee.extract_tactic("```lean\nrfl\n```") == "rfl"
@@ -87,6 +111,89 @@ def test_build_deadend_doc_captures_recirculation_memory() -> None:
     assert doc["retry_policy"]["max_attempts"] == 2
     assert doc["metabolic_cost"]["lean_verification_latency_s"] == 0.75
     assert doc["state_taxonomy"] == ["retrieved", "proposed", "checked", "deadend"]
+
+
+def test_build_replay_packet_captures_declaration_indexed_fossil_context() -> None:
+    fossil_doc = {
+        "_key": "fossil_1",
+        "created_at": "2026-04-22T00:00:00Z",
+    }
+    packet = hive_bee.build_replay_packet(
+        sample_attempt(),
+        worker_id="bee-a",
+        fossil_doc=fossil_doc,
+        theorem_name="hive_Demo_task_123",
+        theorem_source="theorem hive_Demo_task_123 : 1 = 1 := by\n  rfl\n#hive_index_decl hive_Demo_task_123\n",
+        generated_lean_output='HIVE_JSON {"artifactKind":"DiamondFossil"}',
+    )
+
+    assert packet["schema"] == "info_geometry.hive_replay_packet.v1"
+    assert packet["goal_key"] == "goal_123"
+    assert packet["task_key"] == "task_123"
+    assert packet["fossil_key"] == "fossil_1"
+    assert packet["generated_theorem_name"] == "hive_Demo_task_123"
+    assert "#hive_index_decl hive_Demo_task_123" in packet["theorem_source"]
+    assert packet["gravity_neighbors"][0]["scc_key"] == "scc_1"
+    assert packet["proof_state_before"] == "⊢ 1 = 1"
+    assert packet["tactic_trace"][0]["tactic"] == "rfl"
+    assert packet["lean_output"]["generated_theorem_check"].startswith("HIVE_JSON")
+    assert packet["metabolic_cost"]["gravity_neighbors_count"] == 1
+    assert "created_at" in packet["timestamps"]
+
+
+def test_fossilize_success_persists_replay_packet(monkeypatch, tmp_path) -> None:
+    config = sample_config()
+    attempt = sample_attempt()
+    imports: list[tuple[str, list[dict]]] = []
+
+    record = {
+        "artifact_kind": "DiamondFossil",
+        "space": "logos",
+        "entity_key": "hive.Demo.task_123",
+        "canonical_shape": "1 = 1",
+        "packet_sha256": "abc",
+        "shape_sha256": "shape",
+        "source": "hive-bee:hive_Demo_task_123",
+        "line_number": 1,
+        "packet_index": 0,
+        "packet": {
+            "artifactKind": "DiamondFossil",
+            "constName": "hive.Demo.task_123",
+            "declarationKind": "theorem",
+            "kernelStatus": "verified",
+            "conclusionPretty": "1 = 1",
+            "fullTypePretty": "1 = 1",
+            "axiomsUsed": [],
+        },
+    }
+
+    monkeypatch.setattr(
+        hive_bee,
+        "run_generated_theorem_capture",
+        lambda *args, **kwargs: (
+            "hive_Demo_task_123",
+            "theorem hive_Demo_task_123 : 1 = 1 := by\n  rfl\n#hive_index_decl hive_Demo_task_123\n",
+            'HIVE_JSON {"artifactKind":"DiamondFossil"}',
+            [record],
+        ),
+    )
+    monkeypatch.setattr(hive_bee, "write_replay_packet_artifact", lambda packet: tmp_path / "replay.json")
+    monkeypatch.setattr(
+        hive_bee.queue_tool,
+        "import_rows",
+        lambda endpoint, database, username, password, collection, rows: imports.append((collection, rows)),
+    )
+    monkeypatch.setattr(hive_bee.queue_tool, "update_goal_status", lambda *args, **kwargs: {"status": kwargs["status"]})
+    monkeypatch.setattr(hive_bee.queue_tool, "complete_task", lambda *args, **kwargs: {"status": "done"})
+
+    result = hive_bee.fossilize_success(config, attempt)
+
+    assert result["generated_theorem_name"] == "hive_Demo_task_123"
+    assert result["replay_packet"]["schema"] == "info_geometry.hive_replay_packet.v1"
+    assert any(collection == "hive_replay_packets" for collection, _ in imports)
+    replay_rows = [rows for collection, rows in imports if collection == "hive_replay_packets"][0]
+    assert replay_rows[0]["fossil_key"] == result["fossil"]["_key"]
+    assert "#hive_index_decl hive_Demo_task_123" in replay_rows[0]["theorem_source"]
 
 
 def test_run_one_success_fossilizes(monkeypatch) -> None:

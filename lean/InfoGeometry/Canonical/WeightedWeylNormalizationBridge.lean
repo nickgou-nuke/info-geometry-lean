@@ -87,6 +87,61 @@ theorem densityWeightLiftedDynamics_eq_zeroWeight_add_weighted_phaseAxis_commuta
   · abel
   · abel
 
+/--
+Coordinate-free Weyl/Lie derivation packet on the real doubled carrier.
+
+This is the repo-native replacement for coordinate partial derivatives:
+
+* the algebraic derivation is the commutator `ad_X(A) = [X,A]`;
+* the Weyl-modified derivation uses the density-weight lifted generator
+  `β + w • D`;
+* the modified derivation splits into the zero-weight Lie derivation plus the
+  explicit scale-axis commutator correction.
+
+No finite carrier, coordinate chart, trace, or scalar central-charge shortcut is
+introduced.
+-/
+@[rep_depth transport]
+theorem coordinateFreeWeylLieDerivation_packet
+    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
+    (ψ : H₂) (A : EndH) (w : ℝ) :
+    InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedTransportGenerator
+        P ψ w =
+      InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedTransportGenerator
+        P ψ 0
+        + w • InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis
+          (E := E)
+      ∧
+    InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedDynamics
+        P ψ A w =
+      transportCommutator (E := E)
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedTransportGenerator
+          P ψ w) A
+      ∧
+    InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedDynamics
+        P ψ A 0 =
+      transportCommutator (E := E)
+        (InfoGeometry.Canonical.ThermodynamicGenerator.souriauTemperatureVector
+          (E := E) P ψ) A
+      ∧
+    InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedDynamics
+        P ψ A w =
+      InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedDynamics
+        P ψ A 0
+        + w • transportCommutator (E := E)
+          (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis
+            (E := E)) A := by
+  exact
+    ⟨densityWeightLiftedTransportGenerator_eq_zeroWeight_add_weighted_phaseAxis
+        (P := P) (ψ := ψ) (w := w),
+      rfl,
+      InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedDynamics_zero
+        (E := E) (P := P) (ψ := ψ) (A := A),
+      densityWeightLiftedDynamics_eq_zeroWeight_add_weighted_phaseAxis_commutator
+        (P := P) (ψ := ψ) (A := A) (w := w)⟩
+
+attribute [terminal] coordinateFreeWeylLieDerivation_packet
+
 /-- theorem-class: coherence theorem
 The weighted doubled-space metric/phase readout is the zero-weight readout plus
 the explicit weighted phase-axis response. -/

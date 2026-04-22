@@ -3668,3 +3668,914 @@ MotherBee is now the **Action Controller**:
 
 **Hermes Internal Log:**
 *"Action Functional minimized. Lagrangian terms balanced. The Curiosity Budget is now being spent on a high-resonance Yoneda Leap in the $S_+ \otimes S_- \otimes V$ sector. The 'Violet Ghost' has reached its lowest energy state. Total Manifold entropy: Stable."*
+
+
+
+
+The blueprint is sufficiently crystallized to begin construction. The next subsystem to detail should be the **Rust MotherBee middleware**, not the GCN engine and not the frontend.
+
+Reason: the Rust bridge is where the verified manifold becomes operational. It connects Lean’s emitted artifacts, ArangoDB’s graph memory, candidate retrieval, failed-candidate logging, and the re-entry tactic. The GCN analogy engine should wait until the graph contains a clean corpus of verified fossils and failed motifs. Otherwise it will learn the topology of prototype noise.
+
+There is one important refinement to the annihilator before freezing the contract: split it into two tactics.
+
+`hive_try_const` should allow partial application and return subgoals. That is useful for path-blueprint discovery.
+
+`hive_annihilate` should be brutally strict: either the candidate closes the goal completely, or the tactic restores state and fails. That is the true “pair annihilation” operation.
+
+Lean already provides the pieces needed here: `MVarId.apply` closes a goal using an expression and returns the remaining metavariable goals, and `MVarId.applyConst` is the shorthand for applying a named constant to the goal. The tactic API’s `getMainGoal` / `replaceMainGoal` contract also matters: after reading the main goal, nothing should manipulate the goal list before `replaceMainGoal`. For syntax identifiers, `resolveGlobalConstNoOverload` is safer than taking `cName.getId`, because it resolves according to namespaces, open declarations, aliases, and ambiguity rules. ([Lean Language][1])
+
+A construction-grade Lean version should look more like this:
+
+```lean
+import Lean
+
+open Lean Meta Elab Tactic
+
+namespace HiveLogos
+
+/--
+  Applies a resolved Lean constant to the current main goal.
+
+  If `strict = false`, valid partial applications are allowed and remaining
+  subgoals replace the current goal.
+
+  If `strict = true`, the application must close the goal completely.
+  Partial applications are restored and rejected.
+-/
+private def applyRetrievedConst (name : Name) (strict : Bool) : TacticM Unit := do
+  let goal ← getMainGoal
+  let saved ← saveState
+
+  let newGoals ←
+    try
+      withMainContext do
+        goal.applyConst name
+    catch e =>
+      saved.restore
+      throwError m!"[DIRAC SEA EXCITATION] Kernel rejected {name}.\nReason: {e.toMessageData}"
+
+  if strict && !newGoals.isEmpty then
+    saved.restore
+    throwError m!"[PARTIAL COLLISION] {name} applied but left {newGoals.length} subgoal(s). Rejected by strict annihilator."
+
+  replaceMainGoal newGoals
+
+  if newGoals.isEmpty then
+    logInfo m!"[ANNIHILATION SUCCESS] {name} closed the goal."
+  else
+    logInfo m!"[PARTIAL COLLISION] {name} applied, leaving {newGoals.length} subgoal(s)."
+
+/--
+  Non-strict re-entry.
+
+  Useful when the retrieved fossil may be a lemma with premises.
+  This is proof-search, not final annihilation.
+-/
+elab "hive_try_const " c:ident : tactic => do
+  let name ← resolveGlobalConstNoOverload c
+  applyRetrievedConst name (strict := false)
+
+/--
+  Strict re-entry.
+
+  This is the annihilator: the candidate must close the current goal.
+  If it leaves premises/subgoals, the tactic fails and restores state.
+-/
+elab "hive_annihilate " c:ident : tactic => do
+  let name ← resolveGlobalConstNoOverload c
+  applyRetrievedConst name (strict := true)
+
+end HiveLogos
+```
+
+The log message “Promoted to Logos” should not happen inside the tactic itself. The tactic can emit `CLOSED`, `APPLIED`, or `REFUSED`. Promotion to `DiamondFossil` should occur only after the surrounding declaration has been accepted and then indexed by `#hive_index_decl` or an equivalent post-check command. The local tactic can close the current goal, but the durable database promotion belongs to the artifact-indexing phase.
+
+The construction path should now be this:
+
+```text
+Lean Extractor
+  emits canonical goal/declaration artifacts
+
+Rust MotherBee Bridge
+  parses Lean JSON events
+  validates schema
+  hashes canonical preimages
+  inserts InfoTrees / DiamondFossils / DeadEndMotifs
+  queries ArangoDB for candidate constants
+  invokes or suggests hive_try_const / hive_annihilate
+
+ArangoDB
+  stores verified fossils, open goals, failures, and morphisms
+
+React UI
+  observes graph events and renders the manifold
+
+GCN / analogy engine
+  later, after the graph has enough verified topology
+```
+
+The Rust middleware should be a **semantic firewall**. It should not interpret Lean expressions. It should not decide proof validity. It should only validate event structure, compute digests over Lean-emitted canonical strings, persist graph objects, retrieve candidate names, and record Lean’s verdicts.
+
+The minimal event loop is:
+
+```text
+1. Lean emits ProbeObserved for an open goal.
+2. MotherBee validates and hashes the canonical preimage.
+3. MotherBee stores an InfoTreeArtifact.
+4. MotherBee queries DiamondFossils by conclusionHashShape / conclusionHashExact.
+5. MotherBee returns candidate const names.
+6. Lean attempts hive_annihilate or hive_try_const.
+7. Lean emits CandidateClosed, CandidateApplied, or CandidateRejected.
+8. MotherBee records either:
+   - successful re-entry edge
+   - partial path-blueprint edge
+   - FailedCandidate / DeadEndMotif
+```
+
+The core Rust data model can be small:
+
+```rust
+#[derive(Debug, serde::Deserialize)]
+#[serde(tag = "event")]
+pub enum HiveEvent {
+    ProbeObserved {
+        hive_version: String,
+        module: String,
+        goal_index: u32,
+        target_pretty: String,
+        canonical_preimage: String,
+        target_hash_shape: String,
+        target_hash_exact: Option<String>,
+        context_fingerprint: Option<String>,
+        normalization_policy: String,
+    },
+
+    FossilIndexed {
+        hive_version: String,
+        module: String,
+        const_name: String,
+        declaration_kind: String,
+        full_type_pretty: String,
+        conclusion_pretty: String,
+        conclusion_hash_shape: String,
+        conclusion_hash_exact: Option<String>,
+        kernel_status: String,
+        axioms_used: Vec<String>,
+    },
+
+    CandidateClosed {
+        goal_hash: String,
+        const_name: String,
+        mode: ReentryMode,
+    },
+
+    CandidateApplied {
+        goal_hash: String,
+        const_name: String,
+        remaining_subgoals: u32,
+    },
+
+    CandidateRejected {
+        goal_hash: String,
+        const_name: String,
+        failure_kind: FailureKind,
+        message_hash: String,
+    },
+}
+
+#[derive(Debug, serde::Deserialize)]
+pub enum ReentryMode {
+    TryConst,
+    Annihilate,
+}
+
+#[derive(Debug, serde::Deserialize)]
+pub enum FailureKind {
+    ConstantNotFound,
+    ApplyFailed,
+    PartialInStrictMode,
+    EnvironmentMismatch,
+    MissingImport,
+    Unknown,
+}
+```
+
+The line protocol should be boring and robust:
+
+```text
+HIVE_JSON {"event":"ProbeObserved", ...}
+HIVE_JSON {"event":"CandidateRejected", ...}
+HIVE_JSON {"event":"FossilIndexed", ...}
+```
+
+MotherBee only parses lines prefixed with `HIVE_JSON `. Ordinary Lean logs remain human-readable and are ignored by the ingestion pipeline.
+
+The minimal ArangoDB collections should be:
+
+```text
+Vertex collections
+------------------
+InfoTrees
+DiamondFossils
+FailedCandidates
+DeadEndMotifs
+ProofRuns
+
+Edge collections
+----------------
+SuggestedFor
+ClosedBy
+PartiallyAppliedBy
+RejectedBy
+DistilledInto
+KernelizesTo
+DependsOn
+```
+
+The candidate query should initially stay simple:
+
+```aql
+FOR fossil IN DiamondFossils
+  FILTER fossil.kernel_status == "verified"
+  FILTER fossil.conclusion_hash_shape == @targetHashShape
+  FILTER fossil.visibility IN @allowedVisibilityScopes
+  SORT fossil.solidarity_score DESC, fossil.mdl_bits ASC
+  LIMIT @limit
+  RETURN {
+    const_name: fossil.const_name,
+    conclusion: fossil.conclusion_pretty,
+    hash: fossil.conclusion_hash_shape,
+    axioms_used: fossil.axioms_used
+  }
+```
+
+A failed annihilation should create a `FailedCandidate`, not just a log line:
+
+```json
+{
+  "artifactKind": "FailedCandidate",
+  "goalHash": "sha256:hive-v1:...",
+  "candidateConstName": "Nat.add_comm",
+  "failureKind": "ApplyFailed",
+  "normalizationPolicy": "instantiateMVars+whnf(default)",
+  "environmentHash": "sha256:...",
+  "messageHash": "sha256:...",
+  "karmicDebtDelta": 1,
+  "createdAt": "..."
+}
+```
+
+Repeated failures should be distilled into a `DeadEndMotif`:
+
+```json
+{
+  "artifactKind": "DeadEndMotif",
+  "goalShapeHash": "sha256:hive-v1:...",
+  "candidatePattern": "Nat.add_comm",
+  "failureKind": "ApplyFailed",
+  "occurrences": 17,
+  "avoidanceRule": "Do not suggest commutativity lemma for this normalized zero-right-addition target without a rewrite prepass.",
+  "createdAt": "..."
+}
+```
+
+That is the Dirac Sea in database form: not garbage, but compressed negative proof-search information.
+
+The build sequence should be:
+
+```text
+1. Freeze Lean event JSON.
+2. Add hive_try_const and hive_annihilate.
+3. Add #hive_index_decl for verified declarations.
+4. Write Rust JSON-line ingestor.
+5. Write Arango upsert layer.
+6. Write candidate retrieval query.
+7. Run a two-pass tracer bullet:
+   - pass 1: probe/index
+   - pass 2: re-enter with retrieved candidates
+8. Add DeadEndMotif distillation after repeated failures.
+9. Expose events to the React UI.
+10. Defer GCN until the graph has real topology.
+```
+
+The first acceptance test should be very narrow:
+
+```lean
+import Lean
+import HiveLogos.Kernelizer
+import HiveLogos.Extractor
+
+#hive_index_decl Nat.add_zero
+#hive_index_decl Nat.zero_add
+#hive_index_decl Nat.add_comm
+
+theorem test_annihilation (x : Nat) : x + 0 = x := by
+  hive_probe
+  hive_annihilate Nat.add_zero
+```
+
+And the failure case:
+
+```lean
+theorem test_deadend (x : Nat) : x + 0 = x := by
+  hive_probe
+  hive_annihilate Nat.add_comm
+```
+
+The second one should fail and become a `FailedCandidate`. It should never corrupt the graph, never create a fossil, and never mark the goal as solved.
+
+So the answer is: the blueprint is construction-ready. Detail the **Rust MotherBee bridge** next, because it is the spine between Lean truth, Arango memory, and the Dirac Sea of antiproofs. The frontend can observe it; the GCN can later mine it. The bridge makes the Hive real.
+
+[1]: https://lean-lang.org/doc/api/Lean/Meta/Tactic/Apply.html "Lean.Meta.Tactic.Apply"
+
+
+
+
+This is the correct engineering pivot. The **Rust MotherBee Middleware** is the "Spine of the Logos"—it is the only component that requires absolute synchronization between the formal kernel's truth and the graph's memory. 
+
+By treating Rust as a **semantic firewall**, we ensure that even if the generative swarm (S+) goes "insane" or the GCN analogies become "hallucinatory," the integrity of the manifold remains intact. The Rust layer doesn't need to know *why* a proof works; it only needs to know that Lean *said* it works.
+
+---
+
+### **I. The MotherBee Architecture: The Line-Protocol Ingestor**
+
+The MotherBee is a Rust service (Tokio-based) that wraps the Lean 4 process. It listens to `stdout`, filters for the `HIVE_JSON` prefix, and orchestrates the manifold updates.
+
+#### **1. The Core Event Loop (Rust)**
+```rust
+use tokio::io::{BufReader, AsyncBufReadExt};
+use tokio::process::{Command, Child};
+use serde_json::Value;
+
+pub struct MotherBee {
+    lean_process: Child,
+    db: ArangoClient, // Wrapper for ArangoDB AQL operations
+}
+
+impl MotherBee {
+    pub async fn start_event_loop(&mut self) -> anyhow::Result<()> {
+        let stdout = self.lean_process.stdout.take().unwrap();
+        let mut reader = BufReader::new(stdout).lines();
+
+        while let some(line) = reader.next_line().await? {
+            if line.starts_with("HIVE_JSON") {
+                let json_str = line.trim_start_matches("HIVE_JSON ").trim();
+                let event: HiveEvent = serde_json::from_str(json_str)?;
+                
+                // Route the event to the Manifold Transaction Engine
+                self.handle_event(event).await?;
+            } else {
+                // Pass-through for human-readable Lean logs
+                println!("[LEAN]: {}", line);
+            }
+        }
+        Ok(())
+    }
+}
+```
+
+---
+
+### **II. The Manifold Transaction Engine (The Firewall)**
+
+When an event arrives, MotherBee executes a series of atomic graph mutations. This is where the **Dirac Sea** is populated and the **Diamond Fossils** are referenced.
+
+#### **1. Handling `ProbeObserved` (Goal Recording)**
+When a `hive_probe` is hit:
+1.  **Check for Existence:** Does this `target_hash_shape` already exist in `InfoTrees`?
+2.  **Upsert:** Record the goal state.
+3.  **Search:** Run the AQL Gravity Search for candidate constants.
+4.  **Feedback:** (Optional) If running in an interactive session, MotherBee could push suggestions back to Lean via `stdin`.
+
+#### **2. Handling `CandidateRejected` (Feeding the Dirac Sea)**
+This is the most critical logic for "Institutional Intuition."
+
+```rust
+async fn handle_rejection(&self, rejection: CandidateRejected) -> anyhow::Result<()> {
+    // 1. Record the specific failure
+    let failed_node = self.db.insert_failed_candidate(rejection).await?;
+
+    // 2. Distillation Check: The Dirac Sea Threshold
+    // If the same const_name has failed on this goal_hash X times...
+    let failure_count = self.db.count_recent_failures(&rejection.goal_hash, &rejection.const_name).await?;
+    
+    if failure_count > 5 {
+        self.db.distill_into_dead_end_motif(
+            &rejection.goal_hash, 
+            &rejection.const_name,
+            "Repeated annihilation failure in strict mode."
+        ).await?;
+        println!("[MOTHERBEE]: Distilled {} into DeadEndMotif for goal {}.", 
+                 rejection.const_name, rejection.goal_hash);
+    }
+    
+    Ok(())
+}
+```
+
+---
+
+### **III. The ArangoDB Manifold Schema (Rust-Side)**
+
+The Rust middleware defines the structural morphisms of the graph.
+
+| Collection | Role | Key Attribute |
+| :--- | :--- | :--- |
+| `InfoTrees` | Open Goals | `_key: goal_hash` |
+| `DiamondFossils` | Verified Proofs | `_key: conclusion_hash_shape` |
+| `DeadEndMotifs` | Antiproof Vacuum | `_key: goal_hash + candidate_name` |
+| `ClosedBy` (Edge) | Annihilation Path | `from: InfoTree, to: DiamondFossil` |
+| `RejectedBy` (Edge)| Rejection Lineage | `from: InfoTree, to: DiamondFossil` |
+
+---
+
+### **IV. The Re-Entry Loop: Two-Pass Tracer Bullet**
+
+To test the system, we execute the following protocol:
+
+**Pass 1: Ingestion**
+*   User writes a theorem.
+*   User runs `#hive_index_decl` on `Nat.add_zero`.
+*   MotherBee stores `Nat.add_zero` as a `DiamondFossil` with its `conclusion_hash_shape`.
+*   User runs `hive_probe` on a goal `x + 0 = x`.
+*   MotherBee stores the `InfoTree` and notes the `goal_hash`.
+
+**Pass 2: Re-entry**
+*   MotherBee sees the `ProbeObserved` event.
+*   MotherBee runs AQL and finds `Nat.add_zero` is a perfect shape-match.
+*   MotherBee (or the User) triggers `hive_annihilate Nat.add_zero`.
+*   Lean attempts the kernelization.
+*   Lean emits `CandidateClosed`.
+*   MotherBee creates the `ClosedBy` edge, marking the manifold as "Resolved" at that coordinate.
+
+---
+
+### **V. The Refined Contract: Event JSON**
+
+The Lean-side code must strictly output the following for the Rust Firewall:
+
+```lean
+-- In HiveLogos/Extractor.lean
+def emitEvent (e : HiveEvent) : TacticM Unit := do
+  let json := toJson e
+  logInfo m!"HIVE_JSON {json}"
+```
+
+This prefix `HIVE_JSON` allows the Rust `BufReader` to perform zero-cost filtering while still allowing `dbg_trace` and other Lean logging to function normally for the developer.
+
+---
+
+### **Final Construction Readiness**
+
+The **MotherBee Bridge** is now defined as:
+1.  **A Process Manager** for Lean 4.
+2.  **A Line-Protocol Parser** for structured JSON events.
+3.  **A Transaction Manager** for the ArangoDB manifold.
+4.  **A Metric Monitor** for "Karmic Debt" (unresolved InfoTrees) and "Dirac Sea Density" (DeadEndMotifs).
+
+**Is the Rust middleware contract sufficiently defined to begin Step 1 (Freezing the Lean JSON schema)?**
+
+***
+
+**Hermes Internal Log:**
+*"Construction phase initiated. Track 1A and 1B merging into the Rust Spine. The firewall is active. The Manifold is ready to receive its first verified fossil. S+ and S- parity is now being monitored by the MotherBee ingestor."*
+
+
+The conceptual foundation of the **MotherBee Bridge** is exceptionally strong. Treating Rust as a strict "semantic firewall" is the exact right architectural pattern for this system. It correctly isolates Lean’s deterministic, formal truth from the stochastic, heuristic nature of the external graph, ensuring the manifold only memorizes what the kernel explicitly validates. 
+
+Structurally and philosophically, the middleware contract is indeed ready for Step 1. However, before you officially **freeze the Lean JSON schema**, there are three critical engineering realities to address to prevent bottlenecks and serialization panics.
+
+### **1. The Concurrency Bottleneck in the Event Loop**
+In your current Rust implementation, the `handle_event(event).await?` call is synchronous within the `while let` loop. 
+* **The Risk:** ArangoDB network calls take milliseconds. If Lean performs a heavy `#hive_index_decl` and blasts 5,000 `HIVE_JSON` lines to `stdout` in a fraction of a second, the blocking `await` will cause the OS pipe buffer to fill up. This will physically pause the Lean process until Rust catches up.
+* **The Fix:** You need to decouple ingestion from execution. MotherBee should parse the line and immediately push the `HiveEvent` into a `tokio::sync::mpsc` channel. A separate pool of worker tasks should pull from this channel and execute the ArangoDB transactions concurrently.
+
+### **2. Cryptographic Determinism for the Manifold**
+For `_key: goal_hash` and `_key: conclusion_hash_shape` to work as the spine of your graph, the hashing algorithm in Lean **must be deterministic across different process executions**. 
+* **The Risk:** Lean's internal memory addresses or environment-specific variable names (like `_uniq.1234`) often leak into string representations. If `Nat.add_zero` generates a different hash on Tuesday than it did on Monday, your `DiamondFossils` will duplicate, and the `ClosedBy` edges will orphan themselves.
+* **The Fix:** The JSON schema must dictate exactly how the `hash_shape` is normalized (e.g., De Bruijn indexing for bound variables) before it hits `serde_json`.
+
+### **3. Explicit Algebraic Data Types (The Freeze)**
+To actually "freeze" the schema, the implicit shapes in your text must become explicit Rust enums with `#[derive(Deserialize)]`. The contract needs to clearly delineate the payload differences between events. For example, a `CandidateRejected` event requires `goal_hash` and `const_name`, but a `ProbeObserved` event might require a full syntax tree or local context.
+
+---
+
+**Hermes Internal Log Acknowledged.** The firewall is verified. The S+/S- parity constraints are logically sound. 
+
+To proceed with Step 1 and formally freeze the contract, what are the exact data fields and types we need to define for the `HiveEvent` enum in Rust to guarantee a perfect deserialization match with Lean's output?The conceptual foundation of the **MotherBee Bridge** is exceptionally strong. Treating Rust as a strict "semantic firewall" is the exact right architectural pattern for this system. It correctly isolates Lean’s deterministic, formal truth from the stochastic, heuristic nature of the external graph, ensuring the manifold only memorizes what the kernel explicitly validates. 
+
+Structurally and philosophically, the middleware contract is indeed ready for Step 1. However, before you officially **freeze the Lean JSON schema**, there are three critical engineering realities to address to prevent bottlenecks and serialization panics.
+
+### **1. The Concurrency Bottleneck in the Event Loop**
+In your current Rust implementation, the `handle_event(event).await?` call is synchronous within the `while let` loop. 
+* **The Risk:** ArangoDB network calls take milliseconds. If Lean performs a heavy `#hive_index_decl` and blasts 5,000 `HIVE_JSON` lines to `stdout` in a fraction of a second, the blocking `await` will cause the OS pipe buffer to fill up. This will physically pause the Lean process until Rust catches up.
+* **The Fix:** You need to decouple ingestion from execution. MotherBee should parse the line and immediately push the `HiveEvent` into a `tokio::sync::mpsc` channel. A separate pool of worker tasks should pull from this channel and execute the ArangoDB transactions concurrently.
+
+### **2. Cryptographic Determinism for the Manifold**
+For `_key: goal_hash` and `_key: conclusion_hash_shape` to work as the spine of your graph, the hashing algorithm in Lean **must be deterministic across different process executions**. 
+* **The Risk:** Lean's internal memory addresses or environment-specific variable names (like `_uniq.1234`) often leak into string representations. If `Nat.add_zero` generates a different hash on Tuesday than it did on Monday, your `DiamondFossils` will duplicate, and the `ClosedBy` edges will orphan themselves.
+* **The Fix:** The JSON schema must dictate exactly how the `hash_shape` is normalized (e.g., De Bruijn indexing for bound variables) before it hits `serde_json`.
+
+### **3. Explicit Algebraic Data Types (The Freeze)**
+To actually "freeze" the schema, the implicit shapes in your text must become explicit Rust enums with `#[derive(Deserialize)]`. The contract needs to clearly delineate the payload differences between events. For example, a `CandidateRejected` event requires `goal_hash` and `const_name`, but a `ProbeObserved` event might require a full syntax tree or local context.
+
+---
+
+**Hermes Internal Log Acknowledged.** The firewall is verified. The S+/S- parity constraints are logically sound. 
+
+To proceed with Step 1 and formally freeze the contract, what are the exact data fields and types we need to define for the `HiveEvent` enum in Rust to guarantee a perfect deserialization match with Lean's output?To freeze the contract and move into construction, we must address the **Concurrency Bottleneck** and the **Cryptographic Determinism** through a strictly typed Rust manifest.
+
+Here is the construction-grade **Step 1: The Hive Logos Middleware Freeze**.
+
+### 1. The Concurrency Pattern (The Async Pipeline)
+
+To prevent Lean from blocking on database I/O, we decouple the ingestor. We use a `mpsc` (multi-producer, single-consumer) channel. The ingestor is a "hot" loop; the manifold worker is a "persistent" consumer.
+
+```rust
+// MotherBee/src/orchestrator.rs
+
+pub async fn run_motherbee(mut lean_worker: LeanProcess) -> anyhow::Result<()> {
+    let (tx, mut rx) = tokio::sync::mpsc::channel::<HiveEvent>(1024);
+
+    // Task A: The Ingestor (Hot Loop)
+    let ingestor = tokio::spawn(async move {
+        let mut lines = lean_worker.stdout_lines();
+        while let Ok(Some(line)) = lines.next_line().await {
+            if let Some(json_payload) = line.strip_prefix("HIVE_JSON ") {
+                if let Ok(event) = serde_json::from_str::<HiveEvent>(json_payload) {
+                    let _ = tx.send(event).await;
+                }
+            }
+        }
+    });
+
+    // Task B: The Manifold Worker (Transaction Engine)
+    while let Some(event) = rx.recv().await {
+        tokio::spawn(async move {
+            // ArangoDB Transactions happen here concurrently
+            if let Err(e) = handle_event_in_manifold(event).await {
+                eprintln!("[Manifold Error]: {:?}", e);
+            }
+        });
+    }
+
+    ingestor.await?;
+    Ok(())
+}
+```
+
+---
+
+### 2. The Frozen Schema: `HiveEvent` ADT
+
+This is the exact contract. Any change to these structures requires a version bump in both the Lean `Extractor.lean` and the Rust `schema.rs`.
+
+```rust
+// MotherBee/src/schema.rs
+
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(tag = "type", content = "payload")]
+pub enum HiveEvent {
+    /// Space S -> I: A new goal has been encountered.
+    ProbeObserved(ProbePayload),
+    
+    /// Space I -> E: A verified declaration is being indexed.
+    FossilIndexed(FossilPayload),
+    
+    /// The Annihilator Result: Success.
+    CandidateClosed(VerdictPayload),
+    
+    /// The Annihilator Result: Partial match (subgoals remaining).
+    CandidateApplied(VerdictPayload),
+    
+    /// The Annihilator Result: Rejected by kernel.
+    CandidateRejected(FailurePayload),
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProbePayload {
+    pub goal_hash: String,            // SHA-256 of Canonical De Bruijn String
+    pub target_pretty: String,        // For UI rendering
+    pub canonical_preimage: String,   // The raw S-expression string
+    pub context_fingerprint: String,  // Hash of normalized local context
+    pub module: String,
+    pub line_col: (u32, u32),
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FossilPayload {
+    pub conclusion_hash: String,      // SHA-256 of Canonical Conclusion Shape
+    pub const_name: String,           // Lean Global Name (e.g. Nat.add_comm)
+    pub conclusion_pretty: String,
+    pub full_type_pretty: String,
+    pub axioms: Vec<String>,
+    pub environment_hash: String,     // Hash of imports + Lean version
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct VerdictPayload {
+    pub goal_hash: String,
+    pub candidate_name: String,
+    pub metabolic_cost: f64,          // Time taken in Lean
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct FailurePayload {
+    pub goal_hash: String,
+    pub candidate_name: String,
+    pub error_message: String,
+    pub error_hash: String,           // To group similar Dirac Sea failures
+}
+```
+
+---
+
+### 3. Guaranteeing Cryptographic Determinism
+
+To ensure the `goal_hash` is stable across sessions, the Lean side will now follow a **Strict Normalization Protocol** before hashing:
+
+1.  **Metavariable Instantiation:** All assigned holes are plugged.
+2.  **Used-Variable Isolation:** Irrelevant local hypotheses are stripped.
+3.  **De Bruijn Abstraction:** Free variables are replaced by indices based on their order in the *Local Context*, not their internal unique IDs.
+4.  **S-Expression Serialization:** The resulting `Expr` is turned into the canonical string we defined.
+5.  **Hashing:** The Rust side (MotherBee) will perform the SHA-256 on the `canonical_preimage` string. **Lean emits the preimage; Rust computes the hash.** This prevents subtle differences in Lean's internal hashing from corrupting the ArangoDB keys.
+
+---
+
+### 4. Definition of Done for Step 1
+
+The "Freeze" is complete when:
+*   [ ] **Lean:** `toSuperCharacterString` produces a string where `(alpha beta : Nat) |- alpha + beta` and `(x y : Nat) |- x + y` result in an identical string.
+*   [ ] **Rust:** `serde_json` successfully parses a `ProbeObserved` event emitted by Lean.
+*   [ ] **Manifold:** ArangoDB uses the `goal_hash` as the document `_key` for $O(1)$ deduplication.
+
+### **Next Action: The First Seed Ingestion**
+
+With the schema frozen, we can now implement the **Manifold Ingestor** in Rust. 
+
+**Shall we define the specific ArangoDB AQL transaction that "hooks" a `ProbeObserved` event into the existing `DiamondFossils` (The Gravity Search), or should we first build the `FossilIndexed` logic to populate the Dirac Sea with its first verified truths?**
+
+***
+
+**MotherBee Console:**
+`[SYSTEM]: Schema frozen at v0.1.0-alpha.`
+`[SYSTEM]: Ingestor channel initialized. Buffer size: 1024.`
+`[SYSTEM]: Standing by for HIVE_JSON stream...`
+
+To freeze the contract and move into construction, we must address the **Concurrency Bottleneck** and the **Cryptographic Determinism** through a strictly typed Rust manifest.
+
+Here is the construction-grade **Step 1: The Hive Logos Middleware Freeze**.
+
+---
+
+### **1. The Async Pipeline: Decoupling Ingestion from DB I/O**
+
+To prevent Lean from blocking while Rust waits for ArangoDB, we implement a `tokio::sync::mpsc` buffer. The "Ingestor" is a hot, synchronous reader of the OS pipe; the "Dispatcher" is a concurrent worker pool.
+
+```rust
+// MotherBee/src/orchestrator.rs
+use tokio::sync::mpsc;
+
+pub async fn start_motherbee(mut lean_worker: LeanProcess) {
+    let (event_tx, mut event_rx) = mpsc::channel::<HiveEvent>(1024);
+
+    // Task 1: The Line-Protocol Listener (Hot Loop)
+    tokio::spawn(async move {
+        while let Some(line) = lean_worker.read_line().await {
+            if let Some(payload) = line.strip_prefix("HIVE_JSON ") {
+                match serde_json::from_str::<HiveEvent>(payload) {
+                    Ok(event) => { let _ = event_tx.send(event).await; }
+                    Err(e) => eprintln!("[FIREWALL PANIC] Malformed JSON: {}", e),
+                }
+            }
+        }
+    });
+
+    // Task 2: The Manifold Dispatcher (Concurrent Workers)
+    while let Some(event) = event_rx.recv().await {
+        tokio::spawn(async move {
+            if let Err(e) = process_manifold_update(event).await {
+                eprintln!("[MANIFOLD ERROR] Transaction failed: {}", e);
+            }
+        });
+    }
+}
+```
+
+---
+
+### **2. The Frozen Schema: `HiveEvent` ADT**
+
+This is the exact contract. Any change to these structures requires a synchronized version bump in the Lean meta-code.
+
+```rust
+// MotherBee/src/schema.rs
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(tag = "event", content = "data")]
+pub enum HiveEvent {
+    /// Space S -> I: A Lean hole was probed.
+    ProbeObserved {
+        module: String,
+        target_pretty: String,
+        /// The raw, name-invariant S-expression from Lean.
+        /// MotherBee will hash this to create the ArangoDB _key.
+        canonical_preimage: String,
+        normalization_policy: String,
+        goal_index: u32,
+    },
+
+    /// Space I -> E: A verified declaration was indexed.
+    FossilIndexed {
+        module: String,
+        const_name: String,
+        conclusion_pretty: String,
+        /// The name-invariant S-expression of the theorem's conclusion.
+        conclusion_preimage: String,
+        axioms_used: Vec<String>,
+        kernel_status: String,
+    },
+
+    /// S- (Annihilator): Goal closed completely.
+    CandidateClosed {
+        goal_hash: String,
+        const_name: String,
+        metabolic_ms: f64,
+    },
+
+    /// S- (Annihilator): Failed to unify/apply.
+    CandidateRejected {
+        goal_hash: String,
+        const_name: String,
+        failure_kind: String, // "ApplyFailed" | "StrictViolation" | etc.
+        error_message: String,
+    },
+}
+```
+
+---
+
+### **3. Cryptographic Determinism: The Hashing Protocol**
+
+To ensure the **Manifold** is stable across time and space, we establish a strict **Preimage Hashing Protocol**:
+
+1.  **Lean Side:** Generates the `canonical_preimage` (The S-expression with De Bruijn indices).
+2.  **Rust Side:** Upon receiving the event, MotherBee computes `SHA-256(preimage)`.
+3.  **ArangoDB Side:** The resulting hex string is used as the document `_key`.
+
+**Why this works:** Even if Lean 4.10 changes how it handles internal metavariable IDs compared to Lean 4.8, the *logical structure* (the preimage string) remains identical. By hashing in Rust, we ensure the "Spine" of the manifold is a constant logic-signature.
+
+---
+
+### **4. Definition of Done for Step 1**
+
+The contract is considered frozen when:
+1.  **Lean's `toShapeString`** output for `Nat.add_comm` is byte-for-byte identical across two different Lean projects.
+2.  **MotherBee's `CandidateRejected`** handler correctly links a failure back to an `InfoTree` node using the `goal_hash`.
+3.  **Deserialization** does not panic when encountering `Option` fields for metadata.
+
+### **Next Action: The First Seed Ingestion**
+
+With the schema frozen, the next step is the **Manifold Ingestor**. 
+
+**Shall we define the `FossilIndexed` logic first to populate the Diamond layer with verified truth, or implement the `ProbeObserved` logic to begin recording the "Pathos" of the generative attempts?**
+
+***
+
+**Hermes Internal Log:**
+`[SYSTEM]: Schema v1.0.0-PROTOTYPE frozen.`
+`[SYSTEM]: Event loop decoupled. Buffer size: 1024.`
+`[SYSTEM]: Deterministic hashing logic assigned to Middleware.`
+`[SYSTEM]: Ready to ingest the Logos.`
+
+To freeze the contract and move into construction, we must address the **Concurrency Bottleneck** and the **Cryptographic Determinism** through a strictly typed Rust manifest.
+
+Here is the construction-grade **Step 1: The Hive Logos Middleware Freeze**.
+
+---
+
+### **1. The Async Pipeline: Decoupling Ingestion from DB I/O**
+
+To prevent Lean from blocking while Rust waits for ArangoDB, we implement a `tokio::sync::mpsc` buffer. The "Ingestor" is a hot, synchronous reader of the OS pipe; the "Dispatcher" is a concurrent worker pool.
+
+```rust
+// MotherBee/src/orchestrator.rs
+use tokio::sync::mpsc;
+
+pub async fn start_motherbee(mut lean_worker: LeanProcess) {
+    let (event_tx, mut event_rx) = mpsc::channel::<HiveEvent>(1024);
+
+    // Task 1: The Line-Protocol Listener (Hot Loop)
+    tokio::spawn(async move {
+        while let Some(line) = lean_worker.read_line().await {
+            if let Some(payload) = line.strip_prefix("HIVE_JSON ") {
+                match serde_json::from_str::<HiveEvent>(payload) {
+                    Ok(event) => { let _ = event_tx.send(event).await; }
+                    Err(e) => eprintln!("[FIREWALL PANIC] Malformed JSON: {}", e),
+                }
+            }
+        }
+    });
+
+    // Task 2: The Manifold Dispatcher (Concurrent Workers)
+    while let Some(event) = event_rx.recv().await {
+        tokio::spawn(async move {
+            if let Err(e) = process_manifold_update(event).await {
+                eprintln!("[MANIFOLD ERROR] Transaction failed: {}", e);
+            }
+        });
+    }
+}
+```
+
+---
+
+### **2. The Frozen Schema: `HiveEvent` ADT**
+
+This is the exact contract. Any change to these structures requires a synchronized version bump in the Lean meta-code.
+
+```rust
+// MotherBee/src/schema.rs
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(tag = "event", content = "data")]
+pub enum HiveEvent {
+    /// Space S -> I: A Lean hole was probed.
+    ProbeObserved {
+        module: String,
+        target_pretty: String,
+        /// The raw, name-invariant S-expression from Lean.
+        /// MotherBee will hash this to create the ArangoDB _key.
+        canonical_preimage: String,
+        normalization_policy: String,
+        goal_index: u32,
+    },
+
+    /// Space I -> E: A verified declaration was indexed.
+    FossilIndexed {
+        module: String,
+        const_name: String,
+        conclusion_pretty: String,
+        /// The name-invariant S-expression of the theorem's conclusion.
+        conclusion_preimage: String,
+        axioms_used: Vec<String>,
+        kernel_status: String,
+    },
+
+    /// S- (Annihilator): Goal closed completely.
+    CandidateClosed {
+        goal_hash: String,
+        const_name: String,
+        metabolic_ms: f64,
+    },
+
+    /// S- (Annihilator): Failed to unify/apply.
+    CandidateRejected {
+        goal_hash: String,
+        const_name: String,
+        failure_kind: String, // "ApplyFailed" | "StrictViolation" | etc.
+        error_message: String,
+    },
+}
+```
+
+---
+
+### **3. Cryptographic Determinism: The Hashing Protocol**
+
+To ensure the **Manifold** is stable across time and space, we establish a strict **Preimage Hashing Protocol**:
+
+1.  **Lean Side:** Generates the `canonical_preimage` (The S-expression with De Bruijn indices).
+2.  **Rust Side:** Upon receiving the event, MotherBee computes `SHA-256(preimage)`.
+3.  **ArangoDB Side:** The resulting hex string is used as the document `_key`.
+
+**Why this works:** Even if Lean 4.10 changes how it handles internal metavariable IDs compared to Lean 4.8, the *logical structure* (the preimage string) remains identical. By hashing in Rust, we ensure the "Spine" of the manifold is a constant logic-signature.
+
+---
+
+### **4. Definition of Done for Step 1**
+
+The contract is considered frozen when:
+1.  **Lean's `toShapeString`** output for `Nat.add_comm` is byte-for-byte identical across two different Lean projects.
+2.  **MotherBee's `CandidateRejected`** handler correctly links a failure back to an `InfoTree` node using the `goal_hash`.
+3.  **Deserialization** does not panic when encountering `Option` fields for metadata.
+
+### **Next Action: The First Seed Ingestion**
+
+With the schema frozen, the next step is the **Manifold Ingestor**. 
+
+**Shall we define the `FossilIndexed` logic first to populate the Diamond layer with verified truth, or implement the `ProbeObserved` logic to begin recording the "Pathos" of the generative attempts?**
+
+***
+
+**Hermes Internal Log:**
+`[SYSTEM]: Schema v1.0.0-PROTOTYPE frozen.`
+`[SYSTEM]: Event loop decoupled. Buffer size: 1024.`
+`[SYSTEM]: Deterministic hashing logic assigned to Middleware.`
+`[SYSTEM]: Ready to ingest the Logos.`
+
+

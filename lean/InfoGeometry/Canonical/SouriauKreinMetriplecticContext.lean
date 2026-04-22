@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.OnsagerReciprocity
+import InfoGeometry.Canonical.OperatorialCramerRao
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.Canonical.WeightedWeylNormalizationBridge
+import InfoGeometry.Canonical.SuperchargeCARCCRBridge
 import InfoGeometry.Thermodynamics.SouriauKillingFlow
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic
@@ -34,6 +36,7 @@ namespace InfoGeometry.Canonical.SouriauKreinMetriplectic
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.DensityWeightIntertwinerBridge
 open InfoGeometry.Canonical.OnsagerCasimirJ
+open InfoGeometry.Canonical.OperatorialCramerRao
 open InfoGeometry.Canonical.OnsagerReciprocity
 open InfoGeometry.Canonical.OperatorFenchelRegularCone
 open InfoGeometry.Canonical.RelationalInformationCore
@@ -151,6 +154,29 @@ noncomputable def zeroWeightDynamics : EndH :=
 noncomputable def weightedPhaseAxisCommutator : EndH :=
   C.weight • transportCommutator (E := E) (densityWeightPhaseAxis (E := E)) C.A
 
+/--
+Coordinate-free Weyl-covariant thermodynamic derivation.
+
+This is the repo-native operational replacement for a coordinate derivative:
+the generator is the Souriau temperature vector corrected by the Weyl density
+weight, and the derivative of an observable is its Lie/commutator derivation.
+-/
+@[rep_depth transport]
+noncomputable def weylCovariantThermodynamicDerivation : EndH :=
+  observableLieDerivation (E := E)
+    (densityWeightLiftedTransportGenerator C.P C.ψ C.weight) C.A
+
+/-- Zero-weight thermodynamic Lie derivation. -/
+@[rep_depth transport]
+noncomputable def zeroWeightThermodynamicDerivation : EndH :=
+  observableLieDerivation (E := E)
+    (densityWeightLiftedTransportGenerator C.P C.ψ 0) C.A
+
+/-- Weyl phase-axis Lie-derivation correction before multiplying by the weight. -/
+@[rep_depth transport]
+noncomputable def phaseAxisThermodynamicDerivation : EndH :=
+  observableLieDerivation (E := E) (densityWeightPhaseAxis (E := E)) C.A
+
 /-- The phase/J-Casimir response before J-reflection. -/
 @[rep_depth transport]
 noncomputable def phaseCorrelation : ℝ :=
@@ -266,6 +292,40 @@ theorem operatorialMetricResponsePSD
 end SquareOperatorialResponseContext
 
 /--
+One-channel regular-cone positivity for the `X` operatorial Hessian response.
+
+This is the dimension-agnostic owner surface for the first constructive
+operatorial Hessian closure: only the probed double-transport Hessian in the
+`X` channel must live in the regular Drazin/Krein cone.  No finite matrix, no
+two-channel determinant bound, and no scalar PSD packet is assumed.
+-/
+@[rep_depth transport]
+structure RegularConeXResponseContext where
+  c : CertifiedModularReduction (E := H₂)
+  Hxx : EndH
+  Hxx_mem : Hxx ∈ regularPositiveConeOmegaD c
+  probe_nonneg_on_regular :
+    ∀ H : EndH, H ∈ regularPositiveConeOmegaD c → 0 ≤ C.P.probe H
+  diagonalMetricResponse_eq_probe_Hxx :
+    C.diagonalMetricResponse = C.P.probe Hxx
+
+namespace RegularConeXResponseContext
+
+variable {C}
+
+/-- The `X` diagonal response is nonnegative by regular-cone positivity. -/
+@[rep_depth transport]
+theorem diagonalMetricResponse_nonneg
+    (R : RegularConeXResponseContext C) :
+    0 ≤ C.diagonalMetricResponse := by
+  rw [RegularConeXResponseContext.diagonalMetricResponse_eq_probe_Hxx R]
+  exact RegularConeXResponseContext.probe_nonneg_on_regular R
+    (RegularConeXResponseContext.Hxx R)
+    (RegularConeXResponseContext.Hxx_mem R)
+
+end RegularConeXResponseContext
+
+/--
 Noncommutative-operator positivity context for the two-channel response packet.
 
 The positive objects live in the regular Drazin/Krein operator cone `Ω_D`; the
@@ -324,6 +384,77 @@ theorem operatorialMetricResponsePSD
     RegularConeOperatorialResponseContext.mixed_determinant_nonneg R⟩
 
 end RegularConeOperatorialResponseContext
+
+/--
+Operatorial Cramer-Rao realization of the two-channel response packet.
+
+This replaces the explicit determinant hypothesis by identifying the probed
+Souriau/Onsager responses with the owned comparison-state channel metric.  The
+mixed determinant then follows from the repo-native noncommutative
+Cauchy-Schwarz theorem
+`comparisonStateGeneratorMetric_sq_le`, without a finite response matrix.
+-/
+@[rep_depth transport]
+structure CramerRaoOperatorialResponseContext where
+  diagonalMetricResponse_eq_comparisonMetric :
+    C.diagonalMetricResponse =
+      comparisonStateGeneratorMetric (E := E) C.comparison C.X C.X
+  yDiagonalMetricResponse_eq_comparisonMetric :
+    C.yDiagonalMetricResponse =
+      comparisonStateGeneratorMetric (E := E) C.comparison C.Y C.Y
+  mixedMetricResponseXY_eq_comparisonMetric :
+    C.mixedMetricResponseXY =
+      comparisonStateGeneratorMetric (E := E) C.comparison C.X C.Y
+
+namespace CramerRaoOperatorialResponseContext
+
+variable {C}
+
+/-- The `X` diagonal response is nonnegative by the channel-metric norm square. -/
+@[rep_depth transport]
+theorem diagonalMetricResponse_nonneg
+    (R : CramerRaoOperatorialResponseContext C) :
+    0 ≤ C.diagonalMetricResponse := by
+  rw [CramerRaoOperatorialResponseContext.diagonalMetricResponse_eq_comparisonMetric R]
+  exact comparisonStateGeneratorMetric_self_nonneg (E := E) C.comparison C.X
+
+/-- The `Y` diagonal response is nonnegative by the channel-metric norm square. -/
+@[rep_depth transport]
+theorem yDiagonalMetricResponse_nonneg
+    (R : CramerRaoOperatorialResponseContext C) :
+    0 ≤ C.yDiagonalMetricResponse := by
+  rw [CramerRaoOperatorialResponseContext.yDiagonalMetricResponse_eq_comparisonMetric R]
+  exact comparisonStateGeneratorMetric_self_nonneg (E := E) C.comparison C.Y
+
+/--
+The mixed determinant is constructive: it is exactly Cauchy-Schwarz for the
+comparison-state channel metric on the infinite doubled Krein carrier.
+-/
+@[rep_depth transport]
+theorem mixed_determinant_nonneg
+    (R : CramerRaoOperatorialResponseContext C) :
+    0 ≤ C.diagonalMetricResponse * C.yDiagonalMetricResponse
+      - C.mixedMetricResponseXY * C.mixedMetricResponseYX := by
+  have hCS :=
+    comparisonStateGeneratorMetric_sq_le (E := E) C.comparison C.X C.Y
+  have hyx : C.mixedMetricResponseYX = C.mixedMetricResponseXY :=
+    C.mixedMetricResponse_symm.symm
+  rw [hyx]
+  rw [CramerRaoOperatorialResponseContext.diagonalMetricResponse_eq_comparisonMetric R,
+    CramerRaoOperatorialResponseContext.yDiagonalMetricResponse_eq_comparisonMetric R,
+    CramerRaoOperatorialResponseContext.mixedMetricResponseXY_eq_comparisonMetric R]
+  exact sub_nonneg.mpr (by simpa [pow_two] using hCS)
+
+/-- The Cramer-Rao realization constructs the downstream scalar PSD packet. -/
+@[rep_depth transport]
+theorem operatorialMetricResponsePSD
+    (R : CramerRaoOperatorialResponseContext C) :
+    C.OperatorialMetricResponsePSD :=
+  ⟨diagonalMetricResponse_nonneg R,
+    yDiagonalMetricResponse_nonneg R,
+    mixed_determinant_nonneg R⟩
+
+end CramerRaoOperatorialResponseContext
 
 /--
 Operatorial Krein/Onsager second-law gate: a symmetric positive-semidefinite
@@ -405,6 +536,73 @@ theorem operatorialEntropyProduction_nonneg_of_squareResponse
     (SquareOperatorialResponseContext.operatorialMetricResponsePSD S)
     xForce yForce
 
+/--
+Cramer-Rao operatorial second-law gate.  The two-channel determinant required
+by the quadratic form is derived from the comparison-state channel
+Cauchy-Schwarz theorem, not assumed as a scalar PSD hypothesis.
+-/
+@[rep_depth transport]
+theorem operatorialEntropyProduction_nonneg_of_cramerRaoResponse
+    (R : CramerRaoOperatorialResponseContext C)
+    (xForce yForce : ℝ) :
+    0 ≤ C.operatorialEntropyProduction xForce yForce :=
+  C.operatorialEntropyProduction_nonneg_of_metricResponsePSD
+    (CramerRaoOperatorialResponseContext.operatorialMetricResponsePSD R)
+    xForce yForce
+
+/--
+Supergraded even/odd Onsager block packet on the operatorial carrier.
+
+The `X` channel is read as the even/bosonic direction and the `Y` channel as
+the odd/fermionic direction.  This is not a finite block matrix: the entries
+are the operatorial response coefficients of arbitrary doubled-Krein
+endomorphism channels.  Positivity is inherited from the Cramer-Rao
+comparison-state Cauchy-Schwarz theorem.
+-/
+@[rep_depth transport]
+theorem supergradedEvenOddOnsagerBlock_packet_of_cramerRaoResponse
+    (R : CramerRaoOperatorialResponseContext C)
+    (evenForce oddForce : ℝ) :
+    C.mixedMetricResponseXY = C.mixedMetricResponseYX
+      ∧ C.diagonalMetricResponse =
+          comparisonStateGeneratorMetric (E := E) C.comparison C.X C.X
+      ∧ C.yDiagonalMetricResponse =
+          comparisonStateGeneratorMetric (E := E) C.comparison C.Y C.Y
+      ∧ C.mixedMetricResponseXY =
+          comparisonStateGeneratorMetric (E := E) C.comparison C.X C.Y
+      ∧ C.operatorialEntropyProduction evenForce oddForce =
+          C.diagonalMetricResponse * evenForce ^ (2 : ℕ)
+            + 2 * C.mixedMetricResponseXY * evenForce * oddForce
+              + C.yDiagonalMetricResponse * oddForce ^ (2 : ℕ)
+      ∧ 0 ≤ C.operatorialEntropyProduction evenForce oddForce := by
+  exact
+    ⟨C.mixedMetricResponse_symm,
+      R.diagonalMetricResponse_eq_comparisonMetric,
+      R.yDiagonalMetricResponse_eq_comparisonMetric,
+      R.mixedMetricResponseXY_eq_comparisonMetric,
+      C.operatorialEntropyProduction_eq_quadratic evenForce oddForce,
+      C.operatorialEntropyProduction_nonneg_of_cramerRaoResponse
+        R evenForce oddForce⟩
+
+/--
+One-channel operatorial second-law gate on the doubled Krein carrier.
+
+For a pure `X` force, the entropy production reduces to the diagonal Hessian
+readout times `xForce^2`.  If that diagonal Hessian is a regular-cone positive
+operator read by a positive probe, nonnegativity is constructive and does not
+require a finite response matrix or a two-channel determinant hypothesis.
+-/
+@[rep_depth transport]
+theorem operatorialEntropyProduction_xChannel_nonneg_of_regularCone
+    (R : RegularConeXResponseContext C)
+    (xForce : ℝ) :
+    0 ≤ C.operatorialEntropyProduction xForce 0 := by
+  rw [operatorialEntropyProduction_eq_quadratic]
+  have hdiag : 0 ≤ C.diagonalMetricResponse :=
+    RegularConeXResponseContext.diagonalMetricResponse_nonneg R
+  have hx2 : 0 ≤ xForce ^ (2 : ℕ) := sq_nonneg xForce
+  nlinarith
+
 /-- The metric response is the symmetrized readout of the two ordered Lie Hessians. -/
 @[rep_depth transport]
 theorem metricResponse_eq_half_probe_observableLieHessian_add_swap :
@@ -413,7 +611,7 @@ theorem metricResponse_eq_half_probe_observableLieHessian_add_swap :
         (C.P.probe (observableLieHessian (E := E) C.X C.Y C.A)
           + C.P.probe (observableLieHessian (E := E) C.Y C.X C.A)) := by
   simpa [metricResponse] using
-    operatorMetricHessianForm_eq_half_probe_observableLieHessian_add_swap
+    InfoGeometry.Canonical.OnsagerReciprocity.operatorMetricHessianForm_eq_half_probe_observableLieHessian_add_swap
       (E := E) C.P C.A C.X C.Y
 
 /-- The diagonal metric response is the probed double transport commutator. -/
@@ -424,7 +622,7 @@ theorem diagonalMetricResponse_eq_probe_double_transportCommutator :
         (transportCommutator (E := E) C.X
           (transportCommutator (E := E) C.X C.A)) := by
   simpa [diagonalMetricResponse] using
-    responseCoefficient_diag_eq_probe_double_transportCommutator
+    InfoGeometry.Canonical.OnsagerReciprocity.responseCoefficient_diag_eq_probe_double_transportCommutator
       (E := E) C.P C.X C.A
 
 /-- The skew response changes sign under channel swap. -/
@@ -465,6 +663,134 @@ theorem weightedDynamics_eq_zeroWeight_add_phaseAxisCommutator :
   simpa [weightedDynamics, zeroWeightDynamics, weightedPhaseAxisCommutator] using
     densityWeightLiftedDynamics_eq_zeroWeight_add_weighted_phaseAxis_commutator
       (E := E) C.P C.ψ C.A C.weight
+
+/--
+The weighted Weyl dynamics is exactly the coordinate-free Lie derivation for
+the density-weighted Souriau generator.
+-/
+@[rep_depth transport]
+theorem weightedDynamics_eq_weylCovariantThermodynamicDerivation :
+    C.weightedDynamics = C.weylCovariantThermodynamicDerivation := by
+  simp [weightedDynamics, weylCovariantThermodynamicDerivation,
+    densityWeightLiftedDynamics, observableLieDerivation_apply]
+
+/--
+Operational Weyl formula:
+
+`D_w A = D_0 A + w [K_Weyl, A]`.
+
+This is the coordinate-free replacement for a Weyl-covariant partial
+derivative.  The proof is the existing weighted-generator split plus the
+commutator/Lie-derivation identity.
+-/
+@[rep_depth transport]
+theorem weylCovariantThermodynamicDerivation_eq_zeroWeight_add_phaseAxis :
+    C.weylCovariantThermodynamicDerivation =
+      C.zeroWeightThermodynamicDerivation
+        + C.weight • C.phaseAxisThermodynamicDerivation := by
+  rw [← C.weightedDynamics_eq_weylCovariantThermodynamicDerivation]
+  rw [C.weightedDynamics_eq_zeroWeight_add_phaseAxisCommutator]
+  simp [zeroWeightDynamics, weightedPhaseAxisCommutator,
+    zeroWeightThermodynamicDerivation, phaseAxisThermodynamicDerivation,
+    densityWeightLiftedDynamics, observableLieDerivation_apply]
+
+/--
+Dilation/Goldstone-charge packet on the doubled real Krein carrier.
+
+The theorem name is Goldstone-facing, but the formal content is deliberately
+repo-native: density weight is the Weyl phase/dilation axis, the Weyl
+thermodynamic derivation splits into zero-weight plus phase-axis derivation,
+and the real doubled primitive supercharges close by the existing CAR/CCR
+owners.  No scalar charge or finite surrogate is introduced here.
+-/
+@[rep_depth transport]
+theorem operatorialDilationGoldstoneCharge_packet :
+    densityWeightPhaseAxis (E := E) = dilationOperator (E := E)
+      ∧ densityWeightLiftedTransportGenerator (E := E) C.P C.ψ C.weight =
+          InfoGeometry.Canonical.ThermodynamicGenerator.souriauTemperatureVector
+            (E := E) C.P C.ψ
+            + C.weight • dilationOperator (E := E)
+      ∧ C.weylCovariantThermodynamicDerivation =
+          C.zeroWeightThermodynamicDerivation
+            + C.weight • C.phaseAxisThermodynamicDerivation
+      ∧ SuperchargeCARCCRBridge.cptSuperchargeOp (E := E) =
+          dilationOperator (E := E)
+      ∧ SuperchargeCARCCRBridge.CARBracket (E := E)
+          (SuperchargeCARCCRBridge.paritySuperchargeOp (E := E))
+          (SuperchargeCARCCRBridge.modularSuperchargeOp (E := E))
+        = 0
+      ∧ SuperchargeCARCCRBridge.CCRBracket (E := E)
+          (SuperchargeCARCCRBridge.paritySuperchargeOp (E := E))
+          (SuperchargeCARCCRBridge.modularSuperchargeOp (E := E))
+        = (2 : ℝ) • SuperchargeCARCCRBridge.cptSuperchargeOp (E := E) := by
+  exact
+    ⟨densityWeightPhaseAxis_eq_dilationOperator (E := E),
+      densityWeightLiftedTransportGenerator_eq_souriau_add_weighted_dilation
+        (E := E) C.P C.ψ C.weight,
+      C.weylCovariantThermodynamicDerivation_eq_zeroWeight_add_phaseAxis,
+      SuperchargeCARCCRBridge.cptSuperchargeOp_eq_dilationOperator (E := E),
+      SuperchargeCARCCRBridge.parity_modular_supercharge_car_zero (E := E),
+      SuperchargeCARCCRBridge.parity_modular_supercharge_ccrBracket_eq_two_cpt (E := E)⟩
+
+attribute [terminal] operatorialDilationGoldstoneCharge_packet
+
+/--
+Supergraded operatorial Fisher/Onsager block packet on the real doubled carrier.
+
+The two response channels `X` and `Y` are the abstract even/odd block labels of
+the operatorial Hessian.  Positivity is not assumed as a bare PSD hypothesis:
+it is constructed from a square-response witness.  Fermionic/odd closure is
+kept in the existing CAR owner and included as a separate proof component.
+
+This is dimension-agnostic: the carrier `E` is arbitrary, and all dynamics live
+in `EndH := DoubledSpace E →L[ℝ] DoubledSpace E`.
+-/
+@[rep_depth transport]
+theorem supergradedFisherOnsagerBlock_squareResponse_CAR_packet
+    (S : SquareOperatorialResponseContext C)
+    (evenForce oddForce : ℝ) :
+    C.metricResponse =
+        (2 : ℝ)⁻¹ *
+          (C.P.probe (observableLieHessian (E := E) C.X C.Y C.A)
+            + C.P.probe (observableLieHessian (E := E) C.Y C.X C.A))
+      ∧ C.diagonalMetricResponse =
+        C.P.probe
+          (transportCommutator (E := E) C.X
+            (transportCommutator (E := E) C.X C.A))
+      ∧ C.weylCovariantThermodynamicDerivation =
+        C.zeroWeightThermodynamicDerivation
+          + C.weight • C.phaseAxisThermodynamicDerivation
+      ∧ C.operatorialEntropyProduction evenForce oddForce =
+        C.diagonalMetricResponse * evenForce ^ (2 : ℕ)
+          + 2 * C.mixedMetricResponseXY * evenForce * oddForce
+            + C.yDiagonalMetricResponse * oddForce ^ (2 : ℕ)
+      ∧ C.diagonalMetricResponse = S.xAmplitude ^ (2 : ℕ)
+      ∧ C.yDiagonalMetricResponse = S.yAmplitude ^ (2 : ℕ)
+      ∧ C.mixedMetricResponseXY = 0
+      ∧ 0 ≤ C.operatorialEntropyProduction evenForce oddForce
+      ∧ SuperchargeCARCCRBridge.CARBracket (E := E)
+          (SuperchargeCARCCRBridge.paritySuperchargeOp (E := E))
+          (SuperchargeCARCCRBridge.modularSuperchargeOp (E := E))
+        = 0
+      ∧ SuperchargeCARCCRBridge.CCRBracket (E := E)
+          (SuperchargeCARCCRBridge.paritySuperchargeOp (E := E))
+          (SuperchargeCARCCRBridge.modularSuperchargeOp (E := E))
+        = (2 : ℝ) • SuperchargeCARCCRBridge.cptSuperchargeOp (E := E) := by
+  rcases SuperchargeCARCCRBridge.harmonic_oscillator_spine (E := E) with
+    ⟨hCAR, hCCR, _⟩
+  exact
+    ⟨C.metricResponse_eq_half_probe_observableLieHessian_add_swap,
+      C.diagonalMetricResponse_eq_probe_double_transportCommutator,
+      C.weylCovariantThermodynamicDerivation_eq_zeroWeight_add_phaseAxis,
+      C.operatorialEntropyProduction_eq_quadratic evenForce oddForce,
+      S.diagonalMetricResponse_eq_square,
+      S.yDiagonalMetricResponse_eq_square,
+      S.mixedMetricResponseXY_eq_zero,
+      C.operatorialEntropyProduction_nonneg_of_squareResponse S evenForce oddForce,
+      hCAR,
+      hCCR⟩
+
+attribute [terminal] supergradedFisherOnsagerBlock_squareResponse_CAR_packet
 
 end OperatorialMetriplecticContext
 

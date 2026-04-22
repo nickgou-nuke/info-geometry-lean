@@ -27,6 +27,18 @@ def test_souriau_tomita_modular_flow_bridge_is_source_owned() -> None:
     assert "theorem sigma_zero" in text
 
 
+
+def test_souriau_tomita_bridge_exposes_standard_form_owner_route() -> None:
+    text = SOURCE.read_text(encoding="utf-8")
+
+    assert "import InfoGeometry.Canonical.StandardFormCore" in text
+    assert "def toStandardFormSeed" in text
+    assert "def toStandardFormCarrier" in text
+    assert "theorem toStandardFormCarrier_Delta_eq_modularHamiltonian" in text
+    assert "theorem toStandardFormCarrier_modularFlow_apply" in text
+    assert "theorem tomita_flow_eq_souriau_modularTransportFlow" in text
+
+
 def test_souriau_tomita_bridge_is_in_canonical_umbrella() -> None:
     text = ALL.read_text(encoding="utf-8")
 

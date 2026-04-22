@@ -4,9 +4,12 @@ The tooling surface is now split between:
 - Lean-native enforcement under `lean/InfoGeometry/Meta/` and `lean/InfoGeometry/Audit.lean`
 - exported graph and reporting helpers under `lean/DAG/` and `tools/`
 
+These tools support theorem-graph navigation, closure-debt management, and agent-assisted development around the formal corpus. They are infrastructure, not proof authority.
+
 The tooling exists to make the repository recoverable when local context is gone.
 It is the maintained memory and audit surface for a theory that is distributed across many representation files.
 Its purpose is to recover owner order, transport structure, coherence pressure, and wrapper burden quickly enough that direct code reading can start in the right place.
+Checked Lean declarations remain the primary validation surface.
 
 The maintained tooling surface is split into three directories and one planner package:
 - [tools/infra/README.md](infra/README.md)

@@ -4,6 +4,8 @@ LeanTrail is a Lean-native semantic explorer scaffold for this repository.
 It is intentionally sourced from elaborated DAG/process artifacts, not static
 text parsing.
 
+Its role is navigation, retrieval, and conformance around the checked Lean corpus. LeanTrail is not a proof engine and it does not outrank the Lean kernel or native audit layer.
+
 ## Goals
 
 - semantic-first indexing from `artifacts/dag/*`
@@ -349,6 +351,7 @@ lake script run leantrailHolePackets \
 ## Guardrails
 
 - Graph structure is evidence, not proof.
+- LeanTrail is a memory and navigation surface, not a theorem authority.
 - Lean kernel remains closure authority.
 - Bridge claims must close as `equivalence | obstruction | discard`.
 - Path traversal can enforce edge states:

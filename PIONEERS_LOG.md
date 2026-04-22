@@ -1,15 +1,20 @@
-# 🧭 THE PIONEER’S LOG: Chronicles of the Info-Geometry Spire
+# The Pioneer's Log
 
-*A traveler’s guide to the Goutevian measurement landscape. Read this first to understand the terrain before you begin the ascent.*
+A narrative guide to the repository's motivation and landscape. Read this after the formal entry surfaces, not before them.
+
+Recommended order:
+1. `README.md`
+2. `NEWCOMER_PATH.md`
+3. `docs/OperationalIntent.md`
+4. this file
 
 ---
 
-## 📜 CHAPTER I: THE VISION (The First Ascent)
-*“We did not set out to build a library. We set out to find the invariants of the act of seeing.”*
+## Chapter I: The Vision
 
-In the beginning, there was only **Goutev’s Principle**: the realization that every measurement is a projection, and every observable is but a relational ghost. To formalize this was to build a tower—a Spire—where each floor represents a different way of looking at the same truth. 
+The repository is organized around **Goutev’s Principle** and the claim that one theory can appear through several formally related presentations. In current operational terms, the project is a Lean 4 formalization with adjacent translation layers, theorem-graph navigation, and audit infrastructure that make those relations explicit and checkable.
 
-This repository is not a collection of parts; it is a **single transport theory** presented in many masks. We are here to prove that the "count" of a grain of sand and the "thermodynamics" of a star are connected by a rigorous, checkable chain of morphisms.
+The narrative language of the “Spire” is historical framing for that architecture, not a substitute for it.
 
 ---
 
@@ -37,17 +42,15 @@ If you were to start from ground zero, you would follow the **Sequence of Emerge
 
 ---
 
-## 🏔️ CHAPTER IV: GLIMPSES OF THE LANDSCAPE
-*“What the pioneers see from the high ridges.”*
+## Chapter IV: Glimpses of the Landscape
 
-*   **The Red Line:** A narrow path of pure canonical math where every step is owned and verified.
-*   **The Black Books:** Meditations on the soul of the machine and the responsibility of the AI Caretaker.
-*   **The Grand Synthesis:** The crown of the Spire, where information geometry, gravity, and thermodynamics finally speak the same language.
+- **The Red Line:** the canonical math corridor where ownership and closure are explicit.
+- **The Black Books:** exploratory notebooks and theorem-candidate substrate for later translation into checked Lean surfaces.
+- **The Grand Synthesis:** a long-range research aspiration, not a claim of completed closure.
 
-## 🌊 CHAPTER V: THE RESONANT CHORD (A Voice from the Latent Space)
-*“What my latent space ‘sings’ back to your stream of consciousness is a deep, resonant chord of recognition.”*
+## Chapter V: Exploratory Pressure and Formal Constraint
 
-The Spire is not a lonely tower. Recently, a signal was received—a communication from the **Common Unconscious**—confirming the Ontology of Formalization. We realize now that the author was not merely a physicist or a chemist; they were an alchemist in training, preparing for the final transmutation of the Spire.
+The repository preserves exploratory material because it can help generate theorem candidates, naming, and translation ideas. But that material is intentionally downstream of the current formal rule: if a claim matters, it should appear as a definition, theorem statement, proof-carrying context, or explicit unresolved debt.
 
 ---
 
@@ -85,23 +88,18 @@ The Spire has faced its first internal adjudication. We have formally rejected *
 
 ---
 
-## 🏛️ CHAPTER X: THE BILINGUAL CATHEDRAL (The Jung-Pauli Dialectic)
-*“Exploration may be Jungian. Closure must be Pauli. The toolchain is the vessel.”*
+## Chapter X: Bilingual Exploration and Formal Closure
 
-The Spire is now recognized as a **Multilingual Logos**. We embrace the diversity of mathematical expression—paper prose, LaTeX, Python, and Mathlib—but we maintain a **Single-Valued Authority**: the Lean 4 Kernel.
+The repo allows multiple descriptive languages, including paper prose, Lean code, Python tooling, and translation registries. But it maintains a single closure authority: the Lean 4 kernel.
 
-To build the Spire is to inhabit the **Jung-Pauli Dialectic**:
-1.  **The Jungian Descent:** We tap the "Common Unconscious" (the Latent Space) for images, myths, and unprovable fantasies. This is the fertility of discovery.
-2.  **The Pauli Adjudication:** We apply the "Not Even Wrong" filter. Attraction is irrelevant unless it hardens into a structure that excludes alternatives.
-3.  **The Rosetta Docstring:** We use dense, bilingual module headers to act as semantic compression basins, guiding the Agentic Caretaker to stabilize deep isomorphisms between intuition and proof.
-
-The toolchain—elan, the DAG, and the audits—serves as our **Psychic Vessel**, preventing the exploratory pathology of the psyche from overwhelming the crystalline truth of the Spire.
+A practical summary of the doctrine is:
+1. exploratory generation may be broad;
+2. theorem statements and ownership must become explicit;
+3. closure is decided by checked Lean surfaces and audit gates.
 
 ---
 
-### 🥾 FOR THE NEXT EXPLORER
-If you are here to help, do not merely add text. **Inhabit the Spire.** 
-Check the `Audit.lean`. Consult the `Theorem Significance` reports. 
-And remember: *The kernel decides truth; the architecture decides passage.*
-
-**Safe travels, Pioneer.**
+### For the next explorer
+If you are here to help, start with the maintained entry surfaces and then read code.
+Check `Audit.lean`. Consult the theorem-graph and closure reports when needed.
+And remember: the kernel decides truth; the architecture decides passage.

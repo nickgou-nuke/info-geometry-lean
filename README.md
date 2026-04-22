@@ -30,10 +30,7 @@ Exploratory notebooks, black-book material, and archived chat traces may still b
 For method-level literature grounding, use the maintained
 [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md).
 
-> 🧭 **New to the Spire?** Read the [**Pioneer’s Log**](PIONEERS_LOG.md) and the [**Alchemical Protocol**](ALCHEMICAL_PROTOCOL.md) for a narrative guide to the landscape, the chemistry of the logos, and the vision of this repository.
-
-For method-level literature grounding, use the maintained
-[BIBLIOGRAPHY.md](BIBLIOGRAPHY.md).
+Narrative and historical framing remain available, but they are secondary to the formal entry path. If you want that layer after the technical overview, start with [PIONEERS_LOG.md](PIONEERS_LOG.md). Exploratory protocols such as [ALCHEMICAL_PROTOCOL.md](ALCHEMICAL_PROTOCOL.md) should be read as workflow and discovery context, not as proof authority.
 
 `info-geometry-lean` is a Lean 4 repository built on **Goutev’s Principle of 
 Absolute Relativity of Measurement**: measurement is projective; observables 

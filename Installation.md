@@ -1,5 +1,7 @@
 # Installation and First Build
 
+This page is for the formal/tooling entry path: clone, build Lean, and refresh the maintained graph and audit surfaces. Exploratory archives are intentionally out of scope here.
+
 This repository uses:
 - Lean toolchain: `leanprover/lean4:v4.28.0`
 - Lake package management via [lakefile.lean](lakefile.lean)

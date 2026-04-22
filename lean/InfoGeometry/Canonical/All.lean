@@ -328,6 +328,8 @@ import InfoGeometry.Canonical.QFTTDFTLaunchpad
 import InfoGeometry.Canonical.RGFlow
 import InfoGeometry.Canonical.RicciMongeAmpere
 import InfoGeometry.Canonical.MongeAmpereCramerRao
+import InfoGeometry.Canonical.IncompressibleBitBridge
+import InfoGeometry.Canonical.IncompressibleCramerRaoActionBridge
 import InfoGeometry.Canonical.MongeAmpereDualSheetBridge
 import InfoGeometry.Canonical.QuantumGeometryDualSheetBridge
 import InfoGeometry.Canonical.RestrictedSheetContinuous

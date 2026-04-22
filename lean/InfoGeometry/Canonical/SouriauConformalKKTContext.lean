@@ -380,6 +380,37 @@ namespace OperatorialWeylSupercharacterContext
 
 variable (S : OperatorialWeylSupercharacterContext (α := α) (H := H))
 
+/--
+Construct a boson/fermion supercharacter split from a chosen fermionic
+correction readout.
+
+The bosonic readout is `total + fermionic`, so the signed supertrace readout
+is constructively `(total + fermionic) - fermionic = total`.  This removes the
+need to assume the split equation separately when the model supplies the
+fermionic correction functional.
+-/
+@[rep_depth transport]
+noncomputable def ofFermionicCorrection
+    (gibbs : ConformalGibbsSouriauOperatorContext (α := α) (H := H))
+    (fermionicReadout : EndH₂ →L[ℝ] ℝ) :
+    OperatorialWeylSupercharacterContext (α := α) (H := H) where
+  gibbs := gibbs
+  bosonicReadout := gibbs.readout + fermionicReadout
+  fermionicReadout := fermionicReadout
+  readout_eq_bosonic_sub_fermionic := by
+    ext A
+    simp
+
+/--
+Pure bosonic constructor: the fermionic correction is zero, so the
+supercharacter context is built without any external split hypothesis.
+-/
+@[rep_depth transport]
+noncomputable def ofPureBosonicReadout
+    (gibbs : ConformalGibbsSouriauOperatorContext (α := α) (H := H)) :
+    OperatorialWeylSupercharacterContext (α := α) (H := H) :=
+  ofFermionicCorrection (α := α) (H := H) gibbs 0
+
 /-- Bosonic positive-sign character contribution. -/
 @[rep_depth transport]
 noncomputable def bosonicCharacter : ℝ :=
@@ -417,6 +448,29 @@ theorem operatorMassieu_eq_log_operatorSupercharacter :
     S.gibbs.operatorMassieu = Real.log S.operatorSupercharacter := by
   rw [ConformalGibbsSouriauOperatorContext.operatorMassieu_eq_log_partition]
   rw [S.operatorPartition_eq_operatorSupercharacter]
+
+/--
+For the constructive fermionic-correction constructor, the partition is the
+supercharacter without carrying a separate split-equality hypothesis.
+-/
+@[rep_depth transport]
+theorem operatorPartition_eq_operatorSupercharacter_ofFermionicCorrection
+    (gibbs : ConformalGibbsSouriauOperatorContext (α := α) (H := H))
+    (fermionicReadout : EndH₂ →L[ℝ] ℝ) :
+    gibbs.operatorPartition =
+      (ofFermionicCorrection (α := α) (H := H) gibbs fermionicReadout).operatorSupercharacter :=
+  (ofFermionicCorrection (α := α) (H := H) gibbs fermionicReadout).operatorPartition_eq_operatorSupercharacter
+
+/--
+Pure bosonic special case: the operatorial Souriau partition is its
+supercharacter with zero fermionic correction.
+-/
+@[rep_depth transport]
+theorem operatorPartition_eq_operatorSupercharacter_ofPureBosonicReadout
+    (gibbs : ConformalGibbsSouriauOperatorContext (α := α) (H := H)) :
+    gibbs.operatorPartition =
+      (ofPureBosonicReadout (α := α) (H := H) gibbs).operatorSupercharacter :=
+  (ofPureBosonicReadout (α := α) (H := H) gibbs).operatorPartition_eq_operatorSupercharacter
 
 end OperatorialWeylSupercharacterContext
 

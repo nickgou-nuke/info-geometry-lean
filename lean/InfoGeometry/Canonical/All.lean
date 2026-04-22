@@ -281,6 +281,7 @@ import InfoGeometry.Canonical.OnsagerSinkhornOperatorLift
 import InfoGeometry.Canonical.OperatorialCentralCharge
 import InfoGeometry.Canonical.CentralChargeAnomaly
 import InfoGeometry.Canonical.OperatorialCramerRao
+import InfoGeometry.Canonical.OperatorPartitionSupervolumeBridge
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk1
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk2
 import InfoGeometry.Canonical.OperatorialCramerRaoStateFirstChunk3

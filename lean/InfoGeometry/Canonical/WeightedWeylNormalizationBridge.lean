@@ -215,6 +215,60 @@ theorem densityWeightLiftedReadout_pair_eq_weighted_phaseAxisReadout_of_equilibr
     exact congrArg Prod.snd hZero
   simpa [hMetricZero, hPhaseZero] using hSplit
 
+/--
+If the observable channel commutes with the density-weight phase axis, then a
+Gibbs-Souriau equilibrium seed kills the full weighted density-lifted readout at
+any weight.
+
+This is an infinite operatorial closure theorem on the doubled carrier. It does
+not use any finite response matrix: equilibrium kills the zero-weight packet,
+and phase-axis commutation kills the explicit weighted correction.
+-/
+@[rep_depth transport]
+theorem densityWeightLiftedReadout_pair_eq_zero_of_equilibriumSeed_of_commute_phaseAxis
+    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
+    {ψ : H₂} {A : EndH}
+    (hEq : InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed (E := E) P ψ A)
+    (hComm :
+      Commute A
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)))
+    (w : ℝ) :
+    ((InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A w).metric,
+      (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedReadout (E := E) P ψ A w).phase)
+      = (0, 0) := by
+  have hWeighted :=
+    densityWeightLiftedReadout_pair_eq_weighted_phaseAxisReadout_of_equilibriumSeed
+      (E := E) hEq w
+  have hCommZero :
+      transportCommutator (E := E)
+        (InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis (E := E)) A
+        = 0 := by
+    unfold transportCommutator
+    exact sub_eq_zero.mpr hComm.eq.symm
+  have hCommZeroComplex :
+      transportCommutator (E := E) (InfoGeometry.Krein.complex_i (E := E)) A = 0 := by
+    rw [← InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightPhaseAxis_eq_complex_i]
+    exact hCommZero
+  have hMetricZero :
+      InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator (E := E)
+        (transportCommutator (E := E)
+          (InfoGeometry.Krein.complex_i (E := E)) A) = 0 := by
+    rw [hCommZeroComplex]
+    ext u v
+    simp [InfoGeometry.Quantum.GeometricQuantumTensor.metricOfOperator]
+  have hBerryZero :
+      InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator (E := E)
+        (transportCommutator (E := E)
+          (InfoGeometry.Krein.complex_i (E := E)) A) = 0 := by
+    rw [hCommZeroComplex]
+    ext u v
+    simp [InfoGeometry.Quantum.GeometricQuantumTensor.berryOfOperator]
+  apply Prod.ext
+  · have hMetric := congrArg Prod.fst hWeighted
+    simpa [hMetricZero] using hMetric
+  · have hPhase := congrArg Prod.snd hWeighted
+    simpa [hBerryZero] using hPhase
+
 end Core
 
 end InfoGeometry.Canonical.WeightedWeylNormalizationBridge

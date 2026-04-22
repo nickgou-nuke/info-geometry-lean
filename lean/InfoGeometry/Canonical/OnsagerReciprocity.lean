@@ -190,11 +190,11 @@ theorem responseCoefficient_swap
 @[rep_depth transport]
 theorem responseCoefficient_diag_eq_probe_observableLieHessian
     (P : PotentialDatum (E := E)) (X A : EndH) :
-    responseCoefficient (E := E) P X X A
+  responseCoefficient (E := E) P X X A
       =
     P.probe (observableLieHessian (E := E) X X A) := by
   rw [responseCoefficient, operatorMetricHessianForm_diag,
-    operatorInformationHessian_eq_observableLieHessian]
+    InfoGeometry.Canonical.RelationalInformationDynamics.observableLieHessian_apply]
 
 /-- Diagonal Onsager response is the probed double transport commutator. -/
 @[rep_depth transport]
@@ -205,8 +205,7 @@ theorem responseCoefficient_diag_eq_probe_double_transportCommutator
     P.probe
       (transportCommutator (E := E) X
         (transportCommutator (E := E) X A)) := by
-  rw [responseCoefficient, operatorMetricHessianForm_diag,
-    operatorInformationHessian_eq_double_transportCommutator]
+  rw [responseCoefficient, operatorMetricHessianForm_diag]
 
 /-- The skew bracket/curvature coefficient flips sign when the channels are swapped. -/
 @[rep_depth transport]
@@ -461,6 +460,23 @@ theorem toRelationalInformationDatum_bohmMadelung_stationary_iff_isPotentialKill
   exact
     potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_iff_isPotentialKillingOperator
       P comparison A
+
+@[rep_depth transport]
+theorem toRelationalInformationDatum_bohmMadelung_stationary_of_equilibriumSeed
+    (P : PotentialDatum (E := E)) (reference comparison : H₂) (A : EndH)
+    (hEq : InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed (E := E) P comparison A) :
+    ( (InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.stateQGTReadout (E := E)
+          (constantStateGeneratorField (E := E) (P.modularData.modularSeed comparison))
+          comparison A).metric
+    , (InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.stateQGTReadout (E := E)
+          (constantStateGeneratorField (E := E) (P.modularData.modularSeed comparison))
+          comparison A).phase )
+      =
+    (0, 0) := by
+  let _ := reference
+  exact
+    potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_equilibriumSeed
+      (E := E) P comparison A hEq
 
 end Core
 

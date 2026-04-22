@@ -259,6 +259,17 @@ Operatorial conformal partition function
 noncomputable def operatorPartition : ℝ :=
   informationPartitionFunction C.readout (-C.conformalGeometricTemperature) 1
 
+/--
+Operatorial Weyl character of the conformal Gibbs-Souriau generator.
+
+This is the infinite/dimension-agnostic replacement for a finite Weyl weight
+sum: the "character" is the chosen operator readout of the noncommutative Gibbs
+exponential on the doubled Krein carrier.
+-/
+@[rep_depth transport]
+noncomputable def operatorWeylCharacter : ℝ :=
+  C.readout (NormedSpace.exp (-C.conformalGeometricTemperature))
+
 /-- Operatorial Massieu/log-character potential `Φ(β)=log Z(β)`. -/
 @[rep_depth transport]
 noncomputable def operatorMassieu : ℝ :=
@@ -275,6 +286,18 @@ theorem operatorPartition_eq_readout_exp_neg_temperature :
     C.operatorPartition =
       C.readout (NormedSpace.exp (-C.conformalGeometricTemperature)) := by
   simp [operatorPartition, informationPartitionFunction]
+
+/--
+The operatorial Souriau partition is the operatorial Weyl character.
+
+This is not the finite Weyl character formula over listed weights.  It is the
+repo-native noncommutative character/readout identity on `EndH₂`.
+-/
+@[rep_depth transport]
+theorem operatorPartition_eq_operatorWeylCharacter :
+    C.operatorPartition = C.operatorWeylCharacter := by
+  rw [operatorPartition_eq_readout_exp_neg_temperature]
+  rfl
 
 /-- The Massieu potential is the logarithm of the operator partition. -/
 @[rep_depth transport]
@@ -333,6 +356,69 @@ theorem conformalTemperature_eq_components :
   rfl
 
 end ConformalGibbsSouriauOperatorContext
+
+/-! ## Operatorial boson/fermion supercharacter split -/
+
+/--
+Operatorial boson/fermion statistics context for the conformal
+Gibbs-Souriau partition.
+
+The statistical split is carried by readout functionals on the same doubled
+operator carrier.  The bosonic sector contributes with positive sign, the
+fermionic sector with negative sign, and the total Souriau/Weyl readout is
+their difference.  No finite weight enumeration is used here.
+-/
+@[rep_depth transport]
+structure OperatorialWeylSupercharacterContext where
+  gibbs : ConformalGibbsSouriauOperatorContext (α := α) (H := H)
+  bosonicReadout : EndH₂ →L[ℝ] ℝ
+  fermionicReadout : EndH₂ →L[ℝ] ℝ
+  readout_eq_bosonic_sub_fermionic :
+    gibbs.readout = bosonicReadout - fermionicReadout
+
+namespace OperatorialWeylSupercharacterContext
+
+variable (S : OperatorialWeylSupercharacterContext (α := α) (H := H))
+
+/-- Bosonic positive-sign character contribution. -/
+@[rep_depth transport]
+noncomputable def bosonicCharacter : ℝ :=
+  S.bosonicReadout (NormedSpace.exp (-S.gibbs.conformalGeometricTemperature))
+
+/-- Fermionic negative-sign character contribution. -/
+@[rep_depth transport]
+noncomputable def fermionicCharacter : ℝ :=
+  S.fermionicReadout (NormedSpace.exp (-S.gibbs.conformalGeometricTemperature))
+
+/-- Supercharacter/supertrace shadow: bosonic contribution minus fermionic contribution. -/
+@[rep_depth transport]
+noncomputable def operatorSupercharacter : ℝ :=
+  S.bosonicCharacter - S.fermionicCharacter
+
+/--
+The Souriau partition equals the operatorial supercharacter whenever the
+partition readout is the bosonic-minus-fermionic readout.
+
+This is the rigorous operatorial version of the statistics sign rule:
+bosonic channels enter with positive sign and fermionic channels with negative
+sign in the character/supertrace.  The proof is only linear-map evaluation on
+the doubled carrier.
+-/
+@[rep_depth transport]
+theorem operatorPartition_eq_operatorSupercharacter :
+    S.gibbs.operatorPartition = S.operatorSupercharacter := by
+  rw [ConformalGibbsSouriauOperatorContext.operatorPartition_eq_readout_exp_neg_temperature]
+  rw [S.readout_eq_bosonic_sub_fermionic]
+  rfl
+
+/-- The Massieu potential is the logarithm of the boson-minus-fermion supercharacter. -/
+@[rep_depth transport]
+theorem operatorMassieu_eq_log_operatorSupercharacter :
+    S.gibbs.operatorMassieu = Real.log S.operatorSupercharacter := by
+  rw [ConformalGibbsSouriauOperatorContext.operatorMassieu_eq_log_partition]
+  rw [S.operatorPartition_eq_operatorSupercharacter]
+
+end OperatorialWeylSupercharacterContext
 
 /-! ## Weyl/TKK/KKT/Jordan-Lie operator closure package -/
 

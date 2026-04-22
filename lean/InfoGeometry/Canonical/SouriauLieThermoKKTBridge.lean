@@ -1119,6 +1119,25 @@ theorem operatorialFisherOnsager_entropyProduction_equation_of_cramerRaoResponse
       R xForce yForce⟩
 
 /--
+One-channel operatorial entropy production from the same Cramer-Rao realization.
+
+This is the scalar `Operators.entropyProduction` endpoint, but its positivity
+is still inherited from the doubled-carrier Cramer-Rao channel metric rather
+than from an explicit `probe_hessian_nonneg` assumption.
+-/
+@[rep_depth transport]
+theorem operatorCanonicalEntropyProduction_nonneg_of_cramerRaoResponse
+    (R :
+      OperatorialMetriplecticContext.CramerRaoOperatorialResponseContext
+        C.operatorialMetriplectic) :
+    0 ≤
+      InfoGeometry.Canonical.Operators.entropyProduction (E := H)
+        C.operatorialMetriplectic.P
+        C.operatorialMetriplectic.X
+        C.operatorialMetriplectic.A :=
+  C.operatorialMetriplectic.canonicalEntropyProduction_nonneg_of_cramerRaoResponse R
+
+/--
 Operatorial Souriau-Fisher metric packet.
 
 The Souriau-Fisher metric is exposed here as the doubled-Krein

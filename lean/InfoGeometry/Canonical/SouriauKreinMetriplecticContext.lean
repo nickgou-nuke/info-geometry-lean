@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.OnsagerReciprocity
+import InfoGeometry.Canonical.Operators
 import InfoGeometry.Canonical.OperatorialCramerRao
 import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.Canonical.WeightedWeylNormalizationBridge
@@ -549,6 +550,24 @@ theorem operatorialEntropyProduction_nonneg_of_cramerRaoResponse
   C.operatorialEntropyProduction_nonneg_of_metricResponsePSD
     (CramerRaoOperatorialResponseContext.operatorialMetricResponsePSD R)
     xForce yForce
+
+/--
+One-channel operatorial entropy production is nonnegative when the diagonal
+Souriau/Onsager response is realized by the owned Cramer-Rao channel metric.
+
+This discharges the old `probe_hessian_nonneg` style wrapper for this concrete
+operatorial context: the proof descends through the comparison-state
+Cramer-Rao norm square on the infinite doubled carrier.
+-/
+@[rep_depth transport]
+theorem canonicalEntropyProduction_nonneg_of_cramerRaoResponse
+    (R : CramerRaoOperatorialResponseContext C) :
+    0 ≤ InfoGeometry.Canonical.Operators.entropyProduction (E := E) C.P C.X C.A := by
+  have hDiag : 0 ≤ C.diagonalMetricResponse :=
+    CramerRaoOperatorialResponseContext.diagonalMetricResponse_nonneg R
+  rw [diagonalMetricResponse, responseCoefficient, operatorMetricHessianForm_diag] at hDiag
+  simpa [InfoGeometry.Canonical.Operators.entropyProduction,
+    InfoGeometry.Canonical.Operators.operatorFisherDiagonal] using hDiag
 
 /--
 Supergraded even/odd Onsager block packet on the operatorial carrier.

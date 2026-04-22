@@ -5,6 +5,9 @@ import InfoGeometry.Canonical.OnsagerReciprocity
 import InfoGeometry.Canonical.WeylGaugeField
 import InfoGeometry.Canonical.SuperJordanLie
 import InfoGeometry.Canonical.GrandCanonicalFockNumberBridge
+import InfoGeometry.Canonical.ChiralOperatorConeClosure
+import InfoGeometry.Canonical.Cl11PolarizedBasis
+import InfoGeometry.Core.SymmetricLieMetric
 import InfoGeometry.Krein.Thermal
 
 /-!
@@ -37,9 +40,11 @@ open InfoGeometry.Canonical.OnsagerReciprocity
 open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical.GrandCanonicalFockNumberBridge
 open InfoGeometry.Canonical.GrandCanonicalGaugePotentialBridge
+open InfoGeometry.Canonical.ChiralOperatorConeClosure
 open InfoGeometry.GrandCanonical
 open InfoGeometry.Krein
 open InfoGeometry.Quantum
+open InfoGeometry.Core.SymmetricLieAlgebra
 
 variable {α : Type _}
 variable {H : Type}
@@ -331,6 +336,204 @@ end ConformalGibbsSouriauOperatorContext
 
 /-! ## Weyl/TKK/KKT/Jordan-Lie operator closure package -/
 
+/-! ### Self-dual/chiral light-cone owner certificate -/
+
+/--
+Source-backed certificate for the causal chiral light-cone operator lane.
+
+The data lives on the same doubled carrier as the conformal Gibbs-Souriau
+context.  Its proof content is imported from the owner surfaces:
+
+* `Cl11PolarizedBasis`: the circular `u+`/`u-` light-cone channels;
+* `ChiralOperatorConeClosure`: those channels lie in the chiral operator cone
+  when the split grading is the certified spectral grading;
+* `KKTCore`: the mixed `u+`/`u-` commutator closes in grade zero.
+-/
+@[rep_depth transport]
+structure SelfDualChiralLightConeCertificate where
+  CIK : CertifiedInverseKernel H₂
+  Xcl : RealSplitCl11Action H₂
+  A : EndH₂
+  B : EndH₂
+  hGamma : Xcl.eps = CIK.GammaS
+
+namespace SelfDualChiralLightConeCertificate
+
+variable (S : SelfDualChiralLightConeCertificate (H := H))
+
+/-- The `u+` light-cone channel lies in the certified chiral cone. -/
+@[rep_depth transport]
+theorem uPlus_mem_chiralCone :
+    IsInChiralOperatorCone S.CIK
+      (InfoGeometry.Canonical.Cl11PolarizedBasis.uPlus S.Xcl S.A) := by
+  rw [isInChiralOperatorCone_iff_anticommute_GammaS (CIK := S.CIK)]
+  rw [← S.hGamma]
+  have hOdd :=
+    InfoGeometry.Canonical.Cl11PolarizedBasis.eps_mul_eq_neg_mul_eps_of_isUPlus
+      (X := S.Xcl) (A := S.A)
+  rw [hOdd]
+  simp
+
+/-- The `u-` light-cone channel lies in the certified chiral cone. -/
+@[rep_depth transport]
+theorem uMinus_mem_chiralCone :
+    IsInChiralOperatorCone S.CIK
+      (InfoGeometry.Canonical.Cl11PolarizedBasis.uMinus S.Xcl S.B) := by
+  rw [isInChiralOperatorCone_iff_anticommute_GammaS (CIK := S.CIK)]
+  rw [← S.hGamma]
+  have hOdd :=
+    InfoGeometry.Canonical.Cl11PolarizedBasis.eps_mul_eq_neg_mul_eps_of_isUMinus
+      (X := S.Xcl) (A := S.B)
+  rw [hOdd]
+  simp
+
+/--
+The spectral commutator of the `u+`/`u-` chiral channels closes in the compact
+spectral lane.
+-/
+@[rep_depth transport]
+theorem spectralCommutator_mem_spectralCompact :
+    S.CIK.IsSpectralCompact
+      (CertifiedInverseKernel.spectralCommutator
+        (InfoGeometry.Canonical.Cl11PolarizedBasis.uPlus S.Xcl S.A)
+        (InfoGeometry.Canonical.Cl11PolarizedBasis.uMinus S.Xcl S.B)) := by
+  let T := S.CIK.toInformationCartanTriple
+  have hX' :
+      T.IsSpectralNonCompact
+        (InfoGeometry.Canonical.Cl11PolarizedBasis.uPlus S.Xcl S.A) := by
+    simpa [T, IsInChiralOperatorCone,
+      CertifiedInverseKernel.IsSpectralNonCompact,
+      CertifiedInverseKernel.cartanTriple,
+      CertifiedInverseKernel.toInformationCartanTriple] using
+      S.uPlus_mem_chiralCone
+  have hY' :
+      T.IsSpectralNonCompact
+        (InfoGeometry.Canonical.Cl11PolarizedBasis.uMinus S.Xcl S.B) := by
+    simpa [T, IsInChiralOperatorCone,
+      CertifiedInverseKernel.IsSpectralNonCompact,
+      CertifiedInverseKernel.cartanTriple,
+      CertifiedInverseKernel.toInformationCartanTriple] using
+      S.uMinus_mem_chiralCone
+  have hComm :
+      T.IsSpectralCompact
+        (InfoGeometry.Canonical.CartanDecomposition.InformationCartanTriple.spectralCommutator
+          (InfoGeometry.Canonical.Cl11PolarizedBasis.uPlus S.Xcl S.A)
+          (InfoGeometry.Canonical.Cl11PolarizedBasis.uMinus S.Xcl S.B)) :=
+    InfoGeometry.Canonical.CartanDecomposition.InformationCartanTriple.spectralCommutator_mem_compact_of_noncompact
+      T S.CIK.hDrazin hX' hY'
+  simpa [T, CertifiedInverseKernel.spectralCommutator,
+    CertifiedInverseKernel.IsSpectralCompact,
+    CertifiedInverseKernel.cartanTriple,
+    CertifiedInverseKernel.toInformationCartanTriple] using hComm
+
+/-- The ordinary circular `u+`/`u-` commutator closes in the KKT grade-zero lane. -/
+@[rep_depth transport]
+theorem circularCommutator_isGZero :
+    KKTCore.IsGZero S.Xcl
+      (KKTCore.commutator (KKTCore.uPlus S.Xcl S.A) (KKTCore.uMinus S.Xcl S.B)) :=
+  KKTCore.commutator_uPlus_uMinus_isGZero S.Xcl S.A S.B
+
+end SelfDualChiralLightConeCertificate
+
+/--
+Constructive positive-partition witness for the operatorial conformal
+Gibbs-Souriau context.
+
+This replaces a bare positivity assertion with explicit real data:
+the noncommutative operator partition is represented as a strictly positive
+floor plus a real square.  The carrier remains the infinite/dimension-agnostic
+doubled operator space `EndH₂`; this is not a finite partition argument.
+-/
+@[rep_depth transport]
+structure ConformalPositivePartitionWitness
+    (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)) where
+  partitionFloor : ℝ
+  amplitude : ℝ
+  floor_pos : 0 < partitionFloor
+  operatorPartition_eq_floor_add_square :
+    C.operatorPartition = partitionFloor + amplitude ^ (2 : ℕ)
+
+namespace ConformalPositivePartitionWitness
+
+variable {C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)}
+
+/--
+The operator partition is strictly positive from the explicit
+positive-floor-plus-square witness.
+-/
+@[rep_depth transport]
+theorem operatorPartition_pos (W : ConformalPositivePartitionWitness C) :
+    0 < C.operatorPartition := by
+  rw [ConformalPositivePartitionWitness.operatorPartition_eq_floor_add_square W]
+  exact add_pos_of_pos_of_nonneg
+    (ConformalPositivePartitionWitness.floor_pos W)
+    (sq_nonneg (ConformalPositivePartitionWitness.amplitude W))
+
+end ConformalPositivePartitionWitness
+
+/--
+Cartan-odd positive partition witness.
+
+This is the next constructive step beyond a raw positive-floor witness: the
+strictly positive floor is `1 + B_θ(x,x)`, where `x` is in the Cartan-odd
+sector.  Positivity of `B_θ(x,x)` is not assumed here; it is delegated to the
+owner theorem `informationMassSq_nonneg_of_mem_odd`.
+-/
+@[rep_depth transport]
+structure ConformalCartanOddPartitionWitness
+    {L : Type _} [LieRing L] [LieAlgebra ℝ L]
+    (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)) where
+  metric : CartanOddMetricData (L := L)
+  x : L
+  x_mem_odd : x ∈ metric.S.oddSubmodule
+  amplitude : ℝ
+  operatorPartition_eq_cartan_floor_add_square :
+    C.operatorPartition =
+      (1 + informationMassSq (M := metric) x) + amplitude ^ (2 : ℕ)
+
+namespace ConformalCartanOddPartitionWitness
+
+variable {L : Type _} [LieRing L] [LieAlgebra ℝ L]
+variable {C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)}
+variable (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+
+/-- The Cartan-odd floor `1 + B_θ(x,x)` is strictly positive. -/
+@[rep_depth transport]
+theorem partitionFloor_pos :
+    0 < 1 + informationMassSq (M := W.metric) W.x := by
+  exact add_pos_of_pos_of_nonneg zero_lt_one
+    (informationMassSq_nonneg_of_mem_odd (M := W.metric) W.x_mem_odd)
+
+/--
+Convert Cartan-odd positivity into the generic positive-partition witness used
+by the conformal KKT admissibility interface.
+-/
+@[rep_depth transport]
+noncomputable def toPositivePartitionWitness :
+    ConformalPositivePartitionWitness C where
+  partitionFloor := 1 + informationMassSq (M := W.metric) W.x
+  amplitude := W.amplitude
+  floor_pos := W.partitionFloor_pos
+  operatorPartition_eq_floor_add_square :=
+    W.operatorPartition_eq_cartan_floor_add_square
+
+/--
+Cone membership plus Cartan-odd partition positivity proves the conformal
+operatorial admissibility gate.
+-/
+@[rep_depth transport]
+theorem operatorAdmissible_of_cartanOddPartition
+    (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
+    (hCone : C.IsConeAdmissible) :
+    C.IsOperatorAdmissible :=
+  ⟨hCone,
+    ConformalPositivePartitionWitness.operatorPartition_pos
+      (C := C)
+      (ConformalCartanOddPartitionWitness.toPositivePartitionWitness
+        (C := C) W)⟩
+
+end ConformalCartanOddPartitionWitness
+
 /--
 Proof-carrying noncommutative closure package for the operatorial conformal
 Gibbs-Souriau context.
@@ -353,6 +556,57 @@ structure ConformalWeylTKKKKTJordanLieContext where
   hOperatorAdmissible : gibbs.IsOperatorAdmissible
   X : EndH₂
   Y : EndH₂
+
+/--
+Constructive admissibility witness for the full Weyl/TKK/KKT closure package.
+
+The old closure context still exposes `hOperatorAdmissible` for stable
+downstream use.  This witness constructs that field from:
+
+* explicit cone membership, and
+* a positive-floor-plus-square proof of positive operator partition.
+-/
+@[rep_depth transport]
+structure ConformalOperatorAdmissibilityWitness where
+  gibbs : ConformalGibbsSouriauOperatorContext (α := α) (H := H)
+  weylGauge : WeylGaugeField EndH₂ EndH₂
+  tkkParameter : ℝ
+  hTKK : gibbs.SatisfiesOperatorTKKMasterRelation tkkParameter
+  hCone : gibbs.IsConeAdmissible
+  partitionWitness : ConformalPositivePartitionWitness gibbs
+  X : EndH₂
+  Y : EndH₂
+
+namespace ConformalOperatorAdmissibilityWitness
+
+variable (W : ConformalOperatorAdmissibilityWitness (α := α) (H := H))
+
+/--
+Operatorial admissibility follows constructively from cone membership and the
+positive operator-partition witness.
+-/
+@[rep_depth transport]
+theorem operatorAdmissible :
+    W.gibbs.IsOperatorAdmissible :=
+  ⟨W.hCone,
+    ConformalPositivePartitionWitness.operatorPartition_pos
+      (C := W.gibbs) W.partitionWitness⟩
+
+/--
+Convert the constructive admissibility witness into the stable closure-context
+interface used by downstream conformal/Weyl/KKT theorem surfaces.
+-/
+@[rep_depth transport]
+def toClosureContext : ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) where
+  gibbs := W.gibbs
+  weylGauge := W.weylGauge
+  tkkParameter := W.tkkParameter
+  hTKK := W.hTKK
+  hOperatorAdmissible := W.operatorAdmissible
+  X := W.X
+  Y := W.Y
+
+end ConformalOperatorAdmissibilityWitness
 
 namespace ConformalWeylTKKKKTJordanLieContext
 
@@ -621,6 +875,58 @@ theorem fisherOnsagerProduction_swap :
   exact C.closure.gibbs.operatorConformalResponse_swap C.closure.X C.closure.X
 
 end ConformalFisherOnsagerPositiveContext
+
+/--
+Constructive square-response replacement for the bare conformal
+Fisher/Onsager nonnegativity field.
+
+This is still an infinite operatorial surface: the response is the
+noncommutative Hessian readout on
+`EndH₂ := DoubledSpace H →L[ℝ] DoubledSpace H`.  The witness is not a finite
+response matrix; it is the statement that the selected conformal self-response
+is represented by a real square.
+-/
+@[rep_depth transport]
+structure ConformalSquareFisherOnsagerPositiveContext where
+  closure : ConformalWeylTKKKKTJordanLieContext (α := α) (H := H)
+  amplitude : ℝ
+  selfResponse_eq_square :
+    closure.gibbs.operatorConformalResponse closure.X closure.X =
+      amplitude ^ (2 : ℕ)
+
+namespace ConformalSquareFisherOnsagerPositiveContext
+
+variable (C : ConformalSquareFisherOnsagerPositiveContext (α := α) (H := H))
+
+/-- The conformal self-response is nonnegative because it is a real square. -/
+@[rep_depth transport]
+theorem selfResponse_nonneg :
+    0 ≤ C.closure.gibbs.operatorConformalResponse C.closure.X C.closure.X := by
+  rw [C.selfResponse_eq_square]
+  exact sq_nonneg C.amplitude
+
+/--
+Convert a square-response witness into the older positive-context interface.
+
+Downstream users that only require nonnegativity can consume this constructor
+instead of threading a bare scalar positivity hypothesis.
+-/
+@[rep_depth transport]
+def toPositiveContext : ConformalFisherOnsagerPositiveContext (α := α) (H := H) where
+  closure := C.closure
+  selfResponse_nonneg := C.selfResponse_nonneg
+
+/--
+Diagonal conformal Fisher/Onsager production is nonnegative from the
+square-response witness, with no finite response matrix and no bare PSD
+hypothesis.
+-/
+@[rep_depth transport]
+theorem fisherOnsagerProduction_nonneg_of_squareResponse :
+    0 ≤ C.toPositiveContext.fisherOnsagerProduction := by
+  exact C.toPositiveContext.fisherOnsagerProduction_nonneg
+
+end ConformalSquareFisherOnsagerPositiveContext
 
 /-! ## Grand-canonical Fock-number coupling over the conformal operator context -/
 

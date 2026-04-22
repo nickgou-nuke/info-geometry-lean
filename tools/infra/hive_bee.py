@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -28,6 +29,7 @@ if str(ROOT) not in sys.path:
 
 from tools.infra.hermes_bounded_runner import call_openai_compatible
 from tools.infra import hive_arango_queue as queue_tool
+from tools.infra.ingest_hive_json import ingest_text
 from tools.infra.lean_interact_wrapper import apply_tactic, get_proof_state
 
 DEFAULT_HIVE_ENDPOINT = queue_tool.DEFAULT_ENDPOINT
@@ -311,18 +313,87 @@ def build_fossil_record(goal: dict[str, Any], task: dict[str, Any], *, worker_id
     }
 
 
+def theorem_name_for_task(goal: dict[str, Any], task: dict[str, Any]) -> str:
+    return f"hive_{sanitize_identifier(str(goal.get('module') or 'goal'))}_{sanitize_identifier(str(task.get('_key') or 'task'))}"
+
+
+def generated_theorem_source(goal: dict[str, Any], task: dict[str, Any], tactic: str) -> tuple[str, str]:
+    theorem_name = theorem_name_for_task(goal, task)
+    imports = parse_imports(goal)
+    context = parse_context(goal)
+    target = str(goal.get("target_pretty") or goal.get("canonical_shape") or goal.get("entity_key") or "")
+    lines: list[str] = []
+    lines.extend(f"import {name}" for name in dict.fromkeys([*imports, "InfoGeometry.Meta.HiveLogos"]))
+    lines.append("")
+    if context.strip():
+        lines.extend(line.rstrip() for line in context.splitlines())
+        lines.append("")
+    lines.append(f"theorem {theorem_name} : {target} := by")
+    for line in tactic.splitlines():
+        lines.append(f"  {line}" if line.strip() else "")
+    lines.append("")
+    lines.append(f"#hive_index_decl {theorem_name}")
+    lines.append("")
+    return theorem_name, "\n".join(lines)
+
+
+def run_generated_theorem_capture(goal: dict[str, Any], task: dict[str, Any], tactic: str, *, timeout: int) -> tuple[str, str, list[dict[str, Any]]]:
+    theorem_name, source = generated_theorem_source(goal, task, tactic)
+    ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile("w", suffix=".lean", prefix=f"{theorem_name}_", dir=ARTIFACT_DIR, encoding="utf-8", delete=False) as handle:
+        handle.write(source)
+        path = Path(handle.name)
+    env = os.environ.copy()
+    env["PATH"] = f"{Path.home() / '.elan' / 'bin'}:{env.get('PATH', '')}"
+    try:
+        proc = subprocess.run(
+            ["lake", "env", "lean", str(path)],
+            cwd=ROOT,
+            env=env,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=timeout,
+            check=False,
+        )
+        output = (proc.stdout or "") + (proc.stderr or "")
+        if proc.returncode != 0:
+            raise RuntimeError(output.strip() or f"generated theorem check failed for {theorem_name}")
+        records = ingest_text(output, source=f"hive-bee:{theorem_name}")
+        if not records:
+            raise RuntimeError(f"no HIVE_JSON fossils emitted for {theorem_name}")
+        return theorem_name, source, records
+    finally:
+        path.unlink(missing_ok=True)
+
+
 def fossilize_success(config: BeeConfig, attempt: BeeAttempt) -> dict[str, Any]:
-    record = build_fossil_record(
+    theorem_name, theorem_source, records = run_generated_theorem_capture(
         attempt.goal,
         attempt.task,
-        worker_id=config.worker_id,
-        tactic=attempt.proposed_tactic,
-        gravity_path=attempt.gravity_path,
-        elapsed_wall_s=attempt.elapsed_wall_s,
-        lean_latency_s=attempt.lean_latency_s,
+        attempt.proposed_tactic,
+        timeout=config.timeout,
     )
-    fossil_doc = queue_tool.build_fossil_doc(record)
-    event_doc = queue_tool.build_event_doc(record)
+    fossil_records = [record for record in records if record.get("artifact_kind") in queue_tool.FOSSIL_ARTIFACT_KINDS]
+    if not fossil_records:
+        raise RuntimeError(f"generated theorem {theorem_name} emitted no fossil packet")
+    fossil_record = fossil_records[0]
+    packet = fossil_record.setdefault("packet", {})
+    packet["proofTactic"] = attempt.proposed_tactic
+    packet["goalKey"] = attempt.goal.get("_key")
+    packet["taskKey"] = attempt.task.get("_key")
+    packet["workerId"] = config.worker_id
+    packet["gravityContextPath"] = str(attempt.gravity_path)
+    packet["generatedTheoremName"] = theorem_name
+    packet["generatedTheoremSource"] = theorem_source
+    packet["metabolicCost"] = {
+        "wall_time_s": round(attempt.elapsed_wall_s, 6),
+        "lean_verification_latency_s": round(attempt.lean_latency_s, 6),
+        "proof_depth": len([line for line in attempt.proposed_tactic.splitlines() if line.strip()]),
+    }
+    packet["stateTaxonomy"] = ["retrieved", "proposed", "checked", "fossilized"]
+    fossil_doc = queue_tool.build_fossil_doc(fossil_record)
+    event_doc = queue_tool.build_event_doc(fossil_record)
     queue_tool.import_rows(config.hive_endpoint, config.hive_database, config.hive_username, config.hive_password, "hive_fossils", [fossil_doc])
     queue_tool.import_rows(config.hive_endpoint, config.hive_database, config.hive_username, config.hive_password, "hive_events", [event_doc])
     queue_tool.import_rows(
@@ -352,6 +423,7 @@ def fossilize_success(config: BeeConfig, attempt: BeeAttempt) -> dict[str, Any]:
         extra_fields={
             "closed_by_fossil_key": fossil_doc["_key"],
             "last_verified_tactic": attempt.proposed_tactic,
+            "generated_theorem_name": theorem_name,
             "bee_state": "fossilized",
         },
     )
@@ -363,7 +435,14 @@ def fossilize_success(config: BeeConfig, attempt: BeeAttempt) -> dict[str, Any]:
         task_key_value=str(attempt.task["_key"]),
         worker_id=config.worker_id,
     )
-    return {"fossil": fossil_doc, "event": event_doc, "closed_edge": closed_edge, "goal": updated_goal, "task": updated_task}
+    return {
+        "fossil": fossil_doc,
+        "event": event_doc,
+        "closed_edge": closed_edge,
+        "goal": updated_goal,
+        "task": updated_task,
+        "generated_theorem_name": theorem_name,
+    }
 
 
 def record_deadend(config: BeeConfig, attempt: BeeAttempt, failure_kind: str) -> dict[str, Any]:

@@ -17,4 +17,6 @@ def test_operatorial_weyl_character_and_supercharacter_are_source_owned() -> Non
     assert "theorem operatorPartition_eq_operatorSupercharacter" in text
     assert "theorem operatorMassieu_eq_log_operatorSupercharacter" in text
     assert "theorem operatorPartition_eq_operatorSupercharacter_ofFermionicCorrection" in text
+    assert "theorem operatorMassieu_eq_log_operatorSupercharacter_ofFermionicCorrection" in text
     assert "theorem operatorPartition_eq_operatorSupercharacter_ofPureBosonicReadout" in text
+    assert "theorem operatorMassieu_eq_log_operatorSupercharacter_ofPureBosonicReadout" in text

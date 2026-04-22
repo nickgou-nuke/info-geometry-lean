@@ -171,6 +171,65 @@ theorem triality_informationalDiracSquare_eq_id :
     P.triality.informationalDiracSquare = LinearMap.id :=
   P.triality.informationalDiracSquare_eq_id
 
+/--
+Consolidated constructive packet for the repo-owned `Cl(4,4)` / TKK /
+Jordan-Lie corridor.
+
+This is intentionally the reduced theorem surface:
+
+* recursive split `Cl(4,4)` head/tail factorization;
+* real doubled triality-kernel proxy identities;
+* operatorial TKK/KKT/Weyl closure;
+* symmetric Jordan and antisymmetric Lie channel readouts.
+
+It does not assert the unavailable global `Cl(4,4) ≃ M₁₆(ℝ)`, full
+`Spin(4,4)` triality, split-octonion, `F₄`, or `E₈` classification theorem.
+-/
+@[rep_depth transport]
+theorem splitCl44_TKK_JordanLie_constructive_packet
+    (x : ℝ × ℝ) (xs : SplitClNNCarrier 3) :
+    splitCl44_headFactorEquiv
+        (CliffordAlgebra.ι SplitCl44Quad
+          (InfoGeometry.Clifford.ClNN.headPair 3 x))
+      = (CliffordAlgebra.ι InfoGeometry.CliffordTower.Q11 x)
+          ᵍ⊗ₜ (1 : CliffordAlgebra (InfoGeometry.CliffordTower.Qsplit 3))
+      ∧ splitCl44_headFactorEquiv
+        (CliffordAlgebra.ι SplitCl44Quad (InfoGeometry.Clifford.ClNN.tailLift 3 xs))
+      = (1 : CliffordAlgebra InfoGeometry.CliffordTower.Q11)
+          ᵍ⊗ₜ (CliffordAlgebra.ι (InfoGeometry.CliffordTower.Qsplit 3) xs)
+      ∧ P.triality.informationalDiracSquare = LinearMap.id
+      ∧ P.triality.trialitySupercharge.comp P.triality.trialitySupercharge =
+        LinearMap.id
+      ∧ P.triality.trialitySupercharge.comp
+          (P.triality.polarization.Pplus - P.triality.polarization.Pminus)
+        =
+        -((P.triality.polarization.Pplus - P.triality.polarization.Pminus).comp
+          P.triality.trialitySupercharge)
+      ∧ P.closure.gibbs.SatisfiesOperatorTKKMasterRelation P.closure.tkkParameter
+      ∧ P.closure.gibbs.IsOperatorAdmissible
+      ∧ IsGZero cl11 P.closure.gibbs.DGenerator
+      ∧ IsGZero cl11 P.closure.circularPolarizedCommutator
+      ∧ P.closure.SatisfiesKKT_TKK_Weyl_JordanLieClosure
+      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockCommutator (E := H)
+          P.closure.gibbs.conformalGeometricTemperature P.closure.weylTemperature =
+        (2 : ℝ) • P.closure.lieProductTemperatureWeyl
+      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator (E := H)
+          P.closure.gibbs.conformalGeometricTemperature P.closure.weylTemperature =
+        (2 : ℝ) • P.closure.jordanProductTemperatureWeyl := by
+  exact
+    ⟨splitCl44_recursive_head_factor (x := x),
+      splitCl44_recursive_tail_factor (xs := xs),
+      P.triality_informationalDiracSquare_eq_id,
+      P.triality.trialitySupercharge_sq_eq_id,
+      P.triality.k_acts_as_imaginary,
+      P.tkkMasterRelation,
+      P.operatorAdmissible,
+      P.dilation_isGZero,
+      P.circularPolarizedCommutator_isGZero,
+      P.satisfiesKKT_TKK_Weyl_JordanLieClosure,
+      P.fockCommutator_temperature_weyl_eq_two_smul_lieProduct,
+      P.fockAnticommutator_temperature_weyl_eq_two_smul_jordanProduct⟩
+
 end SplitCl44TKKJordanLiePacket
 
 /-! ## Fisher/Killing bridge with explicit base relation -/

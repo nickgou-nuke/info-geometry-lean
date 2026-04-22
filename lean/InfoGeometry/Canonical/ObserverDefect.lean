@@ -234,6 +234,95 @@ theorem observerDefectResidualBoundedByZD_of_deviation_bound
   exact hDevBound
 
 /--
+Constructive `Z_D` control predicate for the remaining observer deviation
+channel.  This is the exact owner-level replacement for bridge-local residual
+budget assumptions.
+-/
+def ObserverDeviationControlledByZD
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) : Prop :=
+  ‖CIK.spectralComplementaryProjector *
+      DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+      CIK.spectralComplementaryProjector‖
+    ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖
+
+/--
+General observer-defect `Z_D` bound from the exact deviation-channel control.
+
+The proof is constructive: the regular spectral-projector commutator is first
+eliminated by defect compression, and the remaining term is precisely the
+controlled deviation commutator.
+-/
+@[rep_depth operator]
+theorem observerDefectResidual_norm_le_ZD
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hControl : ObserverDeviationControlledByZD CIK obs) :
+    ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+  rw [observerDefectResidual_eq_projectorCompression_commutator_deviation (CIK := CIK) (obs := obs)]
+  exact hControl
+
+/--
+The owner-level deviation-channel predicate is equivalent to the old residual
+norm budget once the exact compressed-deviation identity is used.
+-/
+theorem observerDeviationControlledByZD_iff_observerDefectResidual_norm_le_ZD
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) :
+    ObserverDeviationControlledByZD CIK obs ↔
+      ‖observerDefectResidual CIK obs‖ ≤
+        ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+  constructor
+  · intro hControl
+    exact observerDefectResidual_norm_le_ZD (CIK := CIK) (obs := obs) hControl
+  · intro hBound
+    unfold ObserverDeviationControlledByZD
+    rw [← observerDefectResidual_eq_projectorCompression_commutator_deviation (CIK := CIK) (obs := obs)]
+    exact hBound
+
+/--
+If the compressed observer-deviation channel itself vanishes, then the `Z_D`
+control predicate is constructed without any residual-bound hypothesis.
+-/
+theorem observerDeviationControlledByZD_of_compressedDeviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hZero :
+      CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+        CIK.spectralComplementaryProjector = 0) :
+    ObserverDeviationControlledByZD CIK obs := by
+  unfold ObserverDeviationControlledByZD
+  rw [hZero]
+  calc
+    ‖(0 : EndH)‖ = 0 := ContinuousLinearMap.opNorm_zero
+    _ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ :=
+      norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
+
+/--
+Zero-Casimir/zero-defect-central collapse:
+if the remaining observer deviation channel is controlled by `Z_D` and the
+operatorial central defect channel itself is zero, then the observer defect
+residual is zero.
+-/
+@[rep_depth operator]
+theorem observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hControl : ObserverDeviationControlledByZD CIK obs)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    observerDefectResidual CIK obs = 0 := by
+  have hBound :
+      ‖observerDefectResidual CIK obs‖ ≤
+        ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ :=
+    observerDefectResidual_norm_le_ZD (CIK := CIK) (obs := obs) hControl
+  rw [hZD, norm_zero] at hBound
+  have hNormZero : ‖observerDefectResidual CIK obs‖ = 0 :=
+    le_antisymm hBound (norm_nonneg (observerDefectResidual CIK obs))
+  exact norm_eq_zero.mp hNormZero
+
+/--
 Defect-compressed observer-side Cartan split through a chosen axis `sigma`.
 -/
 theorem two_smul_observerDefectResidual_eq_projectorCompression_commutator_localSlice_sigma_add_commutator_localSlice_geometricMismatch
@@ -292,6 +381,67 @@ theorem observerDefectResidual_eq_projectorCompression_commutator_spectralProjec
   rw [observerDefectResidual_eq_projectorCompression_commutator_split (CIK := CIK) (obs := obs)]
   rw [hDev]
   simp [DrazinSupercharge.commutator, mul_assoc]
+
+/--
+If the observer slice agrees with the certified spectral projector, the defect
+residual vanishes constructively: the defect-block compression of
+`[P_D, G]` is zero because `Q₀ P_D = 0 = P_D Q₀`.
+-/
+theorem observerDefectResidual_eq_zero_of_deviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    observerDefectResidual CIK obs = 0 := by
+  rw [observerDefectResidual_eq_projectorCompression_commutator_spectralProjector_of_deviation_eq_zero
+    (CIK := CIK) (obs := obs) hDev]
+  unfold DrazinSupercharge.commutator
+  have hQ0P : CIK.spectralComplementaryProjector * CIK.spectralProjector = 0 :=
+    CIK.spectralComplementaryProjector_mul_spectralProjector
+  have hPQ0 : CIK.spectralProjector * CIK.spectralComplementaryProjector = 0 :=
+    CIK.spectralProjector_mul_spectralComplementaryProjector
+  calc
+    CIK.spectralComplementaryProjector *
+        (CIK.spectralProjector * CIK.dilationGap - CIK.dilationGap * CIK.spectralProjector) *
+        CIK.spectralComplementaryProjector
+      = ((CIK.spectralComplementaryProjector * CIK.spectralProjector) * CIK.dilationGap) *
+          CIK.spectralComplementaryProjector
+        - (CIK.spectralComplementaryProjector * CIK.dilationGap) *
+            (CIK.spectralProjector * CIK.spectralComplementaryProjector) := by
+            noncomm_ring
+    _ = (0 * CIK.dilationGap) * CIK.spectralComplementaryProjector
+        - (CIK.spectralComplementaryProjector * CIK.dilationGap) * 0 := by rw [hQ0P, hPQ0]
+    _ = 0 := by simp
+
+/--
+If the observer slice agrees with the certified spectral projector, the
+observer-defect residual satisfies the `Z_D` budget constructively: the
+residual itself is zero, so the remaining inequality is just `0 ≤ ‖Z_D‖`.
+-/
+@[rep_depth operator]
+theorem observerDefectResidual_norm_le_ZD_of_deviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+  have hZero : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev
+  rw [hZero]
+  calc
+    ‖(0 : EndH)‖ = 0 := ContinuousLinearMap.opNorm_zero
+    _ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ :=
+      norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
+
+/--
+If the observer slice agrees with the certified spectral projector, the exact
+deviation-channel control predicate is constructed directly.
+-/
+theorem observerDeviationControlledByZD_of_deviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    ObserverDeviationControlledByZD CIK obs := by
+  rw [observerDeviationControlledByZD_iff_observerDefectResidual_norm_le_ZD (CIK := CIK) (obs := obs)]
+  exact observerDefectResidual_norm_le_ZD_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev
 
 /--
 Defect compression is stable under left/right `Q₀` action.
@@ -355,6 +505,35 @@ theorem observerDefectResidual_eq_zero_of_aligned
     observerDefectResidual CIK obs = 0 := by
   unfold observerDefectResidual
   simp [hAlign]
+
+/--
+Aligned observers satisfy the `Z_D` budget constructively: alignment collapses
+observer defect residuals to `0`, and the remaining norm bound is immediate.
+-/
+@[rep_depth operator]
+theorem observerDefectResidual_norm_le_ZD_of_aligned
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hAlign : observerOrientationResidual CIK obs = 0) :
+    ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+  have hZero : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_aligned (CIK := CIK) (obs := obs) hAlign
+  rw [hZero]
+  calc
+    ‖(0 : EndH)‖ = 0 := ContinuousLinearMap.opNorm_zero
+    _ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ :=
+      norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
+
+/--
+Aligned observers construct the exact deviation-channel control predicate.
+-/
+theorem observerDeviationControlledByZD_of_aligned
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (hAlign : observerOrientationResidual CIK obs = 0) :
+    ObserverDeviationControlledByZD CIK obs := by
+  rw [observerDeviationControlledByZD_iff_observerDefectResidual_norm_le_ZD (CIK := CIK) (obs := obs)]
+  exact observerDefectResidual_norm_le_ZD_of_aligned (CIK := CIK) (obs := obs) hAlign
 
 /--
 Scalarized observer strain (pre-thermodynamic cost) via operator norm.

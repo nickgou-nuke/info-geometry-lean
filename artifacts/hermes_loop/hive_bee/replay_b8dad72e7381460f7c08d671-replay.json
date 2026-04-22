@@ -1,0 +1,91 @@
+{
+  "_key": "replay_b8dad72e7381460f7c08d671",
+  "fossil_key": "fossil_fa3cb670912abc33dc3f9506",
+  "generated_theorem_name": "hive_ReplaySmoke_task_6e03caa4d00ded92fbc34b9b",
+  "goal_key": "goal_543d2e585dc1198ea45e4f33",
+  "gravity_context_path": "/home/goutev/repos/info-geometry-lean-fusion/artifacts/hermes_loop/hive_bee/task_6e03caa4d00ded92fbc34b9b-gravity.json",
+  "gravity_neighbors": [
+    {
+      "id": "InfoGeometry.Canonical.DensityWeightIntertwinerBridge.densityWeightLiftedTransportGenerator",
+      "module": "InfoGeometry.Canonical.DensityWeightIntertwinerBridge",
+      "raw_doc_id": "raw_info_nodes/raw_3323eee3cdf97cd987730a85a5f0ef8556510a09",
+      "scc_key": "scc_43ee38db12d26b82d18a21bbbf833624d30a0bf8",
+      "score": 339.366122
+    },
+    {
+      "id": "InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.regularRestrictedSuperHamiltonianFlow_mul_spectralComplementaryProjector_eq_zero",
+      "module": "InfoGeometry.Canonical.DrazinSupercharge",
+      "raw_doc_id": "raw_info_nodes/raw_3aef27a8b934926dfbed90f0e8c15a88d44f4271",
+      "scc_key": "scc_abcab80cdbab92042e7f7d80e32b6ba8e3e15b19",
+      "score": 332.755707
+    },
+    {
+      "id": "InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.spectralComplementaryProjector_mul_regularRestrictedSuperHamiltonianFlow_eq_zero",
+      "module": "InfoGeometry.Canonical.DrazinSupercharge",
+      "raw_doc_id": "raw_info_nodes/raw_460719db71b7a5629b345c683e2b2bc9cfc567fc",
+      "scc_key": "scc_9401856222df83fad8339da39d5210c8021522ab",
+      "score": 332.743651
+    },
+    {
+      "id": "InfoGeometry.Canonical.QuantumLieAlgebroidRosetta.paper_phaseReadout_eq_metric_comp_internalPhaseAxis",
+      "module": "InfoGeometry.Canonical.QuantumLieAlgebroidRosetta",
+      "raw_doc_id": "raw_info_nodes/raw_ec2b9fd32883e6f8c1407fd028bd534b26b26c93",
+      "scc_key": "scc_d54f0d6e47b7aa8d0bcd068975f91c7e81c7aad9",
+      "score": 332.701747
+    },
+    {
+      "id": "InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian_eq_canonicalKinetic_plus_canonicalDefectCentral",
+      "module": "InfoGeometry.Canonical.DrazinSupercharge",
+      "raw_doc_id": "raw_info_nodes/raw_13ead1e269d85424b09ed208133aa8bb403a336a",
+      "scc_key": "scc_12b050879397a6635e3c90bbf853d2e84cbaa68d",
+      "score": 331.045141
+    },
+    {
+      "id": "InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.isDefectSupportedK_smul_spectralComplementaryProjector",
+      "module": "InfoGeometry.Canonical.DrazinSupercharge",
+      "raw_doc_id": "raw_info_nodes/raw_db4252abdb7e0423f46fc1c1f799def9b842db09",
+      "scc_key": "scc_15a84528ebbea8d8370cdc58380be57be5fe2829",
+      "score": 327.361277
+    }
+  ],
+  "lean_output": {
+    "generated_theorem_check": "HIVE_JSON {\"artifactKind\":\"DiamondFossil\",\"conclusionHashShapeCanonical\":\"(app (app (app (const Eq) (const Nat)) (app (app (app (const OfNat.ofNat) (const Nat)) (nat 1)) (app (const instOfNatNat) (nat 1)))) (app (app (app (const OfNat.ofNat) (const Nat)) (nat 1)) (app (const instOfNatNat) (nat 1))))\",\"conclusionPretty\":\"Eq.{1} Nat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))\",\"constName\":\"hive_ReplaySmoke_task_6e03caa4d00ded92fbc34b9b\",\"declarationKind\":\"theorem\",\"fullTypeHashShapeCanonical\":\"(app (app (app (const Eq) (const Nat)) (app (app (app (const OfNat.ofNat) (const Nat)) (nat 1)) (app (const instOfNatNat) (nat 1)))) (app (app (app (const OfNat.ofNat) (const Nat)) (nat 1)) (app (const instOfNatNat) (nat 1))))\",\"fullTypePretty\":\"Eq.{1} Nat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))\",\"kernelStatus\":\"verified\",\"space\":\"logos\"}\n",
+    "proof_state": "⊢ 1 = 1\n/tmp/hermes_probe_u1qqy2w1.lean:3:8: warning: declaration uses `sorry`",
+    "tactic_verification": "⊢ 1 = 1\n"
+  },
+  "metabolic_cost": {
+    "gravity_neighbors_count": 6,
+    "lean_verification_latency_s": 3.098553,
+    "proof_depth": 1,
+    "wall_time_s": 17.358207
+  },
+  "proof_state_before": "⊢ 1 = 1\n/tmp/hermes_probe_u1qqy2w1.lean:3:8: warning: declaration uses `sorry`",
+  "schema": "info_geometry.hive_replay_packet.v1",
+  "tactic_trace": [
+    {
+      "phase": "proposed",
+      "tactic": "rfl",
+      "tactic_family": "rfl"
+    },
+    {
+      "lean_output": "⊢ 1 = 1\n",
+      "phase": "apply_tactic",
+      "status": "success"
+    },
+    {
+      "lean_output": "HIVE_JSON {\"artifactKind\":\"DiamondFossil\",\"conclusionHashShapeCanonical\":\"(app (app (app (const Eq) (const Nat)) (app (app (app (const OfNat.ofNat) (const Nat)) (nat 1)) (app (const instOfNatNat) (nat 1)))) (app (app (app (const OfNat.ofNat) (const Nat)) (nat 1)) (app (const instOfNatNat) (nat 1))))\",\"conclusionPretty\":\"Eq.{1} Nat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))\",\"constName\":\"hive_ReplaySmoke_task_6e03caa4d00ded92fbc34b9b\",\"declarationKind\":\"theorem\",\"fullTypeHashShapeCanonical\":\"(app (app (app (const Eq) (const Nat)) (app (app (app (const OfNat.ofNat) (const Nat)) (nat 1)) (app (const instOfNatNat) (nat 1)))) (app (app (app (const OfNat.ofNat) (const Nat)) (nat 1)) (app (const instOfNatNat) (nat 1))))\",\"fullTypePretty\":\"Eq.{1} Nat (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1)) (OfNat.ofNat.{0} Nat 1 (instOfNatNat 1))\",\"kernelStatus\":\"verified\",\"space\":\"logos\"}\n",
+      "phase": "generated_theorem_check",
+      "status": "success"
+    }
+  ],
+  "task_key": "task_6e03caa4d00ded92fbc34b9b",
+  "theorem_source": "import Mathlib\nimport InfoGeometry.Meta.HiveLogos\n\ntheorem hive_ReplaySmoke_task_6e03caa4d00ded92fbc34b9b : 1 = 1 := by\n  rfl\n\n#hive_index_decl hive_ReplaySmoke_task_6e03caa4d00ded92fbc34b9b\n",
+  "timestamps": {
+    "created_at": "2026-04-22T21:05:19Z",
+    "fossil_created_at": "2026-04-22T21:05:19Z",
+    "goal_created_at": "2026-04-22T21:04:59Z",
+    "task_claimed_at": "2026-04-22T21:04:59.567Z",
+    "task_created_at": "2026-04-22T21:04:59Z"
+  },
+  "worker_id": "hive-bee-replay"
+}

@@ -130,7 +130,7 @@ local instance : IsTopologicalRing EndH_loc := inferInstance
 local instance : CompleteSpace EndH_loc := inferInstance
 
 /-- Discrete thermal time step `tₖ = k log q`. -/
-@[rep_depth transport]
+@[rep_depth operator]
 noncomputable def thermalTimeStep (k : ℤ) : ℝ :=
   (k : ℝ) * Real.log L.q
 

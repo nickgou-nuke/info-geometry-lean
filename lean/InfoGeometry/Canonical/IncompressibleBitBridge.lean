@@ -40,12 +40,12 @@ The incompressible information bit in the RN relative-volume lane.
 It is the proof-carrying unit `relativeVolumeChangeRN = 1`, not a finite
 cardinality bit and not a scalar replacement for the operatorial anomaly.
 -/
-@[rep_depth projective]
+@[rep_depth operator]
 structure UnitRelativeVolumeBit (n : Nat) (M : SinkhornMatrix n) : Prop where
   unit_relative_volume : relativeVolumeChangeRN n M = 1
 
 /-- Constructor from the existing RN unit-relative-volume equality. -/
-@[rep_depth projective]
+@[rep_depth operator]
 theorem unitRelativeVolumeBit_of_eq_one
     {n : Nat} {M : SinkhornMatrix n}
     (hUnit : relativeVolumeChangeRN n M = 1) :
@@ -56,7 +56,7 @@ theorem unitRelativeVolumeBit_of_eq_one
 The unit relative-volume bit is exactly the input needed by the existing
 conformal owner theorem to enter the normal phase.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem isNormalInference_of_unitRelativeVolumeBit
     (CI : ConformalInference E)
     {n : Nat}
@@ -72,7 +72,7 @@ The incompressible unit of relative volume collapses the conformal unit of
 action, provided the existing Kähler/log-det readout identifies the chiral scale
 with the RN Kähler potential.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem unitOfAction_eq_zero_of_unitRelativeVolumeBit
     (CI : ConformalInference E)
     {n : Nat}
@@ -89,7 +89,7 @@ theorem unitOfAction_eq_zero_of_unitRelativeVolumeBit
 Unit relative-volume bit packet: normal inference and zero unit of action are
 derived together from the same bit witness.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem normalInference_and_unitOfAction_eq_zero_of_unitRelativeVolumeBit
     (CI : ConformalInference E)
     {n : Nat}
@@ -162,7 +162,7 @@ Cramer-Rao bit forces normal inference.
 This keeps the repository redline sign:
 `Kähler potential = - log(relative volume mode)`.
 -/
-@[rep_depth thermo]
+@[rep_depth thermo, capstone]
 theorem isNormalInference_of_incompressibleBit_of_chiralScale_eq_neg_cramerRaoLogVolume
     (CI : ConformalInference E)
     (H : HessianGeometry E)

@@ -253,7 +253,7 @@ The proof is constructive: the regular spectral-projector commutator is first
 eliminated by defect compression, and the remaining term is precisely the
 controlled deviation commutator.
 -/
-@[rep_depth operator]
+@[rep_depth krein]
 theorem observerDefectResidual_norm_le_ZD
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)
@@ -305,7 +305,7 @@ if the remaining observer deviation channel is controlled by `Z_D` and the
 operatorial central defect channel itself is zero, then the observer defect
 residual is zero.
 -/
-@[rep_depth operator]
+@[rep_depth krein]
 theorem observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)
@@ -417,7 +417,7 @@ If the observer slice agrees with the certified spectral projector, the
 observer-defect residual satisfies the `Z_D` budget constructively: the
 residual itself is zero, so the remaining inequality is just `0 ≤ ‖Z_D‖`.
 -/
-@[rep_depth operator]
+@[rep_depth krein]
 theorem observerDefectResidual_norm_le_ZD_of_deviation_eq_zero
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)
@@ -510,7 +510,7 @@ theorem observerDefectResidual_eq_zero_of_aligned
 Aligned observers satisfy the `Z_D` budget constructively: alignment collapses
 observer defect residuals to `0`, and the remaining norm bound is immediate.
 -/
-@[rep_depth operator]
+@[rep_depth krein]
 theorem observerDefectResidual_norm_le_ZD_of_aligned
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)

@@ -1119,12 +1119,12 @@ noncomputable def fockOccupationOperator : EndH₂ :=
   bogoliubovNumberOperator (E := H) C.mixing
 
 /-- Chemical-potential coupling `μN_B` as a Weyl/Fock gauge term. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 noncomputable def chemicalPotentialFockGaugeTerm : EndH₂ :=
   (fockNumberGauge (E := H) C.mixing).gaugeOf C.chemicalPotential
 
 /-- Grand-canonical Fock generator `H - μN_B` on the doubled Krein carrier. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 noncomputable def grandCanonicalFockOperator : EndH₂ :=
   grandCanonicalFockGenerator (E := H)
     C.mixing C.hamiltonian C.chemicalPotential
@@ -1138,14 +1138,14 @@ theorem fockOccupationOperator_eq_creation_after_annihilation :
   rfl
 
 /-- The chemical potential couples linearly to the Fock occupation operator. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem chemicalPotentialFockGaugeTerm_eq_mu_smul_fockOccupation :
     C.chemicalPotentialFockGaugeTerm =
       C.chemicalPotential • C.fockOccupationOperator := by
   rfl
 
 /-- The grand-canonical Fock operator has the owner form `H - μN_B`. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem grandCanonicalFockOperator_eq_hamiltonian_sub_fockGauge :
     C.grandCanonicalFockOperator =
       C.hamiltonian - C.chemicalPotentialFockGaugeTerm := by
@@ -1159,7 +1159,7 @@ This preserves the chemical-potential affine form across categories:
 finite `E(x) - μN(x)` and operatorial `H - μN_B`.  It does not identify the
 finite count observable with the Fock occupation operator.
 -/
-@[rep_depth transport, spine_morphism, spine_functor, spine_functor_lift]
+@[rep_depth thermo, spine_morphism, spine_functor, spine_functor_lift]
 def finiteFockChemicalPotentialAffineFunctor
     (params : GrandCanonicalTwoParam α) :
     FiniteFockChemicalPotentialAffineBridge
@@ -1172,7 +1172,7 @@ First-quantization form of the same functorial bridge over the conformal
 KKT/TKK context: count-state functions are lifted to the Fock operator lane
 while preserving the affine chemical-potential expression.
 -/
-@[rep_depth transport, spine_morphism, spine_functor, spine_functor_lift]
+@[rep_depth thermo, spine_morphism, spine_functor, spine_functor_lift]
 def firstQuantizationChemicalPotentialAffineFunctor
     (params : GrandCanonicalTwoParam α) :
     FiniteFockChemicalPotentialAffineBridge
@@ -1184,7 +1184,7 @@ def firstQuantizationChemicalPotentialAffineFunctor
 The functorial affine bridge exposes the finite chemical-potential gauge
 coupling as `μ * N(x)`.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem finiteFockChemicalPotentialAffineFunctor_finiteGauge
     (params : GrandCanonicalTwoParam α) (x : α) :
     (C.finiteFockChemicalPotentialAffineFunctor params).finiteGauge x =
@@ -1194,7 +1194,7 @@ theorem finiteFockChemicalPotentialAffineFunctor_finiteGauge
 /--
 The functorial affine bridge exposes the Fock operator form `H - μN_B`.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem finiteFockChemicalPotentialAffineFunctor_fockShiftedHamiltonian
     (params : GrandCanonicalTwoParam α) :
     (C.finiteFockChemicalPotentialAffineFunctor params).fockShiftedHamiltonian =
@@ -1211,7 +1211,7 @@ hold simultaneously.  It is intentionally weaker than any black-hole or
 contour-residue claim, because those are not present as owner theorems in the
 current Lean source.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 def SatisfiesWeylGrandCanonicalTKKKKTBridge
     (params : GrandCanonicalTwoParam α) : Prop :=
   C.closure.SatisfiesKKT_TKK_Weyl_JordanLieClosure
@@ -1231,7 +1231,7 @@ def SatisfiesWeylGrandCanonicalTKKKKTBridge
 The conformal Fock context supplies the grand-canonical affine bridge and the
 operator Weyl/TKK/KKT closure gates.
 -/
-@[rep_depth transport, spine_morphism, spine_functor, spine_functor_lift]
+@[rep_depth thermo, spine_morphism, spine_functor, spine_functor_lift]
 theorem satisfiesWeylGrandCanonicalTKKKKTBridge
     (params : GrandCanonicalTwoParam α) :
     C.SatisfiesWeylGrandCanonicalTKKKKTBridge params := by
@@ -1260,7 +1260,7 @@ noncomputable def transformWeylGauge
 Additive Weyl gauge transformations preserve the combined
 grand-canonical/TKK/KKT bridge.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem transformWeylGauge_preserves_weylGrandCanonicalTKKKKTBridge
     (params : GrandCanonicalTwoParam α)
     (σ : WeylGaugeParameter EndH₂ EndH₂) :
@@ -1268,7 +1268,7 @@ theorem transformWeylGauge_preserves_weylGrandCanonicalTKKKKTBridge
   exact (C.transformWeylGauge σ).satisfiesWeylGrandCanonicalTKKKKTBridge params
 
 /-- At zero chemical potential, the grand-canonical Fock operator is the Hamiltonian. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem grandCanonicalFockOperator_zero_mu
     (hμ : C.chemicalPotential = 0) :
     C.grandCanonicalFockOperator = C.hamiltonian := by

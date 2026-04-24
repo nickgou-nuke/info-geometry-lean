@@ -62,13 +62,13 @@ local notation "ownerResidual" =>
   InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge.UnifiedSuperchargePackage.ownerDefectResidual
 
 /-- The owner BPS/Drazin core read through the generic topological-gap owner. -/
-@[rep_depth transport]
+@[rep_depth operator]
 noncomputable def ownerDrazinCore : Submodule ℝ H₂ :=
   InfoGeometry.Canonical.TopologicalGapShadow.DrazinCore
     (Q := InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage.QD C.U)
 
 /-- The owner excited sector read through the generic topological-gap owner. -/
-@[rep_depth transport]
+@[rep_depth operator]
 noncomputable def ownerExcitedStateSector : Submodule ℝ H₂ :=
   InfoGeometry.Canonical.TopologicalGapShadow.ExcitedStateSector
     (Q := InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage.QD C.U)
@@ -77,7 +77,7 @@ noncomputable def ownerExcitedStateSector : Submodule ℝ H₂ :=
 The unified Drazin supercharge induces the same hopping/gap operator as the
 repo-owned odd-odd closure by the repo-native self-bracket identity.
 -/
-@[rep_depth transport]
+@[rep_depth operator]
 theorem susyHoppingOperator_QD_eq_ownerOddOdd :
     susyHoppingOperator
         (InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage.QD C.U)
@@ -92,7 +92,7 @@ theorem susyHoppingOperator_QD_eq_ownerOddOdd :
 On the owner slice, the gap operator decomposes into translation, central, and
 residual defect lanes.
 -/
-@[rep_depth transport]
+@[capstone, rep_depth transport]
 theorem susyHoppingOperator_QD_eq_translation_plus_central_plus_defectResidual :
     susyHoppingOperator
         (InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage.QD C.U)
@@ -134,7 +134,7 @@ theorem susyHoppingOperator_QD_eq_translation_plus_central :
 Entropy-production readout vanishes on the owner Drazin core through the
 generic topological-gap shadow interface.
 -/
-@[rep_depth transport]
+@[rep_depth operator]
 theorem entropyProduction_vanishes_on_ownerDrazinCore
     (ψ : H₂) (h_core : ψ ∈ C.ownerDrazinCore) :
     ‖(susyHoppingOperator
@@ -147,7 +147,7 @@ theorem entropyProduction_vanishes_on_ownerDrazinCore
 If a proof-carrying gap datum is supplied on the owner Drazin lane, its lower
 bound acts exactly on the owner excited-state sector.
 -/
-@[rep_depth transport]
+@[rep_depth operator]
 theorem gapDatum_bound_on_ownerExcitedSector
     (gap : InfoGeometry.Canonical.TopologicalGapShadow.GapDatum
       (Q := InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage.QD C.U))

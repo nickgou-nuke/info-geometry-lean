@@ -254,7 +254,7 @@ second derivative of the log-readout is the probe of the certified modular Lie
 Hessian. This is the owner bridge from scalar second variation to the
 operatorial modular Hessian; no finite response matrix is used.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem deriv2_scalarLogReadout_zero_eq_probe_modularLieHessian_of_stationary
     (c : CertifiedModularReduction (E := H₂))
     (ω : EndH →L[ℝ] ℝ) (A : EndH)

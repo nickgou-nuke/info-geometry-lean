@@ -2,19 +2,17 @@ import InfoGeometry.Convex.Euclidean
 import Mathlib.Analysis.InnerProductSpace.Basic
 
 open InfoGeometry.Convex
+open InfoGeometry.Convex.Euclidean
 
-variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
 
-omit [CompleteSpace E] in
 /--
 The gradient map of the Euclidean quadratic potential is monotone:
   0 ≤ ⟪grad x - grad y, x - y⟫
 This is a direct consequence of the parallelogram law and positivity of the squared norm.
 -/
-theorem euclidean_grad_monotone (x y : E) :
-  0 ≤ inner ℝ
-    (InfoGeometry.Convex.Euclidean.grad x - InfoGeometry.Convex.Euclidean.grad y)
-    (x - y) :=
+lemma euclidean_grad_monotone (x y : E) :
+  0 ≤ inner ℝ (grad x - grad y) (x - y) :=
 by
-  -- grad x = x, grad y = y
-  simp [InfoGeometry.Convex.Euclidean.grad]
+  -- grad x = x, grad y = y; goal reduces to nonnegativity of `⟪x - y, x - y⟫`
+  simpa [grad] using (real_inner_self_nonneg (x - y))

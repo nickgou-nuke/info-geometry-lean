@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ResiduePacket.schema.json",
+  "title": "ResiduePacket",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "packet_version",
+        "packet_hash",
+        "failure_refs",
+        "failure_class",
+        "stage",
+        "recovery_hint",
+        "return_route"
+      ],
+      "properties": {
+        "kind": {
+          "const": "ResiduePacket"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "recycled",
+            "closed",
+            "archived"
+          ]
+        },
+        "authority": {
+          "const": "proposal"
+        },
+        "packet_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packet_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "failure_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "source_ref.schema.json"
+          }
+        },
+        "failure_class": {
+          "type": "string",
+          "enum": [
+            "symbolic_overheat",
+            "formal_target_missing",
+            "repo_anchor_missing",
+            "novelty_collapse",
+            "proof_obstruction",
+            "translation_failure",
+            "architecture_illegality",
+            "transport_failure",
+            "build_failure",
+            "audit_rejection",
+            "merge_instability"
+          ]
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "seed_intake",
+            "jung_excitation",
+            "resonance_clustering",
+            "pauli_differentiation",
+            "invariant_extraction",
+            "packet_legalization",
+            "translation",
+            "formal_probe",
+            "build",
+            "audit",
+            "promotion"
+          ]
+        },
+        "recovery_hint": {
+          "type": "string",
+          "minLength": 1
+        },
+        "return_route": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recoverability": {
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low",
+            "unknown"
+          ]
+        },
+        "next_cultivation_hint": {
+          "type": "string"
+        },
+        "blocked_packet_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "source_ref.schema.json"
+          }
+        },
+        "anchor_gap_summary": {
+          "type": "string"
+        }
+      }
+    }
+  ]
+}

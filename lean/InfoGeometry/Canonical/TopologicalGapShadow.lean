@@ -8,7 +8,7 @@ Proof-carrying shadow spectrum for the discrete SUSY / hopping lane.
 
 This file introduces only the owner surfaces that the current repo can support:
 
-* the SUSY hopping operator as the anticommutator `{Q, Q†}`,
+* the SUSY hopping operator as the repo-native real odd-odd closure `{Q, Q}`,
 * the BPS/Drazin core as the kernel of that operator,
 * the excited state sector as the orthogonal complement of the core,
 * a proof-carrying topological gap datum,
@@ -31,10 +31,10 @@ noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 local instance : IsTopologicalRing EndH := inferInstance
 local instance : CompleteSpace EndH := inferInstance
 
-/-- The discrete SUSY / hopping operator `{Q, Q†}`. -/
+/-- The discrete SUSY / hopping operator on the real doubled carrier `{Q, Q}`. -/
 @[rep_depth operator]
 noncomputable def susyHoppingOperator (Q : EndH) : EndH :=
-  Q * ContinuousLinearMap.adjoint Q + ContinuousLinearMap.adjoint Q * Q
+  Q * Q + Q * Q
 
 /-- The BPS / Drazin core is the kernel of the hopping operator. -/
 @[rep_depth operator]

@@ -1,10 +1,9 @@
-import InfoGeometry.GrandCanonical.Core
-import InfoGeometry.GrandCanonical.ResponseMatrix
 import InfoGeometry.Canonical.SouriauLieThermoKKTBridge
 import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
 import InfoGeometry.Canonical.SouriauDensityWeightContext
 import InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
 import InfoGeometry.Canonical.SuperSouriauFermionGasBridge
+import InfoGeometry.GrandCanonical.ResponseMatrix
 import InfoGeometry.Convex.Legendre
 
 /-!
@@ -190,16 +189,16 @@ theorem claimC_hessian_eq_fisher_eq_covariance
     [Fintype α] [Nonempty α]
     (M : SouriauMomentMap α) (T : GeometricTemperature) :
     (souriauFisherResponseMatrix M T).betaBeta =
-        InfoGeometry.GrandCanonical.varianceShift (toGrandCanonicalTwoParam M) T.beta T.mu
+        varianceShift (toGrandCanonicalTwoParam M) T.beta T.mu
       ∧ (souriauFisherResponseMatrix M T).muMu =
         T.beta ^ (2 : ℕ) *
-          InfoGeometry.GrandCanonical.varianceNumber (toGrandCanonicalTwoParam M) T.beta T.mu
+          varianceNumber (toGrandCanonicalTwoParam M) T.beta T.mu
       ∧ (souriauFisherResponseMatrix M T).betaMu =
         meanNumber (toGrandCanonicalTwoParam M) T.beta T.mu -
-          T.beta * InfoGeometry.GrandCanonical.covarianceShiftNumber (toGrandCanonicalTwoParam M) T.beta T.mu
+          T.beta * covarianceShiftNumber (toGrandCanonicalTwoParam M) T.beta T.mu
       ∧ (souriauFisherResponseMatrix M T).muBeta =
         meanNumber (toGrandCanonicalTwoParam M) T.beta T.mu -
-          T.beta * InfoGeometry.GrandCanonical.covarianceShiftNumber (toGrandCanonicalTwoParam M) T.beta T.mu
+          T.beta * covarianceShiftNumber (toGrandCanonicalTwoParam M) T.beta T.mu
       ∧ (souriauFisherResponseMatrix M T).Symmetric :=
   ⟨souriauFisher_betaBeta_eq_varianceShift M T,
     souriauFisher_muMu_eq_beta_sq_varianceNumber M T,
@@ -299,10 +298,10 @@ theorem structuredSouriauTranslatorPacket
       ∧ deriv (fun μ => souriauMassieuPotential C.M { C.T with mu := μ }) C.T.mu =
         C.T.beta * souriauMeanNumber C.M C.T
       ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
-        InfoGeometry.GrandCanonical.varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+        varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
       ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
         C.T.beta ^ (2 : ℕ) *
-          InfoGeometry.GrandCanonical.varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+          varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
       ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
       ∧ 0 ≤ C.model.fenchelGap C.theta eta
       ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
@@ -337,10 +336,10 @@ theorem structuredSouriauTranslatorPacket_of_det_nonneg
       ∧ deriv (fun μ => souriauMassieuPotential C.M { C.T with mu := μ }) C.T.mu =
         C.T.beta * souriauMeanNumber C.M C.T
       ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
-        InfoGeometry.GrandCanonical.varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+        varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
       ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
         C.T.beta ^ (2 : ℕ) *
-          InfoGeometry.GrandCanonical.varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+          varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
       ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
       ∧ 0 ≤ C.model.fenchelGap C.theta eta
       ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
@@ -693,43 +692,6 @@ theorem claimM_coadjointLeaf_Casimir_transverseOnsager_packet
   C.full_coadjoint_orbit_metriplectic_theorem x
 
 /--
-Claim M, constructive square-dissipation branch.
-
-This removes the explicit Casimir, Onsager-nonnegativity, and entropy-split
-hypotheses for the branch where the transverse metric/Onsager channel is
-provided by a real dissipation amplitude.  The construction is still
-dimension-agnostic: `Orbit`, `LieAlg`, and `LieCoalg` are arbitrary carriers.
--/
-@[rep_depth thermo]
-theorem claimM_coadjointLeaf_Casimir_transverseOnsager_square_packet
-    {Orbit : Type u} {LieAlg : Type v} {LieCoalg : Type w}
-    (moment : Orbit → LieCoalg)
-    (geometricTemperature : LieAlg)
-    (reversibleVectorField metricVectorField : Orbit → Orbit)
-    (entropy : Orbit → ℝ)
-    (dissipationAmplitude : Orbit → ℝ)
-    (x : Orbit) :
-    let C :=
-      InfiniteCoadjointOrbitMetriplecticContext.ofMomentImageSquareDissipation
-        (Orbit := Orbit) (LieAlg := LieAlg) (LieCoalg := LieCoalg)
-        moment geometricTemperature reversibleVectorField metricVectorField
-        entropy dissipationAmplitude
-    C.reversibleEntropyRate x = 0
-      ∧ C.metricEntropyRate x = dissipationAmplitude x ^ (2 : ℕ)
-      ∧ C.totalEntropyRate x = C.metricEntropyRate x
-      ∧ 0 ≤ C.metricEntropyRate x
-      ∧ 0 ≤ C.totalEntropyRate x := by
-  exact
-    InfiniteCoadjointOrbitMetriplecticContext.SquareDissipation.casimir_leaf_transverse_onsager_square_packet
-        (moment := moment)
-        (geometricTemperature := geometricTemperature)
-        (reversibleVectorField := reversibleVectorField)
-        (metricVectorField := metricVectorField)
-        (entropy := entropy)
-        (dissipationAmplitude := dissipationAmplitude)
-        x
-
-/--
 Literature-facing finite Souriau/KKT theorem packet.
 
 This is the conservative Lean target for the prose synthesis:
@@ -760,10 +722,10 @@ theorem structuredSouriauKKTTranslatorPacket
       ∧ deriv (fun μ => souriauMassieuPotential C.M { C.T with mu := μ }) C.T.mu =
         C.T.beta * souriauMeanNumber C.M C.T
       ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
-        InfoGeometry.GrandCanonical.varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+        varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
       ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
         C.T.beta ^ (2 : ℕ) *
-          InfoGeometry.GrandCanonical.varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
+          varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
       ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
       ∧ 0 ≤ C.model.fenchelGap C.theta eta
       ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
@@ -776,90 +738,6 @@ theorem structuredSouriauKKTTranslatorPacket
   ⟨structuredSouriauTranslatorPacket C hPSD eta xβ xμ,
     claimK_kktEntropyStationarity_packet
       K hCone hStationarity hSlack hFinite⟩
-
-/--
-Exact residuals remove the explicit KKT stationarity hypotheses from the
-translator surface.  The finite Souriau/Fisher/Onsager part still requires its
-own PSD response witness; the KKT part is now supplied by the
-dimension-agnostic exact-residual owner.
--/
-@[rep_depth thermo]
-theorem structuredSouriauKKTTranslatorPacket_ofExactResiduals
-    [Fintype α] [Nonempty α]
-    (C : SouriauFenchelContext (α := α))
-    (hPSD : (souriauFisherResponseMatrix C.M C.T).PositiveSemidefinite)
-    (eta xβ xμ : ℝ) :
-    (souriauMassieuPotential C.M C.T = Real.log (souriauPartition C.M C.T)
-      ∧ deriv (fun β => souriauMassieuPotential C.M { C.T with beta := β }) C.T.beta =
-        -souriauMeanShift C.M C.T
-      ∧ deriv (fun μ => souriauMassieuPotential C.M { C.T with mu := μ }) C.T.mu =
-        C.T.beta * souriauMeanNumber C.M C.T
-      ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
-        InfoGeometry.GrandCanonical.varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
-      ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
-        C.T.beta ^ (2 : ℕ) *
-          InfoGeometry.GrandCanonical.varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
-      ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
-      ∧ 0 ≤ C.model.fenchelGap C.theta eta
-      ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
-      ∧ souriauMassieuPotential C.M C.T +
-          C.model.φ (C.model.dualCoord C.theta) =
-        C.theta * C.model.dualCoord C.theta
-      ∧ 0 ≤ souriauEntropyProduction C.M C.T xβ xμ)
-      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).coneAdmissible
-      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).stationarity
-      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).complementarySlackness
-      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).finitePartitionAdmissible := by
-  let K := DimensionAgnosticKKTResiduals.exact.toShadow
-  have hK :
-      K.coneAdmissible ∧ K.stationarity ∧
-        K.complementarySlackness ∧ K.finitePartitionAdmissible := by
-    simpa [K] using DimensionAgnosticKKTResiduals.exact_stationarity_packet
-  simpa [K] using
-    structuredSouriauKKTTranslatorPacket
-      (C := C) K hPSD hK.1 hK.2.1 hK.2.2.1 hK.2.2.2 eta xβ xμ
-
-/--
-Exact residuals plus the finite determinant gate remove both the explicit KKT
-hypotheses and the bare finite PSD packet from the translator route.  This is
-still the finite Souriau/Fisher shadow; the infinite owner lane is exposed by
-the coadjoint-orbit Gram/square-dissipation packets.
--/
-@[rep_depth thermo]
-theorem structuredSouriauKKTTranslatorPacket_ofExactResiduals_det_nonneg
-    [Fintype α] [Nonempty α]
-    (C : SouriauFenchelContext (α := α))
-    (hdet : 0 ≤ (souriauFisherResponseMatrix C.M C.T).det)
-    (eta xβ xμ : ℝ) :
-    (souriauMassieuPotential C.M C.T = Real.log (souriauPartition C.M C.T)
-      ∧ deriv (fun β => souriauMassieuPotential C.M { C.T with beta := β }) C.T.beta =
-        -souriauMeanShift C.M C.T
-      ∧ deriv (fun μ => souriauMassieuPotential C.M { C.T with mu := μ }) C.T.mu =
-        C.T.beta * souriauMeanNumber C.M C.T
-      ∧ (souriauFisherResponseMatrix C.M C.T).betaBeta =
-        InfoGeometry.GrandCanonical.varianceShift (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
-      ∧ (souriauFisherResponseMatrix C.M C.T).muMu =
-        C.T.beta ^ (2 : ℕ) *
-          InfoGeometry.GrandCanonical.varianceNumber (toGrandCanonicalTwoParam C.M) C.T.beta C.T.mu
-      ∧ (souriauFisherResponseMatrix C.M C.T).Symmetric
-      ∧ 0 ≤ C.model.fenchelGap C.theta eta
-      ∧ C.model.fenchelGap C.theta (C.model.dualCoord C.theta) = 0
-      ∧ souriauMassieuPotential C.M C.T +
-          C.model.φ (C.model.dualCoord C.theta) =
-        C.theta * C.model.dualCoord C.theta
-      ∧ 0 ≤ souriauEntropyProduction C.M C.T xβ xμ)
-      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).coneAdmissible
-      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).stationarity
-      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).complementarySlackness
-      ∧ (DimensionAgnosticKKTResiduals.exact.toShadow).finitePartitionAdmissible := by
-  let K := DimensionAgnosticKKTResiduals.exact.toShadow
-  have hK :
-      K.coneAdmissible ∧ K.stationarity ∧
-        K.complementarySlackness ∧ K.finitePartitionAdmissible := by
-    simpa [K] using DimensionAgnosticKKTResiduals.exact_stationarity_packet
-  exact
-    ⟨structuredSouriauTranslatorPacket_of_det_nonneg C hdet eta xβ xμ,
-      hK.1, hK.2.1, hK.2.2.1, hK.2.2.2⟩
 
 /--
 Stage-2 theorem packet for the two analytic claims that the finite translator

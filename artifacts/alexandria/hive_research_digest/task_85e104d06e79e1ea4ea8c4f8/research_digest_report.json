@@ -1,0 +1,105 @@
+{
+  "task": {
+    "_key": "task_85e104d06e79e1ea4ea8c4f8",
+    "_id": "hive_tasks/task_85e104d06e79e1ea4ea8c4f8",
+    "_rev": "_lZbZoUy---",
+    "schema": "info_geometry.hive_task.v1",
+    "queue_name": "research-digest",
+    "goal_key": "goal_9f4f4eaa33184ed806fa32ad",
+    "status": "leased",
+    "priority": 0.9,
+    "claim_count": 1,
+    "worker_id": "hive-research-codex-live",
+    "lease_expires_at": "2026-04-22T23:12:10.925Z",
+    "created_at": "2026-04-22T22:22:02Z",
+    "updated_at": "2026-04-22T22:42:10.925Z",
+    "claimed_at": "2026-04-22T22:42:10.925Z"
+  },
+  "goal": {
+    "_key": "goal_9f4f4eaa33184ed806fa32ad",
+    "_id": "hive_goals/goal_9f4f4eaa33184ed806fa32ad",
+    "_rev": "_lZbHL3K---",
+    "schema": "info_geometry.hive_goal.v1",
+    "queue_name": "research-digest",
+    "status": "open",
+    "artifact_kind": "InfoTreeArtifact",
+    "goal_hash_shape": "digest-2209-00527",
+    "canonical_shape": "Digest and map theorem corridor for 2209.00527",
+    "entity_key": "ArxivDigest:3",
+    "source": "manual-enqueue",
+    "line_number": null,
+    "packet_sha256": null,
+    "module": "ArxivDigest",
+    "goal_index": 3,
+    "target_pretty": "Digest and map theorem corridor for 2209.00527 geometric thermodynamics and entropy production",
+    "normalization_policy": null,
+    "fvar_policy": null,
+    "created_at": "2026-04-22T22:22:02Z",
+    "updated_at": "2026-04-22T22:22:02Z"
+  },
+  "arxiv_id": "2209.00527",
+  "steps": [
+    {
+      "cmd": [
+        "python3",
+        "tools/alexandria/fetch_arxiv_corpus.py",
+        "--id",
+        "2209.00527",
+        "--output-dir",
+        "/home/goutev/repos/info-geometry-lean-fusion/artifacts/alexandria/hive_research_digest/task_85e104d06e79e1ea4ea8c4f8/cache"
+      ],
+      "returncode": 0,
+      "stdout": "fetched 2209.00527 [tex] -> /home/goutev/repos/info-geometry-lean-fusion/artifacts/alexandria/hive_research_digest/task_85e104d06e79e1ea4ea8c4f8/cache/2209.00527.tex.md\n",
+      "stderr": ""
+    },
+    {
+      "cmd": [
+        "python3",
+        "tools/alexandria/semantic_ingest.py",
+        "--input",
+        "/home/goutev/repos/info-geometry-lean-fusion/artifacts/alexandria/hive_research_digest/task_85e104d06e79e1ea4ea8c4f8/cache",
+        "--output",
+        "/home/goutev/repos/info-geometry-lean-fusion/artifacts/alexandria/hive_research_digest/task_85e104d06e79e1ea4ea8c4f8/digest"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "cmd": [
+        "python3",
+        "tools/alexandria/arango_ingest.py",
+        "--input-dir",
+        "/home/goutev/repos/info-geometry-lean-fusion/artifacts/alexandria/hive_research_digest/task_85e104d06e79e1ea4ea8c4f8/digest",
+        "--endpoint",
+        "http://127.0.0.1:8530",
+        "--database",
+        "alexandria",
+        "--username",
+        "root",
+        "--password",
+        "alexandria_root"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "status": "completed",
+  "cache_files": [
+    "cache/2209.00527.source.tar",
+    "cache/2209.00527.tex.md",
+    "cache/MANIFEST.tsv"
+  ],
+  "digest_files": [
+    "digest/alexandria_chunk_adjacent_edges.jsonl",
+    "digest/alexandria_chunk_entity_edges.jsonl",
+    "digest/alexandria_chunks.jsonl",
+    "digest/alexandria_document_section_edges.jsonl",
+    "digest/alexandria_documents.jsonl",
+    "digest/alexandria_entities.jsonl",
+    "digest/alexandria_entity_relation_edges.jsonl",
+    "digest/alexandria_section_chunk_edges.jsonl",
+    "digest/alexandria_sections.jsonl"
+  ]
+}

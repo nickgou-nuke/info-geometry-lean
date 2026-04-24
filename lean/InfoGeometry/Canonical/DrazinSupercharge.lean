@@ -349,6 +349,57 @@ theorem supercharge_mul_GammaS_eq_neg :
       T CIK.hDrazin).1 hQ
 
 /--
+Chiral supertrace readout on the Drazin lane.
+
+This is deliberately only the operator-level substrate currently owned here:
+it is a linear readout that is cyclic across the spectral chirality operator
+`Γ_S`.  It is not a Dixmier trace, a Type-III trace, or a Pfaffian/Witten-index
+construction.
+-/
+@[rep_depth operator]
+structure ChiralSupertraceReadout where
+  readout : EndH →ₗ[ℝ] ℝ
+  chiral_cyclic :
+    ∀ X : EndH,
+      readout (X * CIK.GammaS) = readout (CIK.GammaS * X)
+
+/-- Chiral supertrace shadow `Str_Γ(X) := τ(Γ_S X)`. -/
+@[rep_depth operator]
+noncomputable def chiralSupertrace (τ : ChiralSupertraceReadout CIK) (X : EndH) : ℝ :=
+  τ.readout (CIK.GammaS * X)
+
+/--
+The Drazin odd supercharge has zero chiral supertrace for every cyclic chiral
+readout.
+
+This is the smallest owner-level supertrace statement supported by the current
+Drazin lane: oddness plus chirality-cyclicity forces cancellation.
+-/
+@[rep_depth operator]
+theorem chiralSupertrace_supercharge_eq_zero
+    (τ : ChiralSupertraceReadout CIK) :
+    chiralSupertrace (CIK := CIK) τ (supercharge CIK) = 0 := by
+  have hAnti :
+      supercharge CIK * CIK.GammaS =
+        -(CIK.GammaS * supercharge CIK) := by
+    simpa [CertifiedInverseKernel.GammaS, CertifiedInverseKernel.cartanTriple,
+      CertifiedInverseKernel.toInformationCartanTriple] using
+      supercharge_mul_GammaS_eq_neg (CIK := CIK)
+  have hNeg :
+      τ.readout (CIK.GammaS * supercharge CIK) =
+        -τ.readout (CIK.GammaS * supercharge CIK) := by
+    calc
+      τ.readout (CIK.GammaS * supercharge CIK)
+          = τ.readout (supercharge CIK * CIK.GammaS) := by
+              exact (τ.chiral_cyclic (supercharge CIK)).symm
+      _ = τ.readout (-(CIK.GammaS * supercharge CIK)) := by
+              rw [hAnti]
+      _ = -τ.readout (CIK.GammaS * supercharge CIK) := by
+              simp
+  unfold chiralSupertrace
+  linarith
+
+/--
 The square of the odd supercharge commutes with the spectral grading:
 `Q² * Γ_S = Γ_S * Q²`.
 -/

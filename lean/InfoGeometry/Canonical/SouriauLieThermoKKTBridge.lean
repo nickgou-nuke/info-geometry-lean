@@ -139,6 +139,18 @@ attribute [terminal] exact_stationarity_packet
 
 end DimensionAgnosticKKTResiduals
 
+namespace KKTEntropyStationarityShadow
+
+/-- Exact dimension-agnostic residuals construct the KKT shadow directly. -/
+@[rep_depth thermo]
+theorem mk_exact :
+    let K : KKTEntropyStationarityShadow := DimensionAgnosticKKTResiduals.toShadow DimensionAgnosticKKTResiduals.exact
+    K.coneAdmissible ∧ K.stationarity ∧
+      K.complementarySlackness ∧ K.finitePartitionAdmissible := by
+  simpa using (DimensionAgnosticKKTResiduals.exact_stationarity_packet)
+
+end KKTEntropyStationarityShadow
+
 /-! ## Full coadjoint-orbit metriplectic target surface -/
 
 /-- Parity tag for the supergraded Souriau moment-map interface. -/
@@ -1250,6 +1262,18 @@ theorem kktStationarity_packet
       C.kktStationarity.complementarySlackness ∧
         C.kktStationarity.finitePartitionAdmissible :=
   C.kktStationarity.packet hCone hStationarity hSlack hFinite
+
+/-- Exact residuals discharge the explicit KKT stationarity packet on the exact branch. -/
+@[rep_depth thermo]
+theorem kktStationarity_packet_of_exact
+    (hExact :
+      C.kktStationarity =
+        DimensionAgnosticKKTResiduals.toShadow DimensionAgnosticKKTResiduals.exact) :
+    C.kktStationarity.coneAdmissible ∧ C.kktStationarity.stationarity ∧
+      C.kktStationarity.complementarySlackness ∧
+        C.kktStationarity.finitePartitionAdmissible := by
+  rw [hExact]
+  exact KKTEntropyStationarityShadow.mk_exact
 
 /-! ## Combined finite/operatorial second-law readout -/
 

@@ -8,6 +8,11 @@ open scoped InnerProductSpace
 
 Thin sign-convention bridge between the operatorial Onsager surface and the
 scalar Legendre/Massieu thermodynamic layer.
+
+This file is translator-only. It does not upgrade the scalar layer to owner
+status: the noncommutative primitive remains the operatorial second-variation /
+probe-read lane, while the canonical free-energy and entropy-production names
+here are exported scalar shadows.
 -/
 
 namespace InfoGeometry.Canonical.OperatorThermoBridge

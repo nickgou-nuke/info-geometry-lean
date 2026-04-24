@@ -3,6 +3,8 @@ import InfoGeometry.Canonical.SuperchargeTransportBridge
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Canonical.DrazinCentralChargeBridge
 import InfoGeometry.Canonical.OperatorialCentralCharge
+import InfoGeometry.Canonical.KKTClosureSymmetry
+import InfoGeometry.Canonical.KramersSuperchargeBridge
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -167,6 +169,257 @@ theorem projected_right_eq_commutator_PD_PR :
 theorem projected_hamiltonian_eq_square :
     HD U = (QD U) * (QD U) := by
   rfl
+
+/--
+Scaled kinetic lane extracted from the projected odd-odd Drazin bracket.
+
+This is the repo-native translation candidate on the chiral-charge / Drazin lane:
+the canonical kinetic remainder in the internal split of `Q_D²`.
+-/
+@[rep_depth transport]
+noncomputable def drazinTranslationCandidate : EndH :=
+  InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPartK U.kernel
+
+/--
+Scaled central lane carried by the KKT packet notation `Z_D`.
+
+We package the odd-odd bracket in the direct form
+`{Q_D, Q_D} = 2 • translationCandidate + centralCandidate`,
+so the central candidate is stored with the factor of `2` absorbed.
+-/
+@[rep_depth transport]
+noncomputable def drazinCentralCandidate : EndH :=
+  (2 : ℝ) • InfoGeometry.Canonical.KKTClosure.ZD U.kernel
+
+/--
+Scaled defect-supported channel on the direct Drazin owner lane.
+
+This is definitionally the same channel as the KKT-side central candidate,
+written in the underlying Drazin owner vocabulary.
+-/
+@[rep_depth transport]
+noncomputable def drazinDefectCandidate : EndH :=
+  (2 : ℝ) •
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK U.kernel
+
+/--
+Minimal pair readout of the new Drazin-lane packet: translation and central
+channels.  The defect witness is carried separately and proved equal to the
+central readout below.
+-/
+@[rep_depth transport]
+noncomputable def drazinTranslationCentralDefectPacket : EndH × EndH :=
+  (drazinTranslationCandidate U, drazinCentralCandidate U)
+
+@[rep_depth transport]
+theorem drazinTranslationCentralDefectPacket_fst :
+    (drazinTranslationCentralDefectPacket U).1 = drazinTranslationCandidate U := by
+  rfl
+
+@[rep_depth transport]
+theorem drazinTranslationCentralDefectPacket_snd :
+    (drazinTranslationCentralDefectPacket U).2 = drazinCentralCandidate U := by
+  rfl
+
+/--
+Repo-native supergraded packet on the projected Drazin lane.
+
+This does not yet formalize a distinct conjugate odd generator `Q̄_D`; instead it
+records the owner decomposition of the realized odd-odd Drazin bracket
+`{Q_D, Q_D}` into translation, central, and defect readouts.
+-/
+@[rep_depth transport]
+structure DrazinSupergradedTranslationPacket where
+  oddOddBracket : EndH
+  translationCandidate : EndH
+  centralCandidate : EndH
+  defectCandidate : EndH
+  oddOdd_bracket_eq_two_smul_translation_plus_central :
+    oddOddBracket = (2 : ℝ) • translationCandidate + centralCandidate
+  central_eq_defect : centralCandidate = defectCandidate
+
+/-- KKT-central and direct Drazin-defect channels coincide definitionally. -/
+@[rep_depth transport]
+theorem drazinCentralCandidate_eq_defectCandidate :
+    drazinCentralCandidate U = drazinDefectCandidate U := by
+  rfl
+
+/--
+Projected odd-odd Drazin bracket in repo-native split form:
+`{Q_D, Q_D} = 2 • translationCandidate + centralCandidate`.
+-/
+@[rep_depth transport]
+theorem projected_oddOdd_bracket_eq_two_smul_translation_plus_central :
+    InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (QD U) (QD U)
+      = (2 : ℝ) • drazinTranslationCandidate U + drazinCentralCandidate U := by
+  calc
+    InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (QD U) (QD U)
+        = (2 : ℝ) • (HD U) := by
+            simp [InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK,
+              InfoGeometry.Canonical.DrazinSupercharge.anticommutator,
+              QD, HD, two_smul,
+              InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK,
+              InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian]
+    _ = (2 : ℝ) •
+          (drazinTranslationCandidate U
+            + InfoGeometry.Canonical.KKTClosure.ZD U.kernel) := by
+          have hSplit :=
+            InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK_eq_canonicalKineticPartK_plus_canonicalDefectCentralK
+              (CIK := U.kernel)
+          exact congrArg (fun X => (2 : ℝ) • X) (by simpa [HD, drazinTranslationCandidate, InfoGeometry.Canonical.KKTClosure.ZD] using hSplit)
+    _ = (2 : ℝ) • drazinTranslationCandidate U + drazinCentralCandidate U := by
+          simp [drazinCentralCandidate, smul_add]
+
+/--
+Equivalent defect-language readout of the same odd-odd Drazin bracket.
+-/
+@[rep_depth transport]
+theorem projected_oddOdd_bracket_eq_two_smul_translation_plus_defect :
+    InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (QD U) (QD U)
+      = (2 : ℝ) • drazinTranslationCandidate U + drazinDefectCandidate U := by
+  rw [projected_oddOdd_bracket_eq_two_smul_translation_plus_central]
+  rw [drazinCentralCandidate_eq_defectCandidate]
+
+/--
+Canonical owner packet witnessing the lift from the primitive transported
+translation seed into the projected chiral-charge / Drazin lane.
+-/
+@[rep_depth transport]
+theorem drazinSupergradedTranslationPacket_ofOwners :
+    ∃ P : DrazinSupergradedTranslationPacket,
+      P.oddOddBracket = InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (QD U) (QD U)
+        ∧ P.translationCandidate = drazinTranslationCandidate U
+        ∧ P.centralCandidate = drazinCentralCandidate U
+        ∧ P.defectCandidate = drazinDefectCandidate U := by
+  refine ⟨{
+    oddOddBracket := InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (QD U) (QD U)
+    translationCandidate := drazinTranslationCandidate U
+    centralCandidate := drazinCentralCandidate U
+    defectCandidate := drazinDefectCandidate U
+    oddOdd_bracket_eq_two_smul_translation_plus_central :=
+      projected_oddOdd_bracket_eq_two_smul_translation_plus_central (U := U)
+    central_eq_defect := drazinCentralCandidate_eq_defectCandidate (U := U)
+  }, rfl, rfl, rfl, rfl⟩
+
+/--
+Best available repo-native paired odd candidate on the Drazin lane.
+
+At present this is a Majorana-conjugate witness rather than a fully independent
+owner-defined `Q̄_D`: it is `Q_D` viewed through the Majorana fixed-sector bridge.
+-/
+@[rep_depth transport]
+noncomputable def drazinMajoranaConjugateCandidate : EndH :=
+  QD U
+
+/--
+Under Majorana compatibility with both anomaly channels, the current paired odd
+candidate collapses to the owned Drazin supercharge itself.
+-/
+@[rep_depth transport]
+theorem drazinMajoranaConjugateCandidate_eq_QD_of_commute_chi
+    (M : InfoGeometry.Canonical.HestenesRealStructures.MajoranaRealStructure (E := E))
+    (_hCL : Commute M.C (U.kernel.chiralAnomaly))
+    (_hCR : Commute M.C (U.kernel.rightChiralAnomaly)) :
+    drazinMajoranaConjugateCandidate U = QD U := by
+  rfl
+
+/--
+For the current Majorana-paired candidate, the paired odd-odd bracket reduces to
+the already owned self-bracket of `Q_D`.
+-/
+@[rep_depth transport]
+theorem paired_oddOdd_majoranaBracket_eq_selfBracket_of_commute_chi
+    (M : InfoGeometry.Canonical.HestenesRealStructures.MajoranaRealStructure (E := E))
+    (hCL : Commute M.C (U.kernel.chiralAnomaly))
+    (hCR : Commute M.C (U.kernel.rightChiralAnomaly)) :
+    InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK
+        (QD U) (drazinMajoranaConjugateCandidate U)
+      =
+    InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (QD U) (QD U) := by
+  rw [drazinMajoranaConjugateCandidate_eq_QD_of_commute_chi (U := U) (M := M) hCL hCR]
+
+/--
+Conditional paired-bracket translation/central readout.
+
+This is the strongest current owner-safe statement: once the paired odd candidate
+is identified with `Q_D` through the Majorana-compatible anomaly corridor, the
+paired bracket inherits the already proved Drazin split.
+-/
+@[rep_depth transport]
+theorem paired_oddOdd_majoranaBracket_eq_two_smul_translation_plus_central_of_commute_chi
+    (M : InfoGeometry.Canonical.HestenesRealStructures.MajoranaRealStructure (E := E))
+    (hCL : Commute M.C (U.kernel.chiralAnomaly))
+    (hCR : Commute M.C (U.kernel.rightChiralAnomaly)) :
+    InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK
+        (QD U) (drazinMajoranaConjugateCandidate U)
+      =
+    (2 : ℝ) • drazinTranslationCandidate U + drazinCentralCandidate U := by
+  rw [paired_oddOdd_majoranaBracket_eq_selfBracket_of_commute_chi (U := U) (M := M) hCL hCR]
+  exact projected_oddOdd_bracket_eq_two_smul_translation_plus_central (U := U)
+
+/--
+Equivalent defect-language version of the conditional paired-bracket readout.
+-/
+@[rep_depth transport]
+theorem paired_oddOdd_majoranaBracket_eq_two_smul_translation_plus_defect_of_commute_chi
+    (M : InfoGeometry.Canonical.HestenesRealStructures.MajoranaRealStructure (E := E))
+    (hCL : Commute M.C (U.kernel.chiralAnomaly))
+    (hCR : Commute M.C (U.kernel.rightChiralAnomaly)) :
+    InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK
+        (QD U) (drazinMajoranaConjugateCandidate U)
+      =
+    (2 : ℝ) • drazinTranslationCandidate U + drazinDefectCandidate U := by
+  rw [paired_oddOdd_majoranaBracket_eq_selfBracket_of_commute_chi (U := U) (M := M) hCL hCR]
+  exact projected_oddOdd_bracket_eq_two_smul_translation_plus_defect (U := U)
+
+/--
+Nontrivial Kramers-conjugated odd candidate on the Drazin lane.
+
+Unlike the Majorana witness above, this really uses an external symmetry action:
+`Θ * Q_D * Θ`.
+-/
+@[rep_depth transport]
+noncomputable def drazinKramersConjugateCandidate
+    (S : InfoGeometry.Canonical.HestenesRealStructures.KramersSymmetry (E := E)) : EndH :=
+  S.Θ * QD U * S.Θ
+
+/-- Paired odd-odd bracket using the Kramers-conjugated Drazin candidate. -/
+@[rep_depth transport]
+noncomputable def pairedOddOddKramersBracket
+    (S : InfoGeometry.Canonical.HestenesRealStructures.KramersSymmetry (E := E)) : EndH :=
+  InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK
+    (QD U) (drazinKramersConjugateCandidate U S)
+
+/--
+If the Kramers symmetry commutes with `Γ_S`, the Kramers-conjugated Drazin odd
+candidate remains odd.
+-/
+@[rep_depth transport]
+theorem drazinKramersConjugateCandidate_is_odd_of_commute_GammaS
+    (S : InfoGeometry.Canonical.HestenesRealStructures.KramersSymmetry (E := E))
+    (hThetaGamma : Commute S.Θ (GammaS U)) :
+    InfoGeometry.Canonical.DrazinSupercharge.anticommutator
+      (GammaS U) (drazinKramersConjugateCandidate U S) = 0 := by
+  simpa [drazinKramersConjugateCandidate, GammaS, QD] using
+    (InfoGeometry.Canonical.KramersSuperchargeBridge.kramers_conjugated_qD_is_odd_of_commute_GammaS
+      (E := E) (CIK := U.kernel) (S := S) hThetaGamma)
+
+/--
+Owner-readout transfer for the Kramers-paired bracket.
+
+This is the strongest current owner-safe theorem: if a concrete Kramers symmetry
+is additionally shown to identify its conjugated odd lane with the owner `Q_D`,
+then the bracket inherits the already formalized Drazin translation/central split.
+-/
+@[rep_depth transport]
+theorem pairedOddOddKramersBracket_eq_ownerReadout
+    (S : InfoGeometry.Canonical.HestenesRealStructures.KramersSymmetry (E := E))
+    (hPair : drazinKramersConjugateCandidate U S = QD U) :
+    pairedOddOddKramersBracket U S
+      = (2 : ℝ) • drazinTranslationCandidate U + drazinCentralCandidate U := by
+  unfold pairedOddOddKramersBracket
+  rw [hPair]
+  exact projected_oddOdd_bracket_eq_two_smul_translation_plus_central (U := U)
 
 /-- Projected odd/even closure package under the spectral grading `Γ_S`. -/
 theorem projected_odd_even_closure :

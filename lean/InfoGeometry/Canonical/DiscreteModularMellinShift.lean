@@ -174,4 +174,58 @@ theorem superHamiltonian_eq_K0_plus_centralOperator
 
 end DoubledRealSuperMellinAlgebra
 
+/--
+Minimal Clifford/Super-Mellin block packet on the doubled-real lane.
+
+This is the conservative owner-adjacent packet for the next realization step:
+
+* a total operator splits into bosonic and fermionic blocks;
+* the discrete Mellin shift acts on the bosonic block by a full doubled-real
+  phase;
+* the same shift acts on the fermionic block by a half-phase.
+
+No complex phase scalar is introduced.  The shift action is expressed entirely
+through the repo-owned doubled-real phase operator.
+-/
+@[rep_depth operator]
+structure CliffordSuperMellinPacket
+    (CIK : CertifiedInverseKernel H₂)
+    (L : TypeIIILambdaCore.ModularLambdaLattice E CIK) where
+  algebra : DoubledRealSuperMellinAlgebra CIK L
+  totalOperator : EndH
+  bosonicBlock : EndH
+  fermionicBlock : EndH
+  phaseAngle : ℝ
+  total_eq_blocks :
+    totalOperator = bosonicBlock + fermionicBlock
+  shiftActsOnBosonicBlock :
+    ((algebra.shift.shift : EndH) * bosonicBlock * (algebra.shift.shift.symm : EndH)) =
+      doubledRealPhaseOperator (E := E) phaseAngle * bosonicBlock
+  shiftActsOnFermionicBlock :
+    ((algebra.shift.shift : EndH) * fermionicBlock * (algebra.shift.shift.symm : EndH)) =
+      doubledRealPhaseOperator (E := E) (phaseAngle / 2) * fermionicBlock
+
+namespace CliffordSuperMellinPacket
+
+variable {CIK : CertifiedInverseKernel H₂}
+variable {L : TypeIIILambdaCore.ModularLambdaLattice E CIK}
+
+/-- The central channel remains operatorial and Drazin-lane central on the block packet. -/
+@[rep_depth operator]
+theorem centralOperator_isDrazinLaneCentral
+    (A : CliffordSuperMellinPacket (E := E) CIK L) :
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDrazinLaneCentralK
+      CIK A.algebra.centralOperator :=
+  A.algebra.centralOperator_isDrazinLaneCentral
+
+/-- The central channel remains defect-supported on the block packet. -/
+@[rep_depth operator]
+theorem centralOperator_isDefectSupported
+    (A : CliffordSuperMellinPacket (E := E) CIK L) :
+    InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.IsDefectSupportedK
+      CIK A.algebra.centralOperator :=
+  A.algebra.centralOperator_isDefectSupported
+
+end CliffordSuperMellinPacket
+
 end InfoGeometry.Canonical.DiscreteModularMellinShift

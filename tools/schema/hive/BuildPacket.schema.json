@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "BuildPacket.schema.json",
+  "title": "BuildPacket",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "packet_version",
+        "packet_hash",
+        "lean_verification_ref",
+        "build_key",
+        "build_command",
+        "build_exit_code",
+        "build_success"
+      ],
+      "properties": {
+        "kind": {
+          "const": "BuildPacket"
+        },
+        "status": {
+          "enum": [
+            "deferred",
+            "gated",
+            "executed",
+            "failed",
+            "passed",
+            "rejected"
+          ]
+        },
+        "authority": {
+          "const": "build_checked"
+        },
+        "packet_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packet_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lean_verification_ref": {
+          "$ref": "source_ref.schema.json"
+        },
+        "build_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "build_command": {
+          "type": "string",
+          "minLength": 1
+        },
+        "build_exit_code": {
+          "type": "integer"
+        },
+        "build_success": {
+          "type": "boolean"
+        },
+        "build_output_excerpt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "build_artifacts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

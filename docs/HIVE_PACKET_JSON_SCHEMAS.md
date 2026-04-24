@@ -1,7 +1,7 @@
 # Hive Packet JSON Schemas
 
 Status: implementation spec
-Date: 2026-04-24
+Date: 2026-05-22
 Scope: concrete JSON packet schemas for the Jung–Pauli Split-Step Hive, aligned with `JUNG_PAULI_SPLIT_STEP_HIVE_BLUEPRINT.md` and `ARANGO_HIVE_SCHEMA_IMPLEMENTATION_SPEC.md`.
 
 ## 1. Purpose
@@ -52,7 +52,7 @@ The Hive distinguishes three classes of objects:
    - `AuditPacket`
    - `PromotionDecisionPacket`
 
-This document focuses on the packet families explicitly requested:
+This document focuses on the packet families:
 - `SymbolicSeed`
 - `FormulationVariant`
 - `ResonanceCluster`
@@ -61,6 +61,10 @@ This document focuses on the packet families explicitly requested:
 - `TheoremCandidatePacket`
 - `TranslationPacket`
 - `ResiduePacket`
+- `LeanVerificationPacket`
+- `BuildPacket`
+- `AuditPacket`
+- `PromotionDecisionPacket`
 
 ## 3. Shared envelope
 
@@ -152,6 +156,14 @@ Packet objects:
 - `accepted`
 - `rejected`
 - `deferred`
+
+Authority-gate status (specific):
+- `passed`
+- `failed`
+- `approved`
+- `promoted`
+- `in_progress`
+- `needs_retry`
 
 Residues:
 - `active`
@@ -711,11 +723,227 @@ Validation notes:
 - failure is structured return, not deletion
 - every residue should remain revivable through lineage and edge connections
 
-## 8. Supporting packet shapes (recommended)
+## 8. Authority-gate output schemas
+
+## 8.1 `LeanVerificationPacket`
+
+Purpose:
+- Records the result of a Lean verification attempt (REPL probe or build).
+- Authority: `lean_checked`.
+
+Required fields:
+- shared envelope
+- `kind = "LeanVerificationPacket"`
+- `packet_version`
+- `packet_hash`
+- `execution_intent_ref`
+- `execution_allowed` (boolean)
+- `verification_key`
+- `verification_outcome` (`passed`, `failed`, `not_executed`, `skipped`)
+- `kernel_summary`
+- `proof_status` (`pending`, `verified`, `blocked`, `rejected`)
+
+Recommended fields:
+- `proof_code`
+- `error_excerpt`
+- `lean_output`
+
+Example:
+
+```json
+{
+  "id": "packet_lean_verification_lineage_9f22d1c1_rev1",
+  "kind": "LeanVerificationPacket",
+  "status": "gated",
+  "lineage_id": "lineage_9f22d1c1",
+  "revision": 1,
+  "packet_version": "1.0.0",
+  "packet_hash": "sha256:...",
+  "origin_run_id": "run_20260522T100000Z_abcd",
+  "created_by_agent": "verification-bee",
+  "agent_role": "verification",
+  "backend": "lean-cli",
+  "created_at": "2026-05-22T10:00:00Z",
+  "updated_at": "2026-05-22T10:00:00Z",
+  "execution_intent_ref": {
+    "ref": "hive_packets/packet_execution_intent_lineage_9f22d1c1_rev1",
+    "kind": "ExecutionIntentPacket"
+  },
+  "execution_allowed": true,
+  "verification_key": "vkey_split_step_001",
+  "verification_outcome": "passed",
+  "kernel_summary": "Theorem splitStepAdmissibility accepted by Lean kernel.",
+  "proof_status": "verified",
+  "proof_code": "theorem splitStepAdmissibility ... := by ...",
+  "authority": "lean_checked",
+  "representation_class": "owner",
+  "representation_depth": "categorical"
+}
+```
+
+## 8.2 `BuildPacket`
+
+Purpose:
+- Records the result of a project-wide or targeted build verification.
+- Authority: `build_checked`.
+
+Required fields:
+- shared envelope
+- `kind = "BuildPacket"`
+- `packet_version`
+- `packet_hash`
+- `lean_verification_ref`
+- `build_key`
+- `build_command`
+- `build_exit_code` (integer)
+- `build_success` (boolean)
+
+Recommended fields:
+- `build_output_excerpt`
+- `build_artifacts`
+
+Example:
+
+```json
+{
+  "id": "packet_build_lineage_9f22d1c1_rev1",
+  "kind": "BuildPacket",
+  "status": "passed",
+  "lineage_id": "lineage_9f22d1c1",
+  "revision": 1,
+  "packet_version": "1.0.0",
+  "packet_hash": "sha256:...",
+  "origin_run_id": "run_20260522T101000Z_efgh",
+  "created_by_agent": "build-bee",
+  "agent_role": "build",
+  "backend": "lake-cli",
+  "created_at": "2026-05-22T10:10:00Z",
+  "updated_at": "2026-05-22T10:10:00Z",
+  "lean_verification_ref": {
+    "ref": "hive_packets/packet_lean_verification_lineage_9f22d1c1_rev1",
+    "kind": "LeanVerificationPacket"
+  },
+  "build_key": "build_split_step_001",
+  "build_command": "lake build InfoGeometry.Hive.SplitStep",
+  "build_exit_code": 0,
+  "build_success": true,
+  "build_output_excerpt": "Building InfoGeometry.Hive.SplitStep... success.",
+  "authority": "build_checked",
+  "representation_class": "owner",
+  "representation_depth": "categorical"
+}
+```
+
+## 8.3 `AuditPacket`
+
+Purpose:
+- Records the result of a human or agentic audit gate.
+- Authority: `audit_checked`.
+
+Required fields:
+- shared envelope
+- `kind = "AuditPacket"`
+- `packet_version`
+- `packet_hash`
+- `build_ref`
+- `audit_key`
+- `audit_scope` (`correctness`, `safety`, `build`, `promotion`)
+- `audit_findings` (array of strings)
+- `audit_outcome` (`approved`, `rejected`, `deferred`)
+- `evidence_summary`
+
+Example:
+
+```json
+{
+  "id": "packet_audit_lineage_9f22d1c1_rev1",
+  "kind": "AuditPacket",
+  "status": "approved",
+  "lineage_id": "lineage_9f22d1c1",
+  "revision": 1,
+  "packet_version": "1.0.0",
+  "packet_hash": "sha256:...",
+  "origin_run_id": "run_20260522T102000Z_ijkl",
+  "created_by_agent": "audit-bee",
+  "agent_role": "auditor",
+  "backend": "local",
+  "created_at": "2026-05-22T10:20:00Z",
+  "updated_at": "2026-05-22T10:20:00Z",
+  "build_ref": {
+    "ref": "hive_packets/packet_build_lineage_9f22d1c1_rev1",
+    "kind": "BuildPacket"
+  },
+  "audit_key": "audit_split_step_001",
+  "audit_scope": "promotion",
+  "audit_findings": [
+    "Formal target matches symbolic intent.",
+    "Repo anchors are verified in Arango.",
+    "Lean proof is complete and checked."
+  ],
+  "audit_outcome": "approved",
+  "evidence_summary": "Full lineage and verification trail confirmed.",
+  "authority": "audit_checked",
+  "representation_class": "owner",
+  "representation_depth": "categorical"
+}
+```
+
+## 8.4 `PromotionDecisionPacket`
+
+Purpose:
+- Records the final decision to promote a packet to a higher status or different repository layer.
+- Authority: `promoted`.
+
+Required fields:
+- shared envelope
+- `kind = "PromotionDecisionPacket"`
+- `packet_version`
+- `packet_hash`
+- `audit_ref`
+- `promotion_key`
+- `decision` (`approved`, `deferred`, `rejected`)
+- `decision_rationale`
+
+Recommended fields:
+- `promotion_targets`
+- `conditions`
+
+Example:
+
+```json
+{
+  "id": "packet_promotion_decision_lineage_9f22d1c1_rev1",
+  "kind": "PromotionDecisionPacket",
+  "status": "promoted",
+  "lineage_id": "lineage_9f22d1c1",
+  "revision": 1,
+  "packet_version": "1.0.0",
+  "packet_hash": "sha256:...",
+  "origin_run_id": "run_20260522T103000Z_mnop",
+  "created_by_agent": "promotion-bee",
+  "agent_role": "orchestrator",
+  "backend": "local",
+  "created_at": "2026-05-22T10:30:00Z",
+  "updated_at": "2026-05-22T10:30:00Z",
+  "audit_ref": {
+    "ref": "hive_packets/packet_audit_lineage_9f22d1c1_rev1",
+    "kind": "AuditPacket"
+  },
+  "promotion_key": "promo_split_step_001",
+  "decision": "approved",
+  "decision_rationale": "All verification and audit gates passed successfully.",
+  "promotion_targets": ["canonical_layer", "alexandria_index"],
+  "authority": "promoted",
+  "representation_class": "owner",
+  "representation_depth": "categorical"
+}
+```
+
+## 9. Supporting packet shapes (recommended)
 
 These are not the main focus of this document, but they are part of the repo doctrine and should remain compatible.
 
-## 8.1 `RetrievalHypothesisPacket`
+## 9.1 `RetrievalHypothesisPacket`
 
 Required payload:
 - `query_text`
@@ -725,7 +953,7 @@ Required payload:
 - `retrieval_summary`
 - `promotion_allowed = false`
 
-## 8.2 `CritiquePacket`
+## 9.2 `CritiquePacket`
 
 Required payload:
 - `target_refs`
@@ -734,7 +962,7 @@ Required payload:
 - `risk_flags`
 - `admissibility_recommendation`
 
-## 8.3 `ExecutionIntentPacket`
+## 9.3 `ExecutionIntentPacket`
 
 Required payload:
 - `target_refs`
@@ -744,30 +972,30 @@ Required payload:
 - `mutation_scope`
 - `execution_allowed`
 
-## 9. Core invariants
+## 10. Core invariants
 
-## 9.1 Layering invariants
+## 10.1 Layering invariants
 - Hive packet objects must not replace faithful Lean/Arango graph objects.
 - Symbolic or packet objects may anchor into raw/projection/topology layers through anchor refs and anchor edges.
 - Absence from a retrieval projection is not proof of semantic absence.
 
-## 9.2 Legalization invariants
+## 10.2 Legalization invariants
 - `SymbolicSeed`, `FormulationVariant`, `ResonanceCluster`, `PauliCritique`, and `InvariantDraft` are pre-legal objects.
 - Only legal packet kinds should cross legalization boundaries.
 - Packet hashes must change when semantic content changes materially.
 
-## 9.3 Authority invariants
+## 10.3 Authority invariants
 - No object in this document alone certifies theorem truth.
 - A `TheoremCandidatePacket` is intent/legalization, not evidence.
 - A `TranslationPacket` is a Lean-facing proposal, not proof.
 - A `ResiduePacket` preserves failure pressure; it does not erase lineage.
 
-## 9.4 Revision invariants
+## 10.4 Revision invariants
 - `revision` starts at `1`.
 - Semantic replacement should create a new revision or new object.
 - Older superseded objects should remain connected by lineage edges.
 
-## 10. Arango storage mapping
+## 11. Arango storage mapping
 
 Recommended collection mapping:
 - `SymbolicSeed` -> `hive_symbolic_seeds`
@@ -778,6 +1006,10 @@ Recommended collection mapping:
 - `TheoremCandidatePacket` -> `hive_packets`
 - `TranslationPacket` -> `hive_packets`
 - `ResiduePacket` -> `hive_packets` and/or `hive_failure_residues` mirror, depending on implementation choice
+- `LeanVerificationPacket` -> `hive_packets`
+- `BuildPacket` -> `hive_packets`
+- `AuditPacket` -> `hive_packets`
+- `PromotionDecisionPacket` -> `hive_packets`
 
 Recommended cross-layer anchor edge usage:
 - `anchors_to_decl`
@@ -788,7 +1020,7 @@ Recommended cross-layer anchor edge usage:
 - `validated_by_build`
 - `validated_by_audit`
 
-## 11. Minimal validator checklist
+## 12. Minimal validator checklist
 
 A future schema validator should check at least:
 
@@ -812,9 +1044,10 @@ A future schema validator should check at least:
    - `failure_class`
    - `stage`
    - `recovery_hint`
-11. pre-legal symbolic objects do not claim authority-gate success directly
+11. `LeanVerificationPacket`, `BuildPacket`, `AuditPacket`, `PromotionDecisionPacket` carry required authority metadata
+12. pre-legal symbolic objects do not claim authority-gate success directly
 
-## 12. Compressed law
+## 13. Compressed law
 
 ```text
 Seeds carry pressure.
@@ -826,9 +1059,10 @@ Packets legalize it.
 Lean-facing translations probe it.
 Residues preserve what fails.
 Lean/build/audit decide what survives.
+Promotion seals the morphism.
 ```
 
-## 13. Next implementation step
+## 14. Next implementation step
 
 The natural next move after this document is:
 - implement JSON validators for these schemas

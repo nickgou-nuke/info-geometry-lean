@@ -79,6 +79,11 @@ def base_envelope(args: argparse.Namespace, kind: str, status: str, *, identity_
         "InvariantDraft": f"invariant_{slug(lineage_id)}_{digest}",
         "TheoremCandidatePacket": f"packet_theorem_candidate_{slug(lineage_id)}_{digest}",
         "ResiduePacket": f"packet_residue_{slug(lineage_id)}_{digest}",
+        "ExecutionIntentPacket": f"packet_execution_intent_{slug(lineage_id)}_{digest}",
+        "LeanVerificationPacket": f"packet_lean_verification_{slug(lineage_id)}_{digest}",
+        "BuildPacket": f"packet_build_{slug(lineage_id)}_{digest}",
+        "AuditPacket": f"packet_audit_{slug(lineage_id)}_{digest}",
+        "PromotionDecisionPacket": f"packet_promotion_decision_{slug(lineage_id)}_{digest}",
     }
     envelope = {
         "id": (args.id or default_ids.get(kind, f"obj_{digest}")).strip(),
@@ -448,6 +453,223 @@ def build_execution_intent_packet(args: argparse.Namespace) -> dict[str, Any]:
     )
 
 
+def build_lean_verification_packet(args: argparse.Namespace) -> dict[str, Any]:
+    execution_refs = [parse_ref_spec(x) for x in (args.execution_intent_ref or [])]
+    if not execution_refs:
+        raise SystemExit("ERROR: at least one --execution-intent-ref is required")
+    verification_outcomes = [x.lower() for x in uniq([args.verification_outcome])]
+    if not verification_outcomes:
+        raise SystemExit("ERROR: --verification-outcome is required")
+
+    identity_seed = {
+        "execution_intent": execution_refs,
+        "verification_key": args.verification_key.strip(),
+        "verification_outcome": args.verification_outcome.strip(),
+        "execution_allowed": args.execution_allowed,
+    }
+    packet = base_envelope(args, "LeanVerificationPacket", args.status, identity_seed=identity_seed)
+    packet.update(
+        {
+            "packet_version": args.packet_version.strip(),
+            "execution_intent_ref": execution_refs[0],
+            "execution_allowed": args.execution_allowed,
+            "verification_key": require_non_empty("--verification-key", args.verification_key),
+            "verification_outcome": verification_outcomes[0],
+            "kernel_summary": require_non_empty("--kernel-summary", args.kernel_summary),
+            "proof_status": args.proof_status.strip(),
+            "proof_code": args.proof_code.strip(),
+        }
+    )
+    if packet["proof_code"] == "":
+        packet.pop("proof_code")
+    if args.error_excerpt.strip():
+        packet["error_excerpt"] = args.error_excerpt.strip()
+    if args.lean_output.strip():
+        packet["lean_output"] = args.lean_output.strip()
+
+    if packet["proof_status"] not in ["pending", "verified", "blocked", "rejected"]:
+        raise SystemExit("ERROR: --proof-status must be one of pending|verified|blocked|rejected")
+    if packet["verification_outcome"] not in ["passed", "failed", "not_executed", "skipped"]:
+        raise SystemExit("ERROR: --verification-outcome must be one of passed|failed|not_executed|skipped")
+
+    packet_hash_material = {
+        k: packet[k]
+        for k in [
+            "kind",
+            "lineage_id",
+            "execution_intent_ref",
+            "execution_allowed",
+            "verification_outcome",
+            "proof_status",
+            "verification_key",
+        ]
+    }
+    packet["packet_hash"] = args.packet_hash.strip() or f"sha256:{stable_digest(packet_hash_material, size=32)}"
+    return with_metadata(
+        packet,
+        authority="lean_checked",
+        representation_class=args.representation_class,
+        representation_depth=args.representation_depth if len(args.representation_depth) > 1 else args.representation_depth[0],
+        promotion_allowed=False,
+    )
+
+
+def build_build_packet(args: argparse.Namespace) -> dict[str, Any]:
+    verification_refs = [parse_ref_spec(x) for x in (args.lean_verification_ref or [])]
+    if not verification_refs:
+        raise SystemExit("ERROR: at least one --lean-verification-ref is required")
+
+    identity_seed = {
+        "lean_verification": verification_refs,
+        "build_command": args.build_command.strip(),
+        "build_exit_code": args.build_exit_code,
+        "build_success": args.build_success,
+    }
+    packet = base_envelope(args, "BuildPacket", args.status, identity_seed=identity_seed)
+    packet.update(
+        {
+            "packet_version": args.packet_version.strip(),
+            "lean_verification_ref": verification_refs[0],
+            "build_key": require_non_empty("--build-key", args.build_key),
+            "build_command": require_non_empty("--build-command", args.build_command),
+            "build_exit_code": args.build_exit_code,
+            "build_success": args.build_success,
+        }
+    )
+    if args.build_output_excerpt.strip():
+        packet["build_output_excerpt"] = args.build_output_excerpt.strip()
+    if args.build_artifact:
+        packet["build_artifacts"] = uniq(args.build_artifact)
+
+    if args.build_exit_code < 0:
+        raise SystemExit("ERROR: --build-exit-code must be a non-negative integer")
+
+    packet_hash_material = {
+        k: packet[k]
+        for k in [
+            "kind",
+            "lineage_id",
+            "lean_verification_ref",
+            "build_key",
+            "build_command",
+            "build_exit_code",
+            "build_success",
+        ]
+    }
+    packet["packet_hash"] = args.packet_hash.strip() or f"sha256:{stable_digest(packet_hash_material, size=32)}"
+    return with_metadata(
+        packet,
+        authority="build_checked",
+        representation_class=args.representation_class,
+        representation_depth=args.representation_depth if len(args.representation_depth) > 1 else args.representation_depth[0],
+        promotion_allowed=False,
+    )
+
+
+def build_audit_packet(args: argparse.Namespace) -> dict[str, Any]:
+    build_refs = [parse_ref_spec(x) for x in (args.build_ref or [])]
+    if not build_refs:
+        raise SystemExit("ERROR: at least one --build-ref is required")
+
+    findings = uniq(args.audit_finding or [])
+    if not findings:
+        raise SystemExit("ERROR: at least one --audit-finding is required")
+
+    identity_seed = {
+        "build_ref": build_refs,
+        "audit_key": args.audit_key.strip(),
+        "audit_scope": args.audit_scope.strip(),
+    }
+    packet = base_envelope(args, "AuditPacket", args.status, identity_seed=identity_seed)
+    packet.update(
+        {
+            "packet_version": args.packet_version.strip(),
+            "build_ref": build_refs[0],
+            "audit_key": require_non_empty("--audit-key", args.audit_key),
+            "audit_scope": args.audit_scope.strip(),
+            "audit_findings": findings,
+            "audit_outcome": require_non_empty("--audit-outcome", args.audit_outcome),
+            "evidence_summary": require_non_empty("--evidence-summary", args.evidence_summary),
+        }
+    )
+
+    if packet["audit_scope"] not in ["correctness", "safety", "build", "promotion"]:
+        raise SystemExit("ERROR: --audit-scope must be one of correctness|safety|build|promotion")
+    if packet["audit_outcome"] not in ["approved", "rejected", "deferred"]:
+        raise SystemExit("ERROR: --audit-outcome must be one of approved|rejected|deferred")
+
+    packet_hash_material = {
+        k: packet[k]
+        for k in [
+            "kind",
+            "lineage_id",
+            "build_ref",
+            "audit_key",
+            "audit_scope",
+            "audit_outcome",
+            "audit_findings",
+        ]
+    }
+    packet["packet_hash"] = args.packet_hash.strip() or f"sha256:{stable_digest(packet_hash_material, size=32)}"
+    return with_metadata(
+        packet,
+        authority="audit_checked",
+        representation_class=args.representation_class,
+        representation_depth=args.representation_depth if len(args.representation_depth) > 1 else args.representation_depth[0],
+        promotion_allowed=False,
+    )
+
+
+def build_promotion_decision_packet(args: argparse.Namespace) -> dict[str, Any]:
+    audit_refs = [parse_ref_spec(x) for x in (args.audit_ref or [])]
+    if not audit_refs:
+        raise SystemExit("ERROR: at least one --audit-ref is required")
+
+    identity_seed = {
+        "audit_ref": audit_refs,
+        "promotion_key": args.promotion_key.strip(),
+        "decision": args.decision.strip(),
+    }
+    packet = base_envelope(args, "PromotionDecisionPacket", args.status, identity_seed=identity_seed)
+    packet.update(
+        {
+            "packet_version": args.packet_version.strip(),
+            "audit_ref": audit_refs[0],
+            "promotion_key": require_non_empty("--promotion-key", args.promotion_key),
+            "decision": require_non_empty("--decision", args.decision),
+            "decision_rationale": require_non_empty("--decision-rationale", args.decision_rationale),
+        }
+    )
+
+    if args.decision not in ["approved", "rejected", "deferred"]:
+        raise SystemExit("ERROR: --decision must be one of approved|rejected|deferred")
+
+    if args.promotion_target:
+        packet["promotion_targets"] = uniq(args.promotion_target)
+    if args.condition:
+        packet["conditions"] = uniq(args.condition)
+
+    packet_hash_material = {
+        k: packet[k]
+        for k in [
+            "kind",
+            "lineage_id",
+            "audit_ref",
+            "promotion_key",
+            "decision",
+            "decision_rationale",
+        ]
+    }
+    packet["packet_hash"] = args.packet_hash.strip() or f"sha256:{stable_digest(packet_hash_material, size=32)}"
+    return with_metadata(
+        packet,
+        authority="promoted",
+        representation_class=args.representation_class,
+        representation_depth=args.representation_depth if len(args.representation_depth) > 1 else args.representation_depth[0],
+        promotion_allowed=False,
+    )
+
+
 def build_invariant_draft(args: argparse.Namespace) -> dict[str, Any]:
     identity_seed = {
         "iteration_index": args.iteration_index,
@@ -636,6 +858,14 @@ def cmd_build(args: argparse.Namespace) -> int:
         packet = build_retrieval_hypothesis_packet(args)
     elif args.cmd == "build-execution-intent-packet":
         packet = build_execution_intent_packet(args)
+    elif args.cmd == "build-lean-verification-packet":
+        packet = build_lean_verification_packet(args)
+    elif args.cmd == "build-build-packet":
+        packet = build_build_packet(args)
+    elif args.cmd == "build-audit-packet":
+        packet = build_audit_packet(args)
+    elif args.cmd == "build-promotion-decision-packet":
+        packet = build_promotion_decision_packet(args)
     elif args.cmd == "build-theorem-candidate":
         packet = build_theorem_candidate(args)
     elif args.cmd == "build-residue":
@@ -776,6 +1006,58 @@ def parse_args() -> argparse.Namespace:
     ei.add_argument("--required-gate", action="append", default=[])
     ei.add_argument("--mutation-scope", required=True, choices=["none", "probe_only", "single_file", "single_module", "bounded_repo_surface"])
     ei.add_argument("--execution-allowed", action="store_true", help="Set execution_allowed=true. Default false.")
+
+    lv = sp.add_parser("build-lean-verification-packet", help="Build LeanVerificationPacket.")
+    add_common_args(lv)
+    lv.add_argument("--status", default="gated", choices=["draft", "legalized", "probe_ready", "gated", "executed", "accepted", "rejected", "deferred"])
+    lv.add_argument("--packet-version", default="1.0.0")
+    lv.add_argument("--packet-hash", default="")
+    lv.add_argument("--execution-intent-ref", action="append", default=[])
+    lv.add_argument("--execution-allowed", action="store_true", help="Set execution_allowed=true.")
+    lv.add_argument("--verification-key", required=True)
+    lv.add_argument("--verification-outcome", required=True)
+    lv.add_argument("--kernel-summary", required=True)
+    lv.add_argument("--proof-status", default="pending", choices=["pending", "verified", "blocked", "rejected"])
+    lv.add_argument("--proof-code", default="")
+    lv.add_argument("--lean-output", default="")
+    lv.add_argument("--error-excerpt", default="")
+
+    bp = sp.add_parser("build-build-packet", help="Build BuildPacket.")
+    add_common_args(bp)
+    bp.add_argument("--status", default="gated", choices=["deferred", "gated", "executed", "failed", "passed", "rejected"])
+    bp.add_argument("--packet-version", default="1.0.0")
+    bp.add_argument("--packet-hash", default="")
+    bp.add_argument("--lean-verification-ref", action="append", default=[])
+    bp.add_argument("--build-key", required=True)
+    bp.add_argument("--build-command", required=True)
+    bp.add_argument("--build-success", action="store_true", help="Set build_success=true")
+    bp.add_argument("--build-exit-code", type=int, default=0)
+    bp.add_argument("--build-output-excerpt", default="")
+    bp.add_argument("--build-artifact", action="append", default=[])
+
+    ap = sp.add_parser("build-audit-packet", help="Build AuditPacket.")
+    add_common_args(ap)
+    ap.add_argument("--status", default="in_progress", choices=["deferred", "gated", "in_progress", "approved", "rejected", "needs_retry"])
+    ap.add_argument("--packet-version", default="1.0.0")
+    ap.add_argument("--packet-hash", default="")
+    ap.add_argument("--build-ref", action="append", default=[])
+    ap.add_argument("--audit-key", required=True)
+    ap.add_argument("--audit-scope", default="correctness", choices=["correctness", "safety", "build", "promotion"])
+    ap.add_argument("--audit-finding", action="append", default=[])
+    ap.add_argument("--audit-outcome", required=True, choices=["approved", "rejected", "deferred"])
+    ap.add_argument("--evidence-summary", required=True)
+
+    pd = sp.add_parser("build-promotion-decision-packet", help="Build PromotionDecisionPacket.")
+    add_common_args(pd)
+    pd.add_argument("--status", default="deferred", choices=["deferred", "rejected", "approved", "promoted"])
+    pd.add_argument("--packet-version", default="1.0.0")
+    pd.add_argument("--packet-hash", default="")
+    pd.add_argument("--audit-ref", action="append", default=[])
+    pd.add_argument("--promotion-key", required=True)
+    pd.add_argument("--decision", required=True, choices=["approved", "deferred", "rejected"])
+    pd.add_argument("--decision-rationale", required=True)
+    pd.add_argument("--promotion-target", action="append", default=[])
+    pd.add_argument("--condition", action="append", default=[])
 
     i = sp.add_parser("build-invariant-draft", help="Build InvariantDraft packet.")
     add_common_args(i)

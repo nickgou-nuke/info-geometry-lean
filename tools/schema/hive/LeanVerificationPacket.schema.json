@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "LeanVerificationPacket.schema.json",
+  "title": "LeanVerificationPacket",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "packet_version",
+        "packet_hash",
+        "execution_intent_ref",
+        "execution_allowed",
+        "verification_key",
+        "verification_outcome",
+        "kernel_summary",
+        "proof_status"
+      ],
+      "properties": {
+        "kind": {
+          "const": "LeanVerificationPacket"
+        },
+        "status": {
+          "enum": [
+            "deferred",
+            "legalized",
+            "gated",
+            "executed",
+            "passed",
+            "failed",
+            "rejected"
+          ]
+        },
+        "authority": {
+          "const": "lean_checked"
+        },
+        "packet_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packet_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "execution_intent_ref": {
+          "$ref": "source_ref.schema.json"
+        },
+        "execution_allowed": {
+          "type": "boolean"
+        },
+        "verification_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kernel_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verification_outcome": {
+          "type": "string",
+          "enum": [
+            "passed",
+            "failed",
+            "not_executed",
+            "skipped"
+          ]
+        },
+        "proof_status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "verified",
+            "blocked",
+            "rejected"
+          ]
+        },
+        "error_excerpt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lean_output": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

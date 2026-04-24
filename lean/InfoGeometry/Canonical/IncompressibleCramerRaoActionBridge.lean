@@ -55,7 +55,7 @@ The scalar volume shadow of the operatorial Souriau-Fisher metric.
 This ordinary determinant readout is only the Hessian/Cramer-Rao shadow. The
 super/chiral replacement point is the Berezinian/super-Berezinian owner lane.
 -/
-@[rep_depth transport]
+@[rep_depth krein]
 noncomputable def souriauFisherMetricVolumeShadow
     (H : HessianGeometry E) (x : E) : ℝ :=
   |LinearMap.det (souriauFisherMetricOperator H x).toLinearMap|
@@ -99,7 +99,7 @@ variable {CI : ConformalInference E} {H : HessianGeometry E}
 Incompressibility kills the conformal anomaly scale when the anomaly readout is
 the negative Cramer-Rao log-volume mode.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem chiralScale_eq_zero_of_incompressible
     (R : CramerRaoNegLogVolumeAnomalyReadout CI H)
     (hIncomp : IncompressibleMongeAmpere H) (x : E) :
@@ -112,9 +112,15 @@ theorem chiralScale_eq_zero_of_incompressible
     simpa [souriauFisherMetricVolumePotential, souriauFisherMetricVolumeShadow,
       souriauFisherMetricOperator] using
         CramerRaoNegLogVolumeAnomalyReadout.chiralScale_eq_metricVolumePotential R x
-  simpa [ConformalInference.IsNormalInference] using
-    isNormalInference_of_incompressibleBit_of_chiralScale_eq_neg_cramerRaoLogVolume
-      (CI := CI) (H := H) bit x hScale
+  have hLogZero :
+      Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) = 0 :=
+    logAbsDet_cramerRaoMetric_eq_zero_of_incompressibleBit
+      (H := H) bit x
+  calc
+    CI.chiralScale
+        = -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) := hScale
+    _ = -0 := by rw [hLogZero]
+    _ = 0 := by simp
 
 /--
 The same readout constructively yields the normal conformal phase.

@@ -1,4 +1,6 @@
 import InfoGeometry.Meta.Architecture
+import Mathlib.Analysis.Normed.Group.Defs
+import Mathlib.Analysis.Complex.Norm
 import Mathlib.Data.Complex.Basic
 
 /-!
@@ -49,8 +51,8 @@ theorem denominator_eq_zero_iff :
     C.denominator = 0 ↔ C.x = C.q * C.y := by
   unfold denominator
   constructor <;> intro h
-  · linarith
-  · linarith
+  · exact sub_eq_zero.mp h
+  · simpa [denominator] using sub_eq_zero.mpr h
 
 /-- Away from `q`-collision the deformed factor is nonzero. -/
 @[rep_depth thermo]
@@ -67,7 +69,7 @@ theorem norm_eq_of_unitPhase_of_collision
     (hq : C.UnitPhase) (hcol : C.denominator = 0) :
     ‖C.x‖ = ‖C.y‖ := by
   have hx : C.x = C.q * C.y := (C.denominator_eq_zero_iff).1 hcol
-  rw [hx, norm_mul, hq, one_mul]
+  rw [hx, Complex.norm_mul, hq, one_mul]
 
 /-- Combined packet for the two-node phase-lock shadow. -/
 @[rep_depth thermo]
@@ -116,27 +118,18 @@ theorem denominatorFactor_eq_zero_iff :
     rcases mul_eq_zero.mp h with h12 | h3
     · rcases mul_eq_zero.mp h12 with h1 | h2
       · left
-        linarith
+        exact sub_eq_zero.mp h1
       · right
         left
-        linarith
+        exact sub_eq_zero.mp h2
     · right
       right
-      linarith
+      exact sub_eq_zero.mp h3
   · intro h
     rcases h with h1 | h2 | h3
-    · unfold denominatorFactor
-      have : C.y - C.q * C.x = 0 := by linarith
-      rw [this]
-      ring
-    · unfold denominatorFactor
-      have : C.z - C.q * C.x = 0 := by linarith
-      rw [this]
-      ring
-    · unfold denominatorFactor
-      have : C.z - C.q * C.y = 0 := by linarith
-      rw [this]
-      ring
+    · simp [h1]
+    · simp [h2]
+    · simp [h3]
 
 /--
 Under the unit-phase condition, any vanishing of the finite `q`-Vandermonde
@@ -148,13 +141,13 @@ theorem exists_norm_locked_pair_of_unitPhase_of_collision
     ‖C.y‖ = ‖C.x‖ ∨ ‖C.z‖ = ‖C.x‖ ∨ ‖C.z‖ = ‖C.y‖ := by
   rcases (C.denominatorFactor_eq_zero_iff).1 hcol with hyx | hzx | hzy
   · left
-    rw [hyx, norm_mul, hq, one_mul]
+    rw [hyx, Complex.norm_mul, hq, one_mul]
   · right
     left
-    rw [hzx, norm_mul, hq, one_mul]
+    rw [hzx, Complex.norm_mul, hq, one_mul]
   · right
     right
-    rw [hzy, norm_mul, hq, one_mul]
+    rw [hzy, Complex.norm_mul, hq, one_mul]
 
 /-- Combined packet for the finite `A₂` `q`-phase-lock shadow. -/
 @[rep_depth thermo]

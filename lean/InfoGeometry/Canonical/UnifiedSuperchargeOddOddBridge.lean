@@ -153,7 +153,7 @@ theorem toOddOddDecompositionData_defectCandidate_eq_zero :
 The derived owner data satisfies the generic odd-odd decomposition packet and
 the central-lane entropy-vanishing law.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem toOddOddDecompositionData_packet :
     (oddOddBracket (toOddOddDecompositionData U).Qi (toOddOddDecompositionData U).Qj
         =

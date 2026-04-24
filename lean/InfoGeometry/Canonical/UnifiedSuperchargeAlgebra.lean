@@ -188,7 +188,7 @@ This follows because it is the canonical kinetic remainder inside the even
 superHamiltonian split, and both the full superHamiltonian and the defect
 compression commute with the spectral grading `Γ_S`.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem drazinTranslationCandidate_isSpectralCompact :
     U.kernel.IsSpectralCompact (drazinTranslationCandidate U) := by
   rw [InfoGeometry.Canonical.CertifiedInverseKernel.isSpectralCompact_iff_commute_GammaS
@@ -317,7 +317,7 @@ theorem drazinCentralCandidate_eq_defectCandidate :
 Projected odd-odd Drazin bracket in repo-native split form:
 `{Q_D, Q_D} = 2 • translationCandidate + centralCandidate`.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem projected_oddOdd_bracket_eq_two_smul_translation_plus_central :
     InfoGeometry.Canonical.DrazinSupercharge.anticommutatorK (QD U) (QD U)
       = (2 : ℝ) • drazinTranslationCandidate U + drazinCentralCandidate U := by
@@ -463,7 +463,7 @@ noncomputable def pairedOddOddKramersBracket
 If the Kramers symmetry commutes with `Γ_S`, the Kramers-conjugated Drazin odd
 candidate remains odd.
 -/
-@[rep_depth transport]
+@[rep_depth transport, capstone]
 theorem drazinKramersConjugateCandidate_is_odd_of_commute_GammaS
     (S : InfoGeometry.Canonical.HestenesRealStructures.KramersSymmetry (E := E))
     (hThetaGamma : Commute S.Θ (GammaS U)) :

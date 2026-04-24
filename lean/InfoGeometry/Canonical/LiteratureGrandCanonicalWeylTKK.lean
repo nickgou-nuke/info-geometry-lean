@@ -487,7 +487,7 @@ variable (B : ConstructiveLiteratureWeylGrandCanonicalTKKKKTBridge
   R Gauge Parameter Curvature G I X A S)
 
 /-- The proposition-level KKT bridge induced by the residual certificate. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 def toKKTBridge :
     LiteratureWeylGrandCanonicalTKKKKTBridge
       R Gauge Parameter Curvature G I X A S where
@@ -499,7 +499,7 @@ def toKKTBridge :
 Exact thermodynamic KKT closure obtained from the bridge's residual
 certificate, with no extra assumptions.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem exactKKTOptimizationPacket :
     B.kktCertificate.toThermodynamicData.primalFeasible ∧
       B.kktCertificate.toThermodynamicData.dualFeasible ∧
@@ -509,7 +509,7 @@ theorem exactKKTOptimizationPacket :
   B.kktCertificate.exactPacket
 
 /-- The constructive bridge still supplies the grand-canonical affine action. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem grandCanonicalActionAffine
     (energy chemicalPotential number : ℝ) :
   B.toLiteratureWeylGrandCanonicalTKKBridge.residue.grandCanonicalSingularAction
@@ -526,7 +526,7 @@ Single packet matching the Bulgarian theorem-factory text:
 grand-canonical affine action, Weyl gauge curvature invariance, TKK mixed
 closure, and exact KKT optimization closure.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem grandCanonicalWeylTKKKKTExactPacket
     (gauge : Gauge) (parameter : Parameter)
     {x y : G} (hx : B.tkk.inGPlus x) (hy : B.tkk.inGMinus y)
@@ -562,13 +562,13 @@ variable (B : LiteratureWeylGrandCanonicalTKKBridge
   R Gauge Parameter Curvature G I X A S)
 
 /-- The bridge supplies the residue formula for inverse temperature. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem inverseTemperatureFromResidue :
     B.residue.inverseTemperature = 4 * Real.pi * B.residue.lapseResidue :=
   B.residue.beta_eq_four_pi_residue
 
 /-- The bridge supplies the grand-canonical affine singular action. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem grandCanonicalActionAffine
     (energy chemicalPotential number : ℝ) :
     B.residue.grandCanonicalSingularAction
@@ -579,7 +579,7 @@ theorem grandCanonicalActionAffine
     energy chemicalPotential number
 
 /-- The bridge supplies the contour-holonomy readout of the lapse residue. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem contourHolonomyReadsLapseResidue :
     B.contourResidue.residueMap.toHolonomy
       (B.contourResidue.lineIntegrator.integrate
@@ -592,7 +592,7 @@ theorem contourHolonomyReadsLapseResidue :
 The contour-holonomy residue presentation yields the same grand-canonical
 affine action once the residue temperature formula is supplied.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem contourHolonomyGrandCanonicalActionAffine
     (inverseTemperature : ℝ)
     (hβ : inverseTemperature =
@@ -754,7 +754,7 @@ variable (B : LiteratureWeylGrandCanonicalTKKKKTBridge
   R Gauge Parameter Curvature G I X A S)
 
 /-- The extended bridge exposes the explicit thermodynamic KKT packet. -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem kktOptimizationPacket
     (hPrimal : B.kktOptimization.primalFeasible)
     (hDual : B.kktOptimization.dualFeasible)
@@ -772,7 +772,7 @@ theorem kktOptimizationPacket
 The KKT-enhanced bridge still supplies the grand-canonical affine action from
 the underlying residue bridge.
 -/
-@[rep_depth transport]
+@[rep_depth thermo]
 theorem grandCanonicalActionAffine
     (energy chemicalPotential number : ℝ) :
     B.toLiteratureWeylGrandCanonicalTKKBridge.residue.grandCanonicalSingularAction

@@ -96,14 +96,16 @@ retaining the owned doubled-carrier `(J, ε, Jε)` atom.
 -/
 @[rep_depth operator]
 noncomputable def toStandardFormSeed : StandardFormSeed H where
-  J := (tomitaAtomSeed (H := H)).J
-  ε := (tomitaAtomSeed (H := H)).ε
-  phaseAxis := (tomitaAtomSeed (H := H)).phaseAxis
+  J := InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ (E := H)
+  ε := InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon (E := H)
+  phaseAxis := InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := H)
   modularFlow := C.tomitaAdditiveModularFlow
-  J_sq := (tomitaAtomSeed (H := H)).J_sq
-  eps_sq := (tomitaAtomSeed (H := H)).eps_sq
-  phase_sq := (tomitaAtomSeed (H := H)).phase_sq
-  J_phase_anticommute := (tomitaAtomSeed (H := H)).J_phase_anticommute
+  J_sq := InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_sq (E := H)
+  eps_sq := InfoGeometry.Canonical.TomitaTakesaki.modularSignEpsilon_sq (E := H)
+  phase_sq := InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_sq (E := H)
+  J_phase_anticommute :=
+    InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_anticommutes_modularComplexI
+      (E := H)
 
 /--
 Concrete standard-form carrier for the Souriau/Tomita logarithmic lane.

@@ -13,9 +13,12 @@ from pathlib import Path
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+    from tools.infra.decl_graph_support import load_decl_graph, resolve_graph_profile, weak_graph_evidence
+    from tools.infra.decl_graph_support import load_decl_graph, resolve_graph_profile, weak_graph_evidence
     from tools.infra.reports.common import relpath
     from tools.pathing import repo_root
 else:
+    from tools.infra.decl_graph_support import load_decl_graph, resolve_graph_profile, weak_graph_evidence
     from tools.infra.reports.common import relpath
     from tools.pathing import repo_root
 
@@ -66,6 +69,8 @@ class Finding:
     category: str
     priority: str
     note: str
+    structural_role: str = 'graph_unknown'
+    graph_load_bearing_score: float = 0.0
 
 def module_to_relpath(root: Path, raw: str) -> str:
     if raw.endswith('.lean') or '/' in raw:
@@ -167,6 +172,7 @@ def dedupe_findings(findings: list[Finding]) -> list[Finding]:
 
 
 def collect_findings(root: Path) -> list[Finding]:
+    _decl_key_to_full, graph_profiles = load_decl_graph(root)
     findings: list[Finding] = []
     src = root / "lean" / "InfoGeometry"
     deprecated_names: set[str] = set()
@@ -224,30 +230,39 @@ def collect_findings(root: Path) -> list[Finding]:
                         )
                     )
                 elif kind in {"theorem", "lemma"} and CONDITIONAL_SUFFIX_RE.search(name):
-                    findings.append(
-                        Finding(
-                            file=rel,
-                            line=i,
-                            decl_kind=kind,
-                            name=name,
-                            category="conditional_theorem",
-                            priority=priority_for("conditional_theorem", rel),
-                            note="conditional theorem surface",
+                    profile = resolve_graph_profile(file_rel=rel, leaf_name_hint=name, line=i, graph_profiles=graph_profiles)
+                    if weak_graph_evidence(profile):
+                        findings.append(
+                            Finding(
+                                file=rel,
+                                line=i,
+                                decl_kind=kind,
+                                name=name,
+                                category="conditional_theorem",
+                                priority=priority_for("conditional_theorem", rel),
+                                note="conditional theorem surface on weak graph role",
+                                structural_role='graph_unknown' if profile is None else profile.structural_role,
+                                graph_load_bearing_score=0.0 if profile is None else profile.graph_load_bearing_score,
+                            )
                         )
-                    )
                 elif kind in {"def", "abbrev"} and CONTRACT_CONSTRUCTOR_RE.search(name):
-                    findings.append(
-                        Finding(
-                            file=rel,
-                            line=i,
-                            decl_kind=kind,
-                            name=name,
-                            category="contract_constructor",
-                            priority=priority_for("contract_constructor", rel),
-                            note="constructor from concrete data into a named contract interface",
+                    profile = resolve_graph_profile(file_rel=rel, leaf_name_hint=name, line=i, graph_profiles=graph_profiles)
+                    if weak_graph_evidence(profile):
+                        findings.append(
+                            Finding(
+                                file=rel,
+                                line=i,
+                                decl_kind=kind,
+                                name=name,
+                                category="contract_constructor",
+                                priority=priority_for("contract_constructor", rel),
+                                note="constructor from concrete data into a named contract interface on weak graph role",
+                                structural_role='graph_unknown' if profile is None else profile.structural_role,
+                                graph_load_bearing_score=0.0 if profile is None else profile.graph_load_bearing_score,
+                            )
                         )
-                    )
                 elif kind in {"structure", "class", "def", "abbrev"} and CONTRACT_NAME_RE.search(name):
+                    profile = resolve_graph_profile(file_rel=rel, leaf_name_hint=name, line=i, graph_profiles=graph_profiles)
                     findings.append(
                         Finding(
                             file=rel,
@@ -257,6 +272,8 @@ def collect_findings(root: Path) -> list[Finding]:
                             category="contract_decl",
                             priority=priority_for("contract_decl", rel),
                             note="named contract/surrogate interface",
+                            structural_role='graph_unknown' if profile is None else profile.structural_role,
+                            graph_load_bearing_score=0.0 if profile is None else profile.graph_load_bearing_score,
                         )
                     )
                 if "/-" in line and "-/" not in line:
@@ -318,6 +335,7 @@ def top_queue(findings: list[Finding], limit: int = 25) -> list[Finding]:
         key=lambda f: (
             order.get(f.priority, 9),
             0 if file_bucket(f.file) == "canonical" else 1 if file_bucket(f.file) == "stable" else 2,
+            -f.graph_load_bearing_score,
             f.file,
             f.line,
             f.name,

@@ -111,7 +111,7 @@ theorem exists_weylBoundarySpinorPair_of_kitaevRepoHypotheses
   exact ⟨weylBoundarySpinorPair_of_simplifiedBoundaryModel
     (S := S) M localOp chain hTopo hPHS hSimple⟩
 
-@[rep_depth operator]
+@[rep_depth krein]
 theorem exists_nontrivial_regularization_pair_of_kitaevRepoHypotheses
     (M : RealMajoranaDatum (S := S))
     (localOp : KitaevCell → S →L[ℝ] S)

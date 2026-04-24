@@ -6,7 +6,7 @@ import InfoGeometry.Meta.Architecture
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.Normed.Algebra.Exponential
 
-namespace InfoGeometry.Canonical.DiscreteModularSpectrum
+namespace InfoGeometry.Canonical.DiscreteModularSpectrumCoordinateFree
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.ModularSourceBridge
@@ -138,4 +138,4 @@ theorem drazin_projector_invariant (k : ℤ) :
 
 end ModularMellinLattice
 end TypeIIIGLattice
-end InfoGeometry.Canonical.DiscreteModularSpectrum
+end InfoGeometry.Canonical.DiscreteModularSpectrumCoordinateFree

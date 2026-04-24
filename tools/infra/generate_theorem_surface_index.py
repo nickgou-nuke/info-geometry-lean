@@ -12,9 +12,11 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.infra.decl_graph_support import GraphProfile, load_decl_graph, weak_graph_evidence
     from tools.quality.common import QUARANTINE_MANIFEST_PATH
     from tools.pathing import default_decl_metadata_file, repo_root
 else:
+    from tools.infra.decl_graph_support import GraphProfile, load_decl_graph, weak_graph_evidence
     from tools.quality.common import QUARANTINE_MANIFEST_PATH
     from tools.pathing import default_decl_metadata_file, repo_root
 
@@ -96,6 +98,13 @@ class DeclRow:
     signals: list[str]
     audit_hits: list[str]
     quarantine_reason: str | None
+    reverse_value_users: int = 0
+    reverse_type_users: int = 0
+    reverse_theorem_users: int = 0
+    graph_load_bearing_score: float = 0.0
+    structural_role: str = "graph_unknown"
+    rep_layer: str | None = None
+    rep_depth: int | None = None
 
 
 def parse_args() -> argparse.Namespace:
@@ -103,7 +112,7 @@ def parse_args() -> argparse.Namespace:
         description=(
             "Classify exported InfoGeometry declarations into likely constructive derivations, "
             "hypothesis bridges, package/reprojection surfaces, surrogate/vacuous surfaces, "
-            "and neutral definitions."
+            "and neutral definitions using graph-backed structural evidence first."
         )
     )
     ap.add_argument("--decls", default=DEFAULT_DECLS, help="Declaration metadata JSONL path.")
@@ -261,12 +270,33 @@ def match_audits(decl: dict[str, Any], findings: list[dict[str, Any]]) -> list[s
     return sorted(set(hits))
 
 
+def graph_profile_signal(profile: GraphProfile | None) -> tuple[str, str, list[str]]:
+    if profile is None:
+        return "likely_constructive", "low", ["graph:missing"]
+    if profile.structural_role in {"isolated_theorem", "type_only_theorem", "thin_forwarder"}:
+        category = "surrogate_or_vacuous" if profile.structural_role != "type_only_theorem" else "package_reprojection"
+        return category, "medium", [f"graph_role:{profile.structural_role}"]
+    if profile.structural_role == "definition":
+        return "neutral_definition", "low", ["graph_role:definition"]
+    if profile.structural_role == "capstone_endpoint":
+        return "likely_constructive", "medium", ["graph_role:capstone_endpoint"]
+    if profile.structural_role in {"load_bearing", "supported_theorem"}:
+        return "likely_constructive", "medium" if profile.structural_role == "supported_theorem" else "high", [f"graph_role:{profile.structural_role}"]
+    return "likely_constructive", "low", [f"graph_role:{profile.structural_role}"]
+
+
+def stronger_confidence(a: str, b: str) -> str:
+    order = {"low": 0, "medium": 1, "high": 2}
+    return a if order[a] >= order[b] else b
+
+
 def classify_decl(
     decl: dict[str, Any],
     *,
     context: str,
     quarantine_reason: str | None,
     audit_hits: list[str],
+    profile: GraphProfile | None,
 ) -> DeclRow:
     signals: list[str] = []
     lowered_name = decl["name"].lower()
@@ -274,12 +304,17 @@ def classify_decl(
     combined_context = "\n".join(part for part in [lowered_doc, context] if part)
 
     quarantine_bucket, quarantine_signals = strongest_quarantine_bucket(quarantine_reason)
+    graph_category, graph_confidence, graph_signals = graph_profile_signal(profile)
+    category = graph_category
+    confidence = graph_confidence
+    signals.extend(graph_signals)
     signals.extend(quarantine_signals)
 
     name_hypothesis = bool(HYPOTHESIS_NAME_RE.search(lowered_name))
     hypothesis_signal = name_hypothesis or any(token in combined_context for token in HYPOTHESIS_CONTEXT_PATTERNS)
     package_signal = any(token in combined_context for token in PACKAGE_PATTERNS)
     surrogate_signal = any(token in combined_context for token in SURROGATE_PATTERNS)
+    weak_graph = weak_graph_evidence(profile)
 
     if name_hypothesis:
         signals.append("name:hypotheses")
@@ -292,20 +327,23 @@ def classify_decl(
     if audit_hits:
         signals.extend(f"audit:{hit}" for hit in audit_hits)
 
-    if audit_hits or surrogate_signal or quarantine_bucket == "surrogate_or_vacuous":
+    if audit_hits or quarantine_bucket == "surrogate_or_vacuous":
         category = "surrogate_or_vacuous"
-        confidence = "high" if audit_hits or quarantine_bucket == "surrogate_or_vacuous" else "medium"
-    elif decl["kind"] in THEOREM_KINDS and hypothesis_signal:
-        category = "hypothesis_bridge"
-        confidence = "high" if name_hypothesis else "medium"
-    elif quarantine_bucket == "package_reprojection" or package_signal:
+        confidence = stronger_confidence(confidence, "high")
+    elif surrogate_signal and weak_graph:
+        category = "surrogate_or_vacuous"
+        confidence = stronger_confidence(confidence, "medium")
+    elif quarantine_bucket == "package_reprojection":
         category = "package_reprojection"
-        confidence = "high" if quarantine_bucket == "package_reprojection" else "medium"
-    elif decl["kind"] in DEFINITION_KINDS:
+        confidence = stronger_confidence(confidence, "high")
+    elif package_signal and weak_graph:
+        category = "package_reprojection"
+        confidence = stronger_confidence(confidence, "medium")
+    elif decl["kind"] in THEOREM_KINDS and hypothesis_signal and weak_graph:
+        category = "hypothesis_bridge"
+        confidence = stronger_confidence(confidence, "high" if name_hypothesis else "medium")
+    elif decl["kind"] in DEFINITION_KINDS and category == "likely_constructive":
         category = "neutral_definition"
-        confidence = "low"
-    else:
-        category = "likely_constructive"
         confidence = "low"
 
     return DeclRow(
@@ -320,6 +358,13 @@ def classify_decl(
         signals=sorted(dict.fromkeys(signals)),
         audit_hits=audit_hits,
         quarantine_reason=quarantine_reason,
+        reverse_value_users=0 if profile is None else profile.reverse_value_users,
+        reverse_type_users=0 if profile is None else profile.reverse_type_users,
+        reverse_theorem_users=0 if profile is None else profile.reverse_theorem_users,
+        graph_load_bearing_score=0.0 if profile is None else profile.graph_load_bearing_score,
+        structural_role="graph_unknown" if profile is None else profile.structural_role,
+        rep_layer=None if profile is None else profile.rep_layer,
+        rep_depth=None if profile is None else profile.rep_depth,
     )
 
 
@@ -328,8 +373,8 @@ def render_md(payload: dict[str, Any], top: int) -> str:
     lines: list[str] = []
     lines.append("# Theorem Surface Index")
     lines.append("")
-    lines.append("This report is a heuristic declaration-level classification, not kernel truth.")
-    lines.append("It distinguishes likely constructive declarations from hypothesis bridges, package/reprojection surfaces, and surrogate/vacuous surfaces using the exported declaration inventory, tracked debt indices, quarantine annotations, and local source context.")
+    lines.append("This report is graph-first structural classification, not kernel truth and not a source-text oracle.")
+    lines.append("Lean/DAG reuse evidence sets the default category; local comments, names, quarantine notes, and legacy audit queues only raise concern when the graph shape is weak or isolated.")
     lines.append("")
     lines.append("## Summary")
     lines.append(f"- analyzed declarations: `{summary['analyzed_declarations']}`")
@@ -342,13 +387,14 @@ def render_md(payload: dict[str, Any], top: int) -> str:
     lines.append(f"- neutral definitions: `{summary['category_counts']['neutral_definition']}`")
     lines.append(f"- declarations with audit hits: `{summary['audit_hit_declarations']}`")
     lines.append(f"- declarations in quarantined modules: `{summary['quarantined_module_declarations']}`")
+    lines.append(f"- graph anchored declarations: `{summary['graph_anchored_declarations']}`")
     lines.append("")
     lines.append("## Category Notes")
-    lines.append("- `likely_constructive`: theorem declarations with no current bridge/package/surrogate warning signal.")
-    lines.append("- `hypothesis_bridge`: theorem names or local comments explicitly advertise hypothesis-driven transport such as `_of_*_hypotheses`.")
-    lines.append("- `package_reprojection`: declarations whose module reason or local comments say they package, store, read back, or reproject witnesses/obligations.")
-    lines.append("- `surrogate_or_vacuous`: declarations hit by the live debt audits or living on surfaces marked vacuous/degenerate/identity-transport in the quarantine manifest.")
-    lines.append("- `neutral_definition`: definitions and opaque wrappers without a stronger warning signal.")
+    lines.append("- `likely_constructive`: default for supported/load-bearing graph roles unless stronger weak-surface evidence exists.")
+    lines.append("- `hypothesis_bridge`: weak-graph theorems whose names/context explicitly advertise hypothesis-driven transport.")
+    lines.append("- `package_reprojection`: graph-thin surfaces or quarantined/context-marked packaging/readback wrappers.")
+    lines.append("- `surrogate_or_vacuous`: audit-hit, quarantined, or graph-thin surfaces with explicit vacuity/surrogate evidence.")
+    lines.append("- `neutral_definition`: definitions/opaque wrappers without a stronger graph or audit concern.")
     lines.append("")
 
     sections = [
@@ -365,9 +411,9 @@ def render_md(payload: dict[str, Any], top: int) -> str:
         else:
             for row in rows[:top]:
                 location = f"{row['file']}:{row['line']}" if row.get("line") else row["file"]
-                signal_text = "; ".join(row.get("signals", [])[:3]) if row.get("signals") else "-"
+                signal_text = "; ".join(row.get("signals", [])[:4]) if row.get("signals") else "-"
                 lines.append(
-                    f"- `{row['name']}` | `{row['kind']}` | `{location}` | confidence `{row['confidence']}` | signals: {signal_text}"
+                    f"- `{row['name']}` | `{row['kind']}` | `{location}` | confidence `{row['confidence']}` | role `{row['structural_role']}` | thm-users `{row['reverse_theorem_users']}` | signals: {signal_text}"
                 )
         lines.append("")
 
@@ -392,9 +438,9 @@ def render_md(payload: dict[str, Any], top: int) -> str:
     lines.append("")
 
     lines.append("## Interpretation")
-    lines.append("- This index is intentionally conservative: a declaration is only marked suspicious when the live audits, the quarantine manifest, the declaration name, or the local source context say so.")
-    lines.append("- A declaration in `likely_constructive` is not proved to be deep; it simply lacks the current signals of packaging or vacuity.")
-    lines.append("- Use this report together with the quarantine manifest and debt indices to decide what deserves promotion or demolition.")
+    lines.append("- Truth still lives in Lean; this report is structural triage only.")
+    lines.append("- Graph evidence outranks lexical/documentary hints. A short proof or suggestive name does not by itself make a declaration vacuous.")
+    lines.append("- Lexical, quarantine, and queue signals matter most when the graph role is isolated, type-only, or thin-forwarder.")
     lines.append("")
     return "\n".join(lines) + "\n"
 
@@ -417,6 +463,7 @@ def main() -> int:
         + load_queue(surrogate_path, "surrogate", root)
     )
     quarantine = load_quarantine_manifest(quarantine_manifest_path)
+    _decl_key_to_full, graph_profiles = load_decl_graph(root)
     file_cache: dict[str, list[str]] = {}
 
     rows: list[DeclRow] = []
@@ -430,6 +477,7 @@ def main() -> int:
                 context=context,
                 quarantine_reason=quarantine_reason,
                 audit_hits=audit_hits,
+                profile=graph_profiles.get(decl["name"]),
             )
         )
 
@@ -454,10 +502,17 @@ def main() -> int:
         key=lambda row: (-row["total"], -row["surrogate_or_vacuous"], row["module"]),
     )
 
-    def rank_key(row: DeclRow) -> tuple[int, int, str, int, str]:
+    def rank_key(row: DeclRow) -> tuple[int, float, int, str, int, str]:
         confidence_rank = {"high": 2, "medium": 1, "low": 0}[row.confidence]
         theorem_rank = 1 if row.kind in THEOREM_KINDS else 0
-        return (-confidence_rank, -theorem_rank, row.file, int(row.line or 0), row.name)
+        return (
+            -confidence_rank,
+            -row.graph_load_bearing_score,
+            -theorem_rank,
+            row.file,
+            int(row.line or 0),
+            row.name,
+        )
 
     top_examples = {
         category: [asdict(row) for row in sorted((r for r in rows if r.category == category), key=rank_key)]
@@ -476,6 +531,7 @@ def main() -> int:
             "analyzed_declarations": len(rows),
             "theorem_declarations": sum(1 for row in rows if row.kind in THEOREM_KINDS),
             "definition_declarations": sum(1 for row in rows if row.kind in DEFINITION_KINDS),
+            "graph_anchored_declarations": sum(1 for row in rows if row.structural_role != "graph_unknown"),
             "category_counts": {
                 "likely_constructive": category_counts.get("likely_constructive", 0),
                 "hypothesis_bridge": category_counts.get("hypothesis_bridge", 0),

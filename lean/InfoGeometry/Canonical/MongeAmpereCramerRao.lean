@@ -53,6 +53,13 @@ noncomputable def cramerRaoMetricVolumePotential
     (H : HessianGeometry E) (x : E) : ℝ :=
   -Real.log (cramerRaoMetricVolumeShadow H x)
 
+/-- Readout seal: potential form equals negative log absolute determinant of the owner operator. -/
+@[simp] theorem cramerRaoMetricVolumePotential_eq_neg_logAbsDet
+    (H : HessianGeometry E) (x : E) :
+    cramerRaoMetricVolumePotential H x
+      = -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) := by
+  rfl
+
 /-- Incompressible Monge-Ampere plus nondegeneracy implies unit Cramer-Rao determinant magnitude. -/
 theorem absDet_cramerRaoMetric_eq_one_of_incompressible
     (H : HessianGeometry E)
@@ -74,17 +81,28 @@ theorem cramerRaoMetricVolumePotential_eq_zero_of_incompressible
   rw [hUnit, Real.log_one]
   simp
 
+/--
+Anti-trivialization witness: a nonzero Cramer-Rao potential at any point rules out
+incompressible Monge-Ampere globally.
+-/
+theorem not_incompressible_of_cramerRaoMetricVolumePotential_ne_zero
+    (H : HessianGeometry E)
+    (x : E)
+    (hPotNe : cramerRaoMetricVolumePotential H x ≠ 0) :
+    ¬ IncompressibleMongeAmpere H := by
+  intro hIncomp
+  exact hPotNe (cramerRaoMetricVolumePotential_eq_zero_of_incompressible (H := H) hIncomp x)
+
 /-- Incompressible Monge-Ampere implies zero log-volume mode of the Cramer-Rao metric. -/
 theorem logAbsDet_cramerRaoMetric_eq_zero_of_incompressible
     (H : HessianGeometry E)
     (hIncomp : IncompressibleMongeAmpere H)
     (x : E) :
     Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) = 0 := by
-  have hPotentialZero : cramerRaoMetricVolumePotential H x = 0 :=
+  have hCramerRaoMetricVolumePotentialZero : cramerRaoMetricVolumePotential H x = 0 :=
     cramerRaoMetricVolumePotential_eq_zero_of_incompressible (H := H) hIncomp x
   have hNegLogZero : -Real.log (|LinearMap.det (cramerRaoMetricOp H x).toLinearMap|) = 0 := by
-    simpa [cramerRaoMetricVolumePotential, cramerRaoMetricVolumeShadow,
-      cramerRaoMetricOperatorOwner, cramerRaoMetricOp] using hPotentialZero
+    simpa [cramerRaoMetricVolumePotential_eq_neg_logAbsDet] using hCramerRaoMetricVolumePotentialZero
   linarith
 end MongeAmpereBridge
 

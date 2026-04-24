@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
 import InfoGeometry.Canonical.SouriauDensityWeightContext
 import InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
 import InfoGeometry.Canonical.SuperSouriauFermionGasBridge
+import InfoGeometry.Canonical.OperatorFenchelRegularCone
 import InfoGeometry.GrandCanonical.ResponseMatrix
 import InfoGeometry.Convex.Legendre
 
@@ -112,6 +113,42 @@ theorem claimD_scalarLegendre_inverseHessian_eq_inv_fisher
     (hFisher : L.fisher θ ≠ 0) :
     a = (L.fisher θ)⁻¹ :=
   L.thetaOfEta_deriv_eq_inv_fisher_of_hasDerivAt θ a hEta hTheta hFisher
+
+section OperatorLegendreEnrichment
+
+variable {E : Type}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
+local notation "EndH" => H₂ →L[ℝ] H₂
+
+/--
+Stage-2 operatorial enrichment for Claim D on the doubled-Krein lane.
+
+This is the constructive operator analog of the inverse-Hessian narrative:
+given a continuous-linear equivalence witness for the Fisher side, the entropy
+and Fisher Hessians form a two-sided inverse packet on the operator carrier.
+-/
+@[rep_depth thermo]
+theorem claimD_operatorLegendre_inverseHessian_eq_inverseFisher_packet
+    (D : InfoGeometry.Geometry.LegendreContinuousLinearEquivInverseData EndH) :
+    D.toLegendreHessianInverseContext.moment =
+        InfoGeometry.Geometry.dualCoord D.massieu D.beta
+      ∧ D.entropyGradient D.toLegendreHessianInverseContext.moment = D.beta
+      ∧ D.toLegendreHessianInverseContext.fisherHessian =
+        InfoGeometry.Geometry.hessian D.massieu D.beta
+      ∧ D.toLegendreHessianInverseContext.entropyHessian =
+        fderiv ℝ D.entropyGradient D.toLegendreHessianInverseContext.moment
+      ∧ D.toLegendreHessianInverseContext.entropyHessian.comp
+          D.toLegendreHessianInverseContext.fisherHessian =
+        ContinuousLinearMap.id ℝ EndH
+      ∧ D.toLegendreHessianInverseContext.fisherHessian.comp
+          D.toLegendreHessianInverseContext.entropyHessian =
+        ContinuousLinearMap.id ℝ (InfoGeometry.Geometry.MomentCoord EndH) :=
+  InfoGeometry.Canonical.OperatorFenchelRegularCone.operatorLegendreHessianInverse_packet_of_continuousLinearEquiv
+    (E := E) D
+
+end OperatorLegendreEnrichment
 
 /--
 Strict Onsager equilibrium gate.

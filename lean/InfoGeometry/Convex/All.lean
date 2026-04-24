@@ -9,6 +9,7 @@ import InfoGeometry.Convex.ProjectiveRays
 import InfoGeometry.Convex.RadonHelly
 import InfoGeometry.Convex.SelfDualCone
 import InfoGeometry.Convex.SpinFactorHessian
+import InfoGeometry.Convex.EuclideanMonotonicity
 
 namespace InfoGeometry
 

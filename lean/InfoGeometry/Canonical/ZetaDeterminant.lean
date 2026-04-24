@@ -115,6 +115,47 @@ theorem operatorZetaRegularizedLogDet_mul_right
           rfl
 
 /--
+Left-composition additivity for the operatorial zeta log-determinant.
+
+As in the right-composition theorem, no commutativity is assumed between the
+factors; composition order is preserved explicitly.
+-/
+@[rep_depth operator]
+theorem operatorZetaRegularizedLogDet_mul_left
+    (L K : E →L[ℝ] E) (Λ : ℝ)
+    (hdetK : LinearMap.det (ContinuousLinearMap.toLinearMap K) ≠ 0)
+    (hdetScaledL : LinearMap.det (ContinuousLinearMap.toLinearMap ((1 / Λ) • L)) ≠ 0) :
+    operatorZetaRegularizedLogDet (E := E) (K * L) Λ
+      = Real.log (|LinearMap.det (ContinuousLinearMap.toLinearMap K)|)
+        + operatorZetaRegularizedLogDet (E := E) L Λ := by
+  have hmul : ((1 / Λ) • (K * L)) = (K * ((1 / Λ) • L)) := by
+    ext x
+    simp [ContinuousLinearMap.mul_def]
+  calc
+    operatorZetaRegularizedLogDet (E := E) (K * L) Λ
+        = Real.log (|LinearMap.det (ContinuousLinearMap.toLinearMap ((1 / Λ) • (K * L)))|) := rfl
+    _ = Real.log (|LinearMap.det (ContinuousLinearMap.toLinearMap ((K * ((1 / Λ) • L) : E →L[ℝ] E)))|) := by
+          rw [hmul]
+    _ = Real.log
+          (|(LinearMap.det (ContinuousLinearMap.toLinearMap (K : E →L[ℝ] E))
+            * LinearMap.det (ContinuousLinearMap.toLinearMap (((1 / Λ) • L : E →L[ℝ] E))))|) := by
+          congr
+          exact (LinearMap.det : (E →ₗ[ℝ] E) →* ℝ).map_mul
+            (ContinuousLinearMap.toLinearMap (K : E →L[ℝ] E))
+            (ContinuousLinearMap.toLinearMap (((1 / Λ) • L : E →L[ℝ] E))
+)
+    _ = Real.log
+          (|LinearMap.det (ContinuousLinearMap.toLinearMap (K : E →L[ℝ] E))|
+            * |LinearMap.det (ContinuousLinearMap.toLinearMap (((1 / Λ) • L : E →L[ℝ] E)))|) := by
+          rw [abs_mul]
+    _ = Real.log (|LinearMap.det (ContinuousLinearMap.toLinearMap (K : E →L[ℝ] E))|)
+        + Real.log (|LinearMap.det (ContinuousLinearMap.toLinearMap (((1 / Λ) • L : E →L[ℝ] E)))|) := by
+          exact Real.log_mul (abs_ne_zero.mpr hdetK) (abs_ne_zero.mpr hdetScaledL)
+    _ = Real.log (|LinearMap.det (ContinuousLinearMap.toLinearMap (K : E →L[ℝ] E))|)
+        + operatorZetaRegularizedLogDet (E := E) L Λ := by
+          rfl
+
+/--
 Regularized operator/spectral zeta package.
 
 `regularizedOp` is the regularized operator input (e.g. Drazin inverse or a

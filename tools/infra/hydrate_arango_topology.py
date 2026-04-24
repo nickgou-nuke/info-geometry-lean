@@ -35,7 +35,7 @@ def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
 
 
 def node_key(row: dict[str, Any]) -> str:
-    return str(row.get("_key") or row.get("id") or "")
+    return str(row.get("name") or row.get("_key") or row.get("id") or "")
 
 
 def edge_endpoint_key(value: Any) -> str:
@@ -154,9 +154,23 @@ def hydrate(
         scc_size = len(sccs.get(scc_id, []))
         labels.add("topology:cyclic" if scc_size > 1 else "topology:acyclic_singleton")
         next_row = dict(row)
-        attrs = dict(next_row.get("attrs") or {})
-        attrs.update(
-            {
+        
+        # ⚖️ PAULI REFACTOR: Handle list-based attrs from dagIndexer
+        raw_attrs = next_row.get("attrs")
+        if isinstance(raw_attrs, list):
+            # Keep as list but add new ones
+            raw_attrs.extend([
+                f"hydration_policy:{raw_layer_policy}",
+                "layer:raw",
+                "grain:fine",
+                "overlay_model:layered_tensor_network",
+                f"scc_id_nat:{scc_id}",
+                f"scc_size_nat:{scc_size}",
+                f"indegree_nat:{indegree.get(key, 0)}",
+                f"outdegree_nat:{outdegree.get(key, 0)}",
+            ])
+        else:
+            next_row["attrs"] = {
                 "hydration_policy": raw_layer_policy,
                 "layer": "raw",
                 "grain": "fine",
@@ -166,8 +180,7 @@ def hydrate(
                 "indegree": indegree.get(key, 0),
                 "outdegree": outdegree.get(key, 0),
             }
-        )
-        next_row["attrs"] = attrs
+        
         next_row["labels"] = sorted(labels)
         hydrated_nodes.append(next_row)
 
@@ -345,8 +358,8 @@ def main() -> int:
     parser.add_argument("--strict-lossless", action=argparse.BooleanOptionalAction, default=True)
     args = parser.parse_args()
 
-    nodes = read_jsonl(args.input_dir / "ig_nodes.jsonl")
-    edges = read_jsonl(args.input_dir / "ig_edges.jsonl")
+    nodes = read_jsonl(args.input_dir / "decls.jsonl")
+    edges = read_jsonl(args.input_dir / "edges.jsonl")
     result = hydrate(
         nodes,
         edges,

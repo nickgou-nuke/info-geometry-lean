@@ -9,6 +9,7 @@ import InfoGeometry.ExponentialFamily.GaussianLadder
 import InfoGeometry.ExponentialFamily.KLBregman
 import InfoGeometry.ExponentialFamily.Legendre
 import InfoGeometry.ExponentialFamily.TwistedGaussian
+import InfoGeometry.ExponentialFamily.GaussianMonotonicity
 
 namespace InfoGeometry
 

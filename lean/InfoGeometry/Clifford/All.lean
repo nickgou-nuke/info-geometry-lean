@@ -22,6 +22,8 @@ import InfoGeometry.Clifford.SplitQ11Projectors
 import InfoGeometry.Clifford.Supercharge
 import InfoGeometry.Clifford.Tower
 import InfoGeometry.Clifford.TowerMatrix
+import InfoGeometry.Clifford.ChiralBasis
+import InfoGeometry.Clifford.GeometricRotor
 
 namespace InfoGeometry
 

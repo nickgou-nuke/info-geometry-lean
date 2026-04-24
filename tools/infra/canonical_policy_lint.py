@@ -112,6 +112,9 @@ class PublicTheorem:
     reverse_theorem_users: int = 0
     graph_load_bearing_score: float = 0.0
     structural_role: str = 'graph_unknown'
+    graph_grounded_signal: bool = False
+    heuristic_signal: bool = False
+    hard_verdict_allowed: bool = False
 
     @property
     def key(self) -> tuple[str, str]:
@@ -395,6 +398,13 @@ def scan_public_theorems() -> list[PublicTheorem]:
         is_trivial = theorem_has_trivial_proof(block)
         if is_trivial and profile is not None and not weak_graph_evidence(profile):
             is_trivial = False
+        graph_grounded_signal = profile is not None
+        hard_verdict_allowed = profile is not None and not weak_graph_evidence(profile)
+        heuristic_signal = bool(
+            is_trivial
+            or category in SUSPECT_THEOREM_CATEGORIES
+            or ALIASISH_THEOREM_NAME.search(short_name)
+        )
 
         public_theorems.append(
             PublicTheorem(
@@ -411,6 +421,9 @@ def scan_public_theorems() -> list[PublicTheorem]:
                 reverse_theorem_users=0 if profile is None else profile.reverse_theorem_users,
                 graph_load_bearing_score=0.0 if profile is None else profile.graph_load_bearing_score,
                 structural_role='graph_unknown' if profile is None else profile.structural_role,
+                graph_grounded_signal=graph_grounded_signal,
+                heuristic_signal=heuristic_signal,
+                hard_verdict_allowed=hard_verdict_allowed,
             )
         )
     return sorted(public_theorems)
@@ -454,24 +467,29 @@ def compare_new_public_theorems(baseline: dict[str, object], current: list[Publi
             continue
         if theorem.theorem_class is None:
             failures.append(
-                f"new public theorem missing theorem-class tag: {theorem.name} at {theorem.file}:{theorem.line}"
+                f"new public theorem missing theorem-class tag: {theorem.name} at {theorem.file}:{theorem.line} "
+                f"[provenance graph_grounded={theorem.graph_grounded_signal} heuristic_signal={theorem.heuristic_signal} hard_verdict_allowed={theorem.hard_verdict_allowed}]"
             )
         elif theorem.theorem_class not in ALLOWED_THEOREM_CLASSES:
             failures.append(
-                f"new public theorem has invalid theorem-class tag '{theorem.theorem_class}': {theorem.name} at {theorem.file}:{theorem.line}"
+                f"new public theorem has invalid theorem-class tag '{theorem.theorem_class}': {theorem.name} at {theorem.file}:{theorem.line} "
+                f"[provenance graph_grounded={theorem.graph_grounded_signal} heuristic_signal={theorem.heuristic_signal} hard_verdict_allowed={theorem.hard_verdict_allowed}]"
             )
         weak_graph = theorem_has_weak_graph_support(theorem)
         if theorem.dependent_theorem_count == 0 and weak_graph:
             failures.append(
-                f"new public theorem has no downstream theorem dependents and weak graph support ({theorem.structural_role}): {theorem.name} at {theorem.file}:{theorem.line}"
+                f"new public theorem has no downstream theorem dependents and weak graph support ({theorem.structural_role}): {theorem.name} at {theorem.file}:{theorem.line} "
+                f"[provenance graph_grounded={theorem.graph_grounded_signal} heuristic_signal={theorem.heuristic_signal} hard_verdict_allowed={theorem.hard_verdict_allowed}]"
             )
         if theorem.trivial_proof and theorem.dependent_theorem_count == 0 and weak_graph:
             failures.append(
-                f"new public theorem has definitional/trivial proof with no downstream theorem dependents and weak graph support ({theorem.structural_role}): {theorem.name} at {theorem.file}:{theorem.line}"
+                f"new public theorem has definitional/trivial proof with no downstream theorem dependents and weak graph support ({theorem.structural_role}): {theorem.name} at {theorem.file}:{theorem.line} "
+                f"[provenance graph_grounded={theorem.graph_grounded_signal} heuristic_signal={theorem.heuristic_signal} hard_verdict_allowed={theorem.hard_verdict_allowed}]"
             )
         if theorem.category in SUSPECT_THEOREM_CATEGORIES and theorem.dependent_theorem_count == 0 and weak_graph:
             failures.append(
-                f"new public theorem lands in suspect theorem-surface category {theorem.category} with no downstream theorem dependents and weak graph support ({theorem.structural_role}): {theorem.name} at {theorem.file}:{theorem.line}"
+                f"new public theorem lands in suspect theorem-surface category {theorem.category} with no downstream theorem dependents and weak graph support ({theorem.structural_role}): {theorem.name} at {theorem.file}:{theorem.line} "
+                f"[provenance graph_grounded={theorem.graph_grounded_signal} heuristic_signal={theorem.heuristic_signal} hard_verdict_allowed={theorem.hard_verdict_allowed}]"
             )
     return failures
 
@@ -648,6 +666,9 @@ def print_summary(prop_surfaces: list[PropSurface], public_theorems: list[Public
     print(f"  proposition surfaces scanned: {len(prop_surfaces)}")
     print(f"  public canonical theorems scanned: {len(public_theorems)}")
     print(f"  suspect theorem surfaces scanned: {len(suspect_theorems)}")
+    print(f"  graph-grounded theorem signals: {sum(1 for theorem in public_theorems if theorem.graph_grounded_signal)}")
+    print(f"  heuristic theorem signals: {sum(1 for theorem in public_theorems if theorem.heuristic_signal)}")
+    print(f"  hard-verdict-allowed theorem signals: {sum(1 for theorem in public_theorems if theorem.hard_verdict_allowed)}")
 
 
 def main() -> int:

@@ -99,6 +99,14 @@ def generate_md(profiles: list[GraphProfile]) -> str:
 
     return "\n".join(lines) + "\n"
 
+
+def display_path(path: Path) -> str:
+    root = repo_root()
+    try:
+        return str(path.resolve().relative_to(root))
+    except ValueError:
+        return str(path)
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="Graph vacuity stratification (topology-only)")
     ap.add_argument("--json-out", type=Path, default=repo_root() / "reports" / "dag" / "sorry-equivalence.json")
@@ -145,7 +153,8 @@ def main() -> int:
     print(f"[pauli-vacuity] {total} theorems analysed")
     print(f"[pauli-vacuity] topology-weak (isolated + type-only + thin-forwarder): {weak} ({100*weak/denom:.1f}%)")
     print(f"[pauli-vacuity] load-bearing (backbone): {counts.get('load_bearing', 0)} ({100*counts.get('load_bearing', 0)/denom:.1f}%)")
-    print(f"[pauli-vacuity] wrote {args.md_out.relative_to(repo_root())}")
+    print(f"[pauli-vacuity] wrote {display_path(args.md_out)}")
+    print(f"[pauli-vacuity] wrote {display_path(args.json_out)}")
     
     return 0
 

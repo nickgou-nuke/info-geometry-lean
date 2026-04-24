@@ -181,6 +181,75 @@ noncomputable def drazinTranslationCandidate : EndH :=
   InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPartK U.kernel
 
 /--
+The repo-owned Drazin translation candidate is spectrally compact on the
+current owner slice.
+
+This follows because it is the canonical kinetic remainder inside the even
+superHamiltonian split, and both the full superHamiltonian and the defect
+compression commute with the spectral grading `Γ_S`.
+-/
+@[rep_depth transport]
+theorem drazinTranslationCandidate_isSpectralCompact :
+    U.kernel.IsSpectralCompact (drazinTranslationCandidate U) := by
+  rw [InfoGeometry.Canonical.CertifiedInverseKernel.isSpectralCompact_iff_commute_GammaS
+    (CIK := U.kernel) (X := drazinTranslationCandidate U)]
+  have hSH :
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.kernel
+        * U.kernel.GammaS
+        =
+      U.kernel.GammaS
+        * InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.kernel := by
+    exact
+      (InfoGeometry.Canonical.CertifiedInverseKernel.isSpectralCompact_iff_commute_GammaS
+        (CIK := U.kernel)
+        (X := InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.kernel)).1
+        (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK_isSpectralCompact
+          (CIK := U.kernel))
+  have hZ :
+      InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK U.kernel
+        * U.kernel.GammaS
+        =
+      U.kernel.GammaS
+        * InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK U.kernel := by
+    exact
+      (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK_isDrazinLaneCentralK
+        (CIK := U.kernel)).2.eq
+  unfold drazinTranslationCandidate
+  change
+      (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPart U.kernel)
+        * U.kernel.GammaS
+        =
+      U.kernel.GammaS
+        * (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPart U.kernel)
+  unfold InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalKineticPart
+  calc
+    (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian U.kernel
+        - InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentral U.kernel)
+        * U.kernel.GammaS
+      =
+        InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.kernel
+          * U.kernel.GammaS
+          -
+        InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK U.kernel
+          * U.kernel.GammaS := by
+            simp [sub_mul, InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK,
+              InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK]
+    _ =
+        U.kernel.GammaS
+          * InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK U.kernel
+          -
+        U.kernel.GammaS
+          * InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK U.kernel := by
+            rw [hSH, hZ]
+    _ =
+        U.kernel.GammaS
+          * (InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonian U.kernel
+              - InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentral U.kernel) := by
+            simp [InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK,
+              InfoGeometry.Canonical.DrazinSupercharge.CertifiedInverseKernel.canonicalDefectCentralK,
+              sub_eq_add_neg, mul_add]
+
+/--
 Scaled central lane carried by the KKT packet notation `Z_D`.
 
 We package the odd-odd bracket in the direct form

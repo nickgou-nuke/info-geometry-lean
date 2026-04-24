@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "authority.schema.json",
+  "title": "HiveAuthorityMetadata",
+  "type": "object",
+  "required": [
+    "authority"
+  ],
+  "properties": {
+    "authority": {
+      "type": "string",
+      "enum": [
+        "navigation",
+        "semantic",
+        "proposal",
+        "execution_intent",
+        "lean_checked",
+        "build_checked",
+        "audit_checked",
+        "promoted"
+      ]
+    },
+    "authority_origin": {
+      "type": "string"
+    },
+    "promotion_allowed": {
+      "type": "boolean"
+    },
+    "verification_origin": {
+      "type": "string",
+      "enum": [
+        "symbolic",
+        "synthetic_smoke",
+        "lean_produced",
+        "build_gate",
+        "audit_gate"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

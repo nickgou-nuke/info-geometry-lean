@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "ExecutionIntentPacket.schema.json",
+  "title": "ExecutionIntentPacket",
+  "allOf": [
+    {
+      "$ref": "common_envelope.schema.json"
+    },
+    {
+      "$ref": "authority.schema.json"
+    },
+    {
+      "$ref": "representation.schema.json"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "status",
+        "packet_version",
+        "packet_hash",
+        "target_refs",
+        "intended_actions",
+        "required_tools",
+        "required_gates",
+        "mutation_scope",
+        "execution_allowed"
+      ],
+      "properties": {
+        "kind": {
+          "const": "ExecutionIntentPacket"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "legalized",
+            "probe_ready",
+            "gated",
+            "executed",
+            "accepted",
+            "rejected",
+            "deferred"
+          ]
+        },
+        "authority": {
+          "const": "execution_intent"
+        },
+        "packet_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packet_hash": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "source_ref.schema.json"
+          }
+        },
+        "intended_actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required_tools": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required_gates": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "mutation_scope": {
+          "type": "string",
+          "enum": [
+            "none",
+            "probe_only",
+            "single_file",
+            "single_module",
+            "bounded_repo_surface"
+          ]
+        },
+        "execution_allowed": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    }
+  ]
+}

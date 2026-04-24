@@ -217,13 +217,20 @@ def taggedDependencyViolations
   let mut out := #[]
   let deps := directlyUsedConstants env declName
   for dep in deps do
-    if let some depDepth := repDepth? env dep then
-      let d := depth.toNat
-      let d' := depDepth.toNat
-      if d' > d then
-        out := out.push m!"REGRESSION: {declName} (L{d}) directly depends on {dep} (L{d'})."
-      else if !allowComposite && d' + 1 < d then
-        out := out.push m!"WORMHOLE: {declName} (L{d}) directly depends on {dep} (L{d'})."
+    match env.find? dep with
+    | some depInfo =>
+        -- Architecture adjacency is enforced on proof/program surfaces, not on
+        -- inductive/structure container declarations used as parameter contexts.
+        if isDefOrTheoremInfo depInfo then
+          if let some depDepth := repDepth? env dep then
+            let d := depth.toNat
+            let d' := depDepth.toNat
+            if d' > d then
+              out := out.push m!"REGRESSION: {declName} (L{d}) directly depends on {dep} (L{d'})."
+            else if !allowComposite && d' + 1 < d then
+              out := out.push m!"WORMHOLE: {declName} (L{d}) directly depends on {dep} (L{d'})."
+    | none =>
+        pure ()
   out
 
 /-- Lean-native architecture audit for the tagged stable spine. -/

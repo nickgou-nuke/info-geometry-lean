@@ -188,6 +188,7 @@ export InfoGeometry.Canonical.RelativePotentialCore (
   relativeDensity
   relativeLogDensity
   relativeModularPotential
+  informationGeometricRelativeNorm
   relativeInformationEnergy
   relativeInformationNorm
   relativeLogDensity_eq_logDensity_sub_logDensity
@@ -198,10 +199,23 @@ export InfoGeometry.Canonical.RelativePotentialCore (
   relativeDensity_self
   relativeLogDensity_self
   relativeModularPotential_self
+  informationGeometricRelativeNorm_self
+  informationGeometricRelativeNorm_nonneg
+  informationGeometricRelativeNorm_eq_sum_gauge_abs_neg_relativeLogDensity
   relativeInformationEnergy_self
   relativeInformationNorm_self
   relativeInformationEnergy_nonneg
   relativeInformationNorm_nonneg
+  relativeInformationEnergy_eq_sum_gauge_sq_neg_relativeLogDensity
+  informationGeometricRelativeNorm_scale_left
+  informationGeometricRelativeNorm_scale_right
+  informationGeometricRelativeNorm_scale_scale
+  relativeInformationEnergy_scale_left
+  relativeInformationEnergy_scale_right
+  relativeInformationEnergy_scale_scale
+  relativeInformationNorm_scale_left
+  relativeInformationNorm_scale_right
+  relativeInformationNorm_scale_scale
 )
 
 export InfoGeometry.Canonical.RelativePotentialScalarBridge (

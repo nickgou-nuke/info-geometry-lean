@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "representation.schema.json",
+  "title": "HiveRepresentationMetadata",
+  "type": "object",
+  "required": [
+    "representation_class",
+    "representation_depth"
+  ],
+  "properties": {
+    "representation_class": {
+      "type": "string",
+      "enum": [
+        "owner",
+        "translator",
+        "coherence",
+        "capstone",
+        "shadow"
+      ]
+    },
+    "representation_depth": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": [
+            "scalar",
+            "finite_matrix",
+            "projective",
+            "hilbert",
+            "operatorial",
+            "krein",
+            "von_neumann",
+            "type_iii",
+            "categorical"
+          ]
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "scalar",
+              "finite_matrix",
+              "projective",
+              "hilbert",
+              "operatorial",
+              "krein",
+              "von_neumann",
+              "type_iii",
+              "categorical"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "additionalProperties": true
+}
